@@ -189,7 +189,7 @@ Defined.
 
 (* And for a non-dependent type, [map_dep] reduces to [map], modulo [trans_trivial]. *)
 
-Lemma mapdep_trivial {A B} {x y : A} (f : A -> B) (p: x ~~> y):
+Lemma map_dep_trivial {A B} {x y : A} (f : A -> B) (p: x ~~> y):
   map_dep f p ~~> trans_trivial p (f x) @ map f p. 
 Proof.
   path_induction.

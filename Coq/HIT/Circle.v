@@ -72,7 +72,7 @@ Proof.
     @ compute_base P pt lp').
   unwhisker.
   moveleft_onleft.
-  apply opposite, mapdep_trivial.
+  apply opposite, map_dep_trivial.
   path_via (!trans_trivial loop _
     @ (!map (transport loop) (compute_base P pt lp'))
     @ map_dep (circle_rect P pt lp') loop
