@@ -18,13 +18,13 @@ Defined.
 
 (** H-levels. *)
 
-Fixpoint hlevel (n : nat) : Type -> Type :=
+Fixpoint is_hlevel (n : nat) : Type -> Type :=
   match n with
     | 0 => is_contr
-    | S n' => fun X => forall (x y:X), hlevel n' (x ~~> y)
+    | S n' => fun X => forall (x y:X), is_hlevel n' (x ~~> y)
   end.
 
-Theorem hlevel_inhabited_contr {n X} : hlevel n X -> is_contr (hlevel n X).
+Theorem hlevel_inhabited_contr {n X} : is_hlevel n X -> is_contr (is_hlevel n X).
 Proof.
   intros n.
   induction n.
@@ -43,7 +43,7 @@ Defined.
 
 (** H-level is preserved under equivalence. *)
 
-Theorem hlevel_equiv {n A B} : (A ≃> B) -> hlevel n A -> hlevel n B.
+Theorem hlevel_equiv {n A B} : (A ≃> B) -> is_hlevel n A -> is_hlevel n B.
 Proof.
   intro n.
   induction n.
@@ -64,7 +64,7 @@ Defined.
 
 (** Propositions are of h-level 1. *)
 
-Definition is_prop := hlevel 1.
+Definition is_prop := is_hlevel 1.
 
 (** Here is an alternate characterization of propositions. *)
 
@@ -84,7 +84,7 @@ Proof.
   assumption.
 Defined.
 
-Theorem hlevel_isprop {n A} : is_prop (hlevel n A).
+Theorem hlevel_isprop {n A} : is_prop (is_hlevel n A).
 Proof.
   intros n A.
   apply inhabited_contr_isprop.
@@ -159,7 +159,7 @@ Defined.
   
 (** Sets are of h-level 2. *)
 
-Definition is_set := hlevel 2.
+Definition is_set := is_hlevel 2.
 
 (** A type is a set if and only if it satisfies Axiom K. *)
 
