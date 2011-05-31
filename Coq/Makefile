@@ -3,6 +3,7 @@
 # The directory which contains the Coq executables (leave it empty if
 # coqc is in the PATH), for example on my Mac I would set
 # COQBIN=/Applications/CoqIdE_8.3.app/Contents/Resources/bin/
+# (note the trailing slash).
 COQBIN=
 
 # Edit below at your own risk
@@ -13,9 +14,18 @@ COQDOC:=$(COQBIN)coqdoc
 # The list of files that comprise the library in the order in which
 # they should appear in the generated documentation.
 
-VFILES:= Functions.v Paths.v Fibrations.v Contractible.v Equivalences.v FiberEquivalences.v \
-	 Funext.v Univalence.v UnivalenceImpliesFunext.v UnivalenceAxiom.v \
-	 HLevel.v Homotopy.v
+VFILES:= Functions.v \
+	 Paths.v \
+	 Fibrations.v \
+	 Contractible.v \
+	 Equivalences.v \
+	 FiberEquivalences.v \
+	 Funext.v \
+         Univalence.v \
+         UnivalenceImpliesFunext.v \
+	 UnivalenceAxiom.v \
+	 HLevel.v \
+         Homotopy.v
 
 VOFILES:=$(VFILES:.v=.vo)
 GLOBFILES:=$(VFILES:.v=.glob)

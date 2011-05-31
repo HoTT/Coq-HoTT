@@ -14,7 +14,7 @@ Definition is_contr A := {x : A & forall y : A, y ~~> x}.
 (** If a space is contractible, then any two points in it are
    connected by a path in a canonical way. *)
 
-Lemma contr_path {A} (x y:A) : (is_contr A) -> (x ~~> y).
+Lemma contr_path {A} (x y : A) : (is_contr A) -> (x ~~> y).
 Proof.
   intros A x y.
   intro H.
