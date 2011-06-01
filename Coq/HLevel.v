@@ -41,6 +41,20 @@ Proof.
   apply H.
 Defined.
 
+(** H-levels are increasing with n. *)
+
+Theorem hlevel_succ {n X} : is_hlevel n X -> is_hlevel (S n) X.
+Proof.
+  intros n.
+  induction n.
+  intros X H x y.
+  apply contr_pathcontr.
+  assumption.
+  intros X H x y.
+  apply IHn.
+  apply H.
+Defined.
+
 (** H-level is preserved under equivalence. *)
 
 Theorem hlevel_equiv {n A B} : (A ≃> B) -> is_hlevel n A -> is_hlevel n B.
