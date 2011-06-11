@@ -10,6 +10,8 @@ Unset Automatic Introduction.
    Inductive is_inhab (A : Type) : Type :=
    | inhab : A -> is_inhab A
    | inhab_path : forall (x y: is_inhab A), x ~~> y
+
+   Instead we have to assume axioms that amount ot the same thing.
 *)
 
 Axiom is_inhab : forall (A : Type), Type.
@@ -18,10 +20,12 @@ Axiom inhab : forall {A : Type}, A -> is_inhab A.
 
 Axiom inhab_path : forall {A : Type} (x y : is_inhab A), x ~~> y.
 
-Axiom is_inhab_rect : forall {A : Type} {P : is_inhab A -> Type}
-  (dinhab : forall (a : A), P (inhab a))
-  (dpath : forall (x y : is_inhab A) (z : P x) (w : P y), transport (inhab_path x y) z ~~> w),
-  forall (x : is_inhab A), P x.
+Axiom is_inhab_rect :
+  forall
+    {A : Type} {P : is_inhab A -> Type}
+    (dinhab : forall a : A, P (inhab a))
+    (dpath : forall (x y : is_inhab A) (z : P x) (w : P y), transport (inhab_path x y) z ~~> w)
+    (x : is_inhab A), P x.
 
 Axiom is_inhab_compute_inhab : forall {A : Type} {P : is_inhab A -> Type}
   (dinhab : forall (a : A), P (inhab a))

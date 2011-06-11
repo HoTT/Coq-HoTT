@@ -1,3 +1,13 @@
+(* The H-levels measure how complicated a type is in terms of higher path spaces.
+   H-level 0 are the contractible spaces, whose homotopy is completely
+   trivial. H-level [(n+1)] are spaces whose path spaces are of level [n].
+
+   Thus, H-level 1 means "the space of paths between any two points is contactible".
+   Such a space is necessarily a sub-singleton: any two points it contains are connected
+   by an essentially unique path. In other words, H-level 1 spaces are truth values or
+   propositions.
+*)
+
 Require Import Paths Fibrations Contractible Equivalences Funext.
 Require Import UnivalenceAxiom.
 
