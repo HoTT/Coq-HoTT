@@ -111,3 +111,31 @@ Proof.
   intro x.
   apply is_inhab_compute_inhab_nondep.
 Defined.
+
+(** Inhabited propositions are contractible. *)
+
+Lemma inhab_prop_contr (A : Type) :
+  is_prop A -> is_inhab A -> is_contr A.
+Proof.
+  intros A prp.
+  apply is_inhab_rect_nondep.
+  apply prop_inhabited_contr; now assumption.
+  intros; apply contr_path.
+  apply contr_contr; now assumption.
+Defined.
+
+(** "Epi" and "mono" implies equivalence. *)
+
+Definition is_epi {X Y : Type} (f : X -> Y) :=
+  forall y:Y, is_inhab (hfiber f y).
+
+Definition is_mono {X Y : Type} (f : X -> Y) :=
+  forall y:Y, is_prop (hfiber f y).
+
+Lemma epi_mono_equiv {X Y : Type} (f : X -> Y) :
+  is_epi f -> is_mono f -> is_equiv f.
+Proof.
+  intros X Y f epi mono y.
+  apply inhab_prop_contr. 
+  apply mono. apply epi.
+Defined.
