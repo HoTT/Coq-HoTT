@@ -1,7 +1,11 @@
-Require Export Paths Fibrations Contractible Equivalences FiberEquivalences.
+Require Export Fibrations Contractible Equivalences FiberEquivalences.
 
 (** For compatibility with Coq 8.2. *)
 Unset Automatic Introduction.
+
+Definition ext_dep_eq {X} {P : X -> Type} (f g : forall x, P x) := forall x : X, f x ~~> g x.
+
+Notation "f ≡ g" := (ext_dep_eq f g) (at level 50).
 
 (** The simplest notion we call "naive functional extensionality".
    This is what a type theorist would probably write down when
@@ -9,11 +13,11 @@ Unset Automatic Introduction.
    that if two functions are equal pointwise, then they are equal.  It
    comes in both ordinary and dependent versions. *)
 
-Definition funext_statement : Type := forall (X Y:Type) (f g: X -> Y)
-  (p : forall x:X, (f x) ~~> (g x)), f ~~> g.
+Definition funext_statement : Type :=
+  forall (X Y : Type) (f g: X -> Y), f ≡ g -> f ~~> g.
 
-Definition funext_dep_statement : Type := forall (X:Type) (P: X -> Type)
-  (f g: forall x:X, P x) (p : forall x:X, (f x) ~~> (g x)), f ~~> g.
+Definition funext_dep_statement : Type :=
+  forall (X : Type) (P : X -> Type) (f g : section P), f ≡ g -> (f ~~> g).
 
 (** However, there are clearly going to be problems with this in the
    homotopy world, since "being equal" is not merely a property, but
@@ -29,10 +33,10 @@ Definition funext_dep_statement : Type := forall (X:Type) (P: X -> Type)
    course, it also comes in ordinary and dependent versions.  *)
 
 Definition strong_funext_statement : Type :=
-  forall (X Y:Type) (f g: X -> Y), is_equiv (@happly X Y f g).
+  forall (X Y : Type) (f g : X -> Y), is_equiv (@happly X Y f g).
 
 Definition strong_funext_dep_statement : Type :=
-  forall (X:Type) (P: X -> Type) (f g:forall x:X, P x),
+  forall (X : Type) (P : X -> Type) (f g : section P),
     is_equiv (@happly_dep X P f g).
 
 (** Of course, strong functional extensionality implies naive
@@ -47,7 +51,7 @@ Defined.
 
 Theorem strong_funext_compute
   (strong_funext : strong_funext_statement)
-  (X Y:Type) (f g: X -> Y) (p : forall x:X, (f x) ~~> (g x)) (x : X) :
+  (X Y:Type) (f g : X -> Y) (p : f ≡ g) (x : X) :
   happly (strong_to_naive_funext strong_funext X Y f g p) x ~~> p x.
 Proof.
   intros.
@@ -66,7 +70,7 @@ Defined.
 
 Theorem strong_funext_dep_compute
   (strong_funext_dep : strong_funext_dep_statement)
-  (X : Type) (P : X -> Type) (f g : forall x : X, P x) (p : forall x : X, f x ~~> g x) (x : X) :
+  (X : Type) (P : X -> Type) (f g : section P) (p : f ≡ g) (x : X) :
   happly_dep (strong_to_naive_funext_dep strong_funext_dep X P f g p) x ~~> p x.
 Proof.
   intros.
@@ -107,8 +111,8 @@ Defined.
    dependent product of a family of (continuously) contractible types
    is contractible.  *)
 
-Definition weak_funext_statement := forall (X:Type) (P: X -> Type),
-  (forall x:X, is_contr (P x)) -> is_contr (forall x:X, P x).
+Definition weak_funext_statement := forall (X : Type) (P : X -> Type),
+  (forall x : X, is_contr (P x)) -> is_contr (forall x : X, P x).
 
 (** It is easy to see that naive dependent functional extensionality
    implies weak functional extensionality. *)

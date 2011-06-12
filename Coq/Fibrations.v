@@ -29,6 +29,10 @@ Notation tpair := (@existT _ _).
 Notation pr1 := (@projT1 _ _).
 Notation pr2 := (@projT2 _ _).
 
+(** An element of [section P] is a global section of fibration [P]. *)
+
+Definition section {A} (P : A -> Type) := forall x : A, P x.
+
 (** We now study how paths interact with fibrations.  The most basic
    fact is that we can transport points in the fibers along paths in
    the base space.  This is actually a special case of the
@@ -198,23 +202,21 @@ Defined.
 (* 2-Paths in a total space. *)
 
 Lemma map_twovar {A : Type} {P : A -> Type} {B : Type} {x y : A} {a : P x} {b : P y}
-  (f : forall (x:A) (y:P x), B) (p : x ~~> y) (q : transport p a ~~> b) :
+  (f : forall x : A, P x -> B) (p : x ~~> y) (q : transport p a ~~> b) :
   f x a ~~> f y b.
 Proof.
-  intros A P B x y a b f p.
-  intro q.
+  intros A P B x y a b f p q.
   induction p.
   simpl in q.
   induction q.
-  auto.
+  apply idpath.
 Defined.
 
 Lemma total_path2 (A : Type) (P : A -> Type) (x y : sigT P)
   (p q : x ~~> y) (r : base_path p ~~> base_path q) :
   (transport (P := fun s => transport s (pr2 x) ~~> (pr2 y)) r (fiber_path p) ~~> fiber_path q) -> (p ~~> q).
 Proof.
-  intros A P x y p q r.
-  intro.
+  intros A P x y p q r H.
   path_via (total_path A P x y (base_path p) (fiber_path p)) ;
   [ apply opposite, total_path_reconstruction | ].
   path_via (total_path A P x y (base_path q) (fiber_path q)) ;
