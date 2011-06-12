@@ -26,7 +26,6 @@ Definition equiv_coerce_to_function A B (w : A ≃> B) : (A -> B)
 
 Coercion equiv_coerce_to_function : equiv >-> Funclass.
 
-
 (** Here is a tactic which helps us prove that a homotopy fiber is
    contractible.  This will be useful for showing that maps are
    equivalences. *)
@@ -48,7 +47,6 @@ Ltac contract_hfiber y p :=
    we use [eexists] to specify that the center of retraction is at the
    element [existT _ y p] of hfiber provided by the user. After that
    we generate some fresh names and perfrom intros. *)
-
 
 (** The identity map is an equivalence. *)
 
@@ -538,7 +536,7 @@ Proof.
 Defined.
   
 (** André Joyal suggested the following definition of equivalences,
-and to call it "h-isomorphism". *)
+   and to call it "h-isomorphism". *)
 
 Definition is_hiso {A B} (f : A -> B) :=
   ( { g : B->A  &  forall x, g (f x) ~~> x } *

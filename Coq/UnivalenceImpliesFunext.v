@@ -35,8 +35,8 @@ Section UnivalenceImpliesFunext.
     apply (projT2 (eta_equiv eta_rule C D)).
   Defined.
 
-  (** Finally, we are ready to prove functional extensionality,
-     starting with the naive non-dependent version. *)
+  (** We are ready to prove functional extensionality, starting with the
+     naive non-dependent version. *)
 
   Theorem univalence_implies_funext : funext_statement.
   Proof.
