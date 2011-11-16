@@ -5,7 +5,7 @@ Unset Automatic Introduction.
 
 Definition ext_dep_eq {X} {P : X -> Type} (f g : forall x, P x) := forall x : X, f x ~~> g x.
 
-Notation "f ≡ g" := (ext_dep_eq f g) (at level 50).
+Notation "f == g" := (ext_dep_eq f g) (at level 50).
 
 (** The simplest notion we call "naive functional extensionality".
    This is what a type theorist would probably write down when
@@ -14,10 +14,10 @@ Notation "f ≡ g" := (ext_dep_eq f g) (at level 50).
    comes in both ordinary and dependent versions. *)
 
 Definition funext_statement : Type :=
-  forall (X Y : Type) (f g: X -> Y), f ≡ g -> f ~~> g.
+  forall (X Y : Type) (f g: X -> Y), f == g -> f ~~> g.
 
 Definition funext_dep_statement : Type :=
-  forall (X : Type) (P : X -> Type) (f g : section P), f ≡ g -> (f ~~> g).
+  forall (X : Type) (P : X -> Type) (f g : section P), f == g -> (f ~~> g).
 
 (** However, there are clearly going to be problems with this in the
    homotopy world, since "being equal" is not merely a property, but
@@ -51,7 +51,7 @@ Defined.
 
 Theorem strong_funext_compute
   (strong_funext : strong_funext_statement)
-  (X Y:Type) (f g : X -> Y) (p : f ≡ g) (x : X) :
+  (X Y:Type) (f g : X -> Y) (p : f == g) (x : X) :
   happly (strong_to_naive_funext strong_funext X Y f g p) x ~~> p x.
 Proof.
   intros.
@@ -70,7 +70,7 @@ Defined.
 
 Theorem strong_funext_dep_compute
   (strong_funext_dep : strong_funext_dep_statement)
-  (X : Type) (P : X -> Type) (f g : section P) (p : f ≡ g) (x : X) :
+  (X : Type) (P : X -> Type) (f g : section P) (p : f == g) (x : X) :
   happly_dep (strong_to_naive_funext_dep strong_funext_dep X P f g p) x ~~> p x.
 Proof.
   intros.
