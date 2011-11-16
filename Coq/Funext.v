@@ -46,7 +46,7 @@ Theorem strong_to_naive_funext :
   strong_funext_statement -> funext_statement.
 Proof.
   intros H X Y f g.
-  exact ((tpair (@happly X Y f g) (H X Y f g)) ⁻¹).
+  exact (inv (tpair (@happly X Y f g) (H X Y f g))).
 Defined.
 
 Theorem strong_funext_compute
@@ -65,7 +65,7 @@ Theorem strong_to_naive_funext_dep :
   strong_funext_dep_statement -> funext_dep_statement.
 Proof.
   intros H X Y f g.
-  exact ((tpair (@happly_dep X Y f g) (H X Y f g)) ⁻¹).
+  exact (inv (tpair (@happly_dep X Y f g) (H X Y f g))).
 Defined.
 
 Theorem strong_funext_dep_compute
@@ -255,9 +255,9 @@ Proof.
   apply pullback_total_is_equiv.
   (* Now any idempotent equivalence is homotopic to the identity. *)
   set (We := (tpair W W_equiv) : (total R ~=> total R)).
-  path_via (We⁻¹ (W (W y))).
+  path_via (inv We (W (W y))).
   apply opposite, inverse_is_retraction.
-  path_via' (We⁻¹ (W y)).
+  path_via' (inv We (W y)).
   apply map. apply W_idempotent.
   apply inverse_is_retraction.
   (* This looks like it would be difficult, except that it is a path

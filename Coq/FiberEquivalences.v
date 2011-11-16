@@ -78,7 +78,7 @@ Section FiberMap.
     Proof.
       intros x y.
       (* The obvious thing to look at first is this. *)
-      set (inv1 := pr2 ((tot_eqv⁻¹) (tpair x y))).
+      set (inv1 := pr2 ((inv tot_eqv) (tpair x y))).
       (* Unfortunately, this does not live in the fiber over [x], but
          rather in some other fiber.  We need to transport it along some
          path.  Our first guess at such a path might be this. *)
@@ -87,7 +87,7 @@ Section FiberMap.
       (* This type is not quite the type of [inv1] yet; it involves
          knowing something about the base component of an image under
          [tg].  This is what [tg_is_fiberwise] is for.   *)
-      apply (transport (tg_is_fiberwise ((tot_eqv⁻¹) (tpair x y)))).
+      apply (transport (tg_is_fiberwise ((inv tot_eqv) (tpair x y)))).
       (* Now we are back to the type of [inv1]. *)
       assumption.
     Defined.
@@ -106,28 +106,28 @@ Section FiberMap.
       intro y.
       path_via (transport (P := Q)
         (base_path (is_section (tpair x y)))
-        (pr2 (tot_eqv (tot_eqv⁻¹ (tpair x y))))).
+        (pr2 (tot_eqv (inv tot_eqv (tpair x y))))).
       path_via (transport
         (base_path (is_section (tpair x y)))
-        (g _ (transport (tg_is_fiberwise (tot_eqv⁻¹ (tpair x y)))
-          (pr2 (tot_eqv⁻¹ (tpair x y)))))).
+        (g _ (transport (tg_is_fiberwise (inv tot_eqv (tpair x y)))
+          (pr2 (inv tot_eqv (tpair x y)))))).
       apply trans_map.
       exact (fiber_path (is_section (existT _ x y))).
       (* And now that it is a retraction. *)
       intro y.
       path_via (transport (base_path (map tg (is_retraction (tpair x y))))
-      (transport (tg_is_fiberwise (tot_eqv⁻¹ (tpair x (g x y))))
-        (pr2 (tot_eqv⁻¹ (tpair x (g x y)))))).
+      (transport (tg_is_fiberwise (inv tot_eqv (tpair x (g x y))))
+        (pr2 (inv tot_eqv (tpair x (g x y)))))).
       unfold ginv.
       apply happly, map, map.
       apply opposite, triangle.
       path_via (transport
         (base_path (is_retraction (tpair x y)))
-        (pr2 (tot_eqv⁻¹ (tpair x (g x y))))).
+        (pr2 (inv tot_eqv (tpair x (g x y))))).
       path_via (transport
-        ((tg_is_fiberwise (tot_eqv⁻¹ (tpair x (g x y))))
+        ((tg_is_fiberwise (inv tot_eqv (tpair x (g x y))))
           @ (base_path (map tg (is_retraction (tpair x y)))))
-        (pr2 ((tot_eqv⁻¹) (tpair x (g x y))))).
+        (pr2 ((inv tot_eqv) (tpair x (g x y))))).
       apply opposite, trans_concat.
       apply happly, map.
       (* Here is where we need [tg_isfib_onpaths], but it is easy to
@@ -136,7 +136,7 @@ Section FiberMap.
          instantiated at an element of the form [tpair x y], in which
          case it happens to be an identity.  Thus, we can just add it
          back in. *)
-      path_via (tg_is_fiberwise (tot_eqv⁻¹ (tpair x (g x y))) @
+      path_via (tg_is_fiberwise (inv tot_eqv (tpair x (g x y))) @
         base_path (map tg (is_retraction (tpair x y))) @
         !tg_is_fiberwise (tpair x y)).
       exact (fiber_path (is_retraction (existT _ x y))).
@@ -159,7 +159,7 @@ Section FiberMap.
     Proof.
       intros [x y].
       exists x.
-      apply ((fiber_eqv x)⁻¹).
+      apply (inv (fiber_eqv x)).
       assumption.
     Defined.
 
@@ -170,12 +170,12 @@ Section FiberMap.
       intros [x y].
       eapply total_path.
       instantiate (1 := idpath x).
-      path_via (fiber_eqv x ((fiber_eqv x ⁻¹) y)).
+      path_via (fiber_eqv x (inv (fiber_eqv x) y)).
       apply inverse_is_section.
       intros [x y].
       eapply total_path.
       instantiate (1 := idpath x).
-      path_via (fiber_eqv x ⁻¹ (fiber_eqv x y)).
+      path_via (inv (fiber_eqv x) (fiber_eqv x y)).
       apply inverse_is_retraction.
     Defined.
 
@@ -211,7 +211,7 @@ Section PullbackMap.
   Let tginv : total Q -> total pbQ.
   Proof.
     intros [x z].
-    exists (f⁻¹ x).
+    exists (inv f x).
     apply (transport (! inverse_is_section f x)).
     assumption.
   Defined.

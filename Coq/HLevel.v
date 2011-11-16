@@ -80,13 +80,13 @@ Proof.
   apply @contr_equiv_contr.
   simpl.
   intros A B f H x y.
-  apply IHn with (A := f (f⁻¹ x) ~~> y).
+  apply IHn with (A := f (inv f x) ~~> y).
   apply concat_equiv_left.
   apply opposite, inverse_is_section.
-  apply IHn with (A := f (f⁻¹ x) ~~> f (f⁻¹ y)).
+  apply IHn with (A := f (inv f x) ~~> f (inv f y)).
   apply concat_equiv_right.
   apply inverse_is_section.
-  apply IHn with (A := (f⁻¹ x) ~~> (f⁻¹ y)).
+  apply IHn with (A := (inv f x) ~~> (inv f y)).
   apply equiv_map_equiv.
   apply H.
 Defined.

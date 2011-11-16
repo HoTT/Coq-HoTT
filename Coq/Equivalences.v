@@ -68,17 +68,15 @@ Defined.
 Definition inverse {U V} (w : U ~=> V) : (V -> U) :=
   fun y => pr1 (pr1 ((pr2 w) y)).
 
-Notation "w ⁻¹" := (inverse w) (at level 40).
-
-(** printing ⁻¹ $^{-1}$ *)
+Notation inv := inverse.
 
 (** The extracted map in the inverse direction is actually an inverse
    (up to homotopy, of course). *)
 
-Definition inverse_is_section {U V} (w : U ~=> V) y : w (w⁻¹ y) ~~> y :=
+Definition inverse_is_section {U V} (w : U ~=> V) y : w (inv w y) ~~> y :=
   pr2 (pr1 ((pr2 w) y)).
 
-Definition inverse_is_retraction {U V} (w : U ~=> V) x : (w⁻¹ (w x)) ~~> x :=
+Definition inverse_is_retraction {U V} (w : U ~=> V) x : (inv w (w x)) ~~> x :=
   !base_path (pr2 ((pr2 w) (w x)) (tpair x (idpath (w x)))).
 
 (** Here are some tactics to use for canceling inverses, and for
@@ -86,10 +84,10 @@ Definition inverse_is_retraction {U V} (w : U ~=> V) x : (w⁻¹ (w x)) ~~> x :=
 
 Ltac cancel_inverses_in s :=
   match s with
-    | context cxt [ equiv_coerce_to_function _ _ ?w (?w ⁻¹ ?x) ] =>
+    | context cxt [ equiv_coerce_to_function _ _ ?w (inverse ?w ?x) ] =>
       let mid := context cxt [ x ] in
         path_using mid inverse_is_section
-    | context cxt [ ?w ⁻¹ (equiv_coerce_to_function _ _ ?w ?x) ] =>
+    | context cxt [inverse ?w (equiv_coerce_to_function _ _ ?w ?x) ] =>
       let mid := context cxt [ x ] in
         path_using mid inverse_is_retraction
   end.
@@ -107,11 +105,11 @@ Ltac expand_inverse_src w x :=
       match s with
         | context cxt [ x ] =>
           first [
-            let mid := context cxt [ w (w⁻¹ x) ] in
+            let mid := context cxt [ w (inv w x) ] in
               path_via' mid;
               [ path_simplify' inverse_is_section | ]
             |
-            let mid := context cxt [ w⁻¹ (w x) ] in
+            let mid := context cxt [ inv w (w x) ] in
               path_via' mid;
               [ path_simplify' inverse_is_retraction | ]
           ]
@@ -124,11 +122,11 @@ Ltac expand_inverse_trg w x :=
       match t with
         | context cxt [ x ] =>
           first [
-            let mid := context cxt [ w (w⁻¹ x) ] in
+            let mid := context cxt [ w (inv w x) ] in
               path_via' mid;
               [ | path_simplify' inverse_is_section ]
             |
-            let mid := context cxt [ w⁻¹ (w x) ] in
+            let mid := context cxt [ inv w (w x) ] in
               path_via' mid;
               [ | path_simplify' inverse_is_retraction ]
           ]
@@ -136,25 +134,25 @@ Ltac expand_inverse_trg w x :=
   end.
 
 (** These tactics change between goals of the form [w x ~~> y] and the
-   form [x ~~> w⁻¹ y], and dually. *)
+   form [x ~~> inv w y], and dually. *)
 
 Ltac equiv_moveright :=
   match goal with
     | |- equiv_coerce_to_function _ _ ?w ?a ~~> ?b =>
-      apply @concat with (y := w (w⁻¹ b));
+      apply @concat with (y := w (inv w b));
         [ apply map | apply inverse_is_section ]
-    | |- (?w ⁻¹) ?a ~~> ?b =>
-      apply @concat with (y := w⁻¹ (w b));
+    | |- (inverse ?w) ?a ~~> ?b =>
+      apply @concat with (y := inverse w (w b));
         [ apply map | apply inverse_is_retraction ]
   end.
 
 Ltac equiv_moveleft :=
   match goal with
     | |- ?a ~~> equiv_coerce_to_function _ _ ?w ?b =>
-      apply @concat with (y := w (w⁻¹ a));
+      apply @concat with (y := w (inv w a));
         [ apply opposite, inverse_is_section | apply map ]
-    | |- ?a ~~> (?w ⁻¹) ?b =>
-      apply @concat with (y := w⁻¹ (w a));
+    | |- ?a ~~> (inverse ?w) ?b =>
+      apply @concat with (y := inv w (w a));
         [ apply opposite, inverse_is_retraction | apply map ]
   end.
 
@@ -261,7 +259,7 @@ Definition is_adjoint_equiv {A B} (f : A -> B) :=
 
 Definition is_equiv_to_adjoint {A B} (f: A -> B) (E : is_equiv f) : is_adjoint_equiv f :=
   let w := (tpair f E) in
-    tpair (w⁻¹) (tpair (inverse_is_section w) (tpair (inverse_is_retraction w) (inverse_triangle w))).
+    tpair (inv w) (tpair (inverse_is_section w) (tpair (inverse_is_retraction w) (inverse_triangle w))).
 
 Definition adjoint_equiv (A B : Type) := { f: A -> B  &  is_adjoint_equiv f }.
 
@@ -372,7 +370,7 @@ Proof.
   intros A B f g' p geq.
   set (g := existT is_equiv g' geq : A ~=> B).
   eapply hequiv_is_equiv.
-  instantiate (1 := g⁻¹).
+  instantiate (1 := inv g).
   intro y.
   expand_inverse_trg g y; auto.
   intro x.
@@ -386,10 +384,10 @@ Proof.
   intros.
   exists (g o f).
   eapply hequiv_is_equiv.
-  instantiate (1 := (f⁻¹) o (g⁻¹)).
+  instantiate (1 := (inv f) o (inv g)).
   intro y.
   expand_inverse_trg g y.
-  expand_inverse_trg f (g⁻¹ y).
+  expand_inverse_trg f (inv g y).
   apply idpath.
   intro x.
   expand_inverse_trg f x.
@@ -403,14 +401,14 @@ Proof.
   intros A B C f g H.
   set (gof := (existT _ (g o f) H) : A ~=> C).
   eapply hequiv_is_equiv.
-  instantiate (1 := f o (gof⁻¹)).
+  instantiate (1 := f o inv (gof)).
   intro y.
   expand_inverse_trg gof y.
   apply idpath.
   intro x.
-  change (f (gof⁻¹ (g x)) ~~> x).
+  change (f (inv gof (g x)) ~~> x).
   equiv_moveright; equiv_moveright.
-  change (g x ~~> g (f (f⁻¹ x))).
+  change (g x ~~> g (f (inv f x))).
   cancel_inverses.
 Defined.
 
@@ -420,15 +418,15 @@ Proof.
   intros A B C f g H.
   set (gof := existT _ (g o f) H : A ~=> C).
   eapply hequiv_is_equiv. 
-  instantiate (1 := gof⁻¹ o g).
+  instantiate (1 := inv gof o g).
   intros y.
   expand_inverse_trg g y.
-  expand_inverse_src g (f (((gof ⁻¹) o g) y)).
+  expand_inverse_src g (f ((inv gof o g) y)).
   apply map.
-  path_via (gof ((gof⁻¹ (g y)))).
+  path_via (gof ((inv gof (g y)))).
   apply inverse_is_section.
   intros x.
-  path_via (gof⁻¹ (gof x)).
+  path_via (inv gof (gof x)).
   apply inverse_is_retraction.
 Defined.
 
@@ -449,9 +447,9 @@ Theorem equiv_map_inv {A B} {x y : A} (f : A ~=> B) :
   (f x ~~> f y) -> (x ~~> y).
 Proof.
   intros A B x y f p.
-  path_via (f⁻¹ (f x)).
+  path_via (inv f (f x)).
   apply opposite, inverse_is_retraction.
-  path_via' (f⁻¹ (f y)).
+  path_via' (inv f (f y)).
   apply map. assumption.
   apply inverse_is_retraction.
 Defined.
@@ -467,16 +465,16 @@ Proof.
   do_opposite_map.
   moveright_onleft.
   undo_compose_map.
-  path_via (map (f o (f ⁻¹)) p @ inverse_is_section f (f y)).
+  path_via (map (f o inv f) p @ inverse_is_section f (f y)).
   apply inverse_triangle.
   path_via (inverse_is_section f (f x) @ p).
-  apply homotopy_naturality_toid with (f := f o (f⁻¹)).
+  apply homotopy_naturality_toid with (f := f o inv f).
   apply opposite, inverse_triangle.
   intro p.
   unfold equiv_map_inv.
   moveright_onleft.
   undo_compose_map.
-  apply homotopy_naturality_toid with (f := (f⁻¹) o f).
+  apply homotopy_naturality_toid with (f := inv f o f).
 Defined.
 
 Definition equiv_map_equiv {A B} {x y : A} (f : A ~=> B) :
@@ -546,9 +544,9 @@ Theorem equiv_to_hiso {A B} (f : equiv A B) : is_hiso f.
 Proof.
   intros A B f.
   split.
-  exists (f⁻¹).
+  exists (inv f).
   apply inverse_is_retraction.
-  exists (f⁻¹).
+  exists (inv f).
   apply inverse_is_section.
 Defined.
 

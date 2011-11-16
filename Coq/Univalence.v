@@ -43,14 +43,14 @@ Ltac undo_concat_to_compose :=
   ).
 
 Lemma opposite_to_inverse {A B} (p : A ~~> B) :
-  (path_to_equiv p)⁻¹ ~~> path_to_equiv (!p).
+  inv (path_to_equiv p) ~~> path_to_equiv (!p).
 Proof.
   path_induction.
 Defined.
 
 Ltac undo_opposite_to_inverse_in s :=
   match s with  
-    | context cxt [ (path_to_equiv ?p) ⁻¹ ] =>
+    | context cxt [ inverse (path_to_equiv ?p) ] =>
       let mid := context cxt [ equiv_coerce_to_function _ _ (path_to_equiv (! p)) ] in
         path_via mid;
         [ repeat apply map; apply opposite_to_inverse | ]
