@@ -2,9 +2,6 @@
 
 Require Export Functions.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 Inductive paths {A} : A -> A -> Type := idpath : forall x, paths x x.
 
 (* The next line tells [coqdoc] to print [paths] as a wiggly arrow LaTeX. *)
@@ -60,7 +57,7 @@ Ltac path_induction :=
 
 Definition concat {A} {x y z : A} : (x ~~> y) -> (y ~~> z) -> (x ~~> z).
 Proof.
-  intros A x y z p q.
+  intros p q.
   induction p.
   induction q.
   apply idpath.
@@ -82,7 +79,7 @@ Notation "p @ q" := (concat p q) (at level 60).
 
 Definition opposite {A} {x y : A} : (x ~~> y) -> (y ~~> x).
 Proof.
-  intros A x y p.
+  intros p.
   induction p.
   apply idpath.
 Defined.
@@ -170,7 +167,7 @@ Defined.
 Definition whisker_right_toid {A} {x y : A} {p : x ~~> x} (q : x ~~> y) :
   (p ~~> idpath x) -> (p @ q ~~> q).
 Proof.
-  intros A x y p q a.
+  intro a.
   apply @concat with (y := idpath x @ q).
   apply whisker_right. assumption.
   apply idpath_left_unit.
@@ -179,7 +176,7 @@ Defined.
 Definition whisker_right_fromid {A} {x y : A} {p : x ~~> x} (q : x ~~> y) :
   (idpath x ~~> p) -> (q ~~> p @ q).
 Proof.
-  intros A x y p q a.
+  intros a.
   apply @concat with (y := idpath x @ q).
   apply opposite, idpath_left_unit.
   apply whisker_right. assumption.
@@ -188,7 +185,7 @@ Defined.
 Definition whisker_left_toid {A} {x y : A} {p : y ~~> y} (q : x ~~> y) :
   (p ~~> idpath y) -> (q @ p ~~> q).
 Proof.
-  intros A x y p q a.
+  intros a.
   apply @concat with (y := q @ idpath y).
   apply whisker_left. assumption.
   apply idpath_right_unit.
@@ -197,7 +194,7 @@ Defined.
 Definition whisker_left_fromid {A} {x y : A} {p : y ~~> y} (q : x ~~> y) :
   (idpath y ~~> p) -> (q ~~> q @ p).
 Proof.
-  intros A x y p q a.
+  intros a.
   apply @concat with (y := q @ idpath y).
   apply opposite, idpath_right_unit.
   apply whisker_left. assumption.
@@ -724,7 +721,6 @@ Hint Resolve homotopy_naturality_fromid : path_hints.
 
 Lemma concat_cancel_right A (x y z : A) (p q : x ~~> y) (r : y ~~> z) : (p @ r ~~> q @ r) -> (p ~~> q).
 Proof.
-  intros A x y z p q r.
   intro a.
   induction p.
   induction r.
@@ -733,7 +729,6 @@ Defined.
 
 Lemma concat_cancel_left A (x y z : A) (p : x ~~> y) (q r : y ~~> z) : (p @ q ~~> p @ r) -> (q ~~> r).
 Proof.
-  intros A x y z p q r.
   intro a.
   induction p.
   induction r.
@@ -746,7 +741,6 @@ Defined.
 Lemma htoid_well_pointed A (f : A -> A) (p : forall x, f x ~~> x) (x : A) :
   map f (p x) ~~> p (f x).
 Proof.
-  intros A f p x.
   apply concat_cancel_right with (r := p x).
   apply homotopy_naturality_toid.
 Defined.
@@ -756,7 +750,6 @@ Defined.
 Lemma concat_moveright_onright A (x y z : A) (p : x ~~> z) (q : x ~~> y) (r : z ~~> y) :
   (p ~~> q @ !r) -> (p @ r ~~> q).
 Proof.
-  intros A x y z p q r.
   intro a.
   path_via (q @ (!r @ r)).
   associate_left.
@@ -773,7 +766,6 @@ Ltac moveright_onright :=
 Lemma concat_moveleft_onright A (x y z : A) (p : x ~~> y) (q : x ~~> z) (r : z ~~> y) :
   (p @ !r ~~> q) -> (p ~~> q @ r).
 Proof.
-  intros A x y z p q r.
   intro a.
   path_via (p @ (!r @ r)).
   associate_left.
@@ -790,7 +782,6 @@ Ltac moveleft_onright :=
 Lemma concat_moveleft_onleft A (x y z : A) (p : y ~~> z) (q : x ~~> z) (r : y ~~> x) :
   (!r @ p ~~> q) -> (p ~~> r @ q).
 Proof.
-  intros A x y z p q r.
   intro a.
   path_via ((r @ !r) @ p).
   associate_right.
@@ -807,7 +798,6 @@ Ltac moveleft_onleft :=
 Lemma concat_moveright_onleft A (x y z : A) (p : x ~~> z) (q : y ~~> z) (r : y ~~> x) :
   (p ~~> !r @ q) -> (r @ p ~~> q).
 Proof.
-  intros A x y z p q r.
   intro a.
   path_via ((r @ !r) @ q).
   associate_right.

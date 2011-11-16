@@ -1,8 +1,5 @@
 Require Export Paths Fibrations Contractible.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 (** An equivalence is a map whose homotopy fibers are contractible. *)
 
 Definition is_equiv {A B} (f : A -> B) := forall y : B, is_contr (hfiber f y).
@@ -21,8 +18,7 @@ Notation "A ~=> B" := (equiv A B) (at level 55).
    [projT1 w x]. Coq is able to do this automatically if we declare
    that [projT1] is a _coercion_ from [equiv A B] to [A -> B]. *)
 
-Definition equiv_coerce_to_function A B (w : A ~=> B) : (A -> B)
-  := projT1 w.
+Definition equiv_coerce_to_function A B (w : A ~=> B) : (A -> B) := projT1 w.
 
 Coercion equiv_coerce_to_function : equiv >-> Funclass.
 
@@ -52,7 +48,6 @@ Ltac contract_hfiber y p :=
 
 Definition idequiv A : A ~=> A.
 Proof.
-  intro A.
   exists (idmap A).
   intros x.
   contract_hfiber x (idpath x).
@@ -177,7 +172,6 @@ Defined.
 
 Lemma equiv_injective U V (w : U ~=> V) x y : (w x ~~> w y) -> (x ~~> y).
 Proof.
-  intros U V w x y.
   intro p.
   expand_inverse_src w x.
   equiv_moveright.
@@ -189,7 +183,7 @@ Defined.
 Lemma contr_equiv_unit (A : Type) :
   is_contr A -> (A ~=> unit).
 Proof.
-  intros A H.
+  intro H.
   exists (fun x => tt).
   intro y. destruct y.
   contract_hfiber (pr1 H) (idpath tt).
@@ -204,8 +198,7 @@ Defined.
 Lemma contr_equiv_contr (A B : Type) :
   A ~=> B -> is_contr A -> is_contr B.
 Proof.
-  intros A B f Acontr.
-  destruct Acontr.
+  intros f [x ?].
   exists (f x).
   intro y.
   equiv_moveleft.
@@ -218,7 +211,6 @@ Definition free_path_space A := {xy : A * A & fst xy ~~> snd xy}.
 
 Definition free_path_source A : free_path_space A ~=> A.
 Proof.
-  intro A.
   exists (fun p => fst (projT1 p)).
   intros x.
   eexists (existT _ (existT (fun (xy : A * A) => fst xy ~~> snd xy) (x,x) (idpath x)) _).
@@ -231,7 +223,6 @@ Defined.
 
 Definition free_path_target A : free_path_space A ~=> A.
 Proof.
-  intro A.
   exists (fun p => snd (projT1 p)).
   intros x.
   eexists (existT _ (existT (fun (xy : A * A) => fst xy ~~> snd xy) (x,x) (idpath x)) _).
@@ -265,7 +256,7 @@ Definition adjoint_equiv (A B : Type) := { f: A -> B  &  is_adjoint_equiv f }.
 
 Theorem is_adjoint_to_equiv {A B} (f: A -> B) : is_adjoint_equiv f -> is_equiv f.
 Proof.
-  intros A B f [g [is_section [is_retraction triangle]]].
+  intros [g [is_section [is_retraction triangle]]].
   intro y.
   contract_hfiber (g y) (is_section y).
   apply (total_path _
@@ -294,7 +285,6 @@ Defined.
 
 Lemma equiv_pointwise_idmap A (f : A -> A) (p : forall x, f x ~~> x) : is_equiv f.
 Proof.
-  intros.
   apply is_adjoint_to_equiv.
   exists (idmap A).
   exists p.
@@ -312,7 +302,7 @@ Definition adjointify {A B} (f : A -> B) (g : B -> A) :
   (forall y, f (g y) ~~> y) -> (forall x, g (f x) ~~> x ) ->
   is_adjoint_equiv f.
 Proof.
-  intros A B f g is_section is_retraction.
+  intros is_section is_retraction.
   (* We have to redefine one of the two homotopies. *)
   set (is_retraction' := fun x =>
     ( map g (map f (!is_retraction x)))
@@ -356,7 +346,6 @@ Definition hequiv_is_equiv {A B} (f : A -> B) (g : B -> A)
 
 Lemma equiv_inverse {A B} (f : A ~=> B) : B ~=> A.
 Proof.
-  intros.
   destruct (is_equiv_to_adjoint f (pr2 f)) as [g [is_section [is_retraction triangle]]].
   exists g.
   exact (hequiv_is_equiv g f is_retraction is_section).
@@ -367,12 +356,12 @@ Defined.
 Lemma equiv_homotopic {A B} (f g : A -> B) :
   (forall x, f x ~~> g x) -> is_equiv g -> is_equiv f.
 Proof.
-  intros A B f g' p geq.
-  set (g := existT is_equiv g' geq : A ~=> B).
+  intros p geq.
+  set (g' := existT is_equiv g geq : A ~=> B).
   eapply hequiv_is_equiv.
-  instantiate (1 := inv g).
+  instantiate (1 := inv g').
   intro y.
-  expand_inverse_trg g y; auto.
+  expand_inverse_trg g' y; auto.
   intro x.
   equiv_moveright; auto.
 Defined.
@@ -381,7 +370,6 @@ Defined.
 
 Definition equiv_compose {A B C} (f : A ~=> B) (g : B ~=> C) : (A ~=> C).
 Proof.
-  intros.
   exists (g o f).
   eapply hequiv_is_equiv.
   instantiate (1 := (inv f) o (inv g)).
@@ -398,7 +386,7 @@ Defined.
 Definition equiv_cancel_right {A B C} (f : A ~=> B) (g : B -> C) :
   is_equiv (g o f) -> is_equiv g.
 Proof.
-  intros A B C f g H.
+  intro H.
   set (gof := (existT _ (g o f) H) : A ~=> C).
   eapply hequiv_is_equiv.
   instantiate (1 := f o inv (gof)).
@@ -415,7 +403,7 @@ Defined.
 Definition equiv_cancel_left {A B C} (f : A -> B) (g : B ~=> C) :
   is_equiv (g o f) -> is_equiv f.
 Proof.
-  intros A B C f g H.
+  intros H.
   set (gof := existT _ (g o f) H : A ~=> C).
   eapply hequiv_is_equiv. 
   instantiate (1 := inv gof o g).
@@ -435,7 +423,7 @@ Defined.
 Definition contr_contr_equiv {A B} (f : A -> B) :
   is_contr A -> is_contr B -> is_equiv f.
 Proof.
-  intros A B f Acontr Bcontr.
+  intros Acontr Bcontr.
   apply @equiv_cancel_left with
     (g := contr_equiv_unit B Bcontr).
   exact (pr2 (contr_equiv_unit A Acontr)).
@@ -446,7 +434,7 @@ Defined.
 Theorem equiv_map_inv {A B} {x y : A} (f : A ~=> B) :
   (f x ~~> f y) -> (x ~~> y).
 Proof.
-  intros A B x y f p.
+  intro p.
   path_via (inv f (f x)).
   apply opposite, inverse_is_retraction.
   path_via' (inv f (f y)).
@@ -457,7 +445,6 @@ Defined.
 Theorem equiv_map_is_equiv {A B} {x y : A} (f : A ~=> B) :
   is_equiv (@map A B x y f).
 Proof.
-  intros A B x y f.
   apply @hequiv_is_equiv with (g := equiv_map_inv f).
   intro p.
   unfold equiv_map_inv.
@@ -486,7 +473,6 @@ Definition equiv_map_equiv {A B} {x y : A} (f : A ~=> B) :
 Lemma concat_is_equiv_left {A} (x y z : A) (p : x ~~> y) :
   is_equiv (fun q: y ~~> z => p @ q).
 Proof.
-  intros A x y z p.
   apply @hequiv_is_equiv with (g := @concat A y x z (!p)).
   intro q.
   associate_left.
@@ -501,7 +487,6 @@ Definition concat_equiv_left {A} (x y z : A) (p : x ~~> y) :
 Lemma concat_is_equiv_right {A} (x y z : A) (p : y ~~> z) :
   is_equiv (fun q : x ~~> y => q @ p).
 Proof.
-  intros A x y z p.
   apply @hequiv_is_equiv with (g := fun r : x ~~> z => r @ !p).
   intro q.
   associate_right.
@@ -519,7 +504,6 @@ Definition concat_equiv_right {A} (x y z : A) (p : y ~~> z) :
 Theorem total_paths_equiv (A : Type) (P : A -> Type) (x y : total P) :
   (x ~~> y) ~=> { p : pr1 x ~~> pr1 y & transport p (pr2 x) ~~> pr2 y }.
 Proof.
-  intros A P x y.
   exists (fun r => existT (fun p => transport p (pr2 x) ~~> pr2 y) (base_path r) (fiber_path r)).
   eapply @hequiv_is_equiv.
   instantiate (1 := fun pq => let (p,q) := pq in total_path A P x y p q).
@@ -542,7 +526,6 @@ Definition is_hiso {A B} (f : A -> B) :=
 
 Theorem equiv_to_hiso {A B} (f : equiv A B) : is_hiso f.
 Proof.
-  intros A B f.
   split.
   exists (inv f).
   apply inverse_is_retraction.
@@ -552,7 +535,7 @@ Defined.
 
 Theorem hiso_to_equiv {A B} (f : A -> B) : is_hiso f -> is_equiv f.
 Proof.
-  intros A B f H.
+  intro H.
   destruct H as ((g, is_retraction), (h, is_section)).
   eapply hequiv_is_equiv.
   instantiate (1 := g).

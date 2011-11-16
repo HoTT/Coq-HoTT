@@ -3,17 +3,13 @@
    extensional equality, as long as they are built from "standard" constructors.
    *)
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 Require Import Paths Fibrations Contractible Funext Equivalences.
 
 (** Let us first observe the following easy fact. If [P] is a fibration and
    [x ~~> y] then [P x] and [P y] are equivalent. *)
 
-Lemma equiv_fibers {A} (P : A -> Type) (x y : A) : x ~~> y -> P x ≃> P y.
+Lemma equiv_fibers {A} (P : A -> Type) (x y : A) : x ~~> y -> P x ~=> P y.
 Proof.
-  intros A P x y p.
   path_induction.
   apply idequiv.
 Qed.
@@ -22,7 +18,7 @@ Qed.
    extensionally equal maps to equivalent fibers. *)
 
 Definition extensional {A B} (P : (A -> B) -> Type) :=
-  forall f g : A -> B, f ≡ g -> P f ≃> P g.
+  forall f g : A -> B, f == g -> P f ~=> P g.
 
 
 (** We also include useful constructions of equivalences. *)
@@ -35,21 +31,21 @@ Defined.
 
 Definition path_fst {A B} {a b : A} {c d : B} : (a,c) ~~> (b,d) -> a ~~> b.
 Proof.
-  intros A B a b c d pq.
+  intros pq.
   exact (map (@fst A B) pq).
 Qed.
 
 Definition path_snd {A B} {a b : A} {c d : B} : (a,c) ~~> (b,d) -> c ~~> d.
 Proof.
-  intros A B a b c d pq.
+  intros pq.
   exact (map (@snd A B) pq).
 Qed.
 
 (* This should go to Fibrations.v. *)
-Lemma path_in_total {A} {P : A -> Type} (u v : total P) :
+Lemma path_in_total {A} {P : A -> Type} : forall (u v : total P),
   { p : pr1 u ~~> pr1 v & transport p (pr2 u) ~~> (pr2 v) } -> u ~~> v.
 Proof.
-  intros A P [x u] [y v] [p q].
+  intros [x u] [y v] [p q].
   simpl in * |- *.
   induction p.
   simpl in q.
@@ -57,9 +53,9 @@ Proof.
   apply idpath.
 Qed.
 
-Lemma equiv_prod {A B} {C D} (f : A ≃> B) (g : C ≃> D) : A * C ≃> B * D.
+Lemma equiv_prod {A B} {C D} : forall (f : A ~=> B) (g : C ~=> D), A * C ~=> B * D.
 Proof.
-  intros A B C D [f ef] [g eg].
+  intros [f ef] [g eg].
   exists (fun xy => (f (fst xy), g (snd xy))).
   intros [b d].
   destruct (ef b) as [[a p] r].
@@ -84,17 +80,17 @@ Admitted.
 Lemma ext_prod A B P Q:
   extensional P -> extensional Q -> extensional (fun (h : A -> B) => P h * Q h)%type.
 Proof.
-  intros A B P Q EP EQ f g E.
+  intros EP EQ f g E.
   unfold equiv.
   split with (fun p => (EP f g E (fst p), EQ f g E (snd p))).
   intros [u v].
   destruct EP as [ep eqP].
-
+  admit.
 Qed.
 
 Lemma ext_sum A B P Q : extensional P -> extensional Q -> extensional (fun (h : A -> B) => P h + Q h)%type.
 Proof.
-  intros A B P Q EP EQ f g E [u | v].
+  intros EP EQ f g E [u | v].
   left; apply EP with (f := f); auto.
   right; apply EQ with (f := f); auto.
 Qed.
@@ -126,7 +122,7 @@ Proof.
 Defined.
 
 Lemma ext_sig_dep A B (C : (A -> B) -> Type) (P : forall h, C h -> Type)  :
-  { c : extensional C & (forall f g (E : f ≡ g) u v,  (c f g E u ~~> v) -> P f u -> P g v) } ->
+  { c : extensional C & (forall f g (E : f == g) u v,  (c f g E u ~~> v) -> P f u -> P g v) } ->
   extensional (fun h => sigT (fun z => P h z)).
 Proof.
   intros A B C P [c H].
@@ -157,7 +153,7 @@ Defined.
 
 (** This goes to the main library. *)
 Lemma contractible_retract A B (s : A -> B) (r : B -> A) :
-  (r ○ s ≡ idmap A) -> is_contr B -> is_contr A.
+  (r o s == idmap A) -> is_contr B -> is_contr A.
 Proof.
   intros A B s r E [b p].
   split with (r b).

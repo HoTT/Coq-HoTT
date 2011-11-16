@@ -1,13 +1,9 @@
 Require Import Paths Fibrations Contractible Equivalences.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 (** Every path between spaces gives an equivalence. *)
 
 Definition path_to_equiv {U V} : (U ~~> V) -> (U ~=> V).
 Proof.
-  intros U V.
   path_induction.
   apply idequiv.
 Defined.
@@ -98,7 +94,6 @@ Section Univalence.
 
   Definition pred_equiv_to_path U V : (U ~=> V -> Type) -> (U ~~> V -> Type).
   Proof.
-    intros U V.
     intros Q p.
     apply Q.
     apply path_to_equiv.
@@ -114,7 +109,6 @@ Section Univalence.
   Theorem equiv_induction (P : forall U V, U ~=> V -> Type) :
     (forall T, P T T (idequiv T)) -> (forall U V (w : U ~=> V), P U V w).
   Proof.
-    intros P.
     intro r.
     pose (P' := (fun U V => pred_equiv_to_path U V (P U V))).
     assert (r' : forall T : Type, P' T T (idpath T)).

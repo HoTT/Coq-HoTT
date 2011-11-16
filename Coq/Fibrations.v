@@ -1,8 +1,5 @@
 Require Export Paths.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 (** In homotopy type theory, We think of elements of [Type] as spaces
    or homotopy types, while a type family [P : A -> Type] corresponds
    to a fibration whose base is [A] and whose fiber over [x] is [P x].
@@ -57,7 +54,6 @@ Definition hfiber {A B} (f : A -> B) (y : B) := {x : A & f x ~~> y}.
 Lemma transport_hfiber A B (f : A -> B) (x y : A) (z : B) (p : x ~~> y) (q : f x ~~> z) :
   transport (P := fun x => f x ~~> z) p q ~~> !(map f p) @ q.
 Proof.
-  intros A B f x y z p q.
   induction p.
   cancel_units.
 Defined.
@@ -68,7 +64,6 @@ Defined.
 Lemma total_path (A : Type) (P : A -> Type) (x y : sigT P) (p : projT1 x ~~> projT1 y) :
   (transport p (projT2 x) ~~> projT2 y) -> (x ~~> y).
 Proof.
-  intros A P x y p.
   intros q.
   destruct x as [x H].
   destruct y as [y G].
@@ -98,7 +93,6 @@ Defined.
 Lemma total_path_reconstruction (A : Type) (P : A -> Type) (x y : sigT P) (p : x ~~> y) :
   total_path A P x y (base_path p) (fiber_path p) ~~> p.
 Proof.
-  intros A P x y p.
   induction p.
   induction x. 
   auto.
@@ -108,7 +102,7 @@ Lemma base_total_path (A : Type) (P : A -> Type) (x y : sigT P)
   (p : projT1 x ~~> projT1 y) (q : transport p (projT2 x) ~~> projT2 y) :
   (base_path (total_path A P x y p q)) ~~> p.
 Proof.
-  destruct x as [x H]. destruct y as [y K]. intros p q.
+  destruct x as [x H]. destruct y as [y K].
   simpl in p. induction p. simpl in q. induction q.
   auto.
 Defined.
@@ -119,7 +113,7 @@ Lemma fiber_total_path (A : Type) (P : A -> Type) (x y : sigT P)
   (base_total_path A P x y p q) (fiber_path (total_path A P x y p q))
   ~~> q.
 Proof.
-  destruct x as [x H]. destruct y as [y K]. intros p q.
+  destruct x as [x H]. destruct y as [y K].
   simpl in p. induction p. simpl in q. induction q.
   auto.
 Defined.
@@ -130,8 +124,8 @@ Defined.
 Lemma hfiber_triangle {A B} {f : A -> B} {z : B} {x y : hfiber f z} (p : x ~~> y) :
   (map f (base_path p)) @ (projT2 y) ~~> (projT2 x).
 Proof.
-  intros. induction p.
   unfold base_path.
+  induction p.
   cancel_units.
 Defined.
 
@@ -153,8 +147,8 @@ Defined.
 
 (** Transporting along a concatenation is transporting twice. *)
 
-Lemma trans_concat {A} {P : A -> Type} {x y z : A} (p : x ~~> y) (q : y ~~> z) (z : P x) :
-  transport (p @ q) z ~~> transport q (transport p z).
+Lemma trans_concat {A} {P : A -> Type} {x y z : A} (p : x ~~> y) (q : y ~~> z) (t : P x) :
+  transport (p @ q) t ~~> transport q (transport p t).
 Proof.
   path_induction.
 Defined.
@@ -205,7 +199,6 @@ Lemma map_twovar {A : Type} {P : A -> Type} {B : Type} {x y : A} {a : P x} {b : 
   (f : forall x : A, P x -> B) (p : x ~~> y) (q : transport p a ~~> b) :
   f x a ~~> f y b.
 Proof.
-  intros A P B x y a b f p q.
   induction p.
   simpl in q.
   induction q.
@@ -216,7 +209,7 @@ Lemma total_path2 (A : Type) (P : A -> Type) (x y : sigT P)
   (p q : x ~~> y) (r : base_path p ~~> base_path q) :
   (transport (P := fun s => transport s (pr2 x) ~~> (pr2 y)) r (fiber_path p) ~~> fiber_path q) -> (p ~~> q).
 Proof.
-  intros A P x y p q r H.
+  intro H.
   path_via (total_path A P x y (base_path p) (fiber_path p)) ;
   [ apply opposite, total_path_reconstruction | ].
   path_via (total_path A P x y (base_path q) (fiber_path q)) ;

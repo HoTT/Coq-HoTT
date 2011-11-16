@@ -1,8 +1,5 @@
 Require Import Paths Fibrations Contractible Equivalences Univalence Funext.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 (** Here we prove that univalence implies function extensionality.  We
    keep this file separate from the statements of Univalence and
    Funext, since it has a tendency to produce universe
