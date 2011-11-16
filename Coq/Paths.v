@@ -265,7 +265,7 @@ Proof.
 Defined.
 
 Lemma compose_map A B C (f : A -> B) (g : B -> C) (x y : A) (p : x ~~> y) :
-  map (g ○ f) p ~~> map g (map f p).
+  map (g o f) p ~~> map g (map f p).
 Proof.
   path_induction.
 Defined.
@@ -628,15 +628,15 @@ Ltac undo_opposite_concat :=
 
 Ltac apply_compose_map :=
   match goal with
-    | |- map (?g' ○ ?f') ?p' ~~> map ?g' (map ?f' ?p') =>
+    | |- map (?g' o ?f') ?p' ~~> map ?g' (map ?f' ?p') =>
       apply compose_map with (g := g') (f := f') (p := p')
-    | |- map ?g' (map ?f' ?p') ~~> map (?g' ○ ?f') ?p' =>
+    | |- map ?g' (map ?f' ?p') ~~> map (?g' o ?f') ?p' =>
       apply opposite; apply compose_map with (g := g') (f := f') (p := p')
   end.
 
 Ltac do_compose_map_in s :=
   match s with
-    | context cxt [ map (?f ○ ?g) ?p ] =>
+    | context cxt [ map (?f o ?g) ?p ] =>
       let mid := context cxt [ map f (map g p) ] in
         path_via mid; try apply_compose_map
   end.
@@ -651,7 +651,7 @@ Ltac do_compose_map :=
 Ltac undo_compose_map_in s :=
   match s with
     | context cxt [ map ?f (map ?g ?p) ] =>
-      let mid := context cxt [ map (f ○ g) p ] in
+      let mid := context cxt [ map (f o g) p ] in
         path_via mid; try apply_compose_map
   end.
 

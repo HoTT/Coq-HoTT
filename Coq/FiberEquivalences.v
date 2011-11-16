@@ -69,7 +69,7 @@ Section FiberMap.
 
     Hypothesis tot_iseqv : is_equiv tg.
 
-    Let tot_eqv : (total P) ≃> (total Q) := (tpair tg tot_iseqv).
+    Let tot_eqv : (total P) ~=> (total Q) := (tpair tg tot_iseqv).
 
     (* We want to show that each function [g x] is an equivalence, so we
        start by defining its inverse. *)
@@ -142,7 +142,7 @@ Section FiberMap.
       exact (fiber_path (is_retraction (existT _ x y))).
     Defined.
 
-    Definition fiber_equiv (x:A) : P x ≃> Q x :=
+    Definition fiber_equiv (x:A) : P x ~=> Q x :=
       tpair (g x) (fiber_is_equiv x).
 
   End TotalIsEquiv.
@@ -153,7 +153,7 @@ Section FiberMap.
 
     Hypothesis fiber_iseqv : forall x, is_equiv (g x).
 
-    Let fiber_eqv x : P x ≃> Q x := tpair (g x) (fiber_iseqv x).
+    Let fiber_eqv x : P x ~=> Q x := tpair (g x) (fiber_iseqv x).
 
     Let total_inv : total Q -> total P.
     Proof.
@@ -179,7 +179,7 @@ Section FiberMap.
       apply inverse_is_retraction.
     Defined.
 
-    Definition total_equiv : total P ≃> total Q :=
+    Definition total_equiv : total P ~=> total Q :=
       tpair tg (total_is_equiv).
 
   End FiberIsEquiv.
@@ -200,9 +200,9 @@ Section PullbackMap.
 
   Variables A B : Type.
   Variable Q : B -> Type.
-  Variable f : A ≃> B.
+  Variable f : A ~=> B.
 
-  Let pbQ : A -> Type := Q ○ f.
+  Let pbQ : A -> Type := Q o f.
 
   Let g (x:A) : pbQ x -> Q (f x) := idmap (Q (f x)).
 
@@ -245,7 +245,7 @@ Section PullbackMap.
       (fun p => transport p z) p).
   Defined.
 
-  Definition pullback_total_equiv : total pbQ ≃> total Q :=
+  Definition pullback_total_equiv : total pbQ ~=> total Q :=
     existT _ tg pullback_total_is_equiv.
 
 End PullbackMap.
@@ -264,12 +264,12 @@ Section FibrationMap.
   Variable P : A -> Type.
   Variable Q : B -> Type.
 
-  Variable f : A ≃> B.
+  Variable f : A ~=> B.
   Variable g : forall x:A, P x -> Q (f x).
 
   Let tg := total_map f g.
 
-  Let pbQ := Q ○ f.
+  Let pbQ := Q o f.
 
   Let pbg (x : A) : P x -> pbQ x := g x.
 
@@ -287,7 +287,7 @@ Section FibrationMap.
   Defined.
 
   Definition fibseq_fiber_equiv :
-    is_equiv tg -> forall x, P x ≃> Q (f x) :=
+    is_equiv tg -> forall x, P x ~=> Q (f x) :=
       fun H x => tpair (g x) (fibseq_fiber_is_equiv H x).
 
   (* Instead of proving directly that [tg] is an equivalence, we'll
@@ -295,7 +295,7 @@ Section FibrationMap.
   equivalence, then that [tg] is homotopic to that map. *)
 
   Let fibseq_a_totalequiv :
-    (forall x, is_equiv (g x)) -> (total P ≃> total Q).
+    (forall x, is_equiv (g x)) -> (total P ~=> total Q).
   Proof.
     intro H.
     apply @equiv_compose with (B := total pbQ).
@@ -316,7 +316,7 @@ Section FibrationMap.
   Defined.
 
   Definition fibseq_total_equiv :
-    (forall x, is_equiv (g x)) -> (total P ≃> total Q) :=
+    (forall x, is_equiv (g x)) -> (total P ~=> total Q) :=
     fun H => tpair tg (fibseq_total_is_equiv H).
 
 End FibrationMap.

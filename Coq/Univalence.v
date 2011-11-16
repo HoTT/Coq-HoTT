@@ -5,7 +5,7 @@ Unset Automatic Introduction.
 
 (** Every path between spaces gives an equivalence. *)
 
-Definition path_to_equiv {U V} : (U ~~> V) -> (U ≃> V).
+Definition path_to_equiv {U V} : (U ~~> V) -> (U ~=> V).
 Proof.
   intros U V.
   path_induction.
@@ -21,14 +21,14 @@ Proof.
 Defined.
 
 Lemma concat_to_compose {A B C} (p : A ~~> B) (q : B ~~> C) :
-  path_to_equiv q ○ path_to_equiv p ~~> projT1 (path_to_equiv (p @ q)).
+  path_to_equiv q o path_to_equiv p ~~> projT1 (path_to_equiv (p @ q)).
 Proof.
   path_induction.
 Defined.
 
 Ltac undo_concat_to_compose_in s :=
   match s with  
-    | context cxt [ equiv_coerce_to_function _ _ (path_to_equiv ?p) ○ equiv_coerce_to_function _ _ (path_to_equiv ?q) ] =>
+    | context cxt [ equiv_coerce_to_function _ _ (path_to_equiv ?p) o equiv_coerce_to_function _ _ (path_to_equiv ?q) ] =>
       let mid := context cxt [ equiv_coerce_to_function _ _ (path_to_equiv (q @ p)) ] in
         path_via mid;
         [ repeat first [ apply happly | apply map | apply concat_to_compose ] | ] 
@@ -76,13 +76,13 @@ Section Univalence.
 
   (** Assuming univalence, every equivalence yields a path. *)
 
-  Definition equiv_to_path {U V} : U ≃> V -> U ~~> V :=
+  Definition equiv_to_path {U V} : U ~=> V -> U ~~> V :=
     inverse (path_to_equiv_equiv U V).
 
   (** The map [equiv_to_path] is a section of [path_to_equiv]. *)
 
   Definition equiv_to_path_section U V :
-    forall (w : U ≃> V), path_to_equiv (equiv_to_path w) ~~> w :=
+    forall (w : U ~=> V), path_to_equiv (equiv_to_path w) ~~> w :=
     inverse_is_section (path_to_equiv_equiv U V).
 
   Definition equiv_to_path_retraction U V :
@@ -96,7 +96,7 @@ Section Univalence.
   (** We can do better than [equiv_to_path]: we can turn a fibration
      fibered over equivalences to one fiberered over paths. *)
 
-  Definition pred_equiv_to_path U V : (U ≃> V -> Type) -> (U ~~> V -> Type).
+  Definition pred_equiv_to_path U V : (U ~=> V -> Type) -> (U ~~> V -> Type).
   Proof.
     intros U V.
     intros Q p.
@@ -111,8 +111,8 @@ Section Univalence.
      transport the predicate [P] of equivalences to a predicate [P']
      on paths. Then we use path induction and transport back to [P]. *)
 
-  Theorem equiv_induction (P : forall U V, U ≃> V -> Type) :
-    (forall T, P T T (idequiv T)) -> (forall U V (w : U ≃> V), P U V w).
+  Theorem equiv_induction (P : forall U V, U ~=> V -> Type) :
+    (forall T, P T T (idequiv T)) -> (forall U V (w : U ~=> V), P U V w).
   Proof.
     intros P.
     intro r.

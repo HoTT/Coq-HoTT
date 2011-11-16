@@ -72,7 +72,7 @@ Defined.
 
 (** H-level is preserved under equivalence. *)
 
-Theorem hlevel_equiv {n A B} : (A ≃> B) -> is_hlevel n A -> is_hlevel n B.
+Theorem hlevel_equiv {n A B} : (A ~=> B) -> is_hlevel n A -> is_hlevel n B.
 Proof.
   intro n.
   induction n.
@@ -102,7 +102,8 @@ Proof.
   intros A H x.
   exists x.
   intro y.
-  apply H.
+  unfold is_prop, is_hlevel in H.
+  apply (H y x).
 Defined.
 
 Theorem inhabited_contr_isprop {A} : (A -> is_contr A) -> is_prop A.
@@ -122,7 +123,7 @@ Defined.
 
 Definition isprop_isprop {A} : is_prop (is_prop A) := hlevel_isprop.
 
-Theorem prop_equiv_inhabited_contr {A} : is_prop A ≃> (A -> is_contr A).
+Theorem prop_equiv_inhabited_contr {A} : is_prop A ~=> (A -> is_contr A).
 Proof.
   intros A.
   exists prop_inhabited_contr.
@@ -164,7 +165,7 @@ Theorem allpath_prop {A} : (forall (x y : A), x ~~> y) -> is_prop A.
   apply contr_pathcontr. assumption.
 Defined.
 
-Theorem prop_equiv_allpath {A} : is_prop A ≃> (forall (x y : A), x ~~> y).
+Theorem prop_equiv_allpath {A} : is_prop A ~=> (forall (x y : A), x ~~> y).
 Proof.
   intro A.
   exists prop_path.
@@ -197,7 +198,7 @@ Definition axiomK A := forall (x : A) (p : x ~~> x), p ~~> idpath x.
 Definition isset_implies_axiomK {A} : is_set A -> axiomK A.
 Proof.
   intros A H x p.
-  apply H.
+  apply (H x x p (idpath x)).
 Defined.
 
 Definition axiomK_implies_isset {A} : axiomK A -> is_set A.
@@ -210,7 +211,7 @@ Proof.
 Defined.
 
 Theorem isset_equiv_axiomK {A} :
-  is_set A ≃> (forall (x : A) (p : x ~~> x), p ~~> idpath x).
+  is_set A ~=> (forall (x : A) (p : x ~~> x), p ~~> idpath x).
 Proof.
   intro A.
   exists isset_implies_axiomK.

@@ -176,7 +176,7 @@ Proof.
 Defined.
 
 Definition eta_equiv (Heta : eta_statement) (A B : Type) :
-  (A -> B) ≃> (A -> B) :=
+  (A -> B) ~=> (A -> B) :=
   existT is_equiv (@eta A B) (eta_is_equiv Heta A B).
 
 (** And the dependent version. *)
@@ -191,7 +191,7 @@ Proof.
 Defined.
 
 Definition eta_dep_equiv (Heta : eta_dep_statement) (A : Type) (P : A -> Type) :
-  (forall x, P x) ≃> (forall x, P x) :=
+  (forall x, P x) ~=> (forall x, P x) :=
   existT is_equiv (@eta_dep A P) (eta_dep_is_equiv Heta A P).
 
 (** Less trivial is the fact that weak functional extensionality
@@ -254,7 +254,7 @@ Proof.
   change (is_equiv (pullback_total_equiv R (eta_dep_equiv Heta X P))).
   apply pullback_total_is_equiv.
   (* Now any idempotent equivalence is homotopic to the identity. *)
-  set (We := (tpair W W_equiv) : (total R ≃> total R)).
+  set (We := (tpair W W_equiv) : (total R ~=> total R)).
   path_via (We⁻¹ (W (W y))).
   apply opposite, inverse_is_retraction.
   path_via' (We⁻¹ (W y)).
