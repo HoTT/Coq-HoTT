@@ -30,7 +30,7 @@ VFILES:= Functions.v \
 VOFILES:=$(VFILES:.v=.vo)
 GLOBFILES:=$(VFILES:.v=.glob)
 
-.PHONY: all .depend html latex pdf
+.PHONY: all .depend html latex pdf doc
 
 all: .depend $(VOFILES) # doc
 
@@ -40,6 +40,7 @@ clean:
 doc: html pdf
 
 html: $(GLOBFILES)
+	/bin/mkdir -p doc/html
 	$(COQDOC) --html --toc --utf8 --charset utf8 --interpolate -d doc/html $(VFILES)
 	/bin/cp -f homotopy.css doc/html/coqdoc.css
 	echo +++++;\
@@ -47,7 +48,8 @@ html: $(GLOBFILES)
 	echo +++++
 
 latex: $(GLOBFILES)
-	$(COQDOC) --latex --toc --utf8 --charset utf8 --interpolate -p '\usepackage{amssymb}' -o doc/latex/UnivalentFoundations.tex $(VFILES)
+	/bin/mkdir -p doc/latex
+	$(COQDOC) --latex --toc --utf8 --charset utf8 --interpolate -o doc/latex/UnivalentFoundations.tex $(VFILES)
 	if [ ! -f doc/latex/coqdoc.sty ] ; then echo coqdoc.sty not found, using my own; cp coqdoc.sty doc/latex; fi
 
 pdf: latex
