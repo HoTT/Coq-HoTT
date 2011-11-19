@@ -523,15 +523,10 @@ Theorem total_paths_equiv (A : Type) (P : A -> Type) (x y : total P) :
 Proof.
   intros A P x y.
   exists (fun r => existT (fun p => transport p (pr2 x) ~~> pr2 y) (base_path r) (fiber_path r)).
-  eapply @hequiv_is_equiv.
-  instantiate (1 := fun pq => let (p,q) := pq in total_path A P x y p q).
+  apply @hequiv_is_equiv with (g := fun (pq : { p : pr1 x ~~> pr1 y & transport p (pr2 x) ~~> pr2 y }) => total_path A P x y (projT1 pq) (projT2 pq)).
   intros [p q].
-  eapply total_path.
-  instantiate (1 := base_total_path A P x y p q).
-  simpl.
+  apply total_path with (p := base_total_path A P x y p q).
   apply fiber_total_path.
-  intro r.
-  simpl.
   apply total_path_reconstruction.
 Defined.
   

@@ -1,22 +1,17 @@
 (** Peter Aczel suggested that we include a meta-theorem which states that
    predicates on functions obey a substitution principle with respect to
    extensional equality, as long as they are built from "standard" constructors.
-   *)
-
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
+*)
 
 Require Import Paths Fibrations Contractible Funext Equivalences.
 
-(** Let us first observe the following easy fact. If [P] is a fibration and
-   [x ~~> y] then [P x] and [P y] are equivalent. *)
+(** Let us first observe the following easy fact. If [P] is a fibration and [x ~~> y]
+    then [P x] and [P y] are connected by a path (and so also equivalent). *)
 
-Lemma equiv_fibers {A} (P : A -> Type) (x y : A) : x ~~> y -> P x ≃> P y.
+Lemma path_fibers {A} {P : A -> Type} {x y : A} : x ~~> y -> P x ~~> P y.
 Proof.
-  intros A P x y p.
   path_induction.
-  apply idequiv.
-Qed.
+Defined.
 
 (** Let us call a fibration [P : (A -> B) -> Type] _extensional_ if it takes
    extensionally equal maps to equivalent fibers. *)
@@ -24,72 +19,42 @@ Qed.
 Definition extensional {A B} (P : (A -> B) -> Type) :=
   forall f g : A -> B, f ≡ g -> P f ≃> P g.
 
-
-(** We also include useful constructions of equivalences. *)
-
-(* This should go to Paths.v. *)
-Definition path_pair {A B} {a b : A} {c d : B} : a ~~> b -> c ~~> d -> (a,c) ~~> (b,d).
-Proof.
-  path_induction.
-Defined.
-
-Definition path_fst {A B} {a b : A} {c d : B} : (a,c) ~~> (b,d) -> a ~~> b.
-Proof.
-  intros A B a b c d pq.
-  exact (map (@fst A B) pq).
-Qed.
-
-Definition path_snd {A B} {a b : A} {c d : B} : (a,c) ~~> (b,d) -> c ~~> d.
-Proof.
-  intros A B a b c d pq.
-  exact (map (@snd A B) pq).
-Qed.
-
-(* This should go to Fibrations.v. *)
-Lemma path_in_total {A} {P : A -> Type} (u v : total P) :
-  { p : pr1 u ~~> pr1 v & transport p (pr2 u) ~~> (pr2 v) } -> u ~~> v.
-Proof.
-  intros A P [x u] [y v] [p q].
-  simpl in * |- *.
-  induction p.
-  simpl in q.
-  induction q.
-  apply idpath.
-Qed.
-
-Lemma equiv_prod {A B} {C D} (f : A ≃> B) (g : C ≃> D) : A * C ≃> B * D.
-Proof.
-  intros A B C D [f ef] [g eg].
-  exists (fun xy => (f (fst xy), g (snd xy))).
-  intros [b d].
-  destruct (ef b) as [[a p] r].
-  destruct (eg d) as [[c q] s].
-  contract_hfiber (a,c) (path_pair p q).
-  destruct z as (a',c').
-  rename q0 into t.
-  simpl in t.
-  assert (u : (a',c') ~~> (a,c)).
-  apply path_pair.
-  exact (base_path (r (tpair a' (path_fst t)))).
-  exact (base_path (s (tpair c' (path_snd t)))).
-  apply path_in_total.
-  split with u.
-  simpl.
-Admitted.
-
 (** If we assume the Univalence Axiom then [equiv_fibers] implies that every
    fibration on a function space is extensional. But even without UA we can
    show that fibrations built from basic operations are extensional. *)
 
-Lemma ext_prod A B P Q:
-  extensional P -> extensional Q -> extensional (fun (h : A -> B) => P h * Q h)%type.
+(* This should go to Paths.v. *)
+Definition path_pair {A B} {x y : A * B} : (fst x ~~> fst y) * (snd x ~~> snd y) -> x ~~> y.  
 Proof.
-  intros A B P Q EP EQ f g E.
-  unfold equiv.
-  split with (fun p => (EP f g E (fst p), EQ f g E (snd p))).
-  intros [u v].
-  destruct EP as [ep eqP].
+  intros [p q].
+  destruct x, y.
+  simpl in * |- *.
+  induction p.
+  induction q.
+  apply idpath.
+Defined.
 
+Lemma ext_prod A B P Q:
+  extensional P -> extensional Q -> extensional (fun (h : A -> B) => prod (P h) (Q h)).
+Proof.
+  intros EP EQ f g E.
+  exists (fun p => (EP f g E (fst p), EQ f g E (snd p))).
+  intros [u v].
+  pose (x := inverse (EP f g E) u).
+  pose (y := inverse (EQ f g E) v).
+  assert (r : (EP f g E x, EQ f g E y) ~~> (u, v)).
+    apply path_pair; split; apply inverse_is_section.
+  contract_hfiber (x,y) r.
+  destruct z as [a b].
+  simpl in * |- *.
+  assert (s : (a,b) ~~> (x,y)).
+    apply path_pair; simpl; split.
+      unfold x; equiv_moveleft.
+      apply (map (@fst _ _) q).
+      unfold y; equiv_moveleft.
+      apply (map (@snd _ _) q).
+  apply total_path with (p := s).
+  simpl.
 Qed.
 
 Lemma ext_sum A B P Q : extensional P -> extensional Q -> extensional (fun (h : A -> B) => P h + Q h)%type.
