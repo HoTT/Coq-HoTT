@@ -9,28 +9,28 @@ Unset Automatic Introduction.
 Axiom circle : Type.
 
 Axiom base : circle.
-Axiom loop : base ~~> base.
+Axiom loop : base == base.
  
 Axiom circle_rect :
-  forall (P : circle -> Type) (pt : P base) (lp : transport loop pt ~~> pt), 
+  forall (P : circle -> Type) (pt : P base) (lp : transport loop pt == pt), 
     forall x : circle, P x.
 
 Axiom compute_base :
-  forall (P : circle -> Type) (pt : P base) (lp : transport loop pt ~~> pt), 
-    circle_rect P pt lp base ~~> pt.
+  forall (P : circle -> Type) (pt : P base) (lp : transport loop pt == pt), 
+    circle_rect P pt lp base == pt.
 
 Axiom compute_loop :
-  forall (P : circle -> Type) (pt : P base) (lp : transport loop pt ~~> pt), 
+  forall (P : circle -> Type) (pt : P base) (lp : transport loop pt == pt), 
     (! map (transport loop) (compute_base P pt lp)
       @ (map_dep (circle_rect P pt lp) loop)
       @ (compute_base P pt lp))
-    ~~> lp.
+    == lp.
 
 (** From this we can derive the non-dependent version of the
    eliminator, with its propositional computation rules. *)
 
 Definition circle_rect' :
-  forall (B : Type) (pt : B) (lp : pt ~~> pt), circle -> B.
+  forall (B : Type) (pt : B) (lp : pt == pt), circle -> B.
 Proof.
   intros B pt lp.
   apply circle_rect with (P := fun x => B) (pt := pt).
@@ -48,8 +48,8 @@ Proof.
 Defined.
 
 Definition compute_base' :
-  forall (B : Type) (pt : B) (lp : pt ~~> pt),
-    circle_rect' B pt lp base ~~> pt.
+  forall (B : Type) (pt : B) (lp : pt == pt),
+    circle_rect' B pt lp base == pt.
 Proof.
   intros B pt lp.
   unfold circle_rect'.
@@ -57,11 +57,11 @@ Proof.
 Defined.
 
 Definition compute_loop' :
-  forall (B : Type) (pt : B) (lp : pt ~~> pt),
+  forall (B : Type) (pt : B) (lp : pt == pt),
     (! (compute_base' B pt lp)
       @ map (circle_rect' B pt lp) loop
       @ (compute_base' B pt lp))
-    ~~> lp.
+    == lp.
 Proof.
   intros B pt lp.
   set (P := fun x : circle => B).
@@ -87,15 +87,15 @@ Defined.
 (** If the circle is contractible, then UIP holds. *)
 
 Theorem circle_contr_implies_UIP : is_contr (circle) ->
-  forall (A : Type) (x y : A) (p q : x ~~> y), p ~~> q.
+  forall (A : Type) (x y : A) (p q : x == y), p == q.
 Proof.
   intros H A x y p q.
   induction p.
   set (cq := circle_rect' A x q).
   set (cqb := cq base).
-  set (cqcb := compute_base' A x q : cqb ~~> x).
-  set (cql := map cq loop : cqb ~~> cqb).
-  set (cqcl := compute_loop' A x q : (!cqcb @ cql @ cqcb ~~> q)).
+  set (cqcb := compute_base' A x q : cqb == x).
+  set (cql := map cq loop : cqb == cqb).
+  set (cqcl := compute_loop' A x q : (!cqcb @ cql @ cqcb == q)).
   path_via (!cqcb @ cql @ cqcb).
   moveleft_onright.
   moveleft_onleft.
