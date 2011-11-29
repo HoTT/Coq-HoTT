@@ -1,11 +1,8 @@
 Require Export Fibrations Contractible Equivalences FiberEquivalences.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 Definition ext_dep_eq {X} {P : X -> Type} (f g : forall x, P x) := forall x : X, f x ~~> g x.
 
-Notation "f ≡ g" := (ext_dep_eq f g) (at level 50).
+Notation "f == g" := (ext_dep_eq f g) (at level 50).
 
 (** The simplest notion we call "naive functional extensionality".
    This is what a type theorist would probably write down when
@@ -14,10 +11,10 @@ Notation "f ≡ g" := (ext_dep_eq f g) (at level 50).
    comes in both ordinary and dependent versions. *)
 
 Definition funext_statement : Type :=
-  forall (X Y : Type) (f g: X -> Y), f ≡ g -> f ~~> g.
+  forall (X Y : Type) (f g: X -> Y), f == g -> f ~~> g.
 
 Definition funext_dep_statement : Type :=
-  forall (X : Type) (P : X -> Type) (f g : section P), f ≡ g -> (f ~~> g).
+  forall (X : Type) (P : X -> Type) (f g : section P), f == g -> (f ~~> g).
 
 (** However, there are clearly going to be problems with this in the
    homotopy world, since "being equal" is not merely a property, but
@@ -46,12 +43,12 @@ Theorem strong_to_naive_funext :
   strong_funext_statement -> funext_statement.
 Proof.
   intros H X Y f g.
-  exact ((tpair (@happly X Y f g) (H X Y f g)) ⁻¹).
+  exact (inv (tpair (@happly X Y f g) (H X Y f g))).
 Defined.
 
 Theorem strong_funext_compute
   (strong_funext : strong_funext_statement)
-  (X Y:Type) (f g : X -> Y) (p : f ≡ g) (x : X) :
+  (X Y:Type) (f g : X -> Y) (p : f == g) (x : X) :
   happly (strong_to_naive_funext strong_funext X Y f g p) x ~~> p x.
 Proof.
   intros.
@@ -65,12 +62,12 @@ Theorem strong_to_naive_funext_dep :
   strong_funext_dep_statement -> funext_dep_statement.
 Proof.
   intros H X Y f g.
-  exact ((tpair (@happly_dep X Y f g) (H X Y f g)) ⁻¹).
+  exact (inv (tpair (@happly_dep X Y f g) (H X Y f g))).
 Defined.
 
 Theorem strong_funext_dep_compute
   (strong_funext_dep : strong_funext_dep_statement)
-  (X : Type) (P : X -> Type) (f g : section P) (p : f ≡ g) (x : X) :
+  (X : Type) (P : X -> Type) (f g : section P) (p : f == g) (x : X) :
   happly_dep (strong_to_naive_funext_dep strong_funext_dep X P f g p) x ~~> p x.
 Proof.
   intros.
@@ -176,7 +173,7 @@ Proof.
 Defined.
 
 Definition eta_equiv (Heta : eta_statement) (A B : Type) :
-  (A -> B) ≃> (A -> B) :=
+  (A -> B) ~=> (A -> B) :=
   existT is_equiv (@eta A B) (eta_is_equiv Heta A B).
 
 (** And the dependent version. *)
@@ -191,7 +188,7 @@ Proof.
 Defined.
 
 Definition eta_dep_equiv (Heta : eta_dep_statement) (A : Type) (P : A -> Type) :
-  (forall x, P x) ≃> (forall x, P x) :=
+  (forall x, P x) ~=> (forall x, P x) :=
   existT is_equiv (@eta_dep A P) (eta_dep_is_equiv Heta A P).
 
 (** Less trivial is the fact that weak functional extensionality
@@ -254,10 +251,10 @@ Proof.
   change (is_equiv (pullback_total_equiv R (eta_dep_equiv Heta X P))).
   apply pullback_total_is_equiv.
   (* Now any idempotent equivalence is homotopic to the identity. *)
-  set (We := (tpair W W_equiv) : (total R ≃> total R)).
-  path_via (We⁻¹ (W (W y))).
+  set (We := (tpair W W_equiv) : (total R ~=> total R)).
+  path_via (inv We (W (W y))).
   apply opposite, inverse_is_retraction.
-  path_via' (We⁻¹ (W y)).
+  path_via' (inv We (W y)).
   apply map. apply W_idempotent.
   apply inverse_is_retraction.
   (* This looks like it would be difficult, except that it is a path

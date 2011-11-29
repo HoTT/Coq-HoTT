@@ -1,8 +1,5 @@
 Require Export Paths Fibrations Contractible.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 (** An equivalence is a map whose homotopy fibers are contractible. *)
 
 Definition is_equiv {A B} (f : A -> B) := forall y : B, is_contr (hfiber f y).
@@ -11,18 +8,17 @@ Definition is_equiv {A B} (f : A -> B) := forall y : B, is_contr (hfiber f y).
 
 Definition equiv A B := { w : A -> B & is_equiv w }.
 
-Notation "A ≃> B" := (equiv A B) (at level 55).
+Notation "A ~=> B" := (equiv A B) (at level 55).
 
-(** printing ≃> $\overset{\sim}{\longrightarrow}$ *)
+(** printing ~=> $\overset{\sim}{\longrightarrow}$ *)
 
-(** Strictly speaking, an element [w] of [A ≃> B] is a _pair_
+(** Strictly speaking, an element [w] of [A ~=> B] is a _pair_
    consisting of a map [projT1 w] and the proof [projT2 w] that it is
    an equivalence. Thus, in order to apply [w] to [x] we must write
    [projT1 w x]. Coq is able to do this automatically if we declare
    that [projT1] is a _coercion_ from [equiv A B] to [A -> B]. *)
 
-Definition equiv_coerce_to_function A B (w : A ≃> B) : (A -> B)
-  := projT1 w.
+Definition equiv_coerce_to_function A B (w : A ~=> B) : (A -> B) := projT1 w.
 
 Coercion equiv_coerce_to_function : equiv >-> Funclass.
 
@@ -50,9 +46,8 @@ Ltac contract_hfiber y p :=
 
 (** The identity map is an equivalence. *)
 
-Definition idequiv A : A ≃> A.
+Definition idequiv A : A ~=> A.
 Proof.
-  intro A.
   exists (idmap A).
   intros x.
   contract_hfiber x (idpath x).
@@ -65,20 +60,18 @@ Defined.
 (** From an equivalence from [U] to [V] we can extract a map in the
    inverse direction. *)
 
-Definition inverse {U V} (w : U ≃> V) : (V -> U) :=
+Definition inverse {U V} (w : U ~=> V) : (V -> U) :=
   fun y => pr1 (pr1 ((pr2 w) y)).
 
-Notation "w ⁻¹" := (inverse w) (at level 40).
-
-(** printing ⁻¹ $^{-1}$ *)
+Notation inv := inverse.
 
 (** The extracted map in the inverse direction is actually an inverse
    (up to homotopy, of course). *)
 
-Definition inverse_is_section {U V} (w : U ≃> V) y : w (w⁻¹ y) ~~> y :=
+Definition inverse_is_section {U V} (w : U ~=> V) y : w (inv w y) ~~> y :=
   pr2 (pr1 ((pr2 w) y)).
 
-Definition inverse_is_retraction {U V} (w : U ≃> V) x : (w⁻¹ (w x)) ~~> x :=
+Definition inverse_is_retraction {U V} (w : U ~=> V) x : (inv w (w x)) ~~> x :=
   !base_path (pr2 ((pr2 w) (w x)) (tpair x (idpath (w x)))).
 
 (** Here are some tactics to use for canceling inverses, and for
@@ -86,10 +79,10 @@ Definition inverse_is_retraction {U V} (w : U ≃> V) x : (w⁻¹ (w x)) ~~> x :
 
 Ltac cancel_inverses_in s :=
   match s with
-    | context cxt [ equiv_coerce_to_function _ _ ?w (?w ⁻¹ ?x) ] =>
+    | context cxt [ equiv_coerce_to_function _ _ ?w (inverse ?w ?x) ] =>
       let mid := context cxt [ x ] in
         path_using mid inverse_is_section
-    | context cxt [ ?w ⁻¹ (equiv_coerce_to_function _ _ ?w ?x) ] =>
+    | context cxt [inverse ?w (equiv_coerce_to_function _ _ ?w ?x) ] =>
       let mid := context cxt [ x ] in
         path_using mid inverse_is_retraction
   end.
@@ -107,11 +100,11 @@ Ltac expand_inverse_src w x :=
       match s with
         | context cxt [ x ] =>
           first [
-            let mid := context cxt [ w (w⁻¹ x) ] in
+            let mid := context cxt [ w (inv w x) ] in
               path_via' mid;
               [ path_simplify' inverse_is_section | ]
             |
-            let mid := context cxt [ w⁻¹ (w x) ] in
+            let mid := context cxt [ inv w (w x) ] in
               path_via' mid;
               [ path_simplify' inverse_is_retraction | ]
           ]
@@ -124,11 +117,11 @@ Ltac expand_inverse_trg w x :=
       match t with
         | context cxt [ x ] =>
           first [
-            let mid := context cxt [ w (w⁻¹ x) ] in
+            let mid := context cxt [ w (inv w x) ] in
               path_via' mid;
               [ | path_simplify' inverse_is_section ]
             |
-            let mid := context cxt [ w⁻¹ (w x) ] in
+            let mid := context cxt [ inv w (w x) ] in
               path_via' mid;
               [ | path_simplify' inverse_is_retraction ]
           ]
@@ -136,25 +129,25 @@ Ltac expand_inverse_trg w x :=
   end.
 
 (** These tactics change between goals of the form [w x ~~> y] and the
-   form [x ~~> w⁻¹ y], and dually. *)
+   form [x ~~> inv w y], and dually. *)
 
 Ltac equiv_moveright :=
   match goal with
     | |- equiv_coerce_to_function _ _ ?w ?a ~~> ?b =>
-      apply @concat with (y := w (w⁻¹ b));
+      apply @concat with (y := w (inv w b));
         [ apply map | apply inverse_is_section ]
-    | |- (?w ⁻¹) ?a ~~> ?b =>
-      apply @concat with (y := w⁻¹ (w b));
+    | |- (inverse ?w) ?a ~~> ?b =>
+      apply @concat with (y := inverse w (w b));
         [ apply map | apply inverse_is_retraction ]
   end.
 
 Ltac equiv_moveleft :=
   match goal with
     | |- ?a ~~> equiv_coerce_to_function _ _ ?w ?b =>
-      apply @concat with (y := w (w⁻¹ a));
+      apply @concat with (y := w (inv w a));
         [ apply opposite, inverse_is_section | apply map ]
-    | |- ?a ~~> (?w ⁻¹) ?b =>
-      apply @concat with (y := w⁻¹ (w a));
+    | |- ?a ~~> (inverse ?w) ?b =>
+      apply @concat with (y := inv w (w a));
         [ apply opposite, inverse_is_retraction | apply map ]
   end.
 
@@ -162,7 +155,7 @@ Ltac equiv_moveleft :=
    homotopies.  (It doesn't look like a triangle since we've inverted
    one of the homotopies.) *)
 
-Definition inverse_triangle {A B} (w : A ≃> B) x :
+Definition inverse_triangle {A B} (w : A ~=> B) x :
   (map w (inverse_is_retraction w x)) ~~> (inverse_is_section w (w x)).
 Proof.
   intros.
@@ -177,9 +170,8 @@ Defined.
 
 (** Equivalences are "injective on paths". *)
 
-Lemma equiv_injective U V (w : U ≃> V) x y : (w x ~~> w y) -> (x ~~> y).
+Lemma equiv_injective U V (w : U ~=> V) x y : (w x ~~> w y) -> (x ~~> y).
 Proof.
-  intros U V w x y.
   intro p.
   expand_inverse_src w x.
   equiv_moveright.
@@ -189,9 +181,9 @@ Defined.
 (** Anything contractible is equivalent to the unit type. *)
 
 Lemma contr_equiv_unit (A : Type) :
-  is_contr A -> (A ≃> unit).
+  is_contr A -> (A ~=> unit).
 Proof.
-  intros A H.
+  intro H.
   exists (fun x => tt).
   intro y. destruct y.
   contract_hfiber (pr1 H) (idpath tt).
@@ -204,10 +196,9 @@ Defined.
    contractible. *)
 
 Lemma contr_equiv_contr (A B : Type) :
-  A ≃> B -> is_contr A -> is_contr B.
+  A ~=> B -> is_contr A -> is_contr B.
 Proof.
-  intros A B f Acontr.
-  destruct Acontr.
+  intros f [x ?].
   exists (f x).
   intro y.
   equiv_moveleft.
@@ -218,9 +209,8 @@ Defined.
 
 Definition free_path_space A := {xy : A * A & fst xy ~~> snd xy}.
 
-Definition free_path_source A : free_path_space A ≃> A.
+Definition free_path_source A : free_path_space A ~=> A.
 Proof.
-  intro A.
   exists (fun p => fst (projT1 p)).
   intros x.
   eexists (existT _ (existT (fun (xy : A * A) => fst xy ~~> snd xy) (x,x) (idpath x)) _).
@@ -231,9 +221,8 @@ Proof.
   apply idpath.
 Defined.
 
-Definition free_path_target A : free_path_space A ≃> A.
+Definition free_path_target A : free_path_space A ~=> A.
 Proof.
-  intro A.
   exists (fun p => snd (projT1 p)).
   intros x.
   eexists (existT _ (existT (fun (xy : A * A) => fst xy ~~> snd xy) (x,x) (idpath x)) _).
@@ -261,13 +250,13 @@ Definition is_adjoint_equiv {A B} (f : A -> B) :=
 
 Definition is_equiv_to_adjoint {A B} (f: A -> B) (E : is_equiv f) : is_adjoint_equiv f :=
   let w := (tpair f E) in
-    tpair (w⁻¹) (tpair (inverse_is_section w) (tpair (inverse_is_retraction w) (inverse_triangle w))).
+    tpair (inv w) (tpair (inverse_is_section w) (tpair (inverse_is_retraction w) (inverse_triangle w))).
 
 Definition adjoint_equiv (A B : Type) := { f: A -> B  &  is_adjoint_equiv f }.
 
 Theorem is_adjoint_to_equiv {A B} (f: A -> B) : is_adjoint_equiv f -> is_equiv f.
 Proof.
-  intros A B f [g [is_section [is_retraction triangle]]].
+  intros [g [is_section [is_retraction triangle]]].
   intro y.
   contract_hfiber (g y) (is_section y).
   apply (total_path _
@@ -287,7 +276,7 @@ Proof.
   associate_right.
   moveright_onleft.
   undo_compose_map.
-  apply opposite, homotopy_naturality_toid with (f := f ○ g).
+  apply opposite, homotopy_naturality_toid with (f := f o g).
 Defined.
 
 (** Probably equiv_to_adjoint and adjoint_to_equiv are actually
@@ -296,7 +285,6 @@ Defined.
 
 Lemma equiv_pointwise_idmap A (f : A -> A) (p : forall x, f x ~~> x) : is_equiv f.
 Proof.
-  intros.
   apply is_adjoint_to_equiv.
   exists (idmap A).
   exists p.
@@ -314,7 +302,7 @@ Definition adjointify {A B} (f : A -> B) (g : B -> A) :
   (forall y, f (g y) ~~> y) -> (forall x, g (f x) ~~> x ) ->
   is_adjoint_equiv f.
 Proof.
-  intros A B f g is_section is_retraction.
+  intros is_section is_retraction.
   (* We have to redefine one of the two homotopies. *)
   set (is_retraction' := fun x =>
     ( map g (map f (!is_retraction x)))
@@ -330,12 +318,12 @@ Proof.
   undo_compose_map.
   moveleft_onleft.
   associate_left.
-  path_via ((!is_section (f x)  @  map (f ○ g) (map f (!is_retraction x))
-    @  map (f ○ g) (is_section (f x)))  @  map f (is_retraction x)).
+  path_via ((!is_section (f x)  @  map (f o g) (map f (!is_retraction x))
+    @  map (f o g) (is_section (f x)))  @  map f (is_retraction x)).
   unwhisker.
   do_compose_map; auto.
   path_via (map f (!is_retraction x)  @  (!is_section (f (g (f x))))
-    @  map (f ○ g) (is_section (f x))  @  map f (is_retraction x)).
+    @  map (f o g) (is_section (f x))  @  map f (is_retraction x)).
   unwhisker.
   apply opposite, (homotopy_naturality_fromid B _ (fun y => !is_section y)).
   path_via (map f (!is_retraction x)  @  (is_section (f x) @ (!is_section (f x)))
@@ -356,9 +344,8 @@ Definition hequiv_is_equiv {A B} (f : A -> B) (g : B -> A)
 
 (** The inverse of an equivalence is an equivalence. *)
 
-Lemma equiv_inverse {A B} (f : A ≃> B) : B ≃> A.
+Lemma equiv_inverse {A B} (f : A ~=> B) : B ~=> A.
 Proof.
-  intros.
   destruct (is_equiv_to_adjoint f (pr2 f)) as [g [is_section [is_retraction triangle]]].
   exists g.
   exact (hequiv_is_equiv g f is_retraction is_section).
@@ -369,27 +356,26 @@ Defined.
 Lemma equiv_homotopic {A B} (f g : A -> B) :
   (forall x, f x ~~> g x) -> is_equiv g -> is_equiv f.
 Proof.
-  intros A B f g' p geq.
-  set (g := existT is_equiv g' geq : A ≃> B).
+  intros p geq.
+  set (g' := existT is_equiv g geq : A ~=> B).
   eapply hequiv_is_equiv.
-  instantiate (1 := g⁻¹).
+  instantiate (1 := inv g').
   intro y.
-  expand_inverse_trg g y; auto.
+  expand_inverse_trg g' y; auto.
   intro x.
   equiv_moveright; auto.
 Defined.
 
 (** And the 2-out-of-3 property for equivalences. *)
 
-Definition equiv_compose {A B C} (f : A ≃> B) (g : B ≃> C) : (A ≃> C).
+Definition equiv_compose {A B C} (f : A ~=> B) (g : B ~=> C) : (A ~=> C).
 Proof.
-  intros.
-  exists (g ○ f).
+  exists (g o f).
   eapply hequiv_is_equiv.
-  instantiate (1 := (f⁻¹) ○ (g⁻¹)).
+  instantiate (1 := (inv f) o (inv g)).
   intro y.
   expand_inverse_trg g y.
-  expand_inverse_trg f (g⁻¹ y).
+  expand_inverse_trg f (inv g y).
   apply idpath.
   intro x.
   expand_inverse_trg f x.
@@ -397,38 +383,38 @@ Proof.
   apply idpath.
 Defined.
 
-Definition equiv_cancel_right {A B C} (f : A ≃> B) (g : B -> C) :
-  is_equiv (g ○ f) -> is_equiv g.
+Definition equiv_cancel_right {A B C} (f : A ~=> B) (g : B -> C) :
+  is_equiv (g o f) -> is_equiv g.
 Proof.
-  intros A B C f g H.
-  set (gof := (existT _ (g ○ f) H) : A ≃> C).
+  intro H.
+  set (gof := (existT _ (g o f) H) : A ~=> C).
   eapply hequiv_is_equiv.
-  instantiate (1 := f ○ (gof⁻¹)).
+  instantiate (1 := f o inv (gof)).
   intro y.
   expand_inverse_trg gof y.
   apply idpath.
   intro x.
-  change (f (gof⁻¹ (g x)) ~~> x).
+  change (f (inv gof (g x)) ~~> x).
   equiv_moveright; equiv_moveright.
-  change (g x ~~> g (f (f⁻¹ x))).
+  change (g x ~~> g (f (inv f x))).
   cancel_inverses.
 Defined.
 
-Definition equiv_cancel_left {A B C} (f : A -> B) (g : B ≃> C) :
-  is_equiv (g ○ f) -> is_equiv f.
+Definition equiv_cancel_left {A B C} (f : A -> B) (g : B ~=> C) :
+  is_equiv (g o f) -> is_equiv f.
 Proof.
-  intros A B C f g H.
-  set (gof := existT _ (g ○ f) H : A ≃> C).
+  intros H.
+  set (gof := existT _ (g o f) H : A ~=> C).
   eapply hequiv_is_equiv. 
-  instantiate (1 := gof⁻¹ ○ g).
+  instantiate (1 := inv gof o g).
   intros y.
   expand_inverse_trg g y.
-  expand_inverse_src g (f (((gof ⁻¹) ○ g) y)).
+  expand_inverse_src g (f ((inv gof o g) y)).
   apply map.
-  path_via (gof ((gof⁻¹ (g y)))).
+  path_via (gof ((inv gof (g y)))).
   apply inverse_is_section.
   intros x.
-  path_via (gof⁻¹ (gof x)).
+  path_via (inv gof (gof x)).
   apply inverse_is_retraction.
 Defined.
 
@@ -437,7 +423,7 @@ Defined.
 Definition contr_contr_equiv {A B} (f : A -> B) :
   is_contr A -> is_contr B -> is_equiv f.
 Proof.
-  intros A B f Acontr Bcontr.
+  intros Acontr Bcontr.
   apply @equiv_cancel_left with
     (g := contr_equiv_unit B Bcontr).
   exact (pr2 (contr_equiv_unit A Acontr)).
@@ -445,21 +431,20 @@ Defined.
 
 (** The action of an equivalence on paths is an equivalence. *)
 
-Theorem equiv_map_inv {A B} {x y : A} (f : A ≃> B) :
+Theorem equiv_map_inv {A B} {x y : A} (f : A ~=> B) :
   (f x ~~> f y) -> (x ~~> y).
 Proof.
-  intros A B x y f p.
-  path_via (f⁻¹ (f x)).
+  intro p.
+  path_via (inv f (f x)).
   apply opposite, inverse_is_retraction.
-  path_via' (f⁻¹ (f y)).
+  path_via' (inv f (f y)).
   apply map. assumption.
   apply inverse_is_retraction.
 Defined.
 
-Theorem equiv_map_is_equiv {A B} {x y : A} (f : A ≃> B) :
+Theorem equiv_map_is_equiv {A B} {x y : A} (f : A ~=> B) :
   is_equiv (@map A B x y f).
 Proof.
-  intros A B x y f.
   apply @hequiv_is_equiv with (g := equiv_map_inv f).
   intro p.
   unfold equiv_map_inv.
@@ -467,20 +452,20 @@ Proof.
   do_opposite_map.
   moveright_onleft.
   undo_compose_map.
-  path_via (map (f ○ (f ⁻¹)) p @ inverse_is_section f (f y)).
+  path_via (map (f o inv f) p @ inverse_is_section f (f y)).
   apply inverse_triangle.
   path_via (inverse_is_section f (f x) @ p).
-  apply homotopy_naturality_toid with (f := f ○ (f⁻¹)).
+  apply homotopy_naturality_toid with (f := f o inv f).
   apply opposite, inverse_triangle.
   intro p.
   unfold equiv_map_inv.
   moveright_onleft.
   undo_compose_map.
-  apply homotopy_naturality_toid with (f := (f⁻¹) ○ f).
+  apply homotopy_naturality_toid with (f := inv f o f).
 Defined.
 
-Definition equiv_map_equiv {A B} {x y : A} (f : A ≃> B) :
-  (x ~~> y) ≃> (f x ~~> f y) :=
+Definition equiv_map_equiv {A B} {x y : A} (f : A ~=> B) :
+  (x ~~> y) ~=> (f x ~~> f y) :=
   tpair (@map A B x y f) (equiv_map_is_equiv f).
 
 (** Path-concatenation is an equivalence. *)
@@ -488,7 +473,6 @@ Definition equiv_map_equiv {A B} {x y : A} (f : A ≃> B) :
 Lemma concat_is_equiv_left {A} (x y z : A) (p : x ~~> y) :
   is_equiv (fun q: y ~~> z => p @ q).
 Proof.
-  intros A x y z p.
   apply @hequiv_is_equiv with (g := @concat A y x z (!p)).
   intro q.
   associate_left.
@@ -497,13 +481,12 @@ Proof.
 Defined.
 
 Definition concat_equiv_left {A} (x y z : A) (p : x ~~> y) :
-  (y ~~> z) ≃> (x ~~> z) :=
+  (y ~~> z) ~=> (x ~~> z) :=
   tpair (fun q: y ~~> z => p @ q) (concat_is_equiv_left x y z p).
 
 Lemma concat_is_equiv_right {A} (x y z : A) (p : y ~~> z) :
   is_equiv (fun q : x ~~> y => q @ p).
 Proof.
-  intros A x y z p.
   apply @hequiv_is_equiv with (g := fun r : x ~~> z => r @ !p).
   intro q.
   associate_right.
@@ -512,16 +495,15 @@ Proof.
 Defined.
 
 Definition concat_equiv_right {A} (x y z : A) (p : y ~~> z) :
-  (x ~~> y) ≃> (x ~~> z) :=
+  (x ~~> y) ~=> (x ~~> z) :=
   tpair (fun q: x ~~> y => q @ p) (concat_is_equiv_right x y z p).
 
 (** And we can characterize the path types of the total space of a
    fibration, up to equivalence. *)
 
 Theorem total_paths_equiv (A : Type) (P : A -> Type) (x y : total P) :
-  (x ~~> y) ≃> { p : pr1 x ~~> pr1 y & transport p (pr2 x) ~~> pr2 y }.
+  (x ~~> y) ~=> { p : pr1 x ~~> pr1 y & transport p (pr2 x) ~~> pr2 y }.
 Proof.
-  intros A P x y.
   exists (fun r => existT (fun p => transport p (pr2 x) ~~> pr2 y) (base_path r) (fiber_path r)).
   apply @hequiv_is_equiv with (g := fun (pq : { p : pr1 x ~~> pr1 y & transport p (pr2 x) ~~> pr2 y }) => total_path A P x y (projT1 pq) (projT2 pq)).
   intros [p q].
@@ -539,17 +521,16 @@ Definition is_hiso {A B} (f : A -> B) :=
 
 Theorem equiv_to_hiso {A B} (f : equiv A B) : is_hiso f.
 Proof.
-  intros A B f.
   split.
-  exists (f⁻¹).
+  exists (inv f).
   apply inverse_is_retraction.
-  exists (f⁻¹).
+  exists (inv f).
   apply inverse_is_section.
 Defined.
 
 Theorem hiso_to_equiv {A B} (f : A -> B) : is_hiso f -> is_equiv f.
 Proof.
-  intros A B f H.
+  intro H.
   destruct H as ((g, is_retraction), (h, is_section)).
   eapply hequiv_is_equiv.
   instantiate (1 := g).
