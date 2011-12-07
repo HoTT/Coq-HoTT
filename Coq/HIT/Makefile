@@ -57,7 +57,7 @@ pdf: latex
 .depend:
 	$(COQDEP) -I .. -I . $(VFILES) > .depend
 
-%.vo %.glob: %.v .depend
+%.vo %.glob: %.v
 	$(COQC) -I .. -I . $<
 
 include .depend
