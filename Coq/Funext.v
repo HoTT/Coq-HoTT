@@ -1,9 +1,9 @@
 Require Export Fibrations Contractible Equivalences FiberEquivalences.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
+(** Much of the content here is closely related to Richard Garner’s paper “On the strength of dependent products…”.  We use different terminology in places, but recall his for comparison. *)
 
-Definition ext_dep_eq {X} {P : X -> Type} (f g : forall x, P x) := forall x : X, f x == g x.
+Definition ext_dep_eq {X} {P : X -> Type} (f g : forall x, P x)
+  := forall x : X, f x == g x.
 
 Notation "f === g" := (ext_dep_eq f g) (at level 50).
 
@@ -18,14 +18,47 @@ Definition funext_statement : Type :=
 
 Definition funext_dep_statement : Type :=
   forall (X : Type) (P : X -> Type) (f g : section P), f === g -> (f == g).
+(** This is the rule ‘Π-ext’ in Garner. *)
 
 (** However, there are clearly going to be problems with this in the
    homotopy world, since "being equal" is not merely a property, but
    being equipped with a path is structure.  We should expect some
    sort of coherence or canonicity of the path from f to g relating it
-   to the pointwise homotopy we started with.
-   
-   A natural way to state a "homotopically good" notion of function
+   to the pointwise homotopy we started with.  
+
+   There are (at least) two natural “computation principles” one might consider.  The first fits with thinking of [funext] as an _eliminator_: it tells us what happens if we apply [funext] to a term of canonical form. *)
+
+Definition funext_comp1_statement (funext : funext_dep_statement)
+  := (forall X P f, funext X P f f (fun x => idpath (f x)) == idpath f).
+(** A propositional form of Garner’s ‘Π-ext-comp’. *)
+
+(** Does this rule follow automatically?  Yes and no.  Given a witness [funext : funext_dep_statement], this does not necessarily hold for [funext] itself; but we can always find a better witness which it does hold: *)
+Definition funext_correction : funext_dep_statement -> funext_dep_statement
+  := (fun funext =>
+        fun X P f g h => 
+            (funext X P f g h)
+          @ 
+            ! (funext X P g g (fun x => idpath (g x)))).
+
+Lemma funext_correction_comp1 :
+  forall (funext : funext_dep_statement),
+  funext_comp1_statement (funext_correction funext).
+Proof.
+  unfold funext_comp1_statement.
+  unfold funext_correction.
+  auto with path_hints.
+Defined.
+
+(** On the other hand, if we think of [funext] as more like a _1-dimensional constructor_ for Π-types,  we can be led to the following rule, telling us what happens to it under the destructor for Π-types, function application (bumped up to dimension 1 via happly): *)
+
+Definition funext_comp2_statement (funext : funext_dep_statement)
+  := (forall X P f g p x,
+      happly_dep (funext X P f g p) x == p x).
+(** ‘Π-ext-app’ in Garner. *)
+
+(** Does this rule follow automatically?  *Yes*, and in fact for a given witness [funext], it’s equivalent to [funext_comp1_statement] above.  However, this seems quite non-trivial to prove; it will follow eventually from the comparision with strong functional extensionality.  So we leave this for now, and will return to it later. *)
+
+(** Alternatively, a natural way to state a "homotopically good" notion of function
    extensionality is to observe that there is a canonical map in the
    other direction, taking paths between functions to pointwise
    homotopies.  We can thus just ask for that map to be an
@@ -40,7 +73,7 @@ Definition strong_funext_dep_statement : Type :=
     is_equiv (@happly_dep X P f g).
 
 (** Of course, strong functional extensionality implies naive
-   functional extensionality, along with a computation rule. *)
+   functional extensionality, along with both computation rules. *)
 
 Theorem strong_to_naive_funext :
   strong_funext_statement -> funext_statement.
@@ -68,11 +101,27 @@ Proof.
   exact ((@happly_dep X Y f g ; H X Y f g) ^-1).
 Defined.
 
-Theorem strong_funext_dep_compute
+Theorem strong_funext_dep_comp1
   (strong_funext_dep : strong_funext_dep_statement)
-  (X : Type) (P : X -> Type) (f g : section P) (p : f === g) (x : X) :
-  happly_dep (strong_to_naive_funext_dep strong_funext_dep X P f g p) x == p x.
+: funext_comp1_statement (strong_to_naive_funext_dep strong_funext_dep).
 Proof.
+  unfold funext_comp1_statement.
+  intros.
+  unfold strong_to_naive_funext_dep.
+  unfold inverse.
+  simpl.
+  unfold strong_funext_dep_statement in *.
+  (* To show the desired equality, we first lift the points to the homotopy fiber, and then show them equal there, which is easy since it’s contractible.  *)
+  apply (@base_path _ _ (pr1 (strong_funext_dep X P f f (fun x : X => idpath (f x)))) (idpath f; idpath _)).
+  symmetry.
+  apply (pr2 (strong_funext_dep X P f f (fun x : X => idpath (f x)))).
+Defined.
+
+Theorem strong_funext_dep_comp2
+  (strong_funext_dep : strong_funext_dep_statement)
+  : funext_comp2_statement (strong_to_naive_funext_dep strong_funext_dep).
+Proof.
+  unfold funext_comp2_statement.
   intros.
   unfold strong_to_naive_funext_dep.
   unfold inverse.
@@ -80,32 +129,35 @@ Proof.
   exact (happly_dep (pr2 (pr1 (strong_funext_dep X P f g p))) x).
 Defined.
 
-(** We also observe that for both strong and naive functional
-   extensionality, the dependent version implies the non-dependent
-   version.  *)
+(* Name used in older versions, retaining for backward-compatibility: *)
+Definition strong_funext_dep_compute := strong_funext_dep_comp2.
 
-Theorem strong_funext_dep_to_nondep :
-  strong_funext_dep_statement -> strong_funext_statement.
+(** Conversely, does naive functional extensionality imply the strong form?  Assuming _both_ computation rules, this is not hard to show: [comp1] says that [funext] gives a left inverse to [happly], [comp2] that it gives a right inverse. *)
+
+Lemma funext_both_comps_to_strong
+  (funext : funext_dep_statement)
+  (funext_comp1 : funext_comp1_statement funext)
+  (funext_comp2 : funext_comp2_statement funext)
+: strong_funext_statement.
 Proof.
-  intros H X Y f g. 
-  exact (H X (fun x => Y) f g).
+  intros.  unfold strong_funext_statement.
+  intros.  
+  (* [funext] gives a two-sided inverse to [happly]: *)  
+  apply (hequiv_is_equiv happly (funext _ _ f g)).
+  (* First, show it’s a right inverse: *)
+  intro h_fg.  apply funext.  
+  intro x.  apply (funext_comp2 X (fun _ => Y)).
+  (* Now, show it’s a left inverse: *)
+  intro p.  destruct p.  apply funext_comp1.
 Defined.
 
-Theorem funext_dep_to_nondep :
-  funext_dep_statement -> funext_statement.
-Proof.
-  intros H X Y f g.
-  exact (H X (fun x => Y) f g).
-Defined.
-
-
-(** Can we go backwards, getting to strong functional extensionality
-   from naive functional extensionality?  At first the prospects don't
+(** But can we do better, getting to strong functional extensionality
+   from just naive functional extensionality itself?  At first the prospects don't
    look good; naive functional extensionality gives us a map going
    backwards, but it doesn't assert anything *about* that map, so it
    seems unlikely that it would be an inverse to [happly].
 
-   However, it turns out that we can go backwards; the key is to first
+   However, it turns out that we can do it; the key is to first
    forget down to an even weaker axiom, called "weak functional
    extensionality".  This has only one version, which states that the
    dependent product of a family of (continuously) contractible types
@@ -280,4 +332,41 @@ Proof.
 Defined.
 
 (** Therefore, strong dependent functional extensionality is
-   equivalent to (weak functional extensionality + dependent eta). *)
+   equivalent to (weak functional extensionality + dependent eta).
+
+   Putting the pieces together, we can now get the strong from the naive form: *)
+
+Theorem naive_to_strong_funext_dep
+  : funext_dep_statement -> strong_funext_dep_statement.
+Proof.
+  intro funext.
+  apply weak_to_strong_funext_dep.
+  apply funext_dep_to_eta_dep.  assumption.
+  apply funext_dep_to_weak.  assumption.
+Defined.
+
+(** Finally, we can now conclude that the two computation rules are equivalent, since once one knows that [happly] is an equivalence, any left inverse to it is also a right inverse, and vice versa.
+
+Proof of this: to do, requires a couple of new lemmas in [Equivalences.v]. *)
+
+
+
+(** * Dependent and non-dependent forms. *)
+
+(** We also observe that for both strong and naive functional
+   extensionality, the dependent version implies the non-dependent
+   version.  *)
+
+Theorem strong_funext_dep_to_nondep :
+  strong_funext_dep_statement -> strong_funext_statement.
+Proof.
+  intros H X Y f g. 
+  exact (H X (fun x => Y) f g).
+Defined.
+
+Theorem funext_dep_to_nondep :
+  funext_dep_statement -> funext_statement.
+Proof.
+  intros H X Y f g.
+  exact (H X (fun x => Y) f g).
+Defined.
