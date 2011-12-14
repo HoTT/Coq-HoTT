@@ -56,7 +56,7 @@ Definition funext_comp2_statement (funext : funext_dep_statement)
       happly_dep (funext X P f g p) x == p x).
 (** ‘Π-ext-app’ in Garner. *)
 
-(** Does this rule follow automatically?  *Yes*, and in fact for a given witness [funext], it’s equivalent to [funext_comp1_statement] above.  However, this seems quite non-trivial to prove; it will follow eventually from the comparision with strong functional extensionality.  So we leave this for now, and will return to it later. *)
+(** Does this rule follow automatically?  *Yes*, and in fact for a given witness [funext], it’s equivalent to [funext_comp1_statement] above.  However, this seems quite non-trivial to prove; it will follow eventually from the comparision with “contractible functional extensionality”.  So we leave this for now, and will return to it later. *)
 
 (** Alternatively, a natural way to state a "homotopically good" notion of function
    extensionality is to observe that there is a canonical map in the
@@ -214,6 +214,40 @@ Proof.
   auto.
 Defined.
 
+(** Some tactics for working with eta-expansion.  *)
+
+Ltac eta_intro f :=
+  match goal with
+    | [ eta_rule : eta_dep_statement |- forall (f : forall x:_, _), @?Q f] =>
+        intro f;
+        apply (@transport _ Q _ _ (eta_rule _ _ f));
+        unfold eta_dep
+    | |- forall f, @?Q f =>
+      let eta_rule := fresh "eta_rule" 
+      in
+        intro f;
+        cut eta_dep_statement; 
+        (* [cut] not [assert], to defer this subgoal to end *)
+          [ intro eta_rule;
+            apply (@transport _ Q _ _ (eta_rule _ _ f));
+            unfold eta_dep 
+          | try auto ]
+    | |- _ => 
+      idtac "Goal not quantified over a function; cannot eta-introduce."
+end.
+
+Ltac eta_expand f := 
+  revert dependent f;
+  eta_intro f.
+
+(** Possible improvements to these tactics:
+ 
+- At end of [eta_expand], reintroduce any other hypotheses generalized at the beginning of it.
+- Make [eta_expand] work without reverting and re-introducing [f]?  
+- In particular, it would be really nice if some form of it could work for arbitrary terms, not just variables; I tried using variations of [match goal with |- @?Q f] to do this, but couldn’t get it to work.
+- Write “plural” versions of these tactics, so one can write i.e. [eta_intros f g h] to abbreviate [eta_intro f; eta_intro g; eta_intro h].
+*)
+
 (** A "mini" form of the desired implication (naive => strong) is that
    the eta rule does implies directly that the eta map is an
    equivalence. *)
@@ -319,18 +353,6 @@ Proof.
   assumption. assumption.
 Defined.
 
-(** Of course, naive dependent functional extensionality implies the
-   eta rule. *)
-
-Theorem funext_dep_to_eta_dep : funext_dep_statement -> eta_dep_statement.
-Proof.
-  intros H A P f.
-  apply H.
-  intro x.
-  unfold eta_dep.
-  auto.
-Defined.
-
 (** Therefore, strong dependent functional extensionality is
    equivalent to (weak functional extensionality + dependent eta).
 
@@ -341,17 +363,87 @@ Theorem naive_to_strong_funext_dep
 Proof.
   intro funext.
   apply weak_to_strong_funext_dep.
-  apply funext_dep_to_eta_dep.  assumption.
+  apply naive_funext_dep_implies_eta.  assumption.
   apply funext_dep_to_weak.  assumption.
 Defined.
 
-(** Finally, we can now conclude that the two computation rules are equivalent, since once one knows that [happly] is an equivalence, any left inverse to it is also a right inverse, and vice versa.
+(** If we want, we can also now conclude that the two computation rules are equivalent, since once one knows that [happly] is an equivalence, any left inverse to it is also a right inverse, and vice versa.
 
-Proof of this: to do, requires a couple of new lemmas in [Equivalences.v]. *)
+Proof of this: to do, wants a couple of new lemmas in [Equivalences.v]. *)
 
 
+(** * A new version of the proof of [strong_funext] from [funext_dep]. *)
 
-(** * Dependent and non-dependent forms. *)
+(** We start by considering yet another version of functional extensionality: that given a function [f], the space of functions together with a homotopy to [f] is contractible.  For the sake of cleaner terms, we give a slightly more specific statement than juse [is_contr (…)]: *)
+
+Definition contr_funext_statement :=
+     forall {A} {B : A -> Type} (f : forall x:A, B x),
+     forall (g : forall x:A, B x)  (h : f === g),
+     (g ; h) == (existT (fun g => f === g) f (fun x => idpath (f x))).
+
+(** The analogous statement with paths in place of homotopies is, of course, always true.  (In fact, I’d recalled it being in the library somewhere, but I can’t find it now.) *)
+
+Lemma contract_cone {A} {x:A} (yp : { y:A & x == y })
+  : yp == (x ; idpath x).
+Proof.
+  destruct yp as [y p].  path_induction.
+Defined.
+
+(** Now, by (weak or naive) extensionality, the product of all these cones is again contractible: *)
+
+Lemma contract_product_of_cones_from_naive_funext
+  {A} {B : A -> Type} {f : forall x:A, B x}
+  : funext_dep_statement ->
+    forall (gh : forall x:A, { y:B x & f x == y }),
+    gh == (fun x:A => ( f x ; (idpath (f x))) ).
+Proof.
+  intros funext gh.  
+  apply funext.  intro x.
+  apply contract_cone.
+Defined.
+
+(** But the type of “functions homotopic to [f]” is an up-to-eta-expansion retract of this product of cones.  So, we define this retraction: *)
+
+Lemma pair_fun_to_fun_pair 
+  {A} {B : A -> Type} {f : forall x:A, B x}
+  (gh : {g : forall x : A, B x & forall x : A, f x == g x})
+  : forall x:A, { y:(B x) & f x == y }.
+Proof.
+  exact (match gh with
+          (g ; h) => (fun x:A => (g x ; h x)) end ).
+Defined.
+
+Lemma fun_pair_to_pair_fun 
+  {A} {B : A -> Type} {f : forall x:A, B x}
+  (k : forall x:A, { y:(B x) & f x == y })
+  : {g : forall x : A, B x & forall x : A, f x == g x}.
+Proof.
+  exists (fun x:A => match (k x) with (gx ; _) => gx end).
+  intro x.  destruct (k x) as [gx hx].  exact hx.
+Defined.
+
+(** …and now we have all the ingredients for proving contractible funext from naive funext (or alternatively from weak funext + dependent eta): *)
+
+Lemma naive_to_contr_funext
+  : funext_dep_statement
+    -> contr_funext_statement.
+Proof.
+  intros funext.
+  unfold contr_funext_statement.  intros A B.
+  (* WLOG, assume all function arguments are eta-expanded. *)
+  eta_intro f; eta_intro g; eta_intro h.
+  (* Now, replace each side with its image under the going-around-the-retraction: *)
+  path_via (fun_pair_to_pair_fun (pair_fun_to_fun_pair (g ; h))).
+  path_via (@fun_pair_to_pair_fun _ _ (fun x => f x) (fun x => (f x ; idpath (f x)))).
+  (* Now it’s enough to show they were equal in the product of cones: *)
+  apply contract_product_of_cones_from_naive_funext.  assumption.
+  (* Finally, we are obliged to justify our use of [eta_intro]. *)
+  apply naive_funext_dep_implies_eta; auto. 
+Defined.
+
+(** To add here: show how [contr_funext_dep] implies [strong_funext_dep], [funext_dep_comp2]. *)
+
+(** * Comparing dependent and non-dependent forms. *)
 
 (** We also observe that for both strong and naive functional
    extensionality, the dependent version implies the non-dependent
@@ -370,3 +462,5 @@ Proof.
   intros H X Y f g.
   exact (H X (fun x => Y) f g).
 Defined.
+
+(** One can prove similar things for the other variants considered.  Can we go the other way, though?? *)
