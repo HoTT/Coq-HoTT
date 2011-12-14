@@ -76,9 +76,10 @@ Section CircleToCircle.
     apply compute_base'.
   Defined.
 
-  Lemma cc_transp : forall u v : C1, forall p : u == v, forall q : g (f u) == u,
-    transport (P := P) p q ==
-    (!map (compose g f) p) @ q @ p.
+  Lemma cc_transp {X Y : Type} (h k : X -> Y) (u v : X) (p : u == v) :
+    forall q : h u == k u,
+        transport (P := (fun x => h x == k x)) p q ==
+        (!map h p) @ q @ (map k p).
   Proof.
     path_induction.
     cancel_units.
@@ -87,7 +88,7 @@ Section CircleToCircle.
   Lemma cc_loop : transport (P := P) loop cc_base == cc_base.
   Proof.
     eapply concat.
-    apply cc_transp.
+    apply cc_transp with (h := compose g f) (k := idmap C1).
     do_compose_map.
 
     rewr (compute_loop' C1 _ _ _ : map f loop == _).
@@ -105,6 +106,8 @@ Section CircleToCircle.
     moveright_onright.
     undo_opposite_concat.
     associate_left.
+    apply opposite.
+    apply idmap_map.
   Defined.
 
   Lemma cc : forall x : C1, P x.
