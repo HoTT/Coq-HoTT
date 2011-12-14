@@ -1,107 +1,114 @@
 Add LoadPath "..".
 Require Import Homotopy.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
+(** The circle type S^1, as a higher inductive type. We define it as a Coq
+   structure so that we can have several circles at the same time. Also, it's a
+   bit cleaner because it avoids postulating axioms.
+*)
 
-(** The circle type S^1, as a higher inductive type. *)
+Structure Circle := {
+  circle :> Type;
+  base : circle;
+  loop : base == base;
+  circle_rect :
+    (forall (P : circle -> Type) (pt : P base) (lp : transport loop pt == pt), 
+      forall x : circle, P x);
+  compute_base :
+    (forall (P : circle -> Type) (pt : P base) (lp : transport loop pt == pt), 
+      circle_rect P pt lp base == pt);
+  compute_loop :
+    (forall P pt lp,
+      map_dep (circle_rect P pt lp) loop
+      == map (transport loop) (compute_base P pt lp) @ lp @ !compute_base P pt lp)
+}.
 
-Axiom circle : Type.
+(* Old compute_loop:
 
-Axiom base : circle.
-Axiom loop : base == base.
- 
-Axiom circle_rect :
-  forall (P : circle -> Type) (pt : P base) (lp : transport loop pt == pt), 
-    forall x : circle, P x.
+    (forall (P : circle -> Type) (pt : P base) (lp : transport loop pt == pt), 
+      (! map (transport loop) (compute_base P pt lp)
+        @ (map_dep (circle_rect P pt lp) loop)
+        @ (compute_base P pt lp))
+      == lp)
+*)
 
-Axiom compute_base :
-  forall (P : circle -> Type) (pt : P base) (lp : transport loop pt == pt), 
-    circle_rect P pt lp base == pt.
+Implicit Arguments base [c].
+Implicit Arguments loop [c].
 
-Axiom compute_loop :
-  forall (P : circle -> Type) (pt : P base) (lp : transport loop pt == pt), 
-    (! map (transport loop) (compute_base P pt lp)
-      @ (map_dep (circle_rect P pt lp) loop)
-      @ (compute_base P pt lp))
-    == lp.
+Section Non_dependent.
 
-(** From this we can derive the non-dependent version of the
-   eliminator, with its propositional computation rules. *)
+  (** From this we can derive the non-dependent version of the
+     eliminator, with its propositional computation rules. *)
 
-Definition circle_rect' :
-  forall (B : Type) (pt : B) (lp : pt == pt), circle -> B.
-Proof.
-  intros B pt lp.
-  apply circle_rect with (P := fun x => B) (pt := pt).
-  (* Since [pt] doesn't depend on [loop], the source [transport loop
-     pt] is equivalent to [pt].  The lemma which says this is
-     [trans_trivial], so it is tempting to write [apply
-     trans_trivial].  However, that would use it to solve the whole
-     goal, rather than allowing us to incorporate [lp] as well.  We
-     also need to be careful with our path-constructing tactics, lest
-     they overzealously use an identity path where we want to use a
-     nontrivial self-path. *)
-  apply @concat with (y := pt).
-  apply trans_trivial.
-  exact lp.
-Defined.
+  Variable circle : Circle.
 
-Definition compute_base' :
-  forall (B : Type) (pt : B) (lp : pt == pt),
-    circle_rect' B pt lp base == pt.
-Proof.
-  intros B pt lp.
-  unfold circle_rect'.
-  apply compute_base with (P := fun x => B).
-Defined.
+  Definition circle_rect' :
+    forall (B : Type) (pt : B) (lp : pt == pt), circle -> B.
+  Proof.
+    intros B pt lp.
+    apply circle_rect with (P := fun x => B) (pt := pt).
+    (* Since [pt] doesn't depend on [loop], the source [transport loop
+       pt] is equivalent to [pt].  The lemma which says this is
+       [trans_trivial], so it is tempting to write [apply
+       trans_trivial].  However, that would use it to solve the whole
+       goal, rather than allowing us to incorporate [lp] as well.  We
+       also need to be careful with our path-constructing tactics, lest
+       they overzealously use an identity path where we want to use a
+       nontrivial self-path. *)
+    apply @concat with (y := pt).
+    apply trans_trivial.
+    exact lp.
+  Defined.
 
-Definition compute_loop' :
-  forall (B : Type) (pt : B) (lp : pt == pt),
-    (! (compute_base' B pt lp)
-      @ map (circle_rect' B pt lp) loop
-      @ (compute_base' B pt lp))
-    == lp.
-Proof.
-  intros B pt lp.
-  set (P := fun x : circle => B).
-  set (lp' := trans_trivial loop pt @ lp).
-  path_via (!compute_base P pt lp'
-    @ !trans_trivial loop _
-    @ map_dep (circle_rect P pt lp') loop
-    @ compute_base P pt lp').
-  unwhisker.
-  moveleft_onleft.
-  apply opposite, map_dep_trivial.
-  path_via (!trans_trivial loop _
-    @ (!map (transport loop) (compute_base P pt lp'))
-    @ map_dep (circle_rect P pt lp') loop
-    @ compute_base P pt lp').
-  do_opposite_concat.
-  associate_right.
-  moveright_onleft.
-  associate_left.
-  apply compute_loop with (P := P) (pt := pt) (lp := lp').
-Defined.
+  Definition compute_base' :
+    forall (B : Type) (pt : B) (lp : pt == pt),
+      circle_rect' B pt lp base == pt.
+  Proof.
+    intros B pt lp.
+    unfold circle_rect'.
+    apply compute_base with (P := fun x => B).
+  Defined.
 
-(** If the circle is contractible, then UIP holds. *)
+  Lemma map_dep_trivial2 {A B} {x y : A} (f : A -> B) (p: x == y):
+    map f p == !trans_trivial p (f x) @ map_dep f p.
+  Proof.
+    path_induction.
+  Defined.
 
-Theorem circle_contr_implies_UIP : is_contr (circle) ->
-  forall (A : Type) (x y : A) (p q : x == y), p == q.
-Proof.
-  intros H A x y p q.
-  induction p.
-  set (cq := circle_rect' A x q).
-  set (cqb := cq base).
-  set (cqcb := compute_base' A x q : cqb == x).
-  set (cql := map cq loop : cqb == cqb).
-  set (cqcl := compute_loop' A x q : (!cqcb @ cql @ cqcb == q)).
-  path_via (!cqcb @ cql @ cqcb).
-  moveleft_onright.
-  moveleft_onleft.
-  cancel_units.
-  cancel_opposites.
-  path_via (map cq (idpath base)).
-  apply contr_path2.
-  assumption.
-Defined.
+  Definition compute_loop' : forall B pt lp,
+    map (circle_rect' B pt lp) loop
+    == compute_base' B pt lp @ lp @ !compute_base' B pt lp.
+  Proof.
+    intros B pt lp.
+    eapply concat.
+    apply map_dep_trivial2.
+    moveright_onleft.
+    eapply concat.
+    apply compute_loop with (P := fun _ => B).
+    unwhisker.
+  Defined.
+
+  (** If the circle is contractible, then UIP holds. *)
+
+  (*
+  Theorem circle_contr_implies_UIP : is_contr (circle) ->
+    forall (A : Type) (x y : A) (p q : x == y), p == q.
+  Proof.
+    intros H A x y p q.
+    induction p.
+    set (cq := circle_rect' A x q).
+    set (cqb := cq base).
+    set (cqcb := compute_base' A x q : cqb == x).
+    set (cql := map cq loop : cqb == cqb).
+    set (cqcl := compute_loop' A x q : (!cqcb @ cql @ cqcb == q)).
+    path_via (!cqcb @ cql @ cqcb).
+    moveleft_onright.
+    moveleft_onleft.
+    cancel_units.
+    cancel_opposites.
+    path_via (map cq (idpath base)).
+    apply contr_path2.
+    assumption.
+  Defined.
+  *)
+End Non_dependent.
+
