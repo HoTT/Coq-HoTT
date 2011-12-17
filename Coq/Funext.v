@@ -486,9 +486,6 @@ Proof.
   apply funext_correction_comp2.
 Defined.
 
-Theorem contr_to_strong_funext
-  : funext_dep_statement -> strong_funext_dep_statement.
-
 (** * Comparing dependent and non-dependent forms. *)
 
 (** We also observe that for both strong and naive functional
