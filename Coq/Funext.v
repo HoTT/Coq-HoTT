@@ -2,26 +2,30 @@ Require Export Fibrations Contractible Equivalences FiberEquivalences.
 
 (** Much of the content here is closely related to Richard Garner’s paper “On the strength of dependent products…”.  We use different terminology in places, but recall his for comparison. *)
 
+(** * Naive functional extensionality *)
+
+(** The simplest notion we call “naive functional extensionality”.
+   This is what a type theorist would probably write down when
+   thinking of types as sets and identity types as equalities: it says
+   that if two functions are equal pointwise, then they are equal.  It
+   comes in both ordinary and dependent versions. 
+
+   From an HoTT point of view, the type of _extensional equality_ or _pointwise equality_ between two functions can also be seen as the type of _homotopies_ between them. *)
+
 Definition ext_dep_eq {X} {P : X -> Type} (f g : forall x, P x)
   := forall x : X, f x == g x.
 
 Notation "f === g" := (ext_dep_eq f g) (at level 50).
-
-(** The simplest notion we call "naive functional extensionality".
-   This is what a type theorist would probably write down when
-   thinking of types as sets and identity types as equalities: it says
-   that if two functions are equal pointwise, then they are equal.  It
-   comes in both ordinary and dependent versions. *)
 
 Definition funext_statement : Type :=
   forall (X Y : Type) (f g: X -> Y), f === g -> f == g.
 
 Definition funext_dep_statement : Type :=
   forall (X : Type) (P : X -> Type) (f g : section P), f === g -> (f == g).
-(** This is the rule ‘Π-ext’ in Garner. *)
+(** This is the rule ‘Pi-ext’ in Garner. *)
 
 (** However, there are clearly going to be problems with this in the
-   homotopy world, since "being equal" is not merely a property, but
+   homotopy world, since “being equal” is not merely a property, but
    being equipped with a path is structure.  We should expect some
    sort of coherence or canonicity of the path from f to g relating it
    to the pointwise homotopy we started with.  
@@ -30,7 +34,7 @@ Definition funext_dep_statement : Type :=
 
 Definition funext_comp1_statement (funext : funext_dep_statement)
   := (forall X P f, funext X P f f (fun x => idpath (f x)) == idpath f).
-(** A propositional form of Garner’s ‘Π-ext-comp’. *)
+(** A propositional form of Garner’s ‘Pi-ext-comp’. *)
 
 (** Does this rule follow automatically?  Yes and no.  Given a witness [funext : funext_dep_statement], this does not necessarily hold for [funext] itself; but we can always find a better witness which it does hold: *)
 Definition funext_correction : funext_dep_statement -> funext_dep_statement
@@ -49,20 +53,22 @@ Proof.
   auto with path_hints.
 Defined.
 
-(** On the other hand, if we think of [funext] as more like a _1-dimensional constructor_ for Π-types,  we can be led to the following rule, telling us what happens to it under the destructor for Π-types, function application (bumped up to dimension 1 via happly): *)
+(** On the other hand, if we think of [funext] as more like a _1-dimensional constructor_ for Pi-types,  we can be led to the following rule, telling us what happens to it under the destructor for Pi-types, function application (bumped up to dimension 1 via happly): *)
 
 Definition funext_comp2_statement (funext : funext_dep_statement)
   := (forall X P f g p x,
       happly_dep (funext X P f g p) x == p x).
-(** ‘Π-ext-app’ in Garner. *)
+(** ‘Pi-ext-app’ in Garner. *)
 
 (** Does this rule follow automatically?  *Yes*, and in fact for a given witness [funext], it’s equivalent to [funext_comp1_statement] above.  However, this seems quite non-trivial to prove; it will follow eventually from the comparision with “contractible functional extensionality”.  So we leave this for now, and will return to it later. *)
 
-(** Alternatively, a natural way to state a "homotopically good" notion of function
+(** * Strong functional extensionality *)
+
+(** Alternatively, a natural way to state a “homotopically good” notion of function
    extensionality is to observe that there is a canonical map in the
    other direction, taking paths between functions to pointwise
    homotopies.  We can thus just ask for that map to be an
-   equivalence.  We call this "strong functional extensionality."  Of
+   equivalence.  We call this “strong functional extensionality.”  Of
    course, it also comes in ordinary and dependent versions.  *)
 
 Definition strong_funext_statement : Type :=
@@ -151,34 +157,11 @@ Proof.
   intro p.  destruct p.  apply funext_comp1.
 Defined.
 
-(** But can we do better, getting to strong functional extensionality
-   from just naive functional extensionality itself?  At first the prospects don't
-   look good; naive functional extensionality gives us a map going
-   backwards, but it doesn't assert anything *about* that map, so it
-   seems unlikely that it would be an inverse to [happly].
+(** But can we do better, getting to strong functional extensionality from just naive functional extensionality alone?  At first the prospects don't look good; naive functional extensionality provides us with paths, but doesn’t tell us anything about the behaviour of those paths under elimination, so it seems unlikely that it would be an inverse to [happly].
 
-   However, it turns out that we can do it; the key is to first
-   forget down to an even weaker axiom, called "weak functional
-   extensionality".  This has only one version, which states that the
-   dependent product of a family of (continuously) contractible types
-   is contractible.  *)
+   However, it turns out that we can do it!  It’s easiest to go via another extensionality statement: _contractible functional extensionality_, [contr_funext_statement] below.  Before that, though, we need a quick technical digression on eta rules. *)
 
-Definition weak_funext_statement := forall (X : Type) (P : X -> Type),
-  (forall x : X, is_contr (P x)) -> is_contr (forall x : X, P x).
-
-(** It is easy to see that naive dependent functional extensionality
-   implies weak functional extensionality. *)
-
-Theorem funext_dep_to_weak :
-  funext_dep_statement -> weak_funext_statement.
-Proof.
-  intros H X P H1.
-  exists (fun x => projT1 (H1 x)).
-  intro f.
-  assert (p : forall (x:X) (y:P x), y == ((fun x => projT1 (H1 x)) x)).
-  intros. apply contr_path, H1.
-  apply H. intro x. apply p.
-Defined.
+(** * Eta rules and tactics *)
 
 (** Another (very) weak type of functional extensionality is the
    (propositional) eta rule, which is implied by naive functional
@@ -214,6 +197,38 @@ Proof.
   auto.
 Defined.
 
+(** A “mini” form of the main theorem (naive => strong) is that
+   the eta rule implies directly that the eta map is an
+   equivalence. *)
+
+Lemma eta_is_equiv : eta_statement -> forall (A B : Type),
+  is_equiv (@eta A B).
+Proof.
+  intros H A B.
+  apply equiv_pointwise_idmap.
+  intro f.
+  apply H.
+Defined.
+
+Definition eta_equiv (Heta : eta_statement) (A B : Type) :
+  (A -> B) <~> (A -> B) :=
+  existT is_equiv (@eta A B) (eta_is_equiv Heta A B).
+
+(** And the dependent version. *)
+
+Lemma eta_dep_is_equiv : eta_dep_statement -> forall (A:Type) (P : A -> Type),
+   is_equiv (@eta_dep A P).
+Proof.
+  intros H A P.
+  apply equiv_pointwise_idmap.
+  intro f.
+  apply H.
+Defined.
+
+Definition eta_dep_equiv (Heta : eta_dep_statement) (A : Type) (P : A -> Type) :
+  (forall x, P x) <~> (forall x, P x) :=
+  existT is_equiv (@eta_dep A P) (eta_dep_is_equiv Heta A P).
+
 (** Some tactics for working with eta-expansion.  *)
 
 Ltac eta_intro f :=
@@ -248,140 +263,18 @@ Ltac eta_expand f :=
 - Write “plural” versions of these tactics, so one can write i.e. [eta_intros f g h] to abbreviate [eta_intro f; eta_intro g; eta_intro h].
 *)
 
-(** A "mini" form of the desired implication (naive => strong) is that
-   the eta rule does implies directly that the eta map is an
-   equivalence. *)
+(** Now we’re equipped to tackle the main theorem. *)
 
-Lemma eta_is_equiv : eta_statement -> forall (A B : Type),
-  is_equiv (@eta A B).
-Proof.
-  intros H A B.
-  apply equiv_pointwise_idmap.
-  intro f.
-  apply H.
-Defined.
+(** * Contractible functional extensionality, and the proof of strong from naive. *)
 
-Definition eta_equiv (Heta : eta_statement) (A B : Type) :
-  (A -> B) <~> (A -> B) :=
-  existT is_equiv (@eta A B) (eta_is_equiv Heta A B).
-
-(** And the dependent version. *)
-
-Lemma eta_dep_is_equiv : eta_dep_statement -> forall (A:Type) (P : A -> Type),
-   is_equiv (@eta_dep A P).
-Proof.
-  intros H A P.
-  apply equiv_pointwise_idmap.
-  intro f.
-  apply H.
-Defined.
-
-Definition eta_dep_equiv (Heta : eta_dep_statement) (A : Type) (P : A -> Type) :
-  (forall x, P x) <~> (forall x, P x) :=
-  existT is_equiv (@eta_dep A P) (eta_dep_is_equiv Heta A P).
-
-(** Less trivial is the fact that weak functional extensionality
-   implies *strong* (dependent) functional extensionality, at least in
-   the presence of the dependent eta rule. *)
-
-Theorem weak_to_strong_funext_dep :
-  eta_dep_statement -> weak_funext_statement -> strong_funext_dep_statement.
-Proof.
-  intros Heta H X P f g.
-  (* The idea is that [happly_dep] is one fiber map in a map of
-     fibrations, whose total spaces are contractible and hence
-     equivalent.  *)
-  set (A := forall x, P x).
-  set (Q := (fun h => f == h) : A -> Type).
-  set (R := (fun h => forall x, f x == h x) : A -> Type).
-  set (fibhap := (@happly_dep X P f) : forall h, Q h -> R h).
-  apply (fiber_is_equiv _ _ fibhap).
-  apply contr_contr_equiv.
-  (* Contractibility of this space is easy. *)
-  apply pathspace_contr'.
-  (* This one is trickier; we show it is contractible by showing it
-     equivalent to the total space of a different fibration. *)
-  set (altAR := forall x, { y : P x & f x == y }).
-  (* which is easily shown to be contractible. *)
-  assert (contr_alt: is_contr altAR).
-  apply H.
-  intro x.
-  apply pathspace_contr'.
-  apply contr_equiv_contr with (A := altAR).
-  (* The map between these spaces is obvious. *)
-  set (k := (fun d => existT R (fun x => pr1 (d x)) (fun x => pr2 (d x)))
-    : altAR -> sigT R).
-  exists k.
-  eapply hequiv_is_equiv.
-  (* as is its inverse. *)
-  instantiate (1 := fun e => (fun x => (pr1 e x ; pr2 e x))).
-  unfold k. intro y.
-  simpl.
-  (* Now we have to be a bit clever.  The LHS here is the image of [z]
-     under the following endofunction. *)
-  set (W := fun z:sigT R => existT R (fun x:X => pr1 z x) (fun x:X => pr2 z x)).
-  path_via (W y).
-  (* So if we can show that [W] is homotopic to the identity, we'll be
-     done.  We do this by showing that it is (1) idempotent and (2) an
-     equivalence. *)
-  assert (W_idempotent : forall z, W (W z) == W z); auto.
-  assert (W_equiv : is_equiv W).
-  (* We show that [W] is an equivalence by showing it is homotopic to
-     the following slightly different map. *)
-  set (W' := fun z:sigT R => let (h,q) := z in existT R (fun x => h x) q).
-  apply @equiv_homotopic with (g := W').
-  intro z. destruct z.
-  unfold W, W'.
-  apply @total_path with (p := idpath (fun x0 => x x0)).
-  simpl.
-  apply Heta.
-  (* But [W'] is an equivalence because it is the pullback of the
-     equivalence [eta_dep] along a fibration. *)
-  change (is_equiv (pullback_total_equiv R (eta_dep_equiv Heta X P))).
-  apply pullback_total_is_equiv.
-  (* Now any idempotent equivalence is homotopic to the identity. *)
-  set (We := (W ; W_equiv) : (sigT R <~> sigT R)).
-  path_via (We^-1 (W (W y))).
-  apply opposite, inverse_is_retraction.
-  path_via' (We^-1 (W y)).
-  apply map. apply W_idempotent.
-  apply inverse_is_retraction.
-  (* This looks like it would be difficult, except that it is a path
-     in a contractible space! *)
-  intro x.
-  apply contr_path.
-  assumption. assumption.
-Defined.
-
-(** Therefore, strong dependent functional extensionality is
-   equivalent to (weak functional extensionality + dependent eta).
-
-   Putting the pieces together, we can now get the strong from the naive form: *)
-
-Theorem naive_to_strong_funext_via_weak
-  : funext_dep_statement -> strong_funext_dep_statement.
-Proof.
-  intro funext.
-  apply weak_to_strong_funext_dep.
-  apply naive_funext_dep_implies_eta.  assumption.
-  apply funext_dep_to_weak.  assumption.
-Defined.
-
-(** If we want, we can also now conclude that the two computation rules are equivalent, since once one knows that [happly] is an equivalence, any left inverse to it is also a right inverse, and vice versa.
-
-Proof of this: to do, wants a couple of new lemmas in [Equivalences.v]. *)
-
-
-(** * A new version of the proof of [strong_funext] from [funext_dep]. *)
-
-(** We start by considering yet another version of functional extensionality: that given a function [f], the space of functions together with a homotopy to [f] is contractible.  For the sake of cleaner terms, we give a slightly more specific statement than juse [is_contr (…)]: *)
+(** We start by considering yet another version of functional extensionality: that given a function [f], the space of functions together with a homotopy to [f] is contractible.  For the sake of cleaner terms, we give a slightly more specific statement than just [is_contr (…)]: *)
 
 Definition contr_funext_statement :=
-     forall {A} {B : A -> Type} (f : forall x:A, B x),
+     forall A (B : A -> Type) (f : forall x:A, B x),
      forall (g : forall x:A, B x)  (h : f === g),
      (g ; h) == (existT (fun g => f === g) f (fun x => idpath (f x))).
 
-(** The analogous statement with paths in place of homotopies is, of course, always true.  (In fact, I’d recalled it being in the library somewhere, but I can’t find it now.) *)
+(** The analogous statement with paths in place of homotopies is, of course, always true.  (I’d recalled it being in the library somewhere, but I can’t find it now?) *)
 
 Lemma contract_cone {A} {x:A} (yp : { y:A & x == y })
   : yp == (x ; idpath x).
@@ -389,7 +282,7 @@ Proof.
   destruct yp as [y p].  path_induction.
 Defined.
 
-(** Now, by (weak or naive) extensionality, the product of all these cones is again contractible: *)
+(** Now, by naive extensionality, the product of all these cones is again contractible: *)
 
 Lemma contract_product_of_cones_from_naive_funext
   {A} {B : A -> Type} {f : forall x:A, B x}
@@ -431,7 +324,7 @@ Proof.
   intros funext.
   unfold contr_funext_statement.  intros A B.
   (* WLOG, assume all function arguments are eta-expanded. *)
-  eta_intro f; eta_intro g; eta_intro h.
+  eta_intro f. eta_intro g. eta_intro h.
   (* Now, replace each side with its image under the going-around-the-retraction: *)
   path_via (fun_pair_to_pair_fun (pair_fun_to_fun_pair (g ; h))).
   path_via (@fun_pair_to_pair_fun _ _ (fun x => f x) (fun x => (f x ; idpath (f x)))).
@@ -477,7 +370,7 @@ Proof.
   apply funext_correction_comp1.
 Defined.
 
-Theorem naive_to_strong_funext_via_contr
+Theorem naive_to_strong_funext
   : funext_dep_statement -> strong_funext_dep_statement.
 Proof.
   intro funext.
@@ -485,6 +378,96 @@ Proof.
   apply funext_correction_comp1.
   apply funext_correction_comp2.
 Defined.
+
+(** Alternatively, we can show strong funext entirely from contractible funext, without ever invoking naive: *)
+ 
+Theorem contr_to_strong_funext :
+  contr_funext_statement -> strong_funext_dep_statement.
+Proof.
+  intros contr_funext X P f g.
+  (* The idea is that [happly_dep] is one fiber map in a map of
+     fibrations, whose total spaces are contractible and hence
+     equivalent.  *)
+  set (A := forall x, P x).
+  set (Q := (fun h => f == h) : A -> Type).
+  set (R := (fun h => forall x, f x == h x) : A -> Type).
+  set (fibhap := (@happly_dep X P f) : forall h, Q h -> R h).
+  apply (fiber_is_equiv _ _ fibhap).  clear g.
+  apply contr_contr_equiv.
+  (* The total path space out of [f] is always contractible: *)
+  apply pathspace_contr'.
+  (* On the other hand, [contr_funext] tells us the same for the total homotopy space: *)
+  unfold is_contr.  exists (existT R f (fun x => idpath (f x))).  
+  intros [g h].  apply contr_funext.
+Defined.
+
+(** * Weak functional extensionality *)
+
+(** Inspection of the proof of [naive_to_contr_funext] shows that it only uses functional extensionality via two simpler statements: [eta_dep_statement], and the fact that a product of contractible types is contractible.
+
+  This latter statement is interesting in its own right; we call it _weak functional extensionality_.  
+
+  Among other things, it can be seen from the model category point of view as saying that the dependent product functor preserves trivial fibrations, which is exactly (the non-trivial part of) what’s needed to make pullback/dependent-product a Quillen adjunction! *)
+
+Definition weak_funext_statement := forall (X : Type) (P : X -> Type),
+  (forall x : X, is_contr (P x)) -> is_contr (forall x : X, P x).
+
+(** It is easy to see that naive dependent functional extensionality
+   implies weak functional extensionality. *)
+
+Theorem funext_dep_to_weak :
+  funext_dep_statement -> weak_funext_statement.
+Proof.
+  intros H X P H1.
+  exists (fun x => projT1 (H1 x)).
+  intro f.
+  assert (p : forall (x:X) (y:P x), y == ((fun x => projT1 (H1 x)) x)).
+  intros. apply contr_path, H1.
+  apply H. intro x. apply p.
+Defined.
+
+(** Now we can give an alternative form of the main theorem: the fact that weak functional extensionality implies *strong* (dependent) functional extensionality, at least in the presence of the dependent eta rule. *)
+
+Lemma is_contr_product_of_cones_from_weak_funext
+  {A} {B : A -> Type} {f : forall x:A, B x}
+  : weak_funext_statement ->
+    is_contr (forall x:A, { y:B x & f x == y }).
+Proof.
+  intro weak_funext.  apply weak_funext.
+  intro x.  exists ((f x ; idpath (f x)) : {y : B x & f x == y}).
+  intros [y p].  path_induction.
+Defined.
+
+(** We can now essentially repeat the proof of [naive_to_contr_funext]: *) 
+ 
+Theorem weak_plus_eta_to_contr_funext
+  : eta_dep_statement -> weak_funext_statement -> contr_funext_statement.
+Proof.
+  intros eta_dep weak_funext.
+  unfold contr_funext_statement.  intros A B.
+  eta_intro f. eta_intro g. eta_intro h.
+  path_via (fun_pair_to_pair_fun (pair_fun_to_fun_pair (g ; h))).
+  path_via (@fun_pair_to_pair_fun _ _ (fun x => f x) (fun x => (f x ; idpath (f x)))).
+  apply contr_path.
+  apply is_contr_product_of_cones_from_weak_funext.  assumption.
+Defined.
+
+Theorem weak_to_strong_funext_dep :
+  eta_dep_statement -> weak_funext_statement -> strong_funext_dep_statement.
+Proof.
+  intros eta_dep weak_funext.
+  apply contr_to_strong_funext.
+  apply weak_plus_eta_to_contr_funext; assumption.
+Defined.
+
+(** Therefore, all of the following are equivalent:
+
+- naive functional extensionality;
+- naive functional extensionality with either or both comp rules;
+- strong functional extensionality;
+- contractible functional extensionality;
+- weak functional extensionality + dependent eta. *)
+
 
 (** * Comparing dependent and non-dependent forms. *)
 
@@ -506,4 +489,4 @@ Proof.
   exact (H X (fun x => Y) f g).
 Defined.
 
-(** One can prove similar things for the other variants considered.  Can we go the other way, though?? *)
+(** One can prove similar things for the other variants considered.  Can we go the other way, for any of the variants? *)
