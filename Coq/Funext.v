@@ -138,15 +138,15 @@ Lemma funext_both_comps_to_strong
   (funext : funext_dep_statement)
   (funext_comp1 : funext_comp1_statement funext)
   (funext_comp2 : funext_comp2_statement funext)
-: strong_funext_statement.
+: strong_funext_dep_statement.
 Proof.
-  intros.  unfold strong_funext_statement.
+  intros.  unfold strong_funext_dep_statement.
   intros.  
   (* [funext] gives a two-sided inverse to [happly]: *)  
-  apply (hequiv_is_equiv happly (funext _ _ f g)).
+  apply (hequiv_is_equiv happly_dep (funext _ _ f g)).
   (* First, show it’s a right inverse: *)
   intro h_fg.  apply funext.  
-  intro x.  apply (funext_comp2 X (fun _ => Y)).
+  intro x.  apply (funext_comp2 X P).
   (* Now, show it’s a left inverse: *)
   intro p.  destruct p.  apply funext_comp1.
 Defined.
@@ -358,7 +358,7 @@ Defined.
 
    Putting the pieces together, we can now get the strong from the naive form: *)
 
-Theorem naive_to_strong_funext_dep
+Theorem naive_to_strong_funext_via_weak
   : funext_dep_statement -> strong_funext_dep_statement.
 Proof.
   intro funext.
@@ -424,7 +424,7 @@ Defined.
 
 (** …and now we have all the ingredients for proving contractible funext from naive funext (or alternatively from weak funext + dependent eta): *)
 
-Lemma naive_to_contr_funext
+Theorem naive_to_contr_funext
   : funext_dep_statement
     -> contr_funext_statement.
 Proof.
@@ -441,7 +441,53 @@ Proof.
   apply naive_funext_dep_implies_eta; auto. 
 Defined.
 
-(** To add here: show how [contr_funext_dep] implies [strong_funext_dep], [funext_dep_comp2]. *)
+Lemma contr_funext_to_comp2 (funext : funext_dep_statement)
+  : (funext_comp1_statement funext)
+  -> contr_funext_statement
+  -> (funext_comp2_statement funext).
+Proof.
+  intros funext_comp1 contr_funext.
+  unfold funext_comp2_statement.  intros X P f g h.
+  apply (@transport _ 
+           (fun (g0h0 : { g : section P & f === g }) 
+              => match g0h0 with (g0;h0)
+              => (forall x : X, happly_dep (funext X P f g0 h0) x == h0 x) end)
+            (existT (fun g => f === g) f (fun x => idpath (f x)))
+            (g ; h)).
+  symmetry.  apply contr_funext.
+  clear g h.  intro x. 
+  (* A “rewrite” tactic would be nicer here; lacking one, we explicitly expand the RHS. *)
+  path_via (happly_dep (idpath f) x).
+  apply_happly.  path_simplify. 
+  apply funext_comp1.
+Defined.
+
+Theorem funext_comp1_to_comp2 (funext : funext_dep_statement)
+  : (funext_comp1_statement funext) -> (funext_comp2_statement funext).
+Proof.
+  intro funext_comp1.  
+  apply contr_funext_to_comp2; auto.  
+  apply naive_to_contr_funext; auto.
+Defined.
+
+Lemma funext_correction_comp2 (funext : funext_dep_statement)
+  : funext_comp2_statement (funext_correction funext).
+Proof.
+  apply funext_comp1_to_comp2. 
+  apply funext_correction_comp1.
+Defined.
+
+Theorem naive_to_strong_funext_via_contr
+  : funext_dep_statement -> strong_funext_dep_statement.
+Proof.
+  intro funext.
+  apply (funext_both_comps_to_strong (funext_correction funext)).
+  apply funext_correction_comp1.
+  apply funext_correction_comp2.
+Defined.
+
+Theorem contr_to_strong_funext
+  : funext_dep_statement -> strong_funext_dep_statement.
 
 (** * Comparing dependent and non-dependent forms. *)
 
