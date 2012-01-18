@@ -1,0 +1,31 @@
+By Vladimir  Voevodsky Feb. 2010 - Nov. 2011 .
+
+This is the current version (as of Nov. 6 , 2011) of the mathematical library for the proof assistant Coq based on the univalent semantics for the calculus of inductive constructions. The best way to see in detail what the files in these subdirectories are about is to generate the corresponding tables of content with coqdoc . Here we give a brief outline of the library structure .   
+
+Important : files in the library starting with hProp.v will not compile without a type_in_type patch which turns off the universe consistency checking . This is a temporary situation which will be corrected when better universe management is implememnted in Coq . We also use a patch which modifies the rule by which the universe level of inductive definitions is computed . If the later patch is applied correctly then the compilation of the first file uuu.v should produce a message of the form [ paths 0 0 : UUU ] . Without a patch the message will be [ paths 0 0 : Prop ] . 
+
+The library contains subdirectories Generalities/ hlevel1/ hlevel2/ and /Proof_of_Extensionality . 
+
+Directory Generalities/ contains files uuu.v and uu0.v .  The file uuu.v contains some new notations for the constructions defined in Coq.Init library as well as the definition of "dependent sum" [ total2 ] . The file uu0.v contains the bulk of general results and definitions about types which are pertinent to the univalent approach .  In this file we prove main results which apply to all types and which require only one universe level to be proved.  Some of the results in uu0 use the extensionality axiom for functions (introduced in the same file). No other axioms or resizings rules (see below) are used and these files should compile with the standard version of Coq. 
+
+Directory hlevel1/ contains one file hProp.v with results and constructions related to types of h-level 1 i.e. to types which correspond to "propositions" in our formalization. Some of the results here use " resizing rules " and therefore it will currently not compile without a type_in_type patch . Note that we continue to keep track of universe levels in these files "by hand" and use only those "universe re-assigment" or "resizing" rules which are semantically justified.  Some of the results in this file also use the univalence axiom for hProp called [ uahp ] which is equivalent to the axiom asserting that if two propositions are logically equivalent then they are equal .  
+
+Directory hlevel2/ contains files with constructions and results related to types of hlevel 2 i.e. to types corresponding to sets in our formalization . 
+
+The first file is hSet.v . It contains most general definitions related to sets including the constructions related to set-quotients of types . 
+
+The next group of files in the hierarchy are algebra1(a b c d).v which contains many definitions and constructions of general abstract algebra culminating at the moment in the construction of the field of fractions of an integral domain. The files also contain definitions and results about the relations on algebraic structures .  
+
+The next file is hnat.v which contains many simple lemmas about arithmetic and comparisons on natural numbers . 
+
+Then the hierarchy branches. 
+
+On one branch  there are files stnfsets.v and finitesets.v which introduce constructions related to standard and general finite sets respectively.
+
+On another branch there are files hz.v and hq.v which introduce the basic cosntructions related to the integer and rational arithmetic as particular cases of the general theorems of the algebra1 group of files. 
+
+At the end of files finitesets.v,  hz.v and hq.v there are sample computations which show that despite our use of stnadard extensionality axioms the relevant terms of types [ bool ] and [ nat ] fully normalize. The last computation example in hq.v which evaluates the integral part of 10/-3 takes relatively long time ( about 30 sec. on my computer, it should work much faster with the stnadard optimized version of the "call by need" normalization algorithm which is switched off by one of the patches which I use, see the explanation in the README file of the patches directory) and it might make sense to comment it out.  
+
+Directory Proof_of_Extensionality/ contains the formulation of general Univalence Axiom and a proof that it implies functional extensionality . 
+
+
