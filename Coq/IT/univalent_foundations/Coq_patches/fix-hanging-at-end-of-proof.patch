@@ -1,0 +1,12 @@
+diff -ub coq-8.3pl2-clean/kernel/closure.ml coq-8.3pl2-no-universe-constraints--index-levels-matter/kernel/closure.ml
+--- kernel/closure.ml	2010-07-28 07:22:04.000000000 -0500
++++ kernel/closure.ml	2011-10-03 14:48:17.000000000 -0500
+@@ -17,7 +17,7 @@
+ open Esubst
+ 
+ let stats = ref false
+-let share = ref true
++let share = ref false
+ 
+ (* Profiling *)
+ let beta = ref 0

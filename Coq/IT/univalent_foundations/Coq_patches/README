@@ -1,0 +1,99 @@
+This directory contains patches for Coq-8.3pl2 written by Hugo Hereblin and Dan Grayson which are needed for proper compilation of the "Foundations" library. 
+
+Hugo's patches "inductive-indice-levels-matter-8.3.patch" and "patch.type-in-type" are intended only as a temporary solution for the universe management issues in Coq which arise in connection with the univalent approach. 
+
+The first of these patches changes the way the universe level of inductive types is computed for those definitions which do not specify [ Set ] or [ Prop ] as the target of the inductive construction explicitely. The new computation rule for the universe level takes into account not only the u-levels of the types occuring in the constructors but also the u-levels of types occuring in "pseudo-parametrs" i.e. in the [ forall ] expressions in the type of the inductive definition. For example, in the definition:
+
+[ Inductive Ind ( a1 : A1 ) : forall a2 : A2 , Type := ... ]
+
+The u-level of [ Ind ] will be the maximum of the u-level computed on the basis of types occuring in the constructors and the u-level of [ A2 ]. The u-level of [ A1 ] which the type of a parameter [ a1 ] ( as opposed to a pseudo-parameter [ a2 ] ) is not taken into account. 
+
+The second patch switches off the universe consistency checking in Coq which is a temporary measure which allows us to formalize interesting constructions such as [ ishinh ] and [ setquot ] without having the resizing rules. 
+
+Dan's patches have the following functions (see also comments in the individual patches):
+
+1. "grayson-closedir-after-opendir.patch" imporoves the management of file openings/closing and eliminates in most cases the complaint that there arev too many open files.
+
+2. "grayson-fix-infinite-loop.patch" this is a temporary fix for a bug in the current version of Coq's "call by need" normnalization algorithm. The patch uses a flag previously installed in the source code to switch off some optimization features of the algorthim. The need for this patch has arised because of several cases when Coq process would hang after "Admitted". In practice the patch prevents hangings but makes compilation of some of the code slower. In particular, with this patch installed the current standard library file Cycllic31.v does not compile in a reasonable amount of time (see the suggestion of how to compile Coq without much of the standard library below). It also affect the time of compilation for some of the "computation tests" in the Foundations library increasing the compilation time by a factor of >5. Hopefully, the actuall buf will be located and removed in the next update.
+
+3. "grayson-improved-abstraction-version2-8.3pl2.patch" this patch dramatically improves the behavior of the [destruct] tactic making it applicable in many the cases when dependencies are present. It is not creating any complicated proof terms but simply uses the eliminator for inductive definitions in a more intelligent way than the standard [ destruct ] .
+
+
+4. "grayson-fix-infinite-loop.patch" fixes another hanging situation.   
+
+The following is a copy of the terminal session on my mac with the application of the patches which shows in particular the "-p" levels which have to be used in each case. It also shows how one can compile all of the Coq which is needed for the Foundations library without compiling most of the Standard Library (it takes about 5 min instead of 20 min on my computer to do it the way suggested here):
+
+
+fuld-220:coq-8.3pl2_two_patches_and_Dan_3 vladimir$ ./configure --prefix /opt/local
+You have GNU Make >= 3.81. Good!
+You have Objective-Caml 3.11.2. Good!
+LablGtk2 not found: CoqIde will not be available.
+pngtopnm was not found; documentation will not be available
+
+  Coq top directory                 : /Applications/coq-8.3pl2_two_patches_and_Dan_3
+  Architecture                      : i386
+  Coq VM bytecode link flags        : -custom
+  Coq tools bytecode link flags     : -custom
+  OS dependent libraries            : -cclib -lunix
+  Objective-Caml/Camlp4 version     : 3.11.2
+  Objective-Caml/Camlp4 binaries in : /opt/local/bin
+  Objective-Caml library in         : /opt/local/lib/ocaml
+  Camlp4 library in                 : +camlp5
+  Native dynamic link support       : true
+  Documentation                     : None
+  CoqIde                            : no
+  Web browser                       : firefox -remote "OpenURL(%s,new-tab)" || firefox %s &
+  Coq web site                      : http://coq.inria.fr/
+
+  Paths for true installation:
+    binaries      will be copied in /opt/local/bin
+    library       will be copied in /opt/local/lib/coq
+    man pages     will be copied in /opt/local/man
+    documentation will be copied in /opt/local/share/doc/coq
+    emacs mode    will be copied in /opt/local/share/emacs/site-lisp
+
+If anything in the above is wrong, please restart './configure'.
+
+*Warning* To compile the system for a new architecture
+          don't forget to do a 'make archclean' before './configure'.
+fuld-220:coq-8.3pl2_two_patches_and_Dan_3 vladimir$ patch -p1 < inductive-indice-levels-matter-8.3.patch
+patching file kernel/indtypes.ml
+patching file kernel/inductive.ml
+patching file kernel/inductive.mli
+fuld-220:coq-8.3pl2_two_patches_and_Dan_3 vladimir$ patch -p3 < patch.type-in-type
+patching file kernel/reduction.ml
+fuld-220:coq-8.3pl2_two_patches_and_Dan_3 vladimir$ patch -p0 < fix-hanging-at-end-of-proof.patch 
+patching file kernel/closure.ml
+fuld-220:coq-8.3pl2_two_patches_and_Dan_3 vladimir$ patch -p0 < grayson-fix-infinite-loop.patch 
+patching file ./tactics/tactics.ml
+fuld-220:coq-8.3pl2_two_patches_and_Dan_3 vladimir$ patch -p0 < grayson-improved-abstraction-version2-8.3pl2.patch 
+patching file ./configure
+patching file ./pretyping/evd.ml
+patching file ./pretyping/evd.mli
+patching file ./pretyping/pretype_errors.ml
+patching file ./pretyping/pretype_errors.mli
+patching file ./pretyping/unification.ml
+patching file ./pretyping/unification.mli
+patching file ./proofs/logic.ml
+patching file ./tactics/tactics.ml
+patching file ./test-suite/success/unification.v
+patching file ./test-suite/success/unification2.v
+patching file ./toplevel/himsg.ml
+fuld-220:coq-8.3pl2_two_patches_and_Dan_3 vladimir$ 
+fuld-220:coq-8.3pl2_two_patches_and_Dan_3 vladimir$ patch -p0 < grayson-closedir-after-opendir.patch 
+patching file ./lib/system.ml
+fuld-220:coq-8.3pl2_two_patches_and_Dan_3 vladimir$ sudo make GOTO_STAGE=2 coqbinaries states
+....
+fuld-220:coq-8.3pl2_two_patches_and_Dan_3 vladimir$ sudo make install .
+
+
+(Note : install may give error messages because some of the files it wants to move are not created by this version of the compilation process. Just ignore it. )
+
+ 
+
+
+
+
+
+
+
