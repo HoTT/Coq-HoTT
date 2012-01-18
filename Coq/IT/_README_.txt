@@ -1,13 +1,13 @@
 Inductive types in Homotopy Type Theory: Coq proofs
 
-This repository ithottCoq contains Coq proofs formalizing the development of 
-inductive types in the setting of Homotopy Type Theory. It accompanies the 
-extended abstract "Inductive types in Homotopy Type Theory", submitted to LICS 2012. 
-The files in the folder "univalent_foundations" are by V. Voevodsky.  
+This repository IT contains Coq proofs formalizing the development of 
+inductive types
+in the setting of Homotopy Type Theory. 
+The files in the folder "univalent_foundations"
+are by V. Voevodsky.  
 All other files have been created and are maintained by 
-S. Awodey, N. Gambino, and K. Sojakova
-(awodey@cmu.edu, ngambino@math.unipa.it, kristinas@cmu.edu).
-
+S. Awodey,
+N. Gambino, and K. Sojakova (awodey@cmu.edu, ngambino@math.unipa.it, kristinas@cmu.edu).
 
 The Coq version used is 8.3pl3.
 
@@ -44,7 +44,7 @@ The organization is as follows:
 
 4) The folder "two_is_hinitial" contains the proof that the type Two arises as an
    h-initial algebra. The proof is structured as follows:
-     i)   First the analogous simple rules for Two are formulated; the corresponding
+         i)   First the analogous simple rules for Two are formulated; the corresponding
 	      eta rules are no longer derivable and are stated as axioms. This is done
 	      in the file "two_simp.v".
 	 ii)  We show that the dependent rules for Two imply the simple ones and
@@ -60,37 +60,37 @@ The organization is as follows:
 			  
 5) The folder "w_is_hinitial" contains the proof that weak W-types arise as h-initial
    algebras for polynomial functors. The proof is structured as follows:
-     i)   First we introduce the notion of polynomial functors and prove a number
+         i)   First we introduce the notion of polynomial functors and prove a number
 	      of useful lemmas. This is done in the file "polynomial_functors.v".
-     ii)  We show the main result, i.e. that the dependent rules for W are
-          equivalent to the assertion that there exists a homotopy-initial algebra
-          for the associated polynomial functor. This is done in the files
-          "w_implies_hinitial.v" and "hinitial_implies_w.v".
+         ii)  We show the main result, i.e. that the dependent rules for W are
+              equivalent to the assertion that there exists a homotopy-initial algebra
+              for the associated polynomial functor. This is done in the files
+              "w_implies_hinitial.v" and "hinitial_implies_w.v".
 			  
 6) The file "nat_as_w_type.v" in the folder "nat_as_w_type" formalizes the proof that
    weak natural numbers are encodable as weak W-types in the presence of the types
    Zero, One, and (a type-level version of) Two.   
    
-7) The file "o2_as_w_type.v" in the folder "o2_as_w_type" formalizes the proof that the
+7) The file "o2_as_w_type.v" in the folder "nat_as_w_type" formalizes the proof that the
    second number class is encodable as a weak W-type in the presence of the types
    Zero, One, Two, and (a type-level version of) Three.
 
 Order of compilation:
 
 1) univalent_foundations:
-    1.1) Generalities/uuu.v
-	2.1) Generalities/uu0.v
+         1.1) Generalities/uuu.v
+	 2.1) Generalities/uu0.v
 2) identity/identity.v
 3) inductive_types/*.v
 4) two_is_hinitial: 
-     4.1) two_simp.v, two_algebras.v
+         4.1) two_simp.v, two_algebras.v
 	 4.2) dep_implies_simp.v, simp_implies_dep.v,
 	      simp_implies_hinitial.v, hinitial_implies_simp.v
 5) w_is_hinitial:
-     5.1) polynomial_functors.v
+         5.1) polynomial_functors.v
 	 5.2) hinitial_implies_w.v, w_implies_hinitial.v
 6) nat_as_w_type:
-     6.1) nat_as_w_type.v
+         6.1) nat_as_w_type.v
 	 6.2) o2_as_w_type.v
 	 
 Repository last updated : 17 Jan 2012.
