@@ -1,0 +1,19 @@
+This "fixes" a seemingly infinite loop by abandoning the routine after ten repetitions.
+A better fix would involve understanding what the code was supposed to do.
+
+   Dan Grayson
+
+diff -ubr ../coq-8.3pl2-clean/tactics/tactics.ml ./tactics/tactics.ml
+--- ../coq-8.3pl2-clean/tactics/tactics.ml	2011-04-08 11:59:26.000000000 -0500
++++ ./tactics/tactics.ml	2011-10-07 09:55:24.000000000 -0500
+@@ -522,7 +522,10 @@
+ 
+ let pf_lookup_hypothesis_as_renamed_gen red h gl =
+   let env = pf_env gl in
++  let infinite_loop_detector = ref 0 in 
+   let rec aux ccl =
++    incr infinite_loop_detector;
++    if !infinite_loop_detector > 10 then raise Redelimination;
+     match pf_lookup_hypothesis_as_renamed env ccl h with
+       | None when red ->
+           aux

@@ -1,0 +1,350 @@
+diff -ur ../coq-8.3pl2-patched/configure ./configure
+--- ../coq-8.3pl2-patched/configure	2011-04-19 02:19:00.000000000 -0500
++++ ./configure	2011-09-12 18:25:27.000000000 -0500
+@@ -6,7 +6,7 @@
+ # 
+ ##################################
+ 
+-VERSION=8.3pl2
++VERSION=8.3pl2+improved-abstraction
+ VOMAGIC=08300
+ STATEMAGIC=58300
+ DATE=`LANG=C date +"%B %Y"`
+@@ -323,8 +323,8 @@
+ if [ "$MAKE" != "" ]; then
+   MAKEVERSION=`$MAKE -v | head -1`
+   case $MAKEVERSION in
+-    "GNU Make 3.8"[12])
+-      echo "You have GNU Make >= 3.81. Good!";;
++    "GNU Make 3.8"[1-9] | "GNU Make 3.8"[1-9].* | "GNU Make 3."[0-9]  | "GNU Make 3."[0-9].* | "GNU Make "[4-9].* )
++      echo "You have GNU Make $MAKEVERSION >= 3.81. Good!";;
+     *)
+       OK="no"
+       if [ -x ./make ]; then
+diff -ur ../coq-8.3pl2-patched/pretyping/evd.ml ./pretyping/evd.ml
+--- ../coq-8.3pl2-patched/pretyping/evd.ml	2011-03-10 09:50:24.000000000 -0600
++++ ./pretyping/evd.ml	2011-09-11 06:30:25.000000000 -0500
+@@ -675,6 +675,11 @@
+         metas = Metamap.add mv (Clval(na,(mk_freelisted v,pb),ty)) evd.metas }
+   | _ -> anomaly "meta_reassign: not yet defined"
+ 
++let meta_unassign mv evd =
++  match Metamap.find mv evd.metas with
++  | Clval(na,_,ty) -> { evd with metas = Metamap.add mv (Cltyp(na,ty)) evd.metas }
++  | _ -> anomaly "meta_unassign: not yet defined"
++
+ (* If the meta is defined then forget its name *)
+ let meta_name evd mv =
+   try fst (clb_name (Metamap.find mv evd.metas)) with Not_found -> Anonymous
+diff -ur ../coq-8.3pl2-patched/pretyping/evd.mli ./pretyping/evd.mli
+--- ../coq-8.3pl2-patched/pretyping/evd.mli	2011-03-10 09:50:24.000000000 -0600
++++ ./pretyping/evd.mli	2011-09-11 06:30:39.000000000 -0500
+@@ -224,6 +224,7 @@
+   metavariable -> types -> ?name:name -> evar_map -> evar_map
+ val meta_assign    : metavariable -> constr * instance_status -> evar_map -> evar_map
+ val meta_reassign  : metavariable -> constr * instance_status -> evar_map -> evar_map
++val meta_unassign  : metavariable -> evar_map -> evar_map
+ 
+ (* [meta_merge evd1 evd2] returns [evd2] extended with the metas of [evd1] *)
+ val meta_merge : evar_map -> evar_map -> evar_map
+diff -ur ../coq-8.3pl2-patched/pretyping/pretype_errors.ml ./pretyping/pretype_errors.ml
+--- ../coq-8.3pl2-patched/pretyping/pretype_errors.ml	2010-07-24 10:57:30.000000000 -0500
++++ ./pretyping/pretype_errors.ml	2011-09-13 16:23:06.000000000 -0500
+@@ -34,6 +34,7 @@
+   | CannotGeneralize of constr
+   | NoOccurrenceFound of constr * identifier option
+   | CannotFindWellTypedAbstraction of constr * constr list
++  | CannotFindAbstraction of Evd.evar_map * constr * constr list * string
+   | AbstractionOverMeta of name * name
+   | NonLinearUnification of name * constr
+   (* Pretyping *)
+@@ -178,6 +179,9 @@
+ let error_cannot_find_well_typed_abstraction env sigma p l =
+   raise (PretypeError (env_ise sigma env,CannotFindWellTypedAbstraction (p,l)))
+ 
++let error_cannot_find_abstraction env sigma c l msg =
++  raise (PretypeError (env_ise sigma env,CannotFindAbstraction (sigma,c,l,msg)))
++
+ let error_abstraction_over_meta env sigma hdmeta metaarg =
+   let m = Evd.meta_name sigma hdmeta and n = Evd.meta_name sigma metaarg in
+   raise (PretypeError (env_ise sigma env,AbstractionOverMeta (m,n)))
+diff -ur ../coq-8.3pl2-patched/pretyping/pretype_errors.mli ./pretyping/pretype_errors.mli
+--- ../coq-8.3pl2-patched/pretyping/pretype_errors.mli	2010-07-24 10:57:30.000000000 -0500
++++ ./pretyping/pretype_errors.mli	2011-09-13 16:22:42.000000000 -0500
+@@ -35,6 +35,7 @@
+   | CannotGeneralize of constr
+   | NoOccurrenceFound of constr * identifier option
+   | CannotFindWellTypedAbstraction of constr * constr list
++  | CannotFindAbstraction of Evd.evar_map * constr * constr list * string
+   | AbstractionOverMeta of name * name
+   | NonLinearUnification of name * constr
+   (* Pretyping *)
+@@ -107,6 +108,9 @@
+ val error_cannot_find_well_typed_abstraction : env -> Evd.evar_map ->
+       constr -> constr list -> 'b
+ 
++val error_cannot_find_abstraction : env -> Evd.evar_map ->
++      constr -> constr list -> string -> 'b
++
+ val error_abstraction_over_meta : env -> Evd.evar_map ->
+   metavariable -> metavariable -> 'b
+ 
+diff -ur ../coq-8.3pl2-patched/pretyping/unification.ml ./pretyping/unification.ml
+--- ../coq-8.3pl2-patched/pretyping/unification.ml	2010-07-26 17:12:43.000000000 -0500
++++ ./pretyping/unification.ml	2011-09-13 17:03:34.000000000 -0500
+@@ -28,6 +28,109 @@
+ open Coercion.Default
+ open Recordops
+ 
++let rec take n x = 
++  if n = 0 then [] else
++  match x with
++    [] -> raise Not_found
++  | e::x -> e::(take (n-1) x)
++
++let rec last x = match x with 
++    |    [] -> error "internal error: empty list"
++    |   [e] -> e
++    |  _::x -> last x
++
++let all_but_last x = List.rev (List.tl (List.rev x))
++
++let is_well_typed env evd t = try ignore(Typing.type_of env evd t); true with Type_errors.TypeError _ -> false
++
++let meta_name evd mv =
++  match find_meta evd mv with
++    | Cltyp(na,_) -> na
++    | Clval(na,_,_) -> na
++
++let abstract_metas evd mvs t = List.fold_right
++    (fun mv t -> 
++      mkLambda( meta_name evd mv, Typing.meta_type evd mv, replace_term (mkMeta mv) (mkRel 1) t))
++    mvs t
++
++let occurrence_count term subterm = 
++  let n = ref 0 in 
++  let rec f c = if eq_constr subterm c then incr n else iter_constr f c in
++  iter_constr f term;
++  !n
++
++let subsets n =
++  assert (n >= 0);
++  let rec subsets n =
++    if n = 0 then [[]]
++    else
++      let m = n-1 in
++      let s = subsets m in
++      List.append s (List.map (fun t -> m :: t) s) in
++  List.map List.rev (subsets n)
++let cartprod2 x y = List.flatten (List.map (fun t -> List.map (fun u -> t::u) y) x)
++let cartprod z = List.fold_right cartprod2 z [[]]
++let subsetsn l = cartprod (List.map subsets l)
++
++let replace_term_occ occs c by_c in_t =
++  let ctr = ref 0 in
++  let rec f x = (
++    if eq_constr c x
++    then (
++      let x' = if List.mem !ctr occs then by_c else x in
++      incr ctr;
++      x'
++     )
++    else map_constr f x    
++   ) in
++  f in_t
++
++let select f x =
++  let rec select f = function
++    | [] -> []
++    | a::x -> if f a then a :: select f x else select f x in
++  select f x
++
++let abstract_list_search_warning = ref (function (env:env) -> function (evd:evar_map) -> function (survivors:constr list) -> assert false)
++
++let always_search = true		(* true for development, false for production *)
++
++let abstract_list_search env evd2 typ c l =
++  let c_orig = c in
++  let l_orig = l in
++  let elimA = List.rev (take (List.length l) (List.map fst (meta_list evd2))) in
++  let k = last l in
++  let l = all_but_last l in
++  let psvar = all_but_last elimA in
++  let evd = List.fold_right meta_unassign psvar evd2 in
++  let psvalpairs = List.map (fun mv -> (mv,meta_value evd2 mv)) psvar in
++  let ispsval t =
++    let rec f = function [] -> None | (mv,v)::rest -> if eq_constr t v then Some mv else f rest in
++    f psvalpairs in
++  let c = replace_term k (mkMeta (last elimA)) c in
++  let c = 
++    let rec f t = match ispsval t with Some mv -> mkMeta mv | None -> map_constr f t in
++    map_constr f c in
++  let psvargoalcount = List.map (occurrence_count c) (List.map mkMeta psvar) in
++  let totcount = List.fold_right (+) psvargoalcount 0 in
++  if totcount > 16 then error_cannot_find_abstraction env evd2 c_orig l_orig "attempted, more than 16 replacement spots";
++  let psvaroccs = subsetsn psvargoalcount in
++  let possibilities = List.map
++      (fun occlist -> List.fold_right2 (fun occ (mv,vl) goal -> replace_term_occ occ (mkMeta mv) vl goal) occlist psvalpairs c)
++      psvaroccs in
++  let survivors = select (is_well_typed env evd) possibilities in
++  let survivors = List.map (abstract_metas evd elimA) survivors in
++  begin
++    match List.length survivors with
++      0 -> error_cannot_find_abstraction env evd2 c_orig l_orig "possible"
++    | 1 -> ()
++    | _ -> !abstract_list_search_warning env evd2 survivors
++  end;
++  let p = List.hd survivors in
++  if is_conv_leq env evd2 (Typing.type_of env evd2 p) typ
++  then p
++  else error "internal error: abstraction not convertible?"
++
+ let occur_meta_or_undefined_evar evd c =
+   let rec occrec c = match kind_of_term c with
+     | Meta _ -> raise Occur
+@@ -930,7 +1033,8 @@
+   let (evd',cllist) =
+     w_unify_to_subterm_list env flags allow_K p oplist typ evd in
+   let typp = Typing.meta_type evd' p in
+-  let pred = abstract_list_all env evd' typp typ cllist in
++  let pred = try abstract_list_all env evd' typp typ cllist
++    with PretypeError _ -> abstract_list_search env evd' typp typ cllist in
+   w_merge env false flags (evd',[p,pred,(ConvUpToEta 0,TypeProcessed)],[])
+ 
+ let w_unify2 env flags allow_K cv_pb ty1 ty2 evd =
+diff -ur ../coq-8.3pl2-patched/pretyping/unification.mli ./pretyping/unification.mli
+--- ../coq-8.3pl2-patched/pretyping/unification.mli	2010-07-24 10:57:30.000000000 -0500
++++ ./pretyping/unification.mli	2011-09-12 12:27:16.000000000 -0500
+@@ -52,3 +52,6 @@
+ (* (exported for inv.ml) *)
+ val abstract_list_all :
+   env -> evar_map -> constr -> constr -> constr list -> constr
++
++
++val abstract_list_search_warning : (env -> evar_map -> Term.constr list -> unit) ref
+diff -ur ../coq-8.3pl2-patched/proofs/logic.ml ./proofs/logic.ml
+--- ../coq-8.3pl2-patched/proofs/logic.ml	2010-07-26 17:12:43.000000000 -0500
++++ ./proofs/logic.ml	2011-09-12 11:47:14.000000000 -0500
+@@ -58,7 +58,7 @@
+   (* unification errors *)
+   | PretypeError(_,(CannotUnify _|CannotUnifyLocal _|CannotGeneralize _
+ 		   |NoOccurrenceFound _|CannotUnifyBindingType _|NotClean _
+-		   |CannotFindWellTypedAbstraction _|OccurCheck _
++		   |CannotFindAbstraction _|CannotFindWellTypedAbstraction _|OccurCheck _
+ 		   |UnsolvableImplicit _)) -> true
+   | Typeclasses_errors.TypeClassError
+       (_, Typeclasses_errors.UnsatisfiableConstraints _) -> true
+diff -ur ../coq-8.3pl2-patched/tactics/tactics.ml ./tactics/tactics.ml
+--- ../coq-8.3pl2-patched/tactics/tactics.ml	2011-10-11 07:28:57.000000000 -0500
++++ ./tactics/tactics.ml	2011-10-10 16:38:28.000000000 -0500
+@@ -134,7 +134,9 @@
+       errorlabstrm "" (pr_id id ++ str " is used in conclusion.")
+   | Evarutil.OccurHypInSimpleClause (Some id') ->
+       errorlabstrm ""
+-        (pr_id id ++ strbrk " is used in hypothesis " ++ pr_id id' ++ str".")
++        (pr_id id ++ strbrk " is used in hypothesis " ++ pr_id id' ++ str"." ++ fnl() ++ fnl()
++	   ++ str "The context:" ++ fnl() ++ str "  " ++ Printer.pr_context_of env
++	)
+   | Evarutil.EvarTypingBreak ev ->
+       errorlabstrm ""
+         (str "Cannot remove " ++ pr_id id ++
+@@ -1912,13 +1914,8 @@
+       let argl = snd (decompose_app indtyp) in
+       let c = List.nth argl (i-1) in
+       match kind_of_term c with
+-	| Var id when not (List.exists (occur_var (pf_env gl) id) avoid) ->
+-	    atomize_one (i-1) ((mkVar id)::avoid) gl
+ 	| Var id ->
+-	    let x = fresh_id [] id gl in
+-	    tclTHEN
+-	      (letin_tac None (Name x) (mkVar id) None allHypsAndConcl)
+-	      (atomize_one (i-1) ((mkVar x)::avoid)) gl
++	    atomize_one (i-1) ((mkVar id)::avoid) gl
+ 	| _ ->
+ 	    let id = id_of_name_using_hdchar (Global.env()) (pf_type_of gl c)
+ 		       Anonymous in
+diff -ur ../coq-8.3pl2-patched/test-suite/success/unification.v ./test-suite/success/unification.v
+--- ../coq-8.3pl2-patched/test-suite/success/unification.v	2010-04-07 17:01:23.000000000 -0500
++++ ./test-suite/success/unification.v	2011-09-12 17:55:41.000000000 -0500
+@@ -136,3 +136,4 @@
+ Proof.
+   intros.
+   rewrite H.
++Abort.
+diff -ur ../coq-8.3pl2-patched/test-suite/success/unification2.v ./test-suite/success/unification2.v
+--- ../coq-8.3pl2-patched/test-suite/success/unification2.v	2011-10-11 07:31:05.000000000 -0500
++++ ./test-suite/success/unification2.v	2011-09-12 18:11:59.000000000 -0500
+@@ -0,0 +1,35 @@
++(* tests to go with Grayson's patch to "destruct" for handling Univalent Foundations *)
++
++Unset Automatic Introduction.
++
++(* Voevodsky's original example: *)
++
++Definition test ( X : Type ) ( x : X ) ( fxe : forall x1 : X , identity x1 x1 ) : identity ( fxe x ) ( fxe x ).
++Proof. intros. destruct ( fxe x ). apply identity_refl. Defined.
++
++(* a harder example *)
++
++Definition UU := Type .
++Inductive paths {T:Type}(t:T): T -> UU := idpath: paths t t.
++Inductive foo (X0:UU) (x0:X0) : forall (X:UU)(x:X) , UU := newfoo : foo X0 x0 X0 x0.
++Definition idonfoo {X0:UU} {x0:X0} {X1:UU} {x1:X1} : foo X0 x0 X1 x1 -> foo X0 x0 X1 x1.
++Proof. intros * t. exact t. Defined.
++
++Lemma hA (T:UU) (t:T) (k : foo T t T t) : paths k (idonfoo k).
++Proof. intros.
++   destruct k.
++   unfold idonfoo.
++   apply idpath.
++Defined.
++
++(* an example with two constructors *)
++
++Inductive foo' (X0:UU) (x0:X0) : forall (X:UU)(x:X) , UU := newfoo1 : foo' X0 x0 X0 x0 | newfoo2 : foo' X0 x0 X0 x0 .
++Definition idonfoo' {X0:UU} {x0:X0} {X1:UU} {x1:X1} : foo' X0 x0 X1 x1 -> foo' X0 x0 X1 x1.
++Proof. intros * t. exact t. Defined.
++Lemma tryb2 (T:UU) (t:T) (k : foo' T t T t) : paths k (idonfoo' k).
++Proof. intros.
++   destruct k.
++   unfold idonfoo'. apply idpath.
++   unfold idonfoo'. apply idpath.
++Defined.
+diff -ur ../coq-8.3pl2-patched/toplevel/himsg.ml ./toplevel/himsg.ml
+--- ../coq-8.3pl2-patched/toplevel/himsg.ml	2010-09-24 17:23:07.000000000 -0500
++++ ./toplevel/himsg.ml	2011-09-13 17:07:40.000000000 -0500
+@@ -439,6 +439,16 @@
+   str "leads to a term" ++ spc () ++ pr_lconstr_env env p ++ spc () ++
+   str "which is ill-typed."
+ 
++let explain_cannot_find_abstraction env evd c l msg =
++  str "Abstraction over the " ++
++    str (plural (List.length l) "term") ++ spc () ++
++    hov 0 (pr_enum (pr_lconstr_env env) l) ++ spc () ++
++    str "not" ++ spc() ++ str msg ++ str "." ++
++    fnl() ++ fnl() ++ str "The context:" ++ fnl() ++
++    str "  " ++ pr_context_of env ++
++    fnl() ++ fnl() ++ str "The term to be abstracted: " ++ fnl() ++ fnl() ++
++    str "  " ++ pr_constr c
++
+ let explain_abstraction_over_meta _ m n =
+   strbrk "Too complex unification problem: cannot find a solution for both " ++
+   pr_name m ++ spc () ++ str "and " ++ pr_name n ++ str "."
+@@ -502,6 +512,8 @@
+   | CannotUnifyBindingType (m,n) -> explain_cannot_unify_binding_type env m n
+   | CannotFindWellTypedAbstraction (p,l) ->
+       explain_cannot_find_well_typed_abstraction env p l
++  | CannotFindAbstraction (evd,c,l,msg) ->
++      explain_cannot_find_abstraction env evd c l msg
+   | AbstractionOverMeta (m,n) -> explain_abstraction_over_meta env m n
+   | NonLinearUnification (m,c) -> explain_non_linear_unification env m c
+ 
+@@ -850,3 +862,8 @@
+            pr_enum pr_call calls ++ strbrk kind_of_last_call)
+   else
+     mt ()
++
++let _ =
++  Unification.abstract_list_search_warning := 
++  function env -> function evd -> function l -> 
++    msgnl(str "warning: multiple well-typed abstractions found:" ++ (fnl()) ++ prlist_with_sep fnl pr_constr l)
