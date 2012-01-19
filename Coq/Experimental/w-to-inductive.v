@@ -14,7 +14,7 @@ Most of the work does not require [fext], but just the weaker principle
 
 I’m pretty certain that [eta_exp] is necessary.  I’m not quite so sure about [funext] — I can’t see how to do without it, but it doesn’t seem implausible that a cleverer implementation of the intro and elim rules could obviate the need for it.
 
-Currently, Coq’s [Prop]-valued equality is used throughout for the convenience of rewrite; however, the code is of course all homotopy-valid.
+Originally, Coq’s [Prop]-valued equality was used throughout for the convenience of rewrite.  Currently retooling it to avoid this, but boy is it ever painful.
 *)
 
 Add Rec LoadPath "../".
