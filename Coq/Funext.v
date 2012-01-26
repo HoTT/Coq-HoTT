@@ -1,4 +1,5 @@
-Require Export Fibrations Contractible Equivalences FiberEquivalences.
+Require Export Fibrations Contractible Equivalences.
+Require Export UsefulEquivalences FiberEquivalences.
 
 (** For compatibility with Coq 8.2. *)
 Unset Automatic Introduction.
