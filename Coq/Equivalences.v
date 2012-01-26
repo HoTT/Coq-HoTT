@@ -55,11 +55,11 @@ Proof.
   intro A.
   exists (idmap A).
   intros x.
-  contract_hfiber x (idpath x).
-  apply total_path with (p := q).
-  simpl.
-  compute in q.
-  path_induction.
+  exists (existT (fun x' => x' == x) x (idpath x)).
+  intros [x' p].
+  unfold idmap in p.
+  induction p.
+  auto.
 Defined.
 
 (** From an equivalence from [U] to [V] we can extract a map in the
@@ -290,9 +290,9 @@ Proof.
   apply opposite, homotopy_naturality_toid with (f := f o g).
 Defined.
 
-(** Probably equiv_to_adjoint and adjoint_to_equiv are actually
-   inverse equivalences, at least if we assume function
-   extensionality. *)
+(** In fact, [equiv_to_adjoint] and [adjoint_to_equiv] are actually
+   inverse equivalences, but proving this requires function
+   extensionality.  See [FunextEquivalences.v]. *)
 
 Lemma equiv_pointwise_idmap A (f : A -> A) (p : forall x, f x == x) : is_equiv f.
 Proof.
@@ -428,109 +428,6 @@ Proof.
   apply inverse_is_retraction.
 Defined.
 
-(* It follows that any two contractible types are equivalent. *)
-
-Definition contr_contr_equiv {A B} (f : A -> B) :
-  is_contr A -> is_contr B -> is_equiv f.
-Proof.
-  intros A B f Acontr Bcontr.
-  apply @equiv_cancel_left with
-    (g := contr_equiv_unit B Bcontr).
-  exact (pr2 (contr_equiv_unit A Acontr)).
-Defined.
-
-(** The action of an equivalence on paths is an equivalence. *)
-
-Theorem equiv_map_inv {A B} {x y : A} (f : A <~> B) :
-  (f x == f y) -> (x == y).
-Proof.
-  intros A B x y f p.
-  path_via (f^-1 (f x)).
-  apply opposite, inverse_is_retraction.
-  path_via' (f^-1 (f y)).
-  apply map. assumption.
-  apply inverse_is_retraction.
-Defined.
-
-Theorem equiv_map_is_equiv {A B} {x y : A} (f : A <~> B) :
-  is_equiv (@map A B x y f).
-Proof.
-  intros A B x y f.
-  apply @hequiv_is_equiv with (g := equiv_map_inv f).
-  intro p.
-  unfold equiv_map_inv.
-  do_concat_map.
-  do_opposite_map.
-  moveright_onleft.
-  undo_compose_map.
-  path_via (map (f o (f ^-1)) p @ inverse_is_section f (f y)).
-  apply inverse_triangle.
-  path_via (inverse_is_section f (f x) @ p).
-  apply homotopy_naturality_toid with (f := f o (f^-1)).
-  apply opposite, inverse_triangle.
-  intro p.
-  unfold equiv_map_inv.
-  moveright_onleft.
-  undo_compose_map.
-  apply homotopy_naturality_toid with (f := (f^-1) o f).
-Defined.
-
-Definition equiv_map_equiv {A B} {x y : A} (f : A <~> B) :
-  (x == y) <~> (f x == f y) :=
-  (@map A B x y f ; equiv_map_is_equiv f).
-
-(** Path-concatenation is an equivalence. *)
-
-Lemma concat_is_equiv_left {A} (x y z : A) (p : x == y) :
-  is_equiv (fun q: y == z => p @ q).
-Proof.
-  intros A x y z p.
-  apply @hequiv_is_equiv with (g := @concat A y x z (!p)).
-  intro q.
-  associate_left.
-  intro q.
-  associate_left.
-Defined.
-
-Definition concat_equiv_left {A} (x y z : A) (p : x == y) :
-  (y == z) <~> (x == z) :=
-  (fun q: y == z => p @ q  ;  concat_is_equiv_left x y z p).
-
-Lemma concat_is_equiv_right {A} (x y z : A) (p : y == z) :
-  is_equiv (fun q : x == y => q @ p).
-Proof.
-  intros A x y z p.
-  apply @hequiv_is_equiv with (g := fun r : x == z => r @ !p).
-  intro q.
-  associate_right.
-  intro q.
-  associate_right.
-Defined.
-
-Definition concat_equiv_right {A} (x y z : A) (p : y == z) :
-  (x == y) <~> (x == z) :=
-  (fun q: x == y => q @ p  ;  concat_is_equiv_right x y z p).
-
-(** And we can characterize the path types of the total space of a
-   fibration, up to equivalence. *)
-
-Theorem total_paths_equiv (A : Type) (P : A -> Type) (x y : sigT P) :
-  (x == y) <~> { p : pr1 x == pr1 y & transport p (pr2 x) == pr2 y }.
-Proof.
-  intros A P x y.
-  exists (fun r => existT (fun p => transport p (pr2 x) == pr2 y) (base_path r) (fiber_path r)).
-  eapply @hequiv_is_equiv.
-  instantiate (1 := fun pq => let (p,q) := pq in total_path A P x y p q).
-  intros [p q].
-  eapply total_path.
-  instantiate (1 := base_total_path A P x y p q).
-  simpl.
-  apply fiber_total_path.
-  intro r.
-  simpl.
-  apply total_path_reconstruction.
-Defined.
-  
 (** André Joyal suggested the following definition of equivalences,
    and to call it "h-isomorphism". *)
 
@@ -560,4 +457,6 @@ Proof.
   assumption.
 Defined.
 
-(** Of course, the harder part is showing that is_hiso is a proposition. *)
+(** Of course, the harder part is showing that [is_hiso] is a
+   proposition, and therefore equivalent to [is_equiv].  This also
+   requires function extensionality; see [FunextEquivalences.v]. *)
