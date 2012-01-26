@@ -79,7 +79,7 @@ Section UnivalenceImpliesFunext.
     assert (alltt : forall y:unit, y == tt).
     induction y; apply idpath.
     apply alltt.
-    exact (transport (P := fun Q: X -> Type => is_contr (forall x, Q x)) eqpt contrunit). 
+    exact (transport (P := fun Q: X -> Type => is_contr (forall x, Q x)) eqpt contrunit).
     (* Oh noes!  Universe inconsistency! *)
   Admitted.
 
