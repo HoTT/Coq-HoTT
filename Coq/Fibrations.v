@@ -21,7 +21,7 @@ Require Export Paths.
 (** We can also define more familiar homotopy-looking aliases for all
    of these functions. *)
 
-Notation "( x  ; y )" := (existT _ x y).
+Notation "( x ; y )" := (existT _ x y).
 Notation pr1 := (@projT1 _ _).
 Notation pr2 := (@projT2 _ _).
 

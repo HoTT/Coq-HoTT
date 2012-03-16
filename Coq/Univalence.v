@@ -4,7 +4,8 @@ Require Import Paths Fibrations Contractible Equivalences.
 
 Definition path_to_equiv {U V} : (U == V) -> (U <~> V).
 Proof.
-  path_induction.
+  intro p.
+  induction p as [U].
   apply idequiv.
 Defined.
 
@@ -100,6 +101,8 @@ Section Univalence.
     exact p.
   Defined.
 
+  Print pred_equiv_to_path.
+
   (** The following theorem is of central importance. Just like there
      is an induction principle for paths, there is a corresponding one
      for equivalences. In the proof we use [pred_equiv_to_path] to
@@ -112,8 +115,7 @@ Section Univalence.
     intro r.
     pose (P' := (fun U V => pred_equiv_to_path U V (P U V))).
     assert (r' : forall T : Type, P' T T (idpath T)).
-    intro T.
-    exact (r T).
+    exact r.
     intros U V w.
     apply (transport (equiv_to_path_section _ _ w)).
     exact (paths_rect _ P' r' U V (equiv_to_path w)).

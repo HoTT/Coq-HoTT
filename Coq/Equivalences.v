@@ -51,10 +51,9 @@ Proof.
   exists (idmap A).
   intros x.
   contract_hfiber x (idpath x).
-  apply total_path with (p := q).
-  simpl.
   compute in q.
-  path_induction.
+  induction q.
+  apply idpath.
 Defined.
 
 (** From an equivalence from [U] to [V] we can extract a map in the
