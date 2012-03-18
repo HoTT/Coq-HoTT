@@ -30,7 +30,7 @@ Coercion equiv_coerce_to_function : equiv >-> Funclass.
 Ltac contract_hfiber y p :=
   match goal with
     | [ |- is_contr (@hfiber _ _ ?f ?x) ] =>
-      eexists (existT (fun z => f z == x) y p);
+      eexists (existT (fun z => f z ~~> x) y p);
         let z := fresh "z" in
         let q := fresh "q" in
           intros [z q]
@@ -51,7 +51,7 @@ Definition idequiv A : A <~> A.
 Proof.
   exists (idmap A).
   intros x.
-  exists (existT (fun x' => x' == x) x (idpath x)).
+  exists (existT (fun x' => x' ~~> x) x (idpath x)).
   intros [x' p].
   unfold idmap in p.
   induction p.
@@ -71,10 +71,10 @@ Notation "w ^-1" := (inverse w) (at level 40).
 (** The extracted map in the inverse direction is actually an inverse
    (up to homotopy, of course). *)
 
-Definition inverse_is_section {U V} (w : U <~> V) y : w (w^-1 y) == y :=
+Definition inverse_is_section {U V} (w : U <~> V) y : w (w^-1 y) ~~> y :=
   pr2 (pr1 ((pr2 w) y)).
 
-Definition inverse_is_retraction {U V} (w : U <~> V) x : (w^-1 (w x)) == x :=
+Definition inverse_is_retraction {U V} (w : U <~> V) x : (w^-1 (w x)) ~~> x :=
   !base_path (pr2 ((pr2 w) (w x)) (x ; idpath (w x))).
 
 (** Here are some tactics to use for canceling inverses, and for
@@ -93,13 +93,13 @@ Ltac cancel_inverses_in s :=
 Ltac cancel_inverses :=
   repeat progress (
     match goal with
-      | |- ?s == ?t => first [ cancel_inverses_in s | cancel_inverses_in t ]
+      | |- ?s ~~> ?t => first [ cancel_inverses_in s | cancel_inverses_in t ]
     end
   ).
 
 Ltac expand_inverse_src w x :=
   match goal with
-    | |- ?s == ?t =>
+    | |- ?s ~~> ?t =>
       match s with
         | context cxt [ x ] =>
           first [
@@ -116,7 +116,7 @@ Ltac expand_inverse_src w x :=
 
 Ltac expand_inverse_trg w x :=
   match goal with
-    | |- ?s == ?t =>
+    | |- ?s ~~> ?t =>
       match t with
         | context cxt [ x ] =>
           first [
@@ -131,25 +131,25 @@ Ltac expand_inverse_trg w x :=
       end
   end.
 
-(** These tactics change between goals of the form [w x == y] and the
-   form [x == w^-1 y], and dually. *)
+(** These tactics change between goals of the form [w x ~~> y] and the
+   form [x ~~> w^-1 y], and dually. *)
 
 Ltac equiv_moveright :=
   match goal with
-    | |- equiv_coerce_to_function _ _ ?w ?a == ?b =>
+    | |- equiv_coerce_to_function _ _ ?w ?a ~~> ?b =>
       apply @concat with (y := w (w^-1 b));
         [ apply map | apply inverse_is_section ]
-    | |- (?w ^-1) ?a == ?b =>
+    | |- (?w ^-1) ?a ~~> ?b =>
       apply @concat with (y := w^-1 (w b));
         [ apply map | apply inverse_is_retraction ]
   end.
 
 Ltac equiv_moveleft :=
   match goal with
-    | |- ?a == equiv_coerce_to_function _ _ ?w ?b =>
+    | |- ?a ~~> equiv_coerce_to_function _ _ ?w ?b =>
       apply @concat with (y := w (w^-1 a));
         [ apply opposite, inverse_is_section | apply map ]
-    | |- ?a == (?w ^-1) ?b =>
+    | |- ?a ~~> (?w ^-1) ?b =>
       apply @concat with (y := w^-1 (w a));
         [ apply opposite, inverse_is_retraction | apply map ]
   end.
@@ -159,7 +159,7 @@ Ltac equiv_moveleft :=
    one of the homotopies.) *)
 
 Definition inverse_triangle {A B} (w : A <~> B) x :
-  (map w (inverse_is_retraction w x)) == (inverse_is_section w (w x)).
+  (map w (inverse_is_retraction w x)) ~~> (inverse_is_section w (w x)).
 Proof.
   intros.
   unfold inverse_is_retraction.
@@ -173,7 +173,7 @@ Defined.
 
 (** Equivalences are "injective on paths". *)
 
-Lemma equiv_injective U V (w : U <~> V) x y : (w x == w y) -> (x == y).
+Lemma equiv_injective U V (w : U <~> V) x y : (w x ~~> w y) -> (x ~~> y).
 Proof.
   intro p.
   expand_inverse_src w x.
@@ -210,13 +210,13 @@ Defined.
 
 (** The free path space of a type is equivalent to the type itself. *)
 
-Definition free_path_space A := {xy : A * A & fst xy == snd xy}.
+Definition free_path_space A := {xy : A * A & fst xy ~~> snd xy}.
 
 Definition free_path_source A : free_path_space A <~> A.
 Proof.
   exists (fun p => fst (projT1 p)).
   intros x.
-  eexists (existT _ (existT (fun (xy : A * A) => fst xy == snd xy) (x,x) (idpath x)) _).
+  eexists (existT _ (existT (fun (xy : A * A) => fst xy ~~> snd xy) (x,x) (idpath x)) _).
   intros [[[u v] p] q].
   simpl in * |- *.
   induction q as [a].
@@ -228,7 +228,7 @@ Definition free_path_target A : free_path_space A <~> A.
 Proof.
   exists (fun p => snd (projT1 p)).
   intros x.
-  eexists (existT _ (existT (fun (xy : A * A) => fst xy == snd xy) (x,x) (idpath x)) _).
+  eexists (existT _ (existT (fun (xy : A * A) => fst xy ~~> snd xy) (x,x) (idpath x)) _).
   intros [[[u v] p] q].
   simpl in * |- *.
   induction q as [a].
@@ -246,9 +246,9 @@ Defined.
 
 Definition is_adjoint_equiv {A B} (f : A -> B) :=
   { g : B -> A &
-    { is_section : forall y, (f (g y)) == y &
-      { is_retraction : forall x, (g (f x)) == x &
-        forall x, (map f (is_retraction x)) == (is_section (f x))
+    { is_section : forall y, (f (g y)) ~~> y &
+      { is_retraction : forall x, (g (f x)) ~~> x &
+        forall x, (map f (is_retraction x)) ~~> (is_section (f x))
           }}}.
 
 Definition is_equiv_to_adjoint {A B} (f: A -> B) (E : is_equiv f) : is_adjoint_equiv f :=
@@ -263,7 +263,7 @@ Proof.
   intro y.
   contract_hfiber (g y) (is_section y).
   apply (total_path _
-    (fun x => f x == y)
+    (fun x => f x ~~> y)
     (existT _ z q)
     (existT _ (g y) (is_section y))
     (!is_retraction z @ (map g q))).
@@ -286,7 +286,7 @@ Defined.
    inverse equivalences, but proving this requires function
    extensionality.  See [FunextEquivalences.v]. *)
 
-Lemma equiv_pointwise_idmap A (f : A -> A) (p : forall x, f x == x) : is_equiv f.
+Lemma equiv_pointwise_idmap A (f : A -> A) (p : forall x, f x ~~> x) : is_equiv f.
 Proof.
   intros.
   apply is_adjoint_to_equiv.
@@ -303,7 +303,7 @@ Defined.
    the usual proof for adjoint equivalences in 2-category theory.  *)
 
 Definition adjointify {A B} (f : A -> B) (g : B -> A) :
-  (forall y, f (g y) == y) -> (forall x, g (f x) == x ) ->
+  (forall y, f (g y) ~~> y) -> (forall x, g (f x) ~~> x ) ->
   is_adjoint_equiv f.
 Proof.
   intros is_section is_retraction.
@@ -341,7 +341,7 @@ Defined.
 (** Therefore, "any homotopy equivalence is an equivalence." *)
 
 Definition hequiv_is_equiv {A B} (f : A -> B) (g : B -> A)
-  (is_section : forall y, f (g y) == y) (is_retraction : forall x, g (f x) == x) :
+  (is_section : forall y, f (g y) ~~> y) (is_retraction : forall x, g (f x) ~~> x) :
   is_equiv f := is_adjoint_to_equiv f (adjointify f g is_section is_retraction).
 
 (** All sorts of nice things follow from this theorem. *)
@@ -359,7 +359,7 @@ Defined.
 (** Anything homotopic to an equivalence is an equivalence. *)
 
 Lemma equiv_homotopic {A B} (f g : A -> B) :
-  (forall x, f x == g x) -> is_equiv g -> is_equiv f.
+  (forall x, f x ~~> g x) -> is_equiv g -> is_equiv f.
 Proof.
   intros p geq.
   set (h := existT is_equiv g geq : A <~> B).
@@ -397,9 +397,9 @@ Proof.
   expand_inverse_trg gof y.
   apply idpath.
   intro x.
-  change (f (gof^-1 (g x)) == x).
+  change (f (gof^-1 (g x)) ~~> x).
   equiv_moveright; equiv_moveright.
-  change (g x == g (f (f^-1 x))).
+  change (g x ~~> g (f (f^-1 x))).
   cancel_inverses.
 Defined.
 
@@ -424,8 +424,8 @@ Defined.
    and to call it "h-isomorphism". *)
 
 Definition is_hiso {A B} (f : A -> B) :=
-  ( { g : B->A  &  forall x, g (f x) == x } *
-    { h : B->A  &  forall y, f (h y) == y } )%type.
+  ( { g : B->A  &  forall x, g (f x) ~~> x } *
+    { h : B->A  &  forall y, f (h y) ~~> y } )%type.
 
 Theorem equiv_to_hiso {A B} (f : equiv A B) : is_hiso f.
 Proof.

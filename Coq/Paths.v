@@ -5,18 +5,18 @@ Require Export Functions.
 Inductive paths {A} : A -> A -> Type := idpath : forall x, paths x x.
 
 (* The next line tells [coqdoc] to print [paths] as an equals sign in LaTeX. *)
-(** printing == $=$ *)
+(** printing ~~> $=$ *)
 
-(** We introduce notation [x == y] for the space [paths x y] of paths
-   from [x] to [y]. We can then write [p : x == y] to indicate that
+(** We introduce notation [x ~~> y] for the space [paths x y] of paths
+   from [x] to [y]. We can then write [p : x ~~> y] to indicate that
    [p] is a path from [x] to [y]. *)
 
-Notation "x == y" := (paths x y) (at level 70).
+Notation "x ~~> y" := (paths x y) (at level 70).
 
 (** The [Hint Resolve @idpath] line below means that Coq's [auto]
    tactic will automatically perform [apply idpath] if that leads to a
    successful solution of the current goal. For example if we ask it
-   to construct a path [x == x], [auto] will find the identity path
+   to construct a path [x ~~> x], [auto] will find the identity path
    [idpath x], thanks to the [Hint Resolve].
 
    In general we should declare [Hint Resolve] on those theorems which
@@ -33,7 +33,7 @@ Hint Resolve @idpath.
 Ltac path_induction :=
   intros; repeat progress (
     match goal with
-      | [ p : _ == _  |- _ ] => induction p
+      | [ p : _ ~~> _  |- _ ] => induction p
       | _ => idtac
     end
   ); auto.
@@ -55,7 +55,7 @@ Ltac path_induction :=
 (** We now define the basic operations on paths, starting with
    concatenation. *)
 
-Definition concat {A} {x y z : A} : (x == y) -> (y == z) -> (x == z).
+Definition concat {A} {x y z : A} : (x ~~> y) -> (y ~~> z) -> (x ~~> z).
 Proof.
   intros p q.
   induction p.
@@ -70,14 +70,14 @@ Notation "p @ q" := (concat p q) (at level 60).
 (** A definition like [concat] can be used in two ways. The first and
    obvious way is as an operation which concatenates together two
    paths. The second use is a proof tactic when we want to construct a
-   path [x == z] as a concatenation of paths [x == y == z]. This is
+   path [x ~~> z] as a concatenation of paths [x ~~> y ~~> z]. This is
    done with [apply @concat], see examples below. We will actually
    define a tactic [path_via] which uses [concat] but is much smarter
    than just the direct application [apply @concat]. *)
 
 (** Paths can be reversed. *)
 
-Definition opposite {A} {x y : A} : (x == y) -> (y == x).
+Definition opposite {A} {x y : A} : (x ~~> y) -> (y ~~> x).
 Proof.
   intros p.
   induction p.
@@ -96,43 +96,43 @@ Notation "! p" := (opposite p) (at level 50).
 (** The following lemmas say that up to higher paths, the paths form a
    1-groupoid. *)
 
-Lemma idpath_left_unit A (x y : A) (p : x == y) : idpath x @ p == p.
+Lemma idpath_left_unit A (x y : A) (p : x ~~> y) : idpath x @ p ~~> p.
 Proof.
   path_induction.
 Defined.
 
-Lemma idpath_right_unit A (x y : A) (p : x == y) : (p @ idpath y) == p.
+Lemma idpath_right_unit A (x y : A) (p : x ~~> y) : (p @ idpath y) ~~> p.
 Proof.
   path_induction.
 Defined.
 
-Lemma opposite_right_inverse A (x y : A) (p : x == y) : (p @ !p) == idpath x.
+Lemma opposite_right_inverse A (x y : A) (p : x ~~> y) : (p @ !p) ~~> idpath x.
 Proof.
  path_induction.
 Defined.
 
-Lemma opposite_left_inverse A (x y : A) (p : x == y) : (!p @ p) == idpath y.
+Lemma opposite_left_inverse A (x y : A) (p : x ~~> y) : (!p @ p) ~~> idpath y.
 Proof.
   path_induction.
 Defined.
 
-Lemma opposite_concat A (x y z : A) (p : x == y) (q : y == z) : !(p @ q) == !q @ !p.
+Lemma opposite_concat A (x y z : A) (p : x ~~> y) (q : y ~~> z) : !(p @ q) ~~> !q @ !p.
 Proof.
   path_induction.
 Defined.
 
-Lemma opposite_idpath A (x : A) : !(idpath x) == idpath x.
+Lemma opposite_idpath A (x : A) : !(idpath x) ~~> idpath x.
 Proof.
   path_induction.
 Defined.
 
-Lemma opposite_opposite A (x y : A) (p : x == y) : !(! p) == p.
+Lemma opposite_opposite A (x y : A) (p : x ~~> y) : !(! p) ~~> p.
 Proof.
   path_induction.
 Defined.
 
-Lemma concat_associativity A (w x y z : A) (p : w == x) (q : x == y) (r : y == z) :
-  (p @ q) @ r == p @ (q @ r).
+Lemma concat_associativity A (w x y z : A) (p : w ~~> x) (q : x ~~> y) (r : y ~~> z) :
+  (p @ q) @ r ~~> p @ (q @ r).
 Proof.
   path_induction.
 Defined.
@@ -142,8 +142,8 @@ Defined.
    concatenation in a path type, but we need a new name and notation
    for concatenation of 2-paths along points. *)
 
-Definition concat2 {A} {x y z : A} {p p' : x == y} {q q' : y == z} :
-  (p == p') -> (q == q') -> (p @ q == p' @ q').
+Definition concat2 {A} {x y z : A} {p p' : x ~~> y} {q q' : y ~~> z} :
+  (p ~~> p') -> (q ~~> q') -> (p @ q ~~> p' @ q').
 Proof.
   path_induction.
 Defined.
@@ -152,20 +152,20 @@ Notation "p @@ q" := (concat2 p q) (at level 60).
 
 (** We also have whiskering operations. *)
 
-Definition whisker_right {A} {x y z : A} {p p' : x == y} (q : y == z) :
-  (p == p') -> (p @ q == p' @ q).
+Definition whisker_right {A} {x y z : A} {p p' : x ~~> y} (q : y ~~> z) :
+  (p ~~> p') -> (p @ q ~~> p' @ q).
 Proof.
   path_induction.
 Defined.
 
-Definition whisker_left {A} {x y z : A} {q q' : y == z} (p : x == y) :
-  (q == q') -> (p @ q == p @ q').
+Definition whisker_left {A} {x y z : A} {q q' : y ~~> z} (p : x ~~> y) :
+  (q ~~> q') -> (p @ q ~~> p @ q').
 Proof.
   path_induction.
 Defined.
 
-Definition whisker_right_toid {A} {x y : A} {p : x == x} (q : x == y) :
-  (p == idpath x) -> (p @ q == q).
+Definition whisker_right_toid {A} {x y : A} {p : x ~~> x} (q : x ~~> y) :
+  (p ~~> idpath x) -> (p @ q ~~> q).
 Proof.
   intro a.
   apply @concat with (y := idpath x @ q).
@@ -173,8 +173,8 @@ Proof.
   apply idpath_left_unit.
 Defined.
 
-Definition whisker_right_fromid {A} {x y : A} {p : x == x} (q : x == y) :
-  (idpath x == p) -> (q == p @ q).
+Definition whisker_right_fromid {A} {x y : A} {p : x ~~> x} (q : x ~~> y) :
+  (idpath x ~~> p) -> (q ~~> p @ q).
 Proof.
   intros a.
   apply @concat with (y := idpath x @ q).
@@ -182,8 +182,8 @@ Proof.
   apply whisker_right. assumption.
 Defined.
 
-Definition whisker_left_toid {A} {x y : A} {p : y == y} (q : x == y) :
-  (p == idpath y) -> (q @ p == q).
+Definition whisker_left_toid {A} {x y : A} {p : y ~~> y} (q : x ~~> y) :
+  (p ~~> idpath y) -> (q @ p ~~> q).
 Proof.
   intros a.
   apply @concat with (y := q @ idpath y).
@@ -191,8 +191,8 @@ Proof.
   apply idpath_right_unit.
 Defined.
 
-Definition whisker_left_fromid {A} {x y : A} {p : y == y} (q : x == y) :
-  (idpath y == p) -> (q == q @ p).
+Definition whisker_left_fromid {A} {x y : A} {p : y ~~> y} (q : x ~~> y) :
+  (idpath y ~~> p) -> (q ~~> q @ p).
 Proof.
   intros a.
   apply @concat with (y := q @ idpath y).
@@ -202,35 +202,35 @@ Defined.
 
 (** The interchange law for whiskering. *)
 
-Definition whisker_interchange A (x y z : A) (p p' : x == y) (q q' : y == z)
-  (a : p == p') (b : q == q') :
-  (whisker_right q a) @ (whisker_left p' b) == (whisker_left p b) @ (whisker_right q' a).
+Definition whisker_interchange A (x y z : A) (p p' : x ~~> y) (q q' : y ~~> z)
+  (a : p ~~> p') (b : q ~~> q') :
+  (whisker_right q a) @ (whisker_left p' b) ~~> (whisker_left p b) @ (whisker_right q' a).
 Proof.
   path_induction.
 Defined.
 
 (** The interchange law for concatenation. *)
 
-Definition concat2_interchange A (x y z : A) (p p' p'' : x == y) (q q' q'' : y == z)
-  (a : p == p') (b : p' == p'') (c : q == q') (d : q' == q'') :
-  (a @@ c) @ (b @@ d) == (a @ b) @@ (c @ d).
+Definition concat2_interchange A (x y z : A) (p p' p'' : x ~~> y) (q q' q'' : y ~~> z)
+  (a : p ~~> p') (b : p' ~~> p'') (c : q ~~> q') (d : q' ~~> q'') :
+  (a @@ c) @ (b @@ d) ~~> (a @ b) @@ (c @ d).
 Proof.
   path_induction.
 Defined.
 
 (** Now we consider the application of functions to paths. *)
 
-(** A path [p : x == y] in a space [A] is mapped by [f : A -> B] to a
-   path [map f p : f x == f y] in [B]. *)
+(** A path [p : x ~~> y] in a space [A] is mapped by [f : A -> B] to a
+   path [map f p : f x ~~> f y] in [B]. *)
 
-Lemma map {A B} {x y : A} (f : A -> B) : (x == y) -> (f x == f y).
+Lemma map {A B} {x y : A} (f : A -> B) : (x ~~> y) -> (f x ~~> f y).
 Proof.
   path_induction.
 Defined.
 
 (** Taking opposites of 1-paths is functorial on 2-paths. *)
 
-Definition opposite2 {A} {x y : A} {p q : x == y} (a : p == q) : (!p == !q)
+Definition opposite2 {A} {x y : A} {p q : x ~~> y} (a : p ~~> q) : (!p ~~> !q)
   := map opposite a.
 (*Proof.
   path_induction.
@@ -238,83 +238,83 @@ Defined.*)
 
 (** The next two lemmas state that [map f p] is "functorial" in the path [p]. *)
 
-Lemma idpath_map A B (x : A) (f : A -> B) : map f (idpath x) == idpath (f x).
+Lemma idpath_map A B (x : A) (f : A -> B) : map f (idpath x) ~~> idpath (f x).
 Proof.
   path_induction.
 Defined.
 
-Lemma concat_map A B (x y z : A) (f : A -> B) (p : x == y) (q : y == z) :
-  map f (p @ q) == (map f p) @ (map f q).
+Lemma concat_map A B (x y z : A) (f : A -> B) (p : x ~~> y) (q : y ~~> z) :
+  map f (p @ q) ~~> (map f p) @ (map f q).
 Proof.
   path_induction.
 Defined.
 
-Lemma opposite_map A B (f : A -> B) (x y : A) (p : x == y) :
-  map f (! p) == ! map f p.
+Lemma opposite_map A B (f : A -> B) (x y : A) (p : x ~~> y) :
+  map f (! p) ~~> ! map f p.
 Proof.
   path_induction.
 Defined.
 
 (** It is also the case that [map f p] is functorial in [f].  *)
 
-Lemma idmap_map A (x y : A) (p : x == y) : map (idmap A) p == p.
+Lemma idmap_map A (x y : A) (p : x ~~> y) : map (idmap A) p ~~> p.
 Proof.
   path_induction.
 Defined.
 
-Lemma compose_map A B C (f : A -> B) (g : B -> C) (x y : A) (p : x == y) :
-  map (g o f) p == map g (map f p).
+Lemma compose_map A B C (f : A -> B) (g : B -> C) (x y : A) (p : x ~~> y) :
+  map (g o f) p ~~> map g (map f p).
 Proof.
   path_induction.
 Defined.
 
-Lemma constmap_map (A B:Type) (b:B) (x y:A) (p: x==y) :
-  map (fun _=>b) p == idpath b.
+Lemma constmap_map (A B:Type) (b:B) (x y:A) (p: x~~>y) :
+  map (fun _=>b) p ~~> idpath b.
 Proof.
   path_induction.
 Defined.
 
 (** We can also map paths between paths. *)
 
-Definition map2 {A B} {x y : A} {p q : x == y} (f : A -> B) :
-  p == q -> (map f p == map f q)
+Definition map2 {A B} {x y : A} {p q : x ~~> y} (f : A -> B) :
+  p ~~> q -> (map f p ~~> map f q)
   := map (map f).
 
 (** The type of "homotopies" between two functions [f] and [g] is
-   [forall x, f x == g x].  These can be derived from "paths" between
-   functions [f == g]; the converse is function extensionality. *)
+   [forall x, f x ~~> g x].  These can be derived from "paths" between
+   functions [f ~~> g]; the converse is function extensionality. *)
 
-Definition happly {A B} {f g : A -> B} : (f == g) -> (forall x, f x == g x) :=
+Definition happly {A B} {f g : A -> B} : (f ~~> g) -> (forall x, f x ~~> g x) :=
   fun p x => map (fun h => h x) p.
 
 (** Similarly, [happly] for dependent functions. *)
 
 Definition happly_dep {A} {P : A -> Type} {f g : forall x, P x} :
-  (f == g) -> (forall x, f x == g x) :=
+  (f ~~> g) -> (forall x, f x ~~> g x) :=
   fun p x => map (fun h => h x) p.
 
 (** [happly] preserves path-concatenation and opposites. *)
 
-Lemma happly_concat A B (f g h : A -> B) (p : f == g) (q : g == h) (x:A) :
-  happly (p @ q) x == happly p x @ happly q x.
+Lemma happly_concat A B (f g h : A -> B) (p : f ~~> g) (q : g ~~> h) (x:A) :
+  happly (p @ q) x ~~> happly p x @ happly q x.
 Proof.
   path_induction.
 Defined.
 
-Lemma happly_opp A B (f g : A -> B) (p : f == g) (x : A) :
-  happly (!p) x == !happly p x.
+Lemma happly_opp A B (f g : A -> B) (p : f ~~> g) (x : A) :
+  happly (!p) x ~~> !happly p x.
 Proof.
   path_induction.
 Defined.
 
-Lemma happly_dep_concat A P (f g h : forall a:A, P a) (p : f == g) (q : g == h) (x:A) :
-  happly_dep (p @ q) x == happly_dep p x @ happly_dep q x.
+Lemma happly_dep_concat A P (f g h : forall a:A, P a) (p : f ~~> g) (q : g ~~> h) (x:A) :
+  happly_dep (p @ q) x ~~> happly_dep p x @ happly_dep q x.
 Proof.
   path_induction.
 Defined.
 
-Lemma happly_dep_opp A P (f g : forall a:A, P a) (p : f == g) (x : A) :
-  happly_dep (!p) x == !happly_dep p x.
+Lemma happly_dep_opp A P (f g : forall a:A, P a) (p : f ~~> g) (x : A) :
+  happly_dep (!p) x ~~> !happly_dep p x.
 Proof.
   path_induction.
 Defined.
@@ -322,22 +322,22 @@ Defined.
 (** How happly interacts with map. *)
 
 Lemma map_precompose {A B C} (f g : B -> C) (h : A -> B)
-  (p : f == g) (a : A) :
-  happly (map (fun f' => f' o h) p) a == happly p (h a).
+  (p : f ~~> g) (a : A) :
+  happly (map (fun f' => f' o h) p) a ~~> happly p (h a).
 Proof.
   path_induction.
 Defined.
 
 Lemma map_postcompose {A B C} (f g : A -> B) (h : B -> C)
-  (p : f == g) (a : A) :
-  happly (map (fun f' => h o f') p) a == map h (happly p a).
+  (p : f ~~> g) (a : A) :
+  happly (map (fun f' => h o f') p) a ~~> map h (happly p a).
 Proof.
   path_induction.
 Defined.
 
 Lemma map_precompose_dep {A B P} (f g : forall b:B, P b) (h : A -> B)
-  (p : f == g) (a : A) :
-  happly_dep (map (fun f' => fun a => f' (h a)) p) a == happly_dep p (h a).
+  (p : f ~~> g) (a : A) :
+  happly_dep (map (fun f' => fun a => f' (h a)) p) a ~~> happly_dep p (h a).
 Proof.
   path_induction.
 Defined.
@@ -345,7 +345,7 @@ Defined.
 (** Paths in cartesian products. *)
 
 Definition prod_path {X Y} (z z' : X * Y) :
-  (fst z == fst z') -> (snd z == snd z') -> (z == z').
+  (fst z ~~> fst z') -> (snd z ~~> snd z') -> (z ~~> z').
 Proof.
   intros; destruct z; destruct z'.
   simpl in *; path_induction.
@@ -388,16 +388,16 @@ Ltac apply_happly_to f' g' x' :=
 
 Ltac apply_happly :=
   match goal with
-    | |- ?f ?x == ?g ?x =>
+    | |- ?f ?x ~~> ?g ?x =>
       apply_happly_to f g x
-    | |- ?f1 (?f2 ?x) == ?g ?x =>
-      change ((f1 o f2) x == g x);
+    | |- ?f1 (?f2 ?x) ~~> ?g ?x =>
+      change ((f1 o f2) x ~~> g x);
       apply_happly_to (f1 o f2) g x
-    | |- ?f ?x == ?g1 (?g2 ?x) =>
-      change (f x == (g1 o g2) x);
+    | |- ?f ?x ~~> ?g1 (?g2 ?x) =>
+      change (f x ~~> (g1 o g2) x);
       apply_happly_to f (g1 o g2) x
-    | |- ?f1 (?f2 ?x) == ?g1 (?g2) ?x =>
-      change ((f1 o f2) x == (g1 o g2) x);
+    | |- ?f1 (?f2 ?x) ~~> ?g1 (?g2) ?x =>
+      change ((f1 o f2) x ~~> (g1 o g2) x);
       apply_happly_to (f1 o f2) (g1 o g2) x
   end.
 
@@ -439,8 +439,8 @@ Ltac path_simplify'' tac :=
     | apply opposite; tac
     ]; auto with path_hints.
 
-(** These tactics are used to construct a path [a == b] as a
-   composition of paths [a == x] and [x == b].  They then apply
+(** These tactics are used to construct a path [a ~~> b] as a
+   composition of paths [a ~~> x] and [x ~~> b].  They then apply
    [path_simplify] to both paths, along with possibly an additional
    lemma supplied by the user. *)
 
@@ -463,8 +463,8 @@ Ltac path_via' mid :=
 
 Ltac path_change mid :=
   match goal with
-    |- ?source == ?target =>
-      first [ change (source == mid) | change (mid == target) ]
+    |- ?source ~~> ?target =>
+      first [ change (source ~~> mid) | change (mid ~~> target) ]
   end; path_simplify.
 
 (** Here are some tactics for reassociating concatenations.  The
@@ -481,7 +481,7 @@ Ltac associate_right_in s :=
 Ltac associate_right :=
   repeat progress (
     match goal with
-      |- ?s == ?t => first [ associate_right_in s | associate_right_in t ]
+      |- ?s ~~> ?t => first [ associate_right_in s | associate_right_in t ]
     end
   ).
 
@@ -495,7 +495,7 @@ Ltac associate_left_in s :=
 Ltac associate_left :=
   repeat progress (
     match goal with
-      |- ?s == ?t => first [ associate_left_in s | associate_left_in t ]
+      |- ?s ~~> ?t => first [ associate_left_in s | associate_left_in t ]
     end
   ).
 
@@ -529,7 +529,7 @@ Ltac cancel_units_in s :=
 Ltac cancel_units :=
   repeat (
     match goal with
-      |- ?s == ?t => first [ cancel_units_in s | cancel_units_in t ]
+      |- ?s ~~> ?t => first [ cancel_units_in s | cancel_units_in t ]
     end
   ).
 
@@ -566,7 +566,7 @@ Ltac partly_cancel_left_opposite_of_in p s :=
 Ltac cancel_left_opposite_of p := 
   repeat progress (
     match goal with
-      |- ?s == ?t => first [
+      |- ?s ~~> ?t => first [
           partly_cancel_left_opposite_of_in p s
         | partly_cancel_left_opposite_of_in p t
       ]
@@ -592,7 +592,7 @@ Ltac partly_cancel_right_opposite_of_in p s :=
 Ltac cancel_right_opposite_of p := 
   repeat progress (
     match goal with
-      |- ?s == ?t => first [
+      |- ?s ~~> ?t => first [
           partly_cancel_right_opposite_of_in p s
         | partly_cancel_right_opposite_of_in p t
       ]
@@ -626,7 +626,7 @@ Ltac cancel_opposites_in s :=
 Ltac cancel_opposites :=
   repeat progress (
     match goal with
-      |- ?s == ?t => first [ cancel_opposites_in s | cancel_opposites_in t ]
+      |- ?s ~~> ?t => first [ cancel_opposites_in s | cancel_opposites_in t ]
     end
   ).
 
@@ -651,7 +651,7 @@ Ltac do_opposite_opposite_in s :=
 Ltac do_opposite_opposite :=
   repeat progress (
     match goal with
-      |- ?s == ?t => first [ do_opposite_opposite_in s | do_opposite_opposite_in t ]
+      |- ?s ~~> ?t => first [ do_opposite_opposite_in s | do_opposite_opposite_in t ]
     end
   ).
 
@@ -659,9 +659,9 @@ Ltac do_opposite_opposite :=
 
 Ltac apply_opposite_map :=
   match goal with
-    | |- map ?f' (! ?p') == ! map ?f' ?p' =>
+    | |- map ?f' (! ?p') ~~> ! map ?f' ?p' =>
       apply opposite_map with (f := f') (p := p')
-    | |- ! map ?f' ?p' == map ?f' (! ?p') =>
+    | |- ! map ?f' ?p' ~~> map ?f' (! ?p') =>
       apply opposite, opposite_map with (f := f') (p := p')
   end.
 
@@ -674,7 +674,7 @@ Ltac do_opposite_map_in s :=
 Ltac do_opposite_map :=
   repeat progress (
     match goal with
-      |- ?s == ?t => first [ do_opposite_map_in s | do_opposite_map_in t ]
+      |- ?s ~~> ?t => first [ do_opposite_map_in s | do_opposite_map_in t ]
     end
   ); do_opposite_opposite.
 
@@ -687,7 +687,7 @@ Ltac undo_opposite_map_in s :=
 Ltac undo_opposite_map :=
   repeat progress (
     match goal with
-      |- ?s == ?t => first [ undo_opposite_map_in s | undo_opposite_map_in t ]
+      |- ?s ~~> ?t => first [ undo_opposite_map_in s | undo_opposite_map_in t ]
     end
   ); do_opposite_opposite.
 
@@ -702,7 +702,7 @@ Ltac do_opposite_concat_in s :=
 Ltac do_opposite_concat :=
   repeat progress (
     match goal with
-      |- ?s == ?t => first [ do_opposite_concat_in s | do_opposite_concat_in t ]
+      |- ?s ~~> ?t => first [ do_opposite_concat_in s | do_opposite_concat_in t ]
     end
   ); do_opposite_opposite.
 
@@ -715,7 +715,7 @@ Ltac undo_opposite_concat_in s :=
 Ltac undo_opposite_concat :=
   repeat progress (
     match goal with
-      |- ?s == ?t => first [ undo_opposite_concat_in s | undo_opposite_concat_in t ]
+      |- ?s ~~> ?t => first [ undo_opposite_concat_in s | undo_opposite_concat_in t ]
     end
   ); do_opposite_opposite.
 
@@ -724,9 +724,9 @@ Ltac undo_opposite_concat :=
 
 Ltac apply_compose_map :=
   match goal with
-    | |- map (?g' o ?f') ?p' == map ?g' (map ?f' ?p') =>
+    | |- map (?g' o ?f') ?p' ~~> map ?g' (map ?f' ?p') =>
       apply compose_map with (g := g') (f := f') (p := p')
-    | |- map ?g' (map ?f' ?p') == map (?g' o ?f') ?p' =>
+    | |- map ?g' (map ?f' ?p') ~~> map (?g' o ?f') ?p' =>
       apply opposite; apply compose_map with (g := g') (f := f') (p := p')
   end.
 
@@ -740,7 +740,7 @@ Ltac do_compose_map_in s :=
 Ltac do_compose_map :=
   repeat progress (
     match goal with
-      |- ?s == ?t => first [ do_compose_map_in s | do_compose_map_in t ]
+      |- ?s ~~> ?t => first [ do_compose_map_in s | do_compose_map_in t ]
     end
   ).
 
@@ -754,7 +754,7 @@ Ltac undo_compose_map_in s :=
 Ltac undo_compose_map :=
   repeat progress (
     match goal with
-      |- ?s == ?t => first [ undo_compose_map_in s | undo_compose_map_in t ]
+      |- ?s ~~> ?t => first [ undo_compose_map_in s | undo_compose_map_in t ]
     end
   ).
 
@@ -770,7 +770,7 @@ Ltac do_concat_map_in s :=
 Ltac do_concat_map :=
   repeat progress (
     match goal with
-      |- ?s == ?t => first [ do_concat_map_in s | do_concat_map_in t ]
+      |- ?s ~~> ?t => first [ do_concat_map_in s | do_concat_map_in t ]
     end
   ).
 
@@ -784,15 +784,15 @@ Ltac undo_concat_map_in s :=
 Ltac undo_concat_map :=
   repeat progress (
     match goal with
-      |- ?s == ?t => first [ undo_concat_map_in s | undo_concat_map_in t ]
+      |- ?s ~~> ?t => first [ undo_concat_map_in s | undo_concat_map_in t ]
     end
   ).
 
 (** Now we return to proving lemmas about paths.
    We show that homotopies are natural with respect to paths in the domain. *) 
 
-Lemma homotopy_naturality A B (f g : A -> B) (p : forall x, f x == g x) (x y : A) (q : x == y) :
-  map f q @ p y == p x @ map g q.
+Lemma homotopy_naturality A B (f g : A -> B) (p : forall x, f x ~~> g x) (x y : A) (q : x ~~> y) :
+  map f q @ p y ~~> p x @ map g q.
 Proof.
   induction q.
   cancel_units.
@@ -800,8 +800,8 @@ Defined.
 
 Hint Resolve homotopy_naturality : path_hints.
 
-Lemma homotopy_naturality_toid A (f : A -> A) (p : forall x, f x == x) (x y : A) (q : x == y) :
-  map f q @ p y == p x @ q.
+Lemma homotopy_naturality_toid A (f : A -> A) (p : forall x, f x ~~> x) (x y : A) (q : x ~~> y) :
+  map f q @ p y ~~> p x @ q.
 Proof.
   induction q.
   cancel_units.
@@ -809,8 +809,8 @@ Defined.
 
 Hint Resolve homotopy_naturality_toid : path_hints.
 
-Lemma homotopy_naturality_fromid A (f : A -> A) (p : forall x, x == f x) (x y : A) (q : x == y) :
-  q @ p y == p x @ map f q.
+Lemma homotopy_naturality_fromid A (f : A -> A) (p : forall x, x ~~> f x) (x y : A) (q : x ~~> y) :
+  q @ p y ~~> p x @ map f q.
 Proof.
   induction q.
   cancel_units.
@@ -820,7 +820,7 @@ Hint Resolve homotopy_naturality_fromid : path_hints.
 
 (** Cancellability of concatenation on both sides. *)
 
-Lemma concat_cancel_right A (x y z : A) (p q : x == y) (r : y == z) : (p @ r == q @ r) -> (p == q).
+Lemma concat_cancel_right A (x y z : A) (p q : x ~~> y) (r : y ~~> z) : (p @ r ~~> q @ r) -> (p ~~> q).
 Proof.
   intro a.
   induction p.
@@ -828,7 +828,7 @@ Proof.
   path_via (q @ idpath x).
 Defined.
 
-Lemma concat_cancel_left A (x y z : A) (p : x == y) (q r : y == z) : (p @ q == p @ r) -> (q == r).
+Lemma concat_cancel_left A (x y z : A) (p : x ~~> y) (q r : y ~~> z) : (p @ q ~~> p @ r) -> (q ~~> r).
 Proof.
   intro a.
   induction p.
@@ -839,8 +839,8 @@ Defined.
 (** If a function is homotopic to the identity, then that homotopy
    makes it a "well-pointed" endofunctor in the following sense. *)
 
-Lemma htoid_well_pointed A (f : A -> A) (p : forall x, f x == x) (x : A) :
-  map f (p x) == p (f x).
+Lemma htoid_well_pointed A (f : A -> A) (p : forall x, f x ~~> x) (x : A) :
+  map f (p x) ~~> p (f x).
 Proof.
   apply concat_cancel_right with (r := p x).
   apply homotopy_naturality_toid.
@@ -848,8 +848,8 @@ Defined.
 
 (** Mates *)
 
-Lemma concat_moveright_onright A (x y z : A) (p : x == z) (q : x == y) (r : z == y) :
-  (p == q @ !r) -> (p @ r == q).
+Lemma concat_moveright_onright A (x y z : A) (p : x ~~> z) (q : x ~~> y) (r : z ~~> y) :
+  (p ~~> q @ !r) -> (p @ r ~~> q).
 Proof.
   intro a.
   path_via (q @ (!r @ r)).
@@ -858,14 +858,14 @@ Defined.
 
 Ltac moveright_onright :=
   match goal with
-    | |- (?p @ ?r == ?q) =>
+    | |- (?p @ ?r ~~> ?q) =>
       apply concat_moveright_onright
-    | |- (?r == ?q) =>
+    | |- (?r ~~> ?q) =>
       path_via (idpath _ @ r); apply concat_moveright_onright
   end; do_opposite_opposite.
 
-Lemma concat_moveleft_onright A (x y z : A) (p : x == y) (q : x == z) (r : z == y) :
-  (p @ !r == q) -> (p == q @ r).
+Lemma concat_moveleft_onright A (x y z : A) (p : x ~~> y) (q : x ~~> z) (r : z ~~> y) :
+  (p @ !r ~~> q) -> (p ~~> q @ r).
 Proof.
   intro a.
   path_via (p @ (!r @ r)).
@@ -874,14 +874,14 @@ Defined.
 
 Ltac moveleft_onright :=
   match goal with
-    | |- (?p == ?q @ ?r) =>
+    | |- (?p ~~> ?q @ ?r) =>
       apply concat_moveleft_onright
-    | |- (?p == ?r) =>
+    | |- (?p ~~> ?r) =>
       path_via (idpath _ @ r); apply concat_moveleft_onright
   end; do_opposite_opposite.
 
-Lemma concat_moveleft_onleft A (x y z : A) (p : y == z) (q : x == z) (r : y == x) :
-  (!r @ p == q) -> (p == r @ q).
+Lemma concat_moveleft_onleft A (x y z : A) (p : y ~~> z) (q : x ~~> z) (r : y ~~> x) :
+  (!r @ p ~~> q) -> (p ~~> r @ q).
 Proof.
   intro a.
   path_via ((r @ !r) @ p).
@@ -890,14 +890,14 @@ Defined.
 
 Ltac moveleft_onleft :=
   match goal with
-    | |- (?p == ?r @ ?q) =>
+    | |- (?p ~~> ?r @ ?q) =>
       apply concat_moveleft_onleft
-    | |- (?p == ?r) =>
+    | |- (?p ~~> ?r) =>
       path_via (r @ idpath _); apply concat_moveleft_onleft
   end; do_opposite_opposite.
 
-Lemma concat_moveright_onleft A (x y z : A) (p : x == z) (q : y == z) (r : y == x) :
-  (p == !r @ q) -> (r @ p == q).
+Lemma concat_moveright_onleft A (x y z : A) (p : x ~~> z) (q : y ~~> z) (r : y ~~> x) :
+  (p ~~> !r @ q) -> (r @ p ~~> q).
 Proof.
   intro a.
   path_via ((r @ !r) @ q).
@@ -906,8 +906,8 @@ Defined.
 
 Ltac moveright_onleft :=
   match goal with
-    | |- (?r @ ?p == ?q) =>
+    | |- (?r @ ?p ~~> ?q) =>
       apply concat_moveright_onleft
-    | |- (?r == ?q) =>
+    | |- (?r ~~> ?q) =>
       path_via (r @ idpath _); apply concat_moveright_onleft
   end; do_opposite_opposite.

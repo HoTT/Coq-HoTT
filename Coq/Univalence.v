@@ -2,7 +2,7 @@ Require Import Paths Fibrations Contractible Equivalences.
 
 (** Every path between spaces gives an equivalence. *)
 
-Definition path_to_equiv {U V} : (U == V) -> (U <~> V).
+Definition path_to_equiv {U V} : (U ~~> V) -> (U <~> V).
 Proof.
   intro p.
   induction p as [U].
@@ -11,14 +11,14 @@ Defined.
 
 (** This is functorial in the appropriate sense. *)
 
-Lemma path_to_equiv_map {A} (P : A -> Type) (x y : A) (p : x == y) :
-  projT1 (path_to_equiv (map P p)) == transport (P := P) p.
+Lemma path_to_equiv_map {A} (P : A -> Type) (x y : A) (p : x ~~> y) :
+  projT1 (path_to_equiv (map P p)) ~~> transport (P := P) p.
 Proof.
   path_induction.
 Defined.
 
-Lemma concat_to_compose {A B C} (p : A == B) (q : B == C) :
-  path_to_equiv q o path_to_equiv p == projT1 (path_to_equiv (p @ q)).
+Lemma concat_to_compose {A B C} (p : A ~~> B) (q : B ~~> C) :
+  path_to_equiv q o path_to_equiv p ~~> projT1 (path_to_equiv (p @ q)).
 Proof.
   path_induction.
 Defined.
@@ -34,13 +34,13 @@ Ltac undo_concat_to_compose_in s :=
 Ltac undo_concat_to_compose :=
   repeat progress (
     match goal with
-      | |- ?s == ?t =>
+      | |- ?s ~~> ?t =>
         first [ undo_concat_to_compose_in s | undo_concat_to_compose_in t ]
     end
   ).
 
-Lemma opposite_to_inverse {A B} (p : A == B) :
-  (path_to_equiv p)^-1 == path_to_equiv (!p).
+Lemma opposite_to_inverse {A B} (p : A ~~> B) :
+  (path_to_equiv p)^-1 ~~> path_to_equiv (!p).
 Proof.
   path_induction.
 Defined.
@@ -56,7 +56,7 @@ Ltac undo_opposite_to_inverse_in s :=
 Ltac undo_opposite_to_inverse :=
   repeat progress (
     match goal with
-      | |- ?s == ?t =>
+      | |- ?s ~~> ?t =>
         first [ undo_opposite_to_inverse_in s | undo_opposite_to_inverse_in t ]
     end
   ).
@@ -73,27 +73,27 @@ Section Univalence.
 
   (** Assuming univalence, every equivalence yields a path. *)
 
-  Definition equiv_to_path {U V} : U <~> V -> U == V :=
+  Definition equiv_to_path {U V} : U <~> V -> U ~~> V :=
     inverse (path_to_equiv_equiv U V).
 
   (** The map [equiv_to_path] is a section of [path_to_equiv]. *)
 
   Definition equiv_to_path_section U V :
-    forall (w : U <~> V), path_to_equiv (equiv_to_path w) == w :=
+    forall (w : U <~> V), path_to_equiv (equiv_to_path w) ~~> w :=
     inverse_is_section (path_to_equiv_equiv U V).
 
   Definition equiv_to_path_retraction U V :
-    forall (p : U == V), equiv_to_path (path_to_equiv p) == p :=
+    forall (p : U ~~> V), equiv_to_path (path_to_equiv p) ~~> p :=
     inverse_is_retraction (path_to_equiv_equiv U V).
 
-  Definition equiv_to_path_triangle U V : forall (p : U == V),
-      map path_to_equiv (equiv_to_path_retraction U V p) == equiv_to_path_section U V (path_to_equiv p) :=
+  Definition equiv_to_path_triangle U V : forall (p : U ~~> V),
+      map path_to_equiv (equiv_to_path_retraction U V p) ~~> equiv_to_path_section U V (path_to_equiv p) :=
     inverse_triangle (path_to_equiv_equiv U V).
 
   (** We can do better than [equiv_to_path]: we can turn a fibration
      fibered over equivalences to one fiberered over paths. *)
 
-  Definition pred_equiv_to_path U V : (U <~> V -> Type) -> (U == V -> Type).
+  Definition pred_equiv_to_path U V : (U <~> V -> Type) -> (U ~~> V -> Type).
   Proof.
     intros Q p.
     apply Q.

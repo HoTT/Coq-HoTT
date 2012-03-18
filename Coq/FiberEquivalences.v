@@ -32,7 +32,7 @@ Section FiberMap.
      arguments of the form [(x ; y)].  Hence we need the following
      lemma.  *)
 
-  Let tg_is_fiberwise (z : sigT P) : pr1 z == pr1 (tg z).
+  Let tg_is_fiberwise (z : sigT P) : pr1 z ~~> pr1 (tg z).
     destruct z as [x y].
     auto.
   Defined.
@@ -43,7 +43,7 @@ Section FiberMap.
      base.  *)
 
   Let tg_isg_onfibers (z : sigT P) :
-    g _ (transport (tg_is_fiberwise z) (pr2 z)) == pr2 (tg z).
+    g _ (transport (tg_is_fiberwise z) (pr2 z)) ~~> pr2 (tg z).
   Proof.
     destruct z as [x y].
     auto.
@@ -52,8 +52,8 @@ Section FiberMap.
   (* And the following lemma tells us that the same is true for its
      action on paths. *)
 
-  Let tg_isfib_onpaths (z w : sigT P) (p : z == w) :
-    (tg_is_fiberwise z @ base_path (map tg p) @ !tg_is_fiberwise w) == base_path p.
+  Let tg_isfib_onpaths (z w : sigT P) (p : z ~~> w) :
+    (tg_is_fiberwise z @ base_path (map tg p) @ !tg_is_fiberwise w) ~~> base_path p.
   Proof.
     path_induction.
     destruct x. simpl. auto.
@@ -230,7 +230,7 @@ Section PullbackMap.
     path_via (transport (!inverse_is_section f (f x) @ map f (inverse_is_retraction f x)) z).
     apply opposite, trans_concat.
     path_via (transport (idpath (f x)) z).
-    assert (p : (!inverse_is_section f (f x) @ map f (inverse_is_retraction f x)) == idpath (f x)).
+    assert (p : (!inverse_is_section f (f x) @ map f (inverse_is_retraction f x)) ~~> idpath (f x)).
     moveright_onleft.
     cancel_units.
     apply inverse_triangle.

@@ -38,12 +38,12 @@ Section UnivalenceImpliesFunext.
   Theorem univalence_implies_funext : funext_statement.
   Proof.
     intros A B f g p.
-    (* It suffices to find a path [eta f == eta g]. *)
+    (* It suffices to find a path [eta f ~~> eta g]. *)
     apply equiv_injective with (w := eta_equiv eta_rule A B).
     simpl.
     (* Consider the following maps. *)
-    pose (d := fun x : A => existT (fun xy => fst xy == snd xy) (f x, f x) (idpath (f x))).
-    pose (e := fun x : A => existT (fun xy => fst xy == snd xy) (f x, g x) (p x)).
+    pose (d := fun x : A => existT (fun xy => fst xy ~~> snd xy) (f x, f x) (idpath (f x))).
+    pose (e := fun x : A => existT (fun xy => fst xy ~~> snd xy) (f x, g x) (p x)).
     (* If we compose [d] and [e] with [free_path_target], we get [eta
        f] and [eta g], respectively. So, if we had a path from [d] to
        [e], we would get one from [eta f] to [eta g]. *)
@@ -73,7 +73,7 @@ Section UnivalenceImpliesFunext.
     intro f.
     apply univalence_implies_funext.
     intro x.
-    assert (alltt : forall y:unit, y == tt).
+    assert (alltt : forall y:unit, y ~~> tt).
     induction y; apply idpath.
     apply alltt.
     exact (transport (P := fun Q: X -> Type => is_contr (forall x, Q x)) eqpt contrunit).
