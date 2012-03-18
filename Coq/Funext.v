@@ -1,4 +1,5 @@
-Require Export Fibrations Contractible Equivalences FiberEquivalences.
+Require Export Fibrations Contractible Equivalences.
+Require Export UsefulEquivalences FiberEquivalences.
 
 Definition ext_dep_eq {X} {P : X -> Type} (f g : forall x, P x) := forall x : X, f x == g x.
 

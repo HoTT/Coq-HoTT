@@ -218,13 +218,6 @@ Proof.
   path_induction.
 Defined.
 
-(** Taking opposites of 1-paths is functorial on 2-paths. *)
-
-Definition opposite2 A {x y : A} (p q : x == y) (a : p == q) : (!p == !q).
-Proof.
-  path_induction.
-Defined.
-
 (** Now we consider the application of functions to paths. *)
 
 (** A path [p : x == y] in a space [A] is mapped by [f : A -> B] to a
@@ -234,6 +227,14 @@ Lemma map {A B} {x y : A} (f : A -> B) : (x == y) -> (f x == f y).
 Proof.
   path_induction.
 Defined.
+
+(** Taking opposites of 1-paths is functorial on 2-paths. *)
+
+Definition opposite2 {A} {x y : A} {p q : x == y} (a : p == q) : (!p == !q)
+  := map opposite a.
+(*Proof.
+  path_induction.
+Defined.*)
 
 (** The next two lemmas state that [map f p] is "functorial" in the path [p]. *)
 
@@ -267,6 +268,12 @@ Proof.
   path_induction.
 Defined.
 
+Lemma constmap_map (A B:Type) (b:B) (x y:A) (p: x==y) :
+  map (fun _=>b) p == idpath b.
+Proof.
+  path_induction.
+Defined.
+
 (** We can also map paths between paths. *)
 
 Definition map2 {A B} {x y : A} {p q : x == y} (f : A -> B) :
@@ -286,6 +293,63 @@ Definition happly_dep {A} {P : A -> Type} {f g : forall x, P x} :
   (f == g) -> (forall x, f x == g x) :=
   fun p x => map (fun h => h x) p.
 
+(** [happly] preserves path-concatenation and opposites. *)
+
+Lemma happly_concat A B (f g h : A -> B) (p : f == g) (q : g == h) (x:A) :
+  happly (p @ q) x == happly p x @ happly q x.
+Proof.
+  path_induction.
+Defined.
+
+Lemma happly_opp A B (f g : A -> B) (p : f == g) (x : A) :
+  happly (!p) x == !happly p x.
+Proof.
+  path_induction.
+Defined.
+
+Lemma happly_dep_concat A P (f g h : forall a:A, P a) (p : f == g) (q : g == h) (x:A) :
+  happly_dep (p @ q) x == happly_dep p x @ happly_dep q x.
+Proof.
+  path_induction.
+Defined.
+
+Lemma happly_dep_opp A P (f g : forall a:A, P a) (p : f == g) (x : A) :
+  happly_dep (!p) x == !happly_dep p x.
+Proof.
+  path_induction.
+Defined.
+
+(** How happly interacts with map. *)
+
+Lemma map_precompose {A B C} (f g : B -> C) (h : A -> B)
+  (p : f == g) (a : A) :
+  happly (map (fun f' => f' o h) p) a == happly p (h a).
+Proof.
+  path_induction.
+Defined.
+
+Lemma map_postcompose {A B C} (f g : A -> B) (h : B -> C)
+  (p : f == g) (a : A) :
+  happly (map (fun f' => h o f') p) a == map h (happly p a).
+Proof.
+  path_induction.
+Defined.
+
+Lemma map_precompose_dep {A B P} (f g : forall b:B, P b) (h : A -> B)
+  (p : f == g) (a : A) :
+  happly_dep (map (fun f' => fun a => f' (h a)) p) a == happly_dep p (h a).
+Proof.
+  path_induction.
+Defined.
+
+(** Paths in cartesian products. *)
+
+Definition prod_path {X Y} (z z' : X * Y) :
+  (fst z == fst z') -> (snd z == snd z') -> (z == z').
+Proof.
+  intros; destruct z; destruct z'.
+  simpl in *; path_induction.
+Defined.
 
 (** We declare some more [Hint Resolve] hints, now in the "hint
    database" [path_hints].  In general various hints (resolve,
@@ -305,7 +369,7 @@ Hint Resolve
   @whisker_right @whisker_left
   @whisker_right_toid @whisker_right_fromid
   @whisker_left_toid @whisker_left_fromid
-  opposite2
+  @opposite2
   @map idpath_map concat_map idmap_map compose_map opposite_map
   @map2
  : path_hints.
@@ -316,13 +380,25 @@ Hint Resolve
    to fail unification.  This tactic does the work that I think they
    should be doing. *)
 
+Ltac apply_happly_to f' g' x' :=
+  first [
+      apply @happly with (f := f') (g := g') (x := x')
+    | apply @happly_dep with (f := f') (g := g') (x := x')
+  ].
+
 Ltac apply_happly :=
   match goal with
-    | |- ?f' ?x == ?g' ?x =>
-      first [
-          apply @happly with (f := f') (g := g')
-        | apply @happly_dep with (f := f') (g := g')
-      ]
+    | |- ?f ?x == ?g ?x =>
+      apply_happly_to f g x
+    | |- ?f1 (?f2 ?x) == ?g ?x =>
+      change ((f1 o f2) x == g x);
+      apply_happly_to (f1 o f2) g x
+    | |- ?f ?x == ?g1 (?g2 ?x) =>
+      change (f x == (g1 o g2) x);
+      apply_happly_to f (g1 o g2) x
+    | |- ?f1 (?f2 ?x) == ?g1 (?g2) ?x =>
+      change ((f1 o f2) x == (g1 o g2) x);
+      apply_happly_to (f1 o f2) (g1 o g2) x
   end.
 
 (** The following tactic is intended to be applied when we want to
@@ -352,6 +428,17 @@ Ltac path_simplify' lem :=
     | apply opposite; apply lem
     ]; auto with path_hints.
 
+(* This one takes a tactic rather than a lemma. *)
+
+Ltac path_simplify'' tac :=
+  repeat progress first [
+      apply whisker_left
+    | apply whisker_right
+    | apply @map
+    | tac
+    | apply opposite; tac
+    ]; auto with path_hints.
+
 (** These tactics are used to construct a path [a == b] as a
    composition of paths [a == x] and [x == b].  They then apply
    [path_simplify] to both paths, along with possibly an additional
@@ -363,10 +450,22 @@ Ltac path_via mid :=
 Ltac path_using mid lem :=
   apply @concat with (y := mid); path_simplify' lem.
 
+Ltac path_using' mid tac :=
+  apply @concat with (y := mid); path_simplify'' tac.
+
 (** This variant does not call path_simplify. *)
 
 Ltac path_via' mid :=
   apply @concat with (y := mid).
+
+(** And this variant does not actually do composition; it just changes
+   the form of one of the goals. *)
+
+Ltac path_change mid :=
+  match goal with
+    |- ?source == ?target =>
+      first [ change (source == mid) | change (mid == target) ]
+  end; path_simplify.
 
 (** Here are some tactics for reassociating concatenations.  The
    tactic [associate_right] associates both source and target of the
@@ -664,7 +763,8 @@ Ltac undo_compose_map :=
 Ltac do_concat_map_in s :=
   match s with
     | context cxt [ map ?f (?p @ ?q) ] =>
-      let mid := context cxt [ map f p @ map f q ] in path_using mid concat_map
+      let mid := context cxt [ map f p @ map f q ] in
+        path_using mid (concat_map _ _ _ _ _ f p q)
   end.
 
 Ltac do_concat_map :=
@@ -677,7 +777,8 @@ Ltac do_concat_map :=
 Ltac undo_concat_map_in s :=
   match s with
     | context cxt [ map ?f ?p @ map ?f ?q ] =>
-      let mid := context cxt [ map f (p @ q) ] in path_using mid concat_map
+      let mid := context cxt [ map f (p @ q) ] in
+        path_using mid (concat_map _ _ _ _ _ f p q)
   end.
 
 Ltac undo_concat_map :=

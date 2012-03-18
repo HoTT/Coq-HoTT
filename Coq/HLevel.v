@@ -63,7 +63,8 @@ Proof.
   apply H.
 Defined.
 
-(** H-level is preserved under equivalence. *)
+(** H-level is preserved under equivalence.
+   (This is, of course, trivial with univalence.) *)
 
 Theorem hlevel_equiv : forall {n A B}, (A <~> B) -> is_hlevel n A -> is_hlevel n B.
 Proof.
@@ -81,6 +82,43 @@ Proof.
   apply IHn with (A := (f^-1 x) == (f^-1 y)).
   apply equiv_map_equiv.
   apply H.
+Defined.
+
+(** And by products *)
+
+Definition prod_hlevel n A B :
+  is_hlevel n A -> is_hlevel n B -> is_hlevel n (A * B).
+Proof.
+  intros n; induction n.
+  intros A B [a ac] [b bc].
+  exists (a,b).
+  intros [a' b'].
+  apply prod_path. apply ac. apply bc.
+  intros A B Ah Bh [a1 b1] [a2 b2].
+  apply @hlevel_equiv with (A := ((a1 == a2) * (b1 == b2))%type).
+  apply equiv_inverse, prod_path_equiv.
+  apply IHn. apply Ah. apply Bh.
+Defined.
+
+(** And by dependent sums *)
+
+Definition total_hlevel n A (P : A -> Type) :
+  is_hlevel n A -> (forall a, is_hlevel n (P a)) ->
+  is_hlevel n (sigT P).
+Proof.
+  intros n; induction n.
+  intros A P [a ac] Pc.
+  exists (a; pr1 (Pc a)).
+  intros [a' p'].
+  apply total_path with (ac a').
+  apply contr_path; apply (Pc a).
+  intros A P Ah Ph [a1 p1] [a2 p2].
+  apply @hlevel_equiv with
+    (A := {p : a1 == a2 & transport p p1 == p2}).
+  apply equiv_inverse, total_paths_equiv.
+  apply IHn.
+  apply Ah.
+  intros p; apply (Ph a2).
 Defined.
 
 (** Propositions are of h-level 1. *)
@@ -113,6 +151,13 @@ Proof.
 Defined.
 
 Definition isprop_isprop A : is_prop (is_prop A) := hlevel_isprop 1 A.
+
+Definition iscontr_isprop A : is_prop (is_contr A).
+Proof.
+  intros A.
+  apply inhabited_contr_isprop.
+  apply contr_contr.
+Defined.
 
 Theorem prop_equiv_inhabited_contr {A} : is_prop A <~> (A -> is_contr A).
 Proof.
@@ -174,6 +219,51 @@ Proof.
   apply H.
 Defined.
   
+(** Two propositions are equivalent as soon as there are maps in both
+   directions. *)
+
+Definition prop_iff_equiv A B : is_prop A -> is_prop B ->
+  (A -> B) -> (B -> A) -> (A <~> B).
+Proof.
+  intros A B Ap Bp f g.
+  exists f.
+  apply @hequiv_is_equiv with (g := g);
+  intros; apply prop_path; auto.
+Defined.
+
+(** Props are closed under sums (with prop base) and arbitrary
+   dependent products. *)
+
+Definition sum_isprop X (P : X -> Type) :
+  is_prop X -> (forall x, is_prop (P x)) -> is_prop (sigT P).
+Proof.
+  intros X P Xp Pp.
+  apply allpath_prop.
+  intros [x p] [y q].
+  apply total_path with (prop_path Xp x y).
+  apply prop_path, Pp.
+Defined.
+
+Definition forall_isprop {X} (P : X -> Type) :
+  (forall x, is_prop (P x)) -> is_prop (forall x, P x).
+Proof.
+  intros X P H.
+  apply allpath_prop.
+  intros f g.
+  apply funext_dep. intros x.
+  apply prop_path.
+  apply H.
+Defined.
+
+(** Being an equivalence is a prop. *)
+
+Definition is_equiv_is_prop {X Y} (f: X -> Y) : is_prop (is_equiv f).
+Proof.
+  intros X Y f.
+  apply forall_isprop. intros y.
+  apply iscontr_isprop.
+Defined.
+
 (** Sets are of h-level 2. *)
 
 Definition is_set := is_hlevel 2.
@@ -273,11 +363,9 @@ Proof.
   intros d.
   apply axiomK_implies_isset.
   intros x p.
-  set (q := d x x).
   set (qp := map_dep (d x) p).
-  fold q in qp.
-  generalize qp.
-  clear qp.
+  set (q := d x x) in *.
+  clearbody qp; revert qp.
   destruct q as [q | q'].
   intro qp0.
   apply concat_cancel_left with (p := q).
@@ -285,6 +373,7 @@ Proof.
   apply opposite, trans_is_concat.
   path_via q.
   set (qp1 := trans_map p (fun (x0:A) => inl  (x == x0 -> Empty_set)) q).
+  simpl in qp1.
   apply inl_injective with (B := (x == x -> Empty_set)).
   exact (qp1 @ qp0).
   induction (q' p).

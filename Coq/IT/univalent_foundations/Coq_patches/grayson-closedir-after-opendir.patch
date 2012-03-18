@@ -1,0 +1,16 @@
+This patch will leave many few file descriptors unclosed.
+
+     Dan Grayson
+
+diff -ur ../coq-8.3pl2-clean/lib/system.ml ./lib/system.ml
+--- ../coq-8.3pl2-clean/lib/system.ml	2010-12-24 03:55:54.000000000 -0600
++++ ./lib/system.ml	2011-10-14 12:49:30.000000000 -0500
+@@ -103,7 +103,7 @@
+ (* All subdirectories, recursively *)
+ 
+ let exists_dir dir =
+-  try let _ = opendir dir in true with Unix_error _ -> false
++  try let _ = closedir (opendir dir) in true with Unix_error _ -> false
+ 
+ let skipped_dirnames = ref ["CVS"; "_darcs"]
+ 

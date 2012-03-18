@@ -61,6 +61,14 @@ Proof.
   path_induction.
 Defined.
 
+Lemma pathspace_contr_opp {X} (x:X) : is_contr { y:X & y == x }.
+Proof.
+  intros X x.
+  exists (existT (fun y => y == x) x (idpath x)).
+  intros [y p].
+  path_induction.
+Defined.
+
 (** The unit type is contractible. *)
 
 Lemma unit_contr : is_contr unit.
