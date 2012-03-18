@@ -1,3 +1,10 @@
+(** This is a highly experimental file which attempts to make it easier to
+   work with equivalences. However, it is very much unfinished, so don't
+   expect it to work or make sense. 
+
+   Andrej Bauer, 2012-03-18
+*)
+
 (** Peter Aczel suggested that we include a meta-theorem which states that
    predicates on functions obey a substitution principle with respect to
    extensional equality, as long as they are built from "standard" constructors.
