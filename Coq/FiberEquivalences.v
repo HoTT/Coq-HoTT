@@ -1,15 +1,11 @@
 Require Export Fibrations Equivalences.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 (** The map on total spaces induced by a map of fibrations *)
 
 Definition total_map {A B : Type} {P : A -> Type} {Q : B -> Type}
   (f : A -> B) (g : forall x:A, P x -> Q (f x)) :
   sigT P -> sigT Q.
 Proof.
-  intros A B P Q f g.
   intros [x y].
   exists (f x).
   exact (g x y).
@@ -37,7 +33,7 @@ Section FiberMap.
      lemma.  *)
 
   Let tg_is_fiberwise (z : sigT P) : pr1 z == pr1 (tg z).
-    intros [x y].
+    destruct z as [x y].
     auto.
   Defined.
 
@@ -49,7 +45,7 @@ Section FiberMap.
   Let tg_isg_onfibers (z : sigT P) :
     g _ (transport (tg_is_fiberwise z) (pr2 z)) == pr2 (tg z).
   Proof.
-    intros [x y].
+    destruct z as [x y].
     auto.
   Defined.
 
@@ -76,7 +72,6 @@ Section FiberMap.
 
     Let ginv (x:A) (y: Q x) : P x.
     Proof.
-      intros x y.
       (* The obvious thing to look at first is this. *)
       set (inv1 := pr2 ((tot_eqv^-1) (x ; y))).
       (* Unfortunately, this does not live in the fiber over [x], but
@@ -96,7 +91,6 @@ Section FiberMap.
 
     Theorem fiber_is_equiv (x:A) : is_equiv (g x).
     Proof.
-      intros x.
       set (is_section := inverse_is_section tot_eqv).
       set (is_retraction := inverse_is_retraction tot_eqv).
       set (triangle := inverse_triangle tot_eqv).

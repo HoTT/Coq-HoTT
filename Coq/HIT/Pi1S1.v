@@ -1,15 +1,15 @@
 Add LoadPath "..".
 Require Import Homotopy Integers Circle.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 (** In this file we prove that the loop space [base == base] of
    [circle] is equivalent to the integers [int]. *)
 
 (** It is easy to define a map in one direction.  We call the function
    [wind] because [wind z] is the path that winds around the circle
    [z] times.  *)
+
+(* We first assume that there is a circle. *)
+Parameter circle : Circle.
 
 Definition wind (z : int) : (base == base) :=
   match z with
@@ -22,7 +22,7 @@ Definition wind (z : int) : (base == base) :=
     | neg n => (fix F (n : nat) :=
                   match n with
                     | 0 => !loop
-                    | S n' => F n' @ !loop
+                    | S n' => F n' @ !(@loop circle)
                   end) n
   end.
 
@@ -32,12 +32,11 @@ Definition wind (z : int) : (base == base) :=
 Lemma wind_succ (z : int) :
   wind z @ loop == wind (succ z).
 Proof.
-  intro z.
   induction z.
   induction n.
   auto.
   auto.
-  path_via loop.
+  path_via (@loop circle).
   induction n.
   apply opposite_left_inverse.
   path_via ((wind (neg n) @ !loop) @ loop).
@@ -47,12 +46,11 @@ Defined.
 Lemma wind_pred (z : int) :
   wind z @ !loop == wind (pred z).
 Proof.
-  intro z.
   induction z.
   induction n.
   simpl; auto with path_hints.
   moveright_onright.
-  path_via (!loop).
+  path_via (!(@loop circle)).
   induction n.
   auto with path_hints.
   auto.
@@ -62,7 +60,7 @@ Defined.
    circle, as a dependent type (i.e. a fibration). *)
 
 Definition circle_cover : circle -> Type :=
-  circle_rect' Type int (equiv_to_path succ_equiv).
+  circle_rect' circle Type int (equiv_to_path succ_equiv).
 
 (** Of course, the fiber over [base] is equivalent to [int]. *)
 
@@ -81,7 +79,7 @@ Lemma circle_cover_dfib (c c' : circle) (z : circle_cover c) (z' : circle_cover 
   (p q : (c ; z) == (c' ; z')) :
   (base_path p == base_path q) -> (p == q).
 Proof.
-  intros c c' z z' p q s.
+  intros s.
   apply total_path2 with (r := s).
   assert (S : is_set (circle_cover base)).
   apply @hlevel_equiv with (A := int).
@@ -103,7 +101,6 @@ Defined.
 Lemma fiber_loop_action (x : circle_cover base) :
   fiber_toint (transport loop x) == succ (fiber_toint x).
 Proof.
-  intro x.
   expand_inverse_src fiber_toint x.
   change ((fiber_toint o transport loop o (fiber_toint^-1)) (fiber_toint x) == succ (fiber_toint x)).
   apply happly.
@@ -115,7 +112,8 @@ Proof.
   undo_opposite_to_inverse.
   undo_concat_to_compose.
   path_via (path_to_equiv (equiv_to_path succ_equiv)).
-  associate_left.
+  moveright_onleft.
+  moveright_onright.
   apply compute_loop'.
   apply equiv_to_path_section.
 Defined.
@@ -123,7 +121,6 @@ Defined.
 Lemma fiber_opploop_action (x : circle_cover base) :
   fiber_toint (transport (!loop) x) == pred (fiber_toint x).
 Proof.
-  intro x.
   expand_inverse_src fiber_toint x.
   change ((fiber_toint o transport (!loop) o (fiber_toint^-1)) (fiber_toint x) == pred (fiber_toint x)).
   apply happly.
@@ -137,10 +134,12 @@ Proof.
   path_via ((path_to_equiv (equiv_to_path succ_equiv))^-1).
   path_via (path_to_equiv (! equiv_to_path succ_equiv)).
   do_opposite_map.
-  path_via (!compute_base' Type int (equiv_to_path succ_equiv) @
+  path_via (!compute_base' circle Type int (equiv_to_path succ_equiv) @
     (!map circle_cover loop @
-      !(!compute_base' Type int (equiv_to_path succ_equiv)))).
+      !(!compute_base' circle Type int (equiv_to_path succ_equiv)))).
   do_opposite_concat.
+  moveright_onright; moveright_onleft.
+  associate_left.
   apply compute_loop'.
   apply opposite, opposite_to_inverse.
   apply equiv_to_path_section.
@@ -151,7 +150,6 @@ Defined.
 Lemma fiber_wind_action (z : int) (x : circle_cover base) :
   fiber_toint (transport (wind z) x) == zadd z (fiber_toint x).
 Proof.
-  intros z x.
   induction z.
   (* positive *)
   induction n.
@@ -189,7 +187,6 @@ Defined.
 Lemma trans_function {A} (P Q : A -> Type) (x y : A) (p : x == y) (f : P x -> Q x) :
   transport (P := fun x => P x -> Q x) p f == transport p o f o transport (!p).
 Proof.
-  intros A P Q x y p f.
   induction p.
   simpl.
   path_via (idmap _ o f o idmap _).
@@ -211,7 +208,7 @@ Definition cover_to_pathcirc : forall (x : circle),
 Proof.
   set (P := fun x => circle_cover x -> base == x).
   set (d := wind o fiber_toint : P base).
-  apply (circle_rect P d).
+  apply (circle_rect _ P d).
   unfold d.
   apply funext.
   intro x.
@@ -244,7 +241,6 @@ Defined.
 Lemma circle_cover_contrbase_opp (z : circle_cover base) :
   (base ; fiber_toint ^-1 zero) == (base ; z).
 Proof.
-  intro z.
   apply total_path with (p := wind (fiber_toint z)).
   simpl.
   expand_inverse_trg fiber_toint z.
@@ -293,7 +289,6 @@ Lemma circle_cover_contr_action (c c' : circle) (l : c == c')
   total_path _ _ (c' ; z) (c ; transport (!l) z) (!l) (idpath _)
   @ cb (transport (!l) z).
 Proof.
-  intros c c' l z cb.
   induction l.
   path_via (idpath _ @ cb z).
 Defined.
@@ -347,7 +342,7 @@ Proof.
   exists (base ; fiber_toint ^-1 zero).
   intros [c z].
   generalize z. generalize c.
-  exact (circle_rect
+  exact (circle_rect _
     (fun c => forall z, (c ; z) == (base ; fiber_toint ^-1 zero))
     circle_cover_contrbase
     trans_basecontr_fixed).
@@ -369,7 +364,7 @@ Defined.
 
 (** Here is the main theorem. *)
 
-Theorem int_equiv_loopcirc : int <~> (base == base).
+Theorem int_equiv_loopcirc : int <~> (base == @base circle).
 Proof.
   apply @equiv_compose with (B := circle_cover base).
   apply path_to_equiv.

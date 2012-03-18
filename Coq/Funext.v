@@ -1,9 +1,6 @@
 Require Export Fibrations Contractible Equivalences.
 Require Export UsefulEquivalences FiberEquivalences.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 Definition ext_dep_eq {X} {P : X -> Type} (f g : forall x, P x) := forall x : X, f x == g x.
 
 Notation "f === g" := (ext_dep_eq f g) (at level 50).

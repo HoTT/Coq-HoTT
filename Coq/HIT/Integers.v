@@ -1,10 +1,7 @@
 Add LoadPath "..".
 Require Import Paths Equivalences HLevel.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
-(** The natural numbers are a set. *)
+(** The natural numbers are an h-set. *)
 
 Theorem nat_decidable : decidable_paths nat.
 Proof.
@@ -93,7 +90,6 @@ Definition pred (z : int) : int :=
 Definition succ_pred (z : int) :
   succ (pred z) == z.
 Proof.
-  intro z.
   induction z.
   induction n; auto. auto. auto.
 Defined.  
@@ -101,7 +97,6 @@ Defined.
 Definition pred_succ (z : int) :
   pred (succ z) == z.
 Proof.
-  intro z.
   induction z.
   auto. auto. induction n; auto.
 Defined.  
@@ -139,7 +134,6 @@ Defined.
 Lemma zero_right_unit (z : int) :
   zadd z zero == z.
 Proof.
-  intro z.
   induction z.
   induction n.
   auto.
