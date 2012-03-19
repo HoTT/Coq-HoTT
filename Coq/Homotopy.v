@@ -1,3 +1,3 @@
-Require Export Paths Fibrations Contractible Equivalences FiberEquivalences.
-Require Export Funext Univalence UnivalenceAxiom.
+Require Export Paths Fibrations Contractible Equivalences UsefulEquivalences FiberEquivalences FiberSequences.
+Require Export Funext Univalence UnivalenceAxiom FunextEquivalences.
 Require Export HLevel.

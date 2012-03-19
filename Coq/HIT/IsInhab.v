@@ -1,15 +1,12 @@
 Add LoadPath "..".
 Require Import Homotopy.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 (** The definition of [is_inhab], the (-1)-truncation.  Here is what
    it would look like if Coq supported higher inductive types natively:
 
    Inductive is_inhab (A : Type) : Type :=
    | inhab : A -> is_inhab A
-   | inhab_path : forall (x y: is_inhab A), x == y
+   | inhab_path : forall (x y: is_inhab A), x ~~> y
 
    Instead we have to assume axioms that amount ot the same thing.
 *)
@@ -18,7 +15,7 @@ Axiom is_inhab : forall (A : Type), Type.
 
 Axiom inhab : forall {A : Type}, A -> is_inhab A.
 
-Axiom inhab_path : forall {A : Type} (x y : is_inhab A), x == y.
+Axiom inhab_path : forall {A : Type} (x y : is_inhab A), x ~~> y.
 
 (** By adding the following [Hint Resolve] we can simply use the [auto] tactic
    to resolve any path involving [is_inhab]. *)
@@ -28,27 +25,27 @@ Axiom is_inhab_rect :
   forall
     {A : Type} {P : is_inhab A -> Type}
     (dinhab : forall a : A, P (inhab a))
-    (dpath : forall (x y : is_inhab A) (z : P x) (w : P y), transport (inhab_path x y) z == w)
+    (dpath : forall (x y : is_inhab A) (z : P x) (w : P y), transport (inhab_path x y) z ~~> w)
     (x : is_inhab A), P x.
 
 Axiom is_inhab_compute_inhab : forall {A : Type} {P : is_inhab A -> Type}
   (dinhab : forall (a : A), P (inhab a))
-  (dpath : forall (x y : is_inhab A) (z : P x) (w : P y), transport (inhab_path x y) z == w),
-  forall (a : A), is_inhab_rect dinhab dpath (inhab a) == dinhab a.
+  (dpath : forall (x y : is_inhab A) (z : P x) (w : P y), transport (inhab_path x y) z ~~> w),
+  forall (a : A), is_inhab_rect dinhab dpath (inhab a) ~~> dinhab a.
 
 Axiom is_inhab_compute_path : forall {A : Type} {P : is_inhab A -> Type}
   (dinhab : forall (a : A), P (inhab a))
-  (dpath : forall (x y : is_inhab A) (z : P x) (w : P y), transport (inhab_path x y) z == w),
+  (dpath : forall (x y : is_inhab A) (z : P x) (w : P y), transport (inhab_path x y) z ~~> w),
   forall (x y : is_inhab A),
     map_dep (is_inhab_rect dinhab dpath) (inhab_path x y)
-    == dpath x y (is_inhab_rect dinhab dpath x) (is_inhab_rect dinhab dpath y).
+    ~~> dpath x y (is_inhab_rect dinhab dpath x) (is_inhab_rect dinhab dpath y).
 
 (** The non-dependent version of the eliminator. *)
 
 Definition is_inhab_rect_nondep {A B : Type} :
-  (A -> B) -> (forall (z w : B), z == w) -> (is_inhab A -> B).
+  (A -> B) -> (forall (z w : B), z ~~> w) -> (is_inhab A -> B).
 Proof.
-  intros A B dinhab' dpath'.
+  intros dinhab' dpath'.
   apply is_inhab_rect.
   assumption.
   intros x y z w.
@@ -58,20 +55,18 @@ Proof.
 Defined.
 
 Definition is_inhab_compute_inhab_nondep {A B : Type}
-  (dinhab' : A -> B) (dpath' : forall (z w : B), z == w) (a : A) :
-  is_inhab_rect_nondep dinhab' dpath' (inhab a) == (dinhab' a).
+  (dinhab' : A -> B) (dpath' : forall (z w : B), z ~~> w) (a : A) :
+  is_inhab_rect_nondep dinhab' dpath' (inhab a) ~~> (dinhab' a).
 Proof.
-  intros A B dinhab' dpath' a.
   apply @is_inhab_compute_inhab with (P := fun a => B).
 Defined.
 
 Definition is_inhab_compute_path_nondep {A B : Type}
-  (dinhab' : A -> B) (dpath' : forall (z w : B), z == w)
+  (dinhab' : A -> B) (dpath' : forall (z w : B), z ~~> w)
   (x y : is_inhab A) :
   map (is_inhab_rect_nondep dinhab' dpath') (inhab_path x y)
-  == dpath' (is_inhab_rect_nondep dinhab' dpath' x) (is_inhab_rect_nondep dinhab' dpath' y).
+  ~~> dpath' (is_inhab_rect_nondep dinhab' dpath' x) (is_inhab_rect_nondep dinhab' dpath' y).
 Proof.
-  intros A B dinhab' dpath' x y.
   (* Here is a "cheating" proof which just uses the assumption that [B] is a prop:
        apply contr_path, allpath_prop; assumption.
      And here is the "real" proof which uses [is_inhab_compute_path]. *)
@@ -92,7 +87,6 @@ Defined.
 
 Theorem is_inhab_is_prop (A : Type) : is_prop (is_inhab A).
 Proof.
-  intros A.
   apply allpath_prop.
   apply inhab_path.
 Defined.
@@ -102,7 +96,7 @@ Defined.
 Theorem prop_inhab_is_equiv (A : Type) :
   is_prop A -> is_equiv (@inhab A).
 Proof.
-  intros A H.
+  intros H.
   apply @hequiv_is_equiv with (g := is_inhab_rect_nondep (idmap A) (prop_path H)).
   auto.
   intro a.
@@ -114,7 +108,7 @@ Defined.
 Lemma inhab_prop_contr (A : Type) :
   is_prop A -> is_inhab A -> is_contr A.
 Proof.
-  intros A prp.
+  intros prp.
   apply is_inhab_rect_nondep.
   apply prop_inhabited_contr; now assumption.
   intros; apply contr_path.
@@ -132,7 +126,7 @@ Definition is_mono {X Y : Type} (f : X -> Y) :=
 Lemma epi_mono_equiv {X Y : Type} (f : X -> Y) :
   is_epi f -> is_mono f -> is_equiv f.
 Proof.
-  intros X Y f epi mono y.
+  intros epi mono y.
   apply inhab_prop_contr. 
   apply mono. apply epi.
 Defined.
@@ -145,7 +139,7 @@ Section IsInhabMonad.
 (** We first need the action of [is_inhab] on morphisms. *)
 Definition is_inhab_map {A B : Type} : (A -> B) -> (is_inhab A -> is_inhab B).
 Proof.
-  intros A B f p.
+  intros f p.
   apply @is_inhab_rect_nondep with (A := A); auto.
   intro x.
   apply (inhab (f x)).
@@ -153,13 +147,13 @@ Defined.
   
 (** Functoriality of [is_inhab_map]. *)
 Lemma is_inhab_map_id {A : Type} :
-  forall (p : is_inhab A), is_inhab_map (fun x => x) p == p.
+  forall (p : is_inhab A), is_inhab_map (fun x => x) p ~~> p.
 Proof.
   auto.
 Defined.
 
 Lemma is_inhab_map_compose {A B C : Type} (f : A -> B) (g : B -> C):
-  forall (p : is_inhab A), is_inhab_map (compose g f) p == is_inhab_map g (is_inhab_map f p).
+  forall (p : is_inhab A), is_inhab_map (compose g f) p ~~> is_inhab_map g (is_inhab_map f p).
 Proof.
   auto.
 Defined.
@@ -169,7 +163,7 @@ Definition eta := @inhab.
 
   (** Naturality of unit. *)
 Lemma eta_natural {A B : Type} (f : A -> B) :
-  forall a : A, eta B (f a) == is_inhab_map f (eta A a).
+  forall a : A, eta B (f a) ~~> is_inhab_map f (eta A a).
 Proof.
   auto.
 Defined.
@@ -177,34 +171,34 @@ Defined.
   (** The multiplication. *)
 Definition mu (A : Type) : is_inhab (is_inhab A) -> is_inhab A.
 Proof.
-  intros A p.
+  intros p.
   apply @is_inhab_rect_nondep with (A := is_inhab A); auto.
 Defined.
 
   (** Naturality of multiplication. *)
 Lemma mu_natural {A B : Type} (f : A -> B) :
   forall p : is_inhab (is_inhab A),
-    mu B (is_inhab_map (is_inhab_map f) p) == is_inhab_map f (mu A p).
+    mu B (is_inhab_map (is_inhab_map f) p) ~~> is_inhab_map f (mu A p).
 Proof.
   auto.
 Qed.
 
   (** Unit laws. *)
 Lemma eta_1 (A : Type) :
-  forall p : is_inhab A, mu A (eta (is_inhab A) p) == p.
+  forall p : is_inhab A, mu A (eta (is_inhab A) p) ~~> p.
 Proof.
   auto.
 Qed.
 
 Lemma eta_2 (A : Type) :
-  forall p : is_inhab A, mu A (is_inhab_map (eta A) p) == p.
+  forall p : is_inhab A, mu A (is_inhab_map (eta A) p) ~~> p.
 Proof.
   auto.
 Qed.
 
 Lemma mu_1 (A : Type) :
   forall p : is_inhab (is_inhab (is_inhab A)),
-    mu A (is_inhab_map (mu A) p) == mu A (mu (is_inhab A) p).
+    mu A (is_inhab_map (mu A) p) ~~> mu A (mu (is_inhab A) p).
 Proof.
   auto.
 Qed.
@@ -212,7 +206,7 @@ Qed.
   (* The strength. *)
 Lemma t (A B : Type) : A * is_inhab B -> is_inhab (A * B).
 Proof.
-  intros A B [a q].
+  intros [a q].
   apply (is_inhab_rect_nondep (A := B)); auto.
   intro b.
   apply inhab; auto.
@@ -221,7 +215,7 @@ Defined.
   (* Naturality of strength. *)
 Lemma t_natural (A A' B B' : Type) (f : A -> A') (g : B -> B') :
   forall (a : A) (q : is_inhab B),
-    is_inhab_map (fun xy => (f (fst xy), g (snd xy))) (t A B (a,q)) == t A' B' (f a, is_inhab_map g q).
+    is_inhab_map (fun xy => (f (fst xy), g (snd xy))) (t A B (a,q)) ~~> t A' B' (f a, is_inhab_map g q).
 Proof.
   auto.
 Qed.
@@ -230,14 +224,14 @@ Qed.
 
 Lemma strength_unit (A : Type) :
   forall p : unit * is_inhab A,
-    is_inhab_map (@snd unit A) (t unit A p) == snd p.
+    is_inhab_map (@snd unit A) (t unit A p) ~~> snd p.
 Proof.
   auto.
 Qed.
 
 Lemma strength_eta (A B : Type) :
   forall (a : A) (b : B),
-    t A B (a, eta B b) == eta (A * B) (a,b).
+    t A B (a, eta B b) ~~> eta (A * B) (a,b).
 Proof.
   auto.
 Qed.
@@ -246,7 +240,7 @@ Definition alpha A B C (u : (A * B) * C) := (fst (fst u), (snd (fst u), snd u)).
 
 Lemma strength_pentagon_1 (A B C : Type) :
   forall (a : A) (b : B) (r : is_inhab C),
-    is_inhab_map (alpha A B C) (t (A * B) C ((a,b),r)) ==
+    is_inhab_map (alpha A B C) (t (A * B) C ((a,b),r)) ~~>
     t A (B * C) (a, t B C (b, r)).
 Proof.
   auto.
@@ -254,7 +248,7 @@ Qed.
 
 Lemma strength_pentagon_2 (A B : Type) :
   forall (a : A) (p : is_inhab (is_inhab B)),
-    mu (A * B) (is_inhab_map (t A B) (t A (is_inhab B) (a, p))) == t A B (a, mu B p).
+    mu (A * B) (is_inhab_map (t A B) (t A (is_inhab B) (a, p))) ~~> t A B (a, mu B p).
 Proof.
   auto.
 Qed.

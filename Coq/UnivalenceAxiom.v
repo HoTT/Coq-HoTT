@@ -22,3 +22,7 @@ Definition funext := strong_to_naive_funext strong_funext.
 Definition weak_funext := funext_dep_to_weak funext_dep.
 Definition funext_dep_compute := strong_funext_dep_compute strong_funext_dep.
 Definition funext_compute := strong_funext_compute strong_funext.
+
+Definition strong_funext_equiv (X Y : Type) (f g : X -> Y)
+  : (f ~~> g) <~> (forall x, f x ~~> g x)
+  := (@happly X Y f g  ;  @strong_funext X Y f g).

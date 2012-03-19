@@ -1,15 +1,11 @@
 Require Export Fibrations Equivalences.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 (** The map on total spaces induced by a map of fibrations *)
 
 Definition total_map {A B : Type} {P : A -> Type} {Q : B -> Type}
   (f : A -> B) (g : forall x:A, P x -> Q (f x)) :
   sigT P -> sigT Q.
 Proof.
-  intros A B P Q f g.
   intros [x y].
   exists (f x).
   exact (g x y).
@@ -36,8 +32,8 @@ Section FiberMap.
      arguments of the form [(x ; y)].  Hence we need the following
      lemma.  *)
 
-  Let tg_is_fiberwise (z : sigT P) : pr1 z == pr1 (tg z).
-    intros [x y].
+  Let tg_is_fiberwise (z : sigT P) : pr1 z ~~> pr1 (tg z).
+    destruct z as [x y].
     auto.
   Defined.
 
@@ -47,17 +43,17 @@ Section FiberMap.
      base.  *)
 
   Let tg_isg_onfibers (z : sigT P) :
-    g _ (transport (tg_is_fiberwise z) (pr2 z)) == pr2 (tg z).
+    g _ (transport (tg_is_fiberwise z) (pr2 z)) ~~> pr2 (tg z).
   Proof.
-    intros [x y].
+    destruct z as [x y].
     auto.
   Defined.
 
   (* And the following lemma tells us that the same is true for its
      action on paths. *)
 
-  Let tg_isfib_onpaths (z w : sigT P) (p : z == w) :
-    (tg_is_fiberwise z @ base_path (map tg p) @ !tg_is_fiberwise w) == base_path p.
+  Let tg_isfib_onpaths (z w : sigT P) (p : z ~~> w) :
+    (tg_is_fiberwise z @ base_path (map tg p) @ !tg_is_fiberwise w) ~~> base_path p.
   Proof.
     path_induction.
     destruct x. simpl. auto.
@@ -76,7 +72,6 @@ Section FiberMap.
 
     Let ginv (x:A) (y: Q x) : P x.
     Proof.
-      intros x y.
       (* The obvious thing to look at first is this. *)
       set (inv1 := pr2 ((tot_eqv^-1) (x ; y))).
       (* Unfortunately, this does not live in the fiber over [x], but
@@ -96,7 +91,6 @@ Section FiberMap.
 
     Theorem fiber_is_equiv (x:A) : is_equiv (g x).
     Proof.
-      intros x.
       set (is_section := inverse_is_section tot_eqv).
       set (is_retraction := inverse_is_retraction tot_eqv).
       set (triangle := inverse_triangle tot_eqv).
@@ -236,7 +230,7 @@ Section PullbackMap.
     path_via (transport (!inverse_is_section f (f x) @ map f (inverse_is_retraction f x)) z).
     apply opposite, trans_concat.
     path_via (transport (idpath (f x)) z).
-    assert (p : (!inverse_is_section f (f x) @ map f (inverse_is_retraction f x)) == idpath (f x)).
+    assert (p : (!inverse_is_section f (f x) @ map f (inverse_is_retraction f x)) ~~> idpath (f x)).
     moveright_onleft.
     cancel_units.
     apply inverse_triangle.
