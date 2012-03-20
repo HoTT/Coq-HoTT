@@ -1,4 +1,5 @@
-(* Colimits as phrased by Egbert Rijke. *)
+(* Colimits as phrased by Egbert Rijke. 
+   THIS IS UNFINISHED WORK IN PROGRESS!  *)
 
 Add LoadPath "..".
 Require Import Paths Fibrations Equivalences Funext.
@@ -17,17 +18,13 @@ Implicit Arguments obj [d].
 Implicit Arguments mor_index [d].
 Implicit Arguments mor [d x y].
 
-Definition Arrow {D : Diagram} (X : Type) : Type := forall (i : @obj_index D), obj i -> X.
-
-Definition isCocone {D : Diagram} {X : Type} (arrow : Arrow X) : Type := forall (i j : @obj_index D) (e : mor_index i j) (u : obj i), arrow i u ~~> arrow j (mor e u).
-
-Record Cocone {D : Diagram} := {
-  vertex :> Type;
-  arrow : forall (i : @obj_index D), obj i -> vertex;
+(* The cocones over a given diagram with a given vertex. *)
+Record Cocone (D : Diagram) (V : Type) := {
+  arrow : forall (i : @obj_index D), obj i -> V;
   triangle : forall (i j : @obj_index D) (e : mor_index i j) (u : obj i), arrow i u ~~> arrow j (mor e u)
 }.
 
-Implicit Arguments arrow [D i].
+Implicit Arguments arrow [D V i].
 Implicit Arguments triangle [D i j].
 
 Section ColimitDefinition.
@@ -36,23 +33,16 @@ Section ColimitDefinition.
   Variables (D : Diagram) (X : Type).
 
   (* Cocones may be post-composed with morphisms. *)
-  Definition cocone_compose (tau : @Arrow D X)(psi : isCocone(tau)) (Y : Type) (f : X -> Y) : sigT (@isCocone D Y).
+  Definition cocone_compose (K : Cocone D X) (Y : Type) (f : X -> Y) : Cocone D Y.
   Proof.
-    pose (arrow := (fun i (u : obj i) => f (tau i u))).
-    exists arrow.
+    refine {| arrow := (fun i (u : obj i) => f (arrow K u)) |}.
     intros i j e u.
-    exact (map f (psi i j e u)).
+    apply map.
+    apply triangle.
   Defined.
 
-  Definition isColimiting (arrow : @Arrow D X) (triangle : isCocone(arrow)) : Type :=
-    forall (Y : Type), is_equiv (cocone_compose arrow triangle Y).
-    
-(*
-  Record Colimit (D : Diagram) := {
-    colim : @Cocone D;
-    colim_equiv :  forall (Y : Type), is_equiv (cocone_compose colim Y)
-  }.
-*)
+  Definition isColimiting (K : Cocone D X) : Type :=
+    forall (Y : Type), is_equiv (cocone_compose K Y).
 End ColimitDefinition.
 
 Section HITDefinition.
@@ -60,27 +50,29 @@ Section HITDefinition.
   
   Variable (D : Diagram).
 
-  Record HIT {D : Diagram} : Type.
+  Record HIT (D : Diagram) := {
+    hit_carrier :> Type ;
+    hit_cocone : Cocone D hit_carrier
+  }.
 
-  Check @HIT D. (* [@HIT : Diagram -> Prop]. What has happened? *)
-  
-  Axiom arrows : @Arrow D (@HIT D).
-
-  Axiom triangles : isCocone(arrows).
-
-Section DependentHIT.
-  Variables (Lambda : @HIT D -> Type) 
-            (Kappa : forall (i : @obj_index D) (u : obj i), Lambda (arrows i u))
-            (Gamma : forall (i j : @obj_index D) (e : mor_index i j) (u : obj i), transport (triangles i j e u) (Kappa i u) ~~> Kappa j (mor e u)).
-
-  Record HIT_induction_principle := {
-    hit_rect : forall (x : HIT), Lambda x ;
-    hit_factor : forall (i : @obj_index D) (u : obj i), hit_rect (arrows i u) ~~> Kappa i u ;
-    hit_compute : forall (i j : @obj_index D) (e : mor_index i j) (u : obj i),
-                  (map (transport (triangles i j e u)) (hit_factor i u) @ (Gamma i j e u)) 
-                  ~~> (map_dep (hit_rect) (triangles i j e u) @ (hit_factor j (mor e u)))
+  Section HITInduction.
+    Variables
+      (carrier : Type)
+      (Lambda : carrier -> Type) 
+      (Kappa : forall (i : @obj_index D) (u : obj i), Lambda (arrows i u))
+      (Gamma : forall (i j : @obj_index D) (e : mor_index i j) (u : obj i),
+        transport (triangles i j e u) (Kappa i u) ~~> Kappa j (mor e u)).
+    
+    Record HIT_induction_principle := {
+      hit_rect : forall (x : HIT), Lambda x ;
+      hit_factor : forall (i : @obj_index D) (u : obj i), hit_rect (arrows i u) ~~> Kappa i u ;
+      hit_compute : forall (i j : @obj_index D) (e : mor_index i j) (u : obj i),
+        (map (transport (triangles i j e u)) (hit_factor i u) @ (Gamma i j e u)) 
+        ~~> (map_dep (hit_rect) (triangles i j e u) @ (hit_factor j (mor e u)))
     }.
-End DependentHIT.
+  End HITInduction.
+
+  Record HIT
 
 Check hit_rect.
 
