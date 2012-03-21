@@ -4,7 +4,8 @@
 Add LoadPath "..".
 Require Import Paths Fibrations Equivalences Funext.
 
-(* Here is the non-dependent version, there is also a dependent version. *)
+(* Because we want to avoid phrasing what a category is, we take "free" diagrams in the
+   sense that a diagram is just an indexing of objects and morphisms betewen them. *)
 
 Record Diagram := {
   obj_index : Type ;
@@ -13,42 +14,71 @@ Record Diagram := {
   mor : forall x y, mor_index x y -> (obj x -> obj y)
 }.
 
-Implicit Arguments obj_index [d].
 Implicit Arguments obj [d].
 Implicit Arguments mor_index [d].
 Implicit Arguments mor [d x y].
 
-(* The cocones over a given diagram with a given vertex. *)
+(* A cocone over a given diagram with a given vertex consists of arrows into the vertex
+   such that the relevant triangles commute. *)
+
 Record Cocone (D : Diagram) (V : Type) := {
-  arrow : forall (i : @obj_index D), obj i -> V;
-  triangle : forall (i j : @obj_index D) (e : mor_index i j) (u : obj i), arrow i u ~~> arrow j (mor e u)
+  arrow : forall (i : obj_index D), obj i -> V;
+  triangle : forall (i j : obj_index D) (e : mor_index i j) (u : obj i), arrow i u ~~> arrow j (mor e u)
 }.
 
 Implicit Arguments arrow [D V i].
 Implicit Arguments triangle [D i j].
 
-Section ColimitDefinition.
-  (* We next define what a colimit of a diagram is in terms of equivalences. *)
-  
-  Variables (D : Diagram) (X : Type).
+(* If we have a cocone to [X] and [f : X -> Y] then we can compose arrows in the cocone
+   to get a cocone to [Y]. *)
 
-  (* Cocones may be post-composed with morphisms. *)
-  Definition cocone_compose (K : Cocone D X) (Y : Type) (f : X -> Y) : Cocone D Y.
+Definition cocone_compose {D X Y} : Cocone D X -> (X -> Y) -> Cocone D Y.
   Proof.
+    intros K f.
     refine {| arrow := (fun i (u : obj i) => f (arrow K u)) |}.
     intros i j e u.
     apply map.
     apply triangle.
   Defined.
 
-  Definition isColimiting (K : Cocone D X) : Type :=
-    forall (Y : Type), is_equiv (cocone_compose K Y).
-End ColimitDefinition.
+(* The fact that a cocone is colimiting can be expressed in terms of equivalences:
+   a cocone K whose vertex is X is colimiting when the map which composes [f : X -> Y]
+   with [K] is an equivalence.
+*)
+
+Definition isColimiting {D X} (K : Cocone D X) :=
+  forall Y, is_equiv (cocone_compose K (Y:=Y)).
+
+(* We now proceed to define "rank 1 higher-inductive types without recursion", i.e.,
+   higher-inductive types which are not recursive and only refer to points and paths,
+   but not for example to paths between paths. For simplicity we call such a type HIT. *)
 
 Section HITDefinition.
-  (* Definition of a HIT for a given diagram. *)
-  
-  Variable (D : Diagram).
+  (* The data for a HIT consists of types of points and paths which generate the HIT. *)
+
+  Variable point : Type. 
+  Variable path : point -> point -> Type.
+
+  (* The HIT itself is a record consisting of: a carrier type, constructors which
+     embed points and paths into the carrier, and induction data. *)
+
+  Record HIT := {
+    hit_carrier :> Type ; (* the carrier type of HIT *)
+    hit_point : point -> hit_carrier ;
+    hit_path : forall {x y}, path x y -> hit_point x ~~> hit_point y ;
+    hit_rect :
+      (forall (P : hit_carrier -> Type) (b : forall x, P (hit_point x)),
+        (forall x y (p : path x y), transport (hit_path p) (b x) ~~> b y) -> forall x, P x) ;
+    hit_convert_point :
+      (forall (P : hit_carrier -> Type) (b : forall x, P (hit_point x))
+        (i : forall x y (p : path x y), transport (hit_path p) (b x) ~~> b y) x,
+        hit_rect P b i (hit_point x) ~~> b x) ;
+    hit_convert_path :
+      (forall (P : hit_carrier -> Type) (b : forall x, P (hit_point x))
+        (i : forall x y (p : path x y), transport (hit_path p) (b x) ~~> b y) x y (p : path x y),
+        map_dep (hit_rect P b i) 
+  }.
+
 
   Record HIT (D : Diagram) := {
     hit_carrier :> Type ;
@@ -59,14 +89,14 @@ Section HITDefinition.
     Variables
       (carrier : Type)
       (Lambda : carrier -> Type) 
-      (Kappa : forall (i : @obj_index D) (u : obj i), Lambda (arrows i u))
-      (Gamma : forall (i j : @obj_index D) (e : mor_index i j) (u : obj i),
+      (Kappa : forall (i : obj_index D) (u : obj i), Lambda (arrows i u))
+      (Gamma : forall (i j : obj_index D) (e : mor_index i j) (u : obj i),
         transport (triangles i j e u) (Kappa i u) ~~> Kappa j (mor e u)).
     
     Record HIT_induction_principle := {
       hit_rect : forall (x : HIT), Lambda x ;
-      hit_factor : forall (i : @obj_index D) (u : obj i), hit_rect (arrows i u) ~~> Kappa i u ;
-      hit_compute : forall (i j : @obj_index D) (e : mor_index i j) (u : obj i),
+      hit_factor : forall (i : obj_index D) (u : obj i), hit_rect (arrows i u) ~~> Kappa i u ;
+      hit_compute : forall (i j : obj_index D) (e : mor_index i j) (u : obj i),
         (map (transport (triangles i j e u)) (hit_factor i u) @ (Gamma i j e u)) 
         ~~> (map_dep (hit_rect) (triangles i j e u) @ (hit_factor j (mor e u)))
     }.
@@ -79,13 +109,13 @@ Check hit_rect.
 Section NonDependentHIT.
 
   Variables (X : Type) 
-            (Kappa : forall (i : @obj_index D), obj i -> X)
-            (Gamma : forall (i j : @obj_index D) (e : mor_index i j) (u : obj i), (Kappa i u) ~~> Kappa j (mor e u)).
+            (Kappa : forall (i : obj_index D), obj i -> X)
+            (Gamma : forall (i j : obj_index D) (e : mor_index i j) (u : obj i), (Kappa i u) ~~> Kappa j (mor e u)).
 
   Record HIT_induction_principle_ND := {
     hit_rect' : HIT -> X;
-    hit_factor' : forall (i : @obj_index D) (u : obj i), hit_rect' (arrows i u) ~~> Kappa i u;
-    hit_compute' : forall (i j : @obj_index D) (e : mor_index i j) (u : obj i),
+    hit_factor' : forall (i : obj_index D) (u : obj i), hit_rect' (arrows i u) ~~> Kappa i u;
+    hit_compute' : forall (i j : obj_index D) (e : mor_index i j) (u : obj i),
          (hit_factor' i u @ Gamma i j e u) 
             ~~> map (hit_rect') (triangles i j e u) @ (hit_factor' j (mor e u))
   }.
