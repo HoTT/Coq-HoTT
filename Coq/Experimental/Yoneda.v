@@ -20,6 +20,54 @@ Proof.
   path_induction.
 Defined.
 
+(* We can do more, we can show that the space of proofs of Yoneda lemma is equivalent
+   to the space of endo-equivalences. *)
+
+Section YonedaSpace.
+
+  Variable A : Type.
+  Variable P : A -> Type.
+
+  Definition YonedaSpace := forall a, P a <~> hom (Y a) P.
+
+  Let F : YonedaSpace -> forall a, P a <~> P a.
+  Proof.
+    intros f a.
+    exists (fun x => (Yoneda P a)^-1 (f a x)).
+    apply @hequiv_is_equiv with (g := (fun x => (f a)^-1 (Yoneda P a x))).
+    intro x.
+    path_via ((Yoneda P a)^-1 ((Yoneda P a) x)).
+    apply inverse_is_section.
+    intro x.
+    path_via ((f a)^-1 (f a x)).
+    apply inverse_is_section.
+    apply inverse_is_retraction.
+  Defined.
+
+  Let G : (forall a, P a <~> P a) -> YonedaSpace.
+  Proof.
+    clear F.
+    intros g a.
+    exists (fun x => Yoneda P a (g a x)).
+    apply @hequiv_is_equiv with (g := fun x => (g a)^-1 ((Yoneda P a)^-1 x)).
+    intro h.
+    path_via ((Yoneda P a) ((Yoneda P a)^-1 h)).
+    apply inverse_is_section.
+    apply inverse_is_section.
+    intro x.
+    path_via ((g a)^-1 (g a x)).
+    apply inverse_is_retraction.
+  Defined.
+    
+  Lemma YonedaSpace_equiv:
+    YonedaSpace <~> forall a, P a <~> P a.
+  Proof.
+    exists F.
+    apply @hequiv_is_equiv with (g := G).
+  Admitted.
+End YonedaSpace.
+  
+
 Lemma Y_full_and_faithful {A : Type} (P : A -> Type) (x y : A) : (x ~~> y) <~> hom (Y x) (Y y).
 Proof.
   apply @Yoneda with (P := (fun z => z ~~> y)).

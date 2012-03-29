@@ -5,7 +5,8 @@ Add LoadPath "..".
 Require Import Paths Fibrations Equivalences Funext.
 
 (* Because we want to avoid phrasing what a category is, we take "free" diagrams in the
-   sense that a diagram is just an indexing of objects and morphisms betewen them. *)
+   sense that a diagram is just an indexing of objects and morphisms betewen them. 
+   (Question: do we lose any generality this way? Presumably not.) *)
 
 Record Diagram := {
   obj_index : Type ;
@@ -56,6 +57,7 @@ Proof.
   pose (f := ((cocone_compose K; H Y) ^-1) L).
   exists f.
   intros i x.
+  destruct (H Y).
   (* STOPPED WORKING HERE. *)
 Admitted.
 
