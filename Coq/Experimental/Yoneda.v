@@ -1,7 +1,7 @@
 (* The Yoneda lemma, first proved by Egbert Rijke. *)
 
 Add LoadPath "..".
-Require Import Paths Fibrations Equivalences Funext.
+Require Import Paths Fibrations Equivalences Funext Univalence UnivalenceImpliesFunext.
 
 Definition hom {A : Type} (P Q : A -> Type) := forall x, P x -> Q x.
 
@@ -20,8 +20,45 @@ Proof.
   path_induction.
 Defined.
 
-(* We can do more, we can show that the space of proofs of Yoneda lemma is equivalent
-   to the space of endo-equivalences. *)
+Section Equivalence_of_equivalences.
+  (* Here is a nice little observation about equivalences, for which we need univalence,
+     it seeems.*)
+
+  Hypothesis univalence : univalence_statement.
+
+  Hypothesis eta : eta_statement.
+
+  Let funext : 
+
+  Variable A B : Type.
+  Variable f : A <~> B.
+
+  Let g : (A <~> B) -> (A <~> A).
+  Proof.
+    intro e.
+    exists (fun x => f^-1 (e x)).
+    apply @hequiv_is_equiv with (g := (fun y => e^-1 (f y))).
+    intro x; path_via (f^-1 (f x)); auto using @inverse_is_section, @inverse_is_retraction.
+    intro x; path_via (e^-1 (e x)); auto using @inverse_is_section, @inverse_is_retraction.
+  Defined.
+
+  Let h : (A <~> A) -> (A <~> B).
+  Proof.
+    intro e.
+    exists (fun x => f (e^-1 x)).
+    apply @hequiv_is_equiv with (g := (fun y => e (f^-1 y))).
+    intro y; path_via (f (f^-1 y)); auto using @inverse_is_section, @inverse_is_retraction.
+    intro y; path_via (e (e^-1 y)); auto using @inverse_is_section, @inverse_is_retraction.
+  Defined.
+
+  Lemma equiv_equiv_equiv : (A <~> B) <~> (A <~> A).
+  Proof.
+    exists g.
+    apply @hequiv_is_equiv with (g := h).
+    intro e.
+    apply funext.
+
+
 
 Section YonedaSpace.
 
