@@ -57,7 +57,6 @@ Proof.
   pose (f := ((cocone_compose K; H Y) ^-1) L).
   exists f.
   intros i x.
-  destruct (H Y).
   (* STOPPED WORKING HERE. *)
 Admitted.
 
@@ -103,6 +102,9 @@ Section HITDefinition.
   }.
 End HITDefinition.
 
+Implicit Arguments hit_point [point path h].
+Implicit Arguments hit_path [point path h x y].
+
 Section HITNonDependent.
 
   (* As a first exercise we derive the non-dependent version of the induction principle. *)
@@ -110,13 +112,15 @@ Section HITNonDependent.
   Variable point : Type.
   Variable path : point -> point -> Type.
 
+  Variable H : HIT point path.
 
-  Lemma transport_nondep (X Y : Type) (u v : X) (p : u ~~> v) (y : Y) : transport (P := fun _ => Y) p y ~~> y.
+  Lemma transport_nondep (X Y : Type) (u v : X) (p : u ~~> v) (y : Y) :
+    transport (P := fun _ => Y) p y ~~> y.
   Proof.
     path_induction.
   Defined.
 
-  Theorem hit_rect' (H : HIT point path) (X : Type) (b : point -> X)
+  Theorem hit_rect' (X : Type) (b : point -> X)
                     (i : forall {x y}, (path x y) -> b x ~~> b y) :  H -> X.
   Proof.
     intro t.
@@ -128,6 +132,14 @@ Section HITNonDependent.
     intros x y p.
     apply @concat with (y := b x); auto.
     apply transport_nondep; apply i; auto.
+  Defined.
+
+  Theorem hit_convert_point' (X : Type) (b : point -> X)
+    (i : forall {x y}, (path x y) -> b x ~~> b y) (x : point) :
+    hit_rect' X b i (hit_point x) ~~> b x.
+  Proof.
+    apply hit_convert_point with
+      (P := fun _ => X).
   Defined.
 
 End HITNonDependent.
@@ -178,10 +190,7 @@ Section HIT_from_colimit.
     
     (* However [y] is not immediately seen to be in [P x]. For that we need to use further
        properties of the colimit. *)
-    unfold fromColimit, inverse in y; simpl.
-    unfold cocone_compose in y; simpl.
-    (* STUFF MISSING HERE *)
-    
+    admit.
     (* Finally, we provide the HIT data. *)
     refine {| hit_carrier := h_carrier ;
               hit_point := h_point ;
@@ -192,54 +201,58 @@ Section HIT_from_colimit.
   Admitted.
 End HIT_from_colimit.
 
-(* If we have HITs then we have colimits. *)
+Section FirstEquivalenceTheorem.
+  (* Egbert's theorem mimicking stuff from category theory and algebra. *)
 
-Lemma make_total_path {A : Type} {P : A -> Type} {x y : A} (p : x ~~> y) (u : P x) (v : P y) : (transport p u ~~> v) -> ((x ; u) ~~> (y ; v)).
-Proof.
-  intro q.
-  induction p.
-  simpl in q.
-  induction q.
-  apply idpath.
-Qed.
+  Variable A B : Type.
+  Variable f : A -> B.
+  Hypothesis f_surjective : forall b, hfiber f b.
 
-Axiom extensionality : funext_dep_statement.
+  Definition ker {X Y : Type} (g : X -> Y) x y := g x ~~> g y.
 
-Lemma transport_pointwise {D E : Diagram}
+  (* The space which would normally be written as [A/ker f]. *)
+  Hypothesis A_ker_f : HIT A (ker f).
 
-Theorem HIT_is_Colimiting (D : Diagram) : isColimiting D HIT (arrows D) (triangles D).
-Proof.
-  intros X taupsi.
-  pose (tau := projT1 taupsi).
-  pose (psi := projT2 taupsi).
-  assert (F : hfiber (cocone_compose D HIT (arrows D) (triangles D) X) taupsi).
-    pose (f := hit_rect' D X tau psi).
-    exists f.
-    pose (foarrows := projT1 (cocone_compose D HIT (arrows D) (triangles D) X f)).
-    pose (fotriangles := projT2 (cocone_compose D HIT (arrows D) (triangles D) X f)).
-    assert (zeta0 : foarrows ~~> tau).
-      apply extensionality; intro i.
-      apply extensionality; intro u.
-      exact (hit_factor' D X tau psi i u).
-    assert (zeta1 : transport zeta0 fotriangles ~~> psi).
-      apply extensionality; intro i.
-      apply extensionality; intro j.
-      apply extensionality; intro e.
-      apply extensionality; intro u.
-      assert (transport zeta0 fotriangles i j e u ~~> !(hit_factor' D X tau psi i u) @
-        (fotriangles i j e u) @ (hit_factor' D X tau psi j (mor e u))).
-        induction zeta0. 
-  intro H.
-  refine {| colim := carrier D H |}.
-  intro Y.
-Admitted.
+  Definition f_tilde : A_ker_f -> B.
+  Proof.
+    intro y.
+    apply hit_rect' with
+      (H := A_ker_f)
+      (point := A)
+      (path := ker f)
+      (X := B)
+      (b := f).
+    auto.
+    exact y.
+  Defined.
 
-(* Now we prove theorems saying that Colimit and HIT "agree". *)
-Theorem Colim_HIT_equiv (D : Diagram) : Colimit D <~> HIT D.
-Admitted.
+  Definition f_tilde_inv : B -> A_ker_f.
+  Proof.
+    intro b.
+    apply hit_point.
+    exact (pr1 (f_surjective b)).
+  Defined.
 
-(* Actual existence of HIT/Colimit has to be assumed as an axiom. *)
-Axiom HIT_exists : forall (D : Diagram), HIT D.
+  Theorem first_equivalence_theorem : is_equiv f_tilde.
+  Proof.
+    intro b.
+    pose (a := pr1 (f_surjective b)).
+    assert (p : f_tilde (hit_point a) ~~> b).
+    path_via (f a).
+    unfold f_tilde.
+    apply hit_convert_point'.
+    apply (pr2 (f_surjective b)).
+    contract_hfiber (hit_point (h := A_ker_f) a) p.
+    generalize dependent q.
+    pattern z.
+    admit.
+    (* eapply hit_rect with (h := A_ker_f)
+       (x := z)
+       (P := (fun (z : A_ker_f) =>
+       forall q : f_tilde z ~~> b,
+       (z; q) ~~>
+       existT (fun (z : A_ker_f) => f_tilde z ~~> b) (hit_point a) p)).
+    *)
+  Admitted.
 
-(* But once we know they exist, we can show that HITs are uniquely determined. *)
-Theorem HIT_exists_and_unique (D : Diagram) : is_contr (HIT D).
+End FirstEquivalenceTheorem.
