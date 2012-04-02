@@ -1,4 +1,4 @@
-(* Basic definitions about functions. *)
+(* The identity map and composition. *)
 
 Definition idmap A := fun x : A => x.
 

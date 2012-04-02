@@ -28,7 +28,8 @@ Notation "x ~~> y" := (paths x y) (at level 70).
 Hint Resolve @idpath.
 
 (** The following automated tactic applies induction on paths and then
-    idpath. It can handle many easy statements.  *)
+    [auto], which will also try [idpath]. It can handle many easy
+    statements. *)
 
 Ltac path_induction :=
   intros; repeat progress (
@@ -38,19 +39,18 @@ Ltac path_induction :=
     end
   ); auto.
 
-(** You can read the tactic definition as follows. We first perform
-   [intros] to move hypotheses into the context. Then we repeat while
-   there is still progress: if there is a path [p] in the context,
-   apply induction to it, otherwise perform the [idtac] which does
-   nothing (and so no progress is made and we stop). After that, we
-   perform an [auto].
+(** You can read the above tactic definition as follows. We first perform
+   [intros] to move hypotheses into the context. Then we repeat while there
+   is still progress: if there is a path [p] in the context, apply
+   induction to it, otherwise perform the [idtac] which does nothing (and
+   so no progress is made and we stop). After that, we perform an [auto].
 
-   The notation [ [... |- ... ] ] is a pattern for contexts. To the
-   left of the symbol [|-] we list hypotheses and to the right the
-   goal. The underscore means "anything".
+   The notation [ [... |- ... ] ] is a pattern for contexts. To the left of
+   the symbol [|-] we list hypotheses and to the right the goal. The
+   underscore means "anything".
 
-   In summary [path_induction] performs as many inductions on paths as
-   it can, then it uses [auto].  *)
+   In summary [path_induction] performs as many inductions on paths as it
+   can, then it uses [auto]. *)
 
 (** We now define the basic operations on paths, starting with
    concatenation. *)
@@ -137,10 +137,10 @@ Proof.
   path_induction.
 Defined.
 
-(** Now we move on to the 2-groupoidal structure of a type.
-   Concatenation of 2-paths along 1-paths is just ordinary
-   concatenation in a path type, but we need a new name and notation
-   for concatenation of 2-paths along points. *)
+(** Now we move on to the 2-groupoidal structure of a type. Concatenation
+   of 2-paths along 1-paths is just ordinary concatenation in a path type,
+   but we need a new name and notation for concatenation of 2-paths along
+   points. *)
 
 Definition concat2 {A} {x y z : A} {p p' : x ~~> y} {q q' : y ~~> z} :
   (p ~~> p') -> (q ~~> q') -> (p @ q ~~> p' @ q').
@@ -150,7 +150,8 @@ Defined.
 
 Notation "p @@ q" := (concat2 p q) (at level 60).
 
-(** We also have whiskering operations. *)
+(** We also have whiskering operations which compose a 1-path with
+   a 2-path. We do not introduce even more notation, however. *)
 
 Definition whisker_right {A} {x y z : A} {p p' : x ~~> y} (q : y ~~> z) :
   (p ~~> p') -> (p @ q ~~> p' @ q).
@@ -163,6 +164,8 @@ Definition whisker_left {A} {x y z : A} {q q' : y ~~> z} (p : x ~~> y) :
 Proof.
   path_induction.
 Defined.
+
+(** Basic properties of whiskering. *)
 
 Definition whisker_right_toid {A} {x y : A} {p : x ~~> x} (q : x ~~> y) :
   (p ~~> idpath x) -> (p @ q ~~> q).

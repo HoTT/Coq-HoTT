@@ -57,7 +57,7 @@ Defined.
 (** The space of factorizations through an equivalence is contractible. *)
 
 Lemma equiv_postfactor_contr A B C (g : B <~> C) (h : A -> C) :
-  is_contr { f : A -> B &  g o f ~~>= h }.
+  is_contr { f : A -> B &  g o f === h }.
 Proof.
   apply contr_equiv_contr with ({f : A -> B & g o f ~~> h}).
   apply total_equiv with (fun f => happly).
@@ -66,7 +66,7 @@ Proof.
 Defined.
 
 Lemma equiv_prefactor_contr A B C (f : A <~> B) (h : A -> C) :
-  is_contr { g : B -> C &  g o f ~~>= h }.
+  is_contr { g : B -> C &  g o f === h }.
 Proof.
   apply contr_equiv_contr with ({g : B -> C & g o f ~~> h}).
   apply total_equiv with (fun g => happly).
