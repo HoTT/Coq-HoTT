@@ -41,6 +41,14 @@ Proof.
   path_induction.
 Defined.
 
+Lemma transport_idpath {A} {P : A -> Type} {x : A} (u : P x) :
+  transport (idpath x) u ~~> u.
+Proof.
+  apply idpath.
+Defined.
+
+Hint Rewrite @transport_idpath : paths.
+
 (** A homotopy fiber for a map [f] at [y] is the space of paths of the
    form [f x ~~> y].
    *)

@@ -104,35 +104,49 @@ Proof.
   path_induction.
 Defined.
 
+Hint Rewrite idpath_left_unit : paths.
+
 Lemma idpath_right_unit A (x y : A) (p : x ~~> y) : (p @ idpath y) ~~> p.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite idpath_right_unit : paths.
 
 Lemma opposite_right_inverse A (x y : A) (p : x ~~> y) : (p @ !p) ~~> idpath x.
 Proof.
  path_induction.
 Defined.
 
+Hint Rewrite opposite_right_inverse : paths.
+
 Lemma opposite_left_inverse A (x y : A) (p : x ~~> y) : (!p @ p) ~~> idpath y.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite opposite_left_inverse : paths.
 
 Lemma opposite_concat A (x y z : A) (p : x ~~> y) (q : y ~~> z) : !(p @ q) ~~> !q @ !p.
 Proof.
   path_induction.
 Defined.
 
+Hint Rewrite opposite_concat : paths.
+
 Lemma opposite_idpath A (x : A) : !(idpath x) ~~> idpath x.
 Proof.
   path_induction.
 Defined.
 
+Hint Rewrite opposite_idpath : paths.
+
 Lemma opposite_opposite A (x y : A) (p : x ~~> y) : !(! p) ~~> p.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite opposite_opposite : paths.
 
 Lemma concat_associativity A (w x y z : A) (p : w ~~> x) (q : x ~~> y) (r : y ~~> z) :
   (p @ q) @ r ~~> p @ (q @ r).
@@ -249,17 +263,23 @@ Proof.
   path_induction.
 Defined.
 
+Hint Rewrite idpath_map : paths.
+
 Lemma concat_map A B (x y z : A) (f : A -> B) (p : x ~~> y) (q : y ~~> z) :
   map f (p @ q) ~~> (map f p) @ (map f q).
 Proof.
   path_induction.
 Defined.
 
+Hint Rewrite concat_map : paths.
+
 Lemma opposite_map A B (f : A -> B) (x y : A) (p : x ~~> y) :
   map f (! p) ~~> ! map f p.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite opposite_map : paths.
 
 (** It is also the case that [map f p] is functorial in [f].  *)
 
@@ -268,17 +288,23 @@ Proof.
   path_induction.
 Defined.
 
+Hint Rewrite idmap_map : paths.
+
 Lemma compose_map A B C (f : A -> B) (g : B -> C) (x y : A) (p : x ~~> y) :
   map (g o f) p ~~> map g (map f p).
 Proof.
   path_induction.
 Defined.
 
+Hint Rewrite compose_map : paths.
+
 Lemma constmap_map (A B : Type) (b : B) (x y : A) (p : x ~~> y) :
   map (fun _ => b) p ~~> idpath b.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite constmap_map : paths.
 
 (** We can also map paths between paths. *)
 
@@ -307,11 +333,15 @@ Proof.
   path_induction.
 Defined.
 
+Hint Rewrite happly_concat : paths.
+
 Lemma happly_opp A B (f g : A -> B) (p : f ~~> g) (x : A) :
   happly (!p) x ~~> !happly p x.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite happly_opp : paths.
 
 Lemma happly_dep_concat A P (f g h : forall a:A, P a) (p : f ~~> g) (q : g ~~> h) (x:A) :
   happly_dep (p @ q) x ~~> happly_dep p x @ happly_dep q x.
@@ -319,11 +349,15 @@ Proof.
   path_induction.
 Defined.
 
+Hint Rewrite happly_dep_concat : paths.
+
 Lemma happly_dep_opp A P (f g : forall a:A, P a) (p : f ~~> g) (x : A) :
   happly_dep (!p) x ~~> !happly_dep p x.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite happly_dep_opp : paths.
 
 (** How happly interacts with map. *)
 
