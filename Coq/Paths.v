@@ -2,10 +2,15 @@
 
 Require Export Functions.
 
-Inductive paths {A} : A -> A -> Type := idpath : forall x, paths x x.
+(** We define the space of paths so that it matches the definitionof Coq equality
+   [eq], except that we put paths in [Type] instead of [Prop]. Older versions
+   of HoTT had a different definition, but we want this one so that we can
+   use Coq rewriting, which is a huge advantage. *)
 
-(* The next line tells [coqdoc] to print [paths] as an equals sign in LaTeX. *)
-(** printing ~~> $=$ *)
+Inductive paths {A : Type} (x : A) : A -> Type := idpath : paths x x.
+
+(* The next line tells [coqdoc] to print [paths] as an wigly arrow in LaTeX. *)
+(** printing ~~> $\leadsto$ *)
 
 (** We introduce notation [x ~~> y] for the space [paths x y] of paths
    from [x] to [y]. We can then write [p : x ~~> y] to indicate that
@@ -52,15 +57,13 @@ Ltac path_induction :=
    In summary [path_induction] performs as many inductions on paths as it
    can, then it uses [auto]. *)
 
-(** We now define the basic operations on paths, starting with
-   concatenation. *)
+(** We now define the basic operations on paths, starting with concatenation. *)
 
 Definition concat {A} {x y z : A} : (x ~~> y) -> (y ~~> z) -> (x ~~> z).
 Proof.
   intros p q.
   induction p.
-  induction q.
-  apply idpath.
+  exact q.
 Defined.
 
 (** The concatenation of paths [p] and [q] is denoted as [p @ q]. *)
@@ -271,8 +274,8 @@ Proof.
   path_induction.
 Defined.
 
-Lemma constmap_map (A B:Type) (b:B) (x y:A) (p: x~~>y) :
-  map (fun _=>b) p ~~> idpath b.
+Lemma constmap_map (A B : Type) (b : B) (x y : A) (p : x ~~> y) :
+  map (fun _ => b) p ~~> idpath b.
 Proof.
   path_induction.
 Defined.
@@ -347,11 +350,10 @@ Defined.
 
 (** Paths in cartesian products. *)
 
-Definition prod_path {X Y} (z z' : X * Y) :
-  (fst z ~~> fst z') -> (snd z ~~> snd z') -> (z ~~> z').
+Definition prod_path {X Y} {x x' : X} {y y' : Y} :
+  (x ~~> x') -> (y ~~> y') -> ((x,y) ~~> (x',y')).
 Proof.
-  intros; destruct z; destruct z'.
-  simpl in *; path_induction.
+  path_induction.
 Defined.
 
 (** We declare some more [Hint Resolve] hints, now in the "hint

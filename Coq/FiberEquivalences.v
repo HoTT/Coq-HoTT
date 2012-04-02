@@ -56,7 +56,7 @@ Section FiberMap.
     (tg_is_fiberwise z @ base_path (map tg p) @ !tg_is_fiberwise w) ~~> base_path p.
   Proof.
     path_induction.
-    destruct x. simpl. auto.
+    destruct z. simpl. auto.
   Defined.
 
   (* Now let's suppose the total function is an equivalence. *)

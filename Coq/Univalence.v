@@ -101,8 +101,6 @@ Section Univalence.
     exact p.
   Defined.
 
-  Print pred_equiv_to_path.
-
   (** The following theorem is of central importance. Just like there
      is an induction principle for paths, there is a corresponding one
      for equivalences. In the proof we use [pred_equiv_to_path] to
@@ -114,11 +112,11 @@ Section Univalence.
   Proof.
     intro r.
     pose (P' := (fun U V => pred_equiv_to_path U V (P U V))).
-    assert (r' : forall T : Type, P' T T (idpath T)).
-    exact r.
     intros U V w.
     apply (transport (equiv_to_path_section _ _ w)).
-    exact (paths_rect _ P' r' U V (equiv_to_path w)).
+    pattern (equiv_to_path w).
+    apply paths_rect with (p := equiv_to_path w).
+    apply r.
   Defined.
 
 End Univalence.

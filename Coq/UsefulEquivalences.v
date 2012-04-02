@@ -214,26 +214,26 @@ Defined.
 
 (** And similarly for products. *)
 
-Program Definition prod_path_equiv A B (x y : A * B) :
-  (x ~~> y) <~> ((fst x ~~> fst y) * (snd x ~~> snd y))
-  := (fun p => (map (@fst A B) p, map (@snd A B) p) ;
-    hequiv_is_equiv _ _ _ _).
-Next Obligation.
-  intros A B [a1 b1] [a2 b2] [p q].
-  apply prod_path; assumption.
-Defined.
-Next Obligation.
-  intros A B [a1 b1] [a2 b2] [p q].
-  unfold prod_path_equiv_obligation_1.
-  simpl in p, q.
-  apply prod_path; induction p; induction q; auto.
-Defined.
-Next Obligation.
-  intros A B x1 x2 pq.
-  induction pq as [[a b]].
-  unfold prod_path_equiv_obligation_1; auto.
+Lemma prod_eta A B (u : A * B) : (fst u, snd u) ~~> u.
+Proof.
+  destruct u; path_induction.
 Defined.
 
+Definition prod_path_equiv A B (x y : A * B) :
+  (x ~~> y) <~> ((fst x ~~> fst y) * (snd x ~~> snd y)).
+Proof.
+  exists (fun p => (map (@fst A B) p, map (@snd A B) p)).
+  apply @hequiv_is_equiv with
+    (g := fun (u : (fst x ~~> fst y) * (snd x ~~> snd y)) =>
+      !prod_eta A B x @ prod_path (fst u) (snd u) @ prod_eta A B y); simpl.
+  intros [p q].
+  destruct x; destruct y; path_induction.
+  simpl in * |- *.
+  path_induction.
+  intro p.
+  path_induction.
+  destruct x; auto.
+Defined.
 
 (** The homotopy fiber of a fibration is equivalent to the actual fiber. *)
 
@@ -279,7 +279,6 @@ Section hfiber_fibration.
     apply @base_total_path with
       (x := (x ; hfiber_fibration_map x (z ; p))).
     path_via ((!!p) @ idpath x).
-    apply trans_is_concat_opp.
     cancel_units.
     intros y.
     unfold hfiber_fibration_map. simpl. auto.
