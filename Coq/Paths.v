@@ -2,10 +2,10 @@
 
 Require Export Functions.
 
-(** We define the space of paths so that it matches the definitionof Coq equality
-   [eq], except that we put paths in [Type] instead of [Prop]. Older versions
-   of HoTT had a different definition, but we want this one so that we can
-   use Coq rewriting, which is a huge advantage. *)
+(** We define the space of paths so that it matches the definitionof Coq
+   equality [eq], except that we put paths in [Type] instead of [Prop].
+   Older versions of HoTT had a different definition, but we want this
+   one so that we can use Coq rewriting, which is a huge advantage. *)
 
 Inductive paths {A : Type} (x : A) : A -> Type := idpath : paths x x.
 
@@ -95,6 +95,32 @@ Notation "! p" := (opposite p) (at level 50).
    paths. Note that all statements are "up to a higher path", e.g.,
    the composition of [p] and the identity path is not equal to [p]
    but only connected to it with a path. *)
+
+(** We are going to create a rewrite hints database called [paths], to
+   be used with the rewriting facilities. We must be a bit careful about
+   putting hints in [paths], lest we end up with a cycle of rewrite
+   rules that will spin forever. What is needed is a well-founded
+   measure which guarantees that the left-hand side of a rewrite rule is
+   larger than the right-hand size. Here is an attempt to describe
+   such a measure. It is the lexicographic order of the following
+   simpler measures, where the most significant measure comes first:
+
+   - depth at which [map_dep] occurs
+   - number of occurences of [concat]
+   - depth at which [transport] occurs
+   - depth at which [happly] occurs
+   - number of occurences of [composition]
+   - depth at which [map] occurs
+   - depth at which [opposite] occurs
+   - number if occurences of [idpath]
+   - size of the expression
+
+   This means, that in each rewrite rule that is added to the [paths]
+   hints database, the number of occurences of [map_dep] has to decrease, or
+   stay the same and the number of occurences of [concat] has to
+   decrease, or stay the same and...., or the size of the formula has to
+   decrease.
+*)
 
 (** The following lemmas say that up to higher paths, the paths form a
    1-groupoid. *)
@@ -414,6 +440,18 @@ Hint Resolve
  : path_hints.
 
 (** We can add more hints to the database later. *)
+
+(** What follows is a long series of tactics which were used before 
+   Coq supported rewriting with [paths]. They are still here mostly
+   for backward compatibility and because some people might be used
+   to them. Eventually we how to get rid of them because the tactic
+   [hott_simpl] defined below supersedes most of them. *)
+
+(** Like [simpl], but for paths. It just uses the [paths] rewrite
+   database but it might get fancier in the future. *)
+
+Ltac hott_simpl :=
+  autorewrite with paths ; try (apply idpath).
 
 (** For some reason, [apply happly] and [apply happly_dep] often seem
    to fail unification.  This tactic does the work that I think they
