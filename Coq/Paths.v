@@ -153,6 +153,59 @@ Defined.
 
 Hint Rewrite opposite_left_inverse : paths.
 
+(* Often the inverses end up associated in the wrong way, so we also add
+   the following variants. *)
+
+Lemma opposite_right_inverse_with_assoc_left A (x y z : A) (p : x ~~> y) (q : y ~~> z) :
+  (p @ q) @ !q ~~> p.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite opposite_right_inverse_with_assoc_left : paths.
+
+Lemma opposite_left_inverse_with_assoc_left A (x y z : A) (p : x ~~> y) (q : z ~~> y) :
+  (p @ !q) @ q ~~> p.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite opposite_left_inverse_with_assoc_left : paths.
+
+Lemma opposite_right_inverse_with_assoc_right A (x y z : A) (p : y ~~> x) (q : y ~~> z) :
+  p @ (!p @ q) ~~> q.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite opposite_right_inverse_with_assoc_right : paths.
+
+Lemma opposite_left_inverse_with_assoc_right A (x y z : A) (p : x ~~> y) (q : y ~~> z) :
+  !p @ (p @ q) ~~> q.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite opposite_right_inverse_with_assoc_left : paths.
+
+Lemma opposite_left_inverse_with_assoc_both A
+  (x y z w : A) (p : x ~~> y) (q : z ~~> y) (r : y ~~> w) :
+  (p @ !q) @ (q @ r) ~~> p @ r.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite opposite_left_inverse_with_assoc_both : paths.
+
+Lemma opposite_right_inverse_with_assoc_both A
+  (x y z w : A) (p : x ~~> y) (q : y ~~> z) (r : y ~~> w) :
+  (p @ q) @ (!q @ r) ~~> p @ r.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite opposite_right_inverse_with_assoc_both : paths.
+
 Lemma opposite_concat A (x y z : A) (p : x ~~> y) (q : y ~~> z) : !(p @ q) ~~> !q @ !p.
 Proof.
   path_induction.
@@ -451,7 +504,7 @@ Hint Resolve
    database but it might get fancier in the future. *)
 
 Ltac hott_simpl :=
-  autorewrite with paths ; try (apply idpath).
+  autorewrite with paths in * |- * ; auto with path_hints.
 
 (** For some reason, [apply happly] and [apply happly_dep] often seem
    to fail unification.  This tactic does the work that I think they
@@ -490,7 +543,7 @@ Ltac path_simplify :=
       apply whisker_left
     | apply whisker_right
     | apply @map
-    ]; auto with path_hints.
+    ]; hott_simpl.
 
 (** The following variant allows the caller to supply an additional
    lemma to be tried (for instance, if the caller expects the core
@@ -503,7 +556,7 @@ Ltac path_simplify' lem :=
     | apply @map
     | apply lem
     | apply opposite; apply lem
-    ]; auto with path_hints.
+    ]; hott_simpl.
 
 (* This one takes a tactic rather than a lemma. *)
 
@@ -514,7 +567,7 @@ Ltac path_simplify'' tac :=
     | apply @map
     | tac
     | apply opposite; tac
-    ]; auto with path_hints.
+    ]; hott_simpl.
 
 (** These tactics are used to construct a path [a ~~> b] as a
    composition of paths [a ~~> x] and [x ~~> b].  They then apply
@@ -522,7 +575,7 @@ Ltac path_simplify'' tac :=
    lemma supplied by the user. *)
 
 Ltac path_via mid :=
-  apply @concat with (y := mid); path_simplify.
+  apply @concat with (y := mid); auto with path_hints.
 
 Ltac path_using mid lem :=
   apply @concat with (y := mid); path_simplify' lem.
@@ -902,7 +955,7 @@ Proof.
   intro a.
   induction p.
   induction r.
-  path_via (q @ idpath x).
+  hott_simpl.
 Defined.
 
 Lemma concat_cancel_left A (x y z : A) (p : x ~~> y) (q r : y ~~> z) : (p @ q ~~> p @ r) -> (q ~~> r).
@@ -910,7 +963,7 @@ Proof.
   intro a.
   induction p.
   induction r.
-  path_via (idpath x @ q).
+  hott_simpl.
 Defined.
 
 (** If a function is homotopic to the identity, then that homotopy
