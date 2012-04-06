@@ -2,13 +2,13 @@ Require Export Fibrations Equivalences.
 
 (** The map on total spaces induced by a map of fibrations *)
 
-Definition total_map {A B : Type} {P : A -> Type} {Q : B -> Type}
-  (f : A -> B) (g : forall x:A, P x -> Q (f x)) :
-  sigT P -> sigT Q.
+Definition total_map {A B : Type} {P : fibration A} {Q : fibration B}
+  (f : A -> B) (h : forall x : A, P x -> Q (f x)) :
+  total P -> total Q.
 Proof.
   intros [x y].
   exists (f x).
-  exact (g x y).
+  exact (h x y).
 Defined.
 
 (** We first consider maps between fibrations over the same base
@@ -24,9 +24,9 @@ Section FiberMap.
   Let tg := total_map (idmap A) g.
 
   (* There is a subtlety here that is easy to get confused about.  The
-     type [sigT P] is *inductively generated* by elements of the form
-     [(x ; y)].  This does *not* mean that every element of [total
-     P] is *definitionally* equal to one of that form.  In particular,
+     type [total P] is *inductively generated* by elements of the form
+     [(x ; y)].  This does *not* mean that every element of [total P] 
+     is *definitionally* equal to one of that form.  In particular,
      although it appears that [total_map f g] "acts as [f] on the base
      space," we cannot assert that *definitionally* except for
      arguments of the form [(x ; y)].  Hence we need the following
@@ -65,12 +65,13 @@ Section FiberMap.
 
     Hypothesis tot_iseqv : is_equiv tg.
 
-    Let tot_eqv : (sigT P) <~> (sigT Q) := (tg ; tot_iseqv).
+    Let tot_eqv : (sigT P) <~> (sigT Q) :=
+      {| equiv_map := tg; equiv_is_equiv := tot_iseqv |}.
 
     (* We want to show that each function [g x] is an equivalence, so we
        start by defining its inverse. *)
 
-    Let ginv (x:A) (y: Q x) : P x.
+    Let ginv (x : A) (y : Q x) : P x.
     Proof.
       (* The obvious thing to look at first is this. *)
       set (inv1 := pr2 ((tot_eqv^-1) (x ; y))).
@@ -89,23 +90,23 @@ Section FiberMap.
 
     (* Now we are ready to prove that [g x] is an equivalence. *)
 
-    Theorem fiber_is_equiv (x:A) : is_equiv (g x).
+    Theorem fiber_is_equiv (x : A) : P x <~> Q x.
     Proof.
+      by_hiso (g x) (ginv x).
       set (is_section := inverse_is_section tot_eqv).
       set (is_retraction := inverse_is_retraction tot_eqv).
       set (triangle := inverse_triangle tot_eqv).
-      (* We have our putative inverse ready to hand. *)
-      apply @hequiv_is_equiv with (g := ginv x).
-      (* First we have to show it is a section of [f x]. *)
+      (* First we have to show [ginv x] is a section of [g x]. *)
       intro y.
-      path_via (transport (P := Q)
+      path_via' (transport (P := Q)
         (base_path (is_section (x ; y)))
         (pr2 (tot_eqv (tot_eqv^-1 (x ; y))))).
-      path_via (transport
+      path_via' (transport
         (base_path (is_section (x ; y)))
         (g _ (transport (tg_is_fiberwise (tot_eqv^-1 (x ; y)))
           (pr2 (tot_eqv^-1 (x ; y)))))).
       apply trans_map.
+      (* XXX GET STUCK HERE. *)
       exact (fiber_path (is_section (existT _ x y))).
       (* And now that it is a retraction. *)
       intro y.
