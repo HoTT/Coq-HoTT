@@ -467,8 +467,6 @@ Proof.
   apply (equiv_from_hiso (g o f) (f^-1 o g^-1)); intro; unfold compose; hott_simpl.
 Defined.
 
-Canonical Structure equiv_compose.
-
 Lemma equiv_inverse_compose (A B C : Type) (f : A <~> B) (g : B <~> C) x :
   inverse (equiv_compose f g) x ~~> f^-1 (g^-1 x).
 Proof.
