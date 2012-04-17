@@ -56,28 +56,30 @@ Proof.
   auto.
 Defined.
 
-Canonical Structure idequiv.
-
-(** We first define the inverse map and only show that it is also an
+(** We first define the inverse map and only show that it is an
    equivalence later on, when we are ready to do it. *)
 
 Let inverse {A B : Type} (e : A <~> B) : (B -> A) := fun y => pr1 (pr1 (equiv_is_equiv e y)).
 
+(** printing ^-1 $^{-1}$ *)
+
+Notation "e ^-1" := (inverse e) (at level 33).
+
 (** The extracted map in the inverse direction is actually an inverse
    (up to homotopy, of course). *)
 
-Definition inverse_is_section {A B : Type} (e : A <~> B) (y : B) : e (inverse e y) ~~> y :=
+Definition inverse_is_section {A B : Type} (e : A <~> B) (y : B) : e (e^-1 y) ~~> y :=
   pr2 (pr1 ((equiv_is_equiv e) y)).
 
 Hint Rewrite @inverse_is_section : paths.
 
-Definition inverse_is_retraction {A B : Type} (e : A <~> B) (x : A) : inverse e (e x) ~~> x :=
+Definition inverse_is_retraction {A B : Type} (e : A <~> B) (x : A) : e^-1 (e x) ~~> x :=
   !base_path (pr2 (equiv_is_equiv e (e x)) (x ; idpath (e x))).
 
 Hint Rewrite @inverse_is_retraction : paths.
 
 Definition map_equiv_o_inverse {A B : Type} (e : A <~> B) (x y : A) (p : x ~~> y) :
-  map (inverse e) (map e p) ~~> inverse_is_retraction e x @ p @ !inverse_is_retraction e y.
+  map (e^-1) (map e p) ~~> inverse_is_retraction e x @ p @ !inverse_is_retraction e y.
 Proof.
   path_induction.
   hott_simpl.
@@ -86,7 +88,7 @@ Defined.
 Hint Rewrite @map_equiv_o_inverse : paths.
 
 Definition map_inverse_o_equiv {A B : Type} (e : A <~> B) (u v : B) (p : u ~~> v) :
-  map e (map (inverse e) p) ~~> inverse_is_section e u @ p @ !inverse_is_section e v.
+  map e (map (e^-1) p) ~~> inverse_is_section e u @ p @ !inverse_is_section e v.
 Proof.
   path_induction.
   hott_simpl.
@@ -295,7 +297,7 @@ Defined.
 Definition equiv_to_adjoint {A B} (e : A <~> B) : adjoint_equiv A B :=
   {|
     adj_map := e ;
-    adj_adjoint := inverse e ;
+    adj_adjoint := e^-1 ;
     adj_is_section := inverse_is_section e ;
     adj_is_retraction := inverse_is_retraction e ;
     adj_triangle := inverse_triangle e |}.
@@ -403,12 +405,28 @@ Defined.
 Definition h_isomorphism_to_equiv {A B} : h_isomorphism A B -> (A <~> B) :=
   adjoint_to_equiv o adjointify.
 
-(** All sorts of nice things follow from this theorem. In fact, we use
-   it so often that it deserves a tactic. *)
+(** All sorts of nice things follow from this theorem. *)
 
-Ltac by_hiso f g :=
-  apply @h_isomorphism_to_equiv;
-    refine {| hiso_map := f; hiso_inverse := g |}.
+(** A lemma for showing that something is an equivalence by providing
+    its h-inverse. *)
+
+Definition is_equiv_from_hiso {A B} {f : A -> B} (g : B -> A)
+  (p : forall y, f (g y) ~~> y) (q : forall x, g (f x) ~~> x) : is_equiv f :=
+  equiv_is_equiv (h_isomorphism_to_equiv 
+    {| hiso_map := f ;
+       hiso_inverse := g ;
+       hiso_section := p ;
+       hiso_retraction := q |}).  
+
+(* A tactic for constructing an equivalence from an h-isomorphism. *)
+
+Definition equiv_from_hiso {A B} (f : A -> B) (g : B -> A)
+  (p : forall y, f (g y) ~~> y) (q : forall x, g (f x) ~~> x) : A <~> B :=
+  h_isomorphism_to_equiv 
+    {| hiso_map := f;
+       hiso_inverse := g;
+       hiso_section := p;
+       hiso_retraction := q |}.
 
 (** The inverse of an equivalence is an equivalence. *)
 
@@ -416,18 +434,12 @@ Lemma equiv_inverse {A B} : (A <~> B) -> B <~> A.
 Proof.
   intro e.
   destruct (equiv_to_adjoint e) as [f g is_section is_retraction triangle].
-  by_hiso g f; auto.
+  apply (equiv_from_hiso g f); auto.
 Defined.
-
-Canonical Structure equiv_inverse.
-
-(** printing ^-1 $^{-1}$ *)
-
-Notation "e ^-1" := (equiv_inverse e) (at level 33).
 
 (* Rewrite rules for inverses. *)
 
-Lemma equiv_inverse_is_inverse (A B  : Type) (f : A <~> B) : equiv_map (f^-1) ~~> inverse f.
+Lemma equiv_inverse_is_inverse (A B  : Type) (f : A <~> B) : equiv_map (equiv_inverse f) ~~> f^-1.
 Proof.
   apply idpath.
 Defined.
@@ -440,7 +452,7 @@ Lemma equiv_homotopic {A B} (f : A -> B) (g : A <~> B) :
   (forall x, f x ~~> g x) -> A <~> B.
 Proof.
   intros p.
-  by_hiso f (inverse g).
+  apply (equiv_from_hiso f (g^-1)).
   intro y.
   rewrite p.
   hott_simpl.
@@ -452,13 +464,13 @@ Defined.
 
 Definition equiv_compose {A B C} (f : A <~> B) (g : B <~> C) : (A <~> C).
 Proof.
-  by_hiso (g o f) ((inverse f) o (inverse g)); intro; unfold compose; hott_simpl.
+  apply (equiv_from_hiso (g o f) (f^-1 o g^-1)); intro; unfold compose; hott_simpl.
 Defined.
 
 Canonical Structure equiv_compose.
 
 Lemma equiv_inverse_compose (A B C : Type) (f : A <~> B) (g : B <~> C) x :
-  inverse (equiv_compose f g) x ~~> inverse f (inverse g x).
+  inverse (equiv_compose f g) x ~~> f^-1 (g^-1 x).
 Proof.
   auto.
 Defined.
@@ -470,7 +482,7 @@ Definition equiv_cancel_right {A B C} (f : A <~> B) (g : B -> C) :
 Proof.
   intros H.
   pose (gof := {| equiv_map := g o f; equiv_is_equiv := H |}).
-  by_hiso g (f o gof^-1).
+  apply (equiv_from_hiso g (f o gof^-1)).
   intro y.
   expand_inverse_trg gof y.
   apply idpath.
@@ -486,7 +498,7 @@ Definition equiv_cancel_left {A B C} (f : A -> B) (g : B <~> C) :
 Proof.
   intros H.
   pose (gof := {| equiv_map := g o f; equiv_is_equiv := H |}).
-  by_hiso f (gof^-1 o g).
+  apply (equiv_from_hiso f (gof^-1 o g)).
   intros y.
   expand_inverse_trg g y.
   expand_inverse_src g (f (((gof ^-1) o g) y)).
@@ -501,7 +513,7 @@ Defined.
 Theorem equiv_to_hiso {A B} : A <~> B -> h_isomorphism A B.
 Proof.
   intro e.
-  exists e (inverse e).
+  exists e (e^-1).
   apply inverse_is_section.
   apply inverse_is_retraction.
 Defined.
@@ -509,7 +521,7 @@ Defined.
 Theorem hiso_to_equiv {A B} : h_isomorphism A B -> A <~> B.
 Proof.
   intros [f g G H].
-  by_hiso f g; assumption.
+  apply (equiv_from_hiso f g); assumption.
 Defined.
 
 (** Of course, the harder part is showing that [is_hiso] is a
