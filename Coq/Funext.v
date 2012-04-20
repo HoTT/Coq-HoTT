@@ -188,7 +188,7 @@ Defined.
 
 (** And the dependent version. *)
 
-Lemma eta_dep_is_equiv {A : Type} (P : fibration A) :
+Lemma eta_dep_equiv {A : Type} (P : fibration A) :
   eta_dep_statement P -> (section P <~> section P).
 Proof.
   intro H.
@@ -196,155 +196,148 @@ Proof.
   apply H.
 Defined.
 
-Section WeakToStrongFunextDep.
-   (** Less trivial is the fact that weak functional extensionality
-      implies *strong* (dependent) functional extensionality, at least in
-      the presence of the dependent eta rule. *)
+Section AxiomOfChoiceEquiv.
 
-  (** Assume a fibration which satisfies the dependent eta rule. *)
+  (** The axiom of choice which says that a relation is total iff it has a
+     choice function. There is a type-theoretic version of it. We strengthen it
+     to show that in the presence of [eta_dep_statement] and
+     [weak_funext_statement] and with a certain further condition o the
+     relation, totality of a relation is equivalent (in the homotopy sense!) to
+     the space of choice function.
+
+     We work with a fully dependent version, so our relation and choice
+     functions are dependent. *)
+
+  Variable X : Type. (* the domain of the relation *)
+  Variable P : fibration X. (* the codomain, which is dependent *)
+  Variable Q : forall x, fibration (P x). (* the relation, which is dependent *)
+
+  (** As is well-known totality of [Q] implies existence of a choice function [h].  *)
+ 
+  Let ac : (forall x, {y : P x & Q x y}) -> {h : section P & forall x, Q x (h x)}.
+  Proof.
+    intro f.
+    exists (fun x => pr1 (f x)).
+    intro x.
+    exact (pr2 (f x)).
+  Defined.
+
+  (** And vice-versa. *)
+
+  Let acinv : {h : section P & forall x, Q x (h x)} -> forall x, {y : P x & Q x y}.
+  Proof.
+    intros [h H x].
+    exists (h x).
+    apply H.
+  Defined.
+
+  (** We can show that [ac] is an equivalence and [acinv] its inverse, provided
+     we have [eta_dep_statement], [weak_funext_statement], as a strengthening
+     of totality of [Q] that makes sense if you think about it homotopically. *)
+
+  Hypothesis total_Q_contr : forall x, is_contr {y : P x & Q x y}.
+
+  (** Now we are ready to show that [ac] is an equivalence. *)
+
+  Definition ac_equiv
+    (E : (forall Y (S : fibration Y), eta_dep_statement S))
+    (weak_funext : forall Y (S : fibration Y), weak_funext_statement S) :
+    (forall x, {y : P x & Q x y}) <~> {h : section P & forall x, Q x (h x)}.
+  Proof.
+    apply (equiv_from_hiso ac acinv).
+    intros [h H].
+    unfold ac; simpl.
+    fold (eta_dep H).
+    rewrite (E _ _ H).
+    fold (eta_dep h).
+    (* The obvious thing here would be to rewrite with [E X P h] but that gives
+       the dreaded "Error: Abstracting over the term ... which is ill-typed".
+       Instead we are going to be a bit clever, as Mike Shulman put it. *)
+    (* First, the left-hand side is the image of a map [f] which is an
+       equivalence because it is the pullback of an equivalence. *)
+    pose (R := (fun (g : section P) => forall x, Q x (g x))).
+    pose (e := eta_dep_equiv P (E _ P)).
+    pose (f := pullback_total_equiv R e).
+    path_via (f (h; H)).
+    (* To show that an equivalence is homotopic to the identity, it
+       suffices to show that is idempotent, which is easy. *)
+    now apply equiv_injective with f.
+    (* The other half of the proof is easier than it looks because
+       we get to apply weak extensionality. *)
+    intro h.
+    apply contr_path.
+    apply weak_funext.
+    assumption.
+  Defined.
+End AxiomOfChoiceEquiv.
+
+Section WeakToStrongFunextDep.
+  (** Less trivial is the fact that weak functional extensionality
+     implies *strong* (dependent) functional extensionality, at least in
+     the presence of the dependent eta rule. *)
+  
+  Hypothesis Heta : forall X (P : fibration X), eta_dep_statement P.
+
+  (** Assume a fibration [P] over [X]. *)
   Variable X : Type.
   Variable P : fibration X.
 
-  Hypothesis Heta : eta_dep_statement P.
-
   (** We want to show that [weak_funext_statement P] implies
-     [strong_funext_dep_statement P], which states that [happly_dep]
-     is an equivalence. *)
-(*
-  Definition paths_from (f : section P) := {g : section P & f ~~> g}.
-
-  Definition homotopies_from (f : section P) := {g : section P & f === g}.
-
-  (* A first observation is that [paths_from f] and [homotopies_from g] are
-     both contractible. *)
-  
-  Lemma paths_from_is_contr (f : section P) : is_contr (paths_from f).
-  Proof.
-    apply pathspace_contr'.
-  Defined.
-
-  Hypothesis H : forall X (P : fibration X), weak_funext_statement P. 
-
-  Lemma homotopies_from_is_contr (f : section P) : is_contr (homotopies_from f).
-  Proof.
-    unfold homotopies_from.
-    unfold is_contr, homotopies_from.
-    pose (p := fun x => idpath (f x)).
-    exists (f; p).
-    intros [g q].
-    apply opposite.
-
-
-*)
+     [strong_funext_dep_statement P], which states that [happly_dep] is an
+     equivalence. We fix a section [f] over [P] and view [happly_dep f] as a map
+     over [section P] between the fibrations [Q] and [R], defined below. *)
 
   Variable f : section P.
   
   Let Q := (fun h => f ~~> h) : fibration (section P).
   Let R := (fun h => f === h) : fibration (section P).
-  
-  Hypothesis H : forall X (P : fibration X), weak_funext_statement P.
-  
-  Lemma foo g : Q g <~> R g.
+
+  (** We need to show that [happly_dep f] is fiber-wise equivalence. It is
+     sufficient to show that the induced total map [total Q] -> [total R] is an
+     equivalence, which it is because [total Q] and [total R] are contractible.
+     The only tricky bit is to show that [total R] is contractible. *)
+
+  Lemma is_contr_total_Q : is_contr (total Q).
   Proof.
-    set (fibhap := (@happly_dep X P f) : forall h, Q h -> R h).
-    apply fiber_equiv with (g := fibhap).
-    apply contr_contr_is_equiv.
-    (* This one is easy. *)
-    apply pathspace_contr'.
-    (* The other one is harder. *)
-    set (altAR := forall x, { y : P x & f x ~~> y }).
-    apply contr_equiv_contr with (A := altAR).
-    (* It is easy to see that [altAR] is contractible. *)
-    2: apply H; intro; apply pathspace_contr'.
-    (* The map between these spaces is obvious. *)
-    pose (k := (fun d => existT R (fun x => pr1 (d x)) (fun x => pr2 (d x))) : altAR -> total R).
-    pose (kinv := (fun (e : total R)  => (fun x => (pr1 e x ; pr2 e x))) : total R -> altAR).
-    apply (equiv_from_hiso k kinv).
+    exists ((f; idpath _) : total Q).
     intros [h p].
-    unfold k, kinv; simpl.
-    unfold eta_dep_statement, eta_dep in Heta.
-    apply @total_path with (p := Heta h).
-    apply contr_path; simpl.
-    exists p.
-    intro q.
-    apply contr_path.
+    induction p; apply idpath.
+  Defined.
 
-  Theorem weak_to_strong_funext_dep : 
-    (forall X (P : fibration X), weak_funext_statement P) -> strong_funext_dep_statement P.
+  Hypothesis weak_funext : forall X (S : fibration X), weak_funext_statement S.
+
+  Lemma is_contr_total_R : is_contr (total R).
   Proof.
-    intros H f g.
-    (* The idea is that [happly_dep] is one fiber map in a map of
-       fibrations, whose total spaces are contractible and hence
-       equivalent.  *)
-    pose (Q := (fun h => f ~~> h) : fibration (section P)).
-    pose (R := (fun h => f === h) : fibration (section P)).
-    set (fibhap := (@happly_dep X P f) : forall h, Q h -> R h).
-    apply (fiber_is_equiv fibhap).
-    apply @contr_contr_equiv with (A := total Q) (B := total R).
-    (* Contractibility of this space is easy. *)
-    apply pathspace_contr'.
-    (* This one is trickier; we show it is contractible by showing it
-       equivalent to the total space of a different fibration. *)
-    set (altAR := forall x, { y : P x & f x ~~> y }).
-    apply contr_equiv_contr with (A := altAR).
-    (* It is easy to see that [altAR] is contractible. *)
-    2: apply H; intro; apply pathspace_contr'.
-    (* The map between these spaces is obvious. *)
-    pose (k := (fun d => existT R (fun x => pr1 (d x)) (fun x => pr2 (d x))) : altAR -> total R).
-    pose (kinv := (fun (e : total R)  => (fun x => (pr1 e x ; pr2 e x))) : total R -> altAR).
-    apply (equiv_from_hiso k kinv).
-  eapply hequiv_is_equiv.
-  (* as is its inverse. *)
-  instantiate (1 := fun e => (fun x => (pr1 e x ; pr2 e x))).
-  unfold k. intro y.
-  simpl.
-  (* Now we have to be a bit clever.  The LHS here is the image of [z]
-     under the following endofunction. *)
-  set (W := fun z:sigT R => existT R (fun x:X => pr1 z x) (fun x:X => pr2 z x)).
-  path_via (W y).
-  (* So if we can show that [W] is homotopic to the identity, we'll be
-     done.  We do this by showing that it is (1) idempotent and (2) an
-     equivalence. *)
-  assert (W_idempotent : forall z, W (W z) ~~> W z); auto.
-  assert (W_equiv : is_equiv W).
-  (* We show that [W] is an equivalence by showing it is homotopic to
-     the following slightly different map. *)
-  set (W' := fun z:sigT R => let (h,q) := z in existT R (fun x => h x) q).
-  apply @equiv_homotopic with (g := W').
-  intro z. destruct z.
-  unfold W, W'.
-  apply @total_path with (p := idpath (fun x0 => x x0)).
-  simpl.
-  apply Heta.
-  (* But [W'] is an equivalence because it is the pullback of the
-     equivalence [eta_dep] along a fibration. *)
-  change (is_equiv (pullback_total_equiv R (eta_dep_equiv Heta X P))).
-  apply pullback_total_is_equiv.
-  (* Now any idempotent equivalence is homotopic to the identity. *)
-  set (We := (W ; W_equiv) : (sigT R <~> sigT R)).
-  path_via (We^-1 (W (W y))).
-  apply opposite, inverse_is_retraction.
-  path_via' (We^-1 (W y)).
-  apply map. apply W_idempotent.
-  apply inverse_is_retraction.
-  (* This looks like it would be difficult, except that it is a path
-     in a contractible space! *)
-  intro x.
-  apply contr_path.
-  assumption. assumption.
-Defined.
+    (* If we knew that our total space [total R] is equivalent to
+       a space of sections, we could bring in [weak_funext]. Let us
+       unfold a bit to see what is going on. *)
+    unfold R, total, ext_dep_eq.
+    (* [total R] is exactly of the form needed for [ac_equiv] to kick in! *)
+    apply contr_equiv_contr with (A := forall x, {y : P x & f x ~~> y}).
+    apply ac_equiv; auto.
+    (* The rest is a triviality. *)
+    intro; apply pathspace_contr'.
+    apply weak_funext.
+    intro; apply pathspace_contr'.
+  Defined.
 
-(** Of course, naive dependent functional extensionality implies the
-   eta rule. *)
+  (** Now we can prove strong extensionality. *)
 
-Theorem funext_dep_to_eta_dep : funext_dep_statement -> eta_dep_statement.
+  Theorem weak_to_strong_funext_dep' (g : section P) : is_equiv (@happly_dep X P f g).
+  Proof.
+    apply (fiber_is_equiv ((@happly_dep X P f) : forall h, Q h -> R h)).
+    apply contr_contr_is_equiv.
+    apply is_contr_total_Q.
+    apply is_contr_total_R.
+  Defined.
+End WeakToStrongFunextDep.
+
+(** Let us record the results in a more compact form. *)
+Theorem weak_to_strong_funext_dep (X : Type) (P : fibration X)
+    (weak_funext: forall X (P : fibration X), weak_funext_statement P)
+    (eta_dep_rule : forall X (P : fibration X), eta_dep_statement P) :
+    strong_funext_dep_statement P.
 Proof.
-  intros H A P f.
-  apply H.
-  intro x.
-  unfold eta_dep.
-  auto.
+  intros H f g.
+  apply weak_to_strong_funext_dep'; auto.
 Defined.
-
-(** Therefore, strong dependent functional extensionality is
-   equivalent to (weak functional extensionality + dependent eta). *)
