@@ -2,11 +2,19 @@ Require Export Paths Fibrations Contractible Equivalences.
 
 (** Any two contractible types are equivalent. *)
 
-Definition contr_contr_equiv {A B} :
+Lemma contr_contr_equiv {A B} :
   is_contr A -> is_contr B -> A <~> B.
 Proof.
   intros Acontr Bcontr.
   exact (equiv_compose (contr_equiv_unit A Acontr) (equiv_inverse (contr_equiv_unit B Bcontr))).
+Defined.
+
+Lemma contr_contr_is_equiv {A B} (f : A -> B) :
+  is_contr A -> is_contr B -> is_equiv f.
+Proof.
+  intros H G.
+  apply is_equiv_from_hiso with (g := fun _ => pr1 H);
+    intro; apply contr_path; assumption.
 Defined.
 
 (* A type is equivalent to its product with [unit]. *)

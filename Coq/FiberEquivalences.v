@@ -84,8 +84,16 @@ Section FiberMap.
       hott_simpl.
       apply (fiber_path (inverse_is_retraction ge (x; u))).
     Defined.
-
   End TotalIsEquiv.
+
+  (* An auxiliary lemma useful for showing that a map is fiber-wise an equivalence
+     without constructing the equivalence itself. *)
+  Lemma fiber_is_equiv (g : forall x, P x -> Q x) :
+    is_equiv (fun u : total P => (pr1 u; g (pr1 u) (pr2 u))) -> forall x, is_equiv (g x).
+  Proof.
+    intros H x.
+    exact (equiv_is_equiv (fiber_equiv g H x)).
+  Defined.
 
   Section FiberIsEquiv.
 
@@ -117,6 +125,7 @@ Section FiberMap.
 End FiberMap.
 
 Implicit Arguments fiber_equiv [A].
+Implicit Arguments fiber_is_equiv [A P Q].
 Implicit Arguments total_equiv [A].
 
 (** Next we consider a fibration over one space and its pullback along

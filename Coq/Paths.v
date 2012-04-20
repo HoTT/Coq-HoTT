@@ -16,9 +16,7 @@ Require Export Functions.
 
 Inductive paths {A : Type} (x : A) : A -> Set := idpath : paths x x.
 
-Implicit Arguments idpath [A].
-
-(* The next line tells [coqdoc] to print [paths] as an wigly arrow in LaTeX. *)
+(* The next line tells [coqdoc] to print [paths] as a wigly arrow in LaTeX. *)
 (** printing ~~> $\leadsto$ *)
 
 (** We introduce notation [x ~~> y] for the space [paths x y] of paths
