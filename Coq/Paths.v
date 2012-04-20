@@ -1,20 +1,20 @@
 (** Basic homotopy-theoretic approach to paths. *)
 
-Require Export Functions.
+Require Export Prelude.
 
 (** We define the space of paths so that it matches the definitionof Coq
    equality [eq], except that we put paths in [Type] instead of [Prop].
    Older versions of HoTT had a different definition, but we want this
    one so that we can use Coq rewriting, which is a huge advantage.
 
-   Note that we write [Set] as the codomain of [paths]. This seems ugly,
+   Note that we write [Universe] as the codomain of [paths]. This seems ugly,
    but if we write [Type] then Coq will infer that the codomain is [Prop]!
    Thus, for example the definition of [identity] in [Coq.Init.Datatypes] 
    lands in [Prop], even though the designers of the library probably
    did not have that in mind.
  *)
 
-Inductive paths {A : Type} (x : A) : A -> Set := idpath : paths x x.
+Inductive paths {A : Type} (x : A) : A -> Universe := idpath : paths x x.
 
 (* The next line tells [coqdoc] to print [paths] as a wigly arrow in LaTeX. *)
 (** printing ~~> $\leadsto$ *)
