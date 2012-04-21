@@ -11,22 +11,22 @@ Defined.
 
 (** This is functorial in the appropriate sense. *)
 
-Lemma path_to_equiv_map {A} (P : A -> Type) (x y : A) (p : x ~~> y) :
-  projT1 (path_to_equiv (map P p)) ~~> transport (P := P) p.
+Lemma path_to_equiv_map {A} (P : fibration A) (x y : A) (p : x ~~> y) :
+  equiv_map (path_to_equiv (map P p)) ~~> transport (P := P) p.
 Proof.
   path_induction.
 Defined.
 
 Lemma concat_to_compose {A B C} (p : A ~~> B) (q : B ~~> C) :
-  path_to_equiv q o path_to_equiv p ~~> projT1 (path_to_equiv (p @ q)).
+  path_to_equiv q o path_to_equiv p ~~> equiv_map (path_to_equiv (p @ q)).
 Proof.
   path_induction.
 Defined.
 
 Ltac undo_concat_to_compose_in s :=
   match s with  
-    | context cxt [ equiv_coerce_to_function _ _ (path_to_equiv ?p) o equiv_coerce_to_function _ _ (path_to_equiv ?q) ] =>
-      let mid := context cxt [ equiv_coerce_to_function _ _ (path_to_equiv (q @ p)) ] in
+    | context cxt [ equiv_map _ _ (path_to_equiv ?p) o equiv_map _ _ (path_to_equiv ?q) ] =>
+      let mid := context cxt [ equiv_map _ _ (path_to_equiv (q @ p)) ] in
         path_via mid;
         [ repeat first [ apply happly | apply map | apply concat_to_compose ] | ] 
   end.
@@ -48,7 +48,7 @@ Defined.
 Ltac undo_opposite_to_inverse_in s :=
   match s with  
     | context cxt [ (path_to_equiv ?p) ^-1 ] =>
-      let mid := context cxt [ equiv_coerce_to_function _ _ (path_to_equiv (! p)) ] in
+      let mid := context cxt [ equiv_map _ _ (path_to_equiv (! p)) ] in
         path_via mid;
         [ repeat apply map; apply opposite_to_inverse | ]
   end.
@@ -63,17 +63,19 @@ Ltac undo_opposite_to_inverse :=
 
 (** The statement of the univalence axiom. *)
 
-Definition univalence_statement := forall (U V : Type), is_equiv (@path_to_equiv U V).
+Definition univalence_statement := forall (U V : Universe), is_equiv (@path_to_equiv U V).
 
 Section Univalence.
 
   Hypothesis univalence : univalence_statement.
 
-  Definition path_to_equiv_equiv (U V : Type) := (@path_to_equiv U V ; univalence U V).
+  Definition path_to_equiv_equiv (U V : Type) := 
+    {| equiv_map := @path_to_equiv U V ;
+       equiv_is_equiv := univalence U V |}.
 
   (** Assuming univalence, every equivalence yields a path. *)
 
-  Definition equiv_to_path {U V} : U <~> V -> U ~~> V :=
+  Definition equiv_to_path {U V : Type} : U <~> V -> U ~~> V :=
     inverse (path_to_equiv_equiv U V).
 
   (** The map [equiv_to_path] is a section of [path_to_equiv]. *)
