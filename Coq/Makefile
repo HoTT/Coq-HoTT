@@ -26,6 +26,7 @@ VFILES:= Prelude.v \
          Univalence.v \
          UnivalenceImpliesFunext.v \
 	 UnivalenceAxiom.v \
+	 ExtensionalityAxiom.v \
 	 FunextEquivalences.v \
 	 HLevel.v \
          Homotopy.v
