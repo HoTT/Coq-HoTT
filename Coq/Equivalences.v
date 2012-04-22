@@ -539,6 +539,9 @@ Proof.
   assumption.
 Defined.
 
+Definition equiv_from_hiso {A B} (f : hiso A B) : A <~> B :=
+  hequiv_to_equiv (hequiv_from_hiso f).
+
 (** Of course, the harder part is showing that being an h-isomorphism is a
    proposition, and therefore equivalent to being an equivalence. This also
    requires function extensionality; see [FunextEquivalences.v]. *)
