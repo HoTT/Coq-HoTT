@@ -58,7 +58,7 @@ Section FiberMap.
 
     Theorem fiber_equiv (x : A) : P x <~> Q x.
     Proof.
-      apply (equiv_from_hiso (g x) (ginv x)).
+      apply (equiv_from_hequiv (g x) (ginv x)).
       (* We have to show [ginv x] is a section of [g x], which
          mostly involves unfolding of definitions and basic lemmas. *)
       intro v.
@@ -109,7 +109,7 @@ Section FiberMap.
 
     Theorem total_equiv : total P <~> total Q.
     Proof.
-      apply (equiv_from_hiso tg tg_inv).
+      apply (equiv_from_hequiv tg tg_inv).
       intros [x v].
       unfold tg, tg_inv; simpl.
       apply @total_path with (p := idpath x).
@@ -156,7 +156,7 @@ Section PullbackMap.
 
   Theorem pullback_total_equiv : total (Q o e) <~> total Q.
   Proof.
-    apply (equiv_from_hiso f g).
+    apply (equiv_from_hequiv f g).
     (* one inverse identity *)
     intros [x v].
     unfold f, g; simpl.
@@ -220,7 +220,7 @@ Section FibrationMap.
 
   Let ke : total (Q o e) <~> total Q.
   Proof.
-    apply (equiv_from_hiso k kinv).
+    apply (equiv_from_hequiv k kinv).
     intros [x u].
     unfold k, kinv.
     apply @total_path with (p := inverse_is_section e x).

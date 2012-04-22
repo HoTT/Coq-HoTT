@@ -13,7 +13,7 @@ Lemma contr_contr_is_equiv {A B} (f : A -> B) :
   is_contr A -> is_contr B -> is_equiv f.
 Proof.
   intros H G.
-  apply is_equiv_from_hiso with (g := fun _ => pr1 H);
+  apply is_equiv_from_hequiv with (g := fun _ => pr1 H);
     intro; apply contr_path; assumption.
 Defined.
 
@@ -21,14 +21,14 @@ Defined.
 
 Definition prod_unit_right_equiv A : A <~> A * unit.
 Proof.
-  apply (equiv_from_hiso (fun (a : A) => (a, tt)) (@fst A unit)).
+  apply (equiv_from_hequiv (fun (a : A) => (a, tt)) (@fst A unit)).
   intros [a t]; destruct t; auto.
   auto.
 Defined.
 
 Definition prod_unit_left_equiv A : A <~> unit * A.
 Proof.
-  apply (equiv_from_hiso (fun (a : A) => (tt, a)) (@snd unit A)).
+  apply (equiv_from_hequiv (fun (a : A) => (tt, a)) (@snd unit A)).
   intros [t a]; destruct t; auto.
   auto.
 Defined.
@@ -51,7 +51,7 @@ Defined.
 
 Theorem equiv_map_equiv {A B} {x y : A} (e : A <~> B) : (x ~~> y) <~> (e x ~~> e y).
 Proof.
-  apply (equiv_from_hiso (@map A B x y e) (equiv_map_inv (x := x) (y := y) e)).
+  apply (equiv_from_hequiv (@map A B x y e) (equiv_map_inv (x := x) (y := y) e)).
   intro p.
   unfold equiv_map_inv.
   hott_simpl.
@@ -71,13 +71,13 @@ Defined.
 
 Lemma concat_equiv_left {A} (x y z : A) (p : x ~~> y) : (y ~~> z) <~> (x ~~> z).
 Proof.
-  apply (equiv_from_hiso (fun q : y ~~> z => p @ q) (@concat A y x z (!p)));
+  apply (equiv_from_hequiv (fun q : y ~~> z => p @ q) (@concat A y x z (!p)));
   intro q; associate_left.
 Defined.
 
 Lemma concat_equiv_right {A} (x y z : A) (p : y ~~> z) : (x ~~> y) <~> (x ~~> z).
 Proof.
-  apply (equiv_from_hiso (fun q : x ~~> y => q @ p) (fun r : x ~~> z => r @ !p));
+  apply (equiv_from_hequiv (fun q : x ~~> y => q @ p) (fun r : x ~~> z => r @ !p));
   intro q; associate_right.
 Defined.
 
@@ -85,7 +85,7 @@ Defined.
 
 Definition opposite_equiv {A} (x y : A) : (x ~~> y) <~> (y ~~> x).
 Proof.
-  apply (equiv_from_hiso (@opposite A x y) (@opposite A y x)).
+  apply (equiv_from_hequiv (@opposite A x y) (@opposite A y x)).
   intros p; apply opposite_opposite.
   intros p; apply opposite_opposite.
 Defined.
@@ -129,7 +129,7 @@ Defined.
 
 Definition opposite2_equiv {A} (x y : A) (p q : x ~~> y) : (p ~~> q) <~> (!p ~~> !q).
 Proof.
-  apply (equiv_from_hiso (@opposite2 A x y p q) (unopposite2 p q)).
+  apply (equiv_from_hequiv (@opposite2 A x y p q) (unopposite2 p q)).
   intros r.
   unfold unopposite2.
   path_via' (opposite2 (!opposite_opposite A x y p) @
@@ -162,7 +162,7 @@ Defined.
 Theorem trans_equiv {A} {P : fibration A} {x y : A} (p : x ~~> y) :
   P x <~> P y.
 Proof.
-  apply (equiv_from_hiso (transport (P := P) p) (transport (P := P) (!p))).
+  apply (equiv_from_hequiv (transport (P := P) p) (transport (P := P) (!p))).
   intros z.
   hott_simpl.
   intros z.
@@ -175,7 +175,7 @@ Defined.
 Theorem total_paths_equiv (A : Type) (P : fibration A) (x y : total P) :
   (x ~~> y) <~> { p : pr1 x ~~> pr1 y & transport p (pr2 x) ~~> pr2 y }.
 Proof.
-  apply (equiv_from_hiso
+  apply (equiv_from_hequiv
      (fun r => existT (fun p => transport p (pr2 x) ~~> pr2 y) (base_path r) (fiber_path r))
      (fun (pq : { p : pr1 x ~~> pr1 y & transport p (pr2 x) ~~> pr2 y }) =>
           @total_path A P x y (projT1 pq) (projT2 pq))).
@@ -199,7 +199,7 @@ Defined.
 Definition prod_path_equiv A B (x y : A * B) :
   (x ~~> y) <~> ((fst x ~~> fst y) * (snd x ~~> snd y)).
 Proof.
-  apply (equiv_from_hiso 
+  apply (equiv_from_hequiv 
     (fun p => (map (x:=x) (y:=y) (@fst A B) p, map (@snd A B) p))
     (fun (u : (fst x ~~> fst y) * (snd x ~~> snd y)) =>
       !prod_eta A B x @ prod_path (fst u) (snd u) @ prod_eta A B y)).
@@ -237,7 +237,7 @@ Section hfiber_fibration.
   Definition hfiber_fibration (x : X) :
     P x <~> { z : total P & pr1 z ~~> x }.
   Proof.
-  apply (  equiv_from_hiso
+  apply (  equiv_from_hequiv
       (fun y: P x => (((x ; y) ; idpath _) : {z : sigT P & pr1 z ~~> x}))
       (hfiber_fibration_map x)).
     intros [z p].
@@ -271,7 +271,7 @@ Section FibrationReplacement.
 
   Definition fibration_replacement_equiv : A <~> {y : B & {x : A & f x ~~> y}}.
   Proof.
-  apply (  equiv_from_hiso
+  apply (  equiv_from_hequiv
       fibration_replacement (fun (yxp : {y : B & {x : A & f x ~~> y}}) => pr1 (pr2 yxp))).
     intros [y [x p]].
     unfold fibration_replacement; simpl.
@@ -310,7 +310,7 @@ Section TotalAssoc.
   Definition total_assoc :
     { x : A & { p : P x & Q x p}} <~> { xp : sigT P & Q (pr1 xp) (pr2 xp) }.
   Proof.
-    apply (equiv_from_hiso ta1 ta2).
+    apply (equiv_from_hequiv ta1 ta2).
     intros [[x p] q]; auto.
     intros [x [p q]]; auto.
   Defined.
@@ -337,7 +337,7 @@ Section TotalAssocSum.
   Definition total_assoc_sum :
     {x : A & {p : P x & Q (x;p)}} <~> {xp : total P & Q xp}.
   Proof.
-    apply (equiv_from_hiso ta1 ta2).
+    apply (equiv_from_hequiv ta1 ta2).
     intros [[x p] q]; auto.
     intros [x [p q]]; auto.
   Defined.
@@ -365,7 +365,7 @@ Section TotalComm.
   Definition total_comm :
     {x : A & {y : B & P x y}} <~> {y : B & {x : A & P x y}}.
   Proof.
-    apply (equiv_from_hiso tc1 tc2).
+    apply (equiv_from_hequiv tc1 tc2).
     intros [x [y p]]; auto.
     intros [y [x p]]; auto.
   Defined.
@@ -389,7 +389,7 @@ Lemma product_equiv (A B C D : Type):
   (A <~> B) -> (C <~> D) -> (A * C <~> B * D).
 Proof.
   intros f g.
-  apply (equiv_from_hiso
+  apply (equiv_from_hequiv
     (fun ac => (f (fst ac), g (snd ac)))
     (fun bd => (f^-1 (fst bd), g^-1 (snd bd)))) ;
   intros [? ?]; simpl; apply prod_path; hott_simpl.
@@ -417,7 +417,7 @@ Section PullbackContr.
 
   Definition pullback_over_contr : {x : A & {y : B & f x ~~> g y}} <~> A * B.
   Proof.
-    apply (equiv_from_hiso pbu1 pbu2).
+    apply (equiv_from_hequiv pbu1 pbu2).
     intros [a b]; simpl; auto.
     intros [a [b p]]; simpl.
     apply @total_path with (idpath a). simpl.

@@ -265,8 +265,13 @@ Proof.
   apply idpath.
 Defined.
 
-(** We now consider the notion of an adjoint equivalences and
-   prove that they coincide with equivalences. *)
+(** We have proven that every equivalence has an inverse up to
+    homotopy.  In fact, having an inverse up to homotopy is also
+    enough to characterize a map as being an equivalence.  However,
+    the data of an inverse up to homotopy is not equivalent to the
+    data in [equiv] unless we add one more piece of coherence data.
+    This is a homotopy version of the category-theoretic notion of
+    "adjoint equivalence". *)
 
 Structure adjoint_equiv A B := {
   adj_map : A -> B ;
@@ -292,7 +297,7 @@ Proof.
   moveright_onleft.
 Defined.
 
-(** An equivalence is an adjoint equivalence. *)
+(** An equivalence is an adjoint equivalence and vice versa. *)
 
 Definition equiv_to_adjoint {A B} (e : A <~> B) : adjoint_equiv A B :=
   {|
@@ -327,12 +332,13 @@ Proof.
   hott_simpl.
 Defined.
 
-(** In fact, [equiv_to_adjoint] and [adjoint_to_equiv] are actually
+(** In fact, [equiv_to_adjoint] and [adjoint_to_equiv] are
    inverse equivalences, but proving this requires function
    extensionality.  See [FunextEquivalences.v]. *)
 
 (** It is sometimes easier to define an adjoint equivalence than
-   an equivalence. *)
+   an equivalence, for example when we have a map which is homotopic
+   to the identity. *)
 Lemma equiv_pointwise_idmap A (f : A -> A) (p : forall x, f x ~~> x) : A <~> A.
 Proof.
   apply adjoint_to_equiv.
@@ -340,20 +346,23 @@ Proof.
   apply htoid_well_pointed.
 Defined.
 
-(** The third notion of equivalence is that of h-isomorphism. *)
+(** The third notion of "equivalence" is that of a map which has an inverse up
+   to homotopy but without the triangle identity (so it is a kind of
+   "incoherent" adjoint equivalence. Let us call such a thing an h-equivalence
+   or just [hequiv] for short. *)
 
-Structure h_isomorphism A B := {
-  hiso_map : A -> B ;
-  hiso_inverse : B -> A ;
-  hiso_section : (forall y, hiso_map (hiso_inverse y) ~~> y) ;
-  hiso_retraction : (forall x, hiso_inverse (hiso_map x) ~~> x)
+Structure hequiv A B := {
+  hequiv_map : A -> B ;
+  hequiv_inverse : B -> A ;
+  hequiv_section : (forall y, hequiv_map (hequiv_inverse y) ~~> y) ;
+  hequiv_retraction : (forall x, hequiv_inverse (hequiv_map x) ~~> x)
 }.
 
 (** A central fact about adjoint equivalences is that any "incoherent"
-   equivalence can be improved to an adjoint equivalence by changing
-   one of the natural isomorphisms.  We now prove a corresponding
-   result in homotopy type theory.  The proof is exactly the same as
-   the usual proof for adjoint equivalences in 2-category theory.  *)
+   equivalence can be improved to an adjoint equivalence by changing one of the
+   natural isomorphisms. We now prove a corresponding result in homotopy type
+   theory. The proof is exactly the same as the usual proof for adjoint
+   equivalences in 2-category theory. *)
 
 Lemma map_retraction_section A B (f : A -> B) (g : B -> A)
   (h : forall x, f (g x) ~~> x) (u v : B) (p : u ~~> v) :
@@ -363,7 +372,7 @@ Proof.
   hott_simpl.
 Defined.
 
-Definition adjointify {A B} : h_isomorphism A B -> adjoint_equiv A B.
+Definition adjointify {A B} : hequiv A B -> adjoint_equiv A B.
 Proof.
   intros [f g is_section is_retraction].
   (* We have to redefine one of the two homotopies. *)
@@ -392,41 +401,31 @@ Proof.
   exact (homotopy_naturality_fromid B  _ (fun y => ! is_section y) _ _ _).
 Defined.
 
-(** We have proven that every equivalence has an inverse up to
-    homotopy.  In fact, having an inverse up to homotopy is also
-    enough to characterize a map as being an equivalence.  However,
-    the data of an inverse up to homotopy is not equivalent to the
-    data in [equiv] unless we add one more piece of coherence data.
-    This is a homotopy version of the category-theoretic notion of
-    "adjoint equivalence". *)
+(** Therefore, "any h-equivalence is an equivalence." *)
 
-(** Therefore, "any homotopy equivalence is an equivalence." *)
-
-Definition h_isomorphism_to_equiv {A B} : h_isomorphism A B -> (A <~> B) :=
+Definition hequiv_to_equiv {A B} : hequiv A B -> (A <~> B) :=
   adjoint_to_equiv o adjointify.
 
 (** All sorts of nice things follow from this theorem. *)
 
-(** A lemma for showing that something is an equivalence by providing
-    its h-inverse. *)
+(** A lemma for showing that if something is an [hequiv] then
+   it is an equivalence. *)
 
-Definition is_equiv_from_hiso {A B} {f : A -> B} (g : B -> A)
+Definition is_equiv_from_hequiv {A B} {f : A -> B} (g : B -> A)
   (p : forall y, f (g y) ~~> y) (q : forall x, g (f x) ~~> x) : is_equiv f :=
-  equiv_is_equiv (h_isomorphism_to_equiv 
-    {| hiso_map := f ;
-       hiso_inverse := g ;
-       hiso_section := p ;
-       hiso_retraction := q |}).  
+  equiv_is_equiv (hequiv_to_equiv 
+    {| hequiv_map := f ;
+       hequiv_inverse := g ;
+       hequiv_section := p ;
+       hequiv_retraction := q |}).  
 
-(* A tactic for constructing an equivalence from an h-isomorphism. *)
-
-Definition equiv_from_hiso {A B} (f : A -> B) (g : B -> A)
+Definition equiv_from_hequiv {A B} (f : A -> B) (g : B -> A)
   (p : forall y, f (g y) ~~> y) (q : forall x, g (f x) ~~> x) : A <~> B :=
-  h_isomorphism_to_equiv 
-    {| hiso_map := f;
-       hiso_inverse := g;
-       hiso_section := p;
-       hiso_retraction := q |}.
+  hequiv_to_equiv 
+    {| hequiv_map := f;
+       hequiv_inverse := g;
+       hequiv_section := p;
+       hequiv_retraction := q |}.
 
 (** The inverse of an equivalence is an equivalence. *)
 
@@ -434,7 +433,7 @@ Lemma equiv_inverse {A B} : (A <~> B) -> B <~> A.
 Proof.
   intro e.
   destruct (equiv_to_adjoint e) as [f g is_section is_retraction triangle].
-  apply (equiv_from_hiso g f); auto.
+  apply (equiv_from_hequiv g f); auto.
 Defined.
 
 (* Rewrite rules for inverses. *)
@@ -452,7 +451,7 @@ Lemma equiv_homotopic {A B} (f : A -> B) (g : A <~> B) :
   (forall x, f x ~~> g x) -> A <~> B.
 Proof.
   intros p.
-  apply (equiv_from_hiso f (g^-1)).
+  apply (equiv_from_hequiv f (g^-1)).
   intro y.
   rewrite p.
   hott_simpl.
@@ -464,7 +463,7 @@ Defined.
 
 Definition equiv_compose {A B C} (f : A <~> B) (g : B <~> C) : (A <~> C).
 Proof.
-  apply (equiv_from_hiso (g o f) (f^-1 o g^-1)); intro; unfold compose; hott_simpl.
+  apply (equiv_from_hequiv (g o f) (f^-1 o g^-1)); intro; unfold compose; hott_simpl.
 Defined.
 
 Lemma equiv_inverse_compose (A B C : Type) (f : A <~> B) (g : B <~> C) x :
@@ -480,7 +479,7 @@ Definition equiv_cancel_right {A B C} (f : A <~> B) (g : B -> C) :
 Proof.
   intros H.
   pose (gof := {| equiv_map := g o f; equiv_is_equiv := H |}).
-  apply (equiv_from_hiso g (f o gof^-1)).
+  apply (equiv_from_hequiv g (f o gof^-1)).
   intro y.
   expand_inverse_trg gof y.
   apply idpath.
@@ -496,7 +495,7 @@ Definition equiv_cancel_left {A B C} (f : A -> B) (g : B <~> C) :
 Proof.
   intros H.
   pose (gof := {| equiv_map := g o f; equiv_is_equiv := H |}).
-  apply (equiv_from_hiso f (gof^-1 o g)).
+  apply (equiv_from_hequiv f (gof^-1 o g)).
   intros y.
   expand_inverse_trg g y.
   expand_inverse_src g (f (((gof ^-1) o g) y)).
@@ -508,20 +507,38 @@ Proof.
   hott_simpl.
 Defined.
 
-Theorem equiv_to_hiso {A B} : A <~> B -> h_isomorphism A B.
+(** André Joyal suggested the following definition of equivalences and to call
+   it "h-isomorphism" or [hiso] for short. This is even weaker than [hequiv] as
+   we have a separate section and a retraction. *)
+
+Structure hiso A B :=
+  { hiso_map :> A -> B ;
+    hiso_section : B -> A ;
+    hiso_is_section : (forall y, hiso_map (hiso_section y) ~~> y) ;
+    hiso_retraction : B -> A ;
+    hiso_is_retraction : forall x, (hiso_retraction (hiso_map x) ~~> x) }.
+
+(** Of course, an honest equivalence is an h-isomorphism. *)
+Definition hiso_from_equiv {A B} (e : A <~> B) : hiso A B :=
+  {| hiso_map := equiv_map e ;
+     hiso_section := equiv_inverse e ;
+     hiso_is_section := inverse_is_section e ;
+     hiso_retraction := equiv_inverse e ;
+     hiso_is_retraction := inverse_is_retraction e |}.
+
+(** But also an h-isomorphism is an equivalence. *)
+Definition hequiv_from_hiso {A B} : hiso A B -> hequiv A B.
 Proof.
-  intro e.
-  exists e (e^-1).
-  apply inverse_is_section.
-  apply inverse_is_retraction.
+  intros [f g G h H].
+  refine {| hequiv_map := f ; hequiv_inverse := h |}.
+  intro y.
+  path_via (f (g y)).
+  apply map.
+  path_via (h (f (g y))).
+  apply map, opposite, G.
+  assumption.
 Defined.
 
-Theorem hiso_to_equiv {A B} : h_isomorphism A B -> A <~> B.
-Proof.
-  intros [f g G H].
-  apply (equiv_from_hiso f g); assumption.
-Defined.
-
-(** Of course, the harder part is showing that [is_hiso] is a
-   proposition, and therefore equivalent to [is_equiv].  This also
+(** Of course, the harder part is showing that being an h-isomorphism is a
+   proposition, and therefore equivalent to being an equivalence. This also
    requires function extensionality; see [FunextEquivalences.v]. *)

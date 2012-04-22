@@ -244,7 +244,7 @@ Section AxiomOfChoiceEquiv.
     (weak_funext : forall Y (S : fibration Y), weak_funext_statement S) :
     (forall x, {y : P x & Q x y}) <~> {h : section P & forall x, Q x (h x)}.
   Proof.
-    apply (equiv_from_hiso ac acinv).
+    apply (equiv_from_hequiv ac acinv).
     intros [h H].
     unfold ac; simpl.
     fold (eta_dep H).

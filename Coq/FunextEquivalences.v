@@ -1,57 +1,65 @@
-Require Import Paths Equivalences UsefulEquivalences Funext UnivalenceAxiom HLevel.
+Require Import Paths Equivalences UsefulEquivalences Funext HLevel.
+Require Import ExtensionalityAxiom.
 
 (** This file defines some useful equivalences that require functional
    extensionality, usually involving equivalences between function
    spaces. *)
 
+(* A convenient tactic for using extensionality. *)
+Ltac by_extensionality :=
+  intros; unfold compose;
+  match goal with 
+  | [ |- ?f ~~> ?g ] =>
+    apply funext_dep ; unfold ext_dep_eq ;
+    match goal with
+      | [ |- forall (_ : prod ?A ?B), _ ] => intros [? ?]
+      | _ => intros
+    end ;
+    simpl;
+    auto
+  end.
+
 (** Currying and uncurrying are equivalences. *)
 
 Definition curry_equiv A B C : (A * B -> C) <~> (A -> B -> C).
 Proof.
-  exists (fun f => fun a b => f (a,b)).
-  apply hequiv_is_equiv with (fun g => fun x => g (fst x) (snd x)).
-  intro f; apply funext; intro a; apply funext; intro b; auto.
-  intro g; apply funext; intros [a b]; auto.
+  apply (equiv_from_hiso (fun f => fun a b => f (a,b)) (fun g => fun x => g (fst x) (snd x)));
+  now repeat by_extensionality.
 Defined.
 
 (** Flipping the arguments of a two-variable function is an equivalence. *)
 
 Definition flip_equiv A B C : (A -> B -> C) <~> (B -> A -> C).
 Proof.
-  exists (fun f => fun b a => f a b).
-  apply hequiv_is_equiv with (fun g => fun a b => g b a).
-  intro g; apply funext; intro a; apply funext; intro b; auto.
-  intro f; apply funext; intro b; apply funext; intro a; auto.
+  apply (equiv_from_hiso (fun f => fun b a => f a b) (fun g => fun a b => g b a));
+  now repeat by_extensionality.
 Defined.
 
 (** Pre- and post-composing by an equivalence is an equivalence. *)
 
 Lemma precomp_equiv A B C (g : A <~> B) : (B -> C) <~> (A -> C).
 Proof.
-  exists (fun h => h o g).
-  apply @hequiv_is_equiv with (g := fun k => k o (g ^-1));
-    intros k; apply funext; intros a; unfold compose; simpl; apply map.
-  apply inverse_is_retraction.
-  apply inverse_is_section.
+  apply (equiv_from_hiso (fun h => h o g) (fun k => k o (g ^-1))) ;
+    by_extensionality.
+  now apply map; hott_simpl.
+  now apply map; hott_simpl.
 Defined.
 
 Lemma postcomp_equiv A B C (g : B <~> C) : (A -> B) <~> (A -> C).
 Proof.
-  exists (fun h => g o h).
-  apply @hequiv_is_equiv with (g := fun k => (g ^-1) o k);
-    intros k; apply funext; intros a; unfold compose; simpl.
-  apply inverse_is_section.
-  apply inverse_is_retraction.
+  apply (equiv_from_hiso (fun h => g o h) (fun k => (g ^-1) o k)) ;
+    by_extensionality.
+  now apply inverse_is_section.
+  now apply inverse_is_retraction.
 Defined.
 
 Lemma postcomp_equiv_dep A P Q (g : forall a:A, P a <~> Q a) :
   (forall a, P a) <~> (forall a, Q a).
 Proof.
-  exists (fun f a => g a (f a)).
-  apply @hequiv_is_equiv with (g := fun k a => (g a ^-1) (k a));
-    intros k; apply funext_dep; intros a; unfold compose; simpl.
-  apply inverse_is_section.
-  apply inverse_is_retraction.
+  apply (equiv_from_hiso (fun f a => g a (f a)) (fun k a => (g a ^-1) (k a)));
+    by_extensionality.
+  now apply inverse_is_section.
+  now apply inverse_is_retraction.
 Defined.
 
 (** The space of factorizations through an equivalence is contractible. *)
@@ -60,18 +68,18 @@ Lemma equiv_postfactor_contr A B C (g : B <~> C) (h : A -> C) :
   is_contr { f : A -> B &  g o f === h }.
 Proof.
   apply contr_equiv_contr with ({f : A -> B & g o f ~~> h}).
-  apply total_equiv with (fun f => happly).
-  intros f; apply strong_funext.
-  refine (pr2 (postcomp_equiv _ _ _ g) h).
+  apply total_equiv.
+  now intros; apply strong_funext_equiv.
+  apply (equiv_is_equiv (postcomp_equiv _ _ _ g) h).
 Defined.
 
 Lemma equiv_prefactor_contr A B C (f : A <~> B) (h : A -> C) :
   is_contr { g : B -> C &  g o f === h }.
 Proof.
   apply contr_equiv_contr with ({g : B -> C & g o f ~~> h}).
-  apply total_equiv with (fun g => happly).
-  intros g; apply strong_funext.
-  refine (pr2 (precomp_equiv _ _ _ f) h).
+  apply total_equiv.
+  intros g; apply strong_funext_equiv.
+  apply (equiv_is_equiv (precomp_equiv _ _ _ f) h).
 Defined.
 
 (** It follows that [is_hiso] is a prop, and hence equivalent to [is_equiv].  *)

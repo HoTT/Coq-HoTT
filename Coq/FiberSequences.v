@@ -193,7 +193,7 @@ Definition fiber_map_to_contr A B (y : B) (f : A -> B) :
   is_contr B -> hfiber f y <~> A.
 Proof.
   intros Bcontr.
-  apply (equiv_from_hiso
+  apply (equiv_from_hequiv
     pr1
     ((fun x : A => (existT (fun x' => f x' ~~> y) x (contr_path (f x) y Bcontr))))).
   intros x; auto.
