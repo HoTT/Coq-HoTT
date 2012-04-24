@@ -196,25 +196,20 @@ Proof.
   apply H.
 Defined.
 
-Section AxiomOfChoiceEquiv.
+Section AxiomOfChoiceEquiv'.
 
-  (** The axiom of choice which says that a relation is total iff it has a
-     choice function. There is a type-theoretic version of it. We strengthen it
-     to show that in the presence of [eta_dep_statement] and
-     [weak_funext_statement] and with a certain further condition o the
-     relation, totality of a relation is equivalent (in the homotopy sense!) to
-     the space of choice function.
-
-     We work with a fully dependent version, so our relation and choice
-     functions are dependent. *)
+  (** The axiom of choice says that a relation is total iff it has a choice function,
+     and there is a type-theoretic version of it, which we record first. 
+     
+     We work with a fully dependent version of the total relation. *)
 
   Variable X : Type. (* the domain of the relation *)
   Variable P : fibration X. (* the codomain, which is dependent *)
   Variable Q : forall x, fibration (P x). (* the relation, which is dependent *)
 
-  (** As is well-known totality of [Q] implies existence of a choice function [h].  *)
+  (** The usual axiom of choice for the total relation [Q]. *)
  
-  Let ac : (forall x, {y : P x & Q x y}) -> {h : section P & forall x, Q x (h x)}.
+  Definition ac : (forall x, {y : P x & Q x y}) -> {h : section P & forall x, Q x (h x)}.
   Proof.
     intro f.
     exists (fun x => pr1 (f x)).
@@ -224,23 +219,31 @@ Section AxiomOfChoiceEquiv.
 
   (** And vice-versa. *)
 
-  Let acinv : {h : section P & forall x, Q x (h x)} -> forall x, {y : P x & Q x y}.
+  Definition acinv : {h : section P & forall x, Q x (h x)} -> forall x, {y : P x & Q x y}.
   Proof.
     intros [h H x].
     exists (h x).
     apply H.
   Defined.
 
-  (** We can show that [ac] is an equivalence and [acinv] its inverse, provided
-     we have [eta_dep_statement], [weak_funext_statement], as a strengthening
-     of totality of [Q] that makes sense if you think about it homotopically. *)
+  (** A homotopic version of [ac] should relate the two spaces in question by
+     an equivalence. We need further assumption to exhibit such an equivalence.
+     Firstly, we assume the eta rule throghout. *)
 
-  Hypothesis total_Q_contr : forall x, is_contr {y : P x & Q x y}.
+  Hypothesis eta_dep_rule : forall Y (S : fibration Y), eta_dep_statement S.
 
-  (** Now we are ready to show that [ac] is an equivalence. *)
+  (** At this point we are able to provide a version of equivalence, called [ac_equiv']
+     below, in which we assume the weakest form of extensionality and an extra condition
+     on [Q], which says that the space [{y : P x & Q x y}] of witnesses of totality of [Q]
+     is contractible for all [x]. In other words [Q] is total in a cannical way.
 
-  Definition ac_equiv
-    (E : (forall Y (S : fibration Y), eta_dep_statement S))
+     We bother proving [ac_equiv'] because it is used in the proof that weak extensionality
+     implies strong extensionality. And once we have that result, we will be able to show
+     a second, desired version [ac_equiv] which has no condition on [Q].
+  *)
+
+  Definition ac_equiv'
+    (total_Q_contr : forall x, is_contr {y : P x & Q x y})
     (weak_funext : forall Y (S : fibration Y), weak_funext_statement S) :
     (forall x, {y : P x & Q x y}) <~> {h : section P & forall x, Q x (h x)}.
   Proof.
@@ -248,7 +251,7 @@ Section AxiomOfChoiceEquiv.
     intros [h H].
     unfold ac; simpl.
     fold (eta_dep H).
-    rewrite (E _ _ H).
+    rewrite (eta_dep_rule _ _ H).
     fold (eta_dep h).
     (* The obvious thing here would be to rewrite with [E X P h] but that gives
        the dreaded "Error: Abstracting over the term ... which is ill-typed".
@@ -256,7 +259,7 @@ Section AxiomOfChoiceEquiv.
     (* First, the left-hand side is the image of a map [f] which is an
        equivalence because it is the pullback of an equivalence. *)
     pose (R := (fun (g : section P) => forall x, Q x (g x))).
-    pose (e := eta_dep_equiv P (E _ P)).
+    pose (e := eta_dep_equiv P (eta_dep_rule _ P)).
     pose (f := pullback_total_equiv R e).
     path_via (f (h; H)).
     (* To show that an equivalence is homotopic to the identity, it
@@ -267,16 +270,21 @@ Section AxiomOfChoiceEquiv.
     intro h.
     apply contr_path.
     apply weak_funext.
+    (* And this is precisely our assumption on [Q]. *)
     assumption.
   Defined.
-End AxiomOfChoiceEquiv.
+
+  (** Continued below in section [AxiomOfChoice]... *)
+End AxiomOfChoiceEquiv'.
 
 Section WeakToStrongFunextDep.
-  (** Less trivial is the fact that weak functional extensionality
-     implies *strong* (dependent) functional extensionality, at least in
-     the presence of the dependent eta rule. *)
-  
-  Hypothesis Heta : forall X (P : fibration X), eta_dep_statement P.
+
+  (** As an intermezzo of treatment of the axiom of choice we show the
+     non-obvious fact that weak functional extensionality implies *strong*
+     (dependent) functional extensionality, at least in the presence of the
+     dependent eta rule. *)
+
+  Hypothesis eta_dep_rule : forall X (P : fibration X), eta_dep_statement P.
 
   (** Assume a fibration [P] over [X]. *)
   Variable X : Type.
@@ -314,7 +322,7 @@ Section WeakToStrongFunextDep.
     unfold R, total, ext_dep_eq.
     (* [total R] is exactly of the form needed for [ac_equiv] to kick in! *)
     apply contr_equiv_contr with (A := forall x, {y : P x & f x ~~> y}).
-    apply ac_equiv; auto.
+    apply ac_equiv'; auto.
     (* The rest is a triviality. *)
     intro; apply pathspace_contr'.
     apply weak_funext.
@@ -341,3 +349,61 @@ Proof.
   intros H f g.
   apply weak_to_strong_funext_dep'; auto.
 Defined.
+
+Section AxiomOfChoiceEquiv.
+  (** We may now continue with the strong version of the axiom of choice.
+     Assuming the eta rule and weak extensionality suffices to show that
+     [ac] is an equivalence. *)
+
+  Hypothesis eta_dep_rule : forall Y (S : fibration Y), eta_dep_statement S.
+
+  Hypothesis weak_funext: forall Y (S : fibration Y), weak_funext_statement S.
+
+  Variable X : Type. (* the domain of the relation *)
+  Variable P : fibration X. (* the codomain, which is dependent *)
+  Variable Q : forall x, fibration (P x). (* the relation, which is dependent *)
+
+  Definition ac_equiv:
+    (forall x, {y : P x & Q x y}) <~> {h : section P & forall x, Q x (h x)}.
+  Proof.
+    (* We first derive strong extensionality. *)
+    pose (strong_funext_dep := fun Y (S : fibration Y) =>
+      weak_to_strong_funext_dep Y S weak_funext eta_dep_rule).
+    pose (funext_dep :=
+      fun Y (S : fibration Y) => strong_to_naive_funext_dep S (strong_funext_dep Y S)).
+    apply (equiv_from_hequiv (ac X P Q) (acinv X P Q)).
+    intros [h H].
+    unfold ac; simpl.
+    fold (eta_dep H).
+    rewrite (eta_dep_rule _ _ H).
+    fold (eta_dep h).
+    (* So far the proof is the same as that of [ac_equiv'] but now we deviate
+       from it. Strong extensionality gives us a path [p : eta_dep h ~~> h] in
+       the base with which we can reduce the problem to having a path in the
+       fiber. *)
+    pose (p := funext_dep X P (eta_dep h) h (fun a => idpath (h a))).
+    apply @total_path with p; simpl.
+    (* We switch from a path to a homotopy, it's easier. *)
+    apply funext_dep; intro x.
+    (* Since [p] was constructed using [strong_to_naive_funext_dep] we should
+       aim at using [strong_funext_dep_compute]. But this means we need [p]
+       as an argument of [happly_dep]. So we juggle a bit. *)
+    (* Our path factors through a suitable [trans_map]. *)
+    apply (concat (trans_map p (fun s' (r': forall x, Q x (s' x)) => r' x) H)).
+    (* Ask Mike Shulman how he thought of the next step, but I think it
+       goes like this: we really want [happly_dep p] to appear, so we stick
+       it in and keep fiddling until it works. *)
+    path_via (happly_dep p x # H x).
+    (* The uninteresting subgoal is disposed of with [trans_map]. *)
+    now (apply @map_trans with (f := fun h : forall x' : X, P x' => h x)).
+    (* And the interesting one with [strong_funext_dep_compute]. *)
+    now rewrite (strong_funext_dep_compute P (strong_funext_dep X P)) with
+      (f := eta_dep h) (g := h) (p := fun x' : X => idpath (h x')).
+    (* The other half of the proof is much easier. *)
+    intros f.
+    apply funext_dep.
+    intro x.
+    unfold ac, acinv; destruct (f x).
+    apply idpath.
+  Defined.
+End AxiomOfChoiceEquiv.
