@@ -226,24 +226,28 @@ Section AxiomOfChoiceEquiv'.
     apply H.
   Defined.
 
-  (** A homotopic version of [ac] should relate the two spaces in question by
-     an equivalence. We need further assumption to exhibit such an equivalence.
+  (** A homotopic version of the axiom of choice ought to state that [ac] is
+     an equivalence. We need further assumption to exhibit this fact.
      Firstly, we assume the eta rule throghout. *)
 
   Hypothesis eta_dep_rule : forall Y (S : fibration Y), eta_dep_statement S.
 
-  (** At this point we are able to provide a version of equivalence, called [ac_equiv']
-     below, in which we assume the weakest form of extensionality and an extra condition
-     on [Q], which says that the space [{y : P x & Q x y}] of witnesses of totality of [Q]
-     is contractible for all [x]. In other words [Q] is total in a cannical way.
+  (** At this point we are able to provide a version of equivalence, called
+     [ac_equiv'] below, in which we assume the weakest form of extensionality
+     and an extra condition on [Q], namely that [Q] is single-valued in the
+     sense that for every [x] any two elements of the space [{y : P x & Q x y}] 
+     are connected by a path. This requirement is equivalent to
+     the space being an h-prop or h-level 1 (see [HLevel]), and so [ac_equiv']
+     is a form of _unuque_ choice.
 
-     We bother proving [ac_equiv'] because it is used in the proof that weak extensionality
-     implies strong extensionality. And once we have that result, we will be able to show
-     a second, desired version [ac_equiv] which has no condition on [Q].
+     We bother proving [ac_equiv'] because it is used in the proof that weak
+     extensionality implies strong extensionality. And once we have that result,
+     we will be able to show a second, desired version [ac_equiv] without any
+     conditions [Q].
   *)
 
   Definition ac_equiv'
-    (total_Q_contr : forall x, is_contr {y : P x & Q x y})
+    (total_Q_prop : forall x, forall u v : {y : P x & Q x y}, u ~~> v)
     (weak_funext : forall Y (S : fibration Y), weak_funext_statement S) :
     (forall x, {y : P x & Q x y}) <~> {h : section P & forall x, Q x (h x)}.
   Proof.
@@ -270,8 +274,10 @@ Section AxiomOfChoiceEquiv'.
     intro h.
     apply contr_path.
     apply weak_funext.
+    intro x.
+    exists (h x).
     (* And this is precisely our assumption on [Q]. *)
-    assumption.
+    intro; apply total_Q_prop.
   Defined.
 
   (** Continued below in section [AxiomOfChoice]... *)
@@ -320,11 +326,11 @@ Section WeakToStrongFunextDep.
        a space of sections, we could bring in [weak_funext]. Let us
        unfold a bit to see what is going on. *)
     unfold R, total, ext_dep_eq.
-    (* [total R] is exactly of the form needed for [ac_equiv] to kick in! *)
+    (* [total R] is exactly of the form needed for [ac_equiv'] to kick in! *)
     apply contr_equiv_contr with (A := forall x, {y : P x & f x ~~> y}).
     apply ac_equiv'; auto.
     (* The rest is a triviality. *)
-    intro; apply pathspace_contr'.
+    intros x u v. apply contr_path, pathspace_contr'.
     apply weak_funext.
     intro; apply pathspace_contr'.
   Defined.
