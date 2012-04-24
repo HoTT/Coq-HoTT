@@ -332,6 +332,12 @@ Proof.
   hott_simpl.
 Defined.
 
+Lemma adjoint_to_equiv_compute_map {A B} (e : adjoint_equiv A B) :
+  equiv_map (adjoint_to_equiv e) ~~> adj_map _ _ e.
+Proof.
+  destruct e; apply idpath.
+Defined.
+
 (** In fact, [equiv_to_adjoint] and [adjoint_to_equiv] are
    inverse equivalences, but proving this requires function
    extensionality.  See [FunextEquivalences.v]. *)
@@ -401,10 +407,22 @@ Proof.
   exact (homotopy_naturality_fromid B  _ (fun y => ! is_section y) _ _ _).
 Defined.
 
+Lemma adjointify_compute_map {A B} (h : hequiv A B) :
+  hequiv_map _ _ h ~~> adj_map _ _ (adjointify h).
+Proof.
+  destruct h; apply idpath.
+Defined.
+
 (** Therefore, "any h-equivalence is an equivalence." *)
 
 Definition hequiv_to_equiv {A B} : hequiv A B -> (A <~> B) :=
   adjoint_to_equiv o adjointify.
+
+Lemma hequiv_to_equiv_compute_map {A B} (h : hequiv A B) :
+  equiv_map (hequiv_to_equiv h) ~~> hequiv_map _ _ h.
+Proof.
+  destruct h; apply idpath.
+Defined.
 
 (** All sorts of nice things follow from this theorem. *)
 
@@ -511,25 +529,48 @@ Defined.
    it "h-isomorphism" or [hiso] for short. This is even weaker than [hequiv] as
    we have a separate section and a retraction. *)
 
+Structure is_hiso {A B} (f : A -> B) :=
+  { hiso_section : B -> A ;
+    hiso_is_section : (forall y, f (hiso_section y) ~~> y) ;
+    hiso_retraction : B -> A ;
+    hiso_is_retraction : forall x, (hiso_retraction (f x) ~~> x)
+  }.
+
+Implicit Arguments hiso_section [A B f].
+Implicit Arguments hiso_is_section [A B f].
+Implicit Arguments hiso_retraction [A B f].
+Implicit Arguments hiso_is_retraction [A B f].
+
+Definition is_hiso_from_is_equiv {A B} (f : A -> B) : is_equiv f -> is_hiso f.
+Proof.
+  intro feq.
+  pose (e := {| equiv_map := f; equiv_is_equiv := feq |}).
+  rewrite (idpath _ : f ~~> equiv_map e).
+  refine {| hiso_section := e^-1; hiso_retraction := e^-1|}.
+  apply inverse_is_section.
+  apply inverse_is_retraction.
+Defined.
+
 Structure hiso A B :=
   { hiso_map :> A -> B ;
-    hiso_section : B -> A ;
-    hiso_is_section : (forall y, hiso_map (hiso_section y) ~~> y) ;
-    hiso_retraction : B -> A ;
-    hiso_is_retraction : forall x, (hiso_retraction (hiso_map x) ~~> x) }.
+    hiso_is_hiso :> is_hiso hiso_map
+  }.
 
 (** Of course, an honest equivalence is an h-isomorphism. *)
 Definition hiso_from_equiv {A B} (e : A <~> B) : hiso A B :=
   {| hiso_map := equiv_map e ;
-     hiso_section := equiv_inverse e ;
-     hiso_is_section := inverse_is_section e ;
-     hiso_retraction := equiv_inverse e ;
-     hiso_is_retraction := inverse_is_retraction e |}.
+     hiso_is_hiso := 
+     {| hiso_section := equiv_inverse e ;
+        hiso_is_section := inverse_is_section e ;
+        hiso_retraction := equiv_inverse e ;
+        hiso_is_retraction := inverse_is_retraction e
+     |}
+  |}.
 
 (** But also an h-isomorphism is an equivalence. *)
 Definition hequiv_from_hiso {A B} : hiso A B -> hequiv A B.
 Proof.
-  intros [f g G h H].
+  intros [f [g G h H]].
   refine {| hequiv_map := f ; hequiv_inverse := h |}.
   intro y.
   path_via (f (g y)).
@@ -539,8 +580,33 @@ Proof.
   assumption.
 Defined.
 
+Lemma hequiv_from_hiso_compute_map {A B} (h : hiso A B) :
+  hequiv_map _ _ (hequiv_from_hiso h) ~~> hiso_map _ _ h.
+Proof.
+  destruct h as [? [? ? ?]].
+  apply idpath.
+Defined.
+
 Definition equiv_from_hiso {A B} (f : hiso A B) : A <~> B :=
   hequiv_to_equiv (hequiv_from_hiso f).
+
+Lemma equiv_from_hiso_compute_map {A B} (f : hiso A B) :
+  equiv_map (equiv_from_hiso f) ~~> hiso_map _ _ f.
+Proof.
+  destruct f as [? [? ? ?]].
+  apply idpath.
+Defined.
+
+Definition is_equiv_from_is_hiso {A B} (f : A -> B) : is_hiso f -> is_equiv f.
+Proof.
+  intro fhiso.
+  pose (h := {| hiso_map := f; hiso_is_hiso := fhiso |}).
+  pose (e := equiv_from_hiso h).
+  (** We would like to apply [equiv_is_equiv e], but Coq wants us to rewrite first. *)
+  rewrite (idpath _ : f ~~> hiso_map _ _ h).
+  rewrite <- (equiv_from_hiso_compute_map h).
+  apply (equiv_is_equiv e).
+Defined.
 
 (** Of course, the harder part is showing that being an h-isomorphism is a
    proposition, and therefore equivalent to being an equivalence. This also
