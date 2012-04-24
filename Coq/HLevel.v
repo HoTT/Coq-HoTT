@@ -14,9 +14,7 @@
 *)
 
 Require Import Paths Fibrations Contractible Equivalences Funext.
-
-(* We should instead explicitly equire funext_dep *)
-(*Require Import UnivalenceAxiom. *)
+Require Import ExtensionalityAxiom.
 
 (** Some more stuff about contractibility. *)
 
@@ -162,7 +160,7 @@ Defined.
 
 Theorem prop_equiv_inhabited_contr {A} : is_prop A <~> (A -> is_contr A).
 Proof.
-  apply (equiv_from_hiso (prop_inhabited_contr A) (inhabited_contr_isprop A)).
+  apply (equiv_from_hequiv (prop_inhabited_contr A) (inhabited_contr_isprop A)).
   intro H.
   unfold prop_inhabited_contr, inhabited_contr_isprop.
   simpl.
@@ -200,7 +198,7 @@ Defined.
 
 Theorem prop_equiv_allpath {A} : is_prop A <~> (forall (x y : A), x ~~> y).
 Proof.
-  apply (equiv_from_hiso prop_path allpath_prop).
+  apply (equiv_from_hequiv prop_path allpath_prop).
   intro H.
   apply funext_dep.
   intro x.
@@ -225,7 +223,7 @@ Definition prop_iff_equiv A B : is_prop A -> is_prop B ->
   (A -> B) -> (B -> A) -> (A <~> B).
 Proof.
   intros Ap Bp f g.
-  apply (equiv_from_hiso f g); 
+  apply (equiv_from_hequiv f g); 
   intros; apply prop_path; auto.
 Defined.
 
@@ -287,7 +285,7 @@ Defined.
 Theorem isset_equiv_axiomK {A} :
   is_set A <~> (forall (x : A) (p : x ~~> x), p ~~> idpath x).
 Proof.
-  apply (equiv_from_hiso (isset_implies_axiomK A) (axiomK_implies_isset A)).
+  apply (equiv_from_hequiv (isset_implies_axiomK A) (axiomK_implies_isset A)).
   intro H.
   apply funext_dep.
   intro x.
