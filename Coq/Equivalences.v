@@ -4,18 +4,20 @@ Require Export Paths Fibrations Contractible.
    Before we define equivalences, let us consider when [A] and [B]
    should be considered "the same".
 
-   The first option is to require existence of [f : A -> B] and [g : B -> A] which are
-   inverses of each other, up to homotopy. We call this homotopy isomorphism
-   or just "h-isomorphism", as suggested by André Joyal.
+   The first option is to require existence of [f : A -> B] and [g : B -> A]
+   which are inverses of each other, up to homotopy. Homotopically speaking, we
+   should also require a certain condition which is remniscent of the triangle
+   identities for adjunctions in category theory. Thus we call this notion an
+   adjoint equivalence.
 
-   The second option is to additionally require that [f] and [g] satisfy
-   triangle identities remniscent of the triangle identities for adjunctions
-   in category theory. We call this an adjoint equivalence.
-
-   The third option is to use Vladimir Voevodsky's definition of an
+   The second option is to use Vladimir Voevodsky's definition of an
    equivalence as a map whose homotopy fibers are contractible.
 
-   We shall start with the third option. We will then show how the other
+   An interesting third options was suggested by André Joyal: a map [f] which
+   has separate left and right homotopy inverses. This too turns out to be
+   reasonable.
+
+   We shall start with the seconnd option. We will then show how the other
    two are related to it. *)
 
 (** An equivalence is a map whose homotopy fibers are contractible. *)
