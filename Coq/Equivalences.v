@@ -481,7 +481,9 @@ Defined.
 
 Definition equiv_compose {A B C} (f : A <~> B) (g : B <~> C) : (A <~> C).
 Proof.
-  apply (equiv_from_hequiv (g o f) (f^-1 o g^-1)); intro; unfold compose; hott_simpl.
+  apply (equiv_from_hequiv (g o f) (f^-1 o g^-1)); intro; unfold compose.
+  now equiv_moveright; apply inverse_is_section.
+  now equiv_moveright; apply inverse_is_retraction.
 Defined.
 
 Lemma equiv_inverse_compose (A B C : Type) (f : A <~> B) (g : B <~> C) x :
