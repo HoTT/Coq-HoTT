@@ -1,4 +1,6 @@
-(* How far can we pretend that paths between types *are* equivalences? *)
+(**** WORK IN PROGRESS WITH Egbert Rijke ***)
+
+(* How far can we pretend that equivalences are paths? *)
 
 Add LoadPath "..".
 
@@ -6,9 +8,10 @@ Require Import Paths Fibrations Contractible Funext HLevel
   Equivalences FiberEquivalences FunextEquivalences.
 Require Import ExtensionalityAxiom.
 
-(* Suppose [P : Type -> Type] and [A <~> B]. Is it the case that [P A <~> P B],
-   for a definable [P]? Let us call a [P] *equivariant* when it has this
-   property. *)
+(** Suppose [P : Type -> Type] and [A <~> B]. Is it the case that [P A <~> P B], for a
+   definable [P]? Let us call a [P] *equivariant* when it has this property. We also
+   require that the passage [eq_map] from [A <~> B] to [P A <~> P B] behaves
+   compositionally.*)
 
 Structure Equivariant := {
   eq_ty :> Type -> Type ;
@@ -22,6 +25,8 @@ Implicit Arguments eq_map [A B].
 Implicit Arguments eq_id [A].
 Implicit Arguments eq_comp [A B C].
 
+(** We also need a more general notion of equivariance of families over equivariant families. *)
+
 Structure EquivariantFamily (P : Equivariant) := {
   fam :> forall (A : Type), P A -> Type ; 
   fam_map : forall (A B : Type) (e : A <~> B) (x : P A), fam A x <~> fam B (eq_map P e x) ;
@@ -34,9 +39,10 @@ Structure EquivariantFamily (P : Equivariant) := {
 Implicit Arguments fam [P].
 Implicit Arguments fam_map [P A B].
 
+(** We expect all definable families to be equivariant. *)
 
 Section CartesianProduct.
-(* An exercise: cartesian products *)
+  (* An exercise: cartesian products *)
 
   Definition prod_map (P Q : Equivariant) (A B : Type) (e : A <~> B) :
     (P A * Q A <~> P B * Q B)%type.
@@ -59,6 +65,7 @@ Section CartesianProduct.
 End CartesianProduct.
 
 Section DisjointSum.
+  (** Another exercise: disjoint sums *)
 
   Lemma sum_equiv (A A' B B' : Type) :
     (A <~> A') -> (B <~> B') -> (A + B <~> A' + B').
@@ -89,9 +96,9 @@ Section DisjointSum.
 End DisjointSum.
 
 Section DependentSum.
-(** Now something slightly more involved: total spaces. *)
+  (** Now something slightly more involved: total spaces. *)
 
-(* This one should go to [FiberEquivalences] *)
+  (** This one should go to [FiberEquivalences] *)
   Lemma total_equiv (A B : Type) (P : fibration A) (Q : fibration B) (e : A <~> B)
     (f : (forall x : A, P x <~> Q (e x))) :
     total P <~> total Q.
@@ -108,6 +115,8 @@ Section DependentSum.
     apply fam_map.
   Defined.
   
+  (** The dependent sum of an equivariant family is equivariant. *)
+
   Theorem total_equivariant (P : Equivariant) (Q : EquivariantFamily P) : Equivariant.
   Proof.
     refine
@@ -126,7 +135,7 @@ End DependentSum.
 
 Section DependentProduct.
 
-(* The final test of course are the products. *)
+  (** The final test of course are the products. This seems doable but excruciatingly painful. *)
 
   Lemma equiv_map_path (A B : Type) (e f : A <~> B) :
     equiv_map e ~~> equiv_map f -> e ~~> f.
