@@ -5,22 +5,6 @@ Require Import ExtensionalityAxiom.
    extensionality, usually involving equivalences between function
    spaces. *)
 
-(* A convenient tactic for using extensionality. *)
-Ltac by_extensionality :=
-  intros; unfold compose;
-  match goal with 
-  | [ |- ?f ~~> ?g ] =>
-    apply funext_dep ; unfold ext_dep_eq ;
-    match goal with
-      | [ |- forall (_ : prod _ _), _ ] => intros [? ?]
-      | [ |- forall (_ : sigT _ _), _ ] => intros [? ?]
-      | [ |- forall (_ : total _), _ ] => intros [? ?]
-      | _ => intros
-    end ;
-    simpl;
-    auto
-  end.
-
 (** Currying and uncurrying are equivalences. *)
 
 Definition curry_equiv A B C : (A * B -> C) <~> (A -> B -> C).
@@ -131,6 +115,7 @@ Section IsHisoIsProp.
     apply is_hiso_from_is_equiv.
     apply is_equiv_from_is_hiso.
   Defined.
+End IsHisoIsProp.
 
 (** Cartesian products have the correct universal property. *)
 
@@ -238,6 +223,10 @@ Section SectionPathsEquiv.
 End SectionPathsEquiv.
 
 (* Finally, we can prove that [is_adjoint_equiv] is equivalent to [is_equiv]. *)
+
+
+(*** UNFINISHED DOWN HERE
+
 
 Theorem is_adjoint_equiv_equiv A B (f : A -> B) :
   is_equiv f <~> is_adjoint_equiv f.
@@ -354,3 +343,5 @@ Proof.
     (w := equiv_inverse (is_adjoint_equiv_equiv A B f)).
   apply is_equiv_is_prop.
 Defined.
+
+****)

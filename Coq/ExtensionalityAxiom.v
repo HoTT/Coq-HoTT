@@ -20,3 +20,18 @@ Axiom eta_dep_rule : forall A (P : fibration A), eta_dep_statement P.
 
 Definition eta_rule A B (f : A -> B) := eta_dep_rule A (fun _ => B).
 
+(* A convenient tactic for using extensionality. *)
+Ltac by_extensionality :=
+  intros; unfold compose;
+  match goal with 
+  | [ |- ?f ~~> ?g ] =>
+    apply funext_dep ; unfold ext_dep_eq ;
+    match goal with
+      | [ |- forall (_ : prod _ _), _ ] => intros [? ?]
+      | [ |- forall (_ : sigT _ _), _ ] => intros [? ?]
+      | [ |- forall (_ : total _), _ ] => intros [? ?]
+      | _ => intros
+    end ;
+    simpl;
+    auto
+  end.
