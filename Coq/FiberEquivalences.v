@@ -34,7 +34,7 @@ Section FiberMap.
 
     Let ginv (x : A) (y : Q x) : P x.
     Proof.
-      (* Unfortunately, the obviuos inverse does not live in the fiber over [x], but
+      (* Unfortunately, the obvious inverse does not live in the fiber over [x], but
          rather in some other fiber. We need to transport it along some path. Our first
          guess at such a path might be this. *)
       apply (transport (base_path (inverse_is_section ge (x ; y)))).
