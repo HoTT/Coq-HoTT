@@ -289,7 +289,6 @@ Structure adjoint_equiv A B := {
 Definition inverse_triangle {A B : Type} (e : A <~> B) x :
   (map e (inverse_is_retraction e x)) ~~> (inverse_is_section e (e x)).
 Proof.
-  intros.
   unfold inverse_is_retraction.
   hott_simpl.
   apply (concat (!idpath_right_unit _ _ _ _)).
