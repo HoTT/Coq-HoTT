@@ -151,49 +151,6 @@ Section DependentProduct.
      unhappy. So we have to do some manual work.
 *)
 
-  Lemma trans_rewrite {A B : Type} (P : fibration B) (f : A -> B) (u : section (P o f)) {x y : A} (q : y ~~> x) :
-    u x ~~> map f q # u y.
-  Proof.
-    path_induction.
-  Defined.
-
-  Ltac trans_rewrite ux f q :=
-    match type of q with ?y ~~> ?x =>
-      let v := fresh in
-        pose (v := ux) ;
-          pattern x in v ;
-            match goal with v := ?u x |- _  =>
-              clear v ;
-                let p := fresh in
-                  assert (p : u x ~~> map f q # u y)
-              end
-            end.
-
-  Lemma trans_rewrite' {A B : Type} (P : fibration B) (a b : A -> B) (p : forall x, a x ~~> b x) (u : forall x, P (a x)) (x y : A) (q : y ~~> x) :
-    p x # u x ~~> (map b q) # (p y # u y).
-  Proof.
-    trans_rewrite (p x # u x) b q.
-    match goal with |- ?e ~~> _ => pose (v := e) ; pattern x in v end.
-    match goal with v := ?r x |- _ => set (v' := r); clear v end.
-    path_induction.
-  Defined.
-
-
-
-  Ltac eta_transport :=
-    match goal with
-      | [ |- ?e ] =>
-        match e with
-          | context ctx [transport ?p ?u] =>
-            idtac p;
-            rewrite (idpath _ : (transport p u) ((fun x => transport p x) u))
-          | _ => idtac "nonooo"
-        end
-    end.
-
-
-
-
   Lemma equiv_map_path (A B : Type) (e f : A <~> B) :
     equiv_map e ~~> equiv_map f -> e ~~> f.
   Proof.
@@ -368,6 +325,75 @@ Section DependentProduct.
     hott_simpl.
   Defined.
 
+  (* Lemma trans_rewrite {A B : Type} (P : fibration B) (f : A -> B) (u : section (P o f)) {x y : A} (q : y ~~> x) : *)
+  (*   u x ~~> map f q # u y. *)
+  (* Proof. *)
+  (*   path_induction. *)
+  (* Defined. *)
+
+  Lemma trans_rewrite {A B : Type} (P : fibration B) (f : A -> B) (u : section (P o f)) {x y : A} (q : y ~~> x) :
+    u x ~~> map f q # u y.
+  Proof.
+    path_induction.
+  Defined.
+
+
+  Ltac trans_rewrite_in ux q :=
+    match type of q with ?y ~~> ?x =>
+      let v := fresh in
+        pose (v := ux) ;
+          pattern x in v ;
+          match goal with v := ?u x |- _  =>
+            clear v ;
+            let A := type of x in
+            let p := fresh "p" in
+              rewrite (trans_rewrite _ (fun (x : A) => A) u q : u x ~~> map q # u y)
+          end
+    end.
+
+  Ltac trans_detect_left q :=
+    match goal with |- ?ux ~~> _ =>
+      match type of q with ?y ~~> ?x =>
+        let v := fresh in
+          pose (v := ux) ;
+            pattern x in v ;
+              match goal with v := ?u x |- _ =>
+                clear v ;
+                let t := fresh "ty" in
+                  let tu := type of u in
+                    let A_ty := fresh in
+                      let x_ty := type of x in
+                  pose (t := tu) ; pose (A_ty := x_ty)
+              end
+      end
+    end.
+
+  Ltac trans_detect_right q :=
+    match goal with |- _ ~~> ?ux =>
+      match type of q with ?y ~~> ?x =>
+        let v := fresh in
+          pose (v := ux) ;
+            pattern x in v ;
+              match goal with v := ?u x |- _ =>
+                idtac x ; idtac u ;
+                clear v ;
+                let t := fresh "ty" in
+                  let tu := type of u in
+                    let A_ty := fresh "A_ty" in
+                      let x_ty := type of x in
+                  pose (t := tu) ; pose (A_ty := x_ty)
+              end
+      end
+    end.
+      
+
+  (* Ltac trans_rewrite f q := *)
+  (*   match type of q with ?y ~~> ?x => *)
+  (*     match goal with *)
+  (*       | context ctx [?u x *)
+  (*     end *)
+  (*   end. *)
+
   Definition section_equivariant (P : Equivariant) (Q : EquivariantFamily P) : Equivariant.
   Proof.
     refine
@@ -390,6 +416,18 @@ Section DependentProduct.
     intros A B C e f s.
     apply funext_dep; intro z.
     unfold section_map, section_equiv; simpl.
+    set (E := eq_map P e).
+    set (F := eq_map P f).
+    set (r := inverse_is_section (eq_map P (equiv_compose e f)) z
+   # (fam_map Q (equiv_compose e f) ((eq_map P (equiv_compose e f) ^-1) z))
+       (s ((eq_map P (equiv_compose e f) ^-1) z))).
+    set (qq := eq_map P (equiv_compose e f)) in r.
+    Set Printing Implicit.
+    rewrite (idpath _ : @inverse_is_section (P A) (P C) qq z ~~> (fun qq => inverse_is_section qq z) qq) in r.
+
+
+
+    trans_rewrite_in (inverse_is_section (eq_map P (equiv_compose e f)) z) (eq_map_comp_inverse P e f).
   Admitted.
 End DependentProduct.
 
