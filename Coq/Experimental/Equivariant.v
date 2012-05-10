@@ -8,10 +8,10 @@ Require Import Paths Fibrations Contractible Funext HLevel
   Equivalences FiberEquivalences FunextEquivalences.
 Require Import ExtensionalityAxiom.
 
-(** Suppose [P : Type -> Type] and [A <~> B]. Is it the case that [P A <~> P B], for a
-   definable [P]? Let us call a [P] *equivariant* when it has this property. We also
-   require that the passage [eq_map] from [A <~> B] to [P A <~> P B] behaves
-   compositionally.*)
+(** Suppose [P : Type -> Type] and [A <~> B]. Is it the case that [P A <~> P B], or more
+   precisely, can we always convert [e : A <~> B] to [map P e : P A <~> P B]? Let us call
+   a [P] *equivariant* when it has this property. We also require that the passage
+   [eq_map] from [A <~> B] to [P A <~> P B] behaves compositionally.*)
 
 Structure Equivariant := {
   eq_ty :> Type -> Type ;
@@ -39,7 +39,8 @@ Structure EquivariantFamily (P : Equivariant) := {
 Implicit Arguments fam [P].
 Implicit Arguments fam_map [P A B].
 
-(** We expect all definable families to be equivariant. *)
+(** We expect all definable families to be equivariant. So we start showing that equivariance
+   is closed under various operations.*)
 
 Section CartesianProduct.
   (* An exercise: cartesian products *)
@@ -67,6 +68,7 @@ End CartesianProduct.
 Section DisjointSum.
   (** Another exercise: disjoint sums *)
 
+  (** We would expect this lemma in [UsefulEquivalences]. *)
   Lemma sum_equiv (A A' B B' : Type) :
     (A <~> A') -> (B <~> B') -> (A + B <~> A' + B').
   Proof.
@@ -98,7 +100,7 @@ End DisjointSum.
 Section DependentSum.
   (** Now something slightly more involved: total spaces. *)
 
-  (** This one should go to [FiberEquivalences] *)
+  (** This one should go to [FiberEquivalences]. *)
   Lemma total_equiv (A B : Type) (P : fibration A) (Q : fibration B) (e : A <~> B)
     (f : (forall x : A, P x <~> Q (e x))) :
     total P <~> total Q.
@@ -135,7 +137,62 @@ End DependentSum.
 
 Section DependentProduct.
 
-  (** The final test of course are the products. This seems doable but excruciatingly painful. *)
+  (** The final test of course are the products. After attacking the problem with brute force
+     and ignorance, one gets the feeling that equivariance is closed under products, but that
+     the proof of such a fact is not easy, mostly because of intricate rewriting that Coq seems
+     unable to do. So we first prepare several lemmas that will help us get over Coq's inability
+     to do fancy rewriting (or my inability to use it).
+
+     Let us describe the general problem. On several occasions we have something like [p x
+     # f x] and a path [q : x ~~> y]. We would like to rewrite [f x] to [f y] with respect
+     to [q]. But if we do this naively, Coq thinks we want to change all occurrences of [x]
+     to [y], so it tells us that [p y # f y] is not well-typed. Normally, in such situations
+     one could use [rewrite q at ...] but that requires the [Setoid] library, which makes us
+     unhappy. So we have to do some manual work.
+*)
+
+  Lemma trans_rewrite {A B : Type} (P : fibration B) (f : A -> B) (u : section (P o f)) {x y : A} (q : y ~~> x) :
+    u x ~~> map f q # u y.
+  Proof.
+    path_induction.
+  Defined.
+
+  Ltac trans_rewrite ux f q :=
+    match type of q with ?y ~~> ?x =>
+      let v := fresh in
+        pose (v := ux) ;
+          pattern x in v ;
+            match goal with v := ?u x |- _  =>
+              clear v ;
+                let p := fresh in
+                  assert (p : u x ~~> map f q # u y)
+              end
+            end.
+
+  Lemma trans_rewrite' {A B : Type} (P : fibration B) (a b : A -> B) (p : forall x, a x ~~> b x) (u : forall x, P (a x)) (x y : A) (q : y ~~> x) :
+    p x # u x ~~> (map b q) # (p y # u y).
+  Proof.
+    trans_rewrite (p x # u x) b q.
+    match goal with |- ?e ~~> _ => pose (v := e) ; pattern x in v end.
+    match goal with v := ?r x |- _ => set (v' := r); clear v end.
+    path_induction.
+  Defined.
+
+
+
+  Ltac eta_transport :=
+    match goal with
+      | [ |- ?e ] =>
+        match e with
+          | context ctx [transport ?p ?u] =>
+            idtac p;
+            rewrite (idpath _ : (transport p u) ((fun x => transport p x) u))
+          | _ => idtac "nonooo"
+        end
+    end.
+
+
+
 
   Lemma equiv_map_path (A B : Type) (e f : A <~> B) :
     equiv_map e ~~> equiv_map f -> e ~~> f.
