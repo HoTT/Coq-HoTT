@@ -5,7 +5,7 @@
 Add LoadPath "..".
 
 Require Import Paths Fibrations Contractible Funext HLevel
-  Equivalences FiberEquivalences FunextEquivalences.
+  Equivalences FiberEquivalences FunextEquivalences Univalence.
 Require Import ExtensionalityAxiom.
 
 (** Suppose [P : Type -> Type] and [A <~> B]. Is it the case that [P A <~> P B], or more
@@ -386,7 +386,6 @@ Section DependentProduct.
       end
     end.
       
-
   (* Ltac trans_rewrite f q := *)
   (*   match type of q with ?y ~~> ?x => *)
   (*     match goal with *)
@@ -394,12 +393,34 @@ Section DependentProduct.
   (*     end *)
   (*   end. *)
 
+  Lemma inverse_is_section_rewrite {A B : Type} (e f : A <~> B) (p : e ~~> f) (y : B) :
+    inverse_is_section e y ~~>
+    map (fun (e : A <~> B) => e (e^-1 y)) p @ inverse_is_section f y.
+  Proof.
+    path_induction.
+  Defined.
+
+  Lemma is_section_equiv_on_Q {P : Equivariant} (Q : EquivariantFamily P) {A B : Type}
+    (e : A <~> B) (y : P B) :
+    Q B (eq_map P e (eq_map P e ^-1 y)) <~> Q B y.
+  Proof.
+    apply path_to_equiv, map.
+    apply inverse_is_section.
+  Defined.
+
+  (* Lemma fam_map_is_section_equiv {P : Equivariant} (Q : EquivariantFamily P) {A B : Type} *)
+  (*   (e : A <~> B) (y : P B) u : *)
+  (*   (fam_map Q (equiv_inverse e) y)^-1 u ~~> *)
+  (*   (is_section_equiv_on_Q Q e y) (fam_map Q e (eq_map P e ^-1 y) u). *)
+    
+
   Definition section_equivariant (P : Equivariant) (Q : EquivariantFamily P) : Equivariant.
   Proof.
     refine
       {| eq_ty := (fun A => section (Q A)) ;
          eq_map := section_map P Q
       |}.
+    (* Identity *)
     intros A s.
     apply funext_dep; intro x.
     unfold section_map, section_equiv; simpl.
@@ -416,14 +437,42 @@ Section DependentProduct.
     intros A B C e f s.
     apply funext_dep; intro z.
     unfold section_map, section_equiv; simpl.
+    rewrite inverse_is_section_rewrite with (p := eq_comp_path P e f).
+    rewrite inverse_is_section_comp.
+    hott_simpl.
+    apply map.
+    equiv_moveright.
+
+    
+
+
+    match goal with |- ?lefty ~~> ?righty => pose (left := lefty) ; pose (right := righty) end.
+
+    rewrite (eq_comp_path P e f) in right.
+
     set (E := eq_map P e).
     set (F := eq_map P f).
     set (r := inverse_is_section (eq_map P (equiv_compose e f)) z
    # (fam_map Q (equiv_compose e f) ((eq_map P (equiv_compose e f) ^-1) z))
        (s ((eq_map P (equiv_compose e f) ^-1) z))).
-    set (qq := eq_map P (equiv_compose e f)) in r.
-    Set Printing Implicit.
-    rewrite (idpath _ : @inverse_is_section (P A) (P C) qq z ~~> (fun qq => inverse_is_section qq z) qq) in r.
+    pose (la := eq_comp_path P e f).
+    set (qq := eq_map P (equiv_compose e f)) in * |- *.
+
+    assert (pp : aa ~~> aa).
+    unfold qq in aa.
+    rewrite (eq_comp_path
+    fold aa in r.
+    pattern aa in r.
+    unfold r.
+    rewrite pp.
+    
+
+    rewrite la in aa.
+    
+    simpl in aa.
+
+    rewrite (idpath _ : xx ~~> xx) in r.
+    Show Proof.
 
 
 
