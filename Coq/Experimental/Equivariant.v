@@ -10,30 +10,26 @@ Require Import ExtensionalityAxiom.
 
 (** Suppose [P : Type -> Type] and [A <~> B]. Is it the case that [P A <~> P B], or more
    precisely, can we always convert [e : A <~> B] to [map P e : P A <~> P B]? Let us call
-   a [P] *equivariant* when it has this property. We also require that the passage
-   [eq_map] from [A <~> B] to [P A <~> P B] behaves compositionally.*)
+   a [P] *equivariant* when it has this property. As it turns out, we need to additionally
+   require that the passage [eq_map] from [A <~> B] to [P A <~> P B] commute with identities.
+   *)
 
 Structure Equivariant := {
   eq_ty :> Type -> Type ;
   eq_map : forall (A B : Type), A <~> B -> eq_ty A <~> eq_ty B ;
-  eq_id : forall (A : Type) (x : eq_ty A), eq_map A A (idequiv A) x ~~> x ;
-  eq_comp : forall (A B C : Type) (e : A <~> B) (f : B <~> C) (x : eq_ty A),
-              eq_map B C f (eq_map A B e x) ~~> eq_map A C (equiv_compose e f) x
+  eq_id : forall (A : Type) (x : eq_ty A), eq_map A A (idequiv A) x ~~> x
 }.
 
 Implicit Arguments eq_map [A B].
 Implicit Arguments eq_id [A].
-Implicit Arguments eq_comp [A B C].
 
-(** We also need a more general notion of equivariance of families over equivariant families. *)
+(** We would like to show that equivariance is closed under dependent sums and products.
+   For this purpose we need a notion of an equivariant family over an equivariant family *)
 
 Structure EquivariantFamily (P : Equivariant) := {
   fam :> forall (A : Type), P A -> Type ; 
   fam_map : forall (A B : Type) (e : A <~> B) (x : P A), fam A x <~> fam B (eq_map P e x) ;
-  fam_id : forall (A : Type) (x : P A) (y : fam A x), eq_id P x # fam_map A A (idequiv A) x y ~~> y ;
-  fam_comp : forall (A B C : Type) (e : A <~> B) (f : B <~> C) (x : P A) (y : fam A x),
-          eq_comp P e f x # fam_map B C f (eq_map P e x) (fam_map A B e x y) ~~>
-          fam_map A C (equiv_compose e f) x y
+  fam_id : forall (A : Type) (x : P A) (y : fam A x), eq_id P x # fam_map A A (idequiv A) x y ~~> y
 }.
 
 Implicit Arguments fam [P].
@@ -60,8 +56,6 @@ Section CartesianProduct.
          eq_map := prod_map P Q
       |}.
     intros A [x y]; apply prod_path_equiv; simpl; split; apply eq_id.
-    intros A B C e f [x y].
-    apply prod_path_equiv; simpl; split; apply eq_comp.
   Defined.
 End CartesianProduct.
 
@@ -93,7 +87,6 @@ Section DisjointSum.
          eq_map := sum_map P Q
        |}.
     intros A [u|v]; unfold sum_map, sum_equiv; simpl; apply map, eq_id.
-    intros A B C e f [u|v]; unfold sum_map, sum_equiv; simpl; apply map, eq_comp.
   Defined.
 End DisjointSum.
 
@@ -118,7 +111,6 @@ Section DependentSum.
   Defined.
   
   (** The dependent sum of an equivariant family is equivariant. *)
-
   Theorem total_equivariant (P : Equivariant) (Q : EquivariantFamily P) : Equivariant.
   Proof.
     refine
@@ -128,28 +120,11 @@ Section DependentSum.
     intros A [x y]; apply total_paths_equiv; simpl.
     exists (eq_id P x).
     now apply fam_id.
-    intros A B C e f [x y]; apply total_paths_equiv; simpl.
-    exists (eq_comp P e f x); simpl.
-    now apply fam_comp.
   Defined.
 
 End DependentSum.
 
 Section DependentProduct.
-
-  (** The final test of course are the products. After attacking the problem with brute force
-     and ignorance, one gets the feeling that equivariance is closed under products, but that
-     the proof of such a fact is not easy, mostly because of intricate rewriting that Coq seems
-     unable to do. So we first prepare several lemmas that will help us get over Coq's inability
-     to do fancy rewriting (or my inability to use it).
-
-     Let us describe the general problem. On several occasions we have something like [p x
-     # f x] and a path [q : x ~~> y]. We would like to rewrite [f x] to [f y] with respect
-     to [q]. But if we do this naively, Coq thinks we want to change all occurrences of [x]
-     to [y], so it tells us that [p y # f y] is not well-typed. Normally, in such situations
-     one could use [rewrite q at ...] but that requires the [Setoid] library, which makes us
-     unhappy. So we have to do some manual work.
-*)
 
   (* Again something that should find its place elsewhere. *)
 
@@ -176,227 +151,10 @@ Section DependentProduct.
   Variable (P : Equivariant).
   Variable (Q : EquivariantFamily P).
 
-  Lemma equiv_map_path {X Y : Type} (g h: X <~> Y) :
-    equiv_map g ~~> equiv_map h -> g ~~> h.
-  Proof.
-    intro p.
-    destruct g as [g G].
-    destruct h as [h H].
-    simpl in p.
-    induction p.
-    rewrite (prop_path (is_equiv_is_prop g) G H).
-    apply idpath.
-  Defined.
-  
-  Lemma equiv_extensionality {X Y : Type} (g h : X <~> Y) :
-    g === h -> g ~~> h.
-  Proof.
-    intro H.
-    apply equiv_map_path.
-    now by_extensionality.
-  Defined.
-
-  Lemma equiv_inverse_left {X Y : Type} (g : X <~> Y) :
-    equiv_compose (equiv_inverse g) g ~~> idequiv Y.
-  Proof.
-    apply equiv_extensionality.
-    intro y.
-    unfold equiv_compose, equiv_inverse; simpl.
-    path_via (g (g^-1 y)).
-    rewrite inverse_is_section.
-    apply idpath.
-  Defined.
-
-  Lemma eq_map_inverse {X Y : Type} (g : X <~> Y):
-    eq_map P (equiv_inverse g) ~~> equiv_inverse (eq_map P g).
-  Proof.
-    apply equiv_extensionality.
-    intro y.
-    simpl.
-    equiv_moveleft.
-    rewrite eq_comp.
-    rewrite equiv_inverse_left.
-    apply eq_id.
-  Defined.
-
   Definition section_map (X Y : Type) (g : X <~> Y) : section (Q X) <~> section (Q Y).
   Proof.
     apply section_equiv with (P := Q X) (Q := Q Y) (e := eq_map P g).
     apply (fam_map Q g).
-  Defined.
-
-  (* Lemma equiv_compose_assoc (A B C D : Type) (f : A <~> B) (g : B <~> C) (h : C <~> D) : *)
-  (*   equiv_compose f (equiv_compose g h) ~~> equiv_compose (equiv_compose f g) h. *)
-  (* Proof. *)
-  (*   apply equiv_extensionality. *)
-  (*   intro; apply idpath. *)
-  (* Defined. *)
-
-  (* Lemma equiv_compose_inverse (A B C : Type) (e : A <~> B) (f : B <~> C) : *)
-  (*   equiv_compose (equiv_inverse f) (equiv_inverse e) ~~> equiv_inverse (equiv_compose e f). *)
-  (* Proof. *)
-  (*   apply equiv_extensionality. *)
-  (*   intro; apply idpath. *)
-  (* Defined. *)
-
-  (* Lemma equiv_left_inverse (A B : Type) (e : A <~> B) : *)
-  (*   equiv_compose (equiv_inverse e) e ~~> idequiv B. *)
-  (* Proof. *)
-  (*   apply equiv_extensionality. *)
-  (*   intro; unfold idequiv, idmap; simpl. *)
-  (*   apply inverse_is_section. *)
-  (* Defined. *)
-
-  (* Lemma eq_comp_path (P : Equivariant) {A B C : Type} (e : A <~> B) (f : B <~> C) : *)
-  (*   eq_map P (equiv_compose e f) ~~> equiv_compose (eq_map P e) (eq_map P f). *)
-  (* Proof. *)
-  (*   apply equiv_extensionality. *)
-  (*   intro x. *)
-  (*   apply opposite. *)
-  (*   unfold equiv_compose, compose; simpl; apply eq_comp. *)
-  (* Defined. *)
-
-  (* Lemma eq_map_comp_inverse (P : Equivariant) {A B C : Type} (e : A <~> B) (f : B <~> C): *)
-  (*   eq_map P (equiv_compose e f) ^-1 ~~> eq_map P (equiv_compose (equiv_inverse f) (equiv_inverse e)). *)
-  (* Proof. *)
-  (*   apply funext_dep; intro z. *)
-  (*   equiv_moveright. *)
-  (*   rewrite eq_comp. *)
-  (*   rewrite equiv_compose_inverse. *)
-  (*   rewrite equiv_left_inverse. *)
-  (*   apply opposite, eq_id. *)
-  (* Defined. *)
-
-  (* Lemma inverse_is_section_comp {A B C : Type} (e : A <~> B) (f : B <~> C) (z : C) : *)
-  (*   inverse_is_section (equiv_compose e f) z ~~> *)
-  (*   map f (inverse_is_section e (f^-1 z)) @ inverse_is_section f z. *)
-  (* Proof. *)
-  (*   unfold inverse_is_section, equiv_compose; simpl. *)
-  (*   apply idpath. *)
-  (* Defined. *)
-
-  (* Lemma inverse_is_stupid (P : Equivariant) {A B C : Type} (e : A <~> B) (f : B <~> C) (z : P C) : *)
-  (*   (inverse_is_section (eq_map P (equiv_compose e f)) z) ~~> *)
-  (*   transport *)
-  (*     (P := fun (h : P A <~> P C) => h (h^-1 z) ~~> z) *)
-  (*     (! (eq_comp_path P e f)) *)
-  (*     (map (eq_map P f) (inverse_is_section (eq_map P e) ((eq_map P f)^-1 z)) @ inverse_is_section (eq_map P f) z). *)
-  (* Proof. *)
-  (*   rewrite (eq_comp_path P e f). *)
-  (*   hott_simpl. *)
-  (* Defined. *)
- 
-  (* Lemma transport_moveright (A : Type) (P : fibration A) (x y : A) (p : x ~~> y) (u : P x) (v : P y) : *)
-  (*   (u ~~> !p # v) -> (p # u ~~> v). *)
-  (* Proof. *)
-  (*   intro q. *)
-  (*   induction p. *)
-  (*   hott_simpl. *)
-  (* Defined. *)
-
-  (* (* Lemma trans_rewrite {A B : Type} (P : fibration B) (f : A -> B) (u : section (P o f)) {x y : A} (q : y ~~> x) : *) *)
-  (* (*   u x ~~> map f q # u y. *) *)
-  (* (* Proof. *) *)
-  (* (*   path_induction. *) *)
-  (* (* Defined. *) *)
-
-  (* Lemma trans_rewrite {A B : Type} (P : fibration B) (f : A -> B) (u : section (P o f)) {x y : A} (q : y ~~> x) : *)
-  (*   u x ~~> map f q # u y. *)
-  (* Proof. *)
-  (*   path_induction. *)
-  (* Defined. *)
-
-
-  (* Ltac trans_rewrite_in ux q := *)
-  (*   match type of q with ?y ~~> ?x => *)
-  (*     let v := fresh in *)
-  (*       pose (v := ux) ; *)
-  (*         pattern x in v ; *)
-  (*         match goal with v := ?u x |- _  => *)
-  (*           clear v ; *)
-  (*           let A := type of x in *)
-  (*           let p := fresh "p" in *)
-  (*             rewrite (trans_rewrite _ (fun (x : A) => A) u q : u x ~~> map q # u y) *)
-  (*         end *)
-  (*   end. *)
-
-  (* Ltac trans_detect_left q := *)
-  (*   match goal with |- ?ux ~~> _ => *)
-  (*     match type of q with ?y ~~> ?x => *)
-  (*       let v := fresh in *)
-  (*         pose (v := ux) ; *)
-  (*           pattern x in v ; *)
-  (*             match goal with v := ?u x |- _ => *)
-  (*               clear v ; *)
-  (*               let t := fresh "ty" in *)
-  (*                 let tu := type of u in *)
-  (*                   let A_ty := fresh in *)
-  (*                     let x_ty := type of x in *)
-  (*                 pose (t := tu) ; pose (A_ty := x_ty) *)
-  (*             end *)
-  (*     end *)
-  (*   end. *)
-
-  (* Ltac trans_detect_right q := *)
-  (*   match goal with |- _ ~~> ?ux => *)
-  (*     match type of q with ?y ~~> ?x => *)
-  (*       let v := fresh in *)
-  (*         pose (v := ux) ; *)
-  (*           pattern x in v ; *)
-  (*             match goal with v := ?u x |- _ => *)
-  (*               idtac x ; idtac u ; *)
-  (*               clear v ; *)
-  (*               let t := fresh "ty" in *)
-  (*                 let tu := type of u in *)
-  (*                   let A_ty := fresh "A_ty" in *)
-  (*                     let x_ty := type of x in *)
-  (*                 pose (t := tu) ; pose (A_ty := x_ty) *)
-  (*             end *)
-  (*     end *)
-  (*   end. *)
-      
-  (* (* Ltac trans_rewrite f q := *) *)
-  (* (*   match type of q with ?y ~~> ?x => *) *)
-  (* (*     match goal with *) *)
-  (* (*       | context ctx [?u x *) *)
-  (* (*     end *) *)
-  (* (*   end. *) *)
-
-
-  Lemma eq_comp_path {A B C : Type} (e : A <~> B) (f : B <~> C) :
-    eq_map P (equiv_compose e f) ~~> equiv_compose (eq_map P e) (eq_map P f).
-  Proof.
-    apply equiv_extensionality.
-    intro x.
-    apply opposite.
-    unfold equiv_compose, compose; simpl; apply eq_comp.
-  Defined.
-
-  Lemma inverse_is_section_rewrite {X Y : Type} (g h : X <~> Y) (p : g ~~> h) (y : Y) :
-    inverse_is_section g y ~~>
-    map (fun (g : X <~> Y) => g (g^-1 y)) p @ inverse_is_section h y.
-  Proof.
-    path_induction.
-  Defined.
-
-  Lemma is_section_equiv_on_Q {A B : Type} (e : A <~> B) (y : P B) :
-    Q B (eq_map P e (eq_map P e ^-1 y)) <~> Q B y.
-  Proof.
-    apply path_to_equiv, map.
-    apply inverse_is_section.
-  Defined.
-
-  (* Lemma fam_map_is_section_equiv {P : Equivariant} (Q : EquivariantFamily P) {A B : Type} *)
-  (*   (e : A <~> B) (y : P B) u : *)
-  (*   (fam_map Q (equiv_inverse e) y)^-1 u ~~> *)
-  (*   (is_section_equiv_on_Q Q e y) (fam_map Q e (eq_map P e ^-1 y) u). *)
-
-  Lemma inverse_is_section_comp {A B C : Type} (e : A <~> B) (f : B <~> C) (z : C) :
-    inverse_is_section (equiv_compose e f) z ~~>
-    map f (inverse_is_section e (f^-1 z)) @ inverse_is_section f z.
-  Proof.
-    unfold inverse_is_section, equiv_compose; simpl.
-    apply idpath.
   Defined.
 
   (* The main theorem of this section. *)
@@ -411,7 +169,7 @@ Section DependentProduct.
     apply funext_dep; intro x.
     unfold section_map, section_equiv; simpl.
     generalize (inverse_is_section (eq_map P (idequiv A)) x).
-    generalize ((eq_map P (idequiv A) ^-1) x).
+    generalize ((eq_map P (idequiv A))^-1 x).
     intros x' p.
     pose (q := (!(eq_id P x') @ p)).
     assert (h : p ~~> eq_id P x' @ q); unfold q; hott_simpl.
@@ -419,18 +177,5 @@ Section DependentProduct.
     generalize q; intro r; induction r.
     hott_simpl.
     now apply fam_id.
-    (* Composition. *)
-    intros A B C e f s.
-    apply funext_dep; intro z.
-    unfold section_map, section_equiv; simpl.
-    rewrite inverse_is_section_rewrite with (p := eq_comp_path e f).
-    rewrite inverse_is_section_comp.
-    hott_simpl.
-    apply map.
-    equiv_moveright.
-
-  Admitted.
-
+  Defined.
 End DependentProduct.
-
-
