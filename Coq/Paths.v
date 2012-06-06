@@ -527,6 +527,10 @@ Ltac cancel_units_in s :=
       let mid := context cxt[p] in path_using mid idmap_map
     | context cxt [ ! (idpath ?a) ] =>
       let mid := context cxt[idpath a] in path_using mid opposite_idpath
+    | context cxt [ map (fun _ => ?a) ?p ] => 
+      let mid := context cxt[idpath a] in path_using mid constmap_map
+    | context cxt [ ! map (fun _ => ?a) ?p ] =>
+      let mid := context cxt[! idpath a] in path_using mid constmap_map
   end.
 
 Ltac cancel_units :=
