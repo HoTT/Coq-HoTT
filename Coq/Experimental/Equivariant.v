@@ -1,6 +1,12 @@
-(**** WORK IN PROGRESS WITH Egbert Rijke ***)
+(** Univalence is about equating equivalences between types with paths between types.
+   Without the axiom of univalence, we can still fake things by showing that equivalences
+   behave like paths. In this file we show that for definable types, equivalences give us
+   a (non-dependent) substitution principle. More precisely, if [P] is a definable type
+   constructor then whenever [A <~> B] we also get [P A <~> P B].
 
-(* How far can we pretend that equivalences are paths? *)
+   You can think of this is an exercise towards showing that the universe of definable
+   types satisfies univalence, which is done in [UnivalentTypes.v].
+*)
 
 Add LoadPath "..".
 
@@ -121,11 +127,9 @@ Section DependentSum.
     exists (eq_id P x).
     now apply fam_id.
   Defined.
-
 End DependentSum.
 
 Section DependentProduct.
-
   (* Again something that should find its place elsewhere. *)
 
   Lemma section_equiv (A B : Type) (P : fibration A) (Q : fibration B)
@@ -179,3 +183,4 @@ Section DependentProduct.
     now apply fam_id.
   Defined.
 End DependentProduct.
+

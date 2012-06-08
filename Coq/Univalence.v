@@ -2,10 +2,10 @@ Require Import Paths Fibrations Contractible Equivalences.
 
 (** Every path between spaces gives an equivalence. *)
 
-Definition path_to_equiv {U V} : (U ~~> V) -> (U <~> V).
+Definition path_to_equiv {U V : Type} : (U ~~> V) -> (U <~> V).
 Proof.
   intro p.
-  induction p as [U].
+  induction p.
   apply idequiv.
 Defined.
 
@@ -63,7 +63,8 @@ Ltac undo_opposite_to_inverse :=
 
 (** The statement of the univalence axiom. *)
 
-Definition univalence_statement := forall (U V : Universe), is_equiv (@path_to_equiv U V).
+Definition univalence_statement :=
+  forall (U V : Universe), is_equiv (@path_to_equiv U V).
 
 Section Univalence.
 
@@ -110,7 +111,7 @@ Section Univalence.
      on paths. Then we use path induction and transport back to [P]. *)
 
   Theorem equiv_induction (P : forall U V, U <~> V -> Type) :
-    (forall T, P T T (idequiv T)) -> (forall U V (w : U <~> V), P U V w).
+    (forall T, P T T (idequiv T)) -> (forall U V (e : U <~> V), P U V e).
   Proof.
     intro r.
     pose (P' := (fun U V => pred_equiv_to_path U V (P U V))).
