@@ -1053,8 +1053,3 @@ Ltac moveright_onleft :=
       path_via (r @ idpath _); apply concat_moveright_onleft
   end; do_opposite_opposite.
 
-Inductive bovine (A:Type) (a:A) : A -> Type :=
-|  cow : bovine A a a
-| bull : bovine A a a.
-
-
