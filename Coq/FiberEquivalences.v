@@ -1,16 +1,5 @@
 Require Export Fibrations Equivalences.
 
-(** The map on total spaces induced by a map of fibrations *)
-
-Definition total_map {A B : Type} {P : A -> Type} {Q : B -> Type}
-  (f : A -> B) (g : forall x:A, P x -> Q (f x)) :
-  sigT P -> sigT Q.
-Proof.
-  intros [x y].
-  exists (f x).
-  exact (g x y).
-Defined.
-
 (** We first consider maps between fibrations over the same base
    space.  The theorem is that such a map induces an equivalence on
    total spaces if and only if it is an equivalence on all fibers. *)
@@ -18,172 +7,126 @@ Defined.
 Section FiberMap.
 
   Variable A : Type.
-  Variables P Q : A -> Type.
-  Variable g : forall x, P x -> Q x.
-
-  Let tg := total_map (idmap A) g.
-
-  (* There is a subtlety here that is easy to get confused about.  The
-     type [sigT P] is *inductively generated* by elements of the form
-     [(x ; y)].  This does *not* mean that every element of [total
-     P] is *definitionally* equal to one of that form.  In particular,
-     although it appears that [total_map f g] "acts as [f] on the base
-     space," we cannot assert that *definitionally* except for
-     arguments of the form [(x ; y)].  Hence we need the following
-     lemma.  *)
-
-  Let tg_is_fiberwise (z : sigT P) : pr1 z ~~> pr1 (tg z).
-    destruct z as [x y].
-    auto.
-  Defined.
-
-  (* Similarly, the following lemma says that the fiber component of
-     [tg z] is obtained by applying the fiberwise function [f] to the
-     fiber component of [z], modulo the previously defined path in the
-     base.  *)
-
-  Let tg_isg_onfibers (z : sigT P) :
-    g _ (transport (tg_is_fiberwise z) (pr2 z)) ~~> pr2 (tg z).
-  Proof.
-    destruct z as [x y].
-    auto.
-  Defined.
-
-  (* And the following lemma tells us that the same is true for its
-     action on paths. *)
-
-  Let tg_isfib_onpaths (z w : sigT P) (p : z ~~> w) :
-    (tg_is_fiberwise z @ base_path (map tg p) @ !tg_is_fiberwise w) ~~> base_path p.
-  Proof.
-    path_induction.
-    destruct x. simpl. auto.
-  Defined.
-
-  (* Now let's suppose the total function is an equivalence. *)
+  Variables P Q : fibration A.
 
   Section TotalIsEquiv.
 
-    Hypothesis tot_iseqv : is_equiv tg.
+    (** Suppose we have a fiberwise map [g]. *)
 
-    Let tot_eqv : (sigT P) <~> (sigT Q) := (tg ; tot_iseqv).
+    Variable g : forall x, P x -> Q x.
+
+    (** Then it induces a map of total spaces. *)
+
+    Let tg (u : total P) : total Q := (pr1 u; g (pr1 u) (pr2 u)).
+
+    (** Suppose the total map is an equivalence. *)
+
+    Hypothesis tg_is_equiv : is_equiv tg.
+
+    Let ge : (total P) <~> (total Q) :=
+      {| 
+        equiv_map := tg ;
+        equiv_is_equiv := tg_is_equiv
+      |}.
 
     (* We want to show that each function [g x] is an equivalence, so we
        start by defining its inverse. *)
 
-    Let ginv (x:A) (y: Q x) : P x.
+    Let ginv (x : A) (y : Q x) : P x.
     Proof.
-      (* The obvious thing to look at first is this. *)
-      set (inv1 := pr2 ((tot_eqv^-1) (x ; y))).
-      (* Unfortunately, this does not live in the fiber over [x], but
-         rather in some other fiber.  We need to transport it along some
-         path.  Our first guess at such a path might be this. *)
-      apply (transport (base_path (inverse_is_section tot_eqv (x ; y)))).
-      simpl.
-      (* This type is not quite the type of [inv1] yet; it involves
-         knowing something about the base component of an image under
-         [tg].  This is what [tg_is_fiberwise] is for.   *)
-      apply (transport (tg_is_fiberwise ((tot_eqv^-1) (x ; y)))).
-      (* Now we are back to the type of [inv1]. *)
-      assumption.
+      (* Unfortunately, the obvious inverse does not live in the fiber over [x], but
+         rather in some other fiber. We need to transport it along some path. Our first
+         guess at such a path might be this. *)
+      apply (transport (base_path (inverse_is_section ge (x ; y)))).
+      (* And it works. *)
+      apply (pr2 (inverse ge (x ; y))).
+    Defined.
+
+    (** Fiddly lemmas to make the proof go through. *)
+
+    Let tg_is_fiberwise (z : total P) : pr1 z ~~> pr1 (tg z).
+      apply idpath.
+    Defined.
+
+    Lemma replace_fiberwise {x y : total P} (p : x ~~> y) : 
+      base_path (map ge p) ~~> (! tg_is_fiberwise x @ base_path p @ tg_is_fiberwise y).
+    Proof.
+      path_induction.
     Defined.
 
     (* Now we are ready to prove that [g x] is an equivalence. *)
 
-    Theorem fiber_is_equiv (x:A) : is_equiv (g x).
+    Theorem fiber_equiv (x : A) : P x <~> Q x.
     Proof.
-      set (is_section := inverse_is_section tot_eqv).
-      set (is_retraction := inverse_is_retraction tot_eqv).
-      set (triangle := inverse_triangle tot_eqv).
-      (* We have our putative inverse ready to hand. *)
-      apply @hequiv_is_equiv with (g := ginv x).
-      (* First we have to show it is a section of [f x]. *)
-      intro y.
-      path_via (transport (P := Q)
-        (base_path (is_section (x ; y)))
-        (pr2 (tot_eqv (tot_eqv^-1 (x ; y))))).
-      path_via (transport
-        (base_path (is_section (x ; y)))
-        (g _ (transport (tg_is_fiberwise (tot_eqv^-1 (x ; y)))
-          (pr2 (tot_eqv^-1 (x ; y)))))).
-      apply trans_map.
-      exact (fiber_path (is_section (existT _ x y))).
-      (* And now that it is a retraction. *)
-      intro y.
-      path_via (transport (base_path (map tg (is_retraction (x ; y))))
-      (transport (tg_is_fiberwise (tot_eqv^-1 (x ; (g x y))))
-        (pr2 (tot_eqv^-1 (x ; (g x y)))))).
+      apply (equiv_from_hequiv (g x) (ginv x)).
+      (* We have to show [ginv x] is a section of [g x], which
+         mostly involves unfolding of definitions and basic lemmas. *)
+      intro v.
+      unfold base_path, inverse_is_section, inverse, ge in ginv; simpl in ginv.
       unfold ginv.
-      apply happly, map, map.
-      apply opposite, triangle.
-      path_via (transport
-        (base_path (is_retraction (x ; y)))
-        (pr2 (tot_eqv^-1 (x ; (g x y))))).
-      path_via (transport
-        ((tg_is_fiberwise (tot_eqv^-1 (x ; (g x y))))
-          @ (base_path (map tg (is_retraction (x ; y)))))
-        (pr2 ((tot_eqv^-1) (x ; (g x y))))).
-      apply opposite, trans_concat.
-      apply happly, map.
-      (* Here is where we need [tg_isfib_onpaths], but it is easy to
-         get confused because the second copy of [tg_is_fiberwise]
-         appears to be missing.  The reason is that it would be
-         instantiated at an element of the form [(x ; y)], in which
-         case it happens to be an identity.  Thus, we can just add it
-         back in. *)
-      path_via (tg_is_fiberwise (tot_eqv^-1 (x ; (g x y))) @
-        base_path (map tg (is_retraction (x ; y))) @
-        !tg_is_fiberwise (x ; y)).
-      exact (fiber_path (is_retraction (existT _ x y))).
+      destruct (tg_is_equiv (x;v)) as [[[x' u'] p] h].
+      rewrite trans_map.
+      apply @fiber_path with (u := (x'; g x' u')) (v := (x; v)) (p := p).
+      (* And now that it is a retraction. *)
+      intro u.
+      unfold ginv.
+      (* A bit of annoying rewriting to get triangle in the correct form
+         for rewriting. *)
+      assert (triangle := inverse_triangle ge (x;u)).
+      unfold ge in triangle; simpl in triangle; fold ge in triangle.
+      unfold tg in triangle; simpl in triangle; fold tg in triangle.
+      rewrite <- triangle.
+      (* We have to do again silly unfolding and folding to make r applicable.
+         How do we avoid this? *)
+      pose (r := replace_fiberwise (inverse_is_retraction ge (x; u))).
+      unfold ge, tg; simpl; unfold ge, tg in r; simpl in r.
+      rewrite r.
+      hott_simpl.
+      apply (fiber_path (inverse_is_retraction ge (x; u))).
     Defined.
-
-    Definition fiber_equiv (x:A) : P x <~> Q x :=
-      (g x ; fiber_is_equiv x).
-
   End TotalIsEquiv.
 
-  (* Now let's suppose instead that the maps on fibers are equivalences. *)
+  (* An auxiliary lemma useful for showing that a map is fiber-wise an equivalence
+     without constructing the equivalence itself. *)
+  Lemma fiber_is_equiv (g : forall x, P x -> Q x) :
+    is_equiv (fun u : total P => (pr1 u; g (pr1 u) (pr2 u))) -> forall x, is_equiv (g x).
+  Proof.
+    intros H x.
+    exact (equiv_is_equiv (fiber_equiv g H x)).
+  Defined.
 
   Section FiberIsEquiv.
 
-    Hypothesis fiber_iseqv : forall x, is_equiv (g x).
+    (* Now let's suppose instead that the maps on fibers are equivalences. *)
 
-    Let fiber_eqv x : P x <~> Q x := (g x ; fiber_iseqv x).
+    Variable g : forall x, P x <~> Q x.
 
-    Let total_inv : sigT Q -> sigT P.
+    (* And we prove that the total map is an equivalence. *)
+
+    Let tg (u : total P) : total Q := existT Q (pr1 u) (g (pr1 u) (pr2 u)).
+
+    Let tg_inv (u : total Q) : total P := existT P (pr1 u) (inverse (g (pr1 u)) (pr2 u)).
+
+    Theorem total_equiv : total P <~> total Q.
     Proof.
-      intros [x y].
-      exists x.
-      apply ((fiber_eqv x)^-1).
-      assumption.
-    Defined.
-
-    Theorem total_is_equiv : is_equiv tg.
-    Proof.
-      eapply hequiv_is_equiv.
-      instantiate (1 := total_inv).
-      intros [x y].
-      eapply total_path.
-      instantiate (1 := idpath x).
-      path_via (fiber_eqv x ((fiber_eqv x ^-1) y)).
+      apply (equiv_from_hequiv tg tg_inv).
+      intros [x v].
+      unfold tg, tg_inv; simpl.
+      apply @total_path with (p := idpath x).
       apply inverse_is_section.
-      intros [x y].
-      eapply total_path.
-      instantiate (1 := idpath x).
-      path_via (fiber_eqv x ^-1 (fiber_eqv x y)).
+      intros [x u].
+      unfold tg, tg_inv; simpl.
+      apply @total_path with (p := idpath x).
       apply inverse_is_retraction.
     Defined.
-
-    Definition total_equiv : sigT P <~> sigT Q :=
-      (tg ; total_is_equiv).
 
   End FiberIsEquiv.
 
 End FiberMap.
 
 Implicit Arguments fiber_equiv [A].
-Implicit Arguments fiber_is_equiv [A].
+Implicit Arguments fiber_is_equiv [A P Q].
 Implicit Arguments total_equiv [A].
-Implicit Arguments total_is_equiv [A].
 
 (** Next we consider a fibration over one space and its pullback along
    a map from another base space.  The theorem is that if the map we
@@ -192,59 +135,46 @@ Implicit Arguments total_is_equiv [A].
 
 Section PullbackMap.
 
+  (** Two base spaces. *)
   Variables A B : Type.
-  Variable Q : B -> Type.
-  Variable f : A <~> B.
 
-  Let pbQ : A -> Type := Q o f.
+  (** And a fibration over one of them. *)
+  Variable Q : fibration B.
+  
+  (** Assume an equivalence between the base spaces. *)
+  Variable e : A <~> B.
 
-  Let g (x:A) : pbQ x -> Q (f x) := idmap (Q (f x)).
-
-  Let tg := total_map f g.
-
-  Let tginv : sigT Q -> sigT pbQ.
+  (** The induced map between total spaces. *)
+  Let g : total Q -> total (Q o e).
   Proof.
-    intros [x z].
-    exists (f^-1 x).
-    apply (transport (! inverse_is_section f x)).
-    assumption.
-  Defined.
-    
-  Theorem pullback_total_is_equiv : is_equiv tg.
-  Proof.
-    apply @hequiv_is_equiv with (g := tginv).
-    intros [x z].
-    apply total_path with (p := inverse_is_section f x).
-    simpl.
-    path_via (transport (! inverse_is_section f x @ inverse_is_section f x) z).
-    apply opposite, trans_concat.
-    path_via (transport (idpath x) z).
-    apply @map with (f := fun p => transport p z).
-    cancel_opposites.
-    intros [x z].
-    apply total_path with (p := inverse_is_retraction f x).
-    simpl.
-    path_via (transport (map f (inverse_is_retraction f x))
-     (transport (!inverse_is_section f (f x)) z)).
-    apply map_trans.
-    path_via (transport (!inverse_is_section f (f x) @ map f (inverse_is_retraction f x)) z).
-    apply opposite, trans_concat.
-    path_via (transport (idpath (f x)) z).
-    assert (p : (!inverse_is_section f (f x) @ map f (inverse_is_retraction f x)) ~~> idpath (f x)).
-    moveright_onleft.
-    cancel_units.
-    apply inverse_triangle.
-    exact (@map _ _ (!inverse_is_section f (f x) @ map f (inverse_is_retraction f x))
-      (idpath (f x))
-      (fun p => transport p z) p).
+    intros [x v].
+    exists (inverse e x).
+    exact (! inverse_is_section e x # v).
   Defined.
 
-  Definition pullback_total_equiv : sigT pbQ <~> sigT Q :=
-    existT _ tg pullback_total_is_equiv.
+  Let f : total (Q o e) -> total Q := fun u => (e (pr1 u) ; pr2 u).
+
+  Theorem pullback_total_equiv : total (Q o e) <~> total Q.
+  Proof.
+    apply (equiv_from_hequiv f g).
+    (* one inverse identity *)
+    intros [x v].
+    unfold f, g; simpl.
+    apply @total_path with (p := inverse_is_section e x).
+    simpl; hott_simpl.
+    (* and the other *)
+    intros [x u].
+    unfold f, g; simpl.
+    apply @total_path with (p := inverse_is_retraction e x).
+    simpl; hott_simpl.
+    rewrite <- inverse_triangle.
+    generalize (inverse_is_retraction e x).
+    generalize (inverse e (e x)).
+    path_induction.
+  Defined.
 
 End PullbackMap.
 
-Implicit Arguments pullback_total_is_equiv [A B].
 Implicit Arguments pullback_total_equiv [A B].
 
 (** Finally, we can put these together to prove that given a map of
@@ -254,68 +184,104 @@ Implicit Arguments pullback_total_equiv [A B].
 
 Section FibrationMap.
 
+  (* Two fibrations over two base spaces. *)
+
   Variables A B : Type.
-  Variable P : A -> Type.
-  Variable Q : B -> Type.
+  Variable P : fibration A.
+  Variable Q : fibration B.
 
-  Variable f : A <~> B.
-  Variable g : forall x:A, P x -> Q (f x).
+  (* Suppose the base spaces are equivalent. *)
 
-  Let tg := total_map f g.
+  Variable e : A <~> B.
 
-  Let pbQ := Q o f.
+  (* And there is a map [g] above the equivalence. *)
 
-  Let pbg (x : A) : P x -> pbQ x := g x.
+  Variable g : forall x, P x -> Q (e x).
 
-  Theorem fibseq_fiber_is_equiv :
-    is_equiv tg -> forall x, is_equiv (g x).
+  (* There is an induced map on the total spaces. *)
+
+  Let eg : total P -> total Q := fun u => (e (pr1 u); g (pr1 u) (pr2 u)).
+
+  (* Which factors through [total (Q o e)] as [h] followed by [k]. *)
+
+  Let h :=  (fun u : total P => existT (Q o e) (pr1 u) (g (pr1 u) (pr2 u))).
+
+  Let k := (fun u : total (Q o e) => existT Q (e (pr1 u)) (pr2 u)).
+
+  (* Moreover, [k] is an equivalence. *)
+
+  Let kinv : total Q -> total (Q o e).
   Proof.
-    intro H.
-    set (pbmap_equiv := pullback_total_is_equiv Q f).
-    apply fiber_is_equiv.
-    apply @equiv_cancel_left with (C := sigT Q) (g := pullback_total_equiv Q f).
-    apply @equiv_homotopic with (g := tg).
-    intros [x y].
-    auto.
-    assumption.
+    intros [x u].
+    exists (inverse e x).
+    unfold compose.
+    exact (!inverse_is_section e x # u).
   Defined.
 
-  Definition fibseq_fiber_equiv :
-    is_equiv tg -> forall x, P x <~> Q (f x) :=
-      fun H x => (g x ; fibseq_fiber_is_equiv H x).
-
-  (* Instead of proving directly that [tg] is an equivalence, we'll
-  prove first that a different map from [sigT P] to [sigT Q] is an
-  equivalence, then that [tg] is homotopic to that map. *)
-
-  Let fibseq_a_totalequiv :
-    (forall x, is_equiv (g x)) -> (sigT P <~> sigT Q).
+  Let ke : total (Q o e) <~> total Q.
   Proof.
-    intro H.
-    apply @equiv_compose with (B := sigT pbQ).
-    exists (total_map (idmap A) pbg).
-    apply @total_is_equiv.
-    apply H.
-    apply pullback_total_equiv.
+    apply (equiv_from_hequiv k kinv).
+    intros [x u].
+    unfold k, kinv.
+    apply @total_path with (p := inverse_is_section e x).
+    simpl; hott_simpl.
+    intros [x v].
+    unfold k, kinv; simpl.
+    apply @total_path with (p := inverse_is_retraction e x).
+    simpl.
+    rewrite (! inverse_triangle e x).
+    generalize (inverse_is_retraction e x).
+    generalize (inverse e (e x)).
+    intros a p.
+    induction p.
+    apply idpath.
   Defined.
 
-  Theorem fibseq_total_is_equiv :
-    (forall x, is_equiv (g x)) -> is_equiv tg.
-  Proof.
-    intro H.
-    apply @equiv_homotopic with (g := fibseq_a_totalequiv H).
-    intros [x y].
-    auto.
-    exact (pr2 (fibseq_a_totalequiv H)).
-  Defined.
+  Section FibseqFiber.
+    (* Suppose the induced map is an equivalence. *)
 
-  Definition fibseq_total_equiv :
-    (forall x, is_equiv (g x)) -> (sigT P <~> sigT Q) :=
-    fun H => (tg ; fibseq_total_is_equiv H).
+    Hypothesis eg_is_equiv : is_equiv eg.
 
+    (* Then [h] is an equivalence. *)
+    Let he : total P <~> total (Q o e).
+    Proof.
+      apply @equiv_cancel_left with (f := h) (g := ke).
+      apply eg_is_equiv.
+    Defined.
+   
+    (* And so [h x] is an equivalence, but that is just [g x]. *)
+
+    Theorem fibseq_fiber_equiv x : P x <~> Q (e x).
+    Proof.
+      apply fiber_equiv with (g := g).
+      apply (equiv_is_equiv he).
+    Defined.
+
+    (* So we showed that [g] is a fiber-wise equivalence. *)
+  End FibseqFiber.
+
+  Section FiberFibseq.
+    (* Now we assume that [g] is fiber-wise equivalence and show that the
+       induced map [eg] is one as well. *)
+    
+    Hypothesis is_equiv_g : forall x, is_equiv (g x).
+
+    (* Then [h] is an equivalence. *)
+    Let he : total P <~> total (Q o e).
+    Proof.
+      apply total_equiv.
+      intro x.
+      exact {| equiv_map := g x; equiv_is_equiv := is_equiv_g x |}.
+    Defined.
+
+    (* And now by a two-out-of-three property, [eg] is an equivalence. *)
+    Theorem fibseq_total_equiv : total P <~> total Q.
+    Proof.
+      refine {| equiv_map := eg |}.
+      apply (equiv_is_equiv (equiv_compose he ke)).
+    Defined.
+  End FiberFibseq.
 End FibrationMap.
 
-Implicit Arguments fibseq_fiber_is_equiv [A B].
 Implicit Arguments fibseq_fiber_equiv [A B].
-Implicit Arguments fibseq_total_is_equiv [A B].
 Implicit Arguments fibseq_total_equiv [A B].

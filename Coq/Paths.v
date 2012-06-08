@@ -1,11 +1,23 @@
 (** Basic homotopy-theoretic approach to paths. *)
 
-Require Export Functions.
+Require Export Prelude.
 
-Inductive paths {A} : A -> A -> Type := idpath : forall x, paths x x.
+(** We define the space of paths so that it matches the definitionof Coq
+   equality [eq], except that we put paths in [Type] instead of [Prop].
+   Older versions of HoTT had a different definition, but we want this
+   one so that we can use Coq rewriting, which is a huge advantage.
 
-(* The next line tells [coqdoc] to print [paths] as an equals sign in LaTeX. *)
-(** printing ~~> $=$ *)
+   Note that we write [Universe] as the codomain of [paths]. This seems ugly,
+   but if we write [Type] then Coq will infer that the codomain is [Prop]!
+   Thus, for example the definition of [identity] in [Coq.Init.Datatypes] 
+   lands in [Prop], even though the designers of the library probably
+   did not have that in mind.
+ *)
+
+Inductive paths {A : Type} (x : A) : A -> Universe := idpath : paths x x.
+
+(* The next line tells [coqdoc] to print [paths] as a wigly arrow in LaTeX. *)
+(** printing ~~> $\leadsto$ *)
 
 (** We introduce notation [x ~~> y] for the space [paths x y] of paths
    from [x] to [y]. We can then write [p : x ~~> y] to indicate that
@@ -28,7 +40,8 @@ Notation "x ~~> y" := (paths x y) (at level 70).
 Hint Resolve @idpath.
 
 (** The following automated tactic applies induction on paths and then
-    idpath. It can handle many easy statements.  *)
+    [auto], which will also try [idpath]. It can handle many easy
+    statements. *)
 
 Ltac path_induction :=
   intros; repeat progress (
@@ -38,29 +51,26 @@ Ltac path_induction :=
     end
   ); auto.
 
-(** You can read the tactic definition as follows. We first perform
-   [intros] to move hypotheses into the context. Then we repeat while
-   there is still progress: if there is a path [p] in the context,
-   apply induction to it, otherwise perform the [idtac] which does
-   nothing (and so no progress is made and we stop). After that, we
-   perform an [auto].
+(** You can read the above tactic definition as follows. We first perform
+   [intros] to move hypotheses into the context. Then we repeat while there
+   is still progress: if there is a path [p] in the context, apply
+   induction to it, otherwise perform the [idtac] which does nothing (and
+   so no progress is made and we stop). After that, we perform an [auto].
 
-   The notation [ [... |- ... ] ] is a pattern for contexts. To the
-   left of the symbol [|-] we list hypotheses and to the right the
-   goal. The underscore means "anything".
+   The notation [ [... |- ... ] ] is a pattern for contexts. To the left of
+   the symbol [|-] we list hypotheses and to the right the goal. The
+   underscore means "anything".
 
-   In summary [path_induction] performs as many inductions on paths as
-   it can, then it uses [auto].  *)
+   In summary [path_induction] performs as many inductions on paths as it
+   can, then it uses [auto]. *)
 
-(** We now define the basic operations on paths, starting with
-   concatenation. *)
+(** We now define the basic operations on paths, starting with concatenation. *)
 
 Definition concat {A} {x y z : A} : (x ~~> y) -> (y ~~> z) -> (x ~~> z).
 Proof.
   intros p q.
   induction p.
-  induction q.
-  apply idpath.
+  exact q.
 Defined.
 
 (** The concatenation of paths [p] and [q] is denoted as [p @ q]. *)
@@ -93,6 +103,32 @@ Notation "! p" := (opposite p) (at level 50).
    the composition of [p] and the identity path is not equal to [p]
    but only connected to it with a path. *)
 
+(** We are going to create a rewrite hints database called [paths], to
+   be used with the rewriting facilities. We must be a bit careful about
+   putting hints in [paths], lest we end up with a cycle of rewrite
+   rules that will spin forever. What is needed is a well-founded
+   measure which guarantees that the left-hand side of a rewrite rule is
+   larger than the right-hand size. Here is an attempt to describe
+   such a measure. It is the lexicographic order of the following
+   simpler measures, where the most significant measure comes first:
+
+   - depth at which [map_dep] occurs
+   - number of occurences of [concat]
+   - depth at which [transport] occurs
+   - depth at which [happly] occurs
+   - number of occurences of [composition]
+   - depth at which [map] occurs
+   - depth at which [opposite] occurs
+   - number if occurences of [idpath]
+   - size of the expression
+
+   This means, that in each rewrite rule that is added to the [paths]
+   hints database, the number of occurences of [map_dep] has to decrease, or
+   stay the same and the number of occurences of [concat] has to
+   decrease, or stay the same and...., or the size of the formula has to
+   decrease.
+*)
+
 (** The following lemmas say that up to higher paths, the paths form a
    1-groupoid. *)
 
@@ -101,35 +137,102 @@ Proof.
   path_induction.
 Defined.
 
+Hint Rewrite idpath_left_unit : paths.
+
 Lemma idpath_right_unit A (x y : A) (p : x ~~> y) : (p @ idpath y) ~~> p.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite idpath_right_unit : paths.
 
 Lemma opposite_right_inverse A (x y : A) (p : x ~~> y) : (p @ !p) ~~> idpath x.
 Proof.
  path_induction.
 Defined.
 
+Hint Rewrite opposite_right_inverse : paths.
+
 Lemma opposite_left_inverse A (x y : A) (p : x ~~> y) : (!p @ p) ~~> idpath y.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite opposite_left_inverse : paths.
+
+(* Often the inverses end up associated in the wrong way, so we also add
+   the following variants. *)
+
+Lemma opposite_right_inverse_with_assoc_left A (x y z : A) (p : x ~~> y) (q : y ~~> z) :
+  (p @ q) @ !q ~~> p.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite opposite_right_inverse_with_assoc_left : paths.
+
+Lemma opposite_left_inverse_with_assoc_left A (x y z : A) (p : x ~~> y) (q : z ~~> y) :
+  (p @ !q) @ q ~~> p.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite opposite_left_inverse_with_assoc_left : paths.
+
+Lemma opposite_right_inverse_with_assoc_right A (x y z : A) (p : y ~~> x) (q : y ~~> z) :
+  p @ (!p @ q) ~~> q.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite opposite_right_inverse_with_assoc_right : paths.
+
+Lemma opposite_left_inverse_with_assoc_right A (x y z : A) (p : x ~~> y) (q : y ~~> z) :
+  !p @ (p @ q) ~~> q.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite opposite_right_inverse_with_assoc_left : paths.
+
+Lemma opposite_left_inverse_with_assoc_both A
+  (x y z w : A) (p : x ~~> y) (q : z ~~> y) (r : y ~~> w) :
+  (p @ !q) @ (q @ r) ~~> p @ r.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite opposite_left_inverse_with_assoc_both : paths.
+
+Lemma opposite_right_inverse_with_assoc_both A
+  (x y z w : A) (p : x ~~> y) (q : y ~~> z) (r : y ~~> w) :
+  (p @ q) @ (!q @ r) ~~> p @ r.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite opposite_right_inverse_with_assoc_both : paths.
 
 Lemma opposite_concat A (x y z : A) (p : x ~~> y) (q : y ~~> z) : !(p @ q) ~~> !q @ !p.
 Proof.
   path_induction.
 Defined.
 
+Hint Rewrite opposite_concat : paths.
+
 Lemma opposite_idpath A (x : A) : !(idpath x) ~~> idpath x.
 Proof.
   path_induction.
 Defined.
 
+Hint Rewrite opposite_idpath : paths.
+
 Lemma opposite_opposite A (x y : A) (p : x ~~> y) : !(! p) ~~> p.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite opposite_opposite : paths.
 
 Lemma concat_associativity A (w x y z : A) (p : w ~~> x) (q : x ~~> y) (r : y ~~> z) :
   (p @ q) @ r ~~> p @ (q @ r).
@@ -137,10 +240,10 @@ Proof.
   path_induction.
 Defined.
 
-(** Now we move on to the 2-groupoidal structure of a type.
-   Concatenation of 2-paths along 1-paths is just ordinary
-   concatenation in a path type, but we need a new name and notation
-   for concatenation of 2-paths along points. *)
+(** Now we move on to the 2-groupoidal structure of a type. Concatenation
+   of 2-paths along 1-paths is just ordinary concatenation in a path type,
+   but we need a new name and notation for concatenation of 2-paths along
+   points. *)
 
 Definition concat2 {A} {x y z : A} {p p' : x ~~> y} {q q' : y ~~> z} :
   (p ~~> p') -> (q ~~> q') -> (p @ q ~~> p' @ q').
@@ -150,7 +253,8 @@ Defined.
 
 Notation "p @@ q" := (concat2 p q) (at level 60).
 
-(** We also have whiskering operations. *)
+(** We also have whiskering operations which compose a 1-path with
+   a 2-path. We do not introduce even more notation, however. *)
 
 Definition whisker_right {A} {x y z : A} {p p' : x ~~> y} (q : y ~~> z) :
   (p ~~> p') -> (p @ q ~~> p' @ q).
@@ -163,6 +267,8 @@ Definition whisker_left {A} {x y z : A} {q q' : y ~~> z} (p : x ~~> y) :
 Proof.
   path_induction.
 Defined.
+
+(** Basic properties of whiskering. *)
 
 Definition whisker_right_toid {A} {x y : A} {p : x ~~> x} (q : x ~~> y) :
   (p ~~> idpath x) -> (p @ q ~~> q).
@@ -243,17 +349,23 @@ Proof.
   path_induction.
 Defined.
 
+Hint Rewrite idpath_map : paths.
+
 Lemma concat_map A B (x y z : A) (f : A -> B) (p : x ~~> y) (q : y ~~> z) :
   map f (p @ q) ~~> (map f p) @ (map f q).
 Proof.
   path_induction.
 Defined.
 
+Hint Rewrite concat_map : paths.
+
 Lemma opposite_map A B (f : A -> B) (x y : A) (p : x ~~> y) :
   map f (! p) ~~> ! map f p.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite opposite_map : paths.
 
 (** It is also the case that [map f p] is functorial in [f].  *)
 
@@ -262,17 +374,23 @@ Proof.
   path_induction.
 Defined.
 
+Hint Rewrite idmap_map : paths.
+
 Lemma compose_map A B C (f : A -> B) (g : B -> C) (x y : A) (p : x ~~> y) :
   map (g o f) p ~~> map g (map f p).
 Proof.
   path_induction.
 Defined.
 
-Lemma constmap_map (A B:Type) (b:B) (x y:A) (p: x~~>y) :
-  map (fun _=>b) p ~~> idpath b.
+Hint Rewrite compose_map : paths.
+
+Lemma constmap_map (A B : Type) (b : B) (x y : A) (p : x ~~> y) :
+  map (fun _ => b) p ~~> idpath b.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite constmap_map : paths.
 
 (** We can also map paths between paths. *)
 
@@ -301,11 +419,15 @@ Proof.
   path_induction.
 Defined.
 
+Hint Rewrite happly_concat : paths.
+
 Lemma happly_opp A B (f g : A -> B) (p : f ~~> g) (x : A) :
   happly (!p) x ~~> !happly p x.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite happly_opp : paths.
 
 Lemma happly_dep_concat A P (f g h : forall a:A, P a) (p : f ~~> g) (q : g ~~> h) (x:A) :
   happly_dep (p @ q) x ~~> happly_dep p x @ happly_dep q x.
@@ -313,11 +435,15 @@ Proof.
   path_induction.
 Defined.
 
+Hint Rewrite happly_dep_concat : paths.
+
 Lemma happly_dep_opp A P (f g : forall a:A, P a) (p : f ~~> g) (x : A) :
   happly_dep (!p) x ~~> !happly_dep p x.
 Proof.
   path_induction.
 Defined.
+
+Hint Rewrite happly_dep_opp : paths.
 
 (** How happly interacts with map. *)
 
@@ -344,11 +470,10 @@ Defined.
 
 (** Paths in cartesian products. *)
 
-Definition prod_path {X Y} (z z' : X * Y) :
-  (fst z ~~> fst z') -> (snd z ~~> snd z') -> (z ~~> z').
+Definition prod_path {X Y} {x x' : X} {y y' : Y} :
+  (x ~~> x') -> (y ~~> y') -> ((x,y) ~~> (x',y')).
 Proof.
-  intros; destruct z; destruct z'.
-  simpl in *; path_induction.
+  path_induction.
 Defined.
 
 (** We declare some more [Hint Resolve] hints, now in the "hint
@@ -375,6 +500,18 @@ Hint Resolve
  : path_hints.
 
 (** We can add more hints to the database later. *)
+
+(** What follows is a long series of tactics which were used before 
+   Coq supported rewriting with [paths]. They are still here mostly
+   for backward compatibility and because some people might be used
+   to them. Eventually we how to get rid of them because the tactic
+   [hott_simpl] defined below supersedes most of them. *)
+
+(** Like [simpl], but for paths. It just uses the [paths] rewrite
+   database but it might get fancier in the future. *)
+
+Ltac hott_simpl :=
+  autorewrite with paths in * |- * ; auto with path_hints.
 
 (** For some reason, [apply happly] and [apply happly_dep] often seem
    to fail unification.  This tactic does the work that I think they
@@ -413,7 +550,7 @@ Ltac path_simplify :=
       apply whisker_left
     | apply whisker_right
     | apply @map
-    ]; auto with path_hints.
+    ]; hott_simpl.
 
 (** The following variant allows the caller to supply an additional
    lemma to be tried (for instance, if the caller expects the core
@@ -426,7 +563,7 @@ Ltac path_simplify' lem :=
     | apply @map
     | apply lem
     | apply opposite; apply lem
-    ]; auto with path_hints.
+    ]; hott_simpl.
 
 (* This one takes a tactic rather than a lemma. *)
 
@@ -437,7 +574,7 @@ Ltac path_simplify'' tac :=
     | apply @map
     | tac
     | apply opposite; tac
-    ]; auto with path_hints.
+    ]; hott_simpl.
 
 (** These tactics are used to construct a path [a ~~> b] as a
    composition of paths [a ~~> x] and [x ~~> b].  They then apply
@@ -445,7 +582,7 @@ Ltac path_simplify'' tac :=
    lemma supplied by the user. *)
 
 Ltac path_via mid :=
-  apply @concat with (y := mid); path_simplify.
+  apply @concat with (y := mid); auto with path_hints.
 
 Ltac path_using mid lem :=
   apply @concat with (y := mid); path_simplify' lem.
@@ -825,7 +962,7 @@ Proof.
   intro a.
   induction p.
   induction r.
-  path_via (q @ idpath x).
+  hott_simpl.
 Defined.
 
 Lemma concat_cancel_left A (x y z : A) (p : x ~~> y) (q r : y ~~> z) : (p @ q ~~> p @ r) -> (q ~~> r).
@@ -833,7 +970,7 @@ Proof.
   intro a.
   induction p.
   induction r.
-  path_via (idpath x @ q).
+  hott_simpl.
 Defined.
 
 (** If a function is homotopic to the identity, then that homotopy
@@ -911,3 +1048,9 @@ Ltac moveright_onleft :=
     | |- (?r ~~> ?q) =>
       path_via (r @ idpath _); apply concat_moveright_onleft
   end; do_opposite_opposite.
+
+Inductive bovine (A:Type) (a:A) : A -> Type :=
+|  cow : bovine A a a
+| bull : bovine A a a.
+
+

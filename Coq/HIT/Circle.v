@@ -117,3 +117,26 @@ Proof.
   unfold cqcb, cql, cq.
   associate_left.
 Defined.
+
+(* Here is a curious fact: Streicher K implies that the circle is contractible.
+   So we have K + Cirle = UIP. *)
+Section Streicher_and_Circle.
+  Parameter C : Circle.
+
+  Definition Streicher_K_statement :=  forall (U : Type) (x : U) (P: x ~~> x -> Type), P (idpath x) -> forall p, P p.
+
+  Lemma little_lemma (A : Type) (x y : A) (p : x ~~> y) : transport (P := fun z => z ~~> y) p p ~~> idpath y.
+  Proof.
+    path_induction.
+  Defined.
+  
+  Lemma Circle_contractible : Streicher_K_statement -> is_contr C.
+  Proof.
+    intro K.
+    exists base.
+    intro x.
+    apply circle_rect with (P := fun x => x ~~> base) (pt := loop).
+    apply K.
+    apply little_lemma.
+  Defined.
+End Streicher_and_Circle.

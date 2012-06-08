@@ -14,7 +14,7 @@ COQDOC:=$(COQBIN)coqdoc
 # The list of files that comprise the library in the order in which
 # they should appear in the generated documentation.
 
-VFILES:= Functions.v \
+VFILES:= Prelude.v \
 	 Paths.v \
 	 Fibrations.v \
 	 Contractible.v \
@@ -26,6 +26,7 @@ VFILES:= Functions.v \
          Univalence.v \
          UnivalenceImpliesFunext.v \
 	 UnivalenceAxiom.v \
+	 ExtensionalityAxiom.v \
 	 FunextEquivalences.v \
 	 HLevel.v \
          Homotopy.v

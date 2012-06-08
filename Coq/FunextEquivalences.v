@@ -1,4 +1,5 @@
-Require Import Paths Equivalences UsefulEquivalences Funext UnivalenceAxiom HLevel.
+Require Import Paths Equivalences UsefulEquivalences Funext HLevel.
+Require Import ExtensionalityAxiom.
 
 (** This file defines some useful equivalences that require functional
    extensionality, usually involving equivalences between function
@@ -8,231 +9,224 @@ Require Import Paths Equivalences UsefulEquivalences Funext UnivalenceAxiom HLev
 
 Definition curry_equiv A B C : (A * B -> C) <~> (A -> B -> C).
 Proof.
-  exists (fun f => fun a b => f (a,b)).
-  apply hequiv_is_equiv with (fun g => fun x => g (fst x) (snd x)).
-  intro f; apply funext; intro a; apply funext; intro b; auto.
-  intro g; apply funext; intros [a b]; auto.
+  apply (equiv_from_hequiv (fun f => fun a b => f (a,b)) (fun g => fun x => g (fst x) (snd x)));
+  now repeat by_extensionality.
 Defined.
 
 (** Flipping the arguments of a two-variable function is an equivalence. *)
 
 Definition flip_equiv A B C : (A -> B -> C) <~> (B -> A -> C).
 Proof.
-  exists (fun f => fun b a => f a b).
-  apply hequiv_is_equiv with (fun g => fun a b => g b a).
-  intro g; apply funext; intro a; apply funext; intro b; auto.
-  intro f; apply funext; intro b; apply funext; intro a; auto.
+  apply (equiv_from_hequiv (fun f => fun b a => f a b) (fun g => fun a b => g b a));
+  now repeat by_extensionality.
 Defined.
 
 (** Pre- and post-composing by an equivalence is an equivalence. *)
 
 Lemma precomp_equiv A B C (g : A <~> B) : (B -> C) <~> (A -> C).
 Proof.
-  exists (fun h => h o g).
-  apply @hequiv_is_equiv with (g := fun k => k o (g ^-1));
-    intros k; apply funext; intros a; unfold compose; simpl; apply map.
-  apply inverse_is_retraction.
-  apply inverse_is_section.
+  apply (equiv_from_hequiv (fun h => h o g) (fun k => k o (g ^-1))) ;
+    by_extensionality.
+  now apply map; hott_simpl.
+  now apply map; hott_simpl.
 Defined.
 
 Lemma postcomp_equiv A B C (g : B <~> C) : (A -> B) <~> (A -> C).
 Proof.
-  exists (fun h => g o h).
-  apply @hequiv_is_equiv with (g := fun k => (g ^-1) o k);
-    intros k; apply funext; intros a; unfold compose; simpl.
-  apply inverse_is_section.
-  apply inverse_is_retraction.
+  apply (equiv_from_hequiv (fun h => g o h) (fun k => (g ^-1) o k)) ;
+    by_extensionality.
+  now apply inverse_is_section.
+  now apply inverse_is_retraction.
 Defined.
 
 Lemma postcomp_equiv_dep A P Q (g : forall a:A, P a <~> Q a) :
   (forall a, P a) <~> (forall a, Q a).
 Proof.
-  exists (fun f a => g a (f a)).
-  apply @hequiv_is_equiv with (g := fun k a => (g a ^-1) (k a));
-    intros k; apply funext_dep; intros a; unfold compose; simpl.
-  apply inverse_is_section.
-  apply inverse_is_retraction.
+  apply (equiv_from_hequiv (fun f a => g a (f a)) (fun k a => (g a ^-1) (k a)));
+    by_extensionality.
+  now apply inverse_is_section.
+  now apply inverse_is_retraction.
 Defined.
 
 (** The space of factorizations through an equivalence is contractible. *)
 
 Lemma equiv_postfactor_contr A B C (g : B <~> C) (h : A -> C) :
-  is_contr { f : A -> B &  g o f ~~>= h }.
+  is_contr { f : A -> B &  g o f === h }.
 Proof.
   apply contr_equiv_contr with ({f : A -> B & g o f ~~> h}).
-  apply total_equiv with (fun f => happly).
-  intros f; apply strong_funext.
-  refine (pr2 (postcomp_equiv _ _ _ g) h).
+  apply total_equiv.
+  now intros; apply strong_funext_equiv.
+  apply (equiv_is_equiv (postcomp_equiv _ _ _ g) h).
 Defined.
 
 Lemma equiv_prefactor_contr A B C (f : A <~> B) (h : A -> C) :
-  is_contr { g : B -> C &  g o f ~~>= h }.
+  is_contr { g : B -> C &  g o f === h }.
 Proof.
   apply contr_equiv_contr with ({g : B -> C & g o f ~~> h}).
-  apply total_equiv with (fun g => happly).
-  intros g; apply strong_funext.
-  refine (pr2 (precomp_equiv _ _ _ f) h).
+  apply total_equiv.
+  intros g; apply strong_funext_equiv.
+  apply (equiv_is_equiv (precomp_equiv _ _ _ f) h).
 Defined.
 
-(** It follows that [is_hiso] is a prop, and hence equivalent to [is_equiv].  *)
+Section IsHisoIsProp.
+  (** We show that [is_hiso] is a prop, and hence equivalent to [is_equiv].  *)
 
-Theorem is_hiso_is_prop A B (f : A -> B) : is_prop (is_hiso f).
-Proof.
-  apply allpath_prop.
-  intros [g1 h1] [g2 h2].
-  set (feq := (f ; hiso_to_equiv f (g1,h1)) : A <~> B).
-  apply prod_path; apply contr_path.
-  refine (equiv_prefactor_contr _ _ _ feq (idmap A)).
-  refine (equiv_postfactor_contr _ _ _ feq (idmap B)).
-Defined.
+  (** How can we avoid wasting time on lemmas such as the one below? *)
 
-Theorem is_equiv_is_hiso_equiv A B (f : A -> B) : is_equiv f <~> is_hiso f.
-Proof.
-  apply prop_iff_equiv.
-  apply is_equiv_is_prop.
-  apply is_hiso_is_prop.
-  intros fiseq; exact (equiv_to_hiso (f; fiseq)).
-  apply hiso_to_equiv.
-Defined.
+  Definition is_hiso' {A B : Type} (f : A -> B) :=
+    ({g : B -> A & forall y, f (g y) ~~> y} * {h : B -> A & forall x, h (f x) ~~> x})%type.
+
+  Lemma is_hiso'_equiv_is_hiso {A B} (f : A -> B) : is_hiso' f <~> is_hiso f.
+  Proof.
+    pose (e := fun (q : is_hiso' f) =>
+      {| hiso_section := pr1 (fst q) ;
+         hiso_is_section := pr2 (fst q) ;
+         hiso_retraction := pr1 (snd q) ;
+         hiso_is_retraction := pr2 (snd q) |}).
+    pose (einv := fun (p : is_hiso f) =>
+      ((hiso_section p; hiso_is_section p), (hiso_retraction p; hiso_is_retraction p)) : is_hiso' f).
+    apply (equiv_from_hequiv e einv).
+    now intros [g G h H]; unfold e, einv; apply idpath.
+    now intros [[g G] [h H]]; unfold e, einv; apply idpath.
+  Defined.
+
+  Theorem is_hiso'_is_prop A B (f : A -> B) : is_prop (is_hiso' f).
+  Proof.
+    apply allpath_prop.
+    intros [gG hH] [jJ kK].
+    set (e := equiv_from_hiso {| hiso_map := f ; hiso_is_hiso := is_hiso'_equiv_is_hiso f (gG, hH) |}).
+    apply prod_path; apply contr_path.
+    apply (equiv_postfactor_contr _ _ _ e (idmap B)).
+    apply (equiv_prefactor_contr _ _ _ e (idmap A)).
+  Defined.
+
+  Theorem is_hiso_is_prop A B (f : A -> B) : is_prop (is_hiso f).
+  Proof.
+    apply @hlevel_equiv with (A := is_hiso' f).
+    apply is_hiso'_equiv_is_hiso.
+    apply is_hiso'_is_prop.
+  Defined.
+    
+  Theorem is_equiv_is_hiso_equiv A B (f : A -> B) : is_equiv f <~> is_hiso f.
+  Proof.
+    apply prop_iff_equiv.
+    apply is_equiv_is_prop.
+    apply is_hiso_is_prop.
+    apply is_hiso_from_is_equiv.
+    apply is_equiv_from_is_hiso.
+  Defined.
+End IsHisoIsProp.
 
 (** Cartesian products have the correct universal property. *)
 
 Lemma prod_equiv A B T :
   (T -> A) * (T -> B) <~> (T -> A * B).
 Proof.
-  exists (fun fg => fun t => (fst fg t, snd fg t)).
-  apply @hequiv_is_equiv with
-    (fun h => (fun t => fst (h t), fun t => snd (h t))).
+  apply (equiv_from_hequiv
+    (fun fg => fun t => (fst fg t, snd fg t))
+    (fun h => (fun t => fst (h t), fun t => snd (h t)))).
   intros h; apply funext; intros t; simpl.
   destruct (h t) as [a b]; auto.
   intros [f g]; apply prod_path; apply funext; intros t; auto.
 Defined.
 
-(** Given an iterated fibration, to give a section of the composite
-   fibration is equivalent to giving a section of the first fibration and
-   a section over that of the second.  *)
+(** Given an iterated fibration, to give a section of the composite fibration is
+   equivalent to giving a section of the first fibration and a section over that
+   of the second.
 
-Lemma section_total_equiv A (P : A -> Type) (Q : forall a, P a -> Type) :
-  (forall a, sigT (Q a)) <~> {s : forall a, P a & forall a, Q a (s a) }.
+   Did you recognize this as the axiom of choice? I did, eventually...
+ *)
+
+Lemma section_total_equiv A (P : fibration A) (Q : forall a, fibration (P a)) :
+  (forall a, {b : P a & Q a b}) <~> {s : section P & forall a, Q a (s a) }.
 Proof.
-  exists (fun f => (existT (fun s => forall a, Q a (s a))
-    (fun a => pr1 (f a)) (fun a => pr2 (f a)))).
-  apply hequiv_is_equiv with
-    (g := fun sr:{s : forall a, P a & forall a, Q a (s a) } =>
-      let (s,r) := sr in (fun a => existT (Q a) (s a) (r a))).
-  intros [s r].
-  set (p := funext_dep (f := eta_dep s) (g := s) (fun a => idpath (s a))).
-  apply total_path with p; simpl.
-  apply funext_dep; intros a.
-  apply (concat (trans_map p
-    (fun s' (r': forall a, Q a (s' a)) => r' a) (eta_dep r))).
-  path_via (transport (happly_dep p a) (eta_dep r a)).
-  unfold happly_dep.
-  apply @map_trans with (f := fun h : forall a' : A, P a' => h a).
-  path_via (transport (idpath (s a)) (eta_dep r a)).
-  apply happly, map.
-  apply funext_dep_compute with
-    (f := eta_dep s) (g := s) (p := fun a' : A => idpath (s a')).
-  intros f.
-  apply funext_dep; intros a.
-  destruct (f a); auto.
+  apply (ac_equiv eta_dep_rule weak_funext).
 Defined.
 
-(** The space of sections of fibrations is "associative". *)
-
 Section SectionAssoc.
+  (** The space of sections of fibrations is "associative". *)
 
-  Hypotheses (A:Type) (P : A -> Type) (Q : forall x, P x -> Type).
+  Hypotheses (A : Type) (P : fibration A) (Q : forall x, fibration (P x)).
 
-  Let sa1 : (forall (x:A) (p:P x), Q x p)
-    -> forall xp:sigT P, Q (pr1 xp) (pr2 xp).
-  Proof.
-    intros f [x p]; exact (f x p).
-  Defined.
+  Let sa : (forall x (u : P x), Q x u) -> forall xp : total P, Q (pr1 xp) (pr2 xp) :=
+    (fun f xu => f (pr1 xu) (pr2 xu)).
 
-  Let sa2 : (forall xp:sigT P, Q (pr1 xp) (pr2 xp))
-    -> forall (x:A) (p:P x), Q x p.
-  Proof.
-    intros f x p; exact (f (x;p)).
-  Defined.
+  Let sainv : (forall xp : total P, Q (pr1 xp) (pr2 xp)) -> forall x (u : P x), Q x u :=
+    (fun f x u => f (x; u)).
     
   Definition section_assoc :
-    (forall (x:A) (p:P x), Q x p) <~> (forall xp:sigT P, Q (pr1 xp) (pr2 xp)).
+    (forall x (u : P x), Q x u) <~> (forall xu : total P, Q (pr1 xu) (pr2 xu)).
   Proof.
-    exists sa1.
-    apply hequiv_is_equiv with sa2.
-    intros f; apply funext_dep; intros [x p]; auto.
-    intros f; apply funext_dep; intros p; apply funext_dep; intros x; auto.
+    apply (equiv_from_hequiv sa sainv); unfold sa, sainv;
+      now repeat by_extensionality.
   Defined.
-
 End SectionAssoc.
 
 Section SectionAssocSum.
+  (** And similarly for sums. *)
 
-  Hypotheses (A:Type) (P : A -> Type) (Q : sigT P -> Type).
+  Hypotheses (A : Type) (P : fibration A) (Q : fibration (total P)).
 
-  Let sa1 : (forall (x:A) (p:P x), Q (x;p))
-    -> forall xp:sigT P, Q xp.
+  Let sa : (forall x (u : P x), Q (x;u)) -> section Q.
   Proof.
     intros f [x p]; exact (f x p).
   Defined.
 
-  Let sa2 : (forall xp:sigT P, Q xp)
-    -> forall (x:A) (p:P x), Q (x;p).
-  Proof.
-    intros f x p; exact (f (x;p)).
-  Defined.
+  Let sainv : section Q -> (forall x (u : P x), Q (x;u)) :=
+    fun f x p => f (x; p).
     
   Definition section_assoc_sum :
-    (forall (x:A) (p:P x), Q (x;p)) <~> (forall xp:sigT P, Q xp).
+    (forall x (u : P x), Q (x;u)) <~> section Q.
   Proof.
-    exists sa1.
-    apply hequiv_is_equiv with sa2.
-    intros f; apply funext_dep; intros [x p]; auto.
-    intros f; apply funext_dep; intros p; apply funext_dep; intros x; auto.
+    apply (equiv_from_hequiv sa sainv); unfold sa, sainv;
+    repeat by_extensionality.
   Defined.
 
 End SectionAssocSum.
 
 (* And "commutative". *)
 
-Definition section_comm (A:Type) (B:Type) (P : A -> B -> Type) :
+Definition section_comm (A : Type) (B : Type) (P : A -> B -> Type) :
   (forall a b, P a b) <~> (forall b a, P a b).
 Proof.
-  exists (fun f b a => f a b).
-  apply hequiv_is_equiv with (fun f a b => f b a).
-  intros f; apply funext_dep; intros y; apply funext_dep; intros x; auto.
-  intros f; apply funext_dep; intros x; apply funext_dep; intros y; auto.
+  apply (equiv_from_hequiv (fun f b a => f a b) (fun f a b => f b a)); 
+  repeat by_extensionality.
 Defined.
 
-(* The space of sections of a type dependent on paths with one end
-   free is equivalent, by the eliminator, to the fiber over the
-   identity path. *)
+Section SectionPathsEquiv.
 
-Program Definition section_paths_equiv A (x:A)
-  (P : forall (b:A), x~~>b -> Type) :
-  (forall (y:A) (p: x ~~> y), P y p) <~> P x (idpath x)
-  := (_ ; hequiv_is_equiv _ _ _ _).
-Next Obligation.
-  intros A x P Z.
-  exact (Z x (idpath x)).
-Defined.
-Next Obligation.
-  intros A x P z y p.
-  induction p. exact z.
-Defined.
-Next Obligation.
-  intros A x P z;
-    unfold section_paths_equiv_obligation_1, section_paths_equiv_obligation_2.
-  auto.
-Defined.
-Next Obligation.
-  unfold section_paths_equiv_obligation_1, section_paths_equiv_obligation_2.
-  intros A x P Z; apply funext_dep; intros y; apply funext_dep; intros p.
-  induction p. auto.
-Defined.
+  (* The space of sections of a type dependent on paths with one end
+     free is equivalent, by the eliminator, to the fiber over the
+     identity path. *)
+
+  Variable A : Type.
+  Variable x : A.
+  Variable P : forall y, fibration (x ~~> y).
+
+  Let sa : (forall y (p: x ~~> y), P y p) -> P x (idpath x) :=
+    fun Z => Z x (idpath x).
+
+  Let sainv : P x (idpath x) -> forall y (p: x ~~> y), P y p.
+  Proof.
+    intros u y p.
+    induction p.
+    exact u.
+  Defined.
+
+  Definition section_paths_equiv :
+    (forall y (p: x ~~> y), P y p) <~> P x (idpath x).
+  Proof.
+    apply (equiv_from_hequiv sa sainv); unfold sa, sainv; simpl.
+    now auto.
+    now repeat by_extensionality; path_induction.
+  Defined.
+End SectionPathsEquiv.
 
 (* Finally, we can prove that [is_adjoint_equiv] is equivalent to [is_equiv]. *)
+
+
+(*** UNFINISHED DOWN HERE
+
 
 Theorem is_adjoint_equiv_equiv A B (f : A -> B) :
   is_equiv f <~> is_adjoint_equiv f.
@@ -349,3 +343,5 @@ Proof.
     (w := equiv_inverse (is_adjoint_equiv_equiv A B f)).
   apply is_equiv_is_prop.
 Defined.
+
+****)
