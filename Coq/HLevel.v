@@ -14,15 +14,12 @@
 *)
 
 Require Import Paths Fibrations Contractible Equivalences Funext.
-Require Import UnivalenceAxiom.
-
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
+Require Import ExtensionalityAxiom.
 
 (** Some more stuff about contractibility. *)
 
 Theorem contr_contr {X} : is_contr X -> is_contr (is_contr X).
-  intros X ctr1.
+  intro ctr1.
   exists ctr1. intros ctr2.
   apply @total_path with (p := pr2 ctr1 (pr1 ctr2)).
   apply funext_dep.
@@ -39,15 +36,12 @@ Fixpoint is_hlevel (n : nat) : Type -> Type :=
     | S n' => fun X => forall (x y:X), is_hlevel n' (x == y)
   end.
 
-Theorem hlevel_inhabited_contr {n X} : is_hlevel n X -> is_contr (is_hlevel n X).
+Theorem hlevel_inhabited_contr n : forall X, is_hlevel n X -> is_contr (is_hlevel n X).
 Proof.
-  intros n.
   induction n.
-  intro X.
-  apply contr_contr.
-  intro X.
+  intro; apply contr_contr.
   simpl.
-  intro H.
+  intros X H.
   apply weak_funext.
   intro x.
   apply weak_funext.
@@ -58,9 +52,8 @@ Defined.
 
 (** H-levels are increasing with n. *)
 
-Theorem hlevel_succ {n X} : is_hlevel n X -> is_hlevel (S n) X.
+Theorem hlevel_succ n : forall X, is_hlevel n X -> is_hlevel (S n) X.
 Proof.
-  intros n.
   induction n.
   intros X H x y.
   apply contr_pathcontr.
@@ -73,9 +66,8 @@ Defined.
 (** H-level is preserved under equivalence.
    (This is, of course, trivial with univalence.) *)
 
-Theorem hlevel_equiv {n A B} : (A <~> B) -> is_hlevel n A -> is_hlevel n B.
+Theorem hlevel_equiv : forall {n A B}, (A <~> B) -> is_hlevel n A -> is_hlevel n B.
 Proof.
-  intro n.
   induction n.
   simpl.
   apply @contr_equiv_contr.
@@ -94,15 +86,15 @@ Defined.
 
 (** And by products *)
 
-Definition prod_hlevel n A B :
-  is_hlevel n A -> is_hlevel n B -> is_hlevel n (A * B).
+Definition prod_hlevel:
+  forall n A B, is_hlevel n A -> is_hlevel n B -> is_hlevel n (A * B).
 Proof.
-  intros n; induction n.
-  intros A B [a ac] [b bc].
+  induction n; intros A B.
+  intros [a ac] [b bc].
   exists (a,b).
   intros [a' b'].
   apply prod_path. apply ac. apply bc.
-  intros A B Ah Bh [a1 b1] [a2 b2].
+  intros Ah Bh [a1 b1] [a2 b2].
   apply @hlevel_equiv with (A := ((a1 == a2) * (b1 == b2))%type).
   apply equiv_inverse, prod_path_equiv.
   apply IHn. apply Ah. apply Bh.
@@ -110,7 +102,7 @@ Defined.
 
 (** And by dependent sums *)
 
-Definition total_hlevel n A (P : A -> Type) :
+Definition total_hlevel: forall n A (P : A -> Type),
   is_hlevel n A -> (forall a, is_hlevel n (P a)) ->
   is_hlevel n (sigT P).
 Proof.
@@ -118,7 +110,7 @@ Proof.
   intros A P [a ac] Pc.
   exists (a; pr1 (Pc a)).
   intros [a' p'].
-  apply total_path with (ac a').
+  apply @total_path with (ac a').
   apply contr_path; apply (Pc a).
   intros A P Ah Ph [a1 p1] [a2 p2].
   apply @hlevel_equiv with
@@ -135,43 +127,40 @@ Definition is_prop := is_hlevel 1.
 
 (** Here is an alternate characterization of propositions. *)
 
-Theorem prop_inhabited_contr {A} : is_prop A -> A -> is_contr A.
+Theorem prop_inhabited_contr A : is_prop A -> A -> is_contr A.
 Proof.
-  intros A H x.
+  intros H x.
   exists x.
   intro y.
-  apply H.
+  unfold is_prop, is_hlevel in H.
+  apply (H y x).
 Defined.
 
-Theorem inhabited_contr_isprop {A} : (A -> is_contr A) -> is_prop A.
+Theorem inhabited_contr_isprop A : (A -> is_contr A) -> is_prop A.
 Proof.
-  intros A H x y.
+  intros H x y.
   apply contr_pathcontr.
   apply H.
   assumption.
 Defined.
 
-Theorem hlevel_isprop {n A} : is_prop (is_hlevel n A).
+Theorem hlevel_isprop n A : is_prop (is_hlevel n A).
 Proof.
-  intros n A.
   apply inhabited_contr_isprop.
   apply hlevel_inhabited_contr.
 Defined.
 
-Definition isprop_isprop {A} : is_prop (is_prop A) := hlevel_isprop.
+Definition isprop_isprop A : is_prop (is_prop A) := hlevel_isprop 1 A.
 
 Definition iscontr_isprop A : is_prop (is_contr A).
 Proof.
-  intros A.
   apply inhabited_contr_isprop.
   apply contr_contr.
 Defined.
 
 Theorem prop_equiv_inhabited_contr {A} : is_prop A <~> (A -> is_contr A).
 Proof.
-  intros A.
-  exists prop_inhabited_contr.
-  apply hequiv_is_equiv with (g := inhabited_contr_isprop).
+  apply (equiv_from_hequiv (prop_inhabited_contr A) (inhabited_contr_isprop A)).
   intro H.
   unfold prop_inhabited_contr, inhabited_contr_isprop.
   simpl.
@@ -195,14 +184,12 @@ Defined.
 
 Theorem prop_path {A} : is_prop A -> forall (x y : A), x == y.
 Proof.
-  intro A.
   unfold is_prop. simpl.
   intros H x y.
   exact (pr1 (H x y)).
 Defined.
 
 Theorem allpath_prop {A} : (forall (x y : A), x == y) -> is_prop A.
-  intro A.
   intros H x y.
   assert (K : is_contr A).
   exists x. intro y'. apply H.
@@ -211,16 +198,14 @@ Defined.
 
 Theorem prop_equiv_allpath {A} : is_prop A <~> (forall (x y : A), x == y).
 Proof.
-  intro A.
-  exists prop_path.
-  apply @hequiv_is_equiv with (g := allpath_prop).
+  apply (equiv_from_hequiv prop_path allpath_prop).
   intro H.
   apply funext_dep.
   intro x.
   apply funext_dep.
   intro y.
   apply contr_path.
-  apply (allpath_prop H).
+  apply (allpath_prop  H).
   intro H.
   apply funext_dep.
   intro x.
@@ -237,9 +222,8 @@ Defined.
 Definition prop_iff_equiv A B : is_prop A -> is_prop B ->
   (A -> B) -> (B -> A) -> (A <~> B).
 Proof.
-  intros A B Ap Bp f g.
-  exists f.
-  apply @hequiv_is_equiv with (g := g);
+  intros Ap Bp f g.
+  apply (equiv_from_hequiv f g); 
   intros; apply prop_path; auto.
 Defined.
 
@@ -249,17 +233,17 @@ Defined.
 Definition sum_isprop X (P : X -> Type) :
   is_prop X -> (forall x, is_prop (P x)) -> is_prop (sigT P).
 Proof.
-  intros X P Xp Pp.
+  intros Xp Pp.
   apply allpath_prop.
   intros [x p] [y q].
-  apply total_path with (prop_path Xp x y).
+  apply @total_path with (prop_path Xp x y).
   apply prop_path, Pp.
 Defined.
 
 Definition forall_isprop {X} (P : X -> Type) :
   (forall x, is_prop (P x)) -> is_prop (forall x, P x).
 Proof.
-  intros X P H.
+  intros H.
   apply allpath_prop.
   intros f g.
   apply funext_dep. intros x.
@@ -271,7 +255,6 @@ Defined.
 
 Definition is_equiv_is_prop {X Y} (f: X -> Y) : is_prop (is_equiv f).
 Proof.
-  intros X Y f.
   apply forall_isprop. intros y.
   apply iscontr_isprop.
 Defined.
@@ -284,15 +267,15 @@ Definition is_set := is_hlevel 2.
 
 Definition axiomK A := forall (x : A) (p : x == x), p == idpath x.
 
-Definition isset_implies_axiomK {A} : is_set A -> axiomK A.
+Definition isset_implies_axiomK A : is_set A -> axiomK A.
 Proof.
-  intros A H x p.
-  apply H.
+  intros H x p.
+  apply (H x x p (idpath x)).
 Defined.
 
-Definition axiomK_implies_isset {A} : axiomK A -> is_set A.
+Definition axiomK_implies_isset A : axiomK A -> is_set A.
 Proof.
-  intros A H x y.
+  intros H x y.
   apply allpath_prop.
   intros p q.
   induction q.
@@ -302,16 +285,14 @@ Defined.
 Theorem isset_equiv_axiomK {A} :
   is_set A <~> (forall (x : A) (p : x == x), p == idpath x).
 Proof.
-  intro A.
-  exists isset_implies_axiomK.
-  apply @hequiv_is_equiv with (g := axiomK_implies_isset).
+  apply (equiv_from_hequiv (isset_implies_axiomK A) (axiomK_implies_isset A)).
   intro H.
   apply funext_dep.
   intro x.
   apply funext_dep.
   intro p.
   apply contr_path.
-  apply (axiomK_implies_isset H).
+  apply (axiomK_implies_isset A H).
   intro H.
   apply funext_dep.
   intro x.
@@ -321,11 +302,10 @@ Proof.
   apply isprop_isprop.
 Defined.
 
-Definition isset_isprop {A} : is_prop (is_set A) := hlevel_isprop.
+Definition isset_isprop A : is_prop (is_set A) := hlevel_isprop 2 A.
 
-Theorem axiomK_isprop {A} : is_prop (axiomK A).
+Theorem axiomK_isprop A : is_prop (axiomK A).
 Proof.
-  intro A.
   apply @hlevel_equiv with (A := is_set A).
   apply isset_equiv_axiomK.
   apply hlevel_isprop.
@@ -334,7 +314,6 @@ Defined.
 Theorem set_path2 (A : Type) (x y : A) (p q : x == y) :
   is_set A -> (p == q).
 Proof.
-  intros A x y p q.
   intro H.
   apply contr_path.
   apply prop_inhabited_contr.
@@ -375,7 +354,7 @@ Definition inl_injective (A B : Type) (x y : A) (p : inl B x == inl B y) : (x ==
 Theorem decidable_isset (A : Type) :
   decidable_paths A -> is_set A.
 Proof.
-  intros A d.
+  intros d.
   apply axiomK_implies_isset.
   intros x p.
   set (qp := map_dep (d x) p).
@@ -393,3 +372,4 @@ Proof.
   exact (qp1 @ qp0).
   induction (q' p).
 Defined.
+

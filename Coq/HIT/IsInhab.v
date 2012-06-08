@@ -1,9 +1,6 @@
 Add LoadPath "..".
 Require Import Homotopy.
 
-(** For compatibility with Coq 8.2. *)
-Unset Automatic Introduction.
-
 (** The definition of [is_inhab], the (-1)-truncation.  Here is what
    it would look like if Coq supported higher inductive types natively:
 
@@ -48,7 +45,7 @@ Axiom is_inhab_compute_path : forall {A : Type} {P : is_inhab A -> Type}
 Definition is_inhab_rect_nondep {A B : Type} :
   (A -> B) -> (forall (z w : B), z == w) -> (is_inhab A -> B).
 Proof.
-  intros A B dinhab' dpath'.
+  intros dinhab' dpath'.
   apply is_inhab_rect.
   assumption.
   intros x y z w.
@@ -61,7 +58,6 @@ Definition is_inhab_compute_inhab_nondep {A B : Type}
   (dinhab' : A -> B) (dpath' : forall (z w : B), z == w) (a : A) :
   is_inhab_rect_nondep dinhab' dpath' (inhab a) == (dinhab' a).
 Proof.
-  intros A B dinhab' dpath' a.
   apply @is_inhab_compute_inhab with (P := fun a => B).
 Defined.
 
@@ -71,7 +67,6 @@ Definition is_inhab_compute_path_nondep {A B : Type}
   map (is_inhab_rect_nondep dinhab' dpath') (inhab_path x y)
   == dpath' (is_inhab_rect_nondep dinhab' dpath' x) (is_inhab_rect_nondep dinhab' dpath' y).
 Proof.
-  intros A B dinhab' dpath' x y.
   (* Here is a "cheating" proof which just uses the assumption that [B] is a prop:
        apply contr_path, allpath_prop; assumption.
      And here is the "real" proof which uses [is_inhab_compute_path]. *)
@@ -92,7 +87,6 @@ Defined.
 
 Theorem is_inhab_is_prop (A : Type) : is_prop (is_inhab A).
 Proof.
-  intros A.
   apply allpath_prop.
   apply inhab_path.
 Defined.
@@ -102,7 +96,7 @@ Defined.
 Theorem prop_inhab_is_equiv (A : Type) :
   is_prop A -> is_equiv (@inhab A).
 Proof.
-  intros A H.
+  intros H.
   apply @hequiv_is_equiv with (g := is_inhab_rect_nondep (idmap A) (prop_path H)).
   auto.
   intro a.
@@ -114,7 +108,7 @@ Defined.
 Lemma inhab_prop_contr (A : Type) :
   is_prop A -> is_inhab A -> is_contr A.
 Proof.
-  intros A prp.
+  intros prp.
   apply is_inhab_rect_nondep.
   apply prop_inhabited_contr; now assumption.
   intros; apply contr_path.
@@ -132,7 +126,7 @@ Definition is_mono {X Y : Type} (f : X -> Y) :=
 Lemma epi_mono_equiv {X Y : Type} (f : X -> Y) :
   is_epi f -> is_mono f -> is_equiv f.
 Proof.
-  intros X Y f epi mono y.
+  intros epi mono y.
   apply inhab_prop_contr. 
   apply mono. apply epi.
 Defined.
@@ -145,7 +139,7 @@ Section IsInhabMonad.
 (** We first need the action of [is_inhab] on morphisms. *)
 Definition is_inhab_map {A B : Type} : (A -> B) -> (is_inhab A -> is_inhab B).
 Proof.
-  intros A B f p.
+  intros f p.
   apply @is_inhab_rect_nondep with (A := A); auto.
   intro x.
   apply (inhab (f x)).
@@ -177,7 +171,7 @@ Defined.
   (** The multiplication. *)
 Definition mu (A : Type) : is_inhab (is_inhab A) -> is_inhab A.
 Proof.
-  intros A p.
+  intros p.
   apply @is_inhab_rect_nondep with (A := is_inhab A); auto.
 Defined.
 
@@ -212,7 +206,7 @@ Qed.
   (* The strength. *)
 Lemma t (A B : Type) : A * is_inhab B -> is_inhab (A * B).
 Proof.
-  intros A B [a q].
+  intros [a q].
   apply (is_inhab_rect_nondep (A := B)); auto.
   intro b.
   apply inhab; auto.
