@@ -13,26 +13,26 @@ Require Import Homotopy.
 Structure Circle := {
   circle :> Type;
   base : circle;
-  loop : base ~~> base;
+  loop : base == base;
   circle_rect :
-    (forall (P : circle -> Type) (pt : P base) (lp : transport loop pt ~~> pt), 
+    (forall (P : circle -> Type) (pt : P base) (lp : transport loop pt == pt), 
       forall x : circle, P x);
   compute_base :
-    (forall (P : circle -> Type) (pt : P base) (lp : transport loop pt ~~> pt), 
-      circle_rect P pt lp base ~~> pt);
+    (forall (P : circle -> Type) (pt : P base) (lp : transport loop pt == pt), 
+      circle_rect P pt lp base == pt);
   compute_loop :
     (forall P pt lp,
       map_dep (circle_rect P pt lp) loop
-      ~~> map (transport loop) (compute_base P pt lp) @ lp @ !compute_base P pt lp)
+      == map (transport loop) (compute_base P pt lp) @ lp @ !compute_base P pt lp)
 }.
 
 (* Old compute_loop:
 
-    (forall (P : circle -> Type) (pt : P base) (lp : transport loop pt ~~> pt), 
+    (forall (P : circle -> Type) (pt : P base) (lp : transport loop pt == pt), 
       (! map (transport loop) (compute_base P pt lp)
         @ (map_dep (circle_rect P pt lp) loop)
         @ (compute_base P pt lp))
-      ~~> lp)
+      == lp)
 *)
 
 Implicit Arguments base [c].
@@ -46,7 +46,7 @@ Section Non_dependent.
   Variable circle : Circle.
 
   Definition circle_rect' :
-    forall (B : Type) (pt : B) (lp : pt ~~> pt), circle -> B.
+    forall (B : Type) (pt : B) (lp : pt == pt), circle -> B.
   Proof.
     intros B pt lp.
     apply circle_rect with (P := fun x => B) (pt := pt).
@@ -64,23 +64,23 @@ Section Non_dependent.
   Defined.
 
   Definition compute_base' :
-    forall (B : Type) (pt : B) (lp : pt ~~> pt),
-      circle_rect' B pt lp base ~~> pt.
+    forall (B : Type) (pt : B) (lp : pt == pt),
+      circle_rect' B pt lp base == pt.
   Proof.
     intros B pt lp.
     unfold circle_rect'.
     apply compute_base with (P := fun x => B).
   Defined.
 
-  Lemma map_dep_trivial2 {A B} {x y : A} (f : A -> B) (p: x ~~> y):
-    map f p ~~> !trans_trivial p (f x) @ map_dep f p.
+  Lemma map_dep_trivial2 {A B} {x y : A} (f : A -> B) (p: x == y):
+    map f p == !trans_trivial p (f x) @ map_dep f p.
   Proof.
     path_induction.
   Defined.
 
   Definition compute_loop' : forall B pt lp,
     map (circle_rect' B pt lp) loop
-    ~~> compute_base' B pt lp @ lp @ !compute_base' B pt lp.
+    == compute_base' B pt lp @ lp @ !compute_base' B pt lp.
   Proof.
     intros B pt lp.
     eapply concat.
@@ -95,14 +95,14 @@ End Non_dependent.
 (* The definition of circle gives "the best possible circle" in a given
    model. If the circle is trivial, then the model satisfies UIP. *)
 Theorem circle_contr_implies_UIP  (C : Circle) :
-  is_contr C -> forall (A : Type) (x y : A) (p q : x ~~> y), p ~~> q.
+  is_contr C -> forall (A : Type) (x y : A) (p q : x == y), p == q.
 Proof.
   intros H A x y p q.
   induction p.
   pose (cq := circle_rect' C A x q).
   pose (cqb := cq base).
-  pose (cqcb := compute_base' C A x q : cqb ~~> x).
-  pose (cql := map cq loop : cqb ~~> cqb).
+  pose (cqcb := compute_base' C A x q : cqb == x).
+  pose (cql := map cq loop : cqb == cqb).
   pose (cqcl := compute_loop' C A x q).
   path_via (!cqcb @ cql @ cqcb).
   moveleft_onright.
@@ -123,9 +123,9 @@ Defined.
 Section Streicher_and_Circle.
   Parameter C : Circle.
 
-  Definition Streicher_K_statement :=  forall (U : Type) (x : U) (P: x ~~> x -> Type), P (idpath x) -> forall p, P p.
+  Definition Streicher_K_statement :=  forall (U : Type) (x : U) (P: x == x -> Type), P (idpath x) -> forall p, P p.
 
-  Lemma little_lemma (A : Type) (x y : A) (p : x ~~> y) : transport (P := fun z => z ~~> y) p p ~~> idpath y.
+  Lemma little_lemma (A : Type) (x y : A) (p : x == y) : transport (P := fun z => z == y) p p == idpath y.
   Proof.
     path_induction.
   Defined.
@@ -135,7 +135,7 @@ Section Streicher_and_Circle.
     intro K.
     exists base.
     intro x.
-    apply circle_rect with (P := fun x => x ~~> base) (pt := loop).
+    apply circle_rect with (P := fun x => x == base) (pt := loop).
     apply K.
     apply little_lemma.
   Defined.

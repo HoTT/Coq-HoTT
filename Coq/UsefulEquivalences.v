@@ -38,7 +38,7 @@ Defined.
    for improvement. *)
 
 Theorem equiv_map_inv {A B} {x y : A} (f : A <~> B) :
-  (f x ~~> f y) -> (x ~~> y).
+  (f x == f y) -> (x == y).
 Proof.
   intros p.
   path_via (f^-1 (f x)).
@@ -49,7 +49,7 @@ Proof.
   apply inverse_is_retraction.
 Defined.
 
-Theorem equiv_map_equiv {A B} {x y : A} (e : A <~> B) : (x ~~> y) <~> (e x ~~> e y).
+Theorem equiv_map_equiv {A B} {x y : A} (e : A <~> B) : (x == y) <~> (e x == e y).
 Proof.
   apply (equiv_from_hequiv (@map A B x y e) (equiv_map_inv (x := x) (y := y) e)).
   intro p.
@@ -69,21 +69,21 @@ Defined.
 
 (** Path-concatenation is an equivalence. *)
 
-Lemma concat_equiv_left {A} (x y z : A) (p : x ~~> y) : (y ~~> z) <~> (x ~~> z).
+Lemma concat_equiv_left {A} (x y z : A) (p : x == y) : (y == z) <~> (x == z).
 Proof.
-  apply (equiv_from_hequiv (fun q : y ~~> z => p @ q) (@concat A y x z (!p)));
+  apply (equiv_from_hequiv (fun q : y == z => p @ q) (@concat A y x z (!p)));
   intro q; associate_left.
 Defined.
 
-Lemma concat_equiv_right {A} (x y z : A) (p : y ~~> z) : (x ~~> y) <~> (x ~~> z).
+Lemma concat_equiv_right {A} (x y z : A) (p : y == z) : (x == y) <~> (x == z).
 Proof.
-  apply (equiv_from_hequiv (fun q : x ~~> y => q @ p) (fun r : x ~~> z => r @ !p));
+  apply (equiv_from_hequiv (fun q : x == y => q @ p) (fun r : x == z => r @ !p));
   intro q; associate_right.
 Defined.
 
 (** Opposite is an equivalence. *)
 
-Definition opposite_equiv {A} (x y : A) : (x ~~> y) <~> (y ~~> x).
+Definition opposite_equiv {A} (x y : A) : (x == y) <~> (y == x).
 Proof.
   apply (equiv_from_hequiv (@opposite A x y) (@opposite A y x)).
   intros p; apply opposite_opposite.
@@ -92,7 +92,7 @@ Defined.
 
 (** The same for opposite2. *)
 
-Definition unopposite2 {A} {x y : A} (p q : x ~~> y) : (!p ~~> !q) -> (p ~~> q).
+Definition unopposite2 {A} {x y : A} (p q : x == y) : (!p == !q) -> (p == q).
 Proof.
   intros r.
   path_via (!!p).
@@ -101,33 +101,33 @@ Proof.
   auto with path_hints.
 Defined.
 
-Lemma opposite2_functor {A} (x y : A) (p q r : x ~~> y) (s : p ~~> q) (t : q ~~> r) :
-  opposite2 (s @ t) ~~> opposite2 s @ opposite2 t.
+Lemma opposite2_functor {A} (x y : A) (p q r : x == y) (s : p == q) (t : q == r) :
+  opposite2 (s @ t) == opposite2 s @ opposite2 t.
 Proof.
   path_induction.
 Defined.
 
-Lemma opposite2_opposite {A} (x y : A) (p q : x ~~> y) (s : p ~~> q) :
-  opposite2 (!s) ~~> !opposite2 s.
+Lemma opposite2_opposite {A} (x y : A) (p q : x == y) (s : p == q) :
+  opposite2 (!s) == !opposite2 s.
 Proof.
   path_induction.
 Defined.
 
-Lemma opposite_opposite_opposite {A} (x y : A) (p : x ~~> y) :
-  opposite2 (opposite_opposite A x y p) ~~>
+Lemma opposite_opposite_opposite {A} (x y : A) (p : x == y) :
+  opposite2 (opposite_opposite A x y p) ==
   opposite_opposite A y x (!p).
 Proof.
   path_induction.
 Defined.
 
-Lemma opposite_opposite_natural {A} (x y : A) (p q : x ~~> y) (r : p ~~> q) :
-  opposite2 (opposite2 r) @ opposite_opposite A x y q ~~>
+Lemma opposite_opposite_natural {A} (x y : A) (p q : x == y) (r : p == q) :
+  opposite2 (opposite2 r) @ opposite_opposite A x y q ==
   opposite_opposite A x y p @ r.
 Proof.
   path_induction.
 Defined.
 
-Definition opposite2_equiv {A} (x y : A) (p q : x ~~> y) : (p ~~> q) <~> (!p ~~> !q).
+Definition opposite2_equiv {A} (x y : A) (p q : x == y) : (p == q) <~> (!p == !q).
 Proof.
   apply (equiv_from_hequiv (@opposite2 A x y p q) (unopposite2 p q)).
   intros r.
@@ -159,7 +159,7 @@ Defined.
 
 (** Transporting is an equivalence. *)
 
-Theorem trans_equiv {A} {P : fibration A} {x y : A} (p : x ~~> y) :
+Theorem trans_equiv {A} {P : fibration A} {x y : A} (p : x == y) :
   P x <~> P y.
 Proof.
   apply (equiv_from_hequiv (transport (P := P) p) (transport (P := P) (!p))).
@@ -173,11 +173,11 @@ Defined.
    fibration, up to equivalence. *)
 
 Theorem total_paths_equiv (A : Type) (P : fibration A) (x y : total P) :
-  (x ~~> y) <~> { p : pr1 x ~~> pr1 y & transport p (pr2 x) ~~> pr2 y }.
+  (x == y) <~> { p : pr1 x == pr1 y & transport p (pr2 x) == pr2 y }.
 Proof.
   apply (equiv_from_hequiv
-     (fun r => existT (fun p => transport p (pr2 x) ~~> pr2 y) (base_path r) (fiber_path r))
-     (fun (pq : { p : pr1 x ~~> pr1 y & transport p (pr2 x) ~~> pr2 y }) =>
+     (fun r => existT (fun p => transport p (pr2 x) == pr2 y) (base_path r) (fiber_path r))
+     (fun (pq : { p : pr1 x == pr1 y & transport p (pr2 x) == pr2 y }) =>
           @total_path A P x y (projT1 pq) (projT2 pq))).
   intros [p q].
   simpl.
@@ -191,17 +191,17 @@ Defined.
 
 (** And similarly for products. *)
 
-Lemma prod_eta A B (u : A * B) : (fst u, snd u) ~~> u.
+Lemma prod_eta A B (u : A * B) : (fst u, snd u) == u.
 Proof.
   destruct u; path_induction.
 Defined.
 
 Definition prod_path_equiv A B (x y : A * B) :
-  (x ~~> y) <~> ((fst x ~~> fst y) * (snd x ~~> snd y)).
+  (x == y) <~> ((fst x == fst y) * (snd x == snd y)).
 Proof.
   apply (equiv_from_hequiv 
     (fun p => (map (x:=x) (y:=y) (@fst A B) p, map (@snd A B) p))
-    (fun (u : (fst x ~~> fst y) * (snd x ~~> snd y)) =>
+    (fun (u : (fst x == fst y) * (snd x == snd y)) =>
       !prod_eta A B x @ prod_path (fst u) (snd u) @ prod_eta A B y)).
   intros [p q].
   destruct x; destruct y.
@@ -219,15 +219,15 @@ Section hfiber_fibration.
   Hypothesis X : Type.
   Hypothesis P : fibration X.
 
-  Let hfiber_fibration_map (x : X) : { z : total P & pr1 z ~~> x } -> P x.
+  Let hfiber_fibration_map (x : X) : { z : total P & pr1 z == x } -> P x.
   Proof.
     intros [z p].
     apply (transport p).
     exact (pr2 z).
   Defined.
 
-  Let hfiber_fibration_map_path (x : X) (z : total P) (p : pr1 z ~~> x) :
-    (x ; hfiber_fibration_map x (z ; p)) ~~> z.
+  Let hfiber_fibration_map_path (x : X) (z : total P) (p : pr1 z == x) :
+    (x ; hfiber_fibration_map x (z ; p)) == z.
   Proof.
     apply @total_path with (p := !p).
     destruct z as [x' y']. simpl.
@@ -235,20 +235,20 @@ Section hfiber_fibration.
   Defined.
 
   Definition hfiber_fibration (x : X) :
-    P x <~> { z : total P & pr1 z ~~> x }.
+    P x <~> { z : total P & pr1 z == x }.
   Proof.
   apply (  equiv_from_hequiv
-      (fun y: P x => (((x ; y) ; idpath _) : {z : sigT P & pr1 z ~~> x}))
+      (fun y: P x => (((x ; y) ; idpath _) : {z : sigT P & pr1 z == x}))
       (hfiber_fibration_map x)).
     intros [z p].
     apply @total_path with (p := hfiber_fibration_map_path x z p). simpl.
-    path_via (transport (P := fun x' => x' ~~> x)
+    path_via (transport (P := fun x' => x' == x)
       (map pr1 (hfiber_fibration_map_path x z p))
       (idpath x)).
-    apply @map_trans with (P := fun x' => x' ~~> x).
+    apply @map_trans with (P := fun x' => x' == x).
     unfold hfiber_fibration_map_path.
-    path_via (transport (P := fun x' => x' ~~> x) (!p) (idpath x)).
-    apply map with (f := fun r => transport (P := fun x' => x' ~~> x) r (idpath x)).
+    path_via (transport (P := fun x' => x' == x) (!p) (idpath x)).
+    apply map with (f := fun r => transport (P := fun x' => x' == x) r (idpath x)).
     apply @base_total_path with
       (x := (x ; hfiber_fibration_map x (z ; p))).
     path_via ((!!p) @ idpath x).
@@ -266,13 +266,13 @@ Section FibrationReplacement.
   Hypothesis A B : Type.
   Hypothesis f : A -> B.
   
-  Definition fibration_replacement (x : A) : {y : B & {x : A & f x ~~> y}} :=
+  Definition fibration_replacement (x : A) : {y : B & {x : A & f x == y}} :=
     (f x ; (x ; idpath (f x))).
 
-  Definition fibration_replacement_equiv : A <~> {y : B & {x : A & f x ~~> y}}.
+  Definition fibration_replacement_equiv : A <~> {y : B & {x : A & f x == y}}.
   Proof.
   apply (  equiv_from_hequiv
-      fibration_replacement (fun (yxp : {y : B & {x : A & f x ~~> y}}) => pr1 (pr2 yxp))).
+      fibration_replacement (fun (yxp : {y : B & {x : A & f x == y}}) => pr1 (pr2 yxp))).
     intros [y [x p]].
     unfold fibration_replacement; simpl.
     apply @total_path with (p := p); simpl.
@@ -281,7 +281,7 @@ Section FibrationReplacement.
   Defined.
 
   Definition fibration_replacement_factors (x : A) :
-    pr1 (fibration_replacement_equiv x) ~~> f x.
+    pr1 (fibration_replacement_equiv x) == f x.
   Proof.
     auto.
   Defined.
@@ -374,9 +374,9 @@ End TotalComm.
 
 (** Transporting along a path is an "adjoint equivalence". *)
 
-Lemma transport_adjoint A (P : fibration A) (x y : A) (p : x ~~> y)
+Lemma transport_adjoint A (P : fibration A) (x y : A) (p : x == y)
   (a : P x) (b : P y) :
-  (transport p a ~~> b) <~> (a ~~> transport (!p) b).
+  (transport p a == b) <~> (a == transport (!p) b).
 Proof.
   path_induction.
   simpl.
@@ -403,19 +403,19 @@ Section PullbackContr.
   Hypothesis Cc : is_contr C.
   Hypothesis (f : A -> C) (g : B -> C).
 
-  Let pbu1 : {x : A & {y : B & f x ~~> g y}} -> A * B.
+  Let pbu1 : {x : A & {y : B & f x == g y}} -> A * B.
   Proof.
     intros [a [b p]].
     exact (a,b).
   Defined.
 
-  Let pbu2 : A * B -> {x : A & {y : B & f x ~~> g y}}.
+  Let pbu2 : A * B -> {x : A & {y : B & f x == g y}}.
   Proof.
     intros [a b].
     exists a; exists b; apply contr_path, Cc.
   Defined.
 
-  Definition pullback_over_contr : {x : A & {y : B & f x ~~> g y}} <~> A * B.
+  Definition pullback_over_contr : {x : A & {y : B & f x == g y}} <~> A * B.
   Proof.
     apply (equiv_from_hequiv pbu1 pbu2).
     intros [a b]; simpl; auto.

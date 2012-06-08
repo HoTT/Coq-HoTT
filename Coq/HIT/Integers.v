@@ -16,7 +16,7 @@ Proof.
   destruct (IHn m) as [p | e].
   left; apply map; assumption.
   right. intro H. apply e.
-  exact (transport (P := fun k => n ~~> match k with 0 => n | S l => l end) H (idpath n)).
+  exact (transport (P := fun k => n == match k with 0 => n | S l => l end) H (idpath n)).
 Defined.
 
 Theorem nat_is_set : is_set nat.
@@ -40,7 +40,7 @@ Proof.
   destruct ndec as [p | f].
   left; apply map; assumption.
   right. intro H. apply f.
-  exact (transport (P := fun z => n ~~> match z with pos a => a | _ => n end) H (idpath n)).
+  exact (transport (P := fun z => n == match z with pos a => a | _ => n end) H (idpath n)).
   right. intro H.
   exact (transport (P := fun z => match z with zero => Empty_set | _ => unit end) H tt).
   right. intro H.
@@ -60,7 +60,7 @@ Proof.
   destruct ndec as [p | f].
   left; apply map; assumption.
   right. intro H. apply f.
-  exact (transport (P := fun z => n ~~> match z with neg a => a | _ => n end) H (idpath n)).
+  exact (transport (P := fun z => n == match z with neg a => a | _ => n end) H (idpath n)).
 Defined.
 
 Theorem int_is_set : is_set int.
@@ -88,14 +88,14 @@ Definition pred (z : int) : int :=
   end.
 
 Definition succ_pred (z : int) :
-  succ (pred z) ~~> z.
+  succ (pred z) == z.
 Proof.
   induction z.
   induction n; auto. auto. auto.
 Defined.  
 
 Definition pred_succ (z : int) :
-  pred (succ z) ~~> z.
+  pred (succ z) == z.
 Proof.
   induction z.
   auto. auto. induction n; auto.
@@ -132,7 +132,7 @@ Proof.
 Defined.
 
 Lemma zero_right_unit (z : int) :
-  zadd z zero ~~> z.
+  zadd z zero == z.
 Proof.
   induction z.
   induction n.

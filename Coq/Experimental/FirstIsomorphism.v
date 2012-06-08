@@ -10,7 +10,7 @@ Section DirectLimit. (* Whoever called colimits limits? *)
 
   Structure Cocone (T : Type) := {
     cocone_incl :> forall n : nat, A n -> T ;
-    cocone_triangle : forall (n : nat) (x : A n), cocone_incl (S n) (alpha n x) ~~> cocone_incl n x
+    cocone_triangle : forall (n : nat) (x : A n), cocone_incl (S n) (alpha n x) == cocone_incl n x
   }.
 
   Definition cocone_compose {X Y : Type} (C : Cocone X) (f : X -> Y) : Cocone Y.

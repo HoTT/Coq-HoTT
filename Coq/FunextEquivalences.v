@@ -53,7 +53,7 @@ Defined.
 Lemma equiv_postfactor_contr A B C (g : B <~> C) (h : A -> C) :
   is_contr { f : A -> B &  g o f === h }.
 Proof.
-  apply contr_equiv_contr with ({f : A -> B & g o f ~~> h}).
+  apply contr_equiv_contr with ({f : A -> B & g o f == h}).
   apply total_equiv.
   now intros; apply strong_funext_equiv.
   apply (equiv_is_equiv (postcomp_equiv _ _ _ g) h).
@@ -62,7 +62,7 @@ Defined.
 Lemma equiv_prefactor_contr A B C (f : A <~> B) (h : A -> C) :
   is_contr { g : B -> C &  g o f === h }.
 Proof.
-  apply contr_equiv_contr with ({g : B -> C & g o f ~~> h}).
+  apply contr_equiv_contr with ({g : B -> C & g o f == h}).
   apply total_equiv.
   intros g; apply strong_funext_equiv.
   apply (equiv_is_equiv (precomp_equiv _ _ _ f) h).
@@ -74,7 +74,7 @@ Section IsHisoIsProp.
   (** How can we avoid wasting time on lemmas such as the one below? *)
 
   Definition is_hiso' {A B : Type} (f : A -> B) :=
-    ({g : B -> A & forall y, f (g y) ~~> y} * {h : B -> A & forall x, h (f x) ~~> x})%type.
+    ({g : B -> A & forall y, f (g y) == y} * {h : B -> A & forall x, h (f x) == x})%type.
 
   Lemma is_hiso'_equiv_is_hiso {A B} (f : A -> B) : is_hiso' f <~> is_hiso f.
   Proof.
@@ -201,12 +201,12 @@ Section SectionPathsEquiv.
 
   Variable A : Type.
   Variable x : A.
-  Variable P : forall y, fibration (x ~~> y).
+  Variable P : forall y, fibration (x == y).
 
-  Let sa : (forall y (p: x ~~> y), P y p) -> P x (idpath x) :=
+  Let sa : (forall y (p: x == y), P y p) -> P x (idpath x) :=
     fun Z => Z x (idpath x).
 
-  Let sainv : P x (idpath x) -> forall y (p: x ~~> y), P y p.
+  Let sainv : P x (idpath x) -> forall y (p: x == y), P y p.
   Proof.
     intros u y p.
     induction p.
@@ -214,7 +214,7 @@ Section SectionPathsEquiv.
   Defined.
 
   Definition section_paths_equiv :
-    (forall y (p: x ~~> y), P y p) <~> P x (idpath x).
+    (forall y (p: x == y), P y p) <~> P x (idpath x).
   Proof.
     apply (equiv_from_hequiv sa sainv); unfold sa, sainv; simpl.
     now auto.
@@ -233,103 +233,103 @@ Theorem is_adjoint_equiv_equiv A B (f : A -> B) :
 Proof.
   unfold is_equiv, is_contr.
   apply @equiv_compose with
-    (B := {g: forall y:B, hfiber f y & forall y y0, y0 ~~> g y}).
+    (B := {g: forall y:B, hfiber f y & forall y y0, y0 == g y}).
   apply section_total_equiv.
   unfold hfiber.
-  set (X := {g : B -> A & forall y:B, f (g y) ~~> y}).
-  set (Y := forall y : B, {x : A & f x ~~> y}).
+  set (X := {g : B -> A & forall y:B, f (g y) == y}).
+  set (Y := forall y : B, {x : A & f x == y}).
   set (k := equiv_inverse
-    (section_total_equiv B (fun _ => A) (fun y x => f x ~~> y)) : X <~> Y).
+    (section_total_equiv B (fun _ => A) (fun y x => f x == y)) : X <~> Y).
   apply @equiv_compose with
-    (B := {gs : X & forall y y0, y0 ~~> k gs y}).
+    (B := {gs : X & forall y y0, y0 == k gs y}).
   apply equiv_inverse.
   exists (total_map k (fun gs => idmap
-    (forall (y : B) (y0 : {x : A & f x ~~> y}), y0 ~~> k gs y))).
+    (forall (y : B) (y0 : {x : A & f x == y}), y0 == k gs y))).
   apply pullback_total_is_equiv with (f := k)
-    (Q := fun g => forall (y : B) (y0 : {x : A & f x ~~> y}), y0 ~~> g y).
+    (Q := fun g => forall (y : B) (y0 : {x : A & f x == y}), y0 == g y).
   unfold X.
   apply @equiv_compose with
-    (B := {g : B -> A & { s : forall y, f (g y) ~~> y &
-      forall (y : B) (y0 : {x : A & f x ~~> y}), y0 ~~> k (g;s) y}}).
+    (B := {g : B -> A & { s : forall y, f (g y) == y &
+      forall (y : B) (y0 : {x : A & f x == y}), y0 == k (g;s) y}}).
   apply equiv_inverse.
   apply total_assoc_sum with
-    (Q := fun gs => forall (y : B) (y0 : {x : A & f x ~~> y}), y0 ~~> k gs y).
+    (Q := fun gs => forall (y : B) (y0 : {x : A & f x == y}), y0 == k gs y).
   unfold is_adjoint_equiv.
   cut (forall g,
-    {s : forall y : B, f (g y) ~~> y &
-      forall (y : B) (y0 : {x : A & f x ~~> y}), y0 ~~> k (g ; s) y}
+    {s : forall y : B, f (g y) == y &
+      forall (y : B) (y0 : {x : A & f x == y}), y0 == k (g ; s) y}
     <~>
-    {is_section : forall y : B, f (g y) ~~> y &
-      {is_retraction : forall x : A, g (f x) ~~> x &
-        forall x : A, map f (is_retraction x) ~~> is_section (f x)}}).
+    {is_section : forall y : B, f (g y) == y &
+      {is_retraction : forall x : A, g (f x) == x &
+        forall x : A, map f (is_retraction x) == is_section (f x)}}).
   intros H. apply total_equiv with (g := H). intros g; apply (pr2 (H g)).
   intros g.
   cut (forall s,
-    (forall (y : B) (y0 : {x : A & f x ~~> y}), y0 ~~> k (g ; s) y)
+    (forall (y : B) (y0 : {x : A & f x == y}), y0 == k (g ; s) y)
     <~>
-    {is_retraction : forall x : A, g (f x) ~~> x &
-      forall x : A, map f (is_retraction x) ~~> s (f x)}).
+    {is_retraction : forall x : A, g (f x) == x &
+      forall x : A, map f (is_retraction x) == s (f x)}).
   intros H. apply total_equiv with H.  intros s; apply (pr2 (H s)).
   intros s.
   apply @equiv_compose with
-    (B := forall (y : B) (x : A) (p : f x ~~> y), (x;p) ~~> k (g;s) y).
+    (B := forall (y : B) (x : A) (p : f x == y), (x;p) == k (g;s) y).
   apply postcomp_equiv_dep. intros y.
   apply equiv_inverse.
-  apply section_assoc_sum with (Q := fun y0 => y0 ~~> k (g;s) y).
+  apply section_assoc_sum with (Q := fun y0 => y0 == k (g;s) y).
   apply @equiv_compose with
-    (B := forall (y : B) (x : A) (p : f x ~~> y),
-      { q : x ~~> pr1 (k (g;s) y) &
-        transport q p ~~> pr2 (k (g;s) y)}).
+    (B := forall (y : B) (x : A) (p : f x == y),
+      { q : x == pr1 (k (g;s) y) &
+        transport q p == pr2 (k (g;s) y)}).
   apply postcomp_equiv_dep; intros y.
   apply postcomp_equiv_dep; intros x.
   apply postcomp_equiv_dep; intros p.
   apply total_paths_equiv.
   unfold k; simpl. clear X Y k.
   apply @equiv_compose with
-    (B := forall (x : A) (y : B) (p : f x ~~> y),
-      {q : x ~~> g y & transport (P := fun x0 : A => f x0 ~~> y) q p ~~> s y}).
+    (B := forall (x : A) (y : B) (p : f x == y),
+      {q : x == g y & transport (P := fun x0 : A => f x0 == y) q p == s y}).
   apply section_comm.
   apply @equiv_compose with
-    (B := forall x:A, { r : g (f x) ~~> x & map f r ~~> s (f x)}).
+    (B := forall x:A, { r : g (f x) == x & map f r == s (f x)}).
   2:apply section_total_equiv.
   apply postcomp_equiv_dep; intros x.
   apply @equiv_compose with
-    (B := forall (y : B) (p : f x ~~> y),
-      {q : x ~~> g y & !map f q @ p ~~> s y}).
+    (B := forall (y : B) (p : f x == y),
+      {q : x == g y & !map f q @ p == s y}).
   apply postcomp_equiv_dep; intros y.
   apply postcomp_equiv_dep; intros p.
   apply equiv_inverse.
   apply @equiv_compose with
-    (B := {q : x ~~> g y &
-      transport (P := fun y0 => y0 ~~> y) (map f q) p ~~> s y}).
+    (B := {q : x == g y &
+      transport (P := fun y0 => y0 == y) (map f q) p == s y}).
   apply total_equiv with
-    (g := fun q:x ~~> g y => concat (trans_is_concat_opp (map f q) p)).
+    (g := fun q:x == g y => concat (trans_is_concat_opp (map f q) p)).
   intros q; apply concat_is_equiv_left.
   apply total_equiv with
-    (g := fun q:x ~~> g y => concat (map_trans (fun y0 => y0 ~~> y) f q p)).
+    (g := fun q:x == g y => concat (map_trans (fun y0 => y0 == y) f q p)).
   intros q; apply concat_is_equiv_left.
   apply @equiv_compose with
-    (B := {r : x ~~> g (f x) & !map f r @ idpath (f x) ~~> s (f x)}).
+    (B := {r : x == g (f x) & !map f r @ idpath (f x) == s (f x)}).
   Focus 2.
   apply @equiv_compose with
-    (B := {r : x ~~> g (f x) & map f (!r) ~~> s (f x)}).
+    (B := {r : x == g (f x) & map f (!r) == s (f x)}).
   apply @equiv_compose with
-    (B := {r : x ~~> g (f x) & !map f r ~~> s (f x)}).
-  apply total_equiv with (fun r:x ~~> g (f x) =>
+    (B := {r : x == g (f x) & !map f r == s (f x)}).
+  apply total_equiv with (fun r:x == g (f x) =>
     concat (!idpath_right_unit _ _ _ (!map f r))).
   intros r; apply concat_is_equiv_left.
-  apply total_equiv with (fun r:x ~~> g (f x) =>
+  apply total_equiv with (fun r:x == g (f x) =>
     concat (opposite_map _ _ f _ _ r)).
   intros r; apply concat_is_equiv_left.
   exists (total_map
-    (P := fun r => map f (!r) ~~> s (f x))
-    (Q := fun r => map f r ~~> s (f x))
+    (P := fun r => map f (!r) == s (f x))
+    (Q := fun r => map f r == s (f x))
     (opposite_equiv x (g (f x)))
-    (fun r => idmap (map f (!r) ~~> s (f x)))).
+    (fun r => idmap (map f (!r) == s (f x)))).
   refine (pullback_total_is_equiv
-    (fun r => map f r ~~> s (f x)) (opposite_equiv x (g (f x)))).
+    (fun r => map f r == s (f x)) (opposite_equiv x (g (f x)))).
   refine (section_paths_equiv B (f x)
-    (fun y p => {q : x ~~> g y & !map f q @ p ~~> s y})).
+    (fun y p => {q : x == g y & !map f q @ p == s y})).
 Defined.
 
 (** And therefore it is a prop. *)

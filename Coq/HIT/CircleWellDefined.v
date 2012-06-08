@@ -16,7 +16,7 @@ Require Import Homotopy Circle.
    we want to prove that they yield an equivalence. For that, we have to prove
    that for all [x : C1], there is a path from [g (f x)] to [x], and vice versa.
 
-   Let us concentrate just on the property [P(x)] which states [g (f x) ~~> x],
+   Let us concentrate just on the property [P(x)] which states [g (f x) == x],
    the other one is symmetric. Then [P] is a fibration over the circle [C1],
    and we want to prove [forall x : C1, P x] by (dependent) induction on [x].
 
@@ -24,16 +24,16 @@ Require Import Homotopy Circle.
    just have to apply the computation rule for [base] twice.
 
    Then we have to find a term [cc_loop] of type [transport (P := P) loop
-   cc_base ~~> cc_base]. But given that we know nothing about [loop], we cannot
+   cc_base == cc_base]. But given that we know nothing about [loop], we cannot
    prove something about it unless we prove something about all paths in the
    circle and then specialize it to [loop]. So we will find [cc_transp] which is
-   of type [transport (P := P) p x ~~> $$$] with [$$$] replaced by something
+   of type [transport (P := P) p x == $$$] with [$$$] replaced by something
    complicated, where [p] is any path of the circle [C1], which explains how
    something like [cc_base] is transported by any loop in the circle (this is
    very easy by induction on [p] and with the [cancel_units] tactic).
 
    Now the difficult part begins. We have to prove that [cc_transp] specialized
-   to [loop] gives indeed [transport (P := P) loop cc_base ~~> cc_base]. We
+   to [loop] gives indeed [transport (P := P) loop cc_base == cc_base]. We
    will here need to use the computation rule for [loop] twice and make sure
    that everything cancels (and this is ugly because each computation rule for
    loop adds two concatenations which have to pass through [map] and [!]).
@@ -66,7 +66,7 @@ Section CircleToCircle.
   Definition f : C1 -> C2 := circle_rect' C1 C2 base loop.
   Definition g : C2 -> C1 := circle_rect' C2 C1 base loop.
 
-  Definition P := fun x : C1 => g (f x) ~~> x.
+  Definition P := fun x : C1 => g (f x) == x.
 
   Lemma cc_base : P base.
   Proof.
@@ -76,27 +76,27 @@ Section CircleToCircle.
     apply compute_base'.
   Defined.
 
-  Lemma cc_transp {X Y : Type} (h k : X -> Y) (u v : X) (p : u ~~> v) :
-    forall q : h u ~~> k u,
-        transport (P := (fun x => h x ~~> k x)) p q ==
+  Lemma cc_transp {X Y : Type} (h k : X -> Y) (u v : X) (p : u == v) :
+    forall q : h u == k u,
+        transport (P := (fun x => h x == k x)) p q ==
         (!map h p) @ q @ (map k p).
   Proof.
     path_induction.
     cancel_units.
   Defined.
 
-  Lemma cc_loop : transport (P := P) loop cc_base ~~> cc_base.
+  Lemma cc_loop : transport (P := P) loop cc_base == cc_base.
   Proof.
     eapply concat.
     apply cc_transp with (h := compose g f) (k := idmap C1).
     do_compose_map.
 
-    rewr (compute_loop' C1 _ _ _ : map f loop ~~> _).
+    rewr (compute_loop' C1 _ _ _ : map f loop == _).
     apply compute_loop'.
     do_concat_map.
     apply concat_map with (f := g). (* Why do I need to make [f] explicit? *)
     undo_opposite_concat.
-    rewr (compute_loop' _ _ _ _ : map g loop ~~> _).
+    rewr (compute_loop' _ _ _ _ : map g loop == _).
     apply compute_loop'.
     undo_opposite_concat.
     unfold cc_base.

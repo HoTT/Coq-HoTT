@@ -24,7 +24,7 @@ Implicit Arguments mor [d x y].
 
 Record Cocone (D : Diagram) (V : Type) := {
   arrow : forall (i : obj_index D), obj i -> V;
-  triangle : forall (i j : obj_index D) (e : mor_index i j) (u : obj i), arrow i u ~~> arrow j (mor e u)
+  triangle : forall (i j : obj_index D) (e : mor_index i j) (u : obj i), arrow i u == arrow j (mor e u)
 }.
 
 Implicit Arguments arrow [D V i].
@@ -52,7 +52,7 @@ Definition isColimiting {D X} (K : Cocone D X) :=
 (* If [K] is a colimiting cocone and [L] is any cocone, then there is a map
    from the vertex of [K] to the vertex of [L] which is a cocone morphism. *)
 Lemma fromColimit {D X Y} (K : Cocone D X) (H : isColimiting K) (L : Cocone D Y) :
- { f : X -> Y & forall (i : obj_index D) (x : obj i), f (arrow K x) ~~> arrow L x }.
+ { f : X -> Y & forall (i : obj_index D) (x : obj i), f (arrow K x) == arrow L x }.
 Proof.
   pose (f := ((cocone_compose K; H Y) ^-1) L).
   exists f.
@@ -80,24 +80,24 @@ Section HITDefinition.
     (* constructors for the carrier *)
     hit_point : point -> hit_carrier ;
     (* constructors for paths *)
-    hit_path : forall {x y}, path x y -> hit_point x ~~> hit_point y ;
+    hit_path : forall {x y}, path x y -> hit_point x == hit_point y ;
     (* the induction principle construst a map from the HIT, given information
        [b] on where to map points and information [i] on where to map paths. *)
     hit_rect :
       (forall (P : hit_carrier -> Type) (b : forall x, P (hit_point x))
-              (i : forall {x y} (p : path x y), transport (hit_path p) (b x) ~~> b y),
+              (i : forall {x y} (p : path x y), transport (hit_path p) (b x) == b y),
         forall x, P x) ;
     (* The first conversion states that [hit_rect] maps points to as prescribed by the data [b]. *)
     hit_convert_point :
       (forall (P : hit_carrier -> Type) (b : forall x, P (hit_point x))
-              (i : forall {x y} (p : path x y), transport (hit_path p) (b x) ~~> b y),
-        forall x, hit_rect P b i (hit_point x) ~~> b x) ;
+              (i : forall {x y} (p : path x y), transport (hit_path p) (b x) == b y),
+        forall x, hit_rect P b i (hit_point x) == b x) ;
     (* The second conversion states that [hit_rect] acts on points as prescribed by the data [i]. *)
     hit_convert_path :
       (forall (P : hit_carrier -> Type) (b : forall x, P (hit_point x))
-              (i : forall {x y} (p : path x y), transport (hit_path p) (b x) ~~> b y),
+              (i : forall {x y} (p : path x y), transport (hit_path p) (b x) == b y),
         forall {x y} (p : path x y),
-          map_dep (hit_rect P b i) (hit_path p) ~~>
+          map_dep (hit_rect P b i) (hit_path p) ==
           map (transport (hit_path p)) (hit_convert_point P b i x) @ i _ _ p @ ! (hit_convert_point P b i y))
   }.
 End HITDefinition.
@@ -114,14 +114,14 @@ Section HITNonDependent.
 
   Variable H : HIT point path.
 
-  Lemma transport_nondep (X Y : Type) (u v : X) (p : u ~~> v) (y : Y) :
-    transport (P := fun _ => Y) p y ~~> y.
+  Lemma transport_nondep (X Y : Type) (u v : X) (p : u == v) (y : Y) :
+    transport (P := fun _ => Y) p y == y.
   Proof.
     path_induction.
   Defined.
 
   Theorem hit_rect' (X : Type) (b : point -> X)
-                    (i : forall {x y}, (path x y) -> b x ~~> b y) :  H -> X.
+                    (i : forall {x y}, (path x y) -> b x == b y) :  H -> X.
   Proof.
     intro t.
     apply hit_rect with
@@ -135,8 +135,8 @@ Section HITNonDependent.
   Defined.
 
   Theorem hit_convert_point' (X : Type) (b : point -> X)
-    (i : forall {x y}, (path x y) -> b x ~~> b y) (x : point) :
-    hit_rect' X b i (hit_point x) ~~> b x.
+    (i : forall {x y}, (path x y) -> b x == b y) (x : point) :
+    hit_rect' X b i (hit_point x) == b x.
   Proof.
     apply hit_convert_point with
       (P := fun _ => X).
@@ -169,7 +169,7 @@ Section HIT_from_colimit.
        from the universal property of [C], but we need some preparation. *)
     assert (h_rect :
       (forall (P : h_carrier -> Type) (b : forall x, P (h_point x))
-              (i : forall {x y} (p : path x y), transport (h_path x y p) (b x) ~~> b y),
+              (i : forall {x y} (p : path x y), transport (h_path x y p) (b x) == b y),
         forall x, P x)).
     intros P b i x.
     (* We construct a cocone on [K] with vertex [sigT P]. *)
@@ -185,7 +185,7 @@ Section HIT_from_colimit.
     destruct (fromColimit C H K) as [f G].
     (* If we apply [f] to [x] we get an element [y] in [P x']. *)
     destruct (f x) as [x' y].
-    (* To get an element in [P x], we transport [y] along a path [x' ~~> x]. But which path? *)
+    (* To get an element in [P x], we transport [y] along a path [x' == x]. But which path? *)
     (* UNFINISHED FROM HERE. *)
     
     (* However [y] is not immediately seen to be in [P x]. For that we need to use further
@@ -208,7 +208,7 @@ Section FirstEquivalenceTheorem.
   Variable f : A -> B.
   Hypothesis f_surjective : forall b, hfiber f b.
 
-  Definition ker {X Y : Type} (g : X -> Y) x y := g x ~~> g y.
+  Definition ker {X Y : Type} (g : X -> Y) x y := g x == g y.
 
   (* The space which would normally be written as [A/ker f]. *)
   Hypothesis A_ker_f : HIT A (ker f).
@@ -237,7 +237,7 @@ Section FirstEquivalenceTheorem.
   Proof.
     intro b.
     pose (a := pr1 (f_surjective b)).
-    assert (p : f_tilde (hit_point a) ~~> b).
+    assert (p : f_tilde (hit_point a) == b).
     path_via (f a).
     unfold f_tilde.
     apply hit_convert_point'.
@@ -249,9 +249,9 @@ Section FirstEquivalenceTheorem.
     (* eapply hit_rect with (h := A_ker_f)
        (x := z)
        (P := (fun (z : A_ker_f) =>
-       forall q : f_tilde z ~~> b,
-       (z; q) ~~>
-       existT (fun (z : A_ker_f) => f_tilde z ~~> b) (hit_point a) p)).
+       forall q : f_tilde z == b,
+       (z; q) ==
+       existT (fun (z : A_ker_f) => f_tilde z == b) (hit_point a) p)).
     *)
   Admitted.
 

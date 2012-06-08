@@ -23,7 +23,7 @@ Require Import ExtensionalityAxiom.
 Structure Equivariant := {
   eq_ty :> Type -> Type ;
   eq_map : forall (A B : Type), A <~> B -> eq_ty A <~> eq_ty B ;
-  eq_id : forall (A : Type) (x : eq_ty A), eq_map A A (idequiv A) x ~~> x
+  eq_id : forall (A : Type) (x : eq_ty A), eq_map A A (idequiv A) x == x
 }.
 
 Implicit Arguments eq_map [A B].
@@ -35,7 +35,7 @@ Implicit Arguments eq_id [A].
 Structure EquivariantFamily (P : Equivariant) := {
   fam :> forall (A : Type), P A -> Type ; 
   fam_map : forall (A B : Type) (e : A <~> B) (x : P A), fam A x <~> fam B (eq_map P e x) ;
-  fam_id : forall (A : Type) (x : P A) (y : fam A x), eq_id P x # fam_map A A (idequiv A) x y ~~> y
+  fam_id : forall (A : Type) (x : P A) (y : fam A x), eq_id P x # fam_map A A (idequiv A) x y == y
 }.
 
 Implicit Arguments fam [P].
@@ -176,7 +176,7 @@ Section DependentProduct.
     generalize ((eq_map P (idequiv A))^-1 x).
     intros x' p.
     pose (q := (!(eq_id P x') @ p)).
-    assert (h : p ~~> eq_id P x' @ q); unfold q; hott_simpl.
+    assert (h : p == eq_id P x' @ q); unfold q; hott_simpl.
     rewrite h.
     generalize q; intro r; induction r.
     hott_simpl.

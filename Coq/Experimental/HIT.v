@@ -14,7 +14,7 @@ Require Import Paths Fibrations Equivalences Funext.
 Fixpoint globule (n : nat) (A : Type) : Type :=
   match n with
     | 0 => (A * A)%type
-    | S m => { x : A & { y : A & globule m (x ~~> y) } }
+    | S m => { x : A & { y : A & globule m (x == y) } }
   end.
 
 Definition globule_map {n : nat} : forall {A B : Type} (f : A -> B), globule n A -> globule n B.
@@ -24,15 +24,15 @@ Proof.
   destruct b as [x [y c]].
   fold globule in c.
   exists (f x); exists (f y).
-  apply IHn with (A := x ~~> y).
+  apply IHn with (A := x == y).
   apply map.
   exact c.
 Defined.
 
 Fixpoint brane (n : nat) (A : Type) : Type :=
   match n with
-    | 0 => {x : A & { y : A & x ~~> y } }
-    | S m => { x : A & {y : A & brane m (x ~~> y) } }
+    | 0 => {x : A & { y : A & x == y } }
+    | S m => { x : A & {y : A & brane m (x == y) } }
 end.
 
 Definition edge {n : nat} : forall {A : Type}, brane n A -> globule n A.
@@ -58,13 +58,13 @@ Structure HIT (G : GlueData) := {
   hit_ty :> Type ;
   hit_incl : glue_ty G -> hit_ty ;
   hit_brane : forall (n : nat), glue_brane G n -> brane n hit_ty ;
-  hit_edge : forall (n : nat) (b : glue_brane G n), edge (hit_brane n b) ~~> globule_map hit_incl (glue_attach G n b) ;
+  hit_edge : forall (n : nat) (b : glue_brane G n), edge (hit_brane n b) == globule_map hit_incl (glue_attach G n b) ;
   hit_rect :
     forall
       (P : fibration hit_ty)
       (i : forall x : glue_ty G, P (hit_incl x))
       (j : forall (n : nat), glue_brane G n -> brane n Type)
-      (e : forall (n : nat) (b : glue_brane G n), globule_map P (edge (hit_brane n b)) ~~> edge (j n b)),
+      (e : forall (n : nat) (b : glue_brane G n), globule_map P (edge (hit_brane n b)) == edge (j n b)),
         forall (x : hit_ty), P x
   (* missing computation rules *)
 }.
@@ -83,7 +83,7 @@ Section KernelQuotient.
       {|
         glue_ty := A' ;
         glue_brane := (fun (k : nat) =>
-          ((k ~~> n) * { l : globule n A' & { b : brane n B & edge b ~~> globule_map f' l } })%type)
+          ((k == n) * { l : globule n A' & { b : brane n B & edge b == globule_map f' l } })%type)
       |}.
     intro m.
     intros [E [l [b p]]].

@@ -6,12 +6,12 @@ Require Export Paths Fibrations.
    first component is a point [x] and the second component is a
    pointwise retraction of [A] to [x]. *)
 
-Definition is_contr A := {x : A & forall y : A, y ~~> x}.
+Definition is_contr A := {x : A & forall y : A, y == x}.
 
 (** If a space is contractible, then any two points in it are
    connected by a path in a canonical way. *)
 
-Lemma contr_path {A} (x y : A) : (is_contr A) -> (x ~~> y).
+Lemma contr_path {A} (x y : A) : (is_contr A) -> (x == y).
 Proof.
   intro H.
   destruct H as (z,p).
@@ -20,7 +20,7 @@ Defined.
 
 (** Similarly, any two parallel paths in a contractible space are homotopic.  *)
 
-Lemma contr_path2 {A} {x y : A} (p q : x ~~> y) : (is_contr A) -> (p ~~> q).
+Lemma contr_path2 {A} {x y : A} (p q : x == y) : (is_contr A) -> (p == q).
 Proof.
   intro ctr.
   destruct ctr as (c, ret).
@@ -36,7 +36,7 @@ Defined.
 
 (** It follows that any space of paths in a contractible space is contractible. *)
 
-Lemma contr_pathcontr {A} (x y : A) : is_contr A -> is_contr (x ~~> y).
+Lemma contr_pathcontr {A} (x y : A) : is_contr A -> is_contr (x == y).
 Proof.
   intro ctr.
   exists (contr_path x y ctr).
@@ -54,16 +54,16 @@ Proof.
   path_induction.
 Defined.
 
-Lemma pathspace_contr' {X} (x:X) : is_contr { y:X  &  x ~~> y }.
+Lemma pathspace_contr' {X} (x:X) : is_contr { y:X  &  x == y }.
 Proof.
-  exists (existT (fun y => x ~~> y) x (idpath x)).
+  exists (existT (fun y => x == y) x (idpath x)).
   intros [y p].
   path_induction.
 Defined.
 
-Lemma pathspace_contr_opp {X} (x:X) : is_contr { y:X & y ~~> x }.
+Lemma pathspace_contr_opp {X} (x:X) : is_contr { y:X & y == x }.
 Proof.
-  exists (existT (fun y => y ~~> x) x (idpath x)).
+  exists (existT (fun y => y == x) x (idpath x)).
   intros [y p].
   path_induction.
 Defined.

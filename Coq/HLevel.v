@@ -33,7 +33,7 @@ Defined.
 Fixpoint is_hlevel (n : nat) : Type -> Type :=
   match n with
     | 0 => is_contr
-    | S n' => fun X => forall (x y:X), is_hlevel n' (x ~~> y)
+    | S n' => fun X => forall (x y:X), is_hlevel n' (x == y)
   end.
 
 Theorem hlevel_inhabited_contr n : forall X, is_hlevel n X -> is_contr (is_hlevel n X).
@@ -73,13 +73,13 @@ Proof.
   apply @contr_equiv_contr.
   simpl.
   intros A B f H x y.
-  apply IHn with (A := f (f^-1 x) ~~> y).
+  apply IHn with (A := f (f^-1 x) == y).
   apply concat_equiv_left.
   apply opposite, inverse_is_section.
-  apply IHn with (A := f (f^-1 x) ~~> f (f^-1 y)).
+  apply IHn with (A := f (f^-1 x) == f (f^-1 y)).
   apply concat_equiv_right.
   apply inverse_is_section.
-  apply IHn with (A := (f^-1 x) ~~> (f^-1 y)).
+  apply IHn with (A := (f^-1 x) == (f^-1 y)).
   apply equiv_map_equiv.
   apply H.
 Defined.
@@ -95,7 +95,7 @@ Proof.
   intros [a' b'].
   apply prod_path. apply ac. apply bc.
   intros Ah Bh [a1 b1] [a2 b2].
-  apply @hlevel_equiv with (A := ((a1 ~~> a2) * (b1 ~~> b2))%type).
+  apply @hlevel_equiv with (A := ((a1 == a2) * (b1 == b2))%type).
   apply equiv_inverse, prod_path_equiv.
   apply IHn. apply Ah. apply Bh.
 Defined.
@@ -114,7 +114,7 @@ Proof.
   apply contr_path; apply (Pc a).
   intros A P Ah Ph [a1 p1] [a2 p2].
   apply @hlevel_equiv with
-    (A := {p : a1 ~~> a2 & transport p p1 ~~> p2}).
+    (A := {p : a1 == a2 & transport p p1 == p2}).
   apply equiv_inverse, total_paths_equiv.
   apply IHn.
   apply Ah.
@@ -182,21 +182,21 @@ Defined.
 
 (** And another one. *)
 
-Theorem prop_path {A} : is_prop A -> forall (x y : A), x ~~> y.
+Theorem prop_path {A} : is_prop A -> forall (x y : A), x == y.
 Proof.
   unfold is_prop. simpl.
   intros H x y.
   exact (pr1 (H x y)).
 Defined.
 
-Theorem allpath_prop {A} : (forall (x y : A), x ~~> y) -> is_prop A.
+Theorem allpath_prop {A} : (forall (x y : A), x == y) -> is_prop A.
   intros H x y.
   assert (K : is_contr A).
   exists x. intro y'. apply H.
   apply contr_pathcontr. assumption.
 Defined.
 
-Theorem prop_equiv_allpath {A} : is_prop A <~> (forall (x y : A), x ~~> y).
+Theorem prop_equiv_allpath {A} : is_prop A <~> (forall (x y : A), x == y).
 Proof.
   apply (equiv_from_hequiv prop_path allpath_prop).
   intro H.
@@ -265,7 +265,7 @@ Definition is_set := is_hlevel 2.
 
 (** A type is a set if and only if it satisfies Axiom K. *)
 
-Definition axiomK A := forall (x : A) (p : x ~~> x), p ~~> idpath x.
+Definition axiomK A := forall (x : A) (p : x == x), p == idpath x.
 
 Definition isset_implies_axiomK A : is_set A -> axiomK A.
 Proof.
@@ -283,7 +283,7 @@ Proof.
 Defined.
 
 Theorem isset_equiv_axiomK {A} :
-  is_set A <~> (forall (x : A) (p : x ~~> x), p ~~> idpath x).
+  is_set A <~> (forall (x : A) (p : x == x), p == idpath x).
 Proof.
   apply (equiv_from_hequiv (isset_implies_axiomK A) (axiomK_implies_isset A)).
   intro H.
@@ -311,8 +311,8 @@ Proof.
   apply hlevel_isprop.
 Defined.
 
-Theorem set_path2 (A : Type) (x y : A) (p q : x ~~> y) :
-  is_set A -> (p ~~> q).
+Theorem set_path2 (A : Type) (x y : A) (p q : x == y) :
+  is_set A -> (p == q).
 Proof.
   intro H.
   apply contr_path.
@@ -329,7 +329,7 @@ Defined.
    homotopy (whew!).  *)
 
 Lemma axiomK_idpath (A : Type) (x : A) (K : axiomK A) :
-  K x (idpath x) ~~> idpath (idpath x).
+  K x (idpath x) == idpath (idpath x).
 Proof.
   intros.
   set (qq := map_dep (K x) (K x (idpath x))).
@@ -343,13 +343,13 @@ Defined.
 (** Any type with "decidable equality" is a set. *)
 
 Definition decidable_paths (A : Type) :=
-  forall (x y : A), (x ~~> y) + ((x ~~> y) -> Empty_set).
+  forall (x y : A), (x == y) + ((x == y) -> Empty_set).
 
 (* Classically, this lemma would be proved with [discriminate], but
    unfortunately that tactic is hardcoded to work only with Coq's
    Prop-valued equality. *)
-Definition inl_injective (A B : Type) (x y : A) (p : inl B x ~~> inl B y) : (x ~~> y) :=
-  transport (P := fun (s:A+B) => x ~~> match s with inl a => a | inr b => x end) p (idpath x).
+Definition inl_injective (A B : Type) (x y : A) (p : inl B x == inl B y) : (x == y) :=
+  transport (P := fun (s:A+B) => x == match s with inl a => a | inr b => x end) p (idpath x).
 
 Theorem decidable_isset (A : Type) :
   decidable_paths A -> is_set A.
@@ -366,9 +366,9 @@ Proof.
   path_via (transport p q).
   apply opposite, trans_is_concat.
   path_via q.
-  set (qp1 := trans_map p (fun (x0:A) => inl  (x ~~> x0 -> Empty_set)) q).
+  set (qp1 := trans_map p (fun (x0:A) => inl  (x == x0 -> Empty_set)) q).
   simpl in qp1.
-  apply inl_injective with (B := (x ~~> x -> Empty_set)).
+  apply inl_injective with (B := (x == x -> Empty_set)).
   exact (qp1 @ qp0).
   induction (q' p).
 Defined.
