@@ -580,7 +580,8 @@ Proof.
   path_via (f (g y)).
   apply map.
   path_via (h (f (g y))).
-  apply map, opposite, G.
+  (* Coq 8.3 wants this but 8.4 does not, so we try it. *)
+  try (apply map, opposite, G).
   assumption.
 Defined.
 

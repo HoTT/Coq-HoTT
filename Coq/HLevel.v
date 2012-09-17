@@ -345,17 +345,15 @@ Defined.
 Definition decidable_paths (A : Type) :=
   forall (x y : A), (x == y) + ((x == y) -> Empty_set).
 
-(* Classically, this lemma would be proved with [discriminate], but
+(* Usually this lemma would be proved with [discriminate], but
    unfortunately that tactic is hardcoded to work only with Coq's
-   Prop-valued equality. *)
-Definition inl_injective (A B : Type) (x y : A) (p : inl B x == inl B y) : (x == y) :=
-  transport (P := fun (s:A+B) => x == match s with inl a => a | inr b => x end) p (idpath x).
+   [Prop]-valued equality. *)
+Definition inl_injective {A B : Type} {x y : A} (p : inl B x == inl B y) : x == y :=
+  transport (P := fun (s : A + B) => x == (match s with inl a => a | inr b => x end)) p (idpath x).
 
-Theorem decidable_isset (A : Type) :
-  decidable_paths A -> is_set A.
+Theorem decidable_implies_axiomK {A : Type} : decidable_paths A -> axiomK A.
 Proof.
-  intros d.
-  apply axiomK_implies_isset.
+  intro d.
   intros x p.
   set (qp := map_dep (d x) p).
   set (q := d x x) in *.
@@ -366,10 +364,18 @@ Proof.
   path_via (transport p q).
   apply opposite, trans_is_concat.
   path_via q.
-  set (qp1 := trans_map p (fun (x0:A) => inl  (x == x0 -> Empty_set)) q).
+  set (qp1 := trans_map p (fun y => @inl (x == y) (x == y -> Empty_set)) q).
   simpl in qp1.
-  apply inl_injective with (B := (x == x -> Empty_set)).
+  apply @inl_injective with (B := (x == x -> Empty_set)).
   exact (qp1 @ qp0).
   induction (q' p).
 Defined.
+
+Corollary decidable_isset (A : Type) : decidable_paths A -> is_set A.
+Proof.
+  intro.
+  apply axiomK_implies_isset, decidable_implies_axiomK.
+  assumption.
+Defined.
+
 

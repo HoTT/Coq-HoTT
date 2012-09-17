@@ -164,7 +164,8 @@ Theorem trans_equiv {A} {P : fibration A} {x y : A} (p : x == y) :
 Proof.
   apply (equiv_from_hequiv (transport (P := P) p) (transport (P := P) (!p))).
   intros z.
-  hott_simpl.
+  (** XXX find out why [hott_simpl] cycles in 8.4 at this point. *)
+  apply trans_trans_opp.
   intros z.
   hott_simpl.
 Defined.

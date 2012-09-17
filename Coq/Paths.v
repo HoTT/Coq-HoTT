@@ -112,6 +112,11 @@ Notation "! p" := (opposite p) (at level 50).
    such a measure. It is the lexicographic order of the following
    simpler measures, where the most significant measure comes first:
 
+   - number of occurences of [equiv_compose]
+   - number of occurences of [equiv_inverse]
+   - number of occurences of [inverse] (from [Equivalences])
+   - number of occurences of [total_path]
+   - depth at which [happly_dep] occurs
    - depth at which [map_dep] occurs
    - number of occurences of [concat]
    - depth at which [transport] occurs

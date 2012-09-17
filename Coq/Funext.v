@@ -266,9 +266,10 @@ Section AxiomOfChoiceEquiv'.
     pose (e := eta_dep_equiv P (eta_dep_rule _ P)).
     pose (f := pullback_total_equiv R e).
     path_via (f (h; H)).
+    (* The following step is not needed in Coq 8.4 but is needed in 8.3 so we try it *)
     (* To show that an equivalence is homotopic to the identity, it
        suffices to show that is idempotent, which is easy. *)
-    now apply equiv_injective with f.
+    try now apply equiv_injective with f.
     (* The other half of the proof is easier than it looks because
        we get to apply weak extensionality. *)
     intro h.
