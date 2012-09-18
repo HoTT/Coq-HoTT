@@ -61,6 +61,14 @@ Defined.
 
 Hint Rewrite @transport_idpath : paths.
 
+Lemma transport_idpath_right {A} {x y : A} (p : x == y) :
+  p # idpath x == p.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite @transport_idpath_right : paths.
+
 (** A homotopy fiber for a map [f] at [y] is the space of paths of the
    form [f x == y]. *)
 
@@ -215,7 +223,9 @@ Proof.
   path_induction.
 Defined.
 
-(* Hint Rewrite @map_trans : paths. *)
+(** XXX This seems to violate the well-order described in Paths.v
+    that guarantees termination of autorewriting with the [path] hints. *)
+Hint Rewrite @map_trans : paths.
 
 (** And also with applying fiberwise functions. *)
 
