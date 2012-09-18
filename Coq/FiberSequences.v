@@ -6,7 +6,7 @@ Section ThreeByThreeMaps.
 
   (* Suppose we have a commutative square. *)
   Hypotheses A B C D : Type.
-  Hypotheses (f :A -> B) (g :C -> D) (h : A -> C) (k : B -> D).
+  Hypotheses (f : A -> B) (g : C -> D) (h : A -> C) (k : B -> D).
   Hypothesis s : forall a, k (f a) == g (h a).
 
   (* Consider a point in [B]. *)
