@@ -164,9 +164,10 @@ Theorem trans_equiv {A} {P : fibration A} {x y : A} (p : x == y) :
 Proof.
   apply (equiv_from_hequiv (transport (P := P) p) (transport (P := P) (!p))).
   intros z.
-  hott_simpl.
+  (** XXX find out why [hott_simpl] cycles in 8.4 at this point. *)
+  apply trans_trans_opp.
   intros z.
-  hott_simpl.
+  apply trans_opp_trans.
 Defined.
   
 (** We can characterize the path types of the total space of a
@@ -231,7 +232,7 @@ Section hfiber_fibration.
   Proof.
     apply @total_path with (p := !p).
     destruct z as [x' y']. simpl.
-    hott_simpl.
+    apply trans_opp_trans.
   Defined.
 
   Definition hfiber_fibration (x : X) :
@@ -277,6 +278,8 @@ Section FibrationReplacement.
     unfold fibration_replacement; simpl.
     apply @total_path with (p := p); simpl.
     hott_simpl.
+    (* This step needed in 8.3 but not 8.4. *)
+    try (rewrite map_trans; hott_simpl).
     intros x. auto.
   Defined.
 

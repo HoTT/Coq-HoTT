@@ -61,6 +61,14 @@ Defined.
 
 Hint Rewrite @transport_idpath : paths.
 
+Lemma transport_idpath_right {A} {x y : A} (p : x == y) :
+  p # idpath x == p.
+Proof.
+  path_induction.
+Defined.
+
+Hint Rewrite @transport_idpath_right : paths.
+
 (** A homotopy fiber for a map [f] at [y] is the space of paths of the
    form [f x == y]. *)
 
@@ -164,7 +172,9 @@ Proof.
   path_induction.
 Defined.
 
-Hint Rewrite @trans_is_concat : paths.
+(** XXX This seems to violate the well-order described in Paths.v
+    that guarantees termination of autorewriting with the [path] hints. *)
+Hint Rewrite @trans_is_concat: paths.
 
 (* This is also a special case of [transport_hfiber]. *)
 Lemma trans_is_concat_opp {A} {x y z : A} (p : x == y) (q : x == z) :
@@ -173,7 +183,9 @@ Proof.
   path_induction.
 Defined.
 
-Hint Rewrite @trans_is_concat_opp : paths.
+(** XXX This seems to violate the well-order described in Paths.v
+    that guarantees termination of autorewriting with the [path] hints. *)
+Hint Rewrite @trans_is_concat_opp: paths.
 
 (** Transporting along a concatenation is transporting twice. *)
 
@@ -211,7 +223,9 @@ Proof.
   path_induction.
 Defined.
 
-Hint Rewrite @map_trans : paths.
+(** XXX This seems to violate the well-order described in Paths.v
+    that guarantees termination of autorewriting with the [path] hints. *)
+(* Hint Rewrite @map_trans : paths. *)
 
 (** And also with applying fiberwise functions. *)
 
@@ -246,7 +260,7 @@ Proof.
   path_induction.
 Defined.
 
-Hint Rewrite @map_dep : paths.
+Hint Rewrite @trans_trivial : paths.
 
 (** And for a non-dependent type, [map_dep] reduces to [map], modulo [trans_trivial]. *)
 
