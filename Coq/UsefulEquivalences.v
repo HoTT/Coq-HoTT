@@ -167,7 +167,7 @@ Proof.
   (** XXX find out why [hott_simpl] cycles in 8.4 at this point. *)
   apply trans_trans_opp.
   intros z.
-  hott_simpl.
+  apply trans_opp_trans.
 Defined.
   
 (** We can characterize the path types of the total space of a
@@ -232,7 +232,7 @@ Section hfiber_fibration.
   Proof.
     apply @total_path with (p := !p).
     destruct z as [x' y']. simpl.
-    hott_simpl.
+    apply trans_opp_trans.
   Defined.
 
   Definition hfiber_fibration (x : X) :

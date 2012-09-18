@@ -225,7 +225,7 @@ Defined.
 
 (** XXX This seems to violate the well-order described in Paths.v
     that guarantees termination of autorewriting with the [path] hints. *)
-Hint Rewrite @map_trans : paths.
+(* Hint Rewrite @map_trans : paths. *)
 
 (** And also with applying fiberwise functions. *)
 
