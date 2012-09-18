@@ -278,6 +278,8 @@ Section FibrationReplacement.
     unfold fibration_replacement; simpl.
     apply @total_path with (p := p); simpl.
     hott_simpl.
+    (* This step needed in 8.3 but not 8.4. *)
+    try (rewrite map_trans; hott_simpl).
     intros x. auto.
   Defined.
 
