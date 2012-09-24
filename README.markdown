@@ -1,3 +1,6 @@
+**THIS IS A DEVELOPMENT BRANCH IN WHICH WE ARE REVAMPING HoTT TO
+USE TYPE CLASSES AND INCLUDE VOEVODSKY'S Foundations REPOSITORY**
+
 A development of homotopy-theoretic foundations of mathematics.
 
 This is the repository for the Coq files of the [Homotopy Type Theory
