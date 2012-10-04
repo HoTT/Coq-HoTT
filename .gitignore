@@ -12,6 +12,4 @@
 *.out
 # Ignore the dependency file created by coqdep
 .depend
-# Ignore local settings
-Coq/IT/.dirlocals
-Coq/IT/coqidescript
+coq/plugins
