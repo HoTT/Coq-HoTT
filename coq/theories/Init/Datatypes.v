@@ -6,8 +6,7 @@
 
 Require Export Logic.
 
-(*Add Rec ML Path "/Users/andrej/Documents/project/homotopy/coq/plugins".*)
-(*Declare ML Module "nat_syntax_plugin".*)
+Declare ML Module "nat_syntax_plugin".
 
 Inductive prod (A B:Type) : Type :=
   pair : A -> B -> prod A B.
