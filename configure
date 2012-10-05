@@ -2464,8 +2464,8 @@ fi
 
   if test "$COQC" != "no"; then
     COQCVERSION=`$COQC -v | sed -n -e 's|^.*version \([^ ]*\) .*$|\1|p'`
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: Coqc version is $TMPVERSION." >&5
-$as_echo "Coqc version is $TMPVERSION." >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: Coqc version is $COQCVERSION." >&5
+$as_echo "Coqc version is $COQCVERSION." >&6; }
 
   fi
 

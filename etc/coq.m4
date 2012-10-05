@@ -24,7 +24,7 @@ AC_DEFUN([AC_PROG_COQ],
   AC_CHECK_TOOL([COQC],[coqc],[no])
   if test "$COQC" != "no"; then
     COQCVERSION=`$COQC -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`
-    AC_MSG_RESULT([Coqc version is $TMPVERSION.])
+    AC_MSG_RESULT([Coqc version is $COQCVERSION.])
     AC_SUBST([COQCVERSION])
   fi
  
