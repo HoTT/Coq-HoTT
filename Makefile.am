@@ -45,6 +45,6 @@ $(VOFILES) : $(STDVOFILES)
 
 # A rule for compiling the HoTT libary files
 $(VOFILES) : %.vo : %.v
-	$(HOQC) -R $(srcdir)/theories HoTT $<
+	$(HOQC) $<
 
 -include .depend

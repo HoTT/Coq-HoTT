@@ -1,3 +1,40 @@
-Installation instructions are below:
+PREREQUISITES
+=============
 
-(not yet)
+The HoTT library requires a version of Coq which supports the command-line options
+`-relevant-equality` and `-warn-universe-inconsistencies`. The first one changes the
+interpretation of equality to one that conforms to the homotopy-theoretic interpretation,
+while the second one is an ugly temporary hack that turns universe inconsistencies
+intro warning rather than errors.
+
+At present only a fork of the Coq trunk supports these options, but we hope to get them
+into the official Coq soon. Unfortunately for you that means you will have to compile a
+version of Coq, available at
+
+   https://github.com/HoTT/coq
+
+If you have never compiled Coq you may prefer to ask a friend for help. But basically,
+here are the instructions:
+
+1. Obtain the Coq fork. If you have the `git` command, you can do
+
+   git clone https://github.com/HoTT/coq.git
+
+   If you do not have git you may download coq as a ZIP file at https://github.com/HoTT/coq/zipball/trunk.
+
+2. Compile Coq, as explained in the INSTALL.txt file of Coq distribution.
+   You will need some prerequisites for compilation, such as Ocaml 3.11.2 or later.
+
+3. Install Coq so that it can be found in your PATH.
+
+4. Test that you have the correct Coq version. The command
+
+   coqtop -help | grep -c -- -relevant-equality
+
+   should print 1. If it prints 0 you got the wrong version of Coq.
+
+
+INSTALLATION OF HoTT
+====================
+
+Once you have the 

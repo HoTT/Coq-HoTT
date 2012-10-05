@@ -10,7 +10,9 @@ mydir=`dirname $0`
 if test -d $mydir/coq/theories
 then
   COQLIB="$mydir/coq"
+  HOTLIB="$mydir/theories"
 else
   COQLIB="@hottdir@/coq"
+  HOTLIB="@hottdir@/theories"
 fi
-exec $COQC -coqlib $COQLIB -R @hottdir@/theories HoTT -relevant-equality -warn-universe-inconsistency $@
+exec $COQC -coqlib $COQLIB -R $HOTLIB HoTT -relevant-equality -warn-universe-inconsistency $@
