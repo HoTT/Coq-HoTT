@@ -5,8 +5,9 @@ The HoTT library was jointly developed by the following people,
 listed in alphabetical order:
 
 * Andrej Bauer, University of Ljubljana (http://andrej.com/)
-* Michael Shulman, Institute for Advanced Study
+* Michael Shulman, University of San Diego
 * Peter LeFanu Lumsdaine, Dalhousie University (http://mathstat.dal.ca/~p.l.lumsdaine/)
+* Egbert Rijke, Radboud University Nijmegen
 
 For a complete list of all contributors, please see the git commit logs,
 available at https://github.com/HoTT/HoTT.

@@ -1,11 +1,38 @@
-PREREQUISITES
-=============
+# QUICK INSTALLATION INSTRUCTIONS
 
-The HoTT library requires a version of Coq which supports the command-line options
+1. Install a custom Coq from https://github.com/HoTT/coq. This is a fork
+   of the trunk and is compatible with standard Coq 8.4 trunk, except that
+   it supports special command-line options that turn on the homotopy theory
+   interpretation.
+
+2. Get the HoTT library at https://github.com/HoTT/HoTT.git.
+ 
+3. If you installed custom Coq in `PATH`, run
+
+       ./configure
+       make
+
+   If you installed custom Coq in a secret place, tell ./configure
+   where to find it:
+   
+       ./configure COQTOP=<custom-coqtop> COQC=<custom-coqc> COQDEP=<custom-coqdep>
+       make
+
+4. You can now use the HoTT library in place by running ./hoqtop and ./hoqc.
+   The library is loaded with `Require Import HoTT.Hopotopy`.
+
+5. You can install the library globally with `make install`.
+
+
+# LONG INSTALLATION INSTRUCTIONS
+
+## PREREQUISITES
+
+The HoTT library requires a custom version of Coq which supports the command-line options
 `-relevant-equality` and `-warn-universe-inconsistencies`. The first one changes the
 interpretation of equality to one that conforms to the homotopy-theoretic interpretation,
-while the second one is an ugly temporary hack that turns universe inconsistencies
-intro warning rather than errors.
+while the second one is an ugly temporary hack that turns universe inconsistencies intro
+warning rather than errors.
 
 At present only a fork of the Coq trunk supports these options, but we hope to get them
 into the official Coq soon. Unfortunately for you that means you will have to compile a
@@ -13,28 +40,78 @@ version of Coq, available at
 
    https://github.com/HoTT/coq
 
-If you have never compiled Coq you may prefer to ask a friend for help. But basically,
-here are the instructions:
+If you have never compiled Coq you may prefer to ask a friend for help. If you feel brave
+you should try doing it yourself:
 
-1. Obtain the Coq fork. If you have the `git` command, you can do
+1. Obtain the custom Coq fork. If you have git clone the fork with
 
-   git clone https://github.com/HoTT/coq.git
+       git clone https://github.com/HoTT/coq.git
 
-   If you do not have git you may download coq as a ZIP file at https://github.com/HoTT/coq/zipball/trunk.
+   If you do not have git, you may still download the files as an archive file at
+   https://github.com/HoTT/coq/zipball/trunk.
 
-2. Compile Coq, as explained in the INSTALL.txt file of Coq distribution.
-   You will need some prerequisites for compilation, such as Ocaml 3.11.2 or later.
+2. Compile Coq, as explained in the INSTALL.txt file of Coq distribution. You will need
+   some prerequisites for compilation, such as OCaml 3.11.2 or later.
 
-3. Install Coq so that it can be found in your PATH.
-
-4. Test that you have the correct Coq version. The command
-
-   coqtop -help | grep -c -- -relevant-equality
-
-   should print 1. If it prints 0 you got the wrong version of Coq.
+   If you do not want the custom Coq to override one that you already have installed,
+   configure Coq with either `./configure -local` so that it will work in-place, or use
+   `./configure -prefix <dir>`, as explained by `./configure -help`.
 
 
-INSTALLATION OF HoTT
-====================
+## INSTALLATION OF HoTT
 
-Once you have the 
+Once you have installed the correct version of Coq, as explained in PREREQUISITES, you
+proceed as follows. Clone the HoTT repository with
+
+   git clone https://github.com/HoTT/HoTT.git
+
+Even better, if you would like to contribute to HoTT, first fork the repository on
+github and then use your own fork. This way you will be able to make pull requests.
+
+If you do not want to deal with git at all, you may download an archive of HoTT at
+https://github.com/HoTT/HoTT/zipball/master and unpack that. We do not recommend this
+option because the HoTT library is under heavy development and you want to be able to
+easily track changes.
+
+Next you should configure the HoTT library:
+
+1. If you installed the custom Coq as your default version of Coq, which means that it
+   it can be fond in PATH, run
+
+       ./configure
+
+   in the HoTT directory.
+
+2. If you installed the custom Coq somewhere special, you should tell ./configure
+   where to find the custom Coq:
+
+       ./configure COQTOP=<coqtop> COQC=<coqc> COQDEP=<coqdep>
+
+   where <coqtop>, <coqc> and <coqdep> are absolute locations of the Coq executables.
+
+To compile the HoTT library type
+
+    make
+
+The library must be used with a special incantation of the custom Coq. The scripts
+`hoqtop` and `hoqc` do this for you, so you can run
+
+    ./hoqtop
+
+directly from the HoTT directory to start using the library. Load it with
+
+   Require Import HoTT.Homotopy.
+
+There is also `hoqc` for compiling files. You may prefer to install `hoqtop`, `hoqc` and
+the library files globally, in which case you type
+
+    sudo make install
+
+By default the files will be installed in `/usr/local/bin` and `/usr/local/share/hott`.
+You can change the location by using standard `configure` parameters when you run it.
+For example
+
+    ./configure --bindir=$HOME/bin --datadir-$HOME/stuff
+
+will install `hoqtop` and `hoqc` in the `bin` subdirectory of your home directory
+and the HoTT library in `stuff/hott` subdirectory of your home directory.
