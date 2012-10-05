@@ -52,8 +52,9 @@ POST_UNINSTALL = :
 bin_PROGRAMS =
 DIST_COMMON = $(am__configure_deps) $(srcdir)/.depend \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(top_srcdir)/configure $(top_srcdir)/etc/install-sh \
-	$(top_srcdir)/etc/missing etc/install-sh etc/missing
+	$(top_srcdir)/configure $(top_srcdir)/etc/hoqtop.in \
+	$(top_srcdir)/etc/install-sh $(top_srcdir)/etc/missing \
+	etc/install-sh etc/missing
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/etc/coq.m4 \
@@ -63,7 +64,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = hoqtop
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(hottdir)"
 PROGRAMS = $(bin_PROGRAMS)
@@ -207,6 +208,9 @@ hott_SOURCES =
 hott_DATA = 
 EXTRA_DIST = bin coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 
+# Location of the replacement of Coq standard library.
+NEWCOQLIB := $(srcdir)/coq
+
 # What to pass to coqtop to compile theories
 COQTOPARGS := -boot -coqlib $(COQLIB) -R theories Coq -relevant-equality -warn-universe-inconsistency -compile
 
@@ -252,6 +256,8 @@ $(top_srcdir)/configure: # $(am__configure_deps)
 $(ACLOCAL_M4): # $(am__aclocal_m4_deps)
 	$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 $(am__aclocal_m4_deps):
+hoqtop: $(top_builddir)/config.status $(top_srcdir)/etc/hoqtop.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
@@ -595,11 +601,12 @@ uninstall-am: uninstall-binPROGRAMS uninstall-hottDATA
 	uninstall-am uninstall-binPROGRAMS uninstall-hottDATA
 
 
-.PHONY: all .depend html latex pdf doc
+.PHONY: all .depend html latex pdf doc hoq
 
-all: .depend $(VOFILES) # doc
+all: hoq .depend $(VOFILES) # doc
 
 clean:
+	rm -f $(NEWCOQLIB)/plugins $(NEWCOQLIB)/dev
 	echo WOULD REMOVE /bin/rm -f doc/html/* doc/latex/* `find $(srcdir)/theories -name "*.{vo,glob}"`
 
 doc: html pdf
@@ -635,6 +642,11 @@ pdf: latex
 
 .depend:
 	$(COQDEP) -I theories $(VFILES) > .depend
+
+hoq:
+	rm -f $(NEWCOQLIB)/dev $(NEWCOQLIB)/plugins
+	ln -s $(COQLIB)/dev $(COQLIB)/plugins $(NEWCOQLIB)
+	chmod +x hoqtop
 
 %.vo %.glob: %.v
 	$(COQTOP) $(COQTOPARGS) $<

@@ -5,6 +5,9 @@ hott_DATA =
 EXTRA_DIST = bin coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 hottdir=$(datarootdir)/hott
 
+# Location of the replacement of Coq standard library.
+NEWCOQLIB:=$(srcdir)/coq
+
 # What to pass to coqtop to compile theories
 COQTOPARGS:=-boot -coqlib $(COQLIB) -R theories Coq -relevant-equality -warn-universe-inconsistency -compile
 
@@ -13,11 +16,12 @@ VFILES=$(shell find theories -name "*.v")
 VOFILES:=$(VFILES:.v=.vo)
 GLOBFILES:=$(VFILES:.v=.glob)
 
-.PHONY: all .depend html latex pdf doc
+.PHONY: all .depend html latex pdf doc hoq
 
-all: .depend $(VOFILES) # doc
+all: hoq .depend $(VOFILES) # doc
 
 clean:
+	rm -f $(NEWCOQLIB)/plugins $(NEWCOQLIB)/dev
 	echo WOULD REMOVE /bin/rm -f doc/html/* doc/latex/* `find $(srcdir)/theories -name "*.{vo,glob}"`
 
 doc: html pdf
@@ -53,6 +57,11 @@ pdf: latex
 
 .depend:
 	$(COQDEP) -I theories $(VFILES) > .depend
+
+hoq:
+	rm -f $(NEWCOQLIB)/dev $(NEWCOQLIB)/plugins
+	ln -s $(COQLIB)/dev $(COQLIB)/plugins $(NEWCOQLIB)
+	chmod +x hoqtop
 
 %.vo %.glob: %.v
 	$(COQTOP) $(COQTOPARGS) $<

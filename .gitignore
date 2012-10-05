@@ -12,9 +12,13 @@
 *.out
 # Ignore the dependency file created by coqdep
 .depend
-coq/plugins
 # Ignore stuff from autobuild
 Makefile.in
 aclocal.m4
 autom4te.cache
 config.status
+# Ignore links into the original Coq library
+coq/dev
+coq/plugins
+# Ignore generated shell scripts
+hoqtop

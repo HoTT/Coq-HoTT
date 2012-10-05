@@ -1,3 +1,7 @@
+dnl This file is used by autoconf to generate the configure script
+dnl by the HoTT development team. Unless you already know what the
+dnl things below mean, you probably do not want to touch anything.
+
 AC_INIT([hott],[1.0])
 AC_CONFIG_AUX_DIR([etc])
 AC_CONFIG_MACRO_DIR([etc])
@@ -23,5 +27,5 @@ fi
 hottdir="$datarootdir/hott"
 AC_SUBST([hottdir])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile hoqtop:etc/hoqtop.in])
 AC_OUTPUT
