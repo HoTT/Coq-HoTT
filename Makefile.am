@@ -5,13 +5,10 @@ hott_DATA =
 EXTRA_DIST = bin coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 hottdir=$(datarootdir)/hott
 
-# How to compile
-# Arguments that need to be passed to Coq to make it HoTT valid
-COQARGS:=-noinit -coqlib $(COQLIB) -relevant-equality -warn-universe-inconsistency
+# What to pass to coqtop to compile theories
+COQTOPARGS:=-boot -coqlib $(COQLIB) -R theories Coq -relevant-equality -warn-universe-inconsistency -compile
 
 # The list of files that comprise the library in the order in which
-# they should appear in the generated documentation.
-
 VFILES=$(shell find theories -name "*.v")
 VOFILES:=$(VFILES:.v=.vo)
 GLOBFILES:=$(VFILES:.v=.glob)
@@ -58,6 +55,6 @@ pdf: latex
 	$(COQDEP) -I theories $(VFILES) > .depend
 
 %.vo %.glob: %.v
-	$(COQTOP) -noinit $(COQARGS) $<
+	$(COQTOP) $(COQTOPARGS) $<
 
 include .depend

@@ -10,6 +10,16 @@ if test "$COQTOP" = "no"; then
   AC_MSG_ERROR([You must install Coq first])
 fi
 
+relevantequality=`$COQTOP -help 2>&1 | grep -c -- -relevant-equality`
+if test "$relevantequality" = "0"; then
+  AC_MSG_ERROR([You need a version of Coq which supports -relevant-equality])
+fi
+
+warnuniverse=`$COQTOP -help 2>&1 | grep -c -- -warn-universe-inconsistency`
+if test "$warnuniverse" = "0"; then
+  AC_MSG_ERROR([You need a version of Coq which supports -warn-universe-inconsistency])
+fi
+
 hottdir="$datarootdir/hott"
 AC_SUBST([hottdir])
 

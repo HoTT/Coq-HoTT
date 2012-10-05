@@ -1,15 +1,4 @@
 dnl autoconf macros for Coq
-dnl
-dnl Adapted from ocaml.m4 see LICENSE-ocaml.m4 for copyright and licensing.
-dnl
-dnl Copyright © 2009      Richard W.M. Jones
-dnl Copyright © 2009      Stefano Zacchiroli
-dnl Copyright © 2000-2005 Olivier Andrieu
-dnl Copyright © 2000-2005 Jean-Christophe Filliâtre
-dnl Copyright © 2000-2005 Georges Mariano
-dnl
-dnl For documentation, please read the ocaml.m4 man page.
-
 AC_DEFUN([AC_PROG_COQ],
 [dnl
 
@@ -17,8 +6,8 @@ AC_DEFUN([AC_PROG_COQ],
   AC_CHECK_TOOL([COQTOP],[coqtop],[no])
 
   if test "$COQTOP" != "no"; then
-     COQVERSION=`$COQTOP -v | sed -n -e 's|.*version *\([^ ]*\) .*$|\1|p'`
-     AC_MSG_RESULT([Coq version is $COQVERSION])
+     COQVERSION=`$COQTOP -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`
+     AC_MSG_RESULT([Coq version is $COQVERSION.])
      # If COQLIB is set, use it
      if test "$COQLIB" = ""; then
         COQLIB=`$COQTOP -where 2>/dev/null`
@@ -29,25 +18,19 @@ AC_DEFUN([AC_PROG_COQ],
 
      AC_SUBST([COQVERSION])
      AC_SUBST([COQLIB])
+  fi
 
-     # checking for coqc
-     AC_CHECK_TOOL([COQC],[coqc],[no])
-     if test "$COQC" != "no"; then
-         TMPVERSION=`$COQC -v | sed -n -e 's|.*version *\([^ ]*\) .*$|\1|p'`
-         if test "$TMPVERSION" != "$COQVERSION"; then
-             AC_MSG_RESULT([version differs from coqop, coqc is discarded.])
-             COQC=no
-         fi
-     fi
 
-     AC_SUBST([COQC])
+  AC_CHECK_TOOL([COQC],[coqc],[no])
+  if test "$COQC" != "no"; then
+    COQCVERSION=`$COQC -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`
+    AC_MSG_RESULT([Coqc version is $TMPVERSION.])
+    AC_SUBST([COQCVERSION])
   fi
  
   # checking for coqdep
-  AC_CHECK_TOOL([COQDEP],[coqdep],[no])
-  AC_SUBST([COQDEP])
+  AC_PATH_TOOL([COQDEP],[coqdep],[no])
 
   # checking for coqdoc
-  AC_CHECK_TOOL([COQDOC],[coqdoc],[no])
-  AC_SUBST([COQDOC])
+  AC_PATH_TOOL([COQDOC],[coqdoc],[no])
 ])

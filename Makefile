@@ -127,12 +127,13 @@ AUTOCONF = ${SHELL} /Users/andrej/Documents/project/homotopy/HoTT/etc/missing --
 AUTOHEADER = ${SHELL} /Users/andrej/Documents/project/homotopy/HoTT/etc/missing --run autoheader
 AUTOMAKE = ${SHELL} /Users/andrej/Documents/project/homotopy/HoTT/etc/missing --run automake-1.12
 AWK = awk
-COQC = coqc
-COQDEP = coqdep
-COQDOC = coqdoc
-COQLIB = /usr/local/lib/coq
-COQTOP = coqtop
-COQVERSION = 
+COQC = ../coq/bin/coqc
+COQCVERSION = trunk
+COQDEP = /usr/local/bin/coqdep
+COQDOC = /usr/local/bin/coqdoc
+COQLIB = /Users/andrej/Documents/project/homotopy/coq
+COQTOP = ../coq/bin/coqtop
+COQVERSION = trunk
 CYGPATH_W = echo
 DEFS = -DPACKAGE_NAME=\"hott\" -DPACKAGE_TARNAME=\"hott\" -DPACKAGE_VERSION=\"1.0\" -DPACKAGE_STRING=\"hott\ 1.0\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"hott\" -DVERSION=\"1.0\"
 ECHO_C = \c
@@ -206,12 +207,10 @@ hott_SOURCES =
 hott_DATA = 
 EXTRA_DIST = bin coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 
-# How to compile
-# Arguments that need to be passed to Coq to make it HoTT valid
-COQARGS := -noinit -coqlib $(COQLIB) -relevant-equality -warn-universe-inconsistency
+# What to pass to coqtop to compile theories
+COQTOPARGS := -boot -coqlib $(COQLIB) -R theories Coq -relevant-equality -warn-universe-inconsistency -compile
 
 # The list of files that comprise the library in the order in which
-# they should appear in the generated documentation.
 VFILES = $(shell find theories -name "*.v")
 VOFILES := $(VFILES:.v=.vo)
 GLOBFILES := $(VFILES:.v=.glob)
@@ -638,7 +637,7 @@ pdf: latex
 	$(COQDEP) -I theories $(VFILES) > .depend
 
 %.vo %.glob: %.v
-	$(COQTOP) -noinit $(COQARGS) $<
+	$(COQTOP) $(COQTOPARGS) $<
 theories/Contractible.vo theories/Contractible.glob theories/Contractible.v.beautified: theories/Contractible.v theories/Paths.vo theories/Fibrations.vo
 theories/Equivalences.vo theories/Equivalences.glob theories/Equivalences.v.beautified: theories/Equivalences.v theories/Paths.vo theories/Fibrations.vo theories/Contractible.vo
 theories/ExtensionalityAxiom.vo theories/ExtensionalityAxiom.glob theories/ExtensionalityAxiom.v.beautified: theories/ExtensionalityAxiom.v theories/Funext.vo
