@@ -13,7 +13,7 @@ STDVFILES=$(shell find $(srcdir)/coq -name "*.v")
 STDVOFILES:=$(STDVFILES:.v=.vo)
 STDGLOBFILES:=$(STDVFILES:.v=.glob)
 
-hott_DATA = $(VOFILES) $(STDVOFILES) $(shell find $(srcdir)/coq/theories -name "README.txt")
+nobase_hott_DATA = $(VOFILES) $(STDVOFILES) $(shell find $(srcdir)/coq/theories -name "README.txt")
 
 # The Coq compiler, adapted to HoTT
 HOQC=$(srcdir)/hoqc
@@ -27,7 +27,10 @@ CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES)
 	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
 
 install-data-local:
-	$(LN_S) $(COQLIB)/dev $(COQLIB)/plugins $(hottdir)/coq
+	$(mkdir_p) $(hottdir)/coq
+	rm -f $(hottdir)/coq/dev $(hottdir)/coq/plugins
+	ln -s $(COQLIB)/dev $(hottdir)/coq
+	ln -s $(COQLIB)/plugins $(hottdir)/coq
 
 # The standard library files must be compiled in a special way
 $(STDVOFILES) : %.vo : %.v
@@ -42,6 +45,6 @@ $(VOFILES) : $(STDVOFILES)
 
 # A rule for compiling the HoTT libary files
 $(VOFILES) : %.vo : %.v
-	$(HOQC) -I $(srcdir)/theories $<
+	$(HOQC) -R $(srcdir)/theories HoTT $<
 
-include .depend
+-include .depend

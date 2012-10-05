@@ -49,12 +49,11 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-DIST_COMMON = $(am__configure_deps) $(srcdir)/.depend \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in $(srcdir)/hoqc.in \
-	$(srcdir)/hoqtop.in $(top_srcdir)/configure \
-	$(top_srcdir)/etc/install-sh $(top_srcdir)/etc/missing \
-	etc/install-sh etc/missing
 subdir = .
+DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(srcdir)/hoqc.in $(srcdir)/hoqtop.in \
+	$(top_srcdir)/configure $(top_srcdir)/etc/install-sh \
+	$(top_srcdir)/etc/missing etc/install-sh etc/missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/etc/coq.m4 \
 	$(top_srcdir)/configure.ac
@@ -103,7 +102,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-DATA = $(hott_DATA)
+DATA = $(nobase_hott_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -215,7 +214,7 @@ GLOBFILES := $(VFILES:.v=.glob)
 STDVFILES = $(shell find $(srcdir)/coq -name "*.v")
 STDVOFILES := $(STDVFILES:.v=.vo)
 STDGLOBFILES := $(STDVFILES:.v=.glob)
-hott_DATA = $(VOFILES) $(STDVOFILES) $(shell find $(srcdir)/coq/theories -name "README.txt")
+nobase_hott_DATA = $(VOFILES) $(STDVOFILES) $(shell find $(srcdir)/coq/theories -name "README.txt")
 
 # The Coq compiler, adapted to HoTT
 HOQC = $(srcdir)/hoqc
@@ -227,7 +226,7 @@ all: all-am
 .SUFFIXES:
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in: # $(srcdir)/Makefile.am $(srcdir)/.depend $(am__configure_deps)
+$(srcdir)/Makefile.in: # $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -250,7 +249,6 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
 	esac;
-$(srcdir)/.depend:
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -299,26 +297,29 @@ uninstall-binSCRIPTS:
 	files=`for p in $$list; do echo "$$p"; done | \
 	       sed -e 's,.*/,,;$(transform)'`; \
 	dir='$(DESTDIR)$(bindir)'; $(am__uninstall_files_from_dir)
-install-hottDATA: $(hott_DATA)
+install-nobase_hottDATA: $(nobase_hott_DATA)
 	@$(NORMAL_INSTALL)
-	@list='$(hott_DATA)'; test -n "$(hottdir)" || list=; \
+	@list='$(nobase_hott_DATA)'; test -n "$(hottdir)" || list=; \
 	if test -n "$$list"; then \
 	  echo " $(MKDIR_P) '$(DESTDIR)$(hottdir)'"; \
 	  $(MKDIR_P) "$(DESTDIR)$(hottdir)" || exit 1; \
 	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(hottdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(hottdir)" || exit $$?; \
+	$(am__nobase_list) | while read dir files; do \
+	  xfiles=; for file in $$files; do \
+	    if test -f "$$file"; then xfiles="$$xfiles $$file"; \
+	    else xfiles="$$xfiles $(srcdir)/$$file"; fi; done; \
+	  test -z "$$xfiles" || { \
+	    test "x$$dir" = x. || { \
+	      echo " $(MKDIR_P) '$(DESTDIR)$(hottdir)/$$dir'"; \
+	      $(MKDIR_P) "$(DESTDIR)$(hottdir)/$$dir"; }; \
+	    echo " $(INSTALL_DATA) $$xfiles '$(DESTDIR)$(hottdir)/$$dir'"; \
+	    $(INSTALL_DATA) $$xfiles "$(DESTDIR)$(hottdir)/$$dir" || exit $$?; }; \
 	done
 
-uninstall-hottDATA:
+uninstall-nobase_hottDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(hott_DATA)'; test -n "$(hottdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	@list='$(nobase_hott_DATA)'; test -n "$(hottdir)" || list=; \
+	$(am__nobase_strip_setup); files=`$(am__nobase_strip)`; \
 	dir='$(DESTDIR)$(hottdir)'; $(am__uninstall_files_from_dir)
 tags: TAGS
 TAGS:
@@ -544,7 +545,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-data-local install-hottDATA
+install-data-am: install-data-local install-nobase_hottDATA
 
 install-dvi: install-dvi-am
 
@@ -590,7 +591,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binSCRIPTS uninstall-hottDATA
+uninstall-am: uninstall-binSCRIPTS uninstall-nobase_hottDATA
 
 .MAKE: install-am install-strip
 
@@ -600,13 +601,13 @@ uninstall-am: uninstall-binSCRIPTS uninstall-hottDATA
 	distcleancheck distdir distuninstallcheck dvi dvi-am html \
 	html-am info info-am install install-am install-binSCRIPTS \
 	install-data install-data-am install-data-local install-dvi \
-	install-dvi-am install-exec install-exec-am install-hottDATA \
-	install-html install-html-am install-info install-info-am \
-	install-man install-pdf install-pdf-am install-ps \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-nobase_hottDATA install-pdf install-pdf-am install-ps \
 	install-ps-am install-strip installcheck installcheck-am \
 	installdirs maintainer-clean maintainer-clean-generic \
 	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am uninstall \
-	uninstall-am uninstall-binSCRIPTS uninstall-hottDATA
+	uninstall-am uninstall-binSCRIPTS uninstall-nobase_hottDATA
 
 
 .PHONY: .depend
@@ -615,7 +616,10 @@ uninstall-am: uninstall-binSCRIPTS uninstall-hottDATA
 	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
 
 install-data-local:
-	$(LN_S) $(COQLIB)/dev $(COQLIB)/plugins $(hottdir)/coq
+	$(mkdir_p) $(hottdir)/coq
+	rm -f $(hottdir)/coq/dev $(hottdir)/coq/plugins
+	ln -s $(COQLIB)/dev $(hottdir)/coq
+	ln -s $(COQLIB)/plugins $(hottdir)/coq
 
 # The standard library files must be compiled in a special way
 $(STDVOFILES) : %.vo : %.v
@@ -630,27 +634,9 @@ $(VOFILES) : $(STDVOFILES)
 
 # A rule for compiling the HoTT libary files
 $(VOFILES) : %.vo : %.v
-	$(HOQC) -I $(srcdir)/theories $<
-./theories/Contractible.vo ./theories/Contractible.glob ./theories/Contractible.v.beautified: ./theories/Contractible.v ./theories/Paths.vo ./theories/Fibrations.vo
-./theories/Equivalences.vo ./theories/Equivalences.glob ./theories/Equivalences.v.beautified: ./theories/Equivalences.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo
-./theories/ExtensionalityAxiom.vo ./theories/ExtensionalityAxiom.glob ./theories/ExtensionalityAxiom.v.beautified: ./theories/ExtensionalityAxiom.v ./theories/Funext.vo
-./theories/FiberEquivalences.vo ./theories/FiberEquivalences.glob ./theories/FiberEquivalences.v.beautified: ./theories/FiberEquivalences.v ./theories/Fibrations.vo ./theories/Equivalences.vo
-./theories/FiberSequences.vo ./theories/FiberSequences.glob ./theories/FiberSequences.v.beautified: ./theories/FiberSequences.v ./theories/Equivalences.vo ./theories/UsefulEquivalences.vo ./theories/FiberEquivalences.vo
-./theories/Fibrations.vo ./theories/Fibrations.glob ./theories/Fibrations.v.beautified: ./theories/Fibrations.v ./theories/Paths.vo
-./theories/Funext.vo ./theories/Funext.glob ./theories/Funext.v.beautified: ./theories/Funext.v ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo ./theories/UsefulEquivalences.vo ./theories/FiberEquivalences.vo
-./theories/FunextEquivalences.vo ./theories/FunextEquivalences.glob ./theories/FunextEquivalences.v.beautified: ./theories/FunextEquivalences.v ./theories/Paths.vo ./theories/Equivalences.vo ./theories/UsefulEquivalences.vo ./theories/Funext.vo ./theories/HLevel.vo ./theories/ExtensionalityAxiom.vo
-./theories/HLevel.vo ./theories/HLevel.glob ./theories/HLevel.v.beautified: ./theories/HLevel.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo ./theories/Funext.vo ./theories/ExtensionalityAxiom.vo
-./theories/Homotopy.vo ./theories/Homotopy.glob ./theories/Homotopy.v.beautified: ./theories/Homotopy.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo ./theories/UsefulEquivalences.vo ./theories/FiberEquivalences.vo ./theories/FiberSequences.vo ./theories/Funext.vo ./theories/Univalence.vo ./theories/UnivalenceAxiom.vo ./theories/FunextEquivalences.vo ./theories/HLevel.vo
-./theories/Paths.vo ./theories/Paths.glob ./theories/Paths.v.beautified: ./theories/Paths.v ./coq/theories/Init/Prelude.vo
-./theories/Univalence.vo ./theories/Univalence.glob ./theories/Univalence.v.beautified: ./theories/Univalence.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo
-./theories/UnivalenceAxiom.vo ./theories/UnivalenceAxiom.glob ./theories/UnivalenceAxiom.v.beautified: ./theories/UnivalenceAxiom.v ./theories/Paths.vo ./theories/Univalence.vo ./theories/Funext.vo
-./theories/UnivalenceImpliesFunext.vo ./theories/UnivalenceImpliesFunext.glob ./theories/UnivalenceImpliesFunext.v.beautified: ./theories/UnivalenceImpliesFunext.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo ./theories/Univalence.vo ./theories/Funext.vo
-./theories/UsefulEquivalences.vo ./theories/UsefulEquivalences.glob ./theories/UsefulEquivalences.v.beautified: ./theories/UsefulEquivalences.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo
-./coq/theories/Init/Datatypes.vo ./coq/theories/Init/Datatypes.glob ./coq/theories/Init/Datatypes.v.beautified: ./coq/theories/Init/Datatypes.v ./coq/theories/Init/Logic.vo
-./coq/theories/Init/Logic.vo ./coq/theories/Init/Logic.glob ./coq/theories/Init/Logic.v.beautified: ./coq/theories/Init/Logic.v ./coq/theories/Init/Notations.vo
-./coq/theories/Init/Notations.vo ./coq/theories/Init/Notations.glob ./coq/theories/Init/Notations.v.beautified: ./coq/theories/Init/Notations.v
-./coq/theories/Init/Prelude.vo ./coq/theories/Init/Prelude.glob ./coq/theories/Init/Prelude.v.beautified: ./coq/theories/Init/Prelude.v ./coq/theories/Init/Notations.vo ./coq/theories/Init/Logic.vo ./coq/theories/Init/Datatypes.vo
-./coq/theories/Init/Tactics.vo ./coq/theories/Init/Tactics.glob ./coq/theories/Init/Tactics.v.beautified: ./coq/theories/Init/Tactics.v
+	$(HOQC) -R $(srcdir)/theories HoTT $<
+
+-include .depend
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

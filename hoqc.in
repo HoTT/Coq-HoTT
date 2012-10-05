@@ -13,4 +13,4 @@ then
 else
   COQLIB="@hottdir@/coq"
 fi
-exec $COQC -coqlib $COQLIB -relevant-equality -warn-universe-inconsistency $@
+exec $COQC -coqlib $COQLIB -R @hottdir@/theories HoTT -relevant-equality -warn-universe-inconsistency $@
