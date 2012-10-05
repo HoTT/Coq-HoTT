@@ -1,12 +1,21 @@
 (* Bits an pieces from Coq's Init/Datatypes.v *)
 
+Require Export Logic.
+Declare ML Module "nat_syntax_plugin".
+
+(** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
+
+Inductive sum (A B: Type) : Type :=
+  | inl : A -> sum A B
+  | inr : B -> sum A B.
+
+Notation "x + y" := (sum x y) : type_scope.
+
+Arguments inl {A B} _ , [A] B _.
+Arguments inr {A B} _ , A [B] _.
+
 (** [prod A B], written [A * B], is the product of [A] and [B];
     the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
-
-
-Require Export Logic.
-
-Declare ML Module "nat_syntax_plugin".
 
 Inductive prod (A B:Type) : Type :=
   pair : A -> B -> prod A B.
@@ -21,7 +30,9 @@ Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
 Definition fst {A B : Type} (p : A * B) := match p with (x, y) => x end.
 Definition snd {A B : Type} (p : A * B) := match p with (x, y) => y end.
 
-Hint Resolve pair : core.
+Hint Resolve pair inl inr : core.
+
+
 
 (** [(sigT A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type. *)
 

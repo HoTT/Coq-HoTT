@@ -49,10 +49,9 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS =
 DIST_COMMON = $(am__configure_deps) $(srcdir)/.depend \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(top_srcdir)/configure $(top_srcdir)/etc/hoqtop.in \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in $(srcdir)/hoqc.in \
+	$(srcdir)/hoqtop.in $(top_srcdir)/configure \
 	$(top_srcdir)/etc/install-sh $(top_srcdir)/etc/missing \
 	etc/install-sh etc/missing
 subdir = .
@@ -64,19 +63,8 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES = hoqtop
+CONFIG_CLEAN_FILES = hoqtop hoqc
 CONFIG_CLEAN_VPATH_FILES =
-am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(hottdir)"
-PROGRAMS = $(bin_PROGRAMS)
-depcomp =
-am__depfiles_maybe =
-SOURCES =
-DIST_SOURCES =
-am__can_run_installinfo = \
-  case $$AM_UPDATE_INFO_DIR in \
-    n|no|NO) false;; \
-    *) (install-info --version) >/dev/null 2>&1;; \
-  esac
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -104,6 +92,17 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
+am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(hottdir)"
+SCRIPTS = $(bin_SCRIPTS)
+depcomp =
+am__depfiles_maybe =
+SOURCES =
+DIST_SOURCES =
+am__can_run_installinfo = \
+  case $$AM_UPDATE_INFO_DIR in \
+    n|no|NO) false;; \
+    *) (install-info --version) >/dev/null 2>&1;; \
+  esac
 DATA = $(hott_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
@@ -128,12 +127,12 @@ AUTOCONF = ${SHELL} /Users/andrej/Documents/project/homotopy/HoTT/etc/missing --
 AUTOHEADER = ${SHELL} /Users/andrej/Documents/project/homotopy/HoTT/etc/missing --run autoheader
 AUTOMAKE = ${SHELL} /Users/andrej/Documents/project/homotopy/HoTT/etc/missing --run automake-1.12
 AWK = awk
-COQC = ../coq/bin/coqc
+COQC = /Users/andrej/Documents/project/homotopy/coq/bin/coqc
 COQCVERSION = trunk
-COQDEP = /usr/local/bin/coqdep
+COQDEP = /Users/andrej/Documents/project/homotopy/coq/bin/coqdep
 COQDOC = /usr/local/bin/coqdoc
 COQLIB = /Users/andrej/Documents/project/homotopy/coq
-COQTOP = ../coq/bin/coqtop
+COQTOP = /Users/andrej/Documents/project/homotopy/coq/bin/coqtop
 COQVERSION = trunk
 CYGPATH_W = echo
 DEFS = -DPACKAGE_NAME=\"hott\" -DPACKAGE_TARNAME=\"hott\" -DPACKAGE_VERSION=\"1.0\" -DPACKAGE_STRING=\"hott\ 1.0\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"hott\" -DVERSION=\"1.0\"
@@ -204,20 +203,25 @@ top_build_prefix =
 top_builddir = .
 top_srcdir = .
 ACLOCAL_AMFLAGS = -I etc
-hott_SOURCES = 
-hott_DATA = 
-EXTRA_DIST = bin coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
+bin_SCRIPTS = hoqtop hoqc
+EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 
-# Location of the replacement of Coq standard library.
-NEWCOQLIB := $(srcdir)/coq
-
-# What to pass to coqtop to compile theories
-COQTOPARGS := -boot -coqlib $(COQLIB) -R theories Coq -relevant-equality -warn-universe-inconsistency -compile
-
-# The list of files that comprise the library in the order in which
-VFILES = $(shell find theories -name "*.v")
+# The list of files that comprise the library
+VFILES = $(shell find $(srcdir)/theories -name "*.v")
 VOFILES := $(VFILES:.v=.vo)
 GLOBFILES := $(VFILES:.v=.glob)
+
+# The list of files that comprise the alternative standard library
+STDVFILES = $(shell find $(srcdir)/coq -name "*.v")
+STDVOFILES := $(STDVFILES:.v=.vo)
+STDGLOBFILES := $(STDVFILES:.v=.glob)
+hott_DATA = $(VOFILES) $(STDVOFILES) $(shell find $(srcdir)/coq/theories -name "README.txt")
+
+# The Coq compiler, adapted to HoTT
+HOQC = $(srcdir)/hoqc
+
+# Which files should be cleaned
+CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES)
 all: all-am
 
 .SUFFIXES:
@@ -256,48 +260,45 @@ $(top_srcdir)/configure: # $(am__configure_deps)
 $(ACLOCAL_M4): # $(am__aclocal_m4_deps)
 	$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 $(am__aclocal_m4_deps):
-hoqtop: $(top_builddir)/config.status $(top_srcdir)/etc/hoqtop.in
+hoqtop: $(top_builddir)/config.status $(srcdir)/hoqtop.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-install-binPROGRAMS: $(bin_PROGRAMS)
+hoqc: $(top_builddir)/config.status $(srcdir)/hoqc.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+install-binSCRIPTS: $(bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
-	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
+	@list='$(bin_SCRIPTS)'; test -n "$(bindir)" || list=; \
 	if test -n "$$list"; then \
 	  echo " $(MKDIR_P) '$(DESTDIR)$(bindir)'"; \
 	  $(MKDIR_P) "$(DESTDIR)$(bindir)" || exit 1; \
 	fi; \
-	for p in $$list; do echo "$$p $$p"; done | \
-	sed 's/$(EXEEXT)$$//' | \
-	while read p p1; do if test -f $$p; \
-	  then echo "$$p"; echo "$$p"; else :; fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  if test -f "$$d$$p"; then echo "$$d$$p"; echo "$$p"; else :; fi; \
 	done | \
-	sed -e 'p;s,.*/,,;n;h' -e 's|.*|.|' \
-	    -e 'p;x;s,.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/' | \
-	sed 'N;N;N;s,\n, ,g' | \
-	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1 } \
+	sed -e 'p;s,.*/,,;n' \
+	    -e 'h;s|.*|.|' \
+	    -e 'p;x;s,.*/,,;$(transform)' | sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1; } \
 	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
-	    if ($$2 == $$4) files[d] = files[d] " " $$1; \
-	    else { print "f", $$3 "/" $$4, $$1; } } \
+	    if ($$2 == $$4) { files[d] = files[d] " " $$1; \
+	      if (++n[d] == $(am__install_max)) { \
+		print "f", d, files[d]; n[d] = 0; files[d] = "" } } \
+	    else { print "f", d "/" $$4, $$1 } } \
 	  END { for (d in files) print "f", d, files[d] }' | \
 	while read type dir files; do \
-	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
-	    test -z "$$files" || { \
-	      echo " $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(bindir)$$dir'"; \
-	      $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
-	    } \
+	     if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	     test -z "$$files" || { \
+	       echo " $(INSTALL_SCRIPT) $$files '$(DESTDIR)$(bindir)$$dir'"; \
+	       $(INSTALL_SCRIPT) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
+	     } \
 	; done
 
-uninstall-binPROGRAMS:
+uninstall-binSCRIPTS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
+	@list='$(bin_SCRIPTS)'; test -n "$(bindir)" || exit 0; \
 	files=`for p in $$list; do echo "$$p"; done | \
-	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
-	      -e 's/$$/$(EXEEXT)/' `; \
-	test -n "$$list" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(bindir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(bindir)" && rm -f $$files
-
-clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+	       sed -e 's,.*/,,;$(transform)'`; \
+	dir='$(DESTDIR)$(bindir)'; $(am__uninstall_files_from_dir)
 install-hottDATA: $(hott_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(hott_DATA)'; test -n "$(hottdir)" || list=; \
@@ -486,7 +487,7 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-am
-all-am: Makefile $(PROGRAMS) $(DATA)
+all-am: Makefile $(SCRIPTS) $(DATA)
 installdirs:
 	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(hottdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -513,6 +514,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -521,7 +523,9 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
+clean: clean-am
+
+clean-am: clean-generic mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
@@ -532,19 +536,21 @@ dvi: dvi-am
 
 dvi-am:
 
+html: html-am
+
 html-am:
 
 info: info-am
 
 info-am:
 
-install-data-am: install-hottDATA
+install-data-am: install-data-local install-hottDATA
 
 install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-binPROGRAMS
+install-exec-am: install-binSCRIPTS
 
 install-html: install-html-am
 
@@ -576,95 +582,75 @@ mostlyclean: mostlyclean-am
 
 mostlyclean-am: mostlyclean-generic
 
+pdf: pdf-am
+
 pdf-am:
 
 ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS uninstall-hottDATA
+uninstall-am: uninstall-binSCRIPTS uninstall-hottDATA
 
 .MAKE: install-am install-strip
 
-.PHONY: all all-am am--refresh check check-am clean clean-binPROGRAMS \
-	clean-generic dist dist-all dist-bzip2 dist-gzip dist-lzip \
-	dist-shar dist-tarZ dist-xz dist-zip distcheck distclean \
-	distclean-generic distcleancheck distdir distuninstallcheck \
-	dvi dvi-am html html-am info info-am install install-am \
-	install-binPROGRAMS install-data install-data-am install-dvi \
+.PHONY: all all-am am--refresh check check-am clean clean-generic dist \
+	dist-all dist-bzip2 dist-gzip dist-lzip dist-shar dist-tarZ \
+	dist-xz dist-zip distcheck distclean distclean-generic \
+	distcleancheck distdir distuninstallcheck dvi dvi-am html \
+	html-am info info-am install install-am install-binSCRIPTS \
+	install-data install-data-am install-data-local install-dvi \
 	install-dvi-am install-exec install-exec-am install-hottDATA \
 	install-html install-html-am install-info install-info-am \
 	install-man install-pdf install-pdf-am install-ps \
 	install-ps-am install-strip installcheck installcheck-am \
 	installdirs maintainer-clean maintainer-clean-generic \
 	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am uninstall \
-	uninstall-am uninstall-binPROGRAMS uninstall-hottDATA
+	uninstall-am uninstall-binSCRIPTS uninstall-hottDATA
 
 
-.PHONY: all .depend html latex pdf doc hoq
-
-all: hoq .depend $(VOFILES) # doc
-
-clean:
-	rm -f $(NEWCOQLIB)/plugins $(NEWCOQLIB)/dev
-	echo WOULD REMOVE /bin/rm -f doc/html/* doc/latex/* `find $(srcdir)/theories -name "*.{vo,glob}"`
-
-doc: html pdf
-
-html: $(GLOBFILES)
-	/bin/mkdir -p doc/html
-	$(COQDOC) --html --toc --utf8 --charset utf8 --interpolate -d doc/html $(VFILES)
-	/bin/cp -f homotopy.css doc/html/coqdoc.css
-	echo +++++;\
-	echo +++++ HMTL documentation doc/html was generated successfully;\
-	echo +++++
-
-latex: $(GLOBFILES)
-	/bin/mkdir -p doc/latex
-	$(COQDOC) --latex --toc --utf8 --charset utf8 --interpolate -o doc/latex/UnivalentFoundations.tex $(VFILES)
-	if [ ! -f doc/latex/coqdoc.sty ] ; then echo coqdoc.sty not found, using my own; cp coqdoc.sty doc/latex; fi
-
-pdf: latex
-	if [ -x "`which latexmk`" ]; \
-	then \
-		echo Good, you have latexmk; \
-		cd doc/latex; \
-		latexmk -pdf UnivalentFoundations.tex; \
-	else \
-		echo Using pdflatex to generated PDF; \
-		cd doc/latex; \
-		pdflatex UnivalentFoundations.tex; \
-		pdflatex UnivalentFoundations.tex; \
-	fi
-	echo +++++;\
-	echo +++++ PDF document doc/latex/UnivalentFoundations.pdf was generated successfully;\
-	echo +++++
+.PHONY: .depend
 
 .depend:
-	$(COQDEP) -I theories $(VFILES) > .depend
+	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
 
-hoq:
-	rm -f $(NEWCOQLIB)/dev $(NEWCOQLIB)/plugins
-	ln -s $(COQLIB)/dev $(COQLIB)/plugins $(NEWCOQLIB)
-	chmod +x hoqtop
+install-data-local:
+	$(LN_S) $(COQLIB)/dev $(COQLIB)/plugins $(hottdir)/coq
 
-%.vo %.glob: %.v
-	$(COQTOP) $(COQTOPARGS) $<
-theories/Contractible.vo theories/Contractible.glob theories/Contractible.v.beautified: theories/Contractible.v theories/Paths.vo theories/Fibrations.vo
-theories/Equivalences.vo theories/Equivalences.glob theories/Equivalences.v.beautified: theories/Equivalences.v theories/Paths.vo theories/Fibrations.vo theories/Contractible.vo
-theories/ExtensionalityAxiom.vo theories/ExtensionalityAxiom.glob theories/ExtensionalityAxiom.v.beautified: theories/ExtensionalityAxiom.v theories/Funext.vo
-theories/FiberEquivalences.vo theories/FiberEquivalences.glob theories/FiberEquivalences.v.beautified: theories/FiberEquivalences.v theories/Fibrations.vo theories/Equivalences.vo
-theories/FiberSequences.vo theories/FiberSequences.glob theories/FiberSequences.v.beautified: theories/FiberSequences.v theories/Equivalences.vo theories/UsefulEquivalences.vo theories/FiberEquivalences.vo
-theories/Fibrations.vo theories/Fibrations.glob theories/Fibrations.v.beautified: theories/Fibrations.v theories/Paths.vo
-theories/Funext.vo theories/Funext.glob theories/Funext.v.beautified: theories/Funext.v theories/Fibrations.vo theories/Contractible.vo theories/Equivalences.vo theories/UsefulEquivalences.vo theories/FiberEquivalences.vo
-theories/FunextEquivalences.vo theories/FunextEquivalences.glob theories/FunextEquivalences.v.beautified: theories/FunextEquivalences.v theories/Paths.vo theories/Equivalences.vo theories/UsefulEquivalences.vo theories/Funext.vo theories/HLevel.vo theories/ExtensionalityAxiom.vo
-theories/HLevel.vo theories/HLevel.glob theories/HLevel.v.beautified: theories/HLevel.v theories/Paths.vo theories/Fibrations.vo theories/Contractible.vo theories/Equivalences.vo theories/Funext.vo theories/ExtensionalityAxiom.vo
-theories/Homotopy.vo theories/Homotopy.glob theories/Homotopy.v.beautified: theories/Homotopy.v theories/Paths.vo theories/Fibrations.vo theories/Contractible.vo theories/Equivalences.vo theories/UsefulEquivalences.vo theories/FiberEquivalences.vo theories/FiberSequences.vo theories/Funext.vo theories/Univalence.vo theories/UnivalenceAxiom.vo theories/FunextEquivalences.vo theories/HLevel.vo
-theories/Paths.vo theories/Paths.glob theories/Paths.v.beautified: theories/Paths.v
-theories/Univalence.vo theories/Univalence.glob theories/Univalence.v.beautified: theories/Univalence.v theories/Paths.vo theories/Fibrations.vo theories/Contractible.vo theories/Equivalences.vo
-theories/UnivalenceAxiom.vo theories/UnivalenceAxiom.glob theories/UnivalenceAxiom.v.beautified: theories/UnivalenceAxiom.v theories/Paths.vo theories/Univalence.vo theories/Funext.vo
-theories/UnivalenceImpliesFunext.vo theories/UnivalenceImpliesFunext.glob theories/UnivalenceImpliesFunext.v.beautified: theories/UnivalenceImpliesFunext.v theories/Paths.vo theories/Fibrations.vo theories/Contractible.vo theories/Equivalences.vo theories/Univalence.vo theories/Funext.vo
-theories/UsefulEquivalences.vo theories/UsefulEquivalences.glob theories/UsefulEquivalences.v.beautified: theories/UsefulEquivalences.v theories/Paths.vo theories/Fibrations.vo theories/Contractible.vo theories/Equivalences.vo
+# The standard library files must be compiled in a special way
+$(STDVOFILES) : %.vo : %.v
+	$(COQTOP) -boot -nois -R $(srcdir)/coq/theories Coq -compile $(basename $<)
+
+# The standard library files must be compiled in a special way
+$(STDGLOBFILES) : %.glob : %.v
+	$(COQTOP) -boot -nois -R $(srcdir)/coq/theories Coq -compile $(basename $<)
+
+# The HoTT files depend on the new standard library, but coqdep will not figure that out.
+$(VOFILES) : $(STDVOFILES)
+
+# A rule for compiling the HoTT libary files
+$(VOFILES) : %.vo : %.v
+	$(HOQC) -I $(srcdir)/theories $<
+./theories/Contractible.vo ./theories/Contractible.glob ./theories/Contractible.v.beautified: ./theories/Contractible.v ./theories/Paths.vo ./theories/Fibrations.vo
+./theories/Equivalences.vo ./theories/Equivalences.glob ./theories/Equivalences.v.beautified: ./theories/Equivalences.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo
+./theories/ExtensionalityAxiom.vo ./theories/ExtensionalityAxiom.glob ./theories/ExtensionalityAxiom.v.beautified: ./theories/ExtensionalityAxiom.v ./theories/Funext.vo
+./theories/FiberEquivalences.vo ./theories/FiberEquivalences.glob ./theories/FiberEquivalences.v.beautified: ./theories/FiberEquivalences.v ./theories/Fibrations.vo ./theories/Equivalences.vo
+./theories/FiberSequences.vo ./theories/FiberSequences.glob ./theories/FiberSequences.v.beautified: ./theories/FiberSequences.v ./theories/Equivalences.vo ./theories/UsefulEquivalences.vo ./theories/FiberEquivalences.vo
+./theories/Fibrations.vo ./theories/Fibrations.glob ./theories/Fibrations.v.beautified: ./theories/Fibrations.v ./theories/Paths.vo
+./theories/Funext.vo ./theories/Funext.glob ./theories/Funext.v.beautified: ./theories/Funext.v ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo ./theories/UsefulEquivalences.vo ./theories/FiberEquivalences.vo
+./theories/FunextEquivalences.vo ./theories/FunextEquivalences.glob ./theories/FunextEquivalences.v.beautified: ./theories/FunextEquivalences.v ./theories/Paths.vo ./theories/Equivalences.vo ./theories/UsefulEquivalences.vo ./theories/Funext.vo ./theories/HLevel.vo ./theories/ExtensionalityAxiom.vo
+./theories/HLevel.vo ./theories/HLevel.glob ./theories/HLevel.v.beautified: ./theories/HLevel.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo ./theories/Funext.vo ./theories/ExtensionalityAxiom.vo
+./theories/Homotopy.vo ./theories/Homotopy.glob ./theories/Homotopy.v.beautified: ./theories/Homotopy.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo ./theories/UsefulEquivalences.vo ./theories/FiberEquivalences.vo ./theories/FiberSequences.vo ./theories/Funext.vo ./theories/Univalence.vo ./theories/UnivalenceAxiom.vo ./theories/FunextEquivalences.vo ./theories/HLevel.vo
+./theories/Paths.vo ./theories/Paths.glob ./theories/Paths.v.beautified: ./theories/Paths.v ./coq/theories/Init/Prelude.vo
+./theories/Univalence.vo ./theories/Univalence.glob ./theories/Univalence.v.beautified: ./theories/Univalence.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo
+./theories/UnivalenceAxiom.vo ./theories/UnivalenceAxiom.glob ./theories/UnivalenceAxiom.v.beautified: ./theories/UnivalenceAxiom.v ./theories/Paths.vo ./theories/Univalence.vo ./theories/Funext.vo
+./theories/UnivalenceImpliesFunext.vo ./theories/UnivalenceImpliesFunext.glob ./theories/UnivalenceImpliesFunext.v.beautified: ./theories/UnivalenceImpliesFunext.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo ./theories/Univalence.vo ./theories/Funext.vo
+./theories/UsefulEquivalences.vo ./theories/UsefulEquivalences.glob ./theories/UsefulEquivalences.v.beautified: ./theories/UsefulEquivalences.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo
+./coq/theories/Init/Datatypes.vo ./coq/theories/Init/Datatypes.glob ./coq/theories/Init/Datatypes.v.beautified: ./coq/theories/Init/Datatypes.v ./coq/theories/Init/Logic.vo
+./coq/theories/Init/Logic.vo ./coq/theories/Init/Logic.glob ./coq/theories/Init/Logic.v.beautified: ./coq/theories/Init/Logic.v ./coq/theories/Init/Notations.vo
+./coq/theories/Init/Notations.vo ./coq/theories/Init/Notations.glob ./coq/theories/Init/Notations.v.beautified: ./coq/theories/Init/Notations.v
+./coq/theories/Init/Prelude.vo ./coq/theories/Init/Prelude.glob ./coq/theories/Init/Prelude.v.beautified: ./coq/theories/Init/Prelude.v ./coq/theories/Init/Notations.vo ./coq/theories/Init/Logic.vo ./coq/theories/Init/Datatypes.vo
+./coq/theories/Init/Tactics.vo ./coq/theories/Init/Tactics.glob ./coq/theories/Init/Tactics.v.beautified: ./coq/theories/Init/Tactics.v
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

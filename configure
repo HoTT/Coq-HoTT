@@ -2687,7 +2687,16 @@ fi
 hottdir="$datarootdir/hott"
 
 
-ac_config_files="$ac_config_files Makefile hoqtop:etc/hoqtop.in"
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: Creating symbolic links into Coq standard library." >&5
+$as_echo "Creating symbolic links into Coq standard library." >&6; }
+rm -f $srcdir/coq/plugins $srcdir/coq/dev
+ln -s $COQLIB/plugins $COQLIB/dev $srcdir/coq
+
+ac_config_files="$ac_config_files Makefile"
+
+ac_config_files="$ac_config_files hoqtop"
+
+ac_config_files="$ac_config_files hoqc"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -3411,7 +3420,8 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "hoqtop") CONFIG_FILES="$CONFIG_FILES hoqtop:etc/hoqtop.in" ;;
+    "hoqtop") CONFIG_FILES="$CONFIG_FILES hoqtop" ;;
+    "hoqc") CONFIG_FILES="$CONFIG_FILES hoqc" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
@@ -3836,6 +3846,12 @@ which seems to be undefined.  Please make sure it is defined" >&2;}
 
   esac
 
+
+  case $ac_file$ac_mode in
+    "hoqtop":F) chmod +x hoqtop ;;
+    "hoqc":F) chmod +x hoqc ;;
+
+  esac
 done # for ac_tag
 
 

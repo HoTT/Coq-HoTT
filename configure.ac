@@ -27,5 +27,12 @@ fi
 hottdir="$datarootdir/hott"
 AC_SUBST([hottdir])
 
-AC_CONFIG_FILES([Makefile hoqtop:etc/hoqtop.in])
+dnl Create symbolic links to the Coq library
+AC_MSG_RESULT([Creating symbolic links into Coq standard library.])
+rm -f $srcdir/coq/plugins $srcdir/coq/dev
+ln -s $COQLIB/plugins $COQLIB/dev $srcdir/coq
+
+AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([hoqtop], [chmod +x hoqtop])
+AC_CONFIG_FILES([hoqc], [chmod +x hoqc])
 AC_OUTPUT

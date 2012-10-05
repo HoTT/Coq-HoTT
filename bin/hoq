@@ -1,2 +1,0 @@
-#!/bin/bash
-../../coq/bin/coqtop -coqlib coq -relevant-equality
