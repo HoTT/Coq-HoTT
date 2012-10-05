@@ -64,7 +64,7 @@ Ltac undo_opposite_to_inverse :=
 (** The statement of the univalence axiom. *)
 
 Definition univalence_statement :=
-  forall (U V : Universe), is_equiv (@path_to_equiv U V).
+  forall (U V : Type), is_equiv (@path_to_equiv U V).
 
 Section Univalence.
 

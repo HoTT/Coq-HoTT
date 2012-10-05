@@ -1,0 +1,26 @@
+THE HoTT DEVELOPMENT TEAM
+=========================
+
+The HoTT library was jointly developed by the following people,
+listed in alphabetical order:
+
+* Andrej Bauer, University of Ljubljana (http://andrej.com/)
+* Michael Shulman, University of San Diego
+* Peter LeFanu Lumsdaine, Dalhousie University (http://mathstat.dal.ca/~p.l.lumsdaine/)
+* Egbert Rijke, Radboud University Nijmegen
+
+For a complete list of all contributors, please see the git commit logs,
+available at https://github.com/HoTT/HoTT.
+
+
+INSTITUTIONAL SUPPORT
+=====================
+
+We acknowledge the support of the following instutitions and funding agencies,
+listed in alphabetical order:
+
+* Institute for Advanced Study, Princeton, USA (http://www.ias.edu/)
+* Institute for Mathematics, Physics and Mechanics, Ljubljana, Slovenia (http://www.imfm.si/)
+* Faculty of Mathematics and Physics, University of Ljubljana, Slovenia (http://www.fmf.uni-lj.si/)
+* Slovenian Research Agency (http://www.arrs.gov.si/), grant P1-0294
+* European Science Foundation project GReGAS (http://www.gregas.eu)

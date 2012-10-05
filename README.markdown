@@ -1,4 +1,5 @@
-A development of homotopy-theoretic foundations of mathematics.
+A development of homotopy-theoretic foundations of mathematics in the Coq
+proof assistant.
 
 This is the repository for the Coq files of the [Homotopy Type Theory
 project](http://homotopytypetheory.org/). You can fork this repository to your own and
@@ -13,3 +14,4 @@ trunk version of Coq fairly quickly, and then to the next Coq release.
 If you insist on using a generic Coq 8.3 or 8.4, then you should get this particular
 version of the library. Good luck!
 
+See the file INSTALL.txt for installation instructions.
