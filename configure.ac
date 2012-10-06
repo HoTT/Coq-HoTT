@@ -8,20 +8,86 @@ AC_CONFIG_MACRO_DIR([etc])
 AM_MAINTAINER_MODE
 AM_INIT_AUTOMAKE([foreign no-dependencies])
 
-AC_PROG_COQ
+# Check to see if 
+AC_ARG_VAR([COQBIN], [the directory which contains the Coq executables])
+if test -n "$COQBIN"; then
+   AC_MSG_RESULT([Will first look for Coq executables in $COQBIN.])
+   PATH=$COQBIN:$PATH
+fi
+
+# Checking for coqtop
+AC_ARG_VAR([COQTOP], [the absolute path of the coqtop executable])
+if test -n "$COQTOP"; then
+   AC_MSG_RESULT([COQTOP was preset to $COQTOP])
+   AC_SUBST([COQTOP])
+else
+   AC_PATH_PROG([COQTOP],[coqtop],[no])
+fi
 
 if test "$COQTOP" = "no"; then
-  AC_MSG_ERROR([You must install Coq first])
+   AC_MSG_ERROR([Could not find coqtop.])
+else
+   COQVERSION=`$COQTOP -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`
+   AC_MSG_RESULT([coqtop version is $COQVERSION.])
+   COQLIB=`$COQTOP -where 2>/dev/null`
+   AC_MSG_RESULT([Coq library path is $COQLIB])
+   AC_SUBST([COQVERSION])
+   AC_SUBST([COQLIB])
+
+   relevantequality=`$COQTOP -help 2>&1 | grep -c -- -relevant-equality`
+   if test "$relevantequality" = "0"; then
+       AC_MSG_ERROR([You need a version of Coq which supports -relevant-equality])
+   fi 
+
+   warnuniverse=`$COQTOP -help 2>&1 | grep -c -- -warn-universe-inconsistency`
+   if test "$warnuniverse" = "0"; then
+      AC_MSG_ERROR([You need a version of Coq which supports -warn-universe-inconsistency])
+   fi
 fi
 
-relevantequality=`$COQTOP -help 2>&1 | grep -c -- -relevant-equality`
-if test "$relevantequality" = "0"; then
-  AC_MSG_ERROR([You need a version of Coq which supports -relevant-equality])
+# Checking for coqc
+AC_ARG_VAR([COQC], [the absolute path of the coqc executable])
+if test -n "$COQC"; then
+   AC_MSG_RESULT([COQC was preset to $COQC])
+   AC_SUBST([COQC])
+else
+   AC_PATH_PROG([COQC],[coqc],[no])
 fi
 
-warnuniverse=`$COQTOP -help 2>&1 | grep -c -- -warn-universe-inconsistency`
-if test "$warnuniverse" = "0"; then
-  AC_MSG_ERROR([You need a version of Coq which supports -warn-universe-inconsistency])
+if test "$COQC" = "no"; then
+   AC_MSG_ERROR([Could not find coqc.])
+else
+  COQCVERSION=`$COQC -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`
+  AC_MSG_RESULT([coqc version is $COQCVERSION.])
+  AC_SUBST([COQCVERSION])
+  if test "$COQCVERSION" != "$COQVERSION"; then
+     AC_MSG_ERROR([Version mismatch between coqtop $COQVERSION and coqc $COQCVERSION.])
+  fi
+fi
+
+# checking for coqdep
+AC_ARG_VAR([COQDEP], [the absolute path of the coqdep executable])
+if test -n "$COQDEP"; then
+   AC_MSG_RESULT([COQDEP was preset to $COQDEP])
+   AC_SUBST([COQCDEP])
+else
+   AC_PATH_PROG([COQDEP],[coqdep],[no])
+fi
+
+if test "$COQDEP" = "no"; then
+   AC_MSG_ERROR([Could not find coqdep.])
+fi
+
+# checking for coqdoc
+AC_ARG_VAR([COQDOC], [the absolute path of the coqdoc executable])
+if test -n "$COQDOC"; then
+   AC_MSG_RESULT([COQDOC was preset to $COQDOC])
+   AC_SUBST([COQCDOC])
+else
+   AC_PATH_PROG([COQDOC],[coqdoc],[no])
+fi
+if test "$COQDOC" = "no"; then
+   AC_MSG_ERROR([Could not find coqdoc.])
 fi
 
 hottdir="$datarootdir/hott"
