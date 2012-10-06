@@ -7,15 +7,15 @@
 
 2. Get the HoTT library at https://github.com/HoTT/HoTT.git.
  
-3. If you installed custom Coq in `PATH`, run
+3. If you installed custom Coq so that it is found in the `PATH`, run
 
        ./configure
        make
 
    If you installed custom Coq in a secret place, tell ./configure
-   where to find it:
+   where to find it as follows:
    
-       ./configure COQTOP=<custom-coqtop> COQC=<custom-coqc> COQDEP=<custom-coqdep>
+       ./configure COQBIN=<absolute-directory-containing-coq-executables>
        make
 
 4. You can now use the HoTT library in place by running ./hoqtop and ./hoqc.
@@ -48,7 +48,8 @@ you should try doing it yourself:
        git clone https://github.com/HoTT/coq.git
 
    If you do not have git, you may still download the files as an archive file at
-   https://github.com/HoTT/coq/zipball/trunk.
+   https://github.com/HoTT/coq/zipball/trunk (but it is better for you in the long run to
+   learn git).
 
 2. Compile Coq, as explained in the INSTALL.txt file of Coq distribution. You will need
    some prerequisites for compilation, such as OCaml 3.11.2 or later.
@@ -82,19 +83,20 @@ Next you should configure the HoTT library:
 
    in the HoTT directory.
 
-2. If you installed the custom Coq somewhere special, you should tell ./configure
-   where to find the custom Coq:
+2. If you installed the custom Coq somewhere special or configured it with `-local`,
+   you should tell ./configure where to find the custom Coq:
 
-       ./configure COQTOP=<coqtop> COQC=<coqc> COQDEP=<coqdep>
+       ./configure COQBIN=<directory-containing-coq-executables>
 
-   where <coqtop>, <coqc> and <coqdep> are absolute locations of the Coq executables.
+   where you should specify the *absolute* path name (starting with /) of the
+   directory which contains `coqtop`, `coqc`, etc.
 
 To compile the HoTT library type
 
     make
 
-The library must be used with a special incantation of the custom Coq. The scripts
-`hoqtop` and `hoqc` do this for you, so you can run
+Because it is a bit tricky to run Coq with a custom standard library, we provided
+scripts `hoqtop` and `hoqc` that do this for you, so you can run
 
     ./hoqtop
 
