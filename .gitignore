@@ -19,6 +19,7 @@ config.status
 # Ignore links into the original Coq library
 coq/dev
 coq/plugins
-# Ignore generated shell scripts
+# Ignore generated shell scripts and Makefile
 hoqtop
 hoqc
+Makefile
