@@ -8,7 +8,31 @@ AC_CONFIG_MACRO_DIR([etc])
 AM_MAINTAINER_MODE
 AM_INIT_AUTOMAKE([foreign no-dependencies])
 
-AC_PROG_COQ
+# checking for coqtop
+AC_PATH_PROG([COQTOP],[coqtop],[no])
+AC_MSG_RESULT([found $COQTOP.])
+if test "$COQTOP" != "no"; then
+   COQVERSION=`$COQTOP -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`
+   AC_MSG_RESULT([Coq version is $COQVERSION.])
+   COQLIB=`$COQTOP -where 2>/dev/null`
+   AC_MSG_RESULT([Coq library path is $COQLIB])
+   AC_SUBST([COQVERSION])
+   AC_SUBST([COQLIB])
+fi
+
+AC_PATH_PROG([COQC],[coqc],[no])
+AC_MSG_RESULT([found $COQC.])
+if test "$COQC" != "no"; then
+  COQCVERSION=`$COQC -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`
+  AC_MSG_RESULT([Coqc version is $COQCVERSION.])
+  AC_SUBST([COQCVERSION])
+fi
+
+# checking for coqdep
+AC_PATH_TOOL([COQDEP],[coqdep],[no])
+
+# checking for coqdoc
+AC_PATH_TOOL([COQDOC],[coqdoc],[no])
 
 if test "$COQTOP" = "no"; then
   AC_MSG_ERROR([You must install Coq first])

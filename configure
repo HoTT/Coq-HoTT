@@ -2258,25 +2258,26 @@ am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
 
 
   # checking for coqtop
-  if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}coqtop", so it can be a program name with args.
-set dummy ${ac_tool_prefix}coqtop; ac_word=$2
+  # Extract the first word of "coqtop", so it can be a program name with args.
+set dummy coqtop; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_COQTOP+:} false; then :
+if ${ac_cv_path_COQTOP+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  if test -n "$COQTOP"; then
-  ac_cv_prog_COQTOP="$COQTOP" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+  case $COQTOP in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_COQTOP="$COQTOP" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_COQTOP="${ac_tool_prefix}coqtop"
+    ac_cv_path_COQTOP="$as_dir/$ac_word$ac_exec_ext"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -2284,9 +2285,11 @@ done
   done
 IFS=$as_save_IFS
 
+  test -z "$ac_cv_path_COQTOP" && ac_cv_path_COQTOP="no"
+  ;;
+esac
 fi
-fi
-COQTOP=$ac_cv_prog_COQTOP
+COQTOP=$ac_cv_path_COQTOP
 if test -n "$COQTOP"; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $COQTOP" >&5
 $as_echo "$COQTOP" >&6; }
@@ -2296,99 +2299,39 @@ $as_echo "no" >&6; }
 fi
 
 
-fi
-if test -z "$ac_cv_prog_COQTOP"; then
-  ac_ct_COQTOP=$COQTOP
-  # Extract the first word of "coqtop", so it can be a program name with args.
-set dummy coqtop; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_ac_ct_COQTOP+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$ac_ct_COQTOP"; then
-  ac_cv_prog_ac_ct_COQTOP="$ac_ct_COQTOP" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_COQTOP="coqtop"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-ac_ct_COQTOP=$ac_cv_prog_ac_ct_COQTOP
-if test -n "$ac_ct_COQTOP"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_COQTOP" >&5
-$as_echo "$ac_ct_COQTOP" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-  if test "x$ac_ct_COQTOP" = x; then
-    COQTOP="no"
-  else
-    case $cross_compiling:$ac_tool_warned in
-yes:)
-{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
-$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
-ac_tool_warned=yes ;;
-esac
-    COQTOP=$ac_ct_COQTOP
-  fi
-else
-  COQTOP="$ac_cv_prog_COQTOP"
-fi
-
-
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $COQTOP." >&5
+$as_echo "found $COQTOP." >&6; }
   if test "$COQTOP" != "no"; then
      COQVERSION=`$COQTOP -v | sed -n -e 's|^.*version \([^ ]*\) .*$|\1|p'`
      { $as_echo "$as_me:${as_lineno-$LINENO}: result: Coq version is $COQVERSION." >&5
 $as_echo "Coq version is $COQVERSION." >&6; }
-     # If COQLIB is set, use it
-     if test "$COQLIB" = ""; then
-        COQLIB=`$COQTOP -where 2>/dev/null`
-     else
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: COQLIB previously set; preserving it." >&5
-$as_echo "COQLIB previously set; preserving it." >&6; }
-     fi
+     COQLIB=`$COQTOP -where 2>/dev/null`
      { $as_echo "$as_me:${as_lineno-$LINENO}: result: Coq library path is $COQLIB" >&5
 $as_echo "Coq library path is $COQLIB" >&6; }
 
 
-
   fi
 
-
-  if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}coqc", so it can be a program name with args.
-set dummy ${ac_tool_prefix}coqc; ac_word=$2
+  # Extract the first word of "coqc", so it can be a program name with args.
+set dummy coqc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_COQC+:} false; then :
+if ${ac_cv_path_COQC+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  if test -n "$COQC"; then
-  ac_cv_prog_COQC="$COQC" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+  case $COQC in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_COQC="$COQC" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_COQC="${ac_tool_prefix}coqc"
+    ac_cv_path_COQC="$as_dir/$ac_word$ac_exec_ext"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -2396,9 +2339,11 @@ done
   done
 IFS=$as_save_IFS
 
+  test -z "$ac_cv_path_COQC" && ac_cv_path_COQC="no"
+  ;;
+esac
 fi
-fi
-COQC=$ac_cv_prog_COQC
+COQC=$ac_cv_path_COQC
 if test -n "$COQC"; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $COQC" >&5
 $as_echo "$COQC" >&6; }
@@ -2408,60 +2353,8 @@ $as_echo "no" >&6; }
 fi
 
 
-fi
-if test -z "$ac_cv_prog_COQC"; then
-  ac_ct_COQC=$COQC
-  # Extract the first word of "coqc", so it can be a program name with args.
-set dummy coqc; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_ac_ct_COQC+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$ac_ct_COQC"; then
-  ac_cv_prog_ac_ct_COQC="$ac_ct_COQC" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_COQC="coqc"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-ac_ct_COQC=$ac_cv_prog_ac_ct_COQC
-if test -n "$ac_ct_COQC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_COQC" >&5
-$as_echo "$ac_ct_COQC" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-  if test "x$ac_ct_COQC" = x; then
-    COQC="no"
-  else
-    case $cross_compiling:$ac_tool_warned in
-yes:)
-{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
-$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
-ac_tool_warned=yes ;;
-esac
-    COQC=$ac_ct_COQC
-  fi
-else
-  COQC="$ac_cv_prog_COQC"
-fi
-
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $COQC." >&5
+$as_echo "found $COQC." >&6; }
   if test "$COQC" != "no"; then
     COQCVERSION=`$COQC -v | sed -n -e 's|^.*version \([^ ]*\) .*$|\1|p'`
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: Coqc version is $COQCVERSION." >&5
