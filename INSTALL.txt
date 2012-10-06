@@ -19,7 +19,7 @@
        make
 
 4. You can now use the HoTT library in place by running ./hoqtop and ./hoqc.
-   The library is loaded with `Require Import HoTT.Hopotopy`.
+   The library is loaded with `Require Import HoTT.Homotopy`.
 
 5. You can install the library globally with `make install`.
 
