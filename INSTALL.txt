@@ -91,6 +91,9 @@ Next you should configure the HoTT library:
    where you should specify the *absolute* path name (starting with /) of the
    directory which contains `coqtop`, `coqc`, etc.
 
+Often coqide is a bit tricky to compile. If you did not compile coqide, you can tell
+the configure script to skip installing hoqide by providing the --without-coqide option.
+
 To compile the HoTT library type
 
     make

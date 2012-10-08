@@ -49,11 +49,13 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+@make_hoqide_TRUE@am__append_1 = hoqide
 subdir = .
 DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(srcdir)/hoqc.in $(srcdir)/hoqtop.in \
-	$(top_srcdir)/configure $(top_srcdir)/etc/install-sh \
-	$(top_srcdir)/etc/missing etc/install-sh etc/missing
+	$(srcdir)/Makefile.in $(srcdir)/hoqc.in $(srcdir)/hoqide.in \
+	$(srcdir)/hoqtop.in $(top_srcdir)/configure \
+	$(top_srcdir)/etc/install-sh $(top_srcdir)/etc/missing \
+	etc/install-sh etc/missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -61,7 +63,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES = hoqtop hoqc
+CONFIG_CLEAN_FILES = hoqtop hoqc hoqide
 CONFIG_CLEAN_VPATH_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -132,6 +134,8 @@ COQCDOC = @COQCDOC@
 COQCVERSION = @COQCVERSION@
 COQDEP = @COQDEP@
 COQDOC = @COQDOC@
+COQIDE = @COQIDE@
+COQIDEVERSION = @COQIDEVERSION@
 COQLIB = @COQLIB@
 COQTOP = @COQTOP@
 COQVERSION = @COQVERSION@
@@ -204,7 +208,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I etc
-bin_SCRIPTS = hoqtop hoqc
+bin_SCRIPTS = hoqtop hoqc $(am__append_1)
 EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 
 # The list of files that comprise the library
@@ -263,6 +267,8 @@ $(am__aclocal_m4_deps):
 hoqtop: $(top_builddir)/config.status $(srcdir)/hoqtop.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 hoqc: $(top_builddir)/config.status $(srcdir)/hoqc.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+hoqide: $(top_builddir)/config.status $(srcdir)/hoqide.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-binSCRIPTS: $(bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
