@@ -8,7 +8,7 @@ AC_CONFIG_MACRO_DIR([etc])
 AM_MAINTAINER_MODE
 AM_INIT_AUTOMAKE([foreign no-dependencies])
 
-# Check to see if 
+# Check to see if COQBIN was set
 AC_ARG_VAR([COQBIN], [the directory which contains the Coq executables])
 if test -n "$COQBIN"; then
    AC_MSG_RESULT([Will first look for Coq executables in $COQBIN.])
@@ -65,6 +65,35 @@ else
   fi
 fi
 
+# Checking for coqide, which can be optional
+AC_ARG_WITH([coqide],
+ [AS_HELP_STRING([--without-coqide], [disable support for coqide])],
+ [],
+ [with_coqide=yes])
+AM_CONDITIONAL(make_hoqide, [test "$with_coqide" = "yes"])
+
+if test "$with_coqide" != "yes"; then
+   AC_MSG_RESULT([Skipping coqide support, as requested.])
+else
+   AC_ARG_VAR([COQIDE], [the absolute path of the coqide executable])
+   if test -n "$COQIDE"; then
+      AC_MSG_RESULT([COQIDE was preset to $COQIDE])
+      AC_SUBST([COQIDE])
+   else
+      AC_PATH_PROG([COQIDE],[coqide],[no])
+   fi
+   if test "$COQIDE" = "no"; then
+      AC_MSG_ERROR([Could not find coqide (configure using --without-coqide).])
+   else
+     COQIDEVERSION=`$COQIDE -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`
+     AC_MSG_RESULT([coqide version is $COQIDEVERSION.])
+     AC_SUBST([COQIDEVERSION])
+     if test "$COQIDEVERSION" != "$COIDEVERSION"; then
+        AC_MSG_ERROR([Version mismatch between coqtop $COQVERSION and coqc $COQIDEVERSION.])
+     fi
+  fi
+fi
+
 # checking for coqdep
 AC_ARG_VAR([COQDEP], [the absolute path of the coqdep executable])
 if test -n "$COQDEP"; then
@@ -73,7 +102,6 @@ if test -n "$COQDEP"; then
 else
    AC_PATH_PROG([COQDEP],[coqdep],[no])
 fi
-
 if test "$COQDEP" = "no"; then
    AC_MSG_ERROR([Could not find coqdep.])
 fi
@@ -101,4 +129,8 @@ ln -s $COQLIB/plugins $COQLIB/dev $srcdir/coq
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([hoqtop], [chmod +x hoqtop])
 AC_CONFIG_FILES([hoqc], [chmod +x hoqc])
+if "$without_coqide" = "no" ; then
+   AC_CONFIG_FILES([hoqide], [chmod +x hoqide])
+fi
+
 AC_OUTPUT
