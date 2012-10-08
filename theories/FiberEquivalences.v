@@ -44,12 +44,12 @@ Section FiberMap.
 
     (** Fiddly lemmas to make the proof go through. *)
 
-    Let tg_is_fiberwise (z : total P) : pr1 z == pr1 (tg z).
+    Let tg_is_fiberwise (z : total P) : pr1 z = pr1 (tg z).
       apply idpath.
     Defined.
 
-    Lemma replace_fiberwise {x y : total P} (p : x == y) : 
-      base_path (map ge p) == (! tg_is_fiberwise x @ base_path p @ tg_is_fiberwise y).
+    Lemma replace_fiberwise {x y : total P} (p : x = y) : 
+      base_path (map ge p) = (! tg_is_fiberwise x @ base_path p @ tg_is_fiberwise y).
     Proof.
       path_induction.
     Defined.

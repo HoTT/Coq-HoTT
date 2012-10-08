@@ -51,7 +51,7 @@ Definition idequiv A : A <~> A.
 Proof.
   exists (idmap A).
   intros x.
-  exists (existT (fun x' => x' == x) x (idpath x)).
+  exists (existT (fun x' => x' = x) x (idpath x)).
   intros [x' p].
   unfold idmap in p.
   induction p.
@@ -71,18 +71,18 @@ Notation "e ^-1" := (inverse e) (at level 33).
 (** The extracted map in the inverse direction is actually an inverse
    (up to homotopy, of course). *)
 
-Definition inverse_is_section {A B : Type} (e : A <~> B) (y : B) : e (e^-1 y) == y :=
+Definition inverse_is_section {A B : Type} (e : A <~> B) (y : B) : e (e^-1 y) = y :=
   pr2 (pr1 ((equiv_is_equiv e) y)).
 
 Hint Rewrite @inverse_is_section : paths.
 
-Definition inverse_is_retraction {A B : Type} (e : A <~> B) (x : A) : e^-1 (e x) == x :=
+Definition inverse_is_retraction {A B : Type} (e : A <~> B) (x : A) : e^-1 (e x) = x :=
   !base_path (pr2 (equiv_is_equiv e (e x)) (x ; idpath (e x))).
 
 Hint Rewrite @inverse_is_retraction : paths.
 
-Definition map_equiv_o_inverse {A B : Type} (e : A <~> B) (x y : A) (p : x == y) :
-  map (e^-1) (map e p) == inverse_is_retraction e x @ p @ !inverse_is_retraction e y.
+Definition map_equiv_o_inverse {A B : Type} (e : A <~> B) (x y : A) (p : x = y) :
+  map (e^-1) (map e p) = inverse_is_retraction e x @ p @ !inverse_is_retraction e y.
 Proof.
   path_induction.
   hott_simpl.
@@ -90,8 +90,8 @@ Defined.
 
 Hint Rewrite @map_equiv_o_inverse : paths.
 
-Definition map_inverse_o_equiv {A B : Type} (e : A <~> B) (u v : B) (p : u == v) :
-  map e (map (e^-1) p) == inverse_is_section e u @ p @ !inverse_is_section e v.
+Definition map_inverse_o_equiv {A B : Type} (e : A <~> B) (u v : B) (p : u = v) :
+  map e (map (e^-1) p) = inverse_is_section e u @ p @ !inverse_is_section e v.
 Proof.
   path_induction.
   hott_simpl.
@@ -109,7 +109,7 @@ Hint Rewrite @map_inverse_o_equiv : paths.
 Ltac contract_hfiber y p :=
   match goal with
     | [ |- is_contr (@hfiber _ _ ?f ?x) ] =>
-      eexists (existT (fun z => f z == x) y p);
+      eexists (existT (fun z => f z = x) y p);
         let z := fresh "z" in
         let q := fresh "q" in
           intros [z q]
@@ -139,7 +139,7 @@ Ltac cancel_inverses_in s :=
 Ltac cancel_inverses :=
   repeat progress (
     match goal with
-      | |- ?s == ?t => first [ cancel_inverses_in s | cancel_inverses_in t ]
+      | |- ?s = ?t => first [ cancel_inverses_in s | cancel_inverses_in t ]
     end
   ).
 
@@ -147,7 +147,7 @@ Ltac cancel_inverses :=
 
 Ltac expand_inverse_src w x :=
   match goal with
-    | |- ?s == ?t =>
+    | |- ?s = ?t =>
       match s with
         | context cxt [ x ] =>
           first [
@@ -164,7 +164,7 @@ Ltac expand_inverse_src w x :=
 
 Ltac expand_inverse_trg w x :=
   match goal with
-    | |- ?s == ?t =>
+    | |- ?s = ?t =>
       match t with
         | context cxt [ x ] =>
           first [
@@ -179,32 +179,32 @@ Ltac expand_inverse_trg w x :=
       end
   end.
 
-(** These tactics change between goals of the form [w x == y] and the
-   form [x == w^-1 y], and dually. *)
+(** These tactics change between goals of the form [w x = y] and the
+   form [x = w^-1 y], and dually. *)
 
 Ltac equiv_moveright :=
   match goal with
-    | |- equiv_map ?w ?a == ?b =>
+    | |- equiv_map ?w ?a = ?b =>
       apply @concat with (y := w (inverse w b));
         [ apply map | apply inverse_is_section ]
-    | |- (inverse ?w) ?a == ?b =>
+    | |- (inverse ?w) ?a = ?b =>
       apply @concat with (y := inverse w (w b));
         [ apply map | apply inverse_is_retraction ]
   end.
 
 Ltac equiv_moveleft :=
   match goal with
-    | |- ?a == equiv_map ?w ?b =>
+    | |- ?a = equiv_map ?w ?b =>
       apply @concat with (y := w (inverse w a));
         [ apply opposite, inverse_is_section | apply map ]
-    | |- ?a == (inverse ?w) ?b =>
+    | |- ?a = (inverse ?w) ?b =>
       apply @concat with (y := inverse w (w a));
         [ apply opposite, inverse_is_retraction | apply map ]
   end.
 
 (** Equivalences are "injective on paths". *)
 
-Lemma equiv_injective {A B : Type} (e : A <~> B) x y : (e x == e y) -> (x == y).
+Lemma equiv_injective {A B : Type} (e : A <~> B) x y : (e x = e y) -> (x = y).
   Proof.
   intro p.
   expand_inverse_src e x.
@@ -242,13 +242,13 @@ Defined.
 
 (** The free path space of a type is equivalent to the type itself. *)
 
-Definition free_path_space A := {xy : A * A & fst xy == snd xy}.
+Definition free_path_space A := {xy : A * A & fst xy = snd xy}.
 
 Definition free_path_source A : free_path_space A <~> A.
 Proof.
   exists (fun p => fst (projT1 p)).
   intros x.
-  eexists (existT _ (existT (fun (xy : A * A) => fst xy == snd xy) (x,x) (idpath x)) _).
+  eexists (existT _ (existT (fun (xy : A * A) => fst xy = snd xy) (x,x) (idpath x)) _).
   intros [[[u v] p] q].
   simpl in * |- *.
   induction q as [a].
@@ -260,7 +260,7 @@ Definition free_path_target A : free_path_space A <~> A.
 Proof.
   exists (fun p => snd (projT1 p)).
   intros x.
-  eexists (existT _ (existT (fun (xy : A * A) => fst xy == snd xy) (x,x) (idpath x)) _).
+  eexists (existT _ (existT (fun (xy : A * A) => fst xy = snd xy) (x,x) (idpath x)) _).
   intros [[[u v] p] q].
   simpl in * |- *.
   induction q as [a].
@@ -279,9 +279,9 @@ Defined.
 Structure adjoint_equiv A B := {
   adj_map : A -> B ;
   adj_adjoint : B -> A ;
-  adj_is_section : (forall y, adj_map (adj_adjoint y) == y) ;
-  adj_is_retraction : (forall x, adj_adjoint (adj_map x) == x) ;
-  adj_triangle : (forall x, map adj_map (adj_is_retraction x) == adj_is_section (adj_map x))
+  adj_is_section : (forall y, adj_map (adj_adjoint y) = y) ;
+  adj_is_retraction : (forall x, adj_adjoint (adj_map x) = x) ;
+  adj_triangle : (forall x, map adj_map (adj_is_retraction x) = adj_is_section (adj_map x))
 }.
 
 (** The following property of equivalences serves to show that an
@@ -290,7 +290,7 @@ Structure adjoint_equiv A B := {
    homotopies. *)
 
 Definition inverse_triangle {A B : Type} (e : A <~> B) x :
-  (map e (inverse_is_retraction e x)) == (inverse_is_section e (e x)).
+  (map e (inverse_is_retraction e x)) = (inverse_is_section e (e x)).
 Proof.
   unfold inverse_is_retraction.
   hott_simpl.
@@ -316,7 +316,7 @@ Proof.
   intro y.
   contract_hfiber (g y) (is_section y).
   apply (@total_path _
-    (fun x => f x == y)
+    (fun x => f x = y)
     (existT _ z q)
     (existT _ (g y) (is_section y))
     (!is_retraction z @ (map g q))).
@@ -335,7 +335,7 @@ Proof.
 Defined.
 
 Lemma adjoint_to_equiv_compute_map {A B} (e : adjoint_equiv A B) :
-  equiv_map (adjoint_to_equiv e) == adj_map _ _ e.
+  equiv_map (adjoint_to_equiv e) = adj_map _ _ e.
 Proof.
   destruct e; apply idpath.
 Defined.
@@ -347,7 +347,7 @@ Defined.
 (** It is sometimes easier to define an adjoint equivalence than
    an equivalence, for example when we have a map which is homotopic
    to the identity. *)
-Lemma equiv_pointwise_idmap A (f : A -> A) (p : forall x, f x == x) : A <~> A.
+Lemma equiv_pointwise_idmap A (f : A -> A) (p : forall x, f x = x) : A <~> A.
 Proof.
   apply adjoint_to_equiv.
   refine {| adj_map := f; adj_adjoint := idmap A; adj_is_section := p; adj_is_retraction := p |}.
@@ -362,8 +362,8 @@ Defined.
 Structure hequiv A B := {
   hequiv_map : A -> B ;
   hequiv_inverse : B -> A ;
-  hequiv_section : (forall y, hequiv_map (hequiv_inverse y) == y) ;
-  hequiv_retraction : (forall x, hequiv_inverse (hequiv_map x) == x)
+  hequiv_section : (forall y, hequiv_map (hequiv_inverse y) = y) ;
+  hequiv_retraction : (forall x, hequiv_inverse (hequiv_map x) = x)
 }.
 
 (** A central fact about adjoint equivalences is that any "incoherent"
@@ -373,8 +373,8 @@ Structure hequiv A B := {
    equivalences in 2-category theory. *)
 
 Lemma map_retraction_section A B (f : A -> B) (g : B -> A)
-  (h : forall x, f (g x) == x) (u v : B) (p : u == v) :
-  map f (map g p) == h u @ p @ ! h v.
+  (h : forall x, f (g x) = x) (u v : B) (p : u = v) :
+  map f (map g p) = h u @ p @ ! h v.
 Proof.
   path_induction.
   hott_simpl.
@@ -410,7 +410,7 @@ Proof.
 Defined.
 
 Lemma adjointify_compute_map {A B} (h : hequiv A B) :
-  hequiv_map _ _ h == adj_map _ _ (adjointify h).
+  hequiv_map _ _ h = adj_map _ _ (adjointify h).
 Proof.
   destruct h; apply idpath.
 Defined.
@@ -421,7 +421,7 @@ Definition hequiv_to_equiv {A B} : hequiv A B -> (A <~> B) :=
   adjoint_to_equiv o adjointify.
 
 Lemma hequiv_to_equiv_compute_map {A B} (h : hequiv A B) :
-  equiv_map (hequiv_to_equiv h) == hequiv_map _ _ h.
+  equiv_map (hequiv_to_equiv h) = hequiv_map _ _ h.
 Proof.
   destruct h; apply idpath.
 Defined.
@@ -432,7 +432,7 @@ Defined.
    it is an equivalence. *)
 
 Definition is_equiv_from_hequiv {A B} {f : A -> B} (g : B -> A)
-  (p : forall y, f (g y) == y) (q : forall x, g (f x) == x) : is_equiv f :=
+  (p : forall y, f (g y) = y) (q : forall x, g (f x) = x) : is_equiv f :=
   equiv_is_equiv (hequiv_to_equiv 
     {| hequiv_map := f ;
        hequiv_inverse := g ;
@@ -440,7 +440,7 @@ Definition is_equiv_from_hequiv {A B} {f : A -> B} (g : B -> A)
        hequiv_retraction := q |}).  
 
 Definition equiv_from_hequiv {A B} (f : A -> B) (g : B -> A)
-  (p : forall y, f (g y) == y) (q : forall x, g (f x) == x) : A <~> B :=
+  (p : forall y, f (g y) = y) (q : forall x, g (f x) = x) : A <~> B :=
   hequiv_to_equiv 
     {| hequiv_map := f;
        hequiv_inverse := g;
@@ -458,7 +458,7 @@ Defined.
 
 (* Rewrite rules for inverses. *)
 
-Lemma equiv_inverse_is_inverse (A B  : Type) (f : A <~> B) : equiv_map (equiv_inverse f) == f^-1.
+Lemma equiv_inverse_is_inverse (A B  : Type) (f : A <~> B) : equiv_map (equiv_inverse f) = f^-1.
 Proof.
   apply idpath.
 Defined.
@@ -468,7 +468,7 @@ Hint Rewrite equiv_inverse_is_inverse : paths.
 (** Anything homotopic to an equivalence is an equivalence. *)
 
 Lemma equiv_homotopic {A B} (f : A -> B) (g : A <~> B) :
-  (forall x, f x == g x) -> A <~> B.
+  (forall x, f x = g x) -> A <~> B.
 Proof.
   intros p.
   apply (equiv_from_hequiv f (g^-1)).
@@ -489,7 +489,7 @@ Proof.
 Defined.
 
 Lemma equiv_inverse_compose (A B C : Type) (f : A <~> B) (g : B <~> C) x :
-  inverse (equiv_compose f g) x == f^-1 (g^-1 x).
+  inverse (equiv_compose f g) x = f^-1 (g^-1 x).
 Proof.
   auto.
 Defined.
@@ -506,9 +506,9 @@ Proof.
   expand_inverse_trg gof y.
   apply idpath.
   intro x.
-  change (f (gof^-1 (g x)) == x).
+  change (f (gof^-1 (g x)) = x).
   equiv_moveright; equiv_moveright.
-  change (g x == g (f (f^-1 x))).
+  change (g x = g (f (f^-1 x))).
   hott_simpl.
 Defined.
 
@@ -535,9 +535,9 @@ Defined.
 
 Structure is_hiso {A B} (f : A -> B) :=
   { hiso_section : B -> A ;
-    hiso_is_section : (forall y, f (hiso_section y) == y) ;
+    hiso_is_section : (forall y, f (hiso_section y) = y) ;
     hiso_retraction : B -> A ;
-    hiso_is_retraction : forall x, (hiso_retraction (f x) == x)
+    hiso_is_retraction : forall x, (hiso_retraction (f x) = x)
   }.
 
 Implicit Arguments hiso_section [A B f].
@@ -549,7 +549,7 @@ Definition is_hiso_from_is_equiv {A B} (f : A -> B) : is_equiv f -> is_hiso f.
 Proof.
   intro feq.
   pose (e := {| equiv_map := f; equiv_is_equiv := feq |}).
-  rewrite (idpath _ : f == equiv_map e).
+  rewrite (idpath _ : f = equiv_map e).
   refine {| hiso_section := e^-1; hiso_retraction := e^-1|}.
   apply inverse_is_section.
   apply inverse_is_retraction.
@@ -586,7 +586,7 @@ Proof.
 Defined.
 
 Lemma hequiv_from_hiso_compute_map {A B} (h : hiso A B) :
-  hequiv_map _ _ (hequiv_from_hiso h) == hiso_map _ _ h.
+  hequiv_map _ _ (hequiv_from_hiso h) = hiso_map _ _ h.
 Proof.
   destruct h as [? [? ? ?]].
   apply idpath.
@@ -596,7 +596,7 @@ Definition equiv_from_hiso {A B} (f : hiso A B) : A <~> B :=
   hequiv_to_equiv (hequiv_from_hiso f).
 
 Lemma equiv_from_hiso_compute_map {A B} (f : hiso A B) :
-  equiv_map (equiv_from_hiso f) == hiso_map _ _ f.
+  equiv_map (equiv_from_hiso f) = hiso_map _ _ f.
 Proof.
   destruct f as [? [? ? ?]].
   apply idpath.
@@ -608,7 +608,7 @@ Proof.
   pose (h := {| hiso_map := f; hiso_is_hiso := fhiso |}).
   pose (e := equiv_from_hiso h).
   (** We would like to apply [equiv_is_equiv e], but Coq wants us to rewrite first. *)
-  rewrite (idpath _ : f == hiso_map _ _ h).
+  rewrite (idpath _ : f = hiso_map _ _ h).
   rewrite <- (equiv_from_hiso_compute_map h).
   apply (equiv_is_equiv e).
 Defined.

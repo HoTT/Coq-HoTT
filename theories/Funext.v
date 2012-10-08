@@ -4,11 +4,11 @@ Require Export UsefulEquivalences FiberEquivalences.
 (** In type theory [f] and [g] are extensionally equal if they give equal values.
    In HoTT such an equality might be called "pointwise homotopy" or just "homotopy". *)
 
-Definition ext_dep_eq {X} {P : X -> Type} (f g : forall x, P x) := forall x : X, f x == g x.
+Definition ext_dep_eq {X} {P : X -> Type} (f g : forall x, P x) := forall x : X, f x = g x.
 
 (** A notation for extensional equality. *)
 
-Notation "f === g" := (ext_dep_eq f g) (at level 50).
+Notation "f == g" := (ext_dep_eq f g) (at level 50).
 
 (** The simplest notion we call "naive functional extensionality".
    This is what a type theorist would probably write down when
@@ -17,10 +17,10 @@ Notation "f === g" := (ext_dep_eq f g) (at level 50).
    comes in both ordinary and dependent versions. *)
 
 Definition funext_statement (X Y : Type) :=
-  forall (f g : X -> Y), f === g -> f == g.
+  forall (f g : X -> Y), f == g -> f = g.
 
 Definition funext_dep_statement {X : Type} (P : fibration X) :=
-  forall (f g : section P), f === g -> (f == g).
+  forall (f g : section P), f == g -> (f = g).
 
 (** However, there are clearly going to be problems with this in the
    homotopy world, since "being equal" is not merely a property, but
@@ -46,7 +46,7 @@ Definition strong_funext_dep_statement {X : Type} (P : fibration X) :=
 
 Definition happly_dep_equiv
   (X : Type) (P : fibration X) (f g : section P) (H : strong_funext_dep_statement P) :
-  f == g <~> f === g.
+  f = g <~> f == g.
 Proof.
   exists (@happly_dep X P f g).
   apply H.
@@ -64,8 +64,8 @@ Defined.
 
 Theorem strong_funext_compute
   (strong_funext : forall X Y, strong_funext_statement X Y)
-  (X Y : Type) (f g : X -> Y) (p : f === g) (x : X) :
-  happly (strong_to_naive_funext strong_funext X Y f g p) x == p x.
+  (X Y : Type) (f g : X -> Y) (p : f == g) (x : X) :
+  happly (strong_to_naive_funext strong_funext X Y f g p) x = p x.
 Proof.
   intros.
   unfold strong_to_naive_funext.
@@ -83,8 +83,8 @@ Defined.
 
 Theorem strong_funext_dep_compute {X} (P : fibration X)
   (strong_funext_dep : strong_funext_dep_statement P)
-  (f g : section P) (p : f === g) (x : X) :
-  happly_dep (strong_to_naive_funext_dep P strong_funext_dep f g p) x == p x.
+  (f g : section P) (p : f == g) (x : X) :
+  happly_dep (strong_to_naive_funext_dep P strong_funext_dep f g p) x = p x.
 Proof.
   intros.
   unfold strong_to_naive_funext_dep, inverse.
@@ -149,7 +149,7 @@ Definition eta {A B} (f : A -> B) :=
    things might end up in [Prop] instead of [Type] without us noticing. *)
 
 Definition eta_statement (A B : Type) : Type :=
-  forall (f : A -> B), eta f == f.
+  forall (f : A -> B), eta f = f.
 
 Theorem naive_funext_implies_eta (A B : Type) :
   funext_statement A B -> eta_statement A B.
@@ -165,7 +165,7 @@ Definition eta_dep {A} {P : A -> Type} (f : section P) :=
   fun x => f x.
 
 Definition eta_dep_statement {A : Type} (P : fibration A) :=
-  forall (f : section P), eta_dep f == f.
+  forall (f : section P), eta_dep f = f.
 
 Theorem naive_funext_dep_implies_eta {A : Type} (P : fibration A) :
   funext_dep_statement P -> eta_dep_statement P.
@@ -247,7 +247,7 @@ Section AxiomOfChoiceEquiv'.
   *)
 
   Definition ac_equiv'
-    (total_Q_prop : forall x, forall u v : {y : P x & Q x y}, u == v)
+    (total_Q_prop : forall x, forall u v : {y : P x & Q x y}, u = v)
     (weak_funext : forall Y (S : fibration Y), weak_funext_statement S) :
     (forall x, {y : P x & Q x y}) <~> {h : section P & forall x, Q x (h x)}.
   Proof.
@@ -304,8 +304,8 @@ Section WeakToStrongFunextDep.
 
   Variable f : section P.
   
-  Let Q := (fun h => f == h) : fibration (section P).
-  Let R := (fun h => f === h) : fibration (section P).
+  Let Q := (fun h => f = h) : fibration (section P).
+  Let R := (fun h => f == h) : fibration (section P).
 
   (** We need to show that [happly_dep f] is fiber-wise equivalence. It is
      sufficient to show that the induced total map [total Q] -> [total R] is an
@@ -328,7 +328,7 @@ Section WeakToStrongFunextDep.
        unfold a bit to see what is going on. *)
     unfold R, total, ext_dep_eq.
     (* [total R] is exactly of the form needed for [ac_equiv'] to kick in! *)
-    apply contr_equiv_contr with (A := forall x, {y : P x & f x == y}).
+    apply contr_equiv_contr with (A := forall x, {y : P x & f x = y}).
     apply ac_equiv'; auto.
     (* The rest is a triviality. *)
     intros x u v. apply contr_path, pathspace_contr'.
@@ -385,7 +385,7 @@ Section AxiomOfChoiceEquiv.
     rewrite (eta_dep_rule _ _ H).
     fold (eta_dep h).
     (* So far the proof is the same as that of [ac_equiv'] but now we deviate
-       from it. Strong extensionality gives us a path [p : eta_dep h == h] in
+       from it. Strong extensionality gives us a path [p : eta_dep h = h] in
        the base with which we can reduce the problem to having a path in the
        fiber. *)
     pose (p := funext_dep X P (eta_dep h) h (fun a => idpath (h a))).

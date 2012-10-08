@@ -1,5 +1,10 @@
 ACLOCAL_AMFLAGS = -I etc
+
 bin_SCRIPTS = hoqtop hoqc
+if make_hoqide
+  bin_SCRIPTS += hoqide
+endif
+
 hottdir=$(datarootdir)/hott
 EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 

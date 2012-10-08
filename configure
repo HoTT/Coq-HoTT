@@ -588,6 +588,10 @@ COQCDOC
 COQDOC
 COQCDEP
 COQDEP
+COQIDEVERSION
+COQIDE
+make_hoqide_FALSE
+make_hoqide_TRUE
 COQCVERSION
 COQC
 COQLIB
@@ -662,6 +666,7 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 enable_maintainer_mode
+with_coqide
 '
       ac_precious_vars='build_alias
 host_alias
@@ -669,6 +674,7 @@ target_alias
 COQBIN
 COQTOP
 COQC
+COQIDE
 COQDEP
 COQDOC'
 
@@ -1289,10 +1295,16 @@ Optional Features:
                           enable make rules and dependencies not useful (and
                           sometimes confusing) to the casual installer
 
+Optional Packages:
+  --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+  --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --without-coqide        disable support for coqide
+
 Some influential environment variables:
   COQBIN      the directory which contains the Coq executables
   COQTOP      the absolute path of the coqtop executable
   COQC        the absolute path of the coqc executable
+  COQIDE      the absolute path of the coqide executable
   COQDEP      the absolute path of the coqdep executable
   COQDOC      the absolute path of the coqdoc executable
 
@@ -2274,7 +2286,7 @@ am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
 
 
 
-# Check to see if
+# Check to see if COQBIN was set
 
 if test -n "$COQBIN"; then
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: Will first look for Coq executables in $COQBIN." >&5
@@ -2417,6 +2429,89 @@ $as_echo "coqc version is $COQCVERSION." >&6; }
   fi
 fi
 
+# Checking for coqide, which can be optional
+
+# Check whether --with-coqide was given.
+if test "${with_coqide+set}" = set; then :
+  withval=$with_coqide;
+else
+  with_coqide=yes
+fi
+
+ if test "$with_coqide" = "yes"; then
+  make_hoqide_TRUE=
+  make_hoqide_FALSE='#'
+else
+  make_hoqide_TRUE='#'
+  make_hoqide_FALSE=
+fi
+
+
+if test "$with_coqide" != "yes"; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Skipping coqide support, as requested." >&5
+$as_echo "Skipping coqide support, as requested." >&6; }
+else
+
+   if test -n "$COQIDE"; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: COQIDE was preset to $COQIDE" >&5
+$as_echo "COQIDE was preset to $COQIDE" >&6; }
+
+   else
+      # Extract the first word of "coqide", so it can be a program name with args.
+set dummy coqide; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_COQIDE+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case $COQIDE in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_COQIDE="$COQIDE" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_COQIDE="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_path_COQIDE" && ac_cv_path_COQIDE="no"
+  ;;
+esac
+fi
+COQIDE=$ac_cv_path_COQIDE
+if test -n "$COQIDE"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $COQIDE" >&5
+$as_echo "$COQIDE" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+   fi
+   if test "$COQIDE" = "no"; then
+      as_fn_error $? "Could not find coqide (configure using --without-coqide)." "$LINENO" 5
+   else
+     COQIDEVERSION=`$COQIDE -v | sed -n -e 's|^.*version \([^ ]*\) .*$|\1|p'`
+     { $as_echo "$as_me:${as_lineno-$LINENO}: result: coqide version is $COQIDEVERSION." >&5
+$as_echo "coqide version is $COQIDEVERSION." >&6; }
+
+     if test "$COQIDEVERSION" != "$COIDEVERSION"; then
+        as_fn_error $? "Version mismatch between coqtop $COQVERSION and coqc $COQIDEVERSION." "$LINENO" 5
+     fi
+  fi
+fi
+
 # checking for coqdep
 
 if test -n "$COQDEP"; then
@@ -2466,7 +2561,6 @@ fi
 
 
 fi
-
 if test "$COQDEP" = "no"; then
    as_fn_error $? "Could not find coqdep." "$LINENO" 5
 fi
@@ -2537,6 +2631,11 @@ ac_config_files="$ac_config_files Makefile"
 ac_config_files="$ac_config_files hoqtop"
 
 ac_config_files="$ac_config_files hoqc"
+
+if "$without_coqide" = "no" ; then
+   ac_config_files="$ac_config_files hoqide"
+
+fi
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -2696,6 +2795,10 @@ $as_echo_n "checking that generated files are newer than configure... " >&6; }
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: done" >&5
 $as_echo "done" >&6; }
 
+if test -z "${make_hoqide_TRUE}" && test -z "${make_hoqide_FALSE}"; then
+  as_fn_error $? "conditional \"make_hoqide\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 
 : "${CONFIG_STATUS=./config.status}"
 ac_write_fail=0
@@ -3262,6 +3365,7 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "hoqtop") CONFIG_FILES="$CONFIG_FILES hoqtop" ;;
     "hoqc") CONFIG_FILES="$CONFIG_FILES hoqc" ;;
+    "hoqide") CONFIG_FILES="$CONFIG_FILES hoqide" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
@@ -3690,6 +3794,7 @@ which seems to be undefined.  Please make sure it is defined" >&2;}
   case $ac_file$ac_mode in
     "hoqtop":F) chmod +x hoqtop ;;
     "hoqc":F) chmod +x hoqc ;;
+    "hoqide":F) chmod +x hoqide ;;
 
   esac
 done # for ac_tag

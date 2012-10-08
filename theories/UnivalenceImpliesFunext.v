@@ -15,7 +15,7 @@ Section UnivalenceImpliesFunext.
 
   Hypothesis univalence : univalence_statement.
 
-  Hypothesis eta_rule : forall (U V : Universe), eta_statement U V.
+  Hypothesis eta_rule : forall (U V : Type), eta_statement U V.
 
   (** Exponentiation preserves equivalences, i.e., if [e] is an
      equivalence then so is post-composition by [e]. *)
@@ -35,14 +35,14 @@ Section UnivalenceImpliesFunext.
   (** We are ready to prove functional extensionality, starting with the
      naive non-dependent version. *)
 
-  Theorem univalence_implies_funext (A B: Universe): funext_statement A B.
+  Theorem univalence_implies_funext (A B: Type): funext_statement A B.
   Proof.
     intros f g p.
-    (* It suffices to find a path [eta f == eta g]. *)
+    (* It suffices to find a path [eta f = eta g]. *)
     apply equiv_injective with (e := eta_equiv A B (eta_rule _ _)); simpl.
     (* Consider the following maps. *)
-    pose (d := fun x : A => existT (fun xy => fst xy == snd xy) (f x, f x) (idpath (f x))).
-    pose (e := fun x : A => existT (fun xy => fst xy == snd xy) (f x, g x) (p x)).
+    pose (d := fun x : A => existT (fun xy => fst xy = snd xy) (f x, f x) (idpath (f x))).
+    pose (e := fun x : A => existT (fun xy => fst xy = snd xy) (f x, g x) (p x)).
     (* If we compose [d] and [e] with [free_path_target], we get [eta
        f] and [eta g], respectively. So, if we had a path from [d] to
        [e], we would get one from [eta f] to [eta g]. *)
@@ -60,13 +60,13 @@ Section UnivalenceImpliesFunext.
   (** Now we use this to prove weak funext, which as we know implies
      (with dependent eta) also the strong dependent funext. *)
 
-  Theorem univalence_implies_weak_funext (A : Universe) (P : A -> Universe):
+  Theorem univalence_implies_weak_funext (A : Type) (P : A -> Type):
     weak_funext_statement P.
   Proof.
     intros allcontr.
     (* We are going to replace [P] with something simpler. *)
-    pose (U := (fun (_ : A) => unit : Universe)).
-    assert (p : P == U).
+    pose (U := (fun (_ : A) => unit : Type)).
+    assert (p : P = U).
     apply univalence_implies_funext.
     intro x.
     apply equiv_to_path; auto.
@@ -81,7 +81,6 @@ Section UnivalenceImpliesFunext.
     apply (univalence_implies_funext A unit).
     intro x.
     apply contr_path, unit_contr.
-    (* Oh noes!  Universe inconsistency! *)
-  Admitted.
+  Qed.
 
 End UnivalenceImpliesFunext.
