@@ -39,7 +39,7 @@ install-data-local:
 
 # The standard library files must be compiled in a special way
 $(STDVOFILES) : %.vo : %.v
-	$(COQTOP) -boot -nois -R $(srcdir)/coq/theories Coq -compile $(basename $<)
+	$(COQTOP) -boot -nois -coqlib $(srcdir)/coq -R $(srcdir)/coq/theories Coq -compile $(basename $<)
 
 # The standard library files must be compiled in a special way
 $(STDGLOBFILES) : %.glob : %.v
