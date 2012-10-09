@@ -114,15 +114,15 @@ Proof.
 Defined.
 
 Lemma opposite_opposite_opposite {A} (x y : A) (p : x = y) :
-  opposite2 (opposite_opposite A x y p) =
-  opposite_opposite A y x (!p).
+  opposite2 (opposite_opposite p) =
+  opposite_opposite (!p).
 Proof.
   path_induction.
 Defined.
 
 Lemma opposite_opposite_natural {A} (x y : A) (p q : x = y) (r : p = q) :
-  opposite2 (opposite2 r) @ opposite_opposite A x y q =
-  opposite_opposite A x y p @ r.
+  opposite2 (opposite2 r) @ opposite_opposite q =
+  opposite_opposite p @ r.
 Proof.
   path_induction.
 Defined.
@@ -132,22 +132,22 @@ Proof.
   apply (equiv_from_hequiv (@opposite2 A x y p q) (unopposite2 p q)).
   intros r.
   unfold unopposite2.
-  path_via' (opposite2 (!opposite_opposite A x y p) @
-    opposite2 (opposite2 r @ opposite_opposite A x y q)).
+  path_via' (opposite2 (!opposite_opposite p) @
+    opposite2 (opposite2 r @ opposite_opposite q)).
   apply opposite2_functor.
-  path_via' (!opposite2 (opposite_opposite A x y p) @
-    opposite2 (opposite2 r @ opposite_opposite A x y q)).
+  path_via' (!opposite2 (opposite_opposite p) @
+    opposite2 (opposite2 r @ opposite_opposite q)).
   apply whisker_right.
   apply opposite2_opposite.
-  path_via' (!(opposite_opposite A y x (!p)) @
-   opposite2 (opposite2 r @ opposite_opposite A x y q)).
+  path_via' (!(opposite_opposite (!p)) @
+   opposite2 (opposite2 r @ opposite_opposite q)).
   apply whisker_right.
   apply map.
   apply opposite_opposite_opposite.
   moveright_onleft.
-  path_via (opposite2 (opposite2 r) @ opposite2 (opposite_opposite A x y q)).
+  path_via (opposite2 (opposite2 r) @ opposite2 (opposite_opposite q)).
   apply opposite2_functor.
-  path_via' (opposite2 (opposite2 r) @ opposite_opposite A y x (!q)).
+  path_via' (opposite2 (opposite2 r) @ opposite_opposite (!q)).
   apply whisker_left.
   apply opposite_opposite_opposite.
   apply opposite_opposite_natural.
