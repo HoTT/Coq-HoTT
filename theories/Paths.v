@@ -219,7 +219,7 @@ Hint Rewrite opposite_concat : paths.
 
 Lemma opposite_idpath A (x : A) : !(idpath x) = idpath x.
 Proof.
-  path_induction.
+  reflexivity.
 Defined.
 
 Hint Rewrite opposite_idpath : paths.
@@ -343,7 +343,7 @@ Defined.*)
 
 Lemma idpath_map A B (x : A) (f : A -> B) : map f (idpath x) = idpath (f x).
 Proof.
-  path_induction.
+  reflexivity.
 Defined.
 
 Hint Rewrite idpath_map : paths.
