@@ -66,6 +66,7 @@ else
 fi
 
 # Checking for coqide, which can be optional
+without_coqide="no"
 AC_ARG_WITH([coqide],
  [AS_HELP_STRING([--without-coqide], [disable support for coqide])],
  [],
@@ -85,10 +86,10 @@ else
    if test "$COQIDE" = "no"; then
       AC_MSG_ERROR([Could not find coqide (configure using --without-coqide).])
    else
-     COQIDEVERSION=`$COQIDE -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`
-     AC_MSG_RESULT([coqide version is $COQIDEVERSION.])
+     AC_MSG_RESULT([Trusting that coqide version is $COQVERSION.])
+     COQIDEVERSION=$COQVERSION
      AC_SUBST([COQIDEVERSION])
-     if test "$COQIDEVERSION" != "$COIDEVERSION"; then
+     if test "$COQIDEVERSION" != "$COQVERSION"; then
         AC_MSG_ERROR([Version mismatch between coqtop $COQVERSION and coqc $COQIDEVERSION.])
      fi
   fi
@@ -129,7 +130,7 @@ ln -s $COQLIB/plugins $COQLIB/dev $srcdir/coq
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([hoqtop], [chmod +x hoqtop])
 AC_CONFIG_FILES([hoqc], [chmod +x hoqc])
-if "$without_coqide" = "no" ; then
+if test "x$without_coqide" != "xyes" ; then
    AC_CONFIG_FILES([hoqide], [chmod +x hoqide])
 fi
 

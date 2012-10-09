@@ -22,4 +22,5 @@ coq/plugins
 # Ignore generated shell scripts and Makefile
 hoqtop
 hoqc
+hoqide
 Makefile
