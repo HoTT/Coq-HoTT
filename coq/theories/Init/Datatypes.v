@@ -14,26 +14,6 @@ Notation "x + y" := (sum x y) : type_scope.
 Arguments inl {A B} _ , [A] B _.
 Arguments inr {A B} _ , A [B] _.
 
-(** [prod A B], written [A * B], is the product of [A] and [B];
-    the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
-
-Inductive prod (A B:Type) : Type :=
-  pair : A -> B -> prod A B.
-
-Arguments pair {A B} _ _.
-
-Add Printing Let prod.
-
-Notation "x * y" := (prod x y) : type_scope.
-Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
-
-Definition fst {A B : Type} (p : A * B) := match p with (x, y) => x end.
-Definition snd {A B : Type} (p : A * B) := match p with (x, y) => y end.
-
-Hint Resolve pair inl inr : core.
-
-
-
 (** [(sigT A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type. *)
 
 Inductive sigT {A:Type} (P:A -> Type) : Type :=
@@ -48,6 +28,22 @@ Definition projT1 {A : Type} {P : A -> Type} (x : sigT P) : A :=
 
 Definition projT2 {A : Type} {P : A -> Type} (x : sigT P) : P (projT1 x) :=
   match x return P (projT1 x) with | existT _ h => h end.
+
+Definition prod (A B : Type) := sigT (fun _ : A => B).
+
+Notation "x * y" := (prod x y) : type_scope.
+
+Definition pair {A B : Type} (a : A) (b : B) : A * B := 
+       existT (fun _ : A => B) a b.
+Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
+
+Definition fst {A B : Type} (p : A * B) := 
+   let (x, _ ) := p in x.
+
+Definition snd {A B : Type} (p : A * B) := 
+  match p with existT a b => b end.
+
+Hint Resolve pair inl inr : core.
 
 (** [Empty_set] is a datatype with no inhabitant *)
 
