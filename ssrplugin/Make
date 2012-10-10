@@ -6,6 +6,11 @@
 #SSRCOQ = bin/ssrcoq
 ##
 
+COQBIN=$(HOTT)
+COQC=hoqc
+COQTOP=hoqtop
+COQC?=$(COQBIN)hoqc
+
 ## What follows should be left untouched by the final user of ssreflect
 -R theories Ssreflect
 -I src
