@@ -3,6 +3,12 @@
 Require Export Logic.
 Declare ML Module "nat_syntax_plugin".
 
+(** ssrefelct wants equality. *)
+Inductive identity {A : Type} (x : A) : A -> Type := identity_refl : identity x x.
+
+Notation "x = y" := (identity x y) (at level 70).
+Notation "x = y :> A" := (@identity A x y) : type_scope.
+
 (** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
 
 Inductive sum (A B: Type) : Type :=
@@ -57,6 +63,18 @@ Inductive Empty_set : Set :=.
 
 Inductive unit : Set :=
     tt : unit.
+
+(** [bool] is the datatype of the boolean values [true] and [false] *)
+
+Inductive bool : Set :=
+  | true : bool
+  | false : bool.
+
+Add Printing If bool.
+
+Delimit Scope bool_scope with bool.
+
+Bind Scope bool_scope with bool.
 
 (* Natural numbers. *)
 
