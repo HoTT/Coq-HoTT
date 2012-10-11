@@ -59,7 +59,8 @@ Theorem strong_to_naive_funext:
   (forall X Y, strong_funext_statement X Y) -> (forall X P, funext_statement X P).
 Proof.
   intros H X Y f g.
-  exact ({| equiv_map := @happly X Y f g; equiv_is_equiv := H X Y f g|} ^-1).
+  exact ((make_equiv _ (H X Y f g))^-1).
+(*  exact ({| equiv_map := @happly X Y f g; equiv_is_equiv := H X Y f g|} ^-1).*)
 Defined.
 
 Theorem strong_funext_compute
@@ -78,7 +79,8 @@ Theorem strong_to_naive_funext_dep {X} (P : fibration X):
   strong_funext_dep_statement P -> funext_dep_statement P.
 Proof.
   intros H f g.  
-  exact ({| equiv_map := @happly_dep X P f g ; equiv_is_equiv := H f g |} ^-1).
+   exact ((make_equiv _ (H f g))^-1).
+(*  exact ({| equiv_map := @happly_dep X P f g ; equiv_is_equiv := H f g |} ^-1). *)
 Defined.
 
 Theorem strong_funext_dep_compute {X} (P : fibration X)
