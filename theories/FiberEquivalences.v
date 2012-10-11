@@ -24,10 +24,13 @@ Section FiberMap.
     Hypothesis tg_is_equiv : is_equiv tg.
 
     Let ge : (total P) <~> (total Q) :=
-      {| 
+(*      {| 
         equiv_map := tg ;
         equiv_is_equiv := tg_is_equiv
-      |}.
+      |}
+*)
+    make_equiv _ tg_is_equiv
+.
 
     (* We want to show that each function [g x] is an equivalence, so we
        start by defining its inverse. *)
@@ -271,13 +274,13 @@ Section FibrationMap.
     Proof.
       apply total_equiv.
       intro x.
-      exact {| equiv_map := g x; equiv_is_equiv := is_equiv_g x |}.
+     exact (make_equiv _ (is_equiv_g x)).
     Defined.
 
     (* And now by a two-out-of-three property, [eg] is an equivalence. *)
     Theorem fibseq_total_equiv : total P <~> total Q.
     Proof.
-      refine {| equiv_map := eg |}.
+       exists eg.
       apply (equiv_is_equiv (equiv_compose he ke)).
     Defined.
   End FiberFibseq.

@@ -31,12 +31,21 @@ Definition is_equiv {A B} (e : A -> B) := forall y : B, is_contr (hfiber e y).
 
    The disadvantage of using a structure is that various theorems about
    total spaces cannot be used directly on the structure.
+  
+   So let's use the total space.
 *)
 
-Structure equiv (A B : Type) := {
-  equiv_map :> A -> B ;
-  equiv_is_equiv : is_equiv equiv_map
-}.
+
+Definition equiv (A B : Type) := sigT (fun e : A -> B => is_equiv e).
+
+Definition equiv_map {A B : Type} (e : equiv A B) : A -> B := projT1 e.
+Coercion equiv_map : equiv >-> Funclass.
+
+Definition equiv_is_equiv {A B : Type} (e : equiv A B) : is_equiv e := projT2 e.
+Coercion equiv_is_equiv : equiv >-> is_equiv.
+
+Definition make_equiv {A B : Type} (e : A -> B) (H : is_equiv e) : equiv A B :=
+    existT _ _ H.
 
 Implicit Arguments equiv_map [A B].
 Implicit Arguments equiv_is_equiv [A B].
@@ -500,7 +509,7 @@ Definition equiv_cancel_right {A B C} (f : A <~> B) (g : B -> C) :
   is_equiv (g o f) -> B <~> C.
 Proof.
   intros H.
-  pose (gof := {| equiv_map := g o f; equiv_is_equiv := H |}).
+  pose (gof := make_equiv _ H).
   apply (equiv_from_hequiv g (f o gof^-1)).
   intro y.
   expand_inverse_trg gof y.
@@ -516,7 +525,7 @@ Definition equiv_cancel_left {A B C} (f : A -> B) (g : B <~> C) :
   is_equiv (g o f) -> A <~> B.
 Proof.
   intros H.
-  pose (gof := {| equiv_map := g o f; equiv_is_equiv := H |}).
+  pose (gof := make_equiv _ H).
   apply (equiv_from_hequiv f (gof^-1 o g)).
   intros y.
   expand_inverse_trg g y.
@@ -548,7 +557,7 @@ Implicit Arguments hiso_is_retraction [A B f].
 Definition is_hiso_from_is_equiv {A B} (f : A -> B) : is_equiv f -> is_hiso f.
 Proof.
   intro feq.
-  pose (e := {| equiv_map := f; equiv_is_equiv := feq |}).
+  pose (e := make_equiv _ feq).
   rewrite (idpath _ : f = equiv_map e).
   refine {| hiso_section := e^-1; hiso_retraction := e^-1|}.
   apply inverse_is_section.

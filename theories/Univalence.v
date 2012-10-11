@@ -71,8 +71,7 @@ Section Univalence.
   Hypothesis univalence : univalence_statement.
 
   Definition path_to_equiv_equiv (U V : Type) := 
-    {| equiv_map := @path_to_equiv U V ;
-       equiv_is_equiv := univalence U V |}.
+     make_equiv _ (univalence U V).
 
   (** Assuming univalence, every equivalence yields a path. *)
 
