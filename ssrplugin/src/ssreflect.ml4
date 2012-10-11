@@ -514,11 +514,11 @@ let ssr_id_of_string loc s =
 
 let ssr_null_entry = Gram.Entry.of_parser "ssr_null" (fun _ -> ())
 
-(* let (!@) = Compat.to_coqloc*)
+let (!@) = Compat.to_coqloc
 
 GEXTEND Gram 
   GLOBAL: Prim.ident;
-  Prim.ident: [[ s = IDENT; ssr_null_entry -> ssr_id_of_string loc s ]];
+  Prim.ident: [[ s = IDENT; ssr_null_entry -> ssr_id_of_string !@loc s ]];
 END
 
 let mk_internal_id s =
@@ -905,7 +905,10 @@ let set_pr_ssrtac name prec afmt =
   | ArgSep _ :: afmt' -> mk_akey afmt'
   | [] -> [] in
   let tacname = "ssr" ^ name in
-  Pptactic.declare_extra_tactic_pprule (tacname, mk_akey afmt, (prec, fmt))
+  Pptactic.declare_extra_tactic_pprule
+    { Pptactic.pptac_key = tacname;
+      Pptactic.pptac_args = mk_akey afmt;
+      Pptactic.pptac_prods = (prec, fmt) }
 
 let ssrtac_atom loc name args = TacExtend (loc, "ssr" ^ name, args)
 let ssrtac_expr loc name args = TacAtom (loc, ssrtac_atom loc name args)
@@ -1364,31 +1367,31 @@ let mk_let loc rt ct mp c1 =
 GEXTEND Gram
   GLOBAL: binder_constr;
   ssr_rtype: [[ "return"; t = operconstr LEVEL "100" -> mk_rtype t ]];
-  ssr_mpat: [[ p = pattern -> [loc, [p]] ]];
+  ssr_mpat: [[ p = pattern -> [!@loc, [p]] ]];
   ssr_dpat: [
     [ mp = ssr_mpat; "in"; t = pattern; rt = ssr_rtype -> mp, mk_ctype mp t, rt
     | mp = ssr_mpat; rt = ssr_rtype -> mp, mk_cnotype mp, rt
     | mp = ssr_mpat -> mp, no_ct, no_rt
   ] ];
-  ssr_dthen: [[ dp = ssr_dpat; "then"; c = lconstr -> mk_dthen loc dp c ]];
-  ssr_elsepat: [[ "else" -> [loc, [CPatAtom (loc, None)]] ]];
-  ssr_else: [[ mp = ssr_elsepat; c = lconstr -> loc, mp, c ]];
+  ssr_dthen: [[ dp = ssr_dpat; "then"; c = lconstr -> mk_dthen !@loc dp c ]];
+  ssr_elsepat: [[ "else" -> [!@loc, [CPatAtom (!@loc, None)]] ]];
+  ssr_else: [[ mp = ssr_elsepat; c = lconstr -> !@loc, mp, c ]];
   binder_constr: [
     [ "if"; c = operconstr LEVEL "200"; "is"; db1 = ssr_dthen; b2 = ssr_else ->
-      let b1, ct, rt = db1 in CCases (loc, MatchStyle, rt, [c, ct], [b1; b2])
+      let b1, ct, rt = db1 in CCases (!@loc, MatchStyle, rt, [c, ct], [b1; b2])
     | "if"; c = operconstr LEVEL "200";"isn't";db1 = ssr_dthen; b2 = ssr_else ->
       let b1, ct, rt = db1 in 
       let b1, b2 = 
         let (l1, p1, r1), (l2, p2, r2) = b1, b2 in (l1, p1, r2), (l2, p2, r1) in
-      CCases (loc, MatchStyle, rt, [c, ct], [b1; b2])
+      CCases (!@loc, MatchStyle, rt, [c, ct], [b1; b2])
     | "let"; ":"; mp = ssr_mpat; ":="; c = lconstr; "in"; c1 = lconstr ->
-      mk_let (loc) no_rt [c, no_ct] mp c1
+      mk_let (!@loc) no_rt [c, no_ct] mp c1
     | "let"; ":"; mp = ssr_mpat; ":="; c = lconstr;
       rt = ssr_rtype; "in"; c1 = lconstr ->
-      mk_let (loc) rt [c, mk_cnotype mp] mp c1
+      mk_let (!@loc) rt [c, mk_cnotype mp] mp c1
     | "let"; ":"; mp = ssr_mpat; "in"; t = pattern; ":="; c = lconstr;
       rt = ssr_rtype; "in"; c1 = lconstr ->
-      mk_let (loc) rt [c, mk_ctype mp t] mp c1
+      mk_let (!@loc) rt [c, mk_ctype mp t] mp c1
   ] ];
 END
 
@@ -1396,7 +1399,7 @@ GEXTEND Gram
   GLOBAL: closed_binder;
   closed_binder: [
     [ ["of" | "&"]; c = operconstr LEVEL "99" ->
-      [LocalRawAssum ([loc, Anonymous], Default Explicit, c)]
+      [LocalRawAssum ([!@loc, Anonymous], Default Explicit, c)]
   ] ];
 END
 (* }}} *)
@@ -1413,7 +1416,7 @@ END
 
 GEXTEND Gram
   GLOBAL: tactic_expr;
-  ssrparentacarg: [[ "("; tac = tactic_expr; ")" -> loc, Tacexp tac ]];
+  ssrparentacarg: [[ "("; tac = tactic_expr; ")" -> !@loc, Tacexp tac ]];
   tactic_expr: LEVEL "0" [[ arg = ssrparentacarg -> TacArg arg ]];
 END
 
@@ -1553,9 +1556,9 @@ let gen_tclarg = in_gen rawwit_ssrtclarg
 GEXTEND Gram
   GLOBAL: tactic tactic_mode;
   tactic: [
-    [ "+"; tac = ssrtclarg -> ssrtac_expr loc "tclplus" [gen_tclarg tac]
-    | "-"; tac = ssrtclarg -> ssrtac_expr loc "tclminus" [gen_tclarg tac]
-    | "*"; tac = ssrtclarg -> ssrtac_expr loc "tclstar" [gen_tclarg tac] 
+    [ "+"; tac = ssrtclarg -> ssrtac_expr !@loc "tclplus" [gen_tclarg tac]
+    | "-"; tac = ssrtclarg -> ssrtac_expr !@loc "tclminus" [gen_tclarg tac]
+    | "*"; tac = ssrtclarg -> ssrtac_expr !@loc "tclstar" [gen_tclarg tac] 
     ] ];
   tactic_mode: [
     [ "+"; tac = G_vernac.subgoal_command -> tac None
@@ -1590,7 +1593,7 @@ GEXTEND Gram
   [ "by"; arg = ssrhintarg ->
     let garg = in_gen rawwit_ssrhint arg in
     let gctx = in_gen rawwit_ltacctx rawltacctx in
-    ssrtac_atom loc "tclby" [garg; gctx]
+    ssrtac_atom !@loc "tclby" [garg; gctx]
   ] ];
 END
 (* }}} *)
@@ -2491,29 +2494,27 @@ let revtoptac n0 gl =
   let f = compose_lam dc' (mkEtaApp (mkRel (n + 1)) (-n) 1) in
   refine (mkApp (f, [|Evarutil.mk_new_meta ()|])) gl
 
-(* assia : this is likely to be deprecated  *)
-(* let equality_inj l b id c gl = *)
-(*   let msg = ref "" in *)
-(*   try Equality.inj l b c gl *)
-(*   with *)
-(*     | Compat.Exc_located(_,Errors.UserError (_,s)) *)
-(*     | Loc.Exc_located(_,Errors.UserError (_,s)) *)
-(*     | Errors.UserError (_,s) *)
-(*   when msg := Pp.string_of_ppcmds s; *)
-(*        !msg = "Not a projectable equality but a discriminable one." || *)
-(*        !msg = "Nothing to inject." -> *)
-(*     msg_warning (str !msg); *)
-(*     discharge_hyp (id, (id, "")) gl *)
+let equality_inj l b id c gl =
+  let msg = ref "" in
+  try Equality.inj l b c gl
+  with
+    | Compat.Exc_located(_,Errors.UserError (_,s))
+    | Loc.Exc_located(_,Errors.UserError (_,s))
+    | Errors.UserError (_,s)
+  when msg := Pp.string_of_ppcmds s;
+       !msg = "Not a projectable equality but a discriminable one." ||
+       !msg = "Nothing to inject." ->
+    msg_warning (str !msg);
+    discharge_hyp (id, (id, "")) gl
 
-let injectidl2rtac id gl =
-  tclTHEN (Equality.inj [] true id) (revtoptac (pf_nb_prod gl)) gl
-
+let injectidl2rtac id c gl =
+  tclTHEN (equality_inj [] true id c) (revtoptac (pf_nb_prod gl)) gl
 
 let injectl2rtac c = match kind_of_term c with
-| Var id -> injectidl2rtac (mkVar id, NoBindings)
+| Var id -> injectidl2rtac id (mkVar id, NoBindings)
 | _ ->
   let id = injecteq_id in
-  tclTHENLIST [havetac id c; injectidl2rtac (mkVar id, NoBindings); clear [id]]
+  tclTHENLIST [havetac id c; injectidl2rtac id (mkVar id, NoBindings); clear [id]]
 
 let is_injection_case c gl =
   let mind, _ = pf_reduce_to_quantified_ind gl (pf_type_of gl c) in
@@ -2523,14 +2524,14 @@ let perform_injection c gl =
   let mind, t = pf_reduce_to_quantified_ind gl (pf_type_of gl c) in
   let dc, eqt = decompose_prod t in
   if dc = [] then injectl2rtac c gl else
-  if not (closed0 eqt) then 
+  if not (closed0 eqt) then
     Errors.error "can't decompose a quantified equality" else
   let cl = pf_concl gl in let n = List.length dc in
   let c_eq = mkEtaApp c n 2 in
   let cl1 = mkLambda (Anonymous, mkArrow eqt cl, mkApp (mkRel 1, [|c_eq|])) in
   let id = injecteq_id in
   let id_with_ebind = (mkVar id, NoBindings) in
-  let injtac = tclTHEN (introid id) (injectidl2rtac id_with_ebind) in 
+  let injtac = tclTHEN (introid id) (injectidl2rtac id id_with_ebind) in 
   tclTHENLAST (apply (compose_lam dc cl1)) injtac gl  
 
 let simplest_newcase_ref = ref (fun t gl -> assert false)
@@ -2723,7 +2724,7 @@ let tclintros_expr loc tac ipats =
 GEXTEND Gram
   GLOBAL: tactic_expr;
   tactic_expr: LEVEL "1" [ RIGHTA
-    [ tac = tactic_expr; intros = ssrintros_ne -> tclintros_expr loc tac intros
+    [ tac = tactic_expr; intros = ssrintros_ne -> tclintros_expr !@loc tac intros
     ] ];
 END
 (* }}} *)
@@ -2754,20 +2755,20 @@ let tclDOTRY n tac =
     tclTRY (tclTHEN tac (loop (i + 1))) gl in
   loop 1
 
-(* assia : blind fix *)
 let tclDO n tac =
   let prefix i = str"At iteration " ++ int i ++ str": " in
   let tac_err_at i gl =
     try tac gl
     with 
     | Errors.UserError (l, s) -> raise (Errors.UserError (l, prefix i ++ s))
-    (* | Compat.Exc_located(loc, Errors.UserError (l, s))  ->  *)
-    (*     raise (Compat.Exc_located(loc, Errors.UserError (l, prefix i ++ s))) *) in
+    | Loc.Exc_located(loc, Errors.UserError (l, s))  -> 
+        raise (Loc.Exc_located(loc, Errors.UserError (l, prefix i ++ s)))
+    | Compat.Exc_located(loc, Errors.UserError (l, s))  -> 
+        raise (Compat.Exc_located(loc, Errors.UserError (l, prefix i ++ s))) in
   let rec loop i gl =
     if i = n then tac_err_at i gl else
     (tclTHEN (tac_err_at i) (loop (i + 1))) gl in
   loop 1
-
 
 let tclMULT = function
   | 0, May  -> tclREPEAT
@@ -2813,12 +2814,12 @@ GEXTEND Gram
   ] ];
   tactic_expr: LEVEL "3" [ RIGHTA
     [ IDENT "do"; m = ssrmmod; tac = ssrdotac; clauses = ssrclauses ->
-      ssrdotac_expr loc noindex m tac clauses
+      ssrdotac_expr !@loc noindex m tac clauses
     | IDENT "do"; tac = ssrortacarg; clauses = ssrclauses ->
-      ssrdotac_expr loc noindex Once tac clauses
+      ssrdotac_expr !@loc noindex Once tac clauses
     | IDENT "do"; n = int_or_var; m = ssrmmod;
                   tac = ssrdotac; clauses = ssrclauses ->
-      ssrdotac_expr loc (mk_index loc n) m tac clauses
+      ssrdotac_expr !@loc (mk_index !@loc n) m tac clauses
     ] ];
 END
 (* }}} *)
@@ -2868,10 +2869,10 @@ let ssrorelse = Gram.Entry.create "ssrorelse"
 GEXTEND Gram
   GLOBAL: ssrorelse ssrseqarg;
   ssrseqidx: [
-    [ test_ssrseqvar; id = Prim.ident -> ArgVar (loc, id)
-    | n = Prim.natural -> ArgArg (check_index loc n)
+    [ test_ssrseqvar; id = Prim.ident -> ArgVar (!@loc, id)
+    | n = Prim.natural -> ArgArg (check_index !@loc n)
     ] ];
-  ssrswap: [[ IDENT "first" -> loc, true | IDENT "last" -> loc, false ]];
+  ssrswap: [[ IDENT "first" -> !@loc, true | IDENT "last" -> !@loc, false ]];
   ssrorelse: [[ "||"; tac = tactic_expr LEVEL "2" -> tac ]];
   ssrseqarg: [
     [ arg = ssrswap -> noindex, swaptacarg arg
@@ -2975,7 +2976,7 @@ let tclseq_expr loc tac dir arg =
 GEXTEND Gram
   GLOBAL: tactic_expr;
   ssr_first: [
-    [ tac = ssr_first; ipats = ssrintros_ne -> tclintros_expr loc tac ipats
+    [ tac = ssr_first; ipats = ssrintros_ne -> tclintros_expr !@loc tac ipats
     | "["; tacl = LIST0 tactic_expr SEP "|"; "]" -> TacFirst tacl
     ] ];
   ssr_first_else: [
@@ -2985,9 +2986,9 @@ GEXTEND Gram
     [ tac1 = tactic_expr; ";"; IDENT "first"; tac2 = ssr_first_else ->
       TacThen (tac1,[||], tac2,[||])
     | tac = tactic_expr; ";"; IDENT "first"; arg = ssrseqarg ->
-      tclseq_expr loc tac L2R arg
+      tclseq_expr !@loc tac L2R arg
     | tac = tactic_expr; ";"; IDENT "last"; arg = ssrseqarg ->
-      tclseq_expr loc tac R2L arg
+      tclseq_expr !@loc tac R2L arg
     ] ];
 END
 (* }}} *)
@@ -3252,10 +3253,10 @@ GEXTEND Gram
     | "?" -> IpatAnon
     | occ = ssrdocc; "->" -> (match occ with
       | None, occ -> IpatRw (occ, L2R)
-      | _ -> loc_error loc "Only occurrences are allowed here")
+      | _ -> loc_error !@loc "Only occurrences are allowed here")
     | occ = ssrdocc; "<-" -> (match occ with
       | None, occ ->  IpatRw (occ, R2L)
-      | _ -> loc_error loc "Only occurrences are allowed here")
+      | _ -> loc_error !@loc "Only occurrences are allowed here")
     | "->" -> IpatRw (allocc, L2R)
     | "<-" -> IpatRw (allocc, R2L)
     ]];
@@ -3479,7 +3480,7 @@ let applyn ~with_evars n t gl =
           | _ -> assert false
       in loop sigma t [] n in
     pp(lazy(str"Refiner.refiner " ++ pr_constr t));
-    Refiner.refiner (Proof_type.Prim (Proof_type.Refine t)) gl
+    Refiner.refiner (Proof_type.Refine t) gl
 
 let refine_with ?(first_goes_last=false) ?(with_evars=true) oc gl =
   let rec mkRels = function 1 -> [] | n -> mkRel n :: mkRels (n-1) in
@@ -4129,7 +4130,7 @@ let pr_mult (n, m) =
 let pr_ssrmult _ _ _ = pr_mult
 
 ARGUMENT EXTEND ssrmult_ne TYPED AS int * ssrmmod PRINTED BY pr_ssrmult
-  | [ natural(n) ssrmmod(m) ] -> [ check_index loc n, m ]
+  | [ natural(n) ssrmmod(m) ] -> [ check_index !@loc n, m ]
   | [ ssrmmod(m) ]            -> [ notimes, m ]
 END
 
@@ -4978,6 +4979,7 @@ GEXTEND Gram
   GLOBAL: ssrbinder;
   ssrbinder: [
   [  ["of" | "&"]; c = operconstr LEVEL "99" ->
+     let loc = !@loc in
      (FwdPose, [BFvar]),
      CLambdaN (loc,[[loc,Anonymous],Default Explicit,c],CHole (loc,None)) ]
   ];
