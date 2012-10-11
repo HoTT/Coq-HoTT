@@ -6,11 +6,6 @@
 #SSRCOQ = bin/ssrcoq
 ##
 
-COQBIN=$HOME/Sources/github/coq/bin/
-COQLIB=$HOME/Sources/github/coq/
-COQC=hoqc
-COQTOP=$(HOME)/Sources/github/coq/
-
 ## What follows should be left untouched by the final user of ssreflect
 -R theories Ssreflect
 -I src
