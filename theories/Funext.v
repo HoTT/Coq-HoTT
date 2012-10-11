@@ -80,7 +80,6 @@ Theorem strong_to_naive_funext_dep {X} (P : fibration X):
 Proof.
   intros H f g.  
    exact ((make_equiv _ (H f g))^-1).
-(*  exact ({| equiv_map := @happly_dep X P f g ; equiv_is_equiv := H f g |} ^-1). *)
 Defined.
 
 Theorem strong_funext_dep_compute {X} (P : fibration X)

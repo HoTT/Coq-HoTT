@@ -72,9 +72,6 @@ Section Univalence.
 
   Definition path_to_equiv_equiv (U V : Type) := 
      make_equiv _ (univalence U V).
-(*    {| equiv_map := @path_to_equiv U V ;
-       equiv_is_equiv := univalence U V |}.
-*)
 
   (** Assuming univalence, every equivalence yields a path. *)
 

@@ -274,7 +274,6 @@ Section FibrationMap.
     Proof.
       apply total_equiv.
       intro x.
-(*      exact {| equiv_map := g x; equiv_is_equiv := is_equiv_g x |}. *)
      exact (make_equiv _ (is_equiv_g x)).
     Defined.
 
@@ -282,7 +281,6 @@ Section FibrationMap.
     Theorem fibseq_total_equiv : total P <~> total Q.
     Proof.
        exists eg.
-  (*      refine {| equiv_map := eg |}. *)
       apply (equiv_is_equiv (equiv_compose he ke)).
     Defined.
   End FiberFibseq.
