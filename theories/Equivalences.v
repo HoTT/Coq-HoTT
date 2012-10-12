@@ -294,7 +294,7 @@ Definition inverse_triangle {A B : Type} (e : A <~> B) x :
 Proof.
   unfold inverse_is_retraction.
   hott_simpl.
-  apply (concat (!idpath_right_unit _ _ _ _)).
+  apply (concat (!idpath_right_unit _)).
   hott_simpl.
   moveright_onleft.
 Defined.
@@ -330,7 +330,7 @@ Proof.
   associate_right.
   moveright_onleft.
   undo_compose_map.
-  apply opposite, homotopy_naturality_toid with (f := f o g).
+  apply opposite, (homotopy_naturality_toid (f o g)).
   hott_simpl.
 Defined.
 
@@ -406,7 +406,7 @@ Proof.
   associate_left.
   moveleft_onright.
   rewrite <- compose_map.
-  exact (homotopy_naturality_fromid B  _ (fun y => ! is_section y) _ _ _).
+  exact (homotopy_naturality_fromid _ (fun y => ! is_section y) _).
 Defined.
 
 Lemma adjointify_compute_map {A B} (h : hequiv A B) :

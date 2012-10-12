@@ -1,6 +1,6 @@
 (* Bits an pieces from Coq's Init/Datatypes.v *)
 
-Require Export Logic.
+Require Import Logic.
 Declare ML Module "nat_syntax_plugin".
 
 (** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
@@ -32,7 +32,12 @@ Definition snd {A B : Type} (p : A * B) := match p with (x, y) => y end.
 
 Hint Resolve pair inl inr : core.
 
+(** <-> is wanted by ssreflect so we hack it here. *)
+(** [iff A B], written [A <-> B], expresses the equivalence of [A] and [B] *)
 
+Definition iff (A B : Type) := prod (A -> B) (B -> A).
+
+Notation "A <-> B" := (iff A B) : type_scope.
 
 (** [(sigT A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type. *)
 
@@ -57,6 +62,18 @@ Inductive Empty_set : Set :=.
 
 Inductive unit : Set :=
     tt : unit.
+
+(** [bool] is the datatype of the boolean values [true] and [false] *)
+
+Inductive bool : Set :=
+  | true : bool
+  | false : bool.
+
+Add Printing If bool.
+
+Delimit Scope bool_scope with bool.
+
+Bind Scope bool_scope with bool.
 
 (* Natural numbers. *)
 
