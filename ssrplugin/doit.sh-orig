@@ -10,5 +10,6 @@ if test "$COQBIN" = "unconfigured"; then
 fi
 export PATH=$COQBIN:$PATH
 # We replace the standard Coq with the HoTT version
-COQC=../hoqc make all
+make Makefile.coq
+COQC=../hoqc make -f Makefile.coq all
 
