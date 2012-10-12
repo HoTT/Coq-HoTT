@@ -29,10 +29,14 @@ SRCCOQLIB=$(srcdir)/coq
 # Which files should be cleaned
 CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES)
 
-.PHONY: .depend
+.PHONY: stdlib hottlib
 
 .depend:
 	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
+
+stdlib: $(STDVOFILES)
+
+hottlib: $(VOFILES)
 
 install-data-local:
 	$(mkdir_p) $(hottdir)/coq
@@ -42,11 +46,11 @@ install-data-local:
 
 # The standard library files must be compiled in a special way
 $(STDVOFILES) : %.vo : %.v
-	$(COQTOP) -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
+	$(COQTOP) -relevant-equality -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
 
 # The standard library files must be compiled in a special way
 $(STDGLOBFILES) : %.glob : %.v
-	$(COQTOP) -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
+	$(COQTOP) -relevant-equality -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
 
 # The HoTT files depend on the new standard library, but coqdep will not figure that out.
 $(VOFILES) : $(STDVOFILES)
