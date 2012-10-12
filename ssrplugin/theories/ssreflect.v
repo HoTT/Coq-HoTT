@@ -300,23 +300,37 @@ Notation nosimpl t := (let: tt := tt in t).
 Lemma master_key : unit. Proof. exact tt. Qed.
 Definition locked A := let: tt := master_key in fun x : A => x.
 
-Lemma lock A x : x = locked x :> A. Proof. unlock; reflexivity. Qed.
+Lemma lock A x : x = locked x :> A. Proof.
+  (* XXX ANDREJ: This wants equality so is commented out.
+  unlock; reflexivity. *)
+  admit.
+Qed.
 
 (* Needed for locked predicates, in particular for eqType's.                  *)
 Lemma not_locked_false_eq_true : locked false <> true.
-Proof. unlock; discriminate. Qed.
+Proof.
+(* XXX ANDREJ: It looks like discriminate wants equality.
+   Proof. unlock; discriminate. *)
+   admit.
+Qed.
 
 (* The basic closing tactic "done".                                           *)
+(* XXX Andrej: sym_equal should not exist because it makes Coq behave funny,
+   there is its equivalent, called opposite. *)
 Ltac done :=
   trivial; hnf; intros; solve
-   [ do ![solve [trivial | apply: sym_equal; trivial]
+   [ do ![solve [trivial | apply: opposite; trivial]
          | discriminate | contradiction | split]
    | case not_locked_false_eq_true; assumption
    | match goal with H : ~ _ |- _ => solve [case H; trivial] end ].
 
 (* To unlock opaque constants. *)
 Structure unlockable T v := Unlockable {unlocked : T; _ : unlocked = v}.
-Lemma unlock T x C : @unlocked T x C = x. Proof. by case: C. Qed.
+Lemma unlock T x C : @unlocked T x C = x. Proof. 
+  (*** XXX ANDREJ: assumes equality here. 
+   by case: C. *)
+  admit.
+Qed.
 
 Notation "[ 'unlockable' 'of' C ]" := (@Unlockable _ _ C (unlock _))
   (at level 0, format "[ 'unlockable'  'of'  C ]") : form_scope.
@@ -332,7 +346,11 @@ Definition locked_with k := let: tt := k in fun T x => x : T.
 (* This can be used as a cheap alternative to cloning the unlockable instance *)
 (* below, but with caution as unkeyed matching can be expensive.              *)
 Lemma locked_withE T k x : unkeyed (locked_with k x) = x :> T.
-Proof. by case: k. Qed.
+Proof. 
+  (* XXX ANDREJ: Assumes eq
+   by case: k. *)
+  admit.
+Qed.
 
 (* Intensionaly, this instance will not apply to locked u. *)
 Canonical locked_with_unlockable T k x :=
@@ -356,39 +374,41 @@ Implicit Arguments ssr_wlog [Pgoal].
 (* Internal N-ary congruence lemmas for the congr tactic.                     *)
 
 Fixpoint nary_congruence_statement (n : nat)
-         : (forall B, (B -> B -> Prop) -> Prop) -> Prop :=
+         : (forall B, (B -> B -> Type) -> Type) -> Type :=
   match n with
   | O => fun k => forall B, k B (fun x1 x2 : B => x1 = x2)
   | S n' =>
     let k' A B e (f1 f2 : A -> B) :=
-      forall x1 x2, x1 = x2 -> (e (f1 x1) (f2 x2) : Prop) in
+      forall x1 x2, x1 = x2 -> (e (f1 x1) (f2 x2) : Type) in
     fun k => forall A, nary_congruence_statement n' (fun B e => k _ (k' A B e))
   end.
 
-Lemma nary_congruence n (k := fun B e => forall y : B, (e y y : Prop)) :
+Lemma nary_congruence n (k := fun B e => forall y : B, (e y y : Type)) :
   nary_congruence_statement n k.
 Proof.
 have: k _ _ := _; rewrite {1}/k.
-elim: n k  => [|n IHn] k k_P /= A; first exact: k_P.
-by apply: IHn => B e He; apply: k_P => f x1 x2 <-.
+(* XXX: Changed by Andrej
+  elim: n k  => [|n IHn] k k_P /= A; first exact: k_P.
+  by apply: IHn => B e He; apply: k_P => f x1 x2 <-. *)
+admit.
 Qed.
 
 Lemma ssr_congr_arrow Plemma Pgoal : Plemma = Pgoal -> Plemma -> Pgoal.
-Proof. by move->. Qed.
+Proof. by (* XXX ANDREJ: move->. *) admit. Qed.
 Implicit Arguments ssr_congr_arrow [].
 
 (* View lemmas that don't use reflection.                                     *)
 
 Section ApplyIff.
 
-Variables P Q : Prop.
+Variables P Q : Type.
 Hypothesis eqPQ : P <-> Q.
 
-Lemma iffLR : P -> Q. Proof. by case: eqPQ. Qed.
-Lemma iffRL : Q -> P. Proof. by case: eqPQ. Qed.
+Lemma iffLR : P -> Q. Proof. by (* XXX ANDREJ case: eqPQ. *) admit. Qed.
+Lemma iffRL : Q -> P. Proof. by (* XXX ANDREJ case: eqPQ. *) admit. Qed.
 
-Lemma iffLRn : ~P -> ~Q. Proof. by move=> nP tQ; case: nP; case: eqPQ tQ. Qed.
-Lemma iffRLn : ~Q -> ~P. Proof. by move=> nQ tP; case: nQ; case: eqPQ tP. Qed.
+Lemma iffLRn : ~P -> ~Q. Proof. by move=> nP tQ; (* XXX ANDREJ case: nP; case: eqPQ tQ. *) admit. Qed.
+Lemma iffRLn : ~Q -> ~P. Proof. by move=> nQ tP; (* XXX ANDREJ case: nQ; case: eqPQ tP. *) admit. Qed.
 
 End ApplyIff.
 
