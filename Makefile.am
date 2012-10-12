@@ -31,7 +31,7 @@ CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES)
 
 .PHONY: stdlib hottlib
 
-.depend:
+.depend: $(VFILES) $(STDVFILES)
 	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
 
 stdlib: $(STDVOFILES)
