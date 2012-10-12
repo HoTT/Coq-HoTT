@@ -14,11 +14,11 @@ Notation "A -> B" := (forall (_ : A), B) : type_scope.
 
 (** * Propositional connectives *)
 
-(** [True] is the always true proposition *)
+(** [True] is the unit type. *)
 Inductive True : Set :=
   I : True.
 
-(** [False] is the always false proposition *)
+(** [False] is the empty type. *)
 Inductive False : Set :=.
 
 (** [not A], written [~A], is the negation of [A] *)
@@ -28,34 +28,38 @@ Notation "~ x" := (not x) : type_scope.
 
 Hint Unfold not: core.
 
-(** * Equality *)
+(** Instead of eq we define paths. *)
 
-(** [eq x y], or simply [x=y] expresses the equality of [x] and
-    [y]. Both [x] and [y] must belong to the same type [A].
-    The definition is inductive and states the reflexivity of the equality.
-    The others properties (symmetry, transitivity, replacement of
-    equals by equals) are proved below. The type of [x] and [y] can be
-    made explicit using the notation [x = y :> A]. This is Leibniz equality
-    as it expresses that [x] and [y] are equal iff every property on
-    [A] which is true of [x] is also true of [y] *)
+Inductive paths (A : Type) (x : A) : A -> Type :=
+    idpath : x = x :> A
 
-Inductive eq (A:Type) (x:A) : A -> Type :=
-    eq_refl : x = x :>A
+where
 
-where "x = y :> A" := (@eq A x y) : type_scope.
+"x = y :> A" := (@paths A x y) : type_scope.
 
 Notation "x = y" := (x = y :>_) : type_scope.
 Notation "x <> y  :> T" := (~ x = y :>T) : type_scope.
 Notation "x <> y" := (x <> y :>_) : type_scope.
 
-Arguments eq {A} x _.
-Arguments eq_refl {A x} , [A] x.
+Arguments paths {A} x _.
+Arguments idpath {A x} , [A] x.
 
-Arguments eq_ind [A] x P _ y _.
-Arguments eq_rec [A] x P _ y _.
-Arguments eq_rect [A] x P _ y _.
+Arguments paths_ind [A] x P _ y _.
+Arguments paths_rec [A] x P _ y _.
+Arguments paths_rect [A] x P _ y _.
 
-Hint Resolve I eq_refl: core.
+(** Paths can be reversed, moved here for the benefit of ssreflect. *)
+
+Definition opposite {A} {x y : A} : (x = y) -> (y = x).
+Proof.
+  intros p.
+  induction p.
+  reflexivity.
+Defined.
+
+Hint Resolve I idpath: core.
+
+(* XXX: If add things below, such as eq_sym, Coq seems to use them secretly, which then breaks things.
 
 Section Logic_lemmas.
 
@@ -107,11 +111,11 @@ Section Logic_lemmas.
 End Logic_lemmas.
 
 Module EqNotations.
-  Notation "'rew' H 'in' H'" := (eq_rect _ _ H' _ H)
+  Notation "'rew' H 'in' H'" := (paths_rect _ _ H' _ H)
     (at level 10, H' at level 10).
-  Notation "'rew' <- H 'in' H'" := (eq_rect_r _ H' H)
-    (at level 10, H' at level 10).
-  Notation "'rew' -> H 'in' H'" := (eq_rect _ _ H' _ H)
+(*  Notation "'rew' <- H 'in' H'" := (paths_rect_r _ H' H)
+    (at level 10, H' at level 10). *)
+  Notation "'rew' -> H 'in' H'" := (paths_rect _ _ H' _ H)
     (at level 10, H' at level 10, only parsing).
 End EqNotations.
 
@@ -149,5 +153,4 @@ Proof.
 Qed.
 
 Hint Immediate eq_sym not_eq_sym: core.
-
-Notation sym_equal := eq_sym (compat "8.3").
+*)
