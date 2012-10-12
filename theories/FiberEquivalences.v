@@ -58,32 +58,44 @@ Section FiberMap.
 
     Theorem fiber_equiv (x : A) : P x <~> Q x.
     Proof.
-      apply (equiv_from_hequiv (g x) (ginv x)).
+      apply (equiv_from_hequiv (g x) (ginv x)). 
       (* We have to show [ginv x] is a section of [g x], which
          mostly involves unfolding of definitions and basic lemmas. *)
-      intro v.
-      unfold base_path, inverse_is_section, inverse, ge in ginv; simpl in ginv.
-      unfold ginv.
-      destruct (tg_is_equiv (x;v)) as [[[x' u'] p] h].
-      rewrite trans_map.
-      apply @fiber_path with (u := (x'; g x' u')) (v := (x; v)) (p := p).
+        intro v.
+        unfold base_path, inverse_is_section, inverse, ge in ginv; simpl in ginv.
+        unfold ginv.
+        destruct (tg_is_equiv (x;v)) as [[[x' u'] p] h].
+        rewrite trans_map.
+        exact (fiber_path p).
       (* And now that it is a retraction. *)
       intro u.
       unfold ginv.
       (* A bit of annoying rewriting to get triangle in the correct form
          for rewriting. *)
-      assert (triangle := inverse_triangle ge (x;u)).
-      unfold ge in triangle; simpl in triangle; fold ge in triangle.
-      unfold tg in triangle; simpl in triangle; fold tg in triangle.
-      rewrite <- triangle.
+      (* assia : this is because of the matching strategy of the std rewrite tactic :
+         head constant modulo conversion, no conversion to identify arguments. The 
+         ssr rewrite matching does the converse : rigid on the head constant and 
+         modulo full conversion for the arguments which is often more convenient and
+         avoids this kind of pain. We can however be slightly lazier by forcing the
+         conversion between the two terms to be matched *)
+      generalize (inverse_triangle ge (x;u)).
+      set (pat1 := inverse_is_section _ _).
+      (* assia : why do we need the ge argument this time? *)
+      set (pat2 := inverse_is_section ge _).
+      change pat2 with pat1.
+      intro triangle; rewrite <- triangle; clear triangle pat1 pat2.
       (* We have to do again silly unfolding and folding to make r applicable.
          How do we avoid this? *)
-      pose (r := replace_fiberwise (inverse_is_retraction ge (x; u))).
-      unfold ge, tg; simpl; unfold ge, tg in r; simpl in r.
-      rewrite r.
+      generalize (replace_fiberwise (inverse_is_retraction ge (x; u))).
+      (* why do we need (map ge _) again?*)
+      set (pat1 := base_path (map ge _)).
+      (* weird behaviour of set prevents us from using the same trick *)
+      change (base_path (map ge (inverse_is_retraction ge (x; u)))) with pat1.
+      intro r; rewrite r; clear r pat1.
       hott_simpl.
       apply (fiber_path (inverse_is_retraction ge (x; u))).
     Defined.
+
   End TotalIsEquiv.
 
   (* An auxiliary lemma useful for showing that a map is fiber-wise an equivalence
