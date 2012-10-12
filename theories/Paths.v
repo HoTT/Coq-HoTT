@@ -1,20 +1,4 @@
 (** Basic homotopy-theoretic approach to paths. *)
-Require Export Prelude.
-
-(** We define the space of paths so that it matches the definition of Coq
-   equality [eq], except that we put paths in [Type] instead of [Prop].
- *)
-
-Inductive paths {A : Type} (x : A) : A -> Type := idpath : paths x x.
-
-(* The next line tells [coqdoc] to print [paths] as an equality sign in HTML and LaTeX. *)
-(** printing = $=$ *)
-
-(** We introduce notation [x = y] for the space [paths x y] of paths
-   from [x] to [y]. We can then write [p : x = y] to indicate that
-   [p] is a path from [x] to [y]. *)
-
-Notation "x = y" := (paths x y) (at level 70).
 
 (** The [Hint Resolve @idpath] line below means that Coq's [auto]
    tactic will automatically perform [apply idpath] if that leads to a
@@ -65,7 +49,7 @@ Defined.
 
 (** The concatenation of paths [p] and [q] is denoted as [p @ q]. *)
 
-Notation "p @ q" := (concat p q) (at level 60).
+Notation "p @ q" := (concat p q) (at level 60, left associativity).
 
 (** A definition like [concat] can be used in two ways. The first and
    obvious way is as an operation which concatenates together two
@@ -74,15 +58,6 @@ Notation "p @ q" := (concat p q) (at level 60).
    done with [apply @concat], see examples below. We will actually
    define a tactic [path_via] which uses [concat] but is much smarter
    than just the direct application [apply @concat]. *)
-
-(** Paths can be reversed. *)
-
-Definition opposite {A} {x y : A} : (x = y) -> (y = x).
-Proof.
-  intros p.
-  induction p.
-  reflexivity.
-Defined.
 
 (** Notation for the opposite of a path [p] is [! p]. *)
 
@@ -959,7 +934,6 @@ Hint Resolve @homotopy_naturality_fromid : path_hints.
 Lemma concat_cancel_right {A} {x y z : A} (r : y = z) (p q : x = y)  : (p @ r = q @ r) -> (p = q).
 Proof.
   intro a.
-  induction p.
   induction r.
   hott_simpl.
 Defined.
