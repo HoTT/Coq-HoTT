@@ -64,6 +64,22 @@ open Locusops
 open Ssrmatching
 
 
+(** Compatibility with HoTT *)
+let build_ssr_eq () = 
+(* std version : *) build_coq_eq ()
+(* hott version : (build_coq_identity_data ()).eq *)
+let build_ssr_eq_refl () = 
+(* std version : *) (build_coq_eq_data()).refl
+(* hott version : (build_coq_identity_data ()).refl *)
+
+
+(** 0.1 Univalence hacks from Cyril *)
+
+(* let build_coq_identity () = (build_coq_identity_data ()).eq *)
+(* let build_coq_identity_refl () = (build_coq_identity_data ()).refl *)
+(* let build_coq_identity_sym () = (build_coq_identity_data ()).sym *)
+
+
 (* Tentative patch from util.ml *)
 
 let array_fold_right_from n f v a =
@@ -244,7 +260,8 @@ let mkAppRed f c = match kind_of_term f with
 | Lambda (_, _, b) -> subst1 c b
 | _ -> mkApp (f, [|c|])
 let mkProt t c = mkApp (mkSsrConst "protect_term", [|t; c|])
-let mkRefl t c = mkApp ((build_coq_eq_data()).refl, [|t; c|])
+let mkRefl t c = mkApp (build_ssr_eq_refl(), [|t; c|])
+
 (* Application to a sequence of n rels (for building eta-expansions). *)
 (* The rel indices decrease down to imin (inclusive), unless n < 0,   *)
 (* in which case they're incresing (from imin).                       *)
@@ -2518,7 +2535,7 @@ let injectl2rtac c = match kind_of_term c with
 
 let is_injection_case c gl =
   let mind, _ = pf_reduce_to_quantified_ind gl (pf_type_of gl c) in
-  mkInd mind = build_coq_eq ()
+  mkInd mind = build_ssr_eq ()
 
 let perform_injection c gl =
   let mind, t = pf_reduce_to_quantified_ind gl (pf_type_of gl c) in
@@ -3270,7 +3287,7 @@ END
 
 let mkEq dir cl c t n =
   let eqargs = [|t; c; c|] in eqargs.(dir_org dir) <- mkRel n;
-  mkArrow (mkApp (build_coq_eq(), eqargs)) (lift 1 cl), mkRefl t c
+  mkArrow (mkApp (build_ssr_eq(), eqargs)) (lift 1 cl), mkRefl t c
 
 let pushmoveeqtac cl c =
   let x, t, cl1 = destProd cl in
@@ -3533,7 +3550,7 @@ let ssrelim ?(is_case=false) ?ist deps what ?elim eqid ipats gl =
   (* Utils of local interest only *)
   let iD s ?t gl = let t = match t with None -> pf_concl gl | Some x -> x in
     pp(lazy(str s ++ pr_constr t)); tclIDTAC gl in
-  let eq, protectC = build_coq_eq (), mkSsrConst "protect_term" in
+  let eq, protectC = build_ssr_eq (), mkSsrConst "protect_term" in
   let fire_subst gl t = Reductionops.nf_evar (project gl) t in
   let fire_sigma sigma t = Reductionops.nf_evar sigma t in
   let is_undef_pat = function
@@ -4082,16 +4099,21 @@ let newssrcongrtac arg ist gl =
   let ssr_congr lr = mkApp (mkSsrConst "ssr_congr_arrow",lr) in
   (* here thw two cases: simple equality or arrow *)
   let equality, _, eq_args, gl' = pf_saturate gl (build_coq_eq ()) 3 in
+  let identity, _, identity_args, gl2 = pf_saturate gl (build_ssr_eq ()) 3 in
   tclMATCH_GOAL (equality, gl') (fun gl' -> fs gl' (List.assoc 0 eq_args))
   (fun ty -> congrtac (arg, Detyping.detype false [] [] ty) ist)
   (fun () ->
-    let lhs, gl' = mk_evar gl mkProp in let rhs, gl' = mk_evar gl' mkProp in
-    let arrow = mkArrow lhs (lift 1 rhs) in
-    tclMATCH_GOAL (arrow, gl') (fun gl' -> [|fs gl' lhs;fs gl' rhs|])
-    (fun lr -> tclTHEN (apply (ssr_congr lr)) (congrtac (arg, mkRType) ist))
-    (fun _ _ -> errorstrm (str"Conclusion is not an equality nor an arrow")))
+    tclMATCH_GOAL (identity, gl2) (fun gl2 -> fs gl2 (List.assoc 0 identity_args))
+	(fun ty -> congrtac (arg, Detyping.detype false [] [] ty) ist)
+	(fun () ->
+	  let lhs, gl' = mk_evar gl mkProp in let rhs, gl' = mk_evar gl' mkProp in
+        let arrow = mkArrow lhs (lift 1 rhs) in
+	  tclMATCH_GOAL (arrow, gl') (fun gl' -> [|fs gl' lhs;fs gl' rhs|])
+	    (fun lr -> tclTHEN (apply (ssr_congr lr)) (congrtac (arg, mkRType) ist))
+	    (fun _ _ -> errorstrm (str"Conclusion is not an equality nor an arrow"))))
     gl
 ;;
+
 
 TACTIC EXTEND ssrcongr
 | [ "congr" ssrcongrarg(arg) ] ->
