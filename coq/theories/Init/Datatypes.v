@@ -87,3 +87,34 @@ Arguments S _%nat.
 Arguments S _.
 
 Open Scope nat_scope. (* Originally in Peano.v *)
+
+
+(** [identity A a] is the family of datatypes on [A] whose sole non-empty
+    member is the singleton datatype [identity A a a] whose
+    sole inhabitant is denoted [refl_identity A a] *)
+
+Inductive identity (A:Type) (a:A) : A -> Type :=
+  identity_refl : identity A a a.
+
+Hint Resolve identity_refl: core.
+
+Arguments identity {A} a _.
+Arguments identity_refl {A a} , [A] a.
+
+Arguments identity_ind [A] a P f y i.
+Arguments identity_rec [A] a P f y i.
+Arguments identity_rect [A] a P f y i.
+
+
+(** Identity type *)
+
+Definition ID := forall A:Type, A -> A.
+Definition id : ID := fun A x => x.
+
+
+Notation "x = y :> A" := (@identity A x y) : type_scope.
+
+Notation "x = y" := (x = y :>_) : type_scope.
+Notation "x <> y  :> T" := (~ x = y :>T) : type_scope.
+Notation "x <> y" := (x <> y :>_) : type_scope.
+

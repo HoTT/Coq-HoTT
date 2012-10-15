@@ -1,3 +1,4 @@
+Require Import Logic_Type.
 (** Basic homotopy-theoretic approach to paths. *)
 
 (** The [Hint Resolve @idpath] line below means that Coq's [auto]
@@ -12,7 +13,6 @@
    try [Hint Resolve idpath] Coq complains that it cannot guess the
    value of the implicit argument [A]).  *)
 
-Hint Resolve @idpath.
 
 (** The following automated tactic applies induction on paths and then
     [auto], which will also try [idpath]. It can handle many easy
@@ -61,7 +61,22 @@ Notation "p @ q" := (concat p q) (at level 60, left associativity).
 
 (** Notation for the opposite of a path [p] is [! p]. *)
 
-Notation "! p" := (opposite p) (at level 50).
+Notation "! p" := (identity_sym p) (at level 50).
+
+Arguments identity_sym {A} {x y} _.
+Arguments identity {A} a _.
+Arguments identity_refl {A a} , [A] a.
+
+Arguments identity_ind [A] a P _ y _.
+Arguments identity_rec [A] a P _ y _.
+Arguments identity_rect [A] a P _ y _.
+
+(* compatibility with init/ *)
+Notation idpath := identity_refl.
+Notation opposite := identity_sym.
+Notation paths := identity.
+Notation paths_rect := identity_rect.
+
 
 (** Next we give names to the basic properties of concatenation of
    paths. Note that all statements are "up to a higher path", e.g.,
