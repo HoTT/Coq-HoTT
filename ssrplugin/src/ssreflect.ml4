@@ -66,19 +66,16 @@ open Ssrmatching
 
 (** Compatibility with HoTT *)
 let build_ssr_eq () = 
-(* std version : *) build_coq_eq ()
-(* hott version : (build_coq_identity_data ()).eq *)
+(* std version : build_coq_eq () *)
+(* hott version : *) (build_coq_identity_data ()).eq 
 let build_ssr_eq_refl () = 
-(* std version : *) (build_coq_eq_data()).refl
-(* hott version : (build_coq_identity_data ()).refl *)
+(* std version : (build_coq_eq_data()).refl *)
+(* hott version : *) (build_coq_identity_data ()).refl
 
-
-(** 0.1 Univalence hacks from Cyril *)
-
-(* let build_coq_identity () = (build_coq_identity_data ()).eq *)
-(* let build_coq_identity_refl () = (build_coq_identity_data ()).refl *)
-(* let build_coq_identity_sym () = (build_coq_identity_data ()).sym *)
-
+(* Construct a Type of an arbitry level: this replaces mkProp when equality is
+at Type level. mkImplicit used to be available in Coq versions <= 8.3 *)
+let implicit_sort = Type (Univ.make_univ (make_dirpath [id_of_string"implicit"], 0))
+let mkImplicit = mkSort implicit_sort
 
 (* Tentative patch from util.ml *)
 
