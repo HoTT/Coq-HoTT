@@ -35,7 +35,7 @@ open Termops
 open Namegen
 open Recordops
 open Tacmach
-(*open Coqlib*)
+open Coqlib
 open Glob_term
 open Util
 open Evd

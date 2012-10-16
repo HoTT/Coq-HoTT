@@ -1,5 +1,6 @@
 (* (c) Copyright Microsoft Corporation and Inria. All rights reserved. *)
 Require Import Bool. (* For bool_scope delimiter 'bool'. *)
+Require Import Logic_Type.
 Require Import ssrmatching.
 Set SsrAstVersion.
 
@@ -319,7 +320,7 @@ Qed.
    there is its equivalent, called opposite. *)
 Ltac done :=
   trivial; hnf; intros; solve
-   [ do ![solve [trivial | apply: opposite; trivial]
+   [ do ![solve [trivial | apply: identity_sym ; trivial]
          | discriminate | contradiction | split]
    | case not_locked_false_eq_true; assumption
    | match goal with H : ~ _ |- _ => solve [case H; trivial] end ].
