@@ -16,3 +16,4 @@ src/ssreflect.ml4
 theories/ssreflect.mllib
 theories/ssrmatching.v
 theories/ssreflect.v
+theories/ssrfun.v
