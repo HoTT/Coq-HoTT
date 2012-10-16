@@ -73,9 +73,10 @@ let build_ssr_eq_refl () =
 (* hott version : *) (build_coq_identity_data ()).refl
 
 (* Construct a Type of an arbitry level: this replaces mkProp when equality is
-at Type level. mkImplicit used to be available in Coq versions <= 8.3 *)
-(* let implicit_sort = Type (Univ.make_univ (make_dirpath [id_of_string"implicit"], 0)) *)
-(* let mkImplicit = mkSort implicit_sort *)
+at Type level. Should create new universes with the right dirpath/toplevel module
+name.*)
+
+let mkType = mkSort (Type (Univ.make_universe (Termops.new_univ_level ())))
 
 (* Tentative patch from util.ml *)
 
