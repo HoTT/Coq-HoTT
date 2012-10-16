@@ -35,7 +35,7 @@ open Termops
 open Namegen
 open Recordops
 open Tacmach
-open Coqlib
+(*open Coqlib*)
 open Glob_term
 open Util
 open Evd
@@ -66,16 +66,16 @@ open Ssrmatching
 
 (** Compatibility with HoTT *)
 let build_ssr_eq () = 
-(* std version : build_coq_eq () *)
-(* hott version : *) (build_coq_identity_data ()).eq 
+(* std version : build_coq_eq ()*)
+(* hott version :*) (build_coq_identity_data ()).eq
 let build_ssr_eq_refl () = 
 (* std version : (build_coq_eq_data()).refl *)
 (* hott version : *) (build_coq_identity_data ()).refl
 
 (* Construct a Type of an arbitry level: this replaces mkProp when equality is
 at Type level. mkImplicit used to be available in Coq versions <= 8.3 *)
-let implicit_sort = Type (Univ.make_univ (make_dirpath [id_of_string"implicit"], 0))
-let mkImplicit = mkSort implicit_sort
+(* let implicit_sort = Type (Univ.make_univ (make_dirpath [id_of_string"implicit"], 0)) *)
+(* let mkImplicit = mkSort implicit_sort *)
 
 (* Tentative patch from util.ml *)
 
@@ -4095,7 +4095,7 @@ let newssrcongrtac arg ist gl =
     x, re_sig si sigma in
   let ssr_congr lr = mkApp (mkSsrConst "ssr_congr_arrow",lr) in
   (* here thw two cases: simple equality or arrow *)
-  let equality, _, eq_args, gl' = pf_saturate gl (build_coq_eq ()) 3 in
+  let equality, _, eq_args, gl' = pf_saturate gl (build_ssr_eq ()) 3 in
   let identity, _, identity_args, gl2 = pf_saturate gl (build_ssr_eq ()) 3 in
   tclMATCH_GOAL (equality, gl') (fun gl' -> fs gl' (List.assoc 0 eq_args))
   (fun ty -> congrtac (arg, Detyping.detype false [] [] ty) ist)
@@ -4452,7 +4452,7 @@ let rwcltac cl rdx dir sr gl =
   let rdxt = Retyping.get_type_of (pf_env gl) (fst sr) rdx in
   let cvtac, rwtac =
     if closed0 r' then 
-      let env, sigma, c, c_eq = pf_env gl, fst sr, snd sr, build_coq_eq () in
+      let env, sigma, c, c_eq = pf_env gl, fst sr, snd sr, build_ssr_eq () in
       let c_ty = Typing.type_of env sigma c in
       match kind_of_type (Reductionops.whd_betadeltaiota env sigma c_ty) with
       | AtomicType(e, a) when eq_constr e c_eq -> 
