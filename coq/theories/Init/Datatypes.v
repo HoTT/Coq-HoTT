@@ -1,7 +1,16 @@
 (* Bits an pieces from Coq's Init/Datatypes.v *)
+Set Implicit Arguments.
 
 Require Import Logic.
 Declare ML Module "nat_syntax_plugin".
+
+(** [option A] is the extension of [A] with an extra element [None] *)
+
+Inductive option (A:Type) : Type :=
+  | Some : A -> option A
+  | None : option A.
+
+Arguments None [A].
 
 (** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
 
@@ -94,7 +103,7 @@ Open Scope nat_scope. (* Originally in Peano.v *)
     sole inhabitant is denoted [refl_identity A a] *)
 
 Inductive identity (A:Type) (a:A) : A -> Type :=
-  identity_refl : identity A a a.
+  identity_refl : identity a a.
 
 Hint Resolve identity_refl: core.
 
