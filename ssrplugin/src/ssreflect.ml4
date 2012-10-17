@@ -847,7 +847,7 @@ let pf_abs_cterm gl n c0 =
 
 let pf_unabs_evars gl ise n c0 =
   if n = 0 then c0 else
-  let evv = Array.make n mkProp in
+  let evv = Array.make n mkType in
   let nev = ref 0 in
   let env0 = pf_env gl in
   let nenv0 = env_size env0 in
@@ -3057,7 +3057,7 @@ let pp_term gl t =
 let pp_concat hd ?(sep=str", ") = function [] -> hd | x :: xs ->
   hd ++ List.fold_left (fun acc x -> acc ++ sep ++ x) x xs
 
-let fake_pmatcher_end () = mkProp, L2R, (Evd.empty, mkProp)
+let fake_pmatcher_end () = mkType, L2R, (Evd.empty, mkType)
 
 (* TASSI: given (c : ty), generates (c ??? : ty[???/...]) with m evars *)
 exception NotEnoughProducts
@@ -3723,7 +3723,7 @@ let ssrelim ?(is_case=false) ?ist deps what ?elim eqid ipats gl =
           let erefl = fire_subst gl (mkRefl t c) in
           apply_type new_concl [erefl] in
         let rel = k + if elim_is_dep then 1 else 0 in
-        let src = mkProt mkProp (mkApp (eq,[|t; c; mkRel rel|])) in
+        let src = mkProt mkType (mkApp (eq,[|t; c; mkRel rel|])) in
         let concl = mkArrow src (lift 1 concl) in
         let clr = if deps <> [] then clr else [] in
         concl, gen_eq_tac, clr
@@ -4101,7 +4101,7 @@ let newssrcongrtac arg ist gl =
   tclMATCH_GOAL (identity, gl') (fun gl' -> fs gl' (List.assoc 0 eq_args))
   (fun ty -> congrtac (arg, Detyping.detype false [] [] ty) ist)
   (fun () ->
-    let lhs, gl' = mk_evar gl mkProp in let rhs, gl' = mk_evar gl' mkProp in
+    let lhs, gl' = mk_evar gl mkType in let rhs, gl' = mk_evar gl' mkType in
     let arrow = mkArrow lhs (lift 1 rhs) in
     tclMATCH_GOAL (arrow, gl') (fun gl' -> [|fs gl' lhs;fs gl' rhs|])
     (fun lr -> tclTHEN (apply (ssr_congr lr)) (congrtac (arg, mkRType) ist))
@@ -4413,7 +4413,9 @@ let pirrel_rewrite pred rdx rdx_ty new_rdx dir (sigma, c) c_ty gl =
     let l' = label_of_id (Nameops.add_suffix (id_of_label l) "_r")  in 
     let c1' = Global.constant_of_delta_kn (canonical_con (make_con mp dp l')) in
     mkConst c1' in
+  pp(lazy(str"elim is " ++ pr_constr elim));
   let proof = mkApp (elim, [| rdx_ty; new_rdx; pred; p; rdx; c |]) in
+  pp(lazy(str"proof is " ++ pr_constr proof));
   (* We check the proof is well typed *)
   let proof_ty =
     try Typing.type_of env sigma proof with _ -> raise PRtype_error in
@@ -4632,10 +4634,10 @@ let rwargtac ist ((dir, mult), (((oclr, occ), grx), (kind, gt))) gl =
   let fail = ref false in
   let interp_rpattern ist gl gc =
     try interp_rpattern ist gl gc
-    with _ when snd mult = May -> fail := true; project gl, T mkProp in
+    with _ when snd mult = May -> fail := true; project gl, T mkType in
   let interp gc gl =
     try interp_term ist gl gc
-    with _ when snd mult = May -> fail := true; (project gl, mkProp) in
+    with _ when snd mult = May -> fail := true; (project gl, mkType) in
   let rwtac gl = 
     let rx = Option.map (interp_rpattern ist gl) grx in
     let t = interp gt gl in
