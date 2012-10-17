@@ -4087,28 +4087,25 @@ let newssrcongrtac arg ist gl =
   (* utils *)
   let fs gl t = Reductionops.nf_evar (project gl) t in
   let tclMATCH_GOAL (c, gl_c) proj t_ok t_fail gl =
-    match try Some (pf_unify_HO gl_c (pf_concl gl) c) with _ -> None with  
+    match try Some (pf_unify_HO gl_c (pf_concl gl) c) with _ -> None with
     | Some gl_c -> tclTHEN (convert_concl (fs gl_c c)) (t_ok (proj gl_c)) gl
-    | None -> t_fail () gl in 
-  let mk_evar gl ty = 
+    | None -> t_fail () gl in
+  let mk_evar gl ty =
     let env, sigma, si = pf_env gl, project gl, sig_it gl in
     let sigma, x = Evarutil.new_evar (create_evar_defs sigma) env ty in
     x, re_sig si sigma in
   let ssr_congr lr = mkApp (mkSsrConst "ssr_congr_arrow",lr) in
   (* here thw two cases: simple equality or arrow *)
-  let equality, _, eq_args, gl' = pf_saturate gl (build_ssr_eq ()) 3 in
-  let identity, _, identity_args, gl2 = pf_saturate gl (build_ssr_eq ()) 3 in
-  tclMATCH_GOAL (equality, gl') (fun gl' -> fs gl' (List.assoc 0 eq_args))
+  (* assia:warning, this should be an abstraction, not a hardwired "identity"*)
+  let identity, _, eq_args, gl' = pf_saturate gl (build_ssr_eq ()) 3 in
+  tclMATCH_GOAL (identity, gl') (fun gl' -> fs gl' (List.assoc 0 eq_args))
   (fun ty -> congrtac (arg, Detyping.detype false [] [] ty) ist)
   (fun () ->
-    tclMATCH_GOAL (identity, gl2) (fun gl2 -> fs gl2 (List.assoc 0 identity_args))
-	(fun ty -> congrtac (arg, Detyping.detype false [] [] ty) ist)
-	(fun () ->
-	  let lhs, gl' = mk_evar gl mkProp in let rhs, gl' = mk_evar gl' mkProp in
-        let arrow = mkArrow lhs (lift 1 rhs) in
-	  tclMATCH_GOAL (arrow, gl') (fun gl' -> [|fs gl' lhs;fs gl' rhs|])
-	    (fun lr -> tclTHEN (apply (ssr_congr lr)) (congrtac (arg, mkRType) ist))
-	    (fun _ _ -> errorstrm (str"Conclusion is not an equality nor an arrow"))))
+    let lhs, gl' = mk_evar gl mkProp in let rhs, gl' = mk_evar gl' mkProp in
+    let arrow = mkArrow lhs (lift 1 rhs) in
+    tclMATCH_GOAL (arrow, gl') (fun gl' -> [|fs gl' lhs;fs gl' rhs|])
+    (fun lr -> tclTHEN (apply (ssr_congr lr)) (congrtac (arg, mkRType) ist))
+    (fun _ _ -> errorstrm (str"Conclusion is not an equality nor an arrow")))
     gl
 ;;
 
@@ -4399,6 +4396,7 @@ exception PRtype_error
 exception PRindetermined_rhs of constr
 
 let pirrel_rewrite pred rdx rdx_ty new_rdx dir (sigma, c) c_ty gl =
+  pp(lazy(str"==PIRREL_REWRITE=="));
   let env = pf_env gl in
   let beta = Reductionops.clos_norm_flags Closure.beta env sigma in
   let sigma, p = 
@@ -4447,6 +4445,7 @@ let pirrel_rewrite pred rdx rdx_ty new_rdx dir (sigma, c) c_ty gl =
 ;;
 
 let rwcltac cl rdx dir sr gl =
+  pp(lazy(str"==RWCLTAC=="));
   let n, r_n = pf_abs_evars gl sr in
   let r_n' = pf_abs_cterm gl n r_n in
   let r' = subst_var pattern_id r_n' in
