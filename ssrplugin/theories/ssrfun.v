@@ -619,7 +619,7 @@ Lemma can_pcan g : cancel g -> pcancel (fun y => Some (g y)).
 Proof. by move=> fK x; congr (Some _). Qed.
 
 Lemma pcan_inj g : pcancel g -> injective.
-Proof. move=> fK x y h. Check (congr1 g  h). rewrite !fK => [[]]. Qed.
+Proof. by move=> fK x y /(congr1 g); rewrite !fK => [[]]. Qed.
 
 Lemma can_inj g : cancel g -> injective.
 Proof. by move/can_pcan; exact: pcan_inj. Qed.
@@ -676,7 +676,7 @@ Section Bijections.
 
 Variables (A B : Type) (f : B -> A).
 
-CoInductive bijective : Prop := Bijective g of cancel f g & cancel g f.
+CoInductive bijective : Type := Bijective g of cancel f g & cancel g f.
 
 Hypothesis bijf : bijective.
 
