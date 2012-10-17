@@ -15,11 +15,11 @@ Notation "A -> B" := (forall (_ : A), B) : type_scope.
 (** * Propositional connectives *)
 
 (** [True] is the unit type. *)
-Inductive True : Set :=
+Inductive True : Type :=
   I : True.
 
 (** [False] is the empty type. *)
-Inductive False : Set :=.
+Inductive False : Type :=.
 
 (** [not A], written [~A], is the negation of [A] *)
 Definition not (A:Type) := A -> False.
