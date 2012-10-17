@@ -357,6 +357,14 @@ Implicit Arguments ssr_suff [Pgoal].
 Definition ssr_wlog := ssr_suff.
 Implicit Arguments ssr_wlog [Pgoal].
 
+(* assia : internal for HoTT eq as identity, should be done otherwise *)
+Definition identity_nondep_rect (A : Type) (a : A) (X : A -> Type) :
+  X a -> forall y : A, a = y -> X y :=
+  identity_rect a (fun (y0 : A) (_ : a = y0) => X y0).
+Arguments identity_nondep_rect [A] a X xa y i.
+
+Definition identity_nondep_rect_r := identity_rect_r.
+
 (* Internal N-ary congruence lemmas for the congr tactic.                     *)
 
 Fixpoint nary_congruence_statement (n : nat)
@@ -373,14 +381,12 @@ Lemma nary_congruence n (k := fun B e => forall y : B, (e y y : Type)) :
   nary_congruence_statement n k.
 Proof.
 have: k _ _ := _; rewrite {1}/k.
-(* XXX: Changed by Andrej
   elim: n k  => [|n IHn] k k_P /= A; first exact: k_P.
-  by apply: IHn => B e He; apply: k_P => f x1 x2 <-. *)
-admit.
+  by apply: IHn => B e He; apply: k_P => f x1 x2 <-.
 Qed.
 
 Lemma ssr_congr_arrow Plemma Pgoal : Plemma = Pgoal -> Plemma -> Pgoal.
-Proof. by (* XXX ANDREJ: move->. *) admit. Qed.
+Proof. by move->. Qed.
 Implicit Arguments ssr_congr_arrow [].
 
 

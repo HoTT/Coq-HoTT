@@ -4405,9 +4405,12 @@ let pirrel_rewrite pred rdx rdx_ty new_rdx dir (sigma, c) c_ty gl =
     Evarutil.new_evar sigma env (beta (subst1 new_rdx pred)) in
   let pred = mkNamedLambda pattern_id rdx_ty pred in
   let elim = 
-    let (kn, i) as ind, unfolded_c_ty = pf_reduce_to_quantified_ind gl c_ty in
-    let sort = elimination_sort_of_goal gl in
-    let elim = Indrec.lookup_eliminator ind sort in
+    (* let (kn, i) as ind, unfolded_c_ty = pf_reduce_to_quantified_ind gl c_ty in *)
+    (* let sort = elimination_sort_of_goal gl in *)
+    (* let elim = Indrec.lookup_eliminator ind sort in *)
+    pp(lazy(str"searching for elim"));
+    let elim = mkSsrConst "identity_nondep_rect" in
+    pp(lazy(str"base elim is " ++ pr_constr elim));
     if dir = R2L then elim else (* taken from Coq's rewrite *)
     let elim = destConst elim in          
     let mp,dp,l = repr_con (constant_of_kn (canonical_con elim)) in
