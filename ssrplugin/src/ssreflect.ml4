@@ -72,11 +72,11 @@ let build_ssr_eq_refl () =
 (* std version : (build_coq_eq_data()).refl *)
 (* hott version : *) (build_coq_identity_data ()).refl
 
-(* Construct a Type of an arbitry level: this replaces mkProp when equality is
-at Type level. Should create new universes with the right dirpath/toplevel module
-name.*)
+(* Construct a Type of an arbitry level: mkType () replaces mkProp
+   when equality is at Type level. Should create new universes with the
+   right dirpath/toplevel module name.*)
 
-let mkType = mkSort (Type (Univ.make_universe (Termops.new_univ_level ())))
+let mkType () = mkSort (Type (Univ.make_universe (Termops.new_univ_level ())))
 
 (* Tentative patch from util.ml *)
 
@@ -847,7 +847,7 @@ let pf_abs_cterm gl n c0 =
 
 let pf_unabs_evars gl ise n c0 =
   if n = 0 then c0 else
-  let evv = Array.make n mkType in
+  let evv = Array.init n (fun i -> mkType()) in
   let nev = ref 0 in
   let env0 = pf_env gl in
   let nenv0 = env_size env0 in
@@ -3057,7 +3057,7 @@ let pp_term gl t =
 let pp_concat hd ?(sep=str", ") = function [] -> hd | x :: xs ->
   hd ++ List.fold_left (fun acc x -> acc ++ sep ++ x) x xs
 
-let fake_pmatcher_end () = mkType, L2R, (Evd.empty, mkType)
+let fake_pmatcher_end () = mkType(), L2R, (Evd.empty, mkType())
 
 (* TASSI: given (c : ty), generates (c ??? : ty[???/...]) with m evars *)
 exception NotEnoughProducts
@@ -3723,7 +3723,7 @@ let ssrelim ?(is_case=false) ?ist deps what ?elim eqid ipats gl =
           let erefl = fire_subst gl (mkRefl t c) in
           apply_type new_concl [erefl] in
         let rel = k + if elim_is_dep then 1 else 0 in
-        let src = mkProt mkType (mkApp (eq,[|t; c; mkRel rel|])) in
+        let src = mkProt (mkType()) (mkApp (eq,[|t; c; mkRel rel|])) in
         let concl = mkArrow src (lift 1 concl) in
         let clr = if deps <> [] then clr else [] in
         concl, gen_eq_tac, clr
@@ -4101,7 +4101,8 @@ let newssrcongrtac arg ist gl =
   tclMATCH_GOAL (identity, gl') (fun gl' -> fs gl' (List.assoc 0 eq_args))
   (fun ty -> congrtac (arg, Detyping.detype false [] [] ty) ist)
   (fun () ->
-    let lhs, gl' = mk_evar gl mkType in let rhs, gl' = mk_evar gl' mkType in
+    let lhs, gl' = mk_evar gl (mkType()) in
+    let rhs, gl' = mk_evar gl'(mkType()) in
     let arrow = mkArrow lhs (lift 1 rhs) in
     tclMATCH_GOAL (arrow, gl') (fun gl' -> [|fs gl' lhs;fs gl' rhs|])
     (fun lr -> tclTHEN (apply (ssr_congr lr)) (congrtac (arg, mkRType) ist))
@@ -4634,10 +4635,10 @@ let rwargtac ist ((dir, mult), (((oclr, occ), grx), (kind, gt))) gl =
   let fail = ref false in
   let interp_rpattern ist gl gc =
     try interp_rpattern ist gl gc
-    with _ when snd mult = May -> fail := true; project gl, T mkType in
+    with _ when snd mult = May -> fail := true; project gl, T (mkType()) in
   let interp gc gl =
     try interp_term ist gl gc
-    with _ when snd mult = May -> fail := true; (project gl, mkType) in
+    with _ when snd mult = May -> fail := true; (project gl, mkType()) in
   let rwtac gl = 
     let rx = Option.map (interp_rpattern ist gl) grx in
     let t = interp gt gl in
