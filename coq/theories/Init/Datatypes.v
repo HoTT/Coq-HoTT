@@ -23,6 +23,9 @@ Notation "x + y" := (sum x y) : type_scope.
 Arguments inl {A B} _ , [A] B _.
 Arguments inr {A B} _ , A [B] _.
 
+Notation "A \/ B" := (A + B)%type : type_scope.
+
+
 (** [prod A B], written [A * B], is the product of [A] and [B];
     the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
 
@@ -35,6 +38,7 @@ Add Printing Let prod.
 
 Notation "x * y" := (prod x y) : type_scope.
 Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
+Notation "A /\ B" := (A * B)%type : type_scope. 
 
 Definition fst {A B : Type} (p : A * B) := match p with (x, y) => x end.
 Definition snd {A B : Type} (p : A * B) := match p with (x, y) => y end.
@@ -68,6 +72,10 @@ Add Printing If bool.
 Delimit Scope bool_scope with bool.
 
 Bind Scope bool_scope with bool.
+
+Definition negb (b:bool) := if b then false else true.
+
+Definition implb (b1 b2:bool) : bool := if b1 then b2 else true.
 
 (* Natural numbers. *)
 
@@ -112,3 +120,6 @@ Notation "x = y" := (x = y :>_) : type_scope.
 Notation "x <> y  :> T" := (~ x = y :>T) : type_scope.
 Notation "x <> y" := (x <> y :>_) : type_scope.
 
+(** Another way of interpreting booleans as propositions *)
+
+Definition is_true b := b = true.

@@ -22,7 +22,7 @@ Inductive True : Type :=
 Inductive False : Type :=.
 
 (** [not A], written [~A], is the negation of [A] *)
-Definition not (A:Type) := A -> False.
+Definition not (A:Type) : Type := A -> False.
 
 Notation "~ x" := (not x) : type_scope.
 

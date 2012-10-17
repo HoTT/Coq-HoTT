@@ -1,4 +1,5 @@
 (* (c) Copyright Microsoft Corporation and Inria. All rights reserved. *)
+Require Import Logic_Type.
 Require Import ssreflect ssrfun.
 
 (******************************************************************************)
@@ -330,7 +331,7 @@ Notation "b1 (+) b2" := (addb b1 b2) : bool_scope.
 (* Constant is_true b := b = true is defined in Init.Datatypes. *)
 Coercion is_true : bool >-> Sortclass. (* Prop *)
 
-Lemma prop_congr : forall b b' : bool, b = b' -> b = b' :> Prop.
+Lemma prop_congr : forall b b' : bool, b = b' -> b = b' :> Type.
 Proof. by move=> b b' ->. Qed.
 
 Ltac prop_congr := apply: prop_congr.
@@ -404,13 +405,14 @@ Coercion isSome T (u : option T) := if u is Some _ then true else false.
 
 Coercion is_inl A B (u : A + B) := if u is inl _ then true else false.
 
-Coercion is_left A B (u : {A} + {B}) := if u is left _ then true else false.
+(* no more prop in HoTT *)
+(* Coercion is_left A B (u : {A} + {B}) := if u is left _ then true else false. *)
 
-Coercion is_inleft A B (u : A + {B}) := if u is inleft _ then true else false.
+(* Coercion is_inleft A B (u : A + {B}) := if u is inleft _ then true else false. *)
 
-Prenex Implicits  isSome is_inl is_left is_inleft.
+Prenex Implicits  isSome is_inl (*is_left is_inleft*).
 
-Definition decidable P := {P} + {~ P}.
+Definition decidable P := (P + (~ P))%type.
 
 (* Lemmas for ifs with large conditions, which allow reasoning about the  *)
 (* condition without repeating it inside the proof (the latter IS         *)
@@ -427,7 +429,7 @@ Section BoolIf.
 
 Variables (A B : Type) (x : A) (f : A -> B) (b : bool) (vT vF : A).
 
-CoInductive if_spec (not_b : Prop) : bool -> A -> Set :=
+CoInductive if_spec (not_b : Type) : bool -> A -> Type :=
   | IfSpecTrue  of      b : if_spec not_b true vT
   | IfSpecFalse of  not_b : if_spec not_b false vF.
 
@@ -462,7 +464,7 @@ End BoolIf.
 
 (* The reflection predicate.                                          *)
 
-Inductive reflect (P : Prop) : bool -> Set :=
+Inductive reflect (P : Type) : bool -> Type :=
   | ReflectT  of   P : reflect P true
   | ReflectF of ~ P : reflect P false.
 
@@ -470,7 +472,7 @@ Inductive reflect (P : Prop) : bool -> Set :=
 
 Section ReflectCore.
 
-Variables (P Q : Prop) (b c : bool).
+Variables (P Q : Type) (b c : bool).
 
 Hypothesis Hb : reflect P b.
 
@@ -497,7 +499,7 @@ End ReflectCore.
 (* Internal negated reflection lemmas *)
 Section ReflectNegCore.
 
-Variables (P Q : Prop) (b c : bool).
+Variables (P Q : Type) (b c : bool).
 Hypothesis Hb : reflect P (~~ b).
 
 Lemma introTFn : (if c then ~ P else P) -> b = c.
@@ -517,7 +519,7 @@ End ReflectNegCore.
 (* User-oriented reflection lemmas *)
 Section Reflect.
 
-Variables (P Q : Prop) (b b' c : bool).
+Variables (P Q : Type) (b b' c : bool).
 Hypotheses (Pb : reflect P b) (Pb' : reflect P (~~ b')).
 
 Lemma introT  : P -> b.            Proof. exact: introTF true _. Qed.
@@ -591,9 +593,9 @@ Proof. by case: b => [_ haveC | haveC _]; exact: haveC. Qed.
 
 (* Classical reasoning becomes directly accessible for any bool subgoal.      *)
 (* Note that we cannot use "unless" here for lack of universe polymorphism.   *)
-Definition classically P : Prop := forall b : bool, (P -> b) -> b.
+Definition classically P : Type := forall b : bool, (P -> b) -> b.
 
-Lemma classicP : forall P : Prop, classically P <-> ~ ~ P.
+Lemma classicP : forall P : Type, classically P <-> ~ ~ P.
 Proof.
 move=> P; split=> [cP nP | nnP [] // nP]; last by case nnP; move/nP.
 by have: P -> false; [move/nP | move/cP].
@@ -621,22 +623,22 @@ move=> T P [] // IH; apply IH; right=> x Px; case: notF.
 by apply: IH; left; exists x.
 Qed.
 
-(* List notations for wider connectives; the Prop connectives have a fixed    *)
+(* List notations for wider connectives; the Type connectives have a fixed    *)
 (* width so as to avoid iterated destruction (we go up to width 5 for /\, and *)
 (* width 4 for or. The bool connectives have arbitrary widths, but denote     *)
 (* expressions that associate to the RIGHT. This is consistent with the right *)
 (* associativity of list expressions and thus more convenient in most proofs. *)
 
-Inductive and3 (P1 P2 P3 : Prop) : Prop := And3 of P1 & P2 & P3.
+Inductive and3 (P1 P2 P3 : Type) : Type := And3 of P1 & P2 & P3.
 
-Inductive and4 (P1 P2 P3 P4 : Prop) : Prop := And4 of P1 & P2 & P3 & P4.
+Inductive and4 (P1 P2 P3 P4 : Type) : Type := And4 of P1 & P2 & P3 & P4.
 
-Inductive and5 (P1 P2 P3 P4 P5 : Prop) : Prop :=
+Inductive and5 (P1 P2 P3 P4 P5 : Type) : Type :=
   And5 of P1 & P2 & P3 & P4 & P5.
 
-Inductive or3 (P1 P2 P3 : Prop) : Prop := Or31 of P1 | Or32 of P2 | Or33 of P3.
+Inductive or3 (P1 P2 P3 : Type) : Type := Or31 of P1 | Or32 of P2 | Or33 of P3.
 
-Inductive or4 (P1 P2 P3 P4 : Prop) : Prop :=
+Inductive or4 (P1 P2 P3 P4 : Type) : Type :=
   Or41 of P1 | Or42 of P2 | Or43 of P3 | Or44 of P4.
 
 Notation "[ /\ P1 & P2 ]" := (and P1 P2) (only parsing) : type_scope.
@@ -662,7 +664,7 @@ Notation "[ ==> b1 => c ]" := (b1 ==> c) (only parsing) : bool_scope.
 
 Section AllAnd.
 
-Variables (T : Type) (P1 P2 P3 P4 P5 : T -> Prop).
+Variables (T : Type) (P1 P2 P3 P4 P5 : T -> Type).
 Local Notation a P := (forall x, P x).
 
 Lemma all_and2 (hP : forall x, [/\ P1 x & P2 x]) : [/\ a P1 & a P2].
@@ -1381,7 +1383,7 @@ Canonical default_keyed_qualifier T n (q : qualifier n T) :=
 
 End DefaultKeying.
 
-Section RelationProperties.
+Section RelationTypeerties.
 
 (* Caveat: reflexive should not be used to state lemmas, as auto and trivial  *)
 (* will not expand the constant.                                              *)
@@ -1429,24 +1431,24 @@ split=> [eqiR | [Rxx trR] x y z]; last by split=> [|/trR->].
 by split=> [x | x y Rxy z]; [rewrite (eqiR x x x) | rewrite (eqiR x y z)].
 Qed.
 
-End RelationProperties.
+End RelationTypeerties.
 
 Lemma rev_trans T (R : rel T) : transitive R -> transitive (fun x y => R y x).
 Proof. by move=> trR x y z Ryx Rzy; exact: trR Rzy Ryx. Qed.
 
-(* Property localization *)
+(* Typeerty localization *)
 
-Notation Local "{ 'all1' P }" := (forall x, P x : Prop) (at level 0).
-Notation Local "{ 'all2' P }" := (forall x y, P x y : Prop) (at level 0).
-Notation Local "{ 'all3' P }" := (forall x y z, P x y z: Prop) (at level 0).
+Notation Local "{ 'all1' P }" := (forall x, P x : Type) (at level 0).
+Notation Local "{ 'all2' P }" := (forall x y, P x y : Type) (at level 0).
+Notation Local "{ 'all3' P }" := (forall x y z, P x y z: Type) (at level 0).
 Notation Local ph := (phantom _).
 
-Section LocalProperties.
+Section LocalTypeerties.
 
 Variables T1 T2 T3 : Type.
 
 Variables (d1 : mem_pred T1) (d2 : mem_pred T2) (d3 : mem_pred T3).
-Notation Local ph := (phantom Prop).
+Notation Local ph := (phantom Type).
 
 Definition prop_for (x : T1) P & ph {all1 P} := P x.
 
@@ -1481,10 +1483,10 @@ Definition prop_on1 Pf P & phantom T3 (Pf f) & ph {all1 P} :=
 Definition prop_on2 Pf P & phantom T3 (Pf f) & ph {all2 P} :=
   forall x y, in_mem (f x) d2 -> in_mem (f y) d2 -> P x y.
 
-End LocalProperties.
+End LocalTypeerties.
 
-Definition inPhantom := Phantom Prop.
-Definition onPhantom T P (x : T) := Phantom Prop (P x).
+Definition inPhantom := Phantom Type.
+Definition onPhantom T P (x : T) := Phantom Type (P x).
 
 Definition bijective_in aT rT (d : mem_pred aT) (f : aT -> rT) :=
   exists2 g, prop_in1 d (inPhantom (cancel f g))
@@ -1535,7 +1537,7 @@ Notation "{ 'on' cd & , P }" :=
   (at level 0, format "{ 'on'  cd  & ,  P }") : type_scope.
 
 Notation "{ 'on' cd , P & g }" :=
-  (prop_on1 (mem cd) (Phantom (_ -> Prop) P) (onPhantom P g))
+  (prop_on1 (mem cd) (Phantom (_ -> Type) P) (onPhantom P g))
   (at level 0, format "{ 'on'  cd ,  P  &  g }") : type_scope.
 
 Notation "{ 'in' d , 'bijective' f }" := (bijective_in (mem d) f)
@@ -1558,11 +1560,11 @@ Variables T1 T2 T3 : predArgType.
 Variables (D1 : pred T1) (D2 : pred T2) (D3 : pred T3).
 Variables (d1 d1' : mem_pred T1) (d2 d2' : mem_pred T2) (d3 d3' : mem_pred T3).
 Variables (f f' : T1 -> T2) (g : T2 -> T1) (h : T3).
-Variables (P1 : T1 -> Prop) (P2 : T1 -> T2 -> Prop).
-Variable P3 : T1 -> T2 -> T3 -> Prop.
-Variable Q1 : (T1 -> T2) -> T1 -> Prop.
-Variable Q1l : (T1 -> T2) -> T3 -> T1 -> Prop.
-Variable Q2 : (T1 -> T2) -> T1 -> T1 -> Prop.
+Variables (P1 : T1 -> Type) (P2 : T1 -> T2 -> Type).
+Variable P3 : T1 -> T2 -> T3 -> Type.
+Variable Q1 : (T1 -> T2) -> T1 -> Type.
+Variable Q1l : (T1 -> T2) -> T3 -> T1 -> Type.
+Variable Q2 : (T1 -> T2) -> T1 -> T1 -> Type.
 
 Hypothesis sub1 : sub_mem d1 d1'.
 Hypothesis sub2 : sub_mem d2 d2'.
@@ -1666,20 +1668,20 @@ Qed.
 
 End LocalGlobal.
 
-Lemma sub_in2 T d d' (P : T -> T -> Prop) :
+Lemma sub_in2 T d d' (P : T -> T -> Type) :
   sub_mem d d' -> forall Ph : ph {all2 P}, prop_in2 d' Ph -> prop_in2 d Ph.
 Proof. by move=> /= sub_dd'; exact: sub_in11. Qed.
 
-Lemma sub_in3 T d d' (P : T -> T -> T -> Prop) :
+Lemma sub_in3 T d d' (P : T -> T -> T -> Type) :
   sub_mem d d' -> forall Ph : ph {all3 P}, prop_in3 d' Ph -> prop_in3 d Ph.
 Proof. by move=> /= sub_dd'; exact: sub_in111. Qed.
 
-Lemma sub_in12 T1 T d1 d1' d d' (P : T1 -> T -> T -> Prop) :
+Lemma sub_in12 T1 T d1 d1' d d' (P : T1 -> T -> T -> Type) :
   sub_mem d1 d1' -> sub_mem d d' ->
   forall Ph : ph {all3 P}, prop_in12 d1' d' Ph -> prop_in12 d1 d Ph.
 Proof. by move=> /= sub1 sub; exact: sub_in111. Qed.
 
-Lemma sub_in21 T T3 d d' d3 d3' (P : T -> T -> T3 -> Prop) :
+Lemma sub_in21 T T3 d d' d3 d3' (P : T -> T -> T3 -> Type) :
   sub_mem d d' -> sub_mem d3 d3' ->
   forall Ph : ph {all3 P}, prop_in21 d' d3' Ph -> prop_in21 d d3 Ph.
 Proof. by move=> /= sub sub3; exact: sub_in111. Qed.

@@ -1,7 +1,6 @@
 (* (c) Copyright Microsoft Corporation and Inria. All rights reserved. *)
 Require Import Bool. (* For bool_scope delimiter 'bool'. *)
 Require Export Logic_Type.
-Import Logic_Type.
 Require Import ssrmatching.
 Set SsrAstVersion.
 
