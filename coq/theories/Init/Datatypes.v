@@ -48,21 +48,6 @@ Definition iff (A B : Type) := prod (A -> B) (B -> A).
 
 Notation "A <-> B" := (iff A B) : type_scope.
 
-(** [(sigT A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type. *)
-
-Inductive sigT {A:Type} (P:A -> Type) : Type :=
-    existT : forall x : A, P x -> sigT P.
-
-Arguments sigT (A P)%type.
-Notation "{ x : A  & P }" := (sigT (fun x:A => P)) : type_scope.
-Add Printing Let sigT.
-
-Definition projT1 {A : Type} {P : A -> Type} (x : sigT P) : A :=
-  match x with | existT a _ => a end.
-
-Definition projT2 {A : Type} {P : A -> Type} (x : sigT P) : P (projT1 x) :=
-  match x return P (projT1 x) with | existT _ h => h end.
-
 (** [Empty_set] is a datatype with no inhabitant *)
 
 Inductive Empty_set : Set :=.
