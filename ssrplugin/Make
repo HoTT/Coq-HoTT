@@ -28,3 +28,5 @@ theories/finfun.v
 theories/path.v
 theories/div.v
 theories/bigop.v
+theories/finset.v
+theories/prime.v
