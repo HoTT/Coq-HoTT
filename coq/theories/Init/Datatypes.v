@@ -40,6 +40,7 @@ Notation "x * y" := (prod x y) : type_scope.
 Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
 Notation "A /\ B" := (A * B)%type : type_scope. 
 Notation and := prod.
+Notation conj := pair.
 
 Definition fst {A B : Type} (p : A * B) := match p with (x, y) => x end.
 Definition snd {A B : Type} (p : A * B) := match p with (x, y) => y end.

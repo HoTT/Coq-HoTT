@@ -21,3 +21,4 @@ theories/ssrbool.v
 theories/eqtype.v
 theories/ssrnat.v
 theories/seq.v
+theories/choice.v

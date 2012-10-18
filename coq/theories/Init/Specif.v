@@ -30,6 +30,7 @@ Inductive sigT2 (A:Type) (P Q:A -> Type) : Type :=
 Arguments sigT (A P)%type.
 Arguments sigT2 (A P Q)%type.
 
+Notation  ex_intro := existT.
 Notation "{ x : A  & P }" := (sigT (fun x:A => P)) : type_scope.
 Notation "{ x : A  & P  & Q }" := (sigT2 (fun x:A => P) (fun x:A => Q)) :
   type_scope.
