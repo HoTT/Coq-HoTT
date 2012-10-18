@@ -30,3 +30,5 @@ theories/div.v
 theories/bigop.v
 theories/finset.v
 theories/prime.v
+theories/fingraph.v
+theories/binomial.v
