@@ -25,3 +25,4 @@ theories/choice.v
 theories/fintype.v
 theories/tuple.v
 theories/finfun.v
+theories/path.v
