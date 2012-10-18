@@ -46,6 +46,11 @@ Definition snd {A B : Type} (p : A * B) := match p with (x, y) => y end.
 
 Hint Resolve pair inl inr : core.
 
+Definition prod_curry (A B C:Type) (f:A -> B -> C)
+  (p:prod A B) : C := match p with
+                       | pair x y => f x y
+                       end.
+
 (** <-> is wanted by ssreflect so we hack it here. *)
 (** [iff A B], written [A <-> B], expresses the equivalence of [A] and [B] *)
 

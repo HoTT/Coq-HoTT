@@ -49,7 +49,7 @@ Defined.
 
 (** The concatenation of paths [p] and [q] is denoted as [p @ q]. *)
 
-Notation "p @ q" := (concat p q) (at level 60, left associativity).
+Notation "p @ q" := (concat p q) (at level 60, right associativity).
 
 (** A definition like [concat] can be used in two ways. The first and
    obvious way is as an operation which concatenates together two
