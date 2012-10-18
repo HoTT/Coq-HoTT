@@ -82,3 +82,4 @@ Hint Immediate identity_sym not_identity_sym: core v62.
 (* Notation sym_id := identity_sym (compat "8.3"). *)
 (* Notation trans_id := identity_trans (compat "8.3"). *)
 (* Notation sym_not_id := not_identity_sym (compat "8.3"). *)
+

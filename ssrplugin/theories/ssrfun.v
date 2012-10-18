@@ -514,8 +514,8 @@ Definition morphism_1 aF rF := forall x, f (aF x) = rF (f x).
 Definition morphism_2 aOp rOp := forall x y, f (aOp x y) = rOp (f x) (f y).
 
 (* Homomorphism property for unary and binary relations *)
-Definition homomorphism_1 (aP rP : _ -> Prop) := forall x, aP x -> rP (f x).
-Definition homomorphism_2 (aR rR : _ -> _ -> Prop) :=
+Definition homomorphism_1 (aP rP : _ -> Type) := forall x, aP x -> rP (f x).
+Definition homomorphism_2 (aR rR : _ -> _ -> Type) :=
   forall x y, aR x y -> rR (f x) (f y).
 
 (* Stability property for unary and binary relations *)

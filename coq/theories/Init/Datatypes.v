@@ -24,7 +24,7 @@ Arguments inl {A B} _ , [A] B _.
 Arguments inr {A B} _ , A [B] _.
 
 Notation "A \/ B" := (A + B)%type : type_scope.
-
+Notation or := sum.
 
 (** [prod A B], written [A * B], is the product of [A] and [B];
     the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
@@ -39,6 +39,7 @@ Add Printing Let prod.
 Notation "x * y" := (prod x y) : type_scope.
 Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
 Notation "A /\ B" := (A * B)%type : type_scope. 
+Notation and := prod.
 
 Definition fst {A B : Type} (p : A * B) := match p with (x, y) => x end.
 Definition snd {A B : Type} (p : A * B) := match p with (x, y) => y end.
@@ -73,9 +74,16 @@ Delimit Scope bool_scope with bool.
 
 Bind Scope bool_scope with bool.
 
+Definition andb (b1 b2:bool) : bool := if b1 then b2 else false.
+
+Definition orb (b1 b2:bool) : bool := if b1 then true else b2.
+
 Definition negb (b:bool) := if b then false else true.
 
 Definition implb (b1 b2:bool) : bool := if b1 then b2 else true.
+
+Infix "||" := orb : bool_scope.
+Infix "&&" := andb : bool_scope.
 
 (* Natural numbers. *)
 
