@@ -1463,7 +1463,7 @@ Lemma catCA_perm_subst R F :
   (forall s1 s2, perm_eq s1 s2 -> F s1 = F s2).
 Proof.
 move=> FcatCA s1 s2 /catCA_perm_ind => ind_s12.
-by apply: (ind_s12 (eq _ \o F)) => //= *; rewrite FcatCA.
+by apply: (ind_s12 (identity _ \o F)) => //= *; rewrite FcatCA.
 Qed.
 
 End PermSeq.
@@ -2399,13 +2399,18 @@ Section EqFlatten.
 
 Variables S T : eqType.
 
+(* assia : for the time being, the original version of the script is broken *)
 Lemma flattenP (A : seq (seq T)) x :
   reflect (exists2 s, s \in A & x \in s) (x \in flatten A).
 Proof.
-elim: A => /= [|s A /iffP IH_A]; [by right; case | rewrite mem_cat].
+elim: A => /= [|s A IH_A]; [by right; case | rewrite mem_cat].
 have [s_x|s'x] := @idP (x \in s); first by left; exists s; rewrite ?mem_head.
-by apply: IH_A => [[t] | [t /predU1P[->|]]]; exists t; rewrite // mem_behead.
+by apply: (iffP IH_A) => [[t] | [t /predU1P[->|]]]; exists t; rewrite // mem_behead.
+(* elim: A => /= [|s A /iffP IH_A]; [by right; case | rewrite mem_cat]. *)
+(* have [s_x|s'x] := @idP (x \in s); first by left; exists s; rewrite ?mem_head. *)
+(* by apply: IH_A => [[t] | [t /predU1P[->|]]]; exists t; rewrite // mem_behead. *)
 Qed.
+
 Implicit Arguments flattenP [A x].
 
 Lemma flatten_mapP (A : S -> seq T) s y :
