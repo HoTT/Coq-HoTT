@@ -32,3 +32,4 @@ theories/finset.v
 theories/prime.v
 theories/fingraph.v
 theories/binomial.v
+theories/ssralg.v
