@@ -330,7 +330,7 @@ Proof. by move->; rewrite eqxx. Qed.
 Lemma predU1r : b -> (x == y) || b.
 Proof. by move->; rewrite orbT. Qed.
 
-Lemma eqVneq : {x = y} + {x != y}.
+Lemma eqVneq : (x = y) + (x != y).
 Proof. by case: eqP; [left | right]. Qed.
 
 End EqPred.
@@ -635,7 +635,7 @@ Variables (T : Type) (P Q : T -> Prop).
 
 Lemma svalP : forall u : sig P, P (sval u). Proof. by case. Qed.
 
-Definition s2val (u : sig2 P Q) := let: exist2 x _ _ := u in x.
+Definition s2val (u : sig2 P Q) := let: existT2 x _ _ := u in x.
 
 Lemma s2valP u : P (s2val u). Proof. by case: u. Qed.
 
@@ -781,58 +781,60 @@ Canonical option_eqType := Eval hnf in EqType (option T) option_eqMixin.
 
 End OptionEqType.
 
-Definition tag := projS1.
-Definition tagged I T_ :  forall u, T_(tag u) := @projS2 I [eta T_].
-Definition Tagged I i T_ x := @existS I [eta T_] i x.
-Implicit Arguments Tagged [I i].
-Prenex Implicits tag tagged Tagged.
+(* assia : hopefully this becomes unnecessary ? in coq trunk with eta? *)
 
-Section TaggedAs.
+(* Definition tag := projS1. *)
+(* Definition tagged I T_ :  forall u, T_(tag u) := @projS2 I [eta T_]. *)
+(* Definition Tagged I i T_ x := @existS I [eta T_] i x. *)
+(* Implicit Arguments Tagged [I i]. *)
+(* Prenex Implicits tag tagged Tagged. *)
 
-Variables (I : eqType) (T_ : I -> Type).
-Implicit Types u v : {i : I & T_ i}.
+(* Section TaggedAs. *)
 
-Definition tagged_as u v :=
-  if tag u =P tag v is ReflectT eq_uv then
-    eq_rect_r T_ (tagged v) eq_uv
-  else tagged u.
+(* Variables (I : eqType) (T_ : I -> Type). *)
+(* Implicit Types u v : {i : I & T_ i}. *)
 
-Lemma tagged_asE u x : tagged_as u (Tagged T_ x) = x.
-Proof.
-by rewrite /tagged_as /=; case: eqP => // eq_uu; rewrite [eq_uu]eq_axiomK.
-Qed.
+(* Definition tagged_as u v := *)
+(*   if tag u =P tag v is ReflectT eq_uv then *)
+(*     eq_rect_r T_ (tagged v) eq_uv *)
+(*   else tagged u. *)
 
-End TaggedAs.
+(* Lemma tagged_asE u x : tagged_as u (Tagged T_ x) = x. *)
+(* Proof. *)
+(* by rewrite /tagged_as /=; case: eqP => // eq_uu; rewrite [eq_uu]eq_axiomK. *)
+(* Qed. *)
 
-Section TagEqType.
+(* End TaggedAs. *)
 
-Variables (I : eqType) (T_ : I -> eqType).
-Implicit Types u v : {i : I & T_ i}.
+(* Section TagEqType. *)
 
-Definition tag_eq u v := (tag u == tag v) && (tagged u == tagged_as u v).
+(* Variables (I : eqType) (T_ : I -> eqType). *)
+(* Implicit Types u v : {i : I & T_ i}. *)
 
-Lemma tag_eqP : Equality.axiom tag_eq.
-Proof.
-rewrite /tag_eq => [] [i x] [j] /=.
-case: eqP => [<-|Hij] y; last by right; case.
-by apply: (iffP eqP) => [->|<-]; rewrite tagged_asE.
-Qed.
+(* Definition tag_eq u v := (tag u == tag v) && (tagged u == tagged_as u v). *)
 
-Canonical tag_eqMixin := EqMixin tag_eqP.
-Canonical tag_eqType := Eval hnf in EqType {i : I & T_ i} tag_eqMixin.
+(* Lemma tag_eqP : Equality.axiom tag_eq. *)
+(* Proof. *)
+(* rewrite /tag_eq => [] [i x] [j] /=. *)
+(* case: eqP => [<-|Hij] y; last by right; case. *)
+(* by apply: (iffP eqP) => [->|<-]; rewrite tagged_asE. *)
+(* Qed. *)
 
-Lemma tag_eqE : tag_eq = eq_op. Proof. by []. Qed.
+(* Canonical tag_eqMixin := EqMixin tag_eqP. *)
+(* Canonical tag_eqType := Eval hnf in EqType {i : I & T_ i} tag_eqMixin. *)
 
-Lemma eq_tag u v : u == v -> tag u = tag v.
-Proof. by move/eqP->. Qed.
+(* Lemma tag_eqE : tag_eq = eq_op. Proof. by []. Qed. *)
 
-Lemma eq_Tagged u x :(u == Tagged _ x) = (tagged u == x).
-Proof. by rewrite -tag_eqE /tag_eq eqxx tagged_asE. Qed.
+(* Lemma eq_tag u v : u == v -> tag u = tag v. *)
+(* Proof. by move/eqP->. Qed. *)
 
-End TagEqType.
+(* Lemma eq_Tagged u x :(u == Tagged _ x) = (tagged u == x). *)
+(* Proof. by rewrite -tag_eqE /tag_eq eqxx tagged_asE. Qed. *)
 
-Implicit Arguments tag_eqP [I T_ x y].
-Prenex Implicits tag_eqP.
+(* End TagEqType. *)
+
+(* Implicit Arguments tag_eqP [I T_ x y]. *)
+(* Prenex Implicits tag_eqP. *)
 
 Section SumEqType.
 

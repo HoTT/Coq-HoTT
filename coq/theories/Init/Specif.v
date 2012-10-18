@@ -42,9 +42,29 @@ Notation "{ x : A | P }" := (sigT (fun x:A => P)) : type_scope.
 Notation "{ x : A | P & Q }" := (sigT2 (fun x:A => P) (fun x:A => Q)) :
   type_scope.
 
+Notation "'exists' x .. y , p" := (sigT (fun x => .. (sigT (fun y => p)) ..))
+  (at level 200, x binder, right associativity,
+   format "'[' 'exists'  '/  ' x  ..  y ,  '/  ' p ']'")
+  : type_scope.
+
+Notation "'exists2' x , p & q" := (sigT2 (fun x => p) (fun x => q))
+  (at level 200, x ident, p at level 200, right associativity) : type_scope.
+Notation "'exists2' x : t , p & q" := (sigT2 (fun x:t => p) (fun x:t => q))
+  (at level 200, x ident, t at level 200, p at level 200, right associativity,
+    format "'[' 'exists2'  '/  ' x  :  t ,  '/  ' '[' p  &  '/' q ']' ']'")
+  : type_scope.
+
+Notation exist := existT.
+Notation sig := (@sigT _).
+Notation sig2 := (@sigT2 _).
+Notation exist2 := (@existT2 _).
+
 Add Printing Let sigT.
 Add Printing Let sigT2.
 
+
+Definition proj1_sig (A : Type) (P : A -> Type) (hP : sigT P) : A :=
+  match hP with existT x _ => x end.
 
 (** Projections of [sig]
 
@@ -163,3 +183,4 @@ Notation existS2 := existT2 (compat "8.2").
 Notation sigS2_rect := sigT2_rect (compat "8.2").
 Notation sigS2_rec := sigT2_rec (compat "8.2").
 Notation sigS2_ind := sigT2_ind (compat "8.2").
+

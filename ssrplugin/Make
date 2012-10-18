@@ -18,3 +18,4 @@ theories/ssrmatching.v
 theories/ssreflect.v
 theories/ssrfun.v
 theories/ssrbool.v
+theories/eqtype.v
