@@ -631,7 +631,7 @@ Notation "@ 'sval'" := (@proj1_sig) (at level 10, format "@ 'sval'").
 
 Section SigProj.
 
-Variables (T : Type) (P Q : T -> Prop).
+Variables (T : Type) (P Q : T -> Type).
 
 Lemma svalP : forall u : sig P, P (sval u). Proof. by case. Qed.
 
