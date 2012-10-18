@@ -20,3 +20,4 @@ theories/ssrfun.v
 theories/ssrbool.v
 theories/eqtype.v
 theories/ssrnat.v
+theories/seq.v

@@ -49,9 +49,15 @@ Hint Resolve pair inl inr : core.
 (** <-> is wanted by ssreflect so we hack it here. *)
 (** [iff A B], written [A <-> B], expresses the equivalence of [A] and [B] *)
 
-Definition iff (A B : Type) := prod (A -> B) (B -> A).
+(* Definition iff (A B : Type) := prod (A -> B) (B -> A). *)
 
+(* Notation "A <-> B" := (iff A B) : type_scope. *)
+(* assia : I change the definition of iff for an inductive one *)
+
+Inductive iff (A B : Type) : Type :=
+  Iff: (A -> B) -> (B -> A) -> iff A B.
 Notation "A <-> B" := (iff A B) : type_scope.
+
 
 (** [Empty_set] is a datatype with no inhabitant *)
 
@@ -131,3 +137,26 @@ Notation "x <> y" := (x <> y :>_) : type_scope.
 (** Another way of interpreting booleans as propositions *)
 
 Definition is_true b := b = true.
+
+(** Polymorphic lists and some operations *)
+
+Inductive list (A : Type) : Type :=
+ | nil : list A
+ | cons : A -> list A -> list A.
+
+Arguments nil [A].
+Infix "::" := cons (at level 60, right associativity) : list_scope.
+Delimit Scope list_scope with list.
+Bind Scope list_scope with list.
+
+Local Open Scope list_scope.
+(** Concatenation of two lists *)
+
+Definition app (A : Type) : list A -> list A -> list A :=
+  fix app l m :=
+  match l with
+   | nil => m
+   | a :: l1 => a :: app l1 m
+  end.
+
+Infix "++" := app (right associativity, at level 60) : list_scope.
