@@ -30,6 +30,7 @@ CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES)
 
 .depend:
 	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
+	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
 
 install-data-local:
 	$(mkdir_p) $(hottdir)/coq
@@ -52,4 +53,4 @@ $(VOFILES) : $(STDVOFILES)
 $(VOFILES) : %.vo : %.v
 	$(HOQC) $<
 
--include .depend
+include .depend
