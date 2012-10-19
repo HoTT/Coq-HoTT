@@ -3783,16 +3783,14 @@ Fixpoint holds (e : seq R) (f : formula R) {struct f} : Type :=
 Lemma same_env_sym e e' : same_env e e' -> same_env e' e.
 Proof. exact: fsym. Qed.
 
-(* assia : do bullets work in trunk? *)
 (* Extensionality of formula evaluation *)
 Lemma eq_holds e e' f : same_env e e' -> holds e f -> holds e' f.
-Proof. (*
+Proof.
 pose sv := set_nth (0 : R).
 have eq_i i v e1 e2: same_env e1 e2 -> same_env (sv e1 i v) (sv e2 i v).
   by move=> eq_e j; rewrite !nth_set_nth /= eq_e.
-elim: f e e' => //=.
- (* assia : are bullets completely broken in the trunK ??? *)
-- by move=> t1 t2 e e' eq_e; rewrite !(eq_eval _ eq_e).
+elim: f e e' => //=. (*
+- by move=> t1 t2 e e' eq_e; rewrite !(eq_eval _ eq_e). 
 - by move=> t e e' eq_e; rewrite (eq_eval _ eq_e).
 - by move=> f1 IH1 f2 IH2 e e' eq_e; move/IH2: (eq_e); move/IH1: eq_e; tauto.
 - by move=> f1 IH1 f2 IH2 e e' eq_e; move/IH2: (eq_e); move/IH1: eq_e; tauto.
@@ -4238,8 +4236,6 @@ Section MultiQuant.
 
 Variable f : formula R.
 Implicit Types (I : seq nat) (e : seq R).
-
-(* assia : eq_hols was broken above *)
 
 Lemma foldExistsP I e :
   (exists2 e', {in [predC I], same_env e e'} & holds e' f)
