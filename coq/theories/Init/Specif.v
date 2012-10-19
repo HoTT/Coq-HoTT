@@ -56,9 +56,9 @@ Notation "'exists2' x : t , p & q" := (sigT2 (fun x:t => p) (fun x:t => q))
   : type_scope.
 
 Notation exist := existT (only parsing).
-Notation sig := (@sigT _) (only parsing)..
-Notation sig2 := (@sigT2 _) (only parsing)..
-Notation exist2 := (@existT2 _) (only parsing)..
+Notation sig := (@sigT _) (only parsing).
+Notation sig2 := (@sigT2 _) (only parsing).
+Notation exist2 := (@existT2 _) (only parsing).
 
 Add Printing Let sigT.
 Add Printing Let sigT2.
