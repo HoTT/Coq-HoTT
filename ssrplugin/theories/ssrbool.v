@@ -769,7 +769,7 @@ Implicit Arguments nandP [b1 b2].
 Implicit Arguments norP [b1 b2].
 Implicit Arguments implyP [b1 b2].
 Prenex Implicits idP idPn negP negPn negPf.
-Prenex Implicits andP and3P and4P and5P orP or3P or4P nandP norP implyP.
+Prenex Implicits andP and3P and4P and5P orP or3P or4P nandP norP implyP iffP.
 
 (* Shorter, more systematic names for the boolean connectives laws.       *)
 
