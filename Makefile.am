@@ -53,4 +53,5 @@ $(VOFILES) : $(STDVOFILES)
 $(VOFILES) : %.vo : %.v
 	$(HOQC) $<
 
-include .depend
+# Do not remove - because then automake will interpret the include statement.
+-include .depend
