@@ -34,11 +34,11 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 @make_hoqide_TRUE@am__append_1 = hoqide
+DIST_COMMON = $(am__configure_deps) $(srcdir)/.depend \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in $(srcdir)/hoqc.in \
+	$(srcdir)/hoqide.in $(srcdir)/hoqtop.in \
+	$(top_srcdir)/configure etc/install-sh etc/missing
 subdir = .
-DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(srcdir)/hoqc.in $(srcdir)/hoqide.in \
-	$(srcdir)/hoqtop.in $(top_srcdir)/configure etc/install-sh \
-	etc/missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -197,7 +197,7 @@ all: all-am
 .SUFFIXES:
 am--refresh:
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/.depend $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -569,6 +569,7 @@ uninstall-am: uninstall-binSCRIPTS uninstall-nobase_hottDATA
 
 .depend:
 	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
+	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
 
 install-data-local:
 	$(mkdir_p) $(hottdir)/coq
@@ -590,8 +591,26 @@ $(VOFILES) : $(STDVOFILES)
 # A rule for compiling the HoTT libary files
 $(VOFILES) : %.vo : %.v
 	$(HOQC) $<
-
--include .depend
+./theories/Contractible.vo ./theories/Contractible.glob ./theories/Contractible.v.beautified: ./theories/Contractible.v ./theories/Paths.vo ./theories/Fibrations.vo
+./theories/Equivalences.vo ./theories/Equivalences.glob ./theories/Equivalences.v.beautified: ./theories/Equivalences.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo
+./theories/ExtensionalityAxiom.vo ./theories/ExtensionalityAxiom.glob ./theories/ExtensionalityAxiom.v.beautified: ./theories/ExtensionalityAxiom.v ./theories/Funext.vo
+./theories/FiberEquivalences.vo ./theories/FiberEquivalences.glob ./theories/FiberEquivalences.v.beautified: ./theories/FiberEquivalences.v ./theories/Fibrations.vo ./theories/Equivalences.vo
+./theories/FiberSequences.vo ./theories/FiberSequences.glob ./theories/FiberSequences.v.beautified: ./theories/FiberSequences.v ./theories/Equivalences.vo ./theories/UsefulEquivalences.vo ./theories/FiberEquivalences.vo
+./theories/Fibrations.vo ./theories/Fibrations.glob ./theories/Fibrations.v.beautified: ./theories/Fibrations.v ./theories/Paths.vo
+./theories/Funext.vo ./theories/Funext.glob ./theories/Funext.v.beautified: ./theories/Funext.v ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo ./theories/UsefulEquivalences.vo ./theories/FiberEquivalences.vo
+./theories/FunextEquivalences.vo ./theories/FunextEquivalences.glob ./theories/FunextEquivalences.v.beautified: ./theories/FunextEquivalences.v ./theories/Paths.vo ./theories/Equivalences.vo ./theories/UsefulEquivalences.vo ./theories/Funext.vo ./theories/HLevel.vo ./theories/ExtensionalityAxiom.vo
+./theories/HLevel.vo ./theories/HLevel.glob ./theories/HLevel.v.beautified: ./theories/HLevel.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo ./theories/Funext.vo ./theories/ExtensionalityAxiom.vo
+./theories/Homotopy.vo ./theories/Homotopy.glob ./theories/Homotopy.v.beautified: ./theories/Homotopy.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo ./theories/UsefulEquivalences.vo ./theories/FiberEquivalences.vo ./theories/FiberSequences.vo ./theories/Funext.vo ./theories/HLevel.vo ./theories/Univalence.vo ./theories/UnivalenceAxiom.vo ./theories/FunextEquivalences.vo
+./theories/Paths.vo ./theories/Paths.glob ./theories/Paths.v.beautified: ./theories/Paths.v ./coq/theories/Init/Prelude.vo
+./theories/Univalence.vo ./theories/Univalence.glob ./theories/Univalence.v.beautified: ./theories/Univalence.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo
+./theories/UnivalenceAxiom.vo ./theories/UnivalenceAxiom.glob ./theories/UnivalenceAxiom.v.beautified: ./theories/UnivalenceAxiom.v ./theories/Paths.vo ./theories/Univalence.vo ./theories/Funext.vo
+./theories/UnivalenceImpliesFunext.vo ./theories/UnivalenceImpliesFunext.glob ./theories/UnivalenceImpliesFunext.v.beautified: ./theories/UnivalenceImpliesFunext.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo ./theories/Univalence.vo ./theories/Funext.vo
+./theories/UsefulEquivalences.vo ./theories/UsefulEquivalences.glob ./theories/UsefulEquivalences.v.beautified: ./theories/UsefulEquivalences.v ./theories/Paths.vo ./theories/Fibrations.vo ./theories/Contractible.vo ./theories/Equivalences.vo
+./coq/theories/Init/Datatypes.vo ./coq/theories/Init/Datatypes.glob ./coq/theories/Init/Datatypes.v.beautified: ./coq/theories/Init/Datatypes.v ./coq/theories/Init/Logic.vo
+./coq/theories/Init/Logic.vo ./coq/theories/Init/Logic.glob ./coq/theories/Init/Logic.v.beautified: ./coq/theories/Init/Logic.v ./coq/theories/Init/Notations.vo
+./coq/theories/Init/Notations.vo ./coq/theories/Init/Notations.glob ./coq/theories/Init/Notations.v.beautified: ./coq/theories/Init/Notations.v
+./coq/theories/Init/Prelude.vo ./coq/theories/Init/Prelude.glob ./coq/theories/Init/Prelude.v.beautified: ./coq/theories/Init/Prelude.v ./coq/theories/Init/Notations.vo ./coq/theories/Init/Logic.vo ./coq/theories/Init/Datatypes.vo ./coq/theories/Init/Tactics.vo
+./coq/theories/Init/Tactics.vo ./coq/theories/Init/Tactics.glob ./coq/theories/Init/Tactics.v.beautified: ./coq/theories/Init/Tactics.v
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
