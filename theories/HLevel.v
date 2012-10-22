@@ -359,8 +359,8 @@ Proof.
   set (q := d x x) in *.
   clearbody qp; revert qp.
   destruct q as [q | q'].
-  intro qp0.
-  apply concat_cancel_left with (p := q).
+  intro qp0. 
+  apply (concat_cancel_left q).
   path_via (transport p q).
   apply opposite, trans_is_concat.
   path_via q.

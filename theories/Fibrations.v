@@ -51,7 +51,7 @@ Proof.
 Defined.
 
 (* Transport is very common so it is worth introducing a notation for it. *)
-Notation "p # x" := (transport p x) (right associativity, at level 60).
+Notation "p # x" := (transport p x) (right associativity, at level 65).
 
 Lemma transport_idpath {A} {P : fibration A} {x : A} (u : P x) :
   (idpath x) # u = u.

@@ -1,22 +1,5 @@
 (** Basic homotopy-theoretic approach to paths. *)
 
-Require Export Prelude.
-
-(** We define the space of paths so that it matches the definition of Coq
-   equality [eq], except that we put paths in [Type] instead of [Prop].
- *)
-
-Inductive paths {A : Type} (x : A) : A -> Type := idpath : paths x x.
-
-(* The next line tells [coqdoc] to print [paths] as an equality sign in HTML and LaTeX. *)
-(** printing = $=$ *)
-
-(** We introduce notation [x = y] for the space [paths x y] of paths
-   from [x] to [y]. We can then write [p : x = y] to indicate that
-   [p] is a path from [x] to [y]. *)
-
-Notation "x = y" := (paths x y) (at level 70).
-
 (** The [Hint Resolve @idpath] line below means that Coq's [auto]
    tactic will automatically perform [apply idpath] if that leads to a
    successful solution of the current goal. For example if we ask it
@@ -57,7 +40,6 @@ Ltac path_induction :=
    can, then it uses [auto]. *)
 
 (** We now define the basic operations on paths, starting with concatenation. *)
-
 Definition concat {A} {x y z : A} : (x = y) -> (y = z) -> (x = z).
 Proof.
   intros p q.
@@ -67,7 +49,7 @@ Defined.
 
 (** The concatenation of paths [p] and [q] is denoted as [p @ q]. *)
 
-Notation "p @ q" := (concat p q) (at level 60).
+Notation "p @ q" := (concat p q) (at level 60, left associativity).
 
 (** A definition like [concat] can be used in two ways. The first and
    obvious way is as an operation which concatenates together two
@@ -76,15 +58,6 @@ Notation "p @ q" := (concat p q) (at level 60).
    done with [apply @concat], see examples below. We will actually
    define a tactic [path_via] which uses [concat] but is much smarter
    than just the direct application [apply @concat]. *)
-
-(** Paths can be reversed. *)
-
-Definition opposite {A} {x y : A} : (x = y) -> (y = x).
-Proof.
-  intros p.
-  induction p.
-  apply idpath.
-Defined.
 
 (** Notation for the opposite of a path [p] is [! p]. *)
 
@@ -129,109 +102,109 @@ Notation "! p" := (opposite p) (at level 50).
 (** The following lemmas say that up to higher paths, the paths form a
    1-groupoid. *)
 
-Lemma idpath_left_unit A (x y : A) (p : x = y) : idpath x @ p = p.
+Lemma idpath_left_unit {A} {x y : A} (p : x = y) : idpath x @ p = p.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite idpath_left_unit : paths.
+Hint Rewrite @idpath_left_unit : paths.
 
-Lemma idpath_right_unit A (x y : A) (p : x = y) : (p @ idpath y) = p.
+Lemma idpath_right_unit {A} {x y : A} (p : x = y) : (p @ idpath y) = p.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite idpath_right_unit : paths.
+Hint Rewrite @idpath_right_unit : paths.
 
-Lemma opposite_right_inverse A (x y : A) (p : x = y) : (p @ !p) = idpath x.
+Lemma opposite_right_inverse {A} {x y : A} (p : x = y) : (p @ !p) = idpath x.
 Proof.
  path_induction.
 Defined.
 
-Hint Rewrite opposite_right_inverse : paths.
+Hint Rewrite @opposite_right_inverse : paths.
 
-Lemma opposite_left_inverse A (x y : A) (p : x = y) : (!p @ p) = idpath y.
+Lemma opposite_left_inverse {A} {x y : A} (p : x = y) : (!p @ p) = idpath y.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite opposite_left_inverse : paths.
+Hint Rewrite @opposite_left_inverse : paths.
 
 (* Often the inverses end up associated in the wrong way, so we also add
    the following variants. *)
 
-Lemma opposite_right_inverse_with_assoc_left A (x y z : A) (p : x = y) (q : y = z) :
+Lemma opposite_right_inverse_with_assoc_left {A} {x y z : A} (p : x = y) (q : y = z) :
   (p @ q) @ !q = p.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite opposite_right_inverse_with_assoc_left : paths.
+Hint Rewrite @opposite_right_inverse_with_assoc_left : paths.
 
-Lemma opposite_left_inverse_with_assoc_left A (x y z : A) (p : x = y) (q : z = y) :
+Lemma opposite_left_inverse_with_assoc_left {A} {x y z : A} (p : x = y) (q : z = y) :
   (p @ !q) @ q = p.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite opposite_left_inverse_with_assoc_left : paths.
+Hint Rewrite @opposite_left_inverse_with_assoc_left : paths.
 
-Lemma opposite_right_inverse_with_assoc_right A (x y z : A) (p : y = x) (q : y = z) :
+Lemma opposite_right_inverse_with_assoc_right {A} {x y z : A} (p : y = x) (q : y = z) :
   p @ (!p @ q) = q.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite opposite_right_inverse_with_assoc_right : paths.
+Hint Rewrite @opposite_right_inverse_with_assoc_right : paths.
 
-Lemma opposite_left_inverse_with_assoc_right A (x y z : A) (p : x = y) (q : y = z) :
+Lemma opposite_left_inverse_with_assoc_right {A} {x y z : A} (p : x = y) (q : y = z) :
   !p @ (p @ q) = q.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite opposite_right_inverse_with_assoc_left : paths.
+Hint Rewrite @opposite_right_inverse_with_assoc_left : paths.
 
-Lemma opposite_left_inverse_with_assoc_both A
-  (x y z w : A) (p : x = y) (q : z = y) (r : y = w) :
+Lemma opposite_left_inverse_with_assoc_both {A}
+  {x y z w : A} (p : x = y) (q : z = y) (r : y = w) :
   (p @ !q) @ (q @ r) = p @ r.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite opposite_left_inverse_with_assoc_both : paths.
+Hint Rewrite @opposite_left_inverse_with_assoc_both : paths.
 
-Lemma opposite_right_inverse_with_assoc_both A
-  (x y z w : A) (p : x = y) (q : y = z) (r : y = w) :
+Lemma opposite_right_inverse_with_assoc_both {A}
+  {x y z w : A} (p : x = y) (q : y = z) (r : y = w) :
   (p @ q) @ (!q @ r) = p @ r.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite opposite_right_inverse_with_assoc_both : paths.
+Hint Rewrite @opposite_right_inverse_with_assoc_both : paths.
 
-Lemma opposite_concat A (x y z : A) (p : x = y) (q : y = z) : !(p @ q) = !q @ !p.
+Lemma opposite_concat {A} {x y z : A} (p : x = y) (q : y = z) : !(p @ q) = !q @ !p.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite opposite_concat : paths.
+Hint Rewrite @opposite_concat : paths.
 
-Lemma opposite_idpath A (x : A) : !(idpath x) = idpath x.
+Lemma opposite_idpath {A} {x : A} : !(idpath x) = idpath x.
+Proof.
+  reflexivity.
+Defined.
+
+Hint Rewrite @opposite_idpath : paths.
+
+Lemma opposite_opposite {A} {x y : A} (p : x = y) : !(! p) = p.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite opposite_idpath : paths.
+Hint Rewrite @opposite_opposite : paths.
 
-Lemma opposite_opposite A (x y : A) (p : x = y) : !(! p) = p.
-Proof.
-  path_induction.
-Defined.
-
-Hint Rewrite opposite_opposite : paths.
-
-Lemma concat_associativity A (w x y z : A) (p : w = x) (q : x = y) (r : y = z) :
+Lemma concat_associativity {A} (w x y z : A) (p : w = x) (q : x = y) (r : y = z) :
   (p @ q) @ r = p @ (q @ r).
 Proof.
   path_induction.
@@ -267,7 +240,7 @@ Defined.
 
 (** Basic properties of whiskering. *)
 
-Definition whisker_right_toid {A} {x y : A} {p : x = x} (q : x = y) :
+Definition whisker_right_toid {A} {x y : A} (p : x = x) (q : x = y) :
   (p = idpath x) -> (p @ q = q).
 Proof.
   intro a.
@@ -276,7 +249,7 @@ Proof.
   apply idpath_left_unit.
 Defined.
 
-Definition whisker_right_fromid {A} {x y : A} {p : x = x} (q : x = y) :
+Definition whisker_right_fromid {A} {x y : A} (p : x = x) (q : x = y) :
   (idpath x = p) -> (q = p @ q).
 Proof.
   intros a.
@@ -285,7 +258,7 @@ Proof.
   apply whisker_right. assumption.
 Defined.
 
-Definition whisker_left_toid {A} {x y : A} {p : y = y} (q : x = y) :
+Definition whisker_left_toid {A} {x y : A} (p : y = y) (q : x = y) :
   (p = idpath y) -> (q @ p = q).
 Proof.
   intros a.
@@ -294,7 +267,7 @@ Proof.
   apply idpath_right_unit.
 Defined.
 
-Definition whisker_left_fromid {A} {x y : A} {p : y = y} (q : x = y) :
+Definition whisker_left_fromid {A} {x y : A} (p : y = y) (q : x = y) :
   (idpath y = p) -> (q = q @ p).
 Proof.
   intros a.
@@ -305,7 +278,7 @@ Defined.
 
 (** The interchange law for whiskering. *)
 
-Definition whisker_interchange A (x y z : A) (p p' : x = y) (q q' : y = z)
+Definition whisker_interchange {A} {x y z : A} (p p' : x = y) (q q' : y = z)
   (a : p = p') (b : q = q') :
   (whisker_right q a) @ (whisker_left p' b) = (whisker_left p b) @ (whisker_right q' a).
 Proof.
@@ -314,7 +287,7 @@ Defined.
 
 (** The interchange law for concatenation. *)
 
-Definition concat2_interchange A (x y z : A) (p p' p'' : x = y) (q q' q'' : y = z)
+Definition concat2_interchange {A} {x y z : A} (p p' p'' : x = y) (q q' q'' : y = z)
   (a : p = p') (b : p' = p'') (c : q = q') (d : q' = q'') :
   (a @@ c) @ (b @@ d) = (a @ b) @@ (c @ d).
 Proof.
@@ -341,57 +314,57 @@ Defined.*)
 
 (** The next two lemmas state that [map f p] is "functorial" in the path [p]. *)
 
-Lemma idpath_map A B (x : A) (f : A -> B) : map f (idpath x) = idpath (f x).
+Lemma idpath_map {A B} {x : A} (f : A -> B) : map f (idpath x) = idpath (f x).
 Proof.
-  path_induction.
+  reflexivity.
 Defined.
 
-Hint Rewrite idpath_map : paths.
+Hint Rewrite @idpath_map : paths.
 
-Lemma concat_map A B (x y z : A) (f : A -> B) (p : x = y) (q : y = z) :
+Lemma concat_map {A B} {x y z : A} (f : A -> B) (p : x = y) (q : y = z) :
   map f (p @ q) = (map f p) @ (map f q).
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite concat_map : paths.
+Hint Rewrite @concat_map : paths.
 
-Lemma opposite_map A B (f : A -> B) (x y : A) (p : x = y) :
+Lemma opposite_map {A B} {x y : A} (f : A -> B) (p : x = y) :
   map f (! p) = ! map f p.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite opposite_map : paths.
+Hint Rewrite @opposite_map : paths.
 
 (** It is also the case that [map f p] is functorial in [f].  *)
 
-Lemma idmap_map A (x y : A) (p : x = y) : map (idmap A) p = p.
+Lemma idmap_map {A} {x y : A} (p : x = y) : map (idmap A) p = p.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite idmap_map : paths.
+Hint Rewrite @idmap_map : paths.
 
-Lemma compose_map A B C (f : A -> B) (g : B -> C) (x y : A) (p : x = y) :
+Lemma compose_map {A B C} (f : A -> B) (g : B -> C) {x y : A} (p : x = y) :
   map (g o f) p = map g (map f p).
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite compose_map : paths.
+Hint Rewrite @compose_map : paths.
 
-Lemma constmap_map (A B : Type) (b : B) (x y : A) (p : x = y) :
+Lemma constmap_map {A B : Type} {b : B} {x y : A} (p : x = y) :
   map (fun _ => b) p = idpath b.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite constmap_map : paths.
+Hint Rewrite @constmap_map : paths.
 
 (** We can also map paths between paths. *)
 
-Definition map2 {A B} {x y : A} {p q : x = y} (f : A -> B) :
+Definition map2 {A B} {x y : A} (p q : x = y) (f : A -> B) :
   p = q -> (map f p = map f q)
   := map (map f).
 
@@ -410,37 +383,37 @@ Definition happly_dep {A} {P : A -> Type} {f g : forall x, P x} :
 
 (** [happly] preserves path-concatenation and opposites. *)
 
-Lemma happly_concat A B (f g h : A -> B) (p : f = g) (q : g = h) (x:A) :
+Lemma happly_concat {A B} (f g h : A -> B) (p : f = g) (q : g = h) (x : A) :
   happly (p @ q) x = happly p x @ happly q x.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite happly_concat : paths.
+Hint Rewrite @happly_concat : paths.
 
-Lemma happly_opp A B (f g : A -> B) (p : f = g) (x : A) :
+Lemma happly_opp {A B} (f g : A -> B) (p : f = g) (x : A) :
   happly (!p) x = !happly p x.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite happly_opp : paths.
+Hint Rewrite @happly_opp : paths.
 
-Lemma happly_dep_concat A P (f g h : forall a:A, P a) (p : f = g) (q : g = h) (x:A) :
+Lemma happly_dep_concat {A} P (f g h : forall a : A, P a) (p : f = g) (q : g = h) (x:A) :
   happly_dep (p @ q) x = happly_dep p x @ happly_dep q x.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite happly_dep_concat : paths.
+Hint Rewrite @happly_dep_concat : paths.
 
-Lemma happly_dep_opp A P (f g : forall a:A, P a) (p : f = g) (x : A) :
+Lemma happly_dep_opp {A} P (f g : forall a : A, P a) (p : f = g) (x : A) :
   happly_dep (!p) x = !happly_dep p x.
 Proof.
   path_induction.
 Defined.
 
-Hint Rewrite happly_dep_opp : paths.
+Hint Rewrite @happly_dep_opp : paths.
 
 (** How happly interacts with map. *)
 
@@ -458,7 +431,7 @@ Proof.
   path_induction.
 Defined.
 
-Lemma map_precompose_dep {A B P} (f g : forall b:B, P b) (h : A -> B)
+Lemma map_precompose_dep {A B} P (f g : forall b : B, P b) (h : A -> B)
   (p : f = g) (a : A) :
   happly_dep (map (fun f' => fun a => f' (h a)) p) a = happly_dep p (h a).
 Proof.
@@ -468,7 +441,7 @@ Defined.
 (** Paths in cartesian products. *)
 
 Definition prod_path {X Y} {x x' : X} {y y' : Y} :
-  (x = x') -> (y = y') -> ((x,y) = (x',y')).
+  (x = x') -> (y = y') -> ((x, y) = (x', y')).
 Proof.
   path_induction.
 Defined.
@@ -929,44 +902,43 @@ Ltac undo_concat_map :=
 (** Now we return to proving lemmas about paths.
    We show that homotopies are natural with respect to paths in the domain. *) 
 
-Lemma homotopy_naturality A B (f g : A -> B) (p : forall x, f x = g x) (x y : A) (q : x = y) :
+Lemma homotopy_naturality {A B} {x y : A} (f g : A -> B) (p : forall x, f x = g x) (q : x = y) :
   map f q @ p y = p x @ map g q.
 Proof.
   induction q.
   cancel_units.
 Defined.
 
-Hint Resolve homotopy_naturality : path_hints.
+Hint Resolve @homotopy_naturality : path_hints.
 
-Lemma homotopy_naturality_toid A (f : A -> A) (p : forall x, f x = x) (x y : A) (q : x = y) :
+Lemma homotopy_naturality_toid {A} {x y : A} (f : A -> A) (p : forall x, f x = x)  (q : x = y) :
   map f q @ p y = p x @ q.
 Proof.
   induction q.
   cancel_units.
 Defined.
 
-Hint Resolve homotopy_naturality_toid : path_hints.
+Hint Resolve @homotopy_naturality_toid : path_hints.
 
-Lemma homotopy_naturality_fromid A (f : A -> A) (p : forall x, x = f x) (x y : A) (q : x = y) :
+Lemma homotopy_naturality_fromid {A} {x y : A} (f : A -> A) (p : forall x, x = f x) (q : x = y) :
   q @ p y = p x @ map f q.
 Proof.
   induction q.
   cancel_units.
 Defined.
 
-Hint Resolve homotopy_naturality_fromid : path_hints.
+Hint Resolve @homotopy_naturality_fromid : path_hints.
 
 (** Cancellability of concatenation on both sides. *)
 
-Lemma concat_cancel_right A (x y z : A) (p q : x = y) (r : y = z) : (p @ r = q @ r) -> (p = q).
+Lemma concat_cancel_right {A} {x y z : A} (r : y = z) (p q : x = y)  : (p @ r = q @ r) -> (p = q).
 Proof.
   intro a.
-  induction p.
   induction r.
   hott_simpl.
 Defined.
 
-Lemma concat_cancel_left A (x y z : A) (p : x = y) (q r : y = z) : (p @ q = p @ r) -> (q = r).
+Lemma concat_cancel_left {A} {x y z : A} (p : x = y) (q r : y = z) : (p @ q = p @ r) -> (q = r).
 Proof.
   intro a.
   induction p.
@@ -977,7 +949,7 @@ Defined.
 (** If a function is homotopic to the identity, then that homotopy
    makes it a "well-pointed" endofunctor in the following sense. *)
 
-Lemma htoid_well_pointed A (f : A -> A) (p : forall x, f x = x) (x : A) :
+Lemma htoid_well_pointed {A} (f : A -> A) (p : forall x, f x = x) (x : A) :
   map f (p x) = p (f x).
 Proof.
   apply concat_cancel_right with (r := p x).
@@ -986,7 +958,7 @@ Defined.
 
 (** Mates *)
 
-Lemma concat_moveright_onright A (x y z : A) (p : x = z) (q : x = y) (r : z = y) :
+Lemma concat_moveright_onright {A} {x y z : A} (p : x = z) (q : x = y) (r : z = y) :
   (p = q @ !r) -> (p @ r = q).
 Proof.
   intro a.
@@ -1002,7 +974,7 @@ Ltac moveright_onright :=
       path_via (idpath _ @ r); apply concat_moveright_onright
   end; do_opposite_opposite.
 
-Lemma concat_moveleft_onright A (x y z : A) (p : x = y) (q : x = z) (r : z = y) :
+Lemma concat_moveleft_onright {A} {x y z : A} (p : x = y) (q : x = z) (r : z = y) :
   (p @ !r = q) -> (p = q @ r).
 Proof.
   intro a.
@@ -1018,7 +990,7 @@ Ltac moveleft_onright :=
       path_via (idpath _ @ r); apply concat_moveleft_onright
   end; do_opposite_opposite.
 
-Lemma concat_moveleft_onleft A (x y z : A) (p : y = z) (q : x = z) (r : y = x) :
+Lemma concat_moveleft_onleft {A} {x y z : A} (p : y = z) (q : x = z) (r : y = x) :
   (!r @ p = q) -> (p = r @ q).
 Proof.
   intro a.
@@ -1034,7 +1006,7 @@ Ltac moveleft_onleft :=
       path_via (r @ idpath _); apply concat_moveleft_onleft
   end; do_opposite_opposite.
 
-Lemma concat_moveright_onleft A (x y z : A) (p : x = z) (q : y = z) (r : y = x) :
+Lemma concat_moveright_onleft {A} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   (p = !r @ q) -> (r @ p = q).
 Proof.
   intro a.
