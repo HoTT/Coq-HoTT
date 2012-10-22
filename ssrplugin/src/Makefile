@@ -1,7 +1,7 @@
 # Makefile for plugin developers
 
-all: ../Makefile.coq
-	$(MAKE) -C .. -f Makefile.coq src/ssreflect.cmxs
+all: ../Makefile_coq
+	$(MAKE) -C .. -f Makefile_coq src/ssreflect.cmxs
 
-../Makefile.coq:
-	$(MAKE) -C .. Makefile.coq
+../Makefile_coq:
+	$(MAKE) -C .. Makefile_coq

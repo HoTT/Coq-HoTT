@@ -661,27 +661,24 @@ $(VOFILES) : stdlib ssrplugin
 $(VOFILES) : %.vo : %.v
 	$(HOQC) $<
 
-<<<<<<< HEAD
 # Compilation of ssreflect is a bit more roundabout because ssreflect relies on coq_makefile,
 # which we do not. Perhaps we should. Anyhow, we circumvent the "standard" ssreflect procedure
 # to keep track of dependencies and what should be installed where. This will break if ssreflect
-# changes drastically its compilation procedure.
+# changes its compilation procedure drastically.
 ssrplugin: stdlib $(SSRVOFILES)
 
 $(SSRMAKEFILE): $(ssrdir)/Make
-	echo thee SSRVOFILES $(SSRVOFILES).
 	$(COQMAKEFILE) COQC = $(HOQC) -f $(ssrdir)/Make > $(SSRMAKEFILE)
 
 $(SSRVOFILES): $(SRRMAKEFILE) $(SSRCMXSFILES)
 
 $(SSRVOFILES) : %.vo : %.v
-	echo two SSRVOFILES $(SSRVOFILES).
-	$(MAKE) -f $(SSRMAKEFILE) $<
+	$(MAKE) -f $(SSRMAKEFILE) COQBIN="$(COQBIN)/" $@
 
 $(SSRCMXSFILES): $(SSRMAKEFILE)
 
 $(SSRCMXSFILES): %.cmxs : %.mllib
-	make -f $(SSRMAKEFILE) $<
+	$(MAKE) -f $(SSRMAKEFILE) COQBIN="$(COQBIN)/" $@
 
 # Do not remove - because then automake will interpret the include statement.
 -include .depend
