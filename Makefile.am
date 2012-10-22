@@ -42,8 +42,10 @@ CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES)
 
 .PHONY: stdlib hottlib ssrplugin
 
+# XXX if someone can figure out why we have to run coqdep twice, that would be cool
 .depend: $(VFILES) $(STDVFILES)
 	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
+	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
 
 install-data-local:
 	$(mkdir_p) $(hottdir)/coq
@@ -67,6 +69,7 @@ $(VOFILES) : stdlib ssrplugin
 $(VOFILES) : %.vo : %.v
 	$(HOQC) $<
 
+<<<<<<< HEAD
 # Compilation of ssreflect is a bit more roundabout because ssreflect relies on coq_makefile,
 # which we do not. Perhaps we should. Anyhow, we circumvent the "standard" ssreflect procedure
 # to keep track of dependencies and what should be installed where. This will break if ssreflect
@@ -88,4 +91,5 @@ $(SSRCMXSFILES): $(SSRMAKEFILE)
 $(SSRCMXSFILES): %.cmxs : %.mllib
 	make -f $(SSRMAKEFILE) $<
 
+# Do not remove - because then automake will interpret the include statement.
 -include .depend

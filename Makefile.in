@@ -223,8 +223,8 @@ STDVOFILES := $(STDVFILES:.v=.vo)
 STDGLOBFILES := $(STDVFILES:.v=.glob)
 
 # The list of Coq files that comprise ssreflect
+SSRMAKEFILE = $(srcdir)/Makefile_ssrplugin
 ssrdir = $(srcdir)/ssrplugin
-SSRMAKEFILE = Makefile_ssrplugin
 SSRVFILES = $(shell find $(ssrdir)/theories -name "*.v")
 SSRVOFILES = $(SSRVFILES:.v=.vo)
 SSRGLOBFILES = $(SSRVFILES:.v=.glob)
@@ -635,8 +635,10 @@ uninstall-am: uninstall-binSCRIPTS uninstall-nobase_hottDATA
 
 .PHONY: stdlib hottlib ssrplugin
 
+# XXX if someone can figure out why we have to run coqdep twice, that would be cool
 .depend: $(VFILES) $(STDVFILES)
 	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
+	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
 
 install-data-local:
 	$(mkdir_p) $(hottdir)/coq
@@ -659,6 +661,7 @@ $(VOFILES) : stdlib ssrplugin
 $(VOFILES) : %.vo : %.v
 	$(HOQC) $<
 
+<<<<<<< HEAD
 # Compilation of ssreflect is a bit more roundabout because ssreflect relies on coq_makefile,
 # which we do not. Perhaps we should. Anyhow, we circumvent the "standard" ssreflect procedure
 # to keep track of dependencies and what should be installed where. This will break if ssreflect
@@ -680,6 +683,7 @@ $(SSRCMXSFILES): $(SSRMAKEFILE)
 $(SSRCMXSFILES): %.cmxs : %.mllib
 	make -f $(SSRMAKEFILE) $<
 
+# Do not remove - because then automake will interpret the include statement.
 -include .depend
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

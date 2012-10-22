@@ -294,8 +294,6 @@ Definition inverse_triangle {A B : Type} (e : A <~> B) x :
 Proof.
   unfold inverse_is_retraction.
   hott_simpl.
-  apply (concat (!idpath_right_unit _)).
-  hott_simpl.
   moveright_onleft.
 Defined.
 
