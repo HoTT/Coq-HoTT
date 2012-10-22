@@ -117,8 +117,7 @@ Section Univalence.
     pose (P' := (fun U V => pred_equiv_to_path U V (P U V))).
     intros U V w.
     apply (transport (equiv_to_path_section _ _ w)).
-    pattern (equiv_to_path w).
-    apply paths_rect with (p := equiv_to_path w).
+    case (equiv_to_path w).
     apply r.
   Defined.
 

@@ -15,49 +15,49 @@ Notation "A -> B" := (forall (_ : A), B) : type_scope.
 (** * Propositional connectives *)
 
 (** [True] is the unit type. *)
-Inductive True : Set :=
+Inductive True : Type :=
   I : True.
 
 (** [False] is the empty type. *)
-Inductive False : Set :=.
+Inductive False : Type :=.
 
 (** [not A], written [~A], is the negation of [A] *)
-Definition not (A:Type) := A -> False.
+Definition not (A:Type) : Type := A -> False.
 
 Notation "~ x" := (not x) : type_scope.
 
 Hint Unfold not: core.
 
-(** Instead of eq we define paths. *)
+(* (** Instead of eq we define paths. *) *)
 
-Inductive paths (A : Type) (x : A) : A -> Type :=
-    idpath : x = x :> A
+(* Inductive paths (A : Type) (x : A) : A -> Type := *)
+(*     idpath : x = x :> A *)
 
-where
+(* where *)
 
-"x = y :> A" := (@paths A x y) : type_scope.
+(* "x = y :> A" := (@paths A x y) : type_scope. *)
 
-Notation "x = y" := (x = y :>_) : type_scope.
-Notation "x <> y  :> T" := (~ x = y :>T) : type_scope.
-Notation "x <> y" := (x <> y :>_) : type_scope.
+(* Notation "x = y" := (x = y :>_) : type_scope. *)
+(* Notation "x <> y  :> T" := (~ x = y :>T) : type_scope. *)
+(* Notation "x <> y" := (x <> y :>_) : type_scope. *)
 
-Arguments paths {A} x _.
-Arguments idpath {A x} , [A] x.
+(* Arguments paths {A} x _. *)
+(* Arguments idpath {A x} , [A] x. *)
 
-Arguments paths_ind [A] x P _ y _.
-Arguments paths_rec [A] x P _ y _.
-Arguments paths_rect [A] x P _ y _.
+(* Arguments paths_ind [A] x P _ y _. *)
+(* Arguments paths_rec [A] x P _ y _. *)
+(* Arguments paths_rect [A] x P _ y _. *)
 
-(** Paths can be reversed, moved here for the benefit of ssreflect. *)
+(* (** Paths can be reversed, moved here for the benefit of ssreflect. *) *)
 
-Definition opposite {A} {x y : A} : (x = y) -> (y = x).
-Proof.
-  intros p.
-  induction p.
-  reflexivity.
-Defined.
+(* Definition opposite {A} {x y : A} : (x = y) -> (y = x). *)
+(* Proof. *)
+(*   intros p. *)
+(*   induction p. *)
+(*   reflexivity. *)
+(* Defined. *)
 
-Hint Resolve I idpath: core.
+Hint Resolve I : core.
 
 (* XXX: If add things below, such as eq_sym, Coq seems to use them secretly, which then breaks things.
 
