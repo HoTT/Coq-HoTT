@@ -82,7 +82,12 @@ Section ThreeByThree.
     undo_opposite_concat.
     associate_right.
     apply map, opposite.
-    apply @map_trans with (P := fun d' => d' = g c).
+    rewrite opposite_opposite.
+    hott_simpl. (* finishes a subgoal *)
+    rewrite opposite_opposite.
+    apply map.
+    rewrite <- map_trans.
+    reflexivity.
   Defined.
 
   Let fibfibmap (x : A) (p : f x = b) :
