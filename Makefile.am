@@ -28,8 +28,16 @@ SSRMLIFILES=$(shell find $(ssrdir)/src -name "*.mli")
 SSRMLFILES=$(shell find $(ssrdir)/src -name "*.ml4" -o -name "*.ml")
 SSRMLLIBFILES=$(shell find $(ssrdir)/theories -name "*.mllib")
 SSRCMXSFILES=$(SSRMLLIBFILES:.mllib=.cmxs)
+SSRCMAFILES=$(SSRMLLIBFILES:.mllib=.cma)
 
-nobase_hott_DATA = $(VOFILES) $(STDVOFILES) $(shell find $(srcdir)/coq/theories -name "README.txt") $(SSRVOFILES) $(SSRCMXSFILES)
+# Definitions that let autoconf know how to install things.
+nobase_hott_DATA = \
+	$(VOFILES) \
+	$(STDVOFILES) \
+	$(shell find $(srcdir)/coq/theories -name "README.txt") \
+	$(SSRVOFILES) \
+	$(SSRCMXSFILES) \
+	$(SSRCMAFILES)
 
 # The Coq compiler, adapted to HoTT
 HOQC=$(srcdir)/hoqc
@@ -43,15 +51,20 @@ CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES)
 .PHONY: stdlib hottlib ssrplugin
 
 # XXX if someone can figure out why we have to run coqdep twice, that would be cool
+# In any case, we should switch to having .d dependency files instead of a central .depend
 .depend: $(VFILES) $(STDVFILES)
-	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
-	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
+	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq -R ssrplugin/theories Ssreflect $(VFILES) $(STDVFILES) $(SSRVFILES) > .depend
+	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq -R ssrplugin/theories Ssreflect $(VFILES) $(STDVFILES) $(SSRVFILES) > .depend
 
 install-data-local:
 	$(mkdir_p) $(hottdir)/coq
 	rm -f $(hottdir)/coq/dev $(hottdir)/coq/plugins
 	ln -s $(COQLIB)/dev $(hottdir)/coq
 	ln -s $(COQLIB)/plugins $(hottdir)/coq
+
+clean-local: $(SSRMAKEFILE)
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" clean
+	rm -f "$(SSRMAKEFILE)"
 
 # The standard library files must be compiled in a special way
 stdlib: $(STDVOFILES)
@@ -76,17 +89,22 @@ $(VOFILES) : %.vo : %.v
 ssrplugin: stdlib $(SSRVOFILES)
 
 $(SSRMAKEFILE): $(ssrdir)/Make
-	$(COQMAKEFILE) COQC = $(HOQC) -f $(ssrdir)/Make > $(SSRMAKEFILE)
+	$(COQMAKEFILE) COQC = "$(HOQC)" -f "$(ssrdir)/Make" > "$(SSRMAKEFILE)"
 
-$(SSRVOFILES): $(SRRMAKEFILE) $(SSRCMXSFILES)
+$(SSRVOFILES): $(SRRMAKEFILE) $(SSRCMXSFILES) $(SSRCMAFILES)
 
 $(SSRVOFILES) : %.vo : %.v
-	$(MAKE) -f $(SSRMAKEFILE) COQBIN="$(COQBIN)/" $@
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
 
 $(SSRCMXSFILES): $(SSRMAKEFILE)
 
+$(SSRCMAFILES): $(SSRMAKEFILE)
+
 $(SSRCMXSFILES): %.cmxs : %.mllib
-	$(MAKE) -f $(SSRMAKEFILE) COQBIN="$(COQBIN)/" $@
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
+
+$(SSRCMAFILES): %.cma : %.mllib
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
 
 # Do not remove - because then automake will interpret the include statement.
 -include .depend

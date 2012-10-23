@@ -232,7 +232,17 @@ SSRMLIFILES = $(shell find $(ssrdir)/src -name "*.mli")
 SSRMLFILES = $(shell find $(ssrdir)/src -name "*.ml4" -o -name "*.ml")
 SSRMLLIBFILES = $(shell find $(ssrdir)/theories -name "*.mllib")
 SSRCMXSFILES = $(SSRMLLIBFILES:.mllib=.cmxs)
-nobase_hott_DATA = $(VOFILES) $(STDVOFILES) $(shell find $(srcdir)/coq/theories -name "README.txt") $(SSRVOFILES) $(SSRCMXSFILES)
+SSRCMAFILES = $(SSRMLLIBFILES:.mllib=.cma)
+
+# Definitions that let autoconf know how to install things.
+nobase_hott_DATA = \
+	$(VOFILES) \
+	$(STDVOFILES) \
+	$(shell find $(srcdir)/coq/theories -name "README.txt") \
+	$(SSRVOFILES) \
+	$(SSRCMXSFILES) \
+	$(SSRCMAFILES)
+
 
 # The Coq compiler, adapted to HoTT
 HOQC = $(srcdir)/hoqc
@@ -549,7 +559,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic mostlyclean-am
+clean-am: clean-generic clean-local mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
@@ -618,33 +628,39 @@ uninstall-am: uninstall-binSCRIPTS uninstall-nobase_hottDATA
 
 .MAKE: install-am install-strip
 
-.PHONY: all all-am am--refresh check check-am clean clean-generic dist \
-	dist-all dist-bzip2 dist-gzip dist-lzip dist-shar dist-tarZ \
-	dist-xz dist-zip distcheck distclean distclean-generic \
-	distcleancheck distdir distuninstallcheck dvi dvi-am html \
-	html-am info info-am install install-am install-binSCRIPTS \
-	install-data install-data-am install-data-local install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-nobase_hottDATA install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am uninstall \
-	uninstall-am uninstall-binSCRIPTS uninstall-nobase_hottDATA
+.PHONY: all all-am am--refresh check check-am clean clean-generic \
+	clean-local dist dist-all dist-bzip2 dist-gzip dist-lzip \
+	dist-shar dist-tarZ dist-xz dist-zip distcheck distclean \
+	distclean-generic distcleancheck distdir distuninstallcheck \
+	dvi dvi-am html html-am info info-am install install-am \
+	install-binSCRIPTS install-data install-data-am \
+	install-data-local install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-nobase_hottDATA \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic pdf pdf-am ps ps-am uninstall uninstall-am \
+	uninstall-binSCRIPTS uninstall-nobase_hottDATA
 
 
 .PHONY: stdlib hottlib ssrplugin
 
 # XXX if someone can figure out why we have to run coqdep twice, that would be cool
+# In any case, we should switch to having .d dependency files instead of a central .depend
 .depend: $(VFILES) $(STDVFILES)
-	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
-	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
+	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq -R ssrplugin/theories Ssreflect $(VFILES) $(STDVFILES) $(SSRVFILES) > .depend
+	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq -R ssrplugin/theories Ssreflect $(VFILES) $(STDVFILES) $(SSRVFILES) > .depend
 
 install-data-local:
 	$(mkdir_p) $(hottdir)/coq
 	rm -f $(hottdir)/coq/dev $(hottdir)/coq/plugins
 	ln -s $(COQLIB)/dev $(hottdir)/coq
 	ln -s $(COQLIB)/plugins $(hottdir)/coq
+
+clean-local: $(SSRMAKEFILE)
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" clean
+	rm -f "$(SSRMAKEFILE)"
 
 # The standard library files must be compiled in a special way
 stdlib: $(STDVOFILES)
@@ -668,17 +684,22 @@ $(VOFILES) : %.vo : %.v
 ssrplugin: stdlib $(SSRVOFILES)
 
 $(SSRMAKEFILE): $(ssrdir)/Make
-	$(COQMAKEFILE) COQC = $(HOQC) -f $(ssrdir)/Make > $(SSRMAKEFILE)
+	$(COQMAKEFILE) COQC = "$(HOQC)" -f "$(ssrdir)/Make" > "$(SSRMAKEFILE)"
 
-$(SSRVOFILES): $(SRRMAKEFILE) $(SSRCMXSFILES)
+$(SSRVOFILES): $(SRRMAKEFILE) $(SSRCMXSFILES) $(SSRCMAFILES)
 
 $(SSRVOFILES) : %.vo : %.v
-	$(MAKE) -f $(SSRMAKEFILE) COQBIN="$(COQBIN)/" $@
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
 
 $(SSRCMXSFILES): $(SSRMAKEFILE)
 
+$(SSRCMAFILES): $(SSRMAKEFILE)
+
 $(SSRCMXSFILES): %.cmxs : %.mllib
-	$(MAKE) -f $(SSRMAKEFILE) COQBIN="$(COQBIN)/" $@
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
+
+$(SSRCMAFILES): %.cma : %.mllib
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
 
 # Do not remove - because then automake will interpret the include statement.
 -include .depend
