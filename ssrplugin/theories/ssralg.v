@@ -3797,7 +3797,15 @@ elim: f e e' => //=. (*
 - by move=> f1 IH1 f2 IH2 e e' eq_e f12; move/IH1: (same_env_sym eq_e); eauto.
 - by move=> f1 IH1 e e'; move/same_env_sym; move/IH1; tauto.
 - by move=> i f1 IH1 e e'; move/(eq_i i)=> eq_e [x f_ex]; exists x; eauto.
-move=> i f1 IH1 e e' ?. move/(eq_i i); eauto. *) admit.
+move=> i f1 IH1 e e' ?. move/(eq_i i); eauto. *) 
+ admit.
+ admit.
+ admit.
+ admit.
+ admit.
+ admit.
+ admit.
+ admit.
 Qed.
 
 
