@@ -45,6 +45,14 @@ else
    fi
 fi
 
+# Now set COQBIN if it has not been set yet. We need COQBIN because Makefiles
+# produces by coq_makefile insist on running coqtop as $(COQBIN)coqtop, and
+# ssreflect usees coq_makefile
+if test ! -n "$COQBIN" ; then
+   COQBIN=`dirname $COQTOP`
+fi
+AC_MSG_RESULT([COQBIN is $COQBIN.])
+
 # Checking for coqc
 AC_ARG_VAR([COQC], [the absolute path of the coqc executable])
 if test -n "$COQC"; then
@@ -117,6 +125,18 @@ else
 fi
 if test "$COQDOC" = "no"; then
    AC_MSG_ERROR([Could not find coqdoc.])
+fi
+
+# checking for coq_makefile
+AC_ARG_VAR([COQMAKEFILE], [the absolute path of the coq_makefile executable])
+if test -n "$COQMAKEFILE"; then
+   AC_MSG_RESULT([COQMAKEFILE was preset to $COQMAKEFILE])
+   AC_SUBST([COQMAKEFILE])
+else
+   AC_PATH_PROG([COQMAKEFILE],[coq_makefile],[no])
+fi
+if test "$COQMAKEFILE" = "no"; then
+   AC_MSG_ERROR([Could not find coq_makefile.])
 fi
 
 hottdir="$datarootdir/hott"
