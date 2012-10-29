@@ -33,3 +33,4 @@ theories/prime.v
 theories/fingraph.v
 theories/binomial.v
 theories/ssralg.v
+theories/hott_theories/Paths.v
