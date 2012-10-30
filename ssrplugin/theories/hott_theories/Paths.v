@@ -141,8 +141,8 @@ Open Local Scope path_scope.
 (* If we want to have an opaque lemma, we use the 'Lemma' vernac command and*)
 (* Qed ending keyword. Note that the original Paths.v crafts this def using *)
 (* the path_induction tactic, when here a simple non dependent elim as *)
-(* performed by the rewrite tactic is sufficient. *)
-
+(* performed by the rewrite tactic is sufficient. Note that we have tuned*)
+(* the ssreflect rewrite tactic so that it works with 'identity' instead of 'eq'*)
 Lemma opaque_concat2 A (x y z : A)(p p' : x = y)(q q' : y = z) :
   p = p' -> q = q' -> p * q = p' * q'.
 Proof. by move=> hp hq; rewrite hp hq. Qed.
