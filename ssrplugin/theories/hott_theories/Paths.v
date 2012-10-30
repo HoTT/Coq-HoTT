@@ -56,6 +56,26 @@ Unset Printing Implicit Defensive.
 
 Delimit Scope path_scope with path.
 
+
+(* The path obtained by applying the function f to the path p. *)
+(* Was: map *)
+(* I am still slightly disturbed by this 'map' vocabulary but could not find a better*)
+(* name by lack of culture. I temporarilly use 'resp' instead, following *)
+(* Hoffman & Streicher *)
+(* Note that it is really importat here that the constant (f_equal) *)
+(* hidden by this notation is transparent. *)
+(* In our modified version of Coq's prelude we have even declared it *)
+(* using an explicit-body definition, using *)
+(* the Definition ... := .... syntax. The original standard libray seems to opacify it *)
+(* using the Opaque command but this has no effect in fact since it is in a section. *)
+(* We reorder the arguments of f_equal so that it behaves more conveniently for *)
+(* our purpose *)
+Definition resp A B x y f:= @f_equal A B f x y.
+Arguments resp [A B] [x y] f _.
+
+(* The inverse of a path: was opposite. esym is a definition for identity_sym see ssrfun *)
+Notation invp := esym.
+
 (* If there is a morphism (path) r from (f : A -> B) and (g : A -> B), then *)
 (* for any morphism (path) p : f x = f y there is exists a path g x = g y *)
 (* The operation which computes the path g x = g y from f x= f y is a kind *)
@@ -67,7 +87,7 @@ Delimit Scope path_scope with path.
 (* (_ =1 _) is the ssreflect notation for unary pointwise equality. see ssrfun.v *)
 (* Was not in the original file ? *)
 Definition conjp A B (f g : A -> B) (r : f =1 g) (x y : A) (p : f y = f x) :=
-  identity_trans (esym (r y)) (identity_trans p (r x)).
+  identity_trans (invp (r y)) (identity_trans p (r x)).
 
 (* This is equivalent to 
 Module PathNotations.
@@ -88,28 +108,17 @@ Notation "1" := (identity_refl _) : path_scope.
 (* The composition of two paths: was compose or (_ @ _) *)
 Notation "p * q" := (identity_trans p q) : path_scope.
 
-(* The inverse of a path: was opposite. esym is a definition for identity_sym see ssrfun *)
-Notation "p ^-1" := (esym p) : path_scope.
+
+Notation "p ^-1" := (invp p) : path_scope.
 
 (* The composition of p with the inverse of q: not present in the original file *)
 Notation "p / q" := (p * q^-1)%path : path_scope.
 
-(* The path obtained by applying the function f to the path p. *)
-(* Was: map *)
-(* I am still slightly disturbed by this 'map' vocabulary but could not find a better*)
-(* name by lack of culture. I temporarilly use 'resp' instead, following *)
-(* Hoffman & Streicher *)
-(* Note that it is really importat here that the constant (f_equal) *)
-(* hidden by this notation is transparent. *)
-(* In our modified version of Coq's prelude we have even declared it *)
-(* using an explicit-body definition, using *)
-(* the Definition ... := .... syntax. The original standard libray seems to opacify it *)
-(* using the Opaque command but this has no effect in fact since it is in a section. *)
 (* We use here the notation suggested by Dan Grayson : to denote the formerly called *)
 (* (map f) as f_* . Unfortunately we cannot do that as such since the _ is understood *)
 (* by Coq's parser to be part of the identifier, so we insert a backquote in between. *)
 (* Not very satisfactory but again, waits for a better ascii art idea...*)
-Notation "f `_*" := (@f_equal _ _ f _ _) (at level 2, format "f `_*") : path_scope.
+Notation "f `_*" := (resp f) (at level 2, format "f `_*") : path_scope.
 
 (* Conjugation *)
 Notation "q ^ p" := (conjp p q)%path : path_scope.
@@ -522,11 +531,9 @@ intro a; case a; intro b; case b.
 reflexivity.
 Qed.
 
-(* May be should I define a constant or abbreviation for opposite, esym is somehow
-   ugly *)
 (** Taking opposites of 1-paths is functorial on 2-paths. *)
 Definition opposite2 {A} {x y : A} {p q : x = y} (a : p = q) : (p^-1 = q^-1) :=
-  (esym)`_* a.
+  (invp)`_* a.
 
 Lemma constmap_map {A B : Type} {b : B} {x y : A} (p : x = y) :
   (fun _ => b)`_* p = 1.
@@ -536,7 +543,7 @@ Proof. by case p. Qed.
   (resp (resp f)) is for more readable *)
 (** We can also map paths between paths. **)
 Definition resp2 {A B} {x y : A} (p q : x = y) (f : A -> B)(u : p = q) : (f`_* p = f`_* q) :=
-  (fun x => f`_* x)`_* u.
+  (resp f)`_* u.
 
 (** The type of "homotopies" between two functions [f] and [g] is
    [forall x, f x = g x].  These can be derived from "paths" between
