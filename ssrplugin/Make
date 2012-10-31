@@ -34,3 +34,4 @@ theories/fingraph.v
 theories/binomial.v
 theories/ssralg.v
 theories/hott_theories/Paths.v
+theories/hott_theories/Fibrations.v

@@ -124,7 +124,6 @@ Notation "f `_*" := (resp f) (at level 2, format "f `_*") : path_scope.
 Notation "q ^ p" := (conjp p q)%path : path_scope.
 (* Cyril : Notation "q ^ p" := ((p _ * q) / p _)%path : path_scope. *)
 
-(* Bruno dit : définit map_dep en termes de map cf map_dep_trivial *)
 End PathNotations.
 
 (* After the end of this module, the notations are assumed the module is imported *)
