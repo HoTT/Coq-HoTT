@@ -3,13 +3,15 @@ Require Export Paths.
 
 Import PathNotations.
 
-Open Scope path_scope.
+Local Open Scope path_scope.
 (** In homotopy type theory, We think of elements of [Type] as spaces
    or homotopy types, while a type family [P : A -> Type] corresponds
    to a fibration whose base is [A] and whose fiber over [x] is [P x].
 *)
 
 Definition fibration (A : Type) := A -> Type.
+
+
 
 (*
    From such a [P] we can build a total space over the base space [A]
@@ -211,14 +213,14 @@ Lemma trans_map {A} {P Q : fibration A} {x y : A} (p : x = y) (f : forall x, P x
   f y (p # z) = p # f x z.
 Proof.
   move: z; case p => z. exact: 1.
-Defined.
+Qed.
 
 Lemma trans_map2 {A} {P Q R : fibration A} {x y : A} (p : x = y)
   (f : forall x, P x -> Q x -> R x) (z : P x) (w: Q x) :
   f y (p # z) (p # w) = p # f x z w.
 Proof.
 move: z; case p => z. exact: 1.
-Defined.
+Qed.
 
 
 (** Transporting in a non-dependent type does nothing. *)
@@ -230,7 +232,7 @@ Proof.
 Defined.
 
 (** A version of [map] for dependent functions. *)
-Lemma map_dep {A} {P : fibration A} {x y : A} (f : section P) (p: x = y) :
+Definition map_dep {A} {P : fibration A} {x y : A} (f : section P) (p: x = y) :
   p # f x = f y.
 Proof.
  case p. exact 1.
@@ -241,7 +243,7 @@ Defined.
 Lemma map_dep_trivial {A B} {x y : A} (f : A -> B) (p: x = y) :
   map_dep f p = trans_trivial p (f x) * f`_* p. 
 Proof.
-  case p. exact 1.
+  case p; exact: 1.
 Qed.
 
 (** Transporting commutes with summing along an unrelated variable. *)
