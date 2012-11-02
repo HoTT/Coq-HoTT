@@ -74,6 +74,8 @@ Proof. case p. exact 1. Qed.
 (** A homotopy fiber for a map [f] at [y] is the space of paths of the
    form [f x = y]. *)
 
+(* assia : Why do we use the eta-expanded version for the def of hfiber and not *)
+(* for fibration?*)
 Definition hfiber {A B} (f : A -> B) (y : B) := {x : A & f x = y}.
 
 (** We prove a lemma that explains how to transport a point in the
