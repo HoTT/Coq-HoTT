@@ -70,7 +70,7 @@ Delimit Scope path_scope with path.
 (* using the Opaque command but this has no effect in fact since it is in a section. *)
 (* We reorder the arguments of f_equal so that it behaves more conveniently for *)
 (* our purpose *)
-Definition resp A B x y f:= @f_equal A B f x y.
+Definition resp A B x y f := @f_equal A B f x y.
 Arguments resp [A B] [x y] f _.
 
 (* The inverse of a path: was opposite. esym is a definition for identity_sym see ssrfun *)
@@ -443,7 +443,7 @@ Lemma mulprespLR A B (f g : A -> B) (p : f =1 g) (x y : A) (q : x = y) :
   (f`_* q) * (p y) = (p x) * (g`_* q).
 Proof. by case q => /=; case (p x). Qed.
 
-(* Was not in the original file ? *)
+(* Was  homotopy_naturality_toid *)
 Lemma respeq1mulp A (f : A -> A) (p : f =1 id) (x y : A) (q : x = y) :
   (f`_* q) * (p y) = (p x) * q.
 Proof. by rewrite (mulprespLR p) respidp. Qed.
@@ -468,12 +468,6 @@ Proof. rewrite (resp_eqp p) mulVKp; reflexivity. Qed.
 (* Was not in the original file ? *)
 Lemma resp_eqidp A (f : A -> A) (p : f =1 id) (x y : A) (q : x = y) : (f`_* q) ^ p = q.
 Proof. by rewrite -(resp_eqp p) respidp. Qed.
-
-(* A slightly different version of the previous lemma was actually in the *)
-(* original file *)
-Lemma homotopy_naturality_toid {A} {x y : A} (f : A -> A) (p : f =1 id)  (q : x = y) :
-  (f`_* q) * p y = p x * q.
-Proof. by rewrite (mulprespLR p) respidp. Qed.
 
 
 (* cancel f g := g is a left inverse of f ie f is a right inverse of g see ssrfun.v *)
