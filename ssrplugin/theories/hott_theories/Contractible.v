@@ -1,5 +1,6 @@
 Require Import ssreflect ssrfun.
-Require Import Paths Fibrations.
+Require Import Paths (* Fibrations*).
+(* assia : in fact we do not rely on the file aubout fibrations. *)
 
 Import PathNotations.
 
@@ -35,9 +36,9 @@ Proof.
 Qed.
 
 (** The total space of any based path space is contractible. *)
-
+(* assia : or, the homotopy class of a point is contractile *)
 Lemma pathspace_contr {X} (x : X) : is_contr (sigT (identity x)).
-Proof. exists (x ; 1); case=> [y p]; case p; exact 1. Qed.
+Proof. exists (existT _ x 1); case=> [y p]; case p; exact 1. Qed.
 
 (* Lemma pathspace_contr' {X} (x:X) : is_contr { y:X  &  x = y }. *)
 (* Proof. *)
