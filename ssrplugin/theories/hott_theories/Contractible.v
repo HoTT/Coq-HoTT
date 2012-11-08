@@ -43,7 +43,7 @@ Definition is_inhab (A : Type) : Type := A.
 (* together with the inhabitant. One can access to the type using the *)
 (* inhab_sort field of the record, and the witness itself is stored in the *)
 (* second projection. *)
-(* Gory detail you can safely skip:*)
+(* Gory details you can safely skip:*)
 (* It can be surprising that we do not give a name to this second projection.*)
 (* We actually do not because it will never be used to trigger canonical *)
 (* structure (CS) inference but would be stored in the CS database anyway if *)
@@ -133,7 +133,7 @@ Definition is_contr A := {x : A & forall y : A, y = x}.
 (* we could use the default inhabitant as the hub: *)
 Definition contr_axiom (A : inhabType) := forall y : A, y = {elt A}. 
 
-(* And know this is the way we craft an interface for contractible: a type *)
+(* And now this is the way we craft an interface for contractible: a type *)
 (* with an inhabitant, and a function providing paths from any point of the *)
 (* space to this hub.*)
 Record contr_class_of (A : Type) := ContrClass {
@@ -145,6 +145,13 @@ Record contrType := ContrPack {
   contr_sort :> Type;
   _ : contr_class_of contr_sort
 }.
+
+(* This section contains technical stuff I do not have time to comment *)
+(* inside the source file right now. Ask me questions if needed and/or *)
+(* have a look to "Packaging Mathematical Structures", Garillot & all *)
+(* at TPHOLs 2009 (http://hal.inria.fr/inria-00368403/) and to *)
+(* F. Garillot's PhD thesis (in English) : " Generic Proof Tools and *)
+(* Finite Group Theory": http://pastel.archives-ouvertes.fr/pastel-00649586*)
 
 Section ContrTypeTechDefs.
 
