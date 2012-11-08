@@ -48,7 +48,6 @@ Definition section {A} (P : fibration A) := forall x : A, P x.
    not depend on paths in the base space but rather just on points of
    the base space. *)
 
-
 Definition transport {A} (P : fibration A) {x y : A} (p : x = y) : P x -> P y.
 Proof. rewrite p; exact. Defined.
 
