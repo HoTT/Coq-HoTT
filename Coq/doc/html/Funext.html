@@ -1,0 +1,814 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>Funext</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Funext</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <a class="idref" href="Fibrations.html#"><span class="id" type="library">Fibrations</span></a> <a class="idref" href="Contractible.html#"><span class="id" type="library">Contractible</span></a> <a class="idref" href="Equivalences.html#"><span class="id" type="library">Equivalences</span></a> <a class="idref" href="FiberEquivalences.html#"><span class="id" type="library">FiberEquivalences</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Much of the content here is closely related to Richard Garner’s paper “On the strength of dependent products…”.  We use different terminology in places, but recall his for comparison. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab1"></a><h1 class="section">Naive functional extensionality</h1>
+
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+The simplest notion we call “naive functional extensionality”.
+   This is what a type theorist would probably write down when
+   thinking of types as sets and identity types as equalities: it says
+   that if two functions are equal pointwise, then they are equal.  It
+   comes in both ordinary and dependent versions. 
+
+<br/> <br/>
+   From an HoTT point of view, the type of <i>extensional equality</i> or <i>pointwise equality</i> between two functions can also be seen as the type of <i>homotopies</i> between them. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="ext_dep_eq"><span class="id" type="definition">ext_dep_eq</span></a> {<span class="id" type="var">X</span>} {<span class="id" type="var">P</span> : <span class="id" type="var">X</span> -&gt; <span class="id" type="keyword">Type</span>} (<span class="id" type="var">f</span> <span class="id" type="var">g</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">P</span> <span class="id" type="var">x</span>)<br/>
+&nbsp;&nbsp;:= <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span> : <span class="id" type="var">X</span>, <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">g</span> <span class="id" type="var">x</span>.<br/>
+
+<br/>
+<span class="id" type="var">Notation </span><a name="::x_'==='_x"><span class="id" type="notation">"</span></a>f === g" := (<a class="idref" href="Funext.html#ext_dep_eq"><span class="id" type="definition">ext_dep_eq</span></a> <span class="id" type="var">f</span> <span class="id" type="var">g</span>) (<span class="id" type="tactic">at</span> <span class="id" type="var">level</span> 50).<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="funext_statement"><span class="id" type="definition">funext_statement</span></a> : <span class="id" type="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">forall</span> (<span class="id" type="var">X</span> <span class="id" type="var">Y</span> : <span class="id" type="keyword">Type</span>) (<span class="id" type="var">f</span> <span class="id" type="var">g</span>: <span class="id" type="var">X</span> -&gt; <span class="id" type="var">Y</span>), <span class="id" type="var">f</span> <a class="idref" href="Funext.html#::x_'==='_x"><span class="id" type="notation">===</span></a> <span class="id" type="var">g</span> -&gt; <span class="id" type="var">f</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">g</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a> : <span class="id" type="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">forall</span> (<span class="id" type="var">X</span> : <span class="id" type="keyword">Type</span>) (<span class="id" type="var">P</span> : <span class="id" type="var">X</span> -&gt; <span class="id" type="keyword">Type</span>) (<span class="id" type="var">f</span> <span class="id" type="var">g</span> : <a class="idref" href="Fibrations.html#section"><span class="id" type="definition">section</span></a> <span class="id" type="var">P</span>), <span class="id" type="var">f</span> <a class="idref" href="Funext.html#::x_'==='_x"><span class="id" type="notation">===</span></a> <span class="id" type="var">g</span> -&gt; (<span class="id" type="var">f</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">g</span>).<br/>
+</div>
+
+<div class="doc">
+This is the rule ‘Pi-ext’ in Garner. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+However, there are clearly going to be problems with this in the
+   homotopy world, since “being equal” is not merely a property, but
+   being equipped with a path is structure.  We should expect some
+   sort of coherence or canonicity of the path from f to g relating it
+   to the pointwise homotopy we started with.  
+
+<br/> <br/>
+   There are (at least) two natural “computation principles” one might consider.  The first fits with thinking of <span class="inlinecode"><a class="idref" href="UnivalenceAxiom.html#funext"><span class="id" type="definition">funext</span></a></span> as an <i>eliminator</i>: it tells us what happens if we apply <span class="inlinecode"><a class="idref" href="UnivalenceAxiom.html#funext"><span class="id" type="definition">funext</span></a></span> to a term of canonical form. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="funext_comp1_statement"><span class="id" type="definition">funext_comp1_statement</span></a> (<span class="id" type="var">funext</span> : <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a>)<br/>
+&nbsp;&nbsp;:= (<span class="id" type="keyword">forall</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span>, <span class="id" type="var">funext</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span> <span class="id" type="var">f</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">f</span>).<br/>
+</div>
+
+<div class="doc">
+A propositional form of Garner’s ‘Pi-ext-comp’. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+Does this rule follow automatically?  Yes and no.  Given a witness <span class="inlinecode"><a class="idref" href="UnivalenceAxiom.html#funext"><span class="id" type="definition">funext</span></a> : <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a></span>, this does not necessarily hold for <span class="inlinecode"><a class="idref" href="UnivalenceAxiom.html#funext"><span class="id" type="definition">funext</span></a></span> itself; but we can always find a better witness which it does hold: 
+</div>
+<div class="code">
+<span class="id" type="keyword">Definition</span> <a name="funext_correction"><span class="id" type="definition">funext_correction</span></a> : <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a> -&gt; <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a><br/>
+&nbsp;&nbsp;:= (<span class="id" type="keyword">fun</span> <span class="id" type="var">funext</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">fun</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <span class="id" type="var">h</span> =&gt; <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">funext</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <span class="id" type="var">h</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">funext</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">g</span> <span class="id" type="var">g</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">g</span> <span class="id" type="var">x</span>))<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">)</span></a>).<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="funext_correction_comp1"><span class="id" type="lemma">funext_correction_comp1</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">forall</span> (<span class="id" type="var">funext</span> : <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a>),<br/>
+&nbsp;&nbsp;<a class="idref" href="Funext.html#funext_comp1_statement"><span class="id" type="definition">funext_comp1_statement</span></a> (<a class="idref" href="Funext.html#funext_correction"><span class="id" type="definition">funext_correction</span></a> <span class="id" type="var">funext</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">funext_comp1_statement</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">funext_correction</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">auto</span> <span class="id" type="keyword">with</span> <span class="id" type="var">path_hints</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+On the other hand, if we think of <span class="inlinecode"><a class="idref" href="UnivalenceAxiom.html#funext"><span class="id" type="definition">funext</span></a></span> as more like a <i>1-dimensional constructor</i> for Pi-types,  we can be led to the following rule, telling us what happens to it under the destructor for Pi-types, function application (bumped up to dimension 1 via happly): 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="funext_comp2_statement"><span class="id" type="definition">funext_comp2_statement</span></a> (<span class="id" type="var">funext</span> : <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a>)<br/>
+&nbsp;&nbsp;:= (<span class="id" type="keyword">forall</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <span class="id" type="var">p</span> <span class="id" type="var">x</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Paths.html#happly_dep"><span class="id" type="definition">happly_dep</span></a> (<span class="id" type="var">funext</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <span class="id" type="var">p</span>) <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span> <span class="id" type="var">x</span>).<br/>
+</div>
+
+<div class="doc">
+‘Pi-ext-app’ in Garner. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+Does this rule follow automatically?  *Yes*, and in fact for a given witness <span class="inlinecode"><a class="idref" href="UnivalenceAxiom.html#funext"><span class="id" type="definition">funext</span></a></span>, it’s equivalent to <span class="inlinecode"><a class="idref" href="Funext.html#funext_comp1_statement"><span class="id" type="definition">funext_comp1_statement</span></a></span> above.  However, this seems quite non-trivial to prove; it will follow eventually from the comparision with “contractible functional extensionality”.  So we leave this for now, and will return to it later. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab2"></a><h1 class="section">Strong functional extensionality</h1>
+
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+Alternatively, a natural way to state a “homotopically good” notion of function
+   extensionality is to observe that there is a canonical map in the
+   other direction, taking paths between functions to pointwise
+   homotopies.  We can thus just ask for that map to be an
+   equivalence.  We call this “strong functional extensionality.”  Of
+   course, it also comes in ordinary and dependent versions.  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="strong_funext_statement"><span class="id" type="definition">strong_funext_statement</span></a> : <span class="id" type="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">forall</span> (<span class="id" type="var">X</span> <span class="id" type="var">Y</span> : <span class="id" type="keyword">Type</span>) (<span class="id" type="var">f</span> <span class="id" type="var">g</span> : <span class="id" type="var">X</span> -&gt; <span class="id" type="var">Y</span>), <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> (@<a class="idref" href="Paths.html#happly"><span class="id" type="definition">happly</span></a> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span>).<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="strong_funext_dep_statement"><span class="id" type="definition">strong_funext_dep_statement</span></a> : <span class="id" type="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">forall</span> (<span class="id" type="var">X</span> : <span class="id" type="keyword">Type</span>) (<span class="id" type="var">P</span> : <span class="id" type="var">X</span> -&gt; <span class="id" type="keyword">Type</span>) (<span class="id" type="var">f</span> <span class="id" type="var">g</span> : <a class="idref" href="Fibrations.html#section"><span class="id" type="definition">section</span></a> <span class="id" type="var">P</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> (@<a class="idref" href="Paths.html#happly_dep"><span class="id" type="definition">happly_dep</span></a> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Of course, strong functional extensionality implies naive
+   functional extensionality, along with both computation rules. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="strong_to_naive_funext"><span class="id" type="lemma">strong_to_naive_funext</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="Funext.html#strong_funext_statement"><span class="id" type="definition">strong_funext_statement</span></a> -&gt; <a class="idref" href="Funext.html#funext_statement"><span class="id" type="definition">funext_statement</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">H</span> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">exact</span> (<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a>@<a class="idref" href="Paths.html#happly"><span class="id" type="definition">happly</span></a> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span>  <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a>  <span class="id" type="var">H</span> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a> <a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a>).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="strong_funext_compute"><span class="id" type="lemma">strong_funext_compute</span></a><br/>
+&nbsp;&nbsp;(<span class="id" type="var">strong_funext</span> : <a class="idref" href="Funext.html#strong_funext_statement"><span class="id" type="definition">strong_funext_statement</span></a>)<br/>
+&nbsp;&nbsp;(<span class="id" type="var">X</span> <span class="id" type="var">Y</span>:<span class="id" type="keyword">Type</span>) (<span class="id" type="var">f</span> <span class="id" type="var">g</span> : <span class="id" type="var">X</span> -&gt; <span class="id" type="var">Y</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">f</span> <a class="idref" href="Funext.html#::x_'==='_x"><span class="id" type="notation">===</span></a> <span class="id" type="var">g</span>) (<span class="id" type="var">x</span> : <span class="id" type="var">X</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#happly"><span class="id" type="definition">happly</span></a> (<a class="idref" href="Funext.html#strong_to_naive_funext"><span class="id" type="lemma">strong_to_naive_funext</span></a> <span class="id" type="var">strong_funext</span> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <span class="id" type="var">p</span>) <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span> <span class="id" type="var">x</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">strong_to_naive_funext</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">inverse</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">exact</span> (<a class="idref" href="Paths.html#happly_dep"><span class="id" type="definition">happly_dep</span></a> (<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> (<a class="idref" href="Fibrations.html#pr1"><span class="id" type="abbreviation">pr1</span></a> (<span class="id" type="var">strong_funext</span> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <span class="id" type="var">p</span>))) <span class="id" type="var">x</span>).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="strong_to_naive_funext_dep"><span class="id" type="lemma">strong_to_naive_funext_dep</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="Funext.html#strong_funext_dep_statement"><span class="id" type="definition">strong_funext_dep_statement</span></a> -&gt; <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">H</span> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">exact</span> (<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a>@<a class="idref" href="Paths.html#happly_dep"><span class="id" type="definition">happly_dep</span></a> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <span class="id" type="var">H</span> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a> <a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a>).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="strong_funext_dep_comp1"><span class="id" type="lemma">strong_funext_dep_comp1</span></a><br/>
+&nbsp;&nbsp;(<span class="id" type="var">strong_funext_dep</span> : <a class="idref" href="Funext.html#strong_funext_dep_statement"><span class="id" type="definition">strong_funext_dep_statement</span></a>)<br/>
+: <a class="idref" href="Funext.html#funext_comp1_statement"><span class="id" type="definition">funext_comp1_statement</span></a> (<a class="idref" href="Funext.html#strong_to_naive_funext_dep"><span class="id" type="lemma">strong_to_naive_funext_dep</span></a> <span class="id" type="var">strong_funext_dep</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">funext_comp1_statement</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">strong_to_naive_funext_dep</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">inverse</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">strong_funext_dep_statement</span> <span class="id" type="keyword">in</span> *.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> (@<a class="idref" href="Fibrations.html#base_path"><span class="id" type="definition">base_path</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> (<a class="idref" href="Fibrations.html#pr1"><span class="id" type="abbreviation">pr1</span></a> (<span class="id" type="var">strong_funext_dep</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span> <span class="id" type="var">f</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> : <span class="id" type="var">X</span> =&gt; <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)))) <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">f</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">_</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> (<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> (<span class="id" type="var">strong_funext_dep</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span> <span class="id" type="var">f</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> : <span class="id" type="var">X</span> =&gt; <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)))).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="strong_funext_dep_comp2"><span class="id" type="lemma">strong_funext_dep_comp2</span></a><br/>
+&nbsp;&nbsp;(<span class="id" type="var">strong_funext_dep</span> : <a class="idref" href="Funext.html#strong_funext_dep_statement"><span class="id" type="definition">strong_funext_dep_statement</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="Funext.html#funext_comp2_statement"><span class="id" type="definition">funext_comp2_statement</span></a> (<a class="idref" href="Funext.html#strong_to_naive_funext_dep"><span class="id" type="lemma">strong_to_naive_funext_dep</span></a> <span class="id" type="var">strong_funext_dep</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">funext_comp2_statement</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">strong_to_naive_funext_dep</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">inverse</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">exact</span> (<a class="idref" href="Paths.html#happly_dep"><span class="id" type="definition">happly_dep</span></a> (<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> (<a class="idref" href="Fibrations.html#pr1"><span class="id" type="abbreviation">pr1</span></a> (<span class="id" type="var">strong_funext_dep</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <span class="id" type="var">p</span>))) <span class="id" type="var">x</span>).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="strong_funext_dep_compute"><span class="id" type="definition">strong_funext_dep_compute</span></a> := <a class="idref" href="Funext.html#strong_funext_dep_comp2"><span class="id" type="lemma">strong_funext_dep_comp2</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Conversely, does naive functional extensionality imply the strong form?  Assuming <i>both</i> computation rules, this is not hard to show: <span class="inlinecode"><span class="id" type="var">comp1</span></span> says that <span class="inlinecode"><a class="idref" href="UnivalenceAxiom.html#funext"><span class="id" type="definition">funext</span></a></span> gives a left inverse to <span class="inlinecode"><a class="idref" href="Paths.html#happly"><span class="id" type="definition">happly</span></a></span>, <span class="inlinecode"><span class="id" type="var">comp2</span></span> that it gives a right inverse. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="funext_both_comps_to_strong"><span class="id" type="lemma">funext_both_comps_to_strong</span></a><br/>
+&nbsp;&nbsp;(<span class="id" type="var">funext</span> : <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a>)<br/>
+&nbsp;&nbsp;(<span class="id" type="var">funext_comp1</span> : <a class="idref" href="Funext.html#funext_comp1_statement"><span class="id" type="definition">funext_comp1_statement</span></a> <span class="id" type="var">funext</span>)<br/>
+&nbsp;&nbsp;(<span class="id" type="var">funext_comp2</span> : <a class="idref" href="Funext.html#funext_comp2_statement"><span class="id" type="definition">funext_comp2_statement</span></a> <span class="id" type="var">funext</span>)<br/>
+: <a class="idref" href="Funext.html#strong_funext_dep_statement"><span class="id" type="definition">strong_funext_dep_statement</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">unfold</span> <span class="id" type="var">strong_funext_dep_statement</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> (<a class="idref" href="Equivalences.html#hequiv_is_equiv"><span class="id" type="definition">hequiv_is_equiv</span></a> <a class="idref" href="Paths.html#happly_dep"><span class="id" type="definition">happly_dep</span></a> (<span class="id" type="var">funext</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">h_fg</span>. <span class="id" type="tactic">apply</span> <span class="id" type="var">funext</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>. <span class="id" type="tactic">apply</span> (<span class="id" type="var">funext_comp2</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">p</span>. <span class="id" type="tactic">destruct</span> <span class="id" type="var">p</span>. <span class="id" type="tactic">apply</span> <span class="id" type="var">funext_comp1</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+But can we do better, getting to strong functional extensionality from just naive functional extensionality alone?  At first the prospects don't look good; naive functional extensionality provides us with paths, but doesn’t tell us anything about the behaviour of those paths under elimination, so it seems unlikely that it would be an inverse to <span class="inlinecode"><a class="idref" href="Paths.html#happly"><span class="id" type="definition">happly</span></a></span>.
+
+<br/> <br/>
+   However, it turns out that we can do it!  It’s easiest to go via another extensionality statement: <i>contractible functional extensionality</i>, <span class="inlinecode"><a class="idref" href="Funext.html#contr_funext_statement"><span class="id" type="definition">contr_funext_statement</span></a></span> below.  Before that, though, we need a quick technical digression on eta rules. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab3"></a><h1 class="section">Eta rules and tactics</h1>
+
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+Another (very) weak type of functional extensionality is the
+   (propositional) eta rule, which is implied by naive functional
+   extensionality. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="eta"><span class="id" type="definition">eta</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <span class="id" type="var">f</span> <span class="id" type="var">x</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="eta_statement"><span class="id" type="definition">eta_statement</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span>:<span class="id" type="keyword">Type</span>) (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>), <a class="idref" href="Funext.html#eta"><span class="id" type="definition">eta</span></a> <span class="id" type="var">f</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">f</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="naive_funext_implies_eta"><span class="id" type="lemma">naive_funext_implies_eta</span></a> : <a class="idref" href="Funext.html#funext_statement"><span class="id" type="definition">funext_statement</span></a> -&gt; <a class="idref" href="Funext.html#eta_statement"><span class="id" type="definition">eta_statement</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">funext</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">funext</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Here is the dependent version. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="eta_dep"><span class="id" type="definition">eta_dep</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>} (<span class="id" type="var">f</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">P</span> <span class="id" type="var">x</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <span class="id" type="var">f</span> <span class="id" type="var">x</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="eta_dep_statement"><span class="id" type="definition">eta_dep_statement</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span>:<span class="id" type="keyword">Type</span>) (<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>) (<span class="id" type="var">f</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">P</span> <span class="id" type="var">x</span>), <a class="idref" href="Funext.html#eta_dep"><span class="id" type="definition">eta_dep</span></a> <span class="id" type="var">f</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">f</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="naive_funext_dep_implies_eta"><span class="id" type="lemma">naive_funext_dep_implies_eta</span></a> : <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a> -&gt; <a class="idref" href="Funext.html#eta_dep_statement"><span class="id" type="definition">eta_dep_statement</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">funext_dep</span> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">funext_dep</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A “mini” form of the main theorem (naive =&gt; strong) is that
+   the eta rule implies directly that the eta map is an
+   equivalence. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="eta_is_equiv"><span class="id" type="lemma">eta_is_equiv</span></a> : <a class="idref" href="Funext.html#eta_statement"><span class="id" type="definition">eta_statement</span></a> -&gt; <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> : <span class="id" type="keyword">Type</span>),<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> (@<a class="idref" href="Funext.html#eta"><span class="id" type="definition">eta</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">H</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#equiv_pointwise_idmap"><span class="id" type="lemma">equiv_pointwise_idmap</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="eta_equiv"><span class="id" type="definition">eta_equiv</span></a> (<span class="id" type="var">Heta</span> : <a class="idref" href="Funext.html#eta_statement"><span class="id" type="definition">eta_statement</span></a>) (<span class="id" type="var">A</span> <span class="id" type="var">B</span> : <span class="id" type="keyword">Type</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span><a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span><a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">)</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> (@<a class="idref" href="Funext.html#eta"><span class="id" type="definition">eta</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span>) (<a class="idref" href="Funext.html#eta_is_equiv"><span class="id" type="lemma">eta_is_equiv</span></a> <span class="id" type="var">Heta</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+And the dependent version. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="eta_dep_is_equiv"><span class="id" type="lemma">eta_dep_is_equiv</span></a> : <a class="idref" href="Funext.html#eta_dep_statement"><span class="id" type="definition">eta_dep_statement</span></a> -&gt; <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span>:<span class="id" type="keyword">Type</span>) (<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>),<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> (@<a class="idref" href="Funext.html#eta_dep"><span class="id" type="definition">eta_dep</span></a> <span class="id" type="var">A</span> <span class="id" type="var">P</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">H</span> <span class="id" type="var">A</span> <span class="id" type="var">P</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#equiv_pointwise_idmap"><span class="id" type="lemma">equiv_pointwise_idmap</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="eta_dep_equiv"><span class="id" type="definition">eta_dep_equiv</span></a> (<span class="id" type="var">Heta</span> : <a class="idref" href="Funext.html#eta_dep_statement"><span class="id" type="definition">eta_dep_statement</span></a>) (<span class="id" type="var">A</span> : <span class="id" type="keyword">Type</span>) (<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">(</span></a><span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">P</span> <span class="id" type="var">x</span><a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">(</span></a><span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">P</span> <span class="id" type="var">x</span><a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">)</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> (@<a class="idref" href="Funext.html#eta_dep"><span class="id" type="definition">eta_dep</span></a> <span class="id" type="var">A</span> <span class="id" type="var">P</span>) (<a class="idref" href="Funext.html#eta_dep_is_equiv"><span class="id" type="lemma">eta_dep_is_equiv</span></a> <span class="id" type="var">Heta</span> <span class="id" type="var">A</span> <span class="id" type="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Some tactics for working with eta-expansion.  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">eta_intro</span> <span class="id" type="var">f</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| [ <span class="id" type="var">eta_rule</span> : <a class="idref" href="Funext.html#eta_dep_statement"><span class="id" type="definition">eta_dep_statement</span></a> |- <span class="id" type="keyword">forall</span> (<span class="id" type="var">f</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>:<span class="id" type="var">_</span>, <span class="id" type="var">_</span>), @?<span class="id" type="var">Q</span> <span class="id" type="var">f</span>] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">f</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> (@<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">_</span> <span class="id" type="var">Q</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> (<span class="id" type="var">eta_rule</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">f</span>));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">eta_dep</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- <span class="id" type="keyword">forall</span> <span class="id" type="var">f</span>, @?<span class="id" type="var">Q</span> <span class="id" type="var">f</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">eta_rule</span> := <span class="id" type="tactic">fresh</span> "eta_rule" <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">f</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">cut</span> <a class="idref" href="Funext.html#eta_dep_statement"><span class="id" type="definition">eta_dep_statement</span></a>; <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <span class="id" type="tactic">intro</span> <span class="id" type="var">eta_rule</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> (@<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">_</span> <span class="id" type="var">Q</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> (<span class="id" type="var">eta_rule</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">f</span>));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">eta_dep</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="tactic">try</span> <span class="id" type="tactic">auto</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- <span class="id" type="var">_</span> =&gt; <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">idtac</span> "Goal not quantified over a function; cannot eta-introduce."<br/>
+<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">eta_expand</span> <span class="id" type="var">f</span> := <br/>
+&nbsp;&nbsp;<span class="id" type="var">revert</span> <span class="id" type="tactic">dependent</span> <span class="id" type="var">f</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">eta_intro</span> <span class="id" type="var">f</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Possible improvements to these tactics:
+<ul>
+<li> At end of <span class="inlinecode"><span class="id" type="var">eta_expand</span></span>, reintroduce any other hypotheses generalized at the beginning of it.
+
+</li>
+<li> Make <span class="inlinecode"><span class="id" type="var">eta_expand</span></span> work without reverting and re-introducing <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a></span>?  
+
+</li>
+<li> In particular, it would be really nice if some form of it could work for arbitrary terms, not just variables; I tried using variations of <span class="inlinecode"><span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span> |- <a class="idref" href="FiberEquivalences.html#FibrationMap.Q"><span class="id" type="variable">Q</span></a>@? <a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a></span> to do this, but couldn’t get it to work.
+
+</li>
+<li> Write “plural” versions of these tactics, so one can write i.e. <span class="inlinecode"><span class="id" type="var">eta_intros</span> <a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a> <a class="idref" href="FiberEquivalences.html#FibrationMap.g"><span class="id" type="variable">g</span></a> <span class="id" type="var">h</span></span> to abbreviate <span class="inlinecode"><span class="id" type="var">eta_intro</span> <a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a>; <span class="id" type="var">eta_intro</span> <a class="idref" href="FiberEquivalences.html#FibrationMap.g"><span class="id" type="variable">g</span></a>; <span class="id" type="var">eta_intro</span> <span class="id" type="var">h</span></span>.
+
+</li>
+</ul>
+
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+Now we’re equipped to tackle the main theorem. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab4"></a><h1 class="section">Contractible functional extensionality, and the proof of strong from naive.</h1>
+
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+We start by considering yet another version of functional extensionality: that given a function <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a></span>, the space of functions together with a homotopy to <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a></span> is contractible.  For the sake of cleaner terms, we give a slightly more specific statement than just <span class="inlinecode"><a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> (…)</span>: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="contr_funext_statement"><span class="id" type="definition">contr_funext_statement</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">A</span> (<span class="id" type="var">B</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>) (<span class="id" type="var">f</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>:<span class="id" type="var">A</span>, <span class="id" type="var">B</span> <span class="id" type="var">x</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">forall</span> (<span class="id" type="var">g</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>:<span class="id" type="var">A</span>, <span class="id" type="var">B</span> <span class="id" type="var">x</span>)  (<span class="id" type="var">h</span> : <span class="id" type="var">f</span> <a class="idref" href="Funext.html#::x_'==='_x"><span class="id" type="notation">===</span></a> <span class="id" type="var">g</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">g</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <span class="id" type="var">h</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> (<span class="id" type="keyword">fun</span> <span class="id" type="var">g</span> =&gt; <span class="id" type="var">f</span> <a class="idref" href="Funext.html#::x_'==='_x"><span class="id" type="notation">===</span></a> <span class="id" type="var">g</span>) <span class="id" type="var">f</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>))<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The analogous statement with paths in place of homotopies is, of course, always true.  (I’d recalled it being in the library somewhere, but I can’t find it now?) 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="contract_cone"><span class="id" type="lemma">contract_cone</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">x</span>:<span class="id" type="var">A</span>} (<span class="id" type="var">yp</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">y</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a><span class="id" type="var">A</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>)<br/>
+&nbsp;&nbsp;: <span class="id" type="var">yp</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">x</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">yp</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">y</span> <span class="id" type="var">p</span>]. <span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now, by naive extensionality, the product of all these cones is again contractible: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="contract_product_of_cones_from_naive_funext"><span class="id" type="lemma">contract_product_of_cones_from_naive_funext</span></a><br/>
+&nbsp;&nbsp;{<span class="id" type="var">A</span>} {<span class="id" type="var">B</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>} {<span class="id" type="var">f</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>:<span class="id" type="var">A</span>, <span class="id" type="var">B</span> <span class="id" type="var">x</span>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">forall</span> (<span class="id" type="var">gh</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>:<span class="id" type="var">A</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">y</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a><span class="id" type="var">B</span> <span class="id" type="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">gh</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><span class="id" type="keyword">fun</span> <span class="id" type="var">x</span>:<span class="id" type="var">A</span> =&gt; <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a> <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">))</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">funext</span> <span class="id" type="var">gh</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">funext</span>. <span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Funext.html#contract_cone"><span class="id" type="lemma">contract_cone</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+But the type of “functions homotopic to <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a></span>” is an up-to-eta-expansion retract of this product of cones.  So, we define this retraction: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="pair_fun_to_fun_pair"><span class="id" type="lemma">pair_fun_to_fun_pair</span></a> <br/>
+&nbsp;&nbsp;{<span class="id" type="var">A</span>} {<span class="id" type="var">B</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>} {<span class="id" type="var">f</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>:<span class="id" type="var">A</span>, <span class="id" type="var">B</span> <span class="id" type="var">x</span>}<br/>
+&nbsp;&nbsp;(<span class="id" type="var">gh</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a><span class="id" type="var">g</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span> : <span class="id" type="var">A</span>, <span class="id" type="var">B</span> <span class="id" type="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span> : <span class="id" type="var">A</span>, <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">g</span> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>)<br/>
+&nbsp;&nbsp;: <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>:<span class="id" type="var">A</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">y</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:(</span></a><span class="id" type="var">B</span> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">exact</span> (<span class="id" type="keyword">match</span> <span class="id" type="var">gh</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">g</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <span class="id" type="var">h</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a> =&gt; (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span>:<span class="id" type="var">A</span> =&gt; <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">g</span> <span class="id" type="var">x</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <span class="id" type="var">h</span> <span class="id" type="var">x</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>) <span class="id" type="keyword">end</span> ).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="fun_pair_to_pair_fun"><span class="id" type="lemma">fun_pair_to_pair_fun</span></a> <br/>
+&nbsp;&nbsp;{<span class="id" type="var">A</span>} {<span class="id" type="var">B</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>} {<span class="id" type="var">f</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>:<span class="id" type="var">A</span>, <span class="id" type="var">B</span> <span class="id" type="var">x</span>}<br/>
+&nbsp;&nbsp;(<span class="id" type="var">k</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>:<span class="id" type="var">A</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">y</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:(</span></a><span class="id" type="var">B</span> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a><span class="id" type="var">g</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span> : <span class="id" type="var">A</span>, <span class="id" type="var">B</span> <span class="id" type="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span> : <span class="id" type="var">A</span>, <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">g</span> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span>:<span class="id" type="var">A</span> =&gt; <span class="id" type="keyword">match</span> (<span class="id" type="var">k</span> <span class="id" type="var">x</span>) <span class="id" type="keyword">with</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">gx</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <span class="id" type="var">_</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a> =&gt; <span class="id" type="var">gx</span> <span class="id" type="keyword">end</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>. <span class="id" type="tactic">destruct</span> (<span class="id" type="var">k</span> <span class="id" type="var">x</span>) <span class="id" type="keyword">as</span> [<span class="id" type="var">gx</span> <span class="id" type="var">hx</span>]. <span class="id" type="tactic">exact</span> <span class="id" type="var">hx</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+…and now we have all the ingredients for proving contractible funext from naive funext (or alternatively from weak funext + dependent eta): 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="naive_to_contr_funext"><span class="id" type="lemma">naive_to_contr_funext</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-&gt; <a class="idref" href="Funext.html#contr_funext_statement"><span class="id" type="definition">contr_funext_statement</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">funext</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">contr_funext_statement</span>. <span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">eta_intro</span> <span class="id" type="var">f</span>. <span class="id" type="var">eta_intro</span> <span class="id" type="var">g</span>. <span class="id" type="var">eta_intro</span> <span class="id" type="var">h</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Funext.html#fun_pair_to_pair_fun"><span class="id" type="lemma">fun_pair_to_pair_fun</span></a> (<a class="idref" href="Funext.html#pair_fun_to_fun_pair"><span class="id" type="lemma">pair_fun_to_fun_pair</span></a> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">g</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <span class="id" type="var">h</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>)).<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (@<a class="idref" href="Funext.html#fun_pair_to_pair_fun"><span class="id" type="lemma">fun_pair_to_pair_fun</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <span class="id" type="var">f</span> <span class="id" type="var">x</span>) (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Funext.html#contract_product_of_cones_from_naive_funext"><span class="id" type="lemma">contract_product_of_cones_from_naive_funext</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Funext.html#naive_funext_dep_implies_eta"><span class="id" type="lemma">naive_funext_dep_implies_eta</span></a>; <span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="contr_funext_to_comp2"><span class="id" type="lemma">contr_funext_to_comp2</span></a> (<span class="id" type="var">funext</span> : <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a>)<br/>
+&nbsp;&nbsp;: (<a class="idref" href="Funext.html#funext_comp1_statement"><span class="id" type="definition">funext_comp1_statement</span></a> <span class="id" type="var">funext</span>)<br/>
+&nbsp;&nbsp;-&gt; <a class="idref" href="Funext.html#contr_funext_statement"><span class="id" type="definition">contr_funext_statement</span></a><br/>
+&nbsp;&nbsp;-&gt; (<a class="idref" href="Funext.html#funext_comp2_statement"><span class="id" type="definition">funext_comp2_statement</span></a> <span class="id" type="var">funext</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">funext_comp1</span> <span class="id" type="var">contr_funext</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">funext_comp2_statement</span>. <span class="id" type="tactic">intros</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <span class="id" type="var">h</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> (@<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">_</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" type="keyword">fun</span> (<span class="id" type="var">g0h0</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">g</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <a class="idref" href="Fibrations.html#section"><span class="id" type="definition">section</span></a> <span class="id" type="var">P</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <span class="id" type="var">f</span> <a class="idref" href="Funext.html#::x_'==='_x"><span class="id" type="notation">===</span></a> <span class="id" type="var">g</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt; <span class="id" type="keyword">match</span> <span class="id" type="var">g0h0</span> <span class="id" type="keyword">with</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">g0</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a><span class="id" type="var">h0</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt; (<span class="id" type="keyword">forall</span> <span class="id" type="var">x</span> : <span class="id" type="var">X</span>, <a class="idref" href="Paths.html#happly_dep"><span class="id" type="definition">happly_dep</span></a> (<span class="id" type="var">funext</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span> <span class="id" type="var">g0</span> <span class="id" type="var">h0</span>) <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">h0</span> <span class="id" type="var">x</span>) <span class="id" type="keyword">end</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> (<span class="id" type="keyword">fun</span> <span class="id" type="var">g</span> =&gt; <span class="id" type="var">f</span> <a class="idref" href="Funext.html#::x_'==='_x"><span class="id" type="notation">===</span></a> <span class="id" type="var">g</span>) <span class="id" type="var">f</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">g</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <span class="id" type="var">h</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">symmetry</span>. <span class="id" type="tactic">apply</span> <span class="id" type="var">contr_funext</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">clear</span> <span class="id" type="var">g</span> <span class="id" type="var">h</span>. <span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Paths.html#happly_dep"><span class="id" type="definition">happly_dep</span></a> (<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">f</span>) <span class="id" type="var">x</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="var">apply_happly</span>. <span class="id" type="var">path_simplify</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">funext_comp1</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="funext_comp1_to_comp2"><span class="id" type="lemma">funext_comp1_to_comp2</span></a> (<span class="id" type="var">funext</span> : <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a>)<br/>
+&nbsp;&nbsp;: (<a class="idref" href="Funext.html#funext_comp1_statement"><span class="id" type="definition">funext_comp1_statement</span></a> <span class="id" type="var">funext</span>) -&gt; (<a class="idref" href="Funext.html#funext_comp2_statement"><span class="id" type="definition">funext_comp2_statement</span></a> <span class="id" type="var">funext</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">funext_comp1</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Funext.html#contr_funext_to_comp2"><span class="id" type="lemma">contr_funext_to_comp2</span></a>; <span class="id" type="tactic">auto</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Funext.html#naive_to_contr_funext"><span class="id" type="lemma">naive_to_contr_funext</span></a>; <span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="funext_correction_comp2"><span class="id" type="lemma">funext_correction_comp2</span></a> (<span class="id" type="var">funext</span> : <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="Funext.html#funext_comp2_statement"><span class="id" type="definition">funext_comp2_statement</span></a> (<a class="idref" href="Funext.html#funext_correction"><span class="id" type="definition">funext_correction</span></a> <span class="id" type="var">funext</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Funext.html#funext_comp1_to_comp2"><span class="id" type="lemma">funext_comp1_to_comp2</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Funext.html#funext_correction_comp1"><span class="id" type="lemma">funext_correction_comp1</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="naive_to_strong_funext"><span class="id" type="lemma">naive_to_strong_funext</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a> -&gt; <a class="idref" href="Funext.html#strong_funext_dep_statement"><span class="id" type="definition">strong_funext_dep_statement</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">funext</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> (<a class="idref" href="Funext.html#funext_both_comps_to_strong"><span class="id" type="lemma">funext_both_comps_to_strong</span></a> (<a class="idref" href="Funext.html#funext_correction"><span class="id" type="definition">funext_correction</span></a> <span class="id" type="var">funext</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Funext.html#funext_correction_comp1"><span class="id" type="lemma">funext_correction_comp1</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Funext.html#funext_correction_comp2"><span class="id" type="lemma">funext_correction_comp2</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Alternatively, we can show strong funext entirely from contractible funext, without ever invoking naive: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="contr_to_strong_funext"><span class="id" type="lemma">contr_to_strong_funext</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="Funext.html#contr_funext_statement"><span class="id" type="definition">contr_funext_statement</span></a> -&gt; <a class="idref" href="Funext.html#strong_funext_dep_statement"><span class="id" type="definition">strong_funext_dep_statement</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">contr_funext</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">set</span> (<span class="id" type="var">A</span> := <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">P</span> <span class="id" type="var">x</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">set</span> (<span class="id" type="var">Q</span> := (<span class="id" type="keyword">fun</span> <span class="id" type="var">h</span> =&gt; <span class="id" type="var">f</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">h</span>) : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">set</span> (<span class="id" type="var">R</span> := (<span class="id" type="keyword">fun</span> <span class="id" type="var">h</span> =&gt; <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">h</span> <span class="id" type="var">x</span>) : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">set</span> (<span class="id" type="var">fibhap</span> := (@<a class="idref" href="Paths.html#happly_dep"><span class="id" type="definition">happly_dep</span></a> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">f</span>) : <span class="id" type="keyword">forall</span> <span class="id" type="var">h</span>, <span class="id" type="var">Q</span> <span class="id" type="var">h</span> -&gt; <span class="id" type="var">R</span> <span class="id" type="var">h</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> (<a class="idref" href="FiberEquivalences.html#fiber_is_equiv"><span class="id" type="lemma">fiber_is_equiv</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">fibhap</span>). <span class="id" type="tactic">clear</span> <span class="id" type="var">g</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#contr_contr_equiv"><span class="id" type="definition">contr_contr_equiv</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Contractible.html#pathspace_contr'"><span class="id" type="lemma">pathspace_contr'</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">is_contr</span>. <span class="id" type="var">exists</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <span class="id" type="var">R</span> <span class="id" type="var">f</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>))).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> [<span class="id" type="var">g</span> <span class="id" type="var">h</span>]. <span class="id" type="tactic">apply</span> <span class="id" type="var">contr_funext</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab5"></a><h1 class="section">Weak functional extensionality</h1>
+
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+Inspection of the proof of <span class="inlinecode"><a class="idref" href="Funext.html#naive_to_contr_funext"><span class="id" type="lemma">naive_to_contr_funext</span></a></span> shows that it only uses functional extensionality via two simpler statements: <span class="inlinecode"><a class="idref" href="Funext.html#eta_dep_statement"><span class="id" type="definition">eta_dep_statement</span></a></span>, and the fact that a product of contractible types is contractible.
+
+<br/> <br/>
+  This latter statement is interesting in its own right; we call it <i>weak functional extensionality</i>.  
+
+<br/> <br/>
+  Among other things, it can be seen from the model category point of view as saying that the dependent product functor preserves trivial fibrations, which is exactly (the non-trivial part of) what’s needed to make pullback/dependent-product a Quillen adjunction! 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="weak_funext_statement"><span class="id" type="definition">weak_funext_statement</span></a> := <span class="id" type="keyword">forall</span> (<span class="id" type="var">X</span> : <span class="id" type="keyword">Type</span>) (<span class="id" type="var">P</span> : <span class="id" type="var">X</span> -&gt; <span class="id" type="keyword">Type</span>),<br/>
+&nbsp;&nbsp;(<span class="id" type="keyword">forall</span> <span class="id" type="var">x</span> : <span class="id" type="var">X</span>, <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> (<span class="id" type="var">P</span> <span class="id" type="var">x</span>)) -&gt; <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> (<span class="id" type="keyword">forall</span> <span class="id" type="var">x</span> : <span class="id" type="var">X</span>, <span class="id" type="var">P</span> <span class="id" type="var">x</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+It is easy to see that naive dependent functional extensionality
+   implies weak functional extensionality. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="funext_dep_to_weak"><span class="id" type="lemma">funext_dep_to_weak</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a> -&gt; <a class="idref" href="Funext.html#weak_funext_statement"><span class="id" type="definition">weak_funext_statement</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">H</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">H1</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> (<span class="id" type="var">H1</span> <span class="id" type="var">x</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">p</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">x</span>:<span class="id" type="var">X</span>) (<span class="id" type="var">y</span>:<span class="id" type="var">P</span> <span class="id" type="var">x</span>), <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a>(<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> (<span class="id" type="var">H1</span> <span class="id" type="var">x</span>)) <span class="id" type="var">x</span><a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Contractible.html#contr_path"><span class="id" type="lemma">contr_path</span></a>, <span class="id" type="var">H1</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">H</span>. <span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>. <span class="id" type="tactic">apply</span> <span class="id" type="var">p</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now we can give an alternative form of the main theorem: the fact that weak functional extensionality implies *strong* (dependent) functional extensionality, at least in the presence of the dependent eta rule. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="is_contr_product_of_cones_from_weak_funext"><span class="id" type="lemma">is_contr_product_of_cones_from_weak_funext</span></a><br/>
+&nbsp;&nbsp;{<span class="id" type="var">A</span>} {<span class="id" type="var">B</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>} {<span class="id" type="var">f</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>:<span class="id" type="var">A</span>, <span class="id" type="var">B</span> <span class="id" type="var">x</span>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="Funext.html#weak_funext_statement"><span class="id" type="definition">weak_funext_statement</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> (<span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>:<span class="id" type="var">A</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">y</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a><span class="id" type="var">B</span> <span class="id" type="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">weak_funext</span>. <span class="id" type="tactic">apply</span> <span class="id" type="var">weak_funext</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>. <span class="id" type="var">exists</span> (<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a><span class="id" type="var">y</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <span class="id" type="var">B</span> <span class="id" type="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> [<span class="id" type="var">y</span> <span class="id" type="var">p</span>]. <span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We can now essentially repeat the proof of <span class="inlinecode"><a class="idref" href="Funext.html#naive_to_contr_funext"><span class="id" type="lemma">naive_to_contr_funext</span></a></span>: 
+</div>
+<div class="code">
+<span class="id" type="keyword">Theorem</span> <a name="weak_plus_eta_to_contr_funext"><span class="id" type="lemma">weak_plus_eta_to_contr_funext</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="Funext.html#eta_dep_statement"><span class="id" type="definition">eta_dep_statement</span></a> -&gt; <a class="idref" href="Funext.html#weak_funext_statement"><span class="id" type="definition">weak_funext_statement</span></a> -&gt; <a class="idref" href="Funext.html#contr_funext_statement"><span class="id" type="definition">contr_funext_statement</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">eta_dep</span> <span class="id" type="var">weak_funext</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">contr_funext_statement</span>. <span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">eta_intro</span> <span class="id" type="var">f</span>. <span class="id" type="var">eta_intro</span> <span class="id" type="var">g</span>. <span class="id" type="var">eta_intro</span> <span class="id" type="var">h</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Funext.html#fun_pair_to_pair_fun"><span class="id" type="lemma">fun_pair_to_pair_fun</span></a> (<a class="idref" href="Funext.html#pair_fun_to_fun_pair"><span class="id" type="lemma">pair_fun_to_fun_pair</span></a> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">g</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <span class="id" type="var">h</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>)).<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (@<a class="idref" href="Funext.html#fun_pair_to_pair_fun"><span class="id" type="lemma">fun_pair_to_pair_fun</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <span class="id" type="var">f</span> <span class="id" type="var">x</span>) (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Contractible.html#contr_path"><span class="id" type="lemma">contr_path</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Funext.html#is_contr_product_of_cones_from_weak_funext"><span class="id" type="lemma">is_contr_product_of_cones_from_weak_funext</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="weak_to_strong_funext_dep"><span class="id" type="lemma">weak_to_strong_funext_dep</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="Funext.html#eta_dep_statement"><span class="id" type="definition">eta_dep_statement</span></a> -&gt; <a class="idref" href="Funext.html#weak_funext_statement"><span class="id" type="definition">weak_funext_statement</span></a> -&gt; <a class="idref" href="Funext.html#strong_funext_dep_statement"><span class="id" type="definition">strong_funext_dep_statement</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">eta_dep</span> <span class="id" type="var">weak_funext</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Funext.html#contr_to_strong_funext"><span class="id" type="lemma">contr_to_strong_funext</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Funext.html#weak_plus_eta_to_contr_funext"><span class="id" type="lemma">weak_plus_eta_to_contr_funext</span></a>; <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Therefore, all of the following are equivalent, in their dependent forms:
+<ul>
+<li> naive functional extensionality;
+
+</li>
+<li> naive functional extensionality with either or both comp rules;
+
+</li>
+<li> strong functional extensionality;
+
+</li>
+<li> contractible functional extensionality;
+
+</li>
+<li> weak functional extensionality + dependent eta. 
+</li>
+</ul>
+
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab6"></a><h1 class="section">Comparing dependent and non-dependent forms.</h1>
+
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+We also observe that for both strong and naive functional
+   extensionality, the dependent version implies the non-dependent
+   version.  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="strong_funext_dep_to_nondep"><span class="id" type="lemma">strong_funext_dep_to_nondep</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="Funext.html#strong_funext_dep_statement"><span class="id" type="definition">strong_funext_dep_statement</span></a> -&gt; <a class="idref" href="Funext.html#strong_funext_statement"><span class="id" type="definition">strong_funext_statement</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">H</span> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">exact</span> (<span class="id" type="var">H</span> <span class="id" type="var">X</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <span class="id" type="var">Y</span>) <span class="id" type="var">f</span> <span class="id" type="var">g</span>).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="funext_dep_to_nondep"><span class="id" type="lemma">funext_dep_to_nondep</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="Funext.html#funext_dep_statement"><span class="id" type="definition">funext_dep_statement</span></a> -&gt; <a class="idref" href="Funext.html#funext_statement"><span class="id" type="definition">funext_statement</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">H</span> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">exact</span> (<span class="id" type="var">H</span> <span class="id" type="var">X</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <span class="id" type="var">Y</span>) <span class="id" type="var">f</span> <span class="id" type="var">g</span>).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+One can prove similar things for the other variants considered.  Can we go the other way, for any of the variants? 
+</div>
+<div class="code">
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

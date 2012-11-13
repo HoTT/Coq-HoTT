@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>Contractible</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Contractible</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <a class="idref" href="Paths.html#"><span class="id" type="library">Paths</span></a> <a class="idref" href="Fibrations.html#"><span class="id" type="library">Fibrations</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+For compatibility with Coq 8.2. 
+</div>
+<div class="code">
+<span class="id" type="keyword">Unset</span> <span class="id" type="var">Automatic</span> <span class="id" type="var">Introduction</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A space <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a></span> is contractible if there is a point <span class="inlinecode"><span class="id" type="var">x</span> : <a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a></span> and a
+   (pointwise) homotopy connecting the identity on <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a></span> to the constant
+   map at <span class="inlinecode"><span class="id" type="var">x</span></span>.  Thus an element of <span class="inlinecode"><a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> <a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a></span> is a pair whose
+   first component is a point <span class="inlinecode"><span class="id" type="var">x</span></span> and the second component is a
+   pointwise retraction of <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a></span> to <span class="inlinecode"><span class="id" type="var">x</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="is_contr"><span class="id" type="definition">is_contr</span></a> <span class="id" type="var">A</span> := <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a><span class="id" type="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <span class="id" type="var">A</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <span class="id" type="keyword">forall</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>, <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If a space is contractible, then any two points in it are
+   connected by a path in a canonical way. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="contr_path"><span class="id" type="lemma">contr_path</span></a> {<span class="id" type="var">A</span>} (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) : (<a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> <span class="id" type="var">A</span>) -&gt; (<span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span> <span class="id" type="keyword">as</span> (<span class="id" type="var">z</span>,<span class="id" type="var">p</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> <span class="id" type="var">z</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Similarly, any two parallel paths in a contractible space are homotopic.  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="contr_path2"><span class="id" type="lemma">contr_path2</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">p</span> <span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) : (<a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> <span class="id" type="var">A</span>) -&gt; (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">X</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">ctr</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">ctr</span> <span class="id" type="keyword">as</span> (<span class="id" type="var">c</span>, <span class="id" type="var">ret</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<span class="id" type="var">ret</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">ret</span> <span class="id" type="var">y</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="var">moveleft_onright</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">moveright_onleft</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">exact</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Fibrations.html#trans_is_concat_opp"><span class="id" type="lemma">trans_is_concat_opp</span></a> <span class="id" type="var">p</span> (<span class="id" type="var">ret</span> <span class="id" type="var">x</span>)  <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a>  <a class="idref" href="Fibrations.html#map_dep"><span class="id" type="lemma">map_dep</span></a> <span class="id" type="var">ret</span> <span class="id" type="var">p</span> ).<br/>
+&nbsp;&nbsp;<span class="id" type="var">moveright_onright</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">moveleft_onleft</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">exact</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Fibrations.html#trans_is_concat_opp"><span class="id" type="lemma">trans_is_concat_opp</span></a> <span class="id" type="var">q</span> (<span class="id" type="var">ret</span> <span class="id" type="var">x</span>)  <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a>  <a class="idref" href="Fibrations.html#map_dep"><span class="id" type="lemma">map_dep</span></a> <span class="id" type="var">ret</span> <span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+It follows that any space of paths in a contractible space is contractible. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="contr_pathcontr"><span class="id" type="lemma">contr_pathcontr</span></a> {<span class="id" type="var">A</span>} (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) : <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> <span class="id" type="var">A</span> -&gt; <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> (<span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">ctr</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<a class="idref" href="Contractible.html#contr_path"><span class="id" type="lemma">contr_path</span></a> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">ctr</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Contractible.html#contr_path2"><span class="id" type="lemma">contr_path2</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The total space of any based path space is contractible. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="pathspace_contr"><span class="id" type="lemma">pathspace_contr</span></a> {<span class="id" type="var">X</span>} (<span class="id" type="var">x</span>:<span class="id" type="var">X</span>) : <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#sigT"><span class="id" type="inductive">sigT</span></a> (<a class="idref" href="Paths.html#paths"><span class="id" type="inductive">paths</span></a> <span class="id" type="var">x</span>)).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">X</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">x</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> [<span class="id" type="var">y</span> <span class="id" type="var">p</span>].<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="pathspace_contr'"><span class="id" type="lemma">pathspace_contr'</span></a> {<span class="id" type="var">X</span>} (<span class="id" type="var">x</span>:<span class="id" type="var">X</span>) : <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">y</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a><span class="id" type="var">X</span>  <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a>  <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">X</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> (<span class="id" type="keyword">fun</span> <span class="id" type="var">y</span> =&gt; <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) <span class="id" type="var">x</span> (<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> [<span class="id" type="var">y</span> <span class="id" type="var">p</span>].<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The unit type is contractible. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="unit_contr"><span class="id" type="lemma">unit_contr</span></a> : <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#unit"><span class="id" type="inductive">unit</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#tt"><span class="id" type="constructor">tt</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Hint</span> <span class="id" type="keyword">Resolve</span> <a class="idref" href="Contractible.html#unit_contr"><span class="id" type="lemma">unit_contr</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

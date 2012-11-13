@@ -1,0 +1,18 @@
+\contentsline {chapter}{\numberline {1}Library \textsf {Functions}}{2}{chapter.1}
+\contentsline {chapter}{\numberline {2}Library \textsf {Paths}}{3}{chapter.2}
+\contentsline {chapter}{\numberline {3}Library \textsf {Fibrations}}{20}{chapter.3}
+\contentsline {chapter}{\numberline {4}Library \textsf {Contractible}}{25}{chapter.4}
+\contentsline {chapter}{\numberline {5}Library \textsf {Equivalences}}{27}{chapter.5}
+\contentsline {chapter}{\numberline {6}Library \textsf {FiberEquivalences}}{39}{chapter.6}
+\contentsline {chapter}{\numberline {7}Library \textsf {Funext}}{45}{chapter.7}
+\contentsline {section}{\numberline {7.1}Naive functional extensionality}{45}{section.7.1}
+\contentsline {section}{\numberline {7.2}Strong functional extensionality}{46}{section.7.2}
+\contentsline {section}{\numberline {7.3}Eta rules and tactics}{49}{section.7.3}
+\contentsline {section}{\numberline {7.4}Contractible functional extensionality, and the proof of strong from naive.}{51}{section.7.4}
+\contentsline {section}{\numberline {7.5}Weak functional extensionality}{54}{section.7.5}
+\contentsline {section}{\numberline {7.6}Comparing dependent and non-dependent forms.}{55}{section.7.6}
+\contentsline {chapter}{\numberline {8}Library \textsf {Univalence}}{57}{chapter.8}
+\contentsline {chapter}{\numberline {9}Library \textsf {UnivalenceImpliesFunext}}{60}{chapter.9}
+\contentsline {chapter}{\numberline {10}Library \textsf {UnivalenceAxiom}}{62}{chapter.10}
+\contentsline {chapter}{\numberline {11}Library \textsf {HLevel}}{63}{chapter.11}
+\contentsline {chapter}{\numberline {12}Library \textsf {Homotopy}}{70}{chapter.12}

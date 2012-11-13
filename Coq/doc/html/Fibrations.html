@@ -1,0 +1,385 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>Fibrations</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Fibrations</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <a class="idref" href="Paths.html#"><span class="id" type="library">Paths</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+For compatibility with Coq 8.2. 
+</div>
+<div class="code">
+<span class="id" type="keyword">Unset</span> <span class="id" type="var">Automatic</span> <span class="id" type="var">Introduction</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+In homotopy type theory, We think of elements of <span class="inlinecode"><span class="id" type="keyword">Type</span></span> as spaces
+   or homotopy types, while a type family <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a> : <a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a> -&gt; <span class="id" type="keyword">Type</span></span> corresponds
+   to a fibration whose base is <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a></span> and whose fiber over <span class="inlinecode"><span class="id" type="var">x</span></span> is <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a> <span class="id" type="var">x</span></span>.
+
+<br/> <br/>
+   From such a <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a></span> we can build a total space over the base space <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a></span>
+   so that the fiber over <span class="inlinecode"><span class="id" type="var">x</span> : <a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a></span> is <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a> <span class="id" type="var">x</span></span>.  This is just Coq's
+   dependent sum construction, written as <span class="inlinecode">{<span class="id" type="var">x</span> : <a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a> &amp; <a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a> <span class="id" type="var">x</span>}</span>.  The
+   elements of <span class="inlinecode">{<span class="id" type="var">x</span> : <a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a> &amp; <a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a> <span class="id" type="var">x</span>}</span> are pairs, written <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a> <span class="id" type="var">x</span> <span class="id" type="var">y</span></span> in
+   Coq, where <span class="inlinecode"><span class="id" type="var">x</span> : <a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a></span> and <span class="inlinecode"><span class="id" type="var">y</span> : <a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a> <span class="id" type="var">x</span></span>.
+
+<br/> <br/>
+   The primitive notation for dependent sum is <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#sigT"><span class="id" type="inductive">sigT</span></a> <a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a></span>.  Note,
+   though, that in the absence of definitional eta expansion, this is
+   not actually identical with <span class="inlinecode">{<span class="id" type="var">x</span> : <a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a> &amp; <a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a> <span class="id" type="var">x</span>}</span>, since the latter
+   desugars to <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#sigT"><span class="id" type="inductive">sigT</span></a> <span class="id" type="keyword">fun</span>( <span class="id" type="var">x</span> =&gt; <a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a> <span class="id" type="var">x</span>)</span>.
+
+<br/> <br/>
+   Finally, the base and fiber components of a point in the total
+   space are extracted with <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a></span> and <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+We can also define more familiar homotopy-looking aliases for all
+   of these functions. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="var">Notation </span><a name="::'('_x_';'_x_')'"><span class="id" type="notation">"</span></a>( x  ; y )" := (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <span class="id" type="var">_</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span>).<br/>
+<span class="id" type="var">Notation </span><a name="pr1"><span class="id" type="abbreviation">pr1</span></a> := (@<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span>).<br/>
+<span class="id" type="var">Notation </span><a name="pr2"><span class="id" type="abbreviation">pr2</span></a> := (@<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+An element of <span class="inlinecode"><a class="idref" href="Fibrations.html#section"><span class="id" type="definition">section</span></a> <a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a></span> is a global section of fibration <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="section"><span class="id" type="definition">section</span></a> {<span class="id" type="var">A</span>} (<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>) := <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span> : <span class="id" type="var">A</span>, <span class="id" type="var">P</span> <span class="id" type="var">x</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We now study how paths interact with fibrations.  The most basic
+   fact is that we can transport points in the fibers along paths in
+   the base space.  This is actually a special case of the
+   <span class="inlinecode"><a class="idref" href="Paths.html#paths_rect"><span class="id" type="definition">paths_rect</span></a></span> induction principle in which the fibration <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.P"><span class="id" type="variable">P</span></a></span> does
+   not depend on paths in the base space but rather just on points of
+   the base space. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="transport"><span class="id" type="lemma">transport</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) : <span class="id" type="var">P</span> <span class="id" type="var">x</span> -&gt; <span class="id" type="var">P</span> <span class="id" type="var">y</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A homotopy fiber for a map <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a></span> at <span class="inlinecode"><span class="id" type="var">y</span></span> is the space of paths of the
+   form <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a> <span class="id" type="var">x</span> == <span class="id" type="var">y</span></span>.
+   
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="hfiber"><span class="id" type="definition">hfiber</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) (<span class="id" type="var">y</span> : <span class="id" type="var">B</span>) := <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a><span class="id" type="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <span class="id" type="var">A</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We prove a lemma that explains how to transport a point in the
+   homotopy fiber along a path in the domain of the map. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="transport_hfiber"><span class="id" type="lemma">transport_hfiber</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">z</span> : <span class="id" type="var">B</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> (<span class="id" type="var">P</span> := <span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) <span class="id" type="var">p</span> <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!(</span></a><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">p</span><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">f</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">cancel_units</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The following lemma tells us how to construct a path in the total space from
+   a path in the base space and a path in the fiber. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="total_path"><span class="id" type="lemma">total_path</span></a> (<span class="id" type="var">A</span> : <span class="id" type="keyword">Type</span>) (<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>) (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#sigT"><span class="id" type="inductive">sigT</span></a> <span class="id" type="var">P</span>) (<span class="id" type="var">p</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;(<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">p</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a> <span class="id" type="var">y</span>) -&gt; (<span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">x</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">x</span> <span class="id" type="var">H</span>].<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">y</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">y</span> <span class="id" type="var">G</span>].<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> * |- *.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Conversely, a path in the total space can be projected down to the base. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="base_path"><span class="id" type="definition">base_path</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>} {<span class="id" type="var">u</span> <span class="id" type="var">v</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#sigT"><span class="id" type="inductive">sigT</span></a> <span class="id" type="var">P</span>} :<br/>
+&nbsp;&nbsp;(<span class="id" type="var">u</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">v</span>) -&gt; (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">u</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">v</span>) :=<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <a class="idref" href="Fibrations.html#pr1"><span class="id" type="abbreviation">pr1</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+And similarly to the fiber.  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="fiber_path"><span class="id" type="definition">fiber_path</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>} {<span class="id" type="var">u</span> <span class="id" type="var">v</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#sigT"><span class="id" type="inductive">sigT</span></a> <span class="id" type="var">P</span>}<br/>
+&nbsp;&nbsp;(<span class="id" type="var">p</span> : <span class="id" type="var">u</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">v</span>) : (<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <a class="idref" href="Fibrations.html#pr1"><span class="id" type="abbreviation">pr1</span></a> <span class="id" type="var">p</span>) (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a> <span class="id" type="var">u</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a> <span class="id" type="var">v</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+And these operations are inverses.  See <span class="inlinecode"><a class="idref" href="Equivalences.html#total_paths_equiv"><span class="id" type="lemma">total_paths_equiv</span></a></span>, later
+   on, for a more precise statement. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="total_path_reconstruction"><span class="id" type="lemma">total_path_reconstruction</span></a> (<span class="id" type="var">A</span> : <span class="id" type="keyword">Type</span>) (<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>) (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#sigT"><span class="id" type="inductive">sigT</span></a> <span class="id" type="var">P</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Fibrations.html#total_path"><span class="id" type="lemma">total_path</span></a> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> (<a class="idref" href="Fibrations.html#base_path"><span class="id" type="definition">base_path</span></a> <span class="id" type="var">p</span>) (<a class="idref" href="Fibrations.html#fiber_path"><span class="id" type="definition">fiber_path</span></a> <span class="id" type="var">p</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="base_total_path"><span class="id" type="lemma">base_total_path</span></a> (<span class="id" type="var">A</span> : <span class="id" type="keyword">Type</span>) (<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>) (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#sigT"><span class="id" type="inductive">sigT</span></a> <span class="id" type="var">P</span>)<br/>
+&nbsp;&nbsp;(<span class="id" type="var">p</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">q</span> : <a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">p</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><a class="idref" href="Fibrations.html#base_path"><span class="id" type="definition">base_path</span></a> (<a class="idref" href="Fibrations.html#total_path"><span class="id" type="lemma">total_path</span></a> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span>)<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">x</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">x</span> <span class="id" type="var">H</span>]. <span class="id" type="tactic">destruct</span> <span class="id" type="var">y</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">y</span> <span class="id" type="var">K</span>]. <span class="id" type="tactic">intros</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> <span class="id" type="var">p</span>. <span class="id" type="tactic">induction</span> <span class="id" type="var">p</span>. <span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> <span class="id" type="var">q</span>. <span class="id" type="tactic">induction</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="fiber_total_path"><span class="id" type="lemma">fiber_total_path</span></a> (<span class="id" type="var">A</span> : <span class="id" type="keyword">Type</span>) (<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>) (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#sigT"><span class="id" type="inductive">sigT</span></a> <span class="id" type="var">P</span>)<br/>
+&nbsp;&nbsp;(<span class="id" type="var">p</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">q</span> : <a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">p</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> (<span class="id" type="var">P</span> := <span class="id" type="keyword">fun</span> <span class="id" type="var">p'</span> : <a class="idref" href="Fibrations.html#pr1"><span class="id" type="abbreviation">pr1</span></a> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Fibrations.html#pr1"><span class="id" type="abbreviation">pr1</span></a> <span class="id" type="var">y</span> =&gt; <a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">p'</span> (<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">y</span>)<br/>
+&nbsp;&nbsp;(<a class="idref" href="Fibrations.html#base_total_path"><span class="id" type="lemma">base_total_path</span></a> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span>) (<a class="idref" href="Fibrations.html#fiber_path"><span class="id" type="definition">fiber_path</span></a> (<a class="idref" href="Fibrations.html#total_path"><span class="id" type="lemma">total_path</span></a> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span>))<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">x</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">x</span> <span class="id" type="var">H</span>]. <span class="id" type="tactic">destruct</span> <span class="id" type="var">y</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">y</span> <span class="id" type="var">K</span>]. <span class="id" type="tactic">intros</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> <span class="id" type="var">p</span>. <span class="id" type="tactic">induction</span> <span class="id" type="var">p</span>. <span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> <span class="id" type="var">q</span>. <span class="id" type="tactic">induction</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This lemma tells us how to extract a commutative triangle in the
+   base from a path in the homotopy fiber. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="hfiber_triangle"><span class="id" type="lemma">hfiber_triangle</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} {<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>} {<span class="id" type="var">z</span> : <span class="id" type="var">B</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <a class="idref" href="Fibrations.html#hfiber"><span class="id" type="definition">hfiber</span></a> <span class="id" type="var">f</span> <span class="id" type="var">z</span>} (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<a class="idref" href="Fibrations.html#base_path"><span class="id" type="definition">base_path</span></a> <span class="id" type="var">p</span>)<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a> <span class="id" type="var">y</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a> <span class="id" type="var">x</span><a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">induction</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">base_path</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">cancel_units</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Transporting a path along another path is equivalent to
+   concatenating the two paths. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="trans_is_concat"><span class="id" type="lemma">trans_is_concat</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">q</span> <span class="id" type="var">p</span><a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="trans_is_concat_opp"><span class="id" type="lemma">trans_is_concat_opp</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> (<span class="id" type="var">P</span> := <span class="id" type="keyword">fun</span> <span class="id" type="var">x'</span> =&gt; (<span class="id" type="var">x'</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>)) <span class="id" type="var">p</span> <span class="id" type="var">q</span><a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Transporting along a concatenation is transporting twice. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="trans_concat"><span class="id" type="lemma">trans_concat</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) (<span class="id" type="var">z</span> : <span class="id" type="var">P</span> <span class="id" type="var">x</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>) <span class="id" type="var">z</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">q</span> (<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">p</span> <span class="id" type="var">z</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Transporting commutes with pulling back along a map. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="map_trans"><span class="id" type="lemma">map_trans</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">P</span> : <span class="id" type="var">B</span> -&gt; <span class="id" type="keyword">Type</span>) (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">z</span> : <span class="id" type="var">P</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)) :<br/>
+&nbsp;<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> (<span class="id" type="var">P</span> := (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <span class="id" type="var">P</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>))) <span class="id" type="var">p</span> <span class="id" type="var">z</span><a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">p</span>) <span class="id" type="var">z</span><a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+And also with applying fiberwise functions. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="trans_map"><span class="id" type="lemma">trans_map</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">P</span> <span class="id" type="var">Q</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">f</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">P</span> <span class="id" type="var">x</span> -&gt; <span class="id" type="var">Q</span> <span class="id" type="var">x</span>) (<span class="id" type="var">z</span> : <span class="id" type="var">P</span> <span class="id" type="var">x</span>) :<br/>
+&nbsp;&nbsp;<span class="id" type="var">f</span> <span class="id" type="var">y</span> (<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">p</span> <span class="id" type="var">z</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">p</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span> <span class="id" type="var">z</span>)<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A version of <span class="inlinecode"><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a></span> for dependent functions. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="map_dep"><span class="id" type="lemma">map_dep</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">f</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">P</span> <span class="id" type="var">x</span>) (<span class="id" type="var">p</span>: <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">p</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">f</span> <span class="id" type="var">y</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="trans_trivial"><span class="id" type="lemma">trans_trivial</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span> : <span class="id" type="keyword">Type</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">z</span> : <span class="id" type="var">B</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> (<span class="id" type="var">P</span> := <span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <span class="id" type="var">B</span>) <span class="id" type="var">p</span> <span class="id" type="var">z</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="map_dep_trivial"><span class="id" type="lemma">map_dep_trivial</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) (<span class="id" type="var">p</span>: <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>):<br/>
+&nbsp;&nbsp;<a class="idref" href="Fibrations.html#map_dep"><span class="id" type="lemma">map_dep</span></a> <span class="id" type="var">f</span> <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Fibrations.html#trans_trivial"><span class="id" type="lemma">trans_trivial</span></a> <span class="id" type="var">p</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">p</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="map_twovar"><span class="id" type="lemma">map_twovar</span></a> {<span class="id" type="var">A</span> : <span class="id" type="keyword">Type</span>} {<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>} {<span class="id" type="var">B</span> : <span class="id" type="keyword">Type</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} {<span class="id" type="var">a</span> : <span class="id" type="var">P</span> <span class="id" type="var">x</span>} {<span class="id" type="var">b</span> : <span class="id" type="var">P</span> <span class="id" type="var">y</span>}<br/>
+&nbsp;&nbsp;(<span class="id" type="var">f</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span> : <span class="id" type="var">A</span>, <span class="id" type="var">P</span> <span class="id" type="var">x</span> -&gt; <span class="id" type="var">B</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">q</span> : <a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">p</span> <span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">b</span>) :<br/>
+&nbsp;&nbsp;<span class="id" type="var">f</span> <span class="id" type="var">x</span> <span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">f</span> <span class="id" type="var">y</span> <span class="id" type="var">b</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">B</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">a</span> <span class="id" type="var">b</span> <span class="id" type="var">f</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="total_path2"><span class="id" type="lemma">total_path2</span></a> (<span class="id" type="var">A</span> : <span class="id" type="keyword">Type</span>) (<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>) (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#sigT"><span class="id" type="inductive">sigT</span></a> <span class="id" type="var">P</span>)<br/>
+&nbsp;&nbsp;(<span class="id" type="var">p</span> <span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">r</span> : <a class="idref" href="Fibrations.html#base_path"><span class="id" type="definition">base_path</span></a> <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Fibrations.html#base_path"><span class="id" type="definition">base_path</span></a> <span class="id" type="var">q</span>) :<br/>
+&nbsp;&nbsp;(<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> (<span class="id" type="var">P</span> := <span class="id" type="keyword">fun</span> <span class="id" type="var">s</span> =&gt; <a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">s</span> (<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">y</span><a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a>) <span class="id" type="var">r</span> (<a class="idref" href="Fibrations.html#fiber_path"><span class="id" type="definition">fiber_path</span></a> <span class="id" type="var">p</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Fibrations.html#fiber_path"><span class="id" type="definition">fiber_path</span></a> <span class="id" type="var">q</span>) -&gt; (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span> <span class="id" type="var">r</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Fibrations.html#total_path"><span class="id" type="lemma">total_path</span></a> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> (<a class="idref" href="Fibrations.html#base_path"><span class="id" type="definition">base_path</span></a> <span class="id" type="var">p</span>) (<a class="idref" href="Fibrations.html#fiber_path"><span class="id" type="definition">fiber_path</span></a> <span class="id" type="var">p</span>)) ;<br/>
+&nbsp;&nbsp;[ <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>, <a class="idref" href="Fibrations.html#total_path_reconstruction"><span class="id" type="lemma">total_path_reconstruction</span></a> | ].<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Fibrations.html#total_path"><span class="id" type="lemma">total_path</span></a> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> (<a class="idref" href="Fibrations.html#base_path"><span class="id" type="definition">base_path</span></a> <span class="id" type="var">q</span>) (<a class="idref" href="Fibrations.html#fiber_path"><span class="id" type="definition">fiber_path</span></a> <span class="id" type="var">q</span>)) ;<br/>
+&nbsp;&nbsp;[ | <span class="id" type="tactic">apply</span> <a class="idref" href="Fibrations.html#total_path_reconstruction"><span class="id" type="lemma">total_path_reconstruction</span></a> ].<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Fibrations.html#map_twovar"><span class="id" type="lemma">map_twovar</span></a> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" type="var">f</span> := <a class="idref" href="Fibrations.html#total_path"><span class="id" type="lemma">total_path</span></a> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" type="var">p</span> := <span class="id" type="var">r</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>UnivalenceImpliesFunext</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library UnivalenceImpliesFunext</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Paths.html#"><span class="id" type="library">Paths</span></a> <a class="idref" href="Fibrations.html#"><span class="id" type="library">Fibrations</span></a> <a class="idref" href="Contractible.html#"><span class="id" type="library">Contractible</span></a> <a class="idref" href="Equivalences.html#"><span class="id" type="library">Equivalences</span></a> <a class="idref" href="Univalence.html#"><span class="id" type="library">Univalence</span></a> <a class="idref" href="Funext.html#"><span class="id" type="library">Funext</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+For compatibility with Coq 8.2. 
+</div>
+<div class="code">
+<span class="id" type="keyword">Unset</span> <span class="id" type="var">Automatic</span> <span class="id" type="var">Introduction</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Here we prove that univalence implies function extensionality.  We
+   keep this file separate from the statements of Univalence and
+   Funext, since it has a tendency to produce universe
+   inconsistencies.  With truly polymorphic universes this ought not
+   to be a problem.
+
+<br/> <br/>
+   Since this file makes the point that univalence implies funext,
+   further development can avoid including this file and simply assume
+   function extensionality as an axiom alongside univalence, in the
+   knowledge that it is actually no additional requirement. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Section</span> <a name="UnivalenceImpliesFunext"><span class="id" type="section">UnivalenceImpliesFunext</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">Hypothesis</span> <a name="UnivalenceImpliesFunext.univalence"><span class="id" type="variable">univalence</span></a> : <a class="idref" href="Univalence.html#univalence_statement"><span class="id" type="definition">univalence_statement</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">Hypothesis</span> <a name="UnivalenceImpliesFunext.eta_rule"><span class="id" type="variable">eta_rule</span></a> : <a class="idref" href="Funext.html#eta_statement"><span class="id" type="definition">eta_statement</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Exponentiation preserves equivalences, i.e., if <span class="inlinecode"><span class="id" type="var">w</span></span> is an
+     equivalence then so is post-composition by <span class="inlinecode"><span class="id" type="var">w</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">Theorem</span> <a name="equiv_exponential"><span class="id" type="lemma">equiv_exponential</span></a> : <span class="id" type="keyword">forall</span> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">w</span> : <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">B</span>) <span class="id" type="var">C</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">C</span> -&gt; <span class="id" type="var">A</span><a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">C</span> -&gt; <span class="id" type="var">B</span><a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">w</span> <span class="id" type="var">C</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">exists</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">h</span> =&gt; <span class="id" type="var">w</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">h</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">generalize</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">w</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Univalence.html#equiv_induction"><span class="id" type="lemma">equiv_induction</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">D</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a> (<a class="idref" href="Funext.html#eta_equiv"><span class="id" type="definition">eta_equiv</span></a> <a class="idref" href="UnivalenceImpliesFunext.html#UnivalenceImpliesFunext.eta_rule"><span class="id" type="variable">eta_rule</span></a> <span class="id" type="var">C</span> <span class="id" type="var">D</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We are ready to prove functional extensionality, starting with the
+     naive non-dependent version. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">Theorem</span> <a name="univalence_implies_funext"><span class="id" type="lemma">univalence_implies_funext</span></a> : <a class="idref" href="Funext.html#funext_statement"><span class="id" type="definition">funext_statement</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#equiv_injective"><span class="id" type="lemma">equiv_injective</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">w</span> := <a class="idref" href="Funext.html#eta_equiv"><span class="id" type="definition">eta_equiv</span></a> <a class="idref" href="UnivalenceImpliesFunext.html#UnivalenceImpliesFunext.eta_rule"><span class="id" type="variable">eta_rule</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">pose</span> (<span class="id" type="var">d</span> := <span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> : <span class="id" type="var">A</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> (<span class="id" type="keyword">fun</span> <span class="id" type="var">xy</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#fst"><span class="id" type="definition">fst</span></a> <span class="id" type="var">xy</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#snd"><span class="id" type="definition">snd</span></a> <span class="id" type="var">xy</span>) <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:core_scope:'('_x_','_x_','_'..'_','_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">f</span> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:core_scope:'('_x_','_x_','_'..'_','_x_')'"><span class="id" type="notation">,</span></a> <span class="id" type="var">f</span> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:core_scope:'('_x_','_x_','_'..'_','_x_')'"><span class="id" type="notation">)</span></a> (<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>))).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">pose</span> (<span class="id" type="var">e</span> := <span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> : <span class="id" type="var">A</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> (<span class="id" type="keyword">fun</span> <span class="id" type="var">xy</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#fst"><span class="id" type="definition">fst</span></a> <span class="id" type="var">xy</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#snd"><span class="id" type="definition">snd</span></a> <span class="id" type="var">xy</span>) <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:core_scope:'('_x_','_x_','_'..'_','_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">f</span> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:core_scope:'('_x_','_x_','_'..'_','_x_')'"><span class="id" type="notation">,</span></a> <span class="id" type="var">g</span> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:core_scope:'('_x_','_x_','_'..'_','_x_')'"><span class="id" type="notation">)</span></a> (<span class="id" type="var">p</span> <span class="id" type="var">x</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">pose</span> (<span class="id" type="var">src_compose</span> := <a class="idref" href="UnivalenceImpliesFunext.html#equiv_exponential"><span class="id" type="lemma">equiv_exponential</span></a> (<a class="idref" href="Equivalences.html#free_path_source"><span class="id" type="definition">free_path_source</span></a> <span class="id" type="var">B</span>) <span class="id" type="var">A</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">pose</span> (<span class="id" type="var">trg_compose</span> := <a class="idref" href="UnivalenceImpliesFunext.html#equiv_exponential"><span class="id" type="lemma">equiv_exponential</span></a> (<a class="idref" href="Equivalences.html#free_path_target"><span class="id" type="definition">free_path_target</span></a> <span class="id" type="var">B</span>) <span class="id" type="var">A</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">trg_compose</span> <span class="id" type="var">e</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">trg_compose</span> <span class="id" type="var">d</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#equiv_injective"><span class="id" type="lemma">equiv_injective</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">w</span> := <span class="id" type="var">src_compose</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now we use this to prove weak funext, which as we know implies
+     (with dependent eta) also the strong dependent funext. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">Theorem</span> <a name="univalence_implies_weak_funext"><span class="id" type="lemma">univalence_implies_weak_funext</span></a> : <a class="idref" href="Funext.html#weak_funext_statement"><span class="id" type="definition">weak_funext_statement</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">X</span> <span class="id" type="var">P</span> <span class="id" type="var">allcontr</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">eqpt</span> : @<a class="idref" href="Paths.html#paths"><span class="id" type="inductive">paths</span></a> (<span class="id" type="var">X</span> -&gt; <span class="id" type="keyword">Type</span>) (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#unit"><span class="id" type="inductive">unit</span></a>) <span class="id" type="var">P</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="UnivalenceImpliesFunext.html#univalence_implies_funext"><span class="id" type="lemma">univalence_implies_funext</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>, <a class="idref" href="Univalence.html#equiv_to_path"><span class="id" type="definition">equiv_to_path</span></a>, <a class="idref" href="Equivalences.html#contr_equiv_unit"><span class="id" type="lemma">contr_equiv_unit</span></a>, <span class="id" type="var">allcontr</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">contrunit</span> : <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> (<span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>:<span class="id" type="var">X</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#unit"><span class="id" type="inductive">unit</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">exists</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">_</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#tt"><span class="id" type="constructor">tt</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="UnivalenceImpliesFunext.html#univalence_implies_funext"><span class="id" type="lemma">univalence_implies_funext</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">alltt</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">y</span>:<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#unit"><span class="id" type="inductive">unit</span></a>, <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#tt"><span class="id" type="constructor">tt</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">y</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">alltt</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">exact</span> (<a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> (<span class="id" type="var">P</span> := <span class="id" type="keyword">fun</span> <span class="id" type="var">Q</span>: <span class="id" type="var">X</span> -&gt; <span class="id" type="keyword">Type</span> =&gt; <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> (<span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">Q</span> <span class="id" type="var">x</span>)) <span class="id" type="var">eqpt</span> <span class="id" type="var">contrunit</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">End</span> <a class="idref" href="UnivalenceImpliesFunext.html#UnivalenceImpliesFunext"><span class="id" type="section">UnivalenceImpliesFunext</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

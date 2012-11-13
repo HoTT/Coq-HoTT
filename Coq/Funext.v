@@ -1,6 +1,6 @@
-Require Export Fibrations Contractible Equivalences FiberEquivalences.
+Require Export Paths Fibrations Contractible Equivalences FiberEquivalences.
 
-(** Much of the content here is closely related to Richard Garner’s paper “On the strength of dependent products…”.  We use different terminology in places, but recall his for comparison. *)
+(** References to [Garner] are the paper “On the strength of dependent products…”, which also compares notions of functional extensionality. *)
 
 (** * Naive functional extensionality *)
 
@@ -60,7 +60,7 @@ Definition funext_comp2_statement (funext : funext_dep_statement)
       happly_dep (funext X P f g p) x == p x).
 (** ‘Pi-ext-app’ in Garner. *)
 
-(** Does this rule follow automatically?  *Yes*, and in fact for a given witness [funext], it’s equivalent to [funext_comp1_statement] above.  However, this seems quite non-trivial to prove; it will follow eventually from the comparision with “contractible functional extensionality”.  So we leave this for now, and will return to it later. *)
+(** Does this rule follow automatically?  Yes, and in fact for a given witness [funext], it’s equivalent to [funext_comp1_statement] above.  However, this seems quite non-trivial to prove; it will follow eventually from the comparision with “contractible functional extensionality”.  So we leave this for now, and will return to it later. *)
 
 (** * Strong functional extensionality *)
 
@@ -138,7 +138,7 @@ Defined.
 (* Name used in older versions, retaining for backward-compatibility: *)
 Definition strong_funext_dep_compute := strong_funext_dep_comp2.
 
-(** Conversely, does naive functional extensionality imply the strong form?  Assuming _both_ computation rules, this is not hard to show: [comp1] says that [funext] gives a left inverse to [happly], [comp2] that it gives a right inverse. *)
+(** Conversely, does naive functional extensionality imply the strong form?  Assuming both computation rules, this isn’t hard to show: [comp1] says that [funext] gives a left inverse to [happly], [comp2] that it gives a right inverse. *)
 
 Lemma funext_both_comps_to_strong
   (funext : funext_dep_statement)
@@ -379,7 +379,7 @@ Proof.
   apply funext_correction_comp2.
 Defined.
 
-(** Alternatively, we can show strong funext entirely from contractible funext, without ever invoking naive: *)
+(** Alternatively, we can show strong funext directly from contractible funext, without ever invoking naive: *)
  
 Theorem contr_to_strong_funext :
   contr_funext_statement -> strong_funext_dep_statement.
@@ -426,7 +426,7 @@ Proof.
   apply H. intro x. apply p.
 Defined.
 
-(** Now we can give an alternative form of the main theorem: the fact that weak functional extensionality implies *strong* (dependent) functional extensionality, at least in the presence of the dependent eta rule. *)
+(** Now we can give an alternative form of the main theorem: the fact that weak functional extensionality implies _strong_ (dependent) functional extensionality, at least in the presence of the dependent eta rule. *)
 
 Lemma is_contr_product_of_cones_from_weak_funext
   {A} {B : A -> Type} {f : forall x:A, B x}
@@ -462,12 +462,17 @@ Defined.
 
 (** Therefore, all of the following are equivalent:
 
-- naive functional extensionality;
+- naive functional extensionality (up to a correction of witness);
 - naive functional extensionality with either or both comp rules;
 - strong functional extensionality;
 - contractible functional extensionality;
-- weak functional extensionality + dependent eta. *)
+- weak functional extensionality + dependent eta.
 
+From Proposition 5.11 of Garner, we know that we can also add to these:
+
+- the rules ‘Pi-Id-elim’, ‘Pi-Id-elim-comp-prop’ stating that the types of homotopies [f === g] have the same universal properties as the types of paths [f == g].
+
+It could be good (or then again, it could be overkill) to add a discussion of rule.  It quite easily implies all the rest; conversely, the easiest of them to show it from is probably [contr_funext], I think. *)
 
 (** * Comparing dependent and non-dependent forms. *)
 
@@ -490,3 +495,61 @@ Proof.
 Defined.
 
 (** One can prove similar things for the other variants considered.  Can we go the other way, for any of the variants? *)
+
+(* The following doesn’t work:
+Definition maps_into_paths_in {X : Type} (P : X -> Type)
+:= forall x:X, { y:(P x) & {y':(P x) & y == y' }}.
+
+Definition ev_src {X : Type} (P : X -> Type) :
+  { x:X & maps_into_paths_in P} -> { x:X & P x}.
+Proof.
+  intros [x fgh].  exists x.  destruct (fgh x) as [y _].  exact y.
+Defined.  
+
+Definition ev_tgt {X : Type} (P : X -> Type) :
+  { x:X & maps_into_paths_in P} -> { x:X & P x}.
+Proof.
+  intros [x fgh].  exists x.  destruct (fgh x) as [y [y' _]].  exact y'.
+Defined.  
+
+Lemma ev_src_homot_ev_tgt {X : Type} (P : X -> Type) :
+  (ev_src P) === (ev_tgt P).
+Proof.
+  intros [x fgh].  unfold ev_src.  unfold ev_tgt.
+  destruct (fgh x) as [y [y' z]].
+  apply total_path with (idpath x).  exact z.
+Defined.
+
+Definition homotopic_sections_to_maps_into_paths {X : Type} (P : X -> Type)
+  : forall f g : (forall x:X, P x), f === g -> maps_into_paths_in P.
+Proof.
+  intros f g h x.  exact (f x ; (g x ; h x)).
+Defined.
+
+Theorem funext_nondep_plus_eta_to_dep :
+  funext_statement -> eta_dep_statement -> funext_dep_statement.
+Proof.
+  intros H_funext H_dep X P.
+  eta_intro f.  eta_intro g.  intro h.
+  set (fgh := (fun x => (f x ; (g x ; h x))) : maps_into_paths_in P).
+  path_via (fun x:X => pr2 (ev_src P (x ; fgh))).  (* Up to eta-expansion, this is f. *)
+  path_via (fun x:X => pr2 (ev_tgt P (x ; fgh))).  (* Up to eta-expansion, this is g. *)
+  assert (ev_src P == ev_tgt P).  apply H_funext.  apply ev_src_homot_ev_tgt.
+  path_simplify.
+Defined.
+
+(*
+One might hope for a simpler proof, beginning:
+
+  assert ((fun x => (x ; f x)) == (fun x => (x ; g x))) as H_xf_eq_xg.  
+  apply H_funext.  intro x. 
+  apply total_path with (idpath x).  exact (h x).
+  path_via (fun x => pr2 ((fun x => (x ; f x)) x)).
+  path_via (fun x => pr2 ((fun x => (x ; g x)) x)).
+  path_simplify with H_xf_eq_xg.  Qed.
+
+However, this use of path_simplify is not legit: one can’t abstract the terms (fun x => (x ; f x)) out of the goal.
+Geometrically, the trouble is that the intuition here relies on knowing that the base homotopy of H_xf_eq_xg is the identity; and I can’t see how to prove this without already having dependent funext!
+*)
+
+*)

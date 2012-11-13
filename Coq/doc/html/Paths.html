@@ -1,0 +1,1261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>Paths</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Paths</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Basic homotopy-theoretic approach to paths. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <a class="idref" href="Functions.html#"><span class="id" type="library">Functions</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+For compatibility with Coq 8.2. 
+</div>
+<div class="code">
+<span class="id" type="keyword">Unset</span> <span class="id" type="var">Automatic</span> <span class="id" type="var">Introduction</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Inductive</span> <a name="paths"><span class="id" type="inductive">paths</span></a> {<span class="id" type="var">A</span>} : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span> := <a name="idpath"><span class="id" type="constructor">idpath</span></a> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <a class="idref" href="Paths.html#paths"><span class="id" type="inductive">paths</span></a> <span class="id" type="var">x</span> <span class="id" type="var">x</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We introduce notation <span class="inlinecode"><span class="id" type="var">x</span> == <span class="id" type="var">y</span></span> for the space <span class="inlinecode"><a class="idref" href="Paths.html#paths"><span class="id" type="inductive">paths</span></a> <span class="id" type="var">x</span> <span class="id" type="var">y</span></span> of paths
+   from <span class="inlinecode"><span class="id" type="var">x</span></span> to <span class="inlinecode"><span class="id" type="var">y</span></span>. We can then write <span class="inlinecode"><span class="id" type="var">p</span> : <span class="id" type="var">x</span> == <span class="id" type="var">y</span></span> to indicate that
+   <span class="inlinecode"><span class="id" type="var">p</span></span> is a path from <span class="inlinecode"><span class="id" type="var">x</span></span> to <span class="inlinecode"><span class="id" type="var">y</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="var">Notation </span><a name="::x_'=='_x"><span class="id" type="notation">"</span></a>x == y" := (<a class="idref" href="Paths.html#paths"><span class="id" type="inductive">paths</span></a> <span class="id" type="var">x</span> <span class="id" type="var">y</span>) (<span class="id" type="tactic">at</span> <span class="id" type="var">level</span> 70).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The <span class="inlinecode"><span class="id" type="keyword">Hint</span> <span class="id" type="keyword">Resolve</span> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a>@</span> line below means that Coq's <span class="inlinecode"><span class="id" type="tactic">auto</span></span>
+   tactic will automatically perform <span class="inlinecode"><span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a></span> if that leads to a
+   successful solution of the current goal. For example if we ask it
+   to construct a path <span class="inlinecode"><span class="id" type="var">x</span> == <span class="id" type="var">x</span></span>, <span class="inlinecode"><span class="id" type="tactic">auto</span></span> will find the identity path
+   <span class="inlinecode"><a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span></span>, thanks to the <span class="inlinecode"><span class="id" type="keyword">Hint</span> <span class="id" type="keyword">Resolve</span></span>.
+
+<br/> <br/>
+   In general we should declare <span class="inlinecode"><span class="id" type="keyword">Hint</span> <span class="id" type="keyword">Resolve</span></span> on those theorems which
+   are not very complicated but get used often to finish off
+   proofs. Notice how we use the non-implicit version <span class="inlinecode"><a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a>@</span> (if we
+   try <span class="inlinecode"><span class="id" type="keyword">Hint</span> <span class="id" type="keyword">Resolve</span> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a></span> Coq complains that it cannot guess the
+   value of the implicit argument <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a></span>).  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Hint</span> <span class="id" type="keyword">Resolve</span> @<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The following automated tactic applies induction on paths and then
+    idpath. It can handle many easy statements.  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">path_induction</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>; <span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [ <span class="id" type="var">p</span> : <span class="id" type="var">_</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">_</span>  |- <span class="id" type="var">_</span> ] =&gt; <span class="id" type="tactic">induction</span> <span class="id" type="var">p</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">_</span> =&gt; <span class="id" type="var">idtac</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;); <span class="id" type="tactic">auto</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+You can read the tactic definition as follows. We first perform
+   <span class="inlinecode"><span class="id" type="tactic">intros</span></span> to move hypotheses into the context. Then we repeat while
+   there is still progress: if there is a path <span class="inlinecode"><span class="id" type="var">p</span></span> in the context,
+   apply induction to it, otherwise perform the <span class="inlinecode"><span class="id" type="var">idtac</span></span> which does
+   nothing (and so no progress is made and we stop). After that, we
+   perform an <span class="inlinecode"><span class="id" type="tactic">auto</span></span>.
+
+<br/> <br/>
+   The notation <span class="inlinecode"> [... |- ... ] </span> is a pattern for contexts. To the
+   left of the symbol <span class="inlinecode">|-</span> we list hypotheses and to the right the
+   goal. The underscore means "anything".
+
+<br/> <br/>
+   In summary <span class="inlinecode"><span class="id" type="var">path_induction</span></span> performs as many inductions on paths as
+   it can, then it uses <span class="inlinecode"><span class="id" type="tactic">auto</span></span>.  
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+We now define the basic operations on paths, starting with
+   concatenation. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="concat"><span class="id" type="definition">concat</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>} : (<span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) -&gt; (<span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) -&gt; (<span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The concatenation of paths <span class="inlinecode"><span class="id" type="var">p</span></span> and <span class="inlinecode"><span class="id" type="var">q</span></span> is denoted as <span class="inlinecode"><span class="id" type="var">p</span> @ <span class="id" type="var">q</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="var">Notation </span><a name="::x_'@'_x"><span class="id" type="notation">"</span></a>p @ q" := (<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="var">p</span> <span class="id" type="var">q</span>) (<span class="id" type="tactic">at</span> <span class="id" type="var">level</span> 60).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A definition like <span class="inlinecode"><a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a></span> can be used in two ways. The first and
+   obvious way is as an operation which concatenates together two
+   paths. The second use is a proof tactic when we want to construct a
+   path <span class="inlinecode"><span class="id" type="var">x</span> == <span class="id" type="var">z</span></span> as a concatenation of paths <span class="inlinecode"><span class="id" type="var">x</span> == <span class="id" type="var">y</span> == <span class="id" type="var">z</span></span>. This is
+   done with <span class="inlinecode"><span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a>@</span>, see examples below. We will actually
+   define a tactic <span class="inlinecode"><span class="id" type="var">path_via</span></span> which uses <span class="inlinecode"><a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a></span> but is much smarter
+   than just the direct application <span class="inlinecode"><span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a>@</span>. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+Paths can be reversed. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="opposite"><span class="id" type="definition">opposite</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} : (<span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) -&gt; (<span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Notation for the opposite of a path <span class="inlinecode"><span class="id" type="var">p</span></span> is <span class="inlinecode">! <span class="id" type="var">p</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="var">Notation </span><a name="::'!'_x"><span class="id" type="notation">"</span></a>! p" := (<a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a> <span class="id" type="var">p</span>) (<span class="id" type="tactic">at</span> <span class="id" type="var">level</span> 50).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Next we give names to the basic properties of concatenation of
+   paths. Note that all statements are "up to a higher path", e.g.,
+   the composition of <span class="inlinecode"><span class="id" type="var">p</span></span> and the identity path is not equal to <span class="inlinecode"><span class="id" type="var">p</span></span>
+   but only connected to it with a path. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+The following lemmas say that up to higher paths, the paths form a
+   1-groupoid. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="idpath_left_unit"><span class="id" type="lemma">idpath_left_unit</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) : <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="idpath_right_unit"><span class="id" type="lemma">idpath_right_unit</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) : <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">y</span><a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="opposite_right_inverse"><span class="id" type="lemma">opposite_right_inverse</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) : <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span><a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="opposite_left_inverse"><span class="id" type="lemma">opposite_left_inverse</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) : <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span><a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">y</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="opposite_concat"><span class="id" type="lemma">opposite_concat</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) : <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!(</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="opposite_idpath"><span class="id" type="lemma">opposite_idpath</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> : <span class="id" type="var">A</span>) : <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!(</span></a><a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="opposite_opposite"><span class="id" type="lemma">opposite_opposite</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) : <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!(!</span></a> <span class="id" type="var">p</span><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="concat_associativity"><span class="id" type="lemma">concat_associativity</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">w</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">w</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">r</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">r</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now we move on to the 2-groupoidal structure of a type.
+   Concatenation of 2-paths along 1-paths is just ordinary
+   concatenation in a path type, but we need a new name and notation
+   for concatenation of 2-paths along points. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="concat2"><span class="id" type="definition">concat2</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>} {<span class="id" type="var">p</span> <span class="id" type="var">p'</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>} {<span class="id" type="var">q</span> <span class="id" type="var">q'</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>} :<br/>
+&nbsp;&nbsp;(<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p'</span>) -&gt; (<span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q'</span>) -&gt; (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p'</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q'</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="var">Notation </span><a name="::x_'@@'_x"><span class="id" type="notation">"</span></a>p @@ q" := (<a class="idref" href="Paths.html#concat2"><span class="id" type="definition">concat2</span></a> <span class="id" type="var">p</span> <span class="id" type="var">q</span>) (<span class="id" type="tactic">at</span> <span class="id" type="var">level</span> 60).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We also have whiskering operations. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="whisker_right"><span class="id" type="definition">whisker_right</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>} {<span class="id" type="var">p</span> <span class="id" type="var">p'</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>} (<span class="id" type="var">q</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) :<br/>
+&nbsp;&nbsp;(<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p'</span>) -&gt; (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p'</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="whisker_left"><span class="id" type="definition">whisker_left</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>} {<span class="id" type="var">q</span> <span class="id" type="var">q'</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>} (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;(<span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q'</span>) -&gt; (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q'</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="whisker_right_toid"><span class="id" type="definition">whisker_right_toid</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} {<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span>} (<span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;(<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span>) -&gt; (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span> <span class="id" type="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">y</span> := <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#whisker_right"><span class="id" type="definition">whisker_right</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#idpath_left_unit"><span class="id" type="lemma">idpath_left_unit</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="whisker_right_fromid"><span class="id" type="definition">whisker_right_fromid</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} {<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span>} (<span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;(<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span>) -&gt; (<span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span> <span class="id" type="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">y</span> := <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>, <a class="idref" href="Paths.html#idpath_left_unit"><span class="id" type="lemma">idpath_left_unit</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#whisker_right"><span class="id" type="definition">whisker_right</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="whisker_left_toid"><span class="id" type="definition">whisker_left_toid</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} {<span class="id" type="var">p</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>} (<span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;(<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">y</span>) -&gt; (<span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span> <span class="id" type="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">y</span> := <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">y</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#whisker_left"><span class="id" type="definition">whisker_left</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#idpath_right_unit"><span class="id" type="lemma">idpath_right_unit</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="whisker_left_fromid"><span class="id" type="definition">whisker_left_fromid</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} {<span class="id" type="var">p</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>} (<span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;(<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span>) -&gt; (<span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span> <span class="id" type="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">y</span> := <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">y</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>, <a class="idref" href="Paths.html#idpath_right_unit"><span class="id" type="lemma">idpath_right_unit</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#whisker_left"><span class="id" type="definition">whisker_left</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The interchange law for whiskering. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="whisker_interchange"><span class="id" type="definition">whisker_interchange</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> <span class="id" type="var">p'</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">q</span> <span class="id" type="var">q'</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>)<br/>
+&nbsp;&nbsp;(<span class="id" type="var">a</span> : <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p'</span>) (<span class="id" type="var">b</span> : <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q'</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#whisker_right"><span class="id" type="definition">whisker_right</span></a> <span class="id" type="var">q</span> <span class="id" type="var">a</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#whisker_left"><span class="id" type="definition">whisker_left</span></a> <span class="id" type="var">p'</span> <span class="id" type="var">b</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#whisker_left"><span class="id" type="definition">whisker_left</span></a> <span class="id" type="var">p</span> <span class="id" type="var">b</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#whisker_right"><span class="id" type="definition">whisker_right</span></a> <span class="id" type="var">q'</span> <span class="id" type="var">a</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The interchange law for concatenation. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="concat2_interchange"><span class="id" type="definition">concat2_interchange</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> <span class="id" type="var">p'</span> <span class="id" type="var">p''</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">q</span> <span class="id" type="var">q'</span> <span class="id" type="var">q''</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>)<br/>
+&nbsp;&nbsp;(<span class="id" type="var">a</span> : <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p'</span>) (<span class="id" type="var">b</span> : <span class="id" type="var">p'</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p''</span>) (<span class="id" type="var">c</span> : <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q'</span>) (<span class="id" type="var">d</span> : <span class="id" type="var">q'</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q''</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@@'_x"><span class="id" type="notation">@@</span></a> <span class="id" type="var">c</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">b</span> <a class="idref" href="Paths.html#::x_'@@'_x"><span class="id" type="notation">@@</span></a> <span class="id" type="var">d</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'@@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">b</span><a class="idref" href="Paths.html#::x_'@@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@@'_x"><span class="id" type="notation">@@</span></a> <a class="idref" href="Paths.html#::x_'@@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">c</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">d</span><a class="idref" href="Paths.html#::x_'@@'_x"><span class="id" type="notation">)</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Taking opposites of 1-paths is functorial on 2-paths. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="opposite2"><span class="id" type="definition">opposite2</span></a> <span class="id" type="var">A</span> {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">p</span> <span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">a</span> : <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span>) : (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now we consider the application of functions to paths. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+A path <span class="inlinecode"><span class="id" type="var">p</span> : <span class="id" type="var">x</span> == <span class="id" type="var">y</span></span> in a space <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a></span> is mapped by <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a> : <a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a> -&gt; <a class="idref" href="FiberEquivalences.html#FibrationMap.B"><span class="id" type="variable">B</span></a></span> to a
+   path <span class="inlinecode"><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a> <span class="id" type="var">p</span> : <a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a> <span class="id" type="var">x</span> == <a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a> <span class="id" type="var">y</span></span> in <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.B"><span class="id" type="variable">B</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="map"><span class="id" type="lemma">map</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) : (<span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) -&gt; (<span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">f</span> <span class="id" type="var">y</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The next two lemmas state that <span class="inlinecode"><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a> <span class="id" type="var">p</span></span> is "functorial" in the path <span class="inlinecode"><span class="id" type="var">p</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="idpath_map"><span class="id" type="lemma">idpath_map</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> (<span class="id" type="var">x</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) : <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="concat_map"><span class="id" type="lemma">concat_map</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">p</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">q</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="opposite_map"><span class="id" type="lemma">opposite_map</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <span class="id" type="var">p</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">p</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+It is also the case that <span class="inlinecode"><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a> <span class="id" type="var">p</span></span> is functorial in <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a></span>.  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="idmap_map"><span class="id" type="lemma">idmap_map</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) : <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (<a class="idref" href="Functions.html#idmap"><span class="id" type="definition">idmap</span></a> <span class="id" type="var">A</span>) <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="compose_map"><span class="id" type="lemma">compose_map</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) (<span class="id" type="var">g</span> : <span class="id" type="var">B</span> -&gt; <span class="id" type="var">C</span>) (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (<span class="id" type="var">g</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">f</span>) <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">g</span> (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">p</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We can also map paths between paths. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="map2"><span class="id" type="definition">map2</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} {<span class="id" type="var">p</span> <span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) :<br/>
+&nbsp;&nbsp;<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span> -&gt; (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">q</span>)<br/>
+&nbsp;&nbsp;:= <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The type of "homotopies" between two functions <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a></span> and <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.g"><span class="id" type="variable">g</span></a></span> is
+   <span class="inlinecode"><span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a> <span class="id" type="var">x</span> == <a class="idref" href="FiberEquivalences.html#FibrationMap.g"><span class="id" type="variable">g</span></a> <span class="id" type="var">x</span></span>.  These can be derived from "paths" between
+   functions <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a> == <a class="idref" href="FiberEquivalences.html#FibrationMap.g"><span class="id" type="variable">g</span></a></span>; the converse is function extensionality. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="happly"><span class="id" type="definition">happly</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} {<span class="id" type="var">f</span> <span class="id" type="var">g</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>} : (<span class="id" type="var">f</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">g</span>) -&gt; (<span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">g</span> <span class="id" type="var">x</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">fun</span> <span class="id" type="var">p</span> <span class="id" type="var">x</span> =&gt; <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (<span class="id" type="keyword">fun</span> <span class="id" type="var">h</span> =&gt; <span class="id" type="var">h</span> <span class="id" type="var">x</span>) <span class="id" type="var">p</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Similarly, <span class="inlinecode"><a class="idref" href="Paths.html#happly"><span class="id" type="definition">happly</span></a></span> for dependent functions. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="happly_dep"><span class="id" type="definition">happly_dep</span></a> {<span class="id" type="var">A</span>} {<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>} {<span class="id" type="var">f</span> <span class="id" type="var">g</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">P</span> <span class="id" type="var">x</span>} :<br/>
+&nbsp;&nbsp;(<span class="id" type="var">f</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">g</span>) -&gt; (<span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">g</span> <span class="id" type="var">x</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">fun</span> <span class="id" type="var">p</span> <span class="id" type="var">x</span> =&gt; <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (<span class="id" type="keyword">fun</span> <span class="id" type="var">h</span> =&gt; <span class="id" type="var">h</span> <span class="id" type="var">x</span>) <span class="id" type="var">p</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We declare some more <span class="inlinecode"><span class="id" type="keyword">Hint</span> <span class="id" type="keyword">Resolve</span></span> hints, now in the "hint
+   database" <span class="inlinecode"><span class="id" type="var">path_hints</span></span>.  In general various hints (resolve,
+   rewrite, unfold hints) can be grouped into "databases". This is
+   necessary as sometimes different kinds of hints cannot be mixed,
+   for example because they would cause a combinatorial explosion or
+   rewriting cycles.
+
+<br/> <br/>
+   A specific <span class="inlinecode"><span class="id" type="keyword">Hint</span> <span class="id" type="keyword">Resolve</span></span> database <span class="inlinecode"><span class="id" type="var">db</span></span> can be used with <span class="inlinecode"><span class="id" type="tactic">auto</span> <span class="id" type="keyword">with</span> <span class="id" type="var">db</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Hint</span> <span class="id" type="keyword">Resolve</span><br/>
+&nbsp;&nbsp;@<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> @<a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#idpath_left_unit"><span class="id" type="lemma">idpath_left_unit</span></a> <a class="idref" href="Paths.html#idpath_right_unit"><span class="id" type="lemma">idpath_right_unit</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#opposite_right_inverse"><span class="id" type="lemma">opposite_right_inverse</span></a> <a class="idref" href="Paths.html#opposite_left_inverse"><span class="id" type="lemma">opposite_left_inverse</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#opposite_concat"><span class="id" type="lemma">opposite_concat</span></a> <a class="idref" href="Paths.html#opposite_idpath"><span class="id" type="lemma">opposite_idpath</span></a> <a class="idref" href="Paths.html#opposite_opposite"><span class="id" type="lemma">opposite_opposite</span></a><br/>
+&nbsp;&nbsp;@<a class="idref" href="Paths.html#concat2"><span class="id" type="definition">concat2</span></a><br/>
+&nbsp;&nbsp;@<a class="idref" href="Paths.html#whisker_right"><span class="id" type="definition">whisker_right</span></a> @<a class="idref" href="Paths.html#whisker_left"><span class="id" type="definition">whisker_left</span></a><br/>
+&nbsp;&nbsp;@<a class="idref" href="Paths.html#whisker_right_toid"><span class="id" type="definition">whisker_right_toid</span></a> @<a class="idref" href="Paths.html#whisker_right_fromid"><span class="id" type="definition">whisker_right_fromid</span></a><br/>
+&nbsp;&nbsp;@<a class="idref" href="Paths.html#whisker_left_toid"><span class="id" type="definition">whisker_left_toid</span></a> @<a class="idref" href="Paths.html#whisker_left_fromid"><span class="id" type="definition">whisker_left_fromid</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#opposite2"><span class="id" type="definition">opposite2</span></a><br/>
+&nbsp;&nbsp;@<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <a class="idref" href="Paths.html#idpath_map"><span class="id" type="lemma">idpath_map</span></a> <a class="idref" href="Paths.html#concat_map"><span class="id" type="lemma">concat_map</span></a> <a class="idref" href="Paths.html#idmap_map"><span class="id" type="lemma">idmap_map</span></a> <a class="idref" href="Paths.html#compose_map"><span class="id" type="lemma">compose_map</span></a> <a class="idref" href="Paths.html#opposite_map"><span class="id" type="lemma">opposite_map</span></a><br/>
+&nbsp;&nbsp;@<a class="idref" href="Paths.html#map2"><span class="id" type="definition">map2</span></a><br/>
+&nbsp;: <span class="id" type="var">path_hints</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We can add more hints to the database later. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+For some reason, <span class="inlinecode"><span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#happly"><span class="id" type="definition">happly</span></a></span> and <span class="inlinecode"><span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#happly_dep"><span class="id" type="definition">happly_dep</span></a></span> often seem
+   to fail unification.  This tactic does the work that I think they
+   should be doing. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">apply_happly</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- ?<span class="id" type="var">f'</span> ?<span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">g'</span> ?<span class="id" type="var">x</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">first</span> [<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#happly"><span class="id" type="definition">happly</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">f</span> := <span class="id" type="var">f'</span>) (<span class="id" type="var">g</span> := <span class="id" type="var">g'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#happly_dep"><span class="id" type="definition">happly_dep</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">f</span> := <span class="id" type="var">f'</span>) (<span class="id" type="var">g</span> := <span class="id" type="var">g'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The following tactic is intended to be applied when we want to
+   find a path between two expressions which are largely the same, but
+   differ in the value of some subexpression.  Therefore, it does its
+   best to "peel off" all the parts of both sides that are the same,
+   repeatedly, until only the "core" bit of difference is left.  Then
+   it performs an <span class="inlinecode"><span class="id" type="tactic">auto</span></span> using the <span class="inlinecode"><span class="id" type="var">path_hints</span></span> database. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">path_simplify</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> <span class="id" type="var">first</span> [<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#whisker_left"><span class="id" type="definition">whisker_left</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#whisker_right"><span class="id" type="definition">whisker_right</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;]; <span class="id" type="tactic">auto</span> <span class="id" type="keyword">with</span> <span class="id" type="var">path_hints</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The following variant allows the caller to supply an additional
+   lemma to be tried (for instance, if the caller expects the core
+   difference to be resolvable by using a particular lemma). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">path_simplify'</span> <span class="id" type="var">lem</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> <span class="id" type="var">first</span> [<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#whisker_left"><span class="id" type="definition">whisker_left</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#whisker_right"><span class="id" type="definition">whisker_right</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="tactic">apply</span> <span class="id" type="var">lem</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>; <span class="id" type="tactic">apply</span> <span class="id" type="var">lem</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;]; <span class="id" type="tactic">auto</span> <span class="id" type="keyword">with</span> <span class="id" type="var">path_hints</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+These tactics are used to construct a path <span class="inlinecode"><span class="id" type="var">a</span> == <span class="id" type="var">b</span></span> as a
+   composition of paths <span class="inlinecode"><span class="id" type="var">a</span> == <span class="id" type="var">x</span></span> and <span class="inlinecode"><span class="id" type="var">x</span> == <span class="id" type="var">b</span></span>.  They then apply
+   <span class="inlinecode"><span class="id" type="var">path_simplify</span></span> to both paths, along with possibly an additional
+   lemma supplied by the user. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">path_via</span> <span class="id" type="var">mid</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">y</span> := <span class="id" type="var">mid</span>); <span class="id" type="var">path_simplify</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">lem</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">y</span> := <span class="id" type="var">mid</span>); <span class="id" type="var">path_simplify'</span> <span class="id" type="var">lem</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This variant does not call path_simplify. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">path_via'</span> <span class="id" type="var">mid</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">y</span> := <span class="id" type="var">mid</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Here are some tactics for reassociating concatenations.  The
+   tactic <span class="inlinecode"><span class="id" type="var">associate_right</span></span> associates both source and target of the
+   goal all the way to the right, and dually for <span class="inlinecode"><span class="id" type="var">associate_left</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">associate_right_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(?</span></a><span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">b</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">c</span> ] =&gt; <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[<span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">b</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">c</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a>] <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">concat_associativity</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">associate_right</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">associate_right_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">associate_right_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;).<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">associate_left_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ ?<span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(?</span></a><span class="id" type="var">b</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">c</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> ] =&gt; <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">b</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">c</span>] <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">concat_associativity</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">associate_left</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">associate_left_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">associate_left_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This tactic unwhiskers by paths on both sides, reassociating as
+   necessary. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">unwhisker</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="var">associate_left</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#whisker_right"><span class="id" type="definition">whisker_right</span></a>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">associate_right</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#whisker_left"><span class="id" type="definition">whisker_left</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Here are some tactics for eliminating identities.  The tactic
+   <span class="inlinecode"><span class="id" type="var">cancel_units</span></span> tries to remove all identity paths and functions
+   from both source and target of the goal. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">cancel_units_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> ?<span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">p</span> ] =&gt; <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[<span class="id" type="var">p</span>] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">idpath_left_unit</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ ?<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> ?<span class="id" type="var">a</span> ] =&gt; <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[<span class="id" type="var">p</span>] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">idpath_right_unit</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">f</span> (<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> ?<span class="id" type="var">x</span>) ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">idpath_map</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (<a class="idref" href="Functions.html#idmap"><span class="id" type="definition">idmap</span></a> <span class="id" type="var">_</span>) ?<span class="id" type="var">p</span> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[<span class="id" type="var">p</span>] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">idmap_map</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> ?<span class="id" type="var">a</span><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">)</span></a> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">a</span>] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">opposite_idpath</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">cancel_units</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">cancel_units_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">cancel_units_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+And some tactics for eliminating matched pairs of opposites. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+This is an auxiliary tactic which performs one step of a
+   reassociation of <span class="inlinecode"><span class="id" type="var">s</span></span> (which is the source or target of a path) so
+   as to get <span class="inlinecode">!<span class="id" type="var">p</span></span> to be closer to being concatenated on the left with
+   something irreducible.  If there is more than one copy of <span class="inlinecode">!<span class="id" type="var">p</span></span> in
+   <span class="inlinecode"><span class="id" type="var">s</span></span>, then this tactic finds the first one which is concatenated on
+   the left with anything (irreducible or not), or if there is no such
+   occurrence of <span class="inlinecode">!<span class="id" type="var">p</span></span>, then finds the first one overall.  If this <span class="inlinecode">!<span class="id" type="var">p</span></span>
+   is already concatenated on the left with something irreducible,
+   then if that something is a <span class="inlinecode"><span class="id" type="var">p</span></span>, it cancels them.  If that
+   something is not a <span class="inlinecode"><span class="id" type="var">p</span></span>, then it fails.  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">partly_cancel_left_opposite_of_in</span> <span class="id" type="var">p</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="var">_</span> ?<span class="id" type="var">trg</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span>) <span class="id" type="var">p</span> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[ <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">trg</span> ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">opposite_left_inverse</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(?</span></a><span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">b</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[ <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">a</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">b</span> ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">concat_associativity</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">_</span> ] =&gt; <span class="id" type="tactic">fail</span> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(?</span></a><span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">b</span> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[ <span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">b</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">concat_associativity</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ ?<span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(?</span></a><span class="id" type="var">b</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[ <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">b</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span> ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">concat_associativity</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">cancel_units</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This tactic simply calls the previous one for the source and the
+   target, repeatedly, until it can no longer make progress.
+   
+</div>
+<div class="code">
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">cancel_left_opposite_of</span> <span class="id" type="var">p</span> := <br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">partly_cancel_left_opposite_of_in</span> <span class="id" type="var">p</span> <span class="id" type="var">s</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">partly_cancel_left_opposite_of_in</span> <span class="id" type="var">p</span> <span class="id" type="var">t</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now the same thing on the right 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">partly_cancel_right_opposite_of_in</span> <span class="id" type="var">p</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="var">_</span> ?<span class="id" type="var">src</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">p</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span>) ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[ <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">src</span> ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">opposite_right_inverse</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(?</span></a><span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">b</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[ <span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">b</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">concat_associativity</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <span class="id" type="var">_</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span> ] =&gt; <span class="id" type="tactic">fail</span> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ ?<span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">b</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[ <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">b</span> ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">concat_associativity</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">a</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">b</span> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span>[ <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">b</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">concat_associativity</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">cancel_units</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">cancel_right_opposite_of</span> <span class="id" type="var">p</span> := <br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">partly_cancel_right_opposite_of_in</span> <span class="id" type="var">p</span> <span class="id" type="var">s</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">partly_cancel_right_opposite_of_in</span> <span class="id" type="var">p</span> <span class="id" type="var">t</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This tactic tries to cancel <span class="inlinecode">!<span class="id" type="var">p</span></span> on both the left and the right. 
+</div>
+<div class="code">
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">cancel_opposite_of</span> <span class="id" type="var">p</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="var">cancel_left_opposite_of</span> <span class="id" type="var">p</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">cancel_right_opposite_of</span> <span class="id" type="var">p</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This tactic looks in <span class="inlinecode"><span class="id" type="var">s</span></span> for an opposite of anything, and for the
+   first one it finds, it tries to cancel it on both sides.  
+</div>
+<div class="code">
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">cancel_opposites_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!(?</span></a><span class="id" type="var">p</span><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">)</span></a> ] =&gt; <span class="id" type="var">cancel_opposite_of</span> <span class="id" type="var">p</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Finally, this tactic repeats the previous one as long as it gets
+   us somewhere.  This is most often the easiest of these tactics to
+   call in an interactive proof.
+
+<br/> <br/>
+   This tactic is not the be-all and end-all of opposite-canceling,
+   however; it only works until it runs into an opposite that it can't
+   cancel.  It can get stymied by something like <span class="inlinecode">!<span class="id" type="var">p</span> @ !<span class="id" type="var">q</span> @ <span class="id" type="var">q</span></span>, which
+   should simplify to <span class="inlinecode">!<span class="id" type="var">p</span></span>, but the tactic simply tries to cancel
+   <span class="inlinecode">!<span class="id" type="var">p</span></span>, makes no progress, and stops.  In such a situation one must
+   call <span class="inlinecode"><span class="id" type="var">cancel_opposite_of</span> <span class="id" type="var">q</span></span> directly (or figure out how to write a
+   smarter tactic!).  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">cancel_opposites</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">cancel_opposites_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">cancel_opposites_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now we have a sequence of fairly boring tactics, each of which
+   corresponds to a simple lemma.  Each of these tactics repeatedly
+   looks for occurrences, in either the source or target of the goal,
+   of something whose form can be changed by the lemma in question,
+   then calls <span class="inlinecode"><span class="id" type="var">path_using</span></span> to change it.
+
+<br/> <br/>
+   For each lemma the basic tactic is called <span class="inlinecode"><span class="id" type="var">do_LEMMA</span></span>.  If the lemma
+   can sensibly be applied in two directions, there is also an
+   <span class="inlinecode"><span class="id" type="var">undo_LEMMA</span></span> tactic.  
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+Tactics for <span class="inlinecode"><a class="idref" href="Paths.html#opposite_opposite"><span class="id" type="lemma">opposite_opposite</span></a></span> 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">do_opposite_opposite_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">(!</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">p</span><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">)</span></a> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <span class="id" type="var">p</span> ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">opposite_opposite</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">do_opposite_opposite</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">do_opposite_opposite_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">do_opposite_opposite_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tactics for <span class="inlinecode"><a class="idref" href="Paths.html#opposite_map"><span class="id" type="lemma">opposite_map</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">apply_opposite_map</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">f'</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">p'</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">f'</span> ?<span class="id" type="var">p'</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite_map"><span class="id" type="lemma">opposite_map</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">f</span> := <span class="id" type="var">f'</span>) (<span class="id" type="var">p</span> := <span class="id" type="var">p'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">f'</span> ?<span class="id" type="var">p'</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">f'</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">p'</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>, <a class="idref" href="Paths.html#opposite_map"><span class="id" type="lemma">opposite_map</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">f</span> := <span class="id" type="var">f'</span>) (<span class="id" type="var">p</span> := <span class="id" type="var">p'</span>)<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">do_opposite_map_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">f</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">p</span>) ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">p</span> ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">opposite_map</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">do_opposite_map</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">do_opposite_map_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">do_opposite_map_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;); <span class="id" type="var">do_opposite_opposite</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">undo_opposite_map_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">f</span> ?<span class="id" type="var">p</span><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">)</span></a> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <span class="id" type="var">p</span>) ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">opposite_map</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">undo_opposite_map</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">undo_opposite_map_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">undo_opposite_map_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;); <span class="id" type="var">do_opposite_opposite</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tactics for <span class="inlinecode"><a class="idref" href="Paths.html#opposite_concat"><span class="id" type="lemma">opposite_concat</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">do_opposite_concat_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">p</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">q</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">)</span></a> ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">opposite_concat</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">do_opposite_concat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">do_opposite_concat_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">do_opposite_concat_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;); <span class="id" type="var">do_opposite_opposite</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">undo_opposite_concat_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">(?</span></a><span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">p</span><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">)</span></a> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <span class="id" type="var">p</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a> <span class="id" type="var">q</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">opposite_concat</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">undo_opposite_concat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">undo_opposite_concat_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">undo_opposite_concat_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;); <span class="id" type="var">do_opposite_opposite</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tactics for <span class="inlinecode"><a class="idref" href="Paths.html#compose_map"><span class="id" type="lemma">compose_map</span></a></span>.  As with <span class="inlinecode"><a class="idref" href="Paths.html#happly"><span class="id" type="definition">happly</span></a></span>, <span class="inlinecode"><span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#compose_map"><span class="id" type="lemma">compose_map</span></a></span>
+   often fail to unify, so we define a separate tactic. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">apply_compose_map</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (?<span class="id" type="var">g'</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">f'</span>) ?<span class="id" type="var">p'</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">g'</span> (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">f'</span> ?<span class="id" type="var">p'</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#compose_map"><span class="id" type="lemma">compose_map</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">g</span> := <span class="id" type="var">g'</span>) (<span class="id" type="var">f</span> := <span class="id" type="var">f'</span>) (<span class="id" type="var">p</span> := <span class="id" type="var">p'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">g'</span> (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">f'</span> ?<span class="id" type="var">p'</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (?<span class="id" type="var">g'</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">f'</span>) ?<span class="id" type="var">p'</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>; <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#compose_map"><span class="id" type="lemma">compose_map</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">g</span> := <span class="id" type="var">g'</span>) (<span class="id" type="var">f</span> := <span class="id" type="var">f'</span>) (<span class="id" type="var">p</span> := <span class="id" type="var">p'</span>)<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">do_compose_map_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (?<span class="id" type="var">f</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">g</span>) ?<span class="id" type="var">p</span> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">g</span> <span class="id" type="var">p</span>) ] <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_via</span> <span class="id" type="var">mid</span>; <span class="id" type="tactic">try</span> <span class="id" type="var">apply_compose_map</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">do_compose_map</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">do_compose_map_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">do_compose_map_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;).<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">undo_compose_map_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">f</span> (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">g</span> ?<span class="id" type="var">p</span>) ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (<span class="id" type="var">f</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">g</span>) <span class="id" type="var">p</span> ] <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_via</span> <span class="id" type="var">mid</span>; <span class="id" type="tactic">try</span> <span class="id" type="var">apply_compose_map</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">undo_compose_map</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">undo_compose_map_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">undo_compose_map_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tactics for <span class="inlinecode"><a class="idref" href="Paths.html#concat_map"><span class="id" type="lemma">concat_map</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">do_concat_map_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">f</span> (?<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">q</span>) ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">q</span> ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">concat_map</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">do_concat_map</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">do_concat_map_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">do_concat_map_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;).<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">undo_concat_map_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">f</span> ?<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ?<span class="id" type="var">f</span> ?<span class="id" type="var">q</span> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>) ] <span class="id" type="keyword">in</span> <span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">concat_map</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">undo_concat_map</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">undo_concat_map_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">undo_concat_map_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now we return to proving lemmas about paths.
+   We show that homotopies are natural with respect to paths in the domain. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="homotopy_naturality"><span class="id" type="lemma">homotopy_naturality</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> (<span class="id" type="var">f</span> <span class="id" type="var">g</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) (<span class="id" type="var">p</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">g</span> <span class="id" type="var">x</span>) (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span> <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">g</span> <span class="id" type="var">q</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">cancel_units</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Hint</span> <span class="id" type="keyword">Resolve</span> <a class="idref" href="Paths.html#homotopy_naturality"><span class="id" type="lemma">homotopy_naturality</span></a> : <span class="id" type="var">path_hints</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="homotopy_naturality_toid"><span class="id" type="lemma">homotopy_naturality_toid</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span>) (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span> <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">cancel_units</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Hint</span> <span class="id" type="keyword">Resolve</span> <a class="idref" href="Paths.html#homotopy_naturality_toid"><span class="id" type="lemma">homotopy_naturality_toid</span></a> : <span class="id" type="var">path_hints</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="homotopy_naturality_fromid"><span class="id" type="lemma">homotopy_naturality_fromid</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">f</span> <span class="id" type="var">x</span>) (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;<span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span> <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> <span class="id" type="var">q</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">cancel_units</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Hint</span> <span class="id" type="keyword">Resolve</span> <a class="idref" href="Paths.html#homotopy_naturality_fromid"><span class="id" type="lemma">homotopy_naturality_fromid</span></a> : <span class="id" type="var">path_hints</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Cancellability of concatenation on both sides. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="concat_cancel_right"><span class="id" type="lemma">concat_cancel_right</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> <span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">r</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) : (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">r</span>) -&gt; (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span> <span class="id" type="var">r</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">r</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span>).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="concat_cancel_left"><span class="id" type="lemma">concat_cancel_left</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">q</span> <span class="id" type="var">r</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) : (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">r</span>) -&gt; (<span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">r</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span> <span class="id" type="var">r</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">r</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If a function is homotopic to the identity, then that homotopy
+   makes it a "well-pointed" endofunctor in the following sense. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="htoid_well_pointed"><span class="id" type="lemma">htoid_well_pointed</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span>) (<span class="id" type="var">x</span> : <span class="id" type="var">A</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<span class="id" type="var">p</span> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">p</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">f</span> <span class="id" type="var">p</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#concat_cancel_right"><span class="id" type="lemma">concat_cancel_right</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">r</span> := <span class="id" type="var">p</span> <span class="id" type="var">x</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#homotopy_naturality_toid"><span class="id" type="lemma">homotopy_naturality_toid</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mates 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="concat_moveright_onright"><span class="id" type="lemma">concat_moveright_onright</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">r</span> : <span class="id" type="var">z</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;(<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">r</span>) -&gt; (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span> <span class="id" type="var">r</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">r</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="var">associate_left</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">moveright_onright</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- (?<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">q</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#concat_moveright_onright"><span class="id" type="lemma">concat_moveright_onright</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- (?<span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">q</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">_</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">r</span>); <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#concat_moveright_onright"><span class="id" type="lemma">concat_moveright_onright</span></a><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>; <span class="id" type="var">do_opposite_opposite</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="concat_moveleft_onright"><span class="id" type="lemma">concat_moveleft_onright</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) (<span class="id" type="var">r</span> : <span class="id" type="var">z</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;(<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span>) -&gt; (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">r</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span> <span class="id" type="var">r</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">r</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="var">associate_left</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">moveleft_onright</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- (?<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">r</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#concat_moveleft_onright"><span class="id" type="lemma">concat_moveleft_onright</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- (?<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">r</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">_</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">r</span>); <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#concat_moveleft_onright"><span class="id" type="lemma">concat_moveleft_onright</span></a><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>; <span class="id" type="var">do_opposite_opposite</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="concat_moveleft_onleft"><span class="id" type="lemma">concat_moveleft_onleft</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) (<span class="id" type="var">r</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span>) :<br/>
+&nbsp;&nbsp;(<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span>) -&gt; (<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span> <span class="id" type="var">r</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">r</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="var">associate_right</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">moveleft_onleft</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- (?<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">q</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#concat_moveleft_onleft"><span class="id" type="lemma">concat_moveleft_onleft</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- (?<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">r</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">_</span>); <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#concat_moveleft_onleft"><span class="id" type="lemma">concat_moveleft_onleft</span></a><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>; <span class="id" type="var">do_opposite_opposite</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="concat_moveright_onleft"><span class="id" type="lemma">concat_moveright_onleft</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) (<span class="id" type="var">q</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) (<span class="id" type="var">r</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span>) :<br/>
+&nbsp;&nbsp;(<span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>) -&gt; (<span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span> <span class="id" type="var">r</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">r</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="var">associate_right</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">moveright_onleft</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- (?<span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">q</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#concat_moveright_onleft"><span class="id" type="lemma">concat_moveright_onleft</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- (?<span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">q</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">_</span>); <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#concat_moveright_onleft"><span class="id" type="lemma">concat_moveright_onleft</span></a><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>; <span class="id" type="var">do_opposite_opposite</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

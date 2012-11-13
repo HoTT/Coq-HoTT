@@ -1,0 +1,830 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>Equivalences</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Equivalences</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <a class="idref" href="Paths.html#"><span class="id" type="library">Paths</span></a> <a class="idref" href="Fibrations.html#"><span class="id" type="library">Fibrations</span></a> <a class="idref" href="Contractible.html#"><span class="id" type="library">Contractible</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+For compatibility with Coq 8.2. 
+</div>
+<div class="code">
+<span class="id" type="keyword">Unset</span> <span class="id" type="var">Automatic</span> <span class="id" type="var">Introduction</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+An equivalence is a map whose homotopy fibers are contractible. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="is_equiv"><span class="id" type="definition">is_equiv</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) := <span class="id" type="keyword">forall</span> <span class="id" type="var">y</span> : <span class="id" type="var">B</span>, <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> (<a class="idref" href="Fibrations.html#hfiber"><span class="id" type="definition">hfiber</span></a> <span class="id" type="var">f</span> <span class="id" type="var">y</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="Equivalences.html#equiv"><span class="id" type="definition">equiv</span></a> <a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a> <a class="idref" href="FiberEquivalences.html#FibrationMap.B"><span class="id" type="variable">B</span></a></span> is the space of equivalences from <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a></span> to <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.B"><span class="id" type="variable">B</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="equiv"><span class="id" type="definition">equiv</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> := <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">w</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> <span class="id" type="var">w</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>.<br/>
+
+<br/>
+<span class="id" type="var">Notation </span><a name="::x_'<~>'_x"><span class="id" type="notation">"</span></a>A &lt;~&gt; B" := (<a class="idref" href="Equivalences.html#equiv"><span class="id" type="definition">equiv</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span>) (<span class="id" type="tactic">at</span> <span class="id" type="var">level</span> 55).<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Strictly speaking, an element <span class="inlinecode"><span class="id" type="var">w</span></span> of <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a> &lt;~&gt; <a class="idref" href="FiberEquivalences.html#FibrationMap.B"><span class="id" type="variable">B</span></a></span> is a <i>pair</i>
+   consisting of a map <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">w</span></span> and the proof <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT2"><span class="id" type="definition">projT2</span></a> <span class="id" type="var">w</span></span> that it is
+   an equivalence. Thus, in order to apply <span class="inlinecode"><span class="id" type="var">w</span></span> to <span class="inlinecode"><span class="id" type="var">x</span></span> we must write
+   <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">w</span> <span class="id" type="var">x</span></span>. Coq is able to do this automatically if we declare
+   that <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a></span> is a <i>coercion</i> from <span class="inlinecode"><a class="idref" href="Equivalences.html#equiv"><span class="id" type="definition">equiv</span></a> <a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a> <a class="idref" href="FiberEquivalences.html#FibrationMap.B"><span class="id" type="variable">B</span></a></span> to <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.A"><span class="id" type="variable">A</span></a> -&gt; <a class="idref" href="FiberEquivalences.html#FibrationMap.B"><span class="id" type="variable">B</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="equiv_coerce_to_function"><span class="id" type="definition">equiv_coerce_to_function</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> (<span class="id" type="var">w</span> : <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">B</span>) : (<span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>)<br/>
+&nbsp;&nbsp;:= <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">w</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Coercion</span> <a class="idref" href="Equivalences.html#equiv_coerce_to_function"><span class="id" type="definition">equiv_coerce_to_function</span></a> : <span class="id" type="var">equiv</span> &gt;-&gt; <span class="id" type="var">Funclass</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Here is a tactic which helps us prove that a homotopy fiber is
+   contractible.  This will be useful for showing that maps are
+   equivalences. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">contract_hfiber</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| [ |- <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> (@<a class="idref" href="Fibrations.html#hfiber"><span class="id" type="definition">hfiber</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> ?<span class="id" type="var">f</span> ?<span class="id" type="var">x</span>) ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">eexists</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> (<span class="id" type="keyword">fun</span> <span class="id" type="var">z</span> =&gt; <span class="id" type="var">f</span> <span class="id" type="var">z</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span>) <span class="id" type="var">y</span> <span class="id" type="var">p</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">z</span> := <span class="id" type="tactic">fresh</span> "z" <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">q</span> := <span class="id" type="tactic">fresh</span> "q" <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span> [<span class="id" type="var">z</span> <span class="id" type="var">q</span>]<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Let us explain the tactic. It accepts two arguments <span class="inlinecode"><span class="id" type="var">y</span></span> and <span class="inlinecode"><span class="id" type="var">p</span></span>
+   and attempts to contract a homotopy fiber to <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <span class="id" type="var">_</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span></span>. It
+   first looks for a goal of the form <span class="inlinecode"><a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> <a class="idref" href="Fibrations.html#hfiber"><span class="id" type="definition">hfiber</span></a>( <a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a> <span class="id" type="var">x</span>)</span>, where
+   the question marks in <span class="inlinecode"><a class="idref" href="FiberEquivalences.html#FibrationMap.f"><span class="id" type="variable">f</span></a>?</span> and <span class="inlinecode">?<span class="id" type="var">x</span></span> are pattern variables that Coq
+   should match against the actual values. If the goal is found, then
+   we use <span class="inlinecode"><span class="id" type="var">eexists</span></span> to specify that the center of retraction is at the
+   element <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <span class="id" type="var">_</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span></span> of hfiber provided by the user. After that
+   we generate some fresh names and perfrom intros. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+The identity map is an equivalence. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="idequiv"><span class="id" type="definition">idequiv</span></a> <span class="id" type="var">A</span> : <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">A</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">A</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<a class="idref" href="Functions.html#idmap"><span class="id" type="definition">idmap</span></a> <span class="id" type="var">A</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">contract_hfiber</span> <span class="id" type="var">x</span> (<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Fibrations.html#total_path"><span class="id" type="lemma">total_path</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">p</span> := <span class="id" type="var">q</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">compute</span> <span class="id" type="keyword">in</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_induction</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+From an equivalence from <span class="inlinecode"><span class="id" type="var">U</span></span> to <span class="inlinecode"><span class="id" type="var">V</span></span> we can extract a map in the
+   inverse direction. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="inverse"><span class="id" type="definition">inverse</span></a> {<span class="id" type="var">U</span> <span class="id" type="var">V</span>} (<span class="id" type="var">w</span> : <span class="id" type="var">U</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">V</span>) : (<span class="id" type="var">V</span> -&gt; <span class="id" type="var">U</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">fun</span> <span class="id" type="var">y</span> =&gt; <a class="idref" href="Fibrations.html#pr1"><span class="id" type="abbreviation">pr1</span></a> (<a class="idref" href="Fibrations.html#pr1"><span class="id" type="abbreviation">pr1</span></a> ((<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">w</span>) <span class="id" type="var">y</span>)).<br/>
+
+<br/>
+<span class="id" type="var">Notation </span><a name="::x_'^-1'"><span class="id" type="notation">"</span></a>w ^-1" := (<a class="idref" href="Equivalences.html#inverse"><span class="id" type="definition">inverse</span></a> <span class="id" type="var">w</span>) (<span class="id" type="tactic">at</span> <span class="id" type="var">level</span> 40).<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The extracted map in the inverse direction is actually an inverse
+   (up to homotopy, of course). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="inverse_is_section"><span class="id" type="definition">inverse_is_section</span></a> {<span class="id" type="var">U</span> <span class="id" type="var">V</span>} (<span class="id" type="var">w</span> : <span class="id" type="var">U</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">V</span>) <span class="id" type="var">y</span> : <span class="id" type="var">w</span> (<span class="id" type="var">w</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> <span class="id" type="var">y</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> (<a class="idref" href="Fibrations.html#pr1"><span class="id" type="abbreviation">pr1</span></a> ((<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">w</span>) <span class="id" type="var">y</span>)).<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="inverse_is_retraction"><span class="id" type="definition">inverse_is_retraction</span></a> {<span class="id" type="var">U</span> <span class="id" type="var">V</span>} (<span class="id" type="var">w</span> : <span class="id" type="var">U</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">V</span>) <span class="id" type="var">x</span> : <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><span class="id" type="var">w</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> (<span class="id" type="var">w</span> <span class="id" type="var">x</span>)<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><a class="idref" href="Fibrations.html#base_path"><span class="id" type="definition">base_path</span></a> (<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> ((<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">w</span>) (<span class="id" type="var">w</span> <span class="id" type="var">x</span>)) <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">x</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> (<span class="id" type="var">w</span> <span class="id" type="var">x</span>)<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Here are some tactics to use for canceling inverses, and for
+   introducing them. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">cancel_inverses_in</span> <span class="id" type="var">s</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <a class="idref" href="Equivalences.html#equiv_coerce_to_function"><span class="id" type="definition">equiv_coerce_to_function</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> ?<span class="id" type="var">w</span> (?<span class="id" type="var">w</span> <a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> ?<span class="id" type="var">x</span>) ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <span class="id" type="var">x</span> ] <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">inverse_is_section</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ ?<span class="id" type="var">w</span> <a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> (<a class="idref" href="Equivalences.html#equiv_coerce_to_function"><span class="id" type="definition">equiv_coerce_to_function</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> ?<span class="id" type="var">w</span> ?<span class="id" type="var">x</span>) ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <span class="id" type="var">x</span> ] <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_using</span> <span class="id" type="var">mid</span> <span class="id" type="var">inverse_is_retraction</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">cancel_inverses</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">progress</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| |- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt; <span class="id" type="var">first</span> [ <span class="id" type="var">cancel_inverses_in</span> <span class="id" type="var">s</span> | <span class="id" type="var">cancel_inverses_in</span> <span class="id" type="var">t</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;).<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">expand_inverse_src</span> <span class="id" type="var">w</span> <span class="id" type="var">x</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <span class="id" type="var">x</span> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">first</span> [<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <span class="id" type="var">w</span> (<span class="id" type="var">w</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> <span class="id" type="var">x</span>) ] <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_via'</span> <span class="id" type="var">mid</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <span class="id" type="var">path_simplify'</span> <span class="id" type="var">inverse_is_section</span> | ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <span class="id" type="var">w</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> (<span class="id" type="var">w</span> <span class="id" type="var">x</span>) ] <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_via'</span> <span class="id" type="var">mid</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <span class="id" type="var">path_simplify'</span> <span class="id" type="var">inverse_is_retraction</span> | ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">expand_inverse_trg</span> <span class="id" type="var">w</span> <span class="id" type="var">x</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- ?<span class="id" type="var">s</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">t</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">t</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <span class="id" type="var">x</span> ] =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">first</span> [<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <span class="id" type="var">w</span> (<span class="id" type="var">w</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> <span class="id" type="var">x</span>) ] <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_via'</span> <span class="id" type="var">mid</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ | <span class="id" type="var">path_simplify'</span> <span class="id" type="var">inverse_is_section</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">mid</span> := <span class="id" type="var">context</span> <span class="id" type="var">cxt</span> [ <span class="id" type="var">w</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> (<span class="id" type="var">w</span> <span class="id" type="var">x</span>) ] <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">path_via'</span> <span class="id" type="var">mid</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ | <span class="id" type="var">path_simplify'</span> <span class="id" type="var">inverse_is_retraction</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+These tactics change between goals of the form <span class="inlinecode"><span class="id" type="var">w</span> <span class="id" type="var">x</span> == <span class="id" type="var">y</span></span> and the
+   form <span class="inlinecode"><span class="id" type="var">x</span> == <span class="id" type="var">w</span>^-1 <span class="id" type="var">y</span></span>, and dually. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">equiv_moveright</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- <a class="idref" href="Equivalences.html#equiv_coerce_to_function"><span class="id" type="definition">equiv_coerce_to_function</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> ?<span class="id" type="var">w</span> ?<span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">b</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">y</span> := <span class="id" type="var">w</span> (<span class="id" type="var">w</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> <span class="id" type="var">b</span>));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> | <span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#inverse_is_section"><span class="id" type="definition">inverse_is_section</span></a> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- (?<span class="id" type="var">w</span> <a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a>) ?<span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">b</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">y</span> := <span class="id" type="var">w</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> (<span class="id" type="var">w</span> <span class="id" type="var">b</span>));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> | <span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#inverse_is_retraction"><span class="id" type="definition">inverse_is_retraction</span></a> ]<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">equiv_moveleft</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- ?<span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Equivalences.html#equiv_coerce_to_function"><span class="id" type="definition">equiv_coerce_to_function</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> ?<span class="id" type="var">w</span> ?<span class="id" type="var">b</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">y</span> := <span class="id" type="var">w</span> (<span class="id" type="var">w</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> <span class="id" type="var">a</span>));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>, <a class="idref" href="Equivalences.html#inverse_is_section"><span class="id" type="definition">inverse_is_section</span></a> | <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| |- ?<span class="id" type="var">a</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> (?<span class="id" type="var">w</span> <a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a>) ?<span class="id" type="var">b</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">y</span> := <span class="id" type="var">w</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> (<span class="id" type="var">w</span> <span class="id" type="var">a</span>));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>, <a class="idref" href="Equivalences.html#inverse_is_retraction"><span class="id" type="definition">inverse_is_retraction</span></a> | <span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> ]<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This is one of the "triangle identities" for the preceeding two
+   homotopies.  (It doesn't look like a triangle since we've inverted
+   one of the homotopies.) 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="inverse_triangle"><span class="id" type="definition">inverse_triangle</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">w</span> : <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">B</span>) <span class="id" type="var">x</span> :<br/>
+&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">w</span> (<a class="idref" href="Equivalences.html#inverse_is_retraction"><span class="id" type="definition">inverse_is_retraction</span></a> <span class="id" type="var">w</span> <span class="id" type="var">x</span>)<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><a class="idref" href="Equivalences.html#inverse_is_section"><span class="id" type="definition">inverse_is_section</span></a> <span class="id" type="var">w</span> (<span class="id" type="var">w</span> <span class="id" type="var">x</span>)<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">inverse_is_retraction</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">do_opposite_map</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> (<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><a class="idref" href="Paths.html#idpath_right_unit"><span class="id" type="lemma">idpath_right_unit</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="var">moveright_onleft</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">exact</span> (<a class="idref" href="Fibrations.html#hfiber_triangle"><span class="id" type="lemma">hfiber_triangle</span></a> (<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> (<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">w</span> (<span class="id" type="var">w</span> <span class="id" type="var">x</span>)) <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">x</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">_</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>)).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Equivalences are "injective on paths". 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="equiv_injective"><span class="id" type="lemma">equiv_injective</span></a> <span class="id" type="var">U</span> <span class="id" type="var">V</span> (<span class="id" type="var">w</span> : <span class="id" type="var">U</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">V</span>) <span class="id" type="var">x</span> <span class="id" type="var">y</span> : (<span class="id" type="var">w</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">w</span> <span class="id" type="var">y</span>) -&gt; (<span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">U</span> <span class="id" type="var">V</span> <span class="id" type="var">w</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">expand_inverse_src</span> <span class="id" type="var">w</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">equiv_moveright</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Anything contractible is equivalent to the unit type. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="contr_equiv_unit"><span class="id" type="lemma">contr_equiv_unit</span></a> (<span class="id" type="var">A</span> : <span class="id" type="keyword">Type</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> <span class="id" type="var">A</span> -&gt; (<span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#unit"><span class="id" type="inductive">unit</span></a>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#tt"><span class="id" type="constructor">tt</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">y</span>. <span class="id" type="tactic">destruct</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">contract_hfiber</span> (<a class="idref" href="Fibrations.html#pr1"><span class="id" type="abbreviation">pr1</span></a> <span class="id" type="var">H</span>) (<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#tt"><span class="id" type="constructor">tt</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Fibrations.html#total_path"><span class="id" type="lemma">total_path</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">p</span> := <a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">H</span> <span class="id" type="var">z</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Contractible.html#contr_path2"><span class="id" type="lemma">contr_path2</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+And conversely, anything equivalent to a contractible type is
+   contractible. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="contr_equiv_contr"><span class="id" type="lemma">contr_equiv_contr</span></a> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> : <span class="id" type="keyword">Type</span>) :<br/>
+&nbsp;&nbsp;<span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">B</span> -&gt; <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> <span class="id" type="var">A</span> -&gt; <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> <span class="id" type="var">B</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">f</span> <span class="id" type="var">Acontr</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">Acontr</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">equiv_moveleft</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">p</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The free path space of a type is equivalent to the type itself. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="free_path_space"><span class="id" type="definition">free_path_space</span></a> <span class="id" type="var">A</span> := <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a><span class="id" type="var">xy</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <span class="id" type="var">A</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:type_scope:x_'*'_x"><span class="id" type="notation">*</span></a> <span class="id" type="var">A</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#fst"><span class="id" type="definition">fst</span></a> <span class="id" type="var">xy</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#snd"><span class="id" type="definition">snd</span></a> <span class="id" type="var">xy</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="free_path_source"><span class="id" type="definition">free_path_source</span></a> <span class="id" type="var">A</span> : <a class="idref" href="Equivalences.html#free_path_space"><span class="id" type="definition">free_path_space</span></a> <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">A</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">A</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">p</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#fst"><span class="id" type="definition">fst</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">p</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">eexists</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <span class="id" type="var">_</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> (<span class="id" type="keyword">fun</span> (<span class="id" type="var">xy</span> : <span class="id" type="var">A</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:type_scope:x_'*'_x"><span class="id" type="notation">*</span></a> <span class="id" type="var">A</span>) =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#fst"><span class="id" type="definition">fst</span></a> <span class="id" type="var">xy</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#snd"><span class="id" type="definition">snd</span></a> <span class="id" type="var">xy</span>) <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:core_scope:'('_x_','_x_','_'..'_','_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:core_scope:'('_x_','_x_','_'..'_','_x_')'"><span class="id" type="notation">,</span></a><span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:core_scope:'('_x_','_x_','_'..'_','_x_')'"><span class="id" type="notation">)</span></a> (<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span>)) <span class="id" type="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> [[[<span class="id" type="var">u</span> <span class="id" type="var">v</span>] <span class="id" type="var">p</span>] <span class="id" type="var">q</span>].<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> * |- *.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">q</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">a</span>].<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">p</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">b</span>].<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="free_path_target"><span class="id" type="definition">free_path_target</span></a> <span class="id" type="var">A</span> : <a class="idref" href="Equivalences.html#free_path_space"><span class="id" type="definition">free_path_space</span></a> <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">A</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">A</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">p</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#snd"><span class="id" type="definition">snd</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#projT1"><span class="id" type="definition">projT1</span></a> <span class="id" type="var">p</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">eexists</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <span class="id" type="var">_</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> (<span class="id" type="keyword">fun</span> (<span class="id" type="var">xy</span> : <span class="id" type="var">A</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:type_scope:x_'*'_x"><span class="id" type="notation">*</span></a> <span class="id" type="var">A</span>) =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#fst"><span class="id" type="definition">fst</span></a> <span class="id" type="var">xy</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#snd"><span class="id" type="definition">snd</span></a> <span class="id" type="var">xy</span>) <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:core_scope:'('_x_','_x_','_'..'_','_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:core_scope:'('_x_','_x_','_'..'_','_x_')'"><span class="id" type="notation">,</span></a><span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:core_scope:'('_x_','_x_','_'..'_','_x_')'"><span class="id" type="notation">)</span></a> (<a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a> <span class="id" type="var">x</span>)) <span class="id" type="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> [[[<span class="id" type="var">u</span> <span class="id" type="var">v</span>] <span class="id" type="var">p</span>] <span class="id" type="var">q</span>].<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> * |- *.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">q</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">a</span>].<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">p</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">b</span>].<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We have proven that every equivalence has an inverse up to
+    homotopy.  In fact, having an inverse up to homotopy is also
+    enough to characterize a map as being an equivalence.  However,
+    the data of an inverse up to homotopy is not equivalent to the
+    data in <span class="inlinecode"><a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a></span> unless we add one more piece of coherence data.
+    This is a homotopy version of the category-theoretic notion of
+    "adjoint equivalence". 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="is_adjoint_equiv"><span class="id" type="definition">is_adjoint_equiv</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) :=<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">g</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <span class="id" type="var">B</span> -&gt; <span class="id" type="var">A</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">is_section</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <span class="id" type="keyword">forall</span> <span class="id" type="var">y</span>, <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><span class="id" type="var">f</span> (<span class="id" type="var">g</span> <span class="id" type="var">y</span>)<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">is_retraction</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><span class="id" type="var">g</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<span class="id" type="var">is_retraction</span> <span class="id" type="var">x</span>)<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">(</span></a><span class="id" type="var">is_section</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)<a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}}}</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="is_equiv_to_adjoint"><span class="id" type="definition">is_equiv_to_adjoint</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span>: <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) (<span class="id" type="var">E</span> : <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> <span class="id" type="var">f</span>) : <a class="idref" href="Equivalences.html#is_adjoint_equiv"><span class="id" type="definition">is_adjoint_equiv</span></a> <span class="id" type="var">f</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">w</span> := <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">f</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <span class="id" type="var">E</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a> <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="var">w</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><a class="idref" href="Equivalences.html#inverse_is_section"><span class="id" type="definition">inverse_is_section</span></a> <span class="id" type="var">w</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><a class="idref" href="Equivalences.html#inverse_is_retraction"><span class="id" type="definition">inverse_is_retraction</span></a> <span class="id" type="var">w</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <a class="idref" href="Equivalences.html#inverse_triangle"><span class="id" type="definition">inverse_triangle</span></a> <span class="id" type="var">w</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)))</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="adjoint_equiv"><span class="id" type="definition">adjoint_equiv</span></a> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> : <span class="id" type="keyword">Type</span>) := <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">f</span><a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>  <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a>  <a class="idref" href="Equivalences.html#is_adjoint_equiv"><span class="id" type="definition">is_adjoint_equiv</span></a> <span class="id" type="var">f</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="is_adjoint_to_equiv"><span class="id" type="lemma">is_adjoint_to_equiv</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span>: <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) : <a class="idref" href="Equivalences.html#is_adjoint_equiv"><span class="id" type="definition">is_adjoint_equiv</span></a> <span class="id" type="var">f</span> -&gt; <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> <span class="id" type="var">f</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">f</span> [<span class="id" type="var">g</span> [<span class="id" type="var">is_section</span> [<span class="id" type="var">is_retraction</span> <span class="id" type="var">triangle</span>]]].<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">contract_hfiber</span> (<span class="id" type="var">g</span> <span class="id" type="var">y</span>) (<span class="id" type="var">is_section</span> <span class="id" type="var">y</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> (<a class="idref" href="Fibrations.html#total_path"><span class="id" type="lemma">total_path</span></a> <span class="id" type="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <span class="id" type="var">_</span> <span class="id" type="var">z</span> <span class="id" type="var">q</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <span class="id" type="var">_</span> (<span class="id" type="var">g</span> <span class="id" type="var">y</span>) (<span class="id" type="var">is_section</span> <span class="id" type="var">y</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">is_retraction</span> <span class="id" type="var">z</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">g</span> <span class="id" type="var">q</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!(</span></a><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">is_retraction</span> <span class="id" type="var">z</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">g</span> <span class="id" type="var">q</span>)<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Fibrations.html#transport_hfiber"><span class="id" type="lemma">transport_hfiber</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">do_concat_map</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">do_opposite_map</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">undo_opposite_concat</span>.<br/>
+</div>
+
+<div class="doc">
+Here is where we use triangle. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">g</span> <span class="id" type="var">q</span>) <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">is_section</span> (<span class="id" type="var">f</span> <span class="id" type="var">z</span>) <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>).<br/>
+</div>
+
+<div class="doc">
+Now it's just naturality of 'is_section'. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" type="var">associate_right</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">moveright_onleft</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">undo_compose_map</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>, <a class="idref" href="Paths.html#homotopy_naturality_toid"><span class="id" type="lemma">homotopy_naturality_toid</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">f</span> := <span class="id" type="var">f</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">g</span>).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Probably equiv_to_adjoint and adjoint_to_equiv are actually
+   inverse equivalences, at least if we assume function
+   extensionality. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="equiv_pointwise_idmap"><span class="id" type="lemma">equiv_pointwise_idmap</span></a> <span class="id" type="var">A</span> (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span>) : <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> <span class="id" type="var">f</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#is_adjoint_to_equiv"><span class="id" type="lemma">is_adjoint_to_equiv</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<a class="idref" href="Functions.html#idmap"><span class="id" type="definition">idmap</span></a> <span class="id" type="var">A</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#htoid_well_pointed"><span class="id" type="lemma">htoid_well_pointed</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A central fact about adjoint equivalences is that any "incoherent"
+   equivalence can be improved to an adjoint equivalence by changing
+   one of the natural isomorphisms.  We now prove a corresponding
+   result in homotopy type theory.  The proof is exactly the same as
+   the usual proof for adjoint equivalences in 2-category theory.  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="adjointify"><span class="id" type="definition">adjointify</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) (<span class="id" type="var">g</span> : <span class="id" type="var">B</span> -&gt; <span class="id" type="var">A</span>) :<br/>
+&nbsp;&nbsp;(<span class="id" type="keyword">forall</span> <span class="id" type="var">y</span>, <span class="id" type="var">f</span> (<span class="id" type="var">g</span> <span class="id" type="var">y</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) -&gt; (<span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">g</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span> ) -&gt;<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#is_adjoint_equiv"><span class="id" type="definition">is_adjoint_equiv</span></a> <span class="id" type="var">f</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <span class="id" type="var">is_section</span> <span class="id" type="var">is_retraction</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">set</span> (<span class="id" type="var">is_retraction'</span> := <span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">g</span> (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">is_retraction</span> <span class="id" type="var">x</span>))<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">g</span> (<span class="id" type="var">is_section</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>))<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">is_retraction</span> <span class="id" type="var">x</span><a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> <span class="id" type="var">g</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> <span class="id" type="var">is_section</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> <span class="id" type="var">is_retraction'</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>.<br/>
+</div>
+
+<div class="doc">
+Now we just play with naturality until things cancel. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">is_retraction'</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">do_concat_map</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">undo_compose_map</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">moveleft_onleft</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">associate_left</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">is_section</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)  <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a>  <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (<span class="id" type="var">f</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">g</span>) (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">is_retraction</span> <span class="id" type="var">x</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a>  <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (<span class="id" type="var">f</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">g</span>) (<span class="id" type="var">is_section</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>))<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a>  <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a>  <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<span class="id" type="var">is_retraction</span> <span class="id" type="var">x</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="var">unwhisker</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">do_compose_map</span>; <span class="id" type="tactic">auto</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">is_retraction</span> <span class="id" type="var">x</span>)  <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a>  <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">is_section</span> (<span class="id" type="var">f</span> (<span class="id" type="var">g</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)))<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a>  <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (<span class="id" type="var">f</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">g</span>) (<span class="id" type="var">is_section</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>))  <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a>  <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<span class="id" type="var">is_retraction</span> <span class="id" type="var">x</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="var">unwhisker</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>, (<a class="idref" href="Paths.html#homotopy_naturality_fromid"><span class="id" type="lemma">homotopy_naturality_fromid</span></a> <span class="id" type="var">B</span> <span class="id" type="var">_</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">y</span> =&gt; <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">is_section</span> <span class="id" type="var">y</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">is_retraction</span> <span class="id" type="var">x</span>)  <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a>  <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">is_section</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">is_section</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">))</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a>  <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">f</span> (<span class="id" type="var">is_retraction</span> <span class="id" type="var">x</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="var">unwhisker</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>, (<a class="idref" href="Paths.html#homotopy_naturality_fromid"><span class="id" type="lemma">homotopy_naturality_fromid</span></a> <span class="id" type="var">B</span> <span class="id" type="var">_</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">y</span> =&gt; <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">is_section</span> <span class="id" type="var">y</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="var">do_opposite_map</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">cancel_right_opposite_of</span> (<span class="id" type="var">is_section</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Therefore, "any homotopy equivalence is an equivalence." 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="hequiv_is_equiv"><span class="id" type="definition">hequiv_is_equiv</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) (<span class="id" type="var">g</span> : <span class="id" type="var">B</span> -&gt; <span class="id" type="var">A</span>)<br/>
+&nbsp;&nbsp;(<span class="id" type="var">is_section</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">y</span>, <span class="id" type="var">f</span> (<span class="id" type="var">g</span> <span class="id" type="var">y</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) (<span class="id" type="var">is_retraction</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">g</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> <span class="id" type="var">f</span> := <a class="idref" href="Equivalences.html#is_adjoint_to_equiv"><span class="id" type="lemma">is_adjoint_to_equiv</span></a> <span class="id" type="var">f</span> (<a class="idref" href="Equivalences.html#adjointify"><span class="id" type="definition">adjointify</span></a> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <span class="id" type="var">is_section</span> <span class="id" type="var">is_retraction</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+All sorts of nice things follow from this theorem. 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+The inverse of an equivalence is an equivalence. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="equiv_inverse"><span class="id" type="lemma">equiv_inverse</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">B</span>) : <span class="id" type="var">B</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">A</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">destruct</span> (<a class="idref" href="Equivalences.html#is_equiv_to_adjoint"><span class="id" type="definition">is_equiv_to_adjoint</span></a> <span class="id" type="var">f</span> (<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">f</span>)) <span class="id" type="keyword">as</span> [<span class="id" type="var">g</span> [<span class="id" type="var">is_section</span> [<span class="id" type="var">is_retraction</span> <span class="id" type="var">triangle</span>]]].<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> <span class="id" type="var">g</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">exact</span> (<a class="idref" href="Equivalences.html#hequiv_is_equiv"><span class="id" type="definition">hequiv_is_equiv</span></a> <span class="id" type="var">g</span> <span class="id" type="var">f</span> <span class="id" type="var">is_retraction</span> <span class="id" type="var">is_section</span>).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Anything homotopic to an equivalence is an equivalence. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="equiv_homotopic"><span class="id" type="lemma">equiv_homotopic</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span> <span class="id" type="var">g</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) :<br/>
+&nbsp;&nbsp;(<span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">g</span> <span class="id" type="var">x</span>) -&gt; <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> <span class="id" type="var">g</span> -&gt; <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> <span class="id" type="var">f</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">f</span> <span class="id" type="var">g'</span> <span class="id" type="var">p</span> <span class="id" type="var">geq</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">set</span> (<span class="id" type="var">g</span> := <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> <span class="id" type="var">g'</span> <span class="id" type="var">geq</span> : <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">B</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Equivalences.html#hequiv_is_equiv"><span class="id" type="definition">hequiv_is_equiv</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">g</span> := <span class="id" type="var">g</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">expand_inverse_trg</span> <span class="id" type="var">g</span> <span class="id" type="var">y</span>; <span class="id" type="tactic">auto</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">equiv_moveright</span>; <span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+And the 2-out-of-3 property for equivalences. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="equiv_compose"><span class="id" type="definition">equiv_compose</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">B</span>) (<span class="id" type="var">g</span> : <span class="id" type="var">B</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">C</span>) : (<span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">C</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<span class="id" type="var">g</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">f</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Equivalences.html#hequiv_is_equiv"><span class="id" type="definition">hequiv_is_equiv</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">g</span> := <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">f</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a><a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">g</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a><a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">)</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">expand_inverse_trg</span> <span class="id" type="var">g</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">expand_inverse_trg</span> <span class="id" type="var">f</span> (<span class="id" type="var">g</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> <span class="id" type="var">y</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">expand_inverse_trg</span> <span class="id" type="var">f</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">expand_inverse_trg</span> <span class="id" type="var">g</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="equiv_cancel_right"><span class="id" type="definition">equiv_cancel_right</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">B</span>) (<span class="id" type="var">g</span> : <span class="id" type="var">B</span> -&gt; <span class="id" type="var">C</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> (<span class="id" type="var">g</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">f</span>) -&gt; <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> <span class="id" type="var">g</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">set</span> (<span class="id" type="var">gof</span> := (<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <span class="id" type="var">_</span> (<span class="id" type="var">g</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">f</span>) <span class="id" type="var">H</span>) : <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">C</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Equivalences.html#hequiv_is_equiv"><span class="id" type="definition">hequiv_is_equiv</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">g</span> := <span class="id" type="var">f</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">gof</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a><a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">)</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">expand_inverse_trg</span> <span class="id" type="var">gof</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#idpath"><span class="id" type="constructor">idpath</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">change</span> (<span class="id" type="var">f</span> (<span class="id" type="var">gof</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> (<span class="id" type="var">g</span> <span class="id" type="var">x</span>)) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="var">equiv_moveright</span>; <span class="id" type="var">equiv_moveright</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">change</span> (<span class="id" type="var">g</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">g</span> (<span class="id" type="var">f</span> (<span class="id" type="var">f</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> <span class="id" type="var">x</span>))).<br/>
+&nbsp;&nbsp;<span class="id" type="var">cancel_inverses</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="equiv_cancel_left"><span class="id" type="definition">equiv_cancel_left</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) (<span class="id" type="var">g</span> : <span class="id" type="var">B</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">C</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> (<span class="id" type="var">g</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">f</span>) -&gt; <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> <span class="id" type="var">f</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">f</span> <span class="id" type="var">g</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">set</span> (<span class="id" type="var">gof</span> := <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> <span class="id" type="var">_</span> (<span class="id" type="var">g</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">f</span>) <span class="id" type="var">H</span> : <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">C</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Equivalences.html#hequiv_is_equiv"><span class="id" type="definition">hequiv_is_equiv</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">g</span> := <span class="id" type="var">gof</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">g</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">expand_inverse_trg</span> <span class="id" type="var">g</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">expand_inverse_src</span> <span class="id" type="var">g</span> (<span class="id" type="var">f</span> ((<a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">gof</span> <a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a><a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">g</span>) <span class="id" type="var">y</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<span class="id" type="var">gof</span> ((<span class="id" type="var">gof</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> (<span class="id" type="var">g</span> <span class="id" type="var">y</span>)))).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#inverse_is_section"><span class="id" type="definition">inverse_is_section</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<span class="id" type="var">gof</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> (<span class="id" type="var">gof</span> <span class="id" type="var">x</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#inverse_is_retraction"><span class="id" type="definition">inverse_is_retraction</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="contr_contr_equiv"><span class="id" type="definition">contr_contr_equiv</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> <span class="id" type="var">A</span> -&gt; <a class="idref" href="Contractible.html#is_contr"><span class="id" type="definition">is_contr</span></a> <span class="id" type="var">B</span> -&gt; <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> <span class="id" type="var">f</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">f</span> <span class="id" type="var">Acontr</span> <span class="id" type="var">Bcontr</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Equivalences.html#equiv_cancel_left"><span class="id" type="definition">equiv_cancel_left</span></a> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" type="var">g</span> := <a class="idref" href="Equivalences.html#contr_equiv_unit"><span class="id" type="lemma">contr_equiv_unit</span></a> <span class="id" type="var">B</span> <span class="id" type="var">Bcontr</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">exact</span> (<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> (<a class="idref" href="Equivalences.html#contr_equiv_unit"><span class="id" type="lemma">contr_equiv_unit</span></a> <span class="id" type="var">A</span> <span class="id" type="var">Acontr</span>)).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The action of an equivalence on paths is an equivalence. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="equiv_map_inv"><span class="id" type="lemma">equiv_map_inv</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">B</span>) :<br/>
+&nbsp;&nbsp;(<span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">f</span> <span class="id" type="var">y</span>) -&gt; (<span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">f</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<span class="id" type="var">f</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>, <a class="idref" href="Equivalences.html#inverse_is_retraction"><span class="id" type="definition">inverse_is_retraction</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via'</span> (<span class="id" type="var">f</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a> (<span class="id" type="var">f</span> <span class="id" type="var">y</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#inverse_is_retraction"><span class="id" type="definition">inverse_is_retraction</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="equiv_map_is_equiv"><span class="id" type="lemma">equiv_map_is_equiv</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">B</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> (@<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">f</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Equivalences.html#hequiv_is_equiv"><span class="id" type="definition">hequiv_is_equiv</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">g</span> := <a class="idref" href="Equivalences.html#equiv_map_inv"><span class="id" type="lemma">equiv_map_inv</span></a> <span class="id" type="var">f</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">equiv_map_inv</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">do_concat_map</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">do_opposite_map</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">moveright_onleft</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">undo_compose_map</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> (<span class="id" type="var">f</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">f</span> <a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a><a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">)</span></a>) <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Equivalences.html#inverse_is_section"><span class="id" type="definition">inverse_is_section</span></a> <span class="id" type="var">f</span> (<span class="id" type="var">f</span> <span class="id" type="var">y</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#inverse_triangle"><span class="id" type="definition">inverse_triangle</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<a class="idref" href="Equivalences.html#inverse_is_section"><span class="id" type="definition">inverse_is_section</span></a> <span class="id" type="var">f</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#homotopy_naturality_toid"><span class="id" type="lemma">homotopy_naturality_toid</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">f</span> := <span class="id" type="var">f</span> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">f</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a><a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">)</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#opposite"><span class="id" type="definition">opposite</span></a>, <a class="idref" href="Equivalences.html#inverse_triangle"><span class="id" type="definition">inverse_triangle</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <span class="id" type="var">equiv_map_inv</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">moveright_onleft</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">undo_compose_map</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Paths.html#homotopy_naturality_toid"><span class="id" type="lemma">homotopy_naturality_toid</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">f</span> := <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">f</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a><a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Functions.html#::x_'o'_x"><span class="id" type="notation">o</span></a> <span class="id" type="var">f</span>).<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="equiv_map_equiv"><span class="id" type="definition">equiv_map_equiv</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} {<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <span class="id" type="var">A</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <span class="id" type="var">B</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span><a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">f</span> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">f</span> <span class="id" type="var">y</span><a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">)</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a>@<a class="idref" href="Paths.html#map"><span class="id" type="lemma">map</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">f</span> <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a> <a class="idref" href="Equivalences.html#equiv_map_is_equiv"><span class="id" type="lemma">equiv_map_is_equiv</span></a> <span class="id" type="var">f</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Path-concatenation is an equivalence. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="concat_is_equiv_left"><span class="id" type="lemma">concat_is_equiv_left</span></a> {<span class="id" type="var">A</span>} (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> (<span class="id" type="keyword">fun</span> <span class="id" type="var">q</span>: <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span> =&gt; <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Equivalences.html#hequiv_is_equiv"><span class="id" type="definition">hequiv_is_equiv</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">g</span> := @<a class="idref" href="Paths.html#concat"><span class="id" type="definition">concat</span></a> <span class="id" type="var">A</span> <span class="id" type="var">y</span> <span class="id" type="var">x</span> <span class="id" type="var">z</span> (<a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">associate_left</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">associate_left</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="concat_equiv_left"><span class="id" type="definition">concat_equiv_left</span></a> {<span class="id" type="var">A</span>} (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span><a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span><a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">)</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="keyword">fun</span> <span class="id" type="var">q</span>: <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span> =&gt; <span class="id" type="var">p</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">q</span>  <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a>  <a class="idref" href="Equivalences.html#concat_is_equiv_left"><span class="id" type="lemma">concat_is_equiv_left</span></a> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> <span class="id" type="var">p</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="concat_is_equiv_right"><span class="id" type="lemma">concat_is_equiv_right</span></a> {<span class="id" type="var">A</span>} (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> (<span class="id" type="keyword">fun</span> <span class="id" type="var">q</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span> =&gt; <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> <span class="id" type="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> @<a class="idref" href="Equivalences.html#hequiv_is_equiv"><span class="id" type="definition">hequiv_is_equiv</span></a> <span class="id" type="keyword">with</span> (<span class="id" type="var">g</span> := <span class="id" type="keyword">fun</span> <span class="id" type="var">r</span> : <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span> =&gt; <span class="id" type="var">r</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <a class="idref" href="Paths.html#::'!'_x"><span class="id" type="notation">!</span></a><span class="id" type="var">p</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">associate_right</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">associate_right</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="concat_equiv_right"><span class="id" type="definition">concat_equiv_right</span></a> {<span class="id" type="var">A</span>} (<span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> : <span class="id" type="var">A</span>) (<span class="id" type="var">p</span> : <span class="id" type="var">y</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span><a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">z</span><a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">)</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">(</span></a><span class="id" type="keyword">fun</span> <span class="id" type="var">q</span>: <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span> =&gt; <span class="id" type="var">q</span> <a class="idref" href="Paths.html#::x_'@'_x"><span class="id" type="notation">@</span></a> <span class="id" type="var">p</span>  <a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">;</span></a>  <a class="idref" href="Equivalences.html#concat_is_equiv_right"><span class="id" type="lemma">concat_is_equiv_right</span></a> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">z</span> <span class="id" type="var">p</span><a class="idref" href="Fibrations.html#::'('_x_';'_x_')'"><span class="id" type="notation">)</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+And we can characterize the path types of the total space of a
+   fibration, up to equivalence. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="total_paths_equiv"><span class="id" type="lemma">total_paths_equiv</span></a> (<span class="id" type="var">A</span> : <span class="id" type="keyword">Type</span>) (<span class="id" type="var">P</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="keyword">Type</span>) (<span class="id" type="var">x</span> <span class="id" type="var">y</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#sigT"><span class="id" type="inductive">sigT</span></a> <span class="id" type="var">P</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">(</span></a><span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span><a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Equivalences.html#::x_'<~>'_x"><span class="id" type="notation">&lt;~&gt;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">p</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <a class="idref" href="Fibrations.html#pr1"><span class="id" type="abbreviation">pr1</span></a> <span class="id" type="var">x</span> <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Fibrations.html#pr1"><span class="id" type="abbreviation">pr1</span></a> <span class="id" type="var">y</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a> <a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">p</span> (<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">y</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">r</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#existT"><span class="id" type="constructor">existT</span></a> (<span class="id" type="keyword">fun</span> <span class="id" type="var">p</span> =&gt; <a class="idref" href="Fibrations.html#transport"><span class="id" type="lemma">transport</span></a> <span class="id" type="var">p</span> (<a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <a class="idref" href="Fibrations.html#pr2"><span class="id" type="abbreviation">pr2</span></a> <span class="id" type="var">y</span>) (<a class="idref" href="Fibrations.html#base_path"><span class="id" type="definition">base_path</span></a> <span class="id" type="var">r</span>) (<a class="idref" href="Fibrations.html#fiber_path"><span class="id" type="definition">fiber_path</span></a> <span class="id" type="var">r</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">eapply</span> @<a class="idref" href="Equivalences.html#hequiv_is_equiv"><span class="id" type="definition">hequiv_is_equiv</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">instantiate</span> (1 := <span class="id" type="keyword">fun</span> <span class="id" type="var">pq</span> =&gt; <span class="id" type="keyword">let</span> (<span class="id" type="var">p</span>,<span class="id" type="var">q</span>) := <span class="id" type="var">pq</span> <span class="id" type="keyword">in</span> <a class="idref" href="Fibrations.html#total_path"><span class="id" type="lemma">total_path</span></a> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> [<span class="id" type="var">p</span> <span class="id" type="var">q</span>].<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">eapply</span> <a class="idref" href="Fibrations.html#total_path"><span class="id" type="lemma">total_path</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">instantiate</span> (1 := <a class="idref" href="Fibrations.html#base_total_path"><span class="id" type="lemma">base_total_path</span></a> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span> <span class="id" type="var">p</span> <span class="id" type="var">q</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Fibrations.html#fiber_total_path"><span class="id" type="lemma">fiber_total_path</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">r</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Fibrations.html#total_path_reconstruction"><span class="id" type="lemma">total_path_reconstruction</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+André Joyal suggested the following definition of equivalences,
+   and to call it "h-isomorphism". 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="is_hiso"><span class="id" type="definition">is_hiso</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) :=<br/>
+&nbsp;&nbsp;( <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">g</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <span class="id" type="var">B</span>-&gt;<span class="id" type="var">A</span>  <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a>  <span class="id" type="keyword">forall</span> <span class="id" type="var">x</span>, <span class="id" type="var">g</span> (<span class="id" type="var">f</span> <span class="id" type="var">x</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Datatypes.html#:type_scope:x_'*'_x"><span class="id" type="notation">*</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">{</span></a> <span class="id" type="var">h</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">:</span></a> <span class="id" type="var">B</span>-&gt;<span class="id" type="var">A</span>  <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">&amp;</span></a>  <span class="id" type="keyword">forall</span> <span class="id" type="var">y</span>, <span class="id" type="var">f</span> (<span class="id" type="var">h</span> <span class="id" type="var">y</span>) <a class="idref" href="Paths.html#::x_'=='_x"><span class="id" type="notation">==</span></a> <span class="id" type="var">y</span> <a class="idref" href="http://coq.inria.fr/distrib/8.3pl1/stdlib/Coq.Init.Specif.html#:type_scope:'{'_x_':'_x_'&'_x_'}'"><span class="id" type="notation">}</span></a> )%<span class="id" type="var">type</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="equiv_to_hiso"><span class="id" type="lemma">equiv_to_hiso</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span> : <a class="idref" href="Equivalences.html#equiv"><span class="id" type="definition">equiv</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span>) : <a class="idref" href="Equivalences.html#is_hiso"><span class="id" type="definition">is_hiso</span></a> <span class="id" type="var">f</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<span class="id" type="var">f</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#inverse_is_retraction"><span class="id" type="definition">inverse_is_retraction</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exists</span> (<span class="id" type="var">f</span><a class="idref" href="Equivalences.html#::x_'^-1'"><span class="id" type="notation">^-1</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Equivalences.html#inverse_is_section"><span class="id" type="definition">inverse_is_section</span></a>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Theorem</span> <a name="hiso_to_equiv"><span class="id" type="lemma">hiso_to_equiv</span></a> {<span class="id" type="var">A</span> <span class="id" type="var">B</span>} (<span class="id" type="var">f</span> : <span class="id" type="var">A</span> -&gt; <span class="id" type="var">B</span>) : <a class="idref" href="Equivalences.html#is_hiso"><span class="id" type="definition">is_hiso</span></a> <span class="id" type="var">f</span> -&gt; <a class="idref" href="Equivalences.html#is_equiv"><span class="id" type="definition">is_equiv</span></a> <span class="id" type="var">f</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">f</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span> <span class="id" type="keyword">as</span> ((<span class="id" type="var">g</span>, <span class="id" type="var">is_retraction</span>), (<span class="id" type="var">h</span>, <span class="id" type="var">is_section</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">eapply</span> <a class="idref" href="Equivalences.html#hequiv_is_equiv"><span class="id" type="definition">hequiv_is_equiv</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">instantiate</span> (1 := <span class="id" type="var">g</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<span class="id" type="var">f</span> (<span class="id" type="var">h</span> <span class="id" type="var">y</span>)).<br/>
+&nbsp;&nbsp;<span class="id" type="var">path_via</span> (<span class="id" type="var">g</span> (<span class="id" type="var">f</span> (<span class="id" type="var">h</span> (<span class="id" type="var">y</span>)))).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Of course, the harder part is showing that is_hiso is a proposition. 
+</div>
+<div class="code">
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

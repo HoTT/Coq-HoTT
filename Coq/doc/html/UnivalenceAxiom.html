@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>UnivalenceAxiom</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library UnivalenceAxiom</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Paths.html#"><span class="id" type="library">Paths</span></a> <a class="idref" href="Univalence.html#"><span class="id" type="library">Univalence</span></a> <a class="idref" href="Funext.html#"><span class="id" type="library">Funext</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This file asserts univalence as a global axiom, along with its
+   basic consequences, including function extensionality.  Since the
+   proof that univalence implies funext has a tendency to create
+   universe inconsistencies, we actually assume funext as a separate
+   axiom rather than actually deriving it from univalence. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Axiom</span> <a name="univalence"><span class="id" type="axiom">univalence</span></a> : <a class="idref" href="Univalence.html#univalence_statement"><span class="id" type="definition">univalence_statement</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Set</span> <span class="id" type="keyword">Implicit</span> <span class="id" type="var">Arguments</span>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="equiv_to_path"><span class="id" type="definition">equiv_to_path</span></a> := @<a class="idref" href="Univalence.html#equiv_to_path"><span class="id" type="definition">equiv_to_path</span></a> <a class="idref" href="UnivalenceAxiom.html#univalence"><span class="id" type="axiom">univalence</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="equiv_to_path_section"><span class="id" type="definition">equiv_to_path_section</span></a> := @<a class="idref" href="Univalence.html#equiv_to_path_section"><span class="id" type="definition">equiv_to_path_section</span></a> <a class="idref" href="UnivalenceAxiom.html#univalence"><span class="id" type="axiom">univalence</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="equiv_to_path_retraction"><span class="id" type="definition">equiv_to_path_retraction</span></a> := @<a class="idref" href="Univalence.html#equiv_to_path_retraction"><span class="id" type="definition">equiv_to_path_retraction</span></a> <a class="idref" href="UnivalenceAxiom.html#univalence"><span class="id" type="axiom">univalence</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="equiv_to_path_triangle"><span class="id" type="definition">equiv_to_path_triangle</span></a> := @<a class="idref" href="Univalence.html#equiv_to_path_triangle"><span class="id" type="definition">equiv_to_path_triangle</span></a> <a class="idref" href="UnivalenceAxiom.html#univalence"><span class="id" type="axiom">univalence</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="equiv_induction"><span class="id" type="definition">equiv_induction</span></a> := @<a class="idref" href="Univalence.html#equiv_induction"><span class="id" type="lemma">equiv_induction</span></a> <a class="idref" href="UnivalenceAxiom.html#univalence"><span class="id" type="axiom">univalence</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Axiom</span> <a name="strong_funext_dep"><span class="id" type="axiom">strong_funext_dep</span></a> : <a class="idref" href="Funext.html#strong_funext_dep_statement"><span class="id" type="definition">strong_funext_dep_statement</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="strong_funext"><span class="id" type="definition">strong_funext</span></a> := <a class="idref" href="Funext.html#strong_funext_dep_to_nondep"><span class="id" type="lemma">strong_funext_dep_to_nondep</span></a> <a class="idref" href="UnivalenceAxiom.html#strong_funext_dep"><span class="id" type="axiom">strong_funext_dep</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="funext_dep"><span class="id" type="definition">funext_dep</span></a> := <a class="idref" href="Funext.html#strong_to_naive_funext_dep"><span class="id" type="lemma">strong_to_naive_funext_dep</span></a> <a class="idref" href="UnivalenceAxiom.html#strong_funext_dep"><span class="id" type="axiom">strong_funext_dep</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="funext"><span class="id" type="definition">funext</span></a> := <a class="idref" href="Funext.html#strong_to_naive_funext"><span class="id" type="lemma">strong_to_naive_funext</span></a> <a class="idref" href="UnivalenceAxiom.html#strong_funext"><span class="id" type="definition">strong_funext</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="weak_funext"><span class="id" type="definition">weak_funext</span></a> := <a class="idref" href="Funext.html#funext_dep_to_weak"><span class="id" type="lemma">funext_dep_to_weak</span></a> <a class="idref" href="UnivalenceAxiom.html#funext_dep"><span class="id" type="definition">funext_dep</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="funext_dep_compute"><span class="id" type="definition">funext_dep_compute</span></a> := <a class="idref" href="Funext.html#strong_funext_dep_compute"><span class="id" type="definition">strong_funext_dep_compute</span></a> <a class="idref" href="UnivalenceAxiom.html#strong_funext_dep"><span class="id" type="axiom">strong_funext_dep</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="funext_compute"><span class="id" type="definition">funext_compute</span></a> := <a class="idref" href="Funext.html#strong_funext_compute"><span class="id" type="lemma">strong_funext_compute</span></a> <a class="idref" href="UnivalenceAxiom.html#strong_funext"><span class="id" type="definition">strong_funext</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

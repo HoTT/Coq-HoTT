@@ -158,6 +158,7 @@ Implicit Arguments new_dep_W_record [].
 
 Definition new_dep_W i := new_dep_W_record i.
 
+(* From here on, everything is incomplete. *)
 Lemma goodness_is_hereditary_W1  (j i:I) (a:A i) (t : forall b:B i a, W1)
   : psi (w1_intro j i a t) == (w1_intro j i a t)
   -> forall b:B i a, psi (t b) == t b.
@@ -170,6 +171,7 @@ Proof.
   unfold w1_intro in H_eq.  simpl in H_eq.
   unfold w1_intro in H_eq.
   path_via  (w1_pr3 ). simpl in H_eq.
+Admitted.
 
 Definition new_dep_w_intro (i : I) (a : A i)
                      (f : forall b : B i a, new_dep_W (s b))

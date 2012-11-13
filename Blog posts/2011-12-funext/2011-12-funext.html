@@ -1,0 +1,85 @@
+It’s amazing what you can find in the <a href="brokenlink">HoTT repository</a> these days!  I was browsing it the other week, looking up something quite different, when I came across a theorem in <a href="brokenlink">Funext.v</a> (originally by Voevodsky) which answers, in a surprising direction, a question posed by Richard Garner in his paper <a href="brokenlink">On the strength of dependent products…</a>, and as far as I know still open in the literature.
+
+The punchline is, roughly: <em>all forms of functional extensionality seem to be derivable from almost the weakest form you might think of.</em>  In the terminology of Richard’s paper, [Π-ext] and [Π-ext-comp] together imply [Π-ext-app], [Π-Id-elim], and so on; and in fact even the assumption of [Π-ext-comp] is negotiable. <!--more-->
+
+Coq code for most of what I say here can be found in <a href="brokenlink">Funext.v</a>.
+
+<hr />
+
+The most traditional form of functional extensionality is the statement
+
+<strong>Naive funext:</strong> If functions take equal values, then they are equal.
+
+We can put a nice gloss on this in homotopical language.  If <i>f</i>, <i>g</i> are dependent functions of type ∏<sub><i>x</i>:<i>A</i></sub> <i>B<sub>x</sub></i>, a <em>homotopy</em> <i>h</i>: <i>f</i> ≃ <i>g</i> is a function giving for each <i>x:A</i> a path <i>h(x)</i> : <i>f(x)</i> = <i>g(x)</i>.  Then naive funext just posits a map <b>ext</b><sub>f,g</sub>: (<i>f</i> ≃ <i>g</i>) → (<i>f</i> = <i>g</i>), converting homotopies to paths.  (This is the rule [Π-ext] in Richard’s paper.)
+
+In a world where UIP held, this would be quite satisfactory on its own.  But with non-trivial path spaces, one often needs to know more!
+
+For instance, when we feed <b>ext</b> the identity homotopy on a function <i>f</i>, it should give just the identity path on <i>f</i>, not some potentially non-trivial loop.  In other words, we want a path <b>ext-comp</b> <i>f</i>: <b>ext</b>(λ<i>x</i>, r(<i>f</i>(<i>x</i>))) = r(<i>f</i>).  Or we could even ask this to be a definitional equality, making it a literal computation rule (if we think of <b>ext</b> as like an eliminator, this tells us how it acts on canonical forms); this is [Π-ext-comp] in Richard’s paper.  Let’s call our propositional version [Π-ext-comp-prop].
+
+On the other hand, we might want to know at least something about how the paths produced by <b>ext</b> behave under path-elimination.  In particular, there’s always a canonical function going in the opposite direction, converting homotopies into paths:  <b>happly</b><sub>f,g</sub>: (<i>f</i> = <i>g</i>) → (<i>f</i> ≃ <i>g</i>). (It’s defined just by path-elimination.)  If we produce a path with <b>ext</b> and then take it back with <b>happly</b>, we’d like to get back the homotopy we first thought of, i.e. to have for each <i>h</i> a path <b>ext-app</b> <i>h</i>: <b>happly</b>(<b>ext</b> <i>h</i>) = <i>h</i>.
+
+This is [Π-ext-app] in the paper; again it has an associated computation principle, [Π-ext-app-comp], but this will be a bit peripheral to our main story, so I won’t go into its details.
+
+In other words, though, [Π-ext-app] just says <b>ext</b><sub>f,g</sub> is a right up-to-homotopy inverse for <b>happly</b><sub>f,g</sub>.  So we could also consider the principle that it should be a <em>left</em> homotopy inverse for <b>happly</b><sub>f,g</sub> — except that we already have, pretty much!  It’s easy to show — <a href="brokenlink">exercise for the reader!</a> — that [Π-ext-comp-prop] is equivalent to <b>ext</b><sub>f,g</sub> being a left homotopy inverse for <b>happly</b><sub>f,g</sub>.
+
+So, taken together [Π-ext], [Π-ext-comp-prop], and [Π-ext-app] imply that <b>happly</b><sub>f,g</sub> is an equivalence; and on the other hand, it clearly implies them all back.  So this can be taken as an alternative form of functional extensionality:
+
+<strong>Strong funext:</strong> The canonical map <b>happly</b><sub>f,g</sub>: (<i>f</i> = <i>g</i>) → (<i>f</i> ≃ <i>g</i>) is an equivalence.
+
+This is more clearly a homotopically-good statement than the others.  In particular, <a href="brokenlink">being an equivalence is a mere proposition</a> — so in assuming this, we don’t need to worry about the particular choice of witness being canonical in any sense.  No computation principles needed!
+
+Richard Garner doesn’t discuss this statement in the paper, but he has a closely related rule [Π-Id-elim], which (together with its computation rule [Π-Id-elim-comp]) says that the types of homotopies (<i>f</i> ≃ <i>g</i>) have the same universal property as the path types (<i>f</i> = <i>g</i>), with the identity homotopy playing the role of the identity path.  It’s not hard to show that modulo making [Π-Id-elim-comp] propositional, this is equivalent to strong funext — an instance of the general principle that two things with the same universal property should be equivalent.
+
+So now, the question is: to what extent does naive funext — [Π-ext] alone — imply any of the others?
+
+For a warmup, let’s think about [Π-ext-comp].  Does [Π-ext] imply it?  Yes and no.  [Π-ext-app] is an assertion about the specific witness <b>ext</b> for [Π-ext]; and while an arbitrary witness <b>ext</b> may not necessarily satisfy [Π-ext-app], but it can always be “corrected” to one that does.  Proof?  I’ll leave this one as an exercise; or if you’re impatient, you can look up the solution in <a href="brokenlink">Funext.v</a>.
+
+So, that’s an encouraging start!  Can we similarly get from these to [Π-ext-app], or equivalently to strong funext?  It’s far from obvious; but this was the surprising theorem that I originally found in Funext.v:
+
+<strong>Theorem (Voevodsky).</strong>  Naive funext implies strong funext.
+
+What follows is a somewhat distilled version of <a href="brokenlink">that proof</a>, which was itself a cleanup by Mike Shulman of Voevodsky’s original proof.  It’s still fairly long, though; so if you’re in a hurry, I won’t be offended if you <a href="#endofproof">skip to the end.</a>
+
+From what we’ve seen above, it’s enough to show:
+
+<strong>Theorem.</strong>  [Π-ext] and [Π-ext-comp-prop] imply [Π-ext-app].
+
+<em>Proof.</em> We need to show that for any functions <i>f</i>, <i>g</i> and homotopy <i>f</i>: <i>g</i> ≃ <i>h</i>, we can construct some path <b>happly</b>(<b>ext</b> <i>h</i>) = <i>h</i>.
+
+Fix <i>f</i>, and think of <i>g</i> and <i>h</i> as varying.  In the case where (<i>g</i>,<i>h</i>) is the pair  (<i>f</i>,(λ<i>x</i>. r(<i>f</i>(<i>x</i>)))), it’s easy to construct the desired path, using [Π-ext-comp-prop] together with the computational behaviour of <b>happly</b>.
+
+So to show it for arbitrary <i>g</i>,<i>h</i>, it’s sufficent to give a path from the pair (<i>g</i>,<i>h</i>) to the pair (<i>f</i>,(λ<i>x</i>. r(<i>f</i>(<i>x</i>)))).  In other words, we want to show that the space of such pairs (<i>g</i>,<i>h</i>) is <em>contractible</em>.  (This statement itself could be considered as another form of functional extensionality.)
+
+To do this, we’ll look at the space of such pairs as a retract, up to homotopy, of another space — of functions into pairs — which we’ll then show contractible.  In other words, we need to show two lemmas:
+
+<strong>Lemma 1.</strong>  Assume [Π-ext].  Given any function <i>f</i> : ∏<sub><i>x</i>:<i>A</i></sub> <i>B<sub>x</sub></i>, the space of pairs of functions { <i>g</i> : ∏<sub><i>x</i>:<i>A</i></sub> <i>B<sub>x</sub></i> &amp; <i>h</i> : <i>f</i> ≃ <i>g</i> } is a retract up to homotopy of the space of functions into pairs,  ∏<sub><i>x</i>:<i>A</i></sub> { y : <i>B<sub>x</sub></i> &amp; p : x = y }.  (I’m using roughly Coq’s notation for Σ-types here; I hope it’s clear what it means.) 
+
+<strong>Lemma 2.</strong> Assume [Π-ext].  Then for any <i>f</i> as above, the type ∏<sub><i>x</i>:<i>A</i></sub> { y : <i>B<sub>x</sub></i> &amp; p : (f x) = y } is contractible.
+
+<i>Proof of Lemma 1.</i> It’s easy to write down functions going between the two types.  To see that they give a retraction, take a pair (<i>g</i>,<i>h</i>), and send it out and back; what we get back is the pair ((λ<i>x</i>. <i>gx</i>),(λ<i>x</i>. <i>hx</i>)) — with <i>η</i>-expansions of the original functions.  So, we need to use an <i>η</i>-rule somehow.
+
+Since we have funext, it’s easy to show the necessary <i>η</i>-rule: any function <i>k</i> has a path <i>η<sub>k</sub></i> to its own <i>η</i>-expansion.  But using it is a little subtle: we’re trying to construct a path between pairs, (<i>g</i>,<i>h</i>) = ((λ<i>x</i>. <i>gx</i>),(λ<i>x</i>. <i>hx</i>)), and the obvious thing to try is the fact that a path between pairs comes from a pair of paths.  But if we do that, using <i>η<sub>g</sub></i> as the first path, then the second path needed involves transport along <i>η<sub>g</sub></i> — and the behaviour under transport of terms produced from <b>ext</b> is exactly what we’re trying to get a handle on in the first place!
+
+Instead, we approach it a bit differently: we use the <i>η</i>-rule at the point where the hypotheses <i>g</i>,<i>h</i> are introduced.  So given <i>g</i>, but with <i>h</i> still generalised, we want to show that for all <i>h</i>, (<i>g</i>,<i>h</i>) = ((λ<i>x</i>. <i>gx</i>),(λ<i>x</i>. <i>hx</i>)).  By eta-expansion, it’s enough to show this with (λ<i>x</i>. <i>gx</i>) in place of <i>g</i>: so, that for all appropriate <i>h</i>, ((λ<i>x</i>. <i>gx</i>),<i>h</i>) = ((λ<i>x</i>. <i>gx</i>),(λ<i>x</i>. <i>hx</i>)).  Only then do we introduce <i>h</i>; and this time, there’s no transport along <i>η<sub>g</sub></i> involved in the goal, so we’re home and dry.
+
+(This approach to <i>η</i>-expansion — essentially, assuming as soon as a function is introduced that WLOG it’s already <i>η</i>-expanded — seems to work quite cleanly in general, so I wrapped it up in a couple of tactics <code>eta_intro</code>, <code>eta_expand</code> in Funext.v, which others may also find useful.  They’re still a bit limited, though, so someone with more Ltac experience might well be able to improve them, which would be great!  Although since the word on the street is that Coq will soon support a definitional <i>η</i>-rule, this may not be needed for long.)
+
+<i>Proof of Lemma 2.</i>  We need to show that given <i>f</i> as above, the type ∏<sub><i>x</i>:<i>A</i></sub> { y : <i>B<sub>x</sub></i> &amp; p : (f x) = y } is contractible.  Certainly, for each individual <i>x</i> the type { y : <i>B<sub>x</sub></i> &amp; p : (f x) = y } is contractible — you probably knew it already, and if not, it’s nice and easy to prove.
+
+But now, by [Π-ext], it’s easy to show that a product of contractible spaces is contractible; so we’re done!  □
+
+(In <a href="brokenlink">Funext.v</a>, I handle the contractibility statements slightly differently.  Contractibility seems the conceptually clearer way of stating them; but one can make the overall proof slightly more compact by working just with the contractions, since the basepoints in all cases are obvious.
+
+We thus have strong functional extensionality from weak — and moreover, we have a kicker:
+
+<strong>Scholium.</strong>  If <b>ext-app</b> is as constructed as above, and moreover [Π-ext-comp] holds <em>definitionally</em>, then so does [Π-ext-app-comp].
+
+<i>Proof.</i>  By appropriate contemplation of the preceding proof. □
+
+(Unlike the rest, this can’t be formalised in Coq, since one can’t take a definitional equality as a hypothesis.)
+
+So — what’s the moral of this proof?  It was moderately long and rather fiddly; but what actually makes the whole thing tick?  My feeling: Σ-types.  We’re trying to show how paths produced by <b>ext</b> behave under <b>happly</b>, or more generally under path-elimination.  The retraction of Lemma 2 lets us relate them to paths in Σ-types; and for paths in Σ-types, or rather for their projection to the base space, we <em>do</em> know something about transport, thanks to their “second projections” to a path in a fiber.  And this is just enough that with some leverage, we can work up to the general statements we need.
+
+So, my intuition at the moment is that the Σ-types are the real core of this proof.  It’s very tempting to conjecture that they’re necessary; but of course, as this theorem shows, the type theory can easily surprise us!  But I do think that if the theorem can be proven without using Σ-types or something similar, it won’t be by a modification of this argument — it would have to involve a rather different idea.
+
+<strong>Extra bonus exercise.</strong>  In the view of [Π-ext-comp-prop] and [Π-ext-app] as making <b>ext</b> an inverse to <b>happly</b>, what does [Π-ext-app-comp-prop] correspond to?
