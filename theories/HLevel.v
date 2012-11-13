@@ -13,6 +13,7 @@
    in the sense that all paths are trivial. We call such spaces "sets".
 *)
 
+
 Require Import Paths Fibrations Contractible Equivalences Funext.
 Require Import ExtensionalityAxiom.
 
@@ -63,7 +64,7 @@ Proof.
   apply H.
 Defined.
 
-(** H-level is preserved under equivalence.
+(** H-levels are preserved under equivalence.
    (This is, of course, trivial with univalence.) *)
 
 Theorem hlevel_equiv : forall {n A B}, (A <~> B) -> is_hlevel n A -> is_hlevel n B.
@@ -84,7 +85,7 @@ Proof.
   apply H.
 Defined.
 
-(** And by products *)
+(** And by binary products *)
 
 Definition prod_hlevel:
   forall n A B, is_hlevel n A -> is_hlevel n B -> is_hlevel n (A * B).
@@ -100,7 +101,7 @@ Proof.
   apply IHn. apply Ah. apply Bh.
 Defined.
 
-(** And by dependent sums *)
+(** And by dependent sums, over a base of the given h-level *)
 
 Definition total_hlevel: forall n A (P : A -> Type),
   is_hlevel n A -> (forall a, is_hlevel n (P a)) ->
@@ -119,6 +120,21 @@ Proof.
   apply IHn.
   apply Ah.
   intros p; apply (Ph a2).
+Defined.
+
+(** And by dependent products over any base. *)
+
+Lemma forall_hlevel n {X} (P : X -> Type) :
+  (forall x, is_hlevel n (P x)) -> is_hlevel n (forall x, P x).
+Proof.
+  revert P.  induction n as [ | n' IH ]; intros P H; simpl in *.
+  (* case n = 0 *) apply weak_funext.  assumption.
+  (* case n = S n' *)  intros f g.  
+  apply (hlevel_equiv (A := f == g)).
+    apply equiv_inverse.
+    exists happly_dep.
+    apply strong_funext_dep.
+  apply IH.  intros.  apply H.
 Defined.
 
 (** Propositions are of h-level 1. *)
