@@ -249,22 +249,13 @@ Defined.
 Definition sum_isprop X (P : X -> Type) :
   is_prop X -> (forall x, is_prop (P x)) -> is_prop (sigT P).
 Proof.
-  intros Xp Pp.
-  apply allpath_prop.
-  intros [x p] [y q].
-  apply @total_path with (prop_path Xp x y).
-  apply prop_path, Pp.
+  apply total_hlevel.
 Defined.
 
 Definition forall_isprop {X} (P : X -> Type) :
   (forall x, is_prop (P x)) -> is_prop (forall x, P x).
 Proof.
-  intros H.
-  apply allpath_prop.
-  intros f g.
-  apply funext_dep. intros x.
-  apply prop_path.
-  apply H.
+  apply forall_hlevel.
 Defined.
 
 (** Being an equivalence is a prop. *)
