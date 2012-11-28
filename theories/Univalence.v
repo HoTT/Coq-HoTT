@@ -2,7 +2,7 @@ Require Import Paths Fibrations Contractible Equivalences.
 
 (** Every path between spaces gives an equivalence. *)
 
-Definition path_to_equiv {U V : Type} : (U = V) -> (U <~> V).
+Definition path_to_equiv {U : Type} {V : Type} : (U = V) -> (U <~> V).
 Proof.
   intro p.
   induction p.
@@ -10,7 +10,6 @@ Proof.
 Defined.
 
 (** This is functorial in the appropriate sense. *)
-
 Lemma path_to_equiv_map {A} (P : fibration A) (x y : A) (p : x = y) :
   equiv_map (path_to_equiv (map P p)) = transport (P := P) p.
 Proof.

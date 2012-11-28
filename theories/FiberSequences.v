@@ -236,8 +236,9 @@ Section FiberFibers.
         square_fiber_map (g o f) g f (idmap Z)
         (fun x : X => idpath (g (f x))) z w =
         (y ; !!p)}).
+
     apply @trans_equiv with
-      (P := fun p => {w : {x : X & g (f x) = z} &
+      (P := fun p : g y = z => {w : {x : X & g (f x) = z} &
         square_fiber_map (g o f) g f (idmap Z)
         (fun x : X => idpath (g (f x))) z w =
         (y ; p)}).

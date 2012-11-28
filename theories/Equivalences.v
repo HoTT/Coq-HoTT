@@ -284,6 +284,7 @@ Structure adjoint_equiv A B := {
   adj_triangle : (forall x, map adj_map (adj_is_retraction x) = adj_is_section (adj_map x))
 }.
 
+
 (** The following property of equivalences serves to show that an
    equivalence is an adjoint equivalences. It is a triangle identity but
    it does not look like one since we have inserted one of the

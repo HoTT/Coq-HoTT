@@ -15,4 +15,4 @@ else
   COQLIB="@hottdir@/coq"
   HOTLIB="@hottdir@/theories"
 fi
-exec $COQC -coqlib $COQLIB -R $HOTLIB HoTT -relevant-equality -warn-universe-inconsistency $@
+exec $COQC -coqlib $COQLIB -R $HOTLIB HoTT -relevant-equality $@

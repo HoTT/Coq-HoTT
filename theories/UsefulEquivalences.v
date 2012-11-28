@@ -154,7 +154,7 @@ Proof.
   intros r.
   unfold unopposite2.
   moveright_onleft.
-  apply opposite_opposite_natural.
+  rewrite opposite_opposite_natural. hott_simpl. 
 Defined.
 
 (** Transporting is an equivalence. *)

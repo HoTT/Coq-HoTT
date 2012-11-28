@@ -2361,10 +2361,6 @@ $as_echo "Coq library path is $COQLIB" >&6; }
        as_fn_error $? "You need a version of Coq which supports -relevant-equality" "$LINENO" 5
    fi
 
-   warnuniverse=`$COQTOP -help 2>&1 | grep -c -- -warn-universe-inconsistency`
-   if test "$warnuniverse" = "0"; then
-      as_fn_error $? "You need a version of Coq which supports -warn-universe-inconsistency" "$LINENO" 5
-   fi
 fi
 
 # Checking for coqc

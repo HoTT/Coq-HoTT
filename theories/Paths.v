@@ -29,7 +29,7 @@ Notation "x = y" := (paths x y) (at level 70).
    try [Hint Resolve idpath] Coq complains that it cannot guess the
    value of the implicit argument [A]).  *)
 
-Hint Resolve @idpath.
+Hint Resolve idpath.
 
 (** The following automated tactic applies induction on paths and then
     [auto], which will also try [idpath]. It can handle many easy
@@ -61,8 +61,8 @@ Ltac path_induction :=
 Definition concat {A} {x y z : A} : (x = y) -> (y = z) -> (x = z).
 Proof.
   intros p q.
-  induction p.
-  exact q.
+  induction p. 
+  exact q. 
 Defined.
 
 (** The concatenation of paths [p] and [q] is denoted as [p @ q]. *)
@@ -328,7 +328,7 @@ Defined.
 
 Lemma map {A B} {x y : A} (f : A -> B) : (x = y) -> (f x = f y).
 Proof.
-  path_induction.
+  path_induction. 
 Defined.
 
 (** Taking opposites of 1-paths is functorial on 2-paths. *)
@@ -483,17 +483,17 @@ Defined.
    A specific [Hint Resolve] database [db] can be used with [auto with db]. *)
 
 Hint Resolve
-  @idpath @opposite
+  idpath opposite
   idpath_left_unit idpath_right_unit
   opposite_right_inverse opposite_left_inverse
   opposite_concat opposite_idpath opposite_opposite
-  @concat2
-  @whisker_right @whisker_left
-  @whisker_right_toid @whisker_right_fromid
-  @whisker_left_toid @whisker_left_fromid
-  @opposite2
-  @map idpath_map concat_map idmap_map compose_map opposite_map
-  @map2
+  concat2
+  whisker_right whisker_left
+  whisker_right_toid whisker_right_fromid
+  whisker_left_toid whisker_left_fromid
+  opposite2
+  map idpath_map concat_map idmap_map compose_map opposite_map
+  map2
  : path_hints.
 
 (** We can add more hints to the database later. *)
