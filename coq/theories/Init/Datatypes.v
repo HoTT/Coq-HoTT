@@ -56,16 +56,16 @@ Definition projT2 {A : Type} {P : A -> Type} (x : sigT P) : P (projT1 x) :=
 
 (** [Empty_set] is a datatype with no inhabitant *)
 
-Inductive Empty_set : Set :=.
+Inductive Empty_set : Type :=.
 
 (** [unit] is a singleton datatype with sole inhabitant [tt] *)
 
-Inductive unit : Set :=
+Inductive unit : Type :=
     tt : unit.
 
 (** [bool] is the datatype of the boolean values [true] and [false] *)
 
-Inductive bool : Set :=
+Inductive bool : Type :=
   | true : bool
   | false : bool.
 
@@ -77,7 +77,7 @@ Bind Scope bool_scope with bool.
 
 (* Natural numbers. *)
 
-Inductive nat : Set :=
+Inductive nat : Type :=
   | O : nat
   | S : nat -> nat.
 
