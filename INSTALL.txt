@@ -1,12 +1,25 @@
 # QUICK INSTALLATION INSTRUCTIONS
 
-1. Install a custom Coq from https://github.com/HoTT/coq. This is a fork
-   of the trunk and is compatible with standard Coq 8.4 trunk, except that
-   it supports special command-line options that turn on the homotopy theory
-   interpretation.
+1. Install a custom Coq from https://github.com/HoTT/coq. This is a fork of the trunk and
+   is compatible with standard Coq 8.4 trunk, except that it supports special command-line
+   options that turn on the homotopy theory interpretation. As currently we are doing some
+   development of Coq, you will have to use an older commit, namely
+   90867e61762826ac7fff185e8bdc9ca6bc6f4250:
 
-2. Get the HoTT library at https://github.com/HoTT/HoTT.git. Go at the
-root of the HoTT created directory.
+       git clone https://github.com/HoTT/coq.git
+       git checkout 90867e61762826ac7fff185e8bdc9ca6bc6f4250
+
+   Compile Coq as usual. One possibility is to compile it with
+
+       ./configure -local
+       make coqlight
+
+   This will compile Coq in place, so you can run it straight from the source
+   directory. It will also skip compilation of some libraries that we do not
+   use anyhow.
+
+2. Get the HoTT library at https://github.com/HoTT/HoTT.git. Go to the
+   root of the HoTT created directory.
  
 3. If you installed custom Coq so that it is found in the `PATH`, run
 
