@@ -253,7 +253,7 @@ CoInductive phant (p : Type) := Phant.
 Definition protect_term (A : Type) (x : A) : A := x.
 
 (* The ssreflect idiom for a non-keyed pattern:                               *)
-(*  - unkeyed t wiil match any subterm that unifies with t, regardless of     *)
+(*  - unkeyed t will match any subterm that unifies with t, regardless of     *)
 (*    whether it displays the same head symbol as t.                          *)
 (*  - unkeyed t a b will match any application of a term f unifying with t,   *)
 (*    to two arguments unifying with with a and b, repectively, regardless of *)

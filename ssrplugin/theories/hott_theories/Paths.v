@@ -469,12 +469,20 @@ Proof. rewrite (resp_eqp p) mulVKp; reflexivity. Qed.
 Lemma resp_eqidp A (f : A -> A) (p : f =1 id) (x y : A) (q : x = y) : (f`_* q) ^ p = q.
 Proof. by rewrite -(resp_eqp p) respidp. Qed.
 
+(* Was not in the original file ? *)
+Lemma resp_eqpid A (f : A -> A) (p : id =1 f) (x y : A) (q : x = y) : (f`_* q) = q ^ p.
+Proof. by rewrite (resp_eqp p) respidp. Qed.
 
 (* cancel f g := g is a left inverse of f ie f is a right inverse of g see ssrfun.v *)
 (* Was not in the original file ? *)
 Lemma can_respp A B (f : A -> B) (g : B -> A) (p : cancel f g) 
       (x y : A) (q : x = y) : g`_* (f`_* q) ^ p = q.
 Proof. by rewrite -resppcomp (resp_eqidp p). Qed.
+
+(* Was not in the original file ? *)
+Lemma conj_canV  A B (f : A -> B) (g : B -> A) (p : id =1 g \o f) 
+      (x y : A) (q : x = y) : g`_* (f`_* q) = q ^ p.
+Proof. by rewrite -resppcomp (resp_eqpid p). Qed.
 
 (* From now on I just translate the material present in Paths which was not already
    delt with in the previous lemmas. I need to be more cultured to make a more 
