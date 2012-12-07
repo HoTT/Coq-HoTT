@@ -1,4 +1,4 @@
-Require Import ssreflect.
+Require Import ssreflect ssrfun.
 Require Export Paths.
 
 Import PathNotations.
@@ -48,8 +48,41 @@ Definition section {A} (P : fibration A) := forall x : A, P x.
    not depend on paths in the base space but rather just on points of
    the base space. *)
 
+(* Warning : this is the legacy definition of transport. See in Equivalence.v
+why this should NOT be the way transport is defined...
 Definition transport {A} (P : fibration A) {x y : A} (p : x = y) : P x -> P y.
 Proof. rewrite p; exact. Defined.
+*)
+
+(* Definition eq_elim_dep (A : Type) (a : A) (P : forall a0 : A, a = a0 -> Type) *)
+(* (Pra : P a (erefl a)) (y : A) (i : a = y) : P y i := let: erefl := i in Pra. *)
+
+(* Definition eq_elim_nondep (A : Type) (a : A) (P : A -> Type) *)
+(* (Pra : P a) (y : A) (i : a = y) : P y := let: erefl := i in Pra. *)
+
+(* Lemma compare_eq_elim (A : Type) (a : A) (P : A -> Type) : *)
+(*   eq_elim_dep A a (fun x i => P x) = eq_elim_nondep A a P. *)
+(*  reflexivity. *)
+(* Abort. *)
+
+(* About identity_rect_. *)
+(* Lemma compare_eq_elim (A : Type) (a : A) (P : A -> Type) : *)
+(*   @identity_nondep_rect_r A a P = eq_elim_nondep A a P. *)
+(*  reflexivity. *)
+(* Abort. *)
+
+
+
+Definition transport (A : Type) (P : fibration A) {x y : A} (p : x = y) : P x ->  P y :=
+fun px => let: erefl := p in px.
+
+
+(* Was:
+
+Definition transport {A} (P : fibration A) {x y : A} (p : x = y) : P x -> P y.
+Proof. rewrite p; exact. Defined.
+*)
+
 
 (* We modify the status of the arguments of P wrt its original version : the*)
 (* fibration is now a non-implicit argument, so that we can provide its *)
@@ -351,9 +384,7 @@ Lemma trans_paths A B (f g : A -> B) (x y : A) (p : x = y) (q : f x = g x) :
   transport (fun a => f a = g a) p q
   =
   (f`_* p)^-1 * q * g`_* p.
-Proof.
-  move: q; case p => q /=; rewrite mul1p transport_idpath. exact: 1.
-Qed.
+Proof. by move: q; case p => q /=; rewrite mul1p. Qed.
 
 (** A dependent version of [map2]. *)
 (* Should this be the definition ? *)
