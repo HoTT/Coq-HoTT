@@ -273,14 +273,44 @@ Canonical eq_equiv_equiv U V : U = V <~> (U <~> V) :=
 (* Because of the (debatable) choice made by *)
 (* Coq in order to find the elimination scheme used by the elim tactic, the *)
 (* choice of this _rect postfixed name makes this scheme the default one *)
-(* for elimination on an object of type equiv. See the proof of compK for *)
-(* an example. *)
+(* for elimination on an object of type equiv. See the proofs below *)
 
 Lemma equiv_rect (P : forall U V, U <~> V -> Type) :
   (forall T, P T T (equiv_refl T)) -> (forall U V (e : U <~> V), P U V e).
 Proof.
 move=> PTT U V f; have <- /= := inverseK [equiv of eq_equiv] f.
 by case: _ /(eq_equiv^-1 f) => /=.
+Qed.
+
+(* A list of small lemmas about the cancellation of and equivalence when composed *)
+(* with its inverse.*)
+Lemma comp_equivV A B (e : A <~> B) : e \o e^-1 = id.
+Proof. by elim: e. Qed.
+
+Lemma comp_Vequiv A B (e : A <~> B) : e^-1 \o e = id.
+Proof. by elim: e. Qed.
+
+Lemma  comp_inverseK A B C (e : A <~> B) (f : C -> B) : e \o (e^-1 \o f) = f.
+Proof. by elim: e f. Qed.
+
+Lemma  comp_equivK A B C (e : A <~> B) (f : C -> A) : e^-1 \o (e \o f) = f.
+Proof. by elim: e f. Qed.
+
+Lemma  precomp_inverseK A B C (e : A <~> B) (f : B -> C) : (f \o e) \o e^-1 = f.
+Proof. by elim: e f. Qed.
+
+Lemma  precomp_equivK A B C (e : A <~> B) (f : A -> C) : (f \o e^-1) \o e = f.
+Proof. by elim: e f. Qed.
+
+(* Now a (very short) proof that the two projection of a diagonal are equal. *)
+Lemma diag_pi12 A : @diag_pi1 A = diag_pi2.
+Proof. by rewrite -[RHS](precomp_equivK [equiv of diag_pi1]). Qed.
+
+(* As a consequence, we obtain a proof that univalence -> fun ext *)
+Lemma funext (X Y : Type)  (f g : X -> Y) : f =1 g -> f = g.
+Proof.
+move=> eq_fg; pose fg x : diag_sq  := Diag_sq (eq_fg x).
+by have: diag_pi1 \o fg = diag_pi2 \o fg by rewrite diag_pi12.
 Qed.
 
 (* We now study the elementary theory of the  composition of *)
@@ -317,36 +347,6 @@ Proof. by elim: e. Qed.
 Canonical equiv_precomp A B C (e : A <~> B) : (C -> A) <~> (C -> B) :=
   can2_equiv (@compK _ _ C e) (@compVK _ _ C e).
 
-(* A list of small lemmas about the cancellation of and equivalence when composed *)
-(* with its inverse.*)
-Lemma comp_equivV A B (e : A <~> B) : e \o e^-1 = id.
-Proof. by elim: e. Qed.
-
-Lemma comp_Vequiv A B (e : A <~> B) : e^-1 \o e = id.
-Proof. by elim: e. Qed.
-
-Lemma  comp_inverseK A B C (e : A <~> B) (f : C -> B) : e \o (e^-1 \o f) = f.
-Proof. by elim: e f. Qed.
-
-Lemma  comp_equivK A B C (e : A <~> B) (f : C -> A) : e^-1 \o (e \o f) = f.
-Proof. by elim: e f. Qed.
-
-Lemma  precomp_inverseK A B C (e : A <~> B) (f : B -> C) : (f \o e) \o e^-1 = f.
-Proof. by elim: e f. Qed.
-
-Lemma  precomp_equivK A B C (e : A <~> B) (f : A -> C) : (f \o e^-1) \o e = f.
-Proof. by elim: e f. Qed.
-
-(* Now a (very short) proof that the two projection of a diagonal are equal. *)
-Lemma diag_pi12 A : @diag_pi1 A = diag_pi2.
-Proof. by rewrite -[RHS](precomp_equivK [equiv of diag_pi1]). Qed.
-
-(* As a consequence, we obtain a proof that univalence -> fun ext *)
-Lemma funext (X Y : Type)  (f g : X -> Y) : f =1 g -> f = g.
-Proof.
-move=> eq_fg; pose fg x : diag_sq  := Diag_sq (eq_fg x).
-by have: diag_pi1 \o fg = diag_pi2 \o fg by rewrite diag_pi12.
-Qed.
 
 (* The final goal here is to show that UIP does _not_ hold when we have univalence *)
 (* We first forge the non-trivial equivalence bool <~> bool via negb *)
