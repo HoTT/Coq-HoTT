@@ -9,24 +9,6 @@ Import PathNotations.
 
 Open Scope path_scope.
 
-(* assia : it proves convenient to import also Cyril's alternate constructors *)
-(* of inhabitants of a hfiber *)
-
-Definition hfiber {A B} (f : A -> B) (y : B) := {x : A & f x = y}.
-
-Definition hfiber_def {A B} (f : A -> B) (y : B) 
-           (x : A) (Hx : f x = y) : hfiber f y := exist (fun x => f x = _) _ Hx.
-
-(* nice constructors for elements of the preimage: *)
-
-(* If (Hx : f x = y), the element of the fiber (x, Hx) *)
-Notation Hfiber f Hx := (@hfiber_def _ _ f _ _ Hx).
-
-(* The element (f x, 1) of the fiber above f x *)
-Notation in_hfiber f x := (@hfiber_def _ _ f _ x (erefl _)).
-
-Lemma hfiberP {A B} (f : A -> B) (y : B) (x : hfiber f y) : f (projT1 x) = y.
-Proof. by case: x. Qed.
 
 (* We diverge from the original Equivalence.v file by defining is_equiv *)
 (* what was previously called adjoint_equiv. We bet it should prove more*)
@@ -282,7 +264,7 @@ move=> PTT U V f; have <- /= := inverseK [equiv of eq_equiv] f.
 by case: _ /(eq_equiv^-1 f) => /=.
 Qed.
 
-(* A list of small lemmas about the cancellation of and equivalence when composed *)
+(* A list of small lemmas about the cancellation of an equivalence when composed *)
 (* with its inverse.*)
 Lemma comp_equivV A B (e : A <~> B) : e \o e^-1 = id.
 Proof. by elim: e. Qed.
@@ -302,7 +284,7 @@ Proof. by elim: e f. Qed.
 Lemma  precomp_equivK A B C (e : A <~> B) (f : A -> C) : (f \o e^-1) \o e = f.
 Proof. by elim: e f. Qed.
 
-(* Now a (very short) proof that the two projection of a diagonal are equal. *)
+(* Now a (very short) proof that the two projections of a diagonal are equal. *)
 Lemma diag_pi12 A : @diag_pi1 A = diag_pi2.
 Proof. by rewrite -[RHS](precomp_equivK [equiv of diag_pi1]). Qed.
 
