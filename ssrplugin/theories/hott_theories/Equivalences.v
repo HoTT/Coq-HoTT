@@ -112,7 +112,7 @@ End EquivTheory.
 Notation "f ^-1" := (@inverse_of _ _ _ (@Phantom (_ -> _) f)) : equiv_scope.
 
 (* We could not state this lemma with this notation inside the section since
-  the structure/notation was attached to a fixed f and we need it two time here. *)
+  the structure/notation was attached to a fixed f and we need it two times here. *)
 Lemma inverseKE (A B : Type) (f : A <~> B) : (f^-1)^-1 = f. Proof. by []. Qed.
 
 (* From contractibility of fibers to equivalences. *)
@@ -135,8 +135,9 @@ by move=> x; rewrite /is_equiv_inverse; case: f_is_equiv => [] [].
 Qed.
 
 (* Now we can forge the equivalence. Theres is no point of having this as a 
-   canonical construction though. *)
-Definition is_equiv_equiv := can2_equiv is_equiv_directK is_equiv_inverseK.
+   canonical construction though, unlesss we decine to package is_equiv which.
+   seems of little interest for now. *)
+Definition is_equiv_equiv : A <~> B := can2_equiv is_equiv_directK is_equiv_inverseK.
 
 End IsEquivEquiv.
 
@@ -178,7 +179,7 @@ Proof. by move=> x; rewrite !hContrE. Qed.
 
 (* Two contractible types (equipped with the hContr structure) are
   canonically equivalent.*)
-Canonical equiv_to_hContr (A B : hContr) :=
+Canonical equiv_to_hContr (A B : hContr) : A <~> B :=
   can2_equiv (@to_hContrK A B) (@to_hContrK B A).
 
 Section EquivTransport.
@@ -205,7 +206,7 @@ Canonical equiv_transport (x y : T)  p : P x <~> P y :=
 
 End EquivTransport.
 
-(* Since Coq did not have definitional eta, at that time, MathCom libraries*)
+(* Since Coq did not have definitional eta, at that time, MathComp libraries*)
 (* could not provide the associativity of the composition of functions. *)
 (* We do it now, and this lemme should probably be moved somewhere else. *)
 Lemma compA A B C D (f : C -> D) (g : B -> C) (h : A -> B) : 
