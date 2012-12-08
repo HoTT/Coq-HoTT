@@ -14,28 +14,35 @@ Open Scope path_scope.
 (* what was previously called adjoint_equiv. We bet it should prove more*)
 (* efficient as an interface because it exposes the inverse of the *)
 (* equivalence as an element of the signature, which we can provide *)
-(* by hand or built generically at our convenience. *)
+(* by hand or built generically at our convenience. Hence this inverse can *)
+(* be retrieved by the canonical structure lookup mechanism, which proves *)
+(* very convenient in proofs.*)
 
 Record equiv A B := Equiv {
   equiv_fun :> A -> B ;
   equiv_adjoint : B -> A ;
   equiv_section : cancel equiv_adjoint equiv_fun; 
   equiv_retraction : cancel equiv_fun equiv_adjoint;
-  equiv_coh : forall x, equiv_section (equiv_fun x) = resp equiv_fun (equiv_retraction x)
+  equiv_coh : forall x, 
+    equiv_section (equiv_fun x) = resp equiv_fun (equiv_retraction x)
 }.
 
-Delimit Scope equiv_scope with equiv.
-
-(* Notation, similar to what was in HoTT *)
-Notation "A <~> B" := (equiv A B) (at level 85) : equiv_scope.
-
-Local Open Scope equiv_scope.
-
+(* Don't ask :-), but this is an ingredient for the notation below. *)
 Definition equiv_clone A B := 
-  fun (f : A -> B) (ef : A <~> B) & (f = ef :> (A -> B)) => ef.
+  fun (f : A -> B) (ef : equiv A B) & (f = ef :> (A -> B)) => ef.
 
+(* Lookup notation to infer the structure of equiv declared as canonical on a *)
+(* given f (f should be the equiv_fun of the candidate instance found in the *)
+(* database.*)
 Notation "[ 'equiv' 'of' f ]" := (@equiv_clone _ _ f _ (erefl _))
   (at level 0, format "[ 'equiv'  'of'  f ]") : form_scope.
+
+Delimit Scope equiv_scope with equiv.
+Local Open Scope equiv_scope.
+
+(* Infix notation, similar to what was in HoTT *)
+Notation "A <~> B" := (equiv A B) (at level 85) : equiv_scope.
+
 
 (* Canonical reflexivity of equiv *)
 Canonical equiv_refl A : A <~> A := @Equiv _ _ idfun idfun
@@ -44,12 +51,11 @@ Canonical equiv_refl A : A <~> A := @Equiv _ _ idfun idfun
 (* We first define how to correct a cancel operation so that it satifies the*)
 (* coherence condition wrt the application of functions on paths *)
 
-(* Now the coherence. It is still strange that I neeed invpK at the end. May
-  be the definition of adjointify is not the best. *)
 Definition adjointify {A B}(f : A -> B) g (fK : cancel f g)(gK : cancel g f) := 
    fun a => (g `_* (f `_* (fK a))^-1) * (resp g (gK (f a))) * (fK a).
 
-(* Now the coherence*)
+(* Now the coherence. It is still strange that I neeed invpK at the end. May
+  be the definition of adjointify is not the best. *)
 Lemma adjointifyP A B (f : A -> B) g 
   (fK : cancel f g)(gK : cancel g f)(fK' := adjointify fK gK) a :
    gK (f a) = f`_* (fK' a).
@@ -61,13 +67,13 @@ Qed.
 (* And now we prove that we can get an equivalence from a bijection *)
 (* This will often be our preferred way to obain a new equivalence, by 
    proving two cancellations lemma and using the can2_equiv equivalence
-   bulder to correct one of them behind the scene using adjointify. *)
+   builder to correct one of them behind the scene using adjointify. *)
 Definition can2_equiv A B (h1 : A -> B)(h2 : B -> A)(h1K : cancel h1 h2)
   (h2K : cancel h2 h1) : A <~> B := Equiv (adjointifyP h1K h2K).
 
-(* A function whose fibers are all contractible *)
+(* A function whose fibers are all contractible. *)
 (* This was the main definition taken in the original Equivalence.v *)
-(* I should probably change its name now *)
+(* I should probably change its name now. *)
 Definition is_equiv {A B} (e : A -> B) := forall y : B, is_contr (hfiber e y).
 
 Section EquivTheory.
@@ -75,17 +81,20 @@ Section EquivTheory.
 Variables (A B : Type).
 Variable (f : A <~> B).
 
-(* An equivalence in the main sens is an equivalence in wrt to the def in terms of 
-contractible fibers.*)
+(* Equivalence have contractible fibers.*)
 Lemma equiv_is_equiv : is_equiv f.
 Proof.
 move=> b; exists (Hfiber f (equiv_section f b)) => [[a]].
 by case: _ / => {b}; rewrite (equiv_coh f); case (equiv_retraction f a).
 Qed.
 
-(* We define a nice constant to access the inverse of an equivalence, and a notation 
-  local to the section to access the inverse of a canonical equivalence from its 
-  function *)
+(* We define a nice constant to access the inverse of an equivalence, *)
+(* and a notation  local to the section to access the inverse of a *)
+(* canonical equivalence from its function. This means that if f is a *)
+(* function, then (f^-1) looks up for a canonical structure of equiv *)
+(* having f as equiv_fun in the database, and extracts the second *)
+(* (equiv_adjoint) component out of it.*)
+
 Definition inverse := nosimpl (@equiv_adjoint _ _ f).
 
 Definition inverse_of (phf : phantom (A -> B) f) := inverse.
@@ -143,11 +152,13 @@ Proof. by move=> x /=; rewrite hContrE. Qed.
 
 Lemma to_unitVK : cancel (fun _ => {elt A}) (@to_unit A). Proof. by case. Qed.
 
+(* Unit is canonically equivalent to a type equipped with  a structure of *)
+(* contractile (hContr) *) 
 Canonical equiv_unit : A <~> unit := can2_equiv to_unitK to_unitVK.
 
 End EquivUnit.
 
-(* A type equivalent to a contractibe is itself contractible *)
+(* A type equivalent to a contractible is itself contractible *)
 Lemma equiv_contr_is_contr (A : hContr) B : A <~> B -> is_contr B.
 Proof.
 move=> f; exists (f {elt A}) => b.
@@ -165,42 +176,44 @@ Definition to_hContr (A : Type) (B : hContr) of A := {elt B}.
 Lemma to_hContrK (A B : hContr) : cancel (@to_hContr A B) (@to_hContr _ _).
 Proof. by move=> x; rewrite !hContrE. Qed.
 
-(* Two contractible types (equipped with the structure defined in Contractible) are
+(* Two contractible types (equipped with the hContr structure) are
   canonically equivalent.*)
 Canonical equiv_to_hContr (A B : hContr) :=
   can2_equiv (@to_hContrK A B) (@to_hContrK B A).
 
 Section EquivTransport.
-Variables (T : Type).
+Variables (T : Type)(P : T -> Type).
 
 (* Transporting backward. May be should this be in Fibrations. Here we need it *)
 (* (only) to define the inverse of the transport in a fiber along a path, . *)
-(* to be given to the equivalence constructor. Notice the benfit of tunning the *)
+(* to be given to the equivalence constructor. Notice the benfit of tunning the*)
 (* behaviour of the arguments of transport. *)
-Definition transport_backward (x y : T) (P : T -> Type)
-  (p : x = y) (py : P y) : P x := (p^-1) # py.
+Definition transport_backward (x y : T) (p : x = y) (py : P y) : P x 
+  := (p^-1) # py.
 
-Lemma transportK (x y : T) (P : T -> Type) p :
-  cancel (transport P p) (@transport_backward x y P p).
+Lemma transportK (x y : T)  p :
+ cancel (transport P p) (@transport_backward x y p).
 Proof. by case: _ / p. Qed.
 
-Lemma transport_backwardK (x y : T) (P : T -> Type) p :
-  cancel (@transport_backward x y P p) (transport P p).
+Lemma transport_backwardK (x y : T)  p :
+  cancel (@transport_backward x y p) (transport P p).
 Proof. by case: _ / p. Qed.
 
 (* Fibers above two points connected by a path are equivalent. *)
-Canonical equiv_transport (x y : T) (P : T -> Type) p : P x <~> P y :=
-  can2_equiv (transportK p) (@transport_backwardK x y P p).
+Canonical equiv_transport (x y : T)  p : P x <~> P y :=
+  can2_equiv (transportK p) (@transport_backwardK x y p).
 
 End EquivTransport.
 
-(* Since Coq did not have definitional eta, we could not prove the associativity *)
-(* of the composition of functions. We do it now. *)
-Lemma compA A B C D (f : C -> D) (g : B -> C) (h : A -> B) : f \o (g \o h) = (f \o g) \o h.
+(* Since Coq did not have definitional eta, at that time, MathCom libraries*)
+(* could not provide the associativity of the composition of functions. *)
+(* We do it now, and this lemme should probably be moved somewhere else. *)
+Lemma compA A B C D (f : C -> D) (g : B -> C) (h : A -> B) : 
+  f \o (g \o h) = (f \o g) \o h.
 Proof. reflexivity. Qed.
 
-(* Definition of the two diagonals of a type and proof that both are equivalent *)
-(* to the type itself. *)
+(* Definition of the diagonals of a type and proof that the two associated *)
+(* projections define both an equivalence with the type itself. *)
 Section Diagonal.
 Context {A : Type}.
 
@@ -219,6 +232,8 @@ Proof. by move=> [[x1 x2] /=]; case: _ /. Qed.
 Lemma to_diagK2 : cancel diag_pi2 to_diag.
 Proof. by move=> [[x1 x2] /=]; case: _ /. Qed.
 
+(* The two projections diag_pi1 and diag_pi2 hence define each an equivalences *)
+(* bewteen type A and its diagonal. We declare them as canonical. *)
 Canonical diag_sq_id1 : diag_sq <~> A := can2_equiv to_diagK1 diag_pi1K.
 Canonical diag_sq_id2 : diag_sq <~> A := can2_equiv to_diagK2 diag_pi2K.
 
@@ -264,8 +279,8 @@ move=> PTT U V f; have <- /= := inverseK [equiv of eq_equiv] f.
 by case: _ /(eq_equiv^-1 f) => /=.
 Qed.
 
-(* A list of small lemmas about the cancellation of an equivalence when composed *)
-(* with its inverse.*)
+(* A list of small lemmas about the cancellation of an equivalence when *)
+(* composed with its inverse.*)
 Lemma comp_equivV A B (e : A <~> B) : e \o e^-1 = id.
 Proof. by elim: e. Qed.
 
@@ -316,7 +331,8 @@ Canonical equiv_comp A B C (e : A <~> B) : (C -> A) <~> (C -> B) :=
 
 (* Same thing for pre-composition.*)
 
-Definition precomp (X X' Y : Type) (f : X -> X') : (X' -> Y) -> (X -> Y) := comp^~ f.
+Definition precomp (X X' Y : Type) (f : X -> X') : (X' -> Y) -> (X -> Y) 
+  := comp^~ f.
 Definition precompV A B C (e : A <~> B) (h : A -> C) : B -> C := h \o e^-1.
 
 Lemma precompK A B C (e : A <~> B) : cancel (precomp e) (@precompV _ _ C e).
@@ -330,15 +346,17 @@ Canonical equiv_precomp A B C (e : A <~> B) : (C -> A) <~> (C -> B) :=
   can2_equiv (@compK _ _ C e) (@compVK _ _ C e).
 
 
-(* The final goal here is to show that UIP does _not_ hold when we have univalence *)
+(* The final goal here is to show that UIP does _not_ hold when we have *)
+(* univalence *)
 (* We first forge the non-trivial equivalence bool <~> bool via negb *)
 Canonical equiv_negb : bool <~> bool :=
   @can2_equiv _ _ negb _ negbK negbK.
 
 (* The inverse contained in the datas of the equivalence defined by idfun is *)
-(* not the same as the one contained in the datas of the equivalence defined by *)
-(* negb. *)
-Lemma not_eq_negb_id : (eq_equiv^-1 [equiv of idfun]) <> (eq_equiv^-1 [equiv of negb]).
+(* not the same as the one contained in the datas of the equivalence defined *)
+(* by negb. *)
+Lemma not_eq_negb_id : 
+  (eq_equiv^-1 [equiv of idfun]) <> (eq_equiv^-1 [equiv of negb]).
 Proof.
 move => eqN1. (* bug? why does move/(equiv_inj _) does not work? *)
 by have /(congr1 (fun f : _ <~> _ => f true)) := equiv_inj _ eqN1.

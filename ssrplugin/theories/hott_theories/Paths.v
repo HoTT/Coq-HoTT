@@ -11,71 +11,81 @@ Require Import ssreflect ssrfun ssrbool.
 (* morphism of the category *)
 
 
-(* An incantation to get a satisfactory behaviour wrt implicit arguments by default *)
+(* An incantation to get a satisfactory behaviour wrt implicit arguments by *)
+(* default *)
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 
-(* Instead of what is done in the main branch of HoTT we try to avoid constructing the *)
-(* witness paths by an automated tactic but instead provide paths combinators that are *)
-(* essentially inspried by the groupoid structure identity proofs are equipped with. *)
-(* USING SUCH AUTOMATION TO BUILD THE BODY OF DEFINITIONS IS DANGEROUS. See the *)
-(* example of concat2 below *)
+(* Instead of what is done in the main branch of HoTT we try to avoid *)
+(* constructing the witness paths by an automated tactic but instead *)
+(* provide paths combinators that are *)
+(* essentially inspried by the groupoid structure identity proofs are equipped *)
+(* with. USING SUCH AUTOMATION TO BUILD THE BODY OF DEFINITIONS IS DANGEROUS. *)
+(* See the example of concat2 below *)
 
-(* We also try to be cleaner about the status of reduction : if a constant has a *)
+(* We also try to be cleaner about the status of reduction: if a constant has a *)
 (* computational content we expect to be usefull, as wittness for a "Defined" *)
-(* command ending the script governing its definition, then it is probably a bad idea *)
-(* in general to use an automation tactic such as hott_simpl in its script, since we *)
-(* loose control over the program we define. It is also important for documentation purposes*)
-(* and in my (assia) case for pedagogical purposes ...*)
-(* I would even like this kind or computationally meaningfull definitions to be defined *)
+(* command ending the script governing its definition, then it is probably a bad*)
+(* idea in general to use an automation tactic such as hott_simpl in its script,*)
+(* since we loose control over the program we define. It is also important for *)
+(* documentation purposes ...*)
+(* I would even like this kind or computationally meaningfull definitions to *)
+(* be defined *)
 (* as often as possible using an explicit-body definition, ie with the *)
 (* Definition ... := .... syntax. Actually, even without using automation, defs *)
-(* of transparent constants via tactics is dangerous as well (see the legacy def of *)
-(* transport and the associated comment in Fibrations.v. In order for this to scale, *)
-(* we should buld terms using identified combinators and/or explicit dependent *)
-(* eliminations as opposed to calls to autorewrite using a databasis to document better *)
-(* what the body of the definition is intended to look like. *)
-(* As a consequence automation should only happen in opaque (Qed-ending) definitions.*)
-(* But we will try understand also what should be computable and what shouldn't since *)
-(* this may severly affects the performances of proof checking. *)
+(* of transparent constants via tactics is dangerous as well (see the legacy def*)
+(*  of transport and the associated comment in Fibrations.v. In order for this *)
+(* to scale, we should buld terms using identified combinators and/or explicit *)
+(*  dependent eliminations as opposed to calls to autorewrite using a databasis *)
+(* to document better what the body of the definition is intended to look like. *)
+(* As a consequence automation should only happen in opaque (Qed-ending) *)
+(* definitions.*)
+(* But we will try understand also what should be computable and what shouldn't *)
+(*  since this may severly affects the performances of proof checking. *)
 
 (* The ssreflect libraries are little used here, except that they feature some *)
 (* correct declarations of implicit arguments. The ssreflect tacics are also *)
 (* seldom unavoidable, except for the control they allow over the selection of *)
-(* rewrite patterns, occurrences to be generalized,... The hope is that this improved *)
-(* control will allow for getting rid of the automation *)
+(* rewrite patterns, occurrences to be generalized,... The hope is that this *)
+(* improved control will allow for getting rid of the automation *)
 
-(* We start by defining group-theory-like notations for the basic operations, and  *)
-(* combinators. We declare them in a module to let users decide of their relevance: *)
-(* the module is imported, notations become available both at parsing and display *)
+(* We start by defining group-theory-like notations for the basic operations, *)
+(*  and  combinators. We declare them in a module to let users decide of their *)
+(* relevance: the module is imported, notations become available both at *)
+(* parsing and display. *)
 (* One des not see them nor can we use them if the module is not imported. *)
 
-(* We declare a notation scope called path_scope to be able to declare notations using *)
-(* very widely used symbols like infix (_ * _) for paths and still being non ambguous *)
-(* In order to disambiguate when necessary we can surrond an expression to be interpreted *)
-(* in that scope by parentheses, labeled with the 'path' label : ( _ )%path *)
+(* We declare a notation scope called path_scope to be able to declare *)
+(* notations using  very commonly used symbols like infix (_ * _) for paths *)
+(* and still bein non ambguous. *)
+(* In order to disambiguate when necessary we can surrond an expression *)
+(*  to be interpreted in that scope by parentheses, labeled with the *)
+(* 'path' label : ( _ )%path *)
 
 Delimit Scope path_scope with path.
 
 
 (* The path obtained by applying the function f to the path p. *)
 (* Was: map *)
-(* I am still slightly disturbed by this 'map' vocabulary but could not find a better*)
-(* name by lack of culture. I temporarilly use 'resp' instead, following *)
-(* Hoffman & Streicher *)
+(* I am still slightly disturbed by this 'map' vocabulary but could not find*)
+(*  a better name by lack of culture. I temporarilly use 'resp' instead, *)
+(* following Hoffman & Streicher *)
 (* Note that it is really importat here that the constant (f_equal) *)
 (* hidden by this notation is transparent. *)
 (* In our modified version of Coq's prelude we have even declared it *)
 (* using an explicit-body definition, using *)
-(* the Definition ... := .... syntax. The original standard libray seems to opacify it *)
-(* using the Opaque command but this has no effect in fact since it is in a section. *)
+(* the Definition ... := .... syntax. The original standard libray seems to *)
+(* opacify it *)
+(* using the Opaque command but this has no effect in fact since it is in a *)
+(* section. *)
 (* We reorder the arguments of f_equal so that it behaves more conveniently for *)
 (* our purpose *)
 Definition resp A B x y f := @f_equal A B f x y.
 Arguments resp [A B] [x y] f _.
 
-(* The inverse of a path: was opposite. esym is a definition for identity_sym see ssrfun *)
+(* The inverse of a path: was opposite. esym is a definition for identity_sym *)
+(* see ssrfun *)
 Notation invp := esym.
 
 (* If there is a morphism (path) r from (f : A -> B) and (g : A -> B), then *)
@@ -86,7 +96,8 @@ Notation invp := esym.
 (* (g : A -> B) is not really (f = g) but rather the pointwise equality *)
 (* (forall x y, f x = g x), which is derivable from (f = g), the converse *)
 (* being the axiom of extensional equality.*)
-(* (_ =1 _) is the ssreflect notation for unary pointwise equality. see ssrfun.v *)
+(* (_ =1 _) is the ssreflect notation for unary pointwise equality.*)
+(*  see ssrfun.v *)
 (* Was not in the original file ? *)
 Definition conjp A B (f g : A -> B) (r : f =1 g) (x y : A) (p : f y = f x) :=
   identity_trans (invp (r y)) (identity_trans p (r x)).
@@ -116,9 +127,12 @@ Notation "p ^-1" := (invp p) : path_scope.
 (* The composition of p with the inverse of q: not present in the original file *)
 Notation "p / q" := (p * q^-1)%path : path_scope.
 
-(* We use here the notation suggested by Dan Grayson : to denote the formerly called *)
-(* (map f) as f_* . Unfortunately we cannot do that as such since the _ is understood *)
-(* by Coq's parser to be part of the identifier, so we insert a backquote in between. *)
+(* We use here the notation suggested by Dan Grayson : to denote the formerly *)
+(* called *)
+(* (map f) as f_* . Unfortunately we cannot do that as such since the _ *)
+(* is understood *)
+(* by Coq's parser to be part of the identifier, so we insert a backquote in *)
+(* between. *)
 (* Not very satisfactory but again, waits for a better ascii art idea...*)
 Notation "f `_*" := (resp f) (at level 2, format "f `_*") : path_scope.
 
@@ -128,12 +142,14 @@ Notation "q ^ p" := (conjp p q)%path : path_scope.
 
 End PathNotations.
 
-(* After the end of this module, the notations are assumed the module is imported *)
+(* After the end of this module, the notations are assumed iff the module is *)
+(* imported *)
 
 
 Section WhyAutomationInDefinitionsIsNotRobust.
 
-(* Inside this section we will only work in notation scope path_scope, so we declare that *)
+(* Inside this section we will only work in notation scope path_scope, so we*)
+(*  declare that *)
 (* everything should be interpreted as if surrounded by some (_)%path. *)
 
 Open Local Scope path_scope.
@@ -155,7 +171,8 @@ Definition concat2 A (x y z : A)(p p' : x = y)(q q' : y = z) :
   p = p' -> q = q' -> p * q = p' * q'.
 Proof. move=> hp hq; rewrite hp hq. reflexivity. Defined.
 
-(* In order to test the transparency of definitions obtained this way we clone it*)
+(* In order to test the transparency of definitions obtained this way we *)
+(* clone it*)
 Definition concat2a A (x y z : A)(p p' : x = y)(q q' : y = z) :
   p = p' -> q = q' -> p * q = p' * q'.
 Proof. move=> hp1 hq1; rewrite hp1 hq1. reflexivity. Defined.
@@ -176,12 +193,16 @@ Lemma sanity_check_concat2_b A (x y z : A)(p p' : x = y)(q q' : y = z)
   (hp : p = p')(hq : q = q') : concat2a hp hq = concat2b hp hq.
 (* reflexivity.*) Abort.
 
-(* Conclusion : an automated tacic, even is it perfectly documents the proof search*)
-(* strategy it uses in terms of structuration of the data-base, is a very fragile way*)
-(* of defining constants. The explicit script which documents the order in which the*)
-(* eliminations have been performed is much more robust. With a little more training*)
-(* on Coq dependent types, one could even define concat2 by providing an explicit *)
-(* proof term. *)
+(* Conclusion: an automated tacic, even is it perfectly documents the proof *)
+(* search*)
+(* strategy it uses in terms of structuration of the data-base, is a very *)
+(* fragile way of defining constants. The explicit script which documents *)
+(* the order in which the eliminations have been performed is much more *)
+(* robust. However, weird thing can still happen even without automation. *)
+(* With a little more training on Coq' syntax for dependent types, *)
+(* one can define concat2 by providing an explicit proof term. Here is*)
+(* an example, which can be much more simplified, see just below, illustrating*)
+(* the match ...in... return... with... *)
 Definition body_concat2 A (x y z : A)(p p' : x = y)(q q' : y = z)
   (hp : p = p')(hq : q = q') : p * q = p' * q' := 
   match hq in _ = rhsq return p * q = p' * rhsq with
@@ -194,7 +215,7 @@ Definition body_concat2 A (x y z : A)(p p' : x = y)(q q' : y = z)
  (x y z : A)(p p' : x = y) (hp : p = p') : p * q = p' * q
 *)
 
-(* This definition above was really an exemple to understant the syntax of a *)
+(* This definition above was really an exemple to understand the syntax of a *)
 (* dependent math. Actually here this is overkill and we can define this as *)
 Definition body_concat3 A (x y z : A)(p p' : x = y)(q q' : y = z)
   (hp : p = p')(hq : q = q') : p * q = p' * q' := 
