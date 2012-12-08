@@ -30,15 +30,17 @@ Unset Printing Implicit Defensive.
 (* and in my (assia) case for pedagogical purposes ...*)
 (* I would even like this kind or computationally meaningfull definitions to be defined *)
 (* as often as possible using an explicit-body definition, ie with the *)
-(* Definition ... := .... syntax. This will probably not scale, but then I would prefer *)
-(* the script to use explicitly identified combinators and/or explicit dependent *)
+(* Definition ... := .... syntax. Actually, even without using automation, defs *)
+(* of transparent constants via tactics is dangerous as well (see the legacy def of *)
+(* transport and the associated comment in Fibrations.v. In order for this to scale, *)
+(* we should buld terms using identified combinators and/or explicit dependent *)
 (* eliminations as opposed to calls to autorewrite using a databasis to document better *)
 (* what the body of the definition is intended to look like. *)
 (* As a consequence automation should only happen in opaque (Qed-ending) definitions.*)
 (* But we will try understand also what should be computable and what shouldn't since *)
 (* this may severly affects the performances of proof checking. *)
 
-(* The ssreflect libraries are little used here, except that they feature the *)
+(* The ssreflect libraries are little used here, except that they feature some *)
 (* correct declarations of implicit arguments. The ssreflect tacics are also *)
 (* seldom unavoidable, except for the control they allow over the selection of *)
 (* rewrite patterns, occurrences to be generalized,... The hope is that this improved *)
@@ -192,6 +194,12 @@ Definition body_concat2 A (x y z : A)(p p' : x = y)(q q' : y = z)
  (x y z : A)(p p' : x = y) (hp : p = p') : p * q = p' * q
 *)
 
+(* This definition above was really an exemple to understant the syntax of a *)
+(* dependent math. Actually here this is overkill and we can define this as *)
+Definition body_concat3 A (x y z : A)(p p' : x = y)(q q' : y = z)
+  (hp : p = p')(hq : q = q') : p * q = p' * q' := 
+  match hq, hp with identity_refl, identity_refl => 1 end.
+
 (* I use this notation only in the current section, to make the statement of
 concat2_interchange look more like its original version. I have replaced the
 infix @@ by ++ just because it is reserved in datatype.v already with a level etc. 
@@ -199,7 +207,7 @@ My current bet is that it should be a lemma and not a definition. Hence it would
 be acceptable to use automation for this script. Since we have remove the Ltac
 machinery, we do it by hand and it is not so long although boring. *)
  
-Local Notation "p ++ q" := (concat2 p q).
+Local Notation "p ++ q" := (body_concat3 p q).
 
 (** The interchange law for concatenation. *)
 Lemma concat2_interchange A (x y z : A) : forall (p p' p'' : x = y) (q q' q'' : y = z)
