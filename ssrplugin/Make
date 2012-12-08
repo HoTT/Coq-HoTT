@@ -36,3 +36,4 @@ theories/ssralg.v
 theories/hott_theories/Paths.v
 theories/hott_theories/Fibrations.v
 theories/hott_theories/Contractible.v
+theories/hott_theories/Equivalences.v
