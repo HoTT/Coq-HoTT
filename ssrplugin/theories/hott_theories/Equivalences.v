@@ -306,7 +306,7 @@ Proof. by rewrite -[RHS](precomp_equivK [equiv of diag_pi1]). Qed.
 
 (* As a consequence, we obtain a proof that univalence -> fun ext.  *)
 (* We consider the auxiliary function fg : X -> diag_sq AY by      *)
-(* x := ((x,y), f x = g x, hence using the available hypothesis of  *)
+(* x := ((x,y), f x = g x), hence using the available hypothesis of  *)
 (* pointwise equality of f anf g. Now it is sufficient to prove that *)
 (* diag_pi1 \o fg = diag_pi2 \o fg since this is f = g when eta is *)
 (* definitional. And this equality holds by a simple rewrite of the *)
