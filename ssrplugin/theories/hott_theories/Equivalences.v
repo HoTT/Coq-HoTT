@@ -215,31 +215,30 @@ Proof. reflexivity. Qed.
 
 (* Definition of the diagonals of a type and proof that the two associated *)
 (* projections define both an equivalence with the type itself. *)
-Section Diagonal.
-Context {A : Type}.
 
-Definition diag_sq := {xy : A * A & xy.1 = xy.2}.
+(* It looks weird IMO to have the arg of diag_sq as implicit. *)
+Definition diag_sq A := {xy : A * A & xy.1 = xy.2}.
 
-Definition Diag_sq {x y} (h : x = y) : diag_sq := existT _ (x, y) h.
+Definition Diag_sq {A} {x y : A} (h : x = y) : diag_sq A := existT _ (x, y) h.
 
-Definition diag_pi1 (aa : diag_sq) : A := (pr1 aa).1.
-Definition diag_pi2 (aa : diag_sq) : A := (pr1 aa).2.
-Definition to_diag (a : A) : diag_sq := exist _ (a, a) (erefl _).
+Definition diag_pi1 {A} (aa : diag_sq A) : A := (pr1 aa).1.
+Definition diag_pi2 {A} (aa : diag_sq A) : A := (pr1 aa).2.
+Definition to_diag {A} (a : A) : diag_sq A := exist _ (a, a) (erefl _).
 
-Lemma diag_pi1K : cancel to_diag diag_pi1. Proof. by []. Qed.
-Lemma diag_pi2K : cancel to_diag diag_pi2. Proof. by []. Qed.
-Lemma to_diagK1 : cancel diag_pi1 to_diag.
+Lemma diag_pi1K {A} : cancel (@to_diag A) (@diag_pi1 A). Proof. by []. Qed.
+Lemma diag_pi2K {A} : cancel (@to_diag A) (@diag_pi2 A). Proof. by []. Qed.
+Lemma to_diagK1 {A} : cancel (@diag_pi1 A) (@to_diag A).
 Proof. by move=> [[x1 x2] /=]; case: _ /. Qed.
-Lemma to_diagK2 : cancel diag_pi2 to_diag.
+Lemma to_diagK2 {A} : cancel (@diag_pi2 A) (@to_diag A).
 Proof. by move=> [[x1 x2] /=]; case: _ /. Qed.
 
-(* The two projections diag_pi1 and diag_pi2 hence define each an equivalences *)
+(* The two projections diag_pi1 and diag_pi2 each define an equivalence *)
 (* bewteen type A and its diagonal. We declare them as canonical. *)
-Canonical diag_sq_id1 : diag_sq <~> A := can2_equiv to_diagK1 diag_pi1K.
-Canonical diag_sq_id2 : diag_sq <~> A := can2_equiv to_diagK2 diag_pi2K.
+Canonical diag_sq_id1 A : diag_sq A <~> A := can2_equiv to_diagK1 diag_pi1K.
+Canonical diag_sq_id2 A : diag_sq A <~> A := can2_equiv to_diagK2 diag_pi2K.
 
 
-End Diagonal.
+
 
 (* An equivalence is injective. *)
 Notation equiv_inj e := (can_inj (equivK [equiv of e])).
@@ -281,7 +280,8 @@ by case: _ /(eq_equiv^-1 f) => /=.
 Qed.
 
 (* A list of small lemmas about the cancellation of an equivalence when *)
-(* composed with its inverse.*)
+(* composed with its inverse. All these 'elim' use the above equiv_rect *)
+(* scheme.*)
 Lemma comp_equivV A B (e : A <~> B) : e \o e^-1 = id.
 Proof. by elim: e. Qed.
 
@@ -304,11 +304,18 @@ Proof. by elim: e f. Qed.
 Lemma diag_pi12 A : @diag_pi1 A = diag_pi2.
 Proof. by rewrite -[RHS](precomp_equivK [equiv of diag_pi1]). Qed.
 
-(* As a consequence, we obtain a proof that univalence -> fun ext *)
+(* As a consequence, we obtain a proof that univalence -> fun ext.  *)
+(* We consider the auxiliary function fg : X -> diag_sq AY by      *)
+(* x := ((x,y), f x = g x, hence using the available hypothesis of  *)
+(* pointwise equality of f anf g. Now it is sufficient to prove that *)
+(* diag_pi1 \o fg = diag_pi2 \o fg since this is f = g when eta is *)
+(* definitional. And this equality holds by a simple rewrite of the *)
+(* above equality of the projections. *)
 Lemma funext (X Y : Type)  (f g : X -> Y) : f =1 g -> f = g.
 Proof.
-move=> eq_fg; pose fg x : diag_sq  := Diag_sq (eq_fg x).
-by have: diag_pi1 \o fg = diag_pi2 \o fg by rewrite diag_pi12.
+move=> eq_fg; pose fg x : diag_sq Y := Diag_sq (eq_fg x).
+suffices: diag_pi1 \o fg = diag_pi2 \o fg by []. 
+by rewrite diag_pi12.
 Qed.
 
 (* We now study the elementary theory of the  composition of *)
