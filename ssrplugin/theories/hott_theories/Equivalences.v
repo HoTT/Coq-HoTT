@@ -206,6 +206,35 @@ Canonical equiv_transport (x y : T)  p : P x <~> P y :=
 
 End EquivTransport.
 
+(* An example from Peter Lumsdaine's (old and probably outdated) github repo: *)
+(* https://github.com/peterlefanulumsdaine/
+   Oberwolfach-explorations/blob/master/basic_weqs.v *)
+(* Line  86 he shows that a function pointwise equal to identity is an *)
+(* equivalence, and his comment says: "this is very lengthy but essentially 
+routine; could presumably be greatly shortened by a well-written tactic or two"*)
+(* But we believe that the change of definition for equivalence plus a more *)
+(* comprehensive body of lemmas is the most useful.*)
+(* Here below we generalize this result to the proof that a function *)
+(* pointwise equal to an equivalence is itself an equivalence. *)
+Section PointWiseEqualToEquivIsEquiv.
+
+Variables A B : Type.
+Variable (f : A <~> B) (g : A -> B).
+
+Hypothesis gpeqf : g =1 f.
+
+Lemma cancelequivVeq1 : cancel f^-1 g.
+Proof. by move=> ?; rewrite gpeqf inverseK. Qed.
+
+Lemma canceleq1equivV : cancel g f^-1.
+Proof. by move=> ?; rewrite gpeqf equivK. Qed.
+
+Definition equiv_pw : A <~> B := can2_equiv canceleq1equivV cancelequivVeq1.
+
+Check (1 : g = equiv_pw).
+
+End PointWiseEqualToEquivIsEquiv.
+
 (* Since Coq did not have definitional eta, at that time, MathComp libraries*)
 (* could not provide the associativity of the composition of functions. *)
 (* We do it now, and this lemme should probably be moved somewhere else. *)
