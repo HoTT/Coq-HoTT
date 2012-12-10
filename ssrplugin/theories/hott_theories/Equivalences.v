@@ -121,12 +121,11 @@ Section IsEquivEquiv.
 Variables (A B : Type) (f : A -> B) (f_is_equiv : is_equiv f).
 
 (* This is the inverse of the function with contractible fibers*)
-Definition is_equiv_inverse (b : B) : A := pr1 (pr1 (f_is_equiv b)). 
+Definition is_equiv_inverse (b : B) : A := pr1 (contr_elt (f_is_equiv b)). 
 
 Lemma is_equiv_directK : cancel f is_equiv_inverse.
 Proof.
-move=> x; rewrite /is_equiv_inverse.
-by case: f_is_equiv => u /= /(_ (in_hfiber f x)) <-.
+by move=> x; rewrite /is_equiv_inverse (contr_eltE _ (in_hfiber f x)).
 Qed.
 
 Lemma is_equiv_inverseK : cancel is_equiv_inverse f.
@@ -146,12 +145,14 @@ Definition to_unit {A} (x : A) : unit := tt.
 (* A contractible type is equivalent to unit. *)
 Section EquivUnit.
 
-Variable A : hContr.
+Variable A : Type.
 
-Lemma to_unitK : cancel (@to_unit A) (fun _ => {elt A}). 
-Proof. by move=> x /=; rewrite hContrE. Qed.
+Hypothesis is_contr_A : is_contr A.
 
-Lemma to_unitVK : cancel (fun _ => {elt A}) (@to_unit A). Proof. by case. Qed.
+Lemma to_unitK : cancel (@to_unit A) (fun _ => contr_elt is_contr_A). 
+Proof. move=> x /=; exact: contr_eltE. Qed.
+
+Lemma to_unitVK : cancel (fun _ => contr_elt is_contr_A) (@to_unit A). Proof. by case. Qed.
 
 (* Unit is canonically equivalent to a type equipped with  a structure of *)
 (* contractile (hContr) *) 
@@ -160,27 +161,28 @@ Canonical equiv_unit : A <~> unit := can2_equiv to_unitK to_unitVK.
 End EquivUnit.
 
 (* A type equivalent to a contractible is itself contractible *)
-Lemma equiv_contr_is_contr (A : hContr) B : A <~> B -> is_contr B.
+Lemma equiv_contr_is_contr A (is_contr_A : is_contr A) B : A <~> B -> is_contr B.
 Proof.
-move=> f; exists (f {elt A}) => b.
-by apply: (canRL (inverseK _)); rewrite hContrE.
+move=> f; exists (f (contr_elt is_contr_A)) => b.
+apply: (canLR (inverseK _)); exact: contr_eltE.
 Qed.
 
-Lemma contr_equiv_is_contr A (B : hContr) : A <~> B -> is_contr A.
+Lemma contr_equiv_is_contr  A B (is_contr_B : is_contr B) : A <~> B -> is_contr A.
 Proof.
-move=> f; exists (inverse f {elt B}) => a.
-by apply: (canRL (equivK _)); rewrite hContrE.
+move=> f; exists (inverse f (contr_elt is_contr_B)) => a.
+by apply: (canLR (equivK _)); exact: contr_eltE. 
 Qed.
 
-Definition to_hContr (A : Type) (B : hContr) of A := {elt B}.
+Definition to_is_contr A B (is_contr_B : is_contr B) of A :=
+  contr_elt is_contr_B.
 
-Lemma to_hContrK (A B : hContr) : cancel (@to_hContr A B) (@to_hContr _ _).
-Proof. by move=> x; rewrite !hContrE. Qed.
 
-(* Two contractible types (equipped with the hContr structure) are
-  canonically equivalent.*)
-Canonical equiv_to_hContr (A B : hContr) : A <~> B :=
-  can2_equiv (@to_hContrK A B) (@to_hContrK B A).
+Lemma to_is_contrK A B (cA : is_contr A) (cB : is_contr B) : 
+  cancel (to_is_contr cA) (to_is_contr cB).
+Proof. move=> x; exact: contr_eltE. Qed.
+
+Definition equiv_to_is_contr A B (cA : is_contr A) (cB : is_contr B) : A <~> B := 
+  can2_equiv (to_is_contrK cB cA) (to_is_contrK cA cB).
 
 Section EquivTransport.
 Variables (T : Type)(P : T -> Type).
@@ -265,7 +267,6 @@ Proof. by move=> [[x1 x2] /=]; case: _ /. Qed.
 (* bewteen type A and its diagonal. We declare them as canonical. *)
 Canonical diag_sq_id1 A : diag_sq A <~> A := can2_equiv to_diagK1 diag_pi1K.
 Canonical diag_sq_id2 A : diag_sq A <~> A := can2_equiv to_diagK2 diag_pi2K.
-
 
 
 
@@ -402,8 +403,8 @@ Qed.
 (* Corollary:  bool = bool is not contractible *)
 Lemma niscontr_eqbool : ~ is_contr (bool = bool :> Type).
 Proof.
-case=> f Hf; have := Hf (eq_equiv^-1 [equiv of idfun]).
-by rewrite -(Hf (eq_equiv^-1 [equiv of negb])); apply: not_eq_negb_id.
+case=> f Hf; have := Hf (eq_equiv^-1 [equiv of negb]).
+rewrite (Hf (eq_equiv^-1 [equiv of idfun])) /=; apply: not_eq_negb_id.
 Qed.
 
 (* Uniqueness of identity proofs predicate *)

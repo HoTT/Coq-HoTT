@@ -1,4 +1,4 @@
-Require Import ssreflect ssrfun ssrbool.
+Require Import ssreflect ssrfun ssrbool eqtype.
 Require Import Paths (* Fibrations*).
 (* assia : in fact we do not rely on the file aubout fibrations. *)
 
@@ -125,132 +125,56 @@ Canonical prod_inhabType (A B : inhabType) :=
 (* Sanity check *)
 Check ({elt (unit * unit * (unit * unit))%type}).
 
-(* This definition was already present in the original version of the *)
-(* file. *)
-Definition is_contr A := {x : A & forall y : A, y = x}.
-
-(* If we knew that the contractible type is inhabited (which it is necessarily),*)
-(* we could use the default inhabitant as the hub: *)
-Definition contr_axiom (A : inhabType) := forall y : A, y = {elt A}. 
-
-(* And now this is the way we craft an interface for contractible: a type *)
-(* with an inhabitant, and a function providing paths from any point of the *)
-(* space to this hub.*)
-Record contr_class_of (A : Type) := ContrClass {
-  contr_base :> is_inhab A;
-  contr_mixin :> contr_axiom (InhabType _ contr_base)
+Record is_contr (A : Type) := IsContr {
+  contr_elt : A;
+  contr_eltE : forall a : A, contr_elt = a
 }.
 
-Record contrType := ContrPack {
-  contr_sort :> Type;
-  _ : contr_class_of contr_sort
-}.
+Arguments contr_eltE {A} i a.
+Arguments contr_elt {A} i.
 
-(* This section contains technical stuff I do not have time to comment *)
-(* inside the source file right now. Ask me questions if needed and/or *)
-(* have a look to "Packaging Mathematical Structures", Garillot & all *)
-(* at TPHOLs 2009 (http://hal.inria.fr/inria-00368403/) and to *)
-(* F. Garillot's PhD thesis (in English) : " Generic Proof Tools and *)
-(* Finite Group Theory": http://pastel.archives-ouvertes.fr/pastel-00649586*)
+Lemma is_contr_eq (A : Type) : is_contr A -> forall x y : A, x = y.
+Proof. by move=> [a Ha] x y; rewrite -[x]Ha -[y]Ha. Qed.
 
-Section ContrTypeTechDefs.
+Lemma is_contrE (A : inhabType) : is_contr A -> all_equal_to {elt A}.
+Proof. by move=> A_is_contr a; apply: is_contr_eq. Qed.
 
-Variable (T : Type) (cT : contrType).
+Lemma inhab_contr (A : inhabType) : (forall x, {elt A} = x) -> is_contr A.
+Proof. exact: IsContr. Qed. (* Cyril: move/IsContr does not work, why ???? *) 
 
-Definition contr_class :=
-  let: ContrPack _ c := cT return contr_class_of cT in c.
+Lemma unit_is_contr : is_contr unit. Proof. by exists tt; case. Qed.
 
-Definition contr_clone c of phant_id contr_class c := @ContrPack T c.
-
-Definition contr_pack x (m : contr_axiom (InhabType T x)) :=
-  fun (iT : inhabType) b2 & phant_id (inhab_class iT) b2 =>
-  fun                  m' & phant_id m m' =>
-    @ContrPack T (@ContrClass T b2 m').
-
-Let xT := let: ContrPack T _ := cT in T.
-Notation xclass := (contr_class : contr_class_of xT).
-
-Definition contr_inhabType := @InhabPack cT xclass.
-
-End ContrTypeTechDefs.
-
-Notation hContr := contrType.
-Notation ContrType T m := (@contr_pack T _ m _ _ id _ id).
-Notation "[ 'hContr' 'of' T 'for' C ]" := (@inhab_clone T C _ idfun)
-  (at level 0, format "[ 'hContr'  'of'  T  'for'  C ]") : form_scope.
-Notation "[ 'hContr' 'of' T ]" := (@inhab_clone T _ _ idfun)
-  (at level 0, format "[ 'hContr'  'of'  T ]") : form_scope.
-Coercion contr_inhabType : hContr >-> inhabType.
-Canonical contr_inhabType.
+Definition UIP (A : Type) := forall (x y : A) (p q : x = y), p = q.
 
 Section ContrTheory.
 
-(* The inhab slice (we call it a mixin) of a type which satisfies is_contr *)
-Coercion inhab_elt_of_is_contr A (cA : is_contr A) : is_inhab A := projT1 cA.
-
-(* How to obtain a contr slice from an inhabType which satisfies is_contr *)
-Lemma ContrMixin (A : inhabType) (cA : is_contr A) : contr_axiom A.
-Proof. by case: cA => [x Hx] y; rewrite [y]Hx [{elt _}]Hx. Qed.
-
-Lemma hContrE (A : hContr) : all_equal_to {elt A}.
-Proof. by case: A => A /= [hA h] y; rewrite (h y). Qed.
-
-Lemma hContrP (A : hContr) (x : A) : {elt A} = x.
-Proof. by rewrite hContrE. Qed.
-
-(* Was : contr_path *)
-Lemma hContr_path (A : hContr) (x y : A) : x = y.
-Proof. apply: identity_trans (hContrP y); symmetry; exact: hContrP. Qed.
+Variables (A : Type).
+Hypothesis A_is_contr : is_contr A.
 
 (* Was: contr_path2 *)
-Lemma hContr_irrelevance (A : hContr) {x y : A} (p q : x = y) : p = q.
+Lemma is_contr_UIP :  UIP A.
 Proof.
-suff {p q} cst t  : t = (hContrP x)^-1 * (hContrP y)  by rewrite (cst p) (cst q).
+move=> x y p q; have cE := contr_eltE A_is_contr.
+suff { p q} cst t : t = (cE x)^-1 * (cE y) by rewrite [p]cst [q]cst.
 by case t; rewrite mulVp.
 Qed.
 
-Section EqHContr.
-
-Variables (A : hContr) (x y : A).
+Variables (x y : A).
 
 (* Was: contr_pathcontr *)
-Lemma eq_hContr_is_contr : is_contr (x = y).
-Proof. by rewrite !hContrE; exists 1 => p; apply: hContr_irrelevance. Qed.
-
-Canonical eq_hContr_inhabType := InhabType (x = y) eq_hContr_is_contr.
- 
-Definition eq_hContr_contrMixin := ContrMixin eq_hContr_is_contr.
-
-Canonical eq_hContr_hContr := ContrType (x = y) eq_hContr_contrMixin.
+Lemma is_contr_eq_is_contr : is_contr (x = y).
+Proof. rewrite -[y](is_contr_eq _ x) //; exists 1; exact: is_contr_UIP. Qed.
 
 (* Was: pathspace_contr *)
-Lemma sig_eqr_hContr_is_contr : is_contr {y : A & x = y}.
+Lemma is_contr_sig_eqr_is_contr : is_contr {y : A & x = y}.
 Proof. exists (existT _ x 1); case=> [z p]; case p; exact 1. Qed.
 
 
 (* Was: pathspace_contr_opp *)
-Lemma sig_eql_hContr_is_contr : is_contr {y : A & y = x}.
+Lemma is_contr_sig_eql_is_contr : is_contr {y : A & y = x}.
 Proof.
 exists (existT (fun y => y = x) _ 1). 
 case=> [z p]; case p; exact 1. 
 Qed.
 
-(* BUT we cannot declare canonical structure on these sigma types *)
-(* because they expose the same value (A) in from of the sigT *)
-(* projection in the unification problem triggering the inference of *)
-(* canonical instance. And the CS mechanism*)
-(* does not allow to register several instances of a same interface *)
-(* keyed by the same value. *)
-
-End EqHContr.
-
-(* Was: unit_contr *)
-Lemma unit_contrMixin : contr_axiom [inhabType of unit]. Proof. by case. Qed.
-
-Canonical unit_hContr := ContrType unit unit_contrMixin.
-
 End ContrTheory.
-
-Arguments hContrP {A} _.
-
-
