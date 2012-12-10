@@ -402,10 +402,7 @@ Qed.
 
 (* Corollary:  bool = bool is not contractible *)
 Lemma niscontr_eqbool : ~ is_contr (bool = bool :> Type).
-Proof.
-case=> f Hf; have := Hf (eq_equiv^-1 [equiv of negb]).
-rewrite (Hf (eq_equiv^-1 [equiv of idfun])) /=; apply: not_eq_negb_id.
-Qed.
+Proof. by case=> f Hf; apply: not_eq_negb_id; rewrite -[LHS]Hf -[RHS]Hf. Qed.
 
 (* Uniqueness of identity proofs predicate *)
 Definition UIP := forall U (a b : U) (p q : a = b :> U), p = q.
