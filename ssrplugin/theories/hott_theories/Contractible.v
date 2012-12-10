@@ -178,3 +178,23 @@ case=> [z p]; case p; exact 1.
 Qed.
 
 End ContrTheory.
+
+Definition funext_dep := forall A P (B1 B2 : forall a : A, P a), 
+  (forall x, B1 x = B2 x) -> B1 = B2.
+
+Section FunExtImpliesIsContrIsContr.
+ 
+Variable A : Type.
+Hypothesis A_is_contr : is_contr A.
+
+Hypothesis FexDep: funext_dep.
+
+Lemma is_contr_is_contr : is_contr (is_contr A).
+Proof.
+apply: (@IsContr _ A_is_contr) => [[a1 cA1]]; case: A_is_contr => a2 cA2. 
+move: cA2; rewrite -[a2]cA1 => cA2.
+suff -> : cA1 = cA2 by [].
+apply: FexDep=> ?; exact: is_contr_UIP.
+Qed.
+
+End FunExtImpliesIsContrIsContr.
