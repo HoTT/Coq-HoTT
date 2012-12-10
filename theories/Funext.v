@@ -231,7 +231,6 @@ Section AxiomOfChoiceEquiv'.
      Firstly, we assume the eta rule throghout. *)
 
   Hypothesis eta_dep_rule : forall Y (S : fibration Y), eta_dep_statement S.
-  Hypothesis eta_dep_rule2 : forall Y (S : fibration Y), eta_dep_statement S.
 
   (** At this point we are able to provide a version of equivalence, called
      [ac_equiv'] below, in which we assume the weakest form of extensionality
@@ -264,7 +263,7 @@ Section AxiomOfChoiceEquiv'.
     (* First, the left-hand side is the image of a map [f] which is an
        equivalence because it is the pullback of an equivalence. *)
     pose (R := (fun (g : section P) => forall x, Q x (g x))).
-    pose (e := eta_dep_equiv P (eta_dep_rule2 _ P)).
+    pose (e := eta_dep_equiv P (eta_dep_rule _ P)).
     pose (f := pullback_total_equiv R e).
     path_via (f (h; H)).
     (* The following step is not needed in Coq 8.4 but is needed in 8.3 so we try it *)
