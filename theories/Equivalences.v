@@ -61,7 +61,7 @@ Defined.
 (** We first define the inverse map and only show that it is an
    equivalence later on, when we are ready to do it. *)
 
-Let inverse {A B : Type} (e : A <~> B) : (B -> A) :=
+Definition inverse {A B : Type} (e : A <~> B) : (B -> A) :=
   fun y => pr1 (pr1 (equiv_is_equiv e y)).
 
 (** printing ^-1 $^{-1}$ *)
@@ -328,9 +328,8 @@ Proof.
   (** Now it's just naturality of 'is_section'. *)
   associate_right.
   moveright_onleft.
-  undo_compose_map.
+  rewrite <- compose_map.
   apply opposite, homotopy_naturality_toid with (f := f o g).
-  hott_simpl.
 Defined.
 
 Lemma adjoint_to_equiv_compute_map {A B} (e : adjoint_equiv A B) :

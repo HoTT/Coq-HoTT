@@ -27,7 +27,7 @@ Section UnivalenceImpliesFunext.
     exists (compose e).
     generalize A B e.
     apply equiv_induction.
-    assumption.
+    apply univalence.
     intro D.
     apply (equiv_is_equiv (eta_equiv C D (eta_rule _ _))).
   Defined.
@@ -56,20 +56,30 @@ Section UnivalenceImpliesFunext.
     apply @equiv_injective with (e := src_compose).
     apply idpath.
   Defined.
+End UnivalenceImpliesFunext.
 
+Section UnivalenceImpliesWeakFunext.
+
+  (** Univelence is used twice at different levels. *)
+
+  Hypothesis univalence : univalence_statement.
+  Hypothesis univalence2 : univalence_statement.
   (** Now we use this to prove weak funext, which as we know implies
      (with dependent eta) also the strong dependent funext. *)
+
+
+  Hypothesis eta_rule : forall (U V : Type), eta_statement U V.
 
   Theorem univalence_implies_weak_funext (A : Type) (P : A -> Type):
     weak_funext_statement P.
   Proof.
     intros allcontr.
     (* We are going to replace [P] with something simpler. *)
-    pose (U := (fun (_ : A) => unit : Type)).
+    pose (U := (fun (_ : A) => unit)).
     assert (p : P = U).
-    apply univalence_implies_funext.
+    apply (univalence_implies_funext univalence eta_rule).
     intro x.
-    apply equiv_to_path; auto.
+    apply (equiv_to_path univalence2).
     apply contr_equiv_unit.
     apply allcontr.
     rewrite p.
@@ -78,9 +88,9 @@ Section UnivalenceImpliesFunext.
     intro f.
     unfold U in * |- *.
     unfold section in f.
-    apply (univalence_implies_funext A unit).
+    apply (univalence_implies_funext univalence2 eta_rule A unit).
     intro x.
     apply contr_path, unit_contr.
   Qed.
 
-End UnivalenceImpliesFunext.
+End UnivalenceImpliesWeakFunext.

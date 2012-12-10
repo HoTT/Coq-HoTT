@@ -34,9 +34,9 @@ else
    AC_SUBST([COQVERSION])
    AC_SUBST([COQLIB])
 
-   relevantequality=`$COQTOP -help 2>&1 | grep -c -- -relevant-equality`
-   if test "$relevantequality" = "0"; then
-       AC_MSG_ERROR([You need a version of Coq which supports -relevant-equality])
+   parametersmatter=`$COQTOP -help 2>&1 | grep -c -- -parameters-matter`
+   if test "$parametersmatter" = "0"; then
+       AC_MSG_ERROR([You need a version of Coq which supports -parameters-matter])
    fi 
 
 fi
@@ -125,6 +125,7 @@ ln -s $COQLIB/plugins $COQLIB/dev $srcdir/coq
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([hoqtop], [chmod +x hoqtop])
+AC_CONFIG_FILES([hoqtop.byte], [chmod +x hoqtop.byte])
 AC_CONFIG_FILES([hoqc], [chmod +x hoqc])
 if test "x$without_coqide" != "xyes" ; then
    AC_CONFIG_FILES([hoqide], [chmod +x hoqide])

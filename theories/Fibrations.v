@@ -81,7 +81,7 @@ Lemma transport_hfiber A B (f : A -> B) (x y : A) (z : B) (p : x = y) (q : f x =
   transport (P := fun x => f x = z) p q = !(map f p) @ q.
 Proof.
   induction p.
-  hott_simpl.
+  hott_simpl. 
 Defined.
 
 (** The following lemma tells us how to construct a path in the total space from

@@ -20,7 +20,7 @@ Defined.
 
 (** Similarly, any two parallel paths in a contractible space are homotopic.  *)
 
-Lemma contr_path2 {A} {x y : A} (p q : x = y) : (is_contr A) -> (p = q).
+Lemma contr_path2 {A : Type} {x y : A} (p q : x = y) : (is_contr A) -> (p = q).
 Proof.
   intro ctr.
   destruct ctr as (c, ret).

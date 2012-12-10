@@ -932,7 +932,7 @@ Ltac undo_concat_map :=
 Lemma homotopy_naturality A B (f g : A -> B) (p : forall x, f x = g x) (x y : A) (q : x = y) :
   map f q @ p y = p x @ map g q.
 Proof.
-  induction q.
+  induction q. instantiate.
   cancel_units.
 Defined.
 
