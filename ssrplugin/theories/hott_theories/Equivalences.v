@@ -287,6 +287,25 @@ Implicit Arguments eq_equiv [[U] [V]].
 (* between types U = V and U <~> V *)
 Definition univalent U V := is_equiv (@eq_equiv U V).
 
+Lemma  equiv_rect : forall (P : forall U V, U <~> V -> Type),
+  (forall T, P T T (equiv_refl T)) -> (forall U V (e : U <~> V), P U V e).
+Admitted.
+
+Definition eq_equivV (U V : Type) (e : U <~> V) : U = V :=
+  @equiv_rect (fun U V h => U = V)(fun T => erefl T) U V e.
+
+
+(* Lemma test U V : univalent U V. *)
+(* Proof. *)
+(* move=> e; elim: _ / e. *)
+(* move=> T /=. *)
+(* have := univalent. *)
+(* move/is_equiv_equiv: (@univalent U V). *)
+(* rewrite /univalent. *)
+
+
+(* pose P (U1 V1 : Type) (e : U1 <~> V1) := . *)
+
 Module UnivalenceAxiom.
 
 Section UnivalenceAxiomImpliesFunExt.

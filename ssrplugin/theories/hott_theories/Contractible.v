@@ -191,9 +191,9 @@ Hypothesis FexDep: funext_dep.
 
 Lemma is_contr_is_contr : is_contr (is_contr A).
 Proof.
-apply: (@IsContr _ A_is_contr) => [[a1 cA1]]; case: A_is_contr => a2 cA2. 
+apply: (@IsContr _ A_is_contr) => [[a1 cA1]]. case: A_is_contr => a2 cA2.
 move: cA2; rewrite -[a2]cA1 => cA2.
-suff -> : cA1 = cA2 by [].
+congr IsContr.
 apply: FexDep=> ?; exact: is_contr_UIP.
 Qed.
 
