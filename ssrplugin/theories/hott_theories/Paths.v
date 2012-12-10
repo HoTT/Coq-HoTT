@@ -509,9 +509,14 @@ Lemma can_respp A B (f : A -> B) (g : B -> A) (p : cancel f g)
 Proof. by rewrite -resppcomp (resp_eqidp p). Qed.
 
 (* Was not in the original file ? *)
-Lemma conj_canV  A B (f : A -> B) (g : B -> A) (p : id =1 g \o f) 
+Lemma conj_canV A B (f : A -> B) (g : B -> A) (p : id =1 g \o f) 
       (x y : A) (q : x = y) : g`_* (f`_* q) = q ^ p.
 Proof. by rewrite -resppcomp (resp_eqpid p). Qed.
+
+(* Lemma resppJ  A B C (f g : A -> B) (p : f =1 g) (h : B -> C) *)
+(*       (x y : A) (q : f x = f y) : *)
+(*   h`_* (q ^ p) = (h`_* q) ^ (fun x => h`_* (p x)). *)
+(* Proof. by rewrite !resppM -resppV. Qed. *)
 
 End GroupoidTheoryOfPaths.
 

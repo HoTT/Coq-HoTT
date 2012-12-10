@@ -115,6 +115,10 @@ Notation "f ^-1" := (@inverse_of _ _ _ (@Phantom (_ -> _) f)) : equiv_scope.
   the structure/notation was attached to a fixed f and we need it two times here. *)
 Lemma inverseKE (A B : Type) (f : A <~> B) : (f^-1)^-1 = f. Proof. by []. Qed.
 
+Lemma resp_equivK (A B : Type) (f : A <~> B) (x : A) :
+    f`_* (equivK f x) = inverseK f (f x).
+Proof. by case: f. Qed.
+
 (* From contractibility of fibers to equivalences. *)
 Section IsEquivEquiv.
 
