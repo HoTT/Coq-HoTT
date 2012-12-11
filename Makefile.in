@@ -208,7 +208,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I etc
-bin_SCRIPTS = hoqtop hoqtop.byte hoqc $(am__append_1)
+bin_SCRIPTS = hoqtop hoqc $(am__append_1)
 EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 
 # The list of files that comprise the library
