@@ -34,9 +34,9 @@ else
    AC_SUBST([COQVERSION])
    AC_SUBST([COQLIB])
 
-   parametersmatter=`$COQTOP -help 2>&1 | grep -c -- -parameters-matter`
-   if test "$parametersmatter" = "0"; then
-       AC_MSG_ERROR([You need a version of Coq which supports -parameters-matter])
+   indicesmatter=`$COQTOP -help 2>&1 | grep -c -- -indices-matter`
+   if test "$indicesmatter" = "0"; then
+       AC_MSG_ERROR([You need a version of Coq which supports -indices-matter])
    fi 
 
 fi

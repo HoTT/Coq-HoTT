@@ -15,4 +15,4 @@ else
   COQLIB="@hottdir@/coq"
   HOTLIB="@hottdir@/theories"
 fi
-exec $COQC -coqlib $COQLIB -R $HOTLIB HoTT -parameters-matter $@
+exec $COQC -coqlib $COQLIB -R $HOTLIB HoTT -indices-matter $@

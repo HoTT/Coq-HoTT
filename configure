@@ -2356,9 +2356,9 @@ $as_echo "Coq library path is $COQLIB" >&6; }
 
 
 
-   parametersmatter=`$COQTOP -help 2>&1 | grep -c -- -parameters-matter`
+   parametersmatter=`$COQTOP -help 2>&1 | grep -c -- -indices-matter`
    if test "$parametersmatter" = "0"; then
-       as_fn_error $? "You need a version of Coq which supports -parameters-matter" "$LINENO" 5
+       as_fn_error $? "You need a version of Coq which supports -indices-matter" "$LINENO" 5
    fi
 
 fi
