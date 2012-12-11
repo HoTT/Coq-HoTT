@@ -64,6 +64,20 @@ open Locusops
 open Ssrmatching
 
 
+(** Compatibility with HoTT *)
+let build_ssr_eq () = 
+(* std version : build_coq_eq ()*)
+(* hott version :*) (build_coq_identity_data ()).eq
+let build_ssr_eq_refl () = 
+(* std version : (build_coq_eq_data()).refl *)
+(* hott version : *) (build_coq_identity_data ()).refl
+
+(* Construct a Type of an arbitry level: mkType () replaces mkProp
+   when equality is at Type level. Should create new universes with the
+   right dirpath/toplevel module name.*)
+
+let mkType () = mkSort (Type (Univ.make_universe (Termops.new_univ_level ())))
+
 (* Tentative patch from util.ml *)
 
 let array_fold_right_from n f v a =
@@ -244,7 +258,8 @@ let mkAppRed f c = match kind_of_term f with
 | Lambda (_, _, b) -> subst1 c b
 | _ -> mkApp (f, [|c|])
 let mkProt t c = mkApp (mkSsrConst "protect_term", [|t; c|])
-let mkRefl t c = mkApp ((build_coq_eq_data()).refl, [|t; c|])
+let mkRefl t c = mkApp (build_ssr_eq_refl(), [|t; c|])
+
 (* Application to a sequence of n rels (for building eta-expansions). *)
 (* The rel indices decrease down to imin (inclusive), unless n < 0,   *)
 (* in which case they're incresing (from imin).                       *)
@@ -832,7 +847,7 @@ let pf_abs_cterm gl n c0 =
 
 let pf_unabs_evars gl ise n c0 =
   if n = 0 then c0 else
-  let evv = Array.make n mkProp in
+  let evv = Array.init n (fun i -> mkType()) in
   let nev = ref 0 in
   let env0 = pf_env gl in
   let nenv0 = env_size env0 in
@@ -2518,7 +2533,7 @@ let injectl2rtac c = match kind_of_term c with
 
 let is_injection_case c gl =
   let mind, _ = pf_reduce_to_quantified_ind gl (pf_type_of gl c) in
-  mkInd mind = build_coq_eq ()
+  mkInd mind = build_ssr_eq ()
 
 let perform_injection c gl =
   let mind, t = pf_reduce_to_quantified_ind gl (pf_type_of gl c) in
@@ -3042,7 +3057,7 @@ let pp_term gl t =
 let pp_concat hd ?(sep=str", ") = function [] -> hd | x :: xs ->
   hd ++ List.fold_left (fun acc x -> acc ++ sep ++ x) x xs
 
-let fake_pmatcher_end () = mkProp, L2R, (Evd.empty, mkProp)
+let fake_pmatcher_end () = mkType(), L2R, (Evd.empty, mkType())
 
 (* TASSI: given (c : ty), generates (c ??? : ty[???/...]) with m evars *)
 exception NotEnoughProducts
@@ -3270,7 +3285,7 @@ END
 
 let mkEq dir cl c t n =
   let eqargs = [|t; c; c|] in eqargs.(dir_org dir) <- mkRel n;
-  mkArrow (mkApp (build_coq_eq(), eqargs)) (lift 1 cl), mkRefl t c
+  mkArrow (mkApp (build_ssr_eq(), eqargs)) (lift 1 cl), mkRefl t c
 
 let pushmoveeqtac cl c =
   let x, t, cl1 = destProd cl in
@@ -3533,7 +3548,7 @@ let ssrelim ?(is_case=false) ?ist deps what ?elim eqid ipats gl =
   (* Utils of local interest only *)
   let iD s ?t gl = let t = match t with None -> pf_concl gl | Some x -> x in
     pp(lazy(str s ++ pr_constr t)); tclIDTAC gl in
-  let eq, protectC = build_coq_eq (), mkSsrConst "protect_term" in
+  let eq, protectC = build_ssr_eq (), mkSsrConst "protect_term" in
   let fire_subst gl t = Reductionops.nf_evar (project gl) t in
   let fire_sigma sigma t = Reductionops.nf_evar sigma t in
   let is_undef_pat = function
@@ -3708,7 +3723,7 @@ let ssrelim ?(is_case=false) ?ist deps what ?elim eqid ipats gl =
           let erefl = fire_subst gl (mkRefl t c) in
           apply_type new_concl [erefl] in
         let rel = k + if elim_is_dep then 1 else 0 in
-        let src = mkProt mkProp (mkApp (eq,[|t; c; mkRel rel|])) in
+        let src = mkProt (mkType()) (mkApp (eq,[|t; c; mkRel rel|])) in
         let concl = mkArrow src (lift 1 concl) in
         let clr = if deps <> [] then clr else [] in
         concl, gen_eq_tac, clr
@@ -4072,26 +4087,29 @@ let newssrcongrtac arg ist gl =
   (* utils *)
   let fs gl t = Reductionops.nf_evar (project gl) t in
   let tclMATCH_GOAL (c, gl_c) proj t_ok t_fail gl =
-    match try Some (pf_unify_HO gl_c (pf_concl gl) c) with _ -> None with  
+    match try Some (pf_unify_HO gl_c (pf_concl gl) c) with _ -> None with
     | Some gl_c -> tclTHEN (convert_concl (fs gl_c c)) (t_ok (proj gl_c)) gl
-    | None -> t_fail () gl in 
-  let mk_evar gl ty = 
+    | None -> t_fail () gl in
+  let mk_evar gl ty =
     let env, sigma, si = pf_env gl, project gl, sig_it gl in
     let sigma, x = Evarutil.new_evar (create_evar_defs sigma) env ty in
     x, re_sig si sigma in
   let ssr_congr lr = mkApp (mkSsrConst "ssr_congr_arrow",lr) in
   (* here thw two cases: simple equality or arrow *)
-  let equality, _, eq_args, gl' = pf_saturate gl (build_coq_eq ()) 3 in
-  tclMATCH_GOAL (equality, gl') (fun gl' -> fs gl' (List.assoc 0 eq_args))
+  (* assia:warning, this should be an abstraction, not a hardwired "identity"*)
+  let identity, _, eq_args, gl' = pf_saturate gl (build_ssr_eq ()) 3 in
+  tclMATCH_GOAL (identity, gl') (fun gl' -> fs gl' (List.assoc 0 eq_args))
   (fun ty -> congrtac (arg, Detyping.detype false [] [] ty) ist)
   (fun () ->
-    let lhs, gl' = mk_evar gl mkProp in let rhs, gl' = mk_evar gl' mkProp in
+    let lhs, gl' = mk_evar gl (mkType()) in
+    let rhs, gl' = mk_evar gl'(mkType()) in
     let arrow = mkArrow lhs (lift 1 rhs) in
     tclMATCH_GOAL (arrow, gl') (fun gl' -> [|fs gl' lhs;fs gl' rhs|])
     (fun lr -> tclTHEN (apply (ssr_congr lr)) (congrtac (arg, mkRType) ist))
     (fun _ _ -> errorstrm (str"Conclusion is not an equality nor an arrow")))
     gl
 ;;
+
 
 TACTIC EXTEND ssrcongr
 | [ "congr" ssrcongrarg(arg) ] ->
@@ -4379,6 +4397,7 @@ exception PRtype_error
 exception PRindetermined_rhs of constr
 
 let pirrel_rewrite pred rdx rdx_ty new_rdx dir (sigma, c) c_ty gl =
+  pp(lazy(str"==PIRREL_REWRITE=="));
   let env = pf_env gl in
   let beta = Reductionops.clos_norm_flags Closure.beta env sigma in
   let sigma, p = 
@@ -4386,16 +4405,21 @@ let pirrel_rewrite pred rdx rdx_ty new_rdx dir (sigma, c) c_ty gl =
     Evarutil.new_evar sigma env (beta (subst1 new_rdx pred)) in
   let pred = mkNamedLambda pattern_id rdx_ty pred in
   let elim = 
-    let (kn, i) as ind, unfolded_c_ty = pf_reduce_to_quantified_ind gl c_ty in
-    let sort = elimination_sort_of_goal gl in
-    let elim = Indrec.lookup_eliminator ind sort in
+    (* let (kn, i) as ind, unfolded_c_ty = pf_reduce_to_quantified_ind gl c_ty in *)
+    (* let sort = elimination_sort_of_goal gl in *)
+    (* let elim = Indrec.lookup_eliminator ind sort in *)
+    pp(lazy(str"searching for elim"));
+    let elim = mkSsrConst "identity_nondep_rect" in
+    pp(lazy(str"base elim is " ++ pr_constr elim));
     if dir = R2L then elim else (* taken from Coq's rewrite *)
     let elim = destConst elim in          
     let mp,dp,l = repr_con (constant_of_kn (canonical_con elim)) in
     let l' = label_of_id (Nameops.add_suffix (id_of_label l) "_r")  in 
     let c1' = Global.constant_of_delta_kn (canonical_con (make_con mp dp l')) in
     mkConst c1' in
+  pp(lazy(str"elim is " ++ pr_constr elim));
   let proof = mkApp (elim, [| rdx_ty; new_rdx; pred; p; rdx; c |]) in
+  pp(lazy(str"proof is " ++ pr_constr proof));
   (* We check the proof is well typed *)
   let proof_ty =
     try Typing.type_of env sigma proof with _ -> raise PRtype_error in
@@ -4427,13 +4451,14 @@ let pirrel_rewrite pred rdx rdx_ty new_rdx dir (sigma, c) c_ty gl =
 ;;
 
 let rwcltac cl rdx dir sr gl =
+  pp(lazy(str"==RWCLTAC=="));
   let n, r_n = pf_abs_evars gl sr in
   let r_n' = pf_abs_cterm gl n r_n in
   let r' = subst_var pattern_id r_n' in
   let rdxt = Retyping.get_type_of (pf_env gl) (fst sr) rdx in
   let cvtac, rwtac =
     if closed0 r' then 
-      let env, sigma, c, c_eq = pf_env gl, fst sr, snd sr, build_coq_eq () in
+      let env, sigma, c, c_eq = pf_env gl, fst sr, snd sr, build_ssr_eq () in
       let c_ty = Typing.type_of env sigma c in
       match kind_of_type (Reductionops.whd_betadeltaiota env sigma c_ty) with
       | AtomicType(e, a) when eq_constr e c_eq -> 
@@ -4613,10 +4638,10 @@ let rwargtac ist ((dir, mult), (((oclr, occ), grx), (kind, gt))) gl =
   let fail = ref false in
   let interp_rpattern ist gl gc =
     try interp_rpattern ist gl gc
-    with _ when snd mult = May -> fail := true; project gl, T mkProp in
+    with _ when snd mult = May -> fail := true; project gl, T (mkType()) in
   let interp gc gl =
     try interp_term ist gl gc
-    with _ when snd mult = May -> fail := true; (project gl, mkProp) in
+    with _ when snd mult = May -> fail := true; (project gl, mkType()) in
   let rwtac gl = 
     let rx = Option.map (interp_rpattern ist gl) grx in
     let t = interp gt gl in

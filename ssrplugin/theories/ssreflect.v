@@ -1,5 +1,6 @@
 (* (c) Copyright Microsoft Corporation and Inria. All rights reserved. *)
 Require Import Bool. (* For bool_scope delimiter 'bool'. *)
+Require Export Logic_Type.
 Require Import ssrmatching.
 Set SsrAstVersion.
 
@@ -252,7 +253,7 @@ CoInductive phant (p : Type) := Phant.
 Definition protect_term (A : Type) (x : A) : A := x.
 
 (* The ssreflect idiom for a non-keyed pattern:                               *)
-(*  - unkeyed t wiil match any subterm that unifies with t, regardless of     *)
+(*  - unkeyed t will match any subterm that unifies with t, regardless of     *)
 (*    whether it displays the same head symbol as t.                          *)
 (*  - unkeyed t a b will match any application of a term f unifying with t,   *)
 (*    to two arguments unifying with with a and b, repectively, regardless of *)
@@ -300,37 +301,25 @@ Notation nosimpl t := (let: tt := tt in t).
 Lemma master_key : unit. Proof. exact tt. Qed.
 Definition locked A := let: tt := master_key in fun x : A => x.
 
-Lemma lock A x : x = locked x :> A. Proof.
-  (* XXX ANDREJ: This wants equality so is commented out.
-  unlock; reflexivity. *)
-  admit.
-Qed.
+Lemma lock A x : x = locked x :> A. Proof. unlock; reflexivity. Qed.
 
-(* Needed for locked predicates, in particular for eqType's.                  *)
 Lemma not_locked_false_eq_true : locked false <> true.
-Proof.
-(* XXX ANDREJ: It looks like discriminate wants equality.
-   Proof. unlock; discriminate. *)
-   admit.
-Qed.
+Proof.  unlock; discriminate. Qed.
 
 (* The basic closing tactic "done".                                           *)
 (* XXX Andrej: sym_equal should not exist because it makes Coq behave funny,
    there is its equivalent, called opposite. *)
 Ltac done :=
   trivial; hnf; intros; solve
-   [ do ![solve [trivial | apply: opposite; trivial]
+   [ do ![solve [trivial | apply: identity_sym ; trivial]
          | discriminate | contradiction | split]
    | case not_locked_false_eq_true; assumption
    | match goal with H : ~ _ |- _ => solve [case H; trivial] end ].
 
+
 (* To unlock opaque constants. *)
 Structure unlockable T v := Unlockable {unlocked : T; _ : unlocked = v}.
-Lemma unlock T x C : @unlocked T x C = x. Proof. 
-  (*** XXX ANDREJ: assumes equality here. 
-   by case: C. *)
-  admit.
-Qed.
+Lemma unlock T x C : @unlocked T x C = x. Proof. by case: C. Qed.
 
 Notation "[ 'unlockable' 'of' C ]" := (@Unlockable _ _ C (unlock _))
   (at level 0, format "[ 'unlockable'  'of'  C ]") : form_scope.
@@ -346,11 +335,7 @@ Definition locked_with k := let: tt := k in fun T x => x : T.
 (* This can be used as a cheap alternative to cloning the unlockable instance *)
 (* below, but with caution as unkeyed matching can be expensive.              *)
 Lemma locked_withE T k x : unkeyed (locked_with k x) = x :> T.
-Proof. 
-  (* XXX ANDREJ: Assumes eq
-   by case: k. *)
-  admit.
-Qed.
+Proof. by case: k. Qed. 
 
 (* Intensionaly, this instance will not apply to locked u. *)
 Canonical locked_with_unlockable T k x :=
@@ -371,6 +356,14 @@ Implicit Arguments ssr_suff [Pgoal].
 Definition ssr_wlog := ssr_suff.
 Implicit Arguments ssr_wlog [Pgoal].
 
+(* assia : internal for HoTT eq as identity, should be done otherwise *)
+Definition identity_nondep_rect (A : Type) (a : A) (X : A -> Type) :
+  X a -> forall y : A, a = y -> X y :=
+  identity_rect a (fun (y0 : A) (_ : a = y0) => X y0).
+Arguments identity_nondep_rect [A] a X xa y i.
+
+Definition identity_nondep_rect_r := identity_rect_r.
+
 (* Internal N-ary congruence lemmas for the congr tactic.                     *)
 
 Fixpoint nary_congruence_statement (n : nat)
@@ -387,15 +380,14 @@ Lemma nary_congruence n (k := fun B e => forall y : B, (e y y : Type)) :
   nary_congruence_statement n k.
 Proof.
 have: k _ _ := _; rewrite {1}/k.
-(* XXX: Changed by Andrej
   elim: n k  => [|n IHn] k k_P /= A; first exact: k_P.
-  by apply: IHn => B e He; apply: k_P => f x1 x2 <-. *)
-admit.
+  by apply: IHn => B e He; apply: k_P => f x1 x2 <-.
 Qed.
 
 Lemma ssr_congr_arrow Plemma Pgoal : Plemma = Pgoal -> Plemma -> Pgoal.
-Proof. by (* XXX ANDREJ: move->. *) admit. Qed.
+Proof. by move->. Qed.
 Implicit Arguments ssr_congr_arrow [].
+
 
 (* View lemmas that don't use reflection.                                     *)
 
@@ -404,11 +396,11 @@ Section ApplyIff.
 Variables P Q : Type.
 Hypothesis eqPQ : P <-> Q.
 
-Lemma iffLR : P -> Q. Proof. by (* XXX ANDREJ case: eqPQ. *) admit. Qed.
-Lemma iffRL : Q -> P. Proof. by (* XXX ANDREJ case: eqPQ. *) admit. Qed.
+Lemma iffLR : P -> Q. Proof. by case: eqPQ. Qed.
+Lemma iffRL : Q -> P. Proof. by case: eqPQ. Qed.
 
-Lemma iffLRn : ~P -> ~Q. Proof. by move=> nP tQ; (* XXX ANDREJ case: nP; case: eqPQ tQ. *) admit. Qed.
-Lemma iffRLn : ~Q -> ~P. Proof. by move=> nQ tP; (* XXX ANDREJ case: nQ; case: eqPQ tP. *) admit. Qed.
+Lemma iffLRn : ~P -> ~Q. Proof. by move=> nP tQ;  case: nP; case: eqPQ tQ. Qed.
+Lemma iffRLn : ~Q -> ~P. Proof. by move=> nQ tP; case: nQ; case: eqPQ tP. Qed.
 
 End ApplyIff.
 
