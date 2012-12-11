@@ -59,6 +59,8 @@ Proof.
   moveright_onleft.
   moveright_onright.
   rewrite inverse_triangle.
+  transitivity ((inverse_is_section e (e x) @ p) @ opposite (inverse_is_section e (e y))).
+  apply opposite, concat_associativity.
   apply whisker_left.
   apply map.
   apply opposite.
@@ -66,6 +68,7 @@ Proof.
   intro p.
   unfold equiv_map_inv.
   moveright_onleft.
+  associate_left.
 Defined.
 
 (** Path-concatenation is an equivalence. *)

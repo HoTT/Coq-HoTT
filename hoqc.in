@@ -10,9 +10,11 @@ mydir=`dirname $0`
 if test -d $mydir/coq/theories
 then
   COQLIB="$mydir/coq"
-  HOTLIB="$mydir/theories"
+  HOTTLIB="$mydir/theories"
+  SSRLIB="$mydir/ssrplugin/theories"
 else
   COQLIB="@hottdir@/coq"
-  HOTLIB="@hottdir@/theories"
+  HOTTLIB="@hottdir@/theories"
+  SSRLIB="@hottdir@/ssrplugin/theories"
 fi
-exec $COQC -coqlib $COQLIB -R $HOTLIB HoTT -relevant-equality -warn-universe-inconsistency $@
+exec "$COQC" -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -R "$SSRLIB" Ssreflect -relevant-equality -warn-universe-inconsistency $@
