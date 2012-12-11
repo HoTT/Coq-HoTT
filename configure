@@ -2356,8 +2356,8 @@ $as_echo "Coq library path is $COQLIB" >&6; }
 
 
 
-   parametersmatter=`$COQTOP -help 2>&1 | grep -c -- -indices-matter`
-   if test "$parametersmatter" = "0"; then
+   indicesmatter=`$COQTOP -help 2>&1 | grep -c -- -indices-matter`
+   if test "$indicesmatter" = "0"; then
        as_fn_error $? "You need a version of Coq which supports -indices-matter" "$LINENO" 5
    fi
 
@@ -2626,8 +2626,6 @@ ln -s $COQLIB/plugins $COQLIB/dev $srcdir/coq
 ac_config_files="$ac_config_files Makefile"
 
 ac_config_files="$ac_config_files hoqtop"
-
-ac_config_files="$ac_config_files hoqtop.byte"
 
 ac_config_files="$ac_config_files hoqc"
 
@@ -3363,7 +3361,6 @@ do
   case $ac_config_target in
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "hoqtop") CONFIG_FILES="$CONFIG_FILES hoqtop" ;;
-    "hoqtop.byte") CONFIG_FILES="$CONFIG_FILES hoqtop.byte" ;;
     "hoqc") CONFIG_FILES="$CONFIG_FILES hoqc" ;;
     "hoqide") CONFIG_FILES="$CONFIG_FILES hoqide" ;;
 
@@ -3793,7 +3790,6 @@ which seems to be undefined.  Please make sure it is defined" >&2;}
 
   case $ac_file$ac_mode in
     "hoqtop":F) chmod +x hoqtop ;;
-    "hoqtop.byte":F) chmod +x hoqtop.byte ;;
     "hoqc":F) chmod +x hoqc ;;
     "hoqide":F) chmod +x hoqide ;;
 
