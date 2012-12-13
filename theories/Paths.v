@@ -1,1039 +1,522 @@
 Require Import Logic_Type.
-(** Basic homotopy-theoretic approach to paths. *)
+Require Import ssreflect ssrfun ssrbool.
 
-(** The [Hint Resolve @idpath] line below means that Coq's [auto]
-   tactic will automatically perform [apply idpath] if that leads to a
-   successful solution of the current goal. For example if we ask it
-   to construct a path [x = x], [auto] will find the identity path
-   [idpath x], thanks to the [Hint Resolve].
-
-   In general we should declare [Hint Resolve] on those theorems which
-   are not very complicated but get used often to finish off
-   proofs. Notice how we use the non-implicit version [@idpath] (if we
-   try [Hint Resolve idpath] Coq complains that it cannot guess the
-   value of the implicit argument [A]).  *)
+(* In this file we study here the basic properties induced by the following *)
+(* game: he inhabitants of a type (A : Type) are the points of a category, *)
+(* whose morphisms are the identity proofs between to provably equal *)
+(*inhabitants of A. An identity proof is a term of type (@identity A) where *)
+(* identity is the inductive type: *)
+(* Inductive identity (A : Type) (a : A) : A -> Type :=  identity_refl : a = a*)
+(* The only constructor identity_refl of identity is hence seen as the identity*)
+(* morphism of the category *)
 
 
-(** The following automated tactic applies induction on paths and then
-    [auto], which will also try [idpath]. It can handle many easy
-    statements. *)
+(* An incantation to get a satisfactory behaviour wrt implicit arguments by *)
+(* default *)
+Set Implicit Arguments.
+Unset Strict Implicit.
+Unset Printing Implicit Defensive.
 
-Ltac path_induction :=
-  intros; repeat progress (
-    match goal with
-      | [ p : _ = _  |- _ ] => induction p
-      | _ => idtac
-    end
-  ); auto.
+(* Instead of what is done in the main branch of HoTT we try to avoid *)
+(* constructing the witness paths by an automated tactic but instead *)
+(* provide paths combinators that are *)
+(* essentially inspried by the groupoid structure identity proofs are equipped *)
+(* with. USING SUCH AUTOMATION TO BUILD THE BODY OF DEFINITIONS IS DANGEROUS. *)
+(* See the example of concat2 below *)
 
-(** You can read the above tactic definition as follows. We first perform
-   [intros] to move hypotheses into the context. Then we repeat while there
-   is still progress: if there is a path [p] in the context, apply
-   induction to it, otherwise perform the [idtac] which does nothing (and
-   so no progress is made and we stop). After that, we perform an [auto].
+(* We also try to be cleaner about the status of reduction: if a constant has a *)
+(* computational content we expect to be usefull, as wittness for a "Defined" *)
+(* command ending the script governing its definition, then it is probably a bad*)
+(* idea in general to use an automation tactic such as hott_simpl in its script,*)
+(* since we loose control over the program we define. It is also important for *)
+(* documentation purposes ...*)
+(* I would even like this kind or computationally meaningfull definitions to *)
+(* be defined *)
+(* as often as possible using an explicit-body definition, ie with the *)
+(* Definition ... := .... syntax. Actually, even without using automation, defs *)
+(* of transparent constants via tactics is dangerous as well (see the legacy def*)
+(*  of transport and the associated comment in Fibrations.v. In order for this *)
+(* to scale, we should buld terms using identified combinators and/or explicit *)
+(*  dependent eliminations as opposed to calls to autorewrite using a databasis *)
+(* to document better what the body of the definition is intended to look like. *)
+(* As a consequence automation should only happen in opaque (Qed-ending) *)
+(* definitions.*)
+(* But we will try understand also what should be computable and what shouldn't *)
+(*  since this may severly affects the performances of proof checking. *)
 
-   The notation [ [... |- ... ] ] is a pattern for contexts. To the left of
-   the symbol [|-] we list hypotheses and to the right the goal. The
-   underscore means "anything".
+(* The ssreflect libraries are little used here, except that they feature some *)
+(* correct declarations of implicit arguments. The ssreflect tacics are also *)
+(* seldom unavoidable, except for the control they allow over the selection of *)
+(* rewrite patterns, occurrences to be generalized,... The hope is that this *)
+(* improved control will allow for getting rid of the automation *)
 
-   In summary [path_induction] performs as many inductions on paths as it
-   can, then it uses [auto]. *)
+(* We start by defining group-theory-like notations for the basic operations, *)
+(*  and  combinators. We declare them in a module to let users decide of their *)
+(* relevance: the module is imported, notations become available both at *)
+(* parsing and display. *)
+(* One des not see them nor can we use them if the module is not imported. *)
 
-(** We now define the basic operations on paths, starting with concatenation. *)
-Definition concat {A} {x y z : A} : (x = y) -> (y = z) -> (x = z).
-Proof.
-  intros p q.
-  induction p.
-  exact q.
-Defined.
+(* We declare a notation scope called path_scope to be able to declare *)
+(* notations using  very commonly used symbols like infix (_ * _) for paths *)
+(* and still bein non ambguous. *)
+(* In order to disambiguate when necessary we can surrond an expression *)
+(*  to be interpreted in that scope by parentheses, labeled with the *)
+(* 'path' label : ( _ )%path *)
 
-(** The concatenation of paths [p] and [q] is denoted as [p @ q]. *)
-
-Notation "p @ q" := (concat p q) (at level 60, right associativity).
-
-(** A definition like [concat] can be used in two ways. The first and
-   obvious way is as an operation which concatenates together two
-   paths. The second use is a proof tactic when we want to construct a
-   path [x = z] as a concatenation of paths [x = y = z]. This is
-   done with [apply @concat], see examples below. We will actually
-   define a tactic [path_via] which uses [concat] but is much smarter
-   than just the direct application [apply @concat]. *)
-
-(** Notation for the opposite of a path [p] is [! p]. *)
-
-Notation "! p" := (identity_sym p) (at level 50).
-
-Arguments identity_sym {A} {x y} _.
-Arguments identity {A} a _.
-Arguments identity_refl {A a} , [A] a.
-
-Arguments identity_ind [A] a P _ y _.
-Arguments identity_rec [A] a P _ y _.
-Arguments identity_rect [A] a P _ y _.
-
-(* compatibility with init/ *)
-Notation idpath := identity_refl.
-Notation opposite := identity_sym.
-Notation paths := identity.
-Notation paths_rect := identity_rect.
+Delimit Scope path_scope with path.
 
 
-(** Next we give names to the basic properties of concatenation of
-   paths. Note that all statements are "up to a higher path", e.g.,
-   the composition of [p] and the identity path is not equal to [p]
-   but only connected to it with a path. *)
+(* The path obtained by applying the function f to the path p. *)
+(* Was: map *)
+(* I am still slightly disturbed by this 'map' vocabulary but could not find*)
+(*  a better name by lack of culture. I temporarilly use 'resp' instead, *)
+(* following Hoffman & Streicher *)
+(* Note that it is really importat here that the constant (f_equal) *)
+(* hidden by this notation is transparent. *)
+(* In our modified version of Coq's prelude we have even declared it *)
+(* using an explicit-body definition, using *)
+(* the Definition ... := .... syntax. The original standard libray seems to *)
+(* opacify it *)
+(* using the Opaque command but this has no effect in fact since it is in a *)
+(* section. *)
+(* We reorder the arguments of f_equal so that it behaves more conveniently for *)
+(* our purpose *)
+Definition resp A B x y f := @f_equal A B f x y.
+Arguments resp [A B] [x y] f _.
 
-(** We are going to create a rewrite hints database called [paths], to
-   be used with the rewriting facilities. We must be a bit careful about
-   putting hints in [paths], lest we end up with a cycle of rewrite
-   rules that will spin forever. What is needed is a well-founded
-   measure which guarantees that the left-hand side of a rewrite rule is
-   larger than the right-hand size. Here is an attempt to describe
-   such a measure. It is the lexicographic order of the following
-   simpler measures, where the most significant measure comes first:
+(* The inverse of a path: was opposite. esym is a definition for identity_sym *)
+(* see ssrfun *)
+Notation invp := esym.
 
-   - number of occurences of [equiv_compose]
-   - number of occurences of [equiv_inverse]
-   - number of occurences of [inverse] (from [Equivalences])
-   - number of occurences of [total_path]
-   - depth at which [happly_dep] occurs
-   - depth at which [map_dep] occurs
-   - number of occurences of [concat]
-   - depth at which [transport] occurs
-   - depth at which [happly] occurs
-   - number of occurences of [composition]
-   - depth at which [map] occurs
-   - depth at which [opposite] occurs
-   - number if occurences of [idpath]
-   - size of the expression
+(* If there is a morphism (path) r from (f : A -> B) and (g : A -> B), then *)
+(* for any morphism (path) p : f x = f y there is exists a path g x = g y *)
+(* The operation which computes the path g x = g y from f x= f y is a kind *)
+(* of conjugation, hence the name and notation we chose. *)
+(* The most natural usefull morphism (path) between (f : A -> B) and *)
+(* (g : A -> B) is not really (f = g) but rather the pointwise equality *)
+(* (forall x y, f x = g x), which is derivable from (f = g), the converse *)
+(* being the axiom of extensional equality.*)
+(* (_ =1 _) is the ssreflect notation for unary pointwise equality.*)
+(*  see ssrfun.v *)
+(* Was not in the original file ? *)
+Definition conjp A B (f g : A -> B) (r : f =1 g) (x y : A) (p : f y = f x) :=
+  identity_trans (invp (r y)) (identity_trans p (r x)).
 
-   This means, that in each rewrite rule that is added to the [paths]
-   hints database, the number of occurences of [map_dep] has to decrease, or
-   stay the same and the number of occurences of [concat] has to
-   decrease, or stay the same and...., or the size of the formula has to
-   decrease.
+(* This is equivalent to 
+Module PathNotations.
+...
+...
+End PathNotations.
+
+Import PathNotations.
 *)
 
-(** The following lemmas say that up to higher paths, the paths form a
-   1-groupoid. *)
+Module Import PathNotations.
+(* Instead of re-defining a type 'paths', we use the type identity present *)
+(* in Coq's prelude. Use About identity for more info. *)
 
-Lemma idpath_left_unit {A} {x y : A} (p : x = y) : idpath x @ p = p.
-Proof.
-  path_induction.
-Defined.
+(* Was idpath *)
+Notation "1" := (identity_refl _) : path_scope.
 
-Hint Rewrite @idpath_left_unit : paths.
+(* The composition of two paths: was compose or (_ @ _) *)
+Notation "p * q" := (identity_trans p q) : path_scope.
 
-Lemma idpath_right_unit {A} {x y : A} (p : x = y) : (p @ idpath y) = p.
-Proof.
-  path_induction.
-Defined.
 
-Hint Rewrite @idpath_right_unit : paths.
+Notation "p ^-1" := (invp p) : path_scope.
 
-Lemma opposite_right_inverse {A} {x y : A} (p : x = y) : (p @ !p) = idpath x.
-Proof.
- path_induction.
-Defined.
+(* The composition of p with the inverse of q: not present in the original file *)
+Notation "p / q" := (p * q^-1)%path : path_scope.
 
-Hint Rewrite @opposite_right_inverse : paths.
+(* We use here the notation suggested by Dan Grayson : to denote the formerly *)
+(* called *)
+(* (map f) as f_* . Unfortunately we cannot do that as such since the _ *)
+(* is understood *)
+(* by Coq's parser to be part of the identifier, so we insert a backquote in *)
+(* between. *)
+(* Not very satisfactory but again, waits for a better ascii art idea...*)
+Notation "f `_*" := (resp f) (at level 2, format "f `_*") : path_scope.
 
-Lemma opposite_left_inverse {A} {x y : A} (p : x = y) : (!p @ p) = idpath y.
-Proof.
-  path_induction.
-Defined.
+(* Conjugation *)
+Notation "q ^ p" := (conjp p q)%path : path_scope.
+(* Cyril : Notation "q ^ p" := ((p _ * q) / p _)%path : path_scope. *)
 
-Hint Rewrite @opposite_left_inverse : paths.
+End PathNotations.
 
-(* Often the inverses end up associated in the wrong way, so we also add
-   the following variants. *)
+(* After the end of this module, the notations are assumed iff the module is *)
+(* imported *)
 
-Lemma opposite_right_inverse_with_assoc_left {A} {x y z : A} (p : x = y) (q : y = z) :
-  (p @ q) @ !q = p.
-Proof.
-  path_induction.
-Defined.
 
-Hint Rewrite @opposite_right_inverse_with_assoc_left : paths.
+Section WhyAutomationInDefinitionsIsNotRobust.
 
-Lemma opposite_left_inverse_with_assoc_left {A} {x y z : A} (p : x = y) (q : z = y) :
-  (p @ !q) @ q = p.
-Proof.
-  path_induction.
-Defined.
+(* Inside this section we will only work in notation scope path_scope, so we*)
+(*  declare that *)
+(* everything should be interpreted as if surrounded by some (_)%path. *)
 
-Hint Rewrite @opposite_left_inverse_with_assoc_left : paths.
+Open Local Scope path_scope.
 
-Lemma opposite_right_inverse_with_assoc_right {A} {x y z : A} (p : y = x) (q : y = z) :
-  p @ (!p @ q) = q.
-Proof.
-  path_induction.
-Defined.
+(* I still do not know if I will need concat2, but we use it as an example:*)
+(* If we want to have an opaque lemma, we use the 'Lemma' vernac command and*)
+(* Qed ending keyword. Note that the original Paths.v crafts this def using *)
+(* the path_induction tactic, when here a simple non dependent elim as *)
+(* performed by the rewrite tactic is sufficient. Note that we have tuned*)
+(* the ssreflect rewrite tactic so that it works with 'identity' instead of 'eq'*)
+Lemma opaque_concat2 A (x y z : A)(p p' : x = y)(q q' : y = z) :
+  p = p' -> q = q' -> p * q = p' * q'.
+Proof. by move=> hp hq; rewrite hp hq. Qed.
 
-Hint Rewrite @opposite_right_inverse_with_assoc_right : paths.
+(* If we want a computational definition, we can still define it using tactics*)
+(* but for sake of documentation we should use the 'Definition' vernac command*)
+(* and end the definition by a Defined of course. *)
+Definition concat2 A (x y z : A)(p p' : x = y)(q q' : y = z) :
+  p = p' -> q = q' -> p * q = p' * q'.
+Proof. move=> hp hq; rewrite hp hq. reflexivity. Defined.
 
-Lemma opposite_left_inverse_with_assoc_right {A} {x y z : A} (p : x = y) (q : y = z) :
-  !p @ (p @ q) = q.
-Proof.
-  path_induction.
-Defined.
+(* In order to test the transparency of definitions obtained this way we *)
+(* clone it*)
+Definition concat2a A (x y z : A)(p p' : x = y)(q q' : y = z) :
+  p = p' -> q = q' -> p * q = p' * q'.
+Proof. move=> hp1 hq1; rewrite hp1 hq1. reflexivity. Defined.
 
-Hint Rewrite @opposite_right_inverse_with_assoc_left : paths.
+(* And prove the sanity check lemma *)
+Lemma sanity_check_concat2_a A (x y z : A)(p p' : x = y)(q q' : y = z)
+  (hp : p = p')(hq : q = q') : concat2a hp hq = concat2 hp hq.
+reflexivity.
+Qed.
 
-Lemma opposite_left_inverse_with_assoc_both {A}
-  {x y z w : A} (p : x = y) (q : z = y) (r : y = w) :
-  (p @ !q) @ (q @ r) = p @ r.
-Proof.
-  path_induction.
-Defined.
+(* Now we define a third version of the lemma *)
+Definition concat2b A (x y z : A)(p p' : x = y)(q q' : y = z) :
+  p = p' -> q = q' -> p * q = p' * q'.
+Proof. move=> hp hq; rewrite hq hp. reflexivity. Defined.
 
-Hint Rewrite @opposite_left_inverse_with_assoc_both : paths.
+(* And try to prove the associated sanity check lemma *)
+Lemma sanity_check_concat2_b A (x y z : A)(p p' : x = y)(q q' : y = z)
+  (hp : p = p')(hq : q = q') : concat2a hp hq = concat2b hp hq.
+(* reflexivity.*) Abort.
 
-Lemma opposite_right_inverse_with_assoc_both {A}
-  {x y z w : A} (p : x = y) (q : y = z) (r : y = w) :
-  (p @ q) @ (!q @ r) = p @ r.
-Proof.
-  path_induction.
-Defined.
+(* Conclusion: an automated tacic, even is it perfectly documents the proof *)
+(* search*)
+(* strategy it uses in terms of structuration of the data-base, is a very *)
+(* fragile way of defining constants. The explicit script which documents *)
+(* the order in which the eliminations have been performed is much more *)
+(* robust. However, weird thing can still happen even without automation. *)
+(* With a little more training on Coq' syntax for dependent types, *)
+(* one can define concat2 by providing an explicit proof term. Here is*)
+(* an example, which can be much more simplified, see just below, illustrating*)
+(* the match ...in... return... with... *)
+Definition body_concat2 A (x y z : A)(p p' : x = y)(q q' : y = z)
+  (hp : p = p')(hq : q = q') : p * q = p' * q' := 
+  match hq in _ = rhsq return p * q = p' * rhsq with
+    |identity_refl => 
+      match hp in _ = rhsp return p * q = rhsp * q with 
+        | identity_refl => 1 end
+  end.
 
-Hint Rewrite @opposite_right_inverse_with_assoc_both : paths.
+(* Note that the deepest match is in fact programming an operation of type:
+ (x y z : A)(p p' : x = y) (hp : p = p') : p * q = p' * q
+*)
 
-Lemma opposite_concat {A} {x y z : A} (p : x = y) (q : y = z) : !(p @ q) = !q @ !p.
-Proof.
-  path_induction.
-Defined.
+(* This definition above was really an exemple to understand the syntax of a *)
+(* dependent math. Actually here this is overkill and we can define this as *)
+Definition body_concat3 A (x y z : A)(p p' : x = y)(q q' : y = z)
+  (hp : p = p')(hq : q = q') : p * q = p' * q' := 
+  match hq, hp with identity_refl, identity_refl => 1 end.
 
-Hint Rewrite @opposite_concat : paths.
-
-Lemma opposite_idpath {A} {x : A} : !(idpath x) = idpath x.
-Proof.
-  reflexivity.
-Defined.
-
-Hint Rewrite @opposite_idpath : paths.
-
-Lemma opposite_opposite {A} {x y : A} (p : x = y) : !(! p) = p.
-Proof.
-  path_induction.
-Defined.
-
-Hint Rewrite @opposite_opposite : paths.
-
-Lemma concat_associativity {A} (w x y z : A) (p : w = x) (q : x = y) (r : y = z) :
-  (p @ q) @ r = p @ (q @ r).
-Proof.
-  path_induction.
-Defined.
-
-(** Now we move on to the 2-groupoidal structure of a type. Concatenation
-   of 2-paths along 1-paths is just ordinary concatenation in a path type,
-   but we need a new name and notation for concatenation of 2-paths along
-   points. *)
-
-Definition concat2 {A} {x y z : A} {p p' : x = y} {q q' : y = z} :
-  (p = p') -> (q = q') -> (p @ q = p' @ q').
-Proof.
-  path_induction.
-Defined.
-
-Notation "p @@ q" := (concat2 p q) (at level 60).
-
-(** We also have whiskering operations which compose a 1-path with
-   a 2-path. We do not introduce even more notation, however. *)
-
-Definition whisker_right {A} {x y z : A} {p p' : x = y} (q : y = z) :
-  (p = p') -> (p @ q = p' @ q).
-Proof.
-  path_induction.
-Defined.
-
-Definition whisker_left {A} {x y z : A} {q q' : y = z} (p : x = y) :
-  (q = q') -> (p @ q = p @ q').
-Proof.
-  path_induction.
-Defined.
-
-(** Basic properties of whiskering. *)
-
-Definition whisker_right_toid {A} {x y : A} (p : x = x) (q : x = y) :
-  (p = idpath x) -> (p @ q = q).
-Proof.
-  intro a.
-  apply @concat with (y := idpath x @ q).
-  apply whisker_right. assumption.
-  apply idpath_left_unit.
-Defined.
-
-Definition whisker_right_fromid {A} {x y : A} (p : x = x) (q : x = y) :
-  (idpath x = p) -> (q = p @ q).
-Proof.
-  intros a.
-  apply @concat with (y := idpath x @ q).
-  apply opposite, idpath_left_unit.
-  apply whisker_right. assumption.
-Defined.
-
-Definition whisker_left_toid {A} {x y : A} (p : y = y) (q : x = y) :
-  (p = idpath y) -> (q @ p = q).
-Proof.
-  intros a.
-  apply @concat with (y := q @ idpath y).
-  apply whisker_left. assumption.
-  apply idpath_right_unit.
-Defined.
-
-Definition whisker_left_fromid {A} {x y : A} (p : y = y) (q : x = y) :
-  (idpath y = p) -> (q = q @ p).
-Proof.
-  intros a.
-  apply @concat with (y := q @ idpath y).
-  apply opposite, idpath_right_unit.
-  apply whisker_left. assumption.
-Defined.
-
-(** The interchange law for whiskering. *)
-
-Definition whisker_interchange {A} {x y z : A} (p p' : x = y) (q q' : y = z)
-  (a : p = p') (b : q = q') :
-  (whisker_right q a) @ (whisker_left p' b) = (whisker_left p b) @ (whisker_right q' a).
-Proof.
-  path_induction.
-Defined.
+(* I use this notation only in the current section, to make the statement of
+concat2_interchange look more like its original version. I have replaced the
+infix @@ by ++ just because it is reserved in datatype.v already with a level etc. 
+My current bet is that it should be a lemma and not a definition. Hence it would
+be acceptable to use automation for this script. Since we have remove the Ltac
+machinery, we do it by hand and it is not so long although boring. *)
+ 
+Local Notation "p ++ q" := (body_concat3 p q).
 
 (** The interchange law for concatenation. *)
-
-Definition concat2_interchange {A} {x y z : A} (p p' p'' : x = y) (q q' q'' : y = z)
-  (a : p = p') (b : p' = p'') (c : q = q') (d : q' = q'') :
-  (a @@ c) @ (b @@ d) = (a @ b) @@ (c @ d).
+Lemma concat2_interchange A (x y z : A) : forall (p p' p'' : x = y) (q q' q'' : y = z)
+  (a : p = p') (b : p' = p'') (c : q = q') (d : q' = q''),
+  (a ++ c) * (b ++ d) = (a * b) ++ (c * d).
 Proof.
-  path_induction.
-Defined.
-
-(** Now we consider the application of functions to paths. *)
-
-(** A path [p : x = y] in a space [A] is mapped by [f : A -> B] to a
-   path [map f p : f x = f y] in [B]. *)
-
-Lemma map {A B} {x y : A} (f : A -> B) : (x = y) -> (f x = f y).
-Proof.
-  path_induction.
-Defined.
-
-(** Taking opposites of 1-paths is functorial on 2-paths. *)
-
-Definition opposite2 {A} {x y : A} {p q : x = y} (a : p = q) : (!p = !q)
-  := map opposite a.
-(*Proof.
-  path_induction.
-Defined.*)
-
-(** The next two lemmas state that [map f p] is "functorial" in the path [p]. *)
-
-Lemma idpath_map {A B} {x : A} (f : A -> B) : map f (idpath x) = idpath (f x).
-Proof.
-  reflexivity.
-Defined.
-
-Hint Rewrite @idpath_map : paths.
-
-Lemma concat_map {A B} {x y z : A} (f : A -> B) (p : x = y) (q : y = z) :
-  map f (p @ q) = (map f p) @ (map f q).
-Proof.
-  path_induction.
-Defined.
-
-Hint Rewrite @concat_map : paths.
-
-Lemma opposite_map {A B} {x y : A} (f : A -> B) (p : x = y) :
-  map f (! p) = ! map f p.
-Proof.
-  path_induction.
-Defined.
-
-Hint Rewrite @opposite_map : paths.
-
-(** It is also the case that [map f p] is functorial in [f].  *)
-
-Lemma idmap_map {A} {x y : A} (p : x = y) : map (idmap A) p = p.
-Proof.
-  path_induction.
-Defined.
-
-Hint Rewrite @idmap_map : paths.
-
-Lemma compose_map {A B C} (f : A -> B) (g : B -> C) {x y : A} (p : x = y) :
-  map (g o f) p = map g (map f p).
-Proof.
-  path_induction.
-Defined.
-
-Hint Rewrite @compose_map : paths.
-
-Lemma constmap_map {A B : Type} {b : B} {x y : A} (p : x = y) :
-  map (fun _ => b) p = idpath b.
-Proof.
-  path_induction.
-Defined.
-
-Hint Rewrite @constmap_map : paths.
-
-(** We can also map paths between paths. *)
-
-Definition map2 {A B} {x y : A} (p q : x = y) (f : A -> B) :
-  p = q -> (map f p = map f q)
-  := map (map f).
-
-(** The type of "homotopies" between two functions [f] and [g] is
-   [forall x, f x = g x].  These can be derived from "paths" between
-   functions [f = g]; the converse is function extensionality. *)
-
-Definition happly {A B} {f g : A -> B} : (f = g) -> (forall x, f x = g x) :=
-  fun p x => map (fun h => h x) p.
-
-(** Similarly, [happly] for dependent functions. *)
-
-Definition happly_dep {A} {P : A -> Type} {f g : forall x, P x} :
-  (f = g) -> (forall x, f x = g x) :=
-  fun p x => map (fun h => h x) p.
-
-(** [happly] preserves path-concatenation and opposites. *)
-
-Lemma happly_concat {A B} (f g h : A -> B) (p : f = g) (q : g = h) (x : A) :
-  happly (p @ q) x = happly p x @ happly q x.
-Proof.
-  path_induction.
-Defined.
-
-Hint Rewrite @happly_concat : paths.
-
-Lemma happly_opp {A B} (f g : A -> B) (p : f = g) (x : A) :
-  happly (!p) x = !happly p x.
-Proof.
-  path_induction.
-Defined.
-
-Hint Rewrite @happly_opp : paths.
-
-Lemma happly_dep_concat {A} P (f g h : forall a : A, P a) (p : f = g) (q : g = h) (x:A) :
-  happly_dep (p @ q) x = happly_dep p x @ happly_dep q x.
-Proof.
-  path_induction.
-Defined.
-
-Hint Rewrite @happly_dep_concat : paths.
-
-Lemma happly_dep_opp {A} P (f g : forall a : A, P a) (p : f = g) (x : A) :
-  happly_dep (!p) x = !happly_dep p x.
-Proof.
-  path_induction.
-Defined.
-
-Hint Rewrite @happly_dep_opp : paths.
-
-(** How happly interacts with map. *)
-
-Lemma map_precompose {A B C} (f g : B -> C) (h : A -> B)
-  (p : f = g) (a : A) :
-  happly (map (fun f' => f' o h) p) a = happly p (h a).
-Proof.
-  path_induction.
-Defined.
-
-Lemma map_postcompose {A B C} (f g : A -> B) (h : B -> C)
-  (p : f = g) (a : A) :
-  happly (map (fun f' => h o f') p) a = map h (happly p a).
-Proof.
-  path_induction.
-Defined.
-
-Lemma map_precompose_dep {A B} P (f g : forall b : B, P b) (h : A -> B)
-  (p : f = g) (a : A) :
-  happly_dep (map (fun f' => fun a => f' (h a)) p) a = happly_dep p (h a).
-Proof.
-  path_induction.
-Defined.
-
-(** Paths in cartesian products. *)
-
-Definition prod_path {X Y} {x x' : X} {y y' : Y} :
-  (x = x') -> (y = y') -> ((x, y) = (x', y')).
-Proof.
-  path_induction.
-Defined.
-
-(** We declare some more [Hint Resolve] hints, now in the "hint
-   database" [path_hints].  In general various hints (resolve,
-   rewrite, unfold hints) can be grouped into "databases". This is
-   necessary as sometimes different kinds of hints cannot be mixed,
-   for example because they would cause a combinatorial explosion or
-   rewriting cycles.
-
-   A specific [Hint Resolve] database [db] can be used with [auto with db]. *)
-
-Hint Resolve
-  @idpath @opposite
-  idpath_left_unit idpath_right_unit
-  opposite_right_inverse opposite_left_inverse
-  opposite_concat opposite_idpath opposite_opposite
-  @concat2
-  @whisker_right @whisker_left
-  @whisker_right_toid @whisker_right_fromid
-  @whisker_left_toid @whisker_left_fromid
-  @opposite2
-  @map idpath_map concat_map idmap_map compose_map opposite_map
-  @map2
- : path_hints.
-
-(** We can add more hints to the database later. *)
-
-(** What follows is a long series of tactics which were used before 
-   Coq supported rewriting with [paths]. They are still here mostly
-   for backward compatibility and because some people might be used
-   to them. Eventually we how to get rid of them because the tactic
-   [hott_simpl] defined below supersedes most of them. *)
-
-(** Like [simpl], but for paths. It just uses the [paths] rewrite
-   database but it might get fancier in the future. *)
-
-Ltac hott_simpl :=
-  autorewrite with paths in * |- * ; auto with path_hints.
-
-(** For some reason, [apply happly] and [apply happly_dep] often seem
-   to fail unification.  This tactic does the work that I think they
-   should be doing. *)
-
-Ltac apply_happly_to f' g' x' :=
-  first [
-      apply @happly with (f := f') (g := g') (x := x')
-    | apply @happly_dep with (f := f') (g := g') (x := x')
-  ].
-
-Ltac apply_happly :=
-  match goal with
-    | |- ?f ?x = ?g ?x =>
-      apply_happly_to f g x
-    | |- ?f1 (?f2 ?x) = ?g ?x =>
-      change ((f1 o f2) x = g x);
-      apply_happly_to (f1 o f2) g x
-    | |- ?f ?x = ?g1 (?g2 ?x) =>
-      change (f x = (g1 o g2) x);
-      apply_happly_to f (g1 o g2) x
-    | |- ?f1 (?f2 ?x) = ?g1 (?g2) ?x =>
-      change ((f1 o f2) x = (g1 o g2) x);
-      apply_happly_to (f1 o f2) (g1 o g2) x
-  end.
-
-(** The following tactic is intended to be applied when we want to
-   find a path between two expressions which are largely the same, but
-   differ in the value of some subexpression.  Therefore, it does its
-   best to "peel off" all the parts of both sides that are the same,
-   repeatedly, until only the "core" bit of difference is left.  Then
-   it performs an [auto] using the [path_hints] database. *)
-
-Ltac path_simplify :=
-  repeat progress first [
-      apply whisker_left
-    | apply whisker_right
-    | apply @map
-    ]; hott_simpl.
-
-(** The following variant allows the caller to supply an additional
-   lemma to be tried (for instance, if the caller expects the core
-   difference to be resolvable by using a particular lemma). *)
-
-Ltac path_simplify' lem :=
-  repeat progress first [
-      apply whisker_left
-    | apply whisker_right
-    | apply @map
-    | apply lem
-    | apply opposite; apply lem
-    ]; hott_simpl.
-
-(* This one takes a tactic rather than a lemma. *)
-
-Ltac path_simplify'' tac :=
-  repeat progress first [
-      apply whisker_left
-    | apply whisker_right
-    | apply @map
-    | tac
-    | apply opposite; tac
-    ]; hott_simpl.
-
-(** These tactics are used to construct a path [a = b] as a
-   composition of paths [a = x] and [x = b].  They then apply
-   [path_simplify] to both paths, along with possibly an additional
-   lemma supplied by the user. *)
-
-Ltac path_via mid :=
-  apply @concat with (y := mid); auto with path_hints.
-
-Ltac path_using mid lem :=
-  apply @concat with (y := mid); path_simplify' lem.
-
-Ltac path_using' mid tac :=
-  apply @concat with (y := mid); path_simplify'' tac.
-
-(** This variant does not call path_simplify. *)
-
-Ltac path_via' mid :=
-  apply @concat with (y := mid).
-
-(** And this variant does not actually do composition; it just changes
-   the form of one of the goals. *)
-
-Ltac path_change mid :=
-  match goal with
-    |- ?source = ?target =>
-      first [ change (source = mid) | change (mid = target) ]
-  end; path_simplify.
-
-(** Here are some tactics for reassociating concatenations.  The
-   tactic [associate_right] associates both source and target of the
-   goal all the way to the right, and dually for [associate_left]. *)
-
-Ltac associate_right_in s :=
-  match s with
-    context cxt [ (?a @ ?b) @ ?c ] => 
-    let mid := context cxt[a @ (b @ c)] in
-      path_using mid concat_associativity
-  end.
-  
-Ltac associate_right :=
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [ associate_right_in s | associate_right_in t ]
-    end
-  ).
-
-Ltac associate_left_in s :=
-  match s with
-    context cxt [ ?a @ (?b @ ?c) ] => 
-    let mid := context cxt[(a @ b) @ c] in
-      path_using mid concat_associativity
-  end.
-
-Ltac associate_left :=
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [ associate_left_in s | associate_left_in t ]
-    end
-  ).
-
-(** This tactic unwhiskers by paths on both sides, reassociating as
-   necessary. *)
-
-Ltac unwhisker :=
-  associate_left;
-  repeat progress apply whisker_right;
-  associate_right;
-  repeat progress apply whisker_left.
-
-(** Here are some tactics for eliminating identities.  The tactic
-   [cancel_units] tries to remove all identity paths and functions
-   from both source and target of the goal. *)
-
-Ltac cancel_units_in s :=
-  match s with
-    | context cxt [ idpath ?a @ ?p ] => 
-      let mid := context cxt[p] in path_using mid idpath_left_unit
-    | context cxt [ ?p @ idpath ?a ] => 
-      let mid := context cxt[p] in path_using mid idpath_right_unit
-    | context cxt [ map ?f (idpath ?x) ] =>
-      let mid := context cxt[idpath (f x)] in path_using mid idpath_map
-    | context cxt [ map (idmap _) ?p ] =>
-      let mid := context cxt[p] in path_using mid idmap_map
-    | context cxt [ ! (idpath ?a) ] =>
-      let mid := context cxt[idpath a] in path_using mid opposite_idpath
-    | context cxt [ map (fun _ => ?a) ?p ] => 
-      let mid := context cxt[idpath a] in path_using mid constmap_map
-    | context cxt [ ! map (fun _ => ?a) ?p ] =>
-      let mid := context cxt[! idpath a] in path_using mid constmap_map
-  end.
-
-Ltac cancel_units :=
-  repeat (
-    match goal with
-      |- ?s = ?t => first [ cancel_units_in s | cancel_units_in t ]
-    end
-  ).
-
-(** And some tactics for eliminating matched pairs of opposites. *)
-
-(** This is an auxiliary tactic which performs one step of a
-   reassociation of [s] (which is the source or target of a path) so
-   as to get [!p] to be closer to being concatenated on the left with
-   something irreducible.  If there is more than one copy of [!p] in
-   [s], then this tactic finds the first one which is concatenated on
-   the left with anything (irreducible or not), or if there is no such
-   occurrence of [!p], then finds the first one overall.  If this [!p]
-   is already concatenated on the left with something irreducible,
-   then if that something is a [p], it cancels them.  If that
-   something is not a [p], then it fails.  *)
-
-Ltac partly_cancel_left_opposite_of_in p s :=
-  match s with
-    | context cxt [ @concat _ ?trg _ _ (!p) p ] =>
-      let mid := context cxt[ idpath trg ] in path_using mid opposite_left_inverse
-    | context cxt [ !p @ (?a @ ?b) ] =>
-      let mid := context cxt[ (!p @ a) @ b ] in path_using mid concat_associativity
-    | context cxt [ !p @ _ ] => fail 1
-    | context cxt [ (?a @ !p) @ ?b ] =>
-      let mid := context cxt[ a @ (!p @ b) ] in path_using mid concat_associativity
-    | context cxt [ ?a @ (?b @ !p) ] =>
-      let mid := context cxt[ (a @ b) @ !p ] in path_using mid concat_associativity
-  end;
-  cancel_units.
-
-(** This tactic simply calls the previous one for the source and the
-   target, repeatedly, until it can no longer make progress.
-   *)
-Ltac cancel_left_opposite_of p := 
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [
-          partly_cancel_left_opposite_of_in p s
-        | partly_cancel_left_opposite_of_in p t
-      ]
-    end
-  ).
-
-(** Now the same thing on the right *)
-
-Ltac partly_cancel_right_opposite_of_in p s :=
-  match s with
-    | context cxt [ @concat _ ?src _ _ p (!p) ] =>
-      let mid := context cxt[ idpath src ] in path_using mid opposite_right_inverse
-    | context cxt [ (?a @ ?b) @ !p ] =>
-      let mid := context cxt[ a @ (b @ !p) ] in path_using mid concat_associativity
-    | context cxt [ _ @ !p ] => fail 1
-    | context cxt [ ?a @ (!p @ ?b) ] =>
-      let mid := context cxt[ (a @ !p) @ b ] in path_using mid concat_associativity
-    | context cxt [ (!p @ ?a) @ ?b ] =>
-      let mid := context cxt[ !p @ (a @ b) ] in path_using mid concat_associativity
-  end;
-  cancel_units.
-
-Ltac cancel_right_opposite_of p := 
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [
-          partly_cancel_right_opposite_of_in p s
-        | partly_cancel_right_opposite_of_in p t
-      ]
-    end
-  ).
-
-(** This tactic tries to cancel [!p] on both the left and the right. *)
-Ltac cancel_opposite_of p :=
-  cancel_left_opposite_of p;
-  cancel_right_opposite_of p.
-
-(** This tactic looks in [s] for an opposite of anything, and for the
-   first one it finds, it tries to cancel it on both sides.  *)
-Ltac cancel_opposites_in s :=
-  match s with
-    context cxt [ !(?p) ] => cancel_opposite_of p
-  end.
-
-(** Finally, this tactic repeats the previous one as long as it gets
-   us somewhere.  This is most often the easiest of these tactics to
-   call in an interactive proof.
-
-   This tactic is not the be-all and end-all of opposite-canceling,
-   however; it only works until it runs into an opposite that it can't
-   cancel.  It can get stymied by something like [!p @ !q @ q], which
-   should simplify to [!p], but the tactic simply tries to cancel
-   [!p], makes no progress, and stops.  In such a situation one must
-   call [cancel_opposite_of q] directly (or figure out how to write a
-   smarter tactic!).  *)
-
-Ltac cancel_opposites :=
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [ cancel_opposites_in s | cancel_opposites_in t ]
-    end
-  ).
-
-(** Now we have a sequence of fairly boring tactics, each of which
-   corresponds to a simple lemma.  Each of these tactics repeatedly
-   looks for occurrences, in either the source or target of the goal,
-   of something whose form can be changed by the lemma in question,
-   then calls [path_using] to change it.
-
-   For each lemma the basic tactic is called [do_LEMMA].  If the lemma
-   can sensibly be applied in two directions, there is also an
-   [undo_LEMMA] tactic.  *)
-
-(** Tactics for [opposite_opposite] *)
-
-Ltac do_opposite_opposite_in s :=
-  match s with
-    | context cxt [ ! (! ?p) ] =>
-      let mid := context cxt [ p ] in path_using mid opposite_opposite
-  end.
-
-Ltac do_opposite_opposite :=
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [ do_opposite_opposite_in s | do_opposite_opposite_in t ]
-    end
-  ).
-
-(** Tactics for [opposite_map]. *)
-
-Ltac apply_opposite_map :=
-  match goal with
-    | |- map ?f' (! ?p') = ! map ?f' ?p' =>
-      apply opposite_map with (f := f') (p := p')
-    | |- ! map ?f' ?p' = map ?f' (! ?p') =>
-      apply opposite, opposite_map with (f := f') (p := p')
-  end.
-
-Ltac do_opposite_map_in s :=
-  match s with
-    | context cxt [ map ?f (! ?p) ] =>
-      let mid := context cxt [ ! map f p ] in path_using mid opposite_map
-  end.
-
-Ltac do_opposite_map :=
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [ do_opposite_map_in s | do_opposite_map_in t ]
-    end
-  ); do_opposite_opposite.
-
-Ltac undo_opposite_map_in s :=
-  match s with
-    | context cxt [ ! (map ?f ?p) ] =>
-      let mid := context cxt [ map f (! p) ] in path_using mid opposite_map
-  end.
-
-Ltac undo_opposite_map :=
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [ undo_opposite_map_in s | undo_opposite_map_in t ]
-    end
-  ); do_opposite_opposite.
-
-(** Tactics for [opposite_concat]. *)
-
-Ltac do_opposite_concat_in s :=
-  match s with
-    | context cxt [ (! ?p) @ (! ?q) ] =>
-      let mid := context cxt [ ! (q @ p) ] in path_using mid opposite_concat
-  end.
-
-Ltac do_opposite_concat :=
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [ do_opposite_concat_in s | do_opposite_concat_in t ]
-    end
-  ); do_opposite_opposite.
-
-Ltac undo_opposite_concat_in s :=
-  match s with
-    | context cxt [ ! (?q @ ?p) ] =>
-      let mid := context cxt [ (! p) @ (! q) ] in path_using mid opposite_concat
-  end.
-
-Ltac undo_opposite_concat :=
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [ undo_opposite_concat_in s | undo_opposite_concat_in t ]
-    end
-  ); do_opposite_opposite.
-
-(** Tactics for [compose_map].  As with [happly], [apply compose_map]
-   often fail to unify, so we define a separate tactic. *)
-
-Ltac apply_compose_map :=
-  match goal with
-    | |- map (?g' o ?f') ?p' = map ?g' (map ?f' ?p') =>
-      apply compose_map with (g := g') (f := f') (p := p')
-    | |- map ?g' (map ?f' ?p') = map (?g' o ?f') ?p' =>
-      apply opposite; apply compose_map with (g := g') (f := f') (p := p')
-  end.
-
-Ltac do_compose_map_in s :=
-  match s with
-    | context cxt [ map (?f o ?g) ?p ] =>
-      let mid := context cxt [ map f (map g p) ] in
-        path_via mid; try apply_compose_map
-  end.
-
-Ltac do_compose_map :=
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [ do_compose_map_in s | do_compose_map_in t ]
-    end
-  ).
-
-Ltac undo_compose_map_in s :=
-  match s with
-    | context cxt [ map ?f (map ?g ?p) ] =>
-      let mid := context cxt [ map (f o g) p ] in
-        path_via mid; try apply_compose_map
-  end.
-
-Ltac undo_compose_map :=
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [ undo_compose_map_in s | undo_compose_map_in t ]
-    end
-  ).
-
-(** Tactics for [concat_map]. *)
-
-Ltac do_concat_map_in s :=
-  match s with
-    | context cxt [ map ?f (?p @ ?q) ] =>
-      let mid := context cxt [ map f p @ map f q ] in
-        path_using mid (concat_map _ _ _ _ _ f p q)
-  end.
-
-Ltac do_concat_map :=
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [ do_concat_map_in s | do_concat_map_in t ]
-    end
-  ).
-
-Ltac undo_concat_map_in s :=
-  match s with
-    | context cxt [ map ?f ?p @ map ?f ?q ] =>
-      let mid := context cxt [ map f (p @ q) ] in
-        path_using mid (concat_map _ _ _ _ _ f p q)
-  end.
-
-Ltac undo_concat_map :=
-  repeat progress (
-    match goal with
-      |- ?s = ?t => first [ undo_concat_map_in s | undo_concat_map_in t ]
-    end
-  ).
-
-(** Now we return to proving lemmas about paths.
-   We show that homotopies are natural with respect to paths in the domain. *) 
-
-Lemma homotopy_naturality {A B} {x y : A} (f g : A -> B) (p : forall x, f x = g x) (q : x = y) :
-  map f q @ p y = p x @ map g q.
-Proof.
-  induction q.
-  cancel_units.
-Defined.
-
-Hint Resolve @homotopy_naturality : path_hints.
-
-Lemma homotopy_naturality_toid {A} {x y : A} (f : A -> A) (p : forall x, f x = x)  (q : x = y) :
-  map f q @ p y = p x @ q.
-Proof.
-  induction q.
-  cancel_units.
-Defined.
-
-Hint Resolve @homotopy_naturality_toid : path_hints.
-
-Lemma homotopy_naturality_fromid {A} {x y : A} (f : A -> A) (p : forall x, x = f x) (q : x = y) :
-  q @ p y = p x @ map f q.
-Proof.
-  induction q.
-  cancel_units.
-Defined.
-
-Hint Resolve @homotopy_naturality_fromid : path_hints.
-
-(** Cancellability of concatenation on both sides. *)
-
-Lemma concat_cancel_right {A} {x y z : A} (r : y = z) (p q : x = y)  : (p @ r = q @ r) -> (p = q).
-Proof.
-  intro a.
-  induction r.
-  hott_simpl.
-Defined.
-
-Lemma concat_cancel_left {A} {x y z : A} (p : x = y) (q r : y = z) : (p @ q = p @ r) -> (q = r).
-Proof.
-  intro a.
-  induction p.
-  induction r.
-  hott_simpl.
-Defined.
-
-(** If a function is homotopic to the identity, then that homotopy
-   makes it a "well-pointed" endofunctor in the following sense. *)
-
-Lemma htoid_well_pointed {A} (f : A -> A) (p : forall x, f x = x) (x : A) :
-  map f (p x) = p (f x).
-Proof.
-  apply concat_cancel_right with (r := p x).
-  apply homotopy_naturality_toid.
-Defined.
-
-(** Mates *)
-
-Lemma concat_moveright_onright {A} {x y z : A} (p : x = z) (q : x = y) (r : z = y) :
-  (p = q @ !r) -> (p @ r = q).
-Proof.
-  intro a.
-  path_via (q @ (!r @ r)).
-  associate_left.
-Defined.
-
-Ltac moveright_onright :=
-  match goal with
-    | |- (?p @ ?r = ?q) =>
-      apply concat_moveright_onright
-    | |- (?r = ?q) =>
-      path_via (idpath _ @ r); apply concat_moveright_onright
-  end; do_opposite_opposite.
-
-Lemma concat_moveleft_onright {A} {x y z : A} (p : x = y) (q : x = z) (r : z = y) :
-  (p @ !r = q) -> (p = q @ r).
-Proof.
-  intro a.
-  path_via (p @ (!r @ r)).
-  associate_left.
-Defined.
-
-Ltac moveleft_onright :=
-  match goal with
-    | |- (?p = ?q @ ?r) =>
-      apply concat_moveleft_onright
-    | |- (?p = ?r) =>
-      path_via (idpath _ @ r); apply concat_moveleft_onright
-  end; do_opposite_opposite.
-
-Lemma concat_moveleft_onleft {A} {x y z : A} (p : y = z) (q : x = z) (r : y = x) :
-  (!r @ p = q) -> (p = r @ q).
-Proof.
-  intro a.
-  path_via ((r @ !r) @ p).
-  associate_right.
-Defined.
-
-Ltac moveleft_onleft :=
-  match goal with
-    | |- (?p = ?r @ ?q) =>
-      apply concat_moveleft_onleft
-    | |- (?p = ?r) =>
-      path_via (r @ idpath _); apply concat_moveleft_onleft
-  end; do_opposite_opposite.
-
-Lemma concat_moveright_onleft {A} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
-  (p = !r @ q) -> (r @ p = q).
-Proof.
-  intro a.
-  path_via ((r @ !r) @ q).
-  associate_right.
-Defined.
-
-Ltac moveright_onleft :=
-  match goal with
-    | |- (?r @ ?p = ?q) =>
-      apply concat_moveright_onleft
-    | |- (?r = ?q) =>
-      path_via (r @ idpath _); apply concat_moveright_onleft
-  end; do_opposite_opposite.
+intro p; case p; intros p' p''.
+intro q; case q; intros q' q''.
+intro a; case a; intro b; case b; intro c; case c; intro d; case d.
+reflexivity.
+Qed.
+End WhyAutomationInDefinitionsIsNotRobust.
+
+
+(* In this section, we review basic properties of the above operations. *)
+(* These should be seen as combinators for further proofs/constructions *)
+(* One of the main difficulties of this kind of base library is to come up *)
+(* with a systematic way of stating and naming facts, and to be comprehensive *)
+(*  while nottoo verbose. For the time being we only reproduce things already *)
+(* present in Paths.v plus some extra results meant as exemples of what can be *)
+(* done with this automation-free infrastructure and we will probably need not *)
+(* be more systematic at some point *)
+Section GroupoidTheoryOfPaths.
+
+(* Inside this section we will only work in notation scope path_scope, so we declare that *)
+(* everything should be interpreted as if surrounded by some (_)%path. *)
+Local Open Scope path_scope.
+
+
+(* Here we use the :> type cast notation of Coq to specify in which type the identity *)
+(* path should be taken since the notation hides it and the present context of the lemma *)
+(* cannot help infering it. This is also a neat way of documenting the endpoints of *)
+(* a path. *)
+(* We could use here the reflexivity tactic, which would put here the identity path.*)
+(* It would be exactly equivalent... *)
+(* Was: opposite_idpath *)
+Lemma path1V  A (x : A) : 1 ^-1 = 1 :> (x = x). 
+Proof. exact: 1. Qed.
+
+(* Was: idpath_right_unit *)
+Lemma mulp1 A (x y : A) (exy : x = y) : exy * 1 = exy.
+Proof. reflexivity. Qed.
+
+(* Here we need a dependent case since identity_trans is defined by a match on*)
+(* its second argument and not its first *)
+(* I state explicitly the proof term here since it took me a while to *)
+(* write it by hand (shame on me :-)). Moreover the proof term generated by *)
+(* the dependent case as displayed by the Show Proof command is 1) much less *)
+(* readable since obtained from a generic pattern, 2) cannot be simply *)
+(* copy-pasted, I still have to understand why. *)
+(* Note that in the pattern of the branch we cannot use the 1 notation instead of *)
+(* identity_refl since 1 is a notation for (@identity_refl _) *)
+(* Was: idpath_left_unit *)
+Lemma mul1p A (x y : A) (exy : x = y) : 1 * exy = exy.
+exact: (match exy as i return 1 * i = i with |identity_refl => 1 end).
+Qed.
+
+(* Alternative proof script using the elimination scheme *)
+(* Lemma mul1p A (x y : A) (exy : x = y) : 1 * exy = exy. *)
+(* pose P := fun (a0 : A)(p : x = a0) => 1 * p = p. *)
+(* have h1 : P x 1. *)
+(*   rewrite /P. exact: 1. *)
+(*   exact: (identity_rect x P h1 y exy). *)
+(* Qed. *)
+
+(* Alternative proof using the dependent case tactic 
+Lemma mul1p A (x y : A) (exy : x = y) : 1 * exy = exy.
+Proof. by case exy. Qed.
+*)
+
+
+
+(* (case: _ / r) is the ssreflect syntax to perfom dependent elimination on r *)
+(* and hence replaces z by t everywhere in the goal. Here we use the 'case' *)
+(* standard tactic which performs dependent elimination. *)
+(* Conclusion : rewrite r performs the non dependent elimination of an identity proof *)
+(* and case: _ /r (resp. case) performs the dependent elimination *)
+(* Was: concat_associativity *)
+Lemma mulpA A (x y z t : A) (p : x = y) (q : y = z) (r : z = t) :
+  p * (q * r) = (p * q) * r.
+Proof. case r; case q; reflexivity. Qed.
+
+(* An alternative way of ending the proof in case its content is non computationaly *)
+(* usefull: the by prenex tactical is an alias for the done Ltac defined in ssreflect.v *)
+(* Here it only does reflexivity but in general it may do also "trivial" (:= auto 1) and *)
+(* hence use a customized database. What is of primary importance is to close subgoals with *)
+(* tactics which fail if they do not close the current goal. Here it is of little use since *)
+(* the proof does not branch but it is good to take this habit in a systematic way to come *)
+(* up with scripts that are easy to maintain. *)
+
+(* Was: opposite_right_inverse *)
+Lemma mulpV A (x y : A) (p : x = y) : p / p = 1.
+
+Proof. by case p. Qed.
+
+(* Was: opposite_left_inverse *)
+Lemma mulVp A (x y : A) (p : x = y) : p^-1 * p = 1.
+Proof. by case p. Qed.
+
+(* Was: opposite_left_inverse_with_assoc_right *)
+Lemma mulKp A (x y z : A) (p : x = y) (q : y = z) : p^-1 * (p * q) = q.
+Proof. by case q; case p. Qed.
+
+(* Was: opposite_right_inverse_with_assoc_right *)
+Lemma mulVKp A (x y z : A) (p : x = y) (q : x = z) : p * (p^-1 * q) = q.
+Proof. by case q; case p. Qed.
+
+(* Was: opposite_right_inverse_with_assoc_left *)
+Lemma mulpK A (x y z : A) (p : x = y) (q : y = z) : (p * q) / q = p.
+Proof. by case q; case p. Qed.
+
+(* Here I use the ssreflect dependent case syntax to be able to specify that *)
+(* I want to generalize (really 'revert' in a std tac language) q before casing p *)
+(* and then perform dependant case elimination on the generalized q in prenex position *)
+(* Was: opposite_left_inverse_with_assoc_left *)
+Lemma mulpVK A (x y z : A) (p : x = z) (q : y = z) : (p / q) * q = p.
+Proof. by case: _ / p q; case: _ /. Qed.
+
+(* Was: opposite_concat *)
+Lemma invpM A (x y z : A) (p : x = y) (q : y = z) : (p * q)^-1 =  q^-1 / p.
+Proof. by case q; case p. Qed.
+
+(* This lemma has already been proven in ssrfun (see esymK) but we restate it here *)
+(* to document its type and provide a consistent name *)
+(* Was: opposite_opposite *)
+Lemma invpK A (x y : A)(p : x = y) : p ^-1 ^-1 = p. 
+Proof. exact: esymK. Qed.
+
+(* Not sure that one really needs to be there *)
+(* Note that in ssr syntax, rewrite can be chained as follows: *)
+(* Was: opposite_left_inverse_with_assoc_both *)
+Lemma mulpVKp A (x y z w : A) (p : x = y) (q : z = y) (r : y = w) : 
+  (p * q^-1) * (q * r) = p * r.
+Proof. by rewrite mulpA mulpVK. Qed.
+
+(* Not sure that one really needs to be there *)
+(* Was: opposite_right_inverse_with_assoc_both *)
+Lemma mulpKp A (x y z w : A) (p : x = y) (q : y = z) (r : y = w) : 
+  p * q * (q^-1 * r) = p * r.
+Proof. by rewrite mulpA mulpK. Qed.
+
+(* Now examples of easy lemmas that were not in the original development but that we *)
+(* can prove without difficulties (and withour automation building on the previous *)
+(* elementary ones. *)
+
+(* move-> is an ssreflect syntax to rewrite the equality in prenex position without *)
+(* having to name it *)
+(* Was: concat_moveright_onleft *)
+Lemma mulpLRl A (x y z : A) (p : x = z) (q : y = z) (r : y = x) :
+  p = r^-1 * q -> r * p = q.
+Proof. by move->; rewrite mulVKp. Qed.
+
+(* Was: concat_moveleft_onright, but with equalities in the other direction *)
+Lemma mulpLRr A (x y z : A) (p : x = z) (q : y = z) (r : y = x) :
+  r = q / p -> r * p = q.
+Proof. by move->; rewrite mulpVK. Qed.
+
+(* Was: concat_moveleft_onleft *)
+Lemma mulpRLl A (x y z : A) (p : x = z) (q : y = z) (r : y = x) :
+  r^-1 * q = p -> q = r * p.
+Proof. by move<-; rewrite mulVKp. Qed.
+
+(* Was: concat_moveright_onright, but with equalities in the other direction*)
+Lemma mulpRLr A (x y z : A) (p : x = z) (q : y = z) (r : y = x) :
+  q / p = r -> q = r * p.
+Proof. by move<-; rewrite mulpVK. Qed.
+
+(* Was not in the original file ? *) 
+Lemma invp_div A (x y z : A) (p : x = z) (q : y = z) : (p / q)^-1 = q / p.
+Proof. by rewrite invpM esymK. Qed.
+
+(* move=> is "intros" *)
+(* Was not in the original file ? *)
+Lemma mulpN_eq1  A (x y : A) (p q : x = y) : p / q = 1 -> p = q.
+Proof. by move=> h; rewrite -(mul1p q) (mulpRLr h). Qed.
+
+(* Was not in the original file ? *) 
+Lemma mulp_eq1  A (x y : A) (p : x = y) (q : y = x) : p * q = 1 -> p = q^-1.
+Proof. by rewrite -{1}[q]invpK => H; apply: mulpN_eq1. Qed.
+
+(* Consider a type (A : Type) as a category whose points are the inhabitants *)
+(* (a : A) and morphisms are inhabitants (p : @identity A a b). Then for *)
+(* any (A B : Type), and any f : A -> B, f can be seen as un functor from A to B *)
+(* wich transforms objects by a |-> f a and morphisms by p |-> resp f p*)
+(* We prove this. *)
+
+(* Was: idpath_map *)
+Lemma resp1f A B x (f : A -> B) : f`_* 1 = 1 :> (f x = f x).
+Proof. reflexivity. Qed.
+
+(* Was: concat_map *)
+Lemma resppM A B (f : A -> B) (x y z : A) (exy : x = y) (eyz : y = z) :
+  f`_* (exy * eyz) = (f`_* exy) * (f`_* eyz ).
+Proof. by case eyz; case exy. Qed.
+
+(* We can move one level higher in the stack of groupoids: if (A : Type) *)
+(* I_A := (@identity A) can also be equipped with a similar categorical structure*)
+(* where now objects are the (p : (@identity A x y)) for any (x y : A) and *)
+(* morphisms are again the inhabitants of (@identity I_A) *)
+(* We also consider the category of types where points are types (A : Type) *)
+(* and morphisms between A and B are functions living in the type A -> B *)
+(* Now resp is a functor bewteen these two categories which acts on objects as*)
+(* A |-> (@identity A) and on morphisms as f |-> resp f. We prove this. *)
+
+(* id is the ssreflect notation for the polymorphic identity function with the appropriate *)
+(* implicit args declaration allowing to drop the type argument. see ssrfun.v *) 
+(* Was: idmap_map *)
+Lemma respidp A (x y : A) (p : x = y) : id`_* p = p.
+Proof. by case p. Qed.
+
+(* (_ \o _) is the infix notation for composition of functions according on their resp. *)
+(* codomain and domain. see ssrefun.v *)
+(* Was: compose_map *)
+Lemma resppcomp A B C (f : A -> B) (g : B -> C) (x y : A) (p : x = y) :
+  (g \o f)`_* p = g`_* (f`_* p).
+Proof. by case p. Qed.
+
+(* Was: opposite_map *)
+Lemma resppV A B (f : A -> B) (x y : A) (p : x = y) : (f`_* p)^-1 = f`_* p^-1.
+Proof. by case p. Qed.
+
+
+(* To unfold the definition of a conjugation by a simple rewrite operation *)
+(* We use here the _ = _ :> notation to document the endpoints of the obtained path *)
+(* The statement does not need it but it is quite convenient to see it explicitely *)
+Lemma conjpE A B (f g : A -> B) (r : f =1 g) (x y : A) (p : f y = f x) :
+ p ^ r = (r y)^-1 * (p * (r x)) :> (g y = g x).
+Proof. reflexivity. Qed.
+
+(* Was not in the original file ? *)
+Lemma conjpM A (f g : A -> A) (r : f =1 g) (x y z : A)
+  (p : f x = f y) (q : f y = f z) : (p * q) ^ r = p ^ r * q ^ r.
+Proof. by rewrite !conjpE !mulpA mulpK. Qed.
+
+(* starting from now (at least) the naming convention starts to be really shaky *)
+
+
+(* We need to simpl before berforming dependent case on (p x) and that's what => /= does *)
+(* Was not in the original file ? *)
+Lemma mulprespLR A B (f g : A -> B) (p : f =1 g) (x y : A) (q : x = y) :
+  (f`_* q) * (p y) = (p x) * (g`_* q).
+Proof. by case q => /=; case (p x). Qed.
+
+(* Was  homotopy_naturality_toid *)
+Lemma respeq1mulp A (f : A -> A) (p : f =1 id) (x y : A) (q : x = y) :
+  (f`_* q) * (p y) = (p x) * q.
+Proof. by rewrite (mulprespLR p) respidp. Qed.
+
+(* Was: homotopy_naturality_fromid, but the equality was stated the other way around*)
+Lemma mulprespeq1 A (f : A -> A) (p : id =1 f) (x y : A) (q : x = y) :
+  (p x) * (f`_* q) =  q * (p y).
+Proof. by rewrite -(mulprespLR p) respidp. Qed. 
+
+(* Here we see how this "conjugation" operation appears in a natural way *)
+(* Was not in the original file ? *)
+Lemma resp_eqp A B (f g : A -> B) (p : f =1 g)
+           (x y : A) (q : x = y) : g`_* q =  (f`_* q) ^ p.
+Proof. by rewrite (conjpE p) mulprespLR mulKp. Qed.
+
+(* A slightly different version of the previous lemma was actually in the *)
+(* original file *)
+Lemma homotopy_naturality {A B} {x y : A} (f g : A -> B) (p : f =1 g) (q : x = y) :
+  (f`_* q) * p y = p x * (g`_* q).
+Proof. rewrite (resp_eqp p) mulVKp; reflexivity. Qed.
+
+(* Was not in the original file ? *)
+Lemma resp_eqidp A (f : A -> A) (p : f =1 id) (x y : A) (q : x = y) : (f`_* q) ^ p = q.
+Proof. by rewrite -(resp_eqp p) respidp. Qed.
+
+(* Was not in the original file ? *)
+Lemma resp_eqpid A (f : A -> A) (p : id =1 f) (x y : A) (q : x = y) : (f`_* q) = q ^ p.
+Proof. by rewrite (resp_eqp p) respidp. Qed.
+
+(* cancel f g := g is a left inverse of f ie f is a right inverse of g see ssrfun.v *)
+(* Was not in the original file ? *)
+Lemma can_respp A B (f : A -> B) (g : B -> A) (p : cancel f g) 
+      (x y : A) (q : x = y) : g`_* (f`_* q) ^ p = q.
+Proof. by rewrite -resppcomp (resp_eqidp p). Qed.
+
+(* Was not in the original file ? *)
+Lemma conj_canV A B (f : A -> B) (g : B -> A) (p : id =1 g \o f) 
+      (x y : A) (q : x = y) : g`_* (f`_* q) = q ^ p.
+Proof. by rewrite -resppcomp (resp_eqpid p). Qed.
+
+(* Lemma resppJ  A B C (f g : A -> B) (p : f =1 g) (h : B -> C) *)
+(*       (x y : A) (q : f x = f y) : *)
+(*   h`_* (q ^ p) = (h`_* q) ^ (fun x => h`_* (p x)). *)
+(* Proof. by rewrite !resppM -resppV. Qed. *)
+
+End GroupoidTheoryOfPaths.
 

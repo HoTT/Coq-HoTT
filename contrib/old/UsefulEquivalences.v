@@ -1,3 +1,4 @@
+Require Import Logic_Type.
 Require Export Paths Fibrations Contractible Equivalences.
 
 (** Any two contractible types are equivalent. *)
