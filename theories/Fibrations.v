@@ -64,8 +64,8 @@ for rewriting a hypothesis from left to right. And these are not convertible of 
 Hence once again we carfully provide an explicit body for this transparent definition.
 *)
 
-Definition transport (A : Type) (P : fibration A) {x y : A} (p : x = y) : P x ->  P y :=
-fun px => let 'erefl := p in px.
+Definition transport (A : Type) (P : fibration A) {x y : A} (p : x = y) : P x -> P y :=
+  fun u => match p with identity_refl => u end.
 
 (* We modify the status of the arguments of P wrt its original version : the*)
 (* fibration is now a non-implicit argument, so that we can provide its *)
@@ -76,7 +76,7 @@ fun px => let 'erefl := p in px.
 Arguments transport {A} P {x y} p%path_scope px.
 
 (* Transport is very common so it is worth introducing a notation for it. *)
-Notation "p # px" := (transport _ p px) (right associativity, at level 65).
+Notation "p # px" := (transport _ p px) (right associativity, at level 65, only parsing).
 
 (* Sanity check : two easy lemmas *)
 Lemma transport1p {A} {P : fibration A} {x : A} (u : P x) : 1 # u = u.

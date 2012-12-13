@@ -1,6 +1,6 @@
 Require Import ssreflect ssrfun ssrbool eqtype.
 Require Import Paths (* Fibrations*).
-(* assia : in fact we do not rely on the file aubout fibrations. *)
+(* assia : in fact we do not rely on the file about fibrations. *)
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -155,7 +155,7 @@ Hypothesis A_is_contr : is_contr A.
 Lemma is_contr_UIP :  UIP A.
 Proof.
 move=> x y p q; have cE := contr_eltE A_is_contr.
-suff { p q} cst t : t = (cE x)^-1 * (cE y) by rewrite [p]cst [q]cst.
+suff {p q} cst t : t = (cE x)^-1 * (cE y) by rewrite [p]cst [q]cst.
 by case t; rewrite mulVp.
 Qed.
 
@@ -191,9 +191,9 @@ Hypothesis FexDep: funext_dep.
 
 Lemma is_contr_is_contr : is_contr (is_contr A).
 Proof.
-apply: (@IsContr _ A_is_contr) => [[a1 cA1]]. case: A_is_contr => a2 cA2.
-move: cA2; rewrite -[a2]cA1 => cA2.
-congr IsContr.
+apply: (@IsContr _ A_is_contr) => [[a1 cA1]].
+case: A_is_contr => a2. rewrite -[a2]cA1 => cA2.
+apply resp.
 apply: FexDep=> ?; exact: is_contr_UIP.
 Qed.
 

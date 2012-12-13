@@ -51,17 +51,17 @@ Canonical equiv_refl A : A <~> A := @Equiv _ _ idfun idfun
 (* We first define how to correct a cancel operation so that it satifies the*)
 (* coherence condition wrt the application of functions on paths *)
 
-Definition adjointify {A B}(f : A -> B) g (fK : cancel f g)(gK : cancel g f) := 
+Definition adjointify {A B} (f : A -> B) g (fK : cancel f g) (gK : cancel g f) : cancel f g := 
    fun a => (g `_* (f `_* (fK a))^-1) * (resp g (gK (f a))) * (fK a).
 
 (* Now the coherence. It is still strange that I neeed invpK at the end. May
   be the definition of adjointify is not the best. *)
 Lemma adjointifyP A B (f : A -> B) g 
-  (fK : cancel f g)(gK : cancel g f)(fK' := adjointify fK gK) a :
+  (fK : cancel f g) (gK : cancel g f) (fK' := adjointify fK gK) a :
    gK (f a) = f`_* (fK' a).
 Proof.
 pose gKV : id =1 f \o g :=  (fun x => (gK x)^-1).
-by rewrite  !resppM !(conj_canV gKV) -(conjpM gKV) conjpE mulpK mulpVK invpK.
+by rewrite !resppM !(conj_canV gKV) -(conjpM gKV) conjpE mulpK mulpVK invpK.
 Qed.
 
 (* And now we prove that we can get an equivalence from a bijection *)
