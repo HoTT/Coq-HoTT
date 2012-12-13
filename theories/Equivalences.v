@@ -22,7 +22,7 @@ Require Export Paths Fibrations Contractible.
 
 (** An equivalence is a map whose homotopy fibers are contractible. *)
 
-Definition is_equiv {A B} (e : A -> B) := forall y : B, is_contr (hfiber e y).
+Definition is_equiv {A B : Type} (e : A -> B) := forall y : B, is_contr (hfiber e y).
 
 (** [equiv A B] is the space of equivalences from [A] to [B]. It is defined
    as a structure rather than a total space because this allows us to use

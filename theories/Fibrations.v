@@ -72,7 +72,7 @@ Hint Rewrite @transport_idpath_right : paths.
 (** A homotopy fiber for a map [f] at [y] is the space of paths of the
    form [f x = y]. *)
 
-Definition hfiber {A B} (f : A -> B) (y : B) := {x : A & f x = y}.
+Definition hfiber {A B : Type} (f : A -> B) (y : B) := {x : A & f x = y}.
 
 (** We prove a lemma that explains how to transport a point in the
    homotopy fiber along a path in the domain of the map. *)
