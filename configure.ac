@@ -125,7 +125,6 @@ ln -s $COQLIB/plugins $COQLIB/dev $srcdir/coq
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([hoqtop], [chmod +x hoqtop])
-AC_CONFIG_FILES([hoqtop.byte], [chmod +x hoqtop.byte])
 AC_CONFIG_FILES([hoqc], [chmod +x hoqc])
 if test "x$without_coqide" != "xyes" ; then
    AC_CONFIG_FILES([hoqide], [chmod +x hoqide])
