@@ -47,10 +47,8 @@ Section identity_is_a_congruence.
   red; intros H H'; apply H; destruct H'; trivial.
  Qed.
 
- Theorem f_equal : x = y -> f x = f y.
- Proof.
-   destruct 1; trivial.
-Qed.
+ Definition f_equal (e : x = y) : f x = f y := 
+   match e with | identity_refl => identity_refl end.
 
 Theorem f_equal2 :
   forall (A1 A2 B:Type) (f:A1 -> A2 -> B) (x1 y1:A1)

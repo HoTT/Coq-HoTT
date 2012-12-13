@@ -3789,7 +3789,7 @@ Proof.
 pose sv := set_nth (0 : R).
 have eq_i i v e1 e2: same_env e1 e2 -> same_env (sv e1 i v) (sv e2 i v).
   by move=> eq_e j; rewrite !nth_set_nth /= eq_e.
-elim: f e e' => //=. (*
+elim: f e e' => //=; (*
 - by move=> t1 t2 e e' eq_e; rewrite !(eq_eval _ eq_e). 
 - by move=> t e e' eq_e; rewrite (eq_eval _ eq_e).
 - by move=> f1 IH1 f2 IH2 e e' eq_e; move/IH2: (eq_e); move/IH1: eq_e; tauto.
