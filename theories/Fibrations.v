@@ -19,8 +19,80 @@ inductive types.)
 Transport: the transport lemmas are two main groups: firstly, interaction with the
 groupoid structure; secondly, what precisely transport becomes in various fibrations. 
 
-Total_*)
+For now, we keep it in one file, but segregated into sections.  Todo: split the file?*)
 
+(** There are a number of notations for operations involving fibrations (e.g. [p # x] 
+for transport) which hide the fibration involved.  These are very readable
+when they work, but often (especially in applications) don’t work, in that Coq cannot
+infer the fibration from the rest.  We therefore put them in their own scope so that
+they can be turned on and off as required. *)
+Delimit Scope fib_scope with fib.
+
+
+Section Transport.
+(** We now study how dependent types interact with paths in their base.
+  The fundamental fact is that we can transport elements of the fibers along such paths.
+
+  This operation is very frequently used; so we need also to know how it interacts
+  with operations on paths in the base, and also how it interacts with the standard
+  constructions for forming dependent types. *)
+
+(** [transport P p u] transports [u : P x] to [P y] along [p : x = y]. *)
+Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
+  match p with identity_refl => u end.
+
+Arguments transport {A} P {x y} p%fib_scope u.
+
+(** Transport is very common so it is worth introducing a parsing notation
+for it.  However, we do not use the notation for output because it hides the
+fibration, and so makes it very hard to read involved transport expression.*)
+Notation "p # x" := (transport _ p x) (right associativity, at level 65, only parsing) : path_scope.
+
+(** Having defined transport, we can talk about what a homotopy theorist
+might see as “paths in a fibration over paths in the base”; and what a type
+theorist might see as “heterogeneous eqality in a dependent type”.
+
+  In particular, this allows us to define an analogue of [pmap] for dependent functions. *)
+
+Definition pmap_dep {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y)
+  : p # (f x) = f y.
+Proof.
+  destruct p.  exact 1.
+Defined.
+
+(** *** Transport and the groupoid structure of paths *)
+
+(** Basic results on how transport interacts with the groupoid structure of paths. *)
+
+Definition transport_1_x {A : Type} (P : A -> Type) {x : A} (u : P x) : 1 # u = u := 1.
+
+Definition transport_p_1 {A : Type} {x y : A} (p : x = y) :
+  p # 1 = p
+  :=
+  match p with identity_refl => 1 end.
+
+Definition transport_pp_x {A : Type} (P : A -> Type) {x y z : A} (p : x = y) (q : y = z) (u : P x) :
+  p @ q # u = q # p # u :=
+  match q with identity_refl =>
+    match p with identity_refl => 1 end
+  end.
+
+Definition transport_p_V_x {A : Type} (P : A -> Type) {x y : A} (p : x = y) (z : P y) :
+  p # p^-1 # z = z :=
+  (match p as i in (_ = y) return (forall z : P y, i # i^-1 # z = z)
+     with identity_refl => fun _ => 1
+   end) z.
+
+Definition transport_V_p_x {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P x) :
+  p^-1 # p # z = z
+  := 
+  (match p as i return (forall z : P x, i^-1 # i # z = z)
+     with identity_refl => fun _ => 1
+   end) z.
+
+End Transport.
+
+Section Sigmas.
 
 (** In homotopy type theory, We think of elements of [Type] as spaces, homotopy types, or
    weak omega-groupoids. A type family [P : A -> Type] corresponds to a fibration whose
@@ -52,54 +124,7 @@ Definition sigT_unpack {A : Type} {P : A -> Type} (Q : sigT P -> Type) (u : sigT
 (* Todo: possibly eliminate this?? *)
 Definition section {A} (P : A -> Type) := forall x : A, P x.
 
-
-(** We now study how paths interact with fibrations.  The most basic
-   fact is that we can transport points in the fibers along paths in
-   the base space.  This is actually a special case of the elimination
-   rule for identity.
-*)
-
-(** [transport P p u] transports [u : P x] to [P y] along [p : x = y]. *)
-Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
-  match p with identity_refl => u end.
-
-Arguments transport {A} P {x y} p%path_scope u.
-
-(** Transport is very common so it is worth introducing a parsing notation for it.
-    However, we do not use the notation for output because it hides the fibration,
-    and so makes it very hard to read involved transport expression. *)
-Notation "p # x" := (transport _ p x) (right associativity, at level 65, only parsing) : path_scope.
-
-
-(** *** Transport and the groupoid structure of paths *)
-
-(** Basic results on how transport interacts with the groupoid structure of paths. *)
-
-Definition transport_1_x {A : Type} (P : A -> Type) {x : A} (u : P x) : 1 # u = u := 1.
-
-Definition transport_p_1 {A : Type} {x y : A} (p : x = y) :
-  p # 1 = p
-  :=
-  match p with identity_refl => 1 end.
-
-Definition transport_pp_x {A : Type} (P : A -> Type) {x y z : A} (p : x = y) (q : y = z) (u : P x) :
-  p @ q # u = q # p # u :=
-  match q with identity_refl =>
-    match p with identity_refl => 1 end
-  end.
-
-Definition transport_p_V_x {A : Type} (P : A -> Type) {x y : A} (p : x = y) (z : P y) :
-  p # p^-1 # z = z :=
-  (match p as i in (_ = y) return (forall z : P y, i # i^-1 # z = z)
-     with identity_refl => fun _ => 1
-   end) z.
-
-Definition transport_V_p_x {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P x) :
-  p^-1 # p # z = z
-  := 
-  (match p as i return (forall z : P x, i^-1 # i # z = z)
-     with identity_refl => fun _ => 1
-   end) z.
+End Sigmas.
 
 (* *** Homotopy fibers *)
 
