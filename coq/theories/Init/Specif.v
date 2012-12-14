@@ -6,6 +6,10 @@
 (*         *       GNU Lesser General Public License Version 2.1        *)
 (************************************************************************)
 
+(************************************************************************)
+(*   This file has been modified for the purposes of the HoTT library.  *)
+(************************************************************************)
+
 (** Basic specifications : sets that may contain logical information *)
 
 Set Implicit Arguments.
@@ -169,19 +173,20 @@ Defined.
 
 Hint Resolve existT existT2: core.
 
-(* Compatibility *)
 
-Notation sigS := sigT (compat "8.2").
+(* Compatibility with ssreflect *)
+
+(* Notation sigS := sigT (compat "8.2"). *)
 Notation existS := existT (compat "8.2").
-Notation sigS_rect := sigT_rect (compat "8.2").
-Notation sigS_rec := sigT_rec (compat "8.2").
-Notation sigS_ind := sigT_ind (compat "8.2").
+(* Notation sigS_rect := sigT_rect (compat "8.2"). *)
+(* Notation sigS_rec := sigT_rec (compat "8.2"). *)
+(* Notation sigS_ind := sigT_ind (compat "8.2"). *)
 Notation projS1 := projT1 (compat "8.2").
 Notation projS2 := projT2 (compat "8.2").
 
-Notation sigS2 := sigT2 (compat "8.2").
-Notation existS2 := existT2 (compat "8.2").
-Notation sigS2_rect := sigT2_rect (compat "8.2").
-Notation sigS2_rec := sigT2_rec (compat "8.2").
-Notation sigS2_ind := sigT2_ind (compat "8.2").
+(* Notation sigS2 := sigT2 (compat "8.2"). *)
+(* Notation existS2 := existT2 (compat "8.2"). *)
+(* Notation sigS2_rect := sigT2_rect (compat "8.2"). *)
+(* Notation sigS2_rec := sigT2_rec (compat "8.2"). *)
+(* Notation sigS2_ind := sigT2_ind (compat "8.2"). *)
 

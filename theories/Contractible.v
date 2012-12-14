@@ -6,9 +6,7 @@ Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 
-
 Import PathNotations.
-
 Open Scope path_scope.
 
 (** A space [A] is contractible if there is a point [x : A] and a

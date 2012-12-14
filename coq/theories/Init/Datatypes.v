@@ -1,4 +1,15 @@
-(* Bits an pieces from Coq's Init/Datatypes.v *)
+(************************************************************************)
+(*  v      *   The Coq Proof Assistant  /  The Coq Development Team     *)
+(* <O___,, *   INRIA - CNRS - LIX - LRI - PPS - Copyright 1999-2012     *)
+(*   \VV/  **************************************************************)
+(*    //   *      This file is distributed under the terms of the       *)
+(*         *       GNU Lesser General Public License Version 2.1        *)
+(************************************************************************)
+
+(************************************************************************)
+(*   This file has been modified for the purposes of the HoTT library.  *)
+(************************************************************************)
+
 Set Implicit Arguments.
 
 Require Import Logic.
@@ -6,7 +17,7 @@ Declare ML Module "nat_syntax_plugin".
 
 (** [option A] is the extension of [A] with an extra element [None] *)
 
-Inductive option (A:Type) : Type :=
+Inductive option (A : Type) : Type :=
   | Some : A -> option A
   | None : option A.
 
@@ -14,7 +25,7 @@ Arguments None [A].
 
 (** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
 
-Inductive sum (A B: Type) : Type :=
+Inductive sum (A B : Type) : Type :=
   | inl : A -> sum A B
   | inr : B -> sum A B.
 
@@ -29,7 +40,7 @@ Notation or := sum.
 (** [prod A B], written [A * B], is the product of [A] and [B];
     the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
 
-Inductive prod (A B:Type) : Type :=
+Inductive prod (A B : Type) : Type :=
   pair : A -> B -> prod A B.
 
 Arguments pair {A B} _ _.
@@ -47,10 +58,10 @@ Definition snd {A B : Type} (p : A * B) := match p with (x, y) => y end.
 
 Hint Resolve pair inl inr : core.
 
-Definition prod_curry (A B C:Type) (f:A -> B -> C)
-  (p:prod A B) : C := match p with
-                       | pair x y => f x y
-                       end.
+Definition prod_curry (A B C : Type) (f : A -> B -> C)
+  (p : prod A B) : C := match p with
+                          | pair x y => f x y
+                        end.
 
 (** <-> is wanted by ssreflect so we hack it here. *)
 (** [iff A B], written [A <-> B], expresses the equivalence of [A] and [B] *)
@@ -86,13 +97,13 @@ Delimit Scope bool_scope with bool.
 
 Bind Scope bool_scope with bool.
 
-Definition andb (b1 b2:bool) : bool := if b1 then b2 else false.
+Definition andb (b1 b2 : bool) : bool := if b1 then b2 else false.
 
-Definition orb (b1 b2:bool) : bool := if b1 then true else b2.
+Definition orb (b1 b2 : bool) : bool := if b1 then true else b2.
 
-Definition negb (b:bool) := if b then false else true.
+Definition negb (b : bool) := if b then false else true.
 
-Definition implb (b1 b2:bool) : bool := if b1 then b2 else true.
+Definition implb (b1 b2 : bool) : bool := if b1 then b2 else true.
 
 Infix "||" := orb : bool_scope.
 Infix "&&" := andb : bool_scope.
@@ -115,12 +126,12 @@ Open Scope nat_scope. (* Originally in Peano.v *)
     member is the singleton datatype [identity A a a] whose
     sole inhabitant is denoted [refl_identity A a] *)
 
-Inductive identity (A:Type) (a:A) : A -> Type :=
+Inductive identity (A : Type) (a : A) : A -> Type :=
   identity_refl : identity a a.
 
 Hint Resolve identity_refl: core.
 
-Arguments identity {A} a _.
+Arguments identity {A} _ _.
 Arguments identity_refl {A a} , [A] a.
 
 Arguments identity_ind [A] a P f y i.
@@ -130,9 +141,10 @@ Arguments identity_rect [A] a P f y i.
 
 (** Identity type *)
 
-Definition ID := forall A:Type, A -> A.
+(*
+Definition ID := forall A : Type, A -> A.
 Definition id : ID := fun A x => x.
-
+*)
 
 Notation "x = y :> A" := (@identity A x y) : type_scope.
 
