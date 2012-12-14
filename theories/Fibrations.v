@@ -5,6 +5,23 @@ Require Import Paths.
 Import PathNotations.
 Local Open Scope path_scope.
 
+(** Notes from discussion between AB & PL, 14 Dec: this file includes several
+things that don’t really belong together: material on sigma-types (with hfiber as
+an example); and material on transport.  So this file should be probably be reborn 
+as Sigma.v, (possibly also HFiber.v), and Transport.v, and the transport lemmas
+given more systematically.
+
+Sigmas: the utility lemmas for assuming an element of a sigma-type is a pair by
+replacing it with is projections; and theorems relating to paths in a sigma-type.
+(Note that both of these are things which in principle generalise to other
+inductive types.)
+
+Transport: the transport lemmas are two main groups: firstly, interaction with the
+groupoid structure; secondly, what precisely transport becomes in various fibrations. 
+
+Total_*)
+
+
 (** In homotopy type theory, We think of elements of [Type] as spaces, homotopy types, or
    weak omega-groupoids. A type family [P : A -> Type] corresponds to a fibration whose
    base is [A] and whose fiber over [x] is [P x].
@@ -25,7 +42,6 @@ Notation "( x ; y )" := (existT _ x y) : path_scope.
 (** Sometimes we would like to prove [Q u] where [u : {x : A & P x}] by writing [u] as a
     pair [(projT1 u ; projT2 u)]. This is accomplished by [sigT_eta]. We want tight
     control over the proof, so we just write it down even though is looks a bit scary. *)
-
 Definition sigT_unpack {A : Type} {P : A -> Type} (Q : sigT P -> Type) (u : sigT P) :
   Q (projT1 u; projT2 u) -> Q u
   :=
@@ -33,7 +49,9 @@ Definition sigT_unpack {A : Type} {P : A -> Type} (Q : sigT P -> Type) (u : sigT
     (let (x,p) as u return (Q (projT1 u; projT2 u) -> Q u) := u in idmap) H.
 
 (** The space of sections of a fibration. *)
+(* Todo: possibly eliminate this?? *)
 Definition section {A} (P : A -> Type) := forall x : A, P x.
+
 
 (** We now study how paths interact with fibrations.  The most basic
    fact is that we can transport points in the fibers along paths in
@@ -51,6 +69,7 @@ Arguments transport {A} P {x y} p%path_scope u.
     However, we do not use the notation for output because it hides the fibration,
     and so makes it very hard to read involved transport expression. *)
 Notation "p # x" := (transport _ p x) (right associativity, at level 65, only parsing) : path_scope.
+
 
 (** *** Transport and the groupoid structure of paths *)
 
