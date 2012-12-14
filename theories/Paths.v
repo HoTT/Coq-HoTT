@@ -348,7 +348,7 @@ Definition whiskerL_p1 {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   :=
   match q with identity_refl => 1 end.
 
-Definition whiskerL_1p {A : Type} {x y z : A} {p q : y = z} (h : p = q) :
+Definition whiskerL_1p {A : Type} {x y : A} {p q : x = y} (h : p = q) :
   (concat_1p p) ^-1 @ whiskerL 1 h @ concat_1p q = h
   :=
   match h with identity_refl =>
