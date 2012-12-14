@@ -297,7 +297,7 @@ Definition concat_pP1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} 
 (** ** The 2-dimensional groupoid structure *)
 
 (** Horizontal composition of 2-dimensional paths. *)
-CDefinition concat2 {A} {x y z : A} {p p' : x = y} {q q' : y = z} (h : p = p') (h' : q = q') :
+Definition concat2 {A} {x y z : A} {p p' : x = y} {q q' : y = z} (h : p = p') (h' : q = q') :
   p @ q = p' @ q'
   :=
   match h, h' with identity_refl, identity_refl => 1 end.
