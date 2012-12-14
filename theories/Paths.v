@@ -41,7 +41,8 @@ Local Open Scope path_scope.
    - we are not afraid of long names
    - we are not afraid of short names when they are used frequently
    - we use underscores
-   - all names are lower-case, except for letters which indicate special entities
+   - name of theorems and lemmas are lower-case
+   - records and other types may be upper or lower case
 
    Theorems about concatenation of paths are called [concat_XXX] where [XXX] tells
    us what is on the left-hand side of the equation. You have to guess the right-hand
@@ -51,6 +52,8 @@ Local Open Scope path_scope.
    - [p] means 'the path'
    - [V] means 'the inverse path'
    - [P] means '[pmap]'
+   - [M] means the thing we are moving across equality
+   - [x] means 'the point' which is not a path, e.g. in [transport p x]
 
    Associativity is indicated with an underscore. Here are some examples of how the
    name gives hints about the left-hand side of the equation.
@@ -303,7 +306,7 @@ Definition concat_pP1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} 
 (** ** The 2-dimensional groupoid structure *)
 
 (** Horizontal composition of 2-dimensional paths. *)
-Definition concat2 {A} {x y z : A} {p p' : x = y} {q q' : y = z} (h : p = p') (h' : q = q') :
+CDefinition concat2 {A} {x y z : A} {p p' : x = y} {q q' : y = z} (h : p = p') (h' : q = q') :
   p @ q = p' @ q'
   :=
   match h, h' with identity_refl, identity_refl => 1 end.
