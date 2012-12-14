@@ -34,7 +34,7 @@ Notation "x + y" := (sum x y) : type_scope.
 Arguments inl {A B} _ , [A] B _.
 Arguments inr {A B} _ , A [B] _.
 
-Notation "A \/ B" := (A + B)%type : type_scope.
+Notation "A \/ B" := (A + B)%type (only parsing) : type_scope.
 Notation or := sum.
 
 (** [prod A B], written [A * B], is the product of [A] and [B];
@@ -49,7 +49,7 @@ Add Printing Let prod.
 
 Notation "x * y" := (prod x y) : type_scope.
 Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
-Notation "A /\ B" := (prod A B) : type_scope. 
+Notation "A /\ B" := (prod A B) (only parsing) : type_scope. 
 Notation and := prod.
 Notation conj := pair.
 
