@@ -403,3 +403,13 @@ Definition triangulator {A : Type} {x y z : A} (p : x = y) (q : y = z)
 Proof.
   case p, q.  reflexivity.
 Defined.
+
+(** The Eckmann-Hilton argument *)
+Definition eckmann_hilton {A} {x:A} (p q : 1 = 1 :> (x = x)) : p @ q = q @ p :=
+  (whiskerR_p1 p @@ whiskerL_1p q) ^-1
+  @ (concat_p1 _ @@ concat_p1 _)
+  @ (concat_1p _ @@ concat_1p _)
+  @ (concat_whisker _ _ _ _ p q)
+  @ (concat_1p _ @@ concat_1p _) ^-1
+  @ (concat_p1 _ @@ concat_p1 _) ^-1
+  @ (whiskerL_1p q @@ whiskerR_p1 p).
