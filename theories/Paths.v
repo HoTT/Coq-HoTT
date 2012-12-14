@@ -68,11 +68,11 @@ Local Open Scope path_scope.
    Laws about inverse of something are of the form [inv_XXX], and those about
    [pmap] are of the form [pmap_XXX]. For example:
 
-   - [inv_concat] is about [(p @ q)^-1]
-   - [inv_inv] is about [(p^-1)^-1]
-   - [inv_pmap] is about [(pmap f p)^-1]
-   - [pmap_inv] is about [pmap f (p^-1)]
-   - [pmap_concat] is about [pmap f (p @ q)]
+   - [inv_pp] is about [(p @ q)^-1]
+   - [inv_V] is about [(p^-1)^-1]
+   - [inv_P] is about [(pmap f p)^-1]
+   - [pmap_V] is about [pmap f (p^-1)]
+   - [pmap_pp] is about [pmap f (p @ q)]
    - [pmap_idmap] is about [pmap idmap p]
    - [pmap_1] is about [pmap f 1]
    
@@ -162,7 +162,7 @@ Definition concat_pV_p {A : Type} {x y z : A} (p : x = z) (q : y = z) :
   end) p.
 
 (** Inverse distributes over contcatenation *)
-Definition inv_concat {A : Type} {x y z : A} (p : x = y) (q : y = z) :
+Definition inv_pp {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   (p @ q)^-1 = q^-1 @ p^-1
   :=
   match q with identity_refl =>
@@ -170,7 +170,7 @@ Definition inv_concat {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   end.
   
 (** Inverse is an involution. *)
-Definition inv_inv {A : Type} {x y : A} (p : x = y) :
+Definition inv_V {A : Type} {x y : A} (p : x = y) :
   p ^-1 ^-1 = p
   :=
   match p with identity_refl => 1 end.
@@ -245,7 +245,7 @@ Definition pmap_1 {A B : Type} (x : A) (f : A -> B) :
   1.
 
 (** Functions commute with concatenation. *)
-Definition pmap_concat {A B : Type} (f : A -> B) {x y z : A} (p : x = y) (q : y = z) :
+Definition pmap_pp {A B : Type} (f : A -> B) {x y z : A} (p : x = y) (q : y = z) :
   pmap f (p @ q) = (pmap f p) @ (pmap f q)
   :=
   match q with
