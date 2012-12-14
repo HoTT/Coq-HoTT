@@ -191,26 +191,26 @@ Definition inv_V {A : Type} {x y : A} (p : x = y) :
 
 (* *** Theorems for moving things around in equations. *)
 
-Lemma moveR_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
+Definition moveR_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   p = r^-1 @ q -> r @ p = q.
 Proof.
   intro h; rewrite h.
   apply concat_p_Vp.
-Qed.
+Defined.
 
-Lemma moveR_pM {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
+Definition moveR_pM {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   r = q @ p^-1 -> r @ p = q.
 Proof. 
   intro h; rewrite h.
   apply concat_pV_p.
-Qed.
+Defined.
 
-Lemma moveL_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
+Definition moveL_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   r^-1 @ q = p -> q = r @ p.
 Proof.
   intro h; rewrite <- h.
   symmetry; apply concat_p_Vp.
-Qed.
+Defined.
 
 Definition moveL_pM {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   q @ p^-1 = r -> q = r @ p.
