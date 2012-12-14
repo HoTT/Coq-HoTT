@@ -161,7 +161,7 @@ Definition concat_pV_p {A : Type} {x y z : A} (p : x = z) (q : y = z) :
       match p with identity_refl => 1 end
   end) p.
 
-(** Inverse distributes over contactenation *)
+(** Inverse distributes over contcatenation *)
 Definition inv_concat {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   (p @ q)^-1 = q^-1 @ p^-1
   :=
@@ -174,15 +174,6 @@ Definition inv_inv {A : Type} {x y : A} (p : x = y) :
   p ^-1 ^-1 = p
   :=
   match p with identity_refl => 1 end.
-
-(** A random result, not sure it is used anywhere. *)
-Definition inv_pVinv {A : Type} {x y z : A} (p : x = z) (q : y = z) :
-  (p @ q^-1)^-1 = q @ p^-1.
-Proof.
-  destruct q.
-  destruct p.
-  reflexivity.
-Defined.
 
 
 (* *** Theorems for moving things around in equations. *)
@@ -346,17 +337,6 @@ Definition concat2_p1 {A : Type} {x y : A} {p q : x = y} (h : p = q) :
   :=
   whiskerR_p1 h.
 
-(** The interchange law for whiskering. *)
-Definition concat_whisker {A} {x y z : A} (p p' : x = y) (q q' : y = z) (a : p = p') (b : q = q') :
-  (whiskerR a q) @ (whiskerL p' b) = (whiskerL p b) @ (whiskerR a q')
-  :=
-  match b with
-    identity_refl =>
-    match a with identity_refl =>
-      (concat_1p _)^-1
-    end
-  end.
-
 (** The interchange law for concatenation. *)
 Definition concat_concat2 {A : Type} {x y z : A} {p p' p'' : x = y} {q q' q'' : y = z}
   (a : p = p') (b : p' = p'') (c : q = q') (d : q' = q'') :
@@ -367,4 +347,35 @@ Proof.
   case b.
   case a.
   reflexivity.
+Defined.
+
+(** The interchange law for whiskering.  Special case of [concat_concat2]. *)
+Definition concat_whisker {A} {x y z : A} (p p' : x = y) (q q' : y = z) (a : p = p') (b : q = q') :
+  (whiskerR a q) @ (whiskerL p' b) = (whiskerL p b) @ (whiskerR a q')
+  :=
+  match b with
+    identity_refl =>
+    match a with identity_refl =>
+      (concat_1p _)^-1
+    end
+  end.
+
+(** Structure corresponding to the coherence equations of a bicategory. *)
+
+(** The “pentagonator”: the 3-cell witnessing the associativity pentagon. *)
+Definition pentagon {A : Type} {v w x y z : A} (p : v = w) (q : w = x) (r : x = y) (s : y = z)
+  : whiskerL p (concat_p_pp q r s)
+      @ concat_p_pp p (q@r) s
+      @ whiskerR (concat_p_pp p q r) s
+  = concat_p_pp p q (r@s) @ concat_p_pp (p@q) r s.
+Proof.
+  case p, q, r, s.  reflexivity.
+Defined.
+
+(** The 3-cell witnessing the left unit triangle. *)
+Definition triangulator {A : Type} {x y z : A} (p : x = y) (q : y = z)
+  : concat_p_pp p 1 q @ whiskerR (concat_p1 p) q
+  = whiskerL p (concat_1p q).
+Proof.
+  case p, q.  reflexivity.
 Defined.
