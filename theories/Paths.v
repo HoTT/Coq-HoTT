@@ -6,6 +6,18 @@ Require Import Logic_Type.
    everywhere else, so we need to be extra careful about how we define and prove things.
    We prefer hand-written terms that give us precise control over proofs. *)
 
+(** We define equality concatenation by destructing on both its
+   arguments, so that it only computes when both arguments are
+   [identity_refl].  This makes proofs more robust and symmetrical. *)
+
+Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
+  match p in (_ = y) return y = z -> x = z with
+     identity_refl => fun q =>
+       match q with
+         identity_refl => identity_refl
+       end
+   end q.
+
 (** We declare a scope in which we shall place path notations. This way they can
    be turned on and off by the user. To make things even easier, we define below
    a module [PathNotations] which the user can import. *)
@@ -18,7 +30,7 @@ Module Import PathNotations.
   Notation "1" := identity_refl : path_scope.
   
   (* The composition of two paths. *)
-  Notation "p @ q" := (identity_trans p q) (at level 20) : path_scope.
+  Notation "p @ q" := (concat p q) (at level 20) : path_scope.
   
   (* The inverse of a path. *)
   Notation "p ^-1" := (identity_sym p) (at level 3) : path_scope.
@@ -114,8 +126,9 @@ Definition concat_1p {A : Type} {x y : A} (p : x = y) :
 Definition concat_p_pp {A : Type} {x y z t : A} (p : x = y) (q : y = z) (r : z = t) :
   p @ (q @ r) = (p @ q) @ r :=
   match r with identity_refl =>
-    match q with | identity_refl => 1 end
-  end.
+    match q with identity_refl =>
+      match p with identity_refl => 1
+      end end end.
 
 (** The left inverse law. *)
 Definition concat_pV {A : Type} {x y : A} (p : x = y) :
@@ -161,7 +174,7 @@ Definition concat_pV_p {A : Type} {x y z : A} (p : x = z) (q : y = z) :
       match p with identity_refl => 1 end
   end) p.
 
-(** Inverse distributes over contcatenation *)
+(** Inverse distributes over concatenation *)
 Definition inv_pp {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   (p @ q)^-1 = q^-1 @ p^-1
   :=
@@ -210,16 +223,16 @@ Definition moveL_M {A : Type} {x y : A} (p q : x = y) :
   p @ q^-1 = 1 -> p = q.
 Proof.
   destruct q.
-  intro h.
-  exact h.
+  simpl; rewrite (concat_p1 p).
+  trivial.
 Defined.
 
 Definition moveL_V {A : Type} {x y : A} (p : x = y) (q : y = x) :
   p @ q = 1 -> p = q^-1.
 Proof.
   destruct q.
-  intro h.
-  assumption.
+  rewrite (concat_p1 p).
+  trivial.
 Defined.
 
 (** Cancelation laws. *)
@@ -276,7 +289,7 @@ Definition concat_Pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y 
   (pmap f q) @ (p y) = (p x) @ (pmap g q)
   :=
   match q with
-    | identity_refl => concat_1p _
+    | identity_refl => concat_1p _ @ ((concat_p1 _) ^-1)
   end.
 
 (** Naturality of [pmap] at identity. *)
@@ -284,14 +297,14 @@ Definition concat_P1p {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} 
   (pmap f q) @ (p y) = (p x) @ q
   :=
   match q with
-    | identity_refl => concat_1p _
+    | identity_refl => concat_1p _ @ ((concat_p1 _) ^-1)
   end.
 
 Definition concat_pP1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} (q : x = y) :
   (p x) @ (pmap f q) =  q @ (p y)
   :=
   match q as i in (_ = y) return (p x @ pmap f i = i @ p y) with
-    | identity_refl => (concat_1p _)^-1
+    | identity_refl => concat_p1 _ @ (concat_1p _)^-1
   end.
 
 (** ** The 2-dimensional groupoid structure *)
@@ -318,24 +331,35 @@ Definition whiskerR {A : Type} {x y z : A} {p q : x = y} (h : p = q) (r : y = z)
 (** Whiskering and identity paths. *)
 
 Definition whiskerR_p1 {A : Type} {x y : A} {p q : x = y} (h : p = q) :
-  whiskerR h 1 = h
+  (concat_p1 p) ^-1 @ whiskerR h 1 @ concat_p1 q = h
   :=
-  match h with identity_refl => 1 end.
+  match h with identity_refl =>
+    match p with identity_refl =>
+      1
+    end end.
 
 Definition whiskerR_1p {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   whiskerR 1 q = 1 :> (p @ q = p @ q)
   :=
   match q with identity_refl => 1 end.
 
-Definition whiskerL_p1 {A : Type} {x y z : A} (p q : x = y) (q : y = z) :
+Definition whiskerL_p1 {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   whiskerL p 1 = 1 :> (p @ q = p @ q)
   :=
   match q with identity_refl => 1 end.
 
-Definition concat2_p1 {A : Type} {x y : A} {p q : x = y} (h : p = q) :
-  h @@ 1 = h :> (p @ 1 = q @ 1)
+Definition whiskerL_1p {A : Type} {x y z : A} {p q : y = z} (h : p = q) :
+  (concat_1p p) ^-1 @ whiskerL 1 h @ concat_1p q = h
   :=
-  whiskerR_p1 h.
+  match h with identity_refl =>
+    match p with identity_refl =>
+      1
+    end end.
+
+Definition concat2_p1 {A : Type} {x y : A} {p q : x = y} (h : p = q) :
+  h @@ 1 = whiskerR h 1 :> (p @ 1 = q @ 1)
+  :=
+  match h with identity_refl => 1 end.
 
 (** The interchange law for concatenation. *)
 Definition concat_concat2 {A : Type} {x y z : A} {p p' p'' : x = y} {q q' q'' : y = z}
