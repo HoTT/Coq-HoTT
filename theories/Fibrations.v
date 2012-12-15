@@ -30,7 +30,9 @@ Delimit Scope fib_scope with fib.
 
 
 Section Transport.
-(** We now study how dependent types interact with paths in their base.
+(** ** Transport.
+
+  We now study how dependent types interact with paths in their base.
   The fundamental fact is that we can transport elements of the fibers along such paths.
 
   This operation is very frequently used; so we need also to know how it interacts
@@ -62,33 +64,56 @@ Defined.
 
 (** *** Transport and the groupoid structure of paths *)
 
-(** Basic results on how transport interacts with the groupoid structure of paths. *)
+(** Basic results on how transport interacts with the groupoid structure of paths. 
 
-Definition transport_1_x {A : Type} (P : A -> Type) {x : A} (u : P x) : 1 # u = u := 1.
+Todo: after some experience working with these, reconsider whether making
+[P] implicit was a good idea.  (It needs to be explicit in transport, but may not need to be in these.) *)
+Definition transport_1 {A : Type} {P : A -> Type} {x : A} (u : P x)
+  : 1 # u = u
+:= 1.
 
-Definition transport_p_1 {A : Type} {x y : A} (p : x = y) :
-  p # 1 = p
-  :=
-  match p with identity_refl => 1 end.
-
-Definition transport_pp_x {A : Type} (P : A -> Type) {x y z : A} (p : x = y) (q : y = z) (u : P x) :
+Definition transport_pp {A : Type} {P : A -> Type} {x y z : A} (p : x = y) (q : y = z) (u : P x) :
   p @ q # u = q # p # u :=
   match q with identity_refl =>
     match p with identity_refl => 1 end
   end.
 
-Definition transport_p_V_x {A : Type} (P : A -> Type) {x y : A} (p : x = y) (z : P y) :
+(** Todo: the following two results follow directly from [transport_1] and
+  [transport_pp].  Is it really necessary to give them separately. *)
+Definition transport_pV {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P y) :
   p # p^-1 # z = z :=
   (match p as i in (_ = y) return (forall z : P y, i # i^-1 # z = z)
      with identity_refl => fun _ => 1
    end) z.
 
-Definition transport_V_p_x {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P x) :
+Definition transport_V_p {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P x) :
   p^-1 # p # z = z
   := 
   (match p as i return (forall z : P x, i^-1 # i # z = z)
      with identity_refl => fun _ => 1
    end) z.
+
+(** In the future, we may expect to need some higher coherence for transport:
+  for instance, that transport acting on the associator is trivial. *)
+Definition transport_p_pp {A : Type} {P : A -> Type} 
+  {x y z w : A} (p : x = y) (q : y = z) (r : z = w)
+  (u : P x)
+  : pmap (fun e => e # u) (concat_p_pp p q r)
+    @ (transport_pp (p@q) r u) @ pmap (transport P r) (transport_pp p q u)
+  = (transport_pp p (q@r) u) @ (transport_pp q r (p#u))
+  :> ((p @ (q @ r)) # u = r # q # p # u) .
+Proof.
+  destruct p, q, r.  simpl.  exact 1.
+Defined.
+
+(** *** Transport in specific dependent types *)
+
+(* Todo: in paths; in a constant type; in a product (sigma??) of fibrations; in a Pi-type. *)
+
+Definition transport_p_1 {A : Type} {x y : A} (p : x = y) :
+  p # 1 = p
+  :=
+  match p with identity_refl => 1 end.
 
 End Transport.
 
