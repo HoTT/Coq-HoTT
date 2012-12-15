@@ -142,7 +142,8 @@ Definition concat_Vp {A : Type} {x y : A} (p : x = y) :
   :=
   match p with identity_refl => 1 end.
 
-(** Several auxiliary theorems about canceling inverses across associativity. *)
+(** Several auxiliary theorems about canceling inverses across associativity.
+  These are somewhat redundant, following from earlier theorems.  *)
 
 Definition concat_V_pp {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   p^-1 @ (p @ q) = q
@@ -413,3 +414,30 @@ Definition eckmann_hilton {A} {x:A} (p q : 1 = 1 :> (x = x)) : p @ q = q @ p :=
   @ (concat_1p _ @@ concat_1p _) ^-1
   @ (concat_p1 _ @@ concat_p1 _) ^-1
   @ (whiskerL_1p q @@ whiskerR_p1 p).
+
+(** *** Tactics *)
+
+(** We declare some more [Hint Resolve] hints, now in the "hint
+   database" [path_hints].  In general various hints (resolve,
+   rewrite, unfold hints) can be grouped into "databases". This is
+   necessary as sometimes different kinds of hints cannot be mixed,
+   for example because they would cause a combinatorial explosion or
+   rewriting cycles.
+
+   A specific [Hint Resolve] database [db] can be used with [auto with db].
+
+   The hints in [path_hints] are designed to push concatenation *outwards*,
+   eliminate identities and inverses, and associate to the left as far as 
+   possible. *)
+
+(* TODO: think more carefully about this.  Perhaps associating
+   to the right would be more convenient? *)
+Hint Resolve
+  @identity_refl @identity_sym
+  concat_1p concat_p1 concat_p_pp
+  inv_pp inv_V
+ : path_hints.
+
+Ltac path_via mid :=
+  apply @concat with (y := mid); auto with path_hints.
+
