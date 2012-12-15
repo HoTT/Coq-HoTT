@@ -108,14 +108,107 @@ Defined.
 
 (** *** Transport in specific dependent types *)
 
-(* Todo: in paths; in a constant type; in a product (sigma??) of fibrations; in a Pi-type. *)
+(** Transport crops up very frequently, whether one wants it or not;
+  so one frequently needs lemmas showing that transport in a certain 
+  dependent type is equal to some more explicitly defined operation,
+  defined according to the structure of that dependent type. *)
 
-Definition transport_p_1 {A : Type} {x y : A} (p : x = y) :
-  p # 1 = p
-  :=
-  match p with identity_refl => 1 end.
+Definition transport_const {A B:Type} {x1 x2 : A} (p : x1 = x2) (y : B)
+  : transport (fun x => B) p y = y.
+Proof.
+  destruct p.  exact 1.
+Defined.
+
+Definition transport_paths_l {A : Type} {x1 x2 y : A} (p : x1 = x2) (q : x1 = y)
+  : transport (fun x => x = y) p q = p^-1 @ q.
+Proof.
+  destruct p, q.  auto.
+Defined.
+
+Definition transport_paths_r {A : Type} {x y1 y2 : A} (p : y1 = y2) (q : x = y1)
+  : transport (fun y => x = y) p q = q @ p.
+Proof.
+  destruct p, q.  auto.
+Defined.
+
+Definition transport_prod {A : Type} {B C : A -> Type}
+  {x1 x2 : A} (p : x1 = x2) (yz : (B x1) * (C x1))
+  : transport (fun x => (B x) * (C x)) p yz
+    = ((p # fst yz), (p # snd yz)). 
+Proof.
+  destruct p.  destruct yz as [y z].  exact 1.
+Defined.
+
+(* Note: conclusion should be [==] if that is defined in an earlier file. *) 
+Definition transport_arrow {A : Type} {B C : A -> Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B x1 -> C x1)
+  : forall y : B x2,
+    (transport (fun x => B x -> C x) p f) y
+    = p # (f (p^-1 # y)).
+Proof.
+  destruct p.  simpl.  auto.
+Defined.
+
+(** The concrete description of transport in sigmas and pis is rather
+  trickier than in the other types.  In particular, these cannot be described
+  just in terms of transport in simpler types; they require the full Id-elim
+  rule, to construct “dependent transport”.
+
+  In particular this indicates why “transport” alone cannot be fully defined
+  by induction on the structure of types, although Id-elim/transport_dep
+  can be (cf. Observational Type Theory).  A more thorough set of lemmas,
+  along the lines of the present ones but dealing with Id-elim rather than
+  just transport, might be nice to have eventually? *)
+
+(* Note: while we use tactics here for readability, the resulting term
+  is fully controlled, and cannot easily be made more compact. *)
+Lemma transport_dep
+  {A : Type} (B : A -> Type) (C : forall a:A, B a -> Type)
+  {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C x1 y)  
+  : C x2 (p # y).
+Proof.
+  destruct p.  exact z.
+Defined.
+
+(* Note: if notation [(x;y)] is available here, this should use it. *)
+Definition transport_sigma
+  {A : Type} {B : A -> Type} {C : forall a:A, B a -> Type}
+  {x1 x2 : A} (p : x1 = x2) (yz : { y : B x1 & C x1 y }) 
+  : transport (fun x => { y : B x & C x y }) p yz
+    = existT _ (p # (projT1 yz)) (transport_dep _ _ p (projT1 yz) (projT2 yz)).
+Proof.
+  destruct p.  destruct yz as [y z].  simpl.  exact 1.
+Defined.
+
+Lemma transport_forall_unwound
+  {A : Type} {B : A -> Type} {C : forall a:A, B a -> Type}
+  {x1 x2 : A} (p : x1 = x2) (f : forall y : B x1, C x1 y) 
+  : forall y : B x2, C x2 y.
+Proof.
+  intro y.  set (z0 := f (p^-1 # y)).
+  set (z1 := transport_dep _ _ p _ z0).
+  apply (fun p => transport (C x2) p z1).
+  path_via (transport B (p^-1 @ p) y).
+    symmetry.  apply transport_pp.  
+    apply (fun e => @pmap (x2=x2) (B x2) (fun q => transport B q y) 
+                      (p^-1 @ p) 1e).
+  apply concat_Vp.
+Defined.
+
+(* Note: conclusion should be [==] if that is defined in an earlier file. *) 
+Definition transport_forall
+  {A : Type} {B : A -> Type} {C : forall a:A, B a -> Type}
+  {x1 x2 : A} (p : x1 = x2) (f : forall y : B x1, C x1 y) 
+  : forall y : B x2,
+    (transport (fun x => forall y:B x, C x y) p f) y
+  = (transport_forall_unwound p f) y.
+Proof.
+  destruct p.  unfold transport_forall_unwound.  simpl.  auto.
+Defined.
 
 End Transport.
+
+(** Temporarily commented out:
 
 Section Sigmas.
 
@@ -445,3 +538,4 @@ Definition path_projT2 {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v) :
 (* Proof. *)
 (*   path_induction. *)
 (* Defined. *)
+*)
