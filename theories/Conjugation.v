@@ -14,6 +14,7 @@ Definition conjp {A B : Type} {f g : A -> B} {x y : A} (r : forall x, f x = g x)
   (r x)^-1 @ p @ r y.
 
 (** Several lemmas about conjugation. Does this actually get used? *)
+
 Definition conjp_concat {A : Type} (f g : A -> A) (r : forall x, f x = g x) {x y z : A}
   (p : f x = f y) (q : f y = f z) :
   conjp r (p @ q) = conjp r p @ (conjp r q).
@@ -27,30 +28,34 @@ Qed.
 Lemma pmap_to_conjp {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y : A} (q : x = y) :
   pmap g q = conjp p (pmap f q).
 Proof.
-  destruct q.
-  symmetry; apply concat_Vp.
+  destruct q.  unfold conjp.  simpl.
+  path_via ((p x)^-1 @ p x).  symmetry; apply concat_Vp.
+  apply whiskerR.  symmetry.  apply concat_p1.
 Qed.
 
 Lemma conjp_pmap {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} (q : x = y) :
   conjp p (pmap f q) = q.
 Proof.
-  destruct q.
+  destruct q.  unfold conjp.  simpl.
+  path_via ((p x)^-1 @ p x). apply whiskerR.  apply concat_p1.
   apply concat_Vp.
 Qed.
 
 Lemma pmap1_to_conjp {A : Type} {f : A -> A} (p : forall x, idmap x = f x) {x y : A} (q : x = y) :
   pmap f q = conjp p q.
 Proof.
-  destruct q.
-  symmetry; apply concat_Vp.
+  path_via (conjp p (pmap idmap q)).
+  apply pmap_to_conjp.  apply pmap; apply pmap_idmap.
 Defined.
 
+(* TEMPORARILY COMMENTED OUT.
 Lemma conjp_pmap_cancel {A B : Type} {f : A -> B} {g : B -> A}
                 (p : forall x, g (f x) = x) {x y : A} (q : x = y) :
       conjp p (pmap g (pmap f q)) = q.
 Proof.
-  destruct q.
-  apply concat_Vp.
+  path_via (conjp p (pmap (compose g f) q)).
+  apply pmap.  symmetry.  apply (pmap_compose f g q).
+  (* Todo: give, for here, a lemma that [conjp] preserves homotopy. *)
 Defined.
 
 (* Was not in the original file ? *)
@@ -61,3 +66,4 @@ Proof.
   destruct q.
   symmetry; apply concat_Vp.
 Defined.
+*)
