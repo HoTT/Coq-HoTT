@@ -4,12 +4,12 @@ Require Import Logic_Type.
 
 (** In this file we study the groupoid structure of identity types. The results are used
    everywhere else, so we need to be extra careful about how we define and prove things.
-   We prefer hand-written terms that give us precise control over proofs. *)
+   We prefer hand-written terms, or at least tactics that allow us to retain clear
+   control over the proof-term produced. *)
 
 (** We define equality concatenation by destructing on both its
    arguments, so that it only computes when both arguments are
    [identity_refl].  This makes proofs more robust and symmetrical. *)
-
 Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
   match p in (_ = y) return y = z -> x = z with
      identity_refl => fun q =>
@@ -17,6 +17,21 @@ Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
          identity_refl => identity_refl
        end
    end q.
+
+(** The inverse of a path. 
+
+  (Note: even though this is already defined [Logic_Type], we re-define it
+  here, so that (a) we get a name better-suited to our conventions, and
+  (b) later modules can access it without importing [Logic_Type]. *)
+Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
+  := identity_sym p.
+
+(** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A],
+   then [pmap f p : f x = f y]. 
+
+  (Note: redefined from [Logic_Type], for same reasons as [inverse]. *)
+Definition pmap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
+  := f_equal f p.
 
 (** We declare a scope in which we shall place path notations. This way they can
    be turned on and off by the user. To make things even easier, we define below
@@ -33,10 +48,7 @@ Module Import PathNotations.
   Notation "p @ q" := (concat p q) (at level 20) : path_scope.
   
   (* The inverse of a path. *)
-  Notation "p ^-1" := (identity_sym p) (at level 3) : path_scope.
-  
-  (* If [f : A -> B] and [p : x = y] is a path in [A] then [pmap f p : f x = f y]. *)
-  Notation "'pmap'" := f_equal : path_scope.
+  Notation "p ^-1" := (inverse p) (at level 3) : path_scope.
 End PathNotations.
 
 Local Open Scope path_scope.
@@ -433,7 +445,7 @@ Definition eckmann_hilton {A} {x:A} (p q : 1 = 1 :> (x = x)) : p @ q = q @ p :=
 (* TODO: think more carefully about this.  Perhaps associating
    to the right would be more convenient? *)
 Hint Resolve
-  @identity_refl @identity_sym
+  @identity_refl @inverse
   concat_1p concat_p1 concat_p_pp
   inv_pp inv_V
  : path_hints.
