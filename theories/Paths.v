@@ -307,8 +307,24 @@ Proof.
   trivial.
 Defined.
 
+Definition moveR_1V {A : Type} {x y : A} (p : x = y) (q : y = x) :
+  1 = q @ p -> p^-1 = q.
+Proof.
+  destruct p.
+  rewrite (concat_p1 q).
+  trivial.
+Defined.
 
-(** Cancelation laws. *)
+Definition moveR_V1 {A : Type} {x y : A} (p : x = y) (q : y = x) :
+  1 = p @ q -> p^-1 = q.
+Proof.
+  destruct p.
+  rewrite (concat_1p q).
+  trivial.
+Defined.
+
+
+(** Cancellation laws. *)
 
 Definition cancelL {A : Type} {x y z : A} (p : x = y) (q r: y = z) (h : q = r) :
   p @ q = p @ r :=
