@@ -16,6 +16,7 @@ Set Implicit Arguments.
 
 Require Import Notations.
 Require Import Datatypes.
+Local Open Scope identity_scope.
 Require Import Logic.
 
 (** Subsets and Sigma-types *)

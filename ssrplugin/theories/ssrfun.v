@@ -1,5 +1,6 @@
 (* (c) Copyright Microsoft Corporation and Inria. All rights reserved. *)
 Require Import ssreflect.
+Local Open Scope identity_scope.
 
 (******************************************************************************)
 (* This file contains the basic definitions and notations for working with    *)

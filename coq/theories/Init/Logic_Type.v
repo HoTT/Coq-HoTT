@@ -12,6 +12,7 @@
 Set Implicit Arguments.
 
 Require Import Datatypes.
+Local Open Scope identity_scope.
 Require Export Logic.
 
 (** Negation of a type in [Type] *)

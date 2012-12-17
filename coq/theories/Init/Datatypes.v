@@ -146,11 +146,15 @@ Definition ID := forall A : Type, A -> A.
 Definition id : ID := fun A x => x.
 *)
 
-Notation "x = y :> A" := (@identity A x y) : type_scope.
+Delimit Scope identity_scope with identity.
 
-Notation "x = y" := (x = y :>_) : type_scope.
-Notation "x <> y  :> T" := (~ x = y :>T) : type_scope.
-Notation "x <> y" := (x <> y :>_) : type_scope.
+Notation "x = y :> A" := (@identity A x y)%identity : identity_scope.
+
+Notation "x = y" := (x = y :>_)%identity : identity_scope.
+Notation "x <> y  :> T" := (~ x = y :>T)%identity : identity_scope.
+Notation "x <> y" := (x <> y :>_)%identity : identity_scope.
+
+Local Open Scope identity_scope.
 
 (** Another way of interpreting booleans as propositions *)
 

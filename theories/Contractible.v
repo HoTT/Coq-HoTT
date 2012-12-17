@@ -1,6 +1,5 @@
 Require Import Common Paths.
 
-Import PathNotations.
 Local Open Scope path_scope.
 
 (** Naming convention: we consistently abbreviate "contractible" as "contr".
@@ -43,8 +42,8 @@ Canonical Structure unit_contr :=
 Definition pair_path {A B : Type} {x y : A} {x' y' : B} (p : x = y) (p' : x' = y') :
   (x, x') = (y, y')
   :=
-  match p with identity_refl =>
-    match p' with identity_refl => 1 end
+  match p with idpath =>
+    match p' with idpath => 1 end
   end.
 
 Definition prod_contr (A : Contr) (B : Contr) : Contr :=
@@ -66,9 +65,8 @@ Definition contr_path {A : Contr} (x y : A) :
 
 (** Similarly, any two parallel paths in a contractible space are homotopic,
    which is just the principle UIP. *)
-Definition contr_UIP (A : Contr) : UIP A.
+Definition contr_UIP (A : Contr) (x y : A) (p q : x = y) : p = q.
 Proof.
-  intros x y p q.
   assert (H : forall (r : x = y), r = contr_path x y).
     intro r; destruct r; apply inverse; now apply concat_Vp.
   path_via (contr_path x y).

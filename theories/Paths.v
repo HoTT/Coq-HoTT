@@ -1,6 +1,5 @@
 (** * The groupoid structure of identity types *)
 
-Require Import Logic_Type.
 Require Import Common.
 
 (** In this file we study the groupoid structure of identity types. The results are used
@@ -8,51 +7,49 @@ Require Import Common.
    We prefer hand-written terms, or at least tactics that allow us to retain clear
    control over the proof-term produced. *)
 
+Inductive paths {A : Type} (a : A) : A -> Type :=
+  idpath : paths a a.
+
+Arguments idpath {A a} , [A] a.
+
+Arguments paths_ind [A] a P f y p.
+Arguments paths_rec [A] a P f y p.
+Arguments paths_rect [A] a P f y p.
+
+Notation "x = y :> A" := (@paths A x y) : type_scope.
+Notation "x = y" := (x = y :>_) : type_scope.
+
+
 (** We define equality concatenation by destructing on both its
    arguments, so that it only computes when both arguments are
-   [identity_refl].  This makes proofs more robust and symmetrical.
+   [idpath].  This makes proofs more robust and symmetrical.
    Compare with the definition of [identity_trans].
  *)
 Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
-  match p in (_ = y) return y = z -> x = z with
-     identity_refl => fun q =>
-       match q with
-         identity_refl => identity_refl
-       end
-   end q.
+  match p, q with idpath, idpath => idpath end.
 
-(** The inverse of a path. 
-
-  (Note: even though this is already defined [Logic_Type], we re-define it
-  here, so that (a) we get a name better-suited to our conventions, and
-  (b) later modules can access it without importing [Logic_Type]. *)
+(** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
-  := identity_sym p.
+  := match p with idpath => idpath end.
 
 (** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A],
-   then [ap f p : f x = f y]. 
-
-  (Note: redefined from [Logic_Type], for same reasons as [inverse]. *)
+   then [ap f p : f x = f y].  *)
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
-  := f_equal f p.
+  := match p with idpath => idpath end.
 
 (** We declare a scope in which we shall place path notations. This way they can
-   be turned on and off by the user. To make things even easier, we define below
-   a module [PathNotations] which the user can import. *)
+   be turned on and off by the user. *)
 
 Delimit Scope path_scope with path.
 
-Module Import PathNotations.
-
-  (** The identity path. *)
-  Notation "1" := identity_refl : path_scope.
+(** The identity path. *)
+Notation "1" := idpath : path_scope.
   
-  (* The composition of two paths. *)
-  Notation "p @ q" := (concat p q) (at level 20) : path_scope.
+(* The composition of two paths. *)
+Notation "p @ q" := (concat p q) (at level 20) : path_scope.
   
-  (* The inverse of a path. *)
-  Notation "p ^-1" := (inverse p) (at level 3) : path_scope.
-End PathNotations.
+(* The inverse of a path. *)
+Notation "p ^-1" := (inverse p) (at level 3) : path_scope.
 
 Local Open Scope path_scope.
 
@@ -129,33 +126,33 @@ Local Open Scope path_scope.
 Definition concat_p1 {A : Type} {x y : A} (p : x = y) :
   p @ 1 = p
   :=
-  match p with identity_refl => 1 end.
+  match p with idpath => 1 end.
 
 (** The identity is a left unit. *)
 Definition concat_1p {A : Type} {x y : A} (p : x = y) :
   1 @ p = p
   :=
-  match p with identity_refl => 1 end.
+  match p with idpath => 1 end.
 
 (** Concatenation is associative. *)
 Definition concat_p_pp {A : Type} {x y z t : A} (p : x = y) (q : y = z) (r : z = t) :
   p @ (q @ r) = (p @ q) @ r :=
-  match r with identity_refl =>
-    match q with identity_refl =>
-      match p with identity_refl => 1
+  match r with idpath =>
+    match q with idpath =>
+      match p with idpath => 1
       end end end.
 
 (** The left inverse law. *)
 Definition concat_pV {A : Type} {x y : A} (p : x = y) :
   p @ p ^-1 = 1
   :=
-  match p with identity_refl => 1 end.
+  match p with idpath => 1 end.
   
 (** The right inverse law. *)
 Definition concat_Vp {A : Type} {x y : A} (p : x = y) :
   p^-1 @ p = 1
   :=
-  match p with identity_refl => 1 end.
+  match p with idpath => 1 end.
 
 (** Several auxiliary theorems about canceling inverses across associativity.
   These are somewhat redundant, following from earlier theorems.  *)
@@ -163,46 +160,46 @@ Definition concat_Vp {A : Type} {x y : A} (p : x = y) :
 Definition concat_V_pp {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   p^-1 @ (p @ q) = q
   :=
-  match q with identity_refl =>
-    match p with identity_refl => 1 end
+  match q with idpath =>
+    match p with idpath => 1 end
   end.
 
 Definition concat_p_Vp {A : Type} {x y z : A} (p : x = y) (q : x = z) :
   p @ (p^-1 @ q) = q
   :=
-  match q with identity_refl =>
-    match p with identity_refl => 1 end
+  match q with idpath =>
+    match p with idpath => 1 end
   end.
 
 Definition concat_pp_V {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   (p @ q) @ q^-1 = p
   :=
-  match q with identity_refl =>
-    match p with identity_refl => 1 end
+  match q with idpath =>
+    match p with idpath => 1 end
   end.
 
 Definition concat_pV_p {A : Type} {x y z : A} (p : x = z) (q : y = z) :
   (p @ q^-1) @ q = p
   :=
   (match q as i return forall p, (p @ i^-1) @ i = p with
-    identity_refl =>
+    idpath =>
     fun p =>
-      match p with identity_refl => 1 end
+      match p with idpath => 1 end
   end) p.
 
 (** Inverse distributes over concatenation *)
 Definition inv_pp {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   (p @ q)^-1 = q^-1 @ p^-1
   :=
-  match q with identity_refl =>
-    match p with identity_refl => 1 end
+  match q with idpath =>
+    match p with idpath => 1 end
   end.
   
 (** Inverse is an involution. *)
 Definition inv_V {A : Type} {x y : A} (p : x = y) :
   p ^-1 ^-1 = p
   :=
-  match p with identity_refl => 1 end.
+  match p with idpath => 1 end.
 
 
 (* *** Theorems for moving things around in equations. *)
@@ -225,14 +222,14 @@ Definition moveL_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   r^-1 @ q = p -> q = r @ p.
 Proof.
   intro h; rewrite <- h.
-  symmetry; apply concat_p_Vp.
+  apply inverse, concat_p_Vp.
 Defined.
 
 Definition moveL_pM {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   q @ p^-1 = r -> q = r @ p.
 Proof.
   intro h; rewrite <- h.
-  symmetry; apply concat_pV_p.
+  apply inverse; apply concat_pV_p.
 Defined.
 
 Definition moveL_M {A : Type} {x y : A} (p q : x = y) :
@@ -278,34 +275,34 @@ Definition ap_pp {A B : Type} (f : A -> B) {x y z : A} (p : x = y) (q : y = z) :
   ap f (p @ q) = (ap f p) @ (ap f q)
   :=
   match q with
-    identity_refl =>
-    match p with identity_refl => 1 end
+    idpath =>
+    match p with idpath => 1 end
   end.
 
 (** Functions commute with path inverses. *)
 Definition inverse_ap {A B : Type} (f : A -> B) {x y : A} (p : x = y) :
   (ap f p)^-1 = ap f (p^-1)
   :=
-  match p with identity_refl => 1 end.
+  match p with idpath => 1 end.
 
 (** [ap] itself is functorial in the first argument. *)
 
 Definition ap_idmap {A : Type} {x y : A} (p : x = y) :
   ap idmap p = p
   :=
-  match p with identity_refl => 1 end.
+  match p with idpath => 1 end.
 
 Definition ap_compose {A B C : Type} (f : A -> B) (g : B -> C) {x y : A} (p : x = y) :
   ap (compose g f) p = ap g (ap f p)
   :=
-  match p with identity_refl => 1 end.
+  match p with idpath => 1 end.
 
 (** Naturality of [ap]. *)
 Definition concat_Pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y : A} (q : x = y) :
   (ap f q) @ (p y) = (p x) @ (ap g q)
   :=
   match q with
-    | identity_refl => concat_1p _ @ ((concat_p1 _) ^-1)
+    | idpath => concat_1p _ @ ((concat_p1 _) ^-1)
   end.
 
 (** Naturality of [ap] at identity. *)
@@ -313,14 +310,14 @@ Definition concat_P1p {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} 
   (ap f q) @ (p y) = (p x) @ q
   :=
   match q with
-    | identity_refl => concat_1p _ @ ((concat_p1 _) ^-1)
+    | idpath => concat_1p _ @ ((concat_p1 _) ^-1)
   end.
 
 Definition concat_pP1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} (q : x = y) :
   (p x) @ (ap f q) =  q @ (p y)
   :=
   match q as i in (_ = y) return (p x @ ap f i = i @ p y) with
-    | identity_refl => concat_p1 _ @ (concat_1p _)^-1
+    | idpath => concat_p1 _ @ (concat_1p _)^-1
   end.
 
 (** ** The 2-dimensional groupoid structure *)
@@ -329,7 +326,7 @@ Definition concat_pP1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} 
 Definition concat2 {A} {x y z : A} {p p' : x = y} {q q' : y = z} (h : p = p') (h' : q = q') :
   p @ q = p' @ q'
   :=
-  match h, h' with identity_refl, identity_refl => 1 end.
+  match h, h' with idpath, idpath => 1 end.
 
 Notation "p @@ q" := (concat2 p q)%path (at level 20) : path_scope.
 
@@ -349,33 +346,33 @@ Definition whiskerR {A : Type} {x y z : A} {p q : x = y} (h : p = q) (r : y = z)
 Definition whiskerR_p1 {A : Type} {x y : A} {p q : x = y} (h : p = q) :
   (concat_p1 p) ^-1 @ whiskerR h 1 @ concat_p1 q = h
   :=
-  match h with identity_refl =>
-    match p with identity_refl =>
+  match h with idpath =>
+    match p with idpath =>
       1
     end end.
 
 Definition whiskerR_1p {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   whiskerR 1 q = 1 :> (p @ q = p @ q)
   :=
-  match q with identity_refl => 1 end.
+  match q with idpath => 1 end.
 
 Definition whiskerL_p1 {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   whiskerL p 1 = 1 :> (p @ q = p @ q)
   :=
-  match q with identity_refl => 1 end.
+  match q with idpath => 1 end.
 
 Definition whiskerL_1p {A : Type} {x y : A} {p q : x = y} (h : p = q) :
   (concat_1p p) ^-1 @ whiskerL 1 h @ concat_1p q = h
   :=
-  match h with identity_refl =>
-    match p with identity_refl =>
+  match h with idpath =>
+    match p with idpath =>
       1
     end end.
 
 Definition concat2_p1 {A : Type} {x y : A} {p q : x = y} (h : p = q) :
   h @@ 1 = whiskerR h 1 :> (p @ 1 = q @ 1)
   :=
-  match h with identity_refl => 1 end.
+  match h with idpath => 1 end.
 
 (** The interchange law for concatenation. *)
 Definition concat_concat2 {A : Type} {x y z : A} {p p' p'' : x = y} {q q' q'' : y = z}
@@ -394,8 +391,8 @@ Definition concat_whisker {A} {x y z : A} (p p' : x = y) (q q' : y = z) (a : p =
   (whiskerR a q) @ (whiskerL p' b) = (whiskerL p b) @ (whiskerR a q')
   :=
   match b with
-    identity_refl =>
-    match a with identity_refl =>
+    idpath =>
+    match a with idpath =>
       (concat_1p _)^-1
     end
   end.
@@ -448,10 +445,12 @@ Definition eckmann_hilton {A} {x:A} (p q : 1 = 1 :> (x = x)) : p @ q = q @ p :=
 (* TODO: think more carefully about this.  Perhaps associating
    to the right would be more convenient? *)
 Hint Resolve
-  @identity_refl @inverse
+  @idpath @inverse
   concat_1p concat_p1 concat_p_pp
   inv_pp inv_V
  : path_hints.
+
+Hint Resolve @idpath : core.
 
 Ltac path_via mid :=
   apply @concat with (y := mid); auto with path_hints.

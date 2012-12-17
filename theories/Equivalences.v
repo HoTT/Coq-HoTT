@@ -2,7 +2,7 @@
 
 Require Import Common Paths Fibrations Contractible.
 
-Import PathNotations.
+Local Open Scope path_scope.
 
 (** Homotopy equivalences are a central concept in homotopy type theory. Before we define
    equivalences, let us consider when [A] and [B] should be considered "the same".
@@ -24,6 +24,10 @@ Import PathNotations.
 *)
 
 (** Naming convention: we use [equiv] and [Equiv] systematically to denote equivalences. *)
+
+(** The fact that [r] is a left inverse of [s]. It is called [cancel] in ssreflect. *)
+Definition section {A B : Type} (s : A -> B) (r : B -> A) :=
+  forall x : A, r (s x) = x.
 
 Record Equiv A B := BuildEquiv {
   equiv_fun :> A -> B ;

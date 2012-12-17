@@ -2,7 +2,6 @@
 
 Require Import Paths.
 
-Import PathNotations.
 Local Open Scope path_scope.
 
 (** Notes from discussion between AB & PL, 14 Dec: this file includes several
@@ -41,7 +40,7 @@ Section Transport.
 
 (** [transport P p u] transports [u : P x] to [P y] along [p : x = y]. *)
 Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
-  match p with identity_refl => u end.
+  match p with idpath => u end.
 
 Arguments transport {A} P {x y} p%fib_scope u.
 
@@ -56,10 +55,10 @@ theorist might see as “heterogeneous eqality in a dependent type”.
 
   In particular, this allows us to define an analogue of [ap] for dependent functions. *)
 
-Definition ap_dep {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
+Definition apd {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
   p # (f x) = f y
   :=
-  match p with identity_refl => 1 end.
+  match p with idpath => 1 end.
 
 (** *** Transport and the groupoid structure of paths *)
 
@@ -73,8 +72,8 @@ Definition transport_1 {A : Type} {P : A -> Type} {x : A} (u : P x)
 
 Definition transport_pp {A : Type} {P : A -> Type} {x y z : A} (p : x = y) (q : y = z) (u : P x) :
   p @ q # u = q # p # u :=
-  match q with identity_refl =>
-    match p with identity_refl => 1 end
+  match q with idpath =>
+    match p with idpath => 1 end
   end.
 
 (** Todo: the following two results follow directly from [transport_1] and
@@ -82,14 +81,14 @@ Definition transport_pp {A : Type} {P : A -> Type} {x y z : A} (p : x = y) (q : 
 Definition transport_pV {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P y) :
   p # p^-1 # z = z :=
   (match p as i in (_ = y) return (forall z : P y, i # i^-1 # z = z)
-     with identity_refl => fun _ => 1
+     with idpath => fun _ => 1
    end) z.
 
 Definition transport_V_p {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P x) :
   p^-1 # p # z = z
   := 
   (match p as i return (forall z : P x, i^-1 # i # z = z)
-     with identity_refl => fun _ => 1
+     with idpath => fun _ => 1
    end) z.
 
 (** In the future, we may expect to need some higher coherence for transport:
@@ -163,7 +162,7 @@ Definition transport_dep
   {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C x1 y) :
   C x2 (p # y)
   :=
-  match p with identity_refl => z end.
+  match p with idpath => z end.
 
 (* Note: if notation [(x;y)] is available here, this should use it. *)
 Definition transport_sigma
@@ -254,8 +253,8 @@ Definition sigT_path_unpacked {A : Type} (P : A -> Type) {x y : A} {u : P x} {v 
   (x ; u) = (y ; v)
   :=
   (match p as i in (_ = y) return (forall v : P y, i # u = v -> (x; u) = (y; v)) with
-     identity_refl =>
-       fun _ q => match q with identity_refl => 1 end
+     idpath =>
+       fun _ q => match q with idpath => 1 end
   end) v q.
 
 Definition sigT_path {A : Type} (P : A -> Type) {u v : sigT P} (p : projT1 u = projT1 v) (q : p # projT2 u = projT2 v) :
@@ -269,12 +268,12 @@ Definition sigT_path {A : Type} (P : A -> Type) {u v : sigT P} (p : projT1 u = p
 Definition path_projT1 {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v) :
   projT1 u = projT1 v
   :=
-  match p with identity_refl => 1 end.
+  match p with idpath => 1 end.
 
 Definition path_projT2 {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v) :
   path_projT1 p # projT2 u = projT2 v
   :=
-  match p with identity_refl => 1 end.
+  match p with idpath => 1 end.
 
 (** TEMPORARILY COMMENTED OUT. *)
 
@@ -380,13 +379,13 @@ Definition path_projT2 {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v) :
 
 (* (** A version of [map] for dependent functions. *) *)
 
-(* Lemma map_dep {A} {P : fibration A} {x y : A} (f : section P) (p: x = y) : *)
+(* Lemma mapd {A} {P : fibration A} {x y : A} (f : section P) (p: x = y) : *)
 (*   p # f x = f y. *)
 (* Proof. *)
 (*   path_induction. *)
 (* Defined. *)
 
-(* Hint Rewrite @map_dep : paths. *)
+(* Hint Rewrite @mapd : paths. *)
 
 (* (** Transporting in a non-dependent type does nothing. *) *)
 
@@ -398,15 +397,15 @@ Definition path_projT2 {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v) :
 
 (* Hint Rewrite @trans_trivial : paths. *)
 
-(* (** And for a non-dependent type, [map_dep] reduces to [map], modulo [trans_trivial]. *) *)
+(* (** And for a non-dependent type, [mapd] reduces to [map], modulo [trans_trivial]. *) *)
 
-(* Lemma map_dep_trivial {A B} {x y : A} (f : A -> B) (p: x = y): *)
-(*   map_dep f p = trans_trivial p (f x) @ map f p.  *)
+(* Lemma mapd_trivial {A B} {x y : A} (f : A -> B) (p: x = y): *)
+(*   mapd f p = trans_trivial p (f x) @ map f p.  *)
 (* Proof. *)
 (*   path_induction. *)
 (* Defined. *)
 
-(* Hint Rewrite @map_dep_trivial : paths. *)
+(* Hint Rewrite @mapd_trivial : paths. *)
 
 (* (** Transporting commutes with summing along an unrelated variable. *) *)
 
@@ -530,7 +529,7 @@ Definition path_projT2 {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v) :
 
 (* Lemma map2_dep {A : Type} {P : fibration A} {x y : A} {p q : x = y} *)
 (*   (f : section P) (r : p = q) : *)
-(*   map_dep f p = trans2 r (f x) @ map_dep f q. *)
+(*   mapd f p = trans2 r (f x) @ mapd f q. *)
 (* Proof. *)
 (*   path_induction. *)
 (* Defined. *)

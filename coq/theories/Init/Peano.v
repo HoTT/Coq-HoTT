@@ -25,6 +25,7 @@
 
 Require Import Notations.
 Require Import Datatypes.
+Local Open Scope identity_scope.
 Require Import Logic_Type.
 
 Open Scope nat_scope.
