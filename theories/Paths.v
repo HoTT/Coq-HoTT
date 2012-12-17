@@ -51,7 +51,10 @@ We will first see this appearing in the type of [apD]. *)
 
 
 (** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A],
-   then [ap f p : f x = f y].  *)
+   then [ap f p : f x = f y].  
+
+   We typically pronounce [ap] as a single syllable, short for “application”;
+   but it may also be considered as an acronym, “action on paths”. *)
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
 
