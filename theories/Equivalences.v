@@ -3,6 +3,7 @@
 Require Import Common Paths Fibrations Contractible.
 
 Local Open Scope path_scope.
+Local Open Scope contr_scope.
 
 (** Homotopy equivalences are a central concept in homotopy type theory. Before we define
    equivalences, let us consider when [A] and [B] should be considered "the same".
@@ -32,15 +33,58 @@ Definition section {A B : Type} (s : A -> B) (r : B -> A) :=
 Record Equiv A B := BuildEquiv {
   equiv_fun :> A -> B ;
   equiv_inv : B -> A ;
-  equiv_section : section equiv_inv equiv_fun ; 
-  equiv_retraction : section equiv_fun equiv_inv ;
-  equiv_adjoint : forall x : A, 
-  equiv_section (equiv_fun x) = ap equiv_fun (equiv_retraction x)
+  equiv_is_section : section equiv_inv equiv_fun ; 
+  equiv_is_retraction : section equiv_fun equiv_inv ;
+  equiv_is_adjoint : forall x : A, equiv_is_section (equiv_fun x) = ap equiv_fun (equiv_is_retraction x)
 }.
+
+Delimit Scope equiv_scope with equiv.
+Local Open Scope equiv_scope.
 
 Notation "A <~> B" := (Equiv A B) (at level 85) : equiv_scope.
 
-(** An equivalence is a map whose homotopy fibers are contractible. *)
+(** We use the canonical structures to recover the equivalence
+   structure of a map which is canonically known to be an equivalence. *)
+
+Definition equiv_of A B := 
+  fun (f : A -> B) (e : A <~> B) (_ : (f = e :> (A -> B))) => e.
+
+Notation "[ 'equiv' 'of' f ]" := (equiv_of _ _ f _ (idpath _))
+  (at level 0, format "[ 'equiv'  'of'  f ]") : equiv_scope.
+
+Definition inverse_of (A B : Type) (e : A <~> B) (_ : batman (A -> B) e) := @equiv_inv _ _ e.
+
+Notation "f ^-1" := (inverse_of _ _ _ (@Batman (_ -> _) f)) : equiv_scope.
+
+
+(** ** Canonical constructions of equivalences *)
+
+(** The identity map is an equivalence. *)
+Canonical Structure equiv_idmap (A : Type) :=
+  BuildEquiv A A idmap idmap (fun _ => 1) (fun _ => 1) (fun _ => 1).
+
+(** A contractible type is equivalent to [unit]. *)
+Definition equiv_contr_unit (A : Contr) : A <~> unit.
+Proof.
+  exists
+    (fun (_ : A) => tt)
+    (fun (_ : unit) => [ center of A ])
+    (fun t : unit => match t with tt => 1 end)
+    (fun x : A => contr x).
+  intro x.
+  apply inverse, ap_const.
+Defined.
+
+Canonical Structure equiv_contr_unit.
+
+(** Composition of equivalences is an equivalence. *)
+Definition equiv_compose {A B C : Type} (f : B <~> C) (e : A <~> B) : Equiv A C.
+
+(**** GOT UP TO HERE. ****)
+
+Section ContractibleHfibers.
+  (** The space of equivalences is equivalent to the space of maps whose
+     fibers are contractible. *)
 
 Definition is_equiv {A B} (e : A -> B) := forall y : B, is_contr (hfiber e y).
 
