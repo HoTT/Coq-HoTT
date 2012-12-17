@@ -84,6 +84,7 @@ Local Open Scope path_scope.
    - [A] means '[ap]'
    - [M] means the thing we are moving across equality
    - [x] means 'the point' which is not a path, e.g. in [transport p x]
+   - [2] means 2-dimensional concatenation
 
    Associativity is indicated with an underscore. Here are some examples of how the
    name gives hints about the left-hand side of the equation.
@@ -96,7 +97,7 @@ Local Open Scope path_scope.
    - [concat_pV_p] means [(q * p^-1) * p] or [(p * p^-1) * q], you just have to look
 
    Laws about inverse of something are of the form [inv_XXX], and those about
-   [ap] are of the form [ap_XXX]. For example:
+   [ap] are of the form [ap_XXX], and so on. For example:
 
    - [inv_pp] is about [(p @ q)^-1]
    - [inv_V] is about [(p^-1)^-1]
@@ -105,6 +106,7 @@ Local Open Scope path_scope.
    - [ap_pp] is about [ap f (p @ q)]
    - [ap_idmap] is about [ap idmap p]
    - [ap_1] is about [ap f 1]
+   - [ap02_p2p] is about [ap02 f (p @@ q)]
    
    Then we have laws which move things around in an equation. The naming scheme here is
    [moveD_XXX]. The direction [D] indicates where to move to: [L] means that we move
@@ -326,6 +328,31 @@ Definition concat_pA1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} 
     | idpath => concat_p1 _ @ (concat_1p _)^-1
   end.
 
+(** [ap] for paths between functions. *)
+
+(* We introduce the convention that [apKN] denotes the application of
+   a K-path between functions to an N-path between elements, where a
+   0-path is simply a function or an element.  Thus, [ap] is a
+   shorthand for [ap01].
+ *)
+
+Definition ap10 {A B} {f g:A->B} (h:f=g) (x:A) : f x = g x
+  := match h with idpath => 1 end.
+
+Definition ap10_1 {A B} {f:A->B} (x:A) : ap10 (idpath f) x = 1
+  := 1.
+
+Definition ap10_pp {A B} {f f' f'':A->B} (h:f=f') (h':f'=f'') (x:A) :
+  ap10 h x @ ap10 h' x = ap10 (h @ h') x.
+Proof.
+  case h, h'; reflexivity.
+Defined.
+
+Definition ap11 {A B} {f g:A->B} (h:f=g) {x y:A} (p:x=y) : f x = g y.
+Proof.
+  case h, p; reflexivity.
+Defined.
+
 (** ** The 2-dimensional groupoid structure *)
 
 (** Horizontal composition of 2-dimensional paths. *)
@@ -432,6 +459,23 @@ Definition eckmann_hilton {A} {x:A} (p q : 1 = 1 :> (x = x)) : p @ q = q @ p :=
   @ (concat_1p _ @@ concat_1p _) ^-1
   @ (concat_p1 _ @@ concat_p1 _) ^-1
   @ (whiskerL_1p q @@ whiskerR_p1 p).
+
+(** The action of functions on 2-dimensional paths *)
+
+Definition ap02 {A B} (f:A->B) {x y:A} {p q:x=y} (r:p=q) : ap f p = ap f q
+  := match r with idpath => 1 end.
+
+Definition ap02_pp {A B} (f:A->B) {x y:A} {p p' p'':x=y} (r:p=p') (r':p'=p'')
+  : ap02 f (r @ r') = ap02 f r @ ap02 f r'.
+Proof.
+  case r, r'; reflexivity.
+Defined.
+
+Definition ap02_p2p {A B} (f:A->B) {x y z:A} {p p':x=y} {q q':y=z} (r:p=p') (s:q=q')
+  : ap02 f (r @@ s) = ap_pp f p q @ (ap02 f r @@ ap02 f s) @ (ap_pp f p' q') ^-1.
+Proof.
+  case r, s, p, q. reflexivity.
+Defined.
 
 (** *** Tactics *)
 
