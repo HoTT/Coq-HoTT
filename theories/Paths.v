@@ -241,6 +241,20 @@ Proof.
   apply concat_pV_p.
 Defined.
 
+Definition moveR_Vp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y) :
+  p = r @ q -> r^-1 @ p = q.
+Proof.
+  intro h; rewrite h.
+  apply concat_V_pp.
+Defined.
+
+Definition moveR_pV {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x) :
+  r = q @ p -> r @ p^-1 = q.
+Proof. 
+  intro h; rewrite h.
+  apply concat_pp_V.
+Defined.
+
 Definition moveL_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   r^-1 @ q = p -> q = r @ p.
 Proof.
@@ -253,6 +267,20 @@ Definition moveL_pM {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
 Proof.
   intro h; rewrite <- h.
   apply inverse; apply concat_pV_p.
+Defined.
+
+Definition moveL_Vp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y) :
+  r @ q = p -> q = r^-1 @ p.
+Proof.
+  intro h; rewrite <- h.
+  apply inverse, concat_V_pp.
+Defined.
+
+Definition moveL_pV {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x) :
+  q @ p = r -> q = r @ p^-1.
+Proof.
+  intro h; rewrite <- h.
+  apply inverse; apply concat_pp_V.
 Defined.
 
 Definition moveL_1M {A : Type} {x y : A} (p q : x = y) :
@@ -480,6 +508,12 @@ Definition concat2_p1 {A : Type} {x y : A} {p q : x = y} (h : p = q) :
   h @@ 1 = whiskerR h 1 :> (p @ 1 = q @ 1)
   :=
   match h with idpath => 1 end.
+
+Definition concat2_1p {A : Type} {x y : A} {p q : x = y} (h : p = q) :
+  1 @@ h = whiskerL 1 h :> (1 @ p = 1 @ q)
+  :=
+  match h with idpath => 1 end.
+
 
 (** The interchange law for concatenation. *)
 Definition concat_concat2 {A : Type} {x y z : A} {p p' p'' : x = y} {q q' q'' : y = z}
