@@ -37,6 +37,12 @@ Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
 
+(** Note that you can use the built-in Coq tactics "reflexivity" and
+   "transitivity" when working with paths, but not "symmetry", because
+   it is too smart for its own good.  But you can say "apply inverse"
+   instead.  
+   *)
+
 (** We declare a scope in which we shall place path notations. This way they can
    be turned on and off by the user. *)
 
@@ -75,7 +81,7 @@ Local Open Scope path_scope.
    - [1] means the identity path
    - [p] means 'the path'
    - [V] means 'the inverse path'
-   - [P] means '[ap]'
+   - [A] means '[ap]'
    - [M] means the thing we are moving across equality
    - [x] means 'the point' which is not a path, e.g. in [transport p x]
 
@@ -94,7 +100,7 @@ Local Open Scope path_scope.
 
    - [inv_pp] is about [(p @ q)^-1]
    - [inv_V] is about [(p^-1)^-1]
-   - [inv_P] is about [(ap f p)^-1]
+   - [inv_A] is about [(ap f p)^-1]
    - [ap_V] is about [ap f (p^-1)]
    - [ap_pp] is about [ap f (p @ q)]
    - [ap_idmap] is about [ap idmap p]
@@ -298,7 +304,7 @@ Definition ap_compose {A B C : Type} (f : A -> B) (g : B -> C) {x y : A} (p : x 
   match p with idpath => 1 end.
 
 (** Naturality of [ap]. *)
-Definition concat_Pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y : A} (q : x = y) :
+Definition concat_Ap {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y : A} (q : x = y) :
   (ap f q) @ (p y) = (p x) @ (ap g q)
   :=
   match q with
@@ -306,14 +312,14 @@ Definition concat_Pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y 
   end.
 
 (** Naturality of [ap] at identity. *)
-Definition concat_P1p {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} (q : x = y) :
+Definition concat_A1p {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} (q : x = y) :
   (ap f q) @ (p y) = (p x) @ q
   :=
   match q with
     | idpath => concat_1p _ @ ((concat_p1 _) ^-1)
   end.
 
-Definition concat_pP1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} (q : x = y) :
+Definition concat_pA1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} (q : x = y) :
   (p x) @ (ap f q) =  q @ (p y)
   :=
   match q as i in (_ = y) return (p x @ ap f i = i @ p y) with
