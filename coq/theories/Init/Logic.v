@@ -30,11 +30,6 @@ Definition not (A:Type) : Type := A -> False.
 
 Notation "~ x" := (not x) : type_scope.
 
-Notation "'idmap'" := (fun x => x).
-
-Definition compose {A B C : Type} (g : B -> C) (f : A -> B) :=
-  fun x => g (f x).
-
 Hint Unfold not: core.
 
 Hint Resolve I : core.

@@ -1,6 +1,7 @@
 (** * The groupoid structure of identity types *)
 
 Require Import Logic_Type.
+Require Import Common.
 
 (** In this file we study the groupoid structure of identity types. The results are used
    everywhere else, so we need to be extra careful about how we define and prove things.

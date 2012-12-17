@@ -35,7 +35,7 @@ Arguments inl {A B} _ , [A] B _.
 Arguments inr {A B} _ , A [B] _.
 
 Notation "A \/ B" := (A + B)%type (only parsing) : type_scope.
-Notation or := sum.
+Notation or := sum (only parsing).
 
 (** [prod A B], written [A * B], is the product of [A] and [B];
     the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
@@ -50,8 +50,8 @@ Add Printing Let prod.
 Notation "x * y" := (prod x y) : type_scope.
 Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
 Notation "A /\ B" := (prod A B) (only parsing) : type_scope. 
-Notation and := prod.
-Notation conj := pair.
+Notation and := prod (only parsing).
+Notation conj := pair (only parsing).
 
 Definition fst {A B : Type} (p : A * B) := match p with (x, y) => x end.
 Definition snd {A B : Type} (p : A * B) := match p with (x, y) => y end.

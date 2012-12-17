@@ -1,443 +1,631 @@
-Require Import ssreflect ssrfun ssrbool.
-Require Import Paths Fibrations Contractible.
+(** * Equivalences *)
 
-Set Implicit Arguments.
-Unset Strict Implicit.
-Unset Printing Implicit Defensive.
+Require Import Common Paths Fibrations Contractible.
 
 Import PathNotations.
 
-Open Scope path_scope.
+(** Homotopy equivalences are a central concept in homotopy type theory. Before we define
+   equivalences, let us consider when [A] and [B] should be considered "the same".
 
+   The first option is to require existence of [f : A -> B] and [g : B -> A] which are
+   inverses of each other, up to homotopy. Homotopically speaking, we should also require
+   a certain condition which is remniscent of the triangle identities for adjunctions in
+   category theory. Thus we call this notion an adjoint equivalence.
 
-(* We diverge from the original Equivalence.v file by defining is_equiv *)
-(* what was previously called adjoint_equiv. We bet it should prove more*)
-(* efficient as an interface because it exposes the inverse of the *)
-(* equivalence as an element of the signature, which we can provide *)
-(* by hand or built generically at our convenience. Hence this inverse can *)
-(* be retrieved by the canonical structure lookup mechanism, which proves *)
-(* very convenient in proofs.*)
+   The second option is to use Vladimir Voevodsky's definition of an equivalence as a map
+   whose homotopy fibers are contractible.
 
-Record equiv A B := Equiv {
+   An interesting third options was suggested by André Joyal: a map [f] which has separate
+   left and right homotopy inverses. This too turns out to be reasonable.
+
+   While the second options was used originally, and it is the most concise one, it makes
+   much more sense to use the first one in a formalized development, as it exposes most
+   directly equivalence as a structure.
+*)
+
+(** Naming convention: we use [equiv] and [Equiv] systematically to denote equivalences. *)
+
+Record Equiv A B := BuildEquiv {
   equiv_fun :> A -> B ;
-  equiv_adjoint : B -> A ;
-  equiv_section : cancel equiv_adjoint equiv_fun; 
-  equiv_retraction : cancel equiv_fun equiv_adjoint;
-  equiv_coh : forall x, 
-    equiv_section (equiv_fun x) = resp equiv_fun (equiv_retraction x)
+  equiv_inv : B -> A ;
+  equiv_section : section equiv_inv equiv_fun ; 
+  equiv_retraction : section equiv_fun equiv_inv ;
+  equiv_adjoint : forall x : A, 
+  equiv_section (equiv_fun x) = pmap equiv_fun (equiv_retraction x)
 }.
 
-(* Don't ask :-), but this is an ingredient for the notation below. *)
-Definition equiv_clone A B := 
-  fun (f : A -> B) (ef : equiv A B) & (f = ef :> (A -> B)) => ef.
+Notation "A <~> B" := (Equiv A B) (at level 85) : equiv_scope.
 
-(* Lookup notation to infer the structure of equiv declared as canonical on a *)
-(* given f (f should be the equiv_fun of the candidate instance found in the *)
-(* database.*)
-Notation "[ 'equiv' 'of' f ]" := (@equiv_clone _ _ f _ (erefl _))
-  (at level 0, format "[ 'equiv'  'of'  f ]") : form_scope.
+(** An equivalence is a map whose homotopy fibers are contractible. *)
 
-Delimit Scope equiv_scope with equiv.
-Local Open Scope equiv_scope.
-
-(* Infix notation, similar to what was in HoTT *)
-Notation "A <~> B" := (equiv A B) (at level 85) : equiv_scope.
-
-
-(* Canonical reflexivity of equiv *)
-Canonical equiv_refl A : A <~> A := @Equiv _ _ idfun idfun
-  (fun _ => erefl) (fun _ => erefl) (fun _ => erefl).
-
-(* We first define how to correct a cancel operation so that it satifies the*)
-(* coherence condition wrt the application of functions on paths *)
-
-Definition adjointify {A B} (f : A -> B) g (fK : cancel f g) (gK : cancel g f) : cancel f g := 
-   fun a => (g `_* (f `_* (fK a))^-1) * (resp g (gK (f a))) * (fK a).
-
-(* Now the coherence. It is still strange that I neeed invpK at the end. May
-  be the definition of adjointify is not the best. *)
-Lemma adjointifyP A B (f : A -> B) g 
-  (fK : cancel f g) (gK : cancel g f) (fK' := adjointify fK gK) a :
-   gK (f a) = f`_* (fK' a).
-Proof.
-pose gKV : id =1 f \o g :=  (fun x => (gK x)^-1).
-by rewrite !resppM !(conj_canV gKV) -(conjpM gKV) conjpE mulpK mulpVK invpK.
-Qed.
-
-(* And now we prove that we can get an equivalence from a bijection *)
-(* This will often be our preferred way to obain a new equivalence, by 
-   proving two cancellations lemma and using the can2_equiv equivalence
-   builder to correct one of them behind the scene using adjointify. *)
-Definition can2_equiv A B (h1 : A -> B)(h2 : B -> A)(h1K : cancel h1 h2)
-  (h2K : cancel h2 h1) : A <~> B := Equiv (adjointifyP h1K h2K).
-
-(* A function whose fibers are all contractible. *)
-(* This was the main definition taken in the original Equivalence.v *)
-(* I should probably change its name now. *)
 Definition is_equiv {A B} (e : A -> B) := forall y : B, is_contr (hfiber e y).
 
-Section EquivTheory.
+(** [equiv A B] is the space of equivalences from [A] to [B]. It is defined
+   as a structure rather than a total space because this allows us to use
+   Coq's canonical structures. Also notice that we have a coercion of
+   an equivalence to a map.
 
-Variables (A B : Type).
-Variable (f : A <~> B).
+   The disadvantage of using a structure is that various theorems about
+   total spaces cannot be used directly on the structure.
+*)
 
-(* Equivalence have contractible fibers.*)
-Lemma equiv_is_equiv : is_equiv f.
+Structure equiv (A B : Type) := {
+  equiv_map :> A -> B ;
+  equiv_is_equiv : is_equiv equiv_map
+}.
+
+Implicit Arguments equiv_map [A B].
+Implicit Arguments equiv_is_equiv [A B].
+
+
+(** printing <~> $\overset{\sim}{\longrightarrow}$ *)
+
+(** The identity map is an equivalence. *)
+
+Definition idequiv A : A <~> A.
 Proof.
-move=> b; exists (Hfiber f (equiv_section f b)) => [[a]].
-by case: _ / => {b}; rewrite (equiv_coh f); case (equiv_retraction f a).
-Qed.
+  exists (idmap A).
+  intros x.
+  exists (existT (fun x' => x' = x) x (idpath x)).
+  intros [x' p].
+  unfold idmap in p.
+  induction p.
+  auto.
+Defined.
 
-(* We define a nice constant to access the inverse of an equivalence, *)
-(* and a notation  local to the section to access the inverse of a *)
-(* canonical equivalence from its function. This means that if f is a *)
-(* function, then (f^-1) looks up for a canonical structure of equiv *)
-(* having f as equiv_fun in the database, and extracts the second *)
-(* (equiv_adjoint) component out of it.*)
+(** We first define the inverse map and only show that it is an
+   equivalence later on, when we are ready to do it. *)
 
-Definition inverse := nosimpl (@equiv_adjoint _ _ f).
+Let inverse {A B : Type} (e : A <~> B) : (B -> A) :=
+  fun y => pr1 (pr1 (equiv_is_equiv e y)).
 
-Definition inverse_of (phf : phantom (A -> B) f) := inverse.
-Local Notation "f ^-1" := (inverse_of (@Phantom (_ -> _) f)).
+(** printing ^-1 $^{-1}$ *)
 
-Definition equivK : cancel f f^-1 := @equiv_retraction _ _ f.
-Definition inverseK : cancel f^-1 f := @equiv_section _ _ f.
+Notation "e ^-1" := (inverse e) (at level 33).
 
-(* Canonical symmetry property of the equiv operation. *)
-Canonical equiv_sym : (B <~> A) := @can2_equiv _ _ f^-1 f inverseK equivK.
+(** The extracted map in the inverse direction is actually an inverse
+   (up to homotopy, of course). *)
 
-End EquivTheory.
+Definition inverse_is_section {A B : Type} (e : A <~> B) (y : B) : e (e^-1 y) = y :=
+  pr2 (pr1 ((equiv_is_equiv e) y)).
 
-(* Global notation for the inverse.*)
-Notation "f ^-1" := (@inverse_of _ _ _ (@Phantom (_ -> _) f)) : equiv_scope.
+Hint Rewrite @inverse_is_section : paths.
 
-(* We could not state this lemma with this notation inside the section since
-  the structure/notation was attached to a fixed f and we need it two times here. *)
-Lemma inverseKE (A B : Type) (f : A <~> B) : (f^-1)^-1 = f. Proof. by []. Qed.
+Definition inverse_is_retraction {A B : Type} (e : A <~> B) (x : A) : e^-1 (e x) = x :=
+  !base_path (pr2 (equiv_is_equiv e (e x)) (x ; idpath (e x))).
 
-Lemma resp_equivK (A B : Type) (f : A <~> B) (x : A) :
-    f`_* (equivK f x) = inverseK f (f x).
-Proof. by case: f. Qed.
+Hint Rewrite @inverse_is_retraction : paths.
 
-(* From contractibility of fibers to equivalences. *)
-Section IsEquivEquiv.
-
-Variables (A B : Type) (f : A -> B) (f_is_equiv : is_equiv f).
-
-(* This is the inverse of the function with contractible fibers*)
-Definition is_equiv_inverse (b : B) : A := pr1 (contr_elt (f_is_equiv b)). 
-
-Lemma is_equiv_directK : cancel f is_equiv_inverse.
+Definition map_equiv_o_inverse {A B : Type} (e : A <~> B) (x y : A) (p : x = y) :
+  map (e^-1) (map e p) = inverse_is_retraction e x @ p @ !inverse_is_retraction e y.
 Proof.
-by move=> x; rewrite /is_equiv_inverse (contr_eltE _ (in_hfiber f x)).
-Qed.
+  path_induction.
+  hott_simpl.
+Defined.
 
-Lemma is_equiv_inverseK : cancel is_equiv_inverse f.
+Hint Rewrite @map_equiv_o_inverse : paths.
+
+Definition map_inverse_o_equiv {A B : Type} (e : A <~> B) (u v : B) (p : u = v) :
+  map e (map (e^-1) p) = inverse_is_section e u @ p @ !inverse_is_section e v.
 Proof.
-by move=> x; rewrite /is_equiv_inverse; case: f_is_equiv => [] []. 
-Qed.
+  path_induction.
+  hott_simpl.
+Defined.
 
-(* Now we can forge the equivalence. Theres is no point of having this as a 
-   canonical construction though, unlesss we decine to package is_equiv which.
-   seems of little interest for now. *)
-Definition is_equiv_equiv : A <~> B := can2_equiv is_equiv_directK is_equiv_inverseK.
+Hint Rewrite @map_inverse_o_equiv : paths.
 
-End IsEquivEquiv.
 
-Definition to_unit {A} (x : A) : unit := tt.
+(** Here are some tactics to use for canceling inverses, and for introducing them. *)
 
-(* A contractible type is equivalent to unit. *)
-Section EquivUnit.
+(** Here is a tactic which helps us prove that a homotopy fiber is
+   contractible.  This will be useful for showing that maps are
+   equivalences. *)
 
-Variable A : Type.
+Ltac contract_hfiber y p :=
+  match goal with
+    | [ |- is_contr (@hfiber _ _ ?f ?x) ] =>
+      eexists (existT (fun z => f z = x) y p);
+        let z := fresh "z" in
+        let q := fresh "q" in
+          intros [z q]
+  end.
 
-Hypothesis is_contr_A : is_contr A.
+(** Let us explain the tactic. It accepts two arguments [y] and [p]
+   and attempts to contract a homotopy fiber to [existT _ y p]. It
+   first looks for a goal of the form [is_contr (hfiber f x)], where
+   the question marks in [?f] and [?x] are pattern variables that Coq
+   should match against the actual values. If the goal is found, then
+   we use [eexists] to specify that the center of retraction is at the
+   element [existT _ y p] of hfiber provided by the user. After that
+   we generate some fresh names and perfrom intros. *)
 
-Lemma to_unitK : cancel (@to_unit A) (fun _ => contr_elt is_contr_A). 
-Proof. move=> x /=; exact: contr_eltE. Qed.
+(* These tactics are obsolete now because rewriting can do them. *)
 
-Lemma to_unitVK : cancel (fun _ => contr_elt is_contr_A) (@to_unit A). Proof. by case. Qed.
+Ltac cancel_inverses_in s :=
+  match s with
+    | context cxt [ equiv_map _ _ ?w (inverse ?w ?x) ] =>
+      let mid := context cxt [ x ] in
+        path_using mid inverse_is_section
+    | context cxt [ inverse ?w (equiv_map ?w ?x) ] =>
+      let mid := context cxt [ x ] in
+        path_using mid inverse_is_retraction
+  end.
 
-(* Unit is canonically equivalent to a type equipped with  a structure of *)
-(* contractile (hContr) *) 
-Canonical equiv_unit : A <~> unit := can2_equiv to_unitK to_unitVK.
+Ltac cancel_inverses :=
+  repeat progress (
+    match goal with
+      | |- ?s = ?t => first [ cancel_inverses_in s | cancel_inverses_in t ]
+    end
+  ).
 
-End EquivUnit.
+(* The following tactics are useful for manipulation of equivalences. *)
 
-(* A type equivalent to a contractible is itself contractible *)
-Lemma equiv_contr_is_contr A (is_contr_A : is_contr A) B : A <~> B -> is_contr B.
+Ltac expand_inverse_src w x :=
+  match goal with
+    | |- ?s = ?t =>
+      match s with
+        | context cxt [ x ] =>
+          first [
+            let mid := context cxt [ w (inverse w x) ] in
+              path_via' mid;
+              [ path_simplify' inverse_is_section | ]
+            |
+              let mid := context cxt [ inverse w (w x) ] in
+                path_via' mid;
+                [ path_simplify' inverse_is_retraction | ]
+          ]
+      end
+  end.
+
+Ltac expand_inverse_trg w x :=
+  match goal with
+    | |- ?s = ?t =>
+      match t with
+        | context cxt [ x ] =>
+          first [
+            let mid := context cxt [ w (inverse w x) ] in
+              path_via' mid;
+              [ | path_simplify' inverse_is_section ]
+            |
+              let mid := context cxt [ inverse w (w x) ] in
+                path_via' mid;
+                [ | path_simplify' inverse_is_retraction ]
+          ]
+      end
+  end.
+
+(** These tactics change between goals of the form [w x = y] and the
+   form [x = w^-1 y], and dually. *)
+
+Ltac equiv_moveright :=
+  match goal with
+    | |- equiv_map ?w ?a = ?b =>
+      apply @concat with (y := w (inverse w b));
+        [ apply map | apply inverse_is_section ]
+    | |- (inverse ?w) ?a = ?b =>
+      apply @concat with (y := inverse w (w b));
+        [ apply map | apply inverse_is_retraction ]
+  end.
+
+Ltac equiv_moveleft :=
+  match goal with
+    | |- ?a = equiv_map ?w ?b =>
+      apply @concat with (y := w (inverse w a));
+        [ apply opposite, inverse_is_section | apply map ]
+    | |- ?a = (inverse ?w) ?b =>
+      apply @concat with (y := inverse w (w a));
+        [ apply opposite, inverse_is_retraction | apply map ]
+  end.
+
+(** Equivalences are "injective on paths". *)
+
+Lemma equiv_injective {A B : Type} (e : A <~> B) x y : (e x = e y) -> (x = y).
+  Proof.
+  intro p.
+  expand_inverse_src e x.
+  equiv_moveright.
+  exact p.
+Defined.
+
+(** Anything contractible is equivalent to the unit type. *)
+
+Lemma contr_equiv_unit (A : Type) :
+  is_contr A -> (A <~> unit).
 Proof.
-move=> f; exists (f (contr_elt is_contr_A)) => b.
-apply: (canLR (inverseK _)); exact: contr_eltE.
-Qed.
+  intros [x h].
+  exists (fun x => tt).
+  intro y; destruct y.
+  contract_hfiber x (idpath tt).
+  apply @total_path with (p := h z).
+  simpl.
+  apply contr_path2.
+  auto.
+Defined.
 
-Lemma contr_equiv_is_contr  A B (is_contr_B : is_contr B) : A <~> B -> is_contr A.
+(** And conversely, anything equivalent to a contractible type is
+   contractible. *)
+
+Lemma contr_equiv_contr (A B : Type) :
+  A <~> B -> is_contr A -> is_contr B.
 Proof.
-move=> f; exists (inverse f (contr_elt is_contr_B)) => a.
-by apply: (canLR (equivK _)); exact: contr_eltE. 
-Qed.
+  intros f [x p].
+  exists (f x).
+  intro y.
+  equiv_moveleft.
+  apply p.
+Defined.
 
-Definition to_is_contr A B (is_contr_B : is_contr B) of A :=
-  contr_elt is_contr_B.
+(** The free path space of a type is equivalent to the type itself. *)
 
+Definition free_path_space A := {xy : A * A & fst xy = snd xy}.
 
-Lemma to_is_contrK A B (cA : is_contr A) (cB : is_contr B) : 
-  cancel (to_is_contr cA) (to_is_contr cB).
-Proof. move=> x; exact: contr_eltE. Qed.
-
-Definition equiv_to_is_contr A B (cA : is_contr A) (cB : is_contr B) : A <~> B := 
-  can2_equiv (to_is_contrK cB cA) (to_is_contrK cA cB).
-
-Section EquivTransport.
-Variables (T : Type)(P : T -> Type).
-
-(* Transporting backward. May be should this be in Fibrations. Here we need it *)
-(* (only) to define the inverse of the transport in a fiber along a path, . *)
-(* to be given to the equivalence constructor. Notice the benfit of tunning the*)
-(* behaviour of the arguments of transport. *)
-Definition transport_backward (x y : T) (p : x = y) (py : P y) : P x 
-  := (p^-1) # py.
-
-Lemma transportK (x y : T)  p :
- cancel (transport P p) (@transport_backward x y p).
-Proof. by case: _ / p. Qed.
-
-Lemma transport_backwardK (x y : T)  p :
-  cancel (@transport_backward x y p) (transport P p).
-Proof. by case: _ / p. Qed.
-
-(* Fibers above two points connected by a path are equivalent. *)
-Canonical equiv_transport (x y : T)  p : P x <~> P y :=
-  can2_equiv (transportK p) (@transport_backwardK x y p).
-
-End EquivTransport.
-
-(* An example from Peter Lumsdaine's (old and probably outdated) github repo: *)
-(* https://github.com/peterlefanulumsdaine/
-   Oberwolfach-explorations/blob/master/basic_weqs.v *)
-(* Line  86 he shows that a function pointwise equal to identity is an *)
-(* equivalence, and his comment says: "this is very lengthy but essentially 
-routine; could presumably be greatly shortened by a well-written tactic or two"*)
-(* But we believe that the change of definition for equivalence plus a more *)
-(* comprehensive body of lemmas is the most useful.*)
-(* Here below we generalize this result to the proof that a function *)
-(* pointwise equal to an equivalence is itself an equivalence. *)
-Section PointWiseEqualToEquivIsEquiv.
-
-Variables A B : Type.
-Variable (f : A <~> B) (g : A -> B).
-
-Hypothesis gpeqf : g =1 f.
-
-Lemma cancelequivVeq1 : cancel f^-1 g.
-Proof. by move=> ?; rewrite gpeqf inverseK. Qed.
-
-Lemma canceleq1equivV : cancel g f^-1.
-Proof. by move=> ?; rewrite gpeqf equivK. Qed.
-
-Definition equiv_pw : A <~> B := can2_equiv canceleq1equivV cancelequivVeq1.
-
-Check (1 : g = equiv_pw).
-
-End PointWiseEqualToEquivIsEquiv.
-
-(* Since Coq did not have definitional eta, at that time, MathComp libraries*)
-(* could not provide the associativity of the composition of functions. *)
-(* We do it now, and this lemme should probably be moved somewhere else. *)
-Lemma compA A B C D (f : C -> D) (g : B -> C) (h : A -> B) : 
-  f \o (g \o h) = (f \o g) \o h.
-Proof. reflexivity. Qed.
-
-(* Definition of the diagonals of a type and proof that the two associated *)
-(* projections define both an equivalence with the type itself. *)
-
-(* It looks weird IMO to have the arg of diag_sq as implicit. *)
-Definition diag_sq A := {xy : A * A & xy.1 = xy.2}.
-
-Definition Diag_sq {A} {x y : A} (h : x = y) : diag_sq A := existT _ (x, y) h.
-
-Definition diag_pi1 {A} (aa : diag_sq A) : A := (pr1 aa).1.
-Definition diag_pi2 {A} (aa : diag_sq A) : A := (pr1 aa).2.
-Definition to_diag {A} (a : A) : diag_sq A := exist _ (a, a) (erefl _).
-
-Lemma diag_pi1K {A} : cancel (@to_diag A) (@diag_pi1 A). Proof. by []. Qed.
-Lemma diag_pi2K {A} : cancel (@to_diag A) (@diag_pi2 A). Proof. by []. Qed.
-Lemma to_diagK1 {A} : cancel (@diag_pi1 A) (@to_diag A).
-Proof. by move=> [[x1 x2] /=]; case: _ /. Qed.
-Lemma to_diagK2 {A} : cancel (@diag_pi2 A) (@to_diag A).
-Proof. by move=> [[x1 x2] /=]; case: _ /. Qed.
-
-(* The two projections diag_pi1 and diag_pi2 each define an equivalence *)
-(* bewteen type A and its diagonal. We declare them as canonical. *)
-Canonical diag_sq_id1 A : diag_sq A <~> A := can2_equiv to_diagK1 diag_pi1K.
-Canonical diag_sq_id2 A : diag_sq A <~> A := can2_equiv to_diagK2 diag_pi2K.
-
-
-
-(* An equivalence is injective. *)
-Notation equiv_inj e := (can_inj (equivK [equiv of e])).
-
-(* The equivalence induced by transporting the trivial (reflexive) equivalence *)
-(* of U with itself along an path from U to V. *)
-Definition eq_equiv (U V : Type) (p : U = V) : U <~> V := p # (equiv_refl U).
-
-Implicit Arguments eq_equiv [[U] [V]].
-
-(* U and V are in univalent correspondance it eq_equiv itself is an eqivalence *)
-(* between types U = V and U <~> V *)
-Definition univalent U V := is_equiv (@eq_equiv U V).
-
-Lemma  equiv_rect : forall (P : forall U V, U <~> V -> Type),
-  (forall T, P T T (equiv_refl T)) -> (forall U V (e : U <~> V), P U V e).
-Admitted.
-
-Definition eq_equivV (U V : Type) (e : U <~> V) : U = V :=
-  @equiv_rect (fun U V h => U = V)(fun T => erefl T) U V e.
-
-
-(* Lemma test U V : univalent U V. *)
-(* Proof. *)
-(* move=> e; elim: _ / e. *)
-(* move=> T /=. *)
-(* have := univalent. *)
-(* move/is_equiv_equiv: (@univalent U V). *)
-(* rewrite /univalent. *)
-
-
-(* pose P (U1 V1 : Type) (e : U1 <~> V1) := . *)
-
-Module UnivalenceAxiom.
-
-Section UnivalenceAxiomImpliesFunExt.
-
-(* A very strong assumption : forall U V : Type, U and V are in univalent *)
-(* correspondance*)
-Hypothesis univalence : forall U V, univalent U V.
-
-(* We declare this equivalence as canonical for the purpose of this section. *)
-Canonical eq_equiv_equiv U V : U = V <~> (U <~> V) := 
-  @is_equiv_equiv _ _ (@eq_equiv U V) (@univalence U V).
-
-(* Since there is no elimination principle on the (inductive) type equiv, we*)
-(* prove the one which makes sense (under univalence hypothesis). *)
-(* Because of the (debatable) choice made by *)
-(* Coq in order to find the elimination scheme used by the elim tactic, the *)
-(* choice of this _rect postfixed name makes this scheme the default one *)
-(* for elimination on an object of type equiv. See the proofs below *)
-
-Lemma equiv_rect (P : forall U V, U <~> V -> Type) :
-  (forall T, P T T (equiv_refl T)) -> (forall U V (e : U <~> V), P U V e).
+Definition free_path_source A : free_path_space A <~> A.
 Proof.
-move=> PTT U V f; have <- /= := inverseK [equiv of eq_equiv] f.
-by case: _ /(eq_equiv^-1 f) => /=.
-Qed.
+  exists (fun p => fst (projT1 p)).
+  intros x.
+  eexists (existT _ (existT (fun (xy : A * A) => fst xy = snd xy) (x,x) (idpath x)) _).
+  intros [[[u v] p] q].
+  simpl in * |- *.
+  induction q as [a].
+  induction p as [b].
+  apply idpath.
+Defined.
 
-(* A list of small lemmas about the cancellation of an equivalence when *)
-(* composed with its inverse. All these 'elim' use the above equiv_rect *)
-(* scheme.*)
-Lemma comp_equivV A B (e : A <~> B) : e \o e^-1 = id.
-Proof. by elim: e. Qed.
-
-Lemma comp_Vequiv A B (e : A <~> B) : e^-1 \o e = id.
-Proof. by elim: e. Qed.
-
-Lemma  comp_inverseK A B C (e : A <~> B) (f : C -> B) : e \o (e^-1 \o f) = f.
-Proof. by elim: e f. Qed.
-
-Lemma  comp_equivK A B C (e : A <~> B) (f : C -> A) : e^-1 \o (e \o f) = f.
-Proof. by elim: e f. Qed.
-
-Lemma  precomp_inverseK A B C (e : A <~> B) (f : B -> C) : (f \o e) \o e^-1 = f.
-Proof. by elim: e f. Qed.
-
-Lemma  precomp_equivK A B C (e : A <~> B) (f : A -> C) : (f \o e^-1) \o e = f.
-Proof. by elim: e f. Qed.
-
-(* Now a (very short) proof that the two projections of a diagonal are equal. *)
-Lemma diag_pi12 A : @diag_pi1 A = diag_pi2.
-Proof. by rewrite -[RHS](precomp_equivK [equiv of diag_pi1]). Qed.
-
-(* As a consequence, we obtain a proof that univalence -> fun ext.  *)
-(* We consider the auxiliary function fg : X -> diag_sq AY by      *)
-(* x := ((x,y), f x = g x), hence using the available hypothesis of  *)
-(* pointwise equality of f anf g. Now it is sufficient to prove that *)
-(* diag_pi1 \o fg = diag_pi2 \o fg since this is f = g when eta is *)
-(* definitional. And this equality holds by a simple rewrite of the *)
-(* above equality of the projections. *)
-Lemma funext (X Y : Type)  (f g : X -> Y) : f =1 g -> f = g.
+Definition free_path_target A : free_path_space A <~> A.
 Proof.
-move=> eq_fg; pose fg x : diag_sq Y := Diag_sq (eq_fg x).
-suffices: diag_pi1 \o fg = diag_pi2 \o fg by []. 
-by rewrite diag_pi12.
-Qed.
+  exists (fun p => snd (projT1 p)).
+  intros x.
+  eexists (existT _ (existT (fun (xy : A * A) => fst xy = snd xy) (x,x) (idpath x)) _).
+  intros [[[u v] p] q].
+  simpl in * |- *.
+  induction q as [a].
+  induction p as [b].
+  apply idpath.
+Defined.
 
-(* We now study the elementary theory of the  composition of *)
-(* functions with equivalences.*)
+(** We have proven that every equivalence has an inverse up to
+    homotopy.  In fact, having an inverse up to homotopy is also
+    enough to characterize a map as being an equivalence.  However,
+    the data of an inverse up to homotopy is not equivalent to the
+    data in [equiv] unless we add one more piece of coherence data.
+    This is a homotopy version of the category-theoretic notion of
+    "adjoint equivalence". *)
 
-Definition compV A B C (e : A <~> B) (h : C -> B) : C -> A := e^-1 \o h.
-(* This following choice for the status of the arguments of compV make C not *)
-(* implicit, even if the function h is provided. But this is the best choice *)
-(* for the purpose of this section. *)
-Arguments compV {A B} C e h _.
- 
-Lemma compK A B C (e : A <~> B) : cancel (comp e) (compV C e).
-Proof. by elim: e. Qed.
+Structure adjoint_equiv A B := {
+  adj_map : A -> B ;
+  adj_adjoint : B -> A ;
+  adj_is_section : (forall y, adj_map (adj_adjoint y) = y) ;
+  adj_is_retraction : (forall x, adj_adjoint (adj_map x) = x) ;
+  adj_triangle : (forall x, map adj_map (adj_is_retraction x) = adj_is_section (adj_map x))
+}.
 
-Lemma compVK A B C (e : A <~> B) : cancel (compV C e) (comp e).
-Proof. by elim: e. Qed.
+(** The following property of equivalences serves to show that an
+   equivalence is an adjoint equivalences. It is a triangle identity but
+   it does not look like one since we have inserted one of the
+   homotopies. *)
 
-(* Two function spaces with equivalent codomains are equivalent *)
-Canonical equiv_comp A B C (e : A <~> B) : (C -> A) <~> (C -> B) :=
-  can2_equiv (@compK _ _ C e) (@compVK _ _ C e).
-
-(* Same thing for pre-composition.*)
-
-Definition precomp (X X' Y : Type) (f : X -> X') : (X' -> Y) -> (X -> Y) 
-  := comp^~ f.
-Definition precompV A B C (e : A <~> B) (h : A -> C) : B -> C := h \o e^-1.
-
-Lemma precompK A B C (e : A <~> B) : cancel (precomp e) (@precompV _ _ C e).
-Proof. by elim: e. Qed.
-
-Lemma precompVK A B C (e : A <~> B) : cancel (@precompV _ _ C e) (precomp e).
-Proof. by elim: e. Qed.
-
-(* Two function spaces with equivalent domains are equivalent *)
-Canonical equiv_precomp A B C (e : A <~> B) : (C -> A) <~> (C -> B) :=
-  can2_equiv (@compK _ _ C e) (@compVK _ _ C e).
-
-
-(* The final goal here is to show that UIP does _not_ hold when we have *)
-(* univalence *)
-(* We first forge the non-trivial equivalence bool <~> bool via negb *)
-Canonical equiv_negb : bool <~> bool :=
-  @can2_equiv _ _ negb _ negbK negbK.
-
-(* The inverse contained in the datas of the equivalence defined by idfun is *)
-(* not the same as the one contained in the datas of the equivalence defined *)
-(* by negb. *)
-Lemma not_eq_negb_id : 
-  (eq_equiv^-1 [equiv of idfun]) <> (eq_equiv^-1 [equiv of negb]).
+Definition inverse_triangle {A B : Type} (e : A <~> B) x :
+  (map e (inverse_is_retraction e x)) = (inverse_is_section e (e x)).
 Proof.
-move => eqN1. (* bug? why does move/(equiv_inj _) does not work? *)
-by have /(congr1 (fun f : _ <~> _ => f true)) := equiv_inj _ eqN1.
-Qed.
+  unfold inverse_is_retraction.
+  hott_simpl.
+  moveright_onleft.
+Defined.
 
-(* Corollary:  bool = bool is not contractible *)
-Lemma niscontr_eqbool : ~ is_contr (bool = bool :> Type).
-Proof. by case=> f Hf; apply: not_eq_negb_id; rewrite -[LHS]Hf -[RHS]Hf. Qed.
+(** An equivalence is an adjoint equivalence and vice versa. *)
 
-(* Uniqueness of identity proofs predicate *)
-Definition UIP := forall U (a b : U) (p q : a = b :> U), p = q.
+Definition equiv_to_adjoint {A B} (e : A <~> B) : adjoint_equiv A B :=
+  {|
+    adj_map := e ;
+    adj_adjoint := e^-1 ;
+    adj_is_section := inverse_is_section e ;
+    adj_is_retraction := inverse_is_retraction e ;
+    adj_triangle := inverse_triangle e |}.
 
-(* As we have two _different_ proofs that "bool = bool" UIP cannot hold *)
-Lemma UIP_false : ~ UIP.
-Proof. by move => *; apply: not_eq_negb_id. Qed.
+Theorem adjoint_to_equiv {A B} : adjoint_equiv A B -> A <~> B.
+Proof.
+  intros [f g is_section is_retraction natural].
+  exists f.
+  intro y.
+  contract_hfiber (g y) (is_section y).
+  apply (@total_path _
+    (fun x => f x = y)
+    (existT _ z q)
+    (existT _ (g y) (is_section y))
+    (!is_retraction z @ (map g q))).
+  simpl.
+  path_via (!(map f (!is_retraction z @ map g q)) @ q).
+  apply transport_hfiber.
+  hott_simpl.
+  (** Here is where we use triangle. *)
+  path_via (!map f (map g q) @ is_section (f z) @ q).
+  (** Now it's just naturality of 'is_section'. *)
+  associate_right.
+  moveright_onleft.
+  undo_compose_map.
+  apply opposite, (homotopy_naturality_toid (f o g)).
+  hott_simpl.
+Defined.
 
-(* Anders: As we have
-      Eq_rect_eq <-> Eq_dep_eq <-> UIP <-> UIP_refl <-> K
-   This means that all of them are incompatible with univalence *)
+Lemma adjoint_to_equiv_compute_map {A B} (e : adjoint_equiv A B) :
+  equiv_map (adjoint_to_equiv e) = adj_map _ _ e.
+Proof.
+  destruct e; apply idpath.
+Defined.
 
+(** In fact, [equiv_to_adjoint] and [adjoint_to_equiv] are
+   inverse equivalences, but proving this requires function
+   extensionality.  See [FunextEquivalences.v]. *)
 
-End UnivalenceAxiomImpliesFunExt.
-End UnivalenceAxiom.
+(** It is sometimes easier to define an adjoint equivalence than
+   an equivalence, for example when we have a map which is homotopic
+   to the identity. *)
+Lemma equiv_pointwise_idmap A (f : A -> A) (p : forall x, f x = x) : A <~> A.
+Proof.
+  apply adjoint_to_equiv.
+  refine {| adj_map := f; adj_adjoint := idmap A; adj_is_section := p; adj_is_retraction := p |}.
+  apply htoid_well_pointed.
+Defined.
+
+(** The third notion of "equivalence" is that of a map which has an inverse up
+   to homotopy but without the triangle identity (so it is a kind of
+   "incoherent" adjoint equivalence. Let us call such a thing an h-equivalence
+   or just [hequiv] for short. *)
+
+Structure hequiv A B := {
+  hequiv_map : A -> B ;
+  hequiv_inverse : B -> A ;
+  hequiv_section : (forall y, hequiv_map (hequiv_inverse y) = y) ;
+  hequiv_retraction : (forall x, hequiv_inverse (hequiv_map x) = x)
+}.
+
+(** A central fact about adjoint equivalences is that any "incoherent"
+   equivalence can be improved to an adjoint equivalence by changing one of the
+   natural isomorphisms. We now prove a corresponding result in homotopy type
+   theory. The proof is exactly the same as the usual proof for adjoint
+   equivalences in 2-category theory. *)
+
+Lemma map_retraction_section A B (f : A -> B) (g : B -> A)
+  (h : forall x, f (g x) = x) (u v : B) (p : u = v) :
+  map f (map g p) = h u @ p @ ! h v.
+Proof.
+  path_induction.
+  hott_simpl.
+Defined.
+
+Definition adjointify {A B} : hequiv A B -> adjoint_equiv A B.
+Proof.
+  intros [f g is_section is_retraction].
+  (* We have to redefine one of the two homotopies. *)
+  set (is_retraction' := fun x =>
+    ( map g (map f (!is_retraction x)))
+    @ (map g (is_section (f x)))
+    @ (is_retraction x)).
+  refine {|
+    adj_map := f;
+    adj_adjoint := g;
+    adj_is_section := is_section;
+    adj_is_retraction := is_retraction' |}.
+  intro x.
+  (** Now we just play with naturality until things cancel. *)
+  unfold is_retraction'.
+  hott_simpl.
+  associate_right.
+  moveright_onleft.
+  rewrite map_retraction_section with (h := is_section).
+  hott_simpl.
+  set (q := map f (is_retraction x)).
+  moveright_onleft.
+  associate_left.
+  moveleft_onright.
+  rewrite <- compose_map.
+  exact (homotopy_naturality_fromid _ (fun y => ! is_section y) _).
+Defined.
+
+Lemma adjointify_compute_map {A B} (h : hequiv A B) :
+  hequiv_map _ _ h = adj_map _ _ (adjointify h).
+Proof.
+  destruct h; apply idpath.
+Defined.
+
+(** Therefore, "any h-equivalence is an equivalence." *)
+
+Definition hequiv_to_equiv {A B} : hequiv A B -> (A <~> B) :=
+  adjoint_to_equiv o adjointify.
+
+Lemma hequiv_to_equiv_compute_map {A B} (h : hequiv A B) :
+  equiv_map (hequiv_to_equiv h) = hequiv_map _ _ h.
+Proof.
+  destruct h; apply idpath.
+Defined.
+
+(** All sorts of nice things follow from this theorem. *)
+
+(** A lemma for showing that if something is an [hequiv] then
+   it is an equivalence. *)
+
+Definition is_equiv_from_hequiv {A B} {f : A -> B} (g : B -> A)
+  (p : forall y, f (g y) = y) (q : forall x, g (f x) = x) : is_equiv f :=
+  equiv_is_equiv (hequiv_to_equiv 
+    {| hequiv_map := f ;
+       hequiv_inverse := g ;
+       hequiv_section := p ;
+       hequiv_retraction := q |}).  
+
+Definition equiv_from_hequiv {A B} (f : A -> B) (g : B -> A)
+  (p : forall y, f (g y) = y) (q : forall x, g (f x) = x) : A <~> B :=
+  hequiv_to_equiv 
+    {| hequiv_map := f;
+       hequiv_inverse := g;
+       hequiv_section := p;
+       hequiv_retraction := q |}.
+
+(** The inverse of an equivalence is an equivalence. *)
+
+Lemma equiv_inverse {A B} : (A <~> B) -> B <~> A.
+Proof.
+  intro e.
+  destruct (equiv_to_adjoint e) as [f g is_section is_retraction triangle].
+  apply (equiv_from_hequiv g f); auto.
+Defined.
+
+(* Rewrite rules for inverses. *)
+
+Lemma equiv_inverse_is_inverse (A B  : Type) (f : A <~> B) : equiv_map (equiv_inverse f) = f^-1.
+Proof.
+  apply idpath.
+Defined.
+
+Hint Rewrite equiv_inverse_is_inverse : paths.
+
+(** Anything homotopic to an equivalence is an equivalence. *)
+
+Lemma equiv_homotopic {A B} (f : A -> B) (g : A <~> B) :
+  (forall x, f x = g x) -> A <~> B.
+Proof.
+  intros p.
+  apply (equiv_from_hequiv f (g^-1)).
+  intro y.
+  rewrite p.
+  hott_simpl.
+  intro x.
+  equiv_moveright; auto.
+Defined.
+
+(** And the 2-out-of-3 property for equivalences. *)
+
+Definition equiv_compose {A B C} (f : A <~> B) (g : B <~> C) : (A <~> C).
+Proof.
+  apply (equiv_from_hequiv (g o f) (f^-1 o g^-1)); intro; unfold compose.
+  now equiv_moveright; apply inverse_is_section.
+  now equiv_moveright; apply inverse_is_retraction.
+Defined.
+
+Lemma equiv_inverse_compose (A B C : Type) (f : A <~> B) (g : B <~> C) x :
+  inverse (equiv_compose f g) x = f^-1 (g^-1 x).
+Proof.
+  auto.
+Defined.
+
+Hint Rewrite equiv_inverse_compose : paths.
+
+Definition equiv_cancel_right {A B C} (f : A <~> B) (g : B -> C) :
+  is_equiv (g o f) -> B <~> C.
+Proof.
+  intros H.
+  pose (gof := {| equiv_map := g o f; equiv_is_equiv := H |}).
+  apply (equiv_from_hequiv g (f o gof^-1)).
+  intro y.
+  expand_inverse_trg gof y.
+  apply idpath.
+  intro x.
+  change (f (gof^-1 (g x)) = x).
+  equiv_moveright; equiv_moveright.
+  change (g x = g (f (f^-1 x))).
+  hott_simpl.
+Defined.
+
+Definition equiv_cancel_left {A B C} (f : A -> B) (g : B <~> C) :
+  is_equiv (g o f) -> A <~> B.
+Proof.
+  intros H.
+  pose (gof := {| equiv_map := g o f; equiv_is_equiv := H |}).
+  apply (equiv_from_hequiv f (gof^-1 o g)).
+  intros y.
+  expand_inverse_trg g y.
+  expand_inverse_src g (f (((gof ^-1) o g) y)).
+  apply map.
+  path_via (gof ((gof^-1 (g y)))).
+  hott_simpl.
+  intros x.
+  path_via (gof^-1 (gof x)).
+  hott_simpl.
+Defined.
+
+(** André Joyal suggested the following definition of equivalences and to call
+   it "h-isomorphism" or [hiso] for short. This is even weaker than [hequiv] as
+   we have a separate section and a retraction. *)
+
+Structure is_hiso {A B} (f : A -> B) :=
+  { hiso_section : B -> A ;
+    hiso_is_section : (forall y, f (hiso_section y) = y) ;
+    hiso_retraction : B -> A ;
+    hiso_is_retraction : forall x, (hiso_retraction (f x) = x)
+  }.
+
+Implicit Arguments hiso_section [A B f].
+Implicit Arguments hiso_is_section [A B f].
+Implicit Arguments hiso_retraction [A B f].
+Implicit Arguments hiso_is_retraction [A B f].
+
+Definition is_hiso_from_is_equiv {A B} (f : A -> B) : is_equiv f -> is_hiso f.
+Proof.
+  intro feq.
+  pose (e := {| equiv_map := f; equiv_is_equiv := feq |}).
+  rewrite (idpath _ : f = equiv_map e).
+  refine {| hiso_section := e^-1; hiso_retraction := e^-1|}.
+  apply inverse_is_section.
+  apply inverse_is_retraction.
+Defined.
+
+Structure hiso A B :=
+  { hiso_map :> A -> B ;
+    hiso_is_hiso :> is_hiso hiso_map
+  }.
+
+(** Of course, an honest equivalence is an h-isomorphism. *)
+Definition hiso_from_equiv {A B} (e : A <~> B) : hiso A B :=
+  {| hiso_map := equiv_map e ;
+     hiso_is_hiso := 
+     {| hiso_section := equiv_inverse e ;
+        hiso_is_section := inverse_is_section e ;
+        hiso_retraction := equiv_inverse e ;
+        hiso_is_retraction := inverse_is_retraction e
+     |}
+  |}.
+
+(** But also an h-isomorphism is an equivalence. *)
+Definition hequiv_from_hiso {A B} : hiso A B -> hequiv A B.
+Proof.
+  intros [f [g G h H]].
+  refine {| hequiv_map := f ; hequiv_inverse := h |}.
+  intro y.
+  path_via (f (g y)).
+  apply map.
+  path_via (h (f (g y))).
+  (* Coq 8.3 wants this but 8.4 does not, so we try it. *)
+  try (apply map, opposite, G).
+  assumption.
+Defined.
+
+Lemma hequiv_from_hiso_compute_map {A B} (h : hiso A B) :
+  hequiv_map _ _ (hequiv_from_hiso h) = hiso_map _ _ h.
+Proof.
+  destruct h as [? [? ? ?]].
+  apply idpath.
+Defined.
+
+Definition equiv_from_hiso {A B} (f : hiso A B) : A <~> B :=
+  hequiv_to_equiv (hequiv_from_hiso f).
+
+Lemma equiv_from_hiso_compute_map {A B} (f : hiso A B) :
+  equiv_map (equiv_from_hiso f) = hiso_map _ _ f.
+Proof.
+  destruct f as [? [? ? ?]].
+  apply idpath.
+Defined.
+
+Definition is_equiv_from_is_hiso {A B} (f : A -> B) : is_hiso f -> is_equiv f.
+Proof.
+  intro fhiso.
+  pose (h := {| hiso_map := f; hiso_is_hiso := fhiso |}).
+  pose (e := equiv_from_hiso h).
+  (** We would like to apply [equiv_is_equiv e], but Coq wants us to rewrite first. *)
+  rewrite (idpath _ : f = hiso_map _ _ h).
+  rewrite <- (equiv_from_hiso_compute_map h).
+  apply (equiv_is_equiv e).
+Defined.
+
+(** Of course, the harder part is showing that being an h-isomorphism is a
+   proposition, and therefore equivalent to being an equivalence. This also
+   requires function extensionality; see [FunextEquivalences.v]. *)

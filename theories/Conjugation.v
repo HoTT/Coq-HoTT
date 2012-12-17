@@ -2,7 +2,7 @@
    It is useful in group theory, but it is not so clear what it is for
    in HoTT. So we store it away here, in case someone needs it later. *)
 
-Require Import Paths.
+Require Import Common Paths.
 
 Import PathNotations.
 Open Scope path_scope.
