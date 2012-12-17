@@ -1,28 +1,19 @@
-(** * Equivalences *)
+(** * Equivalences -*- mode: coq; mode: visual-line -*- *)
 
 Require Import Common Paths Fibrations Contractible.
 
 Local Open Scope path_scope.
 Local Open Scope contr_scope.
 
-(** Homotopy equivalences are a central concept in homotopy type theory. Before we define
-   equivalences, let us consider when [A] and [B] should be considered "the same".
+(** Homotopy equivalences are a central concept in homotopy type theory. Before we define equivalences, let us consider when [A] and [B] should be considered "the same".
 
-   The first option is to require existence of [f : A -> B] and [g : B -> A] which are
-   inverses of each other, up to homotopy. Homotopically speaking, we should also require
-   a certain condition which is remniscent of the triangle identities for adjunctions in
-   category theory. Thus we call this notion an adjoint equivalence.
+   The first option is to require existence of [f : A -> B] and [g : B -> A] which are inverses of each other, up to homotopy. Homotopically speaking, we should also require a certain condition which is remniscent of the triangle identities for adjunctions in category theory. Thus we call this notion an adjoint equivalence.
 
-   The second option is to use Vladimir Voevodsky's definition of an equivalence as a map
-   whose homotopy fibers are contractible.
+   The second option is to use Vladimir Voevodsky's definition of an equivalence as a map whose homotopy fibers are contractible.
 
-   An interesting third options was suggested by André Joyal: a map [f] which has separate
-   left and right homotopy inverses. This too turns out to be reasonable.
+   An interesting third options was suggested by André Joyal: a map [f] which has separate left and right homotopy inverses. This too turns out to be reasonable.
 
-   While the second options was used originally, and it is the most concise one, it makes
-   much more sense to use the first one in a formalized development, as it exposes most
-   directly equivalence as a structure.
-*)
+   While the second options was used originally, and it is the most concise one, it makes much more sense to use the first one in a formalized development, as it exposes most directly equivalence as a structure.  *)
 
 (** Naming convention: we use [equiv] and [Equiv] systematically to denote equivalences. *)
 
@@ -30,6 +21,7 @@ Local Open Scope contr_scope.
 Definition section {A B : Type} (s : A -> B) (r : B -> A) :=
   forall x : A, r (s x) = x.
 
+(** A record that includes all the data of an adjoint equivalence. *)
 Record Equiv A B := BuildEquiv {
   equiv_fun :> A -> B ;
   equiv_inv : B -> A ;
@@ -43,8 +35,7 @@ Local Open Scope equiv_scope.
 
 Notation "A <~> B" := (Equiv A B) (at level 85) : equiv_scope.
 
-(** We use the canonical structures to recover the equivalence
-   structure of a map which is canonically known to be an equivalence. *)
+(** We use the canonical structures to recover the equivalence structure of a map which is canonically known to be an equivalence. *)
 
 Definition equiv_of A B := 
   fun (f : A -> B) (e : A <~> B) (_ : (f = e :> (A -> B))) => e.
@@ -52,9 +43,20 @@ Definition equiv_of A B :=
 Notation "[ 'equiv' 'of' f ]" := (equiv_of _ _ f _ (idpath _))
   (at level 0, format "[ 'equiv'  'of'  f ]") : equiv_scope.
 
-Definition inverse_of (A B : Type) (e : A <~> B) (_ : batman (A -> B) e) := @equiv_inv _ _ e.
+Definition inverse_of (A B : Type) (f : A -> B) (e : A <~> B) (_ : f = e :> (A -> B)) := @equiv_inv _ _ e.
 
-Notation "f ^-1" := (inverse_of _ _ _ (@Batman (_ -> _) f)) : equiv_scope.
+Notation "f ^-1" := (inverse_of _ _ f _ (idpath _)) : equiv_scope.
+
+(* Now we redefine [equiv_is_retraction] and [equiv_is_section] and [equiv_is_adjoint] so that they will recognize the notation [inverse_of]. *)
+Definition eqv_is_retraction {A B} (f : A <~> B) (x : A) : f^-1 (f x) = x
+  := equiv_is_retraction A B f x.
+
+Definition eqv_is_section {A B} (f : A <~> B) (y : B) : f (f^-1 y) = y
+  := equiv_is_section A B f y.
+
+Definition eqv_is_adjoint {A B} (f : A <~> B) (x : A) :
+  eqv_is_section f (f x) = ap f (eqv_is_retraction f x)
+  := equiv_is_adjoint A B f x.
 
 
 (** ** Canonical constructions of equivalences *)
@@ -79,6 +81,23 @@ Canonical Structure equiv_contr_unit.
 
 (** Composition of equivalences is an equivalence. *)
 Definition equiv_compose {A B C : Type} (f : B <~> C) (e : A <~> B) : Equiv A C.
+Proof.
+  exists
+    (fun a => (compose f e) a)
+    (fun c => (compose e^-1 f^-1) c)
+    (fun c => ap f (eqv_is_section e (f^-1 c)) @ eqv_is_section f c)
+    (fun a => ap (e^-1) (eqv_is_retraction f (e a)) @ eqv_is_retraction e a).
+  exact (fun a =>
+    (whiskerL _ (eqv_is_adjoint f (e a))) @
+    (ap_pp f _ _)^-1%path @
+    ap02 f
+    ( (concat_A1p (eqv_is_section e) (eqv_is_retraction f (e a))) ^-1%path @
+      (ap_compose e^-1%equiv e _ @@ eqv_is_adjoint e a) @
+      (ap_pp e _ _)^-1%path
+    ) @
+    (ap_compose e f _) ^-1%path
+  ).
+Defined.
 
 (**** GOT UP TO HERE. ****)
 
