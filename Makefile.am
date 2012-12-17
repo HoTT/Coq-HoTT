@@ -26,12 +26,6 @@ HOQC=$(srcdir)/hoqc
 # Which files should be cleaned
 CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES)
 
-.PHONY: .depend
-
-.depend:
-	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
-	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $(VFILES) $(STDVFILES) > .depend
-
 install-data-local:
 	$(mkdir_p) $(hottdir)/coq
 	rm -f $(hottdir)/coq/dev $(hottdir)/coq/plugins
@@ -53,5 +47,6 @@ $(VOFILES) : $(STDVOFILES)
 $(VOFILES) : %.vo : %.v
 	$(HOQC) $<
 
-# Do not remove - because then automake will interpret the include statement.
--include .depend
+# Dependency files
+%.d: %.v; $(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $< >$@
+-include $(VFILES:.v=.d) $(STDVFILES:.v=.d)
