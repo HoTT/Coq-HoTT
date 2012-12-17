@@ -79,7 +79,6 @@ AC_ARG_WITH([coqide],
  [AS_HELP_STRING([--without-coqide], [disable support for coqide])],
  [],
  [with_coqide=yes])
-AM_CONDITIONAL(make_hoqide, [test "$with_coqide" = "yes"])
 
 if test "$with_coqide" != "yes"; then
    AC_MSG_RESULT([Skipping coqide support, as requested.])
@@ -92,7 +91,8 @@ else
       AC_PATH_PROG([COQIDE],[coqide],[no])
    fi
    if test "$COQIDE" = "no"; then
-      AC_MSG_ERROR([Could not find coqide (configure using --without-coqide).])
+      AC_MSG_RESULT([Could not find coqide, assuming --without-coqide.])
+      with_coqide = "no"
    else
      AC_MSG_RESULT([Trusting that coqide version is $COQVERSION.])
      COQIDEVERSION=$COQVERSION
@@ -102,6 +102,8 @@ else
      fi
   fi
 fi
+
+AM_CONDITIONAL(make_hoqide, [test "$with_coqide" = "yes"])
 
 # checking for coqdep
 AC_ARG_VAR([COQDEP], [the absolute path of the coqdep executable])
