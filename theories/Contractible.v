@@ -29,7 +29,11 @@ Defined.
    type for which a canonical structure of [Contr] exists. *)
 Definition contr_center_of (A : Contr) (phA : robin A) := contr_center A.
 
-Notation "[ 'center' 'of' T ]" := (contr_center_of _ (Robin T)).
+Delimit Scope contr_scope with contr.
+
+Notation "[ 'center' 'of' T ]" :=
+  (contr_center_of _ (Robin T))
+  (at level 0, format "[ 'center'  'of'  T ]") : contr_scope .
 
 (** We shall use the canonical structure mechanism to automagically derive
     contractibility of types. First we set up the notation which allows us
