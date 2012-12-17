@@ -25,7 +25,6 @@ for transport) which hide the fibration involved.  These are very readable
 when they work, but often (especially in applications) don’t work, in that Coq cannot
 infer the fibration from the rest.  We therefore put them in their own scope so that
 they can be turned on and off as required. *)
-Delimit Scope fib_scope with fib.
 
 
 Section Transport.
@@ -38,27 +37,6 @@ Section Transport.
   with operations on paths in the base, and also how it interacts with the standard
   constructions for forming dependent types. *)
 
-(** [transport P p u] transports [u : P x] to [P y] along [p : x = y]. *)
-Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
-  match p with idpath => u end.
-
-Arguments transport {A} P {x y} p%fib_scope u.
-
-(** Transport is very common so it is worth introducing a parsing notation
-for it.  However, we do not use the notation for output because it hides the
-fibration, and so makes it very hard to read involved transport expression.*)
-Notation "p # x" := (transport _ p x) (right associativity, at level 65, only parsing) : path_scope.
-
-(** Having defined transport, we can talk about what a homotopy theorist
-might see as “paths in a fibration over paths in the base”; and what a type
-theorist might see as “heterogeneous eqality in a dependent type”.
-
-  In particular, this allows us to define an analogue of [ap] for dependent functions. *)
-
-Definition apd {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
-  p # (f x) = f y
-  :=
-  match p with idpath => 1 end.
 
 (** *** Transport and the groupoid structure of paths *)
 

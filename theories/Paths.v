@@ -19,6 +19,55 @@ Arguments paths_rect [A] a P f y p.
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
 
+(** We declare a scope in which we shall place path notations. This way they can
+   be turned on and off by the user. *)
+
+Delimit Scope path_scope with path.
+Local Open Scope path_scope.
+
+(** An important instance of [paths_rect] is that given any dependent type,
+   one can _transport_ elements of instances of the type along equalities in the
+   base.
+
+   [transport P p u] transports [u : P x] to [P y] along [p : x = y]. *)
+Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
+  match p with idpath => u end.
+
+Arguments transport {A} P {x y} p%path_scope u.
+
+(** Transport is very common so it is worth introducing a parsing notation
+for it.  However, we do not use the notation for output because it hides the
+fibration, and so makes it very hard to read involved transport expression.*)
+Delimit Scope fib_scope with fib.
+Local Open Scope fib_scope.
+
+Notation "p # x" := (transport _ p x) (right associativity, at level 65, only parsing) : path_scope.
+
+(** Having defined transport, we can use it to talk about what a homotopy
+theorist might see as “paths in a fibration over paths in the base”; and what a
+type theorist might see as “heterogeneous eqality in a dependent type”. 
+
+We will first see this appearing in the type of [apD]. *)
+
+
+(** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A],
+   then [ap f p : f x = f y].  *)
+Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
+  := match p with idpath => idpath end.
+
+(** Similarly, dependent functions act on paths; but the type is a bit more
+  subtle.  If  [f : forall a:A, B a] and [p : x = y] is a path in [A],
+  then [apD f p] should somehow be a path between [f x : B x] and [f y : B y].
+  Since these live in different types, we use transport along [p] to make
+  them comparable: [apD f p : p # f x = f y].
+
+  The type [p # f x = f y] can profitably be considered as a heterogeneous
+  or dependent equality type, of “paths from [f x] to [f y] over [p]”. *)
+Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
+  p # (f x) = f y
+  :=
+  match p with idpath => idpath end.
+
 
 (** We define equality concatenation by destructing on both its
    arguments, so that it only computes when both arguments are
@@ -32,22 +81,11 @@ Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
   := match p with idpath => idpath end.
 
-(** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A],
-   then [ap f p : f x = f y].  *)
-Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
-  := match p with idpath => idpath end.
-
 (** Note that you can use the built-in Coq tactics "reflexivity" and
    "transitivity" when working with paths, but not "symmetry", because
    it is too smart for its own good.  But you can say "apply inverse"
    instead.  
    *)
-
-(** We declare a scope in which we shall place path notations. This way they can
-   be turned on and off by the user. *)
-
-Delimit Scope path_scope with path.
-
 (** The identity path. *)
 Notation "1" := idpath : path_scope.
   
