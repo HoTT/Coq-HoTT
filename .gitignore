@@ -13,8 +13,6 @@
 *.aux
 *.log
 *.out
-# Ignore the dependency file created by coqdep
-.depend
 # Ignore stuff from autobuild
 aclocal.m4
 autom4te.cache
@@ -37,3 +35,5 @@ Makefile_ssrplugin
 *.o
 *.a
 *.cmxa
+# generated dependency files:
+*.d
