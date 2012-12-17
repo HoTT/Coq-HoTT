@@ -24,3 +24,6 @@ hoqtop
 hoqc
 hoqide
 Makefile
+
+# generated dependency files:
+*.d
