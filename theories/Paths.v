@@ -30,10 +30,10 @@ Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
   := identity_sym p.
 
 (** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A],
-   then [pmap f p : f x = f y]. 
+   then [ap f p : f x = f y]. 
 
   (Note: redefined from [Logic_Type], for same reasons as [inverse]. *)
-Definition pmap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
+Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := f_equal f p.
 
 (** We declare a scope in which we shall place path notations. This way they can
@@ -78,7 +78,7 @@ Local Open Scope path_scope.
    - [1] means the identity path
    - [p] means 'the path'
    - [V] means 'the inverse path'
-   - [P] means '[pmap]'
+   - [P] means '[ap]'
    - [M] means the thing we are moving across equality
    - [x] means 'the point' which is not a path, e.g. in [transport p x]
 
@@ -93,15 +93,15 @@ Local Open Scope path_scope.
    - [concat_pV_p] means [(q * p^-1) * p] or [(p * p^-1) * q], you just have to look
 
    Laws about inverse of something are of the form [inv_XXX], and those about
-   [pmap] are of the form [pmap_XXX]. For example:
+   [ap] are of the form [ap_XXX]. For example:
 
    - [inv_pp] is about [(p @ q)^-1]
    - [inv_V] is about [(p^-1)^-1]
-   - [inv_P] is about [(pmap f p)^-1]
-   - [pmap_V] is about [pmap f (p^-1)]
-   - [pmap_pp] is about [pmap f (p @ q)]
-   - [pmap_idmap] is about [pmap idmap p]
-   - [pmap_1] is about [pmap f 1]
+   - [inv_P] is about [(ap f p)^-1]
+   - [ap_V] is about [ap f (p^-1)]
+   - [ap_pp] is about [ap f (p @ q)]
+   - [ap_idmap] is about [ap idmap p]
+   - [ap_1] is about [ap f 1]
    
    Then we have laws which move things around in an equation. The naming scheme here is
    [moveD_XXX]. The direction [D] indicates where to move to: [L] means that we move
@@ -255,27 +255,27 @@ Defined.
 
 Definition cancelL {A : Type} {x y z : A} (p : x = y) (q r: y = z) (h : q = r) :
   p @ q = p @ r :=
-  pmap (fun s : y = z => p @ s) h.
+  ap (fun s : y = z => p @ s) h.
 
 Definition cancelR {A : Type} {x y z : A} (p q : x = y) (r: y = z) (h : p = q) :
   p @ r = q @ r
   :=
-  pmap (fun s : x = y => s @ r) h.
+  ap (fun s : x = y => s @ r) h.
 
 (** *** Functoriality of functions *)
 
 (** Here we prove that functions behave like functors between groupoids,
-   and that [pmap] itself is functorial. *)
+   and that [ap] itself is functorial. *)
 
 (** Functions take identity paths to identity paths. *)
-Definition pmap_1 {A B : Type} (x : A) (f : A -> B) :
-  pmap f 1 = 1 :> (f x = f x)
+Definition ap_1 {A B : Type} (x : A) (f : A -> B) :
+  ap f 1 = 1 :> (f x = f x)
   :=
   1.
 
 (** Functions commute with concatenation. *)
-Definition pmap_pp {A B : Type} (f : A -> B) {x y z : A} (p : x = y) (q : y = z) :
-  pmap f (p @ q) = (pmap f p) @ (pmap f q)
+Definition ap_pp {A B : Type} (f : A -> B) {x y z : A} (p : x = y) (q : y = z) :
+  ap f (p @ q) = (ap f p) @ (ap f q)
   :=
   match q with
     identity_refl =>
@@ -283,43 +283,43 @@ Definition pmap_pp {A B : Type} (f : A -> B) {x y z : A} (p : x = y) (q : y = z)
   end.
 
 (** Functions commute with path inverses. *)
-Definition inverse_pmap {A B : Type} (f : A -> B) {x y : A} (p : x = y) :
-  (pmap f p)^-1 = pmap f (p^-1)
+Definition inverse_ap {A B : Type} (f : A -> B) {x y : A} (p : x = y) :
+  (ap f p)^-1 = ap f (p^-1)
   :=
   match p with identity_refl => 1 end.
 
-(** [pmap] itself is functorial in the first argument. *)
+(** [ap] itself is functorial in the first argument. *)
 
-Definition pmap_idmap {A : Type} {x y : A} (p : x = y) :
-  pmap idmap p = p
+Definition ap_idmap {A : Type} {x y : A} (p : x = y) :
+  ap idmap p = p
   :=
   match p with identity_refl => 1 end.
 
-Definition pmap_compose {A B C : Type} (f : A -> B) (g : B -> C) {x y : A} (p : x = y) :
-  pmap (compose g f) p = pmap g (pmap f p)
+Definition ap_compose {A B C : Type} (f : A -> B) (g : B -> C) {x y : A} (p : x = y) :
+  ap (compose g f) p = ap g (ap f p)
   :=
   match p with identity_refl => 1 end.
 
-(** Naturality of [pmap]. *)
+(** Naturality of [ap]. *)
 Definition concat_Pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y : A} (q : x = y) :
-  (pmap f q) @ (p y) = (p x) @ (pmap g q)
+  (ap f q) @ (p y) = (p x) @ (ap g q)
   :=
   match q with
     | identity_refl => concat_1p _ @ ((concat_p1 _) ^-1)
   end.
 
-(** Naturality of [pmap] at identity. *)
+(** Naturality of [ap] at identity. *)
 Definition concat_P1p {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} (q : x = y) :
-  (pmap f q) @ (p y) = (p x) @ q
+  (ap f q) @ (p y) = (p x) @ q
   :=
   match q with
     | identity_refl => concat_1p _ @ ((concat_p1 _) ^-1)
   end.
 
 Definition concat_pP1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} (q : x = y) :
-  (p x) @ (pmap f q) =  q @ (p y)
+  (p x) @ (ap f q) =  q @ (p y)
   :=
-  match q as i in (_ = y) return (p x @ pmap f i = i @ p y) with
+  match q as i in (_ = y) return (p x @ ap f i = i @ p y) with
     | identity_refl => concat_p1 _ @ (concat_1p _)^-1
   end.
 

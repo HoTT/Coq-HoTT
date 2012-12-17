@@ -54,9 +54,9 @@ Notation "p # x" := (transport _ p x) (right associativity, at level 65, only pa
 might see as “paths in a fibration over paths in the base”; and what a type
 theorist might see as “heterogeneous eqality in a dependent type”.
 
-  In particular, this allows us to define an analogue of [pmap] for dependent functions. *)
+  In particular, this allows us to define an analogue of [ap] for dependent functions. *)
 
-Definition pmap_dep {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
+Definition ap_dep {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
   p # (f x) = f y
   :=
   match p with identity_refl => 1 end.
@@ -97,8 +97,8 @@ Definition transport_V_p {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P
 Definition transport_p_pp {A : Type} {P : A -> Type} 
   {x y z w : A} (p : x = y) (q : y = z) (r : z = w)
   (u : P x)
-  : pmap (fun e => e # u) (concat_p_pp p q r)
-    @ (transport_pp (p@q) r u) @ pmap (transport P r) (transport_pp p q u)
+  : ap (fun e => e # u) (concat_p_pp p q r)
+    @ (transport_pp (p@q) r u) @ ap (transport P r) (transport_pp p q u)
   = (transport_pp p (q@r) u) @ (transport_pp q r (p#u))
   :> ((p @ (q @ r)) # u = r # q # p # u) .
 Proof.
@@ -186,7 +186,7 @@ Proof.
   apply (fun p => transport (C x2) p z1).
   path_via (transport B (p^-1 @ p) y).
     symmetry.  apply transport_pp.  
-    apply (fun e => @pmap (x2=x2) (B x2) (fun q => transport B q y) 
+    apply (fun e => @ap (x2=x2) (B x2) (fun q => transport B q y) 
                       (p^-1 @ p) 1e).
   apply concat_Vp.
 Defined.

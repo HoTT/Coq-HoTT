@@ -31,7 +31,7 @@ Record Equiv A B := BuildEquiv {
   equiv_section : section equiv_inv equiv_fun ; 
   equiv_retraction : section equiv_fun equiv_inv ;
   equiv_adjoint : forall x : A, 
-  equiv_section (equiv_fun x) = pmap equiv_fun (equiv_retraction x)
+  equiv_section (equiv_fun x) = ap equiv_fun (equiv_retraction x)
 }.
 
 Notation "A <~> B" := (Equiv A B) (at level 85) : equiv_scope.
