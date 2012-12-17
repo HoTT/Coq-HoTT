@@ -1,11 +1,9 @@
+(* -*- mode: coq; mode: visual-line -*-  *)
 (** * The groupoid structure of identity types *)
 
 Require Import Common.
 
-(** In this file we study the groupoid structure of identity types. The results are used
-   everywhere else, so we need to be extra careful about how we define and prove things.
-   We prefer hand-written terms, or at least tactics that allow us to retain clear
-   control over the proof-term produced. *)
+(** In this file we study the groupoid structure of identity types. The results are used everywhere else, so we need to be extra careful about how we define and prove things.  We prefer hand-written terms, or at least tactics that allow us to retain clear control over the proof-term produced. *)
 
 Inductive paths {A : Type} (a : A) : A -> Type :=
   idpath : paths a a.
@@ -19,15 +17,12 @@ Arguments paths_rect [A] a P f y p.
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
 
-(** We declare a scope in which we shall place path notations. This way they can
-   be turned on and off by the user. *)
+(** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
 
 Delimit Scope path_scope with path.
 Local Open Scope path_scope.
 
-(** An important instance of [paths_rect] is that given any dependent type,
-   one can _transport_ elements of instances of the type along equalities in the
-   base.
+(** An important instance of [paths_rect] is that given any dependent type, one can _transport_ elements of instances of the type along equalities in the base.
 
    [transport P p u] transports [u : P x] to [P y] along [p : x = y]. *)
 Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
@@ -35,48 +30,36 @@ Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) 
 
 Arguments transport {A} P {x y} p%path_scope u.
 
-(** Transport is very common so it is worth introducing a parsing notation
-for it.  However, we do not use the notation for output because it hides the
-fibration, and so makes it very hard to read involved transport expression.*)
+(** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression.*)
 Delimit Scope fib_scope with fib.
 Local Open Scope fib_scope.
 
 Notation "p # x" := (transport _ p x) (right associativity, at level 65, only parsing) : path_scope.
 
-(** Having defined transport, we can use it to talk about what a homotopy
-theorist might see as “paths in a fibration over paths in the base”; and what a
-type theorist might see as “heterogeneous eqality in a dependent type”. 
+(** Having defined transport, we can use it to talk about what a homotopy theorist might see as “paths in a fibration over paths in the base”; and what a type theorist might see as “heterogeneous eqality in a dependent type”. 
 
 We will first see this appearing in the type of [apD]. *)
 
 
-(** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A],
-   then [ap f p : f x = f y].  
+(** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A], then [ap f p : f x = f y].  
 
-   We typically pronounce [ap] as a single syllable, short for “application”;
-   but it may also be considered as an acronym, “action on paths”. *)
+   We typically pronounce [ap] as a single syllable, short for “application”; but it may also be considered as an acronym, “action on paths”. *)
+
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
 
-(** Similarly, dependent functions act on paths; but the type is a bit more
-  subtle.  If  [f : forall a:A, B a] and [p : x = y] is a path in [A],
-  then [apD f p] should somehow be a path between [f x : B x] and [f y : B y].
-  Since these live in different types, we use transport along [p] to make
-  them comparable: [apD f p : p # f x = f y].
+(** Similarly, dependent functions act on paths; but the type is a bit more subtle.  If  [f : forall a:A, B a] and [p : x = y] is a path in [A], then [apD f p] should somehow be a path between [f x : B x] and [f y : B y].  Since these live in different types, we use transport along [p] to make them comparable: [apD f p : p # f x = f y].
 
-  The type [p # f x = f y] can profitably be considered as a heterogeneous
-  or dependent equality type, of “paths from [f x] to [f y] over [p]”. *)
+  The type [p # f x = f y] can profitably be considered as a heterogeneous or dependent equality type, of “paths from [f x] to [f y] over [p]”. *)
+
 Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
   p # (f x) = f y
   :=
   match p with idpath => idpath end.
 
 
-(** We define equality concatenation by destructing on both its
-   arguments, so that it only computes when both arguments are
-   [idpath].  This makes proofs more robust and symmetrical.
-   Compare with the definition of [identity_trans].
- *)
+(** We define equality concatenation by destructing on both its arguments, so that it only computes when both arguments are [idpath].  This makes proofs more robust and symmetrical.  Compare with the definition of [identity_trans].  *)
+
 Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
   match p, q with idpath, idpath => idpath end.
 
@@ -84,11 +67,8 @@ Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
   := match p with idpath => idpath end.
 
-(** Note that you can use the built-in Coq tactics "reflexivity" and
-   "transitivity" when working with paths, but not "symmetry", because
-   it is too smart for its own good.  But you can say "apply inverse"
-   instead.  
-   *)
+(** Note that you can use the built-in Coq tactics "reflexivity" and "transitivity" when working with paths, but not "symmetry", because it is too smart for its own good.  But you can say "apply inverse" instead.   *)
+
 (** The identity path. *)
 Notation "1" := idpath : path_scope.
   
@@ -102,12 +82,7 @@ Local Open Scope path_scope.
 
 (** ** Naming conventions
 
-   We need good naming conventions that allow us to name theorems without
-   looking them up. The names should indicate the structure of the theorem,
-   but they may sometimes be ambiguous, in which case you just have to know
-   what is going on.
-   
-   We shall adopt the following principles:
+   We need good naming conventions that allow us to name theorems without looking them up. The names should indicate the structure of the theorem, but they may sometimes be ambiguous, in which case you just have to know what is going on.    We shall adopt the following principles:
 
    - we are not afraid of long names
    - we are not afraid of short names when they are used frequently
@@ -115,9 +90,7 @@ Local Open Scope path_scope.
    - name of theorems and lemmas are lower-case
    - records and other types may be upper or lower case
 
-   Theorems about concatenation of paths are called [concat_XXX] where [XXX] tells
-   us what is on the left-hand side of the equation. You have to guess the right-hand
-   side. We use the following symbols in [XXX]:
+   Theorems about concatenation of paths are called [concat_XXX] where [XXX] tells us what is on the left-hand side of the equation. You have to guess the right-hand side. We use the following symbols in [XXX]:
 
    - [1] means the identity path
    - [p] means 'the path'
@@ -127,8 +100,7 @@ Local Open Scope path_scope.
    - [x] means 'the point' which is not a path, e.g. in [transport p x]
    - [2] means 2-dimensional concatenation
 
-   Associativity is indicated with an underscore. Here are some examples of how the
-   name gives hints about the left-hand side of the equation.
+   Associativity is indicated with an underscore. Here are some examples of how the name gives hints about the left-hand side of the equation.
 
    - [concat_1p] means [1 * p]
    - [concat_Vp] means [p^-1 * p]
@@ -137,8 +109,7 @@ Local Open Scope path_scope.
    - [concat_V_pp] means [p^-1 * (p * q)]
    - [concat_pV_p] means [(q * p^-1) * p] or [(p * p^-1) * q], you just have to look
 
-   Laws about inverse of something are of the form [inv_XXX], and those about
-   [ap] are of the form [ap_XXX], and so on. For example:
+   Laws about inverse of something are of the form [inv_XXX], and those about [ap] are of the form [ap_XXX], and so on. For example:
 
    - [inv_pp] is about [(p @ q)^-1]
    - [inv_V] is about [(p^-1)^-1]
@@ -149,18 +120,15 @@ Local Open Scope path_scope.
    - [ap_1] is about [ap f 1]
    - [ap02_p2p] is about [ap02 f (p @@ q)]
    
-   Then we have laws which move things around in an equation. The naming scheme here is
-   [moveD_XXX]. The direction [D] indicates where to move to: [L] means that we move
-   something to the left-hand side, whereas [R] means we are moving something to the
-   right-hand side. The part [XXX] describes the shape of the side _from_ which we are
-   moving where the thing that is getting moves is called [M]. Examples:
+   Then we have laws which move things around in an equation. The naming scheme here is [moveD_XXX]. The direction [D] indicates where to move to: [L] means that we move something to the left-hand side, whereas [R] means we are moving something to the right-hand side. The part [XXX] describes the shape of the side _from_ which we are moving where the thing that is getting moves is called [M]. Examples:
 
-   - [moveL_pM] means that we transform [p = q @ r] to [p @ r^-1 = q] because
-     we are moving something to the left-hand side, and we are moving the right
-     argument of concat.
+   - [moveL_pM] means that we transform [p = q @ r] to [p @ r^-1 = q]
+     because we are moving something to the left-hand side, and we are
+     moving the right argument of concat.
  
-   - [moveR_Mp] means that we transform [p @ q = r] to [q = p^-1 @ r] because
-     we move to the right-hand side, and we are moving the left argument of concat.
+   - [moveR_Mp] means that we transform [p @ q = r] to [q = p^-1 @ r]
+     because we move to the right-hand side, and we are moving the left
+     argument of concat.
 
    - [moveR_1M] means that we transform [p = 1 * q] to [p * q^-1 = 1]
 
@@ -191,6 +159,13 @@ Definition concat_p_pp {A : Type} {x y z t : A} (p : x = y) (q : y = z) (r : z =
       match p with idpath => 1
       end end end.
 
+Definition concat_pp_p {A : Type} {x y z t : A} (p : x = y) (q : y = z) (r : z = t) :
+  (p @ q) @ r = p @ (q @ r) :=
+  match r with idpath =>
+    match q with idpath =>
+      match p with idpath => 1
+      end end end.
+
 (** The left inverse law. *)
 Definition concat_pV {A : Type} {x y : A} (p : x = y) :
   p @ p ^-1 = 1
@@ -203,8 +178,7 @@ Definition concat_Vp {A : Type} {x y : A} (p : x = y) :
   :=
   match p with idpath => 1 end.
 
-(** Several auxiliary theorems about canceling inverses across associativity.
-  These are somewhat redundant, following from earlier theorems.  *)
+(** Several auxiliary theorems about canceling inverses across associativity.  These are somewhat redundant, following from earlier theorems.  *)
 
 Definition concat_V_pp {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   p^-1 @ (p @ q) = q
@@ -281,21 +255,58 @@ Proof.
   apply inverse; apply concat_pV_p.
 Defined.
 
-Definition moveL_M {A : Type} {x y : A} (p q : x = y) :
+Definition moveL_1M {A : Type} {x y : A} (p q : x = y) :
   p @ q^-1 = 1 -> p = q.
 Proof.
   destruct q.
-  simpl; rewrite (concat_p1 p).
+  simpl. rewrite (concat_p1 p).
   trivial.
 Defined.
 
-Definition moveL_V {A : Type} {x y : A} (p : x = y) (q : y = x) :
+Definition moveL_M1 {A : Type} {x y : A} (p q : x = y) :
+  q^-1 @ p = 1 -> p = q.
+Proof.
+  destruct q.
+  (* Because concat is defined with a nested match, we can't simpl on this side. *)
+  rewrite (1 : 1^-1 = 1 :> (x = x)).
+  rewrite (concat_1p p).
+  trivial.
+Defined.
+
+Definition moveL_1V {A : Type} {x y : A} (p : x = y) (q : y = x) :
   p @ q = 1 -> p = q^-1.
 Proof.
   destruct q.
   rewrite (concat_p1 p).
   trivial.
 Defined.
+
+Definition moveL_V1 {A : Type} {x y : A} (p : x = y) (q : y = x) :
+  q @ p = 1 -> p = q^-1.
+Proof.
+  destruct q.
+  rewrite (concat_1p p).
+  trivial.
+Defined.
+
+Definition moveR_M1 {A : Type} {x y : A} (p q : x = y) :
+  1 = p^-1 @ q -> p = q.
+Proof.
+  destruct p.
+  rewrite (1 : 1^-1 = 1 :> (x = x)).
+  rewrite (concat_1p q).
+  trivial.
+Defined.
+
+Definition moveR_1M {A : Type} {x y : A} (p q : x = y) :
+  1 = q @ p^-1 -> p = q.
+Proof.
+  destruct p.
+  simpl.
+  rewrite (concat_p1 q).
+  trivial.
+Defined.
+
 
 (** Cancelation laws. *)
 
@@ -310,8 +321,7 @@ Definition cancelR {A : Type} {x y z : A} (p q : x = y) (r: y = z) (h : p = q) :
 
 (** *** Functoriality of functions *)
 
-(** Here we prove that functions behave like functors between groupoids,
-   and that [ap] itself is functorial. *)
+(** Here we prove that functions behave like functors between groupoids, and that [ap] itself is functorial. *)
 
 (** Functions take identity paths to identity paths. *)
 Definition ap_1 {A B : Type} (x : A) (f : A -> B) :
@@ -331,6 +341,11 @@ Definition ap_pp {A B : Type} (f : A -> B) {x y z : A} (p : x = y) (q : y = z) :
 (** Functions commute with path inverses. *)
 Definition inverse_ap {A B : Type} (f : A -> B) {x y : A} (p : x = y) :
   (ap f p)^-1 = ap f (p^-1)
+  :=
+  match p with idpath => 1 end.
+
+Definition ap_V {A B : Type} (f : A -> B) {x y : A} (p : x = y) :
+  ap f (p^-1) = (ap f p)^-1
   :=
   match p with idpath => 1 end.
 
@@ -377,11 +392,7 @@ Definition concat_pA1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} 
 
 (** [ap] for paths between functions. *)
 
-(* We introduce the convention that [apKN] denotes the application of
-   a K-path between functions to an N-path between elements, where a
-   0-path is simply a function or an element.  Thus, [ap] is a
-   shorthand for [ap01].
- *)
+(* We introduce the convention that [apKN] denotes the application of a K-path between functions to an N-path between elements, where a 0-path is simply a function or an element.  Thus, [ap] is a shorthand for [ap01].  *)
 
 Definition ap10 {A B} {f g:A->B} (h:f=g) (x:A) : f x = g x
   := match h with idpath => 1 end.
@@ -526,21 +537,13 @@ Defined.
 
 (** *** Tactics *)
 
-(** We declare some more [Hint Resolve] hints, now in the "hint
-   database" [path_hints].  In general various hints (resolve,
-   rewrite, unfold hints) can be grouped into "databases". This is
-   necessary as sometimes different kinds of hints cannot be mixed,
-   for example because they would cause a combinatorial explosion or
-   rewriting cycles.
+(** We declare some more [Hint Resolve] hints, now in the "hint database" [path_hints].  In general various hints (resolve, rewrite, unfold hints) can be grouped into "databases". This is necessary as sometimes different kinds of hints cannot be mixed, for example because they would cause a combinatorial explosion or rewriting cycles.
 
    A specific [Hint Resolve] database [db] can be used with [auto with db].
 
-   The hints in [path_hints] are designed to push concatenation *outwards*,
-   eliminate identities and inverses, and associate to the left as far as 
-   possible. *)
+   The hints in [path_hints] are designed to push concatenation *outwards*, eliminate identities and inverses, and associate to the left as far as  possible. *)
 
-(* TODO: think more carefully about this.  Perhaps associating
-   to the right would be more convenient? *)
+(* TODO: think more carefully about this.  Perhaps associating to the right would be more convenient? *)
 Hint Resolve
   @idpath @inverse
   concat_1p concat_p1 concat_p_pp
