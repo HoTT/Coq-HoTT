@@ -56,11 +56,10 @@ theorist might see as “heterogeneous eqality in a dependent type”.
 
   In particular, this allows us to define an analogue of [pmap] for dependent functions. *)
 
-Definition pmap_dep {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y)
-  : p # (f x) = f y.
-Proof.
-  destruct p.  exact 1.
-Defined.
+Definition pmap_dep {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
+  p # (f x) = f y
+  :=
+  match p with identity_refl => 1 end.
 
 (** *** Transport and the groupoid structure of paths *)
 
@@ -159,16 +158,12 @@ Defined.
   can be (cf. Observational Type Theory).  A more thorough set of lemmas,
   along the lines of the present ones but dealing with Id-elim rather than
   just transport, might be nice to have eventually? *)
-
-(* Note: while we use tactics here for readability, the resulting term
-  is fully controlled, and cannot easily be made more compact. *)
-Lemma transport_dep
+Definition transport_dep
   {A : Type} (B : A -> Type) (C : forall a:A, B a -> Type)
-  {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C x1 y)  
-  : C x2 (p # y).
-Proof.
-  destruct p.  exact z.
-Defined.
+  {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C x1 y) :
+  C x2 (p # y)
+  :=
+  match p with identity_refl => z end.
 
 (* Note: if notation [(x;y)] is available here, this should use it. *)
 Definition transport_sigma
@@ -177,7 +172,7 @@ Definition transport_sigma
   : transport (fun x => { y : B x & C x y }) p yz
     = existT _ (p # (projT1 yz)) (transport_dep _ _ p (projT1 yz) (projT2 yz)).
 Proof.
-  destruct p.  destruct yz as [y z].  simpl.  exact 1.
+  destruct p.  destruct yz as [y z].  exact 1.
 Defined.
 
 Lemma transport_forall_unwound
@@ -185,8 +180,9 @@ Lemma transport_forall_unwound
   {x1 x2 : A} (p : x1 = x2) (f : forall y : B x1, C x1 y) 
   : forall y : B x2, C x2 y.
 Proof.
-  intro y.  set (z0 := f (p^-1 # y)).
-  set (z1 := transport_dep _ _ p _ z0).
+  intro y.
+  pose (z0 := f (p^-1 # y)).
+  pose (z1 := transport_dep _ _ p _ z0).
   apply (fun p => transport (C x2) p z1).
   path_via (transport B (p^-1 @ p) y).
     symmetry.  apply transport_pp.  
@@ -203,7 +199,7 @@ Definition transport_forall
     (transport (fun x => forall y:B x, C x y) p f) y
   = (transport_forall_unwound p f) y.
 Proof.
-  destruct p.  unfold transport_forall_unwound.  simpl.  auto.
+  destruct p.  auto.
 Defined.
 
 End Transport.

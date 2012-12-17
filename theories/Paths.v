@@ -9,7 +9,9 @@ Require Import Logic_Type.
 
 (** We define equality concatenation by destructing on both its
    arguments, so that it only computes when both arguments are
-   [identity_refl].  This makes proofs more robust and symmetrical. *)
+   [identity_refl].  This makes proofs more robust and symmetrical.
+   Compare with the definition of [identity_trans].
+ *)
 Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
   match p in (_ = y) return y = z -> x = z with
      identity_refl => fun q =>
