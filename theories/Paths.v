@@ -303,6 +303,12 @@ Definition ap_compose {A B C : Type} (f : A -> B) (g : B -> C) {x y : A} (p : x 
   :=
   match p with idpath => 1 end.
 
+(** The action of constant maps. *)
+Definition ap_const {A B : Type} {x y : A} (p : x = y) (z : B) :
+  ap (fun _ => z) p = 1
+  :=
+  match p with idpath => idpath end.
+
 (** Naturality of [ap]. *)
 Definition concat_Ap {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y : A} (q : x = y) :
   (ap f q) @ (p y) = (p x) @ (ap g q)
