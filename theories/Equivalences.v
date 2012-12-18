@@ -102,34 +102,42 @@ Canonical Structure equiv_compose.
 
 (** We could prove all the basic facts about equivalences explicitly in this way.  However, constructing the final datum [equiv_is_adjoint] is quite tedious.  The following theorem allows us to be lazy: it says that if we are missing that datum, then we can always obtain it by modifying the datum [equiv_is_retraction] (or [equiv_is_section]). *)
 
-Definition adjointify {A B} (f : A -> B) (g : B -> A) :
-  section g f -> section f g -> (A <~> B).
-Proof.
-  intros is_section is_retraction.
-  set (is_retraction' := fun x =>
-    ap g (ap f (is_retraction x) ^-1%path) @
-    ap g (is_section (f x)) @
-    is_retraction x).
-  exists f g is_section is_retraction'.
-  intro a; unfold is_retraction'.
-  repeat rewrite ap_pp.
-  rewrite concat_pp_p.
-  apply moveR_M1.
-  repeat rewrite concat_p_pp.
-  rewrite <- ap_compose; unfold compose.
-  rewrite (concat_pA1
-    (fun b => (is_section b)^-1%path)
-    (ap f (is_retraction a)^-1%path)).
-  repeat rewrite concat_pp_p.
-  apply moveL_Mp; rewrite concat_p1.
-  rewrite concat_p_pp.
-  rewrite <- ap_compose; unfold compose.
-  rewrite (concat_pA1 
-    (fun b => ((is_section b) ^-1)%path)
-    (is_section (f a))).
-  rewrite concat_pV, concat_1p.
-  rewrite ap_V; apply inv_V.
-Defined.
+Section Adjointify.
+
+  Context {A B : Type} (f : A -> B) (g : B -> A).
+  Context (is_retraction : section g f) (is_section : section f g).
+
+  Let is_section' := fun x =>
+    ap g (ap f (is_section x) ^-1%path) @
+    ap g (is_retraction (f x)) @
+    is_section x.
+
+  Let is_adjoint' (a : A) : is_retraction (f a) = ap f (is_section' a).
+  Proof.
+    unfold is_section'.
+    repeat rewrite ap_pp.
+    rewrite concat_pp_p.
+    apply moveR_M1.
+    repeat rewrite concat_p_pp.
+    rewrite <- ap_compose; unfold compose.
+    rewrite (concat_pA1
+      (fun b => (is_retraction b)^-1%path)
+      (ap f (is_section a)^-1%path)).
+    repeat rewrite concat_pp_p.
+    apply moveL_Mp; rewrite concat_p1.
+    rewrite concat_p_pp.
+    rewrite <- ap_compose; unfold compose.
+    rewrite (concat_pA1 
+      (fun b => ((is_retraction b) ^-1)%path)
+      (is_retraction (f a))).
+    rewrite concat_pV, concat_1p.
+    rewrite ap_V; apply inv_V.
+  Qed.
+
+  Definition adjointify : A <~> B
+    := BuildEquiv A B f g is_retraction is_section' is_adjoint'.
+
+End Adjointify.
 
 (** The inverse of an equivalence is an equivalence. *)
 Definition equiv_inverse {A B : Type} (f : A <~> B) : (B <~> A)
