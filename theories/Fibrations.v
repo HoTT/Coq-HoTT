@@ -57,15 +57,15 @@ Definition transport_pp {A : Type} {P : A -> Type} {x y z : A} (p : x = y) (q : 
 (** Todo: the following two results follow directly from [transport_1] and
   [transport_pp].  Is it really necessary to give them separately. *)
 Definition transport_pV {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P y) :
-  p # p^-1 # z = z :=
-  (match p as i in (_ = y) return (forall z : P y, i # i^-1 # z = z)
+  p # p^ # z = z :=
+  (match p as i in (_ = y) return (forall z : P y, i # i^ # z = z)
      with idpath => fun _ => 1
    end) z.
 
 Definition transport_V_p {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P x) :
-  p^-1 # p # z = z
+  p^ # p # z = z
   := 
-  (match p as i return (forall z : P x, i^-1 # i # z = z)
+  (match p as i return (forall z : P x, i^ # i # z = z)
      with idpath => fun _ => 1
    end) z.
 
@@ -96,7 +96,7 @@ Proof.
 Defined.
 
 Definition transport_paths_l {A : Type} {x1 x2 y : A} (p : x1 = x2) (q : x1 = y)
-  : transport (fun x => x = y) p q = p^-1 @ q.
+  : transport (fun x => x = y) p q = p^ @ q.
 Proof.
   destruct p, q.  auto.
 Defined.
@@ -120,7 +120,7 @@ Definition transport_arrow {A : Type} {B C : A -> Type}
   {x1 x2 : A} (p : x1 = x2) (f : B x1 -> C x1)
   : forall y : B x2,
     (transport (fun x => B x -> C x) p f) y
-    = p # (f (p^-1 # y)).
+    = p # (f (p^ # y)).
 Proof.
   destruct p.  simpl.  auto.
 Defined.
@@ -158,13 +158,13 @@ Lemma transport_forall_unwound
   : forall y : B x2, C x2 y.
 Proof.
   intro y.
-  pose (z0 := f (p^-1 # y)).
+  pose (z0 := f (p^ # y)).
   pose (z1 := transport_dep _ _ p _ z0).
   apply (fun p => transport (C x2) p z1).
-  path_via (transport B (p^-1 @ p) y).
+  path_via (transport B (p^ @ p) y).
     symmetry.  apply transport_pp.  
     apply (fun e => @ap (x2=x2) (B x2) (fun q => transport B q y) 
-                      (p^-1 @ p) 1e).
+                      (p^ @ p) 1e).
   apply concat_Vp.
 Defined.
 
@@ -319,7 +319,7 @@ Definition path_projT2 {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v) :
 
 (* (* This is also a special case of [transport_hfiber]. *) *)
 (* Lemma trans_is_concat_opp {A} {x y z : A} (p : x = y) (q : x = z) : *)
-(*   (transport (P := fun x' => (x' = z)) p q) = !p @ q. *)
+(*   (transport (P := fun x' => (x' = z)) p q) = ^p @ q. *)
 (* Proof. *)
 (*   path_induction. *)
 (* Defined. *)
@@ -454,7 +454,7 @@ Definition path_projT2 {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v) :
 
 (* Lemma trans2_opp {A : Type} {Q : fibration A} {x y : A} {p q : x = y} *)
 (*   (r : p = q) (z : Q x) : *)
-(*   trans2 (!r) z = !trans2 r z. *)
+(*   trans2 (^r) z = ^trans2 r z. *)
 (* Proof. *)
 (*   path_induction. *)
 (* Defined. *)
@@ -476,7 +476,7 @@ Definition path_projT2 {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v) :
 (* Lemma trans_trans_opp2 A P (x y : A) (p q : x = y) (r : p = q) (z : P y) : *)
 (*   trans_trans_opp p z = *)
 (*   map (transport p) (trans2 (opposite2 r) z) *)
-(*   @ trans2 r (!q #  z) *)
+(*   @ trans2 r (^q #  z) *)
 (*   @ trans_trans_opp q z. *)
 (* Proof. *)
 (*   path_induction. *)
@@ -497,7 +497,7 @@ Definition path_projT2 {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v) :
 (* Lemma trans_paths A B (f g : A -> B) (x y : A) (p : x = y) (q : f x = g x) : *)
 (*   transport (P := fun a => f a = g a) p q *)
 (*   = *)
-(*   !map f p @ q @ map g p. *)
+(*   ^map f p @ q @ map g p. *)
 (* Proof. *)
 (*   path_induction. *)
 (*   hott_simpl. *)
