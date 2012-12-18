@@ -63,6 +63,8 @@ Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
 Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
   match p, q with idpath, idpath => idpath end.
 
+Arguments concat {A x y z} p q : simpl nomatch.
+
 (** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
   := match p with idpath => idpath end.
@@ -295,9 +297,7 @@ Definition moveL_M1 {A : Type} {x y : A} (p q : x = y) :
   q^-1 @ p = 1 -> p = q.
 Proof.
   destruct q.
-  (* Because concat is defined with a nested match, we can't simpl on this side. *)
-  rewrite (1 : 1^-1 = 1 :> (x = x)).
-  rewrite (concat_1p p).
+  simpl. rewrite (concat_1p p).
   trivial.
 Defined.
 
@@ -321,8 +321,7 @@ Definition moveR_M1 {A : Type} {x y : A} (p q : x = y) :
   1 = p^-1 @ q -> p = q.
 Proof.
   destruct p.
-  rewrite (1 : 1^-1 = 1 :> (x = x)).
-  rewrite (concat_1p q).
+  simpl. rewrite (concat_1p q).
   trivial.
 Defined.
 
