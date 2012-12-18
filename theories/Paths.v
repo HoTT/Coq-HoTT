@@ -525,7 +525,7 @@ Proof.
 Defined.
 
 (** The Eckmann-Hilton argument *)
-Definition eckmann_hilton {A} {x:A} (p q : 1 = 1 :> (x = x)) : p @ q = q @ p :=
+Definition eckmann_hilton {A : Type} {x:A} (p q : 1 = 1 :> (x = x)) : p @ q = q @ p :=
   (whiskerR_p1 p @@ whiskerL_1p q) ^-1
   @ (concat_p1 _ @@ concat_p1 _)
   @ (concat_1p _ @@ concat_1p _)
@@ -536,7 +536,7 @@ Definition eckmann_hilton {A} {x:A} (p q : 1 = 1 :> (x = x)) : p @ q = q @ p :=
 
 (** The action of functions on 2-dimensional paths *)
 
-Definition ap02 {A B} (f:A->B) {x y:A} {p q:x=y} (r:p=q) : ap f p = ap f q
+Definition ap02 {A B : Type} (f:A->B) {x y:A} {p q:x=y} (r:p=q) : ap f p = ap f q
   := match r with idpath => 1 end.
 
 Definition ap02_pp {A B} (f:A->B) {x y:A} {p p' p'':x=y} (r:p=p') (r':p'=p'')
