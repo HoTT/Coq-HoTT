@@ -25,9 +25,9 @@ Definition section {A B : Type} (s : A -> B) (r : B -> A) :=
 Record Equiv A B := BuildEquiv {
   equiv_fun :> A -> B ;
   equiv_inv : B -> A ;
-  equiv_is_section : section equiv_inv equiv_fun ; 
-  equiv_is_retraction : section equiv_fun equiv_inv ;
-  equiv_is_adjoint : forall x : A, equiv_is_section (equiv_fun x) = ap equiv_fun (equiv_is_retraction x)
+  equiv_is_retraction : section equiv_inv equiv_fun ; 
+  equiv_is_section : section equiv_fun equiv_inv ;
+  equiv_is_adjoint : forall x : A, equiv_is_retraction (equiv_fun x) = ap equiv_fun (equiv_is_section x)
 }.
 
 Delimit Scope equiv_scope with equiv.
@@ -48,14 +48,14 @@ Definition inverse_of (A B : Type) (f : A -> B) (e : A <~> B) (_ : f = e :> (A -
 Notation "f ^-1" := (inverse_of _ _ f _ (idpath _)) : equiv_scope.
 
 (* Now we redefine [equiv_is_retraction] and [equiv_is_section] and [equiv_is_adjoint] so that they will recognize the notation [inverse_of]. *)
-Definition eqv_is_retraction {A B} (f : A <~> B) (x : A) : f^-1 (f x) = x
-  := equiv_is_retraction A B f x.
+Definition eissect {A B} (f : A <~> B) (x : A) : f^-1 (f x) = x
+  := equiv_is_section A B f x.
 
-Definition eqv_is_section {A B} (f : A <~> B) (y : B) : f (f^-1 y) = y
-  := equiv_is_section A B f y.
+Definition eisretr {A B} (f : A <~> B) (y : B) : f (f^-1 y) = y
+  := equiv_is_retraction A B f y.
 
 Definition eqv_is_adjoint {A B} (f : A <~> B) (x : A) :
-  eqv_is_section f (f x) = ap f (eqv_is_retraction f x)
+  eisretr f (f x) = ap f (eissect f x)
   := equiv_is_adjoint A B f x.
 
 
@@ -80,24 +80,69 @@ Defined.
 Canonical Structure equiv_contr_unit.
 
 (** Composition of equivalences is an equivalence. *)
-Definition equiv_compose {A B C : Type} (f : B <~> C) (e : A <~> B) : Equiv A C.
+Definition equiv_compose {A B C : Type} (f : B <~> C) (e : A <~> B)
+  : A <~> C
+  := BuildEquiv A C
+    (compose f e)
+    (compose e^-1 f^-1)
+    (fun c => ap f (eisretr e (f^-1 c)) @ eisretr f c)
+    (fun a => ap (e^-1) (eissect f (e a)) @ eissect e a)
+    (fun a =>
+      (whiskerL _ (eqv_is_adjoint f (e a))) @
+      (ap_pp f _ _)^-1%path @
+      ap02 f
+      ( (concat_A1p (eisretr e) (eissect f (e a))) ^-1%path @
+        (ap_compose e^-1%equiv e _ @@ eqv_is_adjoint e a) @
+        (ap_pp e _ _)^-1%path
+      ) @
+      (ap_compose e f _) ^-1%path
+    ).
+
+Canonical Structure equiv_compose.
+
+(** We could prove all the basic facts about equivalences explicitly in this way.  However, constructing the final datum [equiv_is_adjoint] is quite tedious.  The following theorem allows us to be lazy: it says that if we are missing that datum, then we can always obtain it by modifying the datum [equiv_is_retraction] (or [equiv_is_section]). *)
+
+Definition adjointify {A B} (f : A -> B) (g : B -> A) :
+  section g f -> section f g -> (A <~> B).
 Proof.
-  exists
-    (fun a => (compose f e) a)
-    (fun c => (compose e^-1 f^-1) c)
-    (fun c => ap f (eqv_is_section e (f^-1 c)) @ eqv_is_section f c)
-    (fun a => ap (e^-1) (eqv_is_retraction f (e a)) @ eqv_is_retraction e a).
-  exact (fun a =>
-    (whiskerL _ (eqv_is_adjoint f (e a))) @
-    (ap_pp f _ _)^-1%path @
-    ap02 f
-    ( (concat_A1p (eqv_is_section e) (eqv_is_retraction f (e a))) ^-1%path @
-      (ap_compose e^-1%equiv e _ @@ eqv_is_adjoint e a) @
-      (ap_pp e _ _)^-1%path
-    ) @
-    (ap_compose e f _) ^-1%path
-  ).
+  intros is_section is_retraction.
+  set (is_retraction' := fun x =>
+    ap g (ap f (is_retraction x) ^-1%path) @
+    ap g (is_section (f x)) @
+    is_retraction x).
+  exists f g is_section is_retraction'.
+  intro a; unfold is_retraction'.
+  repeat rewrite ap_pp.
+  rewrite concat_pp_p.
+  apply moveR_M1.
+  repeat rewrite concat_p_pp.
+  rewrite <- ap_compose; unfold compose.
+  rewrite (concat_pA1
+    (fun b => (is_section b)^-1%path)
+    (ap f (is_retraction a)^-1%path)).
+  repeat rewrite concat_pp_p.
+  apply moveL_Mp; rewrite concat_p1.
+  rewrite concat_p_pp.
+  rewrite <- ap_compose; unfold compose.
+  rewrite (concat_pA1 
+    (fun b => ((is_section b) ^-1)%path)
+    (is_section (f a))).
+  rewrite concat_pV, concat_1p.
+  rewrite ap_V; apply inv_V.
 Defined.
+
+(** The inverse of an equivalence is an equivalence. *)
+Definition equiv_inverse {A B : Type} (f : A <~> B) : (B <~> A)
+  := adjointify (f^-1) f (eissect f) (eisretr f).
+
+Canonical Structure equiv_inverse.
+
+(**  *)
+Definition equiv_cancel_right {A B C} (f : A <~> B) (g : B -> C) :
+  is_equiv (g o f) -> B <~> C.
+
+(**  *)
+
 
 (**** GOT UP TO HERE. ****)
 
