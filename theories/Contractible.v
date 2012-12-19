@@ -65,7 +65,7 @@ Canonical Structure prod_contr.
 Definition contr_path {A : Contr} (x y : A) :
   x = y
   :=
-  (contr x)^-1 @ (contr y).
+  (contr x)^ @ (contr y).
 
 (** Similarly, any two parallel paths in a contractible space are homotopic,
    which is just the principle UIP. *)
@@ -80,8 +80,8 @@ Defined.
 Canonical Structure contr_identity {A : Contr} (x y : A) :=
   BuildContr
   (x = y)
-  ((contr x)^-1 @ contr y)
-  (contr_UIP A x y ((contr x)^-1 @ contr y)).
+  ((contr x)^ @ contr y)
+  (contr_UIP A x y ((contr x)^ @ contr y)).
 
 (** The total space of any based path space is contractible. *)
 Definition contr_sigT_identity {X : Type} (x : X) : Contr.

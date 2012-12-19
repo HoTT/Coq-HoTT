@@ -78,7 +78,7 @@ Notation "1" := idpath : path_scope.
 Notation "p @ q" := (concat p q) (at level 20) : path_scope.
   
 (* The inverse of a path. *)
-Notation "p ^-1" := (inverse p) (at level 3) : path_scope.
+Notation "p ^" := (inverse p) (at level 3) : path_scope.
 
 Local Open Scope path_scope.
 
@@ -105,18 +105,18 @@ Local Open Scope path_scope.
    Associativity is indicated with an underscore. Here are some examples of how the name gives hints about the left-hand side of the equation.
 
    - [concat_1p] means [1 * p]
-   - [concat_Vp] means [p^-1 * p]
+   - [concat_Vp] means [p^ * p]
    - [concat_p_pp] means [p * (q * r)]
    - [concat_pp_p] means [(p * q) * r]
-   - [concat_V_pp] means [p^-1 * (p * q)]
-   - [concat_pV_p] means [(q * p^-1) * p] or [(p * p^-1) * q], you just have to look
+   - [concat_V_pp] means [p^ * (p * q)]
+   - [concat_pV_p] means [(q * p^) * p] or [(p * p^) * q], you just have to look
 
    Laws about inverse of something are of the form [inv_XXX], and those about [ap] are of the form [ap_XXX], and so on. For example:
 
-   - [inv_pp] is about [(p @ q)^-1]
-   - [inv_V] is about [(p^-1)^-1]
-   - [inv_A] is about [(ap f p)^-1]
-   - [ap_V] is about [ap f (p^-1)]
+   - [inv_pp] is about [(p @ q)^]
+   - [inv_V] is about [(p^)^]
+   - [inv_A] is about [(ap f p)^]
+   - [ap_V] is about [ap f (p^)]
    - [ap_pp] is about [ap f (p @ q)]
    - [ap_idmap] is about [ap idmap p]
    - [ap_1] is about [ap f 1]
@@ -124,15 +124,15 @@ Local Open Scope path_scope.
    
    Then we have laws which move things around in an equation. The naming scheme here is [moveD_XXX]. The direction [D] indicates where to move to: [L] means that we move something to the left-hand side, whereas [R] means we are moving something to the right-hand side. The part [XXX] describes the shape of the side _from_ which we are moving where the thing that is getting moves is called [M]. Examples:
 
-   - [moveL_pM] means that we transform [p = q @ r] to [p @ r^-1 = q]
+   - [moveL_pM] means that we transform [p = q @ r] to [p @ r^ = q]
      because we are moving something to the left-hand side, and we are
      moving the right argument of concat.
  
-   - [moveR_Mp] means that we transform [p @ q = r] to [q = p^-1 @ r]
+   - [moveR_Mp] means that we transform [p @ q = r] to [q = p^ @ r]
      because we move to the right-hand side, and we are moving the left
      argument of concat.
 
-   - [moveR_1M] means that we transform [p = 1 * q] to [p * q^-1 = 1]
+   - [moveR_1M] means that we transform [p = 1 * q] to [p * q^ = 1]
 
    Lastly, there are cancelation laws. These are called [cancelR] and [cancelL].
 
@@ -170,43 +170,43 @@ Definition concat_pp_p {A : Type} {x y z t : A} (p : x = y) (q : y = z) (r : z =
 
 (** The left inverse law. *)
 Definition concat_pV {A : Type} {x y : A} (p : x = y) :
-  p @ p ^-1 = 1
+  p @ p^ = 1
   :=
   match p with idpath => 1 end.
   
 (** The right inverse law. *)
 Definition concat_Vp {A : Type} {x y : A} (p : x = y) :
-  p^-1 @ p = 1
+  p^ @ p = 1
   :=
   match p with idpath => 1 end.
 
 (** Several auxiliary theorems about canceling inverses across associativity.  These are somewhat redundant, following from earlier theorems.  *)
 
 Definition concat_V_pp {A : Type} {x y z : A} (p : x = y) (q : y = z) :
-  p^-1 @ (p @ q) = q
+  p^ @ (p @ q) = q
   :=
   match q with idpath =>
     match p with idpath => 1 end
   end.
 
 Definition concat_p_Vp {A : Type} {x y z : A} (p : x = y) (q : x = z) :
-  p @ (p^-1 @ q) = q
+  p @ (p^ @ q) = q
   :=
   match q with idpath =>
     match p with idpath => 1 end
   end.
 
 Definition concat_pp_V {A : Type} {x y z : A} (p : x = y) (q : y = z) :
-  (p @ q) @ q^-1 = p
+  (p @ q) @ q^ = p
   :=
   match q with idpath =>
     match p with idpath => 1 end
   end.
 
 Definition concat_pV_p {A : Type} {x y z : A} (p : x = z) (q : y = z) :
-  (p @ q^-1) @ q = p
+  (p @ q^) @ q = p
   :=
-  (match q as i return forall p, (p @ i^-1) @ i = p with
+  (match q as i return forall p, (p @ i^) @ i = p with
     idpath =>
     fun p =>
       match p with idpath => 1 end
@@ -214,7 +214,7 @@ Definition concat_pV_p {A : Type} {x y z : A} (p : x = z) (q : y = z) :
 
 (** Inverse distributes over concatenation *)
 Definition inv_pp {A : Type} {x y z : A} (p : x = y) (q : y = z) :
-  (p @ q)^-1 = q^-1 @ p^-1
+  (p @ q)^ = q^ @ p^
   :=
   match q with idpath =>
     match p with idpath => 1 end
@@ -222,7 +222,7 @@ Definition inv_pp {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   
 (** Inverse is an involution. *)
 Definition inv_V {A : Type} {x y : A} (p : x = y) :
-  p ^-1 ^-1 = p
+  p^^ = p
   :=
   match p with idpath => 1 end.
 
@@ -230,63 +230,63 @@ Definition inv_V {A : Type} {x y : A} (p : x = y) :
 (* *** Theorems for moving things around in equations. *)
 
 Definition moveR_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
-  p = r^-1 @ q -> r @ p = q.
+  p = r^ @ q -> r @ p = q.
 Proof.
   intro h; rewrite h.
   apply concat_p_Vp.
 Defined.
 
 Definition moveR_pM {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
-  r = q @ p^-1 -> r @ p = q.
+  r = q @ p^ -> r @ p = q.
 Proof. 
   intro h; rewrite h.
   apply concat_pV_p.
 Defined.
 
 Definition moveR_Vp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y) :
-  p = r @ q -> r^-1 @ p = q.
+  p = r @ q -> r^ @ p = q.
 Proof.
   intro h; rewrite h.
   apply concat_V_pp.
 Defined.
 
 Definition moveR_pV {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x) :
-  r = q @ p -> r @ p^-1 = q.
+  r = q @ p -> r @ p^ = q.
 Proof. 
   intro h; rewrite h.
   apply concat_pp_V.
 Defined.
 
 Definition moveL_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
-  r^-1 @ q = p -> q = r @ p.
+  r^ @ q = p -> q = r @ p.
 Proof.
   intro h; rewrite <- h.
   apply inverse, concat_p_Vp.
 Defined.
 
 Definition moveL_pM {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
-  q @ p^-1 = r -> q = r @ p.
+  q @ p^ = r -> q = r @ p.
 Proof.
   intro h; rewrite <- h.
   apply inverse; apply concat_pV_p.
 Defined.
 
 Definition moveL_Vp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y) :
-  r @ q = p -> q = r^-1 @ p.
+  r @ q = p -> q = r^ @ p.
 Proof.
   intro h; rewrite <- h.
   apply inverse, concat_V_pp.
 Defined.
 
 Definition moveL_pV {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x) :
-  q @ p = r -> q = r @ p^-1.
+  q @ p = r -> q = r @ p^.
 Proof.
   intro h; rewrite <- h.
   apply inverse; apply concat_pp_V.
 Defined.
 
 Definition moveL_1M {A : Type} {x y : A} (p q : x = y) :
-  p @ q^-1 = 1 -> p = q.
+  p @ q^ = 1 -> p = q.
 Proof.
   destruct q.
   simpl. rewrite (concat_p1 p).
@@ -294,7 +294,7 @@ Proof.
 Defined.
 
 Definition moveL_M1 {A : Type} {x y : A} (p q : x = y) :
-  q^-1 @ p = 1 -> p = q.
+  q^ @ p = 1 -> p = q.
 Proof.
   destruct q.
   simpl. rewrite (concat_1p p).
@@ -302,7 +302,7 @@ Proof.
 Defined.
 
 Definition moveL_1V {A : Type} {x y : A} (p : x = y) (q : y = x) :
-  p @ q = 1 -> p = q^-1.
+  p @ q = 1 -> p = q^.
 Proof.
   destruct q.
   rewrite (concat_p1 p).
@@ -310,7 +310,7 @@ Proof.
 Defined.
 
 Definition moveL_V1 {A : Type} {x y : A} (p : x = y) (q : y = x) :
-  q @ p = 1 -> p = q^-1.
+  q @ p = 1 -> p = q^.
 Proof.
   destruct q.
   rewrite (concat_1p p).
@@ -318,7 +318,7 @@ Proof.
 Defined.
 
 Definition moveR_M1 {A : Type} {x y : A} (p q : x = y) :
-  1 = p^-1 @ q -> p = q.
+  1 = p^ @ q -> p = q.
 Proof.
   destruct p.
   simpl. rewrite (concat_1p q).
@@ -326,7 +326,7 @@ Proof.
 Defined.
 
 Definition moveR_1M {A : Type} {x y : A} (p q : x = y) :
-  1 = q @ p^-1 -> p = q.
+  1 = q @ p^ -> p = q.
 Proof.
   destruct p.
   simpl.
@@ -335,7 +335,7 @@ Proof.
 Defined.
 
 Definition moveR_1V {A : Type} {x y : A} (p : x = y) (q : y = x) :
-  1 = q @ p -> p^-1 = q.
+  1 = q @ p -> p^ = q.
 Proof.
   destruct p.
   rewrite (concat_p1 q).
@@ -343,7 +343,7 @@ Proof.
 Defined.
 
 Definition moveR_V1 {A : Type} {x y : A} (p : x = y) (q : y = x) :
-  1 = p @ q -> p^-1 = q.
+  1 = p @ q -> p^ = q.
 Proof.
   destruct p.
   rewrite (concat_1p q).
@@ -383,12 +383,12 @@ Definition ap_pp {A B : Type} (f : A -> B) {x y z : A} (p : x = y) (q : y = z) :
 
 (** Functions commute with path inverses. *)
 Definition inverse_ap {A B : Type} (f : A -> B) {x y : A} (p : x = y) :
-  (ap f p)^-1 = ap f (p^-1)
+  (ap f p)^ = ap f (p^)
   :=
   match p with idpath => 1 end.
 
 Definition ap_V {A B : Type} (f : A -> B) {x y : A} (p : x = y) :
-  ap f (p^-1) = (ap f p)^-1
+  ap f (p^) = (ap f p)^
   :=
   match p with idpath => 1 end.
 
@@ -415,7 +415,7 @@ Definition concat_Ap {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y 
   (ap f q) @ (p y) = (p x) @ (ap g q)
   :=
   match q with
-    | idpath => concat_1p _ @ ((concat_p1 _) ^-1)
+    | idpath => concat_1p _ @ ((concat_p1 _) ^)
   end.
 
 (** Naturality of [ap] at identity. *)
@@ -423,14 +423,14 @@ Definition concat_A1p {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} 
   (ap f q) @ (p y) = (p x) @ q
   :=
   match q with
-    | idpath => concat_1p _ @ ((concat_p1 _) ^-1)
+    | idpath => concat_1p _ @ ((concat_p1 _) ^)
   end.
 
 Definition concat_pA1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} (q : x = y) :
   (p x) @ (ap f q) =  q @ (p y)
   :=
   match q as i in (_ = y) return (p x @ ap f i = i @ p y) with
-    | idpath => concat_p1 _ @ (concat_1p _)^-1
+    | idpath => concat_p1 _ @ (concat_1p _)^
   end.
 
 (** [ap] for paths between functions. *)
@@ -478,7 +478,7 @@ Definition whiskerR {A : Type} {x y z : A} {p q : x = y} (h : p = q) (r : y = z)
 (** Whiskering and identity paths. *)
 
 Definition whiskerR_p1 {A : Type} {x y : A} {p q : x = y} (h : p = q) :
-  (concat_p1 p) ^-1 @ whiskerR h 1 @ concat_p1 q = h
+  (concat_p1 p) ^ @ whiskerR h 1 @ concat_p1 q = h
   :=
   match h with idpath =>
     match p with idpath =>
@@ -496,7 +496,7 @@ Definition whiskerL_p1 {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   match q with idpath => 1 end.
 
 Definition whiskerL_1p {A : Type} {x y : A} {p q : x = y} (h : p = q) :
-  (concat_1p p) ^-1 @ whiskerL 1 h @ concat_1p q = h
+  (concat_1p p) ^ @ whiskerL 1 h @ concat_1p q = h
   :=
   match h with idpath =>
     match p with idpath =>
@@ -533,7 +533,7 @@ Definition concat_whisker {A} {x y z : A} (p p' : x = y) (q q' : y = z) (a : p =
   match b with
     idpath =>
     match a with idpath =>
-      (concat_1p _)^-1
+      (concat_1p _)^
     end
   end.
 
@@ -559,12 +559,12 @@ Defined.
 
 (** The Eckmann-Hilton argument *)
 Definition eckmann_hilton {A : Type} {x:A} (p q : 1 = 1 :> (x = x)) : p @ q = q @ p :=
-  (whiskerR_p1 p @@ whiskerL_1p q) ^-1
+  (whiskerR_p1 p @@ whiskerL_1p q)^
   @ (concat_p1 _ @@ concat_p1 _)
   @ (concat_1p _ @@ concat_1p _)
   @ (concat_whisker _ _ _ _ p q)
-  @ (concat_1p _ @@ concat_1p _) ^-1
-  @ (concat_p1 _ @@ concat_p1 _) ^-1
+  @ (concat_1p _ @@ concat_1p _)^
+  @ (concat_p1 _ @@ concat_p1 _)^
   @ (whiskerL_1p q @@ whiskerR_p1 p).
 
 (** The action of functions on 2-dimensional paths *)
@@ -579,7 +579,7 @@ Proof.
 Defined.
 
 Definition ap02_p2p {A B} (f:A->B) {x y z:A} {p p':x=y} {q q':y=z} (r:p=p') (s:q=q')
-  : ap02 f (r @@ s) = ap_pp f p q @ (ap02 f r @@ ap02 f s) @ (ap_pp f p' q') ^-1.
+  : ap02 f (r @@ s) = ap_pp f p q @ (ap02 f r @@ ap02 f s) @ (ap_pp f p' q')^.
 Proof.
   case r, s, p, q. reflexivity.
 Defined.

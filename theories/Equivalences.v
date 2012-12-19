@@ -45,7 +45,7 @@ Notation "[ 'equiv' 'of' f ]" := (equiv_of _ _ f _ (idpath _))
 
 Definition inverse_of (A B : Type) (f : A -> B) (e : A <~> B) (_ : f = e :> (A -> B)) := @equiv_inv _ _ e.
 
-Notation "f ^-1" := (inverse_of _ _ f _ (idpath _)) : equiv_scope.
+Notation "f ^-1" := (inverse_of _ _ f _ (idpath _)) (at level 3) : equiv_scope.
 
 (* Now we redefine [equiv_is_retraction] and [equiv_is_section] and [equiv_is_adjoint] so that they will recognize the notation [inverse_of]. *)
 Definition eissect {A B} (f : A <~> B) (x : A) : f^-1 (f x) = x
@@ -89,13 +89,13 @@ Definition equiv_compose {A B C : Type} (f : B <~> C) (e : A <~> B)
     (fun a => ap (e^-1) (eissect f (e a)) @ eissect e a)
     (fun a =>
       (whiskerL _ (eqv_is_adjoint f (e a))) @
-      (ap_pp f _ _)^-1%path @
+      (ap_pp f _ _)^ @
       ap02 f
-      ( (concat_A1p (eisretr e) (eissect f (e a))) ^-1%path @
+      ( (concat_A1p (eisretr e) (eissect f (e a)))^ @
         (ap_compose e^-1%equiv e _ @@ eqv_is_adjoint e a) @
-        (ap_pp e _ _)^-1%path
+        (ap_pp e _ _)^
       ) @
-      (ap_compose e f _) ^-1%path
+      (ap_compose e f _)^
     ).
 
 Canonical Structure equiv_compose.
@@ -108,7 +108,7 @@ Section Adjointify.
   Context (is_retraction : section g f) (is_section : section f g).
 
   Let is_section' := fun x =>
-    ap g (ap f (is_section x) ^-1%path) @
+    ap g (ap f (is_section x)^) @
     ap g (is_retraction (f x)) @
     is_section x.
 
@@ -121,14 +121,14 @@ Section Adjointify.
     repeat rewrite concat_p_pp.
     rewrite <- ap_compose; unfold compose.
     rewrite (concat_pA1
-      (fun b => (is_retraction b)^-1%path)
-      (ap f (is_section a)^-1%path)).
+      (fun b => (is_retraction b)^)
+      (ap f (is_section a)^)).
     repeat rewrite concat_pp_p.
     apply moveL_Mp; rewrite concat_p1.
     rewrite concat_p_pp.
     rewrite <- ap_compose; unfold compose.
     rewrite (concat_pA1 
-      (fun b => ((is_retraction b) ^-1)%path)
+      (fun b => (is_retraction b)^)
       (is_retraction (f a))).
     rewrite concat_pV, concat_1p.
     rewrite ap_V; apply inv_V.
