@@ -28,7 +28,7 @@ Local Open Scope path_scope.
 Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
   match p with idpath => u end.
 
-Arguments transport {A} P {x y} p%path_scope u.
+Arguments transport {A} P {x y} p%path_scope u : simpl nomatch.
 
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression.*)
 Delimit Scope fib_scope with fib.
@@ -48,6 +48,8 @@ We will first see this appearing in the type of [apD]. *)
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
 
+Arguments ap {A B} f {x y} p : simpl nomatch.
+
 (** Similarly, dependent functions act on paths; but the type is a bit more subtle.  If  [f : forall a:A, B a] and [p : x = y] is a path in [A], then [apD f p] should somehow be a path between [f x : B x] and [f y : B y].  Since these live in different types, we use transport along [p] to make them comparable: [apD f p : p # f x = f y].
 
   The type [p # f x = f y] can profitably be considered as a heterogeneous or dependent equality type, of “paths from [f x] to [f y] over [p]”. *)
@@ -57,6 +59,7 @@ Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
   :=
   match p with idpath => idpath end.
 
+Arguments apD {A B} f {x y} p : simpl nomatch.
 
 (** We define equality concatenation by destructing on both its arguments, so that it only computes when both arguments are [idpath].  This makes proofs more robust and symmetrical.  Compare with the definition of [identity_trans].  *)
 
@@ -68,6 +71,8 @@ Arguments concat {A x y z} p q : simpl nomatch.
 (** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
   := match p with idpath => idpath end.
+
+Arguments inverse {A x y} p : simpl nomatch.
 
 (** Note that you can use the built-in Coq tactics "reflexivity" and "transitivity" when working with paths, but not "symmetry", because it is too smart for its own good.  But you can say "apply inverse" instead.   *)
 
