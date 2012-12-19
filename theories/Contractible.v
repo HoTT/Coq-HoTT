@@ -1,15 +1,13 @@
+(* -*- mode: coq; mode: visual-line -*- *)
+(** Contractibility *)
+
 Require Import Common Paths.
 
 Local Open Scope path_scope.
 
-(** Naming convention: we consistently abbreviate "contractible" as "contr".
-   A theorem about a space [X] being contractible is called [contr_X]. *)
+(** Naming convention: we consistently abbreviate "contractible" as "contr".  A theorem about a space [X] being contractible is called [contr_X]. *)
 
-(** A space [A] is contractible if there is a point [x : A] and a
-   (pointwise) homotopy connecting the identity on [A] to the constant
-   map at [x].  Thus an element of [is_contr A] is a pair whose
-   first component is a point [x] and the second component is a
-   pointwise retraction of [A] to [x]. *)
+(** A space [A] is contractible if there is a point [x : A] and a (pointwise) homotopy connecting the identity on [A] to the constant map at [x].  Thus an element of [is_contr A] is a pair whose first component is a point [x] and the second component is a pointwise retraction of [A] to [x]. *)
 
 Record Contr := BuildContr {
   contr_carrier :> Type ;
@@ -25,8 +23,7 @@ Proof.
   exact c.
 Defined.
 
-(** A trick which allows us to write [[center of A]] where [A] is a
-   type for which a canonical structure of [Contr] exists. *)
+(** A trick which allows us to write [[center of A]] where [A] is a type for which a canonical structure of [Contr] exists. *)
 Definition contr_center_of (A : Contr) (phA : robin A) := contr_center A.
 
 Delimit Scope contr_scope with contr.
@@ -35,9 +32,7 @@ Notation "[ 'center' 'of' T ]" :=
   (contr_center_of _ (Robin T))
   (at level 0, format "[ 'center'  'of'  T ]") : contr_scope .
 
-(** We shall use the canonical structure mechanism to automagically derive
-    contractibility of types. First we set up the notation which allows us
-    to name the center of a contractible type easily. *)
+(** We shall use the canonical structure mechanism to automagically derive contractibility of types. First we set up the notation which allows us to name the center of a contractible type easily. *)
 
 Canonical Structure unit_contr :=
   BuildContr unit tt (fun t : unit => match t with tt => 1 end).
@@ -60,15 +55,11 @@ Definition prod_contr (A : Contr) (B : Contr) : Contr :=
 
 Canonical Structure prod_contr.
 
-(** If a space is contractible, then any two points in it are
-   connected by a path in a canonical way. *)
-Definition contr_path {A : Contr} (x y : A) :
-  x = y
-  :=
-  (contr x)^ @ (contr y).
+(** If a space is contractible, then any two points in it are connected by a path in a canonical way. *)
+Definition contr_path {A : Contr} (x y : A) : x = y
+  := (contr x)^ @ (contr y).
 
-(** Similarly, any two parallel paths in a contractible space are homotopic,
-   which is just the principle UIP. *)
+(** Similarly, any two parallel paths in a contractible space are homotopic, which is just the principle UIP. *)
 Definition contr_UIP (A : Contr) (x y : A) (p q : x = y) : p = q.
 Proof.
   assert (H : forall (r : x = y), r = contr_path x y).
