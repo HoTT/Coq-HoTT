@@ -50,12 +50,6 @@ CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES)
 
 .PHONY: stdlib hottlib ssrplugin
 
-# XXX if someone can figure out why we have to run coqdep twice, that would be cool
-# In any case, we should switch to having .d dependency files instead of a central .depend
-.depend: $(VFILES) $(STDVFILES)
-	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq -R ssrplugin/theories Ssreflect $(VFILES) $(STDVFILES) $(SSRVFILES) > .depend
-	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq -R ssrplugin/theories Ssreflect $(VFILES) $(STDVFILES) $(SSRVFILES) > .depend
-
 install-data-local:
 	$(mkdir_p) $(hottdir)/coq
 	rm -f $(hottdir)/coq/dev $(hottdir)/coq/plugins
@@ -106,5 +100,6 @@ $(SSRCMXSFILES): %.cmxs : %.mllib
 $(SSRCMAFILES): %.cma : %.mllib
 	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
 
-# Do not remove - because then automake will interpret the include statement.
--include .depend
+# Dependency files
+%.d: %.v; $(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $< >$@
+-include $(VFILES:.v=.d) $(STDVFILES:.v=.d)

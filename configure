@@ -589,10 +589,10 @@ COQCDOC
 COQDOC
 COQCDEP
 COQDEP
-COQIDEVERSION
-COQIDE
 make_hoqide_FALSE
 make_hoqide_TRUE
+COQIDEVERSION
+COQIDE
 COQCVERSION
 COQC
 COQLIB
@@ -2451,14 +2451,6 @@ else
   with_coqide=yes
 fi
 
- if test "$with_coqide" = "yes"; then
-  make_hoqide_TRUE=
-  make_hoqide_FALSE='#'
-else
-  make_hoqide_TRUE='#'
-  make_hoqide_FALSE=
-fi
-
 
 if test "$with_coqide" != "yes"; then
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: Skipping coqide support, as requested." >&5
@@ -2513,7 +2505,9 @@ fi
 
    fi
    if test "$COQIDE" = "no"; then
-      as_fn_error $? "Could not find coqide (configure using --without-coqide)." "$LINENO" 5
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: Could not find coqide, assuming --without-coqide." >&5
+$as_echo "Could not find coqide, assuming --without-coqide." >&6; }
+      with_coqide = "no"
    else
      { $as_echo "$as_me:${as_lineno-$LINENO}: result: Trusting that coqide version is $COQVERSION." >&5
 $as_echo "Trusting that coqide version is $COQVERSION." >&6; }
@@ -2524,6 +2518,15 @@ $as_echo "Trusting that coqide version is $COQVERSION." >&6; }
      fi
   fi
 fi
+
+ if test "$with_coqide" = "yes"; then
+  make_hoqide_TRUE=
+  make_hoqide_FALSE='#'
+else
+  make_hoqide_TRUE='#'
+  make_hoqide_FALSE=
+fi
+
 
 # checking for coqdep
 
