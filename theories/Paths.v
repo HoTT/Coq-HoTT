@@ -433,6 +433,107 @@ Definition concat_pA1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} 
     | idpath => concat_p1 _ @ (concat_1p _)^
   end.
 
+(** Naturality with other paths hanging around. *)
+Definition concat_pA_pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x)
+  {x y : A} (q : x = y)
+  {w z : B} (r : w = f x) (s : g y = z)
+  :
+  (r @ ap f q) @ (p y @ s) = (r @ p x) @ (ap g q @ s).
+Proof.
+  destruct q, s; simpl.
+  repeat rewrite concat_p1.
+  reflexivity.
+Defined.
+
+Definition concat_pA_p {A B : Type} {f g : A -> B} (p : forall x, f x = g x)
+  {x y : A} (q : x = y)
+  {w : B} (r : w = f x)
+  :
+  (r @ ap f q) @ p y = (r @ p x) @ ap g q.
+Proof.
+  destruct q; simpl.
+  repeat rewrite concat_p1.
+  reflexivity.
+Defined.
+
+Definition concat_A_pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x)
+  {x y : A} (q : x = y)
+  {z : B} (s : g y = z)
+  :
+  (ap f q) @ (p y @ s) = (p x) @ (ap g q @ s).
+Proof.
+  destruct q, s; simpl.
+  repeat rewrite concat_p1, concat_1p.
+  reflexivity.
+Defined.
+
+Definition concat_pA1_pp {A : Type} {f : A -> A} (p : forall x, f x = x)
+  {x y : A} (q : x = y)
+  {w z : A} (r : w = f x) (s : y = z)
+  :
+  (r @ ap f q) @ (p y @ s) = (r @ p x) @ (q @ s).
+Proof.
+  destruct q, s; simpl.
+  repeat rewrite concat_p1.
+  reflexivity.
+Defined.
+
+Definition concat_pp_A1p {A : Type} {g : A -> A} (p : forall x, x = g x)
+  {x y : A} (q : x = y)
+  {w z : A} (r : w = x) (s : g y = z)
+  :
+  (r @ p x) @ (ap g q @ s) = (r @ q) @ (p y @ s).
+Proof.
+  destruct q, s; simpl.
+  repeat rewrite concat_p1.
+  reflexivity.
+Defined.
+
+Definition concat_pA1_p {A : Type} {f : A -> A} (p : forall x, f x = x)
+  {x y : A} (q : x = y)
+  {w : A} (r : w = f x)
+  :
+  (r @ ap f q) @ p y = (r @ p x) @ q.
+Proof.
+  destruct q; simpl.
+  repeat rewrite concat_p1.
+  reflexivity.
+Defined.
+
+Definition concat_A1_pp {A : Type} {f : A -> A} (p : forall x, f x = x)
+  {x y : A} (q : x = y)
+  {z : A} (s : y = z)
+  :
+  (ap f q) @ (p y @ s) = (p x) @ (q @ s).
+Proof.
+  destruct q, s; simpl.
+  repeat rewrite concat_p1, concat_1p.
+  reflexivity.
+Defined.
+
+Definition concat_pp_A1 {A : Type} {g : A -> A} (p : forall x, x = g x)
+  {x y : A} (q : x = y)
+  {w : A} (r : w = x)
+  :
+  (r @ p x) @ ap g q = (r @ q) @ p y.
+Proof.
+  destruct q; simpl.
+  repeat rewrite concat_p1.
+  reflexivity.
+Defined.
+
+Definition concat_p_A1p {A : Type} {g : A -> A} (p : forall x, x = g x)
+  {x y : A} (q : x = y)
+  {z : A} (s : g y = z)
+  :
+  p x @ (ap g q @ s) = q @ (p y @ s).
+Proof.
+  destruct q, s; simpl.
+  repeat rewrite concat_p1, concat_1p.
+  reflexivity.
+Defined.
+
+
 (** [ap] for paths between functions. *)
 
 (* We introduce the convention that [apKN] denotes the application of a K-path between functions to an N-path between elements, where a 0-path is simply a function or an element.  Thus, [ap] is a shorthand for [ap01].  *)
@@ -463,6 +564,11 @@ Definition concat2 {A} {x y z : A} {p p' : x = y} {q q' : y = z} (h : p = p') (h
   match h, h' with idpath, idpath => 1 end.
 
 Notation "p @@ q" := (concat2 p q)%path (at level 20) : path_scope.
+
+(** 2-dimensional path inversion *)
+Definition inverse2 {A : Type} {x y : A} {p q : x = y} (h : p = q)
+  : p^ = q^
+  := match h with idpath => 1 end.
 
 (** *** Whiskering *)
 
