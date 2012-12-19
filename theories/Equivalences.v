@@ -11,7 +11,7 @@ Local Open Scope contr_scope.
 
    The second option is to use Vladimir Voevodsky's definition of an equivalence as a map whose homotopy fibers are contractible.
 
-   An interesting third options was suggested by André Joyal: a map [f] which has separate left and right homotopy inverses. This too turns out to be reasonable.
+   An interesting third option was suggested by André Joyal: a map [f] which has separate left and right homotopy inverses. This too turns out to be reasonable.
 
    While the second options was used originally, and it is the most concise one, it makes much more sense to use the first one in a formalized development, as it exposes most directly equivalence as a structure.  *)
 
@@ -115,23 +115,13 @@ Section Adjointify.
   Let is_adjoint' (a : A) : is_retraction (f a) = ap f (is_section' a).
   Proof.
     unfold is_section'.
-    repeat rewrite ap_pp.
-    rewrite concat_pp_p.
     apply moveR_M1.
-    repeat rewrite concat_p_pp.
-    rewrite <- ap_compose; unfold compose.
-    rewrite (concat_pA1
-      (fun b => (is_retraction b)^)
-      (ap f (is_section a)^)).
-    repeat rewrite concat_pp_p.
-    apply moveL_Mp; rewrite concat_p1.
-    rewrite concat_p_pp.
-    rewrite <- ap_compose; unfold compose.
-    rewrite (concat_pA1 
-      (fun b => (is_retraction b)^)
-      (is_retraction (f a))).
-    rewrite concat_pV, concat_1p.
-    rewrite ap_V; apply inv_V.
+    repeat rewrite ap_pp, concat_p_pp; rewrite <- ap_compose; unfold compose.
+    rewrite (concat_pA1 (fun b => (is_retraction b)^) (ap f (is_section a)^)).
+    repeat rewrite concat_pp_p; rewrite ap_V; apply moveL_Vp; rewrite concat_p1.
+    rewrite concat_p_pp, <- ap_compose; unfold compose.
+    rewrite (concat_pA1 (fun b => (is_retraction b)^) (is_retraction (f a))).
+    rewrite concat_pV, concat_1p; reflexivity.
   Qed.
 
   Definition adjointify : A <~> B
