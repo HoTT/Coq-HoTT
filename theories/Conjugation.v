@@ -10,7 +10,7 @@ Open Scope path_scope.
 Definition conjp {A B : Type} {f g : A -> B} {x y : A} (r : forall x, f x = g x) (p : f x = f y) :
   g x = g y
   :=
-  (r x)^-1 @ p @ r y.
+  (r x)^ @ p @ r y.
 
 (** Several lemmas about conjugation. Does this actually get used? *)
 
@@ -28,7 +28,7 @@ Lemma ap_to_conjp {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y : A
   ap g q = conjp p (ap f q).
 Proof.
   destruct q.  unfold conjp.  simpl.
-  path_via ((p x)^-1 @ p x).  apply inverse ; apply concat_Vp.
+  path_via ((p x)^ @ p x).  apply inverse ; apply concat_Vp.
   apply whiskerR.  apply inverse, concat_p1.
 Qed.
 
@@ -36,7 +36,7 @@ Lemma conjp_ap {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} (q : x 
   conjp p (ap f q) = q.
 Proof.
   destruct q.  unfold conjp.  simpl.
-  path_via ((p x)^-1 @ p x). apply whiskerR.  apply concat_p1.
+  path_via ((p x)^ @ p x). apply whiskerR.  apply concat_p1.
   apply concat_Vp.
 Qed.
 
