@@ -78,12 +78,16 @@ Arguments inverse {A x y} p : simpl nomatch.
 
 (** The identity path. *)
 Notation "1" := idpath : path_scope.
-  
+
 (* The composition of two paths. *)
 Notation "p @ q" := (concat p q) (at level 20) : path_scope.
-  
+
 (* The inverse of a path. *)
 Notation "p ^" := (inverse p) (at level 3) : path_scope.
+
+(* An alternative notation which puts each path on its own line.  Useful as a temporary device during proofs of equalities between very long composites; to turn it on inside a section, say [Open Scope long_path_scope]. *)
+Notation "p @' q" := (concat p q) (at level 21, left associativity,
+  format "'[v' p '/' '@''  q ']'") : long_path_scope.
 
 Local Open Scope path_scope.
 
@@ -114,7 +118,7 @@ Local Open Scope path_scope.
    - [concat_p_pp] means [p * (q * r)]
    - [concat_pp_p] means [(p * q) * r]
    - [concat_V_pp] means [p^ * (p * q)]
-   - [concat_pV_p] means [(q * p^) * p] or [(p * p^) * q], you just have to look
+   - [concat_pV_p] means [(q * p^) * p] or [(p * p^) * q], but probably the former because for the latter you could just use [concat_pV].
 
    Laws about inverse of something are of the form [inv_XXX], and those about [ap] are of the form [ap_XXX], and so on. For example:
 
@@ -386,6 +390,20 @@ Definition ap_pp {A B : Type} (f : A -> B) {x y z : A} (p : x = y) (q : y = z) :
     match p with idpath => 1 end
   end.
 
+Definition ap_p_pp {A B : Type} (f : A -> B) {w x y z : A}
+  (r : f w = f x) (p : x = y) (q : y = z) :
+  r @ (ap f (p @ q)) = (r @ ap f p) @ (ap f q).
+Proof.
+  destruct p, q. simpl. exact (concat_p_pp r 1 1).
+Defined.
+
+Definition ap_pp_p {A B : Type} (f : A -> B) {w x y z : A}
+  (p : x = y) (q : y = z) (r : f z = f w) :
+  (ap f (p @ q)) @ r = (ap f p) @ (ap f q @ r).
+Proof.
+  destruct p, q. simpl. exact (concat_pp_p 1 1 r).
+Defined.
+
 (** Functions commute with path inverses. *)
 Definition inverse_ap {A B : Type} (f : A -> B) {x y : A} (p : x = y) :
   (ap f p)^ = ap f (p^)
@@ -406,6 +424,12 @@ Definition ap_idmap {A : Type} {x y : A} (p : x = y) :
 
 Definition ap_compose {A B C : Type} (f : A -> B) (g : B -> C) {x y : A} (p : x = y) :
   ap (compose g f) p = ap g (ap f p)
+  :=
+  match p with idpath => 1 end.
+
+(* Sometimes we don't have the actual function [compose]. *)
+Definition ap_compose' {A B C : Type} (f : A -> B) (g : B -> C) {x y : A} (p : x = y) :
+  ap (fun a => g (f a)) p = ap g (ap f p)
   :=
   match p with idpath => 1 end.
 
