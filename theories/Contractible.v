@@ -42,24 +42,6 @@ Notation "[ 'center' 'of' T ]" :=
 Canonical Structure unit_contr :=
   BuildContr unit tt (fun t : unit => match t with tt => 1 end).
 
-(** XXX: This belongs somewhere else. *)
-Definition pair_path {A B : Type} {x y : A} {x' y' : B} (p : x = y) (p' : x' = y') :
-  (x, x') = (y, y')
-  :=
-  match p with idpath =>
-    match p' with idpath => 1 end
-  end.
-
-Definition prod_contr (A : Contr) (B : Contr) : Contr :=
-  BuildContr
-  (prod A B)
-  (contr_center A, contr_center B)
-  (fun y : prod A B =>
-    let (a, b) as p return ((contr_center A, contr_center B) = p) := y in
-      pair_path (contr a) (contr b)).
-
-Canonical Structure prod_contr.
-
 (** If a space is contractible, then any two points in it are
    connected by a path in a canonical way. *)
 Definition contr_path {A : Contr} (x y : A) :
