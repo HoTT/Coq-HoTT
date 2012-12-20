@@ -28,7 +28,7 @@ Local Open Scope path_scope.
 Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
   match p with idpath => u end.
 
-Arguments transport {A} P {x y} p%path_scope u.
+Arguments transport {A} P {x y} p%path_scope u : simpl nomatch.
 
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression.*)
 Delimit Scope fib_scope with fib.
@@ -48,6 +48,8 @@ We will first see this appearing in the type of [apD]. *)
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
 
+Arguments ap {A B} f {x y} p : simpl nomatch.
+
 (** Similarly, dependent functions act on paths; but the type is a bit more subtle.  If  [f : forall a:A, B a] and [p : x = y] is a path in [A], then [apD f p] should somehow be a path between [f x : B x] and [f y : B y].  Since these live in different types, we use transport along [p] to make them comparable: [apD f p : p # f x = f y].
 
   The type [p # f x = f y] can profitably be considered as a heterogeneous or dependent equality type, of “paths from [f x] to [f y] over [p]”. *)
@@ -57,6 +59,7 @@ Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
   :=
   match p with idpath => idpath end.
 
+Arguments apD {A B} f {x y} p : simpl nomatch.
 
 (** We define equality concatenation by destructing on both its arguments, so that it only computes when both arguments are [idpath].  This makes proofs more robust and symmetrical.  Compare with the definition of [identity_trans].  *)
 
@@ -68,6 +71,8 @@ Arguments concat {A x y z} p q : simpl nomatch.
 (** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
   := match p with idpath => idpath end.
+
+Arguments inverse {A x y} p : simpl nomatch.
 
 (** Note that you can use the built-in Coq tactics "reflexivity" and "transitivity" when working with paths, but not "symmetry", because it is too smart for its own good.  But you can say "apply inverse" instead.   *)
 
@@ -433,6 +438,107 @@ Definition concat_pA1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} 
     | idpath => concat_p1 _ @ (concat_1p _)^
   end.
 
+(** Naturality with other paths hanging around. *)
+Definition concat_pA_pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x)
+  {x y : A} (q : x = y)
+  {w z : B} (r : w = f x) (s : g y = z)
+  :
+  (r @ ap f q) @ (p y @ s) = (r @ p x) @ (ap g q @ s).
+Proof.
+  destruct q, s; simpl.
+  repeat rewrite concat_p1.
+  reflexivity.
+Defined.
+
+Definition concat_pA_p {A B : Type} {f g : A -> B} (p : forall x, f x = g x)
+  {x y : A} (q : x = y)
+  {w : B} (r : w = f x)
+  :
+  (r @ ap f q) @ p y = (r @ p x) @ ap g q.
+Proof.
+  destruct q; simpl.
+  repeat rewrite concat_p1.
+  reflexivity.
+Defined.
+
+Definition concat_A_pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x)
+  {x y : A} (q : x = y)
+  {z : B} (s : g y = z)
+  :
+  (ap f q) @ (p y @ s) = (p x) @ (ap g q @ s).
+Proof.
+  destruct q, s; simpl.
+  repeat rewrite concat_p1, concat_1p.
+  reflexivity.
+Defined.
+
+Definition concat_pA1_pp {A : Type} {f : A -> A} (p : forall x, f x = x)
+  {x y : A} (q : x = y)
+  {w z : A} (r : w = f x) (s : y = z)
+  :
+  (r @ ap f q) @ (p y @ s) = (r @ p x) @ (q @ s).
+Proof.
+  destruct q, s; simpl.
+  repeat rewrite concat_p1.
+  reflexivity.
+Defined.
+
+Definition concat_pp_A1p {A : Type} {g : A -> A} (p : forall x, x = g x)
+  {x y : A} (q : x = y)
+  {w z : A} (r : w = x) (s : g y = z)
+  :
+  (r @ p x) @ (ap g q @ s) = (r @ q) @ (p y @ s).
+Proof.
+  destruct q, s; simpl.
+  repeat rewrite concat_p1.
+  reflexivity.
+Defined.
+
+Definition concat_pA1_p {A : Type} {f : A -> A} (p : forall x, f x = x)
+  {x y : A} (q : x = y)
+  {w : A} (r : w = f x)
+  :
+  (r @ ap f q) @ p y = (r @ p x) @ q.
+Proof.
+  destruct q; simpl.
+  repeat rewrite concat_p1.
+  reflexivity.
+Defined.
+
+Definition concat_A1_pp {A : Type} {f : A -> A} (p : forall x, f x = x)
+  {x y : A} (q : x = y)
+  {z : A} (s : y = z)
+  :
+  (ap f q) @ (p y @ s) = (p x) @ (q @ s).
+Proof.
+  destruct q, s; simpl.
+  repeat rewrite concat_p1, concat_1p.
+  reflexivity.
+Defined.
+
+Definition concat_pp_A1 {A : Type} {g : A -> A} (p : forall x, x = g x)
+  {x y : A} (q : x = y)
+  {w : A} (r : w = x)
+  :
+  (r @ p x) @ ap g q = (r @ q) @ p y.
+Proof.
+  destruct q; simpl.
+  repeat rewrite concat_p1.
+  reflexivity.
+Defined.
+
+Definition concat_p_A1p {A : Type} {g : A -> A} (p : forall x, x = g x)
+  {x y : A} (q : x = y)
+  {z : A} (s : g y = z)
+  :
+  p x @ (ap g q @ s) = q @ (p y @ s).
+Proof.
+  destruct q, s; simpl.
+  repeat rewrite concat_p1, concat_1p.
+  reflexivity.
+Defined.
+
+
 (** [ap] for paths between functions. *)
 
 (* We introduce the convention that [apKN] denotes the application of a K-path between functions to an N-path between elements, where a 0-path is simply a function or an element.  Thus, [ap] is a shorthand for [ap01].  *)
@@ -463,6 +569,11 @@ Definition concat2 {A} {x y z : A} {p p' : x = y} {q q' : y = z} (h : p = p') (h
   match h, h' with idpath, idpath => 1 end.
 
 Notation "p @@ q" := (concat2 p q)%path (at level 20) : path_scope.
+
+(** 2-dimensional path inversion *)
+Definition inverse2 {A : Type} {x y : A} {p q : x = y} (h : p = q)
+  : p^ = q^
+  := match h with idpath => 1 end.
 
 (** *** Whiskering *)
 
