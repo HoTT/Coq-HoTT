@@ -2,12 +2,12 @@
 
 1. Install a custom Coq from https://github.com/HoTT/coq. This is a fork of the trunk and
    is compatible with standard Coq 8.4 trunk, except that it supports special command-line
-   options that turn on the homotopy theory interpretation. As currently we are doing some
-   development of Coq, you will have to use an older commit, namely
-   90867e61762826ac7fff185e8bdc9ca6bc6f4250:
+   options that turn on the homotopy theory interpretation. Because the Coq fork changes
+   frequently, HoTT may fail with the latest version. The latest commit that is known
+   to work is 3d84c0927eb0479d01626f4df9441db3a15b2764, so if things break try
 
        git clone https://github.com/HoTT/coq.git
-       git checkout 90867e61762826ac7fff185e8bdc9ca6bc6f4250
+       git checkout 3d84c0927eb0479d01626f4df9441db3a15b2764
 
    Compile Coq as usual. One possibility is to compile it with
 
@@ -38,7 +38,8 @@
 
 5. The library is loaded with `Require Import HoTT.Homotopy`.
 
-6. You can install the library globally with `make install`.
+6. You can install the library globally with `make install`, although this
+   has not been thoroughly tested.
 
 
 # LONG INSTALLATION INSTRUCTIONS
@@ -46,12 +47,11 @@
 ## PREREQUISITES
 
 The HoTT library requires a custom version of Coq which supports the
-command-line options `-indices-matter` and.
-The first one changes the
-interpretation of equality to one that conforms to the
-homotopy-theoretic interpretation, while the second one is an ugly
-temporary hack that turns universe inconsistencies intro warning
-rather than errors.
+the command-line option `-indices-matter` and universe polymorphism.
+The first one changes the interpretation of equality to one that
+conforms to the homotopy-theoretic interpretation, while the second
+one is needed to avoid certain universe inconsistency errors (which
+are not really there but Coq 8.4 cannot see that).
 
 At present only a fork of the Coq trunk supports these options, but we
 hope to get them into the official Coq soon. Unfortunately for you
@@ -119,10 +119,6 @@ Next you should configure the HoTT library:
    where you should specify the *absolute* path name (starting with /)
    of the directory which contains `coqtop`, `coqc`, etc.
 
-Often coqide is a bit tricky to compile. If you did not compile
-coqide, you can tell the configure script to skip installing hoqide by
-providing the --without-coqide option.
-
 To compile the HoTT library type
 
     make
@@ -163,4 +159,3 @@ option is to type 'M-x customize-variable', then
 Proof Prog Name Ask and to save this for future sessions. This will
 prompt PG to ask you for the name of the coq toplevel to be used each
 time you start evaluating a file.
-
