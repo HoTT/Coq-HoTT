@@ -567,8 +567,12 @@ Defined.
 
 (* We introduce the convention that [apKN] denotes the application of a K-path between functions to an N-path between elements, where a 0-path is simply a function or an element.  Thus, [ap] is a shorthand for [ap01].  *)
 
-Definition ap10 {A B} {f g:A->B} (h:f=g) (x:A) : f x = g x
+Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g) (x:A)
+  : f x = g x
   := match h with idpath => 1 end.
+
+Definition ap10 {A B} {f g:A->B} (h:f=g) (x:A) : f x = g x
+  := apD10 h x.
 
 Definition ap10_1 {A B} {f:A->B} (x:A) : ap10 (idpath f) x = 1
   := 1.

@@ -19,8 +19,8 @@ Local Open Scope path_scope.
 (** Naming convention: we use [equiv] and [Equiv] systematically to denote types of equivalences, and [isequiv] and [IsEquiv] systematically to denote the assertion that a given map is an equivalence. *)
 
 (** The fact that [r] is a left inverse of [s]. It is called [cancel] in ssreflect.  As a mnemonic, note that the partially applied type [Sect s] is the type of proofs that [s] is a section. *)
-Class Sect {A B : Type} (s : A -> B) (r : B -> A) :=
-  cancel : forall x : A, r (s x) = x.
+Definition Sect {A B : Type} (s : A -> B) (r : B -> A) :=
+  forall x : A, r (s x) = x.
 
 (** A typeclass that includes the data making [f] into an adjoint equivalence. *)
 Class IsEquiv {A B : Type} (f : A -> B) := BuildIsEquiv {
@@ -63,23 +63,6 @@ Instance isequiv_idmap (A : Type) : IsEquiv idmap :=
   BuildIsEquiv A A idmap idmap (fun _ => 1) (fun _ => 1) (fun _ => 1).
 
 Definition equiv_idmap (A : Type) : A <~> A := BuildEquiv A A idmap _.
-
-(** A contractible type is equivalent to [unit].  TODO: Does this really belong here, or should it be in Types/Unit.v ? *)
-Definition equiv_contr_unit `{Contr A} : A <~> unit.
-Proof.
-  refine (BuildEquiv _ _
-    (fun (_ : A) => tt)
-    (BuildIsEquiv _ _ _ 
-      (fun (_ : unit) => center A)
-      (fun t : unit => match t with tt => 1 end)
-      (fun x : A => contr x) _)).
-  intro x. apply inverse, ap_const.
-Defined.
-
-(* A type equivalent to [unit] is contractible. TODO: Same. *)
-Instance contr_equiv_unit (A : Type) (f : A <~> unit) : Contr A
-  := BuildContr A (f^-1 tt)
-  (fun a => ap f^-1 (contr (f a)) @ eissect f a).
 
 (** The composition of equivalences is an equivalence. *)
 Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}

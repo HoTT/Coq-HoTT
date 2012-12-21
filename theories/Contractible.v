@@ -47,26 +47,3 @@ Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x}.
   exists (existT (fun y => y = x) x 1).
   intros [y []]; reflexivity.
 Defined.
-
-
-(* TODO: This probably belongs in Types/Unit.v *)
-Instance contr_unit : Contr unit := {
-  center := tt;
-  contr := fun t : unit => match t with tt => 1 end
-}.
-
-
-(** TODO: This probably belongs in Types/Prod.v *)
-Definition path_prod {A B : Type} {x y : A} {x' y' : B} (p : x = y) (p' : x' = y') :
-  (x, x') = (y, y')
-  :=
-  match p with idpath =>
-    match p' with idpath => 1 end
-  end.
-
-Instance contr_prod `{Contr A} `{Contr B} : Contr (A * B) := {
-  center := (center A, center B);
-  contr := fun y : prod A B =>
-    let (a, b) as p return ((center A, center B) = p) := y in
-      path_prod (contr a) (contr b)
-}.
