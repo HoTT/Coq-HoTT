@@ -69,29 +69,31 @@ else
 fi
 
 # Should we compile ssrfelect?
-with_ssreflect="no"
+compile_ssreflect="no"
 AC_ARG_WITH([ssreflect],
- [AS_HELP_STRING([--with-ssreflect], [also compile the ssreflect libary])],
- [with_ssreflect=yes],
+ [AS_HELP_STRING([--with-ssreflect], [compile the ssreflect libary])],
+ [compile_ssreflect="yes"],
  [])
 
-AM_CONDITIONAL(make_ssreflect, [test "$with_ssreflect" = "yes"])
-if test "make_ssreflect" = "yes"; then
-   AC_MSG_RESULT([Will compile ssreflect, as requested.])
+if test "$compile_ssreflect" = "no"
+then
+   AC_MSG_RESULT([Will not compile ssreflect.])
 else
-   AC_MSG_RESULT([Skipping compilation of ssreflect, as not requested.])
+   AC_MSG_RESULT([Will compile ssreflect.])
 fi
-AC_SUBST([with_ssreflect])
+AM_CONDITIONAL(make_ssreflect, [test "$compile_ssreflect" = "yes"])
+AC_SUBST([compile_ssreflect])
 
 # Checking for coqide, which can be optional
-with_coqide="no"
+make_coqide="no"
 AC_ARG_WITH([coqide],
  [AS_HELP_STRING([--without-coqide], [disable support for coqide])],
  [],
- [with_coqide="yes"])
+ [make_coqide="yes"])
 
-if test "$with_coqide" != "no"; then
-   AC_MSG_RESULT([Skipping coqide support, as requested.])
+if test "$make_coqide" = "no"
+then
+   AC_MSG_RESULT([Will not make hoqide.])
 else
    AC_ARG_VAR([COQIDE], [the absolute path of the coqide executable])
    if test -n "$COQIDE"; then
@@ -101,8 +103,8 @@ else
       AC_PATH_PROG([COQIDE],[coqide],[no])
    fi
    if test "$COQIDE" = "no"; then
-      AC_MSG_RESULT([Could not find coqide, assuming --without-coqide.])
-      with_coqide = "no"
+      AC_MSG_RESULT([Could not find coqide, will not make hoqide.])
+      make_coqide="no"
    else
      AC_MSG_RESULT([Trusting that coqide version is $COQVERSION.])
      COQIDEVERSION=$COQVERSION
@@ -113,7 +115,7 @@ else
   fi
 fi
 
-AM_CONDITIONAL(make_hoqide, [test "$with_coqide" = "yes"])
+AM_CONDITIONAL(make_hoqide, [test "$make_coqide" = "yes"])
 
 # checking for coqdep
 AC_ARG_VAR([COQDEP], [the absolute path of the coqdep executable])
@@ -162,7 +164,7 @@ ln -s $COQLIB/plugins $COQLIB/dev $srcdir/coq
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([hoqtop], [chmod +x hoqtop])
 AC_CONFIG_FILES([hoqc], [chmod +x hoqc])
-if test "x$with_coqide" != "xyes" ; then
+if test "$make_coqide" != "yes" ; then
    AC_CONFIG_FILES([hoqide], [chmod +x hoqide])
 fi
 

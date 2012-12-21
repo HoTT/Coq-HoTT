@@ -593,7 +593,7 @@ make_hoqide_FALSE
 make_hoqide_TRUE
 COQIDEVERSION
 COQIDE
-with_ssreflect
+compile_ssreflect
 make_ssreflect_FALSE
 make_ssreflect_TRUE
 COQCVERSION
@@ -1304,7 +1304,7 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-ssreflect        also compile the ssreflect libary
+  --with-ssreflect        compile the ssreflect libary
   --without-coqide        disable support for coqide
 
 Some influential environment variables:
@@ -2442,15 +2442,23 @@ $as_echo "coqc version is $COQCVERSION." >&6; }
 fi
 
 # Should we compile ssrfelect?
-with_ssreflect="no"
+compile_ssreflect="no"
 
 # Check whether --with-ssreflect was given.
 if test "${with_ssreflect+set}" = set; then :
-  withval=$with_ssreflect; with_ssreflect=yes
+  withval=$with_ssreflect; compile_ssreflect="yes"
 fi
 
 
- if test "$with_ssreflect" = "yes"; then
+if test "$compile_ssreflect" = "no"
+then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Will not compile ssreflect." >&5
+$as_echo "Will not compile ssreflect." >&6; }
+else
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Will compile ssreflect." >&5
+$as_echo "Will compile ssreflect." >&6; }
+fi
+ if test "$compile_ssreflect" = "yes"; then
   make_ssreflect_TRUE=
   make_ssreflect_FALSE='#'
 else
@@ -2458,29 +2466,23 @@ else
   make_ssreflect_FALSE=
 fi
 
-if test "make_ssreflect" = "yes"; then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Will compile ssreflect, as requested." >&5
-$as_echo "Will compile ssreflect, as requested." >&6; }
-else
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Skipping compilation of ssreflect, as not requested." >&5
-$as_echo "Skipping compilation of ssreflect, as not requested." >&6; }
-fi
 
 
 # Checking for coqide, which can be optional
-with_coqide="no"
+make_coqide="no"
 
 # Check whether --with-coqide was given.
 if test "${with_coqide+set}" = set; then :
   withval=$with_coqide;
 else
-  with_coqide="yes"
+  make_coqide="yes"
 fi
 
 
-if test "$with_coqide" != "no"; then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Skipping coqide support, as requested." >&5
-$as_echo "Skipping coqide support, as requested." >&6; }
+if test "$make_coqide" = "no"
+then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Will not make hoqide." >&5
+$as_echo "Will not make hoqide." >&6; }
 else
 
    if test -n "$COQIDE"; then
@@ -2531,9 +2533,9 @@ fi
 
    fi
    if test "$COQIDE" = "no"; then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: result: Could not find coqide, assuming --without-coqide." >&5
-$as_echo "Could not find coqide, assuming --without-coqide." >&6; }
-      with_coqide = "no"
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: Could not find coqide, will not make hoqide." >&5
+$as_echo "Could not find coqide, will not make hoqide." >&6; }
+      make_coqide="no"
    else
      { $as_echo "$as_me:${as_lineno-$LINENO}: result: Trusting that coqide version is $COQVERSION." >&5
 $as_echo "Trusting that coqide version is $COQVERSION." >&6; }
@@ -2545,7 +2547,7 @@ $as_echo "Trusting that coqide version is $COQVERSION." >&6; }
   fi
 fi
 
- if test "$with_coqide" = "yes"; then
+ if test "$make_coqide" = "yes"; then
   make_hoqide_TRUE=
   make_hoqide_FALSE='#'
 else
@@ -2727,7 +2729,7 @@ ac_config_files="$ac_config_files hoqtop"
 
 ac_config_files="$ac_config_files hoqc"
 
-if test "x$with_coqide" != "xyes" ; then
+if test "$make_coqide" != "yes" ; then
    ac_config_files="$ac_config_files hoqide"
 
 fi

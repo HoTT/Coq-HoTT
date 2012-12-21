@@ -12,7 +12,7 @@ EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdow
 VFILES=$(shell find $(srcdir)/theories -name "*.v")
 VOFILES:=$(VFILES:.v=.vo)
 GLOBFILES:=$(VFILES:.v=.glob)
-DEPFILES:=(VFILES:.v=.d)
+DEPFILES:=$(VFILES:.v=.d)
 
 # The list of files that comprise the alternative standard library
 STDVFILES=$(shell find $(srcdir)/coq -name "*.v")
@@ -64,14 +64,16 @@ install-data-local:
 	ln -s $(COQLIB)/dev $(hottdir)/coq
 	ln -s $(COQLIB)/plugins $(hottdir)/coq
 
+if make_ssreflect
 clean-local: $(SSRMAKEFILE)
 	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" clean
 	rm -f "$(SSRMAKEFILE)"
+endif
 
 # The standard library files must be compiled in a special way
 stdlib: $(STDVOFILES)
 
-$(STDVOFILES) : %.vo : %.v
+$(STDVOFILES) : %.vo : %.v %.d
 	$(COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
 
 
@@ -81,8 +83,14 @@ hottlib: $(VOFILES)
 $(VOFILES) : stdlib
 
 # A rule for compiling the HoTT libary files
-$(VOFILES) : %.vo : %.v
+if make_ssreflect
+$(VOFILES) : %.vo : %.v %.d ssrplugin
 	$(HOQC) $<
+else
+$(VOFILES) : %.vo : %.v %.d
+	$(HOQC) $<
+endif
+
 
 if make_ssreflect
 # Compilation of ssreflect is a bit more roundabout because ssreflect relies on coq_makefile,
@@ -111,5 +119,7 @@ $(SSRCMAFILES): %.cma : %.mllib
 endif
 
 # Dependency files
-%.d: %.v; $(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $< >$@
+$(DEPFILES) $(STDDEPFILES) : %.d : %.v
+	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $< >$@
+
 -include $(DEPFILES) $(STDDEPFILES)
