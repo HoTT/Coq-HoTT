@@ -1,6 +1,6 @@
 (** * Equivalences -*- mode: coq; mode: visual-line -*- *)
 
-Require Import Common Paths Fibrations Contractible.
+Require Import Common Paths Contractible.
 
 Local Open Scope path_scope.
 

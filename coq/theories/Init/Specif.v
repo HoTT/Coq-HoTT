@@ -19,7 +19,15 @@ Require Import Datatypes.
 Local Open Scope identity_scope.
 Require Import Logic.
 
-(** Subsets and Sigma-types *)
+(** In standard Coq, [sig] and [sig2] are defined as "subset types" which sum over predicates [P:A->Prop].  We don't use [Prop], so we never need them, but some parts of Coq (like [Program Definition]) expect them to be present.  So we include the definitions, but with [Prop] changed to [Type] to ensure that our code is not subtly polluted with [Prop]. *)
+
+Inductive sig (A:Type) (P:A -> Type) : Type :=
+    exist : forall x:A, P x -> sig P.
+
+Inductive sig2 (A:Type) (P Q:A -> Type) : Type :=
+    exist2 : forall x:A, P x -> Q x -> sig2 P Q.
+
+(** Now we define the Sigma-types that we will actually use. *)
 
 (** [(sigT A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type.
     Similarly for [(sigT2 A P Q)], also written [{x:A & (P x) & (Q x)}]. *)
@@ -60,10 +68,10 @@ Notation "'exists2' x : t , p & q" := (sigT2 (fun x:t => p) (fun x:t => q))
     format "'[' 'exists2'  '/  ' x  :  t ,  '/  ' '[' p  &  '/' q ']' ']'")
   : type_scope.
 
-Notation exist := existT (only parsing).
-Notation sig := (@sigT _) (only parsing).
-Notation sig2 := (@sigT2 _) (only parsing).
-Notation exist2 := (@existT2 _) (only parsing).
+(* Definition exist := existT.  (* (only parsing). *) *)
+(* Definition sig := sigT.  (* (only parsing). *) *)
+(* Notation sig2 := (@sigT2 _) (only parsing). *)
+(* Notation exist2 := (@existT2 _) (only parsing). *)
 
 Add Printing Let sigT.
 Add Printing Let sigT2.

@@ -109,7 +109,8 @@ Local Open Scope path_scope.
    - [A] means '[ap]'
    - [M] means the thing we are moving across equality
    - [x] means 'the point' which is not a path, e.g. in [transport p x]
-   - [2] means 2-dimensional concatenation
+   - [2] means relating to 2-dimensional paths
+   - [3] means relating to 3-dimensional paths, and so on
 
    Associativity is indicated with an underscore. Here are some examples of how the name gives hints about the left-hand side of the equation.
 
@@ -131,7 +132,7 @@ Local Open Scope path_scope.
    - [ap_1] is about [ap f 1]
    - [ap02_p2p] is about [ap02 f (p @@ q)]
    
-   Then we have laws which move things around in an equation. The naming scheme here is [moveD_XXX]. The direction [D] indicates where to move to: [L] means that we move something to the left-hand side, whereas [R] means we are moving something to the right-hand side. The part [XXX] describes the shape of the side _from_ which we are moving where the thing that is getting moves is called [M]. Examples:
+   Then we have laws which move things around in an equation. The naming scheme here is [moveD_XXX]. The direction [D] indicates where to move to: [L] means that we move something to the left-hand side, whereas [R] means we are moving something to the right-hand side. The part [XXX] describes the shape of the side _from_ which we are moving where the thing that is getting moves is called [M].  The presence of 1 next to an [M] generally indicates an *implied* identity path which is inserted automatically after the movement.  Examples:
 
    - [moveL_pM] means that we transform [p = q @ r] to [p @ r^ = q]
      because we are moving something to the left-hand side, and we are
@@ -141,9 +142,9 @@ Local Open Scope path_scope.
      because we move to the right-hand side, and we are moving the left
      argument of concat.
 
-   - [moveR_1M] means that we transform [p = 1 * q] to [p * q^ = 1]
+   - [moveR_1M] means that we transform [p = q] (rather than [p = 1 @ q]) to [p * q^ = 1].
 
-   Lastly, there are cancelation laws. These are called [cancelR] and [cancelL].
+   There are also cancelation laws called [cancelR] and [cancelL], which are identical to the 2-dimensional 'whiskering' operations [whiskerR] and [whiskerL].
 
    We may now proceed with the groupoid structure proper.
 *)
@@ -360,17 +361,6 @@ Proof.
 Defined.
 
 
-(** Cancellation laws. *)
-
-Definition cancelL {A : Type} {x y z : A} (p : x = y) (q r: y = z) (h : q = r) :
-  p @ q = p @ r :=
-  ap (fun s : y = z => p @ s) h.
-
-Definition cancelR {A : Type} {x y z : A} (p q : x = y) (r: y = z) (h : p = q) :
-  p @ r = q @ r
-  :=
-  ap (fun s : x = y => s @ r) h.
-
 (** *** Functoriality of functions *)
 
 (** Here we prove that functions behave like functors between groupoids, and that [ap] itself is functorial. *)
@@ -562,10 +552,11 @@ Proof.
   reflexivity.
 Defined.
 
-
 (** [ap] for paths between functions. *)
 
 (* We introduce the convention that [apKN] denotes the application of a K-path between functions to an N-path between elements, where a 0-path is simply a function or an element.  Thus, [ap] is a shorthand for [ap01].  *)
+
+Notation ap01 := ap (only parsing).
 
 Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g) (x:A)
   : f x = g x
@@ -588,6 +579,141 @@ Proof.
   case h, p; reflexivity.
 Defined.
 
+(** *** Transport and the groupoid structure of paths *)
+
+(** TODO: after some experience working with these, reconsider whether making
+[P] implicit was a good idea.  (It needs to be explicit in transport, but may not need to be in these.) *)
+Definition transport_1 {A : Type} {P : A -> Type} {x : A} (u : P x)
+  : 1 # u = u
+:= 1.
+
+Definition transport_pp {A : Type} {P : A -> Type} {x y z : A} (p : x = y) (q : y = z) (u : P x) :
+  p @ q # u = q # p # u :=
+  match q with idpath =>
+    match p with idpath => 1 end
+  end.
+
+(** TODO: The following two results follow directly from [transport_1] and
+  [transport_pp].  Is it really necessary to give them separately? *)
+Definition transport_pV {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P y) :
+  p # p^ # z = z :=
+  (match p as i in (_ = y) return (forall z : P y, i # i^ # z = z)
+     with idpath => fun _ => 1
+   end) z.
+
+Definition transport_Vp {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P x) :
+  p^ # p # z = z
+  := 
+  (match p as i return (forall z : P x, i^ # i # z = z)
+     with idpath => fun _ => 1
+   end) z.
+
+(** In the future, we may expect to need some higher coherence for transport:
+  for instance, that transport acting on the associator is trivial. *)
+Definition transport_p_pp {A : Type} {P : A -> Type} 
+  {x y z w : A} (p : x = y) (q : y = z) (r : z = w)
+  (u : P x)
+  : ap (fun e => e # u) (concat_p_pp p q r)
+    @ (transport_pp (p@q) r u) @ ap (transport P r) (transport_pp p q u)
+  = (transport_pp p (q@r) u) @ (transport_pp q r (p#u))
+  :> ((p @ (q @ r)) # u = r # q # p # u) .
+Proof.
+  destruct p, q, r.  simpl.  exact 1.
+Defined.
+
+(** Dependent transport in a doubly dependent type. *)
+
+Definition transportD {A : Type} (B : A -> Type) (C : forall a:A, B a -> Type)
+  {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C x1 y)
+  : C x2 (p # y)
+  :=
+  match p with idpath => z end.
+
+(** Transporting along higher-dimensional paths *)
+
+Definition transport2 {A : Type} (P : A -> Type) {x y : A} {p q : x = y}
+  (r : p = q) (z : P x)
+  : p # z = q # z
+  := ap (fun p' => p' # z) r.
+
+(** An alternative definition. *)
+Definition transport2_is_ap10 {A : Type} (Q : A -> Type) {x y : A} {p q : x = y}
+  (r : p = q) (z : Q x)
+  : transport2 Q r z = ap10 (ap (transport Q) r) z
+  := match r with idpath => 1 end.
+
+Definition transport2_p2p {A : Type} (P : A -> Type) {x y : A} {p1 p2 p3 : x = y}
+  (r1 : p1 = p2) (r2 : p2 = p3) (z : P x)
+  : transport2 P (r1 @ r2) z = transport2 P r1 z @ transport2 P r2 z.
+Proof.
+  destruct r1, r2; reflexivity.
+Defined.
+
+Definition transport2_V {A : Type} (Q : A -> Type) {x y : A} {p q : x = y}
+  (r : p = q) (z : Q x)
+  : transport2 Q (r^) z = (transport2 Q r z)^
+  := match r with idpath => 1 end.
+
+Definition concat_AT {A : Type} (P : A -> Type) {x y : A} {p q : x = y}
+  {z w : P x} (r : p = q) (s : z = w)
+  : ap (transport P p) s  @  transport2 P r w
+    = transport2 P r z  @  ap (transport P q) s
+  := match r with idpath => (concat_p1 _ @ (concat_1p _)^) end.
+
+
+(** *** Transporting in particular fibrations. *)
+
+(** One frequently needs lemmas showing that transport in a certain dependent type is equal to some more explicitly defined operation, defined according to the structure of that dependent type.  For most dependent types, we prove these lemmas in the appropriate file in the types/ subdirectory.  Here we consider only the most basic cases. *)
+
+(** Transporting in a constant fibration. *)
+Definition transport_const {A B : Type} {x1 x2 : A} (p : x1 = x2) (y : B)
+  : transport (fun x => B) p y = y.
+Proof.
+  destruct p.  exact 1.
+Defined.
+
+Definition transport2_const {A B : Type} {x1 x2 : A} {p q : x1 = x2}
+  (r : p = q) (y : B)
+  : transport_const p y = transport2 (fun _ => B) r y @ transport_const q y
+  := match r with idpath => (concat_1p _)^ end.
+
+(** Transporting in a pulled back fibration. *)
+Lemma transport_compose {A B} {x y : A} (P : B -> Type) (f : A -> B)
+  (p : x = y) (z : P (f x))
+  : transport (fun x => P (f x)) p z  =  transport P (ap f p) z.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+(** Transporting in path spaces *)
+Definition transport_paths_l {A : Type} {x1 x2 y : A} (p : x1 = x2) (q : x1 = y)
+  : transport (fun x => x = y) p q = p^ @ q.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+
+Definition transport_paths_r {A : Type} {x y1 y2 : A} (p : y1 = y2) (q : x = y1)
+  : transport (fun y => x = y) p q = q @ p.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+
+Definition transport_paths_lr {A : Type} {x1 x2 : A} (p : x1 = x2) (q : x1 = x1)
+  : transport (fun x => x = x) p q = p^ @ q @ p.
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
+(** *** The behavior of [ap] and [apD]. *)
+
+(** In a constant fibration, [apD] reduces to [ap], modulo [transport_const]. *)
+Lemma apD_const {A B} {x y : A} (f : A -> B) (p: x = y) :
+  apD f p = transport_const p (f x) @ ap f p.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
 (** ** The 2-dimensional groupoid structure *)
 
 (** Horizontal composition of 2-dimensional paths. *)
@@ -603,16 +729,20 @@ Definition inverse2 {A : Type} {x y : A} {p q : x = y} (h : p = q)
   : p^ = q^
   := match h with idpath => 1 end.
 
-(** *** Whiskering *)
+(** *** Whiskering, a.k.a. cancellation laws *)
 
 Definition whiskerL {A : Type} {x y z : A} (p : x = y) {q r : y = z} (h : q = r) : p @ q = p @ r
   :=
   1 @@ h.
 
+Notation cancelL := whiskerL (only parsing).
+
 Definition whiskerR {A : Type} {x y z : A} {p q : x = y} (h : p = q) (r : y = z) :
   p @ r = q @ r
   :=
   h @@ 1.
+
+Notation cancelR := whiskerR (only parsing).
 
 (** Whiskering and identity paths. *)
 
@@ -718,9 +848,28 @@ Proof.
 Defined.
 
 Definition ap02_p2p {A B} (f:A->B) {x y z:A} {p p':x=y} {q q':y=z} (r:p=p') (s:q=q')
-  : ap02 f (r @@ s) = ap_pp f p q @ (ap02 f r @@ ap02 f s) @ (ap_pp f p' q')^.
+  : ap02 f (r @@ s) =   ap_pp f p q
+                      @ (ap02 f r  @@  ap02 f s)
+                      @ (ap_pp f p' q')^.
 Proof.
   case r, s, p, q. reflexivity.
+Defined.
+
+Definition apD02 {A : Type} {B : A -> Type} {x y : A} {p q : x = y}
+  (f : forall x, B x) (r : p = q)
+  : apD f p = transport2 B r (f x) @ apD f q
+  := match r with idpath => (concat_1p _)^ end.
+
+(* And now for a lemma whose statement is much longer than its proof. *)
+Definition apD02_pp {A} (B : A -> Type) (f : forall x:A, B x) {x y : A}
+  {p1 p2 p3 : x = y} (r1 : p1 = p2) (r2 : p2 = p3)
+  : apD02 f (r1 @ r2)
+  = apD02 f r1
+  @ whiskerL (transport2 B r1 (f x)) (apD02 f r2)
+  @ concat_p_pp _ _ _
+  @ (whiskerR (transport2_p2p B r1 r2 (f x))^ (apD f p3)).
+Proof.
+  destruct r1, r2. destruct p1. reflexivity.
 Defined.
 
 (** *** Tactics *)
