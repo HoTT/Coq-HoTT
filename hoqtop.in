@@ -3,7 +3,7 @@
 # standard library and enables the HoTT-specific options. One day we
 # might figure out how to create an honest Coq toplevel instead.
 prefix="@prefix@"
-ssr="@with_ssreflect@"
+ssr="@compile_ssreflect@"
 COQTOP="@COQTOP@"
 # If there is a coq/theories directory in the same directory as this script,
 # then use that one, otherwise use the global one. This trick allows hoqtop
