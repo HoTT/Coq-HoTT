@@ -46,8 +46,8 @@
 ## PREREQUISITES
 
 The HoTT library requires a custom version of Coq which supports the
-command-line options `-relevant-equality` and
-`-warn-universe-inconsistencies`. The first one changes the
+command-line options `-indices-matter` and.
+The first one changes the
 interpretation of equality to one that conforms to the
 homotopy-theoretic interpretation, while the second one is an ugly
 temporary hack that turns universe inconsistencies intro warning

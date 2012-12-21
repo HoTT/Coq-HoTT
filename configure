@@ -593,6 +593,9 @@ make_hoqide_FALSE
 make_hoqide_TRUE
 COQIDEVERSION
 COQIDE
+with_ssreflect
+make_ssreflect_FALSE
+make_ssreflect_TRUE
 COQCVERSION
 COQC
 COQLIB
@@ -667,6 +670,7 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 enable_maintainer_mode
+with_ssreflect
 with_coqide
 '
       ac_precious_vars='build_alias
@@ -1300,6 +1304,7 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-ssreflect        also compile the ssreflect libary
   --without-coqide        disable support for coqide
 
 Some influential environment variables:
@@ -2359,20 +2364,15 @@ $as_echo "Coq library path is $COQLIB" >&6; }
 
 
 
-   relevantequality=`$COQTOP -help 2>&1 | grep -c -- -relevant-equality`
-   if test "$relevantequality" = "0"; then
-       as_fn_error $? "You need a version of Coq which supports -relevant-equality" "$LINENO" 5
-   fi
-
-   warnuniverse=`$COQTOP -help 2>&1 | grep -c -- -warn-universe-inconsistency`
-   if test "$warnuniverse" = "0"; then
-      as_fn_error $? "You need a version of Coq which supports -warn-universe-inconsistency" "$LINENO" 5
+   indicesmatter=`$COQTOP -help 2>&1 | grep -c -- -indices-matter`
+   if test "$indicesmatter" = "0"; then
+       as_fn_error $? "You need a version of Coq which supports -indices-matter" "$LINENO" 5
    fi
 fi
 
 # Now set COQBIN if it has not been set yet. We need COQBIN because Makefiles
 # produces by coq_makefile insist on running coqtop as $(COQBIN)coqtop, and
-# ssreflect usees coq_makefile
+# ssreflect uses coq_makefile
 if test ! -n "$COQBIN" ; then
    COQBIN=`dirname $COQTOP`
 fi
@@ -2441,18 +2441,44 @@ $as_echo "coqc version is $COQCVERSION." >&6; }
   fi
 fi
 
+# Should we compile ssrfelect?
+with_ssreflect="no"
+
+# Check whether --with-ssreflect was given.
+if test "${with_ssreflect+set}" = set; then :
+  withval=$with_ssreflect; with_ssreflect=yes
+fi
+
+
+ if test "$with_ssreflect" = "yes"; then
+  make_ssreflect_TRUE=
+  make_ssreflect_FALSE='#'
+else
+  make_ssreflect_TRUE='#'
+  make_ssreflect_FALSE=
+fi
+
+if test "make_ssreflect" = "yes"; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Will compile ssreflect, as requested." >&5
+$as_echo "Will compile ssreflect, as requested." >&6; }
+else
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Skipping compilation of ssreflect, as not requested." >&5
+$as_echo "Skipping compilation of ssreflect, as not requested." >&6; }
+fi
+
+
 # Checking for coqide, which can be optional
-without_coqide="no"
+with_coqide="no"
 
 # Check whether --with-coqide was given.
 if test "${with_coqide+set}" = set; then :
   withval=$with_coqide;
 else
-  with_coqide=yes
+  with_coqide="yes"
 fi
 
 
-if test "$with_coqide" != "yes"; then
+if test "$with_coqide" != "no"; then
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: Skipping coqide support, as requested." >&5
 $as_echo "Skipping coqide support, as requested." >&6; }
 else
@@ -2701,7 +2727,7 @@ ac_config_files="$ac_config_files hoqtop"
 
 ac_config_files="$ac_config_files hoqc"
 
-if test "x$without_coqide" != "xyes" ; then
+if test "x$with_coqide" != "xyes" ; then
    ac_config_files="$ac_config_files hoqide"
 
 fi
@@ -2864,6 +2890,10 @@ $as_echo_n "checking that generated files are newer than configure... " >&6; }
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: done" >&5
 $as_echo "done" >&6; }
 
+if test -z "${make_ssreflect_TRUE}" && test -z "${make_ssreflect_FALSE}"; then
+  as_fn_error $? "conditional \"make_ssreflect\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 if test -z "${make_hoqide_TRUE}" && test -z "${make_hoqide_FALSE}"; then
   as_fn_error $? "conditional \"make_hoqide\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5

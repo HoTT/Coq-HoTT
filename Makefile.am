@@ -12,12 +12,15 @@ EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdow
 VFILES=$(shell find $(srcdir)/theories -name "*.v")
 VOFILES:=$(VFILES:.v=.vo)
 GLOBFILES:=$(VFILES:.v=.glob)
+DEPFILES:=(VFILES:.v=.d)
 
 # The list of files that comprise the alternative standard library
 STDVFILES=$(shell find $(srcdir)/coq -name "*.v")
 STDVOFILES:=$(STDVFILES:.v=.vo)
 STDGLOBFILES:=$(STDVFILES:.v=.glob)
+STDDEPFILES:=$(STDVFILES:.v=.d)
 
+if make_ssreflect
 # The list of Coq files that comprise ssreflect
 SSRMAKEFILE=$(srcdir)/Makefile_ssrplugin
 ssrdir=$(srcdir)/ssrplugin
@@ -29,6 +32,7 @@ SSRMLFILES=$(shell find $(ssrdir)/src -name "*.ml4" -o -name "*.ml")
 SSRMLLIBFILES=$(shell find $(ssrdir)/theories -name "*.mllib")
 SSRCMXSFILES=$(SSRMLLIBFILES:.mllib=.cmxs)
 SSRCMAFILES=$(SSRMLLIBFILES:.mllib=.cma)
+endif
 
 # Definitions that let autoconf know how to install things.
 nobase_hott_DATA = \
@@ -46,9 +50,13 @@ HOQC=$(srcdir)/hoqc
 SRCCOQLIB=$(srcdir)/coq
 
 # Which files should be cleaned
-CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES)
+CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES) $(DEPFILES) $(STDDEPFILES)
 
+if make_ssreflect
 .PHONY: stdlib hottlib ssrplugin
+else
+.PHONY: stdlib hottlib
+endif
 
 install-data-local:
 	$(mkdir_p) $(hottdir)/coq
@@ -64,18 +72,19 @@ clean-local: $(SSRMAKEFILE)
 stdlib: $(STDVOFILES)
 
 $(STDVOFILES) : %.vo : %.v
-	$(COQTOP) -relevant-equality -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
+	$(COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
 
 
 # The HoTT files depend on the new standard library and ssreflect, but coqdep will not figure that out.
 hottlib: $(VOFILES)
 
-$(VOFILES) : stdlib ssrplugin
+$(VOFILES) : stdlib
 
 # A rule for compiling the HoTT libary files
 $(VOFILES) : %.vo : %.v
 	$(HOQC) $<
 
+if make_ssreflect
 # Compilation of ssreflect is a bit more roundabout because ssreflect relies on coq_makefile,
 # which we do not. Perhaps we should. Anyhow, we circumvent the "standard" ssreflect procedure
 # to keep track of dependencies and what should be installed where. This will break if ssreflect
@@ -99,7 +108,8 @@ $(SSRCMXSFILES): %.cmxs : %.mllib
 
 $(SSRCMAFILES): %.cma : %.mllib
 	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
+endif
 
 # Dependency files
 %.d: %.v; $(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $< >$@
--include $(VFILES:.v=.d) $(STDVFILES:.v=.d)
+-include $(DEPFILES) $(STDDEPFILES)
