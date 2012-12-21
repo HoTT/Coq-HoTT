@@ -12,12 +12,12 @@ Definition eta_unit (z : unit) : tt = z
 
 (** *** Universal mapping property *)
 
-Instance isequiv_unit_rect (P : unit -> Type)
-  : IsEquiv (unit_rect P)
+Instance isequiv_unit_rect (A : Type)
+  : IsEquiv (@unit_rect A)
   := isequiv_adjointify _
-  (fun f => f tt)
-  (fun f => funext (unit_rect P (f tt)) f
-    (fun x => match x with tt => 1 end))
+  (fun f : unit -> A => f tt)
+  (fun f : unit -> A => funext (unit_rect (f tt)) f
+                               (fun x => match x with tt => 1 end))
   (fun _ => 1).
 
 (** *** Paths *)
