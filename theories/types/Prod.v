@@ -5,7 +5,10 @@ Require Import Common Paths Contractible Equivalences Funext.
 Open Scope path_scope.
 Open Scope equiv_scope.
 
-(* What is this for? *)
+(** *** Unpacking *)
+
+(** Sometimes we would like to prove [Q u] where [u : A * B] by writing [u] as a pair [(fst u ; snd u)]. This is accomplished by [prod_unpack]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
+
 Definition prod_unpack {A B : Type} {P : A * B -> Type} (u : A * B) :
   P (fst u, snd u) -> P u
   :=
@@ -100,11 +103,10 @@ Definition equiv_path_prod {A B : Type} {z z' : A * B}
 
 (** *** Transport *)
 
-Definition trans_prod {A : Type} {P Q : A -> Type} {a a' : A} (p : a = a')
-  (x : P a) (y : Q a)
-  : transport (fun a => P a * Q a) p (x,y)
-  = (transport P p x, transport Q p y)
-  := match p with idpath => 1 end.
+Definition transport_prod {A : Type} {P Q : A -> Type} {a a' : A} (p : a = a')
+  (z : P a * Q a)
+  : transport (fun a => P a * Q a) p z  =  (p # (fst z), p # (snd z))
+  := match p with idpath => match z with (x,y) => 1 end end.
 
 (** *** HLevel *)
 
