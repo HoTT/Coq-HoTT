@@ -581,13 +581,11 @@ Defined.
 
 (** *** Transport and the groupoid structure of paths *)
 
-(** TODO: after some experience working with these, reconsider whether making
-[P] implicit was a good idea.  (It needs to be explicit in transport, but may not need to be in these.) *)
-Definition transport_1 {A : Type} {P : A -> Type} {x : A} (u : P x)
+Definition transport_1 {A : Type} (P : A -> Type) {x : A} (u : P x)
   : 1 # u = u
 := 1.
 
-Definition transport_pp {A : Type} {P : A -> Type} {x y z : A} (p : x = y) (q : y = z) (u : P x) :
+Definition transport_pp {A : Type} (P : A -> Type) {x y z : A} (p : x = y) (q : y = z) (u : P x) :
   p @ q # u = q # p # u :=
   match q with idpath =>
     match p with idpath => 1 end
@@ -595,13 +593,13 @@ Definition transport_pp {A : Type} {P : A -> Type} {x y z : A} (p : x = y) (q : 
 
 (** TODO: The following two results follow directly from [transport_1] and
   [transport_pp].  Is it really necessary to give them separately? *)
-Definition transport_pV {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P y) :
+Definition transport_pV {A : Type} (P : A -> Type) {x y : A} (p : x = y) (z : P y) :
   p # p^ # z = z :=
   (match p as i in (_ = y) return (forall z : P y, i # i^ # z = z)
      with idpath => fun _ => 1
    end) z.
 
-Definition transport_Vp {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P x) :
+Definition transport_Vp {A : Type} (P : A -> Type) {x y : A} (p : x = y) (z : P x) :
   p^ # p # z = z
   := 
   (match p as i return (forall z : P x, i^ # i # z = z)
@@ -610,12 +608,12 @@ Definition transport_Vp {A : Type} {P : A -> Type} {x y : A} (p : x = y) (z : P 
 
 (** In the future, we may expect to need some higher coherence for transport:
   for instance, that transport acting on the associator is trivial. *)
-Definition transport_p_pp {A : Type} {P : A -> Type} 
+Definition transport_p_pp {A : Type} (P : A -> Type)
   {x y z w : A} (p : x = y) (q : y = z) (r : z = w)
   (u : P x)
   : ap (fun e => e # u) (concat_p_pp p q r)
-    @ (transport_pp (p@q) r u) @ ap (transport P r) (transport_pp p q u)
-  = (transport_pp p (q@r) u) @ (transport_pp q r (p#u))
+    @ (transport_pp P (p@q) r u) @ ap (transport P r) (transport_pp P p q u)
+  = (transport_pp P p (q@r) u) @ (transport_pp P q r (p#u))
   :> ((p @ (q @ r)) # u = r # q # p # u) .
 Proof.
   destruct p, q, r.  simpl.  exact 1.
