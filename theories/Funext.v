@@ -5,9 +5,9 @@
 Require Import Overture Equivalences.
 Local Open Scope equiv_scope.
 
-(** The function extensionality axiom is formulated as a class. To use it in a theorem, just assume it with [`{FunextAxiom}], and then you can use [path_forall], defined below. *)
+(** The function extensionality axiom is formulated as a class. To use it in a theorem, just assume it with [`{FunextAxiom}], and then you can use [path_forall], defined below.  If you need function extensionality for a whole development, you can assume it for an entire Section with [Context `{FunextAxiom}].  *)
 Class FunextAxiom := 
-  { apD10_IsEquiv :> forall (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g) }.
+  { isequiv_apD10 :> forall (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g) }.
 
 Definition path_forall `{FunextAxiom} {A : Type} {P : A -> Type} (f g : forall x : A, P x) :
   (forall x, f x = g x) -> f = g
