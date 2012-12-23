@@ -120,6 +120,6 @@ endif
 
 # Dependency files
 $(DEPFILES) $(STDDEPFILES) : %.d : %.v
-	$(COQDEP) -nois -coqlib $(srcdir)/coq -I theories -R coq/theories Coq $< >$@
+	$(COQDEP) -nois -coqlib $(srcdir)/coq -R theories HoTT -R coq/theories Coq $< >$@
 
 -include $(DEPFILES) $(STDDEPFILES)
