@@ -13,6 +13,7 @@ Class Contr (A : Type) := BuildContr {
   contr : (forall y : A, center = y)
 }.
 
+(* Why [simpl never]? *)
 Arguments center A {_} : simpl never.
 
 (** Allow ourselves to implicitly generalize over types [A] and [B]. *)
