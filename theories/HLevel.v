@@ -1,3 +1,5 @@
+(** * H-Levels *)
+
 (* The H-levels measure how complicated a type is in terms of higher path spaces.
    H-level 0 are the contractible spaces, whose homotopy is completely
    trivial. H-level [(n+1)] are spaces whose path spaces are of level [n].
@@ -13,28 +15,26 @@
    in the sense that all paths are trivial. We call such spaces "sets".
 *)
 
-Require Import Paths Fibrations Contractible Equivalences Funext.
-Require Import ExtensionalityAxiom.
+Require Import Common Paths Contractible Funext.
 
-(** Some more stuff about contractibility. *)
+Generalizable Variable A.
 
-Theorem contr_contr {X} : is_contr X -> is_contr (is_contr X).
-  intro ctr1.
-  exists ctr1. intros ctr2.
-  apply @total_path with (p := pr2 ctr1 (pr1 ctr2)).
-  apply funext_dep.
-  intro x.
-  apply contr_path2.
-  assumption.
-Defined.
+Instance contr_Contr `{FunextAxiom} `{Contr A} : Contr (Contr A).
+  exists {| center := center A ; contr := contr |}.
+  intros [c h].
+  apply (Contr_path (contr c)).
+  apply path_forall.
+  intro; apply path2_contr.
+Qed.
 
 (** H-levels. *)
 
-Fixpoint is_hlevel (n : nat) : Type -> Type :=
+Fixpoint is_hlevel (n : nat) (A : Type) : Type :=
   match n with
-    | 0 => is_contr
-    | S n' => fun X => forall (x y:X), is_hlevel n' (x = y)
+    | 0 => Contr A
+    | S n' => forall (x y : A), is_hlevel n' (x = y)
   end.
+(* COMMENTED OUT FOR NOW
 
 Theorem hlevel_inhabited_contr n : forall X, is_hlevel n X -> is_contr (is_hlevel n X).
 Proof.
@@ -379,3 +379,4 @@ Proof.
 Defined.
 
 
+*)

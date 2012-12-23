@@ -47,3 +47,13 @@ Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x}.
   exists (existT (fun y => y = x) x 1).
   intros [y []]; reflexivity.
 Defined.
+
+Lemma Contr_path {A : Type} {c c' : A} (p : c = c')
+  (h : forall a : A, c = a) (h' : forall a : A, c' = a)  :
+  transport (fun c => forall a : A, c = a) p h = h' -> BuildContr A c h = BuildContr A c' h'.
+Proof.
+  intro q.
+  destruct p.
+  destruct q.
+  reflexivity.
+Qed.
