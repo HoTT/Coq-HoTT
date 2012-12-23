@@ -1,15 +1,11 @@
 (** * Function extensionalty *)
 
-(** We formulate function extensionality in a separate file, even though it properly
-    belongs to [types.Forall], because it is used in many places.
-*)
+(** We formulate function extensionality in a separate file, even though it properly belongs to [types.Forall], because it is used in many places.  *)
 
-Require Import Common Paths Equivalences.
-
+Require Import Overture Equivalences.
 Local Open Scope equiv_scope.
 
-(** The function extensionality axiom is formulated as a class. To use it in a theorem,
-   just assume it with [`{FunextAxiom}], and then you can use [path_forall], defined below. *)
+(** The function extensionality axiom is formulated as a class. To use it in a theorem, just assume it with [`{FunextAxiom}], and then you can use [path_forall], defined below. *)
 Class FunextAxiom := 
   { apD10_IsEquiv :> forall (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g) }.
 

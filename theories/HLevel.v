@@ -15,7 +15,8 @@
    in the sense that all paths are trivial. We call such spaces "sets".
 *)
 
-Require Import Common Paths Contractible Funext.
+Require Import Overture Contractible Funext.
+Local Open Scope path_scope.
 
 Generalizable Variable A.
 

@@ -1,9 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about Sigma-types (dependent sums) *)
 
-Require Import Common Paths Contractible Equivalences.
-Open Scope path_scope.
-Open Scope equiv_scope.
+Require Import Overture Contractible Equivalences.
+Local Open Scope path_scope.
+Local Open Scope equiv_scope.
 
 (** In homotopy type theory, We think of elements of [Type] as spaces, homotopy types, or weak omega-groupoids. A type family [P : A -> Type] corresponds to a fibration whose base is [A] and whose fiber over [x] is [P x].
 

@@ -1,7 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the empty type *)
 
-Require Import Common Paths Contractible Funext.
+Require Import Overture Contractible Funext.
+Local Open Scope path_scope.
 
 (** *** Universal mapping property *)
 

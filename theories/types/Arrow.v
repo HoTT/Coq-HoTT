@@ -1,9 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about Non-dependent function types *)
 
-Require Import Common Paths Contractible Equivalences Funext.
-Open Scope path_scope.
-Open Scope equiv_scope.
+Require Import Overture Contractible Equivalences Funext.
+Local Open Scope path_scope.
+Local Open Scope equiv_scope.
 
 (** *** Transport *)
 

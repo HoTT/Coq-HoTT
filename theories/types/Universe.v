@@ -1,9 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the universe, including univalence as a typeclass. *)
 
-Require Import Common Paths Contractible Equivalences.
-Open Scope path_scope.
-Open Scope equiv_scope.
+Require Import Overture Contractible Equivalences.
+Local Open Scope path_scope.
+Local Open Scope equiv_scope.
 
 (** *** Paths *)
 

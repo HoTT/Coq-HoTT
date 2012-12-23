@@ -1,7 +1,6 @@
 (** * Basic facts about fibrations *)
 
-Require Import Paths.
-
+Require Import Overture.
 Local Open Scope path_scope.
 
 (*

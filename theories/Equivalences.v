@@ -1,7 +1,6 @@
 (** * Equivalences -*- mode: coq; mode: visual-line -*- *)
 
-Require Import Common Paths Contractible.
-
+Require Import Overture Contractible.
 Local Open Scope path_scope.
 
 (** Homotopy equivalences are a central concept in homotopy type theory. Before we define equivalences, let us consider when two types [A] and [B] should be considered "the same".
@@ -248,30 +247,6 @@ Section HIso.
 
 End HIso.
 
-
-(** If [f] is an equivalence, then so is [ap f].  Here again we are lazy and use [adjointify]. *)
-Instance isequiv_ap `{IsEquiv A B f} (x y : A)
-  : IsEquiv (@ap A B f x y)
-  := isequiv_adjointify (ap f)
-  (fun q => (eissect f x)^  @  ap f^-1 q  @  eissect f y)
-  (fun q =>
-    ap_pp f _ _
-    @ whiskerR (ap_pp f _ _) _
-    @ ((ap_V f _ @ inverse2 (eisadj f _)^)
-      @@ (ap_compose f^-1 f _)^
-      @@ (eisadj f _)^)
-    @ concat_pA1_p (eisretr f) _ _
-    @ whiskerR (concat_Vp _) _
-    @ concat_1p _)
-  (fun p =>
-    whiskerR (whiskerL _ (ap_compose f f^-1 _)^) _
-    @ concat_pA1_p (eissect f) _ _
-    @ whiskerR (concat_Vp _) _
-    @ concat_1p _).
-
-Definition equiv_ap `{IsEquiv A B f} (x y : A)
-  : (x = y) <~> (f x = f y)
-  := BuildEquiv _ _ (ap f) _.
   
 (** If [f] is an equivalence, then its homotopy fibers are contractible.  That is, it is a Voevodsky equivalence, or a homotopy bijection.  Probably the following two proofs should really be using some standard facts about paths in Sigma types.  *)
 

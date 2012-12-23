@@ -1,9 +1,31 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-(** * The groupoid structure of identity types *)
+(** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
 
-Require Import Common.
+(** ** Basic definitions *)
 
-(** In this file we study the groupoid structure of identity types. The results are used everywhere else, so we need to be extra careful about how we define and prove things.  We prefer hand-written terms, or at least tactics that allow us to retain clear control over the proof-term produced. *)
+(** We make the identity map a notation so we do not have to unfold it,
+    or complicate matters with its type. *)
+Notation "'idmap'" := (fun x => x).
+
+(** We define notation for dependent pairs because it is too annoying to write and see [existT P x y] all the time.  However, we put it in its own scope, because sometimes it is necessary to give the particular dependent type, so we'd like to be able to turn off this notation selectively. *)
+Notation "( x ; y )" := (existT _ x y) : fibration_scope.
+Open Scope fibration_scope.
+
+Notation "x .1" := (projT1 x) (at level 3) : fibration_scope.
+Notation "x .2" := (projT2 x) (at level 3) : fibration_scope.
+
+(** Composition of functions. *)
+Definition compose {A B C : Type} (g : B -> C) (f : A -> B) :=
+  fun x => g (f x).
+
+(** These funny looking types are used to trigger the canonical structures mechanism.
+   TODO: No longer needed as we are using typeclasses? *)
+Inductive batman T (p : T) := Batman. (* Known as [phantom] in ssreflect. *)
+Inductive robin (p : Type) := Robin. (* Known as [phant] in ssreflect. *)
+
+(** ** The groupoid structure of identity types. *)
+
+(** The results in this file are used everywhere else, so we need to be extra careful about how we define and prove things.  We prefer hand-written terms, or at least tactics that allow us to retain clear control over the proof-term produced. *)
 
 Inductive paths {A : Type} (a : A) : A -> Type :=
   idpath : paths a a.
@@ -36,14 +58,14 @@ Local Open Scope fib_scope.
 
 Notation "p # x" := (transport _ p x) (right associativity, at level 65, only parsing) : path_scope.
 
-(** Having defined transport, we can use it to talk about what a homotopy theorist might see as “paths in a fibration over paths in the base”; and what a type theorist might see as “heterogeneous eqality in a dependent type”. 
+(** Having defined transport, we can use it to talk about what a homotopy theorist might see as "paths in a fibration over paths in the base"; and what a type theorist might see as "heterogeneous eqality in a dependent type". 
 
 We will first see this appearing in the type of [apD]. *)
 
 
 (** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A], then [ap f p : f x = f y].  
 
-   We typically pronounce [ap] as a single syllable, short for “application”; but it may also be considered as an acronym, “action on paths”. *)
+   We typically pronounce [ap] as a single syllable, short for "application"; but it may also be considered as an acronym, "action on paths". *)
 
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
@@ -52,7 +74,7 @@ Arguments ap {A B} f {x y} p : simpl nomatch.
 
 (** Similarly, dependent functions act on paths; but the type is a bit more subtle.  If  [f : forall a:A, B a] and [p : x = y] is a path in [A], then [apD f p] should somehow be a path between [f x : B x] and [f y : B y].  Since these live in different types, we use transport along [p] to make them comparable: [apD f p : p # f x = f y].
 
-  The type [p # f x = f y] can profitably be considered as a heterogeneous or dependent equality type, of “paths from [f x] to [f y] over [p]”. *)
+  The type [p # f x = f y] can profitably be considered as a heterogeneous or dependent equality type, of "paths from [f x] to [f y] over [p]". *)
 
 Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
   p # (f x) = f y
@@ -683,26 +705,6 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
-(** Transporting in path spaces *)
-Definition transport_paths_l {A : Type} {x1 x2 y : A} (p : x1 = x2) (q : x1 = y)
-  : transport (fun x => x = y) p q = p^ @ q.
-Proof.
-  destruct p, q; reflexivity.
-Defined.
-
-Definition transport_paths_r {A : Type} {x y1 y2 : A} (p : y1 = y2) (q : x = y1)
-  : transport (fun y => x = y) p q = q @ p.
-Proof.
-  destruct p, q; reflexivity.
-Defined.
-
-Definition transport_paths_lr {A : Type} {x1 x2 : A} (p : x1 = x2) (q : x1 = x1)
-  : transport (fun x => x = x) p q = p^ @ q @ p.
-Proof.
-  destruct p; simpl.
-  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
-Defined.
-
 (** *** The behavior of [ap] and [apD]. *)
 
 (** In a constant fibration, [apD] reduces to [ap], modulo [transport_const]. *)
@@ -806,7 +808,7 @@ Definition concat_whisker {A} {x y z : A} (p p' : x = y) (q q' : y = z) (a : p =
 
 (** Structure corresponding to the coherence equations of a bicategory. *)
 
-(** The “pentagonator”: the 3-cell witnessing the associativity pentagon. *)
+(** The "pentagonator": the 3-cell witnessing the associativity pentagon. *)
 Definition pentagon {A : Type} {v w x y z : A} (p : v = w) (q : w = x) (r : x = y) (s : y = z)
   : whiskerL p (concat_p_pp q r s)
       @ concat_p_pp p (q@r) s
