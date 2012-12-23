@@ -664,18 +664,16 @@ install-data-local:
 # The standard library files must be compiled in a special way
 stdlib: $(STDVOFILES)
 
-$(STDVOFILES) : %.vo : %.v %.d
+$(STDVOFILES) : %.vo : %.v
 	$(COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
 
 # The HoTT files depend on the new standard library and ssreflect, but coqdep will not figure that out.
 hottlib: $(VOFILES)
 
-$(VOFILES) : stdlib
-
 # A rule for compiling the HoTT libary files
-@make_ssreflect_TRUE@$(VOFILES) : %.vo : %.v %.d ssrplugin
+@make_ssreflect_TRUE@$(VOFILES) : %.vo : %.v ssrplugin stdlib
 @make_ssreflect_TRUE@	$(HOQC) $<
-@make_ssreflect_FALSE@$(VOFILES) : %.vo : %.v %.d
+@make_ssreflect_FALSE@$(VOFILES) : %.vo : %.v stdlib
 @make_ssreflect_FALSE@	$(HOQC) $<
 
 # Compilation of ssreflect is a bit more roundabout because ssreflect relies on coq_makefile,

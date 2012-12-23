@@ -73,21 +73,19 @@ endif
 # The standard library files must be compiled in a special way
 stdlib: $(STDVOFILES)
 
-$(STDVOFILES) : %.vo : %.v %.d
+$(STDVOFILES) : %.vo : %.v
 	$(COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
 
 
 # The HoTT files depend on the new standard library and ssreflect, but coqdep will not figure that out.
 hottlib: $(VOFILES)
 
-$(VOFILES) : stdlib
-
 # A rule for compiling the HoTT libary files
 if make_ssreflect
-$(VOFILES) : %.vo : %.v %.d ssrplugin
+$(VOFILES) : %.vo : %.v ssrplugin stdlib
 	$(HOQC) $<
 else
-$(VOFILES) : %.vo : %.v %.d
+$(VOFILES) : %.vo : %.v stdlib
 	$(HOQC) $<
 endif
 
