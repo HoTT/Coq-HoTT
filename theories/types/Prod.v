@@ -7,9 +7,9 @@ Local Open Scope equiv_scope.
 
 (** *** Unpacking *)
 
-(** Sometimes we would like to prove [Q u] where [u : A * B] by writing [u] as a pair [(fst u ; snd u)]. This is accomplished by [prod_unpack]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
+(** Sometimes we would like to prove [Q u] where [u : A * B] by writing [u] as a pair [(fst u ; snd u)]. This is accomplished by [unpack_prod]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
 
-Definition prod_unpack {A B : Type} {P : A * B -> Type} (u : A * B) :
+Definition unpack_prod {A B : Type} {P : A * B -> Type} (u : A * B) :
   P (fst u, snd u) -> P u
   :=
   let (x, y) as u return (P (fst u, snd u) -> P u) := u in idmap.

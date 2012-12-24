@@ -15,7 +15,7 @@ Local Open Scope equiv_scope.
 
 (** Sometimes we would like to prove [Q u] where [u : {x : A & P x}] by writing [u] as a pair [(projT1 u ; projT2 u)]. This is accomplished by [sigT_unpack]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
 
-Definition sigT_unpack {A : Type} {P : A -> Type} (Q : sigT P -> Type) (u : sigT P) :
+Definition unpack_sigma {A : Type} {P : A -> Type} (Q : sigT P -> Type) (u : sigT P) :
   Q (projT1 u; projT2 u) -> Q u
   :=
   fun H =>
@@ -25,7 +25,7 @@ Definition sigT_unpack {A : Type} {P : A -> Type} (Q : sigT P -> Type) (u : sigT
 
 (** A path in a total space is commonly shown component wise. Because we use this over and over, we write down the proofs by hand to make sure they are what we think they should be. *)
 
-Definition sigT_path_unpacked {A : Type} (P : A -> Type) {x y : A}
+Definition path_sigma_unpacked {A : Type} (P : A -> Type) {x y : A}
   {u : P x} {v : P y} (p : x = y) (q : p # u = v)
   : (x ; u) = (y ; v)
   :=
@@ -34,12 +34,12 @@ Definition sigT_path_unpacked {A : Type} (P : A -> Type) {x y : A}
        fun _ q => match q with idpath => 1 end
   end) v q.
 
-Definition sigT_path {A : Type} (P : A -> Type) {u v : sigT P}
+Definition path_sigma {A : Type} (P : A -> Type) {u v : sigT P}
   (p : projT1 u = projT1 v) (q : p # projT2 u = projT2 v)
   : u = v
-  := sigT_unpack _ v
-      (sigT_unpack (fun w => w = (projT1 v; projT2 v)) u
-        (sigT_path_unpacked P p q)).
+  := unpack_sigma _ v
+      (unpack_sigma (fun w => w = (projT1 v; projT2 v)) u
+        (path_sigma_unpacked P p q)).
 
 (** Projections of paths from a total space. *)
 
