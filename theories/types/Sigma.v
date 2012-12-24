@@ -25,21 +25,35 @@ Definition unpack_sigma {A : Type} {P : A -> Type} (Q : sigT P -> Type) (u : sig
 
 (** A path in a total space is commonly shown component wise. Because we use this over and over, we write down the proofs by hand to make sure they are what we think they should be. *)
 
-Definition path_sigma_unpacked {A : Type} (P : A -> Type) {x y : A}
-  {u : P x} {v : P y} (p : x = y) (q : p # u = v)
-  : (x ; u) = (y ; v)
-  :=
-  (match p as i in (_ = y) return (forall v : P y, i # u = v -> (x; u) = (y; v)) with
-     idpath =>
-       fun _ q => match q with idpath => 1 end
-  end) v q.
-
-Definition path_sigma {A : Type} (P : A -> Type) {u v : sigT P}
-  (p : projT1 u = projT1 v) (q : p # projT2 u = projT2 v)
+(** With this version of the function, we often have to give [u] and [v] explicitly, so we make them explicit arguments. *)
+Definition path_sigma_uncurried {A : Type} (P : A -> Type) (u v : sigT P)
+  (pq : {p : u.1 = v.1 &  p # u.2 = v.2})
   : u = v
-  := unpack_sigma _ v
-      (unpack_sigma (fun w => w = (projT1 v; projT2 v)) u
-        (path_sigma_unpacked P p q)).
+  := match pq with
+       | existT p q =>
+         match u, v return (forall p0, (p0 # u.2 = v.2) -> (u=v)) with
+           | (x;y), (x';y') => fun p1 q1 =>
+             match p1 in (_ = x'') return (forall y'', (p1 # y = y'') -> (x;y)=(x'';y'')) with
+               | idpath => fun y' q2 =>
+                 match q2 with
+                   | idpath => 1
+                 end
+             end y' q1
+         end p q
+     end.
+
+(** This is the curried one you usually want to use in practice.  We define it in terms of the uncurried one, since it's the uncurried one that is proven below to be an equivalence. *)
+Definition path_sigma {A : Type} (P : A -> Type) (u v : sigT P)
+  (p : u.1 = v.1) (q : p # u.2 = v.2)
+  : u = v
+  := path_sigma_uncurried P u v (p;q).
+
+(** This version produces only paths between pairs, as opposed to paths between arbitrary inhabitants of dependent sum types.  But it has the advantage that the components of those pairs can more often be inferred. *)
+Definition path_sigma' {A : Type} (P : A -> Type) {x x' : A} {y : P x} {y' : P x'}
+  (p : x = x') (q : p # y = y')
+  : (x;y) = (x';y')
+  := path_sigma P (x;y) (x';y') p q.
+
 
 (** Projections of paths from a total space. *)
 
@@ -53,6 +67,7 @@ Definition path_projT2 {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v) :
   path_projT1 p # projT2 u = projT2 v
   :=
   match p with idpath => 1 end.
+
 
 (** TEMPORARILY COMMENTED OUT. *)
 
