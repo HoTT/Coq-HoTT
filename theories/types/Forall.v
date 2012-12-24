@@ -1,7 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about dependent products *)
 
-Require Import Overture Contractible Equivalences Funext.
+Require Import Overture Contractible Equivalences.
+Require Export Funext.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
