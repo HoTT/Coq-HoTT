@@ -6,7 +6,7 @@ if make_hoqide
 endif
 
 hottdir=$(datarootdir)/hott
-EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
+EXTRA_DIST = coq theories ssrplugin etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 
 # The list of files that comprise the HoTT library
 VFILES=$(shell find $(srcdir)/theories -name "*.v")
@@ -77,18 +77,17 @@ $(STDVOFILES) : %.vo : %.v
 	$(COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
 
 
-# The HoTT files depend on the new standard library and ssreflect, but coqdep will not figure that out.
+# The HoTT library as a single target
 hottlib: $(VOFILES)
 
 # A rule for compiling the HoTT libary files
 if make_ssreflect
-$(VOFILES) : %.vo : %.v ssrplugin stdlib
+$(VOFILES) : %.vo : %.v $(STDVOFILES) $(SSRVOFILES)
 	$(HOQC) $<
 else
-$(VOFILES) : %.vo : %.v stdlib
+$(VOFILES) : %.vo : %.v $(STDVOFILES)
 	$(HOQC) $<
 endif
-
 
 if make_ssreflect
 # Compilation of ssreflect is a bit more roundabout because ssreflect relies on coq_makefile,
