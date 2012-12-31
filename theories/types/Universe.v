@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-(** * Theorems about the universe, including univalence as a typeclass. *)
+(** * Theorems about the universe, including the Univalence Axiom. *)
 
 Require Import Overture Contractible Equivalences.
 Local Open Scope path_scope.
