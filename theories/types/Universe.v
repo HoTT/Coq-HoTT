@@ -19,12 +19,12 @@ Instance isequiv_path {A B : Type} (p : A = B)
 Definition equiv_path (A B : Type) (p : A = B) : A <~> B
   := BuildEquiv _ _ (transport (fun X:Type => X) p) _.
 
-Class UnivalenceAxiom := {
+Class Univalence := {
   isequiv_equiv_path :> forall (A B : Type), IsEquiv (equiv_path A B)
 }.
 
-Section UnivalenceAxiom.
-Context `{UnivalenceAxiom}.
+Section Univalence.
+Context `{Univalence}.
 
 Definition path_universe_uncurried {A B : Type} (f : A <~> B) : A = B
   := (equiv_path A B)^-1 f.
@@ -47,4 +47,4 @@ Definition isequiv_path_universe {A B : Type}
 Definition equiv_path_universe {A B : Type} : (A <~> B) <~> (A = B)
   := BuildEquiv _ _ (@path_universe_uncurried A B) isequiv_path_universe.
 
-End UnivalenceAxiom.
+End Univalence.
