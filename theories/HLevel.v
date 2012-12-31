@@ -20,7 +20,7 @@ Local Open Scope path_scope.
 
 Generalizable Variable A.
 
-Instance contr_Contr `{FunextAxiom} `{Contr A} : Contr (Contr A).
+Instance contr_Contr `{Funext} `{Contr A} : Contr (Contr A).
   exists {| center := center A ; contr := contr |}.
   intros [c h].
   apply (Contr_path (contr c)).

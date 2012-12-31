@@ -12,24 +12,24 @@ Local Open Scope equiv_scope.
 
 (** Now we show how these things compute. *)
 
-Definition apD10_path_forall `{FunextAxiom} {A : Type} {B : A -> Type}
+Definition apD10_path_forall `{Funext} {A : Type} {B : A -> Type}
   (f g : forall x:A, B x) (h : forall x:A, f x = g x)
   : apD10 (path_forall _ _ h) = h
   := eisretr apD10 h.
 
-Definition eta_path_forall `{FunextAxiom} {A : Type} {B : A -> Type}
+Definition eta_path_forall `{Funext} {A : Type} {B : A -> Type}
   (f g : forall x:A, B x) (p : f = g)
   : path_forall _ _ (apD10 p) = p
   := eissect apD10 p.
 
 (** The identification of the path space of a dependent function space, up to equivalence, is of course just funext. *)
 
-Instance isequiv_path_forall `{FunextAxiom} {A : Type} {B : A -> Type}
+Instance isequiv_path_forall `{Funext} {A : Type} {B : A -> Type}
   (f g : forall x:A, B x)
   : IsEquiv (path_forall f g)
   := @isequiv_inverse _ _ (@apD10 A B f g) _.
 
-Definition equiv_path_forall `{FunextAxiom} {A : Type} {B : A -> Type}
+Definition equiv_path_forall `{Funext} {A : Type} {B : A -> Type}
   (f g : forall x:A, B x)
   : (forall x:A, f x = g x)  <~>  (f = g)
   := @equiv_inverse (f = g) _ (@apD10 A B f g) _.

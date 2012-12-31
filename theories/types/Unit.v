@@ -12,7 +12,7 @@ Definition eta_unit (z : unit) : tt = z
 
 (** *** Universal mapping property *)
 
-Instance isequiv_unit_rect `{FunextAxiom} (A : Type)
+Instance isequiv_unit_rect `{Funext} (A : Type)
   : IsEquiv (@unit_rect A)
   := isequiv_adjointify _
   (fun f : unit -> A => f tt)

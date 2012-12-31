@@ -15,14 +15,14 @@ Section BoolForall.
       | true => snd u
     end.
 
-  Let eissect' `{FunextAxiom} : Sect f g.
+  Let eissect' `{Funext} : Sect f g.
   Proof.
     intro s; apply path_forall; intro b; destruct b; reflexivity.
   Defined.
 
   Let eisretr' : Sect g f := fun _ => eta_prod _.
 
-  Definition equiv_bool_forall_prod `{FunextAxiom} :
+  Definition equiv_bool_forall_prod `{Funext} :
     (forall b, P b) <~> P false * P true.
   Proof.
     exists f.

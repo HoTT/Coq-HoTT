@@ -22,7 +22,7 @@ Definition eta_prod {A B : Type} (z : A * B) : (fst z, snd z) = z
 (** *** Universal mapping property *)
 
 (* Doing this sort of thing without adjointifying will require very careful use of funext. *)
-Instance isequiv_prod_rect `{FunextAxiom} {A B : Type} (P : A * B -> Type)
+Instance isequiv_prod_rect `{Funext} {A B : Type} (P : A * B -> Type)
   : IsEquiv (prod_rect P)
   := isequiv_adjointify _
   (fun f x y => f (x,y))

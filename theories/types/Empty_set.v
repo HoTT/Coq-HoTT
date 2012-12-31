@@ -6,7 +6,7 @@ Local Open Scope path_scope.
 
 (** *** Universal mapping property *)
 
-Instance contr_to_Empty_set `{FunextAxiom} (A : Type) :
+Instance contr_to_Empty_set `{Funext} (A : Type) :
   Contr (Empty_set -> A) :=
   BuildContr _
   (Empty_set_rect A)
