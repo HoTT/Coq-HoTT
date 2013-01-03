@@ -18,12 +18,6 @@ Notation "x .2" := (projT2 x) (at level 3) : fibration_scope.
 Definition compose {A B C : Type} (g : B -> C) (f : A -> B) :=
   fun x => g (f x).
 
-(** These funny looking types are used to trigger the canonical structures mechanism.
-   TODO: No longer needed as we are using typeclasses? *)
-Inductive batman T (p : T) := Batman. (* Known as [phantom] in ssreflect. *)
-Inductive robin (p : Type) := Robin. (* Known as [phant] in ssreflect. *)
-
-
 (** ** The groupoid structure of identity types. *)
 
 (** The results in this file are used everywhere else, so we need to be extra careful about how we define and prove things.  We prefer hand-written terms, or at least tactics that allow us to retain clear control over the proof-term produced. *)
