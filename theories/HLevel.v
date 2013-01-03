@@ -15,11 +15,12 @@
    in the sense that all paths are trivial. We call such spaces "sets".
 *)
 
-Require Import Overture Contractible Funext.
-Local Open Scope path_scope.
+Require Import Overture Contractible Equivalences Funext types.Paths.
+Local Open Scope equiv_scope.
 
 Generalizable Variable A.
 
+(** The space of contractions of a contractible space is contractible. *)
 Instance contr_Contr `{Funext} `{Contr A} : Contr (Contr A).
   exists {| center := center A ; contr := contr |}.
   intros [c h].
@@ -28,62 +29,100 @@ Instance contr_Contr `{Funext} `{Contr A} : Contr (Contr A).
   intro; apply path2_contr.
 Qed.
 
-(** H-levels. *)
+(** ** H-levels and general facts about them. *)
 
 Fixpoint is_hlevel (n : nat) (A : Type) : Type :=
   match n with
     | 0 => Contr A
     | S n' => forall (x y : A), is_hlevel n' (x = y)
   end.
-(* COMMENTED OUT FOR NOW
 
-Theorem hlevel_inhabited_contr n : forall X, is_hlevel n X -> is_contr (is_hlevel n X).
+(** A contractible space has h-level zero, of course. *)
+Instance Contr_hlevel_0 (A : Type) : is_hlevel 0 A -> Contr A
+  := idmap.
+  
+(** H-levels are cummulative. *)
+Lemma hlevel_succ (n : nat) :
+  forall A : Type, is_hlevel n A -> is_hlevel (S n) A.
 Proof.
-  induction n.
-  intro; apply contr_contr.
-  simpl.
-  intros X H.
-  apply weak_funext.
-  intro x.
-  apply weak_funext.
+  induction n as [| n I].
+  - intros A H x y.
+    unfold is_hlevel in H.
+    apply contr_paths_contr.
+  - intros A H x y p q.
+    apply I.
+    apply H.
+Qed.
+
+(** ** Facts about [HProp] *)
+
+(** Maybe this should go to a separate file? *)
+
+Class HProp (A : Type) :=
+  { is_hprop : is_hlevel 1 A }.
+
+(** An inhabited proposition is contractible. *)
+Lemma Contr_inhabited_HProp `{H : HProp A} (x : A) : Contr A.
+Proof.
+  exists x.
   intro y.
-  apply IHn.
   apply H.
 Defined.
 
-(** H-levels are increasing with n. *)
-
-Theorem hlevel_succ n : forall X, is_hlevel n X -> is_hlevel (S n) X.
+(** If inhabitation implies contractibility, then we have an h-proposition. *)
+Instance HProp_inhabited_contr (A : Type) : (A -> Contr A) -> HProp A.
 Proof.
-  induction n.
-  intros X H x y.
-  apply contr_pathcontr.
-  assumption.
-  intros X H x y.
-  apply IHn.
-  apply H.
+  intro H.
+  exists.
+  intros x y.
+  pose (C := H x).
+  apply contr_paths_contr.
 Defined.
+
+(** [is_hlevel] is a proposition. *)
+Instance HProp_is_hlevel `{E : Funext} (n  : nat) (A : Type) : HProp (is_hlevel n A).
+Proof.
+  apply HProp_inhabited_contr.
+  generalize A; clear A.
+  induction n as [| n I].
+  - intros A H.
+    unfold is_hlevel in * |- *.
+    apply contr_Contr.
+  - intros A H.
+    exists H.
+    intro G.
+    apply path_forall; intro x.
+    apply path_forall; intro y.
+    simpl in G, H.
+    apply @path_contr.
+    apply I, H.
+Qed.
+
+(** Equivalence preserves h-levels (this is, of course, trivial with univalence). *)
+Theorem hlevel_equiv (n : nat) : forall (A B : Type), (A <~> B) -> is_hlevel n A -> is_hlevel n B.
+Proof.
+  induction n as [| n I].
+  - apply Contr_equiv_contr.
+  - intros A B e H x y.
+    fold is_hlevel.
+    apply I with (A := (e^-1 x = e^-1 y)).
+    + apply equiv_inverse.
+      apply @equiv_ap.
+      apply @isequiv_inverse.
+    + apply H.
+Defined.
+
+(** ** Facts about [HSet] *)
+
+Class HSet (A : Type) :=
+  { _ : is_hlevel 2 A }.
+
+
+(* COMMENTED OUT FOR NOW
 
 (** H-level is preserved under equivalence.
    (This is, of course, trivial with univalence.) *)
 
-Theorem hlevel_equiv : forall {n A B}, (A <~> B) -> is_hlevel n A -> is_hlevel n B.
-Proof.
-  induction n.
-  simpl.
-  apply @contr_equiv_contr.
-  simpl.
-  intros A B f H x y.
-  apply IHn with (A := f (f^-1 x) = y).
-  apply concat_equiv_left.
-  apply opposite, inverse_is_section.
-  apply IHn with (A := f (f^-1 x) = f (f^-1 y)).
-  apply concat_equiv_right.
-  apply inverse_is_section.
-  apply IHn with (A := (f^-1 x) = (f^-1 y)).
-  apply equiv_map_equiv.
-  apply H.
-Defined.
 
 (** And by products *)
 
@@ -127,29 +166,6 @@ Defined.
 Definition is_prop := is_hlevel 1.
 
 (** Here is an alternate characterization of propositions. *)
-
-Theorem prop_inhabited_contr A : is_prop A -> A -> is_contr A.
-Proof.
-  intros H x.
-  exists x.
-  intro y.
-  unfold is_prop, is_hlevel in H.
-  apply (H y x).
-Defined.
-
-Theorem inhabited_contr_isprop A : (A -> is_contr A) -> is_prop A.
-Proof.
-  intros H x y.
-  apply contr_pathcontr.
-  apply H.
-  assumption.
-Defined.
-
-Theorem hlevel_isprop n A : is_prop (is_hlevel n A).
-Proof.
-  apply inhabited_contr_isprop.
-  apply hlevel_inhabited_contr.
-Defined.
 
 Definition isprop_isprop A : is_prop (is_prop A) := hlevel_isprop 1 A.
 
