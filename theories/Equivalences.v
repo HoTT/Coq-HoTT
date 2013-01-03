@@ -155,11 +155,15 @@ Section EquivInverse.
 
   Global Instance isequiv_inverse : IsEquiv f^-1
     := BuildIsEquiv B A f^-1 f (eissect f) (eisretr f) other_adj.
-
-  Definition equiv_inverse : (B <~> A)
-    := BuildEquiv B A f^-1 _.
-
 End EquivInverse.
+
+(** [Equiv A B] is a symmetric relation. *)
+Theorem equiv_inverse (A B : Type): (A <~> B) -> (B <~> A).
+Proof.
+  intro e.
+  exists (e^-1).
+  apply isequiv_inverse.
+Defined.
 
 (** If [g \o f] and [f] are equivalences, so is [g]. *)
 Section EquivCancelR.
@@ -285,3 +289,31 @@ Definition equiv_contr_hfibers `(f : A -> B)
   (hfc : forall y:B, Contr {x:A & f x = y})
   : (A <~> B)
   := BuildEquiv _ _ f (isequiv_contr_hfibers f hfc).
+
+
+(** Several lemmas useful for rewriting. *)
+Lemma moveR_E (A B : Type) (e : A <~> B) (x : A) (y : B) :
+  x = e^-1 y -> e x = y.
+Proof.
+  intro H.
+  rewrite H.
+  apply eisretr.
+Qed.
+
+Lemma moveL_E (A B : Type) (e : A <~> B) (x : A) (y : B) :
+  e^-1 y = x -> y = e x.
+Proof.
+  intro H.
+  rewrite <- H.
+  apply inverse, eisretr.
+Qed.
+
+(** Equivalence preserves contractibility (which of course is trivial under univalence). *)
+Lemma Contr_equiv_contr (A B : Type) : (A <~> B) -> Contr A -> Contr B.
+Proof.
+  intros e C.
+  exists (e (center A)).
+  intro y.
+  apply moveR_E.
+  apply C.
+Qed.
