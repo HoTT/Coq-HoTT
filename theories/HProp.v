@@ -9,7 +9,7 @@ Require Import Overture Contractible Equivalences Funext HLevel types.Forall.
 Generalizable Variable A.
 
 (** An inhabited proposition is contractible. *)
-Lemma Contr_inhabited_HProp `{H : HProp A} (x : A) : Contr A.
+Lemma Contr_inhabited_HProp (A : Type) `{H : HProp A} (x : A) : Contr A.
 Proof.
   exists x.
   intro y.  
@@ -18,7 +18,7 @@ Proof.
 Defined.
 
 (** If inhabitation implies contractibility, then we have an h-proposition. *)
-Instance HProp_inhabited_contr (A : Type) : (A -> Contr A) -> HProp A.
+Instance HProp_inhabited_Contr (A : Type) : (A -> Contr A) -> HProp A.
 Proof.
   intro H.
   exists.
@@ -30,7 +30,7 @@ Defined.
 (** [is_hlevel] is a proposition. *)
 Instance HProp_is_hlevel `{E : Funext} (n  : nat) (A : Type) : HProp (is_hlevel n A).
 Proof.
-  apply HProp_inhabited_contr.
+  apply HProp_inhabited_Contr.
   generalize A; clear A.
   induction n as [| n I].
   - intros A H.
@@ -46,10 +46,19 @@ Proof.
     apply I, H.
 Qed.
 
+(* Being a contractible space is a proposition. *)
+
+Instance HProp_Contr `{Funext} (A : Type) : HProp (Contr A).
+Proof.
+  apply HProp_inhabited_Contr.
+  intro cA.
+  apply contr_Contr.
+Defined.
+
 (** Being an equivalence is a prop. *)
 
 (*
-Instance is_equiv_is_prop {X Y} (f: X -> Y) : HProp (IsEquiv f).
+Instance HProp_IsEquiv (X Y : Type) (f: X -> Y) : HProp (IsEquiv f).
 Proof.
   apply forall_isprop. intros y.
   apply iscontr_isprop.
@@ -61,11 +70,6 @@ Defined.
 
 Definition isprop_isprop A : is_prop (is_prop A) := hlevel_isprop 1 A.
 
-Definition iscontr_isprop A : is_prop (is_contr A).
-Proof.
-  apply inhabited_contr_isprop.
-  apply contr_contr.
-Defined.
 
 Theorem prop_equiv_inhabited_contr {A} : is_prop A <~> (A -> is_contr A).
 Proof.
@@ -125,6 +129,17 @@ Proof.
   apply H.
 Defined.
   
+Instance HProp_forall (A : Type) (P : A -> Type) :
+  (forall x, HProp (P x)) -> HProp (forall x, P x).
+Proof.
+  intros H.
+  apply allpath_prop.
+  intros f g.
+  apply funext_dep. intros x.
+  apply prop_path.
+  apply H.
+Defined.
+
 (** Two propositions are equivalent as soon as there are maps in both
    directions. *)
 

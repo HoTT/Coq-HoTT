@@ -73,18 +73,3 @@ Definition transport_forall
 
 
 (** *** Equivalences *)
-
-(** *** HLevel *)
-
-(*
-Definition forall_isprop {X} (P : X -> Type) :
-  (forall x, is_hprop (P x)) -> is_hprop (forall x, P x).
-Proof.
-  intros H.
-  apply allpath_prop.
-  intros f g.
-  apply funext_dep. intros x.
-  apply prop_path.
-  apply H.
-Defined.
-*)
