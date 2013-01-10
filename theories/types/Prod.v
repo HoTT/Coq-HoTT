@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about cartesian products *)
 
-Require Import Overture Contractible Equivalences Funext HLevel.
+Require Import Overture PathGroupoids Equivalences Funext HLevel.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -133,9 +133,12 @@ Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
     (fun z => path_prod' (eisretr f (fst z)) (eisretr g (snd z)) @ eta_prod z)
     (fun w => path_prod' (eissect f (fst w)) (eissect g (snd w)) @ eta_prod w)
     _).
-  intros [a b]; simpl. repeat rewrite concat_p1.
-  unfold path_prod'; rewrite ap_functor_prod.
-  repeat rewrite eisadj; reflexivity.
+  intros [a b]; simpl.
+  unfold path_prod'.
+  repeat rewrite concat_p1.
+  rewrite ap_functor_prod.
+  repeat rewrite eisadj.
+  reflexivity.
 Defined.
 
 Definition equiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}

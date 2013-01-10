@@ -1,13 +1,10 @@
 (** * HPropositions *)
 
-Require Import Overture Contractible Equivalences Funext HLevel.
+Require Import Overture Contractible Equivalences Funext HLevel types.Forall.
 
 (** ** Facts about [HProp] *)
 
 (** Maybe this should go to a separate file? *)
-
-Class HProp (A : Type) :=
-  { is_hprop : is_hlevel 1 A }.
 
 Generalizable Variable A.
 
@@ -15,8 +12,9 @@ Generalizable Variable A.
 Lemma Contr_inhabited_HProp `{H : HProp A} (x : A) : Contr A.
 Proof.
   exists x.
-  intro y.
-  apply H.
+  intro y.  
+  destruct H as [i].
+  apply i.
 Defined.
 
 (** If inhabitation implies contractibility, then we have an h-proposition. *)
@@ -50,12 +48,13 @@ Qed.
 
 (** Being an equivalence is a prop. *)
 
-Definition is_equiv_is_prop {X Y} (f: X -> Y) : HProp (is_equiv f).
+(*
+Instance is_equiv_is_prop {X Y} (f: X -> Y) : HProp (IsEquiv f).
 Proof.
   apply forall_isprop. intros y.
   apply iscontr_isprop.
 Defined.
-
+*)
 (*
 
 (** Here is an alternate characterization of propositions. *)

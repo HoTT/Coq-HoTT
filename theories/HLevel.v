@@ -1,6 +1,6 @@
 (** * H-Levels *)
 
-Require Import Overture Funext types.Paths.
+Require Import Overture Funext Contractible Equivalences types.Paths.
 Local Open Scope equiv_scope.
 
 Generalizable Variable A.

@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the unit type *)
 
-Require Import Overture Contractible Equivalences Funext.
+Require Import Overture PathGroupoids Equivalences Funext.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

@@ -1,8 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about dependent products *)
 
-Require Import Overture Contractible Equivalences.
+Require Import Overture PathGroupoids Contractible Equivalences.
 Require Export Funext.
+
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -75,8 +76,9 @@ Definition transport_forall
 
 (** *** HLevel *)
 
+(*
 Definition forall_isprop {X} (P : X -> Type) :
-  (forall x, is_prop (P x)) -> is_prop (forall x, P x).
+  (forall x, is_hprop (P x)) -> is_hprop (forall x, P x).
 Proof.
   intros H.
   apply allpath_prop.
@@ -85,3 +87,4 @@ Proof.
   apply prop_path.
   apply H.
 Defined.
+*)

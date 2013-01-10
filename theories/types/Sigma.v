@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about Sigma-types (dependent sums) *)
 
-Require Import Overture Contractible Equivalences.
+Require Import Overture PathGroupoids.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

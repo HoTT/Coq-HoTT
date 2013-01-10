@@ -5,24 +5,18 @@ Local Open Scope equiv_scope.
 
 (** ** Facts about [HSet] *)
 
-Class HSet (A : Type) :=
-  { _ : is_hlevel 2 A }.
-
-(** Sets are of h-level 2. *)
-
-Definition is_set := is_hlevel 2.
-
 (** A type is a set if and only if it satisfies Axiom K. *)
 
+(*
 Definition axiomK A := forall (x : A) (p : x = x), p = idpath x.
 
-Definition isset_implies_axiomK A : is_set A -> axiomK A.
+Definition isset_implies_axiomK A : is_hset A -> axiomK A.
 Proof.
   intros H x p.
   apply (H x x p (idpath x)).
 Defined.
 
-Definition axiomK_implies_isset A : axiomK A -> is_set A.
+Definition axiomK_implies_isset A : axiomK A -> is_hset A.
 Proof.
   intros H x y.
   apply allpath_prop.
@@ -32,7 +26,7 @@ Proof.
 Defined.
 
 Theorem isset_equiv_axiomK {A} :
-  is_set A <~> (forall (x : A) (p : x = x), p = idpath x).
+  is_hset A <~> (forall (x : A) (p : x = x), p = idpath x).
 Proof.
   apply (equiv_from_hequiv (isset_implies_axiomK A) (axiomK_implies_isset A)).
   intro H.
@@ -51,17 +45,17 @@ Proof.
   apply isprop_isprop.
 Defined.
 
-Definition isset_isprop A : is_prop (is_set A) := hlevel_isprop 2 A.
+Definition isset_isprop A : is_prop (is_hset A) := hlevel_isprop 2 A.
 
 Theorem axiomK_isprop A : is_prop (axiomK A).
 Proof.
-  apply @hlevel_equiv with (A := is_set A).
+  apply @hlevel_equiv with (A := is_hset A).
   apply isset_equiv_axiomK.
   apply hlevel_isprop.
 Defined.
 
 Theorem set_path2 (A : Type) (x y : A) (p q : x = y) :
-  is_set A -> (p = q).
+  is_hset A -> (p = q).
 Proof.
   intro H.
   apply contr_path.
@@ -120,9 +114,11 @@ Proof.
   induction (q' p).
 Defined.
 
-Corollary decidable_isset (A : Type) : decidable_paths A -> is_set A.
+Corollary decidable_isset (A : Type) : decidable_paths A -> is_hset A.
 Proof.
   intro.
   apply axiomK_implies_isset, decidable_implies_axiomK.
   assumption.
 Defined.
+
+*)

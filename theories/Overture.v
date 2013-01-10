@@ -211,6 +211,16 @@ Fixpoint is_hlevel (n : nat) (A : Type) : Type :=
     | S n' => forall (x y : A), is_hlevel n' (x = y)
   end.
 
+Definition is_hprop := is_hlevel 1.
+
+Definition is_hset := is_hlevel 2.
+
+Class HProp (A : Type) :=
+  { _ : is_hlevel 1 A }.
+
+Class HSet (A : Type) :=
+  { _ : is_hlevel 2 A }.
+
 (** *** Tactics *)
 
 (** We declare some more [Hint Resolve] hints, now in the "hint database" [path_hints].  In general various hints (resolve, rewrite, unfold hints) can be grouped into "databases". This is necessary as sometimes different kinds of hints cannot be mixed, for example because they would cause a combinatorial explosion or rewriting cycles.
