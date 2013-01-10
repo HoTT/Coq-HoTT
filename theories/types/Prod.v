@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about cartesian products *)
 
-Require Import Overture Contractible Equivalences Funext.
+Require Import Overture Contractible Equivalences Funext HLevel.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -97,7 +97,7 @@ Instance isequiv_path_prod {A B : Type} {z z' : A * B}
   destruct p, q; reflexivity.
 Defined.
 
-Definition equiv_path_prod {A B : Type} {z z' : A * B}
+Definition equiv_path_prod {A B : Type} (z z' : A * B)
   : (fst z = fst z') * (snd z = snd z')  <~>  (z = z')
   := BuildEquiv _ _ (path_prod_uncurried z z') _.
 
@@ -107,15 +107,6 @@ Definition transport_prod {A : Type} {P Q : A -> Type} {a a' : A} (p : a = a')
   (z : P a * Q a)
   : transport (fun a => P a * Q a) p z  =  (p # (fst z), p # (snd z))
   := match p with idpath => match z with (x,y) => 1 end end.
-
-(** *** HLevel *)
-
-Generalizable Variables A B f g.
-
-Instance contr_prod `{Contr A} `{Contr B} : Contr (A * B)
-  := BuildContr (A * B) (center A, center B)
-  (fun z:A*B => path_prod (center A, center B) _
-    (contr (fst z)) (contr (snd z))).
 
 (** *** Functorial action *)
 
@@ -134,6 +125,8 @@ Defined.
 
 (** *** Equivalences *)
 
+Generalizable Variables A B f g.
+
 Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
   : IsEquiv (functor_prod f g).
   refine (BuildIsEquiv _ _ (functor_prod f g) (functor_prod f^-1 g^-1)
@@ -149,3 +142,28 @@ Definition equiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
   : A * B <~> A' * B'
   (* Why can't it find the instance [isequiv_functor_prod]? *)
   := BuildEquiv _ _ (functor_prod f g) isequiv_functor_prod.
+
+(** *** HLevel *)
+
+Instance contr_prod `{Contr A} `{Contr B} : Contr (A * B)
+  := BuildContr (A * B) (center A, center B)
+  (fun z:A*B => path_prod (center A, center B) _
+    (contr (fst z)) (contr (snd z))).
+
+Definition hlevel_prod (n : nat) :
+  forall (A B : Type), is_hlevel n A -> is_hlevel n B -> is_hlevel n (A * B).
+Proof.
+  induction n as [| n I].
+  - intros A B [a ac] [b bc].
+    exists (a,b).
+    intros [a' b'].
+    apply path_prod.
+    + apply ac.
+    + apply bc.
+  - intros A B Ah Bh [a1 b1] [a2 b2].
+    apply hlevel_equiv with (A := ((a1 = a2) * (b1 = b2))%type).
+    + apply equiv_path_prod with (z := (a1, b1)) (z' := (a2, b2)).
+    + apply I.
+      * apply Ah.
+      * apply Bh.
+Defined.

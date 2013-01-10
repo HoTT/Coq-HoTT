@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about path spaces *)
 
-Require Import Overture Contractible Equivalences.
+Require Import Overture PathGroupoids Equivalences.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

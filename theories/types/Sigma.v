@@ -126,9 +126,47 @@ Proof.
   destruct p. destruct yz. reflexivity.
 Defined.
 
-(** *** H-Level *)
-
 (** *** Functorial action *)
 
 (** *** Equivalences *)
 
+(** *** H-Level *)
+
+(*
+(** Props are closed under sums (with prop base) and arbitrary
+   dependent products. *)
+
+Definition sum_isprop X (P : X -> Type) :
+  is_prop X -> (forall x, is_prop (P x)) -> is_prop (sigT P).
+Proof.
+  intros Xp Pp.
+  apply allpath_prop.
+  intros [x p] [y q].
+  apply @total_path with (prop_path Xp x y).
+  apply prop_path, Pp.
+Defined.
+*)
+
+(** And by dependent sums *)
+
+(*
+Definition total_hlevel: forall n A (P : A -> Type),
+  is_hlevel n A -> (forall a, is_hlevel n (P a)) ->
+  is_hlevel n (sigT P).
+Proof.
+  intros n; induction n.
+  intros A P [a ac] Pc.
+  exists (a; pr1 (Pc a)).
+  intros [a' p'].
+  apply @total_path with (ac a').
+  apply contr_path; apply (Pc a).
+  intros A P Ah Ph [a1 p1] [a2 p2].
+  apply @hlevel_equiv with
+    (A := {p : a1 = a2 & transport p p1 = p2}).
+  apply equiv_inverse, total_paths_equiv.
+  apply IHn.
+  apply Ah.
+  intros p; apply (Ph a2).
+Defined.
+
+*)

@@ -2,7 +2,7 @@
 
 (** We formulate function extensionality in a separate file, even though it properly belongs to [types.Forall], because it is used in many places.  *)
 
-Require Import Overture Equivalences.
+Require Import Overture.
 Local Open Scope equiv_scope.
 
 (** The function extensionality axiom is formulated as a class. To use it in a theorem, just assume it with [`{Funext}], and then you can use [path_forall], defined below.  If you need function extensionality for a whole development, you can assume it for an entire Section with [Context `{Funext}].  *)

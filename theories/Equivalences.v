@@ -1,55 +1,8 @@
 (** * Equivalences -*- mode: coq; mode: visual-line -*- *)
 
-Require Import Overture Contractible.
+Require Import Overture PathGroupoids.
 Local Open Scope path_scope.
-
-(** Homotopy equivalences are a central concept in homotopy type theory. Before we define equivalences, let us consider when two types [A] and [B] should be considered "the same".
-
-   The first option is to require existence of [f : A -> B] and [g : B -> A] which are inverses of each other, up to homotopy.  Homotopically speaking, we should also require a certain condition on these homotopies, which is one of the triangle identities for adjunctions in category theory.  Thus, we call this notion an *adjoint equivalence*.
-
-  The other triangle identity is provable from the first one, along with all the higher coherences, so it is reasonable to only assume one of them.  Moreover, as we will see, if we have maps which are inverses up to homotopy, it is always possible to make the triangle identity hold by modifying one of the homotopies.
-
-   The second option is to use Vladimir Voevodsky's definition of an equivalence as a map whose homotopy fibers are contractible.  We call this notion a *homotopy bijection*.
-
-   An interesting third option was suggested by André Joyal: a map [f] which has separate left and right homotopy inverses.  We call this notion a *homotopy isomorphism*.
-
-   While the second option was the one used originally, and it is the most concise one, it makes more sense to use the first one in a formalized development, since it exposes most directly equivalence as a structure.  In particular, it is easier to extract directly from it the data of a homotopy inverse to [f], which is what we care about having most in practice.  Thus, adjoint equivalences are what we will refer to merely as *equivalences*. *)
-
-(** Naming convention: we use [equiv] and [Equiv] systematically to denote types of equivalences, and [isequiv] and [IsEquiv] systematically to denote the assertion that a given map is an equivalence. *)
-
-(** The fact that [r] is a left inverse of [s]. It is called [cancel] in ssreflect.  As a mnemonic, note that the partially applied type [Sect s] is the type of proofs that [s] is a section. *)
-Definition Sect {A B : Type} (s : A -> B) (r : B -> A) :=
-  forall x : A, r (s x) = x.
-
-(** A typeclass that includes the data making [f] into an adjoint equivalence. *)
-Class IsEquiv {A B : Type} (f : A -> B) := BuildIsEquiv {
-  equiv_inv : B -> A ;
-  eisretr : Sect equiv_inv f;
-  eissect : Sect f equiv_inv;
-  eisadj : forall x : A, eisretr (f x) = ap f (eissect x)
-}.
-
-Arguments eisretr {A B} f {_} _.
-Arguments eissect {A B} f {_} _.
-Arguments eisadj {A B} f {_} _.
-
-(** A record that includes all the data of an adjoint equivalence. *)
-Record Equiv A B := BuildEquiv {
-  equiv_fun :> A -> B ;
-  equiv_isequiv :> IsEquiv equiv_fun
-}.
-
-Existing Instance equiv_isequiv.
-
-Delimit Scope equiv_scope with equiv.
 Local Open Scope equiv_scope.
-
-Notation "A <~> B" := (Equiv A B) (at level 85) : equiv_scope.
-
-(** A notation for the inverse of an equivalence.  We can apply this to a function as long as there is a typeclass instance asserting it to be an equivalence.  We can also apply it to an element of [A <~> B], since there is an implicit coercion to [A -> B] and also an existing instance of [IsEquiv]. *)
-
-Notation "f ^-1" := (@equiv_inv _ _ f _) (at level 3) : equiv_scope.
-
 
 (** We now give many ways to construct equivalences.  In each case, we define an instance of the typeclass [IsEquiv] named [isequiv_X], followed by an element of the record type [Equiv] named [equiv_X].
 
@@ -253,43 +206,6 @@ End HIso.
 
   
 (** If [f] is an equivalence, then its homotopy fibers are contractible.  That is, it is a Voevodsky equivalence, or a homotopy bijection.  Probably the following two proofs should really be using some standard facts about paths in Sigma types.  *)
-
-Instance contr_hfiber_equiv `(IsEquiv A B f) (b : B)
-  : Contr {a:A & f a = b}.
-Proof.
-  assert (fp : forall (x x':A) (p:f x = b) (p':f x' = b)
-      (q : x = x') (r : ap f q @ p' = p), (x;p) = (x';p') :> {x:A & f x = b}).
-    intros x x' p p' q r; destruct q. exact (ap _ (r^ @ concat_1p _)).
-  refine (BuildContr _ (f^-1 b; eisretr f b) _).
-  intros [a p].
-  refine (fp (f^-1 b) a (eisretr f b) p ((ap f^-1 p)^ @ eissect f a) _).
-  rewrite ap_pp, ap_V, <- ap_compose, concat_pp_p, <- eisadj.
-  apply moveR_Vp.
-  exact ((concat_A1p (eisretr f) p)^).
-Qed.
-
-Instance isequiv_contr_hfibers `(f : A -> B)
-  (hfc : forall y:B, Contr {x:A & f x = y})
-  : IsEquiv f.
-Proof.
-  pose (g b := projT1 (@center _ (hfc b))).
-  pose (isretr b := projT2 (@center _ (hfc b))).
-  assert (sa : forall a, { issect : g (f a) = a & isretr (f a) = ap f issect }).
-    intros a.
-    assert (fp : forall (x x' : {x:A & f x = f a}) (q : x = x'),
-        { p : projT1 x = projT1 x' & projT2 x = ap f p @ projT2 x' }).
-      intros x _ []. exists 1; exact ((concat_1p _)^).
-    set (r := fp (@center _ (hfc (f a))) (a;1) (@contr _ (hfc (f a)) (a;1))).
-    exact (projT1 r ; projT2 r @ concat_p1 _).
-  exact (BuildIsEquiv _ _ f g isretr
-    (fun a => projT1 (sa a)) (fun a => projT2 (sa a))).
-Defined.
-
-Definition equiv_contr_hfibers `(f : A -> B)
-  (hfc : forall y:B, Contr {x:A & f x = y})
-  : (A <~> B)
-  := BuildEquiv _ _ f (isequiv_contr_hfibers f hfc).
-
 
 (** Several lemmas useful for rewriting. *)
 Lemma moveR_E (A B : Type) (e : A <~> B) (x : A) (y : B) :

@@ -67,11 +67,21 @@ Definition transport_forall
     (transport (fun x => forall y : P x, C x y) p f) y = (transport_forall_unwound p f) y
   := match p with idpath => fun _ => 1 end.
 
-(** *** HLevel *)
-
 
 (** *** Functorial action *)
 
 
 (** *** Equivalences *)
 
+(** *** HLevel *)
+
+Definition forall_isprop {X} (P : X -> Type) :
+  (forall x, is_prop (P x)) -> is_prop (forall x, P x).
+Proof.
+  intros H.
+  apply allpath_prop.
+  intros f g.
+  apply funext_dep. intros x.
+  apply prop_path.
+  apply H.
+Defined.
