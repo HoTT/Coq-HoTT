@@ -1,6 +1,7 @@
 (** * HPropositions *)
 
 Require Import Overture Contractible Equivalences HLevel types.Forall.
+Local Open Scope equiv_scope.
 
 (** ** Facts about [HProp] *)
 
@@ -46,6 +47,64 @@ Proof.
     apply I, H.
 Qed.
 
+(** Chracterization of [HProp] in terms of all points being connected by paths. *)
+
+Theorem allpath_HProp `{H : HProp A} : forall x y : A, x = y.
+Proof.
+  intros x y.
+  apply H.
+Defined.
+
+Theorem HProp_allpath (A : Type) : (forall (x y : A), x = y) -> HProp A.
+  intros H; exists; intros x y.
+  pose (C := BuildContr A x (H x)).
+  apply contr_paths_contr.
+Defined.
+
+Theorem Equiv_HProp_allpath `{E : Funext} (A : Type) : HProp A <~> (forall (x y : A), x = y).
+Proof.
+  apply (equiv_adjointify (@allpath_HProp A) (@HProp_allpath A)).
+  - intro f.
+    apply path_forall; intro x.
+    apply path_forall; intro y.
+    pose (C := BuildContr A x (f x)).
+    apply path_contr.
+  - intros [f].
+    unfold HProp_allpath.
+    apply ap.
+    apply path_forall; intro x.
+    apply path_forall; intro y.
+    assert (Contr A).
+    + exists x; apply f.
+    + apply path_contr.
+Defined.
+
+(** Two propositions are equivalent as soon as there are maps in both
+   directions. *)
+
+Definition prop_iff_equiv (A B : Type) (pA : HProp A) (pB : HProp B) :
+  (A -> B) -> (B -> A) -> (A <~> B).
+Proof.
+  intros f g.
+  apply (equiv_adjointify f g).
+  - intro y. apply pB.
+  - intro x. apply pA.
+Defined.
+
+
+(** [HProp] is closed under [forall]. *)
+  
+Instance HProp_forall `{E : Funext} (A : Type) (P : A -> Type) :
+  (forall x, HProp (P x)) -> HProp (forall x, P x).
+Proof.
+  intro.
+  apply HProp_allpath.
+  intros f g.
+  apply path_forall; intro.
+  apply allpath_HProp.
+Defined.
+
+
 (* Being a contractible space is a proposition. *)
 
 Instance HProp_Contr `{Funext} (A : Type) : HProp (Contr A).
@@ -55,9 +114,13 @@ Proof.
   apply contr_Contr.
 Defined.
 
+
+
+
 (** Being an equivalence is a prop. *)
 
 (*
+
 Instance HProp_IsEquiv (X Y : Type) (f: X -> Y) : HProp (IsEquiv f).
 Proof.
   apply forall_isprop. intros y.
@@ -91,64 +154,6 @@ Proof.
   apply contr_path.
   apply contr_contr.
   exact (H x y).
-Defined.
-
-(** And another one. *)
-
-Theorem prop_path {A} : is_prop A -> forall (x y : A), x = y.
-Proof.
-  unfold is_prop. simpl.
-  intros H x y.
-  exact (pr1 (H x y)).
-Defined.
-
-Theorem allpath_prop {A} : (forall (x y : A), x = y) -> is_prop A.
-  intros H x y.
-  assert (K : is_contr A).
-  exists x. intro y'. apply H.
-  apply contr_pathcontr. assumption.
-Defined.
-
-Theorem prop_equiv_allpath {A} : is_prop A <~> (forall (x y : A), x = y).
-Proof.
-  apply (equiv_from_hequiv prop_path allpath_prop).
-  intro H.
-  apply funext_dep.
-  intro x.
-  apply funext_dep.
-  intro y.
-  apply contr_path.
-  apply (allpath_prop  H).
-  intro H.
-  apply funext_dep.
-  intro x.
-  apply funext_dep.
-  intro y.
-  apply contr_path.
-  apply contr_contr.
-  apply H.
-Defined.
-  
-Instance HProp_forall (A : Type) (P : A -> Type) :
-  (forall x, HProp (P x)) -> HProp (forall x, P x).
-Proof.
-  intros H.
-  apply allpath_prop.
-  intros f g.
-  apply funext_dep. intros x.
-  apply prop_path.
-  apply H.
-Defined.
-
-(** Two propositions are equivalent as soon as there are maps in both
-   directions. *)
-
-Definition prop_iff_equiv A B : is_prop A -> is_prop B ->
-  (A -> B) -> (B -> A) -> (A <~> B).
-Proof.
-  intros Ap Bp f g.
-  apply (equiv_from_hequiv f g); 
-  intros; apply prop_path; auto.
 Defined.
 
 *)
