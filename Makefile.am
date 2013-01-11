@@ -6,18 +6,21 @@ if make_hoqide
 endif
 
 hottdir=$(datarootdir)/hott
-EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
+EXTRA_DIST = coq theories ssrplugin etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 
 # The list of files that comprise the HoTT library
 VFILES=$(shell find $(srcdir)/theories -name "*.v")
 VOFILES:=$(VFILES:.v=.vo)
 GLOBFILES:=$(VFILES:.v=.glob)
+DEPFILES:=$(VFILES:.v=.d)
 
 # The list of files that comprise the alternative standard library
 STDVFILES=$(shell find $(srcdir)/coq -name "*.v")
 STDVOFILES:=$(STDVFILES:.v=.vo)
 STDGLOBFILES:=$(STDVFILES:.v=.glob)
+STDDEPFILES:=$(STDVFILES:.v=.d)
 
+if make_ssreflect
 # The list of Coq files that comprise ssreflect
 SSRMAKEFILE=$(srcdir)/Makefile_ssrplugin
 ssrdir=$(srcdir)/ssrplugin
@@ -29,6 +32,7 @@ SSRMLFILES=$(shell find $(ssrdir)/src -name "*.ml4" -o -name "*.ml")
 SSRMLLIBFILES=$(shell find $(ssrdir)/theories -name "*.mllib")
 SSRCMXSFILES=$(SSRMLLIBFILES:.mllib=.cmxs)
 SSRCMAFILES=$(SSRMLLIBFILES:.mllib=.cma)
+endif
 
 # Definitions that let autoconf know how to install things.
 nobase_hott_DATA = \
@@ -46,15 +50,13 @@ HOQC=$(srcdir)/hoqc
 SRCCOQLIB=$(srcdir)/coq
 
 # Which files should be cleaned
-CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES)
+CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES) $(DEPFILES) $(STDDEPFILES)
 
+if make_ssreflect
 .PHONY: stdlib hottlib ssrplugin
-
-# XXX if someone can figure out why we have to run coqdep twice, that would be cool
-# In any case, we should switch to having .d dependency files instead of a central .depend
-.depend: $(VFILES) $(STDVFILES)
-	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq -R ssrplugin/theories Ssreflect $(VFILES) $(STDVFILES) $(SSRVFILES) > .depend
-	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -I theories -R coq/theories Coq -R ssrplugin/theories Ssreflect $(VFILES) $(STDVFILES) $(SSRVFILES) > .depend
+else
+.PHONY: stdlib hottlib
+endif
 
 install-data-local:
 	$(mkdir_p) $(hottdir)/coq
@@ -62,26 +64,32 @@ install-data-local:
 	ln -s $(COQLIB)/dev $(hottdir)/coq
 	ln -s $(COQLIB)/plugins $(hottdir)/coq
 
+if make_ssreflect
 clean-local: $(SSRMAKEFILE)
 	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" clean
 	rm -f "$(SSRMAKEFILE)"
+endif
 
 # The standard library files must be compiled in a special way
 stdlib: $(STDVOFILES)
 
 $(STDVOFILES) : %.vo : %.v
-	$(COQTOP) -relevant-equality -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
+	$(COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
 
 
-# The HoTT files depend on the new standard library and ssreflect, but coqdep will not figure that out.
+# The HoTT library as a single target
 hottlib: $(VOFILES)
 
-$(VOFILES) : stdlib ssrplugin
-
 # A rule for compiling the HoTT libary files
-$(VOFILES) : %.vo : %.v
+if make_ssreflect
+$(VOFILES) : %.vo : %.v $(STDVOFILES) $(SSRVOFILES)
 	$(HOQC) $<
+else
+$(VOFILES) : %.vo : %.v $(STDVOFILES)
+	$(HOQC) $<
+endif
 
+if make_ssreflect
 # Compilation of ssreflect is a bit more roundabout because ssreflect relies on coq_makefile,
 # which we do not. Perhaps we should. Anyhow, we circumvent the "standard" ssreflect procedure
 # to keep track of dependencies and what should be installed where. This will break if ssreflect
@@ -105,6 +113,10 @@ $(SSRCMXSFILES): %.cmxs : %.mllib
 
 $(SSRCMAFILES): %.cma : %.mllib
 	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
+endif
 
-# Do not remove - because then automake will interpret the include statement.
--include .depend
+# Dependency files
+$(DEPFILES) $(STDDEPFILES) : %.d : %.v
+	$(COQDEP) -nois -coqlib $(srcdir)/coq -R theories HoTT -R coq/theories Coq $< >$@
+
+-include $(DEPFILES) $(STDDEPFILES)

@@ -19,8 +19,8 @@ Notation "( X 'in' t )" := (_ : fun X => t) : ssrpatternscope.
 Delimit Scope ssrpatternscope with pattern.
 
 (* Some shortcuts for recurrent "X in t" parts.                               *)
-Notation RHS := (X in _ = X)%pattern.
-Notation LHS := (X in X = _)%pattern.
+Notation RHS := (X in identity _ X)%pattern.
+Notation LHS := (X in identity X _)%pattern.
 
 End SsrMatchingSyntax.
 

@@ -12,6 +12,7 @@
 Set Implicit Arguments.
 
 Require Import Datatypes.
+Local Open Scope identity_scope.
 Require Export Logic.
 
 (** Negation of a type in [Type] *)
@@ -48,7 +49,7 @@ Section identity_is_a_congruence.
  Qed.
 
  Definition f_equal (e : x = y) : f x = f y := 
-   match e with | identity_refl => identity_refl end.
+   match e with identity_refl => identity_refl end.
 
 Theorem f_equal2 :
   forall (A1 A2 B:Type) (f:A1 -> A2 -> B) (x1 y1:A1)

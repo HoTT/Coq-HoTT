@@ -13,9 +13,8 @@ It draws many ideas from Vladimir Voevodsky's
 ## INSTALATION
 
 Installation details are explained in the file `INSTALL.txt`. You will need to compile a
-custom version of Coq which supports the `-relevant-equality` and
-`-warn-universe-inconsistency` command-line options. We hope to have these options pushed
-into standard Coq.
+custom version of Coq which supports the `-indices-matter` and universe polymorphism. We
+hope to have these pushed into standard Coq.
 
 If you are looking for an older version of HoTT which works with standard Coq, have a look
 at the one tagged as `pure-coq-8.3`. Note however that we do not support the old
