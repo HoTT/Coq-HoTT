@@ -25,6 +25,7 @@
 
 Require Import Notations.
 Require Import Datatypes.
+Local Open Scope identity_scope.
 Require Import Logic_Type.
 
 Open Scope nat_scope.
@@ -66,17 +67,19 @@ Definition IsSucc (n:nat) : Type :=
 
 (** Zero is not the successor of a number *)
 
-Theorem O_S : forall n:nat, 0 <> S n.
-Proof.
-  discriminate.
-Qed.
-Hint Resolve O_S: core.
+(* XXX Andrej: Try to put back in, does not work with current Coq. *)
+(* Theorem O_S : forall n:nat, 0 <> S n. *)
+(* Proof. *)
+(*   discriminate. *)
+(* Qed. *)
+(* Hint Resolve O_S: core. *)
 
-Theorem n_Sn : forall n:nat, n <> S n.
-Proof.
-  induction n; auto.
-Qed.
-Hint Resolve n_Sn: core.
+(* XXX Andrej: Try to put back in, does not work with current Coq. *)
+(* Theorem n_Sn : forall n:nat, n <> S n. *)
+(* Proof. *)
+(*   induction n; auto. *)
+(* Qed. *)
+(* Hint Resolve n_Sn: core. *)
 
 (** addition *)
 
