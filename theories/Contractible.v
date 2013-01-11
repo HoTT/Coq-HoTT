@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** Contractibility *)
 
-Require Import Overture PathGroupoids Funext.
+Require Import Overture PathGroupoids.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

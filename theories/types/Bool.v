@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the booleans *)
 
-Require Import Overture Contractible Equivalences Funext types.Prod.
+Require Import Overture Contractible Equivalences types.Prod.
 Local Open Scope equiv_scope.
 
 Section BoolForall.

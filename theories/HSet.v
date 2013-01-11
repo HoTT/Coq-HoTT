@@ -1,6 +1,6 @@
 (** * H-Set *)
 
-Require Import Overture Contractible Equivalences Funext types.Paths.
+Require Import Overture Contractible Equivalences types.Paths.
 Local Open Scope equiv_scope.
 
 (** ** Facts about [HSet] *)

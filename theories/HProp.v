@@ -1,6 +1,6 @@
 (** * HPropositions *)
 
-Require Import Overture Contractible Equivalences Funext HLevel types.Forall.
+Require Import Overture Contractible Equivalences HLevel types.Forall.
 
 (** ** Facts about [HProp] *)
 

@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about cartesian products *)
 
-Require Import Overture PathGroupoids Equivalences Funext HLevel.
+Require Import Overture PathGroupoids Equivalences HLevel.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

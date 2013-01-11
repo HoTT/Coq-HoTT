@@ -2,7 +2,6 @@
 (** * Theorems about dependent products *)
 
 Require Import Overture PathGroupoids Contractible Equivalences.
-Require Export Funext.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.

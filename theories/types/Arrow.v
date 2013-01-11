@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about Non-dependent function types *)
 
-Require Import Overture Contractible Equivalences Funext.
+Require Import Overture Contractible Equivalences.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
