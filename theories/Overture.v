@@ -216,10 +216,10 @@ Definition is_hprop := is_hlevel 1.
 Definition is_hset := is_hlevel 2.
 
 Class HProp (A : Type) :=
-  { _ : is_hlevel 1 A }.
+  { HProp_is_hprop :> is_hlevel 1 A }.
 
 Class HSet (A : Type) :=
-  { _ : is_hlevel 2 A }.
+  { HSet_is_hlevel :> is_hlevel 2 A }.
 
 (** *** Function extensionality *)
 
