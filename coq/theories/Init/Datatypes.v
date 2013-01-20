@@ -4,6 +4,7 @@ Require Export Logic.
 Declare ML Module "nat_syntax_plugin".
 
 Global Set Universe Polymorphism.
+Global Set Asymmetric Patterns.
 
 (** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
 
