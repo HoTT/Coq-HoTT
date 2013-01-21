@@ -42,7 +42,7 @@ Definition eta_path_universe {A B : Type} (p : A = B)
 
 Definition isequiv_path_universe {A B : Type}
   : IsEquiv (@path_universe_uncurried A B)
-  := isequiv_inverse.
+ := _.
 
 Definition equiv_path_universe {A B : Type} : (A <~> B) <~> (A = B)
   := BuildEquiv _ _ (@path_universe_uncurried A B) isequiv_path_universe.

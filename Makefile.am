@@ -4,6 +4,9 @@ bin_SCRIPTS = hoqtop hoqc
 if make_hoqide
   bin_SCRIPTS += hoqide
 endif
+if make_hoqtopbyte
+  bin_SCRIPTS += hoqtop.byte
+endif
 
 hottdir=$(datarootdir)/hott
 EXTRA_DIST = coq theories ssrplugin etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown

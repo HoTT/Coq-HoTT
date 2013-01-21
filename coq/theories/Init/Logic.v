@@ -14,6 +14,9 @@ Set Implicit Arguments.
 
 Require Export Notations.
 
+Global Set Universe Polymorphism.
+Global Set Asymmetric Patterns.
+
 Notation "A -> B" := (forall (_ : A), B) : type_scope.
 
 (** * Propositional connectives *)

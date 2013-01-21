@@ -40,6 +40,9 @@ else
    fi 
 fi
 
+# Checking for bytecode version of coqtop
+AM_CONDITIONAL(make_hoqtopbyte, [test -n "$COQTOP.byte"])
+
 # Now set COQBIN if it has not been set yet. We need COQBIN because Makefiles
 # produces by coq_makefile insist on running coqtop as $(COQBIN)coqtop, and
 # ssreflect uses coq_makefile
@@ -163,6 +166,7 @@ ln -s $COQLIB/plugins $COQLIB/dev $srcdir/coq
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([hoqtop], [chmod +x hoqtop])
+AC_CONFIG_FILES([hoqtop.byte], [chmod +x hoqtop.byte])
 AC_CONFIG_FILES([hoqc], [chmod +x hoqc])
 if test "$make_coqide" != "yes" ; then
    AC_CONFIG_FILES([hoqide], [chmod +x hoqide])

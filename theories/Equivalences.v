@@ -59,8 +59,9 @@ Section IsEquivHomotopic.
     apply cancelR, eisadj.
   Qed.
 
-  (* It's unclear to me whether this should be a declared instance.  Will it cause the unifier to spin forever searching for homotopies? *)
-  Global Instance isequiv_homotopic : IsEquiv g
+  (* It's unclear to me whether this should be a declared instance.  Will it cause the unifier to spin forever searching for homotopies? 
+   MS: yes! *)
+  Instance isequiv_homotopic : IsEquiv g
     := BuildIsEquiv _ _ g (f ^-1) sect retr adj.
 
   Definition equiv_homotopic : A <~> B
@@ -108,6 +109,7 @@ Section EquivInverse.
 
   Global Instance isequiv_inverse : IsEquiv f^-1
     := BuildIsEquiv B A f^-1 f (eissect f) (eisretr f) other_adj.
+  
 End EquivInverse.
 
 (** [Equiv A B] is a symmetric relation. *)
@@ -120,9 +122,10 @@ Defined.
 
 (** If [g \o f] and [f] are equivalences, so is [g]. *)
 Section EquivCancelR.
-
-  Context `{fe : IsEquiv A B f} `(g : B -> C).
+  
+  Context `{f : A -> B}.
   Context `{gfe : IsEquiv A C (compose g f)}.
+  Context `{fe : IsEquiv A B f}.
   Existing Instance fe.
   Existing Instance gfe.
 
@@ -139,9 +142,9 @@ End EquivCancelR.
 (** If [g \o f] and [g] are equivalences, so is [f]. *)
 Section EquivCancelL.
 
-  Context `{IsEquiv B C g} `(f : A -> B).
+  Context `{f : A -> B}.
   Context `{IsEquiv A C (compose g f)}.
-
+  Context `{IsEquiv B C g}.
   (* Same question as with isequiv_homotopic. *)
   Global Instance isequiv_cancelL : IsEquiv f
   := isequiv_homotopic (compose g^-1 (compose g f)) f
