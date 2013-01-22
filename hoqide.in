@@ -4,7 +4,7 @@
 # might figure out how to create an honest Coq toplevel instead.
 prefix="@prefix@"
 ssr="@compile_ssreflect@"
-COQTOP="@COQTOP@"
+COQIDE="@COQIDE@"
 # If there is a coq/theories directory in the same directory as this script,
 # then use that one, otherwise use the global one. This trick allows hoqtop
 # to work "in place" on the source files.
