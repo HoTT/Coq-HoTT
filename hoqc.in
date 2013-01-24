@@ -1,7 +1,8 @@
 #!/bin/bash
 # This is a wrapper around coqtc which tricks Coq into using the HoTT
 # standard library and enables the HoTT-specific options.
-prefix=@prefix@
+prefix="@prefix@"
+ssr="@compile_ssreflect@"
 COQC="@COQC@"
 # If there is a coq/theories directory in the same directory as this script,
 # then use that one, otherwise use the global one. This trick allows hoqc
@@ -10,9 +11,22 @@ mydir=`dirname $0`
 if test -d $mydir/coq/theories
 then
   COQLIB="$mydir/coq"
-  HOTLIB="$mydir/theories"
+  HOTTLIB="$mydir/theories"
+  if test "$ssr" = "yes"
+  then
+    SSRLIB="$mydir/ssrplugin/theories"
+  fi
 else
   COQLIB="@hottdir@/coq"
-  HOTLIB="@hottdir@/theories"
+  HOTTLIB="@hottdir@/theories"
+  if test "$ssr" = "yes"
+  then
+    SSRLIB="@hottdir@/ssrplugin/theories"
+  fi
 fi
-exec $COQC -coqlib $COQLIB -R $HOTLIB HoTT -indices-matter $@
+if test "$ssr" = "yes"
+then
+  exec "$COQC" -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -R "$SSRLIB" Ssreflect -indices-matter $@
+else
+  exec "$COQC" -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter $@
+fi

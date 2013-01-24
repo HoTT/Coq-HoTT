@@ -1,81 +1,95 @@
-Require Export Paths Fibrations.
+(* -*- mode: coq; mode: visual-line -*- *)
+(** Contractibility *)
 
-(** A space [A] is contractible if there is a point [x : A] and a
-   (pointwise) homotopy connecting the identity on [A] to the constant
-   map at [x].  Thus an element of [is_contr A] is a pair whose
-   first component is a point [x] and the second component is a
-   pointwise retraction of [A] to [x]. *)
+Require Import Overture PathGroupoids.
+Local Open Scope path_scope.
+Local Open Scope equiv_scope.
 
-Definition is_contr A := {x : A & forall y : A, y = x}.
+(** Naming convention: we consistently abbreviate "contractible" as "contr".  A theorem about a space [X] being contractible (which will usually be an instance of the typeclass [Contr]) is called [contr_X]. *)
 
-(** If a space is contractible, then any two points in it are
-   connected by a path in a canonical way. *)
+(** Allow ourselves to implicitly generalize over types [A] and [B], and a function [f]. *)
+Generalizable Variables A B f.
 
-Lemma contr_path {A} (x y : A) : (is_contr A) -> (x = y).
+(** If a space is contractible, then any two points in it are connected by a path in a canonical way. *)
+Definition path_contr `{Contr A} (x y : A) : x = y
+  := (contr x)^ @ (contr y).
+
+(** Similarly, any two parallel paths in a contractible space are homotopic, which is just the principle UIP. *)
+Definition path2_contr `{Contr A} {x y : A} (p q : x = y) : p = q.
 Proof.
-  intro H.
-  destruct H as (z,p).
-  path_via z.
-Defined.
-
-(** Similarly, any two parallel paths in a contractible space are homotopic.  *)
-
-Lemma contr_path2 {A : Type} {x y : A} (p q : x = y) : (is_contr A) -> (p = q).
-Proof.
-  intro ctr.
-  destruct ctr as (c, ret).
-  path_via (ret x @ !ret y).
-  moveleft_onright.
-  moveright_onleft.
-  apply opposite.
-  exact (! trans_is_concat_opp p (ret x)  @  map_dep ret p ).
-  moveright_onright.
-  moveleft_onleft.
-  exact (! trans_is_concat_opp q (ret x)  @  map_dep ret q).
+  assert (K : forall (r : x = y), r = path_contr x y).
+    intro r; destruct r; apply inverse; now apply concat_Vp.
+  path_via (path_contr x y).
 Defined.
 
 (** It follows that any space of paths in a contractible space is contractible. *)
+Instance contr_paths_contr `{Contr A} (x y : A) : Contr (x = y) := {
+  center := (contr x)^ @ contr y;
+  contr := path2_contr ((contr x)^ @ contr y)
+}.
 
-Lemma contr_pathcontr {A} (x y : A) : is_contr A -> is_contr (x = y).
-Proof.
-  intro ctr.
-  exists (contr_path x y ctr).
-  intro p.
-  apply contr_path2.
-  assumption.
+(** Also, the total space of any based path space is contractible. *)
+Instance contr_basedpaths {X : Type} (x : X) : Contr {y : X & x = y}.
+  exists (x ; 1).
+  intros [y []]; reflexivity.
 Defined.
 
-(** The total space of any based path space is contractible. *)
-
-Lemma pathspace_contr {X} (x:X) : is_contr (sigT (paths x)).
-Proof.
-  exists (x ; idpath x).
-  intros [y p].
-  path_induction.
+Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x}.
+  exists (existT (fun y => y = x) x 1).
+  intros [y []]; reflexivity.
 Defined.
 
-Lemma pathspace_contr' {X} (x:X) : is_contr { y:X  &  x = y }.
+Lemma Contr_path {A : Type} {c c' : A} (p : c = c')
+  (h : forall a : A, c = a) (h' : forall a : A, c' = a)  :
+  transport (fun c => forall a : A, c = a) p h = h' -> BuildContr A c h = BuildContr A c' h'.
 Proof.
-  exists (existT (fun y => x = y) x (idpath x)).
-  intros [y p].
-  path_induction.
+  intro q.
+  destruct p.
+  destruct q.
+  reflexivity.
+Qed.
+
+(** The space of contractions of a contractible space is contractible. *)
+Instance contr_Contr `{Funext} `{Contr A} : Contr (Contr A).
+  exists {| center := center A ; contr := contr |}.
+  intros [c h].
+  apply (Contr_path (contr c)).
+  apply path_forall.
+  intro; apply path2_contr.
+Qed.
+
+Instance contr_hfiber_equiv `(IsEquiv A B f) (b : B)
+  : Contr {a:A & f a = b}.
+Proof.
+  assert (fp : forall (x x':A) (p:f x = b) (p':f x' = b)
+      (q : x = x') (r : ap f q @ p' = p), (x;p) = (x';p') :> {x:A & f x = b}).
+    intros x x' p p' q r; destruct q. exact (ap _ (r^ @ concat_1p _)).
+  refine (BuildContr _ (f^-1 b; eisretr f b) _).
+  intros [a p].
+  refine (fp (f^-1 b) a (eisretr f b) p ((ap f^-1 p)^ @ eissect f a) _).
+  rewrite ap_pp, ap_V, <- ap_compose, concat_pp_p, <- eisadj.
+  apply moveR_Vp.
+  exact ((concat_A1p (eisretr f) p)^).
+Qed.
+
+Instance isequiv_contr_hfibers `(f : A -> B)
+  (hfc : forall y:B, Contr {x:A & f x = y})
+  : IsEquiv f.
+Proof.
+  pose (g b := projT1 (@center _ (hfc b))).
+  pose (isretr b := projT2 (@center _ (hfc b))).
+  assert (sa : forall a, { issect : g (f a) = a & isretr (f a) = ap f issect }).
+    intros a.
+    assert (fp : forall (x x' : {x:A & f x = f a}) (q : x = x'),
+        { p : projT1 x = projT1 x' & projT2 x = ap f p @ projT2 x' }).
+      intros x _ []. exists 1; exact ((concat_1p _)^).
+    set (r := fp (@center _ (hfc (f a))) (a;1) (@contr _ (hfc (f a)) (a;1))).
+    exact (projT1 r ; projT2 r @ concat_p1 _).
+  exact (BuildIsEquiv _ _ f g isretr
+    (fun a => projT1 (sa a)) (fun a => projT2 (sa a))).
 Defined.
 
-Lemma pathspace_contr_opp {X} (x:X) : is_contr { y:X & y = x }.
-Proof.
-  exists (existT (fun y => y = x) x (idpath x)).
-  intros [y p].
-  path_induction.
-Defined.
-
-(** The unit type is contractible. *)
-
-Lemma unit_contr : is_contr unit.
-Proof.
-  exists tt.
-  intro y.
-  induction y.
-  auto.
-Defined.
-
-Hint Resolve unit_contr.
+Definition equiv_contr_hfibers `(f : A -> B)
+  (hfc : forall y:B, Contr {x:A & f x = y})
+  : (A <~> B)
+  := BuildEquiv _ _ f (isequiv_contr_hfibers f hfc).

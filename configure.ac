@@ -38,8 +38,18 @@ else
    if test "$indicesmatter" = "0"; then
        AC_MSG_ERROR([You need a version of Coq which supports -indices-matter])
    fi 
-
 fi
+
+# Checking for bytecode version of coqtop
+AM_CONDITIONAL(make_hoqtopbyte, [test -n "$COQTOP.byte"])
+
+# Now set COQBIN if it has not been set yet. We need COQBIN because Makefiles
+# produces by coq_makefile insist on running coqtop as $(COQBIN)coqtop, and
+# ssreflect uses coq_makefile
+if test ! -n "$COQBIN" ; then
+   COQBIN=`dirname $COQTOP`
+fi
+AC_MSG_RESULT([COQBIN is $COQBIN.])
 
 # Checking for coqc
 AC_ARG_VAR([COQC], [the absolute path of the coqc executable])
@@ -61,16 +71,32 @@ else
   fi
 fi
 
+# Should we compile ssrfelect?
+compile_ssreflect="no"
+AC_ARG_WITH([ssreflect],
+ [AS_HELP_STRING([--with-ssreflect], [compile the ssreflect libary])],
+ [compile_ssreflect="yes"],
+ [])
+
+if test "$compile_ssreflect" = "no"
+then
+   AC_MSG_RESULT([Will not compile ssreflect.])
+else
+   AC_MSG_RESULT([Will compile ssreflect.])
+fi
+AM_CONDITIONAL(make_ssreflect, [test "$compile_ssreflect" = "yes"])
+AC_SUBST([compile_ssreflect])
+
 # Checking for coqide, which can be optional
-without_coqide="no"
+make_coqide="no"
 AC_ARG_WITH([coqide],
  [AS_HELP_STRING([--without-coqide], [disable support for coqide])],
  [],
- [with_coqide=yes])
-AM_CONDITIONAL(make_hoqide, [test "$with_coqide" = "yes"])
+ [make_coqide="yes"])
 
-if test "$with_coqide" != "yes"; then
-   AC_MSG_RESULT([Skipping coqide support, as requested.])
+if test "$make_coqide" = "no"
+then
+   AC_MSG_RESULT([Will not make hoqide.])
 else
    AC_ARG_VAR([COQIDE], [the absolute path of the coqide executable])
    if test -n "$COQIDE"; then
@@ -80,7 +106,8 @@ else
       AC_PATH_PROG([COQIDE],[coqide],[no])
    fi
    if test "$COQIDE" = "no"; then
-      AC_MSG_ERROR([Could not find coqide (configure using --without-coqide).])
+      AC_MSG_RESULT([Could not find coqide, will not make hoqide.])
+      make_coqide="no"
    else
      AC_MSG_RESULT([Trusting that coqide version is $COQVERSION.])
      COQIDEVERSION=$COQVERSION
@@ -90,6 +117,8 @@ else
      fi
   fi
 fi
+
+AM_CONDITIONAL(make_hoqide, [test "$make_coqide" = "yes"])
 
 # checking for coqdep
 AC_ARG_VAR([COQDEP], [the absolute path of the coqdep executable])
@@ -115,6 +144,18 @@ if test "$COQDOC" = "no"; then
    AC_MSG_ERROR([Could not find coqdoc.])
 fi
 
+# checking for coq_makefile
+AC_ARG_VAR([COQMAKEFILE], [the absolute path of the coq_makefile executable])
+if test -n "$COQMAKEFILE"; then
+   AC_MSG_RESULT([COQMAKEFILE was preset to $COQMAKEFILE])
+   AC_SUBST([COQMAKEFILE])
+else
+   AC_PATH_PROG([COQMAKEFILE],[coq_makefile],[no])
+fi
+if test "$COQMAKEFILE" = "no"; then
+   AC_MSG_ERROR([Could not find coq_makefile.])
+fi
+
 hottdir="$datarootdir/hott"
 AC_SUBST([hottdir])
 
@@ -125,8 +166,9 @@ ln -s $COQLIB/plugins $COQLIB/dev $srcdir/coq
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([hoqtop], [chmod +x hoqtop])
+AC_CONFIG_FILES([hoqtop.byte], [chmod +x hoqtop.byte])
 AC_CONFIG_FILES([hoqc], [chmod +x hoqc])
-if test "x$without_coqide" != "xyes" ; then
+if test "$make_coqide" != "yes" ; then
    AC_CONFIG_FILES([hoqide], [chmod +x hoqide])
 fi
 

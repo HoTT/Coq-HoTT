@@ -2,7 +2,8 @@
 # This is a wrapper around coqtop which tricks Coq into using the HoTT
 # standard library and enables the HoTT-specific options. One day we
 # might figure out how to create an honest Coq toplevel instead.
-prefix=@prefix@
+prefix="@prefix@"
+ssr="@compile_ssreflect@"
 COQTOP="@COQTOP@"
 # If there is a coq/theories directory in the same directory as this script,
 # then use that one, otherwise use the global one. This trick allows hoqtop
@@ -12,9 +13,21 @@ if test -d $mydir/coq/theories
 then
   COQLIB="$mydir/coq"
   HOTTLIB="$mydir/theories"
+  if test "$ssr" = "yes"
+  then
+    SSRLIB="$mydir/ssrplugin/theories"
+  fi
 else
   COQLIB="@hottdir@/coq"
   HOTTLIB="@hottdir@/theories"
+  if test "$ssr" = "yes"
+  then
+    SSRLIB="@hottdir@/ssrplugin/theories"
+  fi
 fi
-exec $COQTOP -coqlib $COQLIB -R $HOTTLIB HoTT -indices-matter $@
-
+if test "$ssr" = "yes"
+then
+  exec "$COQTOP" -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -R "$SSRLIB" Ssreflect -indices-matter $@
+else
+  exec "$COQTOP" -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter $@
+fi
