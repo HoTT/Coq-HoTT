@@ -118,6 +118,12 @@ $(SSRCMAFILES): %.cma : %.mllib
 	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
 endif
 
+TAGS_FILES = $(STDVFILES)  $(VFILES)
+
+TAGS : $(TAGS_FILES)
+	etags --language=none -r '/^[[:space:]]*\(Axiom\|Theorem\|Class\|Instance\|Let\|Ltac\|Definition\|Lemma\|Record\|Remark\|Structure\|Fixpoint\|Fact\|Corollary\|Let\|Inductive\|Coinductive\|Proposition\)[[:space:]]+\([[:alnum:]_]+\)/\2/' $^
+
+
 # Dependency files
 $(DEPFILES) $(STDDEPFILES) : %.d : %.v
 	$(COQDEP) -nois -coqlib $(srcdir)/coq -R theories HoTT -R coq/theories Coq $< >$@

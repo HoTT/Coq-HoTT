@@ -41,6 +41,16 @@
 6. You can install the library globally with `make install`, although this
    has not been thoroughly tested.
 
+7. To use the emacs tags facility with the *.v files here, run the command
+
+   	make TAGS
+
+   (The emacs command M-x find-tag, bound to M-. , will take you to a 
+   definition or theorem, the default name for which is located under your
+   cursor.  Read the help on that emacs command with C-h k M-. , and learn
+   the other facilities provided, such as the use of M-* to get back where
+   you were, or the use of M-x tags-search to search throughout the code
+   for locations matching a given regular expression.)
 
 # LONG INSTALLATION INSTRUCTIONS
 

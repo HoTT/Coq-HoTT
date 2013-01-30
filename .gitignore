@@ -38,3 +38,4 @@ Makefile_ssrplugin
 *.cmxa
 # generated dependency files:
 *.d
+TAGS
