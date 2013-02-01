@@ -30,11 +30,8 @@ They are currently in several groups:
 
 2. NAMING CONVENTIONS
 
-Should we move the discussion at the beginning of PathGroupoids.v to
-here?
-
-MN: I'm fine with saying it is in file X and X also serves as an
-    example.  
+See the introduction to PathGroupoids.v.
+[Should we move it to here?]
 
 
 3. RECORDS, STRUCTURES, TYPECLASSES
