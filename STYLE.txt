@@ -117,11 +117,12 @@ understand.
 Here are some acceptable tactics to use in transparent definitions
 (this is probably not an exhaustive list):
 
-- intros, revert
-- pose, assert, set
-- fold, unfold, simpl
+- intros, revert, generalize
+- pose, assert, set, cut
+- fold, unfold, simpl, hnf
 - case, elim, destruct, induction
-- apply, refine, exact
+- apply, eapply, assumption, eassumption, refine, exact
+- reflexivity
 
 Conversely, if you want to use "rewrite", that is fine, but you should
 then make the thing you are defining opaque.  If it turns out later
