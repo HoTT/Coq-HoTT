@@ -95,8 +95,7 @@ Proof.
   refine (isequiv_adjointify (@apD10 A B f g)
     (htpy_rect wf f (fun g' _ => f = g') idpath g) _ _).
   revert g; refine (htpy_rect wf _ _ _).
-    refine (ap _ (htpy_rect_beta wf _ _ _) @ _).
-    unfold apD10; reflexivity.
+    refine (ap _ (htpy_rect_beta wf _ _ _)).
   intros h; destruct h.
     refine (htpy_rect_beta wf _ _ _).
 Defined.
