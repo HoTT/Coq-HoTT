@@ -33,6 +33,13 @@ They are currently in several groups:
 See the introduction to PathGroupoids.v.
 [Should we move it to here?]
 
+In general, the name of a theorem (or definition, or instance, etc.)
+should begin with the property (or structure, or class, or record,
+etc.) being proven, and then state the object or construction it is
+being proven about.  For instance, "isequiv_idmap" proves "IsEquiv
+idmap", and "equiv_compose" constructs an "Equiv" record by composing
+two given equivalences.
+
 
 3. RECORDS, STRUCTURES, TYPECLASSES
 
