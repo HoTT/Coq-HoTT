@@ -1,4 +1,4 @@
-(** * H-Levels *)
+ (** * H-Levels *)
 
 Require Import Overture Contractible Equivalences types.Paths.
 Local Open Scope equiv_scope.
@@ -30,7 +30,7 @@ Proof.
   - intros A B e H x y.
     fold is_hlevel.
     apply I with (A := (e^-1 x = e^-1 y)).
-    + apply equiv_inverse.
+    + apply symmetry.
       apply @equiv_ap.
       apply @isequiv_inverse.
     + apply H.

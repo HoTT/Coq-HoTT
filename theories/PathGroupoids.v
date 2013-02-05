@@ -184,28 +184,28 @@ Definition moveL_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   r^ @ q = p -> q = r @ p.
 Proof.
   intro h; rewrite <- h.
-  apply inverse, concat_p_Vp.
+  apply symmetry, concat_p_Vp.
 Defined.
 
 Definition moveL_pM {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   q @ p^ = r -> q = r @ p.
 Proof.
   intro h; rewrite <- h.
-  apply inverse; apply concat_pV_p.
+  apply symmetry; apply concat_pV_p.
 Defined.
 
 Definition moveL_Vp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y) :
   r @ q = p -> q = r^ @ p.
 Proof.
   intro h; rewrite <- h.
-  apply inverse, concat_V_pp.
+  apply symmetry, concat_V_pp.
 Defined.
 
 Definition moveL_pV {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x) :
   q @ p = r -> q = r @ p^.
 Proof.
   intro h; rewrite <- h.
-  apply inverse; apply concat_pp_V.
+  apply symmetry; apply concat_pp_V.
 Defined.
 
 Definition moveL_1M {A : Type} {x y : A} (p q : x = y) :

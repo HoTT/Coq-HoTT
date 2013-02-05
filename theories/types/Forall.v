@@ -33,7 +33,7 @@ Definition equiv_path_forall `{E : Funext} {A : Type} {P : A -> Type}
     (f g : forall x, P x) :
   (forall x, f x = g x)  <~>  (f = g).
 Proof.
-  apply equiv_inverse.
+  apply symmetry.
   exists (@apD10 A P f g).
   apply E.
 Defined.

@@ -27,8 +27,8 @@ Lemma ap_to_conjp {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y : A
   ap g q = conjp p (ap f q).
 Proof.
   destruct q.  unfold conjp.  simpl.
-  path_via ((p x)^ @ p x).  apply inverse ; apply concat_Vp.
-  apply whiskerR.  apply inverse, concat_p1.
+  path_via ((p x)^ @ p x).  apply symmetry; apply concat_Vp.
+  apply whiskerR.  apply symmetry, concat_p1.
 Qed.
 
 Lemma conjp_ap {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} (q : x = y) :
