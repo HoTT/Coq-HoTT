@@ -1,6 +1,19 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
 
+(** ** Type classes *)
+Definition relation (A : Type) := A -> A -> Type.
+
+Class Reflexive {A} (R : relation A) :=
+  reflexivity : forall x : A, R x x.
+
+Class Symmetric {A} (R : relation A) :=
+  symmetry : forall x y, R x y -> R y x.
+
+Class Transitive {A} (R : relation A) :=
+  transitivity : forall x y z, R x y -> R y z -> R x z.
+
+
 (** ** Basic definitions *)
 
 (** We make the identity map a notation so we do not have to unfold it,
@@ -34,6 +47,8 @@ Arguments paths_rect [A] a P f y p.
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
 
+Instance paths_Reflexive {A} : Reflexive (@paths A) := @idpath A.
+
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
 
 Delimit Scope path_scope with path.
@@ -47,6 +62,8 @@ Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments concat {A x y z} p q : simpl nomatch.
 
+Instance paths_Transitive {A} : Transitive (@paths A) := @concat A.
+
 (** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
   := match p with idpath => idpath end.
@@ -54,7 +71,10 @@ Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments inverse {A x y} p : simpl nomatch.
 
-(** Note that you can use the built-in Coq tactics "reflexivity" and "transitivity" when working with paths, but not "symmetry", because it is too smart for its own good.  But you can say "apply inverse" instead.   *)
+Instance paths_Symmetric {A} : Symmetric (@paths A) := @inverse A.
+
+
+(** Note that you can use the built-in Coq tactics "reflexivity" and "transitivity" when working with paths, but not "symmetry", because it is too smart for its own good.  But you can say "apply symmetry" instead.   *)
 
 (** The identity path. *)
 Notation "1" := idpath : path_scope.
@@ -68,6 +88,7 @@ Notation "p ^" := (inverse p) (at level 3) : path_scope.
 (* An alternative notation which puts each path on its own line.  Useful as a temporary device during proofs of equalities between very long composites; to turn it on inside a section, say [Open Scope long_path_scope]. *)
 Notation "p @' q" := (concat p q) (at level 21, left associativity,
   format "'[v' p '/' '@''  q ']'") : long_path_scope.
+
 
 (** An important instance of [paths_rect] is that given any dependent type, one can _transport_ elements of instances of the type along equalities in the base.
 
