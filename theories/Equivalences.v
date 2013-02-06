@@ -16,7 +16,7 @@ Instance isequiv_idmap (A : Type) : IsEquiv idmap :=
 
 Definition equiv_idmap (A : Type) : A <~> A := BuildEquiv A A idmap _.
 
-Instance equiv_Reflexive : Reflexive Equiv := equiv_idmap.
+Instance Reflexive_equiv : Reflexive Equiv := equiv_idmap.
 
 (** The composition of equivalences is an equivalence. *)
 Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
@@ -36,20 +36,15 @@ Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
       (ap_compose f g _)^
     ).
 
-Definition equiv_compose `{IsEquiv B C g} `{IsEquiv A B f}
+Definition equiv_compose {A B C : Type} (g : B -> C) (f : A -> B)
+  `{IsEquiv B C g} `{IsEquiv A B f}
   : A <~> C
   := BuildEquiv A C (compose g f) _.
 
+(* The TypeClass [Transitive] has a different order of parameters than [equiv_compose].  Thus in declaring the instance we have to switch the order of arguments. *)
+Instance Transitive_equiv : Transitive Equiv :=
+  fun _ _ _ f g => equiv_compose g f.
 
-(* Note: Transitive TypeClass has a different order of parameters than equiv_compose. 
-   Note: This is "Let" definition and private to this file.  Use equiv_compose.*)
-Let equiv_transitivity (A B C : Type) (ab : A <~> B) (bc : B <~> C) : A <~> C
-  := 
-  match ab, bc with
-    | BuildEquiv ab_fun ab_isequiv, BuildEquiv bc_fun bc_isequiv 
-      => (@equiv_compose B C bc_fun bc_isequiv A ab_fun ab_isequiv)
-end.
-Instance equiv_Transitive : Transitive Equiv := equiv_transitivity.
 
 (** Anything homotopic to an equivalence is an equivalence. *)
 Section IsEquivHomotopic.
@@ -131,7 +126,7 @@ Proof.
   apply isequiv_inverse.
 Defined.
 
-Instance equiv_Symmetric : Symmetric Equiv := equiv_inverse.
+Instance Symmetric_equiv : Symmetric Equiv := equiv_inverse.
 
 
 (** If [g \o f] and [f] are equivalences, so is [g]. *)
