@@ -44,27 +44,13 @@ Defined.
 
   In particular this indicates why "transport" alone cannot be fully defined by induction on the structure of types, although Id-elim/transportD can be (cf. Observational Type Theory). A more thorough set of lemmas, along the lines of the present ones but dealing with Id-elim rather than just transport, might be nice to have eventually? *)
 
-Lemma transport_forall_unwound
-    {A : Type} {P : A -> Type} {C : forall x, P x -> Type}
-    {x1 x2 : A} (p : x1 = x2) (f : forall y : P x1, C x1 y) :
-  forall y : P x2, C x2 y.
-Proof.
-  intro y.
-  pose (z0 := f (p^ # y)).
-  pose (z1 := transportD _ _ p _ z0).
-  apply (fun p => transport (C x2) p z1).
-  path_via (transport P (p^ @ p) y).
-  - symmetry. apply transport_pp.
-  - apply (fun e => @ap (x2=x2) (P x2) (fun q => transport P q y) (p^ @ p) 1e).
-    apply concat_Vp.
-Defined.
-
 (* Note: conclusion should be [==] if that is defined in an earlier file. *) 
 Definition transport_forall
     {A : Type} {P : A -> Type} {C : forall x, P x -> Type}
     {x1 x2 : A} (p : x1 = x2) (f : forall y : P x1, C x1 y) :
   forall y : P x2,
-    (transport (fun x => forall y : P x, C x y) p f) y = (transport_forall_unwound p f) y
+    (transport (fun x => forall y : P x, C x y) p f) y =
+    transport (C x2) (transport_pV _ _ _) (transportD _ _ p _ (f (p^ # y)))
   := match p with idpath => fun _ => 1 end.
 
 
