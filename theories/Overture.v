@@ -47,7 +47,7 @@ Arguments paths_rect [A] a P f y p.
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
 
-Instance paths_Reflexive {A} : Reflexive (@paths A) := @idpath A.
+Instance Reflexive_paths {A} : Reflexive (@paths A) := @idpath A.
 
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
 
@@ -62,7 +62,7 @@ Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments concat {A x y z} p q : simpl nomatch.
 
-Instance paths_Transitive {A} : Transitive (@paths A) := @concat A.
+Instance Transitive_paths {A} : Transitive (@paths A) := @concat A.
 
 (** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
@@ -71,7 +71,7 @@ Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments inverse {A x y} p : simpl nomatch.
 
-Instance paths_Symmetric {A} : Symmetric (@paths A) := @inverse A.
+Instance Symmetric_paths {A} : Symmetric (@paths A) := @inverse A.
 
 
 (** Note that you can use the built-in Coq tactics "reflexivity" and "transitivity" when working with paths, but not "symmetry", because it is too smart for its own good.  But you can say "apply symmetry" instead.   *)
