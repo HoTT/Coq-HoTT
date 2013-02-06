@@ -9,10 +9,11 @@ Local Open Scope equiv_scope.
 
 Ltac issig fibration record pr1 pr2 :=
   refine (BuildEquiv _ _ (fun u => record u.1 u.2)
-    (isequiv_adjointify _
+    (BuildIsEquiv _ _ _
       (fun v => existT fibration (pr1 v) (pr2 v))
-      (* Since Coq doesn't automatically define recursors for records, the following placeholder has to be a match over the record type.  But we can't write that match without knowing the record constructors, and having the tactic caller pass them in doesn't seem to be enough.  So we leave this term to be defined with tactics instead. *)
-      _
+      (fun v =>
+        let (v1,v2) as v' return (record (pr1 v') (pr2 v') = v')
+          := v in 1)
       (fun u =>
         match u return
           (existT fibration
@@ -20,10 +21,10 @@ Ltac issig fibration record pr1 pr2 :=
             (pr2 (record (u.1) (u.2))))
           = u with
           existT x y => 1
-        end)));
+        end)
+      _));
   let v := fresh "v" in
     intros v; destruct v; exact 1.
-(* It would be nice to do this without adjointifying, but since we lack a transparent assert, that seems like it would require giving the missing placeholder as an explicit term, as the triangle identity depends on its value. *)
 
 (** We show how it works in a couple of examples. *)
 
@@ -75,11 +76,13 @@ Qed.
 
 Ltac issig2 fibration record pr1 pr2 pr3 :=
   refine (BuildEquiv _ _ (fun u => record u.1 u.2.1 u.2.2)
-    (isequiv_adjointify _
+    (BuildIsEquiv _ _ _
       (fun v =>
         (existT (fun x => sigT (fibration x)) (pr1 v)
           (existT (fibration (pr1 v)) (pr2 v) (pr3 v))))
-      _
+      (fun v =>
+        let (v1,v2,v3) as v' return (record (pr1 v') (pr2 v') (pr3 v') = v')
+          := v in 1)
       (fun u =>
         match u return
           (existT _
@@ -89,7 +92,8 @@ Ltac issig2 fibration record pr1 pr2 pr3 :=
               (pr3 (record u.1 u.2.1 u.2.2))))
           = u with
           existT x (existT y z) => 1
-        end)));
+        end)
+      _));
   let v := fresh "v" in
     intros v; destruct v; exact 1.
 
@@ -97,12 +101,15 @@ Ltac issig2 fibration record pr1 pr2 pr3 :=
 
 Ltac issig3 fibration record pr1 pr2 pr3 pr4 :=
   refine (BuildEquiv _ _ (fun u => (record u.1 u.2.1 u.2.2.1 u.2.2.2))
-    (isequiv_adjointify _
+    (BuildIsEquiv _ _ _
       (fun v =>
         (existT (fun x => sigT (fun y => sigT (fibration x y))) (pr1 v)
           (existT (fun y => sigT (fibration (pr1 v) y)) (pr2 v)
             (existT (fibration (pr1 v) (pr2 v)) (pr3 v) (pr4 v)))))
-      _
+      (fun v =>
+        let (v1,v2,v3,v4) as v'
+          return (record (pr1 v') (pr2 v') (pr3 v') (pr4 v') = v')
+          := v in 1)
       (fun u =>
         match u return
           (existT _
@@ -114,7 +121,8 @@ Ltac issig3 fibration record pr1 pr2 pr3 pr4 :=
                 (pr4 (record u.1 u.2.1 u.2.2.1 u.2.2.2)))))
           = u with
           existT x (existT y (existT z w)) => 1
-        end)));
+        end)
+      _));
   let v := fresh "v" in
     intros v; destruct v; exact 1.
 
