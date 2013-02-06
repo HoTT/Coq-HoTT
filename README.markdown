@@ -10,7 +10,7 @@ The HoTT library is a development of homotopy-theoretic ideas in the Coq proof a
 It draws many ideas from Vladimir Voevodsky's
 [Foundations](https://github.com/vladimirias/Foundations) library.
 
-## INSTALATION
+## INSTALLATION
 
 Installation details are explained in the file `INSTALL.txt`. You will need to compile a
 custom version of Coq which supports the `-indices-matter` and universe polymorphism. We
@@ -33,6 +33,13 @@ without asking, you should probably customize set the variable `proof-prog-name-
 
 At the moment there is no `hoqide` equivalent of `coqide`, but getting one is high on our
 to-do list.
+
+## CONTRIBUTING
+
+Contributions to the HoTT library are very welcome!  We use the “fork and pull” mode:
+to contribute, please [create your own fork](https://help.github.com/articles/fork-a-repo)
+and issue [pull requests](https://help.github.com/articles/using-pull-requests) when
+you have code ready to join the main library.
 
 ## LICENSING
 
