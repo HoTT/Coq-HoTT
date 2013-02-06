@@ -13,7 +13,7 @@ Local Open Scope equiv_scope.
 (** Now we show how these things compute. *)
 
 Definition apD10_path_forall `{Funext} {A : Type} {P : A -> Type}
-    (f g : forall x, P x) (h : forall x, f x = g x) :
+    (f g : forall x, P x) (h : f == g) :
   apD10 (path_forall _ _ h) = h
   := eisretr apD10 h.
 
@@ -31,7 +31,7 @@ Instance isequiv_path_forall `{Funext} {A : Type} {P : A -> Type}
 
 Definition equiv_path_forall `{E : Funext} {A : Type} {P : A -> Type}
     (f g : forall x, P x) :
-  (forall x, f x = g x)  <~>  (f = g).
+  (f == g)  <~>  (f = g).
 Proof.
   apply symmetry.
   exists (@apD10 A P f g).
@@ -47,10 +47,10 @@ Defined.
 (* Note: conclusion should be [==] if that is defined in an earlier file. *) 
 Definition transport_forall
     {A : Type} {P : A -> Type} {C : forall x, P x -> Type}
-    {x1 x2 : A} (p : x1 = x2) (f : forall y : P x1, C x1 y) :
-  forall y : P x2,
-    (transport (fun x => forall y : P x, C x y) p f) y =
-    transport (C x2) (transport_pV _ _ _) (transportD _ _ p _ (f (p^ # y)))
+    {x1 x2 : A} (p : x1 = x2) (f : forall y : P x1, C x1 y)
+  : (transport (fun x => forall y : P x, C x y) p f) 
+    == (fun y =>
+       transport (C x2) (transport_pV _ _ _) (transportD _ _ p _ (f (p^ # y))))
   := match p with idpath => fun _ => 1 end.
 
 
