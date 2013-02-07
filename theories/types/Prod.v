@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about cartesian products *)
 
-Require Import Overture PathGroupoids Equivalences HLevel.
+Require Import Overture PathGroupoids Equivalences Trunc.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A B f g n.
@@ -147,17 +147,17 @@ Proof.
   exact _.    (* i.e., search the context for instances *)
 Defined.
 
-(** *** Products preserve HLevels *)
+(** *** Products preserve truncation *)
 
-Instance HLevel_prod `{HLevel n A} `{HLevel n B} : HLevel n (A * B).
+Instance Trunc_prod `{Trunc n A} `{Trunc n B} : Trunc n (A * B).
 Proof.
   generalize dependent B; generalize dependent A.
   induction n as [| n I]; simpl; intros A ? B ?.
   exists (center A, center B).
     intros z; apply path_prod; apply contr.
   intros x y.
-    exact (hlevel_equiv _ _ (equiv_path_prod x y)).
+    exact (trunc_equiv _ _ (equiv_path_prod x y)).
 Defined.
 
 Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B)
-  := @HLevel_prod minus_two A CA B CB.
+  := @Trunc_prod minus_two A CA B CB.

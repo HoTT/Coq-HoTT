@@ -1,6 +1,6 @@
 (** * HPropositions *)
 
-Require Import Overture Contractible Equivalences HLevel types.Forall.
+Require Import Overture Contractible Equivalences Trunc types.Forall.
 Local Open Scope equiv_scope.
 
 (** ** Facts about [HProp] *)
@@ -30,13 +30,13 @@ Proof.
   apply contr_paths_contr.
 Defined.
 
-(** [is_hlevel] is a proposition. *)
-Instance HProp_is_hlevel `{Funext} (n : hlevel_index) (A : Type)
-  : HProp (HLevel n A).
+(** [is_trunc] is a proposition. *)
+Instance HProp_is_trunc `{Funext} (n : trunc_index) (A : Type)
+  : HProp (Trunc n A).
 Proof.
   apply HProp_inhabited_Contr.
   revert A.
-  induction n as [| n I]; unfold HLevel; simpl.
+  induction n as [| n I]; unfold Trunc; simpl.
   - intros A ?.
     apply contr_Contr.
   - intros A AH1.
@@ -129,7 +129,7 @@ Defined.
 
 (** Here is an alternate characterization of propositions. *)
 
-Definition isprop_isprop A : is_prop (is_prop A) := hlevel_isprop 1 A.
+Definition isprop_isprop A : is_prop (is_prop A) := trunc_isprop 1 A.
 
 
 Theorem prop_equiv_inhabited_contr {A} : is_prop A <~> (A -> is_contr A).

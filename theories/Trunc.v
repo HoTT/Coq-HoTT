@@ -7,11 +7,11 @@ Local Open Scope equiv_scope.
 Generalizable Variables A B n f.
 
 (** A contractible space has h-level zero, of course. *)
-Instance Contr_hlevel_minus_two `{HLevel minus_two A} : Contr A
-  := HLevel_is_hlevel.
+Instance Contr_trunc_minus_two `{Trunc minus_two A} : Contr A
+  := Trunc_is_trunc.
 
 (** H-levels are cumulative. *)
-Instance hlevel_succ `{HLevel n A} : HLevel (hlevel_S n) A.
+Instance trunc_succ `{Trunc n A} : Trunc (trunc_S n) A.
 Proof.
   generalize dependent A.
   induction n as [| n I]; simpl; intros A H x y.
@@ -22,9 +22,9 @@ Qed.
 (** Equivalence preserves h-levels (this is, of course, trivial with univalence).
    This is not an [Instance] because it causes infinite loops.
    *)
-Definition hlevel_equiv (A B : Type) (f : A -> B)
-  `{HLevel n A} `{IsEquiv A B f}
-  : HLevel n B.
+Definition trunc_equiv (A B : Type) (f : A -> B)
+  `{Trunc n A} `{IsEquiv A B f}
+  : Trunc n B.
 Proof.
   generalize dependent f; revert B; generalize dependent A.
   induction n as [| n I]; simpl; intros A ? B f ?.
