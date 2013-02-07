@@ -212,35 +212,46 @@ Notation "f ^-1" := (@equiv_inv _ _ f _) (at level 3) : equiv_scope.
 (** *** HLevels *)
 
 (* The H-levels measure how complicated a type is in terms of higher path spaces.
-   H-level 0 are the contractible spaces, whose homotopy is completely
+   H-level -2 are the contractible spaces, whose homotopy is completely
    trivial. H-level [(n+1)] are spaces whose path spaces are of level [n].
 
-   Thus, H-level 1 means "the space of paths between any two points is
+   Thus, H-level -1 means "the space of paths between any two points is
    contactible". Such a space is necessarily a sub-singleton: any two points are
-   connected by a path which is unique up to homotopy. In other words, H-level 1
+   connected by a path which is unique up to homotopy. In other words, H-level -1
    spaces are truth values (we call them "propositions").
   
-   Next, H-level 2 means "the space of paths between any two points is a
+   Next, H-level 0 means "the space of paths between any two points is a
    sub-singleton". Thus, two points might not have any paths between them, or
    they have a unique path. Such a space may have many points but it is discrete
    in the sense that all paths are trivial. We call such spaces "sets".
 *)
 
-Fixpoint is_hlevel (n : nat) (A : Type) : Type :=
+Inductive hlevel_index : Type :=
+| minus_two : hlevel_index
+| hlevel_S : hlevel_index -> hlevel_index.
+
+Fixpoint nat_to_hlevel_index (n : nat) : hlevel_index
+  := match n with
+       | 0 => hlevel_S (hlevel_S minus_two)
+       | S n' => hlevel_S (nat_to_hlevel_index n')
+     end.
+
+Coercion nat_to_hlevel_index : nat >-> hlevel_index.
+
+Fixpoint is_hlevel (n : hlevel_index) (A : Type) : Type :=
   match n with
-    | 0 => Contr A
-    | S n' => forall (x y : A), is_hlevel n' (x = y)
+    | minus_two => Contr A
+    | hlevel_S n' => forall (x y : A), is_hlevel n' (x = y)
   end.
 
-Definition is_hprop := is_hlevel 1.
+Arguments is_hlevel n A : simpl nomatch.
 
-Definition is_hset := is_hlevel 2.
+Class HLevel (n : hlevel_index) (A : Type) : Type :=
+  HLevel_is_hlevel : is_hlevel n A.
 
-Class HProp (A : Type) :=
-  { HProp_is_hprop :> is_hlevel 1 A }.
+Notation HProp := (HLevel (hlevel_S minus_two)).
 
-Class HSet (A : Type) :=
-  { HSet_is_hlevel :> is_hlevel 2 A }.
+Notation HSet := (HLevel 0).
 
 (** *** Function extensionality *)
 

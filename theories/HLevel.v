@@ -1,37 +1,34 @@
- (** * H-Levels *)
+(* -*- mode: coq; mode: visual-line -*-  *)
+(** * H-Levels *)
 
 Require Import Overture Contractible Equivalences types.Paths.
 Local Open Scope equiv_scope.
 
-Generalizable Variable A.
+Generalizable Variables A B n f.
 
 (** A contractible space has h-level zero, of course. *)
-Instance Contr_hlevel_0 (A : Type) : is_hlevel 0 A -> Contr A
-  := idmap.
-  
-(** H-levels are cummulative. *)
-Lemma hlevel_succ (n : nat) :
-  forall A : Type, is_hlevel n A -> is_hlevel (S n) A.
+Instance Contr_hlevel_minus_two `{HLevel minus_two A} : Contr A
+  := HLevel_is_hlevel.
+
+(** H-levels are cumulative. *)
+Instance hlevel_succ `{HLevel n A} : HLevel (hlevel_S n) A.
 Proof.
-  induction n as [| n I].
-  - intros A H x y.
-    unfold is_hlevel in H.
-    apply contr_paths_contr.
-  - intros A H x y p q.
-    apply I.
-    apply H.
+  generalize dependent A.
+  induction n as [| n I]; simpl; intros A H x y.
+  - apply contr_paths_contr.
+  - apply I, H.
 Qed.
 
-(** Equivalence preserves h-levels (this is, of course, trivial with univalence). *)
-Theorem hlevel_equiv (n : nat) : forall (A B : Type), (A <~> B) -> is_hlevel n A -> is_hlevel n B.
+(** Equivalence preserves h-levels (this is, of course, trivial with univalence).
+   This is not an [Instance] because it causes infinite loops.
+   *)
+Definition hlevel_equiv (A B : Type) (f : A -> B)
+  `{HLevel n A} `{IsEquiv A B f}
+  : HLevel n B.
 Proof.
-  induction n as [| n I].
+  generalize dependent f; revert B; generalize dependent A.
+  induction n as [| n I]; simpl; intros A ? B f ?.
   - apply Contr_equiv_contr.
-  - intros A B e H x y.
-    fold is_hlevel.
-    apply I with (A := (e^-1 x = e^-1 y)).
-    + apply symmetry.
-      apply @equiv_ap.
-      apply @isequiv_inverse.
-    + apply H.
+  - intros x y.
+    refine (I (f^-1 x = f^-1 y) _ (x = y) ((ap (f^-1))^-1) _).
 Qed.
