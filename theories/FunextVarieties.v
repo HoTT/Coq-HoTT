@@ -45,22 +45,19 @@ Section Homotopies.
   Context (wf : WeakFunext).
   Context {A:Type} {B : A -> Type}.
 
-  (** A temporary notation to make this section easier to read. *)
-  Let htpy (f g : forall x, B x) := forall x, f x = g x.
-  Notation "f === g" := (htpy f g) (at level 50).
-
   Context (f : forall x, B x).
 
-  Let idhtpy := fun x => idpath (f x).
+  (* Recall that [f == g] is the type of pointwise paths (or "homotopies") from [f] to [g]. *)
+  Let idhtpy : f == f := fun x => idpath (f x).
 
   (** Weak funext implies that the "based homotopy space" of the Pi-type is contractible, just like the based path space. *)
-  Instance contr_basedhtpy : Contr {g : forall x, B x & f === g }.
+  Instance contr_basedhtpy : Contr {g : forall x, B x & f == g }.
   Proof.
     exists (f;idhtpy). intros [g h].
-    (* The trick is to show that the type [{g : forall x, B x & f === g }] is a retract of [forall x, {y : B x & f x = y}], which is contractible due to J and weak funext.  Here are the retraction and its section. *)
-    pose (r := fun k => existT (fun g => f === g)
+    (* The trick is to show that the type [{g : forall x, B x & f == g }] is a retract of [forall x, {y : B x & f x = y}], which is contractible due to J and weak funext.  Here are the retraction and its section. *)
+    pose (r := fun k => existT (fun g => f == g)
       (fun x => (k x).1) (fun x => (k x).2)).
-    pose (s := fun (g : forall x, B x) (h : f === g) x => (g x ; h x)).
+    pose (s := fun (g : forall x, B x) (h : f == g) x => (g x ; h x)).
     (* Because of judgemental eta-conversion, the retraction is actually definitional, so we can just replace the goal. *)
     change (r (fun x => (f x ; idpath (f x))) = r (s g h)).
     apply ap; refine (@path_contr _ _ _ _).
@@ -69,7 +66,7 @@ Section Homotopies.
 
   (** This enables us to prove that pointwise homotopies have the same elimination rule as the identity type. *)
 
-  Context (Q : forall g (h : f === g), Type).
+  Context (Q : forall g (h : f == g), Type).
   Context (d : Q f idhtpy).
 
   Definition htpy_rect g h : Q g h
