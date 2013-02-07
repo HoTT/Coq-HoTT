@@ -216,31 +216,20 @@ Section HIso.
 End HIso.
 
   
-(** If [f] is an equivalence, then its homotopy fibers are contractible.  That is, it is a Voevodsky equivalence, or a homotopy bijection.  Probably the following two proofs should really be using some standard facts about paths in Sigma types.  *)
-
 (** Several lemmas useful for rewriting. *)
-Lemma moveR_E (A B : Type) (e : A <~> B) (x : A) (y : B) :
-  x = e^-1 y -> e x = y.
-Proof.
-  intro H.
-  rewrite H.
-  apply eisretr.
-Qed.
+Definition moveR_E `{IsEquiv A B f} (x : A) (y : B) (p : x = f^-1 y)
+  : (f x = y)
+  := ap f p @ eisretr f y.
 
-Lemma moveL_E (A B : Type) (e : A <~> B) (x : A) (y : B) :
-  e^-1 y = x -> y = e x.
-Proof.
-  intro H.
-  rewrite <- H.
-  apply symmetry, eisretr.
-Qed.
+Definition moveL_E `{IsEquiv A B f} (x : A) (y : B) (p : f^-1 y = x)
+  : (y = f x)
+  := (eisretr f y)^ @ ap f p.
 
 (** Equivalence preserves contractibility (which of course is trivial under univalence). *)
-Lemma Contr_equiv_contr (A B : Type) : (A <~> B) -> Contr A -> Contr B.
+Lemma Contr_equiv_contr `{IsEquiv A B f} `{Contr A} : Contr B.
 Proof.
-  intros e C.
-  exists (e (center A)).
+  exists (f (center A)).
   intro y.
   apply moveR_E.
-  apply C.
+  apply contr.
 Qed.
