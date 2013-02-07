@@ -24,6 +24,7 @@ Notation "'idmap'" := (fun x => x).
 Notation "( x ; y )" := (existT _ x y) : fibration_scope.
 Open Scope fibration_scope.
 
+(** The following notation is very convenient, although it unfortunately clashes with Proof General's "electric period". *)
 Notation "x .1" := (projT1 x) (at level 3) : fibration_scope.
 Notation "x .2" := (projT2 x) (at level 3) : fibration_scope.
 
@@ -35,6 +36,7 @@ Definition compose {A B C : Type} (g : B -> C) (f : A -> B) :=
 
 (** The results in this file are used everywhere else, so we need to be extra careful about how we define and prove things.  We prefer hand-written terms, or at least tactics that allow us to retain clear control over the proof-term produced. *)
 
+(** We define our own identity type, rather than using the one in the Coq standard library, so as to have more control over transitivity, symmetry and inverse.  It seems impossible to change these for the standard eq/identity type (or its Type-valued version) because it breaks various other standard things.  Merely changing notations also doesn't seem to quite work. *)
 Inductive paths {A : Type} (a : A) : A -> Type :=
   idpath : paths a a.
 
@@ -214,38 +216,41 @@ Notation "A <~> B" := (Equiv A B) (at level 85) : equiv_scope.
 
 Notation "f ^-1" := (@equiv_inv _ _ f _) (at level 3) : equiv_scope.
 
-(** *** HLevels *)
+(** *** Truncation levels *)
 
-(* The H-levels measure how complicated a type is in terms of higher path spaces.
-   H-level 0 are the contractible spaces, whose homotopy is completely
-   trivial. H-level [(n+1)] are spaces whose path spaces are of level [n].
+(* Truncation measures how complicated a type is in terms of higher path spaces. The (-2)-truncated types are the contractible ones, whose homotopy is completely trivial. The (n+1)-truncated types are those whose path spaces are n-truncated.
 
-   Thus, H-level 1 means "the space of paths between any two points is
-   contactible". Such a space is necessarily a sub-singleton: any two points are
-   connected by a path which is unique up to homotopy. In other words, H-level 1
-   spaces are truth values (we call them "propositions").
+   Thus, (-1)-truncated means "the space of paths between any two points is contactible". Such a space is necessarily a sub-singleton: any two points are connected by a path which is unique up to homotopy. In other words, (-1)-truncated spaces are truth values (we call them "propositions").
   
-   Next, H-level 2 means "the space of paths between any two points is a
-   sub-singleton". Thus, two points might not have any paths between them, or
-   they have a unique path. Such a space may have many points but it is discrete
-   in the sense that all paths are trivial. We call such spaces "sets".
+   Next, 0-truncated means "the space of paths between any two points is a sub-singleton". Thus, two points might not have any paths between them, or they have a unique path. Such a space may have many points but it is discrete in the sense that all paths are trivial. We call such spaces "sets".
 *)
 
-Fixpoint is_hlevel (n : nat) (A : Type) : Type :=
+Inductive trunc_index : Type :=
+| minus_two : trunc_index
+| trunc_S : trunc_index -> trunc_index.
+
+Fixpoint nat_to_trunc_index (n : nat) : trunc_index
+  := match n with
+       | 0 => trunc_S (trunc_S minus_two)
+       | S n' => trunc_S (nat_to_trunc_index n')
+     end.
+
+Coercion nat_to_trunc_index : nat >-> trunc_index.
+
+Fixpoint is_trunc (n : trunc_index) (A : Type) : Type :=
   match n with
-    | 0 => Contr A
-    | S n' => forall (x y : A), is_hlevel n' (x = y)
+    | minus_two => Contr A
+    | trunc_S n' => forall (x y : A), is_trunc n' (x = y)
   end.
 
-Definition is_hprop := is_hlevel 1.
+Arguments is_trunc n A : simpl nomatch.
 
-Definition is_hset := is_hlevel 2.
+Class Trunc (n : trunc_index) (A : Type) : Type :=
+  Trunc_is_trunc : is_trunc n A.
 
-Class HProp (A : Type) :=
-  { HProp_is_hprop :> is_hlevel 1 A }.
+Notation HProp := (Trunc (trunc_S minus_two)).
 
-Class HSet (A : Type) :=
-  { HSet_is_hlevel :> is_hlevel 2 A }.
+Notation HSet := (Trunc 0).
 
 (** *** Function extensionality *)
 
