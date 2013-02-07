@@ -6,11 +6,11 @@ Local Open Scope equiv_scope.
 
 Generalizable Variables A B n f.
 
-(** A contractible space has h-level zero, of course. *)
+(** A contractible space is (-2)-truncated, of course. *)
 Instance Contr_trunc_minus_two `{Trunc minus_two A} : Contr A
   := Trunc_is_trunc.
 
-(** H-levels are cumulative. *)
+(** Truncation levels are cumulative. *)
 Instance trunc_succ `{Trunc n A} : Trunc (trunc_S n) A.
 Proof.
   generalize dependent A.
@@ -19,7 +19,7 @@ Proof.
   - apply I, H.
 Qed.
 
-(** Equivalence preserves h-levels (this is, of course, trivial with univalence).
+(** Equivalence preserves truncation (this is, of course, trivial with univalence).
    This is not an [Instance] because it causes infinite loops.
    *)
 Definition trunc_equiv (A B : Type) (f : A -> B)

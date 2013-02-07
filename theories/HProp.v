@@ -90,7 +90,7 @@ Proof.
 Defined.
 
 
-(** [HProp] is closed under [forall].  This should really be a theorem in types/Forall that all h-levels are closed under [forall]. *)
+(** [HProp] is closed under [forall].  This should really be a theorem in types/Forall that all truncation levels are closed under [forall]. *)
   
 Instance HProp_forall `{E : Funext} (A : Type) (P : A -> Type) :
   (forall x, HProp (P x)) -> HProp (forall x, P x).

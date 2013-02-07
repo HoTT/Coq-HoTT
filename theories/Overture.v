@@ -209,7 +209,7 @@ Notation "A <~> B" := (Equiv A B) (at level 85) : equiv_scope.
 
 Notation "f ^-1" := (@equiv_inv _ _ f _) (at level 3) : equiv_scope.
 
-(** *** Truncation *)
+(** *** Truncation levels *)
 
 (* Truncation measures how complicated a type is in terms of higher path spaces. The (-2)-truncated types are the contractible ones, whose homotopy is completely trivial. The (n+1)-truncated types are those whose path spaces are n-truncated.
 
