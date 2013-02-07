@@ -10,7 +10,7 @@ Require Export Fibrations.
 Require Export Equivalences.
 Require Export types.Paths.
 Require Export types.Forall.
-Require Export HLevel.
+Require Export Trunc.
 Require Export HProp.
 Require Export HLevel.
 
