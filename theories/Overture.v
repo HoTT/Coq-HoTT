@@ -122,12 +122,17 @@ Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
 
 Notation ap01 := ap (only parsing).
 
-Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g) (x:A)
-  : f x = g x
-  := match h with idpath => 1 end.
+Definition pointwise_paths {A} {P:A->Type} (f g:forall x:A, P x) : Type
+  := forall x:A, f x = g x.
 
-Definition ap10 {A B} {f g:A->B} (h:f=g) (x:A) : f x = g x
-  := apD10 h x.
+Notation "f == g" := (pointwise_paths f g) (at level 50).
+
+Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g)
+  : f == g
+  := fun x => match h with idpath => 1 end.
+
+Definition ap10 {A B} {f g:A->B} (h:f=g) : f == g
+  := apD10 h.
 
 Definition ap11 {A B} {f g:A->B} (h:f=g) {x y:A} (p:x=y) : f x = g y.
 Proof.
@@ -260,7 +265,7 @@ Class Funext :=
   { isequiv_apD10 :> forall (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g) }.
 
 Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A, P x) :
-  (forall x, f x = g x) -> f = g
+  f == g -> f = g
   :=
   (@apD10 A P f g)^-1.
 
