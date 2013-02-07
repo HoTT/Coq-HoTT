@@ -56,13 +56,12 @@ Ltac issig1 build pr1 pr2 :=
       However, for the 3- and 4-variable versions, giving the explicit proof term seems to actually *slow down* the tactic.  Perhaps it is because Coq has to infer more implicit arguments.  Thus, we proceed instead by supplying the term [t] whose type is an existential variable. *)
       t))
   end ];
-  (* Now we are left only with the one subgoal to prove [t], and at this point we know its type.  The proof basically amounts to destructing a pair, but we wrap it in a NOOP match in order to force Coq to incorporate learned values of all unification variables.  This speeds things up significantly (although again, the difference is really only noticable for the 3- and 4-variable versions below). *)
-  match goal with | _ =>
-    simpl;
-    let x := fresh in intro x;
-    destruct x as [? ?];
-    exact 1
-  end.
+  (* Now we are left only with the one subgoal to prove [t], and at this point we know its type.  The proof basically amounts to destructing a pair.  First, though, we instruct Coq to incorporate learned values of all unification variables.  This speeds things up significantly (although again, the difference is really only noticable for the 3- and 4-variable versions below). *)
+  instantiate;
+  simpl;
+  let x := fresh in intro x;
+  destruct x as [? ?];
+  exact 1.
 
 (** This allows us to use the same notation for the tactics with varying numbers of variables. *)
 Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) :=
@@ -149,12 +148,11 @@ Ltac issig2 build pr1 pr2 pr3 :=
         end)
       t))
   end ];
-  match goal with | _ =>
-    simpl;
-    let x := fresh in intro x;
-    destruct x as [? [? ?]];
-    exact 1
-  end.
+  instantiate;
+  simpl;
+  let x := fresh in intro x;
+  destruct x as [? [? ?]];
+  exact 1.
 
 Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) :=
   issig2 build pr1 pr2 pr3.
@@ -196,12 +194,11 @@ Ltac issig3 build pr1 pr2 pr3 pr4 :=
         end)
       t))
   end ];
-  match goal with | _ =>
-    simpl;
-    let x := fresh in intro x;
-    destruct x as [? [? [? ?]]];
-    exact 1
-  end.
+  instantiate;
+  simpl;
+  let x := fresh in intro x;
+  destruct x as [? [? [? ?]]];
+  exact 1.
 
 Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) constr(pr4) :=
   issig3 build pr1 pr2 pr3 pr4.
