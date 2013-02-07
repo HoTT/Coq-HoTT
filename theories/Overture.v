@@ -24,6 +24,7 @@ Notation "'idmap'" := (fun x => x).
 Notation "( x ; y )" := (existT _ x y) : fibration_scope.
 Open Scope fibration_scope.
 
+(** The following notation is very convenient, although it unfortunately clashes with Proof General's "electric period". *)
 Notation "x .1" := (projT1 x) (at level 3) : fibration_scope.
 Notation "x .2" := (projT2 x) (at level 3) : fibration_scope.
 
@@ -35,6 +36,7 @@ Definition compose {A B C : Type} (g : B -> C) (f : A -> B) :=
 
 (** The results in this file are used everywhere else, so we need to be extra careful about how we define and prove things.  We prefer hand-written terms, or at least tactics that allow us to retain clear control over the proof-term produced. *)
 
+(** We define our own identity type, rather than using the one in the Coq standard library, so as to have more control over transitivity, symmetry and inverse.  It seems impossible to change these for the standard eq/identity type (or its Type-valued version) because it breaks various other standard things.  Merely changing notations also doesn't seem to quite work. *)
 Inductive paths {A : Type} (a : A) : A -> Type :=
   idpath : paths a a.
 
