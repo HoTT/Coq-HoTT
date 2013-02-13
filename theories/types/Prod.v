@@ -1,37 +1,24 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about cartesian products *)
 
-Require Import Overture PathGroupoids Equivalences HLevel.
+Require Import Overture PathGroupoids Equivalences Trunc.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
+Generalizable Variables X A B f g n.
 
 (** *** Unpacking *)
 
 (** Sometimes we would like to prove [Q u] where [u : A * B] by writing [u] as a pair [(fst u ; snd u)]. This is accomplished by [unpack_prod]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
 
-Definition unpack_prod {A B : Type} {P : A * B -> Type} (u : A * B) :
+Definition unpack_prod `{P : A * B -> Type} (u : A * B) :
   P (fst u, snd u) -> P u
   :=
   let (x, y) as u return (P (fst u, snd u) -> P u) := u in idmap.
 
 (** *** Eta conversion *)
 
-Definition eta_prod {A B : Type} (z : A * B) : (fst z, snd z) = z
+Definition eta_prod `(z : A * B) : (fst z, snd z) = z
   := match z with (x,y) => 1 end.
-
-(** *** Universal mapping property *)
-
-(* Doing this sort of thing without adjointifying will require very careful use of funext. *)
-Instance isequiv_prod_rect `{Funext} {A B : Type} (P : A * B -> Type)
-  : IsEquiv (prod_rect P)
-  := isequiv_adjointify _
-  (fun f x y => f (x,y))
-  (fun f => path_forall
-    (fun z => prod_rect P (fun x y => f (x,y)) z)
-    f (fun z => match z with (a,b) => 1 end))
-  (fun f => path_forall2
-    (fun x y => prod_rect P f (x,y))
-    f (fun a b => 1)).
 
 (** *** Paths *)
 
@@ -125,8 +112,6 @@ Defined.
 
 (** *** Equivalences *)
 
-Generalizable Variables A B f g.
-
 Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
   : IsEquiv (functor_prod f g).
   refine (BuildIsEquiv _ _ (functor_prod f g) (functor_prod f^-1 g^-1)
@@ -142,31 +127,64 @@ Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
 Defined.
 
 Definition equiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
-  : A * B <~> A' * B'
-  (* Why can't it find the instance [isequiv_functor_prod]? *)
-  := BuildEquiv _ _ (functor_prod f g) isequiv_functor_prod.
-
-(** *** HLevel *)
-
-Instance contr_prod `{Contr A} `{Contr B} : Contr (A * B)
-  := BuildContr (A * B) (center A, center B)
-  (fun z:A*B => path_prod (center A, center B) _
-    (contr (fst z)) (contr (snd z))).
-
-Definition hlevel_prod (n : nat) :
-  forall (A B : Type), is_hlevel n A -> is_hlevel n B -> is_hlevel n (A * B).
+  : A * B <~> A' * B'.
 Proof.
-  induction n as [| n I].
-  - intros A B [a ac] [b bc].
-    exists (a,b).
-    intros [a' b'].
-    apply path_prod.
-    + apply ac.
-    + apply bc.
-  - intros A B Ah Bh [a1 b1] [a2 b2].
-    apply hlevel_equiv with (A := ((a1 = a2) * (b1 = b2))%type).
-    + apply equiv_path_prod with (z := (a1, b1)) (z' := (a2, b2)).
-    + apply I.
-      * apply Ah.
-      * apply Bh.
+  exists (functor_prod f g).
+  exact _.    (* i.e., search the context for instances *)
 Defined.
+
+(** *** Universal mapping properties *)
+
+(* First the positive universal property.
+   Doing this sort of thing without adjointifying will require very careful use of funext. *)
+Instance isequiv_prod_rect `{Funext} `(P : A * B -> Type)
+  : IsEquiv (prod_rect P)
+  := isequiv_adjointify _
+  (fun f x y => f (x,y))
+  (fun f => path_forall
+    (fun z => prod_rect P (fun x y => f (x,y)) z)
+    f (fun z => match z with (a,b) => 1 end))
+  (fun f => path_forall2
+    (fun x y => prod_rect P f (x,y))
+    f (fun a b => 1)).
+
+(* Now the negative universal property. *)
+Definition prod_corect_uncurried {X A B : Type}
+  : (X -> A) * (X -> B) -> (X -> A * B)
+  := fun fg x => let (f,g):=fg in (f x, g x).
+
+Definition prod_corect {X A B : Type} (f : X -> A) (g : X -> B)
+  : X -> A * B
+  := prod_corect_uncurried (f,g).
+
+Instance isequiv_prod_corect `{Funext} (X A B : Type)
+  : IsEquiv (@prod_corect_uncurried X A B)
+  := isequiv_adjointify _
+  (fun h => (fun x => fst (h x), fun x => snd (h x)))
+  _ _.
+Proof.
+  - intros h.
+    apply path_forall; intros x.
+    apply path_prod; simpl; reflexivity.
+  - intros [f g].
+    apply path_prod; simpl; reflexivity.
+Defined.
+
+Definition equiv_prod_corect `{Funext} (X A B : Type)
+  : ((X -> A) * (X -> B)) <~> (X -> A * B)
+  := BuildEquiv _ _ (@prod_corect_uncurried X A B) _.
+
+(** *** Products preserve truncation *)
+
+Instance Trunc_prod `{Trunc n A} `{Trunc n B} : Trunc n (A * B).
+Proof.
+  generalize dependent B; generalize dependent A.
+  induction n as [| n I]; simpl; intros A ? B ?.
+  exists (center A, center B).
+    intros z; apply path_prod; apply contr.
+  intros x y.
+    exact (trunc_equiv _ _ (equiv_path_prod x y)).
+Defined.
+
+Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B)
+  := @Trunc_prod minus_two A CA B CB.

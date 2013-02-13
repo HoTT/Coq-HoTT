@@ -1,50 +1,51 @@
 (** * HPropositions *)
 
-Require Import Overture Contractible Equivalences HLevel types.Forall.
+Require Import Overture Contractible Equivalences Trunc types.Forall.
 Local Open Scope equiv_scope.
 
 (** ** Facts about [HProp] *)
 
 (** Maybe this should go to a separate file? *)
 
-Generalizable Variable A.
+Generalizable Variables A B.
 
-(** An inhabited proposition is contractible. *)
-Lemma Contr_inhabited_HProp (A : Type) `{H : HProp A} (x : A) : Contr A.
+(** An inhabited proposition is contractible.
+   This is not an [Instance] because it causes infinite loops.
+   *)
+Lemma Contr_inhabited_HProp (A : Type) `{H : HProp A} (x : A)
+  : Contr A.
 Proof.
   exists x.
-  intro y.  
-  destruct H as [i].
-  apply i.
+  intro y.
+  simpl in H.
+  apply center, H.
 Defined.
 
 (** If inhabitation implies contractibility, then we have an h-proposition. *)
 Instance HProp_inhabited_Contr (A : Type) : (A -> Contr A) -> HProp A.
 Proof.
   intro H.
-  exists.
   intros x y.
   pose (C := H x).
   apply contr_paths_contr.
 Defined.
 
-(** [is_hlevel] is a proposition. *)
-Instance HProp_is_hlevel `{E : Funext} (n  : nat) (A : Type) : HProp (is_hlevel n A).
+(** [is_trunc] is a proposition. *)
+Instance HProp_is_trunc `{Funext} (n : trunc_index) (A : Type)
+  : HProp (Trunc n A).
 Proof.
   apply HProp_inhabited_Contr.
-  generalize A; clear A.
-  induction n as [| n I].
-  - intros A H.
-    unfold is_hlevel in * |- *.
+  revert A.
+  induction n as [| n I]; unfold Trunc; simpl.
+  - intros A ?.
     apply contr_Contr.
-  - intros A H.
-    exists H.
-    intro G.
+  - intros A AH1.
+    exists AH1.
+    intro AH2.
     apply path_forall; intro x.
     apply path_forall; intro y.
-    simpl in G, H.
     apply @path_contr.
-    apply I, H.
+    apply I, AH1.
 Qed.
 
 (** Chracterization of [HProp] in terms of all points being connected by paths. *)
@@ -56,44 +57,40 @@ Proof.
 Defined.
 
 Theorem HProp_allpath (A : Type) : (forall (x y : A), x = y) -> HProp A.
-  intros H; exists; intros x y.
+  intros H x y.
   pose (C := BuildContr A x (H x)).
   apply contr_paths_contr.
 Defined.
 
-Theorem Equiv_HProp_allpath `{E : Funext} (A : Type) : HProp A <~> (forall (x y : A), x = y).
+Theorem Equiv_HProp_allpath `{Funext} (A : Type)
+  : HProp A <~> (forall (x y : A), x = y).
 Proof.
-  apply (equiv_adjointify (@allpath_HProp A) (@HProp_allpath A)).
-  - intro f.
-    apply path_forall; intro x.
-    apply path_forall; intro y.
-    pose (C := BuildContr A x (f x)).
+  apply (equiv_adjointify (@allpath_HProp A) (@HProp_allpath A));
+  (* The proofs of the two homotopies making up this equivalence are almost identical.  First we start with a thing [f]. *)
+    intro f;
+  (* Then we apply funext a couple of times *)
+    apply path_forall; intro x;
+    apply path_forall; intro y;
+  (* Now we conclude that [A] is contractible *)
+    try pose (C := BuildContr A x (f x));
+    try pose (D := Contr_inhabited_HProp A x);
+  (* And conclude because we have a path in a contractible space. *)
     apply path_contr.
-  - intros [f].
-    unfold HProp_allpath.
-    apply ap.
-    apply path_forall; intro x.
-    apply path_forall; intro y.
-    assert (Contr A).
-    + exists x; apply f.
-    + apply @path_contr. (* Coq runs away on apply path_contr. *)
-     auto with typeclass_instances.
 Defined.
 
 (** Two propositions are equivalent as soon as there are maps in both
    directions. *)
 
-Definition prop_iff_equiv (A B : Type) (pA : HProp A) (pB : HProp B) :
-  (A -> B) -> (B -> A) -> (A <~> B).
+Definition equiv_iff_prop `{HProp A} `{HProp B}
+  : (A -> B) -> (B -> A) -> (A <~> B).
 Proof.
   intros f g.
-  apply (equiv_adjointify f g).
-  - intro y. apply pB.
-  - intro x. apply pA.
+  apply (equiv_adjointify f g);
+    intros ?; apply allpath_HProp.
 Defined.
 
 
-(** [HProp] is closed under [forall]. *)
+(** [HProp] is closed under [forall].  This should really be a theorem in types/Forall that all truncation levels are closed under [forall]. *)
   
 Instance HProp_forall `{E : Funext} (A : Type) (P : A -> Type) :
   (forall x, HProp (P x)) -> HProp (forall x, P x).
@@ -132,7 +129,7 @@ Defined.
 
 (** Here is an alternate characterization of propositions. *)
 
-Definition isprop_isprop A : is_prop (is_prop A) := hlevel_isprop 1 A.
+Definition isprop_isprop A : is_prop (is_prop A) := trunc_isprop 1 A.
 
 
 Theorem prop_equiv_inhabited_contr {A} : is_prop A <~> (A -> is_contr A).

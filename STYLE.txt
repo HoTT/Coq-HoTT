@@ -55,8 +55,36 @@ Typeclasses are particularly convenient for h-properties of objects.
 Here are some of the typeclasses we are using:
 
 - equivalences: IsEquiv
-- hlevels: Contr, HProp, HSet, HLevel
+- hlevels: Contr, HLevel
 - axioms (see below): Funext, Univalence
+
+HProp and HSet are notations for "HLevel -1" and "HLevel 0",
+respectively, while "HLevel -2" reduces to "Contr".
+
+When constructing terms in a typeclass record such as IsEquiv, Contr,
+or HLevel, one has the choice to declare it as an "Instance", in which
+case it is added to the hint database that is searched when Coq tries
+to do typeclass instance resolution.  Care must be taken with this, as
+indiscriminately adding theorems to this database can easily result in
+infinite loops (or at least very long loops).
+
+In general, it seems to be better not to add Instances which suggest
+an open-ended search.  E.g. the theorem that h-levels are closed under
+equivalence is a bad candidate for an Instance, because when Coq is
+searching for a proof of "Contr B" this theorem could cause it to look
+through all possible types A for an equivalence "A <~> B" and a proof
+of "Contr A".  Results of this sort should be proven as "Definition"s
+or "Theorems", not as "Instances".  If you need to use a result of
+this sort in the middle of a proof, use a tactic like "pose" or
+"assert" to add a particular instance of its conclusion to the
+context; then it will be found by subsequent typeclass resolution.
+
+If you have determined through trial and error that a particular
+result should not be an Instance (e.g. when making it an Instance, a
+tactic in some other proof loops, but changing it to a Definition
+prevents this), please add a comment to that effect where it is
+defined.  This way no one else will come along and helpfully change it
+back to an Instance.
 
 
 4. AXIOMS
@@ -157,7 +185,11 @@ transparent subterm use refine.
 
 6. FORMATTING
 
-All "Require" commands should be placed at the top of a file.
+All "Require" commands should be placed at the top of a file.  They
+should generally be followed by all "[Local] Open Scope" commands, and
+then by "Generalizable Variables" commands.  The latter two might
+also occur in Sections later on in the file, but in that case they
+should usually come at the beginning of the Section.
 
 Lines of code should be of limited width; try to restrict yourself to
 not much more than 70 characters.  Remember that when Coq code is
@@ -170,6 +202,17 @@ mode; then you'll be able to read comment paragraphs without scrolling
 horizontally, no matter how narrow your window is.  Putting hard
 newlines in text makes it extremely ugly when viewed in a window that
 is more narrow than the width to which you filled it.
+
+Unfortunately, when viewing source code on Github, these long comment
+lines are not wrapped, making them hard to read.  If you use the
+Stylish plugin, you can make them wrap by adding the following style:
+    @-moz-document domain(github.com) {
+        div.line {
+            white-space: pre-wrap;
+        }
+    }
+This messes up the line-numbering, though, you'll have to turn it
+off in order to link to or comment on a particular line.
 
 When writing tactic scripts, use newlines as a "logical grouping"
 construct.  Important tactic invocations, such as a top-level

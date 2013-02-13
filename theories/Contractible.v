@@ -58,6 +58,8 @@ Instance contr_Contr `{Funext} `{Contr A} : Contr (Contr A).
   intro; apply path2_contr.
 Qed.
 
+(** If [f] is an equivalence, then its homotopy fibers are contractible.  That is, it is a Voevodsky equivalence, or a homotopy bijection.  Probably the following two proofs should really be using some standard facts about paths in Sigma types.  *)
+
 Instance contr_hfiber_equiv `(IsEquiv A B f) (b : B)
   : Contr {a:A & f a = b}.
 Proof.
@@ -72,7 +74,8 @@ Proof.
   exact ((concat_A1p (eisretr f) p)^).
 Qed.
 
-Instance isequiv_contr_hfibers `(f : A -> B)
+(* This should not be an Instance, as it causes infinite loops. *)
+Definition isequiv_contr_hfibers `(f : A -> B)
   (hfc : forall y:B, Contr {x:A & f x = y})
   : IsEquiv f.
 Proof.

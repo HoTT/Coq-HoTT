@@ -216,31 +216,38 @@ Section HIso.
 End HIso.
 
   
-(** If [f] is an equivalence, then its homotopy fibers are contractible.  That is, it is a Voevodsky equivalence, or a homotopy bijection.  Probably the following two proofs should really be using some standard facts about paths in Sigma types.  *)
-
 (** Several lemmas useful for rewriting. *)
-Lemma moveR_E (A B : Type) (e : A <~> B) (x : A) (y : B) :
-  x = e^-1 y -> e x = y.
-Proof.
-  intro H.
-  rewrite H.
-  apply eisretr.
-Qed.
+Definition moveR_E `{IsEquiv A B f} (x : A) (y : B) (p : x = f^-1 y)
+  : (f x = y)
+  := ap f p @ eisretr f y.
 
-Lemma moveL_E (A B : Type) (e : A <~> B) (x : A) (y : B) :
-  e^-1 y = x -> y = e x.
-Proof.
-  intro H.
-  rewrite <- H.
-  apply symmetry, eisretr.
-Qed.
+Definition moveL_E `{IsEquiv A B f} (x : A) (y : B) (p : f^-1 y = x)
+  : (y = f x)
+  := (eisretr f y)^ @ ap f p.
 
 (** Equivalence preserves contractibility (which of course is trivial under univalence). *)
-Lemma Contr_equiv_contr (A B : Type) : (A <~> B) -> Contr A -> Contr B.
+Lemma Contr_equiv_contr `{IsEquiv A B f} `{Contr A} : Contr B.
 Proof.
-  intros e C.
-  exists (e (center A)).
+  exists (f (center A)).
   intro y.
   apply moveR_E.
-  apply C.
+  apply contr.
 Qed.
+
+(** The function [equiv_rect] says that given an equivalence [f : A <~> B], and a hypothesis from [B], one may always assume that the hypothesis is in the image of [e].
+
+In fibrational terms, if we have a fibration over [B] which has a section once pulled back along an equivalence [f : A <~> B], then it has a section over all of [B].  *)
+
+Definition equiv_rect `{IsEquiv A B f} (P : B -> Type)
+  : (forall x:A, P (f x)) -> forall y:B, P y
+  := fun g y => transport P (eisretr f y) (g (f^-1 y)).
+
+Arguments equiv_rect {A B} f {_} P _ _.
+
+(** Using [equiv_rect], we define a handy little tactic which introduces a variable and simultaneously substitutes it along an equivalence. *)
+
+Ltac equiv_intro E x :=
+  match goal with
+    | |- forall y, @?Q y =>
+      refine (equiv_rect E Q _); intros x
+  end.

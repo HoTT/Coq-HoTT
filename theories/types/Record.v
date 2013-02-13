@@ -56,13 +56,12 @@ Ltac issig1 build pr1 pr2 :=
       However, for the 3- and 4-variable versions, giving the explicit proof term seems to actually *slow down* the tactic.  Perhaps it is because Coq has to infer more implicit arguments.  Thus, we proceed instead by supplying the term [t] whose type is an existential variable. *)
       t))
   end ];
-  (* Now we are left only with the one subgoal to prove [t], and at this point we know its type.  The proof basically amounts to destructing a pair, but we wrap it in a NOOP match in order to force Coq to incorporate learned values of all unification variables.  This speeds things up significantly (although again, the difference is really only noticable for the 3- and 4-variable versions below). *)
-  match goal with | _ =>
-    simpl;
-    let x := fresh in intro x;
-    destruct x as [? ?];
-    exact 1
-  end.
+  (* Now we are left only with the one subgoal to prove [t], and at this point we know its type.  The proof basically amounts to destructing a pair.  First, though, we instruct Coq to incorporate learned values of all unification variables.  This speeds things up significantly (although again, the difference is really only noticable for the 3- and 4-variable versions below). *)
+  instantiate;
+  simpl;
+  let x := fresh in intro x;
+  destruct x as [? ?];
+  exact 1.
 
 (** This allows us to use the same notation for the tactics with varying numbers of variables. *)
 Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) :=
@@ -82,25 +81,7 @@ Proof.
   issig (BuildEquiv A B) (equiv_fun A B) (equiv_isequiv A B).
 Defined.
 
-(** The function [equiv_rect] says that if [f : A -> B] is an equivalence, and we have a fibration over [B] which has a section once pulled back to [A], then it has a section over all of [B].  *)
-
-Generalizable Variables A B f.
-
-Definition equiv_rect `{IsEquiv A B f} (P : B -> Type)
-  : (forall x:A, P (f x)) -> forall y:B, P y
-  := fun g y => transport P (eisretr f y) (g (f^-1 y)).
-
-Arguments equiv_rect {A B} f {_} P _ _.
-
-(** Using [equiv_rect], we define a little tactic which introduces a variable and simultaneously substitutes it along an equivalence. *)
-
-Ltac equiv_intro E x :=
-  match goal with
-    | |- forall y, @?Q y =>
-      refine (equiv_rect E Q _); intros x
-  end.
-
-(** Combining [issig_contr] and [equiv_intro], we can transfer the problem of showing contractibility of [Contr A] to the equivalent problem of contractibility of a certain Sigma-type, in which case we can apply the general path-construction functions. *)
+(** Via [issig_contr] (using the [equiv_intro] tactic), we can transfer the problem of showing contractibility of [Contr A] to the equivalent problem of contractibility of a certain Sigma-type, in which case we can apply the general path-construction functions. *)
 
 Instance contr_contr `{Funext} (A : Type)
   : Contr A -> Contr (Contr A).
@@ -149,12 +130,11 @@ Ltac issig2 build pr1 pr2 pr3 :=
         end)
       t))
   end ];
-  match goal with | _ =>
-    simpl;
-    let x := fresh in intro x;
-    destruct x as [? [? ?]];
-    exact 1
-  end.
+  instantiate;
+  simpl;
+  let x := fresh in intro x;
+  destruct x as [? [? ?]];
+  exact 1.
 
 Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) :=
   issig2 build pr1 pr2 pr3.
@@ -196,12 +176,11 @@ Ltac issig3 build pr1 pr2 pr3 pr4 :=
         end)
       t))
   end ];
-  match goal with | _ =>
-    simpl;
-    let x := fresh in intro x;
-    destruct x as [? [? [? ?]]];
-    exact 1
-  end.
+  instantiate;
+  simpl;
+  let x := fresh in intro x;
+  destruct x as [? [? [? ?]]];
+  exact 1.
 
 Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) constr(pr4) :=
   issig3 build pr1 pr2 pr3 pr4.

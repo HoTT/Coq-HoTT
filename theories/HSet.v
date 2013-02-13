@@ -1,6 +1,6 @@
 (** * H-Set *)
 (* Bas: Quick fix, no consistent naming yet *)
-Require Import Overture Contractible Equivalences types.Paths HProp HLevel. 
+Require Import Overture Contractible Equivalences Trunc HProp types.Paths. Require Import types.Empty.
 Local Open Scope equiv_scope.
 
 (** ** Facts about [HSet] *)
@@ -9,7 +9,7 @@ Local Open Scope equiv_scope.
 
 Definition axiomK A := forall (x : A) (p : x = x), p = idpath x.
 
-Definition isset_implies_axiomK A : is_hset A -> axiomK A.
+Definition isset_implies_axiomK {A} : HSet A -> axiomK A.
 Proof.
   intros H x p.
   apply (H x x p (idpath x)).
@@ -17,7 +17,6 @@ Defined.
 
 Instance axiomK_implies_isset {A} `{(axiomK A)}: HSet A.
 Proof.
-  exists.
   intros x y H.
   apply @HProp_allpath.
   intros p q.
@@ -44,7 +43,7 @@ Proof.
   apply isprop_isprop.
 Defined.
 *)
-Instance isset_isprop {A} `{Funext} : HProp (is_hset A) := HProp_is_hlevel 2 A.
+(* Instance isset_isprop {A} `{Funext} : HProp (is_hset A) := HProp_is_hlevel 2 A.*)
 
 (*
 Instance axiomK_isprop A : HProp (axiomK A).
@@ -91,8 +90,8 @@ Defined.*)
 
 (** Any type with "decidable equality" is a set. *)
 
-Definition decidable_paths {A : Type} :=
-  forall (x y : A), (x = y) + ((x = y) -> Empty_set).
+Definition decidable_paths (A : Type) :=
+  forall (x y : A), (x = y) + ((x = y) -> Empty).
 
 (* Usually this lemma would be proved with [discriminate], but
    unfortunately that tactic is hardcoded to work only with Coq's
@@ -138,14 +137,14 @@ Proof.
   path_via (transport _ p q). symmetry. 
   apply trans_is_concat.
   path_via q.
-  set (qp1 := ap_transport p (fun y => @inl (x = y) (x = y -> Empty_set)) q).
+  set (qp1 :=  ap_transport p (fun y => @inl (x = y) (x = y -> Empty)) q).
   simpl in qp1.
-  apply @inl_injective with (B := (x = x -> Empty_set)).
+  apply @inl_injective with (B := (x = x -> Empty)).
   exact (qp1 @ qp0).
   induction (q' p).
 Defined.
 
-Corollary decidable_isset {A : Type} : @decidable_paths A -> @is_hset A.
+Corollary decidable_isset {A : Type} : @decidable_paths A -> @is_trunc 0 A.
 Proof.
   intro.
   by apply @axiomK_implies_isset, @decidable_implies_axiomK.
