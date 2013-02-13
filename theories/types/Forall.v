@@ -8,7 +8,9 @@ Local Open Scope equiv_scope.
 
 (** *** Paths *)
 
-(** See [Funext] for the formulation of function extensionality. *)
+(** Paths [p : f = g] in a function type [forall x:X, P x] are equivalent to functions taking values in path types, [H : forall x:X, f x = g x], or concisely, [H : f == g].
+
+This equivalence, however, is just the combination of [apD10] and function extensionality [funext], and as such, [path_forall], et seq. are given in the [Overture]:  *)
 
 (** Now we show how these things compute. *)
 
@@ -43,8 +45,6 @@ Defined.
 (** The concrete description of transport in sigmas and pis is rather trickier than in the other types. In particular, these cannot be described just in terms of transport in simpler types; they require the full Id-elim rule by way of "dependent transport" [transportD].
 
   In particular this indicates why "transport" alone cannot be fully defined by induction on the structure of types, although Id-elim/transportD can be (cf. Observational Type Theory). A more thorough set of lemmas, along the lines of the present ones but dealing with Id-elim rather than just transport, might be nice to have eventually? *)
-
-(* Note: conclusion should be [==] if that is defined in an earlier file. *) 
 Definition transport_forall
     {A : Type} {P : A -> Type} {C : forall x, P x -> Type}
     {x1 x2 : A} (p : x1 = x2) (f : forall y : P x1, C x1 y)
@@ -56,5 +56,21 @@ Definition transport_forall
 
 (** *** Functorial action *)
 
+(** The functoriality of [forall] is slightly subtle: it is contravariant in the domain type and covariant in the codomain, but the codomain is dependent on the domain. *)
+Definition functor_forall {A : Type} {P : A -> Type} {B : Type} {Q : B -> Type}
+    (f0 : B -> A) (f1 : forall b:B, P (f0 b) -> Q b)
+  : (forall a:A, P a) -> (forall b:B, Q b)
+  := (fun g b => f1 _ (g (f0 b))).
+
+Definition ap_functor_forall `{Funext} {A : Type} {P : A -> Type} {B : Type} {Q : B -> Type}
+    (f0 : B -> A) (f1 : forall b:B, P (f0 b) -> Q b)
+    (g g' : forall a:A, P a) (h : g == g')
+  : ap (functor_forall f0 f1) (path_forall _ _ h)
+    = path_forall _ _ (fun b:B => (ap (f1 b) (h (f0 b)))). 
+Proof.
+  
 
 (** *** Equivalences *)
+
+
+(** *** HLevels *)

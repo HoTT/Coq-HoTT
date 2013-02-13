@@ -233,21 +233,3 @@ Proof.
   apply moveR_E.
   apply contr.
 Qed.
-
-(** The function [equiv_rect] says that given an equivalence [f : A <~> B], and a hypothesis from [B], one may always assume that the hypothesis is in the image of [e].
-
-In fibrational terms, if we have a fibration over [B] which has a section once pulled back along an equivalence [f : A <~> B], then it has a section over all of [B].  *)
-
-Definition equiv_rect `{IsEquiv A B f} (P : B -> Type)
-  : (forall x:A, P (f x)) -> forall y:B, P y
-  := fun g y => transport P (eisretr f y) (g (f^-1 y)).
-
-Arguments equiv_rect {A B} f {_} P _ _.
-
-(** Using [equiv_rect], we define a handy little tactic which introduces a variable and simultaneously substitutes it along an equivalence. *)
-
-Ltac equiv_intro E x :=
-  match goal with
-    | |- forall y, @?Q y =>
-      refine (equiv_rect E Q _); intros x
-  end.
