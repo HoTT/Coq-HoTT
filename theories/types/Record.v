@@ -81,25 +81,7 @@ Proof.
   issig (BuildEquiv A B) (equiv_fun A B) (equiv_isequiv A B).
 Defined.
 
-(** The function [equiv_rect] says that if [f : A -> B] is an equivalence, and we have a fibration over [B] which has a section once pulled back to [A], then it has a section over all of [B].  *)
-
-Generalizable Variables A B f.
-
-Definition equiv_rect `{IsEquiv A B f} (P : B -> Type)
-  : (forall x:A, P (f x)) -> forall y:B, P y
-  := fun g y => transport P (eisretr f y) (g (f^-1 y)).
-
-Arguments equiv_rect {A B} f {_} P _ _.
-
-(** Using [equiv_rect], we define a little tactic which introduces a variable and simultaneously substitutes it along an equivalence. *)
-
-Ltac equiv_intro E x :=
-  match goal with
-    | |- forall y, @?Q y =>
-      refine (equiv_rect E Q _); intros x
-  end.
-
-(** Combining [issig_contr] and [equiv_intro], we can transfer the problem of showing contractibility of [Contr A] to the equivalent problem of contractibility of a certain Sigma-type, in which case we can apply the general path-construction functions. *)
+(** Via [issig_contr] (using the [equiv_intro] tactic), we can transfer the problem of showing contractibility of [Contr A] to the equivalent problem of contractibility of a certain Sigma-type, in which case we can apply the general path-construction functions. *)
 
 Instance contr_contr `{Funext} (A : Type)
   : Contr A -> Contr (Contr A).
