@@ -36,7 +36,7 @@
    ./hoqc. You can also use ./hoqide which is the version of coqide
    running the hoqtop toplevel if you have compiled it successfully.
 
-5. The library is loaded with `Require Import HoTT.Homotopy`.
+5. The library can be loaded with `Require Import HoTT.`
 
 6. You can install the library globally with `make install`, although this
    has not been thoroughly tested.
