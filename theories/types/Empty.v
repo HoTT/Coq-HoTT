@@ -4,17 +4,17 @@
 Require Import Overture Contractible.
 Local Open Scope path_scope.
 
-Inductive Empty : Type :=.
+Inductive Empty : Type := .
 
 Definition not (A:Type) : Type := A -> False.
 
 (** *** Universal mapping property *)
 
-Instance contr_to_Empty `{Funext} (A : Type) :
+Instance contr_from_Empty {_ : Funext} (A : Type) :
   Contr (Empty -> A) :=
   BuildContr _
-  (Empty_rect A)
-  (fun f => path_forall _ f (fun x => Empty_rect _ x)).
+             (Empty_rect A)
+             (fun f => path_forall _ f (fun x => Empty_rect _ x)).
 
 (** *** Paths *)
 
@@ -25,11 +25,7 @@ Instance contr_to_Empty `{Funext} (A : Type) :
 
 (** *** HLevel *)
 
-(*** XXX This should go elsewhere *)
-Class HProp (A : Type) :=
-  { ishprop : forall x y : A, Contr (x = y) }.
-
 Instance hprop_Empty : HProp Empty :=
-  {| ishprop := (fun x y : Empty => Empty_rect _ x) |}.
+  {| Trunc_is_trunc := (fun x y : Empty => Empty_rect _ x) |}.
 
 
