@@ -76,7 +76,8 @@ Proof.
     apply path_forall; intro y.
     assert (Contr A).
     + exists x; apply f.
-    + apply path_contr.
+    + apply @path_contr. (* Coq runs away on apply path_contr. *)
+     auto with typeclass_instances.
 Defined.
 
 (** Two propositions are equivalent as soon as there are maps in both

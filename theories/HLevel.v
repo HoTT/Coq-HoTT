@@ -1,6 +1,6 @@
  (** * H-Levels *)
 
-Require Import Overture Contractible Equivalences types.Paths.
+Require Import Overture Contractible Equivalences types.Paths FunextVarieties.
 Local Open Scope equiv_scope.
 
 Generalizable Variable A.
@@ -35,3 +35,39 @@ Proof.
       apply @isequiv_inverse.
     + apply H.
 Qed.
+
+Instance prop_inhabited_contr `{HProp A} : A -> Contr A.
+Proof.
+  intros x.
+  exists x.
+  intro y.
+  apply H.
+Defined.
+
+Instance inhabited_contr_isprop {A} : (A -> Contr A) -> HProp A.
+Proof.
+  intros H. exists. intros x.
+  apply (@contr_paths_contr _ (H x)).
+Defined.
+
+(* Why is this missing ? *)
+
+Definition Funext_implies_WeakFunext:Funext -> WeakFunext:=
+  (fun E=> (NaiveFunext_implies_WeakFunext (Funext_implies_NaiveFunext E))).
+
+Theorem hlevel_inhabited_contr `{E : Funext} {n X} : is_hlevel n X -> Contr (is_hlevel n X).
+Proof.
+  revert X. induction n.
+    intros X H. apply (@contr_Contr _ _ H).
+  simpl.
+  intros X H. set (wfunext:=(Funext_implies_WeakFunext E)).
+  do 2 (apply wfunext; intro).
+  by apply IHn.
+Defined.
+
+Instance hlevel_isprop `{E : Funext} {n A} : HProp (is_hlevel n A).
+Proof.
+  exists.
+  apply inhabited_contr_isprop.
+  apply hlevel_inhabited_contr.
+Defined.
