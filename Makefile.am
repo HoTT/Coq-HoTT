@@ -118,10 +118,10 @@ $(SSRCMAFILES): %.cma : %.mllib
 	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
 endif
 
+all: TAGS
 TAGS_FILES = $(STDVFILES)  $(VFILES)
-
 TAGS : $(TAGS_FILES) Makefile
-	etags --language=none \
+	$(ETAGS) --language=none \
 	-r '/^[[:space:]]*\(Axiom\|Theorem\|Class\|Instance\|Let\|Ltac\|Definition\|Lemma\|Record\|Remark\|Structure\|Fixpoint\|Fact\|Corollary\|Let\|Inductive\|Coinductive\|Proposition\)[[:space:]]+\([[:alnum:]_'\'']+\)/\2/' \
 	-r '/^[[:space:]]*\([[:alnum:]_'\'']+\)[[:space:]]*:/\1/' \
 	$^

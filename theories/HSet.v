@@ -86,7 +86,7 @@ Defined.
 (** Any type with "decidable equality" is a set. *)
 
 Definition decidable_paths (A : Type) :=
-  forall (x y : A), (x = y) + ((x = y) -> Empty_set).
+  forall (x y : A), (x = y) + ((x = y) -> Empty).
 
 (* Usually this lemma would be proved with [discriminate], but
    unfortunately that tactic is hardcoded to work only with Coq's
@@ -107,9 +107,9 @@ Proof.
   path_via (transport p q).
   apply opposite, trans_is_concat.
   path_via q.
-  set (qp1 := trans_map p (fun y => @inl (x = y) (x = y -> Empty_set)) q).
+  set (qp1 := trans_map p (fun y => @inl (x = y) (x = y -> Empty)) q).
   simpl in qp1.
-  apply @inl_injective with (B := (x = x -> Empty_set)).
+  apply @inl_injective with (B := (x = x -> Empty)).
   exact (qp1 @ qp0).
   induction (q' p).
 Defined.
