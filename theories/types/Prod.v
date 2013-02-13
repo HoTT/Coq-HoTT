@@ -133,6 +133,26 @@ Proof.
   exact _.    (* i.e., search the context for instances *)
 Defined.
 
+(** *** Symmetry *)
+
+(* This is a special property of [prod], of course, not an instance of a general family of facts about types. *)
+
+Definition equiv_prod_symm (A B : Type) : A * B <~> B * A.
+Proof.
+  refine (BuildEquiv (A*B) (B*A)
+    (fun ab => let (a,b) := ab in (b,a))
+    (BuildIsEquiv (A*B) (B*A) _
+      (fun ba => let (b,a) := ba in (a,b))
+      (fun ba => let (b,a) as ba return
+            ((let (a,b) := (let (b,a) := ba in (a,b)) in (b,a)) = ba)
+                 := ba in 1)
+    (fun ab => let (a,b) as ab return
+            ((let (b,a) := (let (a,b) := ab in (b,a)) in (a,b)) = ab)
+                 := ab in 1)
+    _)).
+  intros [a b]. reflexivity.
+Defined.
+
 (** *** Universal mapping properties *)
 
 (** Ordinary universal mapping properties are expressed as equivalences of sets or spaces of functions.  In type theory, we can go beyond this and express an equivalence of types of *dependent* functions.  Moreover, because the product type can expressed both positively and negatively, it has both a left universal property and a right one. *)
