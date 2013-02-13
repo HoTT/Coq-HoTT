@@ -70,7 +70,7 @@ Instance Transitive_paths {A} : Transitive (@paths A) := @concat A.
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
   := match p with idpath => idpath end.
 
-(** See above for the meaning of [simpl nomatch]. *)
+(** Declaring this as [simpl nomatch] prevents the tactic [simpl] from expanding it out into [match] statements.  We only want [inverse] to simplify when applied to an identity path. *)
 Arguments inverse {A x y} p : simpl nomatch.
 
 Instance Symmetric_paths {A} : Symmetric (@paths A) := @inverse A.
@@ -98,7 +98,7 @@ Notation "p @' q" := (concat p q) (at level 21, left associativity,
 Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
   match p with idpath => u end.
 
-(** Declaring this as [simpl nomatch] prevents the tactic [simpl] from expanding it out into [match] statements.  We only want [transport] to simplify when applied to an identity path. *)
+(** See above for the meaning of [simpl nomatch]. *)
 Arguments transport {A} P {x y} p%path_scope u : simpl nomatch.
 
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression.*)
