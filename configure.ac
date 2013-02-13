@@ -159,6 +159,8 @@ fi
 hottdir="$datarootdir/hott"
 AC_SUBST([hottdir])
 
+AC_CHECK_PROGS(ETAGS,etags,[: skipping etags])
+
 dnl Create symbolic links to the Coq library
 AC_MSG_RESULT([Creating symbolic links into Coq standard library.])
 rm -f $srcdir/coq/plugins $srcdir/coq/dev

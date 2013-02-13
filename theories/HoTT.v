@@ -14,7 +14,7 @@ Require Export Trunc.
 Require Export HProp.
 Require Export HSet.
 
-Require Export types.Empty_set.
+Require Export types.Empty.
 Require Export types.Unit.
 Require Export types.Bool.
 Require Export types.Arrow.
