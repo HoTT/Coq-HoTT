@@ -151,7 +151,9 @@ the other parts of an equivalence -- the inverse function and
 homotopies -- will compute.  Thus, a transparent definition will not
 generally be "completely transparent".
 
-
+It is possible to make subterms of a term opaque by using the abstract
+tactic. The assert tactic also produces opaque subterms. For a 
+transparent subterm use refine.
 
 6. FORMATTING
 
