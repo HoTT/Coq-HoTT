@@ -135,6 +135,8 @@ Defined.
 
 (** *** Universal mapping properties *)
 
+(** Ordinary universal mapping properties are expressed as equivalences of sets or spaces of functions.  In type theory, we can go beyond this and express an equivalence of types of *dependent* functions.  Moreover, because the product type can expressed both positively and negatively, it has both a left universal property and a right one. *)
+
 (* First the positive universal property.
    Doing this sort of thing without adjointifying will require very careful use of funext. *)
 Instance isequiv_prod_rect `{Funext} `(P : A * B -> Type)
@@ -148,16 +150,25 @@ Instance isequiv_prod_rect `{Funext} `(P : A * B -> Type)
     (fun x y => prod_rect P f (x,y))
     f (fun a b => 1)).
 
+Definition equiv_prod_rect `{Funext} `(P : A * B -> Type)
+  : (forall (a : A) (b : B), P (a, b)) <~> (forall p : A * B, P p)
+  := BuildEquiv _ _ (prod_rect P) _.
+
+(* The non-dependent version, which is a special case, is the currying equivalence. *)
+Definition equiv_uncurry `{Funext} (A B C : Type)
+  : (A -> B -> C) <~> (A * B -> C)
+  := equiv_prod_rect (fun _ => C).
+
 (* Now the negative universal property. *)
-Definition prod_corect_uncurried {X A B : Type}
-  : (X -> A) * (X -> B) -> (X -> A * B)
+Definition prod_corect_uncurried `{A : X -> Type} `{B : X -> Type}
+  : (forall x, A x) * (forall x, B x) -> (forall x, A x * B x)
   := fun fg x => let (f,g):=fg in (f x, g x).
 
-Definition prod_corect {X A B : Type} (f : X -> A) (g : X -> B)
-  : X -> A * B
+Definition prod_corect `(f : forall x:X, A x) `(g : forall x:X, B x)
+  : forall x, A x * B x
   := prod_corect_uncurried (f,g).
 
-Instance isequiv_prod_corect `{Funext} (X A B : Type)
+Instance isequiv_prod_corect `{Funext} `(A : X -> Type) (B : X -> Type)
   : IsEquiv (@prod_corect_uncurried X A B)
   := isequiv_adjointify _
   (fun h => (fun x => fst (h x), fun x => snd (h x)))
@@ -170,8 +181,8 @@ Proof.
     apply path_prod; simpl; reflexivity.
 Defined.
 
-Definition equiv_prod_corect `{Funext} (X A B : Type)
-  : ((X -> A) * (X -> B)) <~> (X -> A * B)
+Definition equiv_prod_corect `{Funext} `(A : X -> Type) (B : X -> Type)
+  : ((forall x, A x) * (forall x, B x)) <~> (forall x, A x * B x)
   := BuildEquiv _ _ (@prod_corect_uncurried X A B) _.
 
 (** *** Products preserve truncation *)
