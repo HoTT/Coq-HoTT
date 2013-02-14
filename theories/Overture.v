@@ -311,3 +311,16 @@ Ltac done :=
       end ].
 Tactic Notation "by" tactic(tac) :=
   tac; done.
+
+(* A convenient tactic for using function extensionality. *)
+Ltac by_extensionality x :=
+  intros; unfold compose;
+  match goal with
+  | [ |- ?f = ?g ] => eapply path_forall; intro x;
+      match goal with
+        | [ |- forall (_ : prod _ _), _ ] => intros [? ?]
+        | [ |- forall (_ : sigT _ _), _ ] => intros [? ?]
+        | _ => intros
+    end;
+    simpl; auto with path_hints
+  end.
