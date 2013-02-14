@@ -1,5 +1,4 @@
 (** * H-Set *)
-
 Require Import Overture Contractible Equivalences Trunc HProp types.Paths types.Empty PathGroupoids.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
@@ -131,7 +130,7 @@ Proof.
   set (q := d x x) in *.
   clearbody qp; revert qp.
   destruct q as [q | q'].
-    intro qp0; apply (cancel_L q). path_via (transport _ p q).
+    intro qp0; apply (cancelL q). path_via (transport _ p q).
       symmetry; apply transport_paths_r.
       path_via q. apply @inl_injective with (B := (x = x -> Empty)).
       exact ((ap_transport p (fun y => @inl (x = y) (x = y -> Empty)) q) @ qp0).
