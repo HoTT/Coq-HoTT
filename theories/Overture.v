@@ -1,4 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
+
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
 
 (** ** Type classes *)
@@ -287,3 +288,19 @@ Hint Resolve @idpath : core.
 Ltac path_via mid :=
   apply @concat with (y := mid); auto with path_hints.
 
+(* Ssreflect tactics, adapted by Robbert Krebbers *)
+Ltac done := 
+  trivial; intros; solve
+    [ repeat first
+      [ solve [trivial]
+      | solve [apply symmetry; trivial]
+      | reflexivity
+      (* Discriminate should be here, but it doesn't work yet *)
+      (* | discriminate *)
+      | contradiction
+      | split ]
+    | match goal with
+      H : ~ _ |- _ => solve [destruct H; trivial]
+      end ].
+Tactic Notation "by" tactic(tac) :=
+  tac; done.
