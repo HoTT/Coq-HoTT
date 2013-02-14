@@ -39,25 +39,6 @@ Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x}.
   intros [y []]; reflexivity.
 Defined.
 
-Lemma Contr_path {A : Type} {c c' : A} (p : c = c')
-  (h : forall a : A, c = a) (h' : forall a : A, c' = a)  :
-  transport (fun c => forall a : A, c = a) p h = h' -> BuildContr A c h = BuildContr A c' h'.
-Proof.
-  intro q.
-  destruct p.
-  destruct q.
-  reflexivity.
-Qed.
-
-(** The space of contractions of a contractible space is contractible. *)
-Instance contr_Contr `{Funext} `{Contr A} : Contr (Contr A).
-  exists {| center := center A ; contr := contr |}.
-  intros [c h].
-  apply (Contr_path (contr c)).
-  apply path_forall.
-  intro; apply path2_contr.
-Qed.
-
 (** If [f] is an equivalence, then its homotopy fibers are contractible.  That is, it is a Voevodsky equivalence, or a homotopy bijection.  Probably the following two proofs should really be using some standard facts about paths in Sigma types.  *)
 
 Instance contr_hfiber_equiv `(IsEquiv A B f) (b : B)
