@@ -293,9 +293,10 @@ Ltac done :=
   trivial; intros; solve
     [ repeat first
       [ solve [trivial]
-      | solve [symmetry; trivial]
+      | solve [apply symmetry; trivial]
       | reflexivity
-      | discriminate
+      (* Discriminate should be here, but it doesn't work yet *)
+      (* | discriminate *)
       | contradiction
       | split ]
     | match goal with

@@ -555,6 +555,13 @@ Definition concat_AT {A : Type} (P : A -> Type) {x y : A} {p q : x = y}
     = transport2 P r z  @  ap (transport P q) s
   := match r with idpath => (concat_p1 _ @ (concat_1p _)^) end.
 
+(* TODO: What should this be called? *)
+Lemma ap_transport {A} {P Q : A -> Type} {x y : A} (p : x = y) (f : forall x, P x -> Q x) (z : P x) :
+  f y (p # z) = (p # (f x z)).
+Proof.
+  by induction p.
+Defined.
+
 
 (** *** Transporting in particular fibrations. *)
 
@@ -604,20 +611,34 @@ Definition inverse2 {A : Type} {x y : A} {p q : x = y} (h : p = q)
   : p^ = q^
   := match h with idpath => 1 end.
 
-(** *** Whiskering, a.k.a. cancellation laws *)
+(** *** Whiskering *)
 
 Definition whiskerL {A : Type} {x y z : A} (p : x = y) {q r : y = z} (h : q = r) : p @ q = p @ r
   :=
   1 @@ h.
-
-Notation cancelL := whiskerL (only parsing).
 
 Definition whiskerR {A : Type} {x y z : A} {p q : x = y} (h : p = q) (r : y = z) :
   p @ r = q @ r
   :=
   h @@ 1.
 
-Notation cancelR := whiskerR (only parsing).
+(** *** Unwhiskering, a.k.a. cancelling. *)
+
+Lemma cancelL {A} {x y z : A} (p : x = y) (q r : y = z) : (p @ q = p @ r) -> (q = r).
+Proof.
+  intro a.
+  destruct p.
+  destruct r.
+  exact ((concat_1p q)^ @ a).
+Defined.
+
+Lemma cancelR {A} {x y z : A} (p q : x = y) (r : y = z) : (p @ r = q @ r) -> (p = q).
+Proof.
+  intro a.
+  destruct r.
+  destruct p.
+  exact (a @ concat_p1 q).
+Defined.
 
 (** Whiskering and identity paths. *)
 

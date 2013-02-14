@@ -4,21 +4,12 @@
 Require Import Overture PathGroupoids Equivalences.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
+Generalizable Variables A.
 
 (** *** Eta conversion *)
 
 Definition eta_unit (z : unit) : tt = z
   := match z with tt => 1 end.
-
-(** *** Universal mapping property *)
-
-Instance isequiv_unit_rect `{Funext} (A : Type)
-  : IsEquiv (@unit_rect A)
-  := isequiv_adjointify _
-  (fun f : unit -> A => f tt)
-  (fun f : unit -> A => path_forall (unit_rect (f tt)) f
-                                    (fun x => match x with tt => 1 end))
-  (fun _ => 1).
 
 (** *** Paths *)
 
@@ -48,16 +39,49 @@ Instance isequiv_path_unit (z z' : unit) : IsEquiv (path_unit_uncurried z z').
   intros []; destruct z, z'; reflexivity.
 Defined.
 
-(** *** HLevel *)
+Definition equiv_path_unit (z z' : unit) : unit <~> (z = z')
+  := BuildEquiv _ _ (path_unit_uncurried z z') _.
 
+(** *** Transport *)
+
+(** Is a special case of transporting in a constant fibration. *)
+
+(** *** Universal mapping properties *)
+
+(* The positive universal property *)
+Instance isequiv_unit_rect `{Funext} (A : Type) : IsEquiv (@unit_rect A)
+  := isequiv_adjointify _
+  (fun f : unit -> A => f tt)
+  (fun f : unit -> A => path_forall (unit_rect (f tt)) f
+                                    (fun x => match x with tt => 1 end))
+  (fun _ => 1).
+
+(* The negative universal property *)
+Definition unit_corect {A : Type} : unit -> (A -> unit)
+  := fun _ _ => tt.
+
+Instance isequiv_unit_corect `{Funext} (A : Type) : IsEquiv (@unit_corect A)
+  := isequiv_adjointify _
+  (fun f => tt)
+  _ _.
+Proof.
+  - intro f. apply path_forall; intros x; apply path_unit.
+  - intro x; destruct x; reflexivity.
+Defined.
+
+Definition equiv_unit_corect `{Funext} (A : Type)
+  : unit <~> (A -> unit)
+  := BuildEquiv _ _ (@unit_corect A) _.
+
+(** *** Truncation *)
+
+(* The unit type is contractible *)
 Instance contr_unit : Contr unit := {
   center := tt;
   contr := fun t : unit => match t with tt => 1 end
 }.
 
 (** *** Equivalences *)
-
-Generalizable Variables A.
 
 (** A contractible type is equivalent to [unit]. *)
 Definition equiv_contr_unit `{Contr A} : A <~> unit.

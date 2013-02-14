@@ -64,7 +64,7 @@ Section IsEquivHomotopic.
     rewrite concat_p_pp, <- concat_Ap, concat_pp_p, <- concat_Ap.
     rewrite ap_V; apply moveL_Vp.
     rewrite <- ap_compose; unfold compose; rewrite (concat_A1p (eisretr f) (h a)).
-    apply cancelR, eisadj.
+    apply whiskerR, eisadj.
   Qed.
 
   (* It's unclear to me whether this should be a declared instance.  Will it cause the unifier to spin forever searching for homotopies? *)

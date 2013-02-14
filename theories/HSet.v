@@ -1,6 +1,6 @@
 (** * H-Set *)
 (* Bas: Quick fix, no consistent naming yet *)
-Require Import Overture Contractible Equivalences Trunc HProp types.Paths. Require Import types.Empty.
+Require Import Overture PathGroupoids Contractible Equivalences Trunc HProp types.Paths. Require Import types.Empty.
 Local Open Scope equiv_scope.
 
 (** ** Facts about [HSet] *)
@@ -98,31 +98,6 @@ Definition decidable_paths (A : Type) :=
    [Prop]-valued equality. *)
 Definition inl_injective {A B : Type} {x y : A} (p : inl B x = inl B y) : x = y :=
   (@transport _ (fun (s : A + B) => x = (match s with inl a => a | inr b => x end)) _ _ p (idpath x)).
- 
-(* Should be defined in terms of whisker and moved to PathGroupoids
-Should remove the notation cancelL from PathGroupoids*)
-Lemma cancel_L {A} {x y z : A} (p : x = y) (q r : y = z) : (p @ q = p @ r) -> (q = r).
-Proof.
-  intro a.
-  induction p.
-  induction r.
-  path_via (idpath x @ q).
-Defined.
-
-Require Import PathGroupoids.
-(* Should be renamed and moved to PathGroupoids.*)
-Lemma trans_is_concat {A} {x y z : A} (p : x = y) (q : y = z) :
-  (transport _ q p) = p @ q.
-Proof.
-  by induction p.
-Defined.
-(* Should be renamed and moved *)
-Lemma ap_transport {A} {P Q : A -> Type} {x y : A} (p : x = y) (f : forall x, P x -> Q x) (z : P x) :
-  f y (p # z) = (p # (f x z)).
-Proof.
-  by induction p.
-Defined.
-
 
 Theorem decidable_implies_axiomK {A : Type} : @decidable_paths A -> @axiomK A.
 Proof.
@@ -133,9 +108,9 @@ Proof.
   clearbody qp; revert qp.
   destruct q as [q | q'].
   intro qp0. 
-  apply (cancel_L q).
+  apply (cancelL q).
   path_via (transport _ p q). symmetry. 
-  apply trans_is_concat.
+  apply transport_paths_r.
   path_via q.
   set (qp1 :=  ap_transport p (fun y => @inl (x = y) (x = y -> Empty)) q).
   simpl in qp1.
