@@ -81,20 +81,6 @@ Proof.
   issig (BuildEquiv A B) (equiv_fun A B) (equiv_isequiv A B).
 Defined.
 
-(** Via [issig_contr] (using the [equiv_intro] tactic), we can transfer the problem of showing contractibility of [Contr A] to the equivalent problem of contractibility of a certain Sigma-type, in which case we can apply the general path-construction functions. *)
-
-Instance contr_contr `{Funext} (A : Type)
-  : Contr A -> Contr (Contr A).
-Proof.
-  intros c; exists c; generalize c.
-  equiv_intro (issig_contr A) c'.
-  equiv_intro (issig_contr A) d'.
-  refine (ap _ _).
-  refine (path_sigma _ _ _ ((contr (c'.1))^ @ contr (d'.1)) _).
-  refine (path_forall _ _ _); intros x.
-  apply path2_contr.
-Qed.
-
 (** Here is a version of the [issig] tactic for three-component records, which proves goals that look like
 
    { x : A & { y : B x & C x y } } <~> Some_Record.
