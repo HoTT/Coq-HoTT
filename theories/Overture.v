@@ -324,3 +324,13 @@ Ltac by_extensionality x :=
     end;
     simpl; auto with path_hints
   end.
+
+(* Removed auto. We can write "by (path_induction;auto with path_hints)"
+ if we want to.*)
+Ltac path_induction :=
+  intros; repeat progress (
+    match goal with
+      | [ p : _ = _  |- _ ] => induction p
+      | _ => idtac
+    end
+  ).
