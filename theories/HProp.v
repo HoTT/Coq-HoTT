@@ -1,7 +1,9 @@
 (** * HPropositions *)
 
-Require Import Overture Contractible Equivalences Trunc types.Forall.
+Require Import Overture Contractible Equivalences Trunc.
+Require Import types.Forall types.Sigma types.Record.
 Local Open Scope equiv_scope.
+Local Open Scope path_scope.
 
 (** ** Facts about [HProp] *)
 
@@ -30,15 +32,29 @@ Proof.
   apply contr_paths_contr.
 Defined.
 
-(** [is_trunc] is a proposition. *)
-Instance HProp_is_trunc `{Funext} (n : trunc_index) (A : Type)
+(** If a type is contractible, then so is its type of contractions.
+    Using [issig_contr] and the [equiv_intro] tactic, we can transfer this to the equivalent problem of contractibility of a certain Sigma-type, in which case we can apply the general path-construction functions. *)
+Instance contr_contr `{Funext} (A : Type)
+  : Contr A -> Contr (Contr A).
+Proof.
+  intros c; exists c; generalize c.
+  equiv_intro (issig_contr A) c'.
+  equiv_intro (issig_contr A) d'.
+  refine (ap _ _).
+  refine (path_sigma _ _ _ ((contr (c'.1))^ @ contr (d'.1)) _).
+  refine (path_forall _ _ _); intros x.
+  apply path2_contr.
+Qed.
+
+(** This provides the base case in a proof that truncatedness is a proposition. *)
+Instance HProp_trunc `{Funext} (n : trunc_index) (A : Type)
   : HProp (Trunc n A).
 Proof.
   apply HProp_inhabited_Contr.
   revert A.
   induction n as [| n I]; unfold Trunc; simpl.
   - intros A ?.
-    apply contr_Contr.
+    exact _.
   - intros A AH1.
     exists AH1.
     intro AH2.
@@ -109,7 +125,7 @@ Instance HProp_Contr `{Funext} (A : Type) : HProp (Contr A).
 Proof.
   apply HProp_inhabited_Contr.
   intro cA.
-  apply contr_Contr.
+  exact _.
 Defined.
 
 
