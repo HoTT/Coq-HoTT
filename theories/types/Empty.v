@@ -4,14 +4,6 @@
 Require Import Overture Contractible.
 Local Open Scope path_scope.
 
-Inductive Empty : Type := .
-
-Definition not (A:Type) : Type := A -> Empty.
-
-Notation "~ x" := (not x) : type_scope.
-
-Hint Unfold not: core.
-
 (** *** Unpacking *)
 (** *** Eta conversion *)
 (** *** Paths *)
