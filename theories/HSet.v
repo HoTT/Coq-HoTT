@@ -53,7 +53,7 @@ Defined.
 
 Instance Trunc_isprop `{E : Funext} {n A} : HProp (Trunc n A).
 Proof.
-  intros. Check contr_contr.
+  intros.
   apply inhabited_contr_isprop.
   apply hlevel_inhabited_contr.
 Defined.
