@@ -2,20 +2,60 @@
 Require Import Overture Contractible Equivalences Trunc HProp types.Paths types.Empty PathGroupoids.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
-(* Should be defined in terms of whisker and moved to PathGroupoids
-Should remove the notation cancelL from PathGroupoids*)
-Lemma cancel_L {A} {x y z : A} (p : x = y) (q r : y = z) : (p @ q = p @ r) -> (q = r).
-Proof.
-  intro a.
-  induction p.
-  induction r.
-  path_via (idpath x @ q).
-Defined.
-(* Should be renamed and moved *)
+(* Only  axiomK_idpath below is unfinished, the cancel_units tactic is missing *)
+(* Should be defined in terms of whisker and moved *)
+
+Require Import  types.Record FunextVarieties.
+(* A convenient tactic for using extensionality. *)
+Ltac by_extensionality :=
+  intros; unfold compose;
+  match goal with 
+  | [ |- ?f = ?g ] => eapply path_forall; intro;
+      match goal with
+        | [ |- forall (_ : prod _ _), _ ] => intros [? ?]
+        | [ |- forall (_ : sigT _ _), _ ] => intros [? ?]
+        | _ => intros
+    end;
+    simpl;
+    auto
+  end.
+
 Lemma ap_transport {A} {P Q : A -> Type} {x y : A} (p : x = y) (f : forall x, P x -> Q x) (z : P x) :
   f y (p # z) = (p # (f x z)).
 Proof.
   by induction p.
+Defined.
+
+Lemma trans_is_concat_opp {A} {x y z : A} (p : x = y) (q : x = z) :
+  (transport (fun x' => (x' = z)) p q) = p^ @ q.
+Proof.
+  induction p. by induction q.
+Defined.
+
+Definition Funext_implies_WeakFunext:Funext -> WeakFunext:=
+  (fun E=> (NaiveFunext_implies_WeakFunext (Funext_implies_NaiveFunext E))).
+
+Theorem hlevel_inhabited_contr `{E : Funext} {n X} : Trunc n X -> Contr (Trunc n X).
+Proof.
+  revert X. induction n.
+    intros X H. apply (@contr_Contr _ _ H).
+  simpl.
+  intros X H. set (wfunext:=(Funext_implies_WeakFunext E)).
+  do 2 (apply wfunext; intro).
+  by apply IHn.
+Defined.
+
+Instance inhabited_contr_isprop {A} : (A -> Contr A) -> HProp A.
+Proof.
+  intros H x.
+  apply (@contr_paths_contr _ (H x)).
+Defined.
+
+Instance Trunc_isprop `{E : Funext} {n A} : HProp (Trunc n A).
+Proof.
+  intros. Check contr_contr.
+  apply inhabited_contr_isprop.
+  apply hlevel_inhabited_contr.
 Defined.
 
 (** ** Facts about [HSet] *)
@@ -40,56 +80,30 @@ Defined.
 
 Context `{funext_dep:Funext}.
 
-(* A convenient tactic for using extensionality. *)
-Ltac by_extensionality :=
-  intros; unfold compose;
-  match goal with 
-  | [ |- ?f = ?g ] => eapply path_forall; intro;
-      match goal with
-        | [ |- forall (_ : prod _ _), _ ] => intros [? ?]
-        | [ |- forall (_ : sigT _ _), _ ] => intros [? ?]
-        | _ => intros
-    end;
-    simpl;
-    auto
-  end.
-
-(*
 Theorem isset_equiv_axiomK {A} :
   (is_trunc 0 A) <~> (forall (x : A) (p : x = x), p = idpath x).
 Proof.
   apply (equiv_adjointify (@isset_implies_axiomK A) (@axiomK_implies_isset A)).
-   intro H. by_extensionality. by_extensionality. eapply path_contr.
-(*  eapply (axiomK_implies_isset A H).*)
+   intro H. by_extensionality. by_extensionality. 
+    cut (Contr (x=x)). intro. eapply path_contr.
+     exists 1. intros. symmetry. apply H.
   intro H. by_extensionality.
   by_extensionality.
-  eapply allpath_HProp. (* apply prop_path.*)
-  apply isprop_isprop. (* should follow from a general lemma on truncations *)
+  eapply allpath_HProp.
 Defined.
-*)
 
-(*
 Instance axiomK_isprop A : HProp (axiomK A).
 Proof.
-  exists. apply @hlevel_equiv with (A := is_hset A).
-  apply isset_equiv_axiomK.
-  apply hlevel_isprop.
+  apply (trunc_equiv _ _ isset_equiv_axiomK). 
 Defined.
-*)
-(*
+
+
 Theorem set_path2 {A} `{HSet A} {x y : A} (p q : x = y):
   p = q.
 Proof.
-  set (@Contr_path _ p q).
-  cbv in H.
-  assert (P:=(p=q)).  Locate Contr_path.
-
-  apply prop_inhabited_contr.
-  cbv. cbv in H.
-  apply H.
-  assumption.
+  induction q.
+  apply (isset_implies_axiomK HSet0).
 Defined.
-*)
 
 (** Recall that axiom K says that any self-path is homotopic to the
    identity path.  In particular, the identity path is homotopic to
@@ -98,23 +112,27 @@ Defined.
    homotopy (whew!).  *)
 Local Open Scope path_scope.
 
-(* This proof is still broken 
+
+(* Unfinished
 Lemma axiomK_idpath {A} (x : A) (K : axiomK A) :
   K x (idpath x) = idpath (idpath x).
-Proof. 
+Proof.
   set (qq := apD (K x) (K x (idpath x))).
-  set (q2 := (trans_is_concat_opp (K x (idpath x)) (K x (idpath x)) @ qq)).
-  !
-  path_via (!! K x (idpath x)).
-  path_via (! idpath (idpath x)).
-  apply concat_cancel_right with (r := K x (idpath x)).
+  set (q2 := (@trans_is_concat_opp _ (K x (idpath x))) (K x (idpath x))^).  
+    (* this should be concatination with @ qq).*)
+  
+  path_via ((K x (idpath x))^^).
+  path_via (idpath (idpath x))^.
+  apply cancelR with (r := K x (idpath x)).
   cancel_units.
-Defined.*)
+Defined.
+*)
 
 (** Any type with "decidable equality" is a set. *)
-
+(* just to be sure that we have the right notation *)
+Notation "~ X":=(types.Empty.not X).
 Definition decidable_paths (A : Type) :=
-  forall (x y : A), (x = y) + ((x = y) -> Empty).
+  forall (x y : A), (x = y) + (~ (x = y)).
 
 (* Usually this lemma would be proved with [discriminate], but
    unfortunately that tactic is hardcoded to work only with Coq's
@@ -132,8 +150,8 @@ Proof.
   destruct q as [q | q'].
     intro qp0; apply (cancelL q). path_via (transport _ p q).
       symmetry; apply transport_paths_r.
-      path_via q. apply @inl_injective with (B := (x = x -> Empty)).
-      exact ((ap_transport p (fun y => @inl (x = y) (x = y -> Empty)) q) @ qp0).
+      path_via q. apply @inl_injective with (B := (~ x = x)).
+      exact ((ap_transport p (fun y => @inl (x = y) (~x = y)) q) @ qp0).
   induction (q' p).
 Defined.
 
