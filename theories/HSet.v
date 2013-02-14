@@ -130,7 +130,7 @@ Defined.
 
 (** Any type with "decidable equality" is a set. *)
 (* just to be sure that we have the right notation *)
-Notation "~ X":=(types.Empty.not X).
+
 Definition decidable_paths (A : Type) :=
   forall (x y : A), (x = y) + (~ (x = y)).
 
