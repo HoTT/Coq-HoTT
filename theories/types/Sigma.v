@@ -1,9 +1,11 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about Sigma-types (dependent sums) *)
 
-Require Import Overture PathGroupoids.
+Require Import Overture PathGroupoids Equivalences Contractible Trunc.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
+
+Generalizable Variables X A B f g n.
 
 (** In homotopy type theory, We think of elements of [Type] as spaces, homotopy types, or weak omega-groupoids. A type family [P : A -> Type] corresponds to a fibration whose base is [A] and whose fiber over [x] is [P x].
 
@@ -15,11 +17,17 @@ The base and fiber components of a point in the total space are extracted with t
 
 (** Sometimes we would like to prove [Q u] where [u : {x : A & P x}] by writing [u] as a pair [(projT1 u ; projT2 u)]. This is accomplished by [sigT_unpack]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
 
-Definition unpack_sigma {A : Type} {P : A -> Type} (Q : sigT P -> Type) (u : sigT P) :
+Definition unpack_sigma `{P : A -> Type} (Q : sigT P -> Type) (u : sigT P) :
   Q (projT1 u; projT2 u) -> Q u
   :=
   fun H =>
     (let (x,p) as u return (Q (projT1 u; projT2 u) -> Q u) := u in idmap) H.
+
+(** *** Eta conversion *)
+
+Definition eta_sigma `{P : A -> Type} (u : sigT P)
+  : (projT1 u; projT2 u) = u
+  := match u with existT x y => 1 end.
 
 (** *** Paths *)
 
@@ -48,7 +56,7 @@ Definition path_sigma {A : Type} (P : A -> Type) (u v : sigT P)
   : u = v
   := path_sigma_uncurried P u v (p;q).
 
-(** This version produces only paths between pairs, as opposed to paths between arbitrary inhabitants of dependent sum types.  But it has the advantage that the components of those pairs can more often be inferred. *)
+(** This version produces only paths between pairs, as opposed to paths between arbitrary inhabitants of dependent sum types.  But it has the advantage that the components of those pairs can more often be inferred, so we make them implicit arguments. *)
 Definition path_sigma' {A : Type} (P : A -> Type) {x x' : A} {y : P x} {y' : P x'}
   (p : x = x') (q : p # y = y')
   : (x;y) = (x';y')
@@ -57,51 +65,63 @@ Definition path_sigma' {A : Type} (P : A -> Type) {x x' : A} {y : P x} {y' : P x
 
 (** Projections of paths from a total space. *)
 
-Definition path_projT1 {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v) :
-  projT1 u = projT1 v
+Definition projT1_path `{P : A -> Type} {u v : sigT P} (p : u = v)
+  : u.1 = v.1
   :=
   ap (@projT1 _ _) p.
   (* match p with idpath => 1 end. *)
 
-Definition path_projT2 {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v) :
-  path_projT1 p # projT2 u = projT2 v
+Notation "p ..1" := (projT1_path p) (at level 3) : fibration_scope.
+
+Definition projT2_path `{P : A -> Type} {u v : sigT P} (p : u = v)
+  : p..1 # u.2 = v.2
   :=
   match p with idpath => 1 end.
 
+Notation "p ..2" := (projT2_path p) (at level 3) : fibration_scope.
 
-(** TEMPORARILY COMMENTED OUT. *)
+(** Now we show how these things compute. *)
 
-(* (** And these operations are inverses.  See [total_paths_equiv], later *)
-(*    on, for a more precise statement. *) *)
+Definition projT1_path_sigma `{P : A -> Type} {u v : sigT P}
+  (p : u.1 = v.1) (q : p # u.2 = v.2)
+  : (path_sigma _ _ _ p q)..1 = p.
+Proof.
+  destruct u as [u1 u2]; destruct v as [v1 v2]; simpl in *.
+  destruct p; simpl in q; destruct q; reflexivity.
+Defined.
 
-(* Lemma total_path_reconstruction {A : Type} {P : fibration A} {x y : total P} (p : x = y) : *)
-(*   total_path (fiber_path p) = p. *)
-(* Proof. *)
-(*   induction p. *)
-(*   destruct x. *)
-(*   auto. *)
-(* Defined. *)
+Definition projT2_path_sigma `{P : A -> Type} {u v : sigT P}
+  (p : u.1 = v.1) (q : p # u.2 = v.2)
+  : (path_sigma _ _ _ p q)..2
+    = ap (fun s => transport P s u.2) (projT1_path_sigma p q) @ q.
+Proof.
+  destruct u as [u1 u2]; destruct v as [v1 v2]; simpl in *.
+  destruct p; simpl in q; destruct q; reflexivity.
+Defined.
 
-(* Lemma base_total_path {A : Type} {P : fibration A} {x y : total P} *)
-(*   {p : pr1 x = pr1 y} (q : p # (pr2 x) = pr2 y) : *)
-(*   (base_path (total_path q)) = p. *)
-(* Proof. *)
-(*   destruct x as [x H]. destruct y as [y K]. *)
-(*   simpl in p. induction p. simpl in q. induction q. *)
-(*   auto. *)
-(* Defined. *)
+Definition eta_path_sigma `{P : A -> Type} {u v : sigT P} (p : u = v)
+  : path_sigma _ _ _ (p..1) (p..2) = p.
+Proof.
+  destruct p. destruct u. reflexivity.
+Defined.
 
-(* Lemma fiber_total_path (A : Type) (P : fibration A) (x y : total P) *)
-(*   (p : pr1 x = pr1 y) (q : transport p (pr2 x) = pr2 y) : *)
-(*   transport (P := fun p' : pr1 x = pr1 y => p' # (pr2 x) = pr2 y) *)
-(*   (base_total_path q) (fiber_path (total_path q)) *)
-(*   = q. *)
-(* Proof. *)
-(*   destruct x as [x H]. destruct y as [y K]. *)
-(*   simpl in p. induction p. simpl in q. induction q. *)
-(*   auto. *)
-(* Defined. *)
+(** This lets us identify the path space of a sigma-type, up to equivalence. *)
 
+Instance isequiv_path_sigma `{P : A -> Type} {u v : sigT P}
+  : IsEquiv (path_sigma_uncurried P u v).
+  refine (isequiv_adjointify _
+    (fun r => (existT (fun p : u.1 = v.1 => p # u.2 = v.2) r..1 r..2))
+    eta_path_sigma
+    _).
+  destruct u as [u1 u2]; destruct v as [v1 v2]; intros [p q].
+  simpl in p, q.
+  destruct p; simpl in q.
+  destruct q; reflexivity.
+Defined.
+
+Definition equiv_path_sigma `{P : A -> Type} {u v : sigT P}
+  : {p : u.1 = v.1 &  p # u.2 = v.2} <~> (u = v)
+  := BuildEquiv _ _ (path_sigma_uncurried P u v) _.
 
 (** *** Transport *)
 
@@ -128,45 +148,117 @@ Defined.
 
 (** *** Functorial action *)
 
+Definition functor_sigma `{P : A -> Type} `{Q : B -> Type}
+  (f : A -> B) (g : forall a, P a -> Q (f a))
+  : sigT P -> sigT Q
+  := fun u => (f u.1 ; g u.1 u.2).
+
+Definition ap_functor_sigma `{P : A -> Type} `{Q : B -> Type}
+  (f : A -> B) (g : forall a, P a -> Q (f a))
+  (u v : sigT P) (p : u.1 = v.1) (q : p # u.2 = v.2)
+  : ap (functor_sigma f g) (path_sigma P u v p q)
+  = path_sigma Q (functor_sigma f g u) (functor_sigma f g v)
+               (ap f p)
+               ((transport_compose Q f p (g u.1 u.2))^
+               @ (@ap_transport _ P (fun x => Q (f x)) _ _ p g u.2)^
+               @ ap (g v.1) q).
+Proof.
+  destruct u as [u1 u2]; destruct v as [v1 v2]; simpl in p, q.
+  destruct p; simpl in q.
+  destruct q.
+  reflexivity.
+Defined.
+
 (** *** Equivalences *)
 
-(** *** H-Level *)
-
-(*
-(** Props are closed under sums (with prop base) and arbitrary
-   dependent products. *)
-
-Definition sum_isprop X (P : X -> Type) :
-  is_prop X -> (forall x, is_prop (P x)) -> is_prop (sigT P).
+Instance isequiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
+  `{IsEquiv A B f} `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
+  : IsEquiv (functor_sigma f g).
 Proof.
-  intros Xp Pp.
-  apply allpath_prop.
-  intros [x p] [y q].
-  apply @total_path with (prop_path Xp x y).
-  apply prop_path, Pp.
-Defined.
-*)
+  refine (isequiv_adjointify (functor_sigma f g)
+    (functor_sigma (f^-1)
+      (fun x y => ((g (f^-1 x))^-1 ((eisretr f x)^ # y)))) _ _);
+  intros [x y].
+  - refine (path_sigma' _ (eisretr f x) _); simpl.
+    rewrite (eisretr (g (f^-1 x))).
+    apply transport_pV.
+  - refine (path_sigma' _ (eissect f x) _); simpl.
+    refine ((ap_transport (eissect f x) (fun x' => (g x') ^-1)
+              (transport Q (eisretr f (f x)) ^ (g x y)))^ @ _).
+    rewrite transport_compose, eisadj, transport_pV.
+    apply eissect.
+Qed.
 
-(** And by dependent sums *)
+Definition equiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
+  `{IsEquiv A B f} `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
+  : sigT P <~> sigT Q
+  := BuildEquiv _ _ (functor_sigma f g) _.
 
-(*
-Definition total_hlevel: forall n A (P : A -> Type),
-  is_hlevel n A -> (forall a, is_hlevel n (P a)) ->
-  is_hlevel n (sigT P).
+(** *** Universal mapping properties *)
+
+(* The positive universal property. *)
+Instance isequiv_sigT_rect `{Funext} `{P : A -> Type}
+  (Q : sigT P -> Type)
+  : IsEquiv (sigT_rect Q)
+  := isequiv_adjointify (sigT_rect Q)
+  (fun f x y => f (x;y))
+  _ _.
 Proof.
-  intros n; induction n.
-  intros A P [a ac] Pc.
-  exists (a; pr1 (Pc a)).
-  intros [a' p'].
-  apply @total_path with (ac a').
-  apply contr_path; apply (Pc a).
-  intros A P Ah Ph [a1 p1] [a2 p2].
-  apply @hlevel_equiv with
-    (A := {p : a1 = a2 & transport p p1 = p2}).
-  apply equiv_inverse, total_paths_equiv.
-  apply IHn.
-  apply Ah.
-  intros p; apply (Ph a2).
+  - intros f; apply path_forall; intros [x y].
+    reflexivity.
+  - intros f; apply path_forall; intros x; apply path_forall; intros y.
+    reflexivity.
 Defined.
 
-*)
+Definition equiv_sigT_rect `{Funext} `{P : A -> Type}
+  (Q : sigT P -> Type)
+  : (forall (x:A) (y:P x), Q (x;y)) <~> (forall xy, Q xy)
+  := BuildEquiv _ _ (sigT_rect Q) _.
+
+(* The negative universal property. *)
+
+Definition sigT_corect_uncurried
+  `{A : X -> Type} (P : forall x, A x -> Type)
+  : { f : forall x, A x & forall x, P x (f x) }
+     -> (forall x, sigT (P x))
+  := fun fg => let (f,g) := fg in fun x => (f x ; g x).
+
+Definition sigT_corect
+  `{A : X -> Type} (P : forall x, A x -> Type)
+  (f : forall x, A x) (g : forall x, P x (f x))
+  : (forall x, sigT (P x))
+  := sigT_corect_uncurried P (f;g).
+
+Instance isequiv_sigT_corect `{Funext}
+  `{A : X -> Type} {P : forall x, A x -> Type}
+  : IsEquiv (sigT_corect_uncurried P)
+  := isequiv_adjointify (sigT_corect_uncurried P)
+  (fun h => existT (fun f => forall x, P x (f x))
+    (fun x => (h x).1) (fun x => (h x).2))
+  _ _.
+Proof.
+  - intros h; apply path_forall; intros x; simpl.
+    apply eta_sigma.
+  - intros [f g]; simpl; reflexivity.
+Defined.
+
+Definition equiv_sigT_corect `{Funext}
+  `{A : X -> Type} {P : forall x, A x -> Type}
+  : { f : forall x, A x & forall x, P x (f x) }
+     <~> (forall x, sigT (P x))
+  := BuildEquiv _ _ (sigT_corect_uncurried P) _.
+
+(** *** Sigmas preserve truncation *)
+
+Instance Trunc_sigma `{P : A -> Type}
+  `{Trunc n A} `{forall a, Trunc n (P a)}
+  : Trunc n (sigT P).
+Proof.
+  generalize dependent A.
+  induction n; simpl; intros A P ac Pc.
+  - exists (center A; center (P (center A))).
+    intros [a ?].
+    refine (path_sigma' P (contr a) (path_contr _ _)).
+  - intros u v.
+    refine (trunc_equiv _ _ (path_sigma_uncurried P u v)).
+Defined.
