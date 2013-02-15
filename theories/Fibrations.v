@@ -108,10 +108,5 @@ Lemma trans_paths A B (f g : A -> B) (x y : A) (p : x = y) (q : f x = g x) :
   =
   (ap f p)^ @ q @ ap g p.
 Proof.
-  path_induction.
-  (* should be completed with  hott_simpl. *)
-  path_via q. path_via (((ap f 1) ^) @ (q @ ap g 1)).
-  apply moveL_Vp.
-  path_via (1@q). symmetry. path_via (q@1).
-  path_via q.
+  path_induction. hott_simpl.
 Defined.

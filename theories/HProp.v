@@ -132,12 +132,10 @@ Defined.
 
 
 (** Being an equivalence is a prop. *)
-
-(*
-
+(* Should we need the record tactics?
 Instance HProp_IsEquiv (X Y : Type) (f: X -> Y) : HProp (IsEquiv f).
-Proof.
-  apply forall_isprop. intros y.
+Proof. 
+  apply HProp_forall. intros y.
   apply iscontr_isprop.
 Defined.
 *)
