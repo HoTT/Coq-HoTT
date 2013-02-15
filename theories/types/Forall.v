@@ -15,14 +15,19 @@ This equivalence, however, is just the combination of [apD10] and function exten
 (** Now we show how these things compute. *)
 
 Definition apD10_path_forall `{Funext} {A : Type} {P : A -> Type}
-    (f g : forall x, P x) (h : f == g) :
-  apD10 (path_forall _ _ h) = h
-  := eisretr apD10 h.
+    (f g : forall x, P x) (h : f == g)
+  : apD10 (path_forall _ _ h) = h
+:= eisretr apD10 h.
 
 Definition eta_path_forall `{Funext} {A : Type} {P : A -> Type}
-    (f g : forall x, P x) (p : f = g) :
-  path_forall _ _ (apD10 p) = p
-  := eissect apD10 p.
+    (f g : forall x, P x) (p : f = g)
+  : path_forall _ _ (apD10 p) = p
+:= eissect apD10 p.
+
+Definition path_forall_1 `{Funext} {A : Type} {P : A -> Type}
+    (f : forall x, P x)
+  : (path_forall f f (fun x => 1)) = 1
+:= eta_path_forall f f 1.
 
 (** The identification of the path space of a dependent function space, up to equivalence, is of course just funext. *)
 
@@ -68,7 +73,12 @@ Definition ap_functor_forall `{Funext} {A : Type} {P : A -> Type} {B : Type} {Q 
   : ap (functor_forall f0 f1) (path_forall _ _ h)
     = path_forall _ _ (fun b:B => (ap (f1 b) (h (f0 b)))). 
 Proof.
-  
+  revert h.  equiv_intro (@apD10 A P g g') h.
+  destruct h.  simpl.
+  path_via (idpath (functor_forall f0 f1 g)).
+  exact (ap (ap (functor_forall f0 f1)) (path_forall_1 g)).
+  symmetry.  apply path_forall_1.
+Defined.
 
 (** *** Equivalences *)
 
