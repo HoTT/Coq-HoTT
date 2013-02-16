@@ -84,3 +84,32 @@ Defined.
 
 
 (** *** HLevels *)
+
+
+(** *** Misc *)
+
+(** TODO: move to [Equivalences.v].
+    TODO: add injectivity as a property of functions?
+    (Note: was used in an earlier version of [isequiv_flip]; no longer needed here, but a useful lemma nonetheless. *)
+Definition equiv_inj {A B:Type} (e : A -> B) `{IsEquiv A B e} {x y : A}
+  : (e x = e y) -> x = y
+:= (fun (p : e x = e y) =>
+  (eissect e x)^ @ ap (e ^-1) p @ eissect e y).
+
+(** Using the standard Haskell name for this, as it’s a handy utility function. 
+
+Note: not sure if [P] will usually be deducible, or whether it would be better explicit. *)
+Definition flip {A B : Type} {P : A -> B -> Type}
+  : (forall a b, P a b) -> (forall b a, P a b)
+:= fun f b a => f a b.
+
+Instance isequiv_flip `{Funext} {A B : Type} {P : A -> B -> Type}
+  : IsEquiv (@flip _ _ P).
+Proof.
+  set (flip_P := @flip _ _ P).
+  set (flip_P_inv := @flip _ _ (flip P)).
+  set (flip_P_is_sect := (fun f => 1) : Sect flip_P flip_P_inv).
+  set (flip_P_is_retr := (fun g => 1) : Sect flip_P_inv flip_P).
+  exists flip_P_inv flip_P_is_retr flip_P_is_sect.
+  intro g.  exact 1.
+Defined.
