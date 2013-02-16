@@ -83,7 +83,47 @@ Defined.
 (** *** Equivalences *)
 
 
-(** *** HLevels *)
+(** *** Truncatedness: any dependent product of n-types is an n-type *)
+
+Instance Contr_forall `{Funext}
+  {A : Type} {P : A -> Type} `{forall a, Contr (P a)}
+  : Contr (forall a, P a).
+Proof.
+  exists (fun a => center (P a)).  
+  intro f.  apply path_forall.  intro a.  apply contr.
+Defined.
+
+(** TODO: prove and move. *)
+Lemma Trunc_resp_equiv {n} {A B} (e : A -> B) `{IsEquiv A B e} `{Trunc  n A}
+  : Trunc n B.
+Admitted.
+
+Instance Trunc_forall `{Funext}
+  {A : Type} {P : A -> Type}
+  {n : trunc_index} `{forall a, Trunc n (P a)}
+  : Trunc n (forall a, P a).
+Proof.
+  generalize dependent P.  induction n as [ | n' IH].
+  (* case [n = -2], i.e. contractibility *)
+    simpl.  intros P P_contr.  apply Contr_forall.
+  (* case n = trunc_S n' *)
+  intros P P_trunc.   simpl.  intros f g.
+  assert (Trunc n' (f == g)).
+    apply IH.  intro a.  apply (P_trunc a).
+  apply (Trunc_resp_equiv (apD10 ^-1)).
+Defined.
+
+Proof.
+  generalize dependent B; generalize dependent A.
+  induction n as [| n I]; simpl; intros A ? B ?.
+  exists (center A, center B).
+    intros z; apply path_prod; apply contr.
+  intros x y.
+    exact (trunc_equiv _ _ (equiv_path_prod x y)).
+Defined.
+
+Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B)
+  := @Trunc_prod minus_two A CA B CB.
 
 
 (** *** Misc *)
