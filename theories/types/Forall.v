@@ -93,10 +93,48 @@ Proof.
   intro f.  apply path_forall.  intro a.  apply contr.
 Defined.
 
-(** TODO: prove and move. *)
+(** TODO: move to [Equivalences.v].
+    TODO: define injectivity as a property of functions? *)
+Definition equiv_inj {A B:Type} (e : A -> B) `{IsEquiv A B e} {x y : A}
+  : (e x = e y) -> x = y
+:= (fun (p : e x = e y) =>
+  (eissect e x)^ @ ap (e ^-1) p @ eissect e y).
+
+(** TODO: move. *)
 Instance ap_equiv {A B} (e : A -> B) `{IsEquiv A B e} (x y:A)
   : IsEquiv (@ap _ _ e x y).
-Admitted.
+Proof.    
+  apply isequiv_adjointify with (equiv_inj e).
+  (* eisretr *)
+  intro p.  unfold equiv_inj.
+  path_via (ap e ((eissect e x) ^ @ ap e ^-1 p) @ ap e (eissect e y)).
+    apply ap_pp.
+  path_via ((ap e (eissect e x) ^ @ ap e (ap e ^-1 p)) @ ap e (eissect e y)).  
+    apply (ap (fun q => q @ ap e (eissect e y))).  apply ap_pp.
+  path_via (ap e (eissect e x) ^ @ (ap e (ap e ^-1 p) @ ap e (eissect e y))).  
+  path_via (ap e (eissect e x) ^ @ ((eisretr e (e x)) @ p)).  apply ap.
+    path_via (ap e (ap e ^-1 p) @ (eisretr e (e y))).  
+      apply ap.  symmetry.  apply eisadj.
+    path_via (ap (compose e (e ^-1)) p @ (eisretr e (e y))).  
+      apply (ap (fun q => q @ (eisretr e (e y)))).
+      symmetry.  apply (@ap_compose _ _ _ (e ^-1) e).
+    path_via (eisretr e (e x) @ (ap (idmap) p)).
+      apply (concat_Ap (eisretr e)).
+    apply ap.  apply ap_idmap.
+  path_via ((ap e (eissect e x) ^ @ eisretr e (e x)) @ p).
+  path_via (1 @ p).
+  apply (ap (fun q => q @ p)).
+  path_via (ap e (eissect e x) ^ @ ap e (eissect e x)). 
+    apply ap.  apply eisadj.
+  path_via (ap e ((eissect e x) ^ @ eissect e x)).
+    symmetry.  apply ap_pp. 
+  change (idpath (e x)) with (ap e (idpath x)).  apply ap.  apply concat_Vp.
+  (* eissect *)
+  intro p.  destruct p.  unfold equiv_inj.  simpl.
+  path_via ((eissect e x)^ @ eissect e x).
+    apply (ap (fun p => p @ eissect e x)).  apply concat_p1. 
+  apply concat_Vp.
+Defined.
 
 (** TODO: move. *)
 Definition Trunc_resp_equiv {n} {A B} (e : A -> B) `{IsEquiv A B e}
@@ -131,14 +169,6 @@ Defined.
 
 
 (** *** Misc *)
-
-(** TODO: move to [Equivalences.v].
-    TODO: add injectivity as a property of functions?
-    (Note: was used in an earlier version of [isequiv_flip]; no longer needed here, but a useful lemma nonetheless. *)
-Definition equiv_inj {A B:Type} (e : A -> B) `{IsEquiv A B e} {x y : A}
-  : (e x = e y) -> x = y
-:= (fun (p : e x = e y) =>
-  (eissect e x)^ @ ap (e ^-1) p @ eissect e y).
 
 (** Using the standard Haskell name for this, as it’s a handy utility function. 
 
