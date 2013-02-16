@@ -94,9 +94,25 @@ Proof.
 Defined.
 
 (** TODO: prove and move. *)
-Lemma Trunc_resp_equiv {n} {A B} (e : A -> B) `{IsEquiv A B e} `{Trunc  n A}
-  : Trunc n B.
+Instance ap_equiv {A B} (e : A -> B) `{IsEquiv A B e} (x y:A)
+  : IsEquiv (@ap _ _ e x y).
 Admitted.
+
+(** TODO: move. *)
+Definition Trunc_resp_equiv {n} {A B} (e : A -> B) `{IsEquiv A B e}
+  `{Trunc  n A}
+  : Trunc n B.
+Proof.
+  generalize dependent B; generalize dependent A.
+  induction n as [ | n' IH]; simpl in *.
+  (* case [n = -2], i.e. contractibility *)
+    intros A A_trunc B e e_is_eq.  apply Contr_equiv_contr.
+  (* case n = trunc_S n' *)
+    intros A A_trunc B e e_is_eq.
+    equiv_intro e x.  equiv_intro e y.
+    apply (IH (x = y) (A_trunc x y) (e x = e y) (ap e)). 
+    apply ap_equiv; assumption.
+Defined.
 
 Instance Trunc_forall `{Funext}
   {A : Type} {P : A -> Type}
@@ -112,18 +128,6 @@ Proof.
     apply IH.  intro a.  apply (P_trunc a).
   apply (Trunc_resp_equiv (apD10 ^-1)).
 Defined.
-
-Proof.
-  generalize dependent B; generalize dependent A.
-  induction n as [| n I]; simpl; intros A ? B ?.
-  exists (center A, center B).
-    intros z; apply path_prod; apply contr.
-  intros x y.
-    exact (trunc_equiv _ _ (equiv_path_prod x y)).
-Defined.
-
-Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B)
-  := @Trunc_prod minus_two A CA B CB.
 
 
 (** *** Misc *)
