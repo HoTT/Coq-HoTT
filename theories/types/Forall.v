@@ -6,6 +6,8 @@ Require Import Overture PathGroupoids Contractible Equivalences.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
+Generalizable Variables X A B f g n.
+
 (** *** Paths *)
 
 (** Paths [p : f = g] in a function type [forall x:X, P x] are equivalent to functions taking values in path types, [H : forall x:X, f x = g x], or concisely, [H : f == g].
@@ -82,6 +84,32 @@ Defined.
 
 (** *** Equivalences *)
 
+Instance isequiv_functor_forall `{Funext}
+  `{P : A -> Type} `{Q : B -> Type}
+  `{IsEquiv B A f} `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
+  : IsEquiv (functor_forall f g).
+Proof.
+  refine (isequiv_adjointify (functor_forall f g)
+    (functor_forall (f^-1)
+      (fun (x:A) (y:Q (f^-1 x)) => eisretr f x # (g (f^-1 x))^-1 y
+      )) _ _);
+  intros h.
+  - apply path_forall; intros b; unfold functor_forall.
+    rewrite eisadj.
+    rewrite <- transport_compose.
+    rewrite ap_transport.
+    rewrite eisretr.
+    apply apD.
+  - apply path_forall; intros a; unfold functor_forall.
+    rewrite eissect.
+    apply apD.
+Qed.
+
+Definition equiv_functor_forall `{Funext}
+  `{P : A -> Type} `{Q : B -> Type}
+  `{IsEquiv B A f} `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
+  : (forall a, P a) <~> (forall b, Q b)
+  := BuildEquiv _ _ (functor_forall f g) _.
 
 (** *** Truncatedness: any dependent product of n-types is an n-type *)
 
