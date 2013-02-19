@@ -53,3 +53,8 @@ Instance isequiv_ap `{IsEquiv A B f} (x y : A)
 Definition equiv_ap `{IsEquiv A B f} (x y : A)
   : (x = y) <~> (f x = f y)
   := BuildEquiv _ _ (ap f) _.
+
+(* TODO: Is this really necessary? *)
+Definition equiv_inj `{IsEquiv A B f} {x y : A}
+  : (f x = f y) -> (x = y)
+  := (ap f)^-1.
