@@ -33,6 +33,10 @@ Notation "x .2" := (projT2 x) (at level 3) : fibration_scope.
 Definition compose {A B C : Type} (g : B -> C) (f : A -> B) :=
   fun x => g (f x).
 
+Hint Unfold compose.
+
+Notation "g 'o' f" := (compose g f) (at level 40, left associativity).
+
 (** ** The groupoid structure of identity types. *)
 
 (** The results in this file are used everywhere else, so we need to be extra careful about how we define and prove things.  We prefer hand-written terms, or at least tactics that allow us to retain clear control over the proof-term produced. *)
