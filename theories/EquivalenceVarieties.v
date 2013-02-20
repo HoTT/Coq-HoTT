@@ -122,19 +122,19 @@ Proof.
   apply @contr_prod.
     (* The following equivalence changes homotopies into paths. *)
   - pose (E := @equiv_functor_sigma' _ _ _
-      (fun g => compose g f = idmap)
+      (fun g => g o f = idmap)
       (equiv_idmap (B -> A))
-      (fun g => equiv_path_forall (compose g f) idmap)).
+      (fun g => equiv_path_forall (g o f) idmap)).
     (* Since [f] is an equivalence, so is precomposing with it.  Thus, precomposing with [f] is also a contractible map. *)
-    pose (C := (equiv_fcontr_isequiv (fun g:B->A => compose g f))^-1 _).
+    pose (C := (equiv_fcontr_isequiv (fun g:B->A => g o f))^-1 _).
     (* But after applying [E^-1], we are left with just a homotopy fiber of precomposition with [f]. *)
     by apply (@Contr_equiv_contr _ _ E^-1 _ (C idmap)).
   (* The other half is similar. *)
   - pose (E := @equiv_functor_sigma' _ _ _
-      (fun g => compose f g = idmap)
+      (fun g => f o g = idmap)
       (equiv_idmap (B -> A))
-      (fun g => equiv_path_forall (compose f g) idmap)).
-    pose (C := (equiv_fcontr_isequiv (fun g:B->A => compose f g))^-1 _).
+      (fun g => equiv_path_forall (f o g) idmap)).
+    pose (C := (equiv_fcontr_isequiv (fun g:B->A => f o g))^-1 _).
     by apply (@Contr_equiv_contr _ _ E^-1 _ (C idmap)).
 Defined.
 
