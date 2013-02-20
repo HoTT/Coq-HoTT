@@ -102,9 +102,16 @@ Proof.
 Qed.
 
 Definition equiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
-  `{IsEquiv B A f} `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
+  (f : B -> A) `{IsEquiv B A f}
+  (g : forall b, P (f b) -> Q b)
+  `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
   : (forall a, P a) <~> (forall b, Q b)
   := BuildEquiv _ _ (functor_forall f g) _.
+
+Definition equiv_functor_forall' `{P : A -> Type} `{Q : B -> Type}
+  (f : B <~> A) (g : forall b, P (f b) <~> Q b)
+  : (forall a, P a) <~> (forall b, Q b)
+  := equiv_functor_forall f g.
 
 (** *** Truncatedness: any dependent product of n-types is an n-type *)
 
