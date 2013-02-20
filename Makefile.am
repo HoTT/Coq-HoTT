@@ -130,5 +130,9 @@ TAGS : $(TAGS_FILES) Makefile
 $(DEPFILES) $(STDDEPFILES) : %.d : %.v
 	$(COQDEP) -nois -coqlib $(srcdir)/coq -R theories HoTT -R coq/theories Coq $< >$@
 
+clean:
+	rm -f $(CLEANFILES)
+	find coq/theories theories -name \*.vo -o -name \*.glob | xargs rm -f
+
 -include $(DEPFILES) $(STDDEPFILES)
 

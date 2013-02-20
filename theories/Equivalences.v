@@ -16,7 +16,7 @@ Instance isequiv_idmap (A : Type) : IsEquiv idmap :=
 
 Definition equiv_idmap (A : Type) : A <~> A := BuildEquiv A A idmap _.
 
-Instance Reflexive_equiv : Reflexive Equiv := equiv_idmap.
+Instance reflexive_equiv : Reflexive Equiv := equiv_idmap.
 
 (** The composition of equivalences is an equivalence. *)
 Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
@@ -42,7 +42,7 @@ Definition equiv_compose {A B C : Type} (g : B -> C) (f : A -> B)
   := BuildEquiv A C (compose g f) _.
 
 (* The TypeClass [Transitive] has a different order of parameters than [equiv_compose].  Thus in declaring the instance we have to switch the order of arguments. *)
-Instance Transitive_equiv : Transitive Equiv :=
+Instance transitive_equiv : Transitive Equiv :=
   fun _ _ _ f g => equiv_compose g f.
 
 
@@ -126,7 +126,7 @@ Proof.
   apply isequiv_inverse.
 Defined.
 
-Instance Symmetric_equiv : Symmetric Equiv := equiv_inverse.
+Instance symmetric_equiv : Symmetric Equiv := equiv_inverse.
 
 
 (** If [g \o f] and [f] are equivalences, so is [g]. *)

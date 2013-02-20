@@ -50,7 +50,7 @@ Arguments paths_rect [A] a P f y p.
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
 
-Instance Reflexive_paths {A} : Reflexive (@paths A) := @idpath A.
+Instance reflexive_paths {A} : Reflexive (@paths A) := @idpath A.
 
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
 
@@ -65,7 +65,7 @@ Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments concat {A x y z} p q : simpl nomatch.
 
-Instance Transitive_paths {A} : Transitive (@paths A) := @concat A.
+Instance transitive_paths {A} : Transitive (@paths A) := @concat A.
 
 (** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
@@ -74,7 +74,7 @@ Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
 (** Declaring this as [simpl nomatch] prevents the tactic [simpl] from expanding it out into [match] statements.  We only want [inverse] to simplify when applied to an identity path. *)
 Arguments inverse {A x y} p : simpl nomatch.
 
-Instance Symmetric_paths {A} : Symmetric (@paths A) := @inverse A.
+Instance symmetric_paths {A} : Symmetric (@paths A) := @inverse A.
 
 
 (** Note that you can use the built-in Coq tactics "reflexivity" and "transitivity" when working with paths, but not "symmetry", because it is too smart for its own good.  But you can say "apply symmetry" instead.   *)
@@ -238,20 +238,20 @@ Fixpoint nat_to_trunc_index (n : nat) : trunc_index
 
 Coercion nat_to_trunc_index : nat >-> trunc_index.
 
-Fixpoint is_trunc (n : trunc_index) (A : Type) : Type :=
+Fixpoint IsTrunc_internal (n : trunc_index) (A : Type) : Type :=
   match n with
     | minus_two => Contr A
-    | trunc_S n' => forall (x y : A), is_trunc n' (x = y)
+    | trunc_S n' => forall (x y : A), IsTrunc_internal n' (x = y)
   end.
 
-Arguments is_trunc n A : simpl nomatch.
+Arguments IsTrunc_internal n A : simpl nomatch.
 
-Class Trunc (n : trunc_index) (A : Type) : Type :=
-  Trunc_is_trunc : is_trunc n A.
+Class IsTrunc (n : trunc_index) (A : Type) : Type :=
+  Trunc_is_trunc : IsTrunc_internal n A.
 
-Notation HProp := (Trunc (trunc_S minus_two)).
+Notation IsHProp := (IsTrunc (trunc_S minus_two)).
 
-Notation HSet := (Trunc 0).
+Notation IsHSet := (IsTrunc 0).
 
 (** *** Function extensionality *)
 

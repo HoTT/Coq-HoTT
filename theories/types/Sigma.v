@@ -250,9 +250,9 @@ Definition equiv_sigT_corect `{Funext}
 
 (** *** Sigmas preserve truncation *)
 
-Instance Trunc_sigma `{P : A -> Type}
-  `{Trunc n A} `{forall a, Trunc n (P a)}
-  : Trunc n (sigT P).
+Instance trunc_sigma `{P : A -> Type}
+  `{IsTrunc n A} `{forall a, IsTrunc n (P a)}
+  : IsTrunc n (sigT P).
 Proof.
   generalize dependent A.
   induction n; simpl; intros A P ac Pc.
