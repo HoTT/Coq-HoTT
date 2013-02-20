@@ -44,12 +44,7 @@ Arguments sigT (A P)%type.
 Arguments sigT2 (A P Q)%type.
 
 Notation  ex_intro := existT (only parsing).
-Notation "{ x : A  & P }" := (sigT (fun x:A => P)) : type_scope.
-Notation "{ x : A  & P  & Q }" := (sigT2 (fun x:A => P) (fun x:A => Q)) :
-  type_scope.
-(* Notation "{ x & P }" := (sigT (fun x:_ => P)) : type_scope. *)
-(* Notation "{ x & P  & Q }" := (sigT2 (fun x:_ => P) (fun x:A => Q)) : *)
-(*   type_scope. *)
+
 Notation "{ x | P }" := (sigT (fun x => P)) : type_scope.
 Notation "{ x | P & Q }" := (sigT2 (fun x => P) (fun x => Q)) : type_scope.
 Notation "{ x : A | P }" := (sigT (fun x:A => P)) : type_scope.
@@ -72,6 +67,13 @@ Notation "'exists2' x : t , p & q" := (sigT2 (fun x:t => p) (fun x:t => q))
 (* Definition sig := sigT.  (* (only parsing). *) *)
 (* Notation sig2 := (@sigT2 _) (only parsing). *)
 (* Notation exist2 := (@existT2 _) (only parsing). *)
+
+Notation "{ x : A  & P }" := (sigT (fun x:A => P)) : type_scope.
+Notation "{ x : A  & P  & Q }" := (sigT2 (fun x:A => P) (fun x:A => Q)) :
+  type_scope.
+(* Notation "{ x & P }" := (sigT (fun x:_ => P)) : type_scope. *)
+(* Notation "{ x & P  & Q }" := (sigT2 (fun x:_ => P) (fun x:A => Q)) : *)
+(*   type_scope. *)
 
 Add Printing Let sigT.
 Add Printing Let sigT2.
