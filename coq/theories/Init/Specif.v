@@ -126,6 +126,7 @@ Section Choice_lemmas.
     intro z; destruct (H z); assumption.
   Defined.
 
+(*
   Lemma bool_choice :
    (forall x:S, (R1 x) + (R2 x)) ->
      {f:S -> bool & forall x:S, (f x = true) * (R1 x) + (f x = false) * R2 x}.
@@ -134,6 +135,7 @@ Section Choice_lemmas.
     exists (fun z:S => if H z then true else false).
     intro z; destruct (H z); auto.
   Defined.
+*)
 
 End Choice_lemmas.
 

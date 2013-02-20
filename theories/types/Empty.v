@@ -20,7 +20,7 @@ Instance contr_from_Empty {_ : Funext} (A : Type) :
 
 (** *** Behavior with respect to truncation *)
 
-Instance hprop_Empty : HProp Empty.
+Instance hprop_Empty : IsHProp Empty.
 Proof. intro x. destruct x. Defined.
 
 (** *** Paths *)

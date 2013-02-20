@@ -115,15 +115,15 @@ Definition equiv_functor_forall' `{P : A -> Type} `{Q : B -> Type}
 
 (** *** Truncatedness: any dependent product of n-types is an n-type *)
 
-Instance Contr_forall `{P : A -> Type} `{forall a, Contr (P a)}
+Instance contr_forall `{P : A -> Type} `{forall a, Contr (P a)}
   : Contr (forall a, P a).
 Proof.
   exists (fun a => center (P a)).
   intro f.  apply path_forall.  intro a.  apply contr.
 Defined.
 
-Instance Trunc_forall `{P : A -> Type} `{forall a, Trunc n (P a)}
-  : Trunc n (forall a, P a).
+Instance trunc_forall `{P : A -> Type} `{forall a, IsTrunc n (P a)}
+  : IsTrunc n (forall a, P a).
 Proof.
   generalize dependent P.
   induction n as [ | n' IH]; simpl; intros P ?.

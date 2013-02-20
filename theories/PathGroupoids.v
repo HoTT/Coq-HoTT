@@ -326,7 +326,7 @@ Definition ap_idmap {A : Type} {x y : A} (p : x = y) :
   match p with idpath => 1 end.
 
 Definition ap_compose {A B C : Type} (f : A -> B) (g : B -> C) {x y : A} (p : x = y) :
-  ap (compose g f) p = ap g (ap f p)
+  ap (g o f) p = ap g (ap f p)
   :=
   match p with idpath => 1 end.
 

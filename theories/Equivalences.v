@@ -16,7 +16,7 @@ Instance isequiv_idmap (A : Type) : IsEquiv idmap :=
 
 Definition equiv_idmap (A : Type) : A <~> A := BuildEquiv A A idmap _.
 
-Instance Reflexive_equiv : Reflexive Equiv := equiv_idmap.
+Instance reflexive_equiv : Reflexive Equiv := equiv_idmap.
 
 (** The composition of equivalences is an equivalence. *)
 Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
@@ -46,7 +46,7 @@ Definition equiv_compose' {A B C : Type} (g : B <~> C) (f : A <~> B)
   := equiv_compose g f.
 
 (* The TypeClass [Transitive] has a different order of parameters than [equiv_compose].  Thus in declaring the instance we have to switch the order of arguments. *)
-Instance Transitive_equiv : Transitive Equiv :=
+Instance transitive_equiv : Transitive Equiv :=
   fun _ _ _ f g => equiv_compose g f.
 
 
@@ -130,7 +130,7 @@ Proof.
   apply isequiv_inverse.
 Defined.
 
-Instance Symmetric_equiv : Symmetric Equiv := @equiv_inverse.
+Instance symmetric_equiv : Symmetric Equiv := @equiv_inverse.
 
 
 (** If [g \o f] and [f] are equivalences, so is [g]. *)
@@ -213,7 +213,7 @@ Definition moveL_E `{IsEquiv A B f} (x : A) (y : B) (p : f^-1 y = x)
   := (eisretr f y)^ @ ap f p.
 
 (** Equivalence preserves contractibility (which of course is trivial under univalence). *)
-Lemma Contr_equiv_contr `(f : A -> B) `{IsEquiv A B f} `{Contr A}
+Lemma contr_equiv_contr `(f : A -> B) `{IsEquiv A B f} `{Contr A}
   : Contr B.
 Proof.
   exists (f (center A)).
@@ -224,7 +224,7 @@ Qed.
 
 Definition contr_equiv_contr' `(f : A <~> B) `{Contr A}
   : Contr B
-  := Contr_equiv_contr f.
+  := contr_equiv_contr f.
 
 (** Assuming function extensionality, composing with an equivalence is itself an equivalence *)
 

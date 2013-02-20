@@ -86,6 +86,19 @@ prevents this), please add a comment to that effect where it is
 defined.  This way no one else will come along and helpfully change it
 back to an Instance.
 
+Try to avoid ever giving a name to variables inhabiting typeclasses.
+When introducing such a variable, you can write "intros ?" to put it
+in the hypotheses without specifying a name for it.  When using such a
+variable, typeclass resolution means you shouldn't eve need to refer
+to it by name: you can write "_" in tactics such as "refine" and Coq
+will find typeclass instances from the context.  Even "exact _" works.
+
+Unfortunately, it is not currently possible to write "_" in a
+"refine"d term for an inhabitant of a typeclass and have Coq generate
+a subgoal if it can't find an instance; Coq will die if it can't
+resolve a typeclass variable from the context.  You have to "assert"
+or "pose" such an inhabitant first, or give an explicit term for it.
+
 
 4. AXIOMS
 
@@ -110,7 +123,10 @@ Context `{Univalence}.
 
 Now everything defined and proven in this section can use univalence
 without saying so explicitly, and at the end of the section it will be
-implicitly generalized if necessary.
+implicitly generalized if necessary.  The backquote syntax
+`{Univalence} allows us to avoid giving a name to the hypothesis.
+(Backquote syntax is also used for implicit generalization of
+variables, but that is not needed for univalence and funext.)
 
 
 5. TRANSPARENCY AND OPACITY
