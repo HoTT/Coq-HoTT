@@ -120,22 +120,21 @@ Proof.
   intros bif; pose (fe := equiv_biinv f bif).
   (* Now we can split into the two halves. *)
   apply @contr_prod.
-    (* The following equivalence changes homotopies into paths. *)
-  - pose (E := @equiv_functor_sigma' _ _ _
-      (fun g => compose g f = idmap)
-      (equiv_idmap (B -> A))
-      (fun g => equiv_path_forall (compose g f) idmap)).
-    (* Since [f] is an equivalence, so is precomposing with it.  Thus, precomposing with [f] is also a contractible map. *)
-    pose (C := (equiv_fcontr_isequiv (fun g:B->A => compose g f))^-1 _).
-    (* But after applying [E^-1], we are left with just a homotopy fiber of precomposition with [f]. *)
-    by apply (@Contr_equiv_contr _ _ E^-1 _ (C idmap)).
+  (* For the first half, we change homotopies into paths. *)
+  - cut (Contr { g : B -> A & compose g f = idmap }).
+    + apply @contr_equiv_contr'.
+      apply symmetry.
+      (* Then we use the fact that precomposing with an equivalence is an equivalence. *)
+      refine (equiv_functor_sigma' (equiv_idmap (B -> A))
+        (fun g => equiv_path_forall (compose g f) idmap)).
+    + apply equiv_fcontr_isequiv; exact _.
   (* The other half is similar. *)
-  - pose (E := @equiv_functor_sigma' _ _ _
-      (fun g => compose f g = idmap)
-      (equiv_idmap (B -> A))
-      (fun g => equiv_path_forall (compose f g) idmap)).
-    pose (C := (equiv_fcontr_isequiv (fun g:B->A => compose f g))^-1 _).
-    by apply (@Contr_equiv_contr _ _ E^-1 _ (C idmap)).
+  - cut (Contr { h : B -> A & compose f h = idmap }).
+    + apply @contr_equiv_contr'.
+      apply symmetry.
+      refine (equiv_functor_sigma' (equiv_idmap (B -> A))
+        (fun g => equiv_path_forall (compose f g) idmap)).
+    + apply equiv_fcontr_isequiv; exact _.
 Defined.
 
 Definition equiv_biinv_equiv `(f : A -> B)

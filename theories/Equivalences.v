@@ -213,13 +213,18 @@ Definition moveL_E `{IsEquiv A B f} (x : A) (y : B) (p : f^-1 y = x)
   := (eisretr f y)^ @ ap f p.
 
 (** Equivalence preserves contractibility (which of course is trivial under univalence). *)
-Lemma Contr_equiv_contr `{IsEquiv A B f} `{Contr A} : Contr B.
+Lemma Contr_equiv_contr `(f : A -> B) `{IsEquiv A B f} `{Contr A}
+  : Contr B.
 Proof.
   exists (f (center A)).
   intro y.
   apply moveR_E.
   apply contr.
 Qed.
+
+Definition contr_equiv_contr' `(f : A <~> B) `{Contr A}
+  : Contr B
+  := Contr_equiv_contr f.
 
 (** Assuming function extensionality, composing with an equivalence is itself an equivalence *)
 
@@ -256,6 +261,7 @@ Definition equiv_postcompose `{Funext} {A B C : Type}
 Definition equiv_postcompose' `{Funext} {A B C : Type} (f : B <~> C)
   : (A -> B) <~> (A -> C)
   := BuildEquiv _ _ (fun g => @compose A B C f g) _.
+
 
 (** The function [equiv_rect] says that given an equivalence [f : A <~> B], and a hypothesis from [B], one may always assume that the hypothesis is in the image of [e].
 
