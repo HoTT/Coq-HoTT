@@ -14,7 +14,7 @@ Generalizable Variables A B.
 (** An inhabited proposition is contractible.
    This is not an [Instance] because it causes infinite loops.
    *)
-Lemma Contr_inhabited_HProp (A : Type) `{H : IsHProp A} (x : A)
+Lemma contr_inhabited_hprop (A : Type) `{H : IsHProp A} (x : A)
   : Contr A.
 Proof.
   exists x.
@@ -66,22 +66,22 @@ Qed.
 
 (** Chracterization of [IsHProp] in terms of all points being connected by paths. *)
 
-Theorem allpath_HProp `{H : IsHProp A} : forall x y : A, x = y.
+Theorem allpath_hprop `{H : IsHProp A} : forall x y : A, x = y.
 Proof.
   intros x y.
   apply H.
 Defined.
 
-Theorem HProp_allpath (A : Type) : (forall (x y : A), x = y) -> IsHProp A.
+Theorem hprop_allpath (A : Type) : (forall (x y : A), x = y) -> IsHProp A.
   intros H x y.
   pose (C := BuildContr A x (H x)).
   apply contr_paths_contr.
 Defined.
 
-Theorem Equiv_HProp_allpath `{Funext} (A : Type)
+Theorem equiv_hprop_allpath `{Funext} (A : Type)
   : IsHProp A <~> (forall (x y : A), x = y).
 Proof.
-  apply (equiv_adjointify (@allpath_HProp A) (@HProp_allpath A));
+  apply (equiv_adjointify (@allpath_hprop A) (@hprop_allpath A));
   (* The proofs of the two homotopies making up this equivalence are almost identical.  First we start with a thing [f]. *)
     intro f;
   (* Then we apply funext a couple of times *)
@@ -89,7 +89,7 @@ Proof.
     apply path_forall; intro y;
   (* Now we conclude that [A] is contractible *)
     try pose (C := BuildContr A x (f x));
-    try pose (D := Contr_inhabited_HProp A x);
+    try pose (D := contr_inhabited_hprop A x);
   (* And conclude because we have a path in a contractible space. *)
     apply path_contr.
 Defined.
@@ -102,7 +102,7 @@ Definition equiv_iff_prop `{IsHProp A} `{IsHProp B}
 Proof.
   intros f g.
   apply (equiv_adjointify f g);
-    intros ?; apply allpath_HProp.
+    intros ?; apply allpath_hprop.
 Defined.
 
 
@@ -112,10 +112,10 @@ Instance hprop_forall `{E : Funext} (A : Type) (P : A -> Type) :
   (forall x, IsHProp (P x)) -> IsHProp (forall x, P x).
 Proof.
   intro.
-  apply HProp_allpath.
+  apply hprop_allpath.
   intros f g.
   apply path_forall; intro.
-  apply allpath_HProp.
+  apply allpath_hprop.
 Defined.
 
 

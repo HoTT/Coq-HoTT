@@ -28,7 +28,7 @@ Definition trunc_equiv (A B : Type) (f : A -> B)
 Proof.
   generalize dependent f; revert B; generalize dependent A.
   induction n as [| n I]; simpl; intros A ? B f ?.
-  - apply Contr_equiv_contr.
+  - apply contr_equiv_contr.
   - intros x y.
     refine (I (f^-1 x = f^-1 y) _ (x = y) ((ap (f^-1))^-1) _).
 Qed.

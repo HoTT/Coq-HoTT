@@ -21,7 +21,7 @@ Defined.
 Definition hset_axiomK {A} `{axiomK A} : IsHSet A.
 Proof.
   intros x y H.
-  apply @HProp_allpath.
+  apply @hprop_allpath.
   intros p q.
   by induction p.
 Defined.
@@ -36,7 +36,7 @@ Proof.
     cut (Contr (x=x)). intro. eapply path_contr.
     exists 1. intros. apply symmetry, K.
   - intro K. by_extensionality x. by_extensionality x'.
-    eapply allpath_HProp.
+    eapply allpath_hprop.
 Defined.
 
 Instance axiomK_isprop A : IsHProp (axiomK A).
