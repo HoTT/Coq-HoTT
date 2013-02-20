@@ -81,15 +81,16 @@ Notation "A <-> B" := (iff A B) : type_scope.
 
 (** [Empty_set] is a datatype with no inhabitant *)
 
-Inductive Empty_set : Type :=.
+(* Inductive Empty_set : Type :=. *)
 
 (** [unit] is a singleton datatype with sole inhabitant [tt] *)
 
-Inductive unit : Type :=
-    tt : unit.
+(* Inductive unit : Type := 
+    tt : unit. *)
 
 (** [bool] is the datatype of the boolean values [true] and [false] *)
 
+(*
 Inductive bool : Type :=
   | true : bool
   | false : bool.
@@ -110,6 +111,9 @@ Definition implb (b1 b2 : bool) : bool := if b1 then b2 else true.
 
 Infix "||" := orb : bool_scope.
 Infix "&&" := andb : bool_scope.
+
+*)
+
 
 (* Natural numbers. *)
 
@@ -161,7 +165,7 @@ Local Open Scope identity_scope.
 
 (** Another way of interpreting booleans as propositions *)
 
-Definition is_true b := b = true.
+(* Definition is_true b := b = true. *)
 
 (** Polymorphic lists and some operations *)
 

@@ -86,7 +86,8 @@ Definition fcontr_equiv `(f : A -> B) `{IsEquiv A B f}
 
 (** Since contractibility is an HProp, it follows that so is [IsEquiv f].  This might be the easiest way to prove that our definition of [IsEquiv f] is an HProp. *)
 
-Instance hprop_isequiv `(f : A -> B) : HProp (IsEquiv f).
+Instance hprop_isequiv `(f : A -> B) :
+ IsHProp (IsEquiv f).
 Proof.
   refine (@trunc_equiv _ _ (equiv_fcontr_isequiv f) _ _ _).
 Defined.
@@ -113,10 +114,10 @@ Proof.
   - assumption.
 Defined.
 
-Instance isprop_biinv `(f : A -> B) : HProp (BiInv f).
+Instance isprop_biinv `(f : A -> B) : IsHProp (BiInv f).
 Proof.
   (* We may as well assume [f] to be an equivalence. *)
-  apply HProp_inhabited_Contr.
+  apply hprop_inhabited_contr.
   intros bif; pose (fe := equiv_biinv f bif).
   (* Now we can split into the two halves. *)
   apply @contr_prod.
