@@ -96,7 +96,7 @@ Defined.
 (** Two propositions are equivalent as soon as there are maps in both
    directions. *)
 
-Definition equiv_iff_prop `{IsHProp A} `{IsHProp B}
+Definition equiv_iff_hprop `{IsHProp A} `{IsHProp B}
   : (A -> B) -> (B -> A) -> (A <~> B).
 Proof.
   intros f g.
@@ -130,9 +130,11 @@ Defined.
 (** Here is an alternate characterization of propositions. *)
 Instance HProp_HProp `{Funext} A: IsHProp (IsHProp A) :=  hprop_trunc minus_one A.
 
-Theorem prop_equiv_inhabited_contr  `{E:Funext} {A} : IsHProp A <~> (A -> Contr A).
+Theorem equiv_hprop_inhabited_contr `{Funext} {A} : IsHProp A <~> (A -> Contr A).
 Proof.
-  apply (equiv_adjointify (@Contr_inhabited_HProp A) (@hprop_inhabited_contr A)). 
-   intro H. by_extensionality x. apply @path_contr. apply contr_contr. exact (H x).
-  intro H. by_extensionality x.  by_extensionality y. apply @path_contr. apply contr_contr. exact (H x y).
+  apply (equiv_adjointify (@contr_inhabited_hprop A) (@hprop_inhabited_contr A)). 
+  - intro ic. by_extensionality x.
+    apply @path_contr. apply contr_contr. exact (ic x).
+  - intro hp. by_extensionality x. by_extensionality y.
+    apply @path_contr. apply contr_contr. exact (hp x y).
 Defined.

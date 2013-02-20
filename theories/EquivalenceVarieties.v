@@ -140,7 +140,7 @@ Defined.
 Definition equiv_biinv_equiv `(f : A -> B)
   : BiInv f <~> IsEquiv f.
 Proof.
-  apply equiv_iff_prop.
+  apply equiv_iff_hprop.
   - apply equiv_biinv.
   - intros ?.  split.
     + exists (f^-1). apply eissect.
