@@ -244,13 +244,14 @@ Fixpoint is_trunc (n : trunc_index) (A : Type) : Type :=
     | trunc_S n' => forall (x y : A), is_trunc n' (x = y)
   end.
 
+Notation trunc_minus_one:=(trunc_S minus_two).
+
 Arguments is_trunc n A : simpl nomatch.
 
 Class Trunc (n : trunc_index) (A : Type) : Type :=
   Trunc_is_trunc : is_trunc n A.
 
-Notation HProp := (Trunc (trunc_S minus_two)).
-
+Notation HProp := (Trunc trunc_minus_one).
 Notation HSet := (Trunc 0).
 
 (** *** Function extensionality *)

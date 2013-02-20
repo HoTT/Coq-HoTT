@@ -68,7 +68,6 @@ Qed.
 
 Theorem allpath_HProp `{H : HProp A} : forall x y : A, x = y.
 Proof.
-  intros x y.
   apply H.
 Defined.
 
@@ -128,45 +127,17 @@ Proof.
   exact _.
 Defined.
 
-
-
-
-(** Being an equivalence is a prop. *)
-(* Should we need the record tactics?
-Instance HProp_IsEquiv (X Y : Type) (f: X -> Y) : HProp (IsEquiv f).
-Proof. 
-  apply HProp_forall. intros y.
-  apply iscontr_isprop.
-Defined.
-*)
-(*
-
 (** Here is an alternate characterization of propositions. *)
+(* ? *)
+Instance HProp_HProp `{Funext} A: HProp (HProp A) :=  HProp_trunc trunc_minus_one A.
 
-Definition isprop_isprop A : is_prop (is_prop A) := trunc_isprop 1 A.
+Notation IsContr := (Trunc minus_two).
+Notation IsHProp := (Trunc trunc_minus_one).
+Notation IsHSet := (Trunc 0).
 
-
-Theorem prop_equiv_inhabited_contr {A} : is_prop A <~> (A -> is_contr A).
+Theorem prop_equiv_inhabited_contr  `{E:Funext} {A} : IsHProp A <~> (A -> IsContr A).
 Proof.
-  apply (equiv_from_hequiv (prop_inhabited_contr A) (inhabited_contr_isprop A)).
-  intro H.
-  unfold prop_inhabited_contr, inhabited_contr_isprop.
-  simpl.
-  apply funext.
-  intro x.
-  apply contr_path.
-  apply contr_contr.
-  exact (H x).
-  intro H.
-  unfold prop_inhabited_contr, inhabited_contr_isprop.
-  apply funext_dep.
-  intro x.
-  apply funext_dep.
-  intro y.
-  apply contr_path.
-  apply contr_contr.
-  exact (H x y).
+  apply (equiv_adjointify (@Contr_inhabited_HProp A) (@HProp_inhabited_Contr A)). 
+   intro H. by_extensionality x. apply @path_contr. apply contr_contr. exact (H x).
+  intro H. by_extensionality x.  by_extensionality y. apply @path_contr. apply contr_contr. exact (H x y).
 Defined.
-
-*)
-
