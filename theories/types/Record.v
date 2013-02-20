@@ -180,21 +180,3 @@ Proof.
   issig (BuildIsEquiv A B f) (@equiv_inv A B f) (@eisretr A B f)
     (@eissect A B f) (@eisadj A B f).
 Defined.
-
-(** Here are the beginnings of a proof that [IsEquiv f] is an h-proposition, demonstrating again how [issig3_isequiv] and [equiv_intro] reduce the problem from one involving records to one involving Sigma-types. *)
-
-Definition prop_isequiv `{Funext} {A B : Type} (f : A -> B) (e1 e2 : IsEquiv f)
-  : e1 = e2.
-Proof.
-  revert e2; generalize e1.
-  equiv_intro (issig_isequiv f) h1.
-  equiv_intro (issig_isequiv f) h2.
-  refine (ap _ _).
-  destruct h1 as [g1 [r1 [s1 a1]]].
-  destruct h2 as [g2 [r2 [s2 a2]]].
-  refine (path_sigma' _
-    ((path_forall _ _ (fun b => ap g1 (r2 b)))^
-      @ (path_forall _ _ (fun b => s1 (g2 b)))) _).
-  rewrite transport_sigma; simpl.
-  (* Getting pretty nasty. *)
-Abort.

@@ -5,7 +5,7 @@ Require Import Overture PathGroupoids Equivalences.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
-Generalizable Variables A B f.
+Generalizable Variables A B f x y z.
 
 (** ** Path spaces *)
 
@@ -58,7 +58,7 @@ Instance isequiv_ap `{IsEquiv A B f} (x y : A)
     @ whiskerR (concat_Vp _) _
     @ concat_1p _).
 
-Definition equiv_ap `{IsEquiv A B f} (x y : A)
+Definition equiv_ap `(f : A -> B) `{IsEquiv A B f} (x y : A)
   : (x = y) <~> (f x = f y)
   := BuildEquiv _ _ (ap f) _.
 
@@ -80,7 +80,7 @@ Definition equiv_path_inverse {A : Type} (x y : A)
   : (x = y) <~> (y = x)
   := BuildEquiv _ _ (@inverse A x y) _.
 
-Instance isequiv_concat_l {A : Type} (x y z : A) (p : x = y)
+Instance isequiv_concat_l {A : Type} `(p : x = y) (z : A)
   : IsEquiv (@concat A x y z p)
   := BuildIsEquiv _ _ _ (@concat A y x z p^)
      (concat_p_Vp p) (concat_V_pp p) _.
@@ -88,11 +88,11 @@ Proof.
   intros q; destruct p; destruct q; reflexivity.
 Defined.
 
-Definition equiv_concat_l {A : Type} (x y z : A) (p : x = y)
+Definition equiv_concat_l {A : Type} `(p : x = y) (z : A)
   : (y = z) <~> (x = z)
   := BuildEquiv _ _ (concat p) _.
 
-Instance isequiv_concat_r {A : Type} (x y z : A) (p : y = z)
+Instance isequiv_concat_r {A : Type} `(p : y = z) (x : A)
   : IsEquiv (fun q:x=y => q @ p)
   := BuildIsEquiv _ _ (fun q => q @ p) (fun q => q @ p^)
      (fun q => concat_pV_p q p) (fun q => concat_pp_V q p) _.
@@ -100,9 +100,17 @@ Proof.
   intros q; destruct p; destruct q; reflexivity.
 Defined.
 
-Definition equiv_concat_r {A : Type} (x y z : A) (p : y = z)
+Definition equiv_concat_r {A : Type} `(p : y = z) (x : A)
   : (x = y) <~> (x = z)
   := BuildEquiv _ _ (fun q => q @ p) _.
+
+(* We can use these to build up more complicated equivalences.  Here's an example. *)
+Definition equiv_moveR_Vp {A : Type} {x y z : A}
+  (p : x = z) (q : y = z) (r : x = y)
+  : (p = r @ q) <~> (r^ @ p = q)
+  := equiv_compose'
+       (equiv_concat_r (concat_V_pp r q) (r^ @ p))
+       (equiv_ap (equiv_concat_l r^ z) p (r @ q)).
 
 (** ** Universal mapping property *)
 
