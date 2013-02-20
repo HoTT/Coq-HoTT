@@ -7,11 +7,11 @@ Local Open Scope equiv_scope.
 Generalizable Variables A B n f.
 
 (** A contractible space is (-2)-truncated, of course. *)
-Instance Contr_trunc_minus_two `{Trunc minus_two A} : Contr A
+Instance contr_trunc_minus_two `{IsTrunc minus_two A} : Contr A
   := Trunc_is_trunc.
 
 (** Truncation levels are cumulative. *)
-Instance trunc_succ `{Trunc n A} : Trunc (trunc_S n) A.
+Instance trunc_succ `{IsTrunc n A} : IsTrunc (trunc_S n) A.
 Proof.
   generalize dependent A.
   induction n as [| n I]; simpl; intros A H x y.
@@ -23,8 +23,8 @@ Qed.
    This is not an [Instance] because it causes infinite loops.
    *)
 Definition trunc_equiv (A B : Type) (f : A -> B)
-  `{Trunc n A} `{IsEquiv A B f}
-  : Trunc n B.
+  `{IsTrunc n A} `{IsEquiv A B f}
+  : IsTrunc n B.
 Proof.
   generalize dependent f; revert B; generalize dependent A.
   induction n as [| n I]; simpl; intros A ? B f ?.

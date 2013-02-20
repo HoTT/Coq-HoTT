@@ -1,6 +1,10 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the unit type *)
 
+(* coq calls it "unit", we call it "Unit" *)
+Inductive Unit : Type :=
+    tt : Unit.
+
 Require Import Overture PathGroupoids Equivalences.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -8,26 +12,26 @@ Generalizable Variables A.
 
 (** *** Eta conversion *)
 
-Definition eta_unit (z : unit) : tt = z
+Definition eta_unit (z : Unit) : tt = z
   := match z with tt => 1 end.
 
 (** *** Paths *)
 
 (* This is all kind of ridiculous, but it fits the pattern. *)
 
-Definition path_unit_uncurried (z z' : unit) : unit -> z = z'
+Definition path_unit_uncurried (z z' : Unit) : Unit -> z = z'
   := fun _ => match z, z' with tt, tt => 1 end.
 
-Definition path_unit (z z' : unit) : z = z'
+Definition path_unit (z z' : Unit) : z = z'
   := path_unit_uncurried z z' tt.
 
-Definition eta_path_unit {z z' : unit} (p : z = z') :
+Definition eta_path_unit {z z' : Unit} (p : z = z') :
   path_unit z z' = p.
 Proof.
   destruct p. destruct z. reflexivity.
 Defined.
 
-Instance isequiv_path_unit (z z' : unit) : IsEquiv (path_unit_uncurried z z').
+Instance isequiv_path_unit (z z' : Unit) : IsEquiv (path_unit_uncurried z z').
   refine (BuildIsEquiv _ _ (path_unit_uncurried z z') (fun _ => tt)
     (fun p:z=z' =>
       match p in (_ = z') return (path_unit_uncurried z z' tt = p) with
@@ -39,7 +43,7 @@ Instance isequiv_path_unit (z z' : unit) : IsEquiv (path_unit_uncurried z z').
   intros []; destruct z, z'; reflexivity.
 Defined.
 
-Definition equiv_path_unit (z z' : unit) : unit <~> (z = z')
+Definition equiv_path_unit (z z' : Unit) : Unit <~> (z = z')
   := BuildEquiv _ _ (path_unit_uncurried z z') _.
 
 (** *** Transport *)
@@ -49,15 +53,15 @@ Definition equiv_path_unit (z z' : unit) : unit <~> (z = z')
 (** *** Universal mapping properties *)
 
 (* The positive universal property *)
-Instance isequiv_unit_rect `{Funext} (A : Type) : IsEquiv (@unit_rect A)
+Instance isequiv_unit_rect `{Funext} (A : Type) : IsEquiv (@Unit_rect A)
   := isequiv_adjointify _
-  (fun f : unit -> A => f tt)
-  (fun f : unit -> A => path_forall (unit_rect (f tt)) f
+  (fun f : Unit -> A => f tt)
+  (fun f : Unit -> A => path_forall (Unit_rect _ (f tt)) f
                                     (fun x => match x with tt => 1 end))
   (fun _ => 1).
 
 (* The negative universal property *)
-Definition unit_corect {A : Type} : unit -> (A -> unit)
+Definition unit_corect {A : Type} : Unit -> (A -> Unit)
   := fun _ _ => tt.
 
 Instance isequiv_unit_corect `{Funext} (A : Type) : IsEquiv (@unit_corect A)
@@ -70,32 +74,32 @@ Proof.
 Defined.
 
 Definition equiv_unit_corect `{Funext} (A : Type)
-  : unit <~> (A -> unit)
+  : Unit <~> (A -> Unit)
   := BuildEquiv _ _ (@unit_corect A) _.
 
 (** *** Truncation *)
 
-(* The unit type is contractible *)
-Instance contr_unit : Contr unit := {
+(* The Unit type is contractible *)
+Instance contr_unit : Contr Unit := {
   center := tt;
-  contr := fun t : unit => match t with tt => 1 end
+  contr := fun t : Unit => match t with tt => 1 end
 }.
 
 (** *** Equivalences *)
 
-(** A contractible type is equivalent to [unit]. *)
-Definition equiv_contr_unit `{Contr A} : A <~> unit.
+(** A contractible type is equivalent to [Unit]. *)
+Definition equiv_contr_unit `{Contr A} : A <~> Unit.
 Proof.
   refine (BuildEquiv _ _
     (fun (_ : A) => tt)
     (BuildIsEquiv _ _ _ 
-      (fun (_ : unit) => center A)
-      (fun t : unit => match t with tt => 1 end)
+      (fun (_ : Unit) => center A)
+      (fun t : Unit => match t with tt => 1 end)
       (fun x : A => contr x) _)).
   intro x. apply symmetry, ap_const.
 Defined.
 
-(* Conversely, a type equivalent to [unit] is contractible. *)
-Instance contr_equiv_unit (A : Type) (f : A <~> unit) : Contr A
+(* Conversely, a type equivalent to [Unit] is contractible. *)
+Instance contr_equiv_unit (A : Type) (f : A <~> Unit) : Contr A
   := BuildContr A (f^-1 tt)
   (fun a => ap f^-1 (contr (f a)) @ eissect f a).

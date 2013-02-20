@@ -207,7 +207,7 @@ Definition equiv_prod_corect `{Funext} `(A : X -> Type) (B : X -> Type)
 
 (** *** Products preserve truncation *)
 
-Instance Trunc_prod `{Trunc n A} `{Trunc n B} : Trunc n (A * B).
+Instance trunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B).
 Proof.
   generalize dependent B; generalize dependent A.
   induction n as [| n I]; simpl; intros A ? B ?.
@@ -218,4 +218,4 @@ Proof.
 Defined.
 
 Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B)
-  := @Trunc_prod minus_two A CA B CB.
+  := @trunc_prod minus_two A CA B CB.

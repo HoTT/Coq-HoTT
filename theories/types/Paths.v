@@ -133,4 +133,4 @@ Definition equiv_paths_rect `{Funext} {A : Type} (a : A)
 
 (** ** Truncation *)
 
-(** Paths reduce truncation level by one.  This is essentially the definition of [is_trunc]. *)
+(** Paths reduce truncation level by one.  This is essentially the definition of [IsTrunc_internal]. *)
