@@ -19,7 +19,7 @@ Class Transitive {A} (R : relation A) :=
 
 (** We make the identity map a notation so we do not have to unfold it,
     or complicate matters with its type. *)
-Notation "'idmap'" := (fun x => x).
+Notation idmap := (fun x => x).
 
 (** We define notation for dependent pairs because it is too annoying to write and see [existT P x y] all the time.  However, we put it in its own scope, because sometimes it is necessary to give the particular dependent type, so we'd like to be able to turn off this notation selectively. *)
 Notation "( x ; y )" := (existT _ x y) : fibration_scope.
