@@ -4,12 +4,34 @@
 Require Import Overture Contractible Equivalences types.Prod.
 Local Open Scope equiv_scope.
 
+(* coq calls it "bool", we call it "Bool" *)
+Inductive Bool : Type :=
+  | true : Bool
+  | false : Bool.
+
+Add Printing If Bool.
+
+Delimit Scope bool_scope with Bool.
+
+Bind Scope bool_scope with Bool.
+
+Definition andb (b1 b2 : Bool) : Bool := if b1 then b2 else false.
+
+Definition orb (b1 b2 : Bool) : Bool := if b1 then true else b2.
+
+Definition negb (b : Bool) := if b then false else true.
+
+Definition implb (b1 b2 : Bool) : Bool := if b1 then b2 else true.
+
+Infix "||" := orb : bool_scope.
+Infix "&&" := andb : bool_scope.
+
 Section BoolForall.
-  Variable P : bool -> Type.
+  Variable P : Bool -> Type.
   
   Let f (s : forall b, P b) := (s false, s true).
 
-  Let g (u : P false * P true) (b : bool) : P b :=
+  Let g (u : P false * P true) (b : Bool) : P b :=
     match b with
       | false => fst u
       | true => snd u
@@ -28,7 +50,7 @@ Section BoolForall.
     exists f.
     refine {| equiv_inv := g ; eisretr := eisretr' ; eissect := eissect' |}.
     admit.
-    (* must first show that decidable types are in HSet. *)
+    (* must first show that decidable types are in IsHSet. *)
   Defined.
 
 End BoolForall.

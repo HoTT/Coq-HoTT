@@ -566,8 +566,6 @@ maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
 @make_ssreflect_FALSE@clean-local:
-clean: clean-am
-
 clean-am: clean-generic clean-local mostlyclean-am
 
 distclean: distclean-am
@@ -715,6 +713,10 @@ TAGS : $(TAGS_FILES) Makefile
 # Dependency files
 $(DEPFILES) $(STDDEPFILES) : %.d : %.v
 	$(COQDEP) -nois -coqlib $(srcdir)/coq -R theories HoTT -R coq/theories Coq $< >$@
+
+clean:
+	rm -f $(CLEANFILES)
+	find coq/theories theories -name \*.vo -o -name \*.glob | xargs rm -f
 
 -include $(DEPFILES) $(STDDEPFILES)
 

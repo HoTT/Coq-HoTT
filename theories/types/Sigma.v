@@ -75,8 +75,8 @@ Notation "p ..1" := (projT1_path p) (at level 3) : fibration_scope.
 
 Definition projT2_path `{P : A -> Type} {u v : sigT P} (p : u = v)
   : p..1 # u.2 = v.2
-  :=
-  match p with idpath => 1 end.
+  := (transport_compose P (@projT1 _ _) p u.2)^
+     @ (@apD {x:A & P x} _ (@projT2 _ _) _ _ p).
 
 Notation "p ..2" := (projT2_path p) (at level 3) : fibration_scope.
 
@@ -119,7 +119,7 @@ Instance isequiv_path_sigma `{P : A -> Type} {u v : sigT P}
   destruct q; reflexivity.
 Defined.
 
-Definition equiv_path_sigma `{P : A -> Type} {u v : sigT P}
+Definition equiv_path_sigma `(P : A -> Type) (u v : sigT P)
   : {p : u.1 = v.1 &  p # u.2 = v.2} <~> (u = v)
   := BuildEquiv _ _ (path_sigma_uncurried P u v) _.
 
@@ -190,9 +190,32 @@ Proof.
 Qed.
 
 Definition equiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
-  `{IsEquiv A B f} `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
+  (f : A -> B) `{IsEquiv A B f}
+  (g : forall a, P a -> Q (f a))
+  `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
   : sigT P <~> sigT Q
   := BuildEquiv _ _ (functor_sigma f g) _.
+
+Definition equiv_functor_sigma' `{P : A -> Type} `{Q : B -> Type}
+  (f : A <~> B)
+  (g : forall a, P a <~> Q (f a))
+  : sigT P <~> sigT Q
+  := equiv_functor_sigma f g.
+
+(** *** Associativity *)
+
+Definition equiv_sigma_assoc `(P : A -> Type) (Q : {a : A & P a} -> Type)
+  : {a : A & {p : P a & Q (a;p)}} <~> sigT Q.
+Proof.
+  refine (@equiv_adjointify {a : A & {p : P a & Q (a;p)}} (sigT Q)
+    (fun apq => let (a,pq):=apq in let (p,q):=pq in ((a;p);q))
+    (fun apq => let (ap,q):=apq in
+      (let (a,p) return (Q ap -> {a : A & {p : P a & Q (a;p)}})
+        := ap in fun q => (a ; existT (fun p:P a => Q (a;p)) p q)) q)
+    _ _).
+  - intros [[a p] q]; reflexivity.
+  - intros [a [p q]]; reflexivity.
+Defined.
 
 (** *** Universal mapping properties *)
 
@@ -243,16 +266,16 @@ Proof.
 Defined.
 
 Definition equiv_sigT_corect `{Funext}
-  `{A : X -> Type} {P : forall x, A x -> Type}
+  `(A : X -> Type) (P : forall x, A x -> Type)
   : { f : forall x, A x & forall x, P x (f x) }
      <~> (forall x, sigT (P x))
   := BuildEquiv _ _ (sigT_corect_uncurried P) _.
 
 (** *** Sigmas preserve truncation *)
 
-Instance Trunc_sigma `{P : A -> Type}
-  `{Trunc n A} `{forall a, Trunc n (P a)}
-  : Trunc n (sigT P).
+Instance trunc_sigma `{P : A -> Type}
+  `{IsTrunc n A} `{forall a, IsTrunc n (P a)}
+  : IsTrunc n (sigT P).
 Proof.
   generalize dependent A.
   induction n; simpl; intros A P ac Pc.

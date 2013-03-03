@@ -16,7 +16,7 @@ Instance isequiv_idmap (A : Type) : IsEquiv idmap :=
 
 Definition equiv_idmap (A : Type) : A <~> A := BuildEquiv A A idmap _.
 
-Instance Reflexive_equiv : Reflexive Equiv := equiv_idmap.
+Instance reflexive_equiv : Reflexive Equiv := equiv_idmap.
 
 (** The composition of equivalences is an equivalence. *)
 Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
@@ -41,8 +41,12 @@ Definition equiv_compose {A B C : Type} (g : B -> C) (f : A -> B)
   : A <~> C
   := BuildEquiv A C (compose g f) _.
 
+Definition equiv_compose' {A B C : Type} (g : B <~> C) (f : A <~> B)
+  : A <~> C
+  := equiv_compose g f.
+
 (* The TypeClass [Transitive] has a different order of parameters than [equiv_compose].  Thus in declaring the instance we have to switch the order of arguments. *)
-Instance Transitive_equiv : Transitive Equiv :=
+Instance transitive_equiv : Transitive Equiv :=
   fun _ _ _ f g => equiv_compose g f.
 
 
@@ -119,14 +123,14 @@ Section EquivInverse.
 End EquivInverse.
 
 (** [Equiv A B] is a symmetric relation. *)
-Theorem equiv_inverse (A B : Type): (A <~> B) -> (B <~> A).
+Theorem equiv_inverse {A B : Type} : (A <~> B) -> (B <~> A).
 Proof.
   intro e.
   exists (e^-1).
   apply isequiv_inverse.
 Defined.
 
-Instance Symmetric_equiv : Symmetric Equiv := equiv_inverse.
+Instance symmetric_equiv : Symmetric Equiv := @equiv_inverse.
 
 
 (** If [g \o f] and [f] are equivalences, so is [g]. *)
@@ -198,23 +202,6 @@ Section Adjointify.
     := BuildEquiv A B f isequiv_adjointify.
 
 End Adjointify.
-
-(** As a side remark: when adjointifying, it suffices to have both a section and a retraction, even though they may be different maps.  A map with both a section and a retraction is called a "homotopy isomorphism".  As data, being a homotopy isomorphism is also homotopically well-behaved (unlike the ordinary input data to [adjointify]). *)
-
-Section HIso.
-
-  Context {A B : Type} (f : A -> B) (s r : B -> A).
-  Context (isretr : Sect s f) (issect : Sect f r).
-
-  Definition isequiv_hiso : IsEquiv f
-    := isequiv_adjointify f s isretr
-         (fun a => (issect (s (f a)))^ @ ap r (isretr (f a)) @ issect a).
-
-  Definition equiv_hiso : A <~> B
-    := BuildEquiv A B f isequiv_hiso.
-
-End HIso.
-
   
 (** Several lemmas useful for rewriting. *)
 Definition moveR_E `{IsEquiv A B f} (x : A) (y : B) (p : x = f^-1 y)
@@ -226,13 +213,55 @@ Definition moveL_E `{IsEquiv A B f} (x : A) (y : B) (p : f^-1 y = x)
   := (eisretr f y)^ @ ap f p.
 
 (** Equivalence preserves contractibility (which of course is trivial under univalence). *)
-Lemma Contr_equiv_contr `{IsEquiv A B f} `{Contr A} : Contr B.
+Lemma contr_equiv_contr `(f : A -> B) `{IsEquiv A B f} `{Contr A}
+  : Contr B.
 Proof.
   exists (f (center A)).
   intro y.
   apply moveR_E.
   apply contr.
 Qed.
+
+Definition contr_equiv_contr' `(f : A <~> B) `{Contr A}
+  : Contr B
+  := contr_equiv_contr f.
+
+(** Assuming function extensionality, composing with an equivalence is itself an equivalence *)
+
+Instance isequiv_precompose `{Funext} {A B C : Type}
+  (f : A -> B) `{IsEquiv A B f}
+  : IsEquiv (fun g => @compose A B C g f)
+  := isequiv_adjointify (fun g => @compose A B C g f)
+    (fun h => @compose B A C h f^-1)
+    (fun h => path_forall _ _ (fun x => ap h (eissect f x)))
+    (fun g => path_forall _ _ (fun y => ap g (eisretr f y))).
+
+Definition equiv_precompose `{Funext} {A B C : Type}
+  (f : A -> B) `{IsEquiv A B f}
+  : (B -> C) <~> (A -> C)
+  := BuildEquiv _ _ (fun g => @compose A B C g f) _.
+
+Definition equiv_precompose' `{Funext} {A B C : Type} (f : A <~> B)
+  : (B -> C) <~> (A -> C)
+  := BuildEquiv _ _ (fun g => @compose A B C g f) _.
+
+Instance isequiv_postcompose `{Funext} {A B C : Type}
+  (f : B -> C) `{IsEquiv B C f}
+  : IsEquiv (fun g => @compose A B C f g)
+  := isequiv_adjointify (fun g => @compose A B C f g)
+    (fun h => @compose A C B f^-1 h)
+    (fun h => path_forall _ _ (fun x => eisretr f (h x)))
+    (fun g => path_forall _ _ (fun y => eissect f (g y))).
+
+Definition equiv_postcompose `{Funext} {A B C : Type}
+  (f : B -> C) `{IsEquiv B C f}
+  : (A -> B) <~> (A -> C)
+  := BuildEquiv _ _ (fun g => @compose A B C f g) _.
+
+Definition equiv_postcompose' `{Funext} {A B C : Type} (f : B <~> C)
+  : (A -> B) <~> (A -> C)
+  := BuildEquiv _ _ (fun g => @compose A B C f g) _.
+
 
 (** The function [equiv_rect] says that given an equivalence [f : A <~> B], and a hypothesis from [B], one may always assume that the hypothesis is in the image of [e].
 

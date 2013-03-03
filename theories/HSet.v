@@ -12,16 +12,16 @@ Local Open Scope path_scope.
 
 Definition axiomK A := forall (x : A) (p : x = x), p = idpath x.
 
-Definition axiomK_hset {A} : HSet A -> axiomK A.
+Definition axiomK_hset {A} : IsHSet A -> axiomK A.
 Proof.
   intros H x p.
   apply (H x x p (idpath x)).
 Defined.
 
-Definition hset_axiomK {A} `{axiomK A} : HSet A.
+Definition hset_axiomK {A} `{axiomK A} : IsHSet A.
 Proof.
   intros x y H.
-  apply @HProp_allpath.
+  apply @hprop_allpath.
   intros p q.
   by induction p.
 Defined.
@@ -29,26 +29,26 @@ Defined.
 Section AssumeFunext.
 Context `{Funext}.
 
-Theorem equiv_hset_axiomK {A} : HSet A <~> axiomK A.
+Theorem equiv_hset_axiomK {A} : IsHSet A <~> axiomK A.
 Proof.
   apply (equiv_adjointify (@axiomK_hset A) (@hset_axiomK A)).
   - intros K. by_extensionality x. by_extensionality x'. 
     cut (Contr (x=x)). intro. eapply path_contr.
     exists 1. intros. apply symmetry, K.
   - intro K. by_extensionality x. by_extensionality x'.
-    eapply allpath_HProp.
+    eapply allpath_hprop.
 Defined.
 
-Instance axiomK_isprop A : HProp (axiomK A).
+Instance axiomK_isprop A : IsHProp (axiomK A).
 Proof.
   apply (trunc_equiv _ _ equiv_hset_axiomK). 
 Defined.
 
-Theorem set_path2 {A} `{HSet A} {x y : A} (p q : x = y):
+Theorem set_path2 {A} `{IsHSet A} {x y : A} (p q : x = y):
   p = q.
 Proof.
   induction q.
-  apply (axiomK_hset HSet0).
+  apply axiomK_hset; assumption.
 Defined.
 
 (** Recall that axiom K says that any self-path is homotopic to the
@@ -89,7 +89,7 @@ Proof.
   induction (q' p).
 Defined.
 
-Corollary hset_decidable {A : Type} : @decidable_paths A -> HSet A.
+Corollary hset_decidable {A : Type} : @decidable_paths A -> IsHSet A.
 Proof.
   intro.
   by apply @hset_axiomK, @axiomK_decidable.
