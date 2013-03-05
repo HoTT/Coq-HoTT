@@ -21,10 +21,10 @@ Definition equiv_path (A B : Type) (p : A = B) : A <~> B
   := BuildEquiv _ _ (transport (fun X:Type => X) p) _.
 
 Definition equiv_path_inverse `{Funext} (A B : Type) (p : A = B) :
-  transport idmap (p^) = (transport idmap p)^-1.
+  equiv_path B A (p^) = equiv_inverse (equiv_path A B p).
 Proof.
-  apply path_forall; intros b.
-  destruct p. reflexivity.
+  destruct p. simpl. unfold equiv_path, equiv_inverse. simpl. apply ap.
+  refine (@allpath_hprop _ (hprop_isequiv _) _ _).
 Defined.
 
 Class Univalence := {
@@ -56,19 +56,16 @@ Definition equiv_path_universe (A B : Type) : (A <~> B) <~> (A = B)
   := BuildEquiv _ _ (@path_universe_uncurried A B) isequiv_path_universe.
 
 Definition path_universe_inverse_uncurried `{Funext} {A B : Type} (f : A <~> B)
-  : (path_universe f)^ = path_universe (f^-1).
+  : (path_universe_uncurried f)^ = path_universe_uncurried (equiv_inverse f).
 Proof.
   revert f. equiv_intro ((equiv_path_universe A B)^-1) p. simpl.
   path_via (p^).
   exact (inverse2 (eisretr (equiv_path_universe A B) p)).
-  (* This really ought to do it *)
-  refine ((eisretr (equiv_path_universe B A) p^)^ @ _).
-  (* But we have two different proofs that [transport idmap p^] is an equivalence, one coming from the fact that it is transporting along [p^], the other from the fact that it is the inverse of transporting along [p].  So we have to use the fact that [IsEquiv] is an HProp. *)
-  unfold path_universe. apply ap.
-  simpl; unfold compose, equiv_path; simpl. apply ap.
-  (* Why can't it find this instance? *)
-  set (K := hprop_isequiv (transport idmap p^)).
-  apply allpath_hprop.
+  unfold compose.
+  path_via (path_universe_uncurried (equiv_path B A p^)).
+  apply symmetry.
+  by refine (eissect (equiv_path B A) p^).
+  by refine (ap _ (equiv_path_inverse A B p)).
 Defined.
 
 Definition path_universe_inverse `{Funext} `(f : A -> B) `{IsEquiv A B f}
