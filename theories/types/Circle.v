@@ -12,7 +12,8 @@ Generalizable Variables X A B f g n.
 
 Module Circle.
 
-Local Inductive S1 : Type :=
+(* Local *)
+Inductive S1 : Type :=
 | base : S1.
 
 Axiom loop : base = base.
