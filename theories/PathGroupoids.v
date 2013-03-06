@@ -273,6 +273,37 @@ Proof.
   trivial.
 Defined.
 
+Definition moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
+  (p : x = y) (u : P x) (v : P y)
+  : u = p^ # v -> p # u = v.
+Proof.
+  destruct p.
+  exact idmap.
+Defined.
+
+Definition moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
+  (p : y = x) (u : P x) (v : P y)
+  : u = p # v -> p^ # u = v.
+Proof.
+  destruct p.
+  exact idmap.
+Defined.
+
+Definition moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
+  (p : x = y) (u : P x) (v : P y)
+  : p # u = v -> u = p^ # v.
+Proof.
+  destruct p.
+  exact idmap.
+Defined.
+
+Definition moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
+  (p : y = x) (u : P x) (v : P y)
+  : p^ # u = v -> u = p # v.
+Proof.
+  destruct p.
+  exact idmap.
+Defined.
 
 (** *** Functoriality of functions *)
 
