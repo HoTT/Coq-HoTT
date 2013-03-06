@@ -226,7 +226,7 @@ Proof.
   refine (isequiv_adjointify (S1_encode x) (S1_decode x) _ _).
   (* Here we induct on [x:S1].  We just did the case when [x] is [base]. *)
   refine (S1_rect (fun x => Sect (S1_decode x) (S1_encode x))
-    (fun z => S1_encode_looptothe z) _ _).
+    S1_encode_looptothe _ _).
   (* What remains is easy since [Int] is known to be a set. *)
   by apply path_forall; intros z; apply set_path2.
   (* The other side is trivial by path induction. *)
