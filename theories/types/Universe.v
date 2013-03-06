@@ -40,9 +40,9 @@ Definition path_universe_uncurried {A B : Type} (f : A <~> B) : A = B
 Definition path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} : (A = B)
   := path_universe_uncurried (BuildEquiv _ _ f feq).
 
-Definition transport_path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f}
-  : transport (fun X:Type => X) (path_universe f) = f
-  := ap (equiv_fun A B) (eisretr (equiv_path A B) (BuildEquiv _ _ f feq)).
+Definition transport_path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
+  : transport (fun X:Type => X) (path_universe f) z = f z
+  := ap10 (ap (equiv_fun A B) (eisretr (equiv_path A B) (BuildEquiv _ _ f feq))) z.
 
 Definition eta_path_universe {A B : Type} (p : A = B)
   : path_universe (equiv_path A B p) = p
