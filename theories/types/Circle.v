@@ -17,13 +17,13 @@ Local Inductive S1 : Type :=
 
 Axiom loop : base = base.
 
-Definition S1_rech (P : S1 -> Type) (b : P base) (l : loop # b = b)
+Definition S1_rect (P : S1 -> Type) (b : P base) (l : loop # b = b)
   : forall (x:S1), P x
   := fun x => match x with base => b end.
 
-Axiom S1_rech_beta_loop
+Axiom S1_rect_beta_loop
   : forall (P : S1 -> Type) (b : P base) (l : loop # b = b),
-  apD (S1_rech P b l) loop = l.
+  apD (S1_rect P b l) loop = l.
 
 End Circle.
 
@@ -31,19 +31,19 @@ Import Circle.
 
 (* *** The non-dependent eliminator *)
 
-Definition S1_rechnd (P : Type) (b : P) (l : b = b)
+Definition S1_rectnd (P : Type) (b : P) (l : b = b)
   : S1 -> P
-  := S1_rech (fun _ => P) b (transport_const _ _ @ l).
+  := S1_rect (fun _ => P) b (transport_const _ _ @ l).
 
-Definition S1_rechnd_beta_loop (P : Type) (b : P) (l : b = b)
-  : ap (S1_rechnd P b l) loop = l.
+Definition S1_rectnd_beta_loop (P : Type) (b : P) (l : b = b)
+  : ap (S1_rectnd P b l) loop = l.
 Proof.
-  unfold S1_rechnd.
+  unfold S1_rectnd.
   path_via ((transport_const loop _)^
-    @ apD (S1_rech (fun _ => P) b (transport_const loop b @ l)) loop).
+    @ apD (S1_rect (fun _ => P) b (transport_const loop b @ l)) loop).
   apply moveL_Vp.  apply symmetry, apD_const.
   apply moveR_Vp.  simpl.
-  refine (S1_rech_beta_loop (fun _ => P) _ _).
+  refine (S1_rect_beta_loop (fun _ => P) _ _).
 Defined.
 
 (* *** The loop space of the circle is the Integers. *)
@@ -140,7 +140,7 @@ Section AssumeUnivalence.
 Context `{Univalence} `{Funext}.
 
 Definition S1_code : S1 -> Type
-  := S1_rechnd Type Int (path_universe succ_int).
+  := S1_rectnd Type Int (path_universe succ_int).
 
 (* Transporting in the codes fibration is the successor autoequivalence. *)
 
@@ -148,7 +148,7 @@ Definition transport_S1_code_loop (z : Int)
   : transport S1_code loop z = succ_int z.
 Proof.
   refine (transport_compose idmap S1_code loop z @ _).
-  unfold S1_code; rewrite S1_rechnd_beta_loop.
+  unfold S1_code; rewrite S1_rectnd_beta_loop.
   apply transport_path_universe.
 Defined.
 
@@ -157,7 +157,7 @@ Definition transport_S1_code_loopV (z : Int)
 Proof.
   refine (transport_compose idmap S1_code loop^ z @ _).
   rewrite ap_V.
-  unfold S1_code; rewrite S1_rechnd_beta_loop.
+  unfold S1_code; rewrite S1_rectnd_beta_loop.
   rewrite path_universe_inverse.
   apply transport_path_universe.
 Defined.
@@ -184,7 +184,7 @@ Definition looptothe (z : Int) : (base = base)
 
 Definition S1_decode (x:S1) : S1_code x -> (base = x).
 Proof.
-  revert x; refine (S1_rech (fun x => S1_code x -> base = x) looptothe _).
+  revert x; refine (S1_rect (fun x => S1_code x -> base = x) looptothe _).
   apply path_forall; intros z; simpl in z.
   refine (transport_arrow _ _ _ @ _).
   refine (transport_paths_r loop _ @ _).
@@ -225,7 +225,7 @@ Definition S1_encode_isequiv (x:S1) : IsEquiv (S1_encode x).
 Proof.
   refine (isequiv_adjointify (S1_encode x) (S1_decode x) _ _).
   (* Here we induct on [x:S1].  We just did the case when [x] is [base]. *)
-  refine (S1_rech (fun x => Sect (S1_decode x) (S1_encode x))
+  refine (S1_rect (fun x => Sect (S1_decode x) (S1_encode x))
     (fun z => S1_encode_looptothe z) _ _).
   (* What remains is easy since [Int] is known to be a set. *)
   by apply path_forall; intros z; apply set_path2.
