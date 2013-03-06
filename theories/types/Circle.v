@@ -55,10 +55,10 @@ Inductive Pos : Type :=
 | succ_pos : Pos -> Pos.
 
 Definition one_neq_succ_pos (z : Pos) : ~ (one = succ_pos z)
-  := fun p => @transport _ (fun s => match s with one => Unit | succ_pos t => Empty end) _ _ p tt.
+  := fun p => transport (fun s => match s with one => Unit | succ_pos t => Empty end) p tt.
 
 Definition succ_pos_injective {z w : Pos} (p : succ_pos z = succ_pos w) : z = w
-  := (@transport _ (fun s => z = (match s with one => w | succ_pos a => a end)) _ _ p (idpath z)).
+  := transport (fun s => z = (match s with one => w | succ_pos a => a end)) p (idpath z).
 
 Inductive Int : Type :=
 | neg : Pos -> Int
@@ -66,19 +66,19 @@ Inductive Int : Type :=
 | pos : Pos -> Int.
 
 Definition neg_injective {z w : Pos} (p : neg z = neg w) : z = w
-  := (@transport _ (fun s => z = (match s with neg a => a | zero => w | pos a => w end)) _ _ p (idpath z)).
+  := transport (fun s => z = (match s with neg a => a | zero => w | pos a => w end)) p (idpath z).
 
 Definition pos_injective {z w : Pos} (p : pos z = pos w) : z = w
-  := (@transport _ (fun s => z = (match s with neg a => w | zero => w | pos a => a end)) _ _ p (idpath z)).
+  := transport (fun s => z = (match s with neg a => w | zero => w | pos a => a end)) p (idpath z).
 
 Definition neg_neq_zero {z : Pos} : ~ (neg z = zero)
-  := fun p => @transport _ (fun s => match s with neg a => z = a | zero => Empty | pos _ => Empty end) _ _ p (idpath z).
+  := fun p => transport (fun s => match s with neg a => z = a | zero => Empty | pos _ => Empty end) p (idpath z).
 
 Definition pos_neq_zero {z : Pos} : ~ (pos z = zero)
-  := fun p => @transport _ (fun s => match s with pos a => z = a | zero => Empty | neg _ => Empty end) _ _ p (idpath z).
+  := fun p => transport (fun s => match s with pos a => z = a | zero => Empty | neg _ => Empty end) p (idpath z).
 
 Definition neg_neq_pos {z w : Pos} : ~ (neg z = pos w)
-  := fun p => @transport _ (fun s => match s with neg a => z = a | zero => Empty | pos _ => Empty end) _ _ p (idpath z).
+  := fun p => transport (fun s => match s with neg a => z = a | zero => Empty | pos _ => Empty end) p (idpath z).
 
 (* And prove that they are a set. *)
 
