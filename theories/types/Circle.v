@@ -39,10 +39,8 @@ Definition S1_rectnd_beta_loop (P : Type) (b : P) (l : b = b)
   : ap (S1_rectnd P b l) loop = l.
 Proof.
   unfold S1_rectnd.
-  path_via ((transport_const loop _)^
-    @ apD (S1_rect (fun _ => P) b (transport_const loop b @ l)) loop).
-  apply moveL_Vp.  apply symmetry, apD_const.
-  apply moveR_Vp.  simpl.
+  refine (cancelL (transport_const loop b) _ _ _).
+  refine ((apD_const (S1_rect (fun _ => P) b _) loop)^ @ _).
   refine (S1_rect_beta_loop (fun _ => P) _ _).
 Defined.
 
