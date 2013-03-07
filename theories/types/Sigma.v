@@ -202,6 +202,17 @@ Definition equiv_functor_sigma' `{P : A -> Type} `{Q : B -> Type}
   : sigT P <~> sigT Q
   := equiv_functor_sigma f g.
 
+(* Summing up a contractible family of types does nothing. *)
+Definition equiv_sigma_contr {A : Type} (P : A -> Type)
+  `{forall a, Contr (P a)}
+  : sigT P <~> A.
+Proof.
+  refine (equiv_adjointify (@projT1 A P)
+    (fun a => (a ; center (P a))) _ _).
+  intros a; reflexivity.
+  intros [a p]. apply path_sigma' with 1, contr.
+Defined.
+
 (** *** Associativity *)
 
 Definition equiv_sigma_assoc `(P : A -> Type) (Q : {a : A & P a} -> Type)
