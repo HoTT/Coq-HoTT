@@ -143,6 +143,25 @@ Definition inv_pp {A : Type} {x y z : A} (p : x = y) (q : y = z) :
     match p with idpath => 1 end
   end.
   
+Definition inv_Vp {A : Type} {x y z : A} (p : y = x) (q : y = z) :
+  (p^ @ q)^ = q^ @ p
+  :=
+  match q with idpath =>
+    match p with idpath => 1 end
+  end.
+
+Definition inv_pV {A : Type} {x y z : A} (p : x = y) (q : z = y) :
+  (p @ q^)^ = q @ p^.
+Proof.
+  destruct p. destruct q. reflexivity.
+Defined.
+
+Definition inv_VV {A : Type} {x y z : A} (p : y = x) (q : z = y) :
+  (p^ @ q^)^ = q @ p.
+Proof.
+  destruct p. destruct q. reflexivity.
+Defined.
+
 (** Inverse is an involution. *)
 Definition inv_V {A : Type} {x y : A} (p : x = y) :
   p^^ = p
