@@ -1,13 +1,48 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about Non-dependent function types *)
 
-Require Import Overture Contractible Equivalences.
+Require Import Overture PathGroupoids Contractible Equivalences Trunc.
+Require Import Paths Forall.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
+Generalizable Variables A B C D f g n.
+
+Section AssumeFunext.
+Context `{Funext}.
+
+(** *** Paths *)
+
+(** As for dependent functions, paths [p : f = g] in a function type [A -> B] are equivalent to functions taking values in path types, [H : forall x:A, f x = g x], or concisely [H : f == g].  These are all given in the [Overture], but we can give them separate names for clarity in the non-dependent case. *)
+
+Definition path_arrow {A B : Type} (f g : A -> B)
+  : (f == g) -> (f = g)
+  := path_forall f g.
+
+Definition ap10_path_arrow {A B : Type} (f g : A -> B) (h : f == g)
+  : ap10 (path_arrow f g h) = h
+  := apD10_path_forall f g h.
+
+Definition eta_path_arrow {A B : Type} (f g : A -> B) (p : f = g)
+  : path_arrow f g (ap10 p) = p
+  := eta_path_forall f g p.
+
+Definition path_arrow_1 {A B : Type} (f : A -> B)
+  : (path_arrow f f (fun x => 1)) = 1
+  := eta_path_arrow f f 1.
+
+Instance isequiv_path_arrow {A B : Type} (f g : A -> B)
+  : IsEquiv (path_arrow f g)
+  := isequiv_path_forall f g.
+
+Definition equiv_path_arrow {A B : Type} (f g : A -> B)
+  : (f == g) <~> (f = g)
+  := equiv_path_forall f g.
+
 (** *** Transport *)
 
-(* Note: conclusion should be [==] if that is defined in an earlier file. *) 
+(** Transporting in non-dependent function types is somewhat simpler than in dependent ones. *)
+
 Definition transport_arrow {A : Type} {B C : A -> Type}
   {x1 x2 : A} (p : x1 = x2) (f : B x1 -> C x1) (y : B x2)
   : (transport (fun x => B x -> C x) p f) y  =  p # (f (p^ # y)).
@@ -15,18 +50,36 @@ Proof.
   destruct p; simpl; auto.
 Defined.
 
-(* Where do these go?
+(** *** Functorial action *)
 
-Lemma trans_map {A} {P Q : fibration A} {x y : A} (p : x = y) (f : forall x, P x -> Q x) (z : P x) :
-  f y (p # z) = p # f x z.
-Proof.
-  path_induction.
-Defined.
+Definition functor_arrow `(f : B -> A) `(g : C -> D)
+  : (A -> C) -> (B -> D)
+  := @functor_forall A (fun _ => C) B (fun _ => D) f (fun _ => g).
 
-Lemma trans_map2 {A} {P Q R : fibration A} {x y : A} (p : x = y)
-  (f : forall x, P x -> Q x -> R x) (z : P x) (w: Q x) :
-  f y (p # z) (p # w) = p # f x z w.
-Proof.
-  path_induction.
-Defined.
-*)
+Definition ap_functor_arrow `(f : B -> A) `(g : C -> D)
+  (h h' : A -> C) (p : h == h')
+  : ap (functor_arrow f g) (path_arrow _ _ p)
+  = path_arrow _ _ (fun b => ap g (p (f b)))
+  := @ap_functor_forall _ A (fun _ => C) B (fun _ => D)
+  f (fun _ => g) h h' p.
+
+(** *** Equivalences *)
+
+Instance isequiv_functor_arrow `{IsEquiv B A f} `{IsEquiv C D g}
+  : IsEquiv (functor_arrow f g)
+  := @isequiv_functor_forall _ A (fun _ => C) B (fun _ => D)
+     _ _ _ _.
+
+Definition equiv_functor_arrow `{IsEquiv B A f} `{IsEquiv C D g}
+  : (A -> C) <~> (B -> D)
+  := @equiv_functor_forall _ A (fun _ => C) B (fun _ => D)
+  f _ (fun _ => g) _.
+
+Definition equiv_functor_arrow' `(f : B <~> A) `(g : C <~> D)
+  : (A -> C) <~> (B -> D)
+  := @equiv_functor_forall' _ A (fun _ => C) B (fun _ => D)
+  f (fun _ => g).
+  
+(** What remains is really identical to that in [Forall].  *)
+
+End AssumeFunext.
