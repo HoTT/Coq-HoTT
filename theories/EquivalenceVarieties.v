@@ -88,7 +88,7 @@ Definition fcontr_equiv `(f : A -> B) `{IsEquiv A B f}
 
 Instance hprop_isequiv `(f : A -> B) : IsHProp (IsEquiv f).
 Proof.
-  refine (@trunc_equiv _ _ (equiv_fcontr_isequiv f) _ _ _).
+  refine (trunc_equiv (equiv_fcontr_isequiv f)).
 Defined.
 
 
@@ -121,14 +121,14 @@ Proof.
   (* Now we can split into the two halves. *)
   apply @contr_prod.
   (* For the first half, we change homotopies into paths. *)
-  - refine (@contr_equiv_contr' { g : B -> A & g o f = idmap } _ _ _).
+  - refine (@contr_equiv' { g : B -> A & g o f = idmap } _ _ _).
     + apply symmetry.
       (* Then we use the fact that precomposing with an equivalence is an equivalence. *)
       refine (equiv_functor_sigma' (equiv_idmap _) _); intros g.
       exact (equiv_path_forall (g o f) idmap).
     + apply equiv_fcontr_isequiv; exact _.
   (* The other half is similar. *)
-  - refine (@contr_equiv_contr' { h : B -> A & f o h = idmap } _ _ _).
+  - refine (@contr_equiv' { h : B -> A & f o h = idmap } _ _ _).
     + apply symmetry.
       refine (equiv_functor_sigma' (equiv_idmap _) _); intros h.
       exact (equiv_path_forall (f o h) idmap).

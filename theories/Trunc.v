@@ -22,13 +22,17 @@ Qed.
 (** Equivalence preserves truncation (this is, of course, trivial with univalence).
    This is not an [Instance] because it causes infinite loops.
    *)
-Definition trunc_equiv (A B : Type) (f : A -> B)
+Definition trunc_equiv `(f : A -> B)
   `{IsTrunc n A} `{IsEquiv A B f}
   : IsTrunc n B.
 Proof.
   generalize dependent f; revert B; generalize dependent A.
   induction n as [| n I]; simpl; intros A ? B f ?.
-  - refine (contr_equiv_contr f).
+  - refine (contr_equiv f).
   - intros x y.
     refine (I (f^-1 x = f^-1 y) _ (x = y) ((ap (f^-1))^-1) _).
 Qed.
+
+Definition trunc_equiv' `(f : A <~> B) `{IsTrunc n A}
+  : IsTrunc n B
+  := trunc_equiv f.
