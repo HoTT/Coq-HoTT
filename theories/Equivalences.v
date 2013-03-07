@@ -213,7 +213,7 @@ Definition moveL_E `{IsEquiv A B f} (x : A) (y : B) (p : f^-1 y = x)
   := (eisretr f y)^ @ ap f p.
 
 (** Equivalence preserves contractibility (which of course is trivial under univalence). *)
-Lemma contr_equiv_contr `(f : A -> B) `{IsEquiv A B f} `{Contr A}
+Lemma contr_equiv `(f : A -> B) `{IsEquiv A B f} `{Contr A}
   : Contr B.
 Proof.
   exists (f (center A)).
@@ -222,9 +222,9 @@ Proof.
   apply contr.
 Qed.
 
-Definition contr_equiv_contr' `(f : A <~> B) `{Contr A}
+Definition contr_equiv' `(f : A <~> B) `{Contr A}
   : Contr B
-  := contr_equiv_contr f.
+  := contr_equiv f.
 
 (** Assuming function extensionality, composing with an equivalence is itself an equivalence *)
 

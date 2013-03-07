@@ -50,7 +50,7 @@ Definition contr_sect_equiv `(f : A -> B) `{IsEquiv A B f}
   : Contr {g : B -> A & Sect g f}.
 Proof.
   (* First we turn homotopies into paths. *)
-  refine (@contr_equiv_contr' { g : B -> A & f o g = idmap } _ _ _).
+  refine (@contr_equiv' { g : B -> A & f o g = idmap } _ _ _).
   apply symmetry.
   refine (equiv_functor_sigma' (equiv_idmap _) _); intros g.
   exact (equiv_path_forall (f o g) idmap).
@@ -62,7 +62,7 @@ Definition contr_retr_equiv `(f : A -> B) `{IsEquiv A B f}
   : Contr {g : B -> A & Sect f g}.
 Proof.
   (* This proof is just like the previous one. *)
-  refine (@contr_equiv_contr' { g : B -> A & g o f = idmap } _ _ _).
+  refine (@contr_equiv' { g : B -> A & g o f = idmap } _ _ _).
   apply symmetry.
   refine (equiv_functor_sigma' (equiv_idmap _) _); intros g.
   exact (equiv_path_forall (g o f) idmap).
@@ -75,9 +75,9 @@ Instance hprop_isequiv `(f : A -> B) : IsHProp (IsEquiv f).
 Proof.
   apply hprop_inhabited_contr; intros ?.
   (* Get rid of that pesky record. *)
-  refine (@contr_equiv_contr _ _ (issig_isequiv f) _ _).
+  refine (@contr_equiv _ _ (issig_isequiv f) _ _).
   (* Now we claim that the top two elements, [s] and the coherence relation, taken together are contractible, so we can peel them off. *)
-  refine (@contr_equiv_contr' {g : B -> A & Sect g f} _
+  refine (@contr_equiv' {g : B -> A & Sect g f} _
     (equiv_inverse (equiv_functor_sigma' (equiv_idmap (B -> A))
       (fun g => (@equiv_sigma_contr (Sect g f)
         (fun r => {s : Sect f g & forall x, r (f x) = ap f (s x) })
@@ -86,7 +86,7 @@ Proof.
   2:apply contr_sect_equiv; assumption.
   intros r.
   (* Now we claim this is equivalent to a certain space of paths. *)
-  refine (@contr_equiv_contr'
+  refine (@contr_equiv'
     (forall x, (existT (fun a => f a = f x) x 1) = (g (f x); r (f x)))
     _ (equiv_inverse _) _).
   (* The proof of this equivalence is basically just rearranging quantifiers and paths. *)
@@ -184,7 +184,7 @@ End AnotherApproach.
 Definition BiInv `(f : A -> B) : Type
   := {g : B -> A & Sect f g} * {h : B -> A & Sect h f}.
 
-(** It seems that the easiest way to show that bi-invertibility is equivalent to being an equivalence is to show that both are h-props and that they are logically equivalent. *)
+(** It seems that the easiest way to show that bi-invertibility is equivalent to being an equivalence is also to show that both are h-props and that they are logically equivalent. *)
 
 Definition equiv_biinv `(f : A -> B)
   : BiInv f -> IsEquiv f.
