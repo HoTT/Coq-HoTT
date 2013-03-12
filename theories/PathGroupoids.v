@@ -57,7 +57,7 @@ Local Open Scope path_scope.
 
    - [moveR_1M] means that we transform [p = q] (rather than [p = 1 @ q]) to [p * q^ = 1].
 
-   There are also cancelation laws called [cancelR] and [cancelL], which are identical to the 2-dimensional 'whiskering' operations [whiskerR] and [whiskerL].
+   There are also cancellation laws called [cancelR] and [cancelL], which are inverse to the 2-dimensional 'whiskering' operations [whiskerR] and [whiskerL].
 
    We may now proceed with the groupoid structure proper.
 *)
@@ -515,15 +515,42 @@ Proof.
   reflexivity.
 Defined.
 
-(** [ap] for paths between functions. *)
+(** *** Action of [apD10] and [ap10] on paths. *)
+
+(** Application of paths between functions preserves the groupoid structure *)
+
+Definition apD10_1 {A} {B:A->Type} (f : forall x, B x) (x:A) 
+  : apD10 (idpath f) x = 1
+:= 1.
+
+Definition apD10_pp {A} {B:A->Type} {f f' f'' : forall x, B x}
+  (h:f=f') (h':f'=f'') (x:A)
+: apD10 (h @ h') x = apD10 h x @ apD10 h' x.
+Proof.
+  case h, h'; reflexivity.
+Defined.
+
+Definition apD10_V {A} {B:A->Type} {f g : forall x, B x} (h:f=g) (x:A)
+  : apD10 (h^) x = (apD10 h x)^
+:= match h with idpath => 1 end.
 
 Definition ap10_1 {A B} {f:A->B} (x:A) : ap10 (idpath f) x = 1
   := 1.
 
-Definition ap10_pp {A B} {f f' f'':A->B} (h:f=f') (h':f'=f'') (x:A) :
-  ap10 h x @ ap10 h' x = ap10 (h @ h') x.
+Definition ap10_pp {A B} {f f' f'':A->B} (h:f=f') (h':f'=f'') (x:A)
+  : ap10 (h @ h') x = ap10 h x @ ap10 h' x
+:= apD10_pp h h' x.
+
+Definition ap10_V {A B} {f g : A->B} (h : f = g) (x:A)
+  : ap10 (h^) x = (ap10 h x)^
+:= apD10_V h x.
+
+(** [ap10] also behaves nicely on paths produced by [ap] *)
+Lemma ap_ap10 {A B C} (f g : A -> B) (h : B -> C)
+  (p : f = g) (a : A) :
+  ap h (ap10 p a) = ap10 (ap (fun f' => h o f') p) a.
 Proof.
-  case h, h'; reflexivity.
+  destruct p. exact 1.
 Defined.
 
 (** *** Transport and the groupoid structure of paths *)
@@ -856,7 +883,7 @@ Hint Rewrite
 @ap_compose'*)
 @ap_const
 (* Unsure about naturality of [ap], was absent in the old implementation*)
-@ap10_1
+@apD10_1
 :paths.
 
 Ltac hott_simpl :=
