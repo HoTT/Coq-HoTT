@@ -57,7 +57,7 @@ Local Open Scope path_scope.
 
    - [moveR_1M] means that we transform [p = q] (rather than [p = 1 @ q]) to [p * q^ = 1].
 
-   There are also cancelation laws called [cancelR] and [cancelL], which are identical to the 2-dimensional 'whiskering' operations [whiskerR] and [whiskerL].
+   There are also cancellation laws called [cancelR] and [cancelL], which are inverse to the 2-dimensional 'whiskering' operations [whiskerR] and [whiskerL].
 
    We may now proceed with the groupoid structure proper.
 *)
