@@ -13,6 +13,7 @@ Require Export types.Forall.
 Require Export Trunc.
 Require Export HProp.
 Require Export HSet.
+Require Export EquivalenceVarieties.
 
 Require Export types.Empty.
 Require Export types.Unit.

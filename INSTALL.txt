@@ -1,22 +1,23 @@
 # QUICK INSTALLATION INSTRUCTIONS
 
-1. Install a custom Coq from https://github.com/HoTT/coq. This is a fork of the trunk and
-   is compatible with standard Coq 8.4 trunk, except that it supports special command-line
-   options that turn on the homotopy theory interpretation. Because the Coq fork changes
-   frequently, HoTT may fail with the latest version. The latest commit that is known
-   to work is 3d84c0927eb0479d01626f4df9441db3a15b2764, so if things break try
+1. Install a custom Coq from https://github.com/HoTT/coq, the `stable`
+   branch. This is a fork of the trunk and is compatible with standard
+   Coq 8.4 trunk, except that it supports the the homotopy theory
+   interpretation. Because our Coq fork changes frequently, HoTT may
+   fail with the `master` branch. Thus, unless you know what you are
+   doing, you should use the `stable` branch:
 
        git clone https://github.com/HoTT/coq.git
-       git checkout 3d84c0927eb0479d01626f4df9441db3a15b2764
+       git checkout stable
 
    Compile Coq as usual. One possibility is to compile it with
 
        ./configure -local
        make coqlight
 
-   This will compile Coq in place, so you can run it straight from the source
-   directory. It will also skip compilation of some libraries that we do not
-   use anyhow.
+   This will compile Coq in place, so you can run it straight from the
+   source directory. It will also skip compilation of some libraries
+   that we do not use anyhow.
 
 2. Get the HoTT library at https://github.com/HoTT/HoTT.git. Go to the
    root of the HoTT created directory.
@@ -38,32 +39,34 @@
 
 5. The library can be loaded with `Require Import HoTT.`
 
-6. You can install the library globally with `make install`, although this
-   has not been thoroughly tested.
+6. You can install the library globally with `make install`, although
+   this has not been thoroughly tested.
 
 7. To use the emacs tags facility with the *.v files here, run the command
 
    	make TAGS
 
-   (The emacs command M-x find-tag, bound to M-. , will take you to a 
-   definition or theorem, the default name for which is located under your
-   cursor.  Read the help on that emacs command with C-h k M-. , and learn
-   the other facilities provided, such as the use of M-* to get back where
-   you were, or the use of M-x tags-search to search throughout the code
-   for locations matching a given regular expression.)
+   (The emacs command `M-x find-tag`, bound to `M-.` , will take you to
+   a definition or theorem, the default name for which is located under
+   your cursor. Read the help on that emacs command with `C-h k M-.` ,
+   and learn the other facilities provided, such as the use of `M-*` to
+   get back where you were, or the use of `M-x tags-search` to search
+   throughout the code for locations matching a given regular
+   expression.)
 
 # LONG INSTALLATION INSTRUCTIONS
 
 ## PREREQUISITES
 
-The HoTT library requires a custom version of Coq which supports the
-the command-line option `-indices-matter` and universe polymorphism.
-The first one changes the interpretation of equality to one that
-conforms to the homotopy-theoretic interpretation, while the second
-one is needed to avoid certain universe inconsistency errors (which
-are not really there but Coq 8.4 cannot see that).
+The HoTT library requires a custom version of Coq which supports the the
+command-line option `-indices-matter`, universe polymorphism and private
+types. The first one changes the interpretation of equality to one that
+conforms to the homotopy-theoretic interpretation, the second one is
+needed to avoid certain universe inconsistency errors (which are not
+really there but Coq 8.4 cannot see that), and the third one allows us
+to implement higher-inductive types, sort of.
 
-At present only a fork of the Coq trunk supports these options, but we
+At present only our fork of the Coq trunk supports these options, but we
 hope to get them into the official Coq soon. Unfortunately for you
 that means you will have to compile a version of Coq, available at
 
@@ -75,17 +78,15 @@ help. If you feel brave you should try doing it yourself:
 1. Obtain the custom Coq fork. If you have git clone the fork with
 
        git clone https://github.com/HoTT/coq.git
+       git checkout stable
 
    If you do not have git, you may still download the files as an
-   archive file at
-
-   https://github.com/HoTT/coq/zipball/trunk (but it is better for you
-   in the long run to learn git).
+   archive file at https://github.com/HoTT/coq/archive/stable.zip (but
+   it is better for you in the long run to learn git).
 
 2. Compile Coq, as explained in the INSTALL.txt file of Coq
-distribution. You will need some prerequisites for compilation, such
-as OCaml 3.11.2 or later.
-
+   distribution. You will need some prerequisites for compilation, such
+   as OCaml 3.11.2 or later.
 
    If you do not want the custom Coq to override one that you already
    have installed, configure Coq with either `./configure -local` so
@@ -106,7 +107,7 @@ repository on github and then use your own fork. This way you will be
 able to make pull requests.
 
 If you do not want to deal with git at all, you may download an
-archive of HoTT at https://github.com/HoTT/HoTT/zipball/master and
+archive of HoTT at https://github.com/HoTT/HoTT/archive/master.zip and
 unpack that. We do not recommend this option because the HoTT library
 is under heavy development and you want to be able to easily track
 changes.
@@ -142,7 +143,7 @@ can run
 directly from the HoTT directory to start using the library. Load it
 with
 
-   Require Import HoTT.Homotopy.
+   Require Import HoTT.
 
 There is also `hoqc` for compiling files. You may prefer to install
 `hoqtop`, `hoqc` and the library files globally, in which case you
