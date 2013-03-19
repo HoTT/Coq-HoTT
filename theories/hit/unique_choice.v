@@ -2,9 +2,7 @@ Require Import HoTT.
 Require Import minus1Trunc.
 Import minus1Trunc.
 
-(* We use use the bracket notation, as the || || notation conflicts *)
-Notation "[ A ]":=(minus1Trunc A).
-Definition hexists {X} (P:X->Type):=[ (sigT  P) ].
+Definition hexists {X} (P:X->Type):=(minus1Trunc (sigT  P) ).
 Definition atmost1 X:=(forall x1 x2:X, (x1 = x2)).
 Definition atmost1P {X} (P:X->Type):=(forall x1 x2:X, P x1 -> P x2 -> (x1 = x2)).
 Definition hunique {X} (P:X->Type):=(hexists P) * (atmost1P P).
@@ -24,8 +22,7 @@ apply (@minus1Trunc_rect_nondep (sigT  P) );auto.
 by apply atmost. 
 Qed.
 
-(* We prove the principle of unique choice *)
-Lemma UC {X Y} (R:X->Y->Type) : (forall x y, IsHProp (R x y)) -> (forall x, (hunique (R x))) -> {f : X
+Lemma unique_choice {X Y} (R:X->Y->Type) : (forall x y, IsHProp (R x y)) -> (forall x, (hunique (R x))) -> {f : X
 -> Y & forall x, (R x (f x))}.
 intros X0 X1.
 exists (fun x:X => (projT1 (iota _ (X0 x) (X1 x)))).
