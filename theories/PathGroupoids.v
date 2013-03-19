@@ -565,20 +565,15 @@ Definition transport_pp {A : Type} (P : A -> Type) {x y z : A} (p : x = y) (q : 
     match p with idpath => 1 end
   end.
 
-(** TODO: The following two results follow directly from [transport_1] and
-  [transport_pp].  Is it really necessary to give them separately? *)
-Definition transport_pV {A : Type} (P : A -> Type) {x y : A} (p : x = y) (z : P y) :
-  p # p^ # z = z :=
-  (match p as i in (_ = y) return (forall z : P y, i # i^ # z = z)
-     with idpath => fun _ => 1
-   end) z.
+Definition transport_pV {A : Type} (P : A -> Type) {x y : A} (p : x = y) (z : P y)
+  : p # p^ # z = z
+  := (transport_pp P p^ p z)^
+  @ ap (fun r => transport P r z) (concat_Vp p).
 
-Definition transport_Vp {A : Type} (P : A -> Type) {x y : A} (p : x = y) (z : P x) :
-  p^ # p # z = z
-  := 
-  (match p as i return (forall z : P x, i^ # i # z = z)
-     with idpath => fun _ => 1
-   end) z.
+Definition transport_Vp {A : Type} (P : A -> Type) {x y : A} (p : x = y) (z : P x)
+  : p^ # p # z = z
+  := (transport_pp P p p^ z)^
+  @ ap (fun r => transport P r z) (concat_pV p).
 
 (** In the future, we may expect to need some higher coherence for transport:
   for instance, that transport acting on the associator is trivial. *)
@@ -591,6 +586,14 @@ Definition transport_p_pp {A : Type} (P : A -> Type)
   :> ((p @ (q @ r)) # u = r # q # p # u) .
 Proof.
   destruct p, q, r.  simpl.  exact 1.
+Defined.
+
+(* Here is another coherence lemma for transport. *)
+Definition transport_pVp {A} (P : A -> Type) {x y:A} (p:x=y) (z:P x)
+  : transport_pV P p (transport P p z)
+  = ap (transport P p) (transport_Vp P p z).
+Proof.
+  destruct p; reflexivity.
 Defined.
 
 (** Dependent transport in a doubly dependent type. *)
