@@ -7,6 +7,7 @@ Require Import Paths Forall Sigma Arrow Universe Empty Unit.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
+
 (* Some lemmas that ought to go elsewhere. *)
 
 Definition transport_path_sigma {A:Type} (B:A->Type) (C:sigT B -> Type)
@@ -32,44 +33,42 @@ Proof.
 Defined.
 
 
-(* This is obviously not the right thing to do! *)
-Parameters (A B : Type).
-Parameters (f g : B -> A).
-
-
 (* First we define the general non-recursive HIT. *)
 
 Module Import BaseHIT.
 
-Local Inductive W : Type :=
-| cc : A -> W.
+Local Inductive W (A B : Type) (f g : B -> A) : Type :=
+| cc : A -> W A B f g.
 
-Axiom pp : forall (b:B), cc (f b) = cc (g b).
+Arguments cc {A B f g} a.
 
-Definition W_rect (P : W -> Type) (cc' : forall a, P (cc a))
+Axiom pp : forall {A B f g} (b:B), @cc A B f g (f b) = cc (g b).
+
+Definition W_rect {A B f g} (P : W A B f g -> Type)
+  (cc' : forall a, P (cc a))
   (pp' : forall b, (pp b) # (cc' (f b)) = cc' (g b))
   : forall w, P w
   := fun w => match w with cc a => cc' a end.
 
 Axiom W_rect_beta_pp
-  : forall (P : W -> Type) (cc' : forall a, P (cc a))
+  : forall {A B f g} (P : W A B f g -> Type) (cc' : forall a, P (cc a))
   (pp' : forall b, (pp b) # (cc' (f b)) = cc' (g b)) (b:B),
   apD (W_rect P cc' pp') (pp b) = pp' b.
 
 End BaseHIT.
 
-Definition W_rectnd (P : Type) (cc' : A -> P)
+Definition W_rectnd {A B f g} (P : Type) (cc' : A -> P)
   (pp' : forall b, cc' (f b) = cc' (g b))
-  : W -> P
+  : W A B f g -> P
   := W_rect (fun _ => P) cc' (fun b => transport_const _ _ @ pp' b).
 
-Definition W_rectnd_beta_pp (P : Type) (cc' : A -> P)
-  (pp' : forall b, cc' (f b) = cc' (g b)) (b:B)
+Definition W_rectnd_beta_pp {A B f g} (P : Type) (cc' : A -> P)
+  (pp' : forall b:B, cc' (f b) = cc' (g b)) (b:B)
   : ap (W_rectnd P cc' pp') (pp b) = pp' b.
 Proof.
   unfold W_rectnd.
   refine (cancelL (transport_const (pp b) _) _ _ _).
-  refine ((apD_const (W_rect (fun _ => P) cc' _) (pp b))^ @ _).
+  refine ((apD_const (@W_rect A B f g (fun _ => P) cc' _) (pp b))^ @ _).
   refine (W_rect_beta_pp (fun _ => P) _ _ _).
 Defined.
 
@@ -77,45 +76,50 @@ Defined.
 
 (* Now we define the flattened HIT which will be equivalent to the total space of a fibration over [W]. *)
 
-Parameter (C : A -> Type).
-Parameter (D : forall b, C (f b) <~> C (g b)).
-
 Module Import FlattenedHIT.
 
-Local Inductive Wtil : Type :=
-| cct : forall a, C a -> Wtil.
+Local Inductive Wtil (A B : Type) (f g : B -> A)
+  (C : A -> Type) (D : forall b, C (f b) <~> C (g b))
+  : Type :=
+| cct : forall a, C a -> Wtil A B f g C D.
 
-Axiom ppt : forall (b:B) (y:C (f b)), cct (f b) y = cct (g b) (D b y).
+Arguments cct {A B f g C D} a c.
 
-Definition Wtil_rect (Q : Wtil -> Type)
+Axiom ppt : forall {A B f g C D} (b:B) (y:C (f b)),
+  @cct A B f g C D (f b) y = cct (g b) (D b y).
+
+Definition Wtil_rect {A B f g C D} (Q : Wtil A B f g C D -> Type)
   (cct' : forall a x, Q (cct a x))
   (ppt' : forall b y, (ppt b y) # (cct' (f b) y) = cct' (g b) (D b y))
   : forall w, Q w
   := fun w => match w with cct a x => cct' a x end.
 
 Axiom Wtil_rect_beta_ppt
-  : forall (Q : Wtil -> Type) (cct' : forall a x, Q (cct a x))
+  : forall {A B f g C D} (Q : Wtil A B f g C D -> Type)
+    (cct' : forall a x, Q (cct a x))
     (ppt' : forall b y, (ppt b y) # (cct' (f b) y) = cct' (g b) (D b y))
     (b:B) (y : C (f b)),
     apD (Wtil_rect Q cct' ppt') (ppt b y) = ppt' b y.
 
 End FlattenedHIT.
 
-Definition Wtil_rectnd (Q : Type) 
-  (cct' : forall a (x : C a), Q)
+Definition Wtil_rectnd {A B f g C} {D : forall b, C (f b) <~> C (g b)}
+  (Q : Type) (cct' : forall a (x : C a), Q)
   (ppt' : forall b (y : C (f b)), cct' (f b) y = cct' (g b) (D b y))
-  : Wtil -> Q
+  : Wtil A B f g C D -> Q
   := Wtil_rect (fun _ => Q) cct' (fun b y => transport_const _ _ @ ppt' b y).
 
-Definition Wtil_rectnd_beta_ppt (Q : Type) 
-  (cct' : forall a (x : C a), Q)
-  (ppt' : forall b (y : C (f b)), cct' (f b) y = cct' (g b) (D b y))
+Definition Wtil_rectnd_beta_ppt
+  {A B f g C} {D : forall b, C (f b) <~> C (g b)}
+  (Q : Type) (cct' : forall a (x : C a), Q)
+  (ppt' : forall (b:B) (y : C (f b)), cct' (f b) y = cct' (g b) (D b y))
   (b:B) (y: C (f b))
-  : ap (Wtil_rectnd Q cct' ppt') (ppt b y) = ppt' b y.
+  : ap (@Wtil_rectnd A B f g C D Q cct' ppt') (ppt b y) = ppt' b y.
 Proof.
   unfold Wtil_rectnd.
   refine (cancelL (transport_const (ppt b y) _) _ _ _).
-  refine ((apD_const (Wtil_rect (fun _ => Q) cct' _) (ppt b y))^ @ _).
+  refine ((apD_const
+    (@Wtil_rect A B f g C D (fun _ => Q) cct' _) (ppt b y))^ @ _).
   refine (Wtil_rect_beta_ppt (fun _ => Q) _ _ _ _).
 Defined.
 
@@ -126,18 +130,23 @@ Defined.
 Section AssumeAxioms.
 Context `{Funext} `{Univalence}.
 
-Definition P : W -> Type
+Context {A B : Type} {f g : B -> A}.
+Context {C : A -> Type} {D : forall b, C (f b) <~> C (g b)}.
+
+Let W' := W A B f g.
+
+Let P : W' -> Type
   := W_rectnd Type C (fun b => path_universe (D b)).
 
 
 
 (* Now we give the total space the same structure as [Wtil]. *)
 
-Definition sWtil := { w:W & P w }.
+Let sWtil := { w:W' & P w }.
 
-Definition scct (a:A) (x:C a) : sWtil := (existT P (cc a) x).
+Let scct (a:A) (x:C a) : sWtil := (existT P (cc a) x).
 
-Definition sppt (b:B) (y:C (f b)) : scct (f b) y = scct (g b) (D b y).
+Let sppt (b:B) (y:C (f b)) : scct (f b) y = scct (g b) (D b y).
 Proof.
   refine (path_sigma' P (pp b) _).
   refine (transport_path_universe' P (pp b) (D b) _ _).
@@ -205,7 +214,7 @@ Proof.
   refine (W_rect (fun w => P w -> Q) (fun a x => scct' a x) _).
   intros b.
   apply path_forall; intros x.
-  refine (@transport_arrow W P (fun _ => Q) _ _ _ _ _ @ _).
+  refine (@transport_arrow W' P (fun _ => Q) _ _ _ _ _ @ _).
   refine (transport_const _ _ @ _).
   refine (sppt' b _ @ _).
   apply ap.
@@ -224,8 +233,8 @@ Definition sWtil_rectnd_beta_ppt (Q : Type)
   : ap (sWtil_rectnd Q scct' sppt') (sppt b y) = sppt' b y.
 Proof.
   unfold sWtil_rectnd, sppt.
-  refine (@ap_sigT_rect_path_sigma W P Q _ _ (pp b) _ _ _ _ @ _); simpl.
-  rewrite W_rect_beta_pp.
+  refine (@ap_sigT_rect_path_sigma W' P Q _ _ (pp b) _ _ _ _ @ _); simpl.
+  rewrite (@W_rect_beta_pp A B f g).
   rewrite apD10_path_forall.
   (* This equality is everywhere *)
   set (q := transport_path_universe' P (pp b) (D b)
@@ -246,7 +255,7 @@ Qed.
 Close Scope long_path_scope.
 
 (* Woot! *)
-Definition flattening_lemma : Wtil <~> sWtil.
+Definition equiv_flattening : Wtil A B f g C D <~> sWtil.
 Proof.
   (* The maps back and forth are obtained easily from the non-dependent eliminators. *)
   refine (equiv_adjointify
@@ -258,7 +267,7 @@ Proof.
   apply dpath_path_FFlr.
   rewrite concat_1p, concat_p1.
   rewrite sWtil_rectnd_beta_ppt.
-  by apply symmetry, Wtil_rectnd_beta_ppt.
+  by apply symmetry, (@Wtil_rectnd_beta_ppt A B f g C D).
   refine (Wtil_rect _ (fun a x => 1) _). intros b y.
   apply dpath_path_FFlr.
   rewrite concat_1p, concat_p1.
