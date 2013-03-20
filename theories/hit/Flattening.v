@@ -2,8 +2,8 @@
 
 (** * The flattening lemma. *)
 
-Require Import Overture PathGroupoids Equivalences Trunc HSet.
-Require Import Paths Forall Sigma Arrow Universe Empty Unit.
+Require Import Overture PathGroupoids Equivalences.
+Require Import Paths Forall Sigma Arrow Universe.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
