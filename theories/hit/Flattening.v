@@ -165,7 +165,7 @@ Proof.
   intros b.
   apply (dpath_forall P (fun a b => Q (a;b)) _ _ (pp b)
     (scct' (f b)) (scct' (g b))).
-  simpl; intros y.
+  intros y.
   set (q := transport_path_universe' P (pp b) (D b)
     (W_rectnd_beta_pp Type C (fun b0 : B => path_universe (D b0)) b) y).
   refine ((ap (transport Q (ap (existT P (cc (g b))) q)))^-1 _).
