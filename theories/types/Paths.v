@@ -11,7 +11,9 @@ Generalizable Variables A B f x y z.
 
 (** The path spaces of a path space are not, of course, determined; they are just the higher-dimensional structure of the original space. *)
 
-(** ** Transporting in path spaces *)
+(** ** Transporting in path spaces.
+
+   There are potentially a lot of these lemmas, so we adopt a uniform naming scheme.  The letter `l` means the left endpoint varies, while `r` means the right endpoint varies.  A letter `F` means application of a function to that (varying) endpoint. *)
 
 Definition transport_paths_l {A : Type} {x1 x2 y : A} (p : x1 = x2) (q : x1 = y)
   : transport (fun x => x = y) p q = p^ @ q.
@@ -31,6 +33,45 @@ Proof.
   destruct p; simpl.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
+
+Definition transport_paths_Fl {A B : Type} {f : A -> B} {x1 x2 : A} {y : B}
+  (p : x1 = x2) (q : f x1 = y)
+  : transport (fun x => f x = y) p q = (ap f p)^ @ q.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+
+Definition transport_paths_Fr {A B : Type} {g : A -> B} {y1 y2 : A} {x : B}
+  (p : y1 = y2) (q : x = g y1)
+  : transport (fun y => x = g y) p q = q @ (ap g p).
+Proof.
+  destruct p. apply symmetry, concat_p1.
+Defined.
+
+Definition transport_paths_FlFr {A B : Type} {f g : A -> B} {x1 x2 : A}
+  (p : x1 = x2) (q : f x1 = g x1)
+  : transport (fun x => f x = g x) p q = (ap f p)^ @ q @ (ap g p).
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
+Definition transport_paths_FFlr {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : g (f x1) = x1)
+  : transport (fun x => g (f x) = x) p q = (ap g (ap f p))^ @ q @ p.
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
+Definition transport_paths_lFFr {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : x1 = g (f x1))
+  : transport (fun x => x = g (f x)) p q = p^ @ q @ (ap g (ap f p)).
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
 
 (** ** Functorial action *)
 
@@ -111,6 +152,102 @@ Definition equiv_moveR_Vp {A : Type} {x y z : A}
   := equiv_compose'
        (equiv_concat_r (concat_V_pp r q) (r^ @ p))
        (equiv_ap (equiv_concat_l r^ z) p (r @ q)).
+
+
+(** *** Dependent paths *)
+
+(** Usually, a dependent path over [p:x1=x2] in [P:A->Type] between [y1:P x1] and [y2:P x2] is a path [transport P p y1 = y2] in [P x2].  However, when [P] is a path space, these dependent paths have a more convenient description: rather than transporting the left side both forwards and backwards, we transport both sides of the equation forwards, forming a sort of "naturality square".
+
+   We use the same naming scheme as for the transport lemmas. *)
+
+Definition dpath_path_l {A : Type} {x1 x2 y : A}
+  (p : x1 = x2) (q : x1 = y) (r : x2 = y)
+  : q = p @ r
+  <~>
+  transport (fun x => x = y) p q = r.
+Proof.
+  destruct p; simpl.
+  exact (equiv_concat_r (concat_1p r) q).
+Defined.
+
+Definition dpath_path_r {A : Type} {x y1 y2 : A}
+  (p : y1 = y2) (q : x = y1) (r : x = y2)
+  : q @ p = r
+  <~>
+  transport (fun y => x = y) p q = r.
+Proof.
+  destruct p; simpl.
+  exact (equiv_concat_l (concat_p1 q)^ r).
+Defined.
+
+Definition dpath_path_lr {A : Type} {x1 x2 : A}
+  (p : x1 = x2) (q : x1 = x1) (r : x2 = x2)
+  : q @ p = p @ r
+  <~>
+  transport (fun x => x = x) p q = r.
+Proof.
+  destruct p; simpl.
+  refine (equiv_compose' (B := (q @ 1 = r)) _ _).
+  exact (equiv_concat_l (concat_p1 q)^ r).
+  exact (equiv_concat_r (concat_1p r) (q @ 1)).
+Defined.
+
+Definition dpath_path_Fl {A B : Type} {f : A -> B} {x1 x2 : A} {y : B}
+  (p : x1 = x2) (q : f x1 = y) (r : f x2 = y)
+  : q = ap f p @ r
+  <~>
+  transport (fun x => f x = y) p q = r.
+Proof.
+  destruct p; simpl.
+  exact (equiv_concat_r (concat_1p r) q).
+Defined.
+
+Definition dpath_path_Fr {A B : Type} {g : A -> B} {x : B} {y1 y2 : A}
+  (p : y1 = y2) (q : x = g y1) (r : x = g y2)
+  : q @ ap g p = r
+  <~>
+  transport (fun y => x = g y) p q = r.
+Proof.
+  destruct p; simpl.
+  exact (equiv_concat_l (concat_p1 q)^ r).
+Defined.
+
+Definition dpath_path_FlFr {A B : Type} {f g : A -> B} {x1 x2 : A}
+  (p : x1 = x2) (q : f x1 = g x1) (r : f x2 = g x2)
+  : q @ ap g p = ap f p @ r
+  <~>
+  transport (fun x => f x = g x) p q = r.
+Proof.
+  destruct p; simpl.
+  refine (equiv_compose' (B := (q @ 1 = r)) _ _).
+  exact (equiv_concat_l (concat_p1 q)^ r).
+  exact (equiv_concat_r (concat_1p r) (q @ 1)).
+Defined.
+
+Definition dpath_path_FFlr {A B : Type} {f : A -> B} {g : B -> A}
+  {x1 x2 : A} (p : x1 = x2) (q : g (f x1) = x1) (r : g (f x2) = x2)
+  : q @ p = ap g (ap f p) @ r
+  <~>
+  transport (fun x => g (f x) = x) p q = r.
+Proof.
+  destruct p; simpl.
+  refine (equiv_compose' (B := (q @ 1 = r)) _ _).
+  exact (equiv_concat_l (concat_p1 q)^ r).
+  exact (equiv_concat_r (concat_1p r) (q @ 1)).
+Defined.
+
+Definition dpath_path_lFFr {A B : Type} {f : A -> B} {g : B -> A}
+  {x1 x2 : A} (p : x1 = x2) (q : x1 = g (f x1)) (r : x2 = g (f x2))
+  : q @ ap g (ap f p) = p @ r
+  <~>
+  transport (fun x => x = g (f x)) p q = r.
+Proof.
+  destruct p; simpl.
+  refine (equiv_compose' (B := (q @ 1 = r)) _ _).
+  exact (equiv_concat_l (concat_p1 q)^ r).
+  exact (equiv_concat_r (concat_1p r) (q @ 1)).
+Defined.
+
 
 (** ** Universal mapping property *)
 

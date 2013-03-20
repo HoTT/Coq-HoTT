@@ -50,6 +50,23 @@ Proof.
   destruct p; simpl; auto.
 Defined.
 
+
+(** *** Dependent paths *)
+
+(** Usually, a dependent path over [p:x1=x2] in [P:A->Type] between [y1:P x1] and [y2:P x2] is a path [transport P p y1 = y2] in [P x2].  However, when [P] is a function space, these dependent paths have a more convenient description: rather than transporting the argument of [y1] forwards and backwards, we transport only forwards but on both sides of the equation, yielding a "naturality square". *)
+
+Definition dpath_arrow `{Funext}
+  {A:Type} (B C : A -> Type) (x1 x2:A) (p:x1=x2)
+  (f : B x1 -> C x1) (g : B x2 -> C x2)
+  : (forall (y1:B x1), transport C p (f y1) = g (transport B p y1))
+  <~>
+  (transport (fun x => B x -> C x) p f = g).
+Proof.
+  destruct p.
+  apply equiv_path_arrow.
+Defined.
+
+
 (** *** Functorial action *)
 
 Definition functor_arrow `(f : B -> A) `(g : C -> D)
