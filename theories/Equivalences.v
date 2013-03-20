@@ -167,6 +167,20 @@ Section EquivCancelL.
 
 End EquivCancelL.
 
+(** Transporting is an equivalence. *)
+Section EquivTransport.
+
+  Context {A : Type} (P : A -> Type) (x y : A) (p : x = y).
+
+  Global Instance isequiv_transport : IsEquiv (transport P p)
+    := BuildIsEquiv (P x) (P y) (transport P p) (transport P p^)
+    (transport_pV P p) (transport_Vp P p) (transport_pVp P p).
+
+  Definition equiv_transport : P x <~> P y
+    := BuildEquiv _ _ (transport P p) _.
+
+End EquivTransport.
+
 (** In all the above cases, we were able to directly construct all the structure of an equivalence.  However, as is evident, sometimes it is quite difficult to prove the adjoint law.
 
    The following adjointification theorem allows us to be lazy about this if we wish.  It says that if we have all the data of an (adjoint) equivalence except the triangle identity, then we can always obtain the triangle identity by modifying the datum [equiv_is_section] (or [equiv_is_retraction]).  The proof is the same as the standard categorical argument that any equivalence can be improved to an adjoint equivalence.
