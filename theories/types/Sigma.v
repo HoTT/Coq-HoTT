@@ -2,6 +2,7 @@
 (** * Theorems about Sigma-types (dependent sums) *)
 
 Require Import Overture PathGroupoids Equivalences Contractible Trunc.
+Require Import Arrow.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -122,6 +123,75 @@ Defined.
 Definition equiv_path_sigma `(P : A -> Type) (u v : sigT P)
   : {p : u.1 = v.1 &  p # u.2 = v.2} <~> (u = v)
   := BuildEquiv _ _ (path_sigma_uncurried P u v) _.
+
+(** This identification respects path concatenation. *)
+
+Definition path_sigma_pp_pp {A : Type} (P : A -> Type) {u v w : sigT P}
+  (p1 : u.1 = v.1) (q1 : p1 # u.2 = v.2)
+  (p2 : v.1 = w.1) (q2 : p2 # v.2 = w.2)
+  : path_sigma P u w (p1 @ p2)
+      (transport_pp P p1 p2 u.2 @ ap (transport P p2) q1 @ q2)
+  = path_sigma P u v p1 q1 @ path_sigma P v w p2 q2.
+Proof.
+  destruct u, v, w. simpl in *.
+  destruct p1, p2, q1, q2.
+  reflexivity.
+Defined.
+
+Definition path_sigma_pp_pp' {A : Type} (P : A -> Type)
+  {u1 v1 w1 : A} {u2 : P u1} {v2 : P v1} {w2 : P w1}
+  (p1 : u1 = v1) (q1 : p1 # u2 = v2)
+  (p2 : v1 = w1) (q2 : p2 # v2 = w2)
+  : path_sigma' P (p1 @ p2)
+      (transport_pp P p1 p2 u2 @ ap (transport P p2) q1 @ q2)
+  = path_sigma' P p1 q1 @ path_sigma' P p2 q2
+  := @path_sigma_pp_pp A P (u1;u2) (v1;v2) (w1;w2) p1 q1 p2 q2.
+
+Definition path_sigma_p1_1p' {A : Type} (P : A -> Type)
+  {u1 v1 : A} {u2 : P u1} {v2 : P v1}
+  (p : u1 = v1) (q : p # u2 = v2)
+  : path_sigma' P p q
+  = path_sigma' P p 1 @ path_sigma' P 1 q.
+Proof.
+  destruct p, q.
+  reflexivity.
+Defined.
+
+(** Applying [existT] to one argument is the same as [path_sigma] with reflexivity in the first place. *)
+
+Definition ap_existT {A : Type} (P : A -> Type) (x : A) (y1 y2 : P x)
+  (q : y1 = y2)
+  : ap (existT P x) q = path_sigma' P 1 q.
+Proof.
+  destruct q; reflexivity.
+Defined.
+
+(** Dependent transport is the same as transport along a [path_sigma]. *)
+
+Definition transportD_is_transport
+  {A:Type} (B:A->Type) (C:sigT B -> Type)
+  (x1 x2:A) (p:x1=x2) (y:B x1) (z:C (x1;y))
+  : transportD B (fun a b => C (a;b)) p y z
+    = transport C (path_sigma' B p 1) z.
+Proof.
+  destruct p. reflexivity.
+Defined.
+
+(** Applying a function constructed with [sigT_rect] to a [path_sigma] can be computed.  Technically this computation should probably go by way of a 2-variable [ap], and should be done in the dependently typed case. *)
+
+Definition ap_sigT_rectnd_path_sigma {A : Type} (P : A -> Type) {Q : Type}
+  (x1 x2:A) (p:x1=x2) (y1:P x1) (y2:P x2) (q:p # y1 = y2)
+  (d : forall a, P a -> Q)
+  : ap (sigT_rect (fun _ => Q) d) (path_sigma' P p q)
+  = (transport_const p _)^
+  @ (ap ((transport (fun _ => Q) p) o (d x1)) (transport_Vp _ p y1))^
+  @ (transport_arrow p _ _)^
+  @ ap10 (apD d p) (p # y1)
+  @ ap (d x2) q.
+Proof.
+  destruct p. destruct q. reflexivity.
+Defined.
+
 
 (** *** Transport *)
 

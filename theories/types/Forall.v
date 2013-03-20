@@ -22,8 +22,8 @@ This equivalence, however, is just the combination of [apD10] and function exten
 
 Definition apD10_path_forall `{P : A -> Type}
   (f g : forall x, P x) (h : f == g)
-  : apD10 (path_forall _ _ h) = h
-  := eisretr apD10 h.
+  : apD10 (path_forall _ _ h) == h
+  := apD10 (eisretr apD10 h).
 
 Definition eta_path_forall `{P : A -> Type}
   (f g : forall x, P x) (p : f = g)
