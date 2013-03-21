@@ -20,7 +20,7 @@ Definition path_arrow {A B : Type} (f g : A -> B)
   := path_forall f g.
 
 Definition ap10_path_arrow {A B : Type} (f g : A -> B) (h : f == g)
-  : ap10 (path_arrow f g h) = h
+  : ap10 (path_arrow f g h) == h
   := apD10_path_forall f g h.
 
 Definition eta_path_arrow {A B : Type} (f g : A -> B) (p : f = g)
@@ -55,8 +55,8 @@ Defined.
 
 (** Usually, a dependent path over [p:x1=x2] in [P:A->Type] between [y1:P x1] and [y2:P x2] is a path [transport P p y1 = y2] in [P x2].  However, when [P] is a function space, these dependent paths have a more convenient description: rather than transporting the argument of [y1] forwards and backwards, we transport only forwards but on both sides of the equation, yielding a "naturality square". *)
 
-Definition dpath_arrow `{Funext}
-  {A:Type} (B C : A -> Type) (x1 x2:A) (p:x1=x2)
+Definition dpath_arrow
+  {A:Type} (B C : A -> Type) {x1 x2:A} (p:x1=x2)
   (f : B x1 -> C x1) (g : B x2 -> C x2)
   : (forall (y1:B x1), transport C p (f y1) = g (transport B p y1))
   <~>
@@ -66,6 +66,19 @@ Proof.
   apply equiv_path_arrow.
 Defined.
 
+Definition ap10_dpath_arrow
+  {A:Type} (B C : A -> Type) {x1 x2:A} (p:x1=x2)
+  (f : B x1 -> C x1) (g : B x2 -> C x2)
+  (h : forall (y1:B x1), transport C p (f y1) = g (transport B p y1))
+  (u : B x1)
+  : ap10 (dpath_arrow B C p f g h) (p # u)
+  = transport_arrow p f (p # u)
+  @ ap (fun x => p # (f x)) (transport_Vp B p u)
+  @ h u.
+Proof.
+  destruct p; simpl; unfold ap10.
+  exact (apD10_path_forall f g h u @ (concat_1p _)^).
+Defined.
 
 (** *** Functorial action *)
 
