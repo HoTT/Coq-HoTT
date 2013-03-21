@@ -44,6 +44,15 @@ Definition transport_path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} (
   : transport (fun X:Type => X) (path_universe f) z = f z
   := ap10 (ap (equiv_fun A B) (eisretr (equiv_path A B) (BuildEquiv _ _ f feq))) z.
 
+(* This somewhat fancier version is useful when working with HITs. *)
+Definition transport_path_universe'
+  {A : Type} (P : A -> Type) {x y : A} (p : x = y)
+  (f : P x <~> P y) (q : ap P p = path_universe f) (u : P x)
+  : transport P p u = f u
+  := transport_compose idmap P p u
+   @ ap10 (ap (transport idmap) q) u
+   @ transport_path_universe f u.
+
 Definition eta_path_universe {A B : Type} (p : A = B)
   : path_universe (equiv_path A B p) = p
   := eissect (equiv_path A B) p.

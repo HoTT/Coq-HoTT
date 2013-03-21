@@ -22,8 +22,8 @@ This equivalence, however, is just the combination of [apD10] and function exten
 
 Definition apD10_path_forall `{P : A -> Type}
   (f g : forall x, P x) (h : f == g)
-  : apD10 (path_forall _ _ h) = h
-  := eisretr apD10 h.
+  : apD10 (path_forall _ _ h) == h
+  := apD10 (eisretr apD10 h).
 
 Definition eta_path_forall `{P : A -> Type}
   (f g : forall x, P x) (p : f = g)
@@ -56,6 +56,22 @@ Definition transport_forall
     == (fun y =>
        transport (C x2) (transport_pV _ _ _) (transportD _ _ p _ (f (p^ # y))))
   := match p with idpath => fun _ => 1 end.
+
+
+(** *** Dependent paths *)
+
+(** Usually, a dependent path over [p:x1=x2] in [P:A->Type] between [y1:P x1] and [y2:P x2] is a path [transport P p y1 = y2] in [P x2].  However, when [P] is a function space, these dependent paths have a more convenient description: rather than transporting the argument of [y1] forwards and backwards, we transport only forwards but on both sides of the equation, yielding a "naturality square". *)
+
+Definition dpath_forall `{Funext}
+  {A:Type} (B:A -> Type) (C:forall a, B a -> Type) (x1 x2:A) (p:x1=x2)
+  (f:forall y1:B x1, C x1 y1) (g:forall (y2:B x2), C x2 y2)
+  : (forall (y1:B x1), transportD B C p y1 (f y1) = g (transport B p y1))
+  <~>
+  (transport (fun x => forall y:B x, C x y) p f = g).
+Proof.
+  destruct p.
+  apply equiv_path_forall.
+Defined.
 
 
 (** *** Functorial action *)
