@@ -118,13 +118,18 @@ $(SSRCMAFILES): %.cma : %.mllib
 	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
 endif
 
-all: TAGS
-TAGS_FILES = $(STDVFILES)  $(VFILES)
-TAGS : $(TAGS_FILES) Makefile
+# The TAGS file
+TAGS_FILES = $(STDVFILES) $(VFILES)
+TAGS : $(TAGS_FILES)
 	$(ETAGS) --language=none \
 	-r '/^[[:space:]]*\(Axiom\|Theorem\|Class\|Instance\|Let\|Ltac\|Definition\|Lemma\|Record\|Remark\|Structure\|Fixpoint\|Fact\|Corollary\|Let\|Inductive\|Coinductive\|Proposition\)[[:space:]]+\([[:alnum:]_'\'']+\)/\2/' \
 	-r '/^[[:space:]]*\([[:alnum:]_'\'']+\)[[:space:]]*:/\1/' \
 	$^
+
+# Connection to the HoTT book
+HOTTBOOKDIR = ../book
+contrib/HoTTBook.v: $(HOTTBOOKDIR)/*.aux
+	grep -e \\^\\\\newline $^
 
 # Dependency files
 $(DEPFILES) $(STDDEPFILES) : %.d : %.v
