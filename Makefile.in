@@ -293,9 +293,6 @@ CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES) $(DEPFILES) $
 
 # The TAGS file
 TAGS_FILES = $(STDVFILES) $(VFILES)
-
-# Connection to the HoTT book
-HOTTBOOKDIR = ../book
 all: all-am
 
 .SUFFIXES:
@@ -797,8 +794,6 @@ TAGS : $(TAGS_FILES)
 	-r '/^[[:space:]]*\(Axiom\|Theorem\|Class\|Instance\|Let\|Ltac\|Definition\|Lemma\|Record\|Remark\|Structure\|Fixpoint\|Fact\|Corollary\|Let\|Inductive\|Coinductive\|Proposition\)[[:space:]]+\([[:alnum:]_'\'']+\)/\2/' \
 	-r '/^[[:space:]]*\([[:alnum:]_'\'']+\)[[:space:]]*:/\1/' \
 	$^
-contrib/HoTTBook.v: $(HOTTBOOKDIR)/*.aux
-	grep -e \\^\\\\newline $^
 
 # Dependency files
 $(DEPFILES) $(STDDEPFILES) : %.d : %.v

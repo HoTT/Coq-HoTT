@@ -126,11 +126,6 @@ TAGS : $(TAGS_FILES)
 	-r '/^[[:space:]]*\([[:alnum:]_'\'']+\)[[:space:]]*:/\1/' \
 	$^
 
-# Connection to the HoTT book
-HOTTBOOKDIR = ../book
-contrib/HoTTBook.v: $(HOTTBOOKDIR)/*.aux
-	grep -e \\^\\\\newline $^
-
 # Dependency files
 $(DEPFILES) $(STDDEPFILES) : %.d : %.v
 	$(COQDEP) -nois -coqlib $(srcdir)/coq -R theories HoTT -R coq/theories Coq $< >$@
