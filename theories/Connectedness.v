@@ -31,12 +31,12 @@ Existing Instance isconnected_ConnectedType.
 *)
 
 Class IsConnMap (n : trunc_index) {A B : Type} (f : A -> B)
-  := isconnected_hfiber_connmap :>
+  := isconnected_hfiber_conn_map :>
        forall b:B, IsConnected n (hfiber f b).
 (* TODO: question — why do the implicit arguments of this not seem to work, i.e. seem to need to be given explicitly? *)
 
 (** n-connected maps are orthogonal to n-truncated maps (i.e. familes of n-truncated types). *)
-Definition connmap_elim {n : trunc_index}
+Definition conn_map_elim {n : trunc_index}
   {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
   (P : B -> Type) {HP : forall b:B, IsTrunc n (P b)}
   (d : forall a:A, P (f a))
@@ -49,13 +49,13 @@ Proof.
     exact (transport P p (d a)).
 Defined.
 
-Definition connmap_comp {n : trunc_index}
+Definition conn_map_comp {n : trunc_index}
   {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
   (P : B -> Type) {HP : forall b:B, IsTrunc n (P b)}
   (d : forall a:A, P (f a))
-: forall a:A, connmap_elim f P d (f a) = d a.
+: forall a:A, conn_map_elim f P d (f a) = d a.
 Proof.
-  intros a. unfold connmap_elim.
+  intros a. unfold conn_map_elim.
   set (fibermap := (fun a0p : hfiber f (f a)
     => let (a0, p) := a0p in transport P p (d a0))).
   destruct (isconnected_elim (P (f a)) fibermap) as [x e].
@@ -64,6 +64,54 @@ Proof.
 Defined.
 
 (*TODO: converse of these two lemmas — if a map has such an elim/comp, then it is connected. *)
+
+(** This elimination rule (and others) can be seen as saying that, given a fibration over the codomain and a section of it over the domain, there is some *extension* of this to a section over the whole domain. *)
+Definition ExtensionAlong {A B : Type} (f : A -> B)
+  (P : B -> Type) (d : forall x:A, P (f x))
+:= { s : forall y:B, P y & forall x:A, s (f x) = d x }.
+
+Definition path_extension {A B : Type} {f : A -> B}
+  {P : B -> Type} {d : forall x:A, P (f x)}
+  (ext ext' : ExtensionAlong f P d)
+  (H : ExtensionAlong f
+    (fun y => projT1 ext y = projT1 ext' y)
+    (fun x => projT2 ext x @ (projT2 ext' x)^))
+: ext = ext'.
+Proof.
+Admitted.
+
+(* TODO: check existing naming conventions for lemmas like this. *)
+Definition isequiv_path_extension {A B : Type} {f : A -> B}
+  {P : B -> Type} {d : forall x:A, P (f x)}
+  (ext ext' : ExtensionAlong f P d)
+: IsEquiv (path_extension ext ext').
+Proof.
+Admitted.
+
+Lemma extension_conn_map_elim {n : trunc_index}
+  {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
+  (P : B -> Type) {HP : forall b:B, IsTrunc n (P b)}
+  (d : forall a:A, P (f a))
+: ExtensionAlong f P d.
+Proof.
+  exists (conn_map_elim f P d).
+  apply conn_map_comp.
+Defined.
+
+Lemma extension_conn_map_all_eq {n : trunc_index}
+  {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
+  (P : B -> Type) {HP : forall b:B, IsTrunc n (P b)}
+  (d : forall a:A, P (f a))
+  (e e' : ExtensionAlong f P d)
+: e = e'.
+Proof.
+  apply path_extension.
+  destruct n as [ | n'].
+    admit.
+  apply (extension_conn_map_elim (n := n')).
+    admit.
+  intros b. apply HP.
+Defined.
 
 (** Very useful lemma: the connectivity of the wedge into the product, for a pair of pointed spaces.  The version here is reformulated to avoid mentioning the wedge itself. *)
 Definition isconn_wedge_incl {m n : trunc_index}
