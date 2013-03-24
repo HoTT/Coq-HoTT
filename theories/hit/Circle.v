@@ -10,7 +10,7 @@ Generalizable Variables X A B f g n.
 
 (* *** Definition of the circle. *)
 
-Module Circle.
+Module Export Circle.
 
 Local Inductive S1 : Type :=
 | base : S1.
@@ -26,8 +26,6 @@ Axiom S1_rect_beta_loop
   apD (S1_rect P b l) loop = l.
 
 End Circle.
-
-Import Circle.
 
 (* *** The non-dependent eliminator *)
 

@@ -8,7 +8,7 @@ Open Local Scope path_scope.
    | min1_path : forall (x y: minus1Trunc A), x = y
 *)
 
-Module minus1Trunc.
+Module Export minus1Trunc.
 
 Local Inductive minus1Trunc (A :Type) : Type :=
   min1 : A -> minus1Trunc A.
@@ -40,8 +40,6 @@ End minus1Trunc.
 
 (** By adding the following [Hint Resolve] we can simply use the [auto] tactic
    to resolve any path involving [is_inhab]. *)
-
-Import minus1Trunc.
 
 Hint Resolve @min1_path @minus1Trunc_compute_min1 @minus1Trunc_compute_path.
 
