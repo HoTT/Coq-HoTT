@@ -8,31 +8,6 @@ Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
 
-(* Some lemmas that ought to go elsewhere. *)
-
-Definition transport_path_sigma {A:Type} (B:A->Type) (C:sigT B -> Type)
-  (x1 x2:A) (p:x1=x2) (y1:B x1) (y2:B x2) (q:p # y1 = y2) (z:C (x1;y1))
-  : transport C (path_sigma' B p q) z
-  = transport C (ap (existT B x2) q)
-      (transportD B (fun a b => C (a;b)) p y1 z).
-Proof.
-  destruct p. destruct q. reflexivity.
-Defined.
-
-Definition ap_sigT_rect_path_sigma {A : Type} (P : A -> Type) {Q : Type}
-  (x1 x2:A) (p:x1=x2) (y1:P x1) (y2:P x2) (q:p # y1 = y2)
-  (d : forall a, P a -> Q)
-  : ap (sigT_rect (fun _ => Q) d) (path_sigma' P p q)
-  = (ap (d x1) (transport_Vp _ p y1))^
-  @ (transport_const p _)^
-  @ (transport_arrow p _ _)^
-  @ apD10 (apD d p) (p # y1)
-  @ ap (d x2) q.
-Proof.
-  destruct p. destruct q. reflexivity.
-Defined.
-
-
 (* First we define the general non-recursive HIT. *)
 
 Module Export BaseHIT.
@@ -146,12 +121,10 @@ Let sWtil := { w:W' & P w }.
 
 Let scct (a:A) (x:C a) : sWtil := (existT P (cc a) x).
 
-Let sppt (b:B) (y:C (f b)) : scct (f b) y = scct (g b) (D b y).
-Proof.
-  refine (path_sigma' P (pp b) _).
-  refine (transport_path_universe' P (pp b) (D b) _ _).
-  refine (W_rectnd_beta_pp _ _ _ _).
-Defined.
+Let sppt (b:B) (y:C (f b)) : scct (f b) y = scct (g b) (D b y)
+  := path_sigma' P (pp b)
+       (transport_path_universe' P (pp b) (D b)
+         (W_rectnd_beta_pp Type C (fun b0 => path_universe (D b0)) b) y).
 
 (* Here is the dependent eliminator *)
 Definition sWtil_rect (Q : sWtil -> Type)
@@ -168,11 +141,14 @@ Proof.
   intros y.
   set (q := transport_path_universe' P (pp b) (D b)
     (W_rectnd_beta_pp Type C (fun b0 : B => path_universe (D b0)) b) y).
-  refine ((ap (transport Q (ap (existT P (cc (g b))) q)))^-1 _).
-  refine ((transport_path_sigma P Q _ _ (pp b) _ _ q _)^ @ _).
-  refine (sppt' b y @ _).
-  refine ((apD (scct' (g b)) q)^ @ _).
-  exact (transport_compose Q (existT P (cc (g b))) q _).
+  rewrite transportD_is_transport.
+  refine (_ @ apD (scct' (g b)) q^).
+  refine (moveL_transport_V (fun x => Q (scct (g b) x)) q _ _ _).
+  rewrite transport_compose, <- transport_pp.
+  refine (_ @ sppt' b y).
+  apply ap10, ap.
+  refine (whiskerL _ (ap_existT P (cc (g b)) _ _ q) @ _).
+  exact ((path_sigma_p1_1p' _ _ _)^).
 Defined.
 
 (* The eliminator computes on the point constructor. *)
@@ -213,17 +189,14 @@ Proof.
   apply sigT_rect.
   refine (W_rect (fun w => P w -> Q) (fun a x => scct' a x) _).
   intros b.
-  apply path_forall; intros x.
-  refine (@transport_arrow W' P (fun _ => Q) _ _ _ _ _ @ _).
+  refine (dpath_arrow P (fun _ => Q) _ _ _ _).
+  intros y.
   refine (transport_const _ _ @ _).
-  refine (sppt' b _ @ _).
-  apply ap.
-  refine ((transport_path_universe' P (pp b) (D b) _ _)^ @ _).
+  refine (sppt' b _ @ ap _ _).
+  refine ((transport_path_universe' P (pp b) (D b) _ _)^).
   exact (W_rectnd_beta_pp _ _ _ _).
-  by apply transport_pV.
 Defined.
 
-(* Buckle your seat belts. *)
 Open Scope long_path_scope.
 
 Definition sWtil_rectnd_beta_ppt (Q : Type) 
@@ -233,23 +206,13 @@ Definition sWtil_rectnd_beta_ppt (Q : Type)
   : ap (sWtil_rectnd Q scct' sppt') (sppt b y) = sppt' b y.
 Proof.
   unfold sWtil_rectnd, sppt.
-  refine (@ap_sigT_rect_path_sigma W' P Q _ _ (pp b) _ _ _ _ @ _); simpl.
+  refine (@ap_sigT_rectnd_path_sigma W' P Q _ _ (pp b) _ _ _ _ @ _); simpl.
   rewrite (@W_rect_beta_pp A B f g).
-  rewrite apD10_path_forall.
-  (* This equality is everywhere *)
-  set (q := transport_path_universe' P (pp b) (D b)
-    (W_rectnd_beta_pp Type C (fun b0 : B => path_universe (D b0)) b)).
+  rewrite (ap10_dpath_arrow P (fun _ => Q) (pp b) _ _ _ y).
   repeat rewrite concat_p_pp.
-  (* And now things cancel like magic! *)
-  repeat rewrite concat_pV_p.
-  (* Now we can apply naturality *)
-  rewrite transport_pVp.
-  refine (whiskerR (whiskerL _ (ap02 (scct' (g b))
-    (concat_Ap (fun u => (q u)^) (transport_Vp P (pp b) y))^)) _ @ _).
-  rewrite concat_pp_p, <- ap_pp, concat_pV_p, <- ap_compose, concat_pp_p.
-  (* More naturality *)
-  refine (whiskerL _ (concat_Ap (sppt' b) (transport_Vp P (pp b) y))^ @ _).
-  by apply concat_V_pp. 
+  (* Now everything cancels! *)
+  rewrite ap_V, concat_pV_p, concat_pV_p, concat_pV_p, concat_Vp.
+  by apply concat_1p.
 Qed.
 
 Close Scope long_path_scope.
