@@ -36,6 +36,13 @@ Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
       (ap_compose f g _)^
     ).
 
+(* An alias of [isequiv_compose], with some arguments explicit; often convenient when type class search fails. *) 
+Definition isequiv_compose'
+  {A B : Type} (f : A -> B) (_ : IsEquiv f)
+  {C : Type} (g : B -> C) (_ : IsEquiv g)
+  : IsEquiv (g o f)
+  := isequiv_compose.
+
 Definition equiv_compose {A B C : Type} (g : B -> C) (f : A -> B)
   `{IsEquiv B C g} `{IsEquiv A B f}
   : A <~> C
