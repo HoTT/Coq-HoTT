@@ -83,38 +83,31 @@ Definition ExtensionAlong {A B : Type} (f : A -> B)
 Definition path_extension {A B : Type} {f : A -> B}
   {P : B -> Type} {d : forall x:A, P (f x)}
   (ext ext' : ExtensionAlong f P d)
-  (p_alpha : ExtensionAlong f
+: (ExtensionAlong f
     (fun y => projT1 ext y = projT1 ext' y)
     (fun x => projT2 ext x @ (projT2 ext' x)^))
-: ext = ext'.
+-> ext = ext'.
 Proof.
-  apply path_sigma_uncurried.
-  apply (@functor_sigma
-    _ (fun (p : ext .1 == ext' .1) =>
-        forall (x : A), p (f x) = (ext .2 x) @ (ext' .2 x)^) 
-    _ _
-    (path_forall (ext .1) (ext' .1))); [clear p_alpha | exact p_alpha].
-  intros p alpha.
-  apply path_forall. unfold pointwise_paths.
-  apply (@functor_forall
-    _ (fun x:A => p (f x) = ext .2 x @ (ext' .2 x) ^)
-    _ _ idmap);
-    [clear alpha | exact alpha].
-  intros b alpha'.
-  assert (transp_extension : forall p : ext .1 = ext' .1,
-    (transport (fun (s : forall y : B, P y) => forall x : A, s (f x) = d x)
-      p (ext .2)
-    = (fun x => ((apD10 p (f x))^ @ ext .2 x)))).
-    destruct ext as [g gd], ext' as [g' gd']; simpl.
-    intros q; destruct q; simpl.
-    apply path_forall; intro x. apply inverse, concat_1p.
+  apply (compose (path_sigma_uncurried _ _ _)).
+  apply (functor_sigma (path_forall (ext .1) (ext' .1))). intros p.
+  apply (compose (path_forall _ _)). unfold pointwise_paths.
+  apply (functor_forall idmap). intros x.
+  apply (compose (B := (p (f x))^ @ (ext .2 x) = (ext' .2 x))).
+    apply concat.
+    path_via ((apD10 (path_forall _ _ p) (f x))^ @ ext .2 x).
+    assert (transp_extension : forall p : ext .1 = ext' .1,
+      (transport (fun (s : forall y : B, P y) => forall x : A, s (f x) = d x)
+        p (ext .2) x
+      = ((apD10 p (f x))^ @ ext .2 x))).
+      destruct ext as [g gd], ext' as [g' gd']; simpl.
+      intros q; destruct q; simpl.
+      apply inverse, concat_1p.
+    apply transp_extension.
 (*TODO: these rewrites may well need improving to show that this is an equiv.*)
-  rewrite transp_extension; clear transp_extension.  
-  rewrite apD10_path_forall.
-  apply moveR_Vp.
-  apply moveL_pM.
-  apply inverse.
-  exact alpha'.
+    apply whiskerR, ap, apD10_path_forall.
+  apply (compose (moveR_Vp _ _ _)).
+  apply (compose (moveL_pM _ _ _)).
+  exact inverse.
 Defined.
 
 Definition isequiv_path_extension {A B : Type} {f : A -> B}
@@ -122,7 +115,22 @@ Definition isequiv_path_extension {A B : Type} {f : A -> B}
   (ext ext' : ExtensionAlong f P d)
 : IsEquiv (path_extension ext ext').
 Proof.
-Admitted.
+  apply @isequiv_compose.
+    Focus 2. apply @isequiv_path_sigma.
+  apply @isequiv_functor_sigma.
+    apply @isequiv_path_forall.
+  intros a. apply @isequiv_compose.
+    Focus 2. apply @isequiv_path_forall.
+  apply (@isequiv_functor_forall _).
+    apply isequiv_idmap.
+  intros x. apply @isequiv_compose.
+  apply @isequiv_compose.
+    apply @isequiv_compose.
+      apply isequiv_path_inverse.
+      admit. (* TODO: [isequiv_moveL_pM]. *)
+    admit. (* TODO: [isequiv_moveR_Vp]. *)
+  apply isequiv_concat_l.
+Defined.
 
 Lemma extension_conn_map_elim {n : trunc_index}
   {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
