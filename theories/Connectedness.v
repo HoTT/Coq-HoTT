@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Connectedness *)
 
-Require Import Overture PathGroupoids Fibrations Equivalences Trunc types.Forall types.Sigma.
+Require Import Overture PathGroupoids Fibrations Equivalences Trunc types.Forall types.Sigma types.Paths.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 
@@ -88,6 +88,7 @@ Definition path_extension {A B : Type} {f : A -> B}
     (fun x => projT2 ext x @ (projT2 ext' x)^))
 -> ext = ext'.
 Proof.
+(* Note: written with liberal use of [compose], to facilitate later proving that it’s an equivalance. *)
   apply (compose (path_sigma_uncurried _ _ _)).
   apply (functor_sigma (path_forall (ext .1) (ext' .1))). intros p.
   apply (compose (path_forall _ _)). unfold pointwise_paths.
@@ -103,7 +104,6 @@ Proof.
       intros q; destruct q; simpl.
       apply inverse, concat_1p.
     apply transp_extension.
-(*TODO: these rewrites may well need improving to show that this is an equiv.*)
     apply whiskerR, ap, apD10_path_forall.
   apply (compose (moveR_Vp _ _ _)).
   apply (compose (moveL_pM _ _ _)).
@@ -127,10 +127,11 @@ Proof.
   apply @isequiv_compose.
     apply @isequiv_compose.
       apply isequiv_path_inverse.
-      admit. (* TODO: [isequiv_moveL_pM]. *)
-    admit. (* TODO: [isequiv_moveR_Vp]. *)
+      apply isequiv_moveL_pM.
+    apply isequiv_moveR_Vp.
   apply isequiv_concat_l.
-Defined.
+Qed.
+(** Note: opaque, since this term is big enough that using its computational content will probably be pretty intractable. *)
 
 Lemma extension_conn_map_elim {n : trunc_index}
   {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
@@ -176,7 +177,7 @@ Proof.
   apply isequiv_path_extension.
 Defined.
 
-(** A very useful form of the key lemma: the connectivity of the wedge into the product, for a pair of pointed spaces.  The version here is formulated without mentioning the wedge itself. *)
+(** A very useful form of the key lemma: the connectivity of the wedge into the product, for a pair of pointed spaces.  In fact this can be formulated without mentioning the wedge per se, since the statement only needs to talk about maps out of the wedge. *)
 Corollary isconn_wedge_incl {m n : trunc_index}
   (A : Type) (a0 : A) `{IsConnected (trunc_S m) A} 
   (B : Type) (b0 : B) `{IsConnected (trunc_S n) B} 
