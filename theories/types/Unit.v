@@ -53,10 +53,12 @@ Definition equiv_path_unit (z z' : Unit) : Unit <~> (z = z')
 (** *** Universal mapping properties *)
 
 (* The positive universal property *)
+Arguments Unit_rect [A] a u : rename.
+
 Instance isequiv_unit_rect `{Funext} (A : Type) : IsEquiv (@Unit_rect A)
   := isequiv_adjointify _
   (fun f : Unit -> A => f tt)
-  (fun f : Unit -> A => path_forall (Unit_rect _ (f tt)) f
+  (fun f : Unit -> A => path_forall (Unit_rect (f tt)) f
                                     (fun x => match x with tt => 1 end))
   (fun _ => 1).
 

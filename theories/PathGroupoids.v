@@ -174,122 +174,113 @@ Definition inv_V {A : Type} {x y : A} (p : x = y) :
 Definition moveR_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   p = r^ @ q -> r @ p = q.
 Proof.
-  intro h; rewrite h.
-  apply concat_p_Vp.
+  destruct r.
+  intro h. exact (concat_1p _ @ h @ concat_1p _).
 Defined.
 
 Definition moveR_pM {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   r = q @ p^ -> r @ p = q.
-Proof. 
-  intro h; rewrite h.
-  apply concat_pV_p.
+Proof.
+  destruct p.
+  intro h. exact (concat_p1 _ @ h @ concat_p1 _).  
 Defined.
 
 Definition moveR_Vp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y) :
   p = r @ q -> r^ @ p = q.
 Proof.
-  intro h; rewrite h.
-  apply concat_V_pp.
+  destruct r.
+  intro h. exact (concat_1p _ @ h @ concat_1p _).
 Defined.
 
 Definition moveR_pV {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x) :
   r = q @ p -> r @ p^ = q.
 Proof. 
-  intro h; rewrite h.
-  apply concat_pp_V.
+  destruct p.
+  intro h. exact (concat_p1 _ @ h @ concat_p1 _).
 Defined.
 
 Definition moveL_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   r^ @ q = p -> q = r @ p.
 Proof.
-  intro h; rewrite <- h.
-  apply symmetry, concat_p_Vp.
+  destruct r.
+  intro h. exact ((concat_1p _)^ @ h @ (concat_1p _)^).
 Defined.
 
 Definition moveL_pM {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   q @ p^ = r -> q = r @ p.
 Proof.
-  intro h; rewrite <- h.
-  apply symmetry; apply concat_pV_p.
+  destruct p.
+  intro h. exact ((concat_p1 _)^ @ h @ (concat_p1 _)^).
 Defined.
 
 Definition moveL_Vp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y) :
   r @ q = p -> q = r^ @ p.
 Proof.
-  intro h; rewrite <- h.
-  apply symmetry, concat_V_pp.
+  destruct r.
+  intro h. exact ((concat_1p _)^ @ h @ (concat_1p _)^).
 Defined.
 
 Definition moveL_pV {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x) :
   q @ p = r -> q = r @ p^.
 Proof.
-  intro h; rewrite <- h.
-  apply symmetry; apply concat_pp_V.
+  destruct p.
+  intro h. exact ((concat_p1 _)^ @ h @ (concat_p1 _)^).
 Defined.
 
 Definition moveL_1M {A : Type} {x y : A} (p q : x = y) :
   p @ q^ = 1 -> p = q.
 Proof.
   destruct q.
-  simpl. rewrite (concat_p1 p).
-  trivial.
+  intro h. exact ((concat_p1 _)^ @ h).
 Defined.
 
 Definition moveL_M1 {A : Type} {x y : A} (p q : x = y) :
   q^ @ p = 1 -> p = q.
 Proof.
   destruct q.
-  simpl. rewrite (concat_1p p).
-  trivial.
+  intro h. exact ((concat_1p _)^ @ h).
 Defined.
 
 Definition moveL_1V {A : Type} {x y : A} (p : x = y) (q : y = x) :
   p @ q = 1 -> p = q^.
 Proof.
   destruct q.
-  rewrite (concat_p1 p).
-  trivial.
+  intro h. exact ((concat_p1 _)^ @ h).
 Defined.
 
 Definition moveL_V1 {A : Type} {x y : A} (p : x = y) (q : y = x) :
   q @ p = 1 -> p = q^.
 Proof.
   destruct q.
-  rewrite (concat_1p p).
-  trivial.
+  intro h. exact ((concat_1p _)^ @ h).
 Defined.
 
 Definition moveR_M1 {A : Type} {x y : A} (p q : x = y) :
   1 = p^ @ q -> p = q.
 Proof.
   destruct p.
-  simpl. rewrite (concat_1p q).
-  trivial.
+  intro h. exact (h @ (concat_1p _)).
 Defined.
 
 Definition moveR_1M {A : Type} {x y : A} (p q : x = y) :
   1 = q @ p^ -> p = q.
 Proof.
   destruct p.
-  simpl.
-  rewrite (concat_p1 q).
-  trivial.
+  intro h. exact (h @ (concat_p1 _)).
 Defined.
 
 Definition moveR_1V {A : Type} {x y : A} (p : x = y) (q : y = x) :
   1 = q @ p -> p^ = q.
 Proof.
   destruct p.
-  rewrite (concat_p1 q).
-  trivial.
+  intro h. exact (h @ (concat_p1 _)).
 Defined.
 
 Definition moveR_V1 {A : Type} {x y : A} (p : x = y) (q : y = x) :
   1 = p @ q -> p^ = q.
 Proof.
   destruct p.
-  rewrite (concat_1p q).
-  trivial.
+  intro h. exact (h @ (concat_1p _)).
 Defined.
 
 Definition moveR_transport_p {A : Type} (P : A -> Type) {x y : A}

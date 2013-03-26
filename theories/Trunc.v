@@ -36,3 +36,12 @@ Qed.
 Definition trunc_equiv' `(f : A <~> B) `{IsTrunc n A}
   : IsTrunc n B
   := trunc_equiv f.
+
+(** Arithmetic on truncation-levels. TODO: move to Trunc.v?*)
+Fixpoint trunc_add (m n : trunc_index) : trunc_index
+  := match m with
+       | minus_two => n
+       | trunc_S m' => trunc_S (trunc_add m' n)
+     end.
+
+Notation "m -2+ n" := (trunc_add m n) (at level 50, left associativity).
