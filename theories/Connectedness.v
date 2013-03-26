@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Connectedness *)
 
-Require Import Overture Fibrations Equivalences Trunc.
+Require Import Overture PathGroupoids Fibrations Equivalences Trunc types.Forall types.Sigma.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 
@@ -14,12 +14,16 @@ Currently, the translation is therefore as follows:
 Map    (n-1)-connected   n-connected       n-connective
 Type   n-connected       n-connected       (n+1)-connective
 
-There is a further choice in the definition.  Connectedness can either be defined as contractibility of the truncation, or by elimination into truncated types.  The former requires HIT’s, but keeps the type [IsConnected] small; the latter (which we use for now) requires only core Coq, but blows up the size of [IsConnected], since it quantifies over types. *)
+A handy benchmark: under our indexing, the map [S1 -> 1] is 0-connected but not 1-connected, while the map [1 -> S1] is (–1)–connected but not 0-connected.
+
+There is also a technical choice to be made in the definition.  Connectedness can either be defined as contractibility of the truncation, or by elimination into truncated types.  The former requires HIT’s, but keeps the type [IsConnected] small; the latter, which we use for now, requires only core Coq, but blows up the size (universe leve) of [IsConnected], since it quantifies over types. 
+
+Q: is there a definition of connectedness that neither blows up the universe level, nor requires HIT’s? *)
 
 Class IsConnected (n : trunc_index) (A : Type)
  := isconnected_elim :> 
       forall (C : Type) `{IsTrunc n C} (f : A -> C),
-        exists c:C, (forall a:A, f a = c).
+        { c:C & forall a:A, f a = c }.
 
 (* TODO: probably remove — with type classes, one is supposed to avoid using this sort of type, right?
 Record ConnectedType (n : trunc_index) := BuildConnectedType {
@@ -63,7 +67,13 @@ Proof.
   apply inverse, e.
 Defined.
 
-(*TODO: converse of these two lemmas — if a map has such an elim/comp, then it is connected. *)
+(* TODO: converse of these two lemmas — if a map has such an elim/comp, then it is connected. *)
+
+Section Extensions.
+
+Context `{Funext}.
+
+(* TODO: consider naming for [ExtensionAlong] and subsequent lemmas.  As a name for the type itself, [Extension] or [ExtensionAlong] seems great; but resultant lemma names such as [path_extension] (following existing naming conventions) are rather misleading. *)
 
 (** This elimination rule (and others) can be seen as saying that, given a fibration over the codomain and a section of it over the domain, there is some *extension* of this to a section over the whole domain. *)
 Definition ExtensionAlong {A B : Type} (f : A -> B)
@@ -73,15 +83,40 @@ Definition ExtensionAlong {A B : Type} (f : A -> B)
 Definition path_extension {A B : Type} {f : A -> B}
   {P : B -> Type} {d : forall x:A, P (f x)}
   (ext ext' : ExtensionAlong f P d)
-  (H : ExtensionAlong f
+  (p_alpha : ExtensionAlong f
     (fun y => projT1 ext y = projT1 ext' y)
     (fun x => projT2 ext x @ (projT2 ext' x)^))
 : ext = ext'.
 Proof.
-Admitted.
+  apply path_sigma_uncurried.
+  apply (@functor_sigma
+    _ (fun (p : ext .1 == ext' .1) =>
+        forall (x : A), p (f x) = (ext .2 x) @ (ext' .2 x)^) 
+    _ _
+    (path_forall (ext .1) (ext' .1))); [clear p_alpha | exact p_alpha].
+  intros p alpha.
+  apply path_forall. unfold pointwise_paths.
+  apply (@functor_forall
+    _ (fun x:A => p (f x) = ext .2 x @ (ext' .2 x) ^)
+    _ _ idmap);
+    [clear alpha | exact alpha].
+  intros b alpha'.
+  assert (transp_extension : forall p : ext .1 = ext' .1,
+    (transport (fun (s : forall y : B, P y) => forall x : A, s (f x) = d x)
+      p (ext .2)
+    = (fun x => ((apD10 p (f x))^ @ ext .2 x)))).
+    destruct ext as [g gd], ext' as [g' gd']; simpl.
+    intros q; destruct q; simpl.
+    apply path_forall; intro x. apply inverse, concat_1p.
+(*TODO: these rewrites may well need improving to show that this is an equiv.*)
+  rewrite transp_extension; clear transp_extension.  
+  rewrite apD10_path_forall.
+  apply moveR_Vp.
+  apply moveL_pM.
+  apply inverse.
+  exact alpha'.
+Defined.
 
-(* TODO: check existing naming conventions for lemmas like this,
-  showing that the “path-construction” lemma is an equivalence. *)
 Definition isequiv_path_extension {A B : Type} {f : A -> B}
   {P : B -> Type} {d : forall x:A, P (f x)}
   (ext ext' : ExtensionAlong f P d)
@@ -91,7 +126,7 @@ Admitted.
 
 Lemma extension_conn_map_elim {n : trunc_index}
   {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
-  (P : B -> Type) {HP : forall b:B, IsTrunc n (P b)}
+  (P : B -> Type) `{forall b:B, IsTrunc n (P b)}
   (d : forall a:A, P (f a))
 : ExtensionAlong f P d.
 Proof.
@@ -101,7 +136,7 @@ Defined.
 
 Lemma extension_conn_map_all_eq {n : trunc_index}
   {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
-  (P : B -> Type) {HP : forall b:B, IsTrunc n (P b)}
+  (P : B -> Type) `{forall b:B, IsTrunc n (P b)}
   (d : forall a:A, P (f a))
   (e e' : ExtensionAlong f P d)
 : e = e'.
@@ -111,9 +146,9 @@ Proof.
   intros b. apply trunc_succ.
 Defined.
 
-(** A key lemma on the interaction between connectedness and truncatedness: suppose one is trying to lift an n-connected map against a k-truncated map (k ≥ n).  Then the space of possible liftings is (k–n–2)-truncated.
+(** A key lemma on the interaction between connectedness and truncatedness: suppose one is trying to extend along an n-connected map, into a k-truncated family of types (k ≥ n).  Then the space of possible extensions is (k–n–2)-truncated.
 
-(Mnemonic for the indexing: think of the base case, where k=n; then we know we can eliminate, so the space of liftings is contractible.) 
+(Mnemonic for the indexing: think of the base case, where k=n; then we know we can eliminate, so the space of extensions is contractible.) 
 
 This lemma is most useful via corollaries like the wedge-inclusion, the wiggly wedge, and their n-ary generalizations. *)
 Lemma istrunc_extension_along_conn {m n : trunc_index}
@@ -134,7 +169,7 @@ Proof.
 Defined.
 
 (** A very useful form of the key lemma: the connectivity of the wedge into the product, for a pair of pointed spaces.  The version here is formulated without mentioning the wedge itself. *)
-Definition isconn_wedge_incl {m n : trunc_index}
+Corollary isconn_wedge_incl {m n : trunc_index}
   (A : Type) (a0 : A) `{IsConnected (trunc_S m) A} 
   (B : Type) (b0 : B) `{IsConnected (trunc_S n) B} 
   (P : A -> B -> Type) `{forall a b, IsTrunc (m -2+ n) (P a b)}
@@ -147,3 +182,5 @@ Definition isconn_wedge_incl {m n : trunc_index}
   & (e_a0 b0) @ f_a0b0 = (e_b0 a0) }}}.
 Proof.
 Admitted.
+
+End Extensions.
