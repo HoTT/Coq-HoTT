@@ -80,7 +80,8 @@ Definition path_extension {A B : Type} {f : A -> B}
 Proof.
 Admitted.
 
-(* TODO: check existing naming conventions for lemmas like this. *)
+(* TODO: check existing naming conventions for lemmas like this,
+  showing that the “path-construction” lemma is an equivalence. *)
 Definition isequiv_path_extension {A B : Type} {f : A -> B}
   {P : B -> Type} {d : forall x:A, P (f x)}
   (ext ext' : ExtensionAlong f P d)
@@ -106,14 +107,33 @@ Lemma extension_conn_map_all_eq {n : trunc_index}
 : e = e'.
 Proof.
   apply path_extension.
-  destruct n as [ | n'].
-    admit.
-  apply (extension_conn_map_elim (n := n')).
-    admit.
-  intros b. apply HP.
+  apply (extension_conn_map_elim (n := n)); try assumption.
+  intros b. apply trunc_succ.
 Defined.
 
-(** Very useful lemma: the connectivity of the wedge into the product, for a pair of pointed spaces.  The version here is reformulated to avoid mentioning the wedge itself. *)
+(** A key lemma on the interaction between connectedness and truncatedness: suppose one is trying to lift an n-connected map against a k-truncated map (k ≥ n).  Then the space of possible liftings is (k–n–2)-truncated.
+
+(Mnemonic for the indexing: think of the base case, where k=n; then we know we can eliminate, so the space of liftings is contractible.) 
+
+This lemma is most useful via corollaries like the wedge-inclusion, the wiggly wedge, and their n-ary generalizations. *)
+Lemma istrunc_extension_along_conn {m n : trunc_index}
+  {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
+  (P : B -> Type) {HP : forall b:B, IsTrunc (m -2+ n) (P b)}
+  (d : forall a:A, P (f a))
+: IsTrunc m (ExtensionAlong f P d).
+Proof.
+  revert P HP d. induction m as [ | m' IH]; intros P HP d; simpl in *.
+  (* m = –2 *)
+  exists (extension_conn_map_elim f P d).
+  intros y. apply (extension_conn_map_all_eq (n := n)); assumption.
+  (* m = S m' *)
+  intros e e'. apply trunc_equiv with (path_extension e e').
+  apply IH.
+    intros b. apply HP.
+  apply isequiv_path_extension.
+Defined.
+
+(** A very useful form of the key lemma: the connectivity of the wedge into the product, for a pair of pointed spaces.  The version here is formulated without mentioning the wedge itself. *)
 Definition isconn_wedge_incl {m n : trunc_index}
   (A : Type) (a0 : A) `{IsConnected (trunc_S m) A} 
   (B : Type) (b0 : B) `{IsConnected (trunc_S n) B} 
