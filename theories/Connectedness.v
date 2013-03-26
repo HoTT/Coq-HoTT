@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Connectedness *)
 
-Require Import Overture PathGroupoids Fibrations Equivalences Trunc types.Forall types.Sigma types.Paths.
+Require Import Overture PathGroupoids Fibrations Equivalences Trunc types.Forall types.Sigma types.Paths types.Unit.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 
@@ -177,11 +177,13 @@ Proof.
   apply isequiv_path_extension.
 Defined.
 
+Local Notation "'name' a" := (fun (u : Unit) => a) (at level 1).
+
 (** A very useful form of the key lemma: the connectivity of the wedge into the product, for a pair of pointed spaces.  In fact this can be formulated without mentioning the wedge per se, since the statement only needs to talk about maps out of the wedge. *)
 Corollary isconn_wedge_incl {m n : trunc_index}
   (A : Type) (a0 : A) `{IsConnected (trunc_S m) A} 
   (B : Type) (b0 : B) `{IsConnected (trunc_S n) B} 
-  (P : A -> B -> Type) `{forall a b, IsTrunc (m -2+ n) (P a b)}
+  (P : A -> B -> Type) {HP : forall a b, IsTrunc (m -2+ n) (P a b)}
   (f_a0 : forall b:B, P a0 b)
   (f_b0 : forall a:A, P a b0)
   (f_a0b0 : f_a0 b0 = f_b0 a0)
@@ -190,6 +192,23 @@ Corollary isconn_wedge_incl {m n : trunc_index}
   & { e_b0 : forall a, f a b0 = f_b0 a
   & (e_a0 b0) @ f_a0b0 = (e_b0 a0) }}}.
 Proof.
-Admitted.
+  assert (goal_as_extension :
+    ExtensionAlong (name a0)
+      (fun a => ExtensionAlong (name b0) (P a) (name (f_b0 a)))
+      (name (f_a0 ; (name f_a0b0)))).
+    apply (extension_conn_map_elim (n := m)).
+      admit.  (*TODO: lemma on connectedness of a type vs. its point,
+              or, more generally, of a map vs its section.*)
+    intros a.
+    apply (istrunc_extension_along_conn (n := n)).
+      admit.
+    apply HP.
+  destruct goal_as_extension as [f' g''].
+  assert (g' := g'' tt); clear g''.
+  exists (fun a => projT1 (f' a)).
+  exists (fun b => apD10 (ap (@projT1 _ _) g') b).
+  exists (fun a => projT2 (f' a) tt).
+  admit. 
+Defined.
 
 End Extensions.
