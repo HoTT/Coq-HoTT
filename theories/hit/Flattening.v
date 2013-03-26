@@ -10,7 +10,7 @@ Local Open Scope equiv_scope.
 
 (* First we define the general non-recursive HIT. *)
 
-Module Import BaseHIT.
+Module Export BaseHIT.
 
 Local Inductive W (A B : Type) (f g : B -> A) : Type :=
 | cc : A -> W A B f g.
@@ -51,7 +51,7 @@ Defined.
 
 (* Now we define the flattened HIT which will be equivalent to the total space of a fibration over [W]. *)
 
-Module Import FlattenedHIT.
+Module Export FlattenedHIT.
 
 Local Inductive Wtil (A B : Type) (f g : B -> A)
   (C : A -> Type) (D : forall b, C (f b) <~> C (g b))

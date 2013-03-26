@@ -8,7 +8,7 @@ Require Import Sigma Forall Paths.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
-Module Interval.
+Module Export Interval.
 
 Local Inductive interval : Type := 
   | zero : interval
@@ -29,8 +29,6 @@ Axiom interval_rect_beta_seg : forall (P : interval -> Type)
   apD (interval_rect P a b p) seg = p.
 
 End Interval.
-
-Import Interval.
 
 Definition interval_rectnd (P : Type) (a b : P) (p : a = b)
   : interval -> P
