@@ -6,7 +6,7 @@ Require Import types.Forall types.Sigma types.Paths types.Unit types.Arrow.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 
-(** ** Auxliliary lemmas.
+(** ** Auxiliary lemmas.
 
 These don’t really belong here, but are temporarily here for convenience and will be thoughtfully re-housed as soon as possible. *)
 (* TODO: clean up, re-house. *)
@@ -15,6 +15,7 @@ Local Notation "'name' a" := (fun (u : Unit) => a) (at level 1).
 (** [concat], with arguments flipped. Useful mainly for the idiom [apply (concatR (expression))]. *)
 Definition concatR {A : Type} {x y z : A}  (q : y = z) (p : x = y)
   := concat p q.
+
 
 (** ** Connectedness *)
 
@@ -209,7 +210,9 @@ Proof.
                        which by induction is m'-truncated. *)
 Defined.
 
-(** A very useful form of the key lemma: the connectivity of the wedge into the product, for a pair of pointed spaces.  In fact this can be formulated without mentioning the wedge per se, since the statement only needs to talk about maps out of the wedge. *)
+(** A very useful form of the key lemma: the connectivity of the wedge into the product, for a pair of pointed spaces.  In fact this can be formulated without mentioning the wedge per se, since the statement only needs to talk about maps out of the wedge.
+
+Once again, we believe that the type of the conclusion is an hprop (though we do not prove it) — essentially because it is wrapping up an elimination principle and its corresponding computation rule — and so we make the proof of this result opaque. *)
 Corollary isconn_wedge_incl {m n : trunc_index}
   (A : Type) (a0 : A) `{IsConnected (trunc_S m) A} 
   (B : Type) (b0 : B) `{IsConnected (trunc_S n) B} 
@@ -220,7 +223,7 @@ Corollary isconn_wedge_incl {m n : trunc_index}
 : { f : forall a b, P a b
   & { e_a0 : forall b, f a0 b = f_a0 b
   & { e_b0 : forall a, f a b0 = f_b0 a
-  & (e_a0 b0) @ f_a0b0 = (e_b0 a0) }}}.
+  & e_b0 a0 = (e_a0 b0) @ f_a0b0 }}}.
 Proof.
   assert (goal_as_extension :
     ExtensionAlong (name a0)
@@ -232,23 +235,18 @@ Proof.
     apply (istrunc_extension_along_conn (n := n)).
       apply (conn_point_incl b0).
     apply HP.
-  destruct goal_as_extension as [f' g''].
-  assert (g' := g'' tt); clear g''.
-  exists (fun a => projT1 (f' a)).
-  exists (fun b => apD10 (g' ..1) b).
-  exists (fun a => projT2 (f' a) tt).
-(* This last part is at core just (g' ..2), wrapped up in a bunch of path-algebra. *)
-  apply (concatR (apD10 (g'^ ..2) tt)).
-  rewrite transport_arrow. rewrite transport_const.
-  assert (projT1_path_V : 
-    forall (A : Type) (P : A -> Type) (u v : exists x, P x) (p : u = v),
-      (p ..1)^ = p^ ..1).
-    intros; destruct p; exact 1.
-  rewrite <- projT1_path_V.
-  (* Surely there’s a single tactic to abstract a subterm like this: *)
-  set (g'' := g' ..1). generalize g''. clear g' g''. intros g''.
-  rewrite transport_paths_Fl. simpl. apply whiskerR.
-  rewrite ap_V. apply inverse, inv_V.
-Defined.
+  destruct goal_as_extension as [f_eb0 name_ea0_ea0b0].
+  assert (ea0_ea0b0 := name_ea0_ea0b0 tt); clear name_ea0_ea0b0.
+  exists (fun a => projT1 (f_eb0 a)).
+  exists (fun b => apD10 (ea0_ea0b0 ..1) b).
+  exists (fun a => projT2 (f_eb0 a) tt).
+(* The last part is at core just (g' ..2), wrapped in a bit of path-algebra. *)
+  apply moveL_Mp.
+  apply (concatR (apD10 (ea0_ea0b0 ..2) tt)).
+(* TODO: Surely there’s a single tactic to abstract a subterm like this: *)
+  set (ea0 := ea0_ea0b0 ..1). generalize ea0; simpl. clear ea0_ea0b0 ea0. intros ea0.
+  rewrite transport_arrow. rewrite transport_const. rewrite transport_paths_Fl.
+  exact 1.
+Qed.
 
 End Extensions.
