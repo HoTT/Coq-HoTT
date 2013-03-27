@@ -10,12 +10,14 @@ Local Open Scope path_scope.
 
 These don’t really belong here, but are temporarily here for convenience and will be thoughtfully re-housed as soon as possible. *)
 (* TODO: clean up, re-house. *)
+
 Local Notation "'name' a" := (fun (u : Unit) => a) (at level 1).
 
 (** [concat], with arguments flipped. Useful mainly for the idiom [apply (concatR (expression))]. *)
-Definition concatR {A : Type} {x y z : A}  (q : y = z) (p : x = y)
+Definition concat_r {A : Type} {x y z : A}  (q : y = z) (p : x = y)
   := concat p q.
 
+Hint Unfold concat_r.
 
 (** ** Connectedness *)
 
@@ -99,7 +101,7 @@ Proof.
   apply (fun _ => 1).
 Defined.
 
-(** Extensions 
+(** ** Extensions 
 
 Elimination properties can be nicely phrased as the existence of extensions along maps of sections. This is just the traditional categorical language of fillers for commutative squares, restricted to the case where the bottom of the square is the identity; type-theoretically, this approach is slightly more convenient. *)
 
@@ -210,16 +212,27 @@ Proof.
                        which by induction is m'-truncated. *)
 Defined.
 
-(** A very useful form of the key lemma: the connectivity of the wedge into the product, for a pair of pointed spaces.  In fact this can be formulated without mentioning the wedge per se, since the statement only needs to talk about maps out of the wedge.
+End Extensions.
+
+
+Section Wedge_Incl_Conn.
+
+(** ** Connectivity of the wedge into the product.
+
+A very useful form of the key lemma [istrunc_extension_along_conn] is the connectivity of the wedge into the product, for a pair of pointed spaces.  In fact this can be formulated without mentioning the wedge per se (so, without requiring HIT’s), since the statement only needs to talk about maps out of the wedge.
 
 Once again, we believe that the type of the conclusion is an hprop (though we do not prove it) — essentially because it is wrapping up an elimination principle and its corresponding computation rule — and so we make the proof of this result opaque. *)
-Corollary isconn_wedge_incl {m n : trunc_index}
+
+Context `{Funext}
+  {m n : trunc_index}
   (A : Type) (a0 : A) `{IsConnected (trunc_S m) A} 
   (B : Type) (b0 : B) `{IsConnected (trunc_S n) B} 
   (P : A -> B -> Type) {HP : forall a b, IsTrunc (m -2+ n) (P a b)}
   (f_a0 : forall b:B, P a0 b)
   (f_b0 : forall a:A, P a b0)
-  (f_a0b0 : f_a0 b0 = f_b0 a0)
+  (f_a0b0 : f_a0 b0 = f_b0 a0).
+
+Corollary isconn_wedge_incl
 : { f : forall a b, P a b
   & { e_a0 : forall b, f a0 b = f_a0 b
   & { e_b0 : forall a, f a b0 = f_b0 a
@@ -235,18 +248,31 @@ Proof.
     apply (istrunc_extension_along_conn (n := n)).
       apply (conn_point_incl b0).
     apply HP.
-  destruct goal_as_extension as [f_eb0 name_ea0_ea0b0].
-  assert (ea0_ea0b0 := name_ea0_ea0b0 tt); clear name_ea0_ea0b0.
-  exists (fun a => projT1 (f_eb0 a)).
-  exists (fun b => apD10 (ea0_ea0b0 ..1) b).
-  exists (fun a => projT2 (f_eb0 a) tt).
-(* The last part is at core just (g' ..2), wrapped in a bit of path-algebra. *)
+  destruct goal_as_extension as [f_eb name_ea_eab].
+  assert (ea_eab := name_ea_eab tt); clear name_ea_eab.
+  exists (fun a => projT1 (f_eb a)).
+  exists (fun b => apD10 (ea_eab ..1) b).
+  exists (fun a => projT2 (f_eb a) tt).
+(* The last component is essentially (g' ..2), wrapped in a bit of path-algebra. *)
   apply moveL_Mp.
-  apply (concatR (apD10 (ea0_ea0b0 ..2) tt)).
-(* TODO: Surely there’s a single tactic to abstract a subterm like this: *)
-  set (ea0 := ea0_ea0b0 ..1). generalize ea0; simpl. clear ea0_ea0b0 ea0. intros ea0.
+  apply (concatR (apD10 (ea_eab ..2) tt)).
+  set (ea := ea_eab ..1). generalize ea; simpl. clear ea_eab ea. intros.
   rewrite transport_arrow. rewrite transport_const. rewrite transport_paths_Fl.
   exact 1.
 Qed.
 
-End Extensions.
+(** It is easier to apply the above result with its components separated. *)
+Definition wedge_incl_elim : forall a b, P a b
+  := isconn_wedge_incl.1.
+
+Definition wedge_incl_comp1 : forall b, wedge_incl_elim a0 b = f_a0 b
+  := isconn_wedge_incl.2.1.
+
+Definition wedge_incl_comp2 : forall a, wedge_incl_elim a b0 = f_b0 a
+  := isconn_wedge_incl.2.2.1.
+
+Definition wedge_incl_comp3
+  : wedge_incl_comp2 a0 = (wedge_incl_comp1 b0) @ f_a0b0
+  := isconn_wedge_incl.2.2.2.
+
+End Wedge_Incl_Conn.
