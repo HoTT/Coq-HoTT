@@ -40,7 +40,7 @@ Require Import HoTT.
 (* ================================================== lem:opp *)
 (* Lemma 2.1.2, page 47 *)
 
-Definition Book_2_1_2 := @HoTT.Overture.symmetry.
+Definition Book_2_1_2 := @HoTT.Overture.symmetric_paths.
 
 (* ================================================== lem:concat *)
 (* Lemma 2.1.3, page 48 *)
