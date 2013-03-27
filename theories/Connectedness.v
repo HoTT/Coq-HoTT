@@ -1,7 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Connectedness *)
 
-Require Import Overture PathGroupoids Fibrations Equivalences Trunc types.Forall types.Sigma types.Paths types.Unit.
+Require Import Overture PathGroupoids Fibrations Equivalences Trunc.
+Require Import types.Forall types.Sigma types.Paths types.Unit types.Arrow.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 
@@ -177,7 +178,12 @@ Proof.
   apply isequiv_path_extension.
 Defined.
 
+(* TODO: find better homes for the following. *)
 Local Notation "'name' a" := (fun (u : Unit) => a) (at level 1).
+
+(* Useful mainly for the idiom [apply (concatR (expression))]. *)
+Definition concatR {A : Type} {x y z : A}  (q : y = z) (p : x = y)
+  := concat p q.
 
 (** A very useful form of the key lemma: the connectivity of the wedge into the product, for a pair of pointed spaces.  In fact this can be formulated without mentioning the wedge per se, since the statement only needs to talk about maps out of the wedge. *)
 Corollary isconn_wedge_incl {m n : trunc_index}
@@ -206,9 +212,20 @@ Proof.
   destruct goal_as_extension as [f' g''].
   assert (g' := g'' tt); clear g''.
   exists (fun a => projT1 (f' a)).
-  exists (fun b => apD10 (ap (@projT1 _ _) g') b).
+  exists (fun b => apD10 (g' ..1) b).
   exists (fun a => projT2 (f' a) tt).
-  admit. 
+(* We expect this last part to involve a core of (g' ..2), wrapped up in a bunch of path-algebra. *)
+  apply (concatR (apD10 (g'^ ..2) tt)).
+  rewrite transport_arrow. rewrite transport_const.
+  assert (projT1_path_V : 
+    forall (A : Type) (P : A -> Type) (u v : exists x, P x) (p : u = v),
+      (p ..1)^ = p^ ..1).
+    intros; destruct p; exact 1.
+  rewrite <- projT1_path_V.
+  (* Surely there’s a single tactic to abstract a subterm like this: *)
+  set (g'' := g' ..1). generalize g''. clear g' g''. intros g''.
+  rewrite transport_paths_Fl. simpl. apply whiskerR.
+  rewrite ap_V. apply inverse, inv_V.
 Defined.
 
 End Extensions.
