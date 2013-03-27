@@ -83,28 +83,28 @@ Defined.
 (** *** Maps on paths *)
 
 (** The action of maps given by application. *)
-Definition ap_appl_l {A B : Type} {x y : A -> B} (p : x = y) (z : A) :
+Definition ap_apply_l {A B : Type} {x y : A -> B} (p : x = y) (z : A) :
   ap (fun f => f z) p = ap10 p z
   :=
   match p with idpath => idpath end.
 
-Definition ap_appl_Fl {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (z : B) :
+Definition ap_apply_Fl {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (z : B) :
   ap (fun a => (M a) z) p = ap10 (ap M p) z
   :=
   match p with idpath => idpath end.
 
-Definition ap_appl_Fr {A B C : Type} {x y : A} (p : x = y) (z : B -> C) (N : A -> B) :
+Definition ap_apply_Fr {A B C : Type} {x y : A} (p : x = y) (z : B -> C) (N : A -> B) :
   ap (fun a => z (N a)) p = ap01 z (ap N p)
   :=
   match p with idpath => idpath end.
 
-Definition ap_appl_FlFr {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (N : A -> B) :
+Definition ap_apply_FlFr {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (N : A -> B) :
   ap (fun a => (M a) (N a)) p = ap11 (ap M p) (ap N p)
   :=
   match p with idpath => idpath end.
 
 (** The action of maps given by lambda. *)
-Definition ap_lamb {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) :
+Definition ap_lambda {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) :
   ap (fun a b => M a b) p =
   path_arrow _ _ (fun b => ap (fun a => M a b) p).
 Proof.

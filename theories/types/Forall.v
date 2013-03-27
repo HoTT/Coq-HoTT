@@ -57,8 +57,9 @@ Definition transport_forall
        transport (C x2) (transport_pV _ _ _) (transportD _ _ p _ (f (p^ # y))))
   := match p with idpath => fun _ => 1 end.
 
-(** A special case where the type P does not depend on A. *)
-Definition transport_forall'
+(** A special case of [transport_forall] where the type [P] does not depend on [A],
+    and so it is just a fixed type [B]. *)
+Definition transport_forall_constant
   {A B : Type} {C : A -> B -> Type}
   {x1 x2 : A} (p : x1 = x2) (f : forall y : B, C x1 y)
   : (transport (fun x => forall y : B, C x y) p f)
