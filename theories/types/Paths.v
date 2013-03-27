@@ -9,11 +9,17 @@ Generalizable Variables A B f x y z.
 
 (** ** Path spaces *)
 
-(** The path spaces of a path space are not, of course, determined; they are just the higher-dimensional structure of the original space. *)
+(** The path spaces of a path space are not, of course, determined; they are just the
+    higher-dimensional structure of the original space. *)
 
 (** ** Transporting in path spaces.
 
-   There are potentially a lot of these lemmas, so we adopt a uniform naming scheme.  The letter `l` means the left endpoint varies, while `r` means the right endpoint varies.  A letter `F` means application of a function to that (varying) endpoint. *)
+   There are potentially a lot of these lemmas, so we adopt a uniform naming scheme:
+
+   - `l` means the left endpoint varies
+   - `r` means the right endpoint varies
+   - `F` means application of a function to that (varying) endpoint.
+*)
 
 Definition transport_paths_l {A : Type} {x1 x2 y : A} (p : x1 = x2) (q : x1 = y)
   : transport (fun x => x = y) p q = p^ @ q.
