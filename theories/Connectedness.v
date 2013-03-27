@@ -172,6 +172,8 @@ Proof.
   intros y. apply (extension_conn_map_all_eq (n := n)); assumption.
   (* m = S m' *)
   intros e e'. refine (trunc_equiv (path_extension e e')).
+  (* magically infers: paths in extensions = extensions into paths,
+                       which by induction is m'-truncated. *)
 Defined.
 
 (** A very useful form of the key lemma: the connectivity of the wedge into the product, for a pair of pointed spaces.  In fact this can be formulated without mentioning the wedge per se, since the statement only needs to talk about maps out of the wedge. *)
