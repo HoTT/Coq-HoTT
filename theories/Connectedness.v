@@ -6,6 +6,18 @@ Require Import types.Forall types.Sigma types.Paths types.Unit types.Arrow.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 
+(** ** Auxliliary lemmas.
+
+These don’t really belong here, but are temporarily here for convenience and will be thoughtfully re-housed as soon as possible. *)
+(* TODO: clean up, re-house. *)
+Local Notation "'name' a" := (fun (u : Unit) => a) (at level 1).
+
+(** [concat], with arguments flipped. Useful mainly for the idiom [apply (concatR (expression))]. *)
+Definition concatR {A : Type} {x y z : A}  (q : y = z) (p : x = y)
+  := concat p q.
+
+(** ** Connectedness *)
+
 (** There is a slight controversy of indexing for connectedness — in particular, how the indexing for maps shoud relate to the indexing for types.  One may reasonably take the connectedness of a map to correspond either to that of its *fibers*, or of its *cofiber*; these differ by 1.  The traditional topological indexing uses the cofiber.  We use the fiber, as does Lurie in [HTT]; but we choose to agree with the traditional indexing on types, while Lurie agrees with it on maps.
 
 Currently, the translation is therefore as follows:
@@ -68,7 +80,27 @@ Proof.
   apply inverse, e.
 Defined.
 
-(* TODO: converse of these two lemmas — if a map has such an elim/comp, then it is connected. *)
+(* TODO: converse of the two lemmas above — if a map has such an elim/comp, then it is connected. *)
+
+Instance conn_point_incl {n : trunc_index} {A : Type} (a:A)
+ `{IsConnected (trunc_S n) A} : IsConnMap n (name a).
+Proof.
+  intros.  (* Ah; this may require univalence?? *)
+Admitted.
+
+Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
+ `{IsConnMap n _ _ (fun u:Unit => a0)} : IsConnected (trunc_S n) A.
+Proof.
+  intros C HC f. exists (f a0).
+(* TODO: try to use [refine] or similar to get more concise? *)
+  apply (conn_map_elim (name a0)).
+    intros b; apply HC.  
+  apply (fun _ => 1).
+Defined.
+
+(** Extensions 
+
+Elimination properties can be nicely phrased as the existence of extensions along maps of sections. This is just the traditional categorical language of fillers for commutative squares, restricted to the case where the bottom of the square is the identity; type-theoretically, this approach is slightly more convenient. *)
 
 Section Extensions.
 
@@ -177,13 +209,6 @@ Proof.
                        which by induction is m'-truncated. *)
 Defined.
 
-(* TODO: find better homes for the following. *)
-Local Notation "'name' a" := (fun (u : Unit) => a) (at level 1).
-
-(* Useful mainly for the idiom [apply (concatR (expression))]. *)
-Definition concatR {A : Type} {x y z : A}  (q : y = z) (p : x = y)
-  := concat p q.
-
 (** A very useful form of the key lemma: the connectivity of the wedge into the product, for a pair of pointed spaces.  In fact this can be formulated without mentioning the wedge per se, since the statement only needs to talk about maps out of the wedge. *)
 Corollary isconn_wedge_incl {m n : trunc_index}
   (A : Type) (a0 : A) `{IsConnected (trunc_S m) A} 
@@ -202,18 +227,17 @@ Proof.
       (fun a => ExtensionAlong (name b0) (P a) (name (f_b0 a)))
       (name (f_a0 ; (name f_a0b0)))).
     apply (extension_conn_map_elim (n := m)).
-      admit.  (*TODO: lemma on connectedness of a type vs. its point,
-              or, more generally, of a map vs its section.*)
+      apply (conn_point_incl a0).
     intros a.
     apply (istrunc_extension_along_conn (n := n)).
-      admit.
+      apply (conn_point_incl b0).
     apply HP.
   destruct goal_as_extension as [f' g''].
   assert (g' := g'' tt); clear g''.
   exists (fun a => projT1 (f' a)).
   exists (fun b => apD10 (g' ..1) b).
   exists (fun a => projT2 (f' a) tt).
-(* We expect this last part to involve a core of (g' ..2), wrapped up in a bunch of path-algebra. *)
+(* This last part is at core just (g' ..2), wrapped up in a bunch of path-algebra. *)
   apply (concatR (apD10 (g'^ ..2) tt)).
   rewrite transport_arrow. rewrite transport_const.
   assert (projT1_path_V : 
