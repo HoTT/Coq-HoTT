@@ -111,7 +111,7 @@ Proof.
   exact inverse.
 Defined.
 
-Definition isequiv_path_extension {A B : Type} {f : A -> B}
+Instance isequiv_path_extension {A B : Type} {f : A -> B}
   {P : B -> Type} {d : forall x:A, P (f x)}
   (ext ext' : ExtensionAlong f P d)
 : IsEquiv (path_extension ext ext').
@@ -172,10 +172,9 @@ Proof.
   exists (extension_conn_map_elim f P d).
   intros y. apply (extension_conn_map_all_eq (n := n)); assumption.
   (* m = S m' *)
-  intros e e'. apply trunc_equiv with (path_extension e e').
-  apply IH.
-    intros b. apply HP.
-  apply isequiv_path_extension.
+  intros e e'. refine (trunc_equiv (path_extension e e')).
+  (* magically infers: paths in extensions = extensions into paths,
+                       which by induction is m'-truncated. *)
 Defined.
 
 (* TODO: find better homes for the following. *)
