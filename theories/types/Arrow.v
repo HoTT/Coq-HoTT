@@ -105,7 +105,8 @@ Definition ap_appl_FlFr {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (
 
 (** The action of maps given by lambda. *)
 Definition ap_lamb {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) :
-  ap (fun a b => M a b) p = path_arrow _ _ (fun b => ap10 (ap M p) b).
+  ap (fun a b => M a b) p =
+  path_arrow _ _ (fun b => ap (fun a => M a b) p).
 Proof.
   destruct p;
   symmetry;
