@@ -62,6 +62,9 @@ Instance isequiv_unit_rect `{Funext} (A : Type) : IsEquiv (@Unit_rect A)
                                     (fun x => match x with tt => 1 end))
   (fun _ => 1).
 
+(* For various reasons, it is typically more convenient to define functions out of the unit as constant maps, rather than [Unit_rect]. *)
+Notation "'unit_name' x" := (fun (_ : Unit) => x) (at level 60).
+
 (* The negative universal property *)
 Definition unit_corect {A : Type} : Unit -> (A -> Unit)
   := fun _ _ => tt.

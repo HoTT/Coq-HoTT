@@ -157,6 +157,21 @@ Proof.
   reflexivity.
 Defined.
 
+(** [projT1_path] also commutes with the groupoid structure. *)
+
+Definition projT1_path_1 {A : Type} {P : A -> Type} (u : sigT P)
+: (idpath u) ..1 = idpath (u .1)
+:= 1.
+
+Definition projT1_path_pp {A : Type} {P : A -> Type} {u v w : sigT P}
+  (p : u = v) (q : v = w)
+: (p @ q) ..1 = (p ..1) @ (q ..1)
+:= ap_pp _ _ _.
+
+Definition projT1_path_V {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v)
+: p^ ..1 = (p ..1)^
+:= ap_V _ _.
+
 (** Applying [existT] to one argument is the same as [path_sigma] with reflexivity in the first place. *)
 
 Definition ap_existT {A : Type} (P : A -> Type) (x : A) (y1 y2 : P x)
