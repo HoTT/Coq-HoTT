@@ -2,7 +2,7 @@
 (** * Connectedness *)
 
 Require Import Overture PathGroupoids Fibrations Equivalences Trunc.
-Require Import types.Forall types.Sigma types.Paths types.Unit types.Arrow.
+Require Import Forall Sigma Paths Unit Arrow Universe.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 
@@ -40,7 +40,7 @@ Existing Instance isconnected_ConnectedType.
 Class IsConnMap (n : trunc_index) {A B : Type} (f : A -> B)
   := isconnected_hfiber_conn_map :>
        forall b:B, IsConnected n (hfiber f b).
-(* TODO: question — why do the implicit arguments of this not seem to work, i.e. seem to need to be given explicitly? *)
+(* TODO: question — why do the implicit arguments of this not seem to work, i.e. seem to (often) need to be given explicitly? *)
 
 (** n-connected maps are orthogonal to n-truncated maps (i.e. familes of n-truncated types). *)
 Definition conn_map_elim {n : trunc_index}
@@ -72,10 +72,10 @@ Defined.
 
 (* TODO: converse of the two lemmas above — if a map has such an elim/comp, then it is connected. *)
 
-Instance conn_point_incl {n : trunc_index} {A : Type} (a:A)
- `{IsConnected (trunc_S n) A} : IsConnMap n (unit_name a).
+Instance conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
+ `{IsConnected (trunc_S n) A} : IsConnMap n (unit_name a0).
 Proof.
-  intros.  (* Ah; this may require univalence?? *)
+  intros a.
 Admitted.
 
 Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
@@ -94,7 +94,7 @@ Elimination properties can be nicely phrased as the existence of extensions alon
 
 Section Extensions.
 
-Context `{Funext}.
+Context `{Funext} `{Univalence}.
 
 (* TODO: consider naming for [ExtensionAlong] and subsequent lemmas.  As a name for the type itself, [Extension] or [ExtensionAlong] seems great; but resultant lemma names such as [path_extension] (following existing naming conventions) are rather misleading. *)
 
@@ -210,7 +210,7 @@ A very useful form of the key lemma [istrunc_extension_along_conn] is the connec
 
 Once again, we believe that the type of the conclusion is an hprop (though we do not prove it) — essentially because it is wrapping up an elimination principle and its corresponding computation rule — and so we make the proof of this result opaque. *)
 
-Context `{Funext}
+Context `{Funext} `{Univalence}
   {m n : trunc_index}
   (A : Type) (a0 : A) `{IsConnected (trunc_S m) A} 
   (B : Type) (b0 : B) `{IsConnected (trunc_S n) B} 
