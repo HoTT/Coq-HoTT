@@ -118,7 +118,7 @@ Proof.
 Defined.
 
 
-(* Being a contractible space is a proposition. *)
+(** Being a contractible space is a proposition. *)
 
 Instance hprop_contr `{Funext} (A : Type) : IsHProp (Contr A).
 Proof.
@@ -128,9 +128,12 @@ Proof.
 Defined.
 
 (** Here is an alternate characterization of propositions. *)
-Instance HProp_HProp `{Funext} A: IsHProp (IsHProp A) :=  hprop_trunc minus_one A.
 
-Theorem equiv_hprop_inhabited_contr `{Funext} {A} : IsHProp A <~> (A -> Contr A).
+Instance HProp_HProp `{Funext} A : IsHProp (IsHProp A) 
+  := hprop_trunc minus_one A.
+
+Theorem equiv_hprop_inhabited_contr `{Funext} {A}
+  : IsHProp A <~> (A -> Contr A).
 Proof.
   apply (equiv_adjointify (@contr_inhabited_hprop A) (@hprop_inhabited_contr A)). 
   - intro ic. by_extensionality x.

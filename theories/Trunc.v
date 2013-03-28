@@ -1,5 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-(** * H-Levels *)
+(** * Truncatedness *)
+
 
 Require Import Overture Contractible Equivalences types.Paths.
 Local Open Scope equiv_scope.
