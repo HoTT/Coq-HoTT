@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-(** * Theorems about the circle S^1. *)
+(** * The suspension of a type *)
 
 Require Import Overture PathGroupoids Equivalences Trunc HSet.
 Require Import Paths Forall Arrow Universe Empty Unit.
@@ -8,7 +8,7 @@ Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
 
-(* *** Definition of the circle. *)
+(* ** Definition of suspension. *)
 
 Module Export Suspension.
 
@@ -35,3 +35,24 @@ Axiom Susp_comp_merid : forall {X : Type} (P : Susp X -> Type)
 apD (Susp_rect P H_N H_S H_merid) (merid x) = H_merid x.
 
 End Suspension.
+
+(* ** Non-dependent eliminator. *)
+
+Definition Susp_rect_nd {X Y : Type}
+  (H_N H_S : Y) (H_merid : X -> H_N = H_S)
+: Susp X -> Y.
+Proof.
+  apply (Susp_rect (fun _ => Y) H_N H_S).
+  intros x. exact (transport_const _ _ @ H_merid x).
+Defined.
+
+Definition Susp_comp_nd_merid {X Y : Type}
+  {H_N H_S : Y} {H_merid : X -> H_N = H_S} (x:X)
+: ap (Susp_rect_nd H_N H_S H_merid) (merid x) = H_merid x.
+Proof.
+  apply (cancelL (transport_const (merid x) H_N)).
+  path_via (apD (Susp_rect_nd H_N H_S H_merid) (merid x)).
+  symmetry; refine (apD_const (Susp_rect_nd H_N H_S H_merid) _).
+  refine (Susp_comp_merid (fun _ : Susp X => Y) _ _ _ _).
+Defined.
+
