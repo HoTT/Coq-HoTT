@@ -2,8 +2,7 @@
 
 (** * The suspension of a type *)
 
-Require Import Overture PathGroupoids Equivalences Trunc HSet.
-Require Import Paths Forall Arrow Universe Empty Unit.
+Require Import Overture PathGroupoids Fibrations Contractible Trunc Sigma Forall Arrow Paths Universe Unit Connectedness TruncType.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
@@ -56,3 +55,94 @@ Proof.
   refine (Susp_comp_merid (fun _ : Susp X => Y) _ _ _ _).
 Defined.
 
+(* ** Connectedness of the suspension *)
+
+Instance isconn_susp {n : trunc_index} {X : Type} `{IsConnected n X}
+  : IsConnected (trunc_S n) (Susp X).
+Proof.
+  intros C ? f. exists (f North).
+  assert ({ p0 : f North = f South & forall x:X, ap f (merid x) = p0 })
+    as [p0 alleq_p0] by auto.
+  apply (Susp_rect (fun a => f a = f North) 1 p0^).
+  intros x. 
+  apply (concat (transport_paths_Fl _ _)).
+  apply (concat (concat_p1 _)).
+  apply ap, alleq_p0.
+Defined.
+
+Section Auxiliary.
+
+Context `{Funext} `{Univalence}.
+
+(* TODO: move!  Also: better name?  “Constant” or similar is tempting — but that is not quite right, since this retains the element of Y.  E.g. the unique map (0 -> Y) should surely be constant in just one way, rather than in Y-many ways. *)
+Definition NullHomotopy {X Y : Type} (f : X -> Y)
+  := {y : Y & forall x:X, f x = y}.
+
+Lemma istrunc_nullhomotopy {X Y : Type} (f : X -> Y) `{IsTrunc n Y} 
+  : IsTrunc n (NullHomotopy f).
+Proof.
+  apply @trunc_sigma; auto.
+  intros y. apply (@trunc_forall _). 
+  intros x. apply trunc_succ.
+Defined.
+
+End Auxiliary.
+
+(** ** The Freudenthal Suspension Theorem *)
+
+Section Freudenthal.
+
+Context `{Funext} `{Univalence}.
+
+Context {n : trunc_index} (X : Type) (x0:X) `{IsConnMap n _ _ (unit_name x0)}.
+
+(* TODO: eventually, change these to the weaker assumptions:
+Context {n : trunc_index} (X : Type) `{IsConnected (trunc_S n) X}.
+*)
+
+Notation No := (@North X).
+Notation So := (@South X).
+Notation mer := (@merid X).
+Notation mer' := (fun x => mer x @ (mer x0)^).
+
+(** The eventual theorem we want is: *)
+Instance Freudenthal
+  : IsConnMap (n -2+ n) (@merid X).
+Proof.
+  intros p C ? f.
+(** We are not ready to prove this.  For the remainder of the section, we will fix some suitably truncated [C], and show that for all [p], [f], the current goal holds; we will then return to this theorem. *)
+Abort.
+
+Section Fix_C.
+
+Context (C : Type) `{IsTrunc (n -2+ n) C}.
+
+(** The goal we require for the FST is: *)
+Definition FST_Codes_So (p : No = So :> Susp X)
+  := forall (f : hfiber mer p -> C), NullHomotopy f.
+
+(** To prove it, we generalise it over [Susp X]. *)
+Definition FST_Codes_No (p : No = No :> Susp X)
+  := forall (f : hfiber mer' p -> C), NullHomotopy f.
+
+Definition FST_Codes 
+  : forall (y : Susp X), (No = y) -> Type.
+Proof.
+  apply (Susp_rect (fun y => (No = y -> Type)) FST_Codes_No FST_Codes_So).
+  intros x. apply path_forall; intros p.
+  refine (transport_arrow _ _ _ @ _).
+  refine (transport_const _ _ @ _).
+  path_via (FST_Codes_No (p @ (mer x)^)).
+    apply ap, transport_paths_r.
+  apply path_universe_uncurried.
+  unfold FST_Codes_No, FST_Codes_So.
+
+End Fix_C.
+
+Instance Freudenthal
+  : IsConnMap (n -2+ n) (@merid X).
+Proof.
+  intros p C ? f.
+Admitted.
+
+End Freudenthal.
