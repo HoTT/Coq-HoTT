@@ -31,10 +31,20 @@ Proof.
   apply equiv_isequiv.
 Defined.
 
-(* TODO: this name is terrible, especially in conjunction with [contr_equiv_contr].  Improve it?? *)
-Lemma iscontr_equiv_contr_contr {A B : Type} `{Contr A} `{Contr B}
+(* TODO: the name [equiv_contr_contr] is not great in conjunction with the existing, unrelated [contr_equiv_contr].  Consider these? *)
+Lemma equiv_contr_contr {A B : Type} `{Contr A} `{Contr B}
+  : (A <~> B).
+Proof.
+  apply equiv_adjointify with (fun _ => center B) (fun _ => center A);
+  intros ?; apply contr.
+Defined.
+
+Lemma contr_equiv_contr_contr {A B : Type} `{Contr A} `{Contr B}
   : Contr (A <~> B).
-Admitted.
+Proof.
+  exists equiv_contr_contr.
+  intros e. apply equiv_path_equiv, path_forall. intros ?; apply contr.
+Defined.
 
 End Auxiliary.
 
@@ -84,7 +94,7 @@ Proof.
   apply (@trunc_equiv _ _ (equiv_path_trunctype A B)).
     Focus 2. apply equiv_isequiv. 
   case n as [ | n'].
-    apply iscontr_equiv_contr_contr. (* The reason is different in this case. *)
+    apply contr_equiv_contr_contr. (* The reason is different in this case. *)
   apply istrunc_equiv.
 Defined.
 
