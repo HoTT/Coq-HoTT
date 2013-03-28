@@ -126,6 +126,16 @@ Definition ap_functor_arrow `(f : B -> A) `(g : C -> D)
   := @ap_functor_forall _ A (fun _ => C) B (fun _ => D)
   f (fun _ => g) h h' p.
 
+(** *** Truncatedness: functions into an n-type is an n-type *)
+
+Instance contr_arrow {A B : Type} `{Contr B}
+  : Contr (A -> B)
+:= contr_forall.
+
+Instance trunc_arrow {A B : Type} `{IsTrunc n B}
+  : IsTrunc n (A -> B)
+:= trunc_forall.
+
 (** *** Equivalences *)
 
 Instance isequiv_functor_arrow `{IsEquiv B A f} `{IsEquiv C D g}
