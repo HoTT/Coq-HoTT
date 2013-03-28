@@ -303,7 +303,8 @@ Ltac equiv_intro E x :=
   end.
 
 (** [equiv_composeR'], a flipped version of [equiv_compose'], is (like [concatR]) most often useful partially applied, to give the “first half” of an equivalence one is constructing and leave the rest as a subgoal. One could similarly define [equiv_composeR] as a flip of [equiv_compose], but it doesn’t seem so useful since it doesn’t leave the remaining equivalence as a subgoal. *)
-Notation equiv_composeR' := (fun f g => equiv_compose' g f).
+Definition equiv_composeR' {A B C} (f : A <~> B) (g : B <~> C)
+  := equiv_compose' g f.
 
 Ltac equiv_via mid :=
-  apply @equiv_composeR' with (B := mid); auto.
+  apply @equiv_composeR' with (B := mid).
