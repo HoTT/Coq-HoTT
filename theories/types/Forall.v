@@ -81,6 +81,26 @@ Proof.
   apply equiv_path_forall.
 Defined.
 
+(** The action of maps given by application. *)
+Definition ap_apply_l {A : Type} {B : A -> Type} {x y : forall a, B a} (p : x = y) (z : A) :
+  ap (fun f => f z) p = apD10 p z
+  :=
+  match p with idpath => idpath end.
+
+Definition ap_apply_Fl {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (z : B) :
+  ap (fun a => (M a) z) p = ap10 (ap M p) z
+  :=
+  match p with idpath => idpath end.
+
+Definition ap_apply_Fr {A B C : Type} {x y : A} (p : x = y) (z : B -> C) (N : A -> B) :
+  ap (fun a => z (N a)) p = ap01 z (ap N p)
+  :=
+  match p with idpath => idpath end.
+
+Definition ap_apply_FlFr {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (N : A -> B) :
+  ap (fun a => (M a) (N a)) p = ap11 (ap M p) (ap N p)
+  :=
+  match p with idpath => idpath end.
 
 (** *** Functorial action *)
 
