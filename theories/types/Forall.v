@@ -81,7 +81,10 @@ Proof.
   apply equiv_path_forall.
 Defined.
 
-Definition dap_apply_l {A : Type} {B : A -> Type} {x y : forall a, B a} (p : x = y) (z : A) :
+(** *** Maps on paths *)
+
+(** The action of maps given by application. *)
+Definition ap_Dapply_l {A : Type} {B : A -> Type} {x y : forall a, B a} (p : x = y) (z : A) :
   ap (fun f => f z) p = apD10 p z
   :=
   match p with idpath => idpath end.
