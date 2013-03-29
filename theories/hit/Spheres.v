@@ -2,7 +2,7 @@
 
 (** * The spheres, in all dimensions. *)
 
-Require Import Overture PathGroupoids Equivalences Paths Bool Suspension Circle.
+Require Import Overture PathGroupoids Trunc Equivalences Sigma Forall Paths Bool Suspension Circle.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
@@ -62,4 +62,27 @@ Proof.
   refine (whiskerR (concat_p1 _) _ @ _).
   apply moveR_Vp. hott_simpl.  
 Defined.
+
+(** ** Truncatedness via spheres  *)
+
+(** *** Auxiliary notions *)
+Section Auxiliary.
+
+Context `{Funext}.
+
+(** Geometrically, a nullhomotopy of a map [f : X -> Y] is an extension of [f] to a map [Cone X -> Y].  One might more simply call it e.g. [Constant f], but that is a little ambiguous: it could also reasonably mean [forall (x x':X), f x = f x'].  (Should the unique map [0 -> Y] be constant in one way, or in [Y]-many ways?) *)
+
+(* Note: This definition + lemma are difficult to find a home for: they use [trunc_sigma], so need to come after [types.Sigma], but no file after that really fits them well. *)
+Definition NullHomotopy {X Y : Type} (f : X -> Y)
+  := {y : Y & forall x:X, f x = y}.
+
+Lemma istrunc_nullhomotopy {X Y : Type} (f : X -> Y) `{IsTrunc n Y} 
+  : IsTrunc n (NullHomotopy f).
+Proof.
+  apply @trunc_sigma; auto.
+  intros y. apply (@trunc_forall _). 
+  intros x. apply trunc_succ.
+Defined.
+
+End Auxiliary.
 

@@ -2,7 +2,7 @@
 
 (** * The Freudenthal Suspension Theorem, and related results. *)
 
-Require Import Overture PathGroupoids Fibrations Trunc Forall Sigma Paths Unit Universe Arrow Connectedness Suspension.
+Require Import Overture PathGroupoids Fibrations Trunc Forall Sigma Paths Unit Universe Arrow Connectedness Suspension Spheres.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
@@ -21,24 +21,6 @@ Proof.
   apply (concat (concat_p1 _)).
   apply ap, alleq_p0.
 Defined.
-
-Section Auxiliary.
-
-Context `{Funext} `{Univalence}.
-
-(* TODO: move!  Also: better name?  “Constant” or similar is tempting — but that is not quite right, since this retains the element of Y.  E.g. the unique map (0 -> Y) should surely be constant in just one way, rather than in Y-many ways. *)
-Definition NullHomotopy {X Y : Type} (f : X -> Y)
-  := {y : Y & forall x:X, f x = y}.
-
-Lemma istrunc_nullhomotopy {X Y : Type} (f : X -> Y) `{IsTrunc n Y} 
-  : IsTrunc n (NullHomotopy f).
-Proof.
-  apply @trunc_sigma; auto.
-  intros y. apply (@trunc_forall _). 
-  intros x. apply trunc_succ.
-Defined.
-
-End Auxiliary.
 
 (** ** The Freudenthal Suspension Theorem *)
 Section Freudenthal.
