@@ -103,7 +103,7 @@ Context {n : trunc_index} (X : Type) `{IsConnected (trunc_S n) X}.
 Notation No := (@North X).
 Notation So := (@South X).
 Notation mer := (@merid X).
-Notation mer' := (fun x => mer x @ (mer x0)^).
+Definition mer' := (fun x => mer x @ (mer x0)^).
 
 (** The eventual theorem we want is: *)
 Instance Freudenthal
@@ -121,9 +121,29 @@ Context (C : Type) `{IsTrunc (n -2+ n) C}.
 Definition FST_Codes_So (p : No = So :> Susp X)
   := forall (f : hfiber mer p -> C), NullHomotopy f.
 
-(** To prove it, we generalise it over [Susp X]. *)
+(** To prove it, we generalise it over [Susp X], by [Susp_rect].  This requires three components, which we construct (the main parts of) as lemmas in advance. *)
 Definition FST_Codes_No (p : No = No :> Susp X)
   := forall (f : hfiber mer' p -> C), NullHomotopy f.
+
+Definition FST_Codes_cross (x1 : X) (p : No = So)
+  : FST_Codes_No (p @ (mer x1) ^) -> FST_Codes_So p.
+Proof.
+  unfold FST_Codes_No, FST_Codes_So, mer'.
+  assert (forall 
+  intros HH f.
+
+Admitted.
+
+Definition isequiv_FST_Codes_cross (x : X) (p : No = So)
+  : IsEquiv (FST_Codes_cross x p).
+Proof.
+  case n as [ | n'].
+    admit. (* Oops, should have ruled out this case earlier! *)
+  revert x. apply (@conn_map_elim (trunc_S n') _ _ (unit_name x0)).
+    assumption. (* Trying to infer this just spins. *)
+    admit.  (*Need leq on trunc_levels!*)
+  intros [].
+Admitted.
 
 Definition FST_Codes 
   : forall (y : Susp X), (No = y) -> Type.
@@ -135,7 +155,12 @@ Proof.
   path_via (FST_Codes_No (p @ (mer x)^)).
     apply ap, transport_paths_r.
   apply path_universe_uncurried.
-  unfold FST_Codes_No, FST_Codes_So.
+  exists (FST_Codes_cross x p).
+  apply isequiv_FST_Codes_cross.
+Defined.
+
+(* Claim: enough to (a) construct this function in general, (b) show that it’s an equivalence at x0. *)
+Admitted.
 
 End Fix_C.
 
