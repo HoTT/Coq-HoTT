@@ -5,4 +5,6 @@
 
 Require Import types.Universe.
 
-Context `{univalence_axiom : Univalence}.
+Instance univalence_axiom : Univalence.
+  admit.
+Defined.
