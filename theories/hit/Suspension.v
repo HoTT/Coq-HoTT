@@ -129,9 +129,7 @@ Definition FST_Codes_cross (x1 : X) (p : No = So)
   : FST_Codes_No (p @ (mer x1) ^) -> FST_Codes_So p.
 Proof.
   unfold FST_Codes_No, FST_Codes_So, mer'.
-  assert (forall 
   intros HH f.
-
 Admitted.
 
 Definition isequiv_FST_Codes_cross (x : X) (p : No = So)
@@ -158,9 +156,6 @@ Proof.
   exists (FST_Codes_cross x p).
   apply isequiv_FST_Codes_cross.
 Defined.
-
-(* Claim: enough to (a) construct this function in general, (b) show that it’s an equivalence at x0. *)
-Admitted.
 
 End Fix_C.
 
