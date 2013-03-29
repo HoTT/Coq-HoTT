@@ -2,7 +2,7 @@
 
 (** * The suspension of a type *)
 
-Require Import Overture PathGroupoids.
+Require Import Overture PathGroupoids Paths.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
@@ -54,3 +54,23 @@ Proof.
   symmetry; refine (apD_const (Susp_rect_nd H_N H_S H_merid) _).
   refine (Susp_comp_merid (fun _ : Susp X => Y) _ _ _ _).
 Defined.
+
+(** ** Eta-rule. *)
+
+(** The eta-rule for suspension states that any function out of a suspension is equal to one defined by [Susp_rect] in the obvious way. We give it first in a weak form, producing just a pointwise equality, and then turn this into an actual equality using [Funext]. *)
+Definition Susp_eta_homot {X : Type} {P : Susp X -> Type} (f : forall y, P y)
+  : f == Susp_rect P (f North) (f South) (fun x => apD f (merid x)).
+Proof.
+  unfold pointwise_paths; apply (Susp_rect _ 1 1).
+  intros x. 
+  refine (transport_paths_FlFr_D
+    (g := Susp_rect P (f North) (f South) (fun x : X => apD f (merid x)))
+    _ _ @ _); simpl.
+  apply moveR_pM. apply (concat (concat_p1 _)), (concatR (concat_1p _)^).
+  apply ap, inverse. refine (Susp_comp_merid _ _ _ _ _).
+Defined.
+
+Definition Susp_eta `{Funext} 
+  {X : Type} {P : Susp X -> Type} (f : forall y, P y)
+  : f = Susp_rect P (f North) (f South) (fun x => apD f (merid x))
+:= path_forall _ _ (Susp_eta_homot f).
