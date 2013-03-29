@@ -5,4 +5,6 @@
 
 Require Import Overture.
 
-Context `{funext_axiom : Funext}.
+Instance funext_axiom : Funext.
+  admit.
+Defined.
