@@ -27,7 +27,7 @@ else
 fi
 if test "$ssr" = "yes"
 then
-  exec "$COQIDE" -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -R "$SSRLIB" Ssreflect -indices-matter $@
+  exec "$COQIDE" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -R "$SSRLIB" Ssreflect -indices-matter $@
 else
-  exec "$COQIDE" -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter $@
+  exec "$COQIDE" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter $@
 fi
