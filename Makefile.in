@@ -755,7 +755,7 @@ install-data-local:
 stdlib: $(STDVOFILES)
 
 $(STDVOFILES) : %.vo : %.v
-	$(COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
+	$(COQTOP) -no-native-compiler -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
 
 # The HoTT library as a single target
 hottlib: $(VOFILES)
