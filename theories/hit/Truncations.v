@@ -38,6 +38,6 @@ End Truncation.
 
 (** The non-dependent version of the eliminator. *)
 
-Definition Truncation_rect_nondep {n A} X `{IsTrunc n X} 
+Definition Truncation_rect_nondep {n A X} `{IsTrunc n X} 
   : (A -> X) -> (Truncation n A -> X)
 := Truncation_rect (fun _ => X).

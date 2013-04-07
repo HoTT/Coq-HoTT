@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Connectedness *)
 
-Require Import Overture PathGroupoids Fibrations Equivalences Trunc.
+Require Import Overture PathGroupoids Fibrations Equivalences Trunc Truncations.
 Require Import Forall Sigma Paths Unit Arrow Universe.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
@@ -17,30 +17,43 @@ Currently, the translation is therefore as follows:
 Map    (n-1)-connected   n-connected       n-connective
 Type   n-connected       n-connected       (n+1)-connective
 
-A handy benchmark: under our indexing, the map [S1 -> 1] is 0-connected but not 1-connected, while the map [1 -> S1] is (–1)–connected but not 0-connected.
+A handy benchmark: under our indexing, the map [S1 -> 1] is 0-connected but not 1-connected, while the map [1 -> S1] is (–1)–connected but not 0-connected. *)
 
-There is also a technical choice to be made in the definition.  Connectedness can either be defined as contractibility of the truncation, or by elimination into truncated types.  The former requires HIT’s, but keeps the type [IsConnected] small; the latter, which we use for now, requires only core Coq, but blows up the size (universe leve) of [IsConnected], since it quantifies over types. 
+(** Connectedness of a type (however indexed) can be defined in two equivalent ways: quantifying over all maps into suitably truncated types, or by considering just the universal case, the truncation of the type itself.
 
-Q: is there a definition of connectedness that neither blows up the universe level, nor requires HIT’s? *)
+The latter requires HIT’s, but keeps the type [IsConnected] small; the former, which we use for now, requires only core Coq, but blows up the size (universe level) of [IsConnected], since it quantifies over types. 
+
+Question: is there a definition of connectedness that neither blows up the universe level, nor requires HIT’s? *)
 
 Class IsConnected (n : trunc_index) (A : Type)
  := isconnected_elim :> 
       forall (C : Type) `{IsTrunc n C} (f : A -> C),
         { c:C & forall a:A, f a = c }.
 
-(* TODO: probably remove — with type classes, one is supposed to avoid using this sort of type, right?
-Record ConnectedType (n : trunc_index) := BuildConnectedType {
-  Type_of_ConnectedType :> Type ; 
-  isconnected_ConnectedType :> IsTrunc n Type_of_ConnectedType
-}.
+Definition iscontr_truncation_from_isconnected {n} {A} `{IsConnected n A}
+  : Contr (Truncation n A).
+Proof.
+  set (nh := isconnected_elim (Truncation n A) (@truncation_incl n A)).
+  exists (nh .1).
+  apply Truncation_rect. apply trunc_succ.
+  intros; apply symmetry, (nh .2).
+Defined.
 
-Existing Instance isconnected_ConnectedType.
-*)
+Instance isconnected_from_iscontr_truncation {n} {A} `{Contr (Truncation n A)}
+  : IsConnected n A.
+Proof.
+  intros C ? f.
+  set (ff := Truncation_rect_nondep f).
+  exists (ff (center _)).
+  intros a. apply symmetry, (ap ff (contr (truncation_incl _))).
+Defined.
+
+(** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against truncated types.  We use the former. *)
 
 Class IsConnMap (n : trunc_index) {A B : Type} (f : A -> B)
   := isconnected_hfiber_conn_map :>
        forall b:B, IsConnected n (hfiber f b).
-(* TODO: question — why do the implicit arguments of this not seem to work, i.e. seem to (often) need to be given explicitly? *)
+(* TODO: question — why do the implicit arguments of this seem not to work, i.e. seem to (often) need to be given explicitly? *)
 
 (** n-connected maps are orthogonal to n-truncated maps (i.e. familes of n-truncated types). *)
 Definition conn_map_elim {n : trunc_index}
