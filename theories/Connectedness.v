@@ -48,7 +48,7 @@ Proof.
   intros a. apply symmetry, (ap ff (contr (truncation_incl _))).
 Defined.
 
-(** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against truncated types.  We use the former. *)
+(** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against truncated types.  We use the former; the equivalence with the latter is given below in [conn_map_elim], [conn_map_comp], and [conn_map_from_extension_elim]. *)
 
 Class IsConnMap (n : trunc_index) {A B : Type} (f : A -> B)
   := isconnected_hfiber_conn_map :>
@@ -82,8 +82,6 @@ Proof.
   change (d a) with (fibermap (a;1)).
   apply inverse, e.
 Defined.
-
-(* TODO: converse of the two lemmas above — if a map has such an elim/comp, then it is connected. *)
 
 Instance conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
  `{IsConnected (trunc_S n) A} : IsConnMap n (unit_name a0).
@@ -179,7 +177,7 @@ Proof.
   apply conn_map_comp.
 Defined.
 
-Lemma extension_conn_map_all_eq {n : trunc_index}
+Lemma allpath_extension_conn_map {n : trunc_index}
   {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
   (P : B -> Type) `{forall b:B, IsTrunc n (P b)}
   (d : forall a:A, P (f a))
@@ -189,6 +187,31 @@ Proof.
   apply path_extension.
   apply (extension_conn_map_elim (n := n)); try assumption.
   intros b. apply trunc_succ.
+Defined.
+
+(** Conceptually, this proof can be seen as an instance of the fact that a left adjoint (here, pullback) preserves a left class of maps if the right adjoint (here, dependent product) preserves the right class. *)
+Lemma conn_map_from_extension_elim  {n : trunc_index}
+  {A B : Type} (f : A -> B)
+: (forall (P : B -> Type) `{forall b:B, IsTrunc n (P b)}
+          (d : forall a:A, P (f a)),
+    ExtensionAlong f P d)
+  -> (IsConnMap n f).
+Proof.
+  intros Hf b X ? d.
+  set (P := fun (b':B) => (b' = b) -> X). 
+  assert (forall b', IsTrunc n (P b')) by (intros; apply trunc_forall).
+  set (dP := (fun (a:A) (p:f a = b) => (d (a;p)))
+          : forall a:A, P (f a)).
+  set (e := Hf P _ dP).
+  exists (e .1 b 1).
+  intros [a p]. apply symmetry. path_via (e .1 (f a) p).
+    Focus 2. exact (ap10 (e.2 a) p).
+  (* TODO: Can the following be simplified? A version of [ap] for binary functions would be one approach. *)
+  set (e1 := fun (bb : {b':B & b' = b}) => (e.1 (bb.1) (bb.2))).
+  change (e.1 b 1) with (e1 (b;1)).
+  change (e.1 (f a) p) with (e1 (f a; p)).
+  apply ap. apply path_sigma with (p^). simpl.
+  refine (transport_paths_l _ _ @ _). hott_simpl.
 Defined.
 
 (** A key lemma on the interaction between connectedness and truncatedness: suppose one is trying to extend along an n-connected map, into a k-truncated family of types (k ≥ n).  Then the space of possible extensions is (k–n–2)-truncated.
@@ -205,7 +228,7 @@ Proof.
   revert P HP d. induction m as [ | m' IH]; intros P HP d; simpl in *.
   (* m = –2 *)
   exists (extension_conn_map_elim f P d).
-  intros y. apply (extension_conn_map_all_eq (n := n)); assumption.
+  intros y. apply (allpath_extension_conn_map (n := n)); assumption.
   (* m = S m' *)
   intros e e'. refine (trunc_equiv (path_extension e e')).
   (* magically infers: paths in extensions = extensions into paths,
