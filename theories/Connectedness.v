@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Connectedness *)
 
-Require Import Overture PathGroupoids Fibrations Equivalences Trunc Truncations.
+Require Import Overture PathGroupoids Fibrations Equivalences Trunc TruncType Truncations.
 Require Import Forall Sigma Paths Unit Arrow Universe.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
@@ -81,22 +81,6 @@ Proof.
   destruct (isconnected_elim (P (f a)) fibermap) as [x e].
   change (d a) with (fibermap (a;1)).
   apply inverse, e.
-Defined.
-
-Instance conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
- `{IsConnected (trunc_S n) A} : IsConnMap n (unit_name a0).
-Proof.
-  intros a.
-Admitted.
-
-Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
- `{IsConnMap n _ _ (unit_name a0)} : IsConnected (trunc_S n) A.
-Proof.
-  intros C HC f. exists (f a0).
-(* TODO: try to use [refine] or similar to get more concise? *)
-  apply (conn_map_elim (unit_name a0)).
-    intros b; apply HC.  
-  apply (fun _ => 1).
 Defined.
 
 (** ** Extensions 
@@ -189,7 +173,9 @@ Proof.
   intros b. apply trunc_succ.
 Defined.
 
-(** Conceptually, this proof can be seen as an instance of the fact that a left adjoint (here, pullback) preserves a left class of maps if the right adjoint (here, dependent product) preserves the right class. *)
+(** Conversely, if a map satisfies this elimination principle (expressed via extensions), then it is connected.
+
+Conceptually, this proof can be seen as an instance of the fact that a left adjoint (here, pullback) preserves a left class of maps if the right adjoint (here, dependent product) preserves the right class. *)
 Lemma conn_map_from_extension_elim  {n : trunc_index}
   {A B : Type} (f : A -> B)
 : (forall (P : B -> Type) `{forall b:B, IsTrunc n (P b)}
@@ -235,8 +221,38 @@ Proof.
                        which by induction is m'-truncated. *)
 Defined.
 
-End Extensions.
+(** ** Connectivity of pointed types *)
 
+(** The connectivity of a pointed type and (the inclusion of) its point are intimately connected. *)
+
+Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
+ `{IsConnMap n _ _ (unit_name a0)} : IsConnected (trunc_S n) A.
+Proof.
+  intros C HC f. exists (f a0).
+(* TODO: try to use [refine] or similar to get more concise? *)
+  apply (conn_map_elim (unit_name a0)).
+    intros b; apply HC.  
+  apply (fun _ => 1).
+Defined.
+
+Instance conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
+ `{IsConnected (trunc_S n) A} : IsConnMap n (unit_name a0).
+Proof.
+  apply conn_map_from_extension_elim.
+  intros P ?. set (PP := fun a => BuildTruncType n (P a) _).
+  assert (QQ :=
+    @isconnected_elim (trunc_S n) _ _ (TruncType n) istrunc_trunctype PP).
+  destruct QQ as [[Q0 HQ] e].
+  assert (e' := fun a => ap (trunctype_type _) (e a)); simpl in e'. clear HQ e.
+  intros d. set (d0 := d tt). 
+  exists (fun a => (transport idmap (e' a0 @ (e' a)^) d0)).
+  intros []. change (d tt) with (transport idmap 1 d0).
+  apply ap10, ap, concat_pV.
+Defined.
+
+(** TODO: generalise the above to any map with a section. *)
+
+End Extensions.
 
 Section Wedge_Incl_Conn.
 
