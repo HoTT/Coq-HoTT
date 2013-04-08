@@ -264,8 +264,8 @@ Once again, we believe that the type of the conclusion is an hprop (though we do
 
 Context `{Funext} `{Univalence}
   {m n : trunc_index}
-  (A : Type) (a0 : A) `{IsConnected (trunc_S m) A} 
-  (B : Type) (b0 : B) `{IsConnected (trunc_S n) B} 
+  {A : Type} (a0 : A) `{IsConnected (trunc_S m) A} 
+  {B : Type} (b0 : B) `{IsConnected (trunc_S n) B} 
   (P : A -> B -> Type) {HP : forall a b, IsTrunc (m -2+ n) (P a b)}
   (f_a0 : forall b:B, P a0 b)
   (f_b0 : forall a:A, P a b0)
@@ -315,3 +315,17 @@ Definition wedge_incl_comp3
   := isconn_wedge_incl.2.2.2.
 
 End Wedge_Incl_Conn.
+
+Definition wedge_incl_elim_uncurried `{Funext} `{Univalence}
+  {m n : trunc_index}
+  {A : Type} (a0 : A) `{IsConnected (trunc_S m) A} 
+  {B : Type} (b0 : B) `{IsConnected (trunc_S n) B} 
+  (P : A -> B -> Type) {HP : forall a b, IsTrunc (m -2+ n) (P a b)}
+  (fs : {f_a0 : forall b:B, P a0 b
+        & { f_b0 : forall a:A, P a b0
+        & f_a0 b0 = f_b0 a0 }})
+  : forall (a : A) (b : B), P a b.
+Proof.
+  destruct fs as [f_a0 [f_b0 f_a0b0]].
+  refine (wedge_incl_elim _ _ _ _ _ f_a0b0).
+Defined.

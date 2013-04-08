@@ -2,7 +2,7 @@
 
 (** * Truncations of types, in all dimensions. *)
 
-Require Import Overture PathGroupoids Trunc Sigma.
+Require Import Overture PathGroupoids Equivalences Trunc Sigma.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A X n.
@@ -41,3 +41,28 @@ End Truncation.
 Definition Truncation_rect_nondep {n A X} `{IsTrunc n X} 
   : (A -> X) -> (Truncation n A -> X)
 := Truncation_rect (fun _ => X).
+
+(** ** Functoriality *)
+Definition functor_Truncation {n : trunc_index} {X Y} (f : X -> Y)
+  : Truncation n X -> Truncation n Y.
+Proof.
+  apply Truncation_rect_nondep. exact (fun x => truncation_incl (f x)).
+Defined.
+
+Definition functor_Truncation_idmap `{Funext} {n : trunc_index} (X : Type)
+  : @functor_Truncation n X X idmap == idmap.
+Proof.
+  unfold pointwise_paths. apply @Truncation_rect.
+    intros ?; apply trunc_succ.
+  intros a; exact 1.
+Defined.
+
+Definition isequiv_functor_Truncation {n : trunc_index} {X Y} (f : X -> Y)
+  `{IsEquiv _ _ f} : IsEquiv (functor_Truncation (n:=n) f).
+Proof.
+  refine (isequiv_adjointify _ (functor_Truncation (f ^-1)) _ _);
+    unfold Sect; apply @Truncation_rect;
+    try (intros ?; apply trunc_succ).
+  intros y; simpl. apply ap, eisretr.
+  intros x; simpl. apply ap, eissect.
+Defined.
