@@ -78,6 +78,7 @@ Proof.
   exact ((concat_1p _)^ @ whiskerR (concat_pV _)^ _).
 Defined.
 
+(** We will need to show that [FST_Codes_cross] is an equivalence, for each [x1, q]. By connectedness of [X], it will be enough to show this for the case [x1 = x0]; to show this, we first write that case in a tidier form. *)
 Definition FST_Codes_cross_x0 (q : No = So)
   : FST_Codes_No (q @ (mer x0)^) -> FST_Codes_So q.
 Proof.
@@ -103,7 +104,7 @@ Proof.
     apply symmetry. refine (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r).
   unfold FST_Codes_cross_x0.
   apply isequiv_functor_Truncation, @isequiv_functor_sigma. refine _.
-  intros a. admit. (*TODO: isequiv_cancelR. *)
+  intros a. apply isequiv_cancelR.
 Defined.
 
 Definition FST_Codes 
@@ -119,8 +120,6 @@ Proof.
   exists (FST_Codes_cross x p).
   apply isequiv_FST_Codes_cross.
 Defined.
-
-End Fix_C.
 
 Instance Freudenthal
   : IsConnMap (n -2+ n) (@merid X).

@@ -311,6 +311,18 @@ Proof.
   destruct p. apply isequiv_idmap.
 Defined.
 
+Definition isequiv_cancelL {A} {x y z : A} (p : x = y) (q r : y = z)
+  : IsEquiv (cancelL p q r).
+Proof.
+  destruct r, p; simpl. apply isequiv_concat_l.
+Defined.
+
+Definition isequiv_cancelR {A} {x y z : A} (p q : x = y) (r : y = z)
+  : IsEquiv (cancelR p q r).
+Proof.
+  destruct r, p; simpl. apply isequiv_concat_r.
+Defined.
+
 
 (** *** Dependent paths *)
 
