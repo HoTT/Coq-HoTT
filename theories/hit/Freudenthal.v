@@ -2,7 +2,7 @@
 
 (** * The Freudenthal Suspension Theorem, and related results. *)
 
-Require Import Overture PathGroupoids Fibrations Equivalences Trunc Forall Sigma Paths Unit Universe Arrow Connectedness Suspension Truncations.
+Require Import Overture PathGroupoids Fibrations Equivalences Trunc EquivalenceVarieties Forall Sigma Paths Unit Universe Arrow Connectedness Suspension Truncations.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
@@ -14,21 +14,21 @@ Instance isconn_susp {n : trunc_index} {X : Type} `{IsConnected n X}
 Proof.
   intros C ? f. exists (f North).
   assert ({ p0 : f North = f South & forall x:X, ap f (merid x) = p0 })
-    as [p0 alleq_p0] by auto.
+    as [p0 allpath_p0] by auto.
   apply (Susp_rect (fun a => f a = f North) 1 p0^).
   intros x. 
   apply (concat (transport_paths_Fl _ _)).
   apply (concat (concat_p1 _)).
-  apply ap, alleq_p0.
+  apply ap, allpath_p0.
 Defined.
 
 (** ** The Freudenthal Suspension Theorem *)
 Section Freudenthal.
 
 (** We assume funext and univalence.  In fact, since we will use funext at two different levels and local assumptions are monomorphic, we need to assume funext twice; we give the second assumption of it a name (so we can use it explicitly when we want it), and a different type (so it doesn’t get used when we don’t want it). *)
-Context `{Funext} (funext_large : Funext * Unit) `{Univalence}.
-
-Context {n : trunc_index} (X : Type) (x0:X) `{IsConnMap n _ _ (unit_name x0)}.
+Context `{Funext} (funext_large : Funext * Unit) `{Univalence}
+        {n : trunc_index} {Hn : ~ n = minus_two}
+        (X : Type) (x0:X) `{IsConnMap n _ _ (unit_name x0)}.
 
 (* TODO: eventually, change these to the weaker assumptions:
 Context {n : trunc_index} (X : Type) `{IsConnected (trunc_S n) X}.
@@ -93,9 +93,9 @@ Proof.
   revert x. 
   apply (@conn_map_elim _ _ _ (unit_name x0) _
     (fun x => IsEquiv (FST_Codes_cross x q))).
-    intros x; generalize dependent n. intros [ | n'] _.
-      admit. (* n = –2.  TODO: rule this out earlier! *)
-    admit. (* TODO: write [trunc_leq]. *)
+    intros x; generalize dependent n. intros [ | n'] imposs.
+      destruct (imposs 1).
+      intros ?. apply (@trunc_leq minus_one). exact tt. apply hprop_isequiv.
   intros []. unfold FST_Codes_cross.
   apply (isequiv_homotopic (FST_Codes_cross_x0 q)). Focus 2.
     apply Truncation_rect. intros ?; apply trunc_succ.
