@@ -25,7 +25,8 @@ Defined.
 (** ** The Freudenthal Suspension Theorem *)
 Section Freudenthal.
 
-Context `{Funext} `{Univalence}.
+(** We assume funext and univalence.  In fact, since we will use funext at two different levels and local assumptions are monomorphic, we need to assume funext twice; we give the second assumption of it a name (so we can use it explicitly when we want it), and a different type (so it doesn’t get used when we don’t want it). *)
+Context `{Funext} (funext_large : Funext * Unit) `{Univalence}.
 
 Context {n : trunc_index} (X : Type) (x0:X) `{IsConnMap n _ _ (unit_name x0)}.
 
@@ -81,8 +82,7 @@ Definition FST_Codes_cross_x0 (q : No = So)
   : FST_Codes_No (q @ (mer x0)^) -> FST_Codes_So q.
 Proof.
   unfold FST_Codes_No, FST_Codes_So.
-  apply functor_Truncation.
-  apply (functor_sigma idmap).
+  apply functor_Truncation, (functor_sigma idmap).
   unfold mer'; intros x1. apply cancelR.
 Defined.
 
@@ -96,16 +96,13 @@ Proof.
       admit. (* n = –2.  TODO: rule this out earlier! *)
     admit. (* TODO: write [trunc_leq]. *)
   intros []. unfold FST_Codes_cross.
-  apply (isequiv_homotopic (FST_Codes_cross_x0 q)).
-    Focus 2.
+  apply (isequiv_homotopic (FST_Codes_cross_x0 q)). Focus 2.
     apply Truncation_rect. intros ?; apply trunc_succ.
-    intros [x r]. simpl.
+    intros [x r]; simpl.
     unfold functor_sigma; simpl.
-    apply symmetry. 
-    refine (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r).
+    apply symmetry. refine (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r).
   unfold FST_Codes_cross_x0.
-  apply isequiv_functor_Truncation.
-  apply @isequiv_functor_sigma. refine _.
+  apply isequiv_functor_Truncation, @isequiv_functor_sigma. refine _.
   intros a. admit. (*TODO: isequiv_cancelR. *)
 Defined.
 
@@ -113,7 +110,7 @@ Definition FST_Codes
   : forall (y : Susp X), (No = y) -> Type.
 Proof.
   apply (Susp_rect (fun y => (No = y -> Type)) FST_Codes_No FST_Codes_So).
-  intros x. apply path_forall; intros p.
+  intros x. apply (@path_forall (fst funext_large)); intros p.
   refine (transport_arrow _ _ _ @ _).
   refine (transport_const _ _ @ _).
   path_via (FST_Codes_No (p @ (mer x)^)).
