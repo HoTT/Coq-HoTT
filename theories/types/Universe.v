@@ -15,7 +15,11 @@ Instance isequiv_path {A B : Type} (p : A = B)
   := BuildIsEquiv _ _ _ (transport (fun X:Type => X) p^)
   (fun b => ((transport_pp idmap p^ p b)^ @ transport2 idmap (concat_Vp p) b))
   (fun a => ((transport_pp idmap p p^ a)^ @ transport2 idmap (concat_pV p) a))
-  (fun a => match p with idpath => 1 end).
+  (fun a => match p in _ = C return
+              (transport_pp idmap p^ p (transport idmap p a))^ @
+                 transport2 idmap (concat_Vp p) (transport idmap p a) =
+              ap (transport idmap p) ((transport_pp idmap p p^ a) ^ @
+                transport2 idmap (concat_pV p) a) with idpath => 1 end).
 
 Definition equiv_path (A B : Type) (p : A = B) : A <~> B
   := BuildEquiv _ _ (transport (fun X:Type => X) p) _.
