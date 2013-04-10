@@ -155,7 +155,7 @@ Definition equiv_concat_r {A : Type} `(p : y = z) (x : A)
 
 In particular, all of the [move] family are equivalences.
 
-(Note: currently, some but not all of these [isequiv_] lemmas have correspinding [equiv_] lemmas.  Also, they do *not* currently contain the computational content that e.g. the inverse of [moveR_Mp] is [moveL_Vp]; perhaps it would be useful if they did? *)
+(Note: currently, some but not all of these [isequiv_] lemmas have corresponding [equiv_] lemmas.  Also, they do *not* currently contain the computational content that e.g. the inverse of [moveR_Mp] is [moveL_Vp]; perhaps it would be useful if they did? *)
 
 Definition isequiv_moveR_Mp
  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
@@ -181,8 +181,8 @@ Proof.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
-Definition equiv_moveR_Vp {A : Type} {x y z : A}
-  (p : x = z) (q : y = z) (r : x = y)
+Definition equiv_moveR_Vp
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : (p = r @ q) <~> (r^ @ p = q)
 := BuildEquiv _ _ _ (isequiv_moveR_Vp p q r).
 
@@ -203,12 +203,17 @@ Proof.
 Defined.
 
 Definition isequiv_moveL_pM
-{A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveL_pM p q r).
 Proof. 
   destruct p.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
+
+Definition equiv_moveL_pM
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
+  q @ p^ = r <~> q = r @ p
+  := BuildEquiv _ _ _ (isequiv_moveL_pM p q r).
 
 Definition isequiv_moveL_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)

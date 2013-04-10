@@ -81,14 +81,6 @@ Proof.
   apply equiv_path_forall.
 Defined.
 
-(** *** Maps on paths *)
-
-(** The action of maps given by application. *)
-Definition ap_Dapply_l {A : Type} {B : A -> Type} {x y : forall a, B a} (p : x = y) (z : A) :
-  ap (fun f => f z) p = apD10 p z
-  :=
-  match p with idpath => idpath end.
-
 (** *** Functorial action *)
 
 (** The functoriality of [forall] is slightly subtle: it is contravariant in the domain type and covariant in the codomain, but the codomain is dependent on the domain. *)
@@ -143,6 +135,11 @@ Definition equiv_functor_forall' `{P : A -> Type} `{Q : B -> Type}
   (f : B <~> A) (g : forall b, P (f b) <~> Q b)
   : (forall a, P a) <~> (forall b, Q b)
   := equiv_functor_forall f g.
+
+Definition equiv_functor_forall_id `{P : A -> Type} `{Q : A -> Type}
+  (g : forall a, P a <~> Q a)
+  : (forall a, P a) <~> (forall a, Q a)
+  := equiv_functor_forall (equiv_idmap A) g.
 
 (** *** Truncatedness: any dependent product of n-types is an n-type *)
 
