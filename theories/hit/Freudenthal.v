@@ -7,6 +7,11 @@ Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
 
+(* TODO: move! *)
+Definition ap10_path_forall `{Funext} {A B : Type} (f g : A -> B) (h : f == g)
+  : ap10 (path_forall f g h) == h
+:= apD10_path_forall f g h.
+
 (* ** Connectedness of the suspension *)
 
 Instance isconn_susp {n : trunc_index} {X : Type} `{IsConnected n X}
@@ -25,7 +30,7 @@ Defined.
 (** ** The Freudenthal Suspension Theorem *)
 Section Freudenthal.
 
-(** We assume funext and univalence.  In fact, since we will use funext at two different levels and local assumptions are monomorphic, we need to assume funext twice; we give the second assumption of it a name (so we can use it explicitly when we want it), and a different type (so it doesn’t get used when we don’t want it). *)
+(** We assume funext and univalence.  In fact, since we will use funext at two different levels and local assumptions are monomorphic, we need to assume funext twice; we give the second assumption of it a name (so we can use it explicitly when we want it), and a different type (so it doesn’t get used when we don’t want it). TODO: perhaps this could be handled in a more uniform way?? *)
 Context `{Funext} (funext_large : Funext * Unit) `{Univalence}
         {n : trunc_index} {Hn : ~ n = minus_two}
         (X : Type) (x0:X) `{IsConnMap n _ _ (unit_name x0)}.
@@ -120,6 +125,92 @@ Proof.
   exists (FST_Codes_cross x p).
   apply isequiv_FST_Codes_cross.
 Defined.
+
+(** It now remains to show that each [FST_Codes y p] is contractible. It is easy to provide a canonical inhabitant, by transport. (More directly, we could use path-induction, but we will later need to use transport lemmas to reason about this.) *)
+Definition FST_Codes_center (y : Susp X) (p : No = y)
+  : FST_Codes y p.
+Proof.
+  assert (goal' : FST_Codes y (transport _ p 1)).
+    apply transportD. simpl; unfold FST_Codes_No.
+    apply truncation_incl. exists x0; unfold mer'. apply concat_pV.
+  refine (transport _ _ goal'). refine (transport_paths_r _ _ @ _).
+  apply concat_1p.
+Defined.
+
+(** TODO: move the following few lemmas. *)
+Lemma transport_as_ap {A} (P : A -> Type) {x y} (p : x = y)
+  : transport P p == transport idmap (ap P p).
+Proof.
+  intros ?; destruct p; exact 1.
+Defined.
+
+Lemma transportD'
+  {A : Type} (B : A -> Type) (C : forall a : A, B a -> Type)
+  {x1 x2 : A} (p : x1 = x2) (y : B x1)
+: C x1 y -> C x2 (transport B p y).
+Proof.
+  refine (transport idmap _).
+  refine (_ @ ap10 (apD C p) _).
+  apply inverse.
+  refine (transport_arrow _ _ _ @ _).
+  refine (transport_const _ _ @ _).
+  apply ap, transport_Vp.
+Defined.
+
+Arguments transportD' / [_] _ _ [_ _] _ _ _.
+
+Lemma transportD_as_apD
+  {A : Type} (B : A -> Type) (C : forall a : A, B a -> Type)
+  {x1 x2 : A} (p : x1 = x2) (y : B x1)
+: transportD B C p y == transportD' B C p y.
+Proof.
+  intros ?; destruct p; simpl. exact 1.
+Defined.
+
+(** A transport lemma. *)
+Definition FST_Codes_transportD_concrete (x1 : X) (p : No = No)
+  : FST_Codes No p -> FST_Codes So (transport (paths No) (mer x1) p).
+Proof.
+  intro rr. assert (goal' : FST_Codes So (p @ mer x1)).
+    apply (FST_Codes_cross x1).
+    refine (transport FST_Codes_No _ rr). apply symmetry, concat_pp_V.
+  refine (transport FST_Codes_So _ goal').
+  apply inverse, transport_paths_r.
+Defined.
+
+Definition FST_Codes_transportD (x1 : X) (p : No = No) (rr : FST_Codes No p)
+  : transportD (paths No) FST_Codes (mer x1) p rr 
+  = FST_Codes_transportD_concrete x1 p rr.
+Proof.
+  refine (transportD_as_apD _ _ _ _ _ @ _).
+  unfold transportD'. 
+  unfold FST_Codes. rewrite (Susp_comp_merid _ _ _ _ x1); simpl.
+    rewrite (@ap10_path_forall (fst funext_large)).
+  unfold FST_Codes_transportD_concrete.
+  rewrite ! transport_pp.
+  refine (transport_path_universe _ _ @ _).
+  rewrite (transport_paths_r.
+  rewrite transport_as_ap.
+Admitted.
+
+
+(** Showing it is contractible, we will again need the universal property of the suspension. We will prove the components as separate lemmas first; to see the required types of these, we temporarily set up the theorem. *)
+Definition FST_Codes_contr (y : Susp X) (p : No = y) (rr : FST_Codes y p)
+  : rr = FST_Codes_center y p.
+Proof.
+  revert y p rr.
+  Check (Susp_rect (fun y => forall p rr, rr = FST_Codes_center y p)).
+Abort.
+
+Definition FST_Codes_contr_No (p : No = No) (rr : FST_Codes No p)
+  : (rr = FST_Codes_center No p).
+Proof.
+  revert rr. apply Truncation_rect. intros ?; apply trunc_succ.
+  intros [x1 r]. destruct r. unfold FST_Codes_center. simpl.
+  path_via (truncation_incl
+    (transport (fun p => hfiber mer' p) (transport_paths_r p 1 @ concat_1p p)
+    (transportD (paths No) 
+simpl in *.
 
 Instance Freudenthal
   : IsConnMap (n -2+ n) (@merid X).
