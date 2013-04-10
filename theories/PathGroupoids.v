@@ -670,44 +670,42 @@ Defined.
 (** ** The 2-dimensional groupoid structure *)
 
 (** Horizontal composition of 2-dimensional paths. *)
-Definition concat2 {A} {x y z : A} {p p' : x = y} {q q' : y = z} (h : p = p') (h' : q = q') :
-  p @ q = p' @ q'
-  :=
-  match h, h' with idpath, idpath => 1 end.
+Definition concat2 {A} {x y z : A} {p p' : x = y} {q q' : y = z} (h : p = p') (h' : q = q')
+  : p @ q = p' @ q'
+:= match h, h' with idpath, idpath => 1 end.
 
 Notation "p @@ q" := (concat2 p q)%path (at level 20) : path_scope.
 
 (** 2-dimensional path inversion *)
 Definition inverse2 {A : Type} {x y : A} {p q : x = y} (h : p = q)
   : p^ = q^
-  := match h with idpath => 1 end.
+:= match h with idpath => 1 end.
 
 (** *** Whiskering *)
 
-Definition whiskerL {A : Type} {x y z : A} (p : x = y) {q r : y = z} (h : q = r) : p @ q = p @ r
-  :=
-  1 @@ h.
+Definition whiskerL {A : Type} {x y z : A} (p : x = y)
+  {q r : y = z} (h : q = r) : p @ q = p @ r
+:= 1 @@ h.
 
-Definition whiskerR {A : Type} {x y z : A} {p q : x = y} (h : p = q) (r : y = z) :
-  p @ r = q @ r
-  :=
-  h @@ 1.
+Definition whiskerR {A : Type} {x y z : A} {p q : x = y}
+  (h : p = q) (r : y = z) : p @ r = q @ r
+:= h @@ 1.
 
 (** *** Unwhiskering, a.k.a. cancelling. *)
 
-Lemma cancelL {A} {x y z : A} (p : x = y) (q r : y = z) : (p @ q = p @ r) -> (q = r).
+Lemma cancelL {A} {x y z : A} (p : x = y) (q r : y = z)
+  : (p @ q = p @ r) -> (q = r).
 Proof.
+  destruct p, r.
   intro a.
-  destruct p.
-  destruct r.
   exact ((concat_1p q)^ @ a).
 Defined.
 
-Lemma cancelR {A} {x y z : A} (p q : x = y) (r : y = z) : (p @ r = q @ r) -> (p = q).
+Lemma cancelR {A} {x y z : A} (p q : x = y) (r : y = z)
+  : (p @ r = q @ r) -> (p = q).
 Proof.
+  destruct r, p.
   intro a.
-  destruct r.
-  destruct p.
   exact (a @ concat_p1 q).
 Defined.
 
