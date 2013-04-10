@@ -287,6 +287,11 @@ Definition equiv_functor_sigma' `{P : A -> Type} `{Q : B -> Type}
   : sigT P <~> sigT Q
   := equiv_functor_sigma f g.
 
+Definition equiv_functor_sigma_id `{P : A -> Type} `{Q : A -> Type}
+  (g : forall a, P a <~> Q a)
+  : sigT P <~> sigT Q
+  := equiv_functor_sigma (equiv_idmap A) g.
+
 (* Summing up a contractible family of types does nothing. *)
 Definition equiv_sigma_contr {A : Type} (P : A -> Type)
   `{forall a, Contr (P a)}

@@ -24,6 +24,7 @@ Instance isequiv_path {A B : Type} (p : A = B)
 Definition equiv_path (A B : Type) (p : A = B) : A <~> B
   := BuildEquiv _ _ (transport (fun X:Type => X) p) _.
 
+(* There already exists a function named equiv_path_inverse in Paths.v! *)
 Definition equiv_path_inverse `{Funext} (A B : Type) (p : A = B) :
   equiv_path B A (p^) = equiv_inverse (equiv_path A B p).
 Proof.

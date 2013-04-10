@@ -133,6 +133,27 @@ Proof.
   exact _.    (* i.e., search the context for instances *)
 Defined.
 
+Definition equiv_functor_prod' {A A' B B' : Type} (f : A <~> A') (g : B <~> B')
+  : A * B <~> A' * B'.
+Proof.
+  exists (functor_prod f g).
+  exact _.    (* i.e., search the context for instances *)
+Defined.
+
+Definition equiv_functor_prod_l {A B B' : Type} (g : B <~> B')
+  : A * B <~> A * B'.
+Proof.
+  exists (functor_prod idmap g).
+  exact _.    (* i.e., search the context for instances *)
+Defined.
+
+Definition equiv_functor_prod_r {A A' B : Type} (f : A <~> A')
+  : A * B <~> A' * B.
+Proof.
+  exists (functor_prod f idmap).
+  exact _.    (* i.e., search the context for instances *)
+Defined.
+
 (** *** Symmetry *)
 
 (* This is a special property of [prod], of course, not an instance of a general family of facts about types. *)

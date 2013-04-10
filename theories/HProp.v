@@ -1,7 +1,7 @@
 (** * HPropositions *)
 
 Require Import Overture Contractible Equivalences Trunc.
-Require Import types.Forall types.Sigma types.Record.
+Require Import types.Forall types.Sigma types.Prod types.Record.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 
@@ -140,4 +140,26 @@ Proof.
     apply @path_contr. apply contr_contr. exact (ic x).
   - intro hp. by_extensionality x. by_extensionality y.
     apply @path_contr. apply contr_contr. exact (hp x y).
+Defined.
+
+(** Here are some alternate characterizations of contractibility. *)
+Theorem equiv_contr_inhabited_hprop `{Funext} {A}
+  : Contr A <~> A * IsHProp A.
+Proof.
+  assert (f : Contr A -> A * IsHProp A).
+    intro P. split. exact (@center _ P). apply @trunc_succ. exact P.
+  assert (g : A * IsHProp A -> Contr A).
+    intros [a P]. apply (@contr_inhabited_hprop _ P a).
+  refine (@equiv_iff_hprop _ _ _ _ f g).
+  apply hprop_inhabited_contr; intro p.
+  apply @contr_prod.
+  exact (g p). apply (@contr_inhabited_hprop _ _ (snd p)).
+Defined.
+
+Theorem equiv_contr_inhabited_allpath `{Funext} {A}
+  : Contr A <~> A * forall (x y : A), x = y.
+Proof.
+  apply transitivity with (y := A * IsHProp A).
+  apply equiv_contr_inhabited_hprop.
+  apply equiv_functor_prod'. apply equiv_idmap. apply equiv_hprop_allpath.
 Defined.
