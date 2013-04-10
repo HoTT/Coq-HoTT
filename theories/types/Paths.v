@@ -62,6 +62,15 @@ Proof.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
+Definition transport_paths_FlFr_D {A : Type} {B : A -> Type}
+  {f g : forall a, B a} {x1 x2 : A} (p : x1 = x2) (q : f x1 = g x1)
+: transport (fun x => f x = g x) p q
+  = (apD f p)^ @ ap (transport B p) q @ (apD g p).
+Proof.
+  destruct p; simpl.
+  exact ((ap_idmap _)^ @ (concat_1p _)^ @ (concat_p1 _)^).
+Defined.
+
 Definition transport_paths_FFlr {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
   (p : x1 = x2) (q : g (f x1) = x1)
   : transport (fun x => g (f x) = x) p q = (ap g (ap f p))^ @ q @ p.
@@ -305,6 +314,18 @@ Definition isequiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
 : IsEquiv (moveL_transport_p P p u v).
 Proof.
   destruct p. apply isequiv_idmap.
+Defined.
+
+Definition isequiv_cancelL {A} {x y z : A} (p : x = y) (q r : y = z)
+  : IsEquiv (cancelL p q r).
+Proof.
+  destruct r, p; simpl. apply isequiv_concat_l.
+Defined.
+
+Definition isequiv_cancelR {A} {x y z : A} (p q : x = y) (r : y = z)
+  : IsEquiv (cancelR p q r).
+Proof.
+  destruct r, p; simpl. apply isequiv_concat_r.
 Defined.
 
 
