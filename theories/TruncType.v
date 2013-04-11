@@ -34,7 +34,7 @@ Lemma equiv_path_equiv {A B : Type} (e1 e2 : A <~> B)
   : (e1 = e2 :> (A -> B)) <~> (e1 = e2 :> (A <~> B)).
 Proof.
   equiv_via ((issig_equiv A B) ^-1 e1 = (issig_equiv A B) ^-1 e2).
-    Focus 2. apply symmetry, equiv_ap; refine _.
+    2: apply symmetry, equiv_ap; refine _.
 (* TODO: why does this get the wrong type if [hprop_isequiv] is not supplied? *)
   exact (@equiv_path_sigma_hprop _ _ hprop_isequiv 
     ((issig_equiv A B) ^-1 e1) ((issig_equiv A B) ^-1 e2)).
@@ -103,7 +103,7 @@ Proof.
   equiv_via (A = B :> Type).
     apply equiv_path_universe.
   equiv_via ((issig_trunctype ^-1 A) = (issig_trunctype ^-1 B)).
-    Focus 2. apply symmetry, equiv_ap; refine _.
+    2: apply symmetry, equiv_ap; refine _.
   simpl. apply (equiv_path_sigma_hprop
     (trunctype_type A; istrunc_trunctype_type A)
     (trunctype_type B; istrunc_trunctype_type B)).
@@ -118,7 +118,7 @@ Instance istrunc_trunctype {n : trunc_index}
 Proof.
   intros A B.
   apply (@trunc_equiv _ _ (equiv_path_trunctype A B)).
-    Focus 2. apply equiv_isequiv. 
+    2: apply equiv_isequiv. 
   case n as [ | n'].
     apply contr_equiv_contr_contr. (* The reason is different in this case. *)
   apply istrunc_equiv.

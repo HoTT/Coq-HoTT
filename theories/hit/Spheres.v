@@ -58,7 +58,7 @@ Proof.
   revert x. change (Susp Empty) with (Sphere 0). 
   apply (equiv_rect (Sph0_to_Bool ^-1)); intros x.
   case x; simpl. 
-    Focus 2. apply concat_1p.
+    2: apply concat_1p.
   unfold S1_to_Sph1; rewrite S1_rectnd_beta_loop.
   refine (whiskerR (concat_p1 _) _ @ _).
   apply moveR_Vp. hott_simpl.  

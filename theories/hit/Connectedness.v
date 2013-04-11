@@ -134,11 +134,11 @@ Instance isequiv_path_extension {A B : Type} {f : A -> B}
 : IsEquiv (path_extension ext ext').
 Proof.
   apply @isequiv_compose.
-    Focus 2. apply @isequiv_path_sigma.
+    2: apply @isequiv_path_sigma.
   apply @isequiv_functor_sigma.
     apply @isequiv_path_forall.
   intros a. apply @isequiv_compose.
-    Focus 2. apply @isequiv_path_forall.
+    2: apply @isequiv_path_forall.
   apply (@isequiv_functor_forall _).
     apply isequiv_idmap.
   intros x. apply @isequiv_compose.
@@ -191,7 +191,7 @@ Proof.
   set (e := Hf P _ dP).
   exists (e .1 b 1).
   intros [a p]. apply symmetry. path_via (e .1 (f a) p).
-    Focus 2. exact (ap10 (e.2 a) p).
+    2: exact (ap10 (e.2 a) p).
   (* TODO: Can the following be simplified? A version of [ap] for binary functions would be one approach. *)
   set (e1 := fun (bb : {b':B & b' = b}) => (e.1 (bb.1) (bb.2))).
   change (e.1 b 1) with (e1 (b;1)).
