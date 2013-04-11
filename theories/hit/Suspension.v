@@ -25,7 +25,8 @@ Definition Susp_rect {X : Type} (P : Susp X -> Type)
   (H_N : P North) (H_S : P South)
   (H_merid : forall x:X, (merid x) # H_N = H_S)
 : forall (y:Susp X), P y
-:= fun y => match y with North => H_N | South => H_S end.
+:= fun y => (match y return (_ -> P y)
+     with North => (fun _ => H_N) | South => (fun _ => H_S) end) H_merid.
 
 Axiom Susp_comp_merid : forall {X : Type} (P : Susp X -> Type)
   (H_N : P North) (H_S : P South)
