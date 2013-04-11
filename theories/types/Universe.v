@@ -69,20 +69,18 @@ Definition equiv_path_universe (A B : Type) : (A <~> B) <~> (A = B)
   := BuildEquiv _ _ (@path_universe_uncurried A B) isequiv_path_universe.
 
 Definition path_universe_V_uncurried `{Funext} {A B : Type} (f : A <~> B)
-  : (path_universe_uncurried f)^ = path_universe_uncurried (equiv_inverse f).
+  : path_universe_uncurried (equiv_inverse f) = (path_universe_uncurried f)^.
 Proof.
   revert f. equiv_intro ((equiv_path_universe A B)^-1) p. simpl.
   path_via (p^).
-  exact (inverse2 (eisretr (equiv_path_universe A B) p)).
-  unfold compose.
-  path_via (path_universe_uncurried (equiv_path B A p^)).
-  apply symmetry.
+    2: exact (inverse2 (eisretr (equiv_path_universe A B) p)^).
+  unfold compose. path_via (path_universe_uncurried (equiv_path B A p^)).
+    by refine (ap _ (equiv_path_V A B p)^).
   by refine (eissect (equiv_path B A) p^).
-  by refine (ap _ (equiv_path_V A B p)).
 Defined.
 
 Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}
-  : (path_universe f)^ = path_universe (f^-1)
+  : path_universe (f^-1) = (path_universe f)^
   := path_universe_V_uncurried (BuildEquiv A B f _).
 
 End Univalence.
