@@ -24,8 +24,7 @@ Instance isequiv_path {A B : Type} (p : A = B)
 Definition equiv_path (A B : Type) (p : A = B) : A <~> B
   := BuildEquiv _ _ (transport (fun X:Type => X) p) _.
 
-(* There already exists a function named equiv_path_inverse in Paths.v! *)
-Definition equiv_path_inverse `{Funext} (A B : Type) (p : A = B) :
+Definition equiv_path_V `{Funext} (A B : Type) (p : A = B) :
   equiv_path B A (p^) = equiv_inverse (equiv_path A B p).
 Proof.
   destruct p. simpl. unfold equiv_path, equiv_inverse. simpl. apply ap.
@@ -69,7 +68,7 @@ Definition isequiv_path_universe {A B : Type}
 Definition equiv_path_universe (A B : Type) : (A <~> B) <~> (A = B)
   := BuildEquiv _ _ (@path_universe_uncurried A B) isequiv_path_universe.
 
-Definition path_universe_inverse_uncurried `{Funext} {A B : Type} (f : A <~> B)
+Definition path_universe_V_uncurried `{Funext} {A B : Type} (f : A <~> B)
   : (path_universe_uncurried f)^ = path_universe_uncurried (equiv_inverse f).
 Proof.
   revert f. equiv_intro ((equiv_path_universe A B)^-1) p. simpl.
@@ -79,11 +78,11 @@ Proof.
   path_via (path_universe_uncurried (equiv_path B A p^)).
   apply symmetry.
   by refine (eissect (equiv_path B A) p^).
-  by refine (ap _ (equiv_path_inverse A B p)).
+  by refine (ap _ (equiv_path_V A B p)).
 Defined.
 
-Definition path_universe_inverse `{Funext} `(f : A -> B) `{IsEquiv A B f}
+Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}
   : (path_universe f)^ = path_universe (f^-1)
-  := path_universe_inverse_uncurried (BuildEquiv A B f _).
+  := path_universe_V_uncurried (BuildEquiv A B f _).
 
 End Univalence.
