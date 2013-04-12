@@ -318,6 +318,19 @@ Proof.
   - intros [a [p q]]; reflexivity.
 Defined.
 
+Definition equiv_sigma_prod `(Q : (A * B) -> Type)
+  : {a : A & {b : B & Q (a,b)}} <~> sigT Q.
+Proof.
+  refine (@equiv_adjointify {a : A & {b : B & Q (a,b)}} (sigT Q)
+    (fun abq => let (a,bq):=abq in let (b,q):=bq in ((a,b);q))
+    (fun abq => let (ab,q):=abq in
+      (let (a,b) return (Q ab -> {a : A & {b : B & Q (a,b)}})
+        := ab in fun q => (a ; existT (fun b:B => Q (a,b)) b q)) q)
+    _ _).
+  - intros [[a b] q]; reflexivity.
+  - intros [a [b q]]; reflexivity.
+Defined.
+
 (** *** Universal mapping properties *)
 
 (* The positive universal property. *)

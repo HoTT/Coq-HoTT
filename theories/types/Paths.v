@@ -160,6 +160,14 @@ Definition equiv_concat_r {A : Type} `(p : y = z) (x : A)
   : (x = y) <~> (x = z)
   := BuildEquiv _ _ (fun q => q @ p) _.
 
+Instance isequiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
+  : IsEquiv (fun r:x=y => p @ r @ q)
+  := @isequiv_compose _ _ (fun r => p @ r) _ _ (fun r => r @ q) _.
+
+Definition equiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
+  : (x = y) <~> (x' = y')
+  := BuildEquiv _ _ (fun r:x=y => p @ r @ q) _.
+
 (** We can use these to build up more complicated equivalences. 
 
 In particular, all of the [move] family are equivalences.
