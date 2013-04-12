@@ -66,6 +66,18 @@ Definition transport_forall_constant
     == (fun y => transport (fun x => C x y) p (f y))
   := match p with idpath => fun _ => 1 end.
 
+(** *** Maps on paths *)
+
+(** The action of maps given by lambda. *)
+Definition ap_lambdaD {A B : Type} {C : B -> Type} {x y : A} (p : x = y) (M : forall a b, C b) :
+  ap (fun a b => M a b) p =
+  path_forall _ _ (fun b => ap (fun a => M a b) p).
+Proof.
+  destruct p;
+  symmetry;
+  simpl; apply path_forall_1.
+Defined.
+
 (** *** Dependent paths *)
 
 (** Usually, a dependent path over [p:x1=x2] in [P:A->Type] between [y1:P x1] and [y2:P x2] is a path [transport P p y1 = y2] in [P x2].  However, when [P] is a function space, these dependent paths have a more convenient description: rather than transporting the argument of [y1] forwards and backwards, we transport only forwards but on both sides of the equation, yielding a "naturality square". *)
