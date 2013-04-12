@@ -68,13 +68,15 @@ Defined.
 
 (** We show here that a type is n-truncated if and only if every map from the (n+1)-sphere into it is null-homotopic.  (One direction of this is of course the assertion that the (n+1)-sphere is n-connected.) *)
 
+(** TODO: re-type these lemmas in terms of truncation. *)
+
 Fixpoint allnullhomot_trunc {n : trunc_index} {X : Type} `{IsTrunc n X} 
   (f : Sphere (trunc_S n) -> X) {struct n}
 : NullHomotopy f.
 Proof.
   destruct n as [ | n'].
     simpl in *. exists (center X). intros [ ].
-  apply nullhomot_susp.
+  apply nullhomot_susp_from_paths.
   apply allnullhomot_trunc; auto.
 Defined.
 
@@ -88,5 +90,5 @@ Proof.
     set (n := HX f). exact (n.2 North @ (n.2 South)^).
   (* n ≥ -1 *) intros x0 x1.
     apply (trunc_allnullhomot n').
-    intro f. apply nullhomot_paths, HX.
+    intro f. apply nullhomot_paths_from_susp, HX.
 Defined.

@@ -78,7 +78,7 @@ Definition Susp_eta `{Funext}
 
 (** ** Nullhomotopies of maps out of suspensions *)
 
-Definition nullhomot_susp {X Z: Type} (f : Susp X -> Z)
+Definition nullhomot_susp_from_paths {X Z: Type} (f : Susp X -> Z)
   (n : NullHomotopy (fun x => ap f (merid x)))
 : NullHomotopy f.
 Proof.
@@ -88,7 +88,7 @@ Proof.
   apply (concat (concat_p1 _)), ap. apply n.2.
 Defined.
 
-Definition nullhomot_paths {X Z: Type} (H_N H_S : Z) (f : X -> H_N = H_S)
+Definition nullhomot_paths_from_susp {X Z: Type} (H_N H_S : Z) (f : X -> H_N = H_S)
   (n : NullHomotopy (Susp_rect_nd H_N H_S f))
 : NullHomotopy f.
 Proof.
