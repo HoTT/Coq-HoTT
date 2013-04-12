@@ -2,7 +2,7 @@
 
 (** * The suspension of a type *)
 
-Require Import Overture PathGroupoids Paths.
+Require Import Overture PathGroupoids Paths Misc.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
@@ -75,3 +75,27 @@ Definition Susp_eta `{Funext}
   {X : Type} {P : Susp X -> Type} (f : forall y, P y)
   : f = Susp_rect P (f North) (f South) (fun x => apD f (merid x))
 := path_forall _ _ (Susp_eta_homot f).
+
+(** ** Nullhomotopies of maps out of suspensions *)
+
+Definition nullhomot_susp {X Z: Type} (f : Susp X -> Z)
+  (n : NullHomotopy (fun x => ap f (merid x)))
+: NullHomotopy f.
+Proof.
+  exists (f North).
+  refine (Susp_rect _ 1 n.1^ _); intros x.
+  refine (transport_paths_Fl _ _ @ _).
+  apply (concat (concat_p1 _)), ap. apply n.2.
+Defined.
+
+Definition nullhomot_paths {X Z: Type} (H_N H_S : Z) (f : X -> H_N = H_S)
+  (n : NullHomotopy (Susp_rect_nd H_N H_S f))
+: NullHomotopy f.
+Proof.
+  exists (n.2 North @ (n.2 South)^).
+  intro x. apply moveL_pV.
+  path_via (ap (Susp_rect_nd H_N H_S f) (merid x) @ n.2 South).
+  apply whiskerR, inverse, Susp_comp_nd_merid.
+  refine (concat_Ap _ _ @ _).
+  apply (concatR (concat_p1 _)), whiskerL. apply ap_const.
+Defined.
