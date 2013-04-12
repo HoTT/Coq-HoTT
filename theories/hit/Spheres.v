@@ -2,7 +2,7 @@
 
 (** * The spheres, in all dimensions. *)
 
-Require Import Overture PathGroupoids Trunc HProp Equivalences Sigma Forall Paths types.Bool Suspension Circle.
+Require Import Overture PathGroupoids Trunc HProp Equivalences Sigma Forall Paths types.Bool Misc Suspension Circle.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
@@ -67,49 +67,8 @@ Defined.
 (** ** Truncatedness via spheres  *)
 
 (** We show here that a type is n-truncated if and only if every map from the (n+1)-sphere into it is null-homotopic.  (One direction of this is of course the assertion that the (n+1)-sphere is n-connected.) *)
- 
-(** *** Auxiliary notions *)
-Section Auxiliary.
 
-Context `{Funext}.
-
-(** Geometrically, a nullhomotopy of a map [f : X -> Y] is an extension of [f] to a map [Cone X -> Y].  One might more simply call it e.g. [Constant f], but that is a little ambiguous: it could also reasonably mean [forall (x x':X), f x = f x'].  (Should the unique map [0 -> Y] be constant in one way, or in [Y]-many ways?) *)
-
-(* Note: This definition + lemma are difficult to find a home for: they use [trunc_sigma], so need to come after [types.Sigma], but no file after that really fits them well. *)
-Definition NullHomotopy {X Y : Type} (f : X -> Y)
-  := {y : Y & forall x:X, f x = y}.
-
-Lemma istrunc_nullhomotopy {X Y : Type} (f : X -> Y) `{IsTrunc n Y} 
-  : IsTrunc n (NullHomotopy f).
-Proof.
-  apply @trunc_sigma; auto.
-  intros y. apply (@trunc_forall _). 
-  intros x. apply trunc_succ.
-Defined.
-
-Definition nullhomot_susp {X Z: Type} (f : Susp X -> Z)
-  (n : NullHomotopy (fun x => ap f (merid x)))
-: NullHomotopy f.
-Proof.
-  exists (f North).
-  refine (Susp_rect _ 1 n.1^ _); intros x.
-  refine (transport_paths_Fl _ _ @ _).
-  apply (concat (concat_p1 _)), ap. apply n.2.
-Defined.
-
-Definition nullhomot_paths {X Z: Type} (H_N H_S : Z) (f : X -> H_N = H_S)
-  (n : NullHomotopy (Susp_rect_nd H_N H_S f))
-: NullHomotopy f.
-Proof.
-  exists (n.2 North @ (n.2 South)^).
-  intro x. apply moveL_pV.
-  path_via (ap (Susp_rect_nd H_N H_S f) (merid x) @ n.2 South).
-  apply whiskerR, inverse, Susp_comp_nd_merid.
-  refine (concat_Ap _ _ @ _).
-  apply (concatR (concat_p1 _)), whiskerL. apply ap_const.
-Defined.
-
-End Auxiliary.
+(** TODO: re-type these lemmas in terms of truncation. *)
 
 Fixpoint allnullhomot_trunc {n : trunc_index} {X : Type} `{IsTrunc n X} 
   (f : Sphere (trunc_S n) -> X) {struct n}
@@ -117,7 +76,7 @@ Fixpoint allnullhomot_trunc {n : trunc_index} {X : Type} `{IsTrunc n X}
 Proof.
   destruct n as [ | n'].
     simpl in *. exists (center X). intros [ ].
-  apply nullhomot_susp.
+  apply nullhomot_susp_from_paths.
   apply allnullhomot_trunc; auto.
 Defined.
 
@@ -131,5 +90,5 @@ Proof.
     set (n := HX f). exact (n.2 North @ (n.2 South)^).
   (* n ≥ -1 *) intros x0 x1.
     apply (trunc_allnullhomot n').
-    intro f. apply nullhomot_paths, HX.
+    intro f. apply nullhomot_paths_from_susp, HX.
 Defined.
