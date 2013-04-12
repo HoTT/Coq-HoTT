@@ -8,7 +8,9 @@
 - generally, be extra-careful keeping this file well-organised and documented.
 - any time you see a chance to move lemmas from this file to a better home, do so without hesitation! *)
 
-(** Dependencies: we should allow this file to depend at least on files from the [types] directory; ipso facto, we should not put anything here that those files depend on. *)
+(** Dependencies: we should allow this file to depend at least on files from the [types] directory; ipso facto, we should not put anything here that those files depend on. 
+
+Conversely, several files in [hit] now depend on this file; so we should probably avoid using HIT’s in this file. *)
 
 Require Import Overture PathGroupoids Trunc Equivalences HProp Sigma Paths Record Arrow EquivalenceVarieties Forall.
 Local Open Scope path_scope.
