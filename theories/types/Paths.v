@@ -336,6 +336,17 @@ Proof.
   destruct r, p; simpl. apply isequiv_concat_r.
 Defined.
 
+Definition equiv_ap_l `(f : A -> B) `{IsEquiv A B f} (x : A) (z : B)
+  : (f x = z) <~> (x = f^-1 z).
+Proof. 
+  apply transitivity with (f x = f (f^-1 z)).
+  apply equiv_concat_r.
+  apply symmetry.
+  apply (eisretr f).
+  apply symmetry.
+  apply equiv_ap.
+  assumption.
+Defined.
 
 (** *** Dependent paths *)
 
