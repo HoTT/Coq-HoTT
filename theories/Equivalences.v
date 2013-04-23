@@ -94,7 +94,7 @@ Section EquivInverse.
   Context `{IsEquiv A B f}.
   Open Scope long_path_scope.
 
-  Let other_adj (b : B) : eissect f (f^-1 b) = ap f^-1 (eisretr f b).
+  Theorem other_adj (b : B) : eissect f (f^-1 b) = ap f^-1 (eisretr f b).
   Proof.
     (* First we set up the mess. *)
     rewrite <- (concat_1p (eissect _ _)).
