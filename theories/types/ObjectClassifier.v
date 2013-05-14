@@ -49,7 +49,7 @@ apply  equiv_biinv. split;
 by apply moveR_E. 
 Defined.
 
-Theorem equiv_induction (P : forall U V, U <~> V -> Set) :
+Theorem equiv_induction (P : forall U V, U <~> V -> Type) :
   (forall T, P T T (equiv_idmap T)) -> (forall U V (w : U <~> V), P U V w).
 Proof.
 intros H???.
@@ -58,16 +58,16 @@ intro x. case x. apply H.
 Defined.
 
 (* This is generalized in Functorish.v *)
-Theorem transport_exp `{Funext} (U V:Set)(w:U<~>V): forall (f:U->A), 
-  (@transport _ (fun I:Set => I->A) _ _ (path_universe w) f) = (exp w f).
-set (p:=equiv_induction (fun (U:Set) (V:Set) w => forall f : U -> A,
- (@transport _ (fun I : Set => I -> A) U V (path_universe w) f) = (exp w f))).
+Theorem transport_exp `{Funext} (U V:Type)(w:U<~>V): forall (f:U->A), 
+  (@transport _ (fun I:Type => I->A) _ _ (path_universe w) f) = (exp w f).
+set (p:=equiv_induction (fun (U:Type) (V:Type) w => forall f : U -> A,
+ (@transport _ (fun I : Type => I -> A) U V (path_universe w) f) = (exp w f))).
 apply p.
 intros T f. path_via f.
-path_via (@transport _ (fun I : Set => I -> A) _ _
+path_via (@transport _ (fun I : Type => I -> A) _ _
   (path_universe (equiv_path _ _ (idpath T) )) f).
-path_via (@transport Set (fun I : Set => I -> A) T T (idpath T) f ).
-apply (@transport2 Set (fun I:Set => I-> A) T T).
+path_via (@transport Type (fun I : Type => I -> A) T T (idpath T) f ).
+apply (@transport2 Type (fun I:Type => I-> A) T T).
 apply eta_path_universe.
 Qed.
 
@@ -82,10 +82,10 @@ apply ((path_universe (@hfiber_fibration  _ a P))^).
 exists f2p. intros [I f]. 
 (* Theorem right (F:Fam A) : F = (p2ff2p F) *)
 
-set (e:=@equiv_total_paths _ _ (@existT Set (fun I0 : Set => I0 -> A) I f)
+set (e:=@equiv_total_paths _ _ (@existT Type (fun I0 : Type => I0 -> A) I f)
 ({a : A & hfiber f a} ; pr1)). simpl in e.
 cut ( {p : I = {a : A & @hfiber I A f a} &
-     @transport _ (fun I0 : Set => I0 -> A) _ _ p f = pr1}). 
+     @transport _ (fun I0 : Type => I0 -> A) _ _ p f = pr1}). 
 intro X. apply ((e ^-1 X)^).
 set (w:=@equiv_fibration_replacement A I f).
 exists (path_universe w). path_via (exp w f). apply transport_exp.
