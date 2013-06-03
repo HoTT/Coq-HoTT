@@ -106,7 +106,7 @@ Ltac issig2 build pr1 pr2 pr3 :=
           := v in 1)
       (fun u =>
         match u return
-          (existT (fun u2 => sigT (fibration u.1 u2))
+          (existT (fun u1 => sigT (fibration u1))
             (pr1 (build u.1 u.2.1 u.2.2))
             (existT (fibration u.1)
               (pr2 (build u.1 u.2.1 u.2.2))
