@@ -63,7 +63,7 @@ Instance isequiv_unit_rect `{Funext} (A : Type) : IsEquiv (@Unit_rect A)
   (fun _ => 1).
 
 (* For various reasons, it is typically more convenient to define functions out of the unit as constant maps, rather than [Unit_rect]. *)
-Notation "'unit_name' x" := (fun (_ : Unit) => x) (at level 60).
+Notation unit_name x := (fun (_ : Unit) => x).
 
 (* The negative universal property *)
 Definition unit_corect {A : Type} : Unit -> (A -> Unit)
@@ -97,7 +97,7 @@ Definition equiv_contr_unit `{Contr A} : A <~> Unit.
 Proof.
   refine (BuildEquiv _ _
     (fun (_ : A) => tt)
-    (BuildIsEquiv _ _ _ 
+    (BuildIsEquiv _ _ _
       (fun (_ : Unit) => center A)
       (fun t : Unit => match t with tt => 1 end)
       (fun x : A => contr x) _)).
