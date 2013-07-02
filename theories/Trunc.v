@@ -4,6 +4,7 @@
 
 Require Import Overture Contractible Equivalences Paths Unit.
 Local Open Scope equiv_scope.
+Local Open Scope trunc_scope.
 
 Generalizable Variables A B m n f.
 
@@ -14,7 +15,7 @@ Fixpoint trunc_index_add (m n : trunc_index) : trunc_index
        | trunc_S m' => trunc_S (trunc_index_add m' n)
      end.
 
-Notation "m -2+ n" := (trunc_index_add m n) (at level 50, left associativity).
+Notation "m -2+ n" := (trunc_index_add m n) (at level 50, left associativity) : trunc_scope.
 
 Fixpoint trunc_index_leq (m n : trunc_index) : Type
   := match m, n with
@@ -23,7 +24,7 @@ Fixpoint trunc_index_leq (m n : trunc_index) : Type
        | trunc_S m', trunc_S n' => trunc_index_leq m' n'
      end.
 
-Notation "m <= n" := (trunc_index_leq m n) (at level 70, no associativity).
+Notation "m <= n" := (trunc_index_leq m n) (at level 70, no associativity) : trunc_scope.
 
 (** ** Truncatedness proper. *)
 

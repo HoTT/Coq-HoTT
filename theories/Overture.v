@@ -236,6 +236,11 @@ Inductive trunc_index : Type :=
 | minus_two : trunc_index
 | trunc_S : trunc_index -> trunc_index.
 
+(* We will use [Notation] for [trunc_index]es, so define a scope for them here. *)
+Delimit Scope trunc_scope with trunc.
+Bind Scope trunc_scope with trunc_index.
+Arguments trunc_S _%trunc_scope.
+
 Fixpoint nat_to_trunc_index (n : nat) : trunc_index
   := match n with
        | 0 => trunc_S (trunc_S minus_two)
