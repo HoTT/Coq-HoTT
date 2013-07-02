@@ -134,7 +134,7 @@ Notation ap01 := ap (only parsing).
 Definition pointwise_paths {A} {P:A->Type} (f g:forall x:A, P x) : Type
   := forall x:A, f x = g x.
 
-Notation "f == g" := (pointwise_paths f g) (at level 50).
+Notation "f == g" := (pointwise_paths f g) (at level 70, no associativity) : type_scope.
 
 Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g)
   : f == g
