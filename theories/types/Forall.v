@@ -36,7 +36,7 @@ Definition path_forall_1 `{P : A -> Type} (f : forall x, P x)
 
 (** The identification of the path space of a dependent function space, up to equivalence, is of course just funext. *)
 
-Instance isequiv_path_forall `{P : A -> Type} (f g : forall x, P x)
+Global Instance isequiv_path_forall `{P : A -> Type} (f g : forall x, P x)
   : IsEquiv (path_forall f g)
   := @isequiv_inverse _ _ (@apD10 A P f g) _.
 
@@ -52,7 +52,7 @@ Definition equiv_path_forall `{P : A -> Type} (f g : forall x, P x)
 Definition transport_forall
   {A : Type} {P : A -> Type} {C : forall x, P x -> Type}
   {x1 x2 : A} (p : x1 = x2) (f : forall y : P x1, C x1 y)
-  : (transport (fun x => forall y : P x, C x y) p f) 
+  : (transport (fun x => forall y : P x, C x y) p f)
     == (fun y =>
        transport (C x2) (transport_pV _ _ _) (transportD _ _ p _ (f (p^ # y))))
   := match p with idpath => fun _ => 1 end.
@@ -105,7 +105,7 @@ Definition ap_functor_forall `{P : A -> Type} `{Q : B -> Type}
     (f0 : B -> A) (f1 : forall b:B, P (f0 b) -> Q b)
     (g g' : forall a:A, P a) (h : g == g')
   : ap (functor_forall f0 f1) (path_forall _ _ h)
-    = path_forall _ _ (fun b:B => (ap (f1 b) (h (f0 b)))). 
+    = path_forall _ _ (fun b:B => (ap (f1 b) (h (f0 b)))).
 Proof.
   revert h.  equiv_intro (@apD10 A P g g') h.
   destruct h.  simpl.
@@ -116,7 +116,7 @@ Defined.
 
 (** *** Equivalences *)
 
-Instance isequiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
+Global Instance isequiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv B A f} `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
   : IsEquiv (functor_forall f g).
 Proof.
@@ -155,14 +155,14 @@ Definition equiv_functor_forall_id `{P : A -> Type} `{Q : A -> Type}
 
 (** *** Truncatedness: any dependent product of n-types is an n-type *)
 
-Instance contr_forall `{P : A -> Type} `{forall a, Contr (P a)}
+Global Instance contr_forall `{P : A -> Type} `{forall a, Contr (P a)}
   : Contr (forall a, P a).
 Proof.
   exists (fun a => center (P a)).
   intro f.  apply path_forall.  intro a.  apply contr.
 Defined.
 
-Instance trunc_forall `{P : A -> Type} `{forall a, IsTrunc n (P a)}
+Global Instance trunc_forall `{P : A -> Type} `{forall a, IsTrunc n (P a)}
   : IsTrunc n (forall a, P a).
 Proof.
   generalize dependent P.
@@ -176,14 +176,14 @@ Defined.
 
 (** *** Symmetry of curried arguments *)
 
-(** Using the standard Haskell name for this, as it’s a handy utility function. 
+(** Using the standard Haskell name for this, as it’s a handy utility function.
 
 Note: not sure if [P] will usually be deducible, or whether it would be better explicit. *)
 Definition flip `{P : A -> B -> Type}
   : (forall a b, P a b) -> (forall b a, P a b)
   := fun f b a => f a b.
 
-Instance isequiv_flip `{P : A -> B -> Type}
+Global Instance isequiv_flip `{P : A -> B -> Type}
   : IsEquiv (@flip _ _ P).
 Proof.
   set (flip_P := @flip _ _ P).

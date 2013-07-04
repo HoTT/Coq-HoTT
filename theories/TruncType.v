@@ -24,7 +24,7 @@ Arguments BuildTruncType _ _ {_}.
 Arguments trunctype_type [_] _.
 Arguments istrunc_trunctype_type [_] _.
 
-Existing Instance istrunc_trunctype_type.
+Global Existing Instance istrunc_trunctype_type.
 
 Definition issig_trunctype {n : trunc_index}
   : { X : Type & IsTrunc n X } <~> TruncType n.
@@ -48,12 +48,12 @@ Definition path_trunctype {n : trunc_index} {A B : TruncType n}
   : A <~> B -> (A = B :> TruncType n)
 := equiv_path_trunctype A B.
 
-Instance istrunc_trunctype {n : trunc_index}
+Global Instance istrunc_trunctype {n : trunc_index}
   : IsTrunc (trunc_S n) (TruncType n).
 Proof.
   intros A B.
   apply (@trunc_equiv _ _ (equiv_path_trunctype A B)).
-    2: apply equiv_isequiv. 
+    2: apply equiv_isequiv.
   case n as [ | n'].
     apply contr_equiv_contr_contr. (* The reason is different in this case. *)
   apply istrunc_equiv.
