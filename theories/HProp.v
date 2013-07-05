@@ -24,7 +24,7 @@ Proof.
 Defined.
 
 (** If inhabitation implies contractibility, then we have an h-proposition. *)
-Instance hprop_inhabited_contr (A : Type) : (A -> Contr A) -> IsHProp A.
+Global Instance hprop_inhabited_contr (A : Type) : (A -> Contr A) -> IsHProp A.
 Proof.
   intro H.
   intros x y.
@@ -34,7 +34,7 @@ Defined.
 
 (** If a type is contractible, then so is its type of contractions.
     Using [issig_contr] and the [equiv_intro] tactic, we can transfer this to the equivalent problem of contractibility of a certain Sigma-type, in which case we can apply the general path-construction functions. *)
-Instance contr_contr `{Funext} (A : Type)
+Global Instance contr_contr `{Funext} (A : Type)
   : Contr A -> Contr (Contr A).
 Proof.
   intros c; exists c; generalize c.
@@ -47,7 +47,7 @@ Proof.
 Qed.
 
 (** This provides the base case in a proof that truncatedness is a proposition. *)
-Instance hprop_trunc `{Funext} (n : trunc_index) (A : Type)
+Global Instance hprop_trunc `{Funext} (n : trunc_index) (A : Type)
   : IsHProp (IsTrunc n A).
 Proof.
   apply hprop_inhabited_contr.
@@ -107,7 +107,7 @@ Defined.
 
 (** [IsHProp] is closed under [forall].  This should really be a theorem in types/Forall that all truncation levels are closed under [forall]. *)
   
-Instance hprop_forall `{E : Funext} (A : Type) (P : A -> Type) :
+Global Instance hprop_forall `{E : Funext} (A : Type) (P : A -> Type) :
   (forall x, IsHProp (P x)) -> IsHProp (forall x, P x).
 Proof.
   intro.
@@ -120,7 +120,7 @@ Defined.
 
 (** Being a contractible space is a proposition. *)
 
-Instance hprop_contr `{Funext} (A : Type) : IsHProp (Contr A).
+Global Instance hprop_contr `{Funext} (A : Type) : IsHProp (Contr A).
 Proof.
   apply hprop_inhabited_contr.
   intro cA.
@@ -129,7 +129,7 @@ Defined.
 
 (** Here is an alternate characterization of propositions. *)
 
-Instance HProp_HProp `{Funext} A : IsHProp (IsHProp A) 
+Global Instance HProp_HProp `{Funext} A : IsHProp (IsHProp A) 
   := hprop_trunc minus_one A.
 
 Theorem equiv_hprop_inhabited_contr `{Funext} {A}

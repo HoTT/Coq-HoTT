@@ -44,7 +44,7 @@ Defined.
 
 (** *** From an interval type, we can prove function extensionality. *)
 
-Instance funext_from_interval : Funext
+Global Instance funext_from_interval : Funext
   := WeakFunext_implies_Funext (NaiveFunext_implies_WeakFunext
     (fun A P f g p =>
       let h := fun (x:interval) (a:A) =>
@@ -53,7 +53,7 @@ Instance funext_from_interval : Funext
 
 (** *** The interval is contractible. *)
 
-Instance contr_interval : Contr interval.
+Global Instance contr_interval : Contr interval.
 Proof.
   exists zero.
   refine (interval_rect _ 1 seg _).

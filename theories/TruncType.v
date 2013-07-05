@@ -48,7 +48,7 @@ Definition path_trunctype {n : trunc_index} {A B : TruncType n}
   : A <~> B -> (A = B :> TruncType n)
 := equiv_path_trunctype A B.
 
-Instance istrunc_trunctype {n : trunc_index}
+Global Instance istrunc_trunctype {n : trunc_index}
   : IsTrunc (trunc_S n) (TruncType n).
 Proof.
   intros A B.

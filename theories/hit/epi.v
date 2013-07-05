@@ -8,7 +8,7 @@ Record hSet := BuildhSet {setT:> Type; iss :> IsHSet setT}.
 Canonical Structure default_HSet:= fun T P => (@BuildhSet T P).
 Hint Resolve isp iss.
 
-Instance hProp_is_hSet : (IsHSet hProp).
+Global Instance hProp_is_hSet : (IsHSet hProp).
 intros [p p1] [q q1].
 Admitted. (* We need some lemmas about records *)
 

@@ -39,7 +39,7 @@ Proof.
     eapply allpath_hprop.
 Defined.
 
-Instance axiomK_isprop A : IsHProp (axiomK A).
+Global Instance axiomK_isprop A : IsHProp (axiomK A).
 Proof.
   apply (trunc_equiv equiv_hset_axiomK). 
 Defined.

@@ -11,15 +11,15 @@ Local Open Scope equiv_scope.
 Generalizable Variables A B C f g.
 
 (** The identity map is an equivalence. *)
-Instance isequiv_idmap (A : Type) : IsEquiv idmap :=
+Global Instance isequiv_idmap (A : Type) : IsEquiv idmap :=
   BuildIsEquiv A A idmap idmap (fun _ => 1) (fun _ => 1) (fun _ => 1).
 
 Definition equiv_idmap (A : Type) : A <~> A := BuildEquiv A A idmap _.
 
-Instance reflexive_equiv : Reflexive Equiv := equiv_idmap.
+Global Instance reflexive_equiv : Reflexive Equiv := equiv_idmap.
 
 (** The composition of equivalences is an equivalence. *)
-Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
+Global Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
   : IsEquiv (compose g f)
   := BuildIsEquiv A C (compose g f)
     (compose f^-1 g^-1)
@@ -53,7 +53,7 @@ Definition equiv_compose' {A B C : Type} (g : B <~> C) (f : A <~> B)
   := equiv_compose g f.
 
 (* The TypeClass [Transitive] has a different order of parameters than [equiv_compose].  Thus in declaring the instance we have to switch the order of arguments. *)
-Instance transitive_equiv : Transitive Equiv :=
+Global Instance transitive_equiv : Transitive Equiv :=
   fun _ _ _ f g => equiv_compose g f.
 
 
@@ -137,10 +137,10 @@ Proof.
   apply isequiv_inverse.
 Defined.
 
-Instance symmetric_equiv : Symmetric Equiv := @equiv_inverse.
+Global Instance symmetric_equiv : Symmetric Equiv := @equiv_inverse.
 
 (** If [g \o f] and [f] are equivalences, so is [g]. *)
-Instance cancelR_isequiv `{IsEquiv A B f} `{IsEquiv A C (g o f)}
+Global Instance cancelR_isequiv `{IsEquiv A B f} `{IsEquiv A C (g o f)}
   : IsEquiv g
 := isequiv_homotopic (compose (compose g f) f^-1) g
        (fun b => ap g (eisretr f b)).
@@ -152,7 +152,7 @@ Definition cancelR_equiv `{IsEquiv A B f} `{IsEquiv A C (g o f)}
 := BuildEquiv _ _ g (cancelR_isequiv g).
 
 (** If [g \o f] and [g] are equivalences, so is [f]. *)
-Instance cancelL_isequiv `{IsEquiv B C g} `{IsEquiv A C (g o f)}
+Global Instance cancelL_isequiv `{IsEquiv B C g} `{IsEquiv A C (g o f)}
   : IsEquiv f
 := isequiv_homotopic (compose g^-1 (compose g f)) f
        (fun a => eissect g (f a)).
@@ -238,7 +238,7 @@ Definition contr_equiv' `(f : A <~> B) `{Contr A}
 
 (** Assuming function extensionality, composing with an equivalence is itself an equivalence *)
 
-Instance isequiv_precompose `{Funext} {A B C : Type}
+Global Instance isequiv_precompose `{Funext} {A B C : Type}
   (f : A -> B) `{IsEquiv A B f}
   : IsEquiv (fun g => @compose A B C g f)
   := isequiv_adjointify (fun g => @compose A B C g f)
@@ -255,7 +255,7 @@ Definition equiv_precompose' `{Funext} {A B C : Type} (f : A <~> B)
   : (B -> C) <~> (A -> C)
   := BuildEquiv _ _ (fun g => @compose A B C g f) _.
 
-Instance isequiv_postcompose `{Funext} {A B C : Type}
+Global Instance isequiv_postcompose `{Funext} {A B C : Type}
   (f : B -> C) `{IsEquiv B C f}
   : IsEquiv (fun g => @compose A B C f g)
   := isequiv_adjointify (fun g => @compose A B C f g)

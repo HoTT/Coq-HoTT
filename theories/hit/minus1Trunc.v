@@ -76,7 +76,7 @@ Proof.
 Defined.
 
 (** And if [A] was already a proposition, then [minus1Trunc A] is equivalent to [A]. *)
-Instance IsEquivmin1 {A} `{IsHProp A} : IsEquiv (@min1 A).
+Global Instance IsEquivmin1 {A} `{IsHProp A} : IsEquiv (@min1 A).
 Proof.
   apply (@isequiv_adjointify _ _ (@min1 A) (minus1Trunc_rect_nondep (fun x:A => x) allpath_hprop )).
    intro x. apply hprop_allpath, min1_path.

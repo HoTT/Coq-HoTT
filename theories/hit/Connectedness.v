@@ -39,7 +39,7 @@ Proof.
   intros; apply symmetry, (nh .2).
 Defined.
 
-Instance isconnected_from_iscontr_truncation {n} {A} `{Contr (Truncation n A)}
+Global Instance isconnected_from_iscontr_truncation {n} {A} `{Contr (Truncation n A)}
   : IsConnected n A.
 Proof.
   intros C ? f.
@@ -128,7 +128,7 @@ Proof.
   exact inverse.
 Defined.
 
-Instance isequiv_path_extension {A B : Type} {f : A -> B}
+Global Instance isequiv_path_extension {A B : Type} {f : A -> B}
   {P : B -> Type} {d : forall x:A, P (f x)}
   (ext ext' : ExtensionAlong f P d)
 : IsEquiv (path_extension ext ext').
@@ -225,7 +225,7 @@ Defined.
 
 (** The connectivity of a pointed type and (the inclusion of) its point are intimately connected. *)
 
-Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
+Global Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
  `{IsConnMap n _ _ (unit_name a0)} : IsConnected (trunc_S n) A.
 Proof.
   intros C HC f. exists (f a0).
@@ -235,7 +235,7 @@ Proof.
   apply (fun _ => 1).
 Defined.
 
-Instance conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
+Global Instance conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
  `{IsConnected (trunc_S n) A} : IsConnMap n (unit_name a0).
 Proof.
   apply conn_map_from_extension_elim.

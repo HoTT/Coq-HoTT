@@ -36,7 +36,7 @@ Definition path_forall_1 `{P : A -> Type} (f : forall x, P x)
 
 (** The identification of the path space of a dependent function space, up to equivalence, is of course just funext. *)
 
-Instance isequiv_path_forall `{P : A -> Type} (f g : forall x, P x)
+Global Instance isequiv_path_forall `{P : A -> Type} (f g : forall x, P x)
   : IsEquiv (path_forall f g)
   := @isequiv_inverse _ _ (@apD10 A P f g) _.
 
@@ -116,7 +116,7 @@ Defined.
 
 (** *** Equivalences *)
 
-Instance isequiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
+Global Instance isequiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv B A f} `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
   : IsEquiv (functor_forall f g).
 Proof.
@@ -155,14 +155,14 @@ Definition equiv_functor_forall_id `{P : A -> Type} `{Q : A -> Type}
 
 (** *** Truncatedness: any dependent product of n-types is an n-type *)
 
-Instance contr_forall `{P : A -> Type} `{forall a, Contr (P a)}
+Global Instance contr_forall `{P : A -> Type} `{forall a, Contr (P a)}
   : Contr (forall a, P a).
 Proof.
   exists (fun a => center (P a)).
   intro f.  apply path_forall.  intro a.  apply contr.
 Defined.
 
-Instance trunc_forall `{P : A -> Type} `{forall a, IsTrunc n (P a)}
+Global Instance trunc_forall `{P : A -> Type} `{forall a, IsTrunc n (P a)}
   : IsTrunc n (forall a, P a).
 Proof.
   generalize dependent P.
@@ -183,7 +183,7 @@ Definition flip `{P : A -> B -> Type}
   : (forall a b, P a b) -> (forall b a, P a b)
   := fun f b a => f a b.
 
-Instance isequiv_flip `{P : A -> B -> Type}
+Global Instance isequiv_flip `{P : A -> B -> Type}
   : IsEquiv (@flip _ _ P).
 Proof.
   set (flip_P := @flip _ _ P).

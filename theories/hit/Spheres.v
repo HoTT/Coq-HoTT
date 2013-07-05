@@ -24,7 +24,7 @@ Proof.
   simpl. apply (Susp_rect_nd true false). intros [].
 Defined.
 
-Instance isequiv_Sph0_to_Bool : IsEquiv (Sph0_to_Bool).
+Global Instance isequiv_Sph0_to_Bool : IsEquiv (Sph0_to_Bool).
 Proof.
   apply isequiv_adjointify with (fun b : Bool => if b then North else South).
   intros [ | ]; exact 1.

@@ -23,18 +23,18 @@ Proof.
 Defined.
 
 (** It follows that any space of paths in a contractible space is contractible. *)
-Instance contr_paths_contr `{Contr A} (x y : A) : Contr (x = y) := {
+Global Instance contr_paths_contr `{Contr A} (x y : A) : Contr (x = y) := {
   center := (contr x)^ @ contr y;
   contr := path2_contr ((contr x)^ @ contr y)
 }.
 
 (** Also, the total space of any based path space is contractible. *)
-Instance contr_basedpaths {X : Type} (x : X) : Contr {y : X & x = y}.
+Global Instance contr_basedpaths {X : Type} (x : X) : Contr {y : X & x = y}.
   exists (x ; 1).
   intros [y []]; reflexivity.
 Defined.
 
-Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x}.
+Global Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x}.
   exists (existT (fun y => y = x) x 1).
   intros [y []]; reflexivity.
 Defined.

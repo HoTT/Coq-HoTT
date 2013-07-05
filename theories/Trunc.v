@@ -28,11 +28,11 @@ Notation "m <= n" := (trunc_index_leq m n) (at level 70, no associativity).
 (** ** Truncatedness proper. *)
 
 (** A contractible space is (-2)-truncated, of course. *)
-Instance contr_trunc_minus_two `{IsTrunc minus_two A} : Contr A
+Global Instance contr_trunc_minus_two `{IsTrunc minus_two A} : Contr A
   := Trunc_is_trunc.
 
 (** Truncation levels are cumulative. *)
-Instance trunc_succ `{IsTrunc n A} : IsTrunc (trunc_S n) A.
+Global Instance trunc_succ `{IsTrunc n A} : IsTrunc (trunc_S n) A.
 Proof.
   generalize dependent A.
   induction n as [| n I]; simpl; intros A H x y.
@@ -40,7 +40,7 @@ Proof.
   - apply I, H.
 Qed.
 
-Instance trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A} : IsTrunc n A.
+Global Instance trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A} : IsTrunc n A.
 Proof.
   generalize dependent A; generalize dependent m.
   induction n as [ | n' IH]; intros [ | m'] Hmn A ?.
