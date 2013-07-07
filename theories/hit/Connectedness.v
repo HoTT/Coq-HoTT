@@ -21,12 +21,12 @@ A handy benchmark: under our indexing, the map [S1 -> 1] is 0-connected but not 
 
 (** Connectedness of a type (however indexed) can be defined in two equivalent ways: quantifying over all maps into suitably truncated types, or by considering just the universal case, the truncation of the type itself.
 
-The latter requires HIT’s, but keeps the type [IsConnected] small; the former, which we use for now, requires only core Coq, but blows up the size (universe level) of [IsConnected], since it quantifies over types. 
+The latter requires HIT’s, but keeps the type [IsConnected] small; the former, which we use for now, requires only core Coq, but blows up the size (universe level) of [IsConnected], since it quantifies over types.
 
 Question: is there a definition of connectedness that neither blows up the universe level, nor requires HIT’s? *)
 
 Class IsConnected (n : trunc_index) (A : Type)
- := isconnected_elim :> 
+ := isconnected_elim :>
       forall (C : Type) `{IsTrunc n C} (f : A -> C),
         { c:C & forall a:A, f a = c }.
 
@@ -39,7 +39,7 @@ Proof.
   intros; apply symmetry, (nh .2).
 Defined.
 
-Instance isconnected_from_iscontr_truncation {n} {A} `{Contr (Truncation n A)}
+Global Instance isconnected_from_iscontr_truncation {n} {A} `{Contr (Truncation n A)}
   : IsConnected n A.
 Proof.
   intros C ? f.
@@ -62,10 +62,10 @@ Definition conn_map_elim {n : trunc_index}
   (d : forall a:A, P (f a))
 : forall b:B, P b.
 Proof.
-  intros b. 
+  intros b.
   apply isconnected_elim.
     apply HP.
-    instantiate (1 := b). intros [a p]. 
+    instantiate (1 := b). intros [a p].
     exact (transport P p (d a)).
 Defined.
 
@@ -83,7 +83,7 @@ Proof.
   apply inverse, e.
 Defined.
 
-(** ** Extensions 
+(** ** Extensions
 
 Elimination properties can be nicely phrased as the existence of extensions along maps of sections. This is just the traditional categorical language of fillers for commutative squares, restricted to the case where the bottom of the square is the identity; type-theoretically, this approach is slightly more convenient. *)
 
@@ -128,7 +128,7 @@ Proof.
   exact inverse.
 Defined.
 
-Instance isequiv_path_extension {A B : Type} {f : A -> B}
+Global Instance isequiv_path_extension {A B : Type} {f : A -> B}
   {P : B -> Type} {d : forall x:A, P (f x)}
   (ext ext' : ExtensionAlong f P d)
 : IsEquiv (path_extension ext ext').
@@ -184,7 +184,7 @@ Lemma conn_map_from_extension_elim  {n : trunc_index}
   -> (IsConnMap n f).
 Proof.
   intros Hf b X ? d.
-  set (P := fun (b':B) => (b' = b) -> X). 
+  set (P := fun (b':B) => (b' = b) -> X).
   assert (forall b', IsTrunc n (P b')) by (intros; apply trunc_forall).
   set (dP := (fun (a:A) (p:f a = b) => (d (a;p)))
           : forall a:A, P (f a)).
@@ -202,7 +202,7 @@ Defined.
 
 (** A key lemma on the interaction between connectedness and truncatedness: suppose one is trying to extend along an n-connected map, into a k-truncated family of types (k ≥ n).  Then the space of possible extensions is (k–n–2)-truncated.
 
-(Mnemonic for the indexing: think of the base case, where k=n; then we know we can eliminate, so the space of extensions is contractible.) 
+(Mnemonic for the indexing: think of the base case, where k=n; then we know we can eliminate, so the space of extensions is contractible.)
 
 This lemma is most useful via corollaries like the wedge-inclusion, the wiggly wedge, and their n-ary generalizations. *)
 Lemma istrunc_extension_along_conn {m n : trunc_index}
@@ -225,17 +225,17 @@ Defined.
 
 (** The connectivity of a pointed type and (the inclusion of) its point are intimately connected. *)
 
-Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
+Global Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
  `{IsConnMap n _ _ (unit_name a0)} : IsConnected (trunc_S n) A.
 Proof.
   intros C HC f. exists (f a0).
 (* TODO: try to use [refine] or similar to get more concise? *)
   apply (conn_map_elim (unit_name a0)).
-    intros b; apply HC.  
+    intros b; apply HC.
   apply (fun _ => 1).
 Defined.
 
-Instance conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
+Global Instance conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
  `{IsConnected (trunc_S n) A} : IsConnMap n (unit_name a0).
 Proof.
   apply conn_map_from_extension_elim.
@@ -244,7 +244,7 @@ Proof.
     @isconnected_elim (trunc_S n) _ _ (TruncType n) istrunc_trunctype PP).
   destruct QQ as [[Q0 HQ] e].
   assert (e' := fun a => ap (trunctype_type _) (e a)); simpl in e'. clear HQ e.
-  intros d. set (d0 := d tt). 
+  intros d. set (d0 := d tt).
   exists (fun a => (transport idmap (e' a0 @ (e' a)^) d0)).
   intros []. change (d tt) with (transport idmap 1 d0).
   apply ap10, ap, concat_pV.
@@ -264,8 +264,8 @@ Once again, we believe that the type of the conclusion is an hprop (though we do
 
 Context `{Funext} `{Univalence}
   {m n : trunc_index}
-  {A : Type} (a0 : A) `{IsConnected (trunc_S m) A} 
-  {B : Type} (b0 : B) `{IsConnected (trunc_S n) B} 
+  {A : Type} (a0 : A) `{IsConnected (trunc_S m) A}
+  {B : Type} (b0 : B) `{IsConnected (trunc_S n) B}
   (P : A -> B -> Type) {HP : forall a b, IsTrunc (m -2+ n) (P a b)}
   (f_a0 : forall b:B, P a0 b)
   (f_b0 : forall a:A, P a b0)
@@ -318,8 +318,8 @@ End Wedge_Incl_Conn.
 
 Definition wedge_incl_elim_uncurried `{Funext} `{Univalence}
   {m n : trunc_index}
-  {A : Type} (a0 : A) `{IsConnected (trunc_S m) A} 
-  {B : Type} (b0 : B) `{IsConnected (trunc_S n) B} 
+  {A : Type} (a0 : A) `{IsConnected (trunc_S m) A}
+  {B : Type} (b0 : B) `{IsConnected (trunc_S n) B}
   (P : A -> B -> Type) {HP : forall a b, IsTrunc (m -2+ n) (P a b)}
   (fs : {f_a0 : forall b:B, P a0 b
         & { f_b0 : forall a:A, P a b0

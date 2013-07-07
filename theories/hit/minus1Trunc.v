@@ -105,8 +105,6 @@ Definition is_epi {X Y : Type} (f : X -> Y) :=
 Definition is_mono {X Y : Type} (f : X -> Y) :=
   forall y:Y, IsHProp (hfiber f y).
 
-Existing Instance hprop_isequiv.
-
 Lemma epi_mono_equiv {X Y : Type} (f : X -> Y) :
   is_epi f -> is_mono f -> IsEquiv f.
 Proof.
