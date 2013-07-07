@@ -1,25 +1,30 @@
-Require Import HoTT FunextAxiom UnivalenceAxiom TruncType.
+Require Import HoTT TruncType.
 Open Scope equiv.
 Open Scope path.
+
+Section AssumeUnivalence.
+Context `{Univalence}.
+Section AssumeFunext.
+Context `{Funext}.
 
 Lemma equiv_rect {A0 : Type} (P : forall A1 : Type, (A0 <~> A1) -> Type)
   (d0 : P A0 (equiv_idmap A0))
 : forall (A1 : Type) (e : A0 <~> A1), P A1 e.
 Proof.
-  assert (H1 : forall (A1 : Type) (p : A0 = A1), P A1 (equiv_path _ _ p)) 
+  assert (H1 : forall (A1 : Type) (p : A0 = A1), P A1 (equiv_path _ _ p))
    by (by destruct p).
   intros A1 e.
   assert (H2 := H1 A1 (path_universe e)).
-  refine (transport _ _ H2). 
+  refine (transport _ _ H2).
   destruct e as [e_fun e_isequiv]. apply eisretr.
 Defined.
 
 (** Surely should be able to simplify this!? *)
 Lemma equiv_comp {A0 : Type} (P : forall A1 : Type, (A0 <~> A1) -> Type)
   (d0 : P A0 (equiv_idmap A0))
-: equiv_rect P d0 A0 (equiv_idmap A0) = d0. 
+: equiv_rect P d0 A0 (equiv_idmap A0) = d0.
 Proof.
-  assert (lem : forall (q : A0 = A0) (r : 1 = q), 
+  assert (lem : forall (q : A0 = A0) (r : 1 = q),
     @transport _ (P A0) _ _ (ap (equiv_path _ _) r^)
      (match q as p in (_ = y) return (P y (equiv_path A0 y p))
         with 1 => d0 end) = d0) by (by destruct r).
@@ -31,13 +36,13 @@ Defined.
 
 Section Functorish.
 (* We do not need composition to be preserved. *)
-Class Functorish (F : Type -> Type) := {
+Global Class Functorish (F : Type -> Type) := {
   fmap {A B} (f : A -> B) : F A -> F B ;
   fmap_idmap (A:Type) : fmap (idmap : A -> A) = idmap
 }.
 
-Arguments fmap F {FF} {A B} f _ : rename.
-Arguments fmap_idmap F {FF A} : rename.
+Global Arguments fmap F {FF} {A B} f _ : rename.
+Global Arguments fmap_idmap F {FF A} : rename.
 
 Context (F : Type -> Type).
 Context {FF : Functorish F}.
@@ -62,3 +67,5 @@ Proof.
 Defined.
 
 End Functorish.
+End AssumeFunext.
+End AssumeUnivalence.
