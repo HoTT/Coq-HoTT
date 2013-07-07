@@ -56,9 +56,9 @@ Defined.
 Theorem equiv_induction (P : forall U V, U <~> V -> Type) :
   (forall T, P T T (equiv_idmap T)) -> (forall U V (w : U <~> V), P U V w).
 Proof.
-intros H???.
+intros H0???.
 apply (equiv_rect (equiv_path _ _)).
-intro x. case x. apply H.
+intro x. case x. apply H0.
 Defined.
 
 (* This is generalized in Functorish.v *)
