@@ -4,6 +4,10 @@ This equivalence is close to the existence of an object classifier.
 
 Require Import HoTT Universe.
 Set Universe Polymorphism.
+Section AssumeUnivalence.
+Context `{Univalence}.
+Section AssumeFunext.
+Context `{fs : Funext}.
 Section ToBeMoved.
 (* Should be moved *)
 Local Open Scope equiv_scope.
@@ -34,7 +38,7 @@ Definition f2p: Fam A -> (A->Type):=
 
 Open Scope equiv_scope.
 
-Definition exp `{fs:Funext} {U V:Type}(w:U<~>V):(U->A)<~>(V->A).
+Definition exp {U V:Type}(w:U<~>V):(U->A)<~>(V->A).
 exists (fun f:(U->A)=> (fun x => (f (w^-1 x)))).
 apply equiv_biinv. split;
  exists (fun f:(V->A)=> (fun x => (f (w x)))); intro f; apply fs; intro u;
@@ -42,23 +46,23 @@ apply ap; by apply moveR_E.
 Defined.
 
 (* For completeness *)
-Definition exp' `{fs:Funext} {U V:Type}(w:U<~>V):(A->U)<~>(A->V).
+Definition exp' {U V:Type}(w:U<~>V):(A->U)<~>(A->V).
 exists (fun f :A->U => (fun a => (w (f a)))).
 apply  equiv_biinv. split;
  exists (fun f:(A->V )=> (fun x => (w^-1 (f x)))); intro f; apply fs; intro u;
 by apply moveR_E.
 Defined.
 
-Theorem equiv_induction `{Univalence} (P : forall U V, U <~> V -> Type) :
+Theorem equiv_induction (P : forall U V, U <~> V -> Type) :
   (forall T, P T T (equiv_idmap T)) -> (forall U V (w : U <~> V), P U V w).
 Proof.
-intros H0???.
+intros H???.
 apply (equiv_rect (equiv_path _ _)).
-intro x. case x. apply H0.
+intro x. case x. apply H.
 Defined.
 
 (* This is generalized in Functorish.v *)
-Theorem transport_exp `{Funext} `{Univalence} (U V:Type)(w:U<~>V): forall (f:U->A),
+Theorem transport_exp (U V:Type)(w:U<~>V): forall (f:U->A),
   (@transport _ (fun I:Type => I->A) _ _ (path_universe w) f) = (exp w f).
 set (p:=equiv_induction (fun (U:Type) (V:Type) w => forall f : U -> A,
  (@transport _ (fun I : Type => I -> A) U V (path_universe w) f) = (exp w f))).
@@ -73,7 +77,7 @@ Qed.
 
 Open Local Scope path_scope.
 
-Theorem PowisoFam `{fs:Funext} `{Univalence}: BiInv p2f.
+Theorem PowisoFam : BiInv p2f.
 split.
  (* Theorem left (P:A -> Type) : (f2pp2f P) = P *)
  exists f2p. intro P. by_extensionality a.
@@ -96,7 +100,7 @@ apply fs.  (intros [a [i p]]). simpl.  admit.
 reflexivity.*)
 Qed.
 
-Corollary FamequivPow `{fs:Funext} `{Univalence} : (A->Type)<~>(Fam A).
+Corollary FamequivPow : (A->Type)<~>(Fam A).
 exists p2f.
 apply (equiv_biinv_equiv _).  exact PowisoFam.
 Qed.
@@ -143,3 +147,5 @@ simpl in p. path_induction. reflexivity.
 Qed.
 
 End FamPow.
+End AssumeFunext.
+End AssumeUnivalence.
