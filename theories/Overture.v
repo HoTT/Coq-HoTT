@@ -112,11 +112,11 @@ Local Open Scope fib_scope.
 
 Notation "p # x" := (transport _ p x) (right associativity, at level 65, only parsing) : path_scope.
 
-(** Having defined transport, we can use it to talk about what a homotopy theorist might see as "paths in a fibration over paths in the base"; and what a type theorist might see as "heterogeneous eqality in a dependent type". 
+(** Having defined transport, we can use it to talk about what a homotopy theorist might see as "paths in a fibration over paths in the base"; and what a type theorist might see as "heterogeneous eqality in a dependent type".
 
 We will first see this appearing in the type of [apD]. *)
 
-(** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A], then [ap f p : f x = f y].  
+(** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A], then [ap f p : f x = f y].
 
    We typically pronounce [ap] as a single syllable, short for "application"; but it may also be considered as an acronym, "action on paths". *)
 
@@ -226,7 +226,7 @@ Notation "f ^-1" := (@equiv_inv _ _ f _) (at level 3) : equiv_scope.
 (* Truncation measures how complicated a type is in terms of higher path spaces. The (-2)-truncated types are the contractible ones, whose homotopy is completely trivial. The (n+1)-truncated types are those whose path spaces are n-truncated.
 
    Thus, (-1)-truncated means "the space of paths between any two points is contactible". Such a space is necessarily a sub-singleton: any two points are connected by a path which is unique up to homotopy. In other words, (-1)-truncated spaces are truth values (we call them "propositions").
-  
+
    Next, 0-truncated means "the space of paths between any two points is a sub-singleton". Thus, two points might not have any paths between them, or they have a unique path. Such a space may have many points but it is discrete in the sense that all paths are trivial. We call such spaces "sets".
 *)
 
@@ -261,7 +261,7 @@ Notation IsHSet := (IsTrunc 0).
 (** *** Function extensionality *)
 
 (** The function extensionality axiom is formulated as a class. To use it in a theorem, just assume it with [`{Funext}], and then you can use [path_forall], defined below.  If you need function extensionality for a whole development, you can assume it for an entire Section with [Context `{Funext}].  *)
-Class Funext := 
+Class Funext :=
   { isequiv_apD10 :> forall (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g) }.
 
 Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A, P x) :
@@ -271,7 +271,7 @@ Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A,
 
 Definition path_forall2 `{Funext} {A B : Type} {P : A -> B -> Type} (f g : forall x y, P x y) :
   (forall x y, f x y = g x y) -> f = g
-  := 
+  :=
   (fun E => path_forall f g (fun x => path_forall (f x) (g x) (E x))).
 
 
@@ -301,7 +301,7 @@ Notation "~ x" := (not x) : type_scope.
 Hint Unfold not: core.
 
 (* Ssreflect tactics, adapted by Robbert Krebbers *)
-Ltac done := 
+Ltac done :=
   trivial; intros; solve
     [ repeat first
       [ solve [trivial]
@@ -339,3 +339,9 @@ Ltac path_induction :=
       | _ => idtac
     end
   ).
+
+(* The tactic [f_ap] is a replacement for the previously existing standard library tactic [f_equal].  This tactic works by repeatedly applying the fact that [f = g -> x = y -> f x = g y] to turn, e.g., [f x y = f z w] first into [f x = f z] and [y = w], and then turns the first of these into [f = f] and [x = z].  The [done] tactic is used to detect the [f = f] case and finish, and the [trivial] is used to solve, e.g., [x = x] when using [f_ap] on [f y x = f z x].  This tactic only works for non-dependently-typed functions; we cannot express [y = w] in the first example if [y] and [w] have different types.  If and when Arnaud's new-tacticals branch lands, and we can have a goal which depends on the term used to discharge another goal, then this tactic should probably be generalized to deal with dependent functions. *)
+Ltac f_ap :=
+  apply ap11;
+  [ done || f_ap
+  | trivial ].
