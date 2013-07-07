@@ -19,7 +19,7 @@ Definition minus1Trunc_rect :
   forall {A : Type} {P : minus1Trunc A -> Type}
     (dmin1 : forall a : A, P (min1 a))
     (dpath : forall {x y : minus1Trunc A} (z : P x) (w : P y), transport _ (min1_path x y) z = w)
-    (x : minus1Trunc A), P x. 
+    (x : minus1Trunc A), P x.
 intros ???? [x]. apply dmin1.
 Defined.
 
@@ -27,7 +27,7 @@ Definition minus1Trunc_compute_min1 : forall {A : Type} {P : minus1Trunc A -> Ty
   (dmin1 : forall (a : A), P (min1 a))
   (dpath : forall (x y : minus1Trunc A) (z : P x) (w : P y), transport _ (min1_path x y) z = w),
   forall (a : A), minus1Trunc_rect dmin1 dpath (min1 a) = dmin1 a.
-reflexivity. 
+reflexivity.
 Defined.
 
 Axiom minus1Trunc_compute_path : forall {A : Type} {P : minus1Trunc A -> Type}
@@ -83,6 +83,7 @@ Proof.
   intro a. apply allpath_hprop.
 Defined.
 
+Section AssumeFunext.
 (** Inhabited propositions are contractible. *)
 Open Scope fibration_scope.
 Context `{Funext}.
@@ -92,7 +93,7 @@ Proof.
   intros prp.
   apply minus1Trunc_rect_nondep.
     by apply contr_inhabited_hprop.
-  intros. eapply allpath_hprop. 
+  intros. eapply allpath_hprop.
 Defined.
 
 Require Import HProp Fibrations.
@@ -111,11 +112,12 @@ Lemma epi_mono_equiv {X Y : Type} (f : X -> Y) :
   is_epi f -> is_mono f -> IsEquiv f.
 Proof.
   intros epi mono.
-  apply contr_inhabited_hprop. 
+  apply contr_inhabited_hprop.
    apply hprop_isequiv.
   apply  isequiv_fcontr. intro b.
-  apply (inhab_prop_contr (mono b) (epi b)). 
+  apply (inhab_prop_contr (mono b) (epi b)).
 Defined.
+End AssumeFunext.
 
 Section minus1TruncMonad.
 
@@ -129,7 +131,7 @@ Proof.
   apply @minus1Trunc_rect_nondep with (A := A); auto.
   intro x. apply (min1 (f x)).
 Defined.
-  
+
 (** Functoriality of [minus1Trunc_map]. *)
 Lemma minus1Trunc_map_id {A : Type} :
   forall (p : minus1Trunc A), minus1Trunc_map (fun x => x) p = p.
