@@ -76,7 +76,7 @@ Proof.
 Defined.
 
 (** And if [A] was already a proposition, then [minus1Trunc A] is equivalent to [A]. *)
-Instance IsEquivmin1 {A} `{IsHProp A} : IsEquiv (@min1 A).
+Global Instance IsEquivmin1 {A} `{IsHProp A} : IsEquiv (@min1 A).
 Proof.
   apply (@isequiv_adjointify _ _ (@min1 A) (minus1Trunc_rect_nondep (fun x:A => x) allpath_hprop )).
    intro x. apply hprop_allpath, min1_path.
@@ -104,8 +104,6 @@ Definition is_epi {X Y : Type} (f : X -> Y) :=
 
 Definition is_mono {X Y : Type} (f : X -> Y) :=
   forall y:Y, IsHProp (hfiber f y).
-
-Existing Instance hprop_isequiv.
 
 Lemma epi_mono_equiv {X Y : Type} (f : X -> Y) :
   is_epi f -> is_mono f -> IsEquiv f.

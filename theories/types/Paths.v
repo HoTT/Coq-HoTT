@@ -95,7 +95,7 @@ Defined.
 (** ** Equivalences between path spaces *)
 
 (** If [f] is an equivalence, then so is [ap f].  We are lazy and use [adjointify]. *)
-Instance isequiv_ap `{IsEquiv A B f} (x y : A)
+Global Instance isequiv_ap `{IsEquiv A B f} (x y : A)
   : IsEquiv (@ap A B f x y)
   := isequiv_adjointify (ap f)
   (fun q => (eissect f x)^  @  ap f^-1 q  @  eissect f y)
@@ -125,7 +125,7 @@ Definition equiv_inj `{IsEquiv A B f} {x y : A}
 
 (** ** Path operations are equivalences *)
 
-Instance isequiv_path_inverse {A : Type} (x y : A)
+Global Instance isequiv_path_inverse {A : Type} (x y : A)
   : IsEquiv (@inverse A x y)
   := BuildIsEquiv _ _ _ (@inverse A y x) (@inv_V A y x) (@inv_V A x y) _.
 Proof.
@@ -136,7 +136,7 @@ Definition equiv_path_inverse {A : Type} (x y : A)
   : (x = y) <~> (y = x)
   := BuildEquiv _ _ (@inverse A x y) _.
 
-Instance isequiv_concat_l {A : Type} `(p : x = y) (z : A)
+Global Instance isequiv_concat_l {A : Type} `(p : x = y) (z : A)
   : IsEquiv (@concat A x y z p)
   := BuildIsEquiv _ _ _ (@concat A y x z p^)
      (concat_p_Vp p) (concat_V_pp p) _.
@@ -148,7 +148,7 @@ Definition equiv_concat_l {A : Type} `(p : x = y) (z : A)
   : (y = z) <~> (x = z)
   := BuildEquiv _ _ (concat p) _.
 
-Instance isequiv_concat_r {A : Type} `(p : y = z) (x : A)
+Global Instance isequiv_concat_r {A : Type} `(p : y = z) (x : A)
   : IsEquiv (fun q:x=y => q @ p)
   := BuildIsEquiv _ _ (fun q => q @ p) (fun q => q @ p^)
      (fun q => concat_pV_p q p) (fun q => concat_pp_V q p) _.
@@ -160,7 +160,7 @@ Definition equiv_concat_r {A : Type} `(p : y = z) (x : A)
   : (x = y) <~> (x = z)
   := BuildEquiv _ _ (fun q => q @ p) _.
 
-Instance isequiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
+Global Instance isequiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
   : IsEquiv (fun r:x=y => p @ r @ q)
   := @isequiv_compose _ _ (fun r => p @ r) _ _ (fun r => r @ q) _.
 
@@ -445,7 +445,7 @@ Defined.
 
 (** ** Universal mapping property *)
 
-Instance isequiv_paths_rect `{Funext} {A : Type} (a : A)
+Global Instance isequiv_paths_rect `{Funext} {A : Type} (a : A)
   (P : forall x, (a = x) -> Type)
   : IsEquiv (paths_rect a P)
   := isequiv_adjointify (paths_rect a P) (fun f => f a 1) _ _.

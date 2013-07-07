@@ -14,7 +14,7 @@ Definition ap10_path_forall `{Funext} {A B : Type} (f g : A -> B) (h : f == g)
 
 (* ** Connectedness of the suspension *)
 
-Instance isconn_susp {n : trunc_index} {X : Type} `{IsConnected n X}
+Global Instance isconn_susp {n : trunc_index} {X : Type} `{IsConnected n X}
   : IsConnected (trunc_S n) (Susp X).
 Proof.
   intros C ? f. exists (f North).
@@ -46,7 +46,7 @@ Notation mer := (@merid X).
 Definition mer' := (fun x => mer x @ (mer x0)^).
 
 (** The eventual theorem we want is: *)
-Instance Freudenthal
+Global Instance Freudenthal
   : IsConnMap (n -2+ n) (mer').
 Proof.
   intros p. apply @isconnected_from_iscontr_truncation.
@@ -212,7 +212,7 @@ Proof.
     (transportD (paths No) 
 simpl in *.
 
-Instance Freudenthal
+Global Instance Freudenthal
   : IsConnMap (n -2+ n) (@merid X).
 Proof.
   intros p C ? f.

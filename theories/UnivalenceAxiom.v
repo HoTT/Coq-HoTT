@@ -5,6 +5,6 @@
 
 Require Import types.Universe.
 
-Instance univalence_axiom : Univalence.
+Global Instance univalence_axiom : Univalence.
   admit.
 Defined.

@@ -108,7 +108,7 @@ Defined.
 
 (** This lets us identify the path space of a sigma-type, up to equivalence. *)
 
-Instance isequiv_path_sigma `{P : A -> Type} {u v : sigT P}
+Global Instance isequiv_path_sigma `{P : A -> Type} {u v : sigT P}
   : IsEquiv (path_sigma_uncurried P u v).
   refine (isequiv_adjointify _
     (fun r => (existT (fun p : u.1 = v.1 => p # u.2 = v.2) r..1 r..2))
@@ -256,7 +256,7 @@ Defined.
 
 (** *** Equivalences *)
 
-Instance isequiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
+Global Instance isequiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv A B f} `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
   : IsEquiv (functor_sigma f g).
 Proof.
@@ -334,7 +334,7 @@ Defined.
 (** *** Universal mapping properties *)
 
 (* The positive universal property. *)
-Instance isequiv_sigT_rect `{Funext} `{P : A -> Type}
+Global Instance isequiv_sigT_rect `{Funext} `{P : A -> Type}
   (Q : sigT P -> Type)
   : IsEquiv (sigT_rect Q)
   := isequiv_adjointify (sigT_rect Q)
@@ -366,7 +366,7 @@ Definition sigT_corect
   : (forall x, sigT (P x))
   := sigT_corect_uncurried P (f;g).
 
-Instance isequiv_sigT_corect `{Funext}
+Global Instance isequiv_sigT_corect `{Funext}
   `{A : X -> Type} {P : forall x, A x -> Type}
   : IsEquiv (sigT_corect_uncurried P)
   := isequiv_adjointify (sigT_corect_uncurried P)
@@ -387,7 +387,7 @@ Definition equiv_sigT_corect `{Funext}
 
 (** *** Sigmas preserve truncation *)
 
-Instance trunc_sigma `{P : A -> Type}
+Global Instance trunc_sigma `{P : A -> Type}
   `{IsTrunc n A} `{forall a, IsTrunc n (P a)}
   : IsTrunc n (sigT P).
 Proof.

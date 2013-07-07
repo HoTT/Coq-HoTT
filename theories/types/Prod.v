@@ -70,7 +70,7 @@ Defined.
 
 (** This lets us identify the path space of a product type, up to equivalence. *)
 
-Instance isequiv_path_prod {A B : Type} {z z' : A * B}
+Global Instance isequiv_path_prod {A B : Type} {z z' : A * B}
   : IsEquiv (path_prod_uncurried z z').
   refine (BuildIsEquiv _ _ _
     (fun r => (ap fst r, ap snd r))
@@ -112,7 +112,7 @@ Defined.
 
 (** *** Equivalences *)
 
-Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
+Global Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
   : IsEquiv (functor_prod f g).
   refine (BuildIsEquiv _ _ (functor_prod f g) (functor_prod f^-1 g^-1)
     (fun z => path_prod' (eisretr f (fst z)) (eisretr g (snd z)) @ eta_prod z)
@@ -180,7 +180,7 @@ Defined.
 
 (* First the positive universal property.
    Doing this sort of thing without adjointifying will require very careful use of funext. *)
-Instance isequiv_prod_rect `{Funext} `(P : A * B -> Type)
+Global Instance isequiv_prod_rect `{Funext} `(P : A * B -> Type)
   : IsEquiv (prod_rect P)
   := isequiv_adjointify _
   (fun f x y => f (x,y))
@@ -209,7 +209,7 @@ Definition prod_corect `(f : forall x:X, A x) `(g : forall x:X, B x)
   : forall x, A x * B x
   := prod_corect_uncurried (f,g).
 
-Instance isequiv_prod_corect `{Funext} `(A : X -> Type) (B : X -> Type)
+Global Instance isequiv_prod_corect `{Funext} `(A : X -> Type) (B : X -> Type)
   : IsEquiv (@prod_corect_uncurried X A B)
   := isequiv_adjointify _
   (fun h => (fun x => fst (h x), fun x => snd (h x)))
@@ -228,7 +228,7 @@ Definition equiv_prod_corect `{Funext} `(A : X -> Type) (B : X -> Type)
 
 (** *** Products preserve truncation *)
 
-Instance trunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B).
+Global Instance trunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B).
 Proof.
   generalize dependent B; generalize dependent A.
   induction n as [| n I]; simpl; intros A ? B ?.
@@ -238,5 +238,5 @@ Proof.
     exact (trunc_equiv (equiv_path_prod x y)).
 Defined.
 
-Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B)
+Global Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B)
   := @trunc_prod minus_two A CA B CB.
