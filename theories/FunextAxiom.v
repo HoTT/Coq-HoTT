@@ -5,6 +5,5 @@
 
 Require Import Overture.
 
-Instance funext_axiom : Funext.
-  admit.
-Defined.
+Axiom funext_axiom : Funext.
+Existing Instance funext_axiom.
