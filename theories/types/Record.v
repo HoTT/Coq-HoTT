@@ -21,8 +21,9 @@ Ltac issig1 build pr1 pr2 :=
   [ |
   (* Just in case the user supplied a goal which only *reduces* to one of the desired form. *)
   hnf;
-  (* Extract the fibration of which our Sigma-type is the total space, as well as the record type. *)
-  match goal with | [ |- sigT ?fibration <~> ?record ] =>
+  (* Extract the fibration of which our Sigma-type is the total space, as well as the record type. We pull the terms out of a [match], rather than leaving everything inside the [match] because this gives us better error messages. *)
+  let fibration := match goal with |- sigT ?fibration <~> ?record => constr:(fibration) end in
+  let record := match goal with |- sigT ?fibration <~> ?record => constr:(record) end in
   exact (BuildEquiv (sigT fibration) record (fun u => build u.1 u.2)
     (BuildIsEquiv (sigT fibration) record (fun u => build u.1 u.2)
       (fun v => existT fibration (pr1 v) (pr2 v))
@@ -39,7 +40,7 @@ Ltac issig1 build pr1 pr2 :=
         end)
       (* We *could* actually give an explicit proof term for the coherence cell.  Here it is:
 
-      (fun u => match u return 
+      (fun u => match u return
                   ((let (v1,v2) as v' return (build (pr1 v') (pr2 v') = v')
                       := (build u.1 u.2) in 1) =
                   ap (fun u => build u.1 u.2)
@@ -54,8 +55,7 @@ Ltac issig1 build pr1 pr2 :=
                 end)
 
       However, for the 3- and 4-variable versions, giving the explicit proof term seems to actually *slow down* the tactic.  Perhaps it is because Coq has to infer more implicit arguments.  Thus, we proceed instead by supplying the term [t] whose type is an existential variable. *)
-      t))
-  end ];
+      t)) ];
   (* Now we are left only with the one subgoal to prove [t], and at this point we know its type.  The proof basically amounts to destructing a pair.  First, though, we instruct Coq to incorporate learned values of all unification variables.  This speeds things up significantly (although again, the difference is really only noticable for the 3- and 4-variable versions below). *)
   instantiate;
   simpl;
@@ -91,9 +91,10 @@ Ltac issig2 build pr1 pr2 pr3 :=
   let T := fresh in
   let t := fresh in
   evar (T : Type); assert (t : T); subst T;
-  [ | 
-  hnf; match goal with
-         | [ |- sigT (fun u1 => sigT (@?fibration u1)) <~> ?record ] =>
+  [ |
+  hnf;
+  let fibration := match goal with |- sigT (fun u1 => sigT (@?fibration u1)) <~> ?record => constr:(fibration) end in
+  let record := match goal with |- _ <~> ?record => constr:(record) end in
   exact (BuildEquiv (sigT (fun u1 => sigT (fibration u1))) record
                     (fun u => build u.1 u.2.1 u.2.2)
     (BuildIsEquiv (sigT (fun u1 => sigT (fibration u1))) record
@@ -114,8 +115,7 @@ Ltac issig2 build pr1 pr2 pr3 :=
           = u with
           existT x (existT y z) => 1
         end)
-      t))
-  end ];
+      t)) ];
   instantiate;
   simpl;
   let x := fresh in intro x;
@@ -131,10 +131,12 @@ Ltac issig3 build pr1 pr2 pr3 pr4 :=
   let T := fresh in
   let t := fresh in
   evar (T : Type); assert (t : T); subst T;
-  [ | 
-  hnf; match goal with
-         | [ |- sigT (fun u1 => sigT (fun u2 => sigT (@?fibration u1 u2)))
-                <~> ?record ] =>
+  [ |
+  hnf;
+  let fibration := match goal with
+                       |- sigT (fun u1 => sigT (fun u2 => sigT (@?fibration u1 u2)))
+                               <~> ?record => constr:(fibration) end in
+  let record := match goal with |- _ <~> ?record => constr:(record) end in
   exact (BuildEquiv (sigT (fun u1 => sigT (fun u2 => sigT (fibration u1 u2))))
                     record
                     (fun u => (build u.1 u.2.1 u.2.2.1 u.2.2.2))
@@ -160,8 +162,7 @@ Ltac issig3 build pr1 pr2 pr3 pr4 :=
           = u with
           existT x (existT y (existT z w)) => 1
         end)
-      t))
-  end ];
+      t)) ];
   instantiate;
   simpl;
   let x := fresh in intro x;
