@@ -5,7 +5,7 @@ This equivalence is close to the existence of an object classifier.
 Require Import HoTT Universe.
 Set Universe Polymorphism.
 Section AssumeUnivalence.
-Context `{Univalence}.
+Context `{ua:Univalence}.
 Section AssumeFunext.
 Context `{fs : Funext}.
 Section ToBeMoved.

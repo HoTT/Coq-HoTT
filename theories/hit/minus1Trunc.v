@@ -83,6 +83,7 @@ Proof.
   intro a. apply allpath_hprop.
 Defined.
 
+Section AssumeFunExt.
 (** Inhabited propositions are contractible. *)
 Open Scope fibration_scope.
 Context `{Funext}.
@@ -235,5 +236,5 @@ Lemma strength_pentagon_2 (A B : Type) :
 Proof.
   auto.
 Qed.
-
 End minus1TruncMonad.
+End AssumeFunExt.
