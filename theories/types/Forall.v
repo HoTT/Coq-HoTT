@@ -93,6 +93,21 @@ Proof.
   apply equiv_path_forall.
 Defined.
 
+(** A slightly different take on the same idea. Might be handy. *)
+
+Definition dpath_forall'
+  {A : Type } (P : A -> Type) (Q: sigT P -> Type) {x y : A} (h : x = y)
+  (f : forall p, Q (x ; p)) (g : forall p, Q (y ; p))
+ :
+  (forall p, transport Q (path_sigma P (x ; p) (y; _) h 1) (f p) = g (h # p))
+  <~>
+  (forall p, transportD P (fun x => fun p => Q ( x ; p)) h p (f p) = g (transport P h p)).
+Proof.
+  destruct h.
+  apply equiv_idmap.
+Defined.
+  
+
 (** *** Functorial action *)
 
 (** The functoriality of [forall] is slightly subtle: it is contravariant in the domain type and covariant in the codomain, but the codomain is dependent on the domain. *)
