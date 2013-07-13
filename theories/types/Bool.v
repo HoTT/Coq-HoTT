@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the booleans *)
 
-Require Import Overture Contractible Equivalences types.Prod.
+Require Import Overture Contractible Equivalences types.Prod HSet.
 Local Open Scope equiv_scope.
 
 (* coq calls it "bool", we call it "Bool" *)
@@ -26,9 +26,30 @@ Definition implb (b1 b2 : Bool) : Bool := if b1 then b2 else true.
 Infix "||" := orb : bool_scope.
 Infix "&&" := andb : bool_scope.
 
+Section BoolDecidable.
+  Definition false_ne_true : ~false = true
+    := fun H => match H in (_ = y) return (if y then Empty else Bool) with
+                  | 1%path => true
+                end.
+
+  Definition true_ne_false : ~true = false
+    := fun H => false_ne_true (symmetry _ _ H).
+
+  Definition decidable_paths_bool : decidable_paths Bool
+    := fun x y => match x as x, y as y return ((x = y) + (~x = y)) with
+                    | true, true => inl idpath
+                    | false, false => inl idpath
+                    | true, false => inr true_ne_false
+                    | false, true => inr false_ne_true
+                  end.
+
+  Global Instance trunc_bool : IsHSet Bool
+    := hset_decidable decidable_paths_bool.
+End BoolDecidable.
+
 Section BoolForall.
   Variable P : Bool -> Type.
-  
+
   Let f (s : forall b, P b) := (s false, s true).
 
   Let g (u : P false * P true) (b : Bool) : P b :=
@@ -37,20 +58,13 @@ Section BoolForall.
       | true => snd u
     end.
 
-  Let eissect' `{Funext} : Sect f g.
-  Proof.
-    intro s; apply path_forall; intro b; destruct b; reflexivity.
-  Defined.
-
-  Let eisretr' : Sect g f := fun _ => eta_prod _.
-
   Definition equiv_bool_forall_prod `{Funext} :
     (forall b, P b) <~> P false * P true.
   Proof.
-    exists f.
-    refine {| equiv_inv := g ; eisretr := eisretr' ; eissect := eissect' |}.
-    admit.
-    (* must first show that decidable types are in IsHSet. *)
+    apply (equiv_adjointify f g);
+    repeat (reflexivity
+              || intros []
+              || intro
+              || apply path_forall).
   Defined.
-
 End BoolForall.
