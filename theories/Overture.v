@@ -14,6 +14,15 @@ Class Symmetric {A} (R : relation A) :=
 Class Transitive {A} (R : relation A) :=
   transitivity : forall x y z, R x y -> R y z -> R x z.
 
+Tactic Notation "etransitivity" open_constr(y) :=
+  let R := match goal with |- ?R ?x ?z => constr:(R) end in
+  let x := match goal with |- ?R ?x ?z => constr:(x) end in
+  let z := match goal with |- ?R ?x ?z => constr:(z) end in
+  eapply (transitivity (R := R) x y z).
+
+Tactic Notation "etransitivity" := etransitivity _.
+
+Tactic Notation "symmetry" := apply symmetry.
 
 (** ** Basic definitions *)
 
@@ -81,7 +90,7 @@ Arguments inverse {A x y} p : simpl nomatch.
 Instance symmetric_paths {A} : Symmetric (@paths A) := @inverse A.
 
 
-(** Note that you can use the built-in Coq tactics "reflexivity" and "transitivity" when working with paths, but not "symmetry", because it is too smart for its own good.  But you can say "apply symmetry" instead.   *)
+(** Note that you can use the built-in Coq tactics [reflexivity] and [transitivity] when working with paths, but not [symmetry], because it is too smart for its own good.  Hence we have provided replacement [symmetry] and [etransitivity] tactics above. *)
 
 (** The identity path. *)
 Notation "1" := idpath : path_scope.
