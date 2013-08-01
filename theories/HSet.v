@@ -32,16 +32,16 @@ Context `{Funext}.
 Theorem equiv_hset_axiomK {A} : IsHSet A <~> axiomK A.
 Proof.
   apply (equiv_adjointify (@axiomK_hset A) (@hset_axiomK A)).
-  - intros K. by_extensionality x. by_extensionality x'. 
+  - intros K. by_extensionality x. by_extensionality x'.
     cut (Contr (x=x)). intro. eapply path_contr.
     exists 1. intros. apply symmetry, K.
   - intro K. by_extensionality x. by_extensionality x'.
     eapply allpath_hprop.
 Defined.
 
-Instance axiomK_isprop A : IsHProp (axiomK A).
+Global Instance axiomK_isprop A : IsHProp (axiomK A).
 Proof.
-  apply (trunc_equiv equiv_hset_axiomK). 
+  apply (trunc_equiv equiv_hset_axiomK).
 Defined.
 
 Theorem set_path2 {A} `{IsHSet A} {x y : A} (p q : x = y):

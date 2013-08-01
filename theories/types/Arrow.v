@@ -31,7 +31,7 @@ Definition path_arrow_1 {A B : Type} (f : A -> B)
   : (path_arrow f f (fun x => 1)) = 1
   := eta_path_arrow f f 1.
 
-Instance isequiv_path_arrow {A B : Type} (f g : A -> B)
+Global Instance isequiv_path_arrow {A B : Type} (f g : A -> B)
   : IsEquiv (path_arrow f g)
   := isequiv_path_forall f g.
 
@@ -124,17 +124,17 @@ Definition ap_functor_arrow `(f : B -> A) `(g : C -> D)
 
 (** *** Truncatedness: functions into an n-type is an n-type *)
 
-Instance contr_arrow {A B : Type} `{Contr B}
+Global Instance contr_arrow {A B : Type} `{Contr B}
   : Contr (A -> B)
 := contr_forall.
 
-Instance trunc_arrow {A B : Type} `{IsTrunc n B}
+Global Instance trunc_arrow {A B : Type} `{IsTrunc n B}
   : IsTrunc n (A -> B)
 := trunc_forall.
 
 (** *** Equivalences *)
 
-Instance isequiv_functor_arrow `{IsEquiv B A f} `{IsEquiv C D g}
+Global Instance isequiv_functor_arrow `{IsEquiv B A f} `{IsEquiv C D g}
   : IsEquiv (functor_arrow f g)
   := @isequiv_functor_forall _ A (fun _ => C) B (fun _ => D)
      _ _ _ _.
@@ -148,7 +148,7 @@ Definition equiv_functor_arrow' `(f : B <~> A) `(g : C <~> D)
   : (A -> C) <~> (B -> D)
   := @equiv_functor_forall' _ A (fun _ => C) B (fun _ => D)
   f (fun _ => g).
-  
+
 (** What remains is really identical to that in [Forall].  *)
 
 End AssumeFunext.

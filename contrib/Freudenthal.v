@@ -21,7 +21,7 @@ Proof.
   assert ({ p0 : f North = f South & forall x:X, ap f (merid x) = p0 })
     as [p0 allpath_p0] by auto.
   apply (Susp_rect (fun a => f a = f North) 1 p0^).
-  intros x. 
+  intros x.
   apply (concat (transport_paths_Fl _ _)).
   apply (concat (concat_p1 _)).
   apply ap, allpath_p0.
@@ -46,7 +46,7 @@ Notation mer := (@merid X).
 Definition mer' := (fun x => mer x @ (mer x0)^).
 
 (** The eventual theorem we want is: *)
-Instance Freudenthal
+Global Instance Freudenthal
   : IsConnMap (n -2+ n) (mer').
 Proof.
   intros p. apply @isconnected_from_iscontr_truncation.
@@ -74,7 +74,7 @@ Proof.
   refine (@wedge_incl_elim_uncurried _ _ n n X x0 _ X x0 _
     (fun x1 x2 => (mer x2 @ (mer x0) ^ = q @ (mer x1) ^)
                     -> Truncation (n -2+ n) (hfiber mer q)) _ _).
-  apply (conn_pointed_type x0). apply (conn_pointed_type x0).  
+  apply (conn_pointed_type x0). apply (conn_pointed_type x0).
   intros; apply trunc_arrow.
   exists (fun b s => truncation_incl (hfiber_pair b (cancelR _ _ _ s))).
   exists (fun a r => truncation_incl (hfiber_pair a
@@ -95,7 +95,7 @@ Defined.
 Definition isequiv_FST_Codes_cross (x : X) (q : No = So)
   : IsEquiv (FST_Codes_cross x q).
 Proof.
-  revert x. 
+  revert x.
   apply (@conn_map_elim _ _ _ (unit_name x0) _
     (fun x => IsEquiv (FST_Codes_cross x q))).
     intros x; generalize dependent n. intros [ | n'] imposs.
@@ -112,7 +112,7 @@ Proof.
   intros a. apply isequiv_cancelR.
 Defined.
 
-Definition FST_Codes 
+Definition FST_Codes
   : forall (y : Susp X), (No = y) -> Type.
 Proof.
   apply (Susp_rect (fun y => (No = y -> Type)) FST_Codes_No FST_Codes_So).
@@ -179,11 +179,11 @@ Proof.
 Defined.
 
 Definition FST_Codes_transportD (x1 : X) (p : No = No) (rr : FST_Codes No p)
-  : transportD (paths No) FST_Codes (mer x1) p rr 
+  : transportD (paths No) FST_Codes (mer x1) p rr
   = FST_Codes_transportD_concrete x1 p rr.
 Proof.
   refine (transportD_as_apD _ _ _ _ _ @ _).
-  unfold transportD'. 
+  unfold transportD'.
   unfold FST_Codes. rewrite (Susp_comp_merid _ _ _ _ x1); simpl.
     rewrite (@ap10_path_forall (fst funext_large)).
   unfold FST_Codes_transportD_concrete.
@@ -209,10 +209,10 @@ Proof.
   intros [x1 r]. destruct r. unfold FST_Codes_center. simpl.
   path_via (truncation_incl
     (transport (fun p => hfiber mer' p) (transport_paths_r p 1 @ concat_1p p)
-    (transportD (paths No) 
+    (transportD (paths No)
 simpl in *.
 
-Instance Freudenthal
+Global Instance Freudenthal
   : IsConnMap (n -2+ n) (@merid X).
 Proof.
   intros p C ? f.
