@@ -83,7 +83,7 @@ Proof.
   intro a. apply allpath_hprop.
 Defined.
 
-Section AssumeFunExt.
+Section AssumeFunext.
 (** Inhabited propositions are contractible. *)
 Open Scope fibration_scope.
 Context `{Funext}.
@@ -237,4 +237,3 @@ Proof.
 Qed.
 
 End minus1TruncMonad.
-End AssumeFunExt.
