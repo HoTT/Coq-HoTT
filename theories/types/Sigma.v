@@ -6,7 +6,7 @@ Require Import Arrow.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
-Generalizable Variables X A B f g n.
+Generalizable Variables X A B C f g n.
 
 (** In homotopy type theory, We think of elements of [Type] as spaces, homotopy types, or weak omega-groupoids. A type family [P : A -> Type] corresponds to a fibration whose base is [A] and whose fiber over [x] is [P x].
 
@@ -29,6 +29,16 @@ Definition unpack_sigma `{P : A -> Type} (Q : sigT P -> Type) (u : sigT P) :
 Definition eta_sigma `{P : A -> Type} (u : sigT P)
   : (projT1 u; projT2 u) = u
   := match u with existT x y => 1 end.
+
+Definition eta2_sigma `{P : forall (a : A) (b : B a), Type}
+           (u : sigT (fun a => sigT (P a)))
+  : (u.1; (u.2.1; u.2.2)) = u
+  := match u with existT x (existT y z) => 1 end.
+
+Definition eta3_sigma `{P : forall (a : A) (b : B a) (c : C a b), Type}
+           (u : sigT (fun a => sigT (fun b => sigT (P a b))))
+  : (u.1; (u.2.1; (u.2.2.1; u.2.2.2))) = u
+  := match u with existT x (existT y (existT z w)) => 1 end.
 
 (** *** Paths *)
 
