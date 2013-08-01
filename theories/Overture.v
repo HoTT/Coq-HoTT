@@ -44,7 +44,9 @@ Definition compose {A B C : Type} (g : B -> C) (f : A -> B) :=
 
 Hint Unfold compose.
 
-Notation "g 'o' f" := (compose g f) (at level 40, left associativity).
+(* We put the following notation in a scope because leaving it unscoped causes it to override identical notations in other scopes.  It's convenient to use the same notation for, e.g., function composition, morphism composition in a category, and functor composition, and let Coq automatically infer which one we mean by scopes.  We can't do this if this notation isn't scoped.  Unfortunately, Coq doesn't have a built-in [function_scope] like [type_scope]; [type_scope] is automatically opened wherever Coq is expecting a [Sort], and it would be nice if [function_scope] were automatically opened whenever Coq expects a thing of type [forall _, _] or [_ -> _].  To work around this, we open [function_scope] globally. *)
+Notation "g 'o' f" := (compose g f) (at level 40, left associativity) : function_scope.
+Open Scope function_scope.
 
 (** ** The groupoid structure of identity types. *)
 
@@ -141,7 +143,7 @@ Notation ap01 := ap (only parsing).
 Definition pointwise_paths {A} {P:A->Type} (f g:forall x:A, P x) : Type
   := forall x:A, f x = g x.
 
-Notation "f == g" := (pointwise_paths f g) (at level 50).
+Notation "f == g" := (pointwise_paths f g) (at level 70, no associativity) : type_scope.
 
 Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g)
   : f == g
@@ -242,6 +244,11 @@ Notation "f ^-1" := (@equiv_inv _ _ f _) (at level 3) : equiv_scope.
 Inductive trunc_index : Type :=
 | minus_two : trunc_index
 | trunc_S : trunc_index -> trunc_index.
+
+(* We will use [Notation] for [trunc_index]es, so define a scope for them here. *)
+Delimit Scope trunc_scope with trunc.
+Bind Scope trunc_scope with trunc_index.
+Arguments trunc_S _%trunc_scope.
 
 Fixpoint nat_to_trunc_index (n : nat) : trunc_index
   := match n with
