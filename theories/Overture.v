@@ -391,6 +391,10 @@ Ltac path_induction :=
 
 (* The tactic [f_ap] is a replacement for the previously existing standard library tactic [f_equal].  This tactic works by repeatedly applying the fact that [f = g -> x = y -> f x = g y] to turn, e.g., [f x y = f z w] first into [f x = f z] and [y = w], and then turns the first of these into [f = f] and [x = z].  The [done] tactic is used to detect the [f = f] case and finish, and the [trivial] is used to solve, e.g., [x = x] when using [f_ap] on [f y x = f z x].  This tactic only works for non-dependently-typed functions; we cannot express [y = w] in the first example if [y] and [w] have different types.  If and when Arnaud's new-tacticals branch lands, and we can have a goal which depends on the term used to discharge another goal, then this tactic should probably be generalized to deal with dependent functions. *)
 Ltac f_ap :=
-  apply ap11;
-  [ done || f_ap
-  | trivial ].
+  lazymatch goal with
+    | [ |- ?f ?x = ?g ?x ] => apply (@apD10 _ _ f g);
+                             try (done || f_ap)
+    | _ => apply ap11;
+          [ done || f_ap
+          | trivial ]
+  end.
