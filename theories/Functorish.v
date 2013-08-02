@@ -52,6 +52,7 @@ Proposition isequiv_fmap {A B} (f : A -> B) `{IsEquiv _ _ f}
 Proof.
   refine (equiv_rect (fun A' e => IsEquiv (fmap F e)) _ _ (BuildEquiv _ _ f _)).
   refine (transport _ (fmap_idmap F)^ _).
+  apply isequiv_idmap. (* This line may not be needed in a new enough coq. *)
 Defined.
 
 Proposition fmap_agrees_with_univalence {A B} (f : A -> B) `{IsEquiv _ _ f}
