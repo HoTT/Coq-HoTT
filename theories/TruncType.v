@@ -49,7 +49,7 @@ Definition path_trunctype {n : trunc_index} {A B : TruncType n}
 := equiv_path_trunctype A B.
 
 Global Instance istrunc_trunctype {n : trunc_index}
-  : IsTrunc (trunc_S n) (TruncType n).
+  : IsTrunc (trunc_S n) (TruncType n) | 0.
 Proof.
   intros A B.
   apply (@trunc_equiv _ _ (equiv_path_trunctype A B)).

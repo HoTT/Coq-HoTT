@@ -109,7 +109,7 @@ Defined.
 (** This lets us identify the path space of a sigma-type, up to equivalence. *)
 
 Instance isequiv_path_sigma `{P : A -> Type} {u v : sigT P}
-  : IsEquiv (path_sigma_uncurried P u v).
+  : IsEquiv (path_sigma_uncurried P u v) | 0.
   refine (isequiv_adjointify _
     (fun r => (existT (fun p : u.1 = v.1 => p # u.2 = v.2) r..1 r..2))
     eta_path_sigma
@@ -258,7 +258,7 @@ Defined.
 
 Instance isequiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv A B f} `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
-  : IsEquiv (functor_sigma f g).
+  : IsEquiv (functor_sigma f g) | 1000.
 Proof.
   refine (isequiv_adjointify (functor_sigma f g)
     (functor_sigma (f^-1)
@@ -336,7 +336,7 @@ Defined.
 (* The positive universal property. *)
 Instance isequiv_sigT_rect `{Funext} `{P : A -> Type}
   (Q : sigT P -> Type)
-  : IsEquiv (sigT_rect Q)
+  : IsEquiv (sigT_rect Q) | 0
   := isequiv_adjointify (sigT_rect Q)
   (fun f x y => f (x;y))
   _ _.
@@ -368,7 +368,7 @@ Definition sigT_corect
 
 Instance isequiv_sigT_corect `{Funext}
   `{A : X -> Type} {P : forall x, A x -> Type}
-  : IsEquiv (sigT_corect_uncurried P)
+  : IsEquiv (sigT_corect_uncurried P) | 0
   := isequiv_adjointify (sigT_corect_uncurried P)
   (fun h => existT (fun f => forall x, P x (f x))
     (fun x => (h x).1) (fun x => (h x).2))
@@ -389,7 +389,7 @@ Definition equiv_sigT_corect `{Funext}
 
 Instance trunc_sigma `{P : A -> Type}
   `{IsTrunc n A} `{forall a, IsTrunc n (P a)}
-  : IsTrunc n (sigT P).
+  : IsTrunc n (sigT P) | 100.
 Proof.
   generalize dependent A.
   induction n; simpl; intros A P ac Pc.
