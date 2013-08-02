@@ -40,7 +40,7 @@ Proof.
 Defined.
 
 Global Instance isconnected_from_iscontr_truncation {n} {A} `{Contr (Truncation n A)}
-  : IsConnected n A.
+  : IsConnected n A | 1000.
 Proof.
   intros C ? f.
   set (ff := Truncation_rect_nondep f).
@@ -131,7 +131,7 @@ Defined.
 Global Instance isequiv_path_extension {A B : Type} {f : A -> B}
   {P : B -> Type} {d : forall x:A, P (f x)}
   (ext ext' : ExtensionAlong f P d)
-: IsEquiv (path_extension ext ext').
+: IsEquiv (path_extension ext ext') | 0.
 Proof.
   apply @isequiv_compose.
     2: apply @isequiv_path_sigma.
@@ -226,7 +226,7 @@ Defined.
 (** The connectivity of a pointed type and (the inclusion of) its point are intimately connected. *)
 
 Global Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
- `{IsConnMap n _ _ (unit_name a0)} : IsConnected (trunc_S n) A.
+ `{IsConnMap n _ _ (unit_name a0)} : IsConnected (trunc_S n) A | 1000.
 Proof.
   intros C HC f. exists (f a0).
 (* TODO: try to use [refine] or similar to get more concise? *)
@@ -236,7 +236,7 @@ Proof.
 Defined.
 
 Global Instance conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
- `{IsConnected (trunc_S n) A} : IsConnMap n (unit_name a0).
+ `{IsConnected (trunc_S n) A} : IsConnMap n (unit_name a0) | 1000.
 Proof.
   apply conn_map_from_extension_elim.
   intros P ?. set (PP := fun a => BuildTruncType n (P a) _).

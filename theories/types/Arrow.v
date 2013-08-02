@@ -32,7 +32,7 @@ Definition path_arrow_1 {A B : Type} (f : A -> B)
   := eta_path_arrow f f 1.
 
 Global Instance isequiv_path_arrow {A B : Type} (f g : A -> B)
-  : IsEquiv (path_arrow f g)
+  : IsEquiv (path_arrow f g) | 0
   := isequiv_path_forall f g.
 
 Definition equiv_path_arrow {A B : Type} (f g : A -> B)
@@ -125,17 +125,17 @@ Definition ap_functor_arrow `(f : B -> A) `(g : C -> D)
 (** *** Truncatedness: functions into an n-type is an n-type *)
 
 Global Instance contr_arrow {A B : Type} `{Contr B}
-  : Contr (A -> B)
+  : Contr (A -> B) | 100
 := contr_forall.
 
 Global Instance trunc_arrow {A B : Type} `{IsTrunc n B}
-  : IsTrunc n (A -> B)
+  : IsTrunc n (A -> B) | 100
 := trunc_forall.
 
 (** *** Equivalences *)
 
 Global Instance isequiv_functor_arrow `{IsEquiv B A f} `{IsEquiv C D g}
-  : IsEquiv (functor_arrow f g)
+  : IsEquiv (functor_arrow f g) | 1000
   := @isequiv_functor_forall _ A (fun _ => C) B (fun _ => D)
      _ _ _ _.
 
