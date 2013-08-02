@@ -154,7 +154,7 @@ Proof.
   refine (transport_compose idmap S1_code loop^ z @ _).
   rewrite ap_V.
   unfold S1_code; rewrite S1_rectnd_beta_loop.
-  rewrite <- path_universe_V.
+  rewrite <- (path_universe_V succ_int).
   apply transport_path_universe.
 Defined.
 

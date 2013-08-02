@@ -2,7 +2,7 @@
 (** * Theorems about the unit type *)
 
 (* coq calls it "unit", we call it "Unit" *)
-Inductive Unit : Type :=
+Inductive Unit : Set :=
     tt : Unit.
 
 Require Import Overture PathGroupoids Equivalences.
@@ -55,10 +55,10 @@ Definition equiv_path_unit (z z' : Unit) : Unit <~> (z = z')
 (* The positive universal property *)
 Arguments Unit_rect [A] a u : rename.
 
-Instance isequiv_unit_rect `{Funext} (A : Type) : IsEquiv (@Unit_rect A) | 0
+Instance isequiv_unit_rect `{Funext} (A : Type) : IsEquiv (@Unit_rect (fun _ => A)) | 0
   := isequiv_adjointify _
   (fun f : Unit -> A => f tt)
-  (fun f : Unit -> A => path_forall (Unit_rect (f tt)) f
+  (fun f : Unit -> A => path_forall (@Unit_rect (fun _ => A) (f tt)) f
                                     (fun x => match x with tt => 1 end))
   (fun _ => 1).
 
