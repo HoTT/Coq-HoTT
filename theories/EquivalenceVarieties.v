@@ -71,7 +71,7 @@ Defined.
 
 (** Using this, we can prove that [IsEquiv f] is an h-proposition. *)
 
-Global Instance hprop_isequiv `(f : A -> B) : IsHProp (IsEquiv f).
+Global Instance hprop_isequiv `(f : A -> B) : IsHProp (IsEquiv f) | 0.
 Proof.
   apply hprop_inhabited_contr; intros ?.
   (* Get rid of that pesky record. *)
@@ -195,7 +195,7 @@ Proof.
     s).
 Defined.
 
-Global Instance isprop_biinv `(f : A -> B) : IsHProp (BiInv f).
+Global Instance isprop_biinv `(f : A -> B) : IsHProp (BiInv f) | 0.
 Proof.
   apply hprop_inhabited_contr.
   intros bif; pose (fe := equiv_biinv f bif).

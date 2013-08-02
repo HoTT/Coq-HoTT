@@ -11,7 +11,7 @@ Generalizable Variables A B f.
 (** *** Paths *)
 
 Instance isequiv_path {A B : Type} (p : A = B)
-  : IsEquiv (transport (fun X:Type => X) p)
+  : IsEquiv (transport (fun X:Type => X) p) | 0
   := BuildIsEquiv _ _ _ (transport (fun X:Type => X) p^)
   (fun b => ((transport_pp idmap p^ p b)^ @ transport2 idmap (concat_Vp p) b))
   (fun a => ((transport_pp idmap p p^ a)^ @ transport2 idmap (concat_pV p) a))

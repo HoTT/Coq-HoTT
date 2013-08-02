@@ -43,7 +43,7 @@ Section BoolDecidable.
                     | false, true => inr false_ne_true
                   end.
 
-  Global Instance trunc_bool : IsHSet Bool
+  Global Instance trunc_bool : IsHSet Bool | 0
     := hset_decidable decidable_paths_bool.
 End BoolDecidable.
 

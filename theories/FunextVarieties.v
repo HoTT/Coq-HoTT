@@ -51,7 +51,7 @@ Section Homotopies.
   Let idhtpy : f == f := fun x => idpath (f x).
 
   (** Weak funext implies that the "based homotopy space" of the Pi-type is contractible, just like the based path space. *)
-  Global Instance contr_basedhtpy : Contr {g : forall x, B x & f == g }.
+  Global Instance contr_basedhtpy : Contr {g : forall x, B x & f == g } | 0.
   Proof.
     exists (f;idhtpy). intros [g h].
     (* The trick is to show that the type [{g : forall x, B x & f == g }] is a retract of [forall x, {y : B x & f x = y}], which is contractible due to J and weak funext.  Here are the retraction and its section. *)
@@ -71,15 +71,13 @@ Section Homotopies.
 
   Definition htpy_rect g h : Q g h
     := @transport _ (fun gh => Q gh.1 gh.2) (f;idhtpy) (g;h)
-         (* Why can't it find the Instance? *)
-         (@path_contr _ contr_basedhtpy _ _) d.
+         (@path_contr _ _ _ _) d.
 
   (** The computation rule, of course, is only propositional. *)
   Definition htpy_rect_beta : htpy_rect f idhtpy = d
     := transport (fun p : (f;idhtpy) = (f;idhtpy) =>
                     transport (fun gh => Q gh.1 gh.2) p d = d)
-         (* Why can't it find the Instance? *)
-         (@path2_contr _ contr_basedhtpy _ _
+         (@path2_contr _ _ _ _
            (path_contr (f;idhtpy) (f;idhtpy)) (idpath _))^
          (idpath _).
 
