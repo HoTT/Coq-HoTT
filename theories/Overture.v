@@ -216,7 +216,7 @@ Arguments eissect {A B} f {_} _.
 Arguments eisadj {A B} f {_} _.
 
 (** A record that includes all the data of an adjoint equivalence. *)
-Record Equiv A B := BuildEquiv {
+Record > Equiv A B := BuildEquiv {
   equiv_fun :> A -> B ;
   equiv_isequiv :> IsEquiv equiv_fun
 }.
