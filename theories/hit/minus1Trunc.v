@@ -70,13 +70,13 @@ Proof.
 Defined.
 (** [minus1Trunc A] is always a proposition. *)
 
-Theorem minus1Trunc_is_prop {A : Type} : IsHProp (minus1Trunc A).
+Instance minus1Trunc_is_prop {A : Type} : IsHProp (minus1Trunc A) | 0.
 Proof.
   apply hprop_allpath, min1_path.
 Defined.
 
 (** And if [A] was already a proposition, then [minus1Trunc A] is equivalent to [A]. *)
-Instance IsEquivmin1 {A} `{IsHProp A} : IsEquiv (@min1 A).
+Instance IsEquivmin1 {A} `{IsHProp A} : IsEquiv (@min1 A) | 1000.
 Proof.
   apply (@isequiv_adjointify _ _ (@min1 A) (minus1Trunc_rect_nondep (fun x:A => x) allpath_hprop )).
    intro x. apply hprop_allpath, min1_path.

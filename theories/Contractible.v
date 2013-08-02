@@ -23,18 +23,19 @@ Proof.
 Defined.
 
 (** It follows that any space of paths in a contractible space is contractible. *)
-Instance contr_paths_contr `{Contr A} (x y : A) : Contr (x = y) := {
+(** Because [Contr] is a notation, and [Contr_internal] is the record, we need to iota expand to fool Coq's typeclass machinery into accepting supposedly "mismatched" contexts. *)
+Instance contr_paths_contr `{Contr A} (x y : A) : Contr (x = y) | 10000 := let c := {|
   center := (contr x)^ @ contr y;
   contr := path2_contr ((contr x)^ @ contr y)
-}.
+|} in c.
 
 (** Also, the total space of any based path space is contractible. *)
-Instance contr_basedpaths {X : Type} (x : X) : Contr {y : X & x = y}.
+Instance contr_basedpaths {X : Type} (x : X) : Contr {y : X & x = y} | 100.
   exists (x ; 1).
   intros [y []]; reflexivity.
 Defined.
 
-Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x}.
+Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x} | 100.
   exists (existT (fun y => y = x) x 1).
   intros [y []]; reflexivity.
 Defined.

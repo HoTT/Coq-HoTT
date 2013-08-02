@@ -11,16 +11,16 @@ Local Open Scope equiv_scope.
 Generalizable Variables A B C f g.
 
 (** The identity map is an equivalence. *)
-Instance isequiv_idmap (A : Type) : IsEquiv idmap :=
+Instance isequiv_idmap (A : Type) : IsEquiv idmap | 0 :=
   BuildIsEquiv A A idmap idmap (fun _ => 1) (fun _ => 1) (fun _ => 1).
 
 Definition equiv_idmap (A : Type) : A <~> A := BuildEquiv A A idmap _.
 
-Instance reflexive_equiv : Reflexive Equiv := equiv_idmap.
+Instance reflexive_equiv : Reflexive Equiv | 0 := equiv_idmap.
 
 (** The composition of equivalences is an equivalence. *)
 Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
-  : IsEquiv (compose g f)
+  : IsEquiv (compose g f) | 1000
   := BuildIsEquiv A C (compose g f)
     (compose f^-1 g^-1)
     (fun c => ap g (eisretr f (g^-1 c)) @ eisretr g c)
@@ -36,7 +36,7 @@ Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
       (ap_compose f g _)^
     ).
 
-(* An alias of [isequiv_compose], with some arguments explicit; often convenient when type class search fails. *) 
+(* An alias of [isequiv_compose], with some arguments explicit; often convenient when type class search fails. *)
 Definition isequiv_compose'
   {A B : Type} (f : A -> B) (_ : IsEquiv f)
   {C : Type} (g : B -> C) (_ : IsEquiv g)
@@ -53,7 +53,7 @@ Definition equiv_compose' {A B C : Type} (g : B <~> C) (f : A <~> B)
   := equiv_compose g f.
 
 (* The TypeClass [Transitive] has a different order of parameters than [equiv_compose].  Thus in declaring the instance we have to switch the order of arguments. *)
-Instance transitive_equiv : Transitive Equiv :=
+Instance transitive_equiv : Transitive Equiv | 0 :=
   fun _ _ _ f g => equiv_compose g f.
 
 
@@ -78,8 +78,8 @@ Section IsEquivHomotopic.
     apply whiskerR, eisadj.
   Qed.
 
-  (* It's unclear to me whether this should be a declared instance.  Will it cause the unifier to spin forever searching for homotopies? *)
-  Global Instance isequiv_homotopic : IsEquiv g
+  (* It's unclear to me whether this should be a declared instance.  Will it cause the unifier to spin forever searching for homotopies?  For now, we give it a very large priority number, which means that other instances will be preferred over this one. *)
+  Global Instance isequiv_homotopic : IsEquiv g | 10000
     := BuildIsEquiv _ _ g (f ^-1) sect retr adj.
 
   Definition equiv_homotopic : A <~> B
@@ -125,7 +125,7 @@ Section EquivInverse.
     rewrite concat_pV_p; apply concat_Vp.
   Qed.
 
-  Global Instance isequiv_inverse : IsEquiv f^-1
+  Global Instance isequiv_inverse : IsEquiv f^-1 | 1000
     := BuildIsEquiv B A f^-1 f (eissect f) (eisretr f) other_adj.
 End EquivInverse.
 
@@ -137,11 +137,11 @@ Proof.
   apply isequiv_inverse.
 Defined.
 
-Instance symmetric_equiv : Symmetric Equiv := @equiv_inverse.
+Instance symmetric_equiv : Symmetric Equiv | 0 := @equiv_inverse.
 
 (** If [g \o f] and [f] are equivalences, so is [g]. *)
 Instance cancelR_isequiv `{IsEquiv A B f} `{IsEquiv A C (g o f)}
-  : IsEquiv g
+  : IsEquiv g | 10000
 := isequiv_homotopic (compose (compose g f) f^-1) g
        (fun b => ap g (eisretr f b)).
 
@@ -153,7 +153,7 @@ Definition cancelR_equiv `{IsEquiv A B f} `{IsEquiv A C (g o f)}
 
 (** If [g \o f] and [g] are equivalences, so is [f]. *)
 Instance cancelL_isequiv `{IsEquiv B C g} `{IsEquiv A C (g o f)}
-  : IsEquiv f
+  : IsEquiv f | 10000
 := isequiv_homotopic (compose g^-1 (compose g f)) f
        (fun a => eissect g (f a)).
 
@@ -168,7 +168,7 @@ Section EquivTransport.
 
   Context {A : Type} (P : A -> Type) (x y : A) (p : x = y).
 
-  Global Instance isequiv_transport : IsEquiv (transport P p)
+  Global Instance isequiv_transport : IsEquiv (transport P p) | 0
     := BuildIsEquiv (P x) (P y) (transport P p) (transport P p^)
     (transport_pV P p) (transport_Vp P p) (transport_pVp P p).
 
@@ -212,7 +212,7 @@ Section Adjointify.
     := BuildEquiv A B f isequiv_adjointify.
 
 End Adjointify.
-  
+
 (** Several lemmas useful for rewriting. *)
 Definition moveR_E `{IsEquiv A B f} (x : A) (y : B) (p : x = f^-1 y)
   : (f x = y)
@@ -240,7 +240,7 @@ Definition contr_equiv' `(f : A <~> B) `{Contr A}
 
 Instance isequiv_precompose `{Funext} {A B C : Type}
   (f : A -> B) `{IsEquiv A B f}
-  : IsEquiv (fun g => @compose A B C g f)
+  : IsEquiv (fun g => @compose A B C g f) | 1000
   := isequiv_adjointify (fun g => @compose A B C g f)
     (fun h => @compose B A C h f^-1)
     (fun h => path_forall _ _ (fun x => ap h (eissect f x)))
@@ -257,7 +257,7 @@ Definition equiv_precompose' `{Funext} {A B C : Type} (f : A <~> B)
 
 Instance isequiv_postcompose `{Funext} {A B C : Type}
   (f : B -> C) `{IsEquiv B C f}
-  : IsEquiv (fun g => @compose A B C f g)
+  : IsEquiv (fun g => @compose A B C f g) | 1000
   := isequiv_adjointify (fun g => @compose A B C f g)
     (fun h => @compose A C B f^-1 h)
     (fun h => path_forall _ _ (fun x => eisretr f (h x)))

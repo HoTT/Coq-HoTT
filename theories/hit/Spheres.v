@@ -24,7 +24,7 @@ Proof.
   simpl. apply (Susp_rect_nd true false). intros [].
 Defined.
 
-Instance isequiv_Sph0_to_Bool : IsEquiv (Sph0_to_Bool).
+Instance isequiv_Sph0_to_Bool : IsEquiv (Sph0_to_Bool) | 0.
 Proof.
   apply isequiv_adjointify with (fun b : Bool => if b then North else South).
   intros [ | ]; exact 1.
@@ -75,9 +75,9 @@ Fixpoint allnullhomot_trunc {n : trunc_index} {X : Type} `{IsTrunc n X}
 : NullHomotopy f.
 Proof.
   destruct n as [ | n'].
-    simpl in *. exists (center X). intros [ ].
-  apply nullhomot_susp_from_paths.
-  apply allnullhomot_trunc; auto.
+  - simpl in *. exists (center X). intros [ ].
+  - apply nullhomot_susp_from_paths.
+    apply allnullhomot_trunc; auto with typeclass_instances.
 Defined.
 
 Fixpoint trunc_allnullhomot {n : trunc_index} {X : Type}

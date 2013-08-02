@@ -31,7 +31,7 @@ Proof.
   destruct p. destruct z. reflexivity.
 Defined.
 
-Instance isequiv_path_unit (z z' : Unit) : IsEquiv (path_unit_uncurried z z').
+Instance isequiv_path_unit (z z' : Unit) : IsEquiv (path_unit_uncurried z z') | 0.
   refine (BuildIsEquiv _ _ (path_unit_uncurried z z') (fun _ => tt)
     (fun p:z=z' =>
       match p in (_ = z') return (path_unit_uncurried z z' tt = p) with
@@ -69,7 +69,7 @@ Notation unit_name x := (fun (_ : Unit) => x).
 Definition unit_corect {A : Type} : Unit -> (A -> Unit)
   := fun _ _ => tt.
 
-Instance isequiv_unit_corect `{Funext} (A : Type) : IsEquiv (@unit_corect A)
+Instance isequiv_unit_corect `{Funext} (A : Type) : IsEquiv (@unit_corect A) | 0
   := isequiv_adjointify _
   (fun f => tt)
   _ _.
@@ -85,10 +85,11 @@ Definition equiv_unit_corect `{Funext} (A : Type)
 (** *** Truncation *)
 
 (* The Unit type is contractible *)
-Instance contr_unit : Contr Unit := {
+(** Because [Contr] is a notation, and [Contr_internal] is the record, we need to iota expand to fool Coq's typeclass machinery into accepting supposedly "mismatched" contexts. *)
+Instance contr_unit : Contr Unit | 0 := let x := {|
   center := tt;
   contr := fun t : Unit => match t with tt => 1 end
-}.
+|} in x.
 
 (** *** Equivalences *)
 
@@ -105,6 +106,6 @@ Proof.
 Defined.
 
 (* Conversely, a type equivalent to [Unit] is contractible. *)
-Instance contr_equiv_unit (A : Type) (f : A <~> Unit) : Contr A
+Instance contr_equiv_unit (A : Type) (f : A <~> Unit) : Contr A | 10000
   := BuildContr A (f^-1 tt)
   (fun a => ap f^-1 (contr (f a)) @ eissect f a).

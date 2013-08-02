@@ -65,7 +65,7 @@ Arguments paths_rect [A] a P f y p.
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
 
-Instance reflexive_paths {A} : Reflexive (@paths A) := @idpath A.
+Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
 
@@ -80,7 +80,7 @@ Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments concat {A x y z} p q : simpl nomatch.
 
-Instance transitive_paths {A} : Transitive (@paths A) := @concat A.
+Instance transitive_paths {A} : Transitive (@paths A) | 0 := @concat A.
 
 (** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
@@ -89,7 +89,7 @@ Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
 (** Declaring this as [simpl nomatch] prevents the tactic [simpl] from expanding it out into [match] statements.  We only want [inverse] to simplify when applied to an identity path. *)
 Arguments inverse {A x y} p : simpl nomatch.
 
-Instance symmetric_paths {A} : Symmetric (@paths A) := @inverse A.
+Instance symmetric_paths {A} : Symmetric (@paths A) | 0 := @inverse A.
 
 
 (** Note that you can use the built-in Coq tactics [reflexivity] and [transitivity] when working with paths, but not [symmetry], because it is too smart for its own good.  Hence we have provided replacement [symmetry] and [etransitivity] tactics above. *)
@@ -143,6 +143,8 @@ Notation ap01 := ap (only parsing).
 Definition pointwise_paths {A} {P:A->Type} (f g:forall x:A, P x) : Type
   := forall x:A, f x = g x.
 
+Hint Unfold pointwise_paths : typeclass_instances.
+
 Notation "f == g" := (pointwise_paths f g) (at level 70, no associativity) : type_scope.
 
 Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g)
@@ -176,7 +178,8 @@ Arguments apD {A B} f {x y} p : simpl nomatch.
 
 (** A space [A] is contractible if there is a point [x : A] and a (pointwise) homotopy connecting the identity on [A] to the constant map at [x].  Thus an element of [contr A] is a pair whose first component is a point [x] and the second component is a pointwise retraction of [A] to [x]. *)
 
-Class Contr (A : Type) := BuildContr {
+(** We use the [Contr_internal] record so as not to pollute typeclass search; we only do truncation typeclass search on the [IsTrunc] datatype, usually.  We will define a notation [Contr] which is equivalent to [Contr_internal], but picked up by typeclass search.  However, we must make [Contr_internal] a class so that we pick up typeclasses on [center] and [contr].  However, the only typeclass rule we register is the one that turns it into a [Contr]/[IsTrunc]. *)
+Class Contr_internal (A : Type) := BuildContr {
   center : A ;
   contr : (forall y : A, center = y)
 }.
@@ -260,7 +263,7 @@ Coercion nat_to_trunc_index : nat >-> trunc_index.
 
 Fixpoint IsTrunc_internal (n : trunc_index) (A : Type) : Type :=
   match n with
-    | minus_two => Contr A
+    | minus_two => Contr_internal A
     | trunc_S n' => forall (x y : A), IsTrunc_internal n' (x = y)
   end.
 
@@ -271,8 +274,38 @@ Arguments IsTrunc_internal n A : simpl nomatch.
 Class IsTrunc (n : trunc_index) (A : Type) : Type :=
   Trunc_is_trunc : IsTrunc_internal n A.
 
+(** We use the priciple that we should always be doing typeclass resolution on truncation of non-equality types.  We try to change the hypotheses and goals so that they never mention something like [IsTrunc n (_ = _)] and instead say [IsTrunc (S n) _].  If you're evil enough that some of your paths [a = b] are n-truncated, but others are not, then you'll have to either reason manually or add some (local) hints with higher priority than the hint below, or generalize your equality type so that it's not a path anymore. *)
+
+Typeclasses Opaque IsTrunc. (* don't auto-unfold [IsTrunc] in typeclass search *)
+
+Arguments IsTrunc : simpl never. (* don't auto-unfold [IsTrunc] with [simpl] *)
+
+Instance istrunc_paths (A : Type) n `{H : IsTrunc (trunc_S n) A} (x y : A)
+: IsTrunc n (x = y)
+  := H x y. (* but do fold [IsTrunc] *)
+
+Hint Extern 0 => progress change IsTrunc_internal with IsTrunc in * : typeclass_instances. (* Also fold [IsTrunc_internal] *)
+
+(** Picking up the [forall x y, IsTrunc n (x = y)] instances in the hypotheses is much tricker.  We could do something evil where we declare an empty typeclass like [IsTruncSimplification] and use the typeclass as a proxy for allowing typeclass machinery to factor nested [forall]s into the [IsTrunc] via backward reasoning on the type of the hypothesis... but, that's rather complicated, so we instead explicitly list out a few common cases.  It should be clear how to extend the pattern. *)
+Hint Extern 10 =>
+progress match goal with
+           | [ H : forall x y : ?T, IsTrunc ?n (x = y) |- _ ]
+             => change (IsTrunc (trunc_S n) T) in H
+           | [ H : forall (a : ?A) (x y : @?T a), IsTrunc ?n (x = y) |- _ ]
+             => change (forall a : A, IsTrunc (trunc_S n) (T a)) in H; cbv beta in H
+           | [ H : forall (a : ?A) (b : @?B a) (x y : @?T a b), IsTrunc ?n (x = y) |- _ ]
+             => change (forall (a : A) (b : B a), IsTrunc (trunc_S n) (T a b)) in H; cbv beta in H
+           | [ H : forall (a : ?A) (b : @?B a) (c : @?C a b) (x y : @?T a b c), IsTrunc ?n (x = y) |- _ ]
+             => change (forall (a : A) (b : B a) (c : C a b), IsTrunc (trunc_S n) (T a b c)) in H; cbv beta in H
+           | [ H : forall (a : ?A) (b : @?B a) (c : @?C a b) (d : @?D a b c) (x y : @?T a b c d), IsTrunc ?n (x = y) |- _ ]
+             => change (forall (a : A) (b : B a) (c : C a b) (d : D a b c), IsTrunc (trunc_S n) (T a b c d)) in H; cbv beta in H
+         end.
+
+Notation Contr := (IsTrunc minus_two).
 Notation IsHProp := (IsTrunc minus_one).
 Notation IsHSet := (IsTrunc 0).
+
+Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_instances.
 
 (** *** Function extensionality *)
 
