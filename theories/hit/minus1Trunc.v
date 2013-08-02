@@ -115,7 +115,7 @@ Proof.
   apply  isequiv_fcontr. intro b.
   apply (inhab_prop_contr (mono b) (epi b)).
 Defined.
-End AssumeFunExt.
+End AssumeFunext.
 
 Section minus1TruncMonad.
 
