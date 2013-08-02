@@ -58,9 +58,7 @@ Definition path_sigma {A : Type} (P : A -> Type) (u v : sigT P)
   := path_sigma_uncurried P u v (p;q).
 
 
-(** Wanted to define this in Forall.v, but Sigma seems to 
-  actually depend on Forall somehow; it's fair, seeing how I wanted the
-  opposite dependency. *)
+(** A variant of [Forall.dpath_forall] from which uses dependent sums to package things. It cannot go into [Forall] because [Sigma] depends on [Forall]. *)
 
 Definition dpath_forall'
   {A : Type } (P : A -> Type) (Q: sigT P -> Type) {x y : A} (h : x = y)
