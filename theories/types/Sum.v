@@ -235,7 +235,7 @@ Instance isequiv_sum_of_sigT A B : IsEquiv (sum_of_sigT A B)
 
 (** An alternative way of proving the truncation property of [sum]. *)
 Definition trunc_sum' n A B `{IsTrunc n Bool, IsTrunc n A, IsTrunc n B}
-: IsTrunc n (A + B) | 1000.
+: (IsTrunc n (A + B)).
 Proof.
   eapply trunc_equiv'; [ esplit;
                          exact (@isequiv_sum_of_sigT _ _)
