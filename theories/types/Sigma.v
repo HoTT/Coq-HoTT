@@ -57,6 +57,24 @@ Definition path_sigma {A : Type} (P : A -> Type) (u v : sigT P)
   : u = v
   := path_sigma_uncurried P u v (p;q).
 
+
+(** Wanted to define this in Forall.v, but Sigma seems to 
+  actually depend on Forall somehow; it's fair, seeing how I wanted the
+  opposite dependency. *)
+
+Definition dpath_forall'
+  {A : Type } (P : A -> Type) (Q: sigT P -> Type) {x y : A} (h : x = y)
+  (f : forall p, Q (x ; p)) (g : forall p, Q (y ; p))
+ :
+  (forall p, transport Q (path_sigma P (x ; p) (y; _) h 1) (f p) = g (h # p))
+  <~>
+  (forall p, transportD P (fun x => fun p => Q ( x ; p)) h p (f p) = g (transport P h p)).
+Proof.
+  destruct h.
+  apply equiv_idmap.
+Defined.
+
+
 (** This version produces only paths between pairs, as opposed to paths between arbitrary inhabitants of dependent sum types.  But it has the advantage that the components of those pairs can more often be inferred, so we make them implicit arguments. *)
 Definition path_sigma' {A : Type} (P : A -> Type) {x x' : A} {y : P x} {y' : P x'}
   (p : x = x') (q : p # y = y')
