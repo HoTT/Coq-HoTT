@@ -62,8 +62,8 @@ Defined.
 Definition Susp_eta_homot {X : Type} {P : Susp X -> Type} (f : forall y, P y)
   : f == Susp_rect P (f North) (f South) (fun x => apD f (merid x)).
 Proof.
-  unfold pointwise_paths; apply (Susp_rect _ 1 1).
-  intros x. 
+  unfold pointwise_paths. refine (Susp_rect _ 1 1 _).
+  intros x.
   refine (transport_paths_FlFr_D
     (g := Susp_rect P (f North) (f South) (fun x : X => apD f (merid x)))
     _ _ @ _); simpl.
@@ -71,7 +71,7 @@ Proof.
   apply ap, inverse. refine (Susp_comp_merid _ _ _ _ _).
 Defined.
 
-Definition Susp_eta `{Funext} 
+Definition Susp_eta `{Funext}
   {X : Type} {P : Susp X -> Type} (f : forall y, P y)
   : f = Susp_rect P (f North) (f South) (fun x => apD f (merid x))
 := path_forall _ _ (Susp_eta_homot f).
@@ -96,6 +96,6 @@ Proof.
   intro x. apply moveL_pV.
   path_via (ap (Susp_rect_nd H_N H_S f) (merid x) @ n.2 South).
   apply whiskerR, inverse, Susp_comp_nd_merid.
-  refine (concat_Ap _ _ @ _).
+  refine (concat_Ap n.2 (merid x) @ _).
   apply (concatR (concat_p1 _)), whiskerL. apply ap_const.
 Defined.

@@ -10,7 +10,7 @@ Local Open Scope equiv_scope.
 
 Module Export Interval.
 
-Local Inductive interval : Type := 
+Local Inductive interval : Type :=
   | zero : interval
   | one : interval.
 
@@ -19,7 +19,7 @@ Axiom seg : zero = one.
 Definition interval_rect (P : interval -> Type)
   (a : P zero) (b : P one) (p : seg # a = b)
   : forall x:interval, P x
-  := fun x => match x return P x with 
+  := fun x => match x return P x with
                 | zero => a
                 | one  => b
               end.
@@ -44,7 +44,7 @@ Defined.
 
 (** *** From an interval type, we can prove function extensionality. *)
 
-Instance funext_from_interval : Funext
+Instance funext_from_interval : Funext | 0
   := WeakFunext_implies_Funext (NaiveFunext_implies_WeakFunext
     (fun A P f g p =>
       let h := fun (x:interval) (a:A) =>
@@ -53,7 +53,7 @@ Instance funext_from_interval : Funext
 
 (** *** The interval is contractible. *)
 
-Instance contr_interval : Contr interval.
+Instance contr_interval : Contr interval | 0.
 Proof.
   exists zero.
   refine (interval_rect _ 1 seg _).

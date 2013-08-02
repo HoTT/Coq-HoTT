@@ -8,7 +8,7 @@ Record hSet := BuildhSet {setT:> Type; iss :> IsHSet setT}.
 Canonical Structure default_HSet:= fun T P => (@BuildhSet T P).
 Hint Resolve isp iss.
 
-Instance hProp_is_hSet : (IsHSet hProp).
+Instance hProp_is_hSet : (IsHSet hProp) | 0.
 intros [p p1] [q q1].
 Admitted. (* We need some lemmas about records *)
 
@@ -26,8 +26,6 @@ Definition epi {X Y} `(f:X->Y) := forall Z: hSet,
 
 Definition hexists {X} (P:X->Type):Type:= minus1Trunc (sigT  P).
 Definition surj {X Y} (f:X->Y) := forall y:Y , hexists (fun x => (f x) = y).
-
-Existing Instances minus1Trunc_is_prop contr_unit.
 
 Lemma epi_surj `{fs:Funext} `{Univalence} {X Y} (f:X->Y): epi f -> surj f.
 intros epif y.

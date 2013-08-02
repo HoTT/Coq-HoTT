@@ -28,12 +28,12 @@ Notation "m <= n" := (trunc_index_leq m n) (at level 70, no associativity) : tru
 
 (** ** Truncatedness proper. *)
 
-(** A contractible space is (-2)-truncated, of course. *)
-Instance contr_trunc_minus_two `{IsTrunc minus_two A} : Contr A
-  := Trunc_is_trunc.
+(** A contractible space is (-2)-truncated, by definition. *)
+Definition contr_trunc_minus_two `{H : IsTrunc minus_two A} : Contr A
+  := H.
 
 (** Truncation levels are cumulative. *)
-Instance trunc_succ `{IsTrunc n A} : IsTrunc (trunc_S n) A.
+Instance trunc_succ `{IsTrunc n A} : IsTrunc (trunc_S n) A | 1000.
 Proof.
   generalize dependent A.
   induction n as [| n I]; simpl; intros A H x y.
@@ -41,14 +41,16 @@ Proof.
   - apply I, H.
 Qed.
 
-Instance trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A} : IsTrunc n A.
+Instance trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A} : IsTrunc n A | 1000.
 Proof.
   generalize dependent A; generalize dependent m.
-  induction n as [ | n' IH]; intros [ | m'] Hmn A ?.
-  (* -2, -2 *) assumption.
-  (* S m', -2 *) destruct Hmn.
-  (* -2, S n' *) apply @trunc_succ, (IH minus_two); auto.
-  (* S m', S n' *) intros x y; apply (IH m'); auto.
+  induction n as [ | n' IH];
+    intros [ | m'] Hmn A ? .
+  - (* -2, -2 *) assumption.
+  - (* S m', -2 *) destruct Hmn.
+  - (* -2, S n' *) apply @trunc_succ, (IH minus_two); auto.
+  - (* S m', S n' *) intros x y; apply (IH m');
+                     auto with typeclass_instances.
 Qed.
 
 (** Equivalence preserves truncation (this is, of course, trivial with univalence).
@@ -62,7 +64,9 @@ Proof.
   induction n as [| n I]; simpl; intros A ? B f ?.
   - refine (contr_equiv f).
   - intros x y.
-    refine (I (f^-1 x = f^-1 y) _ (x = y) ((ap (f^-1))^-1) _).
+    pose proof (fun X Y => I (f^-1 x = f^-1 y) X (x = y) ((ap (f^-1))^-1) Y).
+    clear I.
+    typeclasses eauto.
 Qed.
 
 Definition trunc_equiv' `(f : A <~> B) `{IsTrunc n A}
