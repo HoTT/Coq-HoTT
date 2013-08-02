@@ -96,7 +96,7 @@ Defined.
 
 (** If [f] is an equivalence, then so is [ap f].  We are lazy and use [adjointify]. *)
 Instance isequiv_ap `{IsEquiv A B f} (x y : A)
-  : IsEquiv (@ap A B f x y)
+  : IsEquiv (@ap A B f x y) | 1000
   := isequiv_adjointify (ap f)
   (fun q => (eissect f x)^  @  ap f^-1 q  @  eissect f y)
   (fun q =>
@@ -126,7 +126,7 @@ Definition equiv_inj `{IsEquiv A B f} {x y : A}
 (** ** Path operations are equivalences *)
 
 Instance isequiv_path_inverse {A : Type} (x y : A)
-  : IsEquiv (@inverse A x y)
+  : IsEquiv (@inverse A x y) | 0
   := BuildIsEquiv _ _ _ (@inverse A y x) (@inv_V A y x) (@inv_V A x y) _.
 Proof.
   intros p; destruct p; reflexivity.
@@ -137,7 +137,7 @@ Definition equiv_path_inverse {A : Type} (x y : A)
   := BuildEquiv _ _ (@inverse A x y) _.
 
 Instance isequiv_concat_l {A : Type} `(p : x = y) (z : A)
-  : IsEquiv (@concat A x y z p)
+  : IsEquiv (@concat A x y z p) | 0
   := BuildIsEquiv _ _ _ (@concat A y x z p^)
      (concat_p_Vp p) (concat_V_pp p) _.
 Proof.
@@ -149,7 +149,7 @@ Definition equiv_concat_l {A : Type} `(p : x = y) (z : A)
   := BuildEquiv _ _ (concat p) _.
 
 Instance isequiv_concat_r {A : Type} `(p : y = z) (x : A)
-  : IsEquiv (fun q:x=y => q @ p)
+  : IsEquiv (fun q:x=y => q @ p) | 0
   := BuildIsEquiv _ _ (fun q => q @ p) (fun q => q @ p^)
      (fun q => concat_pV_p q p) (fun q => concat_pp_V q p) _.
 Proof.
@@ -161,14 +161,14 @@ Definition equiv_concat_r {A : Type} `(p : y = z) (x : A)
   := BuildEquiv _ _ (fun q => q @ p) _.
 
 Instance isequiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
-  : IsEquiv (fun r:x=y => p @ r @ q)
+  : IsEquiv (fun r:x=y => p @ r @ q) | 0
   := @isequiv_compose _ _ (fun r => p @ r) _ _ (fun r => r @ q) _.
 
 Definition equiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
   : (x = y) <~> (x' = y')
   := BuildEquiv _ _ (fun r:x=y => p @ r @ q) _.
 
-(** We can use these to build up more complicated equivalences. 
+(** We can use these to build up more complicated equivalences.
 
 In particular, all of the [move] family are equivalences.
 
@@ -179,21 +179,21 @@ Definition isequiv_moveR_Mp
 : IsEquiv (moveR_Mp p q r).
 Proof.
   destruct r.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)). 
+  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
-Definition isequiv_moveR_pM 
+Definition isequiv_moveR_pM
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveR_pM p q r).
-Proof. 
+Proof.
   destruct p.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)). 
+  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition isequiv_moveR_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : IsEquiv (moveR_Vp p q r).
-Proof. 
+Proof.
   destruct r.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
@@ -206,7 +206,7 @@ Definition equiv_moveR_Vp
 Definition isequiv_moveR_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
 : IsEquiv (moveR_pV p q r).
-Proof. 
+Proof.
   destruct p.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
@@ -214,7 +214,7 @@ Defined.
 Definition isequiv_moveL_Mp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveL_Mp p q r).
-Proof. 
+Proof.
   destruct r.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
@@ -222,7 +222,7 @@ Defined.
 Definition isequiv_moveL_pM
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveL_pM p q r).
-Proof. 
+Proof.
   destruct p.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
@@ -235,7 +235,7 @@ Definition equiv_moveL_pM
 Definition isequiv_moveL_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : IsEquiv (moveL_Vp p q r).
-Proof. 
+Proof.
   destruct r.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
@@ -243,14 +243,14 @@ Defined.
 Definition isequiv_moveL_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
 : IsEquiv (moveL_pV p q r).
-Proof. 
+Proof.
   destruct p.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition isequiv_moveL_1M {A : Type} {x y : A} (p q : x = y)
 : IsEquiv (moveL_1M p q).
-Proof. 
+Proof.
   destruct q. apply isequiv_concat_l.
 Defined.
 
@@ -268,13 +268,13 @@ Defined.
 
 Definition isequiv_moveL_V1 {A : Type} {x y : A} (p : x = y) (q : y = x)
 : IsEquiv (moveL_V1 p q).
-Proof. 
+Proof.
   destruct q. apply isequiv_concat_l.
 Defined.
 
 Definition isequiv_moveR_M1 {A : Type} {x y : A} (p q : x = y)
 : IsEquiv (moveR_M1 p q).
-Proof. 
+Proof.
   destruct p. apply isequiv_concat_r.
 Defined.
 
@@ -338,7 +338,7 @@ Defined.
 
 Definition equiv_ap_l `(f : A -> B) `{IsEquiv A B f} (x : A) (z : B)
   : (f x = z) <~> (x = f^-1 z).
-Proof. 
+Proof.
   apply transitivity with (f x = f (f^-1 z)).
   apply equiv_concat_r.
   apply symmetry.
@@ -447,7 +447,7 @@ Defined.
 
 Instance isequiv_paths_rect `{Funext} {A : Type} (a : A)
   (P : forall x, (a = x) -> Type)
-  : IsEquiv (paths_rect a P)
+  : IsEquiv (paths_rect a P) | 0
   := isequiv_adjointify (paths_rect a P) (fun f => f a 1) _ _.
 Proof.
   - intros f.
