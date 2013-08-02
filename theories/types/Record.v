@@ -87,6 +87,8 @@ Defined.
 
    It takes the record constructor and its three projections as arguments, as before. *)
 
+(* This is the version that is not adjointified.  For 3 or more component records, we first adjointify, for speed. *)
+(*
 Ltac issig2 build pr1 pr2 pr3 :=
   let T := fresh in
   let t := fresh in
@@ -121,12 +123,21 @@ Ltac issig2 build pr1 pr2 pr3 :=
   let x := fresh in intro x;
   destruct x as [? [? ?]];
   exact 1.
+*)
+Ltac issig2 build pr1 pr2 pr3 :=
+  exact (equiv_adjointify
+           (fun u => build u.1 u.2.1 u.2.2)
+           (fun v => (pr1 v; (pr2 v; pr3 v)))
+           (fun v =>
+              let (v1,v2,v3) as v' return (build (pr1 v') (pr2 v') (pr3 v') = v')
+                  := v in 1)
+           eta2_sigma).
 
 Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) :=
   issig2 build pr1 pr2 pr3.
 
 (** And a similar version for four-component records.  It should be clear how to extend the pattern indefinitely. *)
-
+(*
 Ltac issig3 build pr1 pr2 pr3 pr4 :=
   let T := fresh in
   let t := fresh in
@@ -168,6 +179,15 @@ Ltac issig3 build pr1 pr2 pr3 pr4 :=
   let x := fresh in intro x;
   destruct x as [? [? [? ?]]];
   exact 1.
+*)
+Ltac issig3 build pr1 pr2 pr3 pr4 :=
+  exact (equiv_adjointify
+           (fun u => build u.1 u.2.1 u.2.2.1 u.2.2.2)
+           (fun v => (pr1 v; (pr2 v; (pr3 v; pr4 v))))
+           (fun v =>
+              let (v1,v2,v3,v4) as v' return (build (pr1 v') (pr2 v') (pr3 v') (pr4 v') = v')
+                  := v in 1)
+           eta3_sigma).
 
 Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) constr(pr4) :=
   issig3 build pr1 pr2 pr3 pr4.
