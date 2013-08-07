@@ -1,9 +1,15 @@
 language: c
+env:
+ - BRANCH=trunk
+ - BRANCH=stable
+matrix:
+ allow_failures:
+# we're on trunk, so allow stable to fail
+  - env: BRANCH=stable
 before_script:
  - sudo apt-get update -q
  - sudo apt-get install -q ocaml camlp5
-# change '--branch=stable' to '--branch=trunk' to use HoTT/coq trunk
- - git clone --depth=5 --branch=stable git://github.com/HoTT/coq.git coq-HoTT
+ - git clone --depth=5 --branch=$BRANCH git://github.com/HoTT/coq.git coq-HoTT
  - pushd coq-HoTT
  -   ./configure -prefix /usr/local -debug -no-native-compiler
  -   make coqlight
