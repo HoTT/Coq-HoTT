@@ -15,7 +15,10 @@ It draws many ideas from Vladimir Voevodsky's
 Installation details are explained in the file `INSTALL.txt`. You will need to compile a
 custom version of Coq which supports the `-indices-matter` flag, universe polymorphism, and
 private types. We hope to have these pushed into standard Coq, but in the meanwhile the
-Coq version is available at https://github.com/HoTT/HoTT/branches/stable.
+Coq version is available at https://github.com/HoTT/coq/branches/trunk.  The particular
+version of Coq which the current version of this repository is compatible with can be
+found in the `.travis.yml` file, in the form of the commit message and SHA1 hash of the
+relevant commit to [HoTT/coq](https://github.com/HoTT/coq).
 
 If you are looking for an older version of HoTT which works with standard Coq, have a look
 at the one tagged as `pure-coq-8.3`. Note however that we do not support the old
@@ -26,7 +29,7 @@ library anymore.
 It is possible to use the HoTT library directly on the command line with the `hoqtop`
 script, but who does that?
 
-It is probably better o use [Proof General](http://proofgeneral.inf.ed.ac.uk) and
+It is probably better to use [Proof General](http://proofgeneral.inf.ed.ac.uk) and
 [Emacs](http://www.gnu.org/software/emacs/). When Proof General asks you where to find the
 `coqtop` executable, just point it to the `hoqtop` script. If Emacs runs a `coqtop`
 without asking, you should probably customize set the variable `proof-prog-name-ask` to
