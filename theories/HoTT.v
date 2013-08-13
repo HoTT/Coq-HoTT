@@ -22,6 +22,7 @@ Require Export types.Arrow.
 Require Export types.Prod.
 Require Export types.Record.
 Require Export types.Sigma.
+Require Export types.Sum.
 Require Export types.Universe.
 
-
+Require Export Tactics.
