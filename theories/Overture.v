@@ -44,7 +44,7 @@ Definition compose {A B C : Type} (g : B -> C) (f : A -> B) :=
 
 Hint Unfold compose.
 
-(* We put the following notation in a scope because leaving it unscoped causes it to override identical notations in other scopes.  It's convenient to use the same notation for, e.g., function composition, morphism composition in a category, and functor composition, and let Coq automatically infer which one we mean by scopes.  We can't do this if this notation isn't scoped.  Unfortunately, Coq doesn't have a built-in [function_scope] like [type_scope]; [type_scope] is automatically opened wherever Coq is expecting a [Sort], and it would be nice if [function_scope] were automatically opened whenever Coq expects a thing of type [forall _, _] or [_ -> _].  To work around this, we open [function_scope] globally. *)
+(** We put the following notation in a scope because leaving it unscoped causes it to override identical notations in other scopes.  It's convenient to use the same notation for, e.g., function composition, morphism composition in a category, and functor composition, and let Coq automatically infer which one we mean by scopes.  We can't do this if this notation isn't scoped.  Unfortunately, Coq doesn't have a built-in [function_scope] like [type_scope]; [type_scope] is automatically opened wherever Coq is expecting a [Sort], and it would be nice if [function_scope] were automatically opened whenever Coq expects a thing of type [forall _, _] or [_ -> _].  To work around this, we open [function_scope] globally. *)
 Notation "g 'o' f" := (compose g f) (at level 40, left associativity) : function_scope.
 Open Scope function_scope.
 
@@ -97,13 +97,13 @@ Instance symmetric_paths {A} : Symmetric (@paths A) | 0 := @inverse A.
 (** The identity path. *)
 Notation "1" := idpath : path_scope.
 
-(* The composition of two paths. *)
+(** The composition of two paths. *)
 Notation "p @ q" := (concat p q) (at level 20) : path_scope.
 
-(* The inverse of a path. *)
+(** The inverse of a path. *)
 Notation "p ^" := (inverse p) (at level 3) : path_scope.
 
-(* An alternative notation which puts each path on its own line.  Useful as a temporary device during proofs of equalities between very long composites; to turn it on inside a section, say [Open Scope long_path_scope]. *)
+(** An alternative notation which puts each path on its own line.  Useful as a temporary device during proofs of equalities between very long composites; to turn it on inside a section, say [Open Scope long_path_scope]. *)
 Notation "p @' q" := (concat p q) (at level 21, left associativity,
   format "'[v' p '/' '@''  q ']'") : long_path_scope.
 
@@ -134,7 +134,7 @@ We will first see this appearing in the type of [apD]. *)
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
 
-(* We introduce the convention that [apKN] denotes the application of a K-path between
+(** We introduce the convention that [apKN] denotes the application of a K-path between
    functions to an N-path between elements, where a 0-path is simply a function or an
    element. Thus, [ap] is a shorthand for [ap01]. *)
 
@@ -259,7 +259,7 @@ Inductive trunc_index : Type :=
 | minus_two : trunc_index
 | trunc_S : trunc_index -> trunc_index.
 
-(* We will use [Notation] for [trunc_index]es, so define a scope for them here. *)
+(** We will use [Notation] for [trunc_index]es, so define a scope for them here. *)
 Delimit Scope trunc_scope with trunc.
 Bind Scope trunc_scope with trunc_index.
 Arguments trunc_S _%trunc_scope.
@@ -343,7 +343,7 @@ Definition path_forall2 `{Funext} {A B : Type} {P : A -> B -> Type} (f g : foral
 
    The hints in [path_hints] are designed to push concatenation *outwards*, eliminate identities and inverses, and associate to the left as far as  possible. *)
 
-(* TODO: think more carefully about this.  Perhaps associating to the right would be more convenient? *)
+(** TODO: think more carefully about this.  Perhaps associating to the right would be more convenient? *)
 Hint Resolve
   @idpath @inverse
  : path_hints.
@@ -353,19 +353,19 @@ Hint Resolve @idpath : core.
 Ltac path_via mid :=
   apply @concat with (y := mid); auto with path_hints.
 
-(* We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
+(** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
 Inductive Empty : Type := .
 
 Definition not (A:Type) : Type := A -> Empty.
 Notation "~ x" := (not x) : type_scope.
 Hint Unfold not: core.
 
-(* Ssreflect tactics, adapted by Robbert Krebbers *)
+(** Ssreflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=
   trivial; intros; solve
     [ repeat first
       [ solve [trivial]
-      | solve [apply symmetry; trivial]
+      | solve [symmetry; trivial]
       | reflexivity
       (* Discriminate should be here, but it doesn't work yet *)
       (* | discriminate *)
@@ -377,7 +377,7 @@ Ltac done :=
 Tactic Notation "by" tactic(tac) :=
   tac; done.
 
-(* A convenient tactic for using function extensionality. *)
+(** A convenient tactic for using function extensionality. *)
 Ltac by_extensionality x :=
   intros; unfold compose;
   match goal with
@@ -390,7 +390,7 @@ Ltac by_extensionality x :=
     simpl; auto with path_hints
   end.
 
-(* Removed auto. We can write "by (path_induction;auto with path_hints)"
+(** Removed auto. We can write "by (path_induction;auto with path_hints)"
  if we want to.*)
 Ltac path_induction :=
   intros; repeat progress (
@@ -400,7 +400,7 @@ Ltac path_induction :=
     end
   ).
 
-(* The tactic [f_ap] is a replacement for the previously existing standard library tactic [f_equal].  This tactic works by repeatedly applying the fact that [f = g -> x = y -> f x = g y] to turn, e.g., [f x y = f z w] first into [f x = f z] and [y = w], and then turns the first of these into [f = f] and [x = z].  The [done] tactic is used to detect the [f = f] case and finish, and the [trivial] is used to solve, e.g., [x = x] when using [f_ap] on [f y x = f z x].  This tactic only works for non-dependently-typed functions; we cannot express [y = w] in the first example if [y] and [w] have different types.  If and when Arnaud's new-tacticals branch lands, and we can have a goal which depends on the term used to discharge another goal, then this tactic should probably be generalized to deal with dependent functions. *)
+(** The tactic [f_ap] is a replacement for the previously existing standard library tactic [f_equal].  This tactic works by repeatedly applying the fact that [f = g -> x = y -> f x = g y] to turn, e.g., [f x y = f z w] first into [f x = f z] and [y = w], and then turns the first of these into [f = f] and [x = z].  The [done] tactic is used to detect the [f = f] case and finish, and the [trivial] is used to solve, e.g., [x = x] when using [f_ap] on [f y x = f z x].  This tactic only works for non-dependently-typed functions; we cannot express [y = w] in the first example if [y] and [w] have different types.  If and when Arnaud's new-tacticals branch lands, and we can have a goal which depends on the term used to discharge another goal, then this tactic should probably be generalized to deal with dependent functions. *)
 Ltac f_ap :=
   lazymatch goal with
     | [ |- ?f ?x = ?g ?x ] => apply (@apD10 _ _ f g);
