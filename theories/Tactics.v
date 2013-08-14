@@ -1,6 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Overture types.Prod types.Forall PathGroupoids.
+Require Import Overture types.Prod types.Forall PathGroupoids Contractible types.Paths.
+
+Set Implicit Arguments.
 
 (** * Extra tactics for homotopy type theory. *)
 
@@ -137,3 +139,103 @@ Proof.
     simpl.
   reflexivity.
 Qed.
+
+(** ** A more powerful variant of [path_induction] *)
+(** We first define some helper tactics, and then define [path_induction_hammer], which has poor computational behavior, but is vastly more powerful than [path_induction], and removes paths which are discoverably contractible, and paths which only appear in the goal, etc. *)
+
+(** A variant of [induction] which also tries [destruct] and [case], and may be extended to using other [destruct]-like tactics. *)
+Ltac induction_hammer H :=
+  destruct H || induction H || (case H; clear H).
+
+(** Takes a term of type [_ = _], and tries to replace it by [idpath] by trying to prove that it's an hProp.  The ordering of attempts is tuned for speed. *)
+Ltac clear_contr_path p :=
+  let H := fresh in
+  let T := type of p in
+  progress (
+      first [ assert (H : idpath = p) by exact (center _)
+            | assert (H : idpath = p)
+              by (
+                  let a := match goal with |- @paths (?x = ?y) ?a ?b => constr:(a) end in
+                  let b := match goal with |- @paths (?x = ?y) ?a ?b => constr:(b) end in
+                  let x := match goal with |- @paths (?x = ?y) ?a ?b => constr:(x) end in
+                  let y := match goal with |- @paths (?x = ?y) ?a ?b => constr:(y) end in
+                  apply (@equiv_inv _ _ _ (@equiv_ap _ _ _ (@isequiv_apD10 _ _ _ x y) a b));
+                  exact (center _)
+                )
+            | pose proof (@path_contr T _ idpath p) as H ];
+      destruct H;
+      (* now reduce any matches on [idpath] (and on other things too) *)
+      cbv iota in *
+    ).
+
+(** Use both [induction_hammer] and [clear_contr_path] on a path, to try to get rid of it *)
+Ltac clear_path_no_check p :=
+  induction_hammer p || clear_contr_path p.
+Ltac clear_path p :=
+  let t := type of p in
+  lazymatch eval hnf in t with
+    | @paths _ _ _ => clear_path_no_check p
+    | _ => fail 0 "clear_path only works on paths;" p "is not a path"
+  end.
+
+(** Run [clear_path] on hypotheses *)
+(** We don't match only on things of type [_ = _], because maybe that's the head normal form, but it's hiding behind something else; [clear_path] will make sure it's of the right type.  We include some redundant cases at the top, for speed; it is faster to try to destruct everything first, and then do the full battery of tactics, than to just run the hammer. *)
+Ltac step_clear_paths :=
+  match goal with
+    | [ p : _ = _ |- _ ] => destruct p
+    | [ p : _ = _ |- _ ] => clear_path_no_check p
+    | [ p : _ |- _ ] => clear_path p
+  end.
+Ltac clear_paths := progress repeat step_clear_paths.
+
+(** Run [clear_path] on anything inside a [match] *)
+Ltac step_clear_paths_in_match :=
+  match goal with
+    | [ |- appcontext[match ?p with idpath => _ end] ] => progress destruct p
+    | [ |- appcontext[match ?p with idpath => _ end] ] => clear_path_no_check p
+  end.
+Ltac clear_paths_in_match := progress repeat step_clear_paths_in_match.
+
+(** Now some lemmas about trivial [match]es *)
+Definition match_eta T (x y : T) (H0 : x = y)
+: (H0 = match H0 in (_ = y) return (x = y) with
+          | idpath => idpath
+        end)
+  := match H0 with idpath => idpath end.
+
+Definition match_eta1 T (x : T) (E : x = x)
+: (match E in (_ = y) return (x = y) with
+     | idpath => idpath
+   end = idpath)
+  -> idpath = E
+  := fun H => ((H # match_eta E) ^)%path.
+
+Definition match_eta2 T (x : T) (E : x = x)
+: (idpath
+   = match E in (_ = y) return (x = y) with
+       | idpath => idpath
+     end)
+  -> idpath = E
+  := fun H => match_eta1 E (H ^)%path.
+
+(** And now the actual tactic.  Note that the order of the cases in the [match goal with ... end] is somewhat finely tuned for speed. *)
+Ltac step_path_induction_hammer :=
+  match goal with
+    | _ => reflexivity
+    | _ => intro
+    | _ => progress simpl in *
+    | _ => exact (contr _)
+    | [ p : _ = _ |- _ ]
+      => progress destruct p (* placed up here for speed *)
+    | [ H : _ |- _ ]
+      => let H' := fresh in assert (H' := match_eta1 _ H); destruct H'
+    | [ H : _ |- _ ]
+      => let H' := fresh in assert (H' := match_eta2 _ H); destruct H'
+    | _ => step_clear_paths
+    | _ => expand; step_clear_paths_in_match
+    | _ => progress auto with path_hints
+    | _ => done
+    | _ => exact (center _)
+  end.
+
+Ltac path_induction_hammer := progress repeat step_path_induction_hammer.
