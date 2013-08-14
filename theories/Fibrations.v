@@ -3,17 +3,6 @@
 Require Import Overture PathGroupoids.
 Local Open Scope path_scope.
 
-(* Bas: Quick fix. It compiles now *)
-(* should be moved. I removed auto. We can write "by (path_induction;auto with path_hints)"
- if we want to.*)
-Ltac path_induction :=
-  intros; repeat progress (
-    match goal with
-      | [ p : _ = _  |- _ ] => induction p
-      | _ => idtac
-    end
-  ).
-
 Definition base_path {A} {P : A -> Type} {u v : sigT P} :
   (u = v) -> (projT1 u = projT1 v) :=
   ap (@projT1 _ _).
