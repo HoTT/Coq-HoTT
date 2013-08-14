@@ -22,7 +22,7 @@ Tactic Notation "etransitivity" open_constr(y) :=
 
 Tactic Notation "etransitivity" := etransitivity _.
 
-Tactic Notation "symmetry" := refine (@symmetry _ _ _ _ _ _).
+Tactic Notation "symmetry" := (refine (@symmetry _ _ _ _ _ _) || eapply symmetry).
 
 (** ** Basic definitions *)
 
