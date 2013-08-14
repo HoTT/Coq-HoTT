@@ -409,3 +409,12 @@ Ltac f_ap :=
           [ done || f_ap
           | trivial ]
   end.
+
+(** [expand] replaces both terms of an equality (either [paths] or [pointwise_paths] in the goal with their head normal forms *)
+Ltac expand :=
+  match goal with
+    | [ |- ?X = ?Y ] =>
+      let X' := eval hnf in X in let Y' := eval hnf in Y in change (X' = Y')
+    | [ |- ?X == ?Y ] =>
+      let X' := eval hnf in X in let Y' := eval hnf in Y in change (X' == Y')
+  end; simpl.
