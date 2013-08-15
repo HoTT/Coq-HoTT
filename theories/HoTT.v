@@ -25,4 +25,4 @@ Require Export types.Sigma.
 Require Export types.Sum.
 Require Export types.Universe.
 
-Require Export Tactics.
+Require Export HoTT.Tactics.
