@@ -21,6 +21,7 @@ configure
 etc/install-sh
 etc/missing
 Makefile
+Makefile.coq
 Makefile.in
 Makefile_ssrplugin
 # Ignore links into the original Coq library

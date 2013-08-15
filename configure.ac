@@ -37,7 +37,7 @@ else
    indicesmatter=`$COQTOP -help 2>&1 | grep -c -- -indices-matter`
    if test "$indicesmatter" = "0"; then
        AC_MSG_ERROR([You need a version of Coq which supports -indices-matter])
-   fi 
+   fi
 fi
 
 # Checking for bytecode version of coqtop
@@ -49,6 +49,7 @@ AM_CONDITIONAL(make_hoqtopbyte, [test -n "$COQTOP.byte"])
 if test ! -n "$COQBIN" ; then
    COQBIN=`dirname $COQTOP`
 fi
+COQBIN="$COQBIN/"
 AC_MSG_RESULT([COQBIN is $COQBIN.])
 
 # Checking for coqc
