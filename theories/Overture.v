@@ -92,7 +92,7 @@ Arguments inverse {A x y} p : simpl nomatch.
 Instance symmetric_paths {A} : Symmetric (@paths A) | 0 := @inverse A.
 
 
-(** Note that you can use the built-in Coq tactics [reflexivity] and [transitivity] when working with paths, but not [symmetry], because it is too smart for its own good.  Hence we have provided replacement [symmetry] and [etransitivity] tactics above. *)
+(** Note that you can use the built-in Coq tactics [reflexivity] and [transitivity] when working with paths, but not [symmetry], because it is too smart for its own good.  Hence we have provided replacement [symmetry] and [etransitivity] tactics above. However, it seems that sometimes [symmetry] does not work, and Coq will call the built-in [symmetry] anyway. *)
 
 (** The identity path. *)
 Notation "1" := idpath : path_scope.
@@ -365,7 +365,7 @@ Ltac done :=
   trivial; intros; solve
     [ repeat first
       [ solve [trivial]
-      | solve [symmetry; trivial]
+      | solve [eapply symmetry; trivial]
       | reflexivity
       (* Discriminate should be here, but it doesn't work yet *)
       (* | discriminate *)
