@@ -22,7 +22,13 @@ Tactic Notation "etransitivity" open_constr(y) :=
 
 Tactic Notation "etransitivity" := etransitivity _.
 
-Tactic Notation "symmetry" := refine (@symmetry _ _ _ _ _ _).
+(** We would like to redefine [symmetry], which is too smart for its own good, as follows:
+
+<<
+Ltac symmetry := refine (@symmetry _ _ _ _ _ _).
+>>
+
+But this gives "Error: in Tacinterp.add_tacdef: Reserved Ltac name symmetry.".  This might be fixed with https://coq.inria.fr/bugs/show_bug.cgi?id=3113.  For now, you can [apply symmetry] or [eapply symmetry].  (Note that we can get around this error message by using [Tactic Notation "symmetry"], but, confusingly, this tactic notation never gets called. *)
 
 (** ** Basic definitions *)
 
@@ -92,7 +98,7 @@ Arguments inverse {A x y} p : simpl nomatch.
 Instance symmetric_paths {A} : Symmetric (@paths A) | 0 := @inverse A.
 
 
-(** Note that you can use the built-in Coq tactics [reflexivity] and [transitivity] when working with paths, but not [symmetry], because it is too smart for its own good.  Hence we have provided replacement [symmetry] and [etransitivity] tactics above. However, it seems that sometimes [symmetry] does not work, and Coq will call the built-in [symmetry] anyway. *)
+(** Note that you can use the built-in Coq tactics [reflexivity] and [transitivity] when working with paths, but not [symmetry], because it is too smart for its own good.  Instead, you can write [apply symmetry] or [eapply symmetry]. *)
 
 (** The identity path. *)
 Notation "1" := idpath : path_scope.
