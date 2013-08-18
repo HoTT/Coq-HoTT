@@ -19,16 +19,24 @@ Axiom seg : zero = one.
 Definition interval_rect (P : interval -> Type)
   (a : P zero) (b : P one) (p : seg # a = b)
   : forall x:interval, P x
-  := fun x => match x return P x with
-                | zero => a
-                | one  => b
-              end.
+  := fun x => (match x return _ -> P x with
+                | zero => fun _ => a
+                | one  => fun _ => b
+              end) p.
 
 Axiom interval_rect_beta_seg : forall (P : interval -> Type)
   (a : P zero) (b : P one) (p : seg # a = b),
   apD (interval_rect P a b p) seg = p.
 
 End Interval.
+
+(*   Should fail: 
+Lemma test (P : interval -> Type) (a : P zero) (b : P one) 
+      (p p' : seg # a = b) :
+    interval_rect P a b p = interval_rect P a b p'.
+reflexivity.
+*)
+        
 
 Definition interval_rectnd (P : Type) (a b : P) (p : a = b)
   : interval -> P
