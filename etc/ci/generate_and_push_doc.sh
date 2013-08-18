@@ -25,10 +25,6 @@ if [ "$1" != "-f" ]; then
     fi
 fi
 
-if [ -z "$GIT_SSH" ]; then
-    echo 'Warning: $GIT_SSH is empty, remote pushing will probably not work'
-fi
-
 echo 'Configuring git for pushing...'
 git config --global user.name "Travis-CI Bot"
 git config --global user.email "Travis-CI-Bot@travis.fake"
@@ -50,7 +46,7 @@ git add coqdoc-html/*
 echo '$ git commit -am "'"$MESSAGE"'"'
 git commit -am "$MESSAGE"
 # use the copy of the script which stayed around when we changed branches
-"$DIR"/push_remote_tmp.sh gh-pages:gh-pages
+source "$DIR"/push_remote_tmp.sh gh-pages:gh-pages
 
 popd 1>/dev/null
 popd 1>/dev/null
