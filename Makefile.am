@@ -11,6 +11,12 @@ endif
 hottdir=$(datarootdir)/hott
 EXTRA_DIST = coq theories ssrplugin etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 
+# support the TIMED variable like coq_makefile
+TIMED=
+TIMECMD=
+STDTIME=/usr/bin/time -f "$* (user: %U mem: %M ko)"
+TIMER=$(if $(TIMED), $(STDTIME), $(TIMECMD))
+
 # The list of files that comprise the HoTT library
 VFILES=$(shell find $(srcdir)/theories -name "*.v")
 VOFILES:=$(VFILES:.v=.vo)
@@ -77,7 +83,7 @@ endif
 stdlib: $(STDVOFILES)
 
 $(STDVOFILES) : %.vo : %.v
-	$(COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
+	$(TIMER) $(COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
 
 
 # The HoTT library as a single target
@@ -86,10 +92,10 @@ hottlib: $(VOFILES)
 # A rule for compiling the HoTT libary files
 if make_ssreflect
 $(VOFILES) : %.vo : %.v $(STDVOFILES) $(SSRVOFILES)
-	$(HOQC) $<
+	$(TIMER) $(HOQC) $<
 else
 $(VOFILES) : %.vo : %.v $(STDVOFILES)
-	$(HOQC) $<
+	$(TIMER) $(HOQC) $<
 endif
 
 if make_ssreflect
@@ -100,7 +106,7 @@ if make_ssreflect
 ssrplugin: stdlib $(SSRVOFILES)
 
 $(SSRMAKEFILE): $(ssrdir)/Make
-	$(COQMAKEFILE) COQC = "$(HOQC)" -f "$(ssrdir)/Make" > "$(SSRMAKEFILE)"
+	$(COQMAKEFILE) COQC = "$(TIMER) $(HOQC)" -f "$(ssrdir)/Make" > "$(SSRMAKEFILE)"
 
 $(SSRVOFILES): $(SRRMAKEFILE) $(SSRCMXSFILES) $(SSRCMAFILES)
 
@@ -128,11 +134,10 @@ TAGS : $(TAGS_FILES)
 
 # Dependency files
 $(DEPFILES) $(STDDEPFILES) : %.d : %.v
-	$(COQDEP) -nois -coqlib $(srcdir)/coq -R theories HoTT -R coq/theories Coq $< >$@
+	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -R $(srcdir)/theories HoTT -R $(SRCCOQLIB)/theories Coq $< >$@
 
 clean:
 	rm -f $(CLEANFILES)
-	find coq/theories theories -name \*.vo -o -name \*.glob | xargs rm -f
+	find $(SRCCOQLIB)/theories $(srcdir)/theories -name \*.vo -o -name \*.glob | xargs rm -f
 
 -include $(DEPFILES) $(STDDEPFILES)
-
