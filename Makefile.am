@@ -22,12 +22,14 @@ VFILES=$(shell find $(srcdir)/theories -name "*.v")
 VOFILES:=$(VFILES:.v=.vo)
 GLOBFILES:=$(VFILES:.v=.glob)
 DEPFILES:=$(VFILES:.v=.d)
+HTMLFILES:=$(VFILES:.v=.html)
 
 # The list of files that comprise the alternative standard library
 STDVFILES=$(shell find $(srcdir)/coq -name "*.v")
 STDVOFILES:=$(STDVFILES:.v=.vo)
 STDGLOBFILES:=$(STDVFILES:.v=.glob)
 STDDEPFILES:=$(STDVFILES:.v=.d)
+STDHTMLFILES:=$(STDVFILES:.v=.html)
 
 if make_ssreflect
 # The list of Coq files that comprise ssreflect
@@ -36,6 +38,7 @@ ssrdir=$(srcdir)/ssrplugin
 SSRVFILES=$(shell find $(ssrdir)/theories -name "*.v")
 SSRVOFILES=$(SSRVFILES:.v=.vo)
 SSRGLOBFILES=$(SSRVFILES:.v=.glob)
+SSRHTMLFILES:=$(SSRVFILES:.v=.html)
 SSRMLIFILES=$(shell find $(ssrdir)/src -name "*.mli")
 SSRMLFILES=$(shell find $(ssrdir)/src -name "*.ml4" -o -name "*.ml")
 SSRMLLIBFILES=$(shell find $(ssrdir)/theories -name "*.mllib")
@@ -59,7 +62,7 @@ HOQC=$(srcdir)/hoqc
 SRCCOQLIB=$(srcdir)/coq
 
 # Which files should be cleaned
-CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES) $(DEPFILES) $(STDDEPFILES)
+CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES) $(DEPFILES) $(STDDEPFILES) $(HTMLFILES) $(STDHTMLFILES)
 
 if make_ssreflect
 .PHONY: stdlib hottlib ssrplugin
@@ -123,6 +126,11 @@ $(SSRCMXSFILES): %.cmxs : %.mllib
 $(SSRCMAFILES): %.cma : %.mllib
 	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
 endif
+
+# The HTML files
+html: $(GLOBFILES) $(VFILES) $(STDGLOBFILES) $(STDVFILES)
+	- $(mkdir_p) html
+	$(COQDOC) -toc -interpolate -utf8 -html --coqlib_path $(SRCCOQLIB) --no-externals -R $(srcdir)/theories HoTT -R $(SRCCOQLIB)/theories Coq -d html $(VFILES) $(STDVFILES)
 
 # The TAGS file
 TAGS_FILES = $(STDVFILES) $(VFILES)
