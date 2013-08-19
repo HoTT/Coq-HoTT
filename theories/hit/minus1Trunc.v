@@ -75,6 +75,13 @@ Proof.
   apply hprop_allpath, min1_path.
 Defined.
 
+Definition minus1Trunc_ind {A B : Type} `{IsHProp B} :
+  (A -> B) -> minus1Trunc A -> B.
+Proof.
+intros ?. apply minus1Trunc_rect_nondep. assumption.
+apply allpath_hprop.
+Defined.
+
 (** And if [A] was already a proposition, then [minus1Trunc A] is equivalent to [A]. *)
 Instance IsEquivmin1 {A} `{IsHProp A} : IsEquiv (@min1 A) | 1000.
 Proof.
