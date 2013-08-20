@@ -16,6 +16,7 @@ VFILES=$(shell find $(srcdir)/theories -name "*.v")
 VOFILES:=$(VFILES:.v=.vo)
 GLOBFILES:=$(VFILES:.v=.glob)
 DEPFILES:=$(VFILES:.v=.d)
+HOTTMAKEFILE=$(srcdir)/Makefile.coq
 
 # The list of files that comprise the alternative standard library
 STDVFILES=$(shell find $(srcdir)/coq -name "*.v")
@@ -53,7 +54,7 @@ HOQC=$(srcdir)/hoqc
 SRCCOQLIB=$(srcdir)/coq
 
 # Which files should be cleaned
-CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES) $(DEPFILES) $(STDDEPFILES)
+CLEANFILES = $(STDVOFILES) $(STDGLOBFILES) $(STDDEPFILES) $(HOTTMAKEFILE)
 
 if make_ssreflect
 .PHONY: stdlib hottlib ssrplugin
@@ -81,16 +82,17 @@ $(STDVOFILES) : %.vo : %.v
 
 
 # The HoTT library as a single target
-hottlib: $(VOFILES)
+hottlib: $(VOFILES) $(HOTTMAKEFILE)
 
 # A rule for compiling the HoTT libary files
 if make_ssreflect
-$(VOFILES) : %.vo : %.v $(STDVOFILES) $(SSRVOFILES)
-	$(HOQC) $<
+HOTT_MAKEFILE_DEPS = $(STDVOFILES) $(SSRVOFILES)
 else
-$(VOFILES) : %.vo : %.v $(STDVOFILES)
-	$(HOQC) $<
+HOTT_MAKEFILE_DEPS = $(STDVOFILES)
 endif
+
+$(HOTTMAKEFILE) : $(HOTT_MAKEFILE_DEPS)
+	$(COQMAKEFILE) $(VFILES) -R "$(srcdir)/theories" HoTT COQC = "\$$(TIMER) \"$(HOQC)\"" COQDEP = "\"\$$(COQBIN)coqdep\" -nois -coqlib $(srcdir)/coq -R $(SRCCOQLIB)/theories Coq" > "$(HOTTMAKEFILE)"
 
 if make_ssreflect
 # Compilation of ssreflect is a bit more roundabout because ssreflect relies on coq_makefile,
@@ -127,12 +129,12 @@ TAGS : $(TAGS_FILES)
 	$^
 
 # Dependency files
-$(DEPFILES) $(STDDEPFILES) : %.d : %.v
-	$(COQDEP) -nois -coqlib $(srcdir)/coq -R theories HoTT -R coq/theories Coq $< >$@
+$(STDDEPFILES) : %.d : %.v
+	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -R $(srcdir)/theories HoTT -R $(SRCCOQLIB)/theories Coq $< >$@
 
-clean:
+-include $(STDDEPFILES) $(HOTTMAKEFILE)
+
+clean: $(HOTTMAKEFILE)
+	$(MAKE) -f $(HOTTMAKEFILE) clean
 	rm -f $(CLEANFILES)
-	find coq/theories theories -name \*.vo -o -name \*.glob | xargs rm -f
-
--include $(DEPFILES) $(STDDEPFILES)
-
+	find $(SRCCOQLIB) -name \*.vo -o -name \*.glob | xargs rm -f
