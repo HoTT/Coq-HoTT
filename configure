@@ -553,6 +553,7 @@ PACKAGE_STRING='hott 1.0'
 PACKAGE_BUGREPORT=''
 PACKAGE_URL=''
 
+ac_unique_file="theories/Overture.v"
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 ETAGS
@@ -577,6 +578,7 @@ COQLIB
 COQVERSION
 COQTOP
 COQBIN
+LN_S
 am__untar
 am__tar
 AMTAR
@@ -1723,6 +1725,8 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
+
+
 ac_aux_dir=
 for ac_dir in etc "$srcdir"/etc; do
   if test -f "$ac_dir/install-sh"; then
@@ -1753,6 +1757,9 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
 
+# If we ever remove Makefile.in and configure from version control,
+# and depend on autoconf, we should replace "AM_MAINTAINER_MODE" with
+# "AM_MAINTAINER_MODE([enable])".  Possibly even before then.
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
 $as_echo_n "checking whether to enable maintainer-specific portions of Makefiles... " >&6; }
@@ -2255,19 +2262,69 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 
 
 
+# Check for programs
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ln -s works" >&5
+$as_echo_n "checking whether ln -s works... " >&6; }
+LN_S=$as_ln_s
+if test "$LN_S" = "ln -s"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no, using $LN_S" >&5
+$as_echo "no, using $LN_S" >&6; }
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${MAKE-make} sets \$(MAKE)" >&5
+$as_echo_n "checking whether ${MAKE-make} sets \$(MAKE)... " >&6; }
+set x ${MAKE-make}
+ac_make=`$as_echo "$2" | sed 's/+/p/g; s/[^a-zA-Z0-9_]/_/g'`
+if eval "test \"\${ac_cv_prog_make_${ac_make}_set+set}\"" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat >conftest.make <<\_ACEOF
+SHELL = /bin/sh
+all:
+	@echo '@@@%%%=$(MAKE)=@@@%%%'
+_ACEOF
+# GNU make sometimes prints "make[1]: Entering ...", which would confuse us.
+case `${MAKE-make} -f conftest.make 2>/dev/null` in
+  *@@@%%%=?*=@@@%%%*)
+    eval ac_cv_prog_make_${ac_make}_set=yes;;
+  *)
+    eval ac_cv_prog_make_${ac_make}_set=no;;
+esac
+rm -f conftest.make
+fi
+if eval test \$ac_cv_prog_make_${ac_make}_set = yes; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+  SET_MAKE=
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+  SET_MAKE="MAKE=${MAKE-make}"
+fi
+
+
+
 # Check to see if COQBIN was set
 
-if test -n "$COQBIN"; then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Will first look for Coq executables in $COQBIN." >&5
-$as_echo "Will first look for Coq executables in $COQBIN." >&6; }
-   PATH=$COQBIN:$PATH
+# use 'test "x$foo" != "x"' rather than 'test -n "$foo"' as per
+# http://www.gnu.org/software/automake/manual/autoconf.html#Limitations-of-Builtins;
+# some shells get confused if $foo is a weird character like '!' or
+# '-n'
+if test "x$COQBIN" != "x"; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: Will first look for Coq executables in $COQBIN." >&5
+$as_echo "$as_me: Will first look for Coq executables in $COQBIN." >&6;}
+   PATH=$COQBIN$PATH_SEPARATOR$PATH
 fi
 
 # Checking for coqtop
 
-if test -n "$COQTOP"; then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: COQTOP was preset to $COQTOP" >&5
-$as_echo "COQTOP was preset to $COQTOP" >&6; }
+if test "x$COQTOP" != "x"; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: COQTOP was preset to $COQTOP" >&5
+$as_echo "$as_me: COQTOP was preset to $COQTOP" >&6;}
 
 else
    # Extract the first word of "coqtop", so it can be a program name with args.
@@ -2313,26 +2370,30 @@ fi
 
 fi
 
-if test "$COQTOP" = "no"; then
+if test "x$COQTOP" = "xno"; then
    as_fn_error $? "Could not find coqtop." "$LINENO" 5
 else
-   COQVERSION=`$COQTOP -v | sed -n -e 's|^.*version \([^ ]*\) .*$|\1|p'`
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: coqtop version is $COQVERSION." >&5
-$as_echo "coqtop version is $COQVERSION." >&6; }
-   COQLIB=`$COQTOP -where 2>/dev/null`
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Coq library path is $COQLIB" >&5
-$as_echo "Coq library path is $COQLIB" >&6; }
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking coqtop version" >&5
+$as_echo_n "checking coqtop version... " >&6; }
+   COQVERSION="`$COQTOP -v | sed -n -e 's|^.*version \([^ ]*\) .*$|\1|p'`"
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $COQVERSION" >&5
+$as_echo "$COQVERSION" >&6; }
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking Coq library path" >&5
+$as_echo_n "checking Coq library path... " >&6; }
+   COQLIB="`$COQTOP -where 2>/dev/null`"
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $COQLIB" >&5
+$as_echo "$COQLIB" >&6; }
 
 
 
-   indicesmatter=`$COQTOP -help 2>&1 | grep -c -- -indices-matter`
+   indicesmatter="`$COQTOP -help 2>&1 | grep -c -- -indices-matter`"
    if test "$indicesmatter" = "0"; then
        as_fn_error $? "You need a version of Coq which supports -indices-matter" "$LINENO" 5
    fi
 fi
 
 # Checking for bytecode version of coqtop
- if test -n "$COQTOP.byte"; then
+ if test -x "$COQTOP.byte"; then
   make_hoqtopbyte_TRUE=
   make_hoqtopbyte_FALSE='#'
 else
@@ -2344,17 +2405,39 @@ fi
 # Now set COQBIN if it has not been set yet. We need COQBIN because Makefiles
 # produces by coq_makefile insist on running coqtop as $(COQBIN)coqtop, and
 # ssreflect uses coq_makefile
-if test ! -n "$COQBIN" ; then
-   COQBIN=`dirname $COQTOP`
+if test "x$COQBIN" = "x" ; then
+   COQBIN=`$as_dirname -- "$COQTOP" ||
+$as_expr X"$COQTOP" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
+	 X"$COQTOP" : 'X\(//\)[^/]' \| \
+	 X"$COQTOP" : 'X\(//\)$' \| \
+	 X"$COQTOP" : 'X\(/\)' \| . 2>/dev/null ||
+$as_echo X"$COQTOP" |
+    sed '/^X\(.*[^/]\)\/\/*[^/][^/]*\/*$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)[^/].*/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\).*/{
+	    s//\1/
+	    q
+	  }
+	  s/.*/./; q'`
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: COQBIN is $COQBIN." >&5
-$as_echo "COQBIN is $COQBIN." >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: COQBIN is $COQBIN." >&5
+$as_echo "$as_me: COQBIN is $COQBIN." >&6;}
 
 # Checking for coqc
 
-if test -n "$COQC"; then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: COQC was preset to $COQC" >&5
-$as_echo "COQC was preset to $COQC" >&6; }
+if test "x$COQC" != "x"; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: COQC was preset to $COQC" >&5
+$as_echo "$as_me: COQC was preset to $COQC" >&6;}
 
 else
    # Extract the first word of "coqc", so it can be a program name with args.
@@ -2400,16 +2483,18 @@ fi
 
 fi
 
-if test "$COQC" = "no"; then
+if test "x$COQC" = "xno"; then
    as_fn_error $? "Could not find coqc." "$LINENO" 5
 else
-  COQCVERSION=`$COQC -v | sed -n -e 's|^.*version \([^ ]*\) .*$|\1|p'`
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: coqc version is $COQCVERSION." >&5
-$as_echo "coqc version is $COQCVERSION." >&6; }
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking coqc version" >&5
+$as_echo_n "checking coqc version... " >&6; }
+   COQCVERSION="`$COQC -v | sed -n -e 's|^.*version \([^ ]*\) .*$|\1|p'`"
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $COQCVERSION" >&5
+$as_echo "$COQCVERSION" >&6; }
 
-  if test "$COQCVERSION" != "$COQVERSION"; then
-     as_fn_error $? "Version mismatch between coqtop $COQVERSION and coqc $COQCVERSION." "$LINENO" 5
-  fi
+   if test "x$COQCVERSION" != "x$COQVERSION"; then
+      as_fn_error $? "Version mismatch between coqtop $COQVERSION and coqc $COQCVERSION." "$LINENO" 5
+   fi
 fi
 
 # Should we compile ssrfelect?
@@ -2421,15 +2506,15 @@ if test "${with_ssreflect+set}" = set; then :
 fi
 
 
-if test "$compile_ssreflect" = "no"
+if test "x$compile_ssreflect" = "xno"
 then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Will not compile ssreflect." >&5
-$as_echo "Will not compile ssreflect." >&6; }
+   { $as_echo "$as_me:${as_lineno-$LINENO}: Will not compile ssreflect." >&5
+$as_echo "$as_me: Will not compile ssreflect." >&6;}
 else
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Will compile ssreflect." >&5
-$as_echo "Will compile ssreflect." >&6; }
+   { $as_echo "$as_me:${as_lineno-$LINENO}: Will compile ssreflect." >&5
+$as_echo "$as_me: Will compile ssreflect." >&6;}
 fi
- if test "$compile_ssreflect" = "yes"; then
+ if test "x$compile_ssreflect" = "xyes"; then
   make_ssreflect_TRUE=
   make_ssreflect_FALSE='#'
 else
@@ -2450,15 +2535,15 @@ else
 fi
 
 
-if test "$make_coqide" = "no"
+if test "x$make_coqide" = "xno"
 then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: Will not make hoqide." >&5
-$as_echo "Will not make hoqide." >&6; }
+   { $as_echo "$as_me:${as_lineno-$LINENO}: Will not make hoqide." >&5
+$as_echo "$as_me: Will not make hoqide." >&6;}
 else
 
-   if test -n "$COQIDE"; then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: result: COQIDE was preset to $COQIDE" >&5
-$as_echo "COQIDE was preset to $COQIDE" >&6; }
+   if test "x$COQIDE" != "x"; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: COQIDE was preset to $COQIDE" >&5
+$as_echo "$as_me: COQIDE was preset to $COQIDE" >&6;}
 
    else
       # Extract the first word of "coqide", so it can be a program name with args.
@@ -2503,16 +2588,16 @@ fi
 
 
    fi
-   if test "$COQIDE" = "no"; then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: result: Could not find coqide, will not make hoqide." >&5
-$as_echo "Could not find coqide, will not make hoqide." >&6; }
+   if test "x$COQIDE" = "xno"; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: Could not find coqide, will not make hoqide." >&5
+$as_echo "$as_me: Could not find coqide, will not make hoqide." >&6;}
       make_coqide="no"
    else
-     { $as_echo "$as_me:${as_lineno-$LINENO}: result: Trusting that coqide version is $COQVERSION." >&5
-$as_echo "Trusting that coqide version is $COQVERSION." >&6; }
-     COQIDEVERSION=$COQVERSION
+     { $as_echo "$as_me:${as_lineno-$LINENO}: Trusting that coqide version is $COQVERSION." >&5
+$as_echo "$as_me: Trusting that coqide version is $COQVERSION." >&6;}
+     COQIDEVERSION="$COQVERSION"
 
-     if test "$COQIDEVERSION" != "$COQVERSION"; then
+     if test "x$COQIDEVERSION" != "x$COQVERSION"; then
         as_fn_error $? "Version mismatch between coqtop $COQVERSION and coqc $COQIDEVERSION." "$LINENO" 5
      fi
   fi
@@ -2529,9 +2614,9 @@ fi
 
 # checking for coqdep
 
-if test -n "$COQDEP"; then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: COQDEP was preset to $COQDEP" >&5
-$as_echo "COQDEP was preset to $COQDEP" >&6; }
+if test "x$COQDEP" != "x"; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: COQDEP was preset to $COQDEP" >&5
+$as_echo "$as_me: COQDEP was preset to $COQDEP" >&6;}
 
 else
    # Extract the first word of "coqdep", so it can be a program name with args.
@@ -2576,15 +2661,15 @@ fi
 
 
 fi
-if test "$COQDEP" = "no"; then
+if test "x$COQDEP" = "xno"; then
    as_fn_error $? "Could not find coqdep." "$LINENO" 5
 fi
 
 # checking for coqdoc
 
-if test -n "$COQDOC"; then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: COQDOC was preset to $COQDOC" >&5
-$as_echo "COQDOC was preset to $COQDOC" >&6; }
+if test "x$COQDOC" != "x"; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: COQDOC was preset to $COQDOC" >&5
+$as_echo "$as_me: COQDOC was preset to $COQDOC" >&6;}
 
 else
    # Extract the first word of "coqdoc", so it can be a program name with args.
@@ -2629,15 +2714,15 @@ fi
 
 
 fi
-if test "$COQDOC" = "no"; then
+if test "x$COQDOC" = "xno"; then
    as_fn_error $? "Could not find coqdoc." "$LINENO" 5
 fi
 
 # checking for coq_makefile
 
-if test -n "$COQMAKEFILE"; then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: COQMAKEFILE was preset to $COQMAKEFILE" >&5
-$as_echo "COQMAKEFILE was preset to $COQMAKEFILE" >&6; }
+if test "x$COQMAKEFILE" != "x"; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: COQMAKEFILE was preset to $COQMAKEFILE" >&5
+$as_echo "$as_me: COQMAKEFILE was preset to $COQMAKEFILE" >&6;}
 
 else
    # Extract the first word of "coq_makefile", so it can be a program name with args.
@@ -2682,7 +2767,7 @@ fi
 
 
 fi
-if test "$COQMAKEFILE" = "no"; then
+if test "x$COQMAKEFILE" = "xno"; then
    as_fn_error $? "Could not find coq_makefile." "$LINENO" 5
 fi
 
@@ -2733,10 +2818,18 @@ done
 test -n "$ETAGS" || ETAGS=": skipping etags"
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: Creating symbolic links into Coq standard library." >&5
-$as_echo "Creating symbolic links into Coq standard library." >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: Creating symbolic links into Coq standard library." >&5
+$as_echo "$as_me: Creating symbolic links into Coq standard library." >&6;}
+# We must have these links in the source directory, not in the build
+# directory, because the replacement standard library lives in the source
+# directory, and these links are required to make Coq accept it.
 rm -f $srcdir/coq/plugins $srcdir/coq/dev
 ln -s $COQLIB/plugins $COQLIB/dev $srcdir/coq
+# TODO(jgross): Should we use AC_CONFIG_LINKS?  But $COQLIB/dev
+# doesn't exist in my installation, and that would make configure
+# error...
+#AC_CONFIG_LINKS([$srcdir/coq/plugins:$COQLIB/plugins
+#                 $srcdir/coq/dev:$COQLIB/dev])
 
 ac_config_files="$ac_config_files Makefile"
 
@@ -2746,7 +2839,7 @@ ac_config_files="$ac_config_files hoqtop.byte"
 
 ac_config_files="$ac_config_files hoqc"
 
-if test "$make_coqide" = "yes" ; then
+if test "x$make_coqide" = "xyes" ; then
    ac_config_files="$ac_config_files hoqide"
 
 fi
