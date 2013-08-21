@@ -11,6 +11,9 @@ endif
 hottdir=$(datarootdir)/hott
 EXTRA_DIST = coq theories ssrplugin etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 
+# The path to the Coq library in $(srcdir)
+SRCCOQLIB=$(srcdir)/coq
+
 # The list of files that comprise the HoTT library
 VFILES=$(shell find $(srcdir)/theories -name "*.v")
 VOFILES:=$(VFILES:.v=.vo)
@@ -18,7 +21,7 @@ GLOBFILES:=$(VFILES:.v=.glob)
 DEPFILES:=$(VFILES:.v=.d)
 
 # The list of files that comprise the alternative standard library
-STDVFILES=$(shell find $(srcdir)/coq -name "*.v")
+STDVFILES=$(shell find $(SRCCOQLIB) -name "*.v")
 STDVOFILES:=$(STDVFILES:.v=.vo)
 STDGLOBFILES:=$(STDVFILES:.v=.glob)
 STDDEPFILES:=$(STDVFILES:.v=.d)
@@ -41,16 +44,13 @@ endif
 nobase_hott_DATA = \
 	$(VOFILES) \
 	$(STDVOFILES) \
-	$(shell find $(srcdir)/coq/theories -name "README.txt") \
+	$(shell find $(SRCCOQLIB)/theories -name "README.txt") \
 	$(SSRVOFILES) \
 	$(SSRCMXSFILES) \
 	$(SSRCMAFILES)
 
 # The Coq compiler, adapted to HoTT
 HOQC=$(srcdir)/hoqc
-
-# The path to the Coq library in $(srcdir)
-SRCCOQLIB=$(srcdir)/coq
 
 # Which files should be cleaned
 CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES) $(DEPFILES) $(STDDEPFILES)
@@ -62,10 +62,10 @@ else
 endif
 
 install-data-local:
-	$(mkdir_p) $(hottdir)/coq
+	$(MKDIR_P) $(hottdir)/coq
 	rm -f $(hottdir)/coq/dev $(hottdir)/coq/plugins
-	ln -s $(COQLIB)/dev $(hottdir)/coq
-	ln -s $(COQLIB)/plugins $(hottdir)/coq
+	$(LN_S) $(COQLIB)/dev $(hottdir)/coq
+	$(LN_S) $(COQLIB)/plugins $(hottdir)/coq
 
 if make_ssreflect
 clean-local: $(SSRMAKEFILE)
@@ -128,11 +128,10 @@ TAGS : $(TAGS_FILES)
 
 # Dependency files
 $(DEPFILES) $(STDDEPFILES) : %.d : %.v
-	$(COQDEP) -nois -coqlib $(srcdir)/coq -R theories HoTT -R coq/theories Coq $< >$@
+	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -R $(srcdir)/theories HoTT -R $(SRCCOQLIB)/theories Coq $< >$@
 
 clean:
 	rm -f $(CLEANFILES)
-	find coq/theories theories -name \*.vo -o -name \*.glob | xargs rm -f
+	find $(SRCCOQLIB)/theories $(srcdir)/theories -name \*.vo -o -name \*.glob | xargs rm -f
 
 -include $(DEPFILES) $(STDDEPFILES)
-
