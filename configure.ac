@@ -20,7 +20,7 @@ AC_PROG_MAKE_SET
 AC_PROG_MKDIR_P
 
 # Check to see if COQBIN was set
-AC_ARG_VAR([COQBIN], [the directory which contains the Coq executables])
+AC_ARG_VAR([COQBIN], [the directory that contains the Coq executables])
 # use 'test "x$foo" != "x"' rather than 'test -n "$foo"' as per
 # http://www.gnu.org/software/automake/manual/autoconf.html#Limitations-of-Builtins;
 # some shells get confused if $foo is a weird character like '!' or
