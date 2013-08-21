@@ -20,7 +20,7 @@ matrix:
   - env: BRANCH=stable  COMMITISH=HEAD
 before_script:
  - sudo apt-get update -q
- - sudo apt-get install -q ocaml camlp5
+ - sudo apt-get install -q ocaml camlp5 dh-autoreconf
  - git clone --depth=5 --branch=$BRANCH git://github.com/HoTT/coq.git coq-HoTT
  - pushd coq-HoTT
  -   git remote update
@@ -29,4 +29,4 @@ before_script:
  -   make coqlight
  -   sudo make install-coqlight
  - popd
-script: "./configure && make"
+script: "./autogen.sh && ./configure && make"
