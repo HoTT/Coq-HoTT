@@ -164,6 +164,13 @@ AC_SUBST([hottdir])
 
 AC_CHECK_PROGS(ETAGS,etags,[: skipping etags])
 
+AC_ARG_VAR([TIME], [the absolute path of a 'time' command])
+AC_PATH_PROG([TIME],[time],[no])
+AS_IF([test "x$TIME" = "xno"],
+      [STDTIME=""],
+      [STDTIME="\"$TIME\" -f \"\$* (user: %U mem: %M ko)\""])
+AC_SUBST([STDTIME])
+
 dnl Create symbolic links to the Coq library
 AC_MSG_NOTICE([Creating symbolic links into Coq standard library])
 # We must have these links in the source directory, not in the build
