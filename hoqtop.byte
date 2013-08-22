@@ -1,0 +1,17 @@
+#!/bin/bash
+# This is a wrapper around coqtop.byte which tricks Coq into using the HoTT
+# standard library and enables the HoTT-specific options.
+mydir=`dirname $0`
+. "$mydir/etc/hoq-config"
+# We could stick the arguments in hoq-config in COQ_ARGS, and then,
+# using (non-portable) bash arrays, do
+# $ exec "$COQTOP.byte" "${COQ_ARGS[@]}" "$@"
+# or using more evil (but portable) 'eval', do
+# $ eval 'exec "$COQTOP.byte" '"$COQ_ARGS"' "$@"'
+# Instead, we duplicate code, because it's simpler.
+if test "x$ssr" = "xyes"
+then
+  exec "$COQTOP.byte" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -R "$SSRLIB" Ssreflect -indices-matter "$@"
+else
+  exec "$COQTOP.byte" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter "$@"
+fi
