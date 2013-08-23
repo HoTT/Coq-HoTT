@@ -1,0 +1,6 @@
+[submodule "HoTT"]
+	path = HoTT
+	url = https://github.com/HoTT/HoTT.git
+[submodule "coq-HoTT"]
+	path = coq-HoTT
+	url = https://github.com/HoTT/coq.git
