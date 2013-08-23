@@ -188,3 +188,98 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([hoq-config])
 
 AC_OUTPUT
+
+# configure Coq
+
+COQ_ARGS=()
+AS_IF([test "x$exec_prefix" != xNONE],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -prefix "$exec_prefix")],
+      [test "x$prefix" != xNONE],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -prefix "$prefix")],
+      [COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -prefix "$ac_default_prefix")])
+AS_IF([test "x$bindir" != x'${exec_prefix}/bin'],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -bindir "$bindir")])
+AS_IF([test "x$libdir" != x'${exec_prefix}/lib'],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -libdir "$libdir")])
+AS_IF([test "x$datadir" != x'${datarootdir}'],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -datadir "$datadir")],
+      [test "x$datarootdir" != x'${prefix}/share'],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -datadir "$datarootdir")])
+AS_IF([test "x$mandir" != x'${datarootdir}/man'],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -mandir "$mandir")])
+AS_IF([test "x$docdir" != x'${datarootdir}/doc/${PACKAGE_TARNAME}'],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -docdir "$docdir")])
+
+
+AC_ARG_ENABLE([annotate],[AS_HELP_STRING([--enable-annotate],[Compiles Coq with -dtypes option])])
+AS_IF([test "x$enable_annotate" = xyes],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -annotate)])
+
+AC_ARG_ENABLE([byte-only],[AS_HELP_STRING([--enable-byte-only],[Compiles only bytecode version of Coq])])
+AS_IF([test "x$enable_byte_only" = xyes],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -byte-only)])
+
+AC_ARG_ENABLE([camlp4],[AS_HELP_STRING([--enable-camlp4],[Specifies to use camlp4 instead of camlp5])])
+AS_IF([test "x$enable_camlp4" = xyes],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -usecamlp4)])
+
+AC_ARG_ENABLE([camlp5],[AS_HELP_STRING([--enable-camlp5],[Specifies to use camlp5 instead of camlp4])])
+AS_IF([test "x$enable_camlp5" = xyes],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -usecamlp5)])
+
+AC_ARG_ENABLE([coqide],[AS_HELP_STRING([--enable-coqide=opt/byte/no],[Specifies whether or not to compile Coqide])])
+AS_IF([test "x$enable_coqide" != x],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -coqide "$enable_coqide")])
+
+AC_ARG_ENABLE([custom],[AS_HELP_STRING([--enable-custom],[Generate all bytecode executables with -custom (not recommended)])])
+AS_IF([test "x$enable_custom" = xyes],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -custom)])
+
+AC_ARG_ENABLE([debug],[AS_HELP_STRING([--enable-debug],[Add debugging information in the Coq executables])])
+AS_IF([test "x$enable_debug" = xyes],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -debug)])
+
+AC_ARG_ENABLE([doc],[AS_HELP_STRING([--disable-doc],[Specifies to not compile the documentation])])
+AS_IF([test "x$enable_doc" = xno],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -nodoc)])
+
+AC_ARG_ENABLE([geoproof],[AS_HELP_STRING([--enable-geoproof],[Specifies whether or not to use Geoproof binding])])
+AS_IF([test "x$enable_geoproof" = xno],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -with-geoproof no)],
+      [test "x$enable_geoproof" != x],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -with-geoproof yes)])
+
+AC_ARG_ENABLE([macintegration],[AS_HELP_STRING([--disable-macintegration],[Specifies to not try to build coqide mac integration])])
+AS_IF([test "x$enable_macintegration" = xno],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -nomacintegration)])
+
+AC_ARG_ENABLE([natdynlink],[AS_HELP_STRING([--enable-natdynlink],[Specifies whether or not to use dynamic loading of native code])])
+AS_IF([test "x$enable_natdynlink" = xno],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -natdynlink no)],
+      [test "x$enable_natdynlink" != x],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -natdynlink yes)])
+
+AC_ARG_ENABLE([native-compiler],[AS_HELP_STRING([--disable-native-compiler],[Disables compilation to native code for conversion and normalization])])
+AS_IF([test "x$enable_native_compiler" = xno],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -no-native-compiler)])
+
+AC_ARG_ENABLE([opt],[AS_HELP_STRING([--enable-opt],[Specifies whether or not to use OCaml *.opt optimized compilers])])
+AS_IF([test "x$enable_opt" = xyes],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -opt)])
+
+AC_ARG_ENABLE([profile],[AS_HELP_STRING([--enable-profile],[Add profiling information in the Coq executables])])
+AS_IF([test "x$enable_profile" = xyes],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -profile)])
+
+AC_ARG_ENABLE([typerex],[AS_HELP_STRING([--enable-typerex],[Compiles Coq using typerex wrapper])])
+AS_IF([test "x$enable_typerex" = xyes],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -typerex)])
+
+AC_ARG_WITH([browser],[AS_HELP_STRING([--with-browser=COMMAND],[Use COMMAND to open URL %s])])
+AS_IF([test "x$with_browser" != x],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -browser "$with_browser")])
+
+AC_ARG_WITH([caml],[AS_HELP_STRING([--with-caml=DIR],[Specifies the path to the OCaml library])])
+AS_IF([test "x$with_caml" != x],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -camldir "$with_caml")])
+
+AC_ARG_WITH([camlp5],[AS_HELP_STRING([--with-camlp5=DIR],[Specifies where to look for the Camlp5 library and tells to use it])])
+AS_IF([test "x$enable_camlp5" != x],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -camlp5dir "$enable_camlp5")])
+
+AC_ARG_WITH([coqdocdir],[AS_HELP_STRING([--with-coqdocdir=DIR],[Specifies where Coqdoc style files are to be installed])])
+AS_IF([test "x$with_coqdocdir" != x],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -coqdocdir "$with_coqdocdir")])
+
+AC_ARG_WITH([coqrunbyteflags],[AS_HELP_STRING([--with-coqrunbyteflags=FLAGS],[Set link flags for VM-dependent bytecode (coqtop)])])
+AS_IF([test "x$with_coqrunbyteflags" != x],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -coqrunbyteflags "$with_coqrunbyteflags")])
+
+AC_ARG_WITH([coqtoolsbyteflags],[AS_HELP_STRING([--with-coqtoolsbyteflags=FLAGS],[Set link flags for VM-independant bytecode (coqdep, coqdoc, ...)])])
+AS_IF([test "x$with_coqtoolsbyteflags" != x],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -coqtoolsbyteflags "$with_coqtoolsbyteflags")])
+
+AC_ARG_WITH([emacslib],[AS_HELP_STRING([--with-emacslib=DIR],[Specifies where emacs files are to be installed])])
+AS_IF([test "x$with_emacslib" != x],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -emacslib "$with_emacslib")])
+
+AC_ARG_WITH([lablgtk],[AS_HELP_STRING([--with-lablgtk=DIR],[Specifies the path to the Lablgtk library])])
+AS_IF([test "x$with_lablgtk" != x],[COQ_ARGS=("${COQ_ARGS@<:@@@:>@}" -lablgtkdir "$with_lablgtk")])
+
+# Should we have an argument for this?
+#-arch <arch>
+#	Specifies the architecture
+
+COQ_HOTT_DIR=`(cd coq-HoTT && pwd)`
+AS_ECHO("=== configuring in coq-HoTT ($COQ_HOTT_DIR)")
+(cd "$COQ_HOTT_DIR"; exec ./configure "${COQ_ARGS@<:@@@:>@}")
+AS_ECHO("*Warning* To compile the system for a new architecture")
+AS_ECHO("          don't forget to do a 'cd coq-HoTT; make clean' before './configure'.")
