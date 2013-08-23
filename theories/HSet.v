@@ -96,3 +96,7 @@ Proof.
 Defined.
 
 End AssumeFunext.
+
+Record hSet := BuildhSet {setT:> Type; iss :> IsHSet setT}.
+Canonical Structure default_HSet:= fun T P => (@BuildhSet T P).
+Hint Resolve iss.

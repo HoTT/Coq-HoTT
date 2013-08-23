@@ -150,3 +150,9 @@ Proof.
   apply equiv_contr_inhabited_hprop.
   apply equiv_functor_prod'. apply equiv_idmap. apply equiv_hprop_allpath.
 Defined.
+
+(** The type of Propositions *)
+Record hProp := BuildhProp {propT:> Type; isp :> IsHProp propT}.
+Canonical Structure default_HProp:= fun T P => (@BuildhProp T P).
+(** the eta-expansion seems needed *)
+Hint Resolve isp.

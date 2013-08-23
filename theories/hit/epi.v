@@ -1,13 +1,5 @@
 Require Import HoTT minus1Trunc Bool.
 
-Record hProp := BuildhProp {propT:> Type; isp :> IsHProp propT}.
-Canonical Structure default_HProp:= fun T P => (@BuildhProp T P).
-(* the eta-expansion seems needed *)
-
-Record hSet := BuildhSet {setT:> Type; iss :> IsHSet setT}.
-Canonical Structure default_HSet:= fun T P => (@BuildhSet T P).
-Hint Resolve isp iss.
-
 Instance hProp_is_hSet : (IsHSet hProp) | 0.
 intros [p p1] [q q1].
 Admitted. (* We need some lemmas about records *)
