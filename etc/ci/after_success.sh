@@ -9,6 +9,7 @@ if [ ! -z "$UPDATE_HTML" ]; then
     if [ -z "$(git diff origin/master)" ]; then
         # make the html and push it, if we should
         ./generate_and_push_doc.sh
+        ./autogen_and_push.sh
     fi
 fi
 
