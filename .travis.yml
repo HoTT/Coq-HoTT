@@ -9,15 +9,16 @@ env:
 # update the SHA1 hash in the following line to match that of the
 # version given by `git log`, and update the comment with the commit
 # message.
-   - BRANCH=trunk   UPDATE_HTML=""    COMMITISH=e88e47ca76200a5e52bd0f9397fe4900fa9b241b
+   - BRANCH=trunk   UPDATE_HTML=""    WITH_AUTORECONF="yes" COMMITISH=e88e47ca76200a5e52bd0f9397fe4900fa9b241b
 # commit e88e47ca76200a5e52bd0f9397fe4900fa9b241b
 # Author: Matthieu Sozeau <mattam@mattam.org>
 # Date:   Thu Aug 1 02:01:08 2013 +0200
 #
 #     - Relax identification of metas in Ltac to not compare universes syntactically.
 #     - add constr_eq_nounivs tactic to compare constrs without comparing universes.
-   - BRANCH=trunk   UPDATE_HTML="yes" COMMITISH=HEAD
-   - BRANCH=stable  UPDATE_HTML=""    COMMITISH=HEAD
+   - BRANCH=trunk   UPDATE_HTML="yes" WITH_AUTORECONF="yes" COMMITISH=HEAD
+   - BRANCH=trunk   UPDATE_HTML="yes" WITH_AUTORECONF=""    COMMITISH=HEAD
+   - BRANCH=stable  UPDATE_HTML=""    WITH_AUTORECONF="yes" COMMITISH=HEAD
 
  global:
 # encrypted version of deploy key for pushing
@@ -27,7 +28,7 @@ env:
 matrix:
  allow_failures:
 ## we're on trunk, so allow stable to fail
-    - env: BRANCH=stable  UPDATE_HTML=""    COMMITISH=HEAD
+    - env: BRANCH=stable  UPDATE_HTML=""    WITH_AUTORECONF="yes" COMMITISH=HEAD
 
 
 before_script:
