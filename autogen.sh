@@ -1,4 +1,8 @@
 #!/bin/sh
+if test -d .git
+then
+    git submodule update --init --recursive
+fi
 autoreconf -fvi
 if test $? -ne 0
 then
