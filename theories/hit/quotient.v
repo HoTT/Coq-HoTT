@@ -96,20 +96,14 @@ apply (@quotient_rect A R _
 intros. apply allpath_hprop.
 Defined.
 
-Lemma quotient_rect_prop_unpacked (P : quotient _ -> Type) {_: forall q, IsHProp (P q)}:
-  forall dclass : forall x, P (class_of _ x),
-  forall q, P q.
-Proof.
-intros. apply (quotient_rect _ dclass).
-intros. apply allpath_hprop.
-Defined.
+Require Import HProp.
 
-(** A packed version, we can hope to be able to avoid the other one *)
 Lemma quotient_rect_prop (P : quotient _ -> hProp):
   forall dclass : forall x, P (class_of _ x),
   forall q, P q.
 Proof.
-intros H. by apply quotient_rect_prop_unpacked.
+intros. apply (quotient_rect P dclass).
+intros. apply allpath_hprop.
 Defined.
 
 Lemma class_of_repr : forall q x, in_class q x -> q = class_of _ x.
@@ -210,15 +204,12 @@ intros [f H].
 apply (quotient_rect_nondep _ H).
 Defined.
 
-Require Import HProp.
-
-(* It seems that the IsHSet instance for hSet is not properly inferred, so we have [destruct B] *)
 Theorem quotient_ump {funext_axiom:Funext} (B:hSet): ((quotient _) -> B) <~>
   (sigT (fun f : A-> B => (forall a a0:A, (R a a0) -> (f a =f a0)))).
 Proof.
-refine (equiv_adjointify (quotient_ump' B) (quotient_ump'' B) _ _);destruct B as [B HB].
+refine (equiv_adjointify (quotient_ump' B) (quotient_ump'' B) _ _).
 intros [f Hf]. 
-- apply sigma_prop_eq. intro. apply trunc_forall.
+- apply sigma_prop_eq. 
   reflexivity.
 - intros f. 
   apply funext_axiom.

@@ -153,16 +153,15 @@ Proof.
 Defined.
 
 (** Perhaps this should be [ P:A -> hProp ], however the automations seems to work better in this unpacked form. *)
-Lemma sigma_prop_eq {A} {P : A -> Type}:
-(forall a, IsHProp (P a)) -> forall u v : sigT P, u.1 = v.1 -> u=v.
-Proof.
-intros ? ? ? H.
-apply path_sigma with H. apply allpath_hprop.
-Defined.
-
-
 (** The type of Propositions *)
 Record hProp := BuildhProp {propT:> Type; isp :> IsHProp propT}.
 Canonical Structure default_HProp:= fun T P => (@BuildhProp T P).
 (** the eta-expansion seems needed *)
 Hint Resolve isp.
+Global Existing Instance isp.
+
+Lemma sigma_prop_eq {A} {P : A -> hProp}: forall u v : sigT P, u.1 = v.1 -> u=v.
+Proof.
+intros ? ? H.
+apply path_sigma with H. apply allpath_hprop.
+Defined.
