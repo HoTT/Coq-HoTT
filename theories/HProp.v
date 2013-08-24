@@ -152,7 +152,6 @@ Proof.
   apply equiv_functor_prod'. apply equiv_idmap. apply equiv_hprop_allpath.
 Defined.
 
-(** Perhaps this should be [ P:A -> hProp ], however the automations seems to work better in this unpacked form. *)
 (** The type of Propositions *)
 Record hProp := BuildhProp {propT:> Type; isp :> IsHProp propT}.
 Canonical Structure default_HProp:= fun T P => (@BuildhProp T P).
