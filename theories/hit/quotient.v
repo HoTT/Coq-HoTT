@@ -210,11 +210,20 @@ intros [f H].
 apply (quotient_rect_nondep _ H).
 Defined.
 
-Theorem quotient_ump (B:hSet): ((quotient _) -> B) <~> 
+Require Import HProp.
+
+(* It seems that the IsHSet instance for hSet is not properly inferred, so we have [destruct B] *)
+Theorem quotient_ump {funext_axiom:Funext} (B:hSet): ((quotient _) -> B) <~>
   (sigT (fun f : A-> B => (forall a a0:A, (R a a0) -> (f a =f a0)))).
-refine (equiv_adjointify (quotient_ump' B) (quotient_ump'' B) _ _). 
-intros [f H]. unfold quotient_ump'. unfold quotient_ump''.
-Admitted.
+Proof.
+refine (equiv_adjointify (quotient_ump' B) (quotient_ump'' B) _ _);destruct B as [B HB].
+intros [f Hf]. 
+- apply sigma_prop_eq. intro. apply trunc_forall.
+  reflexivity.
+- intros f. 
+  apply funext_axiom.
+  red. apply quotient_ind;[apply _|reflexivity].
+Defined.
 
 (** Missing
 

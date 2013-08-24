@@ -67,7 +67,6 @@ Definition path_sigma {A : Type} (P : A -> Type) (u v : sigT P)
   : u = v
   := path_sigma_uncurried P u v (p;q).
 
-
 (** A variant of [Forall.dpath_forall] from which uses dependent sums to package things. It cannot go into [Forall] because [Sigma] depends on [Forall]. *)
 
 Definition dpath_forall'
