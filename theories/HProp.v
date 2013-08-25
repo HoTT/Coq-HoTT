@@ -159,6 +159,12 @@ Canonical Structure default_HProp:= fun T P => (@BuildhProp T P).
 Hint Resolve isp.
 Global Existing Instance isp.
 
+Definition issig_hProp
+: { propT : Type & IsHProp propT } <~> hProp.
+Proof.
+  issig BuildhProp propT isp.
+Defined.
+
 Lemma sigma_prop_eq {A} {P : A -> hProp}: forall u v : sigT P, u.1 = v.1 -> u=v.
 Proof.
 intros ? ? H.
