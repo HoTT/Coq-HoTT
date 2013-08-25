@@ -35,7 +35,7 @@ Axiom related_classes_eq : forall {x y : A}, R x y ->
  class_of _ x = class_of _ y.
 
 Axiom quotient_set : IsHSet (quotient _).
-Existing Instance quotient_set.
+Global Existing Instance quotient_set.
 
 Definition quotient_rect (P : (quotient _)-> Type):
   forall dclass : forall x, P (class_of _ x),
@@ -68,6 +68,7 @@ Context {funext : Funext} {uni : Univalence}.
 
 Context {A : Type} {R : relation A} {sR:setrel R}
  {Htrans : Transitive R} {Hsymm : Symmetric R}.
+Hint Resolve sR : typeclass_instances.
 
 Lemma quotient_path2 : forall {x y : quotient _} (p q : x=y), p=q.
 Proof.
@@ -77,8 +78,7 @@ Defined.
 Definition in_class : quotient _ -> A -> Type.
 Proof.
 apply (@quotient_rect _ _ _ (fun _ => A -> Type) R).
-intros.
-eapply concat;[apply transport_const|].
+intros. eapply concat;[apply transport_const|].
 apply funext. intro z. apply uni. apply @equiv_iff_hprop; eauto.
 Defined.
 
@@ -89,10 +89,10 @@ Proof.
 reflexivity.
 Defined.
 
-Instance in_class_is_prop : forall q x, IsHProp (in_class q x).
+Global Instance in_class_is_prop : forall q x, IsHProp (in_class q x).
 Proof.
 apply (@quotient_rect A R _ 
-    (fun q : (quotient sR) => forall x, IsHProp (in_class q x)) (fun x y => transport _ (in_class_pr x y) (sR x y))).
+    (fun q : quotient sR => forall x, IsHProp (in_class q x)) (fun x y => transport _ (in_class_pr x y) (sR x y))).
 intros. apply allpath_hprop.
 Defined.
 
@@ -109,7 +109,7 @@ Defined.
 Lemma class_of_repr : forall q x, in_class q x -> q = class_of _ x.
 Proof.
 apply (@quotient_rect A R _
- (fun q : (quotient sR) => forall x, in_class q x -> q = class_of _ x)
+ (fun q : quotient sR => forall x, in_class q x -> q = class_of _ x)
   (fun x y H => related_classes_eq H)).
 intros.
 apply funext. intro z.
@@ -123,49 +123,44 @@ Proof.
 intros x y H.
 pattern (R x y).
 eapply transport. apply in_class_pr.
-pattern (class_of _ x). eapply transport.
-symmetry. apply H.
+pattern (class_of _ x). apply (transport _ (H^)).
 apply Hrefl.
 Defined.
 
 (** Thm 10.1.8 *)
 Open Scope equiv_scope.
 Theorem sets_exact : forall x y, (class_of _ x = class_of _ y) <~> R x y.
-intros ??. eapply equiv_iff_hprop.
+intros ??. apply equiv_iff_hprop.
  apply classes_eq_related.
 apply related_classes_eq.
-(* There should be a better way *)
-Grab Existential Variables. auto.
 Defined.
 
 Definition quotient_rect_nondep : forall {B : Type}, 
   forall dclass : (forall x : A, B), 
-  forall dequiv : (forall x y (H : R x y), dclass x = dclass y), 
+  forall dequiv : (forall x y, R x y -> dclass x = dclass y), 
   quotient _ -> B.
 Proof.
 intros ? ? ?.
 apply (quotient_rect (fun _ : quotient _ => B)) with dclass.
-intros. destruct (related_classes_eq H). by apply dequiv.
+intros ?? H. destruct (related_classes_eq H). by apply dequiv.
 Defined.
 
 Definition quotient_rect_nondep2 {B : hSet} {dclass : (A -> A -> B)}: 
-  forall dequiv : (forall x x' (Hx : R x x') y y' (Hy : R y y'),
+  forall dequiv : (forall x x', R x x' -> forall y y',  R y y' ->
                   dclass x y = dclass x' y'), 
   quotient _ -> quotient _ -> B.
 Proof.
 intro.
-assert (dequiv0 : forall x x0 y : A, R x0 y -> dclass x x0 = dclass x y).
-intros ? ? ? Hx. apply dequiv;[apply Hrefl|done].
+assert (dequiv0 : forall x x0 y : A, R x0 y -> dclass x x0 = dclass x y)
+ by (intros ? ? ? Hx; apply dequiv;[apply Hrefl|done]).
 refine (quotient_rect_nondep 
   (fun x => quotient_rect_nondep (dclass x) (dequiv0 x)) _).
 intros x x' Hx.
-apply funext.
-
-red.
+apply funext. red.
 assert (dequiv1 : forall y : A,
   quotient_rect_nondep (dclass x) (dequiv0 x) (class_of _ y) =
-  quotient_rect_nondep (dclass x') (dequiv0 x') (class_of _ y)).
-intros. by apply dequiv.
+  quotient_rect_nondep (dclass x') (dequiv0 x') (class_of _ y)) 
+ by (intros; by apply dequiv).
 refine (quotient_rect (fun q => 
 quotient_rect_nondep (dclass x) (dequiv0 x) q =
 quotient_rect_nondep (dclass x') (dequiv0 x') q) dequiv1 _).
@@ -184,28 +179,27 @@ Require Import hit.epi.
 Require Import minus1Trunc.
 
 (** From Ch6 *)
-Theorem  quotient_surjective: (surj (class_of _)).
+Theorem  quotient_surjective: surj (class_of _).
 unfold surj. apply (quotient_ind (fun y => hexists (fun x : A => class_of sR x = y))).
  apply _.
-intro x. apply min1.
-by exists x.
+intro x. apply min1. by exists x.
 Defined.
 
 (** From Ch10 *)
-Definition quotient_ump' (B:hSet): ((quotient _) -> B) ->
-  (sigT (fun f : A-> B => (forall a a0:A, (R a a0) -> (f a =f a0)))).
+Definition quotient_ump' (B:hSet): (quotient _ -> B) ->
+  (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
 intro f. exists (compose f (class_of sR) ).
-intros. auto. unfold compose. f_ap. by apply related_classes_eq.
+intros. unfold compose. f_ap. by apply related_classes_eq.
 Defined.
 
-Definition quotient_ump'' (B:hSet): (sigT (fun f : A-> B => (forall a a0:A, (R a a0) -> (f a =f a0))))
- -> ((quotient _) -> B).
+Definition quotient_ump'' (B:hSet): (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0)))
+ -> quotient _ -> B.
 intros [f H]. 
 apply (quotient_rect_nondep _ H).
 Defined.
 
-Theorem quotient_ump {funext_axiom:Funext} (B:hSet): ((quotient _) -> B) <~>
-  (sigT (fun f : A-> B => (forall a a0:A, (R a a0) -> (f a =f a0)))).
+Theorem quotient_ump {funext_axiom:Funext} (B:hSet): (quotient _ -> B) <~>
+  (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
 Proof.
 refine (equiv_adjointify (quotient_ump' B) (quotient_ump'' B) _ _).
 intros [f Hf]. 
