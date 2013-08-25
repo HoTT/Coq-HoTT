@@ -4,9 +4,9 @@ then
     git submodule update --init --recursive
 fi
 autoreconf -fvi
-if test $? -ne 0
+if test $? -eq 127
 then
-    echo 'Warning: autoreconf failed.  Falling back on git.'
+    echo 'Warning: autoreconf not found.  Falling back on git.'
     if test -d .git
     then
 	git remote update
