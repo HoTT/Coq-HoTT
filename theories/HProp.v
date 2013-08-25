@@ -2,6 +2,7 @@
 
 Require Import Overture Contractible Equivalences Trunc.
 Require Import types.Forall types.Sigma types.Prod types.Record.
+
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 
@@ -156,3 +157,10 @@ Record hProp := BuildhProp {propT:> Type; isp :> IsHProp propT}.
 Canonical Structure default_HProp:= fun T P => (@BuildhProp T P).
 (** the eta-expansion seems needed *)
 Hint Resolve isp.
+Global Existing Instance isp.
+
+Lemma sigma_prop_eq {A} {P : A -> hProp}: forall u v : sigT P, u.1 = v.1 -> u=v.
+Proof.
+intros ? ? H.
+apply path_sigma with H. apply allpath_hprop.
+Defined.
