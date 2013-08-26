@@ -18,6 +18,10 @@ html/
 aclocal.m4
 autom4te.cache
 config.status
+configure
+etc/install-sh
+etc/missing
+Makefile.in
 Makefile
 Makefile_ssrplugin
 # Ignore links into the original Coq library
