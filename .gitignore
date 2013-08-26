@@ -21,7 +21,7 @@ config.status
 configure
 etc/install-sh
 etc/missing
-etc/hoq-config
+hoq-config
 Makefile.in
 Makefile
 Makefile_ssrplugin

@@ -2,7 +2,7 @@
 # This is a wrapper around coqtop which tricks Coq into using the HoTT
 # standard library and enables the HoTT-specific options.
 mydir=`dirname $0`
-. "$mydir/etc/hoq-config"
+. "$mydir/hoq-config"
 # We could stick the arguments in hoq-config in COQ_ARGS, and then,
 # using (non-portable) bash arrays, do
 # $ exec "$COQTOP" "${COQ_ARGS[@]}" "$@"

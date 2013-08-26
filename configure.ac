@@ -185,6 +185,6 @@ ln -s $COQLIB/plugins $COQLIB/dev $srcdir/coq
 #                 $srcdir/coq/dev:$COQLIB/dev])
 
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([etc/hoq-config])
+AC_CONFIG_FILES([hoq-config])
 
 AC_OUTPUT
