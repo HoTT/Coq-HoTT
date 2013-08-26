@@ -17,7 +17,7 @@ SRCCOQLIB=$(srcdir)/coq
 # support the TIMED variable like coq_makefile
 TIMED=
 TIMECMD=
-STDTIME=/usr/bin/time -f "$* (user: %U mem: %M ko)"
+#STDTIME=@STDTIME@
 TIMER=$(if $(TIMED), $(STDTIME), $(TIMECMD))
 
 # The list of files that comprise the HoTT library

@@ -21,15 +21,17 @@
 
 2. Get the HoTT library at https://github.com/HoTT/HoTT.git. Go to the
    root of the HoTT created directory.
- 
+
 3. If you installed custom Coq so that it is found in the `PATH`, run
 
+       ./autogen.sh
        ./configure
        make
 
    If you installed custom Coq in a secret place, tell ./configure
    where to find it as follows:
-   
+
+       ./autogen.sh
        ./configure COQBIN=<absolute-directory-containing-coq-executables>
        make
 
@@ -110,13 +112,15 @@ If you do not want to deal with git at all, you may download an
 archive of HoTT at https://github.com/HoTT/HoTT/archive/master.zip and
 unpack that. We do not recommend this option because the HoTT library
 is under heavy development and you want to be able to easily track
-changes.
+changes.  Additionally, downloading the archive requires a working
+version of autoreconf.
 
 Next you should configure the HoTT library:
 
 1. If you installed the custom Coq as your default version of Coq,
    which means that it it can be fond in PATH, run
 
+       ./autogen.sh
        ./configure
 
    in the HoTT directory.
@@ -125,6 +129,7 @@ Next you should configure the HoTT library:
    with `-local`, you should tell ./configure where to find the custom
    Coq:
 
+       ./autogen.sh
        ./configure COQBIN=<directory-containing-coq-executables>
 
    where you should specify the *absolute* path name (starting with /)
