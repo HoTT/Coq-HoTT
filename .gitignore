@@ -26,6 +26,8 @@ Makefile
 Makefile_ssrplugin
 # Ignore links into the original Coq library
 coq/dev
+coq/kernel
+coq/library
 coq/plugins
 # Ignore generated shell scripts and Makefile
 hoqtop
