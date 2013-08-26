@@ -29,12 +29,11 @@ echo 'Configuring git for pushing...'
 git config --global user.name "Travis-CI Bot"
 git config --global user.email "Travis-CI-Bot@travis.fake"
 
-echo "Autoupdate documentation with coqdoc to $(git rev-parse --short HEAD)" > /tmp/msg.txt
-echo "" >> /tmp/msg.txt
-echo 'Generated with `make html` on commit:' >> /tmp/msg.txt
-echo "" >> /tmp/msg.txt
-git log HEAD{^..,} >> /tmp/msg.txt
-export MESSAGE="$(cat /tmp/msg.txt)"
+export MESSAGE="Autoupdate documentation with coqdoc to $(git rev-parse --short HEAD)
+
+Generated with \`make html\` on commit:
+
+$(git log HEAD^..HEAD)"
 
 echo '$ make html'
 make html
