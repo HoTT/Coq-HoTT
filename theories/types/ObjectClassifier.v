@@ -14,17 +14,53 @@ Local Open Scope equiv_scope.
 Definition pullback {A0 B C} (f:B-> A0) (g:C->A0):= {b:B & {c:C & f b = g c}}.
 Definition fibration_replacement {B C} {x:C} (f:C ->B) : {y:B & {c:C & f c = y}} :=
     (f x ; (x ; idpath (f x))).
+Let equiv_fibration_replacement_eissect {B C f}
+: forall x : {y : B & {x : C & f x = y}},
+    (f x.2.1; (x.2.1; 1%path)) = x.
+Proof.
+  repeat (intros [] || intro); reflexivity.
+Defined.
 Definition equiv_fibration_replacement  {B C} (f:C ->B):
   C <~> {y:B & {x:C & f x = y}}.
-Admitted.
+Proof.
+  refine (BuildEquiv
+            _ _
+            _
+            (BuildIsEquiv
+               C {y:B & {x:C & f x = y}}
+               (fun c => (f c; (c; idpath)))
+               (fun c => c.2.1)
+               equiv_fibration_replacement_eissect
+               (fun c => idpath)
+               _)).
+  reflexivity.
+Defined.
 Notation pr1:=(@projT1 _ _).
 Notation pr2:=(@projT2 _ _).
-Theorem equiv_total_paths (A : Type) (P : A-> Type) (x y : sigT P) :
-  (x = y) <~> { p : pr1 x = pr1 y & transport P p (pr2 x) = pr2 y }.
-Admitted.
+Definition equiv_total_paths (A : Type) (P : A-> Type) (x y : sigT P) :
+  (x = y) <~> { p : pr1 x = pr1 y & transport P p (pr2 x) = pr2 y }
+  := BuildEquiv _ _ ((equiv_path_sigma P x y)^-1)%path _.
+Let hfiber_fibration_eissect {X} {x : X} {P}
+: forall x0 : {z : exists x, P x & pr1 z = x},
+      ((x; transport P (pr2 x0) (pr2 (pr1 x0))); 1%path) = x0.
+Proof.
+  repeat (intros [] || intro); reflexivity.
+Defined.
 Definition hfiber_fibration {X} (x : X) (P:X->Type):
     P x <~> { z : sigT P & pr1 z = x }.
-Admitted.
+Proof.
+  refine (BuildEquiv
+            _ _
+            _
+            (BuildIsEquiv
+               (P x) { z : sigT P & pr1 z = x }
+               (fun Px => ((x; Px); idpath))
+               (fun Px => transport P Px.2 Px.1.2)
+               hfiber_fibration_eissect
+               (fun Px => idpath)
+               _)).
+  reflexivity.
+Defined.
 End ToBeMoved.
 
 Section FamPow.
