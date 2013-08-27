@@ -1,48 +1,38 @@
 # QUICK INSTALLATION INSTRUCTIONS
 
-1. Install a custom Coq from https://github.com/HoTT/coq, the `stable`
-   branch. This is a fork of the trunk and is compatible with standard
-   Coq 8.4 trunk, except that it supports the the homotopy theory
-   interpretation. Because our Coq fork changes frequently, HoTT may
-   fail with the `master` branch. Thus, unless you know what you are
-   doing, you should use the `stable` branch:
+1. Get the HoTT library at https://github.com/HoTT/HoTT.git. Go to the
+   root of the HoTT created directory.  You can use the commands
 
-       git clone https://github.com/HoTT/coq.git
-       git checkout stable
+       git clone https://github.com/HoTT/HoTT.git
+       cd HoTT
 
-   Compile Coq as usual. One possibility is to compile it with
-
-       ./configure -local
-       make coqlight
-
-   This will compile Coq in place, so you can run it straight from the
-   source directory. It will also skip compilation of some libraries
-   that we do not use anyhow.
-
-2. Get the HoTT library at https://github.com/HoTT/HoTT.git. Go to the
-   root of the HoTT created directory.
-
-3. If you installed custom Coq so that it is found in the `PATH`, run
+2. Run
 
        ./autogen.sh
        ./configure
        make
 
-   If you installed custom Coq in a secret place, tell ./configure
-   where to find it as follows:
+   If you installed a custom Coq in a secret place, and do not want to
+   use the bundled version of Coq tell ./configure where to find it as
+   follows:
 
        ./autogen.sh
        ./configure COQBIN=<absolute-directory-containing-coq-executables>
        make
 
-4. You can now use the HoTT library in place by running ./hoqtop and
+3. You can now use the HoTT library in place by running ./hoqtop and
    ./hoqc. You can also use ./hoqide which is the version of coqide
    running the hoqtop toplevel if you have compiled it successfully.
 
-5. The library can be loaded with `Require Import HoTT.`
+4. The library can be loaded with `Require Import HoTT.`
 
-6. You can install the library globally with `make install`, although
-   this has not been thoroughly tested.
+5. You can install the library globally with `make install`, although
+   this has not been thoroughly tested.  You can customize the install
+   location by running
+
+       ./autogen.sh
+       ./configure --prefix=<install-location>
+       make install
 
 7. To use the emacs tags facility with the *.v files here, run the command
 
@@ -75,32 +65,16 @@ that means you will have to compile a version of Coq, available at
    https://github.com/HoTT/coq
 
 If you have never compiled Coq you may prefer to ask a friend for
-help. If you feel brave you should try doing it yourself:
-
-1. Obtain the custom Coq fork. If you have git clone the fork with
-
-       git clone https://github.com/HoTT/coq.git
-       git checkout stable
-
-   If you do not have git, you may still download the files as an
-   archive file at https://github.com/HoTT/coq/archive/stable.zip (but
-   it is better for you in the long run to learn git).
-
-2. Compile Coq, as explained in the INSTALL.txt file of Coq
-   distribution. You will need some prerequisites for compilation, such
-   as OCaml 3.11.2 or later.
-
-   If you do not want the custom Coq to override one that you already
-   have installed, configure Coq with either `./configure -local` so
-   that it will work in-place, or use
-
-   `./configure -prefix <dir>`, as explained by `./configure -help`.
-
+help. Since we bundle the version of Coq we need, all that you must do
+is obtain the necessary prerequisites, such as OCaml 3.11.2 or later.
+After you run `./autogen.sh`, you can look at `coq-HoTT/INSTALL` and
+`coq-HoTT/configure -help`.
 
 ## INSTALLATION OF HoTT
 
-Once you have installed the correct version of Coq, as explained in
-PREREQUISITES, you proceed as follows. Clone the HoTT repository with
+Once you have installed the necessary dependencies for Coq, as
+explained in PREREQUISITES, you proceed as follows. Clone the HoTT
+repository with
 
    git clone https://github.com/HoTT/HoTT.git
 
@@ -109,25 +83,23 @@ repository on github and then use your own fork. This way you will be
 able to make pull requests.
 
 If you do not want to deal with git at all, you may download an
-archive of HoTT at https://github.com/HoTT/HoTT/archive/master.zip and
-unpack that. We do not recommend this option because the HoTT library
-is under heavy development and you want to be able to easily track
-changes.  Additionally, downloading the archive requires a working
-version of autoreconf.
+archive of HoTT at
+https://github.com/HoTT/HoTT/archive/master-with-autoreconf-files.zip
+and unpack that. We do not recommend this option because the HoTT
+library is under heavy development and you want to be able to easily
+track changes.
 
 Next you should configure the HoTT library:
 
-1. If you installed the custom Coq as your default version of Coq,
-   which means that it it can be fond in PATH, run
+1. If you want to use the bundled Coq, run
 
        ./autogen.sh
        ./configure
 
    in the HoTT directory.
 
-2. If you installed the custom Coq somewhere special or configured it
-   with `-local`, you should tell ./configure where to find the custom
-   Coq:
+2. If you want to use your own build of Coq, you should tell
+   ./configure where to find the custom Coq:
 
        ./autogen.sh
        ./configure COQBIN=<directory-containing-coq-executables>
@@ -160,11 +132,11 @@ By default the files will be installed in `/usr/local/bin` and
 `/usr/local/share/hott`.  You can change the location by using
 standard `configure` parameters when you run it.  For example
 
-    ./configure --bindir=$HOME/bin --datadir-$HOME/stuff
+    ./configure --bindir=$HOME/bin --datadir=$HOME/stuff
 
 will install `hoqtop` and `hoqc` in the `bin` subdirectory of your
 home directory and the HoTT library in `stuff/hott` subdirectory of
-your home directory.
+your home directory.  Alternatively, you can use `--prefix`.
 
 If you are using ProofGeneral (PG), do not forget to change the name
 of the Coq program called by PG. For instance you can edit the name of
