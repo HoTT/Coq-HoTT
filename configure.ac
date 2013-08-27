@@ -16,17 +16,80 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_MKDIR_P
 
+# Check to see if COQBIN was set
+AC_ARG_VAR([COQBIN], [the directory which contains the Coq executables @<:@BINDIR@:>@])
 # use 'test "x$foo" != "x"' rather than 'test -n "$foo"' as per
 # http://www.gnu.org/software/automake/manual/autoconf.html#Limitations-of-Builtins;
 # some shells get confused if $foo is a weird character like '!' or
 # '-n'
+AS_IF([test "x$COQBIN" != "x"],
+      [AC_MSG_NOTICE([Will look for Coq executables in $COQBIN])
+       COQTOP="$COQBIN/coqtop"
+       COQIDE="$COQBIN/coqide"
+       COQC="$COQBIN/coqc"
+       COQDEP="$COQBIN/coqdep"
+       COQDOC="$COQBIN/coqdoc"
+       COQMAKEFILE="$COQBIN/coq_makefile"
 
-# Now set COQBIN if it has not been set yet. We need COQBIN because Makefiles
-# produces by coq_makefile insist on running coqtop as $(COQBIN)coqtop, and
-# ssreflect uses coq_makefile
-AS_IF([test "x$COQBIN" = "x"],
-      [COQBIN=`AS_DIRNAME(["$COQTOP"])`])
-AC_MSG_NOTICE([COQBIN is $COQBIN])
+       # checking for coqtop
+       AC_MSG_CHECKING([for an executable coqtop in $COQBIN which supports -indices-matter])
+       AS_IF([test ! -x "$COQTOP"],
+              [AC_MSG_RESULT([no])
+               AC_MSG_ERROR([Could not find executable coqtop in $COQBIN])],
+             [test "`$COQTOP -help 2>&1 | grep -c -- -indices-matter`" = "0"],
+              [AC_MSG_RESULT([does not support -indices-matter])
+               AC_MSG_ERROR([You need a version of Coq which supports -indices-matter])],
+             [AC_MSG_RESULT([yes])])
+       AC_MSG_CHECKING([coqtop version])
+       COQVERSION="`$COQTOP -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`"
+       AC_MSG_RESULT([$COQVERSION])
+
+       # checking for coqc
+       AC_MSG_CHECKING([for an executable coqc in $COQBIN])
+       AS_IF([test ! -x "$COQC"],
+             [AC_MSG_RESULT([no])
+              AC_MSG_ERROR([Could not find executable coqc in $COQBIN])],
+             [AC_MSG_RESULT([yes])])
+       AC_MSG_CHECKING([coqc version])
+       COQCVERSION="`$COQC -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`"
+       AC_MSG_RESULT([$COQCVERSION])
+       AS_IF([test "x$COQCVERSION" != "x$COQVERSION"],
+             [AC_MSG_ERROR([Version mismatch between coqtop $COQVERSION and coqc $COQCVERSION])])
+
+       # checking for coqdep
+       AC_MSG_CHECKING([for an executable coqdep in $COQBIN])
+       AS_IF([test ! -x "$COQDEP"],
+             [AC_MSG_RESULT([no])
+              AC_MSG_ERROR([Could not find executable coqdep in $COQBIN])]
+             [AC_MSG_RESULT([yes])])
+
+       # checking for coqdoc
+       AC_MSG_CHECKING([for an executable coqdoc in $COQBIN])
+       AS_IF([test ! -x "$COQDOC"],
+             [AC_MSG_RESULT([no])
+              AC_MSG_ERROR([Could not find executable coqdoc in $COQBIN])],
+             [AC_MSG_RESULT([yes])])
+
+       # checking for coq_makefile
+       AC_MSG_CHECKING([for an executable coq_makefile in $COQBIN])
+       AS_IF([test ! -x "$COQMAKEFILE"],
+             [AC_MSG_RESULT([no])
+              AC_MSG_ERROR([Could not find executable coq_makefile in $COQBIN])],
+             [AC_MSG_RESULT([yes])])
+      ],
+      [COQTOP="$bindir/coqtop"
+       COQIDE="$bindir/coqide"
+       COQC="$bindir/coqc"
+       COQDEP="$bindir/coqdep"
+       COQDOC="$bindir/coqdoc"
+       COQMAKEFILE="$bindir/coq_makefile"])
+
+AC_SUBST([COQTOP])
+AC_SUBST([COQIDE])
+AC_SUBST([COQC])
+AC_SUBST([COQDEP])
+AC_SUBST([COQDOC])
+AC_SUBST([COQMAKEFILE])
 
 # Should we compile ssrfelect?
 compile_ssreflect="no"

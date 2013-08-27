@@ -4,13 +4,27 @@
 # options.  One day we might figure out how to create an honest Coq
 # toplevel instead.
 prefix="@prefix@"
+exec_prefix="@exec_prefix@"
 export ssr="@compile_ssreflect@"
-export COQC="@COQC@"
-export COQDEP="@COQDEP@"
-export COQDOC="@COQDOC@"
-export COQIDE="@COQIDE@"
-export COQTOP="@COQTOP@"
-# If there is a coq/theories directory in the parent directory of this
+# If there is a coq-HoTT directory in the same directory as this
+# script, then use the binaries from that one, otherwise use the
+# global one.  This trick allows coqc to work "in place" on the source
+# files.
+if test -d "$mydir/coq-HoTT"
+then
+  export COQC="$mydir/coq-HoTT/bin/coqc"
+  export COQDEP="$mydir/coq-HoTT/bin/coqdep"
+  export COQDOC="$mydir/coq-HoTT/bin/coqdoc"
+  export COQIDE="$mydir/coq-HoTT/bin/coqide"
+  export COQTOP="$mydir/coq-HoTT/bin/coqtop"
+else
+  export COQC="@COQC@"
+  export COQDEP="@COQDEP@"
+  export COQDOC="@COQDOC@"
+  export COQIDE="@COQIDE@"
+  export COQTOP="@COQTOP@"
+fi
+# If there is a coq/theories directory in the same directory as this
 # script, then use that one, otherwise use the global one. This trick
 # allows hoqc to work "in place" on the source files.
 mydir=`dirname $0`
