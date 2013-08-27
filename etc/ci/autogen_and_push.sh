@@ -29,9 +29,7 @@ echo 'Configuring git for pushing...'
 git config --global user.name "Travis-CI Bot"
 git config --global user.email "Travis-CI-Bot@travis.fake"
 
-export MESSAGE="./autogen.sh from $(git rev-parse --short HEAD)
-
-$(git log HEAD^..HEAD)"
+export MESSAGE="./autogen.sh"
 
 echo '$ autoreconf -fvi'
 autoreconf -fvi || exit $?
