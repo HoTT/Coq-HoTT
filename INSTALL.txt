@@ -26,12 +26,13 @@
 
 4. The library can be loaded with `Require Import HoTT.`
 
-5. You can install the library globally with `make install`, although
-   this has not been thoroughly tested.  You can customize the install
-   location by running
+5. You can install the library globally with `make install
+   install-coqlight`, although this has not been thoroughly tested.
+   You can customize the install location by running
 
        ./autogen.sh
        ./configure --prefix=<install-location>
+       make install-coqlight
        make install
 
 7. To use the emacs tags facility with the *.v files here, run the command
@@ -126,7 +127,7 @@ There is also `hoqc` for compiling files. You may prefer to install
 `hoqtop`, `hoqc` and the library files globally, in which case you
 type
 
-    sudo make install
+    sudo make install install-coqlight
 
 By default the files will be installed in `/usr/local/bin` and
 `/usr/local/share/hott`.  You can change the location by using

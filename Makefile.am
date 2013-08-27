@@ -167,8 +167,7 @@ TAGS : $(TAGS_FILES)
 $(DEPFILES) $(STDDEPFILES) : %.d : %.v $(COQDEP)
 	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -R $(srcdir)/theories HoTT -R $(SRCCOQLIB)/theories Coq $< >$@
 
-install:
-	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" install
+# install: install-coqlight
 
 clean:
 	rm -f $(CLEANFILES)
