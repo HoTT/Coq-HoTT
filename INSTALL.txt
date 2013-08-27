@@ -35,7 +35,7 @@
        make install-coqlight
        make install
 
-7. To use the emacs tags facility with the *.v files here, run the command
+6. To use the emacs tags facility with the *.v files here, run the command
 
    	make TAGS
 
