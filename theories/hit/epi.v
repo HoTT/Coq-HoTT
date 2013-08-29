@@ -1,32 +1,60 @@
-Require Import HoTT minus1Trunc Bool.
+Require Import HoTT minus1Trunc HProp Misc TruncType.
 
-Instance hProp_is_hSet : (IsHSet hProp) | 0.
-intros [p p1] [q q1].
-Admitted. (* We need some lemmas about records *)
+Open Scope path_scope.
+Open Scope equiv_scope.
 
-Lemma uahp `{ua:Univalence}:
-  forall P P': hProp, (P->P') -> (P' -> P) -> P = P'.
+Section AssumingUA.
+(** The univalence axiom for HProp *)
+(** We need fs to be able to find hprop_trunc *)
+Context `{fs:Funext} `{ua:Univalence}.
+Lemma uahp' : forall P P': sigT IsHProp, (P.1<->P'.1) -> P = P'.
+intros ? ? X. apply (equiv_path_sigma_hprop P P'). apply ua. 
+destruct P, P'. destruct X.
+by apply equiv_iff_hprop.
+Defined.
+
+Lemma uahp'' : forall P P': sigT IsHProp, P = P' -> (P.1<->P'.1).
+intros ?? p. by destruct p.
+Defined.
+
+Lemma uahp_biimp :
+ forall P P': sigT IsHProp, (P.1<->P'.1) <~> (P = P').
 intros.
-destruct P, P'. (* TruncType *)
-(* Need Equality on Records
-apply (@path_universe_uncurried _ ). eapply ua. apply equiv_iff_hprop
-*)
-Admitted.
+apply equiv_adjointify with (uahp' P P') (uahp'' P P').
+- intro x. destruct x. eapply allpath_hprop.
+- intros x. cut (IsHProp (P .1 <-> P' .1)). intro H. apply allpath_hprop.
+  cut (Contr(P .1 <-> P' .1)). intro. apply trunc_succ.
+  exists x. intro y. destruct y as [y1 y2]. destruct x as [x1 x2].
+f_ap; apply fs; intro x; [apply P'.2| apply P.2].
+Defined.
 
+(** The variant of [uahp] for record types. 
+The conversion could be smoother if we could coerce record types to sigma types. *)
+Lemma uahp_rec {P P':hProp}: (P->P') -> (P'->P) -> P = P'.
+set (p:=issig_hProp^-1 P).
+set (p':=issig_hProp^-1 P').
+intros X X0.
+assert (p=p') by (by apply uahp_biimp). 
+clear X X0. 
+path_via (issig_hProp (issig_hProp ^-1 P)); destruct P. reflexivity.
+path_via (issig_hProp (issig_hProp ^-1 P')); destruct P';[f_ap|reflexivity].
+Defined.
+
+(** Note the restriction to hSet *)
 Definition epi {X Y} `(f:X->Y) := forall Z: hSet,
   forall g h: Y -> Z, g o f = h o f -> g = h.
 
 Definition hexists {X} (P:X->Type):Type:= minus1Trunc (sigT  P).
 Definition surj {X Y} (f:X->Y) := forall y:Y , hexists (fun x => (f x) = y).
 
-Lemma epi_surj `{fs:Funext} `{Univalence} {X Y} (f:X->Y): epi f -> surj f.
+Lemma epi_surj {X Y} (f:X->Y): epi f -> surj f.
 intros epif y.
 set (g:=fun _:Y => (default_HProp Unit _)).
 set (h:=(fun y:Y => (default_HProp
   (hexists (fun _ : Unit => {x:X & y = (f x)})) _ ))).
 specialize (epif _ g h).
 assert (X1: g o f = h o f ).
- apply fs; intro x. apply uahp;[|done].
+ apply fs; intro x. apply uahp_rec;[|done].
  intros _ . apply min1. exists tt. by exists x.
 specialize (epif X1). clear X1.
 set (apD10 epif y).
@@ -36,9 +64,10 @@ apply (@minus1Trunc_map (sigT (fun _ : Unit => sigT (fun x : X => y = f x)))).
   intros [ _ [x eq]]. exists x. by symmetry.
  apply (X2 X1).
 apply (transport propT p tt).
-Qed.
+(* Defined. We only avoid a universe inconsitency *)
+Admitted.
 
-Lemma surj_epi  `{fs:Funext} {X Y} (f:X->Y): surj f -> epi f.
+Lemma surj_epi {X Y} (f:X->Y): surj f -> epi f.
 intros sur ? ? ? ep. apply fs. intro y.
 specialize (sur y).
 apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
@@ -48,3 +77,4 @@ apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
  path_via (h (f x)). by apply ap.
 intros. by apply @set_path2.
 Qed.
+End AssumingUA.

@@ -153,6 +153,9 @@ Proof.
 Defined.
 
 (** The type of Propositions *)
+(** We use both the Sigma type of propositions and the record type of propositions.
+The latter allows us to automatically find a proof that a type is a proposition.
+*)
 Record hProp := BuildhProp {propT:> Type; isp :> IsHProp propT}.
 Canonical Structure default_HProp:= fun T P => (@BuildhProp T P).
 (** the eta-expansion seems needed *)
@@ -163,10 +166,4 @@ Definition issig_hProp
 : { propT : Type & IsHProp propT } <~> hProp.
 Proof.
   issig BuildhProp propT isp.
-Defined.
-
-Lemma sigma_prop_eq {A} {P : A -> hProp}: forall u v : sigT P, u.1 = v.1 -> u=v.
-Proof.
-intros ? ? H.
-apply path_sigma with H. apply allpath_hprop.
 Defined.

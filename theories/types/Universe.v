@@ -36,7 +36,7 @@ Class Univalence := {
 }.
 
 Section Univalence.
-Context `{Univalence}.
+Context `{ua:Univalence}.
 
 Definition path_universe_uncurried {A B : Type} (f : A <~> B) : A = B
   := (equiv_path A B)^-1 f.
