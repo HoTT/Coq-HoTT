@@ -8,7 +8,7 @@ Section AssumingUA.
 (** We need fs to be able to find hprop_trunc *)
 Context `{fs:Funext} `{ua:Univalence}.
 Lemma uahp' : forall P P': sigT IsHProp, (P.1<->P'.1) -> P = P'.
-intros ? ? X. apply (equiv_path_sigma_hprop P P'). apply ua. 
+intros ? ? X. apply (equiv_path_sigma_hprop P P'). apply ua.
 destruct P, P'. destruct X.
 by apply equiv_iff_hprop.
 Defined.
@@ -33,8 +33,8 @@ Lemma uahp_rec {P P':hProp}: (P->P') -> (P'->P) -> P = P'.
 set (p:=issig_hProp^-1 P).
 set (p':=issig_hProp^-1 P').
 intros X X0.
-assert (p=p') by (by apply uahp_biimp). 
-clear X X0. 
+assert (p=p') by (by apply uahp_biimp).
+clear X X0.
 path_via (issig_hProp (issig_hProp ^-1 P)); destruct P. reflexivity.
 path_via (issig_hProp (issig_hProp ^-1 P')); destruct P';[f_ap|reflexivity].
 Defined.
@@ -56,23 +56,26 @@ apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
 intros. by apply @set_path2.
 Qed.
 
-Require Import FunextAxiom.
-Lemma epi_surj {X Y} (f:X->Y): epi f -> surj f.
-intros epif y.
-set (g:=fun _:Y => (default_HProp (Unit:Type) _)).
-set (h:=(fun y:Y => (default_HProp
-  (hexists (fun _ : Unit => {x:X & y = (f x)})) _ ))).
-specialize (epif _ g h).
-assert (X1: g o f = h o f ).
- apply funext_axiom; intro x. apply uahp_rec;[|done].
- intros _ . apply min1. exists tt. by exists x.
-specialize (epif X1). clear X1.
-set (p:=apD10 epif y).
-apply (@minus1Trunc_map (sigT (fun _ : Unit => sigT (fun x : X => y = f x)))).
- intros [ _ [x eq]].
-  assert (X2: sigT (fun x : X => f x = y)) by (exists x; by symmetry).
- apply X2.
-apply (transport hProp2Type p tt).
+(** We need an extra instance of [Funext] for universe polymorphism. *)
+Lemma epi_surj `{fs' : Funext} {X Y} (f:X->Y): epi f -> surj f.
+Proof.
+  intros epif y.
+  set (g:=fun _:Y => (default_HProp (Unit:Type) _)).
+  set (h:=(fun y:Y => (default_HProp
+                         (hexists (fun _ : Unit => {x:X & y = (f x)})) _ ))).
+  assert (X1: g o f = h o f ).
+  - apply fs'. intro x. apply uahp_rec;[|done].
+    intros _ . apply min1. exists tt. by (exists x).
+  - (** It is absolutely essential that we [clear fs'], so that we
+        don't use it in [epif _ g h] and pick up a universe
+        inconsistency *)
+    clear fs'. specialize (epif _ g h).
+    specialize (epif X1). clear X1.
+    set (p:=apD10 epif y).
+    apply (@minus1Trunc_map (sigT (fun _ : Unit => sigT (fun x : X => y = f x)))).
+    + intros [ _ [x eq]].
+      exists x.
+        by symmetry.
+    + apply (transport hProp2Type p tt).
 Defined.
-
 End AssumingUA.
