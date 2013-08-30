@@ -28,8 +28,7 @@ apply equiv_adjointify with (uahp' P P') (uahp'' P P').
 f_ap; apply fs; intro x; [apply P'.2| apply P.2].
 Defined.
 
-(** The variant of [uahp] for record types. 
-The conversion could be smoother if we could coerce record types to sigma types. *)
+(** The variant of [uahp] for record types. *)
 Lemma uahp_rec {P P':hProp}: (P->P') -> (P'->P) -> P = P'.
 set (p:=issig_hProp^-1 P).
 set (p':=issig_hProp^-1 P').
@@ -40,32 +39,11 @@ path_via (issig_hProp (issig_hProp ^-1 P)); destruct P. reflexivity.
 path_via (issig_hProp (issig_hProp ^-1 P')); destruct P';[f_ap|reflexivity].
 Defined.
 
-(** Note the restriction to hSet *)
+(** We will now prove that for sets epis and surjections are biequivalent.*)
 Definition epi {X Y} `(f:X->Y) := forall Z: hSet,
   forall g h: Y -> Z, g o f = h o f -> g = h.
 
-Definition hexists {X} (P:X->Type):Type:= minus1Trunc (sigT  P).
 Definition surj {X Y} (f:X->Y) := forall y:Y , hexists (fun x => (f x) = y).
-
-Lemma epi_surj {X Y} (f:X->Y): epi f -> surj f.
-intros epif y.
-set (g:=fun _:Y => (default_HProp Unit _)).
-set (h:=(fun y:Y => (default_HProp
-  (hexists (fun _ : Unit => {x:X & y = (f x)})) _ ))).
-specialize (epif _ g h).
-assert (X1: g o f = h o f ).
- apply fs; intro x. apply uahp_rec;[|done].
- intros _ . apply min1. exists tt. by exists x.
-specialize (epif X1). clear X1.
-set (apD10 epif y).
-apply (@minus1Trunc_map (sigT (fun _ : Unit => sigT (fun x : X => y = f x)))).
- intro X1.
-  assert (X2:(sigT (fun _ : Unit => sigT (fun x : X => y = f x)) -> sigT (fun x : X => f x = y))).
-  intros [ _ [x eq]]. exists x. by symmetry.
- apply (X2 X1).
-apply (transport propT p tt).
-(* Defined. We only avoid a universe inconsitency *)
-Admitted.
 
 Lemma surj_epi {X Y} (f:X->Y): surj f -> epi f.
 intros sur ? ? ? ep. apply fs. intro y.
@@ -77,4 +55,24 @@ apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
  path_via (h (f x)). by apply ap.
 intros. by apply @set_path2.
 Qed.
+
+Require Import FunextAxiom.
+Lemma epi_surj {X Y} (f:X->Y): epi f -> surj f.
+intros epif y.
+set (g:=fun _:Y => (default_HProp (Unit:Type) _)).
+set (h:=(fun y:Y => (default_HProp
+  (hexists (fun _ : Unit => {x:X & y = (f x)})) _ ))).
+specialize (epif _ g h).
+assert (X1: g o f = h o f ).
+ apply funext_axiom; intro x. apply uahp_rec;[|done].
+ intros _ . apply min1. exists tt. by exists x.
+specialize (epif X1). clear X1.
+set (p:=apD10 epif y).
+apply (@minus1Trunc_map (sigT (fun _ : Unit => sigT (fun x : X => y = f x)))).
+ intros [ _ [x eq]].
+  assert (X2: sigT (fun x : X => f x = y)) by (exists x; by symmetry).
+ apply X2.
+apply (transport hProp2Type p tt).
+Defined.
+
 End AssumingUA.
