@@ -18,6 +18,8 @@ AC_PROG_MKDIR_P
 
 # Check to see if COQBIN was set
 AC_ARG_VAR([COQBIN], [the directory which contains the Coq executables @<:@BINDIR@:>@])
+# we are using the bundled coq only if the user does not pass COQBIN
+AM_CONDITIONAL([BUNDLE_COQ], [test "x$COQBIN" = x])
 # use 'test "x$foo" != "x"' rather than 'test -n "$foo"' as per
 # http://www.gnu.org/software/automake/manual/autoconf.html#Limitations-of-Builtins;
 # some shells get confused if $foo is a weird character like '!' or
@@ -77,13 +79,15 @@ AS_IF([test "x$COQBIN" != "x"],
               AC_MSG_ERROR([Could not find executable coq_makefile in $COQBIN])],
              [AC_MSG_RESULT([yes])])
       ],
-      [COQTOP="$bindir/coqtop"
+      [COQBIN="$bindir"
+       COQTOP="$bindir/coqtop"
        COQIDE="$bindir/coqide"
        COQC="$bindir/coqc"
        COQDEP="$bindir/coqdep"
        COQDOC="$bindir/coqdoc"
        COQMAKEFILE="$bindir/coq_makefile"])
 
+AC_SUBST([COQBIN])
 AC_SUBST([COQTOP])
 AC_SUBST([COQIDE])
 AC_SUBST([COQC])

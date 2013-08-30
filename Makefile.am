@@ -17,12 +17,11 @@ SRCCOQLIB=$(srcdir)/coq
 # The path to the local Coq distribution in $(builddir)
 SRCCOQDIR=$(abs_srcdir)/coq-HoTT
 BUILDCOQDIR=$(abs_builddir)/coq-HoTT
-COQBIN=$(BUILDCOQDIR)/bin/
-COQTOP=$(COQBIN)coqtop
-COQDEP=$(COQBIN)coqdep
-COQDOC=$(COQBIN)coqdoc
-COQC=$(COQBIN)coqc
-COQMAKEFILE=$(COQBIN)coq_makefile
+COQTOP=$(COQBIN)/coqtop
+COQDEP=$(COQBIN)/coqdep
+COQDOC=$(COQBIN)/coqdoc
+COQC=$(COQBIN)/coqc
+COQMAKEFILE=$(COQBIN)/coq_makefile
 
 # support the TIMED variable like coq_makefile
 TIMED=
@@ -80,28 +79,36 @@ else
 .PHONY: stdlib hottlib coqlight
 endif
 
-$(COQBIN): coqlight
+if BUNDLE_COQ
+COQLIGHT_DEP = coqlight
+else
+COQLIGHT_DEP = miniopt
+endif
 
-$(COQC): coqlight
+$(COQC): $(COQLIGHT_DEP)
 
-$(COQDEP): coqlight
+$(COQDEP): $(COQLIGHT_DEP)
 
-$(COQDOC): coqlight
+$(COQDOC): $(COQLIGHT_DEP)
 
-$(COQMAKEFILE): coqlight
+$(COQMAKEFILE): $(COQLIGHT_DEP)
 
-$(COQTOP): coqlight
+$(COQTOP): $(COQLIGHT_DEP)
 
 coqlight: coq-HoTT
 	$(MKDIR_P) "$(BUILDCOQDIR)"
 	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" coqlight
+
+miniopt: coq-HoTT
+	$(MKDIR_P) "$(BUILDCOQDIR)"
+	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" miniopt
 
 install-coqlight: coqlight
 	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" install-coqlight
 
 if make_ssreflect
 clean-local: $(SSRMAKEFILE)
-	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)" clean
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" clean
 	rm -f "$(SSRMAKEFILE)"
 endif
 
@@ -137,17 +144,17 @@ $(SSRMAKEFILE): $(ssrdir)/Make $(COQMAKEFILE)
 $(SSRVOFILES): $(SRRMAKEFILE) $(SSRCMXSFILES) $(SSRCMAFILES)
 
 $(SSRVOFILES) : %.vo : %.v
-	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)" $@
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
 
 $(SSRCMXSFILES): $(SSRMAKEFILE)
 
 $(SSRCMAFILES): $(SSRMAKEFILE)
 
 $(SSRCMXSFILES): %.cmxs : %.mllib
-	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)" $@
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
 
 $(SSRCMAFILES): %.cma : %.mllib
-	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)" $@
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
 endif
 
 # The HTML files
