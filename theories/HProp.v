@@ -154,8 +154,8 @@ Defined.
 (** Every hProp is a subclass of IsHProp *)
 Class hProp := hp { hproptype : Type ; isp :> IsHProp hproptype}.
 (** Avoid hproptype, isp automatically eating a type *)
-Implicit Arguments hproptype.
-Implicit Arguments isp.
+Arguments hproptype :clear implicits.
+Arguments isp :clear implicits.
 Coercion hproptype: hProp >-> Sortclass.
 Require Import Unit Empty.
 Instance Unit_hp:hProp:=(hp Unit _).

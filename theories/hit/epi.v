@@ -1,7 +1,7 @@
 Require Import HoTT minus1Trunc HProp Misc TruncType.
 
-Open Scope path_scope.
-Open Scope equiv_scope.
+Open Local Scope path_scope.
+Open Local Scope equiv_scope.
 
 Section AssumingUA.
 (** The univalence axiom for HProp *)
