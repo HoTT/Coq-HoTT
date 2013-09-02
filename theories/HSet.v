@@ -98,7 +98,7 @@ Defined.
 End AssumeFunext.
 
 Record hSet := BuildhSet {setT:> Type; iss :> IsHSet setT}.
-(** This one is needed in epi_surj to coerce hProp into hSet*)
+(** This one is needed in [epi_surj] to coerce [hProp] into [hSet]*)
 Canonical Structure default_HSet:= fun T P => (@BuildhSet T P).
 Hint Resolve iss.
 Global Existing Instance iss.
