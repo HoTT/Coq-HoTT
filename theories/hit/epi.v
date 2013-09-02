@@ -34,7 +34,7 @@ set (p:=issig_hProp^-1 P).
 set (p':=issig_hProp^-1 P').
 intros X X0.
 assert (p=p') by (by apply uahp_biimp).
-clear X X0.
+clear X X0. 
 path_via (issig_hProp (issig_hProp ^-1 P)); destruct P. reflexivity.
 path_via (issig_hProp (issig_hProp ^-1 P')); destruct P';[f_ap|reflexivity].
 Defined.
@@ -60,9 +60,8 @@ Qed.
 Lemma epi_surj `{fs' : Funext} {X Y} (f:X->Y): epi f -> surj f.
 Proof.
   intros epif y.
-  set (g:=fun _:Y => (default_HProp (Unit:Type) _)).
-  set (h:=(fun y:Y => (default_HProp
-                         (hexists (fun _ : Unit => {x:X & y = (f x)})) _ ))).
+  set (g :=fun _:Y => Unit_hp).
+  set (h:=(fun y:Y => (hp (hexists (fun _ : Unit => {x:X & y = (f x)})) _ ))).
   assert (X1: g o f = h o f ).
   - apply fs'. intro x. apply uahp_rec;[|done].
     intros _ . apply min1. exists tt. by (exists x).
@@ -76,6 +75,6 @@ Proof.
     + intros [ _ [x eq]].
       exists x.
         by symmetry.
-    + apply (transport hProp2Type p tt).
+    + apply (transport hproptype p tt).
 Defined.
 End AssumingUA.

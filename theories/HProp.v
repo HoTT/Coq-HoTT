@@ -151,73 +151,17 @@ Proof.
 Defined.
 
 (** The type of Propositions *)
-(** We use both the Sigma type of propositions and the record type of propositions.
-The latter allows us to automatically find a proof that a type is a proposition.
+(** Every hProp is a subclass of IsHProp *)
+Class hProp := hp { hproptype : Type ; isp :> IsHProp hproptype}.
+(** Avoid hproptype, isp automatically eating a type *)
+Implicit Arguments hproptype.
+Implicit Arguments isp.
+Coercion hproptype: hProp >-> Sortclass.
+Require Import Unit Empty.
+Instance Unit_hp:hProp:=(hp Unit _).
+Instance False_hp:hProp:=(hp Unit _).
+(** We could continue with products etc *)
 
-At first, we may just want to look at the record type hProp and (sigT IsHProp).
-However, the generalization with total2 will allow us to define two coercions.
-So, a theorem about one type can be applied to the other. It's not magic, but it is convenient.
-
-We make total2 a Class so that sig_to_total2 can be an instance.
-Also, this seems to be convenient to make tp1 and tp2 into coercions.
-
-We should explore this some more and then apply this to other record types.
-
-For now, it allows us to finish the proofs in epi.v which explicitly use the type 
-hProp of all propositions, as opposed to just individual propositions.
-
-More experiments with Canonical Structures (for Equivs) can be found in the deprecated
-ssreflect branch.
-*)
-
-Class total2 {T} (P: T -> Type) := tpair2 { tp1 :> T ; tp2 :> P tp1 }.
-Implicit Arguments tpair2 [T P] .
-Lemma total2_to_sig {T} (P: T -> Type): total2 P -> sigT P.
-intros [p1 p2]. exact (p1;p2).
+Definition issig_hProp: (sigT IsHProp) <~> hProp.
+  issig hp hproptype isp.
 Defined.
-
-(** sigT will be accepted as a total2 *)
-Instance sig_to_total2 {T} (P: T -> Type): sigT P -> total2 P.
-intros [p1 p2]. exact {| tp1 := p1; tp2 := p2 |}.
-Defined.
-
-(** This is similar to sig_to_sigT in the stdlib *)
-Coercion total2_to_sig: total2 >-> sigT.
-Coercion sig_to_total2: sigT >-> total2.
-
-Definition hProp := total2 IsHProp.
-Definition hProp2Type: hProp -> Type.
-intros [p3 _]. exact p3.
-Defined.
-(** Now we can write P-> Q for propositions *)
-Coercion hProp2Type: hProp >-> Sortclass.
-
-(* Here is a simple example.
-Variable P:Type.
-Variable p:(IsHProp P).
-Goal hProp.
-exact (P;_).*)
-
-(** We want to find side conditions automatically. *)
-Instance hProp2IsHProp (P: hProp): IsHProp P.
-apply tp2.
-Defined.
-
-Hint Resolve hProp2IsHProp.
-
-(** It is important to give the type :hProp explicitly to avoid universe inconsistencies in epi.v *)
-Canonical Structure default_HProp (T:Type)(P:IsHProp T) :hProp:= (@tpair2 Type IsHProp T P).
-(** In this way we can write e.g.
-<<
-(default_HProp Unit _)
->>
-For the Unit proposition. Coq will automatically find a proof that it is a proposition.)
-*)
-
-Definition equiv_issig_total {T} {P:T->Type}
-: (sigT P) <~> total2 P.
-Proof.
-  issig (@tpair2 T P) (@tp1 T P) (@tp2 T P).
-Defined.
-
-Definition issig_hProp:=(@equiv_issig_total Type IsHProp).
