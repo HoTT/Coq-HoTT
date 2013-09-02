@@ -152,14 +152,15 @@ Defined.
 
 (** The type of Propositions *)
 (** Every hProp is a subclass of IsHProp *)
-Class hProp := hp { hproptype : Type ; isp :> IsHProp hproptype}.
+Record hProp := hp { hproptype : Type ; isp : IsHProp hproptype}.
+Existing Instance isp.
 (** Avoid hproptype, isp automatically eating a type *)
 Arguments hproptype :clear implicits.
 Arguments isp :clear implicits.
 Coercion hproptype: hProp >-> Sortclass.
 Require Import Unit Empty.
-Instance Unit_hp:hProp:=(hp Unit _).
-Instance False_hp:hProp:=(hp Unit _).
+Definition Unit_hp:hProp:=(hp Unit _).
+Definition False_hp:hProp:=(hp Unit _).
 (** We could continue with products etc *)
 
 Definition issig_hProp: (sigT IsHProp) <~> hProp.
