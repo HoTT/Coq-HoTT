@@ -151,18 +151,14 @@ Proof.
 Defined.
 
 (** The type of Propositions *)
-(** Every hProp is a subclass of IsHProp *)
-Record hProp := hp { hproptype : Type ; isp : IsHProp hproptype}.
-(** This one would allow us to turn the record type of contractible types into an [hProp].
+Record hProp := hp { hproptype :> Type ; isp : IsHProp hproptype}.
+(** This one would allow us to turn the record type of contractible types 
+into an [hProp].
 <<
 Canonical Structure default_HProp:= fun T P => (@hp T P).
 >>
 *)
 Existing Instance isp.
-(** Avoid hproptype, isp automatically eating a type *)
-Arguments hproptype :clear implicits.
-Arguments isp :clear implicits.
-Coercion hproptype: hProp >-> Sortclass.
 Require Import Unit Empty.
 Definition Unit_hp:hProp:=(hp Unit _).
 Definition False_hp:hProp:=(hp Unit _).
