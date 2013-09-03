@@ -3,8 +3,6 @@ This equivalence is close to the existence of an object classifier.
 *)
 
 Require Import HoTT Universe.
-Notation pr1:=(@projT1 _ _).
-Notation pr2:=(@projT2 _ _).
 
 Section AssumeUnivalence.
 Context `{ua:Univalence}.
@@ -39,22 +37,22 @@ Proof.
 Defined.
 
 Definition equiv_total_paths (A : Type) (P : A-> Type) (x y : sigT P) :
-  (x = y) <~> { p : pr1 x = pr1 y & transport P p (pr2 x) = pr2 y }
+  (x = y) <~> { p : x.1 = y.1 & transport P p x.2 = y.2 }
   := BuildEquiv _ _ ((equiv_path_sigma P x y)^-1)%path _.
 Let hfiber_fibration_eissect {X} {x : X} {P}
-: forall x0 : {z : exists x, P x & pr1 z = x},
-      ((x; transport P (pr2 x0) (pr2 (pr1 x0))); 1%path) = x0.
+: forall x0 : {z : exists x, P x & z.1 = x},
+      ((x; transport P x0.2 x0.1.2); 1%path) = x0.
 Proof.
   repeat (intros [] || intro); reflexivity.
 Defined.
 Definition hfiber_fibration {X} (x : X) (P:X->Type):
-    P x <~> { z : sigT P & pr1 z = x }.
+    P x <~> { z : sigT P & z.1 = x }.
 Proof.
   refine (BuildEquiv
             _ _
             _
             (BuildIsEquiv
-               (P x) { z : sigT P & pr1 z = x }
+               (P x) { z : sigT P & z.1 = x }
                (fun Px => ((x; Px); idpath))
                (fun Px => transport P Px.2 Px.1.2)
                hfiber_fibration_eissect
@@ -67,9 +65,8 @@ End ToBeMoved.
 Section FamPow.
 (* We consider Families and Powers over a fixed type [A] *)
 Variable A:Type.
-Notation pr1:=(@projT1 _ _).
 Definition Fam A:=sigT (fun I:Type  => I->A).
-Definition p2f: (A->Type)-> Fam A:=  fun Q:(A->Type) => ( (sigT Q) ; pr1).
+Definition p2f: (A->Type)-> Fam A:=  fun Q:(A->Type) => ( (sigT Q) ; @projT1 _ _).
 Definition f2p: Fam A -> (A->Type):=
  fun F => let (I, f) := F in (fun a => (hfiber f a)).
 
@@ -125,9 +122,9 @@ exists f2p. intros [I f].
 (* Theorem right (F:Fam A) : F = (p2ff2p F) *)
 
 set (e:=@equiv_total_paths _ _ (@existT Type (fun I0 : Type => I0 -> A) I f)
-({a : A & hfiber f a} ; pr1)). simpl in e.
+({a : A & hfiber f a} ; @projT1 _ _)). simpl in e.
 cut ( {p : I = {a : A & @hfiber I A f a} &
-     @transport _ (fun I0 : Type => I0 -> A) _ _ p f = pr1}).
+     @transport _ (fun I0 : Type => I0 -> A) _ _ p f = @projT1 _ _}).
 intro X. apply ((e ^-1 X)^).
 set (w:=@equiv_fibration_replacement A I f).
 exists (path_universe w). path_via (exp w f). apply transport_exp.
@@ -177,10 +174,9 @@ eapply (@total_path A (fun b : A =>
       sigT (fun c : sigT (fun u : Type => u) => paths (P b) (projT1 c))) a
      (existT (fun c : sigT (fun u : Type => u) => paths (P a) (projT1 c))
         (existT (fun u : Type => u) T t) p)) (idpath a)).
-simpl in p. by path_induction. 
+simpl in p. by path_induction.
 Qed.
 
 End FamPow.
 End AssumeFunext.
 End AssumeUnivalence.
-
