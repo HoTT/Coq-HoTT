@@ -59,4 +59,13 @@ Proof.
   apply istrunc_equiv.
 Defined.
 
+Global Instance Sn_trunctype: forall n, IsTrunc (trunc_S n) (sigT (IsTrunc n)) |0.
+intro n.
+apply (@trunc_equiv' _ _ (equiv_inverse issig_trunctype) _ (@istrunc_trunctype n)).
+Defined.
+
+Global Instance hProp_is_hSet : (IsHSet hProp) | 0.
+apply (@trunc_equiv' _ _ issig_hProp _ (Sn_trunctype _)).
+Defined.
+
 End TruncType.

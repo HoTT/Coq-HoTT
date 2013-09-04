@@ -175,8 +175,7 @@ intros ? ? dclass. apply quotient_rect with dclass.
 intros. apply Hprop'.
 Defined.
 
-Require Import hit.epi.
-Require Import minus1Trunc.
+Require Import hit.epi minus1Trunc.
 
 (** From Ch6 *)
 Theorem  quotient_surjective: surj (class_of _).
@@ -198,15 +197,15 @@ intros [f H].
 apply (quotient_rect_nondep _ H).
 Defined.
 
-Theorem quotient_ump {funext_axiom:Funext} (B:hSet): (quotient _ -> B) <~>
+Require Import Misc.
+Theorem quotient_ump (B:hSet): (quotient _ -> B) <~>
   (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
 Proof.
 refine (equiv_adjointify (quotient_ump' B) (quotient_ump'' B) _ _).
 intros [f Hf]. 
-- apply sigma_prop_eq. 
-  reflexivity.
+- by apply equiv_path_sigma_hprop.
 - intros f. 
-  apply funext_axiom.
+  apply funext.
   red. apply quotient_ind;[apply _|reflexivity].
 Defined.
 
