@@ -20,15 +20,13 @@ Lemma contr_inhabited_hprop (A : Type) `{H : IsHProp A} (x : A)
 Proof.
   exists x.
   intro y.
-  simpl in H.
   apply center, H.
 Defined.
 
 (** If inhabitation implies contractibility, then we have an h-proposition.  We probably won't often have a hypothesis of the form [A -> Contr A], so we make sure we give priority to other instances. *)
 Instance hprop_inhabited_contr (A : Type) : (A -> Contr A) -> IsHProp A | 10000.
 Proof.
-  intro H.
-  intros x y.
+  intros H x y.
   pose (C := H x).
   apply contr_paths_contr.
 Defined.
@@ -153,20 +151,19 @@ Proof.
 Defined.
 
 (** The type of Propositions *)
-Record hProp := BuildhProp {propT:> Type; isp :> IsHProp propT}.
-Canonical Structure default_HProp:= fun T P => (@BuildhProp T P).
-(** the eta-expansion seems needed *)
-Hint Resolve isp.
-Global Existing Instance isp.
+Record hProp := hp { hproptype :> Type ; isp : IsHProp hproptype}.
+(** This one would allow us to turn the record type of contractible types 
+into an [hProp].
+<<
+Canonical Structure default_HProp:= fun T P => (@hp T P).
+>>
+*)
+Existing Instance isp.
+Require Import Unit Empty.
+Definition Unit_hp:hProp:=(hp Unit _).
+Definition False_hp:hProp:=(hp Unit _).
+(** We could continue with products etc *)
 
-Definition issig_hProp
-: { propT : Type & IsHProp propT } <~> hProp.
-Proof.
-  issig BuildhProp propT isp.
-Defined.
-
-Lemma sigma_prop_eq {A} {P : A -> hProp}: forall u v : sigT P, u.1 = v.1 -> u=v.
-Proof.
-intros ? ? H.
-apply path_sigma with H. apply allpath_hprop.
+Definition issig_hProp: (sigT IsHProp) <~> hProp.
+  issig hp hproptype isp.
 Defined.

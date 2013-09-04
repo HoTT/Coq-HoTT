@@ -244,3 +244,6 @@ Proof.
 Qed.
 
 End minus1TruncMonad.
+
+(** We may want to define the other connectives to at some point. *)
+Definition hexists {X} (P:X->Type):Type:= minus1Trunc (sigT  P).

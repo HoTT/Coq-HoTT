@@ -3,7 +3,9 @@ This equivalence is close to the existence of an object classifier.
 *)
 
 Require Import HoTT Universe.
-Set Universe Polymorphism.
+Notation pr1:=(@projT1 _ _).
+Notation pr2:=(@projT2 _ _).
+
 Section AssumeUnivalence.
 Context `{ua:Univalence}.
 Section AssumeFunext.
@@ -35,8 +37,7 @@ Proof.
                _)).
   reflexivity.
 Defined.
-Notation pr1:=(@projT1 _ _).
-Notation pr2:=(@projT2 _ _).
+
 Definition equiv_total_paths (A : Type) (P : A-> Type) (x y : sigT P) :
   (x = y) <~> { p : pr1 x = pr1 y & transport P p (pr2 x) = pr2 y }
   := BuildEquiv _ _ ((equiv_path_sigma P x y)^-1)%path _.
@@ -94,6 +95,7 @@ Theorem equiv_induction (P : forall U V, U <~> V -> Type) :
 Proof.
 intros H0???.
 apply (equiv_rect (equiv_path _ _)).
+(* The intro pattern: intros ->. replies eq not found. This is a bug. *)
 intro x. case x. apply H0.
 Defined.
 
@@ -129,11 +131,7 @@ cut ( {p : I = {a : A & @hfiber I A f a} &
 intro X. apply ((e ^-1 X)^).
 set (w:=@equiv_fibration_replacement A I f).
 exists (path_universe w). path_via (exp w f). apply transport_exp.
- unfold w.
-(* It still seems to be hidden in the Funext, Isequiv, apD10 *)
-apply fs.  (intros [a [i p]]). simpl.  admit.
-(* this used to  follow from inspecting the proof of equiv_fibration_replacement
-reflexivity.*)
+apply fs. by  (intros [a [i p]]).
 Qed.
 
 Corollary FamequivPow : (A->Type)<~>(Fam A).
@@ -159,7 +157,7 @@ Defined.
 Open Local Scope path_scope.
 Let help_objclasspb_is_fibrantreplacement2 (P:A-> Type):
  (pullback P (@projT1 _ (fun u :Type => u))) -> (sigT P).
-intros [a [[T t] p]]. simpl in p. exact (a;(bla t (p^))).
+intros [a [[T t] p]]. exact (a;(bla t (p^))).
 Defined.
 
 Lemma objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P) <~> (pullback P (@projT1 _ (fun u :Type => u))).
@@ -179,9 +177,10 @@ eapply (@total_path A (fun b : A =>
       sigT (fun c : sigT (fun u : Type => u) => paths (P b) (projT1 c))) a
      (existT (fun c : sigT (fun u : Type => u) => paths (P a) (projT1 c))
         (existT (fun u : Type => u) T t) p)) (idpath a)).
-simpl in p. path_induction. reflexivity.
+simpl in p. by path_induction. 
 Qed.
 
 End FamPow.
 End AssumeFunext.
 End AssumeUnivalence.
+
