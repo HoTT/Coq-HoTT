@@ -19,6 +19,10 @@ aclocal.m4
 autom4te.cache
 config.status
 configure
+coq/dev
+coq/kernel
+coq/library
+coq/plugins
 etc/install-sh
 etc/missing
 hoq-config

@@ -26,6 +26,7 @@ AM_CONDITIONAL([BUNDLE_COQ], [test "x$COQBIN" = x])
 # '-n'
 AS_IF([test "x$COQBIN" != "x"],
       [AC_MSG_NOTICE([Will look for Coq executables in $COQBIN])
+       BUNDLE_COQ="yes"
        COQTOP="$COQBIN/coqtop"
        COQIDE="$COQBIN/coqide"
        COQC="$COQBIN/coqc"
@@ -79,7 +80,8 @@ AS_IF([test "x$COQBIN" != "x"],
               AC_MSG_ERROR([Could not find executable coq_makefile in $COQBIN])],
              [AC_MSG_RESULT([yes])])
       ],
-      [COQBIN="$bindir"
+      [BUNDLE_COQ="no"
+       COQBIN="$bindir"
        COQTOP="$bindir/coqtop"
        COQIDE="$bindir/coqide"
        COQC="$bindir/coqc"
@@ -218,6 +220,23 @@ AM_CONDITIONAL(make_hoqide, [test "x$with_coqide" != xno])
 AM_CONDITIONAL(make_hoqtopbyte, [true]) #test -x "$COQTOP.byte"])
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([hoq-config])
+
+dnl Create symbolic links to the Coq library
+# Make the symlinks in the source directory.  We must have these links
+# in the source directory, not in the build directory, because the
+# replacement standard library lives in the source directory, and
+# these links are required to make Coq accept it.  I'm not very happy
+# with this, because it would be nicer to not touch the source
+# directory, but I don't see any other way to be able let the user
+# choose whether or not to use the bundled Coq
+AC_MSG_NOTICE([Creating symbolic links into Coq standard library])
+rm -f "$srcdir/coq/dev" "$srcdir/coq/kernel" "$srcdir/coq/library" "$srcdir/coq/plugins"
+AS_IF([test "x$BUNDLE_COQ" = xyes],
+      [ln -s "$srcdir/coq-HoTT/dev" "$srcdir/coq-HoTT/kernel" "$srcdir/coq-HoTT/library" "$srcdir/coq-HoTT/plugins" "$srcdir/coq/"],
+      [AC_MSG_CHECKING([Coq library path])
+       COQLIB="`$COQTOP -where 2>/dev/null`"
+       AC_MSG_RESULT([$COQLIB])
+       ln -s "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$srcdir/coq/"])
 
 AC_OUTPUT
 
