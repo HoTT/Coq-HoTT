@@ -29,13 +29,12 @@ echo 'Configuring git for pushing...'
 git config --global user.name "Travis-CI Bot"
 git config --global user.email "Travis-CI-Bot@travis.fake"
 
-echo "./autogen.sh from $(git rev-parse --short HEAD)" > /tmp/msg.txt
-echo "" >> /tmp/msg.txt
-git log HEAD{^..,} >> /tmp/msg.txt
-export MESSAGE="$(cat /tmp/msg.txt)"
+export MESSAGE="./autogen.sh from $(git rev-parse --short HEAD)
+
+$(git log HEAD^..HEAD)"
 
 echo '$ autoreconf -fvi'
-autoreconf -fvi
+autoreconf -fvi || exit $?
 FILES=`cat etc/autoreconf-files`
 BRANCH=`cat etc/autoreconf-branch`
 echo '$ git checkout -b '"$BRANCH"
