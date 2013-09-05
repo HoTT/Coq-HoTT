@@ -26,7 +26,6 @@ AM_CONDITIONAL([BUNDLE_COQ], [test "x$COQBIN" = x])
 # '-n'
 AS_IF([test "x$COQBIN" != "x"],
       [AC_MSG_NOTICE([Will look for Coq executables in $COQBIN])
-       BUNDLE_COQ="yes"
        COQTOP="$COQBIN/coqtop"
        COQIDE="$COQBIN/coqide"
        COQC="$COQBIN/coqc"
@@ -79,6 +78,10 @@ AS_IF([test "x$COQBIN" != "x"],
              [AC_MSG_RESULT([no])
               AC_MSG_ERROR([Could not find executable coq_makefile in $COQBIN])],
              [AC_MSG_RESULT([yes])])
+
+       AC_MSG_CHECKING([Coq library path])
+       COQLIB="`$COQTOP -where 2>/dev/null`"
+       AC_MSG_RESULT([$COQLIB])
       ],
       [BUNDLE_COQ="no"
        COQBIN="$bindir"
@@ -87,7 +90,8 @@ AS_IF([test "x$COQBIN" != "x"],
        COQC="$bindir/coqc"
        COQDEP="$bindir/coqdep"
        COQDOC="$bindir/coqdoc"
-       COQMAKEFILE="$bindir/coq_makefile"])
+       COQMAKEFILE="$bindir/coq_makefile"
+       COQLIB="$srcdir/coq-HoTT"])
 
 AC_SUBST([COQBIN])
 AC_SUBST([COQTOP])
@@ -231,12 +235,7 @@ dnl Create symbolic links to the Coq library
 # choose whether or not to use the bundled Coq
 AC_MSG_NOTICE([Creating symbolic links into Coq standard library])
 rm -f "$srcdir/coq/dev" "$srcdir/coq/kernel" "$srcdir/coq/library" "$srcdir/coq/plugins"
-AS_IF([test "x$BUNDLE_COQ" = xyes],
-      [ln -s "$srcdir/coq-HoTT/dev" "$srcdir/coq-HoTT/kernel" "$srcdir/coq-HoTT/library" "$srcdir/coq-HoTT/plugins" "$srcdir/coq/"],
-      [AC_MSG_CHECKING([Coq library path])
-       COQLIB="`$COQTOP -where 2>/dev/null`"
-       AC_MSG_RESULT([$COQLIB])
-       ln -s "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$srcdir/coq/"])
+ln -s "$COQLIB/dev/" "$COQLIB/kernel/" "$COQLIB/library/" "$COQLIB/plugins/" "$srcdir/coq/"
 
 AC_OUTPUT
 
