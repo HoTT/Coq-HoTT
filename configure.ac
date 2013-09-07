@@ -19,20 +19,52 @@ AC_PROG_MKDIR_P
 # Check to see if COQBIN was set
 AC_ARG_VAR([COQBIN], [the directory which contains the Coq executables @<:@BINDIR@:>@])
 # we are using the bundled coq only if the user does not pass COQBIN
-AM_CONDITIONAL([BUNDLE_COQ], [test "x$COQBIN" = x])
 # use 'test "x$foo" != "x"' rather than 'test -n "$foo"' as per
 # http://www.gnu.org/software/automake/manual/autoconf.html#Limitations-of-Builtins;
 # some shells get confused if $foo is a weird character like '!' or
 # '-n'
-AS_IF([test "x$COQBIN" != "x"],
-      [AC_MSG_NOTICE([Will look for Coq executables in $COQBIN])
-       COQTOP="$COQBIN/coqtop"
-       COQIDE="$COQBIN/coqide"
-       COQC="$COQBIN/coqc"
-       COQDEP="$COQBIN/coqdep"
-       COQDOC="$COQBIN/coqdoc"
-       COQMAKEFILE="$COQBIN/coq_makefile"
+AM_CONDITIONAL([BUNDLE_COQ], [test "x$COQBIN" = x])
+AM_COND_IF([BUNDLE_COQ],
+           [USE_BUNDLED_COQ=yes
+            COQBIN="$bindir"
+            LOCAL_COQBIN='${abs_builddir}/coq-HoTT/bin'],
+           [USE_BUNDLED_COQ=no
+            LOCAL_COQBIN="$COQBIN"])
 
+COQTOP="$COQBIN/coqtop"
+COQIDE="$COQBIN/coqide"
+COQC="$COQBIN/coqc"
+COQDEP="$COQBIN/coqdep"
+COQDOC="$COQBIN/coqdoc"
+COQMAKEFILE="$COQBIN/coq_makefile"
+
+LOCAL_COQTOP="$LOCAL_COQBIN/coqtop"
+LOCAL_COQIDE="$LOCAL_COQBIN/coqide"
+LOCAL_COQC="$LOCAL_COQBIN/coqc"
+LOCAL_COQDEP="$LOCAL_COQBIN/coqdep"
+LOCAL_COQDOC="$LOCAL_COQBIN/coqdoc"
+LOCAL_COQMAKEFILE="$LOCAL_COQBIN/coq_makefile"
+
+AC_SUBST([COQBIN])
+AC_SUBST([COQTOP])
+AC_SUBST([COQIDE])
+AC_SUBST([COQC])
+AC_SUBST([COQDEP])
+AC_SUBST([COQDOC])
+AC_SUBST([COQMAKEFILE])
+
+AC_SUBST([LOCAL_COQBIN])
+AC_SUBST([LOCAL_COQTOP])
+AC_SUBST([LOCAL_COQIDE])
+AC_SUBST([LOCAL_COQC])
+AC_SUBST([LOCAL_COQDEP])
+AC_SUBST([LOCAL_COQDOC])
+AC_SUBST([LOCAL_COQMAKEFILE])
+
+# now we do a sanity check on executableness, and also set $COQLIB
+AS_IF([test "x$USE_BUNDLED_COQ" = "xyes"],
+      [COQLIB="$srcdir/coq-HoTT"],
+      [AC_MSG_NOTICE([Will look for Coq executables in $COQBIN])
        # checking for coqtop
        AC_MSG_CHECKING([for an executable coqtop in $COQBIN which supports -indices-matter])
        AS_IF([test ! -x "$COQTOP"],
@@ -82,24 +114,7 @@ AS_IF([test "x$COQBIN" != "x"],
        AC_MSG_CHECKING([Coq library path])
        COQLIB="`$COQTOP -where 2>/dev/null`"
        AC_MSG_RESULT([$COQLIB])
-      ],
-      [BUNDLE_COQ="no"
-       COQBIN="$bindir"
-       COQTOP="$bindir/coqtop"
-       COQIDE="$bindir/coqide"
-       COQC="$bindir/coqc"
-       COQDEP="$bindir/coqdep"
-       COQDOC="$bindir/coqdoc"
-       COQMAKEFILE="$bindir/coq_makefile"
-       COQLIB="$srcdir/coq-HoTT"])
-
-AC_SUBST([COQBIN])
-AC_SUBST([COQTOP])
-AC_SUBST([COQIDE])
-AC_SUBST([COQC])
-AC_SUBST([COQDEP])
-AC_SUBST([COQDOC])
-AC_SUBST([COQMAKEFILE])
+      ])
 
 # Should we compile ssrfelect?
 compile_ssreflect="no"
@@ -235,7 +250,11 @@ dnl Create symbolic links to the Coq library
 # choose whether or not to use the bundled Coq
 AC_MSG_NOTICE([Creating symbolic links into Coq standard library])
 rm -f "$srcdir/coq/dev" "$srcdir/coq/kernel" "$srcdir/coq/library" "$srcdir/coq/plugins"
-ln -s "$COQLIB/dev/" "$COQLIB/kernel/" "$COQLIB/library/" "$COQLIB/plugins/" "$srcdir/coq/"
+# if $COQLIB is a relative path, we need to correct for changing directories
+AS_IF([test "x$srcdir" = "x." && test "x${COQLIB:0:1}" != "x/"],
+      [LN_COQLIB="../$COQLIB"],
+      [LN_COQLIB="`cd "$COQLIB" && pwd`"])
+ln -s "$LN_COQLIB/dev/" "$LN_COQLIB/kernel/" "$LN_COQLIB/library/" "$LN_COQLIB/plugins/" "$srcdir/coq/"
 
 AC_OUTPUT
 

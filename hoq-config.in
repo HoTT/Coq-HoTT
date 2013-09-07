@@ -3,20 +3,21 @@
 # into using the HoTT standard library and enables the HoTT-specific
 # options.  One day we might figure out how to create an honest Coq
 # toplevel instead.
-prefix="@prefix@"
-exec_prefix="@exec_prefix@"
+export prefix="@prefix@"
+export exec_prefix="@exec_prefix@"
+export abs_builddir="@abs_builddir@"
 export ssr="@compile_ssreflect@"
-# If there is a coq-HoTT directory in the same directory as this
-# script, then use the binaries from that one, otherwise use the
-# global one.  This trick allows coqc to work "in place" on the source
-# files.
-if test -d "$mydir/coq-HoTT"
+# If there is a local COQC, then use the local binaries, otherwise use
+# the global ones.  This trick allows hoq to work "in place" on the
+# source files.
+mydir=`dirname $0`
+if test -x "@LOCAL_COQC@"
 then
-  export COQC="$mydir/coq-HoTT/bin/coqc"
-  export COQDEP="$mydir/coq-HoTT/bin/coqdep"
-  export COQDOC="$mydir/coq-HoTT/bin/coqdoc"
-  export COQIDE="$mydir/coq-HoTT/bin/coqide"
-  export COQTOP="$mydir/coq-HoTT/bin/coqtop"
+  export COQC="@LOCAL_COQC@"
+  export COQDEP="@LOCAL_COQDEP@"
+  export COQDOC="@LOCAL_COQDOC@"
+  export COQIDE="@LOCAL_COQIDE@"
+  export COQTOP="@LOCAL_COQTOP@"
 else
   export COQC="@COQC@"
   export COQDEP="@COQDEP@"
@@ -27,7 +28,6 @@ fi
 # If there is a coq/theories directory in the same directory as this
 # script, then use that one, otherwise use the global one. This trick
 # allows hoqc to work "in place" on the source files.
-mydir=`dirname $0`
 if test -d "$mydir/coq/theories"
 then
   export COQLIB="$mydir/coq"
