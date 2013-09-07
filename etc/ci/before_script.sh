@@ -10,7 +10,6 @@ if [ ! -z "$WITH_AUTORECONF" ]; then
     sudo apt-get install -q dh-autoreconf
 fi
 
-pwd
 if [ ! -z "$COQBIN" ]; then
     ./install_coq.sh
 fi
