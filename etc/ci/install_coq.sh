@@ -16,7 +16,7 @@ echo '$ ./configure -prefix "'"$COQBIN"'" -debug -no-native-compiler'
 echo '$ make coqlight'
 make coqlight
 echo '$ sudo make install-coqlight'
-sudo make install-coqlight
+sudo make install-coqlight -k
 popd
 
 popd 1>/dev/null
