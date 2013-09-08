@@ -11,8 +11,8 @@ pushd "$ROOT_DIR" 1>/dev/null
 echo '$ git submodule update --init --recursive'
 git submodule update --init --recursive
 pushd coq-HoTT
-echo '$ ./configure -prefix "'"$COQBIN"'" -debug -no-native-compiler'
-./configure -prefix "$COQBIN" -debug -no-native-compiler
+echo '$ ./configure -prefix "'"$PREFIX"'" -debug -no-native-compiler'
+./configure -prefix "$PREFIX" -debug -no-native-compiler
 echo '$ make coqlight'
 make coqlight
 echo '$ sudo make install-coqlight'
