@@ -92,6 +92,8 @@ $(LOCAL_COQMAKEFILE): $(COQLIGHT_DEP)
 
 $(LOCAL_COQTOP): $(COQLIGHT_DEP)
 
+if BUNDLE_COQ
+
 coqlight: coq-HoTT
 	$(MKDIR_P) "$(BUILDCOQDIR)"
 	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" coqlight
@@ -102,6 +104,16 @@ miniopt: coq-HoTT
 
 install-coqlight: coqlight
 	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" install-coqlight
+
+clean-coq: coq-HoTT
+	$(MKDIR_P) "$(BUILDCOQDIR)"
+	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)"
+
+git-clean-coq: coq-HoTT
+	(cd "$(SRCCOQDIR)" && git clean -xfd)
+	@echo "You will need to run ./configure again in order to make."
+
+endif
 
 if make_ssreflect
 clean-local: $(SSRMAKEFILE)
