@@ -14,9 +14,11 @@ EXTRA_DIST = coq theories ssrplugin etc LICENSE.txt CREDITS.txt INSTALL.txt READ
 # The path to the Coq library in $(srcdir)
 SRCCOQLIB=$(srcdir)/coq
 
+if BUNDLE_COQ
 # The path to the local Coq distribution in $(builddir)
 SRCCOQDIR=$(abs_srcdir)/coq-HoTT
 BUILDCOQDIR=$(abs_builddir)/coq-HoTT
+endif
 
 # support the TIMED variable like coq_makefile
 TIMED=
@@ -77,7 +79,7 @@ endif
 if BUNDLE_COQ
 COQLIGHT_DEP = coqlight
 else
-COQLIGHT_DEP = miniopt
+COQLIGHT_DEP =
 endif
 
 $(LOCAL_COQC): $(COQLIGHT_DEP)

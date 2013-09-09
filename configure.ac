@@ -63,7 +63,12 @@ AC_SUBST([LOCAL_COQMAKEFILE])
 
 # now we do a sanity check on executableness, and also set $COQLIB
 AS_IF([test "x$USE_BUNDLED_COQ" = "xyes"],
-      [COQLIB="$srcdir/coq-HoTT"],
+      [COQLIB="$srcdir/coq-HoTT"
+       AC_MSG_CHECKING([for the existance of the bundled Coq as $COQLIB])
+       AS_IF([test ! -d "$COQLIB"],
+             [AC_MSG_RESULT([no])
+              AC_MSG_ERROR([Bundled Coq does not exist at $COQLIB.  Re-run autogen.sh, or pass a COQBIN argument to configure.])],
+             [AC_MSG_RESULT([yes])])],
       [AC_MSG_NOTICE([Will look for Coq executables in $COQBIN])
        # checking for coqtop
        AC_MSG_CHECKING([for an executable coqtop in $COQBIN which supports -indices-matter])
@@ -258,9 +263,11 @@ ln -s "$LN_COQLIB/dev/" "$LN_COQLIB/kernel/" "$LN_COQLIB/library/" "$LN_COQLIB/p
 
 AC_OUTPUT
 
-COQ_HOTT_DIR=`(cd coq-HoTT && pwd)`
-AS_ECHO("=== configuring in coq-HoTT ($COQ_HOTT_DIR)")
-echo "configure ${COQ_ARGS@<:@@@:>@}"
-(cd "$COQ_HOTT_DIR"; exec ./configure "${COQ_ARGS@<:@@@:>@}")
-AS_ECHO("*Warning* To compile the system for a new architecture")
-AS_ECHO("          don't forget to do a 'cd coq-HoTT; make clean' before './configure'.")
+AS_IF([test "x$USE_BUNDLED_COQ" == xyes],
+      [COQ_HOTT_DIR=`(cd coq-HoTT && pwd)`
+       AS_ECHO("=== configuring in coq-HoTT ($COQ_HOTT_DIR)")
+       AS_ECHO("configure ${COQ_ARGS@<:@@@:>@}")
+       (cd "$COQ_HOTT_DIR"; exec ./configure "${COQ_ARGS@<:@@@:>@}")
+       AS_ECHO("*Warning* To compile the system for a new architecture")
+       AS_ECHO("          don't forget to do a 'cd coq-HoTT; make clean' before './configure'.")],
+      [AS_ECHO("=== not configuring in coq-HoTT")])
