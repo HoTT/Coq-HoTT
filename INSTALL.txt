@@ -19,9 +19,8 @@
    old version is incompatible with the new one in ways that make had
    trouble figuring out.
 
-   If you installed a custom Coq in a secret place, and do not want to
-   use the bundled version of Coq tell ./configure where to find it as
-   follows:
+   If you installed a custom Coq, and do not want to use the bundled
+   version of Coq tell ./configure where to find it as follows:
 
        ./autogen.sh --without-bundled-coq
        ./configure COQBIN=<absolute-directory-containing-coq-executables>
