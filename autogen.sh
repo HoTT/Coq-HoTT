@@ -3,10 +3,11 @@
 if test -d .git && test "x$1" != "x--without-bundled-coq"
 then
     echo "Updating bundled coq..."
-    echo "Call '$0 --without-bundled-coq' to prevent this step from happening."
-    echo "To configure without using the bundled Coq, pass a COQBIN argument to"
-    echo "./configure, like './configure COQBIN=/path/to/coqtop/directory' or"
-    echo "'"'./configure COQBIN="$(dirname "$(which coqtop)")"'"'"
+    echo " Call '$0 --without-bundled-coq' to prevent this step from happening."
+    echo " To configure without using the bundled Coq, pass a COQBIN argument, e.g.,"
+    echo "     ./configure COQBIN=/path/to/coqtop/directory"
+    echo " or"
+    echo '     ./configure COQBIN="$(dirname "$(which coqtop)")"'
     git submodule sync
     git submodule update --init --recursive
 fi
