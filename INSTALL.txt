@@ -12,11 +12,18 @@
        ./configure
        make
 
+   If, at some point, when running make, you get errors about OCaml
+   files (.ml, .mli), try running ((cd coq-HoTT && git clean -xfd))
+   and then running the three commands above again; the likely cause
+   is that the version of Coq we are using recently changed, and the
+   old version is incompatible with the new one in ways that make had
+   trouble figuring out.
+
    If you installed a custom Coq in a secret place, and do not want to
    use the bundled version of Coq tell ./configure where to find it as
    follows:
 
-       ./autogen.sh
+       ./autogen.sh --without-bundled-coq
        ./configure COQBIN=<absolute-directory-containing-coq-executables>
        make
 
@@ -102,7 +109,7 @@ Next you should configure the HoTT library:
 2. If you want to use your own build of Coq, you should tell
    ./configure where to find the custom Coq:
 
-       ./autogen.sh
+       ./autogen.sh --without-bundled-coq
        ./configure COQBIN=<directory-containing-coq-executables>
 
    where you should specify the *absolute* path name (starting with /)
