@@ -1,4 +1,4 @@
-dnl This file is used by autoconf to generate the configure script
+<dnl This file is used by autoconf to generate the configure script
 dnl by the HoTT development team. Unless you already know what the
 dnl things below mean, you probably do not want to touch anything.
 
@@ -23,27 +23,58 @@ AC_ARG_VAR([COQBIN], [the directory which contains the Coq executables @<:@BINDI
 # http://www.gnu.org/software/automake/manual/autoconf.html#Limitations-of-Builtins;
 # some shells get confused if $foo is a weird character like '!' or
 # '-n'
-AM_CONDITIONAL([BUNDLE_COQ], [test "x$COQBIN" = x])
+AC_ARG_ENABLE([bundled-coq],
+              [AS_HELP_STRING([--disable-bundled-coq],[Specifies that the bundled Coq should not be used])],
+              [AS_IF([test "x$enable_bundled_coq" = xno],
+                     [USE_BUNDLED_COQ=no],
+                     [USE_BUNDLED_COQ=yes])],
+              [USE_BUNDLED_COQ=yes])
+
+
+
+AM_CONDITIONAL([BUNDLE_COQ], [test "x$USE_BUNDLED_COQ" = xyes])
 AM_COND_IF([BUNDLE_COQ],
-           [USE_BUNDLED_COQ=yes
-            COQBIN="$bindir"
-            LOCAL_COQBIN='${abs_builddir}/coq-HoTT/bin'],
-           [USE_BUNDLED_COQ=no
-            LOCAL_COQBIN="$COQBIN"])
+           [COQBIN="$bindir"
+            LOCAL_COQBIN='${abs_builddir}/coq-HoTT/bin'
 
-COQTOP="$COQBIN/coqtop"
-COQIDE="$COQBIN/coqide"
-COQC="$COQBIN/coqc"
-COQDEP="$COQBIN/coqdep"
-COQDOC="$COQBIN/coqdoc"
-COQMAKEFILE="$COQBIN/coq_makefile"
+            COQTOP="$COQBIN/coqtop"
+            COQIDE="$COQBIN/coqide"
+            COQC="$COQBIN/coqc"
+            COQDEP="$COQBIN/coqdep"
+            COQDOC="$COQBIN/coqdoc"
+            COQMAKEFILE="$COQBIN/coq_makefile"
 
-LOCAL_COQTOP="$LOCAL_COQBIN/coqtop"
-LOCAL_COQIDE="$LOCAL_COQBIN/coqide"
-LOCAL_COQC="$LOCAL_COQBIN/coqc"
-LOCAL_COQDEP="$LOCAL_COQBIN/coqdep"
-LOCAL_COQDOC="$LOCAL_COQBIN/coqdoc"
-LOCAL_COQMAKEFILE="$LOCAL_COQBIN/coq_makefile"
+            LOCAL_COQTOP="$LOCAL_COQBIN/coqtop"
+            LOCAL_COQIDE="$LOCAL_COQBIN/coqide"
+            LOCAL_COQC="$LOCAL_COQBIN/coqc"
+            LOCAL_COQDEP="$LOCAL_COQBIN/coqdep"
+            LOCAL_COQDOC="$LOCAL_COQBIN/coqdoc"
+            LOCAL_COQMAKEFILE="$LOCAL_COQBIN/coq_makefile"],
+           [AS_IF([test "x$COQBIN" != "x"],
+                  [AC_MSG_NOTICE([Will first look for Coq executables in $COQBIN])
+                   COQBIN_WITH_SEP="$COQBIN$PATH_SEPARATOR"],
+                  [COQBIN_WITH_SEP=""])
+            AC_PATH_PROG([COQTOP],[coqtop],[no],[$COQBIN_WITH_SEP$PATH])
+            AC_PATH_PROG([COQIDE],[coqide],[no],[$COQBIN_WITH_SEP$PATH])
+            AC_PATH_PROG([COQC],[coqc],[no],[$COQBIN_WITH_SEP$PATH])
+            AC_PATH_PROG([COQDEP],[coqdep],[no],[$COQBIN_WITH_SEP$PATH])
+            AC_PATH_PROG([COQDOC],[coqdoc],[no],[$COQBIN_WITH_SEP$PATH])
+            AC_PATH_PROG([COQMAKEFILE],[coq_makefile],[no],[$COQBIN_WITH_SEP$PATH])
+
+            LOCAL_COQTOP="$COQTOP"
+            LOCAL_COQIDE="$COQIDE"
+            LOCAL_COQC="$COQC"
+            LOCAL_COQDEP="$COQDEP"
+            LOCAL_COQDOC="$COQDOC"
+            LOCAL_COQMAKEFILE="$COQMAKEFILE"
+
+            # Now (re)set COQBIN. We need COQBIN because Makefiles
+            # produces by coq_makefile insist on running coqtop as
+            # $(COQBIN)coqtop, and ssreflect uses coq_makefile
+            AS_IF([test "x$COQTOP" != "xno"],
+                  [COQBIN=`AS_DIRNAME(["$COQTOP"])`])
+            AC_MSG_NOTICE([COQBIN is $COQBIN])])
+
 
 AC_SUBST([COQBIN])
 AC_SUBST([COQTOP])
@@ -69,12 +100,11 @@ AS_IF([test "x$USE_BUNDLED_COQ" = "xyes"],
              [AC_MSG_RESULT([no])
               AC_MSG_ERROR([Bundled Coq does not exist at $COQLIB.  Re-run autogen.sh, or pass a COQBIN argument to configure.])],
              [AC_MSG_RESULT([yes])])],
-      [AC_MSG_NOTICE([Will look for Coq executables in $COQBIN])
-       # checking for coqtop
-       AC_MSG_CHECKING([for an executable coqtop in $COQBIN which supports -indices-matter])
+      [# checking for coqtop
+       AC_MSG_CHECKING([for an executable coqtop which supports -indices-matter])
        AS_IF([test ! -x "$COQTOP"],
               [AC_MSG_RESULT([no])
-               AC_MSG_ERROR([Could not find executable coqtop in $COQBIN])],
+               AC_MSG_ERROR([Could not find executable coqtop])],
              [test "`$COQTOP -help 2>&1 | grep -c -- -indices-matter`" = "0"],
               [AC_MSG_RESULT([does not support -indices-matter])
                AC_MSG_ERROR([You need a version of Coq which supports -indices-matter])],
@@ -84,10 +114,10 @@ AS_IF([test "x$USE_BUNDLED_COQ" = "xyes"],
        AC_MSG_RESULT([$COQVERSION])
 
        # checking for coqc
-       AC_MSG_CHECKING([for an executable coqc in $COQBIN])
+       AC_MSG_CHECKING([for an executable coqc])
        AS_IF([test ! -x "$COQC"],
              [AC_MSG_RESULT([no])
-              AC_MSG_ERROR([Could not find executable coqc in $COQBIN])],
+              AC_MSG_ERROR([Could not find executable coqc])],
              [AC_MSG_RESULT([yes])])
        AC_MSG_CHECKING([coqc version])
        COQCVERSION="`$COQC -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`"
@@ -96,24 +126,24 @@ AS_IF([test "x$USE_BUNDLED_COQ" = "xyes"],
              [AC_MSG_ERROR([Version mismatch between coqtop $COQVERSION and coqc $COQCVERSION])])
 
        # checking for coqdep
-       AC_MSG_CHECKING([for an executable coqdep in $COQBIN])
+       AC_MSG_CHECKING([for an executable coqdep])
        AS_IF([test ! -x "$COQDEP"],
              [AC_MSG_RESULT([no])
-              AC_MSG_ERROR([Could not find executable coqdep in $COQBIN])]
+              AC_MSG_ERROR([Could not find executable coqdep])],
              [AC_MSG_RESULT([yes])])
 
        # checking for coqdoc
-       AC_MSG_CHECKING([for an executable coqdoc in $COQBIN])
+       AC_MSG_CHECKING([for an executable coqdoc])
        AS_IF([test ! -x "$COQDOC"],
              [AC_MSG_RESULT([no])
-              AC_MSG_ERROR([Could not find executable coqdoc in $COQBIN])],
+              AC_MSG_ERROR([Could not find executable coqdoc])],
              [AC_MSG_RESULT([yes])])
 
        # checking for coq_makefile
-       AC_MSG_CHECKING([for an executable coq_makefile in $COQBIN])
+       AC_MSG_CHECKING([for an executable coq_makefile])
        AS_IF([test ! -x "$COQMAKEFILE"],
              [AC_MSG_RESULT([no])
-              AC_MSG_ERROR([Could not find executable coq_makefile in $COQBIN])],
+              AC_MSG_ERROR([Could not find executable coq_makefile])],
              [AC_MSG_RESULT([yes])])
 
        AC_MSG_CHECKING([Coq library path])
@@ -263,7 +293,7 @@ ln -s "$LN_COQLIB/dev/" "$LN_COQLIB/kernel/" "$LN_COQLIB/library/" "$LN_COQLIB/p
 
 AC_OUTPUT
 
-AS_IF([test "x$USE_BUNDLED_COQ" == xyes],
+AS_IF([test "x$USE_BUNDLED_COQ" = xyes],
       [COQ_HOTT_DIR=`(cd coq-HoTT && pwd)`
        AS_ECHO("=== configuring in coq-HoTT ($COQ_HOTT_DIR)")
        AS_ECHO("configure ${COQ_ARGS@<:@@@:>@}")
