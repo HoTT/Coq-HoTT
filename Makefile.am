@@ -77,9 +77,15 @@ else
 endif
 
 if BUNDLE_COQ
-COQLIGHT_DEP = coqlight
+
+if make_hoqide
+  COQLIGHT_DEP = coqlight coqide
 else
-COQLIGHT_DEP =
+  COQLIGHT_DEP = coqlight
+endif
+
+else
+  COQLIGHT_DEP =
 endif
 
 $(LOCAL_COQC): $(COQLIGHT_DEP)
@@ -102,12 +108,19 @@ miniopt: coq-HoTT
 	$(MKDIR_P) "$(BUILDCOQDIR)"
 	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" miniopt
 
+coqide: coq-HoTT
+	$(MKDIR_P) "$(BUILDCOQDIR)"
+	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" coqide
+
 install-coqlight: coqlight
 	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" install-coqlight
 
+install-coqide: coqide
+	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" install-coqide
+
 clean-coq: coq-HoTT
 	$(MKDIR_P) "$(BUILDCOQDIR)"
-	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)"
+	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" clean
 
 git-clean-coq: coq-HoTT
 	(cd "$(SRCCOQDIR)" && git clean -xfd)
