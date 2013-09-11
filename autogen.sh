@@ -1,6 +1,6 @@
 #!/bin/sh
-# pass --without-bundled-coq to not init the bundled coq repo
-if test -d .git && test "x$1" != "x--without-bundled-coq"
+# pass --disable-bundled-coq to not init the bundled coq repo
+if test -d .git && test "x$1" != "x--disable-bundled-coq"
 then
     echo "Updating bundled coq..."
     echo " Call '$0 --disable-bundled-coq' to prevent this step from happening."
