@@ -23,12 +23,12 @@ AC_ARG_VAR([COQBIN], [the directory which contains the Coq executables @<:@BINDI
 # http://www.gnu.org/software/automake/manual/autoconf.html#Limitations-of-Builtins;
 # some shells get confused if $foo is a weird character like '!' or
 # '-n'
-AC_ARG_ENABLE([bundled-coq],
-              [AS_HELP_STRING([--disable-bundled-coq],[Specifies that the bundled Coq should not be used])],
-              [AS_IF([test "x$enable_bundled_coq" = xno],
-                     [USE_BUNDLED_COQ=no],
-                     [USE_BUNDLED_COQ=yes])],
-              [USE_BUNDLED_COQ=yes])
+AC_ARG_WITH([bundled-coq],
+            [AS_HELP_STRING([--without-bundled-coq],[Specifies that the bundled Coq should not be used])],
+            [AS_IF([test "x$with_bundled_coq" = xno],
+                   [USE_BUNDLED_COQ=no],
+                   [USE_BUNDLED_COQ=yes])],
+            [USE_BUNDLED_COQ=yes])
 
 
 

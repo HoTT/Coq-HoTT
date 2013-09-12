@@ -22,8 +22,8 @@
    If you installed a custom Coq, and do not want to use the bundled
    version of Coq tell ./configure where to find it as follows:
 
-       ./autogen.sh --disable-bundled-coq
-       ./configure --disable-bundled-coq COQBIN=<absolute-directory-containing-coq-executables>
+       ./autogen.sh --without-bundled-coq
+       ./configure --without-bundled-coq COQBIN=<absolute-directory-containing-coq-executables>
        make
 
    If the Coq executables can be found in PATH (that is, if just
@@ -114,8 +114,8 @@ Next you should configure the HoTT library:
 2. If you want to use your own build of Coq, you should tell
    ./configure where to find the custom Coq:
 
-       ./autogen.sh --disable-bundled-coq
-       ./configure --disable-bundled-coq COQBIN=<directory-containing-coq-executables>
+       ./autogen.sh --without-bundled-coq
+       ./configure --without-bundled-coq COQBIN=<directory-containing-coq-executables>
 
    where you should specify the *absolute* path name (starting with /)
    of the directory which contains `coqtop`, `coqc`, etc.  If the Coq
