@@ -98,11 +98,11 @@ AS_IF([test "x$USE_BUNDLED_COQ" = "xyes"],
        AC_MSG_CHECKING([for the existance of the bundled Coq as $COQLIB])
        AS_IF([test ! -d "$COQLIB"],
              [AC_MSG_RESULT([no])
-              AC_MSG_ERROR([Bundled Coq does not exist at $COQLIB.  Re-run autogen.sh, or pass a COQBIN argument to configure.])],
+              AC_MSG_ERROR([Bundled Coq does not exist at $COQLIB.  Re-run autogen.sh, or pass --without-bundled-coq to configure.])],
              [AC_MSG_RESULT([yes])])],
       [# checking for coqtop
        AC_MSG_CHECKING([for an executable coqtop which supports -indices-matter])
-       AS_IF([test ! -x "$COQTOP"],
+       AS_IF([test "x$COQTOP" = xno || test ! -x "$COQTOP"],
               [AC_MSG_RESULT([no])
                AC_MSG_ERROR([Could not find executable coqtop])],
              [test "`$COQTOP -help 2>&1 | grep -c -- -indices-matter`" = "0"],
