@@ -108,28 +108,46 @@ Notation "p ..2" := (projT2_path p) (at level 3) : fibration_scope.
 
 (** Now we show how these things compute. *)
 
-Definition projT1_path_sigma `{P : A -> Type} {u v : sigT P}
-  (p : u.1 = v.1) (q : p # u.2 = v.2)
-  : (path_sigma _ _ _ p q)..1 = p.
+Definition projT1_path_sigma_uncurried `{P : A -> Type} {u v : sigT P}
+  (pq : { p : u.1 = v.1 & p # u.2 = v.2 })
+  : (path_sigma_uncurried _ _ _ pq)..1 = pq.1.
 Proof.
   destruct u as [u1 u2]; destruct v as [v1 v2]; simpl in *.
+  destruct pq as [p q].
   destruct p; simpl in q; destruct q; reflexivity.
 Defined.
+
+Definition projT2_path_sigma_uncurried `{P : A -> Type} {u v : sigT P}
+  (pq : { p : u.1 = v.1 & p # u.2 = v.2 })
+  : (path_sigma_uncurried _ _ _ pq)..2
+    = ap (fun s => transport P s u.2) (projT1_path_sigma_uncurried pq) @ pq.2.
+Proof.
+  destruct u as [u1 u2]; destruct v as [v1 v2]; simpl in *.
+  destruct pq as [p q].
+  destruct p; simpl in q; destruct q; reflexivity.
+Defined.
+
+Definition eta_path_sigma_uncurried `{P : A -> Type} {u v : sigT P}
+  (p : u = v)
+  : path_sigma_uncurried _ _ _ (p..1; p..2) = p.
+Proof.
+  destruct p. destruct u. reflexivity.
+Defined.
+
+Definition projT1_path_sigma `{P : A -> Type} {u v : sigT P}
+  (p : u.1 = v.1) (q : p # u.2 = v.2)
+  : (path_sigma _ _ _ p q)..1 = p
+  := projT1_path_sigma_uncurried (p; q).
 
 Definition projT2_path_sigma `{P : A -> Type} {u v : sigT P}
   (p : u.1 = v.1) (q : p # u.2 = v.2)
   : (path_sigma _ _ _ p q)..2
-    = ap (fun s => transport P s u.2) (projT1_path_sigma p q) @ q.
-Proof.
-  destruct u as [u1 u2]; destruct v as [v1 v2]; simpl in *.
-  destruct p; simpl in q; destruct q; reflexivity.
-Defined.
+    = ap (fun s => transport P s u.2) (projT1_path_sigma p q) @ q
+  := projT2_path_sigma_uncurried (p; q).
 
 Definition eta_path_sigma `{P : A -> Type} {u v : sigT P} (p : u = v)
-  : path_sigma _ _ _ (p..1) (p..2) = p.
-Proof.
-  destruct p. destruct u. reflexivity.
-Defined.
+  : path_sigma _ _ _ (p..1) (p..2) = p
+  := eta_path_sigma_uncurried p.
 
 (** This lets us identify the path space of a sigma-type, up to equivalence. *)
 
@@ -225,6 +243,7 @@ Definition ap_sigT_rectnd_path_sigma {A : Type} (P : A -> Type) {Q : Type}
   : ap (sigT_rect (fun _ => Q) d) (path_sigma' P p q)
   = (transport_const p _)^
   @ (ap ((transport (fun _ => Q) p) o (d x1)) (transport_Vp _ p y1))^
+
   @ (transport_arrow p _ _)^
   @ ap10 (apD d p) (p # y1)
   @ ap (d x2) q.
