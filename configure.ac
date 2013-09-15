@@ -68,11 +68,22 @@ AM_COND_IF([BUNDLE_COQ],
             LOCAL_COQDOC="$COQDOC"
             LOCAL_COQMAKEFILE="$COQMAKEFILE"
 
+            # We will error if the user passed COQBIN, but we did not
+            # use it
+            OLD_COQBIN="$COQBIN"
+            OLD_COQBIN_DIR=`cd "$COQBIN" && pwd`
+
             # Now (re)set COQBIN. We need COQBIN because Makefiles
             # produces by coq_makefile insist on running coqtop as
             # $(COQBIN)coqtop, and ssreflect uses coq_makefile
             AS_IF([test "x$COQTOP" != "xno"],
                   [COQBIN=`AS_DIRNAME(["$COQTOP"])`])
+
+            NEW_COQBIN_DIR=`cd "$COQBIN" && pwd`
+
+            AS_IF([test "x$NEW_COQBIN_DIR" != "x$OLD_COQBIN_DIR"],
+                  [AC_MSG_ERROR([COQBIN was passed (value $OLD_COQBIN, expanded to $OLD_COQBIN_DIR), but not used (coqtop was found in $NEW_COQBIN_DIR)])])
+
             AC_MSG_NOTICE([COQBIN is $COQBIN])])
 
 
