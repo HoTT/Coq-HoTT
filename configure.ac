@@ -24,11 +24,11 @@ AC_ARG_VAR([COQBIN], [the directory which contains the Coq executables @<:@BINDI
 # some shells get confused if $foo is a weird character like '!' or
 # '-n'
 AC_ARG_WITH([bundled-coq],
-            [AS_HELP_STRING([--without-bundled-coq],[Specifies that the bundled Coq should not be used])],
+            [AS_HELP_STRING([--with-bundled-coq],[Specifies that the bundled Coq should be used])],
             [AS_IF([test "x$with_bundled_coq" = xno],
                    [USE_BUNDLED_COQ=no],
                    [USE_BUNDLED_COQ=yes])],
-            [USE_BUNDLED_COQ=yes])
+            [USE_BUNDLED_COQ=no])
 
 
 
@@ -81,7 +81,7 @@ AM_COND_IF([BUNDLE_COQ],
 
             NEW_COQBIN_DIR=`cd "$COQBIN" && pwd`
 
-            AS_IF([test "x$NEW_COQBIN_DIR" != "x$OLD_COQBIN_DIR"],
+            AS_IF([test "x$OLD_COQBIN" != "x" && test "x$NEW_COQBIN_DIR" != "x$OLD_COQBIN_DIR"],
                   [AC_MSG_ERROR([COQBIN was passed (value $OLD_COQBIN, expanded to $OLD_COQBIN_DIR), but not used (coqtop was found in $NEW_COQBIN_DIR)])])
 
             AC_MSG_NOTICE([COQBIN is $COQBIN])])
@@ -109,7 +109,7 @@ AS_IF([test "x$USE_BUNDLED_COQ" = "xyes"],
        AC_MSG_CHECKING([for the existance of the bundled Coq as $COQLIB])
        AS_IF([test ! -d "$COQLIB"],
              [AC_MSG_RESULT([no])
-              AC_MSG_ERROR([Bundled Coq does not exist at $COQLIB.  Re-run autogen.sh, or pass --without-bundled-coq to configure.])],
+              AC_MSG_ERROR([Bundled Coq does not exist at $COQLIB.  Re-run 'autogen.sh --with-bundled-coq'.])],
              [AC_MSG_RESULT([yes])])],
       [# checking for coqtop
        AC_MSG_CHECKING([for an executable coqtop which supports -indices-matter])

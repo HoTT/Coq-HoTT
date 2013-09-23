@@ -8,8 +8,8 @@
 
 2. Run
 
-       ./autogen.sh
-       ./configure
+       ./autogen.sh --with-bundled-coq
+       ./configure --with-bundled-coq
        make
 
    If, at some point, when running make, you get errors about OCaml
@@ -22,8 +22,8 @@
    If you installed a custom Coq, and do not want to use the bundled
    version of Coq tell ./configure where to find it as follows:
 
-       ./autogen.sh --without-bundled-coq
-       ./configure --without-bundled-coq COQBIN=<absolute-directory-containing-coq-executables>
+       ./autogen.sh
+       ./configure COQBIN=<absolute-directory-containing-coq-executables>
        make
 
    If the Coq executables can be found in PATH (that is, if just
@@ -41,8 +41,8 @@
    thoroughly tested.  You can customize the install location by
    running
 
-       ./autogen.sh
-       ./configure --prefix=<install-location>
+       ./autogen.sh --without-bundled-coq
+       ./configure --without-bundled-coq --prefix=<install-location>
        make install-coqlight
        make install-coqide
        make install
@@ -106,16 +106,16 @@ Next you should configure the HoTT library:
 
 1. If you want to use the bundled Coq, run
 
-       ./autogen.sh
-       ./configure
+       ./autogen.sh --with-bundled-coq
+       ./configure --with-bundled-coq
 
    in the HoTT directory.
 
 2. If you want to use your own build of Coq, you should tell
    ./configure where to find the custom Coq:
 
-       ./autogen.sh --without-bundled-coq
-       ./configure --without-bundled-coq COQBIN=<directory-containing-coq-executables>
+       ./autogen.sh
+       ./configure COQBIN=<directory-containing-coq-executables>
 
    where you should specify the *absolute* path name (starting with /)
    of the directory which contains `coqtop`, `coqc`, etc.  If the Coq

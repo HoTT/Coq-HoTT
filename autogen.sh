@@ -1,13 +1,18 @@
-#!/bin/sh
-# pass --without-bundled-coq to not init the bundled coq repo
-if test -d .git && test "x$1" != "x--without-bundled-coq"
+#!/bin/bash
+# pass --with-bundled-coq to init the bundled coq repo
+if test "x$1" = "x--with-bundled-coq"
 then
     echo "Updating bundled coq..."
-    echo " Call '$0 --without-bundled-coq' to prevent this step from happening."
-    echo " To configure without using the bundled Coq, pass --without-bundled-coq"
-    echo " to ./configure"
     git submodule sync
     git submodule update --init --recursive
+else
+    COQTOP_OUT="`coqtop -help 2>&1`"
+    if test $? -eq 127 || test "$(echo "$COQTOP_OUT" | grep -c -- -indices-matter)" = "0"
+    then
+        echo "Warning: Could not find a coqtop with a working -indices-matter."
+        echo " Call '$0 --with-bundled-coq' to use the bundled version of Coq,"
+        echo " or pass the absolute path to coqtop to ./configure via COQBIN."
+    fi
 fi
 autoreconf -fvi
 if test $? -eq 127
