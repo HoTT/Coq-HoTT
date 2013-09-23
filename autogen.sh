@@ -26,7 +26,7 @@ then
 	git checkout $BRANCH $FILES
 	if test $? -ne 0 # we failed to find the branch, so try to get it remotely
 	then
-	    git remote add autogen-temp-upstream git://github.com:HoTT/HoTT.git
+	    git remote add autogen-temp-upstream git://github.com/HoTT/HoTT.git
 	    git remote update
 	    git checkout autogen-temp-upstream/$BRANCH $FILES
 	    if test $? -ne 0
