@@ -8,9 +8,9 @@ branches:
 env:
 
  matrix:
-   - UPDATE_HTML="yes"    WITH_AUTORECONF="yes"    COQBIN=""
-   - UPDATE_HTML=""       WITH_AUTORECONF=""       COQBIN=""
-   - UPDATE_HTML=""       WITH_AUTORECONF="yes"    PREFIX="/usr/local" COQBIN="/usr/local/bin"
+   - UPDATE_HTML="yes"    WITH_AUTORECONF="yes"    COQBIN=""   CONFIGURE_ARGS="--with-bundled-coq"
+   - UPDATE_HTML=""       WITH_AUTORECONF=""       COQBIN=""   CONFIGURE_ARGS="--with-bundled-coq"
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"    PREFIX="/usr/local" COQBIN="/usr/local/bin"   CONFIGURE_ARGS="COQBIN=/usr/local/bin"
 
  global:
 # encrypted version of deploy key for pushing
@@ -21,7 +21,7 @@ before_script:
  - ./etc/ci/before_script.sh
 
 
-script: "./autogen.sh && ./configure COQBIN=\"$COQBIN\" && make"
+script: "./autogen.sh --with-bundled-coq && ./configure $CONFIGURE_ARGS && make"
 
 
 after_success:
