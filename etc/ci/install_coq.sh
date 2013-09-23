@@ -22,6 +22,8 @@ sudo apt-get update -q
 sudo apt-get install -q ocaml camlp5 sed grep
 if [ ! -z "$WITH_AUTORECONF" ]; then
     sudo apt-get install -q dh-autoreconf
+else
+    sudo apt-get remove -q dh-autoreconf
 fi
 
 echo '$'" git clone --depth=5 --branch=$BRANCH git://github.com/HoTT/coq.git coq-HoTT"
