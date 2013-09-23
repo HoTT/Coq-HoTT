@@ -2,9 +2,18 @@
 
 # in case we're run from out of git repo
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-pushd "$DIR" 1>/dev/null
+pushd "$DIR"
 
-# install coq
-./install_coq.sh
+sudo apt-get update -q
+sudo apt-get install -q ocaml camlp5 sed grep
+if [ ! -z "$WITH_AUTORECONF" ]; then
+    sudo apt-get install -q dh-autoreconf
+else
+    sudo apt-get remove -q dh-autoreconf
+fi
 
-popd 1>/dev/null
+if [ ! -z "$COQBIN" ]; then
+    ./install_coq.sh
+fi
+
+popd

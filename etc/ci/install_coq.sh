@@ -8,35 +8,15 @@ pushd "$DIR" 1>/dev/null
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 pushd "$ROOT_DIR" 1>/dev/null
 
-if [ -z "$BRANCH" ]; then
-    echo '$BRANCH must not be empty'
-    exit 1
-fi
-
-if [ -z "$COMMITISH" ]; then
-    echo '$COMMITISH must not be empty'
-    exit 1
-fi
-
-sudo apt-get update -q
-sudo apt-get install -q ocaml camlp5 sed grep
-if [ ! -z "$WITH_AUTORECONF" ]; then
-    sudo apt-get install -q dh-autoreconf
-fi
-
-echo '$'" git clone --depth=5 --branch=$BRANCH git://github.com/HoTT/coq.git coq-HoTT"
-git clone --depth=5 --branch=$BRANCH git://github.com/HoTT/coq.git coq-HoTT
+echo '$ git submodule update --init --recursive'
+git submodule update --init --recursive
 pushd coq-HoTT
-echo '$ git remote update'
-git remote update
-echo '$'" git checkout $COMMITISH"
-git checkout $COMMITISH
-echo '$ ./configure -prefix /usr/local -debug -no-native-compiler'
-./configure -prefix /usr/local -debug -no-native-compiler
+echo '$ ./configure -prefix "'"$PREFIX"'" -debug -no-native-compiler'
+./configure -prefix "$PREFIX" -debug -no-native-compiler
 echo '$ make coqlight'
 make coqlight
 echo '$ sudo make install-coqlight'
-sudo make install-coqlight
+sudo make install-coqlight -k
 popd
 
 popd 1>/dev/null

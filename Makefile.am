@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I etc
 
-bin_SCRIPTS = hoqtop hoqc
+bin_SCRIPTS = hoqtop hoqc hoq-config
 if make_hoqide
   bin_SCRIPTS += hoqide
 endif
@@ -13,6 +13,12 @@ EXTRA_DIST = coq theories ssrplugin etc LICENSE.txt CREDITS.txt INSTALL.txt READ
 
 # The path to the Coq library in $(srcdir)
 SRCCOQLIB=$(srcdir)/coq
+
+if BUNDLE_COQ
+# The path to the local Coq distribution in $(builddir)
+SRCCOQDIR=$(abs_srcdir)/coq-HoTT
+BUILDCOQDIR=$(abs_builddir)/coq-HoTT
+endif
 
 # support the TIMED variable like coq_makefile
 TIMED=
@@ -65,28 +71,74 @@ HOQC=$(srcdir)/hoqc
 CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES) $(DEPFILES) $(STDDEPFILES) $(HTMLFILES) $(STDHTMLFILES)
 
 if make_ssreflect
-.PHONY: stdlib hottlib ssrplugin
+.PHONY: stdlib hottlib ssrplugin coqlight
 else
-.PHONY: stdlib hottlib
+.PHONY: stdlib hottlib coqlight
 endif
 
-install-data-local:
-	$(MKDIR_P) $(hottdir)/coq
-	rm -f $(hottdir)/coq/dev $(hottdir)/coq/plugins
-	$(LN_S) $(COQLIB)/dev $(hottdir)/coq
-	$(LN_S) $(COQLIB)/plugins $(hottdir)/coq
+if BUNDLE_COQ
+
+if make_hoqide
+  COQLIGHT_DEP = coqlight coqide
+else
+  COQLIGHT_DEP = coqlight
+endif
+
+else
+  COQLIGHT_DEP =
+endif
+
+$(LOCAL_COQC): $(COQLIGHT_DEP)
+
+$(LOCAL_COQDEP): $(COQLIGHT_DEP)
+
+$(LOCAL_COQDOC): $(COQLIGHT_DEP)
+
+$(LOCAL_COQMAKEFILE): $(COQLIGHT_DEP)
+
+$(LOCAL_COQTOP): $(COQLIGHT_DEP)
+
+if BUNDLE_COQ
+
+coqlight: coq-HoTT
+	$(MKDIR_P) "$(BUILDCOQDIR)"
+	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" coqlight
+
+miniopt: coq-HoTT
+	$(MKDIR_P) "$(BUILDCOQDIR)"
+	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" miniopt
+
+coqide: coq-HoTT
+	$(MKDIR_P) "$(BUILDCOQDIR)"
+	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" coqide
+
+install-coqlight: coqlight
+	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" install-coqlight
+
+install-coqide: coqide
+	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" install-coqide
+
+clean-coq: coq-HoTT
+	$(MKDIR_P) "$(BUILDCOQDIR)"
+	$(MAKE) -f "$(SRCCOQDIR)/Makefile" --directory="$(BUILDCOQDIR)" clean
+
+git-clean-coq: coq-HoTT
+	(cd "$(SRCCOQDIR)" && git clean -xfd)
+	@echo "You will need to run ./configure again in order to make."
+
+endif
 
 if make_ssreflect
 clean-local: $(SSRMAKEFILE)
-	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" clean
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(MAKE_COQBIN)/" clean
 	rm -f "$(SSRMAKEFILE)"
 endif
 
 # The standard library files must be compiled in a special way
 stdlib: $(STDVOFILES)
 
-$(STDVOFILES) : %.vo : %.v
-	$(TIMER) $(COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
+$(STDVOFILES) : %.vo : %.v $(LOCAL_COQTOP)
+	$(TIMER) $(LOCAL_COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
 
 
 # The HoTT library as a single target
@@ -94,10 +146,10 @@ hottlib: $(VOFILES)
 
 # A rule for compiling the HoTT libary files
 if make_ssreflect
-$(VOFILES) : %.vo : %.v $(STDVOFILES) $(SSRVOFILES)
+$(VOFILES) : %.vo : %.v $(STDVOFILES) $(SSRVOFILES) $(LOCAL_COQC)
 	$(TIMER) $(HOQC) $<
 else
-$(VOFILES) : %.vo : %.v $(STDVOFILES)
+$(VOFILES) : %.vo : %.v $(STDVOFILES) $(LOCAL_COQC)
 	$(TIMER) $(HOQC) $<
 endif
 
@@ -108,29 +160,29 @@ if make_ssreflect
 # changes its compilation procedure drastically.
 ssrplugin: stdlib $(SSRVOFILES)
 
-$(SSRMAKEFILE): $(ssrdir)/Make
-	$(COQMAKEFILE) COQC = "$(TIMER) $(HOQC)" -f "$(ssrdir)/Make" > "$(SSRMAKEFILE)"
+$(SSRMAKEFILE): $(ssrdir)/Make $(LOCAL_COQMAKEFILE)
+	$(LOCAL_COQMAKEFILE) COQC = "$(TIMER) $(HOQC)" -f "$(ssrdir)/Make" > "$(SSRMAKEFILE)"
 
 $(SSRVOFILES): $(SRRMAKEFILE) $(SSRCMXSFILES) $(SSRCMAFILES)
 
 $(SSRVOFILES) : %.vo : %.v
-	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(MAKE_COQBIN)/" $@
 
 $(SSRCMXSFILES): $(SSRMAKEFILE)
 
 $(SSRCMAFILES): $(SSRMAKEFILE)
 
 $(SSRCMXSFILES): %.cmxs : %.mllib
-	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(MAKE_COQBIN)/" $@
 
 $(SSRCMAFILES): %.cma : %.mllib
-	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
+	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(MAKE_COQBIN)/" $@
 endif
 
 # The HTML files
-html: $(GLOBFILES) $(VFILES) $(STDGLOBFILES) $(STDVFILES)
+html: $(GLOBFILES) $(VFILES) $(STDGLOBFILES) $(STDVFILES) $(LOCAL_COQDOC)
 	- $(mkdir_p) html
-	$(COQDOC) -toc -interpolate -utf8 -html --coqlib_path $(SRCCOQLIB) --no-externals -R $(srcdir)/theories HoTT -R $(SRCCOQLIB)/theories Coq -d html $(VFILES) $(STDVFILES)
+	$(LOCAL_COQDOC) -toc -interpolate -utf8 -html --coqlib_path $(SRCCOQLIB) --no-externals -R $(srcdir)/theories HoTT -R $(SRCCOQLIB)/theories Coq -d html $(VFILES) $(STDVFILES)
 
 # The TAGS file
 TAGS_FILES = $(STDVFILES) $(VFILES)
@@ -141,8 +193,10 @@ TAGS : $(TAGS_FILES)
 	$^
 
 # Dependency files
-$(DEPFILES) $(STDDEPFILES) : %.d : %.v
-	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -R $(srcdir)/theories HoTT -R $(SRCCOQLIB)/theories Coq $< >$@
+$(DEPFILES) $(STDDEPFILES) : %.d : %.v $(LOCAL_COQDEP)
+	$(LOCAL_COQDEP) -nois -coqlib $(SRCCOQLIB) -R $(srcdir)/theories HoTT -R $(SRCCOQLIB)/theories Coq $< >$@
+
+# install: install-coqlight
 
 clean:
 	rm -f $(CLEANFILES)

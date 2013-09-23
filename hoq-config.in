@@ -1,0 +1,52 @@
+#!/bin/bash
+# This is the configuration for wrapers around coq which tricks Coq
+# into using the HoTT standard library and enables the HoTT-specific
+# options.  One day we might figure out how to create an honest Coq
+# toplevel instead.
+export prefix="@prefix@"
+export exec_prefix="@exec_prefix@"
+export abs_builddir="@abs_builddir@"
+export ssr="@compile_ssreflect@"
+# If there is a local COQC, then use the local binaries, otherwise use
+# the global ones.  This trick allows hoq to work "in place" on the
+# source files.
+mydir=`dirname $0`
+if test -x "@LOCAL_COQC@"
+then
+  export COQC="@LOCAL_COQC@"
+  export COQDEP="@LOCAL_COQDEP@"
+  export COQDOC="@LOCAL_COQDOC@"
+  export COQIDE="@LOCAL_COQIDE@"
+  export COQTOP="@LOCAL_COQTOP@"
+else
+  export COQC="@COQC@"
+  export COQDEP="@COQDEP@"
+  export COQDOC="@COQDOC@"
+  export COQIDE="@COQIDE@"
+  export COQTOP="@COQTOP@"
+fi
+# If there is a coq/theories directory in the same directory as this
+# script, then use that one, otherwise use the global one. This trick
+# allows hoqc to work "in place" on the source files.
+if test -d "$mydir/coq/theories"
+then
+  export COQLIB="$mydir/coq"
+  export HOTTLIB="$mydir/theories"
+  if test "x$ssr" = "xyes"
+  then
+    export SSRLIB="$mydir/ssrplugin/theories"
+  fi
+else
+  export COQLIB="@hottdir@/coq"
+  export HOTTLIB="@hottdir@/theories"
+  if test "x$ssr" = "xyes"
+  then
+    export SSRLIB="@hottdir@/ssrplugin/theories"
+  fi
+fi
+#if test "x$ssr" = "xyes"
+#then
+#  export COQ_ARGS=(-no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -R "$SSRLIB" Ssreflect -indices-matter)
+#else
+#  export COQ_ARGS=(-no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter)
+#fi
