@@ -35,6 +35,7 @@ then
 	    fi
 	    git remote rm autogen-temp-upstream
 	fi
+        git rm --cached $FILES
     else
 	echo 'Error: autoreconf failed, and you are not using git.  Try installing autoconf or autoreconf.'
     fi
