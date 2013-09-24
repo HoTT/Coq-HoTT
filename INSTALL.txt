@@ -1,26 +1,29 @@
 # QUICK INSTALLATION INSTRUCTIONS
 
-1. Install a custom Coq from https://github.com/HoTT/coq, the `stable`
-   branch. This is a fork of the trunk and is compatible with standard
-   Coq 8.4 trunk, except that it supports the the homotopy theory
-   interpretation. Because our Coq fork changes frequently, HoTT may
-   fail with the `master` branch. Thus, unless you know what you are
-   doing, you should use the `stable` branch:
-
-       git clone https://github.com/HoTT/coq.git
-       git checkout stable
-
-   Compile Coq as usual. One possibility is to compile it with
-
-       ./configure -local
-       make coqlight
-
-   This will compile Coq in place, so you can run it straight from the
-   source directory. It will also skip compilation of some libraries
-   that we do not use anyhow.
-
-2. Get the HoTT library at https://github.com/HoTT/HoTT.git. Go to the
+1. Get the HoTT library at https://github.com/HoTT/HoTT.git. Go to the
    root of the HoTT created directory.
+
+2. Install a custom Coq from https://github.com/HoTT/coq. This is a
+   fork of the trunk and is compatible with standard Coq 8.4 trunk,
+   except that it supports the the homotopy theory
+   interpretation. Because our Coq fork changes frequently, HoTT may
+   fail with any particular commit of HoTT/coq.  (We attempt to keep
+   the master branch of this repository working with the trunk of
+   HoTT/coq, and the stable branch of this repository working with the
+   stable branch of HoTT/coq.) Thus, unless you know what you are
+   doing, you should use the version of Coq bundled with this
+   repository, which can obtain and install by running:
+
+       ./etc/ci/install_coq.sh -local
+
+   Arguments passed to this script get passed to Coq's `./configure`.
+   Passing -local will compile Coq in place, so you can run it
+   straight from the source directory.
+
+   If you run debian (or some version of linux with `apt-get`), you
+   can probably get the dependencies of Coq by running
+
+      ./etc/ci/install_coq_deps.sh
 
 3. If you installed custom Coq so that it is found in the `PATH`, run
 
@@ -28,11 +31,18 @@
        ./configure
        make
 
-   If you installed custom Coq in a secret place, tell ./configure
-   where to find it as follows:
+   If you installed custom Coq in a location not in PATH (the default
+   with the command above), tell ./configure where to find it as
+   follows:
 
        ./autogen.sh
        ./configure COQBIN=<absolute-directory-containing-coq-executables>
+       make
+
+   If you used the -local argument above, you can run:
+
+       ./autogen.sh
+       ./configure COQBIN="`cd coq-HoTT && pwd`"
        make
 
 4. You can now use the HoTT library in place by running ./hoqtop and
@@ -58,7 +68,24 @@
 
 # LONG INSTALLATION INSTRUCTIONS
 
-## PREREQUISITES
+## INSTALLATION OF HoTT
+
+Clone the HoTT repository with
+
+   git clone https://github.com/HoTT/HoTT.git
+
+Even better, if you would like to contribute to HoTT, first fork the
+repository on github and then use your own fork. This way you will be
+able to make pull requests.
+
+If you do not want to deal with git at all, you may download an
+archive of HoTT at https://github.com/HoTT/HoTT/archive/master.zip and
+unpack that. We do not recommend this option because the HoTT library
+is under heavy development and you want to be able to easily track
+changes.  Additionally, downloading the archive requires a working
+version of autoreconf.
+
+### PREREQUISITES
 
 The HoTT library requires a custom version of Coq which supports the the
 command-line option `-indices-matter`, universe polymorphism and private
@@ -77,7 +104,23 @@ that means you will have to compile a version of Coq, available at
 If you have never compiled Coq you may prefer to ask a friend for
 help. If you feel brave you should try doing it yourself:
 
-1. Obtain the custom Coq fork. If you have git clone the fork with
+Note that obtaining the prerequisites for Coq is automated on debian
+by the script ./etc/ci/install_coq_deps.sh, and installing Coq itself
+can by automated by the script ./etc/ci/install_coq.sh.  If you want
+more control over the configuration, you can run the following steps
+manually.
+
+1. Obtain the custom Coq fork. Since we bundle the version of Coq we
+   depend on, you can run the following in the root of the HoTT
+   directory:
+
+       git submodule sync
+       git submodule update --init --recursive
+
+  This will give you the relevant version of HoTT/coq in the
+  subdirectory coq-HoTT.
+
+  Alternatively, if you have git, clone the fork with
 
        git clone https://github.com/HoTT/coq.git
        git checkout stable
@@ -97,23 +140,7 @@ help. If you feel brave you should try doing it yourself:
    `./configure -prefix <dir>`, as explained by `./configure -help`.
 
 
-## INSTALLATION OF HoTT
-
-Once you have installed the correct version of Coq, as explained in
-PREREQUISITES, you proceed as follows. Clone the HoTT repository with
-
-   git clone https://github.com/HoTT/HoTT.git
-
-Even better, if you would like to contribute to HoTT, first fork the
-repository on github and then use your own fork. This way you will be
-able to make pull requests.
-
-If you do not want to deal with git at all, you may download an
-archive of HoTT at https://github.com/HoTT/HoTT/archive/master.zip and
-unpack that. We do not recommend this option because the HoTT library
-is under heavy development and you want to be able to easily track
-changes.  Additionally, downloading the archive requires a working
-version of autoreconf.
+### Configuration of the HoTT library
 
 Next you should configure the HoTT library:
 
