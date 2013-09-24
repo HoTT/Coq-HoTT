@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I etc
 
-bin_SCRIPTS = hoqtop hoqc
+bin_SCRIPTS = hoqtop hoqc hoq-config
 if make_hoqide
   bin_SCRIPTS += hoqide
 endif

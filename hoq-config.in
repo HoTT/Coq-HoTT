@@ -1,0 +1,38 @@
+#!/bin/bash
+# This is the configuration for wrapers around coq which tricks Coq
+# into using the HoTT standard library and enables the HoTT-specific
+# options.  One day we might figure out how to create an honest Coq
+# toplevel instead.
+prefix="@prefix@"
+export ssr="@compile_ssreflect@"
+export COQC="@COQC@"
+export COQDEP="@COQDEP@"
+export COQDOC="@COQDOC@"
+export COQIDE="@COQIDE@"
+export COQTOP="@COQTOP@"
+# If there is a coq/theories directory in the parent directory of this
+# script, then use that one, otherwise use the global one. This trick
+# allows hoqc to work "in place" on the source files.
+mydir=`dirname $0`
+if test -d "$mydir/coq/theories"
+then
+  export COQLIB="$mydir/coq"
+  export HOTTLIB="$mydir/theories"
+  if test "x$ssr" = "xyes"
+  then
+    export SSRLIB="$mydir/ssrplugin/theories"
+  fi
+else
+  export COQLIB="@hottdir@/coq"
+  export HOTTLIB="@hottdir@/theories"
+  if test "x$ssr" = "xyes"
+  then
+    export SSRLIB="@hottdir@/ssrplugin/theories"
+  fi
+fi
+#if test "x$ssr" = "xyes"
+#then
+#  export COQ_ARGS=(-no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -R "$SSRLIB" Ssreflect -indices-matter)
+#else
+#  export COQ_ARGS=(-no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter)
+#fi
