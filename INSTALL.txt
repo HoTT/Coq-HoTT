@@ -1,64 +1,46 @@
 # QUICK INSTALLATION INSTRUCTIONS
 
-1. Get the HoTT library at https://github.com/HoTT/HoTT.git. Go to the
-   root of the HoTT created directory.
+If you are not a Coq expert and just want to get the HoTT library to work with
+minimal fuss, you should try your luck by following these instructions:
 
-2. Install a custom Coq from https://github.com/HoTT/coq. This is a
-   fork of the trunk and is compatible with standard Coq 8.4 trunk,
-   except that it supports the the homotopy theory
-   interpretation. Because our Coq fork changes frequently, HoTT may
-   fail with any particular commit of HoTT/coq.  (We attempt to keep
-   the master branch of this repository working with the trunk of
-   HoTT/coq, and the stable branch of this repository working with the
-   stable branch of HoTT/coq.) Thus, unless you know what you are
-   doing, you should use the version of Coq bundled with this
-   repository, which can obtain and install by running:
+1. Make sure you have all the prerequisites for compiling Coq. These are
+   `OCaml`, `camlp5`, `git`, and `make`. If you do not have them and do not know
+   how to get them, ask a friend.
 
-       ./etc/ci/install_coq.sh -local
+2. Get the HoTT library (skip this step if you already have it):
 
-   Arguments passed to this script get passed to Coq's `./configure`.
-   Passing -local will compile Coq in place, so you can run it
-   straight from the source directory.
+       git clone https://github.com/HoTT/HoTT.git
+       cd HoTT
 
-   If you run debian (or some version of linux with `apt-get`), you
-   can probably get the dependencies of Coq by running
+3. From the HoTT directory run the following commands:
 
-      ./etc/ci/install_coq_deps.sh
-
-3. If you installed custom Coq so that it is found in the `PATH`, run
-
+       ./etc/install_coq.sh
        ./autogen.sh
-       ./configure
+       ./configure COQBIN=`pwd`/coq-HoTT/bin
        make
 
-   If you installed custom Coq in a location not in PATH (the default
-   with the command above), tell ./configure where to find it as
-   follows:
+   It may take a while to compile the custom Coq.
 
-       ./autogen.sh
-       ./configure COQBIN=<absolute-directory-containing-coq-executables>
-       make
-
-   If you used the -local argument above, you can run:
-
-       ./autogen.sh
-       ./configure COQBIN="`cd coq-HoTT && pwd`"
-       make
-
-4. You can now use the HoTT library in place by running ./hoqtop and
-   ./hoqc. You can also use ./hoqide which is the version of coqide
+4. You can now use the HoTT library in place by running `./hoqtop` and
+   `./hoqc`. You can also use `./hoqide` which is the version of coqide
    running the hoqtop toplevel if you have compiled it successfully.
 
-5. The library can be loaded with `Require Import HoTT.`
+   The library can be loaded into a Coq with `Require Import HoTT.`
 
-6. You can install the library globally with `make install`, although
-   this has not been thoroughly tested.
+5. If you use ProofGeneral (PG), do not forget to change the name of the Coq
+   program called by PG. For instance you can edit the name of the executable
+   called by PG by typing 'M-x customize-variable', then 'proof-prog-name' which
+   displays a customization utility. Another option is to type 'M-x
+   customize-variable', then 'proof-prog-name-ask', to click on the 'Toogle'
+   button in front of Proof Prog Name Ask and to save this for future sessions.
+   This will prompt PG to ask you for the name of the coq toplevel to be used
+   each time you start evaluating a file.
 
-7. To use the emacs tags facility with the *.v files here, run the command
+6. To use the emacs tags facility with the `*.v` files here, run the command
 
    	make TAGS
 
-   (The emacs command `M-x find-tag`, bound to `M-.` , will take you to
+   (The Emacs command `M-x find-tag`, bound to `M-.` , will take you to
    a definition or theorem, the default name for which is located under
    your cursor. Read the help on that emacs command with `C-h k M-.` ,
    and learn the other facilities provided, such as the use of `M-*` to
@@ -66,7 +48,30 @@
    throughout the code for locations matching a given regular
    expression.)
 
-# LONG INSTALLATION INSTRUCTIONS
+In case of any problems, feel free to contact us by opening an issue at
+https://github.com/HoTT/HoTT.
+    
+
+# DETAILED INSTALLATION INSTRUCTIONS
+
+## PREPREREQUISITES
+
+To use the HoTT library you must first compile a custom version of Coq, and to
+do that you need to satisfy the prerequisites for compiling Coq. At a minimum
+you need:
+
+* OCaml version 3.11.2 or later (available at http://caml.inria.fr/)
+* Camlp5 (version <= 4.08, or 5.* transitional)
+* GNU Make version 3.81 or later
+
+If you are using Linux check your package manager for these. You can also use
+the script `./etc/ci/install_coq_deps.sh` which installs the dependencies
+automatically on a Debian system using `apt-get`.
+
+If you are using OSX we recommend that you install the Opam package manager for
+Ocaml (http://opam.ocamlpro.com/).
+
+If you are using MS Windows we wish you good luck.
 
 ## INSTALLATION OF HoTT
 
@@ -74,41 +79,38 @@ Clone the HoTT repository with
 
    git clone https://github.com/HoTT/HoTT.git
 
-Even better, if you would like to contribute to HoTT, first fork the
-repository on github and then use your own fork. This way you will be
-able to make pull requests.
+Even better, if you would like to contribute to HoTT, first fork the repository
+on github.com and then use your own fork. This way you will be able to make pull
+requests.
 
-If you do not want to deal with git at all, you may download an
-archive of HoTT at https://github.com/HoTT/HoTT/archive/master.zip and
-unpack that. We do not recommend this option because the HoTT library
-is under heavy development and you want to be able to easily track
-changes.  Additionally, downloading the archive requires a working
-version of autoreconf.
+If you do not want to deal with `git` at all, you may download an archive of HoTT
+at https://github.com/HoTT/HoTT/archive/master.zip and unpack that. We do not
+recommend this option because the HoTT library is under heavy development and
+you want to be able to easily track changes. Additionally, downloading the
+archive requires a working version of the `autoreconf` utility.
 
 ### PREREQUISITES
 
 The HoTT library requires a custom version of Coq which supports the the
-command-line option `-indices-matter`, universe polymorphism and private
-types. The first one changes the interpretation of equality to one that
-conforms to the homotopy-theoretic interpretation, the second one is
-needed to avoid certain universe inconsistency errors (which are not
-really there but Coq 8.4 cannot see that), and the third one allows us
-to implement higher-inductive types, sort of.
+command-line option `-indices-matter`, universe polymorphism and private types.
+The first one changes the interpretation of equality to one that conforms to the
+homotopy-theoretic interpretation, the second one is needed to avoid certain
+universe inconsistency errors (which are not really there but Coq 8.4 cannot see
+that), and the third one allows us to implement higher-inductive types, sort of.
 
-At present only our fork of the Coq trunk supports these options, but we
-hope to get them into the official Coq soon. Unfortunately for you
-that means you will have to compile a version of Coq, available at
+At present only our fork of the Coq trunk supports these options, but we hope to
+get them into the official Coq soon. Unfortunately for you that means you will
+have to compile a version of Coq, available at
 
    https://github.com/HoTT/coq
 
-If you have never compiled Coq you may prefer to ask a friend for
-help. If you feel brave you should try doing it yourself:
+If you have never compiled Coq you may prefer to ask a friend for help. If you
+feel brave you should try doing it yourself:
 
-Note that obtaining the prerequisites for Coq is automated on debian
-by the script ./etc/ci/install_coq_deps.sh, and installing Coq itself
-can by automated by the script ./etc/ci/install_coq.sh.  If you want
-more control over the configuration, you can run the following steps
-manually.
+Note that obtaining the prerequisites for Coq is automated on debian by the
+script `./etc/ci/install_coq_deps.sh`, and installing Coq itself can by
+automated by the script `./etc/install_coq.sh`. If you want more control over
+the configuration, you can run the following steps manually.
 
 1. Obtain the custom Coq fork. Since we bundle the version of Coq we
    depend on, you can run the following in the root of the HoTT
@@ -118,26 +120,27 @@ manually.
        git submodule update --init --recursive
 
   This will give you the relevant version of HoTT/coq in the
-  subdirectory coq-HoTT.
+  subdirectory `coq-HoTT`.
 
-  Alternatively, if you have git, clone the fork with
+  Alternatively, if you have `git`, clone the fork with
 
        git clone https://github.com/HoTT/coq.git
        git checkout stable
 
    If you do not have git, you may still download the files as an
    archive file at https://github.com/HoTT/coq/archive/stable.zip (but
-   it is better for you in the long run to learn git).
+   it is better for you in the long run to learn `git`).
 
-2. Compile Coq, as explained in the INSTALL.txt file of Coq
-   distribution. You will need some prerequisites for compilation, such
-   as OCaml 3.11.2 or later.
+2. Compile Coq, as explained in the `INSTALL` file of Coq distribution. You will
+   need some prerequisites for compilation, such as OCaml 3.11.2 or later.
 
-   If you do not want the custom Coq to override one that you already
-   have installed, configure Coq with either `./configure -local` so
-   that it will work in-place, or use
+   If you do not want the custom Coq to override one that you already have
+   installed, configure Coq with either `./configure -local` so that it will
+   work in-place, or use
 
-   `./configure -prefix <dir>`, as explained by `./configure -help`.
+       ./configure -prefix <dir>`
+
+   as explained by `./configure -help`.
 
 
 ### Configuration of the HoTT library
@@ -153,7 +156,7 @@ Next you should configure the HoTT library:
    in the HoTT directory.
 
 2. If you installed the custom Coq somewhere special or configured it
-   with `-local`, you should tell ./configure where to find the custom
+   with `-local`, you should tell `./configure` where to find the custom
    Coq:
 
        ./autogen.sh
