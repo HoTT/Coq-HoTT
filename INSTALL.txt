@@ -4,8 +4,16 @@ If you are not a Coq expert and just want to get the HoTT library to work with
 minimal fuss, you should try your luck by following these instructions:
 
 1. Make sure you have all the prerequisites for compiling Coq. These are
-   `OCaml`, `camlp5`, `git`, and `make`. If you do not have them and do not know
-   how to get them, ask a friend.
+   `OCaml`, `camlp5`, `git`, and `make`. To get these:
+
+   * Linux: check your package manager. On Debian or any distribution
+     with `apt-get` you can run the script `./etc/ci/install_coq_deps.sh`
+     which installs the dependencies automatically.
+
+   * OSX: we recommend that you install the Opam package manager for Ocaml 
+     (http://opam.ocamlpro.com/).
+
+   * MS Windows: we we wish you good luck.
 
 2. Get the HoTT library (skip this step if you already have it):
 
@@ -16,7 +24,7 @@ minimal fuss, you should try your luck by following these instructions:
 
        ./etc/install_coq.sh
        ./autogen.sh
-       ./configure COQBIN=`pwd`/coq-HoTT/bin
+       ./configure COQBIN="`pwd`/coq-HoTT/bin"
        make
 
    It may take a while to compile the custom Coq.
@@ -25,24 +33,24 @@ minimal fuss, you should try your luck by following these instructions:
    `./hoqc`. You can also use `./hoqide` which is the version of coqide
    running the hoqtop toplevel if you have compiled it successfully.
 
-   The library can be loaded into a Coq with `Require Import HoTT.`
+   The library can be loaded into a Coq session with `Require Import HoTT.`
 
 5. If you use ProofGeneral (PG), do not forget to change the name of the Coq
    program called by PG. For instance you can edit the name of the executable
-   called by PG by typing 'M-x customize-variable', then 'proof-prog-name' which
-   displays a customization utility. Another option is to type 'M-x
-   customize-variable', then 'proof-prog-name-ask', to click on the 'Toogle'
-   button in front of Proof Prog Name Ask and to save this for future sessions.
-   This will prompt PG to ask you for the name of the coq toplevel to be used
+   called by PG by typing `M-x customize-variable`, then `proof-prog-name` which
+   displays a customization utility. Another option is to type `M-x
+   customize-variable`, then `proof-prog-name-ask`, to click on the `Toogle`
+   button in front of `Proof Prog Name Ask` and to save this for future sessions.
+   This will prompt PG to ask you for the name of the Coq toplevel to be used
    each time you start evaluating a file.
 
-6. To use the emacs tags facility with the `*.v` files here, run the command
+6. To use the Emacs tags facility with the `*.v` files here, run the command
 
    	make TAGS
 
    (The Emacs command `M-x find-tag`, bound to `M-.` , will take you to
    a definition or theorem, the default name for which is located under
-   your cursor. Read the help on that emacs command with `C-h k M-.` ,
+   your cursor. Read the help on that Emacs command with `C-h k M-.` ,
    and learn the other facilities provided, such as the use of `M-*` to
    get back where you were, or the use of `M-x tags-search` to search
    throughout the code for locations matching a given regular
@@ -64,14 +72,17 @@ you need:
 * Camlp5 (version <= 4.08, or 5.* transitional)
 * GNU Make version 3.81 or later
 
-If you are using Linux check your package manager for these. You can also use
-the script `./etc/ci/install_coq_deps.sh` which installs the dependencies
-automatically on a Debian system using `apt-get`.
+To get these:
 
-If you are using OSX we recommend that you install the Opam package manager for
-Ocaml (http://opam.ocamlpro.com/).
+* Linux: check your package manager. On Debian or any distribution
+  with `apt-get` you can run the script `./etc/ci/install_coq_deps.sh`
+  which installs the dependencies automatically.
 
-If you are using MS Windows we wish you good luck.
+* OSX: we recommend that you install the Opam package manager for Ocaml 
+  (http://opam.ocamlpro.com/).
+
+* MS Windows: we we wish you good luck.
+
 
 ## INSTALLATION OF HoTT
 
@@ -95,8 +106,11 @@ The HoTT library requires a custom version of Coq which supports the the
 command-line option `-indices-matter`, universe polymorphism and private types.
 The first one changes the interpretation of equality to one that conforms to the
 homotopy-theoretic interpretation, the second one is needed to avoid certain
-universe inconsistency errors (which are not really there but Coq 8.4 cannot see
-that), and the third one allows us to implement higher-inductive types, sort of.
+universe inconsistency errors (which are not really there, but Coq 8.4 cannot see
+that), and the third one is a modification which allows us to implement a poor
+man's version of higher-inductive types
+
+ allows us to implement higher-inductive types, sort of.
 
 At present only our fork of the Coq trunk supports these options, but we hope to
 get them into the official Coq soon. Unfortunately for you that means you will
@@ -125,10 +139,10 @@ the configuration, you can run the following steps manually.
   Alternatively, if you have `git`, clone the fork with
 
        git clone https://github.com/HoTT/coq.git
-       git checkout stable
+       git checkout trunk
 
    If you do not have git, you may still download the files as an
-   archive file at https://github.com/HoTT/coq/archive/stable.zip (but
+   archive file at https://github.com/HoTT/coq/archive/trunk.zip (but
    it is better for you in the long run to learn `git`).
 
 2. Compile Coq, as explained in the `INSTALL` file of Coq distribution. You will
