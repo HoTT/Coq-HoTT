@@ -185,10 +185,6 @@ ln -s $COQLIB/plugins $COQLIB/dev $srcdir/coq
 #                 $srcdir/coq/dev:$COQLIB/dev])
 
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([hoqtop], [chmod +x hoqtop])
-AC_CONFIG_FILES([hoqtop.byte], [chmod +x hoqtop.byte])
-AC_CONFIG_FILES([hoqc], [chmod +x hoqc])
-AS_IF([test "x$make_coqide" = "xyes"],
-      [AC_CONFIG_FILES([hoqide], [chmod +x hoqide])])
+AC_CONFIG_FILES([hoq-config])
 
 AC_OUTPUT
