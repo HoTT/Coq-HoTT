@@ -91,20 +91,13 @@ Add Printing Let sig2.
 
 (** We make the parameters maximally inserted so that we can pass around [proj1] as a function and have it actually mean "first projection" in, e.g., [ap]. *)
 
-Definition proj1 {A} {P : A -> Type} (x : sig P) : A
+Definition proj1_sig {A} {P : A -> Type} (x : sig P) : A
   := let (a, _) := x in a.
-Definition proj2 {A} {P : A -> Type} (x : sig P) : P (proj1 x)
-  := let (a, h) return P (proj1 x) := x in h.
+Definition proj2_sig {A} {P : A -> Type} (x : sig P) : P (proj1_sig x)
+  := let (a, h) return P (proj1_sig x) := x in h.
 
-Notation proj1_sig := proj1.
-Notation proj2_sig := proj2.
-
-Notation projT1 := proj1.
-Notation projT2 := proj2.
-
-(** Because [proj1] and [proj2] were traditionally used for [and], we allow the coercion of a [prod] to a [sig] so that [proj1] and [proj2] still work for [and]. *)
-
-Coercion sig_of_prod A B (x : A * B) : { _ : A & B } := exist (fun _ => B) (fst x) (snd x).
+Notation projT1 := proj1_sig (only parsing).
+Notation projT2 := proj2_sig (only parsing).
 
 
 (** Various forms of the axiom of choice for specifications *)
