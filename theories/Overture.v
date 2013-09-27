@@ -40,6 +40,10 @@ Notation idmap := (fun x => x).
 Notation "( x ; y )" := (existT _ x y) : fibration_scope.
 Open Scope fibration_scope.
 
+(** We have unified [sig] and [sigT] of the standard Coq, and so we introduce a new notation to not annoy newcomers with the [T] in [projT1] and [projT2] nor the [_sig] in [proj1_sig] and [proj2_sig], and to not confuse Coq veterans by stealing [proj1] and [proj2], which Coq uses for [and]. *)
+Notation pr1 := projT1.
+Notation pr2 := projT2.
+
 (** The following notation is very convenient, although it unfortunately clashes with Proof General's "electric period". *)
 Notation "x .1" := (projT1 x) (at level 3) : fibration_scope.
 Notation "x .2" := (projT2 x) (at level 3) : fibration_scope.

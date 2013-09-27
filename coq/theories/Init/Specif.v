@@ -19,7 +19,8 @@ Require Import Datatypes.
 Local Open Scope identity_scope.
 Require Import Logic.
 
-(** In standard Coq, [sig] and [sig2] are defined as "subset types" which sum over predicates [P:A->Prop].  We don't use [Prop], so we never need them, but some parts of Coq (like [Program Definition]) expect them to be present.  So we include the definitions, but with [Prop] changed to [Type] to ensure that our code is not subtly polluted with [Prop]. *)
+(** [(sig A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type.
+    Similarly for [(sig2 A P Q)], also written [{x:A & (P x) & (Q x)}]. *)
 
 Inductive sig (A:Type) (P:A -> Type) : Type :=
     exist : forall x:A, P x -> sig P.
@@ -27,21 +28,23 @@ Inductive sig (A:Type) (P:A -> Type) : Type :=
 Inductive sig2 (A:Type) (P Q:A -> Type) : Type :=
     exist2 : forall x:A, P x -> Q x -> sig2 P Q.
 
-(** Now we define the Sigma-types that we will actually use. *)
+Arguments sig (A P)%type.
+Arguments sig2 (A P Q)%type.
 
-(** [(sigT A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type.
-    Similarly for [(sigT2 A P Q)], also written [{x:A & (P x) & (Q x)}]. *)
+(** *** Notations *)
 
-Inductive sigT (A:Type) (P:A -> Type) : Type :=
-    existT : forall x:A, P x -> sigT P.
+(** In standard Coq, [sig] and [sig2] are defined as "subset types" which sum over predicates [P:A->Prop], while [sigT] and [sigT2] are the [Type] variants.  Because we don't use [Prop], we combine the two versions, and make [sigT] a notation for [sig].  Note that some parts of Coq (like [Program Definition]) expect [sig] to be present. *)
 
-Inductive sigT2 (A:Type) (P Q:A -> Type) : Type :=
-    existT2 : forall x:A, P x -> Q x -> sigT2 P Q.
-
-(* Notations *)
-
-Arguments sigT (A P)%type.
-Arguments sigT2 (A P Q)%type.
+Notation sigT := sig (only parsing).
+Notation existT := exist (only parsing).
+Notation sigT_rect := sig_rect (only parsing).
+Notation sigT_rec := sig_rect (only parsing).
+Notation sigT_ind := sig_rect (only parsing).
+Notation sigT2 := sig2 (only parsing).
+Notation existT2 := exist2 (only parsing).
+Notation sigT2_rect := sig2_rect (only parsing).
+Notation sigT2_rec := sig2_rect (only parsing).
+Notation sigT2_ind := sig2_rect (only parsing).
 
 Notation  ex_intro := existT (only parsing).
 
@@ -75,41 +78,27 @@ Notation "{ x : A  & P  & Q }" := (sigT2 (fun x:A => P) (fun x:A => Q)) :
 (* Notation "{ x & P  & Q }" := (sigT2 (fun x:_ => P) (fun x:A => Q)) : *)
 (*   type_scope. *)
 
-Add Printing Let sigT.
-Add Printing Let sigT2.
+Add Printing Let sig.
+Add Printing Let sig2.
 
-
-Definition proj1_sig (A : Type) (P : A -> Type) (hP : sigT P) : A :=
-  match hP with existT x _ => x end.
-
-(** Projections of [sig]
-
-    An element [y] of a subset [{x:A | (P x)}] is the pair of an [a]
-    of type [A] and of a proof [h] that [a] satisfies [P].  Then
-    [(proj1_sig y)] is the witness [a] and [(proj2_sig y)] is the
-    proof of [(P a)] *)
 
 (** Projections of [sigT]
 
     An element [x] of a sigma-type [{y:A & P y}] is a dependent pair
     made of an [a] of type [A] and an [h] of type [P a].  Then,
-    [(projT1 x)] is the first projection and [(projT2 x)] is the
-    second projection, the type of which depends on the [projT1]. *)
+    [(proj1 x)] is the first projection and [(proj2 x)] is the
+    second projection, the type of which depends on the [proj1]. *)
 
-Section Projections.
+(** We make the parameters maximally inserted so that we can pass around [proj1] as a function and have it actually mean "first projection" in, e.g., [ap]. *)
 
-  Variable A : Type.
-  Variable P : A -> Type.
+Definition proj1_sig {A} {P : A -> Type} (x : sig P) : A
+  := let (a, _) := x in a.
+Definition proj2_sig {A} {P : A -> Type} (x : sig P) : P (proj1_sig x)
+  := let (a, h) return P (proj1_sig x) := x in h.
 
-  Definition projT1 (x:sigT P) : A := match x with
-                                      | existT a _ => a
-                                      end.
-  Definition projT2 (x:sigT P) : P (projT1 x) :=
-    match x return P (projT1 x) with
-    | existT _ h => h
-    end.
+Notation projT1 := proj1_sig (only parsing).
+Notation projT2 := proj2_sig (only parsing).
 
-End Projections.
 
 (** Various forms of the axiom of choice for specifications *)
 
@@ -202,4 +191,3 @@ Notation projS2 := projT2 (compat "8.2").
 (* Notation sigS2_rect := sigT2_rect (compat "8.2"). *)
 (* Notation sigS2_rec := sigT2_rec (compat "8.2"). *)
 (* Notation sigS2_ind := sigT2_ind (compat "8.2"). *)
-
