@@ -1,0 +1,66 @@
+Require Export Category.Core Category.Morphisms.
+
+Set Universe Polymorphism.
+Set Implicit Arguments.
+Generalizable All Variables.
+Set Asymmetric Patterns.
+
+Local Open Scope category_scope.
+Local Open Scope morphism_scope.
+
+Definition unique_up_to_unique_isomorphism (C : PreCategory) (P : C -> Type) :=
+  forall x (_ : P x) x' (_ : P x'),
+    { c : Contr (morphism C x x')
+    | IsIsomorphism (center (morphism C x x')) }.
+
+(** A terminal object is an object with a unique morphism from every
+    other object. *)
+Notation IsTerminalObject C x :=
+  (forall x' : object C, Contr (morphism C x' x)).
+
+Record TerminalObject (C : PreCategory) :=
+  {
+    object_terminal :> C;
+    isterminal_object_terminal :> IsTerminalObject C object_terminal
+  }.
+
+Existing Instance isterminal_object_terminal.
+
+(** An initial object is an object with a unique morphism from every
+    other object. *)
+Notation IsInitialObject C x :=
+  (forall x' : object C, Contr (morphism C x x')).
+
+Record InitialObject (C : PreCategory) :=
+  {
+    object_initial :> C;
+    isinitial_object_initial :> IsInitialObject C object_initial
+  }.
+
+Existing Instance isinitial_object_initial.
+
+Arguments unique_up_to_unique_isomorphism [C] P.
+
+Section CategoryObjectsTheorems.
+  Variable C : PreCategory.
+
+  Local Ltac unique :=
+    repeat first [ intro
+                 | exists _
+                 | exists (center (morphism C _ _))
+                 | etransitivity; [ symmetry | ]; apply contr ].
+
+  (** The terminal object is unique up to unique isomorphism. *)
+  Theorem unique_terminal_object
+  : unique_up_to_unique_isomorphism (fun x => IsTerminalObject C x).
+  Proof.
+    unique.
+  Qed.
+
+  (** The initial object is unique up to unique isomorphism. *)
+  Theorem unique_initial_object
+  : unique_up_to_unique_isomorphism (fun x => IsInitialObject C x).
+  Proof.
+    unique.
+  Qed.
+End CategoryObjectsTheorems.
