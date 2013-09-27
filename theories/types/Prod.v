@@ -15,6 +15,12 @@ Definition unpack_prod `{P : A * B -> Type} (u : A * B) :
   :=
   let (x, y) as u return (P (fst u, snd u) -> P u) := u in idmap.
 
+(** Now we write down the reverse. *)
+Definition pack_prod `{P : A * B -> Type} (u : A * B) :
+  P u -> P (fst u, snd u)
+  :=
+  let (x, y) as u return (P u -> P (fst u, snd u)) := u in idmap.
+
 (** *** Eta conversion *)
 
 Definition eta_prod `(z : A * B) : (fst z, snd z) = z
@@ -67,6 +73,54 @@ Definition eta_path_prod {A B : Type} {z z' : A * B} (p : z = z') :
 Proof.
   destruct p. destruct z. reflexivity.
 Defined.
+
+(** Now we show how these compute with transport. *)
+
+Lemma transport_path_prod_uncurried A B (P : A * B -> Type) (x y : A * B)
+      (H : (fst x = fst y) * (snd x = snd y))
+      Px
+: transport P (path_prod_uncurried _ _ H) Px
+  = unpack_prod
+      y
+      (transport (fun x => P (x, snd y))
+                 (fst H)
+                 (transport (fun y => P (fst x, y))
+                            (snd H)
+                            (pack_prod x Px))).
+Proof.
+  destruct x, y, H; simpl in *.
+  path_induction.
+  reflexivity.
+Defined.
+
+Definition transport_path_prod A B (P : A * B -> Type) (x y : A * B)
+           (HA : fst x = fst y)
+           (HB : snd x = snd y)
+           Px
+: transport P (path_prod _ _ HA HB) Px
+  = match y as y' return P (fst y', snd y') -> P y' with
+      | (_, _) => idmap
+    end (transport (fun x => P (x, snd y))
+                   HA
+                   (transport (fun y => P (fst x, y))
+                              HB
+                              (pack_prod x Px)))
+  := transport_path_prod_uncurried _ _ P x y (HA, HB) Px.
+
+Definition transport_path_prod'
+           A B (P : A * B -> Type)
+           (x y : A)
+           (x' y' : B)
+           (HA : x = y)
+           (HB : x' = y')
+           Px
+: transport P (path_prod' HA HB) Px
+  = transport (fun x => P (x, y'))
+              HA
+              (transport (fun y => P (x, y))
+                         HB
+                         Px)
+  := transport_path_prod _ _ P (x, x') (y, y') HA HB Px.
 
 (** This lets us identify the path space of a product type, up to equivalence. *)
 
