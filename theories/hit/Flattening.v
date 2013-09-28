@@ -3,7 +3,7 @@
 (** * The flattening lemma. *)
 
 Require Import Overture PathGroupoids Equivalences.
-Require Import Paths Forall Sigma Arrow Universe.
+Require Import types.Paths types.Forall types.Sigma types.Arrow types.Universe.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -173,7 +173,7 @@ Abort.
 (* Fortunately, it turns out to be enough to have the computation rule for the *non-dependent* eliminator! *)
 
 (* We could define that in terms of the dependent one, as usual...
-Definition sWtil_rectnd (P : Type) 
+Definition sWtil_rectnd (P : Type)
   (scct' : forall a (x : C a), P)
   (sppt' : forall b (y : C (f b)), scct' (f b) y = scct' (g b) (D b y))
   : sWtil -> P
@@ -181,7 +181,7 @@ Definition sWtil_rectnd (P : Type)
 *)
 
 (* ...but if we define it directly, then it's easier to reason about. *)
-Definition sWtil_rectnd (Q : Type) 
+Definition sWtil_rectnd (Q : Type)
   (scct' : forall a (x : C a), Q)
   (sppt' : forall b (y : C (f b)), scct' (f b) y = scct' (g b) (D b y))
   : sWtil -> Q.
@@ -199,7 +199,7 @@ Defined.
 
 Open Scope long_path_scope.
 
-Definition sWtil_rectnd_beta_ppt (Q : Type) 
+Definition sWtil_rectnd_beta_ppt (Q : Type)
   (scct' : forall a (x : C a), Q)
   (sppt' : forall b (y : C (f b)), scct' (f b) y = scct' (g b) (D b y))
   (b:B) (y: C (f b))

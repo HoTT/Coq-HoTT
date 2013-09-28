@@ -2,7 +2,7 @@
 (** * Comparing definitions of equivalence *)
 
 Require Import Overture PathGroupoids Equivalences Contractible Trunc HProp.
-Require Import Sigma Forall Record Paths Prod.
+Require Import types.Sigma types.Forall types.Record types.Paths types.Prod.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

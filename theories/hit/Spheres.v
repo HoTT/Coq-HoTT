@@ -2,7 +2,7 @@
 
 (** * The spheres, in all dimensions. *)
 
-Require Import Overture PathGroupoids Trunc HProp Equivalences Sigma Forall Paths types.Bool Misc Suspension Circle.
+Require Import Overture PathGroupoids Trunc HProp Equivalences types.Sigma types.Forall types.Paths types.Bool Misc hit.Suspension hit.Circle.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.

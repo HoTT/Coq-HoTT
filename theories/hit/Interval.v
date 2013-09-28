@@ -4,7 +4,7 @@
 
 Require Import Overture PathGroupoids Contractible Equivalences.
 Require Import FunextVarieties.
-Require Import Sigma Forall Paths.
+Require Import types.Sigma types.Forall types.Paths.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -30,13 +30,13 @@ Axiom interval_rect_beta_seg : forall (P : interval -> Type)
 
 End Interval.
 
-(*   Should fail: 
-Lemma test (P : interval -> Type) (a : P zero) (b : P one) 
+(*   Should fail:
+Lemma test (P : interval -> Type) (a : P zero) (b : P one)
       (p p' : seg # a = b) :
     interval_rect P a b p = interval_rect P a b p'.
 reflexivity.
 *)
-        
+
 
 Definition interval_rectnd (P : Type) (a b : P) (p : a = b)
   : interval -> P

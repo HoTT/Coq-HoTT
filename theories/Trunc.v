@@ -2,7 +2,7 @@
 (** * Truncatedness *)
 
 
-Require Import Overture Contractible Equivalences Paths Unit.
+Require Import Overture Contractible Equivalences types.Paths types.Unit.
 Local Open Scope equiv_scope.
 Local Open Scope trunc_scope.
 
