@@ -1,5 +1,5 @@
 Require Export Category.Core Functor.Core Functor.Composition Functor.Identity.
-Require Import Functor.Equality.
+Require Import Functor.Paths.
 
 Set Implicit Arguments.
 Generalizable All Variables.

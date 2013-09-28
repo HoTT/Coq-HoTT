@@ -1,5 +1,5 @@
 Require Export Category.Sum Functor.Core Functor.Composition Functor.Identity.
-Require Import Functor.Equality HoTT.Tactics types.Forall.
+Require Import Functor.Paths HoTT.Tactics types.Forall.
 
 Set Implicit Arguments.
 Generalizable All Variables.
