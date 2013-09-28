@@ -22,21 +22,21 @@ Section functor_identityLemmas.
   (** If we had that [match (p : a = b) in (_ = y) return (a = y) with idpath => idpath end ≡ p] (a form of eta for paths), this would be judgemental. *)
   Lemma left_functor_identity (F : Functor D C) : functor_identity _ o F = F.
   Proof.
-    by functor_eq.
+    by paths_functor.
   Defined.
 
   Lemma right_functor_identity (F : Functor C D) : F o functor_identity _ = F.
   Proof.
-    by functor_eq.
+    by paths_functor.
   Defined.
 
   Definition left_functor_identity_fst F
   : ap object_of (left_functor_identity F) = idpath
-    := @Functor_eq'_sig_fst _ _ _ (functor_identity C o F) F 1%path 1%path.
+    := @paths'_functor_sig_fst _ _ _ (functor_identity C o F) F 1%path 1%path.
 
   Definition right_functor_identity_fst F
   : ap object_of (right_functor_identity F) = idpath
-    := @Functor_eq'_sig_fst _ _ _ (F o functor_identity C) F 1%path 1%path.
+    := @paths'_functor_sig_fst _ _ _ (F o functor_identity C) F 1%path 1%path.
 End functor_identityLemmas.
 
 Hint Rewrite @left_functor_identity @right_functor_identity : category.
@@ -60,12 +60,12 @@ Section FunctorCompositionLemmas.
         (F : Functor B C) (G : Functor C D) (H : Functor D E)
   : (H o G) o F = H o (G o F).
   Proof.
-    by functor_eq.
+    by paths_functor.
   Defined.
 
   Definition associativity_functor_composition_fst F G H
   : ap object_of (associativity_functor_composition F G H) = idpath
-    := @Functor_eq'_sig_fst _ _ _ ((H o G) o F) (H o (G o F)) 1%path 1%path.
+    := @paths'_functor_sig_fst _ _ _ ((H o G) o F) (H o (G o F)) 1%path 1%path.
 End FunctorCompositionLemmas.
 
 Hint Resolve @associativity_functor_composition : category functor.

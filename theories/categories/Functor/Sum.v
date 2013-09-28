@@ -71,7 +71,7 @@ Section swap_functor.
   Lemma sum_swap_swap_id `{Funext} C D
   : sum_swap_functor C D o sum_swap_functor D C = 1.
   Proof.
-    functor_eq.
+    paths_functor.
     exists (path_forall _ _ sum_swap_swap_id_helper).
     repeat (apply (@path_forall _); intro).
     repeat match goal with
