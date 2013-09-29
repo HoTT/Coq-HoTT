@@ -1,8 +1,8 @@
 #!/bin/sh
 autoreconf -fvi
-if test $? -ne 0
+if test $? -eq 127
 then
-    echo 'Warning: autoreconf failed.  Falling back on git.'
+    echo 'Warning: autoreconf not found.  Falling back on git.'
     if test -d .git
     then
 	git remote update
@@ -11,7 +11,7 @@ then
 	git checkout $BRANCH $FILES
 	if test $? -ne 0 # we failed to find the branch, so try to get it remotely
 	then
-	    git remote add autogen-temp-upstream git://github.com:HoTT/HoTT.git
+	    git remote add autogen-temp-upstream git://github.com/HoTT/HoTT.git
 	    git remote update
 	    git checkout autogen-temp-upstream/$BRANCH $FILES
 	    if test $? -ne 0
@@ -20,6 +20,7 @@ then
 	    fi
 	    git remote rm autogen-temp-upstream
 	fi
+        git rm --cached $FILES
     else
 	echo 'Error: autoreconf failed, and you are not using git.  Try installing autoconf or autoreconf.'
     fi

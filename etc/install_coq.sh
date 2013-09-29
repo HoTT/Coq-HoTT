@@ -21,12 +21,10 @@ echo '$ git submodule update --init --recursive'
 git submodule update --init --recursive
 
 pushd coq-HoTT
-echo '$ ./configure -no-native-compiler '"$@"
-./configure -no-native-compiler "$@"
+echo '$ ./configure -local '"$@"
+./configure -local "$@"
 echo '$ make coqlight'
 make coqlight
-echo '$ sudo make install-coqlight'
-sudo make install-coqlight
 popd
 
 popd 1>/dev/null
