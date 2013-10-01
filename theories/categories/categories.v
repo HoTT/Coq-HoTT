@@ -3,15 +3,18 @@
 (** First we give modules to all of the kinds of category theory constructions (corresponding to directories), so that we can refer to them as [Category.foo] or [Functor.foo] after [Require Import categories.] *)
 Require Category.
 Require Functor.
+Require NaturalTransformation.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
 Include Category.Strict.
 Include Category.Univalent.
 Include Functor.Core.
+Include NaturalTransformation.Core.
 
 Require Export Category.Notations.
 Require Export Functor.Notations.
+Require Export NaturalTransformation.Notations.
 
 
 (** Some checks that should pass, if all of the importing went correctly. *)
