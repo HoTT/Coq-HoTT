@@ -201,17 +201,19 @@ Class IsMonomorphism {C} {x y} (m : morphism C x y) :=
                       m o m1 = m o m2
                       -> m1 = m2.
 
-Record > Epimorphism {C} x y :=
+Record Epimorphism {C} x y :=
   {
     Epimorphism_morphism :> morphism C x y;
     Epimorphism_IsEpimorphism :> IsEpimorphism Epimorphism_morphism
   }.
 
-Record > Monomorphism {C} x y :=
+Record Monomorphism {C} x y :=
   {
     Monomorphism_morphism :> morphism C x y;
     Monomorphism_IsMonomorphism :> IsMonomorphism Monomorphism_morphism
   }.
+
+Existing Instances Epimorphism_IsEpimorphism Monomorphism_IsMonomorphism.
 
 Notation "x ->> y" := (Epimorphism x y)
                         (at level 99, right associativity, y at level 200).
@@ -262,16 +264,16 @@ Section EpiMono.
 
   Section equiv.
     Global Instance reflexive_epimorphism : Reflexive (@Epimorphism C)
-      := isepimorphism_identity.
+      := fun x => Build_Epimorphism (isepimorphism_identity x).
 
     Global Instance reflexive_monomorphism : Reflexive (@Monomorphism C)
-      := ismonomorphism_identity.
+      := fun x => Build_Monomorphism (ismonomorphism_identity x).
 
     Global Instance transitive_epimorphism : Transitive (@Epimorphism C)
-      := fun _ _ _ m0 m1 => isepimorphism_composition m1 m0.
+      := fun _ _ _ m0 m1 => Build_Epimorphism (isepimorphism_composition m1 m0).
 
     Global Instance transitive_monomorphism : Transitive (@Monomorphism C)
-      := fun _ _ _ m0 m1 => ismonomorphism_composition m1 m0.
+      := fun _ _ _ m0 m1 => Build_Monomorphism (ismonomorphism_composition m1 m0).
   End equiv.
 
   Section sect.
