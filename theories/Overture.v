@@ -374,6 +374,11 @@ Definition not (A:Type) : Type := A -> Empty.
 Notation "~ x" := (not x) : type_scope.
 Hint Unfold not: core.
 
+(** *** Pointed types *)
+
+(** A space is pointed if that space has a point. *)
+Class IsPointed (A : Type) := point : A.
+
 (** Ssreflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=
   trivial; intros; solve
