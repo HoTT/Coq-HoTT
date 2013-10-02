@@ -34,7 +34,7 @@ Section Functors_Equal.
 
   (** We could leave it at that and be done with it, but we want a more convenient form for actually constructing paths between functors.  For this, we write a trimmed down version of something equivalent to the type of paths between functors. *)
 
-  Local Notation paths'_functor_T F G
+  Local Notation path_functor'_T F G
     := { HO : object_of F = object_of G
        | transport (fun GO => forall s d, morphism C s d -> morphism D (GO s) (GO d))
                    HO
@@ -42,10 +42,10 @@ Section Functors_Equal.
          = morphism_of G }
          (only parsing).
 
-  (** We could just go prove that the path space of [functor_sig_T] is equivalent to [paths'_functor_T], but unification is far too slow to do this effectively.  So instead we explicitly classify [paths'_functor_T], and provide an equivalence between it and the path space of [Functor C D]. *)
+  (** We could just go prove that the path space of [functor_sig_T] is equivalent to [path_functor'_T], but unification is far too slow to do this effectively.  So instead we explicitly classify [path_functor'_T], and provide an equivalence between it and the path space of [Functor C D]. *)
 
-  (*Definition equiv_paths'_functor_sig_sig (F G : Functor C D)
-  : paths'_functor_T F G <~> (@equiv_inv _ _ _ equiv_sig_functor F
+  (*Definition equiv_path_functor'_sig_sig (F G : Functor C D)
+  : path_functor'_T F G <~> (@equiv_inv _ _ _ equiv_sig_functor F
                               = @equiv_inv _ _ _ equiv_sig_functor G).
   Proof.
     etransitivity; [ | by apply equiv_path_sigma ].
@@ -57,7 +57,7 @@ Section Functors_Equal.
     exact (isequiv_idmap (object_of F = object_of G)).
   Abort.*)
 
-  Definition paths'_functor_sig (F G : Functor C D) : paths'_functor_T F G -> F = G.
+  Definition path_functor'_sig (F G : Functor C D) : path_functor'_T F G -> F = G.
   Proof.
     intros [? ?].
     destruct F, G; simpl in *.
@@ -66,36 +66,36 @@ Section Functors_Equal.
       abstract exact (center _).
   Defined.
 
-  Lemma paths'_functor_sig_fst F G HO HM
-  : ap object_of (@paths'_functor_sig F G (HO; HM)) = HO.
+  Lemma path_functor'_sig_fst F G HO HM
+  : ap object_of (@path_functor'_sig F G (HO; HM)) = HO.
   Proof.
     destruct F, G; simpl in *.
     path_induction_hammer.
   Qed.
 
-  Lemma paths'_functor_sig_idpath F
-  : @paths'_functor_sig F F (idpath; idpath) = idpath.
+  Lemma path_functor'_sig_idpath F
+  : @path_functor'_sig F F (idpath; idpath) = idpath.
   Proof.
     destruct F; simpl in *.
     path_induction_hammer.
   Qed.
 
-  Definition paths'_functor_sig_inv (F G : Functor C D) : F = G -> paths'_functor_T F G
+  Definition path_functor'_sig_inv (F G : Functor C D) : F = G -> path_functor'_T F G
     := fun H'
        => (ap object_of H';
            (transport_compose _ _ _ _) ^ @ apD (@morphism_of _ _) H')%path.
 
-  Lemma paths'_functor (F G : Functor C D)
+  Lemma path_functor' (F G : Functor C D)
   : forall HO : object_of F = object_of G,
       transport (fun GO => forall s d, morphism C s d -> morphism D (GO s) (GO d)) HO (morphism_of F) = morphism_of G
       -> F = G.
   Proof.
     intros.
-    apply paths'_functor_sig.
+    apply path_functor'_sig.
     esplit; eassumption.
   Defined.
 
-  Lemma paths_functor (F G : Functor C D)
+  Lemma path_functor (F G : Functor C D)
   : forall HO : object_of F == object_of G,
       (forall s d m,
          transport (fun GO => forall s d, morphism C s d -> morphism D (GO s) (GO d))
@@ -106,22 +106,22 @@ Section Functors_Equal.
       -> F = G.
   Proof.
     intros.
-    eapply (paths'_functor F G (path_forall _ _ HO)).
+    eapply (path_functor' F G (path_forall _ _ HO)).
     repeat (apply path_forall; intro); apply_hyp.
   Defined.
 
-  Lemma equiv_paths'_functor_sig (F G : Functor C D)
-  : paths'_functor_T F G <~> F = G.
+  Lemma equiv_path_functor'_sig (F G : Functor C D)
+  : path_functor'_T F G <~> F = G.
   Proof.
-    apply (equiv_adjointify (@paths'_functor_sig F G)
-                            (@paths'_functor_sig_inv F G)).
+    apply (equiv_adjointify (@path_functor'_sig F G)
+                            (@path_functor'_sig_inv F G)).
     - hnf.
       intros [].
-      apply paths'_functor_sig_idpath.
+      apply path_functor'_sig_idpath.
     - hnf.
       intros [? ?].
       apply path_sigma_uncurried.
-      exists (paths'_functor_sig_fst _ _ _).
+      exists (path_functor'_sig_fst _ _ _).
       exact (center _).
   Defined.
 
@@ -135,9 +135,9 @@ Section Functors_Equal.
   Qed.
 End Functors_Equal.
 
-Ltac paths_functor :=
+Ltac path_functor :=
   repeat match goal with
            | _ => intro
-           | _ => apply paths'_functor_sig; simpl
+           | _ => apply path_functor'_sig; simpl
            | _ => (exists idpath)
          end.

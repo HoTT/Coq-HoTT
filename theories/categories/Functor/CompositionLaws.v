@@ -16,32 +16,32 @@ Section functor_identityLemmas.
 
   Local Open Scope functor_scope.
 
-  Local Transparent compose_functors_identity_of.
-  Local Transparent compose_functors_composition_of.
+  Local Transparent functor_compose_identity_of.
+  Local Transparent functor_compose_composition_of.
 
   (** If we had that [match (p : a = b) in (_ = y) return (a = y) with idpath => idpath end ≡ p] (a form of eta for paths), this would be judgemental. *)
-  Lemma left_functor_identity (F : Functor D C) : functor_identity _ o F = F.
+  Lemma functor_left_identity (F : Functor D C) : functor_identity _ o F = F.
   Proof.
-    by paths_functor.
+    by path_functor.
   Defined.
 
-  Lemma right_functor_identity (F : Functor C D) : F o functor_identity _ = F.
+  Lemma functor_right_identity (F : Functor C D) : F o functor_identity _ = F.
   Proof.
-    by paths_functor.
+    by path_functor.
   Defined.
 
-  Definition left_functor_identity_fst F
-  : ap object_of (left_functor_identity F) = idpath
-    := @paths'_functor_sig_fst _ _ _ (functor_identity C o F) F 1%path 1%path.
+  Definition functor_left_identity_fst F
+  : ap object_of (functor_left_identity F) = idpath
+    := @path_functor'_sig_fst _ _ _ (functor_identity C o F) F 1%path 1%path.
 
-  Definition right_functor_identity_fst F
-  : ap object_of (right_functor_identity F) = idpath
-    := @paths'_functor_sig_fst _ _ _ (F o functor_identity C) F 1%path 1%path.
+  Definition functor_right_identity_fst F
+  : ap object_of (functor_right_identity F) = idpath
+    := @path_functor'_sig_fst _ _ _ (F o functor_identity C) F 1%path 1%path.
 End functor_identityLemmas.
 
-Hint Rewrite @left_functor_identity @right_functor_identity : category.
-Hint Rewrite @left_functor_identity @right_functor_identity : functor.
-Hint Immediate @left_functor_identity @right_functor_identity : category functor.
+Hint Rewrite @functor_left_identity @functor_right_identity : category.
+Hint Rewrite @functor_left_identity @functor_right_identity : functor.
+Hint Immediate @functor_left_identity @functor_right_identity : category functor.
 
 Section FunctorCompositionLemmas.
   Variable B : PreCategory.
@@ -53,21 +53,21 @@ Section FunctorCompositionLemmas.
 
   Local Open Scope functor_scope.
 
-  Local Transparent compose_functors_composition_of.
-  Local Transparent compose_functors_identity_of.
+  Local Transparent functor_compose_composition_of.
+  Local Transparent functor_compose_identity_of.
 
-  Lemma associativity_functor_composition
+  Lemma functor_compose_associativity
         (F : Functor B C) (G : Functor C D) (H : Functor D E)
   : (H o G) o F = H o (G o F).
   Proof.
-    by paths_functor.
+    by path_functor.
   Defined.
 
-  Definition associativity_functor_composition_fst F G H
-  : ap object_of (associativity_functor_composition F G H) = idpath
-    := @paths'_functor_sig_fst _ _ _ ((H o G) o F) (H o (G o F)) 1%path 1%path.
+  Definition functor_compose_associativity_fst F G H
+  : ap object_of (functor_compose_associativity F G H) = idpath
+    := @path_functor'_sig_fst _ _ _ ((H o G) o F) (H o (G o F)) 1%path 1%path.
 End FunctorCompositionLemmas.
 
-Hint Resolve @associativity_functor_composition : category functor.
+Hint Resolve @functor_compose_associativity : category functor.
 
-Opaque associativity_functor_composition left_functor_identity right_functor_identity.
+Opaque functor_compose_associativity functor_left_identity functor_right_identity.

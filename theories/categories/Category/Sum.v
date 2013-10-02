@@ -9,26 +9,26 @@ Section category_sum.
   Variable C : PreCategory.
   Variable D : PreCategory.
 
-  Definition morphism_category_sum (s d : C + D) : Type
+  Definition category_sum_morphism (s d : C + D) : Type
     := match (s, d) with
          | (inl s, inl d) => morphism C s d
          | (inr s, inr d) => morphism D s d
          | _ => Empty
        end.
 
-  Global Arguments morphism_category_sum _ _ / .
+  Global Arguments category_sum_morphism _ _ / .
 
-  Definition identity_category_sum (x : C + D) : morphism_category_sum x x
+  Definition category_sum_identity (x : C + D) : category_sum_morphism x x
     := match x with
          | inl x => identity x
          | inr x => identity x
        end.
 
-  Global Arguments identity_category_sum _ / .
+  Global Arguments category_sum_identity _ / .
 
-  Definition compose_category_sum (s d d' : C + D)
-             (m1 : morphism_category_sum d d') (m2 : morphism_category_sum s d)
-  : morphism_category_sum s d'.
+  Definition category_sum_compose (s d d' : C + D)
+             (m1 : category_sum_morphism d d') (m2 : category_sum_morphism s d)
+  : category_sum_morphism s d'.
   Proof.
     case s, d, d'; simpl in *;
     solve [ case m1
@@ -36,15 +36,15 @@ Section category_sum.
           | eapply compose; eassumption ].
   Defined.
 
-  Global Arguments compose_category_sum [_ _ _] _ _ / .
+  Global Arguments category_sum_compose [_ _ _] _ _ / .
 
   Definition category_sum : PreCategory.
   Proof.
     refine (@Build_PreCategory
               (C + D)%type
-              morphism_category_sum
-              identity_category_sum
-              compose_category_sum
+              category_sum_morphism
+              category_sum_identity
+              category_sum_compose
               _
               _
               _

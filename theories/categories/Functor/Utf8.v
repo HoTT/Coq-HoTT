@@ -1,6 +1,6 @@
 Require Export Category.Utf8 Functor.Core Functor.Composition Functor.Duals.
 
-Infix "∘" := compose_functors : functor_scope.
+Infix "∘" := functor_compose : functor_scope.
 
 Notation "F ₀ x" := (object_of F x) (at level 10, no associativity) : object_scope.
 Notation "F ₁ m" := (morphism_of F m) (at level 10, no associativity) : morphism_scope.

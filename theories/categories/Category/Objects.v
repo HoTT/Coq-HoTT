@@ -51,14 +51,14 @@ Section CategoryObjectsTheorems.
                  | etransitivity; [ symmetry | ]; apply contr ].
 
   (** The terminal object is unique up to unique isomorphism. *)
-  Theorem unique_terminal_object
+  Theorem terminal_object_unique
   : unique_up_to_unique_isomorphism (fun x => IsTerminalObject C x).
   Proof.
     unique.
   Qed.
 
   (** The initial object is unique up to unique isomorphism. *)
-  Theorem unique_initial_object
+  Theorem initial_object_unique
   : unique_up_to_unique_isomorphism (fun x => IsInitialObject C x).
   Proof.
     unique.

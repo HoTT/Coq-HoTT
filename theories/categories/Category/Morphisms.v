@@ -46,7 +46,7 @@ Section iso_contr.
   Section IsIsomorphism.
     Variable m : morphism C s d.
 
-    Lemma unique_inverse (m_inv0 m_inv1 : morphism C d s)
+    Lemma inverse_unique (m_inv0 m_inv1 : morphism C d s)
           (left_inverse_0 : m_inv0 o m = identity _)
           (right_inverse_1 : m o m_inv1 = identity _)
     : m_inv0 = m_inv1.
@@ -78,7 +78,7 @@ Section iso_contr.
       apply hprop_allpath.
       intros [x [? ?]] [y [? ?]].
       let H := fresh in
-      assert (H : x = y) by (apply unique_inverse; assumption);
+      assert (H : x = y) by (apply inverse_unique; assumption);
         destruct H.
       repeat match goal with
                | _ => progress simpl
@@ -117,8 +117,6 @@ Section iso_contr.
     exact (center _).
   Defined.
 
-  Definition Isomorphic_eq := path_isomorphic.
-
   Global Instance isequiv_path_isomorphic
   : IsEquiv (path_isomorphic i j).
   Proof.
@@ -153,7 +151,7 @@ Section iso_equiv_relation.
           | rewrite <- ?associativity; rewrite inv_lemma ];
     auto with morphism.
 
-  Global Instance isisomorphism_composition `(@IsIsomorphism C y z m0) `(@IsIsomorphism C x y m1)
+  Global Instance isisomorphism_compose `(@IsIsomorphism C y z m0) `(@IsIsomorphism C x y m1)
   : IsIsomorphism (m0 o m1).
   Proof.
     exists (m1^-1 o m0^-1);
@@ -241,7 +239,7 @@ Section EpiMono.
       repeat intro; autorewrite with morphism in *; trivial.
     Qed.
 
-    Global Instance isepimorphism_composition s d d' m0 m1
+    Global Instance isepimorphism_compose s d d' m0 m1
     : IsEpimorphism m0
       -> IsEpimorphism m1
       -> IsEpimorphism (@compose C s d d' m0 m1).
@@ -251,7 +249,7 @@ Section EpiMono.
       apply_hyp.
     Qed.
 
-    Global Instance ismonomorphism_composition s d d' m0 m1
+    Global Instance ismonomorphism_compose s d d' m0 m1
     : IsMonomorphism m0
       -> IsMonomorphism m1
       -> IsMonomorphism (@compose C s d d' m0 m1).
@@ -270,10 +268,10 @@ Section EpiMono.
       := fun x => Build_Monomorphism (ismonomorphism_identity x).
 
     Global Instance transitive_epimorphism : Transitive (@Epimorphism C)
-      := fun _ _ _ m0 m1 => Build_Epimorphism (isepimorphism_composition m1 m0).
+      := fun _ _ _ m0 m1 => Build_Epimorphism (isepimorphism_compose m1 m0).
 
     Global Instance transitive_monomorphism : Transitive (@Monomorphism C)
-      := fun _ _ _ m0 m1 => Build_Monomorphism (ismonomorphism_composition m1 m0).
+      := fun _ _ _ m0 m1 => Build_Monomorphism (ismonomorphism_compose m1 m0).
   End equiv.
 
   Section sect.
@@ -325,13 +323,13 @@ Section EpiMono.
   End iso.
 End EpiMono.
 
-Hint Immediate @isepimorphism_identity @ismonomorphism_identity @ismonomorphism_composition @isepimorphism_composition : category morphism.
+Hint Immediate @isepimorphism_identity @ismonomorphism_identity @ismonomorphism_compose @isepimorphism_compose : category morphism.
 
 Section iso_lemmas.
   Local Ltac idtoiso_t :=
     path_induction; simpl; autorewrite with morphism; reflexivity.
 
-  Lemma transport_to_idtoiso (C D : PreCategory) s d
+  Lemma idtoiso_of_transport (C D : PreCategory) s d
         (m1 m2 : morphism C s d)
         (p : m1 = m2)
         (s' d' : morphism C s d -> D) u
@@ -400,7 +398,7 @@ Section iso_lemmas.
   Defined.
 End iso_lemmas.
 
-Hint Rewrite transport_to_idtoiso idtoiso_inv idtoiso_comp idtoiso_functor.
+Hint Rewrite idtoiso_of_transport idtoiso_inv idtoiso_comp idtoiso_functor.
 
 Section iso_concat_lemmas.
   Variable C : PreCategory.

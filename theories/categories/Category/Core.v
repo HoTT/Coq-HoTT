@@ -83,11 +83,11 @@ Hint Resolve @left_identity @right_identity @associativity : category morphism.
 Hint Rewrite @left_identity @right_identity : category.
 Hint Rewrite @left_identity @right_identity : morphism.
 
-Section unique_identity.
+Section identity_unique.
   Variable C : PreCategory.
 
   (** The identity morphism is uniuqe. *)
-  Lemma unique_identity (id0 id1 : forall x, morphism C x x)
+  Lemma identity_unique (id0 id1 : forall x, morphism C x x)
         (id1_left : forall s d (m : morphism C s d), id1 _ o m = m)
         (id0_right : forall s d (m : morphism C s d), m o id0 _ = m)
   : id0 == id1.
@@ -107,4 +107,4 @@ Section unique_identity.
   Definition concat_right_identity s d (m : morphism C s d) i
   : i = 1 -> m o i = m
     := fun H => (ap _ H @ right_identity _ _ _ m)%path.
-End unique_identity.
+End identity_unique.
