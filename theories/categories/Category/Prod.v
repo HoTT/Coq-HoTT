@@ -1,4 +1,4 @@
-Require Export Category.Core Category.StrictCategory.
+Require Import Category.Core Category.Strict.
 Require Import types.Prod.
 
 Set Implicit Arguments.
@@ -9,11 +9,11 @@ Set Universe Polymorphism.
 Local Open Scope category_scope.
 Local Open Scope morphism_scope.
 
-Section category_product.
+Section prod.
   Variable C : PreCategory.
   Variable D : PreCategory.
 
-  Definition category_product : PreCategory.
+  Definition prod : PreCategory.
     refine (@Build_PreCategory
               (C * D)%type
               (fun s d => (morphism C (fst s) (fst d)
@@ -29,9 +29,9 @@ Section category_product.
         try f_ap; auto with morphism
       ).
   Defined.
-End category_product.
+End prod.
 
-Infix "*" := category_product : category_scope.
+Local Infix "*" := prod : category_scope.
 
 Global Instance isstrict_category_product
        `{IsStrictCategory C, IsStrictCategory D}
@@ -39,3 +39,7 @@ Global Instance isstrict_category_product
 Proof.
   typeclasses eauto.
 Qed.
+
+Module Export Notations.
+  Infix "*" := prod : category_scope.
+End Notations.

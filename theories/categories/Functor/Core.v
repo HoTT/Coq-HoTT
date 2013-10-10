@@ -1,4 +1,4 @@
-Require Export Category.Core.
+Require Import Category.Core.
 
 Set Implicit Arguments.
 Generalizable All Variables.
@@ -52,10 +52,12 @@ Arguments morphism_of [C%category] [D%category] F%functor [s%object d%object] m%
 Arguments composition_of [C D] F _ _ _ _ _ : rename.
 Arguments identity_of [C D] F _ : rename.
 
-(** Perhaps we should consider making this more global? *)
-Local Notation "C --> D" := (Functor C D) (at level 99, right associativity, y at level 200) : type_scope.
-Notation "F '_0' x" := (object_of F x) (at level 10, no associativity, only parsing) : object_scope.
-Notation "F '_1' m" := (morphism_of F m) (at level 10, no associativity) : morphism_scope.
+Module Export Notations.
+  (** Perhaps we should consider making this more global? *)
+  Local Notation "C --> D" := (Functor C D) (at level 99, right associativity, y at level 200) : type_scope.
+  Notation "F '_0' x" := (object_of F x) (at level 10, no associativity, only parsing) : object_scope.
+  Notation "F '_1' m" := (morphism_of F m) (at level 10, no associativity) : morphism_scope.
+End Notations.
 
 Hint Resolve @composition_of @identity_of : category functor.
 Hint Rewrite @identity_of : category.

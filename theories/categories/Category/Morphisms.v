@@ -1,4 +1,4 @@
-Require Export Category.Core Functor.Core.
+Require Import Category.Core Functor.Core.
 Require Import HoTT.Tactics types.Record Trunc HProp types.Sigma Equivalences.
 
 Set Universe Polymorphism.
@@ -16,7 +16,7 @@ Class IsIsomorphism {C : PreCategory} {s d} (m : morphism C s d) :=
     right_inverse : m o morphism_inverse = identity _
   }.
 
-Notation "m ^-1" := (morphism_inverse (m := m)) : morphism_scope.
+Local Notation "m ^-1" := (morphism_inverse (m := m)) : morphism_scope.
 
 Hint Resolve left_inverse right_inverse : category morphism.
 Hint Rewrite @left_inverse @right_inverse : category.
@@ -32,7 +32,7 @@ Class Isomorphic {C : PreCategory} s d :=
 Coercion morphism_isomorphic : Isomorphic >-> morphism.
 Coercion isisomorphism_isomorphic : Isomorphic >-> IsIsomorphism.
 
-Infix "<~=~>" := Isomorphic (at level 70, no associativity) : category_scope.
+Local Infix "<~=~>" := Isomorphic (at level 70, no associativity) : category_scope.
 
 Existing Instance isisomorphism_isomorphic.
 
@@ -213,10 +213,10 @@ Record Monomorphism {C} x y :=
 
 Existing Instances Epimorphism_IsEpimorphism Monomorphism_IsMonomorphism.
 
-Notation "x ->> y" := (Epimorphism x y)
-                        (at level 99, right associativity, y at level 200).
-Notation "x (-> y" := (Monomorphism x y)
-                        (at level 99, right associativity, y at level 200).
+Local Notation "x ->> y" := (Epimorphism x y)
+                              (at level 99, right associativity, y at level 200).
+Local Notation "x (-> y" := (Monomorphism x y)
+                              (at level 99, right associativity, y at level 200).
 
 Class IsSectionOf C x y (s : morphism C x y) (r : morphism C y x)
   := is_sect_morphism : r o s = identity _.
@@ -556,3 +556,14 @@ Ltac iso_move_inverse' :=
   end.
 
 Ltac iso_move_inverse := progress repeat iso_move_inverse'.
+
+Module Export Notations.
+  Notation "m ^-1" := (morphism_inverse (m := m)) : morphism_scope.
+
+  Infix "<~=~>" := Isomorphic (at level 70, no associativity) : category_scope.
+
+  Notation "x ->> y" := (Epimorphism x y)
+                          (at level 99, right associativity, y at level 200).
+  Notation "x (-> y" := (Monomorphism x y)
+                          (at level 99, right associativity, y at level 200).
+End Notations.

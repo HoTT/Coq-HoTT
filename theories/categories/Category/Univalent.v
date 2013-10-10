@@ -1,4 +1,4 @@
-Require Export Category.Core Category.Morphisms.
+Require Import Category.Core Category.Morphisms.
 Require Import HoTT.Tactics Trunc.
 
 Set Universe Polymorphism.

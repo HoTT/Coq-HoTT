@@ -1,4 +1,5 @@
-Require Export Category.Core Category.Morphisms Category.Duals.
+Require Import Category.Core Category.Morphisms Category.Duals Category.Prod Category.Sum.
+Require Export Category.Notations.
 
 Infix "∘" := compose (at level 40, left associativity) : morphism_scope.
 Notation "m ⁻¹" := (morphism_inverse (m := m)) (at level 3) : morphism_scope.
@@ -12,4 +13,4 @@ Notation "x ↪ y" := (Monomorphism x y)
     copy/paste doesn't work, because the parser doesn't recognize the
     unicode characters [ᵒᵖ].  So, really, this notation is just a
     reminder to do something when Coq's parser is better. *)
-Notation "C ᵒᵖ" := (category_opposite C) (at level 3, only parsing) : category_scope.
+Notation "C ᵒᵖ" := (opposite C) (at level 3, only parsing) : category_scope.

@@ -52,11 +52,11 @@ Arguments morphism !C%category s d : rename.
 Arguments identity [!C%category] x%object : rename.
 Arguments compose [!C%category s%object d%object d'%object] m1%morphism m2%morphism : rename.
 
-Infix "o" := compose : morphism_scope.
+Local Infix "o" := compose : morphism_scope.
 (** Perhaps we should consider making this notation more global. *)
 (** Perhaps we should pre-reserve all of the notations. *)
 Local Notation "x --> y" := (@morphism _ x y) (at level 99, right associativity, y at level 200) : type_scope.
-Notation "1" := (identity _) : morphism_scope.
+Local Notation "1" := (identity _) : morphism_scope.
 
 Definition Build_PreCategory
            object morphism compose identity
@@ -108,3 +108,12 @@ Section identity_unique.
   : i = 1 -> m o i = m
     := fun H => (ap _ H @ right_identity _ _ _ m)%path.
 End identity_unique.
+
+(** Make a separate module for Notations, which can be exported/imported separately. *)
+Module Export Notations.
+  Infix "o" := compose : morphism_scope.
+  (** Perhaps we should consider making this notation more global. *)
+  (** Perhaps we should pre-reserve all of the notations. *)
+  Local Notation "x --> y" := (@morphism _ x y) (at level 99, right associativity, y at level 200) : type_scope.
+  Notation "1" := (identity _) : morphism_scope.
+End Notations.

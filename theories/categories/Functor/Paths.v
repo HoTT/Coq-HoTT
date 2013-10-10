@@ -1,4 +1,4 @@
-Require Export Functor.Core.
+Require Import Category.Core Functor.Core.
 Require Import HProp HoTT.Tactics Equivalences PathGroupoids types.Sigma Trunc types.Record.
 
 Set Implicit Arguments.
@@ -9,7 +9,7 @@ Set Universe Polymorphism.
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.
 
-Section Functors_Equal.
+Section path_functor.
   Context `{Funext}.
 
   Variable C : PreCategory.
@@ -133,7 +133,7 @@ Section Functors_Equal.
     simpl; intros;
     typeclasses eauto.
   Qed.
-End Functors_Equal.
+End path_functor.
 
 Ltac path_functor :=
   repeat match goal with

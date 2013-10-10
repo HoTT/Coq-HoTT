@@ -5,30 +5,30 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 Set Universe Polymorphism.
 
-Section category_sum.
+Section internals.
   Variable C : PreCategory.
   Variable D : PreCategory.
 
-  Definition category_sum_morphism (s d : C + D) : Type
+  Definition sum_morphism (s d : C + D) : Type
     := match (s, d) with
          | (inl s, inl d) => morphism C s d
          | (inr s, inr d) => morphism D s d
          | _ => Empty
        end.
 
-  Global Arguments category_sum_morphism _ _ / .
+  Global Arguments sum_morphism _ _ / .
 
-  Definition category_sum_identity (x : C + D) : category_sum_morphism x x
+  Definition sum_identity (x : C + D) : sum_morphism x x
     := match x with
          | inl x => identity x
          | inr x => identity x
        end.
 
-  Global Arguments category_sum_identity _ / .
+  Global Arguments sum_identity _ / .
 
-  Definition category_sum_compose (s d d' : C + D)
-             (m1 : category_sum_morphism d d') (m2 : category_sum_morphism s d)
-  : category_sum_morphism s d'.
+  Definition sum_compose (s d d' : C + D)
+             (m1 : sum_morphism d d') (m2 : sum_morphism s d)
+  : sum_morphism s d'.
   Proof.
     case s, d, d'; simpl in *;
     solve [ case m1
@@ -36,25 +36,27 @@ Section category_sum.
           | eapply compose; eassumption ].
   Defined.
 
-  Global Arguments category_sum_compose [_ _ _] _ _ / .
+  Global Arguments sum_compose [_ _ _] _ _ / .
+End internals.
 
-  Definition category_sum : PreCategory.
-  Proof.
-    refine (@Build_PreCategory
-              (C + D)%type
-              category_sum_morphism
-              category_sum_identity
-              category_sum_compose
-              _
-              _
-              _
-              _);
-    abstract (
-        repeat (simpl || intros [] || intro);
-        auto with morphism;
-        typeclasses eauto
-      ).
-  Defined.
-End category_sum.
+Definition sum (C D : PreCategory) : PreCategory.
+Proof.
+  refine (@Build_PreCategory
+            (C + D)%type
+            (sum_morphism C D)
+            (sum_identity C D)
+            (sum_compose C D)
+            _
+            _
+            _
+            _);
+  abstract (
+      repeat (simpl || intros [] || intro);
+      auto with morphism;
+      typeclasses eauto
+    ).
+Defined.
 
-Infix "+" := category_sum : category_scope.
+Module Export Notations.
+  Infix "+" := sum : category_scope.
+End Notations.

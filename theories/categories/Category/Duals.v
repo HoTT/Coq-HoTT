@@ -1,4 +1,4 @@
-Require Export Category.Core Category.Objects.
+Require Import Category.Core Category.Objects.
 
 Set Implicit Arguments.
 Generalizable All Variables.
@@ -9,8 +9,8 @@ Local Open Scope equiv_scope.
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 
-Section category_opposite.
-  Definition category_opposite (C : PreCategory) : PreCategory
+Section opposite.
+  Definition opposite (C : PreCategory) : PreCategory
     := @Build_PreCategory'
          C
          (fun s d => morphism C d s)
@@ -22,18 +22,18 @@ Section category_opposite.
          (fun _ _ => @left_identity _ _ _)
          (@identity_identity C)
          _.
-End category_opposite.
+End opposite.
 
-Notation "C ^op" := (category_opposite C) (at level 3) : category_scope.
+Local Notation "C ^op" := (opposite C) (at level 3) : category_scope.
 
 Section DualCategories.
-  Lemma op_op_id C : (C^op)^op = C.
+  Lemma opposite_involutive C : (C^op)^op = C.
   Proof.
     destruct C; exact idpath.
   Defined.
 End DualCategories.
 
-Hint Rewrite @op_op_id : category.
+Hint Rewrite @opposite_involutive : category.
 
 Section DualObjects.
   Variable C : PreCategory.
@@ -48,3 +48,7 @@ Section DualObjects.
   : IsTerminalObject (C^op) x
     := fun x' => H x'.
 End DualObjects.
+
+Module Export Notations.
+  Notation "C ^op" := (opposite C) (at level 3) : category_scope.
+End Notations.

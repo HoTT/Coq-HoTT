@@ -1,4 +1,4 @@
-Require Export Category.Core Functor.Core.
+Require Import Category.Core Functor.Core.
 
 Set Implicit Arguments.
 Generalizable All Variables.
@@ -7,7 +7,7 @@ Set Universe Polymorphism.
 
 Local Open Scope morphism_scope.
 
-Section functor_composition.
+Section composition.
   Variable B : PreCategory.
   Variable C : PreCategory.
   Variable D : PreCategory.
@@ -20,43 +20,45 @@ Section functor_composition.
   Local Notation c_object_of c := (G (F c)) (only parsing).
   Local Notation c_morphism_of m := (morphism_of G (morphism_of F m)) (only parsing).
   (** We use [rewrite <-] because the resulting [match]es look better. *)
-  Let functor_compose_composition_of' s d d'
+  Let compose_composition_of' s d d'
       (m1 : morphism C s d) (m2 : morphism C d d')
   : c_morphism_of (m2 o m1) = c_morphism_of m2 o c_morphism_of m1.
   Proof.
     rewrite <- !composition_of.
     reflexivity.
   Defined.
-  Definition functor_compose_composition_of s d d' m1 m2
+  Definition compose_composition_of s d d' m1 m2
     := Eval cbv beta iota zeta delta
-            [functor_compose_composition_of' internal_paths_rew] in
-        @functor_compose_composition_of' s d d' m1 m2.
+            [compose_composition_of' internal_paths_rew] in
+        @compose_composition_of' s d d' m1 m2.
 
-  Let functor_compose_identity_of' x
+  Let compose_identity_of' x
   : c_morphism_of (identity x) = identity (c_object_of x).
   Proof.
     rewrite <- !identity_of.
     reflexivity.
   Defined.
-  Definition functor_compose_identity_of x
+  Definition compose_identity_of x
     := Eval cbv beta iota zeta delta
-            [functor_compose_identity_of' internal_paths_rew] in
-        @functor_compose_identity_of' x.
+            [compose_identity_of' internal_paths_rew] in
+        @compose_identity_of' x.
 
-  Global Arguments functor_compose_composition_of / .
-  Global Arguments functor_compose_identity_of / .
-  Global Opaque functor_compose_composition_of functor_compose_identity_of.
+  Global Arguments compose_composition_of / .
+  Global Arguments compose_identity_of / .
+  Global Opaque compose_composition_of compose_identity_of.
 
-  Definition functor_compose : Functor C E
+  Definition compose : Functor C E
     := Build_Functor
          C E
          (fun c => G (F c))
          (fun _ _ m => morphism_of G (morphism_of F m))
-         functor_compose_composition_of
-         functor_compose_identity_of.
-End functor_composition.
+         compose_composition_of
+         compose_identity_of.
+End composition.
 
-Infix "o" := functor_compose : functor_scope.
+Global Arguments compose_composition_of / .
+Global Arguments compose_identity_of / .
 
-Global Arguments functor_compose_composition_of / .
-Global Arguments functor_compose_identity_of / .
+Module Export Notations.
+  Infix "o" := compose : functor_scope.
+End Notations.
