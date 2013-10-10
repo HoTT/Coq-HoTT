@@ -1,5 +1,5 @@
 Require Category.Duals.
-Import Category.Duals.Notations.
+Import Category.Duals.CategoryDualsNotations.
 Require Import Category.Core Functor.Core.
 
 Set Implicit Arguments.
@@ -49,7 +49,7 @@ Section opposite_involutive.
   Defined.
 End opposite_involutive.
 
-Module Export Notations.
+Module Export FunctorDualsNotations.
   Notation "F ^op" := (opposite F) : functor_scope.
   Notation "F ^op'" := (opposite_inv F) (at level 3) : functor_scope.
-End Notations.
+End FunctorDualsNotations.

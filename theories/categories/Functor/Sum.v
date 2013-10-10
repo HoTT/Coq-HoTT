@@ -93,6 +93,6 @@ Section swap_functor.
   Qed.
 End swap_functor.
 
-Module Export Notations.
+Module Export FunctorSumNotations.
   Notation "F + G" := (sum F G) : functor_scope.
-End Notations.
+End FunctorSumNotations.

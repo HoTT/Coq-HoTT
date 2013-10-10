@@ -40,6 +40,6 @@ Proof.
   typeclasses eauto.
 Qed.
 
-Module Export Notations.
+Module Export CategoryProdNotations.
   Infix "*" := prod : category_scope.
-End Notations.
+End CategoryProdNotations.

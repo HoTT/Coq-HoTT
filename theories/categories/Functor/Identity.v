@@ -15,6 +15,6 @@ Section identity.
                      (fun _ => idpath).
 End identity.
 
-Module Export Notations.
+Module Export FunctorIdentityNotations.
   Notation "1" := (identity _) : functor_scope.
-End Notations.
+End FunctorIdentityNotations.

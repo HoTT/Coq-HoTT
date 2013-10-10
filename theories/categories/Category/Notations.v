@@ -1,2 +1,11 @@
-Require Category.Core Category.Sum Category.Prod Category.Duals Category.Morphisms.
-Export Category.Core.Notations Category.Sum.Notations Category.Prod.Notations Category.Duals.Notations Category.Morphisms.Notations.
+Require Category.Core.
+Require Category.Duals.
+Require Category.Morphisms.
+Require Category.Prod.
+Require Category.Sum.
+
+Include Category.Core.CategoryCoreNotations.
+Include Category.Duals.CategoryDualsNotations.
+Include Category.Morphisms.CategoryMorphismsNotations.
+Include Category.Prod.CategoryProdNotations.
+Include Category.Sum.CategorySumNotations.

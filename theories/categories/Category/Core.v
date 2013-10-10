@@ -110,10 +110,10 @@ Section identity_unique.
 End identity_unique.
 
 (** Make a separate module for Notations, which can be exported/imported separately. *)
-Module Export Notations.
+Module Export CategoryCoreNotations.
   Infix "o" := compose : morphism_scope.
   (** Perhaps we should consider making this notation more global. *)
   (** Perhaps we should pre-reserve all of the notations. *)
   Local Notation "x --> y" := (@morphism _ x y) (at level 99, right associativity, y at level 200) : type_scope.
   Notation "1" := (identity _) : morphism_scope.
-End Notations.
+End CategoryCoreNotations.

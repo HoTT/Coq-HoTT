@@ -557,7 +557,7 @@ Ltac iso_move_inverse' :=
 
 Ltac iso_move_inverse := progress repeat iso_move_inverse'.
 
-Module Export Notations.
+Module Export CategoryMorphismsNotations.
   Notation "m ^-1" := (morphism_inverse (m := m)) : morphism_scope.
 
   Infix "<~=~>" := Isomorphic (at level 70, no associativity) : category_scope.
@@ -566,4 +566,4 @@ Module Export Notations.
                           (at level 99, right associativity, y at level 200).
   Notation "x (-> y" := (Monomorphism x y)
                           (at level 99, right associativity, y at level 200).
-End Notations.
+End CategoryMorphismsNotations.

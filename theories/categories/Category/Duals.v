@@ -49,6 +49,6 @@ Section DualObjects.
     := fun x' => H x'.
 End DualObjects.
 
-Module Export Notations.
+Module Export CategoryDualsNotations.
   Notation "C ^op" := (opposite C) (at level 3) : category_scope.
-End Notations.
+End CategoryDualsNotations.

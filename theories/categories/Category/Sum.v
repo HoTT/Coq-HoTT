@@ -57,6 +57,6 @@ Proof.
     ).
 Defined.
 
-Module Export Notations.
+Module Export CategorySumNotations.
   Infix "+" := sum : category_scope.
-End Notations.
+End CategorySumNotations.

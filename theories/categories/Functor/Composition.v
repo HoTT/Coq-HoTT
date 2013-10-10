@@ -59,6 +59,6 @@ End composition.
 Global Arguments compose_composition_of / .
 Global Arguments compose_identity_of / .
 
-Module Export Notations.
+Module Export FunctorCompositionNotations.
   Infix "o" := compose : functor_scope.
-End Notations.
+End FunctorCompositionNotations.
