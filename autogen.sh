@@ -3,9 +3,10 @@
 # don't fall back on git if you interrupt or kill this script
 trap "exit 1" SIGINT SIGTERM
 
-autoreconf -fvi
-if test $? -eq 127
-then
+if command -v autoreconf >/dev/null 2>&1
+then # autoreconf found
+    autoreconf -fvi
+else
     echo 'Warning: autoreconf not found.  Falling back on git.'
     if test -d .git
     then
