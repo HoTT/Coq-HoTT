@@ -177,7 +177,7 @@ AC_MSG_NOTICE([Creating symbolic links into Coq standard library])
 # directory, because the replacement standard library lives in the source
 # directory, and these links are required to make Coq accept it.
 rm -f "$srcdir/coq/dev" "$srcdir/coq/kernel" "$srcdir/coq/library" "$srcdir/coq/plugins"
-ln -s "$COQLIB/dev/" "$COQLIB/kernel/" "$COQLIB/library/" "$COQLIB/plugins/" "$srcdir/coq/"
+ln -s "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$srcdir/coq"
 # TODO(jgross): Should we use AC_CONFIG_LINKS?  But $COQLIB/dev
 # doesn't exist in my installation, and that would make configure
 # error...
