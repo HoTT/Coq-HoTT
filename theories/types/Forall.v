@@ -2,7 +2,7 @@
 (** * Theorems about dependent products *)
 
 Require Import Overture PathGroupoids Contractible Equivalences Trunc.
-Require Import Paths.
+Require Import types.Paths.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.

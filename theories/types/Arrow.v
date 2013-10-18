@@ -2,7 +2,7 @@
 (** * Theorems about Non-dependent function types *)
 
 Require Import Overture PathGroupoids Contractible Equivalences Trunc.
-Require Import Paths Forall.
+Require Import types.Paths types.Forall.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

@@ -289,6 +289,10 @@ Fixpoint IsTrunc_internal (n : trunc_index) (A : Type) : Type :=
   end.
 
 Notation minus_one:=(trunc_S minus_two).
+(** Include the basic numerals, so we don't need to go through the coercion from [nat], and so that we get the right binding with [trunc_scope]. *)
+Notation "0" := (trunc_S minus_one) : trunc_scope.
+Notation "1" := (trunc_S 0) : trunc_scope.
+Notation "2" := (trunc_S 1) : trunc_scope.
 
 Arguments IsTrunc_internal n A : simpl nomatch.
 

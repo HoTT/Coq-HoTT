@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Universes of truncated types. *)
 
-Require Import Overture PathGroupoids Trunc Equivalences HProp EquivalenceVarieties Arrow Paths Sigma Universe Record Misc.
+Require Import Overture PathGroupoids Trunc Equivalences HProp EquivalenceVarieties types.Arrow types.Paths types.Sigma types.Universe types.Record Misc.
 Local Open Scope equiv_scope.
 
 Generalizable Variables A B n f.

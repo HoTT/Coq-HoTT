@@ -239,3 +239,52 @@ Ltac step_path_induction_hammer :=
   end.
 
 Ltac path_induction_hammer := progress repeat step_path_induction_hammer.
+
+(** * Miscellaneous tactics *)
+
+(** Substitute all hypotheses with bodies, i.e., of the form [H := _]. *)
+Ltac subst_body :=
+  repeat match goal with
+           | [ H := _ |- _ ] => subst H
+         end.
+
+(** Some tactics to do things with some arbitrary hypothesis in the context.  These tactics are similar to, e.g., [assumption]. *)
+
+Ltac do_with_hyp tac :=
+  match goal with
+    | [ H : _ |- _ ] => tac H
+  end.
+
+Ltac rewrite_hyp' := do_with_hyp ltac:(fun H => rewrite H).
+Ltac rewrite_hyp := repeat rewrite_hyp'.
+Ltac rewrite_rev_hyp' := do_with_hyp ltac:(fun H => rewrite <- H).
+Ltac rewrite_rev_hyp := repeat rewrite_rev_hyp'.
+
+Ltac apply_hyp' := do_with_hyp ltac:(fun H => apply H).
+Ltac apply_hyp := repeat apply_hyp'.
+Ltac eapply_hyp' := do_with_hyp ltac:(fun H => eapply H).
+Ltac eapply_hyp := repeat eapply_hyp'.
+
+(** Run [simpl] on a hypothesis before rewriting with it. *)
+Ltac simpl_do_clear tac term :=
+  let H := fresh in
+  assert (H := term);
+    simpl in H |- *;
+    tac H;
+    clear H.
+
+Tactic Notation "simpl" "rewrite" constr(term)
+  := simpl_do_clear ltac:(fun H => rewrite H) term.
+Tactic Notation "simpl" "rewrite" "->" constr(term)
+  := simpl_do_clear ltac:(fun H => rewrite -> H) term.
+Tactic Notation "simpl" "rewrite" "<-" constr(term)
+  := simpl_do_clear ltac:(fun H => rewrite <- H) term.
+
+(** [atomic x] is the same as [idtac] if [x] is a variable or hypothesis, but is [fail 0] if [x] has internal structure. *)
+Ltac atomic x :=
+  match x with
+    | ?f _ => fail 1 x "is not atomic"
+    | (fun _ => _) => fail 1 x "is not atomic"
+    | forall _, _ => fail 1 x "is not atomic"
+    | _ => idtac
+  end.

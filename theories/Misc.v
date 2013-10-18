@@ -8,11 +8,11 @@
 - generally, be extra-careful keeping this file well-organised and documented.
 - any time you see a chance to move lemmas from this file to a better home, do so without hesitation! *)
 
-(** Dependencies: we should allow this file to depend at least on files from the [types] directory; ipso facto, we should not put anything here that those files depend on. 
+(** Dependencies: we should allow this file to depend at least on files from the [types] directory; ipso facto, we should not put anything here that those files depend on.
 
 Conversely, several files in [hit] now depend on this file; so we should probably avoid using HIT’s in this file. *)
 
-Require Import Overture PathGroupoids Trunc Equivalences HProp Sigma Paths Record Arrow EquivalenceVarieties Forall.
+Require Import Overture PathGroupoids Trunc Equivalences HProp types.Sigma types.Paths types.Record types.Arrow EquivalenceVarieties types.Forall.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -28,11 +28,11 @@ Definition NullHomotopy {X Y : Type} (f : X -> Y)
   := {y : Y & forall x:X, f x = y}.
 
 Lemma istrunc_nullhomotopy {n : trunc_index}
-  {X Y : Type} (f : X -> Y) `{IsTrunc n Y} 
+  {X Y : Type} (f : X -> Y) `{IsTrunc n Y}
   : IsTrunc n (NullHomotopy f).
 Proof.
   apply @trunc_sigma; auto.
-  intros y. apply (@trunc_forall _). 
+  intros y. apply (@trunc_forall _).
   intros x. apply trunc_succ.
 Defined.
 
@@ -64,7 +64,7 @@ Proof.
   equiv_via ((issig_equiv A B) ^-1 e1 = (issig_equiv A B) ^-1 e2).
     2: apply symmetry, equiv_ap; refine _.
 (* TODO: why does this get the wrong type if [hprop_isequiv] is not supplied? *)
-  exact (@equiv_path_sigma_hprop _ _ hprop_isequiv 
+  exact (@equiv_path_sigma_hprop _ _ hprop_isequiv
     ((issig_equiv A B) ^-1 e1) ((issig_equiv A B) ^-1 e2)).
 Defined.
 

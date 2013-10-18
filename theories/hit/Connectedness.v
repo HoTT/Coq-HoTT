@@ -2,7 +2,7 @@
 (** * Connectedness *)
 
 Require Import Overture PathGroupoids Fibrations Equivalences Trunc TruncType Truncations.
-Require Import Forall Sigma Paths Unit Arrow Universe.
+Require Import types.Forall types.Sigma types.Paths types.Unit types.Arrow types.Universe.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 

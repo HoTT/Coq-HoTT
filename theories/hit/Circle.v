@@ -3,7 +3,7 @@
 (** * Theorems about the circle S^1. *)
 
 Require Import Overture PathGroupoids Equivalences Trunc HSet.
-Require Import Paths Forall Arrow Universe Empty Unit.
+Require Import types.Paths types.Forall types.Arrow types.Universe types.Empty types.Unit.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
