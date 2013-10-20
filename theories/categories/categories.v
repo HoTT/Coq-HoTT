@@ -5,6 +5,7 @@ Require Category.
 Require Functor.
 Require NaturalTransformation.
 Require FunctorCategory.
+Require GroupoidCategory.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -13,6 +14,7 @@ Include Category.Univalent.
 Include Functor.Core.
 Include NaturalTransformation.Core.
 Include FunctorCategory.Core.
+Include GroupoidCategory.Core.
 
 Require Export Category.Notations.
 Require Export Functor.Notations.
