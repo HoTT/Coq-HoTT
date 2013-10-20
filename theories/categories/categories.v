@@ -9,6 +9,7 @@ Require GroupoidCategory.
 Require DiscreteCategory.
 Require IndiscreteCategory.
 Require NatCategory.
+Require InitialTerminalCategory.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -21,6 +22,7 @@ Include GroupoidCategory.Core.
 Include DiscreteCategory.Core.
 Include IndiscreteCategory.Core.
 Include NatCategory.Core.
+Include InitialTerminalCategory.Core.
 
 Require Export categories.Notations.
 
