@@ -22,11 +22,7 @@ Include DiscreteCategory.Core.
 Include IndiscreteCategory.Core.
 Include NatCategory.Core.
 
-Export Category.Notations.
-Export Functor.Notations.
-Export NaturalTransformation.Notations.
-Export FunctorCategory.Notations.
-Export NatCategory.Notations.
+Require Export categories.Notations.
 
 (** Some checks that should pass, if all of the importing went correctly. *)
 (*Check PreCategory.
