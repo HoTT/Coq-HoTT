@@ -8,6 +8,7 @@ Require FunctorCategory.
 Require GroupoidCategory.
 Require DiscreteCategory.
 Require IndiscreteCategory.
+Require NatCategory.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -19,12 +20,13 @@ Include FunctorCategory.Core.
 Include GroupoidCategory.Core.
 Include DiscreteCategory.Core.
 Include IndiscreteCategory.Core.
+Include NatCategory.Core.
 
-Require Export Category.Notations.
-Require Export Functor.Notations.
-Require Export NaturalTransformation.Notations.
-Require Export FunctorCategory.Notations.
-
+Export Category.Notations.
+Export Functor.Notations.
+Export NaturalTransformation.Notations.
+Export FunctorCategory.Notations.
+Export NatCategory.Notations.
 
 (** Some checks that should pass, if all of the importing went correctly. *)
 (*Check PreCategory.
