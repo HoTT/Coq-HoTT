@@ -4,6 +4,7 @@
 Require Category.
 Require Functor.
 Require NaturalTransformation.
+Require FunctorCategory.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -11,10 +12,12 @@ Include Category.Strict.
 Include Category.Univalent.
 Include Functor.Core.
 Include NaturalTransformation.Core.
+Include FunctorCategory.Core.
 
 Require Export Category.Notations.
 Require Export Functor.Notations.
 Require Export NaturalTransformation.Notations.
+Require Export FunctorCategory.Notations.
 
 
 (** Some checks that should pass, if all of the importing went correctly. *)
