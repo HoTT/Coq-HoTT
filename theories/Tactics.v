@@ -288,3 +288,48 @@ Ltac atomic x :=
     | forall _, _ => fail 1 x "is not atomic"
     | _ => idtac
   end.
+
+(** find the head of the given expression *)
+Ltac head expr :=
+  match expr with
+    | ?f _ => head f
+    | _ => expr
+  end.
+
+Ltac head_hnf expr := let expr' := eval hnf in expr in head expr'.
+
+(* given a [matcher] that succeeds on some hypotheses and fails on
+   others, destruct any matching hypotheses, and then execute [tac]
+   after each [destruct].
+
+   The [tac] part exists so that you can, e.g., [simpl in *], to
+   speed things up. *)
+Ltac destruct_all_matches_then matcher tac :=
+  repeat match goal with
+           | [ H : ?T |- _ ] => matcher T; destruct H; tac
+         end.
+
+Ltac destruct_all_matches matcher := destruct_all_matches_then matcher ltac:(simpl in *).
+Ltac destruct_all_matches' matcher := destruct_all_matches_then matcher idtac.
+
+(** matches anything whose type has a [T] in it *)
+Ltac destruct_type_matcher T HT :=
+  match HT with
+    | context[T] => idtac
+  end.
+Ltac destruct_type T := destruct_all_matches ltac:(destruct_type_matcher T).
+Ltac destruct_type' T := destruct_all_matches' ltac:(destruct_type_matcher T).
+
+Ltac destruct_head_matcher T HT :=
+  match head HT with
+    | T => idtac
+  end.
+Ltac destruct_head T := destruct_all_matches ltac:(destruct_head_matcher T).
+Ltac destruct_head' T := destruct_all_matches' ltac:(destruct_head_matcher T).
+
+Ltac destruct_head_hnf_matcher T HT :=
+  match head_hnf HT with
+    | T => idtac
+  end.
+Ltac destruct_head_hnf T := destruct_all_matches ltac:(destruct_head_hnf_matcher T).
+Ltac destruct_head_hnf' T := destruct_all_matches' ltac:(destruct_head_hnf_matcher T).

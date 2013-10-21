@@ -3,16 +3,28 @@
 (** First we give modules to all of the kinds of category theory constructions (corresponding to directories), so that we can refer to them as [Category.foo] or [Functor.foo] after [Require Import categories.] *)
 Require Category.
 Require Functor.
+Require NaturalTransformation.
+Require FunctorCategory.
+Require GroupoidCategory.
+Require DiscreteCategory.
+Require IndiscreteCategory.
+Require NatCategory.
+Require InitialTerminalCategory.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
 Include Category.Strict.
 Include Category.Univalent.
 Include Functor.Core.
+Include NaturalTransformation.Core.
+Include FunctorCategory.Core.
+Include GroupoidCategory.Core.
+Include DiscreteCategory.Core.
+Include IndiscreteCategory.Core.
+Include NatCategory.Core.
+Include InitialTerminalCategory.Core.
 
-Require Export Category.Notations.
-Require Export Functor.Notations.
-
+Require Export categories.Notations.
 
 (** Some checks that should pass, if all of the importing went correctly. *)
 (*Check PreCategory.
