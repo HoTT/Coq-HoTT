@@ -280,15 +280,6 @@ Tactic Notation "simpl" "rewrite" "->" constr(term)
 Tactic Notation "simpl" "rewrite" "<-" constr(term)
   := simpl_do_clear ltac:(fun H => rewrite <- H) term.
 
-(** [atomic x] is the same as [idtac] if [x] is a variable or hypothesis, but is [fail 0] if [x] has internal structure. *)
-Ltac atomic x :=
-  match x with
-    | ?f _ => fail 1 x "is not atomic"
-    | (fun _ => _) => fail 1 x "is not atomic"
-    | forall _, _ => fail 1 x "is not atomic"
-    | _ => idtac
-  end.
-
 (** find the head of the given expression *)
 Ltac head expr :=
   match expr with

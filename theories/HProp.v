@@ -152,7 +152,7 @@ Defined.
 
 (** The type of Propositions *)
 Record hProp := hp { hproptype :> Type ; isp : IsHProp hproptype}.
-(** This one would allow us to turn the record type of contractible types 
+(** This one would allow us to turn the record type of contractible types
 into an [hProp].
 <<
 Canonical Structure default_HProp:= fun T P => (@hp T P).

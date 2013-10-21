@@ -2,7 +2,7 @@
 (** * Theorems about the universe, including the Univalence Axiom. *)
 
 Require Import Overture PathGroupoids Equivalences.
-Require Import HProp EquivalenceVarieties.
+Require Import HProp EquivalenceVarieties Trunc types.Sigma.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -83,4 +83,49 @@ Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}
   : path_universe (f^-1) = (path_universe f)^
   := path_universe_V_uncurried (BuildEquiv A B f _).
 
+(** It would be nice for these to go in [HProp.v], but this file depends on that one, and these depend on having [Univalence]. *)
+Instance trunc_path_IsHProp `{Funext} X Y `{IsHProp Y}
+: IsHProp (X = Y).
+Proof.
+  apply hprop_allpath.
+  intros pf1 pf2.
+  rewrite <- (eta_path_universe pf1), <- (eta_path_universe pf2).
+  lazymatch goal with
+    | [ |- @path_universe _ _ (equiv_fun _ _ ?f) ?Hf
+           = @path_universe _ _ (equiv_fun _ _ ?g) ?Hg ]
+      => change Hf with (equiv_isequiv _ _ f);
+        change Hg with (equiv_isequiv _ _ g);
+        generalize (equiv_isequiv _ _ f) (equiv_isequiv _ _ g);
+        generalize (equiv_fun _ _ f) (equiv_fun _ _ g)
+  end.
+  let f' := fresh in
+  let g' := fresh in
+  intros f' g' ? ?;
+    assert (f' = g'); [ | path_induction; apply ap; apply allpath_hprop ].
+  apply path_forall; intro.
+  apply allpath_hprop.
+Qed.
+
+Instance trunc_hProp `{Funext} : IsHSet hProp.
+Proof.
+  eapply trunc_equiv'; [ apply issig_hProp | ].
+  (intros ? [? ?]).
+  apply hprop_allpath.
+  repeat match goal with
+           | _ => reflexivity
+           | _ => intro
+           | _ => progress simpl in *
+           | [ H : _ = ?x |- _ ] => atomic x; induction H
+           | [ H : @paths (sigT _) _ _ |- _ ]
+             => rewrite <- (eta_path_sigma H);
+               generalize (H..1) (H..2);
+               clear H;
+               simpl in *
+           | [ x : sig _ |- _ ] => destruct x
+           | [ H : _ = _ |- _ ]
+             => let H' := fresh in
+                assert (H' : idpath = H) by apply allpath_hprop;
+                  induction H'
+         end.
+Qed.
 End Univalence.
