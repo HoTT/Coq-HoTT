@@ -1,5 +1,5 @@
-Require Category.Duals Functor.Duals.
-Import Category.Duals.CategoryDualsNotations Functor.Duals.FunctorDualsNotations.
+Require Category.Dual Functor.Dual.
+Import Category.Dual.CategoryDualNotations Functor.Dual.FunctorDualNotations.
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 
 Set Implicit Arguments.
@@ -63,8 +63,8 @@ Section opposite_involutive.
 
   Local Open Scope natural_transformation_scope.
 
-  Local Notation op_op_functor_id := Functor.Duals.opposite_involutive.
-  Local Notation op_op_id := Category.Duals.opposite_involutive.
+  Local Notation op_op_functor_id := Functor.Dual.opposite_involutive.
+  Local Notation op_op_id := Category.Dual.opposite_involutive.
 
   (** ewww, the transports *)
   Lemma opposite_involutive
@@ -88,9 +88,9 @@ Section opposite_involutive.
   Defined.
 End opposite_involutive.
 
-Module Export NaturalTransformationDualsNotations.
+Module Export NaturalTransformationDualNotations.
   Notation "T ^op" := (opposite T) : natural_transformation_scope.
   Notation "T ^op'" := (opposite' T) : natural_transformation_scope.
   Notation "T ^op''" := (opposite_finv T) : natural_transformation_scope.
   Notation "T ^op'''" := (opposite_tinv T) : natural_transformation_scope.
-End NaturalTransformationDualsNotations.
+End NaturalTransformationDualNotations.

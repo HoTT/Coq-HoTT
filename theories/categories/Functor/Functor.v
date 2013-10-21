@@ -4,7 +4,7 @@ Require Export Functor.Notations.
 Require Functor.CompositionLaws.
 Require Functor.Composition.
 Require Functor.Core.
-Require Functor.Duals.
+Require Functor.Dual.
 Require Functor.Identity.
 Require Functor.Paths.
 Require Functor.Prod.
@@ -13,7 +13,7 @@ Require Functor.Sum.
 Include Functor.CompositionLaws.
 Include Functor.Composition.
 Include Functor.Core.
-Include Functor.Duals.
+Include Functor.Dual.
 Include Functor.Identity.
 Include Functor.Paths.
 Include Functor.Prod.

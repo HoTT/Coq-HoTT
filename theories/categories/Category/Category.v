@@ -2,7 +2,7 @@
 Require Export Category.Notations.
 
 Require Category.Core.
-Require Category.Duals.
+Require Category.Dual.
 Require Category.Morphisms.
 Require Category.Objects.
 Require Category.Prod.
@@ -11,7 +11,7 @@ Require Category.Sum.
 Require Category.Univalent.
 
 Include Category.Core.
-Include Category.Duals.
+Include Category.Dual.
 Include Category.Morphisms.
 Include Category.Objects.
 Include Category.Prod.
