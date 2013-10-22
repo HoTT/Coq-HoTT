@@ -42,3 +42,5 @@ coq/plugins
 # generated dependency files:
 *.d
 TAGS
+# ignore compiled python files
+*.pyc
