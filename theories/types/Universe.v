@@ -110,22 +110,14 @@ Instance trunc_hProp `{Funext} : IsHSet hProp.
 Proof.
   eapply trunc_equiv'; [ apply issig_hProp | ].
   (intros ? [? ?]).
-  apply hprop_allpath.
+  refine (hprop_allpath _ _).
   repeat match goal with
            | _ => reflexivity
            | _ => intro
            | _ => progress simpl in *
-           | [ H : _ = ?x |- _ ] => atomic x; induction H
-           | [ H : @paths (sigT _) _ _ |- _ ]
-             => rewrite <- (eta_path_sigma H);
-               generalize (H..1) (H..2);
-               clear H;
-               simpl in *
-           | [ x : sig _ |- _ ] => destruct x
-           | [ H : _ = _ |- _ ]
-             => let H' := fresh in
-                assert (H' : idpath = H) by apply allpath_hprop;
-                  induction H'
+           | _ => apply path_path_sigma_uncurried
+           | _ => (exists (allpath_hprop _ _))
+           | _ => by apply allpath_hprop
          end.
 Qed.
 End Univalence.
