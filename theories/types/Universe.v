@@ -111,13 +111,9 @@ Proof.
   eapply trunc_equiv'; [ apply issig_hProp | ].
   (intros ? [? ?]).
   refine (hprop_allpath _ _).
-  repeat match goal with
-           | _ => reflexivity
-           | _ => intro
-           | _ => progress simpl in *
-           | _ => apply path_path_sigma_uncurried
-           | _ => (exists (allpath_hprop _ _))
-           | _ => by apply allpath_hprop
-         end.
+  intros.
+  apply path_path_sigma_uncurried.
+  (exists (allpath_hprop _ _)).
+  by apply allpath_hprop.
 Qed.
 End Univalence.
