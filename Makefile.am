@@ -20,6 +20,25 @@ TIMECMD=
 #STDTIME=@STDTIME@
 TIMER=$(if $(TIMED), $(STDTIME), $(TIMECMD))
 
+# some makefile magic to make things like `make TIMED=1` less noisy
+V = 0
+
+Q_0 := @
+Q_1 :=
+Q = $(Q_$(V))
+
+VECHO_0 := @echo
+VECHO_1 := @true
+VECHO = $(VECHO_$(V))
+
+SILENCE_HOQC_0 := @echo \"HOQC $$<\"; #
+SILENCE_HOQC_1 :=
+SILENCE_HOQC = $(SILENCE_HOQC_$(V))
+
+SILENCE_COQDEP_0 := @echo \"COQDEP $$<\"; #
+SILENCE_COQDEP_1 :=
+SILENCE_COQDEP = $(SILENCE_COQDEP_$(V))
+
 # The list of files that comprise the HoTT library
 VFILES=$(shell find $(srcdir)/theories -name "*.v")
 VOFILES:=$(VFILES:.v=.vo)
@@ -86,7 +105,8 @@ endif
 stdlib: $(STDVOFILES)
 
 $(STDVOFILES) : %.vo : %.v
-	$(TIMER) $(COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
+	$(VECHO) COQTOP $(basename $<)
+	$(Q) $(TIMER) $(COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
 
 
 # The HoTT library as a single target
@@ -95,10 +115,12 @@ hottlib: $(VOFILES)
 # A rule for compiling the HoTT libary files
 if make_ssreflect
 $(VOFILES) : %.vo : %.v $(STDVOFILES) $(SSRVOFILES)
-	$(TIMER) $(HOQC) $<
+	$(VECHO) HOQC $<
+	$(Q) $(TIMER) $(HOQC) $<
 else
 $(VOFILES) : %.vo : %.v $(STDVOFILES)
-	$(TIMER) $(HOQC) $<
+	$(VECHO) HOQC $<
+	$(Q) $(TIMER) $(HOQC) $<
 endif
 
 if make_ssreflect
@@ -109,7 +131,7 @@ if make_ssreflect
 ssrplugin: stdlib $(SSRVOFILES)
 
 $(SSRMAKEFILE): $(ssrdir)/Make
-	$(COQMAKEFILE) COQC = "$(TIMER) $(HOQC)" -f "$(ssrdir)/Make" > "$(SSRMAKEFILE)"
+	$(COQMAKEFILE) COQC = "$(SILENCE_HOQC)\$$(TIMER) \"$(HOQC)\"" COQDEP = "$(SILENCE_COQDEP)\"\$$(COQBIN)coqdep\" -c" -f "$(ssrdir)/Make" > "$(SSRMAKEFILE)"
 
 $(SSRVOFILES): $(SRRMAKEFILE) $(SSRCMXSFILES) $(SSRCMAFILES)
 
@@ -142,7 +164,8 @@ TAGS : $(TAGS_FILES)
 
 # Dependency files
 $(DEPFILES) $(STDDEPFILES) : %.d : %.v
-	$(COQDEP) -nois -coqlib $(SRCCOQLIB) -R $(srcdir)/theories HoTT -R $(SRCCOQLIB)/theories Coq $< >$@
+	$(VECHO) COQDEP $<
+	$(Q) $(COQDEP) -nois -coqlib $(SRCCOQLIB) -R $(srcdir)/theories HoTT -R $(SRCCOQLIB)/theories Coq $< >$@
 
 clean:
 	rm -f $(CLEANFILES)
