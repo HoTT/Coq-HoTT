@@ -7,6 +7,7 @@ Require Functor.Core.
 Require Functor.Duals.
 Require Functor.Identity.
 Require Functor.Paths.
+Require Functor.Prod.
 Require Functor.Sum.
 
 Include Functor.CompositionLaws.
@@ -15,5 +16,12 @@ Include Functor.Core.
 Include Functor.Duals.
 Include Functor.Identity.
 Include Functor.Paths.
+Include Functor.Prod.
 Include Functor.Sum.
 (** We don't want to make utf-8 notations the default, so we don't export them. *)
+
+(** Since [Prod] is a separate sub-directory, we need to re-create the module structure *)
+Module Prod.
+  Require Functor.Prod.Prod.
+  Include Functor.Prod.Prod.
+End Prod.
