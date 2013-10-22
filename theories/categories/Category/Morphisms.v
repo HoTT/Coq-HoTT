@@ -63,7 +63,7 @@ Section iso_contr.
       | { _ : inverse o m = identity _
         | m o inverse = identity _ } } (only parsing).
 
-    Lemma equiv_sig_isisomorphism
+    Lemma issig_isisomorphism
     : IsIsomorphism_sig_T <~> IsIsomorphism m.
     Proof.
       issig (@Build_IsIsomorphism _ _ _ m)
@@ -74,7 +74,7 @@ Section iso_contr.
 
     Global Instance trunc_isisomorphism : IsHProp (IsIsomorphism m).
     Proof.
-      eapply trunc_equiv'; [ exact equiv_sig_isisomorphism | ].
+      eapply trunc_equiv'; [ exact issig_isisomorphism | ].
       apply hprop_allpath.
       intros [x [? ?]] [y [? ?]].
       let H := fresh in
@@ -93,7 +93,7 @@ Section iso_contr.
     { m : morphism C s d
     | IsIsomorphism m } (only parsing).
 
-  Lemma Isomorphic_sig
+  Lemma issig_isomorphic
   : Isomorphic_sig_T <~> Isomorphic s d.
   Proof.
     issig (@Build_Isomorphic C s d)
@@ -103,7 +103,7 @@ Section iso_contr.
 
   Global Instance trunc_Isomorphic : IsHSet (Isomorphic s d).
   Proof.
-    eapply trunc_equiv'; [ exact Isomorphic_sig | ].
+    eapply trunc_equiv'; [ exact issig_isomorphic | ].
     typeclasses eauto.
   Qed.
 
