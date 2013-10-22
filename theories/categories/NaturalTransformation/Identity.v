@@ -35,7 +35,7 @@ Section identity.
                                       HO
                                       (identity (F c))).
 
-    Definition commutes
+    Definition generalized_identity_commutes
                s d (m : morphism C s d)
     : CO d o morphism_of F m
       = morphism_of G m o CO s.
@@ -49,10 +49,10 @@ Section identity.
       := Build_NaturalTransformation
            F G
            (fun c => CO c)
-           commutes.
+           generalized_identity_commutes.
   End generalized.
 
-  Global Arguments commutes / .
+  Global Arguments generalized_identity_commutes / .
   Global Arguments generalized_identity F G !HO !HM / .
 
   Section generalized'.

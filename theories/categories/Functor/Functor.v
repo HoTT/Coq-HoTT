@@ -1,9 +1,19 @@
-Require Export Functor.CompositionLaws.
-Require Export Functor.Composition.
-Require Export Functor.Core.
-Require Export Functor.Duals.
-Require Export Functor.Identity.
+(** Since there are only notations in [Functor.Notations], we can just export those. *)
 Require Export Functor.Notations.
-Require Export Functor.Paths.
-Require Export Functor.Sum.
+
+Require Functor.CompositionLaws.
+Require Functor.Composition.
+Require Functor.Core.
+Require Functor.Duals.
+Require Functor.Identity.
+Require Functor.Paths.
+Require Functor.Sum.
+
+Include Functor.CompositionLaws.
+Include Functor.Composition.
+Include Functor.Core.
+Include Functor.Duals.
+Include Functor.Identity.
+Include Functor.Paths.
+Include Functor.Sum.
 (** We don't want to make utf-8 notations the default, so we don't export them. *)
