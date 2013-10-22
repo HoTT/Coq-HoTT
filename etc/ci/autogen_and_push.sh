@@ -37,7 +37,6 @@ FILES=`cat etc/autoreconf-files`
 BRANCH=`cat etc/autoreconf-branch`
 echo '$ git checkout -b '"$BRANCH"
 git checkout -b $BRANCH
-git rm -f .travis.yml
 git add -f $FILES
 echo '$ git commit -am "'"$MESSAGE"'"'
 git commit -m "$MESSAGE"
