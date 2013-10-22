@@ -1,5 +1,5 @@
 Require Import types.Unit.
-Require Import Category.Core Functor.Core Subcategory.Sigma.
+Require Import Category.Core Functor.Core Category.Sigma.Core.
 Require Functor.Composition Functor.Identity.
 Require Import Functor.Paths.
 Import Functor.Identity.FunctorIdentityNotations.

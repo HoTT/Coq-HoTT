@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** Techniques for applying theorems from Sigma.v to record types. *)
 
-Require Import Overture Contractible Equivalences Sigma Forall.
+Require Import Overture Contractible Equivalences types.Sigma types.Forall.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
