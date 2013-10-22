@@ -11,6 +11,8 @@ if [ ! -z "$WITH_AUTORECONF" ]; then
 else
     sudo apt-get remove -q dh-autoreconf
 fi
+# install time for make `TIMED=1`
+sudo apt-get install -q time
 # install coq
 ./install_coq_deps.sh
 ./install_coq.sh -prefix /usr/local -debug
