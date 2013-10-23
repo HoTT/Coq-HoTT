@@ -13,7 +13,7 @@ export COQTOP="@COQTOP@"
 # If there is a coq/theories directory in the parent directory of this
 # script, then use that one, otherwise use the global one. This trick
 # allows hoqc to work "in place" on the source files.
-mydir=`dirname $0`
+mydir="$(dirname "$(readlink -f "$0")")"
 if test -d "$mydir/coq/theories"
 then
   export COQLIB="$mydir/coq"
