@@ -32,5 +32,7 @@ Check IsStrictCategory _.
 Check Category.compose.
 Check Category.sum.
 Check Category.Sum.sum_compose.
+Check Functor.sum.
+Check Functor.Prod.unique.
 Check (_ o _)%morphism.
 Check (_ o _)%functor.*)
