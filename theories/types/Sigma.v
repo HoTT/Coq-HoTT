@@ -252,6 +252,28 @@ Proof.
 Defined.
 
 
+(** A path between paths in a total space is commonly shown component wise. *)
+
+(** With this version of the function, we often have to give [u] and [v] explicitly, so we make them explicit arguments. *)
+Definition path_path_sigma_uncurried {A : Type} (P : A -> Type) (u v : sigT P)
+  (p q : u = v)
+  (rs : {r : p..1 = q..1 & transport (fun x => transport P x u.2 = v.2) r p..2 = q..2})
+  : p = q.
+Proof.
+  destruct rs, p, u.
+  etransitivity; [ | apply eta_path_sigma ].
+  path_induction.
+  reflexivity.
+Defined.
+
+(** This is the curried one you usually want to use in practice.  We define it in terms of the uncurried one, since it's the uncurried one that is proven below to be an equivalence. *)
+Definition path_path_sigma {A : Type} (P : A -> Type) (u v : sigT P)
+           (p q : u = v)
+           (r : p..1 = q..1)
+           (s : transport (fun x => transport P x u.2 = v.2) r p..2 = q..2)
+: p = q
+  := path_path_sigma_uncurried P u v p q (r; s).
+
 (** *** Transport *)
 
 (** The concrete description of transport in sigmas (and also pis) is rather trickier than in the other types.  In particular, these cannot be described just in terms of transport in simpler types; they require also the dependent transport [transportD].

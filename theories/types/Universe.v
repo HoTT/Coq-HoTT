@@ -2,7 +2,7 @@
 (** * Theorems about the universe, including the Univalence Axiom. *)
 
 Require Import Overture PathGroupoids Equivalences.
-Require Import HProp EquivalenceVarieties.
+Require Import HProp EquivalenceVarieties Trunc types.Sigma.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -83,4 +83,37 @@ Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}
   : path_universe (f^-1) = (path_universe f)^
   := path_universe_V_uncurried (BuildEquiv A B f _).
 
+(** It would be nice for these to go in [HProp.v], but this file depends on that one, and these depend on having [Univalence]. *)
+Instance trunc_path_IsHProp `{Funext} X Y `{IsHProp Y}
+: IsHProp (X = Y).
+Proof.
+  apply hprop_allpath.
+  intros pf1 pf2.
+  rewrite <- (eta_path_universe pf1), <- (eta_path_universe pf2).
+  lazymatch goal with
+    | [ |- @path_universe _ _ (equiv_fun _ _ ?f) ?Hf
+           = @path_universe _ _ (equiv_fun _ _ ?g) ?Hg ]
+      => change Hf with (equiv_isequiv _ _ f);
+        change Hg with (equiv_isequiv _ _ g);
+        generalize (equiv_isequiv _ _ f) (equiv_isequiv _ _ g);
+        generalize (equiv_fun _ _ f) (equiv_fun _ _ g)
+  end.
+  let f' := fresh in
+  let g' := fresh in
+  intros f' g' ? ?;
+    assert (f' = g'); [ | path_induction; apply ap; apply allpath_hprop ].
+  apply path_forall; intro.
+  apply allpath_hprop.
+Qed.
+
+Instance trunc_hProp `{Funext} : IsHSet hProp.
+Proof.
+  eapply trunc_equiv'; [ apply issig_hProp | ].
+  (intros ? [? ?]).
+  refine (hprop_allpath _ _).
+  intros.
+  apply path_path_sigma_uncurried.
+  (exists (allpath_hprop _ _)).
+  by apply allpath_hprop.
+Qed.
 End Univalence.

@@ -432,3 +432,12 @@ Ltac expand :=
     | [ |- ?X == ?Y ] =>
       let X' := eval hnf in X in let Y' := eval hnf in Y in change (X' == Y')
   end; simpl.
+
+(** [atomic x] is the same as [idtac] if [x] is a variable or hypothesis, but is [fail 0] if [x] has internal structure. *)
+Ltac atomic x :=
+  match x with
+    | ?f _ => fail 1 x "is not atomic"
+    | (fun _ => _) => fail 1 x "is not atomic"
+    | forall _, _ => fail 1 x "is not atomic"
+    | _ => idtac
+  end.
