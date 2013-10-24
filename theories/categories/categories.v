@@ -10,6 +10,7 @@ Require DiscreteCategory.
 Require IndiscreteCategory.
 Require NatCategory.
 Require InitialTerminalCategory.
+Require SetCategory.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -23,6 +24,7 @@ Include DiscreteCategory.Core.
 Include IndiscreteCategory.Core.
 Include NatCategory.Core.
 Include InitialTerminalCategory.Core.
+Include SetCategory.Core.
 
 Require Export categories.Notations.
 
