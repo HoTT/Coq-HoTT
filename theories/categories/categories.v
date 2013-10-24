@@ -11,6 +11,7 @@ Require IndiscreteCategory.
 Require NatCategory.
 Require InitialTerminalCategory.
 Require SetCategory.
+Require HomFunctor.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -25,6 +26,7 @@ Include IndiscreteCategory.Core.
 Include NatCategory.Core.
 Include InitialTerminalCategory.Core.
 Include SetCategory.Core.
+Include HomFunctor.
 
 Require Export categories.Notations.
 
