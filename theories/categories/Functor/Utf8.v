@@ -1,5 +1,5 @@
 Require Export Category.Notations Category.Utf8 Functor.Notations.
-Require Import Functor.Core Functor.Composition Functor.Sum Functor.Duals Functor.Identity.
+Require Import Functor.Core Functor.Composition Functor.Sum Functor.Dual Functor.Identity.
 
 Infix "∘" := compose : functor_scope.
 

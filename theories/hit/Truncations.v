@@ -2,7 +2,7 @@
 
 (** * Truncations of types, in all dimensions. *)
 
-Require Import Overture PathGroupoids Equivalences Trunc Sigma.
+Require Import Overture PathGroupoids Equivalences Trunc types.Sigma.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A X n.

@@ -138,6 +138,7 @@ End path_functor.
 Ltac path_functor :=
   repeat match goal with
            | _ => intro
+           | _ => reflexivity
            | _ => apply path_functor'_sig; simpl
            | _ => (exists idpath)
          end.

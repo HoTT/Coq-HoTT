@@ -1,5 +1,5 @@
-Require Category.Duals.
-Import Category.Duals.CategoryDualsNotations.
+Require Category.Dual.
+Import Category.Dual.CategoryDualNotations.
 Require Import Category.Core Functor.Core.
 
 Set Implicit Arguments.
@@ -38,7 +38,7 @@ Section opposite_involutive.
   Variable D : PreCategory.
   Variable F : Functor C D.
 
-  Local Notation op_op_id := Category.Duals.opposite_involutive.
+  Local Notation op_op_id := Category.Dual.opposite_involutive.
 
   Lemma opposite_involutive
   : match op_op_id C in (_ = C), op_op_id D in (_ = D) return Functor C D with
@@ -49,7 +49,7 @@ Section opposite_involutive.
   Defined.
 End opposite_involutive.
 
-Module Export FunctorDualsNotations.
+Module Export FunctorDualNotations.
   Notation "F ^op" := (opposite F) : functor_scope.
   Notation "F ^op'" := (opposite_inv F) (at level 3) : functor_scope.
-End FunctorDualsNotations.
+End FunctorDualNotations.

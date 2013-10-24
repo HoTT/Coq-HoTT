@@ -1,4 +1,4 @@
-Require Import Category.Core Category.Morphisms Category.Duals Category.Prod Category.Sum.
+Require Import Category.Core Category.Morphisms Category.Dual Category.Prod Category.Sum.
 Require Export Category.Notations.
 
 Infix "∘" := compose (at level 40, left associativity) : morphism_scope.

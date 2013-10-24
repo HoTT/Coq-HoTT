@@ -42,9 +42,7 @@ Section NaturalTransformation.
         components_of :> forall c, morphism D (F c) (G c);
         commutes : forall s d (m : morphism C s d),
                      components_of d o F _1 m = G _1 m o components_of s;
-        (* We require the following symmetrized version so we don't
-           need functional extensionality to prove [(T^op)^op =
-           T]. *)
+        (* We require the following symmetrized version so that for eta-expanded [T], we have [(T^op)^op = T] judgementally. *)
         commutes_sym : forall s d (m : C.(morphism) s d),
                          G _1 m o components_of s = components_of d o F _1 m
       }.
