@@ -1,4 +1,4 @@
-Require Import Category.Core Functor.Core SetCategory.Core Category.Dual.
+Require Import Category.Core Functor.Core SetCategory.Core Category.Dual Functor.Composition.
 Require Category.Prod Functor.Prod.
 Import Category.Prod.CategoryProdNotations Functor.Prod.FunctorProdNotations.
 Require Import HSet Overture.
@@ -43,3 +43,18 @@ Section hom_functor.
       ).
   Defined.
 End hom_functor.
+
+Section covariant_contravariant.
+  Context `{Funext}.
+  Variable C : PreCategory.
+
+  Local Open Scope functor_scope.
+
+  Local Arguments Functor.Prod.induced_snd / .
+  Local Arguments Functor.Prod.induced_fst / .
+
+  Definition covariant_hom_functor (A : object C^op)
+    := Eval simpl in Functor.Prod.induced_snd (hom_functor C) A.
+  Definition contravariant_hom_functor (A : C)
+    := Eval simpl in Functor.Prod.induced_fst (hom_functor C) A.
+End covariant_contravariant.
