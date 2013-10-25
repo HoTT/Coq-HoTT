@@ -6,3 +6,4 @@ Require NatCategory.
 Export NatCategory.Notations.
 Require InitialTerminalCategory.
 Export InitialTerminalCategory.Notations.
+Require Export Profunctor.Notations.
