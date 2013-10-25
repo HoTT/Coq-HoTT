@@ -5,6 +5,7 @@ then
     # print help
 
     cat <<EOF
+
 This is a helper script for make-pretty-timed.sh and
 make-pretty-timed-diff.sh.
 
@@ -24,8 +25,8 @@ OLD_FILENAME: The name of the file to store the output of timing the
               interrupted or finishes, `git stash pop` is used to
               restore the present state.  This means that all relevant
               files must be tracked by git to be handled properly.
-
 EOF
+fi
 
 # in case we're run from out of git repo
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
