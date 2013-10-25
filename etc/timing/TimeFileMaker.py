@@ -2,10 +2,23 @@
 from __future__ import with_statement
 import os, sys, re
 
+# This is a helper script for make-pretty-timed.sh and
+# make-pretty-timed-diff.sh.
+
+# This script parses the output of `make TIMED=1` into a dictionary
+# mapping names of compiled files to the number of minutes and seconds
+# that they took to compile.
+
 STRIP_REG = re.compile('^(|coq/)theories/')
 STRIP_REP = r'\1'
 
 def get_times(file_name):
+    '''
+    Reads the contents of file_name, which should be the output of
+    'make TIMED=1', and parses it to construct a dict mapping file
+    names to compile durations, as strings.  Removes common prefixes
+    using STRIP_REG and STRIP_REP.
+    '''
     with open(file_name, 'r') as f:
         lines = f.read()
     reg = re.compile(r'^([^ ]*) \(user: ([0-9\.]+) mem: [0-9]+ [a-zA-Z]+\)$', re.MULTILINE)
@@ -21,12 +34,20 @@ def get_times(file_name):
     return times_dict
 
 def get_sorted_file_list_from_times_dict(times_dict, descending=True):
+    '''
+    Takes the output dict of get_times and returns the list of keys,
+    sorted by duration.
+    '''
     def get_key(name):
         minutes, seconds = times_dict[name].replace('s', '').split('m')
         return (int(minutes), float(seconds))
     return sorted(times_dict.keys(), key=get_key, reverse=descending)
 
 def sum_times(times):
+    '''
+    Takes the values of an output from get_times, parses the time
+    strings, and returns their sum, in the same string format.
+    '''
     def to_seconds(time):
         minutes, seconds = time.replace('s', '').split('m')
         return int(minutes) * 60 + float(seconds)

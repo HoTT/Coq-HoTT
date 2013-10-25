@@ -3,13 +3,20 @@ from __future__ import with_statement
 import os, sys, re
 from TimeFileMaker import *
 
+# This is a helper script for make-pretty-timed-diff.sh.
+
+# This uses TimeFileMaker.py to format timing information.
+
 def make_table_string(left_times_dict, right_times_dict,
                       descending=True,
                       left_tag="After", right_tag="Before"):
+    # We first get the names of all of the compiled files: all files
+    # that were compiled either before or after.
     all_names_dict = dict()
     all_names_dict.update(right_times_dict)
     all_names_dict.update(left_times_dict) # do the left (after) last, so that we give precedence to those ones
     names = get_sorted_file_list_from_times_dict(all_names_dict, descending=descending)
+    # set the widths of each of the columns by the longest thing to go in that column
     left_width = max(max(map(len, left_times_dict.values())), len(sum_times(left_times_dict.values())))
     right_width = max(max(map(len, right_times_dict.values())), len(sum_times(right_times_dict.values())))
     middle_width = max(map(len, names + ["File Name", "Total"]))
@@ -18,7 +25,9 @@ def make_table_string(left_times_dict, right_times_dict,
     total = format_string % (sum_times(left_times_dict.values()),
                              "Total",
                              sum_times(right_times_dict.values()))
+    # separator to go between headers and body
     sep = '-' * len(header)
+    # the representation of the default value (0), to get replaced by N/A
     left_rep, right_rep = ("%%-%ds" % left_width) % 0, ("%%-%ds" % right_width) % 0
     return '\n'.join([header, sep, total, sep] +
                      [format_string % (left_times_dict.get(name, 0),
