@@ -42,7 +42,11 @@ to-do list.
 Contributions to the HoTT library are very welcome!  We use the “fork and pull” model:
 to contribute, please [create your own fork](https://help.github.com/articles/fork-a-repo)
 and [issue a pull request](https://help.github.com/articles/using-pull-requests) when
-you have code ready to join the main library.
+you have code ready to join the main library.  When you make large changes, feel free to
+include timing information in your commit message; run
+`./etc/timing/make-pretty-timed-diff.sh && git commit -at ./time-of-build-both.log`, or
+see the comments at the top of `etc/timing/make-pretty-timed-diff.sh` for more detailed
+instructions and caveats.
 
 ## LICENSING
 
