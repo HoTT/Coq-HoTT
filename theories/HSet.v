@@ -2,7 +2,7 @@
 (** * H-Sets *)
 
 Require Import Overture PathGroupoids Contractible Equivalences Trunc HProp.
-Require Import types.Paths types.Sigma types.Empty types.Record.
+Require Import types.Paths types.Sigma types.Empty types.Record types.Unit.
 Require Import FunextVarieties.
 
 Local Open Scope equiv_scope.
@@ -102,3 +102,45 @@ Record hSet := BuildhSet {setT:> Type; iss :> IsHSet setT}.
 Canonical Structure default_HSet:= fun T P => (@BuildhSet T P).
 Hint Resolve iss.
 Global Existing Instance iss.
+
+(** We will now prove that for sets, monos and injections are equivalent.*)
+Definition mono {X Y} (f : X -> Y)
+  := forall Z : hSet,
+     forall g h : Z -> X, f o g = f o h -> g = h.
+
+Definition inj {X Y} (f : X -> Y)
+  := forall x0 x1 : X,
+       f x0 = f x1 -> x0 = x1.
+
+Lemma inj_mono `{Funext} {X Y} (f : X -> Y) : inj f -> mono f.
+Proof.
+  intros ? ? ? ? H'.
+  apply path_forall.
+  apply ap10 in H'.
+  hnf in *; unfold compose in *.
+  eauto.
+Qed.
+
+Definition mono_inj {X Y} (f : X -> Y)
+           (H : mono f)
+: inj f
+  := fun x0 x1 H' =>
+       ap10 (H (BuildhSet Unit _)
+               (fun _ => x0)
+               (fun _ => x1)
+               (ap (fun x => unit_name x) H'))
+            tt.
+
+Lemma mono_isequiv `{Funext} X Y (f : X -> Y) `{IsEquiv _ _ f}
+: mono f.
+Proof.
+  intros ? g h H'.
+  apply ap10 in H'.
+  apply path_forall.
+  intro x.
+  transitivity (f^-1 (f (g x))).
+  - by rewrite eissect.
+  - transitivity (f^-1 (f (h x))).
+    * apply ap. apply H'.
+    * by rewrite eissect.
+Qed.
