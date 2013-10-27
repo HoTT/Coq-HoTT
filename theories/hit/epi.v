@@ -34,7 +34,7 @@ set (p:=issig_hProp^-1 P).
 set (p':=issig_hProp^-1 P').
 intros X X0.
 assert (p=p') by (by apply path_equiv_biimp).
-clear X X0. 
+clear X X0.
 path_via (issig_hProp (issig_hProp ^-1 P)); destruct P. reflexivity.
 path_via (issig_hProp (issig_hProp ^-1 P')); destruct P';[f_ap|reflexivity].
 Defined.
@@ -77,4 +77,18 @@ Proof.
         by symmetry.
     + apply (transport hproptype p tt).
 Defined.
+
+Lemma epi_isequiv X Y (f : X -> Y) `{IsEquiv _ _ f}
+: epi f.
+Proof.
+  intros ? g h H'.
+  apply ap10 in H'.
+  apply path_forall.
+  intro x.
+  transitivity (g (f (f^-1 x))).
+  - by rewrite eisretr.
+  - transitivity (h (f (f^-1 x))).
+    * apply H'.
+    * by rewrite eisretr.
+Qed.
 End AssumingUA.
