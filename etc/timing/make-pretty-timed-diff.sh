@@ -26,7 +26,7 @@
 #
 # $ git status
 # $ git add <all files mentioned above which you care to have in the repo>
-# $ ./etc/timing/make-pretty-timmed-diff.sh
+# $ ./etc/timing/make-pretty-timed-diff.sh
 # $ git commit -at ./time-of-build-both.log
 #
 # This will bring up an editor, where you should add your commit
