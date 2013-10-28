@@ -1,4 +1,5 @@
 Require Import Category.Core Functor.Core HomFunctor Category.Morphisms Category.Dual Functor.Dual Category.Prod Functor.Prod NaturalTransformation.Core SetCategory.Core Functor.Composition.
+Require Import hit.epi types.Universe HSet hit.iso Overture.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -73,13 +74,51 @@ Section full_faithful.
     intros ? ?; hnf in * |- .
     apply H'; eauto.
   Qed.
-
-  (** TODO(JasonGross): find or prove a lemma saying epi + mono -> iso *)
-  (*Global Instance isfullyfaithful_isfull_isfaithful `{IsFull} `{IsFaithful}
-  : IsFullyFaithful.
-  Proof.
-    apply isfullyfaithful_isfull_isfaithful_helper.
-    (* We need epi + mono -> iso here *)
-  Qed.*)
-  (* Depends on injective + surjective -> isomorphism, and epi = surj, mono = inj *)
 End full_faithful.
+
+Section fully_faithful_helpers.
+  Context `{fs0 : Funext}.
+  Variables x y : hSet.
+  Variable m : x -> y.
+
+  Lemma isisomorphism_isequiv_set_cat
+        `{H' : IsEquiv _ _ m}
+  : IsIsomorphism (m : morphism set_cat x y).
+  Proof.
+    exists (m^-1)%equiv;
+    apply path_forall; intro;
+    destruct H';
+    simpl in *;
+    eauto.
+  Qed.
+
+  Let isequiv_isepi_ismono_helper ua fs1 : isepi m -> ismono m -> IsEquiv m
+    := @isequiv_isepi_ismono ua fs0 fs1 x y m.
+
+  Definition isequiv_isepimorphism_ismonomorphism
+        `{fs1 : Funext} `{Univalence}
+        (Hepi : IsEpimorphism (m : morphism set_cat x y))
+        (Hmono : IsMonomorphism (m : morphism set_cat x y))
+  : @IsEquiv _ _ m
+    := @isequiv_isepi_ismono_helper _ fs1 Hepi Hmono.
+
+  (** TODO: Figure out why Universe inconsistencies don't respect delta expansion. *)
+  (*Definition isequiv_isepimorphism_ismonomorphism'
+        `{fs1 : Funext} `{Univalence}
+        (Hepi : IsEpimorphism (m : morphism set_cat x y))
+        (Hmono : IsMonomorphism (m : morphism set_cat x y))
+  : @IsEquiv _ _ m
+    := @isequiv_isepi_ismono _ fs0 fs1 x y m Hepi Hmono.*)
+End fully_faithful_helpers.
+
+Global Instance isfullyfaithful_isfull_isfaithful
+       `{Univalence} `{fs0 : Funext} `{fs1 : Funext}
+       `{Hfull : @IsFull fs0 C D F}
+       `{Hfaithful : @IsFaithful fs0 C D F}
+: @IsFullyFaithful fs0 C D F
+  := fun x y => @isisomorphism_isequiv_set_cat
+                  fs0 _ _ _
+                  (@isequiv_isepimorphism_ismonomorphism
+                     fs0 _ _ _ fs1 _
+                     (Hfull x y)
+                     (Hfaithful x y)).
