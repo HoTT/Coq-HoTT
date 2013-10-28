@@ -11,25 +11,25 @@ Section iso.
   Variables X Y : hSet.
   Variable f : X -> Y.
 
-  Lemma inj_atmost1P (injf : inj f)
+  Lemma atmost1P_isinj (injf : isinj f)
   : forall y : Y, atmost1P (fun x => f x = y).
   Proof.
-    unfold inj, atmost1P in *.
+    unfold isinj, atmost1P in *.
     intros.
     apply injf.
     path_induction.
     reflexivity.
   Defined.
 
-  Definition isequiv_epi_mono (epif : epi f) (monof : mono f)
+  Definition isequiv_isepi_ismono (epif : isepi f) (monof : ismono f)
   : IsEquiv f.
   Proof.
-    pose proof (@epi_surj fs1 _ fs2 _ _ f epif) as surjf.
-    pose proof (mono_inj _ monof) as injf.
+    pose proof (@isepi_issurj fs1 _ fs2 _ _ f epif) as surjf.
+    pose proof (ismono_isinj _ monof) as injf.
     pose proof (unique_choice
                   (fun y x => f x = y)
                   _
-                  (fun y => (surjf y, inj_atmost1P injf y)))
+                  (fun y => (surjf y, atmost1P_isinj injf y)))
       as H_unique_choice.
     apply (isequiv_adjointify _ H_unique_choice.1).
     - intro.

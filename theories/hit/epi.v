@@ -40,12 +40,12 @@ path_via (issig_hProp (issig_hProp ^-1 P')); destruct P';[f_ap|reflexivity].
 Defined.
 
 (** We will now prove that for sets epis and surjections are biequivalent.*)
-Definition epi {X Y} `(f:X->Y) := forall Z: hSet,
+Definition isepi {X Y} `(f:X->Y) := forall Z: hSet,
   forall g h: Y -> Z, g o f = h o f -> g = h.
 
-Definition surj {X Y} (f:X->Y) := forall y:Y , hexists (fun x => (f x) = y).
+Definition issurj {X Y} (f:X->Y) := forall y:Y , hexists (fun x => (f x) = y).
 
-Lemma surj_epi {X Y} (f:X->Y): surj f -> epi f.
+Lemma issurj_isepi {X Y} (f:X->Y): issurj f -> isepi f.
 intros sur ? ? ? ep. apply fs. intro y.
 specialize (sur y).
 apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
@@ -57,7 +57,7 @@ intros. by apply @set_path2.
 Qed.
 
 (** We need an extra instance of [Funext] for universe polymorphism. *)
-Lemma epi_surj `{fs' : Funext} {X Y} (f:X->Y): epi f -> surj f.
+Lemma isepi_issurj `{fs' : Funext} {X Y} (f:X->Y): isepi f -> issurj f.
 Proof.
   intros epif y.
   set (g :=fun _:Y => Unit_hp).
@@ -78,8 +78,8 @@ Proof.
     + apply (transport hproptype p tt).
 Defined.
 
-Lemma epi_isequiv X Y (f : X -> Y) `{IsEquiv _ _ f}
-: epi f.
+Lemma isepi_isequiv X Y (f : X -> Y) `{IsEquiv _ _ f}
+: isepi f.
 Proof.
   intros ? g h H'.
   apply ap10 in H'.
