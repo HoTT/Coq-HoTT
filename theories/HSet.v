@@ -104,15 +104,15 @@ Hint Resolve iss.
 Global Existing Instance iss.
 
 (** We will now prove that for sets, monos and injections are equivalent.*)
-Definition mono {X Y} (f : X -> Y)
+Definition ismono {X Y} (f : X -> Y)
   := forall Z : hSet,
      forall g h : Z -> X, f o g = f o h -> g = h.
 
-Definition inj {X Y} (f : X -> Y)
+Definition isinj {X Y} (f : X -> Y)
   := forall x0 x1 : X,
        f x0 = f x1 -> x0 = x1.
 
-Lemma inj_mono `{Funext} {X Y} (f : X -> Y) : inj f -> mono f.
+Lemma isinj_ismono `{Funext} {X Y} (f : X -> Y) : isinj f -> ismono f.
 Proof.
   intros ? ? ? ? H'.
   apply path_forall.
@@ -121,9 +121,9 @@ Proof.
   eauto.
 Qed.
 
-Definition mono_inj {X Y} (f : X -> Y)
-           (H : mono f)
-: inj f
+Definition ismono_isinj {X Y} (f : X -> Y)
+           (H : ismono f)
+: isinj f
   := fun x0 x1 H' =>
        ap10 (H (BuildhSet Unit _)
                (fun _ => x0)
@@ -131,8 +131,8 @@ Definition mono_inj {X Y} (f : X -> Y)
                (ap (fun x => unit_name x) H'))
             tt.
 
-Lemma mono_isequiv `{Funext} X Y (f : X -> Y) `{IsEquiv _ _ f}
-: mono f.
+Lemma ismono_isequiv `{Funext} X Y (f : X -> Y) `{IsEquiv _ _ f}
+: ismono f.
 Proof.
   intros ? g h H'.
   apply ap10 in H'.
