@@ -42,7 +42,7 @@ Proof.
 Defined.
 
 (** The powerful recursive case *)
-Lemma path_forall_recr_beta `{Funext} A B x0 P f g e Px
+Lemma path_forall_recr_beta' `{Funext} A B x0 P f g e Px
 : @transport (forall a : A, B a)
              (fun f => P f (f x0))
              f
@@ -77,6 +77,32 @@ Proof.
   path_induction.
   reflexivity.
 Defined.
+
+(** Rewrite the recursive case after clean-up *)
+Lemma path_forall_recr_beta `{Funext} A B x0 P f g e Px
+: @transport (forall a : A, B a)
+             (fun f => P f (f x0))
+             f
+             g
+             (@path_forall _ _ _ _ _ e)
+             Px
+  = @transport (forall x : A, B x)
+               (fun x => P x (g x0))
+               f
+               g
+               (@path_forall H A B f g e)
+               (@transport (B x0)
+                           (fun y => P f y)
+                           (f x0)
+                           (g x0)
+                           (e x0)
+                           Px).
+Proof.
+  etransitivity.
+  - apply path_forall_recr_beta'.
+  - apply transport_path_prod'_beta'.
+Defined.
+
 
 (** The sledge-hammer for computing with [transport]ing across a [path_forall].  Note that it uses [rewrite], and so should only be used in opaque proofs. *)
 
@@ -131,7 +157,8 @@ Ltac transport_path_forall_hammer :=
   progress
     repeat (
       transport_path_forall_hammer_helper;
-      rewrite ?transport_path_prod'_beta', ?transport_const
+      cbv beta;
+      rewrite ?transport_const
     ).
 
 (** An example showing that it works *)

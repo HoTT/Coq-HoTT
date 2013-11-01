@@ -68,20 +68,7 @@ Section universal.
                  | [ |- appcontext[?f (transport ?P ?p ?z)] ]
                    => rewrite (@ap_transport _ P _ _ _ p (fun _ => f) z)
                end.
-        lazymatch goal with
-          | [ |- appcontext[transport
-                              (fun f => prod_type
-                                          (?P0 (?fst (f ?x0)) (?fst (f ?x1)))
-                                          (?P1 (?snd (f ?x0)) (?snd (f ?x1))))
-                              (@path_forall ?H ?A ?B ?f ?g ?e)] ]
-            => simpl rewrite (@path_forall_2_beta
-                                H A B x0 x1
-                                (fun fx0 fx1
-                                 => prod_type (P0 (fst fx0) (fst fx1))
-                                              (P1 (snd fx0) (snd fx1)))
-                                f g)
-        end.
-        rewrite transport_path_prod'.
+        transport_path_forall_hammer.
         unfold unique_helper.
         repeat match goal with
                  | [ H : _ = _ |- _ ] => case H; simpl; clear H
