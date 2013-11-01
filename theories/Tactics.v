@@ -162,7 +162,7 @@ Ltac transport_path_forall_hammer :=
     ).
 
 (** An example showing that it works *)
-Lemma path_forall_2_beta `{Funext} A B x0 x1 P f g e Px
+Lemma path_forall_2_beta' `{Funext} A B x0 x1 P f g e Px
 : @transport (forall a : A, B a) (fun f => P (f x0) (f x1)) f g (@path_forall _ _ _ _ _ e) Px
   = @transport (B x0 * B x1)%type (fun x => P (fst x) (snd x)) (f x0, f x1) (g x0, g x1) (path_prod' (e x0) (e x1)) Px.
 Proof.
@@ -171,6 +171,15 @@ Proof.
            | [ |- appcontext[e ?x] ] => induction (e x)
          end;
     simpl.
+  reflexivity.
+Qed.
+
+Lemma path_forall_2_beta `{Funext} A B x0 x1 P f g e Px
+: @transport (forall a : A, B a) (fun f => P (f x0) (f x1)) f g (@path_forall _ _ _ _ _ e) Px
+  = transport (fun y : B x1 => P (g x0) y) (e x1)
+     (transport (fun y : B x0 => P y (f x1)) (e x0) Px).
+Proof.
+  transport_path_forall_hammer.
   reflexivity.
 Qed.
 
