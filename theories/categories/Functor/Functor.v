@@ -10,6 +10,7 @@ Require Functor.Paths.
 Require Functor.Prod.
 Require Functor.Sum.
 Require Functor.Attributes.
+Require Functor.Pointwise.
 
 Include Functor.CompositionLaws.
 Include Functor.Composition.
@@ -20,6 +21,7 @@ Include Functor.Paths.
 Include Functor.Prod.
 Include Functor.Sum.
 Include Functor.Attributes.
+Include Functor.Pointwise.
 (** We don't want to make utf-8 notations the default, so we don't export them. *)
 
 (** Since [Prod] is a separate sub-directory, we need to re-create the module structure *)
@@ -27,3 +29,8 @@ Module Prod.
   Require Functor.Prod.Prod.
   Include Functor.Prod.Prod.
 End Prod.
+
+Module Pointwise.
+  Require Functor.Pointwise.Pointwise.
+  Include Functor.Pointwise.Pointwise.
+End Pointwise.
