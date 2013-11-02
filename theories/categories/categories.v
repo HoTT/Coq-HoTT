@@ -14,6 +14,7 @@ Require SetCategory.
 Require HomFunctor.
 Require Profunctor.
 Require Cat.
+Require ExponentialLaws.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
