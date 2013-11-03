@@ -13,6 +13,9 @@ Require InitialTerminalCategory.
 Require SetCategory.
 Require HomFunctor.
 Require Profunctor.
+Require Cat.
+Require ExponentialLaws.
+Require ProductLaws.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -29,6 +32,7 @@ Include InitialTerminalCategory.Core.
 Include SetCategory.Core.
 Include HomFunctor.
 Include Profunctor.Core.
+Include Cat.Core.
 
 Require Export categories.Notations.
 
