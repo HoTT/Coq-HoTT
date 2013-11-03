@@ -55,11 +55,17 @@ Section universal.
         apply eta_prod.
       Defined.
 
-      Lemma unique
-      : a * b = F.
+      Lemma unique_helper2
+      : transport
+          (fun GO : C -> prod_type A B =>
+             forall s d : C,
+               morphism C s d ->
+               prod_type (morphism A (fst_type (GO s)) (fst_type (GO d)))
+                         (morphism B (snd_type (GO s)) (snd_type (GO d))))
+          (path_forall (a * b) F unique_helper)
+          (fun (s d : C) (m : morphism C s d) => pair_type (a _1 m) (b _1 m)) =
+        morphism_of F.
       Proof.
-        path_functor.
-        exists (path_forall _ _ unique_helper).
         repeat (apply path_forall; intro).
         repeat match goal with
                  | _ => reflexivity
@@ -81,6 +87,14 @@ Section universal.
                end.
         reflexivity.
       Qed.
+
+      Lemma unique
+      : a * b = F.
+      Proof.
+        path_functor.
+        exists (path_forall _ _ unique_helper).
+        apply unique_helper2.
+      Defined.
     End unique.
 
     Local Open Scope core_scope.
