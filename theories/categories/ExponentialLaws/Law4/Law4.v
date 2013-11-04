@@ -1,3 +1,8 @@
+(** ** Currying *)
+(** We prove:
+
+    - (yⁿ)ᵐ ≅ yⁿᵐ
+ *)
 Require ExponentialLaws.Law4.Functors.
 (** TODO: Prove the law *)
 (** Require ExponentialLaws.Law4.Law. *)
