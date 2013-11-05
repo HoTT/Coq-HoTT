@@ -117,3 +117,8 @@ Module Export CategoryCoreNotations.
   Local Notation "x --> y" := (@morphism _ x y) (at level 99, right associativity, y at level 200) : type_scope.
   Notation "1" := (identity _) : morphism_scope.
 End CategoryCoreNotations.
+
+(** We have a tactic for trying to run a tactic after associating morphisms either all the way to the left, or all the way to the right *)
+Tactic Notation "try_associativity_quick" tactic(tac) :=
+  first [ rewrite <- ?associativity; tac
+        | rewrite -> ?associativity; tac ].
