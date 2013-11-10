@@ -18,6 +18,7 @@ Require ExponentialLaws.
 Require ProductLaws.
 Require Comma.
 Require UniversalProperties.
+Require KanExtensions.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -37,6 +38,7 @@ Include Profunctor.Core.
 Include Cat.Core.
 Include Comma.Core.
 Include UniversalProperties.
+Include KanExtensions.
 
 Require Export categories.Notations.
 
