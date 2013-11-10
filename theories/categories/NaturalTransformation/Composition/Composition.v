@@ -1,7 +1,9 @@
 Require NaturalTransformation.Composition.Core.
+Require NaturalTransformation.Composition.Functorial.
 Require NaturalTransformation.Composition.Laws.
 
 Include NaturalTransformation.Composition.Core.
+Include NaturalTransformation.Composition.Functorial.
 Include NaturalTransformation.Composition.Laws.
 
 Module Export NaturalTransformationCompositionNotations.
