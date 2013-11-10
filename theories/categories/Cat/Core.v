@@ -1,5 +1,5 @@
 Require Import Category.Core Category.Objects InitialTerminalCategory Functor.Core Category.Strict Category.Univalent Functor.Paths.
-Require Import Functor.Identity Functor.Composition Functor.CompositionLaws.
+Require Import Functor.Identity Functor.Composition.Core Functor.Composition.Laws.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

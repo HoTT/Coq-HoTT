@@ -1,4 +1,4 @@
-Require Import Category.Core Functor.Core Functor.Identity Functor.Composition NaturalTransformation.Core NaturalTransformation.Identity NaturalTransformation.Composition NaturalTransformation.Paths.
+Require Import Category.Core Functor.Core Functor.Identity Functor.Composition.Core NaturalTransformation.Core NaturalTransformation.Identity NaturalTransformation.Composition.Core NaturalTransformation.Paths.
 
 Set Implicit Arguments.
 Generalizable All Variables.

@@ -1,4 +1,4 @@
-Require Import Category.Core Functor.Core NaturalTransformation.Core Functor.Prod FunctorCategory.Core Category.Prod NaturalTransformation.Prod Functor.Composition NaturalTransformation.Composition.
+Require Import Category.Core Functor.Core NaturalTransformation.Core Functor.Prod FunctorCategory.Core Category.Prod NaturalTransformation.Prod Functor.Composition.Core NaturalTransformation.Composition.Core.
 Require Import NaturalTransformation.Paths.
 
 Set Universe Polymorphism.

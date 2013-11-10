@@ -1,5 +1,5 @@
 Require Export Category.Utf8 Functor.Utf8.
-Require Import NaturalTransformation.Core NaturalTransformation.Composition NaturalTransformation.Dual.
+Require Import NaturalTransformation.Core NaturalTransformation.Composition.Core NaturalTransformation.Dual.
 
 Infix "∘" := compose : natural_transformation_scope.
 Infix "∘ˡ" := whisker_l (at level 40, left associativity) : natural_transformation_scope.

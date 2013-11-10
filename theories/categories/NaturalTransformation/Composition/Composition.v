@@ -1,0 +1,9 @@
+Require NaturalTransformation.Composition.Core.
+Require NaturalTransformation.Composition.Laws.
+
+Include NaturalTransformation.Composition.Core.
+Include NaturalTransformation.Composition.Laws.
+
+Module Export NaturalTransformationCompositionNotations.
+  Include NaturalTransformation.Composition.Core.NaturalTransformationCompositionCoreNotations.
+End NaturalTransformationCompositionNotations.

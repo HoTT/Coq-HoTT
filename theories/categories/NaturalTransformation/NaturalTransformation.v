@@ -1,16 +1,14 @@
 (** Since there are only notations in [NaturalTransformation.Notations], we can just export those. *)
 Require Export NaturalTransformation.Notations.
 
-Require NaturalTransformation.CompositionLaws.
-Require NaturalTransformation.Composition.
+Require NaturalTransformation.Composition.Composition.
 Require NaturalTransformation.Core.
 Require NaturalTransformation.Dual.
 Require NaturalTransformation.Identity.
 Require NaturalTransformation.Paths.
 Require NaturalTransformation.Sum.
 
-Include NaturalTransformation.CompositionLaws.
-Include NaturalTransformation.Composition.
+Include NaturalTransformation.Composition.Composition.
 Include NaturalTransformation.Core.
 Include NaturalTransformation.Dual.
 Include NaturalTransformation.Identity.

@@ -1,4 +1,4 @@
-Require Import Category.Core Functor.Core SetCategory.Core Category.Dual Functor.Composition.
+Require Import Category.Core Functor.Core SetCategory.Core Category.Dual Functor.Composition.Core.
 Require Category.Prod Functor.Prod.
 Import Category.Prod.CategoryProdNotations Functor.Prod.FunctorProdNotations.
 Require Import HSet Overture.

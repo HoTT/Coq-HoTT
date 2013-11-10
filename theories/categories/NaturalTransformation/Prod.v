@@ -1,5 +1,5 @@
 Require Import Category.Core Functor.Core Category.Prod Functor.Prod NaturalTransformation.Core.
-Require Functor.Composition Functor.Identity.
+Require Functor.Composition.Core Functor.Identity.
 Require Import InitialTerminalCategory.
 Require Import types.Prod.
 

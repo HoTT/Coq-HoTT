@@ -1,9 +1,9 @@
 Require Import types.Unit.
 Require Import Category.Core Functor.Core Category.Sigma.Core.
-Require Functor.Composition Functor.Identity.
+Require Functor.Composition.Core Functor.Identity.
 Require Import Functor.Paths.
 Import Functor.Identity.FunctorIdentityNotations.
-Import Functor.Composition.FunctorCompositionNotations.
+Import Functor.Composition.Core.FunctorCompositionCoreNotations.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -1,6 +1,6 @@
 Require Import Category.Core Category.Strict Functor.Core NaturalTransformation.Core Functor.Paths.
 (** These must come last, so that [identity], [compose], etc., refer to natural transformations. *)
-Require Import NaturalTransformation.Composition NaturalTransformation.Identity NaturalTransformation.CompositionLaws.
+Require Import NaturalTransformation.Composition.Core NaturalTransformation.Identity NaturalTransformation.Composition.Laws.
 
 Set Implicit Arguments.
 Generalizable All Variables.

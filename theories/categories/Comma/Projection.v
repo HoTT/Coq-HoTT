@@ -1,6 +1,6 @@
 Require Import Category.Core Functor.Core.
 Require Import Category.Prod Functor.Prod.
-Require Import Functor.Composition Functor.Identity.
+Require Import Functor.Composition.Core Functor.Identity.
 Require Import InitialTerminalCategory.
 Require Import Comma.Core.
 Require Import types.Prod.
@@ -32,14 +32,14 @@ End comma_category.
 Section slice_category.
   Variable A : PreCategory.
 
-  Local Arguments Functor.Composition.compose / .
-  Local Arguments Functor.Composition.compose_composition_of / .
-  Local Arguments Functor.Composition.compose_identity_of / .
+  Local Arguments Functor.Composition.Core.compose / .
+  Local Arguments Functor.Composition.Core.compose_composition_of / .
+  Local Arguments Functor.Composition.Core.compose_identity_of / .
   Local Arguments path_prod / .
   Local Arguments path_prod' / .
   Local Arguments path_prod_uncurried / .
-  Local Transparent Functor.Composition.compose_composition_of.
-  Local Transparent Functor.Composition.compose_identity_of.
+  Local Transparent Functor.Composition.Core.compose_composition_of.
+  Local Transparent Functor.Composition.Core.compose_identity_of.
 
   Definition arrow_category_projection : Functor (arrow_category A) A
     := Eval simpl in fst o comma_category_projection _ 1.
