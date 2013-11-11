@@ -28,9 +28,9 @@ Section opposite.
     Local Notation obj_of_inv x
       := (CommaCategory.Build_object S T _ _ (CommaCategory.f x)).
 
-    Definition dual_functor : Functor (S |v| T) ((T^op |v| S^op)^op).
+    Definition dual_functor : Functor (S / T) ((T^op / S^op)^op).
     Proof.
-      refine (Build_Functor (S |v| T) ((T^op |v| S^op)^op)
+      refine (Build_Functor (S / T) ((T^op / S^op)^op)
                             (fun x => obj_of x)
                             (fun s d m =>
                                CommaCategory.Build_morphism
@@ -43,9 +43,9 @@ Section opposite.
       abstract t.
     Defined.
 
-    Definition dual_functor_inv : Functor ((T^op |v| S^op)^op) (S |v| T).
+    Definition dual_functor_inv : Functor ((T^op / S^op)^op) (S / T).
     Proof.
-      refine (Build_Functor ((T^op |v| S^op)^op) (S |v| T)
+      refine (Build_Functor ((T^op / S^op)^op) (S / T)
                             (fun x => obj_of_inv x)
                             (fun s d m => CommaCategory.Build_morphism
                                             (obj_of_inv s) (obj_of_inv d)
@@ -69,9 +69,9 @@ Section opposite.
     Local Notation obj_of_inv x
       := (CommaCategory.Build_object S T _ _ (CommaCategory.f x)).
 
-    Definition dual_functor' : Functor (S |v| T) ((T^op' |v| S^op')^op).
+    Definition dual_functor' : Functor (S / T) ((T^op' / S^op')^op).
     Proof.
-      refine (Build_Functor (S |v| T) ((T^op' |v| S^op')^op)
+      refine (Build_Functor (S / T) ((T^op' / S^op')^op)
                             (fun x => obj_of x)
                             (fun s d m => CommaCategory.Build_morphism
                                             (obj_of d) (obj_of s)
@@ -83,9 +83,9 @@ Section opposite.
       abstract t.
     Defined.
 
-    Definition dual_functor_inv' : Functor ((T^op' |v| S^op')^op) (S |v| T).
+    Definition dual_functor_inv' : Functor ((T^op' / S^op')^op) (S / T).
     Proof.
-      refine (Build_Functor ((T^op' |v| S^op')^op) (S |v| T)
+      refine (Build_Functor ((T^op' / S^op')^op) (S / T)
                             (fun x => obj_of_inv x)
                             (fun s d m => CommaCategory.Build_morphism
                                             (obj_of_inv s) (obj_of_inv d)

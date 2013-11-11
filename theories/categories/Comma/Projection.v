@@ -20,9 +20,9 @@ Section comma_category.
   Variable S : Functor A C.
   Variable T : Functor B C.
 
-  Definition comma_category_projection : Functor (S |v| T) (A * B)
+  Definition comma_category_projection : Functor (S / T) (A * B)
     := Build_Functor
-         (S |v| T) (A * B)
+         (S / T) (A * B)
          (fun abf => (CommaCategory.a abf, CommaCategory.b abf)%core)
          (fun _ _ m => (CommaCategory.g m, CommaCategory.h m)%core)
          (fun _ _ _ _ _ => idpath)
@@ -55,10 +55,10 @@ Section slice_category.
     Variable a : C.
     Variable S : Functor A C.
 
-    Definition slice_category_projection : Functor (S |v| a) A
+    Definition slice_category_projection : Functor (S / a) A
       := Eval simpl in fst o comma_category_projection S !a.
 
-    Definition coslice_category_projection : Functor (a |v| S) A
+    Definition coslice_category_projection : Functor (a / S) A
       := Eval simpl in snd o comma_category_projection !a S.
   End slice_coslice.
 End slice_category.

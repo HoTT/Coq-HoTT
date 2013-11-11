@@ -60,8 +60,8 @@ Section UniversalMorphism.
 >>
        *)
 
-    Definition IsInitialMorphism (Ap : object (X |v| U)) :=
-      IsInitialObject (X |v| U) Ap.
+    Definition IsInitialMorphism (Ap : object (X / U)) :=
+      IsInitialObject (X / U) Ap.
 
     Section IntroductionAbstractionBarrier.
       Definition Build_IsInitialMorphism
@@ -90,7 +90,7 @@ Section UniversalMorphism.
     End IntroductionAbstractionBarrier.
 
     Section EliminationAbstractionBarrier.
-      Variable Ap : object (X |v| U).
+      Variable Ap : object (X / U).
 
       Definition IsInitialMorphism_object (M : IsInitialMorphism Ap) : D
         := CommaCategory.b Ap.
@@ -173,12 +173,12 @@ Section UniversalMorphism.
     Local Notation op_object Ap
       := (CommaCategory.Build_object
             (Functors.from_terminal C^op X) (U^op)
-            (CommaCategory.b (Ap : object (U |v| X)))
-            (CommaCategory.a (Ap : object (U |v| X)))
-            (CommaCategory.f (Ap : object (U |v| X)))
-          : object ((X : object C^op) |v| U^op)).
+            (CommaCategory.b (Ap : object (U / X)))
+            (CommaCategory.a (Ap : object (U / X)))
+            (CommaCategory.f (Ap : object (U / X)))
+          : object ((X : object C^op) / U^op)).
 
-    Definition IsTerminalMorphism (Ap : object (U |v| X)) : Type
+    Definition IsTerminalMorphism (Ap : object (U / X)) : Type
       := @IsInitialMorphism
            (C^op)
            _
@@ -208,7 +208,7 @@ Section UniversalMorphism.
     End IntroductionAbstractionBarrier.
 
     Section AbstractionBarrier.
-      Variable Ap : object (U |v| X).
+      Variable Ap : object (U / X).
       Variable M : IsTerminalMorphism Ap.
 
       Definition IsTerminalMorphism_object : D :=

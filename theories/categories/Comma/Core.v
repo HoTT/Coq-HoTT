@@ -3,6 +3,7 @@ Require Import InitialTerminalCategory.
 Require Functor.Identity.
 Require Import Category.Strict.
 Require Import types.Record Trunc HoTT.Tactics.
+Import Functor.Identity.FunctorIdentityNotations.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -254,20 +255,22 @@ End arrow_category.
 Definition CC_Functor' (C : PreCategory) (D : PreCategory) := Functor C D.
 Coercion cc_functor_from_terminal' (C : PreCategory) (x : C) : CC_Functor' _ C
   := Functors.from_terminal C x.
+Coercion cc_identity_functor' (C : PreCategory) : CC_Functor' C C
+  := 1%functor.
 Global Arguments CC_Functor' / .
 Global Arguments cc_functor_from_terminal' / .
+Global Arguments cc_identity_functor' / .
 
 Module Export CommaCoreNotations.
+  (** We really want to use infix [↓] for comma categories, but that's unicode.  Infix [,] might also be reasonable, but I can't seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [/] of [↓]. *)
+  (** Set some notations for printing *)
   Notation "C / a" := (@slice_category_over C a) : category_scope.
   Notation "a \ C" := (@coslice_category_over C a) (at level 40, left associativity) : category_scope.
-
-
-  (** We really want to use infix [↓] for comma categories, but that's unicode.  Infix [,] might also be reasonable, but I can't seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [|v|] of [↓]. *)
-  (** Set some notations for printing *)
-  Notation "x |v| F" := (coslice_category x F) (at level 70, no associativity) : category_scope.
-  Notation "F |v| x" := (slice_category x F) : category_scope.
-  Notation "S |v| T" := (comma_category S T) : category_scope.
+  Notation "a / C" := (@coslice_category_over C a) : category_scope.
+  Notation "x / F" := (coslice_category x F) : category_scope.
+  Notation "F / x" := (slice_category x F) : category_scope.
+  Notation "S / T" := (comma_category S T) : category_scope.
   (** Set the notation for parsing; coercions will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)
-  Notation "S |v| T" := (comma_category (S : CC_Functor' _ _)
-                                        (T : CC_Functor' _ _)) : category_scope.
+  Notation "S / T" := (comma_category (S : CC_Functor' _ _)
+                                      (T : CC_Functor' _ _)) : category_scope.
 End CommaCoreNotations.

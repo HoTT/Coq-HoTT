@@ -23,8 +23,8 @@ Section comma_category_induced_functor.
 
   Definition comma_category_induced_functor_object_of s d
              (m : morphism ((A -> C)^op * (B -> C)) s d)
-             (x : fst s |v| snd s)
-  : (fst d |v| snd d)
+             (x : fst s / snd s)
+  : (fst d / snd d)
     := CommaCategory.Build_object
          (fst d) (snd d)
          (CommaCategory.a x)
@@ -32,8 +32,8 @@ Section comma_category_induced_functor.
          ((snd m) (CommaCategory.b x) o CommaCategory.f x o (fst m) (CommaCategory.a x)).
 
   Definition comma_category_induced_functor_morphism_of s d m s0 d0
-             (m0 : morphism (fst s |v| snd s) s0 d0)
-  : morphism (fst d |v| snd d)
+             (m0 : morphism (fst s / snd s) s0 d0)
+  : morphism (fst d / snd d)
              (@comma_category_induced_functor_object_of s d m s0)
              (@comma_category_induced_functor_object_of s d m d0).
   Proof.
@@ -55,9 +55,9 @@ Section comma_category_induced_functor.
 
   Definition comma_category_induced_functor s d
              (m : morphism ((A -> C)^op * (B -> C)) s d)
-  : Functor (fst s |v| snd s) (fst d |v| snd d).
+  : Functor (fst s / snd s) (fst d / snd d).
   Proof.
-    refine (Build_Functor (fst s |v| snd s) (fst d |v| snd d)
+    refine (Build_Functor (fst s / snd s) (fst d / snd d)
                           (@comma_category_induced_functor_object_of s d m)
                           (@comma_category_induced_functor_morphism_of s d m)
                           _
@@ -95,7 +95,7 @@ Section slice_category_induced_functor.
       Definition slice_category_induced_functor F' a'
                  (m : morphism D a a')
                  (T : NaturalTransformation F' F)
-      : Functor (F |v| a) (F' |v| a')
+      : Functor (F / a) (F' / a')
         := comma_category_induced_functor
              (s := (F, !a))
              (d := (F', !a'))
@@ -111,7 +111,7 @@ Section slice_category_induced_functor.
       Definition coslice_category_induced_functor F' a'
                  (m : morphism D a' a)
                  (T : NaturalTransformation F F')
-      : Functor (a |v| F) (a' |v| F')
+      : Functor (a / F) (a' / F')
         := comma_category_induced_functor
              (s := (!a, F))
              (d := (!a', F'))
