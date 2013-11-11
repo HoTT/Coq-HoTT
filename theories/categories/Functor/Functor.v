@@ -1,8 +1,7 @@
 (** Since there are only notations in [Functor.Notations], we can just export those. *)
 Require Export Functor.Notations.
 
-Require Functor.CompositionLaws.
-Require Functor.Composition.
+Require Functor.Composition.Core.
 Require Functor.Core.
 Require Functor.Dual.
 Require Functor.Identity.
@@ -12,8 +11,7 @@ Require Functor.Sum.
 Require Functor.Attributes.
 Require Functor.Pointwise.
 
-Include Functor.CompositionLaws.
-Include Functor.Composition.
+Include Functor.Composition.Core.
 Include Functor.Core.
 Include Functor.Dual.
 Include Functor.Identity.
@@ -34,3 +32,8 @@ Module Pointwise.
   Require Functor.Pointwise.Pointwise.
   Include Functor.Pointwise.Pointwise.
 End Pointwise.
+
+Module Composition.
+  Require Functor.Composition.Composition.
+  Include Functor.Composition.Composition.
+End Composition.

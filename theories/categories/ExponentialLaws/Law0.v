@@ -1,4 +1,4 @@
-Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity Functor.Composition.
+Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity Functor.Composition.Core.
 Require Import InitialTerminalCategory.
 
 Set Universe Polymorphism.

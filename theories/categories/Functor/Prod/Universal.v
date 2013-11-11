@@ -1,4 +1,4 @@
-Require Import Category.Core Functor.Core Category.Prod NaturalTransformation.Core Functor.Composition Functor.Prod.
+Require Import Category.Core Functor.Core Category.Prod NaturalTransformation.Core Functor.Composition.Core Functor.Prod.
 Require Import Functor.Paths.
 Require Import types.Prod HoTT.Tactics types.Forall types.Sigma.
 

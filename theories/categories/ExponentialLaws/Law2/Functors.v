@@ -1,4 +1,4 @@
-Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity NaturalTransformation.Core NaturalTransformation.Paths Functor.Composition Category.Sum Category.Prod Functor.Sum Functor.Prod NaturalTransformation.Sum Functor.Pointwise NaturalTransformation.Paths.
+Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity NaturalTransformation.Core NaturalTransformation.Paths Functor.Composition.Core Category.Sum Category.Prod Functor.Sum Functor.Prod NaturalTransformation.Sum Functor.Pointwise NaturalTransformation.Paths.
 Require Import InitialTerminalCategory.
 
 Set Universe Polymorphism.

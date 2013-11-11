@@ -1,4 +1,4 @@
-Require Import Category.Core Functor.Core Functor.Composition Functor.Identity.
+Require Import Category.Core Functor.Core Functor.Composition.Core Functor.Identity.
 Require Import Functor.Paths.
 
 Set Implicit Arguments.

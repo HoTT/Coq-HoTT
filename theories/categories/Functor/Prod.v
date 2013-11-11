@@ -1,4 +1,4 @@
-Require Import Category.Core Functor.Core Category.Prod Functor.Composition.
+Require Import Category.Core Functor.Core Category.Prod Functor.Composition.Core.
 Require Import Functor.Paths.
 Require Import types.Prod.
 

@@ -1,4 +1,4 @@
-Require Import Category.Core Functor.Core Category.Prod Category.Dual Functor.Prod SetCategory.Core Profunctor.Core Functor.Dual Profunctor.Identity Functor.Composition Functor.Identity.
+Require Import Category.Core Functor.Core Category.Prod Category.Dual Functor.Prod SetCategory.Core Profunctor.Core Functor.Dual Profunctor.Identity Functor.Composition.Core Functor.Identity.
 Require Import HSet.
 
 Set Universe Polymorphism.

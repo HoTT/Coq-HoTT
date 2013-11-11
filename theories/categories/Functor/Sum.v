@@ -1,4 +1,4 @@
-Require Import Category.Sum Functor.Core Functor.Composition Functor.Identity.
+Require Import Category.Sum Functor.Core Functor.Composition.Core Functor.Identity.
 Require Import Functor.Paths HoTT.Tactics types.Forall.
 
 Set Implicit Arguments.

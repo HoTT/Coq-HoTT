@@ -1,4 +1,4 @@
-Require Import Category.Core Functor.Core Functor.Composition NaturalTransformation.Core.
+Require Import Category.Core Functor.Core Functor.Composition.Core NaturalTransformation.Core.
 
 Set Implicit Arguments.
 Generalizable All Variables.
@@ -151,8 +151,8 @@ Section composition.
   End whisker.
 End composition.
 
-Module Export NaturalTransformationCompositionNotations.
+Module Export NaturalTransformationCompositionCoreNotations.
   Infix "o" := compose : natural_transformation_scope.
   Infix "oL" := whisker_l (at level 40, left associativity) : natural_transformation_scope.
   Infix "oR" := whisker_r (at level 40, left associativity) : natural_transformation_scope.
-End NaturalTransformationCompositionNotations.
+End NaturalTransformationCompositionCoreNotations.

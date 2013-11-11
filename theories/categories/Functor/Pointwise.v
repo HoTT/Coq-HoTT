@@ -1,4 +1,4 @@
-Require Import Category.Core Functor.Core FunctorCategory.Core NaturalTransformation.Paths Functor.Composition NaturalTransformation.Core NaturalTransformation.Composition.
+Require Import Category.Core Functor.Core FunctorCategory.Core NaturalTransformation.Paths Functor.Composition.Core NaturalTransformation.Core NaturalTransformation.Composition.Core.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -66,9 +66,9 @@ Module Functors.
            (fun x => initial_category_rect _ x).
   End functors.
 
-  Arguments to_terminal / .
-  Arguments from_terminal / .
-  Arguments from_initial / .
+  Local Arguments to_terminal / .
+  Local Arguments from_terminal / .
+  Local Arguments from_initial / .
 
   Definition to_1 C : Functor C 1
     := Eval simpl in to_terminal C.

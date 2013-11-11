@@ -1,4 +1,4 @@
-Require Import Category.Core Functor.Core InitialTerminalCategory Category.Prod Functor.Prod Functor.Composition Functor.Identity Functor.Prod.Universal Functor.CompositionLaws Functor.Prod.Universal.
+Require Import Category.Core Functor.Core InitialTerminalCategory Category.Prod Functor.Prod Functor.Composition.Core Functor.Identity Functor.Prod.Universal Functor.Composition.Laws Functor.Prod.Universal.
 Require Import Functor.Paths.
 Require Import types.Prod types.Forall HoTT.Tactics.
 
@@ -99,10 +99,10 @@ Module Law1.
                 | exact (compose_snd_prod _ _) ];
       [];
       apply Functor.Prod.Universal.path_prod;
-      rewrite <- !Functor.CompositionLaws.associativity by assumption;
+      rewrite <- !Functor.Composition.Laws.associativity by assumption;
       (rewrite ?compose_fst_prod, ?compose_snd_prod,
-       ?Functor.CompositionLaws.left_identity,
-       ?Functor.CompositionLaws.right_identity
+       ?Functor.Composition.Laws.left_identity,
+       ?Functor.Composition.Laws.right_identity
         by assumption);
       try (reflexivity || exact (center _)).
 
