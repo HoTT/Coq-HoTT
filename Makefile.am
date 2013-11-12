@@ -40,14 +40,14 @@ SILENCE_COQDEP_1 :=
 SILENCE_COQDEP = $(SILENCE_COQDEP_$(V))
 
 # The list of files that comprise the HoTT library
-VFILES=$(shell find $(srcdir)/theories -name "*.v")
+VFILES=$(shell find "$(srcdir)/theories" -name "*.v")
 VOFILES:=$(VFILES:.v=.vo)
 GLOBFILES:=$(VFILES:.v=.glob)
 DEPFILES:=$(VFILES:.v=.d)
 HTMLFILES:=$(VFILES:.v=.html)
 
 # The list of files that comprise the alternative standard library
-STDVFILES=$(shell find $(SRCCOQLIB) -name "*.v")
+STDVFILES=$(shell find "$(SRCCOQLIB)/theories" -name "*.v")
 STDVOFILES:=$(STDVFILES:.v=.vo)
 STDGLOBFILES:=$(STDVFILES:.v=.glob)
 STDDEPFILES:=$(STDVFILES:.v=.d)
@@ -57,13 +57,13 @@ if make_ssreflect
 # The list of Coq files that comprise ssreflect
 SSRMAKEFILE=$(srcdir)/Makefile_ssrplugin
 ssrdir=$(srcdir)/ssrplugin
-SSRVFILES=$(shell find $(ssrdir)/theories -name "*.v")
+SSRVFILES=$(shell find "$(ssrdir)/theories" -name "*.v")
 SSRVOFILES=$(SSRVFILES:.v=.vo)
 SSRGLOBFILES=$(SSRVFILES:.v=.glob)
 SSRHTMLFILES:=$(SSRVFILES:.v=.html)
-SSRMLIFILES=$(shell find $(ssrdir)/src -name "*.mli")
-SSRMLFILES=$(shell find $(ssrdir)/src -name "*.ml4" -o -name "*.ml")
-SSRMLLIBFILES=$(shell find $(ssrdir)/theories -name "*.mllib")
+SSRMLIFILES=$(shell find "$(ssrdir)/src" -name "*.mli")
+SSRMLFILES=$(shell find "$(ssrdir)/src" -name "*.ml4" -o -name "*.ml")
+SSRMLLIBFILES=$(shell find "$(ssrdir)/theories" -name "*.mllib")
 SSRCMXSFILES=$(SSRMLLIBFILES:.mllib=.cmxs)
 SSRCMAFILES=$(SSRMLLIBFILES:.mllib=.cma)
 endif
@@ -72,7 +72,7 @@ endif
 nobase_hott_DATA = \
 	$(VOFILES) \
 	$(STDVOFILES) \
-	$(shell find $(SRCCOQLIB)/theories -name "README.txt") \
+	$(shell find "$(SRCCOQLIB)/theories" -name "README.txt") \
 	$(SSRVOFILES) \
 	$(SSRCMXSFILES) \
 	$(SSRCMAFILES)
@@ -89,11 +89,12 @@ else
 .PHONY: stdlib hottlib
 endif
 
+# TODO(JasonGross): Get this to work on Windows, where symlinks are unreliable
 install-data-local:
-	$(MKDIR_P) $(hottdir)/coq
-	rm -f $(hottdir)/coq/dev $(hottdir)/coq/plugins
-	$(LN_S) $(COQLIB)/dev $(hottdir)/coq
-	$(LN_S) $(COQLIB)/plugins $(hottdir)/coq
+	$(MKDIR_P) "$(hottdir)/coq"
+	rm -f "$(hottdir)/coq/dev" "$(hottdir)/coq/plugins"
+	$(LN_S) "$(COQLIB)/dev" "$(hottdir)/coq"
+	$(LN_S) "$(COQLIB)/plugins" "$(hottdir)/coq"
 
 if make_ssreflect
 clean-local: $(SSRMAKEFILE)
@@ -106,7 +107,7 @@ stdlib: $(STDVOFILES)
 
 $(STDVOFILES) : %.vo : %.v
 	$(VECHO) COQTOP $(basename $<)
-	$(Q) $(TIMER) $(COQTOP) -indices-matter -boot -nois -coqlib $(SRCCOQLIB) -R $(SRCCOQLIB)/theories Coq -compile $(basename $<)
+	$(Q) $(TIMER) "$(COQTOP)" -indices-matter -boot -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq -compile "$(basename $<)"
 
 
 # The HoTT library as a single target
@@ -152,7 +153,7 @@ endif
 # The HTML files
 html: $(GLOBFILES) $(VFILES) $(STDGLOBFILES) $(STDVFILES)
 	- $(mkdir_p) html
-	$(COQDOC) -toc -interpolate -utf8 -html --coqlib_path $(SRCCOQLIB) --no-externals -R $(srcdir)/theories HoTT -R $(SRCCOQLIB)/theories Coq -d html $(VFILES) $(STDVFILES)
+	"$(COQDOC)" -toc -interpolate -utf8 -html --coqlib_path "$(SRCCOQLIB)" --no-externals -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq -d html $(VFILES) $(STDVFILES)
 
 # The TAGS file
 TAGS_FILES = $(STDVFILES) $(VFILES)
@@ -165,10 +166,10 @@ TAGS : $(TAGS_FILES)
 # Dependency files
 $(DEPFILES) $(STDDEPFILES) : %.d : %.v
 	$(VECHO) COQDEP $<
-	$(Q) $(COQDEP) -nois -coqlib $(SRCCOQLIB) -R $(srcdir)/theories HoTT -R $(SRCCOQLIB)/theories Coq $< >$@
+	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
 
 clean:
 	rm -f $(CLEANFILES)
-	find $(SRCCOQLIB)/theories $(srcdir)/theories -name \*.vo -o -name \*.glob | xargs rm -f
+	find "$(SRCCOQLIB)/theories" $(srcdir)/theories -name \*.vo -o -name \*.glob | xargs rm -f
 
 -include $(DEPFILES) $(STDDEPFILES)

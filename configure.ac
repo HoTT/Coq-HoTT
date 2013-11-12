@@ -41,15 +41,15 @@ AS_IF([test "x$COQTOP" != "x"],
 AS_IF([test "x$COQTOP" = "xno"],
       [AC_MSG_ERROR([Could not find coqtop])],
       [AC_MSG_CHECKING([coqtop version])
-       COQVERSION="`$COQTOP -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`"
+       COQVERSION="`"$COQTOP" -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`"
        AC_MSG_RESULT([$COQVERSION])
        AC_MSG_CHECKING([Coq library path])
-       COQLIB="`$COQTOP -where 2>/dev/null`"
+       COQLIB="`"$COQTOP" -where 2>/dev/null | tr -d '\r'`"
        AC_MSG_RESULT([$COQLIB])
        AC_SUBST([COQVERSION])
        AC_SUBST([COQLIB])
 
-       indicesmatter="`$COQTOP -help 2>&1 | grep -c -- -indices-matter`"
+       indicesmatter="`"$COQTOP" -help 2>&1 | grep -c -- -indices-matter`"
        AS_IF([test "$indicesmatter" = "0"],
              [AC_MSG_ERROR([You need a version of Coq which supports -indices-matter])
              ])
@@ -76,7 +76,7 @@ AS_IF([test "x$COQC" != "x"],
 AS_IF([test "x$COQC" = "xno"],
       [AC_MSG_ERROR([Could not find coqc])],
       [AC_MSG_CHECKING([coqc version])
-       COQCVERSION="`$COQC -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`"
+       COQCVERSION=`"$COQC" -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`
        AC_MSG_RESULT([$COQCVERSION])
        AC_SUBST([COQCVERSION])
        AS_IF([test "x$COQCVERSION" != "x$COQVERSION"],
@@ -176,13 +176,32 @@ AC_MSG_NOTICE([Creating symbolic links into Coq standard library])
 # We must have these links in the source directory, not in the build
 # directory, because the replacement standard library lives in the source
 # directory, and these links are required to make Coq accept it.
-rm -f "$srcdir/coq/dev" "$srcdir/coq/kernel" "$srcdir/coq/library" "$srcdir/coq/plugins"
+# First remove existing links.  If they are symlinks, use -f.  If they are
+# physical directories, use -rf.  This ensures that we don't delete the
+# contents of symlinked directories.
+AS_IF([test -h "$srcdir/coq/dev"], [rm -f "$srcdir/coq/dev"],
+      [test -d "$srcdir/coq/dev"], [rm -rf "$srcdir/coq/dev"])
+AS_IF([test -h "$srcdir/coq/kernel"], [rm -f "$srcdir/coq/kernel"],
+      [test -d "$srcdir/coq/kernel"], [rm -rf "$srcdir/coq/kernel"])
+AS_IF([test -h "$srcdir/coq/library"], [rm -f "$srcdir/coq/library"],
+      [test -d "$srcdir/coq/library"], [rm -rf "$srcdir/coq/library"])
+AS_IF([test -h "$srcdir/coq/plugins"], [rm -f "$srcdir/coq/plugins"],
+      [test -d "$srcdir/coq/plugins"], [rm -rf "$srcdir/coq/plugins"])
 ln -s "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$srcdir/coq"
 # TODO(jgross): Should we use AC_CONFIG_LINKS?  But $COQLIB/dev
 # doesn't exist in my installation, and that would make configure
 # error...
 #AC_CONFIG_LINKS([$srcdir/coq/plugins:$COQLIB/plugins
 #                 $srcdir/coq/dev:$COQLIB/dev])
+AC_MSG_CHECKING([whether your coqtop supports directory symlinks to the stdlib])
+coqtop_out="$("$COQTOP" -coqlib "$srcdir/coq" < /dev/null 2>&1 | grep -c 'Warning: Cannot open')"
+AS_IF([test "$coqtop_out" = 0],
+      [AC_MSG_RESULT([yes])],
+      [AC_MSG_RESULT([no])
+       AC_MSG_NOTICE([Falling back on making physical copies of the stdlib])
+       rm -f "$srcdir/coq/dev" "$srcdir/coq/kernel" "$srcdir/coq/library" "$srcdir/coq/plugins"
+       cp -R "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$srcdir/coq"])
+
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([hoq-config])
