@@ -31,7 +31,10 @@ minimal fuss, you should try your luck by following these instructions:
 
 4. You can now use the HoTT library in place by running `./hoqtop` and
    `./hoqc`. You can also use `./hoqide` which is the version of coqide
-   running the hoqtop toplevel if you have compiled it successfully.
+   running the hoqtop toplevel if you have compiled it successfully.  If you
+   want the commands `hoqtop`, `hoqc`, `hoqide` available system-wide, run:
+
+       make install
 
    The library can be loaded into a Coq session with `Require Import HoTT.`
 
@@ -102,15 +105,13 @@ archive requires a working version of the `autoreconf` utility.
 
 ### PREREQUISITES
 
-The HoTT library requires a custom version of Coq which supports the the
-command-line option `-indices-matter`, universe polymorphism and private types.
+The HoTT library requires a custom version of Coq with three modifications: the
+command-line option `-indices-matter`, universe polymorphism, and private types.
 The first one changes the interpretation of equality to one that conforms to the
-homotopy-theoretic interpretation, the second one is needed to avoid certain
+homotopy-theoretic interpretation; the second one is needed to avoid certain
 universe inconsistency errors (which are not really there, but Coq 8.4 cannot see
-that), and the third one is a modification which allows us to implement a poor
-man's version of higher-inductive types
-
- allows us to implement higher-inductive types, sort of.
+that); and the third one is a modification which allows us to implement a poor
+man's version of higher-inductive types.
 
 At present only our fork of the Coq trunk supports these options, but we hope to
 get them into the official Coq soon. Unfortunately for you that means you will
