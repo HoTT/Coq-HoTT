@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # don't fall back on git if you interrupt or kill this script
 trap "exit 1" SIGINT SIGTERM
