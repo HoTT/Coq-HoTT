@@ -12,6 +12,11 @@ pushd "$ROOT_DIR" 1>/dev/null
 # copy the push_remote script so it stays around after we change branches
 cp "$DIR"/{push_remote,push_remote_tmp}.sh
 
+
+
+#for testing, always build
+
+if [ 0 != 0 ]; then
 if [ -z "$UPDATE_HTML" ]; then
     echo 'Not making html becuase $UPDATE_HTML variable not set.'
     exit 0
@@ -23,6 +28,7 @@ if [ "$1" != "-f" ]; then
 	echo "Not making html beause we do not match with origin/master; call '$0 -f' to force"
 	exit 0
     fi
+fi
 fi
 
 echo 'Configuring git for pushing...'
@@ -48,6 +54,27 @@ git add proviola-html/*
 echo '$ git commit -am "'"$MESSAGE"'"'
 git commit -m "$MESSAGE"
 # use the copy of the script which stayed around when we changed branches
+
+
+
+
+
+# for testing, only push if we should
+if [ -z "$UPDATE_HTML" ]; then
+    echo 'Not making html becuase $UPDATE_HTML variable not set.'
+    exit 0
+fi
+
+# only make the html with -f, or if we're the same as origin/master
+if [ "$1" != "-f" ]; then
+    if [ ! -z "$(git diff origin/master)" ]; then
+	echo "Not making html beause we do not match with origin/master; call '$0 -f' to force"
+	exit 0
+    fi
+fi
+
+
+
 source "$DIR"/push_remote_tmp.sh gh-pages:gh-pages
 
 # checkout the original commit
