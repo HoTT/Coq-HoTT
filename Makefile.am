@@ -39,19 +39,26 @@ SILENCE_COQDEP_0 := @echo \"COQDEP $$<\"; #
 SILENCE_COQDEP_1 :=
 SILENCE_COQDEP = $(SILENCE_COQDEP_$(V))
 
+# the proviola camera
+CAMERA := python proviola/camera/camera.py
+
 # The list of files that comprise the HoTT library
 VFILES=$(shell find "$(srcdir)/theories" -name "*.v")
 VOFILES:=$(VFILES:.v=.vo)
 GLOBFILES:=$(VFILES:.v=.glob)
 DEPFILES:=$(VFILES:.v=.d)
-HTMLFILES:=$(VFILES:.v=.html)
+HTMLFILES:=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(VFILES:.v=.html)))
+XMLFILES:=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(HTMLFILES:.html=.xml))
+PROVIOLA_HTMLFILES:=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(XMLFILES:.xml=.html))
 
 # The list of files that comprise the alternative standard library
 STDVFILES=$(shell find "$(SRCCOQLIB)/theories" -name "*.v")
 STDVOFILES:=$(STDVFILES:.v=.vo)
 STDGLOBFILES:=$(STDVFILES:.v=.glob)
 STDDEPFILES:=$(STDVFILES:.v=.d)
-STDHTMLFILES:=$(STDVFILES:.v=.html)
+STDHTMLFILES:=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/html/Coq.%,$(subst /,.,$(STDVFILES:.v=.html)))
+STDXMLFILES:=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(STDHTMLFILES:.html=.xml))
+STDPROVIOLA_HTMLFILES:=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(STDXMLFILES:.xml=.html))
 
 if make_ssreflect
 # The list of Coq files that comprise ssreflect
@@ -81,12 +88,12 @@ nobase_hott_DATA = \
 HOQC=$(srcdir)/hoqc
 
 # Which files should be cleaned
-CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES) $(DEPFILES) $(STDDEPFILES) $(HTMLFILES) $(STDHTMLFILES)
+CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES) $(DEPFILES) $(STDDEPFILES) $(HTMLFILES) $(STDHTMLFILES) $(XMLFILES) $(STDXMLFILES) $(PROVIOLA_HTMLFILES) $(STDPROVIOLA_HTMLFILES) html-done.timestamp
 
 if make_ssreflect
-.PHONY: stdlib hottlib ssrplugin
+.PHONY: stdlib hottlib clean html proviola clean-local install-data-local proviola-all proviola-xml ssrplugin
 else
-.PHONY: stdlib hottlib
+.PHONY: stdlib hottlib clean html proviola clean-local install-data-local proviola-all proviola-xml
 endif
 
 # TODO(JasonGross): Get this to work on Windows, where symlinks are unreliable
@@ -151,9 +158,47 @@ $(SSRCMAFILES): %.cma : %.mllib
 endif
 
 # The HTML files
-html: $(GLOBFILES) $(VFILES) $(STDGLOBFILES) $(STDVFILES)
+# We have a dummy file, to allow us to depend on the html files without
+# remaking them every time, and to prevent make -j2 from running coqdoc
+# twice.
+html-done.timestamp: $(GLOBFILES) $(VFILES) $(STDGLOBFILES) $(STDVFILES)
 	- $(mkdir_p) html
+	touch html-done.timestamp
 	"$(COQDOC)" -toc -interpolate -utf8 -html --coqlib_path "$(SRCCOQLIB)" --no-externals -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq -d html $(VFILES) $(STDVFILES)
+
+html: html-done.timestamp
+
+
+$(HTMLFILES) $(STDHTMLFILES) html/index.html html/coqdoc.css : html-done.timestamp
+
+
+# the proviola files
+proviola-html/index.html proviola-html/toc.html proviola-html/coqdoc.css : proviola-html/% : html/%
+	- $(mkdir_p) proviola-html
+	cp -f $< $@
+
+proviola-html/proviola.css : proviola-html/% : proviola/proviola/coq/%
+	- $(mkdir_p) proviola-html
+	cp -f $< $@
+
+proviola-xml/proviola.css proviola-xml/proviola.xsl : proviola-xml/% : proviola/proviola/coq/%
+	- $(mkdir_p) proviola-xml
+	cp -f $< $@
+
+proviola-xml/%.xml: html/%.html
+	$(VECHO) CAMERA $<
+	$(Q) $(CAMERA) --coqtop "$(srcdir)/hoqtop" $< $@
+
+proviola-html/%.html: proviola-xml/%.xml proviola-xml/proviola.xsl
+	$(VECHO) XSLTPROC $<
+	$(Q) xsltproc $< > $@
+
+proviola: $(PROVIOLA_HTMLFILES) $(STDPROVIOLA_HTMLFILES) proviola-html/proviola.css proviola-html/toc.html proviola-html/coqdoc.css
+
+proviola-xml: $(XMLFILES) $(STDXMLFILES)
+
+proviola-all: proviola proviola-xml
+
 
 # The TAGS file
 TAGS_FILES = $(STDVFILES) $(VFILES)
