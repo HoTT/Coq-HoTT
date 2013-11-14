@@ -186,11 +186,11 @@ proviola-html/index.html proviola-html/toc.html proviola-html/coqdoc.css : provi
 	- $(mkdir_p) proviola-html
 	cp -f $< $@
 
-proviola-html/proviola.css : proviola-html/% : proviola/proviola/coq/%
+proviola-html/proviola.css : proviola-html/% : proviola/proviola/ppcoqdoc/%
 	- $(mkdir_p) proviola-html
 	cp -f $< $@
 
-proviola-xml/proviola.css proviola-xml/proviola.xsl : proviola-xml/% : proviola/proviola/coq/%
+proviola-xml/proviola.css proviola-xml/proviola.xsl : proviola-xml/% : proviola/proviola/ppcoqdoc/%
 	- $(mkdir_p) proviola-xml
 	cp -f $< $@
 
