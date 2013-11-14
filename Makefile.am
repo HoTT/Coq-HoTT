@@ -195,7 +195,7 @@ proviola-html/%.html: proviola-xml/%.xml proviola-xml/proviola.xsl
 	$(VECHO) XSLTPROC $<
 	$(Q) xsltproc $< > $@
 
-proviola: $(PROVIOLA_HTMLFILES) $(STDPROVIOLA_HTMLFILES) proviola-html/proviola.css proviola-html/toc.html proviola-html/coqdoc.css
+proviola: $(PROVIOLA_HTMLFILES) $(STDPROVIOLA_HTMLFILES) proviola-html/proviola.css proviola-html/toc.html proviola-html/coqdoc.css proviola-html/index.html
 
 proviola-xml: $(XMLFILES) $(STDXMLFILES)
 
