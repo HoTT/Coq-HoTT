@@ -178,7 +178,7 @@ html-utf8: $(GLOBFILES) $(VFILES) $(STDGLOBFILES) $(STDVFILES)
 
 
 
-$(HTMLFILES) $(STDHTMLFILES) html/index.html html/coqdoc.css : html-done.timestamp
+$(HTMLFILES) $(STDHTMLFILES) html/index.html html/coqdoc.css html/toc.html : html-done.timestamp
 
 
 # the proviola files
