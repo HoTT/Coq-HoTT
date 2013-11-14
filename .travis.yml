@@ -26,7 +26,7 @@ before_script:
 
 
 install:
- - pip install lxml pexpect
+ - pip install lxml pexpect-u
 
 
 # we must run make at the end, because the success of
