@@ -186,10 +186,12 @@ proviola-xml/proviola.css proviola-xml/proviola.xsl : proviola-xml/% : proviola/
 	cp -f $< $@
 
 proviola-xml/%.xml: html/%.html
+	@$(mkdir_p) proviola-xml
 	$(VECHO) CAMERA $<
 	$(Q) $(CAMERA) --coqtop "$(srcdir)/hoqtop" $< $@
 
 proviola-html/%.html: proviola-xml/%.xml proviola-xml/proviola.xsl
+	@$(mkdir_p) proviola-html
 	$(VECHO) XSLTPROC $<
 	$(Q) xsltproc $< > $@
 
