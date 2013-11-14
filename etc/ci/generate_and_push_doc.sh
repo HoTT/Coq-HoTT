@@ -41,7 +41,7 @@ Generated with \`make html proviola\`"
 
 echo '$ make html'
 make html
-make proviola -j16
+make proviola -j16 -k
 mv proviola-html proviola-html-bak
 echo '$ git checkout -b gh-pages upstream/gh-pages'
 git checkout -b gh-pages upstream/gh-pages
