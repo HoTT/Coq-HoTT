@@ -47,6 +47,7 @@ VFILES=$(shell find "$(srcdir)/theories" -name "*.v")
 VOFILES:=$(VFILES:.v=.vo)
 GLOBFILES:=$(VFILES:.v=.glob)
 DEPFILES:=$(VFILES:.v=.d)
+HTMLUTF8FILES:=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html-utf8/HoTT.%,$(subst /,.,$(VFILES:.v=.html)))
 HTMLFILES:=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(VFILES:.v=.html)))
 XMLFILES:=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(HTMLFILES:.html=.xml))
 PROVIOLA_HTMLFILES:=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(XMLFILES:.xml=.html))
@@ -56,6 +57,7 @@ STDVFILES=$(shell find "$(SRCCOQLIB)/theories" -name "*.v")
 STDVOFILES:=$(STDVFILES:.v=.vo)
 STDGLOBFILES:=$(STDVFILES:.v=.glob)
 STDDEPFILES:=$(STDVFILES:.v=.d)
+STDHTMLUTF8FILES:=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/html-utf8/Coq.%,$(subst /,.,$(STDVFILES:.v=.html)))
 STDHTMLFILES:=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/html/Coq.%,$(subst /,.,$(STDVFILES:.v=.html)))
 STDXMLFILES:=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(STDHTMLFILES:.html=.xml))
 STDPROVIOLA_HTMLFILES:=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(STDXMLFILES:.xml=.html))
@@ -91,9 +93,9 @@ HOQC=$(srcdir)/hoqc
 CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES) $(DEPFILES) $(STDDEPFILES) $(HTMLFILES) $(STDHTMLFILES) $(XMLFILES) $(STDXMLFILES) $(PROVIOLA_HTMLFILES) $(STDPROVIOLA_HTMLFILES) html-done.timestamp
 
 if make_ssreflect
-.PHONY: stdlib hottlib clean html proviola clean-local install-data-local proviola-all proviola-xml ssrplugin
+.PHONY: stdlib hottlib clean html proviola clean-local install-data-local proviola-all proviola-xml html-utf8 ssrplugin
 else
-.PHONY: stdlib hottlib clean html proviola clean-local install-data-local proviola-all proviola-xml
+.PHONY: stdlib hottlib clean html proviola clean-local install-data-local proviola-all proviola-xml html-utf8
 endif
 
 # TODO(JasonGross): Get this to work on Windows, where symlinks are unreliable
@@ -164,9 +166,16 @@ endif
 html-done.timestamp: $(GLOBFILES) $(VFILES) $(STDGLOBFILES) $(STDVFILES)
 	- $(mkdir_p) html
 	touch html-done.timestamp
+	"$(COQDOC)" -toc -interpolate -html --coqlib_path "$(SRCCOQLIB)" --no-externals -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq -d html $(VFILES) $(STDVFILES)
+
+html:
+	rm -f html-done.timestamp
+	$(MAKE) html-done.timestamp
+
+html-utf8: $(GLOBFILES) $(VFILES) $(STDGLOBFILES) $(STDVFILES)
+	- $(mkdir_p) html-utf8
 	"$(COQDOC)" -toc -interpolate -utf8 -html --coqlib_path "$(SRCCOQLIB)" --no-externals -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq -d html $(VFILES) $(STDVFILES)
 
-html: html-done.timestamp
 
 
 $(HTMLFILES) $(STDHTMLFILES) html/index.html html/coqdoc.css : html-done.timestamp

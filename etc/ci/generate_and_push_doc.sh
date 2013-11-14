@@ -39,15 +39,15 @@ export MESSAGE="Autoupdate documentation with coqdoc and proviola
 
 Generated with \`make html proviola\`"
 
-echo '$ make html'
-make html
+echo '$ make html-utf8'
+make html-utf8
 make proviola -j16 -k
 mv proviola-html proviola-html-bak
 echo '$ git checkout -b gh-pages upstream/gh-pages'
 git checkout -b gh-pages upstream/gh-pages
 rm -rf coqdoc-html
 rm -rf proviola-html
-mv html coqdoc-html
+mv html-utf8 coqdoc-html
 mv proviola-html-bak proviola-html
 git add coqdoc-html/*
 git add proviola-html/*
