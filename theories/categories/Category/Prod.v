@@ -1,10 +1,10 @@
 Require Import Category.Core Category.Strict.
 Require Import types.Prod.
 
+Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Set Universe Polymorphism.
 
 Local Open Scope category_scope.
 Local Open Scope morphism_scope.

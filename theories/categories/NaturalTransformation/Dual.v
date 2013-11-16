@@ -2,10 +2,10 @@ Require Category.Dual Functor.Dual.
 Import Category.Dual.CategoryDualNotations Functor.Dual.FunctorDualNotations.
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 
+Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Set Universe Polymorphism.
 
 Local Open Scope category_scope.
 

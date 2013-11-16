@@ -2,10 +2,10 @@ Require Import Category.Core Category.Strict Functor.Core NaturalTransformation.
 (** These must come last, so that [identity], [compose], etc., refer to natural transformations. *)
 Require Import NaturalTransformation.Composition.Core NaturalTransformation.Identity NaturalTransformation.Composition.Laws.
 
+Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Set Universe Polymorphism.
 
 Section functor_category.
   Context `{Funext}.

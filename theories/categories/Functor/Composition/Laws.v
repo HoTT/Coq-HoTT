@@ -1,10 +1,10 @@
 Require Import Category.Core Functor.Core Functor.Composition.Core Functor.Identity.
 Require Import Functor.Paths.
 
+Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Set Universe Polymorphism.
 
 Local Open Scope morphism_scope.
 

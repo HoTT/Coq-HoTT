@@ -1,9 +1,9 @@
 Require Import Category.Core Category.Objects.
 
+Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Set Universe Polymorphism.
 
 Local Open Scope equiv_scope.
 Local Open Scope morphism_scope.

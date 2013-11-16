@@ -1,9 +1,9 @@
 Require Import Category.Core.
 
+Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Set Universe Polymorphism.
 
 Delimit Scope functor_scope with functor.
 
