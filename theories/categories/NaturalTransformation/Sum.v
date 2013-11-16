@@ -1,9 +1,9 @@
 Require Import Category.Core Functor.Core Category.Sum Functor.Sum NaturalTransformation.Core.
 
+Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Set Universe Polymorphism.
 
 Section sum.
   Definition sum

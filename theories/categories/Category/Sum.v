@@ -1,9 +1,9 @@
 Require Export Category.Core.
 
+Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Set Universe Polymorphism.
 
 Section internals.
   Variable C : PreCategory.

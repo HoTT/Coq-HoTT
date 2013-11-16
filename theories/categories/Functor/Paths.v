@@ -1,10 +1,10 @@
 Require Import Category.Core Functor.Core.
 Require Import HProp HoTT.Tactics Equivalences PathGroupoids types.Sigma Trunc types.Record.
 
+Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Set Universe Polymorphism.
 
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.

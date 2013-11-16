@@ -1,10 +1,10 @@
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Equivalences types.Sigma Trunc.
 
+Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Set Universe Polymorphism.
 
 Local Open Scope morphism_scope.
 Local Open Scope natural_transformation_scope.

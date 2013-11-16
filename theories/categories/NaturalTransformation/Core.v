@@ -1,9 +1,9 @@
 Require Import Category.Core Functor.Core.
 
+Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Set Universe Polymorphism.
 
 Delimit Scope natural_transformation_scope with natural_transformation.
 
