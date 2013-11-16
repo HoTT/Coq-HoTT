@@ -12,6 +12,7 @@ pushd "$ROOT_DIR" 1>/dev/null
 # copy the push_remote script so it stays around after we change branches
 cp "$DIR"/{push_remote,push_remote_tmp}.sh
 
+
 if [ -z "$UPDATE_HTML" ]; then
     echo 'Not making html becuase $UPDATE_HTML variable not set.'
     exit 0
@@ -19,6 +20,7 @@ fi
 
 # only make the html with -f, or if we're the same as origin/master
 if [ "$1" != "-f" ]; then
+    git remote update
     if [ ! -z "$(git diff origin/master)" ]; then
 	echo "Not making html beause we do not match with origin/master; call '$0 -f' to force"
 	exit 0
@@ -29,19 +31,24 @@ echo 'Configuring git for pushing...'
 git config --global user.name "Travis-CI Bot"
 git config --global user.email "Travis-CI-Bot@travis.fake"
 
-export MESSAGE="Autoupdate documentation with coqdoc
+export MESSAGE="Autoupdate documentation with coqdoc and proviola
 
-Generated with \`make html\`"
+Generated with \`make html proviola\`"
 
 echo '$ make html'
 make html
+make proviola -j16 -k
+mv proviola-html proviola-html-bak
 echo '$ git checkout -b gh-pages upstream/gh-pages'
 git checkout -b gh-pages upstream/gh-pages
 rm -rf coqdoc-html
+rm -rf proviola-html
 mv html coqdoc-html
+mv proviola-html-bak proviola-html
 git add coqdoc-html/*
+git add proviola-html/*
 echo '$ git commit -am "'"$MESSAGE"'"'
-git commit -am "$MESSAGE"
+git commit -m "$MESSAGE"
 # use the copy of the script which stayed around when we changed branches
 source "$DIR"/push_remote_tmp.sh gh-pages:gh-pages
 
