@@ -30,7 +30,7 @@ install:
 
 # we must run make at the end, because the success of
 # `make-pretty-timed` is not an indication that the build succeeded
-script: "./autogen.sh && ./configure && ./etc/timing/make-pretty-timed.sh V=1 && make"
+script: "./autogen.sh && ./configure && ./etc/timing/make-pretty-timed.sh V=1 -j2 && make"
 
 
 after_success:
