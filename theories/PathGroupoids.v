@@ -44,13 +44,13 @@ Local Open Scope path_scope.
    - [ap_idmap] is about [ap idmap p]
    - [ap_1] is about [ap f 1]
    - [ap02_p2p] is about [ap02 f (p @@ q)]
-   
+
    Then we have laws which move things around in an equation. The naming scheme here is [moveD_XXX]. The direction [D] indicates where to move to: [L] means that we move something to the left-hand side, whereas [R] means we are moving something to the right-hand side. The part [XXX] describes the shape of the side _from_ which we are moving where the thing that is getting moves is called [M].  The presence of 1 next to an [M] generally indicates an *implied* identity path which is inserted automatically after the movement.  Examples:
 
    - [moveL_pM] means that we transform [p = q @ r] to [p @ r^ = q]
      because we are moving something to the left-hand side, and we are
      moving the right argument of concat.
- 
+
    - [moveR_Mp] means that we transform [p @ q = r] to [q = p^ @ r]
      because we move to the right-hand side, and we are moving the left
      argument of concat.
@@ -96,7 +96,7 @@ Definition concat_pV {A : Type} {x y : A} (p : x = y) :
   p @ p^ = 1
   :=
   match p with idpath => 1 end.
-  
+
 (** The right inverse law. *)
 Definition concat_Vp {A : Type} {x y : A} (p : x = y) :
   p^ @ p = 1
@@ -142,7 +142,7 @@ Definition inv_pp {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   match q with idpath =>
     match p with idpath => 1 end
   end.
-  
+
 Definition inv_Vp {A : Type} {x y z : A} (p : y = x) (q : y = z) :
   (p^ @ q)^ = q^ @ p
   :=
@@ -182,7 +182,7 @@ Definition moveR_pM {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   r = q @ p^ -> r @ p = q.
 Proof.
   destruct p.
-  intro h. exact (concat_p1 _ @ h @ concat_p1 _).  
+  intro h. exact (concat_p1 _ @ h @ concat_p1 _).
 Defined.
 
 Definition moveR_Vp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y) :
@@ -194,7 +194,7 @@ Defined.
 
 Definition moveR_pV {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x) :
   r = q @ p -> r @ p^ = q.
-Proof. 
+Proof.
   destruct p.
   intro h. exact (concat_p1 _ @ h @ concat_p1 _).
 Defined.
@@ -510,7 +510,7 @@ Defined.
 
 (** Application of paths between functions preserves the groupoid structure *)
 
-Definition apD10_1 {A} {B:A->Type} (f : forall x, B x) (x:A) 
+Definition apD10_1 {A} {B:A->Type} (f : forall x, B x) (x:A)
   : apD10 (idpath f) x = 1
 := 1.
 
@@ -657,6 +657,11 @@ Lemma transport_compose {A B} {x y : A} (P : B -> Type) (f : A -> B)
 Proof.
   destruct p; reflexivity.
 Defined.
+
+(** A special case of [transport_compose] which seems to come up a lot. *)
+Definition transport_idmap_ap A (P : A -> Type) x y (p : x = y) (u : P x)
+: transport P p u = transport idmap (ap P p) u
+  := match p with idpath => idpath end.
 
 (** *** The behavior of [ap] and [apD]. *)
 
@@ -849,7 +854,7 @@ Hint Resolve
 
 (* First try at a paths db
 We want the RHS of the equation to become strictly simpler *)
-Hint Rewrite 
+Hint Rewrite
 @concat_p1
 @concat_1p
 @concat_p_pp (* there is a choice here !*)
