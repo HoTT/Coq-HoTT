@@ -112,6 +112,9 @@ Section UniversalMorphism.
                                  (H' A' p' m'.1 m'.2)
                                  (center _) |}).
 
+      (** Projections from nested sigmas are currently rather slow.  We should just be able to do
+
+<<
       Definition Build_IsInitialMorphism_uncurried
                  (univ
                   : { A : D
@@ -129,6 +132,57 @@ Section UniversalMorphism.
              (fun A' p' => (univ.2.2 A' p').1)
              (fun A' p' => (univ.2.2 A' p').2.1)
              (fun A' p' => (univ.2.2 A' p').2.2).
+>>
+
+      But that's currently too slow.  (About 6-8 seconds, on my machine.)  So instead we factor out all of the type parts by hand, and then apply them after. *)
+
+      Let make_uncurried A' B' C' D' E'0
+          (E'1 : forall a a' b b' (c : C' a a'), D' a a' b b' c -> E'0 a a' -> Type)
+          (E' : forall a a' b b' (c : C' a a'), D' a a' b b' c -> E'0 a a' -> Type)
+          F'
+          (f : forall (a : A')
+                      (b : B' a)
+                      (c : forall (a' : A') (b' : B' a'),
+                             C' a a')
+                      (d : forall (a' : A') (b' : B' a'),
+                             D' a a' b b' (c a' b'))
+                      (e : forall (a' : A') (b' : B' a')
+                                  (e0 : E'0 a a')
+                                  (e1 : E'1 a a' b b' (c a' b') (d a' b') e0),
+                             E' a a' b b' (c a' b') (d a' b') e0),
+                 F' a b)
+          (univ
+           : { a : A'
+             | { b : B' a
+               | forall (a' : A') (b' : B' a'),
+                   { c : C' a a'
+                   | { d : D' a a' b b' c
+                     | forall (e0 : E'0 a a')
+                              (e1 : E'1 a a' b b' c d e0),
+                         E' a a' b b' c d e0 }}}})
+      : F' univ.1 univ.2.1
+        := f
+             (univ.1)
+             (univ.2.1)
+             (fun A' p' => (univ.2.2 A' p').1)
+             (fun A' p' => (univ.2.2 A' p').2.1)
+             (fun A' p' => (univ.2.2 A' p').2.2).
+
+      Definition Build_IsInitialMorphism_uncurried
+      : forall (univ
+                : { A : D
+                  | { p : morphism C X (U A)
+                    | let Ap := CommaCategory.Build_object !X U tt A p in
+                      forall (A' : D) (p' : morphism C X (U A')),
+                        { m : morphism D A A'
+                        | { H : morphism_of U m o p = p'
+                          | forall m',
+                              morphism_of U m' o p = p'
+                              -> m = m' }}}}),
+          IsInitialMorphism (CommaCategory.Build_object !X U tt univ.1 univ.2.1)
+        := @make_uncurried
+             _ _ _ _ _ _ _ _
+             (@Build_IsInitialMorphism_curried).
     End IntroductionAbstractionBarrier.
 
     Global Opaque
