@@ -144,68 +144,47 @@ Section UniversalMorphism.
       Definition IsInitialMorphism_morphism (M : IsInitialMorphism Ap)
       : morphism C X (U (IsInitialMorphism_object M))
         := CommaCategory.f Ap.
-      Definition IsInitialMorphism_property (M : IsInitialMorphism Ap)
-                 (Y : D) (f : morphism C X (U Y))
-      : Contr { m : morphism D (IsInitialMorphism_object M) Y
-              | morphism_of U m o (IsInitialMorphism_morphism M) = f }.
-      Proof.
-        (** We could just [rewrite right_identity], but we want to preserve judgemental computation rules. *)
-        pose proof (@trunc_equiv'
-                      _
-                      _
-                      (symmetry _ _ (@CommaCategory.issig_morphism _ _ _ !X U _ _))
-                      minus_two
-                      (M (CommaCategory.Build_object
-                            !X
-                            U
-                            tt
-                            Y
-                            f))) as H'.
-        simpl in H'.
-        apply contr_inhabited_hprop.
-        - abstract (
-              apply @trunc_succ in H';
-              eapply @trunc_equiv'; [ | exact H' ];
-              match goal with
-                | [ |- appcontext[?m o 1] ]
-                  => simpl rewrite (right_identity _ _ _ m)
-                | [ |- appcontext[1 o ?m] ]
-                  => simpl rewrite (left_identity _ _ _ m)
-              end;
-              simpl;
-              unfold IsInitialMorphism_object, IsInitialMorphism_morphism;
-              let A := match goal with |- Equiv ?A ?B => constr:(A) end in
-              let B := match goal with |- Equiv ?A ?B => constr:(B) end in
-              apply (equiv_adjointify
-                       (fun x : A => x.2)
-                       (fun x : B => (tt; x)));
-              [ intro; reflexivity
-              | intros [[]]; reflexivity ]
-            ).
-        - (exists (@center _ H').2.1).
-          abstract (
-              etransitivity;
-              [ apply (@center _ H').2.2 | auto with morphism ]
-            ).
-      Defined.
-
       Definition IsInitialMorphism_property_morphism (M : IsInitialMorphism Ap)
                  (Y : D) (f : morphism C X (U Y))
       : morphism D (IsInitialMorphism_object M) Y
-        := (@center _ (IsInitialMorphism_property M Y f)).1.
+        := CommaCategory.h
+             (@center _ (M (CommaCategory.Build_object !X U tt Y f))).
       Definition IsInitialMorphism_property_morphism_property
                  (M : IsInitialMorphism Ap)
                  (Y : D) (f : morphism C X (U Y))
       : (morphism_of U (IsInitialMorphism_property_morphism M Y f))
-          o (IsInitialMorphism_morphism M) = f
-        := (@center _ (IsInitialMorphism_property M Y f)).2.
+          o IsInitialMorphism_morphism M = f
+        := concat
+             (CommaCategory.p
+                (@center _ (M (CommaCategory.Build_object !X U tt Y f))))
+             (right_identity _ _ _ _).
       Definition IsInitialMorphism_property_morphism_unique
                  (M : IsInitialMorphism Ap)
                  (Y : D) (f : morphism C X (U Y))
                  m'
-                 (H : morphism_of U m' o (IsInitialMorphism_morphism M) = f)
+                 (H : morphism_of U m' o IsInitialMorphism_morphism M = f)
       : IsInitialMorphism_property_morphism M Y f = m'
-        := ap pr1 (@contr _ (IsInitialMorphism_property M Y f) (m'; H)).
+        := ap
+             (@CommaCategory.h _ _ _ _ _ _ _)
+             (@contr _
+                     (M (CommaCategory.Build_object !X U tt Y f))
+                     (CommaCategory.Build_morphism
+                        Ap (CommaCategory.Build_object !X U tt Y f)
+                        tt m' (H @ (right_identity _ _ _ _)^)%path)).
+      Definition IsInitialMorphism_property
+                 (M : IsInitialMorphism Ap)
+                 (Y : D) (f : morphism C X (U Y))
+      : Contr { m : morphism D (IsInitialMorphism_object M) Y
+              | morphism_of U m o IsInitialMorphism_morphism M = f }
+        := {| center := (IsInitialMorphism_property_morphism M Y f;
+                         IsInitialMorphism_property_morphism_property M Y f);
+              contr m' := path_sigma
+                            _
+                            (IsInitialMorphism_property_morphism M Y f;
+                             IsInitialMorphism_property_morphism_property M Y f)
+                            m'
+                            (@IsInitialMorphism_property_morphism_unique M Y f m'.1 m'.2)
+                            (center _) |}.
     End EliminationAbstractionBarrier.
 
     Global Opaque
