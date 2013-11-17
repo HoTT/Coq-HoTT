@@ -6,6 +6,7 @@
 *.vo
 *.glob
 *.v.d
+*.native
 *.ml4.d
 *.mli.d
 *.mllib.d
@@ -20,6 +21,7 @@ proviola-xml/
 # Ignore stuff from autobuild
 aclocal.m4
 autom4te.cache
+config
 config.status
 configure
 etc/install-sh
