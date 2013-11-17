@@ -63,7 +63,7 @@ Section path_functor.
     destruct F, G; simpl in *.
     path_induction; simpl.
     f_ap;
-      abstract exact (center _).
+      eapply @center; abstract exact _.
   Defined.
 
   Lemma path_functor'_sig_fst F G HO HM
@@ -77,7 +77,8 @@ Section path_functor.
   : @path_functor'_sig F F (idpath; idpath) = idpath.
   Proof.
     destruct F; simpl in *.
-    path_induction_hammer.
+    rewrite !(contr idpath).
+    reflexivity.
   Qed.
 
   Definition path_functor'_sig_inv (F G : Functor C D) : F = G -> path_functor'_T F G
