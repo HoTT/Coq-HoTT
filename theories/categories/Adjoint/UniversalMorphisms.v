@@ -81,50 +81,26 @@ Section adjunction_from_universal.
 
     Local Notation mor_of Y0 Y1 f :=
       (let etaY1 := IsInitialMorphism_morphism (@HM Y1) in
-       (@center _ (IsInitialMorphism_property (@HM Y0) _ (etaY1 o f))).1)
+       IsInitialMorphism_property_morphism (@HM Y0) _ (etaY1 o f))
         (only parsing).
 
     Lemma identity_of Y : mor_of Y Y 1 = 1.
     Proof.
       simpl.
-      match goal with
-        | [ |- ((@center ?A ?H).2).1 = _ ]
-          => erewrite (@contr A H (center _; (_; _)))
-      end.
-      simpl; reflexivity.
-      Grab Existential Variables.
-      simpl.
+      erewrite IsInitialMorphism_property_morphism_unique; [ reflexivity | ].
       rewrite ?identity_of, ?left_identity, ?right_identity.
       reflexivity.
     Qed.
-
-    Local Arguments IsInitialMorphism_object / .
-    Local Arguments IsInitialMorphism_morphism / .
 
     Lemma composition_of x y z g f
     : mor_of _ _ (f o g) = mor_of y z f o mor_of x y g.
     Proof.
       simpl.
-      match goal with
-        | [ |- ((@center ?A ?H).2).1 = _ ]
-          => erewrite (@contr A H (center _; (_; _)))
-      end. (* 7 s *)
-      simpl; reflexivity.
-      Grab Existential Variables.
-      simpl in *.
-      repeat match goal with
-               | [ |- appcontext[?x.2.1] ]
-                 => generalize (x.2); intro
-             end.
+      erewrite IsInitialMorphism_property_morphism_unique; [ reflexivity | ].
       rewrite ?composition_of.
       repeat
         try_associativity_quick
-        (idtac;
-         match goal with
-           | [ |- appcontext[?x.1] ]
-             => simpl rewrite x.2
-         end).
-      rewrite ?left_identity, ?right_identity, ?associativity.
+        rewrite IsInitialMorphism_property_morphism_property.
       reflexivity.
     Qed.
 
@@ -147,7 +123,7 @@ Section adjunction_from_universal.
                 (fun s d m =>
                    symmetry
                      _ _
-                     (@center _ (IsInitialMorphism_property (@HM s) _ _)).2)).
+                     (IsInitialMorphism_property_morphism_property (@HM s) _ _))).
       simpl.
       exact (fun c => @IsInitialMorphism_property _ _ c G (M c) (@HM c)).
     Defined.
