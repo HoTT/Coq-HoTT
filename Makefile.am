@@ -53,20 +53,20 @@ MAKEFILE_TARGETS_FILE := Makefile_targets.mk
 include $(MAKEFILE_TARGETS_FILE)
 
 # The list of files that comprise the HoTT library
-CORE_VOFILES:=$(CORE_VFILES:.v=.vo)
-CORE_GLOBFILES:=$(CORE_VFILES:.v=.glob)
-CORE_DEPFILES:=$(CORE_VFILES:.v=.d)
-CORE_HTMLFILES:=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CORE_VFILES:.v=.html)))
-CORE_XMLFILES:=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(CORE_HTMLFILES:.html=.xml))
-CORE_PROVIOLA_HTMLFILES:=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(CORE_XMLFILES:.xml=.html))
+CORE_VOFILES=$(CORE_VFILES:.v=.vo)
+CORE_GLOBFILES=$(CORE_VFILES:.v=.glob)
+CORE_DEPFILES=$(CORE_VFILES:.v=.d)
+CORE_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CORE_VFILES:.v=.html)))
+CORE_XMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(CORE_HTMLFILES:.html=.xml))
+CORE_PROVIOLA_HTMLFILES=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(CORE_XMLFILES:.xml=.html))
 
 # The list of files that comprise the category theory in the HoTT library
-CATEGORY_VOFILES:=$(CATEGORY_VFILES:.v=.vo)
-CATEGORY_GLOBFILES:=$(CATEGORY_VFILES:.v=.glob)
-CATEGORY_DEPFILES:=$(CATEGORY_VFILES:.v=.d)
-CATEGORY_HTMLFILES:=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CATEGORY_VFILES:.v=.html)))
-CATEGORY_XMLFILES:=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(CATEGORY_HTMLFILES:.html=.xml))
-CATEGORY_PROVIOLA_HTMLFILES:=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(CATEGORY_XMLFILES:.xml=.html))
+CATEGORY_VOFILES=$(CATEGORY_VFILES:.v=.vo)
+CATEGORY_GLOBFILES=$(CATEGORY_VFILES:.v=.glob)
+CATEGORY_DEPFILES=$(CATEGORY_VFILES:.v=.d)
+CATEGORY_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CATEGORY_VFILES:.v=.html)))
+CATEGORY_XMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(CATEGORY_HTMLFILES:.html=.xml))
+CATEGORY_PROVIOLA_HTMLFILES=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(CATEGORY_XMLFILES:.xml=.html))
 
 # I'm not sure why we needs = rather than :=, but we seem to
 ALL_BUILT_HOTT_VFILES = $(STD_VFILES) $(CORE_VFILES) $(CATEGORY_VFILES)
@@ -74,12 +74,12 @@ ALL_HOTT_VFILES = $(shell find "$(srcdir)/theories" -name "*.v") $(shell find "$
 UNBUILT_VFILES = $(filter-out $(ALL_BUILT_HOTT_VFILES),$(ALL_HOTT_VFILES))
 
 # The list of files that comprise the alternative standard library
-STD_VOFILES:=$(STD_VFILES:.v=.vo)
-STD_GLOBFILES:=$(STD_VFILES:.v=.glob)
-STD_DEPFILES:=$(STD_VFILES:.v=.d)
-STD_HTMLFILES:=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/html/Coq.%,$(subst /,.,$(STD_VFILES:.v=.html)))
-STD_XMLFILES:=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(STD_HTMLFILES:.html=.xml))
-STD_PROVIOLA_HTMLFILES:=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(STD_XMLFILES:.xml=.html))
+STD_VOFILES=$(STD_VFILES:.v=.vo)
+STD_GLOBFILES=$(STD_VFILES:.v=.glob)
+STD_DEPFILES=$(STD_VFILES:.v=.d)
+STD_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/html/Coq.%,$(subst /,.,$(STD_VFILES:.v=.html)))
+STD_XMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(STD_HTMLFILES:.html=.xml))
+STD_PROVIOLA_HTMLFILES=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(STD_XMLFILES:.xml=.html))
 
 if make_ssreflect
 # The list of Coq files that comprise ssreflect
@@ -88,7 +88,7 @@ ssrdir=$(srcdir)/ssrplugin
 SSR_VFILES=$(shell find "$(ssrdir)/theories" -name "*.v")
 SSR_VOFILES=$(SSR_VFILES:.v=.vo)
 SSR_GLOBFILES=$(SSR_VFILES:.v=.glob)
-SSR_HTMLFILES:=$(SSR_VFILES:.v=.html)
+SSR_HTMLFILES=$(SSR_VFILES:.v=.html)
 SSR_MLIFILES=$(shell find "$(ssrdir)/src" -name "*.mli")
 SSR_MLFILES=$(shell find "$(ssrdir)/src" -name "*.ml4" -o -name "*.ml")
 SSR_MLLIBFILES=$(shell find "$(ssrdir)/theories" -name "*.mllib")
@@ -153,7 +153,7 @@ strict-test:
 	    exit 1; \
 	fi
 
-strict: hottlib hott-core hott-categories strict-test
+strict: strict-test hottlib hott-core hott-categories
 
 # A rule for compiling the HoTT libary files
 if make_ssreflect

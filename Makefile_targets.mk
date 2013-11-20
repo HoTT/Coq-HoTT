@@ -7,7 +7,7 @@
 # a '\' to the end of the line before it, or, if you place it in the
 # middle, to the end of the line that you added.
 
-STD_VFILES := \
+STD_VFILES = \
 	$(SRCCOQLIB)/theories/Init/Notations.v \
 	$(SRCCOQLIB)/theories/Init/Logic.v \
 	$(SRCCOQLIB)/theories/Init/Datatypes.v \
@@ -19,7 +19,7 @@ STD_VFILES := \
 	$(SRCCOQLIB)/theories/Bool/Bool.v \
 	$(SRCCOQLIB)/theories/Program/Tactics.v
 
-CORE_VFILES := \
+CORE_VFILES = \
 	$(srcdir)/theories/Overture.v \
 	$(srcdir)/theories/PathGroupoids.v \
 	$(srcdir)/theories/Conjugation.v \
@@ -64,7 +64,7 @@ CORE_VFILES := \
 	$(srcdir)/theories/hit/iso.v \
 	$(srcdir)/theories/types/ObjectClassifier.v
 
-CATEGORY_VFILES := \
+CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Category/Core.v \
 	$(srcdir)/theories/categories/Functor/Core.v \
 	$(srcdir)/theories/categories/NaturalTransformation/Core.v \
