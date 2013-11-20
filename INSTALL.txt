@@ -4,14 +4,16 @@ If you are not a Coq expert and just want to get the HoTT library to work with
 minimal fuss, you should try your luck by following these instructions:
 
 1. Make sure you have all the prerequisites for compiling Coq. These are
-   `OCaml`, `camlp5`, `git`, and `make`. To get these:
+   `OCaml`, `camlp5`, `git`, and `make`. If you want to build the HoTT
+   version of the graphical user interface `coqide` you also need the
+   `lablgtk2` and `lablgtksourceview2` libraries. To get these:
 
    * Linux: check your package manager. On Debian or any distribution
      with `apt-get` you can run the script `./etc/ci/install_coq_deps.sh`
      which installs the dependencies automatically.
 
    * OSX: we recommend that you install the Opam package manager for Ocaml 
-     (http://opam.ocamlpro.com/).
+     (http://opam.ocamlpro.com/) and go from there.
 
    * MS Windows: we we wish you good luck.
 
