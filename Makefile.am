@@ -48,7 +48,9 @@ CAMERA := python proviola/camera/camera.py
 # CATEGORY_VFILES.  To add more targets (e.g., SSR_VFILES), you'll
 # need to update Makefile.am and run autogen.sh and configure again
 
-include Makefile_targets.mk
+MAKEFILE_TARGETS_FILE := Makefile_targets.mk
+
+include $(MAKEFILE_TARGETS_FILE)
 
 # The list of files that comprise the HoTT library
 CORE_VOFILES:=$(CORE_VFILES:.v=.vo)
@@ -65,6 +67,11 @@ CATEGORY_DEPFILES:=$(CATEGORY_VFILES:.v=.d)
 CATEGORY_HTMLFILES:=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CATEGORY_VFILES:.v=.html)))
 CATEGORY_XMLFILES:=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(CATEGORY_HTMLFILES:.html=.xml))
 CATEGORY_PROVIOLA_HTMLFILES:=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(CATEGORY_XMLFILES:.xml=.html))
+
+# I'm not sure why we needs = rather than :=, but we seem to
+ALL_BUILT_HOTT_VFILES = $(STD_VFILES) $(CORE_VFILES) $(CATEGORY_VFILES)
+ALL_HOTT_VFILES = $(shell find "$(srcdir)/theories" -name "*.v") $(shell find "$(SRCCOQLIB)/theories" -name "*.v")
+UNBUILT_VFILES = $(filter-out $(ALL_BUILT_HOTT_VFILES),$(ALL_HOTT_VFILES))
 
 # The list of files that comprise the alternative standard library
 STD_VOFILES:=$(STD_VFILES:.v=.vo)
@@ -139,6 +146,15 @@ hott-categories: $(CATEGORY_VOFILES)
 
 hottlib: hott-core hott-categories
 
+# a strict rule that will error if there are .v files around which aren't in Makefile_targets.mk
+strict-test:
+	$(Q) if [ x"$(UNBUILT_VFILES)" != x ]; then \
+	    echo "Error: The files '$(UNBUILT_VFILES)' are present but are not in $(MAKEFILE_TARGETS_FILE)"; \
+	    exit 1; \
+	fi
+
+strict: hottlib hott-core hott-categories strict-test
+
 # A rule for compiling the HoTT libary files
 if make_ssreflect
 $(CORE_VOFILES) $(CATEGORY_VOFILES) : %.vo : %.v $(STD_VOFILES) $(SSR_VOFILES)
@@ -149,6 +165,8 @@ $(CORE_VOFILES) $(CATEGORY_VOFILES) : %.vo : %.v $(STD_VOFILES)
 	$(VECHO) HOQC $<
 	$(Q) $(TIMER) $(HOQC) $<
 endif
+
+# A rule for the strict
 
 if make_ssreflect
 # Compilation of ssreflect is a bit more roundabout because ssreflect relies on coq_makefile,
