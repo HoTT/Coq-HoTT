@@ -40,7 +40,7 @@ SILENCE_COQDEP_1 :=
 SILENCE_COQDEP = $(SILENCE_COQDEP_$(V))
 
 # the proviola camera
-CAMERA := python proviola/camera/camera.py
+CAMERA = python proviola/camera/camera.py
 
 # include the makefile listing all the targets.  This way, we don't
 # need to rerun configure every time we add a new file.  The targets
@@ -48,7 +48,7 @@ CAMERA := python proviola/camera/camera.py
 # CATEGORY_VFILES.  To add more targets (e.g., SSR_VFILES), you'll
 # need to update Makefile.am and run autogen.sh and configure again
 
-MAKEFILE_TARGETS_FILE := Makefile_targets.mk
+MAKEFILE_TARGETS_FILE = Makefile_targets.mk
 
 include $(MAKEFILE_TARGETS_FILE)
 
@@ -111,6 +111,12 @@ HOQC=$(srcdir)/hoqc
 
 # Which files should be cleaned
 CLEANFILES = $(STD_VOFILES) $(STD_GLOBFILES) $(CORE_VOFILES) $(CORE_GLOBFILES) $(CATEGORY_VOFILES) $(CATEGORY_GLOBFILES) $(STD_DEPFILES) $(CORE_DEPFILES) $(CATEGORY_DEPFILES) $(STD_HTMLFILES) $(CORE_HTMLFILES) $(CATEGORY_HTMLFILES) $(STD_XMLFILES) $(CORE_XMLFILES) $(CATEGORY_XMLFILES) $(STD_PROVIOLA_HTMLFILES) $(CORE_PROVIOLA_HTMLFILES) $(CATEGORY_PROVIOLA_HTMLFILES) html-done.timestamp
+
+# automake is very stupid and wants to put the 'include' line above
+# after this target.  But this target depends on variables defined in
+# that file, so we explicitly put the target here to trick automake
+# into putting the include in the right place.
+all-am: Makefile $(SCRIPTS) $(DATA)
 
 if make_ssreflect
 .PHONY: stdlib hottlib hott-core hott-categories clean html proviola clean-local install-data-local proviola-all proviola-xml ssrplugin
