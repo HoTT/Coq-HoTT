@@ -378,6 +378,7 @@ Hint Unfold not: core.
 
 (** A space is pointed if that space has a point. *)
 Class IsPointed (A : Type) := point : A.
+Definition pointedType := { u : Type & IsPointed u }.
 
 (** Ssreflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=
