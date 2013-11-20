@@ -19,6 +19,7 @@ Require ProductLaws.
 Require Comma.
 Require UniversalProperties.
 Require KanExtensions.
+Require Adjoint.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -39,6 +40,7 @@ Include Cat.Core.
 Include Comma.Core.
 Include UniversalProperties.
 Include KanExtensions.
+Include Adjoint.Core.
 
 Require Export categories.Notations.
 
