@@ -9,7 +9,7 @@ minimal fuss, you should try your luck by following these instructions:
    `lablgtk2` and `lablgtksourceview2` libraries. To get these:
 
    * Linux: check your package manager. On Debian or any distribution
-     with `apt-get` you can run the script `./etc/ci/install_coq_deps.sh`
+     with `apt-get` you can run the script `./etc/install_coq_deps.sh`
      which installs the dependencies automatically.
 
    * OSX: we recommend that you install the Opam package manager for Ocaml 
