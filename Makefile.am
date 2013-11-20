@@ -42,58 +42,73 @@ SILENCE_COQDEP = $(SILENCE_COQDEP_$(V))
 # the proviola camera
 CAMERA := python proviola/camera/camera.py
 
+# include the makefile listing all the targets.  This way, we don't
+# need to rerun configure every time we add a new file.  The targets
+# makefile should provide CORE_VFILES and STD_VFILES and
+# CATEGORY_VFILES.  To add more targets (e.g., SSR_VFILES), you'll
+# need to update Makefile.am and run autogen.sh and configure again
+
+include Makefile_targets.mk
+
 # The list of files that comprise the HoTT library
-VFILES=$(shell find "$(srcdir)/theories" -name "*.v")
-VOFILES:=$(VFILES:.v=.vo)
-GLOBFILES:=$(VFILES:.v=.glob)
-DEPFILES:=$(VFILES:.v=.d)
-HTMLFILES:=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(VFILES:.v=.html)))
-XMLFILES:=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(HTMLFILES:.html=.xml))
-PROVIOLA_HTMLFILES:=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(XMLFILES:.xml=.html))
+CORE_VOFILES:=$(CORE_VFILES:.v=.vo)
+CORE_GLOBFILES:=$(CORE_VFILES:.v=.glob)
+CORE_DEPFILES:=$(CORE_VFILES:.v=.d)
+CORE_HTMLFILES:=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CORE_VFILES:.v=.html)))
+CORE_XMLFILES:=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(CORE_HTMLFILES:.html=.xml))
+CORE_PROVIOLA_HTMLFILES:=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(CORE_XMLFILES:.xml=.html))
+
+# The list of files that comprise the category theory in the HoTT library
+CATEGORY_VOFILES:=$(CATEGORY_VFILES:.v=.vo)
+CATEGORY_GLOBFILES:=$(CATEGORY_VFILES:.v=.glob)
+CATEGORY_DEPFILES:=$(CATEGORY_VFILES:.v=.d)
+CATEGORY_HTMLFILES:=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CATEGORY_VFILES:.v=.html)))
+CATEGORY_XMLFILES:=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(CATEGORY_HTMLFILES:.html=.xml))
+CATEGORY_PROVIOLA_HTMLFILES:=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(CATEGORY_XMLFILES:.xml=.html))
 
 # The list of files that comprise the alternative standard library
-STDVFILES=$(shell find "$(SRCCOQLIB)/theories" -name "*.v")
-STDVOFILES:=$(STDVFILES:.v=.vo)
-STDGLOBFILES:=$(STDVFILES:.v=.glob)
-STDDEPFILES:=$(STDVFILES:.v=.d)
-STDHTMLFILES:=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/html/Coq.%,$(subst /,.,$(STDVFILES:.v=.html)))
-STDXMLFILES:=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(STDHTMLFILES:.html=.xml))
-STDPROVIOLA_HTMLFILES:=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(STDXMLFILES:.xml=.html))
+STD_VOFILES:=$(STD_VFILES:.v=.vo)
+STD_GLOBFILES:=$(STD_VFILES:.v=.glob)
+STD_DEPFILES:=$(STD_VFILES:.v=.d)
+STD_HTMLFILES:=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/html/Coq.%,$(subst /,.,$(STD_VFILES:.v=.html)))
+STD_XMLFILES:=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(STD_HTMLFILES:.html=.xml))
+STD_PROVIOLA_HTMLFILES:=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(STD_XMLFILES:.xml=.html))
 
 if make_ssreflect
 # The list of Coq files that comprise ssreflect
-SSRMAKEFILE=$(srcdir)/Makefile_ssrplugin
+SSR_MAKEFILE=$(srcdir)/Makefile_ssrplugin
 ssrdir=$(srcdir)/ssrplugin
-SSRVFILES=$(shell find "$(ssrdir)/theories" -name "*.v")
-SSRVOFILES=$(SSRVFILES:.v=.vo)
-SSRGLOBFILES=$(SSRVFILES:.v=.glob)
-SSRHTMLFILES:=$(SSRVFILES:.v=.html)
-SSRMLIFILES=$(shell find "$(ssrdir)/src" -name "*.mli")
-SSRMLFILES=$(shell find "$(ssrdir)/src" -name "*.ml4" -o -name "*.ml")
-SSRMLLIBFILES=$(shell find "$(ssrdir)/theories" -name "*.mllib")
-SSRCMXSFILES=$(SSRMLLIBFILES:.mllib=.cmxs)
-SSRCMAFILES=$(SSRMLLIBFILES:.mllib=.cma)
+SSR_VFILES=$(shell find "$(ssrdir)/theories" -name "*.v")
+SSR_VOFILES=$(SSR_VFILES:.v=.vo)
+SSR_GLOBFILES=$(SSR_VFILES:.v=.glob)
+SSR_HTMLFILES:=$(SSR_VFILES:.v=.html)
+SSR_MLIFILES=$(shell find "$(ssrdir)/src" -name "*.mli")
+SSR_MLFILES=$(shell find "$(ssrdir)/src" -name "*.ml4" -o -name "*.ml")
+SSR_MLLIBFILES=$(shell find "$(ssrdir)/theories" -name "*.mllib")
+SSR_CMXSFILES=$(SSR_MLLIBFILES:.mllib=.cmxs)
+SSR_CMAFILES=$(SSR_MLLIBFILES:.mllib=.cma)
 endif
 
 # Definitions that let autoconf know how to install things.
 nobase_hott_DATA = \
-	$(VOFILES) \
-	$(STDVOFILES) \
+	$(STD_VOFILES) \
+	$(CORE_VOFILES) \
+	$(CATEGORY_VOFILES) \
 	$(shell find "$(SRCCOQLIB)/theories" -name "README.txt") \
-	$(SSRVOFILES) \
-	$(SSRCMXSFILES) \
-	$(SSRCMAFILES)
+	$(SSR_VOFILES) \
+	$(SSR_CMXSFILES) \
+	$(SSR_CMAFILES)
 
 # The Coq compiler, adapted to HoTT
 HOQC=$(srcdir)/hoqc
 
 # Which files should be cleaned
-CLEANFILES = $(VOFILES) $(GLOBFILES) $(STDVOFILES) $(STDGLOBFILES) $(DEPFILES) $(STDDEPFILES) $(HTMLFILES) $(STDHTMLFILES) $(XMLFILES) $(STDXMLFILES) $(PROVIOLA_HTMLFILES) $(STDPROVIOLA_HTMLFILES) html-done.timestamp
+CLEANFILES = $(STD_VOFILES) $(STD_GLOBFILES) $(CORE_VOFILES) $(CORE_GLOBFILES) $(CATEGORY_VOFILES) $(CATEGORY_GLOBFILES) $(STD_DEPFILES) $(CORE_DEPFILES) $(CATEGORY_DEPFILES) $(STD_HTMLFILES) $(CORE_HTMLFILES) $(CATEGORY_HTMLFILES) $(STD_XMLFILES) $(CORE_XMLFILES) $(CATEGORY_XMLFILES) $(STD_PROVIOLA_HTMLFILES) $(CORE_PROVIOLA_HTMLFILES) $(CATEGORY_PROVIOLA_HTMLFILES) html-done.timestamp
 
 if make_ssreflect
-.PHONY: stdlib hottlib clean html proviola clean-local install-data-local proviola-all proviola-xml ssrplugin
+.PHONY: stdlib hottlib hott-core hott-categories clean html proviola clean-local install-data-local proviola-all proviola-xml ssrplugin
 else
-.PHONY: stdlib hottlib clean html proviola clean-local install-data-local proviola-all proviola-xml
+.PHONY: stdlib hottlib hott-core hott-categories clean html proviola clean-local install-data-local proviola-all proviola-xml
 endif
 
 # TODO(JasonGross): Get this to work on Windows, where symlinks are unreliable
@@ -104,29 +119,33 @@ install-data-local:
 	$(LN_S) "$(COQLIB)/plugins" "$(hottdir)/coq"
 
 if make_ssreflect
-clean-local: $(SSRMAKEFILE)
-	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" clean
-	rm -f "$(SSRMAKEFILE)"
+clean-local: $(SSR_MAKEFILE)
+	$(MAKE) -f "$(SSR_MAKEFILE)" COQBIN="$(COQBIN)/" clean
+	rm -f "$(SSR_MAKEFILE)"
 endif
 
 # The standard library files must be compiled in a special way
-stdlib: $(STDVOFILES)
+stdlib: $(STD_VOFILES)
 
-$(STDVOFILES) : %.vo : %.v
+$(STD_VOFILES) : %.vo : %.v
 	$(VECHO) COQTOP $(basename $<)
 	$(Q) $(TIMER) "$(COQTOP)" -indices-matter -boot -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq -compile "$(basename $<)"
 
 
 # The HoTT library as a single target
-hottlib: $(VOFILES)
+hott-core: $(CORE_VOFILES)
+
+hott-categories: $(CATEGORY_VOFILES)
+
+hottlib: hott-core hott-categories
 
 # A rule for compiling the HoTT libary files
 if make_ssreflect
-$(VOFILES) : %.vo : %.v $(STDVOFILES) $(SSRVOFILES)
+$(CORE_VOFILES) $(CATEGORY_VOFILES) : %.vo : %.v $(STD_VOFILES) $(SSR_VOFILES)
 	$(VECHO) HOQC $<
 	$(Q) $(TIMER) $(HOQC) $<
 else
-$(VOFILES) : %.vo : %.v $(STDVOFILES)
+$(CORE_VOFILES) $(CATEGORY_VOFILES) : %.vo : %.v $(STD_VOFILES)
 	$(VECHO) HOQC $<
 	$(Q) $(TIMER) $(HOQC) $<
 endif
@@ -136,42 +155,42 @@ if make_ssreflect
 # which we do not. Perhaps we should. Anyhow, we circumvent the "standard" ssreflect procedure
 # to keep track of dependencies and what should be installed where. This will break if ssreflect
 # changes its compilation procedure drastically.
-ssrplugin: stdlib $(SSRVOFILES)
+ssrplugin: stdlib $(SSR_VOFILES)
 
-$(SSRMAKEFILE): $(ssrdir)/Make
-	$(COQMAKEFILE) COQC = "$(SILENCE_HOQC)\$$(TIMER) \"$(HOQC)\"" COQDEP = "$(SILENCE_COQDEP)\"\$$(COQBIN)coqdep\" -c" -f "$(ssrdir)/Make" > "$(SSRMAKEFILE)"
+$(SSR_MAKEFILE): $(ssrdir)/Make
+	$(COQMAKEFILE) COQC = "$(SILENCE_HOQC)\$$(TIMER) \"$(HOQC)\"" COQDEP = "$(SILENCE_COQDEP)\"\$$(COQBIN)coqdep\" -c" -f "$(ssrdir)/Make" > "$(SSR_MAKEFILE)"
 
-$(SSRVOFILES): $(SRRMAKEFILE) $(SSRCMXSFILES) $(SSRCMAFILES)
+$(SSR_VOFILES): $(SSR_MAKEFILE) $(SSR_CMXSFILES) $(SSR_CMAFILES)
 
-$(SSRVOFILES) : %.vo : %.v
-	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
+$(SSR_VOFILES) : %.vo : %.v
+	$(MAKE) -f "$(SSR_MAKEFILE)" COQBIN="$(COQBIN)/" $@
 
-$(SSRCMXSFILES): $(SSRMAKEFILE)
+$(SSR_CMXSFILES): $(SSR_MAKEFILE)
 
-$(SSRCMAFILES): $(SSRMAKEFILE)
+$(SSR_CMAFILES): $(SSR_MAKEFILE)
 
-$(SSRCMXSFILES): %.cmxs : %.mllib
-	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
+$(SSR_CMXSFILES): %.cmxs : %.mllib
+	$(MAKE) -f "$(SSR_MAKEFILE)" COQBIN="$(COQBIN)/" $@
 
-$(SSRCMAFILES): %.cma : %.mllib
-	$(MAKE) -f "$(SSRMAKEFILE)" COQBIN="$(COQBIN)/" $@
+$(SSR_CMAFILES): %.cma : %.mllib
+	$(MAKE) -f "$(SSR_MAKEFILE)" COQBIN="$(COQBIN)/" $@
 endif
 
 # The HTML files
 # We have a dummy file, to allow us to depend on the html files without
 # remaking them every time, and to prevent make -j2 from running coqdoc
 # twice.
-html-done.timestamp: $(GLOBFILES) $(VFILES) $(STDGLOBFILES) $(STDVFILES)
+html-done.timestamp: $(STD_GLOBFILES) $(STD_VFILES) $(CORE_GLOBFILES) $(CORE_VFILES) $(CATEGORY_GLOBFILES) $(CATEGORY_VFILES)
 	- $(mkdir_p) html
 	touch html-done.timestamp
-	"$(COQDOC)" -toc -interpolate -utf8 -html --coqlib_path "$(SRCCOQLIB)" --no-externals -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq -d html $(VFILES) $(STDVFILES)
+	"$(COQDOC)" -toc -interpolate -utf8 -html --coqlib_path "$(SRCCOQLIB)" --no-externals -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq -d html $(STD_VFILES) $(CORE_VFILES) $(CATEGORY_VFILES)
 
 html:
 	rm -f html-done.timestamp
 	$(MAKE) html-done.timestamp
 
 
-$(HTMLFILES) $(STDHTMLFILES) html/index.html html/coqdoc.css html/toc.html : html-done.timestamp
+$(STD_HTMLFILES) $(CORE_HTMLFILES) $(CATEGORY_HTMLFILES) html/index.html html/coqdoc.css html/toc.html : html-done.timestamp
 
 
 # the proviola files
@@ -197,15 +216,15 @@ proviola-html/%.html: proviola-xml/%.xml proviola-xml/proviola.xsl
 	$(VECHO) XSLTPROC $<
 	$(Q) xsltproc $< > $@
 
-proviola: $(PROVIOLA_HTMLFILES) $(STDPROVIOLA_HTMLFILES) proviola-html/proviola.css proviola-html/toc.html proviola-html/coqdoc.css proviola-html/index.html
+proviola: $(STD_PROVIOLA_HTMLFILES) $(CORE_PROVIOLA_HTMLFILES) $(CATEGORY_PROVIOLA_HTMLFILES) proviola-html/proviola.css proviola-html/toc.html proviola-html/coqdoc.css proviola-html/index.html
 
-proviola-xml: $(XMLFILES) $(STDXMLFILES)
+proviola-xml: $(STD_XMLFILES) $(CORE_XMLFILES) $(CATEGORY_XMLFILES)
 
 proviola-all: proviola proviola-xml
 
 
 # The TAGS file
-TAGS_FILES = $(STDVFILES) $(VFILES)
+TAGS_FILES = $(STD_VFILES) $(CORE_VFILES) $(CATEGORY_VFILES)
 TAGS : $(TAGS_FILES)
 	$(ETAGS) --language=none \
 	-r '/^[[:space:]]*\(Axiom\|Theorem\|Class\|Instance\|Let\|Ltac\|Definition\|Lemma\|Record\|Remark\|Structure\|Fixpoint\|Fact\|Corollary\|Let\|Inductive\|Coinductive\|Proposition\)[[:space:]]+\([[:alnum:]_'\'']+\)/\2/' \
@@ -213,7 +232,7 @@ TAGS : $(TAGS_FILES)
 	$^
 
 # Dependency files
-$(DEPFILES) $(STDDEPFILES) : %.d : %.v
+$(STD_DEPFILES) $(CORE_DEPFILES) $(CATEGORY_DEPFILES) : %.d : %.v
 	$(VECHO) COQDEP $<
 	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
 
@@ -221,4 +240,4 @@ clean:
 	rm -f $(CLEANFILES)
 	find "$(SRCCOQLIB)/theories" $(srcdir)/theories -name \*.vo -o -name \*.glob | xargs rm -f
 
--include $(DEPFILES) $(STDDEPFILES)
+-include $(STD_DEPFILES) $(CORE_DEPFILES) $(CATEGORY_DEPFILES)
