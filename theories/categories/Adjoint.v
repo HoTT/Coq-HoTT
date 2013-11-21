@@ -18,6 +18,8 @@ Require Adjoint.Dual.
 Require Adjoint.Paths.
 (** ** Composition *)
 Require Adjoint.Composition.
+(** ** Pointwise adjunctions *)
+Require Adjoint.Pointwise.
 
 Include Adjoint.Core.
 Include Adjoint.UnitCounit.
@@ -28,5 +30,6 @@ Include Adjoint.HomCoercions.
 Include Adjoint.Dual.
 Include Adjoint.Paths.
 Include Adjoint.Composition.
+Include Adjoint.Pointwise.
 
 Require Export Adjoint.Notations.

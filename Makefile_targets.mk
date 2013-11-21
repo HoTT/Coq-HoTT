@@ -238,6 +238,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Adjoint/UniversalMorphisms.v \
 	$(srcdir)/theories/categories/Adjoint/Hom.v \
 	$(srcdir)/theories/categories/Adjoint/HomCoercions.v \
+	$(srcdir)/theories/categories/Adjoint/Pointwise.v \
 	$(srcdir)/theories/categories/Adjoint/Notations.v \
 	$(srcdir)/theories/categories/Adjoint/Utf8.v \
 	\
