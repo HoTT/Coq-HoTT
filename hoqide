@@ -37,17 +37,19 @@ fi
 if [ "x$COQIDE" = "xno" ]
 then
   echo "Fatal error: coqide with -indices-matter was not found during configuration."
-else
-  # We could stick the arguments in hoq-config in COQ_ARGS, and then,
-  # using (non-portable) bash arrays, do
-  # $ exec "$COQIDE" "${COQ_ARGS[@]}" "$@"
-  # or using more evil (but portable) 'eval', do
-  # $ eval 'exec "$COQIDE" '"$COQ_ARGS"' "$@"'
-  # Instead, we duplicate code, because it's simpler.
-  if test "x$ssr" = "xyes"
-  then
-    exec "$COQIDE" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -R "$SSRLIB" Ssreflect -indices-matter "$@"
-  else
-    exec "$COQIDE" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter "$@"
-  fi
+  exit 1
 fi
+
+# We could stick the arguments in hoq-config in COQ_ARGS, and then,
+# using (non-portable) bash arrays, do
+# $ exec "$COQIDE" "${COQ_ARGS[@]}" "$@"
+# or using more evil (but portable) 'eval', do
+# $ eval 'exec "$COQIDE" '"$COQ_ARGS"' "$@"'
+# Instead, we duplicate code, because it's simpler.
+if test "x$ssr" = "xyes"
+then
+  exec "$COQIDE" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -R "$SSRLIB" Ssreflect -indices-matter "$@"
+else
+  exec "$COQIDE" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter "$@"
+fi
+

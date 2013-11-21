@@ -27,6 +27,20 @@ function readlink_f() {
 }
 
 mydir="$(dirname "$(readlink_f "$0")")"
+if [ ! -f "$mydir/hoq-config" ]
+then
+  echo "Could not find hoq-config. Did you run ./configure?"
+  exit 1
+fi
+
+. "$mydir/hoq-config"
+if [ "x$COQDEP" = "xno" ]
+then
+  echo "Fatal error: coqdep with -indices-matter was not found during configuration."
+  exit 1
+fi
+
+mydir="$(dirname "$(readlink_f "$0")")"
 . "$mydir/hoq-config"
 # We could stick the arguments in hoq-config in COQ_ARGS, and then,
 # using (non-portable) bash arrays, do
