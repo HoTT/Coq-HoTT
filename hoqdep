@@ -40,8 +40,6 @@ then
   exit 1
 fi
 
-mydir="$(dirname "$(readlink_f "$0")")"
-. "$mydir/hoq-config"
 # We could stick the arguments in hoq-config in COQ_ARGS, and then,
 # using (non-portable) bash arrays, do
 # $ exec "$COQDEP" "${COQ_ARGS[@]}" "$@"
