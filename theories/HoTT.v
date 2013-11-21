@@ -14,6 +14,7 @@ Require Export Trunc.
 Require Export HProp.
 Require Export HSet.
 Require Export EquivalenceVarieties.
+Require Export Pointed.
 
 Require Export types.Empty.
 Require Export types.Unit.
