@@ -87,7 +87,108 @@ Section UniversalMorphism.
           abstract (progress rewrite ?right_identity, ?left_identity;
                     exact (@center _ UniversalProperty).2).
       Defined.
+
+      Definition Build_IsInitialMorphism_curried
+                 (A : D)
+                 (p : morphism C X (U A))
+                 (Ap := CommaCategory.Build_object !X U tt A p)
+                 (m : forall (A' : D) (p' : morphism C X (U A')),
+                        morphism D A A')
+                 (H : forall (A' : D) (p' : morphism C X (U A')),
+                        morphism_of U (m A' p') o p = p')
+                 (H' : forall (A' : D) (p' : morphism C X (U A')) m',
+                         morphism_of U m' o p = p'
+                         -> m A' p' = m')
+      : IsInitialMorphism Ap
+        := Build_IsInitialMorphism
+             A
+             p
+             (fun A' p' =>
+                {| center := (m A' p'; H A' p');
+                   contr m' := path_sigma
+                                 _
+                                 (m A' p'; H A' p')
+                                 m'
+                                 (H' A' p' m'.1 m'.2)
+                                 (center _) |}).
+
+      (** Projections from nested sigmas are currently rather slow.  We should just be able to do
+
+<<
+      Definition Build_IsInitialMorphism_uncurried
+                 (univ
+                  : { A : D
+                    | { p : morphism C X (U A)
+                       | let Ap := CommaCategory.Build_object !X U tt A p in
+                         forall (A' : D) (p' : morphism C X (U A')),
+                           { m : morphism D A A'
+                           | { H : morphism_of U m o p = p'
+                             | forall m',
+                                 morphism_of U m' o p = p'
+                                 -> m = m' }}}})
+        := @Build_IsInitialMorphism_curried
+             (univ.1)
+             (univ.2.1)
+             (fun A' p' => (univ.2.2 A' p').1)
+             (fun A' p' => (univ.2.2 A' p').2.1)
+             (fun A' p' => (univ.2.2 A' p').2.2).
+>>
+
+      But that's currently too slow.  (About 6-8 seconds, on my machine.)  So instead we factor out all of the type parts by hand, and then apply them after. *)
+
+      Let make_uncurried A' B' C' D' E'0
+          (E'1 : forall a a' b b' (c : C' a a'), D' a a' b b' c -> E'0 a a' -> Type)
+          (E' : forall a a' b b' (c : C' a a'), D' a a' b b' c -> E'0 a a' -> Type)
+          F'
+          (f : forall (a : A')
+                      (b : B' a)
+                      (c : forall (a' : A') (b' : B' a'),
+                             C' a a')
+                      (d : forall (a' : A') (b' : B' a'),
+                             D' a a' b b' (c a' b'))
+                      (e : forall (a' : A') (b' : B' a')
+                                  (e0 : E'0 a a')
+                                  (e1 : E'1 a a' b b' (c a' b') (d a' b') e0),
+                             E' a a' b b' (c a' b') (d a' b') e0),
+                 F' a b)
+          (univ
+           : { a : A'
+             | { b : B' a
+               | forall (a' : A') (b' : B' a'),
+                   { c : C' a a'
+                   | { d : D' a a' b b' c
+                     | forall (e0 : E'0 a a')
+                              (e1 : E'1 a a' b b' c d e0),
+                         E' a a' b b' c d e0 }}}})
+      : F' univ.1 univ.2.1
+        := f
+             (univ.1)
+             (univ.2.1)
+             (fun A' p' => (univ.2.2 A' p').1)
+             (fun A' p' => (univ.2.2 A' p').2.1)
+             (fun A' p' => (univ.2.2 A' p').2.2).
+
+      Definition Build_IsInitialMorphism_uncurried
+      : forall (univ
+                : { A : D
+                  | { p : morphism C X (U A)
+                    | let Ap := CommaCategory.Build_object !X U tt A p in
+                      forall (A' : D) (p' : morphism C X (U A')),
+                        { m : morphism D A A'
+                        | { H : morphism_of U m o p = p'
+                          | forall m',
+                              morphism_of U m' o p = p'
+                              -> m = m' }}}}),
+          IsInitialMorphism (CommaCategory.Build_object !X U tt univ.1 univ.2.1)
+        := @make_uncurried
+             _ _ _ _ _ _ _ _
+             (@Build_IsInitialMorphism_curried).
     End IntroductionAbstractionBarrier.
+
+    Global Opaque
+           Build_IsInitialMorphism
+           Build_IsInitialMorphism_curried
+           Build_IsInitialMorphism_uncurried.
 
     Section EliminationAbstractionBarrier.
       Variable Ap : object (X / U).
@@ -97,51 +198,56 @@ Section UniversalMorphism.
       Definition IsInitialMorphism_morphism (M : IsInitialMorphism Ap)
       : morphism C X (U (IsInitialMorphism_object M))
         := CommaCategory.f Ap.
-      Definition IsInitialMorphism_property (M : IsInitialMorphism Ap)
+      Definition IsInitialMorphism_property_morphism (M : IsInitialMorphism Ap)
+                 (Y : D) (f : morphism C X (U Y))
+      : morphism D (IsInitialMorphism_object M) Y
+        := CommaCategory.h
+             (@center _ (M (CommaCategory.Build_object !X U tt Y f))).
+      Definition IsInitialMorphism_property_morphism_property
+                 (M : IsInitialMorphism Ap)
+                 (Y : D) (f : morphism C X (U Y))
+      : (morphism_of U (IsInitialMorphism_property_morphism M Y f))
+          o IsInitialMorphism_morphism M = f
+        := concat
+             (CommaCategory.p
+                (@center _ (M (CommaCategory.Build_object !X U tt Y f))))
+             (right_identity _ _ _ _).
+      Definition IsInitialMorphism_property_morphism_unique
+                 (M : IsInitialMorphism Ap)
+                 (Y : D) (f : morphism C X (U Y))
+                 m'
+                 (H : morphism_of U m' o IsInitialMorphism_morphism M = f)
+      : IsInitialMorphism_property_morphism M Y f = m'
+        := ap
+             (@CommaCategory.h _ _ _ _ _ _ _)
+             (@contr _
+                     (M (CommaCategory.Build_object !X U tt Y f))
+                     (CommaCategory.Build_morphism
+                        Ap (CommaCategory.Build_object !X U tt Y f)
+                        tt m' (H @ (right_identity _ _ _ _)^)%path)).
+      Definition IsInitialMorphism_property
+                 (M : IsInitialMorphism Ap)
                  (Y : D) (f : morphism C X (U Y))
       : Contr { m : morphism D (IsInitialMorphism_object M) Y
-              | morphism_of U m o (IsInitialMorphism_morphism M) = f }.
-      Proof.
-        (** We could just [rewrite right_identity], but we want to preserve judgemental computation rules. *)
-        pose proof (@trunc_equiv'
-                      _
-                      _
-                      (symmetry _ _ (@CommaCategory.issig_morphism _ _ _ !X U _ _))
-                      minus_two
-                      (M (CommaCategory.Build_object
-                            !X
-                            U
-                            tt
-                            Y
-                            f))) as H'.
-        simpl in H'.
-        apply contr_inhabited_hprop.
-        - abstract (
-              apply @trunc_succ in H';
-              eapply @trunc_equiv'; [ | exact H' ];
-              match goal with
-                | [ |- appcontext[?m o 1] ]
-                  => simpl rewrite (right_identity _ _ _ m)
-                | [ |- appcontext[1 o ?m] ]
-                  => simpl rewrite (left_identity _ _ _ m)
-              end;
-              simpl;
-              unfold IsInitialMorphism_object, IsInitialMorphism_morphism;
-              let A := match goal with |- Equiv ?A ?B => constr:(A) end in
-              let B := match goal with |- Equiv ?A ?B => constr:(B) end in
-              apply (equiv_adjointify
-                       (fun x : A => x.2)
-                       (fun x : B => (tt; x)));
-              [ intro; reflexivity
-              | intros [[]]; reflexivity ]
-            ).
-        - (exists (@center _ H').2.1).
-          abstract (
-              etransitivity;
-              [ apply (@center _ H').2.2 | auto with morphism ]
-            ).
-      Defined.
+              | morphism_of U m o IsInitialMorphism_morphism M = f }
+        := {| center := (IsInitialMorphism_property_morphism M Y f;
+                         IsInitialMorphism_property_morphism_property M Y f);
+              contr m' := path_sigma
+                            _
+                            (IsInitialMorphism_property_morphism M Y f;
+                             IsInitialMorphism_property_morphism_property M Y f)
+                            m'
+                            (@IsInitialMorphism_property_morphism_unique M Y f m'.1 m'.2)
+                            (center _) |}.
     End EliminationAbstractionBarrier.
+
+    Global Opaque
+           IsInitialMorphism_object
+           IsInitialMorphism_morphism
+           IsInitialMorphism_property
+           IsInitialMorphism_property_morphism
+           IsInitialMorphism_property_morphism_property
+           IsInitialMorphism_property_morphism_unique.
   End InitialMorphism.
 
   Section TerminalMorphism.
@@ -188,26 +294,61 @@ Section UniversalMorphism.
 
     Section IntroductionAbstractionBarrier.
       Definition Build_IsTerminalMorphism
-                 (*(Ap : Object (U ↓ X))*)
-                 (A : D)(* := CommaCategory.a Ap*)
-                 (p : morphism C (U A) X)(*:= CommaCategory.f Ap*)
-                 (Ap := CommaCategory.Build_object U !X A tt p)
-                 (UniversalProperty
-                  : forall (A' : D) (p' : morphism C (U A') X),
-                      Contr { m : morphism D A' A
-                            | p o morphism_of U m  = p' })
-      : IsTerminalMorphism Ap
+      : forall
+          (*(Ap : Object (U ↓ X))*)
+          (A : D)(* := CommaCategory.a Ap*)
+          (p : morphism C (U A) X)(*:= CommaCategory.f Ap*)
+          (Ap := CommaCategory.Build_object U !X A tt p)
+          (UniversalProperty
+           : forall (A' : D) (p' : morphism C (U A') X),
+               Contr { m : morphism D A' A
+                     | p o morphism_of U m = p' }),
+          IsTerminalMorphism Ap
         := @Build_IsInitialMorphism
              (C^op)
              (D^op)
              X
-             (U^op)
-             A
-             p
-             UniversalProperty.
+             (U^op).
+
+      Definition Build_IsTerminalMorphism_curried
+      : forall
+          (A : D)
+          (p : morphism C (U A) X)
+          (Ap := CommaCategory.Build_object U !X A tt p)
+          (m : forall (A' : D) (p' : morphism C (U A') X),
+                 morphism D A' A)
+          (H : forall (A' : D) (p' : morphism C (U A') X),
+                 p o morphism_of U (m A' p') = p')
+          (H' : forall (A' : D) (p' : morphism C (U A') X) m',
+                  p o morphism_of U m' = p'
+                  -> m A' p' = m'),
+          IsTerminalMorphism Ap
+        := @Build_IsInitialMorphism_curried
+             (C^op)
+             (D^op)
+             X
+             (U^op).
+
+      Definition Build_IsTerminalMorphism_uncurried
+      : forall
+          (univ : { A : D
+                  | { p : morphism C (U A) X
+                    | let Ap := CommaCategory.Build_object U !X A tt p in
+                      forall (A' : D) (p' : morphism C (U A') X),
+                        { m : morphism D A' A
+                        | { H : p o morphism_of U m = p'
+                          | forall m',
+                              p o morphism_of U m' = p'
+                              -> m = m' }}}}),
+          IsTerminalMorphism (CommaCategory.Build_object U !X univ.1 tt univ.2.1)
+        := @Build_IsInitialMorphism_uncurried
+             (C^op)
+             (D^op)
+             X
+             (U^op).
     End IntroductionAbstractionBarrier.
 
-    Section AbstractionBarrier.
+    Section EliminationAbstractionBarrier.
       Variable Ap : object (U / X).
       Variable M : IsTerminalMorphism Ap.
 
@@ -221,7 +362,26 @@ Section UniversalMorphism.
           Contr { m : morphism D Y IsTerminalMorphism_object
                 | IsTerminalMorphism_morphism o morphism_of U m = f }
         := @IsInitialMorphism_property C^op D^op X U^op (op_object Ap) M.
-    End AbstractionBarrier.
+      Definition IsTerminalMorphism_property_morphism
+      : forall (Y : D) (f : morphism C (U Y) X),
+          morphism D Y IsTerminalMorphism_object
+        := @IsInitialMorphism_property_morphism
+             C^op D^op X U^op (op_object Ap) M.
+      Definition IsTerminalMorphism_property_morphism_property
+      : forall (Y : D) (f : morphism C (U Y) X),
+          IsTerminalMorphism_morphism
+            o (morphism_of U (IsTerminalMorphism_property_morphism Y f))
+          = f
+        := @IsInitialMorphism_property_morphism_property
+             C^op D^op X U^op (op_object Ap) M.
+      Definition IsTerminalMorphism_property_morphism_unique
+      : forall (Y : D) (f : morphism C (U Y) X)
+               m'
+               (H : IsTerminalMorphism_morphism o morphism_of U m' = f),
+          IsTerminalMorphism_property_morphism Y f = m'
+        := @IsInitialMorphism_property_morphism_unique
+             C^op D^op X U^op (op_object Ap) M.
+    End EliminationAbstractionBarrier.
   End TerminalMorphism.
 
   Section UniversalMorphism.
