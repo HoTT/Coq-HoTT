@@ -137,7 +137,6 @@ apply (equiv_biinv_equiv _).  exact PowisoFam.
 Qed.
 
 (* We construct the universal diagram for the object classifier *)
-Definition pointedType:= { u:Type & u }.
 Definition topmap {B} (f:B->A) (b:B): pointedType :=
   (hfiber f (f b) ; (b ; idpath (f b))).
 Let help_objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P) ->
