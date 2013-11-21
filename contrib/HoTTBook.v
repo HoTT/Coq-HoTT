@@ -144,7 +144,7 @@ Definition Book_2_1_6 := @HoTT.PathGroupoids.eckmann_hilton.
 (* ================================================== def:pointedtype *)
 (* Definition 2.1.7, page 68 *)
 
-Definition Book_2_1_7 := @HoTT.types.ObjectClassifier.pointedType.
+Definition Book_2_1_7 := @HoTT.Overture.pointedType.
 
 (* ================================================== def:loopspace *)
 (* Definition 2.1.8, page 68 *)
@@ -172,37 +172,39 @@ Definition Book_2_3_1 := @HoTT.Overture.transport.
 (* ================================================== thm:path-lifting *)
 (* Lemma 2.3.2, page 70 *)
 
+(* special case of *)
+Definition Book_2_3_2 := @HoTT.types.Sigma.equiv_path_sigma.
 
 
 (* ================================================== lem:mapdep *)
 (* Lemma 2.3.4, page 71 *)
 
-
+Definition Book_2_3_4 := @HoTT.Overture.apD.
 
 (* ================================================== thm:trans-trivial *)
 (* Lemma 2.3.5, page 72 *)
 
-
+Definition Book_2_3_5 := @HoTT.PathGroupoids.transport_const.
 
 (* ================================================== thm:apd-const *)
 (* Lemma 2.3.8, page 72 *)
 
-
+Definition Book_2_3_8 := @HoTT.PathGroupoids.apD_const.
 
 (* ================================================== thm:transport-compose *)
 (* Lemma 2.3.10, page 73 *)
 
-
+Definition Book_2_3_10 := @HoTT.PathGroupoids.transport_compose.
 
 (* ================================================== thm:ap-transport *)
 (* Lemma 2.3.11, page 73 *)
 
-
+Definition Book_2_3_11 := @HoTT.PathGroupoids.ap_transport.
 
 (* ================================================== thm:transport-concat *)
 (* Lemma 2.3.9, page 73 *)
 
-
+Definition Book_2_3_9 := @HoTT.PathGroupoids.transport_pp.
 
 (* ================================================== defn:homotopy *)
 (* Definition 2.4.1, page 74 *)
@@ -262,7 +264,7 @@ Definition Book_2_3_1 := @HoTT.Overture.transport.
 (* ================================================== thm:path-sigma *)
 (* Theorem 2.7.2, page 81 *)
 
-
+Definition Book_2_7_2 := @HoTT.types.Sigma.equiv_path_sigma.
 
 (* ================================================== thm:eta-sigma *)
 (* Corollary 2.7.3, page 82 *)
