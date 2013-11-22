@@ -55,6 +55,8 @@ Definition Book_1_1 := @compose.
 (* ================================================== ex:iterator *)
 (* Exercise 1.4, page 55 *)
 
+
+
 (* ================================================== ex:ackermann *)
 (* Exercise 1.10, page 56 *)
 
@@ -175,7 +177,6 @@ Definition Book_2_3_1 := @HoTT.Overture.transport.
 (* special case of *)
 Definition Book_2_3_2 := @HoTT.types.Sigma.equiv_path_sigma.
 
-
 (* ================================================== lem:mapdep *)
 (* Lemma 2.3.4, page 71 *)
 
@@ -209,20 +210,25 @@ Definition Book_2_3_9 := @HoTT.PathGroupoids.transport_pp.
 (* ================================================== defn:homotopy *)
 (* Definition 2.4.1, page 74 *)
 
-
+Definition Book_2_4_1 := @HoTT.Overture.pointwise_paths.
 
 (* ================================================== lem:homotopy-props *)
 (* Lemma 2.4.2, page 74 *)
 
-
+Definition Book_2_4_2 := @HoTT.Overture.pointwise_paths.
 
 (* ================================================== lem:htpy-natural *)
 (* Lemma 2.4.3, page 74 *)
 
-
+Definition Book_2_4_3 := @HoTT.PathGroupoids.concat_Ap.
 
 (* ================================================== cor:hom-fg *)
 (* Corollary 2.4.4, page 74 *)
+
+Definition Book_2_4_4 := @HoTT.PathGroupoids.concat_A1p.
+
+(* ================================================== defn:quasi-inverse *)
+(* Definition 2.4.6, page 75 *)
 
 
 
@@ -269,17 +275,18 @@ Definition Book_2_7_2 := @HoTT.types.Sigma.equiv_path_sigma.
 (* ================================================== thm:eta-sigma *)
 (* Corollary 2.7.3, page 82 *)
 
-
+Definition Book_2_7_3 := @HoTT.types.Sigma.eta_sigma.
 
 (* ================================================== transport-Sigma *)
 (* Theorem 2.7.4, page 82 *)
 
-
+Definition Book_2_7_4 := @HoTT.types.Sigma.transportD_is_transport.
 
 (* ================================================== thm:path-unit *)
 (* Theorem 2.8.1, page 83 *)
 
-
+Definition Book_2_8_1 := @HoTT.types.Unit.equiv_path_unit.
+Definition Book_2_8_1 := @HoTT.Overture.path_forall.
 
 (* ================================================== thm:dpath-arrow *)
 (* Lemma 2.9.6, page 85 *)
@@ -393,6 +400,11 @@ Definition Book_2_7_2 := @HoTT.types.Sigma.equiv_path_sigma.
 
 (* ================================================== ex:coprod-ump *)
 (* Exercise 2.9, page 101 *)
+
+
+
+(* ================================================== ex:strong-from-weak-funext *)
+(* Exercise 2.16, page 102 *)
 
 
 
@@ -967,7 +979,7 @@ Definition Book_2_7_2 := @HoTT.types.Sigma.equiv_path_sigma.
 
 
 (* ================================================== thm:apd2 *)
-(* Lemma 6.4.6, page 182 *)
+(* Lemma 6.4.6, page 183 *)
 
 
 
@@ -997,7 +1009,7 @@ Definition Book_2_7_2 := @HoTT.types.Sigma.equiv_path_sigma.
 
 
 (* ================================================== thm:trunc0-lump *)
-(* Lemma 6.9.2, page 194 *)
+(* Lemma 6.9.2, page 195 *)
 
 
 
@@ -1022,12 +1034,12 @@ Definition Book_2_7_2 := @HoTT.types.Sigma.equiv_path_sigma.
 
 
 (* ================================================== lem:quotient-when-canonical-representatives *)
-(* Lemma 6.10.8, page 197 *)
+(* Lemma 6.10.8, page 198 *)
 
 
 
 (* ================================================== thm:retraction-quotient *)
-(* Corollary 6.10.10, page 198 *)
+(* Corollary 6.10.10, page 199 *)
 
 
 
@@ -1037,12 +1049,12 @@ Definition Book_2_7_2 := @HoTT.types.Sigma.equiv_path_sigma.
 
 
 (* ================================================== thm:looptothe *)
-(* Corollary 6.10.13, page 199 *)
+(* Corollary 6.10.13, page 200 *)
 
 
 
 (* ================================================== thm:homotopy-groups *)
-(* Example 6.11.4, page 200 *)
+(* Example 6.11.4, page 201 *)
 
 
 
@@ -1062,47 +1074,47 @@ Definition Book_2_7_2 := @HoTT.types.Sigma.equiv_path_sigma.
 
 
 (* ================================================== thm:flattening-rect *)
-(* Lemma 6.12.4, page 206 *)
+(* Lemma 6.12.4, page 207 *)
 
 
 
 (* ================================================== thm:flattening-rectnd *)
-(* Lemma 6.12.5, page 207 *)
+(* Lemma 6.12.5, page 208 *)
 
 
 
 (* ================================================== thm:ap-sigma-rect-path-pair *)
-(* Lemma 6.12.7, page 208 *)
+(* Lemma 6.12.7, page 209 *)
 
 
 
 (* ================================================== thm:flattening-rectnd-beta-ppt *)
-(* Lemma 6.12.8, page 208 *)
+(* Lemma 6.12.8, page 209 *)
 
 
 
 (* ================================================== eg:unnatural-hit *)
-(* Example 6.13.1, page 210 *)
+(* Example 6.13.1, page 211 *)
 
 
 
 (* ================================================== ex:torus *)
-(* Exercise 6.1, page 212 *)
+(* Exercise 6.1, page 213 *)
 
 
 
 (* ================================================== ex:suspS1 *)
-(* Exercise 6.2, page 212 *)
+(* Exercise 6.2, page 213 *)
 
 
 
 (* ================================================== ex:torus-s1-times-s1 *)
-(* Exercise 6.3, page 212 *)
+(* Exercise 6.3, page 213 *)
 
 
 
 (* ================================================== ex:nspheres *)
-(* Exercise 6.4, page 212 *)
+(* Exercise 6.4, page 213 *)
 
 
 
@@ -1113,6 +1125,11 @@ Definition Book_2_7_2 := @HoTT.types.Sigma.equiv_path_sigma.
 
 (* ================================================== ex:unnatural-endomorphisms *)
 (* Exercise 6.9, page 213 *)
+
+
+
+(* ================================================== ex:funext-from-interval *)
+(* Exercise 6.10, page 214 *)
 
 
 
