@@ -23,8 +23,8 @@ git submodule update --init --recursive
 pushd coq-HoTT
 echo '$ ./configure -local '"$@"
 ./configure -local "$@"
-echo '$ make coqlight'
-make coqlight
+echo '$ make coqlight coqide'
+make coqlight coqide
 popd
 
 popd 1>/dev/null
