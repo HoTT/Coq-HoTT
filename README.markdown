@@ -46,7 +46,9 @@ you have code ready to join the main library.  When you make large changes, feel
 include timing information in your commit message; run
 `./etc/timing/make-pretty-timed-diff.sh && git commit -at ./time-of-build-both.log`, or
 see the comments at the top of `etc/timing/make-pretty-timed-diff.sh` for more detailed
-instructions and caveats.
+instructions and caveats.  Note that if you create a new file, you must update
+`Makefile_targets.mk`.  We suggest running `make strict` rather than just `make`, so that
+you will get an error if you forget.
 
 ## LICENSING
 

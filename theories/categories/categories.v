@@ -20,6 +20,7 @@ Require Comma.
 Require UniversalProperties.
 Require KanExtensions.
 Require Adjoint.
+Require Limits.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -41,6 +42,7 @@ Include Comma.Core.
 Include UniversalProperties.
 Include KanExtensions.
 Include Adjoint.Core.
+Include Limits.
 
 Require Export categories.Notations.
 
