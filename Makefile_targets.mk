@@ -220,3 +220,6 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Notations.v \
 	$(srcdir)/theories/categories/Utf8.v \
 	$(srcdir)/theories/categories/categories.v
+
+CONTRIB_VFILES = \
+	$(srcdir)/contrib/HoTTBook.v
