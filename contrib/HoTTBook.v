@@ -9,7 +9,7 @@
     This files is processed automagically by the etc/Book.py script. The
     script parses the file according to the markers present in it (the
     comment lines with many = signs followed by a LaTeX label). It
-    reorders the entries according to page numbers and it inserts
+    reorders the entries according to entry number X.Y.Z and inserts
     missing entries. You must therefore obey the following rules:
 
     1. Do not mess with the markers. If a LaTeX label has been renamed
@@ -77,6 +77,8 @@ Definition Book_1_1 := @compose.
 
 
 
+
+
 (* ================================================== ex:ackermann *)
 (* Exercise 1.10 *)
 
@@ -114,7 +116,7 @@ Definition Book_1_10 := ack.
 
 
 (* ================================================== ex:subtFromPathInd *)
-(* Exercise 1.15 *)
+(* Exercise 1.15 *)concat_A1p
 
 
 
@@ -174,55 +176,61 @@ Definition Book_2_3_1 := @HoTT.Overture.transport.
 (* ================================================== thm:path-lifting *)
 (* Lemma 2.3.2 *)
 
-
+(* special case of *)
+Definition Book_2_3_2 := @HoTT.types.Sigma.equiv_path_sigma.
 
 (* ================================================== lem:mapdep *)
 (* Lemma 2.3.4 *)
 
-
+Definition Book_2_3_4 := @HoTT.Overture.apD.
 
 (* ================================================== thm:trans-trivial *)
 (* Lemma 2.3.5 *)
 
-
+Definition Book_2_3_5 := @HoTT.PathGroupoids.transport_const.
 
 (* ================================================== thm:apd-const *)
 (* Lemma 2.3.8 *)
 
-
+Definition Book_2_3_8 := @HoTT.PathGroupoids.apD_const.
 
 (* ================================================== thm:transport-concat *)
 (* Lemma 2.3.9 *)
 
-
+Definition Book_2_3_10 := @HoTT.PathGroupoids.transport_compose.
 
 (* ================================================== thm:transport-compose *)
 (* Lemma 2.3.10 *)
 
-
+Definition Book_2_3_11 := @HoTT.PathGroupoids.ap_transport.
 
 (* ================================================== thm:ap-transport *)
 (* Lemma 2.3.11 *)
 
-
+Definition Book_2_3_9 := @HoTT.PathGroupoids.transport_pp.
 
 (* ================================================== defn:homotopy *)
 (* Definition 2.4.1 *)
 
-
+Definition Book_2_4_1 := @HoTT.Overture.pointwise_paths.
 
 (* ================================================== lem:homotopy-props *)
 (* Lemma 2.4.2 *)
 
-
+Definition Book_2_4_2 := @HoTT.Overture.pointwise_paths.
 
 (* ================================================== lem:htpy-natural *)
 (* Lemma 2.4.3 *)
 
-
+Definition Book_2_4_3 := @HoTT.PathGroupoids.concat_Ap.
 
 (* ================================================== cor:hom-fg *)
 (* Corollary 2.4.4 *)
+
+Definition Book_2_4_4 := @HoTT.PathGroupoids.concat_A1p.
+
+(* ================================================== defn:quasi-inverse *)
+(* Definition 2.4.6 *)
 
 
 
@@ -264,27 +272,27 @@ Definition Book_2_3_1 := @HoTT.Overture.transport.
 (* ================================================== thm:path-sigma *)
 (* Theorem 2.7.2 *)
 
-
+Definition Book_2_7_2 := @HoTT.types.Sigma.equiv_path_sigma.
 
 (* ================================================== thm:eta-sigma *)
 (* Corollary 2.7.3 *)
 
-
+Definition Book_2_7_3 := @HoTT.types.Sigma.eta_sigma.
 
 (* ================================================== transport-Sigma *)
 (* Theorem 2.7.4 *)
 
-
+Definition Book_2_7_4 := @HoTT.types.Sigma.transportD_is_transport.
 
 (* ================================================== thm:path-unit *)
 (* Theorem 2.8.1 *)
 
-
+Definition Book_2_8_1 := @HoTT.types.Unit.equiv_path_unit.
 
 (* ================================================== axiom:funext *)
 (* Axiom 2.9.3 *)
 
-
+Definition Book_2_8_1 := @HoTT.Overture.path_forall.
 
 (* ================================================== thm:dpath-arrow *)
 (* Lemma 2.9.6 *)
@@ -403,6 +411,11 @@ Definition Book_2_3_1 := @HoTT.Overture.transport.
 
 (* ================================================== ex:equality-reflection *)
 (* Exercise 2.14 *)
+
+
+
+(* ================================================== ex:strong-from-weak-funext *)
+(* Exercise 2.16, page 102 *)
 
 
 
@@ -1123,6 +1136,11 @@ Definition Book_2_3_1 := @HoTT.Overture.transport.
 
 (* ================================================== ex:unnatural-endomorphisms *)
 (* Exercise 6.9 *)
+
+
+
+(* ================================================== ex:funext-from-interval *)
+(* Exercise 6.10, page 214 *)
 
 
 
