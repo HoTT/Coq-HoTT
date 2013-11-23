@@ -26,9 +26,9 @@ AC_ARG_VAR([COQBIN], [the directory that contains the Coq executables])
 # some shells get confused if $foo is a weird character like '!' or
 # '-n'
 AS_IF([test "x$COQBIN" != "x"],
-      [AC_MSG_NOTICE([Will first look for Coq executables in $COQBIN])
-       COQBIN_WITH_SEP="$COQBIN$PATH_SEPARATOR"],
-      [COQBIN_WITH_SEP=""])
+      [AC_MSG_NOTICE([Will look for Coq executables only in $COQBIN])
+       COQBIN_PATH="$COQBIN"],
+      [COQBIN_PATH="$PATH"])
 
 # Checking for coqtop
 AC_ARG_VAR([COQTOP], [the absolute path of the coqtop executable])
@@ -36,7 +36,7 @@ AS_IF([test "x$COQTOP" != "x"],
       [AC_MSG_CHECKING([for coqtop])
        AC_MSG_RESULT([(preset) $COQTOP])
        AC_SUBST([COQTOP])],
-      [AC_PATH_PROG([COQTOP],[coqtop],[no],[$COQBIN_WITH_SEP$PATH])])
+      [AC_PATH_PROG([COQTOP],[coqtop],[no],[$COQBIN_PATH])])
 
 AS_IF([test "x$COQTOP" = "xno"],
       [AC_MSG_ERROR([Could not find coqtop])],
@@ -71,7 +71,7 @@ AS_IF([test "x$COQC" != "x"],
       [AC_MSG_CHECKING([for coqc])
        AC_MSG_RESULT([(preset) $COQC])
        AC_SUBST([COQC])],
-      [AC_PATH_PROG([COQC],[coqc],[no],[$COQBIN$PATH_SEPARATOR$PATH])])
+      [AC_PATH_PROG([COQC],[coqc],[no],[$COQBIN_PATH])])
 
 AS_IF([test "x$COQC" = "xno"],
       [AC_MSG_ERROR([Could not find coqc])],
@@ -110,7 +110,7 @@ AS_IF([test "x$make_coqide" = "xno"],
              [AC_MSG_CHECKING([for coqide])
               AC_MSG_RESULT([(preset) $COQIDE])
               AC_SUBST([COQIDE])],
-             [AC_PATH_PROG([COQIDE],[coqide],[no],[$COQBIN$PATH_SEPARATOR$PATH])])
+             [AC_PATH_PROG([COQIDE],[coqide],[no],[$COQBIN_PATH])])
        AS_IF([test "x$COQIDE" = "xno"],
              [AC_MSG_NOTICE([Could not find coqide, will not make hoqide])
               make_coqide="no"],
@@ -130,7 +130,7 @@ AS_IF([test "x$COQDEP" != "x"],
       [AC_MSG_CHECKING([for coqdep])
        AC_MSG_RESULT([(preset) $COQDEP])
        AC_SUBST([COQDEP])],
-      [AC_PATH_PROG([COQDEP],[coqdep],[no],[$COQBIN$PATH_SEPARATOR$PATH])])
+      [AC_PATH_PROG([COQDEP],[coqdep],[no],[$COQBIN_PATH])])
 
 AS_IF([test "x$COQDEP" = "xno"],
       [AC_MSG_ERROR([Could not find coqdep])])
@@ -142,7 +142,7 @@ AS_IF([test "x$COQDOC" != "x"],
       [AC_MSG_CHECKING([for coqdoc])
        AC_MSG_RESULT([(preset) $COQDOC])
        AC_SUBST([COQDOC])],
-      [AC_PATH_PROG([COQDOC],[coqdoc],[no],[$COQBIN$PATH_SEPARATOR$PATH])])
+      [AC_PATH_PROG([COQDOC],[coqdoc],[no],[$COQBIN_PATH])])
 
 AS_IF([test "x$COQDOC" = "xno"],
       [AC_MSG_ERROR([Could not find coqdoc])])
@@ -153,7 +153,7 @@ AS_IF([test "x$COQMAKEFILE" != "x"],
       [AC_MSG_CHECKING([for coq_makefile])
        AC_MSG_RESULT([(preset) $COQMAKEFILE])
        AC_SUBST([COQMAKEFILE])],
-      [AC_PATH_PROG([COQMAKEFILE],[coq_makefile],[no],[$COQBIN$PATH_SEPARATOR$PATH])])
+      [AC_PATH_PROG([COQMAKEFILE],[coq_makefile],[no],[$COQBIN_PATH])])
 
 AS_IF([test "x$COQMAKEFILE" = "xno"],
       [AC_MSG_ERROR([Could not find coq_makefile])])

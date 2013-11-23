@@ -10,13 +10,23 @@
 import re
 import sys
 import argparse
+from argparse import RawTextHelpFormatter
 import shutil
 import os
 
+description = """
+Process the HoTTBook.v file and refresh with respect to the
+HoTT book *.aux files. The script expects the content of 
+*.aux files on stdandard input. Typical use:
+
+  cat ../book/*.aux | etc/Book.py contrib/HoTTBook.v
+
+"""
+
 # Parse command line arguments
-parser = argparse.ArgumentParser(description = "Munch HoTTBook.v")
+parser = argparse.ArgumentParser(description = description, add_help=True, formatter_class=RawTextHelpFormatter)
 parser.add_argument ("--debug", action='store_true', help='Print debugging info', default=False)
-parser.add_argument ("file", help='the Coq file that should be processed')
+parser.add_argument ("file", help='the Coq file that should be processed\n(probably contrib/HoTTBook.v)')
 
 args = parser.parse_args()
 
@@ -28,15 +38,16 @@ def log(msg):
     if args.debug: print("Line {0}: {1}".format(lineno, msg))
 
 def warn(msg):
-    print("WARNING: {0}".format(msg))
+    print("\n **** WARNING: {0}\n".format(msg))
 
 def die(msg):
-    print("FATAL ERROR: {0}".format(msg))
+    print("\n ***** FATAL ERROR: {0}\n".format(msg))
     sys.exit(1)
 
 
 # Mapping from envirnment names to names, and flag indicating whether it is formalizable
 envname = { 
+    'axiom' :      ('Axiom', True),
     'chapter' :    ('Chapter', False),
     'cor' :        ('Corollary', True),
     'defn' :       ('Definition', True),
@@ -49,6 +60,7 @@ envname = {
     'rmk' :        ('Remark', False),
     'section' :    ('Section', False),
     'subsection' : ('Subsection', False),
+    'symindex' :   ('Symbol index', False),
     'table' :      ('Table', False),
     'thm' :        ('Theorem', True)
 }
@@ -59,6 +71,9 @@ entries = {}
 # The regular expression which matches a label line in a *.aux file
 r = re.compile(r"\\newlabel{([a-zA-Z0-9:=_-]+)}{{([0-9.]+)}{([0-9]+)}{[^}]*}{([a-z]+)\.[^}]*}{[^}]*}}")
 
+print """Reading content of *.aux files from standard input...
+(If you see this press Ctrl-C, read help with --help option, and try agian.)""",
+
 for line in sys.stdin:
     lineno = lineno + 1
     m = r.match(line)
@@ -68,24 +83,27 @@ for line in sys.stdin:
             badlabel = badlabel + 1
             continue
         label = m.group(1)
-        number = m.group(2)
+        number = map(int, m.group(2).split("."))
         page = int(m.group(3))
         typ = envname[m.group(4)]
         if not typ[1]: continue # entry not formalizable, skip
-        log ('match: label = {0}, number = {1}, page = {2}, type = {3}'.format(label, number, page, typ[0]))
+        log ('match: label = {0}, number = {1}, page = {2}, type = {3}'.format(
+            label, number, page, typ[0]))
         if label in entries:
             warn ('duplicate label {0} in *.aux files'.format(label))
         entries[label] = { 'number' : number, 'page' : page, 'typ' : typ[0] }
     else:
         skipped = skipped + 1
 
-print ("\nStatistics:\n{0} lines of input\n{1} lines skipped\n{2} labels found\n{3} labels confused me\n".format(lineno,skipped,len(entries), badlabel))
+print "\r {0}".format(" " * 80)
+
+print ("Statistics:\n{0} lines of input\n{1} lines skipped\n{2} labels found\n{3} labels confused me\n".format(lineno,skipped,len(entries), badlabel))
 
 #### Now we munch the file
 
 print ("Reading {0}".format(args.file))
 
-# Read the whole file (line by line processing is so 1970's)
+# Read the whole file in one go (doing things line by line is so 1970's)
 with open(args.file, "r") as f:
     coqfile = f.read()
 
@@ -112,15 +130,14 @@ while snippets:
         die ('duplicate entry {0} found in Coq file, please fix this first.'.format(label))
     entries[label]['content'] = content
 
-print ("Found {0} labels in the Coq file".format(k))
-
 #### Regenerate the output file
 newentry = []
 
 coqfile = preamble + "\n"
 
 # Process entries sorted by page number
-for label in sorted(entries.keys(), key = lambda k: (entries[k]['page'], entries[k]['number'])):
+for label in sorted(entries.keys(),
+                    key = lambda k: (entries[k]['page'], entries[k]['number'])):
     entry = entries[label]
     if 'content' in entry:
         # Fix old content
@@ -128,14 +145,28 @@ for label in sorted(entries.keys(), key = lambda k: (entries[k]['page'], entries
         # Strip the comment on the first line
         content = content[content.index('\n')+1:]
         # Update Book_X_Y_Z
-        book = "_".join(entry['number'].split("."))
+        book = "_".join(map(str,entry['number']))
         content = re.sub('Book_[0-9_]*[0-9]', 'Book_{0}'.format(book), content)
+        # It is a common error to write things like Lemma_X_Y_Z instead of Book_X_Y_Z,
+        # so we warn about those.
+        suspect_names = "|".join(['Axiom',
+                                  'Corollary',
+                                  'Example',
+                                  'Exercise',
+                                  'Lemma',
+                                  'Remark',
+                                  'Theorem'])
+        suspect = re.search('({0})_[0-9]*[0-9]'.format(suspect_names), content)
+        if suspect:
+            better = re.sub('({0})'.format(suspect_names), 'Book', suspect.group(0))
+            warn ('You wrote "{0}", should it not be "{1}"?'.format(suspect.group(0), better))
     else:
         # Genereate new content
         content = ''
         newentry.append(label)
     # Put in the correct first line
-    content = "(* {0} {1}, page {2} *)\n\n{3}\n\n".format(entry['typ'], entry['number'], entry['page'], content.strip())
+    content = "(* {0} {1} *)\n\n{2}\n\n".format(
+        entry['typ'], '.'.join(map(str,entry['number'])), content.strip())
     coqfile += '(* {0} {1} *)\n{2}'.format('=' * 50, label, content)
 
 if newentry: print ("New entries: {0}".format(newentry))
