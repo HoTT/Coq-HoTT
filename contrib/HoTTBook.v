@@ -35,7 +35,7 @@
        please use that one, even if it is not exactly the same.
 *)
 
-Require Import HoTT HoTT.types.ObjectClassifier.
+Require Import HoTT.
 
 (* ================================================== ex:composition *)
 (* Exercise 1.1 *)
@@ -116,8 +116,9 @@ Definition Book_1_10 := ack.
 
 
 (* ================================================== ex:subtFromPathInd *)
-(* Exercise 1.15 *)concat_A1p
+(* Exercise 1.15 *)
 
+(* concat_A1p? *)
 
 
 (* ================================================== lem:opp *)
@@ -292,7 +293,7 @@ Definition Book_2_8_1 := @HoTT.types.Unit.equiv_path_unit.
 (* ================================================== axiom:funext *)
 (* Axiom 2.9.3 *)
 
-Definition Book_2_8_1 := @HoTT.Overture.path_forall.
+Definition Book_2_9_3 := @HoTT.Overture.path_forall.
 
 (* ================================================== thm:dpath-arrow *)
 (* Lemma 2.9.6 *)
@@ -2536,6 +2537,3 @@ Definition Book_2_8_1 := @HoTT.Overture.path_forall.
 
 (* ================================================== ex:mean-value-theorem *)
 (* Exercise 11.13 *)
-
-
-
