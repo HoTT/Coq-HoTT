@@ -7,6 +7,17 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+(** * Pointwise Natural Transformations
+
+    Recall that a "pointwise" functor is a functor [Aᴮ → Cᴰ] induced
+    by functors [D → B] and [A → C].  Given two functors [D → B] and a
+    natural transformation between them, there is an induced natural
+    transformation between the resulting functors between functor
+    categories, and similarly for two functors [A → C].  In this file,
+    we construct these natural transformations. They will be used to
+    construct the pointwise induced adjunction [Fˣ ⊣ Gˣ] of an
+    adjunction [F ⊣ G] for all categories [X]. *)
+
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 Local Open Scope functor_scope.
