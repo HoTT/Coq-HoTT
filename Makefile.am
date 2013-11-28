@@ -68,7 +68,7 @@ CATEGORY_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/H
 CONTRIB_VOFILES=$(CONTRIB_VFILES:.v=.vo)
 CONTRIB_GLOBFILES=$(CONTRIB_VFILES:.v=.glob)
 CONTRIB_DEPFILES=$(CONTRIB_VFILES:.v=.d)
-CONTRIB_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).%,$(srcdir)/html/%,$(subst /,.,$(CONTRIB_VFILES:.v=.html)))
+CONTRIB_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).contrib.%,$(srcdir)/html/%,$(subst /,.,$(CONTRIB_VFILES:.v=.html)))
 
 # I'm not sure why we needs = rather than :=, but we seem to
 ALL_BUILT_HOTT_VFILES = $(STD_VFILES) $(CORE_VFILES) $(CATEGORY_VFILES)
