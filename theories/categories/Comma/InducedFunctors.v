@@ -31,6 +31,17 @@ Section comma_category_induced_functor.
          (CommaCategory.b x)
          ((snd m) (CommaCategory.b x) o CommaCategory.f x o (fst m) (CommaCategory.a x)).
 
+  Lemma comma_category_induced_functor_object_of_identity s x
+  : comma_category_induced_functor_object_of (Category.Core.identity s) x
+    = x.
+  Proof.
+    let x1 := match goal with |- ?x1 = ?x2 => constr:(x1) end in
+    let x2 := match goal with |- ?x1 = ?x2 => constr:(x2) end in
+    apply (CommaCategory.path_object' x1 x2 idpath idpath).
+    simpl.
+    abstract (rewrite ?left_identity, ?right_identity; reflexivity).
+  Defined.
+
   Definition comma_category_induced_functor_morphism_of s d m s0 d0
              (m0 : morphism (fst s / snd s) s0 d0)
   : morphism (fst d / snd d)
