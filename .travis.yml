@@ -22,6 +22,7 @@ env:
 
 before_script:
  - ./etc/ci/before_script.sh
+ - ./etc/ci/travis_keep_alive.sh
 
 
 install:
