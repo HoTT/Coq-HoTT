@@ -206,6 +206,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Comma/Dual.v \
 	$(srcdir)/theories/categories/Comma/Projection.v \
 	$(srcdir)/theories/categories/Comma/InducedFunctors.v \
+	$(srcdir)/theories/categories/Comma/ProjectionFunctors.v \
 	$(srcdir)/theories/categories/Comma/Comma.v \
 	\
 	$(srcdir)/theories/categories/UniversalProperties.v \
