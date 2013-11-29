@@ -22,7 +22,7 @@ env:
 
 before_script:
  - ./etc/ci/before_script.sh
- - ./etc/ci/travis_keep_alive.sh
+ - export PID_KEEP_ALIVE="$(./etc/ci/keep_alive.sh & echo "$!")"
 
 
 install:
@@ -38,3 +38,4 @@ script: "./autogen.sh && ./configure && make strict-test && ./etc/timing/make-pr
 
 after_success:
  - ./etc/ci/after_success.sh
+ - kill $PID_KEEP_ALIVE
