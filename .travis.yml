@@ -22,7 +22,7 @@ env:
 
 before_script:
  - ./etc/ci/before_script.sh
- - export PID_KEEP_ALIVE="$(./etc/ci/keep_alive.sh & echo "$!")"
+ - source ./etc/ci/travis_keep_alive.sh
 
 
 install:
