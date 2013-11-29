@@ -102,7 +102,7 @@ Section comma.
     path_functor.
     simpl.
     exists (path_forall _ _ (comma_category_induced_functor_object_of_compose m' m)).
-    admit. (*abstract comma_laws_t.*)
+    abstract comma_laws_t.
   Qed.
 
   Definition comma_category_projection_functor
