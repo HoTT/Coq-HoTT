@@ -77,8 +77,6 @@ Definition Book_1_1 := @compose.
 
 
 
-
-
 (* ================================================== ex:ackermann *)
 (* Exercise 1.10 *)
 
@@ -116,7 +114,7 @@ Definition Book_1_10 := ack.
 
 
 (* ================================================== ex:subtFromPathInd *)
-(* Exercise 1.15 *)concat_A1p
+(* Exercise 1.15 *)
 
 
 
@@ -197,17 +195,17 @@ Definition Book_2_3_8 := @HoTT.PathGroupoids.apD_const.
 (* ================================================== thm:transport-concat *)
 (* Lemma 2.3.9 *)
 
-Definition Book_2_3_10 := @HoTT.PathGroupoids.transport_compose.
+Definition Book_2_3_9 := @HoTT.PathGroupoids.transport_compose.
 
 (* ================================================== thm:transport-compose *)
 (* Lemma 2.3.10 *)
 
-Definition Book_2_3_11 := @HoTT.PathGroupoids.ap_transport.
+Definition Book_2_3_10 := @HoTT.PathGroupoids.ap_transport.
 
 (* ================================================== thm:ap-transport *)
 (* Lemma 2.3.11 *)
 
-Definition Book_2_3_9 := @HoTT.PathGroupoids.transport_pp.
+Definition Book_2_3_11 := @HoTT.PathGroupoids.transport_pp.
 
 (* ================================================== defn:homotopy *)
 (* Definition 2.4.1 *)
@@ -292,7 +290,7 @@ Definition Book_2_8_1 := @HoTT.types.Unit.equiv_path_unit.
 (* ================================================== axiom:funext *)
 (* Axiom 2.9.3 *)
 
-Definition Book_2_8_1 := @HoTT.Overture.path_forall.
+Definition Book_2_9_3 := @HoTT.Overture.path_forall.
 
 (* ================================================== thm:dpath-arrow *)
 (* Lemma 2.9.6 *)
@@ -415,7 +413,7 @@ Definition Book_2_8_1 := @HoTT.Overture.path_forall.
 
 
 (* ================================================== ex:strong-from-weak-funext *)
-(* Exercise 2.16, page 102 *)
+(* Exercise 2.16 *)
 
 
 
@@ -1140,7 +1138,7 @@ Definition Book_2_8_1 := @HoTT.Overture.path_forall.
 
 
 (* ================================================== ex:funext-from-interval *)
-(* Exercise 6.10, page 214 *)
+(* Exercise 6.10 *)
 
 
 
