@@ -42,6 +42,26 @@ Section comma_category_induced_functor.
     abstract (rewrite ?left_identity, ?right_identity; reflexivity).
   Defined.
 
+  Definition comma_category_induced_functor_object_of_compose s d d'
+             (m : morphism ((A -> C)^op * (B -> C)) d d')
+             (m' : morphism ((A -> C)^op * (B -> C)) s d)
+             x
+  : comma_category_induced_functor_object_of (m o m') x
+    = comma_category_induced_functor_object_of
+        m
+        (comma_category_induced_functor_object_of m' x).
+  Proof.
+    let x1 := match goal with |- ?x1 = ?x2 => constr:(x1) end in
+    let x2 := match goal with |- ?x1 = ?x2 => constr:(x2) end in
+    apply (CommaCategory.path_object' x1 x2 idpath idpath).
+    abstract (
+        destruct m', m, x;
+        simpl in *;
+          rewrite !associativity;
+        reflexivity
+      ).
+  Defined.
+
   Definition comma_category_induced_functor_morphism_of s d m s0 d0
              (m0 : morphism (fst s / snd s) s0 d0)
   : morphism (fst d / snd d)
