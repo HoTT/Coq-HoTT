@@ -17,36 +17,6 @@ Set Asymmetric Patterns.
 
 Local Open Scope category_scope.
 
-(*Local Ltac quick_step :=
-  try ((progress repeat subst)
-         || (apply sig_eq; simpl)
-         || (apply CommaCategory_Morphism_eq; simpl)
-         || (apply CommaCategory_Morphism_JMeq; simpl)
-         || (apply CommaCategory_Object_eq; simpl)
-         || apply f_equal
-         || (apply f_equal2; trivial; []));
-  trivial.
-
-Local Ltac pre_anihilate :=
-  subst_body;
-  repeat intro;
-  repeat quick_step;
-  simpl in *;
-  destruct_head_hnf @CommaCategory_Morphism;
-  destruct_head_hnf @CommaCategory_Object;
-  destruct_head_hnf @prod;
-  subst_body;
-  simpl in *;
-  trivial.
-
-Local Ltac anihilate :=
-  pre_anihilate;
-  try apply Functor_eq;
-  simpl; intros;
-  repeat quick_step;
-  autorewrite with morphism;
-  trivial.
-*)
 Section comma.
   Context `{Funext}.
 
