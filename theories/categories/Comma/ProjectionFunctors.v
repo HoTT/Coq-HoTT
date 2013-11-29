@@ -102,7 +102,7 @@ Section comma.
     path_functor.
     simpl.
     exists (path_forall _ _ (comma_category_induced_functor_object_of_compose m' m)).
-    abstract comma_laws_t.
+    admit. (*abstract comma_laws_t.*)
   Qed.
 
   Definition comma_category_projection_functor
@@ -136,28 +136,31 @@ Section slice_category_projection_functor.
   Local Open Scope functor_scope.
   Local Open Scope category_scope.
 
-  Definition slice_category_projection_functor_pre_pre
-  : Functor (Cat / ((C * 1; PC1) : Cat)) (Cat / ((C; PC) : Cat))
-    := cat_over_induced_functor
-         (ProductLaws.Law1.functor C : morphism Cat (C * 1; PC1) (C; PC)).
-
-  Definition slice_category_projection_functor_pre
-  : object ((C -> D)^op * D -> (Cat / ((C; PC) : Cat))).
-  Proof.
-    refine (_ o (Functor.Identity.identity (C -> D)^op,
-                 ExponentialLaws.Law1.Functors.inverse D)).
-    refine (_ o @comma_category_projection_functor _ P HF C 1 D PC1 P_comma).
-    exact slice_category_projection_functor_pre_pre.
-  Defined.
-
   Definition slice_category_projection_functor
   : object (((C -> D)^op) -> (D -> (Cat / ((C; PC) : Cat)))).
   Proof.
     refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).
-    exact slice_category_projection_functor_pre.
+    refine (_ o (Functor.Identity.identity (C -> D)^op,
+                 ExponentialLaws.Law1.Functors.inverse D)).
+    refine (_ o @comma_category_projection_functor _ P HF C 1 D PC1 P_comma).
+    refine (cat_over_induced_functor _).
+    hnf.
+    exact (ProductLaws.Law1.functor _).
   Defined.
 
   Definition coslice_category_projection_functor
+  : object ((C -> D)^op -> (D -> (Cat / ((C; PC) : Cat)))).
+  Proof.
+    refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).
+    refine (_ o (Functor.Identity.identity (C -> D)^op,
+                 ExponentialLaws.Law1.Functors.inverse D)).
+    refine (_ o @comma_category_projection_functor _ P HF C 1 D PC1 P_comma).
+    refine (cat_over_induced_functor _).
+    hnf.
+    exact (ProductLaws.Law1.functor _).
+  Defined.
+
+  Definition slice_category_projection_functor'
   : object ((C -> D) -> (D^op -> (Cat / ((C; PC) : Cat)))).
   Proof.
     refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).
@@ -167,7 +170,19 @@ Section slice_category_projection_functor.
     refine (_ o @comma_category_projection_functor _ P HF 1 C D P1C P_comma').
     refine (cat_over_induced_functor _).
     hnf.
+    exact (ProductLaws.Law1.functor' _).
+  Defined.
+
+  Definition coslice_category_projection_functor'
+  : object ((C -> D) -> (D^op -> (Cat / ((C; PC) : Cat)))).
+  Proof.
+    refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).
+    refine (_ o (Functor.Identity.identity (C -> D),
+                 (ExponentialLaws.Law1.Functors.inverse D)^op)).
     refine (_ o ProductLaws.Swap.functor _ _).
-    exact (ProductLaws.Law1.functor _).
+    refine (_ o @comma_category_projection_functor _ P HF 1 C D P1C P_comma').
+    refine (cat_over_induced_functor _).
+    hnf.
+    exact (ProductLaws.Law1.functor' _).
   Defined.
 End slice_category_projection_functor.
