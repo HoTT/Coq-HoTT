@@ -212,6 +212,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Comma/Comma.v \
 	\
 	$(srcdir)/theories/categories/Pseudofunctor/Core.v \
+	$(srcdir)/theories/categories/Pseudofunctor/FromFunctor.v \
 	$(srcdir)/theories/categories/Pseudofunctor/Pseudofunctor.v \
 	\
 	$(srcdir)/theories/categories/UniversalProperties.v \
