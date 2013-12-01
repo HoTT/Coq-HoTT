@@ -143,12 +143,14 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/NaturalTransformation/Dual.v \
 	$(srcdir)/theories/categories/NaturalTransformation/Sum.v \
 	$(srcdir)/theories/categories/NaturalTransformation/Pointwise.v \
-	$(srcdir)/theories/categories/NaturalTransformation/Notations.v \
-	$(srcdir)/theories/categories/NaturalTransformation/Utf8.v \
-	$(srcdir)/theories/categories/NaturalTransformation/NaturalTransformation.v \
 	\
 	$(srcdir)/theories/categories/FunctorCategory/Morphisms.v \
 	$(srcdir)/theories/categories/FunctorCategory/Notations.v \
+	\
+	$(srcdir)/theories/categories/NaturalTransformation/Isomorphisms.v \
+	$(srcdir)/theories/categories/NaturalTransformation/Notations.v \
+	$(srcdir)/theories/categories/NaturalTransformation/Utf8.v \
+	$(srcdir)/theories/categories/NaturalTransformation/NaturalTransformation.v \
 	\
 	$(srcdir)/theories/categories/Profunctor/Core.v \
 	$(srcdir)/theories/categories/Profunctor/Identity.v \
@@ -208,6 +210,9 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Comma/InducedFunctors.v \
 	$(srcdir)/theories/categories/Comma/ProjectionFunctors.v \
 	$(srcdir)/theories/categories/Comma/Comma.v \
+	\
+	$(srcdir)/theories/categories/Pseudofunctor/Core.v \
+	$(srcdir)/theories/categories/Pseudofunctor/Pseudofunctor.v \
 	\
 	$(srcdir)/theories/categories/UniversalProperties.v \
 	\
