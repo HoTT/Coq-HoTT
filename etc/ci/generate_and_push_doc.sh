@@ -6,9 +6,9 @@ pushd "$DIR" 1>/dev/null
 
 # now change to the git root
 ROOT_DIR="$(git rev-parse --show-toplevel)"
-pushd "$ROOT_DIR" 1>/dev/null
+cd "$ROOT_DIR" 1>/dev/null
 
-"$DIR"/add_upstream.sh
+#"$DIR"/add_upstream.sh
 # copy the push_remote script so it stays around after we change branches
 cp "$DIR"/{push_remote,push_remote_tmp}.sh
 
@@ -18,14 +18,7 @@ if [ -z "$UPDATE_HTML" ]; then
     exit 0
 fi
 
-# only make the html with -f, or if we're the same as origin/master
-if [ "$1" != "-f" ]; then
-    git remote update
-    if [ ! -z "$(git diff origin/master)" ]; then
-	echo "Not making html beause we do not match with origin/master; call '$0 -f' to force"
-	exit 0
-    fi
-fi
+EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 
 echo 'Configuring git for pushing...'
 git config --global user.name "Travis-CI Bot"
@@ -37,7 +30,7 @@ Generated with \`make html proviola\`"
 
 echo '$ make html'
 make html
-make proviola -j16 -k
+make proviola -j2 -k
 mv proviola-html proviola-html-bak
 echo '$ git checkout -b gh-pages upstream/gh-pages'
 git checkout -b gh-pages upstream/gh-pages
@@ -50,11 +43,10 @@ git add proviola-html/*
 echo '$ git commit -am "'"$MESSAGE"'"'
 git commit -m "$MESSAGE"
 # use the copy of the script which stayed around when we changed branches
-source "$DIR"/push_remote_tmp.sh gh-pages:gh-pages
+"$DIR"/push_remote_tmp.sh gh-pages:gh-pages $EXTRA_ARGS
 
 # checkout the original commit
 echo '$ git checkout HEAD@{2}'
 git checkout HEAD@{2} -f
 
-popd 1>/dev/null
 popd 1>/dev/null

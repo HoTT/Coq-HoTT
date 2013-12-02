@@ -108,10 +108,12 @@ with open(args.file, "r") as f:
     coqfile = f.read()
 
 # Break it up
-snippets = re.split(r'^\s*\(\* =======+ ([A-Za-z0-9:=_-]+) \*\)\s*$', coqfile, flags=re.MULTILINE)
+(preamble, rest) = re.split(r'^\(\* END OF PREAMBLE \*\)\s*$', coqfile, flags=re.MULTILINE)
 
-# Get the preamble
-preamble = snippets.pop(0)
+snippets = re.split(r'^\s*\(\* =======+ ([A-Za-z0-9:=_-]+) \*\)\s*$', rest, flags=re.MULTILINE)
+
+# Pop the first snippet, as it is just an empty string
+snippets.pop(0)
 
 if len(preamble.split()) > 1000:
     die ('Why is the preamble longer than 1000 lines? Parsing error?')
@@ -133,7 +135,7 @@ while snippets:
 #### Regenerate the output file
 newentry = []
 
-coqfile = preamble + "\n"
+coqfile = preamble + "(* END OF PREAMBLE *)\n"
 
 # Process entries sorted by page number
 for label in sorted(entries.keys(),
@@ -165,7 +167,7 @@ for label in sorted(entries.keys(),
         content = ''
         newentry.append(label)
     # Put in the correct first line
-    content = "(* {0} {1} *)\n\n{2}\n\n".format(
+    content = "(** {0} {1} *)\n\n{2}\n\n".format(
         entry['typ'], '.'.join(map(str,entry['number'])), content.strip())
     coqfile += '(* {0} {1} *)\n{2}'.format('=' * 50, label, content)
 

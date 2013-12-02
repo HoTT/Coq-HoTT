@@ -142,6 +142,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/NaturalTransformation/Composition/Composition.v \
 	$(srcdir)/theories/categories/NaturalTransformation/Dual.v \
 	$(srcdir)/theories/categories/NaturalTransformation/Sum.v \
+	$(srcdir)/theories/categories/NaturalTransformation/Pointwise.v \
 	$(srcdir)/theories/categories/NaturalTransformation/Notations.v \
 	$(srcdir)/theories/categories/NaturalTransformation/Utf8.v \
 	$(srcdir)/theories/categories/NaturalTransformation/NaturalTransformation.v \
@@ -220,3 +221,6 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Notations.v \
 	$(srcdir)/theories/categories/Utf8.v \
 	$(srcdir)/theories/categories/categories.v
+
+CONTRIB_VFILES = \
+	$(srcdir)/contrib/HoTTBook.v

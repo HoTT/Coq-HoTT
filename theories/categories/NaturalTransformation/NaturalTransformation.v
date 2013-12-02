@@ -6,6 +6,7 @@ Require NaturalTransformation.Core.
 Require NaturalTransformation.Dual.
 Require NaturalTransformation.Identity.
 Require NaturalTransformation.Paths.
+Require NaturalTransformation.Pointwise.
 Require NaturalTransformation.Sum.
 
 Include NaturalTransformation.Composition.Core.
@@ -13,6 +14,7 @@ Include NaturalTransformation.Core.
 Include NaturalTransformation.Dual.
 Include NaturalTransformation.Identity.
 Include NaturalTransformation.Paths.
+Include NaturalTransformation.Pointwise.
 Include NaturalTransformation.Sum.
 (** We don't want to make utf-8 notations the default, so we don't export them. *)
 
