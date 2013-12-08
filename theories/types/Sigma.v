@@ -134,6 +134,18 @@ Proof.
   destruct p. destruct u. reflexivity.
 Defined.
 
+Lemma transport_projT1_path_sigma_uncurried
+      `{P : A -> Type} {u v : sigT P}
+      (pq : { p : u.1 = v.1 & transport P p u.2 = v.2 })
+      Q
+: transport (fun x => Q x.1) (@path_sigma_uncurried A P u v pq)
+  = transport _ pq.1.
+Proof.
+  destruct pq as [p q], u, v; simpl in *.
+  destruct p, q; simpl in *.
+  reflexivity.
+Defined.
+
 Definition projT1_path_sigma `{P : A -> Type} {u v : sigT P}
   (p : u.1 = v.1) (q : p # u.2 = v.2)
   : (path_sigma _ _ _ p q)..1 = p
@@ -148,6 +160,14 @@ Definition projT2_path_sigma `{P : A -> Type} {u v : sigT P}
 Definition eta_path_sigma `{P : A -> Type} {u v : sigT P} (p : u = v)
   : path_sigma _ _ _ (p..1) (p..2) = p
   := eta_path_sigma_uncurried p.
+
+Definition transport_projT1_path_sigma
+      `{P : A -> Type} {u v : sigT P}
+      (p : u.1 = v.1) (q : p # u.2 = v.2)
+      Q
+: transport (fun x => Q x.1) (@path_sigma A P u v p q)
+  = transport _ p
+  := transport_projT1_path_sigma_uncurried (p; q) Q.
 
 (** This lets us identify the path space of a sigma-type, up to equivalence. *)
 
