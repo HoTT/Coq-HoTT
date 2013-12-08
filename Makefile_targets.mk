@@ -175,6 +175,8 @@ CATEGORY_VFILES = \
 	\
 	$(srcdir)/theories/categories/Cat/Core.v \
 	\
+	$(srcdir)/theories/categories/DualFunctor.v \
+	\
 	$(srcdir)/theories/categories/FunctorCategory/Functorial.v \
 	$(srcdir)/theories/categories/FunctorCategory/FunctorCategory.v \
 	$(srcdir)/theories/categories/FunctorCategory/Utf8.v \
