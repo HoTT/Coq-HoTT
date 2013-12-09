@@ -210,12 +210,16 @@ CATEGORY_VFILES = \
 	\
 	$(srcdir)/theories/categories/UniversalProperties.v \
 	\
+	$(srcdir)/theories/categories/KanExtensions/Core.v \
+	$(srcdir)/theories/categories/KanExtensions/Functors.v \
 	$(srcdir)/theories/categories/KanExtensions/KanExtensions.v \
 	\
 	$(srcdir)/theories/categories/Adjoint/Adjoint.v \
 	$(srcdir)/theories/categories/Adjoint/UnitCounitCoercions.v \
 	$(srcdir)/theories/categories/Adjoint/UniversalMorphisms.v \
 	\
+	$(srcdir)/theories/categories/Limits/Core.v \
+	$(srcdir)/theories/categories/Limits/Functors.v \
 	$(srcdir)/theories/categories/Limits/Limits.v \
 	\
 	$(srcdir)/theories/categories/Notations.v \
