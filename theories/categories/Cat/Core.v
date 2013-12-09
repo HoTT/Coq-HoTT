@@ -12,7 +12,6 @@ Section sub_pre_cat.
   Context `{Funext}.
 
   Variable P : PreCategory -> Type.
-  Context `{forall C, IsHProp (P C)}.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
   (** There is a precategory of precategories which satisfy the proposition P *)
