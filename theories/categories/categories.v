@@ -40,9 +40,9 @@ Include Profunctor.Core.
 Include Cat.Core.
 Include Comma.Core.
 Include UniversalProperties.
-Include KanExtensions.
+Include KanExtensions.Core.
 Include Adjoint.Core.
-Include Limits.
+Include Limits.Core.
 
 Require Export categories.Notations.
 
