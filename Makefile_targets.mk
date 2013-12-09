@@ -225,6 +225,8 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Grothendieck/ToCat.v \
 	$(srcdir)/theories/categories/Grothendieck/Grothendieck.v \
 	\
+	$(srcdir)/theories/categories/DependentProduct.v \
+	\
 	$(srcdir)/theories/categories/UniversalProperties.v \
 	\
 	$(srcdir)/theories/categories/KanExtensions/Core.v \
