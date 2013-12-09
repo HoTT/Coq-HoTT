@@ -217,6 +217,11 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Pseudofunctor/FromFunctor.v \
 	$(srcdir)/theories/categories/Pseudofunctor/Pseudofunctor.v \
 	\
+	$(srcdir)/theories/categories/Grothendieck/ToSet.v \
+	$(srcdir)/theories/categories/Grothendieck/PseudofunctorToCat.v \
+	$(srcdir)/theories/categories/Grothendieck/ToCat.v \
+	$(srcdir)/theories/categories/Grothendieck/Grothendieck.v \
+	\
 	$(srcdir)/theories/categories/UniversalProperties.v \
 	\
 	$(srcdir)/theories/categories/KanExtensions/Core.v \

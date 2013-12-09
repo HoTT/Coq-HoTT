@@ -23,6 +23,7 @@ Require Adjoint.
 Require Limits.
 Require Pseudofunctor.
 Require DualFunctor.
+Require Grothendieck.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
