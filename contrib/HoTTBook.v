@@ -236,12 +236,17 @@ Definition Book_2_4_4 := @HoTT.PathGroupoids.concat_A1p.
 (* ================================================== defn:quasi-inverse *)
 (** Definition 2.4.6 *)
 
-
+(** Quasi-inverses do not occur explicitly in the library since 
+    they are `not good'. They do only occur implicitly as input to
+    isequiv_adjointify : IsEquiv f. Therefore we link to the half
+    adjoint equivalence extending the quasi-inverse *)
+  
+Definition Book_2_4_6 := @HoTT.Equivalences.isequiv_adjointify. 
 
 (* ================================================== eg:idequiv *)
 (** Example 2.4.7 *)
 
-
+Definition Book_2_4_7 := @HoTT.Equivalences.equiv_idmap.
 
 (* ================================================== eg:concatequiv *)
 (** Example 2.4.8 *)
@@ -251,27 +256,29 @@ Definition Book_2_4_4 := @HoTT.PathGroupoids.concat_A1p.
 (* ================================================== thm:transportequiv *)
 (** Example 2.4.9 *)
 
-
+Definition Book_2_4_9 := @HoTT.Equivalences.isequiv_transport.
 
 (* ================================================== thm:equiv-eqrel *)
 (** Lemma 2.4.12 *)
 
-
+Definition Book_2_4_12_item_i   := @HoTT.Equivalences.reflexive_equiv.
+(* missing? Definition Book_2_4_12_item_ii  :=  *)
+Definition Book_2_4_12_item_iii := @HoTT.Equivalences.transitive_equiv.
 
 (* ================================================== thm:path-prod *)
 (** Theorem 2.6.2 *)
 
-
+Definition Book_2_6_2 := @HoTT.types.Prod.equiv_path_prod.
 
 (* ================================================== thm:trans-prod *)
 (** Theorem 2.6.4 *)
 
-
+Definition Book_2_6_4 := @HoTT.types.Prod.transport_prod.
 
 (* ================================================== thm:ap-prod *)
 (** Theorem 2.6.5 *)
 
-
+Definition Book_2_6_5 := @HoTT.types.Prod.ap_functor_prod.
 
 (* ================================================== thm:path-sigma *)
 (** Theorem 2.7.2 *)
@@ -301,17 +308,18 @@ Definition Book_2_9_3 := @HoTT.Overture.path_forall.
 (* ================================================== thm:dpath-arrow *)
 (** Lemma 2.9.6 *)
 
-
+(** non-dependent as special case of dependent *)
+Definition Book_2_9_6 := @HoTT.types.Forall.dpath_forall.
 
 (* ================================================== thm:dpath-forall *)
 (** Lemma 2.9.7 *)
 
-
+Definition Book_2_9_7 := @HoTT.types.Forall.dpath_forall.
 
 (* ================================================== axiom:univalence *)
 (** Axiom 2.10.3 *)
 
-
+Definition Book_2_10_1 := @HoTT.types.Universe.equiv_path.
 
 (* ================================================== thm:transport-is-ap *)
 (** Lemma 2.10.5 *)
