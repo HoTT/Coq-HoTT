@@ -9,7 +9,7 @@ import os, sys, re
 # mapping names of compiled files to the number of minutes and seconds
 # that they took to compile.
 
-STRIP_REG = re.compile('^(|coq/)theories/')
+STRIP_REG = re.compile('^(coq/|contrib/|)(?:theories/)?')
 STRIP_REP = r'\1'
 
 def get_times(file_name):
