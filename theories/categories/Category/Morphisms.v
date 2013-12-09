@@ -557,6 +557,19 @@ Ltac iso_move_inverse' :=
 
 Ltac iso_move_inverse := progress repeat iso_move_inverse'.
 
+Section associativity_composition.
+  Variable C : PreCategory.
+  Variables x0 x1 x2 x3 x4 : C.
+
+  Lemma compose4associativity_helper
+    (a : morphism C x3 x4) (b : morphism C x2 x3)
+    (c : morphism C x1 x2) (d : morphism C x0 x1)
+  : a o b o c o d = (a o ((b o c) o d)).
+  Proof.
+    rewrite !associativity; reflexivity.
+  Qed.
+End associativity_composition.
+
 Module Export CategoryMorphismsNotations.
   Notation "m ^-1" := (morphism_inverse (m := m)) : morphism_scope.
 
