@@ -22,6 +22,7 @@ env:
 
 before_script:
  - ./etc/ci/before_script.sh
+ - source ./etc/ci/travis_keep_alive.sh
 
 
 install:
@@ -32,8 +33,9 @@ install:
 # `make-pretty-timed` is not an indication that the build succeeded.
 # We also use `make strict-test` at the beginning so that we error
 # quickly if someone commited .v files but neglected to mention them.
-script: "./autogen.sh && ./configure && make strict-test && ./etc/timing/make-pretty-timed.sh V=1 && make"
+script: "./autogen.sh && ./configure && make strict-test && ./etc/timing/make-pretty-timed.sh V=1 -j2 && make"
 
 
 after_success:
  - ./etc/ci/after_success.sh
+ - kill $PID_KEEP_ALIVE

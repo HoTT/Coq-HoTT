@@ -97,6 +97,24 @@ Module Import CommaCategory.
       intros; path_induction; reflexivity.
     Defined.
 
+    Lemma ap_a_path_object' x y Ha Hb Hf
+    : ap (@a) (@path_object' x y Ha Hb Hf) = Ha.
+    Proof.
+      destruct x, y; simpl in *.
+      destruct Ha, Hb, Hf; simpl in *.
+      reflexivity.
+    Qed.
+
+    Lemma ap_b_path_object' x y Ha Hb Hf
+    : ap (@b) (@path_object' x y Ha Hb Hf) = Hb.
+    Proof.
+      destruct x, y; simpl in *.
+      destruct Ha, Hb, Hf; simpl in *.
+      reflexivity.
+    Qed.
+
+    Global Opaque path_object'.
+
     Record morphism (abf a'b'f' : object) :=
       {
         g : Category.Core.morphism A (abf.(a)) (a'b'f'.(a));

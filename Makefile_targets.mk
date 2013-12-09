@@ -143,12 +143,17 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/NaturalTransformation/Dual.v \
 	$(srcdir)/theories/categories/NaturalTransformation/Sum.v \
 	$(srcdir)/theories/categories/NaturalTransformation/Pointwise.v \
+	\
+	$(srcdir)/theories/categories/FunctorCategory/Morphisms.v \
+	$(srcdir)/theories/categories/FunctorCategory/Notations.v \
+	\
+	$(srcdir)/theories/categories/NaturalTransformation/Isomorphisms.v \
 	$(srcdir)/theories/categories/NaturalTransformation/Notations.v \
 	$(srcdir)/theories/categories/NaturalTransformation/Utf8.v \
 	$(srcdir)/theories/categories/NaturalTransformation/NaturalTransformation.v \
 	\
-	$(srcdir)/theories/categories/FunctorCategory/Morphisms.v \
-	$(srcdir)/theories/categories/FunctorCategory/Notations.v \
+	$(srcdir)/theories/categories/CategoryOfSections/Core.v \
+	$(srcdir)/theories/categories/CategoryOfSections/CategoryOfSections.v \
 	\
 	$(srcdir)/theories/categories/Profunctor/Core.v \
 	$(srcdir)/theories/categories/Profunctor/Identity.v \
@@ -172,6 +177,8 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Adjoint/Utf8.v \
 	\
 	$(srcdir)/theories/categories/Cat/Core.v \
+	\
+	$(srcdir)/theories/categories/DualFunctor.v \
 	\
 	$(srcdir)/theories/categories/FunctorCategory/Functorial.v \
 	$(srcdir)/theories/categories/FunctorCategory/FunctorCategory.v \
@@ -206,16 +213,32 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Comma/Dual.v \
 	$(srcdir)/theories/categories/Comma/Projection.v \
 	$(srcdir)/theories/categories/Comma/InducedFunctors.v \
+	$(srcdir)/theories/categories/Comma/ProjectionFunctors.v \
 	$(srcdir)/theories/categories/Comma/Comma.v \
+	\
+	$(srcdir)/theories/categories/Pseudofunctor/Core.v \
+	$(srcdir)/theories/categories/Pseudofunctor/FromFunctor.v \
+	$(srcdir)/theories/categories/Pseudofunctor/Pseudofunctor.v \
+	\
+	$(srcdir)/theories/categories/Grothendieck/ToSet.v \
+	$(srcdir)/theories/categories/Grothendieck/PseudofunctorToCat.v \
+	$(srcdir)/theories/categories/Grothendieck/ToCat.v \
+	$(srcdir)/theories/categories/Grothendieck/Grothendieck.v \
+	\
+	$(srcdir)/theories/categories/DependentProduct.v \
 	\
 	$(srcdir)/theories/categories/UniversalProperties.v \
 	\
+	$(srcdir)/theories/categories/KanExtensions/Core.v \
+	$(srcdir)/theories/categories/KanExtensions/Functors.v \
 	$(srcdir)/theories/categories/KanExtensions/KanExtensions.v \
 	\
 	$(srcdir)/theories/categories/Adjoint/Adjoint.v \
 	$(srcdir)/theories/categories/Adjoint/UnitCounitCoercions.v \
 	$(srcdir)/theories/categories/Adjoint/UniversalMorphisms.v \
 	\
+	$(srcdir)/theories/categories/Limits/Core.v \
+	$(srcdir)/theories/categories/Limits/Functors.v \
 	$(srcdir)/theories/categories/Limits/Limits.v \
 	\
 	$(srcdir)/theories/categories/Notations.v \

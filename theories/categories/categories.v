@@ -21,6 +21,11 @@ Require UniversalProperties.
 Require KanExtensions.
 Require Adjoint.
 Require Limits.
+Require Pseudofunctor.
+Require DualFunctor.
+Require Grothendieck.
+Require CategoryOfSections.
+Require DependentProduct.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -40,9 +45,13 @@ Include Profunctor.Core.
 Include Cat.Core.
 Include Comma.Core.
 Include UniversalProperties.
-Include KanExtensions.
+Include KanExtensions.Core.
 Include Adjoint.Core.
-Include Limits.
+Include Limits.Core.
+Include Pseudofunctor.Core.
+Include DualFunctor.
+Include CategoryOfSections.Core.
+Include DependentProduct.
 
 Require Export categories.Notations.
 

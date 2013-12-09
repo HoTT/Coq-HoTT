@@ -5,6 +5,7 @@ Require NaturalTransformation.Composition.Core.
 Require NaturalTransformation.Core.
 Require NaturalTransformation.Dual.
 Require NaturalTransformation.Identity.
+Require NaturalTransformation.Isomorphisms.
 Require NaturalTransformation.Paths.
 Require NaturalTransformation.Pointwise.
 Require NaturalTransformation.Sum.
@@ -13,6 +14,7 @@ Include NaturalTransformation.Composition.Core.
 Include NaturalTransformation.Core.
 Include NaturalTransformation.Dual.
 Include NaturalTransformation.Identity.
+Include NaturalTransformation.Isomorphisms.
 Include NaturalTransformation.Paths.
 Include NaturalTransformation.Pointwise.
 Include NaturalTransformation.Sum.
