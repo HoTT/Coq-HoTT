@@ -98,13 +98,13 @@ Definition transport_path_prod A B (P : A * B -> Type) (x y : A * B)
            (HB : snd x = snd y)
            Px
 : transport P (path_prod _ _ HA HB) Px
-  = match y as y' return P (fst y', snd y') -> P y' with
-      | (_, _) => idmap
-    end (transport (fun x => P (x, snd y))
-                   HA
-                   (transport (fun y => P (fst x, y))
-                              HB
-                              (pack_prod x Px)))
+  = unpack_prod
+      y
+      (transport (fun x => P (x, snd y))
+                 HA
+                 (transport (fun y => P (fst x, y))
+                            HB
+                            (pack_prod x Px)))
   := transport_path_prod_uncurried _ _ P x y (HA, HB) Px.
 
 Definition transport_path_prod'
