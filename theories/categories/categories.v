@@ -24,6 +24,7 @@ Require Limits.
 Require Pseudofunctor.
 Require DualFunctor.
 Require Grothendieck.
+Require CategoryOfSections.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -48,6 +49,7 @@ Include Adjoint.Core.
 Include Limits.Core.
 Include Pseudofunctor.Core.
 Include DualFunctor.
+Include CategoryOfSections.Core.
 
 Require Export categories.Notations.
 

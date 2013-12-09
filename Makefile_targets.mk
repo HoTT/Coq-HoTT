@@ -152,6 +152,9 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/NaturalTransformation/Utf8.v \
 	$(srcdir)/theories/categories/NaturalTransformation/NaturalTransformation.v \
 	\
+	$(srcdir)/theories/categories/CategoryOfSections/Core.v \
+	$(srcdir)/theories/categories/CategoryOfSections/CategoryOfSections.v \
+	\
 	$(srcdir)/theories/categories/Profunctor/Core.v \
 	$(srcdir)/theories/categories/Profunctor/Identity.v \
 	$(srcdir)/theories/categories/Profunctor/Notations.v \
