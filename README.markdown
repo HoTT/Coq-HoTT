@@ -1,3 +1,5 @@
+[![Build Status](https://api.travis-ci.org/HoTT/HoTT.png?branch=master)](https://travis-ci.org/HoTT/HoTT)
+
 [Homotopy Type Theory](http://homotopytypetheory.org/) is an interpretation of
 Martin-Löf’s intensional type theory into abstract homotopy theory. Propositional equality
 is interpreted as homotopy and type isomorphism as homotopy equivalence. Logical
