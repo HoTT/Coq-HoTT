@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This is a helper script for make-pretty-timed-diff.sh.
 
