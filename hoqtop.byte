@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # This is a wrapper around coqtop.byte which tricks Coq into using the HoTT
 # standard library and enables the HoTT-specific options.
 

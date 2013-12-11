@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ######################################################################
 # Record the compilation performance of the current state of the
