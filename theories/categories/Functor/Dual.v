@@ -34,18 +34,28 @@ Local Notation "F ^op" := (opposite F) : functor_scope.
 Local Notation "F ^op'" := (opposite_inv F) (at level 3) : functor_scope.
 
 Section opposite_involutive.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
-  Variable F : Functor C D.
+  Local Open Scope functor_scope.
 
   Local Notation op_op_id := Category.Dual.opposite_involutive.
 
-  Lemma opposite_involutive
+  Lemma opposite_involutive C D (F : Functor C D)
   : match op_op_id C in (_ = C), op_op_id D in (_ = D) return Functor C D with
       | idpath, idpath => ((F^op)^op)%functor
     end = F.
   Proof.
     destruct F, C, D; reflexivity.
+  Defined.
+
+  Lemma opposite_law C D (F : Functor C D)
+  : F^op^op' = F.
+  Proof.
+    destruct F; reflexivity.
+  Defined.
+
+  Lemma opposite'_law C D (F : Functor C^op D^op)
+  : F^op'^op = F.
+  Proof.
+    destruct F; reflexivity.
   Defined.
 End opposite_involutive.
 

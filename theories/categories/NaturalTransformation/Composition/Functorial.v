@@ -31,6 +31,6 @@ Section functorial_composition.
          (D -> E) (C -> E)
          (fun F => F o G)%functor
          (fun _ _ T => T oR G)
-         (fun _ _ _ _ _ => inverse (composition_of_whisker_r _ _ _))
+         (fun _ _ _ _ _ => composition_of_whisker_r _ _ _)
          (fun _ => whisker_r_left_identity _ _).
 End functorial_composition.

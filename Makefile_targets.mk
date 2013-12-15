@@ -144,6 +144,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/NaturalTransformation/Sum.v \
 	$(srcdir)/theories/categories/NaturalTransformation/Pointwise.v \
 	\
+	$(srcdir)/theories/categories/FunctorCategory/Dual.v \
 	$(srcdir)/theories/categories/FunctorCategory/Morphisms.v \
 	$(srcdir)/theories/categories/FunctorCategory/Notations.v \
 	\

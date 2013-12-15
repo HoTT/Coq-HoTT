@@ -5,6 +5,7 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+Local Open Scope path_scope.
 Local Open Scope morphism_scope.
 Local Open Scope natural_transformation_scope.
 
@@ -58,37 +59,34 @@ Section composition.
 
     Local Notation CO c := (T' c o T c).
 
-    Local Ltac t_fin :=
-      match goal with
-        | _ => apply associativity
-        | _ => symmetry; apply associativity
-      end.
-
-    Local Ltac t :=
-      match goal with
-        | _ => t_fin
-        | [ T : _, m : _ |- _ ] => case (commutes T _ _ m); t_fin
-        | [ T : _, m : _ |- _ ] => case (symmetry _ _ (commutes T _ _ m));
-                                  t_fin
-      end.
-
     Definition compose_commutes s d (m : morphism C s d)
-    : CO d o morphism_of F m = morphism_of F'' m o CO s.
-    Proof.
-      transitivity (T' _ o (morphism_of F' m o T _)).
-      - t.
-      - transitivity ((T' _ o morphism_of F' m) o T _);
-        t.
-    Defined.
+    : CO d o morphism_of F m = morphism_of F'' m o CO s
+      := (associativity _ _ _ _ _ _ _ _)
+           @ ap (fun x => _ o x) (commutes T _ _ m)
+           @ (associativity_sym _ _ _ _ _ _ _ _)
+           @ ap (fun x => x o _) (commutes T' _ _ m)
+           @ (associativity _ _ _ _ _ _ _ _).
+
+    (** We define the symmetrized version separately so that we can get more unification in the functor [(C → D)ᵒᵖ → (Cᵒᵖ → Dᵒᵖ)] *)
+    Definition compose_commutes_sym s d (m : morphism C s d)
+    : morphism_of F'' m o CO s = CO d o morphism_of F m
+      := (associativity_sym _ _ _ _ _ _ _ _)
+           @ ap (fun x => x o _) (commutes_sym T' _ _ m)
+           @ (associativity _ _ _ _ _ _ _ _)
+           @ ap (fun x => _ o x) (commutes_sym T _ _ m)
+           @ (associativity_sym _ _ _ _ _ _ _ _).
 
     Global Arguments compose_commutes / .
+    Global Arguments compose_commutes_sym / .
     Global Opaque compose_commutes.
+    Global Opaque compose_commutes_sym.
 
     Definition compose
     : NaturalTransformation F F''
-      := Build_NaturalTransformation F F''
-                                     (fun c => CO c)
-                                     compose_commutes.
+      := Build_NaturalTransformation' F F''
+                                      (fun c => CO c)
+                                      compose_commutes
+                                      compose_commutes_sym.
   End compose.
 
   Local Ltac whisker_t :=
