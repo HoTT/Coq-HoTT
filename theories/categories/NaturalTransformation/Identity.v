@@ -1,4 +1,5 @@
 Require Import Category.Core Functor.Core NaturalTransformation.Core NaturalTransformation.Paths.
+Require Import PathGroupoids.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -12,12 +13,6 @@ Local Open Scope natural_transformation_scope.
 Section identity.
   Variable C : PreCategory.
   Variable D : PreCategory.
-
-  Local Ltac id_fin_t :=
-    intros;
-    etransitivity;
-    [ apply left_identity
-    | apply symmetry; apply right_identity ].
 
   (** There is an identity natrual transformation.  We create a number
       of variants, for various uses. *)
@@ -35,24 +30,31 @@ Section identity.
                                       HO
                                       (identity (F c))).
 
-    Definition generalized_identity_commutes
-               s d (m : morphism C s d)
-    : CO d o morphism_of F m
-      = morphism_of G m o CO s.
+    Definition generalized_identity_commutes s d (m : morphism C s d)
+    : CO d o morphism_of F m = morphism_of G m o CO s.
     Proof.
       case HM. case HO.
-      id_fin_t.
+      exact (left_identity _ _ _ _ @ (right_identity _ _ _ _)^).
+    Defined.
+
+    Definition generalized_identity_commutes_sym s d (m : morphism C s d)
+    : morphism_of G m o CO s = CO d o morphism_of F m.
+    Proof.
+      case HM. case HO.
+      exact (right_identity _ _ _ _ @ (left_identity _ _ _ _)^).
     Defined.
 
     Definition generalized_identity
     : NaturalTransformation F G
-      := Build_NaturalTransformation
+      := Build_NaturalTransformation'
            F G
            (fun c => CO c)
-           generalized_identity_commutes.
+           generalized_identity_commutes
+           generalized_identity_commutes_sym.
   End generalized.
 
   Global Arguments generalized_identity_commutes / .
+  Global Arguments generalized_identity_commutes_sym / .
   Global Arguments generalized_identity F G !HO !HM / .
 
   Section generalized'.
@@ -78,6 +80,7 @@ Section identity.
 End identity.
 
 Global Opaque commutes.
+Global Opaque commutes_sym.
 
 Module Export NaturalTransformationIdentityNotations.
   Notation "1" := (identity _) : natural_transformation_scope.

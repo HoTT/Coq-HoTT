@@ -32,8 +32,10 @@ Section natural_transformation_identity.
 
   Definition whisker_r_left_identity E
              (G : Functor D E) (F : Functor C D)
-  : identity G oR F = 1
-    := idpath.
+  : identity G oR F = 1.
+  Proof.
+    path_natural_transformation; auto with morphism.
+  Qed.
 
   Definition whisker_l_right_identity E
              (G : Functor D E) (F : Functor C D)
@@ -83,8 +85,8 @@ Section whisker.
     Lemma composition_of_whisker_r B (I : Functor B C)
     : (T o T') oR I = (T oR I) o (T' oR I).
     Proof.
-      exact idpath.
-    Defined.
+      path_natural_transformation; apply idpath.
+    Qed.
   End whisker.
 End whisker.
 

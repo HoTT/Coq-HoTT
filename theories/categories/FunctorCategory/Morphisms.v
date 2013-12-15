@@ -5,6 +5,7 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+Local Open Scope path_scope.
 Local Open Scope category_scope.
 Local Open Scope morphism_scope.
 
@@ -70,14 +71,14 @@ Section idtoiso.
              (T : F = G)
   : NaturalTransformation F G.
   Proof.
-    refine (Build_NaturalTransformation
+    refine (Build_NaturalTransformation'
               F G
               (fun x => idtoiso _ (ap10 (ap object_of T) x))
-              _).
-    intros; case T; simpl.
-    etransitivity; [ | symmetry ];
-    first [ apply left_identity
-          | apply right_identity ].
+              _
+              _);
+    intros; case T; simpl;
+    [ exact (left_identity _ _ _ _ @ (right_identity _ _ _ _)^)
+    | exact (right_identity _ _ _ _ @ (left_identity _ _ _ _)^) ].
   Defined.
 
   Definition idtoiso
