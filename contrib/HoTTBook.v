@@ -12,18 +12,22 @@
     reorders the entries according to entry number X.Y.Z and inserts
     missing entries. You must therefore obey the following rules:
 
-    1. Do not mess with the markers. If a LaTeX label has been renamed
-       you may rename the corresponding marker.
+    0. Read the description below of what the correct procedure is.
 
-    3. If a theorem is gone, you may delete the corresponding entry,
+    1. Do not mess with the markers and do not insert new entries by hand.
+       If a LaTeX label has been renamed you may rename the corresponding
+       marker, but for addition of new entries you have to use the
+       etc/Book.py script, as described below.
+
+    2. If a theorem is gone, you may delete the corresponding entry,
        but make sure first that it was not just moved elsewhere.
 
-    4. Make entries independent of other entries, as they may get
+    3. Make entries independent of other entries, as they may get
        reordered or deleted.
 
-    5. If you need to import anything, do it before the first entry.
+    4. If you need to import anything, do it before the first entry.
 
-    6. Each entry should define Book_X_Y_Z, but you can also
+    5. Each entry should define Book_X_Y_Z, but you can also
        put in auxiliary definitions and lemmas (keep it short please).
        The script renames the Book_X_Y_Z to whatever the correct number
        is, so initially you can use whatever number you like.
@@ -31,8 +35,26 @@
        If you are formalizing a Lemma with several part, use
        Book_X_Y_Z_item_i, Book_X_Y_Z_item_ii, or some such.
 
-    7. If there is a corresponding HoTT library theorem or definition,
+    6. If there is a corresponding HoTT library theorem or definition,
        please use that one, even if it is not exactly the same.
+
+
+   PROCEDURE FOR UPDATING THE FILE:
+
+   1. Compile the latest version of the HoTT Book to update the LaTeX
+      labels. Do not forget to pull in changes from HoTT/HoTT.
+
+   2. Run `etc/Book.py` as described by `etc/Book.py` if you run it without
+      arguments. If it complains, fix things.
+
+   3. Add contents to new entries.
+
+   4. Run `etc/Book.py` again to make sure it is happy. 
+
+   5. Compile this file with `make config` or `make contrib/HoTTBook.vo`.
+
+   6. Do the git thing to submit your changes.
+
 *)
 
 Require Import HoTT.
@@ -241,7 +263,7 @@ Definition Book_2_4_4 := @HoTT.PathGroupoids.concat_A1p.
     isequiv_adjointify : IsEquiv f. Therefore we link to the half
     adjoint equivalence extending the quasi-inverse *)
   
-Definition Book_2_4_6 := @HoTT.Equivalences.isequiv_adjointify. 
+Definition Book_2_4_6 := @HoTT.Equivalences.isequiv_adjointify.
 
 (* ================================================== eg:idequiv *)
 (** Example 2.4.7 *)
@@ -316,10 +338,14 @@ Definition Book_2_9_6 := @HoTT.types.Forall.dpath_forall.
 
 Definition Book_2_9_7 := @HoTT.types.Forall.dpath_forall.
 
-(* ================================================== axiom:univalence *)
-(** Lemma 2.10.1 (label will soon come) and Axiom 2.10.3 *)
+(* ================================================== thm:idtoeqv *)
+(** Lemma 2.10.1 *)
 
 Definition Book_2_10_1 := @HoTT.types.Universe.equiv_path.
+
+(* ================================================== axiom:univalence *)
+(** Axiom 2.10.3 *)
+
 Definition Book_2_10_3 := @HoTT.types.Universe.isequiv_equiv_path.
 
 (* ================================================== thm:transport-is-ap *)
@@ -676,6 +702,11 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 
 
 
+(* ================================================== thm:qinv-notprop *)
+(** Theorem 4.1.3 *)
+
+
+
 (* ================================================== defn:ishae *)
 (** Definition 4.2.1 *)
 
@@ -883,6 +914,11 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 
 (* ================================================== ex:2-out-of-6 *)
 (** Exercise 4.5 *)
+
+
+
+(* ================================================== ex:qinv-univalence *)
+(** Exercise 4.6 *)
 
 
 
@@ -1168,6 +1204,11 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 
 (* ================================================== ex:funext-from-interval *)
 (** Exercise 6.10 *)
+
+
+
+(* ================================================== ex:susp-lump *)
+(** Exercise 6.11 *)
 
 
 
@@ -1461,6 +1502,11 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 
 
 
+(* ================================================== ex:trunc-spokes-no-hub *)
+(** Exercise 7.15 *)
+
+
+
 (* ================================================== def-of-homotopy-groups *)
 (** Definition 8.0.1 *)
 
@@ -1603,6 +1649,16 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 
 (* ================================================== cor:stability-spheres *)
 (** Corollary 8.6.15 *)
+
+
+
+(* ================================================== thm:pinsn *)
+(** Theorem 8.6.17 *)
+
+
+
+(* ================================================== thm:pi3s2 *)
+(** Corollary 8.6.19 *)
 
 
 
