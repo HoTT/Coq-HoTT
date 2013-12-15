@@ -317,64 +317,69 @@ Definition Book_2_9_6 := @HoTT.types.Forall.dpath_forall.
 Definition Book_2_9_7 := @HoTT.types.Forall.dpath_forall.
 
 (* ================================================== axiom:univalence *)
-(** Axiom 2.10.3 *)
+(** Lemma 2.10.1 (label will soon come) and Axiom 2.10.3 *)
 
 Definition Book_2_10_1 := @HoTT.types.Universe.equiv_path.
+Definition Book_2_10_3 := @HoTT.types.Universe.isequiv_equiv_path.
 
 (* ================================================== thm:transport-is-ap *)
 (** Lemma 2.10.5 *)
 
-
+(** Lemma 2.10.5 is a special case of Lemma 2.3.10, but also of: *)
+Definition Book_2_10_5 := @HoTT.types.Universe.transport_path_universe'.
 
 (* ================================================== thm:paths-respects-equiv *)
 (** Theorem 2.11.1 *)
 
-
+Definition Book_2_11_1 := @HoTT.types.Paths.isequiv_ap.
 
 (* ================================================== cor:transport-path-prepost *)
 (** Lemma 2.11.2 *)
 
-
+Definition Book_2_11_2_item_1 := @HoTT.types.Paths.transport_paths_l.
+Definition Book_2_11_2_item_2 := @HoTT.types.Paths.transport_paths_r.
+Definition Book_2_11_2_item_3 := @HoTT.types.Paths.transport_paths_lr.
 
 (* ================================================== thm:transport-path *)
 (** Theorem 2.11.3 *)
 
-
+Definition Book_2_11_3 := @HoTT.types.Paths.transport_paths_FlFr.
 
 (* ================================================== thm:transport-path2 *)
 (** Theorem 2.11.4 *)
 
-
+Definition Book_2_11_4 := @HoTT.types.Paths.transport_paths_FlFr_D.
 
 (* ================================================== thm:dpath-path *)
 (** Theorem 2.11.5 *)
 
-
+Definition Book_2_11_5 := @HoTT.types.Paths.dpath_path_lr.
 
 (* ================================================== thm:path-coprod *)
 (** Theorem 2.12.5 *)
 
-
+Definition Book_2_12_5 := @HoTT.types.Sum.equiv_path_sum.
 
 (* ================================================== thm:path-nat *)
 (** Theorem 2.13.1 *)
 
-
+(* Definition Book_2_13_1 := @HoTT.types... *)
 
 (* ================================================== thm:prod-ump *)
 (** Theorem 2.15.2 *)
 
-
+(** non-dependent as special case of dependent, Theorem 2.15.5 *)
+Definition Book_2_15_2 := @HoTT.types.Prod.isequiv_prod_corect.
 
 (* ================================================== thm:prod-umpd *)
 (** Theorem 2.15.5 *)
 
-
+Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 
 (* ================================================== thm:ttac *)
 (** Theorem 2.15.7 *)
 
-
+(* Definition Book_2_15_7 := @HoTT.... *)
 
 (* ================================================== ex:basics:concat *)
 (** Exercise 2.1 *)
