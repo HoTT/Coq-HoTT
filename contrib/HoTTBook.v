@@ -49,9 +49,9 @@
 
    3. Add contents to new entries.
 
-   4. Run `etc/Book.py` again to make sure it is happy. 
+   4. Run `etc/Book.py` again to make sure it is happy.
 
-   5. Compile this file with `make config` or `make contrib/HoTTBook.vo`.
+   5. Compile this file with `make contrib` or `make contrib/HoTTBook.vo`.
 
    6. Do the git thing to submit your changes.
 
@@ -258,11 +258,11 @@ Definition Book_2_4_4 := @HoTT.PathGroupoids.concat_A1p.
 (* ================================================== defn:quasi-inverse *)
 (** Definition 2.4.6 *)
 
-(** Quasi-inverses do not occur explicitly in the library since 
+(** Quasi-inverses do not occur explicitly in the library since
     they are `not good'. They do only occur implicitly as input to
     isequiv_adjointify : IsEquiv f. Therefore we link to the half
     adjoint equivalence extending the quasi-inverse *)
-  
+
 Definition Book_2_4_6 := @HoTT.Equivalences.isequiv_adjointify.
 
 (* ================================================== eg:idequiv *)
@@ -2619,6 +2619,3 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 
 (* ================================================== ex:mean-value-theorem *)
 (** Exercise 11.13 *)
-
-
-
