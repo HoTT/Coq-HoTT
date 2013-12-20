@@ -19,8 +19,17 @@ Definition path_arrow {A B : Type} (f g : A -> B)
   : (f == g) -> (f = g)
   := path_forall f g.
 
+(** There are a number of combinations of dependent and non-dependent for [apD10_path_forall]; we list all of the combinations as helpful lemmas for rewriting. *)
 Definition ap10_path_arrow {A B : Type} (f g : A -> B) (h : f == g)
   : ap10 (path_arrow f g h) == h
+  := apD10_path_forall f g h.
+
+Definition apD10_path_arrow {A B : Type} (f g : A -> B) (h : f == g)
+  : apD10 (path_arrow f g h) == h
+  := apD10_path_forall f g h.
+
+Definition ap10_path_forall {A B : Type} (f g : A -> B) (h : f == g)
+  : ap10 (path_forall f g h) == h
   := apD10_path_forall f g h.
 
 Definition eta_path_arrow {A B : Type} (f g : A -> B) (p : f = g)
