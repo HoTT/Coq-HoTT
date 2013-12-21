@@ -46,9 +46,5 @@ fi
 # or using more evil (but portable) 'eval', do
 # $ eval 'exec "$COQDEP" '"$COQ_ARGS"' "$@"'
 # Instead, we duplicate code, because it's simpler.
-if test "x$ssr" = "xyes"
-then
-  exec "$COQDEP" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -R "$SSRLIB" Ssreflect -indices-matter "$@"
-else
-  exec "$COQDEP" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter "$@"
-fi
+exec "$COQDEP" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter "$@"
+
