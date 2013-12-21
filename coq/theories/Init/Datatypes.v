@@ -66,54 +66,11 @@ Definition prod_curry (A B C : Type) (f : A -> B -> C)
                           | pair x y => f x y
                         end.
 
-(** <-> is wanted by ssreflect so we hack it here. *)
 (** [iff A B], written [A <-> B], expresses the equivalence of [A] and [B] *)
 
-(* Definition iff (A B : Type) := prod (A -> B) (B -> A). *)
+Definition iff (A B : Type) := prod (A -> B) (B -> A).
 
-(* Notation "A <-> B" := (iff A B) : type_scope. *)
-(* assia : I change the definition of iff for an inductive one *)
-
-Inductive iff (A B : Type) : Type :=
-  Iff: (A -> B) -> (B -> A) -> iff A B.
 Notation "A <-> B" := (iff A B) : type_scope.
-
-
-(** [Empty_set] is a datatype with no inhabitant *)
-
-(* Inductive Empty_set : Type :=. *)
-
-(** [unit] is a singleton datatype with sole inhabitant [tt] *)
-
-(* Inductive unit : Type := 
-    tt : unit. *)
-
-(** [bool] is the datatype of the boolean values [true] and [false] *)
-
-(*
-Inductive bool : Type :=
-  | true : bool
-  | false : bool.
-
-Add Printing If bool.
-
-Delimit Scope bool_scope with bool.
-
-Bind Scope bool_scope with bool.
-
-Definition andb (b1 b2 : bool) : bool := if b1 then b2 else false.
-
-Definition orb (b1 b2 : bool) : bool := if b1 then true else b2.
-
-Definition negb (b : bool) := if b then false else true.
-
-Definition implb (b1 b2 : bool) : bool := if b1 then b2 else true.
-
-Infix "||" := orb : bool_scope.
-Infix "&&" := andb : bool_scope.
-
-*)
-
 
 (* Natural numbers. *)
 

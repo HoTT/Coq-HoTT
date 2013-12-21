@@ -200,7 +200,7 @@ Arguments apD {A B} f {x y} p : simpl nomatch.
 
 (** Naming convention: we use [equiv] and [Equiv] systematically to denote types of equivalences, and [isequiv] and [IsEquiv] systematically to denote the assertion that a given map is an equivalence. *)
 
-(** The fact that [r] is a left inverse of [s]. It is called [cancel] in ssreflect.  As a mnemonic, note that the partially applied type [Sect s] is the type of proofs that [s] is a section. *)
+(** The fact that [r] is a left inverse of [s]. As a mnemonic, note that the partially applied type [Sect s] is the type of proofs that [s] is a section. *)
 Definition Sect {A B : Type} (s : A -> B) (r : B -> A) :=
   forall x : A, r (s x) = x.
 
