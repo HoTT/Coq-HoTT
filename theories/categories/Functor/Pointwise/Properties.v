@@ -74,10 +74,10 @@ Section parts.
       path_functor.
       exists identity_of_helper.
       unfold identity_of_helper.
-      functor_pointwise_t
-        identity_of_helper_helper
-        identity_of_helper_helper_object_of.
-    Qed.
+      abstract functor_pointwise_t
+               identity_of_helper_helper
+               identity_of_helper_helper_object_of.
+    Defined.
   End identity_of.
 
   Section composition_of.
@@ -116,9 +116,9 @@ Section parts.
       path_functor.
       exists composition_of_helper.
       unfold composition_of_helper.
-      functor_pointwise_t
-        composition_of_helper_helper
-        composition_of_helper_helper_object_of.
-    Qed.
+      abstract functor_pointwise_t
+               composition_of_helper_helper
+               composition_of_helper_helper_object_of.
+    Defined.
   End composition_of.
 End parts.
