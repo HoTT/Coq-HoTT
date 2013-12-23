@@ -246,9 +246,11 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/KanExtensions/Functors.v \
 	$(srcdir)/theories/categories/KanExtensions/KanExtensions.v \
 	\
-	$(srcdir)/theories/categories/Adjoint/Adjoint.v \
 	$(srcdir)/theories/categories/Adjoint/UnitCounitCoercions.v \
 	$(srcdir)/theories/categories/Adjoint/UniversalMorphisms.v \
+	$(srcdir)/theories/categories/Adjoint/Hom.v \
+	$(srcdir)/theories/categories/Adjoint/HomCoercions.v \
+	$(srcdir)/theories/categories/Adjoint/Adjoint.v \
 	\
 	$(srcdir)/theories/categories/Limits/Core.v \
 	$(srcdir)/theories/categories/Limits/Functors.v \
