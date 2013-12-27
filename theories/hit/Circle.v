@@ -12,7 +12,7 @@ Generalizable Variables X A B f g n.
 
 Module Export Circle.
 
-Local Inductive S1 : Type1 :=
+Private Inductive S1 : Type1 :=
 | base : S1.
 
 Axiom loop : base = base.

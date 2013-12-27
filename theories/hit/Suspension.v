@@ -14,7 +14,7 @@ Module Export Suspension.
 (** We play games to ensure that [Susp X] does not live in a lower universe than [X] *)
 Section hack_my_types.
 Let U := Type.
-Local Inductive Susp (X : U) : U :=
+Private Inductive Susp (X : U) : U :=
   | North : Susp X
   | South : Susp X.
 End hack_my_types.

@@ -1,6 +1,7 @@
 [submodule "coq-HoTT"]
 	path = coq-HoTT
-	url = https://github.com/HoTT/coq.git
+	url = https://github.com/coq/coq.git
+	branch = trunk
 [submodule "etc/coq-scripts"]
 	path = etc/coq-scripts
 	url = https://github.com/JasonGross/coq-scripts.git

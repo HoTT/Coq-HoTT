@@ -30,7 +30,7 @@ We do not require [R] to be an equivalence relation, but implicitly consider its
 
 
 (** Note: If we wanted to be really accurate, we'd need to put [@quotient A R sr] in the max [U_{sup(i, j)}] of the universes of [A : U_i] and [R : A -> A -> U_j].  But this requires some hacky code, at the moment, and the only thing we gain is avoiding making use of an implicit hpropositional resizing "axiom". *)
-Local Inductive quotient (sR:setrel R): Type :=
+Private Inductive quotient (sR:setrel R): Type :=
   | class_of : A -> quotient sR.
 Axiom related_classes_eq : forall {x y : A}, R x y ->
  class_of _ x = class_of _ y.
