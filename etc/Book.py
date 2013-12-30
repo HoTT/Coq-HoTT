@@ -15,7 +15,7 @@ import shutil
 import os
 
 description = """
-Process the HoTTBook.v file and refresh with respect to the
+Process Coq file (e.g. HoTTBook.v) and refresh with respect to the
 HoTT book *.aux files. The script expects the content of 
 *.aux files on stdandard input. Typical use:
 
@@ -26,7 +26,8 @@ HoTT book *.aux files. The script expects the content of
 # Parse command line arguments
 parser = argparse.ArgumentParser(description = description, add_help=True, formatter_class=RawTextHelpFormatter)
 parser.add_argument ("--debug", action='store_true', help='Print debugging info', default=False)
-parser.add_argument ("file", help='the Coq file that should be processed\n(probably contrib/HoTTBook.v)')
+parser.add_argument ("--exercises", action='store_true', help='Process exercises', default=False)
+parser.add_argument ("file", help='the Coq file that should be processed\n(probably contrib/HoTTBook.v or contrib/HoTTBookExercises.v)')
 
 args = parser.parse_args()
 
@@ -45,25 +46,30 @@ def die(msg):
     sys.exit(1)
 
 
-# Mapping from envirnment names to names, and flag indicating whether it is formalizable
+# Mapping from envirnment names to names
 envname = { 
-    'axiom' :      ('Axiom', True),
-    'chapter' :    ('Chapter', False),
-    'cor' :        ('Corollary', True),
-    'defn' :       ('Definition', True),
-    'equation' :   ('Equation', False),
-    'eg' :         ('Example', True),
-    'egs' :        ('Examples', True),
-    'ex' :         ('Exercise', True),
-    'figure' :     ('Figure', False),
-    'lem' :        ('Lemma', True),
-    'rmk' :        ('Remark', False),
-    'section' :    ('Section', False),
-    'subsection' : ('Subsection', False),
-    'symindex' :   ('Symbol index', False),
-    'table' :      ('Table', False),
-    'thm' :        ('Theorem', True)
+    'axiom' :      'Axiom',
+    'chapter' :    'Chapter',
+    'cor' :        'Corollary',
+    'defn' :       'Definition',
+    'equation' :   'Equation',
+    'eg' :         'Example',
+    'egs' :        'Examples',
+    'ex' :         'Exercise',
+    'figure' :     'Figure',
+    'lem' :        'Lemma',
+    'rmk' :        'Remark',
+    'section' :    'Section',
+    'subsection' : 'Subsection',
+    'symindex' :   'Symbol index',
+    'table' :      'Table',
+    'thm' :        'Theorem'
 }
+
+# Set of environment names that are formalizable
+formalizable = set(['axiom', 'cor', 'defn', 'eg', 'egs', 'lem', 'thm'])
+if args.exercises:
+    formalizable = set(['ex'])
 
 # Step 1: Read the standard input and gather entry info into a dictionary
 entries = {}
@@ -86,12 +92,12 @@ for line in sys.stdin:
         number = map(int, m.group(2).split("."))
         page = int(m.group(3))
         typ = envname[m.group(4)]
-        if not typ[1]: continue # entry not formalizable, skip
+        if not m.group(4) in formalizable: continue # entry not formalizable, skip
         log ('match: label = {0}, number = {1}, page = {2}, type = {3}'.format(
-            label, number, page, typ[0]))
+            label, number, page, typ))
         if label in entries:
             warn ('duplicate label {0} in *.aux files'.format(label))
-        entries[label] = { 'number' : number, 'page' : page, 'typ' : typ[0] }
+        entries[label] = { 'number' : number, 'page' : page, 'typ' : typ }
     else:
         skipped = skipped + 1
 
