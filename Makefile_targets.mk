@@ -247,4 +247,5 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/categories.v
 
 CONTRIB_VFILES = \
-	$(srcdir)/contrib/HoTTBook.v
+	$(srcdir)/contrib/HoTTBook.v \
+	$(srcdir)/contrib/HoTTBookExercises.v
