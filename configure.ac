@@ -59,8 +59,7 @@ AS_IF([test "x$COQTOP" = "xno"],
 AM_CONDITIONAL(make_hoqtopbyte, [test -x "$COQTOP.byte"])
 
 # Now set COQBIN if it has not been set yet. We need COQBIN because Makefiles
-# produces by coq_makefile insist on running coqtop as $(COQBIN)coqtop, and
-# ssreflect uses coq_makefile
+# produced by coq_makefile insist on running coqtop as $(COQBIN)coqtop.
 AS_IF([test "x$COQBIN" = "x"],
       [COQBIN=`AS_DIRNAME(["$COQTOP"])`])
 AC_MSG_NOTICE([COQBIN is $COQBIN])
@@ -82,19 +81,6 @@ AS_IF([test "x$COQC" = "xno"],
        AS_IF([test "x$COQCVERSION" != "x$COQVERSION"],
              [AC_MSG_ERROR([Version mismatch between coqtop $COQVERSION and coqc $COQCVERSION])])
       ])
-
-# Should we compile ssrfelect?
-compile_ssreflect="no"
-AC_ARG_WITH([ssreflect],
-            [AS_HELP_STRING([--with-ssreflect], [compile the ssreflect libary])],
-            [compile_ssreflect="yes"],
-            [])
-
-AS_IF([test "x$compile_ssreflect" = "xno"],
-      [AC_MSG_NOTICE([Will not compile ssreflect])],
-      [AC_MSG_NOTICE([Will compile ssreflect])])
-AM_CONDITIONAL(make_ssreflect, [test "x$compile_ssreflect" = "xyes"])
-AC_SUBST([compile_ssreflect])
 
 # Checking for coqide, which can be optional
 make_coqide="no"

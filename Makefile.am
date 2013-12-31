@@ -9,7 +9,7 @@ if make_hoqtopbyte
 endif
 
 hottdir=$(datarootdir)/hott
-EXTRA_DIST = coq theories ssrplugin etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
+EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 
 # The path to the Coq library in $(srcdir)
 SRCCOQLIB=$(srcdir)/coq
@@ -45,8 +45,8 @@ CAMERA = python proviola/camera/camera.py
 # include the makefile listing all the targets.  This way, we don't
 # need to rerun configure every time we add a new file.  The targets
 # makefile should provide CORE_VFILES and STD_VFILES and
-# CATEGORY_VFILES.  To add more targets (e.g., SSR_VFILES), you'll
-# need to update Makefile.am and run autogen.sh and configure again
+# CATEGORY_VFILES.  To add more targets (e.g., ANALYSIS_VFILES), you'll
+# need to update Makefile.am and run autogen.sh and configure again.
 
 MAKEFILE_TARGETS_FILE = Makefile_targets.mk
 
@@ -81,21 +81,6 @@ STD_GLOBFILES=$(STD_VFILES:.v=.glob)
 STD_DEPFILES=$(STD_VFILES:.v=.d)
 STD_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/html/Coq.%,$(subst /,.,$(STD_VFILES:.v=.html)))
 
-if make_ssreflect
-# The list of Coq files that comprise ssreflect
-SSR_MAKEFILE=$(srcdir)/Makefile_ssrplugin
-ssrdir=$(srcdir)/ssrplugin
-SSR_VFILES=$(shell find "$(ssrdir)/theories" -name "*.v")
-SSR_VOFILES=$(SSR_VFILES:.v=.vo)
-SSR_GLOBFILES=$(SSR_VFILES:.v=.glob)
-SSR_HTMLFILES=$(SSR_VFILES:.v=.html)
-SSR_MLIFILES=$(shell find "$(ssrdir)/src" -name "*.mli")
-SSR_MLFILES=$(shell find "$(ssrdir)/src" -name "*.ml4" -o -name "*.ml")
-SSR_MLLIBFILES=$(shell find "$(ssrdir)/theories" -name "*.mllib")
-SSR_CMXSFILES=$(SSR_MLLIBFILES:.mllib=.cmxs)
-SSR_CMAFILES=$(SSR_MLLIBFILES:.mllib=.cma)
-endif
-
 # The list of all files, mainly used for html and proviola
 MAIN_VFILES = $(CORE_VFILES) $(CATEGORY_VFILES) $(CONTRIB_VFILES)
 MAIN_VOFILES = $(MAIN_VFILES:.v=.vo)
@@ -117,10 +102,7 @@ nobase_hott_DATA = \
 	$(CORE_VOFILES) \
 	$(CATEGORY_VOFILES) \
 	$(CONTRIB_VOFILES) \
-	$(shell find "$(SRCCOQLIB)/theories" -name "README.txt") \
-	$(SSR_VOFILES) \
-	$(SSR_CMXSFILES) \
-	$(SSR_CMAFILES)
+	$(shell find "$(SRCCOQLIB)/theories" -name "README.txt")
 
 # The Coq compiler, adapted to HoTT
 HOQC=$(srcdir)/hoqc
@@ -134,11 +116,7 @@ CLEANFILES = $(ALL_VOFILES) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(
 # into putting the include in the right place.
 all-am: Makefile $(SCRIPTS) $(DATA) $(MAKEFILE_TARGETS_FILE)
 
-if make_ssreflect
-.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola clean-local install-data-local proviola-all proviola-xml ssrplugin
-else
 .PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola clean-local install-data-local proviola-all proviola-xml
-endif
 
 # TODO(JasonGross): Get this to work on Windows, where symlinks are unreliable
 install-data-local:
@@ -146,12 +124,6 @@ install-data-local:
 	rm -f "$(hottdir)/coq/dev" "$(hottdir)/coq/plugins"
 	$(LN_S) "$(COQLIB)/dev" "$(hottdir)/coq"
 	$(LN_S) "$(COQLIB)/plugins" "$(hottdir)/coq"
-
-if make_ssreflect
-clean-local: $(SSR_MAKEFILE)
-	$(MAKE) -f "$(SSR_MAKEFILE)" COQBIN="$(COQBIN)/" clean
-	rm -f "$(SSR_MAKEFILE)"
-endif
 
 # The standard library files must be compiled in a special way
 stdlib: $(STD_VOFILES)
@@ -180,41 +152,9 @@ strict-test:
 strict: strict-test hottlib hott-core hott-categories contrib
 
 # A rule for compiling the HoTT libary files
-if make_ssreflect
-$(MAIN_VOFILES) : %.vo : %.v $(STD_VOFILES) $(SSR_VOFILES)
-	$(VECHO) HOQC $<
-	$(Q) $(TIMER) $(HOQC) $<
-else
 $(MAIN_VOFILES) : %.vo : %.v $(STD_VOFILES)
 	$(VECHO) HOQC $<
 	$(Q) $(TIMER) $(HOQC) $<
-endif
-
-if make_ssreflect
-# Compilation of ssreflect is a bit more roundabout because ssreflect relies on coq_makefile,
-# which we do not. Perhaps we should. Anyhow, we circumvent the "standard" ssreflect procedure
-# to keep track of dependencies and what should be installed where. This will break if ssreflect
-# changes its compilation procedure drastically.
-ssrplugin: stdlib $(SSR_VOFILES)
-
-$(SSR_MAKEFILE): $(ssrdir)/Make
-	$(COQMAKEFILE) COQC = "$(SILENCE_HOQC)\$$(TIMER) \"$(HOQC)\"" COQDEP = "$(SILENCE_COQDEP)\"\$$(COQBIN)coqdep\" -c" -f "$(ssrdir)/Make" > "$(SSR_MAKEFILE)"
-
-$(SSR_VOFILES): $(SSR_MAKEFILE) $(SSR_CMXSFILES) $(SSR_CMAFILES)
-
-$(SSR_VOFILES) : %.vo : %.v
-	$(MAKE) -f "$(SSR_MAKEFILE)" COQBIN="$(COQBIN)/" $@
-
-$(SSR_CMXSFILES): $(SSR_MAKEFILE)
-
-$(SSR_CMAFILES): $(SSR_MAKEFILE)
-
-$(SSR_CMXSFILES): %.cmxs : %.mllib
-	$(MAKE) -f "$(SSR_MAKEFILE)" COQBIN="$(COQBIN)/" $@
-
-$(SSR_CMAFILES): %.cma : %.mllib
-	$(MAKE) -f "$(SSR_MAKEFILE)" COQBIN="$(COQBIN)/" $@
-endif
 
 # The HTML files
 # We have a dummy file, to allow us to depend on the html files without
