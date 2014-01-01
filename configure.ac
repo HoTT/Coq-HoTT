@@ -7,10 +7,8 @@ AC_PREREQ([2.67])
 AC_CONFIG_SRCDIR([theories/Overture.v])
 AC_CONFIG_AUX_DIR([etc])
 AC_CONFIG_MACRO_DIR([etc])
-# If we ever remove Makefile.in and configure from version control,
-# and depend on autoconf, we should replace "AM_MAINTAINER_MODE" with
-# "AM_MAINTAINER_MODE([enable])".  Possibly even before then.
-AM_MAINTAINER_MODE
+# Autoregenerate Makefile if needed
+AM_MAINTAINER_MODE([enable])
 AM_INIT_AUTOMAKE([foreign no-dependencies])
 
 # Check for programs
