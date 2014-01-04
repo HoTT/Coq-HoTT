@@ -1,9 +1,10 @@
 (** The HoTT Book Exercises formalization. *)
 
-(** This file records formalized solutions to the HoTT Book exercises.
-    See HoTTBook.v for an IMPORTANT NOTE FOR THE HoTT DEVELOPERS. *)
+(** This file records formalized solutions to the HoTT Book exercises. *)
 
-(*  PROCEDURE FOR UPDATING THE FILE:
+(*  See HoTTBook.v for an IMPORTANT NOTE FOR THE HoTT DEVELOPERS. 
+
+    PROCEDURE FOR UPDATING THE FILE:
 
    1. Compile the latest version of the HoTT Book to update the LaTeX
       labels. Do not forget to pull in changes from HoTT/HoTT.
