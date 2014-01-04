@@ -31,15 +31,92 @@ Require Import HoTT.
 
 Definition Book_1_1 := @compose.
 
+Theorem Book_1_1_refl : forall (A B C D : Type) (f : A -> B) (g : B -> C) (h : C -> D),
+                          h o (g o f) = (h o g) o f.
+Proof.
+  reflexivity.
+Defined.
+
 (* ================================================== ex:pr-to-rec *)
 (** Exercise 1.2 *)
 
+(** Recursor as equivalence. *)
+Definition Book_1_2_prod_lib := @HoTT.types.Prod.equiv_uncurry.
+Section Book_1_2_prod.
+  Variable A B : Type.
 
+  (** Recursor with projection functions instead of pattern-matching. *)
+  Let prod_rec_proj C (g : A -> B -> C) (p : A * B) : C :=
+    g (fst p) (snd p).
+  Definition Book_1_2_prod := prod_rec_proj.
+
+  Proposition Book_1_2_prod_fst : fst = prod_rec_proj A (fun a b => a).
+  Proof.
+    reflexivity.
+  Defined.
+
+  Proposition Book_1_2_prod_snd : snd = prod_rec_proj B (fun a b => b).
+  Proof.
+    reflexivity.
+  Defined.
+End Book_1_2_prod.
+
+(** Recursor as (dependent) equivalence. *)
+Definition Book_1_2_sig_lib := @HoTT.types.Sigma.equiv_sigT_rect.
+Section Book_1_2_sig.
+  Variable A : Type.
+  Variable B : A -> Type.
+
+  (** Non-dependent recursor with projection functions instead of pattern matching. *)
+  Let sig_rec_proj C (g : forall (x : A), B x -> C) (p : exists (x : A), B x) : C :=
+    g (projT1 p) (projT2 p).
+  Definition Book_1_2_sig := @sig_rec_proj.
+
+  Proposition Book_1_2_sig_fst : @projT1 A B = sig_rec_proj A (fun a => fun b => a).
+  Proof.
+    reflexivity.
+  Defined.
+
+  (** NB: You cannot implement projT2 with only the recursor, so it is not possible
+      to check its definitional equality as the exercise suggests. *)
+End Book_1_2_sig.
 
 (* ================================================== ex:pr-to-ind *)
 (** Exercise 1.3 *)
 
+(** The propositional uniqueness principles are named with an
+    'eta' postfix in the HoTT library. *)
 
+Definition Book_1_3_prod_lib := @Coq.Init.Datatypes.prod_rect.
+Section Book_1_3_prod.
+  Variable A B : Type.
+
+  Let prod_ind_eta (C : A * B -> Type) (g : forall (x : A) (y : B), C (x, y)) (x : A * B) : C x :=
+    transport C (HoTT.types.Prod.eta_prod x) (g (fst x) (snd x)).
+  Definition Book_1_3_prod := prod_ind_eta.
+
+  Proposition Book_1_3_prod_refl : forall C g a b, prod_ind_eta C g (a, b) = g a b.
+  Proof.
+    reflexivity.
+  Defined.
+End Book_1_3_prod.
+
+Definition Book_1_3_sig_lib := @Coq.Init.Specif.sigT_rect.
+Section Book_1_3_sig.
+  Variable A : Type.
+  Variable B : A -> Type.
+
+  Let sig_ind_eta (C : (exists (a : A), B a) -> Type)
+                          (g : forall (a : A) (b : B a), C (a; b))
+                          (x : exists (a : A), B a) : C x :=
+    transport C (HoTT.types.Sigma.eta_sigma x) (g (projT1 x) (projT2 x)).
+  Definition Book_1_3_sig := sig_ind_eta.
+
+  Proposition Book_1_3_sig_refl : forall C g a b, sig_ind_eta C g (a; b) = g a b.
+  Proof.
+    reflexivity.
+  Defined.
+End Book_1_3_sig.
 
 (* ================================================== ex:iterator *)
 (** Exercise 1.4 *)
