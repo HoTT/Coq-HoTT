@@ -144,4 +144,4 @@ Ltac path_functor :=
            | _ => (exists idpath)
          end.
 
-Global Opaque path_functor'_sig.
+Global Arguments path_functor'_sig : simpl never.

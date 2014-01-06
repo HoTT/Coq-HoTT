@@ -15,7 +15,7 @@ Section composition.
   Variable G : Functor D E.
   Variable F : Functor C D.
 
-  (** We usually don't want to see the proofs of composition in functors, because the proofs are hProps, and so we don't care about them.  But occasionally, we want to be able to reduce the proofs.  Having the proofs transparent allows the composition of the identity functor with itself to be judgementally the identity.  Since the only way to hide something from within a proof is [abstract], and that makes the definitions opaque, we need to define the laws separately.  We use [Opaque] to make them transparent to the unification engine, but opaque to simplification. *)
+  (** We usually don't want to see the proofs of composition in functors, because the proofs are hProps, and so we don't care about them.  But occasionally, we want to be able to reduce the proofs.  Having the proofs transparent allows the composition of the identity functor with itself to be judgementally the identity.  Since the only way to hide something from within a proof is [abstract], and that makes the definitions opaque, we need to define the laws separately.  We use [simpl never] to make them transparent to the unification engine, but opaque to simplification. *)
 
   Local Notation c_object_of c := (G (F c)) (only parsing).
   Local Notation c_morphism_of m := (morphism_of G (morphism_of F m)) (only parsing).
@@ -45,7 +45,8 @@ Section composition.
 
   Global Arguments compose_composition_of / .
   Global Arguments compose_identity_of / .
-  Global Opaque compose_composition_of compose_identity_of.
+  Global Arguments compose_composition_of : simpl never.
+  Global Arguments compose_identity_of : simpl never.
 
   Definition compose : Functor C E
     := Build_Functor

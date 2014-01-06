@@ -49,8 +49,6 @@ Section parts.
     Variable C : PreCategory.
     Variable D : PreCategory.
 
-    Local Transparent compose_identity_of compose_composition_of.
-
     Lemma identity_of_helper_helper (x : Functor C D)
     : 1 o x o 1 = x.
     Proof.

@@ -113,7 +113,7 @@ Module Import CommaCategory.
       reflexivity.
     Qed.
 
-    Global Opaque path_object'.
+    Global Arguments path_object' : simpl never.
 
     Record morphism (abf a'b'f' : object) :=
       {
@@ -187,6 +187,8 @@ Module Import CommaCategory.
     Global Arguments identity _ / .
   End comma_category_parts.
 End CommaCategory.
+
+Global Arguments CommaCategory.path_object' : simpl never.
 
 Local Ltac path_comma_t :=
   intros;

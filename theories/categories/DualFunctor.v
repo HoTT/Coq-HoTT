@@ -18,7 +18,7 @@ Section opposite.
   Context `{forall C, IsHProp (P C)}.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Notation cat := (@sub_pre_cat _ P HF).
+  Let cat := (@sub_pre_cat _ P HF).
 
   Hypothesis has_op : forall C : cat, P C.1^op.
 
@@ -43,7 +43,7 @@ Section opposite.
 
   Local Open Scope functor_scope.
 
-  Local Opaque path_sigma_uncurried.
+  Local Arguments path_sigma_uncurried : simpl never.
 
   Definition opposite_functor_involutive
   : opposite_functor o opposite_functor = 1.
@@ -66,9 +66,11 @@ Section opposite.
                       (fun x => f x y))
     end.
     simpl in *.
-    destruct_head_hnf @sigT.
-    destruct_head_hnf @Functor.
-    destruct_head_hnf @PreCategory.
+    hnf in *.
+    subst_body.
+    destruct_head @sigT.
+    destruct_head @Functor.
+    destruct_head @PreCategory.
     reflexivity.
   Qed.
 End opposite.

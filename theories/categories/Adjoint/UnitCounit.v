@@ -142,8 +142,6 @@ Section Adjunction.
     Variable F : Functor C D.
     Variable G : Functor D C.
 
-    Local Transparent compose_composition_of compose_identity_of.
-      
     Definition adjunction_counit__op__adjunction_unit (A : AdjunctionUnit G^op F^op)
     : AdjunctionCounit F G
       := existT

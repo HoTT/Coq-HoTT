@@ -30,12 +30,6 @@ Section identity_lemmas.
 
   Local Open Scope adjunction_scope.
 
-  Local Transparent left_identity right_identity.
-
-  Local Transparent Functor.Composition.Core.compose_composition_of. 
-  Local Transparent Functor.Composition.Core.compose_identity_of.
-
-
   Lemma left_identity
   : ((_, _); 1 o A) = ((_, _); A) :> AdjunctionWithFunctors C D.
   Proof.

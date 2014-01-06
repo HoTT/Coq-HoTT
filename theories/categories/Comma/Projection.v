@@ -38,8 +38,6 @@ Section slice_category.
   Local Arguments path_prod / .
   Local Arguments path_prod' / .
   Local Arguments path_prod_uncurried / .
-  Local Transparent Functor.Composition.Core.compose_composition_of.
-  Local Transparent Functor.Composition.Core.compose_identity_of.
 
   Definition arrow_category_projection : Functor (arrow_category A) A
     := Eval simpl in fst o comma_category_projection _ 1.

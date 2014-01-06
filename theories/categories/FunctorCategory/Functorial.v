@@ -18,9 +18,6 @@ Section functor.
 
   Hypothesis has_functor_categories : forall C D : cat, P (C.1 -> D.1).
 
-  Local Transparent Functor.Composition.Core.compose_composition_of.
-  Local Transparent Functor.Composition.Core.compose_identity_of.
-
   Definition functor_uncurried `{fs2 : Funext}
   : object (@functor_category fs2 (cat^op * cat) cat)
     := Eval cbv zeta in

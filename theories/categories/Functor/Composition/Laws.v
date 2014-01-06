@@ -16,9 +16,6 @@ Section identity_lemmas.
 
   Local Open Scope functor_scope.
 
-  Local Transparent compose_identity_of.
-  Local Transparent compose_composition_of.
-
   (** If we had that [match (p : a = b) in (_ = y) return (a = y) with idpath => idpath end ≡ p] (a form of eta for paths), this would be judgemental. *)
   Lemma left_identity (F : Functor D C) : identity _ o F = F.
   Proof.
@@ -53,9 +50,6 @@ Section composition_lemmas.
 
   Local Open Scope functor_scope.
 
-  Local Transparent compose_composition_of.
-  Local Transparent compose_identity_of.
-
   Lemma associativity
         (F : Functor B C) (G : Functor C D) (H : Functor D E)
   : (H o G) o F = H o (G o F).
@@ -70,4 +64,6 @@ End composition_lemmas.
 
 Hint Resolve @associativity : category functor.
 
-Opaque associativity left_identity right_identity.
+Arguments associativity : simpl never.
+Arguments left_identity : simpl never.
+Arguments right_identity : simpl never.

@@ -25,7 +25,6 @@ Section opposite.
          (fun _ _ _ _ _ => idpath)
          (fun _ => idpath).
 
-
   Definition opposite_functor_inv : Functor (C^op -> D^op)^op (C -> D)
     := Build_Functor
          ((C^op -> D^op)^op) (C -> D)

@@ -28,9 +28,6 @@ Section natural_transformation_identity.
     path_natural_transformation; auto with morphism.
   Qed.
 
-  Local Transparent whisker_l_commutes whisker_r_commutes.
-  Local Transparent commutes.
-
   Definition whisker_r_left_identity E
              (G : Functor D E) (F : Functor C D)
   : identity G oR F = 1.
@@ -82,9 +79,6 @@ Section whisker.
     Proof.
       path_natural_transformation; apply composition_of.
     Qed.
-
-    Local Transparent whisker_l_commutes whisker_r_commutes.
-    Local Transparent compose_commutes commutes.
 
     Lemma composition_of_whisker_r B (I : Functor B C)
     : (T o T') oR I = (T oR I) o (T' oR I).

@@ -79,8 +79,8 @@ Section identity.
   Global Arguments generalized_identity' F G !H / .
 End identity.
 
-Global Opaque commutes.
-Global Opaque commutes_sym.
+Global Arguments commutes : simpl never.
+Global Arguments commutes_sym : simpl never.
 
 Module Export NaturalTransformationIdentityNotations.
   Notation "1" := (identity _) : natural_transformation_scope.

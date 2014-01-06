@@ -28,8 +28,6 @@ Section universal.
     Variable a : Functor C A.
     Variable b : Functor C B.
 
-    Local Transparent compose_composition_of compose_identity_of.
-
     Lemma compose_fst_prod : fst o (a * b) = a.
     Proof.
       path_functor; trivial.

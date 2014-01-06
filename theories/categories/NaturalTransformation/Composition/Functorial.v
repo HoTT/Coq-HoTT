@@ -25,9 +25,6 @@ Section functorial_composition.
          (fun _ _ _ _ _ => composition_of_whisker_l _ _ _)
          (fun _ => whisker_l_right_identity _ _).
 
-  Local Transparent whisker_l_commutes whisker_r_commutes.
-  Local Transparent compose_commutes commutes.
-
   Definition whiskerR_functor (G : (C -> D)%category)
   : ((D -> E) -> (C -> E))%category
     := Build_Functor

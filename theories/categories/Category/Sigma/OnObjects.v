@@ -71,11 +71,6 @@ Section sigT_obj.
     reflexivity.
   Qed.
 
-
-
-  Local Transparent Functor.Composition.Core.compose_composition_of.
-  Local Transparent Functor.Composition.Core.compose_identity_of.
-
   Definition sigT_obj_compat : pr1_obj o sigT_functor_obj = pr1
     := idpath.
 End sigT_obj.
