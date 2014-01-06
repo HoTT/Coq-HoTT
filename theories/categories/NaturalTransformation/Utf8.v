@@ -10,7 +10,7 @@ Infix "∘ʳ" := whisker_r (at level 40, left associativity) : natural_transform
    unicode characters [ᵒᵖ].  So, really, this notation is just a
    reminder to do something when Coq's parser is better. *)
 
-Notation "T ᵒᵖ" := (opposite T) (only parsing) : natural_transformation_scope.
-Notation "T ᵒᵖ'" := (opposite' T) (only parsing) : natural_transformation_scope.
-Notation "T ᵒᵖ''" := (opposite_finv T) (at level 3, only parsing) : natural_transformation_scope.
-Notation "T ᵒᵖ'''" := (opposite_tinv T) (at level 3, only parsing) : natural_transformation_scope.
+Notation "T 'ᵒᵖ'" := (opposite T) (only parsing) : natural_transformation_scope.
+Notation "T 'ᵒᵖ''" := (opposite' T) (only parsing) : natural_transformation_scope.
+Notation "T 'ᵒᵖ'''" := (opposite_finv T) (at level 3, only parsing) : natural_transformation_scope.
+Notation "T 'ᵒᵖ''''" := (opposite_tinv T) (at level 3, only parsing) : natural_transformation_scope.

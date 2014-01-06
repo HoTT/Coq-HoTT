@@ -11,5 +11,5 @@ Notation "F ₁ m" := (morphism_of F m) (at level 10, no associativity) : morphi
    unicode characters [ᵒᵖ].  So, really, this notation is just a
    reminder to do something when Coq's parser is better. *)
 
-Notation "F ᵒᵖ" := (opposite F) (only parsing) : functor_scope.
-Notation "F ᵒᵖ'" := (opposite_inv F) (only parsing, at level 3) : functor_scope.
+Notation "F 'ᵒᵖ'" := (opposite F) (only parsing) : functor_scope.
+Notation "F 'ᵒᵖ''" := (opposite_inv F) (only parsing, at level 3) : functor_scope.

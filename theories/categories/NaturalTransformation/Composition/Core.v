@@ -76,10 +76,8 @@ Section composition.
            @ ap (fun x => _ o x) (commutes_sym T _ _ m)
            @ (associativity_sym _ _ _ _ _ _ _ _).
 
-    Global Arguments compose_commutes / .
-    Global Arguments compose_commutes_sym / .
-    Global Opaque compose_commutes.
-    Global Opaque compose_commutes_sym.
+    Global Arguments compose_commutes : simpl never.
+    Global Arguments compose_commutes_sym : simpl never.
 
     Definition compose
     : NaturalTransformation F F''
@@ -114,8 +112,7 @@ Section composition.
         whisker_t.
       Defined.
 
-      Global Arguments whisker_l_commutes / .
-      Global Opaque whisker_l_commutes.
+      Global Arguments whisker_l_commutes : simpl never.
 
       Definition whisker_l
         := Build_NaturalTransformation
@@ -137,8 +134,7 @@ Section composition.
         whisker_t.
       Defined.
 
-      Global Arguments whisker_r_commutes / .
-      Global Opaque whisker_r_commutes.
+      Global Arguments whisker_r_commutes : simpl never.
 
       Definition whisker_r
         := Build_NaturalTransformation

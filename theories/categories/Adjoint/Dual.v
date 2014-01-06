@@ -104,9 +104,7 @@ Section opposite_involutive.
     end = A.
   Proof.
     destruct A as [[] [] ? ?], F, G, C, D.
-    (** WTF? [reflexivity] fails here *)
-    Fail reflexivity.
-    exact idpath.
+    reflexivity.
   Defined.
 End opposite_involutive.
 

@@ -10,7 +10,7 @@ Infix "∘" := compose (at level 40, left associativity) : adjunction_scope.
    unicode characters [ᵒᵖ].  So, really, this notation is just a
    reminder to do something when Coq's parser is better. *)
 
-Notation "A ᵒᵖ" := (opposite A) (at level 3, only parsing) : adjunction_scope.
-Notation "A ᵒᵖ'" := (opposite_inv A) (at level 3, only parsing) : adjunction_scope.
-Notation "A ᵒᵖ'ᴸ" := (opposite'L A) (at level 3, only parsing) : adjunction_scope.
-Notation "A ᵒᵖ'ᴿ" := (opposite'R A) (at level 3, only parsing) : adjunction_scope.
+Notation "A 'ᵒᵖ'" := (opposite A) (at level 3, only parsing) : adjunction_scope.
+Notation "A 'ᵒᵖ''" := (opposite_inv A) (at level 3, only parsing) : adjunction_scope.
+Notation "A 'ᵒᵖ'ᴸ'" := (opposite'L A) (at level 3, only parsing) : adjunction_scope.
+Notation "A 'ᵒᵖ'ᴿ'" := (opposite'R A) (at level 3, only parsing) : adjunction_scope.

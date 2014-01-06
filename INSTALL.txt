@@ -12,7 +12,7 @@ minimal fuss, you should try your luck by following these instructions:
      with `apt-get` you can run the script `./etc/install_coq_deps.sh`
      which installs the dependencies automatically.
 
-   * OSX: we recommend that you install the Opam package manager for Ocaml 
+   * OSX: we recommend that you install the Opam package manager for Ocaml
      (http://opam.ocamlpro.com/) and go from there.
 
    * MS Windows: we we wish you good luck.
@@ -63,7 +63,7 @@ minimal fuss, you should try your luck by following these instructions:
 
 In case of any problems, feel free to contact us by opening an issue at
 https://github.com/HoTT/HoTT.
-    
+
 
 # DETAILED INSTALLATION INSTRUCTIONS
 
@@ -83,7 +83,7 @@ To get these:
   with `apt-get` you can run the script `./etc/ci/install_coq_deps.sh`
   which installs the dependencies automatically.
 
-* OSX: we recommend that you install the Opam package manager for Ocaml 
+* OSX: we recommend that you install the Opam package manager for Ocaml
   (http://opam.ocamlpro.com/).
 
 * MS Windows: we we wish you good luck.

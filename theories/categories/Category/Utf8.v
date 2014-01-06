@@ -13,4 +13,4 @@ Notation "x ↪ y" := (Monomorphism x y)
     copy/paste doesn't work, because the parser doesn't recognize the
     unicode characters [ᵒᵖ].  So, really, this notation is just a
     reminder to do something when Coq's parser is better. *)
-Notation "C ᵒᵖ" := (opposite C) (at level 3, only parsing) : category_scope.
+Notation "C 'ᵒᵖ'" := (opposite C) (at level 3, only parsing) : category_scope.

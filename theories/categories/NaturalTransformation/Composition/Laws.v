@@ -28,8 +28,6 @@ Section natural_transformation_identity.
     path_natural_transformation; auto with morphism.
   Qed.
 
-  Local Transparent whisker_l_commutes whisker_r_commutes.
-
   Definition whisker_r_left_identity E
              (G : Functor D E) (F : Functor C D)
   : identity G oR F = 1.

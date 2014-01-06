@@ -78,12 +78,8 @@ Section Grothendieck.
     apply identity_H.
   Defined.
 
-  Global Arguments compose_H / .
-  Global Opaque compose_H.
-
-  Global Arguments identity_H / .
-  Global Opaque identity_H.
-
+  Global Arguments compose_H : simpl never.
+  Global Arguments identity_H : simpl never.
   Global Arguments identity _ / .
   Global Arguments compose _ _ _ _ _ / .
 

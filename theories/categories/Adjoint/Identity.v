@@ -9,6 +9,7 @@ Set Asymmetric Patterns.
 
 Section identity.
   (** There is an identity adjunction.  It does the obvious thing. *)
+
   Definition identity C : @Adjunction C C 1 1
     := @Build_AdjunctionUnitCounit
          C C 1 1

@@ -185,10 +185,9 @@ Section UniversalMorphism.
              (@Build_IsInitialMorphism_curried).
     End IntroductionAbstractionBarrier.
 
-    Global Opaque
-           Build_IsInitialMorphism
-           Build_IsInitialMorphism_curried
-           Build_IsInitialMorphism_uncurried.
+    Global Arguments Build_IsInitialMorphism : simpl never.
+    Global Arguments Build_IsInitialMorphism_curried : simpl never.
+    Global Arguments Build_IsInitialMorphism_uncurried : simpl never.
 
     Section EliminationAbstractionBarrier.
       Variable Ap : object (X / U).
@@ -241,13 +240,12 @@ Section UniversalMorphism.
                             (center _) |}.
     End EliminationAbstractionBarrier.
 
-    Global Opaque
-           IsInitialMorphism_object
-           IsInitialMorphism_morphism
-           IsInitialMorphism_property
-           IsInitialMorphism_property_morphism
-           IsInitialMorphism_property_morphism_property
-           IsInitialMorphism_property_morphism_unique.
+    Global Arguments IsInitialMorphism_object : simpl never.
+    Global Arguments IsInitialMorphism_morphism : simpl never.
+    Global Arguments IsInitialMorphism_property : simpl never.
+    Global Arguments IsInitialMorphism_property_morphism : simpl never.
+    Global Arguments IsInitialMorphism_property_morphism_property : simpl never.
+    Global Arguments IsInitialMorphism_property_morphism_unique : simpl never.
   End InitialMorphism.
 
   Section TerminalMorphism.
