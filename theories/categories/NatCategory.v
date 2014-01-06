@@ -1,5 +1,5 @@
 Require Import Category.Core DiscreteCategory IndiscreteCategory.
-Require Import types.Unit Trunc types.Sum.
+Require Import types.Unit Trunc types.Sum types.Empty.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

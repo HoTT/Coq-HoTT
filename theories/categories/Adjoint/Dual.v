@@ -14,6 +14,8 @@ Section opposite.
   Variable C : PreCategory.
   Variable D : PreCategory.
 
+  Local Transparent compose_composition_of compose_identity_of.
+
   Definition opposite
              (F : Functor C D)
              (G : Functor D C)
@@ -80,6 +82,12 @@ Section opposite_involutive.
   Local Notation op_op_id_C := (Category.Dual.opposite_involutive C).
   Local Notation op_op_id_D := (Category.Dual.opposite_involutive D).
 
+  (** MS: Reflexivity used to fail in the lemma below because it takes 
+      into account the transparent state. 
+      JG: WTF? [reflexivity] fails here *)
+    
+  Local Transparent compose_composition_of compose_identity_of.
+
   Lemma opposite_involutive
   : match
       op_op_id_F as Fop in (_ = F), op_op_id_G as Gop in (_ = G)
@@ -104,9 +112,7 @@ Section opposite_involutive.
     end = A.
   Proof.
     destruct A as [[] [] ? ?], F, G, C, D.
-    (** WTF? [reflexivity] fails here *)
-    Fail reflexivity.
-    exact idpath.
+    reflexivity.    
   Defined.
 End opposite_involutive.
 
