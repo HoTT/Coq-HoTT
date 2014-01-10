@@ -54,6 +54,7 @@ Section Pseudofunctor.
                                        ⇘              //
                                         P_{x,y}(idₓ ; f)
 >>
+
         and
 <<
                                     P_{x, y}(f) ; id_{P_y}
@@ -70,6 +71,7 @@ Section Pseudofunctor.
                                        ⇘              //
                                        P_{x,y}(f ; id_y)
 >>
+
         commute; and
 
       - for each quadruple [w],[x],[y],[z] of [C]-objects,
@@ -90,6 +92,7 @@ Section Pseudofunctor.
                           P_{w,z}((f ; g) ; h) ========================================⇒ P_{w,z}(f ; (g ; h))
                                                           P_{w,z}(α_{f,g,h})
 >>
+
         commutes.
 *)
 
