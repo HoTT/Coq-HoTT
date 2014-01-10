@@ -39,6 +39,7 @@ Section pseudofunctor.
         P_{x,y}(f);P_{y,z}(g) ⇒ P_{x,z}(f;g)];
 
       - for each hom-category [C(x,y)],
+
 <<
                                     id_{Pₓ} ; P_{x, y}(f)
                                       //              \\
@@ -56,6 +57,7 @@ Section pseudofunctor.
 >>
 
         and
+
 <<
                                     P_{x, y}(f) ; id_{P_y}
                                       //              \\
@@ -75,6 +77,7 @@ Section pseudofunctor.
         commute; and
 
       - for each quadruple [w],[x],[y],[z] of [C]-objects,
+
 <<
                                                   α_{P_{w,x}(f),P_{x,y}(g),P_{y,z}(h)}
         (P_{w,x}(f) ; P_{x,y}(g)) ; P_{y,z}(h) ========================================⇒ P_{w,x}(f) ; (P_{x,y}(g) ; P_{y,z}(h))
