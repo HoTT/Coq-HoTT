@@ -15,7 +15,7 @@ Set Asymmetric Patterns.
 
 Local Open Scope morphism_scope.
 
-Section Pseudofunctor.
+Section pseudofunctor.
   Local Open Scope natural_transformation_scope.
   Context `{Funext}.
 
@@ -190,7 +190,7 @@ Section Pseudofunctor.
           = ((right_identity_natural_transformation_2 (p_morphism_of x y f))
                o (Category.Morphisms.idtoiso (_ -> _) (ap (p_morphism_of x y) (Category.Core.right_identity C x y f)) : morphism _ _ _))
     }.
-End Pseudofunctor.
+End pseudofunctor.
 
 Delimit Scope pseudofunctor_scope with pseudofunctor.
 Bind Scope pseudofunctor_scope with Pseudofunctor.
