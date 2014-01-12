@@ -32,16 +32,14 @@ Section pseudofunctor.
         C(x,y) → D(P_x, P_y)];
 
       - for each object [x] of [C], an invertible 2-morphism (2-cell)
-        [P_{id_x} : id_{P_x} ⇒ P_{x,x}(id_x);
+        [P_{id_x} : id_{P_x} ⇒ P_{x,x}(id_x)];
 
       - for each triple [x],[y],[z] of [C]-objects, a isomorphism
         (natural in [f : x → y] and [g : y → z]) [P_{x,y,z}(f,g) :
         P_{x,y}(f);P_{y,z}(g) ⇒ P_{x,z}(f;g)];
 
       - for each hom-category [C(x,y)],
-
 <<
-
                                     id_{Pₓ} ; P_{x, y}(f)
                                       //              \\
                                     //                  \\
@@ -55,7 +53,6 @@ Section pseudofunctor.
                                      \\                 //
                                        ⇘              //
                                         P_{x,y}(idₓ ; f)
-
 >>
 
         and
@@ -75,11 +72,9 @@ Section pseudofunctor.
                                        ⇘              //
                                        P_{x,y}(f ; id_y)
 >>
-
         commute; and
 
       - for each quadruple [w],[x],[y],[z] of [C]-objects,
-
 <<
                                                   α_{P_{w,x}(f),P_{x,y}(g),P_{y,z}(h)}
         (P_{w,x}(f) ; P_{x,y}(g)) ; P_{y,z}(h) ========================================⇒ P_{w,x}(f) ; (P_{x,y}(g) ; P_{y,z}(h))
@@ -97,7 +92,6 @@ Section pseudofunctor.
                           P_{w,z}((f ; g) ; h) ========================================⇒ P_{w,z}(f ; (g ; h))
                                                           P_{w,z}(α_{f,g,h})
 >>
-
         commutes.
 *)
 
