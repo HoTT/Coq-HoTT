@@ -41,6 +41,7 @@ Section pseudofunctor.
       - for each hom-category [C(x,y)],
 
 <<
+
                                     id_{Pₓ} ; P_{x, y}(f)
                                       //              \\
                                     //                  \\
@@ -54,6 +55,7 @@ Section pseudofunctor.
                                      \\                 //
                                        ⇘              //
                                         P_{x,y}(idₓ ; f)
+
 >>
 
         and
