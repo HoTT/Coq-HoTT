@@ -186,7 +186,7 @@ Section Adjunction.
   (** Quoting Wikipedia on Adjoint Functors:
 
       A counit-unit adjunction between two categories [C] and [D]
-      consists of two functors [F : C ← D] and [G : C → D and two
+      consists of two functors [F : C ← D] and [G : C → D] and two
       natural transformations
 
 <<
