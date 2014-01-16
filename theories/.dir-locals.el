@@ -1,6 +1,4 @@
-(
- (coq-mode 
-  . (
-     (coq-prog-name
-      . (let ((default-directory (locate-dominating-file buffer-file-name ".dir-locals.el")))
-	  (expand-file-name "../hoqtop"))))))
+((coq-mode . ((eval . (let ((default-directory (locate-dominating-file
+						buffer-file-name ".dir-locals.el")))
+			(make-local-variable 'coq-prog-name)
+			(setq coq-prog-name (expand-file-name "../hoqtop")))))))
