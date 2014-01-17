@@ -26,6 +26,7 @@ Require DualFunctor.
 Require Grothendieck.
 Require CategoryOfSections.
 Require DependentProduct.
+Require Yoneda.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -52,6 +53,7 @@ Include Pseudofunctor.Core.
 Include DualFunctor.
 Include CategoryOfSections.Core.
 Include DependentProduct.
+Include Yoneda.
 
 Require Export categories.Notations.
 
