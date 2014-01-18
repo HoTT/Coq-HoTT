@@ -6,7 +6,7 @@ Require Import Cat.Core.
 Require Import FunctorCategory.Core.
 Require Import FunctorCategory.Morphisms NaturalTransformation.Isomorphisms.
 Require Import Category.Morphisms NaturalTransformation.Paths.
-Require Import HProp PathGroupoids.
+Require Import HProp PathGroupoids FunextVarieties.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -18,11 +18,11 @@ Local Open Scope morphism_scope.
 
 (** Every functor to Cat is a pseudofunctor *)
 Section of_functor.
-  Context `{Funext}.
+  Context `{fs : Funext, fs' : Funext}.
   Variable C : PreCategory.
   Context `{HP : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Notation cat := (@sub_pre_cat _ P HP).
+  Local Notation cat := (@sub_pre_cat fs P HP).
 
   Variable F : Functor C cat.
 
@@ -109,7 +109,7 @@ intros.
          o ((idtoiso (x0 -> x1) x14 : morphism _ _ _)
               o (idtoiso (x0 -> x1) x12 : morphism _ _ _)))%natural_transformation.
   Proof.
-    clear HP F.
+    clear HP F fs.
     abstract (apply symmetry; simpl; pseudofunctor_t).
   Qed.
 
@@ -124,7 +124,7 @@ intros.
     = ((NaturalTransformation.Composition.Laws.left_identity_natural_transformation_2 x5)
          o (Category.Morphisms.idtoiso (x0 -> x) x6 : morphism _ _ _))%natural_transformation.
   Proof.
-    clear HP F.
+    clear HP F fs.
     abstract (simpl; pseudofunctor_t).
   Qed.
 
@@ -139,12 +139,13 @@ intros.
     = ((NaturalTransformation.Composition.Laws.right_identity_natural_transformation_2 x3)
          o (Category.Morphisms.idtoiso (x0 -> x) x6 : morphism _ _ _))%natural_transformation.
   Proof.
-    clear HP F.
+    clear HP F fs.
     abstract (simpl; pseudofunctor_t).
   Qed.
 
-  Definition pseudofunctor_of_functor : Pseudofunctor C
-    := Build_Pseudofunctor
+  Definition pseudofunctor_of_functor : @Pseudofunctor fs' C
+    := @Build_Pseudofunctor
+         fs'
          C
          (fun x => pr1 (F x))
          (fun s d m => morphism_of F m)
@@ -155,10 +156,10 @@ intros.
          (fun x y _ => pseudofunctor_of_functor__right_identity_of (F x).2 (F y).2).
 End of_functor.
 
-Definition FunctorToCat `{Funext} {C} `{HP : forall C D, P C -> P D -> IsHSet (Functor C D)}
-  := Functor C (@sub_pre_cat _ P HP).
+Definition FunctorToCat `{fs : Funext, fs' : Funext} {C} `{HP : forall C D, P C -> P D -> IsHSet (Functor C D)}
+  := Functor C (@sub_pre_cat fs P HP).
 Identity Coercion functor_to_cat_id : FunctorToCat >-> Functor.
-Definition pseudofunctor_of_functor_to_cat `(F : @FunctorToCat H C P HP)
-  := @pseudofunctor_of_functor _ C P HP F.
+Definition pseudofunctor_of_functor_to_cat `(F : @FunctorToCat fs fs' C P HP)
+  := @pseudofunctor_of_functor fs fs' C P HP F.
 
 Coercion pseudofunctor_of_functor_to_cat : FunctorToCat >-> Pseudofunctor.
