@@ -1,5 +1,6 @@
 (** * Morphisms in [set_cat] *)
-Require Import Category.Core Category.Morphisms.
+Require Import Category.Core Functor.Core NaturalTransformation.Core.
+Require Import Category.Morphisms NaturalTransformation.Paths.
 Require Import Category.Univalent.
 Require Import SetCategory.Core.
 Require Import Overture types.Record types.Sigma HProp HSet types.Universe Equivalences HoTT.Misc UnivalenceImpliesFunext.
@@ -13,6 +14,26 @@ Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
+
+Lemma isisomorphism_set_cat_natural_transformation_paths
+      `{fs : Funext} (X : set_cat) C D F G
+      (T1 T2 : morphism set_cat X (BuildhSet (@NaturalTransformation C D F G) (@trunc_natural_transformation _ _ _ _ _)))
+      (H : forall x y, T1 x y = T2 x y)
+      `{@IsIsomorphism set_cat _ _ T1}
+: @IsIsomorphism set_cat _ _ T2.
+Proof.
+  exists (T1^-1)%morphism;
+  abstract (
+      first [ apply @iso_moveR_Vp
+            | apply @iso_moveR_pV ];
+      repeat first [ intro
+                   | progress unfold Overture.compose
+                   | solve [ auto
+                           | symmetry; auto ]
+                   | apply @path_forall
+                   | path_natural_transformation ]
+    ).
+Defined.
 
 Section equiv_iso_set_cat.
   (** ** Isomorphisms in [set_cat] are eqivalent to equivalences. *)
