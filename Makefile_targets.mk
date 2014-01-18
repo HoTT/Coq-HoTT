@@ -208,6 +208,8 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/ExponentialLaws/Law4/Law4.v \
 	$(srcdir)/theories/categories/ExponentialLaws/ExponentialLaws.v \
 	\
+	$(srcdir)/theories/categories/Yoneda.v \
+	\
 	$(srcdir)/theories/categories/Cat/Morphisms.v \
 	$(srcdir)/theories/categories/Cat/Cat.v \
 	\
