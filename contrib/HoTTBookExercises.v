@@ -23,7 +23,7 @@
 
 *)
 
-Require Import HoTT HoTT.hit.minus1Trunc.
+Require Import HoTT HoTT.hit.minus1Trunc HoTT.Misc.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -185,7 +185,7 @@ Definition Book_1_10 := ack.
 (* ================================================== ex:without-K *)
 (** Exercise 1.14 *)
 
-
+Definition Book_1_14 := @HoTT.Misc.equiv_bool_equiv_bool_bool.
 
 (* ================================================== ex:subtFromPathInd *)
 (** Exercise 1.15 *)
