@@ -444,7 +444,7 @@ Definition sigT_corect_uncurried
   `{A : X -> Type} (P : forall x, A x -> Type)
   : { f : forall x, A x & forall x, P x (f x) }
      -> (forall x, sigT (P x))
-  := fun fg => let (f,g) := fg in fun x => (f x ; g x).
+  := fun fg => fun x => (fg.1 x ; fg.2 x).
 
 Definition sigT_corect
   `{A : X -> Type} (P : forall x, A x -> Type)
@@ -453,16 +453,21 @@ Definition sigT_corect
   := sigT_corect_uncurried P (f;g).
 
 Instance isequiv_sigT_corect `{Funext}
-  `{A : X -> Type} {P : forall x, A x -> Type}
-  : IsEquiv (sigT_corect_uncurried P) | 0
-  := isequiv_adjointify (sigT_corect_uncurried P)
-  (fun h => existT (fun f => forall x, P x (f x))
-    (fun x => (h x).1) (fun x => (h x).2))
-  _ _.
+         `{A : X -> Type} {P : forall x, A x -> Type}
+: IsEquiv (sigT_corect_uncurried P) | 0
+  := BuildIsEquiv
+       _ _
+       (sigT_corect_uncurried P)
+       (fun h => existT (fun f => forall x, P x (f x))
+                        (fun x => (h x).1)
+                        (fun x => (h x).2))
+       (fun h => path_forall _ _ (fun a : X => @eta_sigma (A a) (P a) (h a)))
+       (fun h => eta_sigma _)
+       _.
 Proof.
-  - intros h; apply path_forall; intros x; simpl.
-    apply eta_sigma.
-  - intros [f g]; simpl; reflexivity.
+  intros [f g]; simpl.
+  unfold sigT_corect_uncurried; simpl.
+  exact (eissect apD10 1).
 Defined.
 
 Definition equiv_sigT_corect `{Funext}
