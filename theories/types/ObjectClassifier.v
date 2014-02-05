@@ -1,4 +1,4 @@
-(* We prove that Fam and Pow are equivalent.
+(** We prove that Fam and Pow are equivalent.
 This equivalence is close to the existence of an object classifier.
 *)
 
@@ -9,7 +9,7 @@ Context `{ua:Univalence}.
 Section AssumeFunext.
 Context `{fs : Funext}.
 Section ToBeMoved.
-(* Should be moved *)
+(** Should be moved *)
 Local Open Scope equiv_scope.
 Definition pullback {A0 B C} (f:B-> A0) (g:C->A0):= {b:B & {c:C & f b = g c}}.
 Definition fibration_replacement {B C} {x:C} (f:C ->B) : {y:B & {c:C & f c = y}} :=
@@ -63,7 +63,7 @@ Defined.
 End ToBeMoved.
 
 Section FamPow.
-(* We consider Families and Powers over a fixed type [A] *)
+(** We consider Families and Powers over a fixed type [A] *)
 Variable A:Type.
 Definition Fam A:=sigT (fun I:Type  => I->A).
 Definition p2f: (A->Type)-> Fam A:=  fun Q:(A->Type) => ( (sigT Q) ; @projT1 _ _).
@@ -79,7 +79,7 @@ apply equiv_biinv. split;
 apply ap; by apply moveR_E.
 Defined.
 
-(* For completeness *)
+(** For completeness *)
 Definition exp' {U V:Type}(w:U<~>V):(A->U)<~>(A->V).
 exists (fun f :A->U => (fun a => (w (f a)))).
 apply  equiv_biinv. split;
@@ -114,12 +114,12 @@ Open Local Scope path_scope.
 
 Theorem PowisoFam : BiInv p2f.
 split.
- (* Theorem left (P:A -> Type) : (f2pp2f P) = P *)
+ (** Theorem left (P:A -> Type) : (f2pp2f P) = P *)
  exists f2p. intro P. by_extensionality a.
 apply ((path_universe (@hfiber_fibration  _ a P))^).
 
 exists f2p. intros [I f].
-(* Theorem right (F:Fam A) : F = (p2ff2p F) *)
+(** Theorem right (F:Fam A) : F = (p2ff2p F) *)
 
 set (e:=@equiv_total_paths _ _ (@existT Type (fun I0 : Type => I0 -> A) I f)
 ({a : A & hfiber f a} ; @projT1 _ _)). simpl in e.
@@ -136,7 +136,7 @@ exists p2f.
 apply (equiv_biinv_equiv _).  exact PowisoFam.
 Qed.
 
-(* We construct the universal diagram for the object classifier *)
+(** We construct the universal diagram for the object classifier *)
 Definition topmap {B} (f:B->A) (b:B): pointedType :=
   (hfiber f (f b) ; (b ; idpath (f b))).
 Let help_objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P) ->

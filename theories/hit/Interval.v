@@ -50,7 +50,7 @@ Proof.
   refine (interval_rect_beta_seg (fun _ => P) _ _ _).
 Defined.
 
-(** *** From an interval type, we can prove function extensionality. *)
+(** ** From an interval type, we can prove function extensionality. *)
 
 Instance funext_from_interval : Funext | 0
   := WeakFunext_implies_Funext (NaiveFunext_implies_WeakFunext
@@ -59,7 +59,7 @@ Instance funext_from_interval : Funext | 0
         interval_rectnd _ (f a) (g a) (p a) x
         in ap h seg)).
 
-(** *** The interval is contractible. *)
+(** ** The interval is contractible. *)
 
 Instance contr_interval : Contr interval | 0.
 Proof.

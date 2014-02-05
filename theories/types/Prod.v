@@ -6,7 +6,7 @@ Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
 
-(** *** Unpacking *)
+(** ** Unpacking *)
 
 (** Sometimes we would like to prove [Q u] where [u : A * B] by writing [u] as a pair [(fst u ; snd u)]. This is accomplished by [unpack_prod]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
 
@@ -21,12 +21,12 @@ Definition pack_prod `{P : A * B -> Type} (u : A * B) :
   :=
   let (x, y) as u return (P u -> P (fst u, snd u)) := u in idmap.
 
-(** *** Eta conversion *)
+(** ** Eta conversion *)
 
 Definition eta_prod `(z : A * B) : (fst z, snd z) = z
   := match z with (x,y) => 1 end.
 
-(** *** Paths *)
+(** ** Paths *)
 
 (** With this version of the function, we often have to give [z] and [z'] explicitly, so we make them explicit arguments. *)
 Definition path_prod_uncurried {A B : Type} (z z' : A * B)
@@ -142,14 +142,14 @@ Definition equiv_path_prod {A B : Type} (z z' : A * B)
   : (fst z = fst z') * (snd z = snd z')  <~>  (z = z')
   := BuildEquiv _ _ (path_prod_uncurried z z') _.
 
-(** *** Transport *)
+(** ** Transport *)
 
 Definition transport_prod {A : Type} {P Q : A -> Type} {a a' : A} (p : a = a')
   (z : P a * Q a)
   : transport (fun a => P a * Q a) p z  =  (p # (fst z), p # (snd z))
   := match p with idpath => match z with (x,y) => 1 end end.
 
-(** *** Functorial action *)
+(** ** Functorial action *)
 
 Definition functor_prod {A A' B B' : Type} (f:A->A') (g:B->B')
   : A * B -> A' * B'
@@ -164,7 +164,7 @@ Proof.
   simpl in p, q. destruct p, q. reflexivity.
 Defined.
 
-(** *** Equivalences *)
+(** ** Equivalences *)
 
 Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
   : IsEquiv (functor_prod f g) | 1000.
@@ -208,7 +208,7 @@ Proof.
   exact _.    (* i.e., search the context for instances *)
 Defined.
 
-(** *** Symmetry *)
+(** ** Symmetry *)
 
 (* This is a special property of [prod], of course, not an instance of a general family of facts about types. *)
 
@@ -228,7 +228,7 @@ Proof.
   intros [a b]. reflexivity.
 Defined.
 
-(** *** Universal mapping properties *)
+(** ** Universal mapping properties *)
 
 (** Ordinary universal mapping properties are expressed as equivalences of sets or spaces of functions.  In type theory, we can go beyond this and express an equivalence of types of *dependent* functions.  Moreover, because the product type can expressed both positively and negatively, it has both a left universal property and a right one. *)
 
@@ -280,7 +280,7 @@ Definition equiv_prod_corect `{Funext} `(A : X -> Type) (B : X -> Type)
   : ((forall x, A x) * (forall x, B x)) <~> (forall x, A x * B x)
   := BuildEquiv _ _ (@prod_corect_uncurried X A B) _.
 
-(** *** Products preserve truncation *)
+(** ** Products preserve truncation *)
 
 Instance trunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B) | 100.
 Proof.

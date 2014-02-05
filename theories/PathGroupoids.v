@@ -1,4 +1,4 @@
-(* * The groupid structure of paths *)
+(** * The groupid structure of paths *)
 
 Require Import Overture.
 

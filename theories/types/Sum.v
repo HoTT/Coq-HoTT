@@ -9,11 +9,11 @@ Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
 Set Implicit Arguments.
 
-(** *** CoUnpacking *)
+(** ** CoUnpacking *)
 
 (** Sums are coproducts, so there should be a dual to [unpack_prod].  I'm not sure what it is, though. *)
 
-(** *** Eta conversion *)
+(** ** Eta conversion *)
 
 Definition eta_sum `(z : A + B) : match z with
                                     | inl z' => inl z'
@@ -21,7 +21,7 @@ Definition eta_sum `(z : A + B) : match z with
                                   end = z
   := match z with inl _ => 1 | inr _ => 1 end.
 
-(** *** Paths *)
+(** ** Paths *)
 
 Definition path_sum {A B : Type} (z z' : A + B)
            (pq : match z, z' with
@@ -95,7 +95,7 @@ Defined.
 Definition equiv_path_sum {A B : Type} (z z' : A + B)
   := BuildEquiv _ _ _ (@isequiv_path_sum A B z z').
 
-(** *** Transport *)
+(** ** Transport *)
 
 Definition transport_sum {A : Type} {P Q : A -> Type} {a a' : A} (p : a = a')
            (z : P a + Q a)
@@ -105,13 +105,13 @@ Definition transport_sum {A : Type} {P Q : A -> Type} {a a' : A} (p : a = a')
                                        end
   := match p with idpath => match z with inl _ => 1 | inr _ => 1 end end.
 
-(** *** Functorial action *)
+(** ** Functorial action *)
 
 Definition functor_sum {A A' B B' : Type} (f : A -> A') (g : B -> B')
 : A + B -> A' + B'
   := fun z => match z with inl z' => inl (f z') | inr z' => inr (g z') end.
 
-(** *** Equivalences *)
+(** ** Equivalences *)
 
 Instance isequiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}
 : IsEquiv (functor_sum f g) | 1000.
@@ -139,7 +139,7 @@ Definition equiv_functor_sum_r {A A' B : Type} (f : A <~> A')
 : A + B <~> A' + B
   := equiv_functor_sum (f := f) (g := idmap).
 
-(** *** Symmetry *)
+(** ** Symmetry *)
 
 (* This is a special property of [sum], of course, not an instance of a general family of facts about types. *)
 
@@ -151,7 +151,7 @@ Proof.
   intros [?|?]; exact idpath.
 Defined.
 
-(** *** Universal mapping properties *)
+(** ** Universal mapping properties *)
 
 (** Ordinary universal mapping properties are expressed as equivalences of sets or spaces of functions.  In type theory, we can go beyond this and express an equivalence of types of *dependent* functions. *)
 
@@ -182,7 +182,7 @@ Definition equiv_sum_distributive `{Funext} (A B C : Type)
 : (A -> C) * (B -> C) <~> (A + B -> C)
   := equiv_sum_rect (fun _ => C).
 
-(** *** Sums preserve most truncation *)
+(** ** Sums preserve most truncation *)
 
 Instance trunc_sum n' (n := trunc_S (trunc_S n'))
          `{IsTrunc n A, IsTrunc n B}
@@ -199,7 +199,7 @@ Defined.
 Instance hset_sum `{HA : IsHSet A, HB : IsHSet B} : IsHSet (A + B) | 100
   := @trunc_sum minus_two A HA B HB.
 
-(** *** Binary coproducts are equivalent to dependent sigmas where the first component is a bool. *)
+(** ** Binary coproducts are equivalent to dependent sigmas where the first component is a bool. *)
 
 Definition sigT_of_sum A B (x : A + B)
 : { b : Bool & if b then A else B }

@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-(** * Theorems about the circle S^1. *)
+(** * Theorems about the circle [S¹]. *)
 
 Require Import Overture PathGroupoids Equivalences Trunc HSet.
 Require Import types.Paths types.Forall types.Arrow types.Universe types.Empty types.Unit.
@@ -8,7 +8,7 @@ Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
 
-(* *** Definition of the circle. *)
+(* ** Definition of the circle. *)
 
 Module Export Circle.
 
@@ -27,7 +27,7 @@ Axiom S1_rect_beta_loop
 
 End Circle.
 
-(* *** The non-dependent eliminator *)
+(* ** The non-dependent eliminator *)
 
 Definition S1_rectnd (P : Type) (b : P) (l : b = b)
   : S1 -> P
@@ -42,7 +42,7 @@ Proof.
   refine (S1_rect_beta_loop (fun _ => P) _ _).
 Defined.
 
-(* *** The loop space of the circle is the Integers. *)
+(* ** The loop space of the circle is the Integers. *)
 
 (* First we define the appropriate integers. *)
 

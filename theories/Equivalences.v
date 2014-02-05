@@ -1,4 +1,5 @@
-(** * Equivalences -*- mode: coq; mode: visual-line -*- *)
+(* -*- mode: coq; mode: visual-line -*- *)
+(** * Equivalences *)
 
 Require Import Overture PathGroupoids.
 Local Open Scope path_scope.
