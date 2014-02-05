@@ -10,12 +10,12 @@ Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A.
 
-(** *** Eta conversion *)
+(** ** Eta conversion *)
 
 Definition eta_unit (z : Unit) : tt = z
   := match z with tt => 1 end.
 
-(** *** Paths *)
+(** ** Paths *)
 
 (* This is all kind of ridiculous, but it fits the pattern. *)
 
@@ -46,11 +46,11 @@ Defined.
 Definition equiv_path_unit (z z' : Unit) : Unit <~> (z = z')
   := BuildEquiv _ _ (path_unit_uncurried z z') _.
 
-(** *** Transport *)
+(** ** Transport *)
 
 (** Is a special case of transporting in a constant fibration. *)
 
-(** *** Universal mapping properties *)
+(** ** Universal mapping properties *)
 
 (* The positive universal property *)
 Arguments Unit_rect [A] a u : rename.
@@ -82,7 +82,7 @@ Definition equiv_unit_corect `{Funext} (A : Type)
   : Unit <~> (A -> Unit)
   := BuildEquiv _ _ (@unit_corect A) _.
 
-(** *** Truncation *)
+(** ** Truncation *)
 
 (* The Unit type is contractible *)
 (** Because [Contr] is a notation, and [Contr_internal] is the record, we need to iota expand to fool Coq's typeclass machinery into accepting supposedly "mismatched" contexts. *)
@@ -91,7 +91,7 @@ Instance contr_unit : Contr Unit | 0 := let x := {|
   contr := fun t : Unit => match t with tt => 1 end
 |} in x.
 
-(** *** Equivalences *)
+(** ** Equivalences *)
 
 (** A contractible type is equivalent to [Unit]. *)
 Definition equiv_contr_unit `{Contr A} : A <~> Unit.

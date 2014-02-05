@@ -14,7 +14,7 @@ From such a [P] we can build a total space over the base space [A] so that the f
 
 The base and fiber components of a point in the total space are extracted with the two projections [projT1] and [projT2]. *)
 
-(** *** Unpacking *)
+(** ** Unpacking *)
 
 (** Sometimes we would like to prove [Q u] where [u : {x : A & P x}] by writing [u] as a pair [(projT1 u ; projT2 u)]. This is accomplished by [sigT_unpack]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
 
@@ -24,7 +24,7 @@ Definition unpack_sigma `{P : A -> Type} (Q : sigT P -> Type) (u : sigT P) :
   fun H =>
     (let (x,p) as u return (Q (projT1 u; projT2 u) -> Q u) := u in idmap) H.
 
-(** *** Eta conversion *)
+(** ** Eta conversion *)
 
 Definition eta_sigma `{P : A -> Type} (u : sigT P)
   : (projT1 u; projT2 u) = u
@@ -40,7 +40,7 @@ Definition eta3_sigma `{P : forall (a : A) (b : B a) (c : C a b), Type}
   : (u.1; (u.2.1; (u.2.2.1; u.2.2.2))) = u
   := match u with existT x (existT y (existT z w)) => 1 end.
 
-(** *** Paths *)
+(** ** Paths *)
 
 (** A path in a total space is commonly shown component wise. Because we use this over and over, we write down the proofs by hand to make sure they are what we think they should be. *)
 
@@ -294,7 +294,7 @@ Definition path_path_sigma {A : Type} (P : A -> Type) (u v : sigT P)
 : p = q
   := path_path_sigma_uncurried P u v p q (r; s).
 
-(** *** Transport *)
+(** ** Transport *)
 
 (** The concrete description of transport in sigmas (and also pis) is rather trickier than in the other types.  In particular, these cannot be described just in terms of transport in simpler types; they require also the dependent transport [transportD].
 
@@ -317,7 +317,7 @@ Proof.
   destruct p. destruct yz. reflexivity.
 Defined.
 
-(** *** Functorial action *)
+(** ** Functorial action *)
 
 Definition functor_sigma `{P : A -> Type} `{Q : B -> Type}
   (f : A -> B) (g : forall a, P a -> Q (f a))
@@ -340,7 +340,7 @@ Proof.
   reflexivity.
 Defined.
 
-(** *** Equivalences *)
+(** ** Equivalences *)
 
 Instance isequiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv A B f} `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
@@ -389,7 +389,7 @@ Proof.
   intros [a p]. apply path_sigma' with 1, contr.
 Defined.
 
-(** *** Associativity *)
+(** ** Associativity *)
 
 Definition equiv_sigma_assoc `(P : A -> Type) (Q : {a : A & P a} -> Type)
   : {a : A & {p : P a & Q (a;p)}} <~> sigT Q.
@@ -417,7 +417,7 @@ Proof.
   - intros [a [b q]]; reflexivity.
 Defined.
 
-(** *** Universal mapping properties *)
+(** ** Universal mapping properties *)
 
 (* The positive universal property. *)
 Instance isequiv_sigT_rect `{Funext} `{P : A -> Type}
@@ -471,7 +471,7 @@ Definition equiv_sigT_corect `{Funext}
      <~> (forall x, sigT (P x))
   := BuildEquiv _ _ (sigT_corect_uncurried P) _.
 
-(** *** Sigmas preserve truncation *)
+(** ** Sigmas preserve truncation *)
 
 Instance trunc_sigma `{P : A -> Type}
   `{IsTrunc n A} `{forall a, IsTrunc n (P a)}

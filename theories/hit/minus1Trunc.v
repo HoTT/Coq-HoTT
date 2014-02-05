@@ -1,11 +1,15 @@
+(** * (-1)-truncation *)
+
 Require Import HoTT HProp EquivalenceVarieties.
 Open Local Scope path_scope.
 (** The definition of [minus1Trunc], the (-1)-truncation.  Here is what
    it would look like if Coq supported higher inductive types natively:
 
+<<
    Inductive minus1Trunc (A : Type) : Type :=
    | min1 : A -> minus1Trunc A
    | min1_path : forall (x y: minus1Trunc A), x = y
+>>
 *)
 
 Module Export minus1Trunc.
@@ -43,7 +47,7 @@ End minus1Trunc.
 
 Hint Resolve @min1_path @minus1Trunc_compute_min1 @minus1Trunc_compute_path.
 
-(** The non-dependent version of the eliminator. *)
+(** ** The non-dependent version of the eliminator. *)
 
 Definition minus1Trunc_rect_nondep {A B : Type} :
   (A -> B) -> (forall (z w : B), z = w) -> (minus1Trunc A -> B).
@@ -68,7 +72,7 @@ Proof.
  apply (@path_contr ).
  by apply hprop_allpath.
 Defined.
-(** [minus1Trunc A] is always a proposition. *)
+(** ** [minus1Trunc A] is always a proposition. *)
 
 Instance minus1Trunc_is_prop {A : Type} : IsHProp (minus1Trunc A) | 0.
 Proof.
@@ -91,7 +95,7 @@ Proof.
 Defined.
 
 Section AssumeFunext.
-(** Inhabited propositions are contractible. *)
+(** ** Inhabited propositions are contractible. *)
 Open Scope fibration_scope.
 Context `{Funext}.
 
@@ -105,7 +109,7 @@ Defined.
 
 Require Import HProp Fibrations.
 
-(** "Epi" and "mono" implies equivalence. *)
+(** ** "Epi" and "mono" implies equivalence. *)
 
 Definition is_epi {X Y : Type} (f : X -> Y) :=
   forall y:Y, minus1Trunc (hfiber f y).
@@ -126,8 +130,9 @@ End AssumeFunext.
 
 Section minus1TruncMonad.
 
-(** The monadic structure of [minus1Trunc]. This is pretty easy to check since any
-   diagram involving propositions commutes. *)
+(** ** The monadic structure of [minus1Trunc].
+
+    This is pretty easy to check since any diagram involving propositions commutes. *)
 
 (** We first need the action of [minus1Trunc] on morphisms. *)
 Definition minus1Trunc_map {A B : Type} : (A -> B) -> (minus1Trunc A -> minus1Trunc B).
@@ -137,7 +142,7 @@ Proof.
   intro x. apply (min1 (f x)).
 Defined.
 
-(** Functoriality of [minus1Trunc_map]. *)
+(** *** Functoriality of [minus1Trunc_map]. *)
 Lemma minus1Trunc_map_id {A : Type} :
   forall (p : minus1Trunc A), minus1Trunc_map (fun x => x) p = p.
 Proof.
@@ -150,23 +155,23 @@ Proof.
   auto.
 Defined.
 
-(** The unit. *)
+(** *** The unit. *)
 Definition eta := @min1.
 
-  (** Naturality of unit. *)
+(** *** Naturality of unit. *)
 Lemma eta_natural {A B : Type} (f : A -> B) :
   forall a : A, eta B (f a) = minus1Trunc_map f (eta A a).
 Proof.
   auto.
 Defined.
 
-  (** The multiplication. *)
+(** *** The multiplication. *)
 Definition mu (A : Type) : minus1Trunc (minus1Trunc A) -> minus1Trunc A.
 Proof.
   intros p. apply @minus1Trunc_rect_nondep with (A := minus1Trunc A); auto.
 Defined.
 
-  (** Naturality of multiplication. *)
+(** *** Naturality of multiplication. *)
 Lemma mu_natural {A B : Type} (f : A -> B) :
   forall p : minus1Trunc (minus1Trunc A),
     mu B (minus1Trunc_map (minus1Trunc_map f) p) = minus1Trunc_map f (mu A p).
@@ -174,7 +179,7 @@ Proof.
   auto.
 Qed.
 
-  (** Unit laws. *)
+(** *** Unit laws. *)
 Lemma eta_1 (A : Type) :
   forall p : minus1Trunc A, mu A (eta (minus1Trunc A) p) = p.
 Proof.
@@ -194,7 +199,7 @@ Proof.
   auto.
 Qed.
 
-  (* The strength. *)
+(** *** The strength. *)
 Lemma t (A B : Type) : A * minus1Trunc B -> minus1Trunc (A * B).
 Proof.
   intros [a q].
@@ -202,7 +207,7 @@ Proof.
   intro b. apply min1; auto.
 Defined.
 
-  (* Naturality of strength. *)
+(** *** Naturality of strength. *)
 Lemma t_natural (A A' B B' : Type) (f : A -> A') (g : B -> B') :
   forall (a : A) (q : minus1Trunc B),
     minus1Trunc_map (fun xy => (f (fst xy), g (snd xy))) (t A B (a,q)) = t A' B' (f a, minus1Trunc_map g q).

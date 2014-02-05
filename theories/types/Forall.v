@@ -12,7 +12,7 @@ Generalizable Variables A B f g e n.
 Section AssumeFunext.
 Context `{Funext}.
 
-(** *** Paths *)
+(** ** Paths *)
 
 (** Paths [p : f = g] in a function type [forall x:X, P x] are equivalent to functions taking values in path types, [H : forall x:X, f x = g x], or concisely, [H : f == g].
 
@@ -44,7 +44,7 @@ Definition equiv_path_forall `{P : A -> Type} (f g : forall x, P x)
   : (f == g)  <~>  (f = g)
   := BuildEquiv _ _ (path_forall f g) _.
 
-(** *** Transport *)
+(** ** Transport *)
 
 (** The concrete description of transport in sigmas and pis is rather trickier than in the other types. In particular, these cannot be described just in terms of transport in simpler types; they require the full Id-elim rule by way of "dependent transport" [transportD].
 
@@ -66,7 +66,7 @@ Definition transport_forall_constant
     == (fun y => transport (fun x => C x y) p (f y))
   := match p with idpath => fun _ => 1 end.
 
-(** *** Maps on paths *)
+(** ** Maps on paths *)
 
 (** The action of maps given by lambda. *)
 Definition ap_lambdaD {A B : Type} {C : B -> Type} {x y : A} (p : x = y) (M : forall a b, C b) :
@@ -78,7 +78,7 @@ Proof.
   simpl; apply path_forall_1.
 Defined.
 
-(** *** Dependent paths *)
+(** ** Dependent paths *)
 
 (** Usually, a dependent path over [p:x1=x2] in [P:A->Type] between [y1:P x1] and [y2:P x2] is a path [transport P p y1 = y2] in [P x2].  However, when [P] is a function space, these dependent paths have a more convenient description: rather than transporting the argument of [y1] forwards and backwards, we transport only forwards but on both sides of the equation, yielding a "naturality square". *)
 
@@ -93,7 +93,7 @@ Proof.
   apply equiv_path_forall.
 Defined.
 
-(** *** Functorial action *)
+(** ** Functorial action *)
 
 (** The functoriality of [forall] is slightly subtle: it is contravariant in the domain type and covariant in the codomain, but the codomain is dependent on the domain. *)
 Definition functor_forall `{P : A -> Type} `{Q : B -> Type}
@@ -114,7 +114,7 @@ Proof.
   - symmetry.  apply path_forall_1.
 Defined.
 
-(** *** Equivalences *)
+(** ** Equivalences *)
 
 Global Instance isequiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv B A f} `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
@@ -153,7 +153,7 @@ Definition equiv_functor_forall_id `{P : A -> Type} `{Q : A -> Type}
   : (forall a, P a) <~> (forall a, Q a)
   := equiv_functor_forall (equiv_idmap A) g.
 
-(** *** Truncatedness: any dependent product of n-types is an n-type *)
+(** ** Truncatedness: any dependent product of n-types is an n-type *)
 
 Global Instance contr_forall `{P : A -> Type} `{forall a, Contr (P a)}
   : Contr (forall a, P a) | 100.
@@ -174,7 +174,7 @@ Proof.
 Defined.
 
 
-(** *** Symmetry of curried arguments *)
+(** ** Symmetry of curried arguments *)
 
 (** Using the standard Haskell name for this, as it’s a handy utility function.
 

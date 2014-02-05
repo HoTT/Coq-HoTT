@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-(** Misecllaneous material *)
+(** * Misecllaneous material *)
 
 (** If you have a lemma or group of lemmas that you can’t find a better home for, put them here.  However, big “Miscellaneous” files are sub-optimal to work with, so some caveats:
 

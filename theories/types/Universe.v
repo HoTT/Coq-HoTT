@@ -8,7 +8,7 @@ Local Open Scope equiv_scope.
 
 Generalizable Variables A B f.
 
-(** *** Paths *)
+(** ** Paths *)
 
 Instance isequiv_path {A B : Type} (p : A = B)
   : IsEquiv (transport (fun X:Type => X) p) | 0

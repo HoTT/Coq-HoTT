@@ -11,7 +11,7 @@ Generalizable Variables A B C D f g n.
 Section AssumeFunext.
 Context `{Funext}.
 
-(** *** Paths *)
+(** ** Paths *)
 
 (** As for dependent functions, paths [p : f = g] in a function type [A -> B] are equivalent to functions taking values in path types, [H : forall x:A, f x = g x], or concisely [H : f == g].  These are all given in the [Overture], but we can give them separate names for clarity in the non-dependent case. *)
 
@@ -48,7 +48,7 @@ Definition equiv_path_arrow {A B : Type} (f g : A -> B)
   : (f == g) <~> (f = g)
   := equiv_path_forall f g.
 
-(** *** Transport *)
+(** ** Transport *)
 
 (** Transporting in non-dependent function types is somewhat simpler than in dependent ones. *)
 
@@ -60,7 +60,7 @@ Proof.
 Defined.
 
 
-(** *** Dependent paths *)
+(** ** Dependent paths *)
 
 (** Usually, a dependent path over [p:x1=x2] in [P:A->Type] between [y1:P x1] and [y2:P x2] is a path [transport P p y1 = y2] in [P x2].  However, when [P] is a function space, these dependent paths have a more convenient description: rather than transporting the argument of [y1] forwards and backwards, we transport only forwards but on both sides of the equation, yielding a "naturality square". *)
 
@@ -89,7 +89,7 @@ Proof.
   exact (apD10_path_forall f g h u @ (concat_1p _)^).
 Defined.
 
-(** *** Maps on paths *)
+(** ** Maps on paths *)
 
 (** The action of maps given by application. *)
 Definition ap_apply_l {A B : Type} {x y : A -> B} (p : x = y) (z : A) :
@@ -118,7 +118,7 @@ Proof.
   simpl; apply path_arrow_1.
 Defined.
 
-(** *** Functorial action *)
+(** ** Functorial action *)
 
 Definition functor_arrow `(f : B -> A) `(g : C -> D)
   : (A -> C) -> (B -> D)
@@ -131,7 +131,7 @@ Definition ap_functor_arrow `(f : B -> A) `(g : C -> D)
   := @ap_functor_forall _ A (fun _ => C) B (fun _ => D)
   f (fun _ => g) h h' p.
 
-(** *** Truncatedness: functions into an n-type is an n-type *)
+(** ** Truncatedness: functions into an n-type is an n-type *)
 
 Global Instance contr_arrow {A B : Type} `{Contr B}
   : Contr (A -> B) | 100
@@ -141,7 +141,7 @@ Global Instance trunc_arrow {A B : Type} `{IsTrunc n B}
   : IsTrunc n (A -> B) | 100
 := trunc_forall.
 
-(** *** Equivalences *)
+(** ** Equivalences *)
 
 Global Instance isequiv_functor_arrow `{IsEquiv B A f} `{IsEquiv C D g}
   : IsEquiv (functor_arrow f g) | 1000
