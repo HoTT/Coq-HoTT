@@ -125,16 +125,20 @@ Proof.
       (fun (x:A) (y:Q (f^-1 x)) => eisretr f x # (g (f^-1 x))^-1 y
       )) _ _);
   intros h.
-  - apply path_forall; intros b; unfold functor_forall.
-    rewrite eisadj.
-    rewrite <- transport_compose.
-    rewrite ap_transport.
-    rewrite eisretr.
-    apply apD.
-  - apply path_forall; intros a; unfold functor_forall.
-    rewrite eissect.
-    apply apD.
-Qed.
+  - abstract (
+        apply path_forall; intros b; unfold functor_forall;
+        rewrite eisadj;
+        rewrite <- transport_compose;
+        rewrite ap_transport;
+        rewrite eisretr;
+        apply apD
+      ).
+  - abstract (
+        apply path_forall; intros a; unfold functor_forall;
+        rewrite eissect;
+        apply apD
+      ).
+Defined.
 
 Definition equiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
   (f : B -> A) `{IsEquiv B A f}
