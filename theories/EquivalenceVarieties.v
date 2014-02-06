@@ -137,8 +137,7 @@ Proof.
   refine (equiv_compose' _ (equiv_inverse (equiv_sigma_assoc
     (fun g => forall x, f (g x) = x)
     (fun gh => forall x y,
-      (let (g, h) return (forall b, exists a, (f a) = b)
-        := gh in fun b => (g b; h b)) x = y)))).
+      (fun b => (gh.1 b; gh.2 b)) x = y)))).
   refine (equiv_functor_sigma' (equiv_idmap _) _). intros g.
   refine (equiv_functor_sigma' (equiv_idmap _) _). intros r. simpl.
   (* Now we use the fact that Paulin-Mohring J is an equivalence. *)
