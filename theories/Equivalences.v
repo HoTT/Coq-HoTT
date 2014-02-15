@@ -63,7 +63,7 @@ Section IsEquivHomotopic.
 
   Context `(f : A -> B) `(g : A -> B).
   Context `{IsEquiv A B f}.
-  Context (h : forall a:A, f a = g a).
+  Hypothesis h : f == g.
 
   Let sect := (fun b:B => (h (f^-1 b))^ @ eisretr f b).
   Let retr := (fun a:A => (ap f^-1 (h a))^ @ eissect f a).
