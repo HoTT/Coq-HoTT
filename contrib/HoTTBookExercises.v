@@ -2,7 +2,7 @@
 
 (** This file records formalized solutions to the HoTT Book exercises. *)
 
-(*  See HoTTBook.v for an IMPORTANT NOTE FOR THE HoTT DEVELOPERS. 
+(*  See HoTTBook.v for an IMPORTANT NOTE FOR THE HoTT DEVELOPERS.
 
     PROCEDURE FOR UPDATING THE FILE:
 
@@ -10,7 +10,7 @@
       labels. Do not forget to pull in changes from HoTT/HoTT.
 
    2. Run `etc/Book.py` using the `--exercises` flag (so your command
-      should look like `cat ../book/\*.aux | etc/Book.py --exercises contrib/HoTTBookExercises.v`)
+      should look like `cat ../book/*.aux | etc/Book.py --exercises contrib/HoTTBookExercises.v`)
       If it complains, fix things.
 
    3. Add contents to new entries.
@@ -194,8 +194,23 @@ Definition Book_1_10 := ack.
 
 
 
+(* ================================================== ex:eq-proofs-commute *)
+(** Exercise 2.2 *)
+
+
+
+(* ================================================== ex:fourth-concat *)
+(** Exercise 2.3 *)
+
+
+
 (* ================================================== ex:npaths *)
 (** Exercise 2.4 *)
+
+
+
+(* ================================================== ex:ap-to-apd-equiv-apd-to-ap *)
+(** Exercise 2.5 *)
 
 
 
@@ -206,6 +221,11 @@ Definition Book_1_10 := ack.
 
 (* ================================================== ex:ap-sigma *)
 (** Exercise 2.7 *)
+
+
+
+(* ================================================== ex:ap-coprod *)
+(** Exercise 2.8 *)
 
 
 
@@ -239,8 +259,23 @@ Definition Book_1_10 := ack.
 
 
 
+(* ================================================== ex:strengthen-transport-is-ap *)
+(** Exercise 2.15 *)
+
+
+
 (* ================================================== ex:strong-from-weak-funext *)
 (** Exercise 2.16 *)
+
+
+
+(* ================================================== ex:equiv-functor-types *)
+(** Exercise 2.17 *)
+
+
+
+(* ================================================== ex:equiv-functor-set *)
+(** Exercise 3.1 *)
 
 
 
@@ -279,8 +314,28 @@ Definition Book_1_10 := ack.
 
 
 
+(* ================================================== ex:lem-impl-prop-equiv-bool *)
+(** Exercise 3.9 *)
+
+
+
 (* ================================================== ex:lem-impred *)
 (** Exercise 3.10 *)
+
+
+
+(* ================================================== ex:not-brck-A-impl-A *)
+(** Exercise 3.11 *)
+
+
+
+(* ================================================== ex:lem-impl-simple-ac *)
+(** Exercise 3.12 *)
+
+
+
+(* ================================================== ex:naive-lem-impl-ac *)
+(** Exercise 3.13 *)
 
 
 
@@ -291,6 +346,11 @@ Definition Book_1_10 := ack.
 
 (* ================================================== ex:impred-brck *)
 (** Exercise 3.15 *)
+
+
+
+(* ================================================== ex:lem-impl-dn-commutes *)
+(** Exercise 3.16 *)
 
 
 
@@ -311,6 +371,21 @@ Definition Book_1_10 := ack.
 
 (* ================================================== ex:omit-contr2 *)
 (** Exercise 3.20 *)
+
+
+
+(* ================================================== ex:isprop-equiv-equiv-bracket *)
+(** Exercise 3.21 *)
+
+
+
+(* ================================================== ex:finite-choice *)
+(** Exercise 3.22 *)
+
+
+
+(* ================================================== ex:two-sided-adjoint-equivalences *)
+(** Exercise 4.1 *)
 
 
 
@@ -339,6 +414,11 @@ Definition Book_1_10 := ack.
 
 
 
+(* ================================================== ex:ind-lst *)
+(** Exercise 5.1 *)
+
+
+
 (* ================================================== ex:same-recurrence-not-defeq *)
 (** Exercise 5.2 *)
 
@@ -354,6 +434,16 @@ Definition Book_1_10 := ack.
 
 
 
+(* ================================================== ex:ind-nat-not-equiv *)
+(** Exercise 5.5 *)
+
+
+
+(* ================================================== ex:no-dep-uniqueness-failure *)
+(** Exercise 5.6 *)
+
+
+
 (* ================================================== ex:loop *)
 (** Exercise 5.7 *)
 
@@ -361,6 +451,21 @@ Definition Book_1_10 := ack.
 
 (* ================================================== ex:loop2 *)
 (** Exercise 5.8 *)
+
+
+
+(* ================================================== ex:inductive-lawvere *)
+(** Exercise 5.9 *)
+
+
+
+(* ================================================== ex:ilunit *)
+(** Exercise 5.10 *)
+
+
+
+(* ================================================== ex:empty-inductive-type *)
+(** Exercise 5.11 *)
 
 
 
@@ -384,6 +489,21 @@ Definition Book_1_10 := ack.
 
 
 
+(* ================================================== ex:susp-spheres-equiv *)
+(** Exercise 6.5 *)
+
+
+
+(* ================================================== ex:spheres-make-U-not-2-type *)
+(** Exercise 6.6 *)
+
+
+
+(* ================================================== ex:monoid-eq-prop *)
+(** Exercise 6.7 *)
+
+
+
 (* ================================================== ex:free-monoid *)
 (** Exercise 6.8 *)
 
@@ -404,6 +524,16 @@ Definition Book_1_10 := ack.
 
 
 
+(* ================================================== ex:alt-integers *)
+(** Exercise 6.12 *)
+
+
+
+(* ================================================== ex:all-types-sets *)
+(** Exercise 7.1 *)
+
+
+
 (* ================================================== ex:s2-colim-unit *)
 (** Exercise 7.2 *)
 
@@ -411,6 +541,11 @@ Definition Book_1_10 := ack.
 
 (* ================================================== ex:ntypes-closed-under-wtypes *)
 (** Exercise 7.3 *)
+
+
+
+(* ================================================== ex:connected-pointed-all-section-retraction *)
+(** Exercise 7.4 *)
 
 
 
@@ -444,8 +579,48 @@ Definition Book_1_10 := ack.
 
 
 
+(* ================================================== ex:n-truncation-not-left-exact *)
+(** Exercise 7.11 *)
+
+
+
+(* ================================================== ex:double-negation-modality *)
+(** Exercise 7.12 *)
+
+
+
+(* ================================================== ex:prop-modalities *)
+(** Exercise 7.13 *)
+
+
+
+(* ================================================== ex:f-local-type *)
+(** Exercise 7.14 *)
+
+
+
 (* ================================================== ex:trunc-spokes-no-hub *)
 (** Exercise 7.15 *)
+
+
+
+(* ================================================== ex:homotopy-groups-resp-prod *)
+(** Exercise 8.1 *)
+
+
+
+(* ================================================== ex:decidable-equality-susp *)
+(** Exercise 8.2 *)
+
+
+
+(* ================================================== ex:contr-infinity-sphere-colim *)
+(** Exercise 8.3 *)
+
+
+
+(* ================================================== ex:contr-infinity-sphere-susp *)
+(** Exercise 8.4 *)
 
 
 
@@ -484,6 +659,21 @@ Definition Book_1_10 := ack.
 
 
 
+(* ================================================== ex:slice-precategory *)
+(** Exercise 9.1 *)
+
+
+
+(* ================================================== ex:set-slice-over-equiv-functor-category *)
+(** Exercise 9.2 *)
+
+
+
+(* ================================================== ex:functor-equiv-right-adjoint *)
+(** Exercise 9.3 *)
+
+
+
 (* ================================================== ct:pre2cat *)
 (** Exercise 9.4 *)
 
@@ -499,8 +689,23 @@ Definition Book_1_10 := ack.
 
 
 
+(* ================================================== ex:2strict-cat *)
+(** Exercise 9.7 *)
+
+
+
+(* ================================================== ex:pre2dagger-cat *)
+(** Exercise 9.8 *)
+
+
+
 (* ================================================== ct:ex:hocat *)
 (** Exercise 9.9 *)
+
+
+
+(* ================================================== ex:dagger-rezk *)
+(** Exercise 9.10 *)
 
 
 
@@ -514,8 +719,33 @@ Definition Book_1_10 := ack.
 
 
 
+(* ================================================== ex:utype-ct *)
+(** Exercise 10.1 *)
+
+
+
+(* ================================================== ex:surjections-have-sections-impl-ac *)
+(** Exercise 10.2 *)
+
+
+
 (* ================================================== ex:well-pointed *)
 (** Exercise 10.3 *)
+
+
+
+(* ================================================== ex:add-ordinals *)
+(** Exercise 10.4 *)
+
+
+
+(* ================================================== ex:multiply-ordinals *)
+(** Exercise 10.5 *)
+
+
+
+(* ================================================== ex:algebraic-ordinals *)
+(** Exercise 10.6 *)
 
 
 
@@ -529,6 +759,11 @@ Definition Book_1_10 := ack.
 
 
 
+(* ================================================== ex:well-founded-extensional-simulation *)
+(** Exercise 10.9 *)
+
+
+
 (* ================================================== ex:choice-function *)
 (** Exercise 10.10 *)
 
@@ -536,6 +771,21 @@ Definition Book_1_10 := ack.
 
 (* ================================================== ex:cumhierhit *)
 (** Exercise 10.11 *)
+
+
+
+(* ================================================== ex:strong-collection *)
+(** Exercise 10.12 *)
+
+
+
+(* ================================================== ex:choice-cumulative-hierarchy-choice *)
+(** Exercise 10.13 *)
+
+
+
+(* ================================================== ex:alt-dedekind-reals *)
+(** Exercise 11.1 *)
 
 
 
@@ -596,6 +846,11 @@ Definition Book_1_10 := ack.
 
 (* ================================================== ex:mean-value-theorem *)
 (** Exercise 11.13 *)
+
+
+
+(* ================================================== ex:knuth-surreal-check *)
+(** Exercise 11.14 *)
 
 
 
