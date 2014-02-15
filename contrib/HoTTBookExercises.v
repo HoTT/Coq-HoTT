@@ -23,7 +23,10 @@
 
 *)
 
-Require Import HoTT.
+Require Import HoTT HoTT.hit.minus1Trunc.
+
+Local Open Scope path_scope.
+Local Open Scope equiv_scope.
 
 (* END OF PREAMBLE *)
 (* ================================================== ex:composition *)
@@ -337,12 +340,91 @@ Definition Book_1_10 := ack.
 (* ================================================== ex:naive-lem-impl-ac *)
 (** Exercise 3.13 *)
 
+Section Book_3_13.
+  Definition naive_LEM_impl_DN_elim (A : Type) (LEM : A + ~A)
+  : ~~A -> A
+    := fun nna => match LEM with
+                    | inl a => a
+                    | inr na => match nna na with end
+                  end.
 
+  Lemma naive_LEM_implies_AC
+  : (forall A : Type, A + ~A)
+    -> forall X A P,
+         (forall x : X, ~~{ a : A x | P x a })
+         -> { g : forall x, A x | forall x, P x (g x) }.
+  Proof.
+    intros LEM X A P H.
+    pose (fun x => @naive_LEM_impl_DN_elim _ (LEM _) (H x)) as H'.
+    exists (fun x => (H' x).1).
+    exact (fun x => (H' x).2).
+  Defined.
+
+  Lemma Book_3_13 `{Funext}
+  : (forall A : Type, A + ~A)
+    -> forall X A P,
+         IsHSet X
+         -> (forall x : X, IsHSet (A x))
+         -> (forall x (a : A x), IsHProp (P x a))
+         -> (forall x, minus1Trunc { a : A x & P x a })
+         -> minus1Trunc { g : forall x, A x & forall x, P x (g x) }.
+  Proof.
+    intros LEM X A P HX HA HP H0.
+    apply min1.
+    apply (naive_LEM_implies_AC LEM).
+    intro x.
+    specialize (H0 x).
+    revert H0.
+    apply minus1Trunc_rect_nondep.
+    - exact (fun x nx => nx x).
+    - apply allpath_hprop.
+  Defined.
+End Book_3_13.
 
 (* ================================================== ex:lem-brck *)
 (** Exercise 3.14 *)
 
+Section Book_3_14.
+  Context `{Funext}.
+  Hypothesis LEM : forall A : Type, IsHProp A -> A + ~A.
 
+  Definition Book_3_14
+  : forall A (P : ~~A -> Type),
+    (forall a, P (fun na => na a))
+    -> (forall x y (z : P x) (w : P y), transport P (allpath_hprop x y) z = w)
+    -> forall x, P x.
+  Proof.
+    intros A P base p nna.
+    assert (forall x, IsHProp (P x)).
+    - intro x.
+      apply hprop_allpath.
+      intros x' y'.
+      etransitivity; [ apply symmetry; apply (p x x y' x') | ].
+      assert (H' : idpath = allpath_hprop x x) by apply allpath_hprop.
+      destruct H'.
+      reflexivity.
+    - destruct (LEM (P nna) _) as [pnna|npnna]; trivial.
+      refine (match _ : Empty with end).
+      apply nna.
+      intro a.
+      apply npnna.
+      exact (transport P (allpath_hprop _ _) (base a)).
+  Defined.
+
+  Lemma Book_3_14_equiv A : minus1Trunc A <~> ~~A.
+  Proof.
+    apply equiv_iff_hprop.
+    - apply minus1Trunc_rect_nondep.
+      * exact (fun a na => na a).
+      * apply allpath_hprop.
+    - intro nna.
+      apply (@Book_3_14 A (fun _ => minus1Trunc A)).
+      * exact min1.
+      * intros x y z w.
+        apply min1_path.
+      * exact nna.
+  Defined.
+End Book_3_14.
 
 (* ================================================== ex:impred-brck *)
 (** Exercise 3.15 *)
@@ -851,6 +933,3 @@ Definition Book_1_10 := ack.
 
 (* ================================================== ex:knuth-surreal-check *)
 (** Exercise 11.14 *)
-
-
-
