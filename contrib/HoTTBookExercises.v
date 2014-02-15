@@ -489,7 +489,54 @@ End Book_3_14.
 (* ================================================== ex:2-out-of-6 *)
 (** Exercise 4.5 *)
 
+Section Book_4_5.
+  Section parts.
+    Variables A B C D : Type.
+    Variable f : A -> B.
+    Variable g : B -> C.
+    Variable h : C -> D.
+    Context `{IsEquiv _ _ (g o f), IsEquiv _ _ (h o g)}.
 
+    Local Instance Book_4_5_g : IsEquiv g.
+    Proof.
+      apply equiv_biinv.
+      split.
+      - exists ((h o g)^-1 o h);
+        repeat intro; simpl;
+        try apply (@eissect _ _ (h o g)).
+      - exists (f o (g o f)^-1);
+        repeat intro; simpl;
+        try apply (@eisretr _ _ (g o f)).
+    Defined.
+
+    Local Instance Book_4_5_f : IsEquiv f.
+    Proof with try typeclasses eauto.
+      apply (@isequiv_homotopic _ _ (g^-1 o (g o f)))...
+      intro; apply (eissect g).
+    Defined.
+
+    Local Instance Book_4_5_h : IsEquiv h.
+    Proof with try typeclasses eauto.
+      apply (@isequiv_homotopic _ _ ((h o g) o g^-1))...
+      intro; apply (ap h); apply (eisretr g).
+    Defined.
+
+    Definition Book_4_5_hgf : IsEquiv (h o g o f).
+    Proof.
+      typeclasses eauto.
+    Defined.
+  End parts.
+
+  (*Lemma Book_4_5 A B f `{IsEquiv A B f} (a a' : A) : IsEquiv (@ap _ _ f a a').
+  Proof.
+    pose (@ap _ _ (f^-1) (f a) (f a')) as f'.
+    pose (fun p : f^-1 (f a) = _ => p @ (@eissect _ _ f _ a')) as g'.
+    pose (fun p : _ = a' => (@eissect _ _ f _ a)^ @ p) as h'.
+    pose (g' o f').
+    pose (h' o g').
+    admit.
+  Qed.*)
+End Book_4_5.
 
 (* ================================================== ex:qinv-univalence *)
 (** Exercise 4.6 *)
