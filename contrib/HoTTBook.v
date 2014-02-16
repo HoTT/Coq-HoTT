@@ -1201,6 +1201,11 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 
 
 
+(* ================================================== thm:iscontr-s1cover *)
+(** Lemma 8.1.12 *)
+
+
+
 (* ================================================== thm:encode-total-equiv *)
 (** Corollary 8.1.13 *)
 
