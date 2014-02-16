@@ -509,6 +509,7 @@ Section Book_4_5.
         try apply (@eisretr _ _ (g o f)).
     Defined.
 
+    (** We use [Proof with try typeclasses eauto] to make typeclass resolution pick up the proofs that [g⁻¹ ∘ (g ∘ f)] and [(h ∘ g) ∘ g⁻¹] are equivalences automatically when we type [...]. *)
     Local Instance Book_4_5_f : IsEquiv f.
     Proof with try typeclasses eauto.
       apply (@isequiv_homotopic _ _ (g^-1 o (g o f)))...
