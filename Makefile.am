@@ -39,6 +39,9 @@ SILENCE_COQDEP_0 := @echo \"COQDEP $$<\"; #
 SILENCE_COQDEP_1 :=
 SILENCE_COQDEP = $(SILENCE_COQDEP_$(V))
 
+# The command for making .dot files
+DEPSTODOT := "$(srcdir)/etc/DepsToDot.hs"
+
 # the proviola camera
 CAMERA = python proviola/camera/camera.py
 
@@ -116,7 +119,7 @@ CLEANFILES = $(ALL_VOFILES) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(
 # into putting the include in the right place.
 all-am: Makefile $(SCRIPTS) $(DATA) $(MAKEFILE_TARGETS_FILE)
 
-.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola clean-local install-data-local proviola-all proviola-xml
+.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola clean-local install-data-local proviola-all proviola-xml hottdot
 
 # TODO(JasonGross): Get this to work on Windows, where symlinks are unreliable
 install-data-local:
@@ -142,6 +145,8 @@ contrib: $(CONTRIB_VOFILES)
 
 hottlib: hott-core hott-categories contrib
 
+hottdot: HoTT.dot
+
 # a strict rule that will error if there are .v files around which aren't in Makefile_targets.mk
 strict-test:
 	$(Q) if [ x"$(UNBUILT_VFILES)" != x ]; then \
@@ -155,6 +160,15 @@ strict: strict-test hottlib hott-core hott-categories contrib
 $(MAIN_VOFILES) : %.vo : %.v $(STD_VOFILES)
 	$(VECHO) HOQC $<
 	$(Q) $(TIMER) $(HOQC) $<
+
+# The deps file, for graphs
+HoTT.deps: $(ALL_VFILES)
+	$(VECHO) COQDEP > $@
+	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
+
+HoTT.dot: HoTT.deps
+	$(VECHO) DEPSTODOT $< > $@
+	$(Q) "$(DEPSTODOT)" < $< > $@
 
 # The HTML files
 # We have a dummy file, to allow us to depend on the html files without

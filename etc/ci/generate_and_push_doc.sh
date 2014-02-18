@@ -28,6 +28,8 @@ export MESSAGE="Autoupdate documentation with coqdoc and proviola
 
 Generated with \`make html proviola\`"
 
+echo '$ make hottdot'
+make hottdot
 echo '$ make html'
 make html
 make proviola -j4 -k

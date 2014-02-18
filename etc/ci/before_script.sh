@@ -15,6 +15,7 @@ fi
 sudo apt-get install -q time
 # install coq
 ./install_coq_deps.sh
+./install_coq_dot_deps.sh
 ./install_proviola.sh
 ./install_coq.sh -prefix /usr/local -debug
 
