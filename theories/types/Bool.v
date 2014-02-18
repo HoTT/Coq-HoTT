@@ -72,3 +72,57 @@ Section BoolForall.
               || apply path_forall).
   Defined.
 End BoolForall.
+
+Section EquivBoolEquiv.
+  (** We prove that the type [Bool <~> Bool] is equivalent to [Bool].  We first define the functions in both directoins, which identify [true] with the identity equivalence and [false] with the flip equivalence. *)
+
+  Global Instance isequiv_negb : IsEquiv negb.
+  Proof.
+      refine (@BuildIsEquiv
+                _ _
+                negb negb
+                (fun b => if b as b return negb (negb b) = b then idpath else idpath)
+                (fun b => if b as b return negb (negb b) = b then idpath else idpath)
+                _).
+      intros []; simpl; exact idpath.
+  Defined.
+
+  (** We prove that equivalences [Bool <~> Bool] send [true] and [false] to different things. *)
+  Lemma eval_bool_isequiv (f : Bool -> Bool) `{IsEquiv Bool Bool f}
+  : f false = negb (f true).
+  Proof.
+    pose proof (eissect f true).
+    pose proof (eissect f false).
+    destruct (f true), (f false).
+    - etransitivity; try (eassumption || (symmetry; eassumption)).
+    - simpl. reflexivity.
+    - simpl. reflexivity.
+    - etransitivity; try (eassumption || (symmetry; eassumption)).
+  Defined.
+
+  (** We identify the constant equivalence with [true] and the flip equivalence with [false], and do this by evaluating the equivalence function on [true]. *)
+  Let f : Bool <~> Bool -> Bool := fun e => e true.
+  Let g : Bool -> Bool <~> Bool := fun b => if b
+                                            then {| equiv_fun := idmap |}
+                                            else {| equiv_fun := negb |}.
+
+  (** We can't depend on [EquivalenceVarieties] nor [Misc] here, so we take the necessary lemma as a hypothesis, and put the theorem in [Misc.v] *)
+  Context `{Funext}.
+  Hypothesis path_equiv : forall e1 e2 : Bool <~> Bool,
+                            (e1 = e2 :> (Bool -> Bool)) -> (e1 = e2 :> (Bool <~> Bool)).
+  Lemma equiv_bool_equiv_bool_bool_helper : Bool <~> (Bool <~> Bool).
+  Proof.
+    refine (equiv_adjointify g f _ _);
+    unfold f, g; clear f g;
+    hnf; simpl.
+    - intro e.
+      destruct e as [e ?].
+      apply path_equiv; try assumption.
+      apply path_forall.
+      intros []; simpl.
+      * destruct (e true); reflexivity.
+      * etransitivity; [ | symmetry; apply eval_bool_isequiv; trivial ].
+        destruct (e true); reflexivity.
+    - intros []; reflexivity.
+  Defined.
+End EquivBoolEquiv.

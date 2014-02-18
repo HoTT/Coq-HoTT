@@ -12,7 +12,7 @@
 
 Conversely, several files in [hit] now depend on this file; so we should probably avoid using HIT’s in this file. *)
 
-Require Import Overture PathGroupoids Trunc Equivalences HProp types.Sigma types.Paths types.Record types.Arrow EquivalenceVarieties types.Forall.
+Require Import Overture PathGroupoids Trunc Equivalences HProp types.Sigma types.Paths types.Record types.Arrow EquivalenceVarieties types.Forall types.Bool.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -87,6 +87,11 @@ Defined.
 
 End SigmaHProp.
 
+(** ** [Bool <~> (Bool <~> Bool)]
+
+    This should go in [types/Bool.v], but it depends on a lemma above. *)
+Definition equiv_bool_equiv_bool_bool `{Funext} : Bool <~> (Bool <~> Bool)
+  := @equiv_bool_equiv_bool_bool_helper _ (@path_equiv _ _ _).
 
 (** ** Equivalences between contractible types *)
 Section EquivContr.
