@@ -5,11 +5,16 @@
 import Data.Graph.Inductive
   (reachable, delEdge, mkGraph, nmap, Edge, Gr, DynGraph, UEdge, LEdge, efilter, LNode, labNodes, Graph, delNodes)
 import Data.GraphViz
-  (Attribute(..), Label(..), printDotGraph, nonClusteredParams, graphToDot, fmtNode, Color(..), X11Color(..))
+  (color, toLabel, printDotGraph, nonClusteredParams, graphToDot, fmtNode, X11Color(..))
+import Data.GraphViz.Attributes
+  (Attributes)
+import Data.GraphViz.Attributes.Complete
+  (Attribute(URL))
+import Data.Text.Lazy (Text, pack, unpack)
 import Data.List (nub, elemIndex, isSuffixOf, isPrefixOf)
 import Control.Monad (liftM2)
 import Data.Maybe
-import System
+import System.Environment
 import System.Exit
 import System.IO
 import System.Console.GetOpt
@@ -49,33 +54,43 @@ cut_dotvo = dropBack 3
 
 -- strip to basename
 basename :: String → String
-basename = drop 1 . dropWhile (/= '/')
+basename name = if "theories/"          `isPrefixOf` name then drop (length "theories/") name
+                else if "coq/theories/" `isPrefixOf` name then "coq/" ++ drop (length "coq/theories/") name
+                else name
+
+hottRenameCoqDoc :: String → String
+hottRenameCoqDoc p = if "theories/"          `isPrefixOf` p then "HoTT." ++ drop (length "theories/") p
+                     else if "coq/theories/" `isPrefixOf` p then "Coq." ++ drop (length "coq/theories/") p
+                     else if "contrib/"      `isPrefixOf` p then drop (length "contrib/") p
+                     else p
 
 coqDocURL :: String → FilePath → String
 coqDocURL base p = base
-  ++ map (\c -> if c == '/' then '.' else c) (cut_dotvo p)
+  ++ map (\c -> if c == '/' then '.' else c) (hottRenameCoqDoc (cut_dotvo p))
   ++ ".html"
 
-label :: Options → FilePath → [Attribute]
-label opts p =
-  [ Label (StrLabel (basename $ cut_dotvo p))
-  , Color [X11Color color]
-  , LabelFontColor (X11Color color)
-  ] ++ maybe [] (\base -> [URL (coqDocURL base p)]) (optCoqDocBase opts)
+label :: Options → FilePath → Attributes
+label opts p' =
+  [ toLabel (basename $ cut_dotvo p)
+  , color myColor
+--  , LabelFontColor (X11Color color)
+  ] ++ maybe [] (\base -> [URL (pack $ coqDocURL base p)]) (optCoqDocBase opts)
   where
-    color :: X11Color
-    color
-      | "categories/"      `isPrefixOf` p = Magenta
-      | "implementations/" `isPrefixOf` p = Gold3
-      | "interfaces/"      `isPrefixOf` p = Green
-      | "misc/"            `isPrefixOf` p = Cyan4
-      | "orders/"          `isPrefixOf` p = Blue
-      | "quote/"           `isPrefixOf` p = Orange
-      | "theory/"          `isPrefixOf` p = BlueViolet
-      | "varieties/"       `isPrefixOf` p = Red
-      | otherwise = Gray
+    p = if take 2 p' == "./" then drop 2 p' else p'
 
-makeGraph :: Options -> String -> String
+    myColor :: X11Color
+    myColor
+      | "theories/categories/"  `isPrefixOf` p = Magenta
+      | "theories/types/"       `isPrefixOf` p = BlueViolet
+      | "theories/hit/"         `isPrefixOf` p = Orange
+      | "contrib/"              `isPrefixOf` p = Cyan4
+      | "coq/theories/"         `isPrefixOf` p = Blue
+--      | "quote/"           `isPrefixOf` p = Gold3
+--      | "theory/"          `isPrefixOf` p = BlueViolet
+--      | "varieties/"       `isPrefixOf` p = Red
+      | otherwise = Green
+
+makeGraph :: Options -> String -> Text
 makeGraph opts = printDotGraph .
   graphToDot (nonClusteredParams {fmtNode = snd}) .
   nmap (label opts).
@@ -121,7 +136,7 @@ main = do
    (actions,_,[]) -> do
      opts <- foldl (>>=) (return defaultOptions) actions
      input <- optInput opts
-     optOutput opts $ makeGraph opts $ input
+     optOutput opts $ unpack $ makeGraph opts $ input
    (_,_,errors) -> do
      hPutStrLn stderr $ concat errors
      usage
