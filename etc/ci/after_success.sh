@@ -11,10 +11,15 @@ cd "$ROOT_DIR"
 # only make if we should ($UPDATE_HTML is not empty) and we're the same as origin/master
 if [ -z "$UPDATE_HTML" ]; then
     echo 'Not making html because $UPDATE_HTML is not set'
-    exit 0
+else
+    "$DIR"/generate_and_push_doc.sh "$@"
 fi
 
-"$DIR"/generate_and_push_doc.sh "$@"
-"$DIR"/autogen_and_push.sh "$@"
+if [ -z "$UPDATE_QUICK_DOC" ]; then
+    echo 'Not making quick doc because $QUICK_DOC is not set'
+else
+    "$DIR"/generate_and_push_quick_doc.sh "$@"
+    "$DIR"/autogen_and_push.sh "$@"
+fi
 
 popd 1>/dev/null

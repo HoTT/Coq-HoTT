@@ -15,8 +15,12 @@ fi
 sudo apt-get install -q time
 # install coq
 ./install_coq_deps.sh
-./install_coq_dot_deps.sh
-./install_proviola.sh
+if [ ! -z "$UPDATE_QUICK_DOC" ]; then
+    ./install_coq_dot_deps.sh
+fi
+if [ ! -z "$UPDATE_HTML" ]; then
+    ./install_proviola.sh
+fi
 ./install_coq.sh -prefix /usr/local -debug
 
 popd 1>/dev/null
