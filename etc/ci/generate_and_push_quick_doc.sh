@@ -31,8 +31,8 @@ export MESSAGE="Autoupdate documentation with DepsToDot.hs"
 echo '$ make HoTT.deps HoTTCore.deps'
 make HoTT.deps HoTTCore.deps
 # There must be a better way to insert titles than sed...
-runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/coqdoc-html/" < HoTT.deps | sed s'/^digraph {/digraph "HoTT Library Dependency Graph" {/g' > HoTT.dot
-runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/coqdoc-html/" < HoTTCore.deps | sed s'/^digraph {/digraph "HoTT Core Library Dependency Graph" {/g' > HoTTCore.dot
+runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" < HoTT.deps | sed s'/^digraph {/digraph "HoTT Library Dependency Graph" {/g' > HoTT.dot
+runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" < HoTTCore.deps | sed s'/^digraph {/digraph "HoTT Core Library Dependency Graph" {/g' > HoTTCore.dot
 dot -Tsvg HoTT.dot -o HoTT.svg
 dot -Tsvg HoTTCore.dot -o HoTTCore.svg
 echo '$ git checkout -b gh-pages upstream/gh-pages'
