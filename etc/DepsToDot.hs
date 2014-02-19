@@ -5,9 +5,7 @@
 import Data.Graph.Inductive
   (reachable, delEdge, mkGraph, nmap, Edge, Gr, DynGraph, UEdge, LEdge, efilter, LNode, labNodes, Graph, delNodes)
 import Data.GraphViz
-  (color, toLabel, printDotGraph, nonClusteredParams, graphToDot, fmtNode, X11Color(..))
-import Data.GraphViz.Attributes
-  (Attributes)
+  (Attributes, toGraphID, color, toLabel, printDotGraph, nonClusteredParams, graphToDot, fmtNode, setID, X11Color(..))
 import Data.GraphViz.Attributes.Complete
   (Attribute(URL))
 import Data.Text.Lazy (Text, pack, unpack)
@@ -92,6 +90,7 @@ label opts p' =
 
 makeGraph :: Options -> String -> Text
 makeGraph opts = printDotGraph .
+  setID (toGraphID $ optTitle opts) .
   graphToDot (nonClusteredParams {fmtNode = snd}) .
   nmap (label opts).
   untransitive .
@@ -100,6 +99,7 @@ makeGraph opts = printDotGraph .
 
 data Options = Options {
   optCoqDocBase :: Maybe String,
+  optTitle :: String,
   optInput :: IO String,
   optOutput :: String -> IO ()
 }
@@ -107,6 +107,7 @@ data Options = Options {
 defaultOptions :: Options
 defaultOptions = Options {
   optCoqDocBase = Nothing,
+  optTitle = "",
   optInput = getContents,
   optOutput = putStr
 }
@@ -119,6 +120,8 @@ options = [
     return opt { optInput = readFile arg }) "FILE") "input file, stdin if omitted",
   Option ['o'] ["output"] (ReqArg (\arg opt ->
     return opt { optOutput = writeFile arg }) "FILE") "output file, stdout if omitted",
+  Option ['t'] ["title"] (ReqArg (\arg opt ->
+    return opt { optTitle = arg }) "TITLE") "title of the graph page",
   Option ['h'] ["help"] (NoArg (\_ ->
     usage >> exitSuccess)) "display this help page"]
 
