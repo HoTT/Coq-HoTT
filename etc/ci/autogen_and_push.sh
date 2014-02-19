@@ -8,6 +8,11 @@ pushd "$DIR" 1>/dev/null
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 cd "$ROOT_DIR" 1>/dev/null
 
+if [ -z "$UPDATE_AUTOGEN" ]; then
+    echo 'Not making autogen becuase $UPDATE_AUTOGEN variable not set.'
+    exit 0
+fi
+
 EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 
 # copy the push_remote script so it stays around after we change branches
