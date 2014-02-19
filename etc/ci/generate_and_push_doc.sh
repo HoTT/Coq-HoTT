@@ -31,28 +31,19 @@ export MESSAGE="Autoupdate documentation with coqdoc and proviola
 
 Generated with \`make html proviola\`"
 
-echo '$ make hottdot'
-make HoTT.deps HoTTCore.deps
-runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/coqdoc-html/" < HoTT.deps > HoTT.dot
-runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/coqdoc-html/" < HoTTCore.deps > HoTTCore.dot
-dot -Tsvg HoTT.dot -o HoTT.svg
-dot -Tsvg HoTTCore.dot -o HoTTCore.svg
 echo '$ make html'
 make html
 make proviola -j4 -k
 mv proviola-html proviola-html-bak
+git remote update
 echo '$ git checkout -b gh-pages upstream/gh-pages'
 git checkout -b gh-pages upstream/gh-pages
 rm -rf coqdoc-html
 rm -rf proviola-html
 mv html coqdoc-html
 mv proviola-html-bak proviola-html
-rm -rf dependencies
-mkdir -p dependencies
-mv HoTT.svg HoTTCore.svg dependencies/
 git add coqdoc-html/*
 git add proviola-html/*
-git add dependencies/*.svg
 
 echo '$ git commit -am "'"$MESSAGE"'"'
 git commit -m "$MESSAGE"
