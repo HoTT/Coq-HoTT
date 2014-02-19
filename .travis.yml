@@ -12,8 +12,9 @@ branches:
 env:
 
  matrix:
-   - UPDATE_HTML="yes"    WITH_AUTORECONF="yes"
-   - UPDATE_HTML=""       WITH_AUTORECONF=""
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC="yes"  UPDATE_AUTOGEN="yes"
+   - UPDATE_HTML="yes"    WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""
+   - UPDATE_HTML=""       WITH_AUTORECONF=""     UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""
 
  global:
 # encrypted version of deploy key for pushing
@@ -25,15 +26,11 @@ before_script:
  - source ./etc/ci/travis_keep_alive.sh
 
 
-install:
- - pip install lxml pexpect-u
-
-
 # we must run make at the end, because the success of
 # `make-pretty-timed` is not an indication that the build succeeded.
 # We also use `make strict-test` at the beginning so that we error
 # quickly if someone commited .v files but neglected to mention them.
-script: "./autogen.sh && ./configure && make strict-test && ./etc/timing/make-pretty-timed.sh V=1 -j2 && make"
+script: "./autogen.sh && ./configure && if [ -z \"$UPDATE_QUICK_DOC\" ]; then make strict-test && ./etc/timing/make-pretty-timed.sh V=1 -j2 && make; fi"
 
 
 after_success:

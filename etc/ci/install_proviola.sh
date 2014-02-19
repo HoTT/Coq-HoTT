@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+PS4='$ '
+set -x
+
 # in case we're run from out of git repo
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 pushd "$DIR" 1>/dev/null
@@ -7,6 +10,8 @@ pushd "$DIR" 1>/dev/null
 # now change to the git root
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 pushd "$ROOT_DIR" 1>/dev/null
+
+pip install lxml pexpect-u
 
 # wget -N http://mws.cs.ru.nl/proviola/files/proviola.tar.gz
 # we need one that works with `coqdoc --utf8`.  Neither the .tar.gz nor the latest sources do, but the .tar.gz is closer.  So use a slightly patched version.

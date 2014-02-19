@@ -16,8 +16,8 @@ cd "$ROOT_DIR" 1>/dev/null
 cp "$DIR"/{push_remote,push_remote_tmp}.sh
 
 
-if [ -z "$UPDATE_HTML" ]; then
-    echo 'Not making html becuase $UPDATE_HTML variable not set.'
+if [ -z "$UPDATE_QUICK_DOC" ]; then
+    echo 'Not making quick doc becuase $UPDATE_QUICK_DOC variable not set.'
     exit 0
 fi
 
@@ -27,31 +27,18 @@ echo 'Configuring git for pushing...'
 git config --global user.name "Travis-CI Bot"
 git config --global user.email "Travis-CI-Bot@travis.fake"
 
-export MESSAGE="Autoupdate documentation with coqdoc and proviola
-
-Generated with \`make html proviola\`"
-
-echo '$ make hottdot'
+export MESSAGE="Autoupdate documentation with DepsToDot.hs"
+echo '$ make HoTT.deps HoTTCore.deps'
 make HoTT.deps HoTTCore.deps
 runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/coqdoc-html/" < HoTT.deps > HoTT.dot
 runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/coqdoc-html/" < HoTTCore.deps > HoTTCore.dot
 dot -Tsvg HoTT.dot -o HoTT.svg
 dot -Tsvg HoTTCore.dot -o HoTTCore.svg
-echo '$ make html'
-make html
-make proviola -j4 -k
-mv proviola-html proviola-html-bak
 echo '$ git checkout -b gh-pages upstream/gh-pages'
 git checkout -b gh-pages upstream/gh-pages
-rm -rf coqdoc-html
-rm -rf proviola-html
-mv html coqdoc-html
-mv proviola-html-bak proviola-html
 rm -rf dependencies
 mkdir -p dependencies
 mv HoTT.svg HoTTCore.svg dependencies/
-git add coqdoc-html/*
-git add proviola-html/*
 git add dependencies/*.svg
 
 echo '$ git commit -am "'"$MESSAGE"'"'

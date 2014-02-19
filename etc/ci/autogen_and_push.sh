@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+PS4='$ '
+set -x
+
 # in case we're run from out of git repo
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 pushd "$DIR" 1>/dev/null
@@ -7,6 +10,11 @@ pushd "$DIR" 1>/dev/null
 # now change to the git root
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 cd "$ROOT_DIR" 1>/dev/null
+
+if [ -z "$UPDATE_AUTOGEN" ]; then
+    echo 'Not making autogen becuase $UPDATE_AUTOGEN variable not set.'
+    exit 0
+fi
 
 EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 

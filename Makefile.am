@@ -108,7 +108,7 @@ nobase_hott_DATA = \
 HOQC=$(srcdir)/hoqc
 
 # Which files should be cleaned
-CLEANFILES = $(ALL_VOFILES) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(ALL_XMLFILES) $(ALL_PROVIOLA_HTMLFILES) html-done.timestamp
+CLEANFILES = $(ALL_VOFILES) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(ALL_XMLFILES) $(ALL_PROVIOLA_HTMLFILES) html-done.timestamp HoTT.deps HoTTCore.deps
 
 # automake is very stupid and wants to put the 'include' line above
 # after this target.  But this target depends on variables defined in
@@ -155,6 +155,15 @@ strict: strict-test hottlib hott-core hott-categories contrib
 $(MAIN_VOFILES) : %.vo : %.v $(STD_VOFILES)
 	$(VECHO) HOQC $<
 	$(Q) $(TIMER) $(HOQC) $<
+
+# The deps file, for graphs
+HoTT.deps: $(ALL_VFILES)
+	$(VECHO) COQDEP > $@
+	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq $(ALL_VFILES) | sed s'#\\#/#g' >$@
+
+HoTTCore.deps: $(CORE_VFILES)
+	$(VECHO) COQDEP > $@
+	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq $(CORE_VFILES) | sed s'#\\#/#g' >$@
 
 # The HTML files
 # We have a dummy file, to allow us to depend on the html files without

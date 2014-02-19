@@ -22,14 +22,14 @@ EXTRA_ARGS=""
 # only push if match upstream/master
 if [ "$1" != "-f" ]; then
     if [ ! -z "$BAD_REMOTES" ]; then
-	echo 'Not pushing html because there are remotes which are not HoTT/HoTT:' 1>&2
+	echo 'Not pushing doc because there are remotes which are not HoTT/HoTT:' 1>&2
 	echo "$BAD_REMOTES" 1>&2
 	EXTRA_ARGS="--dry-run"
     fi
 
     # only make the errata if we're the same as upstream/master
     if [ ! -z "$UPSTREAM_DIFF" ]; then
-	echo "Not pushing html beause we do not match with upstream/master; call '$0 -f' to force" 1>&2
+	echo "Not pushing doc beause we do not match with upstream/master; call '$0 -f' to force" 1>&2
 	EXTRA_ARGS="--dry-run"
     fi
 fi
