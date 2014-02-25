@@ -24,6 +24,9 @@ fi
 if [ ! -z "$UPDATE_HTML" ]; then
     ./install_proviola.sh
 fi
+if [ ! -z "$UPDATE_DEP_GRAPHS" ]; then
+    ./install_dep_graphs_deps.sh
+fi
 ./install_coq.sh -prefix /usr/local -debug
 
 popd 1>/dev/null
