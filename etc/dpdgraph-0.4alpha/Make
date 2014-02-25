@@ -1,0 +1,5 @@
+-custom "$(COQMKTOP) $(COQMKTOPFLAGS) -opt -o coqthmdep searchdepend.cmx graphdepend.cmx" "searchdepend.cmx graphdepend.cmx" coqthmdep
+COQMKTOP = coqmktop
+COQDEP = ocamldep
+searchdepend.ml4
+graphdepend.ml4
