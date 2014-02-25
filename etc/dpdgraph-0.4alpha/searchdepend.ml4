@@ -12,16 +12,16 @@
 open Pp
 
 module Data = struct
-  type t = int Libnames.Refmap.t
+  type t = int Globnames.Refmap.t
 
-  let empty = Libnames.Refmap.empty
+  let empty = Globnames.Refmap.empty
 
   let add gref d =
-    let n = try  Libnames.Refmap.find gref d with Not_found -> 0 in
-    Libnames.Refmap.add gref (n+1) d
+    let n = try  Globnames.Refmap.find gref d with Not_found -> 0 in
+    Globnames.Refmap.add gref (n+1) d
 
       (* [f gref n acc] *)
-  let fold f d acc = Libnames.Refmap.fold f d acc
+  let fold f d acc = Globnames.Refmap.fold f d acc
 end
 
 let add_identifier (x:Names.identifier)(d:Data.t) =
@@ -32,13 +32,13 @@ let add_identifier (x:Names.identifier)(d:Data.t) =
 let add_sort (s:Term.sorts)(d:Data.t) = d
 
 let add_constant (cst:Names.constant)(d:Data.t) =
-  Data.add (Libnames.ConstRef cst) d
+  Data.add (Globnames.ConstRef cst) d
 
 let add_inductive ((k,i):Names.inductive)(d:Data.t) =
-  Data.add (Libnames.IndRef (k, i)) d
+  Data.add (Globnames.IndRef (k, i)) d
 
 let add_constructor(((k,i),j):Names.constructor)(d:Data.t) =
-  Data.add (Libnames.ConstructRef ((k,i),j)) d
+  Data.add (Globnames.ConstructRef ((k,i),j)) d
 
 let collect_long_names (c:Term.constr) (acc:Data.t) =
   let rec add c acc =
@@ -53,9 +53,9 @@ let collect_long_names (c:Term.constr) (acc:Data.t) =
       | Term.Lambda(n,t,c) -> add t (add c acc)
       | Term.LetIn(_,v,t,c) -> add v (add t (add c acc))
       | Term.App(c,ca) -> add c (Array.fold_right add ca acc)
-      | Term.Const cst -> add_constant cst acc
-      | Term.Ind i -> add_inductive i acc
-      | Term.Construct cnst -> add_constructor cnst acc
+      | Term.Const (cst,univ) -> add_constant cst acc (* abstraction-barrier-breaking hack! *)
+      | Term.Ind (i,univ) -> add_inductive i acc (* abstraction-barrier-breaking hack! *)
+      | Term.Construct (cnst,univ) -> add_constructor cnst acc (* abstraction-barrier-breaking hack! *)
       | Term.Case({Term.ci_ind=i},c,t,ca) ->
           add_inductive i (add c (add t (Array.fold_right add ca acc)))
       | Term.Fix(_,(_,ca,ca')) ->
@@ -64,20 +64,20 @@ let collect_long_names (c:Term.constr) (acc:Data.t) =
           Array.fold_right add ca (Array.fold_right add ca' acc)
   in add c acc
 
-exception NoDef of Libnames.global_reference
+exception NoDef of Globnames.global_reference
 
 let collect_dependance gref =
   match gref with
-  | Libnames.VarRef _ -> assert false
-  | Libnames.ConstRef cst ->
+  | Globnames.VarRef _ -> assert false
+  | Globnames.ConstRef cst ->
       let cb = Environ.lookup_constant cst (Global.env()) in
       let c = match cb.Declarations.const_body with
-        | Declarations.Def c -> Declarations.force c
-        | Declarations.OpaqueDef c -> Declarations.force_opaque c
+        | Declarations.Def c -> Lazyconstr.force c
+        | Declarations.OpaqueDef c -> Lazyconstr.force_opaque c
         | Declarations.Undef _ -> raise (NoDef gref)
       in
       collect_long_names c Data.empty
-  | Libnames.IndRef i | Libnames.ConstructRef (i,_) ->
+  | Globnames.IndRef i | Globnames.ConstructRef (i,_) ->
       let _, indbody = Global.lookup_inductive i in
       let ca = indbody.Declarations.mind_user_lc in
         Array.fold_right collect_long_names ca Data.empty
