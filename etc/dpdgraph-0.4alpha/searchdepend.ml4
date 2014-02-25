@@ -14,9 +14,9 @@ open Pp
 module Data = struct
   type t = int Libnames.Refmap.t
 
-  let empty = Libnames.Refmap.empty 
+  let empty = Libnames.Refmap.empty
 
-  let add gref d = 
+  let add gref d =
     let n = try  Libnames.Refmap.find gref d with Not_found -> 0 in
     Libnames.Refmap.add gref (n+1) d
 
@@ -24,8 +24,8 @@ module Data = struct
   let fold f d acc = Libnames.Refmap.fold f d acc
 end
 
-let add_identifier (x:Names.identifier)(d:Data.t) = 
-  failwith 
+let add_identifier (x:Names.identifier)(d:Data.t) =
+  failwith
     ("SearchDep does not expect to find plain identifiers :" ^
      Names.string_of_id x)
 
@@ -58,41 +58,40 @@ let collect_long_names (c:Term.constr) (acc:Data.t) =
       | Term.Construct cnst -> add_constructor cnst acc
       | Term.Case({Term.ci_ind=i},c,t,ca) ->
           add_inductive i (add c (add t (Array.fold_right add ca acc)))
-      | Term.Fix(_,(_,ca,ca')) -> 
+      | Term.Fix(_,(_,ca,ca')) ->
           Array.fold_right add ca (Array.fold_right add ca' acc)
-      | Term.CoFix(_,(_,ca,ca')) -> 
+      | Term.CoFix(_,(_,ca,ca')) ->
           Array.fold_right add ca (Array.fold_right add ca' acc)
   in add c acc
 
 exception NoDef of Libnames.global_reference
 
-let collect_dependance gref = 
+let collect_dependance gref =
   match gref with
   | Libnames.VarRef _ -> assert false
   | Libnames.ConstRef cst ->
       let cb = Environ.lookup_constant cst (Global.env()) in
-      let c = match cb.Declarations.const_body with 
-        | Declarations.Def c -> Declarations.force c 
-        | Declarations.OpaqueDef _ 
+      let c = match cb.Declarations.const_body with
+        | Declarations.Def c -> Declarations.force c
+        | Declarations.OpaqueDef c -> Declarations.force_opaque c
         | Declarations.Undef _ -> raise (NoDef gref)
       in
       collect_long_names c Data.empty
-  | Libnames.IndRef i | Libnames.ConstructRef (i,_) -> 
+  | Libnames.IndRef i | Libnames.ConstructRef (i,_) ->
       let _, indbody = Global.lookup_inductive i in
       let ca = indbody.Declarations.mind_user_lc in
         Array.fold_right collect_long_names ca Data.empty
 
-let display_dependance gref = 
+let display_dependance gref =
   let display d =
-    let pp gr n s = 
-      [< Printer.pr_global gr ++ str "(" ++ int n ++ str ")" ++ spc() ++s >] 
+    let pp gr n s =
+      [< Printer.pr_global gr ++ str "(" ++ int n ++ str ")" ++ spc() ++s >]
     in
       Pp.msgnl [< str"[" ++ ((Data.fold pp) d (str "]")) >]
   in try let data = collect_dependance gref in display data
-  with NoDef gref -> 
+  with NoDef gref ->
     Pp.msgerrnl [< Printer.pr_global gref ++ str " has no value" >]
 
 VERNAC COMMAND EXTEND Searchdepend
    ["SearchDepend" global(ref) ] -> [ display_dependance (Nametab.global ref) ]
 END
-
