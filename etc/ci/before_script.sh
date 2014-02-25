@@ -28,5 +28,8 @@ if [ ! -z "$UPDATE_DEP_GRAPHS" ]; then
     ./install_dep_graphs_deps.sh
 fi
 ./install_coq.sh -prefix /usr/local -debug
+if [ ! -z "$UPDATE_DEP_GRAPHS" ]; then
+    ./make_dpd_graphs.sh
+fi
 
 popd 1>/dev/null
