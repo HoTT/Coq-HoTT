@@ -40,7 +40,7 @@ let is_prop gref = match gref with
       let env = Global.env() in
       let cb = Environ.lookup_constant cnst env in
       let cnst_type =
-          Typeops.type_of_constant_type env cb.Declarations.const_type in
+          (*Typeops.type_of_constant_type env *)cb.Declarations.const_type in
       let is_prop =
         if Term.is_Prop cnst_type then true
         else begin
