@@ -14,7 +14,7 @@ module Node = Dpd_compute.Node
 
 let color_soft_yellow = (0xFFFFC3)
 
-let color_pale_orange = (0xFFE1C3) 
+let color_pale_orange = (0xFFE1C3)
 let color_medium_orange = (0xFFB57F)
 
 let color_soft_green = (0x7FFFD4)
@@ -26,7 +26,7 @@ let color_medium_pink = (0xF070D1)
 let color_soft_purple = (0xE2CDFA)
 let color_soft_blue = (0x7FAAFF)
 
-type attr_kind = 
+type attr_kind =
   | Aid of string
   | Astr of string
   | Acolor of int
@@ -38,10 +38,10 @@ let split_string s i =
   let s2 = String.sub s (i+1) ((String.length s) - (i+1)) in
     s1, s2
 
-let mk_url n = 
+let mk_url n =
   let df, dm = match Node.get_attrib "path" n with
     | None -> "", ""
-    | Some d -> 
+    | Some d ->
         try let i = String.index d '.' in
         let df, dm = split_string d i in
           df, dm^"."
@@ -53,9 +53,9 @@ let node_attribs g n =
   let attr = [] in
   let color = match Node.get_attrib "kind" n with
     | Some s when s = "cnst" ->
-        begin 
-          let is_prop = 
-            match Node.bool_attrib "prop" n with 
+        begin
+          let is_prop =
+            match Node.bool_attrib "prop" n with
               | Some b -> b | None -> false
           in
             match Node.bool_attrib "body" n with
@@ -78,10 +78,10 @@ let node_attribs g n =
 
 let add_node_in_subgraph sg_tbl n sg =
   let rec get_subgraph sg =
-    try Hashtbl.find sg_tbl sg 
+    try Hashtbl.find sg_tbl sg
     with Not_found -> (* new subgraph *)
       C.debug "New subgraph : %s@." sg;
-      try 
+      try
         let i = String.rindex sg '.' in
         let d, n = split_string sg i in
         let (level, ssg, nodes) = get_subgraph d in
@@ -93,11 +93,11 @@ let add_node_in_subgraph sg_tbl n sg =
   let (l, ssg, nodes) = get_subgraph sg in
     Hashtbl.replace sg_tbl sg (l, ssg, n::nodes)
 
-let str2id s = 
+let str2id s =
   let char = function  '.' | '\'' -> '_' |  c -> c in
-    for i = 0 to String.length s - 1 do s.[i] <- char s.[i] done; s 
+    for i = 0 to String.length s - 1 do s.[i] <- char s.[i] done; s
 
-let rec print_attribs sep fmt attribs = 
+let rec print_attribs sep fmt attribs =
   let print_a fmt a = match a with
     | Aid s -> Format.fprintf fmt "%s" s
     | Astr s -> Format.fprintf fmt "\"%s\"" s
@@ -105,12 +105,12 @@ let rec print_attribs sep fmt attribs =
     | Acolor color -> Format.fprintf fmt "\"#%06X\"" color
     | Aint i -> Format.fprintf fmt "%d" i
   in
-  let print_attrib fmt (a, b) = 
-    Format.fprintf fmt "%a=%a" print_a a print_a b 
+  let print_attrib fmt (a, b) =
+    Format.fprintf fmt "%a=%a" print_a a print_a b
   in
     match attribs with [] -> ()
       | a::[] -> Format.fprintf fmt "%a" print_attrib a
-      | a::tl -> Format.fprintf fmt "%a%s%a" 
+      | a::tl -> Format.fprintf fmt "%a%s%a"
                    print_attrib a sep (print_attribs sep) tl
 
 let node_dot_id n = (* was Node.id n *)
@@ -140,7 +140,7 @@ let print_subgraphs fmt sg_tbl =
       List.iter (fun n -> Format.fprintf fmt "%s; " (node_dot_id n)) nodes;
       Format.fprintf fmt "};@."
   and print_sub_subgraph (sg_id, sg_name) =
-    try 
+    try
       let ssg = Hashtbl.find sg_tbl sg_id in print_subgraph sg_id sg_name ssg
     with Not_found -> assert false
   in
@@ -151,24 +151,24 @@ let print_subgraphs fmt sg_tbl =
 
 (** don't use Graph.Graphviz because of attribute limitations (URL, subgraph,
 * ...) *)
-let print_graph fmt graph = 
+let print_graph name fmt graph =
   let subgraphs = Hashtbl.create 7 in
   let print_node n =
      let attribs = node_attribs graph n in
-       Format.fprintf fmt "%s [%a] ;@." 
+       Format.fprintf fmt "%s [%a] ;@."
          (node_dot_id n) (print_attribs ", ") attribs;
      let _ = match Node.get_attrib "path" n with None | Some "" -> ()
        | Some d -> add_node_in_subgraph subgraphs n d
     in ()
   in
-  let print_edge e = 
+  let print_edge e =
     let edge_attribs = [] in
     (* let edge_attribs = (Aid "style", Aid "bold")::edge_attribs in *)
     Format.fprintf fmt "  %s -> %s [%a] ;@."
       (node_dot_id (G.E.src e)) (node_dot_id (G.E.dst e))
       (print_attribs ", ") edge_attribs
   in
-  Format.fprintf fmt "digraph G {@.";
+  Format.fprintf fmt "digraph %s {@." name;
   Format.fprintf fmt "  graph [ratio=0.5]@.";
   Format.fprintf fmt "  node [style=filled]@.";
   G.iter_vertex print_node graph;
@@ -177,8 +177,8 @@ let print_graph fmt graph =
   Format.fprintf fmt "} /* END */@."
 
 
-let graph_file filename g =
-  let file, oc = 
+let graph_file graphname filename g =
+  let file, oc =
     try filename, open_out filename
     with Sys_error msg ->
       C.warning "cannot open file: %s@." msg;
@@ -186,6 +186,5 @@ let graph_file filename g =
         file, open_out file
   in C.feedback "Graph output in %s@." file;
      let fmt = Format.formatter_of_out_channel oc in
-       print_graph fmt g;
+       print_graph graphname fmt g;
        close_out oc
-
