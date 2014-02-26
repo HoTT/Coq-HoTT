@@ -552,22 +552,65 @@ End Book_4_5.
 (* ================================================== ex:same-recurrence-not-defeq *)
 (** Exercise 5.2 *)
 
-
+Section Book_5_2.
+  Let ez : Bool := true.
+  Let es : nat -> Bool -> Bool := fun _ => idmap.
+  Definition Book_5_2_i : nat -> Bool := nat_rect (fun _ => Bool) ez es.
+  Definition Book_5_2_ii : nat -> Bool := fun _ => true.
+  Fail Definition Book_5_2_not_defn_eq : Book_5_2_i = Book_5_2_ii := idpath.
+  Lemma Book_5_2_i_prop_eq : forall n, Book_5_2_i n = Book_5_2_ii n.
+  Proof.
+    induction n; simpl; trivial.
+  Defined.
+End Book_5_2.
 
 (* ================================================== ex:one-function-two-recurrences *)
 (** Exercise 5.3 *)
 
-
+Section Book_5_3.
+  Let ez : Bool := true.
+  Let es : nat -> Bool -> Bool := fun _ => idmap.
+  Let ez' : Bool := true.
+  Let es' : nat -> Bool -> Bool := fun _ _ => true.
+  Definition Book_5_3 : nat -> Bool := fun _ => true.
+  Definition Book_5_3_satisfies_ez : Book_5_3 0 = ez := idpath.
+  Definition Book_5_3_satisfies_ez' : Book_5_3 0 = ez' := idpath.
+  Definition Book_5_3_satisfies_es n : Book_5_3 (S n) = es n (Book_5_3 n) := idpath.
+  Definition Book_5_3_satisfies_es' n : Book_5_3 (S n) = es' n (Book_5_3 n) := idpath.
+  Definition Book_5_3_es_ne_es' : ~(es = es')
+    := fun H => false_ne_true (ap10 (ap10 H 0) false).
+End Book_5_3.
 
 (* ================================================== ex:bool *)
 (** Exercise 5.4 *)
 
-
+Definition Book_5_4 := @HoTT.types.Bool.equiv_bool_forall_prod.
 
 (* ================================================== ex:ind-nat-not-equiv *)
 (** Exercise 5.5 *)
 
+Section Book_5_5.
+  Let ind_nat (P : nat -> Type) := fun x => @nat_rect P (fst x) (snd x).
 
+  Lemma Book_5_5 `{fs : Funext} : ~forall P : nat -> Type,
+                                     IsEquiv (@ind_nat P).
+  Proof.
+    intro H.
+    specialize (H (fun _ => Bool)).
+    pose proof (eissect (@ind_nat (fun _ => Bool)) (true, (fun _ _ => true))) as H1.
+    pose proof (eissect (@ind_nat (fun _ => Bool)) (true, (fun _ => idmap))) as H2.
+    cut (ind_nat (fun _ : nat => Bool) (true, fun (_ : nat) (_ : Bool) => true)
+         = (ind_nat (fun _ : nat => Bool) (true, fun _ : nat => idmap))).
+    - intro H'.
+      apply true_ne_false.
+      exact (ap10 (apD10 (ap snd (H1^ @ ap _ H' @ H2)) 0) false).
+    - apply path_forall.
+      intro n; induction n; trivial.
+      unfold ind_nat in *; simpl in *.
+      rewrite <- IHn.
+      destruct n; reflexivity.
+  Defined.
+End Book_5_5.
 
 (* ================================================== ex:no-dep-uniqueness-failure *)
 (** Exercise 5.6 *)
