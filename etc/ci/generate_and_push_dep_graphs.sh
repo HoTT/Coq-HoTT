@@ -9,7 +9,7 @@ pushd "$DIR" 1>/dev/null
 
 # now change to the git root
 ROOT_DIR="$(git rev-parse --show-toplevel)"
-cd "$ROOT_DIR" 1>/dev/null
+cd "$ROOT_DIR"
 
 #"$DIR"/add_upstream.sh
 # copy the push_remote script so it stays around after we change branches
@@ -29,9 +29,9 @@ git config --global user.email "Travis-CI-Bot@travis.fake"
 
 export MESSAGE="Autoupdate documentation with dpdgraphs"
 
-echo '$ make svg-file-dep-graphs svg-aggregate-dep-graphs -k'
-make svg-file-dep-graphs -k
-make svg-aggregate-dep-graphs -k
+echo '$ make svg-file-dep-graphs svg-aggregate-dep-graphs'
+make svg-file-dep-graphs
+make svg-aggregate-dep-graphs
 
 mv file-dep-graphs file-dep-graphs-bak
 git remote update

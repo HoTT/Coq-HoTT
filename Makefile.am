@@ -226,11 +226,12 @@ etc/dpdgraph-0.4alpha/coqthmdep: etc/dpdgraph-0.4alpha/searchdepend.ml4 etc/dpdg
 	$(Q) cd etc/dpdgraph-0.4alpha && $(MAKE)
 
 %.svg: %.dot
-	dot -Tsvg "$<" -o "$@"
+	$(VECHO) DOT $< -o $@
+	$(Q) if [ -s "$<" ]; then dot -Tsvg "$<" -o "$@"; else (echo "" > "$@"; touch "$@"); fi # don't do anything if zero size
 
 file-dep-graphs/%.dot: file-dep-graphs/%.dpd etc/dpdgraph-0.4alpha/coqthmdep
 	$(VECHO) DPD2DOT $< -o $@
-	$(Q) etc/dpdgraph-0.4alpha/dpd2dot $< -graphname $(subst .,_,$*) -o $@ >/dev/null
+	$(Q) if [ -s "$<" ]; then etc/dpdgraph-0.4alpha/dpd2dot $< -graphname $(subst .,_,$*) -o $@ >/dev/null; else (echo "" > "$@"; touch "$@"); fi
 
 $(MAIN_DPDFILES): file-dep-graphs/HoTT.%.dpd : theories/$$(subst .,/,$$*).vo etc/dpdgraph-0.4alpha/coqthmdep
 	@ $(mkdir_p) $(dir $@)
@@ -256,7 +257,7 @@ file-dep-graphs/hott-all.dpd: etc/dpdgraph-0.4alpha/coqthmdep $(MAIN_VOFILES)
 
 svg-dep-graphs: svg-file-dep-graphs svg-aggregate-dep-graphs
 
-svg-aggregate-dep-graphs: file-dep-graphs/hottlib.svg file-dep-graphs/hott-all.svg
+svg-aggregate-dep-graphs: file-dep-graphs/hott-lib.svg file-dep-graphs/hott-all.svg
 
 svg-file-dep-graphs: $(ALL_SVGFILES)
 
