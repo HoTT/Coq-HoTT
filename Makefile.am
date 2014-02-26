@@ -257,9 +257,15 @@ file-dep-graphs/hott-all.dpd: etc/dpdgraph-0.4alpha/coqthmdep $(MAIN_VOFILES)
 
 svg-dep-graphs: svg-file-dep-graphs svg-aggregate-dep-graphs
 
+dot-dep-graphs: dot-file-dep-graphs dot-aggregate-dep-graphs
+
 svg-aggregate-dep-graphs: file-dep-graphs/hott-lib.svg file-dep-graphs/hott-all.svg
 
-svg-file-dep-graphs: $(ALL_SVGFILES)
+dot-aggregate-dep-graphs: file-dep-graphs/hott-lib.dot file-dep-graphs/hott-all.dot
+
+svg-file-dep-graphs: $(ALL_SVGFILES) $(ALL_DOTFILES)
+
+dot-file-dep-graphs: $(ALL_DOTFILES)
 
 # The TAGS file
 TAGS_FILES = $(ALL_VFILES)
