@@ -231,7 +231,7 @@ etc/dpdgraph-0.4alpha/coqthmdep: etc/dpdgraph-0.4alpha/searchdepend.ml4 etc/dpdg
 
 file-dep-graphs/%.dot: file-dep-graphs/%.dpd etc/dpdgraph-0.4alpha/coqthmdep
 	$(VECHO) DPD2DOT $< -o $@
-	$(Q) if [ -s "$<" ]; then etc/dpdgraph-0.4alpha/dpd2dot $< -graphname $(subst .,_,$*) -o $@ >/dev/null; else (echo "" > "$@"; touch "$@"); fi
+	$(Q) if [ -s "$<" ]; then etc/dpdgraph-0.4alpha/dpd2dot $< -graphname $(subst -,_,$(subst .,_,$*)) -o $@ >/dev/null; else (echo "" > "$@"; touch "$@"); fi
 
 $(MAIN_DPDFILES): file-dep-graphs/HoTT.%.dpd : theories/$$(subst .,/,$$*).vo etc/dpdgraph-0.4alpha/coqthmdep
 	@ $(mkdir_p) $(dir $@)
@@ -246,22 +246,34 @@ $(STD_DPDFILES): file-dep-graphs/Coq.%.dpd : coq/theories/$$(subst .,/,$$*).vo e
 file-dep-graphs/hott-lib.dpd: etc/dpdgraph-0.4alpha/coqthmdep $(CORE_VOFILES)
 	@ $(mkdir_p) $(dir $@)
 	$(VECHO) HOQTHMDEP HoTTLib
-        FILES=$(subst /,.,$(patsubst $(srcdir)/theories/%.v,HoTT.%,$(CORE_VFILES)))
-	$(Q) (echo "Require $(FILES)."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(FILES)') | etc/dpdgraph-0.4alpha/hoqthmdep 2>/dev/null >/dev/null
+        HOTT_LIB_FILES=$(subst /,.,$(patsubst $(srcdir)/theories/%.v,HoTT.%,$(CORE_VFILES)))
+	$(Q) (echo "Require $(HOTT_LIB_FILES)."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_LIB_FILES).') | etc/dpdgraph-0.4alpha/hoqthmdep 2>/dev/null >/dev/null
 
-file-dep-graphs/hott-all.dpd: etc/dpdgraph-0.4alpha/coqthmdep $(MAIN_VOFILES)
+#file-dep-graphs/hott-all.dpd: etc/dpdgraph-0.4alpha/coqthmdep $(CORE_VOFILES) $(CATEGORY_VOFILES)
+#	@ $(mkdir_p) $(dir $@)
+#	$(VECHO) HOQTHMDEP HoTT
+#        HOTT_ALL_FILES=$(subst /,.,$(patsubst $(srcdir)/theories/%.v,HoTT.%,$(CORE_VFILES) $(CATEGORY_VFILES)))
+#	$(Q) (echo "Require $(HOTT_ALL_FILES)."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_ALL_FILES).') | etc/dpdgraph-0.4alpha/hoqthmdep 2>/dev/null >/dev/null
+
+file-dep-graphs/index.html: Makefile_targets.mk
 	@ $(mkdir_p) $(dir $@)
-	$(VECHO) HOQTHMDEP HoTT
-        FILES=$(subst /,.,$(patsubst $(srcdir)/theories/%.v,HoTT.%,$(MAIN_VFILES)))
-	$(Q) (echo "Require $(FILES)."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(FILES)') | etc/dpdgraph-0.4alpha/hoqthmdep 2>/dev/null >/dev/null
+	$(VECHO) MAKE $@
+	$(Q) (echo "<html><head><title>Dependency Graphs</title></head><body>"; \
+		echo '<ul><!--li><a href="hott-all.svg">Entire HoTT Library</a></li-->'; \
+		echo '<li><a href="hott-lib.svg">HoTT Core Library</a></li>'; \
+		for i in $(patsubst $(srcdir)/file-dep-graphs/%.svg,%,$(ALL_SVGFILES)); \
+		do echo "<li><a href=\"$$i.svg\">$$i</a></li>"; \
+		done; \
+		echo "</ul></body></html>") \
+		> $@
 
 svg-dep-graphs: svg-file-dep-graphs svg-aggregate-dep-graphs
 
 dot-dep-graphs: dot-file-dep-graphs dot-aggregate-dep-graphs
 
-svg-aggregate-dep-graphs: file-dep-graphs/hott-lib.svg file-dep-graphs/hott-all.svg
+svg-aggregate-dep-graphs: file-dep-graphs/hott-lib.svg #file-dep-graphs/hott-all.svg
 
-dot-aggregate-dep-graphs: file-dep-graphs/hott-lib.dot file-dep-graphs/hott-all.dot
+dot-aggregate-dep-graphs: file-dep-graphs/hott-lib.dot #file-dep-graphs/hott-all.dot
 
 svg-file-dep-graphs: $(ALL_SVGFILES) $(ALL_DOTFILES)
 

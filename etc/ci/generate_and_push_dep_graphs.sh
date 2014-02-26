@@ -32,6 +32,7 @@ export MESSAGE="Autoupdate documentation with dpdgraphs"
 echo '$ make svg-file-dep-graphs svg-aggregate-dep-graphs'
 make svg-file-dep-graphs
 make svg-aggregate-dep-graphs
+make file-dep-graphs/index.html
 
 mv file-dep-graphs file-dep-graphs-bak
 git remote update
@@ -39,7 +40,7 @@ echo '$ git checkout -b gh-pages upstream/gh-pages'
 git checkout -b gh-pages upstream/gh-pages
 git rm -rf file-dep-graphs
 mv file-dep-graphs-bak file-dep-graphs
-git add file-dep-graphs/*.svg # file-dep-graphs/*.dot
+git add file-dep-graphs/*.svg file-dep-graphs/index.html # file-dep-graphs/*.dot
 
 echo '$ git commit -am "'"$MESSAGE"'"'
 git commit -m "$MESSAGE"
