@@ -9,13 +9,16 @@
 
 open Pp
 
+let gen_filtered_search : Search.filter_function -> Search.display_function -> unit =
+    fun filt disp -> Search.generic_search (fun gr e c -> if filt gr e c then disp gr e c else ())
+
 let debug msg = if false then Pp.msgnl msg
 
-let feedback msg = Pp.msgnl [< str "Info: " ++ msg >]
+let feedback msg = Pp.msgnl (str "Info: " ++ msg)
 
-let warning msg = Pp.msgerrnl [< str "Warning: " ++ msg >]
+let warning msg = Pp.msgerrnl (str "Warning: " ++ msg)
 
-let error msg = Pp.msgerrnl [< str "Error: " ++ msg >]
+let error msg = Pp.msgerrnl (str "Error: " ++ msg)
 
 let filename = ref "graph.dpd"
 
@@ -23,17 +26,17 @@ let get_dirlist_grefs dirlist =
   let selected_gref = ref [] in
   let filter gref env constr =
     let outside = false in
-    Search.filter_by_module_from_list (dirlist, outside) gref env constr
+    Search.module_filter (dirlist, outside) gref env constr
   in
   let display gref _env _constr =
-    debug [< str "Select " ++ Printer.pr_global gref >];
+    debug (str "Select " ++ Printer.pr_global gref);
     selected_gref := gref::!selected_gref
   in
-    Search.gen_filtered_search filter display;
+    (*Search.*)gen_filtered_search filter display;
     !selected_gref
 
 let is_prop gref = match gref with
-  | Libnames.ConstRef cnst ->
+  | Globnames.ConstRef cnst ->
       let env = Global.env() in
       let cb = Environ.lookup_constant cnst env in
       let cnst_type =
@@ -47,15 +50,15 @@ let is_prop gref = match gref with
           with _ -> false
         end
       in is_prop
-  | Libnames.IndRef _ -> false
-  | Libnames.ConstructRef _ -> false
-  | Libnames.VarRef _ -> assert false
+  | Globnames.IndRef _ -> false
+  | Globnames.ConstructRef _ -> false
+  | Globnames.VarRef _ -> assert false
 
 
 module G = struct
 
   module Node = struct
-    type t = int * Libnames.global_reference
+    type t = int * Globnames.global_reference
     let id n = fst n
     let gref n = snd n
     let compare n1 n2 = Pervasives.compare (id n1) (id n2)
@@ -95,7 +98,7 @@ module G = struct
 
   module Edges = Set.Make (Edge)
 
-  type t = (Libnames.global_reference, int) Hashtbl.t * Edges.t
+  type t = (Globnames.global_reference, int) Hashtbl.t * Edges.t
 
   let empty () = Hashtbl.create 10, Edges.empty
 
@@ -143,7 +146,7 @@ end
   * If not all, don't add nodes, and return an empty list. *)
 let add_gref_dpds graph ~all n_gref todo =
   let gref = G.Node.gref n_gref in
-  debug [< str "Add dpds " ++ Printer.pr_global gref >];
+  debug (str "Add dpds " ++ Printer.pr_global gref);
   let add_dpd dpd nb_use (g, td) = match G.get_node g dpd with
     | Some n -> let g = G.add_edge g n_gref n nb_use in g, td
     | None ->
@@ -162,7 +165,7 @@ let add_gref_dpds graph ~all n_gref todo =
 (** add gref node and add it to the todo list
 * to process its dependencies later. *)
 let add_gref_only (graph, todo) gref =
-  debug [< str "Add " ++ Printer.pr_global gref >];
+  debug (str "Add " ++ Printer.pr_global gref);
   let graph, n = G.add_node graph gref in
   let todo = n::todo in
     graph, todo
@@ -197,16 +200,16 @@ end = struct
     let is_prop = is_prop gref in
     let acc = ("prop", if is_prop then "yes" else "no")::acc in
     let acc = match gref with
-      | Libnames.ConstRef cnst ->
+      | Globnames.ConstRef cnst ->
           let acc = ("kind", "cnst")::acc in
             add_cnst_attrib acc cnst
-      | Libnames.IndRef _ ->
+      | Globnames.IndRef _ ->
           let acc = ("kind", "inductive")::acc in
             acc
-      | Libnames.ConstructRef _ ->
+      | Globnames.ConstructRef _ ->
           let acc = ("kind", "construct")::acc in
             acc
-      | Libnames.VarRef _ -> assert false
+      | Globnames.VarRef _ -> assert false
     in acc
 
   let pp_attribs fmt attribs =
@@ -234,11 +237,11 @@ end = struct
   let file graph =
     try
       let oc = open_out !filename  in
-        feedback [< str "output dependencies in file " ++ (str !filename) >];
+        feedback (str "output dependencies in file " ++ (str !filename));
         out_graph (Format.formatter_of_out_channel oc) graph;
         close_out oc
     with Sys_error msg ->
-      error [< str "cannot open file: " ++ (str msg)>];
+      error (str "cannot open file: " ++ (str msg));
 end
 
 let mk_dpds_graph gref =
@@ -258,7 +261,7 @@ let locate_mp_dirpath ref =
   let (loc,qid) = Libnames.qualid_of_reference ref in
   try Nametab.dirpath_of_module (Nametab.locate_module qid)
   with Not_found ->
-    Util.user_err_loc
+    Errors.user_err_loc
       (loc,"",str "Unknown module" ++ spc() ++ Libnames.pr_qualid qid)
 
 VERNAC COMMAND EXTEND DependGraphSetFile
@@ -267,7 +270,7 @@ END
 
 (*
 VERNAC ARGUMENT EXTEND dirpath
-  [ string(str) ] -> [ Libnames.dirpath_of_string str ]
+  [ string(str) ] -> [ Globnames.dirpath_of_string str ]
 END
 
 VERNAC ARGUMENT EXTEND dirlist
