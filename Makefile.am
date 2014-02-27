@@ -97,6 +97,7 @@ ALL_VOFILES = $(STD_VOFILES) $(MAIN_VOFILES)
 ALL_GLOBFILES=$(STD_GLOBFILES) $(MAIN_GLOBFILES)
 ALL_DEPFILES=$(STD_DEPFILES) $(MAIN_DEPFILES)
 ALL_HTMLFILES=$(STD_HTMLFILES) $(MAIN_HTMLFILES)
+ALL_TIMINGFILES=$(ALL_VFILES:.v=.timing)
 ALL_XMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(ALL_HTMLFILES:.html=.xml))
 ALL_PROVIOLA_HTMLFILES=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(ALL_XMLFILES:.xml=.html))
 ALL_DPDFILES=$(MAIN_DPDFILES) # $(STD_DPDFILES)
@@ -115,7 +116,7 @@ nobase_hott_DATA = \
 HOQC=$(srcdir)/hoqc
 
 # Which files should be cleaned
-CLEANFILES = $(ALL_VOFILES) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(ALL_XMLFILES) $(ALL_PROVIOLA_HTMLFILES) html-done.timestamp HoTT.deps HoTTCore.deps $(ALL_SVGFILES) $(ALL_DPDFILES) $(ALL_DOTFILES) file-dep-graphs/hott-all.dot file-dep-graphs/hott-all.dpd file-dep-graphs/hott-all.svg file-dep-graphs/hott-lib.dot file-dep-graphs/hott-lib.dpd file-dep-graphs/hott-lib.svg
+CLEANFILES = $(ALL_VOFILES) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(ALL_XMLFILES) $(ALL_PROVIOLA_HTMLFILES) $(ALL_TIMINGFILES) html-done.timestamp HoTT.deps HoTTCore.deps $(ALL_SVGFILES) $(ALL_DPDFILES) $(ALL_DOTFILES) file-dep-graphs/hott-all.dot file-dep-graphs/hott-all.dpd file-dep-graphs/hott-all.svg file-dep-graphs/hott-lib.dot file-dep-graphs/hott-lib.dpd file-dep-graphs/hott-lib.svg
 
 # automake is very stupid and wants to put the 'include' line above
 # after this target.  But this target depends on variables defined in
@@ -138,8 +139,8 @@ install-data-local:
 stdlib: $(STD_VOFILES)
 
 $(STD_VOFILES) : %.vo : %.v
-	$(VECHO) COQTOP $(basename $<)
-	$(Q) $(TIMER) "$(COQTOP)" -indices-matter -boot -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq -compile "$(basename $<)"
+	$(VECHO) COQTOP $*
+	$(Q) $(TIMER) ("$(COQTOP)" -time -indices-matter -boot -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq -compile "$*" > $*.timing)
 
 
 # The HoTT library as a single target
@@ -162,8 +163,8 @@ strict: strict-test hottlib hott-core hott-categories contrib
 
 # A rule for compiling the HoTT libary files
 $(MAIN_VOFILES) : %.vo : %.v $(STD_VOFILES)
-	$(VECHO) HOQC $<
-	$(Q) $(TIMER) $(HOQC) $<
+	$(VECHO) HOQC $*
+	$(Q) $(TIMER) ($(HOQC) -time $< > $*.timing)
 
 # The deps file, for graphs
 HoTT.deps: $(ALL_VFILES)
@@ -297,6 +298,6 @@ clean-dpdgraph:
 
 clean:
 	rm -f $(CLEANFILES)
-	find "$(SRCCOQLIB)/theories" $(srcdir)/theories -name \*.vo -o -name \*.glob | xargs rm -f
+	find "$(SRCCOQLIB)/theories" $(srcdir)/theories -name \*.vo -o -name \*.glob -o \*.timing | xargs rm -f
 
 -include $(ALL_DEPFILES)
