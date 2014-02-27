@@ -57,6 +57,7 @@ CORE_VOFILES=$(CORE_VFILES:.v=.vo)
 CORE_GLOBFILES=$(CORE_VFILES:.v=.glob)
 CORE_DEPFILES=$(CORE_VFILES:.v=.d)
 CORE_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CORE_VFILES:.v=.html)))
+CORE_TIMING_HTMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/timing-html/%,$(CORE_HTMLFILES))
 CORE_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/file-dep-graphs/HoTT.%,$(subst /,.,$(CORE_VFILES:.v=.dpd)))
 
 # The list of files that comprise the category theory in the HoTT library
@@ -64,6 +65,7 @@ CATEGORY_VOFILES=$(CATEGORY_VFILES:.v=.vo)
 CATEGORY_GLOBFILES=$(CATEGORY_VFILES:.v=.glob)
 CATEGORY_DEPFILES=$(CATEGORY_VFILES:.v=.d)
 CATEGORY_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CATEGORY_VFILES:.v=.html)))
+CATEGORY_TIMING_HTMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/timing-html/%,$(CATEGORY_HTMLFILES))
 CATEGORY_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/file-dep-graphs/HoTT.%,$(subst /,.,$(CATEGORY_VFILES:.v=.dpd)))
 
 # The list of files from contrib
@@ -71,6 +73,7 @@ CONTRIB_VOFILES=$(CONTRIB_VFILES:.v=.vo)
 CONTRIB_GLOBFILES=$(CONTRIB_VFILES:.v=.glob)
 CONTRIB_DEPFILES=$(CONTRIB_VFILES:.v=.d)
 CONTRIB_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).contrib.%,$(srcdir)/html/%,$(subst /,.,$(CONTRIB_VFILES:.v=.html)))
+CONTRIB_TIMING_HTMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/timing-html/%,$(CONTRIB_HTMLFILES))
 
 # I'm not sure why we needs = rather than :=, but we seem to
 ALL_BUILT_HOTT_VFILES = $(STD_VFILES) $(CORE_VFILES) $(CATEGORY_VFILES)
@@ -82,6 +85,7 @@ STD_VOFILES=$(STD_VFILES:.v=.vo)
 STD_GLOBFILES=$(STD_VFILES:.v=.glob)
 STD_DEPFILES=$(STD_VFILES:.v=.d)
 STD_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/html/Coq.%,$(subst /,.,$(STD_VFILES:.v=.html)))
+STD_TIMING_HTMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/timing-html/%,$(STD_HTMLFILES))
 STD_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/file-dep-graphs/Coq.%,$(subst /,.,$(STD_VFILES:.v=.dpd)))
 
 # The list of all files, mainly used for html and proviola
@@ -90,6 +94,7 @@ MAIN_VOFILES = $(MAIN_VFILES:.v=.vo)
 MAIN_GLOBFILES = $(MAIN_VFILES:.v=.glob)
 MAIN_DEPFILES = $(MAIN_VFILES:.v=.d)
 MAIN_HTMLFILES = $(CORE_HTMLFILES) $(CATEGORY_HTMLFILES) $(CONTRIB_HTMLFILES)
+MAIN_TIMING_HTMLFILES = $(CORE_TIMING_HTMLFILES) $(CATEGORY_TIMING_HTMLFILES) $(CONTRIB_TIMING_HTMLFILES)
 MAIN_DPDFILES = $(CORE_DPDFILES) $(CATEGORY_DPDFILES)
 
 ALL_VFILES = $(STD_VFILES) $(MAIN_VFILES)
@@ -97,6 +102,7 @@ ALL_VOFILES = $(STD_VOFILES) $(MAIN_VOFILES)
 ALL_GLOBFILES=$(STD_GLOBFILES) $(MAIN_GLOBFILES)
 ALL_DEPFILES=$(STD_DEPFILES) $(MAIN_DEPFILES)
 ALL_HTMLFILES=$(STD_HTMLFILES) $(MAIN_HTMLFILES)
+ALL_TIMING_HTMLFILES=$(STD_TIMING_HTMLFILES) $(MAIN_TIMING_HTMLFILES)
 ALL_TIMINGFILES=$(ALL_VFILES:.v=.timing)
 ALL_XMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(ALL_HTMLFILES:.html=.xml))
 ALL_PROVIOLA_HTMLFILES=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(ALL_XMLFILES:.xml=.html))
@@ -116,7 +122,7 @@ nobase_hott_DATA = \
 HOQC=$(srcdir)/hoqc
 
 # Which files should be cleaned
-CLEANFILES = $(ALL_VOFILES) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(ALL_XMLFILES) $(ALL_PROVIOLA_HTMLFILES) $(ALL_TIMINGFILES) html-done.timestamp HoTT.deps HoTTCore.deps $(ALL_SVGFILES) $(ALL_DPDFILES) $(ALL_DOTFILES) file-dep-graphs/hott-all.dot file-dep-graphs/hott-all.dpd file-dep-graphs/hott-all.svg file-dep-graphs/hott-lib.dot file-dep-graphs/hott-lib.dpd file-dep-graphs/hott-lib.svg
+CLEANFILES = $(ALL_VOFILES) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(ALL_XMLFILES) $(ALL_PROVIOLA_HTMLFILES) $(ALL_TIMINGFILES) $(ALL_TIMING_HTMLFILES) html-done.timestamp HoTT.deps HoTTCore.deps $(ALL_SVGFILES) $(ALL_DPDFILES) $(ALL_DOTFILES) file-dep-graphs/hott-all.dot file-dep-graphs/hott-all.dpd file-dep-graphs/hott-all.svg file-dep-graphs/hott-lib.dot file-dep-graphs/hott-lib.dpd file-dep-graphs/hott-lib.svg
 
 # automake is very stupid and wants to put the 'include' line above
 # after this target.  But this target depends on variables defined in
@@ -126,7 +132,7 @@ all-am: Makefile $(SCRIPTS) $(DATA) $(MAKEFILE_TARGETS_FILE)
 
 .SECONDEXPANSION:
 
-.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph
+.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph
 
 # TODO(JasonGross): Get this to work on Windows, where symlinks are unreliable
 install-data-local:
@@ -188,8 +194,29 @@ html:
 	rm -f html-done.timestamp
 	$(MAKE) html-done.timestamp
 
+timing-html: $(ALL_TIMING_HTMLFILES) timing-html/coqdoc.css timing-html/toc.html
+
+timing-html/coqdoc.css timing-html/toc.html: timing-html/% : html/%
+	@ $(mkdir_p) timing-html
+	cp "$<" "$@"
 
 $(ALL_HTMLFILES) html/index.html html/coqdoc.css html/toc.html : html-done.timestamp
+
+$(CORE_TIMING_HTMLFILES) $(CATEGORY_TIMING_HTMLFILES): timing-html/HoTT.%.html : theories/$$(subst .,/,$$*).vo etc/time2html
+	@ $(mkdir_p) $(dir $@)
+	$(VECHO) TIME2HTML HoTT.$* > $@
+	$(Q) etc/time2html "$(<:.vo=.timing)" "$(<:.vo=.v)" > $@
+
+$(CONTRIB_TIMING_HTMLFILES): timing-html/%.html : contrib/$$(subst .,/,$$*).vo etc/time2html
+	@ $(mkdir_p) $(dir $@)
+	$(VECHO) TIME2HTML $* > $@
+	$(Q) etc/time2html "$(<:.vo=.timing)" "$(<:.vo=.v)" > $@
+
+$(STD_TIMING_HTMLFILES): timing-html/Coq.%.html : coq/theories/$$(subst .,/,$$*).vo etc/time2html
+	@ $(mkdir_p) $(dir $@)
+	$(VECHO) TIME2HTML Coq.$* > $@
+	$(Q) etc/time2html "$(<:.vo=.timing)" "$(<:.vo=.v)" > $@
+
 
 
 # the proviola files
