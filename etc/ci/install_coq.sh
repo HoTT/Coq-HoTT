@@ -28,8 +28,8 @@ echo '$ ./configure -no-native-compiler '"$@"
 ./configure -no-native-compiler "$@"
 echo '$ make coqlight'
 make coqlight
-echo '$ sudo make install-coqlight'
-sudo make install-coqlight
+echo '$ sudo make install-coqlight install-devfiles'
+sudo make install-coqlight install-devfiles
 popd
 
 popd 1>/dev/null
