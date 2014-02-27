@@ -14,6 +14,7 @@ cd "$ROOT_DIR"
 # only make if we should ($UPDATE_HTML is not empty) and we're the same as origin/master
 "$DIR"/generate_and_push_doc.sh "$@"
 "$DIR"/generate_and_push_quick_doc.sh "$@"
+"$DIR"/generate_and_push_dep_graphs.sh "$@"
 "$DIR"/autogen_and_push.sh "$@"
 
 popd 1>/dev/null

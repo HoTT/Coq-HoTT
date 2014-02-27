@@ -57,12 +57,14 @@ CORE_VOFILES=$(CORE_VFILES:.v=.vo)
 CORE_GLOBFILES=$(CORE_VFILES:.v=.glob)
 CORE_DEPFILES=$(CORE_VFILES:.v=.d)
 CORE_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CORE_VFILES:.v=.html)))
+CORE_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/file-dep-graphs/HoTT.%,$(subst /,.,$(CORE_VFILES:.v=.dpd)))
 
 # The list of files that comprise the category theory in the HoTT library
 CATEGORY_VOFILES=$(CATEGORY_VFILES:.v=.vo)
 CATEGORY_GLOBFILES=$(CATEGORY_VFILES:.v=.glob)
 CATEGORY_DEPFILES=$(CATEGORY_VFILES:.v=.d)
 CATEGORY_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CATEGORY_VFILES:.v=.html)))
+CATEGORY_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/file-dep-graphs/HoTT.%,$(subst /,.,$(CATEGORY_VFILES:.v=.dpd)))
 
 # The list of files from contrib
 CONTRIB_VOFILES=$(CONTRIB_VFILES:.v=.vo)
@@ -80,6 +82,7 @@ STD_VOFILES=$(STD_VFILES:.v=.vo)
 STD_GLOBFILES=$(STD_VFILES:.v=.glob)
 STD_DEPFILES=$(STD_VFILES:.v=.d)
 STD_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/html/Coq.%,$(subst /,.,$(STD_VFILES:.v=.html)))
+STD_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/file-dep-graphs/Coq.%,$(subst /,.,$(STD_VFILES:.v=.dpd)))
 
 # The list of all files, mainly used for html and proviola
 MAIN_VFILES = $(CORE_VFILES) $(CATEGORY_VFILES) $(CONTRIB_VFILES)
@@ -87,6 +90,7 @@ MAIN_VOFILES = $(MAIN_VFILES:.v=.vo)
 MAIN_GLOBFILES = $(MAIN_VFILES:.v=.glob)
 MAIN_DEPFILES = $(MAIN_VFILES:.v=.d)
 MAIN_HTMLFILES = $(CORE_HTMLFILES) $(CATEGORY_HTMLFILES) $(CONTRIB_HTMLFILES)
+MAIN_DPDFILES = $(CORE_DPDFILES) $(CATEGORY_DPDFILES)
 
 ALL_VFILES = $(STD_VFILES) $(MAIN_VFILES)
 ALL_VOFILES = $(STD_VOFILES) $(MAIN_VOFILES)
@@ -95,6 +99,9 @@ ALL_DEPFILES=$(STD_DEPFILES) $(MAIN_DEPFILES)
 ALL_HTMLFILES=$(STD_HTMLFILES) $(MAIN_HTMLFILES)
 ALL_XMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(ALL_HTMLFILES:.html=.xml))
 ALL_PROVIOLA_HTMLFILES=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(ALL_XMLFILES:.xml=.html))
+ALL_DPDFILES=$(MAIN_DPDFILES) # $(STD_DPDFILES)
+ALL_SVGFILES=$(ALL_DPDFILES:.dpd=.svg)
+ALL_DOTFILES=$(ALL_DPDFILES:.dpd=.dot)
 
 # Definitions that let autoconf know how to install things.
 nobase_hott_DATA = \
@@ -108,7 +115,7 @@ nobase_hott_DATA = \
 HOQC=$(srcdir)/hoqc
 
 # Which files should be cleaned
-CLEANFILES = $(ALL_VOFILES) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(ALL_XMLFILES) $(ALL_PROVIOLA_HTMLFILES) html-done.timestamp HoTT.deps HoTTCore.deps
+CLEANFILES = $(ALL_VOFILES) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(ALL_XMLFILES) $(ALL_PROVIOLA_HTMLFILES) html-done.timestamp HoTT.deps HoTTCore.deps $(ALL_SVGFILES) $(ALL_DPDFILES) $(ALL_DOTFILES) file-dep-graphs/hott-all.dot file-dep-graphs/hott-all.dpd file-dep-graphs/hott-all.svg file-dep-graphs/hott-lib.dot file-dep-graphs/hott-lib.dpd file-dep-graphs/hott-lib.svg
 
 # automake is very stupid and wants to put the 'include' line above
 # after this target.  But this target depends on variables defined in
@@ -116,7 +123,9 @@ CLEANFILES = $(ALL_VOFILES) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(
 # into putting the include in the right place.
 all-am: Makefile $(SCRIPTS) $(DATA) $(MAKEFILE_TARGETS_FILE)
 
-.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola clean-local install-data-local proviola-all proviola-xml
+.SECONDEXPANSION:
+
+.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph
 
 # TODO(JasonGross): Get this to work on Windows, where symlinks are unreliable
 install-data-local:
@@ -211,6 +220,64 @@ proviola-xml: $(ALL_XMLFILES)
 
 proviola-all: proviola proviola-xml
 
+# dpdgraphs
+etc/dpdgraph-0.4alpha/coqthmdep: etc/dpdgraph-0.4alpha/searchdepend.ml4 etc/dpdgraph-0.4alpha/graphdepend.ml4
+	$(VECHO) MAKE DPDGRAPH
+	$(Q) cd etc/dpdgraph-0.4alpha && $(MAKE)
+
+%.svg: %.dot
+	$(VECHO) DOT $< -o $@
+	$(Q) if [ -s "$<" ]; then dot -Tsvg "$<" -o "$@"; else (echo "" > "$@"; touch "$@"); fi # don't do anything if zero size
+
+file-dep-graphs/%.dot: file-dep-graphs/%.dpd etc/dpdgraph-0.4alpha/coqthmdep
+	$(VECHO) DPD2DOT $< -o $@
+	$(Q) if [ -s "$<" ]; then etc/dpdgraph-0.4alpha/dpd2dot $< -graphname $(subst -,_,$(subst .,_,$*)) -o $@ >/dev/null; else (echo "" > "$@"; touch "$@"); fi
+
+$(MAIN_DPDFILES): file-dep-graphs/HoTT.%.dpd : theories/$$(subst .,/,$$*).vo etc/dpdgraph-0.4alpha/coqthmdep
+	@ $(mkdir_p) $(dir $@)
+	$(VECHO) HOQTHMDEP HoTT.$* > $@
+	$(Q) (echo "Require HoTT.$*."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph HoTT.$*.') | etc/dpdgraph-0.4alpha/hoqthmdep 2>/dev/null >/dev/null
+
+$(STD_DPDFILES): file-dep-graphs/Coq.%.dpd : coq/theories/$$(subst .,/,$$*).vo etc/dpdgraph-0.4alpha/coqthmdep
+	@ $(mkdir_p) $(dir $@)
+	$(VECHO) HOQTHMDEP Coq.$* > $@
+	$(Q) (echo "Require Coq.$*."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph Coq.$*.') | etc/dpdgraph-0.4alpha/hoqthmdep 2>/dev/null >/dev/null
+
+file-dep-graphs/hott-lib.dpd: etc/dpdgraph-0.4alpha/coqthmdep $(CORE_VOFILES)
+	@ $(mkdir_p) $(dir $@)
+	$(VECHO) HOQTHMDEP HoTTLib
+        HOTT_LIB_FILES=$(subst /,.,$(patsubst $(srcdir)/theories/%.v,HoTT.%,$(CORE_VFILES)))
+	$(Q) (echo "Require $(HOTT_LIB_FILES)."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_LIB_FILES).') | etc/dpdgraph-0.4alpha/hoqthmdep 2>/dev/null >/dev/null
+
+#file-dep-graphs/hott-all.dpd: etc/dpdgraph-0.4alpha/coqthmdep $(CORE_VOFILES) $(CATEGORY_VOFILES)
+#	@ $(mkdir_p) $(dir $@)
+#	$(VECHO) HOQTHMDEP HoTT
+#        HOTT_ALL_FILES=$(subst /,.,$(patsubst $(srcdir)/theories/%.v,HoTT.%,$(CORE_VFILES) $(CATEGORY_VFILES)))
+#	$(Q) (echo "Require $(HOTT_ALL_FILES)."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_ALL_FILES).') | etc/dpdgraph-0.4alpha/hoqthmdep 2>/dev/null >/dev/null
+
+file-dep-graphs/index.html: Makefile_targets.mk
+	@ $(mkdir_p) $(dir $@)
+	$(VECHO) MAKE $@
+	$(Q) (echo "<html><head><title>Dependency Graphs</title></head><body>"; \
+		echo '<ul><!--li><a href="hott-all.svg">Entire HoTT Library</a></li-->'; \
+		echo '<li><a href="hott-lib.svg">HoTT Core Library</a></li>'; \
+		for i in $(patsubst $(srcdir)/file-dep-graphs/%.svg,%,$(ALL_SVGFILES)); \
+		do echo "<li><a href=\"$$i.svg\">$$i</a></li>"; \
+		done; \
+		echo "</ul></body></html>") \
+		> $@
+
+svg-dep-graphs: svg-file-dep-graphs svg-aggregate-dep-graphs
+
+dot-dep-graphs: dot-file-dep-graphs dot-aggregate-dep-graphs
+
+svg-aggregate-dep-graphs: file-dep-graphs/hott-lib.svg #file-dep-graphs/hott-all.svg
+
+dot-aggregate-dep-graphs: file-dep-graphs/hott-lib.dot #file-dep-graphs/hott-all.dot
+
+svg-file-dep-graphs: $(ALL_SVGFILES) $(ALL_DOTFILES)
+
+dot-file-dep-graphs: $(ALL_DOTFILES)
 
 # The TAGS file
 TAGS_FILES = $(ALL_VFILES)
@@ -224,6 +291,9 @@ TAGS : $(TAGS_FILES)
 $(ALL_DEPFILES) : %.d : %.v
 	$(VECHO) COQDEP $<
 	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
+
+clean-dpdgraph:
+	(cd etc/dpdgraph-0.4alpha && $(MAKE) clean)
 
 clean:
 	rm -f $(CLEANFILES)

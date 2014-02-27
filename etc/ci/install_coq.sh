@@ -28,8 +28,12 @@ echo '$ ./configure -no-native-compiler '"$@"
 ./configure -no-native-compiler "$@"
 echo '$ make coqlight'
 make coqlight
-echo '$ sudo make install-coqlight'
-sudo make install-coqlight
+echo '$ sudo make install-coqlight install-devfiles'
+sudo make install-coqlight install-devfiles
+# now we do some terrible hackery for -lcoqrun
+echo ' install coqrun'
+sudo install -m 644  kernel/byterun/dllcoqrun.so "/usr/local/lib/coq"
+sudo install -m 644  kernel/byterun/libcoqrun.a "/usr/local/lib/coq"
 popd
 
 popd 1>/dev/null

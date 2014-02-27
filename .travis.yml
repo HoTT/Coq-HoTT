@@ -12,9 +12,10 @@ branches:
 env:
 
  matrix:
-   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC="yes"  UPDATE_AUTOGEN="yes"
-   - UPDATE_HTML="yes"    WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""
-   - UPDATE_HTML=""       WITH_AUTORECONF=""     UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS="yes"
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC="yes"  UPDATE_AUTOGEN="yes"  UPDATE_DEP_GRAPHS=""
+   - UPDATE_HTML="yes"    WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""
+   - UPDATE_HTML=""       WITH_AUTORECONF=""     UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""
 
  global:
 # encrypted version of deploy key for pushing
