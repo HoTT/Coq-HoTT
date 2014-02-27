@@ -23,7 +23,7 @@
 
 *)
 
-Require Import HoTT HoTT.hit.minus1Trunc HoTT.Misc.
+Require Import HoTT HoTT.hit.minus1Trunc HoTT.Misc Coq.Init.Peano.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -569,14 +569,8 @@ Section Book_5_2'.
   (** Here's another example where two functions are not (currently) definitionally equal, but satisfy the same reucrrence judgmentally.  This example is a bit less robust; it fails in CoqMT. *)
   Let ez : nat := 1.
   Let es : nat -> nat -> nat := fun _ => S.
-  (** This should be moved to some other place. *)
-  Fixpoint plus (n m : nat) :=
-    match n with
-      | O => m
-      | S p => S (plus p m)
-    end.
-  Definition Book_5_2'_i : nat -> nat := fun n => plus n 1.
-  Definition Book_5_2'_ii : nat -> nat := fun n => plus 1 n.
+  Definition Book_5_2'_i : nat -> nat := fun n => n + 1.
+  Definition Book_5_2'_ii : nat -> nat := fun n => 1 + n.
   Fail Definition Book_5_2'_not_defn_eq : Book_5_2'_i = Book_5_2'_ii := idpath.
   Definition Book_5_2'_i_eq_ez : Book_5_2'_i 0 = ez := idpath.
   Definition Book_5_2'_ii_eq_ez : Book_5_2'_ii 0 = ez := idpath.
