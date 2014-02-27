@@ -40,7 +40,7 @@ echo '$ git checkout -b gh-pages upstream/gh-pages'
 git checkout -b gh-pages upstream/gh-pages
 git rm -rf file-dep-graphs
 mv file-dep-graphs-bak file-dep-graphs
-git add file-dep-graphs/*.svg file-dep-graphs/index.html # file-dep-graphs/*.dot
+git add -f file-dep-graphs/*.svg file-dep-graphs/index.html # file-dep-graphs/*.dot
 
 echo '$ git commit -am "'"$MESSAGE"'"'
 git commit -m "$MESSAGE"
