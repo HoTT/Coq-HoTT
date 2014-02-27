@@ -1,4 +1,4 @@
-#!/usr/bin/lua5.1
+#!/usr/bin/env lua
 
 time = assert(select(1,...), "arg1 missing: output of coqc -time")
 vfile = assert(select(2,...), "arg2 missing: .v file")
@@ -85,7 +85,7 @@ max = 0; for _,d in ipairs(data) do max = math.max(max,d.time) end
 for _,d in ipairs(data) do
 	print('<div class="code" title="File: '..vname..
 		'\nLine: '..d.lines..'\nTime: '..d.time..'s">')
-	print('<div class="time" style="width: '.. 
+	print('<div class="time" style="width: '..
 		d.time * 100 / max ..'%"></div>')
 	if d.text == '\n' then
 		print('<pre>\n\n</pre>')
