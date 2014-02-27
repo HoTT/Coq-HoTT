@@ -146,7 +146,7 @@ stdlib: $(STD_VOFILES)
 
 $(STD_VOFILES) : %.vo : %.v
 	$(VECHO) COQTOP $*
-	$(Q) $(TIMER) ("$(COQTOP)" -time -indices-matter -boot -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq -compile "$*" > $*.timing)
+	$(Q) $(TIMER) etc/pipe_out.sh "$*.timing" "$(COQTOP)" -time -indices-matter -boot -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq -compile "$*"
 
 
 # The HoTT library as a single target
@@ -170,7 +170,7 @@ strict: strict-test hottlib hott-core hott-categories contrib
 # A rule for compiling the HoTT libary files
 $(MAIN_VOFILES) : %.vo : %.v $(STD_VOFILES)
 	$(VECHO) HOQC $*
-	$(Q) $(TIMER) ($(HOQC) -time $< > $*.timing)
+	$(Q) $(TIMER) ./etc/pipe_out.sh "$*.timing" $(HOQC) -time $<
 
 # The deps file, for graphs
 HoTT.deps: $(ALL_VFILES)
