@@ -125,7 +125,7 @@ all-am: Makefile $(SCRIPTS) $(DATA) $(MAKEFILE_TARGETS_FILE)
 
 .SECONDEXPANSION:
 
-.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs
+.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph
 
 # TODO(JasonGross): Get this to work on Windows, where symlinks are unreliable
 install-data-local:
@@ -292,9 +292,11 @@ $(ALL_DEPFILES) : %.d : %.v
 	$(VECHO) COQDEP $<
 	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
 
+clean-dpdgraph:
+	(cd etc/dpdgraph-0.4alpha && $(MAKE) clean)
+
 clean:
 	rm -f $(CLEANFILES)
 	find "$(SRCCOQLIB)/theories" $(srcdir)/theories -name \*.vo -o -name \*.glob | xargs rm -f
-	(cd etc/dpdgraph-0.4alpha && $(MAKE) clean)
 
 -include $(ALL_DEPFILES)
