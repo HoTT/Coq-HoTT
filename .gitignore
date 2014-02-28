@@ -10,6 +10,7 @@
 *.ml4.d
 *.mli.d
 *.mllib.d
+*.timing
 html/
 proviola/
 proviola-html/

@@ -22,6 +22,7 @@ if [ ! -z "$UPDATE_QUICK_DOC" ]; then
     ./install_coq_dot_deps.sh
 fi
 if [ ! -z "$UPDATE_HTML" ]; then
+    ./install_timing_deps.sh
     ./install_proviola.sh
 fi
 if [ ! -z "$UPDATE_DEP_GRAPHS" ]; then

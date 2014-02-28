@@ -27,23 +27,28 @@ echo 'Configuring git for pushing...'
 git config --global user.name "Travis-CI Bot"
 git config --global user.email "Travis-CI-Bot@travis.fake"
 
-export MESSAGE="Autoupdate documentation with coqdoc and proviola
+export MESSAGE="Autoupdate documentation with coqdoc and proviola and time2html
 
 Generated with \`make html proviola\`"
 
 echo '$ make html'
 make html
 make proviola -j4 -k
+make timing-html
 mv proviola-html proviola-html-bak
+mv timing-html timing-html-bak
 git remote update
 echo '$ git checkout -b gh-pages upstream/gh-pages'
 git checkout -b gh-pages upstream/gh-pages
 rm -rf coqdoc-html
 rm -rf proviola-html
+rm -rf timing-html
 mv html coqdoc-html
 mv proviola-html-bak proviola-html
+mv timing-html-bak timing-html
 git add coqdoc-html/*
 git add proviola-html/*
+git add timing-html/*
 
 echo '$ git commit -am "'"$MESSAGE"'"'
 git commit -m "$MESSAGE"

@@ -1,0 +1,109 @@
+#!/usr/bin/env lua
+
+time = assert(select(1,...), "arg1 missing: output of coqc -time")
+vfile = assert(select(2,...), "arg2 missing: .v file")
+
+source = assert(io.open(vfile), "unable to open "..vfile):read("*a")
+
+function htmlescape(s)
+	return (s:gsub("&","&amp;"):gsub("<","&lt;"):gsub(">","&gt;"))
+end
+
+vname = vfile:match("([^/]+.v)$")
+
+print([[
+<html>
+<head>
+<title>]]..vname..[[</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ]]..vname..[[</h1>
+]])
+
+data = {}
+last_end = -1
+lines = 1
+for l in io.lines(time) do
+	local b,e,t = l:match("^Chars ([%d]+) %- ([%d]+) [^ ]+ ([%d%.]+) secs")
+	if b then
+		if tonumber(b) > last_end + 1 then
+			local text = string.sub(source,last_end+1,b-1)
+			if not text:match('^%s+$') then
+				local _, n = text:gsub('\n','')
+				data[#data+1] = {
+					start = last_end+1; stop = b-1; time = 0;
+					text = text; lines = lines
+				}
+				lines = lines + n
+				last_end = b
+			end
+		end
+		local text = string.sub(source,last_end+1,e)
+		local _, n = text:gsub('\n','')
+		local _, eoln = text:match('^[%s\n]*'):gsub('\n','')
+		data[#data+1] = {
+			start = b; stop = e; time = tonumber(t); text = text;
+			lines = lines
+		}
+		lines = lines + n
+		last_end = tonumber(e)
+	end
+end
+if last_end + 1 <= string.len(source) then
+	local text = string.sub(source,last_end+1,string.len(source))
+	data[#data+1] = {
+		start = last_end+1; stop = string.len(source); time = 0;
+		text = text; lines = lines+1
+		}
+end
+
+max = 0; for _,d in ipairs(data) do max = math.max(max,d.time) end
+
+for _,d in ipairs(data) do
+	print('<div class="code" title="File: '..vname..
+		'\nLine: '..d.lines..'\nTime: '..d.time..'s">')
+	print('<div class="time" style="width: '..
+		d.time * 100 / max ..'%"></div>')
+	if d.text == '\n' then
+		print('<pre>\n\n</pre>')
+	elseif d.text:match('\n$') then
+		print('<pre>'..htmlescape(d.text)..'\n</pre>')
+	else
+		print('<pre>'..htmlescape(d.text)..'</pre>')
+	end
+	print("</div>")
+end
+
+print [[
+</body>
+</html>
+]]
+
+-- vim: set ts=4:
+
+--for i = 1,#data do
+--	io.stderr:write(data[i].text)
+--end
