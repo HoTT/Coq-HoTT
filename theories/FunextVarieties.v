@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-(** Varieties of function extensionality *)
+(** * Varieties of function extensionality *)
 
 Require Import Overture PathGroupoids Contractible Equivalences.
 Local Open Scope path_scope.
@@ -94,3 +94,9 @@ Proof.
   intros h; destruct h.
     refine (htpy_rect_beta wf _ _ _).
 Defined.
+
+(** We add some hints to the typeclass database, so if we happen to have hypotheses of [WeakFunext] or [NaiveFunext] floating around, we get [Funext] automatically. *)
+Definition NaiveFunext_implies_Funext : NaiveFunext -> Funext
+  := WeakFunext_implies_Funext o NaiveFunext_implies_WeakFunext.
+
+Hint Immediate WeakFunext_implies_Funext NaiveFunext_implies_Funext : typeclass_instances.
