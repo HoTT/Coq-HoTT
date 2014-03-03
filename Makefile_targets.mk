@@ -42,6 +42,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/types/Bool.v \
 	$(srcdir)/theories/types/Sum.v \
 	$(srcdir)/theories/types/Universe.v \
+	$(srcdir)/theories/UnivalenceImpliesFunext.v \
 	$(srcdir)/theories/Pointed.v \
 	$(srcdir)/theories/Tactics.v \
 	$(srcdir)/theories/HoTT.v \
