@@ -325,6 +325,6 @@ clean-dpdgraph:
 
 clean:
 	rm -f $(CLEANFILES)
-	find "$(SRCCOQLIB)/theories" $(srcdir)/theories -name \*.vo -o -name \*.glob -o \*.timing | xargs rm -f
+	find "$(SRCCOQLIB)/theories" $(srcdir)/theories -name \*.vo -o -name \*.glob -o -name \*.timing | xargs rm -f
 
 -include $(ALL_DEPFILES)
