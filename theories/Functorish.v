@@ -1,4 +1,4 @@
-Require Import HoTT TruncType.
+Require Import Overture TruncType types.Universe Equivalences PathGroupoids.
 Open Scope equiv.
 Open Scope path.
 

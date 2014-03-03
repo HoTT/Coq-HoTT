@@ -2,7 +2,7 @@
 This equivalence is close to the existence of an object classifier.
 *)
 
-Require Import HoTT Universe.
+Require Import Overture types.Universe types.Sigma Fibrations EquivalenceVarieties Equivalences PathGroupoids.
 
 Section AssumeUnivalence.
 Context `{ua:Univalence}.

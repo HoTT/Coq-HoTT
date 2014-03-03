@@ -1,4 +1,4 @@
-Require Import HoTT minus1Trunc HProp Misc TruncType.
+Require Import Overture hit.minus1Trunc HProp Misc TruncType types.Universe Equivalences Trunc HSet types.Unit.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
