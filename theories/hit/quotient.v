@@ -1,4 +1,4 @@
-Require Import HoTT.
+Require Import Overture types.Universe HSet PathGroupoids HProp Equivalences.
 
 Open Local Scope path_scope.
 

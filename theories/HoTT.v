@@ -5,19 +5,23 @@
 
 Require Export Overture.
 Require Export PathGroupoids.
+Require Export Conjugation.
 Require Export Contractible.
-Require Export Fibrations.
 Require Export Equivalences.
-Require Export types.Paths.
-Require Export types.Forall.
 Require Export Trunc.
+Require Export FunextVarieties.
+Require Export Pointed.
 Require Export HProp.
 Require Export HSet.
+Require Export Fibrations.
 Require Export EquivalenceVarieties.
-Require Export Pointed.
+Require Export Misc.
+Require Export Functorish.
 
-Require Export types.Empty.
 Require Export types.Unit.
+Require Export types.Paths.
+Require Export types.Forall.
+Require Export types.Empty.
 Require Export types.Bool.
 Require Export types.Arrow.
 Require Export types.Prod.
@@ -25,5 +29,18 @@ Require Export types.Record.
 Require Export types.Sigma.
 Require Export types.Sum.
 Require Export types.Universe.
+Require Export types.ObjectClassifier.
+
+Require Export hit.Interval.
+Require Export hit.Truncations.
+Require Export hit.Flattening.
+Require Export hit.Circle.
+Require Export hit.Suspension.
+Require Export hit.Spheres.
+Require Export hit.minus1Trunc.
+Require Export hit.epi.
+Require Export hit.unique_choice.
+Require Export hit.iso.
+Require Export hit.quotient.
 
 Require Export HoTT.Tactics.

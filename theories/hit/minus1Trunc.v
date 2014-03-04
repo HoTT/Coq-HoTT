@@ -1,6 +1,6 @@
 (** * (-1)-truncation *)
 
-Require Import HoTT HProp EquivalenceVarieties.
+Require Import Overture HProp EquivalenceVarieties Contractible Equivalences types.Unit.
 Open Local Scope path_scope.
 (** The definition of [minus1Trunc], the (-1)-truncation.  Here is what
    it would look like if Coq supported higher inductive types natively:
