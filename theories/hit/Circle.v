@@ -12,14 +12,14 @@ Generalizable Variables X A B f g n.
 
 Module Export Circle.
 
-Local Inductive S1 : Type :=
+Local Inductive S1 : Set :=
 | base : S1.
 
 Axiom loop : base = base.
 
 Definition S1_rect (P : S1 -> Type) (b : P base) (l : loop # b = b)
   : forall (x:S1), P x
-  := fun x => match x with base => b end.
+  := fun x => match x with base => fun _ => b end l.
 
 Axiom S1_rect_beta_loop
   : forall (P : S1 -> Type) (b : P base) (l : loop # b = b),
