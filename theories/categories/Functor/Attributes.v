@@ -92,15 +92,15 @@ Section fully_faithful_helpers.
     eauto.
   Qed.
 
-  Let isequiv_isepi_ismono_helper ua fs1 : isepi m -> ismono m -> IsEquiv m
-    := @isequiv_isepi_ismono ua fs0 fs1 x y m.
+  Let isequiv_isepi_ismono_helper ua : isepi m -> ismono m -> IsEquiv m
+    := @isequiv_isepi_ismono ua fs0 x y m.
 
   Definition isequiv_isepimorphism_ismonomorphism
-        `{fs1 : Funext} `{Univalence}
+        `{Univalence}
         (Hepi : IsEpimorphism (m : morphism set_cat x y))
         (Hmono : IsMonomorphism (m : morphism set_cat x y))
   : @IsEquiv _ _ m
-    := @isequiv_isepi_ismono_helper _ fs1 Hepi Hmono.
+    := @isequiv_isepi_ismono_helper _ Hepi Hmono.
 
   (** TODO: Figure out why Universe inconsistencies don't respect delta expansion. *)
   (*Definition isequiv_isepimorphism_ismonomorphism'
@@ -119,6 +119,6 @@ Global Instance isfullyfaithful_isfull_isfaithful
   := fun x y => @isisomorphism_isequiv_set_cat
                   fs0 _ _ _
                   (@isequiv_isepimorphism_ismonomorphism
-                     fs0 _ _ _ fs1 _
+                     fs1 _ _ _ _
                      (Hfull x y)
                      (Hfaithful x y)).

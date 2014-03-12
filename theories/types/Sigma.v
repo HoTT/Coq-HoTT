@@ -2,7 +2,7 @@
 (** * Theorems about Sigma-types (dependent sums) *)
 
 Require Import Overture PathGroupoids Equivalences Contractible Trunc.
-Require Import Arrow.
+Require Import types.Arrow.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

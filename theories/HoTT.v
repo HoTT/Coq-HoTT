@@ -30,6 +30,7 @@ Require Export types.Sigma.
 Require Export types.Sum.
 Require Export types.Universe.
 Require Export types.ObjectClassifier.
+Require Export types.UniverseLevel.
 
 Require Export hit.Interval.
 Require Export hit.Truncations.
