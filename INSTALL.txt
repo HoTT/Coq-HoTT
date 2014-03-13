@@ -15,7 +15,9 @@ minimal fuss, you should try your luck by following these instructions:
    * OSX: we recommend that you install the Opam package manager for Ocaml
      (http://opam.ocamlpro.com/) and go from there.
 
-   * MS Windows: we we wish you good luck.
+   * MS Windows: we wish you good luck.  Note that you may have to run
+     the `dos2unix` command on various scripts to prevent cygwin's
+     shell from complaining about unrecognized `\r` commands.
 
 2. Get the HoTT library (skip this step if you already have it):
 
