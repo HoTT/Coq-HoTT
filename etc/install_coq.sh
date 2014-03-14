@@ -21,6 +21,11 @@ echo '$ git submodule update --init --recursive'
 git submodule update --init --recursive
 
 pushd coq-HoTT
+echo '$ Patching configure'
+if [ ! -z "$(grep '\[ "$MAKEVERSIONMAJOR" -eq 3 -a "$MAKEVERSIONMINOR" -ge 81 \]' configure)" ]
+then
+    sed -i s'/\[ "$MAKEVERSIONMAJOR" -eq 3 -a "$MAKEVERSIONMINOR" -ge 81 \]/[ "$MAKEVERSIONMAJOR" -eq 3 -a "$MAKEVERSIONMINOR" -ge 81 -o "$MAKEVERSIONMAJOR" -gt 3 ]/g' configure
+fi
 echo '$ ./configure -local '"$@"
 ./configure -local "$@"
 echo '$ make coqlight coqide'
