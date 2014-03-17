@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -ex
 
 # in case we're run from out of git repo
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -24,12 +24,17 @@ pushd coq-HoTT
 echo '$ Patching configure'
 if [ ! -z "$(grep '\[ "$MAKEVERSIONMAJOR" -eq 3 -a "$MAKEVERSIONMINOR" -ge 81 \]' configure)" ]
 then
-    sed -i s'/\[ "$MAKEVERSIONMAJOR" -eq 3 -a "$MAKEVERSIONMINOR" -ge 81 \]/[ "$MAKEVERSIONMAJOR" -eq 3 -a "$MAKEVERSIONMINOR" -ge 81 -o "$MAKEVERSIONMAJOR" -gt 3 ]/g' configure
+    sed \
+	-e 's/\[ "$MAKEVERSIONMAJOR" -eq 3 -a "$MAKEVERSIONMINOR" -ge 81 \]/[ "$MAKEVERSIONMAJOR" -eq 3 -a "$MAKEVERSIONMINOR" -ge 81 -o "$MAKEVERSIONMAJOR" -gt 3 ]/g' \
+	-e 's/-fno-defer-pop//' \
+	<configure >configure.tmp
+    mv configure.tmp configure
+    chmod a+x configure
 fi
 echo '$ ./configure -local '"$@"
 ./configure -local "$@"
 echo '$ make coqlight coqide'
-make coqlight coqide
+make coqlight coqide VERBOSE=1
 popd
 
 popd 1>/dev/null
