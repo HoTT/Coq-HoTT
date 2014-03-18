@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Varieties of function extensionality *)
 
-Require Import Overture PathGroupoids Contractible Equivalences.
+Require Import Overture PathGroupoids Contractible Equivalences types.UniverseLevel.
 Local Open Scope path_scope.
 
 (** In the Overture, we defined function extensionality to be the assertion that the map [apD10] is an equivalence.   We now prove that this follows from a couple of weaker-looking forms of function extensionality.  We do require eta conversion, which Coq 8.4+ has judgmentally.
@@ -100,3 +100,15 @@ Definition NaiveFunext_implies_Funext : NaiveFunext -> Funext
   := WeakFunext_implies_Funext o NaiveFunext_implies_WeakFunext.
 
 Hint Immediate WeakFunext_implies_Funext NaiveFunext_implies_Funext : typeclass_instances.
+
+(** ** Functional extensionality is downward closed *)
+(** If universe [U_i] is functionally extensional, then so are universes [U_j] for [j ≤ i]. *)
+Lemma Funext_downward_closed `{H : Funext} : Funext.
+Proof.
+  constructor.
+  intros A P.
+  exact (@isequiv_apD10 H (Lift A) (fun a => Lift (P a))).
+Defined.
+
+(** We permit the use of [Funext_downward_closed] exactly once in typeclass resolution.  So long as typeclass resolution backtracks on instances of functional extensionality, this will hopefully mean that we'll never need to worry about instances of functional extensionality, at least when we make definitions all in one go. *)
+Hint Immediate Funext_downward_closed : typeclass_instances.

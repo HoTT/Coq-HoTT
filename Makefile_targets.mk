@@ -37,6 +37,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/HProp.v \
 	$(srcdir)/theories/EquivalenceVarieties.v \
 	$(srcdir)/theories/Fibrations.v \
+	$(srcdir)/theories/types/UniverseLevel.v \
 	$(srcdir)/theories/FunextVarieties.v \
 	$(srcdir)/theories/HSet.v \
 	$(srcdir)/theories/types/Bool.v \

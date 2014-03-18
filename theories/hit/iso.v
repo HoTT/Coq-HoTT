@@ -1,4 +1,4 @@
-Require Import Overture hit.epi HSet types.Universe hit.unique_choice Equivalences.
+Require Import Overture hit.epi HSet types.Universe hit.unique_choice Equivalences FunextVarieties.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
@@ -6,8 +6,9 @@ Open Local Scope equiv_scope.
 (** We prove that [epi + mono <-> IsEquiv] *)
 Section iso.
   Context `{Univalence}.
-  Context `{fs1 : Funext}.
-  Context `{fs2 : Funext}.
+  Context {fs0 : Funext}.
+  Let fs1 := Funext_downward_closed.
+  Let fs2 := Funext_downward_closed.
   Variables X Y : hSet.
   Variable f : X -> Y.
 
