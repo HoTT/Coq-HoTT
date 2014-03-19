@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -e
 
 # in case we're run from out of git repo
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -23,8 +23,15 @@ git submodule update --init --recursive
 pushd coq-HoTT
 echo '$ Patching configure'
 if [ ! -z "$(grep '\[ "$MAKEVERSIONMAJOR" -eq 3 -a "$MAKEVERSIONMINOR" -ge 81 \]' configure)" ]
-then
-    sed -i s'/\[ "$MAKEVERSIONMAJOR" -eq 3 -a "$MAKEVERSIONMINOR" -ge 81 \]/[ "$MAKEVERSIONMAJOR" -eq 3 -a "$MAKEVERSIONMINOR" -ge 81 -o "$MAKEVERSIONMAJOR" -gt 3 ]/g' configure
+then sed -e 's/\[ "$MAKEVERSIONMAJOR" -eq 3 -a "$MAKEVERSIONMINOR" -ge 81 \]/[ "$MAKEVERSIONMAJOR" -eq 3 -a "$MAKEVERSIONMINOR" -ge 81 -o "$MAKEVERSIONMAJOR" -gt 3 ]/g' \
+	 <configure >configure.tmp
+     mv configure.tmp configure
+     chmod a+x configure
+fi
+if [ ! -z "$(grep fno-defer-pop configure)" ]
+then sed -e 's/-fno-defer-pop//' <configure >configure.tmp
+     mv configure.tmp configure
+     chmod a+x configure
 fi
 echo '$ ./configure -local '"$@"
 ./configure -local "$@"

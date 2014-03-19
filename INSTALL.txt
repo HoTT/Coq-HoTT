@@ -26,7 +26,7 @@ minimal fuss, you should try your luck by following these instructions:
 
 3. From the HoTT directory run the following commands:
 
-       ./etc/install_coq.sh
+       etc/install_coq.sh
        ./autogen.sh
        ./configure COQBIN="`pwd`/coq-HoTT/bin"
        make
