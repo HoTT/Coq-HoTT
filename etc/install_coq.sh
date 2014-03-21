@@ -1,4 +1,7 @@
-#!/usr/bin/env bash -e
+#!/usr/bin/env bash
+
+# exit immediately if any command fails
+set -e
 
 # in case we're run from out of git repo
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
