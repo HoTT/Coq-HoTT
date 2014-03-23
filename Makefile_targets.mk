@@ -58,6 +58,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/hit/Interval.v \
 	$(srcdir)/theories/hit/Suspension.v \
 	$(srcdir)/theories/hit/Spheres.v \
+	$(srcdir)/theories/hit/TwoSphere.v \
 	$(srcdir)/theories/hit/minus1Trunc.v \
 	$(srcdir)/theories/hit/epi.v \
 	$(srcdir)/theories/hit/unique_choice.v \

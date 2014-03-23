@@ -779,22 +779,22 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 (* ================================================== thm:ap2 *)
 (** Lemma 6.4.4 *)
 
-
+Definition Book_6_4_4 := @HoTT.PathGroupoids.ap02.
 
 (* ================================================== thm:transport2 *)
 (** Lemma 6.4.5 *)
 
-
+Definition Book_6_4_5 := @HoTT.PathGroupoids.transport2.
 
 (* ================================================== thm:apd2 *)
 (** Lemma 6.4.6 *)
 
-
+Definition Book_6_4_6 := @HoTT.PathGroupoids.apD02.
 
 (* ================================================== thm:suspbool *)
 (** Lemma 6.5.1 *)
 
-
+Definition Book_6_5_1 := @HoTT.hit.Spheres.isequiv_Sph1_to_S1.
 
 (* ================================================== lem:susp-loop-adj *)
 (** Lemma 6.5.4 *)
@@ -2128,6 +2128,3 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 
 (* ================================================== thm:NO-unstrict-transitive *)
 (** Corollary 11.6.17 *)
-
-
-
