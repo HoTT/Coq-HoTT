@@ -185,7 +185,7 @@ Definition Book_1_10 := ack.
 (* ================================================== ex:without-K *)
 (** Exercise 1.14 *)
 
-Definition Book_1_14 := @HoTT.Misc.equiv_bool_equiv_bool_bool.
+
 
 (* ================================================== ex:subtFromPathInd *)
 (** Exercise 1.15 *)
@@ -255,7 +255,7 @@ Definition Book_1_14 := @HoTT.Misc.equiv_bool_equiv_bool_bool.
 (* ================================================== ex:eqvboolbool *)
 (** Exercise 2.13 *)
 
-
+Definition Book_2_13 := @HoTT.Misc.equiv_bool_equiv_bool_bool.
 
 (* ================================================== ex:equality-reflection *)
 (** Exercise 2.14 *)
