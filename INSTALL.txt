@@ -33,6 +33,13 @@ minimal fuss, you should try your luck by following these instructions:
 
    It may take a while to compile the custom Coq.
 
+   If you get error messages during the compilation of Coq about the command
+   line option "-fno-defer-pop", then you might be running Mac OS X 10.9 with
+   an ocaml compiler installed by "brew".  In that case try
+	  brew update; brew upgrade objective-caml
+   If that doesn't work, try
+	  brew remove objective-caml; brew install objective-caml
+
 4. You can now use the HoTT library in place by running `./hoqtop` and
    `./hoqc`. You can also use `./hoqide` which is the version of coqide
    running the hoqtop toplevel if you have compiled it successfully.  If you
