@@ -14,6 +14,11 @@ Class Symmetric {A} (R : relation A) :=
 Class Transitive {A} (R : relation A) :=
   transitivity : forall x y z, R x y -> R y z -> R x z.
 
+(** A [PreOrder] is both Reflexive and Transitive. *)
+Class PreOrder {A} (R : relation A) :=
+  { PreOrder_Reflexive :> Reflexive R | 2 ;
+    PreOrder_Transitive :> Transitive R | 2 }.
+
 Tactic Notation "etransitivity" open_constr(y) :=
   let R := match goal with |- ?R ?x ?z => constr:(R) end in
   let x := match goal with |- ?R ?x ?z => constr:(x) end in

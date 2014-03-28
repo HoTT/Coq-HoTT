@@ -9,3 +9,4 @@ Export InitialTerminalCategory.Notations.
 Require Export Profunctor.Notations.
 Require Export Comma.Notations.
 Require Export Adjoint.Notations.
+Require Export Structure.Notations.
