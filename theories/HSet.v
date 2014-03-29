@@ -2,7 +2,7 @@
 (** * H-Sets *)
 
 Require Import Overture PathGroupoids Contractible Equivalences Trunc HProp.
-Require Import types.Paths types.Sigma types.Empty types.Record types.Unit.
+Require Import types.Paths types.Sigma types.Empty types.Record types.Unit types.Arrow.
 Require Import FunextVarieties.
 
 Local Open Scope equiv_scope.
@@ -96,6 +96,43 @@ Proof.
 Defined.
 
 End AssumeFunext.
+
+(** We prove that if [R] is a reflexive mere relation on [X] implying identity, then [X] is an hSet, and hence [R x y] is equivalent to [x = y]. *)
+Lemma isset_hrel_subpaths
+      {X R}
+      `{Reflexive X R}
+      `{forall x y, IsHProp (R x y)}
+      (f : forall x y, R x y -> x = y)
+: IsHSet X.
+Proof.
+  apply @hset_axiomK.
+  intros x p.
+  refine (_ @ concat_Vp (f x x (transport (R x) p^ (reflexivity _)))).
+  apply moveL_Vp.
+  refine ((transport_paths_r _ _)^ @ _).
+  refine ((transport_arrow _ _ _)^ @ _).
+  refine ((ap10 (apD (f x) p) (@reflexivity X R _ x)) @ _).
+  apply ap.
+  apply allpath_hprop.
+Defined.
+
+Global Instance isequiv_hrel_subpaths
+       X R
+       `{Reflexive X R}
+       `{forall x y, IsHProp (R x y)}
+       (f : forall x y, R x y -> x = y)
+       x y
+: IsEquiv (f x y) | 10000.
+Proof.
+  pose proof (isset_hrel_subpaths f).
+  refine (isequiv_adjointify
+            (f x y)
+            (fun p => transport (R x) p (reflexivity x))
+            _
+            _);
+  intro;
+  apply allpath_hprop.
+Defined.
 
 Record hSet := BuildhSet {setT:> Type; iss :> IsHSet setT}.
 (** This one is needed in [epi_surj] to coerce [hProp] into [hSet]*)
