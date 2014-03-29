@@ -107,7 +107,10 @@ if args.exercises:
 entries = {}
 
 # The regular expression which matches a label line in a *.aux file
-r = re.compile(r"\\newlabel{([a-zA-Z0-9:=_-]+)}{{([0-9.]+)}{([0-9]+)}{[^}]*}{([a-z]+)\.[^}]*}{[^}]*}}")
+# Really we should check for 'balanced braces' instead of '.*?', but
+# that's hard.  We need to catch things involving \texorpdfstring, for
+# example
+r = re.compile(r"\\newlabel{([a-zA-Z0-9:=_-]+)}{{([0-9.]+)}{([0-9]+)}{.*?}{([a-z]+)\.[^}]*}{[^}]*}}")
 
 print """Reading content of *.aux files from standard input...
 (If you see this press Ctrl-C, read help with --help option, and try agian.)""",
