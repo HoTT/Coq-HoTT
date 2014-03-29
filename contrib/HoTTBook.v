@@ -58,6 +58,7 @@
 *)
 
 Require Import HoTT.
+Require HoTT.categories.categories.
 
 (* END OF PREAMBLE *)
 (* ================================================== lem:opp *)
@@ -1649,12 +1650,12 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== ct:sig *)
 (** Definition 9.8.1 *)
 
-
+Definition Book_9_8_1 := @HoTT.categories.Structure.Core.NotionOfStructure.
 
 (* ================================================== thm:sip *)
 (** Theorem 9.8.2 *)
 
-
+Definition Book_9_8_2 := @HoTT.categories.Structure.IdentityPrinciple.structure_identity_principle.
 
 (* ================================================== ct:sip-functor-cat *)
 (** Example 9.8.3 *)
