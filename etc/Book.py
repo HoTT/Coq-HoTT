@@ -9,27 +9,59 @@
 
 import re
 import sys
-import argparse
-from argparse import RawTextHelpFormatter
 import shutil
 import os
 
 description = """
 Process Coq file (e.g. HoTTBook.v) and refresh with respect to the
-HoTT book *.aux files. The script expects the content of 
+HoTT book *.aux files. The script expects the content of
 *.aux files on stdandard input. Typical use:
 
   cat ../book/*.aux | etc/Book.py contrib/HoTTBook.v
 
 """
 
-# Parse command line arguments
-parser = argparse.ArgumentParser(description = description, add_help=True, formatter_class=RawTextHelpFormatter)
-parser.add_argument ("--debug", action='store_true', help='Print debugging info', default=False)
-parser.add_argument ("--exercises", action='store_true', help='Process exercises', default=False)
-parser.add_argument ("file", help='the Coq file that should be processed\n(probably contrib/HoTTBook.v or contrib/HoTTBookExercises.v)')
+parser_args_tuples = ((("--debug",), {'action':'store_true', 'help':'Print debugging info', 'default':False}),
+                      (("--exercises",), {'action':'store_true', 'help':'Process exercises', 'default':False}))
 
-args = parser.parse_args()
+file_help_string = 'the Coq file that should be processed\n(probably contrib/HoTTBook.v or contrib/HoTTBookExercises.v)'
+
+extra_description = r"""positional arguments:
+  file         the Coq file that should be processed
+               (probably contrib/HoTTBook.v or contrib/HoTTBookExercises.v)
+"""
+
+# Parse command line arguments
+# first try argparse, which is Python 2.7+
+try:
+    import argparse
+    from argparse import RawTextHelpFormatter
+    parser = argparse.ArgumentParser(description = description, add_help=True, formatter_class=RawTextHelpFormatter)
+
+    for parser_args, parser_kwargs in parser_args_tuples:
+        parser.add_argument (*parser_args, **parser_kwargs)
+    parser.add_argument ("file", help=file_help_string)
+
+    args = parser.parse_args()
+
+except ImportError:
+    # we don't have argparse, so try the older optparse
+    import optparse
+    opts = ' '.join('[%s]' % parser_args[0] for parser_args, parser_kwargs in parser_args_tuples)
+    usage = "usage: %prog [-h] " + opts + " file"
+    # TODO: Figure out how to make a raw display, and not reflow the description improperly
+    parser = optparse.OptionParser(description = description+extra_description, add_help_option=True, usage=usage)
+
+    for parser_args, parser_kwargs in parser_args_tuples:
+        parser.add_option (*parser_args, **parser_kwargs)
+
+    (args, positional_args) = parser.parse_args()
+    if len(positional_args) != 1:
+        parser.error("too few arguments")
+    else:
+        args.file = positional_args[0]
+
+
 
 lineno = 0
 skipped = 0
@@ -47,7 +79,7 @@ def die(msg):
 
 
 # Mapping from envirnment names to names
-envname = { 
+envname = {
     'axiom' :      'Axiom',
     'chapter' :    'Chapter',
     'cor' :        'Corollary',
@@ -114,9 +146,10 @@ with open(args.file, "r") as f:
     coqfile = f.read()
 
 # Break it up
-(preamble, rest) = re.split(r'^\(\* END OF PREAMBLE \*\)\s*$', coqfile, flags=re.MULTILINE)
+# use a separate compile part so that python 2.6 doesn't complain
+(preamble, rest) = re.compile(r'^\(\* END OF PREAMBLE \*\)\s*$', flags=re.MULTILINE).split(coqfile)
 
-snippets = re.split(r'^\s*\(\* =======+ ([A-Za-z0-9:=_-]+) \*\)\s*$', rest, flags=re.MULTILINE)
+snippets = re.compile(r'^\s*\(\* =======+ ([A-Za-z0-9:=_-]+) \*\)\s*$', flags=re.MULTILINE).split(rest)
 
 # Pop the first snippet, as it is just an empty string
 snippets.pop(0)
