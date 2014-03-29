@@ -172,9 +172,9 @@ Module PreCategoryOfStructures.
     Variable X : PreCategory.
     Variable P : NotionOfStructure X.
 
-    Record object := { x : X; a : P x }.
+    Local Notation object := { x : X | P x }.
 
-    Lemma issig_object
+    (*Lemma issig_object
     : { x : X | P x } <~> object.
     Proof.
       issig Build_object x a.
@@ -186,34 +186,31 @@ Module PreCategoryOfStructures.
         -> xa = yb.
     Proof.
       intros [? ?] [? ?] H H'; simpl in *; path_induction; reflexivity.
-    Defined.
+    Defined.*)
 
     Record morphism (xa yb : object) :=
-      { f : Category.Core.morphism X (x xa) (x yb);
-        h : is_structure_homomorphism _ _ _ f (a xa) (a yb) }.
+      { f : Category.Core.morphism X xa.1 yb.1;
+        h : is_structure_homomorphism _ _ _ f xa.2 yb.2 }.
 
     Lemma issig_morphism xa yb
-    : { f : Category.Core.morphism X (x xa) (x yb)
-      | is_structure_homomorphism _ _ _ f (a xa) (a yb) }
+    : { f : Category.Core.morphism X xa.1 yb.1
+      | is_structure_homomorphism _ _ _ f xa.2 yb.2 }
         <~> morphism xa yb.
     Proof.
       issig (@Build_morphism xa yb) (@f xa yb) (@h xa yb).
     Defined.
 
     Lemma path_morphism
-    : forall xa yb fh gi (H : f fh = f gi),
-        transport (fun f => is_structure_homomorphism _ _ _ f (a xa) (a yb))
-                  H
-                  (h fh)
-        = h gi
-        -> fh = gi.
+    : forall xa yb (fh gi : morphism xa yb),
+        f fh = f gi -> fh = gi.
     Proof.
-      intros ? ? [? ?] [? ?] H H'; simpl in *; path_induction; reflexivity.
+      intros ? ? [? ?] [? ?] H; simpl in *; path_induction; apply ap.
+      apply allpath_hprop.
     Defined.
   End precategory.
 
-  Global Arguments path_object {X P xa yb} H _.
-  Global Arguments path_morphism {X P xa yb fh gi} H _.
+  (*Global Arguments path_object {X P xa yb} H _.*)
+  Global Arguments path_morphism {X P xa yb fh gi} H.
 End PreCategoryOfStructures.
 
 Section precategory.
@@ -222,26 +219,25 @@ Section precategory.
   Definition precategory_of_structures X (P : NotionOfStructure X) : PreCategory.
   Proof.
     refine (@Build_PreCategory
-              (@object _ P)
+              _
               (@morphism _ P)
-              (fun xa => {| f := identity (x xa);
-                            h := is_structure_homomorphism_identity _ _ (a xa) |})
+              (fun xa => {| f := identity xa.1;
+                            h := is_structure_homomorphism_identity _ _ xa.2 |})
               (fun xa yb zc gi fh => {| f := (f gi) o (f fh);
                                         h := is_structure_homomorphism_composition _ _ _ _ _ _ _ _ _ (h fh) (h gi) |})
               _
               _
               _
-              (fun s d => trunc_equiv' (issig_morphism s d)));
+              (fun s d => trunc_equiv' (issig_morphism P s d)));
     simpl;
     abstract (
         repeat match goal with
-                 | |- @object _ P -> _ => intro
                  | |- @morphism _ P _ _ -> _ => intros [? ?]; simpl in *
+                 | |- _ -> _ => intro
                end;
-        first [ apply path_morphism with (H := associativity _ _ _ _ _ _ _ _)
-              | apply path_morphism with (H := left_identity _ _ _ _)
-              | apply path_morphism with (H := right_identity _ _ _ _) ];
-        apply allpath_hprop
+        first [ apply path_morphism; exact (associativity _ _ _ _ _ _ _ _)
+              | apply path_morphism; exact (left_identity _ _ _ _)
+              | apply path_morphism; exact (right_identity _ _ _ _) ]
       ).
   Defined.
 End precategory.
