@@ -219,6 +219,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Comma/Projection.v \
 	$(srcdir)/theories/categories/Comma/InducedFunctors.v \
 	$(srcdir)/theories/categories/Comma/ProjectionFunctors.v \
+	$(srcdir)/theories/categories/Comma/Functorial.v \
 	$(srcdir)/theories/categories/Comma/Comma.v \
 	\
 	$(srcdir)/theories/categories/Pseudofunctor/Core.v \
