@@ -23,7 +23,7 @@
 
 *)
 
-Require Import HoTT HoTT.hit.minus1Trunc HoTT.Misc Coq.Init.Peano.
+Require Import HoTT HoTT.hit.minus1Trunc HoTT.Misc Coq.Init.Peano HoTT.hit.Suspension.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -699,6 +699,77 @@ End Book_5_5.
 (* ================================================== ex:unnatural-endomorphisms *)
 (** Exercise 6.9 *)
 
+Section Book_6_9.
+  Hypothesis LEM : forall A, IsHProp A -> A + ~A.
+
+  Definition Book_6_9 : forall X, X -> X.
+  Proof.
+    intro X.
+    pose proof (@LEM (Contr { f : X <~> X & ~(forall x, f x = x) }) _) as contrXEquiv.
+    destruct contrXEquiv as [[f H]|H].
+    - (** In the case where we have exactly one autoequivalence which is not the identity, use it. *)
+      exact (f.1).
+    - (** In the other case, just use the identity. *)
+      exact idmap.
+  Defined.
+
+  Lemma bool_map_equiv_not_idmap (f : { f : Bool <~> Bool & ~(forall x, f x = x) })
+  : forall b, ~(f.1 b = b).
+  Proof.
+    intro b.
+    intro H''.
+    apply f.2.
+    intro b'.
+    pose proof (eval_bool_isequiv f.1).
+    destruct b', b, (f.1 true), (f.1 false);
+      simpl in *;
+      match goal with
+        | _ => assumption
+        | _ => reflexivity
+        | [ H : true = false |- _ ] => exact (match true_ne_false H with end)
+        | [ H : false = true |- _ ] => exact (match false_ne_true H with end)
+      end.
+  Qed.
+
+  Lemma Book_6_9_not_id `{Funext} : Book_6_9 Bool = negb.
+  Proof.
+    apply path_forall; intro b.
+    unfold Book_6_9.
+    destruct (@LEM (Contr { f : Bool <~> Bool & ~(forall x, f x = x) }) _) as [[f H']|H'].
+    - pose proof (bool_map_equiv_not_idmap f b).
+      destruct (f.1 b), b;
+      match goal with
+        | _ => assumption
+        | _ => reflexivity
+        | [ H : ~(_ = _) |- _ ] => exact (match H idpath with end)
+        | [ H : true = false |- _ ] => exact (match true_ne_false H with end)
+        | [ H : false = true |- _ ] => exact (match false_ne_true H with end)
+      end.
+    - refine (match H' _ with end).
+      eexists (existT (fun f : Bool <~> Bool =>
+                         ~(forall x, f x = x))
+                      (BuildEquiv _ _ negb _)
+                      (fun H => false_ne_true (H true)));
+        simpl.
+      intro f.
+      apply path_sigma_uncurried; simpl.
+      refine ((fun H'' =>
+                 (equiv_path_equiv _ _ H'';
+                  allpath_hprop _ _))
+                _);
+        simpl.
+      apply path_forall; intro b'.
+      pose proof (bool_map_equiv_not_idmap f b').
+      destruct (f.1 b'), b';
+      match goal with
+        | _ => assumption
+        | _ => reflexivity
+        | [ H : ~(_ = _) |- _ ] => exact (match H idpath with end)
+        | [ H : true = false |- _ ] => exact (match true_ne_false H with end)
+        | [ H : false = true |- _ ] => exact (match false_ne_true H with end)
+      end.
+  Qed.
+End Book_6_9.
 
 
 (* ================================================== ex:funext-from-interval *)

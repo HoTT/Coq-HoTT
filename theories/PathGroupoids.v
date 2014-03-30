@@ -325,6 +325,11 @@ Definition ap_1 {A B : Type} (x : A) (f : A -> B) :
   :=
   1.
 
+Definition apD_1 {A B} (x : A) (f : forall x : A, B x) :
+  apD f 1 = 1 :> (f x = f x)
+  :=
+  1.
+
 (** Functions commute with concatenation. *)
 Definition ap_pp {A B : Type} (f : A -> B) {x y z : A} (p : x = y) (q : y = z) :
   ap f (p @ q) = (ap f p) @ (ap f q)

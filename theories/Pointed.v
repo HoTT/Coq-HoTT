@@ -24,8 +24,18 @@ Instance ispointed_sigma `{IsPointed A} `{IsPointed (B (point A))}
   := (point A; point (B (point A))).
 
 (** A cartesian product of pointed types is pointed. *)
-Instance ispointed_pord `{IsPointed A, IsPointed B} : IsPointed (A * B)
+Instance ispointed_prod `{IsPointed A, IsPointed B} : IsPointed (A * B)
   := (point A, point B).
 
 (** The type [x = x] is pointed. *)
 Instance ispointed_loop_space A (a : A) : IsPointed (a = a) := idpath.
+
+(** We can build an iterated loop space *)
+Definition loopSpace (A : pointedType) : pointedType :=
+  (A.1 = A.1; idpath).
+
+Fixpoint iteratedLoopSpace (n : nat) (A : Type) `{H : IsPointed A} {struct n} : pointedType
+  := match n with
+       | O => existT IsPointed A (@point A H)
+       | S p => iteratedLoopSpace p (point = point)
+     end.
