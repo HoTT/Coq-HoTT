@@ -774,7 +774,7 @@ End Book_5_5.
 (* ================================================== ex:double-negation-modality *)
 (** Exercise 7.12 *)
 
-
+Definition Book_7_12 := @HoTT.Modality.ismodality_notnot.
 
 (* ================================================== ex:prop-modalities *)
 (** Exercise 7.13 *)
