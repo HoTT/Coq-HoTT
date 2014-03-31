@@ -43,17 +43,6 @@ Section SigmaHProp.
 
 Context `{Funext}.
 
-(** The sigma of an hprop over a type can be viewed as a subtype. In particular, paths in the subtype are equivalent to paths in the original type. *)
-Definition equiv_path_sigma_hprop {A : Type} {P : A -> Type}
-  {HP : forall a, IsHProp (P a)} (u v : sigT P)
-: (u.1 = v.1) <~> (u = v).
-Proof.
-  apply (equiv_compose' (equiv_path_sigma _ _ _)); simpl.
-  apply symmetry, equiv_sigma_contr.
-  intros ?; apply HP.
-Defined.
-(** (This lemma would fit well in [types.Sigma], except that it depends on [EquivalenceVarieties] via [hprop_isequiv], which itself depends on [types.Sigma].) *)
-
 (** *** Paths between equivalences *)
 
 (** (These could fit in [EquivalenceVarieties], if the lemma [equiv_path_sigma_hprop] were available there. *)

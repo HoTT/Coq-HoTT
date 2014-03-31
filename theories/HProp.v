@@ -150,6 +150,31 @@ Proof.
   apply equiv_functor_prod'. apply equiv_idmap. apply equiv_hprop_allpath.
 Defined.
 
+(** If the second component of a sigma type is an hProp, then to prove equality, we only need equality of the first component. *)
+Definition path_sigma_hprop {A : Type} {P : A -> Type}
+           `{forall x, IsHProp (P x)}
+           (u v : sigT P)
+           (p : u.1 = v.1)
+: u = v
+  := path_sigma P u v p (center _).
+
+Instance isequiv_path_sigma_hprop {A P} `{forall x : A, IsHProp (P x)} {u v : sigT P}
+: IsEquiv (@path_sigma_hprop A P _ u v) | 0.
+Proof.
+  change (IsEquiv (path_sigma_uncurried P u v o (fun p => (p; center _)))).
+  apply (@isequiv_compose); [ | apply isequiv_path_sigma ].
+  (** This step is fragile, because it relies on the particular equivalence of [equiv_sigma_contr]. *)
+  pose proof (fun A P H => equiv_isequiv _ _ (symmetry _ _ (@equiv_sigma_contr A P H))) as H'.
+  simpl in H'.
+  exact (H' _ _ _).
+Defined.
+
+(** The sigma of an hprop over a type can be viewed as a subtype. In particular, paths in the subtype are equivalent to paths in the original type. *)
+Definition equiv_path_sigma_hprop {A : Type} {P : A -> Type}
+           {HP : forall a, IsHProp (P a)} (u v : sigT P)
+: (u.1 = v.1) <~> (u = v)
+  := BuildEquiv _ _ _ _.
+
 (** The type of Propositions *)
 Record hProp := hp { hproptype :> Type ; isp : IsHProp hproptype}.
 (** This one would allow us to turn the record type of contractible types
