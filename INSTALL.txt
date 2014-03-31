@@ -45,6 +45,15 @@ minimal fuss, you should try your luck by following these instructions:
 
    It may take a while to compile the custom Coq.
 
+
+   If you are using Debian/Ubuntu, and don't mind not having HoTT/coq
+   as your only version of Coq, you can install it using apt-get:
+
+       sudo add-apt-repository ppa:ezyang/coq-hott-git
+       sudo apt-get update
+       sudo apt-get install coq
+
+
    If you get error messages during the compilation of Coq about the command
    line option "-fno-defer-pop", then you might be running Mac OS X 10.9 with
    an ocaml compiler installed by "brew".  In that case try
