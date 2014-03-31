@@ -964,7 +964,7 @@ Definition Book_6_5_1 := @HoTT.hit.Spheres.isequiv_Sph1_to_S1.
 (* ================================================== thm:h-set-refrel-in-paths-sets *)
 (** Theorem 7.2.2 *)
 
-
+Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 
 (* ================================================== notnotstable-equality-to-set *)
 (** Corollary 7.2.3 *)
