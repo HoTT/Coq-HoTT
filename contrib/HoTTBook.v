@@ -58,6 +58,7 @@
 *)
 
 Require Import HoTT.
+Require HoTT.categories.categories.
 
 (* END OF PREAMBLE *)
 (* ================================================== lem:opp *)
@@ -1414,32 +1415,41 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== ct:precategory *)
 (** Definition 9.1.1 *)
 
-
+Definition Book_9_1_1 := @HoTT.categories.Category.Core.PreCategory.
 
 (* ================================================== ct:isomorphism *)
 (** Definition 9.1.2 *)
 
-
+Definition Book_9_1_2 := @HoTT.categories.Category.Morphisms.Isomorphic.
 
 (* ================================================== ct:isoprop *)
 (** Lemma 9.1.3 *)
 
+Definition Book_9_1_3 := @HoTT.categories.Category.Morphisms.trunc_isisomorphism.
 
+(* ================================================== ct:idtoiso *)
+(** Lemma 9.1.4 *)
+
+Definition Book_9_1_4 := @HoTT.categories.Category.Morphisms.idtoiso.
 
 (* ================================================== ct:precatset *)
 (** Example 9.1.5 *)
 
-
+Definition Book_9_1_5 := @HoTT.categories.SetCategory.Core.set_cat.
 
 (* ================================================== ct:category *)
 (** Definition 9.1.6 *)
 
-
+Definition Book_9_1_6 C := (HoTT.categories.Category.Univalent.IsCategory C).
 
 (* ================================================== ct:eg:set *)
 (** Example 9.1.7 *)
 
-
+(** Once this is proven, we will have
+<<
+Definition Book_9_1_7 := @HoTT.categories.SetCategory.Morphisms.iscategory_set_cat.
+>>
+*)
 
 (* ================================================== ct:obj-1type *)
 (** Lemma 9.1.8 *)
@@ -1464,7 +1474,7 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== ct:discrete *)
 (** Example 9.1.16 *)
 
-
+Definition Book_9_1_16 := @HoTT.categories.GroupoidCategory.Core.groupoid_category.
 
 (* ================================================== ct:fundgpd *)
 (** Example 9.1.17 *)
@@ -1484,37 +1494,52 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== ct:functor *)
 (** Definition 9.2.1 *)
 
-
+Definition Book_9_2_1 := @HoTT.categories.Functor.Core.Functor.
 
 (* ================================================== ct:nattrans *)
 (** Definition 9.2.2 *)
 
-
+Definition Book_9_2_2 := @HoTT.categories.NaturalTransformation.Core.NaturalTransformation.
 
 (* ================================================== ct:functor-precat *)
 (** Definition 9.2.3 *)
 
-
+Definition Book_9_2_3 := @HoTT.categories.FunctorCategory.Core.functor_category.
 
 (* ================================================== ct:natiso *)
 (** Lemma 9.2.4 *)
 
-
+Definition Book_9_2_4 := @HoTT.categories.FunctorCategory.Morphisms.isisomorphism_natural_transformation.
 
 (* ================================================== ct:functor-cat *)
 (** Theorem 9.2.5 *)
 
+(** When this is done, it will be
+<<
+Definition Book_9_2_5 := @HoTT.categories.FunctorCategory.Morphisms.iscategory_functor_category.
+>>
+*)
 
+(* ================================================== ct:functor-composition *)
+(** Definition 9.2.6 *)
+
+Definition Book_9_2_6 := @HoTT.categories.Functor.Composition.Core.compose.
+
+(* ================================================== ct:whisker *)
+(** Definition 9.2.7 *)
+
+Definition Book_9_2_7_l := @HoTT.categories.NaturalTransformation.Composition.Core.whisker_l.
+Definition Book_9_2_7_r := @HoTT.categories.NaturalTransformation.Composition.Core.whisker_r.
 
 (* ================================================== ct:interchange *)
 (** Lemma 9.2.8 *)
 
-
+Definition Book_9_2_8 := @HoTT.categories.NaturalTransformation.Composition.Laws.exchange_whisker.
 
 (* ================================================== ct:functor-assoc *)
 (** Lemma 9.2.9 *)
 
-
+Definition Book_9_2_9 := @HoTT.categories.Functor.Composition.Laws.associativity.
 
 (* ================================================== ct:pentagon *)
 (** Lemma 9.2.10 *)
@@ -1524,7 +1549,13 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== ct:units *)
 (** Lemma 9.2.11 *)
 
+Definition Book_9_2_11_l := @HoTT.categories.Functor.Composition.Laws.left_identity.
+Definition Book_9_2_11_r := @HoTT.categories.Functor.Composition.Laws.right_identity.
 
+(* ================================================== ct:adjoints *)
+(** Definition 9.3.1 *)
+
+Definition Book_9_3_1 := @HoTT.categories.Adjoint.UnitCounit.AdjunctionUnitCounit.
 
 (* ================================================== ct:adjprop *)
 (** Lemma 9.3.2 *)
@@ -1539,10 +1570,27 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== ct:adjointification *)
 (** Lemma 9.4.2 *)
 
+Definition Book_9_4_2a := @HoTT.categories.Functor.Attributes.IsFaithful.
+Definition Book_9_4_2b := @HoTT.categories.Functor.Attributes.IsFull.
+Definition Book_9_4_2c := @HoTT.categories.Functor.Attributes.IsFullyFaithful.
+
+(* ================================================== ct:full-faithful *)
+(** Definition 9.4.3 *)
+
+
+
+(* ================================================== ct:split-essentially-surjective *)
+(** Definition 9.4.4 *)
+
 
 
 (* ================================================== ct:ffeso *)
 (** Lemma 9.4.5 *)
+
+
+
+(* ================================================== ct:essentially-surjective *)
+(** Definition 9.4.6 *)
 
 
 
@@ -1564,7 +1612,7 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== ct:chaotic *)
 (** Example 9.4.13 *)
 
-
+Definition Book_9_4_13 := @HoTT.categories.IndiscreteCategory.Core.indiscrete_category.
 
 (* ================================================== ct:eqv-levelwise *)
 (** Lemma 9.4.14 *)
@@ -1584,22 +1632,28 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== ct:opposite-category *)
 (** Definition 9.5.1 *)
 
+Definition Book_9_5_1 := @HoTT.categories.Category.Dual.opposite.
 
+(* ================================================== ct:prod-cat *)
+(** Definition 9.5.2 *)
+
+Definition Book_9_5_2 := @HoTT.categories.Category.Prod.prod.
 
 (* ================================================== ct:functorexpadj *)
 (** Lemma 9.5.3 *)
 
-
+(** When we prove it, this should be mapped to the law, not the functor. *)
+Definition Book_9_5_3 := @HoTT.categories.ExponentialLaws.Law4.Functors.functor.
 
 (* ================================================== ct:yoneda *)
 (** Theorem 9.5.4 *)
 
-
+Definition Book_9_5_4 := @HoTT.categories.Yoneda.yoneda_lemma.
 
 (* ================================================== ct:yoneda-embedding *)
 (** Corollary 9.5.6 *)
 
-
+Definition Book_9_5_6 := @HoTT.categories.Yoneda.yoneda_embedding.
 
 (* ================================================== ct:yoneda-mono *)
 (** Corollary 9.5.7 *)
@@ -1626,8 +1680,23 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 
 
 
+(* ================================================== ct:strict-category *)
+(** Definition 9.6.1 *)
+
+Definition Book_9_6_1 C := HoTT.categories.Category.Strict.IsStrictCategory C.
+
+(* ================================================== ct:mono-cat *)
+(** Example 9.6.2 *)
+
+
+
 (* ================================================== ct:galois *)
 (** Example 9.6.3 *)
+
+
+
+(* ================================================== ct:dagger-precategory *)
+(** Definition 9.7.1 *)
 
 
 
@@ -1641,6 +1710,21 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 
 
 
+(* ================================================== ct:dagger-category *)
+(** Definition 9.7.4 *)
+
+
+
+(* ================================================== ct:rel-dagger-cat *)
+(** Example 9.7.5 *)
+
+
+
+(* ================================================== ct:groupoid-dagger-cat *)
+(** Example 9.7.6 *)
+
+
+
 (* ================================================== ct:hilb *)
 (** Example 9.7.7 *)
 
@@ -1649,12 +1733,12 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== ct:sig *)
 (** Definition 9.8.1 *)
 
-
+Definition Book_9_8_1 := @HoTT.categories.Structure.Core.NotionOfStructure.
 
 (* ================================================== thm:sip *)
 (** Theorem 9.8.2 *)
 
-
+Definition Book_9_8_2 := @HoTT.categories.Structure.IdentityPrinciple.structure_identity_principle.
 
 (* ================================================== ct:sip-functor-cat *)
 (** Example 9.8.3 *)
@@ -1663,6 +1747,11 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 
 (* ================================================== defn:fo-notion-of-structure *)
 (** Definition 9.8.4 *)
+
+
+
+(* ================================================== ct:esosurj-postcomp-faithful *)
+(** Lemma 9.9.1 *)
 
 
 
@@ -1688,6 +1777,11 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 
 (* ================================================== ct:hocat *)
 (** Example 9.9.7 *)
+
+
+
+(* ================================================== ct:weq-iso-precat-cat *)
+(** Theorem 9.9.8 *)
 
 
 
@@ -2128,3 +2222,8 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 
 (* ================================================== thm:NO-unstrict-transitive *)
 (** Corollary 11.6.17 *)
+
+
+
+(* ================================================== eg:surreal-addition *)
+(** Example 11.6.18 *)
