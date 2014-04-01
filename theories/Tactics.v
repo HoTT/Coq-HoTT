@@ -316,12 +316,67 @@ Ltac simpl_do_clear tac term :=
     tac H;
     clear H.
 
-Tactic Notation "simpl" "rewrite" constr(term)
-  := simpl_do_clear ltac:(fun H => rewrite H) term.
-Tactic Notation "simpl" "rewrite" "->" constr(term)
-  := simpl_do_clear ltac:(fun H => rewrite -> H) term.
-Tactic Notation "simpl" "rewrite" "<-" constr(term)
-  := simpl_do_clear ltac:(fun H => rewrite <- H) term.
+Tactic Notation "simpl" "rewrite"      constr(term) := simpl_do_clear ltac:(fun H => rewrite    H) term.
+Tactic Notation "simpl" "rewrite" "->" constr(term) := simpl_do_clear ltac:(fun H => rewrite -> H) term.
+Tactic Notation "simpl" "rewrite" "<-" constr(term) := simpl_do_clear ltac:(fun H => rewrite <- H) term.
+
+Tactic Notation "simpl" "rewrite"      constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite    H in hyp) term.
+Tactic Notation "simpl" "rewrite" "->" constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite -> H in hyp) term.
+Tactic Notation "simpl" "rewrite" "<-" constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite <- H in hyp) term.
+
+Tactic Notation "simpl" "rewrite"      constr(term) "in" "*" := simpl_do_clear ltac:(fun H => rewrite    H in * ) term.
+Tactic Notation "simpl" "rewrite" "->" constr(term) "in" "*" := simpl_do_clear ltac:(fun H => rewrite -> H in * ) term.
+Tactic Notation "simpl" "rewrite" "<-" constr(term) "in" "*" := simpl_do_clear ltac:(fun H => rewrite <- H in * ) term.
+
+Tactic Notation "simpl" "rewrite"      constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => rewrite    H in hyp |- * ) term.
+Tactic Notation "simpl" "rewrite" "->" constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => rewrite -> H in hyp |- * ) term.
+Tactic Notation "simpl" "rewrite" "<-" constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => rewrite <- H in hyp |- * ) term.
+
+Tactic Notation "simpl" "rewrite"      constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => rewrite    H in * |- ) term.
+Tactic Notation "simpl" "rewrite" "->" constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => rewrite -> H in * |- ) term.
+Tactic Notation "simpl" "rewrite" "<-" constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => rewrite <- H in * |- ) term.
+
+
+Tactic Notation "simpl" "rewrite"      "!" constr(term) := simpl_do_clear ltac:(fun H => rewrite    !H) term.
+Tactic Notation "simpl" "rewrite" "->" "!" constr(term) := simpl_do_clear ltac:(fun H => rewrite -> !H) term.
+Tactic Notation "simpl" "rewrite" "<-" "!" constr(term) := simpl_do_clear ltac:(fun H => rewrite <- !H) term.
+
+Tactic Notation "simpl" "rewrite"      "!" constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite    !H in hyp) term.
+Tactic Notation "simpl" "rewrite" "->" "!" constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite -> !H in hyp) term.
+Tactic Notation "simpl" "rewrite" "<-" "!" constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite <- !H in hyp) term.
+
+Tactic Notation "simpl" "rewrite"      "!" constr(term) "in" "*" := simpl_do_clear ltac:(fun H => rewrite    !H in * ) term.
+Tactic Notation "simpl" "rewrite" "->" "!" constr(term) "in" "*" := simpl_do_clear ltac:(fun H => rewrite -> !H in * ) term.
+Tactic Notation "simpl" "rewrite" "<-" "!" constr(term) "in" "*" := simpl_do_clear ltac:(fun H => rewrite <- !H in * ) term.
+
+Tactic Notation "simpl" "rewrite"      "!" constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => rewrite    !H in hyp |- * ) term.
+Tactic Notation "simpl" "rewrite" "->" "!" constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => rewrite -> !H in hyp |- * ) term.
+Tactic Notation "simpl" "rewrite" "<-" "!" constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => rewrite <- !H in hyp |- * ) term.
+
+Tactic Notation "simpl" "rewrite"      "!" constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => rewrite    !H in * |- ) term.
+Tactic Notation "simpl" "rewrite" "->" "!" constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => rewrite -> !H in * |- ) term.
+Tactic Notation "simpl" "rewrite" "<-" "!" constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => rewrite <- !H in * |- ) term.
+
+
+Tactic Notation "simpl" "rewrite"      "?" constr(term) := simpl_do_clear ltac:(fun H => rewrite    ?H) term.
+Tactic Notation "simpl" "rewrite" "->" "?" constr(term) := simpl_do_clear ltac:(fun H => rewrite -> ?H) term.
+Tactic Notation "simpl" "rewrite" "<-" "?" constr(term) := simpl_do_clear ltac:(fun H => rewrite <- ?H) term.
+
+Tactic Notation "simpl" "rewrite"      "?" constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite    ?H in hyp) term.
+Tactic Notation "simpl" "rewrite" "->" "?" constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite -> ?H in hyp) term.
+Tactic Notation "simpl" "rewrite" "<-" "?" constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite <- ?H in hyp) term.
+
+Tactic Notation "simpl" "rewrite"      "?" constr(term) "in" "*" := simpl_do_clear ltac:(fun H => rewrite    ?H in * ) term.
+Tactic Notation "simpl" "rewrite" "->" "?" constr(term) "in" "*" := simpl_do_clear ltac:(fun H => rewrite -> ?H in * ) term.
+Tactic Notation "simpl" "rewrite" "<-" "?" constr(term) "in" "*" := simpl_do_clear ltac:(fun H => rewrite <- ?H in * ) term.
+
+Tactic Notation "simpl" "rewrite"      "?" constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => rewrite    ?H in hyp |- * ) term.
+Tactic Notation "simpl" "rewrite" "->" "?" constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => rewrite -> ?H in hyp |- * ) term.
+Tactic Notation "simpl" "rewrite" "<-" "?" constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => rewrite <- ?H in hyp |- * ) term.
+
+Tactic Notation "simpl" "rewrite"      "?" constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => rewrite    ?H in * |- ) term.
+Tactic Notation "simpl" "rewrite" "->" "?" constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => rewrite -> ?H in * |- ) term.
+Tactic Notation "simpl" "rewrite" "<-" "?" constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => rewrite <- ?H in * |- ) term.
 
 (** find the head of the given expression *)
 Ltac head expr :=
