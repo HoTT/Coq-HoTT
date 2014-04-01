@@ -7,8 +7,8 @@ Require Import HomFunctor NaturalTransformation.Isomorphisms.
 Require Import Functor.Composition.Core.
 Require Import FunctorCategory.Morphisms.
 Require Import Functor.Identity.
-Require Import SetCategory.Core.
-Require Import HProp HSet types.Sigma HoTT.Tactics.
+Require Import SetCategory.Core SetCategory.Morphisms.
+Require Import HProp HSet types.Sigma HoTT.Tactics Equivalences.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -147,8 +147,8 @@ Section AdjunctionEquivalences.
   Defined.
 End AdjunctionEquivalences.
 
-Section AdjunctionEquivalences'.
-  Context `{Funext}.
+Section isequiv.
+  (** We want to be able to use this without needing [Funext].  So, first, we prove that the types of hom-sets are equivalent. *)
   Variable C : PreCategory.
   Variable D : PreCategory.
   Variable F : Functor C D.
@@ -158,15 +158,17 @@ Section AdjunctionEquivalences'.
 
   Local Open Scope morphism_scope.
 
-  Lemma adjunction_hom__of__adjunction_unit__isisomorphism
-        (T : AdjunctionUnit F G) (c : C) (d : D)
-  : @IsIsomorphism
-      set_cat (BuildhSet _ _) (BuildhSet _ _)
-      (fun g : morphism D (F c) d =>
-         G _1 g o T.1 c).
+  Variable T : AdjunctionUnit F G.
+
+  Lemma equiv_hom_set_adjunction
+        (c : C) (d : D)
+  : morphism C c (G d) <~> morphism D (F c) d.
   Proof.
-    exists (fun f => (@center _ (T.2 _ _ f)).1); simpl;
-    apply path_forall; intro.
+    refine (equiv_adjointify
+              (fun f => (@center _ (T.2 _ _ f)).1)
+              (fun g => G _1 g o T.1 c)
+              _ _);
+    intro.
     - match goal with
         | [ |- @projT1 ?A ?P ?x = ?y ]
           => change (x.1 = (existT P y idpath).1)
@@ -177,7 +179,19 @@ Section AdjunctionEquivalences'.
         | [ |- appcontext[?x.1] ]
           => apply x.2
       end.
-  Qed.
+  Defined.
+End isequiv.
+
+Section AdjunctionEquivalences'.
+  Context `{Funext}.
+  Variable C : PreCategory.
+  Variable D : PreCategory.
+  Variable F : Functor C D.
+  Variable G : Functor D C.
+
+  Local Arguments Overture.compose / .
+
+  Local Open Scope morphism_scope.
 
   Lemma adjunction_hom__of__adjunction_unit__commutes
         (T : AdjunctionUnit F G)
@@ -197,17 +211,18 @@ Section AdjunctionEquivalences'.
   : AdjunctionHom F G.
   Proof.
     constructor.
-    let F0 := match goal with |- ?R ?F ?G => constr:(F) end in
-    let G0 := match goal with |- ?R ?F ?G => constr:(G) end in
-    (eexists (Build_NaturalTransformation
-                F0 G0
-                (fun cd (g : morphism _ (F (fst cd)) (snd cd))
-                 => morphism_of G g o projT1 T (fst cd))
-                (fun _ _ _ =>
-                   adjunction_hom__of__adjunction_unit__commutes T _ _ _ _ _ _))).
-    apply (@isisomorphism_natural_transformation _).
-    simpl; intro.
-    apply adjunction_hom__of__adjunction_unit__isisomorphism.
+    (eexists (Build_NaturalTransformation _ _ _ _)).
+    apply (@isisomorphism_natural_transformation _); simpl.
+    exact (fun cd =>
+             @isiso_isequiv
+               _ _ _ _
+               (equiv_isequiv
+                  _ _
+                  (equiv_inverse (equiv_hom_set_adjunction T (fst cd) (snd cd))))).
+    Grab Existential Variables.
+    simpl.
+    intros.
+    exact (adjunction_hom__of__adjunction_unit__commutes T _ _ _ _ _ _).
   Defined.
 End AdjunctionEquivalences'.
 
