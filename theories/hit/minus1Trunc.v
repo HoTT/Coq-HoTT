@@ -135,12 +135,16 @@ Section minus1TruncMonad.
     This is pretty easy to check since any diagram involving propositions commutes. *)
 
 (** We first need the action of [minus1Trunc] on morphisms. *)
-Definition minus1Trunc_map {A B : Type} : (A -> B) -> (minus1Trunc A -> minus1Trunc B).
+Definition minus1Trunc_map_dep {A B}
+: (forall x : A, B (min1 x)) -> (forall x : minus1Trunc A, minus1Trunc (B x)).
 Proof.
-  intros f p.
-  apply @minus1Trunc_rect_nondep with (A := A); auto.
-  intro x. apply (min1 (f x)).
+  intros f.
+  apply (@minus1Trunc_rect A (fun x => minus1Trunc (B x))
+                           (fun x => min1 (f x))); auto.
 Defined.
+
+Definition minus1Trunc_map {A B : Type} : (A -> B) -> (minus1Trunc A -> minus1Trunc B)
+  := @minus1Trunc_map_dep A (fun _ => B).
 
 (** *** Functoriality of [minus1Trunc_map]. *)
 Lemma minus1Trunc_map_id {A : Type} :

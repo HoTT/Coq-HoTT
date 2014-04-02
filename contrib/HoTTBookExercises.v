@@ -23,7 +23,7 @@
 
 *)
 
-Require Import HoTT HoTT.hit.minus1Trunc HoTT.Misc Coq.Init.Peano HoTT.hit.Suspension.
+Require Import HoTT Coq.Init.Peano.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -790,7 +790,34 @@ End Book_6_9.
 (* ================================================== ex:all-types-sets *)
 (** Exercise 7.1 *)
 
+Section Book_7_1.
+  Lemma Book_7_1_part_i (H : forall A, minus1Trunc A -> A) A : IsHSet A.
+  Proof.
+    apply (@HoTT.HSet.isset_hrel_subpaths
+             A (fun x y => minus1Trunc (x = y)));
+    try typeclasses eauto.
+    - intros ?.
+      apply min1.
+      reflexivity.
+    - intros.
+      apply H.
+      assumption.
+  Defined.
 
+  Lemma Book_7_1_part_ii (H : forall A B (f : A -> B),
+                                (forall b, minus1Trunc (hfiber f b))
+                                -> forall b, hfiber f b)
+  : forall A, IsHSet A.
+  Proof.
+    apply Book_7_1_part_i.
+    intros A a.
+    apply (fun H' => (@H A (minus1Trunc A) min1 H' a).1).
+    clear a.
+    apply @minus1Trunc_map_dep.
+    intro x; compute.
+    exists x; reflexivity.
+  Defined.
+End Book_7_1.
 
 (* ================================================== ex:s2-colim-unit *)
 (** Exercise 7.2 *)
