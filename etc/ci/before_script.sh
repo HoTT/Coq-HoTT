@@ -7,6 +7,10 @@ set -x
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 pushd "$DIR" 1>/dev/null
 
+if [ -z "$BUILD_COQ" ]
+then
+    echo | sudo add-apt-repository ppa:ezyang/coq-hott-git
+fi
 sudo apt-get update -q
 # (un)install autoreconf
 if [ ! -z "$WITH_AUTORECONF" ]; then

@@ -146,7 +146,7 @@ stdlib: $(STD_VOFILES)
 
 $(STD_VOFILES) : %.vo : %.v
 	$(VECHO) COQTOP $*
-	$(Q) $(TIMER) etc/pipe_out.sh "$*.timing" "$(COQTOP)" -time -indices-matter -boot -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq -compile "$*"
+	$(Q) $(TIMER) etc/pipe_out.sh "$*.timing" "$(COQTOP)" -time -indices-matter -boot -nois -no-native-compiler -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq -compile "$*"
 
 
 # The HoTT library as a single target

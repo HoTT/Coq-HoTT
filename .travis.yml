@@ -12,17 +12,27 @@ branches:
 env:
 
  matrix:
-   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS="yes"
-   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC="yes"  UPDATE_AUTOGEN="yes"  UPDATE_DEP_GRAPHS=""
-   - UPDATE_HTML="yes"    WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""
-   - UPDATE_HTML=""       WITH_AUTORECONF=""     UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS="yes" BUILD_COQ=""
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC="yes"  UPDATE_AUTOGEN="yes"  UPDATE_DEP_GRAPHS=""    BUILD_COQ=""
+   - UPDATE_HTML="yes"    WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ=""
+   - UPDATE_HTML=""       WITH_AUTORECONF=""     UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ=""
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"
 
  global:
 # encrypted version of deploy key for pushing
     - secure: "BbEmeDrctsjexOh5wOT+/3dsXzLu9WyTNwtP9cc6KDMQN+TOZ08nl1zRMJ8ICRA+TcEWWydgks4T4vi3RMWfjW4WFiblpi/qy/t9XiCC/50JEXtIjiwaTsIjpa8wjRiHCmgvZmoWfuOPnBNyXTVInmu0NhpZaA/hZJ4CQjJqu3k="
 
 
+matrix:
+  fast_finish: true
+  allow_failures:
+    - env: UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"
+
+
+
+
 before_script:
+ - uname -a
  - ./etc/ci/before_script.sh
  - source ./etc/ci/travis_keep_alive.sh
 

@@ -1,7 +1,16 @@
 #!/usr/bin/env bash
 
 PS4='$ '
-set -x
+set -ex
+
+# if we're not testing the build of Coq, then install it from debian
+if [ -z "$BUILD_COQ" ]
+then
+    #echo | sudo add-apt-repository ppa:ezyang/coq-hott-git
+    #sudo apt-get update -qq
+    sudo apt-get install -q coq libcoq-ocaml-dev
+    exit 0
+fi
 
 # in case we're run from out of git repo
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
