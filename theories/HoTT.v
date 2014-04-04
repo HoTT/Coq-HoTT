@@ -17,6 +17,7 @@ Require Export Fibrations.
 Require Export EquivalenceVarieties.
 Require Export Misc.
 Require Export Functorish.
+Require Export Modality.
 
 Require Export types.Unit.
 Require Export types.Paths.
