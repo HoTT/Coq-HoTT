@@ -99,6 +99,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Functor/Dual.v \
 	\
 	$(srcdir)/theories/categories/SetCategory/Core.v \
+	$(srcdir)/theories/categories/SetCategory/Morphisms.v \
 	\
 	$(srcdir)/theories/categories/HomFunctor.v \
 	$(srcdir)/theories/categories/Functor/Attributes.v \
