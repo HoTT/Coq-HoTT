@@ -378,16 +378,21 @@ Definition equiv_functor_sigma_id `{P : A -> Type} `{Q : A -> Type}
   : sigT P <~> sigT Q
   := equiv_functor_sigma (equiv_idmap A) g.
 
-(* Summing up a contractible family of types does nothing. *)
-Definition equiv_sigma_contr {A : Type} (P : A -> Type)
-  `{forall a, Contr (P a)}
-  : sigT P <~> A.
+(** Summing up a contractible family of types does nothing. *)
+Instance isequiv_pr1_contr {A} {P : A -> Type}
+           `{forall a, Contr (P a)}
+: IsEquiv (@pr1 A P) | 100.
 Proof.
-  refine (equiv_adjointify (@projT1 A P)
+  refine (isequiv_adjointify (@projT1 A P)
     (fun a => (a ; center (P a))) _ _).
   intros a; reflexivity.
   intros [a p]. apply path_sigma' with 1, contr.
 Defined.
+
+Definition equiv_sigma_contr {A : Type} (P : A -> Type)
+  `{forall a, Contr (P a)}
+  : sigT P <~> A
+  := BuildEquiv _ _ pr1 _.
 
 (** ** Associativity *)
 
