@@ -1,5 +1,5 @@
 Require Import Category.Core Category.Strict.
-Require Import HProp HSet types.Universe.
+Require Import HProp HSet types.Universe FunextVarieties.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -14,7 +14,7 @@ Notation cat_of obj :=
                       (fun _ _ _ _ _ _ _ => idpath)
                       (fun _ _ _ => idpath)
                       (fun _ _ _ => idpath)
-                      _).
+                      (fun s d => @Arrow.trunc_arrow Funext_downward_closed _ _ _ _)).
 
 (** There is a category [Set], where the objects are sets and the
     morphisms are set morphisms *)

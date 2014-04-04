@@ -13,3 +13,5 @@ Notation "F ₁ m" := (morphism_of F m) (at level 10, no associativity) : morphi
 
 Notation "F 'ᵒᵖ'" := (opposite F) (only parsing) : functor_scope.
 Notation "F 'ᵒᵖ''" := (opposite_inv F) (only parsing, at level 3) : functor_scope.
+Notation "F 'ᵒᵖ'ᴸ'" := (opposite_invL F) (only parsing, at level 3) : functor_scope.
+Notation "F 'ᵒᵖ'ᴿ'" := (opposite_invR F) (only parsing, at level 3) : functor_scope.

@@ -1,7 +1,7 @@
 Require Import Category.Core Functor.Core SetCategory.Core Category.Dual Functor.Composition.Core.
 Require Category.Prod Functor.Prod.
 Import Category.Prod.CategoryProdNotations Functor.Prod.FunctorProdNotations.
-Require Import HSet Overture.
+Require Import HSet Overture FunextVarieties.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -34,8 +34,9 @@ Section hom_functor.
                           _);
     subst hom_functor_morphism_of;
     simpl;
+    (* TODO: I don't want to have to give [Funext_downward_closed] explicitly here. *)
     abstract (
-        repeat (apply path_forall || intros [] || intro);
+        repeat (apply (@path_forall Funext_downward_closed) || intros [] || intro);
         unfold compose, Overture.compose;
         simpl in *;
         rewrite <- ?associativity, ?left_identity, ?right_identity;

@@ -9,7 +9,7 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Section functorial_composition.
-  Context `{Funext}.
+  Context `{fs : Funext, fs' : Funext, fs'' : Funext, fs''' : Funext, fs'''' : Funext}.
   Variable C : PreCategory.
   Variable D : PreCategory.
   Variable E : PreCategory.
@@ -17,8 +17,8 @@ Section functorial_composition.
   Local Open Scope natural_transformation_scope.
 
   Definition compose_functor_morphism_of
-             s d (m : morphism (C -> D) s d)
-  : morphism ((D -> E) -> (C -> E))
+             s d (m : morphism (@functor_category fs C D) s d)
+  : morphism (@functor_category fs''' (@functor_category fs' D E) (@functor_category fs'' C E))
              (whiskerR_functor _ s)
              (whiskerR_functor _ d)
     := Build_NaturalTransformation
@@ -27,11 +27,14 @@ Section functorial_composition.
          (fun x => x oL m)
          (fun _ _ _ => exchange_whisker _ _).
 
-  Definition compose_functor : object ((C -> D) -> ((D -> E) -> (C -> E))).
+  Definition compose_functor
+  : object (@functor_category fs''''
+                              (@functor_category fs C D)
+                              (@functor_category fs''' (@functor_category fs' D E) (@functor_category fs'' C E))).
   Proof.
     refine (Build_Functor
               (C -> D) ((D -> E) -> (C -> E))
-              (@whiskerR_functor _ _ _ _)
+              (@whiskerR_functor _ _ _ _ _ _ _)
               compose_functor_morphism_of
               _
               _);
@@ -43,6 +46,7 @@ Section functorial_composition.
   Defined.
 
   Definition compose_functor_uncurried
-  : object ((C -> D) * (D -> E) -> (C -> E))
+  : object ((@functor_category fs C D) * (@functor_category fs' D E)
+            -> (@functor_category fs'' C E))
     := ExponentialLaws.Law4.Functors.functor _ _ _ compose_functor.
 End functorial_composition.

@@ -1,5 +1,5 @@
 Require Import Category.Core Functor.Core HomFunctor Category.Morphisms Category.Dual Functor.Dual Category.Prod Functor.Prod NaturalTransformation.Core SetCategory.Core Functor.Composition.Core.
-Require Import hit.epi types.Universe HSet hit.iso Overture.
+Require Import hit.epi types.Universe HSet hit.iso Overture FunextVarieties.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -28,7 +28,7 @@ Section full_faithful.
     abstract (
         repeat (intros [] || intro);
         simpl in *;
-          repeat (apply path_forall; intro);
+          repeat (apply (@path_forall Funext_downward_closed); intro);
         unfold compose, Overture.compose;
         simpl;
         rewrite !composition_of;
@@ -86,7 +86,7 @@ Section fully_faithful_helpers.
   : IsIsomorphism (m : morphism set_cat x y).
   Proof.
     exists (m^-1)%equiv;
-    apply path_forall; intro;
+    apply (@path_forall Funext_downward_closed); intro;
     destruct H';
     simpl in *;
     eauto.
@@ -112,13 +112,13 @@ Section fully_faithful_helpers.
 End fully_faithful_helpers.
 
 Global Instance isfullyfaithful_isfull_isfaithful
-       `{Univalence} `{fs0 : Funext} `{fs1 : Funext}
+       `{Univalence} `{fs0 : Funext} `{fs1 : Funext} `{fs2 : Funext}
        `{Hfull : @IsFull fs0 C D F}
-       `{Hfaithful : @IsFaithful fs0 C D F}
-: @IsFullyFaithful fs0 C D F
+       `{Hfaithful : @IsFaithful fs1 C D F}
+: @IsFullyFaithful fs2 C D F
   := fun x y => @isisomorphism_isequiv_set_cat
-                  fs0 _ _ _
+                  _ _ _ _
                   (@isequiv_isepimorphism_ismonomorphism
-                     fs1 _ _ _ _
+                     _ _ _ _ _
                      (Hfull x y)
                      (Hfaithful x y)).

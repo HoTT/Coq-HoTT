@@ -110,5 +110,5 @@ Proof.
   exact (@isequiv_apD10 H (Lift A) (fun a => Lift (P a))).
 Defined.
 
-(** We permit the use of [Funext_downward_closed] exactly once in typeclass resolution.  So long as typeclass resolution backtracks on instances of functional extensionality, this will hopefully mean that we'll never need to worry about instances of functional extensionality, at least when we make definitions all in one go. *)
-Hint Immediate Funext_downward_closed : typeclass_instances.
+(** We permit the use of [Funext_downward_closed] exactly once in typeclass resolution.  So long as typeclass resolution backtracks on instances of functional extensionality, this will hopefully mean that we'll never need to worry about instances of functional extensionality, at least when we make definitions all in one go.  Furthermore, we want to pick up the downward closed version first, on the assumption that when we don't explicitly mark an instance of funext, it means we don't care, and so don't want the most general instance, but instead the most detached instance. *)
+Global Hint Extern 0 Funext => match goal with | [ H : Funext |- _ ] => exact (@Funext_downward_closed H) end : typeclass_instances.
