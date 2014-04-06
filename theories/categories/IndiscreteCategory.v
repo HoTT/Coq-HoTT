@@ -1,3 +1,4 @@
+(** * Indiscrete category *)
 Require Import Category.Core Functor.Core Category.Strict Category.Univalent Category.Morphisms.
 Require Import types.Unit Trunc HoTT.Tactics Equivalences.
 
@@ -6,6 +7,7 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+(** ** Definition of an indiscrete category *)
 Module Export Core.
   Section indiscrete_category.
     (** The indiscrete category has exactly one morphism between any two
@@ -29,10 +31,12 @@ Module Export Core.
                              _.
   End indiscrete_category.
 
+  (** *** Indiscrete categories are strict categories *)
   Definition isstrict_indiscrete_category `{H : IsHSet X}
   : IsStrictCategory (indiscrete_category X)
     := H.
 
+  (** *** Indiscrete categories are (saturated/univalent) categories *)
   Instance iscategory_indiscrete_category `{H : IsHProp X}
   : IsCategory (indiscrete_category X).
   Proof.
@@ -51,6 +55,7 @@ Module Export Core.
   Defined.
 End Core.
 
+(** ** Functors to an indiscrete category are given by their action on objects *)
 Module Functors.
   Section to.
     Variable X : Type.

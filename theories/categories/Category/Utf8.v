@@ -1,3 +1,4 @@
+(** * Unicode notations for categories *)
 Require Import Category.Core Category.Morphisms Category.Dual Category.Prod Category.Sum.
 Require Export Category.Notations.
 

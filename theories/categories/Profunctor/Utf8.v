@@ -1,3 +1,4 @@
+(** * Unicode notations for profunctors *)
 Require Import Profunctor.Core.
 Require Export Profunctor.Notations.
 

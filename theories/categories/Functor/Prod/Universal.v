@@ -1,3 +1,4 @@
+(** * Universal properties of product categories *)
 Require Import Category.Core Functor.Core Category.Prod NaturalTransformation.Core Functor.Composition.Core Functor.Prod.
 Require Import Functor.Paths.
 Require Import types.Prod HoTT.Tactics types.Forall types.Sigma.
@@ -28,11 +29,13 @@ Section universal.
     Variable a : Functor C A.
     Variable b : Functor C B.
 
+    (** ** [fst ∘ (a * b) = a] *)
     Lemma compose_fst_prod : fst o (a * b) = a.
     Proof.
       path_functor; trivial.
     Defined.
 
+    (** ** [snd ∘ (a * b) = b] *)
     Lemma compose_snd_prod : snd o (a * b) = b.
     Proof.
       path_functor; trivial.
@@ -97,6 +100,7 @@ Section universal.
 
     Local Open Scope core_scope.
 
+    (** ** Universal property characterizing unique product of functors *)
     Global Instance contr_prod_type
            `{IsHSet (Functor C A), IsHSet (Functor C B)}
     : Contr { F : Functor C (A * B)
@@ -115,6 +119,7 @@ Section universal.
     Qed.
   End universal.
 
+  (** ** Classification of path space of functors to a product precategory *)
   Definition path_prod (F G : Functor C (A * B))
              (H1 : fst o F = fst o G)
              (H2 : snd o F = snd o G)

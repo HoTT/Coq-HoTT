@@ -1,3 +1,4 @@
+(** * Functoriality of functor category construction *)
 Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Pointwise Functor.Pointwise.Properties Category.Dual Category.Prod Cat.Core ExponentialLaws.Law4.Functors.
 
 Set Universe Polymorphism.
@@ -7,6 +8,7 @@ Set Asymmetric Patterns.
 
 Local Open Scope category_scope.
 
+(** ** [(_ → _)] is a functor [catᵒᵖ × cat → cat] *)
 Section functor.
   Context `{fs1 : Funext}.
 

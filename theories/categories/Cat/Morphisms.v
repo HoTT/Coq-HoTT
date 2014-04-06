@@ -1,3 +1,4 @@
+(** * Morphisms in cat *)
 Require Import Category.Core Functor.Core FunctorCategory.Core FunctorCategory.Morphisms NaturalTransformation.Core.
 Require Import Category.Morphisms.
 
@@ -9,6 +10,7 @@ Set Asymmetric Patterns.
 Local Open Scope category_scope.
 Local Open Scope morphism_scope.
 
+(** ** Lemmas relationship between transporting the action of functors on objects, and [idtoiso] *)
 Section iso_lemmas.
   Context `{Funext}.
 

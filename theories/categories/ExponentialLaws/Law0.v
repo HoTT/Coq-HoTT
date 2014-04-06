@@ -1,3 +1,4 @@
+(** * Exponential laws about the initial category *)
 Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity Functor.Composition.Core.
 Require Import InitialTerminalCategory.
 
@@ -8,12 +9,11 @@ Set Asymmetric Patterns.
 
 Local Open Scope functor_scope.
 
-(** * Exponential laws about the initial category *)
 (** In this file, we prove that
 
-      - x⁰ ≅ 1
-      - 0ˣ ≅ 0 if x ≠ 0
-      - 0⁰ ≅ 1
+      - [x⁰ ≅ 1]
+      - [0ˣ ≅ 0] if [x ≠ 0]
+      - [0⁰ ≅ 1]
  *)
 
 
@@ -45,7 +45,7 @@ Section law0.
     := center _.
 End law0.
 
-(** ** 0ˣ ≅ 0 if x ≠ 0 *)
+(** ** [0ˣ ≅ 0] if [x ≠ 0] *)
 Section law0'.
   Context `{Funext}.
   Context `{IsInitialCategory zero}.
@@ -75,7 +75,7 @@ Section law0'.
     := center _.
 End law0'.
 
-(** ** 0⁰ ≅ 1 *)
+(** ** [0⁰ ≅ 1] *)
 Section law00.
   Context `{Funext}.
   Context `{IsInitialCategory zero}.

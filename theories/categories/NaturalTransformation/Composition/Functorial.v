@@ -1,3 +1,4 @@
+(** * Functoriality of composition of natural transformations *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import FunctorCategory.Core Functor.Composition.Core NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
 
@@ -16,6 +17,7 @@ Section functorial_composition.
 
   Local Open Scope natural_transformation_scope.
 
+  (** ** whiskering on the left is a functor *)
   Definition whiskerL_functor (F : (D -> E)%category)
   : ((C -> D) -> (C -> E))%category
     := Build_Functor
@@ -25,6 +27,7 @@ Section functorial_composition.
          (fun _ _ _ _ _ => composition_of_whisker_l _ _ _)
          (fun _ => whisker_l_right_identity _ _).
 
+  (** ** whiskering on the right is a functor *)
   Definition whiskerR_functor (G : (C -> D)%category)
   : ((D -> E) -> (C -> E))%category
     := Build_Functor

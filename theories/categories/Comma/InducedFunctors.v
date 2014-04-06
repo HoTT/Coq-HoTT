@@ -1,3 +1,4 @@
+(** * Induced functors between comma categories *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Dual.
 Require Import Category.Prod.
@@ -15,6 +16,7 @@ Set Asymmetric Patterns.
 Local Open Scope functor_scope.
 Local Open Scope category_scope.
 
+(** ** Morphisms in [(A → C)ᵒᵖ × (B → C)] from [(s₀, s₁)] to [(d₀, d₁)] induce functors [(s₀ / s₁) → (d₀ / d₁)] *)
 Section comma_category_induced_functor.
   Context `{Funext}.
   Variable A : PreCategory.
@@ -98,11 +100,9 @@ Section comma_category_induced_functor.
         intros; apply CommaCategory.path_morphism; reflexivity
       ).
   Defined.
-
-  (** This functor is actually only the [morphism_of] part of a larger functor [(A -> C)^op -> (B -> C) -> Cat].  But that functor is a pain to construct, and takes a while to compile. *)
-  (** TODO(JasonGross): Port that functor from catdb. *)
 End comma_category_induced_functor.
 
+(** ** Morphisms in [C] from [a] to [a'] induce functors [(C / a) → (C / a')] *)
 Section slice_category_induced_functor.
   Context `{Funext}.
   Variable C : PreCategory.
@@ -110,7 +110,7 @@ Section slice_category_induced_functor.
   Section slice_coslice.
     Variable D : PreCategory.
 
-    (** TODO(JasonGross): See if this can be recast as an exponential law functor about how [1 -> Cat] is isomorphic to [Cat], or something *)
+    (** TODO(JasonGross): See if this can be recast as an exponential law functor about how [1 → Cat] is isomorphic to [Cat], or something *)
     Definition slice_category_induced_functor_nt s d (m : morphism D s d)
     : NaturalTransformation !s !d.
     Proof.
@@ -163,6 +163,7 @@ Section slice_category_induced_functor.
     := Eval hnf in coslice_category_morphism_induced_functor _ _ _ m.
 End slice_category_induced_functor.
 
+(** ** Functors [A → A'] functors [(cat / A) → (cat / A')] *)
 Section cat_over_induced_functor.
   Context `{fs : Funext}.
   Variable P : PreCategory -> Type.

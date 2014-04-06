@@ -1,3 +1,4 @@
+(** * ∑-categories on objects - a generalization of subcategories *)
 Require Import types.Unit.
 Require Import Category.Core Functor.Core Category.Sigma.Core.
 Require Functor.Composition.Core Functor.Identity.
@@ -20,6 +21,7 @@ Section sigT_obj.
   Variable A : PreCategory.
   Variable Pobj : A -> Type.
 
+  (** ** Definition of [sigT_obj]-precategory *)
   Definition sigT_obj : PreCategory.
   Proof.
     refine (@Build_PreCategory
@@ -35,6 +37,7 @@ Section sigT_obj.
     simpl; intros; auto with category.
   Defined.
 
+  (** ** First projection functor *)
   Definition pr1_obj : Functor sigT_obj A
     := Build_Functor
          sigT_obj A

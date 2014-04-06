@@ -1,5 +1,9 @@
+(** * Composition of functors *)
+(** ** Definition of composition *)
 Require Functor.Composition.Core.
+(** ** Functoriality of composition *)
 Require Functor.Composition.Functorial.
+(** ** Laws about functor composition *)
 Require Functor.Composition.Laws.
 
 Include Functor.Composition.Core.

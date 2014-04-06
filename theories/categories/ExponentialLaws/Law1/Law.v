@@ -1,3 +1,4 @@
+(** * Exponential laws about the terminal category *)
 Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity NaturalTransformation.Core Functor.Paths NaturalTransformation.Paths ExponentialLaws.Law1.Functors Functor.Composition.Core.
 Require Import InitialTerminalCategory.
 Require Import HoTT.Tactics types.Forall types.Prod PathGroupoids.
@@ -9,6 +10,7 @@ Set Asymmetric Patterns.
 
 Local Open Scope functor_scope.
 
+(** ** [C¹ ≅ C] *)
 Section law1.
   Context `{Funext}.
   Context `{IsInitialCategory zero}.

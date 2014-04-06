@@ -1,3 +1,4 @@
+(** * Functor category [D → C] (also [Cᴰ] and [[D, C]]) *)
 Require Import Category.Core Category.Strict Functor.Core NaturalTransformation.Core Functor.Paths.
 (** These must come last, so that [identity], [compose], etc., refer to natural transformations. *)
 Require Import NaturalTransformation.Composition.Core NaturalTransformation.Identity NaturalTransformation.Composition.Laws.
@@ -7,6 +8,7 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+(** ** Definition of [C → D] *)
 Section functor_category.
   Context `{Funext}.
 
@@ -14,7 +16,6 @@ Section functor_category.
   Variable D : PreCategory.
 
   (** There is a category Fun(C, D) of functors from [C] to [D]. *)
-
   Definition functor_category : PreCategory
     := @Build_PreCategory (Functor C D)
                           (@NaturalTransformation C D)
@@ -28,6 +29,7 @@ End functor_category.
 
 Local Notation "C -> D" := (functor_category C D) : category_scope.
 
+(** ** [C → D] is a strict category if [D] is *)
 Lemma isstrict_functor_category `{Funext} C `{IsStrictCategory D}
 : IsStrictCategory (C -> D).
 Proof.

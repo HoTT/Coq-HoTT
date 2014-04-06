@@ -1,3 +1,4 @@
+(** * Projection functors from comma categories *)
 Require Import Category.Core Functor.Core.
 Require Import Category.Prod Functor.Prod.
 Require Import Functor.Composition.Core Functor.Identity.
@@ -13,6 +14,7 @@ Set Asymmetric Patterns.
 Local Open Scope functor_scope.
 Local Open Scope category_scope.
 
+(** ** First projection [(S / T) → A × B] (for [S : A → C ← B : T]) *)
 Section comma_category.
   Variable A : PreCategory.
   Variable B : PreCategory.
@@ -29,6 +31,7 @@ Section comma_category.
          (fun _ => idpath).
 End comma_category.
 
+(** ** First projections [(S / a) → A] and [(a / S) → A] *)
 Section slice_category.
   Variable A : PreCategory.
 

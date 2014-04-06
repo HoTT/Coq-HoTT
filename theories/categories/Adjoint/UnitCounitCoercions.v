@@ -1,3 +1,4 @@
+(** * Coercions between the various (co)unit definitions *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
 Require Import Adjoint.UnitCounit Adjoint.Dual.
@@ -36,6 +37,7 @@ Section equivalences.
           | _ => progress path_induction
         end.
 
+    (** ** unit+counit+zig+zag → unit+UMP *)
     Definition adjunction_unit__of__adjunction_unit_counit
                C D F G (A : @AdjunctionUnitCounit C D F G)
     : AdjunctionUnit F G.
@@ -67,6 +69,7 @@ Section equivalences.
         etransitivity; [ | symmetry ]; eassumption.
     Defined.
 
+    (** ** unit+counit+zig+zag → counit+UMP *)
     Definition adjunction_counit__of__adjunction_unit_counit
                C D F G (A : @AdjunctionUnitCounit C D F G)
     : AdjunctionCounit F G
@@ -90,6 +93,7 @@ Section equivalences.
                  => simpl_do_clear commutes_tac (commutes T)
              end.
 
+    (** ** unit+UMP → unit+counit+zig+zag *)
     Section from_unit.
       Variable C : PreCategory.
       Variable D : PreCategory.
@@ -164,6 +168,7 @@ Section equivalences.
       Defined.
     End from_unit.
 
+    (** ** counit+UMP → unit+counit+zig+zag *)
     Definition adjunction_unit_counit__of__adjunction_counit
                C D F G (A : @AdjunctionCounit C D F G)
     : AdjunctionUnitCounit F G

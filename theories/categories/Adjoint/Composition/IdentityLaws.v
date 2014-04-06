@@ -1,3 +1,4 @@
+(** * Left and right identity laws of adjunction composition *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Composition.Core.
 Require Import Functor.Composition.Laws.

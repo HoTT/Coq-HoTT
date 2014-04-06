@@ -1,3 +1,4 @@
+(** * Attributes of functors (full, faithful) *)
 Require Import Category.Core Functor.Core HomFunctor Category.Morphisms Category.Dual Functor.Dual Category.Prod Functor.Prod NaturalTransformation.Core SetCategory.Core Functor.Composition.Core.
 Require Import hit.epi types.Universe HSet hit.iso Overture.
 
@@ -14,6 +15,7 @@ Section full_faithful.
   Variable D : PreCategory.
   Variable F : Functor C D.
 
+  (** ** Natural transformation [hom_C(─, ─) → hom_D(Fᵒᵖ(─), F(─))] *)
   (** TODO(JasonGross): Come up with a better name and location for this. *)
   Definition induced_hom_natural_transformation
   : NaturalTransformation (hom_functor C) (hom_functor D o (F^op, F)).
@@ -36,20 +38,24 @@ Section full_faithful.
       ).
   Defined.
 
+  (** ** Full *)
   Class IsFull
     := is_full
        : forall x y : C,
            IsEpimorphism (induced_hom_natural_transformation (x, y)).
+  (** ** Faithful *)
   Class IsFaithful
     := is_faithful
        : forall x y : C,
            IsMonomorphism (induced_hom_natural_transformation (x, y)).
 
+  (** ** Fully Faithful *)
   Class IsFullyFaithful
     := is_fully_faithful
        : forall x y : C,
            IsIsomorphism (induced_hom_natural_transformation (x, y)).
 
+  (** ** Fully Faithful → Full *)
   Global Instance isfull_isfullyfaithful `{IsFullyFaithful}
   : IsFull.
   Proof.
@@ -57,6 +63,7 @@ Section full_faithful.
     typeclasses eauto.
   Qed.
 
+  (** ** Fully Faithful → Faithful *)
   Global Instance isfaithful_isfullyfaithful `{IsFullyFaithful}
   : IsFaithful.
   Proof.
@@ -64,6 +71,8 @@ Section full_faithful.
     typeclasses eauto.
   Qed.
 
+  (** ** Full * Faithful → Fully Faithful *)
+  (** We start with a helper method, which assumes that epi * mono → iso, and ten prove this assumption *)
   Lemma isfullyfaithful_isfull_isfaithful_helper `{IsFull} `{IsFaithful}
         (H' : forall x y (m : morphism set_cat x y),
                 IsEpimorphism m

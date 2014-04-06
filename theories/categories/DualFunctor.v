@@ -1,3 +1,4 @@
+(** * The functor [ᵒᵖ : cat → cat] *)
 Require Import Category.Core Functor.Core.
 Require Import Category.Dual Functor.Dual.
 Require Import Functor.Composition.Core Functor.Identity.

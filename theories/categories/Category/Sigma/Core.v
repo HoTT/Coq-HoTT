@@ -1,3 +1,4 @@
+(** * ∑-categories - exploded Grothendieck constructions, or generalizations of subcategories *)
 Require Import Category.Core Functor.Core.
 Require Import types.Sigma HProp.
 
@@ -7,6 +8,8 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Local Notation sigT_type := sigT.
+
+(** We can generalize the notion of [sigT] to categories.  This is, essentially, a type-theoretic perspecitive on the Grothendieck construction. *)
 
 Section sigT_obj_mor.
   Variable A : PreCategory.
@@ -40,6 +43,7 @@ Section sigT_obj_mor.
   : forall a b (f : mor a b),
       compose f (identity a) = f.
 
+  (** ** Definition of a [sigT]-precategory *)
   Definition sigT : PreCategory.
   Proof.
     refine (@Build_PreCategory
@@ -54,6 +58,7 @@ Section sigT_obj_mor.
     assumption.
   Defined.
 
+  (** ** First projection functor *)
   Definition pr1 : Functor sigT A
     := Build_Functor
          sigT A
@@ -65,6 +70,7 @@ End sigT_obj_mor.
 
 Arguments pr1 {A Pobj Pmor HPmor Pidentity Pcompose P_associativity P_LeftIdentity P_RightIdentity}.
 
+(** ** Variant of [sigT]-precategory when we are taking a subset of morphisms *)
 Section sigT_obj_mor_hProp.
   Variable A : PreCategory.
   Variable Pobj : A -> Type.
@@ -119,10 +125,12 @@ Section sigT_obj_mor_hProp.
       using P_right_identity_core_subproof.
   Defined.
 
+  (** *** Definition of [sig]-precategory *)
   Definition sig : PreCategory
     := Eval cbv delta [P_associativity P_left_identity P_right_identity]
       in @sigT A Pobj Pmor _ Pidentity Pcompose P_associativity P_left_identity P_right_identity.
 
+  (** *** First projection functor *)
   Definition proj1_sig : Functor sig A
     := pr1.
 End sigT_obj_mor_hProp.

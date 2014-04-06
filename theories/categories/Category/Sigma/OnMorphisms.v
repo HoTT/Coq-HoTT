@@ -1,3 +1,4 @@
+(** * ∑-categories on morphisms - a category with the same objects, but a ∑ type for morphisms *)
 Require Import HSet types.Unit HoTT.Tactics types.Forall types.Sigma HProp.
 Require Import Category.Core Functor.Core Category.Sigma.Core.
 Require Functor.Composition.Core Functor.Identity.
@@ -44,6 +45,7 @@ Section sigT_mor.
   : forall a b (f : mor a b),
       compose f (identity a) = f.
 
+  (** ** Definition of [sigT_mor]-precategory *)
   Definition sigT_mor : PreCategory.
   Proof.
     refine (@Build_PreCategory
@@ -58,6 +60,7 @@ Section sigT_mor.
     assumption.
   Defined.
 
+  (** ** First projection functor *)
   Definition pr1_mor : Functor sigT_mor A
     := Build_Functor
          sigT_mor A
@@ -170,10 +173,12 @@ Section sigT_mor_hProp.
       using P_right_identity_on_morphisms_subproof.
   Defined.
 
+  (** ** Definition of [sig_mor]-precategory *)
   Definition sig_mor : PreCategory
     := Eval cbv delta [P_associativity P_left_identity P_right_identity]
       in @sigT_mor A Pmor _ Pidentity Pcompose P_associativity P_left_identity P_right_identity.
 
+  (** ** First projection functor *)
   Definition proj1_sig_mor : Functor sig_mor A
     := pr1_mor.
 End sigT_mor_hProp.

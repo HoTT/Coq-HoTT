@@ -1,3 +1,4 @@
+(** * Notations for functors *)
 Require Functor.Composition.Composition.
 Require Functor.Core.
 Require Functor.Dual.

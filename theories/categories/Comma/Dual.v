@@ -1,3 +1,4 @@
+(** * Opposite comma categories *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
 Require Import Comma.Core.
@@ -12,6 +13,7 @@ Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 Local Open Scope functor_scope.
 
+(** ** The dual functors [(S / T) ↔ ((Tᵒᵖ / Sᵒᵖ)ᵒᵖ)] *)
 Section opposite.
   Variable A : PreCategory.
   Variable B : PreCategory.

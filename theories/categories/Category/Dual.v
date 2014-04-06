@@ -1,3 +1,4 @@
+(** * Opposite Category *)
 Require Import Category.Core Category.Objects.
 
 Set Universe Polymorphism.
@@ -9,6 +10,7 @@ Local Open Scope equiv_scope.
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 
+(** ** Definition of [Cᵒᵖ] *)
 Section opposite.
   Definition opposite (C : PreCategory) : PreCategory
     := @Build_PreCategory'
@@ -26,7 +28,9 @@ End opposite.
 
 Local Notation "C ^op" := (opposite C) (at level 3) : category_scope.
 
+(** ** [ᵒᵖ] is propositionally involutive *)
 Section DualCategories.
+  (** If we had judgmental eta for records, it would be judgmentally involutive. *)
   Lemma opposite_involutive C : (C^op)^op = C.
   Proof.
     destruct C; exact idpath.
@@ -35,6 +39,7 @@ End DualCategories.
 
 Hint Rewrite @opposite_involutive : category.
 
+(** ** Initial objects are opposite terminal objects, and vice versa *)
 Section DualObjects.
   Variable C : PreCategory.
 

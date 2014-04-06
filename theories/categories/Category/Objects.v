@@ -1,3 +1,4 @@
+(** * Universal objects *)
 Require Import Category.Core Category.Morphisms.
 
 Set Universe Polymorphism.
@@ -8,11 +9,14 @@ Set Asymmetric Patterns.
 Local Open Scope category_scope.
 Local Open Scope morphism_scope.
 
+(** ** Definition of "unique up to unique isomorphism" *)
+
 Definition unique_up_to_unique_isomorphism (C : PreCategory) (P : C -> Type) :=
   forall x (_ : P x) x' (_ : P x'),
     { c : Contr (morphism C x x')
     | IsIsomorphism (center (morphism C x x')) }.
 
+(** ** Terminal objects *)
 (** A terminal object is an object with a unique morphism from every
     other object. *)
 Notation IsTerminalObject C x :=
@@ -26,6 +30,7 @@ Record TerminalObject (C : PreCategory) :=
 
 Existing Instance isterminal_object_terminal.
 
+(** ** Initial objects *)
 (** An initial object is an object with a unique morphism from every
     other object. *)
 Notation IsInitialObject C x :=
@@ -41,6 +46,7 @@ Existing Instance isinitial_object_initial.
 
 Arguments unique_up_to_unique_isomorphism [C] P.
 
+(** ** Initial and terminal objects are unique up to unique isomorphism *)
 Section CategoryObjectsTheorems.
   Variable C : PreCategory.
 

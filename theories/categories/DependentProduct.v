@@ -1,3 +1,4 @@
+(** * Dependent Product; oplax limit of a functor to Cat *)
 Require Import Category.Core Functor.Core.
 Require Import Cat.Core.
 Require Grothendieck.ToCat.

@@ -1,3 +1,4 @@
+(** * Definition of natural transformation *)
 Require Import Category.Core Functor.Core.
 
 Set Universe Polymorphism.

@@ -1,3 +1,4 @@
+(** * Hom Functor *)
 Require Import Category.Core Functor.Core SetCategory.Core Category.Dual Functor.Composition.Core.
 Require Category.Prod Functor.Prod.
 Import Category.Prod.CategoryProdNotations Functor.Prod.FunctorProdNotations.
@@ -10,6 +11,7 @@ Set Asymmetric Patterns.
 
 Local Open Scope morphism_scope.
 
+(** ** Definition of [hom : Cᵒᵖ × C → Set] as a functor *)
 Section hom_functor.
   Context `{Funext}.
   Variable C : PreCategory.
@@ -53,8 +55,10 @@ Section covariant_contravariant.
   Local Arguments Functor.Prod.induced_snd / .
   Local Arguments Functor.Prod.induced_fst / .
 
+  (** ** Covariant hom functor [hom_C(A, ─) : C → set] *)
   Definition covariant_hom_functor (A : object C^op)
     := Eval simpl in Functor.Prod.induced_snd (hom_functor C) A.
+  (** ** Contravariant hom functor [hom_C(─, A) : Cᵒᵖ → set] *)
   Definition contravariant_hom_functor (A : C)
     := Eval simpl in Functor.Prod.induced_fst (hom_functor C) A.
 End covariant_contravariant.

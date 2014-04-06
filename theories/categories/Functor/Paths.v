@@ -1,3 +1,4 @@
+(** * Classification of path spaces of functors *)
 Require Import Category.Core Functor.Core.
 Require Import HProp HoTT.Tactics Equivalences PathGroupoids types.Sigma Trunc types.Record.
 
@@ -26,6 +27,7 @@ Section path_functor.
             MO x x (identity x) = identity (OO x) } } }
       (only parsing).
 
+  (** ** Equivalence between the record and sigma-type versions of a functor *)
   Lemma equiv_sig_functor
   : functor_sig_T <~> Functor C D.
   Proof.
@@ -44,7 +46,9 @@ Section path_functor.
 
   (** We could just go prove that the path space of [functor_sig_T] is equivalent to [path_functor'_T], but unification is far too slow to do this effectively.  So instead we explicitly classify [path_functor'_T], and provide an equivalence between it and the path space of [Functor C D]. *)
 
-  (*Definition equiv_path_functor'_sig_sig (F G : Functor C D)
+  (**
+<<
+  Definition equiv_path_functor'_sig_sig (F G : Functor C D)
   : path_functor'_T F G <~> (@equiv_inv _ _ _ equiv_sig_functor F
                               = @equiv_inv _ _ _ equiv_sig_functor G).
   Proof.
@@ -54,9 +58,12 @@ Section path_functor.
              | [ |- appcontext[(@equiv_inv ?A ?B ?f ?H ?F).1] ]
                => change ((@equiv_inv A B f H F).1) with (object_of F)
            end.
-    exact (isequiv_idmap (object_of F = object_of G)).
-  Abort.*)
+    Time exact (isequiv_idmap (object_of F = object_of G)). (* 13.411 secs *)
+  Abort.
+>>
+   *)
 
+  (** ** Classify sufficient conditions to prove functors equal *)
   Definition path_functor'_sig (F G : Functor C D) : path_functor'_T F G -> F = G.
   Proof.
     intros [? ?].
@@ -66,6 +73,7 @@ Section path_functor.
       eapply @center; abstract exact _.
   Defined.
 
+  (** *** Said proof respects [object_of] *)
   Lemma path_functor'_sig_fst F G HO HM
   : ap object_of (@path_functor'_sig F G (HO; HM)) = HO.
   Proof.
@@ -73,6 +81,7 @@ Section path_functor.
     path_induction_hammer.
   Qed.
 
+  (** *** Said proof respects [idpath] *)
   Lemma path_functor'_sig_idpath F
   : @path_functor'_sig F F (idpath; idpath) = idpath.
   Proof.
@@ -81,11 +90,13 @@ Section path_functor.
     reflexivity.
   Qed.
 
+  (** ** Equality of functors gives rise to an inhabitant of the path-classifying-type *)
   Definition path_functor'_sig_inv (F G : Functor C D) : F = G -> path_functor'_T F G
     := fun H'
        => (ap object_of H';
            (transport_compose _ _ _ _) ^ @ apD (@morphism_of _ _) H')%path.
 
+  (** ** Curried version of path classifying lemma *)
   Lemma path_functor' (F G : Functor C D)
   : forall HO : object_of F = object_of G,
       transport (fun GO => forall s d, morphism C s d -> morphism D (GO s) (GO d)) HO (morphism_of F) = morphism_of G
@@ -96,6 +107,7 @@ Section path_functor.
     esplit; eassumption.
   Defined.
 
+  (** ** Curried version of path classifying lemma, using [forall] in place of equality of functions *)
   Lemma path_functor (F G : Functor C D)
   : forall HO : object_of F == object_of G,
       (forall s d m,
@@ -111,6 +123,7 @@ Section path_functor.
     repeat (apply path_forall; intro); apply_hyp.
   Defined.
 
+  (** ** Classify equality of functors up to equivalence *)
   Lemma equiv_path_functor'_sig (F G : Functor C D)
   : path_functor'_T F G <~> F = G.
   Proof.
@@ -126,6 +139,7 @@ Section path_functor.
       exact (center _).
   Defined.
 
+  (** ** If the objects in [D] are n-truncated, then so is the type of  functors [C → D] *)
   Global Instance trunc_functor `{IsTrunc n D} `{forall s d, IsTrunc n (morphism D s d)}
   : IsTrunc n (Functor C D).
   Proof.
@@ -136,6 +150,7 @@ Section path_functor.
   Qed.
 End path_functor.
 
+(** ** Tactic for proving equality of functors *)
 Ltac path_functor :=
   repeat match goal with
            | _ => intro

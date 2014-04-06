@@ -1,3 +1,4 @@
+(** * Dual functor categories *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
 Require Import Functor.Composition.Core Functor.Identity.
@@ -17,6 +18,7 @@ Section opposite.
   Variable C : PreCategory.
   Variable D : PreCategory.
 
+  (** ** Functors [(C → D) ↔ (Cᵒᵖ → Dᵒᵖ)ᵒᵖ] *)
   Definition opposite_functor : Functor (C -> D) (C^op -> D^op)^op
     := Build_Functor
          (C -> D) ((C^op -> D^op)^op)
@@ -33,6 +35,7 @@ Section opposite.
          (fun _ _ _ _ _ => idpath)
          (fun _ => idpath).
 
+  (** ** Functors [(C → D)ᵒᵖ ↔ (Cᵒᵖ → Dᵒᵖ)] *)
   Definition opposite_functor' : Functor (C -> D)^op (C^op -> D^op)
     := Build_Functor
          ((C -> D)^op) (C^op -> D^op)
@@ -63,6 +66,7 @@ Section opposite.
     destruct_head Functor;
     exact idpath.
 
+  (** ** The above functors are isomorphisms *)
   Definition opposite_functor_law
   : opposite_functor o opposite_functor_inv = 1
     /\ opposite_functor_inv o opposite_functor = 1.

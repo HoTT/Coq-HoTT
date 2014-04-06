@@ -1,3 +1,4 @@
+(** * Product Category *)
 Require Import Category.Core Category.Strict.
 Require Import types.Prod.
 
@@ -9,6 +10,7 @@ Set Asymmetric Patterns.
 Local Open Scope category_scope.
 Local Open Scope morphism_scope.
 
+(** ** Definition of [*] for categories *)
 Section prod.
   Variable C : PreCategory.
   Variable D : PreCategory.
@@ -33,6 +35,7 @@ End prod.
 
 Local Infix "*" := prod : category_scope.
 
+(** ** The product of strict categories is strict *)
 Global Instance isstrict_category_product
        `{IsStrictCategory C, IsStrictCategory D}
 : IsStrictCategory (C * D).

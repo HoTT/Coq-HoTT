@@ -1,3 +1,4 @@
+(** * Classify the path space of adjunctions *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Composition.Core Functor.Identity.
 Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
@@ -28,6 +29,7 @@ Section path_adjunction.
       | { equ1 : forall Y : C, (eps (F Y) o F _1 (eta Y))%morphism = 1%morphism
         | forall X : D, (G _1 (eps X) o eta (G X))%morphism = 1%morphism }}}.
 
+  (** ** Equivalence between record and nested sigma for unit+counit adjunctions *)
   Lemma equiv_sig_adjunction
   : adjunction_sigT <~> (F -| G).
   Proof.
@@ -38,12 +40,14 @@ Section path_adjunction.
           (@unit_counit_equation_2 _ _ F G).
   Defined.
 
+  (** ** Adjunctions are an hSet *)
   Global Instance trunc_adjunction : IsHSet (F -| G).
   Proof.
     eapply trunc_equiv'; [ exact equiv_sig_adjunction | ].
     typeclasses eauto.
   Qed.
 
+  (** ** Equality of adjunctions follows from equality of unit+counit *)
   Lemma path_adjunction' (A A' : F -| G)
   : unit A = unit A'
     -> counit A = counit A'
@@ -56,6 +60,7 @@ Section path_adjunction.
       exact (center _).
   Qed.
 
+  (** ** Equality of adjunctions follows from equality of action of unit+counit on objects *)
   Lemma path_adjunction (A A' : F -| G)
   : components_of (unit A) == components_of (unit A')
     -> components_of (counit A) == components_of (counit A')

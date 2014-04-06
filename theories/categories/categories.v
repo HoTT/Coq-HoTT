@@ -1,32 +1,60 @@
+(** * Category Theory *)
 (** To get all of the category theory library in scope with the proper qualified names, you should [Require Import categories.] or [Require Import HoTT.categories.] *)
 
 (** First we give modules to all of the kinds of category theory constructions (corresponding to directories), so that we can refer to them as [Category.foo] or [Functor.foo] after [Require Import categories.] *)
+(** ** Categories *)
 Require Category.
+(** ** Functors *)
 Require Functor.
+(** ** Natural Transformations *)
 Require NaturalTransformation.
+(** ** Functor Categories *)
 Require FunctorCategory.
+(** ** Groupoids *)
 Require GroupoidCategory.
+(** ** Discrete Categories *)
 Require DiscreteCategory.
+(** ** Indiscrete Categories *)
 Require IndiscreteCategory.
+(** ** Finite Discrete Categories (natural numbers as categories) *)
 Require NatCategory.
+(** ** Initial and Terminal Categories *)
 Require InitialTerminalCategory.
+(** ** The Category of Sets *)
 Require SetCategory.
+(** ** The Hom Functor *)
 Require HomFunctor.
+(** ** Profunctors *)
 Require Profunctor.
+(** ** The Category of Categories *)
 Require Cat.
+(** ** Laws about Functor Categories *)
 Require ExponentialLaws.
+(** ** Laws about Product Categories *)
 Require ProductLaws.
+(** ** Comma Categories *)
 Require Comma.
+(** ** Universal Properties and Universal Morphisms *)
 Require UniversalProperties.
+(** ** Kan Extensions *)
 Require KanExtensions.
+(** ** Adjunctions *)
 Require Adjoint.
+(** ** Limits *)
 Require Limits.
+(** ** Pseudofunctors *)
 Require Pseudofunctor.
+(** ** Duality as a Functor *)
 Require DualFunctor.
+(** ** The Grothendieck Construction *)
 Require Grothendieck.
+(** ** The Category of Sections of a Functor *)
 Require CategoryOfSections.
+(** ** The Dependent Product *)
 Require DependentProduct.
+(** ** The Yoneda Lemma *)
 Require Yoneda.
+(** ** The Structure Identity Principle *)
 Require Structure.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)

@@ -1,3 +1,4 @@
+(** * PreCategories [set_cat] and [prop_cat] *)
 Require Import Category.Core Category.Strict.
 Require Import HProp HSet types.Universe.
 
@@ -22,6 +23,7 @@ Notation cat_of obj :=
 Definition prop_cat `{Funext} : PreCategory := cat_of hProp.
 Definition set_cat `{Funext} : PreCategory := cat_of hSet.
 
+(** ** [Prop] is a strict category *)
 Instance isstrict_prop_cat `{Funext, Univalence}
 : IsStrictCategory prop_cat
   := trunc_hProp.

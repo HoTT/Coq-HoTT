@@ -1,3 +1,4 @@
+(** * Identity functor *)
 Require Import Category.Core Functor.Core.
 
 Set Universe Polymorphism.

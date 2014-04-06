@@ -1,3 +1,4 @@
+(** * Composition of adjunctions [F' ⊣ G' → F ⊣ G → (F' ∘ F) ⊣ (G ∘ G')] *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Composition.Core NaturalTransformation.Composition.Core.
 Require Import Functor.Identity NaturalTransformation.Identity.
@@ -13,6 +14,7 @@ Set Asymmetric Patterns.
 
 Local Open Scope natural_transformation_scope.
 
+(** ** via the unit+counit+zig+zag definition *)
 Section compose.
   Variable C : PreCategory.
   Variable D : PreCategory.

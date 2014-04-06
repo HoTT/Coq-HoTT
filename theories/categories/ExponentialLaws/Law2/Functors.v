@@ -1,3 +1,4 @@
+(** * Exponential functors between products and sums in exponents *)
 Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity NaturalTransformation.Core NaturalTransformation.Paths Functor.Composition.Core Category.Sum Category.Prod Functor.Sum Functor.Prod NaturalTransformation.Sum Functor.Pointwise NaturalTransformation.Paths.
 Require Import InitialTerminalCategory.
 
@@ -18,11 +19,13 @@ Section law2.
   Variable C1 : PreCategory.
   Variable C2 : PreCategory.
 
+  (** ** [yⁿ⁺ᵐ → yⁿ × yᵐ] *)
   Definition functor
   : Functor (C1 + C2 -> D) ((C1 -> D) * (C2 -> D))
     := pointwise (inl C1 C2) 1
        * pointwise (inr C1 C2) 1.
 
+  (** ** [yⁿ × yᵐ → yⁿ⁺ᵐ] *)
   Definition inverse
   : Functor ((C1 -> D) * (C2 -> D)) (C1 + C2 -> D).
   Proof.

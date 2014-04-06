@@ -1,3 +1,4 @@
+(** * Definition of a functor *)
 Require Import Category.Core.
 
 Set Universe Polymorphism.

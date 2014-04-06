@@ -1,3 +1,4 @@
+(** * Unicode notations for comma categories *)
 Require Import Comma.Core.
 Require Export Comma.Notations.
 

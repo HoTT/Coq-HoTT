@@ -1,3 +1,4 @@
+(** * Grothendieck Construction of a functor to Cat *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Pseudofunctor.Core Pseudofunctor.FromFunctor.
 Require Import Cat.Core.
@@ -22,9 +23,11 @@ Section Grothendieck.
   Variable C : PreCategory.
   Variable F : Functor C cat.
 
+  (** ** Category of elements *)
   Definition category : PreCategory
     := category (F : FunctorToCat).
 
+  (** ** First projection functor *)
   Definition pr1 : Functor category C
     := pr1 (F : FunctorToCat).
 End Grothendieck.

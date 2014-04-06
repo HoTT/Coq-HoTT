@@ -1,3 +1,4 @@
+(** * Properties of pointwise functors *)
 Require Import Category.Core Functor.Core Functor.Pointwise NaturalTransformation.Core NaturalTransformation.Paths Functor.Composition.Core Functor.Identity Functor.Paths.
 Require Import PathGroupoids types.Forall HoTT.Tactics.
 
@@ -45,6 +46,7 @@ Section parts.
                => rewrite (helper_lem x)
            end.
 
+  (** ** respects identity *)
   Section identity_of.
     Variable C : PreCategory.
     Variable D : PreCategory.
@@ -78,6 +80,7 @@ Section parts.
     Defined.
   End identity_of.
 
+  (** ** respects composition *)
   Section composition_of.
     Variable C : PreCategory.
     Variable D : PreCategory.

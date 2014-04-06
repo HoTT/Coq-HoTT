@@ -1,3 +1,4 @@
+(** * Kan extensions assemble into functors *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import KanExtensions.Core.
 Require Import Adjoint.UniversalMorphisms.
@@ -9,8 +10,6 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
-(** Kan extensions assemble into functors *)
-
 Section kan_extension_functors.
   Context `{Funext}.
   Variable C  : PreCategory.
@@ -18,6 +17,7 @@ Section kan_extension_functors.
   Variable D  : PreCategory.
   Variable p : object (C -> C').
 
+  (** ** Left Kan extension functor *)
   Section lan.
     Context `(has_left_kan_extensions
               : forall h : object (C -> D),
@@ -33,6 +33,7 @@ Section kan_extension_functors.
   End lan.
 
 
+  (** ** Right Kan extension functor *)
   Section ran.
     Context `(has_right_kan_extensions
               : forall h : object (C -> D),

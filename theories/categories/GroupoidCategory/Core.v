@@ -1,3 +1,4 @@
+(** * Groupoids *)
 Require Import Category.Core Category.Morphisms Category.Strict.
 Require Import Trunc.
 
@@ -8,6 +9,8 @@ Set Asymmetric Patterns.
 
 Local Open Scope equiv_scope.
 Local Open Scope category_scope.
+
+(** A groupoid is a precategory where every morphism is an isomorphism.  Since 1-types are 1-groupoids, we can construct the category corresponding to the 1-groupoid of a 1-type. *)
 
 (** We don't want access to all of the internals of a groupoid category at top level. *)
 Module GroupoidCategoryInternals.
@@ -29,6 +32,7 @@ Module GroupoidCategoryInternals.
   End groupoid_category.
 End GroupoidCategoryInternals.
 
+(** ** Categorification of the groupoid of a 1-type *)
 Definition groupoid_category X `{IsTrunc 1 X} : PreCategory.
 Proof.
   refine (@Build_PreCategory X
@@ -44,6 +48,7 @@ Defined.
 
 Arguments groupoid_category X {_}.
 
+(** ** 0-types give rise to strict (groupoid) categories *)
 Lemma isstrict_groupoid_category X `{IsHSet X}
 : IsStrictCategory (groupoid_category X).
 Proof.

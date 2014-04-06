@@ -1,3 +1,4 @@
+(** * Laws about product categories *)
 Require Import Category.Core Functor.Core InitialTerminalCategory Category.Prod Functor.Prod Functor.Composition.Core Functor.Identity Functor.Prod.Universal Functor.Composition.Laws Functor.Prod.Universal.
 Require Import Functor.Paths.
 Require Import types.Prod types.Forall HoTT.Tactics.
@@ -15,6 +16,7 @@ Local Notation fst_type := Coq.Init.Datatypes.fst.
 Local Notation snd_type := Coq.Init.Datatypes.snd.
 Local Notation pair_type := Coq.Init.Datatypes.pair.
 
+(** ** Swap functor [C × D → D × C] *)
 Module Swap.
   Definition functor (C D : PreCategory)
   : Functor (C * D) (D * C)
@@ -37,6 +39,7 @@ Module Swap.
   Qed.
 End Swap.
 
+(** ** Laws about the initial category [0] *)
 Module Law0.
   Section law0.
     Context `{Funext}.
@@ -58,11 +61,13 @@ Module Law0.
     Definition inverse : Functor 0 (C * 0) := Functors.from_initial _.
     Definition inverse' : Functor 0 (0 * C) := Functors.from_initial _.
 
+    (** *** [C × 0 ≅ 0] *)
     Definition law
     : functor o inverse = 1
       /\ inverse o functor = 1
       := center _.
 
+    (** *** [0 × C ≅ 0] *)
     Definition law'
     : functor' o inverse' = 1
       /\ inverse' o functor' = 1
@@ -70,6 +75,7 @@ Module Law0.
   End law0.
 End Law0.
 
+(** ** Laws about the terminal category [1] *)
 Module Law1.
   Section law1.
     Context `{Funext}.
@@ -106,6 +112,7 @@ Module Law1.
         by assumption);
       try (reflexivity || exact (center _)).
 
+    (** *** [C × 1 ≅ C] *)
     Lemma law1
     : functor o inverse = 1
       /\ inverse o functor = 1.
@@ -114,6 +121,7 @@ Module Law1.
       abstract t_prod.
     Qed.
 
+    (** *** [1 × C ≅ C] *)
     Lemma law1'
     : functor' o inverse' = 1
       /\ inverse' o functor' = 1.

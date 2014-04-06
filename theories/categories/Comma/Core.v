@@ -1,3 +1,4 @@
+(** * Comma categories *)
 Require Import Category.Core Functor.Core.
 Require Import InitialTerminalCategory.
 Require Functor.Identity.
@@ -19,7 +20,7 @@ Local Open Scope category_scope.
     Suppose that [A], [B], and [C] are categories, and [S] and [T] are
     functors
 
-    [S : A -> C <- B : T]
+    [S : A → C ← B : T]
 
     We can form the comma category [(S ↓ T)] as follows:
 
@@ -28,7 +29,7 @@ Local Open Scope category_scope.
       [C].
 
     - The morphisms from [(α, β, f)] to [(α', β', f')] are all pairs
-      [(g, h)] where [g : α -> α'] and [h : β -> β'] are morphisms in
+      [(g, h)] where [g : α → α'] and [h : β → β'] are morphisms in
       [A] and [B] respectively, such that the following diagram
       commutes:
 
@@ -47,6 +48,7 @@ Local Open Scope category_scope.
     g', h ∘ h')], whenever the latter expression is defined.  The
     identity morphism on an object [(α, β, f)] is [(1_α, 1_β)].  *)
 
+(** ** Comma category [(S / T)] *)
 Module Import CommaCategory.
   Section comma_category_parts.
     Variable A : PreCategory.
@@ -246,6 +248,7 @@ Qed.
 Hint Unfold compose identity : category.
 Hint Constructors morphism object : category.
 
+(** ** (co)slice category [(a / F)], [(F / a)] *)
 Section slice_category.
   Variable A : PreCategory.
   Variable C : PreCategory.
@@ -258,6 +261,7 @@ Section slice_category.
   (** [x ↓ F] is a coslice category; [F ↓ x] is a slice category; [x ↓ F] deals with morphisms [x -> F y]; [F ↓ x] has morphisms [F y -> x] *)
 End slice_category.
 
+(** ** (co)slice category over [(a / C)], [(C / a)] *)
 Section slice_category_over.
   Variable C : PreCategory.
   Variable a : C.
@@ -266,6 +270,7 @@ Section slice_category_over.
   Definition coslice_category_over := coslice_category a (Functor.Identity.identity C).
 End slice_category_over.
 
+(** ** category of arrows *)
 Section arrow_category.
   Variable C : PreCategory.
 

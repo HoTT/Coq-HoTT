@@ -1,3 +1,4 @@
+(** * Functors between [set_cat] and [prop_cat] *)
 Require Import Category.Core Functor.Core SetCategory.Core.
 Require Import HProp HSet.
 
@@ -28,6 +29,7 @@ Section set_coercions.
 
   Variable C : PreCategory.
 
+  (** ** Functors to [prop_cat] give rise to functors to [set_cat] *)
   Definition to_prop2set (F : to_prop C) : to_set C :=
     Build_Functor C set_cat
                   (fun x => BuildhSet (F x) _)
@@ -35,6 +37,7 @@ Section set_coercions.
                   (fun s d d' m m' => composition_of F s d d' m m')
                   (fun x => identity_of F x).
 
+  (** ** Functors from [set_cat] give rise to functors to [prop_cat] *)
   Definition from_set2prop (F : from_set C) : from_prop C
     := Build_Functor prop_cat C
                      (fun x => F (BuildhSet x _))

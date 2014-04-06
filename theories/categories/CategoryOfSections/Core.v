@@ -1,3 +1,4 @@
+(** * Category of sections *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Strict.
 Require Import Functor.Identity NaturalTransformation.Identity.
@@ -22,6 +23,7 @@ Section FunctorSectionCategory.
 
   (** There is a category [Sect(R)] of sections of [R]. *)
 
+  (** ** Section of a functor *)
   Record SectionOfFunctor :=
     {
       section_of_functor_morphism :> Functor D C;
@@ -42,6 +44,7 @@ Section FunctorSectionCategory.
 
   Local Open Scope natural_transformation_scope.
 
+  (** ** Definition of category of sections of a functor *)
   Definition category_of_sections : PreCategory.
   Proof.
     refine (@Build_PreCategory

@@ -1,3 +1,4 @@
+(** * Functors involving coproduct categories *)
 Require Import Category.Sum Functor.Core Functor.Composition.Core Functor.Identity.
 Require Import Functor.Paths HoTT.Tactics types.Forall.
 
@@ -10,6 +11,7 @@ Set Asymmetric Patterns.
 Local Notation type_inl := inl.
 Local Notation type_inr := inr.
 
+(** ** Injections [inl : C → C + D] and [inr : D → C + D] *)
 Section sum_functors.
   Variable C : PreCategory.
   Variable D : PreCategory.
@@ -29,6 +31,7 @@ Section sum_functors.
                      (fun _ => idpath).
 End sum_functors.
 
+(** ** Coproduct of functors [F + F' : C + C' → D] *)
 Section sum.
   Variable C : PreCategory.
   Variable C' : PreCategory.
@@ -62,6 +65,7 @@ Section sum.
   Defined.
 End sum.
 
+(** ** swap : [C + D → D + C] *)
 Section swap_functor.
   Definition swap C D
   : Functor (C + D) (D + C)

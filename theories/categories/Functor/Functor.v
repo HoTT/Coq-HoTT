@@ -1,14 +1,24 @@
+(** * Functors *)
 (** Since there are only notations in [Functor.Notations], we can just export those. *)
 Require Export Functor.Notations.
 
-Require Functor.Composition.Core.
+(** ** Definition *)
 Require Functor.Core.
+(** ** Composition *)
+Require Functor.Composition.Core.
+(** ** Duals *)
 Require Functor.Dual.
+(** ** Identity *)
 Require Functor.Identity.
+(** ** Classification of path space *)
 Require Functor.Paths.
+(** ** Product functors *)
 Require Functor.Prod.
+(** ** Coproduct functors *)
 Require Functor.Sum.
+(** ** Full, Faithful, Fully Faithful *)
 Require Functor.Attributes.
+(** ** Pointwise functors (functoriality of functor category construction) *)
 Require Functor.Pointwise.
 
 Include Functor.Composition.Core.

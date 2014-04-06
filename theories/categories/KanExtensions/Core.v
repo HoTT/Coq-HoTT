@@ -1,3 +1,4 @@
+(** * Kan Extensions *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import ExponentialLaws.Law4.Functors FunctorCategory.Core.
 Require Import Functor.Composition.Functorial.
@@ -21,7 +22,7 @@ Local Open Scope category_scope.
     C
     |
     | p
-    v
+    ↓
     C'
 >>
 
@@ -34,7 +35,7 @@ Local Open Scope category_scope.
     |       ↗
     | p   /
     |   /
-    v /
+    ↓ /
     C'
 >>
 
@@ -49,7 +50,7 @@ Local Open Scope category_scope.
 <<
     D'
     |
-    v
+    ↓
     D
 >>
 
@@ -61,7 +62,7 @@ Local Open Scope category_scope.
             /   |
         F̂ /     |
         /       |
-      /   F     v
+      /   F     ↓
     C --------> D
 >>
 
@@ -127,6 +128,7 @@ Section kan_extensions.
    *)
 
 
+  (** *** Pullback-along functor *)
   Context `{Funext}.
   Variable C  : PreCategory.
   Variable C' : PreCategory.
@@ -162,10 +164,12 @@ Section kan_extensions.
 
       - the right Kan extension operation forms the limit of a functor. *)
 
+  (** *** Left Kan extensions *)
   (** Colimits are initial morphisms. *)
   Definition IsLeftKanExtensionAlong (p : Functor C C') (h : Functor C D)
     := @IsInitialMorphism (_ -> _) _ h (pullback_along p).
 
+  (** *** Right Kan extensions *)
   (** Limits are terminal morphisms *)
   Definition IsRightKanExtensionAlong (p : Functor C C') (h : Functor C D)
     := @IsTerminalMorphism _ (_ -> _) (pullback_along p) h.

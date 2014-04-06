@@ -1,3 +1,4 @@
+(** * Tactic for proving laws about adjoint composition *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Composition.Core.
 Require Import Functor.Composition.Laws.

@@ -1,3 +1,4 @@
+(** * Notations for natural transformations *)
 Require NaturalTransformation.Composition.Composition.
 Require NaturalTransformation.Dual.
 Require NaturalTransformation.Identity.

@@ -1,3 +1,4 @@
+(** * Functoriality of functor composition *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Composition.Core NaturalTransformation.Composition.Core.
 Require Import Category.Prod FunctorCategory.Core NaturalTransformation.Composition.Functorial NaturalTransformation.Composition.Laws ExponentialLaws.Law4.Functors.
@@ -8,6 +9,7 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+(** * Construction of the functor [_∘_ : (C → D) × (D → E) → (C → E)] and it's curried variant *)
 Section functorial_composition.
   Context `{Funext}.
   Variable C : PreCategory.

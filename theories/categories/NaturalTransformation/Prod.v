@@ -1,3 +1,4 @@
+(** * Natural transformations involving product categories *)
 Require Import Category.Core Functor.Core Category.Prod Functor.Prod NaturalTransformation.Core.
 Require Functor.Composition.Core Functor.Identity.
 Require Import InitialTerminalCategory.
@@ -8,6 +9,7 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+(** ** Product of natural transformations *)
 Section prod.
   Context {A : PreCategory}.
   Context {B : PreCategory}.
@@ -27,6 +29,7 @@ End prod.
 
 Local Infix "*" := prod : natural_transformation_scope.
 
+(** ** Natural transformations between partially applied functors *)
 Section induced.
   Variable C : PreCategory.
   Variable D : PreCategory.
