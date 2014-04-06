@@ -1,3 +1,4 @@
+(** * Natural isomorphisms *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import NaturalTransformation.Composition.Core.
 Require Import Functor.Composition.Core.
@@ -33,6 +34,7 @@ Local Ltac iso_whisker_t :=
 Section composition.
   Context `{Funext}.
 
+  (** ** Natural isomorphism respects composition *)
   Global Instance isisomorphism_compose
          `(T' : @NaturalTransformation C D F' F'')
          `(T : @NaturalTransformation C D F F')
@@ -41,6 +43,7 @@ Section composition.
   : @IsIsomorphism (C -> D) F F'' (T' o T)%natural_transformation
     := @isisomorphism_compose (C -> D) _ _ T' _ _ T _.
 
+  (** ** Left whiskering preserves natural isomorphisms *)
   Global Instance iso_whisker_l C D E
          (F : Functor D E)
          (G G' : Functor C D)
@@ -52,6 +55,7 @@ Section composition.
     abstract iso_whisker_t.
   Defined.
 
+  (** ** Right whiskering preserves natural isomorphisms *)
   Global Instance iso_whisker_r C D E
          (F F' : Functor D E)
          (T : NaturalTransformation F F')
@@ -63,6 +67,7 @@ Section composition.
     abstract iso_whisker_t.
   Defined.
 
+  (** ** [idtoiso] respsects composition *)
   Definition idtoiso_compose C D
          (F F' F'' : Functor C D)
          (T' : F' = F'')
@@ -74,6 +79,7 @@ Section composition.
     path_natural_transformation; path_induction; simpl; auto with morphism.
   Defined.
 
+  (** ** left whiskering respects [idtoiso] *)
   Definition idtoiso_whisker_l C D E
          (F : Functor D E)
          (G G' : Functor C D)
@@ -84,6 +90,7 @@ Section composition.
     path_natural_transformation; path_induction; simpl; auto with functor.
   Defined.
 
+  (** ** right whiskering respects [idtoiso] *)
   Definition idtoiso_whisker_r C D E
          (F F' : Functor D E)
          (T : F = F')

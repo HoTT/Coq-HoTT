@@ -1,3 +1,4 @@
+(** * Opposite adjunction [F ⊣ G → Gᵒᵖ ⊣ Fᵒᵖ] *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
 Require Import Adjoint.UnitCounit Adjoint.Core.

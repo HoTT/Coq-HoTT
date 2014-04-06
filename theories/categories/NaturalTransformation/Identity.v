@@ -1,3 +1,4 @@
+(** * Identity natural transformation *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core NaturalTransformation.Paths.
 Require Import PathGroupoids.
 

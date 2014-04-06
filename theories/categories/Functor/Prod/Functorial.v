@@ -1,3 +1,4 @@
+(** * Functoriality of product of functors *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core Functor.Prod FunctorCategory.Core Category.Prod NaturalTransformation.Prod Functor.Composition.Core NaturalTransformation.Composition.Core.
 Require Import NaturalTransformation.Paths.
 
@@ -12,6 +13,7 @@ Local Notation fst_type := Coq.Init.Datatypes.fst.
 Local Notation snd_type := Coq.Init.Datatypes.snd.
 Local Notation pair_type := Coq.Init.Datatypes.pair.
 
+(** ** Construction of product of functors as a functor - [_×_ : (C → D) × (C → D') → (C → D × D')] *)
 Section functorial.
   Context `{Funext}.
 

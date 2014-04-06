@@ -1,3 +1,4 @@
+(** * Definition of a [PreCategory] *)
 Require Export Overture.
 
 Set Universe Polymorphism.
@@ -10,6 +11,32 @@ Delimit Scope category_scope with category.
 Delimit Scope object_scope with object.
 
 Local Open Scope morphism_scope.
+
+(** Quoting the HoTT Book: *)
+(** Definition 9.1.1. A precategory [A] consists of the following.
+
+    (i) A type [A₀] of objects. We write [a : A] for [a : A₀].
+
+    (ii) For each [a, b : A], a set [hom_A(a, b)] of arrows or morphisms.
+
+    (iii) For each [a : A], a morphism [1ₐ : hom_A(a, a)].
+
+    (iv) For each [a, b, c : A], a function
+
+         [hom_A(b, c) → hom_A(a, b) → hom_A(a, c)]
+
+         denoted infix by [g ↦ f ↦ g ∘ f] , or sometimes simply by [g f].
+
+    (v) For each [a, b : A] and [f : hom_A(a, b)], we have [f = 1_b ∘
+        f] and [f = f ∘ 1ₐ].
+
+    (vi) For each [a, b, c, d : A] and [f : hom_A(a, b)], [g :
+         hom_A(b, c)], [h : hom_A(c,d)], we have [h ∘ (g ∘ f) = (h ∘
+         g) ∘ f]. *)
+(** In addition to these laws, we ask for a few redundant laws to give
+    us more judgmental equalities.  For example, since [(p^)^ ≢ p] for
+    paths [p], we ask for the symmetrized version of the associativity
+    law, so we can swap them when we take the dual. *)
 
 Record PreCategory :=
   Build_PreCategory' {
@@ -28,7 +55,7 @@ Record PreCategory :=
                              (m2 : morphism x2 x3)
                              (m3 : morphism x3 x4),
                         (m3 o m2) o m1 = m3 o (m2 o m1);
-      (** Ask for the symmetrized version of [associativity], so that [(C^op)^op] and [C] are equal without [Funext] *)
+      (** Ask for the symmetrized version of [associativity], so that [(Cᵒᵖ)ᵒᵖ] and [C] are equal without [Funext] *)
       associativity_sym : forall x1 x2 x3 x4
                                  (m1 : morphism x1 x2)
                                  (m2 : morphism x2 x3)
@@ -37,7 +64,7 @@ Record PreCategory :=
 
       left_identity : forall a b (f : morphism a b), identity b o f = f;
       right_identity : forall a b (f : morphism a b), f o identity a = f;
-      (** Ask for the double-identity version so that [InitialTerminalCategory.Functors.from_terminal C^op X] and [(InitialTerminalCategory.Functors.from_terminal C X)^op] are convertible. *)
+      (** Ask for the double-identity version so that [InitialTerminalCategory.Functors.from_terminal Cᵒᵖ X] and [(InitialTerminalCategory.Functors.from_terminal C X)ᵒᵖ] are convertible. *)
       identity_identity : forall x, identity x o identity x = identity x;
 
       trunc_morphism : forall s d, IsHSet (morphism s d)
@@ -58,6 +85,8 @@ Local Infix "o" := compose : morphism_scope.
 Local Notation "x --> y" := (@morphism _ x y) (at level 99, right associativity, y at level 200) : type_scope.
 Local Notation "1" := (identity _) : morphism_scope.
 
+(** Define a convenience wrapper for building a precategory without
+    specifying the redundant proofs. *)
 Definition Build_PreCategory
            object morphism compose identity
            associativity left_identity right_identity
@@ -83,6 +112,7 @@ Hint Resolve @left_identity @right_identity @associativity : category morphism.
 Hint Rewrite @left_identity @right_identity : category.
 Hint Rewrite @left_identity @right_identity : morphism.
 
+(** ** Simple laws about the identity morphism *)
 Section identity_unique.
   Variable C : PreCategory.
 

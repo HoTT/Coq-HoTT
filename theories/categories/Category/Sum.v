@@ -1,3 +1,4 @@
+(** * The coproduct of categories *)
 Require Export Category.Core.
 
 Set Universe Polymorphism.
@@ -5,6 +6,7 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+(** ** Definition of [+] for categories *)
 Section internals.
   Variable C : PreCategory.
   Variable D : PreCategory.

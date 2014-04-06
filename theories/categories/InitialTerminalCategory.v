@@ -1,3 +1,4 @@
+(** * Initial and terminal categories *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core Functor.Paths NaturalTransformation.Paths.
 Require Import NatCategory Contractible.
 
@@ -10,10 +11,14 @@ Module Export Core.
   Notation initial_category := (nat_category 0) (only parsing).
   Notation terminal_category := (nat_category 1) (only parsing).
 
+  (** ** Terminal categories *)
+  (** A precategory is terminal if its objects and morphisms are contractible types. *)
   Class IsTerminalCategory (C : PreCategory)
         `{Contr (object C)}
         `{forall s d, Contr (morphism C s d)} := {}.
 
+  (** ** Initial categories *)
+  (** An initial precategory is one whose objects have the recursion priniciple of the empty type *)
   Class IsInitialCategory (C : PreCategory)
     := initial_category_rect : forall P : Type, C -> P.
 
@@ -24,6 +29,7 @@ Module Export Core.
   : Contr (morphism C x y)
     := initial_category_rect _ x.
 
+  (** ** Default intitial ([0]) and terminal ([1]) precategories. *)
   Instance is_initial_category_0 : IsInitialCategory 0 := Empty_rect.
   Instance: IsTerminalCategory 1 | 0.
   Instance: Contr (object 1) | 0 := _.
@@ -34,10 +40,12 @@ Module Export Core.
   Arguments is_initial_category_0 / .
 End Core.
 
+(** ** Functors to and from initial and terminal categories *)
 Module Functors.
   Section functors.
     Variable C : PreCategory.
 
+    (** *** Functor to any terminal category *)
     Definition to_terminal `{@IsTerminalCategory one Hone Hone'}
     : Functor C one
       := Build_Functor
@@ -47,6 +55,7 @@ Module Functors.
            (fun _ _ _ _ _ => contr _)
            (fun _ => contr _).
 
+    (** *** Constant functor from any terminal category *)
     Definition from_terminal `{@IsTerminalCategory one Hone Hone'} (c : C)
     : Functor one C
       := Build_Functor
@@ -56,6 +65,7 @@ Module Functors.
            (fun _ _ _ _ _ => symmetry _ _ (@identity_identity _ _))
            (fun _ => idpath).
 
+    (** *** Functor from any initial category *)
     Definition from_initial `{@IsInitialCategory zero}
     : Functor zero C
       := Build_Functor
@@ -79,6 +89,7 @@ Module Functors.
 
   Local Notation "! x" := (from_terminal _ x) (at level 3) : functor_scope.
 
+  (** *** Uniqueness principles about initial and terminal categories and functors *)
   Section unique.
     Context `{Funext}.
 
@@ -135,6 +146,7 @@ Module Functors.
   End InitialTerminalCategoryFunctorsNotations.
 End Functors.
 
+(** ** Natural transformations between functors from initial categories and to terminal categories *)
 Module NaturalTransformations.
   Section NaturalTransformations.
     Variable C : PreCategory.

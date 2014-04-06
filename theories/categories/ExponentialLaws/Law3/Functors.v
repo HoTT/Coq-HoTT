@@ -1,3 +1,4 @@
+(** * Functors between an exponential of a product and a product of exponentials *)
 Require Import Category.Core Functor.Core FunctorCategory.Core Category.Prod.
 Require Import Functor.Prod Functor.Composition.Core NaturalTransformation.Composition.Laws NaturalTransformation.Composition.Core.
 Require Functor.Prod.Functorial.
@@ -21,6 +22,7 @@ Section law3.
   Variable C2 : PreCategory.
   Variable D : PreCategory.
 
+  (** ** [(y × z)ⁿ → yⁿ × zⁿ] *)
   Definition functor
   : Functor (D -> C1 * C2) ((D -> C1) * (D -> C2))
     := Build_Functor
@@ -32,6 +34,7 @@ Section law3.
          (fun _ => path_prod' (whisker_l_right_identity _ _)
                               (whisker_l_right_identity _ _)).
 
+  (** ** [yⁿ × zⁿ → (y × z)ⁿ] *)
   (** If we had [Require Functor.Functor.], we could just say [Functor.Prod.functor] here. *)
   Definition inverse
   : Functor ((D -> C1) * (D -> C2)) (D -> C1 * C2)

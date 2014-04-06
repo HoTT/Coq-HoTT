@@ -1,3 +1,4 @@
+(** * Cat, the precategory of strict categories *)
 Require Import Category.Core Category.Objects InitialTerminalCategory Functor.Core Category.Strict Category.Univalent Functor.Paths.
 Require Import Functor.Identity Functor.Composition.Core Functor.Composition.Laws.
 
@@ -10,6 +11,12 @@ Local Open Scope functor_scope.
 
 Section sub_pre_cat.
   Context `{Funext}.
+
+  (** We use a slight generalization; we look at a full 1-precategory
+      of the 2-precategory Cat, such that all types of functors are
+      hSets.  It might be possible to prove that this doesn't buy you
+      anything, because it's probably the case that [IsHSet (Functor C
+      C) → IsStrictCategory C]. *)
 
   Variable P : PreCategory -> Type.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
@@ -37,6 +44,7 @@ Definition strict_cat `{Funext} : PreCategory
   refine (@sub_pre_cat _ (fun C => IsCategory C) _).
   *)
 
+(** ** The initial and terminal categories are initial and terminal objects in cat *)
 Section objects.
   Context `{Funext}.
 

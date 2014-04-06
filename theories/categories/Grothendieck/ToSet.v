@@ -1,3 +1,4 @@
+(** * Grothendieck Construction of a functor to Set *)
 Require Import Category.Core Functor.Core.
 Require Import SetCategory.Core.
 Require Import HSet types.Sigma.
@@ -83,6 +84,7 @@ Section Grothendieck.
   Global Arguments identity _ / .
   Global Arguments compose _ _ _ _ _ / .
 
+  (** ** Category of elements *)
   Definition category : PreCategory.
   Proof.
     refine (@Build_PreCategory
@@ -104,6 +106,7 @@ Section Grothendieck.
       ).
   Defined.
 
+  (** ** First projection functor *)
   Definition pr1 : Functor category C
     := Build_Functor
          category C

@@ -1,3 +1,4 @@
+(** * Coercions between hom-set adjunctions and unit+counit adjunctions *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.UnitCounitCoercions Adjoint.Dual Adjoint.Hom.
 Require Import FunctorCategory.Core Category.Morphisms.
@@ -22,6 +23,7 @@ Local Open Scope category_scope.
 Local Open Scope functor_scope.
 Local Open Scope natural_transformation_scope.
 
+(** ** unit+UMP from hom-set adjunction *)
 Section AdjunctionEquivalences.
   Context `{Funext}.
   Variable C : PreCategory.
@@ -77,7 +79,7 @@ Section AdjunctionEquivalences.
 
      Proposition 9.4. Given categories and functors,
 
-     [F : C <-> D : G]
+     [F : C ↔ D : G]
 
      the following conditions are equivalent:
 
@@ -182,6 +184,7 @@ Section isequiv.
   Defined.
 End isequiv.
 
+(** ** hom-set adjunction from unit+ump adjunction *)
 Section AdjunctionEquivalences'.
   Context `{Funext}.
   Variable C : PreCategory.

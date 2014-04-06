@@ -1,3 +1,4 @@
+(** * Identity profunctor *)
 Require Import Category.Core Functor.Core Category.Prod Category.Dual Functor.Prod SetCategory.Core Profunctor.Core HomFunctor.
 
 Set Universe Polymorphism.

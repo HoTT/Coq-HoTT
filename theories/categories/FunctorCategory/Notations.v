@@ -1,3 +1,4 @@
+(** * Notations for functor categories *)
 Require FunctorCategory.Core.
 Require FunctorCategory.Morphisms.
 

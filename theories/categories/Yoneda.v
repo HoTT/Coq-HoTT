@@ -1,3 +1,4 @@
+(** * The Yoneda Lemma *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Dual.
 Require Import Category.Prod.
@@ -37,7 +38,7 @@ Local Open Scope functor_scope.
     modern developments in algebraic geometry and representation
     theory. It is named after Nobuo Yoneda.
 
-    * Generalities
+    ** Generalities
 
     The Yoneda lemma suggests that instead of studying the (locally
     small) category [A], one should study the category of all functors
@@ -54,9 +55,9 @@ Local Open Scope functor_scope.
     category of modules over the ring is a category of functors
     defined on [A].
 
-    * Formal statement
+    ** Formal statement
 
-    ** General version
+    *** General version
 
     Yoneda's lemma concerns functors from a fixed category [A] to the
     category of sets, [Set]. If [A] is a locally small category
@@ -75,6 +76,7 @@ Local Open Scope functor_scope.
     [f ↦ Hom(a, f) = ⟦ Hom(a, x) ∋ g ↦ f ∘ g ∈ Hom(a,y) ⟧].
  *)
 
+(** ** The (co)yoneda functors [A → (Aᵒᵖ → set)] *)
 Section yoneda.
   Context `{Funext}.
   Variable A : PreCategory.
@@ -88,6 +90,7 @@ Section yoneda.
     := ExponentialLaws.Law4.Functors.inverse _ _ _ (hom_functor A o ProductLaws.Swap.functor _ _).
 End yoneda.
 
+(** ** The (co)yoneda lemma *)
 Section coyoneda_lemma.
   Context `{Funext}.
   Variable A : PreCategory.

@@ -1,3 +1,4 @@
+(** * Functors involving functor categories involving the terminal category *)
 Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity NaturalTransformation.Core NaturalTransformation.Paths Functor.Composition.Core.
 Require Import InitialTerminalCategory.
 
@@ -17,6 +18,7 @@ Section law1.
 
   Variable C : PreCategory.
 
+  (** ** [C¹ → C] *)
   Definition functor : Functor (1 -> C) C
     := Build_Functor (1 -> C) C
                      (fun F => F (center _))
@@ -43,6 +45,7 @@ Section law1.
 
   Global Arguments inverse_morphism_of / _ _ _.
 
+  (** ** [C → C¹] *)
   Definition inverse : Functor C (1 -> C).
   Proof.
     refine (Build_Functor
@@ -67,12 +70,15 @@ Section law1'.
 
   Global Instance: IsTerminalCategory (C -> 1).
 
+  (** ** [1ˣ → 1] *)
   Definition functor' : Functor (C -> 1) 1
     := Functors.to_terminal _.
 
+  (** ** [1 → 1ˣ] *)
   Definition inverse' : Functor 1 (C -> 1)
     := Functors.to_terminal _.
 
+  (** ** [1ˣ ≅ 1] *)
   Definition law'
   : functor' o inverse' = 1
     /\ inverse' o functor' = 1

@@ -1,3 +1,4 @@
+(** * Functors about currying, between [C₁ × C₂ → D] and [C₁ → (C₂ → D)] *)
 Require Import Category.Core Category.Prod FunctorCategory.Core Functor.Core NaturalTransformation.Core NaturalTransformation.Paths.
 
 Set Universe Polymorphism.
@@ -31,6 +32,7 @@ Section law4.
               | _ => rewrite <- ?associativity, !commutes
             end).
 
+  (** ** [(yⁿ)ᵐ → yⁿᵐ] *)
   Section functor.
     Local Ltac do_exponential4
       := do_exponential4_helper ltac:(rewrite !composition_of).
@@ -84,6 +86,7 @@ Section law4.
     Defined.
   End functor.
 
+  (** ** [yⁿᵐ → (yⁿ)ᵐ] *)
   Section inverse.
     Local Ltac do_exponential4_inverse
       := do_exponential4_helper ltac:(rewrite <- !composition_of).

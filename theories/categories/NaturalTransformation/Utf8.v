@@ -1,3 +1,4 @@
+(** * Unicode notations for natural transformations *)
 Require Export Category.Utf8 Functor.Utf8.
 Require Import NaturalTransformation.Core NaturalTransformation.Composition.Core NaturalTransformation.Dual.
 

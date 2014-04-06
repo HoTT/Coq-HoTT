@@ -1,3 +1,4 @@
+(** * Functoriality of the comma category construction with projection functors *)
 Require Import Category.Core Functor.Core.
 Require Import Category.Prod Functor.Prod.
 Require Import Category.Dual Functor.Dual.
@@ -17,6 +18,8 @@ Set Asymmetric Patterns.
 
 Local Open Scope category_scope.
 
+(** ** Functor from [(A → C)ᵒᵖ × (B → C)] to [cat / (A × B)] *)
+(** It sends [S : A → C ← B : T] to the category [(S / T)] and its projection functor to [A × B]. *)
 Section comma.
   Context `{Funext}.
 
@@ -136,6 +139,7 @@ Section slice_category_projection_functor.
   Local Open Scope functor_scope.
   Local Open Scope category_scope.
 
+  (** ** Functor [(C → D)ᵒᵖ → D → (cat / C)] *)
   Definition slice_category_projection_functor
   : object (((C -> D)^op) -> (D -> (Cat / ((C; PC) : Cat)))).
   Proof.
@@ -160,6 +164,7 @@ Section slice_category_projection_functor.
     exact (ProductLaws.Law1.functor _).
   Defined.
 
+  (** ** Functor [(C → D) → Dᵒᵖ → (cat / C)] *)
   Definition slice_category_projection_functor'
   : object ((C -> D) -> (D^op -> (Cat / ((C; PC) : Cat)))).
   Proof.

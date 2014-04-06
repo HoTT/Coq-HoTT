@@ -1,3 +1,4 @@
+(** * Functors involving product categories *)
 Require Import Category.Core Functor.Core Category.Prod Functor.Composition.Core.
 Require Import Functor.Paths.
 Require Import types.Prod.
@@ -14,6 +15,7 @@ Local Notation pair_type := pair.
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.
 
+(** ** First and second projections from a product precategory *)
 Section proj.
   Context {C : PreCategory}.
   Context {D : PreCategory}.
@@ -33,6 +35,7 @@ Section proj.
                      (fun _ => idpath).
 End proj.
 
+(** ** Product of two functors from the same domain *)
 Section prod.
   Variable C : PreCategory.
   Variable D : PreCategory.
@@ -51,6 +54,7 @@ End prod.
 
 Local Infix "*" := prod : functor_scope.
 
+(** ** Pairing of two functors *)
 Section pair.
   Variable C : PreCategory.
   Variable D : PreCategory.
@@ -67,6 +71,7 @@ End pair.
 
 Local Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : functor_scope.
 
+(** ** Partially applied functors out of a product precategory *)
 Section induced.
   Variable C : PreCategory.
   Variable D : PreCategory.

@@ -1,3 +1,4 @@
+(** * Morphisms in a groupoid *)
 Require Import Category.Core Category.Morphisms Category.Univalent GroupoidCategory.Core.
 Require Import Trunc Equivalences HoTT.Tactics.
 
@@ -17,6 +18,7 @@ Section groupoid_category.
   : s <~=~> d -> s = d
     := fun f => f : morphism _ _ _.
 
+  (** ** All groupoids are categories *)
   Global Instance iscategory_groupoid_category
   : IsCategory (groupoid_category X).
   Proof.

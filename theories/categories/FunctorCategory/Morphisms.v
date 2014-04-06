@@ -1,3 +1,4 @@
+(** * Morphisms in a functor category *)
 Require Import Category.Core Functor.Core NaturalTransformation.Paths FunctorCategory.Core Category.Morphisms NaturalTransformation.Core NaturalTransformation.Composition.Core.
 
 Set Universe Polymorphism.
@@ -9,6 +10,7 @@ Local Open Scope path_scope.
 Local Open Scope category_scope.
 Local Open Scope morphism_scope.
 
+(** ** Natural Isomorphisms - isomorphisms in a functor category *)
 Definition NaturalIsomorphism `{Funext} (C D : PreCategory) F G :=
   @Isomorphic (C -> D) F G.
 
@@ -21,6 +23,7 @@ Coercion natural_transformation_of_natural_isomorphism `{Funext} C D F G
 
 Local Infix "<~=~>" := NaturalIsomorphism : natural_transformation_scope.
 
+(** ** If [T] is an isomorphism, then so is [T x] for any [x] *)
 Definition isisomorphism_components_of `{Funext}
            `{@IsIsomorphism (C -> D) F G T} x
 : IsIsomorphism (T x).
@@ -46,6 +49,7 @@ Proof.
     ).
 Defined.
 
+(** ** If [T x] is an isomorphism for all [x], then so is [T] *)
 Definition isisomorphism_natural_transformation `{Funext}
            C D F G (T : NaturalTransformation F G)
            `{forall x, IsIsomorphism (T x)}
@@ -61,6 +65,7 @@ Defined.
 
 Hint Immediate isisomorphism_natural_transformation : typeclass_instances.
 
+(** ** Variant of [idtoiso] for natural transformations *)
 Section idtoiso.
   Context `{Funext}.
   Variable C : PreCategory.

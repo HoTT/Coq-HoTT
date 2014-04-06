@@ -1,3 +1,4 @@
+(** * Universal morphisms *)
 Require Import Category.Core Functor.Core.
 Require Import Category.Dual Functor.Dual.
 Require Import Category.Objects Category.Morphisms.
@@ -15,7 +16,7 @@ Local Open Scope morphism_scope.
 Section UniversalMorphism.
   (** Quoting Wikipedia:
 
-      Suppose that [U : D -> C] is a functor from a category [D] to a
+      Suppose that [U : D → C] is a functor from a category [D] to a
       category [C], and let [X] be an object of [C].  Consider the
       following dual (opposite) notions: *)
 
@@ -33,7 +34,9 @@ Section UniversalMorphism.
             assumption
           | by typeclasses eauto ].
 
+  (** ** Initial morphisms *)
   Section InitialMorphism.
+    (** *** Definition *)
     Variable C : PreCategory.
     Variable D : PreCategory.
 
@@ -42,12 +45,12 @@ Section UniversalMorphism.
     (** An initial morphism from [X] to [U] is an initial object in
         the category [(X ↓ U)] of morphisms from [X] to [U].  In other
         words, it consists of a pair [(A, φ)] where [A] is an object
-        of [D] and [φ: X -> U A] is a morphism in [C], such that the
+        of [D] and [φ: X → U A] is a morphism in [C], such that the
         following initial property is satisfied:
 
-       - Whenever [Y] is an object of [D] and [f : X -> U Y] is a
+       - Whenever [Y] is an object of [D] and [f : X → U Y] is a
          morphism in [C], then there exists a unique morphism [g : A
-         -> Y] such that the following diagram commutes:
+         → Y] such that the following diagram commutes:
 
 <<
              φ
@@ -63,6 +66,7 @@ Section UniversalMorphism.
     Definition IsInitialMorphism (Ap : object (X / U)) :=
       IsInitialObject (X / U) Ap.
 
+    (** *** Introduction rule *)
     Section IntroductionAbstractionBarrier.
       Definition Build_IsInitialMorphism
                  (*(Ap : Object (X ↓ U))*)
@@ -189,6 +193,7 @@ Section UniversalMorphism.
     Global Arguments Build_IsInitialMorphism_curried : simpl never.
     Global Arguments Build_IsInitialMorphism_uncurried : simpl never.
 
+    (** *** Elimination rule *)
     Section EliminationAbstractionBarrier.
       Variable Ap : object (X / U).
 
@@ -248,7 +253,9 @@ Section UniversalMorphism.
     Global Arguments IsInitialMorphism_property_morphism_unique : simpl never.
   End InitialMorphism.
 
+  (** ** Terminal morphisms *)
   Section TerminalMorphism.
+    (** *** Definition *)
     Variable C : PreCategory.
     Variable D : PreCategory.
 
@@ -290,6 +297,7 @@ Section UniversalMorphism.
            (U^op)
            (op_object Ap).
 
+    (** *** Introduction rule *)
     Section IntroductionAbstractionBarrier.
       Definition Build_IsTerminalMorphism
       : forall
@@ -346,6 +354,7 @@ Section UniversalMorphism.
              (U^op).
     End IntroductionAbstractionBarrier.
 
+    (** *** Elimination rule *)
     Section EliminationAbstractionBarrier.
       Variable Ap : object (U / X).
       Variable M : IsTerminalMorphism Ap.

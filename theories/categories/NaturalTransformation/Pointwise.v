@@ -1,3 +1,4 @@
+(** * Pointwise Natural Transformations *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import FunctorCategory.Core NaturalTransformation.Paths Functor.Composition.Core NaturalTransformation.Composition.Core.
 Require Import Functor.Pointwise.
@@ -7,9 +8,7 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
-(** * Pointwise Natural Transformations
-
-    Recall that a "pointwise" functor is a functor [Aᴮ → Cᴰ] induced
+(** Recall that a "pointwise" functor is a functor [Aᴮ → Cᴰ] induced
     by functors [D → B] and [A → C].  Given two functors [D → B] and a
     natural transformation between them, there is an induced natural
     transformation between the resulting functors between functor
@@ -38,6 +37,7 @@ Section pointwise.
     first [ apply commutes
           | apply symmetry; apply commutes ].
 
+  (** ** [Tˣ] for a natural transformation [T : F → G] and a functor [x : C → D] *)
   Definition pointwise_l
              (F G : Functor C D)
              (T : NaturalTransformation F G)
@@ -51,6 +51,7 @@ Section pointwise.
     abstract t.
   Defined.
 
+  (** ** [Fᵀ] for a natural transformation [T : F' → G'] and a functor [F : C → D] *)
   Definition pointwise_r
              (F : Functor C D)
              (F' G' : Functor C' D')

@@ -1,3 +1,4 @@
+(** * Pseudofunctors *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import FunctorCategory.Core.
 Require Import Category.Morphisms FunctorCategory.Morphisms.

@@ -1,3 +1,4 @@
+(** * Grothendieck Construction of a pseudofunctor to Cat *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Pseudofunctor.Core.
 Require Import Category.Morphisms NaturalTransformation.Isomorphisms Cat.Morphisms.
@@ -246,6 +247,7 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
     abstract helper_t idtac.
   Qed.
 
+  (** ** Category of elements *)
   Definition category : PreCategory.
   Proof.
     refine (@Build_PreCategory
@@ -280,6 +282,7 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
     ) ].
   Defined.
 
+  (** ** First projection functor *)
   Definition pr1 : Functor category C
     := Build_Functor category C
                      c

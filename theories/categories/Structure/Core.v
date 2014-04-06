@@ -1,3 +1,4 @@
+(** * Notions of Structure *)
 Require Import Category.Core.
 Require Import HProp HSet types.Sigma types.Record Trunc.
 
@@ -36,6 +37,7 @@ Local Open Scope structure_scope.
     be the category of [U]-small sets, where [U] is a univalent type
     universe. *)
 
+(** *** Notion of Structure *)
 (** Definition: A _notion of structure_ [(P,H)] over [X] consists of
     the following.  We use [X₀] to denote the objects of [X], and
     [homₓ(x, y)] to denote the morphisms [morphism X x y] of [X].
@@ -116,6 +118,7 @@ Local Notation "a <= b" := (a <=_{ _ } b)%long_structure : structure_scope.
 (** By (iii) and (iv), this is a preorder with [P x] its type of objects. *)
 
 
+(** *** Being a structure homomorphism is a preorder *)
 Global Instance preorder_is_structure_homomorphism
        X (P : NotionOfStructure X) x
 : PreOrder (is_structure_homomorphism P x x (identity x)).
@@ -125,6 +128,7 @@ Proof.
   eauto with structure_homomorphisms.
 Defined.
 
+(** *** Standard notion of structure *)
 (** We say that [(P, H)] is a _standard notion of structure_ if this
     preorder is in fact a partial order, for all [x : X]. *)
 
@@ -149,6 +153,7 @@ Proof.
   - intros ? ? [? ?]; apply antisymmetry_structure; assumption.
 Defined.
 
+(** *** Precategory of structures *)
 (** We now define, for any notion of structure [(P, H)], a
     _precategory of [(P, H)]-structures_,
 

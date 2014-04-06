@@ -1,3 +1,4 @@
+(** * The Structure Identity Principle *)
 Require Import Category.Core Category.Univalent Category.Morphisms.
 Require Import Structure.Core.
 Require Import HProp types.Sigma types.Record Trunc Equivalences Misc.
@@ -11,8 +12,6 @@ Local Open Scope path_scope.
 Local Open Scope category_scope.
 Local Open Scope morphism_scope.
 Local Open Scope structure_scope.
-
-(** * The Structure Identity Principle *)
 
 (** Quoting the Homotopy Type Theory Book (with slight changes for
     notational consistency): *)

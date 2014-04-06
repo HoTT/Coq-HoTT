@@ -1,3 +1,4 @@
+(** * Composition of functors *)
 Require Import Category.Core Functor.Core.
 
 Set Universe Polymorphism.

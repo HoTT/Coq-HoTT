@@ -1,3 +1,4 @@
+(** * (co)limits assemble into functors *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import KanExtensions.Core KanExtensions.Functors.
 Require Import Limits.Core.
@@ -20,13 +21,14 @@ Section functors.
   Variable C : PreCategory.
   Variable D : PreCategory.
 
+  (** ** Colimit functor, which is left adjoint to Δ *)
   Section colimit.
     Context `(has_colimits
               : forall F : Functor D C,
                   @IsColimit _ C D F (colimits F)).
 
     (** TODO(jgross): We'll probably want to compose this with the
-        functor from [1 -> C] to [C], and then compose the adjunctions
+        functor from [1 → C] to [C], and then compose the adjunctions
         similarly.  This will require turning the equality in the
         exponential laws into an adjunction. Probably not very
         hard. *)
@@ -50,6 +52,7 @@ Section functors.
         exponential laws into an adjunction. Probably not very
         hard. *)
 
+    (** ** Limit functor, which is right adjoint to Δ *)
     Definition limit_functor : Functor (D -> C) (1 -> C)
       := right_kan_extension_functor has_limits.
 

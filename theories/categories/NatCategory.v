@@ -1,3 +1,4 @@
+(** * Discrete categories on [n] objects *)
 Require Import Category.Core DiscreteCategory IndiscreteCategory.
 Require Import types.Unit Trunc types.Sum types.Empty.
 
@@ -7,6 +8,8 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Module Export Core.
+  (** ** [Fin n] types, or [CardinalityRepresentative] *)
+  (** We use [Empty] for [0] and [Unit] for [1] so that we get nice judgmental behavior with opposites *)
   Fixpoint CardinalityRepresentative (n : nat) : Set :=
     match n with
       | 0 => Empty
@@ -16,6 +19,7 @@ Module Export Core.
 
   Coercion CardinalityRepresentative : nat >-> Sortclass.
 
+  (** ** [Fin n] is an hSet *)
   Instance trunc_cardinality_representative (n : nat)
   : IsHSet (CardinalityRepresentative n).
   Proof.
@@ -25,6 +29,7 @@ Module Export Core.
       typeclasses eauto.
   Qed.
 
+  (** ** Define the categories [n] *)
   Definition nat_category (n : nat) :=
     match n with
       | 0 => indiscrete_category 0

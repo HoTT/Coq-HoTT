@@ -1,3 +1,4 @@
+(** * Opposite functors *)
 Require Category.Dual.
 Import Category.Dual.CategoryDualNotations.
 Require Import Category.Core Functor.Core.
@@ -9,6 +10,7 @@ Set Asymmetric Patterns.
 
 Local Open Scope category_scope.
 
+(** ** Definition of [Fᵒᵖ], and a variant for stripping [ᵒᵖ]s off of categories *)
 Section opposite.
   Variable C : PreCategory.
   Variable D : PreCategory.
@@ -38,6 +40,7 @@ Section opposite_involutive.
 
   Local Notation op_op_id := Category.Dual.opposite_involutive.
 
+  (** ** [ᵒᵖ] is propositionally involutive *)
   Lemma opposite_involutive C D (F : Functor C D)
   : match op_op_id C in (_ = C), op_op_id D in (_ = D) return Functor C D with
       | idpath, idpath => ((F^op)^op)%functor

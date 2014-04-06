@@ -1,3 +1,4 @@
+(** * Laws about composition of functors *)
 Require Import Category.Core Functor.Core Functor.Identity Functor.Composition.Core NaturalTransformation.Core NaturalTransformation.Identity NaturalTransformation.Composition.Core NaturalTransformation.Paths.
 
 Set Universe Polymorphism.
@@ -14,6 +15,7 @@ Section natural_transformation_identity.
   Variable C : PreCategory.
   Variable D : PreCategory.
 
+  (** ** left identity : [1 ∘ T = T] *)
   Lemma left_identity (F F' : Functor C D)
         (T : NaturalTransformation F F')
   : 1 o T = T.
@@ -21,6 +23,7 @@ Section natural_transformation_identity.
     path_natural_transformation; auto with morphism.
   Qed.
 
+  (** ** right identity : [T ∘ 1 = T] *)
   Lemma right_identity (F F' : Functor C D)
         (T : NaturalTransformation F F')
   : T o 1 = T.
@@ -28,6 +31,7 @@ Section natural_transformation_identity.
     path_natural_transformation; auto with morphism.
   Qed.
 
+  (** ** right whisker left identity : [1 ∘ᴿ F = 1] *)
   Definition whisker_r_left_identity E
              (G : Functor D E) (F : Functor C D)
   : identity G oR F = 1.
@@ -35,6 +39,7 @@ Section natural_transformation_identity.
     path_natural_transformation; auto with morphism.
   Qed.
 
+  (** ** left whisker right identity : [G ∘ᴸ 1 = 1] *)
   Definition whisker_l_right_identity E
              (G : Functor D E) (F : Functor C D)
   : G oL identity F = 1.
@@ -49,6 +54,7 @@ Hint Rewrite @left_identity @right_identity : natural_transformation.
 Section whisker.
   Context `{fs : Funext}.
 
+  (** ** whisker exchange law : [(G' ∘ᴸ T) ∘ (T' ∘ᴿ F) = (T' ∘ᴿ F') ∘ (G ∘ᴸ T)] *)
   Section exch.
     Variable C : PreCategory.
     Variable D : PreCategory.
@@ -74,12 +80,14 @@ Section whisker.
     Variable T : NaturalTransformation G H.
     Variable T' : NaturalTransformation F G.
 
+    (** ** left whisker composition : [F ∘ᴸ (T ∘ T') = (F ∘ᴸ T) ∘ (F ∘ᴸ T')] *)
     Lemma composition_of_whisker_l E (I : Functor D E)
     : I oL (T o T') = (I oL T) o (I oL T').
     Proof.
       path_natural_transformation; apply composition_of.
     Qed.
 
+    (** ** right whisker composition : [(T ∘ T') ∘ᴿ F = (T ∘ᴿ F) ∘ (T' ∘ᴿ F)] *)
     Lemma composition_of_whisker_r B (I : Functor B C)
     : (T o T') oR I = (T oR I) o (T' oR I).
     Proof.
@@ -89,6 +97,7 @@ Section whisker.
 End whisker.
 
 Section associativity.
+  (** ** associators - natural transformations between [F ∘ (G ∘ H)] and [(F ∘ G) ∘ H] *)
   Section functors.
     Variable B : PreCategory.
     Variable C : PreCategory.
@@ -110,6 +119,7 @@ Section associativity.
           generalized_identity F1 F0 idpath idpath.
   End functors.
 
+  (** ** associativity : [(T ∘ U) ∘ V = T ∘ (U ∘ V)] *)
   Section nt.
     Context `{fs : Funext}.
 
@@ -137,6 +147,7 @@ Section functor_identity.
   Local Ltac nt_id_t := split; path_natural_transformation;
                         autorewrite with morphism; reflexivity.
 
+  (** ** left unitors : natural transformations between [1 ∘ F] and [F] *)
   Section left.
     Variable F : Functor D C.
 
@@ -155,6 +166,7 @@ Section functor_identity.
     Qed.
   End left.
 
+  (** ** right unitors : natural transformations between [F ∘ 1] and [F] *)
   Section right.
     Variable F : Functor C D.
 
@@ -172,6 +184,7 @@ Section functor_identity.
   End right.
 End functor_identity.
 
+(** ** Tactics for inserting appropriate associators, whiskers, and unitors *)
 Ltac nt_solve_associator' :=
   repeat match goal with
            | _ => exact (associator_1 _ _ _)

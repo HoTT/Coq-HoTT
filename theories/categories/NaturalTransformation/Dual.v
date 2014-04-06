@@ -1,3 +1,4 @@
+(** * Opposite natural transformations *)
 Require Category.Dual Functor.Dual.
 Import Category.Dual.CategoryDualNotations Functor.Dual.FunctorDualNotations.
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
@@ -9,9 +10,12 @@ Set Asymmetric Patterns.
 
 Local Open Scope category_scope.
 
+(** ** Definition of [Tᵒᵖ], and some variants that strip off [ᵒᵖ]s *)
 Section opposite.
   Variable C : PreCategory.
   Variable D : PreCategory.
+
+  (** If we had judgmental eta for records, we wouldn't need all these variants. *)
 
   Definition opposite
              (F G : Functor C D)
@@ -55,6 +59,7 @@ Notation "T ^op'" := (opposite' T) : natural_transformation_scope.
 Notation "T ^op''" := (opposite_finv T) (at level 3) : natural_transformation_scope.
 Notation "T ^op'''" := (opposite_tinv T) (at level 3) : natural_transformation_scope.
 
+(** ** [ᵒᵖ] is propositionally involutive *)
 Section opposite_involutive.
   Variable C : PreCategory.
   Variable D : PreCategory.

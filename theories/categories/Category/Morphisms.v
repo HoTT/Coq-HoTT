@@ -1,3 +1,4 @@
+(** * Definitions and theorems about {iso,epi,mono,}morphisms in a precategory *)
 Require Import Category.Core Functor.Core.
 Require Import HoTT.Tactics types.Record Trunc HProp types.Sigma Equivalences.
 
@@ -9,6 +10,7 @@ Set Asymmetric Patterns.
 Local Open Scope category_scope.
 Local Open Scope morphism_scope.
 
+(** ** Definition of isomorphism *)
 Class IsIsomorphism {C : PreCategory} {s d} (m : morphism C s d) :=
   {
     morphism_inverse : morphism C d s;
@@ -36,6 +38,7 @@ Local Infix "<~=~>" := Isomorphic (at level 70, no associativity) : category_sco
 
 Existing Instance isisomorphism_isomorphic.
 
+(** ** Theorems about isomorphisms *)
 Section iso_contr.
   Variable C : PreCategory.
 
@@ -46,6 +49,7 @@ Section iso_contr.
   Section IsIsomorphism.
     Variable m : morphism C s d.
 
+    (** *** The inverse of a morphism is unique *)
     Lemma inverse_unique (m_inv0 m_inv1 : morphism C d s)
           (left_inverse_0 : m_inv0 o m = identity _)
           (right_inverse_1 : m o m_inv1 = identity _)
@@ -63,6 +67,7 @@ Section iso_contr.
       | { _ : inverse o m = identity _
         | m o inverse = identity _ } } (only parsing).
 
+    (** *** Equivalence between the record and sigma versions of [IsIsomorphism] *)
     Lemma issig_isisomorphism
     : IsIsomorphism_sig_T <~> IsIsomorphism m.
     Proof.
@@ -72,6 +77,7 @@ Section iso_contr.
             (@right_inverse _ _ _ m).
     Defined.
 
+    (** *** Being an isomorphism is a mere proposition *)
     Global Instance trunc_isisomorphism : IsHProp (IsIsomorphism m).
     Proof.
       eapply trunc_equiv'; [ exact issig_isisomorphism | ].
@@ -93,6 +99,7 @@ Section iso_contr.
     { m : morphism C s d
     | IsIsomorphism m } (only parsing).
 
+  (** *** Equivalence between record and sigma versions of [Isomorphic] *)
   Lemma issig_isomorphic
   : Isomorphic_sig_T <~> Isomorphic s d.
   Proof.
@@ -101,12 +108,14 @@ Section iso_contr.
           (@isisomorphism_isomorphic C s d).
   Defined.
 
+  (** *** Isomorphisms form an hSet *)
   Global Instance trunc_Isomorphic : IsHSet (Isomorphic s d).
   Proof.
     eapply trunc_equiv'; [ exact issig_isomorphic | ].
     typeclasses eauto.
   Qed.
 
+  (** *** Equality between isomorphisms is determined by equality between their forward components *)
   Definition path_isomorphic (i j : Isomorphic s d)
   : @morphism_isomorphic _ _ _ i = @morphism_isomorphic _ _ _ j
     -> i = j.
@@ -117,6 +126,7 @@ Section iso_contr.
     exact (center _).
   Defined.
 
+  (** *** Equality between isomorphisms is equivalent to by equality between their forward components *)
   Global Instance isequiv_path_isomorphic
   : IsEquiv (path_isomorphic i j).
   Proof.
@@ -132,11 +142,13 @@ End iso_contr.
 Section iso_equiv_relation.
   Variable C : PreCategory.
 
+  (** *** The identity is an isomorphism *)
   Global Instance isisomorphism_identity (x : C) : IsIsomorphism (identity x)
     := {| morphism_inverse := identity x;
           left_inverse := left_identity C x x (identity x);
           right_inverse := right_identity C x x (identity x) |}.
 
+  (** *** Inverses of isomorphisms are isomorphisms *)
   Definition isisomorphism_inverse `(@IsIsomorphism C x y m) : IsIsomorphism m^-1
     := {| morphism_inverse := m;
           left_inverse := right_inverse;
@@ -151,6 +163,7 @@ Section iso_equiv_relation.
           | rewrite <- ?associativity; rewrite inv_lemma ];
     auto with morphism.
 
+  (** *** Composition of isomorphisms gives an isomorphism *)
   Global Instance isisomorphism_compose `(@IsIsomorphism C y z m0) `(@IsIsomorphism C x y m1)
   : IsIsomorphism (m0 o m1).
   Proof.
@@ -161,15 +174,19 @@ Section iso_equiv_relation.
 
   Hint Immediate isisomorphism_inverse : typeclass_instances.
 
+  (** *** Being isomorphic is a reflexive relation *)
   Global Instance isomorphic_refl : Reflexive (@Isomorphic C)
     := fun x : C => {| morphism_isomorphic := identity x |}.
 
+  (** *** Being isomorphic is a symmetric relation *)
   Global Instance isomorphic_sym : Symmetric (@Isomorphic C)
     := fun x y X => {| morphism_isomorphic := morphism_inverse |}.
 
+  (** *** Being isomorphic is a transitive relation *)
   Global Instance isomorphic_trans : Transitive (@Isomorphic C)
     := fun x y z X Y => {| morphism_isomorphic := @morphism_isomorphic _ _ _ Y o @morphism_isomorphic _ _ _ X |}.
 
+  (** *** Equality gives rise to isomorphism *)
   Definition idtoiso (x y : C) (H : x = y) : Isomorphic x y
     := match H in (_ = y0) return (x <~=~> y0) with
          | 1%path => reflexivity x
@@ -178,17 +195,18 @@ End iso_equiv_relation.
 
 Hint Immediate isisomorphism_inverse : typeclass_instances.
 
-(* Quoting Wikipedia:
+(** ** Epimorphisms and Monomorphisms *)
+(** Quoting Wikipedia:
 
-   In category theory, an epimorphism (also called an epic morphism
-   or, colloquially, an epi) is a morphism [f : X → Y] which is
-   right-cancellative in the sense that, for all morphisms [g, g' : Y
-   → Z], [g o f = g' o f -> g = g']
+    In category theory, an epimorphism (also called an epic morphism
+    or, colloquially, an epi) is a morphism [f : X → Y] which is
+    right-cancellative in the sense that, for all morphisms [g, g' : Y
+    → Z], [g ∘ f = g' ∘ f → g = g']
 
-   Epimorphisms are analogues of surjective functions, but they are
-   not exactly the same. The dual of an epimorphism is a monomorphism
-   (i.e. an epimorphism in a category [C] is a monomorphism in the
-   dual category [Cᵒᵖ]).  *)
+    Epimorphisms are analogues of surjective functions, but they are
+    not exactly the same. The dual of an epimorphism is a monomorphism
+    (i.e. an epimorphism in a category [C] is a monomorphism in the
+    dual category [Cᵒᵖ]).  *)
 
 Class IsEpimorphism {C} {x y} (m : morphism C x y) :=
   is_epimorphism : forall z (m1 m2 : morphism C y z),
@@ -227,18 +245,21 @@ Section EpiMono.
   Variable C : PreCategory.
 
   Section properties.
+    (** *** The identity is an epimorphism *)
     Global Instance isepimorphism_identity (x : C)
     : IsEpimorphism (identity x).
     Proof.
       repeat intro; autorewrite with morphism in *; trivial.
     Qed.
 
+    (** *** The identity is a monomorphism *)
     Global Instance ismonomorphism_identity (x : C)
     : IsMonomorphism (identity x).
     Proof.
       repeat intro; autorewrite with morphism in *; trivial.
     Qed.
 
+    (** *** Composition of epimorphisms gives an epimorphism *)
     Global Instance isepimorphism_compose s d d' m0 m1
     : IsEpimorphism m0
       -> IsEpimorphism m1
@@ -249,6 +270,7 @@ Section EpiMono.
       apply_hyp.
     Qed.
 
+    (** *** Composition of monomorphisms gives a monomorphism *)
     Global Instance ismonomorphism_compose s d d' m0 m1
     : IsMonomorphism m0
       -> IsMonomorphism m1
@@ -260,6 +282,7 @@ Section EpiMono.
     Qed.
   End properties.
 
+  (** *** Existence of {epi,mono}morphisms are a preorder *)
   Section equiv.
     Global Instance reflexive_epimorphism : Reflexive (@Epimorphism C)
       := fun x => Build_Epimorphism (isepimorphism_identity x).
@@ -285,6 +308,7 @@ Section EpiMono.
       first [ rewrite -> ?associativity; t
             | rewrite <- ?associativity; t].
 
+    (** *** Retractions are epimorphisms *)
     Global Instance isepimorphism_retr `(@IsSectionOf C x y s r)
     : IsEpimorphism r | 1000.
     Proof.
@@ -295,6 +319,7 @@ Section EpiMono.
         epi_mono_sect_t.
     Qed.
 
+    (** *** Sections are monomorphisms *)
     Global Instance ismonomorphism_sect `(@IsSectionOf C x y s r)
     : IsMonomorphism s | 1000.
     Proof.
@@ -304,6 +329,7 @@ Section EpiMono.
         epi_mono_sect_t.
     Qed.
 
+    (** *** Isomorphisms are both sections and retractions *)
     Global Instance issect_isisomorphism `(@IsIsomorphism C x y m)
     : IsSectionOf m m^-1 | 1000
       := left_inverse.
@@ -313,6 +339,7 @@ Section EpiMono.
       := right_inverse.
   End sect.
 
+  (** *** Isomorphisms are therefore epimorphisms and monomorphisms *)
   Section iso.
     Global Instance isepimorphism_isisomorphism `(@IsIsomorphism C s d m)
     : IsEpimorphism m | 1000
@@ -325,10 +352,12 @@ End EpiMono.
 
 Hint Immediate @isepimorphism_identity @ismonomorphism_identity @ismonomorphism_compose @isepimorphism_compose : category morphism.
 
+(** ** Lemmas about [idtoiso] *)
 Section iso_lemmas.
   Local Ltac idtoiso_t :=
     path_induction; simpl; autorewrite with morphism; reflexivity.
 
+  (** *** [transport]ing across an equality of morphisms is the same as conjugating with [idtoiso] *)
   Lemma idtoiso_of_transport (C D : PreCategory) s d
         (m1 m2 : morphism C s d)
         (p : m1 = m2)
@@ -337,12 +366,14 @@ Section iso_lemmas.
     = idtoiso _ (ap d' p) o u o (idtoiso _ (ap s' p))^-1.
   Proof. idtoiso_t. Qed.
 
+  (** *** [idtoiso] respects inverse *)
   Lemma idtoiso_inv (C : PreCategory) (s d : C) (p : s = d)
   : (idtoiso _ p)^-1 = idtoiso _ (p^)%path.
   Proof.
     path_induction; reflexivity.
   Defined.
 
+  (** *** [idtoiso] respects composition *)
   Lemma idtoiso_comp (C : PreCategory) (s d d' : C)
         (m1 : d = d') (m2 : s = d)
   : idtoiso _ m1 o idtoiso _ m2 = idtoiso _ (m2 @ m1)%path.
@@ -382,6 +413,7 @@ Section iso_lemmas.
     = idtoiso _ (m4 @ (m3 @ (m2 @ (m1 @ m0))))%path.
   Proof. idtoiso_t. Qed.
 
+  (** *** [idtoiso] respects application of functors on morphisms and objects *)
   Lemma idtoiso_functor (C D : PreCategory) (s d : C) (m : s = d)
         (F : Functor C D)
   : morphism_of F (idtoiso _ m) = idtoiso _ (ap (object_of F) m).
@@ -389,6 +421,7 @@ Section iso_lemmas.
     path_induction; simpl; apply identity_of.
   Defined.
 
+  (** *** Functors preserve isomorphisms *)
   Global Instance iso_functor C D (F : Functor C D) `(@IsIsomorphism C s d m)
   : IsIsomorphism (morphism_of F m)
     := {| morphism_inverse := morphism_of F m^-1 |}.
@@ -400,6 +433,7 @@ End iso_lemmas.
 
 Hint Rewrite idtoiso_of_transport idtoiso_inv idtoiso_comp idtoiso_functor.
 
+(** ** Lemmas about how to move isomorphisms around equalities, following [HoTT.PathGroupoids] *)
 Section iso_concat_lemmas.
   Variable C : PreCategory.
 
@@ -561,6 +595,7 @@ Section associativity_composition.
   Variable C : PreCategory.
   Variables x0 x1 x2 x3 x4 : C.
 
+  (** This lemma is helpful for backwards reasoning. *)
   Lemma compose4associativity_helper
     (a : morphism C x3 x4) (b : morphism C x2 x3)
     (c : morphism C x1 x2) (d : morphism C x0 x1)

@@ -1,3 +1,4 @@
+(** * Unicode notations for functor categories *)
 Require Export Category.Utf8 Functor.Utf8 NaturalTransformation.Utf8.
 Require Import FunctorCategory.Core FunctorCategory.Morphisms.
 

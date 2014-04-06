@@ -1,3 +1,4 @@
+(** * Functors between functor categories constructed pointwise *)
 Require Import Category.Core Functor.Core FunctorCategory.Core NaturalTransformation.Paths Functor.Composition.Core NaturalTransformation.Core NaturalTransformation.Composition.Core.
 
 Set Universe Polymorphism.
@@ -10,6 +11,7 @@ Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 Local Open Scope functor_scope.
 
+(** This is the on-objects part of the functor-category construction as a functor. *)
 Section pointwise.
   Context `{Funext}.
 
@@ -49,6 +51,7 @@ Section pointwise.
   Global Arguments pointwise_whiskerL_morphism_of _ _ _ / .
   Global Arguments pointwise_whiskerR_morphism_of _ _ _ / .
 
+  (** ** Construction of [pointwise : (C → D) → (C' → D')] from [C' → C] and [D → D'] *)
   Definition pointwise : Functor (C -> D) (C' -> D').
   Proof.
     refine (Build_Functor
@@ -60,6 +63,7 @@ Section pointwise.
     abstract (intros; simpl; path_natural_transformation; auto with functor).
   Defined.
 
+  (** ** Construction of [(C → D) → (C → D')] from [D → D'] *)
   Definition pointwise_whiskerL : Functor (C -> D) (C -> D').
   Proof.
     refine (Build_Functor
@@ -71,6 +75,7 @@ Section pointwise.
     abstract (intros; simpl; path_natural_transformation; auto with functor).
   Defined.
 
+  (** ** Construction of [(C → D) → (C' → D)] from [C' → C] *)
   Definition pointwise_whiskerR : Functor (C -> D) (C' -> D).
   Proof.
     refine (Build_Functor

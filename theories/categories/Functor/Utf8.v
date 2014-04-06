@@ -1,3 +1,4 @@
+(** * Unicode notations for functors *)
 Require Export Category.Notations Category.Utf8 Functor.Notations.
 Require Import Functor.Core Functor.Composition.Core Functor.Sum Functor.Dual Functor.Identity.
 

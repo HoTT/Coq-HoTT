@@ -1,5 +1,9 @@
+(** * Composition of natural transformations *)
+(** ** Composition *)
 Require NaturalTransformation.Composition.Core.
+(** ** Functoriality *)
 Require NaturalTransformation.Composition.Functorial.
+(** ** Laws about composition *)
 Require NaturalTransformation.Composition.Laws.
 
 Include NaturalTransformation.Composition.Core.

@@ -1,3 +1,4 @@
+(** * Adjunctions by units and counits *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
 Require Import Functor.Composition.Core Functor.Identity.
@@ -11,6 +12,7 @@ Local Open Scope category_scope.
 Local Open Scope morphism_scope.
 
 Section Adjunction.
+  (** ** Unit + UMP definition of adjunction *)
   (** Quoting from Awody's "Category Theory":
 
       An adjunction between categories [C] and [D] consists of
@@ -80,6 +82,7 @@ Section Adjunction.
       }.
   End unit.
 
+  (** ** Counit + UMP definition of adjunction *)
   (**
      Paraphrasing and quoting from Awody's "Category Theory":
 
@@ -183,6 +186,7 @@ Section Adjunction.
            (fun c d g => A.2 d c g).
   End unit_counit_op.
 
+  (** ** Unit + Counit + Zig + Zag definition of adjunction *)
   (** Quoting Wikipedia on Adjoint Functors:
 
       A counit-unit adjunction between two categories [C] and [D]

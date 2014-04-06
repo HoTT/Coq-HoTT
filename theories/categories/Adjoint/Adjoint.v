@@ -1,21 +1,32 @@
+(** * Adjunctions *)
+(** ** Definitions *)
 Require Adjoint.Core.
-Require Adjoint.Dual.
-Require Adjoint.Paths.
+(** *** unit+UMP *)
+(** *** counit+UMP *)
+(** *** unit+counit+zig+zag *)
 Require Adjoint.UnitCounit.
-Require Adjoint.Composition.Composition.
-Require Adjoint.UnitCounitCoercions.
+(** *** universal morphisms *)
 Require Adjoint.UniversalMorphisms.
+(** *** hom-set isomorphism *)
 Require Adjoint.Hom.
+(** ** Coercions between various definitions *)
+Require Adjoint.UnitCounitCoercions.
 Require Adjoint.HomCoercions.
+(** ** Opposite adjunctions *)
+Require Adjoint.Dual.
+(** ** Path spaces of adjunctions *)
+Require Adjoint.Paths.
+(** ** Composition *)
+Require Adjoint.Composition.Composition.
 
 Include Adjoint.Core.
-Include Adjoint.Dual.
-Include Adjoint.Paths.
 Include Adjoint.UnitCounit.
-Include Adjoint.Composition.Composition.
-Include Adjoint.UnitCounitCoercions.
 Include Adjoint.UniversalMorphisms.
 Include Adjoint.Hom.
+Include Adjoint.UnitCounitCoercions.
 Include Adjoint.HomCoercions.
+Include Adjoint.Dual.
+Include Adjoint.Paths.
+Include Adjoint.Composition.Composition.
 
 Require Export Adjoint.Notations.

@@ -1,3 +1,4 @@
+(** * Functors to cat are pseudofunctors *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Composition.Core NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
 Require Import Functor.Identity.

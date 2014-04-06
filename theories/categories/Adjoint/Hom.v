@@ -1,3 +1,4 @@
+(** * Hom-Set Adjunctions *)
 Require Import Category.Core Functor.Core.
 Require Import Adjoint.Core Adjoint.UnitCounit.
 Require Import FunctorCategory.Core Category.Morphisms.

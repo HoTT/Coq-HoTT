@@ -1,3 +1,4 @@
+(** * Classify the path space of natural transformations *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Equivalences types.Sigma Trunc.
 
@@ -18,6 +19,7 @@ Section path_natural_transformation.
 
   Local Open Scope equiv_scope.
 
+  (** ** Equivalence between record and sigma versions of natural transformation *)
   Lemma equiv_sig_natural_transformation
   : { CO : forall x, morphism D (F x) (G x)
     | forall s d (m : morphism C s d),
@@ -34,6 +36,7 @@ Section path_natural_transformation.
       | intros; apply eta_sigma ].
   Defined.
 
+  (** ** The type of natural transformations is an hSet *)
   Global Instance trunc_natural_transformation
   : IsHSet (NaturalTransformation F G).
   Proof.
@@ -44,6 +47,7 @@ Section path_natural_transformation.
   Section path.
     Variables T U : NaturalTransformation F G.
 
+    (** ** Equality of natural transformations is implied by equality of components *)
     Lemma path'_natural_transformation
     : components_of T = components_of U
       -> T = U.
@@ -91,6 +95,7 @@ Section path_natural_transformation.
       refine (center _).
     Qed.
 
+    (** ** Equality of natural transformations is equivalent to equality of components *)
     Lemma equiv_path_natural_transformation
     : T = U <~> (components_of T == components_of U).
     Proof.
@@ -99,6 +104,7 @@ Section path_natural_transformation.
   End path.
 End path_natural_transformation.
 
+(** ** Tactic for proving equality of natural transformations *)
 Ltac path_natural_transformation :=
   repeat match goal with
            | _ => intro

@@ -1,3 +1,4 @@
+(** * Adjunctions as universal morphisms *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Identity Functor.Composition.Core.
 Require Import Functor.Dual NaturalTransformation.Dual Category.Dual.
@@ -13,6 +14,7 @@ Set Asymmetric Patterns.
 Local Open Scope morphism_scope.
 
 Section adjunction_universal.
+  (** ** [F ⊣ G] gives an initial object of [(Y / G)] for all [Y : C] *)
   Section initial.
     Variable C : PreCategory.
     Variable D : PreCategory.
@@ -43,6 +45,7 @@ Section adjunction_universal.
   Global Arguments initial_morphism__of__adjunction [C D F G] A Y.
   Global Arguments is_initial_morphism__of__adjunction [C D F G] A Y _.
 
+  (** ** [F ⊣ G] gives a terminal object of [(F / X)] for all [X : D] *)
   Section terminal.
     Variable C : PreCategory.
     Variable D : PreCategory.
@@ -68,6 +71,7 @@ Section adjunction_universal.
 End adjunction_universal.
 
 Section adjunction_from_universal.
+  (** ** an initial object of [(Y / G)] for all [Y : C] gives a left adjoint to [G] *)
   Section initial.
     Variable C : PreCategory.
     Variable D : PreCategory.
@@ -129,6 +133,7 @@ Section adjunction_from_universal.
     Defined.
   End initial.
 
+  (** ** a terminal object of [(F / X)] for all [X : D] gives a right adjoint to [F] *)
   Section terminal.
     Variable C : PreCategory.
     Variable D : PreCategory.

@@ -1,3 +1,4 @@
+(** * Composition of natural transformations *)
 Require Import Category.Core Functor.Core Functor.Composition.Core NaturalTransformation.Core.
 
 Set Universe Polymorphism.
@@ -9,6 +10,7 @@ Local Open Scope path_scope.
 Local Open Scope morphism_scope.
 Local Open Scope natural_transformation_scope.
 
+(** ** Vertical composition *)
 Section composition.
   (**
      We have the diagram
@@ -87,6 +89,7 @@ Section composition.
                                       compose_commutes_sym.
   End compose.
 
+  (** ** Whiskering *)
   Local Ltac whisker_t :=
     simpl;
     repeat first [ apply commutes

@@ -1,3 +1,4 @@
+(** * Notations for categories *)
 Require Category.Core.
 Require Category.Dual.
 Require Category.Morphisms.

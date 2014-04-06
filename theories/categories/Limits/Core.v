@@ -1,3 +1,4 @@
+(** * Limits and Colimits *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Composition.Core.
 Require Import ExponentialLaws.Law1.Functors FunctorCategory.Core.
@@ -16,6 +17,7 @@ Local Open Scope equiv_scope.
 Local Open Scope functor_scope.
 Local Open Scope category_scope.
 
+(** ** The diagonal or "constant diagram" functor Δ *)
 Section diagonal_functor.
   Context `{Funext}.
   Variable C : PreCategory.
@@ -95,6 +97,7 @@ Section Limit.
   Variable D : PreCategory.
   Variable F : Functor D C.
 
+  (** ** Definition of Limit *)
   (**
      Quoting Dwyer and Spalinski:
 
@@ -126,6 +129,7 @@ Section Limit.
      [C] and every natural transformation [s : F -> Δ X], there exists
      a unique map [s' : c -> X] in [C] such that [(Δ s') t = s].  **)
 
+  (** ** Definition of Colimit *)
   Definition IsColimit
     := @IsLeftKanExtensionAlong _ D 1 C (Functors.to_terminal _) F.
   (*Definition IsColimit' := @IsInitialMorphism (_ -> _) (_ -> _) F (diagonal_functor C D).*)

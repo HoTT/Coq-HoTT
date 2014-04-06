@@ -1,3 +1,4 @@
+(** * Coproduct of natural transformations *)
 Require Import Category.Core Functor.Core Category.Sum Functor.Sum NaturalTransformation.Core.
 
 Set Universe Polymorphism.
