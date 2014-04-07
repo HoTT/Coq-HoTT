@@ -140,6 +140,28 @@ Canonical Structure default_HSet:= fun T P => (@BuildhSet T P).
 Hint Resolve iss.
 Global Existing Instance iss.
 
+Definition issig_hSet: (sigT IsHSet) <~> hSet.
+Proof.
+  issig BuildhSet setT iss.
+Defined.
+
+(** Prove that [ap setT] is an equivalence. *)
+Global Instance isequiv_ap_setT `{Funext} X Y : IsEquiv (@ap _ _ setT X Y).
+Proof.
+  (* TODO: This is a bit slow... can we speed it up? *)
+  pose proof
+       (isequiv_homotopic
+          ((@path_sigma_hprop _ _ _ _ _)^-1 o (@ap _ _ issig_hSet^-1 X Y)))
+    as H'.
+  apply H'; clear H'.
+  - apply @isequiv_compose.
+    + typeclasses eauto.
+    + apply @isequiv_inverse.
+  - intros []; reflexivity.
+Defined.
+
+Definition path_hset `{Funext} X Y := (@ap _ _ setT X Y)^-1%equiv.
+
 (** We will now prove that for sets, monos and injections are equivalent.*)
 Definition ismono {X Y} (f : X -> Y)
   := forall Z : hSet,
