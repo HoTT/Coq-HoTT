@@ -1469,7 +1469,20 @@ Definition Book_9_1_8 := @HoTT.categories.Category.Univalent.trunc_category.
 (* ================================================== ct:gaunt *)
 (** Example 9.1.15 *)
 
-
+Definition Book_9_1_15 A `{H : HoTT.categories.Category.Univalent.IsCategory A}
+: IsHSet (HoTT.categories.Category.Core.object A)
+  <-> (forall a b, IsHProp (@HoTT.categories.Category.Morphisms.Isomorphic A a b)).
+Proof.
+  split.
+  - intros H' a b.
+    eapply trunc_equiv.
+    + apply (H' a b).
+    + apply H.
+  - intros H' a b.
+    eapply trunc_equiv.
+    + apply (H' a b).
+    + apply (@isequiv_inverse _ _ _ (H _ _)).
+Defined.
 
 (* ================================================== ct:discrete *)
 (** Example 9.1.16 *)
@@ -1479,12 +1492,12 @@ Definition Book_9_1_16 := @HoTT.categories.GroupoidCategory.Core.groupoid_catego
 (* ================================================== ct:fundgpd *)
 (** Example 9.1.17 *)
 
-
+Definition Book_9_1_17 := @HoTT.categories.FundamentalPreGroupoidCategory.fundamental_pregroupoid_category.
 
 (* ================================================== ct:hoprecat *)
 (** Example 9.1.18 *)
 
-
+Definition Book_9_1_18 := @HoTT.categories.HomotopyPreCategory.homotopy_precategory.
 
 (* ================================================== ct:rel *)
 (** Example 9.1.19 *)
@@ -1582,7 +1595,7 @@ Definition Book_9_4_2c := @HoTT.categories.Functor.Attributes.IsFullyFaithful.
 (* ================================================== ct:split-essentially-surjective *)
 (** Definition 9.4.4 *)
 
-
+Definition Book_9_4_4 := @HoTT.categories.Functor.Attributes.IsSplitEssentiallySurjective.
 
 (* ================================================== ct:ffeso *)
 (** Lemma 9.4.5 *)
@@ -1592,7 +1605,8 @@ Definition Book_9_4_2c := @HoTT.categories.Functor.Attributes.IsFullyFaithful.
 (* ================================================== ct:essentially-surjective *)
 (** Definition 9.4.6 *)
 
-
+Definition Book_9_4_6_ess := @HoTT.categories.Functor.Attributes.IsEssentiallySurjective.
+Definition Book_9_4_6_weq := @HoTT.categories.Functor.Attributes.IsWeakEquivalence.
 
 (* ================================================== ct:catweq *)
 (** Lemma 9.4.7 *)

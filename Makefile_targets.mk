@@ -109,6 +109,9 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/SetCategory/Morphisms.v \
 	$(srcdir)/theories/categories/SetCategory/Functors/Functors.v \
 	\
+	$(srcdir)/theories/categories/FundamentalPreGroupoidCategory.v \
+	$(srcdir)/theories/categories/HomotopyPreCategory.v \
+	\
 	$(srcdir)/theories/categories/HomFunctor.v \
 	$(srcdir)/theories/categories/Functor/Attributes.v \
 	\
