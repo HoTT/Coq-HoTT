@@ -1454,7 +1454,7 @@ Definition Book_9_1_7 := @HoTT.categories.SetCategory.Morphisms.iscategory_set_c
 (* ================================================== ct:obj-1type *)
 (** Lemma 9.1.8 *)
 
-
+Definition Book_9_1_8 := @HoTT.categories.Category.Univalent.trunc_category.
 
 (* ================================================== ct:idtoiso-trans *)
 (** Lemma 9.1.9 *)
