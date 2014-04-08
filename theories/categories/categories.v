@@ -56,6 +56,10 @@ Require DependentProduct.
 Require Yoneda.
 (** ** The Structure Identity Principle *)
 Require Structure.
+(** ** Fundamental Pregroupoids *)
+Require FundamentalPreGroupoidCategory.
+(** ** Homotopy PreCategory *)
+Require HomotopyPreCategory.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Include Category.Core.
@@ -84,6 +88,8 @@ Include CategoryOfSections.Core.
 Include DependentProduct.
 Include Yoneda.
 Include Structure.Core.
+Include FundamentalPreGroupoidCategory.
+Include HomotopyPreCategory.
 
 Require Export categories.Notations.
 

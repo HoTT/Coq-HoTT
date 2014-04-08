@@ -1,6 +1,6 @@
-(** * Attributes of functors (full, faithful) *)
+(** * Attributes of functors (full, faithful, split essentially surjective) *)
 Require Import Category.Core Functor.Core HomFunctor Category.Morphisms Category.Dual Functor.Dual Category.Prod Functor.Prod NaturalTransformation.Core SetCategory.Core Functor.Composition.Core.
-Require Import hit.epi types.Universe HSet hit.iso Overture.
+Require Import hit.epi types.Universe HSet hit.iso Overture hit.minus1Trunc.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -131,3 +131,31 @@ Global Instance isfullyfaithful_isfull_isfaithful
                      fs1 _ _ _ _
                      (Hfull x y)
                      (Hfaithful x y)).
+
+(** ** Split Essentially Surjective *)
+(** Quoting the HoTT Book:
+
+    We say a functor [F : A → B] is _split essentially surjective_ if
+    for all [b : B] there exists an [a : A] such that [F a ≅ b]. *)
+
+Class IsSplitEssentiallySurjective A B (F : Functor A B)
+  := is_split_essentially_surjective
+     : forall b : B, exists a : A, F a <~=~> b.
+
+(** ** Essentially Surjective *)
+(** Quoting the HoTT Book:
+
+    A functor [F : A → B] is _split essentially surjective_ if for all
+    [b : B] there _merely_ exists an [a : A] such that [F a ≅ b]. *)
+Class IsEssentiallySurjective A B (F : Functor A B)
+  := is_essentially_surjective
+     : forall b : B, hexists (fun a : A => F a <~=~> b).
+
+(** ** Weak Equivalence *)
+(** Quoting the HoTT Book:
+
+    We say [F] is a _weak equivalence_ if it is fully faithful and
+    essentially surjective. *)
+Class IsWeakEquivalence `{Funext} A B (F : Functor A B)
+  := { is_fully_faithful__is_weak_equivalence :> IsFullyFaithful F;
+       is_essentially_surjective__is_weak_equivalence :> IsEssentiallySurjective F }.
