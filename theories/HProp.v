@@ -1,7 +1,7 @@
 (** * HPropositions *)
 
 Require Import Overture Contractible Equivalences Trunc.
-Require Import types.Forall types.Sigma types.Prod types.Record.
+Require Import types.Forall types.Sigma types.Prod types.Record types.Paths Equivalences.
 
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
@@ -161,6 +161,8 @@ Instance isequiv_path_sigma_hprop {A P} `{forall x : A, IsHProp (P x)} {u v : si
 : IsEquiv (@path_sigma_hprop A P _ u v) | 100
   := isequiv_compose.
 
+Hint Immediate isequiv_path_sigma_hprop : typeclass_instances.
+
 (** The sigma of an hprop over a type can be viewed as a subtype. In particular, paths in the subtype are equivalent to paths in the original type. *)
 Definition equiv_path_sigma_hprop {A : Type} {P : A -> Type}
            {HP : forall a, IsHProp (P a)} (u v : sigT P)
@@ -182,5 +184,23 @@ Definition False_hp:hProp:=(hp Unit _).
 (** We could continue with products etc *)
 
 Definition issig_hProp: (sigT IsHProp) <~> hProp.
+Proof.
   issig hp hproptype isp.
 Defined.
+
+(** Prove that [ap hproptype] is an equivalence. *)
+Global Instance isequiv_ap_hproptype `{Funext} X Y : IsEquiv (@ap _ _ hproptype X Y).
+Proof.
+  (* TODO: This is a bit slow... can we speed it up? *)
+  pose proof
+       (isequiv_homotopic
+          ((@path_sigma_hprop _ _ _ _ _)^-1 o (@ap _ _ issig_hProp^-1 X Y)))
+    as H'.
+  apply H'; clear H'.
+  - apply @isequiv_compose.
+    + typeclasses eauto.
+    + apply @isequiv_inverse.
+  - intros []; reflexivity.
+Defined.
+
+Definition path_hprop `{Funext} X Y := (@ap _ _ hproptype X Y)^-1%equiv.

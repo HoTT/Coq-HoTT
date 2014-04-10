@@ -126,9 +126,12 @@ Section EquivInverse.
     rewrite concat_pV_p; apply concat_Vp.
   Qed.
 
-  Global Instance isequiv_inverse : IsEquiv f^-1 | 1000
+  Global Instance isequiv_inverse : IsEquiv f^-1 | 10000
     := BuildIsEquiv B A f^-1 f (eissect f) (eisretr f) other_adj.
 End EquivInverse.
+
+(** If the goal is [IsEquiv _^-1], then use [isequiv_inverse]; otherwise, don't pretend worry about if the goal is an evar and we want to add a [^-1]. *)
+Hint Extern 0 (IsEquiv _^-1) => apply @isequiv_inverse : typeclass_instances.
 
 (** [Equiv A B] is a symmetric relation. *)
 Theorem equiv_inverse {A B : Type} : (A <~> B) -> (B <~> A).
