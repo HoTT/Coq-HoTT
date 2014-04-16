@@ -116,4 +116,26 @@ Proof.
   (exists (allpath_hprop _ _)).
   by apply allpath_hprop.
 Qed.
+
+Definition path_iff_hprop_uncurried `{IsHProp A, IsHProp B}
+: (A <-> B) -> A = B
+  := @path_universe_uncurried A B o equiv_iff_hprop_uncurried.
+
+Definition path_iff_hProp_uncurried `{Funext} {A B : hProp}
+: (A <-> B) -> A = B
+  := (@path_hprop _ A B) o path_iff_hprop_uncurried.
+
+Global Instance isequiv_path_iff_hprop_uncurried `{Funext} `{IsHProp A, IsHProp B}
+: IsEquiv (@path_iff_hprop_uncurried A _ B _) | 0
+  := _.
+
+Global Instance isequiv_path_iff_hProp_uncurried `{Funext} {A B : hProp}
+: IsEquiv (@path_iff_hProp_uncurried _ A B).
+Proof.
+  unfold path_iff_hProp_uncurried.
+  apply (@isequiv_compose).
+  - typeclasses eauto.
+  - unfold path_hprop.
+    apply isequiv_inverse.
+Defined.
 End Univalence.

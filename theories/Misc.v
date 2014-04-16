@@ -38,44 +38,6 @@ Defined.
 
 End NullHomotopy.
 
-(** ** Sigmas of hprops. *)
-Section SigmaHProp.
-
-Context `{Funext}.
-
-(** *** Paths between equivalences *)
-
-(** (These could fit in [EquivalenceVarieties], if the lemma [equiv_path_sigma_hprop] were available there. *)
-
-Lemma equiv_path_equiv {A B : Type} (e1 e2 : A <~> B)
-  : (e1 = e2 :> (A -> B)) <~> (e1 = e2 :> (A <~> B)).
-Proof.
-  equiv_via ((issig_equiv A B) ^-1 e1 = (issig_equiv A B) ^-1 e2).
-    2: apply symmetry, equiv_ap; refine _.
-(* TODO: why does this get the wrong type if [hprop_isequiv] is not supplied? *)
-  exact (@equiv_path_sigma_hprop _ _ hprop_isequiv
-    ((issig_equiv A B) ^-1 e1) ((issig_equiv A B) ^-1 e2)).
-Defined.
-
-Definition path_equiv {A B : Type} {e1 e2 : A <~> B}
-  : (e1 = e2 :> (A -> B)) -> (e1 = e2 :> (A <~> B))
-:= equiv_path_equiv e1 e2.
-
-Definition isequiv_path_equiv {A B : Type} {e1 e2 : A <~> B}
-  : IsEquiv (@path_equiv _ _ e1 e2)
-:= equiv_path_equiv e1 e2.
-
-Lemma istrunc_equiv {n : trunc_index} {A B : Type} `{IsTrunc (trunc_S n) B}
-  : IsTrunc (trunc_S n) (A <~> B).
-Proof.
-  simpl. intros e1 e2.
-  apply (@trunc_equiv _ _ (equiv_path_equiv e1 e2)).
-    apply (@trunc_arrow _ A B (trunc_S n) _).
-  apply equiv_isequiv.
-Defined.
-
-End SigmaHProp.
-
 (** ** [Bool <~> (Bool <~> Bool)]
 
     This should go in [types/Bool.v], but it depends on a lemma above. *)
