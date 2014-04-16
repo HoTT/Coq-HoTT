@@ -106,7 +106,7 @@ Proof.
   apply allpath_hprop.
 Qed.
 
-Instance trunc_hProp `{Funext} : IsHSet hProp.
+Global Instance isset_hProp `{Funext} : IsHSet hProp | 0.
 Proof.
   eapply trunc_equiv'; [ apply issig_hProp | ].
   (intros ? [? ?]).
