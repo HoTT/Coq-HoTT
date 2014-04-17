@@ -64,8 +64,10 @@ intro n.
 apply (@trunc_equiv' _ _ (equiv_inverse issig_trunctype) _ (@istrunc_trunctype n)).
 Defined.
 
+(* Moved to types.Universe
 Global Instance hProp_is_hSet : (IsHSet hProp) | 0.
 apply (@trunc_equiv' _ _ issig_hProp _ (Sn_trunctype _)).
 Defined.
+*)
 
 End TruncType.

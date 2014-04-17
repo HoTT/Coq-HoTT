@@ -26,4 +26,4 @@ Definition set_cat `{Funext} : PreCategory := cat_of hSet.
 (** ** [Prop] is a strict category *)
 Instance isstrict_prop_cat `{Funext, Univalence}
 : IsStrictCategory prop_cat
-  := trunc_hProp.
+  := _.
