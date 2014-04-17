@@ -95,14 +95,17 @@ Defined.
 (** Two propositions are equivalent as soon as there are maps in both
    directions. *)
 
-Definition equiv_iff_hprop `{IsHProp A} `{IsHProp B}
-  : (A -> B) -> (B -> A) -> (A <~> B).
+Definition equiv_iff_hprop_uncurried `{IsHProp A} `{IsHProp B}
+  : (A <-> B) -> (A <~> B).
 Proof.
-  intros f g.
+  intros [f g].
   apply (equiv_adjointify f g);
     intros ?; apply allpath_hprop.
 Defined.
 
+Definition equiv_iff_hprop `{IsHProp A} `{IsHProp B}
+  : (A -> B) -> (B -> A) -> (A <~> B)
+  := fun f g => equiv_iff_hprop_uncurried (f, g).
 
 (** Being a contractible space is a proposition. *)
 
