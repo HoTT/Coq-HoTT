@@ -46,7 +46,6 @@ CORE_VFILES = \
 	$(srcdir)/theories/UnivalenceImpliesFunext.v \
 	$(srcdir)/theories/Pointed.v \
 	$(srcdir)/theories/Tactics.v \
-	$(srcdir)/theories/HoTT.v \
 	$(srcdir)/theories/Misc.v \
 	$(srcdir)/theories/TruncType.v \
 	$(srcdir)/theories/Functorish.v \
@@ -66,7 +65,9 @@ CORE_VFILES = \
 	$(srcdir)/theories/hit/unique_choice.v \
 	$(srcdir)/theories/hit/quotient.v \
 	$(srcdir)/theories/hit/iso.v \
-	$(srcdir)/theories/types/ObjectClassifier.v
+	$(srcdir)/theories/types/ObjectClassifier.v \
+	$(srcdir)/theories/Utf8.v \
+	$(srcdir)/theories/HoTT.v
 
 CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/categories.v \

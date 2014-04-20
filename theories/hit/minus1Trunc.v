@@ -13,9 +13,11 @@ Open Local Scope path_scope.
 *)
 
 Module Export minus1Trunc.
+Delimit Scope prop_trunc_scope with prop_trunc.
 
 Local Inductive minus1Trunc (A :Type) : Type :=
   min1 : A -> minus1Trunc A.
+Bind Scope prop_trunc_scope with minus1Trunc.
 Axiom min1_path : forall {A : Type} (x y : minus1Trunc A),  x = y.
 Arguments min1 {A} a.
 
