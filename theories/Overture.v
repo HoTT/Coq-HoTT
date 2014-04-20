@@ -37,6 +37,9 @@ But this gives "Error: in Tacinterp.add_tacdef: Reserved Ltac name symmetry.".  
 
 (** ** Basic definitions *)
 
+(** Define an alias for [Set], which is really [Type₀]. *)
+Notation Type0 := Set.
+
 (** We make the identity map a notation so we do not have to unfold it,
     or complicate matters with its type. *)
 Notation idmap := (fun x => x).
