@@ -67,6 +67,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/hit/Pushout.v \
 	$(srcdir)/theories/types/ObjectClassifier.v \
 	$(srcdir)/theories/Misc.v \
+	$(srcdir)/theories/Utf8.v \
 	$(srcdir)/theories/HoTT.v \
 	$(srcdir)/theories/Tests.v
 

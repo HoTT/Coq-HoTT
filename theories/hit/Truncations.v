@@ -22,9 +22,11 @@ However, while we are faking our higher-inductives anyway, we can take some shor
 *)
 
 Module Export Truncation.
+Delimit Scope trunc_scope with trunc.
 
 Private Inductive Truncation (n : trunc_index) (A :Type) : Type :=
   truncation_incl : A -> Truncation n A.
+Bind Scope trunc_scope with Truncation.
 Arguments truncation_incl {n A} a.
 (** Make the priority 1, so that we don't override, e.g., [Unit]. *)
 Instance istrunc_truncation : forall n A, IsTrunc n (Truncation n A) | 1.
