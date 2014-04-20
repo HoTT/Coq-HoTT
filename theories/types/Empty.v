@@ -12,6 +12,7 @@ Local Open Scope path_scope.
 (** ** Equivalences *)
 (** ** Universal mapping properties *)
 
+(** We eta-expand [_] to [fun _ => _] to work around a bug in HoTT/coq: https://github.com/HoTT/coq/issues/117 *)
 Instance contr_from_Empty {_ : Funext} (A : Type) :
   Contr (Empty -> A) :=
   BuildContr _
