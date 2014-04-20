@@ -1,14 +1,14 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the unit type *)
 
-(* coq calls it "unit", we call it "Unit" *)
-Inductive Unit : Set :=
-    tt : Unit.
-
 Require Import Overture PathGroupoids Equivalences.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A.
+
+(** coq calls it "unit", we call it "Unit" *)
+Inductive Unit : Type0 :=
+    tt : Unit.
 
 (** ** Eta conversion *)
 

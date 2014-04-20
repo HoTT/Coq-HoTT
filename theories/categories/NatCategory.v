@@ -10,7 +10,7 @@ Set Asymmetric Patterns.
 Module Export Core.
   (** ** [Fin n] types, or [CardinalityRepresentative] *)
   (** We use [Empty] for [0] and [Unit] for [1] so that we get nice judgmental behavior with opposites *)
-  Fixpoint CardinalityRepresentative (n : nat) : Set :=
+  Fixpoint CardinalityRepresentative (n : nat) : Type0 :=
     match n with
       | 0 => Empty
       | 1 => Unit

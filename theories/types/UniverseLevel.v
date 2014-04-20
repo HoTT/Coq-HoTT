@@ -36,5 +36,5 @@ Typeclasses Opaque lift lower.
 Global Opaque lift lower.
 
 
-(*Fail Check Lift nat : Set.
+(*Fail Check Lift nat : Type0.
 Check 1 : Lift nat.*)
