@@ -28,6 +28,23 @@ The former seems more natural.
 
 We do not require [R] to be an equivalence relation, but implicitly consider its transitive-reflexive closure. *)
 
+(** When we switch to trunk-polyproj or 8.5, we should possibly do the following hackery with universes, rather than this terrible hackery with [Empty] and universes:
+<<
+Section Domain.
+  Let U := Type.
+  (** We need a universe level that is not lower than [U], but doesn't
+  need to be the same. *)
+  Let U' : Type.
+  Proof.
+    let U' := constr:(Type) in
+    let U_le_U' := constr:(fun x : U => (x : U')) in
+    exact U'.
+  Defined.
+  Context {A : Type} {R:A -> A -> U} {sR:setrel R}.
+
+  Local Inductive quotient (sR:setrel R): U' :=
+   | class_of : A -> quotient sR.
+>> *)
 Local Inductive quotient (sR:setrel R) :=
   | class_of : A -> quotient sR
   | dummy_quotient_constructor_for_universes_of_related_classes_eq
