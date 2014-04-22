@@ -139,8 +139,9 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/ExponentialLaws/Law4/Law4.v \
 	$(srcdir)/theories/categories/ExponentialLaws/Law4/Functors.v \
 	\
-	$(srcdir)/theories/categories/Functor/Composition/Functorial/Core.v \
 	$(srcdir)/theories/categories/Functor/Composition/Functorial.v \
+	$(srcdir)/theories/categories/Functor/Composition/Functorial/Core.v \
+	$(srcdir)/theories/categories/Functor/Composition/Functorial/Attributes.v \
 	$(srcdir)/theories/categories/Functor/Composition/Laws.v \
 	\
 	$(srcdir)/theories/categories/Functor/Sum.v \
