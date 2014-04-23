@@ -30,7 +30,7 @@ Module Export Core.
     := initial_category_rect _ x.
 
   (** ** Default intitial ([0]) and terminal ([1]) precategories. *)
-  Instance is_initial_category_0 : IsInitialCategory 0 := Empty_rect.
+  Instance is_initial_category_0 : IsInitialCategory 0 := (fun T => @Empty_rect (fun _ => T)).
   Instance: IsTerminalCategory 1 | 0.
   Instance: Contr (object 1) | 0 := _.
   Instance: Contr (morphism 1 x y) | 0 := fun x y => _.
