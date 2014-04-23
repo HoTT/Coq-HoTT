@@ -101,3 +101,37 @@ Section composition.
     path_natural_transformation; path_induction; simpl; auto with functor.
   Defined.
 End composition.
+
+(** ** Equalities induced by isomorphisms of objects *)
+Section object_isomorphisms.
+  Lemma path_components_of_isisomorphism
+        `{IsIsomorphism C s d m}
+        D (F G : Functor C D) (T : NaturalTransformation F G)
+  : (G _1 m)^-1 o (T d o F _1 m) = T s.
+  Proof.
+    apply iso_moveR_Vp.
+    apply commutes.
+  Qed.
+
+  Lemma path_components_of_isisomorphism'
+        `{IsIsomorphism C s d m}
+        D (F G : Functor C D) (T : NaturalTransformation F G)
+  : (G _1 m o T s) o (F _1 m)^-1 = T d.
+  Proof.
+    apply iso_moveR_pV.
+    symmetry.
+    apply commutes.
+  Qed.
+
+  Definition path_components_of_isomorphic
+             `(m : @Isomorphic C s d)
+             D (F G : Functor C D) (T : NaturalTransformation F G)
+  : (G _1 m)^-1 o (T d o F _1 m) = T s
+    := @path_components_of_isisomorphism _ _ _ m m D F G T.
+
+  Definition path_components_of_isomorphic'
+             `(m : @Isomorphic C s d)
+             D (F G : Functor C D) (T : NaturalTransformation F G)
+  : (G _1 m o T s) o (F _1 m)^-1 = T d
+    := @path_components_of_isisomorphism' _ _ _ m m D F G T.
+End object_isomorphisms.

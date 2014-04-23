@@ -256,3 +256,24 @@ End minus1TruncMonad.
 
 (** We may want to define the other connectives to at some point. *)
 Definition hexists {X} (P:X->Type):Type:= minus1Trunc (sigT  P).
+
+(** If the goal is an hProp, we may remove [minus1Trunc] in hypotheses. *)
+Ltac strip_truncations :=
+  (** get the type of the goal *)
+  let G := match goal with |- ?G => constr:(G) end in
+  (** prove that the goal is an hProp *)
+  let H := fresh in
+  assert (H : forall z w : G, z = w) by apply allpath_hprop;
+    (** search for truncated hypotheses *)
+    progress repeat match goal with
+                      | [ T : _ |- _ ]
+                        => revert T;
+                          refine (@minus1Trunc_rect_nondep _ _ _ H);
+                          intro T
+                    end;
+    (** clear the IsHProp hypothesis *)
+    clear H.
+
+(** Define a lengthy pun for the above tactic. *)
+Ltac since_the_goal_is_a_mere_proposition_we_may_strip_truncations
+  := strip_truncations.

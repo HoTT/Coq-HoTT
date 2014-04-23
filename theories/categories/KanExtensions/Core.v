@@ -1,7 +1,7 @@
 (** * Kan Extensions *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import ExponentialLaws.Law4.Functors FunctorCategory.Core.
-Require Import Functor.Composition.Functorial.
+Require Import Functor.Composition.Functorial.Core.
 Require Import UniversalProperties.
 
 Set Universe Polymorphism.
@@ -137,7 +137,7 @@ Section kan_extensions.
   Section pullback_along.
     Definition pullback_along_functor
     : object ((C -> C') -> (C' -> D) -> (C -> D))
-      := Functor.Composition.Functorial.compose_functor _ _ _.
+      := Functor.Composition.Functorial.Core.compose_functor _ _ _.
 
     Definition pullback_along (p : Functor C C')
     : object ((C' -> D) -> (C -> D))
