@@ -11,9 +11,13 @@ Generalizable Variables X A B f g n.
 
 Module Export Suspension.
 
-Local Inductive Susp (X : Type) : Type :=
+(** We play games to ensure that [Susp X] does not live in a lower universe than [X] *)
+Section hack_my_types.
+Let U := Type.
+Local Inductive Susp (X : U) : U :=
   | North : Susp X
   | South : Susp X.
+End hack_my_types.
 
 Global Arguments North {X}.
 Global Arguments South {X}.

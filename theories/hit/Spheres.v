@@ -10,7 +10,7 @@ Generalizable Variables X A B f g n.
 (** ** Definition, by iterated suspension. *)
 
 (** To match the usual indexing for spheres, we have to pad the sequence with a dummy term [Sphere minus_two]. *)
-Fixpoint Sphere (n : trunc_index) : Type
+Fixpoint Sphere (n : trunc_index) : Type0
   := match n with
        | minus_two => Empty
        | minus_one => Empty
