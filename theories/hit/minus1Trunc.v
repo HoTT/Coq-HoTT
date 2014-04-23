@@ -273,7 +273,3 @@ Ltac strip_truncations :=
                     end;
     (** clear the IsHProp hypothesis *)
     clear H.
-
-(** Define a lengthy pun for the above tactic. *)
-Ltac since_the_goal_is_a_mere_proposition_we_may_strip_truncations
-  := strip_truncations.
