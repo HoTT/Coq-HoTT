@@ -28,10 +28,30 @@ The former seems more natural.
 
 We do not require [R] to be an equivalence relation, but implicitly consider its transitive-reflexive closure. *)
 
+(** When we switch to trunk-polyproj or 8.5, we should possibly do the following hackery with universes, rather than this terrible hackery with [Empty] and universes:
+<<
+Section Domain.
+  Let U := Type.
+  (** We need a universe level that is not lower than [U], but doesn't
+  need to be the same. *)
+  Let U' : Type.
+  Proof.
+    let U' := constr:(Type) in
+    let U_le_U' := constr:(fun x : U => (x : U')) in
+    exact U'.
+  Defined.
+  Context {A : Type} {R:A -> A -> U} {sR:setrel R}.
 
-(** Note: If we wanted to be really accurate, we'd need to put [@quotient A R sr] in the max [U_{sup(i, j)}] of the universes of [A : U_i] and [R : A -> A -> U_j].  But this requires some hacky code, at the moment, and the only thing we gain is avoiding making use of an implicit hpropositional resizing "axiom". *)
-Local Inductive quotient (sR:setrel R): Type :=
-  | class_of : A -> quotient sR.
+  Local Inductive quotient (sR:setrel R): U' :=
+   | class_of : A -> quotient sR.
+>> *)
+Local Inductive quotient (sR:setrel R) :=
+  | class_of : A -> quotient sR
+  | dummy_quotient_constructor_for_universes_of_related_classes_eq
+    : (forall (T : Type) (class_of : A -> T),
+       (forall {x y : A}, R x y
+                         -> class_of x = class_of y)
+       -> Empty) -> quotient sR.
 Axiom related_classes_eq : forall {x y : A}, R x y ->
  class_of _ x = class_of _ y.
 
@@ -44,7 +64,8 @@ Definition quotient_rect (P : (quotient _)-> Type):
            transport _ (related_classes_eq H) (dclass x) = dclass y),
   forall q, P q.
 Proof.
-intros ? ? [a]. apply dclass.
+intros ? ? [a|H]. apply dclass.
+destruct (H _ (class_of sR) (@related_classes_eq)).
 Defined.
 
 Definition quotient_rect_compute : forall {P} dclass dequiv x,
