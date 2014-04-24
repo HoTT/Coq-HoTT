@@ -13,6 +13,8 @@ Require Category.Morphisms.
 Require Category.Objects.
 (** ** Product precategories *)
 Require Category.Prod.
+(** ** Dependent product precategories *)
+Require Category.Pi.
 (** ** ∑-precategories *)
 Require Category.Sigma.Sigma.
 (** ** Strict categories *)
@@ -27,6 +29,7 @@ Include Category.Dual.
 Include Category.Morphisms.
 Include Category.Objects.
 Include Category.Prod.
+Include Category.Pi.
 (** We use the [Sigma] folder only to allow us to split up the various files and group conceptually similar lemmas, but not for namespacing.  So we include the main file in it. *)
 Include Category.Sigma.Sigma.
 Include Category.Strict.

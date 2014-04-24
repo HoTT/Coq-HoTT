@@ -86,6 +86,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Category/Objects.v \
 	$(srcdir)/theories/categories/Category/Dual.v \
 	$(srcdir)/theories/categories/Category/Prod.v \
+	$(srcdir)/theories/categories/Category/Pi.v \
 	$(srcdir)/theories/categories/Category/Sum.v \
 	$(srcdir)/theories/categories/Category/Sigma/Core.v \
 	\
