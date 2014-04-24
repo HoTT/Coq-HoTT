@@ -44,6 +44,8 @@ Require Adjoint.
 Require Limits.
 (** ** Pseudofunctors *)
 Require Pseudofunctor.
+(** ** Pseudonatural Transformations *)
+Require PseudonaturalTransformation.
 (** ** Duality as a Functor *)
 Require DualFunctor.
 (** ** The Grothendieck Construction *)
@@ -83,6 +85,7 @@ Include KanExtensions.Core.
 Include Adjoint.Core.
 Include Limits.Core.
 Include Pseudofunctor.Core.
+Include PseudonaturalTransformation.Core.
 Include DualFunctor.
 Include CategoryOfSections.Core.
 Include DependentProduct.

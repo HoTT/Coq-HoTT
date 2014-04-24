@@ -86,6 +86,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Category/Objects.v \
 	$(srcdir)/theories/categories/Category/Dual.v \
 	$(srcdir)/theories/categories/Category/Prod.v \
+	$(srcdir)/theories/categories/Category/Pi.v \
 	$(srcdir)/theories/categories/Category/Sum.v \
 	$(srcdir)/theories/categories/Category/Sigma/Core.v \
 	\
@@ -245,6 +246,9 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Pseudofunctor/Pseudofunctor.v \
 	$(srcdir)/theories/categories/Pseudofunctor/Core.v \
 	$(srcdir)/theories/categories/Pseudofunctor/FromFunctor.v \
+	\
+	$(srcdir)/theories/categories/PseudonaturalTransformation/PseudonaturalTransformation.v \
+	$(srcdir)/theories/categories/PseudonaturalTransformation/Core.v \
 	\
 	$(srcdir)/theories/categories/Grothendieck/Grothendieck.v \
 	$(srcdir)/theories/categories/Grothendieck/ToSet.v \
