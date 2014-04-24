@@ -43,17 +43,28 @@ def get_sorted_file_list_from_times_dict(times_dict, descending=True):
         return (int(minutes), float(seconds))
     return sorted(times_dict.keys(), key=get_key, reverse=descending)
 
-def sum_times(times):
+def to_seconds(time):
     '''
-    Takes the values of an output from get_times, parses the time
-    strings, and returns their sum, in the same string format.
+    Converts a string time into a number of seconds.
     '''
-    def to_seconds(time):
-        minutes, seconds = time.replace('s', '').split('m')
-        return int(minutes) * 60 + float(seconds)
-    seconds = sum(map(to_seconds, times))
+    minutes, seconds = time.replace('s', '').split('m')
+    return int(minutes) * 60 + float(seconds)
+
+def from_seconds(seconds, signed=False):
+    '''
+    Converts a number of seconds into a string time.
+    '''
+    sign = ('-' if seconds < 0 else '+') if signed else ''
+    seconds = abs(seconds)
     minutes = int(seconds) / 60
     seconds -= minutes * 60
     full_seconds = int(seconds)
     partial_seconds = int(100 * (seconds - full_seconds))
-    return '%dm%02d.%02ds' % (minutes, full_seconds, partial_seconds)
+    return sign + '%dm%02d.%02ds' % (minutes, full_seconds, partial_seconds)
+
+def sum_times(times, signed=False):
+    '''
+    Takes the values of an output from get_times, parses the time
+    strings, and returns their sum, in the same string format.
+    '''
+    return from_seconds(sum(map(to_seconds, times)), signed=signed)
