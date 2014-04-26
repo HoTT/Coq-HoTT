@@ -250,6 +250,7 @@ CATEGORY_VFILES = \
 	\
 	$(srcdir)/theories/categories/Pseudofunctor/Pseudofunctor.v \
 	$(srcdir)/theories/categories/Pseudofunctor/Core.v \
+	$(srcdir)/theories/categories/Pseudofunctor/RewriteLaws.v \
 	$(srcdir)/theories/categories/Pseudofunctor/FromFunctor.v \
 	$(srcdir)/theories/categories/Pseudofunctor/Identity.v \
 	\

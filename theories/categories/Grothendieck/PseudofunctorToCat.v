@@ -1,6 +1,6 @@
 (** * Grothendieck Construction of a pseudofunctor to Cat *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Pseudofunctor.Core.
+Require Import Pseudofunctor.Core Pseudofunctor.RewriteLaws.
 Require Import Category.Morphisms NaturalTransformation.Isomorphisms Cat.Morphisms.
 Require Import Functor.Composition.Core Functor.Composition.Laws.
 Require Import Functor.Identity.

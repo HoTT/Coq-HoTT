@@ -7,7 +7,6 @@ Require Import NaturalTransformation.Composition.Core NaturalTransformation.Comp
 Require Import NaturalTransformation.Isomorphisms.
 Require Import NaturalTransformation.Paths.
 Require Import FunctorCategory.Core.
-Require Import HoTT.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -202,71 +201,3 @@ Arguments p_morphism_of {_} [C%category] F%pseudofunctor [s d]%object m%morphism
 
 (*Notation "F ₀ x" := (p_object_of F x) : object_scope.
 Notation "F ₁ m" := (p_morphism_of F m) : morphism_scope.*)
-
-Section lemmas.
-  Local Open Scope natural_transformation_scope.
-  Context `{Funext}.
-
-  Variable C : PreCategory.
-  Variable F : Pseudofunctor C.
-
-  Lemma p_composition_of_coherent_for_rewrite_helper w x y z
-        (f : morphism C w x) (g : morphism C x y) (h : morphism C y z)
-        (p p0 p1 p2 : PreCategory) (f0 : morphism C w z -> Functor p2 p1)
-        (f1 : Functor p0 p1) (f2 : Functor p2 p) (f3 : Functor p p0)
-        (f4 : Functor p2 p0) `(@IsIsomorphism (_ -> _) f4 (f3 o f2)%functor n)
-        `(@IsIsomorphism (_ -> _) (f0 (h o (g o f))%morphism) (f1 o f4)%functor n0)
-  : (Category.Morphisms.idtoiso (p2 -> p1) (ap f0 (Category.Core.associativity C w x y z f g h)) : morphism _ _ _)
-    = (n0^-1
-         o ((f1 oL n^-1)
-              o ((f1 oL n)
-                   o (n0
-                        o (Category.Morphisms.idtoiso (p2 -> p1) (ap f0 (Category.Core.associativity C w x y z f g h)) : morphism _ _ _))))).
-  Proof.
-    simpl in *.
-    let C := match goal with |- @paths (@NaturalTransformation ?C ?D ?F ?G) _ _ => constr:(C -> D)%category end in
-    apply (@iso_moveL_Vp C);
-      apply (@iso_moveL_Mp C _ _ _ _ _ _ (iso_whisker_l _ _ _ _ _ _ _)).
-    path_natural_transformation.
-    reflexivity.
-  Qed.
-
-  Arguments p_composition_of_coherent_for_rewrite_helper {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
-
-  Lemma p_composition_of_coherent_for_rewrite w x y z
-        (f : morphism C w x) (g : morphism C x y) (h : morphism C y z)
-  : (Category.Morphisms.idtoiso (_ -> _) (ap (@p_morphism_of _ _ F w z) (Category.Core.associativity C w x y z f g h)) : morphism _ _ _)
-    = (((p_composition_of F w y z h (g o f))^-1)
-         o ((p_morphism_of F h oL (p_composition_of F w x y g f)^-1)
-              o ((associator_1 (p_morphism_of F h) (p_morphism_of F g) (p_morphism_of F f))
-                   o ((p_composition_of F x y z h g oR p_morphism_of F f)
-                        o p_composition_of F w x z (h o g) f)))).
-  Proof.
-    simpl rewrite (@p_composition_of_coherent _ C F w x y z f g h).
-    exact p_composition_of_coherent_for_rewrite_helper.
-  Qed.
-
-  Lemma p_left_identity_of_coherent_for_rewrite x y (f : morphism C x y)
-  : (Category.Morphisms.idtoiso (_ -> _) (ap (@p_morphism_of _ _ F x y) (Category.Core.left_identity C x y f)) : morphism _ _ _)
-    = ((left_identity_natural_transformation_1 (p_morphism_of F f))
-         o ((p_identity_of F y oR p_morphism_of F f)
-              o p_composition_of F x y y 1 f)).
-  Proof.
-    simpl rewrite (@p_left_identity_of_coherent _ C F x y f).
-    path_natural_transformation.
-    apply symmetry.
-    etransitivity; apply Category.Core.left_identity.
-  Qed.
-
-  Lemma p_right_identity_of_coherent_for_rewrite x y (f : morphism C x y)
-  : (Category.Morphisms.idtoiso (_ -> _) (ap (@p_morphism_of _ _ F x y) (Category.Core.right_identity C x y f)) : morphism _ _ _)
-    = ((right_identity_natural_transformation_1 (p_morphism_of F f))
-         o ((p_morphism_of F f oL p_identity_of F x)
-              o p_composition_of F x x y f 1)).
-  Proof.
-    simpl rewrite (@p_right_identity_of_coherent _ C F x y f).
-    path_natural_transformation.
-    apply symmetry.
-    etransitivity; apply Category.Core.left_identity.
-  Qed.
-End lemmas.
