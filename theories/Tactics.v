@@ -217,7 +217,7 @@ Ltac clear_path_no_check p :=
 Ltac clear_path p :=
   let t := type of p in
   lazymatch eval hnf in t with
-    | @paths _ _ _ => clear_path_no_check p
+    | @paths _ _ _ => clear_path_no_check p || fail 1 "cannot clear path" p
     | _ => fail 0 "clear_path only works on paths;" p "is not a path"
   end.
 
