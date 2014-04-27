@@ -33,7 +33,6 @@ Definition lower {A} := (@equiv_inv _ _ (@lift A) _).
 
 (** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreck havok. *)
 Typeclasses Opaque lift lower.
-Global Opaque lift lower.
 
 
 (*Fail Check Lift nat : Type0.
