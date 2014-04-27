@@ -578,8 +578,79 @@ Section iso_concat_lemmas.
   Definition iso_moveR_V1 `(@IsIsomorphism C x y p) q
   : identity _ = p o q -> p^-1 = q.
   Proof. iso_concat_t. Qed.
+
+
+
+  Definition iso_removeL__M_Vp `(@IsIsomorphism C z y p) `(q : morphism C x y) r
+  : q = r -> p o (p^-1 o q) = r.
+  Proof. iso_concat_t. Qed.
+
+  Definition iso_removeL__V_Mp `(@IsIsomorphism C y z p) `(q : morphism C x y) r
+  : q = r -> p^-1 o (p o q) = r.
+  Proof. iso_concat_t. Qed.
+
+  Definition iso_removeR__M_Vp `(@IsIsomorphism C z y p) `(q : morphism C x y) r
+  : r = q -> r = p o (p^-1 o q).
+  Proof. iso_concat_t. Qed.
+
+  Definition iso_removeR__V_Mp `(@IsIsomorphism C y z p) `(q : morphism C x y) r
+  : r = q -> r = p^-1 o (p o q).
+  Proof. iso_concat_t. Qed.
+
+
+  Definition iso_removeL__MV_p `(@IsIsomorphism C z y p) `(q : morphism C x y) r
+  : q = r -> (p o p^-1) o q = r.
+  Proof. iso_concat_t. Qed.
+
+  Definition iso_removeL__VM_p `(@IsIsomorphism C y z p) `(q : morphism C x y) r
+  : q = r -> (p^-1 o p) o q = r.
+  Proof. iso_concat_t. Qed.
+
+  Definition iso_removeR__MV_p `(@IsIsomorphism C z y p) `(q : morphism C x y) r
+  : r = q -> r = (p o p^-1) o q.
+  Proof. iso_concat_t. Qed.
+
+  Definition iso_removeR__VM_p `(@IsIsomorphism C y z p) `(q : morphism C x y) r
+  : r = q -> r = (p^-1 o p) o q.
+  Proof. iso_concat_t. Qed.
+
+
+
+  Definition iso_removeL__p_MV `(@IsIsomorphism C x y p) `(q : morphism C y z) r
+  : q = r -> q o (p o p^-1) = r.
+  Proof. iso_concat_t. Qed.
+
+  Definition iso_removeL__p_VM `(@IsIsomorphism C y x p) `(q : morphism C y z) r
+  : q = r -> q o (p^-1 o p) = r.
+  Proof. iso_concat_t. Qed.
+
+  Definition iso_removeR__p_MV `(@IsIsomorphism C x y p) `(q : morphism C y z) r
+  : r = q -> r = q o (p o p^-1).
+  Proof. iso_concat_t. Qed.
+
+  Definition iso_removeR__p_VM `(@IsIsomorphism C y x p) `(q : morphism C y z) r
+  : r = q -> r = q o (p^-1 o p).
+  Proof. iso_concat_t. Qed.
+
+
+  Definition iso_removeL__pM_V `(@IsIsomorphism C x y p) `(q : morphism C y z) r
+  : q = r -> (q o p) o p^-1 = r.
+  Proof. iso_concat_t. Qed.
+
+  Definition iso_removeL__pV_M `(@IsIsomorphism C y x p) `(q : morphism C y z) r
+  : q = r -> (q o p^-1) o p = r.
+  Proof. iso_concat_t. Qed.
+
+  Definition iso_removeR__pM_V `(@IsIsomorphism C x y p) `(q : morphism C y z) r
+  : r = q -> r = (q o p) o p^-1.
+  Proof. iso_concat_t. Qed.
+
+  Definition iso_removeR__pV_M `(@IsIsomorphism C y x p) `(q : morphism C y z) r
+  : r = q -> r = (q o p^-1) o p.
+  Proof. iso_concat_t. Qed.
 End iso_concat_lemmas.
 
+(** ** Tactics for moving inverses around *)
 Ltac iso_move_inverse' :=
   match goal with
     | [ |- _^-1 o _ = _ ] => apply iso_moveR_Vp
@@ -593,6 +664,68 @@ Ltac iso_move_inverse' :=
   end.
 
 Ltac iso_move_inverse := progress repeat iso_move_inverse'.
+
+(** ** Tactics for collapsing [p ∘ p⁻¹] and [p⁻¹ ∘ p] *)
+Ltac iso_remove_final_inverse' :=
+  match goal with
+    | [ |- _ o (_^-1 o _) = _ ] => apply iso_removeL__M_Vp
+    | [ |- _^-1 o (_ o _) = _ ] => apply iso_removeL__V_Mp
+    | [ |- _ = _ o (_^-1 o _) ] => apply iso_removeR__M_Vp
+    | [ |- _ = _^-1 o (_ o _) ] => apply iso_removeR__V_Mp
+    | [ |- (_ o _^-1) o _ = _ ] => apply iso_removeL__MV_p
+    | [ |- (_^-1 o _) o _ = _ ] => apply iso_removeL__VM_p
+    | [ |- _ = (_ o _^-1) o _ ] => apply iso_removeR__MV_p
+    | [ |- _ = (_^-1 o _) o _ ] => apply iso_removeR__VM_p
+    | [ |- _ o (_ o _^-1) = _ ] => apply iso_removeL__p_MV
+    | [ |- _ o (_^-1 o _) = _ ] => apply iso_removeL__p_VM
+    | [ |- _ = _ o (_ o _^-1) ] => apply iso_removeR__p_MV
+    | [ |- _ = _ o (_^-1 o _) ] => apply iso_removeR__p_VM
+    | [ |- (_ o _) o _^-1 = _ ] => apply iso_removeL__pM_V
+    | [ |- (_ o _^-1) o _ = _ ] => apply iso_removeL__pV_M
+    | [ |- _ = (_ o _) o _^-1 ] => apply iso_removeR__pM_V
+    | [ |- _ = (_ o _^-1) o _ ] => apply iso_removeR__pV_M
+  end.
+
+Ltac iso_remove_final_inverse := progress repeat iso_remove_final_inverse'.
+
+(** Now the tactics for collapsing [p ∘ p⁻¹] (and [p⁻¹ ∘ p]) in the
+    middle of a chain of compositions of isomorphisms.  The idea is
+    that we peel isomorphisms off the left or the right, until we hit
+    [p ∘ p⁻¹] or [p⁻¹ ∘ p] on an end, and then we strip it.  Then we
+    repeat.  This would probably benefit immensely from reflective
+    automation, both in power and in speed; we'd be able to check
+    adjacent morphisms independent of associativity and of whether the
+    surrounding morphisms are isomorphisms. *)
+
+Ltac iso_collapse_inverse_left :=
+  first [ iso_remove_final_inverse
+        | lazymatch goal with
+        | [ |- ?r o ?p = ?q ]
+          => apply (@iso_moveR_Mp _ _ _ p _ q r _)
+          end;
+          iso_collapse_inverse_left;
+          first [ apply ap
+                | apply iso_moveL_Vp ] ].
+
+Ltac iso_collapse_inverse_right :=
+  first [ iso_remove_final_inverse
+        | lazymatch goal with
+        | [ |- ?r o ?p = ?q ]
+          => apply (@iso_moveR_pM _ _ _ p _ _ q r)
+          end;
+          iso_collapse_inverse_right;
+          first [ apply ap10; apply ap
+                | apply iso_moveL_pV ] ].
+
+Ltac iso_collapse_inverse' :=
+  first [ rewrite -> ?Category.Core.associativity;
+          progress repeat first [ apply ap
+                                | iso_collapse_inverse_left ]
+        | rewrite <- ?Category.Core.associativity;
+          progress repeat first [ apply ap10; apply ap
+                                | iso_collapse_inverse_right ] ].
+
+Ltac iso_collapse_inverse := progress repeat iso_collapse_inverse'.
 
 Section associativity_composition.
   Variable C : PreCategory.
