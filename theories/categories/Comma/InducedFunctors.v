@@ -4,7 +4,7 @@ Require Import Category.Dual.
 Require Import Category.Prod.
 Require Import NaturalTransformation.Identity.
 Require Import FunctorCategory.Core Cat.Core.
-Require Import InitialTerminalCategory.
+Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 Require Import Comma.Core Comma.Projection.
 Require Import types.Prod HoTT.Tactics types.Unit.
 

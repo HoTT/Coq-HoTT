@@ -1,6 +1,6 @@
 (** * Comma categories *)
 Require Import Category.Core Functor.Core.
-Require Import InitialTerminalCategory.
+Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 Require Functor.Identity.
 Require Import Category.Strict.
 Require Import types.Record Trunc HoTT.Tactics.

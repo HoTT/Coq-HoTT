@@ -1,7 +1,7 @@
 (** * Natural transformations involving product categories *)
 Require Import Category.Core Functor.Core Category.Prod Functor.Prod NaturalTransformation.Core.
 Require Functor.Composition.Core Functor.Identity.
-Require Import InitialTerminalCategory.
+Require Import InitialTerminalCategory.Core.
 Require Import types.Prod.
 
 Set Universe Polymorphism.

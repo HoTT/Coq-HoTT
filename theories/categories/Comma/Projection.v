@@ -2,7 +2,7 @@
 Require Import Category.Core Functor.Core.
 Require Import Category.Prod Functor.Prod.
 Require Import Functor.Composition.Core Functor.Identity.
-Require Import InitialTerminalCategory.
+Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 Require Import Comma.Core.
 Require Import types.Prod.
 
