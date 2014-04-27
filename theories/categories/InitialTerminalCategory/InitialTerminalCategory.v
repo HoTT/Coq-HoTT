@@ -12,5 +12,11 @@ Module NaturalTransformations.
   Require InitialTerminalCategory.NaturalTransformations.
   Include InitialTerminalCategory.NaturalTransformations.
 End NaturalTransformations.
+(** ** Pseudounctors from initial and terminal categories *)
+Module Pseudofunctors.
+  Require InitialTerminalCategory.Pseudofunctors.
+  Include InitialTerminalCategory.Pseudofunctors.
+End Pseudofunctors.
+
 
 Require Export InitialTerminalCategory.Notations.

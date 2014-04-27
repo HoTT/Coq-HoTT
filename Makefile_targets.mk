@@ -164,6 +164,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/InitialTerminalCategory/Core.v \
 	$(srcdir)/theories/categories/InitialTerminalCategory/Functors.v \
 	$(srcdir)/theories/categories/InitialTerminalCategory/NaturalTransformations.v \
+	$(srcdir)/theories/categories/InitialTerminalCategory/Pseudofunctors.v \
 	$(srcdir)/theories/categories/InitialTerminalCategory/Notations.v \
 	\
 	$(srcdir)/theories/categories/NaturalTransformation/Prod.v \
