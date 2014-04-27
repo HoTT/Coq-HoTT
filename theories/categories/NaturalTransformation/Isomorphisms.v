@@ -67,6 +67,18 @@ Section composition.
     abstract iso_whisker_t.
   Defined.
 
+  (** ** action of [idtoiso] on objects *)
+  Definition idtoiso_components_of C D
+             (F G : Functor C D)
+             (T' : F = G)
+             x
+  : (Category.Morphisms.idtoiso (_ -> _) T' : morphism _ _ _) x
+    = Category.Morphisms.idtoiso _ (ap10 (ap object_of T') x).
+  Proof.
+    destruct T'.
+    reflexivity.
+  Defined.
+
   (** ** [idtoiso] respsects composition *)
   Definition idtoiso_compose C D
          (F F' F'' : Functor C D)
