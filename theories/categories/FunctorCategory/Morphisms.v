@@ -34,6 +34,10 @@ Proof.
 Defined.
 
 Hint Immediate isisomorphism_components_of : typeclass_instances.
+(** When one of the functors is the identity functor, we fail to match correctly, because [apply] is stupid.  So we do its work for it. *)
+Hint Extern 10 (@IsIsomorphism _ _ _ (@components_of ?C ?D ?F ?G ?T ?x))
+=> apply (fun H' => @isisomorphism_components_of _ C D F G T H' x)
+   : typeclass_instances.
 
 Definition inverse `{Funext}
            C D (F G : Functor C D) (T : NaturalTransformation F G)
