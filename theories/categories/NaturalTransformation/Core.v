@@ -64,3 +64,20 @@ Arguments components_of {C D}%category {F G}%functor T%natural_transformation
 Arguments commutes [C D F G] T _ _ _ : rename.
 
 Hint Resolve @commutes : category natural_transformation.
+
+(** ** Helper lemmas *)
+(** Some helper lemmas for rewriting.  In the names, [p] stands for a
+    morphism, [T] for natural transformation, and [F] for functor. *)
+Definition commutes_pT_F C D (F G : Functor C D) (T : NaturalTransformation F G)
+      s d d' (m : morphism C s d) (m' : morphism D _ d')
+: (m' o T d) o F _1 m = (m' o G _1 m) o T s
+  := ((Category.Core.associativity _ _ _ _ _ _ _ _)
+        @ ap _ (commutes _ _ _ _)
+        @ (Category.Core.associativity_sym _ _ _ _ _ _ _ _))%path.
+
+Definition commutes_T_Fp C D (F G : Functor C D) (T : NaturalTransformation F G)
+      s d d' (m : morphism C s d) (m' : morphism D d' _)
+: T d o (F _1 m o m') = G _1 m o (T s o m')
+  := ((Category.Core.associativity_sym _ _ _ _ _ _ _ _)
+        @ ap10 (ap _ (commutes _ _ _ _)) _
+        @ (Category.Core.associativity _ _ _ _ _ _ _ _))%path.
