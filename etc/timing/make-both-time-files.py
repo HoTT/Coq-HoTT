@@ -19,7 +19,7 @@ def make_table_string(left_times_dict, right_times_dict,
                            for name in all_names_dict.keys())
     # update to sort by approximate difference, first
     for name in all_names_dict.keys():
-        all_names_dict[name] = (int(to_seconds(diff_times_dict[name])), to_seconds(all_names_dict[name]))
+        all_names_dict[name] = (abs(int(to_seconds(diff_times_dict[name]))), to_seconds(all_names_dict[name]))
 
     names = sorted(all_names_dict.keys(), key=all_names_dict.get, reverse=descending)
     #names = get_sorted_file_list_from_times_dict(all_names_dict, descending=descending)
