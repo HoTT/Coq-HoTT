@@ -580,6 +580,7 @@ Section iso_concat_lemmas.
   Proof. iso_concat_t. Qed.
 End iso_concat_lemmas.
 
+(** ** Tactics for moving inverses around *)
 Ltac iso_move_inverse' :=
   match goal with
     | [ |- _^-1 o _ = _ ] => apply iso_moveR_Vp
@@ -593,6 +594,30 @@ Ltac iso_move_inverse' :=
   end.
 
 Ltac iso_move_inverse := progress repeat iso_move_inverse'.
+
+(** ** Tactics for collapsing [p ∘ p⁻¹] and [p⁻¹ ∘ p] *)
+(** Now the tactics for collapsing [p ∘ p⁻¹] (and [p⁻¹ ∘ p]) in the
+    middle of a chain of compositions of isomorphisms. *)
+
+Ltac iso_collapse_inverse_left' :=
+  first [ apply ap
+        | progress rewrite ?iso_compose_p_Vp, ?iso_compose_V_pp ].
+
+Ltac iso_collapse_inverse_left :=
+  rewrite -> ?Category.Core.associativity;
+  progress repeat iso_collapse_inverse_left'.
+
+Ltac iso_collapse_inverse_right' :=
+  first [ apply ap10; apply ap
+        | progress rewrite ?iso_compose_pV_p, ?iso_compose_pp_V ].
+
+Ltac iso_collapse_inverse_right :=
+  rewrite <- ?Category.Core.associativity;
+  progress repeat iso_collapse_inverse_right'.
+
+Ltac iso_collapse_inverse :=
+  progress repeat first [ iso_collapse_inverse_left
+                        | iso_collapse_inverse_right ].
 
 Section associativity_composition.
   Variable C : PreCategory.
