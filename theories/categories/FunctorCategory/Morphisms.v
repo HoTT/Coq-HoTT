@@ -16,6 +16,10 @@ Definition NaturalIsomorphism `{Funext} (C D : PreCategory) F G :=
 
 Arguments NaturalIsomorphism {_} [C D] F G / .
 
+Global Instance reflexive_natural_isomorphism `{Funext} C D
+: Reflexive (@NaturalIsomorphism _ C D) | 0
+  := _.
+
 Coercion natural_transformation_of_natural_isomorphism `{Funext} C D F G
          (T : @NaturalIsomorphism _ C D F G)
 : NaturalTransformation F G

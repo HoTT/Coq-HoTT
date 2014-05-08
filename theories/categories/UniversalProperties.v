@@ -2,7 +2,7 @@
 Require Import Category.Core Functor.Core.
 Require Import Category.Dual Functor.Dual.
 Require Import Category.Objects Category.Morphisms.
-Require Import InitialTerminalCategory.
+Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 Require Import Comma.Core.
 Require Import types.Unit Trunc types.Sigma HProp HoTT.Tactics Equivalences.
 

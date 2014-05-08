@@ -2,7 +2,7 @@
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Composition.Core.
 Require Import ExponentialLaws.Law1.Functors FunctorCategory.Core.
-Require Import UniversalProperties KanExtensions.Core InitialTerminalCategory NatCategory.
+Require Import UniversalProperties KanExtensions.Core InitialTerminalCategory.Core NatCategory.
 Require Import Functor.Paths NaturalTransformation.Paths.
 Require Import Comma.Core.
 Require Import Equivalences.

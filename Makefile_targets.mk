@@ -160,7 +160,12 @@ CATEGORY_VFILES = \
 	\
 	$(srcdir)/theories/categories/NatCategory.v \
 	\
-	$(srcdir)/theories/categories/InitialTerminalCategory.v \
+	$(srcdir)/theories/categories/InitialTerminalCategory/InitialTerminalCategory.v \
+	$(srcdir)/theories/categories/InitialTerminalCategory/Core.v \
+	$(srcdir)/theories/categories/InitialTerminalCategory/Functors.v \
+	$(srcdir)/theories/categories/InitialTerminalCategory/NaturalTransformations.v \
+	$(srcdir)/theories/categories/InitialTerminalCategory/Pseudofunctors.v \
+	$(srcdir)/theories/categories/InitialTerminalCategory/Notations.v \
 	\
 	$(srcdir)/theories/categories/NaturalTransformation/Prod.v \
 	\
@@ -246,6 +251,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Pseudofunctor/Pseudofunctor.v \
 	$(srcdir)/theories/categories/Pseudofunctor/Core.v \
 	$(srcdir)/theories/categories/Pseudofunctor/FromFunctor.v \
+	$(srcdir)/theories/categories/Pseudofunctor/Identity.v \
 	\
 	$(srcdir)/theories/categories/PseudonaturalTransformation/PseudonaturalTransformation.v \
 	$(srcdir)/theories/categories/PseudonaturalTransformation/Core.v \

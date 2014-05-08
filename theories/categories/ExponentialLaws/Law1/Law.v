@@ -1,6 +1,6 @@
 (** * Exponential laws about the terminal category *)
 Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity NaturalTransformation.Core Functor.Paths NaturalTransformation.Paths ExponentialLaws.Law1.Functors Functor.Composition.Core.
-Require Import InitialTerminalCategory.
+Require Import InitialTerminalCategory.Core.
 Require Import HoTT.Tactics types.Forall types.Prod PathGroupoids.
 
 Set Universe Polymorphism.

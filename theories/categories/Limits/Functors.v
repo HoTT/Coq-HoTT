@@ -5,7 +5,7 @@ Require Import Limits.Core.
 Require Import Adjoint.UniversalMorphisms.
 Require Import FunctorCategory.Core.
 Require Import Adjoint.Core.
-Require Import InitialTerminalCategory NatCategory.
+Require Import InitialTerminalCategory.Core NatCategory.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

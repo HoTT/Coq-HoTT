@@ -3,7 +3,7 @@ Require Import Category.Core Functor.Core.
 Require Import Category.Prod Functor.Prod.
 Require Import Category.Dual Functor.Dual.
 Require Import Functor.Composition.Core Functor.Identity.
-Require Import InitialTerminalCategory NatCategory.
+Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors NatCategory.
 Require Import FunctorCategory.Core.
 Require Import Cat.Core.
 Require Import Functor.Paths.
