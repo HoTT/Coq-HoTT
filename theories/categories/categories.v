@@ -12,6 +12,8 @@ Require NaturalTransformation.
 Require FunctorCategory.
 (** ** Groupoids *)
 Require GroupoidCategory.
+(** ** Precategory of Groupoids *)
+Require CategoryOfGroupoids.
 (** ** Discrete Categories *)
 Require DiscreteCategory.
 (** ** Indiscrete Categories *)
@@ -71,6 +73,7 @@ Include Functor.Core.
 Include NaturalTransformation.Core.
 Include FunctorCategory.Core.
 Include GroupoidCategory.Core.
+Include CategoryOfGroupoids.
 Include DiscreteCategory.Core.
 Include IndiscreteCategory.Core.
 Include NatCategory.Core.

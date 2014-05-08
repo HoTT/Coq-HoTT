@@ -154,6 +154,8 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/GroupoidCategory/GroupoidCategory.v \
 	$(srcdir)/theories/categories/GroupoidCategory/Core.v \
 	\
+	$(srcdir)/theories/categories/CategoryOfGroupoids.v \
+	\
 	$(srcdir)/theories/categories/DiscreteCategory.v \
 	\
 	$(srcdir)/theories/categories/IndiscreteCategory.v \
