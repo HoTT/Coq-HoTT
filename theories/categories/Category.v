@@ -9,6 +9,8 @@ Require Category.Core.
 Require Category.Dual.
 (** ** Morphisms in precategories *)
 Require Category.Morphisms.
+(** ** Classification of path space *)
+Require Category.Paths.
 (** ** Universal objects *)
 Require Category.Objects.
 (** ** Product precategories *)
@@ -27,6 +29,7 @@ Require Category.Univalent.
 Include Category.Core.
 Include Category.Dual.
 Include Category.Morphisms.
+Include Category.Paths.
 Include Category.Objects.
 Include Category.Prod.
 Include Category.Pi.
