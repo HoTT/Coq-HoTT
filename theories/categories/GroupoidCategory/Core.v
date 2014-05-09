@@ -1,6 +1,6 @@
 (** * Groupoids *)
 Require Import Category.Core Category.Morphisms Category.Strict.
-Require Import Trunc.
+Require Import Trunc types.Forall PathGroupoids.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -11,6 +11,14 @@ Local Open Scope equiv_scope.
 Local Open Scope category_scope.
 
 (** A groupoid is a precategory where every morphism is an isomorphism.  Since 1-types are 1-groupoids, we can construct the category corresponding to the 1-groupoid of a 1-type. *)
+
+(** ** Definition of what it means to be a groupoid *)
+Class IsGroupoid (C : PreCategory)
+  := isgroupoid : forall s d (m : morphism C s d),
+                    IsIsomorphism m.
+
+Instance trunc_isgroupoid `{Funext} C : IsHProp (IsGroupoid C)
+  := trunc_forall.
 
 (** We don't want access to all of the internals of a groupoid category at top level. *)
 Module GroupoidCategoryInternals.
@@ -47,6 +55,18 @@ Proof.
 Defined.
 
 Arguments groupoid_category X {_}.
+
+Instance isgroupoid_groupoid_category X `{IsTrunc 1 X}
+: IsGroupoid (groupoid_category X).
+ Proof.
+  intros s d m; simpl in *.
+  exact (Build_IsIsomorphism
+           (groupoid_category X)
+           s d
+           m m^%path
+           (concat_pV m)
+           (concat_Vp m)).
+Defined.
 
 (** ** 0-types give rise to strict (groupoid) categories *)
 Lemma isstrict_groupoid_category X `{IsHSet X}
