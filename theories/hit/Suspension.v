@@ -103,3 +103,14 @@ Proof.
   refine (concat_Ap n.2 (merid x) @ _).
   apply (concatR (concat_p1 _)), whiskerL. apply ap_const.
 Defined.
+
+(** ** Pointedness of [Susp] and path spaces thereof *)
+(** We arbitrarily choose [North] to be the point. *)
+Global Instance ispointed_susp {X : Type} : IsPointed (Susp X) | 0
+  := North.
+
+Global Instance ispointed_path_susp `{IsPointed X} : IsPointed (North = South :> Susp X) | 0
+  := merid (point X).
+
+Global Instance ispointed_path_susp' `{IsPointed X} : IsPointed (South = North :> Susp X) | 0
+  := (merid (point X))^.
