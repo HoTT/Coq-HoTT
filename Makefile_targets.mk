@@ -7,19 +7,8 @@
 # a '\' to the end of the line before it, or, if you place it in the
 # middle, to the end of the line that you added.
 
-STD_VFILES = \
-	$(SRCCOQLIB)/theories/Init/Notations.v \
-	$(SRCCOQLIB)/theories/Init/Logic.v \
-	$(SRCCOQLIB)/theories/Init/Datatypes.v \
-	$(SRCCOQLIB)/theories/Init/Logic_Type.v \
-	$(SRCCOQLIB)/theories/Init/Peano.v \
-	$(SRCCOQLIB)/theories/Init/Tactics.v \
-	$(SRCCOQLIB)/theories/Init/Specif.v \
-	$(SRCCOQLIB)/theories/Init/Prelude.v \
-	$(SRCCOQLIB)/theories/Bool/Bool.v \
-	$(SRCCOQLIB)/theories/Program/Tactics.v
-
 CORE_VFILES = \
+	$(srcdir)/theories/CoqStandardLibraryReplacement.v \
 	$(srcdir)/theories/Overture.v \
 	$(srcdir)/theories/PathGroupoids.v \
 	$(srcdir)/theories/Conjugation.v \

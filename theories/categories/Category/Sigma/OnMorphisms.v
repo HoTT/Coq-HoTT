@@ -11,8 +11,8 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
-Local Notation sigT_type := Coq.Init.Specif.sigT.
-Local Notation projT1_type := Coq.Init.Specif.projT1.
+Local Notation sigT_type := Init.Specif.sigT.
+Local Notation projT1_type := Init.Specif.projT1.
 
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.

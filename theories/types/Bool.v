@@ -4,13 +4,6 @@
 Require Import Overture Contractible Equivalences types.Prod HSet.
 Local Open Scope equiv_scope.
 
-(* coq calls it "bool", we call it "Bool" *)
-Inductive Bool : Type :=
-  | true : Bool
-  | false : Bool.
-
-Add Printing If Bool.
-
 Delimit Scope bool_scope with Bool.
 
 Bind Scope bool_scope with Bool.

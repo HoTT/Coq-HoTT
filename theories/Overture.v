@@ -1,39 +1,15 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
+(** Warn the user if they're using [eq] or [identity]. *)
+Notation EVIL_PROP_EQ := Coq.Init.Logic.eq.
+Notation EVIL_MONOMORPHIC_IDENTITY := Coq.Init.Datatypes.identity.
+
+Require Export CoqStandardLibraryReplacement.
+
+Global Open Scope type_scope.
+Global Open Scope core_scope.
+
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
-
-(** ** Type classes *)
-Definition relation (A : Type) := A -> A -> Type.
-
-Class Reflexive {A} (R : relation A) :=
-  reflexivity : forall x : A, R x x.
-
-Class Symmetric {A} (R : relation A) :=
-  symmetry : forall x y, R x y -> R y x.
-
-Class Transitive {A} (R : relation A) :=
-  transitivity : forall x y z, R x y -> R y z -> R x z.
-
-(** A [PreOrder] is both Reflexive and Transitive. *)
-Class PreOrder {A} (R : relation A) :=
-  { PreOrder_Reflexive :> Reflexive R | 2 ;
-    PreOrder_Transitive :> Transitive R | 2 }.
-
-Tactic Notation "etransitivity" open_constr(y) :=
-  let R := match goal with |- ?R ?x ?z => constr:(R) end in
-  let x := match goal with |- ?R ?x ?z => constr:(x) end in
-  let z := match goal with |- ?R ?x ?z => constr:(z) end in
-  refine (@transitivity _ R _ x y z _ _).
-
-Tactic Notation "etransitivity" := etransitivity _.
-
-(** We would like to redefine [symmetry], which is too smart for its own good, as follows:
-
-<<
-Ltac symmetry := refine (@symmetry _ _ _ _ _ _).
->>
-
-But this gives "Error: in Tacinterp.add_tacdef: Reserved Ltac name symmetry.".  This might be fixed with https://coq.inria.fr/bugs/show_bug.cgi?id=3113.  For now, you can [apply symmetry] or [eapply symmetry].  (Note that we can get around this error message by using [Tactic Notation "symmetry"], but, confusingly, this tactic notation never gets called. *)
 
 (** ** Basic definitions *)
 
@@ -44,11 +20,29 @@ Notation Type0 := Set.
     or complicate matters with its type. *)
 Notation idmap := (fun x => x).
 
+Notation Unit := unit.
+Notation Unit_rect := unit_rect.
+Notation Unit_rec := unit_rec.
+Notation Unit_ind := unit_ind.
+
+Notation Empty := Empty_set.
+Notation Empty_rect := Empty_set_rect.
+Notation Empty_rec := Empty_set_rec.
+Notation Empty_ind := Empty_set_ind.
+
+Notation Bool := bool.
+Notation Bool_rect := bool_rect.
+Notation Bool_rec := bool_rec.
+Notation Bool_ind := bool_ind.
+
 (** We define notation for dependent pairs because it is too annoying to write and see [existT P x y] all the time.  However, we put it in its own scope, because sometimes it is necessary to give the particular dependent type, so we'd like to be able to turn off this notation selectively. *)
 Notation "( x ; y )" := (existT _ x y) : fibration_scope.
+Bind Scope fibration_scope with sigT.
 Open Scope fibration_scope.
 
 (** We have unified [sig] and [sigT] of the standard Coq, and so we introduce a new notation to not annoy newcomers with the [T] in [projT1] and [projT2] nor the [_sig] in [proj1_sig] and [proj2_sig], and to not confuse Coq veterans by stealing [proj1] and [proj2], which Coq uses for [and]. *)
+Arguments projT1 {A P}%type _%fibration_scope.
+Arguments projT2 {A P}%type _%fibration_scope.
 Notation pr1 := projT1.
 Notation pr2 := projT2.
 
@@ -57,6 +51,7 @@ Notation "x .1" := (projT1 x) (at level 3) : fibration_scope.
 Notation "x .2" := (projT2 x) (at level 3) : fibration_scope.
 
 (** Composition of functions. *)
+(** It would be nice to reuse [Coq.Program.Basics.compose], but it's monomorphic. *)
 Definition compose {A B C : Type} (g : B -> C) (f : A -> B) :=
   fun x => g (f x).
 
@@ -72,23 +67,27 @@ Open Scope function_scope.
 
 (** We define our own identity type, rather than using the one in the Coq standard library, so as to have more control over transitivity, symmetry and inverse.  It seems impossible to change these for the standard eq/identity type (or its Type-valued version) because it breaks various other standard things.  Merely changing notations also doesn't seem to quite work. *)
 Inductive paths {A : Type} (a : A) : A -> Type :=
-  idpath : paths a a.
+  idpath : paths a a
+where "x = y :> A" := (@paths A x y) : type_scope.
+Notation "x = y" := (x = y :>_) : type_scope.
+
+Bind Scope path_scope with paths.
+Delimit Scope path_scope with path.
+Local Open Scope path_scope.
 
 Arguments idpath {A a} , [A] a.
 
-Arguments paths_ind [A] a P f y p.
-Arguments paths_rec [A] a P f y p.
-Arguments paths_rect [A] a P f y p.
+Arguments paths_ind [A]%type a P%function_scope f y p%path.
+Arguments paths_rec [A]%type a P%function_scope f y p%path.
+Arguments paths_rect [A]%type a P%function_scope f y p%path.
 
-Notation "x = y :> A" := (@paths A x y) : type_scope.
-Notation "x = y" := (x = y :>_) : type_scope.
+Notation eq := paths (only parsing).
+Notation eq_refl := idpath (only parsing).
 
 Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
 
-Delimit Scope path_scope with path.
-Local Open Scope path_scope.
 
 (** We define equality concatenation by destructing on both its arguments, so that it only computes when both arguments are [idpath].  This makes proofs more robust and symmetrical.  Compare with the definition of [identity_trans].  *)
 
@@ -98,6 +97,8 @@ Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments concat {A x y z} p q : simpl nomatch.
 
+Notation eq_trans := concat (only parsing).
+
 Instance transitive_paths {A} : Transitive (@paths A) | 0 := @concat A.
 
 (** The inverse of a path. *)
@@ -106,6 +107,8 @@ Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
 
 (** Declaring this as [simpl nomatch] prevents the tactic [simpl] from expanding it out into [match] statements.  We only want [inverse] to simplify when applied to an identity path. *)
 Arguments inverse {A x y} p : simpl nomatch.
+
+Notation eq_sym := inverse (only parsing).
 
 Instance symmetric_paths {A} : Symmetric (@paths A) | 0 := @inverse A.
 
@@ -133,7 +136,7 @@ Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) 
   match p with idpath => u end.
 
 (** See above for the meaning of [simpl nomatch]. *)
-Arguments transport {A} P {x y} p%path_scope u : simpl nomatch.
+Arguments transport {A} P {x y} p u : simpl nomatch.
 
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression.*)
 Delimit Scope fib_scope with fib.
@@ -151,6 +154,8 @@ We will first see this appearing in the type of [apD]. *)
 
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
+
+Notation f_equal := ap (only parsing).
 
 (** We introduce the convention that [apKN] denotes the application of a K-path between
    functions to an N-path between elements, where a 0-path is simply a function or an
@@ -317,7 +322,14 @@ Instance istrunc_paths (A : Type) n `{H : IsTrunc (trunc_S n) A} (x y : A)
 : IsTrunc n (x = y)
   := H x y. (* but do fold [IsTrunc] *)
 
-Hint Extern 0 => progress change IsTrunc_internal with IsTrunc in * : typeclass_instances. (* Also fold [IsTrunc_internal] *)
+Ltac fold_IsTrunc_internal :=
+  repeat match goal with
+           | [ H : appcontext[IsTrunc_internal] |- _ ] => progress change IsTrunc_internal with IsTrunc in H at 1
+           | _ => progress change IsTrunc_internal with IsTrunc at 1
+           | [ H : appcontext[IsTrunc_internal] |- _ ] => progress change IsTrunc_internal with IsTrunc in H
+           | _ => progress change IsTrunc_internal with IsTrunc
+         end.
+Hint Extern 0 => progress fold_IsTrunc_internal : typeclass_instances. (* Also fold [IsTrunc_internal] *)
 
 (** Picking up the [forall x y, IsTrunc n (x = y)] instances in the hypotheses is much tricker.  We could do something evil where we declare an empty typeclass like [IsTruncSimplification] and use the typeclass as a proxy for allowing typeclass machinery to factor nested [forall]s into the [IsTrunc] via backward reasoning on the type of the hypothesis... but, that's rather complicated, so we instead explicitly list out a few common cases.  It should be clear how to extend the pattern. *)
 Hint Extern 10 =>
@@ -338,7 +350,14 @@ Notation Contr := (IsTrunc minus_two).
 Notation IsHProp := (IsTrunc minus_one).
 Notation IsHSet := (IsTrunc 0).
 
-Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_instances.
+Ltac fold_Contr_internal :=
+  repeat match goal with
+           | [ H : appcontext[Contr_internal] |- _ ] => progress change Contr_internal with Contr in H at 1
+           | _ => progress change Contr_internal with Contr at 1
+           | [ H : appcontext[Contr_internal] |- _ ] => progress change Contr_internal with Contr in H
+           | _ => progress change Contr_internal with Contr
+         end.
+Hint Extern 0 => progress fold_Contr_internal : typeclass_instances.
 
 (** *** Function extensionality *)
 
@@ -375,12 +394,12 @@ Hint Resolve @idpath : core.
 Ltac path_via mid :=
   apply @concat with (y := mid); auto with path_hints.
 
-(** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
-Inductive Empty : Type0 := .
-
 Definition not (A:Type) : Type := A -> Empty.
 Notation "~ x" := (not x) : type_scope.
 Hint Unfold not: core.
+
+Notation "x <> y :> T" := (not (x = y :> T)) : type_scope.
+Notation "x <> y" := (x <> y :> _) : type_scope.
 
 (** *** Pointed types *)
 
@@ -409,6 +428,7 @@ Tactic Notation "by" tactic(tac) :=
 (** A convenient tactic for using function extensionality. *)
 Ltac by_extensionality x :=
   intros; unfold compose;
+  let test_funext := constr:(@path_forall _) in
   match goal with
   | [ |- ?f = ?g ] => eapply path_forall; intro x;
       match goal with

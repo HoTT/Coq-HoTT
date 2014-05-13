@@ -38,13 +38,11 @@ function readlink_f() {
 # script, then use that one, otherwise use the global one. This trick
 # allows hoqc to work "in place" on the source files.
 mydir="$(dirname "$(readlink_f "${BASH_SOURCE[0]}")")"
-if test -d "$mydir/coq/theories"
+if test -f "$mydir/theories/Overture.v"
 then
-  export COQLIB="$mydir/coq"
   export HOTTLIB="$mydir/theories"
 else
-  export COQLIB="@hottdir@/coq"
-  export HOTTLIB="@hottdir@/theories"
+  export HOTTLIB="${prefix}/share/hott/theories"
 fi
 
 COQ_PROG_NAME="$1"
@@ -59,4 +57,4 @@ then
   exit 1
 fi
 
-exec "$COQ_PROG" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter "$@"
+exec "$COQ_PROG" -no-native-compiler -R "$HOTTLIB" HoTT -indices-matter "$@"
