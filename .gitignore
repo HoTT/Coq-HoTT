@@ -30,7 +30,7 @@ config.status
 configure
 etc/install-sh
 etc/missing
-hoq-config
+hoq-run
 Makefile.in
 Makefile
 Makefile_ssrplugin

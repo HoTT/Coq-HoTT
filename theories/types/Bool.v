@@ -4,27 +4,9 @@
 Require Import Overture Contractible Equivalences types.Prod HSet.
 Local Open Scope equiv_scope.
 
-(* coq calls it "bool", we call it "Bool" *)
-Inductive Bool : Type :=
-  | true : Bool
-  | false : Bool.
-
-Add Printing If Bool.
-
 Delimit Scope bool_scope with Bool.
 
 Bind Scope bool_scope with Bool.
-
-Definition andb (b1 b2 : Bool) : Bool := if b1 then b2 else false.
-
-Definition orb (b1 b2 : Bool) : Bool := if b1 then true else b2.
-
-Definition negb (b : Bool) := if b then false else true.
-
-Definition implb (b1 b2 : Bool) : Bool := if b1 then b2 else true.
-
-Infix "||" := orb : bool_scope.
-Infix "&&" := andb : bool_scope.
 
 Instance trunc_if n A B `{IsTrunc n A, IsTrunc n B} (b : Bool)
 : IsTrunc n (if b then A else B) | 100
