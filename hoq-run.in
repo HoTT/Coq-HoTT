@@ -4,11 +4,11 @@
 # options.  One day we might figure out how to create an honest Coq
 # toplevel instead.
 prefix="@prefix@"
-export COQC="@COQC@"
-export COQDEP="@COQDEP@"
-export COQDOC="@COQDOC@"
-export COQIDE="@COQIDE@"
-export COQTOP="@COQTOP@"
+export coqc="@COQC@"
+export coqdep="@COQDEP@"
+export coqdoc="@COQDOC@"
+export coqide="@COQIDE@"
+export coqtop="@COQTOP@"
 
 function readlink_f() {
     # readlink -f doesn't work on Mac OS.  So we roll our own readlink
@@ -46,4 +46,17 @@ else
   export COQLIB="@hottdir@/coq"
   export HOTTLIB="@hottdir@/theories"
 fi
-#export COQ_ARGS=(-no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter)
+
+COQ_PROG_NAME="$1"
+COQ_PROG_EXTRA="$2"
+COQ_PROG="${!COQ_PROG_NAME}$COQ_PROG_EXTRA"
+shift
+shift
+
+if [ "x$COQ_PROG" = "xno" ]
+then
+  echo "Fatal error: $COQ_PROG_NAME$COQ_PROG_EXTRA with -indices-matter was not found during configuration."
+  exit 1
+fi
+
+exec "$COQ_PROG" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter "$@"

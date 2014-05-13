@@ -27,23 +27,10 @@ function readlink_f() {
 }
 
 mydir="$(dirname "$(readlink_f "${BASH_SOURCE[0]}")")"
-if [ ! -f "$mydir/hoq-config" ]
+if [ ! -f "$mydir/hoq-run" ]
 then
-  echo "Could not find hoq-config. Did you run ./configure?"
+  echo "Could not find hoq-run. Did you run ./configure?"
   exit 1
 fi
 
-. "$mydir/hoq-config"
-if [ "x$COQDEP" = "xno" ]
-then
-  echo "Fatal error: coqdep with -indices-matter was not found during configuration."
-  exit 1
-fi
-
-# We could stick the arguments in hoq-config in COQ_ARGS, and then,
-# using (non-portable) bash arrays, do
-# $ exec "$COQDEP" "${COQ_ARGS[@]}" "$@"
-# or using more evil (but portable) 'eval', do
-# $ eval 'exec "$COQDEP" '"$COQ_ARGS"' "$@"'
-# Instead, we duplicate code, because it's simpler.
-exec "$COQDEP" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter "$@"
+. "$mydir/hoq-run" coqdep "" "$@"

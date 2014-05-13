@@ -188,6 +188,6 @@ AS_IF([test "$coqtop_out" = 0],
 
 
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([hoq-config])
+AC_CONFIG_FILES([hoq-run])
 
 AC_OUTPUT

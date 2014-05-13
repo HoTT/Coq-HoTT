@@ -27,18 +27,12 @@ function readlink_f() {
 }
 
 mythmdepdir="$(dirname "$(readlink_f "${BASH_SOURCE[0]}")")"
-if [ ! -f "$mythmdepdir/../../hoq-config" ]
+if [ ! -f "$mythmdepdir/../../hoq-run" ]
 then
-  echo "Could not find hoq-config. Did you run ./configure?"
+  echo "Could not find hoq-run. Did you run ./configure?"
   exit 1
 fi
 
-. "$mythmdepdir/../../hoq-config"
+export coqthmdep="$mythmdepdir/coqthmdep"
 
-# We could stick the arguments in hoq-config in COQ_ARGS, and then,
-# using (non-portable) bash arrays, do
-# $ exec "$COQTOP" "${COQ_ARGS[@]}" "$@"
-# or using more evil (but portable) 'eval', do
-# $ eval 'exec "$COQTOP" '"$COQ_ARGS"' "$@"'
-# Instead, we duplicate code, because it's simpler.
-exec "$mythmdepdir/coqthmdep" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter "$@"
+. "$mythmdepdir/../../hoq-run" coqthmdep "" "$@"
