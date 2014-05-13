@@ -394,8 +394,6 @@ Hint Resolve @idpath : core.
 Ltac path_via mid :=
   apply @concat with (y := mid); auto with path_hints.
 
-Definition not (A:Type) : Type := A -> Empty.
-Notation "~ x" := (not x) : type_scope.
 Hint Unfold not: core.
 
 Notation "x <> y :> T" := (not (x = y :> T)) : type_scope.
