@@ -105,9 +105,11 @@ Hint Immediate WeakFunext_implies_Funext NaiveFunext_implies_Funext : typeclass_
 (** If universe [U_i] is functionally extensional, then so are universes [U_j] for [j ≤ i]. *)
 Lemma Funext_downward_closed `{H : Funext} : Funext.
 Proof.
-  constructor.
-  intros A P.
-  exact (@isequiv_apD10 H (Lift A) (fun a => Lift (P a))).
+  apply @NaiveFunext_implies_Funext.
+  apply Funext_implies_NaiveFunext in H.
+  hnf in *.
+  intros A P f g H'.
+  exact (H (Lift A) (fun x => Lift (P x)) f g (fun x => ap lift (H' x))).
 Defined.
 
 (** We permit the use of [Funext_downward_closed] exactly once in typeclass resolution.  So long as typeclass resolution backtracks on instances of functional extensionality, this will hopefully mean that we'll never need to worry about instances of functional extensionality, at least when we make definitions all in one go. *)
