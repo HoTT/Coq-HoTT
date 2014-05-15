@@ -238,7 +238,8 @@ Section Reflexive_Subuniverse.
       apply path_forall; intro x; simpl.
       pose (foo1 := ap10 (function_lift_compose X A C π1 f) x).
       pose (foo2 := ap10 (function_lift_compose X B C π2 g) x).
-      pose (foo3 := ap (fun u => O_rec X (O subU C) (fun x0 => O_unit subU C (u x0)) x) (x:=f o π1) (y:=g o π2) comm). simpl in foo3.
+      pose (foo3 := ap (fun u => O_rec X (O subU C) (fun x0 => O_unit subU C (u x0)) x)
+                       (x:=f o π1) (y:=g o π2) comm).
       exact (concat (concat (inverse foo1) foo3) foo2).
     Defined.
 
