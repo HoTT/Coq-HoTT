@@ -3,8 +3,8 @@ Require Import types.Empty types.Unit types.Arrow types.Sigma types.Forall types
 
 Local Open Scope path_scope.
 
-(** * Reflexive Subuniverses *)
-Section Reflexive_Subuniverse.
+(** * Reflective Subuniverses *)
+Section Reflective_Subuniverse.
   Context {Fun : Funext}.
 
   (** A reflective subuniverse is the data of : *)
@@ -424,7 +424,7 @@ Section Reflexive_Subuniverse.
     Qed.
 
   End Types.
-End Reflexive_Subuniverse.
+End Reflective_Subuniverse.
 Set Implicit Arguments.
 
 (** * Modalities *)
