@@ -21,33 +21,18 @@ Section composition.
   Local Notation c_object_of c := (G (F c)) (only parsing).
   Local Notation c_morphism_of m := (morphism_of G (morphism_of F m)) (only parsing).
   (** We use [rewrite <-] because the resulting [match]es look better. *)
-  Let compose_composition_of' s d d'
+  Definition compose_composition_of s d d'
       (m1 : morphism C s d) (m2 : morphism C d d')
-  : c_morphism_of (m2 o m1) = c_morphism_of m2 o c_morphism_of m1.
-  Proof.
-    rewrite <- !composition_of.
-    reflexivity.
-  Defined.
-  Definition compose_composition_of s d d' m1 m2
-    := Eval cbv beta iota zeta delta
-            [compose_composition_of' internal_paths_rew] in
-        @compose_composition_of' s d d' m1 m2.
+  : c_morphism_of (m2 o m1) = c_morphism_of m2 o c_morphism_of m1
+    := transport (@paths _ (c_morphism_of (m2 o m1)))
+                 (composition_of G _ _ _ _ _)
+                 (ap (@morphism_of _ _ G _ _) (composition_of F _ _ _ m1 m2)).
 
-  Let compose_identity_of' x
-  : c_morphism_of (identity x) = identity (c_object_of x).
-  Proof.
-    rewrite <- !identity_of.
-    reflexivity.
-  Defined.
   Definition compose_identity_of x
-    := Eval cbv beta iota zeta delta
-            [compose_identity_of' internal_paths_rew] in
-        @compose_identity_of' x.
-
-  Global Arguments compose_composition_of / .
-  Global Arguments compose_identity_of / .
-  Global Arguments compose_composition_of : simpl never.
-  Global Arguments compose_identity_of : simpl never.
+  : c_morphism_of (identity x) = identity (c_object_of x)
+    := transport (@paths _ _)
+                 (identity_of G _)
+                 (ap (@morphism_of _ _ G _ _) (identity_of F x)).
 
   Definition compose : Functor C E
     := Build_Functor

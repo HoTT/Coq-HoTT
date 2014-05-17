@@ -90,9 +90,12 @@ Module Import CommaCategory.
     Lemma path_object' (x y : object)
     : forall (Ha : x.(a) = y.(a))
              (Hb : x.(b) = y.(b)),
-        match Ha in _ = X, Hb in _ = Y return morphism C (S X) (T Y) with
-          | idpath, idpath => x.(f)
-        end = y.(f)
+        transport (fun X => morphism C (S X) _)
+                  Ha
+                  (transport (fun Y => morphism C _ (T Y))
+                             Hb
+                             x.(f))
+        = y.(f)
         -> x = y.
     Proof.
       destruct x, y; simpl.
