@@ -37,7 +37,7 @@ Section identity_lemmas.
     apply path_sigma_uncurried; simpl.
     (exists (path_prod'
                (Functor.Composition.Laws.left_identity _)
-               (Functor.Composition.Laws.left_identity _))).
+               (Functor.Composition.Laws.right_identity _))).
     Adjoint.Composition.LawsTactic.law_t.
   Qed.
 
@@ -47,7 +47,7 @@ Section identity_lemmas.
     apply path_sigma_uncurried; simpl.
     (exists (path_prod'
                (Functor.Composition.Laws.right_identity _)
-               (Functor.Composition.Laws.right_identity _))).
+               (Functor.Composition.Laws.left_identity _))).
     Adjoint.Composition.LawsTactic.law_t.
   Qed.
 End identity_lemmas.

@@ -209,7 +209,7 @@ Record PseudonaturalTransformation `{Funext} (X : PreCategory)
            o (p_identity_of G x oR p_components_of x)
            o (p_commutes x x 1%morphism)
            o (p_components_of x oL (p_identity_of F x) ^-1)
-           o (left_identity_natural_transformation_2 (p_components_of x))
+           o (right_identity_natural_transformation_2 (p_components_of x))
          = 1)%natural_transformation;
     p_commutes_respects_composition
     : forall (x y z : X) (m1 : morphism X y z) (m2 : morphism X x y),
