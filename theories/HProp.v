@@ -63,6 +63,15 @@ Proof.
     apply I, AH1.
 Qed.
 
+(** We can induct on the truncation index to get that [IsTrunc] is (n+1)-truncated for all [n]. *)
+Lemma istrunc_s__ishprop `{IsHProp A} {n} : IsTrunc (trunc_S n) A.
+Proof.
+  induction n; typeclasses eauto.
+Defined.
+
+Global Instance trunc_trunc `{Funext} A m n : IsTrunc (trunc_S n) (IsTrunc m A) | 0
+  := istrunc_s__ishprop.
+
 (** Chracterization of [IsHProp] in terms of all points being connected by paths. *)
 
 Theorem allpath_hprop `{H : IsHProp A} : forall x y : A, x = y.
