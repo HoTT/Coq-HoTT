@@ -132,7 +132,7 @@ all-am: Makefile $(SCRIPTS) $(DATA) $(MAKEFILE_TARGETS_FILE)
 
 .SECONDEXPANSION:
 
-.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph
+.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom
 
 # TODO(JasonGross): Get this to work on Windows, where symlinks are unreliable
 install-data-local:
@@ -165,7 +165,14 @@ strict-test:
 	    exit 1; \
 	fi
 
-strict: strict-test hottlib hott-core hott-categories contrib
+# a rule that will error if there are any .v files that require FunextAxiom or UnivalenceAxiom
+strict-no-axiom: $(ALL_GLOBFILES)
+	$(Q) if [ ! -z "$$(grep 'HoTT\.\(FunextAxiom\|UnivalenceAxiom\) <> <> lib' -l $<)" ]; then \
+	    echo "Error: The files '$$(grep 'HoTT\.\(FunextAxiom\|UnivalenceAxiom\) <> <> lib' -l $<)' depend on FunextAxiom or UnivalenceAxiom."; \
+	    exit 1; \
+	fi
+
+strict: strict-test strict-no-axiom hottlib hott-core hott-categories contrib
 
 # A rule for compiling the HoTT libary files
 $(MAIN_VOFILES) : %.vo : %.v $(STD_VOFILES)
