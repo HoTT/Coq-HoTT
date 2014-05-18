@@ -301,4 +301,5 @@ CATEGORY_VFILES = \
 
 CONTRIB_VFILES = \
 	$(srcdir)/contrib/HoTTBook.v \
-	$(srcdir)/contrib/HoTTBookExercises.v
+	$(srcdir)/contrib/HoTTBookExercises.v \
+	$(srcdir)/contrib/Freudenthal.v
