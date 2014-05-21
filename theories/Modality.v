@@ -1,5 +1,6 @@
-Require Import Overture PathGroupoids HProp Equivalences.
-Require Import types.Empty types.Unit types.Arrow types.Sigma types.Forall types.Prod types.Universe.
+Require Import Overture PathGroupoids HProp Equivalences .
+Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths
+        types.Forall types.Prod types.Universe types.ObjectClassifier.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -75,8 +76,7 @@ Section Reflective_Subuniverse.
         apply path_forall; intro y.
         exact (H y).
         apply ap10.
-        apply (elim_E (f := (fun f : (O subU T) .1 -> (O subU T) .1 => f o O_unit subU T))).
-        exact ((subU.(O_equiv) T (subU.(O) T))).
+        apply ((equiv_inv (IsEquiv := isequiv_ap (H := O_equiv subU T (O subU T)) (eta o mu) idmap ))).
         exact X.
       - exact H.
     Defined.
@@ -91,7 +91,6 @@ Section Reflective_Subuniverse.
       intro. eapply ap10 in f. exact (f x).
     Defined.
 
-
     Definition O_modal (T:SubuniverseType subU)
     : T = subU.(O) T.1.
     Proof.
@@ -99,7 +98,6 @@ Section Reflective_Subuniverse.
       apply path_universe.
       exact (BuildEquiv _ _ (subU.(O_unit) (T.1)) (O_modal_equiv _)).
     Defined.
-
 
     Definition subuniverse_iff_O (T:Type)
     : IsEquiv (subU.(O_unit) T) = (subU.(subuniverse_HProp) T).
@@ -179,7 +177,6 @@ Section Reflective_Subuniverse.
     (** In this section, we see how the ○ operator acts on maps *)
     Variable subU : SubuniverseStruct.
 
-
     Definition function_lift (A B : Type) (f : A -> B)
     : (subU.(O) A).1 -> (subU.(O) B).1.
     Proof.
@@ -214,8 +211,7 @@ Section Reflective_Subuniverse.
       fold ( (O_unit subU B) o f).
 
       assert (P1 : O_rec A (O subU C) (fun x0 : A => O_unit subU C ((g o f) x0)) x
-                   = O_rec A (O subU C) (((O_unit subU C) o g) o f) x).
-      exact idpath.
+                   = O_rec A (O subU C) (((O_unit subU C) o g) o f) x) by (exact idpath).
 
       assert (P2 : O_rec A (O subU C) (((O_unit subU C) o g) o f) x
                    = O_rec A (O subU C)
@@ -226,8 +222,8 @@ Section Reflective_Subuniverse.
       assert (P3 : O_rec A (O subU C)
                          (O_rec B (O subU C) (O_unit subU C o g) o O_unit subU B o f) x
                    = O_rec A (O subU C)
-                           (O_rec B (O subU C) (O_unit subU C o g) o (O_unit subU B o f)) x).
-      exact idpath.
+                           (O_rec B (O subU C) (O_unit subU C o g) o (O_unit subU B o f)) x)
+        by (exact idpath).
 
       assert (P4 : O_rec A (O subU C)
                          (O_rec B (O subU C) (O_unit subU C o g) o (O_unit subU B o f)) x
@@ -281,14 +277,14 @@ Section Reflective_Subuniverse.
     Proof.
       intro H.
       pose (ev := fun x => (fun (f:(forall x, (B x))) => f x)).
-      pose (ζ := fun x:A => O_rec (forall x0 : A, (B x0) ) (B x; H x) (ev x)).
-      pose (h := fun z => fun x => ζ x z).
+      pose (zz := fun x:A => O_rec (forall x0 : A, (B x0) ) (B x; H x) (ev x)).
+      pose (h := fun z => fun x => zz x z).
       simpl in *.
       rewrite <- (subuniverse_iff_O).
       set (eta := (O_unit subU (forall x : A, (B x)))).
       apply O_unit_retract_equiv with (mu := h).
       intro phi.
-      unfold h, ζ, ev; clear h; clear ζ; clear ev.
+      unfold h, zz, ev; clear h; clear zz; clear ev.
       apply path_forall; intro x.
       pose (foo := @O_rec_retr subU (forall x0 : A, (B x0)) (B x; H x)
                                (fun f : forall x0 : A, (B x0) => f x)).
@@ -382,8 +378,7 @@ Section Reflective_Subuniverse.
         pose (g'' := fun x => (f' x).1).
         pose (f'' := fun x:(O subU A).1 => x).
         pose (eq'' := path_forall _ _ (fun x => @ap _ _ pr1 _ _ (eqf x))).
-        assert (X : g'' o (O_unit subU A) = f'' o (O_unit subU A)).
-        exact eq''.
+        assert (X : g'' o (O_unit subU A) = f'' o (O_unit subU A)) by (exact eq'').
         pose (eq''' := ap10 (equal_fun_modal _ A (O subU A) (g'') (f'') (eq''))).
         pose (f := fun z => (f' z).2). simpl in f.
         set (eta := O_unit subU A) in *.
@@ -424,28 +419,38 @@ Section Reflective_Subuniverse.
         exact idpath.
     Qed.
 
-    (** ** Pullbacks and paths *)
+    (** ** Paths *)
 
-    Definition pullback {A B C : Type} (f : A -> C) (g : B -> C)
-      := {a:A & {b: B & f a = g b}}.
+    Definition paths_subuniverse_fun (S:SubuniverseType subU) (x y:S.1)
+    : (O subU (x=y)).1 -> x=y.
+      intros u.
+      assert (p : (fun _:(O subU (x=y)).1 => x) = (fun _=> y)).
+      apply (equiv_inv (IsEquiv := isequiv_ap (H:=O_equiv subU (x=y) S) (fun _ : (O subU (x = y)) .1 => x) (fun _ : (O subU (x = y)) .1 => y))).
+      apply path_forall; intro v. exact v.
+      exact (ap10 p u).
+    Defined.
 
-    (** Note: This is provable, but since we haven't proven it yet, and since we need it for [paths_subuniverse], we assume it as a hypothesis. *)
-
-    Parameter pullback_subuniverse : forall (A B C : SubuniverseType subU) (f : A.1 -> C.1) (g : B.1 -> C.1), (subU.(subuniverse_HProp) (pullback f g)).
-
-    Lemma paths_subuniverse (S:SubuniverseType subU) (x y:S.1)
+    Definition paths_subuniverse (S:SubuniverseType subU) (x y:S.1)
     : (subuniverse_HProp subU (x=y)).
-    Proof.
-      assert (X : (x=y) <~> (@pullback Unit Unit S.1 (fun u => x) (fun u => y))).
-      unfold pullback.
-      exists (fun X => existT (fun _ => {_ : Unit | x=y}) tt (existT (fun _ => x=y) tt X)).
-      apply isequiv_adjointify with (g := fun X : {_ : Unit | {_ : Unit | x=y}} => X.2.2).
-      - intro u. destruct u as [tt1 [tt2 u]]. simpl.
-        destruct tt1; destruct tt2. exact idpath.
-      - intro u. destruct u. exact idpath.
-      - apply (SubuniverseStruct_transport subU (pullback (unit_name x) (unit_name y))).
-        apply equiv_inverse; exact X.
-        apply (pullback_subuniverse (Unit;unit_subuniverse) (Unit;unit_subuniverse) S).
+      rewrite <- subuniverse_iff_O.
+      apply O_unit_retract_equiv with (mu := paths_subuniverse_fun S x y).
+      intro u.
+      etransitivity.
+      exact ((ap_ap10_L
+                ((fun _ : (O subU (x = y)) .1 => x))
+                ((fun _ : (O subU (x = y)) .1 => y))
+                (O_unit subU (x = y))
+                (equiv_inv (IsEquiv := isequiv_ap (H:=O_equiv subU (x=y) S)
+                                                  (fun _ : (O subU (x = y)) .1 => x)
+                                                  (fun _ : (O subU (x = y)) .1 => y))
+                           (path_forall
+                              ((fun _ : (O subU (x = y)) .1 => x) o O_unit subU (x = y))
+                              ((fun _ : (O subU (x = y)) .1 => y) o O_unit subU (x = y))
+                              idmap))
+                u)^).
+      rewrite eisretr.
+      unfold path_forall, ap10.
+      rewrite eisretr. exact idpath.
     Qed.
 
   End Types.
