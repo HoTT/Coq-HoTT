@@ -65,7 +65,7 @@ End Quotient.
 
 Section Equiv.
 
-Context {funext : Funext} {uni : Univalence}.
+Context `{Funext} `{Univalence}.
 
 Context {A : Type} {R : relation A} {sR:setrel R}
  {Htrans : Transitive R} {Hsymm : Symmetric R}.
@@ -80,7 +80,7 @@ Definition in_class : quotient _ -> A -> Type.
 Proof.
 apply (@quotient_rect _ _ _ (fun _ => A -> Type) R).
 intros. eapply concat;[apply transport_const|].
-apply funext. intro z. apply uni. apply @equiv_iff_hprop; eauto.
+apply path_forall. intro z. apply path_universe_uncurried. apply @equiv_iff_hprop; eauto.
 Defined.
 
 Context {Hrefl : Reflexive R}.
@@ -113,18 +113,18 @@ apply (@quotient_rect A R _
  (fun q : quotient sR => forall x, in_class q x -> q = class_of _ x)
   (fun x y H => related_classes_eq H)).
 intros.
-apply funext. intro z.
-apply funext;intro H'.
+apply path_forall. intro z.
+apply path_forall;intro H'.
 apply quotient_path2.
 Defined.
 
 Lemma classes_eq_related : forall x y,
 class_of _ x = class_of _ y -> R x y.
 Proof.
-intros x y H.
+intros x y H'.
 pattern (R x y).
 eapply transport. apply in_class_pr.
-pattern (class_of _ x). apply (transport _ (H^)).
+pattern (class_of _ x). apply (transport _ (H'^)).
 apply Hrefl.
 Defined.
 
@@ -143,7 +143,7 @@ Definition quotient_rect_nondep : forall {B : Type},
 Proof.
 intros ? ? ?.
 apply (quotient_rect (fun _ : quotient _ => B)) with dclass.
-intros ?? H. destruct (related_classes_eq H). by apply dequiv.
+intros ?? H'. destruct (related_classes_eq H'). by apply dequiv.
 Defined.
 
 Definition quotient_rect_nondep2 {B : hSet} {dclass : (A -> A -> B)}:
@@ -157,7 +157,7 @@ assert (dequiv0 : forall x x0 y : A, R x0 y -> dclass x x0 = dclass x y)
 refine (quotient_rect_nondep
   (fun x => quotient_rect_nondep (dclass x) (dequiv0 x)) _).
 intros x x' Hx.
-apply funext. red.
+apply path_forall. red.
 assert (dequiv1 : forall y : A,
   quotient_rect_nondep (dclass x) (dequiv0 x) (class_of _ y) =
   quotient_rect_nondep (dclass x') (dequiv0 x') (class_of _ y))
@@ -194,8 +194,8 @@ Defined.
 
 Definition quotient_ump'' (B:hSet): (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0)))
  -> quotient _ -> B.
-intros [f H].
-apply (quotient_rect_nondep _ H).
+intros [f H'].
+apply (quotient_rect_nondep _ H').
 Defined.
 
 Require Import Misc.
@@ -206,7 +206,7 @@ refine (equiv_adjointify (quotient_ump' B) (quotient_ump'' B) _ _).
 intros [f Hf].
 - by apply equiv_path_sigma_hprop.
 - intros f.
-  apply funext.
+  apply path_forall.
   red. apply quotient_ind;[apply _|reflexivity].
 Defined.
 
