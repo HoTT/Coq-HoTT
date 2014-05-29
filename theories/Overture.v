@@ -158,7 +158,7 @@ Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
 
 Notation ap01 := ap (only parsing).
 
-Definition pointwise_paths {A} {P:A->Type} (f g:forall x:A, P x) : Type
+Definition pointwise_paths {A} {P:A->Type} (f g:forall x:A, P x)
   := forall x:A, f x = g x.
 
 Hint Unfold pointwise_paths : typeclass_instances.
