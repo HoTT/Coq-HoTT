@@ -109,7 +109,9 @@ Proof.
   apply Funext_implies_NaiveFunext in H.
   hnf in *.
   intros A P f g H'.
-  exact (H (Lift A) (fun x => Lift (P x)) f g (fun x => ap lift (H' x))).
+  (** We want to just use [H] here.  But we need to adjust the universe level in four places: for [A], for [P], for the input path, and for the output path. *)
+  case (H (Lift A) (fun x => Lift (P x)) f g (fun x => ap lift (H' x))).
+  exact idpath.
 Defined.
 
 (** We permit the use of [Funext_downward_closed] exactly once in typeclass resolution.  So long as typeclass resolution backtracks on instances of functional extensionality, this will hopefully mean that we'll never need to worry about instances of functional extensionality, at least when we make definitions all in one go. *)
