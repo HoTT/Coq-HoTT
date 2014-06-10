@@ -50,11 +50,11 @@ Definition path_sigma_uncurried {A : Type} (P : A -> Type) (u v : sigT P)
   : u = v
   := match pq with
        | existT p q =>
-         match u, v return (forall p0, (p0 # u.2 = v.2) -> (u=v)) with
-           | (x;y), (x';y') => fun p1 q1 =>
+         match u, v return (forall p0 : u.1 = v.1, (p0 # u.2 = v.2) -> (u=v)) with
+           | (x;y), (x';y') => fun (p1 : x = x') (q1 : p1 # y = y') =>
              match p1 in (_ = x'') return (forall y'', (p1 # y = y'') -> (x;y)=(x'';y'')) with
-               | idpath => fun y' q2 =>
-                 match q2 with
+               | idpath => fun (y' : P x) (q2 : y = y') =>
+                 match q2 in _ = y' return (x;y) = (x;y') with
                    | idpath => 1
                  end
              end y' q1
@@ -467,7 +467,7 @@ Instance isequiv_sigT_corect `{Funext}
                         (fun x => (h x).1)
                         (fun x => (h x).2))
        (fun h => path_forall _ _ (fun a : X => @eta_sigma (A a) (P a) (h a)))
-       (fun h => eta_sigma _)
+       (fun h => eta_sigma h)
        _.
 Proof.
   intros [f g]; simpl.
@@ -483,7 +483,7 @@ Definition equiv_sigT_corect `{Funext}
 
 (** ** Sigmas preserve truncation *)
 
-Instance trunc_sigma `{P : A -> Type}
+Instance trunc_sigma {A: Type@{i}} `{P : A -> Type@{j}}
   `{IsTrunc n A} `{forall a, IsTrunc n (P a)}
   : IsTrunc n (sigT P) | 100.
 Proof.
@@ -491,7 +491,7 @@ Proof.
   induction n; simpl; intros A P ac Pc.
   - exists (center A; center (P (center A))).
     intros [a ?].
-    refine (path_sigma' P (contr a) (path_contr _ _)).
+    apply (path_sigma' P (contr a) (@path_contr _ (Pc a) _ _)).
   - intros u v.
     refine (trunc_equiv (path_sigma_uncurried P u v)).
 Defined.

@@ -106,8 +106,8 @@ Section EquivBoolEquiv.
                                             then {| equiv_fun := idmap |}
                                             else {| equiv_fun := negb |}.
 
-  (** We can't depend on [EquivalenceVarieties] nor [Misc] here, so we take the necessary lemma as a hypothesis, and put the theorem in [Misc.v] *)
   Context `{Funext}.
+  (** We can't depend on [EquivalenceVarieties] nor [Misc] here, so we take the necessary lemma as a hypothesis, and put the theorem in [Misc.v] *)
   Hypothesis path_equiv : forall e1 e2 : Bool <~> Bool,
                             (e1 = e2 :> (Bool -> Bool)) -> (e1 = e2 :> (Bool <~> Bool)).
   Lemma equiv_bool_equiv_bool_bool_helper : Bool <~> (Bool <~> Bool).
@@ -116,8 +116,8 @@ Section EquivBoolEquiv.
     unfold f, g; clear f g;
     hnf; simpl.
     - intro e.
-      destruct e as [e ?].
-      apply path_equiv; try assumption.
+      destruct e as [e ?]. simpl.
+      apply path_equiv. 
       apply path_forall.
       intros []; simpl.
       * destruct (e true); reflexivity.

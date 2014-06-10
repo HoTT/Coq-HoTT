@@ -10,6 +10,8 @@
 (*   This file has been modified for the purposes of the HoTT library.  *)
 (************************************************************************)
 
+Require Import Notations.
+
 Ltac easy :=
   let rec use_hyp H :=
     match type of H with

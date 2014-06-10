@@ -23,7 +23,7 @@ However, while we are faking our higher-inductives anyway, we can take some shor
 
 Module Export Truncation.
 
-Local Inductive Truncation (n : trunc_index) (A :Type) : Type :=
+Private Inductive Truncation (n : trunc_index) (A :Type) : Type :=
   truncation_incl : A -> Truncation n A.
 Arguments truncation_incl {n A} a.
 Axiom istrunc_truncation : forall n A, IsTrunc n (Truncation n A).

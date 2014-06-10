@@ -14,7 +14,7 @@ Open Local Scope path_scope.
 
 Module Export minus1Trunc.
 
-Local Inductive minus1Trunc (A :Type) : Type :=
+Private Inductive minus1Trunc (A :Type) : Type :=
   min1 : A -> minus1Trunc A.
 Axiom min1_path : forall {A : Type} (x y : minus1Trunc A),  x = y.
 Arguments min1 {A} a.

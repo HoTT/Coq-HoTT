@@ -108,7 +108,7 @@ Section sigT_mor.
                        | (_; tt) => _
                      end))
               _).
-    instantiate (1 := idpath).
+    apply idpath.
     repeat (apply path_forall; intro).
     destruct_head @sigT_type.
     destruct_head Unit.

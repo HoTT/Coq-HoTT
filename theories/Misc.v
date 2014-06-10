@@ -32,7 +32,7 @@ Lemma istrunc_nullhomotopy {n : trunc_index}
   : IsTrunc n (NullHomotopy f).
 Proof.
   apply @trunc_sigma; auto.
-  intros y. apply (@trunc_forall _).
+  intros y. apply (@trunc_forall _). auto.
   intros x. apply trunc_succ.
 Defined.
 

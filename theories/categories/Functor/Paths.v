@@ -91,10 +91,9 @@ Section path_functor.
   Qed.
 
   (** ** Equality of functors gives rise to an inhabitant of the path-classifying-type *)
-  Definition path_functor'_sig_inv (F G : Functor C D) : F = G -> path_functor'_T F G
-    := fun H'
-       => (ap object_of H';
-           (transport_compose _ _ _ _) ^ @ apD (@morphism_of _ _) H')%path.
+  Definition path_functor'_sig_inv (F G : Functor C D) : F = G -> path_functor'_T F G :=
+    fun H' => (ap object_of H';
+               (((transport_compose _ object_of _ _) ^ @ apD (@morphism_of _ _) H')%path)).
 
   (** ** Curried version of path classifying lemma *)
   Lemma path_functor' (F G : Functor C D)

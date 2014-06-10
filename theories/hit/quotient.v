@@ -30,7 +30,7 @@ We do not require [R] to be an equivalence relation, but implicitly consider its
 
 
 (** Note: If we wanted to be really accurate, we'd need to put [@quotient A R sr] in the max [U_{sup(i, j)}] of the universes of [A : U_i] and [R : A -> A -> U_j].  But this requires some hacky code, at the moment, and the only thing we gain is avoiding making use of an implicit hpropositional resizing "axiom". *)
-Local Inductive quotient (sR:setrel R): Type :=
+Private Inductive quotient (sR:setrel R): Type :=
   | class_of : A -> quotient sR.
 Axiom related_classes_eq : forall {x y : A}, R x y ->
  class_of _ x = class_of _ y.
@@ -80,7 +80,7 @@ Definition in_class : quotient _ -> A -> Type.
 Proof.
 apply (@quotient_rect _ _ _ (fun _ => A -> Type) R).
 intros. eapply concat;[apply transport_const|].
-apply funext. intro z. apply uni. apply @equiv_iff_hprop; eauto.
+apply isequiv_apD10. intro z. apply isequiv_equiv_path. apply @equiv_iff_hprop; eauto.
 Defined.
 
 Context {Hrefl : Reflexive R}.
@@ -94,7 +94,7 @@ Global Instance in_class_is_prop : forall q x, IsHProp (in_class q x).
 Proof.
 apply (@quotient_rect A R _
     (fun q : quotient sR => forall x, IsHProp (in_class q x)) (fun x y => transport _ (in_class_pr x y) (sR x y))).
-intros. apply allpath_hprop.
+intros. eapply @allpath_hprop. admit.
 Defined.
 
 Require Import HProp.
@@ -113,8 +113,8 @@ apply (@quotient_rect A R _
  (fun q : quotient sR => forall x, in_class q x -> q = class_of _ x)
   (fun x y H => related_classes_eq H)).
 intros.
-apply funext. intro z.
-apply funext;intro H'.
+apply isequiv_apD10. intro z.
+apply isequiv_apD10;intro H'.
 apply quotient_path2.
 Defined.
 
@@ -157,7 +157,7 @@ assert (dequiv0 : forall x x0 y : A, R x0 y -> dclass x x0 = dclass x y)
 refine (quotient_rect_nondep
   (fun x => quotient_rect_nondep (dclass x) (dequiv0 x)) _).
 intros x x' Hx.
-apply funext. red.
+apply isequiv_apD10. red.
 assert (dequiv1 : forall y : A,
   quotient_rect_nondep (dclass x) (dequiv0 x) (class_of _ y) =
   quotient_rect_nondep (dclass x') (dequiv0 x') (class_of _ y))
@@ -206,7 +206,7 @@ refine (equiv_adjointify (quotient_ump' B) (quotient_ump'' B) _ _).
 intros [f Hf].
 - by apply equiv_path_sigma_hprop.
 - intros f.
-  apply funext.
+  apply isequiv_apD10.
   red. apply quotient_ind;[apply _|reflexivity].
 Defined.
 

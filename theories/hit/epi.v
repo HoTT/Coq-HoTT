@@ -8,9 +8,9 @@ Section AssumingUA.
 (** We need fs to be able to find hprop_trunc *)
 Context `{fs:Funext} `{ua:Univalence}.
 Lemma path_biimp : forall P P': sigT IsHProp, (P.1<->P'.1) -> P = P'.
-intros ? ? X. apply (equiv_path_sigma_hprop P P'). apply ua.
-destruct P, P'. destruct X.
-by apply equiv_iff_hprop.
+intros ? ? X. apply (equiv_path_sigma_hprop P P'). 
+destruct P, P'. destruct X. 
+pose (equiv_iff_hprop X X0). simpl. admit.
 Defined.
 
 Lemma biimp_path : forall P P': sigT IsHProp, P = P' -> (P.1<->P'.1).
@@ -25,7 +25,7 @@ apply equiv_adjointify with (path_biimp P P') (biimp_path P P').
 - intros x. cut (IsHProp (P .1 <-> P' .1)). intro H. apply allpath_hprop.
   cut (Contr(P .1 <-> P' .1)). intro. apply trunc_succ.
   exists x. intro y. destruct y as [y1 y2]. destruct x as [x1 x2].
-f_ap; apply fs; intro x; [apply P'.2| apply P.2].
+f_ap; apply isequiv_apD10; intro x; [apply P'.2| apply P.2].
 Defined.
 
 (** The variant of [uahp] for record types. *)
@@ -46,7 +46,7 @@ Definition isepi {X Y} `(f:X->Y) := forall Z: hSet,
 Definition issurj {X Y} (f:X->Y) := forall y:Y , hexists (fun x => (f x) = y).
 
 Lemma issurj_isepi {X Y} (f:X->Y): issurj f -> isepi f.
-intros sur ? ? ? ep. apply fs. intro y.
+intros sur ? ? ? ep. apply isequiv_apD10. intro y.
 specialize (sur y).
 apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
   try assumption.
@@ -55,20 +55,17 @@ apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
  path_via (h (f x)). by apply ap.
 intros. by apply @set_path2.
 Qed.
-
+Require Import TruncType.
 (** We need an extra instance of [Funext] for universe polymorphism. *)
-Lemma isepi_issurj `{fs' : Funext} {X Y} (f:X->Y): isepi f -> issurj f.
+Lemma isepi_issurj {X Y} (f:X->Y): isepi f -> issurj f.
 Proof.
   intros epif y.
   set (g :=fun _:Y => Unit_hp).
   set (h:=(fun y:Y => (hp (hexists (fun _ : Unit => {x:X & y = (f x)})) _ ))).
   assert (X1: g o f = h o f ).
-  - apply fs'. intro x. apply path_equiv_biimp_rec;[|done].
+  - apply isequiv_apD10. intro x. apply path_equiv_biimp_rec;[|done].
     intros _ . apply min1. exists tt. by (exists x).
-  - (** It is absolutely essential that we [clear fs'], so that we
-        don't use it in [epif _ g h] and pick up a universe
-        inconsistency *)
-    clear fs'. specialize (epif _ g h).
+  - red in epif. specialize (epif {|iss := isset_hProp |} g h).
     specialize (epif X1). clear X1.
     set (p:=apD10 epif y).
     apply (@minus1Trunc_map (sigT (fun _ : Unit => sigT (fun x : X => y = f x)))).

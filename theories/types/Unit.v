@@ -69,12 +69,18 @@ Notation unit_name x := (fun (_ : Unit) => x).
 Definition unit_corect {A : Type} : Unit -> (A -> Unit)
   := fun _ _ => tt.
 
+Definition paths_lift (A : Type@{i}) (x y : A) :
+  paths x y -> paths@{j} x y.
+Proof. 
+  intros. destruct X. exact (idpath _).
+Defined.
+
 Instance isequiv_unit_corect `{Funext} (A : Type) : IsEquiv (@unit_corect A) | 0
   := isequiv_adjointify _
   (fun f => tt)
   _ _.
 Proof.
-  - intro f. apply path_forall; intros x; apply path_unit.
+  - intro f. apply path_forall; intros x. apply paths_lift. apply path_unit.
   - intro x; destruct x; reflexivity.
 Defined.
 
@@ -94,7 +100,7 @@ Instance contr_unit : Contr Unit | 0 := let x := {|
 (** ** Equivalences *)
 
 (** A contractible type is equivalent to [Unit]. *)
-Definition equiv_contr_unit `{Contr A} : A <~> Unit.
+Definition equiv_contr_unit `{Contr A} : A <~> (Unit: Type@{j}).
 Proof.
   refine (BuildEquiv _ _
     (fun (_ : A) => tt)

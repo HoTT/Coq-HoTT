@@ -12,7 +12,7 @@ Local Open Scope equiv_scope.
 
 Module Export BaseHIT.
 
-Local Inductive W (A B : Type) (f g : B -> A) : Type :=
+Private Inductive W (A B : Type) (f g : B -> A) : Type :=
 | cc : A -> W A B f g.
 
 Arguments cc {A B f g} a.
@@ -42,7 +42,7 @@ Definition W_rectnd_beta_pp {A B f g} (P : Type) (cc' : A -> P)
   : ap (W_rectnd P cc' pp') (pp b) = pp' b.
 Proof.
   unfold W_rectnd.
-  refine (cancelL (transport_const (pp b) _) _ _ _).
+  refine (cancelL (transport_const (pp b) _) _ _ _). shelve. exact f. exact g.
   refine ((apD_const (@W_rect A B f g (fun _ => P) cc' _) (pp b))^ @ _).
   refine (W_rect_beta_pp (fun _ => P) _ _ _).
 Defined.
@@ -53,7 +53,7 @@ Defined.
 
 Module Export FlattenedHIT.
 
-Local Inductive Wtil (A B : Type) (f g : B -> A)
+Private Inductive Wtil (A B : Type) (f g : B -> A)
   (C : A -> Type) (D : forall b, C (f b) <~> C (g b))
   : Type :=
 | cct : forall a, C a -> Wtil A B f g C D.
@@ -92,9 +92,10 @@ Definition Wtil_rectnd_beta_ppt
   : ap (@Wtil_rectnd A B f g C D Q cct' ppt') (ppt b y) = ppt' b y.
 Proof.
   unfold Wtil_rectnd.
-  refine (cancelL (transport_const (ppt b y) _) _ _ _).
+  refine (cancelL (transport_const (ppt (C:=C) b y) _) _ _ _). 
+  exact g. intro b0. apply D.
   refine ((apD_const
-    (@Wtil_rect A B f g C D (fun _ => Q) cct' _) (ppt b y))^ @ _).
+    (@Wtil_rect A B f g C D (fun _ => Q) cct' _) (ppt (C:=C) b y))^ @ _).
   refine (Wtil_rect_beta_ppt (fun _ => Q) _ _ _ _).
 Defined.
 

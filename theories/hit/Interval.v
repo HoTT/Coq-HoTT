@@ -10,7 +10,7 @@ Local Open Scope equiv_scope.
 
 Module Export Interval.
 
-Local Inductive interval : Type0 :=
+Private Inductive interval : Type0 :=
   | zero : interval
   | one : interval.
 
@@ -52,7 +52,7 @@ Defined.
 
 (** ** From an interval type, we can prove function extensionality. *)
 
-Instance funext_from_interval : Funext | 0
+Definition funext_from_interval : Funext_type
   := WeakFunext_implies_Funext (NaiveFunext_implies_WeakFunext
     (fun A P f g p =>
       let h := fun (x:interval) (a:A) =>

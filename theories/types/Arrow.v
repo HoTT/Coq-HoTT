@@ -102,7 +102,7 @@ Definition ap_apply_Fl {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (z
 
 Definition ap_apply_Fr {A B C : Type} {x y : A} (p : x = y) (z : B -> C) (N : A -> B) :
   ap (fun a => z (N a)) p = ap01 z (ap N p)
-:= (ap_compose _ _ _).
+:= (ap_compose N z _).
 
 Definition ap_apply_FlFr {A B C : Type} {x y : A} (p : x = y) (M : A -> B -> C) (N : A -> B) :
   ap (fun a => (M a) (N a)) p = ap11 (ap M p) (ap N p)
