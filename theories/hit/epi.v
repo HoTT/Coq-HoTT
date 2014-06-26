@@ -1,4 +1,5 @@
 Require Import Overture hit.minus1Trunc HProp Misc TruncType types.Universe Equivalences Trunc HSet types.Unit.
+Set Standard Proposition Elimination Names.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.

@@ -36,7 +36,7 @@ Proof.
   intro.
   intros. 
   pose (@trunc_arrow H0 (not@{i i} A) Empty (trunc_S minus_two)
-                     (IsTrunc_lift@{Set i Type Type} _ hprop_Empty)).
+                     (IsTrunc_lift@{Set i Type Type Type Type} _ hprop_Empty)).
   apply i.
 Defined.
 
