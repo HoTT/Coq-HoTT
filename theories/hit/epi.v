@@ -56,8 +56,8 @@ apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
  path_via (h (f x)). by apply ap.
 intros. by apply @set_path2.
 Qed.
-Require Import TruncType.
-(** We need an extra instance of [Funext] for universe polymorphism. *)
+
+Require Import TruncType Pushout.
 Lemma isepi_issurj {X Y} (f:X->Y): isepi f -> issurj f.
 Proof.
   intros epif y.
@@ -66,7 +66,12 @@ Proof.
   assert (X1: g o f = h o f ).
   - apply isequiv_apD10. intro x. apply path_equiv_biimp_rec;[|done].
     intros _ . apply min1. exists tt. by (exists x).
-  - red in epif. specialize (epif {|iss := isset_hProp |} g h).
+  - red in epif. 
+    pose (C := pushout g h). 
+
+    specialize (epif C).
+
+    specialize (epif {|iss := isset_hProp |} g h).
     specialize (epif X1). clear X1.
     set (p:=apD10 epif y).
     apply (@minus1Trunc_map (sigT (fun _ : Unit => sigT (fun x : X => y = f x)))).

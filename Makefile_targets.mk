@@ -60,6 +60,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/hit/Spheres.v \
 	$(srcdir)/theories/hit/TwoSphere.v \
 	$(srcdir)/theories/hit/minus1Trunc.v \
+	$(srcdir)/theories/hit/Pushout.v \
 	$(srcdir)/theories/hit/epi.v \
 	$(srcdir)/theories/hit/unique_choice.v \
 	$(srcdir)/theories/hit/quotient.v \
