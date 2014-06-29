@@ -68,7 +68,7 @@ Proof. revert A.
   intros x y.
   specialize (IHn _ (HA x y)).
   red in IHn. red in IHn.
-  red. red.
+  red. 
 
   rewrite <- (eq_paths_lift A x y).
   apply IHn.
