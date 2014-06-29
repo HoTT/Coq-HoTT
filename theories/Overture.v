@@ -83,6 +83,16 @@ Arguments paths_rect [A] a P f y p.
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
 
+(** Ensure [internal_paths_rew] and [internal_paths_rew_r] are defined outside sections, which 
+   could make them unnecessarily polymorphic. *)
+Lemma paths_rew (A : Type) (a : A) (P : forall _ : A, Type) 
+    (_ : P a) y (_ : paths a y) : P y.
+Proof. rewrite <- X0. exact X. Defined.
+
+Lemma paths_rew_r (A : Type) (a y : A) (P : forall _ : A, Type) 
+    (_ : P y) (_ : paths a y) : P a.
+Proof. rewrite X0. exact X. Defined.
+
 (** We show that paths uses its universe covariantly: i.e. paths at level i are paths
   at level j for i <= j *)
 
