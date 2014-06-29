@@ -71,7 +71,8 @@ Section lemmas.
           [ typeclasses eauto
           | eapply isisomorphism_compose;
             [ eapply iso_whisker_r; typeclasses eauto
-            | typeclasses eauto ] ] ] ].
+            | idtac ] ] ] ].
+      refine (@isisomorphism_isomorphic _ _ _ n).
     Defined.
 
     Definition p_composition_of_coherent_iso_for_rewrite__isisomorphism_helper
@@ -117,7 +118,7 @@ Section lemmas.
     simpl rewrite (@p_left_identity_of_coherent _ C F x y f).
     path_natural_transformation.
     apply symmetry.
-    etransitivity; apply Category.Core.left_identity.
+    etransitivity; refine (Category.Core.left_identity _ _ _ _).
   Qed.
 
   Lemma p_right_identity_of_coherent_iso_for_rewrite x y (f : morphism C x y)
@@ -133,7 +134,7 @@ Section lemmas.
     simpl rewrite (@p_right_identity_of_coherent _ C F x y f).
     path_natural_transformation.
     apply symmetry.
-    etransitivity; apply Category.Core.left_identity.
+    etransitivity; refine (Category.Core.left_identity _ _ _ _).
   Qed.
 
   Local Notation typeof x := ((fun T (_ : T) => T) _ x) (only parsing).

@@ -81,7 +81,6 @@ Section comma.
            end;
     unfold comma_category_induced_functor_object_of_identity;
     unfold comma_category_induced_functor_object_of_compose;
-    simpl;
     rewrite ?CommaCategory.ap_a_path_object', ?CommaCategory.ap_b_path_object';
     try reflexivity.
 

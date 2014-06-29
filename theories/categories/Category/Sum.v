@@ -54,7 +54,7 @@ Proof.
             _
             _); 
   abstract (
-      repeat (simpl || intros [] || intro); try (apply paths_lift);
+      repeat (simpl || intros [] || intro); 
       auto with morphism; typeclasses eauto).
 Defined.
 

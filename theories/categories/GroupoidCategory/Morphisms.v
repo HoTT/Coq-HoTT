@@ -30,9 +30,5 @@ Section groupoid_category.
       destruct_head @IsIsomorphism;
       compute in *;
       path_induction_hammer. 
-    (* MS: Not needed previously ? *)
-      destruct (H left_inverse 1%path). 
-      destruct (H right_inverse 1%path). 
-      path_induction_hammer.
   Qed.
 End groupoid_category.
