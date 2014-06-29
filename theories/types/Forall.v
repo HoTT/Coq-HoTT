@@ -172,7 +172,7 @@ Proof.
   generalize dependent P.
   induction n as [ | n' IH]; simpl; intros P ?.
   (* case [n = -2], i.e. contractibility *) 
-  - clear H. exact _.
+  - apply contr_forall.
   (* case n = trunc_S n' *) 
   - intros f g; apply (trunc_equiv (apD10 ^-1)).
 Defined.

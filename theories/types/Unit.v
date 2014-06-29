@@ -92,7 +92,7 @@ Definition equiv_unit_corect `{Funext} (A : Type)
 
 (* The Unit type is contractible *)
 (** Because [Contr] is a notation, and [Contr_internal] is the record, we need to iota expand to fool Coq's typeclass machinery into accepting supposedly "mismatched" contexts. *)
-Instance contr_unit : Contr Unit | 0 := let x := {|
+Instance contr_unit : IsTrunc@{i} minus_two Unit | 0 := let x := {|
   center := tt;
   contr := fun t : Unit => match t with tt => 1 end
 |} in x.
