@@ -75,7 +75,7 @@ Open Scope equiv_scope.
 Definition exp {U V:Type}(w:U<~>V):(U->A)<~>(V->A).
 exists (fun f:(U->A)=> (fun x => (f (w^-1 x)))).
 apply equiv_biinv. split;
- exists (fun f:(V->A)=> (fun x => (f (w x)))); intro f; apply fs; intro u;
+ exists (fun f:(V->A)=> (fun x => (f (w x)))); intro f; apply path_forall; intro u;
 apply ap; by apply moveR_E.
 Defined.
 
@@ -83,7 +83,7 @@ Defined.
 Definition exp' {U V:Type}(w:U<~>V):(A->U)<~>(A->V).
 exists (fun f :A->U => (fun a => (w (f a)))).
 apply  equiv_biinv. split;
- exists (fun f:(A->V )=> (fun x => (w^-1 (f x)))); intro f; apply fs; intro u;
+ exists (fun f:(A->V )=> (fun x => (w^-1 (f x)))); intro f; apply path_forall; intro u;
 by apply moveR_E.
 Defined.
 
@@ -128,7 +128,7 @@ cut ( {p : I = {a : A & @hfiber I A f a} &
 intro X. apply ((e ^-1 X)^).
 set (w:=@equiv_fibration_replacement A I f).
 exists (path_universe w). path_via (exp w f). apply transport_exp.
-apply fs. by  (intros [a [i p]]).
+apply path_forall. by  (intros [a [i p]]).
 Qed.
 
 Corollary FamequivPow : (A->Type)<~>(Fam A).
