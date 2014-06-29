@@ -20,7 +20,7 @@ Section iso.
     reflexivity.
   Defined.
 
-  Definition isequiv_isepi_ismono (epif : isepi f) (monof : ismono f)
+  Definition isequiv_isepi_ismono (epif : isepi f) (monof : ismono@{Type Type Type Type Type} f)
   : IsEquiv f.
   Proof.
     pose proof (@isepi_issurj _ _ _ _ f epif) as surjf.

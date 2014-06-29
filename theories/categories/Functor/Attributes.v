@@ -87,7 +87,7 @@ End full_faithful.
 
 Section fully_faithful_helpers.
   Context `{fs0 : Funext}.
-  Variables x y : hSet.
+  Variables x y : hSet@{i}.
   Variable m : x -> y.
 
   Lemma isisomorphism_isequiv_set_cat
@@ -101,24 +101,15 @@ Section fully_faithful_helpers.
     eauto.
   Qed.
 
-  Let isequiv_isepi_ismono_helper ua : isepi m -> ismono@{Type Type Type Type Type} m -> IsEquiv m
+  Let isequiv_isepi_ismono_helper ua : isepi m -> ismono m -> IsEquiv m
     := @isequiv_isepi_ismono ua fs0 x y m.
 
-  (* Definition isequiv_isepimorphism_ismonomorphism *)
-  (*       `{ua:Univalence} *)
-  (*       (Hepi : IsEpimorphism (m : morphism set_cat x y)) *)
-  (*       (Hmono : IsMonomorphism (m : morphism set_cat x y)) *)
-  (* : @IsEquiv _ _ m. *)
-  (*   pose *)
-  (*    (@isequiv_isepi_ismono_helper ua Hepi Hmono). *)
-
-  (** TODO: Figure out why Universe inconsistencies don't respect delta expansion. *)
   Definition isequiv_isepimorphism_ismonomorphism
-        `{fs1 : Funext} `{Univalence}
+             `{Univalence}
         (Hepi : IsEpimorphism (m : morphism set_cat x y))
         (Hmono : IsMonomorphism (m : morphism set_cat x y))
-  : @IsEquiv _ _ m. admit. Defined.
-    (* := @isequiv_isepi_ismono _ fs0 x y m Hepi Hmono. *)
+  : @IsEquiv _ _ m
+   := @isequiv_isepi_ismono _ fs0 x y m Hepi Hmono.
 End fully_faithful_helpers.
 
 Global Instance isfullyfaithful_isfull_isfaithful

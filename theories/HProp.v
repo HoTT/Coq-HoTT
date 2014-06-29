@@ -191,7 +191,8 @@ Canonical Structure default_HProp:= fun T P => (@hp T P).
 *)
 Existing Instance isp.
 Require Import Unit Empty.
-Definition Unit_hp:hProp:=(hp Unit _).
+
+Definition Unit_hp:hProp@{i}:=(hp Unit _).
 Definition False_hp:hProp:=(hp Unit _).
 (** We could continue with products etc *)
 

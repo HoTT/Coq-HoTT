@@ -107,10 +107,10 @@ Defined.
 Section hEpi_issurj.
   Context {X Y : hSet} (f : X -> Y) (Hisepi : isepi f).
   Definition epif := isepi_hEpi _ Hisepi.
-  Definition fam : Cf f -> hProp.
+  Definition fam : Cf f -> hProp@{i}.
     refine (let fib y := hp (hexists (fun x : X => f x = y)) _ in
 
-    fun c : Cf f => pushout_rectnd hProp
+    fun c : Cf f => pushout_rectnd hProp@{i}
                                    (fun x : Y + Unit =>
                                       match x with
                                         | inl y => fib y
