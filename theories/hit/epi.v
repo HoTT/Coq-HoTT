@@ -8,7 +8,7 @@ Section AssumingUA.
 (** We need fs to be able to find hprop_trunc *)
 Context `{fs:Funext} `{ua:Univalence}.
 Lemma path_biimp : forall P P': sigT IsHProp, (P.1<->P'.1) -> P = P'.
-intros ? ? X. apply (equiv_path_sigma_hprop P P'). apply ua.
+intros ? ? X. apply (equiv_path_sigma_hprop P P'). apply path_universe_uncurried.
 destruct P, P'. destruct X.
 by apply equiv_iff_hprop.
 Defined.
@@ -25,7 +25,7 @@ apply equiv_adjointify with (path_biimp P P') (biimp_path P P').
 - intros x. cut (IsHProp (P .1 <-> P' .1)). intro H. apply allpath_hprop.
   cut (Contr(P .1 <-> P' .1)). intro. apply trunc_succ.
   exists x. intro y. destruct y as [y1 y2]. destruct x as [x1 x2].
-f_ap; apply fs; intro x; [apply P'.2| apply P.2].
+f_ap; apply path_forall; intro x; [apply P'.2| apply P.2].
 Defined.
 
 (** The variant of [uahp] for record types. *)
@@ -46,7 +46,7 @@ Definition isepi {X Y} `(f:X->Y) := forall Z: hSet,
 Definition issurj {X Y} (f:X->Y) := forall y:Y , hexists (fun x => (f x) = y).
 
 Lemma issurj_isepi {X Y} (f:X->Y): issurj f -> isepi f.
-intros sur ? ? ? ep. apply fs. intro y.
+intros sur ? ? ? ep. apply path_forall. intro y.
 specialize (sur y).
 apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
   try assumption.
@@ -63,7 +63,7 @@ Proof.
   set (g :=fun _:Y => Unit_hp).
   set (h:=(fun y:Y => (hp (hexists (fun _ : Unit => {x:X & y = (f x)})) _ ))).
   assert (X1: g o f = h o f ).
-  - apply fs'. intro x. apply path_equiv_biimp_rec;[|done].
+  - apply (@path_forall fs'). intro x. apply path_equiv_biimp_rec;[|done].
     intros _ . apply min1. exists tt. by (exists x).
   - (** It is absolutely essential that we [clear fs'], so that we
         don't use it in [epif _ g h] and pick up a universe
