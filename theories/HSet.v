@@ -181,17 +181,18 @@ Proof.
 Qed.
 
 Definition typeunit := Unit : Type.
-Definition contrtypeunit :=
+Definition contrtypeunit : Contr_internal@{i} typeunit@{i} :=
   let x :=
       BuildContr (typeunit@{i}) tt
                  (fun t : typeunit =>
-                    match t as t0 return (@paths (* Set *) typeunit tt t0) with
-                      | tt => @idpath (* Set *) typeunit tt
+                    match t as t0 return paths tt t0 with
+                      | tt => idpath
      end) in
   x.
 
-Definition unit_hset : hSet := BuildhSet (typeunit@{i}) 
-                                                     (@trunc_succ _ _ (@trunc_succ minus_two  typeunit contrtypeunit)).
+Definition unit_hset : hSet := 
+  BuildhSet (typeunit@{i}) 
+            (@trunc_succ _ _ (@trunc_succ minus_two typeunit contrtypeunit)).
 
 Definition ismono_isinj {X Y} (f : X -> Y)
            (H : ismono f)
