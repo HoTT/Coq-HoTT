@@ -45,6 +45,109 @@ Axiom pushout_rect_beta_pp
   (a : A),
   apD (pushout_rect f g P push' pp') (pp a) = pp' a.
 
+
+
+Definition pushout_rectnd {A B C} {f : A -> B} {g : A -> C} (P : Type)
+  (push' : B + C -> P)
+  (pp' : forall a : A, push' (inl (f a)) = push' (inr (g a)))
+  : @pushout A B C f g -> P
+  := pushout_rect f g (fun _ => P) push' (fun a => transport_const _ _ @ pp' a).
+
+Section Paths.
+  Context {A B C} {f : A -> B} {g : A -> C}.
+
+  (* Definition pushout_eq (z z' : pushout f g) := *)
+  (*   match z, z' with *)
+  (*     | push (inl z0), push (inl z'0) => z0 = z'0 *)
+  (*     | push (inr z0), push (inr z'0) => z0 = z'0 *)
+  (*     | push (inl a), push (inr b) =>  *)
+  (*       { x : A & f x = a /\ g x = b } *)
+  (*     | push (inr a), push (inl b) =>  *)
+  (*       { x : A & f x = b /\ g x = a } *)
+  (*   end. *)
+  
+  (* Definition equiv_left (a : A) (w : B) := *)
+  (*   (fun x : f a = w => (a; (x, 1)) : {x : A & (f x = w) * (g x = g a)}). *)
+
+  (* Definition equiv_right (a : A) (w : B) : {x : A & (f x = w) * (g x = g a)} -> f a = w. *)
+  (* Proof. *)
+  (*   intros [x [p q]]. destruct p. *)
+  (*   admit. *)
+  (* Defined. *)
+
+  (* Definition isequiv a b : IsEquiv (equiv a b). *)
+  (* Proof. *)
+  (*   esplit. *)
+
+(*   Definition pushout_eq `{Funext} `{Univalence} : forall (z z' : pushout f g), Type. *)
+(*     refine (pushout_rectnd (pushout f g -> Type)  *)
+(*                            (fun z =>  *)
+(*                               match z with *)
+(*                                 | inl z0 => *)
+(*                                   pushout_rectnd Type  *)
+(*                                      (fun z' => *)
+(*                                         match z' with *)
+(*                                           | inl z'0 => z0 = z'0 *)
+(*                                           | inr z'0 => { x : A & f x = z0 /\ g x = z'0 } *)
+(*                                         end) _ *)
+(*                                 | inr z0 => *)
+(*                                   pushout_rectnd Type  *)
+(*                                      (fun z' => *)
+(*                                         match z' with *)
+(*                                           | inl z'0 => { x : A & f x = z'0 /\ g x = z0 } *)
+(*                                           | inr z'0 => z0 = z'0 *)
+(*                                         end) _ *)
+(*                               end) *)
+(*                    _); intros. *)
+(*     admit.  *)
+(*     admit.  *)
+(*     unfold pushout_rectnd. *)
+(*     unfold pushout_rect. apply path_forall. *)
+(*     intros w. destruct w as [[w|w]].  *)
+(*     pose (path_universe equiv). *)
+(*   Defined. *)
+
+(*   Definition pushout_eq_pushoutrect z z' : pushout_eq_pushoutrect_type z z'. *)
+(*   Proof. red. simpl. unfold pushout_rectnd. unfold pushout_rect. simpl.  *)
+(*          unfold pushout_eq. *)
+(*          destruct z as [[z|z]], z' as [[z'|z']]; exact 1. *)
+(*   Defined. *)
+
+(*   Definition path_pushout (z z' : pushout f g) *)
+(*              (pq : pushout_eq z z') : z = z'. *)
+(*   Proof. *)
+(*     destruct z as [[z|z]], z' as [[z'|z']], pq; try exact idpath. *)
+(*     destruct p. destruct p, p0. apply pp. *)
+(*     destruct p. destruct p, p0. symmetry. apply pp. *)
+(*   Defined. *)
+
+(*   Definition path_pushout_inv (z z' : pushout f g) *)
+(*              (pq : z = z') *)
+(*   : pushout_eq z z'. *)
+(*   Proof. *)
+(*     destruct pq, z as [[z|z]]; exact 1. *)
+(*   Defined. *)
+
+(*   Definition eisretr_path_pushout {z z' : pushout f g} *)
+(*   : Sect (path_pushout_inv z z') (path_pushout z z'). *)
+(*   Proof. *)
+(*     intros p. destruct p. destruct z as [[z|z]]; exact 1.  *)
+(*   Defined. *)
+
+(*   Definition eissect_path_pushout {z z' : pushout f g} *)
+(*   : Sect (path_pushout z z')  (path_pushout_inv z z'). *)
+(*   Proof. *)
+(*     intros p. pose (pushout_eq_pushoutrect z z'). red in p0. rewrite p0 in p. *)
+(* destruct z as [[z|z]], z' as [[z'|z']], p; simpl; try exact 1.  *)
+(*     destruct p. unfold path_pushout_inv. destruct p. destruct p0. simpl. *)
+(*     set (e := pp x).  *)
+(*     pose (apD (pushout_rect f g  *)
+
+
+(*   Defined. *)
+
+End Paths.
+
 End BaseHIT.
 
 
@@ -77,7 +180,7 @@ Definition hEpi {X Y} (f : X -> Y) := forall Z : hSet,
                                           Contr  { h : Y -> Z & g o f = h o f }.
 
 Definition const {A B} (b : B) := fun x : A => b.
-Require Import Trunc Contractible Tactics.
+Require Import Trunc Truncations Contractible Tactics.
 
 Lemma transport_precomp {A B C} (f : A -> B) (g g' : B -> C) (p : g = g') :
       transport (fun h : B -> C => g o f = h o f) p 1 =
@@ -93,50 +196,60 @@ Proof.
   destruct p. simpl. reflexivity.
 Defined.
 
-Section Cone.
-  Context {A B : hSet} (f : A -> B).
-  Definition one {A : Type} : A -> Unit := fun x => tt.
+Lemma apD10_ap_postcomp {A B C} (f : B -> C) (g g' : A -> B) (p : g = g') a :
+   apD10 (ap (fun h : A -> B => f o h) p) a = ap f (apD10 p a).
+Proof.
+  destruct p. simpl. reflexivity.
+Defined.
 
-  Definition Cf := pushout f one.
+Section Cone.
+  Universe i.
+  
+  Context {A B : hSet@{i}} (f : A -> B).
+  Definition one {A : Type@{i}} : A -> Unit := fun x => tt.
+
+  Definition Cf := Truncation@{i} 0 (pushout f one).
 
   Instance Cf_hSet : IsHSet Cf.
-  Proof.
-    admit.
-  Defined.    
+  Proof. apply istrunc_truncation. Defined.
 
-  Definition t : Cf := push (inr tt).
+  Definition t : Cf := truncation_incl@{i} (push (inr tt)).
 
-
-  Lemma isepi_isContr `{Funext} : hEpi f -> Contr Cf.
+  Lemma isepi_isContr `{Funext} : hEpi@{i i i i i i} f -> Contr Cf.
   Proof.
     intros hepi.
     red. simpl. exists t.
 
     pose (α1 := @pp A B Unit f one).
-    pose (tot:= { h : B -> Cf & push o inl o f = h o f }).
-    pose (l := (push o inl; idpath) : tot).
-    pose (r := (@const B Cf t; path_forall _ _ α1) : tot). 
+    pose (tot:= { h : B -> Cf & truncation_incl o push o inl o f = h o f }).
+    pose (l := (truncation_incl o push o inl; idpath) : tot).
+    pose (r:= (@const B Cf t; (ap (fun f => @truncation_incl 0 _ o f) (path_forall _ _ α1))) : tot).
     subst tot.
 
     + assert (l = r).
-      pose (hepi {| setT := Cf |} (push o inl)). 
+      red in hepi.
+      pose (hepi {| setT := Cf |} (truncation_incl o push o inl)).
       apply path_contr.
     subst l r.
 
     pose (I0 b := apD10 (X ..1) b).
+    refine (Truncation_rect _ _).
     refine (pushout_rect _ _ _ _ _).
     intros [b|[]]; [|reflexivity]. 
     apply inverse. apply I0.
     
     simpl. subst α1. intros.
-    change (paths t) with (fun x => t = x).
-    rewrite transport_paths_r. subst I0. simpl.
+    unfold t. 
+    subst I0. simpl.
     pose (X..2). simpl in p. rewrite transport_precomp in p.
-    assert (H':=concat (ap (fun x => apD10 x a) p) (apD10_path_forall _ _ _ a)).
+    assert (H':=concat (ap (fun x => apD10 x a) p) (apD10_ap_postcomp truncation_incl _ _ (path_forall pushl pushr pp) _)).
+    rewrite (apD10_path_forall _ _ _ a) in H'.
     clear p.
     pose (concat (apD10_ap_precomp f _ _ (X ..1) a)^ H').
     simpl in p.
-    rewrite p. apply concat_Vp.
+    rewrite p. 
+    rewrite transport_paths_Fr.
+    apply concat_Vp.
   Defined.
 
 End Cone.

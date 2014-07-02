@@ -9,9 +9,9 @@ Section AssumingUA.
 (** We need fs to be able to find hprop_trunc *)
 Context `{fs:Funext} `{ua:Univalence}.
 Lemma path_biimp : forall P P': sigT IsHProp, (P.1<->P'.1) -> P = P'.
-intros ? ? X. apply (equiv_path_sigma_hprop P P'). 
-destruct P, P'. destruct X. 
-pose (equiv_iff_hprop X X0). simpl. admit.
+intros ? ? X. apply (equiv_path_sigma_hprop P P'). apply path_universe_uncurried.
+destruct P, P'. destruct X.
+by apply equiv_iff_hprop.
 Defined.
 
 Lemma biimp_path : forall P P': sigT IsHProp, P = P' -> (P.1<->P'.1).
@@ -26,7 +26,7 @@ apply equiv_adjointify with (path_biimp P P') (biimp_path P P').
 - intros x. cut (IsHProp (P .1 <-> P' .1)). intro H. apply allpath_hprop.
   cut (Contr(P .1 <-> P' .1)). intro. apply trunc_succ.
   exists x. intro y. destruct y as [y1 y2]. destruct x as [x1 x2].
-f_ap; apply isequiv_apD10; intro x; [apply P'.2| apply P.2].
+f_ap; apply path_forall; intro x; [apply P'.2| apply P.2].
 Defined.
 
 (** The variant of [uahp] for record types. *)
@@ -47,7 +47,7 @@ Definition isepi {X Y} `(f:X->Y) := forall Z: hSet,
 Definition issurj {X Y} (f:X->Y) := forall y:Y , hexists (fun x => (f x) = y).
 
 Lemma issurj_isepi {X Y} (f:X->Y): issurj f -> isepi f.
-intros sur ? ? ? ep. apply isequiv_apD10. intro y.
+intros sur ? ? ? ep. apply path_forall. intro y.
 specialize (sur y).
 apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
   try assumption.
@@ -105,7 +105,7 @@ Proof.
 Defined.
 
 Section hEpi_issurj.
-  Context {X Y : hSet} (f : X -> Y) (Hisepi : isepi f).
+  Context {X Y : hSet@{i}} (f : X -> Y) (Hisepi : isepi@{i i i i i} f).
   Definition epif := isepi_hEpi _ Hisepi.
   Definition fam : Cf f -> hProp@{i}.
     refine (let fib y := hp (hexists (fun x : X => f x = y)) _ in
