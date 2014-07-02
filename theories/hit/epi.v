@@ -57,7 +57,8 @@ apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
 intros. by apply @set_path2.
 Qed.
 
-Require Import TruncType Pushout.
+Require Import TruncType Pushout Truncations.
+
 (* Old-style proof using polymorphic Omega. Needs resizing for the isepi proof to live in the
  same universe as X and Y (the Z quantifier is instantiated with an hSet at a level higher) *)
 (* Lemma isepi_issurj {X Y} (f:X->Y): isepi f -> issurj f. *)
@@ -110,13 +111,15 @@ Section hEpi_issurj.
   Definition fam : Cf f -> hProp@{i}.
     refine (let fib y := hp (hexists (fun x : X => f x = y)) _ in
 
-    fun c : Cf f => pushout_rectnd hProp@{i}
-                                   (fun x : Y + Unit =>
-                                      match x with
-                                        | inl y => fib y
-                                        | inr x => Unit_hp
-                                      end)
-                                   (fun x => _) c).
+    fun c : Cf f => 
+      Truncation_rect_nondep
+        (pushout_rectnd hProp@{i}
+                        (fun x : Y + Unit =>
+                           match x with
+                             | inl y => fib y
+                             | inr x => Unit_hp
+                           end)
+                        (fun x => _)) c).
   (** Prove that the truncated sigma is equivalent to Unit *)
   pose (contr_inhabited_hprop (fib (f x)) (min1 (x; idpath))).
   apply path_hprop. simpl. simpl in i.
@@ -131,7 +134,7 @@ Section hEpi_issurj.
     
     assert (forall x : Cf f, fam x = fam (t f)).
     intros. apply contr_dom_equiv. apply i.
-    specialize (X0 (push (inl y))). simpl in X0.
+    specialize (X0 (truncation_incl (push (inl y)))). simpl in X0.
     pose (ap hproptype X0). simpl in p. 
     rewrite p. exact tt.
   Defined.
