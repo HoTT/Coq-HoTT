@@ -48,6 +48,9 @@ Identity Coercion unfold_Type1 : Type1 >-> Sortclass.
     or complicate matters with its type. *)
 Notation idmap := (fun x => x).
 
+(** *** Constant functions *)
+Definition const {A B} (b : B) := fun x : A => b.
+
 (** We define notation for dependent pairs because it is too annoying to write and see [existT P x y] all the time.  However, we put it in its own scope, because sometimes it is necessary to give the particular dependent type, so we'd like to be able to turn off this notation selectively. *)
 Notation "( x ; y )" := (existT _ x y) : fibration_scope.
 Open Scope fibration_scope.

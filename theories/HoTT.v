@@ -40,6 +40,7 @@ Require Export hit.Circle.
 Require Export hit.Suspension.
 Require Export hit.Spheres.
 Require Export hit.minus1Trunc.
+Require Export hit.Pushout.
 Require Export hit.epi.
 Require Export hit.unique_choice.
 Require Export hit.iso.

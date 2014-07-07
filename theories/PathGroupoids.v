@@ -663,6 +663,25 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
+Lemma transport_precompose {A B C} (f : A -> B) (g g' : B -> C) (p : g = g')
+: transport (fun h : B -> C => g o f = h o f) p 1 =
+  ap (fun h => h o f) p.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+Lemma apD10_ap_precompose {A B C} (f : A -> B) (g g' : B -> C) (p : g = g') a
+: apD10 (ap (fun h : B -> C => h o f) p) a = apD10 p (f a).
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+Lemma apD10_ap_postcompose {A B C} (f : B -> C) (g g' : A -> B) (p : g = g') a
+: apD10 (ap (fun h : A -> B => f o h) p) a = ap f (apD10 p a).
+Proof.
+  destruct p; reflexivity.
+Defined.
+
 (** A special case of [transport_compose] which seems to come up a lot. *)
 Definition transport_idmap_ap A (P : A -> Type) x y (p : x = y) (u : P x)
 : transport P p u = transport idmap (ap P p) u

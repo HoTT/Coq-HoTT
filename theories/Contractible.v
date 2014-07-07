@@ -39,3 +39,7 @@ Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x} | 100.
   exists (existT (fun y => y = x) x 1).
   intros [y []]; reflexivity.
 Defined.
+
+(** If the domain is contractible, the function is propositionally constant. *)
+Definition contr_dom_equiv {A B} (f : A -> B) `{Contr A} : forall x y : A, f x = f y
+  := fun x y => ap f ((contr x)^ @ contr y).
