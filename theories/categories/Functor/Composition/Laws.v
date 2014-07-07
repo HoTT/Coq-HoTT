@@ -45,7 +45,7 @@ Hint Rewrite @left_identity @right_identity : functor.
 Hint Immediate @left_identity @right_identity : category functor.
 
 Section composition_lemmas.
-  Context `{H0 : Funext}.
+  Context `{fs : Funext}.
 
   Variable B : PreCategory.
   Variable C : PreCategory.

@@ -2,7 +2,7 @@
 
 (** * Theorems about the circle [S¹]. *)
 
-Require Import Overture PathGroupoids Equivalences Trunc HSet.
+Require Import Overture PathGroupoids Equivalences Trunc HSet UnivalenceImpliesFunext.
 Require Import types.Paths types.Forall types.Arrow types.Universe types.Empty types.Unit.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -133,7 +133,7 @@ Defined.
 (* Now we do the encode/decode. *)
 
 Section AssumeUnivalence.
-Context `{Univalence} `{Funext}.
+Context `{Univalence}.
 
 Definition S1_code : S1 -> Type
   := S1_rectnd Type Int (path_universe succ_int).

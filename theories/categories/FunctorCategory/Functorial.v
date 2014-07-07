@@ -10,7 +10,7 @@ Local Open Scope category_scope.
 
 (** ** [(_ → _)] is a functor [catᵒᵖ × cat → cat] *)
 Section functor.
-  Context `{fs1 : Funext}.
+  Context `{Funext}.
 
   Variable P : PreCategory -> Type.
   Context `{forall C, IsHProp (P C)}.
@@ -20,8 +20,8 @@ Section functor.
 
   Hypothesis has_functor_categories : forall C D : cat, P (C.1 -> D.1).
 
-  Definition functor_uncurried `{fs2 : Funext}
-  : object (@functor_category fs2 (cat^op * cat) cat)
+  Definition functor_uncurried
+  : object ((cat^op * cat) -> cat)
     := Eval cbv zeta in
         let object_of := (fun CD => (((fst CD).1 -> (snd CD).1);
                                      has_functor_categories (fst CD) (snd CD)))
@@ -32,6 +32,6 @@ Section functor.
              (fun _ _ _ _ _ => Functor.Pointwise.Properties.composition_of _ _ _ _)
              (fun _ => Functor.Pointwise.Properties.identity_of _ _).
 
-  Definition functor `{fs2 : Funext} : object (cat^op -> (cat -> cat))
-    := ExponentialLaws.Law4.Functors.inverse _ _ _ (@functor_uncurried fs2).
+  Definition functor : object (cat^op -> (cat -> cat))
+    := ExponentialLaws.Law4.Functors.inverse _ _ _ functor_uncurried.
 End functor.

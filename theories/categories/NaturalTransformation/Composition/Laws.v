@@ -10,7 +10,7 @@ Local Open Scope morphism_scope.
 Local Open Scope natural_transformation_scope.
 
 Section natural_transformation_identity.
-  Context `{fs : Funext}.
+  Context `{Funext}.
 
   Variable C : PreCategory.
   Variable D : PreCategory.

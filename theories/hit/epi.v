@@ -1,4 +1,4 @@
-Require Import Overture hit.minus1Trunc HProp Misc TruncType types.Universe Equivalences Trunc HSet types.Unit.
+Require Import Overture hit.minus1Trunc HProp Misc TruncType types.Universe Equivalences Trunc HSet types.Unit UnivalenceImpliesFunext.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
@@ -6,7 +6,7 @@ Open Local Scope equiv_scope.
 Section AssumingUA.
 (** The univalence axiom for HProp (Voevodsky's uahp) *)
 (** We need fs to be able to find hprop_trunc *)
-Context `{fs:Funext} `{ua:Univalence}.
+Context `{ua:Univalence}.
 Lemma path_biimp : forall P P': sigT IsHProp, (P.1<->P'.1) -> P = P'.
 intros ? ? X. apply (equiv_path_sigma_hprop P P'). apply path_universe_uncurried.
 destruct P, P'. destruct X.
@@ -57,18 +57,15 @@ intros. by apply @set_path2.
 Qed.
 
 (** We need an extra instance of [Funext] for universe polymorphism. *)
-Lemma isepi_issurj `{fs' : Funext} {X Y} (f:X->Y): isepi f -> issurj f.
+Lemma isepi_issurj {X Y} (f:X->Y): isepi f -> issurj f.
 Proof.
   intros epif y.
   set (g :=fun _:Y => Unit_hp).
   set (h:=(fun y:Y => (hp (hexists (fun _ : Unit => {x:X & y = (f x)})) _ ))).
   assert (X1: g o f = h o f ).
-  - apply (@path_forall fs'). intro x. apply path_equiv_biimp_rec;[|done].
+  - apply path_forall. intro x. apply path_equiv_biimp_rec;[|done].
     intros _ . apply min1. exists tt. by (exists x).
-  - (** It is absolutely essential that we [clear fs'], so that we
-        don't use it in [epif _ g h] and pick up a universe
-        inconsistency *)
-    clear fs'. specialize (epif _ g h).
+  - specialize (epif _ g h).
     specialize (epif X1). clear X1.
     set (p:=apD10 epif y).
     apply (@minus1Trunc_map (sigT (fun _ : Unit => sigT (fun x : X => y = f x)))).

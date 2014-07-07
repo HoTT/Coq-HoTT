@@ -1,6 +1,6 @@
 (** * Attributes of functors (full, faithful, split essentially surjective) *)
 Require Import Category.Core Functor.Core HomFunctor Category.Morphisms Category.Dual Functor.Dual Category.Prod Functor.Prod NaturalTransformation.Core SetCategory.Core Functor.Composition.Core.
-Require Import hit.epi types.Universe HSet hit.iso Overture hit.minus1Trunc.
+Require Import hit.epi types.Universe HSet hit.iso Overture hit.minus1Trunc UnivalenceImpliesFunext.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -86,7 +86,7 @@ Section full_faithful.
 End full_faithful.
 
 Section fully_faithful_helpers.
-  Context `{fs0 : Funext}.
+  Context `{ua : Univalence}.
   Variables x y : hSet.
   Variable m : x -> y.
 
@@ -102,9 +102,8 @@ Section fully_faithful_helpers.
   Qed.
 
   Definition isequiv_isepimorphism_ismonomorphism
-        `{Univalence}
-        (Hepi : IsEpimorphism (m : morphism set_cat x y))
-        (Hmono : IsMonomorphism (m : morphism set_cat x y))
+             (Hepi : IsEpimorphism (m : morphism set_cat x y))
+             (Hmono : IsMonomorphism (m : morphism set_cat x y))
   : @IsEquiv _ _ m.
   (* := @isequiv_isepi_ismono _ _ x y m. *)
   Proof.
@@ -118,14 +117,14 @@ Section fully_faithful_helpers.
 End fully_faithful_helpers.
 
 Global Instance isfullyfaithful_isfull_isfaithful
-       `{Univalence} `{fs0 : Funext} `{fs1 : Funext}
-       `{Hfull : @IsFull fs0 C D F}
-       `{Hfaithful : @IsFaithful fs0 C D F}
-: @IsFullyFaithful fs0 C D F
+       `{Univalence}
+       `{Hfull : @IsFull _ C D F}
+       `{Hfaithful : @IsFaithful _ C D F}
+: @IsFullyFaithful _ C D F
   := fun x y => @isisomorphism_isequiv_set_cat
-                  fs0 _ _ _
+                  _ _ _ _
                   (@isequiv_isepimorphism_ismonomorphism
-                     fs1 _ _ _ _
+                     _ _ _ _
                      (Hfull x y)
                      (Hfaithful x y)).
 

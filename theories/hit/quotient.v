@@ -1,4 +1,4 @@
-Require Import Overture types.Universe HSet PathGroupoids HProp Equivalences.
+Require Import Overture types.Universe HSet PathGroupoids HProp Equivalences UnivalenceImpliesFunext.
 
 Open Local Scope path_scope.
 
@@ -65,7 +65,7 @@ End Quotient.
 
 Section Equiv.
 
-Context `{Funext} `{Univalence}.
+Context `{Univalence}.
 
 Context {A : Type} {R : relation A} {sR:setrel R}
  {Htrans : Transitive R} {Hsymm : Symmetric R}.

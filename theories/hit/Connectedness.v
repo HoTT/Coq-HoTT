@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Connectedness *)
 
-Require Import Overture PathGroupoids Fibrations Equivalences Trunc TruncType Truncations.
+Require Import Overture PathGroupoids Fibrations Equivalences Trunc TruncType Truncations UnivalenceImpliesFunext.
 Require Import types.Forall types.Sigma types.Paths types.Unit types.Arrow types.Universe.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
@@ -89,7 +89,7 @@ Elimination properties can be nicely phrased as the existence of extensions alon
 
 Section Extensions.
 
-Context `{Funext} `{Univalence}.
+Context `{Univalence}.
 
 (* TODO: consider naming for [ExtensionAlong] and subsequent lemmas.  As a name for the type itself, [Extension] or [ExtensionAlong] seems great; but resultant lemma names such as [path_extension] (following existing naming conventions) are rather misleading. *)
 
@@ -262,7 +262,7 @@ A very useful form of the key lemma [istrunc_extension_along_conn] is the connec
 
 Once again, we believe that the type of the conclusion is an hprop (though we do not prove it) — essentially because it is wrapping up an elimination principle and its corresponding computation rule — and so we make the proof of this result opaque. *)
 
-Context `{Funext} `{Univalence}
+Context `{Univalence}
   {m n : trunc_index}
   {A : Type} (a0 : A) `{IsConnected (trunc_S m) A}
   {B : Type} (b0 : B) `{IsConnected (trunc_S n) B}
@@ -316,7 +316,7 @@ Definition wedge_incl_comp3
 
 End Wedge_Incl_Conn.
 
-Definition wedge_incl_elim_uncurried `{Funext} `{Univalence}
+Definition wedge_incl_elim_uncurried `{Univalence}
   {m n : trunc_index}
   {A : Type} (a0 : A) `{IsConnected (trunc_S m) A}
   {B : Type} (b0 : B) `{IsConnected (trunc_S n) B}

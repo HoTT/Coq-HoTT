@@ -3,7 +3,6 @@
 
 Require Import Overture PathGroupoids Contractible Equivalences Trunc HProp.
 Require Import types.Paths types.Sigma types.Empty types.Record types.Unit types.Arrow.
-Require Import FunextVarieties.
 
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
