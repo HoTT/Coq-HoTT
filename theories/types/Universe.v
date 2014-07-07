@@ -31,9 +31,9 @@ Proof.
   refine (@allpath_hprop _ (hprop_isequiv _) _ _).
 Defined.
 
-Class Univalence := {
-  isequiv_equiv_path :> forall (A B : Type), IsEquiv (equiv_path A B)
-}.
+(** See the note by [Funext] in Overture.v *)
+Class Univalence.
+Axiom isequiv_equiv_path : forall `{Univalence} (A B : Type), IsEquiv (equiv_path A B).
 
 Section Univalence.
 Context `{Univalence}.

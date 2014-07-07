@@ -86,7 +86,8 @@ End Homotopies.
 (** Now the proof is fairly easy; we can just use the same induction principle on both sides. *)
 Theorem WeakFunext_implies_Funext : WeakFunext -> Funext.
 Proof.
-  intros wf; constructor; intros A B f g.
+  intros wf. (cut (forall A B f g, IsEquiv (@apD10 A B f g))); [ admit | ].
+  hnf; intros A B f g.
   refine (isequiv_adjointify (@apD10 A B f g)
     (htpy_rect wf f (fun g' _ => f = g') idpath g) _ _).
   revert g; refine (htpy_rect wf _ _ _).
