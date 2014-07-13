@@ -224,6 +224,7 @@ Ltac clear_path p :=
 (** Run [clear_path] on hypotheses *)
 (** We don't match only on things of type [_ = _], because maybe that's the head normal form, but it's hiding behind something else; [clear_path] will make sure it's of the right type.  We include some redundant cases at the top, for speed; it is faster to try to destruct everything first, and then do the full battery of tactics, than to just run the hammer. *)
 Ltac step_clear_paths :=
+  idtac;
   match goal with
     | [ p : _ = _ |- _ ] => destruct p
     | [ p : _ = _ |- _ ] => clear_path_no_check p
@@ -233,6 +234,7 @@ Ltac clear_paths := progress repeat step_clear_paths.
 
 (** Run [clear_path] on anything inside a [match] *)
 Ltac step_clear_paths_in_match :=
+  idtac;
   match goal with
     | [ |- appcontext[match ?p with idpath => _ end] ] => progress destruct p
     | [ |- appcontext[match ?p with idpath => _ end] ] => clear_path_no_check p
@@ -263,6 +265,7 @@ Definition match_eta2 T (x : T) (E : x = x)
 
 (** And now the actual tactic.  Note that the order of the cases in the [match goal with ... end] is somewhat finely tuned for speed. *)
 Ltac step_path_induction_hammer :=
+  idtac;
   match goal with
     | _ => reflexivity
     | _ => intro
@@ -294,6 +297,7 @@ Ltac subst_body :=
 (** Some tactics to do things with some arbitrary hypothesis in the context.  These tactics are similar to, e.g., [assumption]. *)
 
 Ltac do_with_hyp tac :=
+  idtac;
   match goal with
     | [ H : _ |- _ ] => tac H
   end.
