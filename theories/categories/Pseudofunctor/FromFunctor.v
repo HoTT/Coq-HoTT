@@ -35,11 +35,7 @@ Section of_functor.
 
   Local Tactic Notation "transitivity_idtoiso" open_constr(hyp) :=
     lazymatch goal with
-      | [ |- ?f (Category.Morphisms.idtoiso ?C _) = _ ] => etransitivity (f (Category.Morphisms.idtoiso C hyp));
-                                       [ do 2 apply ap;
-                                         apply path_functor_helper;
-                                         simpl; trivial
-                                       | path_natural_transformation ]
+      | [ |- ?f (Category.Morphisms.idtoiso ?C _) = _ ] => etransitivity (f (Category.Morphisms.idtoiso C hyp)); [ do 2 apply ap; apply path_functor_helper; simpl; trivial | path_natural_transformation ]
     end.
 
   Local Ltac pseudofunctor_t :=
@@ -66,8 +62,7 @@ Section of_functor.
           | transitivity_idtoiso ((Functor.Composition.Laws.right_identity _)^)
           | transitivity_idtoiso (Functor.Composition.Laws.associativity _ _ _)
           | transitivity_idtoiso ((Functor.Composition.Laws.associativity _ _ _)^) ];
-    rewrite eta_idtoiso;
-    simpl;
+    rewrite eta_idtoiso; simpl;
     rewrite ?ap_V, ?Functor.Composition.Laws.left_identity_fst, ?Functor.Composition.Laws.right_identity_fst, ?Functor.Composition.Laws.associativity_fst;
     try reflexivity.
 
@@ -110,7 +105,7 @@ intros.
          o ((idtoiso (x0 -> x1) x14 : morphism _ _ _)
               o (idtoiso (x0 -> x1) x12 : morphism _ _ _)))%natural_transformation.
   Proof.
-    clear HP F.
+    clear F.
     abstract (apply symmetry; simpl; pseudofunctor_t).
   Qed.
 
@@ -125,7 +120,7 @@ intros.
     = ((NaturalTransformation.Composition.Laws.left_identity_natural_transformation_2 x5)
          o (Category.Morphisms.idtoiso (x0 -> x) x6 : morphism _ _ _))%natural_transformation.
   Proof.
-    clear HP F.
+    clear F.
     abstract (simpl; pseudofunctor_t).
   Qed.
 
@@ -140,7 +135,7 @@ intros.
     = ((NaturalTransformation.Composition.Laws.right_identity_natural_transformation_2 x3)
          o (Category.Morphisms.idtoiso (x0 -> x) x6 : morphism _ _ _))%natural_transformation.
   Proof.
-    clear HP F.
+    clear F.
     abstract (simpl; pseudofunctor_t).
   Qed.
 

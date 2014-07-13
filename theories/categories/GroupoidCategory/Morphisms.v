@@ -29,6 +29,6 @@ Section groupoid_category.
       destruct_head @Isomorphic;
       destruct_head @IsIsomorphism;
       compute in *;
-      path_induction_hammer.
+      path_induction_hammer. 
   Qed.
 End groupoid_category.

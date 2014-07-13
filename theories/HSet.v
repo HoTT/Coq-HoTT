@@ -180,15 +180,29 @@ Proof.
   eauto.
 Qed.
 
+Definition typeunit := Unit : Type.
+Definition contrtypeunit : Contr_internal@{i} typeunit@{i} :=
+  let x :=
+      BuildContr (typeunit@{i}) tt
+                 (fun t : typeunit =>
+                    match t as t0 return paths tt t0 with
+                      | tt => idpath
+     end) in
+  x.
+
+Definition unit_hset : hSet := 
+  BuildhSet (typeunit@{i}) 
+            (@trunc_succ _ _ (@trunc_succ minus_two typeunit contrtypeunit)).
+
 Definition ismono_isinj {X Y} (f : X -> Y)
            (H : ismono f)
 : isinj f
   := fun x0 x1 H' =>
-       ap10 (H (BuildhSet Unit _)
+       ap10 (H unit_hset@{i Type}
                (fun _ => x0)
                (fun _ => x1)
-               (ap (fun x => unit_name x) H'))
-            tt.
+               (ap (fun x => (fun _ : typeunit => x)) H'))
+            (tt : (Unit : Type@{i})).
 
 Lemma ismono_isequiv `{Funext} X Y (f : X -> Y) `{IsEquiv _ _ f}
 : ismono f.

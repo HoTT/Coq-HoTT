@@ -18,7 +18,7 @@ Let equiv_fibration_replacement_eissect {B C f}
 : forall x : {y : B & {x : C & f x = y}},
     (f x.2.1; (x.2.1; 1%path)) = x.
 Proof.
-  repeat (intros [] || intro); reflexivity.
+  intros [? [? <-]]. simpl. reflexivity.
 Defined.
 Definition equiv_fibration_replacement  {B C} (f:C ->B):
   C <~> {y:B & {x:C & f x = y}}.
@@ -43,7 +43,7 @@ Let hfiber_fibration_eissect {X} {x : X} {P}
 : forall x0 : {z : exists x, P x & z.1 = x},
       ((x; transport P x0.2 x0.1.2); 1%path) = x0.
 Proof.
-  repeat (intros [] || intro); reflexivity.
+  intros [[? ?] <-]; reflexivity.
 Defined.
 Definition hfiber_fibration {X} (x : X) (P:X->Type):
     P x <~> { z : sigT P & z.1 = x }.

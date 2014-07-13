@@ -1,6 +1,6 @@
 (** * Modalities *)
 Require Import Overture types.Empty types.Arrow HProp Equivalences.
-
+Require Import FunextVarieties.
 Set Implicit Arguments.
 
 (** Quoting the HoTT Book: *)
@@ -26,16 +26,32 @@ Class IsModality (mod : Type -> Type) :=
     modality_isequiv_eta_path :> forall A (z z' : mod A),
                                    IsEquiv (@modality_eta (z = z')) }.
 
-Instance ismodality_notnot `{Funext} : IsModality (fun X => ~~X).
+Require Import Universe.
+
+(** Needs this instance otherwise it will make A fall in set by using
+    hProp_empty unlifted. *)
+Instance lift_IsHProp_not_not `{Univalence} `{Funext} {A : Type@{i}} : 
+  IsHProp@{i} (not@{i i} (not@{i i} A)).
 Proof.
+  intro.
+  intros. 
+  pose (@trunc_arrow H0 (not@{i i} A) Empty (trunc_S minus_two)
+                     (IsTrunc_lift@{Set i Type Type} _ hprop_Empty)).
+  apply i.
+Defined.
+
+Instance ismodality_notnot `{Univalence} `{Funext} : 
+  IsModality (fun X : Type@{i} => 
+                not@{i i} (not@{i i} X)).
+Proof.
+  intros.
   apply (@Build_IsModality
-           (fun X => ~~X)
-           (fun X x nx => match nx x with end)
-           (fun A B H' z nBz =>
-              z (fun a => H' a (transport (fun x => ~B x)
+           (fun X => ~~ X)
+           (fun (X : Type) (x : X) nx => match nx x with end)
+           (fun (A : Type) (B : ~~ A -> Type) H' z nBz =>
+              z (fun a => H' a (transport (fun x => not (B x))
                                           (allpath_hprop _ _)
                                           nBz))));
-  abstract (
       repeat (intro || apply path_forall);
       try match goal with
             | [ |- appcontext[match ?x : Empty with end] ] => destruct x
@@ -46,6 +62,5 @@ Proof.
                 _
                 _);
       repeat (intro || apply path_forall);
-      apply allpath_hprop
-    ).
+      apply allpath_hprop.
 Defined.

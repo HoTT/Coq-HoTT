@@ -8,7 +8,7 @@ Set Asymmetric Patterns.
 
 Section sum.
   Definition sum
-             C C' D F G F' G'
+             (C C' : PreCategory@{i j}) D F G F' G'
              (T : @NaturalTransformation C D F G)
              (T' : @NaturalTransformation C' D F' G')
   : NaturalTransformation (F + F') (G + G').

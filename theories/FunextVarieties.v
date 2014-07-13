@@ -24,10 +24,9 @@ Definition WeakFunext :=
    Funext -> NaiveFunext -> WeakFunext
    *)
 
-Definition Funext_implies_NaiveFunext : Funext -> NaiveFunext.
+Definition Funext_implies_NaiveFunext : Funext_type -> NaiveFunext.
 Proof.
-  intros fe A P f g h.
-  exact (path_forall f g h).
+  intros fe A P f g h. apply fe. red. apply h.
 Defined.
 
 Definition NaiveFunext_implies_WeakFunext : NaiveFunext -> WeakFunext.
@@ -84,9 +83,9 @@ Section Homotopies.
 End Homotopies.
 
 (** Now the proof is fairly easy; we can just use the same induction principle on both sides. *)
-Theorem WeakFunext_implies_Funext : WeakFunext -> Funext.
+Theorem WeakFunext_implies_Funext : WeakFunext -> Funext_type.
 Proof.
-  intros wf; constructor; intros A B f g.
+  intros wf; intros A B f g.
   refine (isequiv_adjointify (@apD10 A B f g)
     (htpy_rect wf f (fun g' _ => f = g') idpath g) _ _).
   revert g; refine (htpy_rect wf _ _ _).
@@ -96,14 +95,14 @@ Proof.
 Defined.
 
 (** We add some hints to the typeclass database, so if we happen to have hypotheses of [WeakFunext] or [NaiveFunext] floating around, we get [Funext] automatically. *)
-Definition NaiveFunext_implies_Funext : NaiveFunext -> Funext
+Definition NaiveFunext_implies_Funext : NaiveFunext -> Funext_type
   := WeakFunext_implies_Funext o NaiveFunext_implies_WeakFunext.
 
 Hint Immediate WeakFunext_implies_Funext NaiveFunext_implies_Funext : typeclass_instances.
 
 (** ** Functional extensionality is downward closed *)
 (** If universe [U_i] is functionally extensional, then so are universes [U_j] for [j ≤ i]. *)
-Lemma Funext_downward_closed `{H : Funext} : Funext.
+Lemma Funext_downward_closed `{H : Funext_type} : Funext_type.
 Proof.
   apply @NaiveFunext_implies_Funext.
   apply Funext_implies_NaiveFunext in H.

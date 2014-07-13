@@ -87,7 +87,7 @@ End full_faithful.
 
 Section fully_faithful_helpers.
   Context `{fs0 : Funext}.
-  Variables x y : hSet.
+  Variables x y : hSet@{i}.
   Variable m : x -> y.
 
   Lemma isisomorphism_isequiv_set_cat
@@ -105,30 +105,22 @@ Section fully_faithful_helpers.
     := @isequiv_isepi_ismono ua fs0 x y m.
 
   Definition isequiv_isepimorphism_ismonomorphism
-        `{Univalence}
+             `{Univalence}
         (Hepi : IsEpimorphism (m : morphism set_cat x y))
         (Hmono : IsMonomorphism (m : morphism set_cat x y))
   : @IsEquiv _ _ m
-    := @isequiv_isepi_ismono_helper _ Hepi Hmono.
-
-  (** TODO: Figure out why Universe inconsistencies don't respect delta expansion. *)
-  (*Definition isequiv_isepimorphism_ismonomorphism'
-        `{fs1 : Funext} `{Univalence}
-        (Hepi : IsEpimorphism (m : morphism set_cat x y))
-        (Hmono : IsMonomorphism (m : morphism set_cat x y))
-  : @IsEquiv _ _ m
-    := @isequiv_isepi_ismono _ fs0 fs1 x y m Hepi Hmono.*)
+   := @isequiv_isepi_ismono _ fs0 x y m Hepi Hmono.
 End fully_faithful_helpers.
 
 Global Instance isfullyfaithful_isfull_isfaithful
-       `{Univalence} `{fs0 : Funext} `{fs1 : Funext}
+       `{Univalence} `{fs0 : Funext}
        `{Hfull : @IsFull fs0 C D F}
        `{Hfaithful : @IsFaithful fs0 C D F}
 : @IsFullyFaithful fs0 C D F
   := fun x y => @isisomorphism_isequiv_set_cat
                   fs0 _ _ _
                   (@isequiv_isepimorphism_ismonomorphism
-                     fs1 _ _ _ _
+                     _ _ _ _ _
                      (Hfull x y)
                      (Hfaithful x y)).
 

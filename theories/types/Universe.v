@@ -31,9 +31,48 @@ Proof.
   refine (@allpath_hprop _ (hprop_isequiv _) _ _).
 Defined.
 
-Class Univalence := {
-  isequiv_equiv_path :> forall (A B : Type), IsEquiv (equiv_path A B)
-}.
+Class Univalence.
+
+Axiom isequiv_equiv_path : forall {u:Univalence}, 
+                           forall (A B : Type), IsEquiv (equiv_path A B).
+Existing Instance isequiv_equiv_path.
+
+Definition paths_unlift {A : Type@{i}} (x y : A) (p : paths@{j} x y) :  paths@{i} x y.
+Proof.
+  destruct p. apply idpath.
+Defined.
+
+Lemma eq_paths_lift `{Univalence} : forall (A : Type@{i}) (x y : A), 
+                                      paths ((paths@{i} x y) : Type@{j}) (paths@{j} x y).
+intros. apply isequiv_equiv_path. 
+exists (@paths_lift A x y).
+refine (BuildIsEquiv _ _ _ (@paths_unlift A x y)  _ _ _).
+red. intros. destruct x0. reflexivity.
+intro eq. destruct eq. reflexivity.
+intro eq. destruct eq. simpl. reflexivity.
+Defined.
+
+
+Lemma Contr_internal_lift {A} : Contr_internal@{j} A -> Contr_internal@{i} A.
+Proof.
+  intros. destruct X. exists center.
+  intros. apply paths_lift. apply contr.
+Defined.
+Require Import UniverseLevel.
+
+Lemma IsTrunc_lift `{Univalence} n {A : Type@{j}} : IsTrunc@{j} n A -> IsTrunc@{i} n A.
+Proof. revert A.
+  induction n; intros A HA. simpl.
+  apply Contr_internal_lift. apply HA. 
+  simpl in HA.
+  intros x y.
+  specialize (IHn _ (HA x y)).
+  red in IHn. red in IHn.
+  red. 
+
+  rewrite <- (eq_paths_lift A x y).
+  apply IHn.
+Defined.
 
 Section Univalence.
 Context `{Univalence}.

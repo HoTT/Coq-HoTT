@@ -11,11 +11,11 @@ Section internals.
   Variable C : PreCategory.
   Variable D : PreCategory.
 
-  Definition sum_morphism (s d : C + D) : Type
-    := match (s, d) with
-         | (inl s, inl d) => morphism C s d
-         | (inr s, inr d) => morphism D s d
-         | _ => Empty
+  Definition sum_morphism (s d : C + D) : Type@{i}
+    := match s, d with
+         | (inl s), (inl d) => morphism C s d
+         | (inr s), (inr d) => morphism D s d
+         | _, _ => (Empty : Type@{i})
        end.
 
   Global Arguments sum_morphism _ _ / .
@@ -40,23 +40,22 @@ Section internals.
 
   Global Arguments sum_compose [_ _ _] _ _ / .
 End internals.
+Require Import types.Universe.
 
 Definition sum (C D : PreCategory) : PreCategory.
 Proof.
   refine (@Build_PreCategory
             (C + D)%type
-            (sum_morphism C D)
+            (sum_morphism@{a b c d e} C D)
             (sum_identity C D)
             (sum_compose C D)
             _
             _
             _
-            _);
+            _); 
   abstract (
-      repeat (simpl || intros [] || intro);
-      auto with morphism;
-      typeclasses eauto
-    ).
+      repeat (simpl || intros [] || intro); 
+      auto with morphism; typeclasses eauto).
 Defined.
 
 Module Export CategorySumNotations.

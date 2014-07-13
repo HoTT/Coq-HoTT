@@ -197,7 +197,7 @@ Module PreCategoryOfStructures.
       { f : Category.Core.morphism X xa.1 yb.1;
         h : is_structure_homomorphism _ _ _ f xa.2 yb.2 }.
 
-    Lemma issig_morphism xa yb
+    Lemma issig_morphism (xa yb : object)
     : { f : Category.Core.morphism X xa.1 yb.1
       | is_structure_homomorphism _ _ _ f xa.2 yb.2 }
         <~> morphism xa yb.

@@ -12,7 +12,7 @@ Generalizable Variables X A B f g n.
 
 Module Export Circle.
 
-Local Inductive S1 : Type0 :=
+Private Inductive S1 : Type0 :=
 | base : S1.
 
 Axiom loop : base = base.
@@ -123,7 +123,7 @@ Definition pred_int (z : Int) : Int
        | pos (succ_pos n) => pos n
      end.
 
-Instance isequiv_succ_int : IsEquiv succ_int | 0
+Instance isequiv_succ_int : IsEquiv@{i j} succ_int | 0
   := isequiv_adjointify succ_int pred_int _ _.
 Proof.
   intros [[|n] | | [|n]]; reflexivity.
@@ -181,7 +181,7 @@ Definition looptothe (z : Int) : (base = base)
 Definition S1_decode (x:S1) : S1_code x -> (base = x).
 Proof.
   revert x; refine (S1_rect (fun x => S1_code x -> base = x) looptothe _).
-  apply path_forall; intros z; simpl in z.
+  apply path_forall; intros z; simpl in z. 
   refine (transport_arrow _ _ _ @ _).
   refine (transport_paths_r loop _ @ _).
   rewrite transport_S1_code_loopV.

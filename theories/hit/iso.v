@@ -7,8 +7,6 @@ Open Local Scope equiv_scope.
 Section iso.
   Context `{Univalence}.
   Context {fs0 : Funext}.
-  Let fs1 := Funext_downward_closed.
-  Let fs2 := Funext_downward_closed.
   Variables X Y : hSet.
   Variable f : X -> Y.
 
@@ -22,10 +20,10 @@ Section iso.
     reflexivity.
   Defined.
 
-  Definition isequiv_isepi_ismono (epif : isepi f) (monof : ismono f)
+  Definition isequiv_isepi_ismono (epif : isepi f) (monof : ismono@{Type Type Type Type Type} f)
   : IsEquiv f.
   Proof.
-    pose proof (@isepi_issurj fs1 _ fs2 _ _ f epif) as surjf.
+    pose proof (@isepi_issurj _ _ _ _ f epif) as surjf.
     pose proof (ismono_isinj _ monof) as injf.
     pose proof (unique_choice
                   (fun y x => f x = y)

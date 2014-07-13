@@ -166,17 +166,16 @@ Proof.
   intro f.  apply path_forall.  intro a.  apply contr.
 Defined.
 
-Global Instance trunc_forall `{P : A -> Type} `{forall a, IsTrunc n (P a)}
-  : IsTrunc n (forall a, P a) | 100.
-Proof.
+Global Instance trunc_forall {A:Type@{i}} `{P : A -> Type@{j}} `{forall a, IsTrunc@{j} n (P a)}
+  : IsTrunc@{k} n (forall a, P a) | 100.
+Proof. 
   generalize dependent P.
   induction n as [ | n' IH]; simpl; intros P ?.
-  (* case [n = -2], i.e. contractibility *)
-  - exact _.
-  (* case n = trunc_S n' *)
+  (* case [n = -2], i.e. contractibility *) 
+  - apply contr_forall.
+  (* case n = trunc_S n' *) 
   - intros f g; apply (trunc_equiv (apD10 ^-1)).
 Defined.
-
 
 (** ** Symmetry of curried arguments *)
 

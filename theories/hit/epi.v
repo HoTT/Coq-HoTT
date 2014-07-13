@@ -1,4 +1,5 @@
 Require Import Overture hit.minus1Trunc HProp Misc TruncType types.Universe Equivalences Trunc HSet types.Unit.
+Set Standard Proposition Elimination Names.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
@@ -56,27 +57,88 @@ apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
 intros. by apply @set_path2.
 Qed.
 
-(** We need an extra instance of [Funext] for universe polymorphism. *)
-Lemma isepi_issurj `{fs' : Funext} {X Y} (f:X->Y): isepi f -> issurj f.
+Require Import TruncType Pushout Truncations.
+
+(* Old-style proof using polymorphic Omega. Needs resizing for the isepi proof to live in the
+ same universe as X and Y (the Z quantifier is instantiated with an hSet at a level higher) *)
+(* Lemma isepi_issurj {X Y} (f:X->Y): isepi f -> issurj f. *)
+(* Proof. *)
+(*   intros epif y. *)
+(*   set (g :=fun _:Y => Unit_hp). *)
+(*   set (h:=(fun y:Y => (hp (hexists (fun _ : Unit => {x:X & y = (f x)})) _ ))). *)
+(*   assert (X1: g o f = h o f ). *)
+(*   - apply isequiv_apD10. intro x. apply path_equiv_biimp_rec;[|done]. *)
+(*     intros _ . apply min1. exists tt. by (exists x). *)
+(*   - red in epif.  *)
+(*     pose (C := pushout g h).  *)
+
+(*     specialize (epif C). *)
+
+(*     specialize (epif {|iss := isset_hProp |} g h). *)
+(*     specialize (epif X1). clear X1. *)
+(*     set (p:=apD10 epif y). *)
+(*     apply (@minus1Trunc_map (sigT (fun _ : Unit => sigT (fun x : X => y = f x)))). *)
+(*     + intros [ _ [x eq]]. *)
+(*       exists x. *)
+(*         by symmetry. *)
+(*     + apply (transport hproptype p tt). *)
+(* Defined. *)
+Require Import Contractible.
+Lemma contr_dom_equiv {A B : Type} (f : A -> B) (H : Contr A) : forall x y : A, f x = f y.
 Proof.
-  intros epif y.
-  set (g :=fun _:Y => Unit_hp).
-  set (h:=(fun y:Y => (hp (hexists (fun _ : Unit => {x:X & y = (f x)})) _ ))).
-  assert (X1: g o f = h o f ).
-  - apply (@path_forall fs'). intro x. apply path_equiv_biimp_rec;[|done].
-    intros _ . apply min1. exists tt. by (exists x).
-  - (** It is absolutely essential that we [clear fs'], so that we
-        don't use it in [epif _ g h] and pick up a universe
-        inconsistency *)
-    clear fs'. specialize (epif _ g h).
-    specialize (epif X1). clear X1.
-    set (p:=apD10 epif y).
-    apply (@minus1Trunc_map (sigT (fun _ : Unit => sigT (fun x : X => y = f x)))).
-    + intros [ _ [x eq]].
-      exists x.
-        by symmetry.
-    + apply (transport hproptype p tt).
+  intros. pose (contr (A:=A)). rewrite <- (p x). rewrite <- (p y).
+  reflexivity.
+Qed.
+Require Import types.Sigma.
+
+Lemma isepi_hEpi {X Y : hSet} (f : X -> Y) (epif : isepi f) : hEpi f.
+Proof.
+  red; red in epif.
+  intros.
+  refine {| center := (g; 1) |}.
+  intros [g' Hg']. 
+  assert (eq:=epif _ g g' Hg').
+  destruct eq. apply path_sigma_uncurried.
+  simpl. exists idpath. simpl.
+  assert (IsHProp (g o f = g o f)). typeclasses eauto.
+  pose (contr_inhabited_hprop (g o f = g o f) 1).
+  apply path_contr.
 Defined.
+
+Section hEpi_issurj.
+  Context {X Y : hSet@{i}} (f : X -> Y) (Hisepi : isepi@{i i i i i} f).
+  Definition epif := isepi_hEpi _ Hisepi.
+  Definition fam : Cf f -> hProp@{i}.
+    refine (let fib y := hp (hexists (fun x : X => f x = y)) _ in
+
+    fun c : Cf f => 
+      Truncation_rect_nondep
+        (pushout_rectnd hProp@{i}
+                        (fun x : Y + Unit =>
+                           match x with
+                             | inl y => fib y
+                             | inr x => Unit_hp
+                           end)
+                        (fun x => _)) c).
+  (** Prove that the truncated sigma is equivalent to Unit *)
+  pose (contr_inhabited_hprop (fib (f x)) (min1 (x; idpath))).
+  apply path_hprop. simpl. simpl in i.
+  apply path_universe_uncurried.
+  apply (equiv_contr_unit).
+  Defined.
+
+  Lemma isepi_issurj : issurj f.
+  Proof.
+    intros y.
+    pose (isepi_isContr _ epif).
+    
+    assert (forall x : Cf f, fam x = fam (t f)).
+    intros. apply contr_dom_equiv. apply i.
+    specialize (X0 (truncation_incl (push (inl y)))). simpl in X0.
+    pose (ap hproptype X0). simpl in p. 
+    rewrite p. exact tt.
+  Defined.
+End hEpi_issurj.
 
 Lemma isepi_isequiv X Y (f : X -> Y) `{IsEquiv _ _ f}
 : isepi f.

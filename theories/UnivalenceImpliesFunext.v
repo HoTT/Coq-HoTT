@@ -88,7 +88,7 @@ Section UnivalenceImpliesFunext.
 End UnivalenceImpliesFunext.
 
 Section UnivalenceImpliesWeakFunext.
-  Context `{ua1 : Univalence, ua2 : Univalence}.
+  Context `{Univalence}.
   (** Now we use this to prove weak funext, which as we know implies (with dependent eta) also the strong dependent funext. *)
 
   Theorem Univalence_implies_WeakFunext : WeakFunext.
@@ -99,20 +99,21 @@ Section UnivalenceImpliesWeakFunext.
     assert (p : P = U).
     - apply Univalence_implies_FunextNondep.
       intro x.
-      apply (@path_universe_uncurried ua1).
+      apply path_universe_uncurried.
       apply equiv_contr_unit.
     - (** Now this is much easier. *)
       rewrite p.
       unfold U; simpl.
       exists (fun _ => tt).
       intro f.
-      apply (@Univalence_implies_FunextNondep ua2).
+      apply Univalence_implies_FunextNondep.
       intro x.
-      exact (@contr Unit _ _).
+      apply paths_lift.
+      exact (@contr Unit _ (f x)).
   Qed.
 End UnivalenceImpliesWeakFunext.
 
-Definition Univalence_implies_Funext `{ua1 : Univalence, ua2 : Univalence} : Funext
-  := WeakFunext_implies_Funext (@Univalence_implies_WeakFunext ua1 ua2).
+Definition Univalence_implies_Funext `{Univalence} : Funext_type
+  := WeakFunext_implies_Funext Univalence_implies_WeakFunext.
 
 Hint Immediate Univalence_implies_Funext : typeclass_instances.

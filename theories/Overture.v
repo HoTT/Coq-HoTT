@@ -83,6 +83,25 @@ Arguments paths_rect [A] a P f y p.
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
 
+(** Ensure [internal_paths_rew] and [internal_paths_rew_r] are defined outside sections, which 
+   could make them unnecessarily polymorphic. *)
+Lemma paths_rew (A : Type) (a : A) (P : forall _ : A, Type) 
+    (_ : P a) y (_ : paths a y) : P y.
+Proof. rewrite <- X0. exact X. Defined.
+
+Lemma paths_rew_r (A : Type) (a y : A) (P : forall _ : A, Type) 
+    (_ : P y) (_ : paths a y) : P a.
+Proof. rewrite X0. exact X. Defined.
+
+(** We show that paths uses its universe covariantly: i.e. paths at level i are paths
+  at level j for i <= j *)
+
+Definition paths_lift (A : Type@{i}) (x y : A) :
+  paths x y -> paths@{j} x y.
+Proof. 
+  intros. destruct X. exact (idpath _).
+Defined.
+
 Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
@@ -343,8 +362,13 @@ Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_inst
 (** *** Function extensionality *)
 
 (** The function extensionality axiom is formulated as a class. To use it in a theorem, just assume it with [`{Funext}], and then you can use [path_forall], defined below.  If you need function extensionality for a whole development, you can assume it for an entire Section with [Context `{Funext}].  *)
-Class Funext :=
-  { isequiv_apD10 :> forall (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g) }.
+Class Funext.
+
+Definition Funext_type :=
+  forall (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
+
+Axiom isequiv_apD10 : forall {f:Funext},
+                      forall (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
 
 Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A, P x) :
   f == g -> f = g
