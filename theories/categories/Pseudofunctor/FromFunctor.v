@@ -110,7 +110,7 @@ intros.
          o ((idtoiso (x0 -> x1) x14 : morphism _ _ _)
               o (idtoiso (x0 -> x1) x12 : morphism _ _ _)))%natural_transformation.
   Proof.
-    clear HP F.
+    clear F.
     abstract (apply symmetry; simpl; pseudofunctor_t).
   Qed.
 
@@ -125,7 +125,7 @@ intros.
     = ((NaturalTransformation.Composition.Laws.left_identity_natural_transformation_2 x5)
          o (Category.Morphisms.idtoiso (x0 -> x) x6 : morphism _ _ _))%natural_transformation.
   Proof.
-    clear HP F.
+    clear F.
     abstract (simpl; pseudofunctor_t).
   Qed.
 
@@ -140,7 +140,7 @@ intros.
     = ((NaturalTransformation.Composition.Laws.right_identity_natural_transformation_2 x3)
          o (Category.Morphisms.idtoiso (x0 -> x) x6 : morphism _ _ _))%natural_transformation.
   Proof.
-    clear HP F.
+    clear F.
     abstract (simpl; pseudofunctor_t).
   Qed.
 
