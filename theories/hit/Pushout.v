@@ -71,9 +71,8 @@ Defined.
 
 Section Cone.
   Context {A B : hSet} (f : A -> B).
-  Definition one {A : Type} : A -> Unit := fun x => tt.
 
-  Definition cone := Truncation 0 (pushout f one).
+  Definition cone := Truncation 0 (pushout f !).
 
   Global Instance istrunc_cone : IsHSet cone := _.
 

@@ -26,8 +26,9 @@ Module Export Truncation.
 Private Inductive Truncation (n : trunc_index) (A :Type) : Type :=
   truncation_incl : A -> Truncation n A.
 Arguments truncation_incl {n A} a.
-Axiom istrunc_truncation : forall n A, IsTrunc n (Truncation n A).
-Global Existing Instance istrunc_truncation.
+(** Make the priority 1, so that we don't override, e.g., [Unit]. *)
+Instance istrunc_truncation : forall n A, IsTrunc n (Truncation n A) | 1.
+Admitted.
 
 Definition Truncation_rect {n A}
   (P : Truncation n A -> Type) `{forall aa, IsTrunc n (P aa)}

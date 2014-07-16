@@ -73,7 +73,7 @@ Section cones.
   Proof.
     intros hepi.
     exists (cone_point _).
-    pose (alpha1 := @pp A B Unit f one).
+    pose (alpha1 := @pp A B Unit f !).
     pose (tot:= { h : B -> cone f & truncation_incl o push o inl o f = h o f }).
     pose (l := (truncation_incl o push o inl; idpath) : tot).
     pose (r := (@const B (cone f) (cone_point _); (ap (fun f => @truncation_incl 0 _ o f) (path_forall _ _ alpha1))) : tot).
@@ -96,7 +96,9 @@ Section cones.
     assert (H':=concat (ap (fun x => apD10 x a) p) (apD10_ap_postcompose truncation_incl _ _ (path_forall pushl pushr pp) _)).
     rewrite (apD10_path_forall _ _ _ a) in H'.
     clear p.
-    pose proof (concat (apD10_ap_precompose f _ _ (X ..1) a)^ H') as p.
+    (** Apparently [pose; clearbody] is only ~.8 seconds, while [pose proof] is ~4 seconds? *)
+    pose (concat (apD10_ap_precompose f _ _ (X ..1) a)^ H') as p.
+    clearbody p.
     simpl in p.
     rewrite p.
     rewrite transport_paths_Fr.

@@ -347,6 +347,9 @@ Notation IsHSet := (IsTrunc 0).
 
 Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_instances.
 
+(** There is a canonical function to a contractible type. *)
+Notation "!" := (fun _ => center _).
+
 (** *** Function extensionality *)
 
 (** The function extensionality axiom is formulated as a class. To use it in a theorem, just assume it with [`{Funext}], and then you can use [path_forall], defined below.  If you need function extensionality for a whole development, you can assume it for an entire Section with [Context `{Funext}].  *)
