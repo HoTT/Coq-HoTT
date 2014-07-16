@@ -39,6 +39,10 @@ But this gives "Error: in Tacinterp.add_tacdef: Reserved Ltac name symmetry.".  
 
 (** Define an alias for [Set], which is really [Type₀]. *)
 Notation Type0 := Set.
+(** Define [Type₁] (really, [Type_i] for any [i > 0]) so that we can enforce having universes that are not [Set].  In trunk, universes will not be unified with [Set] in most places, so we want to never use [Set] at all. *)
+Definition Type1 := Eval hnf in let U := Type in let gt := (Set : U) in U.
+Arguments Type1 / .
+Identity Coercion unfold_Type1 : Type1 >-> Sortclass.
 
 (** We make the identity map a notation so we do not have to unfold it,
     or complicate matters with its type. *)
@@ -376,7 +380,13 @@ Ltac path_via mid :=
   apply @concat with (y := mid); auto with path_hints.
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
-Inductive Empty : Type0 := .
+(** HoTT/coq is broken and somehow interprets [Type1] as [Prop] with regard to elimination schemes. *)
+Unset Elimination Schemes.
+Inductive Empty : Type1 := .
+Scheme Empty_rect := Induction for Empty Sort Type.
+Scheme Empty_rec := Induction for Empty Sort Set.
+Scheme Empty_ind := Induction for Empty Sort Prop.
+Set Elimination Schemes.
 
 Definition not (A:Type) : Type := A -> Empty.
 Notation "~ x" := (not x) : type_scope.

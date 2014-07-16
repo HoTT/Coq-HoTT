@@ -10,14 +10,14 @@ Set Asymmetric Patterns.
 Module Export Core.
   (** ** [Fin n] types, or [CardinalityRepresentative] *)
   (** We use [Empty] for [0] and [Unit] for [1] so that we get nice judgmental behavior with opposites *)
-  Fixpoint CardinalityRepresentative (n : nat) : Type0 :=
+  Fixpoint CardinalityRepresentative (n : nat) : Type1 :=
     match n with
       | 0 => Empty
       | 1 => Unit
       | S n' => (CardinalityRepresentative n' + Unit)%type
     end.
 
-  Coercion CardinalityRepresentative : nat >-> Sortclass.
+  Coercion CardinalityRepresentative : nat >-> Type1.
 
   (** ** [Fin n] is an hSet *)
   Instance trunc_cardinality_representative (n : nat)

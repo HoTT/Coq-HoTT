@@ -12,7 +12,7 @@ Generalizable Variables X A B f g n.
 
 Module Export Circle.
 
-Local Inductive S1 : Type0 :=
+Local Inductive S1 : Type1 :=
 | base : S1.
 
 Axiom loop : base = base.
@@ -46,7 +46,7 @@ Defined.
 
 (* First we define the appropriate integers. *)
 
-Inductive Pos : Type :=
+Inductive Pos : Type1 :=
 | one : Pos
 | succ_pos : Pos -> Pos.
 
@@ -56,7 +56,7 @@ Definition one_neq_succ_pos (z : Pos) : ~ (one = succ_pos z)
 Definition succ_pos_injective {z w : Pos} (p : succ_pos z = succ_pos w) : z = w
   := transport (fun s => z = (match s with one => w | succ_pos a => a end)) p (idpath z).
 
-Inductive Int : Type :=
+Inductive Int : Type1 :=
 | neg : Pos -> Int
 | zero : Int
 | pos : Pos -> Int.

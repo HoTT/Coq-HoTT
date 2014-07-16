@@ -12,7 +12,7 @@ Generalizable Variables X A B f g n.
 
 Module Export TwoSphere.
 
-Local Inductive S2 : Type0 :=
+Local Inductive S2 : Type1 :=
 | base : S2.
 
 Axiom surf : idpath base = idpath base.
