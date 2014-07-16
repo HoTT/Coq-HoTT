@@ -101,23 +101,20 @@ Section fully_faithful_helpers.
     eauto.
   Qed.
 
-  Let isequiv_isepi_ismono_helper ua : isepi m -> ismono m -> IsEquiv m
-    := @isequiv_isepi_ismono ua fs0 x y m.
-
   Definition isequiv_isepimorphism_ismonomorphism
         `{Univalence}
         (Hepi : IsEpimorphism (m : morphism set_cat x y))
         (Hmono : IsMonomorphism (m : morphism set_cat x y))
-  : @IsEquiv _ _ m
-    := @isequiv_isepi_ismono_helper _ Hepi Hmono.
-
-  (** TODO: Figure out why Universe inconsistencies don't respect delta expansion. *)
-  (*Definition isequiv_isepimorphism_ismonomorphism'
-        `{fs1 : Funext} `{Univalence}
-        (Hepi : IsEpimorphism (m : morphism set_cat x y))
-        (Hmono : IsMonomorphism (m : morphism set_cat x y))
-  : @IsEquiv _ _ m
-    := @isequiv_isepi_ismono _ fs0 fs1 x y m Hepi Hmono.*)
+  : @IsEquiv _ _ m.
+  (* := @isequiv_isepi_ismono _ _ x y m. *)
+  Proof.
+    (** We have code implementing the version of
+        [isequiv_isepi_ismono] that doesn't require an impredicative
+        hProp in #407, but we still need to review it and clean it up.
+        For now, to get things to work with trunk, we admit this code,
+        which would otherwise yield a universe inconsistency. *)
+    admit.
+  Defined.
 End fully_faithful_helpers.
 
 Global Instance isfullyfaithful_isfull_isfaithful
