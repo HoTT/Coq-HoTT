@@ -108,7 +108,8 @@ Section UnivalenceImpliesWeakFunext.
       intro f.
       apply (@Univalence_implies_FunextNondep ua2).
       intro x.
-      exact (@contr Unit _ _).
+      destruct (@contr Unit _ (f x)).
+      reflexivity.
   Qed.
 End UnivalenceImpliesWeakFunext.
 
