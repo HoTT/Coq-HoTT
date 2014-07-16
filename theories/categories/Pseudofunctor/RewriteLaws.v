@@ -71,7 +71,9 @@ Section lemmas.
           [ typeclasses eauto
           | eapply isisomorphism_compose;
             [ eapply iso_whisker_r; typeclasses eauto
-            | typeclasses eauto ] ] ] ].
+            | ] ] ] ].
+      (** [typeclasses eauto] should solve this goal, but it doesn't; see https://coq.inria.fr/bugs/show_bug.cgi?id=3422. *)
+      exact isisomorphism_isomorphic.
     Defined.
 
     Definition p_composition_of_coherent_iso_for_rewrite__isisomorphism_helper
