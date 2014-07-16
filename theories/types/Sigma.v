@@ -467,7 +467,7 @@ Instance isequiv_sigT_corect `{Funext}
                         (fun x => (h x).1)
                         (fun x => (h x).2))
        (fun h => path_forall _ _ (fun a : X => @eta_sigma (A a) (P a) (h a)))
-       (fun h => eta_sigma _)
+       (fun h => eta_sigma h)
        _.
 Proof.
   intros [f g]; simpl.
