@@ -1,3 +1,6 @@
 [submodule "coq-HoTT"]
 	path = coq-HoTT
 	url = https://github.com/HoTT/coq.git
+[submodule "etc/coq-scripts"]
+	path = etc/coq-scripts
+	url = https://github.com/JasonGross/coq-scripts.git
