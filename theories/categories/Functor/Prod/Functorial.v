@@ -34,14 +34,14 @@ Section functorial.
   : functor_morphism_of (m2 o m1)
     = functor_morphism_of m2 o functor_morphism_of m1.
   Proof.
-    abstract (path_natural_transformation; reflexivity).
+    path_natural_transformation; reflexivity.
   Qed.
 
   Definition functor_identity_of
              (x : object ((C -> D) * (C -> D')))
   : functor_morphism_of (identity x) = identity _.
   Proof.
-    abstract (path_natural_transformation; reflexivity).
+    path_natural_transformation; reflexivity.
   Qed.
 
   Definition functor

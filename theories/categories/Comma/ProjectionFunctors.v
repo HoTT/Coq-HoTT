@@ -92,7 +92,7 @@ Section comma.
     apply CommaCategory.path_morphism; simpl; [ | reflexivity ].
     path_functor.
     exists (path_forall _ _ (comma_category_induced_functor_object_of_identity _)).
-    abstract comma_laws_t.
+    comma_laws_t.
   Qed.
 
   Lemma comma_category_projection_functor_composition_of s d d' m m'
@@ -105,7 +105,7 @@ Section comma.
     path_functor.
     simpl.
     exists (path_forall _ _ (comma_category_induced_functor_object_of_compose m' m)).
-    abstract comma_laws_t.
+    comma_laws_t.
   Qed.
 
   Definition comma_category_projection_functor
