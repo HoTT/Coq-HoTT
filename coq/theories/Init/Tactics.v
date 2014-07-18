@@ -10,6 +10,8 @@
 (*   This file has been modified for the purposes of the HoTT library.  *)
 (************************************************************************)
 
+Require Import Notations.
+
 Ltac easy :=
   let rec use_hyp H :=
     match type of H with
@@ -30,4 +32,3 @@ Ltac easy :=
   (use_hyps; do_ccl) || fail "Cannot solve this goal".
 
 Tactic Notation "now" tactic(t) := t; easy.
-

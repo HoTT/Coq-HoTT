@@ -104,11 +104,10 @@ Section sigT_mor.
                  _
                  _
                  (fun x
-                  => match x with
-                       | (_; tt) => _
+                  => match x as x return (x.1; tt) = x with
+                       | (_; tt) => idpath
                      end))
               _).
-    instantiate (1 := idpath).
     repeat (apply path_forall; intro).
     destruct_head @sigT_type.
     destruct_head Unit.

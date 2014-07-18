@@ -1476,7 +1476,7 @@ Proof.
   split.
   - intros H' a b.
     eapply trunc_equiv.
-    + apply (H' a b).
+    + exact (H' a b).
     + apply H.
   - intros H' a b.
     eapply trunc_equiv.

@@ -50,11 +50,11 @@ Definition path_sigma_uncurried {A : Type} (P : A -> Type) (u v : sigT P)
   : u = v
   := match pq with
        | existT p q =>
-         match u, v return (forall p0, (p0 # u.2 = v.2) -> (u=v)) with
+         match u, v return (forall p0 : (u.1 = v.1), (p0 # u.2 = v.2) -> (u=v)) with
            | (x;y), (x';y') => fun p1 q1 =>
              match p1 in (_ = x'') return (forall y'', (p1 # y = y'') -> (x;y)=(x'';y'')) with
                | idpath => fun y' q2 =>
-                 match q2 with
+                 match q2 in (_ = y'') return (x;y) = (x;y'') with
                    | idpath => 1
                  end
              end y' q1
@@ -467,7 +467,7 @@ Instance isequiv_sigT_corect `{Funext}
                         (fun x => (h x).1)
                         (fun x => (h x).2))
        (fun h => path_forall _ _ (fun a : X => @eta_sigma (A a) (P a) (h a)))
-       (fun h => eta_sigma _)
+       (fun h => eta_sigma h)
        _.
 Proof.
   intros [f g]; simpl.

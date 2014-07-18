@@ -293,7 +293,9 @@ Section FullyFaithful.
   Proof.
     intros a b.
     pose (coyoneda_lemma (A := A) (coyoneda A b) a) as YL.
-    exists (coyoneda_lemma_morphism (F := coyoneda A b) (a := a));
+    (** [exists] loops, for some reason? *)
+    let term := constr:(coyoneda_lemma_morphism (F := coyoneda A b) (a := a)) in
+    exists term;
       [ eapply iso_moveR_Mp
       | eapply iso_moveR_pM ];
       repeat (intro || apply path_forall || path_natural_transformation);
@@ -306,7 +308,8 @@ Section FullyFaithful.
   Proof.
     intros a b.
     pose (yoneda_lemma (A := A) (yoneda A b) a) as YL.
-    exists (yoneda_lemma_morphism (G := yoneda A b) (a := a));
+    let term := constr:(yoneda_lemma_morphism (G := yoneda A b) (a := a)) in
+    exists term;
       [ eapply iso_moveR_Mp
       | eapply iso_moveR_pM ];
       repeat (intro || apply path_forall || path_natural_transformation);
