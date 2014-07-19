@@ -85,8 +85,11 @@ Section lemmas.
     Definition p_composition_of_coherent_iso_for_rewrite__isisomorphism_helper__to_inverse
           X
           (H' : X = @Build_Isomorphic (_ -> _) _ _ _ p_composition_of_coherent_iso_for_rewrite__isisomorphism_helper)
-    : @morphism_inverse _ _ _ _ X = inv
-      := ap (fun i => @morphism_inverse _ _ _ _ (@isisomorphism_isomorphic _ _ _ i)) H'.
+    : @morphism_inverse _ _ _ _ X = inv.
+    Proof.
+      refine (ap (fun i => @morphism_inverse _ _ _ _ (@isisomorphism_isomorphic _ _ _ i)) H' @ _)%path.
+      reflexivity. (** Why is [exact idpath] slow? *)
+    Defined.
   End helper.
 
   Lemma p_composition_of_coherent_iso_for_rewrite w x y z
@@ -168,9 +171,12 @@ Section lemmas.
     := Eval simpl in typeof (ap (fun i => @morphism_inverse _ _ _ _ (@isisomorphism_isomorphic _ _ _ i))
                                 (@p_left_identity_of_coherent_iso_for_rewrite x y f)).
   Definition p_left_identity_of_coherent_inverse_for_rewrite x y f
-  : p_left_identity_of_coherent_inverse_for_rewrite_type x y f
-    := ap (fun i => @morphism_inverse _ _ _ _ (@isisomorphism_isomorphic _ _ _ i))
-          (@p_left_identity_of_coherent_iso_for_rewrite x y f).
+  : p_left_identity_of_coherent_inverse_for_rewrite_type x y f.
+  Proof.
+    refine (ap (fun i => @morphism_inverse _ _ _ _ (@isisomorphism_isomorphic _ _ _ i))
+               (@p_left_identity_of_coherent_iso_for_rewrite x y f) @ _)%path.
+    reflexivity.
+  Defined.
 
   Let p_right_identity_of_coherent_for_rewrite_type x y f
     := Eval simpl in typeof (ap (@morphism_isomorphic _ _ _)
@@ -184,7 +190,10 @@ Section lemmas.
     := Eval simpl in typeof (ap (fun i => @morphism_inverse _ _ _ _ (@isisomorphism_isomorphic _ _ _ i))
                                 (@p_right_identity_of_coherent_iso_for_rewrite x y f)).
   Definition p_right_identity_of_coherent_inverse_for_rewrite x y f
-  : p_right_identity_of_coherent_inverse_for_rewrite_type x y f
-    := ap (fun i => @morphism_inverse _ _ _ _ (@isisomorphism_isomorphic _ _ _ i))
-          (@p_right_identity_of_coherent_iso_for_rewrite x y f).
+  : p_right_identity_of_coherent_inverse_for_rewrite_type x y f.
+  Proof.
+    refine (ap (fun i => @morphism_inverse _ _ _ _ (@isisomorphism_isomorphic _ _ _ i))
+               (@p_right_identity_of_coherent_iso_for_rewrite x y f) @ _)%path.
+    reflexivity.
+  Defined.
 End lemmas.

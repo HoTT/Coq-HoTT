@@ -118,7 +118,7 @@ Module Law1.
       /\ inverse o functor = 1.
     Proof.
       unfold functor, inverse.
-      abstract t_prod.
+      t_prod.
     Qed.
 
     (** *** [1 × C ≅ C] *)
@@ -127,7 +127,7 @@ Module Law1.
       /\ inverse' o functor' = 1.
     Proof.
       unfold functor', inverse'.
-      abstract t_prod.
+      t_prod.
     Qed.
   End law1.
 End Law1.

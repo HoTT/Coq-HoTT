@@ -111,7 +111,7 @@ intros.
               o (idtoiso (x0 -> x1) x12 : morphism _ _ _)))%natural_transformation.
   Proof.
     clear F.
-    abstract (apply symmetry; simpl; pseudofunctor_t).
+    apply symmetry; simpl; pseudofunctor_t.
   Qed.
 
   Lemma pseudofunctor_of_functor__left_identity_of
@@ -126,7 +126,7 @@ intros.
          o (Category.Morphisms.idtoiso (x0 -> x) x6 : morphism _ _ _))%natural_transformation.
   Proof.
     clear F.
-    abstract (simpl; pseudofunctor_t).
+    simpl; pseudofunctor_t.
   Qed.
 
   Lemma pseudofunctor_of_functor__right_identity_of
@@ -141,7 +141,7 @@ intros.
          o (Category.Morphisms.idtoiso (x0 -> x) x6 : morphism _ _ _))%natural_transformation.
   Proof.
     clear F.
-    abstract (simpl; pseudofunctor_t).
+    simpl; pseudofunctor_t.
   Qed.
 
   Definition pseudofunctor_of_functor : Pseudofunctor C

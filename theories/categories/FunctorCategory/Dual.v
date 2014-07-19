@@ -71,13 +71,13 @@ Section opposite.
   : opposite_functor o opposite_functor_inv = 1
     /\ opposite_functor_inv o opposite_functor = 1.
   Proof.
-    abstract op_t.
+    op_t.
   Qed.
 
   Definition opposite_functor'_law
   : opposite_functor' o opposite_functor_inv' = 1
     /\ opposite_functor_inv' o opposite_functor' = 1.
   Proof.
-    abstract op_t.
+    op_t.
   Qed.
 End opposite.

@@ -224,7 +224,7 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
              (x x3 o (f1 _1 f' o x0 x4))
       = (f; f').
   Proof.
-    abstract helper_t idtac.
+    helper_t idtac.
   Qed.
 
   Lemma pseudofunctor_to_cat_right_identity_helper
@@ -244,7 +244,7 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
                (f' o ((f0 f) _1 (x x4) o x0 x4))
         = (f; f').
   Proof.
-    abstract helper_t idtac.
+    helper_t idtac.
   Qed.
 
   (** ** Category of elements *)
