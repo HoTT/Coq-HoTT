@@ -63,7 +63,7 @@ Proof.
     _ _ (BuildEquiv _ _ f _)).
   path_via (idmap : F A -> F A).
     apply fmap_idmap.
-  change (equiv_idmap A) with (equiv_path A A 1).
+  change (equiv_idmap A) with (equiv_path A A 1). simpl equiv_isequiv.
   rewrite (@eta_path_universe _ A A 1). exact 1.
 Defined.
 

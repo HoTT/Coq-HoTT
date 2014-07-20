@@ -701,7 +701,7 @@ End Book_5_5.
 
 Section Book_6_9.
   Hypothesis LEM : forall A, IsHProp A -> A + ~A.
-
+  Context `{F:Funext}. (* For contractibility of Contr { f : X <~> X ... *)
   Definition Book_6_9 : forall X, X -> X.
   Proof.
     intro X.

@@ -73,12 +73,13 @@ Section diagonal_functor_lemmas.
     path_functor.
   Qed.
 
+  (* Very strange, is HoTT/Coq, having diagonal_functor C D' x on the right really? *)
   Definition compose_diagonal_functor_natural_transformation
              x (F : Functor D' D)
-  : NaturalTransformation (diagonal_functor C D x o F) (diagonal_functor _ _ x)
+  : NaturalTransformation (diagonal_functor C D x o F) (diagonal_functor C D x o F)
     := Build_NaturalTransformation
          (diagonal_functor C D x o F)
-         (diagonal_functor _ _ x)
+         (diagonal_functor C D x o F)
          (fun z => identity _)
          (fun _ _ _ => transitivity
                          _ _ _
