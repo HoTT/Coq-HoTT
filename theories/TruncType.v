@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Universes of truncated types. *)
 
-Require Import Overture PathGroupoids Trunc Equivalences HProp EquivalenceVarieties types.Arrow types.Paths types.Sigma types.Universe types.Record Misc.
+Require Import Overture PathGroupoids Trunc Equivalences HProp EquivalenceVarieties types.Arrow types.Paths types.Sigma types.Universe types.Record Misc UnivalenceImpliesFunext.
 Local Open Scope equiv_scope.
 
 Generalizable Variables A B n f.
@@ -12,7 +12,7 @@ Generalizable Variables A B n f.
 
 Section TruncType.
 
-Context `{Univalence} `{Funext}.
+Context `{Univalence}.
 
 Record TruncType (n : trunc_index) := BuildTruncType {
   trunctype_type :> Type ;

@@ -1,4 +1,4 @@
-Require Import Overture hit.epi HSet types.Universe hit.unique_choice Equivalences FunextVarieties.
+Require Import Overture hit.epi HSet types.Universe hit.unique_choice Equivalences UnivalenceImpliesFunext.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
@@ -6,9 +6,6 @@ Open Local Scope equiv_scope.
 (** We prove that [epi + mono <-> IsEquiv] *)
 Section iso.
   Context `{Univalence}.
-  Context {fs0 : Funext}.
-  Let fs1 := Funext_downward_closed.
-  Let fs2 := Funext_downward_closed.
   Variables X Y : hSet.
   Variable f : X -> Y.
 
@@ -25,7 +22,7 @@ Section iso.
   Definition isequiv_isepi_ismono (epif : isepi f) (monof : ismono f)
   : IsEquiv f.
   Proof.
-    pose proof (@isepi_issurj fs1 _ fs2 _ _ f epif) as surjf.
+    pose proof (@isepi_issurj _ _ _ f epif) as surjf.
     pose proof (ismono_isinj _ monof) as injf.
     pose proof (unique_choice
                   (fun y x => f x = y)

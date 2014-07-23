@@ -6,7 +6,7 @@ set -ex
 # if we're not testing the build of Coq, then install it from debian
 if [ -z "$BUILD_COQ" ]
 then
-    #echo | sudo add-apt-repository ppa:ezyang/coq-hott-git
+    #echo | sudo add-apt-repository ppa:ezyang/coq-git
     #sudo apt-get update -qq
     sudo apt-get install -q coq libcoq-ocaml-dev
     exit 0

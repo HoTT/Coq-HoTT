@@ -7,8 +7,11 @@ Set Implicit Arguments.
 
 (** Here we prove that univalence implies function extensionality. *)
 
+(** We define an axiom-free variant of [Univalence] *)
+Definition Univalence_type := forall (A B : Type), IsEquiv (equiv_path A B).
+
 Section UnivalenceImpliesFunext.
-  Context `{Univalence}.
+  Context `{ua : Univalence_type}.
 
   (** Exponentiation preserves equivalences, i.e., if [e] is an equivalence then so is post-composition by [e]. *)
 
@@ -16,6 +19,7 @@ Section UnivalenceImpliesFunext.
 
   Theorem univalence_isequiv_postcompose `{H0 : IsEquiv A B w} C : IsEquiv (@compose C A B w).
   Proof.
+    unfold Univalence_type in *.
     refine (isequiv_adjointify
               (@compose C A B w)
               (@compose C B A w^-1)%equiv
@@ -26,8 +30,8 @@ Section UnivalenceImpliesFunext.
     change H0 with (@equiv_isequiv _ _ w');
     change w with (@equiv_fun _ _ w');
     clearbody w'; clear H0 w;
-    rewrite <- (@eisretr _ _ _ (@isequiv_equiv_path _ A B) w');
-    generalize ((equiv_path A B)^-1 w')%equiv;
+    rewrite <- (@eisretr _ _ (@equiv_path A B) (ua A B) w');
+    generalize ((@equiv_inv _ _ (equiv_path A B) (ua A B)) w')%equiv;
     intro p;
     clear w';
     destruct p;
@@ -88,7 +92,7 @@ Section UnivalenceImpliesFunext.
 End UnivalenceImpliesFunext.
 
 Section UnivalenceImpliesWeakFunext.
-  Context `{ua1 : Univalence, ua2 : Univalence}.
+  Context `{ua1 : Univalence_type, ua2 : Univalence_type}.
   (** Now we use this to prove weak funext, which as we know implies (with dependent eta) also the strong dependent funext. *)
 
   Theorem Univalence_implies_WeakFunext : WeakFunext.
@@ -97,9 +101,9 @@ Section UnivalenceImpliesWeakFunext.
     (** We are going to replace [P] with something simpler. *)
     pose (U := (fun (_ : A) => Unit)).
     assert (p : P = U).
-    - apply Univalence_implies_FunextNondep.
+    - apply (@Univalence_implies_FunextNondep ua2).
       intro x.
-      apply (@path_universe_uncurried ua1).
+      apply (@equiv_inv _ _ _ (ua1 _ _)).
       apply equiv_contr_unit.
     - (** Now this is much easier. *)
       rewrite p.
@@ -113,7 +117,9 @@ Section UnivalenceImpliesWeakFunext.
   Qed.
 End UnivalenceImpliesWeakFunext.
 
-Definition Univalence_implies_Funext `{ua1 : Univalence, ua2 : Univalence} : Funext
+Definition Univalence_type_implies_Funext_type `{ua1 : Univalence_type, ua2 : Univalence_type} : Funext_type
   := WeakFunext_implies_Funext (@Univalence_implies_WeakFunext ua1 ua2).
 
-Hint Immediate Univalence_implies_Funext : typeclass_instances.
+(** As justified by the above proof, we may assume [Univalence -> Funext]. *)
+Global Instance Univalence_implies_Funext `{Univalence} : Funext.
+Admitted.

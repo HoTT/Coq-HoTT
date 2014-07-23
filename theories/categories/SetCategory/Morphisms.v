@@ -2,7 +2,7 @@
 Require Import Category.Core Category.Morphisms.
 Require Import Category.Univalent.
 Require Import SetCategory.Core.
-Require Import Overture types.Record types.Sigma HProp HSet types.Universe Equivalences HoTT.Misc.
+Require Import Overture types.Record types.Sigma HProp HSet types.Universe Equivalences HoTT.Misc UnivalenceImpliesFunext.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -125,7 +125,7 @@ Section equiv_iso_prop_cat.
 End equiv_iso_prop_cat.
 
 Local Close Scope morphism_scope.
-Instance iscategory_set_cat `{Funext, Univalence}
+Instance iscategory_set_cat `{Univalence}
 : IsCategory set_cat.
 Proof.
   intros C D.
@@ -134,7 +134,7 @@ Proof.
   typeclasses eauto.
 Defined.
 
-Instance iscategory_prop_cat `{Funext, Univalence}
+Instance iscategory_prop_cat `{Univalence}
 : IsCategory prop_cat.
 Proof.
   intros C D.

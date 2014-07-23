@@ -165,11 +165,11 @@ End slice_category_induced_functor.
 
 (** ** Functors [A → A'] functors [(cat / A) → (cat / A')] *)
 Section cat_over_induced_functor.
-  Context `{fs : Funext}.
+  Context `{Funext}.
   Variable P : PreCategory -> Type.
   Context `{H0 : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Notation cat := (@sub_pre_cat fs P H0).
+  Local Notation cat := (@sub_pre_cat _ P H0).
 
   Definition cat_over_induced_functor a a' (m : morphism cat a a')
   : Functor (cat / a) (cat / a')

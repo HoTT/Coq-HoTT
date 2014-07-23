@@ -2,12 +2,10 @@
 This equivalence is close to the existence of an object classifier.
 *)
 
-Require Import Overture types.Universe types.Sigma Fibrations EquivalenceVarieties Equivalences PathGroupoids.
+Require Import Overture types.Universe types.Sigma Fibrations EquivalenceVarieties Equivalences PathGroupoids UnivalenceImpliesFunext.
 
 Section AssumeUnivalence.
 Context `{ua:Univalence}.
-Section AssumeFunext.
-Context `{fs : Funext}.
 Section ToBeMoved.
 (** Should be moved *)
 Local Open Scope equiv_scope.
@@ -177,5 +175,4 @@ simpl in p. by path_induction.
 Qed.
 
 End FamPow.
-End AssumeFunext.
 End AssumeUnivalence.

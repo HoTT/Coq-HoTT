@@ -2,7 +2,7 @@
 
 (** * The flattening lemma. *)
 
-Require Import Overture PathGroupoids Equivalences.
+Require Import Overture PathGroupoids Equivalences UnivalenceImpliesFunext.
 Require Import types.Paths types.Forall types.Sigma types.Arrow types.Universe.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -12,7 +12,7 @@ Local Open Scope equiv_scope.
 
 Module Export BaseHIT.
 
-Local Inductive W (A B : Type) (f g : B -> A) : Type :=
+Private Inductive W (A B : Type) (f g : B -> A) : Type :=
 | cc : A -> W A B f g.
 
 Arguments cc {A B f g} a.
@@ -54,7 +54,7 @@ Defined.
 
 Module Export FlattenedHIT.
 
-Local Inductive Wtil (A B : Type) (f g : B -> A)
+Private Inductive Wtil (A B : Type) (f g : B -> A)
   (C : A -> Type) (D : forall b, C (f b) <~> C (g b))
   : Type :=
 | cct : forall a, C a -> Wtil A B f g C D.
@@ -104,7 +104,7 @@ Defined.
 (** Now we define the fibration over it that we will be considering the total space of. *)
 
 Section AssumeAxioms.
-Context `{Funext} `{Univalence}.
+Context `{Univalence}.
 
 Context {A B : Type} {f g : B -> A}.
 Context {C : A -> Type} {D : forall b, C (f b) <~> C (g b)}.

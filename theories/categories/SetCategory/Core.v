@@ -1,6 +1,6 @@
 (** * PreCategories [set_cat] and [prop_cat] *)
 Require Import Category.Core Category.Strict.
-Require Import HProp HSet types.Universe.
+Require Import HProp HSet types.Universe UnivalenceImpliesFunext.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -24,6 +24,6 @@ Definition prop_cat `{Funext} : PreCategory := cat_of hProp.
 Definition set_cat `{Funext} : PreCategory := cat_of hSet.
 
 (** ** [Prop] is a strict category *)
-Instance isstrict_prop_cat `{Funext, Univalence}
+Instance isstrict_prop_cat `{Univalence}
 : IsStrictCategory prop_cat
   := _.
