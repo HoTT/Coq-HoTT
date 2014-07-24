@@ -87,6 +87,13 @@ Arguments paths_rect [A] a P f y p.
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
 
+(** Ensure [internal_paths_rew] and [internal_paths_rew_r] are defined outside sections, so they are not unnecessarily polymorphic. *)
+Lemma paths_rew A a y P (X : P a) (H : a = y :> A) : P y.
+Proof. rewrite <- H. exact X. Defined.
+
+Lemma paths_rew_r A a y P (X : P y) (H : a = y :> A) : P a.
+Proof. rewrite -> H. exact X. Defined.
+
 Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
