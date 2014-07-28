@@ -262,6 +262,13 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/PseudonaturalTransformation/PseudonaturalTransformation.v \
 	$(srcdir)/theories/categories/PseudonaturalTransformation/Core.v \
 	\
+	$(srcdir)/theories/categories/LaxComma/LaxComma.v \
+	$(srcdir)/theories/categories/LaxComma/Core.v \
+	$(srcdir)/theories/categories/LaxComma/CoreParts.v \
+	$(srcdir)/theories/categories/LaxComma/CoreLaws.v \
+	$(srcdir)/theories/categories/LaxComma/Notations.v \
+	$(srcdir)/theories/categories/LaxComma/Utf8.v \
+	\
 	$(srcdir)/theories/categories/Grothendieck/Grothendieck.v \
 	$(srcdir)/theories/categories/Grothendieck/ToSet.v \
 	$(srcdir)/theories/categories/Grothendieck/PseudofunctorToCat.v \
