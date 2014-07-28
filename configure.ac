@@ -171,7 +171,9 @@ AS_IF([test -h "$srcdir/coq/library"], [rm -f "$srcdir/coq/library"],
       [test -d "$srcdir/coq/library"], [rm -rf "$srcdir/coq/library"])
 AS_IF([test -h "$srcdir/coq/plugins"], [rm -f "$srcdir/coq/plugins"],
       [test -d "$srcdir/coq/plugins"], [rm -rf "$srcdir/coq/plugins"])
-ln -s "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$srcdir/coq"
+AS_IF([test -h "$srcdir/coq/stm"], [rm -f "$srcdir/coq/stm"],
+      [test -d "$srcdir/coq/stm"], [rm -rf "$srcdir/coq/stm"])
+ln -s "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$COQLIB/stm" "$srcdir/coq"
 # TODO(jgross): Should we use AC_CONFIG_LINKS?  But $COQLIB/dev
 # doesn't exist in my installation, and that would make configure
 # error...
@@ -183,8 +185,8 @@ AS_IF([test "$coqtop_out" = 0],
       [AC_MSG_RESULT([yes])],
       [AC_MSG_RESULT([no])
        AC_MSG_NOTICE([Falling back on making physical copies of the stdlib])
-       rm -f "$srcdir/coq/dev" "$srcdir/coq/kernel" "$srcdir/coq/library" "$srcdir/coq/plugins"
-       cp -R "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$srcdir/coq"])
+       rm -f "$srcdir/coq/dev" "$srcdir/coq/kernel" "$srcdir/coq/library" "$srcdir/coq/plugins" "$srcdir/coq/stm"
+       cp -R "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$COQLIB/stm" "$srcdir/coq"])
 
 
 AC_CONFIG_FILES([Makefile])
