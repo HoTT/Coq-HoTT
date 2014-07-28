@@ -106,58 +106,52 @@ Defined.
 
 (** The sledge-hammer for computing with [transport]ing across a [path_forall].  Note that it uses [rewrite], and so should only be used in opaque proofs. *)
 
-(** We separate the inference part and the rewrite part to avoid 'Anomaly: Uncaught exception Invalid_argument("to_constraints: non-trivial algebraic constraint between universes", _).
-Please report.' on rewrite *)
+(** This helper tactic takes a [term] and a function [f], finds [f x] in [term] and patterns that, returning a pair [(x, term')] such that [term' (f x) ≡ term]. *)
+Ltac pull_app term f :=
+  let term' := (eval cbv beta in term) in
+  match term' with
+    | context[f ?x]
+      => match eval pattern (f x) in term' with
+           | ?term' (f x) => constr:((x, term'))
+         end
+  end.
+
+Ltac infer_path_forall_recr_beta term :=
+  let path_forall_recr_beta' :=
+      match term with
+        | @transport _ (fun x => @?P0 x) _ _ (@path_forall ?H ?A ?B ?f ?g ?e) _
+          => constr:(fun x0 P Px => @path_forall_recr_beta H A B x0 P f g e Px)
+      end in
+  let Px := match term with @transport _ _ _ _ _ ?Px => constr:(Px) end in
+  let P0 := match term with @transport _ (fun f => @?P0 f) _ _ _ _ => constr:(P0) end in
+  (** pattern some [f x0] in [P0] *)
+  (** Hopefully, no goal will have a variable called [WORKAROUND_FOR_BUG_3458] in the context.  At least not until bug #3458 is fixed. *)
+  let P0f := constr:(fun WORKAROUND_FOR_BUG_3458 => $(let ret := pull_app (P0 WORKAROUND_FOR_BUG_3458) WORKAROUND_FOR_BUG_3458 in
+                                                      exact ret)$) in
+  let x0 := match P0f with fun f => (?x0, @?P f) => constr:(x0) end in
+  let P := match P0f with fun f => (?x0, @?P f) => constr:(P) end in
+  let ret := constr:(path_forall_recr_beta' x0 P Px) in
+  let retT := type of ret in
+  let ret' := (eval cbv beta in ret) in
+  let retT' := (eval cbv beta in retT) in
+  constr:(ret' : retT').
+
 
 Ltac transport_path_forall_hammer_helper :=
-  (* pull out the parts of the goal to use [path_forall_recr_beta] *)
-  let F := match goal with |- appcontext[@transport _ (fun x0 => @?F x0) _ _ (@path_forall ?H ?X ?T ?f ?g ?e)] => constr:(F) end in
-  let H := match goal with |- appcontext[@transport _ (fun x0 => @?F x0) _ _ (@path_forall ?H ?X ?T ?f ?g ?e)] => constr:(H) end in
-  let X := match goal with |- appcontext[@transport _ (fun x0 => @?F x0) _ _ (@path_forall ?H ?X ?T ?f ?g ?e)] => constr:(X) end in
-  let T := match goal with |- appcontext[@transport _ (fun x0 => @?F x0) _ _ (@path_forall ?H ?X ?T ?f ?g ?e)] => constr:(T) end in
-  let t0 := fresh "t0" in
-  let t1 := fresh "t1" in
-  let T1 := lazymatch type of F with (?T -> _) -> _ => constr:(T) end in
-      evar (t1 : T1);
-    let T0 := lazymatch type of F with (forall a : ?A, @?B a) -> ?C => constr:((forall a : A, B a) -> B t1 -> C) end in
-        evar (t0 : T0);
-      (* make a dummy goal to figure out the functional form of [P] in [@transport _ P] *)
-      let dummy := fresh in
-      assert (dummy : forall x0, F x0 = t0 x0 (x0 t1));
-        [ let x0 := fresh in
-          intro x0;
-            simpl in *;
-            let GL0 := lazymatch goal with |- ?GL0 = _ => constr:(GL0) end in
-                let GL0' := fresh in
-                let GL1' := fresh in
-                set (GL0' := GL0);
-                  (* find [x0] applied to some argument, and note the argument *)
-                  let arg := match GL0 with appcontext[x0 ?arg] => constr:(arg) end in
-                  assert (t1 = arg) by (subst t1; reflexivity); subst t1;
-                  pattern (x0 arg) in GL0';
-                  match goal with
-                    | [ GL0'' := ?GR _ |- _ ] => constr_eq GL0' GL0'';
-                                                pose GR as GL1'
-                  end;
-                  (* remove the other instances of [x0], and figure out the shape *)
-                  pattern x0 in GL1';
-                  match goal with
-                    | [ GL1'' := ?GR _ |- _ ] => constr_eq GL1' GL1'';
-                                                assert (t0 = GR)
-                  end;
-                  subst t0; [ reflexivity | reflexivity ]
-              | clear dummy ];
-        let p := fresh in
-        pose (@path_forall_recr_beta H X T t1 t0) as p;
-          simpl in *;
-          rewrite p;
-          subst t0 t1 p.
+  let term := match goal with
+                | |- context[@transport ?At (fun x => @?Bt x) ?ft ?gt (@path_forall ?H ?A ?B ?f ?g ?e) ?Px]
+                  => constr:(@transport At Bt ft gt (@path_forall H A B f g e) Px)
+              end in
+  let lem := infer_path_forall_recr_beta term in
+  pattern term;
+    refine (transport _ lem^ _);
+    cbv beta.
 
 Ltac transport_path_forall_hammer :=
-  progress
-    repeat (
+  transport_path_forall_hammer_helper;
+  rewrite ?transport_const;
+  repeat (
       transport_path_forall_hammer_helper;
-      cbv beta;
       rewrite ?transport_const
     ).
 

@@ -136,10 +136,13 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/ExponentialLaws/Law1/Law.v \
 	$(srcdir)/theories/categories/ExponentialLaws/Law2/Law2.v \
 	$(srcdir)/theories/categories/ExponentialLaws/Law2/Functors.v \
+	$(srcdir)/theories/categories/ExponentialLaws/Law2/Law.v \
 	$(srcdir)/theories/categories/ExponentialLaws/Law3/Law3.v \
 	$(srcdir)/theories/categories/ExponentialLaws/Law3/Functors.v \
+	$(srcdir)/theories/categories/ExponentialLaws/Law3/Law.v \
 	$(srcdir)/theories/categories/ExponentialLaws/Law4/Law4.v \
 	$(srcdir)/theories/categories/ExponentialLaws/Law4/Functors.v \
+	$(srcdir)/theories/categories/ExponentialLaws/Law4/Law.v \
 	\
 	$(srcdir)/theories/categories/Functor/Composition/Functorial.v \
 	$(srcdir)/theories/categories/Functor/Composition/Functorial/Core.v \
