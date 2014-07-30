@@ -250,6 +250,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Comma/Projection.v \
 	$(srcdir)/theories/categories/Comma/InducedFunctors.v \
 	$(srcdir)/theories/categories/Comma/ProjectionFunctors.v \
+	$(srcdir)/theories/categories/Comma/Functorial.v \
 	$(srcdir)/theories/categories/Comma/Notations.v \
 	$(srcdir)/theories/categories/Comma/Utf8.v \
 	\
