@@ -104,16 +104,8 @@ Section fully_faithful_helpers.
   Definition isequiv_isepimorphism_ismonomorphism
              (Hepi : IsEpimorphism (m : morphism set_cat x y))
              (Hmono : IsMonomorphism (m : morphism set_cat x y))
-  : @IsEquiv _ _ m.
-  (* := @isequiv_isepi_ismono _ _ x y m. *)
-  Proof.
-    (** We have code implementing the version of
-        [isequiv_isepi_ismono] that doesn't require an impredicative
-        hProp in #407, but we still need to review it and clean it up.
-        For now, to get things to work with trunk, we admit this code,
-        which would otherwise yield a universe inconsistency. *)
-    admit.
-  Defined.
+  : @IsEquiv _ _ m
+    := @isequiv_isepi_ismono _ x y m Hepi Hmono.
 End fully_faithful_helpers.
 
 Global Instance isfullyfaithful_isfull_isfaithful
