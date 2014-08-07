@@ -1,0 +1,19 @@
+## This file allows joining different accounts of a single person.
+## Cf for instance: git shortlog -nse. More details via: man git shortlog
+
+# having the same name <email> name <email> on a line will fix capitalization
+Andrej Bauer <Andrej.Bauer@andrej.com>                     Andrej Bauer <Andrej.Bauer@andrej.com>
+Andrej Bauer <Andrej.Bauer@andrej.com>                     Andrej Bauer <abauer@somf401.math.ias.edu>
+Andrej Bauer <Andrej.Bauer@andrej.com>                     andrejbauer <Andrej.Bauer@andrej.com>
+Assia Mahboubi <assia.mahboubi@inria.fr>                   amahboubi <assia.mahboubi@inria.fr>
+Bas Spitters <b.a.w.spitters@gmail.com>                    Bas Spitters <spitters@cs.ru.nl>
+Bas Spitters <b.a.w.spitters@gmail.com>                    spitters <b.a.w.spitters@gmail.com>
+Gaetan Gilbert <gaetan.gilbert@ens-lyon.fr>                Gaetan Gilbert <gaetan.gilbert@laposte.net>
+Jason Gross <jgross@mit.edu>                               Jason Gross <jasongross9@gmail.com>
+Kristina Sojakova <kristinas@cmu.edu>                      Kristina <kristina@ubuntu.(none)>
+Mike Shulman <viritrilbia@gmail.com>                       Mike Shulman <mshulman@ucsd.edu>
+Mike Shulman <viritrilbia@gmail.com>                       mikeshulman <viritrilbia@gmail.com>
+Peter LeFanu Lumsdaine <pedro@cantab.net>                  Peter LeFanu Lumsdaine <p.l.lumsdaine@gmail.com>
+Steve Awodey <sawodey@gmail.com>                           Steve <sawodey@gmail.com>
+jcmckeown <qnoodles@gmail.com>                             jcmckeown <jesse@sockwright>
+
