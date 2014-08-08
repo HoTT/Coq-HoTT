@@ -246,6 +246,9 @@ Record Equiv A B := BuildEquiv {
 
 Existing Instance equiv_isequiv.
 
+Arguments equiv_fun {A B} _ _.
+Arguments equiv_isequiv {A B} _.
+
 Delimit Scope equiv_scope with equiv.
 Local Open Scope equiv_scope.
 
