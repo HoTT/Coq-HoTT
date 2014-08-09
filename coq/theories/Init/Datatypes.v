@@ -17,6 +17,8 @@ Declare ML Module "nat_syntax_plugin".
 
 Global Set Universe Polymorphism.
 Global Set Asymmetric Patterns.
+Local Set Primitive Projections.
+Global Set Record Elimination Schemes.
 
 (** [option A] is the extension of [A] with an extra element [None] *)
 
@@ -43,28 +45,24 @@ Notation or := sum (only parsing).
 (** [prod A B], written [A * B], is the product of [A] and [B];
     the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)
 
-Inductive prod (A B : Type) : Type :=
-  pair : A -> B -> prod A B.
+Record prod (A B : Type) := pair { fst : A ; snd : B }.
 
 Arguments pair {A B} _ _.
+Arguments fst {A B} _ / .
+Arguments snd {A B} _ / .
 
 Add Printing Let prod.
 
 Notation "x * y" := (prod x y) : type_scope.
 Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : core_scope.
-Notation "A /\ B" := (prod A B) (only parsing) : type_scope. 
+Notation "A /\ B" := (prod A B) (only parsing) : type_scope.
 Notation and := prod (only parsing).
 Notation conj := pair (only parsing).
-
-Definition fst {A B : Type} (p : A * B) := match p with (x, y) => x end.
-Definition snd {A B : Type} (p : A * B) := match p with (x, y) => y end.
 
 Hint Resolve pair inl inr : core.
 
 Definition prod_curry (A B C : Type) (f : A -> B -> C)
-  (p : prod A B) : C := match p with
-                          | pair x y => f x y
-                        end.
+  (p : prod A B) : C := f (fst p) (snd p).
 
 (** [iff A B], written [A <-> B], expresses the equivalence of [A] and [B] *)
 

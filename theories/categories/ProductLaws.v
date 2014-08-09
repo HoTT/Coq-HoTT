@@ -30,12 +30,6 @@ Module Swap.
   : functor C D o functor D C = 1.
   Proof.
     path_functor.
-    exists (path_forall _ _ (fun x => @eta_prod D C x)).
-    repeat (apply path_forall; intro).
-    rewrite !transport_forall_constant.
-    destruct_head_hnf @prod_type.
-    transport_path_forall_hammer.
-    reflexivity.
   Qed.
 End Swap.
 

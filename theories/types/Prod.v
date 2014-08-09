@@ -12,19 +12,23 @@ Generalizable Variables X A B f g n.
 
 Definition unpack_prod `{P : A * B -> Type} (u : A * B) :
   P (fst u, snd u) -> P u
-  :=
-  let (x, y) as u return (P (fst u, snd u) -> P u) := u in idmap.
+  := idmap.
+
+Arguments unpack_prod / .
 
 (** Now we write down the reverse. *)
 Definition pack_prod `{P : A * B -> Type} (u : A * B) :
   P u -> P (fst u, snd u)
-  :=
-  let (x, y) as u return (P u -> P (fst u, snd u)) := u in idmap.
+  := idmap.
+
+Arguments pack_prod / .
 
 (** ** Eta conversion *)
 
 Definition eta_prod `(z : A * B) : (fst z, snd z) = z
-  := match z with (x,y) => 1 end.
+  := 1.
+
+Arguments eta_prod / .
 
 (** ** Paths *)
 
@@ -32,14 +36,8 @@ Definition eta_prod `(z : A * B) : (fst z, snd z) = z
 Definition path_prod_uncurried {A B : Type} (z z' : A * B)
   (pq : (fst z = fst z') * (snd z = snd z'))
   : (z = z')
-  := match pq with (p,q) =>
-       match z, z' return
-         (fst z = fst z') -> (snd z = snd z') -> (z = z') with
-         | (a,b), (a',b') => fun p q =>
-           match p, q with
-             idpath, idpath => 1
-           end
-       end p q
+  := match fst pq in (_ = z'1), snd pq in (_ = z'2) return z = (z'1, z'2) with
+       | 1, 1 => 1
      end.
 
 (** This is the curried one you usually want to use in practice.  We define it in terms of the uncurried one, since it's the uncurried one that is proven below to be an equivalence. *)
@@ -71,7 +69,7 @@ Defined.
 Definition eta_path_prod {A B : Type} {z z' : A * B} (p : z = z') :
   path_prod _ _(ap fst p) (ap snd p) = p.
 Proof.
-  destruct p. destruct z. reflexivity.
+  destruct p. reflexivity.
 Defined.
 
 (** Now we show how these compute with transport. *)
@@ -147,7 +145,7 @@ Definition equiv_path_prod {A B : Type} (z z' : A * B)
 Definition transport_prod {A : Type} {P Q : A -> Type} {a a' : A} (p : a = a')
   (z : P a * Q a)
   : transport (fun a => P a * Q a) p z  =  (p # (fst z), p # (snd z))
-  := match p with idpath => match z with (x,y) => 1 end end.
+  := match p with idpath => 1 end.
 
 (** ** Functorial action *)
 
