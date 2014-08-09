@@ -46,7 +46,7 @@ Definition path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} : (A = B)
 
 Definition transport_path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
   : transport (fun X:Type => X) (path_universe f) z = f z
-  := ap10 (ap (equiv_fun A B) (eisretr (equiv_path A B) (BuildEquiv _ _ f feq))) z.
+  := ap10 (ap equiv_fun (eisretr (equiv_path A B) (BuildEquiv _ _ f feq))) z.
 
 (* This somewhat fancier version is useful when working with HITs. *)
 Definition transport_path_universe'
@@ -91,12 +91,12 @@ Proof.
   intros pf1 pf2.
   rewrite <- (eta_path_universe pf1), <- (eta_path_universe pf2).
   lazymatch goal with
-    | [ |- @path_universe _ _ (equiv_fun _ _ ?f) ?Hf
-           = @path_universe _ _ (equiv_fun _ _ ?g) ?Hg ]
-      => change Hf with (equiv_isequiv _ _ f);
-        change Hg with (equiv_isequiv _ _ g);
-        generalize (equiv_isequiv _ _ f) (equiv_isequiv _ _ g);
-        generalize (equiv_fun _ _ f) (equiv_fun _ _ g)
+    | [ |- @path_universe _ _ (equiv_fun ?f) ?Hf
+           = @path_universe _ _ (equiv_fun ?g) ?Hg ]
+      => change Hf with (equiv_isequiv f);
+        change Hg with (equiv_isequiv g);
+        generalize (equiv_isequiv f) (equiv_isequiv g);
+        generalize (equiv_fun f) (equiv_fun g)
   end.
   let f' := fresh in
   let g' := fresh in

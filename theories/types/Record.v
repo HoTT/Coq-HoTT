@@ -78,7 +78,7 @@ Defined.
 Definition issig_equiv (A B : Type)
   : { f : A -> B & IsEquiv f } <~> Equiv A B.
 Proof.
-  issig (BuildEquiv A B) (equiv_fun A B) (equiv_isequiv A B).
+  issig (BuildEquiv A B) (@equiv_fun A B) (@equiv_isequiv A B).
 Defined.
 
 (** Here is a version of the [issig] tactic for three-component records, which proves goals that look like

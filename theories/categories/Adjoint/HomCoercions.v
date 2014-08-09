@@ -220,7 +220,6 @@ Section AdjunctionEquivalences'.
              @isiso_isequiv
                _ _ _ _
                (equiv_isequiv
-                  _ _
                   (equiv_inverse (equiv_hom_set_adjunction T (fst cd) (snd cd))))).
     Grab Existential Variables.
     simpl.
