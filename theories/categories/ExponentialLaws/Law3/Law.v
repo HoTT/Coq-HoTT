@@ -65,11 +65,6 @@ Section Law3.
              | [ |- appcontext[ap (@object_of ?C ?D) (@path_functor'_sig ?H ?C ?D ?F ?G (?HO; ?HM))] ]
                => simpl rewrite (@path_functor'_sig_fst H C D F G HO HM)
              | _ => transport_path_forall_hammer
-           end;
-    repeat match goal with
-             | [ |- appcontext[components_of ?T ?x] ] => generalize (T x)
-             | [ |- appcontext[object_of ?T ?x] ] => generalize (T x)
-             | _ => by repeat (intros [] || intro)
            end.
   Qed.
 End Law3.
