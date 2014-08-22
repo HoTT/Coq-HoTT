@@ -210,7 +210,7 @@ Defined.
 
 (** ** Symmetry *)
 
-(* This is a special property of [prod], of course, not an instance of a general family of facts about types. *)
+(** This is a special property of [prod], of course, not an instance of a general family of facts about types. *)
 
 Definition equiv_prod_symm (A B : Type) : A * B <~> B * A.
 Proof.
@@ -226,6 +226,23 @@ Proof.
                  := ab in 1)
     _)).
   intros [a b]. reflexivity.
+Defined.
+
+(** ** Associativity *)
+
+(** This, too, is a special property of [prod], of course, not an instance of a general family of facts about types. *)
+Definition equiv_prod_assoc (A B C : Type) : A * (B * C) <~> (A * B) * C.
+Proof.
+  refine (BuildEquiv
+            _ _ _
+            (BuildIsEquiv
+               (A * (B * C)) ((A * B) * C)
+               (fun abc => ((fst abc, fst (snd abc)), snd (snd abc)))
+               (fun abc => (fst (fst abc), (snd (fst abc), snd abc)))
+               _ _ _)).
+  { intros [[a b] c]; reflexivity. }
+  { intros [a [b c]]; reflexivity. }
+  { intros [a [b c]]; reflexivity. }
 Defined.
 
 (** ** Universal mapping properties *)
