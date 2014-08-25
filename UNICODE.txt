@@ -1,0 +1,25 @@
+To insert unicode characters into emacs, you can set the TeX input
+method by typing `C-u C-\` (or `M-x set-input-method RET`), typing
+`TeX`, and pressing RETURN.  You can then insert characters as you
+would in TeX, such as `•` by typing `\bullet`.  There are other
+unicode input methods, as well.  For example, if you have Agda
+installed, you can enter `Agda` as the input method, and then you can
+enter `•` by typing `\bu`.
+
+Emacs can tell you how to enter a pre-existing character: place the
+cursor right before the character, and type `C-u C-x =` (or `M-x
+describe-char RET`).
+
+To default to TeX input method when editing Coq files, add the
+following to your ~/.emacs:
+
+(defun my-coq-hook ()
+  (set-input-method "TeX"))
+
+(add-hook 'coq-mode-hook 'my-coq-hook)
+
+
+Instructions for entering unicode into CoqIDE are documented in the
+Coq Reference Manual (http://coq.inria.fr/refman/toc.html).  You can
+find the v8.4 documentation about unicode input at
+http://coq.inria.fr/distrib/8.4pl4/refman/Reference-Manual018.html#sec628.
