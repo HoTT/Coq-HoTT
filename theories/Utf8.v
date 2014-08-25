@@ -1,4 +1,5 @@
-Require Import Overture (*types.Bool*) hit.Circle hit.TwoSphere hit.minus1Trunc hit.Truncations hit.Suspension.
+Require Export Coq.Unicode.Utf8.
+Require Import Overture Trunc (*types.Bool*) hit.Circle hit.TwoSphere hit.minus1Trunc hit.Truncations hit.Suspension.
 
 Notation Type₀ := Type0.
 Notation pr₁ := pr1.
@@ -17,7 +18,10 @@ Notation "p ∙' q" := (p @ q)%path (at level 21, left associativity,
 Notation "A ≃ B" := (A <~> B)%equiv (at level 85) : equiv_scope.
 Notation "f '⁻¹'" := (f^-1)%equiv (at level 3, format "f '⁻¹'") : equiv_scope.
 Notation "¬ x" := (~x) (at level 75, right associativity) : type_scope.
+Notation "x ≠ y" := (x <> y) (at level 70) : type_scope.
 (*Notation "p @@ q" := (concat2 p q)%path (at level 20) : path_scope.*)
+
+Notation "m ≤ n" := (m <= n)%trunc (at level 70, no associativity) : trunc_scope.
 
 (*Infix "||" := orb : bool_scope.*)
 (*Infix "&&" := andb : bool_scope.*)
