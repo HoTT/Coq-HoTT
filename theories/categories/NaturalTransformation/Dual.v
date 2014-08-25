@@ -54,10 +54,10 @@ Section opposite.
                                     (fun s d => commutes T d s).
 End opposite.
 
-Notation "T ^op" := (opposite T) : natural_transformation_scope.
-Notation "T ^op'" := (opposite' T) : natural_transformation_scope.
-Notation "T ^op''" := (opposite_finv T) (at level 3) : natural_transformation_scope.
-Notation "T ^op'''" := (opposite_tinv T) (at level 3) : natural_transformation_scope.
+Local Notation "T ^op" := (opposite T) (at level 3, format "T ^op") : natural_transformation_scope.
+Local Notation "T ^op'" := (opposite' T) (at level 3, format "T ^op'") : natural_transformation_scope.
+Local Notation "T ^op''" := (opposite_finv T) (at level 3, format "T ^op''") : natural_transformation_scope.
+Local Notation "T ^op'''" := (opposite_tinv T) (at level 3, format "T ^op'''") : natural_transformation_scope.
 
 (** ** [ᵒᵖ] is propositionally involutive *)
 Section opposite_involutive.
@@ -94,8 +94,8 @@ Section opposite_involutive.
 End opposite_involutive.
 
 Module Export NaturalTransformationDualNotations.
-  Notation "T ^op" := (opposite T) : natural_transformation_scope.
-  Notation "T ^op'" := (opposite' T) : natural_transformation_scope.
-  Notation "T ^op''" := (opposite_finv T) : natural_transformation_scope.
-  Notation "T ^op'''" := (opposite_tinv T) : natural_transformation_scope.
+  Notation "T ^op" := (opposite T) (at level 3, format "T ^op") : natural_transformation_scope.
+  Notation "T ^op'" := (opposite' T) (at level 3, format "T ^op'") : natural_transformation_scope.
+  Notation "T ^op''" := (opposite_finv T) (at level 3, format "T ^op''") : natural_transformation_scope.
+  Notation "T ^op'''" := (opposite_tinv T) (at level 3, format "T ^op'''") : natural_transformation_scope.
 End NaturalTransformationDualNotations.

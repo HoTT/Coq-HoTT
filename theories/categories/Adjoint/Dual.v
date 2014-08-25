@@ -64,10 +64,10 @@ Section opposite.
          (unit_counit_equation_1 A).
 End opposite.
 
-Local Notation "A ^op" := (opposite A) : adjunction_scope.
-Local Notation "A ^op'" := (opposite_inv A) : adjunction_scope.
-Local Notation "A ^op'L" := (opposite'L A) (at level 3) : adjunction_scope.
-Local Notation "A ^op'R" := (opposite'R A) (at level 3) : adjunction_scope.
+Local Notation "A ^op" := (opposite A) (at level 3, format "A '^op'") : adjunction_scope.
+Local Notation "A ^op'" := (opposite_inv A) (at level 3, format "A '^op''") : adjunction_scope.
+Local Notation "A ^op'L" := (opposite'L A) (at level 3, format "A '^op'L'") : adjunction_scope.
+Local Notation "A ^op'R" := (opposite'R A) (at level 3, format "A '^op'R'") : adjunction_scope.
 
 Section opposite_involutive.
   Variable C : PreCategory.
@@ -110,8 +110,8 @@ Section opposite_involutive.
 End opposite_involutive.
 
 Module Export AdjointDualNotations.
-  Notation "A ^op" := (opposite A) : adjunction_scope.
-  Notation "A ^op'" := (opposite_inv A) : adjunction_scope.
-  Notation "A ^op'L" := (opposite'L A) (at level 3) : adjunction_scope.
-  Notation "A ^op'R" := (opposite'R A) (at level 3) : adjunction_scope.
+  Notation "A ^op" := (opposite A) (at level 3, format "A '^op'") : adjunction_scope.
+  Notation "A ^op'" := (opposite_inv A) (at level 3, format "A '^op''") : adjunction_scope.
+  Notation "A ^op'L" := (opposite'L A) (at level 3, format "A '^op'L'") : adjunction_scope.
+  Notation "A ^op'R" := (opposite'R A) (at level 3, format "A '^op'R'") : adjunction_scope.
 End AdjointDualNotations.

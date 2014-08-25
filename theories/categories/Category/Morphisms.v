@@ -18,7 +18,7 @@ Class IsIsomorphism {C : PreCategory} {s d} (m : morphism C s d) :=
     right_inverse : m o morphism_inverse = identity _
   }.
 
-Local Notation "m ^-1" := (morphism_inverse (m := m)) : morphism_scope.
+Local Notation "m ^-1" := (morphism_inverse (m := m)) (at level 3, format "m '^-1'") : morphism_scope.
 
 Hint Resolve left_inverse right_inverse : category morphism.
 Hint Rewrite @left_inverse @right_inverse : category.
@@ -634,7 +634,7 @@ Section associativity_composition.
 End associativity_composition.
 
 Module Export CategoryMorphismsNotations.
-  Notation "m ^-1" := (morphism_inverse (m := m)) : morphism_scope.
+  Notation "m ^-1" := (morphism_inverse (m := m)) (at level 3, format "m '^-1'") : morphism_scope.
 
   Infix "<~=~>" := Isomorphic (at level 70, no associativity) : category_scope.
 
