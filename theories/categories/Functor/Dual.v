@@ -46,10 +46,10 @@ Section opposite.
                      (identity_of F).
 End opposite.
 
-Local Notation "F ^op" := (opposite F) : functor_scope.
-Local Notation "F ^op'" := (opposite_inv F) (at level 3) : functor_scope.
-Local Notation "F ^op'L" := (opposite_invL F) (at level 3) : functor_scope.
-Local Notation "F ^op'R" := (opposite_invR F) (at level 3) : functor_scope.
+Local Notation "F ^op" := (opposite F) (at level 3, format "F ^op") : functor_scope.
+Local Notation "F ^op'" := (opposite_inv F) (at level 3, format "F ^op'") : functor_scope.
+Local Notation "F ^op'L" := (opposite_invL F) (at level 3, format "F ^op'L") : functor_scope.
+Local Notation "F ^op'R" := (opposite_invR F) (at level 3, format "F ^op'R") : functor_scope.
 
 Section opposite_involutive.
   Local Open Scope functor_scope.
@@ -91,8 +91,8 @@ Section opposite_involutive.
 End opposite_involutive.
 
 Module Export FunctorDualNotations.
-  Notation "F ^op" := (opposite F) : functor_scope.
-  Notation "F ^op'" := (opposite_inv F) (at level 3) : functor_scope.
-  Notation "F ^op'L" := (opposite_invL F) (at level 3) : functor_scope.
-  Notation "F ^op'R" := (opposite_invR F) (at level 3) : functor_scope.
+  Notation "F ^op" := (opposite F) (at level 3, format "F ^op") : functor_scope.
+  Notation "F ^op'" := (opposite_inv F) (at level 3, format "F ^op'") : functor_scope.
+  Notation "F ^op'L" := (opposite_invL F) (at level 3, format "F ^op'L") : functor_scope.
+  Notation "F ^op'R" := (opposite_invR F) (at level 3, format "F ^op'R") : functor_scope.
 End FunctorDualNotations.

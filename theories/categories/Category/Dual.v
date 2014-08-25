@@ -26,7 +26,7 @@ Section opposite.
          _.
 End opposite.
 
-Local Notation "C ^op" := (opposite C) (at level 3) : category_scope.
+Local Notation "C ^op" := (opposite C) (at level 3, format "C '^op'") : category_scope.
 
 (** ** [ᵒᵖ] is propositionally involutive *)
 Section DualCategories.
@@ -55,5 +55,5 @@ Section DualObjects.
 End DualObjects.
 
 Module Export CategoryDualNotations.
-  Notation "C ^op" := (opposite C) (at level 3) : category_scope.
+  Notation "C ^op" := (opposite C) (at level 3, format "C '^op'") : category_scope.
 End CategoryDualNotations.
