@@ -9,10 +9,10 @@ Notation "x ₁" := (x.1) (at level 3) : fibration_scope.
 Notation "x ₂" := (x.2) (at level 3) : fibration_scope.
 Notation "g ∘ f" := (g o f) (at level 40, left associativity) : function_scope.
 (** We copy the HoTT-Agda library with regard to path concatenation. *)
-Notation "p ∙ q" := (p @ q)%path (at level 20) : path_scope.
+Notation "p • q" := (p @ q)%path (at level 20) : path_scope.
 Notation "p '⁻¹'" := (p^)%path (at level 3, format "p '⁻¹'") : path_scope.
-Notation "p ∙' q" := (p @ q)%path (at level 21, left associativity,
-                                   format "'[v' p '/' '∙''  q ']'") : long_path_scope.
+Notation "p •' q" := (p @ q)%path (at level 21, left associativity,
+                                   format "'[v' p '/' '•''  q ']'") : long_path_scope.
 (*Notation "p # x" := (transport _ p x) (right associativity, at level 65, only parsing) : path_scope.*)
 (*Notation "f == g" := (pointwise_paths f g) (at level 70, no associativity) : type_scope.*)
 Notation "A ≃ B" := (A <~> B)%equiv (at level 85) : equiv_scope.
