@@ -50,6 +50,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/Functorish.v \
 	$(srcdir)/theories/FunextAxiom.v \
 	$(srcdir)/theories/UnivalenceAxiom.v \
+	$(srcdir)/theories/ReflectiveSubuniverse.v \
 	$(srcdir)/theories/Modality.v \
 	$(srcdir)/theories/hit/Circle.v \
 	$(srcdir)/theories/hit/Truncations.v \
