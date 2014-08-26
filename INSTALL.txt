@@ -92,11 +92,15 @@ minimal fuss, you should try your luck by following these instructions:
    expression.)
 
 7. To prevent Emacs from prompting you about risky local variables
-   every time you open a `*.v` file, you can add the following lisp
-   form to the Emacs variable `safe-local-eval-forms`.  One way is to
-   run `M-x customize-variable`, enter `safe-local-eval-forms`, click
-   `INS` and paste in the following lisp form, then click `State` and
-   select `Save for future sessions`.
+   every time you open a `*.v` file, you can inform it that the
+   variables we use are safe.  In newer versions of Emacs, you can do
+   this by simply pressing `!` at the prompt.  In older versions of
+   Emacs, that option is not available; instead you can add the
+   following lisp form to the Emacs variable `safe-local-eval-forms`.
+   One way to do this is to run `M-x customize-variable`, enter
+   `safe-local-eval-forms`, click `INS` and paste in the following
+   lisp form, then click `State` and select `Save for future
+   sessions`.
 
    	(let ((default-directory
    	       (locate-dominating-file buffer-file-name ".dir-locals.el")))
