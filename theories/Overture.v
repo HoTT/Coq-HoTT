@@ -416,6 +416,9 @@ Set Elimination Schemes.
 Definition not (A:Type) : Type := A -> Empty.
 Notation "~ x" := (not x) : type_scope.
 Hint Unfold not: core.
+Notation "x <> y  :>  T" := (not (x = y :> T))
+(at level 70, y at next level, no associativity) : type_scope.
+Notation "x <> y" := (x <> y :> _) (at level 70, no associativity) : type_scope.
 
 (** *** Pointed types *)
 
