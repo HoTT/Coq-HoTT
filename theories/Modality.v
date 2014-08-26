@@ -3,15 +3,16 @@ Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths
         types.Forall types.Prod types.Universe types.ObjectClassifier.
 Require Import ReflectiveSubuniverse.
 
+Set Implicit Arguments.
+
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
 (** * Modalities *)
 
 Section Modalities.
-  Context {path_universe : Univalence}.
-  Context {Fun : Funext}.
-  Set Implicit Arguments.
+  Context {ua : Univalence}.
+  Context {fs : Funext}.
 
   (** Quoting the HoTT Book: *)
   (** Definition 7.7.5. A _modality_ is an operation [○ : Type → Type] for which there are

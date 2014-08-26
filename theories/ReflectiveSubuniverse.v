@@ -8,8 +8,8 @@ Local Open Scope equiv_scope.
 (** * Reflective Subuniverses *)
 
 Section Reflective_Subuniverse.
-  Context {path_type : Univalence}.
-  Context {Fun : Funext}.
+  Context {ua : Univalence}.
+  Context {fs : Funext}.
 
   (** A reflective subuniverse is the data of : *)
 
@@ -59,7 +59,7 @@ Section Reflective_Subuniverse.
     Defined.
 
     (** The subuniverse structure is transportable *)
-    Definition SubuniverseStruct_transport T U (f : T <~> U)
+    Definition ReflectiveSubuniverse_transport T U (f : T <~> U)
     : (subU.(subuniverse_HProp) T) -> (subU.(subuniverse_HProp) U).
     Proof.
       apply path_universe_uncurried in f. rewrite f.
@@ -111,7 +111,7 @@ Section Reflective_Subuniverse.
                _
                (subuniverse_HProp subU T)
                (isp (subuniverse_HProp subU T))
-               (fun X => SubuniverseStruct_transport _ _
+               (fun X => ReflectiveSubuniverse_transport _ _
                              (BuildEquiv _ _ _
                                          (isequiv_inverse (H:=X)))
                              ((subU.(O) T)).2)
