@@ -43,4 +43,4 @@ make coqlight coqide
 popd
 
 popd 1>/dev/null
-#popd 1>/dev/null
+popd 1>/dev/null
