@@ -4,7 +4,7 @@
 set -e
 
 # in case we're run from out of git repo
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 pushd "$DIR" 1>/dev/null
 
 # now change to the git root
@@ -43,4 +43,4 @@ make coqlight coqide
 popd
 
 popd 1>/dev/null
-popd 1>/dev/null
+#popd 1>/dev/null
