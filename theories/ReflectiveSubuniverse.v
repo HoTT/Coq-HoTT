@@ -86,20 +86,23 @@ Section Reflective_Subuniverse.
 
     (** A type is modal if and only if its unit map is an equivalence : *)
 
-    Instance O_modal_equiv (P : SubuniverseType subU)
+    Instance O_modal_isequiv (P : SubuniverseType subU)
     : IsEquiv (subU.(O_unit) P).
     Proof.
       apply O_unit_retract_equiv with (mu := (O_rec P P idmap)).
-      pose (f := O_rec_retr P P idmap). 
-      intro. eapply ap10 in f. exact (f x).
+      exact (ap10 (O_rec_retr P P idmap)).
     Defined.
+
+    Definition O_modal_equiv (P : SubuniverseType subU)
+      : P <~> subU.(O) P
+      := (BuildEquiv _ _ (subU.(O_unit) P) (O_modal_isequiv _)).
 
     Definition O_modal (T:SubuniverseType subU)
     : T = subU.(O) T.
     Proof.
       apply unique_subuniverse. 
       apply path_universe_uncurried.
-      exact (BuildEquiv _ _ (subU.(O_unit) T) (O_modal_equiv _)).
+      apply O_modal_equiv.
     Defined.
 
     Definition subuniverse_iff_O (T:Type)
@@ -115,7 +118,7 @@ Section Reflective_Subuniverse.
                              (BuildEquiv _ _ _
                                          (isequiv_inverse (H:=X)))
                              ((subU.(O) T)).2)
-               (fun X => O_modal_equiv (T;X))).
+               (fun X => O_modal_isequiv (T;X))).
     Defined.
 
     (** The modality is involutive *)
@@ -195,7 +198,7 @@ Section Reflective_Subuniverse.
     Defined.
 
     Definition function_lift_modal_square (A : Type) (B : SubuniverseType subU) (f : A -> B)
-    : (@equiv_inv _ _ (subU.(O_unit) B) (O_modal_equiv _ B))
+    : (@equiv_inv _ _ (subU.(O_unit) B) (O_modal_isequiv _ B))
         o (function_lift A B f)
         o (subU.(O_unit) A)
       =  f.
