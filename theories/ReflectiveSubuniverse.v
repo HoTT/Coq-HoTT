@@ -16,10 +16,10 @@ Section Reflective_Subuniverse.
   Record ReflectiveSubuniverse :=
     { 
       (** a predicate U -> Prop *)
-      subuniverse_HProp : Type -> hProp ;
+      in_subuniverse : Type -> hProp ;
       (** we define the type of modal types *)
-      SubuniverseType := {T : Type & (subuniverse_HProp) T} ;
-      (** for every type T, a type (O T) such that (subuniverse_HProp (O T)) *)
+      SubuniverseType := {T : Type & (in_subuniverse) T} ;
+      (** for every type T, a type (O T) such that (in_subuniverse (O T)) *)
       to_O : Type -> SubuniverseType ; 
       (** for every type T, a map A -> O T *)
       O_unit : forall T, T -> (to_O T).1; 
@@ -55,12 +55,12 @@ Section Reflective_Subuniverse.
       intros T T' X. destruct T as [T h], T' as [T' h'].
       eapply (path_sigma _ _ _ X).
       simpl in X; destruct X.
-      apply (allpath_hprop (H := isp (subuniverse_HProp subU T))).
+      apply (allpath_hprop (H := isp (in_subuniverse subU T))).
     Defined.
 
     (** The subuniverse structure is transportable *)
     Definition ReflectiveSubuniverse_transport T U (f : T <~> U)
-    : (subU.(subuniverse_HProp) T) -> (subU.(subuniverse_HProp) U).
+    : (subU.(in_subuniverse) T) -> (subU.(in_subuniverse) U).
     Proof.
       apply path_universe_uncurried in f. rewrite f.
       intro x; exact x.
@@ -103,14 +103,14 @@ Section Reflective_Subuniverse.
     Defined.
 
     Definition subuniverse_iff_O (T:Type)
-    : IsEquiv (subU.(O_unit) T) = (subU.(subuniverse_HProp) T).
+    : IsEquiv (subU.(O_unit) T) = (subU.(in_subuniverse) T).
     Proof.
       apply path_universe_uncurried.
       exact (@equiv_iff_hprop
                (IsEquiv (O_unit subU T))
                _
-               (subuniverse_HProp subU T)
-               (isp (subuniverse_HProp subU T))
+               (in_subuniverse subU T)
+               (isp (in_subuniverse subU T))
                (fun X => ReflectiveSubuniverse_transport _ _
                              (BuildEquiv _ _ _
                                          (isequiv_inverse (H:=X)))
@@ -266,7 +266,7 @@ Section Reflective_Subuniverse.
     Variable subU : ReflectiveSubuniverse.
 
     (** ** The Unit type *)
-    Lemma unit_subuniverse : (subU.(subuniverse_HProp) Unit).
+    Lemma unit_subuniverse : (subU.(in_subuniverse) Unit).
     Proof.
       rewrite <- subuniverse_iff_O.
       apply O_unit_retract_equiv with (mu := fun x:(subU.(O) Unit) => tt).
@@ -277,8 +277,8 @@ Section Reflective_Subuniverse.
     (** ** Dependent product and arrows *)
     (** Theorem 7.7.2 *)
     Definition forall_subuniverse (A:Type) (B:A -> Type) 
-    : (forall x, (subU.(subuniverse_HProp) (B x)))
-      -> ((subU.(subuniverse_HProp)) (forall x:A, (B x))).
+    : (forall x, (subU.(in_subuniverse) (B x)))
+      -> ((subU.(in_subuniverse)) (forall x:A, (B x))).
     Proof.
       intro H.
       pose (ev := fun x => (fun (f:(forall x, (B x))) => f x)).
@@ -297,7 +297,7 @@ Section Reflective_Subuniverse.
     Qed.
 
     Definition arrow_subuniverse (A : Type) (B : SubuniverseType subU)
-    : (subuniverse_HProp subU (A -> B)).
+    : (in_subuniverse subU (A -> B)).
     Proof.
       apply forall_subuniverse.
       intro a. exact B.2.
@@ -305,7 +305,7 @@ Section Reflective_Subuniverse.
 
     (** ** Product *)
     Definition product_subuniverse (A B : SubuniverseType subU)
-    : (subuniverse_HProp subU (A*B)).
+    : (in_subuniverse subU (A*B)).
     Proof.
       rewrite <- subuniverse_iff_O.
 
@@ -338,7 +338,7 @@ Section Reflective_Subuniverse.
       apply (@equiv_compose' _ ((O subU A) -> B -> C) _).
       {
         exists ((fun f : (O subU A)  ->
-                         (existT (fun T => subuniverse_HProp subU T)
+                         (existT (fun T => in_subuniverse subU T)
                                  (B -> C)
                                  (arrow_subuniverse B C)) .1
                  => f o O_unit subU A)).
@@ -366,7 +366,7 @@ Section Reflective_Subuniverse.
     (** Theorem 7.7.4 *)
     Definition sigma_subuniverse
     : (forall (A:SubuniverseType subU) (B:A -> SubuniverseType subU),
-         (subuniverse_HProp subU ({x:A & B x})))
+         (in_subuniverse subU ({x:A & B x})))
       <->
       (forall (A:Type) (B: (O subU A) -> SubuniverseType subU)
               (g : forall (a:A), (B (O_unit subU A a))),
@@ -374,7 +374,7 @@ Section Reflective_Subuniverse.
     Proof.
       split.
       - intro H. intros A B g.
-        pose (Z := (existT (fun T => (subuniverse_HProp subU T))
+        pose (Z := (existT (fun T => (in_subuniverse subU T))
                           ({z:(O subU A).1 & (B z)})
                           (H (O subU A) B)) : SubuniverseType subU).
         pose (g' := (fun a:A => (O_unit subU A a ; g a)) : A -> Z).
@@ -436,7 +436,7 @@ Section Reflective_Subuniverse.
     Defined.
 
     Definition paths_subuniverse (S:SubuniverseType subU) (x y:S)
-    : (subuniverse_HProp subU (x=y)).
+    : (in_subuniverse subU (x=y)).
       rewrite <- subuniverse_iff_O.
       apply O_unit_retract_equiv with (mu := paths_subuniverse_fun S x y).
       intro u.
