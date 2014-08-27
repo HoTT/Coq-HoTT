@@ -52,19 +52,15 @@ Section Reflective_Subuniverse.
     Definition unique_subuniverse
     : forall (T T' : SubuniverseType subU), T.1 = T'.1 -> T = T'.
     Proof.
-      intros T T' X. destruct T as [T h], T' as [T' h'].
-      eapply (path_sigma _ _ _ X).
-      simpl in X; destruct X.
-      apply (allpath_hprop (H := isp (in_subuniverse subU T))).
+      intros [T h] [T' h'] X.
+      apply (path_sigma _ _ _ X).
+      apply allpath_hprop.
     Defined.
 
     (** The subuniverse structure is transportable *)
     Definition ReflectiveSubuniverse_transport T U (f : T <~> U)
-    : (subU.(in_subuniverse) T) -> (subU.(in_subuniverse) U).
-    Proof.
-      apply path_universe_uncurried in f. rewrite f.
-      intro x; exact x.
-    Defined.
+    : (subU.(in_subuniverse) T) -> (subU.(in_subuniverse) U)
+    := transport (in_subuniverse subU) (path_universe_uncurried f).
     
     (** Unit maps are equivalences iff they admit a retraction *)
     Definition O_unit_retract_equiv (T:Type) (mu : (subU.(O) T) -> T) (eta := subU.(O_unit) T)
@@ -74,8 +70,7 @@ Section Reflective_Subuniverse.
       - assert (X : eta o mu o eta = idmap o eta).
         unfold compose at 3.
         apply (ap (fun g => eta o g)).
-        apply path_forall; intro y.
-        exact (H y).
+        apply path_forall; exact H.
         apply ap10.
         apply ((equiv_inv (IsEquiv := isequiv_ap (H := O_equiv subU T (O subU T))
                                                  (eta o mu)
@@ -109,20 +104,17 @@ Section Reflective_Subuniverse.
     : IsEquiv (subU.(O_unit) T) = (subU.(in_subuniverse) T).
     Proof.
       apply path_universe_uncurried.
-      exact (@equiv_iff_hprop
-               (IsEquiv (O_unit subU T))
-               _
-               (in_subuniverse subU T)
-               (isp (in_subuniverse subU T))
-               (fun X => ReflectiveSubuniverse_transport _ _
-                             (BuildEquiv _ _ _
-                                         (isequiv_inverse (H:=X)))
-                             ((subU.(O) T)).2)
-               (fun X => O_modal_isequiv (T;X))).
+      apply equiv_iff_hprop.
+      - intros e.
+        apply (ReflectiveSubuniverse_transport (O subU T)).
+        * apply equiv_inverse.
+          eexists; exact e.
+        * exact ((O subU T).2).
+      - intros X; exact (O_modal_isequiv (T;X)).
     Defined.
 
-    (** The modality is involutive *)
-    Definition O_invol
+    (** The modality is idempotent *)
+    Definition O_idempotent
     : forall T, (O subU) (((O subU) T)) = O subU T.
     Proof.
       intro T; symmetry; apply O_modal.
