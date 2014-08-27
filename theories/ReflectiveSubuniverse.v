@@ -179,7 +179,7 @@ Section Reflective_Subuniverse.
 
   Section Functions_lifts.
 
-    (** In this section, we see how the ○ operator acts on maps *)
+    (** In this section, we see how the O operator acts on maps *)
     Variable subU : ReflectiveSubuniverse.
     
     Definition function_lift (A B : Type) (f : A -> B)
@@ -323,7 +323,7 @@ Section Reflective_Subuniverse.
         exact (ap10 (O_rec_retr (A * B) B (fun x : (A * B) => snd x)) (a,b)). 
     Qed.
 
-    (** We show that ○A*○B has the same universal property as ○(A*B) *)
+    (** We show that OA*OB has the same universal property as O(A*B) *)
     Lemma product_universal (A B : Type) (C : SubuniverseType subU)
     : ((O subU A)*(O subU B) -> C) <~> (A * B -> C).
     Proof.
@@ -360,7 +360,7 @@ Section Reflective_Subuniverse.
       }
     Qed.
 
-    (** TODO : ○(A*B) = ○A * ○B *)
+    (** TODO : O(A*B) = OA * OB *)
 
     (** ** Dependent sums *)
     (** Theorem 7.7.4 *)
