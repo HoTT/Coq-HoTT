@@ -4,7 +4,7 @@
 set -e
 
 # in case we're run from out of git repo
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 pushd "$DIR" 1>/dev/null
 
 # now change to the git root
