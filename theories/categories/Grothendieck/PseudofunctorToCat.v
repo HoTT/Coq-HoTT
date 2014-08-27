@@ -286,7 +286,7 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
   Definition pr1 : Functor category C
     := Build_Functor category C
                      c
-                     (fun s d => @projT1 _ _)
+                     (fun s d => @pr1 _ _)
                      (fun _ _ _ _ _ => idpath)
                      (fun _ => idpath).
 End Grothendieck.

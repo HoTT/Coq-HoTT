@@ -391,12 +391,12 @@ Section Reflective_Subuniverse.
         exists (fun z => transport (fun u => (B u)) (eq''' z) (f z)).
         intro a.
 
-        pose (p := projT1_path (eqf a)). simpl in p.
-        pose (q := projT2_path (eqf a)). simpl in q.
+        pose (p := pr1_path (eqf a)). simpl in p.
+        pose (q := pr2_path (eqf a)). simpl in q.
 
         rewrite <- q. 
         assert (X0 : (eq''' (eta a)) =  (eqf a) ..1).
-        unfold eq''', projT1_path, eqf, q, p, f, eq''', eq'', f'', g'', eqf, f', g', Z, eta in *;
+        unfold eq''', pr1_path, eqf, q, p, f, eq''', eq'', f'', g'', eqf, f', g', Z, eta in *;
           simpl in *.
         rewrite universality_unit.
         unfold path_forall. rewrite eisretr. exact idpath.

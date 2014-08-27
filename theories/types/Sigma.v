@@ -12,22 +12,22 @@ Generalizable Variables X A B C f g n.
 
 From such a [P] we can build a total space over the base space [A] so that the fiber over [x : A] is [P x]. This is just Coq's dependent sum construction, written as [sigT P] or [{x : A & P x}]. The elements of [{x : A & P x}] are pairs, written [existT P x y] in Coq, where [x : A] and [y : P x].  In [Common.v] we defined the notation [(x;y)] to mean [existT _ x y].
 
-The base and fiber components of a point in the total space are extracted with the two projections [projT1] and [projT2]. *)
+The base and fiber components of a point in the total space are extracted with the two projections [pr1] and [pr2]. *)
 
 (** ** Unpacking *)
 
-(** Sometimes we would like to prove [Q u] where [u : {x : A & P x}] by writing [u] as a pair [(projT1 u ; projT2 u)]. This is accomplished by [sigT_unpack]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
+(** Sometimes we would like to prove [Q u] where [u : {x : A & P x}] by writing [u] as a pair [(pr1 u ; pr2 u)]. This is accomplished by [sigT_unpack]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
 
 Definition unpack_sigma `{P : A -> Type} (Q : sigT P -> Type) (u : sigT P) :
-  Q (projT1 u; projT2 u) -> Q u
+  Q (pr1 u; pr2 u) -> Q u
   :=
   fun H =>
-    (let (x,p) as u return (Q (projT1 u; projT2 u) -> Q u) := u in idmap) H.
+    (let (x,p) as u return (Q (pr1 u; pr2 u) -> Q u) := u in idmap) H.
 
 (** ** Eta conversion *)
 
 Definition eta_sigma `{P : A -> Type} (u : sigT P)
-  : (projT1 u; projT2 u) = u
+  : (pr1 u; pr2 u) = u
   := match u with existT x y => 1 end.
 
 Definition eta2_sigma `{P : forall (a : A) (b : B a), Type}
@@ -91,24 +91,24 @@ Definition path_sigma' {A : Type} (P : A -> Type) {x x' : A} {y : P x} {y' : P x
 
 (** Projections of paths from a total space. *)
 
-Definition projT1_path `{P : A -> Type} {u v : sigT P} (p : u = v)
+Definition pr1_path `{P : A -> Type} {u v : sigT P} (p : u = v)
   : u.1 = v.1
   :=
-  ap (@projT1 _ _) p.
+  ap (@pr1 _ _) p.
   (* match p with idpath => 1 end. *)
 
-Notation "p ..1" := (projT1_path p) (at level 3) : fibration_scope.
+Notation "p ..1" := (pr1_path p) (at level 3) : fibration_scope.
 
-Definition projT2_path `{P : A -> Type} {u v : sigT P} (p : u = v)
+Definition pr2_path `{P : A -> Type} {u v : sigT P} (p : u = v)
   : p..1 # u.2 = v.2
-  := (transport_compose P (@projT1 _ _) p u.2)^
-     @ (@apD {x:A & P x} _ (@projT2 _ _) _ _ p).
+  := (transport_compose P (@pr1 _ _) p u.2)^
+     @ (@apD {x:A & P x} _ (@pr2 _ _) _ _ p).
 
-Notation "p ..2" := (projT2_path p) (at level 3) : fibration_scope.
+Notation "p ..2" := (pr2_path p) (at level 3) : fibration_scope.
 
 (** Now we show how these things compute. *)
 
-Definition projT1_path_sigma_uncurried `{P : A -> Type} {u v : sigT P}
+Definition pr1_path_sigma_uncurried `{P : A -> Type} {u v : sigT P}
   (pq : { p : u.1 = v.1 & p # u.2 = v.2 })
   : (path_sigma_uncurried _ _ _ pq)..1 = pq.1.
 Proof.
@@ -117,10 +117,10 @@ Proof.
   destruct p; simpl in q; destruct q; reflexivity.
 Defined.
 
-Definition projT2_path_sigma_uncurried `{P : A -> Type} {u v : sigT P}
+Definition pr2_path_sigma_uncurried `{P : A -> Type} {u v : sigT P}
   (pq : { p : u.1 = v.1 & p # u.2 = v.2 })
   : (path_sigma_uncurried _ _ _ pq)..2
-    = ap (fun s => transport P s u.2) (projT1_path_sigma_uncurried pq) @ pq.2.
+    = ap (fun s => transport P s u.2) (pr1_path_sigma_uncurried pq) @ pq.2.
 Proof.
   destruct u as [u1 u2]; destruct v as [v1 v2]; simpl in *.
   destruct pq as [p q].
@@ -134,7 +134,7 @@ Proof.
   destruct p. destruct u. reflexivity.
 Defined.
 
-Lemma transport_projT1_path_sigma_uncurried
+Lemma transport_pr1_path_sigma_uncurried
       `{P : A -> Type} {u v : sigT P}
       (pq : { p : u.1 = v.1 & transport P p u.2 = v.2 })
       Q
@@ -146,28 +146,28 @@ Proof.
   reflexivity.
 Defined.
 
-Definition projT1_path_sigma `{P : A -> Type} {u v : sigT P}
+Definition pr1_path_sigma `{P : A -> Type} {u v : sigT P}
   (p : u.1 = v.1) (q : p # u.2 = v.2)
   : (path_sigma _ _ _ p q)..1 = p
-  := projT1_path_sigma_uncurried (p; q).
+  := pr1_path_sigma_uncurried (p; q).
 
-Definition projT2_path_sigma `{P : A -> Type} {u v : sigT P}
+Definition pr2_path_sigma `{P : A -> Type} {u v : sigT P}
   (p : u.1 = v.1) (q : p # u.2 = v.2)
   : (path_sigma _ _ _ p q)..2
-    = ap (fun s => transport P s u.2) (projT1_path_sigma p q) @ q
-  := projT2_path_sigma_uncurried (p; q).
+    = ap (fun s => transport P s u.2) (pr1_path_sigma p q) @ q
+  := pr2_path_sigma_uncurried (p; q).
 
 Definition eta_path_sigma `{P : A -> Type} {u v : sigT P} (p : u = v)
   : path_sigma _ _ _ (p..1) (p..2) = p
   := eta_path_sigma_uncurried p.
 
-Definition transport_projT1_path_sigma
+Definition transport_pr1_path_sigma
       `{P : A -> Type} {u v : sigT P}
       (p : u.1 = v.1) (q : p # u.2 = v.2)
       Q
 : transport (fun x => Q x.1) (@path_sigma A P u v p q)
   = transport _ p
-  := transport_projT1_path_sigma_uncurried (p; q) Q.
+  := transport_pr1_path_sigma_uncurried (p; q) Q.
 
 (** This lets us identify the path space of a sigma-type, up to equivalence. *)
 
@@ -220,18 +220,18 @@ Proof.
   reflexivity.
 Defined.
 
-(** [projT1_path] also commutes with the groupoid structure. *)
+(** [pr1_path] also commutes with the groupoid structure. *)
 
-Definition projT1_path_1 {A : Type} {P : A -> Type} (u : sigT P)
+Definition pr1_path_1 {A : Type} {P : A -> Type} (u : sigT P)
 : (idpath u) ..1 = idpath (u .1)
 := 1.
 
-Definition projT1_path_pp {A : Type} {P : A -> Type} {u v w : sigT P}
+Definition pr1_path_pp {A : Type} {P : A -> Type} {u v w : sigT P}
   (p : u = v) (q : v = w)
 : (p @ q) ..1 = (p ..1) @ (q ..1)
 := ap_pp _ _ _.
 
-Definition projT1_path_V {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v)
+Definition pr1_path_V {A : Type} {P : A -> Type} {u v : sigT P} (p : u = v)
 : p^ ..1 = (p ..1)^
 := ap_V _ _.
 
@@ -383,7 +383,7 @@ Instance isequiv_pr1_contr {A} {P : A -> Type}
            `{forall a, Contr (P a)}
 : IsEquiv (@pr1 A P) | 100.
 Proof.
-  refine (isequiv_adjointify (@projT1 A P)
+  refine (isequiv_adjointify (@pr1 A P)
     (fun a => (a ; center (P a))) _ _).
   intros a; reflexivity.
   intros [a p]. apply path_sigma' with 1, contr.

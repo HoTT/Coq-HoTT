@@ -102,8 +102,8 @@ Definition path_extension {A B : Type} {f : A -> B}
   {P : B -> Type} {d : forall x:A, P (f x)}
   (ext ext' : ExtensionAlong f P d)
 : (ExtensionAlong f
-    (fun y => projT1 ext y = projT1 ext' y)
-    (fun x => projT2 ext x @ (projT2 ext' x)^))
+    (fun y => pr1 ext y = pr1 ext' y)
+    (fun x => pr2 ext x @ (pr2 ext' x)^))
 -> ext = ext'.
 Proof.
 (* Note: written with liberal use of [compose], to facilitate later proving that it’s an equivalance. *)
@@ -289,9 +289,9 @@ Proof.
     apply HP.
   destruct goal_as_extension as [f_eb name_ea_eab].
   assert (ea_eab := name_ea_eab tt); clear name_ea_eab.
-  exists (fun a => projT1 (f_eb a)).
+  exists (fun a => pr1 (f_eb a)).
   exists (fun b => apD10 (ea_eab ..1) b).
-  exists (fun a => projT2 (f_eb a) tt).
+  exists (fun a => pr2 (f_eb a) tt).
 (* The last component is essentially (g' ..2), wrapped in a bit of path-algebra. *)
   apply moveL_Mp.
   apply (concatR (apD10 (ea_eab ..2) tt)).

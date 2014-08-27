@@ -4,8 +4,8 @@ Require Import Overture PathGroupoids.
 Local Open Scope path_scope.
 
 Definition base_path {A} {P : A -> Type} {u v : sigT P} :
-  (u = v) -> (projT1 u = projT1 v) :=
-  ap (@projT1 _ _).
+  (u = v) -> (pr1 u = pr1 v) :=
+  ap (@pr1 _ _).
 
 (* *** Homotopy fibers *)
 
@@ -34,7 +34,7 @@ Proof.
 Defined.
 
 Definition fiber_path {A} {P : A -> Type} {u v : sigT P}
-  (p : u = v) : (transport _ (ap (@projT1 _ _) p) (u.2) = v.2).
+  (p : u = v) : (transport _ (ap (@pr1 _ _) p) (u.2) = v.2).
 Proof.
   by path_induction.
 Defined.

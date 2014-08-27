@@ -27,6 +27,6 @@ Lemma unique_choice {X Y} (R:X->Y->Type) :
  (forall x y, IsHProp (R x y)) -> (forall x, (hunique (R x)))
    -> {f : X -> Y & forall x, (R x (f x))}.
 intros X0 X1.
-exists (fun x:X => (projT1 (iota _ (X0 x) (X1 x)))).
-intro x. apply (projT2 (iota _ (X0 x) (X1 x))).
+exists (fun x:X => (pr1 (iota _ (X0 x) (X1 x)))).
+intro x. apply (pr2 (iota _ (X0 x) (X1 x))).
 Qed.

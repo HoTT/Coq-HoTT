@@ -111,7 +111,7 @@ Section Grothendieck.
     := Build_Functor
          category C
          c
-         (fun s d => @projT1 _ _)
+         (fun s d => @pr1 _ _)
          (fun _ _ _ _ _ => idpath)
          (fun _ => idpath).
 End Grothendieck.
