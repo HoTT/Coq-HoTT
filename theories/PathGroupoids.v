@@ -549,6 +549,11 @@ Proof.
   destruct p. exact 1.
 Defined.
 
+Lemma ap_ap10_L {A B C} (g h : A -> B) (f : C -> A) (p : g = h) (a : C) : ap10 (ap (fun f0 => f0 o f) p) a = ap10 p (f a).
+Proof.
+  destruct p. exact idpath.
+Defined.
+
 (** *** Transport and the groupoid structure of paths *)
 
 Definition transport_1 {A : Type} (P : A -> Type) {x : A} (u : P x)
