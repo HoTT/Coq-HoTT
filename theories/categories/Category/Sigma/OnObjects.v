@@ -12,7 +12,7 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Local Notation sigT_type := Coq.Init.Specif.sigT.
-Local Notation projT1_type := Coq.Init.Specif.projT1.
+Local Notation pr1_type := Overture.pr1.
 
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.
@@ -26,8 +26,8 @@ Section sigT_obj.
   Proof.
     refine (@Build_PreCategory
               (sigT_type Pobj)
-              (fun s d => morphism A (projT1_type s) (projT1_type d))
-              (fun x => @identity A (projT1_type x))
+              (fun s d => morphism A (pr1_type s) (pr1_type d))
+              (fun x => @identity A (pr1_type x))
               (fun s d d' m1 m2 => m1 o m2)%morphism
               _
               _
@@ -41,7 +41,7 @@ Section sigT_obj.
   Definition pr1_obj : Functor sigT_obj A
     := Build_Functor
          sigT_obj A
-         (@projT1_type _ _)
+         (@pr1_type _ _)
          (fun s d m => m)
          (fun _ _ _ _ _ => idpath)
          (fun _ => idpath).
@@ -52,7 +52,7 @@ Section sigT_obj.
   Definition sigT_functor_obj : Functor sigT_obj_as_sigT sigT_obj
     := Build_Functor sigT_obj_as_sigT sigT_obj
                      (fun x => x)
-                     (fun _ _ => @projT1_type _ _)
+                     (fun _ _ => @pr1_type _ _)
                      (fun _ _ _ _ _ => idpath)
                      (fun _ => idpath).
 

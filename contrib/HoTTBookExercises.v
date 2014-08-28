@@ -72,15 +72,15 @@ Section Book_1_2_sig.
 
   (** Non-dependent recursor with projection functions instead of pattern matching. *)
   Let sig_rec_proj C (g : forall (x : A), B x -> C) (p : exists (x : A), B x) : C :=
-    g (projT1 p) (projT2 p).
+    g (pr1 p) (pr2 p).
   Definition Book_1_2_sig := @sig_rec_proj.
 
-  Proposition Book_1_2_sig_fst : @projT1 A B = sig_rec_proj A (fun a => fun b => a).
+  Proposition Book_1_2_sig_fst : @pr1 A B = sig_rec_proj A (fun a => fun b => a).
   Proof.
     reflexivity.
   Defined.
 
-  (** NB: You cannot implement projT2 with only the recursor, so it is not possible
+  (** NB: You cannot implement pr2 with only the recursor, so it is not possible
       to check its definitional equality as the exercise suggests. *)
 End Book_1_2_sig.
 
@@ -112,7 +112,7 @@ Section Book_1_3_sig.
   Let sig_ind_eta (C : (exists (a : A), B a) -> Type)
                           (g : forall (a : A) (b : B a), C (a; b))
                           (x : exists (a : A), B a) : C x :=
-    transport C (HoTT.types.Sigma.eta_sigma x) (g (projT1 x) (projT2 x)).
+    transport C (HoTT.types.Sigma.eta_sigma x) (g (pr1 x) (pr2 x)).
   Definition Book_1_3_sig := sig_ind_eta.
 
   Proposition Book_1_3_sig_refl : forall C g a b, sig_ind_eta C g (a; b) = g a b.
