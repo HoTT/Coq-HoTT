@@ -32,15 +32,42 @@ Section Reflective_Subuniverse.
 
   Coercion SubuniverseType_pr1 subU (T:SubuniverseType subU) := @pr1 Type subU.(subuniverse_HProp) T.
 
-  (** Some shortcuts to manipulate the above equivalence *)
+  (** Some shortcuts to manipulate the above equivalence.  Here is a "recursor" for O. *)
   Definition O_rec {subU} (P : Type) (Q : SubuniverseType subU) :
     (P -> Q) -> (subU.(O) P) -> Q := 
     (@equiv_inv _ _ _ (subU.(O_isequiv) _ _)).
 
+  (** Here is its "computation rule" *)
   Definition O_rec_retr {subU} (P : Type) (Q : SubuniverseType subU) f
     : O_rec _ _ f o subU.(O_unit) _ = f
     := @eisretr _ _ _ (subU.(O_isequiv) P Q) f.
 
+  (** Versions of [O_rec_retr] with [compose] unfolded and that are
+     further pre- or post-composed with another function.  This
+     enables [rewrite] to recognize them. *)
+  Definition O_rec_retr' {subU} (P : Type) (Q : SubuniverseType subU) f
+    : (fun x => O_rec _ _ f (subU.(O_unit) _ x)) = f
+    := O_rec_retr P Q f.
+  Definition O_rec_retr'_pre {subU} (P A : Type) (Q : SubuniverseType subU) f (g : A -> P)
+    : (fun x => O_rec _ _ f (subU.(O_unit) _ (g x))) = f o g
+    := ap (fun k => k o g) (O_rec_retr P Q f).
+  Definition O_rec_retr'_post {subU} (P B : Type) (Q : SubuniverseType subU) f (h : Q -> B)
+    : (fun x => h (O_rec _ _ f (subU.(O_unit) _ x))) = h o f
+    := ap (fun k => h o k) (O_rec_retr P Q f).
+  Definition O_rec_retr'_prepost {subU} (P A B : Type) (Q : SubuniverseType subU) f (g : A -> P) (h : Q -> B)
+    : (fun x => h (O_rec _ _ f (subU.(O_unit) _ (g x)))) = h o f o g
+    := ap (fun k => h o k o g) (O_rec_retr P Q f).
+
+  (** And a tactic that tries them all *)
+  Ltac rewrite_O_rec_retr :=
+    repeat first
+      [ unfold compose; rewrite O_rec_retr'
+        | unfold compose; rewrite O_rec_retr'_post
+        | unfold compose; rewrite O_rec_retr'_pre
+        | unfold compose; rewrite O_rec_retr'_prepost
+      ].
+
+  (** Here is the "uniqueness rule" for the "recursor" *)
   Definition O_rec_sect {subU} (P : Type) (Q : SubuniverseType subU) f
     : O_rec _ _ (f o subU.(O_unit) _) = f
     := @eissect _ _ _ (subU.(O_isequiv) P Q) f.
@@ -179,21 +206,8 @@ Section Reflective_Subuniverse.
     Definition O_functor_compose (A B C : Type) ( f : A -> B) (g : B -> C)
     : (O_functor A C (g o f)) = (O_functor B C g) o (O_functor A B f).
     Proof.
-      apply path_arrow_modal; unfold O_functor; simpl.
-      (* Now we basically use O_rec_retr a bunch of times.  However,
-         Coq seems to need some help noticing the judgmental associativity
-         of function composition and in folding its definition. *)
-      rewrite O_rec_retr.
-      match goal with
-          | |- ?k = ?h o ?g o ?f =>
-            change (k = h o (g o f))
-      end.
-      rewrite O_rec_retr.
-      match goal with
-          | |- ?k = ?h o (fun x => O_unit subU B (f x)) =>
-            change (k = h o O_unit subU B o f)
-      end.
-      rewrite O_rec_retr.
+      apply path_arrow_modal; unfold O_functor.
+      rewrite_O_rec_retr.
       reflexivity.
     Defined.
 
