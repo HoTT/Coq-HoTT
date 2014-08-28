@@ -1942,32 +1942,40 @@ Definition Book_9_8_2 := @HoTT.categories.Structure.IdentityPrinciple.structure_
 (* ================================================== defn:V *)
 (** Definition 10.5.1 *)
 
-
+Definition Book_10_5_1 := @HoTT.hit.V.CumulativeHierarchy.V.
 
 (* ================================================== def:bisimulation *)
 (** Definition 10.5.4 *)
 
-
+Definition Book_10_5_4 := @HoTT.hit.V.bisimulation.
 
 (* ================================================== lem:BisimEqualsId *)
 (** Lemma 10.5.5 *)
 
-
+Definition Book_10_5_5 := @HoTT.hit.V.bisim_equals_id.
 
 (* ================================================== lem:MonicSetPresent *)
 (** Lemma 10.5.6 *)
 
-
+Definition Book_10_5_6 := @HoTT.hit.V.monic_set_present.
 
 (* ================================================== def:TypeOfElements *)
 (** Definition 10.5.7 *)
 
-
+Definition Book_10_5_7 := @HoTT.hit.V.type_of_members.
 
 (* ================================================== thm:VisCST *)
 (** Theorem 10.5.8 *)
 
-
+Definition Book_10_5_8_item_i := @HoTT.hit.V.extensionality.
+Definition Book_10_5_8_item_ii := @HoTT.hit.V.not_mem_Vempty.
+Definition Book_10_5_8_item_iii := @HoTT.hit.V.pairing.
+Definition Book_10_5_8_item_iv := @HoTT.hit.V.infinity.
+Definition Book_10_5_8_item_v := @HoTT.hit.V.union.
+Definition Book_10_5_8_item_vi := @HoTT.hit.V.function.
+Definition Book_10_5_8_item_vii := @HoTT.hit.V.mem_induction.
+Definition Book_10_5_8_item_viii := @HoTT.hit.V.replacement.
+Definition Book_10_5_8_item_ix := @HoTT.hit.V.separation.
 
 (* ================================================== cor:Delta0sep *)
 (** Corollary 10.5.9 *)

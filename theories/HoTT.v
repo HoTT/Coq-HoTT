@@ -45,5 +45,6 @@ Require Export hit.epi.
 Require Export hit.unique_choice.
 Require Export hit.iso.
 Require Export hit.quotient.
+Require Export hit.V.
 
 Require Export HoTT.Tactics.

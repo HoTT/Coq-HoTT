@@ -96,6 +96,13 @@ Proof.
   intro a. apply allpath_hprop.
 Defined.
 
+(* Weaker form: if [A] is a proposition, you can remove the truncation *)
+Lemma untrunc_hprop {A : Type} : (IsHProp A) -> (minus1Trunc A) -> A.
+Proof.
+  intro.
+  apply minus1Trunc_ind. exact idmap.
+Defined.
+
 Section AssumeFunext.
 (** ** Inhabited propositions are contractible. *)
 Open Scope fibration_scope.
@@ -256,6 +263,7 @@ End minus1TruncMonad.
 
 (** We may want to define the other connectives to at some point. *)
 Definition hexists {X} (P:X->Type):Type:= minus1Trunc (sigT  P).
+Definition hor (P:Type) (Q:Type):Type:= minus1Trunc (P + Q).
 
 (** If the goal is an hProp, we may remove [minus1Trunc] in hypotheses. *)
 Ltac strip_truncations :=
