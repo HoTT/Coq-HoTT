@@ -172,7 +172,7 @@ Section isequiv.
               _ _);
     intro.
     - match goal with
-        | [ |- @projT1 ?A ?P ?x = ?y ]
+        | [ |- @pr1 ?A ?P ?x = ?y ]
           => change (x.1 = (existT P y idpath).1)
       end.
       apply (ap pr1).

@@ -109,7 +109,7 @@ Section sip.
     refine ((ap _ (ap _ _))
               @ (ap (@morphism_isomorphic _ _ _)
                     (eisretr (@idtoiso X xa.1 yb.1) (sip_isotoid_helper _)))).
-    exact (projT1_path_sigma_uncurried _).
+    exact (pr1_path_sigma_uncurried _).
   Defined.
 
   Global Instance structure_identity_principle

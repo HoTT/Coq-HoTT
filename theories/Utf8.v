@@ -27,8 +27,8 @@ Notation "m ≤ n" := (m <= n)%trunc (at level 70, no associativity) : trunc_sco
 
 (*Infix "||" := orb : bool_scope.*)
 (*Infix "&&" := andb : bool_scope.*)
-(*Notation "p ..1" := (projT1_path p) (at level 3) : fibration_scope.*)
-(*Notation "p ..2" := (projT2_path p) (at level 3) : fibration_scope.*)
+(*Notation "p ..1" := (pr1_path p) (at level 3) : fibration_scope.*)
+(*Notation "p ..2" := (pr2_path p) (at level 3) : fibration_scope.*)
 
 Notation S¹ := S1.
 (*Fail Notation S² := S2. (* Lexer: Undefined Token?! *)*)

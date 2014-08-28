@@ -55,14 +55,14 @@ Section opposite.
     rewrite !transport_forall_constant.
     transport_path_forall_hammer.
     unfold opposite_functor_involutive_helper.
-    rewrite !transport_projT1_path_sigma_uncurried.
+    rewrite !transport_pr1_path_sigma_uncurried.
     simpl in *.
     repeat progress change (fun x => ?f x) with f in *.
     match goal with
       | [ |- appcontext[transport
                           (fun x' => ?f x'.1 ?y)
                           (@path_sigma_uncurried ?A ?P ?u ?v ?pq)] ]
-        => rewrite (@transport_projT1_path_sigma_uncurried
+        => rewrite (@transport_pr1_path_sigma_uncurried
                       A P u v pq
                       (fun x => f x y))
     end.
