@@ -137,7 +137,7 @@ Section Reflective_Subuniverse.
       : ((f o eta = g o eta) -> (f=g))
       := @equiv_inj _ _ _ (O_isequiv subU A B) _ _.
     
-    Definition universality_unit (A:Type) (B:SubuniverseType subU) (f g:(O subU A) -> B)
+    Definition ap10_path_arrow_modal (A:Type) (B:SubuniverseType subU) (f g:(O subU A) -> B)
                (eta := O_unit subU A) (pi : (f o eta = g o eta))
     : forall a, ap10 (path_arrow_modal A B _ _ pi) (eta a) = ap10 pi a.
     Proof.
@@ -151,89 +151,65 @@ Section Reflective_Subuniverse.
 
   End Basic_facts.
 
-  Section Functions_lifts.
+  Section Functor.
 
-    (** In this section, we see how the O operator acts on maps *)
+    (** In this section, we see that O is a functor. *)
     Variable subU : ReflectiveSubuniverse.
     
-    Definition function_lift (A B : Type) (f : A -> B)
+    Definition O_functor (A B : Type) (f : A -> B)
     : (subU.(O) A) -> (subU.(O) B).
     Proof.
       apply O_rec; intro x; apply subU.(O_unit); apply f; exact x.
     Defined.
 
-    Definition function_lift_modal (A:Type) (B:SubuniverseType subU) (f : A -> B)
-    : (O subU A) -> B.
-    Proof.
-      apply O_rec. exact f.
-    Defined.
-
-    Definition function_lift_modal_square (A : Type) (B : SubuniverseType subU) (f : A -> B)
-    : (@equiv_inv _ _ (subU.(O_unit) B) (isequiv_O_unit _ B))
-        o (function_lift A B f)
-        o (subU.(O_unit) A)
+    (* What is this for? *)
+    Definition O_functor_modal_square (A : Type) (B : SubuniverseType subU) (f : A -> B)
+    : ((equiv_O_unit _ B) ^-1)  o  (O_functor A B f)  o  (subU.(O_unit) A)
       =  f.
     Proof.
-      apply path_forall; intro x; unfold compose, function_lift; simpl.
+      apply path_arrow; intro x; unfold compose, O_functor; simpl.
+      pose ((ap10 ((O_rec_retr A (subU.(O) B)) ((O_unit subU B) o f)) x)^).
       exact (transport (fun U => O_rec B B (fun x : B => x) U = f x)
                        ((ap10 ((O_rec_retr A (subU.(O) B)) ((O_unit subU B) o f)) x)^)
                        (ap10 (O_rec_retr B B idmap) (f x))).
     Defined.
 
-    (** Function lift is ok with composition *)
-    Definition function_lift_compose (A B C : Type) ( f : A -> B) (g : B -> C)
-    : (function_lift A C (g o f)) = (function_lift B C g) o (function_lift A B f).
+    (** Functoriality on composition *)
+    Definition O_functor_compose (A B C : Type) ( f : A -> B) (g : B -> C)
+    : (O_functor A C (g o f)) = (O_functor B C g) o (O_functor A B f).
     Proof.
-      apply path_forall; intro x; simpl.
-      unfold function_lift.
-      fold ( (O_unit subU C) o g).
-      fold ( (O_unit subU B) o f).
-
-      assert (P1 : O_rec A (O subU C) (fun x0 : A => O_unit subU C ((g o f) x0)) x
-                   = O_rec A (O subU C) (((O_unit subU C) o g) o f) x) by (exact idpath).
-
-      assert (P2 : O_rec A (O subU C) (((O_unit subU C) o g) o f) x
-                   = O_rec A (O subU C)
-                           (((O_rec B (O subU C) (O_unit subU C o g) o O_unit subU B) o f)) x).
-      apply ap10. apply ap. apply ap10. apply ap.
-      exact (inverse (O_rec_retr B (O subU C) (O_unit subU C o g))).
-
-      assert (P3 : O_rec A (O subU C)
-                         (O_rec B (O subU C) (O_unit subU C o g) o O_unit subU B o f) x
-                   = O_rec A (O subU C)
-                           (O_rec B (O subU C) (O_unit subU C o g) o (O_unit subU B o f)) x)
-        by (exact idpath).
-      
-      assert (P4 : O_rec A (O subU C)
-                         (O_rec B (O subU C) (O_unit subU C o g) o (O_unit subU B o f)) x
-                   = O_rec A (O subU C)
-                           (O_rec B (O subU C) (O_unit subU C o g) o
-                                  (O_rec A (O subU B) (O_unit subU B o f) o O_unit subU A)) x).
-      apply ap10. repeat apply ap.
-      exact (inverse (O_rec_retr A (O subU B) (O_unit subU B o f))).
-      exact (P1 @ P2 @ P3 @ P4 @
-                (ap10 (O_rec_sect A (O subU C)
-                                  (O_rec B (O subU C)
-                                         (O_unit subU C o g)
-                                         o O_rec A (O subU B) (O_unit subU B o f))) x)).
+      apply path_arrow_modal; unfold O_functor; simpl.
+      (* Now we basically use O_rec_retr a bunch of times.  However,
+         Coq seems to need some help noticing the judgmental associativity
+         of function composition and in folding its definition. *)
+      rewrite O_rec_retr.
+      match goal with
+          | |- ?k = ?h o ?g o ?f =>
+            change (k = h o (g o f))
+      end.
+      rewrite O_rec_retr.
+      match goal with
+          | |- ?k = ?h o (fun x => O_unit subU B (f x)) =>
+            change (k = h o O_unit subU B o f)
+      end.
+      rewrite O_rec_retr.
+      reflexivity.
     Defined.
 
-    (** Hence function lift is ok with commutative squares *)
-
-    Definition function_lift_square (A B C X : Type) (pi1 : X -> A) (pi2 : X -> B)
+    (** Hence functoriality on commutative squares *)
+    Definition O_functor_square (A B C X : Type) (pi1 : X -> A) (pi2 : X -> B)
                (f : A -> C) (g : B -> C) (comm : (f o pi1) = (g o pi2))
-    : ( (function_lift A C f) o (function_lift X A pi1) )
-      = ( (function_lift B C g) o (function_lift X B pi2) ).
+    : ( (O_functor A C f) o (O_functor X A pi1) )
+      = ( (O_functor B C g) o (O_functor X B pi2) ).
     Proof.
-      apply path_forall; intro x; simpl.
-      pose (foo1 := ap10 (function_lift_compose X A C pi1 f) x).
-      pose (foo2 := ap10 (function_lift_compose X B C pi2 g) x).
-      pose (foo3 := ap (fun u => O_rec X (O subU C) (fun x0 => O_unit subU C (u x0)) x)
-                       (x:=f o pi1) (y:=g o pi2) comm).
-      exact (concat (concat (inverse foo1) foo3) foo2).
+      path_via (O_functor X C (f o pi1)).
+      - symmetry; apply O_functor_compose.
+      - path_via (O_functor X C (g o pi2)).
+        * apply ap; exact comm.
+        * apply O_functor_compose.
     Defined.
 
-  End Functions_lifts.
+  End Functor.
 
   Section Types.
 
@@ -372,7 +348,7 @@ Section Reflective_Subuniverse.
         assert (X0 : (eq''' (eta a)) =  (eqf a) ..1).
         unfold eq''', pr1_path, eqf, q, p, f, eq''', eq'', f'', g'', eqf, f', g', Z, eta in *;
           simpl in *.
-        rewrite universality_unit.
+        rewrite ap10_path_arrow_modal.
         unfold path_forall. rewrite eisretr. exact idpath.
         exact (ap (fun v => transport (fun u => B u) v (f' (eta a)) .2) X0).
       - intros H A B.
