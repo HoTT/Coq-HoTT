@@ -38,11 +38,12 @@ Section Reflective_Subuniverse.
     (@equiv_inv _ _ _ (subU.(O_isequiv) _ _)).
 
   Definition O_rec_retr {subU} (P : Type) (Q : SubuniverseType subU) f
-  : O_rec _ _ f o subU.(O_unit) _ = f :=
-    @eisretr _ _ _ (subU.(O_isequiv) P Q) f.
+    : O_rec _ _ f o subU.(O_unit) _ = f
+    := @eisretr _ _ _ (subU.(O_isequiv) P Q) f.
 
-  Definition O_rec_sect {subU} (P : Type) (Q : SubuniverseType subU) f :=
-    @eissect _ _ _ (subU.(O_isequiv) P Q) f.
+  Definition O_rec_sect {subU} (P : Type) (Q : SubuniverseType subU) f
+    : O_rec _ _ (f o subU.(O_unit) _) = f
+    := @eissect _ _ _ (subU.(O_isequiv) P Q) f.
 
   Section Basic_facts.
 
