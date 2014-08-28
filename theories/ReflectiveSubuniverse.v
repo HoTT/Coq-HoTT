@@ -32,10 +32,15 @@ Section Reflective_Subuniverse.
 
   Coercion SubuniverseType_pr1 subU (T:SubuniverseType subU) := @pr1 Type subU.(subuniverse_HProp) T.
 
+  (** The equivalence arising from [O_isequiv] *)
+  Definition O_equiv {subU} (P : Type) (Q : SubuniverseType subU)
+    : (subU.(O) P -> Q) <~> (P -> Q)
+    := BuildEquiv _ _ (fun f => f o (O_unit subU P)) (O_isequiv subU P Q).
+
   (** Some shortcuts to manipulate the above equivalence.  Here is a "recursor" for O. *)
-  Definition O_rec {subU} (P : Type) (Q : SubuniverseType subU) :
-    (P -> Q) -> (subU.(O) P) -> Q := 
-    (@equiv_inv _ _ _ (subU.(O_isequiv) _ _)).
+  Definition O_rec {subU} (P : Type) (Q : SubuniverseType subU)
+    : (P -> Q) -> (subU.(O) P) -> Q
+    := (O_equiv P Q)^-1.
 
   (** Here is its "computation rule" *)
   Definition O_rec_retr {subU} (P : Type) (Q : SubuniverseType subU) f
@@ -140,6 +145,11 @@ Section Reflective_Subuniverse.
       - intros X; exact (isequiv_O_unit (T;X)).
     Defined.
 
+    (* Hence, a type is modal if its unit admits a retraction. *)
+    Definition O_unit_retract_modal (T:Type) (mu : (subU.(O) T) -> T) (eta := subU.(O_unit) T) (iss : Sect eta mu)
+    : subU.(in_subuniverse) T
+    := transport (fun X => X) (O_unit_isequiv_iff_modal T) (O_unit_retract_isequiv T mu iss).
+
     (** The modality is idempotent *)
     Definition O_idempotent
     : forall T, (O subU) (((O subU) T)) = O subU T.
@@ -231,98 +241,56 @@ Section Reflective_Subuniverse.
     Variable subU : ReflectiveSubuniverse.
 
     (** ** The Unit type *)
-    Lemma unit_subuniverse : (subU.(in_subuniverse) Unit).
+    Lemma in_subuniverse_unit : (subU.(in_subuniverse) Unit).
     Proof.
-      rewrite <- O_unit_isequiv_iff_modal.
-      apply O_unit_retract_isequiv with (mu := fun x:(subU.(O) Unit) => tt).
-      intro u.
-      destruct u; exact idpath.
+      apply O_unit_retract_modal with (mu := fun x:(subU.(O) Unit) => tt).
+      exact (@contr Unit _).
     Defined.
     
     (** ** Dependent product and arrows *)
     (** Theorem 7.7.2 *)
-    Definition forall_subuniverse (A:Type) (B:A -> Type) 
+    Definition in_subuniverse_forall (A:Type) (B:A -> Type) 
     : (forall x, (subU.(in_subuniverse) (B x)))
       -> ((subU.(in_subuniverse)) (forall x:A, (B x))).
     Proof.
       intro H.
       pose (ev := fun x => (fun (f:(forall x, (B x))) => f x)).
-      pose (zz := fun x:A => O_rec (forall x0 : A, (B x0) ) (B x; H x) (ev x)).
-      pose (h := fun z => fun x => zz x z).
-      simpl in *.
-      rewrite <- (O_unit_isequiv_iff_modal).
-      set (eta := (O_unit subU (forall x : A, (B x)))).
-      apply O_unit_retract_isequiv with (mu := h).
+      pose (zz := fun x:A => O_rec _ (B x; H x) (ev x)).
+      apply O_unit_retract_modal with (mu := fun z => fun x => zz x z).
       intro phi.
-      unfold h, zz, ev; clear h; clear zz; clear ev.
+      unfold zz, ev; clear zz; clear ev.
       apply path_forall; intro x.
-      pose (foo := @O_rec_retr subU (forall x0 : A, (B x0)) (B x; H x)
-                               (fun f : forall x0 : A, (B x0) => f x)).
+      pose (foo := O_rec_retr _ (B x; H x) (fun f : forall x0, (B x0) => f x)).
       exact (ap10 foo phi).
     Qed.
 
-    Definition arrow_subuniverse (A : Type) (B : SubuniverseType subU)
+    Definition in_subuniverse_arrow (A : Type) (B : SubuniverseType subU)
     : (in_subuniverse subU (A -> B)).
     Proof.
-      apply forall_subuniverse.
+      apply in_subuniverse_forall.
       intro a. exact B.2.
     Qed.
 
     (** ** Product *)
-    Definition product_subuniverse (A B : SubuniverseType subU)
+    Definition in_subuniverse_prod (A B : SubuniverseType subU)
     : (in_subuniverse subU (A*B)).
     Proof.
-      rewrite <- O_unit_isequiv_iff_modal.
-
-      pose (mu := fun (X : (O subU (A * B))) =>
-                   (O_rec (A * B) (A)
-                          (fun x : (A * B) => (fst x)) X ,
-                    O_rec (A * B) (B)
-                          (fun x : (A * B) => (snd x)) X)).
-      apply O_unit_retract_isequiv with (mu := mu).
-      intro x; destruct x as [a b].
-      unfold mu; apply path_prod.
-      - simpl.
-        exact (ap10 (O_rec_retr (A * B) A (fun x : (A * B) => fst x)) (a,b)). 
-      - simpl.
-        exact (ap10 (O_rec_retr (A * B) B (fun x : (A * B) => snd x)) (a,b)). 
+      apply O_unit_retract_modal with
+        (mu := fun X => (O_rec (A * B) A fst X , O_rec (A * B) B snd X)).
+      intros [a b]; apply path_prod; simpl.
+      - exact (ap10 (O_rec_retr (A * B) A fst) (a,b)). 
+      - exact (ap10 (O_rec_retr (A * B) B snd) (a,b)). 
     Qed.
 
     (** We show that OA*OB has the same universal property as O(A*B) *)
-    Lemma product_universal (A B : Type) (C : SubuniverseType subU)
+    Lemma equiv_O_prod_rect (A B : Type) (C : SubuniverseType subU)
     : ((O subU A)*(O subU B) -> C) <~> (A * B -> C).
     Proof.
-      apply (@equiv_compose' _ (A -> B -> C) _).
-      {
-        exists (fun u => fun x => u (fst x) (snd x)).
-        apply isequiv_adjointify with (g:= (fun f => fun u v => f (u,v))).
-        - intro x. apply path_forall; intro u. rewrite eta_prod. exact idpath.
-        - intro x. apply path_forall; intro u; apply path_forall; intro v. exact idpath.
-      }
-      
-      apply (@equiv_compose' _ ((O subU A) -> B -> C) _).
-      {
-        exists ((fun f : (O subU A)  ->
-                         (existT (fun T => in_subuniverse subU T)
-                                 (B -> C)
-                                 (arrow_subuniverse B C)) .1
-                 => f o O_unit subU A)).
-        exact (O_isequiv subU A (( B -> C) ; arrow_subuniverse B C)).
-      }
-      
-      apply (@equiv_compose' _ ((O subU A) -> (O subU B) -> C) _).
-      {
-        apply equiv_postcompose'.
-        exists (fun f : ((O subU B) )  -> (C )  => f o O_unit subU B).
-        exact (O_isequiv subU B C).
-      }
-
-      {
-        exists (fun f => fun u v => f (u,v)).
-        apply isequiv_adjointify with (g := fun f => fun u => f (fst u) (snd u)).
-        - intro x. apply path_forall; intro u. apply path_forall; intro v. exact idpath.
-        - intro x. apply path_forall; intro u. rewrite eta_prod. exact idpath.
-      }
+      apply (equiv_compose' (equiv_uncurry A B C)).
+      refine (equiv_compose' _ (equiv_inverse (equiv_uncurry (O subU A) (O subU B) C))).
+      apply (equiv_compose' (O_equiv A (B -> C ; in_subuniverse_arrow B C))); simpl.
+      apply equiv_postcompose'.
+      exact (O_equiv B C).
     Qed.
 
     (** TODO : O(A*B) = OA * OB *)
