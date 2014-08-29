@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-(** * Theorems about the cumulative hierarchy [V]. *)
+(** ** The cumulative hierarchy [V]. *)
 
 Require Import Overture PathGroupoids HProp Trunc Fibrations Equivalences EquivalenceVarieties UnivalenceImpliesFunext.
 Require Import types.Unit types.Bool types.Universe types.Sigma types.Arrow types.Forall.
@@ -9,9 +9,9 @@ Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
 
-(* ** Misc. definitions & lemmas ** *)
+(** ** Misc. definitions & lemmas *)
 
-(* This is slightly more general than the composition defined in Overture.v (where g : B -> C). *)
+(** This is slightly more general than the composition defined in Overture.v (where g : B -> C). *)
 Definition compose {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).
 
 Hint Unfold compose.
@@ -19,7 +19,7 @@ Hint Unfold compose.
 Notation " g 'o' f " := (compose g f)
   (at level 40, left associativity) : function_scope.
 
-(* Monos are injective *)
+(** Monos are injective *)
 Lemma mono_implies_inj {A B : Type} (m : A -> B) : is_mono m -> (forall a a', m a = m a' -> a = a').
 Proof.
   intros H a a' p.
@@ -30,9 +30,9 @@ Proof.
 Defined.
 
 
-(* ** Pushout with respect to a relation ** *)
+(** ** Pushout with respect to a relation *)
 
-(* This could be implemented using the pushouts in /hit/Pushout.v, where f and g are the (fst ∘ pr1) and (snd ∘ pr1), with domain {(a,b) : A * B & R a b}. However, these pushouts weren't implemented when I started this work, and doing it this way is closer to exercise 10.11 of the HoTT book *)
+(** This could be implemented using the pushouts in /hit/Pushout.v, where f and g are (fst o pr1) and (snd o pr1), with domain {(a,b) : A * B & R a b}. However, these pushouts weren't implemented when I started this work, and doing it this way is closer to exercise 10.11 of the HoTT book *)
 
 Module Export RPushout.
 
@@ -60,7 +60,7 @@ apD (RPushout_rect P i j gl) (glue R a b r) = gl a b r.
 
 End RPushout.
 
-(* ** The non-depentent eliminator *)
+(* The non-depentent eliminator *)
 
 Definition RPushout_rect_nd {A B : Type} (R : A -> B -> hProp)
   (P : Type) (i : A -> P) (j : B -> P)
@@ -81,14 +81,13 @@ Proof.
 Defined.
 
 
-(* ** Bitotal relation ** *)
+(** Bitotal relation *)
 
 Definition bitot {A B : Type} (R : A -> B -> hProp) :=
    (forall a : A, hexists (fun (b : B) => R a b))
  * (forall b : B, hexists (fun (a : A) => R a b)).
 
-
-(* ** The cumulative hierarchy V ** *)
+(** ** The cumulative hierarchy V *)
 
 Module Export CumulativeHierarchy.
 
@@ -127,7 +126,7 @@ apD (V_rect P H_0trunc H_set H_setext) (setext R bitot_R h)
 
 End CumulativeHierarchy.
 
-(* ** The non-dependent eliminator ** *)
+(* The non-dependent eliminator *)
 
 Definition V_rect_nd (P : Type)
   (H_0trunc : IsTrunc 0 P)
@@ -158,7 +157,7 @@ Proof.
 Defined.
 
 
-(* ** Alternative induction principle (This is close to the one from the book) ** *)
+(** ** Alternative induction principle (This is close to the one from the book) *)
 
 Definition equal_img {A B C : Type} (f : A -> C) (g : B -> C) :=
    (forall a : A, hexists (fun (b : B) => f a = g b))
@@ -196,7 +195,7 @@ Proof.
 Defined.
 
 (* We might also want to prove the associated computation rules *)
-(* Note that the hypothesis H_setext' differs from the one given in section 10.5 of the HoTT book. *)
+(** Note that the hypothesis H_setext' differs from the one given in section 10.5 of the HoTT book. *)
 Definition V_rect' (P : V -> Type)
   (H_0trunc : forall v : V, IsTrunc 0 (P v))
   (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
@@ -246,7 +245,7 @@ Proof.
 Defined.
 
 
-(* ** Simpler induction principle when the goal is an hprop ** *)
+(** Simpler induction principle when the goal is an hprop *)
 
 Definition V_rect_hprop (P : V -> Type)
   (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
@@ -261,7 +260,7 @@ Defined.
 Section AssumingUA.
 Context `{ua : Univalence}.
 
-(* ** Membership relation ** *)
+(** ** Membership relation *)
 
 Definition mem (x : V) : V -> hProp.
 Proof.
@@ -280,7 +279,7 @@ Notation " x ∈ v " := (mem x v)
   (at level 30) : set_scope.
 Open Scope set_scope.
 
-(* ** Subset relation ** *)
+(** ** Subset relation *)
 
 Definition subset (x : V) (y : V) : hProp
 := hp (forall z : V, z ∈ x -> z ∈ y) _.
@@ -289,9 +288,9 @@ Notation " x ⊆ y " := (subset x y)
   (at level 30) : set_scope.
 
 
-(* ** Bisimulation relation ** *)
+(** ** Bisimulation relation *)
 
-(* The equality in V lives in Type@{U'}. We define the bisimulation relation which is a U-small resizing of the equality in V: it must live in hProp_U : Type{U'}, hence the codomain is hProp@{U'}. We then prove that bisimulation is equality (bisim_equals_id), then use it to prove the key lemma monic_set_present. *)
+(** The equality in V lives in Type@{U'}. We define the bisimulation relation which is a U-small resizing of the equality in V: it must live in hProp_U : Type{U'}, hence the codomain is hProp@{U'}. We then prove that bisimulation is equality (bisim_equals_id), then use it to prove the key lemma monic_set_present. *)
 
 Definition bisimulation : V@{U' U} -> V@{U' U} -> hProp@{U'}.
 Proof.
@@ -372,9 +371,9 @@ Proof.
 Defined.
 
 
-(* ** Canonical presentation of V-sets (Lemma 10.5.6) ** *)
+(** ** Canonical presentation of V-sets (Lemma 10.5.6) *)
 
-(* Using the regular kernel (with = instead of ~~) also works, but this seems to be a Coq bug, it should lead to a universe inconsistency in the monic_set_present lemma later. This version is the right way to do it. *)
+(** Using the regular kernel (with = instead of ~~) also works, but this seems to be a Coq bug, it should lead to a universe inconsistency in the monic_set_present lemma later. This version is the right way to do it. *)
 Definition ker_bisim {A} (f : A -> V) (x y : A) := (f x ~~ f y).
 Lemma setrel_ker_bisim {A} (f : A -> V) : setrel (ker_bisim f).
 Proof.
@@ -418,7 +417,7 @@ Defined.
 
 
 Section MonicSetPresent_Uniqueness.
-(* Given u : V, we want to show that the representation u = @set Au mu, where Au is an hSet and mu is monic, is unique. *)
+(** Given u : V, we want to show that the representation u = @set Au mu, where Au is an hSet and mu is monic, is unique. *)
 
 Context {u : V} {Au Au': Type} {h : IsHSet Au} {h' : IsHSet Au'} {mu : Au -> V} {mono : is_mono mu}
   {mu' : Au' -> V} {mono' : is_mono mu'} {p : u = set mu} {p' : u = set mu'}.
@@ -485,7 +484,7 @@ Defined.
 
 End MonicSetPresent_Uniqueness.
 
-(* This lemma actually says a little more than 10.5.6, i.e., that Au is a hSet *)
+(** This lemma actually says a little more than 10.5.6, i.e., that Au is a hSet *)
 Lemma monic_set_present : forall u : V, exists (Au : Type) (m : Au -> V),
   (IsHSet Au) * (is_mono m) * (u = set m).
 Proof.
@@ -518,7 +517,7 @@ Definition is_mono_funcofmembers {u : V} : is_mono func_of_members := snd (fst (
 Definition is_valid_presentation (u : V) : u = set func_of_members := snd (pr2 (pr2 (monic_set_present u))).
 
 
-(* ** Lemmas 10.5.8 (i) & (vii), we put them here because they are useful later ** *)
+(** ** Lemmas 10.5.8 (i) & (vii), we put them here because they are useful later *)
 Lemma extensionality : forall {x y : V}, (x ⊆ y * y ⊆ x) <-> x = y.
 Proof.
   refine (V_rect_hprop _ _ _). intros A f _.
@@ -543,7 +542,7 @@ Proof.
   intros [a p]. exact (transport C p (H_f a)).
 Defined.
 
-(* ** Two useful lemmas ** *)
+(** ** Two useful lemmas *)
 
 Lemma irreflexive_mem : forall x, ~ (x ∈ x).
 Proof.
@@ -566,12 +565,12 @@ Proof.
 Defined.
 
 
-(* ** Definitions of particular sets in V ** *)
+(** ** Definitions of particular sets in V *)
 
-(* The empty set *)
+(** The empty set *)
 Definition V_empty : V := set (Empty_rect (fun _ => V)).
 
-(* The singleton {u} *)
+(** The singleton {u} *)
 Definition V_singleton (u : V) : V@{U' U} := set (Unit_rect u).
 
 Lemma path_singleton {u v : V} : V_singleton u = V_singleton v <-> u = v.
@@ -584,7 +583,7 @@ Proof.
     intro t; destruct t; apply min1; exists tt; exact p.
 Defined.
 
-(* The pair {u,v} *)
+(** The pair {u,v} *)
 Definition V_pair (u : V) (v : V) : V@{U' U} := set (fun b : Bool => if b then u else v).
 
 Lemma path_pair {u v u' v' : V@{U' U}} : (u = u') * (v = v') -> V_pair u v = V_pair u' v'.
@@ -608,7 +607,7 @@ Proof.
     intro t; apply min1; exists true. destruct t; exact p1.
 Defined.
 
-(* The ordered pair (u,v) *)
+(** The ordered pair (u,v) *)
 Definition V_pair_ord (u : V) (v : V) : V := V_pair (V_singleton u) (V_pair u v).
 
 Notation " [ u , v ] " := (V_pair_ord u v)
@@ -647,27 +646,27 @@ Proof.
   apply path_pair. split; assumption; assumption.
 Defined.
 
-(* The cartesian product a × b *)
+(** The cartesian product a × b *)
 Definition V_cart_prod (a : V) (b : V) : V
 := set (fun x : [a] * [b] => [func_of_members (fst x), func_of_members (snd x)]).
 
 Notation " a × b " := (V_cart_prod a b)
   (at level 25) : set_scope.
 
-(* f is a function with domain a and codomain b *)
+(** f is a function with domain a and codomain b *)
 Definition V_is_func (a : V) (b : V) (f : V) := f ⊆ a × b
  * (forall x, x ∈ a -> hexists (fun y => y ∈ b * [x,y] ∈ f))
  * (forall x y y', [x,y] ∈ f * [x,y'] ∈ f -> y = y').
 
-(* The set of functions from a to b *)
+(** The set of functions from a to b *)
 Definition V_func (a : V) (b : V) : V
 := @set ([a] -> [b]) (fun f => set (fun x => [func_of_members x, func_of_members (f x)] )).
 
-(* The union of a set Uv *)
+(** The union of a set Uv *)
 Definition V_union (v : V) := 
   @set ({x : [v] & [func_of_members x]}) (fun z => func_of_members (pr2 z)).
 
-(* The ordinal successor x ∪ {x} *)
+(** The ordinal successor x ∪ {x} *)
 Definition V_succ : V -> V.
 Proof.
   refine (V_rect'_nd _ _ _ _). intros A f _.
@@ -684,13 +683,13 @@ Proof.
       + apply min1; exists (inr tt). destruct u. apply setext'; auto.
 Defined.
 
-(* The set of finite ordinals *) 
+(** The set of finite ordinals *) 
 Definition V_omega : V
 := set (fix I n := match n with 0   => V_empty
                               | S n => V_succ (I n) end).
 
 
-(* ** Axioms of set theory (theorem 10.5.8) ** *)
+(** ** Axioms of set theory (theorem 10.5.8) *)
 
 Lemma not_mem_Vempty : forall x, ~ (x ∈ V_empty).
 Proof.
