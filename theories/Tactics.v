@@ -1,6 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
 Require Import Overture types.Prod types.Forall PathGroupoids Contractible types.Paths.
+Require Export Tactics.BinderApply.
 
 Set Implicit Arguments.
 

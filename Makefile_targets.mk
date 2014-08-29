@@ -47,6 +47,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/types/Universe.v \
 	$(srcdir)/theories/UnivalenceImpliesFunext.v \
 	$(srcdir)/theories/Pointed.v \
+	$(srcdir)/theories/Tactics/BinderApply.v \
 	$(srcdir)/theories/Tactics.v \
 	$(srcdir)/theories/TruncType.v \
 	$(srcdir)/theories/Functorish.v \
