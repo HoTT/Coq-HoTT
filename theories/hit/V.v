@@ -75,7 +75,7 @@ Defined.
 
 (** Bitotal relation *)
 
-Definition bitot {A B : Type} (R : A -> B -> hProp) :=
+Definition bitotal {A B : Type} (R : A -> B -> hProp) :=
    (forall a : A, hexists (fun (b : B) => R a b))
  * (forall b : B, hexists (fun (a : A) => R a b)).
 
@@ -87,7 +87,7 @@ Private Inductive V : Type@{U'} :=
 | set {A : Type@{U}} (f : A -> V) : V.
 
 Axiom setext : forall {A B : Type} (R : A -> B -> hProp)
-  (bitot_R : bitot R) (h : RPushout R -> V),
+  (bitot_R : bitotal R) (h : RPushout R -> V),
 set (h o (inL R)) = set (h o (inR R)).
 
 Axiom is0trunc_V : IsTrunc 0 V.
@@ -95,7 +95,7 @@ Axiom is0trunc_V : IsTrunc 0 V.
 Definition V_rect (P : V -> Type)
   (H_0trunc : forall v : V, IsTrunc 0 (P v))
   (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
-  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitot R)
+  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
     (h : RPushout R -> V) (H_h : forall x : RPushout R, P (h x)),
     (setext R bitot_R h) # (H_set A (h o inL R) (H_h oD inL R))
       = H_set B (h o inR R) (H_h oD inR R) )
@@ -108,11 +108,11 @@ Definition V_rect (P : V -> Type)
 Axiom V_comp_setext : forall (P : V -> Type)
   (H_0trunc : forall v : V, IsTrunc 0 (P v))
   (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
-  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitot R)
+  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
     (h : RPushout R -> V) (H_h : forall x : RPushout R, P (h x)),
     (setext R bitot_R h) # (H_set A (h o inL R) (H_h oD inL R))
       = H_set B (h o inR R) (H_h oD inR R) )
-  (A B : Type) (R : A -> B -> hProp) (bitot_R : bitot R) (h : RPushout R -> V),
+  (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R) (h : RPushout R -> V),
 apD (V_rect P H_0trunc H_set H_setext) (setext R bitot_R h)
 = H_setext A B R bitot_R h ((V_rect P H_0trunc H_set H_setext) oD h).
 
@@ -123,7 +123,7 @@ End CumulativeHierarchy.
 Definition V_rect_nd (P : Type)
   (H_0trunc : IsTrunc 0 P)
   (H_set : forall (A : Type), (A -> V) -> (A -> P) -> P)
-  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitot R)
+  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
     (h : RPushout R -> V) (H_h : RPushout R -> P),
     H_set A (h o inL R) (H_h o inL R) = H_set B (h o inR R) (H_h o inR R) )
 : V -> P.
@@ -135,10 +135,10 @@ Defined.
 Definition V_comp_nd_setext (P : Type)
   (H_0trunc : IsTrunc 0 P)
   (H_set : forall (A : Type), (A -> V) -> (A -> P) -> P)
-  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitot R)
+  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
     (h : RPushout R -> V) (H_h : RPushout R -> P),
     H_set A (h o inL R) (H_h o inL R) = H_set B (h o inR R) (H_h o inR R) )
-  (A B : Type) (R : A -> B -> hProp) (bitot_R : bitot R) (h : RPushout R -> V)
+  (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R) (h : RPushout R -> V)
 : ap (V_rect_nd P H_0trunc H_set H_setext) (setext R bitot_R h)
   = H_setext A B R bitot_R h ((V_rect_nd P H_0trunc H_set H_setext) o h).
 Proof.
