@@ -73,6 +73,13 @@ Hint Unfold compose.
 Notation "g 'o' f" := (compose g f) (at level 40, left associativity) : function_scope.
 Open Scope function_scope.
 
+(** Dependent composition of functions. *)
+Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).
+
+Hint Unfold composeD.
+
+Notation " g 'oD' f " := (composeD g f) (at level 40, left associativity) : function_scope.
+
 (** ** The groupoid structure of identity types. *)
 
 (** The results in this file are used everywhere else, so we need to be extra careful about how we define and prove things.  We prefer hand-written terms, or at least tactics that allow us to retain clear control over the proof-term produced. *)

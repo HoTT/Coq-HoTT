@@ -11,14 +11,6 @@ Local Open Scope equiv_scope.
 
 (** ** Misc. definitions & lemmas *)
 
-(** This is slightly more general than the composition defined in Overture.v (where g : B -> C). *)
-Definition compose {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).
-
-Hint Unfold compose.
-
-Notation " g 'o' f " := (compose g f)
-  (at level 40, left associativity) : function_scope.
-
 (** Monos are injective *)
 Lemma mono_implies_inj {A B : Type} (m : A -> B) : is_mono m -> (forall a a', m a = m a' -> a = a').
 Proof.
@@ -105,8 +97,8 @@ Definition V_rect (P : V -> Type)
   (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
   (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitot R)
     (h : RPushout R -> V) (H_h : forall x : RPushout R, P (h x)),
-    (setext R bitot_R h) # (H_set A (h o inL R) (H_h o inL R))
-      = H_set B (h o inR R) (H_h o inR R) )
+    (setext R bitot_R h) # (H_set A (h o inL R) (H_h oD inL R))
+      = H_set B (h o inR R) (H_h oD inR R) )
 : forall v : V, P v
 := fix F (v : V) :=
      (match v with
@@ -118,11 +110,11 @@ Axiom V_comp_setext : forall (P : V -> Type)
   (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
   (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitot R)
     (h : RPushout R -> V) (H_h : forall x : RPushout R, P (h x)),
-    (setext R bitot_R h) # (H_set A (h o inL R) (H_h o inL R))
-      = H_set B (h o inR R) (H_h o inR R) )
+    (setext R bitot_R h) # (H_set A (h o inL R) (H_h oD inL R))
+      = H_set B (h o inR R) (H_h oD inR R) )
   (A B : Type) (R : A -> B -> hProp) (bitot_R : bitot R) (h : RPushout R -> V),
 apD (V_rect P H_0trunc H_set H_setext) (setext R bitot_R h)
-= H_setext A B R bitot_R h ((V_rect P H_0trunc H_set H_setext) o h).
+= H_setext A B R bitot_R h ((V_rect P H_0trunc H_set H_setext) oD h).
 
 End CumulativeHierarchy.
 
@@ -214,16 +206,16 @@ Proof.
   intros A B R bitot_R h H_h.
   pose (f := h o inL R : A -> V ).
   pose (g := h o inR R : B -> V ).
-  pose (H_f := H_h o inL R : forall a : A, P (f a)).
-  pose (H_g := H_h o inR R : forall b : B, P (g b)).
+  pose (H_f := H_h oD inL R : forall a : A, P (f a)).
+  pose (H_g := H_h oD inR R : forall b : B, P (g b)).
   assert (eq_img : equal_img f g). split.
     intro a. generalize (fst bitot_R a). apply minus1Trunc_map.
       intros [b r]. exists b. exact (ap h (glue R _ _ r)).
     intro b. generalize (snd bitot_R b). apply minus1Trunc_map.
       intros [a r]. exists a. exact (ap h (glue R _ _ r)).
   path_via (transport P (setext' (h o inL R) (h o inR R) eq_img)
-                (H_set A (h o inL R) (H_h o inL R))).
-    apply (ap (fun p => transport P p (H_set A (h o inL R) (H_h o inL R)))).
+                (H_set A (h o inL R) (H_h oD inL R))).
+    apply (ap (fun p => transport P p (H_set A (h o inL R) (H_h oD inL R)))).
     apply allpath_hprop.
   apply (H_setext' A B f g eq_img H_f H_g).  split.
   - intro a.
