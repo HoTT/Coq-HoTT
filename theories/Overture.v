@@ -497,3 +497,17 @@ Ltac atomic x :=
     | forall _, _ => fail 1 x "is not atomic"
     | _ => idtac
   end.
+
+(** [transparent assert (H : T)] is like [assert (H : T)], but leaves the body transparent. *)
+(** Since binders don't respect [fresh], we use a name unlikely to be reused. *)
+Tactic Notation "transparent" "assert" "(" ident(name) ":" constr(type) ")" :=
+  refine (let __transparent_assert_hypothesis := (_ : type) in _);
+  [
+  | ((* We cannot use the name [__transparent_assert_hypothesis], due to some infelicities in the naming of bound variables.  So instead we pull the bottommost hypothesis. *)
+    let H := match goal with H := _ |- _ => constr:(H) end in
+    rename H into name) ].
+
+(** [transparent eassert] is like [transparent assert], but allows holes in the type, which will be turned into evars. *)
+Tactic Notation "transparent" "assert" "(" ident(name) ":" constr(type) ")" "by" tactic3(tac) := let name := fresh "H" in transparent assert (name : type); [ solve [ tac ] | ].
+Tactic Notation "transparent" "eassert" "(" ident(name) ":" open_constr(type) ")" := transparent assert (name : type).
+Tactic Notation "transparent" "eassert" "(" ident(name) ":" open_constr(type) ")" "by" tactic3(tac) := transparent assert (name : type) by tac.
