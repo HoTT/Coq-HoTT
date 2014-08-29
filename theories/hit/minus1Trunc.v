@@ -1,7 +1,8 @@
 (** * (-1)-truncation *)
 
-Require Import Overture HProp Fibrations EquivalenceVarieties Contractible Equivalences types.Unit.
+Require Import Overture HProp HSet Fibrations EquivalenceVarieties Contractible Equivalences types.Unit.
 Open Local Scope path_scope.
+Open Local Scope equiv_scope.
 (** The definition of [minus1Trunc], the (-1)-truncation.  Here is what
    it would look like if Coq supported higher inductive types natively:
 
@@ -134,6 +135,16 @@ Proof.
   apply (inhab_prop_contr (mono b) (epi b)).
 Defined.
 End AssumeFunext.
+
+(** Monos are injective *)
+Lemma is_mono_isinj {A B : Type} (m : A -> B) : is_mono m -> isinj m.
+Proof.
+  intros H a a' p.
+  specialize (H (m a')). unfold hfiber in *.
+  assert ((a; p) = (a'; 1) :> {x : A & m x = m a'}) by apply allpath_hprop.
+  apply (path_sigma_uncurried (fun x => m x = m a') (a; p) (a'; 1))^-1.
+  assumption.
+Defined.
 
 Section minus1TruncMonad.
 

@@ -78,7 +78,7 @@ Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (
 
 Hint Unfold composeD.
 
-Notation " g 'oD' f " := (composeD g f) (at level 40, left associativity) : function_scope.
+Notation "g 'oD' f" := (composeD g f) (at level 40, left associativity) : function_scope.
 
 (** ** The groupoid structure of identity types. *)
 

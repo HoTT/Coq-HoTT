@@ -2,24 +2,11 @@
 
 (** ** The cumulative hierarchy [V]. *)
 
-Require Import Overture PathGroupoids HProp Trunc Fibrations Equivalences EquivalenceVarieties UnivalenceImpliesFunext.
+Require Import Overture PathGroupoids HProp HSet Trunc Fibrations Equivalences EquivalenceVarieties UnivalenceImpliesFunext.
 Require Import types.Unit types.Bool types.Universe types.Sigma types.Arrow types.Forall.
 Require Import hit.minus1Trunc hit.quotient.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
-
-
-(** ** Misc. definitions & lemmas *)
-
-(** Monos are injective *)
-Lemma mono_implies_inj {A B : Type} (m : A -> B) : is_mono m -> (forall a a', m a = m a' -> a = a').
-Proof.
-  intros H a a' p.
-  specialize (H (m a')). unfold hfiber in *.
-  assert ((a; p) = (a'; 1) :> {x : A & m x = m a'}) by apply allpath_hprop.
-  apply (path_sigma_uncurried (fun x => m x = m a') (a; p) (a'; 1))^-1.
-  assumption.
-Defined.
 
 
 (** ** Pushout with respect to a relation *)
@@ -267,7 +254,7 @@ Proof.
         intros [a p']. exists a. path_via (g b).
 Defined.
 
-Notation " x ∈ v " := (mem x v)
+Notation "x ∈ v" := (mem x v)
   (at level 30) : set_scope.
 Open Scope set_scope.
 
@@ -276,7 +263,7 @@ Open Scope set_scope.
 Definition subset (x : V) (y : V) : hProp
 := hp (forall z : V, z ∈ x -> z ∈ y) _.
 
-Notation " x ⊆ y " := (subset x y)
+Notation "x ⊆ y" := (subset x y)
   (at level 30) : set_scope.
 
 
@@ -335,7 +322,7 @@ apply path_iff_hProp_uncurried; split; simpl.
 Defined.
 
 
-Notation " u ~~ v " := (bisimulation u v)
+Notation "u ~~ v" := (bisimulation u v)
   (at level 30) : set_scope.
 
 Lemma reflexive_bisim : forall u, u ~~ u.
@@ -428,7 +415,7 @@ Let inv_e : Au' -> Au := fun a' => pr1 (snd eq_img_untrunc a').
 Let hom1 : Sect inv_e e.
 Proof.
   intro a'.
-  apply (mono_implies_inj mu' mono').
+  apply (is_mono_isinj mu' mono').
   path_via (mu (inv_e a')).
   exact (pr2 (fst eq_img_untrunc (inv_e a'))).
   exact (pr2 (snd eq_img_untrunc a')).
@@ -437,7 +424,7 @@ Defined.
 Let hom2 : Sect e inv_e.
 Proof.
   intro a.
-  apply (mono_implies_inj mu mono).
+  apply (is_mono_isinj mu mono).
   path_via (mu' (e a)).
   exact (pr2 (snd eq_img_untrunc (e a))).
   exact (pr2 (fst eq_img_untrunc a)).
@@ -497,7 +484,7 @@ Defined.
 
 Definition type_of_members (u : V) : Type := pr1 (monic_set_present u).
 
-Notation " [ u ] " := (type_of_members u)
+Notation "[ u ]" := (type_of_members u)
   (at level 20) : set_scope.
 
 Definition func_of_members {u : V} : [u] -> V := pr1 (pr2 (monic_set_present u)) : [u] -> V.
@@ -745,7 +732,7 @@ Proof.
       destruct (fst path_pair_ord p) as (px, py). destruct (fst path_pair_ord p') as (px', py').
       path_via (func_of_members (h a)). path_via (func_of_members (h a')).
       refine (ap func_of_members _). refine (ap h _).
-      apply (mono_implies_inj func_of_members is_mono_funcofmembers a a' (px @ px'^)).
+      apply (is_mono_isinj func_of_members is_mono_funcofmembers a a' (px @ px'^)).
   - intros ((H1, H2), H3). simpl.
     assert (h : forall a : [u], {b : [v] & [func_of_members a, func_of_members b] ∈ phi}).
     + intro a. pose (x := func_of_members a).
