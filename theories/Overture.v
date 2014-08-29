@@ -427,6 +427,17 @@ Notation "x <> y  :>  T" := (not (x = y :> T))
 (at level 70, y at next level, no associativity) : type_scope.
 Notation "x <> y" := (x <> y :> _) (at level 70, no associativity) : type_scope.
 
+Definition complement {A} (R : relation A) : relation A :=
+  fun x y => ~ (R x y).
+
+Typeclasses Opaque complement.
+
+Class Irreflexive {A} (R : relation A) :=
+  irreflexivity : Reflexive (complement R).
+
+Class Asymmetric {A} (R : relation A) :=
+  asymmetry : forall {x y}, R x y -> (complement R y x : Type).
+
 (** *** Pointed types *)
 
 (** A space is pointed if that space has a point. *)

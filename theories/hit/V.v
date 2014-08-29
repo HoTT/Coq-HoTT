@@ -2,7 +2,7 @@
 
 (** ** The cumulative hierarchy [V]. *)
 
-Require Import Overture PathGroupoids HProp HSet Trunc Fibrations Equivalences EquivalenceVarieties UnivalenceImpliesFunext.
+Require Import Overture PathGroupoids HProp Trunc Fibrations Equivalences EquivalenceVarieties UnivalenceImpliesFunext.
 Require Import types.Unit types.Bool types.Universe types.Sigma types.Arrow types.Forall.
 Require Import hit.minus1Trunc hit.quotient.
 Local Open Scope path_scope.
@@ -523,7 +523,7 @@ Defined.
 
 (** ** Two useful lemmas *)
 
-Lemma irreflexive_mem : forall x, ~ (x ∈ x).
+Instance irreflexive_mem : Irreflexive mem.
 Proof.
   refine (mem_induction (fun x => hp (~ x ∈ x) _) _); simpl in *.
   intros v H. intro Hv.
