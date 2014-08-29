@@ -12,7 +12,7 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Local Notation sigT_type := Coq.Init.Specif.sigT.
-Local Notation projT1_type := Coq.Init.Specif.projT1.
+Local Notation pr1_type := Overture.pr1.
 
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.
@@ -33,7 +33,7 @@ Section sigT_mor.
   Local Notation identity x := (@identity A x; @Pidentity x).
   Local Notation compose m1 m2 := (m1.1 o m2.1; @Pcompose _ _ _ m1.1 m2.1 m1.2 m2.2)%morphism.
 
-  Hypothesis P_Associativity
+  Hypothesis P_associativity
   : forall x1 x2 x3 x4 (m1 : mor x1 x2) (m2 : mor x2 x3) (m3 : mor x3 x4),
       compose (compose m3 m2) m1 = compose m3 (compose m2 m1).
 
@@ -65,20 +65,20 @@ Section sigT_mor.
     := Build_Functor
          sigT_mor A
          idmap
-         (fun _ _ => @projT1_type _ _)
+         (fun _ _ => @pr1_type _ _)
          (fun _ _ _ _ _ => idpath)
          (fun _ => idpath).
 
   Definition sigT_mor_as_sigT : PreCategory.
   Proof.
-    refine (@sigT A (fun _ => Unit) (fun s d => @Pmor (projT1 s) (projT1 d)) _ (fun _ => Pidentity _) (fun _ _ _ _ _ m1 m2 => Pcompose m1 m2) _ _ _);
+    refine (@sigT A (fun _ => Unit) (fun s d => @Pmor (pr1_type s) (pr1_type d)) _ (fun _ => Pidentity _) (fun _ _ _ _ _ m1 m2 => Pcompose m1 m2) _ _ _);
     intros; trivial.
   Defined.
 
   Definition sigT_functor_mor : Functor sigT_mor_as_sigT sigT_mor
     := Build_Functor
          sigT_mor_as_sigT sigT_mor
-         (@projT1_type _ _)
+         (@pr1_type _ _)
          (fun _ _ => idmap)
          (fun _ _ _ _ _ => idpath)
          (fun _ => idpath).
@@ -120,7 +120,7 @@ Section sigT_mor.
     := idpath.
 End sigT_mor.
 
-Arguments pr1_mor {A Pmor _ Pidentity Pcompose P_Associativity P_left_identity P_right_identity}.
+Arguments pr1_mor {A Pmor _ Pidentity Pcompose P_associativity P_left_identity P_right_identity}.
 
 Section sigT_mor_hProp.
   Variable A : PreCategory.

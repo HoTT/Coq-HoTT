@@ -60,8 +60,8 @@ Notation pr1 := projT1.
 Notation pr2 := projT2.
 
 (** The following notation is very convenient, although it unfortunately clashes with Proof General's "electric period".  We add [format] specifiers so that it will display without an extra space, as [x.1] rather than as [x .1]. *)
-Notation "x .1" := (projT1 x) (at level 3, format "x '.1'") : fibration_scope.
-Notation "x .2" := (projT2 x) (at level 3, format "x '.2'") : fibration_scope.
+Notation "x .1" := (pr1 x) (at level 3, format "x '.1'") : fibration_scope.
+Notation "x .2" := (pr2 x) (at level 3, format "x '.2'") : fibration_scope.
 
 (** Composition of functions. *)
 Definition compose {A B C : Type} (g : B -> C) (f : A -> B) :=
