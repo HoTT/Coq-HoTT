@@ -297,7 +297,7 @@ Section Reflective_Subuniverse.
 
     (** ** Dependent sums *)
     (** Theorem 7.7.4 *)
-    Definition sigma_subuniverse
+    Definition in_subuniverse_sigma_iff
     : (forall (A:SubuniverseType subU) (B:A -> SubuniverseType subU),
          (in_subuniverse subU ({x:A & B x})))
       <->
@@ -307,54 +307,31 @@ Section Reflective_Subuniverse.
     Proof.
       split.
       - intro H. intros A B g.
-        pose (Z := (existT (fun T => (in_subuniverse subU T))
-                          ({z:(O subU A).1 & (B z)})
-                          (H (O subU A) B)) : SubuniverseType subU).
+        pose (Z := (sigT B ; H (O subU A) B) : SubuniverseType subU).
         pose (g' := (fun a:A => (O_unit subU A a ; g a)) : A -> Z).
         pose (f' := O_rec _ _ g').
-        pose (eqf :=fun a:A => (ap10 (O_rec_retr _ _ g') a)).
-        pose (g'' := fun x => (f' x).1).
-        pose (f'' := fun x:(O subU A) => x).
-        pose (eq'' := path_forall _ _ (fun x => @ap _ _ pr1 _ _ (eqf x))).
-        assert (X : g'' o (O_unit subU A) = f'' o (O_unit subU A)) by (exact eq'').
-        pose (eq''' := ap10 (path_arrow_modal _ A (O subU A) (g'') (f'') (eq''))).
-        pose (f := fun z => (f' z).2). simpl in f.
-        set (eta := O_unit subU A) in *.
-
-        exists (fun z => transport (fun u => (B u)) (eq''' z) (f z)).
-        intro a.
-
-        pose (p := pr1_path (eqf a)). simpl in p.
-        pose (q := pr2_path (eqf a)). simpl in q.
-
-        rewrite <- q. 
-        assert (X0 : (eq''' (eta a)) =  (eqf a) ..1).
-        unfold eq''', pr1_path, eqf, q, p, f, eq''', eq'', f'', g'', eqf, f', g', Z, eta in *;
-          simpl in *.
-        rewrite ap10_path_arrow_modal.
-        unfold path_forall. rewrite eisretr. exact idpath.
-        exact (ap (fun v => transport (fun u => B u) v (f' (eta a)) .2) X0).
+        pose (eqf := (O_rec_retr _ _ g')  : f' o O_unit subU A = g').
+        pose (eqid := path_arrow_modal subU A (O subU A) (pr1 o f') idmap
+                        (ap (fun k => pr1 o k) eqf)).
+        exists (fun z => transport B (ap10 eqid z) ((f' z).2)); intros a.
+        unfold eqid. rewrite ap10_path_arrow_modal.
+        refine (_ @ pr2_path (ap10 (O_rec_retr A Z g') a)).
+        apply (ap (fun p => transport B p _)).
+        exact ((ap_ap10 (f' o O_unit subU A) g' pr1 eqf a)^).
       - intros H A B.
         pose (h := fun x => O_rec ({x:A & B x}) A pr1 x).
-        pose (p := fun z => ap10 (O_rec_retr ({x : A & B x}) A pr1) z).
-        pose (C := fun w => B(h w)).
-        pose (g := fun z => (transport (fun u => B u) (inverse (p z)) z.2)).
+        pose (p := (fun z => ap10 (O_rec_retr ({x : A & B x}) A pr1) z)
+                : h o (O_unit _ _) == pr1).
+        pose (g := fun z => (transport B ((p z)^) z.2)).
         simpl in *.
-        specialize (H ({x:A & B x}) C g).
-        destruct H as [f q]. simpl in q.
-        pose (k := (fun w => (h w; f w))
-                   : (O subU ({x:A & B x})) -> ({x:A & B x})); simpl in k.
-
-        rewrite <- O_unit_isequiv_iff_modal.
-        apply O_unit_retract_isequiv with (mu := k).
-
-        intro x; destruct x as [x1 x2]. unfold k.
-        apply (path_sigma _ (O_rec {x : A & B x} A pr1
-                                   (O_unit subU {x : A & B x} (x1; x2));
-                             f (O_unit subU {x : A & B x} (x1; x2)))
-                          (x1;x2) (p (x1;x2))).
-        rewrite (q (x1;x2)). unfold g; simpl. rewrite <- transport_pp. rewrite concat_Vp.
-        exact idpath.
+        specialize (H ({x:A & B x}) (B o h) g).
+        destruct H as [f q].
+        apply O_unit_retract_modal with (mu := fun w => (h w; f w)).
+        intros [x1 x2].
+        refine (path_sigma B _ _ _ _); simpl.
+        * apply p.
+        * rewrite (q (x1;x2)).
+          unfold g; simpl. exact (transport_pV B _ _).
     Qed.
 
     (** ** Paths *)
