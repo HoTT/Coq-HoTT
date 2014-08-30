@@ -270,11 +270,12 @@ Notation "x ⊆ y" := (subset x y)
 (** ** Bisimulation relation *)
 
 (** The equality in V lives in Type@{U'}. We define the bisimulation relation which is a U-small resizing of the equality in V: it must live in hProp_U : Type{U'}, hence the codomain is hProp@{U'}. We then prove that bisimulation is equality (bisim_equals_id), then use it to prove the key lemma monic_set_present. *)
-
+(* We define bisimulation by double induction on V *)
 Definition bisimulation : V@{U' U} -> V@{U' U} -> hProp@{U'}.
 Proof.
-(* We first fix the first argument as set(A,f) and define bisim_aux : V -> hProp, by induction. This is the inner of the two inductions. *)
-  Definition bisim_aux (A : Type) (f : A -> V) (H_f : A -> V -> hProp) : (V -> hProp).
+(* First fix the first argument as set(A,f) and define bisim_aux : V -> hProp, by induction. This is the inner of the two inductions. *)
+transparent assert (bisim_aux : (forall (A : Type), (A -> V) -> (A -> V -> hProp) -> V -> hProp)).
+{ intros A f H_f.
   apply V_rect'_nd with
     (fun B g _ => hp ( (forall a, hexists (fun b => H_f a (g b)))
                       * forall b, hexists (fun a => H_f a (g b)) ) _
@@ -284,20 +285,19 @@ Proof.
   apply path_iff_hProp_uncurried; split; simpl.
   - intros [H1 H2]; split.
     + intro a. refine (minus1Trunc_ind _ (H1 a)).
-        intros [b H3]. generalize (fst eq_img b). apply minus1Trunc_map.
-          intros [b' p]. exists b'. exact (transport (fun x => H_f a x) p H3).
+      intros [b H3]. generalize (fst eq_img b). apply minus1Trunc_map.
+      intros [b' p]. exists b'. exact (transport (fun x => H_f a x) p H3).
     + intro b'. refine (minus1Trunc_ind _ (snd eq_img b')).
-        intros [b p]. generalize (H2 b). apply minus1Trunc_map.
-          intros [a H3]. exists a. exact (transport (fun x => H_f a x) p H3).
+      intros [b p]. generalize (H2 b). apply minus1Trunc_map.
+      intros [a H3]. exists a. exact (transport (fun x => H_f a x) p H3).
   - intros [H1 H2]; split.
     + intro a. refine (minus1Trunc_ind _ (H1 a)).
-        intros [b' H3]. generalize (snd eq_img b'). apply minus1Trunc_map.
-          intros [b p]. exists b. exact (transport (fun x => H_f a x) p^ H3).
+      intros [b' H3]. generalize (snd eq_img b'). apply minus1Trunc_map.
+      intros [b p]. exists b. exact (transport (fun x => H_f a x) p^ H3).
     + intro b. refine (minus1Trunc_ind _ (fst eq_img b)).
-        intros [b' p]. generalize (H2 b'). apply minus1Trunc_map.
-          intros [a H3]. exists a. exact (transport (fun x => H_f a x) p^ H3).
-  Defined.
-
+      intros [b' p]. generalize (H2 b'). apply minus1Trunc_map.
+      intros [a H3]. exists a. exact (transport (fun x => H_f a x) p^ H3).
+}
 (* Then define bisim : V -> (V -> hProp) by induction again *)
 refine (V_rect'_nd (V -> hProp) _ bisim_aux _).
 intros A B f g eq_img H_f H_g H_img.
@@ -307,20 +307,19 @@ intros C h _; simpl.
 apply path_iff_hProp_uncurried; split; simpl.
 - intros [H1 H2]; split.
   + intro b. refine (minus1Trunc_ind _ (snd H_img b)).
-      intros [a p]. generalize (H1 a). apply minus1Trunc_map.
-        intros [c H3]. exists c. exact ((ap10 p (h c)) # H3).
+    intros [a p]. generalize (H1 a). apply minus1Trunc_map.
+    intros [c H3]. exists c. exact ((ap10 p (h c)) # H3).
   + intro c. refine (minus1Trunc_ind _ (H2 c)).
-      intros [a H3]. generalize (fst H_img a). apply minus1Trunc_map.
-        intros [b p]. exists b. exact ((ap10 p (h c)) # H3).
+    intros [a H3]. generalize (fst H_img a). apply minus1Trunc_map.
+    intros [b p]. exists b. exact ((ap10 p (h c)) # H3).
 - intros [H1 H2]; split.
   + intro a. refine (minus1Trunc_ind _ (fst H_img a)).
-      intros [b p]. generalize (H1 b). apply minus1Trunc_map.
-        intros [c H3]. exists c. exact ((ap10 p^ (h c)) # H3).
+    intros [b p]. generalize (H1 b). apply minus1Trunc_map.
+    intros [c H3]. exists c. exact ((ap10 p^ (h c)) # H3).
   + intro c. refine (minus1Trunc_ind _ (H2 c)).
-      intros [b H3]. generalize (snd H_img b). apply minus1Trunc_map.
-        intros [a p]. exists a. exact ((ap10 p^ (h c)) # H3).
+    intros [b H3]. generalize (snd H_img b). apply minus1Trunc_map.
+    intros [a p]. exists a. exact ((ap10 p^ (h c)) # H3).
 Defined.
-
 
 Notation "u ~~ v" := (bisimulation u v)
   (at level 30) : set_scope.
