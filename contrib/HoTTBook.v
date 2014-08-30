@@ -972,6 +972,11 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 
 
 
+(* ================================================== lem:hedberg-helper *)
+(** Lemma 7.2.4 *)
+
+
+
 (* ================================================== thm:hedberg *)
 (** Theorem 7.2.5 *)
 
@@ -2241,3 +2246,6 @@ Definition Book_9_8_2 := @HoTT.categories.Structure.IdentityPrinciple.structure_
 
 (* ================================================== eg:surreal-addition *)
 (** Example 11.6.18 *)
+
+
+

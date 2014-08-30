@@ -192,6 +192,11 @@ Definition Book_1_10 := ack.
 
 (* concat_A1p? *)
 
+(* ================================================== ex:add-nat-commutative *)
+(** Exercise 1.16 *)
+
+
+
 (* ================================================== ex:basics:concat *)
 (** Exercise 2.1 *)
 
@@ -280,6 +285,42 @@ Definition Book_2_13 := @HoTT.Misc.equiv_bool_equiv_bool_bool.
 (* ================================================== ex:equiv-functor-set *)
 (** Exercise 3.1 *)
 
+(** The exercise is easy using UA, but we prefer a proof without UA, using
+two lemmas that may also be of interest *)
+
+Lemma retr_f_g_path_in_B {A B} (f : A -> B)  (g : B -> A) (alpha : Sect g f) (x y : B) (p : x = y) 
+      :  p = (alpha x) ^ @ (ap f (ap g p)) @ (alpha y).
+Proof.
+  intros.
+  destruct p.
+  simpl.
+  rewrite concat_p1.
+  rewrite concat_Vp.
+  exact 1.
+Defined. 
+
+Lemma retr_f_g_isHSet_A_so_B {A B} (f : A -> B)  (g : B -> A) 
+      : Sect g f -> IsHSet A -> IsHSet B.
+Proof.
+  intros retr_f_g isHSet_A. 
+  apply @hset_axiomK.
+  unfold axiomK.
+  intros x p.
+  assert (ap g p = 1) as g_p_is_1.
+  apply (axiomK_hset isHSet_A).
+  assert ((retr_f_g x) ^ @ (ap f (ap g p)) @ (retr_f_g x)   = 1) as rhs_is_1.
+  rewrite g_p_is_1. simpl. rewrite concat_p1. rewrite concat_Vp. exact 1.
+  rewrite (rhs_is_1 ^).
+  apply (retr_f_g_path_in_B f g retr_f_g).
+Defined.
+
+Lemma Book_3_1 {A B} : A <~> B -> IsHSet A -> IsHSet B.
+Proof.
+  intros equivalent_A_B isHSet_A.
+  elim equivalent_A_B. intro f. intro isequiv_f.
+  elim isequiv_f. intros g retr_f_g sect_f_g coherence.
+  apply (retr_f_g_isHSet_A_so_B f g); assumption.
+Defined. 
 
 
 (* ================================================== ex:isset-coprod *)
@@ -466,6 +507,11 @@ End Book_3_14.
 
 
 
+(* ================================================== ex:decidable-choice-strong *)
+(** Exercise 3.23 *)
+
+
+
 (* ================================================== ex:two-sided-adjoint-equivalences *)
 (** Exercise 4.1 *)
 
@@ -541,6 +587,16 @@ End Book_4_5.
 
 (* ================================================== ex:qinv-univalence *)
 (** Exercise 4.6 *)
+
+
+
+(* ================================================== ex:embedding-cancellable *)
+(** Exercise 4.7 *)
+
+
+
+(* ================================================== ex:cancellable-from-bool *)
+(** Exercise 4.8 *)
 
 
 
@@ -653,6 +709,36 @@ End Book_5_5.
 
 (* ================================================== ex:empty-inductive-type *)
 (** Exercise 5.11 *)
+
+
+
+(* ================================================== ex:Wprop *)
+(** Exercise 5.12 *)
+
+
+
+(* ================================================== ex:Wbounds *)
+(** Exercise 5.13 *)
+
+
+
+(* ================================================== ex:Wdec *)
+(** Exercise 5.14 *)
+
+
+
+(* ================================================== ex:Wbounds-loose *)
+(** Exercise 5.15 *)
+
+
+
+(* ================================================== ex:Wimpred *)
+(** Exercise 5.16 *)
+
+
+
+(* ================================================== ex:no-nullary-constructor *)
+(** Exercise 5.17 *)
 
 
 
@@ -771,7 +857,6 @@ Section Book_6_9.
   Qed.
 End Book_6_9.
 
-
 (* ================================================== ex:funext-from-interval *)
 (** Exercise 6.10 *)
 
@@ -784,6 +869,11 @@ End Book_6_9.
 
 (* ================================================== ex:alt-integers *)
 (** Exercise 6.12 *)
+
+
+
+(* ================================================== ex:trunc-bool-interval *)
+(** Exercise 6.13 *)
 
 
 
@@ -886,6 +976,11 @@ Definition Book_7_12 := @HoTT.Modality.ismodality_notnot.
 
 (* ================================================== ex:trunc-spokes-no-hub *)
 (** Exercise 7.15 *)
+
+
+
+(* ================================================== ex:s2-colim-unit-2 *)
+(** Exercise 7.16 *)
 
 
 
@@ -1069,6 +1164,26 @@ Definition Book_7_12 := @HoTT.Modality.ismodality_notnot.
 
 
 
+(* ================================================== ex:plump-ordinals *)
+(** Exercise 10.14 *)
+
+
+
+(* ================================================== ex:not-plump *)
+(** Exercise 10.15 *)
+
+
+
+(* ================================================== ex:plump-successor *)
+(** Exercise 10.16 *)
+
+
+
+(* ================================================== ex:ZF-algebras *)
+(** Exercise 10.17 *)
+
+
+
 (* ================================================== ex:alt-dedekind-reals *)
 (** Exercise 11.1 *)
 
@@ -1136,3 +1251,26 @@ Definition Book_7_12 := @HoTT.Modality.ismodality_notnot.
 
 (* ================================================== ex:knuth-surreal-check *)
 (** Exercise 11.14 *)
+
+
+
+(* ================================================== ex:reals-into-surreals *)
+(** Exercise 11.15 *)
+
+
+
+(* ================================================== ex:ord-into-surreals *)
+(** Exercise 11.16 *)
+
+
+
+(* ================================================== ex:hiit-plump *)
+(** Exercise 11.17 *)
+
+
+
+(* ================================================== ex:pseudo-ordinals *)
+(** Exercise 11.18 *)
+
+
+
