@@ -269,14 +269,11 @@ Notation "x ⊆ y" := (subset x y)
 
 
 (** ** Bisimulation relation *)
-
 (** The equality in V lives in Type@{U'}. We define the bisimulation relation which is a U-small resizing of the equality in V: it must live in hProp_U : Type{U'}, hence the codomain is hProp@{U'}. We then prove that bisimulation is equality (bisim_equals_id), then use it to prove the key lemma monic_set_present. *)
-(* We define bisimulation by double induction on V *)
-Definition bisimulation : V@{U' U} -> V@{U' U} -> hProp@{U'}.
+
+(* We define bisimulation by double induction on V. We first fix the first argument as set(A,f) and define bisim_aux : V -> hProp, by induction. This is the inner of the two inductions. *)
+Let bisim_aux (A : Type) (f : A -> V) (H_f : A -> V -> hProp) : V -> hProp.
 Proof.
-(* First fix the first argument as set(A,f) and define bisim_aux : V -> hProp, by induction. This is the inner of the two inductions. *)
-transparent assert (bisim_aux : (forall (A : Type), (A -> V) -> (A -> V -> hProp) -> V -> hProp)).
-{ intros A f H_f.
   apply V_rect'_nd with
     (fun B g _ => hp ( (forall a, hexists (fun b => H_f a (g b)))
                       * forall b, hexists (fun a => H_f a (g b)) ) _
@@ -298,34 +295,37 @@ transparent assert (bisim_aux : (forall (A : Type), (A -> V) -> (A -> V -> hProp
     + intro b. refine (minus1Trunc_ind _ (fst eq_img b)).
       intros [b' p]. generalize (H2 b'). apply minus1Trunc_map.
       intros [a H3]. exists a. exact (transport (fun x => H_f a x) p^ H3).
-}
-(* Then define bisim : V -> (V -> hProp) by induction again *)
-refine (V_rect'_nd (V -> hProp) _ bisim_aux _).
-intros A B f g eq_img H_f H_g H_img.
-apply path_forall.
-refine (V_rect_hprop _ _ _).
-intros C h _; simpl.
-apply path_iff_hProp_uncurried; split; simpl.
-- intros [H1 H2]; split.
-  + intro b. refine (minus1Trunc_ind _ (snd H_img b)).
-    intros [a p]. generalize (H1 a). apply minus1Trunc_map.
-    intros [c H3]. exists c. exact ((ap10 p (h c)) # H3).
-  + intro c. refine (minus1Trunc_ind _ (H2 c)).
-    intros [a H3]. generalize (fst H_img a). apply minus1Trunc_map.
-    intros [b p]. exists b. exact ((ap10 p (h c)) # H3).
-- intros [H1 H2]; split.
-  + intro a. refine (minus1Trunc_ind _ (fst H_img a)).
-    intros [b p]. generalize (H1 b). apply minus1Trunc_map.
-    intros [c H3]. exists c. exact ((ap10 p^ (h c)) # H3).
-  + intro c. refine (minus1Trunc_ind _ (H2 c)).
-    intros [b H3]. generalize (snd H_img b). apply minus1Trunc_map.
-    intros [a p]. exists a. exact ((ap10 p^ (h c)) # H3).
+Defined.
+
+(* Then we define bisim : V -> (V -> hProp) by induction again *)
+Definition bisimulation : V@{U' U} -> V@{U' U} -> hProp@{U'}.
+Proof.
+  refine (V_rect'_nd (V -> hProp) _ bisim_aux _).
+  intros A B f g eq_img H_f H_g H_img.
+  apply path_forall.
+  refine (V_rect_hprop _ _ _).
+  intros C h _; simpl.
+  apply path_iff_hProp_uncurried; split; simpl.
+  - intros [H1 H2]; split.
+    + intro b. refine (minus1Trunc_ind _ (snd H_img b)).
+      intros [a p]. generalize (H1 a). apply minus1Trunc_map.
+      intros [c H3]. exists c. exact ((ap10 p (h c)) # H3).
+    + intro c. refine (minus1Trunc_ind _ (H2 c)).
+      intros [a H3]. generalize (fst H_img a). apply minus1Trunc_map.
+      intros [b p]. exists b. exact ((ap10 p (h c)) # H3).
+  - intros [H1 H2]; split.
+    + intro a. refine (minus1Trunc_ind _ (fst H_img a)).
+      intros [b p]. generalize (H1 b). apply minus1Trunc_map.
+      intros [c H3]. exists c. exact ((ap10 p^ (h c)) # H3).
+    + intro c. refine (minus1Trunc_ind _ (H2 c)).
+      intros [b H3]. generalize (snd H_img b). apply minus1Trunc_map.
+      intros [a p]. exists a. exact ((ap10 p^ (h c)) # H3).
 Defined.
 
 Notation "u ~~ v" := (bisimulation u v)
   (at level 30) : set_scope.
 
-Lemma reflexive_bisim : forall u, u ~~ u.
+Instance reflexive_bisimulation : Reflexive bisimulation.
 Proof.
   refine (V_rect_hprop _ _ _).
   intros A f H_f; simpl. split.
@@ -333,11 +333,11 @@ Proof.
   - intro a; apply min1; exists a; auto.
 Defined.
 
-Lemma bisim_equals_id : forall u v : V, (u = v) = (u ~~ v).
+Lemma bisimulation_equals_id : forall u v : V, (u = v) = (u ~~ v).
 Proof.
   intros u v.
   apply path_iff_hprop_uncurried; split.
-  intro p; exact (transport (fun x => u ~~ x) p (reflexive_bisim u)).
+  intro p; exact (transport (fun x => u ~~ x) p (reflexive_bisimulation u)).
   generalize u v.
   refine (V_rect_hprop _ _ _); intros A f H_f.
   refine (V_rect_hprop _ _ _); intros B g _.
@@ -370,7 +370,7 @@ Proof.
   transparent assert (m : (C -> V)).
   { apply quotient_rect with f.
     intros x y H. path_via (f x). apply transport_const.
-    exact (transport (fun X => X) (bisim_equals_id (f x) (f y))^ H). }
+    exact (transport (fun X => X) (bisimulation_equals_id (f x) (f y))^ H). }
   exists m.
   split. split. split.
   - assumption.
@@ -383,7 +383,7 @@ Proof.
     { refine (quotient_rect _ _ _). intro a.
       refine (quotient_rect _ _ _). intros a' p p'.
       + apply related_classes_eq.
-        refine (transport (fun X => X) (bisim_equals_id _ _) _).
+        refine (transport (fun X => X) (bisimulation_equals_id _ _) _).
         path_via (m (e a)). path_via (m (e a')).
         exact (p @ p'^).
       + intros; apply allpath_hprop.
