@@ -1,5 +1,20 @@
 (** * Apply a lemma under binders *)
 Require Import Overture.
+(** There are some cases where [apply lem] will fail, but [intros; apply lem] will succeed.  The tactic [binder apply] is like [intros; apply lem], but it cleans up after itself by [revert]ing the things it introduced.  The tactic [binder apply lem in H] is to [binder apply lem], as [apply lem in H] is to [apply lem].  Note, however, that the implementation of [binder apply lem in H] is completely different and significantly more complicated. *)
+
+Ltac can_binder_apply apply_tac fail1_tac :=
+  first [ test apply_tac
+        | test (intro; can_binder_apply apply_tac fail1_tac)
+        | fail1_tac ].
+Ltac binder_apply apply_tac fail1_tac :=
+  can_binder_apply apply_tac fail1_tac;
+  first [ apply_tac
+        | let H := fresh in
+          intro H;
+            binder_apply apply_tac fail1_tac;
+            revert H
+        | fail 1 "Cannot re-revert some introduced hypothesis" ].
+
 
 Ltac make_tac_under_binders_using_in tac using_tac H :=
   let rec_tac := make_tac_under_binders_using_in tac using_tac in
@@ -46,8 +61,31 @@ Tactic Notation "binder" "eapply" open_constr(lem) "in" constr(H) "using" tactic
 Tactic Notation "constrbinder" "apply" constr(lem) "in" constr(H) := constrbinder apply lem in H using idtac.
 Tactic Notation "constrbinder" "eapply" open_constr(lem) "in" constr(H) := constrbinder eapply lem in H using idtac.
 
+Tactic Notation "binder" "apply" constr(lem) := binder_apply ltac:(apply lem) ltac:(fail 1 "Cannot apply" lem).
+Tactic Notation "binder" "eapply" open_constr(lem) := binder_apply binder_apply ltac:(eapply lem) ltac:(fail 1 "Cannot eapply" lem).
+
 Tactic Notation "binder" "apply" constr(lem) "in" constr(H) := binder apply lem in H using idtac.
 Tactic Notation "binder" "eapply" open_constr(lem) "in" constr(H) := binder eapply lem in H using idtac.
+
+Example basic_goal {A B C} (HA : forall x : A, B x) (HB : forall x : A, B x -> C x) : forall x : A, C x.
+Proof.
+  (** If we try to [apply HB], wanting to replace [C] with [B], we get an error about being unable to unify [B ?] with [A]. *)
+  Fail apply HB.
+  (** The tactic [binder apply] fixes this shortcoming. *)
+  binder apply HB.
+  exact HA.
+  (** We [Abort], so that we don't get an extra constant floating around. *)
+Abort.
+
+Example basic {A B C} (HA : forall x : A, B x) (HB : forall x : A, B x -> C x) : forall x : A, C x.
+Proof.
+  (** If we try to [apply HB in HA], wanting to replace [B] with [C], we get an error about being unable to instantiate the argument of type [A]: "Error: Unable to find an instance for the variable x." *)
+  Fail apply HB in HA.
+  (** The tactic [binder apply] fixes this shortcoming. *)
+  binder apply HB in HA.
+  exact HA.
+  (** We [Abort], so that we don't get an extra constant floating around. *)
+Abort.
 
 Example ex_funext `{Funext} {A} f g
         (H' : forall x y z w : A, f x y z w = g x y z w :> A)
