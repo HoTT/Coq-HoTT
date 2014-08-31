@@ -15,15 +15,15 @@ Section Reflective_Subuniverse.
 
   Record ReflectiveSubuniverse :=
     { 
-      (** a predicate U -> Prop *)
+      (** a predicate [U -> Prop] *)
       in_subuniverse : Type -> hProp ;
       (** we define the type of modal types *)
       SubuniverseType := {T : Type & (in_subuniverse) T} ;
-      (** for every type T, a type (O T) such that (in_subuniverse (O T)) *)
+      (** for every type [T], a type [O T] such that [in_subuniverse (O T)] *)
       to_O : Type -> SubuniverseType ; 
-      (** for every type T, a map A -> O T *)
+      (** for every type [T], a map [A -> O T] *)
       O_unit : forall T, T -> (to_O T).1; 
-      (** an equivalence ((O P)->Q) <~> (P -> Q) *)
+      (** an equivalence [((O P)->Q) <~> (P -> Q)] *)
       O_isequiv : forall (P : Type) (Q : SubuniverseType), 
                   IsEquiv (fun f : (to_O P).1 -> Q.1 => f o (@O_unit P)) 
     }.
@@ -37,7 +37,7 @@ Section Reflective_Subuniverse.
     : (subU.(O) P -> Q) <~> (P -> Q)
     := BuildEquiv _ _ (fun f => f o (O_unit subU P)) (O_isequiv subU P Q).
 
-  (** Some shortcuts to manipulate the above equivalence.  Here is a "recursor" for O. *)
+  (** Some shortcuts to manipulate the above equivalence.  Here is a "recursor" for [O]. *)
   Definition O_rec {subU} (P : Type) (Q : SubuniverseType subU)
     : (P -> Q) -> (subU.(O) P) -> Q
     := (O_equiv P Q)^-1.
@@ -81,7 +81,7 @@ Section Reflective_Subuniverse.
 
     Variable subU : ReflectiveSubuniverse.
 
-    (** The second component of subunivere_Type is unique *)
+    (** The second component of [subuniverse_Type] is unique *)
     Definition path_SubuniverseType
     : forall (T T' : SubuniverseType subU), T.1 = T'.1 -> T = T'.
     Proof.
@@ -156,7 +156,7 @@ Section Reflective_Subuniverse.
       intro T; symmetry; apply O_modal.
     Defined.
 
-    (** A little commutation property between O_rec and eta *)
+    (** A little commutation property between [O_rec] and [eta] *)
     
     Definition O_rec_O_unit (A : SubuniverseType subU) (B : Type)
                (f : B -> A) (x : (O subU B))
@@ -167,7 +167,7 @@ Section Reflective_Subuniverse.
                                    (O_unit subU A o u) x)
                    (inverse (O_rec_retr B A f)))^).
 
-    (** The universal property commutes with eta *)
+    (** The universal property commutes with [eta] *)
     
     Definition path_arrow_modal (A:Type) (B:SubuniverseType subU)
       (f g:(O subU A) -> B) (eta := O_unit subU A)
@@ -190,7 +190,7 @@ Section Reflective_Subuniverse.
 
   Section Functor.
 
-    (** In this section, we see that O is a functor. *)
+    (** In this section, we see that [O] is a functor. *)
     Variable subU : ReflectiveSubuniverse.
     
     Definition O_functor (A B : Type) (f : A -> B)
@@ -239,7 +239,7 @@ Section Reflective_Subuniverse.
 
     Variable subU : ReflectiveSubuniverse.
 
-    (** ** The Unit type *)
+    (** ** The [Unit] type *)
     Lemma in_subuniverse_unit : (subU.(in_subuniverse) Unit).
     Proof.
       apply O_unit_retract_modal with (mu := fun x:(subU.(O) Unit) => tt).
@@ -281,7 +281,7 @@ Section Reflective_Subuniverse.
       - exact (ap10 (O_rec_retr (A * B) B snd) (a,b)). 
     Qed.
 
-    (** We show that OA*OB has the same universal property as O(A*B) *)
+    (** We show that [OA*OB] has the same universal property as [O(A*B)] *)
     Lemma equiv_O_prod_rect (A B : Type) (C : SubuniverseType subU)
     : ((O subU A)*(O subU B) -> C) <~> (A * B -> C).
     Proof.
@@ -292,7 +292,7 @@ Section Reflective_Subuniverse.
       exact (O_equiv B C).
     Qed.
 
-    (** TODO : O(A*B) = OA * OB *)
+    (** TODO : [O(A*B) = OA * OB] *)
 
     (** ** Dependent sums *)
     (** Theorem 7.7.4 *)
