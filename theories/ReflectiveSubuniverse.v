@@ -133,10 +133,9 @@ Section Reflective_Subuniverse.
     Defined.
 
     Definition O_unit_isequiv_iff_modal (T:Type)
-    : IsEquiv (subU.(O_unit) T) = (subU.(in_subuniverse) T).
+    : IsEquiv (subU.(O_unit) T) <-> (subU.(in_subuniverse) T).
     Proof.
-      apply path_universe_uncurried.
-      apply equiv_iff_hprop.
+      split.
       - intros e.
         apply (ReflectiveSubuniverse_transport (O subU T)).
         * apply equiv_inverse.
@@ -148,7 +147,7 @@ Section Reflective_Subuniverse.
     (* Hence, a type is modal if its unit admits a retraction. *)
     Definition O_unit_retract_modal (T:Type) (mu : (subU.(O) T) -> T) (eta := subU.(O_unit) T) (iss : Sect eta mu)
     : subU.(in_subuniverse) T
-    := transport (fun X => X) (O_unit_isequiv_iff_modal T) (O_unit_retract_isequiv T mu iss).
+    := fst (O_unit_isequiv_iff_modal T) (O_unit_retract_isequiv T mu iss).
 
     (** The modality is idempotent *)
     Definition O_idempotent
