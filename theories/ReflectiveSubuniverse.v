@@ -336,36 +336,18 @@ Section Reflective_Subuniverse.
 
     (** ** Paths *)
 
-    Definition paths_subuniverse_fun (S:SubuniverseType subU) (x y:S)
-    : (O subU (x=y)) -> x=y.
-      intros u.
-      assert (p : (fun _:(O subU (x=y)) => x) = (fun _=> y)). 
-      apply (equiv_inv (IsEquiv := isequiv_ap (H:=O_isequiv subU (x=y) S) (fun _ : (O subU (x = y))  => x) (fun _ : (O subU (x = y))  => y))).
-      apply path_forall; intro v. exact v.
-      exact (ap10 p u).
-    Defined.
-
-    Definition paths_subuniverse (S:SubuniverseType subU) (x y:S)
+    Definition in_subuniverse_paths (S:SubuniverseType subU) (x y:S)
     : (in_subuniverse subU (x=y)).
-      rewrite <- O_unit_isequiv_iff_modal.
-      apply O_unit_retract_isequiv with (mu := paths_subuniverse_fun S x y).
-      intro u.
-      etransitivity.
-      exact ((ap_ap10_L
-                ((fun _ : (O subU (x = y))  => x))
-                ((fun _ : (O subU (x = y))  => y))
-                (O_unit subU (x = y))
-                (equiv_inv (IsEquiv := isequiv_ap (H:=O_isequiv subU (x=y) S)
-                                                  (fun _ : (O subU (x = y))  => x)
-                                                  (fun _ : (O subU (x = y))  => y))
-                           (path_forall
-                              ((fun _ : (O subU (x = y))  => x) o O_unit subU (x = y))
-                              ((fun _ : (O subU (x = y))  => y) o O_unit subU (x = y))
-                              idmap))
-                u)^).
-      rewrite eisretr.
-      unfold path_forall, ap10.
-      rewrite eisretr. exact idpath.
+    Proof.
+      refine (O_unit_retract_modal subU _ _ _); intro u.
+      - assert (p : (fun _:(O subU (x=y)) => x) = (fun _=> y)). 
+        { apply ((equiv_ap (O_equiv (x=y) S) _ _)^-1).
+          apply path_arrow; intro v. exact v. }
+        exact (ap10 p u).
+      - hnf.
+        rewrite <- ap_ap10_L.
+        rewrite eisretr. 
+        rewrite ap10_path_arrow; reflexivity.
     Qed.
     
   End Types.
