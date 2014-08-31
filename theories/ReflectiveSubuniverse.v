@@ -30,7 +30,7 @@ Section Reflective_Subuniverse.
 
   Local Notation O := to_O.
 
-  Coercion SubuniverseType_pr1 subU (T:SubuniverseType subU) := @pr1 Type subU.(subuniverse_HProp) T.
+  Coercion SubuniverseType_pr1 subU (T:SubuniverseType subU) := @pr1 Type subU.(in_subuniverse) T.
 
   (** The equivalence arising from [O_isequiv] *)
   Definition O_equiv {subU} (P : Type) (Q : SubuniverseType subU)
