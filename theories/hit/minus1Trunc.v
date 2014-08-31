@@ -1,6 +1,7 @@
 (** * (-1)-truncation *)
 
 Require Import Overture HProp EquivalenceVarieties Contractible Equivalences types.Unit.
+Require Import HProp Fibrations.
 Open Local Scope path_scope.
 (** The definition of [minus1Trunc], the (-1)-truncation.  Here is what
    it would look like if Coq supported higher inductive types natively:
@@ -108,8 +109,6 @@ Proof.
     by apply contr_inhabited_hprop.
   intros. eapply allpath_hprop.
 Defined.
-
-Require Import HProp Fibrations.
 
 (** ** "Epi" and "mono" implies equivalence. *)
 
