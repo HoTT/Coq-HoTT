@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-(** ** The cumulative hierarchy [V]. *)
+(** * The cumulative hierarchy [V]. *)
 
 Require Import Overture PathGroupoids HProp Trunc Fibrations Equivalences EquivalenceVarieties UnivalenceImpliesFunext.
 Require Import types.Unit types.Bool types.Universe types.Sigma types.Arrow types.Forall.
@@ -11,7 +11,7 @@ Local Open Scope equiv_scope.
 
 (** ** Pushout with respect to a relation *)
 
-(** This could be implemented using the pushouts in /hit/Pushout.v, where f and g are (fst o pr1) and (snd o pr1), with domain {(a,b) : A * B & R a b}. However, these pushouts weren't implemented when I started this work, and doing it this way is closer to exercise 10.11 of the HoTT book *)
+(** This could be implemented using the pushouts in /hit/Pushout.v, where [f] and [g] are [(fst o pr1)] and [(snd o pr1)], with domain {(a,b) : A * B & R a b}. However, these pushouts weren't implemented when I started this work, and doing it this way is closer to exercise 10.11 of the HoTT book *)
 
 Module Export RPushout.
 
@@ -39,7 +39,7 @@ apD (RPushout_rect P i j gl) (glue R a b r) = gl a b r.
 
 End RPushout.
 
-(* The non-depentent eliminator *)
+(** The non-depentent eliminator *)
 
 Definition RPushout_rect_nd {A B : Type} (R : A -> B -> hProp)
   (P : Type) (i : A -> P) (j : B -> P)
@@ -79,33 +79,38 @@ set (h o (inL R)) = set (h o (inR R)).
 
 Axiom is0trunc_V : IsTrunc 0 V.
 
-Definition V_rect (P : V -> Type)
+Fixpoint V_rect (P : V -> Type)
   (H_0trunc : forall v : V, IsTrunc 0 (P v))
   (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
   (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
     (h : RPushout R -> V) (H_h : forall x : RPushout R, P (h x)),
     (setext R bitot_R h) # (H_set A (h o inL R) (H_h oD inL R))
       = H_set B (h o inR R) (H_h oD inR R) )
-: forall v : V, P v
-:= fix F (v : V) :=
-     (match v with
-      | set A f => fun _ _ => H_set A f (fun a => F (f a))
-     end) H_setext H_0trunc.
+  (v : V)
+: P v
+:= (match v with
+     | set A f => fun _ _ => H_set A f (fun a => V_rect P H_0trunc H_set H_setext (f a))
+    end) H_setext H_0trunc.
 
-Axiom V_comp_setext : forall (P : V -> Type)
-  (H_0trunc : forall v : V, IsTrunc 0 (P v))
-  (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
-  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
-    (h : RPushout R -> V) (H_h : forall x : RPushout R, P (h x)),
-    (setext R bitot_R h) # (H_set A (h o inL R) (H_h oD inL R))
-      = H_set B (h o inR R) (H_h oD inR R) )
-  (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R) (h : RPushout R -> V),
-apD (V_rect P H_0trunc H_set H_setext) (setext R bitot_R h)
-= H_setext A B R bitot_R h ((V_rect P H_0trunc H_set H_setext) oD h).
+(** We don't need to axiomatize the computation rule because we get it for free thanks to 0-truncation *)
 
 End CumulativeHierarchy.
 
-(* The non-dependent eliminator *)
+Definition V_comp_setext (P : V -> Type)
+  (H_0trunc : forall v : V, IsTrunc 0 (P v))
+  (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
+  (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
+    (h : RPushout R -> V) (H_h : forall x : RPushout R, P (h x)),
+    (setext R bitot_R h) # (H_set A (h o inL R) (H_h oD inL R))
+      = H_set B (h o inR R) (H_h oD inR R) )
+  (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R) (h : RPushout R -> V)
+: apD (V_rect P H_0trunc H_set H_setext) (setext R bitot_R h)
+  = H_setext A B R bitot_R h ((V_rect P H_0trunc H_set H_setext) oD h).
+Proof.
+  apply allpath_hprop.
+Defined.
+
+(** The non-dependent eliminator *)
 
 Definition V_rect_nd (P : Type)
   (H_0trunc : IsTrunc 0 P)
@@ -129,10 +134,7 @@ Definition V_comp_nd_setext (P : Type)
 : ap (V_rect_nd P H_0trunc H_set H_setext) (setext R bitot_R h)
   = H_setext A B R bitot_R h ((V_rect_nd P H_0trunc H_set H_setext) o h).
 Proof.
-  apply (cancelL (transport_const (setext R bitot_R h) _)).
-  path_via (apD (V_rect_nd P H_0trunc H_set H_setext) (setext R bitot_R h)).
-  symmetry; apply (apD_const (V_rect_nd P H_0trunc H_set H_setext)).
-  apply (V_comp_setext (fun _ => P)).
+  apply allpath_hprop.
 Defined.
 
 
@@ -142,7 +144,7 @@ Definition equal_img {A B C : Type} (f : A -> C) (g : B -> C) :=
    (forall a : A, hexists (fun (b : B) => f a = g b))
  * (forall b : B, hexists (fun (a : A) => f a = g b)).
 
-Let setext' {A B : Type} (f : A -> V) (g : B -> V) (eq_img : equal_img f g)
+Definition setext' {A B : Type} (f : A -> V) (g : B -> V) (eq_img : equal_img f g)
 : set f = set g.
 Proof.
   pose (R := fun a b => hp (f a = g b) _).
@@ -173,7 +175,6 @@ Proof.
       intros [a r]. exists a. exact (ap H_h (glue R _ _ r)).
 Defined.
 
-(* We might also want to prove the associated computation rules *)
 (** Note that the hypothesis H_setext' differs from the one given in section 10.5 of the HoTT book. *)
 Definition V_rect' (P : V -> Type)
   (H_0trunc : forall v : V, IsTrunc 0 (P v))
@@ -272,7 +273,7 @@ Notation "x ⊆ y" := (subset x y)
 (** The equality in V lives in Type@{U'}. We define the bisimulation relation which is a U-small resizing of the equality in V: it must live in hProp_U : Type{U'}, hence the codomain is hProp@{U'}. We then prove that bisimulation is equality (bisim_equals_id), then use it to prove the key lemma monic_set_present. *)
 
 (* We define bisimulation by double induction on V. We first fix the first argument as set(A,f) and define bisim_aux : V -> hProp, by induction. This is the inner of the two inductions. *)
-Let bisim_aux (A : Type) (f : A -> V) (H_f : A -> V -> hProp) : V -> hProp.
+Local Definition bisim_aux (A : Type) (f : A -> V) (H_f : A -> V -> hProp) : V -> hProp.
 Proof.
   apply V_rect'_nd with
     (fun B g _ => hp ( (forall a, hexists (fun b => H_f a (g b)))

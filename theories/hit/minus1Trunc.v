@@ -1,6 +1,6 @@
 (** * (-1)-truncation *)
 
-Require Import Overture HProp HSet Fibrations EquivalenceVarieties Contractible Equivalences types.Unit.
+Require Import Overture HProp HSet Fibrations EquivalenceVarieties Contractible Equivalences types.Unit types.Sigma.
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
 (** The definition of [minus1Trunc], the (-1)-truncation.  Here is what
@@ -97,7 +97,7 @@ Proof.
   intro a. apply allpath_hprop.
 Defined.
 
-(* Weaker form: if [A] is a proposition, you can remove the truncation *)
+(** Weaker form: if [A] is a proposition, you can remove the truncation *)
 Lemma untrunc_hprop {A : Type} : (IsHProp A) -> (minus1Trunc A) -> A.
 Proof.
   intro.
