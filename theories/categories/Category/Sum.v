@@ -12,10 +12,10 @@ Section internals.
   Variable D : PreCategory.
 
   Definition sum_morphism (s d : C + D) : Type
-    := match (s, d) with
-         | (inl s, inl d) => morphism C s d
-         | (inr s, inr d) => morphism D s d
-         | _ => Empty
+    := match s, d with
+         | inl s, inl d => morphism C s d
+         | inr s, inr d => morphism D s d
+         | _, _ => Empty
        end.
 
   Global Arguments sum_morphism _ _ / .
