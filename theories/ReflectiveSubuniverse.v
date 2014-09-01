@@ -104,9 +104,7 @@ Section Reflective_Subuniverse.
         apply (ap (fun g => eta o g)).
         exact (path_forall _ _ H).
         apply ap10.
-        apply (equiv_inv (IsEquiv := isequiv_ap (H := O_isequiv subU T (O subU T))
-                                                (eta o mu)
-                                                idmap )).
+        apply ((ap (O_equiv T (O subU T)))^-1); simpl.
         exact X.
       - exact H.
     Defined.
@@ -181,9 +179,8 @@ Section Reflective_Subuniverse.
       intros a.
       refine ((ap_ap10_L _ _ eta (path_arrow_modal A B f g pi) a) ^ @ _).
       apply (ap (fun h => ap10 h a)).
-      exact (@eisretr _ _ (ap (fun h : O subU A -> B => h o eta))
-        (@isequiv_ap _ _ _ (O_isequiv subU A B) f g)
-        pi).
+      unfold path_arrow_modal, equiv_inj.
+      apply eisretr.
     Qed.
 
   End Basic_facts.
@@ -340,7 +337,7 @@ Section Reflective_Subuniverse.
     Proof.
       refine (O_unit_retract_modal subU _ _ _); intro u.
       - assert (p : (fun _:(O subU (x=y)) => x) = (fun _=> y)). 
-        { apply ((equiv_ap (O_equiv (x=y) S) _ _)^-1).
+        { apply ((ap (O_equiv (x=y) S))^-1).
           apply path_arrow; intro v. exact v. }
         exact (ap10 p u).
       - hnf.
