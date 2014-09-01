@@ -89,13 +89,3 @@ Lemma trans_trans_opp2 {A : Type} {P : A -> Type} {x y : A} {p q : x = y}
 Proof.
   path_induction.
 Defined. *)
-
-(** Transporting in a sigT of paths. *)
-
-Lemma trans_paths A B (f g : A -> B) (x y : A) (p : x = y) (q : f x = g x) :
-  transport (fun a => f a = g a) p q
-  =
-  (ap f p)^ @ q @ ap g p.
-Proof.
-  path_induction. hott_simpl.
-Defined.
