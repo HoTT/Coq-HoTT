@@ -250,10 +250,10 @@ Proof.
   intros A B f g eqimg _ _ _. apply path_iff_hProp_uncurried; split; simpl.
   - intro H. refine (minus1Trunc_ind _ H).
     intros [a p]. generalize (fst eqimg a). apply minus1Trunc_map.
-    intros [b p']. exists b. path_via (f a).
+    intros [b p']. exists b. transitivity (f a); auto with path_hints.
   - intro H. refine (minus1Trunc_ind _ H).
     intros [b p]. generalize (snd eqimg b). apply minus1Trunc_map.
-    intros [a p']. exists a. path_via (g b).
+    intros [a p']. exists a. transitivity (g b); auto with path_hints.
 Defined.
 
 Notation "x ∈ v" := (mem x v)
@@ -385,7 +385,7 @@ Proof.
       refine (quotient_rect _ _ _). intros a' p p'.
       + apply related_classes_eq.
         refine (transport (fun X => X) (bisimulation_equals_id _ _) _).
-        path_via (m (e a)). path_via (m (e a')).
+        transitivity (m (e a)); auto with path_hints. transitivity (m (e a')); auto with path_hints.
         exact (p @ p'^).
       + intros; apply allpath_hprop.
       + intros; apply allpath_hprop. }
@@ -736,7 +736,7 @@ Proof.
       generalize (transport (fun z => [x, y] ∈ z) p_phi^ Hy). apply minus1Trunc_ind. intros [a p].
       generalize (transport (fun z => [x, y'] ∈ z) p_phi^ Hy'). apply minus1Trunc_ind. intros [a' p'].
       destruct (fst path_pair_ord p) as (px, py). destruct (fst path_pair_ord p') as (px', py').
-      path_via (func_of_members (h a)). path_via (func_of_members (h a')).
+      transitivity (func_of_members (h a)); auto with path_hints. transitivity (func_of_members (h a')); auto with path_hints.
       refine (ap func_of_members _). refine (ap h _).
       apply (is_mono_isinj func_of_members is_mono_funcofmembers a a' (px @ px'^)).
   - intros ((H1, H2), H3). simpl.
@@ -755,7 +755,7 @@ Proof.
       exact (transport (fun w => w ∈ phi) Ha (pr2 (h a))).
     + intros z Hz. simpl.
       generalize (H1 z Hz). apply minus1Trunc_map. intros [(a,b) p]. simpl in p.
-      exists a. path_via ([func_of_members a, func_of_members b]).
+      exists a. transitivity ([func_of_members a, func_of_members b]); auto with path_hints.
       apply path_pair_ord. split. reflexivity.
       apply H3 with (func_of_members a). split.
       exact (pr2 (h a)).
@@ -771,7 +771,7 @@ Proof.
     intros [a p]. exists (f a). split. apply min1; exists a; auto. assumption.
   - apply minus1Trunc_ind.
     intros [z [h p]]. generalize h. apply minus1Trunc_map.
-    intros [a p']. exists a. path_via (r z). exact (ap r p').
+    intros [a p']. exists a. transitivity (r z); auto with path_hints. exact (ap r p').
 Qed.
 
 Lemma separation (C : V -> hProp) : forall a : V,

@@ -113,7 +113,7 @@ apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
   try assumption.
  intros [x p]. set (p0:=apD10 ep x).
  transitivity (g (f x)). by apply ap.
- path_via (h (f x)). by apply ap.
+ transitivity (h (f x)); auto with path_hints. by apply ap.
 intros. by apply @set_path2.
 Qed.
 

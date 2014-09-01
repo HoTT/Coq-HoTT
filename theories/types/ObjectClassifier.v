@@ -100,10 +100,10 @@ Theorem transport_exp (U V:Type)(w:U<~>V): forall (f:U->A),
 set (p:=equiv_induction (fun (U:Type) (V:Type) w => forall f : U -> A,
  (@transport _ (fun I : Type => I -> A) U V (path_universe w) f) = (exp w f))).
 apply p.
-intros T f. path_via f.
-path_via (@transport _ (fun I : Type => I -> A) _ _
-  (path_universe (equiv_path _ _ (idpath T) )) f).
-path_via (@transport Type (fun I : Type => I -> A) T T (idpath T) f ).
+intros T f. transitivity f; auto with path_hints.
+transitivity (@transport _ (fun I : Type => I -> A) _ _
+  (path_universe (equiv_path _ _ (idpath T) )) f); auto with path_hints.
+transitivity (@transport Type (fun I : Type => I -> A) T T (idpath T) f ); auto with path_hints.
 apply (@transport2 Type (fun I:Type => I-> A) T T).
 apply eta_path_universe.
 Qed.

@@ -408,9 +408,6 @@ Hint Resolve
 
 Hint Resolve @idpath : core.
 
-Ltac path_via mid :=
-  transitivity mid; auto with path_hints.
-
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
 (** HoTT/coq is broken and somehow interprets [Type1] as [Prop] with regard to elimination schemes. *)
 Unset Elimination Schemes.

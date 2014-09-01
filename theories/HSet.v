@@ -83,7 +83,7 @@ Proof.
   destruct q as [q | q'].
     intro qp0; apply (cancelL q). transitivity (transport _ p q).
       symmetry; apply transport_paths_r.
-      path_via q. apply @inl_injective with (B := (~ x = x)).
+      transitivity q; auto with path_hints. apply @inl_injective with (B := (~ x = x)).
       exact ((ap_transport p (fun y => @inl (x = y) (~x = y)) q) @ qp0).
   induction (q' p).
 Defined.

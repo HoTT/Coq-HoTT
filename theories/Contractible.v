@@ -19,7 +19,7 @@ Definition path2_contr `{Contr A} {x y : A} (p q : x = y) : p = q.
 Proof.
   assert (K : forall (r : x = y), r = path_contr x y).
     intro r; destruct r; symmetry; now apply concat_Vp.
-  path_via (path_contr x y).
+  transitivity (path_contr x y); auto with path_hints.
 Defined.
 
 (** It follows that any space of paths in a contractible space is contractible. *)
