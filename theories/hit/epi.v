@@ -1,5 +1,5 @@
 Require Import Overture hit.minus1Trunc HProp Misc TruncType types.Universe Equivalences Trunc HSet types.Unit UnivalenceImpliesFunext.
-Require Import TruncType hit.Pushout hit.Truncations types.Forall types.Sigma Contractible PathGroupoids types.Paths.
+Require Import TruncType hit.Pushout hit.Truncations types.Forall types.Arrow types.Sigma Contractible PathGroupoids types.Paths.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
@@ -81,7 +81,7 @@ Section cones.
     assert (X : l = r) by (pose (hepi {| setT := cone f |} (truncation_incl o push o inl)); apply path_contr).
     subst l r.
 
-    pose (I0 b := apD10 (X ..1) b).
+    pose (I0 b := ap10 (X ..1) b).
     refine (Truncation_rect _ _).
     pose (fun a : B + Unit => (match a as a return cone_point _ = truncation_incl (push a) with
                                  | inl a' => (I0 a')^
@@ -93,11 +93,11 @@ Section cones.
     unfold cone_point.
     subst I0. simpl.
     pose (X..2) as p. simpl in p. rewrite transport_precompose in p.
-    assert (H':=concat (ap (fun x => apD10 x a) p) (apD10_ap_postcompose truncation_incl _ _ (path_forall pushl pushr pp) _)).
-    rewrite (apD10_path_forall _ _ _ a) in H'.
+    assert (H':=concat (ap (fun x => ap10 x a) p) (ap10_ap_postcompose truncation_incl (path_arrow pushl pushr pp) _)).
+    rewrite ap10_path_arrow in H'.
     clear p.
     (** Apparently [pose; clearbody] is only ~.8 seconds, while [pose proof] is ~4 seconds? *)
-    pose (concat (apD10_ap_precompose f _ _ (X ..1) a)^ H') as p.
+    pose (concat (ap10_ap_precompose f (X ..1) a)^ H') as p.
     clearbody p.
     simpl in p.
     rewrite p.

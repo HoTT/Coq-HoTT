@@ -541,18 +541,26 @@ Definition ap10_V {A B} {f g : A->B} (h : f = g) (x:A)
   : ap10 (h^) x = (ap10 h x)^
 := apD10_V h x.
 
-(** [ap10] also behaves nicely on paths produced by [ap] *)
-Lemma ap_ap10 {A B C} (f g : A -> B) (h : B -> C)
-  (p : f = g) (a : A) :
-  ap h (ap10 p a) = ap10 (ap (fun f' => h o f') p) a.
+(** [apD10] and [ap10] also behave nicely on paths produced by [ap] *)
+Definition apD10_ap_precompose {A B C} (f : A -> B) {g g' : forall x:B, C x} (p : g = g') a
+: apD10 (ap (fun h : forall x:B, C x => h oD f) p) a = apD10 p (f a).
 Proof.
-  destruct p. exact 1.
+  destruct p; reflexivity.
 Defined.
 
-Lemma ap_ap10_L {A B C} (g h : A -> B) (f : C -> A) (p : g = h) (a : C) : ap10 (ap (fun f0 => f0 o f) p) a = ap10 p (f a).
+Definition ap10_ap_precompose {A B C} (f : A -> B) {g g' : B -> C} (p : g = g') a
+: ap10 (ap (fun h : B -> C => h o f) p) a = ap10 p (f a)
+:= apD10_ap_precompose f p a.
+
+Definition apD10_ap_postcompose {A B C} (f : forall x, B x -> C) {g g' : forall x:A, B x} (p : g = g') a
+: apD10 (ap (fun h : forall x:A, B x => fun x => f x (h x)) p) a = ap (f a) (apD10 p a).
 Proof.
-  destruct p. exact idpath.
+  destruct p; reflexivity.
 Defined.
+
+Definition ap10_ap_postcompose {A B C} (f : B -> C) {g g' : A -> B} (p : g = g') a
+: ap10 (ap (fun h : A -> B => f o h) p) a = ap f (ap10 p a)
+:= apD10_ap_postcompose (fun a => f) p a.
 
 (** *** Transport and the groupoid structure of paths *)
 
@@ -671,18 +679,6 @@ Defined.
 Lemma transport_precompose {A B C} (f : A -> B) (g g' : B -> C) (p : g = g')
 : transport (fun h : B -> C => g o f = h o f) p 1 =
   ap (fun h => h o f) p.
-Proof.
-  destruct p; reflexivity.
-Defined.
-
-Lemma apD10_ap_precompose {A B C} (f : A -> B) (g g' : B -> C) (p : g = g') a
-: apD10 (ap (fun h : B -> C => h o f) p) a = apD10 p (f a).
-Proof.
-  destruct p; reflexivity.
-Defined.
-
-Lemma apD10_ap_postcompose {A B C} (f : B -> C) (g g' : A -> B) (p : g = g') a
-: apD10 (ap (fun h : A -> B => f o h) p) a = ap f (apD10 p a).
 Proof.
   destruct p; reflexivity.
 Defined.
