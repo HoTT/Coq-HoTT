@@ -367,6 +367,11 @@ Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_inst
 (** There is a canonical function to a contractible type. *)
 Notation "!" := (fun _ => center _).
 
+(** *** Truncated relations  *)
+
+(** Hprop-valued relations *)
+Notation is_mere_relation R := (forall x y, IsHProp (R x y)).
+
 (** *** Function extensionality *)
 
 (** The function extensionality axiom is formulated as a class. To use it in a theorem, just assume it with [`{Funext}], and then you can use [path_forall], defined below.  If you need function extensionality for a whole development, you can assume it for an entire Section with [Context `{Funext}].  *)

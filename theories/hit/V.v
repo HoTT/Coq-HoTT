@@ -355,7 +355,7 @@ Defined.
 
 (** Using the regular kernel (with = instead of ~~) also works, but this seems to be a Coq bug, it should lead to a universe inconsistency in the monic_set_present lemma later. This version is the right way to do it. *)
 Definition ker_bisim {A} (f : A -> V) (x y : A) := (f x ~~ f y).
-Lemma setrel_ker_bisim {A} (f : A -> V) : setrel (ker_bisim f).
+Lemma ismere_ker_bisim {A} (f : A -> V) : is_mere_relation (ker_bisim f).
 Proof.
   intros x y. apply _.
 Defined.
@@ -363,10 +363,10 @@ Defined.
 Lemma inj_surj_factor_V {A : Type} (f : A -> V)
 : exists (C : Type) (e : A -> C) (m : C -> V), IsHSet C * is_epi e * is_mono m * (f = m o e).
 Proof.
-  pose (C := quotient (setrel_ker_bisim f)).
+  pose (C := quotient (ker_bisim f)).
   assert (IsHSet C) by (unfold C; apply _).
   exists C.
-  pose (e := class_of (setrel_ker_bisim f)).
+  pose (e := class_of (ker_bisim f)).
   exists e.
   transparent assert (m : (C -> V)).
   { apply quotient_rect with f.
@@ -375,14 +375,14 @@ Proof.
   exists m.
   split. split. split.
   - assumption.
-  - unfold is_epi. refine (quotient_rect _ _ _).
+  - unfold is_epi. refine (quotient_rect (ker_bisim f) _ _ _).
     intro a; apply min1; exists a. exact 1.
     intros x y H. apply allpath_hprop.
   - unfold is_mono. intro u.
     apply hprop_allpath.
     assert (H : forall (x y : C) (p : m x = u) (p' : m y = u), x = y).
-    { refine (quotient_rect _ _ _). intro a.
-      refine (quotient_rect _ _ _). intros a' p p'.
+    { refine (quotient_rect (ker_bisim f) _ _ _). intro a.
+      refine (quotient_rect (ker_bisim f) _ _ _). intros a' p p'.
       + apply related_classes_eq.
         refine (transport (fun X => X) (bisimulation_equals_id _ _) _).
         path_via (m (e a)). path_via (m (e a')).
