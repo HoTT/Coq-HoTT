@@ -33,9 +33,6 @@ We do not require [R] to be an equivalence relation, but implicitly consider its
 Private Inductive quotient {sR: is_mere_relation R} : Type :=
   | class_of : A -> quotient.
 
-(* For the rest of the section, we instantiate that parameter to the one in the context. *)
-Let quotient := @quotient sR.
-
 (* The path constructors. *)
 Axiom related_classes_eq : forall {x y : A}, R x y ->
  class_of x = class_of y.
@@ -43,7 +40,7 @@ Axiom related_classes_eq : forall {x y : A}, R x y ->
 Axiom quotient_set : IsHSet quotient.
 Global Existing Instance quotient_set.
 
-Definition quotient_rect (P : quotient -> Type):
+Definition quotient_rect (P : @quotient sR -> Type):
   forall dclass : forall x, P (class_of x),
   forall dequiv : (forall x y (H : R x y),
            transport _ (related_classes_eq H) (dclass x) = dclass y),
