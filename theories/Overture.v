@@ -488,6 +488,13 @@ Ltac expand :=
       let X' := eval hnf in X in let Y' := eval hnf in Y in change (X' == Y')
   end; simpl.
 
+(** Test if a tactic succeeds, but always roll-back the results *)
+Tactic Notation "test" tactic3(tac) :=
+  try (first [ tac | fail 2 tac "does not succeed" ]; fail tac "succeeds"; [](* test for [t] solved all goals *)).
+
+(** [not tac] is equivalent to [fail tac "succeeds"] if [tac] succeeds, and is equivalent to [idtac] if [tac] fails *)
+Tactic Notation "not" tactic3(tac) := try ((test tac); fail 1 tac "succeeds").
+
 (** [atomic x] is the same as [idtac] if [x] is a variable or hypothesis, but is [fail 0] if [x] has internal structure. *)
 Ltac atomic x :=
   idtac;
