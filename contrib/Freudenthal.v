@@ -106,7 +106,7 @@ Proof.
     apply Truncation_rect. intros ?; apply trunc_succ.
     intros [x r]; simpl.
     unfold functor_sigma; simpl.
-    apply symmetry. refine (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r).
+    symmetry. refine (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r).
   unfold FST_Codes_cross_x0.
   apply isequiv_functor_Truncation, @isequiv_functor_sigma. refine _.
   intros a. apply isequiv_cancelR.
@@ -173,7 +173,7 @@ Definition FST_Codes_transportD_concrete (x1 : X) (p : No = No)
 Proof.
   intro rr. assert (goal' : FST_Codes So (p @ mer x1)).
     apply (FST_Codes_cross x1).
-    refine (transport FST_Codes_No _ rr). apply symmetry, concat_pp_V.
+    refine (transport FST_Codes_No _ rr). symmetry; apply concat_pp_V.
   refine (transport FST_Codes_So _ goal').
   apply inverse, transport_paths_r.
 Defined.

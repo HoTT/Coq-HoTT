@@ -36,7 +36,7 @@ Proof.
   set (nh := isconnected_elim (Truncation n A) (@truncation_incl n A)).
   exists (nh .1).
   apply Truncation_rect. apply trunc_succ.
-  intros; apply symmetry, (nh .2).
+  intros; symmetry; apply (nh .2).
 Defined.
 
 Global Instance isconnected_from_iscontr_truncation {n} {A} `{Contr (Truncation n A)}
@@ -45,7 +45,7 @@ Proof.
   intros C ? f.
   set (ff := Truncation_rect_nondep f).
   exists (ff (center _)).
-  intros a. apply symmetry, (ap ff (contr (truncation_incl _))).
+  intros a. symmetry; apply (ap ff (contr (truncation_incl _))).
 Defined.
 
 (** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against truncated types.  We use the former; the equivalence with the latter is given below in [conn_map_elim], [conn_map_comp], and [conn_map_from_extension_elim]. *)
@@ -113,7 +113,7 @@ Proof.
   apply (functor_forall idmap). intros x.
   apply (compose (B := (p (f x))^ @ (ext .2 x) = (ext' .2 x))).
     apply concat.
-    path_via ((apD10 (path_forall _ _ p) (f x))^ @ ext .2 x).
+    transitivity ((apD10 (path_forall _ _ p) (f x))^ @ ext .2 x).
     assert (transp_extension : forall p : ext .1 = ext' .1,
       (transport (fun (s : forall y : B, P y) => forall x : A, s (f x) = d x)
         p (ext .2) x
@@ -190,7 +190,7 @@ Proof.
           : forall a:A, P (f a)).
   set (e := Hf P _ dP).
   exists (e .1 b 1).
-  intros [a p]. apply symmetry. path_via (e .1 (f a) p).
+  intros [a p]. symmetry. transitivity (e .1 (f a) p).
     2: exact (ap10 (e.2 a) p).
   (* TODO: Can the following be simplified? A version of [ap] for binary functions would be one approach. *)
   set (e1 := fun (bb : {b':B & b' = b}) => (e.1 (bb.1) (bb.2))).

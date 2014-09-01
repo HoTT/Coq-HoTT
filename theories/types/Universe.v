@@ -72,9 +72,9 @@ Definition path_universe_V_uncurried `{Funext} {A B : Type} (f : A <~> B)
   : path_universe_uncurried (equiv_inverse f) = (path_universe_uncurried f)^.
 Proof.
   revert f. equiv_intro ((equiv_path_universe A B)^-1) p. simpl.
-  path_via (p^).
+  transitivity (p^).
     2: exact (inverse2 (eisretr (equiv_path_universe A B) p)^).
-  unfold compose. path_via (path_universe_uncurried (equiv_path B A p^)).
+  unfold compose. transitivity (path_universe_uncurried (equiv_path B A p^)).
     by refine (ap _ (equiv_path_V A B p)^).
   by refine (eissect (equiv_path B A) p^).
 Defined.

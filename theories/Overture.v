@@ -409,7 +409,7 @@ Hint Resolve
 Hint Resolve @idpath : core.
 
 Ltac path_via mid :=
-  apply @concat with (y := mid); auto with path_hints.
+  transitivity mid; auto with path_hints.
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
 (** HoTT/coq is broken and somehow interprets [Type1] as [Prop] with regard to elimination schemes. *)
@@ -450,7 +450,7 @@ Ltac done :=
   trivial; intros; solve
     [ repeat first
       [ solve [trivial]
-      | solve [eapply symmetry; trivial]
+      | solve [symmetry; trivial]
       | reflexivity
       (* Discriminate should be here, but it doesn't work yet *)
       (* | discriminate *)

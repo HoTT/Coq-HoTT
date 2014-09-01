@@ -235,12 +235,12 @@ Proof.
   apply dpath_path_FFlr.
   rewrite concat_1p, concat_p1.
   rewrite sWtil_rectnd_beta_ppt.
-  by apply symmetry, (@Wtil_rectnd_beta_ppt A B f g C D).
+  by symmetry; apply (@Wtil_rectnd_beta_ppt A B f g C D).
   refine (Wtil_rect _ (fun a x => 1) _). intros b y.
   apply dpath_path_FFlr.
   rewrite concat_1p, concat_p1.
   rewrite Wtil_rectnd_beta_ppt.
-  by apply symmetry, sWtil_rectnd_beta_ppt.
+  by symmetry; apply sWtil_rectnd_beta_ppt.
 Defined.
 
 End AssumeAxioms.

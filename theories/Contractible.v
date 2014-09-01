@@ -18,7 +18,7 @@ Definition path_contr `{Contr A} (x y : A) : x = y
 Definition path2_contr `{Contr A} {x y : A} (p q : x = y) : p = q.
 Proof.
   assert (K : forall (r : x = y), r = path_contr x y).
-    intro r; destruct r; apply symmetry; now apply concat_Vp.
+    intro r; destruct r; symmetry; now apply concat_Vp.
   path_via (path_contr x y).
 Defined.
 

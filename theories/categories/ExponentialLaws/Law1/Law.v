@@ -37,7 +37,7 @@ Section law1.
         simpl;
         rewrite <- identity_of;
         f_ap;
-        apply symmetry;
+        symmetry;
         apply contr
       ).
   Defined.

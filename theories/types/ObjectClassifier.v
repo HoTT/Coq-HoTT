@@ -125,7 +125,7 @@ cut ( {p : I = {a : A & @hfiber I A f a} &
      @transport _ (fun I0 : Type => I0 -> A) _ _ p f = @pr1 _ _}).
 intro X. apply ((e ^-1 X)^).
 set (w:=@equiv_fibration_replacement A I f).
-exists (path_universe w). path_via (exp w f). apply transport_exp.
+exists (path_universe w). transitivity (exp w f). apply transport_exp.
 apply path_forall. by  (intros [a [i p]]).
 Qed.
 

@@ -467,7 +467,7 @@ Section iso_concat_lemmas.
                 iso_concat_t_id_fin
               ]
           | solve [
-                etransitivity; [ eapply symmetry; eapply lem | ];
+                etransitivity; [ symmetry; eapply lem | ];
                 iso_concat_t_id_fin
           ] ].
 

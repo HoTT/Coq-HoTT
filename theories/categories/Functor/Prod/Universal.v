@@ -125,7 +125,7 @@ Section universal.
              (H2 : snd o F = snd o G)
   : F = G.
   Proof.
-    etransitivity; [ apply symmetry | ];
+    etransitivity; [ symmetry | ];
     apply unique; try eassumption; reflexivity.
   Defined.
 End universal.

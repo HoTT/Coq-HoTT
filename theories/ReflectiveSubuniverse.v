@@ -223,9 +223,9 @@ Section Reflective_Subuniverse.
     : ( (O_functor A C f) o (O_functor X A pi1) )
       = ( (O_functor B C g) o (O_functor X B pi2) ).
     Proof.
-      path_via (O_functor X C (f o pi1)).
+      transitivity (O_functor X C (f o pi1)).
       - symmetry; apply O_functor_compose.
-      - path_via (O_functor X C (g o pi2)).
+      - transitivity (O_functor X C (g o pi2)).
         * apply ap; exact comm.
         * apply O_functor_compose.
     Defined.

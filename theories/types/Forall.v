@@ -109,7 +109,7 @@ Definition ap_functor_forall `{P : A -> Type} `{Q : B -> Type}
 Proof.
   revert h.  equiv_intro (@apD10 A P g g') h.
   destruct h.  simpl.
-  path_via (idpath (functor_forall f0 f1 g)).
+  transitivity (idpath (functor_forall f0 f1 g)).
   - exact (ap (ap (functor_forall f0 f1)) (path_forall_1 g)).
   - symmetry.  apply path_forall_1.
 Defined.

@@ -288,7 +288,7 @@ Definition Book_2_13 := @HoTT.Misc.equiv_bool_equiv_bool_bool.
 (** The exercise is easy using UA, but we prefer a proof without UA, using
 two lemmas that may also be of interest *)
 
-Lemma retr_f_g_path_in_B {A B} (f : A -> B)  (g : B -> A) (alpha : Sect g f) (x y : B) (p : x = y) 
+Lemma retr_f_g_path_in_B {A B} (f : A -> B)  (g : B -> A) (alpha : Sect g f) (x y : B) (p : x = y)
       :  p = (alpha x) ^ @ (ap f (ap g p)) @ (alpha y).
 Proof.
   intros.
@@ -297,12 +297,12 @@ Proof.
   rewrite concat_p1.
   rewrite concat_Vp.
   exact 1.
-Defined. 
+Defined.
 
-Lemma retr_f_g_isHSet_A_so_B {A B} (f : A -> B)  (g : B -> A) 
+Lemma retr_f_g_isHSet_A_so_B {A B} (f : A -> B)  (g : B -> A)
       : Sect g f -> IsHSet A -> IsHSet B.
 Proof.
-  intros retr_f_g isHSet_A. 
+  intros retr_f_g isHSet_A.
   apply @hset_axiomK.
   unfold axiomK.
   intros x p.
@@ -320,7 +320,7 @@ Proof.
   elim equivalent_A_B. intro f. intro isequiv_f.
   elim isequiv_f. intros g retr_f_g sect_f_g coherence.
   apply (retr_f_g_isHSet_A_so_B f g); assumption.
-Defined. 
+Defined.
 
 
 (* ================================================== ex:isset-coprod *)
@@ -440,7 +440,7 @@ Section Book_3_14.
     - intro x.
       apply hprop_allpath.
       intros x' y'.
-      etransitivity; [ apply symmetry; apply (p x x y' x') | ].
+      etransitivity; [ symmetry; apply (p x x y' x') | ].
       assert (H' : idpath = allpath_hprop x x) by apply allpath_hprop.
       destruct H'.
       reflexivity.
@@ -1271,6 +1271,3 @@ Definition Book_7_12 := @HoTT.Modality.ismodality_notnot.
 
 (* ================================================== ex:pseudo-ordinals *)
 (** Exercise 11.18 *)
-
-
-

@@ -201,7 +201,7 @@ Proof.
   destruct z as [n | | n]; unfold S1_encode.
   induction n; simpl in *.
   refine (moveR_transport_V _ loop _ _ _).
-  by apply symmetry, transport_S1_code_loop.
+  by symmetry; apply transport_S1_code_loop.
   rewrite transport_pp.
   refine (moveR_transport_V _ loop _ _ _).
   refine (_ @ (transport_S1_code_loop _)^).

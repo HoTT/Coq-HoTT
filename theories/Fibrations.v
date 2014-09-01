@@ -68,9 +68,9 @@ Lemma total_path2 {A} (P : A-> Type) (x y : sigT P)
   (transport (fun s => s # (x.2) = (y.2)) r (fiber_path p) = fiber_path q) -> (p = q).
 Proof.
   intro H.
-  path_via (total_path _ (fiber_path p)) ;
+  transitivity (total_path _ (fiber_path p)) ;
   [ apply inverse, total_path_reconstruction | ].
-  path_via (total_path _ (fiber_path q)) ;
+  transitivity (total_path _ (fiber_path q)) ;
   [ | apply total_path_reconstruction ].
   by apply @map_twovar with
     (f := @total_path A P x y)

@@ -27,22 +27,22 @@ Lemma ap_to_conjp {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y : A
   ap g q = conjp p (ap f q).
 Proof.
   destruct q.  unfold conjp.  simpl.
-  path_via ((p x)^ @ p x).  apply symmetry; apply concat_Vp.
-  apply whiskerR.  apply symmetry, concat_p1.
+  transitivity ((p x)^ @ p x). symmetry; apply concat_Vp.
+  apply whiskerR.  symmetry; apply concat_p1.
 Qed.
 
 Lemma conjp_ap {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} (q : x = y) :
   conjp p (ap f q) = q.
 Proof.
   destruct q.  unfold conjp.  simpl.
-  path_via ((p x)^ @ p x). apply whiskerR.  apply concat_p1.
+  transitivity ((p x)^ @ p x). apply whiskerR.  apply concat_p1.
   apply concat_Vp.
 Qed.
 
 Lemma ap1_to_conjp {A : Type} {f : A -> A} (p : forall x, idmap x = f x) {x y : A} (q : x = y) :
   ap f q = conjp p q.
 Proof.
-  path_via (conjp p (ap idmap q)).
+  transitivity (conjp p (ap idmap q)).
   apply ap_to_conjp.  apply ap; apply ap_idmap.
 Defined.
 
@@ -51,7 +51,7 @@ Lemma conjp_ap_cancel {A B : Type} {f : A -> B} {g : B -> A}
                 (p : forall x, g (f x) = x) {x y : A} (q : x = y) :
       conjp p (ap g (ap f q)) = q.
 Proof.
-  path_via (conjp p (ap (compose g f) q)).
+  transitivity (conjp p (ap (compose g f) q)).
   apply ap.  symmetry.  apply (ap_compose f g q).
   (* Todo: give, for here, a lemma that [conjp] preserves homotopy. *)
 Defined.
