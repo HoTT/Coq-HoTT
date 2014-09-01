@@ -37,10 +37,10 @@ Private Inductive quotient {sR: is_mere_relation R} : Type :=
 Axiom related_classes_eq : forall {x y : A}, R x y ->
  class_of x = class_of y.
 
-Axiom quotient_set : IsHSet quotient.
+Axiom quotient_set : IsHSet (@quotient sR).
 Global Existing Instance quotient_set.
 
-Definition quotient_rect (P : @quotient sR -> Type):
+Definition quotient_rect (P : (@quotient sR) -> Type):
   forall dclass : forall x, P (class_of x),
   forall dequiv : (forall x y (H : R x y),
            transport _ (related_classes_eq H) (dclass x) = dclass y),
