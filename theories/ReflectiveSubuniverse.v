@@ -177,7 +177,7 @@ Section Reflective_Subuniverse.
     : forall a, ap10 (path_arrow_modal A B _ _ pi) (eta a) = ap10 pi a.
     Proof.
       intros a.
-      refine ((ap_ap10_L _ _ eta (path_arrow_modal A B f g pi) a) ^ @ _).
+      refine ((ap10_ap_precompose eta (path_arrow_modal A B f g pi) a) ^ @ _).
       apply (ap (fun h => ap10 h a)).
       unfold path_arrow_modal, equiv_inj.
       apply eisretr.
@@ -313,7 +313,7 @@ Section Reflective_Subuniverse.
         unfold eqid. rewrite ap10_path_arrow_modal.
         refine (_ @ pr2_path (ap10 (O_rec_retr A Z g') a)).
         apply (ap (fun p => transport B p _)).
-        exact ((ap_ap10 (f' o O_unit subU A) g' pr1 eqf a)^).
+        exact (ap10_ap_postcompose pr1 eqf a).
       - intros H A B.
         pose (h := fun x => O_rec ({x:A & B x}) A pr1 x).
         pose (p := (fun z => ap10 (O_rec_retr ({x : A & B x}) A pr1) z)
@@ -341,7 +341,7 @@ Section Reflective_Subuniverse.
           apply path_arrow; intro v. exact v. }
         exact (ap10 p u).
       - hnf.
-        rewrite <- ap_ap10_L.
+        rewrite <- ap10_ap_precompose.
         rewrite eisretr. 
         rewrite ap10_path_arrow; reflexivity.
     Qed.
