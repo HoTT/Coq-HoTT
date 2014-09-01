@@ -5,6 +5,7 @@
 (** ** Type classes *)
 Definition relation (A : Type) := A -> A -> Type.
 
+(** TODO: Should we make [reflexivity], [symmetry], and [transitivity] unfold under [simpl], to, e.g., [idpath], [inverse], and [concat]? *)
 Class Reflexive {A} (R : relation A) :=
   reflexivity : forall x : A, R x x.
 
@@ -27,13 +28,12 @@ Tactic Notation "etransitivity" open_constr(y) :=
 
 Tactic Notation "etransitivity" := etransitivity _.
 
-(** We would like to redefine [symmetry], which is too smart for its own good, as follows:
+(** We redefine [transitivity] to work without needing to include [Setoid] or be using Leibniz equality, and to give proofs that unfold to [concat]. *)
+Ltac transitivity x := etransitivity x.
 
-<<
+(** We redefine [symmetry], which is too smart for its own good. *)
 Ltac symmetry := refine (@symmetry _ _ _ _ _ _).
->>
 
-But this gives "Error: in Tacinterp.add_tacdef: Reserved Ltac name symmetry.".  This might be fixed with https://coq.inria.fr/bugs/show_bug.cgi?id=3113.  For now, you can [apply symmetry] or [eapply symmetry].  (Note that we can get around this error message by using [Tactic Notation "symmetry"], but, confusingly, this tactic notation never gets called. *)
 
 (** ** Basic definitions *)
 
