@@ -29,11 +29,11 @@ We do not require [R] to be an equivalence relation, but implicitly consider its
 
 (** Note: If we wanted to be really accurate, we'd need to put [@quotient A R sr] in the max [U_{sup(i, j)}] of the universes of [A : U_i] and [R : A -> A -> U_j].  But this requires some hacky code, at the moment, and the only thing we gain is avoiding making use of an implicit hpropositional resizing "axiom". *)
 
-(* This definition has a parameter [sR] that shadows the ambient one in the Context in order to ensure that it actually ends up depending on everything in the Context when the section is closed, since its definition doesn't actually refer to any of them.  *)
+(** This definition has a parameter [sR] that shadows the ambient one in the Context in order to ensure that it actually ends up depending on everything in the Context when the section is closed, since its definition doesn't actually refer to any of them.  *)
 Private Inductive quotient {sR: is_mere_relation R} : Type :=
   | class_of : A -> quotient.
 
-(* The path constructors. *)
+(** The path constructors. *)
 Axiom related_classes_eq : forall {x y : A}, R x y ->
  class_of x = class_of y.
 
