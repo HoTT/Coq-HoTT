@@ -33,7 +33,7 @@ Proof.
   apply (equiv_adjointify (@axiomK_hset A) (@hset_axiomK A)).
   - intros K. by_extensionality x. by_extensionality x'.
     cut (Contr (x=x)). intro. eapply path_contr.
-    exists 1. intros. apply symmetry, K.
+    exists 1. intros. symmetry; apply K.
   - intro K. by_extensionality x. by_extensionality x'.
     eapply allpath_hprop.
 Defined.
@@ -81,9 +81,9 @@ Proof.
   set (q := d x x) in *.
   clearbody qp; revert qp.
   destruct q as [q | q'].
-    intro qp0; apply (cancelL q). path_via (transport _ p q).
+    intro qp0; apply (cancelL q). transitivity (transport _ p q).
       symmetry; apply transport_paths_r.
-      path_via q. apply @inl_injective with (B := (~ x = x)).
+      transitivity q; auto with path_hints. apply @inl_injective with (B := (~ x = x)).
       exact ((ap_transport p (fun y => @inl (x = y) (~x = y)) q) @ qp0).
   induction (q' p).
 Defined.

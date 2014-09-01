@@ -106,7 +106,7 @@ Proof.
     apply Truncation_rect. intros ?; apply trunc_succ.
     intros [x r]; simpl.
     unfold functor_sigma; simpl.
-    apply symmetry. refine (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r).
+    symmetry. refine (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r).
   unfold FST_Codes_cross_x0.
   apply isequiv_functor_Truncation, @isequiv_functor_sigma. refine _.
   intros a. apply isequiv_cancelR.
@@ -119,7 +119,7 @@ Proof.
   intros x. apply (@path_forall (fst funext_large)); intros p.
   refine (transport_arrow _ _ _ @ _).
   refine (transport_const _ _ @ _).
-  path_via (FST_Codes_No (p @ (mer x)^)).
+  transitivity (FST_Codes_No (p @ (mer x)^)); auto with path_hints.
     apply ap, transport_paths_r.
   apply path_universe_uncurried.
   exists (FST_Codes_cross x p).
@@ -173,7 +173,7 @@ Definition FST_Codes_transportD_concrete (x1 : X) (p : No = No)
 Proof.
   intro rr. assert (goal' : FST_Codes So (p @ mer x1)).
     apply (FST_Codes_cross x1).
-    refine (transport FST_Codes_No _ rr). apply symmetry, concat_pp_V.
+    refine (transport FST_Codes_No _ rr). symmetry; apply concat_pp_V.
   refine (transport FST_Codes_So _ goal').
   apply inverse, transport_paths_r.
 Defined.
@@ -207,10 +207,10 @@ Definition FST_Codes_contr_No (p : No = No) (rr : FST_Codes No p)
 Proof.
   revert rr. apply Truncation_rect. intros ?; apply trunc_succ.
   intros [x1 r]. destruct r. unfold FST_Codes_center. simpl.
-  path_via (truncation_incl
+  transitivity (truncation_incl
     (transport (fun p => hfiber mer' p) (transport_paths_r p 1 @ concat_1p p)
     (transportD (paths No)
-simpl in *.
+; auto with path_hints; simpl in *.
 
 Global Instance Freudenthal
   : IsConnMap (n -2+ n) (@merid X).

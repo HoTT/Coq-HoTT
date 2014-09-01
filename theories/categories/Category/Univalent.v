@@ -21,7 +21,7 @@ Instance trunc_category `{IsCategory C} : IsTrunc 1 C | 10000.
 Proof.
   intros ? ?.
   eapply trunc_equiv';
-  [ apply symmetry;
+  [ symmetry;
     esplit;
     apply_hyp
   | ].

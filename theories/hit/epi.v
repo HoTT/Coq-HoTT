@@ -36,8 +36,8 @@ set (p':=issig_hProp^-1 P').
 intros X X0.
 assert (p=p') by (by apply path_equiv_biimp).
 clear X X0.
-path_via (issig_hProp (issig_hProp ^-1 P)); destruct P. reflexivity.
-path_via (issig_hProp (issig_hProp ^-1 P')); destruct P';[f_ap|reflexivity].
+transitivity (issig_hProp (issig_hProp ^-1 P)); destruct P. reflexivity.
+transitivity (issig_hProp (issig_hProp ^-1 P')); destruct P';[f_ap|reflexivity].
 Defined.
 
 (** We will now prove that for sets epis and surjections are biequivalent.*)
@@ -112,8 +112,8 @@ specialize (sur y).
 apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
   try assumption.
  intros [x p]. set (p0:=apD10 ep x).
- path_via (g (f x)). by apply ap.
- path_via (h (f x)). by apply ap.
+ transitivity (g (f x)). by apply ap.
+ transitivity (h (f x)); auto with path_hints. by apply ap.
 intros. by apply @set_path2.
 Qed.
 

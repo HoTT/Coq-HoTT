@@ -51,7 +51,7 @@ Definition transport_paths_Fr {A B : Type} {g : A -> B} {y1 y2 : A} {x : B}
   (p : y1 = y2) (q : x = g y1)
   : transport (fun y => x = g y) p q = q @ (ap g p).
 Proof.
-  destruct p. apply symmetry, concat_p1.
+  destruct p. symmetry; apply concat_p1.
 Defined.
 
 Definition transport_paths_FlFr {A B : Type} {f g : A -> B} {x1 x2 : A}
@@ -341,9 +341,9 @@ Definition equiv_ap_l `(f : A -> B) `{IsEquiv A B f} (x : A) (z : B)
 Proof.
   apply transitivity with (f x = f (f^-1 z)).
   apply equiv_concat_r.
-  apply symmetry.
+  symmetry.
   apply (eisretr f).
-  apply symmetry.
+  symmetry.
   apply equiv_ap.
   assumption.
 Defined.

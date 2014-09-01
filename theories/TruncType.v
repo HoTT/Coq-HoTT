@@ -38,7 +38,7 @@ Proof.
   equiv_via (A = B :> Type).
     apply equiv_path_universe.
   equiv_via ((issig_trunctype ^-1 A) = (issig_trunctype ^-1 B)).
-    2: apply symmetry, equiv_ap; refine _.
+    2: symmetry; apply equiv_ap; refine _.
   simpl. apply (equiv_path_sigma_hprop
     (trunctype_type A; istrunc_trunctype_type A)
     (trunctype_type B; istrunc_trunctype_type B)).

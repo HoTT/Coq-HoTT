@@ -96,7 +96,7 @@ Ltac issig_harness make_is_equiv_tac :=
   evar (T : Type); assert (t : T); subst T;
   [
   | hnf;
-    apply symmetry;
+    symmetry;
     let A := match goal with |- ?A <~> ?B => constr:(A) end in
     let B := match goal with |- ?A <~> ?B => constr:(B) end in
     let isequiv_proof := make_is_equiv_tac A B in

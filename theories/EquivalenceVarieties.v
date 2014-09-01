@@ -51,7 +51,7 @@ Definition contr_sect_equiv `(f : A -> B) `{IsEquiv A B f}
 Proof.
   (* First we turn homotopies into paths. *)
   refine (@contr_equiv' { g : B -> A & f o g = idmap } _ _ _).
-  apply symmetry.
+  symmetry.
   refine (equiv_functor_sigma' (equiv_idmap _) _); intros g.
   exact (equiv_path_forall (f o g) idmap).
   (* Now this is just the fiber over [idmap] of postcomposition with [f], and the latter is an equivalence since [f] is. *)
@@ -63,7 +63,7 @@ Definition contr_retr_equiv `(f : A -> B) `{IsEquiv A B f}
 Proof.
   (* This proof is just like the previous one. *)
   refine (@contr_equiv' { g : B -> A & g o f = idmap } _ _ _).
-  apply symmetry.
+  symmetry.
   refine (equiv_functor_sigma' (equiv_idmap _) _); intros g.
   exact (equiv_path_forall (g o f) idmap).
   apply fcontr_isequiv; exact _.
@@ -227,7 +227,7 @@ Lemma equiv_path_equiv {A B : Type} (e1 e2 : A <~> B)
   : (e1 = e2 :> (A -> B)) <~> (e1 = e2 :> (A <~> B)).
 Proof.
   equiv_via ((issig_equiv A B) ^-1 e1 = (issig_equiv A B) ^-1 e2).
-    2: apply symmetry, equiv_ap; refine _.
+    2: symmetry; apply equiv_ap; refine _.
 (* TODO: why does this get the wrong type if [hprop_isequiv] is not supplied? *)
   exact (@equiv_path_sigma_hprop _ _ hprop_isequiv
     ((issig_equiv A B) ^-1 e1) ((issig_equiv A B) ^-1 e2)).

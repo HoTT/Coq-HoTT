@@ -40,7 +40,7 @@ Section law1.
     simpl; intros.
     etransitivity;
       [ apply right_identity
-      | apply symmetry; apply left_identity ].
+      | symmetry; apply left_identity ].
   Defined.
 
   Global Arguments inverse_morphism_of / _ _ _.

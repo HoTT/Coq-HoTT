@@ -111,7 +111,7 @@ intros.
               o (idtoiso (x0 -> x1) x12 : morphism _ _ _)))%natural_transformation.
   Proof.
     clear F.
-    apply symmetry; simpl; pseudofunctor_t.
+    symmetry; simpl; pseudofunctor_t.
   Qed.
 
   Lemma pseudofunctor_of_functor__left_identity_of

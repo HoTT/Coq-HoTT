@@ -55,7 +55,7 @@ Definition Susp_comp_nd_merid {X Y : Type}
 : ap (Susp_rect_nd H_N H_S H_merid) (merid x) = H_merid x.
 Proof.
   apply (cancelL (transport_const (merid x) H_N)).
-  path_via (apD (Susp_rect_nd H_N H_S H_merid) (merid x)).
+  transitivity (apD (Susp_rect_nd H_N H_S H_merid) (merid x)).
   symmetry; refine (apD_const (Susp_rect_nd H_N H_S H_merid) _).
   refine (Susp_comp_merid (fun _ : Susp X => Y) _ _ _ _).
 Defined.
@@ -98,7 +98,7 @@ Definition nullhomot_paths_from_susp {X Z: Type} (H_N H_S : Z) (f : X -> H_N = H
 Proof.
   exists (n.2 North @ (n.2 South)^).
   intro x. apply moveL_pV.
-  path_via (ap (Susp_rect_nd H_N H_S f) (merid x) @ n.2 South).
+  transitivity (ap (Susp_rect_nd H_N H_S f) (merid x) @ n.2 South).
   apply whiskerR, inverse, Susp_comp_nd_merid.
   refine (concat_Ap n.2 (merid x) @ _).
   apply (concatR (concat_p1 _)), whiskerL. apply ap_const.

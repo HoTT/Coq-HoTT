@@ -116,7 +116,7 @@ Section lemmas.
     apply path_isomorphic; simpl.
     simpl rewrite (@p_left_identity_of_coherent _ C F x y f).
     path_natural_transformation.
-    apply symmetry.
+    symmetry.
     etransitivity; apply Category.Core.left_identity.
   Qed.
 
@@ -132,7 +132,7 @@ Section lemmas.
     apply path_isomorphic; simpl.
     simpl rewrite (@p_right_identity_of_coherent _ C F x y f).
     path_natural_transformation.
-    apply symmetry.
+    symmetry.
     etransitivity; apply Category.Core.left_identity.
   Qed.
 

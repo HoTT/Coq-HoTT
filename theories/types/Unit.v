@@ -108,7 +108,7 @@ Proof.
       (fun (_ : Unit) => center A)
       (fun t : Unit => match t with tt => 1 end)
       (fun x : A => contr x) _)).
-  intro x. apply symmetry, ap_const.
+  intro x. symmetry; apply ap_const.
 Defined.
 
 (* Conversely, a type equivalent to [Unit] is contractible. *)

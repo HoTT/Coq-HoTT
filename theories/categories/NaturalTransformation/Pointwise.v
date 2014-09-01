@@ -35,7 +35,7 @@ Section pointwise.
     rewrite <- ?composition_of;
     try apply ap;
     first [ apply commutes
-          | apply symmetry; apply commutes ].
+          | symmetry; apply commutes ].
 
   (** ** [Tˣ] for a natural transformation [T : F → G] and a functor [x : C → D] *)
   Definition pointwise_l
