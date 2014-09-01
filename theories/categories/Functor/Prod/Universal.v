@@ -72,8 +72,6 @@ Section universal.
                  | _ => reflexivity
                  | _ => progress simpl
                  | _ => rewrite !transport_forall_constant
-                 | [ |- appcontext[?f (transport ?P ?p ?z)] ]
-                   => rewrite (@ap_transport _ P _ _ _ p (fun _ => f) z)
                end.
         transport_path_forall_hammer.
         unfold unique_helper.
