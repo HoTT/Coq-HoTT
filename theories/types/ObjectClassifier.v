@@ -34,9 +34,6 @@ Proof.
   reflexivity.
 Defined.
 
-Definition equiv_total_paths (A : Type) (P : A-> Type) (x y : sigT P) :
-  (x = y) <~> { p : x.1 = y.1 & transport P p x.2 = y.2 }
-  := BuildEquiv _ _ ((equiv_path_sigma P x y)^-1)%path _.
 Let hfiber_fibration_eissect {X} {x : X} {P}
 : forall x0 : {z : exists x, P x & z.1 = x},
       ((x; transport P x0.2 x0.1.2); 1%path) = x0.
@@ -119,11 +116,11 @@ apply ((path_universe (@hfiber_fibration  _ a P))^).
 exists f2p. intros [I f].
 (** Theorem right (F:Fam A) : F = (p2ff2p F) *)
 
-set (e:=@equiv_total_paths _ _ (@existT Type (fun I0 : Type => I0 -> A) I f)
+set (e:=equiv_path_sigma _ (@existT Type (fun I0 : Type => I0 -> A) I f)
 ({a : A & hfiber f a} ; @pr1 _ _)). simpl in e.
 cut ( {p : I = {a : A & @hfiber I A f a} &
      @transport _ (fun I0 : Type => I0 -> A) _ _ p f = @pr1 _ _}).
-intro X. apply ((e ^-1 X)^).
+intro X. apply (e X)^.
 set (w:=@equiv_fibration_replacement A I f).
 exists (path_universe w). transitivity (exp w f). apply transport_exp.
 apply path_forall. by  (intros [a [i p]]).
