@@ -1,7 +1,8 @@
 (** * (-1)-truncation *)
 
-Require Import Overture HProp Fibrations EquivalenceVarieties Contractible Equivalences types.Unit.
+Require Import Overture HProp HSet Fibrations EquivalenceVarieties Contractible Equivalences types.Unit types.Sigma.
 Open Local Scope path_scope.
+Open Local Scope equiv_scope.
 (** The definition of [minus1Trunc], the (-1)-truncation.  Here is what
    it would look like if Coq supported higher inductive types natively:
 
@@ -96,6 +97,13 @@ Proof.
   intro a. apply allpath_hprop.
 Defined.
 
+(** Weaker form: if [A] is a proposition, you can remove the truncation *)
+Lemma untrunc_hprop {A : Type} : (IsHProp A) -> (minus1Trunc A) -> A.
+Proof.
+  intro.
+  apply minus1Trunc_ind. exact idmap.
+Defined.
+
 Section AssumeFunext.
 (** ** Inhabited propositions are contractible. *)
 Open Scope fibration_scope.
@@ -127,6 +135,16 @@ Proof.
   apply (inhab_prop_contr (mono b) (epi b)).
 Defined.
 End AssumeFunext.
+
+(** Monos are injective *)
+Lemma is_mono_isinj {A B : Type} (m : A -> B) : is_mono m -> isinj m.
+Proof.
+  intros H a a' p.
+  specialize (H (m a')). unfold hfiber in *.
+  assert ((a; p) = (a'; 1) :> {x : A & m x = m a'}) by apply allpath_hprop.
+  apply (path_sigma_uncurried (fun x => m x = m a') (a; p) (a'; 1))^-1.
+  assumption.
+Defined.
 
 Section minus1TruncMonad.
 
@@ -256,6 +274,7 @@ End minus1TruncMonad.
 
 (** We may want to define the other connectives to at some point. *)
 Definition hexists {X} (P:X->Type):Type:= minus1Trunc (sigT  P).
+Definition hor (P:Type) (Q:Type):Type:= minus1Trunc (P + Q).
 
 (** If the goal is an hProp, we may remove [minus1Trunc] in hypotheses. *)
 Ltac strip_truncations :=

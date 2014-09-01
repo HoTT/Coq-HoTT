@@ -73,6 +73,13 @@ Hint Unfold compose.
 Notation "g 'o' f" := (compose g f) (at level 40, left associativity) : function_scope.
 Open Scope function_scope.
 
+(** Dependent composition of functions. *)
+Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).
+
+Hint Unfold composeD.
+
+Notation "g 'oD' f" := (composeD g f) (at level 40, left associativity) : function_scope.
+
 (** ** The groupoid structure of identity types. *)
 
 (** The results in this file are used everywhere else, so we need to be extra careful about how we define and prove things.  We prefer hand-written terms, or at least tactics that allow us to retain clear control over the proof-term produced. *)
@@ -419,6 +426,17 @@ Hint Unfold not: core.
 Notation "x <> y  :>  T" := (not (x = y :> T))
 (at level 70, y at next level, no associativity) : type_scope.
 Notation "x <> y" := (x <> y :> _) (at level 70, no associativity) : type_scope.
+
+Definition complement {A} (R : relation A) : relation A :=
+  fun x y => ~ (R x y).
+
+Typeclasses Opaque complement.
+
+Class Irreflexive {A} (R : relation A) :=
+  irreflexivity : Reflexive (complement R).
+
+Class Asymmetric {A} (R : relation A) :=
+  asymmetry : forall {x y}, R x y -> (complement R y x : Type).
 
 (** *** Pointed types *)
 
