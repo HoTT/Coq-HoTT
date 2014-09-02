@@ -22,14 +22,11 @@ Definition f2p: Fam A -> (A->Type):=
 (* This is generalized in Functorish.v *)
 Theorem transport_exp (U V:Type)(w:U<~>V): forall (f:U->A),
   (transport (fun I:Type => I->A) (path_universe w) f) = (f o w^-1).
-set (p:=equiv_induction' (fun (U:Type) (V:Type) w => forall f : U -> A,
- (transport (fun I : Type => I -> A) (path_universe w) f) = (f o w^-1))).
-apply p.
-intros T f. path_via f.
-path_via (transport (fun I : Type => I -> A) (path_universe (equiv_path _ _ (idpath T) )) f).
-path_via (transport (fun I : Type => I -> A) (idpath T) f ).
-apply (@transport2 Type (fun I:Type => I-> A) T T).
-apply eta_path_universe.
+Proof.
+  intros f; apply path_arrow; intros y.
+  refine (transport_arrow_toconst _ _ _ @ _).
+  unfold compose; apply ap.
+  by apply transport_path_universe_V.
 Qed.
 
 Theorem PowisoFam : BiInv p2f.
