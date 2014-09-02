@@ -22,7 +22,7 @@ Definition f2p: Fam A -> (A->Type):=
 (* This is generalized in Functorish.v *)
 Theorem transport_exp (U V:Type)(w:U<~>V): forall (f:U->A),
   (transport (fun I:Type => I->A) (path_universe w) f) = (f o w^-1).
-set (p:=equiv_induction (fun (U:Type) (V:Type) w => forall f : U -> A,
+set (p:=equiv_induction' (fun (U:Type) (V:Type) w => forall f : U -> A,
  (transport (fun I : Type => I -> A) (path_universe w) f) = (f o w^-1))).
 apply p.
 intros T f. path_via f.

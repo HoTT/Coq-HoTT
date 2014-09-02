@@ -85,14 +85,33 @@ Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}
 
 (** ** Equivalence induction *)
 
-Theorem equiv_induction (P : forall U V, U <~> V -> Type) :
+(** Paulin-Mohring style *)
+Theorem equiv_induction {U : Type} (P : forall V, U <~> V -> Type) :
+  (P U (equiv_idmap U)) -> (forall V (w : U <~> V), P V w).
+Proof.
+  intros H0 V w.
+  apply (equiv_rect (equiv_path U V)).
+  exact (paths_rect U (fun Y p => P Y (equiv_path U Y p)) H0 V).
+Defined.
+
+Definition equiv_induction_comp {U : Type} (P : forall V, U <~> V -> Type)
+  (didmap : P U (equiv_idmap U))
+  : equiv_induction P didmap U (equiv_idmap U) = didmap
+  := (equiv_rect_comp (P U) _ 1).
+
+(** Martin-Lof style *)
+Theorem equiv_induction' (P : forall U V, U <~> V -> Type) :
   (forall T, P T T (equiv_idmap T)) -> (forall U V (w : U <~> V), P U V w).
 Proof.
-  intros H0 ? ? ?.
-  apply (equiv_rect (equiv_path _ _)).
-  (* The intro pattern: intros ->. gives an error. This is a bug. *)
-  intro x. case x. apply H0.
+  intros H0 U V w.
+  apply (equiv_rect (equiv_path U V)).
+  exact (paths_rect' (fun X Y p => P X Y (equiv_path X Y p)) H0 U V).
 Defined.
+
+Definition equiv_induction'_comp (P : forall U V, U <~> V -> Type)
+  (didmap : forall T, P T T (equiv_idmap T)) (U : Type)
+  : equiv_induction' P didmap U U (equiv_idmap U) = didmap U
+  := (equiv_rect_comp (P U U) _ 1).
 
 (** ** Facts about HProps using univalence *)
 

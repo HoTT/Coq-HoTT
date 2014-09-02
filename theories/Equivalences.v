@@ -287,6 +287,16 @@ Definition equiv_rect `{IsEquiv A B f} (P : B -> Type)
 
 Arguments equiv_rect {A B} f {_} P _ _.
 
+Definition equiv_rect_comp `{IsEquiv A B f} (P : B -> Type)
+  (df : forall x:A, P (f x)) (x : A)
+  : equiv_rect f P df (f x) = df x.
+Proof.
+  unfold equiv_rect.
+  rewrite eisadj.
+  rewrite <- transport_compose.
+  exact (apD df (eissect f x)).
+Defined.
+
 (** Using [equiv_rect], we define a handy little tactic which introduces a variable and simultaneously substitutes it along an equivalence. *)
 
 Ltac equiv_intro E x :=
