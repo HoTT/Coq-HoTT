@@ -44,19 +44,6 @@ Definition path_universe_uncurried {A B : Type} (f : A <~> B) : A = B
 Definition path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} : (A = B)
   := path_universe_uncurried (BuildEquiv _ _ f feq).
 
-Definition transport_path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
-  : transport (fun X:Type => X) (path_universe f) z = f z
-  := ap10 (ap equiv_fun (eisretr (equiv_path A B) (BuildEquiv _ _ f feq))) z.
-
-(* This somewhat fancier version is useful when working with HITs. *)
-Definition transport_path_universe'
-  {A : Type} (P : A -> Type) {x y : A} (p : x = y)
-  (f : P x <~> P y) (q : ap P p = path_universe f) (u : P x)
-  : transport P p u = f u
-  := transport_compose idmap P p u
-   @ ap10 (ap (transport idmap) q) u
-   @ transport_path_universe f u.
-
 Definition eta_path_universe {A B : Type} (p : A = B)
   : path_universe (equiv_path A B p) = p
   := eissect (equiv_path A B) p.
@@ -82,6 +69,58 @@ Defined.
 Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}
   : path_universe (f^-1) = (path_universe f)^
   := path_universe_V_uncurried (BuildEquiv A B f _).
+
+(** ** Transport *)
+
+Definition transport_path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
+  : transport (fun X:Type => X) (path_universe f) z = f z
+  := ap10 (ap equiv_fun (eisretr (equiv_path A B) (BuildEquiv _ _ f feq))) z.
+
+(* This somewhat fancier version is useful when working with HITs. *)
+Definition transport_path_universe'
+  {A : Type} (P : A -> Type) {x y : A} (p : x = y)
+  (f : P x <~> P y) (q : ap P p = path_universe f) (u : P x)
+  : transport P p u = f u
+  := transport_compose idmap P p u
+   @ ap10 (ap (transport idmap) q) u
+   @ transport_path_universe f u.
+
+Definition transport_path_universe_V `{Funext} {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : B)
+  : transport (fun X:Type => X) (path_universe f)^ z = f^-1 z
+  := (transport2 idmap (path_universe_V f) z)^
+   @ (transport_path_universe (f^-1) z).
+
+(** ** Equivalence induction *)
+
+(** Paulin-Mohring style *)
+Theorem equiv_induction {U : Type} (P : forall V, U <~> V -> Type) :
+  (P U (equiv_idmap U)) -> (forall V (w : U <~> V), P V w).
+Proof.
+  intros H0 V w.
+  apply (equiv_rect (equiv_path U V)).
+  exact (paths_rect U (fun Y p => P Y (equiv_path U Y p)) H0 V).
+Defined.
+
+Definition equiv_induction_comp {U : Type} (P : forall V, U <~> V -> Type)
+  (didmap : P U (equiv_idmap U))
+  : equiv_induction P didmap U (equiv_idmap U) = didmap
+  := (equiv_rect_comp (P U) _ 1).
+
+(** Martin-Lof style *)
+Theorem equiv_induction' (P : forall U V, U <~> V -> Type) :
+  (forall T, P T T (equiv_idmap T)) -> (forall U V (w : U <~> V), P U V w).
+Proof.
+  intros H0 U V w.
+  apply (equiv_rect (equiv_path U V)).
+  exact (paths_rect' (fun X Y p => P X Y (equiv_path X Y p)) H0 U V).
+Defined.
+
+Definition equiv_induction'_comp (P : forall U V, U <~> V -> Type)
+  (didmap : forall T, P T T (equiv_idmap T)) (U : Type)
+  : equiv_induction' P didmap U U (equiv_idmap U) = didmap U
+  := (equiv_rect_comp (P U U) _ 1).
+
+(** ** Facts about HProps using univalence *)
 
 (** It would be nice for these to go in [HProp.v], but this file depends on that one, and these depend on having [Univalence]. *)
 Instance trunc_path_IsHProp `{Funext} X Y `{IsHProp Y}

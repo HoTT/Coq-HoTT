@@ -106,6 +106,15 @@ Proof. rewrite -> H. exact X. Defined.
 
 Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 
+(** Our identity type is the Paulin-Mohring style.  We derive the Martin-Lof eliminator. *)
+
+Definition paths_rect' {A : Type} (P : forall (a b : A), (a = b) -> Type)
+  : (forall (a : A), P a a idpath) -> forall (a b : A) (p : a = b), P a b p.
+Proof.
+  intros H ? ? [].
+  apply H.
+Defined.
+
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
 
 Delimit Scope path_scope with path.

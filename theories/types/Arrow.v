@@ -59,6 +59,20 @@ Proof.
   destruct p; simpl; auto.
 Defined.
 
+Definition transport_arrow_toconst {A : Type} {B : A -> Type} {C : Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B x1 -> C) (y : B x2)
+  : (transport (fun x => B x -> C) p f) y  =  f (p^ # y).
+Proof.
+  destruct p; simpl; auto.
+Defined.
+
+Definition transport_arrow_fromconst {A B : Type} {C : A -> Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B -> C x1) (y : B)
+  : (transport (fun x => B -> C x) p f) y  =  p # (f y).
+Proof.
+  destruct p; simpl; auto.
+Defined.
+
 
 (** ** Dependent paths *)
 

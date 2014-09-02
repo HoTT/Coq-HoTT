@@ -2,6 +2,7 @@
 
 Require Import Overture PathGroupoids.
 Local Open Scope path_scope.
+Local Open Scope equiv_scope.
 
 Definition base_path {A} {P : A -> Type} {u v : sigT P} :
   (u = v) -> (pr1 u = pr1 v) :=
@@ -90,12 +91,33 @@ Proof.
   path_induction.
 Defined. *)
 
-(** Transporting in a sigT of paths. *)
 
-Lemma trans_paths A B (f g : A -> B) (x y : A) (p : x = y) (q : f x = g x) :
-  transport (fun a => f a = g a) p q
-  =
-  (ap f p)^ @ q @ ap g p.
+(** *** Replacing a map with a fibration *)
+
+Definition equiv_fibration_replacement  {B C} (f:C ->B):
+  C <~> {y:B & hfiber f y}.
 Proof.
-  path_induction. hott_simpl.
+  refine (BuildEquiv _ _ _ (BuildIsEquiv
+               C {y:B & {x:C & f x = y}}
+               (fun c => (f c; (c; idpath)))
+               (fun c => c.2.1)
+               _
+               (fun c => idpath)
+               _)).
+  - repeat (intros [] || intro); reflexivity.
+  - reflexivity.
+Defined.
+
+Definition hfiber_fibration {X} (x : X) (P:X->Type):
+    P x <~> @hfiber (sigT P) X pr1 x.
+Proof.
+  refine (BuildEquiv _ _ _ (BuildIsEquiv
+               (P x) { z : sigT P & z.1 = x }
+               (fun Px => ((x; Px); idpath))
+               (fun Px => transport P Px.2 Px.1.2)
+               _
+               (fun Px => idpath)
+               _)).
+  - repeat (intros [] || intro); reflexivity.
+  - reflexivity.
 Defined.
