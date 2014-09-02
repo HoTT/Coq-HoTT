@@ -2,7 +2,7 @@
 This equivalence is close to the existence of an object classifier.
 *)
 
-Require Import Overture types.Universe types.Sigma Fibrations EquivalenceVarieties Equivalences PathGroupoids UnivalenceImpliesFunext.
+Require Import Overture types.Universe types.Sigma types.Arrow Fibrations EquivalenceVarieties Equivalences PathGroupoids UnivalenceImpliesFunext.
 
 Section AssumeUnivalence.
 Context `{ua:Univalence}.
@@ -19,21 +19,6 @@ Definition f2p: Fam A -> (A->Type):=
 
 Open Scope equiv_scope.
 
-Definition exp {U V:Type}(w:U<~>V):(U->A)<~>(V->A).
-exists (fun f:(U->A)=> (fun x => (f (w^-1 x)))).
-apply equiv_biinv. split;
- exists (fun f:(V->A)=> (fun x => (f (w x)))); intro f; apply path_forall; intro u;
-apply ap; by apply moveR_E.
-Defined.
-
-(** For completeness *)
-Definition exp' {U V:Type}(w:U<~>V):(A->U)<~>(A->V).
-exists (fun f :A->U => (fun a => (w (f a)))).
-apply  equiv_biinv. split;
- exists (fun f:(A->V )=> (fun x => (w^-1 (f x)))); intro f; apply path_forall; intro u;
-by apply moveR_E.
-Defined.
-
 Theorem equiv_induction (P : forall U V, U <~> V -> Type) :
   (forall T, P T T (equiv_idmap T)) -> (forall U V (w : U <~> V), P U V w).
 Proof.
@@ -45,9 +30,9 @@ Defined.
 
 (* This is generalized in Functorish.v *)
 Theorem transport_exp (U V:Type)(w:U<~>V): forall (f:U->A),
-  (@transport _ (fun I:Type => I->A) _ _ (path_universe w) f) = (exp w f).
+  (@transport _ (fun I:Type => I->A) _ _ (path_universe w) f) = (f o w^-1).
 set (p:=equiv_induction (fun (U:Type) (V:Type) w => forall f : U -> A,
- (@transport _ (fun I : Type => I -> A) U V (path_universe w) f) = (exp w f))).
+ (@transport _ (fun I : Type => I -> A) U V (path_universe w) f) = (f o w^-1))).
 apply p.
 intros T f. path_via f.
 path_via (@transport _ (fun I : Type => I -> A) _ _
@@ -74,7 +59,7 @@ cut ( {p : I = {a : A & @hfiber I A f a} &
      @transport _ (fun I0 : Type => I0 -> A) _ _ p f = @pr1 _ _}).
 intro X. apply (e X)^.
 set (w:=@equiv_fibration_replacement A I f).
-exists (path_universe w). transitivity (exp w f). apply transport_exp.
+exists (path_universe w). transitivity (f o w^-1). apply transport_exp.
 apply path_forall. by  (intros [a [i p]]).
 Qed.
 
