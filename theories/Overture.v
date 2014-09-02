@@ -111,8 +111,7 @@ Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 Definition paths_rect' {A : Type} (P : forall (a b : A), (a = b) -> Type)
   : (forall (a : A), P a a idpath) -> forall (a b : A) (p : a = b), P a b p.
 Proof.
-  intros H a b p.
-  destruct p.
+  intros H ? ? [].
   apply H.
 Defined.
 
