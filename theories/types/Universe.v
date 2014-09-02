@@ -83,6 +83,19 @@ Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}
   : path_universe (f^-1) = (path_universe f)^
   := path_universe_V_uncurried (BuildEquiv A B f _).
 
+(** ** Equivalence induction *)
+
+Theorem equiv_induction (P : forall U V, U <~> V -> Type) :
+  (forall T, P T T (equiv_idmap T)) -> (forall U V (w : U <~> V), P U V w).
+Proof.
+  intros H0 ? ? ?.
+  apply (equiv_rect (equiv_path _ _)).
+  (* The intro pattern: intros ->. gives an error. This is a bug. *)
+  intro x. case x. apply H0.
+Defined.
+
+(** ** Facts about HProps using univalence *)
+
 (** It would be nice for these to go in [HProp.v], but this file depends on that one, and these depend on having [Univalence]. *)
 Instance trunc_path_IsHProp `{Funext} X Y `{IsHProp Y}
 : IsHProp (X = Y).

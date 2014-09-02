@@ -3,6 +3,8 @@ This equivalence is close to the existence of an object classifier.
 *)
 
 Require Import Overture types.Universe types.Sigma types.Arrow Fibrations EquivalenceVarieties Equivalences PathGroupoids UnivalenceImpliesFunext.
+Local Open Scope equiv_scope.
+Local Open Scope path_scope.
 
 Section AssumeUnivalence.
 Context `{ua:Univalence}.
@@ -17,32 +19,18 @@ Definition p2f: (A->Type)-> Fam A:=  fun Q:(A->Type) => ( (sigT Q) ; @pr1 _ _).
 Definition f2p: Fam A -> (A->Type):=
  fun F => let (I, f) := F in (fun a => (hfiber f a)).
 
-Open Scope equiv_scope.
-
-Theorem equiv_induction (P : forall U V, U <~> V -> Type) :
-  (forall T, P T T (equiv_idmap T)) -> (forall U V (w : U <~> V), P U V w).
-Proof.
-intros H0???.
-apply (equiv_rect (equiv_path _ _)).
-(* The intro pattern: intros ->. replies eq not found. This is a bug. *)
-intro x. case x. apply H0.
-Defined.
-
 (* This is generalized in Functorish.v *)
 Theorem transport_exp (U V:Type)(w:U<~>V): forall (f:U->A),
-  (@transport _ (fun I:Type => I->A) _ _ (path_universe w) f) = (f o w^-1).
+  (transport (fun I:Type => I->A) (path_universe w) f) = (f o w^-1).
 set (p:=equiv_induction (fun (U:Type) (V:Type) w => forall f : U -> A,
- (@transport _ (fun I : Type => I -> A) U V (path_universe w) f) = (f o w^-1))).
+ (transport (fun I : Type => I -> A) (path_universe w) f) = (f o w^-1))).
 apply p.
 intros T f. path_via f.
-path_via (@transport _ (fun I : Type => I -> A) _ _
-  (path_universe (equiv_path _ _ (idpath T) )) f).
-path_via (@transport Type (fun I : Type => I -> A) T T (idpath T) f ).
+path_via (transport (fun I : Type => I -> A) (path_universe (equiv_path _ _ (idpath T) )) f).
+path_via (transport (fun I : Type => I -> A) (idpath T) f ).
 apply (@transport2 Type (fun I:Type => I-> A) T T).
 apply eta_path_universe.
 Qed.
-
-Open Local Scope path_scope.
 
 Theorem PowisoFam : BiInv p2f.
 split.
@@ -77,15 +65,9 @@ intros [a q]. exists a.
 exists (existT (fun u:Type=> u) (P a) q). apply idpath.
 Defined.
 
-(* This is not optimal *)
-Let bla {B C} (b:B): B=C-> C.
-intro. by path_induction.
-Defined.
-
-Open Local Scope path_scope.
 Let help_objclasspb_is_fibrantreplacement2 (P:A-> Type):
  (pullback P (@pr1 _ (fun u :Type => u))) -> (sigT P).
-intros [a [[T t] p]]. exact (a;(bla t (p^))).
+intros [a [[T t] p]]. exact (a;(transport (fun X => X) (p^) t)).
 Defined.
 
 Lemma objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P) <~> (pullback P (@pr1 _ (fun u :Type => u))).
@@ -98,7 +80,7 @@ eapply (@total_path A (fun b : A =>
      (fun b : A =>
       sigT (fun c : sigT (fun u : Type => u) => paths (P b) (pr1 c))) a
      (existT (fun c : sigT (fun u : Type => u) => paths (P a) (pr1 c))
-        (existT (fun u : Type => u) (P a) (bla t (p^)))
+        (existT (fun u : Type => u) (P a) (transport (fun X => X) (p^) t))
         (idpath (P a))))
 (existT
      (fun b : A =>
