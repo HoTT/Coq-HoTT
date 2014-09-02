@@ -44,19 +44,6 @@ Definition path_universe_uncurried {A B : Type} (f : A <~> B) : A = B
 Definition path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} : (A = B)
   := path_universe_uncurried (BuildEquiv _ _ f feq).
 
-Definition transport_path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
-  : transport (fun X:Type => X) (path_universe f) z = f z
-  := ap10 (ap equiv_fun (eisretr (equiv_path A B) (BuildEquiv _ _ f feq))) z.
-
-(* This somewhat fancier version is useful when working with HITs. *)
-Definition transport_path_universe'
-  {A : Type} (P : A -> Type) {x y : A} (p : x = y)
-  (f : P x <~> P y) (q : ap P p = path_universe f) (u : P x)
-  : transport P p u = f u
-  := transport_compose idmap P p u
-   @ ap10 (ap (transport idmap) q) u
-   @ transport_path_universe f u.
-
 Definition eta_path_universe {A B : Type} (p : A = B)
   : path_universe (equiv_path A B p) = p
   := eissect (equiv_path A B) p.
@@ -82,6 +69,26 @@ Defined.
 Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}
   : path_universe (f^-1) = (path_universe f)^
   := path_universe_V_uncurried (BuildEquiv A B f _).
+
+(** ** Transport *)
+
+Definition transport_path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
+  : transport (fun X:Type => X) (path_universe f) z = f z
+  := ap10 (ap equiv_fun (eisretr (equiv_path A B) (BuildEquiv _ _ f feq))) z.
+
+(* This somewhat fancier version is useful when working with HITs. *)
+Definition transport_path_universe'
+  {A : Type} (P : A -> Type) {x y : A} (p : x = y)
+  (f : P x <~> P y) (q : ap P p = path_universe f) (u : P x)
+  : transport P p u = f u
+  := transport_compose idmap P p u
+   @ ap10 (ap (transport idmap) q) u
+   @ transport_path_universe f u.
+
+Definition transport_path_universe_V `{Funext} {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : B)
+  : transport (fun X:Type => X) (path_universe f)^ z = f^-1 z
+  := (transport2 idmap (path_universe_V f) z)^
+   @ (transport_path_universe (f^-1) z).
 
 (** ** Equivalence induction *)
 
