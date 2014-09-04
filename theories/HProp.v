@@ -157,7 +157,7 @@ Defined.
 Theorem equiv_contr_inhabited_allpath `{Funext} {A}
   : Contr A <~> A * forall (x y : A), x = y.
 Proof.
-  apply transitivity with (y := A * IsHProp A).
+  transitivity ( A * IsHProp A).
   apply equiv_contr_inhabited_hprop.
   apply equiv_functor_prod'. apply equiv_idmap. apply equiv_hprop_allpath.
 Defined.

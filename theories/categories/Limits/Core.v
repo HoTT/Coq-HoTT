@@ -81,7 +81,6 @@ Section diagonal_functor_lemmas.
          (diagonal_functor _ _ x)
          (fun z => identity _)
          (fun _ _ _ => transitivity
-                         _ _ _
                          (left_identity _ _ _ _)
                          (symmetry
                             _ _

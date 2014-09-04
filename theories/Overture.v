@@ -121,14 +121,17 @@ Delimit Scope path_scope with path.
 Local Open Scope path_scope.
 
 (** We define equality concatenation by destructing on both its arguments, so that it only computes when both arguments are [idpath].  This makes proofs more robust and symmetrical.  Compare with the definition of [identity_trans].  *)
+Arguments transitivity {A R _ x y z} _ _: simpl nomatch.
 
-Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
-  match p, q with idpath, idpath => idpath end.
+Instance transitive_paths {A} : Transitive (@paths A) | 0
+  := fun x y z (p : x = y) (q : y = z) => match p, q with idpath, idpath => idpath end.
 
-(** See above for the meaning of [simpl nomatch]. *)
-Arguments concat {A x y z} p q : simpl nomatch.
+Arguments transitive_paths {A x y z} p q : simpl nomatch.
 
-Instance transitive_paths {A} : Transitive (@paths A) | 0 := @concat A.
+Notation concat := (transitivity (R := @paths _)) (only parsing).
+(* Faking the notation [@concat] does not quite work, although ssr seems to be able to do it *)
+Notation "'atconcat'" := (fun A => @transitivity _ (@paths A) _) (only parsing).
+Infix "@" := (@transitivity _ _ _ _ _ _) (at level 20). 
 
 (** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x

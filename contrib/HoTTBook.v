@@ -69,7 +69,7 @@ Definition Book_2_1_1 := @HoTT.Overture.inverse.
 (* ================================================== lem:concat *)
 (** Lemma 2.1.2 *)
 
-Definition Book_2_1_2 := @HoTT.Overture.concat.
+Definition Book_2_1_2 := atconcat.
 
 (* ================================================== thm:omg *)
 (** Lemma 2.1.4 *)
