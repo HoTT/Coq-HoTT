@@ -334,10 +334,10 @@ Proof.
   - intro a; apply min1; exists a; auto.
 Defined.
 
-Lemma bisimulation_equals_id : forall u v : V, (u = v) = (u ~~ v).
+Lemma bisimulation_equiv_id : forall u v : V, (u = v) <~> (u ~~ v).
 Proof.
   intros u v.
-  apply path_iff_hprop_uncurried; split.
+  apply equiv_iff_hprop.
   intro p; exact (transport (fun x => u ~~ x) p (reflexive_bisimulation u)).
   generalize u v.
   refine (V_rect_hprop _ _ _); intros A f H_f.
@@ -355,47 +355,13 @@ Defined.
 
 (** Using the regular kernel (with = instead of ~~) also works, but this seems to be a Coq bug, it should lead to a universe inconsistency in the monic_set_present lemma later. This version is the right way to do it. *)
 Definition ker_bisim {A} (f : A -> V) (x y : A) := (f x ~~ f y).
-Lemma ismere_ker_bisim {A} (f : A -> V) : is_mere_relation (ker_bisim f).
+
+Definition ker_bisim_is_ker {A} (f : A -> V)
+  : forall (x y : A), f x = f y <~> ker_bisim f x y.
 Proof.
-  intros x y. apply _.
+  intros; apply bisimulation_equiv_id.
 Defined.
-
-Lemma inj_surj_factor_V {A : Type} (f : A -> V)
-: exists (C : Type) (e : A -> C) (m : C -> V), IsHSet C * is_epi e * is_mono m * (f = m o e).
-Proof.
-  pose (C := quotient (ker_bisim f)).
-  assert (IsHSet C) by (unfold C; apply _).
-  exists C.
-  pose (e := class_of (ker_bisim f)).
-  exists e.
-  transparent assert (m : (C -> V)).
-  { apply quotient_rect with f.
-    intros x y H. transitivity (f x). apply transport_const.
-    exact (transport (fun X => X) (bisimulation_equals_id (f x) (f y))^ H). }
-  exists m.
-  split. split. split.
-  - assumption.
-  - unfold is_epi. refine (quotient_rect (ker_bisim f) _ _ _).
-    intro a; apply min1; exists a. exact 1.
-    intros x y H. apply allpath_hprop.
-  - unfold is_mono. intro u.
-    apply hprop_allpath.
-    assert (H : forall (x y : C) (p : m x = u) (p' : m y = u), x = y).
-    { refine (quotient_rect (ker_bisim f) _ _ _). intro a.
-      refine (quotient_rect (ker_bisim f) _ _ _). intros a' p p'.
-      + apply related_classes_eq.
-        refine (transport (fun X => X) (bisimulation_equals_id _ _) _).
-        path_via (m (e a)). path_via (m (e a')).
-        exact (p @ p'^).
-      + intros; apply allpath_hprop.
-      + intros; apply allpath_hprop. }
-    intros [x p] [y p'].
-    apply path_sigma_hprop; simpl.
-    exact (H x y p p').
-  - apply path_forall. intro a. reflexivity.
-Defined.
-
-
+  
 Section MonicSetPresent_Uniqueness.
 (** Given u : V, we want to show that the representation u = @set Au mu, where Au is an hSet and mu is monic, is unique. *)
 
@@ -470,7 +436,8 @@ Lemma monic_set_present : forall u : V, exists (Au : Type) (m : Au -> V),
 Proof.
   apply V_rect_hprop.
   - intros A f _.
-    destruct (inj_surj_factor_V f) as [Au [eu [mu (((hset_Au, epi_eu), mono_mu), factor)]]].
+    destruct (quotient_kernel_factor f (ker_bisim f) (ker_bisim_is_ker f))
+      as [Au [eu [mu (((hset_Au, epi_eu), mono_mu), factor)]]].
     exists Au, mu. split. exact (hset_Au, mono_mu).
     apply setext'; split.
     + intro a. apply min1; exists (eu a). exact (ap10 factor a).
