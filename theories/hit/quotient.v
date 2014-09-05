@@ -268,7 +268,7 @@ Proof.
     intros [x p] [y p'].
     apply path_sigma_hprop; simpl.
     exact (H x y p p').
-  - apply path_forall. intro a. reflexivity.
+  - reflexivity.
 Defined.
 
 End Kernel.
