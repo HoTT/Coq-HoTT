@@ -720,13 +720,8 @@ Proof.
       exact (transport (fun w => w ∈ phi) Ha (pr2 (h a))).
     + intros z Hz. simpl.
       generalize (H1 z Hz). apply minus1Trunc_map. intros [(a,b) p]. simpl in p.
-<<<<<<< HEAD
       exists a. transitivity ([func_of_members a, func_of_members b]); auto with path_hints.
-      apply path_pair_ord. split. reflexivity.
-=======
-      exists a. path_via ([func_of_members a, func_of_members b]).
       apply ap.
->>>>>>> ebcc6b3871fb9165c6eab3519cbde25433e42824
       apply H3 with (func_of_members a). split.
       exact (pr2 (h a)).
       exact (transport (fun w => w ∈ phi) p^ Hz).

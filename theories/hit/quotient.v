@@ -247,7 +247,7 @@ Proof.
   exists e.
   transparent assert (m : (C -> B)).
   { apply quotient_rect with f.
-    intros x y H. path_via (f x).
+    intros x y H. transitivity (f x).
     - apply transport_const.
     - exact ((is_ker x y) ^-1 H). }
   exists m.
