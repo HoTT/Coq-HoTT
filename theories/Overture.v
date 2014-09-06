@@ -129,8 +129,6 @@ Instance transitive_paths {A} : Transitive (@paths A) | 0
 Arguments transitive_paths {A x y z} p q : simpl nomatch.
 
 Notation concat := (transitivity (R := @paths _)) (only parsing).
-(* Faking the notation [@concat] does not quite work, although ssr seems to be able to do it *)
-Notation "'atconcat'" := (fun A => @transitivity _ (@paths A) _) (only parsing).
 Infix "@" := (@transitivity _ _ _ _ _ _) (at level 20). 
 
 (** The inverse of a path. *)

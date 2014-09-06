@@ -137,7 +137,7 @@ Definition equiv_path_inverse {A : Type} (x y : A)
   := BuildEquiv _ _ (@inverse A x y) _.
 
 Instance isequiv_concat_l {A : Type} `(p : x = y:>A) (z : A)
-  : IsEquiv (atconcat A x y z p) | 0
+  : IsEquiv (@transitivity A _ _ x y z p) | 0
   := BuildIsEquiv _ _ _ (concat p^)
      (concat_p_Vp p) (concat_V_pp p) _.
 Proof.
