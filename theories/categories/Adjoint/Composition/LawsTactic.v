@@ -25,17 +25,17 @@ Ltac law_t :=
   repeat
     match goal with
       | [ |- appcontext[transport (fun y => ?f (@object_of ?C ?D y ?x))] ]
-        => rewrite (fun a b => @transport_compose _ _ a b (fun y => f (y x)) (@object_of C D))
+        => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x)) (@object_of C D))
       | [ |- appcontext[transport (fun y => ?f (?g (@object_of ?C ?D y ?x)))] ]
-        => rewrite (fun a b => @transport_compose _ _ a b (fun y => f (g (y x))) (@object_of C D))
+        => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (y' x))) (@object_of C D))
       | [ |- appcontext[transport (fun y => ?f (?g (?h (?i (@object_of ?C ?D y ?x)))))] ]
-        => rewrite (fun a b => @transport_compose _ _ a b (fun y => f (g (h (i (y x))))) (@object_of C D))
+        => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (h (i (y' x))))) (@object_of C D))
       | [ |- appcontext[transport (fun y => ?f (@object_of ?C ?D y ?x) ?z)] ]
-        => rewrite (fun a b => @transport_compose _ _ a b (fun y => f (y x) z) (@object_of C D))
+        => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x) z) (@object_of C D))
       | [ |- appcontext[transport (fun y => ?f (?g (@object_of ?C ?D y ?x)) ?z)] ]
-        => rewrite (fun a b => @transport_compose _ _ a b (fun y => f (g (y x)) z) (@object_of C D))
+        => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (y' x)) z) (@object_of C D))
       | [ |- appcontext[transport (fun y => ?f (?g (?h (?i (@object_of ?C ?D y ?x)))) ?z)] ]
-        => rewrite (fun a b => @transport_compose _ _ a b (fun y => f (g (h (i (y x)))) z) (@object_of C D))
+        => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (h (i (y' x)))) z) (@object_of C D))
     end;
   unfold symmetry, symmetric_paths;
   rewrite ?ap_V;
