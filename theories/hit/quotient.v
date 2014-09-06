@@ -1,9 +1,10 @@
-Require Import Overture types.Universe HSet PathGroupoids HProp Equivalences UnivalenceImpliesFunext.
+Require Import Overture Fibrations types.Universe HSet PathGroupoids HProp Equivalences UnivalenceImpliesFunext.
 Require Import hit.epi minus1Trunc.
 
 Open Local Scope path_scope.
+Open Local Scope equiv_scope.
 
-(** ** Quotient of a Type by a set-valued relation
+(** ** Quotient of a Type by an hprop-valued relation
 
 We aim to model:
 <<
@@ -219,3 +220,55 @@ http://perso.crans.org/cohen/work/quotients/
 *)
 
 End Equiv.
+
+Section Kernel.
+
+(** ** Quotients of kernels of maps to sets give a surjection/mono factorization. *)
+
+Context {fs : Funext}.
+
+(** A function we want to factor. *)
+Context {A B : Type} `{IsHSet B} (f : A -> B).
+
+(** A mere relation equivalent to its kernel. *)
+Context (R : relation A) {sR : is_mere_relation R}.
+Context (is_ker : forall x y, f x = f y <~> R x y).
+
+Theorem quotient_kernel_factor
+  : exists (C : Type) (e : A -> C) (m : C -> B),
+      IsHSet C * issurj e * is_mono m * (f = m o e).
+Proof.
+  pose (C := quotient R).
+  (* We put this explicitly in the context so that typeclass
+  resolution will pick it up. *)
+  assert (IsHSet C) by (unfold C; apply _).
+  exists C.
+  pose (e := class_of R).
+  exists e.
+  transparent assert (m : (C -> B)).
+  { apply quotient_rect with f.
+    intros x y H. path_via (f x).
+    - apply transport_const.
+    - exact ((is_ker x y) ^-1 H). }
+  exists m.
+  split. split. split.
+  - assumption.
+  - apply quotient_surjective.
+  - unfold is_mono. intro u.
+    apply hprop_allpath.
+    assert (H : forall (x y : C) (p : m x = u) (p' : m y = u), x = y).
+    { refine (quotient_rect R _ _ _). intro a.
+      refine (quotient_rect R _ _ _). intros a' p p'; fold e in p, p'.
+      + apply related_classes_eq.
+        refine (is_ker a a' _).
+        change (m (e a) = m (e a')).
+        exact (p @ p'^).
+      + intros; apply allpath_hprop.
+      + intros; apply allpath_hprop. }
+    intros [x p] [y p'].
+    apply path_sigma_hprop; simpl.
+    exact (H x y p p').
+  - reflexivity.
+Defined.
+
+End Kernel.

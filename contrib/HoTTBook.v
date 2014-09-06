@@ -1952,7 +1952,7 @@ Definition Book_10_5_4 := @HoTT.hit.V.bisimulation.
 (* ================================================== lem:BisimEqualsId *)
 (** Lemma 10.5.5 *)
 
-Definition Book_10_5_5 := @HoTT.hit.V.bisimulation_equals_id.
+Definition Book_10_5_5 := @HoTT.hit.V.bisimulation_equiv_id.
 
 (* ================================================== lem:MonicSetPresent *)
 (** Lemma 10.5.6 *)

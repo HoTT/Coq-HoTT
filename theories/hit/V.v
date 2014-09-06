@@ -334,10 +334,10 @@ Proof.
   - intro a; apply min1; exists a; auto.
 Defined.
 
-Lemma bisimulation_equals_id : forall u v : V, (u = v) = (u ~~ v).
+Lemma bisimulation_equiv_id : forall u v : V, (u = v) <~> (u ~~ v).
 Proof.
   intros u v.
-  apply path_iff_hprop_uncurried; split.
+  apply equiv_iff_hprop.
   intro p; exact (transport (fun x => u ~~ x) p (reflexive_bisimulation u)).
   generalize u v.
   refine (V_rect_hprop _ _ _); intros A f H_f.
@@ -355,47 +355,13 @@ Defined.
 
 (** Using the regular kernel (with = instead of ~~) also works, but this seems to be a Coq bug, it should lead to a universe inconsistency in the monic_set_present lemma later. This version is the right way to do it. *)
 Definition ker_bisim {A} (f : A -> V) (x y : A) := (f x ~~ f y).
-Lemma ismere_ker_bisim {A} (f : A -> V) : is_mere_relation (ker_bisim f).
+
+Definition ker_bisim_is_ker {A} (f : A -> V)
+  : forall (x y : A), f x = f y <~> ker_bisim f x y.
 Proof.
-  intros x y. apply _.
+  intros; apply bisimulation_equiv_id.
 Defined.
-
-Lemma inj_surj_factor_V {A : Type} (f : A -> V)
-: exists (C : Type) (e : A -> C) (m : C -> V), IsHSet C * is_epi e * is_mono m * (f = m o e).
-Proof.
-  pose (C := quotient (ker_bisim f)).
-  assert (IsHSet C) by (unfold C; apply _).
-  exists C.
-  pose (e := class_of (ker_bisim f)).
-  exists e.
-  transparent assert (m : (C -> V)).
-  { apply quotient_rect with f.
-    intros x y H. transitivity (f x). apply transport_const.
-    exact (transport (fun X => X) (bisimulation_equals_id (f x) (f y))^ H). }
-  exists m.
-  split. split. split.
-  - assumption.
-  - unfold is_epi. refine (quotient_rect (ker_bisim f) _ _ _).
-    intro a; apply min1; exists a. exact 1.
-    intros x y H. apply allpath_hprop.
-  - unfold is_mono. intro u.
-    apply hprop_allpath.
-    assert (H : forall (x y : C) (p : m x = u) (p' : m y = u), x = y).
-    { refine (quotient_rect (ker_bisim f) _ _ _). intro a.
-      refine (quotient_rect (ker_bisim f) _ _ _). intros a' p p'.
-      + apply related_classes_eq.
-        refine (transport (fun X => X) (bisimulation_equals_id _ _) _).
-        transitivity (m (e a)); auto with path_hints. transitivity (m (e a')); auto with path_hints.
-        exact (p @ p'^).
-      + intros; apply allpath_hprop.
-      + intros; apply allpath_hprop. }
-    intros [x p] [y p'].
-    apply path_sigma_hprop; simpl.
-    exact (H x y p p').
-  - apply path_forall. intro a. reflexivity.
-Defined.
-
-
+  
 Section MonicSetPresent_Uniqueness.
 (** Given u : V, we want to show that the representation u = @set Au mu, where Au is an hSet and mu is monic, is unique. *)
 
@@ -470,7 +436,8 @@ Lemma monic_set_present : forall u : V, exists (Au : Type) (m : Au -> V),
 Proof.
   apply V_rect_hprop.
   - intros A f _.
-    destruct (inj_surj_factor_V f) as [Au [eu [mu (((hset_Au, epi_eu), mono_mu), factor)]]].
+    destruct (quotient_kernel_factor f (ker_bisim f) (ker_bisim_is_ker f))
+      as [Au [eu [mu (((hset_Au, epi_eu), mono_mu), factor)]]].
     exists Au, mu. split. exact (hset_Au, mono_mu).
     apply setext'; split.
     + intro a. apply min1; exists (eu a). exact (ap10 factor a).
@@ -555,14 +522,12 @@ Definition V_empty : V := set (Empty_rect (fun _ => V)).
 (** The singleton {u} *)
 Definition V_singleton (u : V) : V@{U' U} := set (Unit_rect u).
 
-Lemma path_singleton {u v : V} : V_singleton u = V_singleton v <-> u = v.
+Instance isequiv_ap_V_singleton {u v : V}
+: IsEquiv (@ap _ _ V_singleton u v).
 Proof.
-  split.
-  - intro H. specialize (path_V_eqimg H). intros (H1, H2).
-    refine (minus1Trunc_ind _ (H1 tt)). intros [t p]. destruct t; exact p.
-  - intro p. apply setext'; split.
-    intro t; destruct t; apply min1; exists tt; exact p.
-    intro t; destruct t; apply min1; exists tt; exact p.
+  refine (BuildIsEquiv _ _ _ _ _ _ _); try solve [ intro; apply allpath_hprop ].
+  { intro H. specialize (path_V_eqimg H). intros (H1, H2).
+    refine (minus1Trunc_ind _ (H1 tt)). intros [t p]. destruct t; exact p. }
 Defined.
 
 (** The pair {u,v} *)
@@ -603,7 +568,7 @@ Proof.
       { apply (snd extensionality p). simpl.
         apply min1; exists true; reflexivity. }
       refine (minus1Trunc_ind _ H). intros [t p']; destruct t.
-      apply (fst path_singleton p'^).
+      apply ((ap V_singleton)^-1 p'^).
       symmetry; apply (fst pair_eq_singleton p').
     + split. exact p1.
       assert (H : hor (b = c) (b = d)).
@@ -620,14 +585,14 @@ Proof.
       2: assumption.
       assert (H' : [a, b] = V_singleton (V_singleton b)).
       { apply (snd pair_eq_singleton).
-        split. apply path_singleton; exact (p1 @ p'^).
+        split. apply ap; exact (p1 @ p'^).
         apply (snd pair_eq_singleton).
         split; [exact (p1 @ p'^) | reflexivity]. }
       assert (H'' : V_pair c d = V_singleton b)
         by apply (fst pair_eq_singleton (p^ @ H')).
       symmetry; apply (fst pair_eq_singleton H'').
 - intros (p, p').
-  apply path_pair. split. apply path_singleton; exact p.
+  apply path_pair. split. apply ap; exact p.
   apply path_pair. split; assumption; assumption.
 Defined.
 
@@ -755,8 +720,13 @@ Proof.
       exact (transport (fun w => w ∈ phi) Ha (pr2 (h a))).
     + intros z Hz. simpl.
       generalize (H1 z Hz). apply minus1Trunc_map. intros [(a,b) p]. simpl in p.
+<<<<<<< HEAD
       exists a. transitivity ([func_of_members a, func_of_members b]); auto with path_hints.
       apply path_pair_ord. split. reflexivity.
+=======
+      exists a. path_via ([func_of_members a, func_of_members b]).
+      apply ap.
+>>>>>>> ebcc6b3871fb9165c6eab3519cbde25433e42824
       apply H3 with (func_of_members a). split.
       exact (pr2 (h a)).
       exact (transport (fun w => w ∈ phi) p^ Hz).
