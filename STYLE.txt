@@ -168,6 +168,12 @@ given for "eckmann_hilton": some may consider it optimally elegant,
 while others would prefer to be able to step through a tactic proof to
 understand what is happening step-by-step.
 
+One thing to beware of is explicit "match" terms that require "in" or
+"return" annotations, as these are particularly difficult for
+newcomers to understand.  Avoiding them is not a hard and fast rule,
+but when there is a short proof using tactics that produces an
+acceptable proof term, it should probably be preferred.
+
 The important thing is that when defining a transparent term with
 tactics, you should restrict yourself to tactics which maintain a high
 degree of control over the resulting term; "blast" tactics like
