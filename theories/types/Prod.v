@@ -35,10 +35,13 @@ Arguments eta_prod / .
 (** With this version of the function, we often have to give [z] and [z'] explicitly, so we make them explicit arguments. *)
 Definition path_prod_uncurried {A B : Type} (z z' : A * B)
   (pq : (fst z = fst z') * (snd z = snd z'))
-  : (z = z')
-  := match fst pq in (_ = z'1), snd pq in (_ = z'2) return z = (z'1, z'2) with
-       | 1, 1 => 1
-     end.
+  : (z = z').
+Proof.
+  change ((fst z, snd z) = (fst z', snd z')).
+  destruct pq as [p q].
+  destruct p; destruct q.
+  reflexivity.
+Defined.
 
 (** This is the curried one you usually want to use in practice.  We define it in terms of the uncurried one, since it's the uncurried one that is proven below to be an equivalence. *)
 Definition path_prod {A B : Type} (z z' : A * B) :
@@ -54,17 +57,22 @@ Definition path_prod' {A B : Type} {x x' : A} {y y' : B}
 
 Definition ap_fst_path_prod {A B : Type} {z z' : A * B}
   (p : fst z = fst z') (q : snd z = snd z') :
-  ap fst (path_prod _ _ p q) = p
-  := match p as p in (_ = z'1), q as q in (_ = z'2) return ap fst (path_prod z (z'1, z'2) p q) = p with
-       | 1, 1 => 1
-     end.
+  ap fst (path_prod _ _ p q) = p.
+Proof.
+  change z with (fst z, snd z).
+  change z' with (fst z', snd z').
+  destruct p. destruct q.
+  reflexivity.
+Defined.
 
 Definition ap_snd_path_prod {A B : Type} {z z' : A * B}
   (p : fst z = fst z') (q : snd z = snd z') :
-  ap snd (path_prod _ _ p q) = q
-  := match p as p in (_ = z'1), q as q in (_ = z'2) return ap snd (path_prod z (z'1, z'2) p q) = q with
-       | 1, 1 => 1
-     end.
+  ap snd (path_prod _ _ p q) = q.
+  change z with (fst z, snd z).
+  change z' with (fst z', snd z').
+  destruct p. destruct q.
+  reflexivity.
+Defined.
 
 Definition eta_path_prod {A B : Type} {z z' : A * B} (p : z = z') :
   path_prod _ _(ap fst p) (ap snd p) = p.
