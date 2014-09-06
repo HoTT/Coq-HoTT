@@ -75,6 +75,6 @@ Defined.
 
 (*
 Local Variables:
-coq-prog-args: ("-emacs-U" "-impredicative-set")
+coq-prog-args: ("-emacs" "-impredicative-set")
 End:
 *)
