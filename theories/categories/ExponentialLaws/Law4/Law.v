@@ -24,12 +24,9 @@ Section Law4.
   : functor C1 C2 D (inverse C1 C2 D c) = c.
   Proof.
     path_functor.
-    exists (path_forall _ _ (fun c1c2 => ap (object_of c) (eta_prod c1c2))).
     abstract (
+        simpl;
         repeat (apply path_forall || intro);
-        rewrite !transport_forall_constant;
-        transport_path_forall_hammer;
-        destruct_head Datatypes.prod;
         rewrite <- composition_of;
         simpl;
         autorewrite with morphism;

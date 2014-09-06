@@ -63,10 +63,10 @@ Definition conn_map_elim {n : trunc_index}
 : forall b:B, P b.
 Proof.
   intros b.
-  apply isconnected_elim.
-    apply HP.
-    instantiate (1 := b). intros [a p].
-    exact (transport P p (d a)).
+  refine (pr1 (isconnected_elim _ _)).
+  2:exact b.
+  intros [a p].
+  exact (transport P p (d a)).
 Defined.
 
 Definition conn_map_comp {n : trunc_index}
