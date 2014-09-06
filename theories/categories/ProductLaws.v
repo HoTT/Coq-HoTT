@@ -31,6 +31,27 @@ Module Swap.
     := idpath.
 End Swap.
 
+(** ** [A * (B * C) ≅ (A * B) * C] *)
+Module Associativity.
+  Section associativity.
+    Variable A : PreCategory.
+    Variable B : PreCategory.
+    Variable C : PreCategory.
+
+    Definition functor : Functor (A * (B * C)) ((A * B) * C)
+      := (fst * (fst o snd)) * (snd o snd).
+    Definition inverse : Functor ((A * B) * C) (A * (B * C))
+      := (fst o fst) * ((snd o fst) * snd).
+
+    Definition law
+    : functor o inverse = 1
+      /\ inverse o functor = 1.
+    Proof.
+      split; expand; reflexivity.
+    Defined.
+  End associativity.
+End Associativity.
+
 (** ** Laws about the initial category [0] *)
 Module Law0.
   Section law0.
