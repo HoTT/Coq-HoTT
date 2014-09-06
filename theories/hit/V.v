@@ -522,14 +522,12 @@ Definition V_empty : V := set (Empty_rect (fun _ => V)).
 (** The singleton {u} *)
 Definition V_singleton (u : V) : V@{U' U} := set (Unit_rect u).
 
-Lemma path_singleton {u v : V} : V_singleton u = V_singleton v <-> u = v.
+Instance isequiv_ap_V_singleton {u v : V}
+: IsEquiv (@ap _ _ V_singleton u v).
 Proof.
-  split.
-  - intro H. specialize (path_V_eqimg H). intros (H1, H2).
-    refine (minus1Trunc_ind _ (H1 tt)). intros [t p]. destruct t; exact p.
-  - intro p. apply setext'; split.
-    intro t; destruct t; apply min1; exists tt; exact p.
-    intro t; destruct t; apply min1; exists tt; exact p.
+  refine (BuildIsEquiv _ _ _ _ _ _ _); try solve [ intro; apply allpath_hprop ].
+  { intro H. specialize (path_V_eqimg H). intros (H1, H2).
+    refine (minus1Trunc_ind _ (H1 tt)). intros [t p]. destruct t; exact p. }
 Defined.
 
 (** The pair {u,v} *)
@@ -570,7 +568,7 @@ Proof.
       { apply (snd extensionality p). simpl.
         apply min1; exists true; reflexivity. }
       refine (minus1Trunc_ind _ H). intros [t p']; destruct t.
-      apply (fst path_singleton p'^).
+      apply ((ap V_singleton)^-1 p'^).
       symmetry; apply (fst pair_eq_singleton p').
     + split. exact p1.
       assert (H : hor (b = c) (b = d)).
@@ -587,14 +585,14 @@ Proof.
       2: assumption.
       assert (H' : [a, b] = V_singleton (V_singleton b)).
       { apply (snd pair_eq_singleton).
-        split. apply path_singleton; exact (p1 @ p'^).
+        split. apply ap; exact (p1 @ p'^).
         apply (snd pair_eq_singleton).
         split; [exact (p1 @ p'^) | reflexivity]. }
       assert (H'' : V_pair c d = V_singleton b)
         by apply (fst pair_eq_singleton (p^ @ H')).
       symmetry; apply (fst pair_eq_singleton H'').
 - intros (p, p').
-  apply path_pair. split. apply path_singleton; exact p.
+  apply path_pair. split. apply ap; exact p.
   apply path_pair. split; assumption; assumption.
 Defined.
 
@@ -723,7 +721,7 @@ Proof.
     + intros z Hz. simpl.
       generalize (H1 z Hz). apply minus1Trunc_map. intros [(a,b) p]. simpl in p.
       exists a. path_via ([func_of_members a, func_of_members b]).
-      apply path_pair_ord. split. reflexivity.
+      apply ap.
       apply H3 with (func_of_members a). split.
       exact (pr2 (h a)).
       exact (transport (fun w => w ∈ phi) p^ Hz).
