@@ -40,6 +40,16 @@ being proven about.  For instance, "isequiv_idmap" proves "IsEquiv
 idmap", and "equiv_compose" constructs an "Equiv" record by composing
 two given equivalences.
 
+When defining an equivalence, the standard naming procedure is to
+
+- Define the function in one direction with a name, say "foo".
+- Define an IsEquiv instance for this function, called "isequiv_foo".
+- Define an Equiv record putting them together, called "equiv_foo".
+
+The inverse function can then be referred to as "foo ^-1".  Avoid
+using "equiv_foo" unless you really do need an Equiv object rather
+than a function which happens to be an equivalence.
+
 
 3. RECORDS, STRUCTURES, TYPECLASSES
 
@@ -198,6 +208,7 @@ generally be "completely transparent".
 It is possible to make subterms of a term opaque by using the abstract
 tactic. The assert tactic also produces opaque subterms. For a 
 transparent subterm use refine.
+
 
 6. FORMATTING
 
