@@ -38,8 +38,7 @@ Definition path_prod_uncurried {A B : Type} (z z' : A * B)
   : (z = z').
 Proof.
   change ((fst z, snd z) = (fst z', snd z')).
-  destruct pq as [p q].
-  destruct p; destruct q.
+  case (fst pq). case (snd pq).
   reflexivity.
 Defined.
 
@@ -61,16 +60,17 @@ Definition ap_fst_path_prod {A B : Type} {z z' : A * B}
 Proof.
   change z with (fst z, snd z).
   change z' with (fst z', snd z').
-  destruct p. destruct q.
+  destruct p, q.
   reflexivity.
 Defined.
 
 Definition ap_snd_path_prod {A B : Type} {z z' : A * B}
   (p : fst z = fst z') (q : snd z = snd z') :
   ap snd (path_prod _ _ p q) = q.
+Proof.
   change z with (fst z, snd z).
   change z' with (fst z', snd z').
-  destruct p. destruct q.
+  destruct p, q.
   reflexivity.
 Defined.
 
