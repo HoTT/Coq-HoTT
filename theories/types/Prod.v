@@ -190,28 +190,28 @@ Definition equiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
   : A * B <~> A' * B'.
 Proof.
   exists (functor_prod f g).
-  typeclasses eauto.
+  exact _. (* i.e., search the context for instances *)
 Defined.
 
 Definition equiv_functor_prod' {A A' B B' : Type} (f : A <~> A') (g : B <~> B')
   : A * B <~> A' * B'.
 Proof.
   exists (functor_prod f g).
-  typeclasses eauto.
+  exact _.
 Defined.
 
 Definition equiv_functor_prod_l {A B B' : Type} (g : B <~> B')
   : A * B <~> A * B'.
 Proof.
   exists (functor_prod idmap g).
-  typeclasses eauto.
+  exact _.
 Defined.
 
 Definition equiv_functor_prod_r {A A' B : Type} (f : A <~> A')
   : A * B <~> A' * B.
 Proof.
   exists (functor_prod f idmap).
-  typeclasses eauto.
+  exact _.
 Defined.
 
 (** ** Symmetry *)
