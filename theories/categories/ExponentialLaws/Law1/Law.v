@@ -69,6 +69,7 @@ Section law1.
                => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x) z) (@object_of C D))
            end.
     rewrite !path_functor'_sig_fst.
+    simpl. (* https://coq.inria.fr/bugs/show_bug.cgi?id=3587 *)
     transport_path_forall_hammer.
     assert (idpath = contr (center 1%category)) by exact (center _).
     path_induction.
