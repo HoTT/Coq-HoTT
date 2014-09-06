@@ -102,9 +102,10 @@ in the hypotheses without specifying a name for it.  When using such a
 variable, typeclass resolution means you shouldn't eve need to refer
 to it by name: you can write "_" in tactics such as "refine" and Coq
 will find typeclass instances from the context.  Even "exact _" works.
-(You can also use "typeclasses eauto", but "exact _" is preferable
-when it works, as it is shorter and uses a tactic name the reader is
-presumably already familiar with.)
+(You can usually also use "typeclasses eauto" or "eauto with
+typeclass_instances", but "exact _" is preferable when it works, as it
+is shorter and uses a tactic name the reader is presumably already
+familiar with.)
 
 Unfortunately, it is not currently possible to write "_" in a
 "refine"d term for an inhabitant of a typeclass and have Coq generate
