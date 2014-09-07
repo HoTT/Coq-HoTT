@@ -40,6 +40,16 @@ being proven about.  For instance, "isequiv_idmap" proves "IsEquiv
 idmap", and "equiv_compose" constructs an "Equiv" record by composing
 two given equivalences.
 
+When defining an equivalence, the standard naming procedure is to
+
+- Define the function in one direction with a name, say "foo".
+- Define an IsEquiv instance for this function, called "isequiv_foo".
+- Define an Equiv record putting them together, called "equiv_foo".
+
+The inverse function can then be referred to as "foo ^-1".  Avoid
+using "equiv_foo" unless you really do need an Equiv object rather
+than a function which happens to be an equivalence.
+
 
 3. RECORDS, STRUCTURES, TYPECLASSES
 
@@ -92,6 +102,10 @@ in the hypotheses without specifying a name for it.  When using such a
 variable, typeclass resolution means you shouldn't eve need to refer
 to it by name: you can write "_" in tactics such as "refine" and Coq
 will find typeclass instances from the context.  Even "exact _" works.
+(You can usually also use "typeclasses eauto" or "eauto with
+typeclass_instances", but "exact _" is preferable when it works, as it
+is shorter and uses a tactic name the reader is presumably already
+familiar with.)
 
 Unfortunately, it is not currently possible to write "_" in a
 "refine"d term for an inhabitant of a typeclass and have Coq generate
@@ -155,6 +169,12 @@ given for "eckmann_hilton": some may consider it optimally elegant,
 while others would prefer to be able to step through a tactic proof to
 understand what is happening step-by-step.
 
+One thing to beware of is explicit "match" terms that require "in" or
+"return" annotations, as these are particularly difficult for
+newcomers to understand.  Avoiding them is not a hard and fast rule,
+but when there is a short proof using tactics that produces an
+acceptable proof term, it should probably be preferred.
+
 The important thing is that when defining a transparent term with
 tactics, you should restrict yourself to tactics which maintain a high
 degree of control over the resulting term; "blast" tactics like
@@ -198,6 +218,7 @@ generally be "completely transparent".
 It is possible to make subterms of a term opaque by using the abstract
 tactic. The assert tactic also produces opaque subterms. For a 
 transparent subterm use refine.
+
 
 6. FORMATTING
 
