@@ -34,14 +34,14 @@ Section parts.
            end;
     repeat match goal with
              | [ x : _ |- appcontext[ap (fun x3 : ?T => ?f (object_of x3 ?z))] ]
-               => rewrite (@ap_compose' _ _ _ (fun x3 : T => object_of x3) (fun Ox3 => f (Ox3 x)))
+               => rewrite (@ap_compose' _ _ _ (fun x3' : T => object_of x3') (fun Ox3 => f (Ox3 x)))
              | [ x : _ |- appcontext[ap (fun x3 : ?T => ?f (object_of x3 ?z) ?w)] ]
-               => rewrite (@ap_compose' _ _ _ (fun x3 : T => object_of x3) (fun Ox3 => f (Ox3 x) w))
+               => rewrite (@ap_compose' _ _ _ (fun x3' : T => object_of x3') (fun Ox3 => f (Ox3 x) w))
            end;
     repeat match goal with
              | _ => done
              | [ |- appcontext[fun F => @object_of ?C ?D F] ]
-               => progress change (fun F => @object_of C D F) with (@object_of C D)
+               => progress change (fun F' => @object_of C D F') with (@object_of C D)
              | [ |- appcontext[helper_lem_match ?x] ]
                => rewrite (helper_lem x)
            end.

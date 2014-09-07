@@ -18,12 +18,18 @@ Require Import Notations.
 Require Import Datatypes.
 Local Open Scope identity_scope.
 Require Import Logic.
+Local Set Primitive Projections.
 
 (** [(sig A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type.
     Similarly for [(sig2 A P Q)], also written [{x:A & (P x) & (Q x)}]. *)
 
-Inductive sig (A:Type) (P:A -> Type) : Type :=
-    exist : forall x:A, P x -> sig P.
+Record sig {A} (P : A -> Type) := exist { proj1_sig : A ; proj2_sig : P proj1_sig }.
+
+(** We make the parameters maximally inserted so that we can pass around [pr1] as a function and have it actually mean "first projection" in, e.g., [ap]. *)
+
+Arguments exist {A}%type P%type _ _.
+Arguments proj1_sig {A P} _ / .
+Arguments proj2_sig {A P} _ / .
 
 Inductive sig2 (A:Type) (P Q:A -> Type) : Type :=
     exist2 : forall x:A, P x -> Q x -> sig2 P Q.
@@ -88,13 +94,6 @@ Add Printing Let sig2.
     made of an [a] of type [A] and an [h] of type [P a].  Then,
     [(proj1 x)] is the first projection and [(proj2 x)] is the
     second projection, the type of which depends on the [proj1]. *)
-
-(** We make the parameters maximally inserted so that we can pass around [proj1] as a function and have it actually mean "first projection" in, e.g., [ap]. *)
-
-Definition proj1_sig {A} {P : A -> Type} (x : sig P) : A
-  := let (a, _) := x in a.
-Definition proj2_sig {A} {P : A -> Type} (x : sig P) : P (proj1_sig x)
-  := let (a, h) return P (proj1_sig x) := x in h.
 
 Notation projT1 := proj1_sig (only parsing).
 Notation projT2 := proj2_sig (only parsing).

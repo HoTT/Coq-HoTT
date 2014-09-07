@@ -134,7 +134,7 @@ Global Instance isequiv_path_extension {A B : Type} {f : A -> B}
 : IsEquiv (path_extension ext ext') | 0.
 Proof.
   apply @isequiv_compose.
-    2: apply @isequiv_path_sigma.
+    2: refine (@isequiv_path_sigma _ _ _ _). (* https://coq.inria.fr/bugs/show_bug.cgi?id=3588 *)
   apply @isequiv_functor_sigma.
     apply @isequiv_path_forall.
   intros a. apply @isequiv_compose.
