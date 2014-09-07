@@ -3,8 +3,6 @@
 Require Import Overture types.Prod types.Forall PathGroupoids Contractible types.Paths.
 Require Export Tactics.BinderApply.
 
-Set Implicit Arguments.
-
 (** * Extra tactics for homotopy type theory. *)
 
 (** ** Tactics for dealing with [Funext] *)
@@ -237,20 +235,20 @@ Ltac step_clear_paths_in_match :=
 Ltac clear_paths_in_match := progress repeat step_clear_paths_in_match.
 
 (** Now some lemmas about trivial [match]es *)
-Definition match_eta T (x y : T) (H0 : x = y)
+Definition match_eta {T} {x y : T} (H0 : x = y)
 : (H0 = match H0 in (_ = y) return (x = y) with
           | idpath => idpath
         end)
   := match H0 with idpath => idpath end.
 
-Definition match_eta1 T (x : T) (E : x = x)
+Definition match_eta1 {T} {x : T} (E : x = x)
 : (match E in (_ = y) return (x = y) with
      | idpath => idpath
    end = idpath)
   -> idpath = E
   := fun H => ((H # match_eta E) ^)%path.
 
-Definition match_eta2 T (x : T) (E : x = x)
+Definition match_eta2 {T} {x : T} (E : x = x)
 : (idpath
    = match E in (_ = y) return (x = y) with
        | idpath => idpath

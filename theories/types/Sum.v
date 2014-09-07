@@ -7,7 +7,6 @@ Require Import types.Bool types.Forall types.Sigma.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
-Set Implicit Arguments.
 
 (** ** CoUnpacking *)
 
@@ -33,7 +32,7 @@ Definition path_sum {A B : Type} (z z' : A + B)
   destruct z, z', pq; exact idpath.
 Defined.
 
-Definition path_sum_inv {A B : Type} (z z' : A + B)
+Definition path_sum_inv {A B : Type} {z z' : A + B}
            (pq : z = z')
 : match z, z' with
     | inl z0, inl z'0 => z0 = z'0
@@ -155,7 +154,7 @@ Defined.
 
 (** Ordinary universal mapping properties are expressed as equivalences of sets or spaces of functions.  In type theory, we can go beyond this and express an equivalence of types of *dependent* functions. *)
 
-Definition sum_rect_uncurried A B (P : A + B -> Type)
+Definition sum_rect_uncurried {A B} (P : A + B -> Type)
            (fg : (forall a, P (inl a)) * (forall b, P (inr b)))
 : forall s, P s
   := @sum_rect A B P (fst fg) (snd fg).
