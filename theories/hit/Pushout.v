@@ -1,29 +1,28 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-(** * The flattening lemma. *)
-
 Require Import Overture PathGroupoids Equivalences.
 Require Import types.Paths types.Forall types.Sigma types.Arrow types.Universe.
-Require Import types.Unit HSet types.Sum.
+Require Import types.Unit HProp HSet types.Sum types.Paths.
 Require Import Trunc Contractible.
 Require Import hit.Truncations.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
-(* Record Span :=  *)
-(*   { A : Type; B : Type; C : Type; *)
-(*     f : C -> A; *)
-(*     g : C -> B }. *)
+(** * Homotopy Pushouts *)
 
-(* Record Cocone (S : Span) (D : Type) :=  *)
-(*   { i : A S -> D; *)
-(*     j : B S -> D; *)
-(*     h : forall c, i (f S c) = j (g S c) }. *)
+(*
+Record Span :=
+  { A : Type; B : Type; C : Type;
+    f : C -> A;
+    g : C -> B }.
 
+Record Cocone (S : Span) (D : Type) :=
+  { i : A S -> D;
+    j : B S -> D;
+    h : forall c, i (f S c) = j (g S c) }.
+*)
 
-(** First we define the general non-recursive HIT. *)
-
-Module Export BaseHIT.
+Module Export Pushout.
 
 Private Inductive pushout {A B C : Type} (f : A -> B) (g : A -> C) : Type :=
 | push : B + C -> pushout f g.
@@ -48,8 +47,9 @@ Axiom pushout_rect_beta_pp
   (a : A),
   apD (pushout_rect f g P push' pp') (pp a) = pp' a.
 
-End BaseHIT.
+End Pushout.
 
+(** ** The non-dependent eliminator *)
 
 Definition pushout_rectnd {A B C} {f : A -> B} {g : A -> C} (P : Type)
   (push' : B + C -> P)
@@ -69,12 +69,14 @@ Proof.
   refine (pushout_rect_beta_pp (fun _ => P) _ _ _).
 Defined.
 
-Section Cone.
+(** ** Cones of hsets *)
+
+Section SetCone.
   Context {A B : hSet} (f : A -> B).
 
-  Definition cone := Truncation 0 (pushout f (const tt)).
+  Definition setcone := Truncation 0 (pushout f (const tt)).
 
-  Global Instance istrunc_cone : IsHSet cone := _.
+  Global Instance istrunc_setcone : IsHSet setcone := _.
 
-  Definition cone_point : cone := truncation_incl (push (inr tt)).
-End Cone.
+  Definition setcone_point : setcone := truncation_incl (push (inr tt)).
+End SetCone.
