@@ -89,7 +89,7 @@ Section yoneda.
     := ExponentialLaws.Law4.Functors.inverse _ _ _ (hom_functor A).
 
   Definition yoneda A : Functor A (A^op -> set_cat)
-    := ((coyoneda A^op)^op'L)^op'L.
+    := coyoneda A^op.
 End yoneda.
 
 (** ** The (co)yoneda lemma *)
@@ -129,7 +129,7 @@ Section coyoneda_lemma.
     Definition coyoneda_functor
     : Functor (A -> set_cat)
               (A -> set_cat)
-      := (compose_functor _ _ set_cat (coyoneda A)^op'L)
+      := (compose_functor _ _ set_cat (coyoneda A)^op)
            o (yoneda (A -> set_cat)).
   End functor.
 

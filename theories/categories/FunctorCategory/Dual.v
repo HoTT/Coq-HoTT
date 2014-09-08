@@ -15,11 +15,9 @@ Local Open Scope functor_scope.
 
 Section opposite.
   Context `{Funext}.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
 
   (** ** Functors [(C → D) ↔ (Cᵒᵖ → Dᵒᵖ)ᵒᵖ] *)
-  Definition opposite_functor : Functor (C -> D) (C^op -> D^op)^op
+  Definition opposite_functor (C D : PreCategory) : Functor (C -> D) (C^op -> D^op)^op
     := Build_Functor
          (C -> D) ((C^op -> D^op)^op)
          (fun F => F^op)%functor
@@ -27,37 +25,11 @@ Section opposite.
          (fun _ _ _ _ _ => idpath)
          (fun _ => idpath).
 
-  Definition opposite_functor_inv : Functor (C^op -> D^op)^op (C -> D)
-    := Build_Functor
-         ((C^op -> D^op)^op) (C -> D)
-         (fun F => F^op')%functor
-         (fun _ _ T => T^op')%natural_transformation
-         (fun _ _ _ _ _ => idpath)
-         (fun _ => idpath).
-
-  (** ** Functors [(C → D)ᵒᵖ ↔ (Cᵒᵖ → Dᵒᵖ)] *)
-  Definition opposite_functor' : Functor (C -> D)^op (C^op -> D^op)
-    := Build_Functor
-         ((C -> D)^op) (C^op -> D^op)
-         (fun F => F^op)%functor
-         (fun _ _ T => T^op)%natural_transformation
-         (fun _ _ _ _ _ => idpath)
-         (fun _ => idpath).
-
-
-  Definition opposite_functor_inv' : Functor (C^op -> D^op) (C -> D)^op
-    := Build_Functor
-         (C^op -> D^op) ((C -> D)^op)
-         (fun F => F^op')%functor
-         (fun _ _ T => T^op')%natural_transformation
-         (fun _ _ _ _ _ => idpath)
-         (fun _ => idpath).
-
-  Local Ltac op_t :=
+  Local Ltac op_t C D :=
     split;
     path_functor;
-    [ (exists (path_forall _ _ (@opposite'_law C D)))
-    | (exists (path_forall _ _ (@opposite_law C D))) ];
+    [ (exists (path_forall _ _ (@Functor.Dual.opposite_involutive C^op D^op)))
+    | (exists (path_forall _ _ (@Functor.Dual.opposite_involutive C D))) ];
     repeat (apply path_forall; intro);
     simpl;
     rewrite !transport_forall_constant;
@@ -67,17 +39,10 @@ Section opposite.
     exact idpath.
 
   (** ** The above functors are isomorphisms *)
-  Definition opposite_functor_law
-  : opposite_functor o opposite_functor_inv = 1
-    /\ opposite_functor_inv o opposite_functor = 1.
+  Definition opposite_functor_law C D
+  : opposite_functor C D o (opposite_functor C^op D^op)^op = 1
+    /\ (opposite_functor C^op D^op)^op o opposite_functor C D = 1.
   Proof.
-    op_t.
-  Qed.
-
-  Definition opposite_functor'_law
-  : opposite_functor' o opposite_functor_inv' = 1
-    /\ opposite_functor_inv' o opposite_functor' = 1.
-  Proof.
-    op_t.
+    op_t C D.
   Qed.
 End opposite.

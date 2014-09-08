@@ -26,7 +26,7 @@ Section opposite.
     Local Notation obj_of x
       := (CommaCategory.Build_object (T^op) (S^op) _ _ (CommaCategory.f x)
           : object ((T^op / S^op)^op)).
-    Local Notation obj_of_inv x
+    Local Notation obj_of' x
       := (CommaCategory.Build_object S T _ _ (CommaCategory.f x)
           : object (S / T)).
 
@@ -37,13 +37,13 @@ Section opposite.
             (CommaCategory.g m)
             ((CommaCategory.p m)^)
           : morphism ((T^op / S^op)^op) (obj_of s) (obj_of d)).
-    Local Notation mor_of_inv s d m
+    Local Notation mor_of' s d m
       := (CommaCategory.Build_morphism
-            (obj_of_inv s) (obj_of_inv d)
+            (obj_of' s) (obj_of' d)
             (CommaCategory.h m)
             (CommaCategory.g m)
             ((CommaCategory.p m)^)
-          : morphism (S / T) (obj_of_inv s) (obj_of_inv d)).
+          : morphism (S / T) (obj_of' s) (obj_of' d)).
 
     Definition dual_functor : Functor (S / T) ((T^op / S^op)^op)
       := Build_Functor
@@ -63,87 +63,24 @@ Section opposite.
                 idpath
                 idpath).
 
-    Definition dual_functor_inv : Functor ((T^op / S^op)^op) (S / T)
+    Definition dual_functor' : Functor ((T^op / S^op)^op) (S / T)
       := Build_Functor
            ((T^op / S^op)^op) (S / T)
-           (fun x => obj_of_inv x)
-           (fun s d m => mor_of_inv s d m)
+           (fun x => obj_of' x)
+           (fun s d m => mor_of' s d m)
            (fun s d d' m1 m2 =>
               CommaCategory.path_morphism
-                (mor_of_inv s d' (m2 o m1))
-                (mor_of_inv d d' m2 o mor_of_inv s d m1)
+                (mor_of' s d' (m2 o m1))
+                (mor_of' d d' m2 o mor_of' s d m1)
                 idpath
                 idpath)
            (fun x =>
               CommaCategory.path_morphism
-                (mor_of_inv x x (Category.Core.identity x))
-                (Category.Core.identity (obj_of_inv x))
+                (mor_of' x x (Category.Core.identity x))
+                (Category.Core.identity (obj_of' x))
                 idpath
                 idpath).
 
-    (** It would be nice to prove that these functors are inverses.  It would be almost trivial if we had eta for records.  Without it, I fear it will be rather tedius. *)
+    (** It would be nice to prove that these functors are inverses.  This will have to wait until we make [Functor] a primitive record. *)
   End op.
-
-  Section op'.
-    Variable S : Functor A^op C^op.
-    Variable T : Functor B^op C^op.
-
-    Local Notation obj_of x
-      := (CommaCategory.Build_object (T^op') (S^op') _ _ (CommaCategory.f x)
-          : object ((T^op' / S^op')^op)).
-    Local Notation obj_of_inv x
-      := (CommaCategory.Build_object S T _ _ (CommaCategory.f x)
-          : object (S / T)).
-
-    Local Notation mor_of s d m
-      := (CommaCategory.Build_morphism
-            (obj_of d) (obj_of s)
-            (CommaCategory.h m)
-            (CommaCategory.g m)
-            ((CommaCategory.p m)^)
-          : morphism ((T^op' / S^op')^op) (obj_of s) (obj_of d)).
-    Local Notation mor_of_inv s d m
-      := (CommaCategory.Build_morphism
-            (obj_of_inv s) (obj_of_inv d)
-            (CommaCategory.h m)
-            (CommaCategory.g m)
-            ((CommaCategory.p m)^)
-          : morphism (S / T) (obj_of_inv s) (obj_of_inv d)).
-
-    Definition dual_functor' : Functor (S / T) ((T^op' / S^op')^op)
-      := Build_Functor
-           (S / T) ((T^op' / S^op')^op)
-           (fun x => obj_of x)
-           (fun s d m => mor_of s d m)
-           (fun s d d' m1 m2 =>
-              CommaCategory.path_morphism
-                (mor_of s d' (m2 o m1))
-                (mor_of d d' m2 o mor_of s d m1)
-                idpath
-                idpath)
-           (fun x =>
-              CommaCategory.path_morphism
-                (mor_of x x (Category.Core.identity x))
-                (Category.Core.identity (obj_of x))
-                idpath
-                idpath).
-
-    Definition dual_functor_inv' : Functor ((T^op' / S^op')^op) (S / T)
-      := Build_Functor
-           ((T^op' / S^op')^op) (S / T)
-           (fun x => obj_of_inv x)
-           (fun s d m => mor_of_inv s d m)
-           (fun s d d' m1 m2 =>
-              CommaCategory.path_morphism
-                (mor_of_inv s d' (m2 o m1))
-                (mor_of_inv d d' m2 o mor_of_inv s d m1)
-                idpath
-                idpath)
-           (fun x =>
-              CommaCategory.path_morphism
-                (mor_of_inv x x (Category.Core.identity x))
-                (Category.Core.identity (obj_of_inv x))
-                idpath
-                idpath).
-  End op'.
 End opposite.
