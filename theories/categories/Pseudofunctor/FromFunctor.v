@@ -57,7 +57,7 @@ Section of_functor.
     rewrite ?idtoiso_inv;
     simpl;
     change @NaturalTransformation.Composition.Core.compose
-    with (fun C D F G H => @Category.Core.compose (C -> D) F G H);
+    with (fun C D F G H => Category.Core.compose (C := C -> D) (s := F) (d := G) (d' := H));
     cbv beta;
     rewrite ?idtoiso_comp;
     first [ transitivity_idtoiso (Functor.Composition.Laws.left_identity _)
