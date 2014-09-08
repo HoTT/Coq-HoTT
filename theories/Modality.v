@@ -80,7 +80,7 @@ Section Modalities.
     Definition O_rect_beta : forall a, O_rect (O_unit A a) = f a.
     Proof.
       intros a; unfold O_rect.
-      apply moveR_VE.
+      apply moveR_equiv_V.
       apply @O_rectO_beta with (f := fun x => O_unit _ (f x)).
     Defined.
 
