@@ -19,7 +19,7 @@ Section Join.
 
   Definition joinpp := @pp (A*B) A B fst snd.
 
-  (* Joining with a contractible type produces a contractible type *)
+  (** Joining with a contractible type produces a contractible type *)
   Global Instance contr_join `{Contr A} : Contr join.
   Proof.
     exists (push (inl (center A))).
