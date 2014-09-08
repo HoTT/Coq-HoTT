@@ -69,6 +69,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/hit/quotient.v \
 	$(srcdir)/theories/hit/iso.v \
 	$(srcdir)/theories/hit/Pushout.v \
+	$(srcdir)/theories/hit/Join.v \
 	$(srcdir)/theories/hit/V.v \
 	$(srcdir)/theories/ObjectClassifier.v \
 	$(srcdir)/theories/Misc.v \
