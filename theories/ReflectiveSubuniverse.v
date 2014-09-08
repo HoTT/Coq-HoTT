@@ -24,7 +24,7 @@ Section Unit_Subuniverse.
 
   1. Assume an arbitrary one for the purposes of general theory, as we will do here.  In this case it is a variable in the context, so typeclass resolution finds it automatically.
 
-  2. Construct a specific one, such as n-types.  You should define it with [Definition], not [Instance], because you want someone to be able to import your file and still be able to talk about *other* subuniverses than yours.
+  2. Construct a specific one, such as n-types.  You should not define it as a global instance: use [Definition] or [Local Instance].  That way someone else can import your file and still be able to talk about subuniverses other than yours.  (If they do want to use yours, then they can declare it with [Local Existing Instance].)
 
   3. Apply general theory to a specific example explicitly.  This requires giving the specific example, defined as above, as an explicit argument to the general functions and theorems.
 
