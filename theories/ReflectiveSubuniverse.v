@@ -39,15 +39,13 @@ Section Unit_Subuniverse.
   Class inO (T : Type) :=
     isequiv_inO : IsEquiv (O_unit T).
 
+  Typeclasses Transparent inO.
   Global Existing Instance isequiv_inO.
 
   Definition equiv_O_unit (T : Type) {T_inO : inO T} : T <~> O T
     := BuildEquiv T (O T) (O_unit T) T_inO.
 
-  Global Instance hprop_inO (T : Type) : IsHProp (inO T).
-  Proof.
-    apply hprop_isequiv.
-  Defined.
+  Global Instance hprop_inO (T : Type) : IsHProp (inO T) := _.
 
   (** Being in the universe transports along equivalences, by univalence *)
   Definition inO_equiv_inO (T : Type) {U : Type} {T_inO : inO T} (f : T <~> U)
