@@ -41,5 +41,9 @@ then
 fi
 popd
 
+# now clean the HoTT repository, so that we don't have inconsistent compiled files
+echo '$ make clean'
+make clean
+
 popd 1>/dev/null
 popd 1>/dev/null
