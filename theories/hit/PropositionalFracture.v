@@ -51,8 +51,7 @@ Section ClosedModality.
 
   Context `{Funext} (U : hProp).
 
-  (* Not Global! *)
-  Instance closed_unitsubuniverse : UnitSubuniverse
+  Local Instance closed_unitsubuniverse : UnitSubuniverse
     := (Build_UnitSubuniverse
                (fun X => join U X)
                (fun X => push o (@inr U X))).
@@ -85,8 +84,7 @@ Section ClosedModality.
       * intros a. reflexivity.
   Defined.
 
-  (* Not Global! *)
-  Instance closed_modality : Modality.
+  Local Instance closed_modality : Modality.
   Proof.
     refine (Build_Modality closed_unitsubuniverse _ _ _).
     - intros A B f z.
