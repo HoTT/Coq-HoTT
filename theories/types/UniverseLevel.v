@@ -1,7 +1,5 @@
 Require Import Overture.
 
-Set Implicit Arguments.
-
 (** * Universe Levels *)
 
 (** We provide casting definitions for raising universe levels. *)

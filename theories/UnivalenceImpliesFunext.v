@@ -1,7 +1,6 @@
 Require Import Overture types.Universe FunextVarieties Equivalences types.Paths types.Unit.
 
 Generalizable All Variables.
-Set Implicit Arguments.
 
 (** * Univalence Implies Functional Extensionality *)
 

@@ -290,3 +290,13 @@ Definition concat_p1 {A : Type} {x y : A} (p : x = y) : p @ 1 = p
 
 Of course, if the term is longer than one line, it should be broken
 across lines, with later lines indented further.
+
+
+7. IMPLICIT ARGUMENTS
+
+Do not use "Set Implicit Arguments" in the core.  It makes it
+difficult for a newcomer to read the code; use braces {...} to
+explicitly mark which arguments are implicit.  If necessary, you can
+use the "Arguments" command to adjust implicitness of arguments after
+a function is defined, but this should be avoided if possible for the
+same reason.
