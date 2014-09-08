@@ -46,5 +46,7 @@ Require Export hit.unique_choice.
 Require Export hit.iso.
 Require Export hit.quotient.
 Require Export hit.V.
+Require Export hit.Join.
+Require Export hit.PropositionalFracture.
 
 Require Export HoTT.Tactics.

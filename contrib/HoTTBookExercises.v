@@ -967,6 +967,8 @@ Definition Book_7_12 := @HoTT.Modality.notnot_modality.
 (* ================================================== ex:prop-modalities *)
 (** Exercise 7.13 *)
 
+Definition Book_7_13_part_i := @HoTT.hit.PropositionalFracture.open_modality.
+Definition Book_7_13_part_ii := @HoTT.hit.PropositionalFracture.closed_modality.
 
 
 (* ================================================== ex:f-local-type *)
