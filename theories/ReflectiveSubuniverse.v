@@ -28,7 +28,7 @@ Section Unit_Subuniverse.
 
   3. Apply general theory to a specific example explicitly.  This requires giving the specific example, defined as above, as an explicit argument to the general functions and theorems.
 
-  4. Inside a section (only!), specify that we will be applying the general theory of subuniverses only to a specific example, by declaring that example as an [Instance].  As long as you *don't* say [Global Instance], the instance won't outlast the section, but inside the section you won't have to give it as an explicit argument.
+  4. Specify locally that we will be applying the general theory of subuniverses only to a specific example, by declaring that example as a [Local Instance].  (If the subuniverse in question has already been defined somewhere else, you can declare it as an instance locally with [Local Existing Instance].)  This way the instance won't outlast the containing section, module, or file, but inside that section, module, or file, you won't have to give it as an explicit argument.
 
   The same considerations will apply to [ReflectiveSubuniverse] and [Modality].
   *)
