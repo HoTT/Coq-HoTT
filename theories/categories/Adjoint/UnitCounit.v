@@ -266,15 +266,15 @@ Section Adjunction.
         (*where "'ε'" := counit*);
         unit_counit_equation_1
         : forall Y : C, (*ε (F Y) ∘ F ₁ (η Y) = identity (F Y);*)
-            @Category.Core.compose D (F Y) (F (G (F Y))) (F Y)
-                                   (counit (F Y))
-                                   (morphism_of F (s := Y) (d := G (F Y)) (unit Y))
+            Category.Core.compose (C := D) (s := F Y) (d := F (G (F Y))) (d' := F Y)
+                                  (counit (F Y))
+                                  (morphism_of F (s := Y) (d := G (F Y)) (unit Y))
             = 1;
         unit_counit_equation_2
         : forall X : D, (* G ₁ (ε X) ∘ η (G X) = identity (G X) *)
-            @Category.Core.compose C (G X) (G (F (G X))) (G X)
-                                   (morphism_of G (s := F (G X)) (d := X) (counit X))
-                                   (unit (G X))
+            Category.Core.compose (C := C) (s := G X) (d := G (F (G X))) (d' := G X)
+                                  (morphism_of G (s := F (G X)) (d := X) (counit X))
+                                  (unit (G X))
             = 1
       }.
   End unit_counit.
