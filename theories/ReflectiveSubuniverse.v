@@ -80,7 +80,7 @@ Section Reflective_Subuniverse.
   Class ReflectiveSubuniverse :=
     {
       (** The underlying [UnitSubuniverse] *)
-      rsubu_usubu :> UnitSubuniverse ;
+      rsubu_usubu : UnitSubuniverse ;
       (** [O T] is in the subuniverse for all [T] *)
       O_inO : forall T, inO (O T) ;
       (** an equivalence [((O P)->Q) <~> (P -> Q)] *)
@@ -88,6 +88,8 @@ Section Reflective_Subuniverse.
                   IsEquiv (fun f : O P -> Q => f o O_unit P)
     }.
 
+  Global Existing Instance rsubu_usubu.
+  Coercion rsubu_usubu : ReflectiveSubuniverse >-> UnitSubuniverse.
   Global Existing Instance O_inO.
   Global Existing Instance isequiv_o_O_unit.
 

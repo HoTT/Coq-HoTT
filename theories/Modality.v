@@ -27,7 +27,7 @@ Section Modalities.
 
   Class Modality :=
     {
-      mod_usubu :> UnitSubuniverse ;
+      mod_usubu : UnitSubuniverse ;
       O_rectO : forall A (B : O A -> Type),
                 (forall a, O (B (O_unit A a))) -> forall z, O (B z) ;
       O_rectO_beta : forall A B (f : forall a : A, O (B (O_unit A a))) a,
@@ -37,6 +37,8 @@ Section Modalities.
 
   (** See ReflectiveSubuniverse.v for explanation of how to use (and how not to use) [Modality] as a typeclass. *)
 
+  Global Existing Instance mod_usubu.
+  Coercion mod_usubu : Modality >-> UnitSubuniverse.
   Global Existing Instance inO_pathsO.
 
   Context {mod : Modality}.
