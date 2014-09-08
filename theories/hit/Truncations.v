@@ -2,7 +2,7 @@
 
 (** * Truncations of types, in all dimensions. *)
 
-Require Import Overture PathGroupoids Equivalences Trunc types.Sigma.
+Require Import Overture PathGroupoids Equivalences Trunc types.Sigma ReflectiveSubuniverse Modality.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A X n.
@@ -46,6 +46,7 @@ Definition Truncation_rect_nondep {n A X} `{IsTrunc n X}
 := Truncation_rect (fun _ => X).
 
 (** ** Functoriality *)
+
 Definition functor_Truncation {n : trunc_index} {X Y} (f : X -> Y)
   : Truncation n X -> Truncation n Y.
 Proof.
@@ -69,3 +70,43 @@ Proof.
   intros y; simpl. apply ap, eisretr.
   intros x; simpl. apply ap, eissect.
 Defined.
+
+(** Truncation is a modality *)
+
+Section TruncationModality.
+
+  Context (n : trunc_index).
+
+  (* Not Global! *)
+  Instance truncation_unitsubuniverse : UnitSubuniverse
+    := (Build_UnitSubuniverse (Truncation n) (@truncation_incl n)).
+
+  Definition truncation_inO_iff_trunc (A : Type)
+  : inO A <-> IsTrunc n A.
+  Proof.
+    split; intros ?.
+    - exact (trunc_equiv (O_unit A)^-1).
+    - refine (isequiv_adjointify _ _ _ _).
+      * apply Truncation_rect_nondep, idmap.
+      * intros oa.
+        refine (@Truncation_rect n A
+                (fun z => truncation_incl (Truncation_rect_nondep idmap z) = z)
+                _ _ _).
+        reflexivity.
+      * intros a.
+        reflexivity.
+  Defined.
+    
+  (* Not Global! *)
+  Instance truncation_modality : Modality.
+  Proof.
+    refine (Build_Modality
+              _
+              (fun A B => @Truncation_rect
+                            n A (fun a => Truncation n (B a)) _)
+              (fun A B f a => 1) _).
+    intros A z z'.
+    exact (snd (truncation_inO_iff_trunc _) _).
+  Defined.    
+  
+End TruncationModality.
