@@ -35,7 +35,7 @@ Section Unit_Subuniverse.
 
   Context {subU : UnitSubuniverse}.
 
-  (** The property of being in the subuniverse.  This is a more usual sort of typeclass, to be inferred automatically in many cases.  Note, however, that you shouldn't write [`{inO A}], since the generalizing binders will then introduce a *new* subuniverse hypothesis rather than using the one you intend; write [{A_inO : inO A}] instead.  *)
+  (** The property of being in the subuniverse.  This is a more usual sort of typeclass, to be inferred automatically in many cases.  Note, however, that you shouldn't write [`{inO A}], since the generalizing binders will then introduce a *new* [UnitSubuniverse] hypothesis rather than using the one you intend; write [{A_inO : inO A}] instead.  *)
   Class inO (T : Type) :=
     isequiv_inO : IsEquiv (O_unit T).
 
