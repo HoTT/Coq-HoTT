@@ -77,8 +77,7 @@ Section TruncationModality.
 
   Context (n : trunc_index).
 
-  (* Not Global! *)
-  Instance truncation_unitsubuniverse : UnitSubuniverse
+  Local Instance truncation_unitsubuniverse : UnitSubuniverse
     := (Build_UnitSubuniverse (Truncation n) (@truncation_incl n)).
 
   Definition truncation_inO_iff_trunc (A : Type)
@@ -97,8 +96,7 @@ Section TruncationModality.
         reflexivity.
   Defined.
     
-  (* Not Global! *)
-  Instance truncation_modality : Modality.
+  Local Instance truncation_modality : Modality.
   Proof.
     refine (Build_Modality
               _
