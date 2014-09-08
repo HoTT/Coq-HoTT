@@ -152,7 +152,7 @@ Section Adjunction.
               forall (c : C) (d : D) (g : morphism D (F c) d),
                 Contr {f : morphism C c (G d)
                       | U d o F _1 f = g })
-           (@opposite' _ _ (F o G) 1 A.1)
+           (A.1^op)%natural_transformation
            (fun c d g => A.2 d c g).
 
     Definition adjunction_counit__op__adjunction_unit__inv (A : AdjunctionUnit G F)
@@ -162,7 +162,7 @@ Section Adjunction.
             => forall (c : C^op) (d : D^op) (g : morphism D^op ((F^op)%functor c) d),
                  Contr {f : morphism C^op c ((G^op)%functor d)
                        | U d o F^op _1 f = g })
-           (@opposite' _ _ (F^op o G^op) 1 A.1)
+           (A.1^op)%natural_transformation
            (fun c d g => A.2 d c g).
 
     Definition adjunction_unit__op__adjunction_counit (A : AdjunctionCounit G^op F^op)
@@ -172,7 +172,7 @@ Section Adjunction.
               forall (c : C) (d : D) (f : morphism C c (G d)),
                 Contr { g : morphism D (F c) d
                       | G _1 g o T c = f })
-           (@opposite' _ _ 1 (G o F) A.1)
+           (A.1^op)%natural_transformation
            (fun c d g => A.2 d c g).
 
     Definition adjunction_unit__op__adjunction_counit__inv (A : AdjunctionCounit G F)
@@ -182,7 +182,7 @@ Section Adjunction.
             => forall (c : C^op) (d : D^op) (f : morphism C^op c ((G^op)%functor d)),
                  Contr {g : morphism D^op ((F^op)%functor c) d
                        | G^op _1 g o T c = f })
-           (@opposite' _ _ 1 (G^op o F^op) A.1)
+           (A.1^op)%natural_transformation
            (fun c d g => A.2 d c g).
   End unit_counit_op.
 

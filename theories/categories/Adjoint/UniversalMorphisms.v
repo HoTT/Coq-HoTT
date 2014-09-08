@@ -57,8 +57,8 @@ Section adjunction_universal.
     Definition terminal_morphism__of__adjunction
     : object (F / X)
       := Eval simpl in
-          dual_functor'
-            F (! X)
+          dual_functor
+            (! X)^op F^op
             (initial_morphism__of__adjunction A^op X).
 
     Definition is_terminal_morphism__of__adjunction
@@ -152,6 +152,6 @@ Section adjunction_from_universal.
       := ((@adjunction__of__initial_morphism
              (D^op) (C^op)
              (F^op)
-             (fun x : D => dual_functor F !x (M x)) HM)^op'R)%adjunction.
+             (fun x : D => dual_functor F !x (M x)) HM)^op)%adjunction.
   End terminal.
 End adjunction_from_universal.

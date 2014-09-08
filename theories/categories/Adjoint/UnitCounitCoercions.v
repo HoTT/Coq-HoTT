@@ -173,7 +173,7 @@ Section equivalences.
                C D F G (A : @AdjunctionCounit C D F G)
     : AdjunctionUnitCounit F G
       := ((adjunction_unit_counit__of__adjunction_unit
-             (adjunction_unit__op__adjunction_counit__inv A))^op')%adjunction.
+             (adjunction_unit__op__adjunction_counit__inv A))^op)%adjunction.
   End to_unit_counit.
 End equivalences.
 
