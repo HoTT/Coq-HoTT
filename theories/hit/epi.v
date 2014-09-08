@@ -53,11 +53,7 @@ Proof.
   apply (@equiv_functor_forall' _ _ _ _ _ (equiv_idmap _)); intro Z.
   apply (@equiv_functor_forall' _ _ _ _ _ (equiv_idmap _)); intro g.
   unfold equiv_idmap; simpl.
-  set (e:=@equiv_sigT_rect _ _ (fun h : Y -> Z => g o f = h o f) (fun h => g = h.1)).
-  cbn in e. refine (transitivity e _).
-(* We could also use:
-  [transitivity (forall xy : {h : Y -> Z & g o f = h o f}, g = xy.1).]
-*)
+  refine (transitivity _ _ _ (@equiv_sigT_rect _ (fun h : Y -> Z => g o f = h o f) (fun h => g = h.1)) _).
   (** TODO(JasonGross): Can we do this entirely by chaining equivalences? *)
   apply equiv_iff_hprop.
   { intro hepi.
