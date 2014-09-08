@@ -226,6 +226,14 @@ Definition moveL_E `{IsEquiv A B f} (x : A) (y : B) (p : f^-1 y = x)
   : (y = f x)
   := (eisretr f y)^ @ ap f p.
 
+Definition moveR_VE `{IsEquiv A B f} (x : B) (y : A) (p : x = f y)
+  : (f^-1 x = y)
+  := ap (f^-1) p @ eissect f y.
+
+Definition moveL_VE `{IsEquiv A B f} (x : B) (y : A) (p : f y = x)
+  : (y = f^-1 x)
+  := (eissect f y)^ @ ap (f^-1) p.
+
 (** Equivalence preserves contractibility (which of course is trivial under univalence). *)
 Lemma contr_equiv `(f : A -> B) `{IsEquiv A B f} `{Contr A}
   : Contr B.
