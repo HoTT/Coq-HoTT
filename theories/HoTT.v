@@ -18,6 +18,8 @@ Require Export EquivalenceVarieties.
 Require Export Misc.
 Require Export Functorish.
 Require Export Modality.
+Require Export ObjectClassifier.
+Require Export UniverseLevel.
 
 Require Export types.Unit.
 Require Export types.Paths.
@@ -30,8 +32,6 @@ Require Export types.Record.
 Require Export types.Sigma.
 Require Export types.Sum.
 Require Export types.Universe.
-Require Export types.ObjectClassifier.
-Require Export types.UniverseLevel.
 
 Require Export hit.Interval.
 Require Export hit.Truncations.
