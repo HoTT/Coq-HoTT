@@ -1,7 +1,7 @@
 Require Import Overture PathGroupoids Contractible HProp Equivalences EquivalenceVarieties
         UnivalenceImpliesFunext.
 Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths
-        types.Forall types.Prod types.Universe types.ObjectClassifier.
+        types.Forall types.Prod types.Universe.
 Require Import ReflectiveSubuniverse Modality.
 Require Import hit.Pushout hit.Join.
 
