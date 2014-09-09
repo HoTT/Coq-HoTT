@@ -69,28 +69,28 @@ Defined.
 Definition issurj {X Y} (f:X->Y) := forall y:Y , hexists (fun x => (f x) = y).
 
 Section cones.
-  Lemma isepi'_contr_cone `{Funext} {A B : hSet} (f : A -> B) : isepi' f -> Contr (cone f).
+  Lemma isepi'_contr_cone `{Funext} {A B : hSet} (f : A -> B) : isepi' f -> Contr (setcone f).
   Proof.
     intros hepi.
-    exists (cone_point _).
+    exists (setcone_point _).
     pose (alpha1 := @pp A B Unit f (const tt)).
-    pose (tot:= { h : B -> cone f & truncation_incl o push o inl o f = h o f }).
+    pose (tot:= { h : B -> setcone f & truncation_incl o push o inl o f = h o f }).
     pose (l := (truncation_incl o push o inl; idpath) : tot).
-    pose (r := (@const B (cone f) (cone_point _); (ap (fun f => @truncation_incl 0 _ o f) (path_forall _ _ alpha1))) : tot).
+    pose (r := (@const B (setcone f) (setcone_point _); (ap (fun f => @truncation_incl 0 _ o f) (path_forall _ _ alpha1))) : tot).
     subst tot.
-    assert (X : l = r) by (pose (hepi {| setT := cone f |} (truncation_incl o push o inl)); apply path_contr).
+    assert (X : l = r) by (pose (hepi {| setT := setcone f |} (truncation_incl o push o inl)); apply path_contr).
     subst l r.
 
     pose (I0 b := ap10 (X ..1) b).
     refine (Truncation_rect _ _).
-    pose (fun a : B + Unit => (match a as a return cone_point _ = truncation_incl (push a) with
+    pose (fun a : B + Unit => (match a as a return setcone_point _ = truncation_incl (push a) with
                                  | inl a' => (I0 a')^
                                  | inr tt => idpath
                                end)) as I0f.
     refine (pushout_rect _ _ _ I0f _).
 
     simpl. subst alpha1. intros.
-    unfold cone_point.
+    unfold setcone_point.
     subst I0. simpl.
     pose (X..2) as p. simpl in p. rewrite transport_precompose in p.
     assert (H':=concat (ap (fun x => ap10 x a) p) (ap10_ap_postcompose truncation_incl (path_arrow pushl pushr pp) _)).
@@ -142,7 +142,7 @@ Defined.
 Section isepi_issurj.
   Context {X Y : hSet} (f : X -> Y) (Hisepi : isepi f).
   Definition epif := equiv_isepi_isepi' _ Hisepi.
-  Definition fam (c : cone f) : hProp.
+  Definition fam (c : setcone f) : hProp.
   Proof.
     pose (fib y := hp (hexists (fun x : X => f x = y)) _).
     apply (fun f => @Truncation_rect_nondep _ _ hProp _ f c).
@@ -165,7 +165,7 @@ Section isepi_issurj.
     intros y.
     pose (i := isepi'_contr_cone _ epif).
 
-    assert (X0 : forall x : cone f, fam x = fam (cone_point f)).
+    assert (X0 : forall x : setcone f, fam x = fam (setcone_point f)).
     { intros. apply contr_dom_equiv. apply i. }
     specialize (X0 (truncation_incl (push (inl y)))). simpl in X0.
     exact (transport idmap (ap hproptype X0)^ tt).

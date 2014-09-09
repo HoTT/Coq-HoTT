@@ -46,6 +46,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/types/Sum.v \
 	$(srcdir)/theories/types/Universe.v \
 	$(srcdir)/theories/UnivalenceImpliesFunext.v \
+	$(srcdir)/theories/ObjectClassifier.v \
 	$(srcdir)/theories/Pointed.v \
 	$(srcdir)/theories/Tactics/BinderApply.v \
 	$(srcdir)/theories/Tactics.v \
@@ -69,8 +70,9 @@ CORE_VFILES = \
 	$(srcdir)/theories/hit/quotient.v \
 	$(srcdir)/theories/hit/iso.v \
 	$(srcdir)/theories/hit/Pushout.v \
+	$(srcdir)/theories/hit/Join.v \
+	$(srcdir)/theories/hit/PropositionalFracture.v \
 	$(srcdir)/theories/hit/V.v \
-	$(srcdir)/theories/ObjectClassifier.v \
 	$(srcdir)/theories/Misc.v \
 	$(srcdir)/theories/Utf8.v \
 	$(srcdir)/theories/HoTT.v \

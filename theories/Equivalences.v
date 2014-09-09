@@ -9,6 +9,8 @@ Local Open Scope equiv_scope.
 
    Whenever we need to assume, as a hypothesis, that a certain function is an equivalence, we do it by assuming separately a function and a proof of [IsEquiv].  This is more general than assuming an inhabitant of [Equiv], since the latter has an implicit coercion and an existing instance to give us the former automatically.  Moreover, implicit generalization makes it easy to assume a function and a proof of [IsEquiv]. *)
 
+(** A word on naming: some of the lemmas about equivalences are analogues of those for paths in PathGroupoids.  We name them in an analogous way but adding [_equiv] in an appropriate place, e.g. instead of [moveR_M] we have [moveR_equiv_M].  *)
+
 Generalizable Variables A B C f g.
 
 (** The identity map is an equivalence. *)
@@ -218,13 +220,21 @@ Section Adjointify.
 End Adjointify.
 
 (** Several lemmas useful for rewriting. *)
-Definition moveR_E `{IsEquiv A B f} (x : A) (y : B) (p : x = f^-1 y)
+Definition moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B) (p : x = f^-1 y)
   : (f x = y)
   := ap f p @ eisretr f y.
 
-Definition moveL_E `{IsEquiv A B f} (x : A) (y : B) (p : f^-1 y = x)
+Definition moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B) (p : f^-1 y = x)
   : (y = f x)
   := (eisretr f y)^ @ ap f p.
+
+Definition moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A) (p : x = f y)
+  : (f^-1 x = y)
+  := ap (f^-1) p @ eissect f y.
+
+Definition moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A) (p : f y = x)
+  : (y = f^-1 x)
+  := (eissect f y)^ @ ap (f^-1) p.
 
 (** Equivalence preserves contractibility (which of course is trivial under univalence). *)
 Lemma contr_equiv `(f : A -> B) `{IsEquiv A B f} `{Contr A}
@@ -232,7 +242,7 @@ Lemma contr_equiv `(f : A -> B) `{IsEquiv A B f} `{Contr A}
 Proof.
   exists (f (center A)).
   intro y.
-  apply moveR_E.
+  apply moveR_equiv_M.
   apply contr.
 Qed.
 
