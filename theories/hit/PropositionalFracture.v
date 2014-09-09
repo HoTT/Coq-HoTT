@@ -24,9 +24,11 @@ Proof.
     apply ap; apply allpath_hprop.
   - intros A B f a.
     apply path_arrow; intros u.
-    path_via (transport B 1 (f a u)).
+    transitivity (transport B 1 (f a u));
+      auto with path_hints.
     apply (ap (fun p => transport B p (f a u))).
-    path_via (path_arrow (fun _ => a) (fun _ => a) (@ap10 U _ _ _ 1)).
+    transitivity (path_arrow (fun _ => a) (fun _ => a) (@ap10 U _ _ _ 1));
+      auto with path_hints.
     * apply ap.
       apply path_forall; intros u'.
       apply ap_const.
@@ -36,7 +38,7 @@ Proof.
     * intros f; apply path_arrow; intros u.
       exact (ap10 (f u) u).
     * intros f; apply path_arrow; intros u.
-      path_via (path_arrow z z' (ap10 (f u))).
+      transitivity (path_arrow z z' (ap10 (f u))).
       + apply ap.
         apply path_forall; intros u'.
         apply (ap (fun u0 => ap10 (f u0) u')).
