@@ -322,16 +322,34 @@ Proof.
   apply (retr_f_g_isHSet_A_so_B f g); assumption.
 Defined.
 
-
 (* ================================================== ex:isset-coprod *)
 (** Exercise 3.2 *)
 
-
+Lemma Book_3_2 {A B} : IsHSet A -> IsHSet B -> IsHSet (A+B).
+Proof.
+  intros isHSet_A isHSet_B.
+  apply @hset_axiomK. unfold axiomK. intros x p. destruct x.
+  rewrite (inverse (eisretr_path_sum p)). 
+  rewrite (axiomK_hset isHSet_A a (path_sum_inv p)). 
+  simpl; exact idpath.
+  rewrite (inverse (eisretr_path_sum p)). 
+  rewrite (axiomK_hset isHSet_B b (path_sum_inv p)). 
+  simpl; exact idpath.
+Defined.
 
 (* ================================================== ex:isset-sigma *)
 (** Exercise 3.3 *)
 
+(** This exercise is hard because 2-paths over Sigma types are not treated
+in the first three chapters of the book. Consult theories/types/Sigma.v *)
 
+Lemma Book_3_3 {A : Type} {B : A -> Type} : 
+  IsHSet A -> (forall x:A, IsHSet (B x)) -> IsHSet { x:A | B x}.
+Proof.
+  intros isHSet_A allBx_HSet.
+  apply @hset_axiomK. intros x xx.
+  apply (path_path_sigma B x x xx 1 (axiomK_hset _ x.1 xx..1) (set_path2 _ _)).
+Defined.
 
 (* ================================================== ex:prop-endocontr *)
 (** Exercise 3.4 *)
@@ -1273,3 +1291,6 @@ Definition Book_7_13_part_ii := @HoTT.hit.PropositionalFracture.closed_modality.
 
 (* ================================================== ex:pseudo-ordinals *)
 (** Exercise 11.18 *)
+
+
+
