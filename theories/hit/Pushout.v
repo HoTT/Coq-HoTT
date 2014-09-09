@@ -72,7 +72,7 @@ Defined.
 Section Cone.
   Context {A B : hSet} (f : A -> B).
 
-  Definition cone := Truncation 0 (pushout f !).
+  Definition cone := Truncation 0 (pushout f (const tt)).
 
   Global Instance istrunc_cone : IsHSet cone := _.
 

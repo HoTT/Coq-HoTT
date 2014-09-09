@@ -374,9 +374,6 @@ Notation IsHSet := (IsTrunc 0).
 
 Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_instances.
 
-(** There is a canonical function to a contractible type. *)
-Notation "!" := (fun _ => center _).
-
 (** *** Truncated relations  *)
 
 (** Hprop-valued relations *)

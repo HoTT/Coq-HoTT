@@ -73,7 +73,7 @@ Section cones.
   Proof.
     intros hepi.
     exists (cone_point _).
-    pose (alpha1 := @pp A B Unit f !).
+    pose (alpha1 := @pp A B Unit f (const tt)).
     pose (tot:= { h : B -> cone f & truncation_incl o push o inl o f = h o f }).
     pose (l := (truncation_incl o push o inl; idpath) : tot).
     pose (r := (@const B (cone f) (cone_point _); (ap (fun f => @truncation_incl 0 _ o f) (path_forall _ _ alpha1))) : tot).
