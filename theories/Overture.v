@@ -450,6 +450,15 @@ Class Irreflexive {A} (R : relation A) :=
 Class Asymmetric {A} (R : relation A) :=
   asymmetry : forall {x y}, R x y -> (complement R y x : Type).
 
+(** Likewise, we put [Unit] here, instead of in [Unit.v], because [Trunc] uses it. *)
+Unset Elimination Schemes.
+Inductive Unit : Type1 :=
+    tt : Unit.
+Scheme Unit_rect := Induction for Unit Sort Type.
+Scheme Unit_rec := Induction for Unit Sort Set.
+Scheme Unit_ind := Induction for Unit Sort Prop.
+Set Elimination Schemes.
+
 (** *** Pointed types *)
 
 (** A space is pointed if that space has a point. *)

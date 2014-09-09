@@ -1,11 +1,10 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Truncatedness *)
 
-
-Require Import Overture Contractible Equivalences types.Paths types.Unit.
+Require Import Overture PathGroupoids Contractible Equivalences.
 Local Open Scope equiv_scope.
 Local Open Scope trunc_scope.
-
+Local Open Scope path_scope.
 Generalizable Variables A B m n f.
 
 (** ** Arithmetic on truncation-levels. *)
@@ -60,13 +59,11 @@ Definition trunc_equiv `(f : A -> B)
   `{IsTrunc n A} `{IsEquiv A B f}
   : IsTrunc n B.
 Proof.
-  generalize dependent f; revert B; generalize dependent A.
+  generalize dependent B; generalize dependent A.
   induction n as [| n I]; simpl; intros A ? B f ?.
-  - refine (contr_equiv f).
+  - exact (contr_equiv f).
   - intros x y.
-    pose proof (fun X Y => I (f^-1 x = f^-1 y) X (x = y) ((ap (f^-1))^-1) Y).
-    clear I.
-    typeclasses eauto.
+    exact (I (f^-1 x = f^-1 y) (H (f^-1 x) (f^-1 y)) (x = y) ((ap (f^-1))^-1) _).
 Qed.
 
 Definition trunc_equiv' `(f : A <~> B) `{IsTrunc n A}
