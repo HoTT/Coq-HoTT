@@ -39,7 +39,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/HProp.v \
 	$(srcdir)/theories/EquivalenceVarieties.v \
 	$(srcdir)/theories/Fibrations.v \
-	$(srcdir)/theories/types/UniverseLevel.v \
+	$(srcdir)/theories/UniverseLevel.v \
 	$(srcdir)/theories/FunextVarieties.v \
 	$(srcdir)/theories/HSet.v \
 	$(srcdir)/theories/types/Bool.v \
@@ -70,7 +70,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/hit/iso.v \
 	$(srcdir)/theories/hit/Pushout.v \
 	$(srcdir)/theories/hit/V.v \
-	$(srcdir)/theories/types/ObjectClassifier.v \
+	$(srcdir)/theories/ObjectClassifier.v \
 	$(srcdir)/theories/Misc.v \
 	$(srcdir)/theories/Utf8.v \
 	$(srcdir)/theories/HoTT.v \
