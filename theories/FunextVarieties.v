@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Varieties of function extensionality *)
 
-Require Import Overture PathGroupoids Contractible Equivalences types.UniverseLevel.
+Require Import Overture PathGroupoids Contractible Equivalences UniverseLevel.
 Local Open Scope path_scope.
 
 (** In the Overture, we defined function extensionality to be the assertion that the map [apD10] is an equivalence.   We now prove that this follows from a couple of weaker-looking forms of function extensionality.  We do require eta conversion, which Coq 8.4+ has judgmentally.

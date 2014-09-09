@@ -1,6 +1,6 @@
 Require Import Overture PathGroupoids HProp Equivalences EquivalenceVarieties.
 Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths
-        types.Forall types.Prod types.Universe types.ObjectClassifier.
+        types.Forall types.Prod types.Universe ObjectClassifier.
 Require Import ReflectiveSubuniverse.
 
 Set Implicit Arguments.
