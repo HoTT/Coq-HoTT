@@ -94,7 +94,7 @@ Section Modalities.
 
     Context {A : Type} (B : O A -> Type) {B_inO : forall a, inO (B a)}.
 
-    Instance isequiv_O_rect : IsEquiv (O_rect B).
+    Global Instance isequiv_O_rect : IsEquiv (O_rect B).
     Proof.
       apply isequiv_adjointify with (g := fun h => h oD O_unit A).
       - intros h. apply path_forall.
