@@ -1,11 +1,18 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-(** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
+(** * Basic definitions of homotopy type theory
 
-(** ** Type classes *)
+  We focus on the groupoid structure of identity types and several general facts about equivalence relations.
+
+  We use type classes to automate many mundane tasks. If you are not familiar with type classes, it is best to think of them as record types. And if you are not familiar with record types, think of these as nested dependent sums where the components of the sum are called "fields" and are given names.
+
+*)
+
+(** ** General facts about relations *)
+
+(** In proof-relevant mathematics a (binary) relation on a type [A] is just a family of types indexed by two copies of [A]. *)
 Definition relation (A : Type) := A -> A -> Type.
 
-(** TODO: Should we make [reflexivity], [symmetry], and [transitivity] unfold under [simpl], to, e.g., [idpath], [inverse], and [concat]? *)
 Class Reflexive {A} (R : relation A) :=
   reflexivity : forall x : A, R x x.
 
@@ -14,6 +21,8 @@ Class Symmetric {A} (R : relation A) :=
 
 Class Transitive {A} (R : relation A) :=
   transitivity : forall x y z, R x y -> R y z -> R x z.
+
+Arguments transitivity {A R _ x y z} _ _: simpl nomatch.
 
 (** A [PreOrder] is both Reflexive and Transitive. *)
 Class PreOrder {A} (R : relation A) :=
@@ -28,21 +37,28 @@ Tactic Notation "etransitivity" open_constr(y) :=
 
 Tactic Notation "etransitivity" := etransitivity _.
 
-(** We redefine [transitivity] to work without needing to include [Setoid] or be using Leibniz equality, and to give proofs that unfold to [concat]. *)
+(** We redefine [transitivity] to work without [Setoid] from the standard library (because we ripped out the standard library) and without the [Prop]-based Leibniz equality. *)
 Ltac transitivity x := etransitivity x.
 
-(** We redefine [symmetry], which is too smart for its own good. *)
+(** We also redefine [symmetry], which is too smart for its own good. *)
 Ltac symmetry := refine (@symmetry _ _ _ _ _ _).
 
 
 (** ** Basic definitions *)
 
-(** Define an alias for [Set], which is really [Type₀]. *)
+(** *** Universes *)
+
+(** Define an alias for [Set], which is really [Type0]. *)
 Notation Type0 := Set.
-(** Define [Type₁] (really, [Type_i] for any [i > 0]) so that we can enforce having universes that are not [Set].  In trunk, universes will not be unified with [Set] in most places, so we want to never use [Set] at all. *)
+
+(** The following defines [Type1] to be a universe above [Type0]. Thus by mentioning
+    [Type1] explicitly, we can make sure that things do not land in [Set]. *)
 Definition Type1 := Eval hnf in let U := Type in let gt := (Set : U) in U.
 Arguments Type1 / .
+
 Identity Coercion unfold_Type1 : Type1 >-> Sortclass.
+
+(** *** The identity map *)
 
 (** We make the identity map a notation so we do not have to unfold it,
     or complicate matters with its type. *)
@@ -51,9 +67,11 @@ Notation idmap := (fun x => x).
 (** *** Constant functions *)
 Definition const {A B} (b : B) := fun x : A => b.
 
-(** We define notation for dependent pairs because it is too annoying to write and see [existT P x y] all the time.  However, we put it in its own scope, because sometimes it is necessary to give the particular dependent type, so we'd like to be able to turn off this notation selectively. *)
+(** We define notation for dependent pairs because it is too annoying to write and read [existT P x y] all the time.  However, we put it in its own scope, because sometimes it is necessary to give the particular dependent type, so we'd like to be able to turn off this notation selectively. *)
 Notation "( x ; y )" := (existT _ x y) : fibration_scope.
 Open Scope fibration_scope.
+
+(** ** *Projections from a dependent sum *)
 
 (** We have unified [sig] and [sigT] of the standard Coq, and so we introduce a new notation to not annoy newcomers with the [T] in [projT1] and [projT2] nor the [_sig] in [proj1_sig] and [proj2_sig], and to not confuse Coq veterans by stealing [proj1] and [proj2], which Coq uses for [and]. *)
 Notation pr1 := projT1.
@@ -63,7 +81,7 @@ Notation pr2 := projT2.
 Notation "x .1" := (pr1 x) (at level 3, format "x '.1'") : fibration_scope.
 Notation "x .2" := (pr2 x) (at level 3, format "x '.2'") : fibration_scope.
 
-(** Composition of functions. *)
+(** *** Composition of functions. *)
 Definition compose {A B C : Type} (g : B -> C) (f : A -> B) :=
   fun x => g (f x).
 
@@ -84,7 +102,7 @@ Notation "g 'oD' f" := (composeD g f) (at level 40, left associativity) : functi
 
 (** The results in this file are used everywhere else, so we need to be extra careful about how we define and prove things.  We prefer hand-written terms, or at least tactics that allow us to retain clear control over the proof-term produced. *)
 
-(** We define our own identity type, rather than using the one in the Coq standard library, so as to have more control over transitivity, symmetry and inverse.  It seems impossible to change these for the standard eq/identity type (or its Type-valued version) because it breaks various other standard things.  Merely changing notations also doesn't seem to quite work. *)
+(** We define our own identity type, rather than using the one in the Coq standard library, so as to have more control over proof terms involving equality.  It seems impossible to change these for the standard [eq]/[identity] type (or its [Type]-valued version) because it breaks various other standard things.  Merely changing notations also doesn't seem to quite work. *)
 Inductive paths {A : Type} (a : A) : A -> Type :=
   idpath : paths a a.
 
@@ -104,6 +122,7 @@ Proof. rewrite <- H. exact X. Defined.
 Lemma paths_rew_r A a y P (X : P y) (H : a = y :> A) : P a.
 Proof. rewrite -> H. exact X. Defined.
 
+(** This is how we tell the type class mechanism in Coq to automatically use [idpath] to solve a goal of the form [Reflexive (@paths A)]. *)
 Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 
 (** Our identity type is the Paulin-Mohring style.  We derive the Martin-Lof eliminator. *)
@@ -115,21 +134,15 @@ Proof.
   apply H.
 Defined.
 
-(** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
+(** We define concatenation of paths by destructing on both its arguments, so that it only computes when both arguments are [idpath].  This makes proofs more robust and symmetrical.  Compare with the definition of [identity_trans]. *)
+Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : (x = z)
+  := match p, q with idpath, idpath => idpath end.
 
-Delimit Scope path_scope with path.
-Local Open Scope path_scope.
+(** Declaring this as [simpl nomatch] prevents the tactic [simpl] from expanding it out into [match] statements.  We only want [concat] to simplify when applied to an identity path. *)
+Arguments concat {A x y z} p q : simpl nomatch.
 
-(** We define equality concatenation by destructing on both its arguments, so that it only computes when both arguments are [idpath].  This makes proofs more robust and symmetrical.  Compare with the definition of [identity_trans].  *)
-Arguments transitivity {A R _ x y z} _ _: simpl nomatch.
-
-Instance transitive_paths {A} : Transitive (@paths A) | 0
-  := fun x y z (p : x = y) (q : y = z) => match p, q with idpath, idpath => idpath end.
-
-Arguments transitive_paths {A x y z} p q : simpl nomatch.
-
-Notation concat := (transitivity (R := @paths _)) (only parsing).
-Infix "@" := (@transitivity _ _ _ _ _ _) (at level 20). 
+(** We declare [concat] to be an instance of transitivity so that the [transitivity] tactic will automatically use it. *)
+Instance transitive_paths {A} : Transitive (@paths A) | 0 := @concat A.
 
 (** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
@@ -140,22 +153,44 @@ Arguments inverse {A x y} p : simpl nomatch.
 
 Instance symmetric_paths {A} : Symmetric (@paths A) | 0 := @inverse A.
 
-
-(** Note that you can use the built-in Coq tactics [reflexivity] and [transitivity] when working with paths, but not [symmetry], because it is too smart for its own good.  Instead, you can write [apply symmetry] or [eapply symmetry]. *)
+(** Next we introduce various notations for paths. We place these in the [path_scope] scope
+    so that they can be turned on an off by the user. *)
+Delimit Scope path_scope with path.
+Local Open Scope path_scope.
 
 (** The identity path. *)
 Notation "1" := idpath : path_scope.
 
-(** The composition of two paths. *)
+(** The composition of two paths is typically constructed either directly using
+    [concat] or with the [transitivity] tactic. We make sure that both display
+    using the infix operator @. 
+
+    NB: This is a bit of a hack, as we are using the same notation for two things.
+    If we change the order of the two commands below, Coq will hang on [PathGroupoids],
+    presumably because it will parse @ as transitivity, and then go into a loop trying
+    to resolve the transitivity with the type class mechanism.
+*)
+
+Infix "p @ q" := (@transitivity _ _ (@transitive_paths _) _ _ _ p q) (at level 20) : path_scope. 
+
 Notation "p @ q" := (concat p q) (at level 20) : path_scope.
 
-(** The inverse of a path. *)
+(** The inverse of a path. Here too we make sure that an inverse which was constructed
+    using [symmetry] is displayed as if it were [inverse] (which it is after we unfold
+    all the definitions.) 
+
+    NB: See remark about order of notation definitions for @ above.
+*)
+
+Notation "p ^" := (@symmetry _ _ (@symmetric_paths _) _ _ p) (at level 3, format "p '^'") : path_scope.
+
 Notation "p ^" := (inverse p) (at level 3, format "p '^'") : path_scope.
 
 (** An alternative notation which puts each path on its own line.  Useful as a temporary device during proofs of equalities between very long composites; to turn it on inside a section, say [Open Scope long_path_scope]. *)
 Notation "p @' q" := (concat p q) (at level 21, left associativity,
   format "'[v' p '/' '@''  q ']'") : long_path_scope.
 
+(** *** Transport *)
 
 (** An important instance of [paths_rect] is that given any dependent type, one can _transport_ elements of instances of the type along equalities in the base.
 
