@@ -171,7 +171,7 @@ Notation "1" := idpath : path_scope.
     to resolve the transitivity with the type class mechanism.
 *)
 
-Infix "p @ q" := (@transitivity _ _ (@transitive_paths _) _ _ _ p q) (at level 20) : path_scope. 
+Notation "p @ q" := (@transitivity _ _ (@transitive_paths _) _ _ _ p q) (at level 20) : path_scope. 
 
 Notation "p @ q" := (concat p q) (at level 20) : path_scope.
 
