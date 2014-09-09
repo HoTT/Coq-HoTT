@@ -30,7 +30,7 @@ Module GroupoidCategoryInternals.
 
     Definition compose s d d' (m : morphism d d') (m' : morphism s d)
     : morphism s d'
-      := transitivity s d d' m' m.
+      := transitivity m' m.
 
     Definition identity x : morphism x x
       := reflexivity _.

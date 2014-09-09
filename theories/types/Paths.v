@@ -136,9 +136,9 @@ Definition equiv_path_inverse {A : Type} (x y : A)
   : (x = y) <~> (y = x)
   := BuildEquiv _ _ (@inverse A x y) _.
 
-Instance isequiv_concat_l {A : Type} `(p : x = y) (z : A)
-  : IsEquiv (@concat A x y z p) | 0
-  := BuildIsEquiv _ _ _ (@concat A y x z p^)
+Instance isequiv_concat_l {A : Type} `(p : x = y:>A) (z : A)
+  : IsEquiv (@transitivity A _ _ x y z p) | 0
+  := BuildIsEquiv _ _ _ (concat p^)
      (concat_p_Vp p) (concat_V_pp p) _.
 Proof.
   intros q; destruct p; destruct q; reflexivity.
@@ -339,7 +339,7 @@ Defined.
 Definition equiv_ap_l `(f : A -> B) `{IsEquiv A B f} (x : A) (z : B)
   : (f x = z) <~> (x = f^-1 z).
 Proof.
-  apply transitivity with (f x = f (f^-1 z)).
+  transitivity (f x = f (f^-1 z)).
   apply equiv_concat_r.
   symmetry.
   apply (eisretr f).

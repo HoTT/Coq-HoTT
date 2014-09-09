@@ -53,7 +53,7 @@ Proof.
   apply (@equiv_functor_forall' _ _ _ _ _ (equiv_idmap _)); intro Z.
   apply (@equiv_functor_forall' _ _ _ _ _ (equiv_idmap _)); intro g.
   unfold equiv_idmap; simpl.
-  refine (transitivity _ _ _ (@equiv_sigT_rect _ (fun h : Y -> Z => g o f = h o f) (fun h => g = h.1)) _).
+  refine (transitivity (@equiv_sigT_rect _ (fun h : Y -> Z => g o f = h o f) (fun h => g = h.1)) _).
   (** TODO(JasonGross): Can we do this entirely by chaining equivalences? *)
   apply equiv_iff_hprop.
   { intro hepi.
@@ -113,7 +113,7 @@ apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
   try assumption.
  intros [x p]. set (p0:=apD10 ep x).
  transitivity (g (f x)). by apply ap.
- path_via (h (f x)). by apply ap.
+ transitivity (h (f x));auto with path_hints. by apply ap.
 intros. by apply @set_path2.
 Qed.
 

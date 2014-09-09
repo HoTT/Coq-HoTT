@@ -440,7 +440,7 @@ Definition concat_A_pp {A B : Type} {f g : A -> B} (p : forall x, f x = g x)
   :
   (ap f q) @ (p y @ s) = (p x) @ (ap g q @ s).
 Proof.
-  destruct q, s; simpl.
+  destruct q, s; cbn.
   repeat rewrite concat_p1, concat_1p.
   reflexivity.
 Defined.
@@ -484,7 +484,7 @@ Definition concat_A1_pp {A : Type} {f : A -> A} (p : forall x, f x = x)
   :
   (ap f q) @ (p y @ s) = (p x) @ (q @ s).
 Proof.
-  destruct q, s; simpl.
+  destruct q, s; cbn.
   repeat rewrite concat_p1, concat_1p.
   reflexivity.
 Defined.
