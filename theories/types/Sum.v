@@ -1,7 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about disjoint unions *)
 
-Require Import Overture PathGroupoids Equivalences Trunc types.Empty.
+Require Import Basics.
+Require Import types.Empty.
 (** The following are only required for the equivalence between [sum] and a sigma type *)
 Require Import types.Bool types.Forall types.Sigma.
 Local Open Scope path_scope.

@@ -3,23 +3,16 @@
     But please do not use it in the HoTT library itself, or
     you are likely going to create a dependency loop. *)
 
-Require Export Overture.
-Require Export PathGroupoids.
+Require Export Basics.
+
 Require Export Conjugation.
-Require Export Contractible.
-Require Export Equivalences.
-Require Export Trunc.
-Require Export FunextVarieties.
-Require Export Pointed.
 Require Export HProp.
 Require Export HSet.
-Require Export Fibrations.
 Require Export EquivalenceVarieties.
 Require Export Misc.
 Require Export Functorish.
 Require Export Modality.
 Require Export ObjectClassifier.
-Require Export UniverseLevel.
 
 Require Export types.Unit.
 Require Export types.Paths.

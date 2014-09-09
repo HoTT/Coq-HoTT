@@ -1,6 +1,8 @@
 (** * (-1)-truncation *)
 
-Require Import Overture HProp HSet Fibrations EquivalenceVarieties Contractible Equivalences types.Unit types.Sigma.
+Require Import Basics.
+Require Import types.Unit types.Sigma.
+Require Import HProp HSet EquivalenceVarieties.
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
 (** The definition of [minus1Trunc], the (-1)-truncation.  Here is what

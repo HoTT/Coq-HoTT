@@ -2,7 +2,7 @@
    It is useful in group theory, but it is not so clear what it is for
    in HoTT. So we store it away here, in case someone needs it later. *)
 
-Require Import Overture PathGroupoids.
+Require Import Basics.
 Local Open Scope path_scope.
 
 (** We shall use a conjugation-like operation which is not present in the standard library. *)

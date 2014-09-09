@@ -1,4 +1,4 @@
-Require Import Overture hit.minus1Trunc HProp.
+Require Import Basics hit.minus1Trunc HProp.
 
 Definition hexists {X} (P:X->Type):=(minus1Trunc (sigT  P) ).
 Definition atmost1 X:=(forall x1 x2:X, (x1 = x2)).

@@ -1,8 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the universe, including the Univalence Axiom. *)
 
-Require Import Overture PathGroupoids Equivalences.
-Require Import HProp EquivalenceVarieties Trunc types.Sigma.
+Require Import Basics.
+Require Import HProp EquivalenceVarieties types.Sigma.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

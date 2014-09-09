@@ -1,7 +1,7 @@
 (** * HPropositions *)
 
-Require Import Overture Contractible Equivalences Trunc.
-Require Import types.Forall types.Sigma types.Prod types.Record types.Paths Equivalences.
+Require Import Basics.
+Require Import types.Forall types.Sigma types.Prod types.Record types.Paths.
 
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.

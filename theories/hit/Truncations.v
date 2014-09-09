@@ -2,9 +2,7 @@
 
 (** * Truncations of types, in all dimensions. *)
 
-Require Import Overture PathGroupoids Equivalences Trunc.
-Require Import types.Sigma types.Universe.
-Require Import HProp ReflectiveSubuniverse Modality.
+Require Import Basics types.Sigma HProp ReflectiveSubuniverse Modality.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A X n.

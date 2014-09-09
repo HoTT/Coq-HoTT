@@ -129,7 +129,7 @@ Instance transitive_paths {A} : Transitive (@paths A) | 0
 Arguments transitive_paths {A x y z} p q : simpl nomatch.
 
 Notation concat := (transitivity (R := @paths _)) (only parsing).
-Infix "@" := (@transitivity _ _ _ _ _ _) (at level 20). 
+Infix "@" := (@transitivity _ _ _ _ _ _) (at level 20).
 
 (** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
