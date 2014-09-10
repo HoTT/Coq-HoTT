@@ -1,5 +1,7 @@
+(* -*- mode: coq; mode: visual-line -*- *)
+
 Require Import Overture PathGroupoids HProp Equivalences EquivalenceVarieties
-        UnivalenceImpliesFunext.
+        UnivalenceImpliesFunext Functorish.
 Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths
         types.Forall types.Prod types.Universe ObjectClassifier.
 
@@ -216,6 +218,42 @@ Section Reflective_Subuniverse.
         * apply ap; exact comm.
         * apply O_functor_compose.
     Defined.
+
+    (** Functoriality on identities *)
+    Definition O_functor_idmap (A : Type)
+    : @O_functor A A idmap = idmap.
+    Proof.
+      apply path_arrow_modal; unfold O_functor.
+      rewrite_O_rectnd_retr.
+      reflexivity.
+    Qed.
+
+    (** Which implies preservation of equivalences *)
+    Global Instance O_functorish : Functorish O
+      := Build_Functorish O _ _.
+    Proof.
+      exact @O_functor.
+      exact O_functor_idmap.
+    Defined.
+
+    Global Instance isequiv_O_functor `{Univalence}
+      {A B} (f : A -> B) `{IsEquiv _ _ f}
+    : IsEquiv (O_functor f)
+    := isequiv_fmap O f.
+
+    Definition equiv_O_functor `{Univalence} {A B} (f : A <~> B)
+    : O A <~> O B
+    := BuildEquiv _ _ (O_functor f) _.
+
+    (** Naturality of [O_unit] *)
+    Definition O_unit_natural {A B} (f : A -> B)
+    : (O_functor f) o (O_unit A) = (O_unit B) o f
+    := (O_rectnd_retr _ _ _).
+
+    (** The pointed endofunctor ([O],[O_unit]) is well-pointed *)
+    Definition O_functor_wellpointed (A : Type)
+    : O_functor (O_unit A) o O_unit A = O_unit (O A) o O_unit A
+    := O_unit_natural (O_unit A).
 
   End Functor.
 
