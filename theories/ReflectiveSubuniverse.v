@@ -9,7 +9,6 @@ Local Open Scope equiv_scope.
 (** * Reflective Subuniverses *)
 
 Section Unit_Subuniverse.
-  Context {ua : Univalence}.
 
   (** A UnitSubuniverse is the common underlying structure of a reflective subuniverse and a modality.  It consists of: *)
   Class UnitSubuniverse :=
@@ -45,10 +44,10 @@ Section Unit_Subuniverse.
   Definition equiv_O_unit (T : Type) {T_inO : inO T} : T <~> O T
     := BuildEquiv T (O T) (O_unit T) T_inO.
 
-  Global Instance hprop_inO (T : Type) : IsHProp (inO T) := _.
+  Global Instance hprop_inO `{Funext} (T : Type) : IsHProp (inO T) := _.
 
   (** Being in the universe transports along equivalences, by univalence *)
-  Definition inO_equiv_inO (T : Type) {U : Type} {T_inO : inO T} (f : T <~> U)
+  Definition inO_equiv_inO `{Univalence} (T : Type) {U : Type} {T_inO : inO T} (f : T <~> U)
     : inO U
     := transport inO (path_universe f) _.
     
@@ -59,7 +58,7 @@ Section Unit_Subuniverse.
   Coercion TypeO_pr1 (T : TypeO) := @pr1 Type inO T.
 
   (** The second component of [TypeO] is unique *)
-  Definition path_TypeO
+  Definition path_TypeO `{Funext}
     : forall (T T' : TypeO), T.1 = T'.1 -> T = T'.
   Proof.
     intros [T h] [T' h'] X.
@@ -221,6 +220,8 @@ Section Reflective_Subuniverse.
   End Functor.
 
   Section Types.
+
+    Context `{fs : Funext}.
 
     (** ** The [Unit] type *)
     Global Instance inO_unit : inO Unit.
