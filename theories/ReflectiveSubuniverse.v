@@ -257,6 +257,98 @@ Section Reflective_Subuniverse.
 
   End Functor.
 
+  Section OInverts.
+
+    (** The maps that are inverted by the reflector. *)
+    Notation O_inverts f := (IsEquiv (O_functor f)).
+
+    Global Instance O_inverts_O_unit (A : Type)
+    : O_inverts (O_unit A).
+    Proof.
+      refine (isequiv_homotopic (O_unit (O A)) _ _).
+      apply ap10, path_arrow_modal.
+      symmetry; apply O_unit_natural.
+    Defined.
+
+    (** A map between modal types that is inverted by [O] is already an equivalence. *)
+    Definition isequiv_O_inverts {A B} {A_inO : inO A} {B_inO : inO B}
+      (f : A -> B) `{O_inverts f}
+    : IsEquiv f.
+    Proof.
+      assert (IsEquiv (O_unit B o f)).
+      { refine (isequiv_homotopic (O_functor f o O_unit A) _ _).
+        apply ap10, O_unit_natural. }
+      refine (cancelL_isequiv (O_unit B)).
+    Defined.
+
+    Definition equiv_O_inverts {A B} {A_inO : inO A} {B_inO : inO B}
+      (f : A -> B) `{O_inverts f}
+    : A <~> B
+    := BuildEquiv _ _ f (isequiv_O_inverts f).
+
+    (** Two maps between modal types that become equal after applying [O_functor] are already equal. *)
+    Definition O_functor_faithful_inO `{Funext} {A B} {A_inO : inO A} {B_inO : inO B}
+      (f g : A -> B) (e : O_functor f = O_functor g)
+      : f = g.
+    Proof.
+      refine (@equiv_inj _ _ (equiv_postcompose (O_unit B)) _ _ _ _); cbn.
+      transitivity (O_functor f o O_unit A); try (symmetry; apply O_unit_natural).
+      transitivity (O_functor g o O_unit A); try (apply O_unit_natural).
+      exact (ap (fun h => h o O_unit A) e).
+    Defined.
+
+    (** Any map to a type in the subuniverse that is inverted by [O] must be equivalent to [O_unit].  More precisely, the type of such maps is contractible. *)
+    Definition typeof_O_unit (A : Type)
+      := { OA : Type & { Ou : A -> OA & ((inO OA) * (O_inverts Ou)) }}.
+
+    Global Instance contr_typeof_O_unit `{Univalence} (A : Type)
+    : Contr (typeof_O_unit A).
+    Proof.
+      exists (O A ; (O_unit A ; (_ , _))).
+      intros [OA [Ou [? ?]]].
+      pose (f := O_rectnd A OA Ou : O A -> OA).
+      pose (g := (O_functor Ou)^-1 o O_unit OA : (OA -> O A)).
+      assert (IsEquiv f).
+      { refine (isequiv_adjointify f g _ _); apply ap10.
+        - apply O_functor_faithful_inO.
+          rewrite O_functor_idmap.
+          fold (f o g); rewrite O_functor_compose.
+          refine (path_arrow_modal (O_functor f o O_functor g) idmap _).
+          unfold g; rewrite O_functor_compose.
+          (* Here we need to "rewrite modulo associativity" again... *)
+          match goal with |- (?a o (?b o ?c) o ?d = ?e) => change (a o b o (c o d) = e) end.
+          rewrite O_functor_wellpointed.
+          match goal with |- (?a o ?b o (?c o ?d) = ?e) => change ((a o (b o c)) o d = e) end.
+          apply (ap (fun h => h o O_unit OA)).
+          rewrite O_unit_natural.
+          match goal with |- (?a o (?b o ?c) = ?d) => change ((a o b) o c = d) end.
+          rewrite O_unit_natural.
+          refine (moveR_equiv_M (f := equiv_precompose (O_functor Ou)^-1)
+                                (O_unit OA o f) idmap _); cbn.
+          apply path_arrow_modal.
+          transitivity (O_unit OA o Ou); try (symmetry; apply O_unit_natural).
+          apply (ap (fun h => O_unit OA o h)).
+          unfold f. rewrite_O_rectnd_retr; reflexivity.
+        - refine (path_arrow_modal (g o f) idmap _).
+          unfold f; rewrite_O_rectnd_retr. unfold g.
+          refine (moveR_equiv_M
+                    (f := equiv_postcompose (O_functor Ou)^-1)
+                    (O_unit OA o Ou) (O_unit A) _); cbn.
+          symmetry; apply O_unit_natural.
+      }
+      refine (path_sigma _ _ _ _ _); cbn.
+      - exact (path_universe f).
+      - rewrite transport_sigma.
+        refine (path_sigma _ _ _ _ _); cbn; try apply allpath_hprop.
+        apply path_arrow; intros x.
+        rewrite transport_arrow_fromconst.
+        rewrite transport_path_universe.
+        unfold f.
+        revert x; apply ap10; rewrite_O_rectnd_retr; reflexivity.
+    Qed.
+
+  End OInverts.
+
   Section Types.
 
     Context `{fs : Funext}.
@@ -303,7 +395,8 @@ Section Reflective_Subuniverse.
     Qed.
 
     (** We show that [OA*OB] has the same universal property as [O(A*B)] *)
-    Definition equiv_O_prod_rect (A B C : Type) (C_inO : inO C)
+
+    Definition equiv_O_prod_unit_precompose (A B C : Type) {C_inO : inO C}
     : ((O A) * (O B) -> C) <~> (A * B -> C).
     Proof.
       apply (equiv_compose' (equiv_uncurry A B C)).
@@ -311,9 +404,42 @@ Section Reflective_Subuniverse.
       apply (equiv_compose' (equiv_O_rectnd A (B -> C))); simpl.
       apply equiv_postcompose'.
       exact (equiv_O_rectnd B C).
+    Defined.
+
+    (** The preceding equivalence turns out to be actually (judgmentally!) precomposition with the following function. *)
+    Definition O_prod_unit (A B : Type) : A * B -> O A * O B
+      := fun ab => (O_unit A (fst ab) , O_unit B (snd ab)).
+
+    (** From this, we can define the comparison map for products, and show that precomposing with it is also an equivalence. *)
+    Definition O_prod_cmp (A B : Type) : O (A * B) -> O A * O B
+      := O_rectnd (A * B) (O A * O B) (O_prod_unit A B).
+
+    Definition isequiv_O_prod_cmp_precompose
+      (A B C : Type) {C_inO : inO C}
+    : IsEquiv (fun h : O A * O B -> C => h o O_prod_cmp A B).
+    Proof.
+      unfold O_prod_cmp.
+      refine (isequiv_homotopic
+                ((O_rectnd (A*B) C) o
+                 (equiv_O_prod_unit_precompose A B C)) _ _).
+      intros h.
+      apply path_arrow_modal.
+      rewrite_O_rectnd_retr.
+      reflexivity.
     Qed.
 
-    (** TODO : [O(A*B) = OA * OB] *)
+    (** Thus, by the Yoneda lemma, the functor [O] preserves products. *)
+    Global Instance isequiv_O_prod_cmp (A B : Type)
+    : IsEquiv (O_prod_cmp A B).
+    Proof.
+      apply isequiv_isequiv_precompose;
+      apply isequiv_O_prod_cmp_precompose;
+      exact _.
+    Defined.
+
+    Definition equiv_O_prod_cmp (A B : Type)
+    : O (A * B) <~> (O A * O B)
+    := BuildEquiv _ _ (O_prod_cmp A B) _.
 
     (** ** Dependent sums *)
     (** Theorem 7.7.4 *)

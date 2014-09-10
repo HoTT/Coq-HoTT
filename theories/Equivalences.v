@@ -286,6 +286,42 @@ Definition equiv_postcompose' `{Funext} {A B C : Type} (f : B <~> C)
   : (A -> B) <~> (A -> C)
   := BuildEquiv _ _ (fun g => @compose A B C f g) _.
 
+(** Conversely, if pre- or post-composing with a function is always an equivalence, then that function is also an equivalence.  It's convenient to know that we only need to assume the equivalence when the other type is the domain or the codomain. *)
+
+Definition isequiv_isequiv_precompose {A B : Type} (f : A -> B)
+  (precomp := (fun (C : Type) (h : B -> C) => h o f))
+  (Aeq : IsEquiv (precomp A)) (Beq : IsEquiv (precomp B))
+  : IsEquiv f.
+Proof.
+  assert (H : forall (C D : Type)
+                     (Ceq : IsEquiv (precomp C)) (Deq : IsEquiv (precomp D))
+                     (k : C -> D) (h : A -> C),
+                k o (precomp C)^-1 h = (precomp D)^-1 (k o h)).
+  { intros C D ? ? k h.
+    transitivity ((precomp D)^-1 (k o (precomp C ((precomp C)^-1 h)))).
+    - transitivity ((precomp D)^-1 (precomp D (k o ((precomp C)^-1 h)))).
+      + rewrite (eissect (precomp D) _); reflexivity.
+      + reflexivity.
+    - rewrite (eisretr (precomp C) h); reflexivity. }
+  refine (isequiv_adjointify f ((precomp A)^-1 idmap) _ _).
+  - intros x.
+    change ((f o (precomp A)^-1 idmap) x = idmap x).
+    apply ap10.
+    rewrite (H A B Aeq Beq).
+    change ((precomp B)^-1 (precomp B idmap) = idmap).
+    apply eissect.
+  - intros x.
+    change ((precomp A ((precomp A)^-1 idmap)) x = idmap x).
+    apply ap10, eisretr.
+Qed.
+
+(*
+Definition isequiv_isequiv_postcompose {A B : Type} (f : A -> B)
+  (postcomp := (fun (C : Type) (h : C -> A) => f o h))
+  (feq : forall C:Type, IsEquiv (postcomp C))
+  : IsEquiv f.
+(* TODO *)
+*)
 
 (** The function [equiv_rect] says that given an equivalence [f : A <~> B], and a hypothesis from [B], one may always assume that the hypothesis is in the image of [e].
 

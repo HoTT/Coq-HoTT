@@ -108,4 +108,8 @@ Section TruncationModality.
   : IsEquiv (Truncation_functor f)
   := isequiv_O_functor f.
 
+  Definition equiv_Truncation_prod_cmp {X Y}
+  : Truncation n (X * Y) <~> Truncation n X * Truncation n Y
+  := equiv_O_prod_cmp X Y.
+
 End TruncationModality.
