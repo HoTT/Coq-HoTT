@@ -175,7 +175,7 @@ Section Reflective_Subuniverse.
 
     (** In this section, we see that [O] is a functor. *)
     
-    Definition O_functor (A B : Type) (f : A -> B) : O A -> O B.
+    Definition O_functor {A B : Type} (f : A -> B) : O A -> O B.
     Proof.
       apply O_rectnd.
       - exact _.
@@ -196,8 +196,8 @@ Section Reflective_Subuniverse.
      *)
 
     (** Functoriality on composition *)
-    Definition O_functor_compose (A B C : Type) ( f : A -> B) (g : B -> C)
-    : (O_functor A C (g o f)) = (O_functor B C g) o (O_functor A B f).
+    Definition O_functor_compose {A B C : Type} (f : A -> B) (g : B -> C)
+    : (O_functor (g o f)) = (O_functor g) o (O_functor f).
     Proof.
       apply path_arrow_modal; unfold O_functor.
       rewrite_O_rectnd_retr.
@@ -205,14 +205,14 @@ Section Reflective_Subuniverse.
     Qed.
 
     (** Hence functoriality on commutative squares *)
-    Definition O_functor_square (A B C X : Type) (pi1 : X -> A) (pi2 : X -> B)
+    Definition O_functor_square {A B C X : Type} (pi1 : X -> A) (pi2 : X -> B)
                (f : A -> C) (g : B -> C) (comm : (f o pi1) = (g o pi2))
-    : ( (O_functor A C f) o (O_functor X A pi1) )
-      = ( (O_functor B C g) o (O_functor X B pi2) ).
+    : ( (O_functor f) o (O_functor pi1) )
+      = ( (O_functor g) o (O_functor pi2) ).
     Proof.
-      transitivity (O_functor X C (f o pi1)).
+      transitivity (O_functor (f o pi1)).
       - symmetry; apply O_functor_compose.
-      - transitivity (O_functor X C (g o pi2)).
+      - transitivity (O_functor (g o pi2)).
         * apply ap; exact comm.
         * apply O_functor_compose.
     Defined.
