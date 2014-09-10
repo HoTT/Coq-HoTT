@@ -145,29 +145,29 @@ Defined.
 
 Instance symmetric_equiv : Symmetric Equiv | 0 := @equiv_inverse.
 
-(** If [g \o f] and [f] are equivalences, so is [g]. *)
-Instance cancelR_isequiv `{IsEquiv A B f} `{IsEquiv A C (g o f)}
-  : IsEquiv g | 10000
-:= isequiv_homotopic (compose (compose g f) f^-1) g
+(** If [g \o f] and [f] are equivalences, so is [g].  This is not an Instance because it would require Coq to guess [f]. *)
+Definition cancelR_isequiv {A B C} (f : A -> B) {g : B -> C}
+  `{IsEquiv A B f} `{IsEquiv A C (g o f)}
+  : IsEquiv g
+  := isequiv_homotopic (compose (compose g f) f^-1) g
        (fun b => ap g (eisretr f b)).
 
-Arguments cancelR_isequiv {_ _ _ _ _} g {_}.
-
-Definition cancelR_equiv `{IsEquiv A B f} `{IsEquiv A C (g o f)}
+Definition cancelR_equiv {A B C} (f : A -> B) {g : B -> C}
+  `{IsEquiv A B f} `{IsEquiv A C (g o f)}
   : B <~> C
-:= BuildEquiv _ _ g (cancelR_isequiv g).
+  := BuildEquiv B C g (cancelR_isequiv f).
 
 (** If [g \o f] and [g] are equivalences, so is [f]. *)
-Instance cancelL_isequiv `{IsEquiv B C g} `{IsEquiv A C (g o f)}
-  : IsEquiv f | 10000
-:= isequiv_homotopic (compose g^-1 (compose g f)) f
+Definition cancelL_isequiv {A B C} (g : B -> C) {f : A -> B}
+  `{IsEquiv B C g} `{IsEquiv A C (g o f)}
+  : IsEquiv f
+  := isequiv_homotopic (compose g^-1 (compose g f)) f
        (fun a => eissect g (f a)).
 
-Arguments cancelL_isequiv {_ _ _ _ _} f {_}.
-
-Definition cancelL_equiv `{IsEquiv B C g} `{IsEquiv A C (g o f)}
+Definition cancelL_equiv {A B C} (g : B -> C) {f : A -> B}
+  `{IsEquiv B C g} `{IsEquiv A C (g o f)}
   : A <~> B
-:= BuildEquiv _ _ f (cancelL_isequiv f).
+  := BuildEquiv _ _ f (cancelL_isequiv g).
 
 (** Transporting is an equivalence. *)
 Section EquivTransport.
