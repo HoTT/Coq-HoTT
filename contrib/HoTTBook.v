@@ -415,16 +415,8 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 (* ================================================== thm:isprop-forall *)
 (** Example 3.6.2 *)
 
-Lemma Book_3_6_2 `{Funext} {A : Type} {B : A -> Type} :
- (forall x:A, IsHProp (B x)) -> IsHProp (forall x:A, B x).
-Proof.
-  intro BxHProp.
-  apply hprop_allpath.
-  intros f g.
-  apply path_forall.
-  intro x.
-  apply allpath_hprop.
-Defined.
+Definition Book_3_6_2 `{Funext} (A : Type) (B : A -> Type) 
+  := @HoTT.types.Forall.trunc_forall _ A B minus_one.
 
 (* ================================================== defn:logical-notation *)
 (** Definition 3.7.1 *)
