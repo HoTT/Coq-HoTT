@@ -2,7 +2,9 @@
 
 (** * Truncations of types, in all dimensions. *)
 
-Require Import Overture PathGroupoids Equivalences Trunc types.Sigma ReflectiveSubuniverse Modality.
+Require Import Overture PathGroupoids Equivalences Trunc.
+Require Import types.Sigma types.Universe.
+Require Import HProp ReflectiveSubuniverse Modality.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A X n.
@@ -45,32 +47,6 @@ Definition Truncation_rect_nondep {n A X} `{IsTrunc n X}
   : (A -> X) -> (Truncation n A -> X)
 := Truncation_rect (fun _ => X).
 
-(** ** Functoriality *)
-
-Definition functor_Truncation {n : trunc_index} {X Y} (f : X -> Y)
-  : Truncation n X -> Truncation n Y.
-Proof.
-  apply Truncation_rect_nondep. exact (fun x => truncation_incl (f x)).
-Defined.
-
-Definition functor_Truncation_idmap `{Funext} {n : trunc_index} (X : Type)
-  : @functor_Truncation n X X idmap == idmap.
-Proof.
-  unfold pointwise_paths. apply @Truncation_rect.
-    intros ?; apply trunc_succ.
-  intros a; exact 1.
-Defined.
-
-Definition isequiv_functor_Truncation {n : trunc_index} {X Y} (f : X -> Y)
-  `{IsEquiv _ _ f} : IsEquiv (functor_Truncation (n:=n) f).
-Proof.
-  refine (isequiv_adjointify _ (functor_Truncation (f ^-1)) _ _);
-    unfold Sect; apply @Truncation_rect;
-    try (intros ?; apply trunc_succ).
-  intros y; simpl. apply ap, eisretr.
-  intros x; simpl. apply ap, eissect.
-Defined.
-
 (** Truncation is a modality *)
 
 Section TruncationModality.
@@ -95,6 +71,11 @@ Section TruncationModality.
       * intros a.
         reflexivity.
   Defined.
+
+  Definition equiv_truncation_inO_iff_trunc `{Funext} (A : Type)
+  : inO A <~> IsTrunc n A
+  := equiv_iff_hprop (fst (truncation_inO_iff_trunc A))
+                     (snd (truncation_inO_iff_trunc A)).
     
   Local Instance truncation_modality : Modality.
   Proof.
@@ -107,4 +88,28 @@ Section TruncationModality.
     exact (snd (truncation_inO_iff_trunc _) _).
   Defined.    
   
+  (** ** Functoriality *)
+
+  Context `{ua : Univalence}.
+
+  Definition Truncation_functor {X Y} (f : X -> Y)
+  : Truncation n X -> Truncation n Y
+  := O_functor f.
+
+  Definition Truncation_functor_compose {X Y Z} (f : X -> Y) (g : Y -> Z)
+  : Truncation_functor (g o f) == Truncation_functor g o Truncation_functor f
+  := ap10 (O_functor_compose f g).
+
+  Definition Truncation_functor_idmap (X : Type)
+  : @Truncation_functor X X idmap == idmap
+  := ap10 (O_functor_idmap X).
+
+  Definition isequiv_Truncation_functor {X Y} (f : X -> Y) `{IsEquiv _ _ f}
+  : IsEquiv (Truncation_functor f)
+  := isequiv_O_functor f.
+
+  Definition equiv_Truncation_prod_cmp {X Y}
+  : Truncation n (X * Y) <~> Truncation n X * Truncation n Y
+  := equiv_O_prod_cmp X Y.
+
 End TruncationModality.

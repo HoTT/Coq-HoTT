@@ -145,29 +145,29 @@ Defined.
 
 Instance symmetric_equiv : Symmetric Equiv | 0 := @equiv_inverse.
 
-(** If [g \o f] and [f] are equivalences, so is [g]. *)
-Instance cancelR_isequiv `{IsEquiv A B f} `{IsEquiv A C (g o f)}
-  : IsEquiv g | 10000
-:= isequiv_homotopic (compose (compose g f) f^-1) g
+(** If [g \o f] and [f] are equivalences, so is [g].  This is not an Instance because it would require Coq to guess [f]. *)
+Definition cancelR_isequiv {A B C} (f : A -> B) {g : B -> C}
+  `{IsEquiv A B f} `{IsEquiv A C (g o f)}
+  : IsEquiv g
+  := isequiv_homotopic (compose (compose g f) f^-1) g
        (fun b => ap g (eisretr f b)).
 
-Arguments cancelR_isequiv {_ _ _ _ _} g {_}.
-
-Definition cancelR_equiv `{IsEquiv A B f} `{IsEquiv A C (g o f)}
+Definition cancelR_equiv {A B C} (f : A -> B) {g : B -> C}
+  `{IsEquiv A B f} `{IsEquiv A C (g o f)}
   : B <~> C
-:= BuildEquiv _ _ g (cancelR_isequiv g).
+  := BuildEquiv B C g (cancelR_isequiv f).
 
 (** If [g \o f] and [g] are equivalences, so is [f]. *)
-Instance cancelL_isequiv `{IsEquiv B C g} `{IsEquiv A C (g o f)}
-  : IsEquiv f | 10000
-:= isequiv_homotopic (compose g^-1 (compose g f)) f
+Definition cancelL_isequiv {A B C} (g : B -> C) {f : A -> B}
+  `{IsEquiv B C g} `{IsEquiv A C (g o f)}
+  : IsEquiv f
+  := isequiv_homotopic (compose g^-1 (compose g f)) f
        (fun a => eissect g (f a)).
 
-Arguments cancelL_isequiv {_ _ _ _ _} f {_}.
-
-Definition cancelL_equiv `{IsEquiv B C g} `{IsEquiv A C (g o f)}
+Definition cancelL_equiv {A B C} (g : B -> C) {f : A -> B}
+  `{IsEquiv B C g} `{IsEquiv A C (g o f)}
   : A <~> B
-:= BuildEquiv _ _ f (cancelL_isequiv f).
+  := BuildEquiv _ _ f (cancelL_isequiv g).
 
 (** Transporting is an equivalence. *)
 Section EquivTransport.
@@ -286,6 +286,42 @@ Definition equiv_postcompose' `{Funext} {A B C : Type} (f : B <~> C)
   : (A -> B) <~> (A -> C)
   := BuildEquiv _ _ (fun g => @compose A B C f g) _.
 
+(** Conversely, if pre- or post-composing with a function is always an equivalence, then that function is also an equivalence.  It's convenient to know that we only need to assume the equivalence when the other type is the domain or the codomain. *)
+
+Definition isequiv_isequiv_precompose {A B : Type} (f : A -> B)
+  (precomp := (fun (C : Type) (h : B -> C) => h o f))
+  (Aeq : IsEquiv (precomp A)) (Beq : IsEquiv (precomp B))
+  : IsEquiv f.
+Proof.
+  assert (H : forall (C D : Type)
+                     (Ceq : IsEquiv (precomp C)) (Deq : IsEquiv (precomp D))
+                     (k : C -> D) (h : A -> C),
+                k o (precomp C)^-1 h = (precomp D)^-1 (k o h)).
+  { intros C D ? ? k h.
+    transitivity ((precomp D)^-1 (k o (precomp C ((precomp C)^-1 h)))).
+    - transitivity ((precomp D)^-1 (precomp D (k o ((precomp C)^-1 h)))).
+      + rewrite (eissect (precomp D) _); reflexivity.
+      + reflexivity.
+    - rewrite (eisretr (precomp C) h); reflexivity. }
+  refine (isequiv_adjointify f ((precomp A)^-1 idmap) _ _).
+  - intros x.
+    change ((f o (precomp A)^-1 idmap) x = idmap x).
+    apply ap10.
+    rewrite (H A B Aeq Beq).
+    change ((precomp B)^-1 (precomp B idmap) = idmap).
+    apply eissect.
+  - intros x.
+    change ((precomp A ((precomp A)^-1 idmap)) x = idmap x).
+    apply ap10, eisretr.
+Qed.
+
+(*
+Definition isequiv_isequiv_postcompose {A B : Type} (f : A -> B)
+  (postcomp := (fun (C : Type) (h : C -> A) => f o h))
+  (feq : forall C:Type, IsEquiv (postcomp C))
+  : IsEquiv f.
+(* TODO *)
+*)
 
 (** The function [equiv_rect] says that given an equivalence [f : A <~> B], and a hypothesis from [B], one may always assume that the hypothesis is in the image of [e].
 
