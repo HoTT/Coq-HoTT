@@ -457,7 +457,7 @@ Section iso_concat_lemmas.
   Local Ltac iso_concat_t_id_fin :=
     match goal with
       | [ |- appcontext[@identity ?C ?x] ]
-        => generalize dependent (@identity C x)
+        => generalize dependent (identity x)
     end;
     iso_concat_t'.
 

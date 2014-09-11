@@ -1,5 +1,7 @@
+(* -*- mode: coq; mode: visual-line -*- *)
+
 Require Import Overture PathGroupoids HProp Equivalences EquivalenceVarieties
-        UnivalenceImpliesFunext.
+        UnivalenceImpliesFunext Functorish.
 Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths
         types.Forall types.Prod types.Universe ObjectClassifier.
 
@@ -9,7 +11,6 @@ Local Open Scope equiv_scope.
 (** * Reflective Subuniverses *)
 
 Section Unit_Subuniverse.
-  Context {ua : Univalence}.
 
   (** A UnitSubuniverse is the common underlying structure of a reflective subuniverse and a modality.  It consists of: *)
   Class UnitSubuniverse :=
@@ -45,10 +46,10 @@ Section Unit_Subuniverse.
   Definition equiv_O_unit (T : Type) {T_inO : inO T} : T <~> O T
     := BuildEquiv T (O T) (O_unit T) T_inO.
 
-  Global Instance hprop_inO (T : Type) : IsHProp (inO T) := _.
+  Global Instance hprop_inO `{Funext} (T : Type) : IsHProp (inO T) := _.
 
   (** Being in the universe transports along equivalences, by univalence *)
-  Definition inO_equiv_inO (T : Type) {U : Type} {T_inO : inO T} (f : T <~> U)
+  Definition inO_equiv_inO `{Univalence} (T : Type) {U : Type} {T_inO : inO T} (f : T <~> U)
     : inO U
     := transport inO (path_universe f) _.
     
@@ -59,7 +60,7 @@ Section Unit_Subuniverse.
   Coercion TypeO_pr1 (T : TypeO) := @pr1 Type inO T.
 
   (** The second component of [TypeO] is unique *)
-  Definition path_TypeO
+  Definition path_TypeO `{Funext}
     : forall (T T' : TypeO), T.1 = T'.1 -> T = T'.
   Proof.
     intros [T h] [T' h'] X.
@@ -176,7 +177,7 @@ Section Reflective_Subuniverse.
 
     (** In this section, we see that [O] is a functor. *)
     
-    Definition O_functor (A B : Type) (f : A -> B) : O A -> O B.
+    Definition O_functor {A B : Type} (f : A -> B) : O A -> O B.
     Proof.
       apply O_rectnd.
       - exact _.
@@ -197,8 +198,8 @@ Section Reflective_Subuniverse.
      *)
 
     (** Functoriality on composition *)
-    Definition O_functor_compose (A B C : Type) ( f : A -> B) (g : B -> C)
-    : (O_functor A C (g o f)) = (O_functor B C g) o (O_functor A B f).
+    Definition O_functor_compose {A B C : Type} (f : A -> B) (g : B -> C)
+    : (O_functor (g o f)) = (O_functor g) o (O_functor f).
     Proof.
       apply path_arrow_modal; unfold O_functor.
       rewrite_O_rectnd_retr.
@@ -206,21 +207,151 @@ Section Reflective_Subuniverse.
     Qed.
 
     (** Hence functoriality on commutative squares *)
-    Definition O_functor_square (A B C X : Type) (pi1 : X -> A) (pi2 : X -> B)
+    Definition O_functor_square {A B C X : Type} (pi1 : X -> A) (pi2 : X -> B)
                (f : A -> C) (g : B -> C) (comm : (f o pi1) = (g o pi2))
-    : ( (O_functor A C f) o (O_functor X A pi1) )
-      = ( (O_functor B C g) o (O_functor X B pi2) ).
+    : ( (O_functor f) o (O_functor pi1) )
+      = ( (O_functor g) o (O_functor pi2) ).
     Proof.
-      transitivity (O_functor X C (f o pi1)).
+      transitivity (O_functor (f o pi1)).
       - symmetry; apply O_functor_compose.
-      - transitivity (O_functor X C (g o pi2)).
+      - transitivity (O_functor (g o pi2)).
         * apply ap; exact comm.
         * apply O_functor_compose.
     Defined.
 
+    (** Functoriality on identities *)
+    Definition O_functor_idmap (A : Type)
+    : @O_functor A A idmap = idmap.
+    Proof.
+      apply path_arrow_modal; unfold O_functor.
+      rewrite_O_rectnd_retr.
+      reflexivity.
+    Qed.
+
+    (** Which implies preservation of equivalences *)
+    Global Instance O_functorish : Functorish O
+      := Build_Functorish O _ _.
+    Proof.
+      exact @O_functor.
+      exact O_functor_idmap.
+    Defined.
+
+    Global Instance isequiv_O_functor `{Univalence}
+      {A B} (f : A -> B) `{IsEquiv _ _ f}
+    : IsEquiv (O_functor f)
+    := isequiv_fmap O f.
+
+    Definition equiv_O_functor `{Univalence} {A B} (f : A <~> B)
+    : O A <~> O B
+    := BuildEquiv _ _ (O_functor f) _.
+
+    (** Naturality of [O_unit] *)
+    Definition O_unit_natural {A B} (f : A -> B)
+    : (O_functor f) o (O_unit A) = (O_unit B) o f
+    := (O_rectnd_retr _ _ _).
+
+    (** The pointed endofunctor ([O],[O_unit]) is well-pointed *)
+    Definition O_functor_wellpointed (A : Type)
+    : O_functor (O_unit A) o O_unit A = O_unit (O A) o O_unit A
+    := O_unit_natural (O_unit A).
+
   End Functor.
 
+  Section OInverts.
+
+    (** The maps that are inverted by the reflector. *)
+    Notation O_inverts f := (IsEquiv (O_functor f)).
+
+    Global Instance O_inverts_O_unit (A : Type)
+    : O_inverts (O_unit A).
+    Proof.
+      refine (isequiv_homotopic (O_unit (O A)) _ _).
+      apply ap10, path_arrow_modal.
+      symmetry; apply O_unit_natural.
+    Defined.
+
+    (** A map between modal types that is inverted by [O] is already an equivalence. *)
+    Definition isequiv_O_inverts {A B} {A_inO : inO A} {B_inO : inO B}
+      (f : A -> B) `{O_inverts f}
+    : IsEquiv f.
+    Proof.
+      assert (IsEquiv (O_unit B o f)).
+      { refine (isequiv_homotopic (O_functor f o O_unit A) _ _).
+        apply ap10, O_unit_natural. }
+      refine (cancelL_isequiv (O_unit B)).
+    Defined.
+
+    Definition equiv_O_inverts {A B} {A_inO : inO A} {B_inO : inO B}
+      (f : A -> B) `{O_inverts f}
+    : A <~> B
+    := BuildEquiv _ _ f (isequiv_O_inverts f).
+
+    (** Two maps between modal types that become equal after applying [O_functor] are already equal. *)
+    Definition O_functor_faithful_inO `{Funext} {A B} {A_inO : inO A} {B_inO : inO B}
+      (f g : A -> B) (e : O_functor f = O_functor g)
+      : f = g.
+    Proof.
+      refine (@equiv_inj _ _ (equiv_postcompose (O_unit B)) _ _ _ _); cbn.
+      transitivity (O_functor f o O_unit A); try (symmetry; apply O_unit_natural).
+      transitivity (O_functor g o O_unit A); try (apply O_unit_natural).
+      exact (ap (fun h => h o O_unit A) e).
+    Defined.
+
+    (** Any map to a type in the subuniverse that is inverted by [O] must be equivalent to [O_unit].  More precisely, the type of such maps is contractible. *)
+    Definition typeof_O_unit (A : Type)
+      := { OA : Type & { Ou : A -> OA & ((inO OA) * (O_inverts Ou)) }}.
+
+    Global Instance contr_typeof_O_unit `{Univalence} (A : Type)
+    : Contr (typeof_O_unit A).
+    Proof.
+      exists (O A ; (O_unit A ; (_ , _))).
+      intros [OA [Ou [? ?]]].
+      pose (f := O_rectnd A OA Ou : O A -> OA).
+      pose (g := (O_functor Ou)^-1 o O_unit OA : (OA -> O A)).
+      assert (IsEquiv f).
+      { refine (isequiv_adjointify f g _ _); apply ap10.
+        - apply O_functor_faithful_inO.
+          rewrite O_functor_idmap.
+          fold (f o g); rewrite O_functor_compose.
+          refine (path_arrow_modal (O_functor f o O_functor g) idmap _).
+          unfold g; rewrite O_functor_compose.
+          (* Here we need to "rewrite modulo associativity" again... *)
+          match goal with |- (?a o (?b o ?c) o ?d = ?e) => change (a o b o (c o d) = e) end.
+          rewrite O_functor_wellpointed.
+          match goal with |- (?a o ?b o (?c o ?d) = ?e) => change ((a o (b o c)) o d = e) end.
+          apply (ap (fun h => h o O_unit OA)).
+          rewrite O_unit_natural.
+          match goal with |- (?a o (?b o ?c) = ?d) => change ((a o b) o c = d) end.
+          rewrite O_unit_natural.
+          refine (moveR_equiv_M (f := equiv_precompose (O_functor Ou)^-1)
+                                (O_unit OA o f) idmap _); cbn.
+          apply path_arrow_modal.
+          transitivity (O_unit OA o Ou); try (symmetry; apply O_unit_natural).
+          apply (ap (fun h => O_unit OA o h)).
+          unfold f. rewrite_O_rectnd_retr; reflexivity.
+        - refine (path_arrow_modal (g o f) idmap _).
+          unfold f; rewrite_O_rectnd_retr. unfold g.
+          refine (moveR_equiv_M
+                    (f := equiv_postcompose (O_functor Ou)^-1)
+                    (O_unit OA o Ou) (O_unit A) _); cbn.
+          symmetry; apply O_unit_natural.
+      }
+      refine (path_sigma _ _ _ _ _); cbn.
+      - exact (path_universe f).
+      - rewrite transport_sigma.
+        refine (path_sigma _ _ _ _ _); cbn; try apply allpath_hprop.
+        apply path_arrow; intros x.
+        rewrite transport_arrow_fromconst.
+        rewrite transport_path_universe.
+        unfold f.
+        revert x; apply ap10; rewrite_O_rectnd_retr; reflexivity.
+    Qed.
+
+  End OInverts.
+
   Section Types.
+
+    Context `{fs : Funext}.
 
     (** ** The [Unit] type *)
     Global Instance inO_unit : inO Unit.
@@ -264,7 +395,8 @@ Section Reflective_Subuniverse.
     Qed.
 
     (** We show that [OA*OB] has the same universal property as [O(A*B)] *)
-    Definition equiv_O_prod_rect (A B C : Type) (C_inO : inO C)
+
+    Definition equiv_O_prod_unit_precompose (A B C : Type) {C_inO : inO C}
     : ((O A) * (O B) -> C) <~> (A * B -> C).
     Proof.
       apply (equiv_compose' (equiv_uncurry A B C)).
@@ -272,9 +404,42 @@ Section Reflective_Subuniverse.
       apply (equiv_compose' (equiv_O_rectnd A (B -> C))); simpl.
       apply equiv_postcompose'.
       exact (equiv_O_rectnd B C).
+    Defined.
+
+    (** The preceding equivalence turns out to be actually (judgmentally!) precomposition with the following function. *)
+    Definition O_prod_unit (A B : Type) : A * B -> O A * O B
+      := fun ab => (O_unit A (fst ab) , O_unit B (snd ab)).
+
+    (** From this, we can define the comparison map for products, and show that precomposing with it is also an equivalence. *)
+    Definition O_prod_cmp (A B : Type) : O (A * B) -> O A * O B
+      := O_rectnd (A * B) (O A * O B) (O_prod_unit A B).
+
+    Definition isequiv_O_prod_cmp_precompose
+      (A B C : Type) {C_inO : inO C}
+    : IsEquiv (fun h : O A * O B -> C => h o O_prod_cmp A B).
+    Proof.
+      unfold O_prod_cmp.
+      refine (isequiv_homotopic
+                ((O_rectnd (A*B) C) o
+                 (equiv_O_prod_unit_precompose A B C)) _ _).
+      intros h.
+      apply path_arrow_modal.
+      rewrite_O_rectnd_retr.
+      reflexivity.
     Qed.
 
-    (** TODO : [O(A*B) = OA * OB] *)
+    (** Thus, by the Yoneda lemma, the functor [O] preserves products. *)
+    Global Instance isequiv_O_prod_cmp (A B : Type)
+    : IsEquiv (O_prod_cmp A B).
+    Proof.
+      apply isequiv_isequiv_precompose;
+      apply isequiv_O_prod_cmp_precompose;
+      exact _.
+    Defined.
+
+    Definition equiv_O_prod_cmp (A B : Type)
+    : O (A * B) <~> (O A * O B)
+    := BuildEquiv _ _ (O_prod_cmp A B) _.
 
     (** ** Dependent sums *)
     (** Theorem 7.7.4 *)

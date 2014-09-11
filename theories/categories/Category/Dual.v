@@ -29,15 +29,7 @@ End opposite.
 Local Notation "C ^op" := (opposite C) (at level 3, format "C '^op'") : category_scope.
 
 (** ** [ᵒᵖ] is propositionally involutive *)
-Section DualCategories.
-  (** If we had judgmental eta for records, it would be judgmentally involutive. *)
-  Lemma opposite_involutive C : (C^op)^op = C.
-  Proof.
-    destruct C; exact idpath.
-  Defined.
-End DualCategories.
-
-Hint Rewrite @opposite_involutive : category.
+Definition opposite_involutive C : (C^op)^op = C := idpath.
 
 (** ** Initial objects are opposite terminal objects, and vice versa *)
 Section DualObjects.

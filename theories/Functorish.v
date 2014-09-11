@@ -1,13 +1,9 @@
-Require Import Overture TruncType types.Universe Equivalences PathGroupoids.
+Require Import Overture TruncType types.Universe Equivalences PathGroupoids UnivalenceImpliesFunext.
 Open Scope equiv.
 Open Scope path.
 
-Section AssumeUnivalence.
-Context `{Univalence}.
-Section AssumeFunext.
-Context `{Funext}.
-
 Section Functorish.
+Context `{Univalence}.
 (* We do not need composition to be preserved. *)
 Global Class Functorish (F : Type -> Type) := {
   fmap {A B} (f : A -> B) : F A -> F B ;
@@ -41,5 +37,3 @@ Proof.
 Defined.
 
 End Functorish.
-End AssumeFunext.
-End AssumeUnivalence.
