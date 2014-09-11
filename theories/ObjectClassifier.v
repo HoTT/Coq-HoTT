@@ -14,17 +14,6 @@ Context `{ua:Univalence}.
 Definition pullback {A0 B C} (f:B-> A0) (g:C->A0):= {b:B & {c:C & f b = g c}}.
 
 Section FamPow.
-(** This seems like a useful strengthening of [BiInv]. 
-It is easier to work with than [Equiv]. *)
-Definition BiInvPair {A B} (f : A -> B) (g : B -> A) : Type
-  := Sect f g * Sect g f.
-Lemma BiInvPairBiInv {A B} (f : A -> B) (g : B -> A) : 
-   BiInvPair f g -> BiInv f.
-Proof. intros [H1 H2]. split; exists g;auto. Defined.
-Lemma BiInvPairEquiv {A B} (f : A -> B) (g : B -> A) : 
-   (BiInvPair f g -> A<~> B). 
-Proof. intros [H G]. apply (equiv_adjointify f g G H). Defined.
-
 (** We consider Families and Powers over a fixed type [A] *)
 Variable A:Type.
 Definition Fam A:=sigT (fun I:Type  => I->A).
@@ -42,26 +31,21 @@ Proof.
   by apply transport_path_universe_V.
 Qed.
 
-Theorem PowisoFam : BiInvPair p2f f2p.
+Theorem FamequivPow : (A->Type)<~>(Fam A).
 Proof.
-split.
+apply (equiv_adjointify p2f f2p).
+(* Theorem right (F:Fam A) : F = (p2ff2p F) *)
+ +intros [I f]. set (e:=equiv_path_sigma _ (@existT Type (fun I0 : Type => I0 -> A) I f)
+  ({a : A & hfiber f a} ; @pr1 _ _)). simpl in e.
+  enough (X:{p : I = {a : A & @hfiber I A f a} &
+     @transport _ (fun I0 : Type => I0 -> A) _ _ p f = @pr1 _ _}) by apply (e X)^.
+  set (w:=@equiv_fibration_replacement A I f).
+  exists (path_universe w). 
+  transitivity (f o w^-1);[apply transport_exp|apply path_forall;by (intros [a [i p]])].
  (* Theorem left (P:A -> Type) : (f2pp2f P) = P *)
  + intro P. by_extensionality a.
  apply ((path_universe (@hfiber_fibration  _ a P))^).
-(* Theorem right (F:Fam A) : F = (p2ff2p F) *)
-+intros [I f]. set (e:=equiv_path_sigma _ (@existT Type (fun I0 : Type => I0 -> A) I f)
-({a : A & hfiber f a} ; @pr1 _ _)). simpl in e.
-enough (X:{p : I = {a : A & @hfiber I A f a} &
-     @transport _ (fun I0 : Type => I0 -> A) _ _ p f = @pr1 _ _}) by apply (e X)^.
-set (w:=@equiv_fibration_replacement A I f).
-exists (path_universe w). 
-transitivity (f o w^-1);[apply transport_exp|apply path_forall;by (intros [a [i p]])].
-Qed.
-
-Corollary FamequivPow : (A->Type)<~>(Fam A).
-Proof.
-exists p2f. apply (equiv_biinv_equiv _). apply (BiInvPairBiInv _ _ PowisoFam).
-Qed.
+Defined.
 
 (** We construct the universal diagram for the object classifier *)
 Definition topmap {B} (f:B->A) (b:B): pointedType :=
@@ -131,18 +115,17 @@ Qed.
 Definition Pfam2pow (F:PFam) (a:A): {X :Type & isP X}:=
    ((f2p A F.1 a); (Pfam2pow_pf F a)).
 
-Theorem PowisoPFam : BiInvPair pow2Pfam Pfam2pow.
+Theorem PowisoPFam : (forall a:A, {X :Type & isP X})<~>PFam.
 Proof.
-split.
- + intro P. apply path_forall. intro a.
-   assert (f2p A (p2f A (pr1 o P)) a = (pr1 (P a))) by (
-    destruct (PowisoFam A) as [p _];
-    apply (ap10 (p (pr1 o P)) a)).
-  by apply path_sigma_hprop.
-+ intros [[B f] q]. apply path_sigma_hprop.
-destruct (PowisoFam A) as [_ p ]. apply (p (B;f)).
-Qed.
-
+apply (equiv_adjointify pow2Pfam Pfam2pow).
+ + intros [[B f] q]. apply path_sigma_hprop. cbn.
+  refine (@eisretr _ _ (FamequivPow A) _ (B;f)).
++ intro P. apply path_forall. intro a.
+ assert (f2p A (p2f A (pr1 o P)) a = (pr1 (P a))).
+  set (p:=@eissect _ _ (FamequivPow A) _).
+  apply (ap10 (p (pr1 o P)) a).
+by apply path_sigma_hprop.
+Defined.
 End Subobjectclassifier.
 
 End AssumeUnivalence.
