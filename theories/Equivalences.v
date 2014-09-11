@@ -319,5 +319,6 @@ Ltac equiv_intro E x :=
 Definition equiv_composeR' {A B C} (f : A <~> B) (g : B <~> C)
   := equiv_compose' g f.
 
+(* Shouldn't this become transitivity mid ? *)
 Ltac equiv_via mid :=
   apply @equiv_composeR' with (B := mid).
