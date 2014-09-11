@@ -22,20 +22,16 @@ Section sigT_obj.
   Variable Pobj : A -> Type.
 
   (** ** Definition of [sigT_obj]-precategory *)
-  Definition sigT_obj : PreCategory.
-  Proof.
-    refine (@Build_PreCategory
-              (sigT_type Pobj)
-              (fun s d => morphism A (pr1_type s) (pr1_type d))
-              (fun x => @identity A (pr1_type x))
-              (fun s d d' m1 m2 => m1 o m2)%morphism
-              _
-              _
-              _
-              _
-           );
-    simpl; intros; auto with category.
-  Defined.
+  Definition sigT_obj : PreCategory
+    := @Build_PreCategory
+         (sigT_type Pobj)
+         (fun s d => morphism A (pr1_type s) (pr1_type d))
+         (fun x => @identity A (pr1_type x))
+         (fun s d d' m1 m2 => m1 o m2)%morphism
+         (fun _ _ _ _ => associativity A _ _ _ _)
+         (fun _ _ => left_identity A _ _)
+         (fun _ _ => right_identity A _ _)
+         _.
 
   (** ** First projection functor *)
   Definition pr1_obj : Functor sigT_obj A

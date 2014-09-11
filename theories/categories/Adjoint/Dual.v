@@ -27,15 +27,15 @@ Section opposite.
          (unit_counit_equation_2 A)
          (unit_counit_equation_1 A).
 
-  Definition opposite_inv
+  Definition opposite'
              (F : Functor C D)
              (G : Functor D C)
              (A : F^op -| G^op)
   : G -| F
     := @Build_AdjunctionUnitCounit
          _ _ G F
-         (@opposite_tinv _ _ 1 (F o G) (counit A))
-         (@opposite_tinv _ _ (G o F) 1 (unit A))
+         (@opposite' _ _ 1 (F o G) (counit A))
+         (@opposite' _ _ (G o F) 1 (unit A))
          (unit_counit_equation_2 A)
          (unit_counit_equation_1 A).
 
@@ -43,11 +43,11 @@ Section opposite.
              (F : Functor C^op D^op)
              (G : Functor D C)
              (A : F -| G^op)
-  : G -| F^op'
+  : G -| F^op
     := @Build_AdjunctionUnitCounit
-         _ _ G (F^op')
-         ((counit A)^op')
-         ((unit A)^op')
+         _ _ G (F^op)
+         ((counit A)^op)
+         ((unit A)^op)
          (unit_counit_equation_2 A)
          (unit_counit_equation_1 A).
 
@@ -55,17 +55,17 @@ Section opposite.
              (F : Functor C D)
              (G : Functor D^op C^op)
              (A : F^op -| G)
-  : G^op' -| F
+  : G^op -| F
     := @Build_AdjunctionUnitCounit
-         _ _ (G^op') F
-         ((counit A)^op')
-         ((unit A)^op')
+         _ _ (G^op) F
+         ((counit A)^op)
+         ((unit A)^op)
          (unit_counit_equation_2 A)
          (unit_counit_equation_1 A).
 End opposite.
 
 Local Notation "A ^op" := (opposite A) (at level 3, format "A '^op'") : adjunction_scope.
-Local Notation "A ^op'" := (opposite_inv A) (at level 3, format "A '^op''") : adjunction_scope.
+Local Notation "A ^op'" := (opposite' A) (at level 3, format "A '^op''") : adjunction_scope.
 Local Notation "A ^op'L" := (opposite'L A) (at level 3, format "A '^op'L'") : adjunction_scope.
 Local Notation "A ^op'R" := (opposite'R A) (at level 3, format "A '^op'R'") : adjunction_scope.
 
@@ -111,7 +111,7 @@ End opposite_involutive.
 
 Module Export AdjointDualNotations.
   Notation "A ^op" := (opposite A) (at level 3, format "A '^op'") : adjunction_scope.
-  Notation "A ^op'" := (opposite_inv A) (at level 3, format "A '^op''") : adjunction_scope.
+  Notation "A ^op'" := (opposite' A) (at level 3, format "A '^op''") : adjunction_scope.
   Notation "A ^op'L" := (opposite'L A) (at level 3, format "A '^op'L'") : adjunction_scope.
   Notation "A ^op'R" := (opposite'R A) (at level 3, format "A '^op'R'") : adjunction_scope.
 End AdjointDualNotations.
