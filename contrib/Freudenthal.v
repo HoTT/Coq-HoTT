@@ -91,7 +91,7 @@ Definition FST_Codes_cross_x0 (q : No = So)
   : FST_Codes_No (q @ (mer x0)^) -> FST_Codes_So q.
 Proof.
   unfold FST_Codes_No, FST_Codes_So.
-  apply functor_Truncation, (functor_sigma idmap).
+  apply Truncation_functor, (functor_sigma idmap).
   unfold mer'; intros x1. apply cancelR.
 Defined.
 
@@ -107,12 +107,39 @@ Proof.
   intros []. unfold FST_Codes_cross.
   apply (isequiv_homotopic (FST_Codes_cross_x0 q)).
   { unfold FST_Codes_cross_x0.
-    apply isequiv_functor_Truncation, @isequiv_functor_sigma. refine _.
+    apply isequiv_Truncation_functor, @isequiv_functor_sigma. refine _.
     intros a. apply isequiv_cancelR. }
   { hnf. apply Truncation_rect. intros ?; apply trunc_succ.
     intros [x r]; simpl.
     unfold functor_sigma; simpl.
-    apply symmetry. refine (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r). }
+    unfold wedge_incl_elim_uncurried.
+    simpl.
+    apply symmetry.
+    etransitivity.
+    refine (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r).
+    unfold FST_Codes_cross_x0.
+    (* 1 focused subgoals
+(unfocused: 0)
+, subgoal 1 (ID 187)
+
+  H : Funext
+  funext_large : Funext * Unit
+  H0 : Univalence
+  n : trunc_index
+  Hn : n <> minus_two
+  X : Type
+  x0 : X
+  H1 : IsConnMap n (unit_name x0)
+  q : No = So
+  x : X
+  r : mer' x = q @ (mer x0)^
+  ============================
+   truncation_incl (hfiber_pair x (cancelR (mer x) q (mer x0)^ r)) =
+   Truncation_functor (n -2+ n)
+     (functor_sigma idmap (fun x1 : X => cancelR (mer x1) q (mer x0)^))
+     (truncation_incl (x; r))
+(dependent evars: ?141 using , ?142 using ,)
+ *) admit. }
 Defined.
 
 Definition FST_Codes
