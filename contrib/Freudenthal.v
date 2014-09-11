@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-(** * The Freudenthal Suspension Theorem, and related results. *)
+(** * The Freudenthal Suspension Theorem, and related results. (INCOMPLETE) *)
 
 Require Import Overture PathGroupoids Fibrations Equivalences Trunc EquivalenceVarieties types.Forall types.Sigma types.Paths types.Unit types.Universe types.Arrow hit.Connectedness hit.Suspension hit.Truncations HProp.
 Local Open Scope path_scope.
