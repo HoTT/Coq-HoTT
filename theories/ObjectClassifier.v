@@ -3,7 +3,7 @@ This equivalence is close to the existence of an object classifier.
 *)
 
 Require Import Overture types.Universe types.Sigma types.Arrow Fibrations 
-EquivalenceVarieties Equivalences PathGroupoids UnivalenceImpliesFunext.
+EquivalenceVarieties Equivalences PathGroupoids UnivalenceImpliesFunext HProp.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 
@@ -98,65 +98,17 @@ Qed.
 End FamPow.
 
 Section Subobjectclassifier.
-Require Import Misc HProp.
 (** We prove that hProp is the subobject classifier *)
 (** In fact, the proof works for general mere predicates on [Type], 
-not just [IsHProp], truncations and modalities are important examples.
-We provide two proofs for comparison. The first using [HProp] as a record,
-The second is an unfolded version.*)
-
+not just [IsHProp], truncations and modalities are important examples.*)
 Variable A:Type.
-
-(* This should be moved. Strong monos, i.e. -1-truncated maps. *)
-Definition is_smono {I} (f:I->A):=forall i, IsHProp (hfiber f i).
-Definition SubFam := (sig (fun F:Fam A => is_smono (pr2 F))).
-
-(* Bug: abstract should accept more than one tactic.
-Alternatively, we would like to use [Program] here. 
-Instead we split the [Definition] and first make a [Local Definition] *)
-Local Definition pow2subfam_pf (P:A -> hProp): is_smono (pr2 (p2f A P)). 
-intro i. cbn. 
-set (e:=@hfiber_fibration A i (fun x => (hproptype (P x)))).
-(* rewrite <- e.
-Error: The term does not end with an applied homogeneous relation.
-There seems to be a [Proper] missing for [IsHProp] and [<~>].
-Should we try to add them consistently for all types? *)
-rewrite <- (path_universe_uncurried e).
-apply isp. 
-Qed.
-
-Definition pow2subfam (P:A -> hProp): SubFam:=
-  (p2f A P; pow2subfam_pf P).
-
-Local Definition subfam2pow_pf (F:SubFam)(a:A):IsHProp (f2p A F.1 a). 
-unfold f2p. by destruct F as [[I f] p]. 
-Qed.
-
-Definition subfam2pow (F:SubFam):A->hProp:=
-   fun (a:A)=>hp (f2p A F.1 a) (subfam2pow_pf F a).
-
-Theorem PowisosubFam : BiInvPair pow2subfam subfam2pow.
-Proof.
-split.
- + intro P. assert (f2p A (p2f A (fun x : A => P x)) = P) by by destruct (PowisoFam A) as [p _].
-   apply path_forall. intro a. 
-   (* Why do we need to be so explicit here? *)
-   apply (path_hprop 
-    (hp (f2p A (p2f A (fun x : A => hproptype (P x))) a)
-     (subfam2pow_pf
-        (@exist (Fam A) (fun F : Fam A => @is_smono (proj1_sig F) (proj2_sig F))
-           (p2f A (fun x : A => hproptype (P x))) (pow2subfam_pf P)) a))
-     _ (ap10 X a)). 
-+intros [[B f] q]. apply path_sigma_hprop.
-destruct (PowisoFam A) as [_ p ]. apply (p (B;f)).
-Qed.
-
-(** Now the general case *)
 Variable isP:Type -> Type.
 Variable ishprop_isP: forall I, IsHProp (isP I).
 Definition IsPfibered {I} (f:I->A):=forall i, isP (hfiber f i).
 Definition PFam := (sig (fun F:Fam A => IsPfibered (pr2 F))).
-(* We would like to use [Program] here. Instead we first make a [Local Definition] *)
+(* Bug: abstract should accept more than one tactic.
+Alternatively, we would like to use [Program] here. 
+Instead we split the [Definition] and first make a [Local Definition] *)
 Local Definition pow2Pfam_pf (P:forall a:A, {X :Type & isP X}): 
            IsPfibered (pr2 (p2f A (pr1 o P))). 
 intro i. cbn. 
@@ -174,10 +126,10 @@ Qed.
 Definition Pfam2pow (F:PFam) (a:A): {X :Type & isP X}:=
    ((f2p A F.1 a); (Pfam2pow_pf F a)).
 
-Theorem PowisosFam : BiInvPair pow2Pfam Pfam2pow.
+Theorem PowisoPFam : BiInvPair pow2Pfam Pfam2pow.
 Proof.
 split.
- + intro P. apply path_forall. intro a. 
+ + intro P. apply path_forall. intro a.
    assert (f2p A (p2f A (pr1 o P)) a = (pr1 (P a))) by (
     destruct (PowisoFam A) as [p _];
     apply (ap10 (p (pr1 o P)) a)).
