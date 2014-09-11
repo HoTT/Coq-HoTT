@@ -79,10 +79,9 @@ Section TruncationModality.
                 (Truncation n)
                 (@truncation_incl n)
                 trunc_iff_isequiv_truncation)
-              (fun A B => @Truncation_rect
-                            n A (fun a => Truncation n (B a)) _)
-              (fun A B f a => 1) _).
-    intros A z z'.
+              (@Truncation_rect n)
+              (fun A B B_inO f a => 1)
+              _ _);
     simpl; exact _.
   Defined.
 

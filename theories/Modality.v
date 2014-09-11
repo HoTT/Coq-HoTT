@@ -1,3 +1,5 @@
+(* -*- mode: coq; mode: visual-line -*- *)
+
 Require Import Overture PathGroupoids HProp Equivalences EquivalenceVarieties
         UnivalenceImpliesFunext.
 Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths
@@ -12,86 +14,73 @@ Local Open Scope equiv_scope.
 Section Modalities.
   Context {ua : Univalence}.
 
-  (** Quoting the HoTT Book: *)
-  (** Definition 7.7.5. A _modality_ is an operation [○ : Type → Type] for which there are
-
-    (i) functions [eta^○_A : A → ○(A)] for every type [A]
-
-    (ii) for every [A : Type] and every type family [B : ○(A) → Type], a function
-
-         [ind_○ : (∀ a : A, ○(B(eta^○_A(a)))) → (∀ z : ○(A), ○(B(z)))]
-
-    (iii) A path [ind_○(f)(eta^○_A(a)) = f(a)] for each [f : ∀ a : A, ○(B(eta^○_A(a)))].
-
-    (iv) For any [z z' : ○(A)], the function [eta^○_{z = z'} : (z = z') → ○(z = z')] is an equivalence. *)
-
+  (** A modality consists of *)
   Class Modality :=
     {
+      (** a UnitSubuniverse, whose types are called "modal", *)
       mod_usubu : UnitSubuniverse ;
-      O_rectO : forall A (B : O A -> Type),
-                (forall a, O (B (O_unit A a))) -> forall z, O (B z) ;
-      O_rectO_beta : forall A B (f : forall a : A, O (B (O_unit A a))) a,
-                     O_rectO A B f (O_unit A a) = f a ;
-      inO_pathsO : forall A (z z' : O A), inO (z = z')
+      (** an induction principle into families of modal types *)
+      O_rect : forall A (B : O A -> Type) (B_inO : forall oa, inO (B oa)),
+        (forall a, B (O_unit A a)) -> forall a, B a ;
+      (** with a computation rule *)
+      O_rect_beta : forall A B B_inO (f : forall a : A, B (O_unit A a)) a,
+        O_rect A B B_inO f (O_unit A a) = f a ;
+      (** such that [O] maps into the subuniverse *)
+      O_inO_modality : forall A, inO (O A) ;
+      (** and which is closed under path spaces. *)
+      inO_paths : forall A (A_inO : inO A) (z z' : A), inO (z = z')
     }.
 
+  Arguments O_rect {Modality} {A} B {B_inO} f a.
+  Arguments O_rect_beta {Modality} {A} B {B_inO} f a.
+  
   (** See ReflectiveSubuniverse.v for explanation of how to use (and how not to use) [Modality] as a typeclass. *)
 
   Global Existing Instance mod_usubu.
   Coercion mod_usubu : Modality >-> UnitSubuniverse.
-  Global Existing Instance inO_pathsO.
+  Global Existing Instance O_inO_modality.
+  Global Existing Instance inO_paths.
 
-  Context {mod : Modality}.
+  (** Our definition of modality is slightly different from the one in the book, which requires an induction principle only into families of the form [fun oa => O (B oa)] and similarly only that path-spaces of types [O A] are modal.  This is "obviously" equivalent since every modal type is equivalent to one of the form [O A].  However, our definition is more convenient in formalized applications because in some examples, there is a naturally occurring [O_rect] into all modal types that is not judgmentally equal to the one that can be constructed by passing through [O] and back again.
 
-  (** The image of a type by [mod] is always modal *)
-  Local Definition O_inO_modality (A:Type) : inO (O A).
+     However, in other examples it is easier to construct the latter weaker induction principle, so we now show how to do this. *)
+
+  Definition Build_Modality_easy
+    (mod_usubu : UnitSubuniverse)
+    (O_rectO : forall A (B : O A -> Type),
+      (forall a, O (B (O_unit A a))) -> forall z, O (B z))
+    (O_rectO_beta : forall A B (f : forall a : A, O (B (O_unit A a))) a,
+      O_rectO A B f (O_unit A a) = f a)
+    (inO_pathsO : forall A (z z' : O A), inO (z = z'))
+    : Modality.
   Proof.
-    apply inO_isequiv_O_unit.
-    apply isequiv_adjointify with (g := O_rectO (O A) (fun _ => A) idmap).
-    - intro x.
-      apply ((O_unit _)^-1).
-      generalize dependent x; apply O_rectO; intro a.
-      apply O_unit.
-      apply ap.
-      apply (O_rectO_beta _ (fun _ : O (O A) => A) (fun u:O A => u) a).
-    - exact (O_rectO_beta _ (fun _ : O (O A) => A) idmap).
-  Qed.
-
-  Local Instance inO_paths_modality (A:Type) {A_inO : inO A}
-  : forall (x y:A), inO (x=y).
-  Proof.
-    intros x y.
-    refine (inO_equiv_inO (O_unit A x = O_unit A y) _).
-    apply equiv_inverse, equiv_ap; exact _.
-  Qed.
-
-  (** A generalized induction principle into families of modal types. *)
-
-  Section OInd.
-
-    Context {A : Type} (B : O A -> Type) {B_inO : forall a, inO (B a)}
-            (f : forall a, B (O_unit A a)).
-
-    Definition O_rect : forall oa, B oa.
-    Proof.
-      intros oa.
+    refine (Build_Modality mod_usubu _ _ _ _).
+    - intros A B B_inO f oa.
       apply ((O_unit (B oa))^-1).
       apply O_rectO.
       intros a; apply O_unit. apply f.
-    Defined.
-
-    Definition O_rect_beta : forall a, O_rect (O_unit A a) = f a.
-    Proof.
-      intros a; unfold O_rect.
+    - intros A B B_inO f a; unfold O_rect.
       apply moveR_equiv_V.
       apply @O_rectO_beta with (f := fun x => O_unit _ (f x)).
-    Defined.
+    - intros A; apply inO_isequiv_O_unit.
+      refine (isequiv_adjointify (O_unit (O A)) (O_rectO (O A) (fun _ => A) idmap) _ _).
+      + intro x.
+        apply ((O_unit _)^-1).
+        generalize dependent x; apply O_rectO; intro a.
+        apply O_unit. apply ap.
+        apply (O_rectO_beta _ (fun _ : O (O A) => A) (fun u:O A => u) a).
+      + exact (O_rectO_beta _ (fun _ : O (O A) => A) idmap).
+    - intros A A_inO x y.
+      refine (inO_equiv_inO (O_unit A x = O_unit A y) _).
+      apply equiv_inverse, equiv_ap; exact _.
+  Defined.
 
-  End OInd.
+  (** For the rest of this section, we work with an arbitrary modality. *)
+  Context {mod : Modality}.
 
   (** The induction principle [O_rect], like most induction principles, is an equivalence. *)
 
-  Section OIndEquiv.
+  Section ORectEquiv.
 
     Context {A : Type} (B : O A -> Type) {B_inO : forall a, inO (B a)}.
 
@@ -114,7 +103,7 @@ Section Modalities.
     : IsEquiv (fun (h : forall oa, B oa) => h oD O_unit A)
     := equiv_isequiv (equiv_inverse equiv_O_rect).
 
-  End OIndEquiv.
+  End ORectEquiv.
 
   Local Definition isequiv_o_O_unit (A B : Type) (B_inO : inO B)
   : IsEquiv (fun (h : O A -> B) => h o O_unit A)
@@ -150,15 +139,15 @@ Theorem reflective_subuniverse_to_modality `{ua : Univalence}
 Proof.
   pose (K := fst inO_sigma_iff H).
   exact (Build_Modality _
-           (fun A B g => pr1 (K A (O oD B) _ g))
-           (fun A B g => pr2 (K A (O oD B) _ g))
-           _).
-Defined.  
+           (fun A B B_inO g => pr1 (K A B B_inO g))
+           (fun A B B_inO g => pr2 (K A B B_inO g))
+           _ _).
+Defined.
 
 (** Exercise 7.12 *)
 Definition notnot_modality `{Univalence} : Modality.
 Proof.
-  refine (Build_Modality
+  refine (Build_Modality_easy
             (Build_UnitSubuniverse_easy
                (fun X => ~~X)
                (fun X x nx => nx x))

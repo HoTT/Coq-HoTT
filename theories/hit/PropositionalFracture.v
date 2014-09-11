@@ -11,9 +11,9 @@ Local Open Scope equiv_scope.
 (** * Open and closed modalities and the propositional fracture theorem *)
 
 (** Exercise 7.13(i): Open modalities *)
-Definition open_modality `{Funext} (U : hProp) : Modality.
+Definition open_modality `{Univalence} (U : hProp) : Modality.
 Proof.
-  refine (Build_Modality
+  refine (Build_Modality_easy
             (Build_UnitSubuniverse_easy
                (fun X => U -> X)
                (fun X x u => x))
@@ -51,7 +51,7 @@ Defined.
 (** Exercise 7.13(ii): Closed modalities *)
 Section ClosedModality.
 
-  Context `{Funext} (U : hProp).
+  Context `{Univalence} (U : hProp).
 
   Definition equiv_inO_closed (A : Type)
   : (U -> Contr A) <~> IsEquiv (fun a:A => push (inr a) : join U A).
@@ -87,19 +87,22 @@ Section ClosedModality.
            (fun X => join U X)
            (fun X x => push (inr x))
            equiv_inO_closed)
-         _ _ _).
+         _ _ _ _).
   Proof.
-    - intros A B f z.
-      refine (pushout_rect _ _ (fun z' => join U (B z')) _ _ z).
+    - intros A B ? f z.
+      refine (pushout_rect _ _ B _ _ z).
       * intros [u | a].
-        + exact (push (inl u)).
+        + apply center, B_inO, u.
         + apply f.
       * intros [u a].
-        pose (contr_inhabited_hprop U u).
+        pose (B_inO (O_unit A a) u).
         apply path_contr.
     - reflexivity.
-    - intros A z z'; simpl.
-      intros u; pose (contr_inhabited_hprop U u).
+    - intros A u.
+      pose (contr_inhabited_hprop U u).
+      exact _.
+    - intros A A_inO z z' u.
+      pose (A_inO u).
       exact _.
   Defined.
 
