@@ -14,14 +14,16 @@ Context `{ua:Univalence}.
 Definition pullback {A0 B C} (f:B-> A0) (g:C->A0):= {b:B & {c:C & f b = g c}}.
 
 Section FamPow.
-(* This seems like a useful strengthening of [BiInv]. 
+(** This seems like a useful strengthening of [BiInv]. 
 It is easier to work with than [Equiv]. *)
-Definition BiInvPair {A B} `(f : A -> B) `(g : B -> A) : Type
+Definition BiInvPair {A B} (f : A -> B) (g : B -> A) : Type
   := Sect f g * Sect g f.
-Lemma BiInvPairBiInv {A B} `(f : A -> B) `(g : B -> A) : 
+Lemma BiInvPairBiInv {A B} (f : A -> B) (g : B -> A) : 
    BiInvPair f g -> BiInv f.
-intros [H1 H2]. split; exists g;auto.
-Defined.
+Proof. intros [H1 H2]. split; exists g;auto. Defined.
+Lemma BiInvPairEquiv {A B} (f : A -> B) (g : B -> A) : 
+   (BiInvPair f g -> A<~> B). 
+Proof. intros [H G]. apply (equiv_adjointify f g G H). Defined.
 
 (** We consider Families and Powers over a fixed type [A] *)
 Variable A:Type.
@@ -41,11 +43,12 @@ Proof.
 Qed.
 
 Theorem PowisoFam : BiInvPair p2f f2p.
+Proof.
 split.
- (** Theorem left (P:A -> Type) : (f2pp2f P) = P *)
+ (* Theorem left (P:A -> Type) : (f2pp2f P) = P *)
  + intro P. by_extensionality a.
  apply ((path_universe (@hfiber_fibration  _ a P))^).
-(** Theorem right (F:Fam A) : F = (p2ff2p F) *)
+(* Theorem right (F:Fam A) : F = (p2ff2p F) *)
 +intros [I f]. set (e:=equiv_path_sigma _ (@existT Type (fun I0 : Type => I0 -> A) I f)
 ({a : A & hfiber f a} ; @pr1 _ _)). simpl in e.
 enough (X:{p : I = {a : A & @hfiber I A f a} &
@@ -56,19 +59,17 @@ transitivity (f o w^-1);[apply transport_exp|apply path_forall;by (intros [a [i 
 Qed.
 
 Corollary FamequivPow : (A->Type)<~>(Fam A).
-exists p2f.
-apply (equiv_biinv_equiv _). apply (BiInvPairBiInv _ _ PowisoFam).
+Proof.
+exists p2f. apply (equiv_biinv_equiv _). apply (BiInvPairBiInv _ _ PowisoFam).
 Qed.
 
 (** We construct the universal diagram for the object classifier *)
 Definition topmap {B} (f:B->A) (b:B): pointedType :=
   (hfiber f (f b) ; (b ; idpath (f b))).
 
-Local Definition help_objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P) ->
-  (pullback P (@pr1 _ (fun u :Type => u))).
-intros [a q]. exists a.
-exists (existT (fun u:Type=> u) (P a) q). apply idpath.
-Defined.
+Local Definition help_objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P)->
+  (pullback P (@pr1 _ (fun u :Type => u))):=
+(fun (X : {a : A & P a}) => (fun (a : A) (q : P a) => (a; ((P a; q); 1))) X.1 X.2).
 
 Local Definition help_objclasspb_is_fibrantreplacement2 (P:A-> Type):
  (pullback P (@pr1 _ (fun u :Type => u))) -> (sigT P).
@@ -76,6 +77,7 @@ intros [a [[T t] p]]. exact (a;(transport (fun X => X) (p^) t)).
 Defined.
 
 Lemma objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P) <~> (pullback P (@pr1 _ (fun u :Type => u))).
+Proof.
 exists (help_objclasspb_is_fibrantreplacement P).
 apply equiv_biinv. split; exists (help_objclasspb_is_fibrantreplacement2 P); intros [a p]. apply idpath.
 destruct p as [[T t] p].
@@ -107,10 +109,13 @@ Variable ishprop_isP: forall I, IsHProp (isP I).
 Definition IsPfibered {I} (f:I->A):=forall i, isP (hfiber f i).
 Definition PFam := (sig (fun F:Fam A => IsPfibered (pr2 F))).
 (* Bug: abstract should accept more than one tactic.
-Alternatively, we would like to use [Program] here. 
+https://coq.inria.fr/bugs/show_bug.cgi?id=3609
+Alternatively, we would like to use [Program] here.
+6a99db1c31fe267fdef7be755fa169fb6a87e3cf
 Instead we split the [Definition] and first make a [Local Definition] *)
 Local Definition pow2Pfam_pf (P:forall a:A, {X :Type & isP X}): 
            IsPfibered (pr2 (p2f A (pr1 o P))). 
+Proof.
 intro i. cbn. 
 rewrite <- (path_universe_uncurried (@hfiber_fibration A i (pr1 o P))).
 apply ((P i).2).
