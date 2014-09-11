@@ -55,8 +55,8 @@ Section TruncationModality.
 
   Definition trunc_iff_isequiv_truncation (A : Type)
   : IsTrunc n A <~> IsEquiv (@truncation_incl n A).
-  Proof using n.
-(*    apply equiv_iff_hprop; intros ?.
+  Proof.
+    apply equiv_iff_hprop; intros ?.
     - refine (isequiv_adjointify _ _ _ _).
       * apply Truncation_rect_nondep, idmap.
       * intros oa.
@@ -68,11 +68,9 @@ Section TruncationModality.
         reflexivity.
     - exact (trunc_equiv (@truncation_incl n A)^-1).
   Defined.
-    *)
-  Admitted.
 
   Local Instance truncation_modality : Modality.
-  Proof using n.
+  Proof.
     refine (Build_Modality
               (Build_UnitSubuniverse
                 (IsTrunc n)
