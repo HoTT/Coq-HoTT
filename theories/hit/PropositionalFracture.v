@@ -14,7 +14,7 @@ Local Open Scope equiv_scope.
 Definition open_modality `{Funext} (U : hProp) : Modality.
 Proof.
   refine (Build_Modality
-            (Build_UnitSubuniverse
+            (Build_UnitSubuniverse_easy
                (fun X => U -> X)
                (fun X x u => x))
             _ _ _); unfold O, inO, O_unit.
@@ -53,22 +53,12 @@ Section ClosedModality.
 
   Context `{Funext} (U : hProp).
 
-  Local Instance closed_unitsubuniverse : UnitSubuniverse
-    := (Build_UnitSubuniverse
-               (fun X => join U X)
-               (fun X => push o (@inr U X))).
-
-  Definition inO_closed (A : Type)
-  : inO A <-> (U -> Contr A).
+  Definition equiv_inO_closed (A : Type)
+  : (U -> Contr A) <~> IsEquiv (fun a:A => push (inr a) : join U A).
   Proof.
-    split.
-    - intros ? u.
-      refine (@contr_equiv (join U A) A (O_unit A)^-1 _ _).
-      pose (contr_inhabited_hprop U u).
-      exact _.
+    apply equiv_iff_hprop.
     - intros uac.
-      refine (isequiv_adjointify _ _ _ _);
-        unfold O, O_unit, closed_unitsubuniverse.
+      refine (isequiv_adjointify _ _ _ _).
       * refine (pushout_rectnd A _ _).
         + intros [u | a].
           { pose (uac u). exact (center A). }
@@ -84,11 +74,21 @@ Section ClosedModality.
         + intros [u a]; pose (contr_inhabited_hprop U u).
           apply path_contr.
       * intros a. reflexivity.
+    - intros ? u.
+      refine (@contr_equiv (join U A) A (fun a:A => push (inr a))^-1 _ _).
+      pose (contr_inhabited_hprop U u).
+      exact _.
   Defined.
 
-  Local Instance closed_modality : Modality.
+  Local Instance closed_modality : Modality
+    := (Build_Modality
+         (Build_UnitSubuniverse
+           (fun X => U -> Contr X)
+           (fun X => join U X)
+           (fun X x => push (inr x))
+           equiv_inO_closed)
+         _ _ _).
   Proof.
-    refine (Build_Modality closed_unitsubuniverse _ _ _).
     - intros A B f z.
       refine (pushout_rect _ _ (fun z' => join U (B z')) _ _ z).
       * intros [u | a].
@@ -98,8 +98,7 @@ Section ClosedModality.
         pose (contr_inhabited_hprop U u).
         apply path_contr.
     - reflexivity.
-    - intros A z z'.
-      apply (snd (inO_closed (z = z'))).
+    - intros A z z'; simpl.
       intros u; pose (contr_inhabited_hprop U u).
       exact _.
   Defined.

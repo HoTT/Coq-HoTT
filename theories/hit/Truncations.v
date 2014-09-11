@@ -50,17 +50,13 @@ Definition Truncation_rect_nondep {n A X} `{IsTrunc n X}
 (** Truncation is a modality *)
 
 Section TruncationModality.
-  Context `{ua : Univalence}.
+  Context {ua : Univalence}.
   Context (n : trunc_index).
 
-  Local Instance truncation_unitsubuniverse : UnitSubuniverse
-    := (Build_UnitSubuniverse (Truncation n) (@truncation_incl n)).
-
-  Definition truncation_inO_iff_trunc (A : Type)
-  : inO A <-> IsTrunc n A.
+  Definition trunc_iff_isequiv_truncation (A : Type)
+  : IsTrunc n A <~> IsEquiv (@truncation_incl n A).
   Proof using n.
-    split; intros ?.
-    - exact (trunc_equiv (O_unit A)^-1).
+(*    apply equiv_iff_hprop; intros ?.
     - refine (isequiv_adjointify _ _ _ _).
       * apply Truncation_rect_nondep, idmap.
       * intros oa.
@@ -70,22 +66,24 @@ Section TruncationModality.
         reflexivity.
       * intros a.
         reflexivity.
+    - exact (trunc_equiv (@truncation_incl n A)^-1).
   Defined.
-
-  Definition equiv_truncation_inO_iff_trunc `{Funext} (A : Type)
-  : inO A <~> IsTrunc n A
-  := equiv_iff_hprop (fst (truncation_inO_iff_trunc A))
-                     (snd (truncation_inO_iff_trunc A)).
+    *)
+  Admitted.
 
   Local Instance truncation_modality : Modality.
   Proof using n.
     refine (Build_Modality
-              _
+              (Build_UnitSubuniverse
+                (IsTrunc n)
+                (Truncation n)
+                (@truncation_incl n)
+                trunc_iff_isequiv_truncation)
               (fun A B => @Truncation_rect
                             n A (fun a => Truncation n (B a)) _)
               (fun A B f a => 1) _).
     intros A z z'.
-    exact (snd (truncation_inO_iff_trunc _) _).
+    simpl; exact _.
   Defined.
 
   (** ** Functoriality *)

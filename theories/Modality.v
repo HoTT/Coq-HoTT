@@ -46,6 +46,7 @@ Section Modalities.
   (** The image of a type by [mod] is always modal *)
   Local Definition O_inO_modality (A:Type) : inO (O A).
   Proof.
+    apply inO_isequiv_O_unit.
     apply isequiv_adjointify with (g := O_rectO (O A) (fun _ => A) idmap).
     - intro x.
       apply ((O_unit _)^-1).
@@ -61,7 +62,7 @@ Section Modalities.
   Proof.
     intros x y.
     refine (inO_equiv_inO (O_unit A x = O_unit A y) _).
-    apply equiv_inverse, equiv_ap, A_inO.
+    apply equiv_inverse, equiv_ap; exact _.
   Qed.
 
   (** A generalized induction principle into families of modal types. *)
@@ -158,7 +159,7 @@ Defined.
 Definition notnot_modality `{Univalence} : Modality.
 Proof.
   refine (Build_Modality
-            (Build_UnitSubuniverse
+            (Build_UnitSubuniverse_easy
                (fun X => ~~X)
                (fun X x nx => nx x))
             (fun A B f z nBz =>

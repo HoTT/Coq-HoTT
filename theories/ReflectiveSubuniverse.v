@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-Require Import Overture PathGroupoids HProp Equivalences EquivalenceVarieties
+Require Import Overture PathGroupoids Trunc HProp Equivalences EquivalenceVarieties
         UnivalenceImpliesFunext Functorish.
 Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths
         types.Forall types.Prod types.Universe ObjectClassifier.
@@ -15,11 +15,23 @@ Section Unit_Subuniverse.
   (** A UnitSubuniverse is the common underlying structure of a reflective subuniverse and a modality.  It consists of: *)
   Class UnitSubuniverse :=
     {
+      (** a predicate [inO] on types, *)
+      inO_internal : Type -> Type ;
       (** an endomorphism [O] of [Type], and *)
       O : Type -> Type ;
-      (** maps [T -> O T] for all [T]. *)
-      O_unit : forall T, T -> O T
+      (** maps [T -> O T] for all [T], such that *)
+      O_unit : forall T, T -> O T ;
+      (** the predicate [inO] is equivalent to [O_unit] being an equivalence. *)
+      equiv_inO_internal_isequiv_O_unit : forall T, inO_internal T <~> IsEquiv (O_unit T)
     }.
+
+  (** Obviously, the definition is redundant: we don't need to include [inO] if it is equivalent to [IsEquiv (O_unit T)].  We include it, and the equivalence, explicitly, because in many examples there is a "more basic" definition of [inO] which only later happens to be equivalent to the unit maps being equivalences.  Thus, including it as data makes more things turn out to be judgmentally what we would expect.
+
+     However, in cases where there is no other definition, we can construct a [UnitSubuniverse] more simply. *)
+
+  Definition Build_UnitSubuniverse_easy (O : Type -> Type) (O_unit : forall T, T -> O T)
+    : UnitSubuniverse
+    := Build_UnitSubuniverse (fun T => IsEquiv (O_unit T)) O O_unit (fun T => equiv_idmap _).
 
   (** We made [UnitSubuniverse] into a typeclass, rather than just a record, so that when there is an assumed one around it doesn't need to be given explicitly as an argument to everything.  You should *not* ever declare a global [Instance] of [UnitSubuniverse].  The things to do with it are:
 
@@ -38,21 +50,26 @@ Section Unit_Subuniverse.
 
   (** The property of being in the subuniverse.  This is a more usual sort of typeclass, to be inferred automatically in many cases.  Note, however, that you shouldn't write [`{inO A}], since the generalizing binders will then introduce a *new* [UnitSubuniverse] hypothesis rather than using the one you intend; write [{A_inO : inO A}] instead.  *)
   Class inO (T : Type) :=
-    isequiv_inO : IsEquiv (O_unit T).
+    isequiv_inO : inO_internal T.
 
   Typeclasses Transparent inO.
-  Global Existing Instance isequiv_inO.
+  Global Instance isequiv_O_unit_inO (T : Type) {T_inO : inO T} : IsEquiv (O_unit T)
+    := equiv_inO_internal_isequiv_O_unit T isequiv_inO.
 
   Definition equiv_O_unit (T : Type) {T_inO : inO T} : T <~> O T
-    := BuildEquiv T (O T) (O_unit T) T_inO.
+    := BuildEquiv T (O T) (O_unit T) _.
 
-  Global Instance hprop_inO `{Funext} (T : Type) : IsHProp (inO T) := _.
+  Definition inO_isequiv_O_unit (T : Type) `{IsEquiv _ _ (O_unit T)} : inO T
+    := (equiv_inO_internal_isequiv_O_unit T)^-1 _.
+
+  Global Instance hprop_inO `{Funext} (T : Type) : IsHProp (inO T)
+    := (trunc_equiv ((equiv_inO_internal_isequiv_O_unit T)^-1)).
 
   (** Being in the universe transports along equivalences, by univalence *)
   Definition inO_equiv_inO `{Univalence} (T : Type) {U : Type} {T_inO : inO T} (f : T <~> U)
     : inO U
     := transport inO (path_universe f) _.
-    
+
   (** The type of types in the subuniverse *)
   Definition TypeO : Type
     := {T : Type & inO T}.
@@ -146,7 +163,9 @@ Section Reflective_Subuniverse.
     Definition inO_unit_retract (T:Type) (mu : O T -> T)
     : Sect (O_unit T) mu -> inO T.
     Proof.
-      unfold Sect; intros H. apply isequiv_adjointify with (g:=mu).
+      unfold Sect; intros H.
+      apply inO_isequiv_O_unit.
+      apply isequiv_adjointify with (g:=mu).
       - apply ap10.
         apply ((ap (equiv_O_rectnd T (O T)))^-1).
         apply path_arrow; intros x; unfold compose; simpl.
