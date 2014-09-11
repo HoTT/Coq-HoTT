@@ -53,7 +53,8 @@ MAKEFILE_TARGETS_FILE = Makefile_targets.mk
 include $(MAKEFILE_TARGETS_FILE)
 
 # The list of files that comprise the HoTT library
-CORE_VOFILES=$(CORE_VFILES:.v=.vo)
+VO=vo
+CORE_VOFILES=$(CORE_VFILES:.v=.$(VO))
 CORE_GLOBFILES=$(CORE_VFILES:.v=.glob)
 CORE_DEPFILES=$(CORE_VFILES:.v=.d)
 CORE_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CORE_VFILES:.v=.html)))
@@ -61,7 +62,7 @@ CORE_TIMING_HTMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/timing-html/%,$(CORE
 CORE_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/file-dep-graphs/HoTT.%,$(subst /,.,$(CORE_VFILES:.v=.dpd)))
 
 # The list of files that comprise the category theory in the HoTT library
-CATEGORY_VOFILES=$(CATEGORY_VFILES:.v=.vo)
+CATEGORY_VOFILES=$(CATEGORY_VFILES:.v=.$(VO))
 CATEGORY_GLOBFILES=$(CATEGORY_VFILES:.v=.glob)
 CATEGORY_DEPFILES=$(CATEGORY_VFILES:.v=.d)
 CATEGORY_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CATEGORY_VFILES:.v=.html)))
@@ -69,7 +70,7 @@ CATEGORY_TIMING_HTMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/timing-html/%,$(
 CATEGORY_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/file-dep-graphs/HoTT.%,$(subst /,.,$(CATEGORY_VFILES:.v=.dpd)))
 
 # The list of files from contrib
-CONTRIB_VOFILES=$(CONTRIB_VFILES:.v=.vo)
+CONTRIB_VOFILES=$(CONTRIB_VFILES:.v=.$(VO))
 CONTRIB_GLOBFILES=$(CONTRIB_VFILES:.v=.glob)
 CONTRIB_DEPFILES=$(CONTRIB_VFILES:.v=.d)
 CONTRIB_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).contrib.%,$(srcdir)/html/%,$(subst /,.,$(CONTRIB_VFILES:.v=.html)))
@@ -81,6 +82,8 @@ ALL_HOTT_VFILES = $(shell find "$(srcdir)/theories" -name "*.v") $(shell find "$
 UNBUILT_VFILES = $(filter-out $(ALL_BUILT_HOTT_VFILES),$(ALL_HOTT_VFILES))
 
 # The list of files that comprise the alternative standard library
+# the .vi infrastructure doesn't work unless we have .vos for the
+# standard library
 STD_VOFILES=$(STD_VFILES:.v=.vo)
 STD_GLOBFILES=$(STD_VFILES:.v=.glob)
 STD_DEPFILES=$(STD_VFILES:.v=.d)
@@ -90,7 +93,7 @@ STD_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/file-dep
 
 # The list of all files, mainly used for html and proviola
 MAIN_VFILES = $(CORE_VFILES) $(CATEGORY_VFILES) $(CONTRIB_VFILES)
-MAIN_VOFILES = $(MAIN_VFILES:.v=.vo)
+MAIN_VOFILES = $(MAIN_VFILES:.v=.$(VO))
 MAIN_GLOBFILES = $(MAIN_VFILES:.v=.glob)
 MAIN_DEPFILES = $(MAIN_VFILES:.v=.d)
 MAIN_HTMLFILES = $(CORE_HTMLFILES) $(CATEGORY_HTMLFILES) $(CONTRIB_HTMLFILES)
@@ -122,7 +125,7 @@ nobase_hott_DATA = \
 HOQC=$(srcdir)/hoqc
 
 # Which files should be cleaned
-CLEANFILES = $(ALL_VOFILES) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(ALL_XMLFILES) $(ALL_PROVIOLA_HTMLFILES) $(ALL_TIMINGFILES) $(ALL_TIMING_HTMLFILES) html-done.timestamp HoTT.deps HoTTCore.deps $(ALL_SVGFILES) $(ALL_DPDFILES) $(ALL_DOTFILES) file-dep-graphs/hott-all.dot file-dep-graphs/hott-all.dpd file-dep-graphs/hott-all.svg file-dep-graphs/hott-lib.dot file-dep-graphs/hott-lib.dpd file-dep-graphs/hott-lib.svg
+CLEANFILES = $(ALL_VOFILES) $(ALL_VFILES:.v=.vi) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(ALL_XMLFILES) $(ALL_PROVIOLA_HTMLFILES) $(ALL_TIMINGFILES) $(ALL_TIMING_HTMLFILES) html-done.timestamp HoTT.deps HoTTCore.deps $(ALL_SVGFILES) $(ALL_DPDFILES) $(ALL_DOTFILES) file-dep-graphs/hott-all.dot file-dep-graphs/hott-all.dpd file-dep-graphs/hott-all.svg file-dep-graphs/hott-lib.dot file-dep-graphs/hott-lib.dpd file-dep-graphs/hott-lib.svg
 
 # automake is very stupid and wants to put the 'include' line above
 # after this target.  But this target depends on variables defined in
@@ -132,7 +135,7 @@ all-am: Makefile $(SCRIPTS) $(DATA) $(MAKEFILE_TARGETS_FILE)
 
 .SECONDEXPANSION:
 
-.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom
+.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom quick vi2vo checkproofs
 
 # TODO(JasonGross): Get this to work on Windows, where symlinks are unreliable
 install-data-local:
@@ -143,6 +146,17 @@ install-data-local:
 
 # The standard library files must be compiled in a special way
 stdlib: $(STD_VOFILES)
+
+quick:
+	$(MAKE) all VO=vi
+
+vi2vo:
+	$(VECHO) HOQC -schedule-vi2vo
+	$(Q) $(TIMER) $(HOQC) -schedule-vi2vo $(J) $(MAIN_VOFILES:%.vo=%.vi)
+
+checkproofs:
+	$(VECHO) HOQC -schedule-vi-checking
+	$(Q) $(TIMER) $(HOQC) -schedule-vi-checking $(J) $(MAIN_VOFILES:%.vo=%.vi)
 
 $(STD_VOFILES) : %.vo : %.v
 	$(VECHO) COQTOP $*
@@ -175,9 +189,13 @@ strict-no-axiom: $(ALL_GLOBFILES)
 strict: strict-test strict-no-axiom hottlib hott-core hott-categories contrib
 
 # A rule for compiling the HoTT libary files
-$(MAIN_VOFILES) : %.vo : %.v $(STD_VOFILES)
+$(MAIN_VFILES:.v=.vo) : %.vo : %.v $(STD_VOFILES)
 	$(VECHO) HOQC $*
 	$(Q) $(TIMER) ./etc/pipe_out.sh "$*.timing" $(HOQC) -time $<
+
+$(MAIN_VFILES:.v=.vi) : %.vi : %.v $(STD_VOFILES)
+	$(VECHO) HOQC -quick $*
+	$(Q) $(TIMER) ./etc/pipe_out.sh "$*.timing" $(HOQC) -quick -time $<
 
 # The deps file, for graphs
 HoTT.deps: $(ALL_VFILES)
