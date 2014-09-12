@@ -1,5 +1,4 @@
-Require Import Overture PathGroupoids Contractible HProp Equivalences EquivalenceVarieties
-        UnivalenceImpliesFunext.
+Require Import Overture PathGroupoids Contractible HProp Equivalences EquivalenceVarieties.
 Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths
         types.Forall types.Prod types.Universe.
 Require Import ReflectiveSubuniverse Modality.
@@ -13,10 +12,9 @@ Local Open Scope equiv_scope.
 (** Exercise 7.13(i): Open modalities *)
 Definition open_modality `{Funext} (U : hProp) : Modality.
 Proof.
-  refine (Build_Modality
-            (Build_UnitSubuniverse
-               (fun X => U -> X)
-               (fun X x u => x))
+  refine (Build_Modality_easy
+           (fun X => U -> X)
+           (fun X x u => x)
             _ _ _); unfold O, inO, O_unit.
   - intros A B f z u.
     refine (transport B _ (f (z u) u)).
@@ -53,22 +51,12 @@ Section ClosedModality.
 
   Context `{Funext} (U : hProp).
 
-  Local Instance closed_unitsubuniverse : UnitSubuniverse
-    := (Build_UnitSubuniverse
-               (fun X => join U X)
-               (fun X => push o (@inr U X))).
-
-  Definition inO_closed (A : Type)
-  : inO A <-> (U -> Contr A).
+  Definition equiv_inO_closed (A : Type)
+  : (U -> Contr A) <~> IsEquiv (fun a:A => push (inr a) : join U A).
   Proof.
-    split.
-    - intros ? u.
-      refine (@contr_equiv (join U A) A (O_unit A)^-1 _ _).
-      pose (contr_inhabited_hprop U u).
-      exact _.
+    apply equiv_iff_hprop.
     - intros uac.
-      refine (isequiv_adjointify _ _ _ _);
-        unfold O, O_unit, closed_unitsubuniverse.
+      refine (isequiv_adjointify _ _ _ _).
       * refine (pushout_rectnd A _ _).
         + intros [u | a].
           { pose (uac u). exact (center A). }
@@ -84,24 +72,37 @@ Section ClosedModality.
         + intros [u a]; pose (contr_inhabited_hprop U u).
           apply path_contr.
       * intros a. reflexivity.
+    - intros ? u.
+      refine (@contr_equiv (join U A) A (fun a:A => push (inr a))^-1 _ _).
+      pose (contr_inhabited_hprop U u).
+      exact _.
   Defined.
 
   Local Instance closed_modality : Modality.
   Proof.
-    refine (Build_Modality closed_unitsubuniverse _ _ _).
-    - intros A B f z.
-      refine (pushout_rect _ _ (fun z' => join U (B z')) _ _ z).
+    refine (Build_Modality
+              (Build_UnitSubuniverse
+                 (fun X => hp (U -> Contr X) _)
+                 (fun X => join U X)
+                 _
+                 (fun X x => push (inr x)))
+              _ _ _ _); cbn; try exact _.
+    - intros A u.
+      pose (contr_inhabited_hprop U u).
+      exact _.
+    - intros A B inO_A f ?; cbn in *; intros u; pose (inO_A u).
+      apply contr_equiv with f; exact _.
+    - intros A B ? f z.
+      refine (pushout_rect _ _ B _ _ z).
       * intros [u | a].
-        + exact (push (inl u)).
+        + apply center, B_inO, u.
         + apply f.
       * intros [u a].
-        pose (contr_inhabited_hprop U u).
+        pose (B_inO (push (inr a)) u).
         apply path_contr.
     - reflexivity.
-    - intros A z z'.
-      apply (snd (inO_closed (z = z'))).
-      intros u; pose (contr_inhabited_hprop U u).
-      exact _.
+    - intros A A_inO z z' u.
+      pose (A_inO u); exact _.
   Defined.
 
 End ClosedModality.
