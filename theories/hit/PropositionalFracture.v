@@ -1,5 +1,4 @@
-Require Import Overture PathGroupoids Contractible HProp Equivalences EquivalenceVarieties
-        UnivalenceImpliesFunext.
+Require Import Overture PathGroupoids Contractible HProp Equivalences EquivalenceVarieties.
 Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths
         types.Forall types.Prod types.Universe.
 Require Import ReflectiveSubuniverse Modality.
@@ -11,12 +10,11 @@ Local Open Scope equiv_scope.
 (** * Open and closed modalities and the propositional fracture theorem *)
 
 (** Exercise 7.13(i): Open modalities *)
-Definition open_modality `{Univalence} (U : hProp) : Modality.
+Definition open_modality `{Funext} (U : hProp) : Modality.
 Proof.
   refine (Build_Modality_easy
-            (Build_UnitSubuniverse_easy
-               (fun X => U -> X)
-               (fun X x u => x))
+           (fun X => U -> X)
+           (fun X x u => x)
             _ _ _); unfold O, inO, O_unit.
   - intros A B f z u.
     refine (transport B _ (f (z u) u)).
@@ -80,30 +78,31 @@ Section ClosedModality.
       exact _.
   Defined.
 
-  Local Instance closed_modality : Modality
-    := (Build_Modality
-         (Build_UnitSubuniverse
-           (fun X => U -> Contr X)
-           (fun X => join U X)
-           (fun X x => push (inr x))
-           equiv_inO_closed)
-         _ _ _ _).
+  Local Instance closed_modality : Modality.
   Proof.
+    refine (Build_Modality
+              (Build_UnitSubuniverse
+                 (fun X => hp (U -> Contr X) _)
+                 (fun X => join U X)
+                 _
+                 (fun X x => push (inr x)))
+              _ _ _ _); cbn; try exact _.
+    - intros A u.
+      pose (contr_inhabited_hprop U u).
+      exact _.
+    - intros A B inO_A f ?; cbn in *; intros u; pose (inO_A u).
+      apply contr_equiv with f; exact _.
     - intros A B ? f z.
       refine (pushout_rect _ _ B _ _ z).
       * intros [u | a].
         + apply center, B_inO, u.
         + apply f.
       * intros [u a].
-        pose (B_inO (O_unit A a) u).
+        pose (B_inO (push (inr a)) u).
         apply path_contr.
     - reflexivity.
-    - intros A u.
-      pose (contr_inhabited_hprop U u).
-      exact _.
     - intros A A_inO z z' u.
-      pose (A_inO u).
-      exact _.
+      pose (A_inO u); exact _.
   Defined.
 
 End ClosedModality.

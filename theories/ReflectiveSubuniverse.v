@@ -1,7 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-Require Import Overture PathGroupoids Trunc HProp Equivalences EquivalenceVarieties
-        UnivalenceImpliesFunext Functorish.
+Require Import Overture PathGroupoids Trunc HProp Equivalences EquivalenceVarieties.
 Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths
         types.Forall types.Prod types.Universe ObjectClassifier.
 
@@ -10,30 +9,22 @@ Local Open Scope equiv_scope.
 
 (** * Reflective Subuniverses *)
 
-Section Unit_Subuniverse.
+(** A UnitSubuniverse is the common underlying structure of a reflective subuniverse and a modality.  We make it a separate structure in order to use the same names for its fields and functions in the two cases.  It consists of: *)
+Class UnitSubuniverse :=
+  {
+    (** a predicate [inO] on types, *)
+    inO_internal : Type -> hProp ;
+    (** an endomorphism [O] of [Type] *)
+    O : Type -> Type ;
+    (** which maps into the predicate *)
+    O_inO_internal : forall T, inO_internal (O T) ;
+    (** and maps [T -> O T] for all [T]. *)
+    O_unit : forall T, T -> O T
+  }.
 
-  (** A UnitSubuniverse is the common underlying structure of a reflective subuniverse and a modality.  It consists of: *)
-  Class UnitSubuniverse :=
-    {
-      (** a predicate [inO] on types, *)
-      inO_internal : Type -> Type ;
-      (** an endomorphism [O] of [Type], and *)
-      O : Type -> Type ;
-      (** maps [T -> O T] for all [T], such that *)
-      O_unit : forall T, T -> O T ;
-      (** the predicate [inO] is equivalent to [O_unit] being an equivalence. *)
-      equiv_inO_internal_isequiv_O_unit : forall T, inO_internal T <~> IsEquiv (O_unit T)
-    }.
+(** For reflective subuniverses (and hence also modalities), it will turn out that [inO T] is equivalent to [IsEquiv (O_unit T)].  We could define the former as the latter, and it would simplify some of the general theory.  However, in many examples there is a "more basic" definition of [inO] which is equivalent, but not definitionally identical, to [IsEquiv (O_unit T)].  Thus, including [inO] as data makes more things turn out to be judgmentally what we would expect. *)
 
-  (** Obviously, the definition is redundant: we don't need to include [inO] if it is equivalent to [IsEquiv (O_unit T)].  We include it, and the equivalence, explicitly, because in many examples there is a "more basic" definition of [inO] which only later happens to be equivalent to the unit maps being equivalences.  Thus, including it as data makes more things turn out to be judgmentally what we would expect.
-
-     However, in cases where there is no other definition, we can construct a [UnitSubuniverse] more simply. *)
-
-  Definition Build_UnitSubuniverse_easy (O : Type -> Type) (O_unit : forall T, T -> O T)
-    : UnitSubuniverse
-    := Build_UnitSubuniverse (fun T => IsEquiv (O_unit T)) O O_unit (fun T => equiv_idmap _).
-
-  (** We made [UnitSubuniverse] into a typeclass, rather than just a record, so that when there is an assumed one around it doesn't need to be given explicitly as an argument to everything.  You should *not* ever declare a global [Instance] of [UnitSubuniverse].  The things to do with it are:
+(** We made [UnitSubuniverse] into a typeclass, rather than just a record, so that when there is an assumed one around it doesn't need to be given explicitly as an argument to everything.  You should *not* ever declare a global [Instance] of [UnitSubuniverse].  The things to do with it are:
 
   1. Assume an arbitrary one for the purposes of general theory, as we will do here.  In this case it is a variable in the context, so typeclass resolution finds it automatically.
 
@@ -44,7 +35,9 @@ Section Unit_Subuniverse.
   4. Specify locally that we will be applying the general theory of subuniverses only to a specific example, by declaring that example as a [Local Instance].  (If the subuniverse in question has already been defined somewhere else, you can declare it as an instance locally with [Local Existing Instance].)  This way the instance won't outlast the containing section, module, or file, but inside that section, module, or file, you won't have to give it as an explicit argument.
 
   The same considerations will apply to [ReflectiveSubuniverse] and [Modality].
-  *)
+ *)
+
+Section Unit_Subuniverse.
 
   Context {subU : UnitSubuniverse}.
 
@@ -53,17 +46,13 @@ Section Unit_Subuniverse.
     isequiv_inO : inO_internal T.
 
   Typeclasses Transparent inO.
-  Global Instance isequiv_O_unit_inO (T : Type) {T_inO : inO T} : IsEquiv (O_unit T)
-    := equiv_inO_internal_isequiv_O_unit T isequiv_inO.
 
-  Definition equiv_O_unit (T : Type) {T_inO : inO T} : T <~> O T
-    := BuildEquiv T (O T) (O_unit T) _.
+  (** Being in the subuniverse is a mere predicate (by hypothesis) *)
+  Global Instance hprop_inO (T : Type) : IsHProp (inO T) := _.
 
-  Definition inO_isequiv_O_unit (T : Type) `{IsEquiv _ _ (O_unit T)} : inO T
-    := (equiv_inO_internal_isequiv_O_unit T)^-1 _.
-
-  Global Instance hprop_inO `{Funext} (T : Type) : IsHProp (inO T)
-    := (trunc_equiv ((equiv_inO_internal_isequiv_O_unit T)^-1)).
+  (** [O T] is always in the subuniverse (by hypothesis) *)
+  Global Instance O_inO T : inO (O T)
+    := O_inO_internal T.
 
   (** The type of types in the subuniverse *)
   Definition TypeO : Type
@@ -72,8 +61,7 @@ Section Unit_Subuniverse.
   Coercion TypeO_pr1 (T : TypeO) := @pr1 Type inO T.
 
   (** The second component of [TypeO] is unique *)
-  Definition path_TypeO `{Funext}
-    : forall (T T' : TypeO), T.1 = T'.1 -> T = T'.
+  Definition path_TypeO : forall (T T' : TypeO), T.1 = T'.1 -> T = T'.
   Proof.
     intros [T h] [T' h'] X.
     apply (path_sigma _ _ _ X). cbn.
@@ -82,91 +70,88 @@ Section Unit_Subuniverse.
 
 End Unit_Subuniverse.
 
+(** A reflective subuniverse is a [UnitSubuniverse], as above, whose unit has a universal property. *)
+Class ReflectiveSubuniverse :=
+  {
+    (** The underlying [UnitSubuniverse] *)
+    rsubu_usubu : UnitSubuniverse ;
+    (** an equivalence [((O P)->Q) <~> (P -> Q)] *)
+    isequiv_o_O_unit : forall (P Q : Type) (Q_inO : inO Q), 
+                         IsEquiv (fun f : O P -> Q => f o O_unit P)
+  }.
 
-Section Reflective_Subuniverse.
-  Context {fs : Funext}.
+Global Existing Instance rsubu_usubu.
+Coercion rsubu_usubu : ReflectiveSubuniverse >-> UnitSubuniverse.
+Global Existing Instance isequiv_o_O_unit.
 
-  (** A reflective subuniverse is a subuniverse with unit, as above,
-     for which the unit has a universal property. *)
-  Class ReflectiveSubuniverse :=
-    {
-      (** The underlying [UnitSubuniverse] *)
-      rsubu_usubu : UnitSubuniverse ;
-      (** [O T] is in the subuniverse for all [T] *)
-      O_inO : forall T, inO (O T) ;
-      (** an equivalence [((O P)->Q) <~> (P -> Q)] *)
-      isequiv_o_O_unit : forall (P Q : Type) (Q_inO : inO Q), 
-                  IsEquiv (fun f : O P -> Q => f o O_unit P)
-    }.
-
-  Global Existing Instance rsubu_usubu.
-  Coercion rsubu_usubu : ReflectiveSubuniverse >-> UnitSubuniverse.
-  Global Existing Instance O_inO.
-  Global Existing Instance isequiv_o_O_unit.
+Section ORectnd.
 
   Context {subU : ReflectiveSubuniverse}.
 
-  Section ORec.
+  Context (P Q : Type) {Q_inO : inO Q}.
 
-    Context (P Q : Type) {Q_inO : inO Q}.
+  (** The equivalence arising from [isequiv_o_O_unit] *)
+  Definition equiv_O_rectnd : (O P -> Q) <~> (P -> Q)
+    := BuildEquiv _ _ (fun f => f o (O_unit P)) _.
+  
+  (** Some shortcuts to manipulate the above equivalence.  Here is a "recursor" for [O]. *)
+  Definition O_rectnd : (P -> Q) -> (O P) -> Q
+    := equiv_O_rectnd^-1.
 
-    (** The equivalence arising from [isequiv_o_O_unit] *)
-    Definition equiv_O_rectnd : (O P -> Q) <~> (P -> Q)
-      := BuildEquiv _ _ (fun f => f o (O_unit P)) _.
-    
-    (** Some shortcuts to manipulate the above equivalence.  Here is a "recursor" for [O]. *)
-    Definition O_rectnd : (P -> Q) -> (O P) -> Q
-      := equiv_O_rectnd^-1.
+  Context (f : P -> Q).
 
-    Context (f : P -> Q).
+  (** Here is its "computation rule". *)
+  Definition O_rectnd_retr : O_rectnd f o O_unit _ = f
+    := eisretr equiv_O_rectnd f.
 
-    (** Here is its "computation rule". *)
-    Definition O_rectnd_retr : O_rectnd f o O_unit _ = f
-      := eisretr equiv_O_rectnd f.
+  (** Versions of [O_rectnd_retr] with [compose] unfolded and that are further pre- or post-composed with another function.  This enables [rewrite] to recognize them. *)
+  Definition O_rectnd_retr' : (fun x => O_rectnd f (O_unit _ x)) = f
+    := O_rectnd_retr.
+  Definition O_rectnd_retr'_pre (A : Type) (g : A -> P)
+  : (fun x => O_rectnd f (O_unit _ (g x))) = f o g
+    := ap (fun k => k o g) O_rectnd_retr.
+  Definition O_rectnd_retr'_post (B : Type) (h : Q -> B)
+  : (fun x => h (O_rectnd f (O_unit _ x))) = h o f
+    := ap (fun k => h o k) O_rectnd_retr.
+  Definition O_rectnd_retr'_prepost (A B : Type) (g : A -> P) (h : Q -> B)
+  : (fun x => h (O_rectnd f (O_unit _ (g x)))) = h o f o g
+    := ap (fun k => h o k o g) O_rectnd_retr.
 
-    (** Versions of [O_rectnd_retr] with [compose] unfolded and that are further pre- or post-composed with another function.  This enables [rewrite] to recognize them. *)
-    Definition O_rectnd_retr' : (fun x => O_rectnd f (O_unit _ x)) = f
-      := O_rectnd_retr.
-    Definition O_rectnd_retr'_pre (A : Type) (g : A -> P)
-      : (fun x => O_rectnd f (O_unit _ (g x))) = f o g
-      := ap (fun k => k o g) O_rectnd_retr.
-    Definition O_rectnd_retr'_post (B : Type) (h : Q -> B)
-      : (fun x => h (O_rectnd f (O_unit _ x))) = h o f
-      := ap (fun k => h o k) O_rectnd_retr.
-    Definition O_rectnd_retr'_prepost (A B : Type) (g : A -> P) (h : Q -> B)
-      : (fun x => h (O_rectnd f (O_unit _ (g x)))) = h o f o g
-      := ap (fun k => h o k o g) O_rectnd_retr.
+  (** And here is the "uniqueness rule" for the "recursor" *)
+  Definition O_rectnd_sect (f : O P -> Q) : O_rectnd (f o O_unit _) = f
+    := eissect equiv_O_rectnd f.
 
-    (** And here is the "uniqueness rule" for the "recursor" *)
-    Definition O_rectnd_sect (f : O P -> Q) : O_rectnd (f o O_unit _) = f
-      := eissect equiv_O_rectnd f.
+End ORectnd.
 
-  End ORec.
+(** Here is a tactic that tries all the forms of [O_rectnd_retr]. *)
+Ltac rewrite_O_rectnd_retr :=
+  repeat first
+         [ unfold compose; rewrite O_rectnd_retr'
+         | unfold compose; rewrite O_rectnd_retr'_post
+         | unfold compose; rewrite O_rectnd_retr'_pre
+         | unfold compose; rewrite O_rectnd_retr'_prepost
+         ].
 
-  (** Here is a tactic that tries all the forms of [O_rectnd_retr]. *)
-  Ltac rewrite_O_rectnd_retr :=
-    repeat first
-      [ unfold compose; rewrite O_rectnd_retr'
-        | unfold compose; rewrite O_rectnd_retr'_post
-        | unfold compose; rewrite O_rectnd_retr'_pre
-        | unfold compose; rewrite O_rectnd_retr'_prepost
-      ].
+(** A subuniverse is replete if it is closed under equivalence.  This is also a more usual sort of typeclass. *)
+
+Class Replete (subU : UnitSubuniverse) :=
+  inO_equiv_inO : forall T U (T_inO : @inO subU T) (f : T -> U) (feq : IsEquiv f), @inO subU U.
+
+(** Of course, with univalence this is automatic.  This is the only appearance of univalence in the theory of reflective subuniverses and (non-lex) modalities. *)
+Global Instance replete_univalence `{Univalence} (subU : UnitSubuniverse)
+: Replete subU.
+Proof.
+  intros T U ? f ?.
+  refine (transport (@inO subU) _ _).
+  apply path_universe with f; exact _.
+Defined.
+
+(** We now prove a bunch of things about an arbitrary reflective subuniverse (sometimes replete). *)
+Section Reflective_Subuniverse.
+  Context {fs : Funext}.
+  Context {subU : ReflectiveSubuniverse}.
 
   Section Basic_facts.
-    
-    (** [T] is in the subuniverse as soon as [O_unit T] admits a retraction. *)
-    Definition inO_unit_retract (T:Type) (mu : O T -> T)
-    : Sect (O_unit T) mu -> inO T.
-    Proof.
-      unfold Sect; intros H.
-      apply inO_isequiv_O_unit.
-      apply isequiv_adjointify with (g:=mu).
-      - apply ap10.
-        apply ((ap (equiv_O_rectnd T (O T)))^-1).
-        apply path_arrow; intros x; unfold compose; simpl.
-        exact (ap (O_unit T) (H x)).
-      - exact H.
-    Defined.
 
     (** Injectivity of composing with the unit. *)
     
@@ -184,6 +169,22 @@ Section Reflective_Subuniverse.
       unfold path_arrow_modal, equiv_inj.
       apply eisretr.
     Qed.
+
+    (** If [T] is in the subuniverse, then [O_unit T] is an equivalence. *)
+    Global Instance isequiv_O_unit_inO (T : Type) {T_inO : inO T} : IsEquiv (O_unit T).
+    Proof.
+      pose (g := O_rectnd T T idmap).
+      refine (isequiv_adjointify (O_unit T) g _ _).
+      - change (O_unit T o g == idmap); apply ap10.
+        apply path_arrow_modal; unfold compose.
+        unfold g; rewrite_O_rectnd_retr.
+        reflexivity.
+      - apply ap10; unfold g.
+        apply O_rectnd_retr.
+    Qed.
+
+    Definition equiv_O_unit (T : Type) {T_inO : inO T} : T <~> O T
+      := BuildEquiv T (O T) (O_unit T) _.
 
   End Basic_facts.
 
@@ -273,19 +274,52 @@ Section Reflective_Subuniverse.
     : O A <~> O B
     := BuildEquiv _ _ (O_functor f) _.
 
-    (** Being in the universe transports along equivalences. *)
-    Definition inO_equiv_inO (T : Type) {U : Type} {T_inO : inO T} (f : T <~> U)
-      : inO U.
+  End Functor.
+
+  Section Replete.
+
+    (** An equivalent formulation of repleteness is that a type lies in the subuniverse as soon as its unit map is an equivalence. *)
+    Definition inO_isequiv_O_unit {rep : Replete subU} (T:Type)
+    : IsEquiv (O_unit T) -> inO T
+    := fun _ => inO_equiv_inO (O T) T _ (O_unit T)^-1 _.
+
+    Global Instance replete_inO_isequiv_O_unit
+           (H : forall T, IsEquiv (O_unit T) -> inO T)
+    : Replete subU.
     Proof.
-      apply inO_isequiv_O_unit.
-      assert (IsEquiv (O_unit U o f)).
-      - apply isequiv_homotopic with (O_functor f o O_unit T).
-        + apply isequiv_compose.
-        + apply ap10, O_unit_natural.
-      - refine (cancelR_isequiv f).
+      intros A B A_inO f feq.
+      pose (uA := BuildEquiv _ _ (O_unit A) _).
+      refine (H B (isequiv_adjointify (O_unit B) _ _ _)); cbn.
+      - exact (f o uA^-1 o (O_functor f)^-1).
+      - intros x; unfold compose.
+        refine ((ap10 (O_unit_natural f) _) ^ @ _).
+        transitivity (O_functor f ((O_functor f)^-1 x)).
+        + apply (ap (O_functor f)).
+          apply eisretr.
+        + apply eisretr.
+      - intros x; unfold compose.
+        transitivity (f (uA^-1 (O_unit A (f^-1 x)))).
+        + apply ap, ap, (ap10 (O_unit_natural (f^-1)) x).
+        + transitivity (f (f^-1 x)).
+          * apply ap, eissect.
+          * apply eisretr.
     Defined.
 
-  End Functor.
+    (** Thus, [T] is in a replete subuniverse as soon as [O_unit T] admits a retraction. *)
+    Definition inO_unit_retract {rep : Replete subU} (T:Type) (mu : O T -> T)
+    : Sect (O_unit T) mu -> inO T.
+    Proof.
+      unfold Sect; intros H.
+      apply inO_isequiv_O_unit.
+      apply isequiv_adjointify with (g:=mu).
+      - apply ap10.
+        apply ((ap (equiv_O_rectnd T (O T)))^-1).
+        apply path_arrow; intros x; unfold compose; simpl.
+        exact (ap (O_unit T) (H x)).
+      - exact H.
+    Defined.
+
+  End Replete.
 
   Section OInverts.
 
@@ -380,6 +414,7 @@ Section Reflective_Subuniverse.
   End OInverts.
 
   Section Types.
+    Context {rep : Replete subU}.
 
     (** ** The [Unit] type *)
     Global Instance inO_unit : inO Unit.

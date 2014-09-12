@@ -73,14 +73,16 @@ Section TruncationModality.
   Proof.
     refine (Build_Modality
               (Build_UnitSubuniverse
-                (IsTrunc n)
+                (fun A => hp (IsTrunc n A) _)
                 (Truncation n)
-                (@truncation_incl n)
-                trunc_iff_isequiv_truncation)
+                _
+                (@truncation_incl n))
+              _
               (@Truncation_rect n)
               (fun A B B_inO f a => 1)
-              _ _);
-    simpl; exact _.
+              _); cbn; try exact _.
+    intros A B ? f ?; cbn in *.
+    apply trunc_equiv with f; exact _.
   Defined.
 
   (** ** Functoriality *)

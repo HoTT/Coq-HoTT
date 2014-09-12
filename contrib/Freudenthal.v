@@ -112,13 +112,8 @@ Proof.
   { hnf. apply Truncation_rect. intros ?; apply trunc_succ.
     intros [x r]; simpl.
     unfold functor_sigma; simpl.
-    unfold wedge_incl_elim_uncurried.
-    simpl.
-    apply symmetry.
-    etransitivity.
-    refine (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r).
-    unfold FST_Codes_cross_x0.
-    reflexivity. }
+    symmetry.
+    exact (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r). }
 Defined.
 
 Definition FST_Codes
