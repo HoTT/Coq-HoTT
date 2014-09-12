@@ -51,7 +51,7 @@ Defined.
 (** Exercise 7.13(ii): Closed modalities *)
 Section ClosedModality.
 
-  Context `{Univalence} (U : hProp).
+  Context `{Funext} (U : hProp).
 
   Definition equiv_inO_closed (A : Type)
   : (U -> Contr A) <~> IsEquiv (fun a:A => push (inr a) : join U A).

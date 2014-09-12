@@ -50,7 +50,7 @@ Definition Truncation_rect_nondep {n A X} `{IsTrunc n X}
 (** Truncation is a modality *)
 
 Section TruncationModality.
-  Context {ua : Univalence}.
+  Context {fs : Funext}.
   Context (n : trunc_index).
 
   Definition trunc_iff_isequiv_truncation (A : Type)

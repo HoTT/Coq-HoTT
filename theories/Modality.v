@@ -12,7 +12,7 @@ Local Open Scope equiv_scope.
 (** * Modalities *)
 
 Section Modalities.
-  Context {ua : Univalence}.
+  Context `{Funext}.
 
   (** A modality consists of *)
   Class Modality :=
@@ -45,7 +45,7 @@ Section Modalities.
 
      However, in other examples it is easier to construct the latter weaker induction principle, so we now show how to do this. *)
 
-  Definition Build_Modality_easy
+  Definition Build_Modality_easy `{Univalence}
     (mod_usubu : UnitSubuniverse)
     (O_rectO : forall A (B : O A -> Type),
       (forall a, O (B (O_unit A a))) -> forall z, O (B z))
@@ -71,8 +71,8 @@ Section Modalities.
         apply (O_rectO_beta _ (fun _ : O (O A) => A) (fun u:O A => u) a).
       + exact (O_rectO_beta _ (fun _ : O (O A) => A) idmap).
     - intros A A_inO x y.
-      refine (inO_equiv_inO (O_unit A x = O_unit A y) _).
-      apply equiv_inverse, equiv_ap; exact _.
+      refine (@transport Type inO (O_unit A x = O_unit A y) (x = y) _ _).
+      symmetry; exact (path_universe (equiv_ap (O_unit A) _ _)).
   Defined.
 
   (** For the rest of this section, we work with an arbitrary modality. *)
@@ -130,7 +130,7 @@ Section Modalities.
 
 End Modalities.
 
-Theorem reflective_subuniverse_to_modality `{ua : Univalence}
+Theorem reflective_subuniverse_to_modality `{fs : Funext}
   (subU : ReflectiveSubuniverse)
   (H : forall (A:Type) (B:A -> Type)
           {A_inO : inO A} {B_inO : forall a, inO (B a)},
@@ -158,11 +158,13 @@ Proof.
             _ _).
   - intros A B f a. apply allpath_hprop.
   - intros A z z'.
-    refine (inO_equiv_inO Unit _).
+    refine (@transport Type inO Unit (z = z') _ _).
+    * assert (f : Unit <~> (z = z')).
+      { apply equiv_iff_hprop.
+        + intros; apply allpath_hprop.
+        + intros; exact tt. }
+      apply (path_universe f).
     * exact (equiv_isequiv
                (@equiv_iff_hprop Unit _ (~~Unit) _
                                  (fun u nu => nu u) (fun _ => tt))).
-    * apply equiv_iff_hprop.
-      + intros; apply allpath_hprop.
-      + intros; exact tt.
 Defined.

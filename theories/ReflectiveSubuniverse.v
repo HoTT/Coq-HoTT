@@ -65,11 +65,6 @@ Section Unit_Subuniverse.
   Global Instance hprop_inO `{Funext} (T : Type) : IsHProp (inO T)
     := (trunc_equiv ((equiv_inO_internal_isequiv_O_unit T)^-1)).
 
-  (** Being in the universe transports along equivalences, by univalence *)
-  Definition inO_equiv_inO `{Univalence} (T : Type) {U : Type} {T_inO : inO T} (f : T <~> U)
-    : inO U
-    := transport inO (path_universe f) _.
-
   (** The type of types in the subuniverse *)
   Definition TypeO : Type
     := {T : Type & inO T}.
@@ -89,7 +84,7 @@ End Unit_Subuniverse.
 
 
 Section Reflective_Subuniverse.
-  Context {ua : Univalence}.
+  Context {fs : Funext}.
 
   (** A reflective subuniverse is a subuniverse with unit, as above,
      for which the unit has a universal property. *)
@@ -247,23 +242,6 @@ Section Reflective_Subuniverse.
       reflexivity.
     Qed.
 
-    (** Which implies preservation of equivalences *)
-    Global Instance O_functorish : Functorish O
-      := Build_Functorish O _ _.
-    Proof.
-      exact @O_functor.
-      exact O_functor_idmap.
-    Defined.
-
-    Global Instance isequiv_O_functor `{Univalence}
-      {A B} (f : A -> B) `{IsEquiv _ _ f}
-    : IsEquiv (O_functor f)
-    := isequiv_fmap O f.
-
-    Definition equiv_O_functor `{Univalence} {A B} (f : A <~> B)
-    : O A <~> O B
-    := BuildEquiv _ _ (O_functor f) _.
-
     (** Naturality of [O_unit] *)
     Definition O_unit_natural {A B} (f : A -> B)
     : (O_functor f) o (O_unit A) = (O_unit B) o f
@@ -273,6 +251,39 @@ Section Reflective_Subuniverse.
     Definition O_functor_wellpointed (A : Type)
     : O_functor (O_unit A) o O_unit A = O_unit (O A) o O_unit A
     := O_unit_natural (O_unit A).
+
+    (* Preservation of equivalences *)
+    Global Instance isequiv_O_functor {A B} (f : A -> B) `{IsEquiv _ _ f}
+    : IsEquiv (O_functor f).
+    Proof.
+      refine (isequiv_adjointify (O_functor f) (O_functor f^-1) _ _).
+      - apply ap10; change (O_functor f o O_functor f^-1 = idmap).
+        transitivity (O_functor (f o f^-1)); try (symmetry; apply O_functor_compose).
+        transitivity (@O_functor B B idmap); try apply O_functor_idmap.
+        apply (ap O_functor), path_arrow.
+        intros x; apply eisretr.
+      - apply ap10; change (O_functor f^-1 o O_functor f = idmap).
+        transitivity (O_functor (f^-1 o f)); try (symmetry; apply O_functor_compose).
+        transitivity (@O_functor A A idmap); try apply O_functor_idmap.
+        apply (ap O_functor), path_arrow.
+        intros x; apply eissect.
+    Defined.
+      
+    Definition equiv_O_functor {A B} (f : A <~> B)
+    : O A <~> O B
+    := BuildEquiv _ _ (O_functor f) _.
+
+    (** Being in the universe transports along equivalences. *)
+    Definition inO_equiv_inO (T : Type) {U : Type} {T_inO : inO T} (f : T <~> U)
+      : inO U.
+    Proof.
+      apply inO_isequiv_O_unit.
+      assert (IsEquiv (O_unit U o f)).
+      - apply isequiv_homotopic with (O_functor f o O_unit T).
+        + apply isequiv_compose.
+        + apply ap10, O_unit_natural.
+      - refine (cancelR_isequiv f).
+    Defined.
 
   End Functor.
 
@@ -306,7 +317,7 @@ Section Reflective_Subuniverse.
     := BuildEquiv _ _ f (isequiv_O_inverts f).
 
     (** Two maps between modal types that become equal after applying [O_functor] are already equal. *)
-    Definition O_functor_faithful_inO `{Funext} {A B} {A_inO : inO A} {B_inO : inO B}
+    Definition O_functor_faithful_inO {A B} {A_inO : inO A} {B_inO : inO B}
       (f g : A -> B) (e : O_functor f = O_functor g)
       : f = g.
     Proof.
@@ -369,8 +380,6 @@ Section Reflective_Subuniverse.
   End OInverts.
 
   Section Types.
-
-    Context `{fs : Funext}.
 
     (** ** The [Unit] type *)
     Global Instance inO_unit : inO Unit.
