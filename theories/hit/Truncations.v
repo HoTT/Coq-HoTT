@@ -51,22 +51,6 @@ Section TruncationModality.
   Context {fs : Funext}.
   Context (n : trunc_index).
 
-  Definition trunc_iff_isequiv_truncation (A : Type)
-  : IsTrunc n A <~> IsEquiv (@truncation_incl n A).
-  Proof.
-    apply equiv_iff_hprop; intros ?.
-    - refine (isequiv_adjointify _ _ _ _).
-      * apply Truncation_rect_nondep, idmap.
-      * intros oa.
-        refine (@Truncation_rect n A
-                (fun z => truncation_incl (Truncation_rect_nondep idmap z) = z)
-                _ _ _).
-        reflexivity.
-      * intros a.
-        reflexivity.
-    - exact (trunc_equiv (@truncation_incl n A)^-1).
-  Defined.
-
   Local Instance truncation_modality : Modality.
   Proof.
     refine (Build_Modality
@@ -82,6 +66,10 @@ Section TruncationModality.
     intros A B ? f ?; cbn in *.
     apply trunc_equiv with f; exact _.
   Defined.
+
+  Definition trunc_iff_isequiv_truncation (A : Type)
+  : IsTrunc n A <~> IsEquiv (@truncation_incl n A)
+  := inO_iff_isequiv_O_unit A.
 
   (** ** Functoriality *)
 

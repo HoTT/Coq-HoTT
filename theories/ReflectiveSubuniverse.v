@@ -274,6 +274,14 @@ Section Reflective_Subuniverse.
     : IsEquiv (O_unit T) -> inO T
     := fun _ => inO_equiv_inO (O T) T _ (O_unit T)^-1 _.
 
+    Definition inO_iff_isequiv_O_unit {rep : Replete subU} (T:Type)
+    : inO T <~> IsEquiv (O_unit T).
+    Proof.
+      apply equiv_iff_hprop.
+      - apply isequiv_O_unit_inO.
+      - apply inO_isequiv_O_unit.
+    Defined.
+
     Global Instance replete_inO_isequiv_O_unit
            (H : forall T, IsEquiv (O_unit T) -> inO T)
     : Replete subU.
