@@ -10,19 +10,14 @@ Local Open Scope equiv_scope.
 
 (** * Modalities *)
 
-(** A modality consists of *)
 Class Modality :=
   {
-    (** a replete [UnitSubuniverse], whose types are called "modal", *)
     mod_usubu : UnitSubuniverse ;
     mod_replete : Replete mod_usubu ;
-    (** an induction principle into families of modal types *)
     O_rect : forall A (B : O A -> Type) (B_inO : forall oa, inO (B oa)),
                (forall a, B (O_unit A a)) -> forall a, B a ;
-    (** with a computation rule *)
     O_rect_beta : forall A B B_inO (f : forall a : A, B (O_unit A a)) a,
                     O_rect A B B_inO f (O_unit A a) = f a ;
-    (** and which is closed under path spaces. *)
     inO_paths : forall A (A_inO : inO A) (z z' : A), inO (z = z')
   }.
 

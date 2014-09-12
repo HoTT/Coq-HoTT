@@ -9,16 +9,12 @@ Local Open Scope equiv_scope.
 
 (** * Reflective Subuniverses *)
 
-(** A UnitSubuniverse is the common underlying structure of a reflective subuniverse and a modality.  We make it a separate structure in order to use the same names for its fields and functions in the two cases.  It consists of: *)
+(** A UnitSubuniverse is the common underlying structure of a reflective subuniverse and a modality.  We make it a separate structure in order to use the same names for its fields and functions in the two cases. *)
 Class UnitSubuniverse :=
   {
-    (** a predicate [inO] on types, *)
     inO_internal : Type -> hProp ;
-    (** an endomorphism [O] of [Type] *)
     O : Type -> Type ;
-    (** which maps into the predicate *)
     O_inO_internal : forall T, inO_internal (O T) ;
-    (** and maps [T -> O T] for all [T]. *)
     O_unit : forall T, T -> O T
   }.
 
@@ -61,12 +57,8 @@ Section Unit_Subuniverse.
   Coercion TypeO_pr1 (T : TypeO) := @pr1 Type inO T.
 
   (** The second component of [TypeO] is unique *)
-  Definition path_TypeO : forall (T T' : TypeO), T.1 = T'.1 -> T = T'.
-  Proof.
-    intros [T h] [T' h'] X.
-    apply (path_sigma _ _ _ X). cbn.
-    apply allpath_hprop.
-  Defined.
+  Definition path_TypeO : forall (T T' : TypeO), T.1 = T'.1 -> T = T'
+    := path_sigma_hprop.
 
 End Unit_Subuniverse.
 
@@ -253,7 +245,7 @@ Section Reflective_Subuniverse.
     : O_functor (O_unit A) o O_unit A = O_unit (O A) o O_unit A
     := O_unit_natural (O_unit A).
 
-    (* Preservation of equivalences *)
+    (** Preservation of equivalences *)
     Global Instance isequiv_O_functor {A B} (f : A -> B) `{IsEquiv _ _ f}
     : IsEquiv (O_functor f).
     Proof.
