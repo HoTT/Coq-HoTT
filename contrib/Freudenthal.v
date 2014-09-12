@@ -112,34 +112,8 @@ Proof.
   { hnf. apply Truncation_rect. intros ?; apply trunc_succ.
     intros [x r]; simpl.
     unfold functor_sigma; simpl.
-    unfold wedge_incl_elim_uncurried.
-    simpl.
-    apply symmetry.
-    etransitivity.
-    refine (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r).
-    unfold FST_Codes_cross_x0.
-    (* 1 focused subgoals
-(unfocused: 0)
-, subgoal 1 (ID 187)
-
-  H : Funext
-  funext_large : Funext * Unit
-  H0 : Univalence
-  n : trunc_index
-  Hn : n <> minus_two
-  X : Type
-  x0 : X
-  H1 : IsConnMap n (unit_name x0)
-  q : No = So
-  x : X
-  r : mer' x = q @ (mer x0)^
-  ============================
-   truncation_incl (hfiber_pair x (cancelR (mer x) q (mer x0)^ r)) =
-   Truncation_functor (n -2+ n)
-     (functor_sigma idmap (fun x1 : X => cancelR (mer x1) q (mer x0)^))
-     (truncation_incl (x; r))
-(dependent evars: ?141 using , ?142 using ,)
- *) admit. }
+    symmetry.
+    exact (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r). }
 Defined.
 
 Definition FST_Codes

@@ -104,6 +104,14 @@ Defined.
 (** Two propositions are equivalent as soon as there are maps in both
    directions. *)
 
+Definition isequiv_iff_hprop `{IsHProp A} `{IsHProp B}
+  (f : A -> B) (g : B -> A)
+: IsEquiv f.
+Proof.
+  apply (isequiv_adjointify f g);
+    intros ?; apply allpath_hprop.
+Defined.
+
 Definition equiv_iff_hprop_uncurried `{IsHProp A} `{IsHProp B}
   : (A <-> B) -> (A <~> B).
 Proof.
