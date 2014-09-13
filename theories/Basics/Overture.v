@@ -424,13 +424,7 @@ Ltac path_via mid :=
   apply @concat with (y := mid); auto with path_hints.
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
-(** HoTT/coq is broken and somehow interprets [Type1] as [Prop] with regard to elimination schemes. *)
-Unset Elimination Schemes.
 Inductive Empty : Type1 := .
-Scheme Empty_rect := Induction for Empty Sort Type.
-Scheme Empty_rec := Induction for Empty Sort Set.
-Scheme Empty_ind := Induction for Empty Sort Prop.
-Set Elimination Schemes.
 
 Definition not (A:Type) : Type := A -> Empty.
 Notation "~ x" := (not x) : type_scope.
@@ -451,13 +445,8 @@ Class Asymmetric {A} (R : relation A) :=
   asymmetry : forall {x y}, R x y -> (complement R y x : Type).
 
 (** Likewise, we put [Unit] here, instead of in [Unit.v], because [Trunc] uses it. *)
-Unset Elimination Schemes.
 Inductive Unit : Type1 :=
     tt : Unit.
-Scheme Unit_rect := Induction for Unit Sort Type.
-Scheme Unit_rec := Induction for Unit Sort Set.
-Scheme Unit_ind := Induction for Unit Sort Prop.
-Set Elimination Schemes.
 
 (** *** Pointed types *)
 
