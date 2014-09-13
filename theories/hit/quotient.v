@@ -1,5 +1,7 @@
-Require Import Overture Fibrations types.Universe HSet PathGroupoids HProp Equivalences UnivalenceImpliesFunext.
-Require Import hit.epi minus1Trunc.
+Require Import Basics.
+Require Import types.Universe.
+Require Import HSet HProp UnivalenceImpliesFunext.
+Require Import hit.epi hit.minus1Trunc.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.

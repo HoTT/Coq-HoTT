@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Overture types.Prod types.Forall PathGroupoids Contractible types.Paths.
+Require Import Basics types.Prod types.Forall types.Paths.
 Require Export Tactics.BinderApply.
 
 (** * Extra tactics for homotopy type theory. *)

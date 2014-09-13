@@ -1,20 +1,10 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the unit type *)
 
-Require Import Overture PathGroupoids Equivalences.
+Require Import Basics.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A.
-
-(** coq calls it "unit", we call it "Unit" *)
-(** HoTT/coq is broken and somehow interprets [Type1] as [Prop] with regard to elimination schemes. *)
-Unset Elimination Schemes.
-Inductive Unit : Type1 :=
-    tt : Unit.
-Scheme Unit_rect := Induction for Unit Sort Type.
-Scheme Unit_rec := Induction for Unit Sort Set.
-Scheme Unit_ind := Induction for Unit Sort Prop.
-Set Elimination Schemes.
 
 (** ** Eta conversion *)
 

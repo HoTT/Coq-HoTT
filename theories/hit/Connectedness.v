@@ -1,8 +1,10 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Connectedness *)
 
-Require Import Overture PathGroupoids Fibrations Equivalences Trunc TruncType Truncations UnivalenceImpliesFunext.
+Require Import Basics.
 Require Import types.Forall types.Sigma types.Paths types.Unit types.Arrow types.Universe.
+Require Import TruncType UnivalenceImpliesFunext.
+Require Import hit.Truncations.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 

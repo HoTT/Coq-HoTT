@@ -4,7 +4,7 @@ dnl things below mean, you probably do not want to touch anything.
 
 AC_INIT([hott],[1.0])
 AC_PREREQ([2.67])
-AC_CONFIG_SRCDIR([theories/Overture.v])
+AC_CONFIG_SRCDIR([theories/Basics/Overture.v])
 AC_CONFIG_AUX_DIR([etc])
 AC_CONFIG_MACRO_DIR([etc])
 # Autoregenerate Makefile if needed

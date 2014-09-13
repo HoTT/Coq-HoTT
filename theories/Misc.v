@@ -12,7 +12,9 @@
 
 Conversely, several files in [hit] now depend on this file; so we should probably avoid using HIT’s in this file. *)
 
-Require Import Overture PathGroupoids Trunc Equivalences HProp types.Sigma types.Paths types.Record types.Arrow EquivalenceVarieties types.Forall types.Bool.
+Require Import Basics.
+Require Import types.Sigma types.Paths types.Record types.Arrow types.Forall types.Bool.
+Require Import HProp EquivalenceVarieties.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

@@ -61,7 +61,7 @@ Lemma total_path_reconstruction {A} {P:A->Type} {x y : sigT P} (p : x = y) :
   total_path (base_path p) (fiber_path p) = p.
 Proof.
   induction p.
-  by induction x. 
+  by induction x.
 Defined.
 
 Lemma total_path2 {A} (P : A-> Type) (x y : sigT P)
@@ -80,7 +80,7 @@ Defined.
 
 (** Transporting along a path between paths. *)
 
-(* I cannot find trans_trans_opp 
+(* I cannot find trans_trans_opp
 Lemma trans_trans_opp2 {A : Type} {P : A -> Type} {x y : A} {p q : x = y}
   (r : p = q) (z : P y) :
   trans_trans_opp p z =

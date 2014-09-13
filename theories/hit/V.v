@@ -2,8 +2,9 @@
 
 (** * The cumulative hierarchy [V]. *)
 
-Require Import Overture PathGroupoids HProp Trunc Fibrations Equivalences EquivalenceVarieties UnivalenceImpliesFunext.
+Require Import Basics.
 Require Import types.Unit types.Bool types.Universe types.Sigma types.Arrow types.Forall.
+Require Import HProp EquivalenceVarieties UnivalenceImpliesFunext.
 Require Import hit.minus1Trunc hit.quotient.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.

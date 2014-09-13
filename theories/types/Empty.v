@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the empty type *)
 
-Require Import Overture Contractible.
+Require Import Basics.
 Local Open Scope path_scope.
 
 (** ** Unpacking *)

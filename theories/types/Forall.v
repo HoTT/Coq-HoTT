@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about dependent products *)
 
-Require Import Overture PathGroupoids Contractible Equivalences Trunc.
+Require Import Basics.
 Require Import types.Paths.
 
 Local Open Scope path_scope.

@@ -323,6 +323,26 @@ Definition isequiv_isequiv_postcompose {A B : Type} (f : A -> B)
 (* TODO *)
 *)
 
+(** If [f] is an equivalence, then so is [ap f].  We are lazy and use [adjointify]. *)
+Instance isequiv_ap `{IsEquiv A B f} (x y : A)
+  : IsEquiv (@ap A B f x y) | 1000
+  := isequiv_adjointify (ap f)
+  (fun q => (eissect f x)^  @  ap f^-1 q  @  eissect f y)
+  (fun q =>
+    ap_pp f _ _
+    @ whiskerR (ap_pp f _ _) _
+    @ ((ap_V f _ @ inverse2 (eisadj f _)^)
+      @@ (ap_compose f^-1 f _)^
+      @@ (eisadj f _)^)
+    @ concat_pA1_p (eisretr f) _ _
+    @ whiskerR (concat_Vp _) _
+    @ concat_1p _)
+  (fun p =>
+    whiskerR (whiskerL _ (ap_compose f f^-1 _)^) _
+    @ concat_pA1_p (eissect f) _ _
+    @ whiskerR (concat_Vp _) _
+    @ concat_1p _).
+
 (** The function [equiv_rect] says that given an equivalence [f : A <~> B], and a hypothesis from [B], one may always assume that the hypothesis is in the image of [e].
 
 In fibrational terms, if we have a fibration over [B] which has a section once pulled back along an equivalence [f : A <~> B], then it has a section over all of [B].  *)

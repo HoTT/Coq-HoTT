@@ -2,8 +2,9 @@
 
 (** * Theorems about the circle [S¹]. *)
 
-Require Import Overture PathGroupoids Equivalences Trunc HSet UnivalenceImpliesFunext.
+Require Import Basics.
 Require Import types.Paths types.Forall types.Arrow types.Universe types.Empty types.Unit.
+Require Import HSet UnivalenceImpliesFunext.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.

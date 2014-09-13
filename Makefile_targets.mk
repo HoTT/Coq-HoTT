@@ -22,38 +22,39 @@ STD_VFILES = \
 	$(SRCCOQLIB)/theories/Program/Tactics.v
 
 CORE_VFILES = \
-	$(srcdir)/theories/Overture.v \
-	$(srcdir)/theories/PathGroupoids.v \
-	$(srcdir)/theories/Conjugation.v \
-	$(srcdir)/theories/Contractible.v \
-	$(srcdir)/theories/Equivalences.v \
+	$(srcdir)/theories/Basics/Overture.v \
+	$(srcdir)/theories/Basics/UniverseLevel.v \
+	$(srcdir)/theories/Basics/PathGroupoids.v \
+	$(srcdir)/theories/Basics/Contractible.v \
+	$(srcdir)/theories/Basics/Equivalences.v \
+	$(srcdir)/theories/Basics/Trunc.v \
+	$(srcdir)/theories/Basics/FunextVarieties.v \
+	$(srcdir)/theories/Basics/Pointed.v \
+	$(srcdir)/theories/Basics/Fibrations.v \
+	$(srcdir)/theories/Basics.v \
 	$(srcdir)/theories/types/Paths.v \
 	$(srcdir)/theories/types/Unit.v \
-	$(srcdir)/theories/Trunc.v \
 	$(srcdir)/theories/types/Forall.v \
 	$(srcdir)/theories/types/Arrow.v \
 	$(srcdir)/theories/types/Sigma.v \
 	$(srcdir)/theories/types/Prod.v \
 	$(srcdir)/theories/types/Record.v \
 	$(srcdir)/theories/types/Empty.v \
+	$(srcdir)/theories/Conjugation.v \
 	$(srcdir)/theories/HProp.v \
 	$(srcdir)/theories/EquivalenceVarieties.v \
-	$(srcdir)/theories/Fibrations.v \
-	$(srcdir)/theories/UniverseLevel.v \
-	$(srcdir)/theories/FunextVarieties.v \
 	$(srcdir)/theories/HSet.v \
 	$(srcdir)/theories/types/Bool.v \
 	$(srcdir)/theories/types/Sum.v \
 	$(srcdir)/theories/types/Universe.v \
 	$(srcdir)/theories/UnivalenceImpliesFunext.v \
-	$(srcdir)/theories/ObjectClassifier.v \
-	$(srcdir)/theories/Pointed.v \
 	$(srcdir)/theories/Tactics/BinderApply.v \
 	$(srcdir)/theories/Tactics.v \
 	$(srcdir)/theories/TruncType.v \
 	$(srcdir)/theories/Functorish.v \
 	$(srcdir)/theories/FunextAxiom.v \
 	$(srcdir)/theories/UnivalenceAxiom.v \
+	$(srcdir)/theories/ObjectClassifier.v \
 	$(srcdir)/theories/ReflectiveSubuniverse.v \
 	$(srcdir)/theories/Modality.v \
 	$(srcdir)/theories/hit/Circle.v \

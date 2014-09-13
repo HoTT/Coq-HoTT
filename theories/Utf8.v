@@ -1,5 +1,5 @@
 Require Export Coq.Unicode.Utf8.
-Require Import Overture Trunc (*types.Bool*) hit.Circle hit.TwoSphere hit.minus1Trunc hit.Truncations hit.Suspension.
+Require Import Basics (*types.Bool*) hit.Circle hit.TwoSphere hit.minus1Trunc hit.Truncations hit.Suspension.
 
 Notation Type₀ := Type0.
 Notation pr₁ := pr1.
