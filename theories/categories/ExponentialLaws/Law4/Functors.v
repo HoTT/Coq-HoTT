@@ -64,7 +64,7 @@ Section law4.
                 _);
         abstract (
             repeat match goal with
-                     | [ |- appcontext[components_of ?T ?x o components_of ?U ?x] ] =>
+                     | [ |- context[components_of ?T ?x o components_of ?U ?x] ] =>
                        change (T x o U x) with ((compose (C := (_ -> _)) T U) x)
                      | _ => f_ap
                      | _ => rewrite !commutes

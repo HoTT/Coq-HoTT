@@ -24,25 +24,25 @@ Section parts.
     rewrite !transport_forall_constant, !path_forall_2_beta;
     path_natural_transformation;
     repeat match goal with
-             | [ |- appcontext[components_of (transport ?P ?p ?z)] ]
+             | [ |- context[components_of (transport ?P ?p ?z)] ]
                => rewrite (@ap_transport _ P _ _ _ p (fun _ => components_of) z)
            end;
     rewrite !transport_forall_constant;
     repeat match goal with
-             | [ |- appcontext[transport ?P ?p ?u] ]
+             | [ |- context[transport ?P ?p ?u] ]
                => progress (rewrite <- (transport_idmap_ap P p u); simpl)
            end;
     repeat match goal with
-             | [ x : _ |- appcontext[ap (fun x3 : ?T => ?f (object_of x3 ?z))] ]
+             | [ x : _ |- context[ap (fun x3 : ?T => ?f (object_of x3 ?z))] ]
                => rewrite (@ap_compose' _ _ _ (fun x3' : T => object_of x3') (fun Ox3 => f (Ox3 x)))
-             | [ x : _ |- appcontext[ap (fun x3 : ?T => ?f (object_of x3 ?z) ?w)] ]
+             | [ x : _ |- context[ap (fun x3 : ?T => ?f (object_of x3 ?z) ?w)] ]
                => rewrite (@ap_compose' _ _ _ (fun x3' : T => object_of x3') (fun Ox3 => f (Ox3 x) w))
            end;
     repeat match goal with
              | _ => done
-             | [ |- appcontext[fun F => @object_of ?C ?D F] ]
+             | [ |- context[fun F => @object_of ?C ?D F] ]
                => progress change (fun F' => @object_of C D F') with (@object_of C D)
-             | [ |- appcontext[helper_lem_match ?x] ]
+             | [ |- context[helper_lem_match ?x] ]
                => rewrite (helper_lem x)
            end.
 

@@ -67,9 +67,9 @@ Module Import LaxCommaCategory.
     Local Ltac t_do_work :=
       repeat match goal with
                | _ => reflexivity
-               | [ |- appcontext[components_of ?T^-1 ?x] ]
+               | [ |- context[components_of ?T^-1 ?x] ]
                  => progress change (T^-1 x) with ((T x)^-1)
-               | [ |- appcontext[?F _1 ?m^-1] ]
+               | [ |- context[?F _1 ?m^-1] ]
                  => progress change (F _1 m^-1) with ((F _1 m)^-1)
                | _ => progress repeat iso_collapse_inverse_right'
              end.
@@ -90,9 +90,9 @@ Module Import LaxCommaCategory.
       (** A reflective simplifier would be really useful here... *)
       repeat match goal with
                | _ => progress t_do_work
-               | [ |- appcontext[components_of ?T ?x] ]
+               | [ |- context[components_of ?T ?x] ]
                  => simpl rewrite <- !(commutes_pT_F T)
-               | [ |- appcontext[components_of ?T ?x] ]
+               | [ |- context[components_of ?T ?x] ]
                  => simpl rewrite <- !(commutes T)
                | _ => iso_move_inverse
              end.
@@ -111,7 +111,7 @@ Module Import LaxCommaCategory.
                                 _).
         simpl in *.
         repeat match goal with
-                 | [ |- appcontext[@morphism_inverse
+                 | [ |- context[@morphism_inverse
                                      _ _ _ _
                                      (@isisomorphism_isomorphic
                                         _ _ _
@@ -124,7 +124,7 @@ Module Import LaxCommaCategory.
                                    C0
                                    (ap (p_morphism_of F (s:=_) (d:=_))
                                        (Category.Core.associativity C x1 x2 x3 x4 m1 m2 m3)))
-                 | [ |- appcontext[Category.Morphisms.idtoiso
+                 | [ |- context[Category.Morphisms.idtoiso
                                      ?C0
                                      (ap (p_morphism_of ?F (s:=_) (d:=_))
                                          (Category.Core.associativity ?C ?x1 ?x2 ?x3 ?x4 ?m1 ?m2 ?m3))] ]
@@ -139,13 +139,13 @@ Module Import LaxCommaCategory.
         destruct_head object.
         simpl in *.
         repeat match goal with
-                 | [ |- appcontext[p_composition_of ?F ?x ?y ?z ?m1 ?m2] ]
+                 | [ |- context[p_composition_of ?F ?x ?y ?z ?m1 ?m2] ]
                    => generalize dependent (p_composition_of F x y z m1 m2)
-                 | [ |- appcontext[p_identity_of ?F ?x] ]
+                 | [ |- context[p_identity_of ?F ?x] ]
                    => generalize dependent (p_identity_of F x)
-                 | [ |- appcontext[p_morphism_of ?F ?x] ]
+                 | [ |- context[p_morphism_of ?F ?x] ]
                    => generalize dependent (p_morphism_of F x)
-                 | [ |- appcontext[p_object_of ?F ?x] ]
+                 | [ |- context[p_object_of ?F ?x] ]
                    => generalize dependent (p_object_of F x)
                end.
         simpl.
@@ -229,7 +229,7 @@ Lemma left_identity (s d : object) (m : morphism s d)
                                _).
         simpl in *.
         repeat match goal with
-                 | [ |- appcontext[@morphism_inverse
+                 | [ |- context[@morphism_inverse
                                      _ _ _ _
                                      (@isisomorphism_isomorphic
                                         _ _ _
@@ -242,7 +242,7 @@ Lemma left_identity (s d : object) (m : morphism s d)
                                    C0
                                    (ap (p_morphism_of F (s:=_) (d:=_))
                                        (Category.Core.left_identity C x y f)))
-                 | [ |- appcontext[Category.Morphisms.idtoiso
+                 | [ |- context[Category.Morphisms.idtoiso
                                      ?C0
                                      (ap (p_morphism_of ?F (s:=_) (d:=_))
                                          (Category.Core.left_identity ?C ?x ?y ?f))] ]
@@ -257,13 +257,13 @@ Lemma left_identity (s d : object) (m : morphism s d)
         destruct_head object.
         simpl in *.
         repeat match goal with
-                 | [ |- appcontext[p_composition_of ?F ?x ?y ?z ?m1 ?m2] ]
+                 | [ |- context[p_composition_of ?F ?x ?y ?z ?m1 ?m2] ]
                    => generalize dependent (p_composition_of F x y z m1 m2)
-                 | [ |- appcontext[p_identity_of ?F ?x] ]
+                 | [ |- context[p_identity_of ?F ?x] ]
                    => generalize dependent (p_identity_of F x)
-                 | [ |- appcontext[p_morphism_of ?F ?x] ]
+                 | [ |- context[p_morphism_of ?F ?x] ]
                    => generalize dependent (p_morphism_of F x)
-                 | [ |- appcontext[p_object_of ?F ?x] ]
+                 | [ |- context[p_object_of ?F ?x] ]
                    => generalize dependent (p_object_of F x)
                end.
         simpl.
@@ -324,7 +324,7 @@ Lemma left_identity (s d : object) (m : morphism s d)
                                _).
         simpl in *.
         repeat match goal with
-                 | [ |- appcontext[@morphism_inverse
+                 | [ |- context[@morphism_inverse
                                      _ _ _ _
                                      (@isisomorphism_isomorphic
                                         _ _ _
@@ -337,7 +337,7 @@ Lemma left_identity (s d : object) (m : morphism s d)
                                    C0
                                    (ap (p_morphism_of F (s:=_) (d:=_))
                                        (Category.Core.right_identity C x y f)))
-                 | [ |- appcontext[Category.Morphisms.idtoiso
+                 | [ |- context[Category.Morphisms.idtoiso
                                      ?C0
                                      (ap (p_morphism_of ?F (s:=_) (d:=_))
                                          (Category.Core.right_identity ?C ?x ?y ?f))] ]
@@ -352,13 +352,13 @@ Lemma left_identity (s d : object) (m : morphism s d)
         destruct_head object.
         simpl in *.
         repeat match goal with
-                 | [ |- appcontext[p_composition_of ?F ?x ?y ?z ?m1 ?m2] ]
+                 | [ |- context[p_composition_of ?F ?x ?y ?z ?m1 ?m2] ]
                    => generalize dependent (p_composition_of F x y z m1 m2)
-                 | [ |- appcontext[p_identity_of ?F ?x] ]
+                 | [ |- context[p_identity_of ?F ?x] ]
                    => generalize dependent (p_identity_of F x)
-                 | [ |- appcontext[p_morphism_of ?F ?x] ]
+                 | [ |- context[p_morphism_of ?F ?x] ]
                    => generalize dependent (p_morphism_of F x)
-                 | [ |- appcontext[p_object_of ?F ?x] ]
+                 | [ |- context[p_object_of ?F ?x] ]
                    => generalize dependent (p_object_of F x)
                end.
         simpl.
