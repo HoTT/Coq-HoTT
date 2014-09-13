@@ -53,28 +53,28 @@ Section Law4.
              | _ => reflexivity
              | _ => rewrite !identity_of
              | _ => progress autorewrite with morphism
-             | [ |- appcontext[Datatypes.fst (transport ?P ?p ?z)] ]
+             | [ |- context[Datatypes.fst (transport ?P ?p ?z)] ]
                => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => @Datatypes.fst _ _) z)
-             | [ |- appcontext[Datatypes.snd (transport ?P ?p ?z)] ]
+             | [ |- context[Datatypes.snd (transport ?P ?p ?z)] ]
                => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => @Datatypes.snd _ _) z)
-             | [ |- appcontext[components_of (transport ?P ?p ?z)] ]
+             | [ |- context[components_of (transport ?P ?p ?z)] ]
                => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => components_of) z)
              | _ => rewrite !transport_path_prod
              | _ => rewrite !transport_const
              | _ => rewrite !transport_forall_constant
-             | [ |- appcontext[transport (fun y => ?f (@object_of ?C ?D y ?x))] ]
+             | [ |- context[transport (fun y => ?f (@object_of ?C ?D y ?x))] ]
                => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x)) (@object_of C D))
-             | [ |- appcontext[transport (fun y => ?f (@object_of ?C ?D y ?x) ?z)] ]
+             | [ |- context[transport (fun y => ?f (@object_of ?C ?D y ?x) ?z)] ]
                => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x) z) (@object_of C D))
-             | [ |- appcontext[transport (fun y => ?f (?g (@object_of ?C ?D y ?x)))] ]
+             | [ |- context[transport (fun y => ?f (?g (@object_of ?C ?D y ?x)))] ]
                => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (y' x))) (@object_of C D))
-             | [ |- appcontext[transport (fun y => ?f (?g (@object_of ?C ?D y ?x)) ?z)] ]
+             | [ |- context[transport (fun y => ?f (?g (@object_of ?C ?D y ?x)) ?z)] ]
                => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (y' x)) z) (@object_of C D))
-             | [ |- appcontext[transport (fun y => ?f (?g (@object_of ?C ?D y ?x) ?k))] ]
+             | [ |- context[transport (fun y => ?f (?g (@object_of ?C ?D y ?x) ?k))] ]
                => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (y' x) k)) (@object_of C D))
-             | [ |- appcontext[transport (fun y => ?f (?g (@object_of ?C ?D y ?x) ?k) ?z)] ]
+             | [ |- context[transport (fun y => ?f (?g (@object_of ?C ?D y ?x) ?k) ?z)] ]
                => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (y' x) k) z) (@object_of C D))
-             | [ |- appcontext[ap (@object_of ?C ?D) (@path_functor'_sig ?H ?C ?D ?F ?G (?HO; ?HM))] ]
+             | [ |- context[ap (@object_of ?C ?D) (@path_functor'_sig ?H ?C ?D ?F ?G (?HO; ?HM))] ]
                => simpl rewrite (@path_functor'_sig_fst H C D F G HO HM)
              | _ => transport_path_forall_hammer
            end.

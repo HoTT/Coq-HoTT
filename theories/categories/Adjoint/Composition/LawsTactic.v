@@ -14,27 +14,27 @@ Ltac law_t :=
   rewrite !transport_path_prod'; simpl;
   path_adjunction; simpl;
   repeat match goal with
-           | [ |- appcontext[unit (transport ?P ?p ?z)] ]
+           | [ |- context[unit (transport ?P ?p ?z)] ]
              => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => @unit _ _ _ _) z)
-           | [ |- appcontext[counit (transport ?P ?p ?z)] ]
+           | [ |- context[counit (transport ?P ?p ?z)] ]
              => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => @counit _ _ _ _) z)
-           | [ |- appcontext[components_of (transport ?P ?p ?z)] ]
+           | [ |- context[components_of (transport ?P ?p ?z)] ]
              => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => @components_of _ _ _ _) z)
          end;
   rewrite !transport_forall_constant;
   repeat
     match goal with
-      | [ |- appcontext[transport (fun y => ?f (@object_of ?C ?D y ?x))] ]
+      | [ |- context[transport (fun y => ?f (@object_of ?C ?D y ?x))] ]
         => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x)) (@object_of C D))
-      | [ |- appcontext[transport (fun y => ?f (?g (@object_of ?C ?D y ?x)))] ]
+      | [ |- context[transport (fun y => ?f (?g (@object_of ?C ?D y ?x)))] ]
         => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (y' x))) (@object_of C D))
-      | [ |- appcontext[transport (fun y => ?f (?g (?h (?i (@object_of ?C ?D y ?x)))))] ]
+      | [ |- context[transport (fun y => ?f (?g (?h (?i (@object_of ?C ?D y ?x)))))] ]
         => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (h (i (y' x))))) (@object_of C D))
-      | [ |- appcontext[transport (fun y => ?f (@object_of ?C ?D y ?x) ?z)] ]
+      | [ |- context[transport (fun y => ?f (@object_of ?C ?D y ?x) ?z)] ]
         => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x) z) (@object_of C D))
-      | [ |- appcontext[transport (fun y => ?f (?g (@object_of ?C ?D y ?x)) ?z)] ]
+      | [ |- context[transport (fun y => ?f (?g (@object_of ?C ?D y ?x)) ?z)] ]
         => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (y' x)) z) (@object_of C D))
-      | [ |- appcontext[transport (fun y => ?f (?g (?h (?i (@object_of ?C ?D y ?x)))) ?z)] ]
+      | [ |- context[transport (fun y => ?f (?g (?h (?i (@object_of ?C ?D y ?x)))) ?z)] ]
         => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (h (i (y' x)))) z) (@object_of C D))
     end;
   unfold symmetry, symmetric_paths;

@@ -71,11 +71,11 @@ Section compose.
             | _ => repeat (try_associativity_quick rewrite <- !composition_of);
                   progress repeat apply ap;
                   rewrite ?composition_of
-            | [ |- appcontext[components_of ?T] ]
+            | [ |- context[components_of ?T] ]
               => (try_associativity_quick simpl rewrite <- (commutes T));
                 try_associativity_quick (apply concat_right_identity
                                                || apply concat_left_identity)
-            | [ |- appcontext[components_of ?T] ]
+            | [ |- context[components_of ?T] ]
               => (try_associativity_quick simpl rewrite (commutes T));
                 try_associativity_quick (apply concat_right_identity
                                                || apply concat_left_identity)

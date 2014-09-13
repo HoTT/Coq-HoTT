@@ -67,7 +67,7 @@ Section Grothendieck.
     repeat match goal with
              | _ => reflexivity
              | _ => progress rewrite ?Category.Core.left_identity, ?Category.Core.right_identity
-             | [ |- appcontext[components_of ?T ?x o components_of ?T^-1 ?x] ]
+             | [ |- context[components_of ?T ?x o components_of ?T^-1 ?x] ]
                => simpl rewrite (@iso_compose_pV _ _ _ (T x) _)
              | _ => try_associativity_quick
                       first [ f_ap; []
@@ -93,7 +93,7 @@ Section Grothendieck.
       rewrite ?idtoiso_inv, ?ap_V, ?inv_V;
       simpl;
       let rew_hyp := match goal with
-                       | [ H' : appcontext[ex_hyp] |- _ ] => constr:(H')
+                       | [ H' : context[ex_hyp] |- _ ] => constr:(H')
                      end in
       rewrite rew_hyp;
         clear rew_hyp ex_hyp;
@@ -103,10 +103,10 @@ Section Grothendieck.
                      | try_associativity_quick (f_ap; []) ];
         match goal with
           | _ => reflexivity
-          | [ |- appcontext[morphism_of ?F ?m o components_of ?T ?x] ]
+          | [ |- context[morphism_of ?F ?m o components_of ?T ?x] ]
             => simpl rewrite <- (commutes T _ _ m);
               try reflexivity
-          | [ |- appcontext[components_of ?T ?x o morphism_of ?F ?m] ]
+          | [ |- context[components_of ?T ?x o morphism_of ?F ?m] ]
             => simpl rewrite (commutes T _ _ m);
               try reflexivity
         end.
@@ -132,17 +132,17 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
     gen_x c.
     gen_x d.
     repeat match goal with
-             | [ |- appcontext[p_identity_of ?F ?x] ]
+             | [ |- context[p_identity_of ?F ?x] ]
                => generalize dependent (p_identity_of F x)
-             | [ |- appcontext[p_composition_of ?F ?x ?y ?z ?f ?g] ]
+             | [ |- context[p_composition_of ?F ?x ?y ?z ?f ?g] ]
                => generalize dependent (p_composition_of F x y z f g)
-             | [ |- appcontext[p_morphism_of ?F ?m] ]
+             | [ |- context[p_morphism_of ?F ?m] ]
                => generalize dependent (p_morphism_of F m)
-             | [ |- appcontext[p_object_of ?F ?x] ]
+             | [ |- context[p_object_of ?F ?x] ]
                => generalize dependent (p_object_of F x)
-             | [ H : appcontext[p_morphism_of ?F ?m] |- _ ]
+             | [ H : context[p_morphism_of ?F ?m] |- _ ]
                => generalize dependent (p_morphism_of F m)
-             | [ |- appcontext[@p_morphism_of _ _ ?F ?x ?y] ]
+             | [ |- context[@p_morphism_of _ _ ?F ?x ?y] ]
                => generalize dependent (@p_morphism_of _ _ F x y)
            end.
     simpl.
@@ -150,7 +150,7 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
     intros.
 
     lazymatch goal with
-      | [ H : appcontext[ap ?f ?H'] |- _ ]
+      | [ H : context[ap ?f ?H'] |- _ ]
         => rename H' into fst_hyp;
           rename H into rew_hyp;
           move rew_hyp at top

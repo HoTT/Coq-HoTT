@@ -24,12 +24,12 @@ Section equivalences.
           | _ => progress auto with morphism
           | _ => progress simpl
           | _ => rewrite !composition_of
-          | [ |- appcontext[components_of ?T] ]
+          | [ |- context[components_of ?T] ]
             => (try_associativity_quick simpl rewrite <- (commutes T));
               try_associativity_quick
                 progress
                 rewrite ?unit_counit_equation_1, ?unit_counit_equation_2
-          | [ |- appcontext[components_of ?T] ]
+          | [ |- context[components_of ?T] ]
             => (try_associativity_quick simpl rewrite (commutes T));
               try_associativity_quick
                 progress
@@ -87,9 +87,9 @@ Section equivalences.
                | _ => rewrite !composition_of
                | _ => progress
                         rewrite ?identity_of, ?left_identity, ?right_identity
-               | [ |- appcontext[?x.1] ]
+               | [ |- context[?x.1] ]
                  => try_associativity_quick simpl rewrite x.2
-               | [ |- appcontext[components_of ?T] ]
+               | [ |- context[components_of ?T] ]
                  => simpl_do_clear commutes_tac (commutes T)
              end.
 
@@ -159,7 +159,7 @@ Section equivalences.
         simpl;
         intros;
         try match goal with
-              | [ |- appcontext[?x.1] ] => exact x.2
+              | [ |- context[?x.1] ] => exact x.2
             end;
         [].
         abstract (to_unit_counit_nt
