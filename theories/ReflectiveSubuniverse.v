@@ -123,7 +123,7 @@ Ltac rewrite_O_rectnd_retr :=
          | unfold compose; rewrite O_rectnd_retr'_prepost
          ].
 
-(** A subuniverse is replete if it is closed under equivalence.  This is also a more usual sort of typeclass. *)
+(** A subuniverse is replete if it is closed under equivalence.  This is also a more usual sort of typeclass.  We are not very interested in non-replete subuniverses; the reason for not including repleteness in the main definition is so that functoriality, below, can not depend on it, so that in turn [Build_Modality_easy] can use functoriality to prove repleteness. *)
 
 Class Replete (subU : UnitSubuniverse) :=
   inO_equiv_inO : forall T U (T_inO : @inO subU T) (f : T -> U) (feq : IsEquiv f), @inO subU U.
