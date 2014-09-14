@@ -5,6 +5,7 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
+Local Set Primitive Projections.
 
 Delimit Scope natural_transformation_scope with natural_transformation.
 
@@ -59,8 +60,8 @@ Bind Scope natural_transformation_scope with NaturalTransformation.
 
 Create HintDb natural_transformation discriminated.
 
-Global Arguments components_of {C D}%category {F G}%functor T%natural_transformation
-          c%object : rename, simpl nomatch.
+Global Arguments components_of {C D}%category {F G}%functor T%natural_transformation /
+          c%object : rename.
 Global Arguments commutes {C D F G} !T / _ _ _ : rename.
 Global Arguments commutes_sym {C D F G} !T / _ _ _ : rename.
 
