@@ -5,7 +5,6 @@
 (** ** Type classes *)
 Definition relation (A : Type) := A -> A -> Type.
 
-(** TODO: Should we make [reflexivity], [symmetry], and [transitivity] unfold under [simpl], to, e.g., [idpath], [inverse], and [concat]? *)
 Class Reflexive {A} (R : relation A) :=
   reflexivity : forall x : A, R x x.
 
@@ -20,19 +19,35 @@ Class PreOrder {A} (R : relation A) :=
   { PreOrder_Reflexive :> Reflexive R | 2 ;
     PreOrder_Transitive :> Transitive R | 2 }.
 
+Arguments reflexivity {A R _} / _.
+Arguments symmetry {A R _} / _ _ _.
+Arguments transitivity {A R _} / {_ _ _} _ _.
+
+(** Above, we have made [reflexivity], [symmetry], and [transitivity] reduce under [cbn]/[simpl] to their underlying instances.  This allows the tactics to build proof terms referencing, e.g., [concat].  We use [change] after the fact to make sure that we didn't [cbn] away the original form of the relation.
+
+    If we want to remove the use of [cbn], we can play tricks with [Module Type]s and [Module]s to declare [inverse] directly as an instance of [Symmetric] without changing its type.  Then we can simply [unfold symmetry].  See the comments around the definition of [inverse]. *)
+
+(** Even if we weren't using [cbn], we would have to redefine symmetry, since the built-in Coq version is sometimes too smart for its own good, and will occasionally fail when it should not. *)
+Ltac symmetry :=
+  let R := match goal with |- ?R ?x ?y => constr:(R) end in
+  let x := match goal with |- ?R ?x ?y => constr:(x) end in
+  let y := match goal with |- ?R ?x ?y => constr:(y) end in
+  let pre_proof_term_head := constr:(@symmetry _ R _) in
+  let proof_term_head := (eval cbn in pre_proof_term_head) in
+  refine (proof_term_head y x _); change (R y x).
+
 Tactic Notation "etransitivity" open_constr(y) :=
   let R := match goal with |- ?R ?x ?z => constr:(R) end in
   let x := match goal with |- ?R ?x ?z => constr:(x) end in
   let z := match goal with |- ?R ?x ?z => constr:(z) end in
-  refine (@transitivity _ R _ x y z _ _).
+  let pre_proof_term_head := constr:(@transitivity _ R _) in
+  let proof_term_head := (eval cbn in pre_proof_term_head) in
+  refine (proof_term_head x y z _ _); [ change (R x y) | change (R y z) ].
 
 Tactic Notation "etransitivity" := etransitivity _.
 
 (** We redefine [transitivity] to work without needing to include [Setoid] or be using Leibniz equality, and to give proofs that unfold to [concat]. *)
 Ltac transitivity x := etransitivity x.
-
-(** We redefine [symmetry], which is too smart for its own good. *)
-Ltac symmetry := refine (@symmetry _ _ _ _ _ _).
 
 
 (** ** Basic definitions *)
@@ -107,6 +122,7 @@ Lemma paths_rew_r A a y P (X : P y) (H : a = y :> A) : P a.
 Proof. rewrite -> H. exact X. Defined.
 
 Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
+Arguments reflexive_paths / .
 
 (** Our identity type is the Paulin-Mohring style.  We derive the Martin-Lof eliminator. *)
 
@@ -125,16 +141,6 @@ Local Open Scope path_scope.
 (** We bind [path_scope] to [paths] so that when we are constructing arguments to things like [concat], we automatically are in [path_scope]. *)
 Bind Scope path_scope with paths.
 
-(** We define equality concatenation by destructing on both its arguments, so that it only computes when both arguments are [idpath].  This makes proofs more robust and symmetrical.  Compare with the definition of [identity_trans].  *)
-Arguments transitivity {A R _ x y z} _ _: simpl nomatch.
-
-Instance transitive_paths {A} : Transitive (@paths A) | 0
-  := fun x y z (p : x = y) (q : y = z) => match p, q with idpath, idpath => idpath end.
-
-Arguments transitive_paths {A x y z} p q : simpl nomatch.
-
-Notation concat := (transitivity (R := @paths _)) (only parsing).
-Infix "@" := (@transitivity _ _ _ _ _ _) (at level 20).
 
 (** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
@@ -144,9 +150,41 @@ Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
 Arguments inverse {A x y} p : simpl nomatch.
 
 Instance symmetric_paths {A} : Symmetric (@paths A) | 0 := @inverse A.
+Arguments symmetric_paths / .
+
+(** If we wanted to not have the constant [symmetric_paths] floating around, and wanted to resolve [inverse] directly, instead, we could play this trick, discovered by Georges Gonthier to fool Coq's restriction on [Identity Coercion]s:
+
+<<
+Module Export inverse.
+  Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
+    := match p with idpath => idpath end.
+End inverse.
+
+Module Type inverseT.
+  Parameter inverse : forall {A}, Symmetric (@paths A).
+End inverseT.
+
+Module inverseSymmetric (inverse : inverseT).
+  Global Existing Instance inverse.inverse.
+End inverseSymmetric.
+
+Module Export symmetric_paths := inverseSymmetric inverse.
+>> *)
 
 
-(** Note that you can use the built-in Coq tactics [reflexivity] and [transitivity] when working with paths, but not [symmetry], because it is too smart for its own good.  Instead, you can write [apply symmetry] or [eapply symmetry]. *)
+(** We define equality concatenation by destructing on both its arguments, so that it only computes when both arguments are [idpath].  This makes proofs more robust and symmetrical.  Compare with the definition of [identity_trans].  *)
+
+Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
+  match p, q with idpath, idpath => idpath end.
+
+(** See above for the meaning of [simpl nomatch]. *)
+Arguments concat {A x y z} p q : simpl nomatch.
+
+Instance transitive_paths {A} : Transitive (@paths A) | 0 := @concat A.
+Arguments transitive_paths / .
+
+
+(** Note that you can use the Coq tactics [reflexivity], [transitivity], [etransitivity], and [symmetry] when working with paths; we've redefined them above to use typeclasses and to unfold the instances so you get proof terms with [concat] and [inverse]. *)
 
 (** The identity path. *)
 Notation "1" := idpath : path_scope.
