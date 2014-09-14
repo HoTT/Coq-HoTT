@@ -25,15 +25,13 @@ End opposite.
 
 Local Notation "T ^op" := (opposite T) (at level 3, format "T ^op") : natural_transformation_scope.
 
-(** ** [ᵒᵖ] is propositionally involutive *)
+(** ** [ᵒᵖ] is judgmentally involutive *)
 Section opposite_involutive.
   Local Open Scope natural_transformation_scope.
 
-  Lemma opposite_involutive C D (F G : Functor C D) (T : NaturalTransformation F G)
-  : (T^op)^op = T.
-  Proof.
-    destruct T; reflexivity.
-  Defined.
+  Definition opposite_involutive C D (F G : Functor C D) (T : NaturalTransformation F G)
+  : (T^op)^op = T
+    := idpath.
 End opposite_involutive.
 
 Module Export NaturalTransformationDualNotations.
