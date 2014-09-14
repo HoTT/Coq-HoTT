@@ -25,7 +25,7 @@ Section parts.
     path_natural_transformation;
     repeat match goal with
              | [ |- context[components_of (transport ?P ?p ?z)] ]
-               => rewrite (@ap_transport _ P _ _ _ p (fun _ => components_of) z)
+               => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => components_of) z)
            end;
     rewrite !transport_forall_constant;
     repeat match goal with

@@ -57,7 +57,7 @@ Section law1.
              | [ H : morphism 1 _ _ |- _ ] => destruct (contr H)
              | _ => rewrite !transport_forall_constant
              | [ |- context[components_of (transport ?P ?p ?z)] ]
-               => rewrite (@ap_transport _ P _ _ _ p (fun _ => components_of) z)
+               => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => components_of) z)
              | _ => rewrite path_forall_2_beta, ?transport_const
              | _ => transport_path_forall_hammer
            end.
