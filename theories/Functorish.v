@@ -1,4 +1,4 @@
-Require Import Overture TruncType types.Universe Equivalences PathGroupoids UnivalenceImpliesFunext.
+Require Import Basics types.Universe TruncType UnivalenceImpliesFunext.
 Open Scope equiv.
 Open Scope path.
 

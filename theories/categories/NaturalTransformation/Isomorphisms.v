@@ -22,7 +22,7 @@ Local Ltac iso_whisker_t :=
   try f_ap;
   match goal with
     | [ H : IsIsomorphism _
-        |- appcontext[components_of ?T0 ?x o components_of ?T1 ?x] ]
+        |- context[components_of ?T0 ?x o components_of ?T1 ?x] ]
       => change (T0 x o T1 x)
          with (components_of ((T0 : morphism (_ -> _) _ _)
                                 o (T1 : morphism (_ -> _) _ _))%morphism

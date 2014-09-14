@@ -26,9 +26,9 @@ Section UniversalMorphism.
     first [ intro;
             simpl;
             match goal with
-              | [ |- appcontext[?m o 1] ]
+              | [ |- context[?m o 1] ]
                 => simpl rewrite (right_identity _ _ _ m)
-              | [ |- appcontext[1 o ?m] ]
+              | [ |- context[1 o ?m] ]
                 => simpl rewrite (left_identity _ _ _ m)
             end;
             assumption

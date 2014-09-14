@@ -3,7 +3,7 @@
     avoids creating multiple witnesses for the axiom in
     different developments.) *)
 
-Require Import Overture.
+Require Import Basics.Overture.
 
 Axiom funext_axiom : Funext.
 Existing Instance funext_axiom.

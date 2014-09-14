@@ -2,9 +2,8 @@
 
 (** * Theorems about the homotopical interval. *)
 
-Require Import Overture PathGroupoids Contractible Equivalences.
+Require Import Basics.
 Require Import types.Sigma types.Forall types.Paths.
-Require Import FunextVarieties.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

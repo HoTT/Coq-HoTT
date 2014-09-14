@@ -1,8 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-
-Require Import Overture PathGroupoids Trunc HProp Equivalences EquivalenceVarieties.
-Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths
-        types.Forall types.Prod types.Universe ObjectClassifier.
+Require Import Basics.
+Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths types.Forall types.Prod types.Universe.
+Require Import HProp ObjectClassifier EquivalenceVarieties.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.

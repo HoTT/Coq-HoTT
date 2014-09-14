@@ -1,5 +1,7 @@
-Require Import Overture hit.minus1Trunc HProp Misc TruncType types.Universe Equivalences Trunc HSet types.Unit UnivalenceImpliesFunext.
-Require Import TruncType hit.Pushout hit.Truncations types.Forall types.Arrow types.Sigma Contractible PathGroupoids types.Paths.
+Require Import Basics.
+Require Import types.Universe types.Unit types.Forall types.Arrow types.Sigma types.Paths.
+Require Import HProp Misc TruncType HSet UnivalenceImpliesFunext.
+Require Import hit.minus1Trunc hit.Pushout hit.Truncations.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.

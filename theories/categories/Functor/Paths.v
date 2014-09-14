@@ -55,7 +55,7 @@ Section path_functor.
     etransitivity; [ | by apply equiv_path_sigma ].
     eapply @equiv_functor_sigma.
     repeat match goal with
-             | [ |- appcontext[(@equiv_inv ?A ?B ?f ?H ?F).1] ]
+             | [ |- context[(@equiv_inv ?A ?B ?f ?H ?F).1] ]
                => change ((@equiv_inv A B f H F).1) with (object_of F)
            end.
     Time exact (isequiv_idmap (object_of F = object_of G)). (* 13.411 secs *)

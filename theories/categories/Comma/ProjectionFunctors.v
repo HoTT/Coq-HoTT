@@ -69,14 +69,14 @@ Section comma.
     apply CommaCategory.path_morphism;
     simpl;
     repeat match goal with
-             | [ |- appcontext[?f _ _ _ _ _ _ _ (transport ?P ?p ?z)] ]
+             | [ |- context[?f _ _ _ _ _ _ _ (transport ?P ?p ?z)] ]
                => simpl rewrite (@ap_transport
                                    _ P _ _ _ p
                                    (fun _ => f _ _ _ _ _ _ _)
                                    z)
-             | [ |- appcontext[transport (fun y => ?f (?fa _ _ _ _ _ y) ?x)] ]
+             | [ |- context[transport (fun y => ?f (?fa _ _ _ _ _ y) ?x)] ]
                => rewrite (fun a b => @transport_compose _ _ a b (fun y => f y x) (fa _ _ _ _ _))
-             | [ |- appcontext[transport (fun y => ?f ?x (?fa _ _ _ _ _ y))] ]
+             | [ |- context[transport (fun y => ?f ?x (?fa _ _ _ _ _ y))] ]
                => rewrite (fun a b => @transport_compose _ _ a b (fun y => f x y) (fa _ _ _ _ _))
            end;
     unfold comma_category_induced_functor_object_of_identity;

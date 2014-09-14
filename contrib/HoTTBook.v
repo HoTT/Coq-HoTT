@@ -64,32 +64,32 @@ Require HoTT.categories.categories.
 (* ================================================== lem:opp *)
 (** Lemma 2.1.1 *)
 
-Definition Book_2_1_1 := @HoTT.Overture.inverse.
+Definition Book_2_1_1 := @HoTT.Basics.Overture.inverse.
 
 (* ================================================== lem:concat *)
 (** Lemma 2.1.2 *)
 
-Definition Book_2_1_2 := @HoTT.Overture.transitive_paths. 
+Definition Book_2_1_2 := @HoTT.Basics.Overture.transitive_paths.
 
 (* ================================================== thm:omg *)
 (** Lemma 2.1.4 *)
 
-Definition Book_2_1_4_item_i := @HoTT.PathGroupoids.concat_p1.
-Definition Book_2_1_4_item_i' := @HoTT.PathGroupoids.concat_1p.
-Definition Book_2_1_4_item_ii := @HoTT.PathGroupoids.concat_Vp.
-Definition Book_2_1_4_item_ii' := @HoTT.PathGroupoids.concat_pV.
-Definition Book_2_1_4_item_iii := @HoTT.PathGroupoids.inv_V.
-Definition Book_2_1_4_item_iv := @HoTT.PathGroupoids.concat_p_pp.
+Definition Book_2_1_4_item_i := @HoTT.Basics.PathGroupoids.concat_p1.
+Definition Book_2_1_4_item_i' := @HoTT.Basics.PathGroupoids.concat_1p.
+Definition Book_2_1_4_item_ii := @HoTT.Basics.PathGroupoids.concat_Vp.
+Definition Book_2_1_4_item_ii' := @HoTT.Basics.PathGroupoids.concat_pV.
+Definition Book_2_1_4_item_iii := @HoTT.Basics.PathGroupoids.inv_V.
+Definition Book_2_1_4_item_iv := @HoTT.Basics.PathGroupoids.concat_p_pp.
 
 (* ================================================== thm:EckmannHilton *)
 (** Theorem 2.1.6 *)
 
-Definition Book_2_1_6 := @HoTT.PathGroupoids.eckmann_hilton.
+Definition Book_2_1_6 := @HoTT.Basics.PathGroupoids.eckmann_hilton.
 
 (* ================================================== def:pointedtype *)
 (** Definition 2.1.7 *)
 
-Definition Book_2_1_7 := @HoTT.Overture.pointedType.
+Definition Book_2_1_7 := @HoTT.Basics.Overture.pointedType.
 
 (* ================================================== def:loopspace *)
 (** Definition 2.1.8 *)
@@ -99,20 +99,20 @@ Definition Book_2_1_7 := @HoTT.Overture.pointedType.
 (* ================================================== lem:map *)
 (** Lemma 2.2.1 *)
 
-Definition Book_2_2_1 := @HoTT.Overture.ap.
+Definition Book_2_2_1 := @HoTT.Basics.Overture.ap.
 
 (* ================================================== lem:ap-functor *)
 (** Lemma 2.2.2 *)
 
-Definition Book_2_2_2_item_i   := @HoTT.PathGroupoids.ap_pp.
-Definition Book_2_2_2_item_ii  := @HoTT.PathGroupoids.inverse_ap.
-Definition Book_2_2_2_item_iii := @HoTT.PathGroupoids.ap_compose.
-Definition Book_2_2_2_item_iv  := @HoTT.PathGroupoids.ap_idmap.
+Definition Book_2_2_2_item_i   := @HoTT.Basics.PathGroupoids.ap_pp.
+Definition Book_2_2_2_item_ii  := @HoTT.Basics.PathGroupoids.inverse_ap.
+Definition Book_2_2_2_item_iii := @HoTT.Basics.PathGroupoids.ap_compose.
+Definition Book_2_2_2_item_iv  := @HoTT.Basics.PathGroupoids.ap_idmap.
 
 (* ================================================== lem:transport *)
 (** Lemma 2.3.1 *)
 
-Definition Book_2_3_1 := @HoTT.Overture.transport.
+Definition Book_2_3_1 := @HoTT.Basics.Overture.transport.
 
 (* ================================================== thm:path-lifting *)
 (** Lemma 2.3.2 *)
@@ -123,52 +123,52 @@ Definition Book_2_3_2 := @HoTT.types.Sigma.equiv_path_sigma.
 (* ================================================== lem:mapdep *)
 (** Lemma 2.3.4 *)
 
-Definition Book_2_3_4 := @HoTT.Overture.apD.
+Definition Book_2_3_4 := @HoTT.Basics.Overture.apD.
 
 (* ================================================== thm:trans-trivial *)
 (** Lemma 2.3.5 *)
 
-Definition Book_2_3_5 := @HoTT.PathGroupoids.transport_const.
+Definition Book_2_3_5 := @HoTT.Basics.PathGroupoids.transport_const.
 
 (* ================================================== thm:apd-const *)
 (** Lemma 2.3.8 *)
 
-Definition Book_2_3_8 := @HoTT.PathGroupoids.apD_const.
+Definition Book_2_3_8 := @HoTT.Basics.PathGroupoids.apD_const.
 
 (* ================================================== thm:transport-concat *)
 (** Lemma 2.3.9 *)
 
-Definition Book_2_3_9 := @HoTT.PathGroupoids.transport_compose.
+Definition Book_2_3_9 := @HoTT.Basics.PathGroupoids.transport_compose.
 
 (* ================================================== thm:transport-compose *)
 (** Lemma 2.3.10 *)
 
-Definition Book_2_3_10 := @HoTT.PathGroupoids.ap_transport.
+Definition Book_2_3_10 := @HoTT.Basics.PathGroupoids.ap_transport.
 
 (* ================================================== thm:ap-transport *)
 (** Lemma 2.3.11 *)
 
-Definition Book_2_3_11 := @HoTT.PathGroupoids.transport_pp.
+Definition Book_2_3_11 := @HoTT.Basics.PathGroupoids.transport_pp.
 
 (* ================================================== defn:homotopy *)
 (** Definition 2.4.1 *)
 
-Definition Book_2_4_1 := @HoTT.Overture.pointwise_paths.
+Definition Book_2_4_1 := @HoTT.Basics.Overture.pointwise_paths.
 
 (* ================================================== lem:homotopy-props *)
 (** Lemma 2.4.2 *)
 
-Definition Book_2_4_2 := @HoTT.Overture.pointwise_paths.
+Definition Book_2_4_2 := @HoTT.Basics.Overture.pointwise_paths.
 
 (* ================================================== lem:htpy-natural *)
 (** Lemma 2.4.3 *)
 
-Definition Book_2_4_3 := @HoTT.PathGroupoids.concat_Ap.
+Definition Book_2_4_3 := @HoTT.Basics.PathGroupoids.concat_Ap.
 
 (* ================================================== cor:hom-fg *)
 (** Corollary 2.4.4 *)
 
-Definition Book_2_4_4 := @HoTT.PathGroupoids.concat_A1p.
+Definition Book_2_4_4 := @HoTT.Basics.PathGroupoids.concat_A1p.
 
 (* ================================================== defn:quasi-inverse *)
 (** Definition 2.4.6 *)
@@ -178,12 +178,12 @@ Definition Book_2_4_4 := @HoTT.PathGroupoids.concat_A1p.
     isequiv_adjointify : IsEquiv f. Therefore we link to the half
     adjoint equivalence extending the quasi-inverse *)
 
-Definition Book_2_4_6 := @HoTT.Equivalences.isequiv_adjointify.
+Definition Book_2_4_6 := @HoTT.Basics.Equivalences.isequiv_adjointify.
 
 (* ================================================== eg:idequiv *)
 (** Example 2.4.7 *)
 
-Definition Book_2_4_7 := @HoTT.Equivalences.equiv_idmap.
+Definition Book_2_4_7 := @HoTT.Basics.Equivalences.equiv_idmap.
 
 (* ================================================== eg:concatequiv *)
 (** Example 2.4.8 *)
@@ -193,14 +193,14 @@ Definition Book_2_4_7 := @HoTT.Equivalences.equiv_idmap.
 (* ================================================== thm:transportequiv *)
 (** Example 2.4.9 *)
 
-Definition Book_2_4_9 := @HoTT.Equivalences.isequiv_transport.
+Definition Book_2_4_9 := @HoTT.Basics.Equivalences.isequiv_transport.
 
 (* ================================================== thm:equiv-eqrel *)
 (** Lemma 2.4.12 *)
 
-Definition Book_2_4_12_item_i   := @HoTT.Equivalences.reflexive_equiv.
+Definition Book_2_4_12_item_i   := @HoTT.Basics.Equivalences.reflexive_equiv.
 (* missing? Definition Book_2_4_12_item_ii  :=  *)
-Definition Book_2_4_12_item_iii := @HoTT.Equivalences.transitive_equiv.
+Definition Book_2_4_12_item_iii := @HoTT.Basics.Equivalences.transitive_equiv.
 
 (* ================================================== thm:path-prod *)
 (** Theorem 2.6.2 *)
@@ -240,7 +240,7 @@ Definition Book_2_8_1 := @HoTT.types.Unit.equiv_path_unit.
 (* ================================================== axiom:funext *)
 (** Axiom 2.9.3 *)
 
-Definition Book_2_9_3 := @HoTT.Overture.path_forall.
+Definition Book_2_9_3 := @HoTT.Basics.Overture.path_forall.
 
 (* ================================================== thm:dpath-arrow *)
 (** Lemma 2.9.6 *)
@@ -272,7 +272,7 @@ Definition Book_2_10_5 := @HoTT.types.Universe.transport_path_universe'.
 (* ================================================== thm:paths-respects-equiv *)
 (** Theorem 2.11.1 *)
 
-Definition Book_2_11_1 := @HoTT.types.Paths.isequiv_ap.
+Definition Book_2_11_1 := @HoTT.Basics.Equivalences.isequiv_ap.
 
 (* ================================================== cor:transport-path-prepost *)
 (** Lemma 2.11.2 *)
@@ -780,17 +780,17 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 (* ================================================== thm:ap2 *)
 (** Lemma 6.4.4 *)
 
-Definition Book_6_4_4 := @HoTT.PathGroupoids.ap02.
+Definition Book_6_4_4 := @HoTT.Basics.PathGroupoids.ap02.
 
 (* ================================================== thm:transport2 *)
 (** Lemma 6.4.5 *)
 
-Definition Book_6_4_5 := @HoTT.PathGroupoids.transport2.
+Definition Book_6_4_5 := @HoTT.Basics.PathGroupoids.transport2.
 
 (* ================================================== thm:apd2 *)
 (** Lemma 6.4.6 *)
 
-Definition Book_6_4_6 := @HoTT.PathGroupoids.apD02.
+Definition Book_6_4_6 := @HoTT.Basics.PathGroupoids.apD02.
 
 (* ================================================== thm:suspbool *)
 (** Lemma 6.5.1 *)

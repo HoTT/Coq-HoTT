@@ -50,13 +50,13 @@ Local Ltac functorial_helper_t unfold_lem :=
   unfold unfold_lem; simpl;
   repeat match goal with
            | _ => exact idpath
-           | [ |- appcontext[CommaCategory.g (transport ?P ?p ?z)] ]
+           | [ |- context[CommaCategory.g (transport ?P ?p ?z)] ]
              => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => @CommaCategory.g _ _ _ _ _ _ _) z)
-           | [ |- appcontext[CommaCategory.h (transport ?P ?p ?z)] ]
+           | [ |- context[CommaCategory.h (transport ?P ?p ?z)] ]
              => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => @CommaCategory.h _ _ _ _ _ _ _) z)
-           | [ |- appcontext[transport (fun y => ?f (?g y) ?z)] ]
+           | [ |- context[transport (fun y => ?f (?g y) ?z)] ]
              => simpl rewrite (fun a b => @transport_compose _ _ a b (fun y => f y z) g)
-           | [ |- appcontext[transport (fun y => ?f (?g y))] ]
+           | [ |- context[transport (fun y => ?f (?g y))] ]
              => simpl rewrite (fun a b => @transport_compose _ _ a b (fun y => f y) g)
            | _ => rewrite !CommaCategory.ap_a_path_object'; simpl
            | _ => rewrite !CommaCategory.ap_b_path_object'; simpl

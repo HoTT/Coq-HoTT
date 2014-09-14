@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Overture types.Prod types.Forall PathGroupoids Contractible types.Paths.
+Require Import Basics types.Prod types.Forall types.Paths.
 Require Export Tactics.BinderApply.
 
 (** * Extra tactics for homotopy type theory. *)
@@ -19,7 +19,7 @@ The way the tactic does this is by creating an evar for [P] and an evar for the 
 (** First, we prove some helpful lemmas about [path_forall] and [transport] *)
 Local Ltac path_forall_beta_t :=
   lazymatch goal with
-    | [ |- appcontext[@path_forall ?H ?A ?B ?f ?g ?e] ]
+    | [ |- context[@path_forall ?H ?A ?B ?f ?g ?e] ]
       => let X := fresh in
          pose proof (eissect (@path_forall H A B f g) e) as X;
            case X;
@@ -161,7 +161,7 @@ Lemma path_forall_2_beta' `{Funext} A B x0 x1 P f g e Px
 Proof.
   transport_path_forall_hammer.
   repeat match goal with
-           | [ |- appcontext[e ?x] ] => induction (e x)
+           | [ |- context[e ?x] ] => induction (e x)
          end;
     simpl.
   reflexivity.
@@ -229,8 +229,8 @@ Ltac clear_paths := progress repeat step_clear_paths.
 Ltac step_clear_paths_in_match :=
   idtac;
   match goal with
-    | [ |- appcontext[match ?p with idpath => _ end] ] => progress destruct p
-    | [ |- appcontext[match ?p with idpath => _ end] ] => clear_path_no_check p
+    | [ |- context[match ?p with idpath => _ end] ] => progress destruct p
+    | [ |- context[match ?p with idpath => _ end] ] => clear_path_no_check p
   end.
 Ltac clear_paths_in_match := progress repeat step_clear_paths_in_match.
 

@@ -178,7 +178,7 @@ Section isequiv.
       apply (ap pr1).
       apply contr.
     - match goal with
-        | [ |- appcontext[?x.1] ]
+        | [ |- context[?x.1] ]
           => apply x.2
       end.
   Defined.

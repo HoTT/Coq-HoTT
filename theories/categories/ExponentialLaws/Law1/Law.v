@@ -56,16 +56,16 @@ Section law1.
              | [ H : object 1 |- _ ] => destruct (contr H)
              | [ H : morphism 1 _ _ |- _ ] => destruct (contr H)
              | _ => rewrite !transport_forall_constant
-             | [ |- appcontext[components_of (transport ?P ?p ?z)] ]
+             | [ |- context[components_of (transport ?P ?p ?z)] ]
                => rewrite (@ap_transport _ P _ _ _ p (fun _ => components_of) z)
              | _ => rewrite path_forall_2_beta, ?transport_const
              | _ => transport_path_forall_hammer
            end.
     unfold helper.
     repeat match goal with
-             | [ |- appcontext[transport (fun y => ?f (@object_of ?C ?D y ?x))] ]
+             | [ |- context[transport (fun y => ?f (@object_of ?C ?D y ?x))] ]
                => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x)) (@object_of C D))
-             | [ |- appcontext[transport (fun y => ?f (@object_of ?C ?D y ?x) ?z)] ]
+             | [ |- context[transport (fun y => ?f (@object_of ?C ?D y ?x) ?z)] ]
                => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x) z) (@object_of C D))
            end.
     rewrite !path_functor'_sig_fst.

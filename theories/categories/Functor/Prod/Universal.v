@@ -79,9 +79,9 @@ Section universal.
                  | [ H : _ = _ |- _ ] => case H; simpl; clear H
                end.
         repeat match goal with
-                 | [ |- appcontext[@morphism_of ?C ?D ?F ?s ?d ?m] ]
+                 | [ |- context[@morphism_of ?C ?D ?F ?s ?d ?m] ]
                    => destruct (@morphism_of C D F s d m); clear m
-                 | [ |- appcontext[@object_of ?C ?D ?F ?x] ]
+                 | [ |- context[@object_of ?C ?D ?F ?x] ]
                    => destruct (@object_of C D F x); clear x
                end.
         reflexivity.

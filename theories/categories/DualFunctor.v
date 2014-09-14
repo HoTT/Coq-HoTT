@@ -59,7 +59,7 @@ Section opposite.
     simpl in *.
     repeat progress change (fun x => ?f x) with f in *.
     match goal with
-      | [ |- appcontext[transport
+      | [ |- context[transport
                           (fun x' => ?f x'.1 ?y)
                           (@path_sigma_uncurried ?A ?P ?u ?v ?pq)] ]
         => rewrite (@transport_pr1_path_sigma_uncurried

@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about cartesian products *)
 
-Require Import Overture PathGroupoids Equivalences Trunc.
+Require Import Basics.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.

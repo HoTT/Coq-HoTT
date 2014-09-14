@@ -1,4 +1,4 @@
-Require Import Overture types.Universe FunextVarieties Equivalences types.Paths types.Unit.
+Require Import Basics types.Universe types.Paths types.Unit.
 
 Generalizable All Variables.
 

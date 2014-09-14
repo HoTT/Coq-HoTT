@@ -2,7 +2,7 @@
 
 (** * Theorems about the 2-sphere [S²]. *)
 
-Require Import Overture PathGroupoids Equivalences Trunc HSet.
+Require Import Basics HSet.
 Require Import types.Paths types.Forall types.Arrow types.Universe types.Empty types.Unit.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.

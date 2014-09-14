@@ -71,7 +71,7 @@ Section sip.
     apply sip_helper; simpl.
     split;
       lazymatch goal with
-        | [ |- appcontext[idtoiso ?X ((isotoid ?X ?x ?y) ?m)] ]
+        | [ |- context[idtoiso ?X ((isotoid ?X ?x ?y) ?m)] ]
           => pose proof (eisretr (@idtoiso X x y) m) as H';
              pattern (idtoiso X ((isotoid X x y) m))
       end;

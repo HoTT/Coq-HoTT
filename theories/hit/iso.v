@@ -1,4 +1,7 @@
-Require Import Overture hit.epi HSet types.Universe hit.unique_choice Equivalences UnivalenceImpliesFunext.
+Require Import Basics.
+Require Import types.Universe.
+Require Import HSet UnivalenceImpliesFunext.
+Require Import hit.epi hit.unique_choice.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.

@@ -75,9 +75,9 @@ Section of_functor.
 <<
 intros.
     repeat match goal with
-             | [ |- appcontext[idtoiso ?C (?f ?x)] ] => generalize (f x); intro
-             | [ |- appcontext[MorphismOf ?F ?f] ] => generalize dependent (MorphismOf F f); repeat (let x := fresh "x" in intro x)
-             | [ |- appcontext[ObjectOf ?F ?f] ] => generalize dependent (ObjectOf F f); repeat (let x := fresh "x" in intro x)
+             | [ |- context[idtoiso ?C (?f ?x)] ] => generalize (f x); intro
+             | [ |- context[MorphismOf ?F ?f] ] => generalize dependent (MorphismOf F f); repeat (let x := fresh "x" in intro x)
+             | [ |- context[ObjectOf ?F ?f] ] => generalize dependent (ObjectOf F f); repeat (let x := fresh "x" in intro x)
            end.
     simpl in *.
     unfold SubPreCatCat.
