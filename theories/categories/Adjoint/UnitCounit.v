@@ -7,6 +7,7 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
+Local Set Primitive Projections.
 
 Local Open Scope category_scope.
 Local Open Scope morphism_scope.
@@ -286,7 +287,7 @@ Bind Scope adjunction_scope with AdjunctionUnit.
 Bind Scope adjunction_scope with AdjunctionCounit.
 Bind Scope adjunction_scope with AdjunctionUnitCounit.
 
-Arguments unit [C D]%category [F G]%functor _%adjunction.
-Arguments counit [C D]%category [F G]%functor _%adjunction.
+Arguments unit [C D]%category [F G]%functor _%adjunction / .
+Arguments counit [C D]%category [F G]%functor _%adjunction / .
 Arguments unit_counit_equation_1 [C D]%category [F G]%functor _%adjunction _%object.
 Arguments unit_counit_equation_2 [C D]%category [F G]%functor _%adjunction _%object.
