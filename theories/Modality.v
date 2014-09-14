@@ -25,7 +25,7 @@ Arguments O_rect_beta {Modality} {A} B {B_inO} f a.
 (** See ReflectiveSubuniverse.v for explanation of how to use (and how not to use) [Modality] as a typeclass. *)
 
 Global Existing Instance mod_usubu.
-Coercion mod_usubu : Modality >-> UnitSubuniverse.
+(* Coercion mod_usubu : Modality >-> UnitSubuniverse. *)
 Global Existing Instance mod_replete.
 Global Existing Instance inO_paths.
 
@@ -208,7 +208,7 @@ Proof.
            _).
 Defined.
 
-(** Finally, we give one example of a modality.  This is Exercise 7.12 in the book. *)
+(** Finally, we give one nontrivial example of a modality.  This is Exercise 7.12 in the book. *)
 Definition notnot_modality `{Funext} : Modality.
 Proof.
   refine (Build_Modality_easy
@@ -223,5 +223,18 @@ Proof.
   - intros; refine (isequiv_iff_hprop _ _).
     intros; apply allpath_hprop.
 Defined.
+
+(** Of course, there is also the trivial example. *)
+Definition identity_modality : Modality
+  := Build_Modality
+     (Build_UnitSubuniverse
+        (fun _ => hp Unit _)
+        idmap
+        (fun _ => tt)
+        (fun T => idmap))
+     (fun T U _ _ _ => tt)
+     (fun A B _ f a => f a)
+     (fun A B _ f a => 1)
+     (fun A _ z z' => tt).
 
 (** For more examples of modalities, see hit/Truncations.v and hit/PropositionalFracture.v. *)

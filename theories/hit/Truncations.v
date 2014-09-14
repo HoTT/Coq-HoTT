@@ -94,3 +94,9 @@ Section TruncationModality.
   := equiv_O_prod_cmp X Y.
 
 End TruncationModality.
+
+(** This coercion allows us to use truncation indices where a modality is expected and refer to the corresponding truncation modality.  For instance, the general theory of O-connected maps specializes to the theory of n-connected maps. *)
+(* Coercion truncation_modality : trunc_index >-> Modality. *)
+
+(** It's sometimes convenient to use "infinity" to refer to the identity modality in a similar way.  This clashes with some uses in higher topos theory, where "oo-truncated" means instead "hypercomplete", but this has not yet been a big problem. *)
+Notation oo := identity_modality.
