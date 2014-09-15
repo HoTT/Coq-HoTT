@@ -52,7 +52,13 @@ Section comma.
              (comma_category_projection_functor_object_of s)
              (comma_category_projection_functor_object_of d).
   Proof.
-    exists (comma_category_induced_functor m) (center _).
+    hnf.
+    refine (CommaCategory.Build_morphism
+              (comma_category_projection_functor_object_of s)
+              (comma_category_projection_functor_object_of d)
+              (comma_category_induced_functor m)
+              (center _)
+              _).
     simpl.
     destruct_head_hnf Datatypes.prod.
     path_functor.

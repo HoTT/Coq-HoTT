@@ -11,24 +11,22 @@ Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 
 (** ** Definition of [Cᵒᵖ] *)
-Section opposite.
-  Definition opposite (C : PreCategory) : PreCategory
-    := @Build_PreCategory'
-         C
-         (fun s d => morphism C d s)
-         (identity (C := C))
-         (fun _ _ _ m1 m2 => m2 o m1)
-         (fun _ _ _ _ _ _ _ => @associativity_sym _ _ _ _ _ _ _ _)
-         (fun _ _ _ _ _ _ _ => @associativity _ _ _ _ _ _ _ _)
-         (fun _ _ => @right_identity _ _ _)
-         (fun _ _ => @left_identity _ _ _)
-         (@identity_identity C)
-         _.
-End opposite.
+Definition opposite (C : PreCategory) : PreCategory
+  := @Build_PreCategory'
+       C
+       (fun s d => morphism C d s)
+       (identity (C := C))
+       (fun _ _ _ m1 m2 => m2 o m1)
+       (fun _ _ _ _ _ _ _ => @associativity_sym _ _ _ _ _ _ _ _)
+       (fun _ _ _ _ _ _ _ => @associativity _ _ _ _ _ _ _ _)
+       (fun _ _ => @right_identity _ _ _)
+       (fun _ _ => @left_identity _ _ _)
+       (@identity_identity C)
+       _.
 
 Local Notation "C ^op" := (opposite C) (at level 3, format "C '^op'") : category_scope.
 
-(** ** [ᵒᵖ] is propositionally involutive *)
+(** ** [ᵒᵖ] is judgmentally involutive *)
 Definition opposite_involutive C : (C^op)^op = C := idpath.
 
 (** ** Initial objects are opposite terminal objects, and vice versa *)

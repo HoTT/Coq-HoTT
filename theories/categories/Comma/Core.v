@@ -3,7 +3,7 @@ Require Import Category.Core Functor.Core.
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 Require Functor.Identity.
 Require Import Category.Strict.
-Require Import types.Record Trunc HoTT.Tactics.
+Require Import types.Record types.Paths types.Sigma Trunc HoTT.Tactics HProp.
 Import Functor.Identity.FunctorIdentityNotations.
 
 Set Universe Polymorphism.
@@ -125,29 +125,61 @@ Module Import CommaCategory.
     Global Arguments path_object' : simpl never.
 
     Record morphism (abf a'b'f' : object) :=
-      {
-        g : Category.Core.morphism A (abf.(a)) (a'b'f'.(a));
-        h : Category.Core.morphism B (abf.(b)) (a'b'f'.(b));
-        p : T _1 h o abf.(f) = a'b'f'.(f) o S _1 g
-      }.
+      Build_morphism' {
+          g : Category.Core.morphism A (abf.(a)) (a'b'f'.(a));
+          h : Category.Core.morphism B (abf.(b)) (a'b'f'.(b));
+          p : T _1 h o abf.(f) = a'b'f'.(f) o S _1 g;
+          p_sym : a'b'f'.(f) o S _1 g = T _1 h o abf.(f)
+        }.
 
+    Definition Build_morphism abf a'b'f' g h p : morphism abf a'b'f'
+      := @Build_morphism' abf a'b'f' g h p p^.
+
+    Global Arguments Build_morphism / .
     Global Arguments g _ _ _ / .
     Global Arguments h _ _ _ / .
     Global Arguments p _ _ _ / .
+    Global Arguments p_sym _ _ _ / .
 
     Local Notation morphism_sig_T abf a'b'f' :=
       ({ g : Category.Core.morphism A (abf.(a)) (a'b'f'.(a))
        | { h : Category.Core.morphism B (abf.(b)) (a'b'f'.(b))
          | T _1 h o abf.(f) = a'b'f'.(f) o S _1 g }}).
 
+    Local Notation morphism_sig_T' abf a'b'f' :=
+      ({ g : Category.Core.morphism A (abf.(a)) (a'b'f'.(a))
+       | { h : Category.Core.morphism B (abf.(b)) (a'b'f'.(b))
+         | { _ : T _1 h o abf.(f) = a'b'f'.(f) o S _1 g
+           | a'b'f'.(f) o S _1 g = T _1 h o abf.(f) }}}).
+
+    Lemma issig_morphism' abf a'b'f'
+    : (morphism_sig_T' abf a'b'f')
+        <~> morphism abf a'b'f'.
+    Proof.
+      issig (@Build_morphism' abf a'b'f')
+            (@g abf a'b'f')
+            (@h abf a'b'f')
+            (@p abf a'b'f')
+            (@p_sym abf a'b'f').
+    Defined.
+
+    Lemma issig_morphism_helper {T0} `{IsHSet T0} (a b : T0) (pf : a = b)
+    : Contr (b = a).
+    Proof.
+      destruct pf.
+      apply contr_inhabited_hprop; try reflexivity.
+      typeclasses eauto.
+    Qed.
+
+
     Lemma issig_morphism abf a'b'f'
     : (morphism_sig_T abf a'b'f')
         <~> morphism abf a'b'f'.
     Proof.
-      issig (@Build_morphism abf a'b'f')
-            (@g abf a'b'f')
-            (@h abf a'b'f')
-            (@p abf a'b'f').
+      etransitivity; [ | exact (issig_morphism' abf a'b'f') ].
+      repeat (apply equiv_functor_sigma_id; intro).
+      symmetry; apply equiv_sigma_contr; intro.
+      apply issig_morphism_helper; assumption.
     Defined.
 
     Global Instance trunc_morphism abf a'b'f'
@@ -157,6 +189,9 @@ Module Import CommaCategory.
                IsTrunc n (T _1 m2 o abf.(f) = a'b'f'.(f) o S _1 m1)}
     : IsTrunc n (morphism abf a'b'f').
     Proof.
+      assert (forall m1 m2,
+                IsTrunc n (a'b'f'.(f) o S _1 m1 = T _1 m2 o abf.(f)))
+        by (intros; apply (trunc_equiv inverse)).
       eapply trunc_equiv';
       [ exact (issig_morphism _ _) | ].
       typeclasses eauto.
@@ -171,31 +206,46 @@ Module Import CommaCategory.
       destruct gh, g'h'; simpl.
       intros; path_induction.
       f_ap.
-      exact (center _).
+      all:exact (center _).
     Qed.
 
     Definition compose s d d'
                (gh : morphism d d') (g'h' : morphism s d)
-    : morphism s d'.
-    Proof.
-      exists (gh.(g) o g'h'.(g)) (gh.(h) o g'h'.(h)).
-      hnf in *; simpl in *.
-      abstract (
-          destruct_head morphism;
-          rewrite !composition_of;
-            by repeat try_associativity_quick progress rewrite_rev_hyp
-        ).
-    Defined.
+    : morphism s d'
+      := Build_morphism'
+           s d'
+           (gh.(g) o g'h'.(g))
+           (gh.(h) o g'h'.(h))
+           ((ap (fun m => m o s.(f)) (composition_of T _ _ _ _ _))
+              @ (associativity _ _ _ _ _ _ _ _)
+              @ (ap (fun m => _ o m) g'h'.(p))
+              @ (associativity_sym _ _ _ _ _ _ _ _)
+              @ (ap (fun m => m o _) gh.(p))
+              @ (associativity _ _ _ _ _ _ _ _)
+              @ (ap (fun m => d'.(f) o m) (composition_of S _ _ _ _ _)^))%path
+           ((ap (fun m => d'.(f) o m) (composition_of S _ _ _ _ _))
+              @ (associativity_sym _ _ _ _ _ _ _ _)
+              @ (ap (fun m => m o _) gh.(p_sym))
+              @ (associativity _ _ _ _ _ _ _ _)
+              @ (ap (fun m => _ o m) g'h'.(p_sym))
+              @ (associativity_sym _ _ _ _ _ _ _ _)
+              @ (ap (fun m => m o s.(f)) (composition_of T _ _ _ _ _)^))%path.
 
     Global Arguments compose _ _ _ _ _ / .
 
-    Definition identity x : morphism x x.
-    Proof.
-      exists (identity (x.(a))) (identity (x.(b))).
-      abstract (
-          simpl; autorewrite with category; reflexivity
-        ).
-    Defined.
+    Definition identity x : morphism x x
+      := Build_morphism'
+           x x
+           (identity (x.(a)))
+           (identity (x.(b)))
+           ((ap (fun m => m o x.(f)) (identity_of T _))
+              @ (left_identity _ _ _ _)
+              @ ((right_identity _ _ _ _)^)
+              @ (ap (fun m => x.(f) o m) (identity_of S _)^))
+           ((ap (fun m => x.(f) o m) (identity_of S _))
+              @ (right_identity _ _ _ _)
+              @ ((left_identity _ _ _ _)^)
+              @ (ap (fun m => m o x.(f)) (identity_of T _)^)).
 
     Global Arguments identity _ / .
   End comma_category_parts.
