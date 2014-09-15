@@ -285,13 +285,13 @@ Definition Book_2_13 := @HoTT.Misc.equiv_bool_equiv_bool_bool.
 (* ================================================== ex:equiv-functor-set *)
 (** Exercise 3.1 *)
 
-Definition Book_3_1 {A B} (f : A <~> B) (H : IsHSet A)
-  := @HoTT.Trunc.trunc_equiv' A B f (trunc_S minus_one) H.
+Definition Book_3_1_solution_1 {A B} (f : A <~> B) (H : IsHSet A)
+  := @HoTT.Basics.Trunc.trunc_equiv' A B f (trunc_S minus_one) H.
 
-(** Alternative solutions: an easy one using UA, and one using
+(** Alternative solutions: Easy_3_1 using UA, and Replay_3_1 using
 two easy lemmas that may be of independent interest *)
 
-Lemma Book_3_1_easy `{Univalence} {A B} : A <~> B -> IsHSet A -> IsHSet B.
+Lemma Book_3_1_solution_2 `{Univalence} {A B} : A <~> B -> IsHSet A -> IsHSet B.
 Proof.
   intro e. 
   rewrite (path_universe_uncurried e).
@@ -321,7 +321,7 @@ Proof.
   apply (retr_f_g_path_in_B f g retr_f_g).
 Defined.
 
-Lemma Book_3_1_alternative {A B} : A <~> B -> IsHSet A -> IsHSet B.
+Lemma Book_3_1_solution_3 {A B} : A <~> B -> IsHSet A -> IsHSet B.
 Proof.
   intros equivalent_A_B isHSet_A.
   elim equivalent_A_B; intros f isequiv_f.
@@ -332,11 +332,11 @@ Defined.
 (* ================================================== ex:isset-coprod *)
 (** Exercise 3.2 *)
 
-Definition Book_3_2 := @HoTT.types.Sum.hset_sum.
+Definition Book_3_2_solution_1 := @HoTT.types.Sum.hset_sum.
 
 (** Alternative solution for replaying *)
  
-Lemma Book_3_2_alternative (A B : Type) : IsHSet A -> IsHSet B -> IsHSet (A+B).
+Lemma Book_3_2_solution_2 (A B : Type) : IsHSet A -> IsHSet B -> IsHSet (A+B).
 Proof.
   intros isHSet_A isHSet_B.
   apply @hset_axiomK. unfold axiomK. intros x p. destruct x.
@@ -351,13 +351,13 @@ Defined.
 (* ================================================== ex:isset-sigma *)
 (** Exercise 3.3 *)
 
-Definition Book_3_3 (A : Type) (B : A -> Type)
+Definition Book_3_3_solution_1 (A : Type) (B : A -> Type)
    := @HoTT.types.Sigma.trunc_sigma A B 0.
 
 (** This exercise is hard because 2-paths over Sigma types are not treated
 in the first three chapters of the book. Consult theories/types/Sigma.v *)
 
-Lemma Book_3_3_alternative (A : Type) (B : A -> Type) : 
+Lemma Book_3_3_solution_2 (A : Type) (B : A -> Type) : 
   IsHSet A -> (forall x:A, IsHSet (B x)) -> IsHSet { x:A | B x}.
 Proof.
   intros isHSet_A allBx_HSet.
