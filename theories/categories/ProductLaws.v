@@ -45,10 +45,8 @@ Module Associativity.
 
     Definition law
     : functor o inverse = 1
-      /\ inverse o functor = 1.
-    Proof.
-      split; expand; reflexivity.
-    Defined.
+      /\ inverse o functor = 1
+      := (idpath, idpath)%core.
   End associativity.
 End Associativity.
 

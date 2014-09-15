@@ -1481,7 +1481,7 @@ Proof.
   split.
   - intros H' a b.
     eapply trunc_equiv.
-    + exact (H' a b).
+    + refine (H' a b).
     + apply H.
   - intros H' a b.
     eapply trunc_equiv.
@@ -2254,6 +2254,3 @@ Definition Book_10_5_8_item_ix := @HoTT.hit.V.separation.
 
 (* ================================================== eg:surreal-addition *)
 (** Example 11.6.18 *)
-
-
-

@@ -28,14 +28,9 @@ Section opposite.
   Local Ltac op_t C D :=
     split;
     path_functor;
-    [ (exists (path_forall _ _ (@Functor.Dual.opposite_involutive C^op D^op)))
-    | (exists (path_forall _ _ (@Functor.Dual.opposite_involutive C D))) ];
     repeat (apply path_forall; intro);
     simpl;
-    rewrite !transport_forall_constant;
-    transport_path_forall_hammer;
     destruct_head NaturalTransformation;
-    destruct_head Functor;
     exact idpath.
 
   (** ** The above functors are isomorphisms *)
