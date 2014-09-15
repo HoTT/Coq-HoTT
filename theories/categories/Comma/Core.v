@@ -10,6 +10,7 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
+Local Set Primitive Projections.
 
 Local Open Scope equiv_scope.
 Local Open Scope morphism_scope.
@@ -63,6 +64,10 @@ Module Import CommaCategory.
         b : B;
         f : morphism C (S a) (T b)
       }.
+
+    Global Arguments a _ / .
+    Global Arguments b _ / .
+    Global Arguments f _ / .
 
     Local Notation object_sig_T :=
       ({ a : A
@@ -126,6 +131,10 @@ Module Import CommaCategory.
         h : Category.Core.morphism B (abf.(b)) (a'b'f'.(b));
         p : T _1 h o abf.(f) = a'b'f'.(f) o S _1 g
       }.
+
+    Global Arguments g _ _ _ / .
+    Global Arguments h _ _ _ / .
+    Global Arguments p _ _ _ / .
 
     Local Notation morphism_sig_T abf a'b'f' :=
       ({ g : Category.Core.morphism A (abf.(a)) (a'b'f'.(a))
