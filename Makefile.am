@@ -158,7 +158,7 @@ checkproofs:
 	$(VECHO) HOQC -schedule-vi-checking
 	$(Q) $(TIMER) $(HOQC) -schedule-vi-checking $(J) $(MAIN_VOFILES:%.vo=%.vi)
 
-$(STD_VOFILES) : %.vo : %.v
+$(STD_VOFILES) : %.vo : %.v coq-HoTT
 	$(VECHO) COQTOP $*
 	$(Q) $(TIMER) etc/pipe_out.sh "$*.timing" "$(COQTOP)" -time -indices-matter -boot -nois -no-native-compiler -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq -compile "$*"
 
@@ -189,11 +189,11 @@ strict-no-axiom: $(ALL_GLOBFILES)
 strict: strict-test strict-no-axiom hottlib hott-core hott-categories contrib
 
 # A rule for compiling the HoTT libary files
-$(MAIN_VFILES:.v=.vo) : %.vo : %.v $(STD_VOFILES)
+$(MAIN_VFILES:.v=.vo) : %.vo : %.v $(STD_VOFILES) coq-HoTT
 	$(VECHO) HOQC $*
 	$(Q) $(TIMER) ./etc/pipe_out.sh "$*.timing" $(HOQC) -time $<
 
-$(MAIN_VFILES:.v=.vi) : %.vi : %.v $(STD_VOFILES)
+$(MAIN_VFILES:.v=.vi) : %.vi : %.v $(STD_VOFILES) coq-HoTT
 	$(VECHO) HOQC -quick $*
 	$(Q) $(TIMER) ./etc/pipe_out.sh "$*.timing" $(HOQC) -quick -time $<
 
