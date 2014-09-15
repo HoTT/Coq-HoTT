@@ -5,7 +5,6 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Local Set Primitive Projections.
 
 Delimit Scope functor_scope with functor.
 

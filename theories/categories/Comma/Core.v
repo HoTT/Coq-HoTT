@@ -10,7 +10,6 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Local Set Primitive Projections.
 
 Local Open Scope equiv_scope.
 Local Open Scope morphism_scope.
