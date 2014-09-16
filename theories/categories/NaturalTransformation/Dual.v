@@ -10,31 +10,25 @@ Set Asymmetric Patterns.
 
 Local Open Scope category_scope.
 
-(** ** Definition of [Tᵒᵖ], and some variants that strip off [ᵒᵖ]s *)
-Section opposite.
-  Definition opposite
-             C D
-             (F G : Functor C D)
-             (T : NaturalTransformation F G)
-  : NaturalTransformation G^op F^op
-    := Build_NaturalTransformation' (G^op) (F^op)
-                                    (components_of T)
-                                    (fun s d => commutes_sym T d s)
-                                    (fun s d => commutes T d s).
-End opposite.
+(** ** Definition of [Tᵒᵖ] *)
+Definition opposite
+           C D
+           (F G : Functor C D)
+           (T : NaturalTransformation F G)
+: NaturalTransformation G^op F^op
+  := Build_NaturalTransformation' (G^op) (F^op)
+                                  (components_of T)
+                                  (fun s d => commutes_sym T d s)
+                                  (fun s d => commutes T d s).
 
 Local Notation "T ^op" := (opposite T) (at level 3, format "T ^op") : natural_transformation_scope.
 
-(** ** [ᵒᵖ] is propositionally involutive *)
-Section opposite_involutive.
-  Local Open Scope natural_transformation_scope.
+(** ** [ᵒᵖ] is judgmentally involutive *)
+Local Open Scope natural_transformation_scope.
 
-  Lemma opposite_involutive C D (F G : Functor C D) (T : NaturalTransformation F G)
-  : (T^op)^op = T.
-  Proof.
-    destruct T; reflexivity.
-  Defined.
-End opposite_involutive.
+Definition opposite_involutive C D (F G : Functor C D) (T : NaturalTransformation F G)
+: (T^op)^op = T
+  := idpath.
 
 Module Export NaturalTransformationDualNotations.
   Notation "T ^op" := (opposite T) (at level 3, format "T ^op") : natural_transformation_scope.

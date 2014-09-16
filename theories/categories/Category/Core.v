@@ -5,7 +5,7 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Local Set Primitive Projections.
+Global Set Primitive Projections.
 
 Delimit Scope morphism_scope with morphism.
 Delimit Scope category_scope with category.
