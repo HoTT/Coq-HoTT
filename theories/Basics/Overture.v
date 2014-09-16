@@ -359,9 +359,17 @@ Delimit Scope trunc_scope with trunc.
 Bind Scope trunc_scope with trunc_index.
 Arguments trunc_S _%trunc_scope.
 
+(** Include the basic numerals, so we don't need to go through the coercion from [nat], and so that we get the right binding with [trunc_scope]. *)
+(** Note that putting the negative numbers at level 0 allows us to override the [- _] notation for negative numbers. *)
+Notation "-2" := minus_two (at level 0) : trunc_scope.
+Notation "-1" := (trunc_S -2) (at level 0) : trunc_scope.
+Notation "0" := (trunc_S -1) : trunc_scope.
+Notation "1" := (trunc_S 0) : trunc_scope.
+Notation "2" := (trunc_S 1) : trunc_scope.
+
 Fixpoint nat_to_trunc_index (n : nat) : trunc_index
   := match n with
-       | 0 => trunc_S (trunc_S minus_two)
+       | 0 => 0
        | S n' => trunc_S (nat_to_trunc_index n')
      end.
 
@@ -369,15 +377,9 @@ Coercion nat_to_trunc_index : nat >-> trunc_index.
 
 Fixpoint IsTrunc_internal (n : trunc_index) (A : Type) : Type :=
   match n with
-    | minus_two => Contr_internal A
+    | -2%trunc => Contr_internal A
     | trunc_S n' => forall (x y : A), IsTrunc_internal n' (x = y)
   end.
-
-Notation minus_one:=(trunc_S minus_two).
-(** Include the basic numerals, so we don't need to go through the coercion from [nat], and so that we get the right binding with [trunc_scope]. *)
-Notation "0" := (trunc_S minus_one) : trunc_scope.
-Notation "1" := (trunc_S 0) : trunc_scope.
-Notation "2" := (trunc_S 1) : trunc_scope.
 
 Arguments IsTrunc_internal n A : simpl nomatch.
 
@@ -411,8 +413,8 @@ progress match goal with
              => change (forall (a : A) (b : B a) (c : C a b) (d : D a b c), IsTrunc (trunc_S n) (T a b c d)) in H; cbv beta in H
          end.
 
-Notation Contr := (IsTrunc minus_two).
-Notation IsHProp := (IsTrunc minus_one).
+Notation Contr := (IsTrunc -2).
+Notation IsHProp := (IsTrunc -1).
 Notation IsHSet := (IsTrunc 0).
 
 Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_instances.

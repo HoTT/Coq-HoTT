@@ -136,7 +136,7 @@ Defined.
 (** Here is an alternate characterization of propositions. *)
 
 Instance HProp_HProp `{Funext} A : IsHProp (IsHProp A) | 0
-  := hprop_trunc minus_one A.
+  := hprop_trunc -1 A.
 
 Theorem equiv_hprop_inhabited_contr `{Funext} {A}
   : IsHProp A <~> (A -> Contr A).

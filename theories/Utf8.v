@@ -33,11 +33,11 @@ Notation "m ≤ n" := (m <= n)%trunc (at level 70, no associativity) : trunc_sco
 Notation "'S¹'" := S1.
 Notation "'S²'" := S2.
 
-Notation "∥ A ∥₋₂" := (Truncation minus_two A).
-Notation "| a |₋₂" := (@truncation_incl minus_two _ a) : trunc_scope.
+Notation "∥ A ∥₋₂" := (Truncation -2 A).
+Notation "| a |₋₂" := (@truncation_incl -2 _ a) : trunc_scope.
 
-Notation "∥ A ∥₋₁" := (Truncation (trunc_S minus_two) A).
-Notation "| a |₋₁" := (@truncation_incl (trunc_S minus_two) _ a) : trunc_scope.
+Notation "∥ A ∥₋₁" := (Truncation -1 A).
+Notation "| a |₋₁" := (@truncation_incl -1 _ a) : trunc_scope.
 
 Notation "∥ A ∥₀" := (Truncation 0 A).
 Notation "| a |₀" := (@truncation_incl 0_ a) : trunc_scope.
@@ -48,7 +48,7 @@ Notation "| a |₁" := (@truncation_incl 1 _ a) : trunc_scope.
 Notation "∥ A ∥₂" := (Truncation 2 A).
 Notation "| a |₂" := (@truncation_incl 2 _ a) : trunc_scope.
 
-(* N.B. If you swap which one of these is [only parsing], you should also swap which one is used to display [Truncation minus_one A] above. *)
+(* N.B. If you swap which one of these is [only parsing], you should also swap which one is used to display [Truncation -1 A] above. *)
 Notation "∥ A ∥" := (minus1Trunc A) (only parsing).
 Notation "∥ A ∥₋₁" := (minus1Trunc A).
 Notation "| a |₋₁" := (min1 a) : prop_trunc_scope.
