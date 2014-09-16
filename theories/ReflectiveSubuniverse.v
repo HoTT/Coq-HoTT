@@ -2,9 +2,12 @@
 Require Import Basics.
 Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths types.Forall types.Prod types.Universe.
 Require Import HProp ObjectClassifier EquivalenceVarieties.
+Require Import HoTT.Tactics.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
+
+Local Arguments compose / .
 
 (** * Reflective Subuniverses *)
 
@@ -441,11 +444,9 @@ Section Reflective_Subuniverse.
           rewrite O_functor_idmap.
           fold (f o g); rewrite O_functor_compose.
           unfold g.
-          unfold compose at 1; rewrite O_functor_compose; unfold compose.
+          simpl rewrite (O_functor_compose (O_unit OA) (O_functor Ou)^-1).
           rewrite O_functor_wellpointed.
-          Fail rewrite O_unit_natural. (* c'mon... *)
-            pose (p := O_unit_natural (O_functor Ou)^-1 x).
-            unfold compose in p; rewrite p; clear p.
+          simpl rewrite (O_unit_natural (O_functor Ou)^-1 x).
           refine (O_unit_natural f _ @ _).
           set (y := (O_functor Ou)^-1 x).
           transitivity (O_functor Ou y); try apply eisretr.
