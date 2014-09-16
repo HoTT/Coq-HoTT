@@ -419,3 +419,15 @@ Ltac destruct_head_hnf_matcher T HT :=
   end.
 Ltac destruct_head_hnf T := destruct_all_matches ltac:(destruct_head_hnf_matcher T).
 Ltac destruct_head_hnf' T := destruct_all_matches' ltac:(destruct_head_hnf_matcher T).
+
+(** [set_evars] will remove any evars from the goal, placing them in the context *)
+Ltac set_evars :=
+  repeat match goal with
+           | [ |- context[?e] ] => is_evar e; let e' := fresh "e" in set (e' := e)
+         end.
+
+(** [subst_evars] reverses [set_evars] *)
+Ltac subst_evars :=
+  repeat match goal with
+           | [ H := ?e |- _ ] => is_evar e; subst H
+         end.
