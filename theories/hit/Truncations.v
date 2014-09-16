@@ -48,17 +48,17 @@ Definition Truncation_rect_nondep {n A X} `{IsTrunc n X}
 (** Truncation is a modality *)
 
 Section TruncationModality.
-  Context {fs : Funext}.
   Context (n : trunc_index).
 
   Local Instance truncation_modality : Modality.
   Proof.
     refine (Build_Modality
               (Build_UnitSubuniverse
-                (fun A => hp (IsTrunc n A) _)
+                (fun A => IsTrunc n A)
                 (Truncation n)
                 _
-                (@truncation_incl n))
+                (@truncation_incl n)
+                _)
               _
               (@Truncation_rect n)
               (fun A B B_inO f a => 1)
@@ -68,7 +68,7 @@ Section TruncationModality.
   Defined.
 
   Definition trunc_iff_isequiv_truncation (A : Type)
-  : IsTrunc n A <~> IsEquiv (@truncation_incl n A)
+  : IsTrunc n A <-> IsEquiv (@truncation_incl n A)
   := inO_iff_isequiv_O_unit A.
 
   (** ** Functoriality *)
@@ -79,24 +79,24 @@ Section TruncationModality.
 
   Definition Truncation_functor_compose {X Y Z} (f : X -> Y) (g : Y -> Z)
   : Truncation_functor (g o f) == Truncation_functor g o Truncation_functor f
-  := ap10 (O_functor_compose f g).
+  := O_functor_compose f g.
 
   Definition Truncation_functor_idmap (X : Type)
   : @Truncation_functor X X idmap == idmap
-  := ap10 (O_functor_idmap X).
+  := O_functor_idmap X.
 
   Definition isequiv_Truncation_functor {X Y} (f : X -> Y) `{IsEquiv _ _ f}
   : IsEquiv (Truncation_functor f)
   := isequiv_O_functor f.
 
-  Definition equiv_Truncation_prod_cmp {X Y}
+  Definition equiv_Truncation_prod_cmp `{Funext} {X Y}
   : Truncation n (X * Y) <~> Truncation n X * Truncation n Y
   := equiv_O_prod_cmp X Y.
 
 End TruncationModality.
 
 (** This coercion allows us to use truncation indices where a modality is expected and refer to the corresponding truncation modality.  For instance, the general theory of O-connected maps specializes to the theory of n-connected maps. *)
-(* Coercion truncation_modality : trunc_index >-> Modality. *)
+Coercion truncation_modality : trunc_index >-> Modality.
 
 (** It's sometimes convenient to use "infinity" to refer to the identity modality in a similar way.  This clashes with some uses in higher topos theory, where "oo-truncated" means instead "hypercomplete", but this has not yet been a big problem. *)
 Notation oo := identity_modality.
