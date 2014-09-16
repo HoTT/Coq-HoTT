@@ -34,7 +34,6 @@ Global Existing Instance inO_paths.
    However, in other examples (such as [~~] and open modalities) it is easier to construct the latter weaker induction principle.  Thus, we now show how to get from that to our definition of modality. *)
 
 Section EasyModality.
-  Context {fs : Funext}.
 
   Context (O : Type -> Type).
 
@@ -89,32 +88,29 @@ Section EasyModality.
 
   Local Instance usubU : UnitSubuniverse
     := Build_UnitSubuniverse
-         (fun T => hp (IsEquiv (O_unit T)) _)
-         O O_inO' O_unit.
+         (fun T => IsEquiv (O_unit T))
+         O O_inO' O_unit _.
 
   (** However, it seems to be surprisingly hard to show (without univalence) that this [UnitSubuniverse] is replete.  We basically have to develop enough functoriality of [O] and naturality of [O_unit].  We could do that directly, but instead we piggyback by showing that it is a reflective subuniverse.  This is why we excluded repleteness from the basic definition of [ReflectiveSubuniverse] and the proofs of functoriality. *)
 
   Local Instance rsubU : ReflectiveSubuniverse.
   Proof.
-    assert (H : forall P Q, inO' Q ->
-             IsEquiv (fun f : O P -> Q => f o O_unit P)).
-    { intros P Q Q_inO.
-      refine (isequiv_adjointify _
-               (O_rect' P (const Q) (const Q_inO)) _ _).
-      - intros f.
-        apply path_forall; intros x.
-        apply O_rect_beta'.
-      - intros f.
-        refine (@equiv_inj _ _
-                 (compose (O_unit Q))
-                 (@isequiv_postcompose _ _ _ _ (O_unit Q) Q_inO) _ _ _).
-        apply path_forall; intros x; pattern x.
-        apply O_rect'.
-        + intros oa; apply inO_pathsO. 
-        + intros a; unfold compose.
-          apply ap.
-          apply (O_rect_beta' P (const Q)). }
-    exact (Build_ReflectiveSubuniverse usubU H).
+    refine (Build_ReflectiveSubuniverse _ _ _ _ _);
+      intros P Q ?.
+    - intros f. exact (O_rect' P (fun _ => Q) (fun _ => Q_inO) f).
+    - intros f x. exact (O_rect_beta' P (fun _ => Q) f x).
+    - intros g h p x.
+      cbn in Q_inO.
+      refine ((ap (O_unit Q))^-1 _).
+      refine (O_rect' P (fun y => O_unit Q (g y) = O_unit Q (h y)) _ _ x).
+      + intros y. apply inO_pathsO.
+      + intros a; apply ap, p.
+    - intros g h p x; cbn.
+      rewrite O_rect_beta'.
+      rewrite concat_pp_p.
+      apply moveR_Vp.
+      rewrite <- ap_compose.
+      exact (concat_A1p (eissect (O_unit Q)) (p x)).
   Defined.
 
   (** It is now automatically replete, since in our case [inO] means by definition that [O_unit] is an equivalence. *)
@@ -135,14 +131,12 @@ Section EasyModality.
 
 End EasyModality.
 
-(** We now prove various useful things about a general modality. *)
-Section Modalities.
+(** The induction principle [O_rect], like most induction principles, is an equivalence. *)
+Section ORectEquiv.
   Context {fs : Funext}.
   Context {mod : Modality}.
 
-  (** The induction principle [O_rect], like most induction principles, is an equivalence. *)
-
-  Section ORectEquiv.
+  Section ORectEquivData.
 
     Context {A : Type} (B : O A -> Type) {B_inO : forall a, inO (B a)}.
 
@@ -165,36 +159,44 @@ Section Modalities.
     : IsEquiv (fun (h : forall oa, B oa) => h oD O_unit A)
     := equiv_isequiv (equiv_inverse equiv_O_rect).
 
-  End ORectEquiv.
+  End ORectEquivData.
 
   Local Definition isequiv_o_O_unit (A B : Type) (B_inO : inO B)
   : IsEquiv (fun (h : O A -> B) => h o O_unit A)
     := isequiv_oD_O_unit (fun _ => B).
 
-  (** We show that modalities have underlying reflective subuniverses.  It is important in some applications, such as [Truncation], that this construction uses the general [O_rect] given as part of the modality data, and not one constructed out of [O_rectO] as we did when proving [Build_Modality_easy].  For instance, this ensures that [O_functor] reduces to simply an application of [O_rect]. *)
+End ORectEquiv.
 
-  (** Corollary 7.7.8, part 1 *)
-  Global Instance modality_to_reflective_subuniverse
-  : ReflectiveSubuniverse
-    := Build_ReflectiveSubuniverse _ isequiv_o_O_unit.
+(** We show that modalities have underlying reflective subuniverses.  It is important in some applications, such as [Truncation], that this construction uses the general [O_rect] given as part of the modality data, and not one constructed out of [O_rectO] as we did when proving [Build_Modality_easy].  For instance, this ensures that [O_functor] reduces to simply an application of [O_rect].
 
-  (** Corollary 7.7.8, part 2 *)
-  Global Instance inO_sigma (A:Type) (B:A -> Type)
-    {A_inO : inO A} {B_inO : forall a, inO (B a)}
-  : inO {x:A & B x}.
-  Proof.
-    generalize dependent A.
-    refine (snd inO_sigma_iff _).
-    intros A B ? g.
-    exists (O_rect B g).
-    apply O_rect_beta.
-  Defined.
+ Note also that our choice of how to define reflective subuniverses differently from the book enables us to prove this without using funext. *)
 
-End Modalities.
+(** Corollary 7.7.8, part 1 *)
+Global Instance modality_to_reflective_subuniverse (mod : Modality)
+: ReflectiveSubuniverse
+:= Build_ReflectiveSubuniverse _
+     (fun P Q H => O_rect (fun _ => Q))
+     (fun P Q H => O_rect_beta (fun _ => Q))
+     (fun P Q H g h => O_rect (fun y => g y = h y))
+     (fun P Q H g h => O_rect_beta (fun y => g y = h y)).
+
+Coercion modality_to_reflective_subuniverse : Modality >-> ReflectiveSubuniverse.
+
+(** Corollary 7.7.8, part 2 *)
+Global Instance inO_sigma {mod : Modality} (A:Type) (B:A -> Type)
+       {A_inO : inO A} {B_inO : forall a, inO (B a)}
+: inO {x:A & B x}.
+Proof.
+  generalize dependent A.
+  refine (snd inO_sigma_iff _).
+  intros A B ? g.
+  exists (O_rect B g).
+  apply O_rect_beta.
+Defined.
 
 (** Conversely, if a reflective subuniverse is closed under sigmas, it is a modality. *)
 
-Theorem reflective_subuniverse_to_modality `{fs : Funext}
+Theorem reflective_subuniverse_to_modality
   (subU : ReflectiveSubuniverse) {rep : Replete subU}
   (H : forall (A:Type) (B:A -> Type)
           {A_inO : inO A} {B_inO : forall a, inO (B a)},
@@ -228,10 +230,11 @@ Defined.
 Definition identity_modality : Modality
   := Build_Modality
      (Build_UnitSubuniverse
-        (fun _ => hp Unit _)
+        (fun _ => Unit)
         idmap
         (fun _ => tt)
-        (fun T => idmap))
+        (fun T => idmap)
+        _)
      (fun T U _ _ _ => tt)
      (fun A B _ f a => f a)
      (fun A B _ f a => 1)
