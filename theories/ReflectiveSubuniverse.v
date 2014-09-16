@@ -89,7 +89,7 @@ Class ReflectiveSubuniverse :=
 Global Existing Instance rsubu_usubu.
 Coercion rsubu_usubu : ReflectiveSubuniverse >-> UnitSubuniverse.
 
-(** The conclusion of this theorem is the definition of reflective subuniverse in the book. *)
+(** Here we prove the definition of reflective subuniverse in the book. *)
 Section IsEquiv.
   Context {fs : Funext} {subU : ReflectiveSubuniverse}.
   Context (P Q : Type) {Q_inO : inO Q}.
@@ -172,7 +172,13 @@ Section ReflectiveSubuniverseFromIsEquiv.
 
 End ReflectiveSubuniverseFromIsEquiv.
 
-(** So why do we use a different definition than the book?  Notice that *both* directions of the comparison between our definition and the book's make use of funext.  Moreover, it seems that in order to do anything useful with the book's definition, or construct any interesting examples, also requires funext.  However, this is not the case for our definition!  This gives it a noticeable advantage: it avoids the funext redexes that otherwise infect the theory, it stays closer to what we actually use and construct, and it also avoids [Funext] hypotheses that run afoul of Coq's "uniform inheritance condition" when defining coercions. *)
+(** So why do we use a different definition than the book?  Notice that *both* directions of the comparison between our definition and the book's make use of funext.  Moreover, it seems that in order to do anything useful with the book's definition, or construct any interesting examples, also requires funext.  However, this is not the case for our definition!  Thus, our choice has the following advantages:
+
+1. It avoids the funext redexes that otherwise infect the theory, thereby simplifying the proofs and proof terms.  We never have to worry about whether we have a path between functions or a homotopy; we use only homotopies, with no need for [ap10] or [path_arrow] to mediate.
+
+2. It avoids [Funext] hypotheses in some constructions of reflective subuniverses, particularly the construction from a [Modality].  This enables us to declare such constructions as coercions without running afoul of Coq's "uniform inheritance condition", so that a modality can be used as a reflective subuniverse.
+
+3. In fact, the data of a reflective subuniverse according to our definition are precisely a couple of special cases of the data of a modality.  Thus, all the theorems we prove about reflective subuniverses will, when interpreted for a modality (coerced as above to a reflective subuniverse), reduce definitionally to "the way we would have proved them directly for a modality".  *)
 
 (** ** Replete Subuniverses *)
 
@@ -487,14 +493,14 @@ Section Reflective_Subuniverse.
       unfold zz, ev; clear zz; clear ev.
       apply path_forall; intro x.
       exact (O_rectnd_beta (fun f : forall x0, (B x0) => f x) phi).
-    Qed.
+    Defined.
 
     Global Instance inO_arrow {fs : Funext} (A B : Type) {B_inO : inO B}
     : inO (A -> B).
     Proof.
       apply inO_forall.
       intro a. exact _.
-    Qed.
+    Defined.
 
     (** ** Product *)
     Global Instance inO_prod (A B : Type) {A_inO : inO A} {B_inO : inO B}
@@ -505,7 +511,7 @@ Section Reflective_Subuniverse.
       intros [a b]; apply path_prod; simpl.
       - exact (O_rectnd_beta fst (a,b)). 
       - exact (O_rectnd_beta snd (a,b)).
-    Qed.
+    Defined.
 
     (** We show that [OA*OB] has the same universal property as [O(A*B)] *)
     (* TODO: Can this be done without funext? *)
@@ -540,9 +546,10 @@ Section Reflective_Subuniverse.
       intros h; apply path_arrow.
       refine (O_rectpaths _ _ _); intros x.
       unfold compose; simpl.
-      repeat rewrite O_rectnd_beta.
-      reflexivity.
-    Qed.
+      transitivity (h (O_prod_unit A B x)).
+      - refine (O_rectnd_beta _ _).
+      - symmetry; apply ap; refine (O_rectnd_beta _ _).
+    Defined.
 
     (** Thus, by the Yoneda lemma, the functor [O] preserves products. *)
     Global Instance isequiv_O_prod_cmp {fs : Funext} (A B : Type)
