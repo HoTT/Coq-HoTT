@@ -1,5 +1,5 @@
 Require Export Coq.Unicode.Utf8.
-Require Import Basics (*types.Bool*) hit.Circle hit.TwoSphere hit.minus1Trunc hit.Truncations hit.Suspension.
+Require Import Basics (*types.Bool*) hit.Circle hit.TwoSphere hit.minus1Trunc hit.Truncations hit.Suspension Modality.
 
 Notation Type₀ := Type0.
 Notation pr₁ := pr1.
@@ -52,5 +52,7 @@ Notation "| a |₂" := (@truncation_incl 2 _ a) : trunc_scope.
 Notation "∥ A ∥" := (minus1Trunc A) (only parsing).
 Notation "∥ A ∥₋₁" := (minus1Trunc A).
 Notation "| a |₋₁" := (min1 a) : prop_trunc_scope.
+
+Notation "∞" := identity_modality.
 
 Notation Σ := Susp.
