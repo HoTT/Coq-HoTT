@@ -32,6 +32,7 @@ Section identity.
     path_natural_transformation;
     abstract (
         autorewrite with functor morphism;
+        unfold morphism_isomorphic;
         rewrite ap_idmap, idtoiso_components_of;
         rewrite ?Functor.Composition.Laws.associativity_fst,
         ?Functor.Composition.Laws.left_identity_fst,

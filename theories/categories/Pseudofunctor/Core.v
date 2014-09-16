@@ -196,8 +196,8 @@ Bind Scope pseudofunctor_scope with Pseudofunctor.
 
 Create HintDb pseudofunctor discriminated.
 
-Arguments p_object_of {_} {C%category} F%pseudofunctor c%object : rename, simpl nomatch.
-Arguments p_morphism_of {_} [C%category] F%pseudofunctor [s d]%object m%morphism : rename, simpl nomatch.
+Arguments p_object_of {_} {C%category} F%pseudofunctor / c%object : rename.
+Arguments p_morphism_of {_} {C%category} F%pseudofunctor / {s d}%object m%morphism : rename.
 
 (*Notation "F ₀ x" := (p_object_of F x) : object_scope.
 Notation "F ₁ m" := (p_morphism_of F m) : morphism_scope.*)

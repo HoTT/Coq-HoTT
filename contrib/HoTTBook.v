@@ -415,7 +415,8 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 (* ================================================== thm:isprop-forall *)
 (** Example 3.6.2 *)
 
-
+Definition Book_3_6_2 `{Funext} (A : Type) (B : A -> Type) 
+  := @HoTT.types.Forall.trunc_forall _ A B minus_one.
 
 (* ================================================== defn:logical-notation *)
 (** Definition 3.7.1 *)
@@ -1481,7 +1482,7 @@ Proof.
   split.
   - intros H' a b.
     eapply trunc_equiv.
-    + exact (H' a b).
+    + refine (H' a b).
     + apply H.
   - intros H' a b.
     eapply trunc_equiv.
@@ -2254,6 +2255,3 @@ Definition Book_10_5_8_item_ix := @HoTT.hit.V.separation.
 
 (* ================================================== eg:surreal-addition *)
 (** Example 11.6.18 *)
-
-
-

@@ -285,13 +285,21 @@ Definition Book_2_13 := @HoTT.Misc.equiv_bool_equiv_bool_bool.
 (* ================================================== ex:equiv-functor-set *)
 (** Exercise 3.1 *)
 
-(** The exercise is easy using UA, but we prefer a proof without UA, using
-two lemmas that may also be of interest *)
+Definition Book_3_1_solution_1 {A B} (f : A <~> B) (H : IsHSet A)
+  := @HoTT.Basics.Trunc.trunc_equiv' A B f (trunc_S minus_one) H.
+
+(** Alternative solutions: [Book_3_1_solution_2] using UA, and [Book_3_1_solution_3] using two easy lemmas that may be of independent interest *)
+
+Lemma Book_3_1_solution_2 `{Univalence} {A B} : A <~> B -> IsHSet A -> IsHSet B.
+Proof.
+  intro e.
+  rewrite (path_universe_uncurried e).
+  exact idmap.
+Defined.
 
 Lemma retr_f_g_path_in_B {A B} (f : A -> B)  (g : B -> A) (alpha : Sect g f) (x y : B) (p : x = y)
-      :  p = (alpha x) ^ @ (ap f (ap g p)) @ (alpha y).
+      :  p = (alpha x)^ @ (ap f (ap g p)) @ (alpha y).
 Proof.
-  intros.
   destruct p.
   simpl.
   rewrite concat_p1.
@@ -303,35 +311,58 @@ Lemma retr_f_g_isHSet_A_so_B {A B} (f : A -> B)  (g : B -> A)
       : Sect g f -> IsHSet A -> IsHSet B.
 Proof.
   intros retr_f_g isHSet_A.
-  apply @hset_axiomK.
-  unfold axiomK.
+  apply @hset_axiomK. unfold axiomK.
   intros x p.
-  assert (ap g p = 1) as g_p_is_1.
-  apply (axiomK_hset isHSet_A).
-  assert ((retr_f_g x) ^ @ (ap f (ap g p)) @ (retr_f_g x)   = 1) as rhs_is_1.
+  assert (ap g p = 1) as g_p_is_1. apply (axiomK_hset isHSet_A).
+  assert (1 = (retr_f_g x) ^ @ (ap f (ap g p)) @ (retr_f_g x)) as rhs_is_1.
   rewrite g_p_is_1. simpl. rewrite concat_p1. rewrite concat_Vp. exact 1.
-  rewrite (rhs_is_1 ^).
+  rewrite (rhs_is_1).
   apply (retr_f_g_path_in_B f g retr_f_g).
 Defined.
 
-Lemma Book_3_1 {A B} : A <~> B -> IsHSet A -> IsHSet B.
+Lemma Book_3_1_solution_3 {A B} : A <~> B -> IsHSet A -> IsHSet B.
 Proof.
   intros equivalent_A_B isHSet_A.
-  elim equivalent_A_B. intro f. intro isequiv_f.
-  elim isequiv_f. intros g retr_f_g sect_f_g coherence.
+  elim equivalent_A_B; intros f isequiv_f.
+  elim isequiv_f; intros g retr_f_g sect_f_g coh.
   apply (retr_f_g_isHSet_A_so_B f g); assumption.
 Defined.
-
 
 (* ================================================== ex:isset-coprod *)
 (** Exercise 3.2 *)
 
+Definition Book_3_2_solution_1 := @HoTT.types.Sum.hset_sum.
 
+(** Alternative solution for replaying *)
+
+Lemma Book_3_2_solution_2 (A B : Type) : IsHSet A -> IsHSet B -> IsHSet (A+B).
+Proof.
+  intros isHSet_A isHSet_B.
+  apply @hset_axiomK. unfold axiomK. intros x p. destruct x.
+  rewrite (inverse (eisretr_path_sum p)).
+  rewrite (axiomK_hset isHSet_A a (path_sum_inv p)).
+  simpl; exact idpath.
+  rewrite (inverse (eisretr_path_sum p)).
+  rewrite (axiomK_hset isHSet_B b (path_sum_inv p)).
+  simpl; exact idpath.
+Defined.
 
 (* ================================================== ex:isset-sigma *)
 (** Exercise 3.3 *)
 
+Definition Book_3_3_solution_1 (A : Type) (B : A -> Type)
+   := @HoTT.types.Sigma.trunc_sigma A B 0.
 
+(** This exercise is hard because 2-paths over Sigma types are not treated in the first three chapters of the book. Consult theories/types/Sigma.v *)
+
+Lemma Book_3_3_solution_2 (A : Type) (B : A -> Type) :
+  IsHSet A -> (forall x:A, IsHSet (B x)) -> IsHSet { x:A | B x}.
+Proof.
+  intros isHSet_A allBx_HSet.
+  apply @hset_axiomK. intros x xx.
+  pose (path_path_sigma B x x xx 1) as useful.
+  apply (useful (axiomK_hset _ _ _) (set_path2 _ _)).
+Defined.
 
 (* ================================================== ex:prop-endocontr *)
 (** Exercise 3.4 *)
@@ -969,7 +1000,6 @@ Definition Book_7_12 := @HoTT.Modality.notnot_modality.
 
 Definition Book_7_13_part_i := @HoTT.hit.PropositionalFracture.open_modality.
 Definition Book_7_13_part_ii := @HoTT.hit.PropositionalFracture.closed_modality.
-
 
 (* ================================================== ex:f-local-type *)
 (** Exercise 7.14 *)

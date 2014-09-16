@@ -36,7 +36,7 @@ Section of_functor.
   Local Tactic Notation "transitivity_idtoiso" open_constr(hyp) :=
     lazymatch goal with
       | [ |- ?f (Category.Morphisms.idtoiso ?C _) = _ ] => etransitivity (f (Category.Morphisms.idtoiso C hyp));
-                                       [ do 2 apply ap;
+                                       [ do 2 refine (ap _ _); (* https://coq.inria.fr/bugs/show_bug.cgi?id=3626 *)
                                          apply path_functor_helper;
                                          simpl; trivial
                                        | path_natural_transformation ]
