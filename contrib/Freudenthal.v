@@ -3,6 +3,7 @@
 (** * The Freudenthal Suspension Theorem, and related results. (INCOMPLETE) *)
 
 Require Import Overture PathGroupoids Fibrations Equivalences Trunc EquivalenceVarieties types.Forall types.Sigma types.Paths types.Unit types.Universe types.Arrow hit.Connectedness hit.Suspension hit.Truncations HProp.
+Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
@@ -27,7 +28,7 @@ Section Freudenthal.
 
 (** We assume funext and univalence.  In fact, since we will use funext at two different levels and local assumptions are monomorphic, we need to assume funext twice; we give the second assumption of it a name (so we can use it explicitly when we want it), and a different type (so it doesn’t get used when we don’t want it). TODO: perhaps this could be handled in a more uniform way?? *)
 Context `{Funext} (funext_large : Funext * Unit) `{Univalence}
-        {n : trunc_index} {Hn : ~ n = minus_two}
+        {n : trunc_index} {Hn : ~ n = -2}
         (X : Type) (x0:X) `{IsConnMap n _ _ (unit_name x0)}.
 
 (* TODO: eventually, change these to the weaker assumptions:
@@ -103,7 +104,7 @@ Proof.
     (fun x => IsEquiv (FST_Codes_cross x q))).
     intros x; generalize dependent n. intros [ | n'] imposs.
       destruct (imposs 1).
-      intros ?. apply (@trunc_leq minus_one). exact tt. apply hprop_isequiv.
+      intros ?. apply (@trunc_leq -1). exact tt. apply hprop_isequiv.
   intros []. unfold FST_Codes_cross.
   apply (isequiv_homotopic (FST_Codes_cross_x0 q)).
   { unfold FST_Codes_cross_x0.

@@ -6,17 +6,18 @@ Require Import Basics.
 Require Import types.Sigma types.Forall types.Paths types.Bool.
 Require Import HProp Misc.
 Require Import hit.Suspension hit.Circle.
+Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
 
 (** ** Definition, by iterated suspension. *)
 
-(** To match the usual indexing for spheres, we have to pad the sequence with a dummy term [Sphere minus_two]. *)
+(** To match the usual indexing for spheres, we have to pad the sequence with a dummy term [Sphere -2]. *)
 Fixpoint Sphere (n : trunc_index)
   := match n return Type with
-       | minus_two => Empty
-       | minus_one => Empty
+       | -2 => Empty
+       | -1 => Empty
        | trunc_S n' => Susp (Sphere (n'))
      end.
 

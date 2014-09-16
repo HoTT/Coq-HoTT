@@ -286,7 +286,7 @@ Definition Book_2_13 := @HoTT.Misc.equiv_bool_equiv_bool_bool.
 (** Exercise 3.1 *)
 
 Definition Book_3_1_solution_1 {A B} (f : A <~> B) (H : IsHSet A)
-  := @HoTT.Basics.Trunc.trunc_equiv' A B f (trunc_S minus_one) H.
+  := @HoTT.Basics.Trunc.trunc_equiv' A B f 0 H.
 
 (** Alternative solutions: [Book_3_1_solution_2] using UA, and [Book_3_1_solution_3] using two easy lemmas that may be of independent interest *)
 

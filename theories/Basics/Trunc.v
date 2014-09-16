@@ -10,7 +10,7 @@ Generalizable Variables A B m n f.
 (** ** Arithmetic on truncation-levels. *)
 Fixpoint trunc_index_add (m n : trunc_index) : trunc_index
   := match m with
-       | minus_two => n
+       | -2 => n
        | trunc_S m' => trunc_S (trunc_index_add m' n)
      end.
 
@@ -18,8 +18,8 @@ Notation "m -2+ n" := (trunc_index_add m n) (at level 50, left associativity) : 
 
 Fixpoint trunc_index_leq (m n : trunc_index) : Type
   := match m, n with
-       | minus_two, _ => Unit
-       | trunc_S m', minus_two => Empty
+       | -2, _ => Unit
+       | trunc_S m', -2 => Empty
        | trunc_S m', trunc_S n' => trunc_index_leq m' n'
      end.
 
@@ -28,7 +28,7 @@ Notation "m <= n" := (trunc_index_leq m n) (at level 70, no associativity) : tru
 (** ** Truncatedness proper. *)
 
 (** A contractible space is (-2)-truncated, by definition. *)
-Definition contr_trunc_minus_two `{H : IsTrunc minus_two A} : Contr A
+Definition contr_trunc_minus_two `{H : IsTrunc -2 A} : Contr A
   := H.
 
 (** Truncation levels are cumulative. *)
@@ -47,7 +47,7 @@ Proof.
     intros [ | m'] Hmn A ? .
   - (* -2, -2 *) assumption.
   - (* S m', -2 *) destruct Hmn.
-  - (* -2, S n' *) apply @trunc_succ, (IH minus_two); auto.
+  - (* -2, S n' *) apply @trunc_succ, (IH -2); auto.
   - (* S m', S n' *) intros x y; apply (IH m');
                      auto with typeclass_instances.
 Qed.
