@@ -49,12 +49,12 @@ Defined.
 (** Exercise 7.13(ii): Closed modalities *)
 Section ClosedModality.
 
-  Context `{Funext} (U : hProp).
+  Context (U : hProp).
 
   Definition equiv_inO_closed (A : Type)
-  : (U -> Contr A) <~> IsEquiv (fun a:A => push (inr a) : join U A).
+  : (U -> Contr A) <-> IsEquiv (fun a:A => push (inr a) : join U A).
   Proof.
-    apply equiv_iff_hprop.
+    split.
     - intros uac.
       refine (isequiv_adjointify _ _ _ _).
       * refine (pushout_rectnd A _ _).
@@ -82,10 +82,11 @@ Section ClosedModality.
   Proof.
     refine (Build_Modality
               (Build_UnitSubuniverse
-                 (fun X => hp (U -> Contr X) _)
+                 (fun X => U -> Contr X)
                  (fun X => join U X)
                  _
-                 (fun X x => push (inr x)))
+                 (fun X x => push (inr x))
+                 _)
               _ _ _ _); cbn; try exact _.
     - intros A u.
       pose (contr_inhabited_hprop U u).
