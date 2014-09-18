@@ -180,9 +180,8 @@ Defined.
 
 (** From Ch6 *)
 Theorem quotient_surjective: IsSurjection (class_of _).
-Proof using A R sR.
-  unfold IsConnMap.
-  intros y; apply contr_inhabited_hprop; try exact _.
+Proof.
+  apply issurj.
   apply (quotient_ind (fun y => merely (hfiber (class_of R) y))); try exact _.
   intro x. apply tr. by exists x.
 Defined.
