@@ -371,15 +371,14 @@ Lemma Book_3_4_solution_1 `{Funext} (A : Type) : IsHProp A <-> Contr (A -> A).
 Proof.
   split.
   intro isHProp_A.
-  exists idmap; intro f.
-  apply allpath_hprop.
-  intro contr_AA.  
+  exists idmap.
+  apply allpath_hprop. (* automagically, from IsHProp A *)
+  intro contr_AA. 
   apply hprop_allpath; intros a1 a2.
-  elim contr_AA; intros center all_center.
-  change ((fun x:A => a1) a1 = (fun x:A => a2) a1).
-  rewrite ((all_center (fun x:A => a1))^ @ (all_center (fun x:A => a2))).
-  exact idpath.
+  pose ((contr (fun x:A => a1))^ @ (contr (fun x:A => a2))). 
+  exact (ap10 p a1).
 Defined.
+
 
 (* ================================================== ex:prop-inhabcontr *)
 (** Exercise 3.5 *)
