@@ -217,18 +217,24 @@ Section Reflective_Subuniverse.
       { symmetry; apply O_rectnd_beta. } }
   Defined.
 
+  (** There are a few interesting ideas that go into making a proof of functoriality.
+
+      One is that to prove [f x = g x] for [x : O T], it sufficies to prove this for [x] of the form [O_unit T _].  To implement this, we find such an [x] in the context, and [revert] it so that we can have Ltac figure out the functions [f] and [g] for us without having to do higher order unification.  Then we use [O_rectpaths], which expresses the fact.
+
+      The other interesting ideas are cleanly expressed by [O_rectnd_beta], [eisretr], and [eissect].
+
+      The remaining components of this tactic trivial plumbing. *)
   Local Ltac reflective_subuniverse_functor_t :=
     repeat match goal with
-             | _ => progress hnf
-             | [ H := _ |- _ ] => subst H
+             | _ => intro
              | _ => reflexivity
-             | [ |- forall x : O ?T, @?f x = @?g x ] => refine (O_rectpaths f g _); cbn
-             | [ |- O_rectnd _ ?x = _ ]
+             | [ H := _ |- _ ] => subst H
+             | _ => progress cbn
+             | [ x : O _ |- _ = _ ]
                => revert x;
                  match goal with
                    | [ |- forall x : O ?T, @?f x = @?g x ] => refine (O_rectpaths f g _); cbn
                  end
-             | _ => intro
              | _ => progress rewrite ?O_rectnd_beta, ?eisretr, ?eissect (* TODO: Do we want to make this use [transport]/[concat], so we can keep the proof term around? *)
            end.
 
@@ -324,14 +330,14 @@ Section Reflective_Subuniverse.
 
   End Functor.
 
+  (** For some functoriality proofs, we need [O_rectnd_postcompose] in addition to [O_rectnd_beta], [eisretr], and [eissect].  Coq isn't smart neough to infer the arguments to [O_rectnd_postcompose], so we do this manually in Ltac. *)
   Local Ltac reflective_subuniverse_functor_rewrite_t :=
     repeat match goal with
              | _ => progress rewrite ?O_rectnd_beta, ?eisretr, ?eissect
              | [ |- context[?g (O_rectnd ?f ?x)] ] => simpl rewrite (O_rectnd_postcompose f g x)
            end.
 
-  (** We really just want to be using [setoid_rewrite] here, but we don't have it, so we need to manually rewrite with homotopies. *)
-  (** We wrap the rewriter in [set_evars] and [subst_evars] so that [rewrite] doesn't decide to instantiate evars with more evars. *)
+  (** We really just want to be using [setoid_rewrite] here, but we don't have it, so we need to manually rewrite with homotopies.  To do this, we [apply O_rectnd_homotopy] after an [etransitivity], hide the resulting evar from Coq with [set_evars] (so that it's not instantiated in a way that causes Coq to loop), and then see if we can do any rewrites (possibly under more binders).  If we can, we consider it a success, and use [reflexivity] (after [subst_evars] to get Coq to do higher order unification, which it only does with explicit evars and not simply things that unfold to evars). *)
   Local Ltac reflective_subuniverse_functor_rewrite_under_binders_t :=
     repeat first [ progress reflective_subuniverse_functor_rewrite_t
                  | etransitivity;
@@ -342,6 +348,7 @@ Section Reflective_Subuniverse.
                      reflexivity
                    | ]
                  | reflexivity ].
+  (** Now we put together the tactic we'll be using from here on, which does both the rewriting under binders, as well as what we were already doing in [reflective_subuniverse_functor_t]. *)
   Local Ltac reflective_subuniverse_functor_t2 :=
     repeat first [ progress reflective_subuniverse_functor_t
                  | progress reflective_subuniverse_functor_rewrite_under_binders_t ].
