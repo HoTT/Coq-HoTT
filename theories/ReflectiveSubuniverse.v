@@ -561,13 +561,6 @@ Section Reflective_Subuniverse.
     Definition O_prod_cmp (A B : Type) : O (A * B) -> O A * O B
       := O_rectnd (O_prod_unit A B).
 
-    (** Useful helper lemma *)
-    Definition O_rectnd_twice {P Q} {Q_inO : inO Q} (f : P -> P -> Q)
-    : forall x, O_rectnd (fun x0 : P => O_rectnd (f x0) x) x = O_rectnd (fun x0 : P => f x0 x0) x.
-    Proof.
-      reflective_subuniverse_functor_t.
-    Qed.
-
     Global Instance isequiv_O_prod_cmp (A B : Type)
     : IsEquiv (O_prod_cmp A B).
     Proof.
