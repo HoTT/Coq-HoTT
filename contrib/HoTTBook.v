@@ -415,8 +415,8 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 (* ================================================== thm:isprop-forall *)
 (** Example 3.6.2 *)
 
-Definition Book_3_6_2 `{Funext} (A : Type) (B : A -> Type) 
-  := @HoTT.types.Forall.trunc_forall _ A B minus_one.
+Definition Book_3_6_2 `{Funext} (A : Type) (B : A -> Type)
+  := @HoTT.types.Forall.trunc_forall _ A B -1.
 
 (* ================================================== defn:logical-notation *)
 (** Definition 3.7.1 *)

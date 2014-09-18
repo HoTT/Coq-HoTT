@@ -197,7 +197,7 @@ Proof.
 Defined.
 
 Instance hset_sum `{HA : IsHSet A, HB : IsHSet B} : IsHSet (A + B) | 100
-  := @trunc_sum minus_two A HA B HB.
+  := @trunc_sum -2 A HA B HB.
 
 (** ** Binary coproducts are equivalent to dependent sigmas where the first component is a bool. *)
 
