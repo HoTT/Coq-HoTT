@@ -246,6 +246,9 @@ Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g)
 Definition ap10 {A B} {f g:A->B} (h:f=g) : f == g
   := apD10 h.
 
+(** For the benefit of readers of the HoTT Book: *)
+Notation happly := ap10 (only parsing).
+
 Definition ap11 {A B} {f g:A->B} (h:f=g) {x y:A} (p:x=y) : f x = g y.
 Proof.
   case h, p; reflexivity.
