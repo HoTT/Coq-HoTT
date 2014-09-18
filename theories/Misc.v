@@ -23,7 +23,7 @@ Section NullHomotopy.
 
 Context `{Funext}.
 
-(** Geometrically, a nullhomotopy of a map [f : X -> Y] is an extension of [f] to a map [Cone X -> Y].  One might more simply call it e.g. [Constant f], but that is a little ambiguous: it could also reasonably mean e.g. a factorisation of [f] through [ minus1Trunc X ].  (Should the unique map [0 -> Y] be constant in one way, or in [Y]-many ways?) *)
+(** Geometrically, a nullhomotopy of a map [f : X -> Y] is an extension of [f] to a map [Cone X -> Y].  One might more simply call it e.g. [Constant f], but that is a little ambiguous: it could also reasonably mean e.g. a factorisation of [f] through [ Trunc -1 X ].  (Should the unique map [0 -> Y] be constant in one way, or in [Y]-many ways?) *)
 
 (* These use [trunc_sigma], so depend on [types.Sigma]. *)
 Definition NullHomotopy {X Y : Type} (f : X -> Y)

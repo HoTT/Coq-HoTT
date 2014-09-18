@@ -22,19 +22,19 @@ Local Open Scope category_scope.
 Module HomotopyPreCategoryInternals.
   Section homotopy_precategory.
     Local Notation object := Type (only parsing).
-    Local Notation morphism s d := (Truncation 0 (s -> d)) (only parsing).
+    Local Notation morphism s d := (Trunc 0 (s -> d)) (only parsing).
 
     Definition compose s d d' (m : morphism d d') (m' : morphism s d)
     : morphism s d'.
     Proof.
-      revert m'; apply Truncation_rect_nondep; intro m'.
-      revert m; apply Truncation_rect_nondep; intro m.
-      apply truncation_incl.
+      revert m'; apply Trunc_rect_nondep; intro m'.
+      revert m; apply Trunc_rect_nondep; intro m.
+      apply tr.
       exact (m o m')%core.
     Defined.
 
     Definition identity x : morphism x x
-      := truncation_incl idmap.
+      := tr idmap.
 
     Global Arguments compose [s d d'] m m' / .
     Global Arguments identity x / .
@@ -55,9 +55,9 @@ Proof.
             _);
   simpl; intros;
   repeat match goal with
-           | [ m : Truncation _ _ |- _ ]
+           | [ m : Trunc _ _ |- _ ]
              => revert m;
-               apply Truncation_rect;
+               apply Trunc_rect;
                [ intro;
                  match goal with
                    | [ |- IsHSet (?a = ?b :> ?T) ]

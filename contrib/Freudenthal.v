@@ -2,7 +2,10 @@
 
 (** * The Freudenthal Suspension Theorem, and related results. (INCOMPLETE) *)
 
-Require Import Overture PathGroupoids Fibrations Equivalences Trunc EquivalenceVarieties types.Forall types.Sigma types.Paths types.Unit types.Universe types.Arrow hit.Connectedness hit.Suspension hit.Truncations HProp.
+Require Import Basics.
+Require Import types.Forall types.Sigma types.Paths types.Unit types.Universe types.Arrow.
+Require Import HProp EquivalenceVarieties.
+Require Import hit.Connectedness hit.Suspension hit.Truncations.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -13,9 +16,10 @@ Generalizable Variables X A B f g n.
 Instance isconn_susp {n : trunc_index} {X : Type} `{H : IsConnected n X}
   : IsConnected (trunc_S n) (Susp X).
 Proof.
+  apply isconnected_from_elim.
   intros C H' f. exists (f North).
   assert ({ p0 : f North = f South & forall x:X, ap f (merid x) = p0 })
-    as [p0 allpath_p0] by (apply H; apply H').
+    as [p0 allpath_p0] by (apply isconnected_elim; apply H').
   apply (Susp_rect (fun a => f a = f North) 1 p0^).
   intros x.
   apply (concat (transport_paths_Fl _ _)).
@@ -45,17 +49,17 @@ Definition mer' := (fun x => mer x @ (mer x0)^).
 Global Instance Freudenthal
   : IsConnMap (n -2+ n) (mer').
 Proof.
-  intros p. apply @isconnected_from_iscontr_truncation.
+  intros p. unfold IsConnected.
 (** We are not ready to prove this yet.  For the remainder of the section, we will generalize this goal a bit, and prove some auxiliary lemmas; then we will return to the theorem. *)
 Abort.
 
 (** The goal we require for the FST is: *)
 Definition FST_Codes_No (p : No = No)
-  := (Truncation (n -2+ n) (hfiber mer' p)).
+  := (Trunc (n -2+ n) (hfiber mer' p)).
 
 (** To prove it, we generalise it over [Susp X], by [Susp_rect].  This requires three components, which we construct (the main parts of) as lemmas in advance. *)
 Definition FST_Codes_So (q : No = So)
-  := (Truncation (n -2+ n) (hfiber mer q)).
+  := (Trunc (n -2+ n) (hfiber mer q)).
 
 (* TODO: move! *)
 Definition hfiber_pair {A B} {f: A -> B} {b} (a:A) (p:f a = b) : hfiber f b
@@ -65,23 +69,23 @@ Definition FST_Codes_cross (x1 : X) (q : No = So)
   : FST_Codes_No (q @ (mer x1) ^) -> FST_Codes_So q.
 Proof.
   unfold FST_Codes_No, FST_Codes_So, mer'.
-  apply Truncation_rect_nondep.
+  apply Trunc_rect_nondep.
   intros [x2 p]. revert x1 x2 p.
   refine (@wedge_incl_elim_uncurried _ n n X x0 _ X x0 _
     (fun x1 x2 => (mer x2 @ (mer x0) ^ = q @ (mer x1) ^)
-                    -> Truncation (n -2+ n) (hfiber mer q)) _ _).
-  apply (conn_pointed_type x0); try typeclasses eauto.
+                    -> Trunc (n -2+ n) (hfiber mer q)) _ _).
+  refine (pr1 (@isconnected_elim (trunc_S n) X _ _ _ _)).
   { apply @trunc_sigma; try typeclasses eauto.
     { apply @trunc_forall; try typeclasses eauto; intro.
       apply @trunc_arrow; try typeclasses eauto; intro.
       intros.
       admit. }
     admit. }
-  apply (conn_pointed_type x0); try typeclasses eauto.
+  refine (pr1 (@isconnected_elim (trunc_S n) X _ _ _ _)).
   { apply @trunc_arrow; try typeclasses eauto; intros.
     admit. }
-  { exists (fun b s => truncation_incl (hfiber_pair b (cancelR _ _ _ s))).
-    exists (fun a r => truncation_incl (hfiber_pair a
+  { exists (fun b s => tr (hfiber_pair b (cancelR _ _ _ s))).
+    exists (fun a r => tr (hfiber_pair a
                                                     (cancelR _ _ _ ((concat_pV _) @ (concat_pV _)^ @ r)))).
     apply path_forall; intros s. apply ap, ap, ap.
     exact ((concat_1p _)^ @ whiskerR (concat_pV _)^ _). }
@@ -92,7 +96,7 @@ Definition FST_Codes_cross_x0 (q : No = So)
   : FST_Codes_No (q @ (mer x0)^) -> FST_Codes_So q.
 Proof.
   unfold FST_Codes_No, FST_Codes_So.
-  apply Truncation_functor, (functor_sigma idmap).
+  apply Trunc_functor, (functor_sigma idmap).
   unfold mer'; intros x1. apply cancelR.
 Defined.
 
@@ -108,9 +112,9 @@ Proof.
   intros []. unfold FST_Codes_cross.
   apply (isequiv_homotopic (FST_Codes_cross_x0 q)).
   { unfold FST_Codes_cross_x0.
-    apply isequiv_Truncation_functor, @isequiv_functor_sigma. refine _.
+    apply isequiv_Trunc_functor, @isequiv_functor_sigma. refine _.
     intros a. apply isequiv_cancelR. }
-  { hnf. apply Truncation_rect. intros ?; apply trunc_succ.
+  { hnf. apply Trunc_rect. intros ?; apply trunc_succ.
     intros [x r]; simpl.
     unfold functor_sigma; simpl.
     symmetry.
@@ -137,7 +141,7 @@ Definition FST_Codes_center (y : Susp X) (p : No = y)
 Proof.
   assert (goal' : FST_Codes y (transport _ p 1)).
     apply transportD. simpl; unfold FST_Codes_No.
-    apply truncation_incl. exists x0; unfold mer'. apply concat_pV.
+    apply tr. exists x0; unfold mer'. apply concat_pV.
   refine (transport _ _ goal'). refine (transport_paths_r _ _ @ _).
   apply concat_1p.
 Defined.
@@ -210,9 +214,9 @@ Abort.
 Definition FST_Codes_contr_No (p : No = No) (rr : FST_Codes No p)
   : (rr = FST_Codes_center No p).
 Proof.
-  revert rr. apply Truncation_rect. intros ?; apply trunc_succ.
+  revert rr. apply Trunc_rect. intros ?; apply trunc_succ.
   intros [x1 r]. destruct r. unfold FST_Codes_center. simpl.
-  (*transitivity (truncation_incl
+  (*transitivity (tr
     (transport (fun p => hfiber mer' p) (transport_paths_r p 1 @ concat_1p p)
     (transportD (paths No))))
 simpl in *.*)
@@ -221,7 +225,7 @@ Admitted.
 Global Instance Freudenthal
   : IsConnMap (n -2+ n) (@merid X).
 Proof.
-  intros p C ? f.
+  intros p; apply isconnected_from_elim; intros C ? f.
 Admitted.
 
 End Freudenthal.

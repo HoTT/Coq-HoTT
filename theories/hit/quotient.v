@@ -1,7 +1,7 @@
 Require Import Basics.
 Require Import types.Universe.
 Require Import HSet HProp UnivalenceImpliesFunext.
-Require Import hit.epi hit.minus1Trunc.
+Require Import hit.epi hit.Truncations hit.Connectedness.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
@@ -179,10 +179,12 @@ intros. apply Hprop'.
 Defined.
 
 (** From Ch6 *)
-Theorem quotient_surjective: issurj (class_of _).
-unfold issurj. apply (quotient_ind (fun y => hexists (fun x : A => class_of R x = y))).
- apply _.
-intro x. apply min1. by exists x.
+Theorem quotient_surjective: IsSurjection (class_of _).
+Proof using A R sR.
+  unfold IsConnMap.
+  intros y; apply contr_inhabited_hprop; try exact _.
+  apply (quotient_ind (fun y => merely (hfiber (class_of R) y))); try exact _.
+  intro x. apply tr. by exists x.
 Defined.
 
 (** From Ch10 *)
@@ -238,7 +240,7 @@ Context (is_ker : forall x y, f x = f y <~> R x y).
 
 Theorem quotient_kernel_factor
   : exists (C : Type) (e : A -> C) (m : C -> B),
-      IsHSet C * issurj e * is_mono m * (f = m o e).
+      IsHSet C * IsSurjection e * IsEmbedding m * (f = m o e).
 Proof.
   pose (C := quotient R).
   (* We put this explicitly in the context so that typeclass
@@ -256,7 +258,7 @@ Proof.
   split. split. split.
   - assumption.
   - apply quotient_surjective.
-  - unfold is_mono. intro u.
+  - intro u.
     apply hprop_allpath.
     assert (H : forall (x y : C) (p : m x = u) (p' : m y = u), x = y).
     { refine (quotient_rect R _ _ _). intro a.

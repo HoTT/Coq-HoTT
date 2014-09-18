@@ -8,7 +8,7 @@ Require Import FunctorCategory.Core.
 Require Import Category.Morphisms.
 Require Import SetCategory.Core.
 Require Import NaturalTransformation.Paths.
-Require Import HSet HProp hit.minus1Trunc.
+Require Import HSet HProp hit.Truncations.
 (*.
 Require Import Category.Prod  NaturalTransformation.Composition.Functorial NaturalTransformation.Composition.Laws ExponentialLaws.Law4.Functors.
 Require Import NaturalTransformation.Paths.

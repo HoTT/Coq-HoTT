@@ -72,9 +72,9 @@ Defined.
 Section SetCone.
   Context {A B : hSet} (f : A -> B).
 
-  Definition setcone := Truncation 0 (pushout f (const tt)).
+  Definition setcone := Trunc 0 (pushout f (const tt)).
 
   Global Instance istrunc_setcone : IsHSet setcone := _.
 
-  Definition setcone_point : setcone := truncation_incl (push (inr tt)).
+  Definition setcone_point : setcone := tr (push (inr tt)).
 End SetCone.

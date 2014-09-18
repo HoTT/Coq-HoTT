@@ -63,6 +63,14 @@ Proof.
     apply I, AH1.
 Qed.
 
+(** Similarly, a map being truncated is also a proposition. *)
+Global Instance isprop_istruncmap `{Funext} (n : trunc_index) {X Y : Type} (f : X -> Y)
+: IsHProp (IsTruncMap n f).
+Proof.
+  unfold IsTruncMap.
+  exact _.
+Defined.
+
 (** We can induct on the truncation index to get that [IsTrunc] is (n+1)-truncated for all [n]. *)
 Lemma istrunc_s__ishprop `{IsHProp A} {n} : IsTrunc (trunc_S n) A.
 Proof.

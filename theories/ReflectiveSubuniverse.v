@@ -618,4 +618,111 @@ Section Reflective_Subuniverse.
     Qed.
     
   End Types.
+
+  Section Monad.
+
+    Definition O_monad_mult A : O (O A) -> O A
+      := O_rectnd idmap.
+
+    Definition O_monad_mult_natural {A B} (f : A -> B)
+    : O_functor f o O_monad_mult A == O_monad_mult B o O_functor (O_functor f).
+    Proof.
+      apply O_rectpaths; intros x; unfold compose, O_monad_mult.
+      simpl rewrite (O_unit_natural (O_functor f) x).
+      rewrite (O_rectnd_beta idmap x).
+      rewrite (O_rectnd_beta idmap (O_functor f x)).
+      reflexivity.
+    Qed.
+
+    Definition O_monad_unitlaw1 A
+    : O_monad_mult A o (O_unit (O A)) == idmap.
+    Proof.
+      apply O_rectpaths; intros x; unfold compose, O_monad_mult.
+      exact (O_rectnd_beta idmap (O_unit A x)).
+    Defined.
+
+    Definition O_monad_unitlaw2 A
+    : O_monad_mult A o (O_functor (O_unit A)) == idmap.
+    Proof.
+      apply O_rectpaths; intros x; unfold O_monad_mult, O_functor, compose.
+      repeat rewrite O_rectnd_beta.
+      reflexivity.
+    Qed.
+
+    Definition O_monad_mult_assoc A
+    : O_monad_mult A o O_monad_mult (O A) == O_monad_mult A o O_functor (O_monad_mult A).
+    Proof.
+      apply O_rectpaths; intros x; unfold O_monad_mult, O_functor, compose.
+      repeat rewrite O_rectnd_beta.
+      reflexivity.
+    Qed.
+
+  End Monad.
+
+  Section StrongMonad.
+    Context {fs : Funext} {rep : Replete subU}.
+
+    Definition O_monad_strength A B : A * O B -> O (A * B)
+      := fun aob => O_rectnd (fun b a => O_unit (A*B) (a,b)) (snd aob) (fst aob).
+
+    Definition O_monad_strength_natural A A' B B' (f : A -> A') (g : B -> B')
+    : O_functor (functor_prod f g) o O_monad_strength A B ==
+      O_monad_strength A' B' o functor_prod f (O_functor g).
+    Proof.
+      intros [a ob]. revert a. apply ap10.
+      revert ob; apply O_rectpaths.
+      intros b; simpl.
+      apply path_arrow; intros a.
+      unfold O_monad_strength, O_functor, compose; simpl.
+      repeat rewrite O_rectnd_beta.
+      reflexivity.
+    Qed.
+      
+    (** The diagrams for strength, see http://en.wikipedia.org/wiki/Strong_monad *)
+    Definition O_monad_strength_unitlaw1 A
+    : O_functor (@snd Unit A) o O_monad_strength Unit A == @snd Unit (O A).
+    Proof.
+      intros [[] oa]; revert oa.
+      apply O_rectpaths; intros x; unfold O_monad_strength, O_functor, compose. simpl. 
+      repeat rewrite O_rectnd_beta.
+      reflexivity.
+    Qed.
+
+    Definition O_monad_strength_unitlaw2 A B
+    : O_monad_strength A B o functor_prod idmap (O_unit B) == O_unit (A*B).
+    Proof.
+      intros [a b].
+      unfold O_monad_strength, functor_prod, compose. simpl. 
+      repeat rewrite O_rectnd_beta.
+      reflexivity.
+    Qed.
+
+    Definition O_monad_strength_assoc1 A B C
+    : O_functor (equiv_prod_assoc A B C)^-1 o O_monad_strength (A*B) C ==
+      O_monad_strength A (B*C) o functor_prod idmap (O_monad_strength B C) o (equiv_prod_assoc A B (O C))^-1.
+    Proof.
+      intros [[a b] oc].
+      revert a; apply ap10. revert b; apply ap10.
+      revert oc; apply O_rectpaths.
+      intros c; simpl.
+      apply path_arrow; intros b. apply path_arrow; intros a.
+      unfold O_monad_strength, O_functor, functor_prod, compose. simpl. 
+      repeat rewrite O_rectnd_beta.
+      reflexivity.
+    Qed.
+
+    Definition O_monad_strength_assoc2 A B
+    : O_monad_mult (A*B) o O_functor (O_monad_strength A B) o O_monad_strength A (O B) ==
+      O_monad_strength A B o functor_prod idmap (O_monad_mult B).
+    Proof.
+      intros [a oob]. revert a; apply ap10.
+      revert oob; apply O_rectpaths. apply O_rectpaths.
+      intros b; simpl. apply path_arrow; intros a.
+      unfold O_monad_strength, O_functor, O_monad_mult, functor_prod, compose. simpl. 
+      repeat (rewrite O_rectnd_beta; simpl).
+      reflexivity.
+    Qed.
+      
+  End StrongMonad.
+      
 End Reflective_Subuniverse.

@@ -1,6 +1,5 @@
-Require Import Basics hit.minus1Trunc HProp.
+Require Import Basics hit.Truncations HProp.
 
-Definition hexists {X} (P:X->Type):=(minus1Trunc (sigT  P) ).
 Definition atmost1 X:=(forall x1 x2:X, (x1 = x2)).
 Definition atmost1P {X} (P:X->Type):=
     (forall x1 x2:X, P x1 -> P x2 -> (x1 = x2)).
@@ -19,8 +18,8 @@ Lemma iota {X} (P:X-> Type):
   (forall x, IsHProp (P x)) -> (hunique P) -> sigT P.
 Proof.
 intros H1 [H H0].
-apply (@minus1Trunc_rect_nondep (sigT  P) );auto.
-by apply atmost.
+apply (@Trunc_rect_nondep -1 (sigT P) );auto.
+by apply hprop_allpath, atmost.
 Qed.
 
 Lemma unique_choice {X Y} (R:X->Y->Type) :
