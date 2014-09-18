@@ -375,8 +375,8 @@ Proof.
   apply allpath_hprop. (* automagically, from IsHProp A *)
   intro contr_AA. 
   apply hprop_allpath; intros a1 a2.
-  pose ((contr (fun x:A => a1))^ @ (contr (fun x:A => a2))). 
-  exact (ap10 p a1).
+  pose ((contr (fun x:A => a1))^ @ (contr (fun x:A => a2))) as equal_functions. 
+  exact (ap10 equal_functions a1).
 Defined.
 
 
