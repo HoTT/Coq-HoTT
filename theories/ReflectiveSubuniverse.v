@@ -582,16 +582,7 @@ Section Reflective_Subuniverse.
         abstract (destruct x; reflective_subuniverse_functor_t2). }
       { intro.
         unfold prod_rect, O_prod_cmp, O_prod_unit.
-        (** Work around Anomaly: Bad recursive type. Please report. *)
-        repeat match goal with
-                 | [ |- context[@fst ?A ?B ?x] ] => set (fst' := @fst A B); change (fst x) with (fst' x)
-                 | [ |- context[@snd ?A ?B ?x] ] => set (snd' := @snd A B); change (snd x) with (snd' x)
-               end.
-        abstract (assert (fst = fst') by reflexivity; clearbody fst';
-                  assert (snd = snd') by reflexivity; clearbody snd';
-                  reflective_subuniverse_functor_t2;
-                  destruct_head @paths;
-                  reflective_subuniverse_functor_t2). }
+        abstract reflective_subuniverse_functor_t2. }
     Defined.
 
     Definition isequiv_O_prod_cmp_precompose
