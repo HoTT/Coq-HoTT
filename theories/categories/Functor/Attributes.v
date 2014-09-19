@@ -1,6 +1,6 @@
 (** * Attributes of functors (full, faithful, split essentially surjective) *)
 Require Import Category.Core Functor.Core HomFunctor Category.Morphisms Category.Dual Functor.Dual Category.Prod Functor.Prod NaturalTransformation.Core SetCategory.Core Functor.Composition.Core.
-Require Import hit.epi types.Universe HSet hit.iso Overture hit.minus1Trunc UnivalenceImpliesFunext.
+Require Import hit.epi types.Universe HSet hit.iso Overture hit.Truncations UnivalenceImpliesFunext.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -4,8 +4,8 @@
 
 Require Import Basics.
 Require Import types.Unit types.Bool types.Universe types.Sigma types.Arrow types.Forall.
-Require Import HProp EquivalenceVarieties UnivalenceImpliesFunext.
-Require Import hit.minus1Trunc hit.quotient.
+Require Import HProp HSet EquivalenceVarieties UnivalenceImpliesFunext.
+Require Import hit.Truncations hit.quotient.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -165,14 +165,14 @@ Proof.
   intros A B R bitot_R h H_h.
   apply H_setext'.
   - split.
-    + intro a. generalize (fst bitot_R a). apply minus1Trunc_map.
+    + intro a. generalize (fst bitot_R a). apply (Trunc_functor -1).
       intros [b r]. exists b. exact (ap h (glue R _ _ r)).
-    + intro b. generalize (snd bitot_R b). apply minus1Trunc_map.
+    + intro b. generalize (snd bitot_R b). apply (Trunc_functor -1).
       intros [a r]. exists a. exact (ap h (glue R _ _ r)).
   - split.
-    + intro a. generalize (fst bitot_R a). apply minus1Trunc_map.
+    + intro a. generalize (fst bitot_R a). apply (Trunc_functor -1).
       intros [b r]. exists b. exact (ap H_h (glue R _ _ r)).
-    + intro b. generalize (snd bitot_R b). apply minus1Trunc_map.
+    + intro b. generalize (snd bitot_R b). apply (Trunc_functor -1).
       intros [a r]. exists a. exact (ap H_h (glue R _ _ r)).
 Defined.
 
@@ -199,9 +199,9 @@ Proof.
   pose (H_g := H_h oD inR R : forall b : B, P (g b)).
   assert (eq_img : equal_img f g).
   { split.
-    - intro a. generalize (fst bitot_R a). apply minus1Trunc_map.
+    - intro a. generalize (fst bitot_R a). apply (Trunc_functor -1).
       intros [b r]. exists b. exact (ap h (glue R _ _ r)).
-    - intro b. generalize (snd bitot_R b). apply minus1Trunc_map.
+    - intro b. generalize (snd bitot_R b). apply (Trunc_functor -1).
       intros [a r]. exists a. exact (ap h (glue R _ _ r)). }
   transitivity (transport P (setext' (h o inL R) (h o inR R) eq_img)
       (H_set A (h o inL R) (H_h oD inL R))).
@@ -210,17 +210,17 @@ Proof.
   apply (H_setext' A B f g eq_img H_f H_g).  split.
   - intro a.
     set (truncb := fst bitot_R a). generalize truncb.
-    apply minus1Trunc_map.
+    apply (Trunc_functor -1).
     intros [b Rab]. exists b.
-    apply min1.
+    apply tr.
     exists (ap h (glue R _ _ Rab)).
     apply (concatR (apD H_h (glue R _ _ Rab))).
     apply inverse. unfold f, g, compose. apply transport_compose.
   - intros b.
     set (trunca := snd bitot_R b). generalize trunca.
-    apply minus1Trunc_map.
+    apply (Trunc_functor -1).
     intros [a Rab]. exists a.
-    apply min1.
+    apply tr.
     exists (ap h (glue R _ _ Rab)).
     apply (concatR (apD H_h (glue R _ _ Rab))).
     apply inverse. unfold f, g, compose. apply transport_compose.
@@ -249,11 +249,11 @@ Proof.
   refine (V_rect'_nd _ _ _ _). intros A f _.
   exact (hp (hexists (fun a : A => f a = x)) _). simpl.
   intros A B f g eqimg _ _ _. apply path_iff_hProp_uncurried; split; simpl.
-  - intro H. refine (minus1Trunc_ind _ H).
-    intros [a p]. generalize (fst eqimg a). apply minus1Trunc_map.
+  - intro H. refine (Trunc_rect_nondep _ H).
+    intros [a p]. generalize (fst eqimg a). apply (Trunc_functor -1).
     intros [b p']. exists b. transitivity (f a); auto with path_hints.
-  - intro H. refine (minus1Trunc_ind _ H).
-    intros [b p]. generalize (snd eqimg b). apply minus1Trunc_map.
+  - intro H. refine (Trunc_rect_nondep _ H).
+    intros [b p]. generalize (snd eqimg b). apply (Trunc_functor -1).
     intros [a p']. exists a. transitivity (g b); auto with path_hints.
 Defined.
 
@@ -284,18 +284,19 @@ Proof.
   intros B B' g g' eq_img H_g H_g' H_img; simpl.
   apply path_iff_hProp_uncurried; split; simpl.
   - intros [H1 H2]; split.
-    + intro a. refine (minus1Trunc_ind _ (H1 a)).
-      intros [b H3]. generalize (fst eq_img b). apply minus1Trunc_map.
+    + intro a. refine (Trunc_rect_nondep _ (H1 a)).
+      intros [b H3]. generalize (fst eq_img b).
+      unfold hexists. refine (@Trunc_functor -1 {b0 : B' & g b = g' b0} {b0 : B' & H_f a (g' b0)} _).
       intros [b' p]. exists b'. exact (transport (fun x => H_f a x) p H3).
-    + intro b'. refine (minus1Trunc_ind _ (snd eq_img b')).
-      intros [b p]. generalize (H2 b). apply minus1Trunc_map.
+    + intro b'. refine (Trunc_rect_nondep _ (snd eq_img b')).
+      intros [b p]. generalize (H2 b). apply (Trunc_functor -1).
       intros [a H3]. exists a. exact (transport (fun x => H_f a x) p H3).
   - intros [H1 H2]; split.
-    + intro a. refine (minus1Trunc_ind _ (H1 a)).
-      intros [b' H3]. generalize (snd eq_img b'). apply minus1Trunc_map.
+    + intro a. refine (Trunc_rect_nondep _ (H1 a)).
+      intros [b' H3]. generalize (snd eq_img b'). apply (Trunc_functor -1).
       intros [b p]. exists b. exact (transport (fun x => H_f a x) p^ H3).
-    + intro b. refine (minus1Trunc_ind _ (fst eq_img b)).
-      intros [b' p]. generalize (H2 b'). apply minus1Trunc_map.
+    + intro b. refine (Trunc_rect_nondep _ (fst eq_img b)).
+      intros [b' p]. generalize (H2 b'). apply (Trunc_functor -1).
       intros [a H3]. exists a. exact (transport (fun x => H_f a x) p^ H3).
 Defined.
 
@@ -309,18 +310,18 @@ Proof.
   intros C h _; simpl.
   apply path_iff_hProp_uncurried; split; simpl.
   - intros [H1 H2]; split.
-    + intro b. refine (minus1Trunc_ind _ (snd H_img b)).
-      intros [a p]. generalize (H1 a). apply minus1Trunc_map.
+    + intro b. refine (Trunc_rect_nondep _ (snd H_img b)).
+      intros [a p]. generalize (H1 a). apply (Trunc_functor -1).
       intros [c H3]. exists c. exact ((ap10 p (h c)) # H3).
-    + intro c. refine (minus1Trunc_ind _ (H2 c)).
-      intros [a H3]. generalize (fst H_img a). apply minus1Trunc_map.
+    + intro c. refine (Trunc_rect_nondep _ (H2 c)).
+      intros [a H3]. generalize (fst H_img a). apply (Trunc_functor -1).
       intros [b p]. exists b. exact ((ap10 p (h c)) # H3).
   - intros [H1 H2]; split.
-    + intro a. refine (minus1Trunc_ind _ (fst H_img a)).
-      intros [b p]. generalize (H1 b). apply minus1Trunc_map.
+    + intro a. refine (Trunc_rect_nondep _ (fst H_img a)).
+      intros [b p]. generalize (H1 b). apply (Trunc_functor -1).
       intros [c H3]. exists c. exact ((ap10 p^ (h c)) # H3).
-    + intro c. refine (minus1Trunc_ind _ (H2 c)).
-      intros [b H3]. generalize (snd H_img b). apply minus1Trunc_map.
+    + intro c. refine (Trunc_rect_nondep _ (H2 c)).
+      intros [b H3]. generalize (snd H_img b). apply (Trunc_functor -1).
       intros [a p]. exists a. exact ((ap10 p^ (h c)) # H3).
 Defined.
 
@@ -331,8 +332,8 @@ Instance reflexive_bisimulation : Reflexive bisimulation.
 Proof.
   refine (V_rect_hprop _ _ _).
   intros A f H_f; simpl. split.
-  - intro a; apply min1; exists a; auto.
-  - intro a; apply min1; exists a; auto.
+  - intro a; apply tr; exists a; auto.
+  - intro a; apply tr; exists a; auto.
 Defined.
 
 Lemma bisimulation_equiv_id : forall u v : V, (u = v) <~> (u ~~ v).
@@ -345,9 +346,9 @@ Proof.
   refine (V_rect_hprop _ _ _); intros B g _.
   simpl; intros [H1 H2].
   apply setext'. split.
-  - intro a. generalize (H1 a). apply minus1Trunc_map.
+  - intro a. generalize (H1 a). apply (Trunc_functor -1).
     intros [b h]. exists b; exact (H_f a (g b) h).
-  - intro b. generalize (H2 b). apply minus1Trunc_map.
+  - intro b. generalize (H2 b). apply (Trunc_functor -1).
     intros [a h]. exists a; exact (H_f a (g b) h).
 Defined.
 
@@ -366,15 +367,15 @@ Defined.
 Section MonicSetPresent_Uniqueness.
 (** Given u : V, we want to show that the representation u = @set Au mu, where Au is an hSet and mu is monic, is unique. *)
 
-Context {u : V} {Au Au': Type} {h : IsHSet Au} {h' : IsHSet Au'} {mu : Au -> V} {mono : is_mono mu}
-  {mu' : Au' -> V} {mono' : is_mono mu'} {p : u = set mu} {p' : u = set mu'}.
+Context {u : V} {Au Au': Type} {h : IsHSet Au} {h' : IsHSet Au'} {mu : Au -> V} {mono : IsEmbedding mu}
+  {mu' : Au' -> V} {mono' : IsEmbedding mu'} {p : u = set mu} {p' : u = set mu'}.
 
 Lemma eq_img_untrunc : (forall a : Au, {a' : Au' & mu' a' = mu a})
                      * (forall a' : Au', {a : Au & mu a = mu' a'}).
 Proof.
   split.
-  intro a. exact (untrunc_hprop (mono' (mu a)) (transport (fun x => mu a ∈ x) (p^ @ p') (min1 (a; 1)))).
-  intro a'. exact (untrunc_hprop (mono (mu' a')) (transport (fun x => mu' a' ∈ x) (p'^ @ p) (min1 (a'; 1)))).
+  intro a. exact (@untrunc_istrunc -1 _ (mono' (mu a)) (transport (fun x => mu a ∈ x) (p^ @ p') (tr (a; 1)))).
+  intro a'. exact (@untrunc_istrunc -1 _ (mono (mu' a')) (transport (fun x => mu' a' ∈ x) (p'^ @ p) (tr (a'; 1)))).
 Defined.
 
 Let e : Au -> Au' := fun a => pr1 (fst eq_img_untrunc a).
@@ -383,7 +384,7 @@ Let inv_e : Au' -> Au := fun a' => pr1 (snd eq_img_untrunc a').
 Let hom1 : Sect inv_e e.
 Proof.
   intro a'.
-  apply (is_mono_isinj mu' mono').
+  apply (isinj_embedding mu' mono').
   transitivity (mu (inv_e a')).
   exact (pr2 (fst eq_img_untrunc (inv_e a'))).
   exact (pr2 (snd eq_img_untrunc a')).
@@ -392,7 +393,7 @@ Defined.
 Let hom2 : Sect e inv_e.
 Proof.
   intro a.
-  apply (is_mono_isinj mu mono).
+  apply (isinj_embedding mu mono).
   transitivity (mu' (e a)).
   exact (pr2 (snd eq_img_untrunc (e a))).
   exact (pr2 (fst eq_img_untrunc a)).
@@ -419,12 +420,12 @@ Proof.
   apply transport_path_universe.
 Defined.
 
-Lemma monic_set_present_uniqueness : (Au; (mu; (h, mono, p))) = (Au'; (mu'; (h', mono', p'))) :> {A : Type & {m : A -> V & IsHSet A * is_mono m * (u = set m)}}.
+Lemma monic_set_present_uniqueness : (Au; (mu; (h, mono, p))) = (Au'; (mu'; (h', mono', p'))) :> {A : Type & {m : A -> V & IsHSet A * IsEmbedding m * (u = set m)}}.
 Proof.
   apply path_sigma_uncurried; simpl.
   exists path^.
-  transitivity (path^ # mu; transportD (fun A => A -> V) (fun A m => IsHSet A * is_mono m * (u = set m)) path^ mu (h, mono, p)).
-  apply (@transport_sigma Type (fun A => A -> V) (fun A m => IsHSet A * is_mono m * (u = set m)) Au Au' path^ (mu; (h, mono, p))).
+  transitivity (path^ # mu; transportD (fun A => A -> V) (fun A m => IsHSet A * IsEmbedding m * (u = set m)) path^ mu (h, mono, p)).
+  apply (@transport_sigma Type (fun A => A -> V) (fun A m => IsHSet A * IsEmbedding m * (u = set m)) Au Au' path^ (mu; (h, mono, p))).
   apply path_sigma_hprop; simpl.
   exact mu_eq_mu'.
 Defined.
@@ -433,7 +434,7 @@ End MonicSetPresent_Uniqueness.
 
 (** This lemma actually says a little more than 10.5.6, i.e., that Au is a hSet *)
 Lemma monic_set_present : forall u : V, exists (Au : Type) (m : Au -> V),
-  (IsHSet Au) * (is_mono m) * (u = set m).
+  (IsHSet Au) * (IsEmbedding m) * (u = set m).
 Proof.
   apply V_rect_hprop.
   - intros A f _.
@@ -441,8 +442,9 @@ Proof.
       as [Au [eu [mu (((hset_Au, epi_eu), mono_mu), factor)]]].
     exists Au, mu. split. exact (hset_Au, mono_mu).
     apply setext'; split.
-    + intro a. apply min1; exists (eu a). exact (ap10 factor a).
-    + intro a'. generalize (epi_eu a'). apply minus1Trunc_map.
+    + intro a. apply tr; exists (eu a). exact (ap10 factor a).
+    + intro a'. generalize (epi_eu a').
+      intros ?; refine (Trunc_functor -1 _ (center _)).
       intros [a p]. exists a. transitivity (mu (eu a)).
       exact (ap10 factor a). exact (ap mu p).
   - intro v. apply hprop_allpath.
@@ -460,7 +462,7 @@ Definition func_of_members {u : V} : [u] -> V := pr1 (pr2 (monic_set_present u))
 
 Definition is_hset_typeofmembers {u : V} : IsHSet ([u]) := fst (fst (pr2 (pr2 (monic_set_present u)))).
 
-Definition is_mono_funcofmembers {u : V} : is_mono func_of_members := snd (fst (pr2 (pr2 (monic_set_present u)))).
+Definition IsEmbedding_funcofmembers {u : V} : IsEmbedding func_of_members := snd (fst (pr2 (pr2 (monic_set_present u)))).
 
 Definition is_valid_presentation (u : V) : u = set func_of_members := snd (pr2 (pr2 (monic_set_present u))).
 
@@ -472,9 +474,9 @@ Proof.
   refine (V_rect_hprop _ _ _). intros B g _.
   split.
   - intros [H1 H2]. apply setext'. split.
-    + intro. refine (minus1Trunc_ind _ (H1 (f a) (min1 (a;1)))).
-      intros [b p]. apply min1. exists b. exact p^.
-    + intro. apply (H2 (g b)). apply min1; exists b; reflexivity.
+    + intro. refine (Trunc_rect_nondep _ (H1 (f a) (tr (a;1)))).
+      intros [b p]. apply tr. exists b. exact p^.
+    + intro. apply (H2 (g b)). apply tr; exists b; reflexivity.
   - intro p; split.
     + intros z Hz. apply (transport (fun x => z ∈ x) p Hz).
     + intros z Hz. apply (transport (fun x => z ∈ x) p^ Hz).
@@ -486,7 +488,7 @@ Proof.
   intro H.
   refine (V_rect_hprop _ _ _).
   intros A f H_f. apply H. intros x Hx.
-  generalize Hx; apply minus1Trunc_ind.
+  generalize Hx; apply Trunc_rect_nondep.
   intros [a p]. exact (transport C p (H_f a)).
 Defined.
 
@@ -505,13 +507,13 @@ Proof.
   - intro a.
     assert (H : f a ∈ set g).
     { apply (snd extensionality p).
-      apply min1; exists a; reflexivity. }
-    generalize H; apply minus1Trunc_map. intros [b p']. exists b; exact p'^.
+      apply tr; exists a; reflexivity. }
+    generalize H; apply (Trunc_functor -1). intros [b p']. exists b; exact p'^.
   - intro b.
     assert (H : g b ∈ set f).
     { apply (snd extensionality p^).
-      apply min1; exists b; reflexivity. }
-    generalize H; apply minus1Trunc_map. intros [a p']. exists a; exact p'.
+      apply tr; exists b; reflexivity. }
+    generalize H; apply (Trunc_functor -1). intros [a p']. exists a; exact p'.
 Defined.
 
 
@@ -528,7 +530,7 @@ Instance isequiv_ap_V_singleton {u v : V}
 Proof.
   refine (BuildIsEquiv _ _ _ _ _ _ _); try solve [ intro; apply allpath_hprop ].
   { intro H. specialize (path_V_eqimg H). intros (H1, H2).
-    refine (minus1Trunc_ind _ (H1 tt)). intros [t p]. destruct t; exact p. }
+    refine (Trunc_rect_nondep _ (H1 tt)). intros [t p]. destruct t; exact p. }
 Defined.
 
 (** The pair {u,v} *)
@@ -537,22 +539,22 @@ Definition V_pair (u : V) (v : V) : V@{U' U} := set (fun b : Bool => if b then u
 Lemma path_pair {u v u' v' : V@{U' U}} : (u = u') * (v = v') -> V_pair u v = V_pair u' v'.
 Proof.
   intros (H1, H2). apply setext'. split.
-  + apply Bool_rect. apply min1; exists true. assumption.
-    apply min1; exists false; assumption.
-  + apply Bool_rect. apply min1; exists true; assumption.
-    apply min1; exists false; assumption.
+  + apply Bool_rect. apply tr; exists true. assumption.
+    apply tr; exists false; assumption.
+  + apply Bool_rect. apply tr; exists true; assumption.
+    apply tr; exists false; assumption.
 Defined.
 
 Lemma pair_eq_singleton {u v w : V} : V_pair u v = V_singleton w <-> (u = w) * (v = w).
 Proof.
   split.
   + intro H. destruct (path_V_eqimg H) as (H1, H2).
-    refine (minus1Trunc_ind _ (H1 true)). intros [t p]; destruct t.
-    refine (minus1Trunc_ind _ (H1 false)). intros [t p']; destruct t.
+    refine (Trunc_rect_nondep _ (H1 true)). intros [t p]; destruct t.
+    refine (Trunc_rect_nondep _ (H1 false)). intros [t p']; destruct t.
     split; [exact p| exact p'].
   + intros (p1, p2). apply setext'; split.
-    intro a; apply min1; exists tt. destruct a; [exact p1 | exact p2].
-    intro t; apply min1; exists true. destruct t; exact p1.
+    intro a; apply tr; exists tt. destruct a; [exact p1 | exact p2].
+    intro t; apply tr; exists true. destruct t; exact p1.
 Defined.
 
 (** The ordered pair (u,v) *)
@@ -567,22 +569,22 @@ Proof.
   - intro p. assert (p1 : a = c).
     + assert (H : V_singleton a ∈ [c, d]).
       { apply (snd extensionality p). simpl.
-        apply min1; exists true; reflexivity. }
-      refine (minus1Trunc_ind _ H). intros [t p']; destruct t.
+        apply tr; exists true; reflexivity. }
+      refine (Trunc_rect_nondep _ H). intros [t p']; destruct t.
       apply ((ap V_singleton)^-1 p'^).
       symmetry; apply (fst pair_eq_singleton p').
     + split. exact p1.
       assert (H : hor (b = c) (b = d)).
       { assert (H' : V_pair a b ∈ [c, d]).
         { apply (snd extensionality p).
-          apply min1; exists false; reflexivity. }
-        refine (minus1Trunc_ind _ H'). intros [t p']; destruct t.
-        * apply min1; left. apply (fst pair_eq_singleton p'^).
+          apply tr; exists false; reflexivity. }
+        refine (Trunc_rect_nondep _ H'). intros [t p']; destruct t.
+        * apply tr; left. apply (fst pair_eq_singleton p'^).
         * destruct (path_V_eqimg p') as (H1, H2).
-          generalize (H2 false); apply minus1Trunc_map.
+          generalize (H2 false); apply (Trunc_functor -1).
           intros [t p'']; destruct t.
           left; exact p''^. right; exact p''^. }
-      refine (minus1Trunc_ind _ H). intro case; destruct case as [p'| p'].
+      refine (Trunc_rect_nondep _ H). intro case; destruct case as [p'| p'].
       2: assumption.
       assert (H' : [a, b] = V_singleton (V_singleton b)).
       { apply (snd pair_eq_singleton).
@@ -625,13 +627,13 @@ Proof.
                                           | inr tt => set f end)).
   simpl; intros A B f g eq_img _ _ _. apply setext'. split.
   - intro. destruct a.
-    + generalize (fst eq_img a). apply minus1Trunc_map.
+    + generalize (fst eq_img a). apply (Trunc_functor -1).
       intros [b p]. exists (inl b); exact p.
-    + apply min1; exists (inr tt). destruct u. apply setext'; auto.
+    + apply tr; exists (inr tt). destruct u. apply setext'; auto.
   - intro. destruct b.
-    + generalize (snd eq_img b). apply minus1Trunc_map.
+    + generalize (snd eq_img b). apply (Trunc_functor -1).
       intros [a p]. exists (inl a); exact p.
-    + apply min1; exists (inr tt). destruct u. apply setext'; auto.
+    + apply tr; exists (inr tt). destruct u. apply setext'; auto.
 Defined.
 
 (** The set of finite ordinals *)
@@ -644,83 +646,85 @@ Definition V_omega : V
 
 Lemma not_mem_Vempty : forall x, ~ (x ∈ V_empty).
 Proof.
-  intros x Hx. generalize Hx; apply minus1Trunc_ind.
+  intros x Hx. generalize Hx; apply Trunc_rect_nondep.
   intros [ff _]. exact ff.
 Qed.
 
 Lemma pairing : forall u v, hexists (fun w => forall x, x ∈ w <-> hor (x = u) (x = v)).
 Proof.
-  intros u v. apply min1. exists (V_pair u v).
-  intro; split; apply minus1Trunc_map.
+  intros u v. apply tr. exists (V_pair u v).
+  intro; split; apply (Trunc_functor -1).
   - intros [[|] p]; [left|right]; exact p^.
   - intros [p | p]; [exists true | exists false]; exact p^.
 Qed.
 
 Lemma infinity : (V_empty ∈ V_omega) * (forall x, x ∈ V_omega -> V_succ x ∈ V_omega).
 Proof.
-  split. apply min1; exists 0; auto.
-  intro. apply minus1Trunc_map.
+  split. apply tr; exists 0; auto.
+  intro. apply (Trunc_functor -1).
   intros [n p]. exists (S n). rewrite p; auto.
 Qed.
 
 Lemma union : forall v, hexists (fun w => forall x, x ∈ w <-> hexists (fun u => x ∈ u * u ∈ v)).
 Proof.
-  intro v. apply min1; exists (V_union v).
+  intro v. apply tr; exists (V_union v).
   intro x; split.
-  - intro H. simpl in H. generalize H; apply minus1Trunc_map.
+  - intro H. simpl in H. generalize H; apply (Trunc_functor -1).
     intros [[u' x'] p]; simpl in p.
     exists (func_of_members u'); split.
     + refine (transport (fun z => x ∈ z) (is_valid_presentation (func_of_members u'))^ _).
-      simpl. apply min1; exists x'. exact p.
+      simpl. apply tr; exists x'. exact p.
     + refine (transport (fun z => func_of_members u' ∈ z) (is_valid_presentation v)^ _).
-      simpl. apply min1; exists u'; reflexivity.
-  - apply minus1Trunc_ind. intros [u (Hx, Hu)].
+      simpl. apply tr; exists u'; reflexivity.
+  - apply Trunc_rect_nondep. intros [u (Hx, Hu)].
     generalize (transport (fun z => u ∈ z) (is_valid_presentation v) Hu).
-    apply minus1Trunc_ind. intros [u' pu].
+    apply Trunc_rect_nondep. intros [u' pu].
     generalize (transport (fun z => x ∈ z) (is_valid_presentation (func_of_members u')) (transport (fun z => x ∈ z) pu^ Hx)).
-    apply minus1Trunc_ind. intros [x' px].
-    apply min1. exists (u'; x'). exact px.
+    apply Trunc_rect_nondep. intros [x' px].
+    apply tr. exists (u'; x'). exact px.
 Qed.
 
 Lemma function : forall u v, hexists (fun w => forall x, x ∈ w <-> V_is_func u v x).
 Proof.
-  intros u v. apply min1; exists (V_func u v).
+  intros u v. apply tr; exists (V_func u v).
   assert (memb_u : u = set (@func_of_members u)) by exact (is_valid_presentation u).
   assert (memb_v : v = set (@func_of_members v)) by exact (is_valid_presentation v).
   intro phi; split.
   - intro H. split. split.
-    + intros z Hz. simpl in *. generalize H. apply minus1Trunc_ind.
-      intros [h p_phi]. generalize (transport (fun x => z ∈ x) p_phi^ Hz). apply minus1Trunc_map.
+    + intros z Hz. simpl in *. generalize H. apply Trunc_rect_nondep.
+      intros [h p_phi]. generalize (transport (fun x => z ∈ x) p_phi^ Hz). apply (Trunc_functor -1).
       intros [a p]. exists (a, h a). assumption.
     + intros x Hx. generalize (transport (fun y => x ∈ y) memb_u Hx).
-      apply minus1Trunc_ind. intros [a p]. generalize H; apply minus1Trunc_map.
+      apply Trunc_rect_nondep. intros [a p]. generalize H; apply (Trunc_functor -1).
       intros [h p_phi]. exists (func_of_members (h a)). split.
-      exact (transport (fun z => func_of_members (h a) ∈ z) memb_v^ (min1 (h a; 1))).
+      exact (transport (fun z => func_of_members (h a) ∈ z) memb_v^ (tr (h a; 1))).
       apply (transport (fun y => [x, func_of_members (h a)] ∈ y) p_phi).
-      apply min1; exists a. rewrite p; reflexivity.
-    + intros x y y' (Hy, Hy'). generalize H; apply minus1Trunc_ind. intros [h p_phi].
-      generalize (transport (fun z => [x, y] ∈ z) p_phi^ Hy). apply minus1Trunc_ind. intros [a p].
-      generalize (transport (fun z => [x, y'] ∈ z) p_phi^ Hy'). apply minus1Trunc_ind. intros [a' p'].
+      apply tr; exists a. rewrite p; reflexivity.
+    + intros x y y' (Hy, Hy'). generalize H; apply Trunc_rect_nondep. intros [h p_phi].
+      generalize (transport (fun z => [x, y] ∈ z) p_phi^ Hy). apply Trunc_rect_nondep. intros [a p].
+      generalize (transport (fun z => [x, y'] ∈ z) p_phi^ Hy'). apply Trunc_rect_nondep. intros [a' p'].
       destruct (fst path_pair_ord p) as (px, py). destruct (fst path_pair_ord p') as (px', py').
       transitivity (func_of_members (h a)); auto with path_hints. transitivity (func_of_members (h a'));auto with path_hints.
       refine (ap func_of_members _). refine (ap h _).
-      apply (is_mono_isinj func_of_members is_mono_funcofmembers a a' (px @ px'^)).
+      apply (isinj_embedding func_of_members IsEmbedding_funcofmembers a a' (px @ px'^)).
   - intros ((H1, H2), H3). simpl.
     assert (h : forall a : [u], {b : [v] & [func_of_members a, func_of_members b] ∈ phi}).
     { intro a. pose (x := func_of_members a).
-      refine (let H := untrunc_hprop _ (H2 x (transport (fun z => x ∈ z) memb_u^ (min1 (a; 1)))) in _).
+      transparent assert (H : {y : V & y ∈ v * [x, y] ∈ phi}).
+      refine (@untrunc_istrunc -1 {y : V & y ∈ v * [x, y] ∈ phi} _
+                                 (H2 x (transport (fun z => x ∈ z) memb_u^ (tr (a; 1))))).
       { apply hprop_allpath. intros [y (H1_y, H2_y)] [y' (H1_y', H2_y')].
         apply path_sigma_uncurried; simpl.
         exists (H3 x y y' (H2_y, H2_y')).
         apply allpath_hprop. }
       destruct H as [y (H1_y, H2_y)].
-      destruct (untrunc_hprop (is_mono_funcofmembers y) (transport (fun z => y ∈ z) memb_v H1_y)) as [b Hb].
+      destruct (@untrunc_istrunc -1 _ (IsEmbedding_funcofmembers y) (transport (fun z => y ∈ z) memb_v H1_y)) as [b Hb].
       exists b. exact (transport (fun z => [x, z] ∈ phi) Hb^ H2_y). }
-    apply min1; exists (fun a => pr1 (h a)). apply extensionality. split.
-    + intros z Hz. generalize Hz; apply minus1Trunc_ind. intros [a Ha].
+    apply tr; exists (fun a => pr1 (h a)). apply extensionality. split.
+    + intros z Hz. generalize Hz; apply Trunc_rect_nondep. intros [a Ha].
       exact (transport (fun w => w ∈ phi) Ha (pr2 (h a))).
     + intros z Hz. simpl.
-      generalize (H1 z Hz). apply minus1Trunc_map. intros [(a,b) p]. simpl in p.
+      generalize (H1 z Hz). apply (Trunc_functor -1). intros [(a,b) p]. simpl in p.
       exists a. transitivity ([func_of_members a, func_of_members b]); auto with path_hints.
       apply ap.
       apply H3 with (func_of_members a). split.
@@ -732,11 +736,11 @@ Lemma replacement : forall (r : V -> V) (x : V),
   hexists (fun w => forall y, y ∈ w <-> hexists (fun z => z ∈ x * (r z = y))).
 Proof.
   intro r. refine (V_rect_hprop _ _ _).
-  intros A f _. apply min1. exists (set (r o f)). split.
-  - apply minus1Trunc_map.
-    intros [a p]. exists (f a). split. apply min1; exists a; auto. assumption.
-  - apply minus1Trunc_ind.
-    intros [z [h p]]. generalize h. apply minus1Trunc_map.
+  intros A f _. apply tr. exists (set (r o f)). split.
+  - apply (Trunc_functor -1).
+    intros [a p]. exists (f a). split. apply tr; exists a; auto. assumption.
+  - apply Trunc_rect_nondep.
+    intros [z [h p]]. generalize h. apply (Trunc_functor -1).
     intros [a p']. exists a. transitivity (r z); auto with path_hints. exact (ap r p').
 Qed.
 
@@ -744,10 +748,10 @@ Lemma separation (C : V -> hProp) : forall a : V,
   hexists (fun w => forall x, x ∈ w <-> x ∈ a * (C x)).
 Proof.
   refine (V_rect_hprop _ _ _).
-  intros A f _. apply min1. exists (set (fun z : {a : A & C (f a)} => f (pr1 z))). split.
-  - apply minus1Trunc_ind.
-    intros [[a h] p]. split. apply min1; exists a; assumption. exact (transport C p h).
-  - intros [H1 H2]. generalize H1. apply minus1Trunc_map.
+  intros A f _. apply tr. exists (set (fun z : {a : A & C (f a)} => f (pr1 z))). split.
+  - apply Trunc_rect_nondep.
+    intros [[a h] p]. split. apply tr; exists a; assumption. exact (transport C p h).
+  - intros [H1 H2]. generalize H1. apply (Trunc_functor -1).
     intros [a p]. exists (a; transport C p^ H2). exact p.
 Qed.
 

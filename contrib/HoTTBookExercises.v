@@ -447,18 +447,17 @@ Section Book_3_13.
          IsHSet X
          -> (forall x : X, IsHSet (A x))
          -> (forall x (a : A x), IsHProp (P x a))
-         -> (forall x, minus1Trunc { a : A x & P x a })
-         -> minus1Trunc { g : forall x, A x & forall x, P x (g x) }.
+         -> (forall x, merely { a : A x & P x a })
+         -> merely { g : forall x, A x & forall x, P x (g x) }.
   Proof.
     intros LEM X A P HX HA HP H0.
-    apply min1.
+    apply tr.
     apply (naive_LEM_implies_AC LEM).
     intro x.
     specialize (H0 x).
     revert H0.
-    apply minus1Trunc_rect_nondep.
-    - exact (fun x nx => nx x).
-    - apply allpath_hprop.
+    apply Trunc_rect_nondep.
+    exact (fun x nx => nx x).
   Defined.
 End Book_3_13.
 
@@ -492,17 +491,16 @@ Section Book_3_14.
       exact (transport P (allpath_hprop _ _) (base a)).
   Defined.
 
-  Lemma Book_3_14_equiv A : minus1Trunc A <~> ~~A.
+  Lemma Book_3_14_equiv A : merely A <~> ~~A.
   Proof.
     apply equiv_iff_hprop.
-    - apply minus1Trunc_rect_nondep.
-      * exact (fun a na => na a).
-      * apply allpath_hprop.
+    - apply Trunc_rect_nondep.
+      exact (fun a na => na a).
     - intro nna.
-      apply (@Book_3_14 A (fun _ => minus1Trunc A)).
-      * exact min1.
+      apply (@Book_3_14 A (fun _ => merely A)).
+      * exact tr.
       * intros x y z w.
-        apply min1_path.
+        apply allpath_hprop.
       * exact nna.
   Defined.
 End Book_3_14.
@@ -921,13 +919,13 @@ End Book_6_9.
 (** Exercise 7.1 *)
 
 Section Book_7_1.
-  Lemma Book_7_1_part_i (H : forall A, minus1Trunc A -> A) A : IsHSet A.
+  Lemma Book_7_1_part_i (H : forall A, merely A -> A) A : IsHSet A.
   Proof.
     apply (@HoTT.HSet.isset_hrel_subpaths
-             A (fun x y => minus1Trunc (x = y)));
+             A (fun x y => merely (x = y)));
     try typeclasses eauto.
     - intros ?.
-      apply min1.
+      apply tr.
       reflexivity.
     - intros.
       apply H.
@@ -935,16 +933,16 @@ Section Book_7_1.
   Defined.
 
   Lemma Book_7_1_part_ii (H : forall A B (f : A -> B),
-                                (forall b, minus1Trunc (hfiber f b))
+                                (forall b, merely (hfiber f b))
                                 -> forall b, hfiber f b)
   : forall A, IsHSet A.
   Proof.
     apply Book_7_1_part_i.
     intros A a.
-    apply (fun H' => (@H A (minus1Trunc A) min1 H' a).1).
+    apply (fun H' => (@H A (merely A) tr H' a).1).
     clear a.
-    apply @minus1Trunc_map_dep.
-    intro x; compute.
+    apply Trunc_rect; try exact _.
+    intro x; compute; apply tr.
     exists x; reflexivity.
   Defined.
 End Book_7_1.

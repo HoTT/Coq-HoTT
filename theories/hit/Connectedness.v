@@ -3,7 +3,7 @@
 
 Require Import Basics.
 Require Import types.Forall types.Sigma types.Paths types.Unit types.Arrow types.Universe.
-Require Import TruncType UnivalenceImpliesFunext.
+Require Import TruncType UnivalenceImpliesFunext HProp EquivalenceVarieties.
 Require Import hit.Truncations.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
@@ -23,31 +23,44 @@ A handy benchmark: under our indexing, the map [S1 -> 1] is 0-connected but not 
 
 (** Connectedness of a type (however indexed) can be defined in two equivalent ways: quantifying over all maps into suitably truncated types, or by considering just the universal case, the truncation of the type itself.
 
-The latter requires HIT’s, but keeps the type [IsConnected] small; the former, which we use for now, requires only core Coq, but blows up the size (universe level) of [IsConnected], since it quantifies over types.
+The former requires only core Coq, but blows up the size (universe level) of [IsConnected], since it quantifies over types; moreover, it is not even quite correct since it should really be quantified over all universes.  Thus, we use the latter, although it requires HITs to define the truncation.
 
 Question: is there a definition of connectedness that neither blows up the universe level, nor requires HIT’s? *)
 
 Class IsConnected (n : trunc_index) (A : Type)
- := isconnected_elim :>
-      forall (C : Type) `{IsTrunc n C} (f : A -> C),
-        { c:C & forall a:A, f a = c }.
+ := isconnected_contr_trunc :> Contr (Trunc n A).
 
-Definition iscontr_truncation_from_isconnected {n} {A} `{IsConnected n A}
-  : Contr (Truncation n A).
+Definition isconnected_elim {n} {A} `{IsConnected n A}
+           (C : Type) `{IsTrunc n C} (f : A -> C)
+: { c:C & forall a:A, f a = c }.
 Proof.
-  set (nh := isconnected_elim (Truncation n A) (@truncation_incl n A)).
+  set (ff := Trunc_rect_nondep f).
+  exists (ff (center _)).
+  intros a. symmetry; apply (ap ff (contr (tr _))).
+Defined.
+
+Definition isconnected_from_elim {n} {A}
+: (forall (C : Type) `{IsTrunc n C} (f : A -> C), { c:C & forall a:A, f a = c })
+  -> IsConnected n A.
+Proof.
+  intros H.
+  set (nh := H (Trunc n A) _ (@tr n A)).
   exists (nh .1).
-  apply Truncation_rect. apply trunc_succ.
+  apply Trunc_rect. apply trunc_succ.
   intros; symmetry; apply (nh .2).
 Defined.
 
-Global Instance isconnected_from_iscontr_truncation {n} {A} `{Contr (Truncation n A)}
-  : IsConnected n A | 1000.
+(** A type which is both connected and truncated is contractible. *)
+
+Definition contr_trunc_conn {n} {A} `{IsTrunc n A} `{IsConnected n A} : Contr A.
 Proof.
-  intros C ? f.
-  set (ff := Truncation_rect_nondep f).
-  exists (ff (center _)).
-  intros a. symmetry; apply (ap ff (contr (truncation_incl _))).
+  apply (contr_equiv (@tr n A)^-1).
+Defined.
+
+Definition contr_inhab_prop {A} `{IsHProp A} (ma : merely A) : Contr A.
+Proof.
+  refine (@contr_trunc_conn -1 A _ _).
+  refine (contr_inhabited_hprop _ ma).
 Defined.
 
 (** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against truncated types.  We use the former; the equivalence with the latter is given below in [conn_map_elim], [conn_map_comp], and [conn_map_from_extension_elim]. *)
@@ -55,8 +68,17 @@ Defined.
 Class IsConnMap (n : trunc_index) {A B : Type} (f : A -> B)
   := isconnected_hfiber_conn_map :>
        forall b:B, IsConnected n (hfiber f b).
-(* TODO: question — why do the implicit arguments of this seem not to work, i.e. seem to (often) need to be given explicitly? *)
 
+(** Surjections are the (-1)-connected maps, but they can be characterized more simply since an inhabited hprop is automatically contractible. *)
+Notation IsSurjection := (IsConnMap -1).
+
+Definition BuildIsSurjection {A B} (f : A -> B) :
+  (forall b, merely (hfiber f b)) -> IsSurjection f.
+Proof.
+  intros H b; refine (contr_inhabited_hprop _ _).
+  apply H.
+Defined.
+  
 (** n-connected maps are orthogonal to n-truncated maps (i.e. familes of n-truncated types). *)
 Definition conn_map_elim {n : trunc_index}
   {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
@@ -84,6 +106,19 @@ Proof.
   change (d a) with (fibermap (a;1)).
   apply inverse, e.
 Defined.
+
+Definition isequiv_conn_trunc {n} {A B} (f : A -> B)
+           `{IsConnMap n _ _ f} `{IsTruncMap n _ _ f}
+: IsEquiv f.
+Proof.
+  apply isequiv_fcontr. intros b.
+  refine (@contr_trunc_conn n _ _ _).
+Defined.
+
+Definition isequiv_surj_emb {A B} (f : A -> B)
+           `{IsSurjection f} `{IsEmbedding f}
+: IsEquiv f
+:= isequiv_conn_trunc f.
 
 (** ** Extensions
 
@@ -185,7 +220,7 @@ Lemma conn_map_from_extension_elim  {n : trunc_index}
     ExtensionAlong f P d)
   -> (IsConnMap n f).
 Proof.
-  intros Hf b X ? d.
+  intros Hf b. apply isconnected_from_elim. intros X ? d.
   set (P := fun (b':B) => (b' = b) -> X).
   assert (forall b', IsTrunc n (P b')) by (intros; apply trunc_forall).
   set (dP := (fun (a:A) (p:f a = b) => (d (a;p)))
@@ -230,11 +265,9 @@ Defined.
 Global Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
  `{IsConnMap n _ _ (unit_name a0)} : IsConnected (trunc_S n) A | 1000.
 Proof.
+  apply isconnected_from_elim.
   intros C HC f. exists (f a0).
-(* TODO: try to use [refine] or similar to get more concise? *)
-  apply (conn_map_elim (unit_name a0)).
-    intros b; apply HC.
-  apply (fun _ => 1).
+  refine (conn_map_elim (unit_name a0) _ (fun _ => 1)).
 Defined.
 
 Global Instance conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
