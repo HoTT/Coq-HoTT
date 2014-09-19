@@ -76,11 +76,11 @@ Section TruncationModality.
 
   Definition equiv_tr (A : Type) `{IsTrunc n A}
   : A <~> Trunc n A
-  := BuildEquiv _ _ (@tr n A) (fst (trunc_iff_isequiv_truncation A) _).
+  := BuildEquiv _ _ (@tr n A) _.
 
   Definition untrunc_istrunc {A : Type} `{IsTrunc n A}
   : Trunc n A -> A
-  := (equiv_tr A)^-1.
+  := (@tr n A)^-1.
 
   (** ** Functoriality *)
 
