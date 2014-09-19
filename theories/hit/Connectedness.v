@@ -72,7 +72,7 @@ Class IsConnMap (n : trunc_index) {A B : Type} (f : A -> B)
 (** Surjections are the (-1)-connected maps, but they can be characterized more simply since an inhabited hprop is automatically contractible. *)
 Notation IsSurjection := (IsConnMap -1).
 
-Definition issurj {A B} (f : A -> B) :
+Definition BuildIsSurjection {A B} (f : A -> B) :
   (forall b, merely (hfiber f b)) -> IsSurjection f.
 Proof.
   intros H b; refine (contr_inhabited_hprop _ _).

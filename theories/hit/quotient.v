@@ -181,7 +181,7 @@ Defined.
 (** From Ch6 *)
 Theorem quotient_surjective: IsSurjection (class_of _).
 Proof.
-  apply issurj.
+  apply BuildIsSurjection.
   apply (quotient_ind (fun y => merely (hfiber (class_of R) y))); try exact _.
   intro x. apply tr. by exists x.
 Defined.
