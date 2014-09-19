@@ -419,22 +419,3 @@ Ltac destruct_head_hnf_matcher T HT :=
   end.
 Ltac destruct_head_hnf T := destruct_all_matches ltac:(destruct_head_hnf_matcher T).
 Ltac destruct_head_hnf' T := destruct_all_matches' ltac:(destruct_head_hnf_matcher T).
-
-(** [set_evars] will remove any evars from the goal, placing them in the context *)
-(** We must work around https://coq.inria.fr/bugs/show_bug.cgi?id=3638 *)
-Ltac set_evars :=
-  repeat match goal with
-           | [ |- context[?e] ]
-             => is_evar e;
-               let e' := fresh "e" in
-               pose (e' := e);
-                 pattern e;
-                 let P := match goal with |- ?P _ => constr:P end in
-                 change (P e'); cbn beta
-         end.
-
-(** [subst_evars] reverses [set_evars] *)
-Ltac subst_evars :=
-  repeat match goal with
-           | [ H := ?e |- _ ] => is_evar e; subst H
-         end.

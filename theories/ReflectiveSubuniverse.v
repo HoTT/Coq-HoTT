@@ -97,7 +97,7 @@ Section IsEquiv.
   Context {fs : Funext} {subU : ReflectiveSubuniverse}.
   Context (P Q : Type) {Q_inO : inO Q}.
 
-  Global Instance isequiv_o_O_unit
+  Global Instance isequiv_o_O_unit 
   : IsEquiv (fun g : O P -> Q => g o O_unit P).
   Proof.
     refine (BuildIsEquiv _ _ _ O_rectnd _ _ _).
@@ -135,7 +135,7 @@ Section ReflectiveSubuniverseFromIsEquiv.
   Context (subU : UnitSubuniverse).
   Let precomp := fun P Q => (fun g : O P -> Q => g o O_unit P).
   Context (H : forall {P Q : Type} {Q_inO : inO Q}, IsEquiv (precomp P Q)).
-
+  
   Local Definition O_rectnd' {P Q : Type} {Q_inO : inO Q} (f : P -> Q)
   : O P -> Q
   := (precomp P Q)^-1 f.
@@ -217,33 +217,17 @@ Section Reflective_Subuniverse.
       { symmetry; apply O_rectnd_beta. } }
   Defined.
 
-  (** There are a few interesting ideas that go into making a proof of functoriality.
-
-      One is that to prove [f x = g x] for [x : O T], it sufficies to prove this for [x] of the form [O_unit T _].  To implement this, we find such an [x] in the context, and [revert] it so that we can have Ltac figure out the functions [f] and [g] for us without having to do higher order unification.  Then we use [O_rectpaths], which expresses the fact.
-
-      The other interesting ideas are cleanly expressed by [O_rectnd_beta], [eisretr], and [eissect].
-
-      The remaining components of this tactic trivial plumbing. *)
-  Local Ltac reflective_subuniverse_functor_t :=
-    repeat match goal with
-             | _ => intro
-             | _ => reflexivity
-             | [ H := _ |- _ ] => subst H
-             | _ => progress cbn
-             | [ x : O _ |- _ = _ ]
-               => revert x;
-                 match goal with
-                   | [ |- forall x : O ?T, @?f x = @?g x ] => refine (O_rectpaths f g _); cbn
-                 end
-             | _ => progress rewrite ?O_rectnd_beta, ?eisretr, ?eissect (* TODO: Do we want to make this use [transport]/[concat], so we can keep the proof term around? *)
-           end.
-
   (** If [T] is in the subuniverse, then [O_unit T] is an equivalence. *)
   Global Instance isequiv_O_unit_inO (T : Type) {T_inO : inO T} : IsEquiv (O_unit T).
   Proof.
     pose (g := O_rectnd idmap).
-    refine (isequiv_adjointify (O_unit T) g _ _);
-      abstract reflective_subuniverse_functor_t.
+    refine (isequiv_adjointify (O_unit T) g _ _).
+    - refine (O_rectpaths (O_unit T o g) idmap _).
+      intros x; unfold compose.
+      apply ap.
+      apply O_rectnd_beta.
+    - intros x.
+      apply O_rectnd_beta.
   Defined.
 
   Definition equiv_O_unit (T : Type) {T_inO : inO T} : T <~> O T
@@ -252,7 +236,7 @@ Section Reflective_Subuniverse.
   Section Functor.
 
     (** In this section, we see that [O] is a functor. *)
-
+    
     Definition O_functor {A B : Type} (f : A -> B) : O A -> O B
       := O_rectnd (O_unit B o f).
 
@@ -260,16 +244,22 @@ Section Reflective_Subuniverse.
     Definition O_functor_compose {A B C : Type} (f : A -> B) (g : B -> C)
     : (O_functor (g o f)) == (O_functor g) o (O_functor f).
     Proof.
-      unfold O_functor; reflective_subuniverse_functor_t.
-    Qed.
+      apply O_rectpaths; intros x; unfold compose.
+      refine (O_rectnd_beta (O_unit C o g o f) x @ _).
+      transitivity (O_functor g (O_unit B (f x))).
+      - symmetry. exact (O_rectnd_beta (O_unit C o g) (f x)).
+      - apply ap; symmetry.
+        exact (O_rectnd_beta (O_unit B o f) x).
+    Defined.
 
     (** Functoriality on homotopies *)
     Definition O_functor_homotopy {A B : Type} (f g : A -> B) (pi : f == g)
     : O_functor f == O_functor g.
     Proof.
-      unfold O_functor; apply O_rectnd_homotopy.
-      intro x; cbn.
-      apply ap.
+      refine (O_rectpaths _ _ _); intros x.
+      refine (O_rectnd_beta (O_unit B o f) x @ _).
+      refine (_ @ (O_rectnd_beta (O_unit B o g) x)^).
+      unfold compose; apply ap.
       apply pi.
     Defined.
 
@@ -312,10 +302,19 @@ Section Reflective_Subuniverse.
     Global Instance isequiv_O_functor {A B} (f : A -> B) `{IsEquiv _ _ f}
     : IsEquiv (O_functor f).
     Proof.
-      refine (isequiv_adjointify (O_functor f) (O_functor f^-1) _ _);
-      unfold O_functor; abstract reflective_subuniverse_functor_t.
+      refine (isequiv_adjointify (O_functor f) (O_functor f^-1) _ _).
+      - intros x.
+        refine ((O_functor_compose _ _ x)^ @ _).
+        refine (O_functor_homotopy _ idmap _ x @ _).
+        + intros y; apply eisretr.
+        + apply O_functor_idmap.
+      - intros x.
+        refine ((O_functor_compose _ _ x)^ @ _).
+        refine (O_functor_homotopy _ idmap _ x @ _).
+        + intros y; apply eissect.
+        + apply O_functor_idmap.
     Defined.
-
+      
     Definition equiv_O_functor {A B} (f : A <~> B)
     : O A <~> O B
     := BuildEquiv _ _ (O_functor f) _.
@@ -325,8 +324,11 @@ Section Reflective_Subuniverse.
                (f : A -> B) (g : B -> C)
     : g o O_rectnd f == O_rectnd (g o f).
     Proof.
-      reflective_subuniverse_functor_t.
-    Qed.
+      refine (O_rectpaths _ _ _); intros x; unfold compose.
+      transitivity (g (f x)).
+      - apply ap. apply O_rectnd_beta.
+      - symmetry. exact (O_rectnd_beta (g o f) x).
+    Defined.
 
   End Functor.
 
@@ -433,7 +435,7 @@ Section Reflective_Subuniverse.
           + symmetry; apply O_unit_inv_natural.
           + transitivity ((O_unit B)^-1 (O_functor g (O_unit A x))).
             * apply ap, e.
-            * apply O_unit_inv_natural. }
+            * apply O_unit_inv_natural. } 
         { apply ap, eissect. }
     Defined.
 
@@ -489,10 +491,10 @@ Section Reflective_Subuniverse.
       apply inO_unit_retract with (mu := fun x => tt).
       exact (@contr Unit _).
     Defined.
-
+    
     (** ** Dependent product and arrows *)
     (** Theorem 7.7.2 *)
-    Global Instance inO_forall {fs : Funext} (A:Type) (B:A -> Type)
+    Global Instance inO_forall {fs : Funext} (A:Type) (B:A -> Type) 
     : (forall x, (inO (B x)))
       -> (inO (forall x:A, (B x))).
     Proof.
@@ -520,7 +522,7 @@ Section Reflective_Subuniverse.
       apply inO_unit_retract with
         (mu := fun X => (@O_rectnd _ (A * B) A _ fst X , O_rectnd snd X)).
       intros [a b]; apply path_prod; simpl.
-      - exact (O_rectnd_beta fst (a,b)).
+      - exact (O_rectnd_beta fst (a,b)). 
       - exact (O_rectnd_beta snd (a,b)).
     Defined.
 
@@ -619,13 +621,13 @@ Section Reflective_Subuniverse.
     : inO (x=y).
     Proof.
       refine (inO_unit_retract _ _ _); intro u.
-      - assert (p : (fun _ : O (x=y) => x) == (fun _=> y)).
+      - assert (p : (fun _ : O (x=y) => x) == (fun _=> y)). 
         { refine (O_rectpaths _ _ _); unfold compose; simpl.
           intro v; exact v. }
         exact (p u).
       - hnf.
         rewrite O_rectpaths_beta; reflexivity.
     Qed.
-
+    
   End Types.
 End Reflective_Subuniverse.
