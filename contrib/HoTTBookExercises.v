@@ -367,12 +367,21 @@ Defined.
 (* ================================================== ex:prop-endocontr *)
 (** Exercise 3.4 *)
 
-
+Lemma Book_3_4_solution_1 `{Funext} (A : Type) : IsHProp A <-> Contr (A -> A).
+Proof.
+  split.
+  intro isHProp_A.
+  exists idmap.
+  apply allpath_hprop. (* automagically, from IsHProp A *)
+  intro contr_AA. 
+  apply hprop_allpath; intros a1 a2.
+  exact (ap10 (path_contr (fun x:A => a1) (fun x:A => a2)) a1).
+Defined.
 
 (* ================================================== ex:prop-inhabcontr *)
 (** Exercise 3.5 *)
 
-
+Definition Book_3_5_solution_1 := @HoTT.HProp.equiv_hprop_inhabited_contr.
 
 (* ================================================== ex:lem-mereprop *)
 (** Exercise 3.6 *)
@@ -1303,3 +1312,6 @@ Definition Book_7_13_part_ii := @HoTT.hit.PropositionalFracture.closed_modality.
 
 (* ================================================== ex:pseudo-ordinals *)
 (** Exercise 11.18 *)
+
+
+
