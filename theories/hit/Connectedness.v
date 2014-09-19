@@ -115,6 +115,11 @@ Proof.
   refine (@contr_trunc_conn n _ _ _).
 Defined.
 
+Definition isequiv_surj_emb {A B} (f : A -> B)
+           `{IsSurjection f} `{IsEmbedding f}
+: IsEquiv f
+:= isequiv_conn_trunc f.
+
 (** ** Extensions
 
 Elimination properties can be nicely phrased as the existence of extensions along maps of sections. This is just the traditional categorical language of fillers for commutative squares, restricted to the case where the bottom of the square is the identity; type-theoretically, this approach is slightly more convenient. *)
