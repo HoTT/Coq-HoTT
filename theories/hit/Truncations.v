@@ -122,12 +122,12 @@ Definition hor (P Q : Type) : Type := merely (P + Q).
 
 (** ** Tactic to remove truncations in hypotheses if possible. *)
 Ltac strip_truncations :=
-  (** get the type of the goal *)
-  let G := match goal with |- ?G => constr:(G) end in
-    (** search for truncated hypotheses *)
-    progress repeat match goal with
-                      | [ T : _ |- _ ]
-                        => revert T;
-                          refine (@Trunc_rect_nondep _ _ _ _ _);
-                          intro T
-                    end.
+  (** search for truncated hypotheses *)
+  progress repeat match goal with
+                    | [ T : _ |- _ ]
+                      => revert T;
+                        refine (@Trunc_rect _ _ _ _ _);
+                        (** ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated *)
+                        [];
+                        intro T
+                  end.
