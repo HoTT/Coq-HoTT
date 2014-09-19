@@ -386,12 +386,25 @@ Definition Book_3_5_solution_1 := @HoTT.HProp.equiv_hprop_inhabited_contr.
 (* ================================================== ex:lem-mereprop *)
 (** Exercise 3.6 *)
 
-
+Lemma Book_3_6_solution_1 (A : Type) : IsHProp A -> IsHProp (A + ~A).
+Proof.
+  intro isHProp_A.
+  apply hprop_allpath. intros x y.
+  destruct x as [a1|n1]; destruct y as [a2|n2]; apply path_sum; try apply allpath_hprop. 
+  exact (n2 a1). exact (n1 a2).
+Defined.
 
 (* ================================================== ex:disjoint-or *)
 (** Exercise 3.7 *)
 
-
+Lemma Book_3_7_solution_1 (A B: Type) : 
+  IsHProp A -> IsHProp B -> ~(A*B) -> IsHProp (A+B).
+Proof.
+  intros isHProp_A isProp_B nab.
+  apply hprop_allpath. intros x y.
+  destruct x as [a1|b1]; destruct y as [a2|b2]; apply path_sum; try apply allpath_hprop. 
+  exact (nab (a1,b2)). exact (nab (a2,b1)).
+Defined.
 
 (* ================================================== ex:brck-qinv *)
 (** Exercise 3.8 *)
