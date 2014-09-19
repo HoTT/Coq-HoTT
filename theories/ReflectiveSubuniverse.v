@@ -205,6 +205,18 @@ Defined.
 Section Reflective_Subuniverse.
   Context {subU : ReflectiveSubuniverse}.
 
+  (** Functoriality of [O_rectnd] homotopies *)
+  Definition O_rectnd_homotopy {P Q} {Q_inO : inO Q} (f g : P -> Q) (pi : f == g)
+  : O_rectnd f == O_rectnd g.
+  Proof.
+    apply O_rectpaths; intro x.
+    etransitivity.
+    { apply O_rectnd_beta. }
+    { etransitivity.
+      { exact (pi _). }
+      { symmetry; apply O_rectnd_beta. } }
+  Defined.
+
   (** If [T] is in the subuniverse, then [O_unit T] is an equivalence. *)
   Global Instance isequiv_O_unit_inO (T : Type) {T_inO : inO T} : IsEquiv (O_unit T).
   Proof.
@@ -515,7 +527,6 @@ Section Reflective_Subuniverse.
     Defined.
 
     (** We show that [OA*OB] has the same universal property as [O(A*B)] *)
-    (* TODO: Can this be done without funext? *)
 
     Definition equiv_O_prod_unit_precompose
                {fs : Funext} (A B C : Type) {C_inO : inO C}
@@ -530,35 +541,36 @@ Section Reflective_Subuniverse.
 
     (** The preceding equivalence turns out to be actually (judgmentally!) precomposition with the following function. *)
     Definition O_prod_unit (A B : Type) : A * B -> O A * O B
-      := fun ab => (O_unit A (fst ab) , O_unit B (snd ab)).
+      := functor_prod (O_unit A) (O_unit B).
 
     (** From this, we can define the comparison map for products, and show that precomposing with it is also an equivalence. *)
     Definition O_prod_cmp (A B : Type) : O (A * B) -> O A * O B
       := O_rectnd (O_prod_unit A B).
 
+    Global Instance isequiv_O_prod_cmp (A B : Type)
+    : IsEquiv (O_prod_cmp A B).
+    Proof.
+      refine (isequiv_adjointify _ _ _ _).
+      { apply prod_rect; intro a.
+        apply O_rectnd; intro b; revert a.
+        apply O_rectnd; intro a.
+        apply O_unit.
+        exact (a, b). }
+      { unfold prod_rect, O_prod_cmp, O_prod_unit.
+        intros [oa ob].
+        revert ob; refine (O_rectpaths _ _ _); intros b.
+        revert oa; refine (O_rectpaths _ _ _); intros a.
+        cbn. abstract (repeat rewrite O_rectnd_beta; reflexivity). }
+      { unfold prod_rect, O_prod_cmp, O_prod_unit.
+        refine (O_rectpaths _ _ _); intros [a b]; cbn.
+        abstract (repeat (rewrite O_rectnd_beta; cbn); reflexivity). }
+    Defined.
+
     Definition isequiv_O_prod_cmp_precompose
       {fs : Funext} (A B C : Type) {C_inO : inO C}
     : IsEquiv (fun h : O A * O B -> C => h o O_prod_cmp A B).
     Proof.
-      unfold O_prod_cmp.
-      refine (isequiv_homotopic
-                ((equiv_O_rectnd (A*B) C) o
-                 (equiv_O_prod_unit_precompose A B C)) _ _).
-      intros h; apply path_arrow.
-      refine (O_rectpaths _ _ _); intros x.
-      unfold compose; simpl.
-      transitivity (h (O_prod_unit A B x)).
-      - refine (O_rectnd_beta _ _).
-      - symmetry; apply ap; refine (O_rectnd_beta _ _).
-    Defined.
-
-    (** Thus, by the Yoneda lemma, the functor [O] preserves products. *)
-    Global Instance isequiv_O_prod_cmp {fs : Funext} (A B : Type)
-    : IsEquiv (O_prod_cmp A B).
-    Proof.
-      apply isequiv_isequiv_precompose;
-      apply isequiv_O_prod_cmp_precompose;
-      exact _.
+      apply isequiv_precompose; exact _.
     Defined.
 
     Definition equiv_O_prod_cmp {fs : Funext} (A B : Type)
