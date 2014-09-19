@@ -330,29 +330,6 @@ Section Reflective_Subuniverse.
 
   End Functor.
 
-  (** For some functoriality proofs, we need [O_rectnd_postcompose] in addition to [O_rectnd_beta], [eisretr], and [eissect].  Coq isn't smart neough to infer the arguments to [O_rectnd_postcompose], so we do this manually in Ltac. *)
-  Local Ltac reflective_subuniverse_functor_rewrite_t :=
-    repeat match goal with
-             | _ => progress rewrite ?O_rectnd_beta, ?eisretr, ?eissect
-             | [ |- context[?g (O_rectnd ?f ?x)] ] => simpl rewrite (O_rectnd_postcompose f g x)
-           end.
-
-  (** We really just want to be using [setoid_rewrite] here, but we don't have it, so we need to manually rewrite with homotopies.  To do this, we [apply O_rectnd_homotopy] after an [etransitivity], hide the resulting evar from Coq with [set_evars] (so that it's not instantiated in a way that causes Coq to loop), and then see if we can do any rewrites (possibly under more binders).  If we can, we consider it a success, and use [reflexivity] (after [subst_evars] to get Coq to do higher order unification, which it only does with explicit evars and not simply things that unfold to evars). *)
-  Local Ltac reflective_subuniverse_functor_rewrite_under_binders_t :=
-    repeat first [ progress reflective_subuniverse_functor_rewrite_t
-                 | etransitivity;
-                   [ apply O_rectnd_homotopy; intro;
-                     set_evars;
-                     progress reflective_subuniverse_functor_rewrite_under_binders_t;
-                     subst_evars;
-                     reflexivity
-                   | ]
-                 | reflexivity ].
-  (** Now we put together the tactic we'll be using from here on, which does both the rewriting under binders, as well as what we were already doing in [reflective_subuniverse_functor_t]. *)
-  Local Ltac reflective_subuniverse_functor_t2 :=
-    repeat first [ progress reflective_subuniverse_functor_t
-                 | progress reflective_subuniverse_functor_rewrite_under_binders_t ].
-
   Section Replete.
 
     (** An equivalent formulation of repleteness is that a type lies in the subuniverse as soon as its unit map is an equivalence. *)
@@ -577,12 +554,14 @@ Section Reflective_Subuniverse.
         apply O_rectnd; intro a.
         apply O_unit.
         exact (a, b). }
-      { intro x.
-        unfold prod_rect, O_prod_cmp, O_prod_unit.
-        abstract (destruct x; reflective_subuniverse_functor_t2). }
-      { intro.
-        unfold prod_rect, O_prod_cmp, O_prod_unit.
-        abstract reflective_subuniverse_functor_t2. }
+      { unfold prod_rect, O_prod_cmp, O_prod_unit.
+        intros [oa ob].
+        revert ob; refine (O_rectpaths _ _ _); intros b.
+        revert oa; refine (O_rectpaths _ _ _); intros a.
+        cbn. abstract (repeat rewrite O_rectnd_beta; reflexivity). }
+      { unfold prod_rect, O_prod_cmp, O_prod_unit.
+        refine (O_rectpaths _ _ _); intros [a b]; cbn.
+        abstract (repeat (rewrite O_rectnd_beta; cbn); reflexivity). }
     Defined.
 
     Definition isequiv_O_prod_cmp_precompose
