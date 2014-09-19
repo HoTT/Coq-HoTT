@@ -145,13 +145,15 @@ Section slice_category_projection_functor.
   Local Open Scope functor_scope.
   Local Open Scope category_scope.
 
+  Local Notation inv D := (@ExponentialLaws.Law1.Functors.inverse _ terminal_category _ _ _ D).
+
   (** ** Functor [(C → D)ᵒᵖ → D → (cat / C)] *)
   Definition slice_category_projection_functor
   : object (((C -> D)^op) -> (D -> (Cat / ((C; PC) : Cat)))).
   Proof.
     refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).
     refine (_ o (Functor.Identity.identity (C -> D)^op,
-                 ExponentialLaws.Law1.Functors.inverse D)).
+                 inv D)).
     refine (_ o @comma_category_projection_functor _ P HF C 1 D PC1 P_comma).
     refine (cat_over_induced_functor _).
     hnf.
@@ -163,7 +165,7 @@ Section slice_category_projection_functor.
   Proof.
     refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).
     refine (_ o (Functor.Identity.identity (C -> D)^op,
-                 ExponentialLaws.Law1.Functors.inverse D)).
+                 inv D)).
     refine (_ o @comma_category_projection_functor _ P HF C 1 D PC1 P_comma).
     refine (cat_over_induced_functor _).
     hnf.
@@ -176,7 +178,7 @@ Section slice_category_projection_functor.
   Proof.
     refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).
     refine (_ o (Functor.Identity.identity (C -> D),
-                 (ExponentialLaws.Law1.Functors.inverse D)^op)).
+                 (inv D)^op)).
     refine (_ o ProductLaws.Swap.functor _ _).
     refine (_ o @comma_category_projection_functor _ P HF 1 C D P1C P_comma').
     refine (cat_over_induced_functor _).
@@ -189,7 +191,7 @@ Section slice_category_projection_functor.
   Proof.
     refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).
     refine (_ o (Functor.Identity.identity (C -> D),
-                 (ExponentialLaws.Law1.Functors.inverse D)^op)).
+                 (inv D)^op)).
     refine (_ o ProductLaws.Swap.functor _ _).
     refine (_ o @comma_category_projection_functor _ P HF 1 C D P1C P_comma').
     refine (cat_over_induced_functor _).

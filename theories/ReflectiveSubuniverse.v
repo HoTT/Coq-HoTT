@@ -428,15 +428,13 @@ Section Reflective_Subuniverse.
       : f == g.
     Proof.
       intros x.
-      transitivity (f ((O_unit A)^-1 (O_unit A x))).
-      - apply ap; symmetry; apply eissect.
-      - transitivity (g ((O_unit A)^-1 (O_unit A x))).
-        { transitivity ((O_unit B)^-1 (O_functor f (O_unit A x))).
-          + symmetry; apply O_unit_inv_natural.
-          + transitivity ((O_unit B)^-1 (O_functor g (O_unit A x))).
-            * apply ap, e.
-            * apply O_unit_inv_natural. } 
-        { apply ap, eissect. }
+      refine (ap f (eissect (O_unit A) x)^ @ _).
+      refine (_ @ ap g (eissect (O_unit A) x)).
+      transitivity ((O_unit B)^-1 (O_functor f (O_unit A x))).
+      + symmetry; apply O_unit_inv_natural.
+      + transitivity ((O_unit B)^-1 (O_functor g (O_unit A x))).
+        * apply ap, e.
+        * apply O_unit_inv_natural.
     Defined.
 
     (** Any map to a type in the subuniverse that is inverted by [O] must be equivalent to [O_unit].  More precisely, the type of such maps is contractible. *)

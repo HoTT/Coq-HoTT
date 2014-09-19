@@ -316,8 +316,8 @@ Section slice_category.
   Variable a : C.
   Variable S : Functor A C.
 
-  Definition slice_category := comma_category S (Functors.from_terminal C a).
-  Definition coslice_category := comma_category (Functors.from_terminal C a) S.
+  Definition slice_category := comma_category S (!a).
+  Definition coslice_category := comma_category (!a) S.
 
   (** [x ↓ F] is a coslice category; [F ↓ x] is a slice category; [x ↓ F] deals with morphisms [x -> F y]; [F ↓ x] has morphisms [F y -> x] *)
 End slice_category.
@@ -340,7 +340,7 @@ End arrow_category.
 
 Definition CC_Functor' (C : PreCategory) (D : PreCategory) := Functor C D.
 Coercion cc_functor_from_terminal' (C : PreCategory) (x : C) : CC_Functor' _ C
-  := Functors.from_terminal C x.
+  := (!x)%functor.
 Coercion cc_identity_functor' (C : PreCategory) : CC_Functor' C C
   := 1%functor.
 Global Arguments CC_Functor' / .

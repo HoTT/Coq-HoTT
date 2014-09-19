@@ -386,8 +386,9 @@ Instance isequiv_pr1_contr {A} {P : A -> Type}
 Proof.
   refine (isequiv_adjointify (@pr1 A P)
                              (fun a => (a ; center (P a))) _ _).
-  intros a; reflexivity.
-  intros [a p]. apply path_sigma' with 1, contr.
+  - intros a; reflexivity.
+  - intros [a p].
+    refine (path_sigma' P 1 (contr _)).
 Defined.
 
 Definition equiv_sigma_contr {A : Type} (P : A -> Type)
