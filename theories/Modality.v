@@ -24,11 +24,7 @@ Arguments O_rect_beta {Modality} {A} B {B_inO} f a.
 
 (** See ReflectiveSubuniverse.v for explanation of how to use (and how not to use) [Modality] as a typeclass. *)
 
-Global Existing Instance mod_usubu.
-(* We don't declare this as a coercion, since soon we're going to declare a coercion from [Modality] to [ReflectiveSubuniverse]; then we'll get this coercion automatically as a composite. *)
-(* Coercion mod_usubu : Modality >-> UnitSubuniverse. *)
-Global Existing Instance mod_replete.
-Global Existing Instance inO_paths.
+(* We don't declare [mod_usubu] or [mod_replete] globally as coercions or instances, since soon we're going to declare a coercion and instance from [Modality] to [ReflectiveSubuniverse] and get these as composites. *)
 
 (** Our definition of modality is slightly different from the one in the book, which requires an induction principle only into families of the form [fun oa => O (B oa)], and similarly only that path-spaces of types [O A] are modal, where "modal" means that the unit is an equivalence.  This is equivalent, roughly since every modal type [A] (in this sense) is equivalent to [O A].
 
@@ -139,6 +135,10 @@ Section ORectEquiv.
   Context {fs : Funext}.
   Context {mod : Modality}.
 
+  Local Existing Instance mod_usubu.
+  Local Existing Instance mod_replete.
+  Local Existing Instance inO_paths.
+
   Section ORectEquivData.
 
     Context {A : Type} (B : O A -> Type) {B_inO : forall a, inO (B a)}.
@@ -174,6 +174,12 @@ End ORectEquiv.
 
  Note also that our choice of how to define reflective subuniverses differently from the book enables us to prove this without using funext. *)
 
+Section M2RS.
+
+Local Existing Instance mod_usubu.
+Local Existing Instance mod_replete.
+Local Existing Instance inO_paths.
+
 (** Corollary 7.7.8, part 1 *)
 Global Instance modality_to_reflective_subuniverse (mod : Modality)
 : ReflectiveSubuniverse
@@ -182,6 +188,12 @@ Global Instance modality_to_reflective_subuniverse (mod : Modality)
      (fun P Q H => O_rect_beta (fun _ => Q))
      (fun P Q H g h => O_rect (fun y => g y = h y))
      (fun P Q H g h => O_rect_beta (fun y => g y = h y)).
+
+Global Instance replete_modality (mod : Modality)
+: Replete (modality_to_reflective_subuniverse mod)
+:= @mod_replete mod.
+
+End M2RS.
 
 Coercion modality_to_reflective_subuniverse : Modality >-> ReflectiveSubuniverse.
 
