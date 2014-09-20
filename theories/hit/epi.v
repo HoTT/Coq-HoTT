@@ -1,7 +1,7 @@
 Require Import Basics.
 Require Import types.Universe types.Unit types.Forall types.Arrow types.Sigma types.Paths.
 Require Import HProp Misc TruncType HSet UnivalenceImpliesFunext.
-Require Import hit.minus1Trunc hit.Pushout hit.Truncations.
+Require Import hit.Pushout hit.Truncations hit.Connectedness.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
@@ -68,24 +68,22 @@ Proof.
     exact (ap pr1 ((contr (g; 1))^ @ contr xy)). }
 Defined.
 
-Definition issurj {X Y} (f:X->Y) := forall y:Y , hexists (fun x => (f x) = y).
-
 Section cones.
   Lemma isepi'_contr_cone `{Funext} {A B : hSet} (f : A -> B) : isepi' f -> Contr (setcone f).
   Proof.
     intros hepi.
     exists (setcone_point _).
     pose (alpha1 := @pp A B Unit f (const tt)).
-    pose (tot:= { h : B -> setcone f & truncation_incl o push o inl o f = h o f }).
-    pose (l := (truncation_incl o push o inl; idpath) : tot).
-    pose (r := (@const B (setcone f) (setcone_point _); (ap (fun f => @truncation_incl 0 _ o f) (path_forall _ _ alpha1))) : tot).
+    pose (tot:= { h : B -> setcone f & tr o push o inl o f = h o f }).
+    pose (l := (tr o push o inl; idpath) : tot).
+    pose (r := (@const B (setcone f) (setcone_point _); (ap (fun f => @tr 0 _ o f) (path_forall _ _ alpha1))) : tot).
     subst tot.
-    assert (X : l = r) by (pose (hepi {| setT := setcone f |} (truncation_incl o push o inl)); apply path_contr).
+    assert (X : l = r) by (pose (hepi {| setT := setcone f |} (tr o push o inl)); apply path_contr).
     subst l r.
 
     pose (I0 b := ap10 (X ..1) b).
-    refine (Truncation_rect _ _).
-    pose (fun a : B + Unit => (match a as a return setcone_point _ = truncation_incl (push a) with
+    refine (Trunc_rect _ _).
+    pose (fun a : B + Unit => (match a as a return setcone_point _ = tr (push a) with
                                  | inl a' => (I0 a')^
                                  | inr tt => idpath
                                end)) as I0f.
@@ -95,7 +93,7 @@ Section cones.
     unfold setcone_point.
     subst I0. simpl.
     pose (X..2) as p. simpl in p. rewrite transport_precompose in p.
-    assert (H':=concat (ap (fun x => ap10 x a) p) (ap10_ap_postcompose truncation_incl (path_arrow pushl pushr pp) _)).
+    assert (H':=concat (ap (fun x => ap10 x a) p) (ap10_ap_postcompose tr (path_arrow pushl pushr pp) _)).
     rewrite ap10_path_arrow in H'.
     clear p.
     (** Apparently [pose; clearbody] is only ~.8 seconds, while [pose proof] is ~4 seconds? *)
@@ -108,15 +106,14 @@ Section cones.
   Qed.
 End cones.
 
-Lemma issurj_isepi {X Y} (f:X->Y): issurj f -> isepi f.
+Lemma issurj_isepi {X Y} (f:X->Y): IsSurjection f -> isepi f.
 intros sur ? ? ? ep. apply path_forall. intro y.
-specialize (sur y).
-apply (minus1Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
+specialize (sur y). pose (center (merely (hfiber f y))).
+apply (Trunc_rect_nondep (n:=-1) (A:=(sigT (fun x : X => f x = y))));
   try assumption.
  intros [x p]. set (p0:=apD10 ep x).
  transitivity (g (f x)). by apply ap.
  transitivity (h (f x));auto with path_hints. by apply ap.
-intros. by apply @set_path2.
 Qed.
 
 (** Old-style proof using polymorphic Omega. Needs resizing for the isepi proof to live in the
@@ -147,7 +144,7 @@ Section isepi_issurj.
   Definition fam (c : setcone f) : hProp.
   Proof.
     pose (fib y := hp (hexists (fun x : X => f x = y)) _).
-    apply (fun f => @Truncation_rect_nondep _ _ hProp _ f c).
+    apply (fun f => @Trunc_rect_nondep _ _ hProp _ f c).
     refine (pushout_rectnd hProp
                            (fun x : Y + Unit =>
                               match x with
@@ -156,21 +153,21 @@ Section isepi_issurj.
                               end)
                            (fun x => _)).
     (** Prove that the truncated sigma is equivalent to Unit *)
-    pose (contr_inhabited_hprop (fib (f x)) (min1 (x; idpath))) as i.
+    pose (contr_inhabited_hprop (fib (f x)) (tr (x; idpath))) as i.
     apply path_hprop. simpl. simpl in i.
     refine (path_universe_uncurried _).
     apply (equiv_contr_unit).
   Defined.
 
-  Lemma isepi_issurj : issurj f.
+  Lemma isepi_issurj : IsSurjection f.
   Proof.
     intros y.
     pose (i := isepi'_contr_cone _ epif).
 
     assert (X0 : forall x : setcone f, fam x = fam (setcone_point f)).
     { intros. apply contr_dom_equiv. apply i. }
-    specialize (X0 (truncation_incl (push (inl y)))). simpl in X0.
-    exact (transport idmap (ap hproptype X0)^ tt).
+    specialize (X0 (tr (push (inl y)))). simpl in X0.
+    exact (transport Contr (ap hproptype X0)^ _).
   Defined.
 End isepi_issurj.
 

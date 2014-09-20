@@ -1,7 +1,7 @@
 Require Import Basics.
 Require Import types.Universe.
 Require Import HSet UnivalenceImpliesFunext.
-Require Import hit.epi hit.unique_choice.
+Require Import hit.epi hit.unique_choice hit.Truncations.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
@@ -30,7 +30,7 @@ Section iso.
     pose proof (unique_choice
                   (fun y x => f x = y)
                   _
-                  (fun y => (surjf y, atmost1P_isinj injf y)))
+                  (fun y => (@center _ (surjf y), atmost1P_isinj injf y)))
       as H_unique_choice.
     apply (isequiv_adjointify _ H_unique_choice.1).
     - intro.

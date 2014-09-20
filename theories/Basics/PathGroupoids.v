@@ -613,6 +613,35 @@ Definition transportD {A : Type} (B : A -> Type) (C : forall a:A, B a -> Type)
   :=
   match p with idpath => z end.
 
+(** *** [ap] for multivariable functions *)
+
+Definition ap011 {A B C} (f : A -> B -> C) {x x' y y'} (p : x = x') (q : y = y')
+: f x y = f x' y'
+:= ap11 (ap f p) q.
+
+(** It would be nice to have a consistent way to name the different ways in which this can be dependent.  The following are a sort of half-hearted attempt. *)
+
+Definition ap011D {A B C} (f : forall (a:A), B a -> C)
+           {x x'} (p : x = x') {y y'} (q : p # y = y')
+: f x y = f x' y'.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+
+Definition ap01D1 {A B C} (f : forall (a:A), B a -> C a)
+           {x x'} (p : x = x') {y y'} (q : p # y = y')
+: transport C p (f x y) = f x' y'.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+
+Definition apD011 {A B C} (f : forall (a:A) (b:B a), C a b)
+           {x x'} (p : x = x') {y y'} (q : p # y = y')
+: transport (C x') q (transportD B C p y (f x y)) = f x' y'.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+
 (** Transporting along higher-dimensional paths *)
 
 Definition transport2 {A : Type} (P : A -> Type) {x y : A} {p q : x = y}

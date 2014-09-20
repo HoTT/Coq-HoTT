@@ -3,6 +3,10 @@
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
 
 (** ** Type classes *)
+
+(** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
+Local Set Typeclasses Strict Resolution.
+
 Definition relation (A : Type) := A -> A -> Type.
 
 Class Reflexive {A} (R : relation A) :=
@@ -245,6 +249,9 @@ Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g)
 
 Definition ap10 {A B} {f g:A->B} (h:f=g) : f == g
   := apD10 h.
+
+(** For the benefit of readers of the HoTT Book: *)
+Notation happly := ap10 (only parsing).
 
 Definition ap11 {A B} {f g:A->B} (h:f=g) {x y:A} (p:x=y) : f x = g y.
 Proof.

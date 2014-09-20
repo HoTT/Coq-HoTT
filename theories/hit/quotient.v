@@ -1,7 +1,7 @@
 Require Import Basics.
 Require Import types.Universe.
 Require Import HSet HProp UnivalenceImpliesFunext.
-Require Import hit.epi hit.minus1Trunc.
+Require Import hit.epi hit.Truncations hit.Connectedness.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
@@ -126,7 +126,7 @@ Proof.
 intros x y H'.
 pattern (R x y).
 eapply transport. apply in_class_pr.
-pattern (class_of _ x). apply (transport _ (H'^)).
+pattern (class_of R x). apply (transport _ (H'^)).
 apply Hrefl.
 Defined.
 
@@ -170,7 +170,7 @@ quotient_rect_nondep (dclass x') (dequiv0 x') q) dequiv1 _).
 intros. apply iss.
 Defined.
 
-Definition quotient_ind : forall P : quotient _ -> Type,
+Definition quotient_ind : forall P : quotient R -> Type,
 forall (Hprop' : forall x, IsHProp (P (class_of _ x))),
 (forall x, P (class_of _ x)) -> forall y, P y.
 Proof.
@@ -179,14 +179,15 @@ intros. apply Hprop'.
 Defined.
 
 (** From Ch6 *)
-Theorem quotient_surjective: issurj (class_of _).
-unfold issurj. apply (quotient_ind (fun y => hexists (fun x : A => class_of R x = y))).
- apply _.
-intro x. apply min1. by exists x.
+Theorem quotient_surjective: IsSurjection (class_of R).
+Proof.
+  apply BuildIsSurjection.
+  apply (quotient_ind (fun y => merely (hfiber (class_of R) y))); try exact _.
+  intro x. apply tr. by exists x.
 Defined.
 
 (** From Ch10 *)
-Definition quotient_ump' (B:hSet): (quotient _ -> B) ->
+Definition quotient_ump' (B:hSet): (quotient R -> B) ->
   (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
 intro f. exists (compose f (class_of R) ).
 intros. unfold compose. f_ap. by apply related_classes_eq.
@@ -198,7 +199,7 @@ intros [f H'].
 apply (quotient_rect_nondep _ H').
 Defined.
 
-Theorem quotient_ump (B:hSet): (quotient _ -> B) <~>
+Theorem quotient_ump (B:hSet): (quotient R -> B) <~>
   (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
 Proof.
 refine (equiv_adjointify (quotient_ump' B) (quotient_ump'' B) _ _).
@@ -238,7 +239,7 @@ Context (is_ker : forall x y, f x = f y <~> R x y).
 
 Theorem quotient_kernel_factor
   : exists (C : Type) (e : A -> C) (m : C -> B),
-      IsHSet C * issurj e * is_mono m * (f = m o e).
+      IsHSet C * IsSurjection e * IsEmbedding m * (f = m o e).
 Proof.
   pose (C := quotient R).
   (* We put this explicitly in the context so that typeclass
@@ -256,7 +257,7 @@ Proof.
   split. split. split.
   - assumption.
   - apply quotient_surjective.
-  - unfold is_mono. intro u.
+  - intro u.
     apply hprop_allpath.
     assert (H : forall (x y : C) (p : m x = u) (p' : m y = u), x = y).
     { refine (quotient_rect R _ _ _). intro a.

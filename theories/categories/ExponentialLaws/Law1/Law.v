@@ -43,8 +43,8 @@ Section law1.
   Defined.
 
   Lemma law
-  : functor C o inverse C = 1
-    /\ inverse C o functor C = 1.
+  : @functor _ one _ C o inverse C = 1
+    /\ inverse C o @functor _ one _ C = 1.
   Proof.
     split;
     path_functor.

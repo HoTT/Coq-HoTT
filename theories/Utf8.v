@@ -1,5 +1,5 @@
 Require Export Coq.Unicode.Utf8.
-Require Import Basics (*types.Bool*) hit.Circle hit.TwoSphere hit.minus1Trunc hit.Truncations hit.Suspension Modality.
+Require Import Basics (*types.Bool*) hit.Circle hit.TwoSphere hit.Truncations hit.Suspension Modality.
 
 Notation Type₀ := Type0.
 Notation pr₁ := pr1.
@@ -33,25 +33,21 @@ Notation "m ≤ n" := (m <= n)%trunc (at level 70, no associativity) : trunc_sco
 Notation "'S¹'" := S1.
 Notation "'S²'" := S2.
 
-Notation "∥ A ∥₋₂" := (Truncation -2 A).
-Notation "| a |₋₂" := (@truncation_incl -2 _ a) : trunc_scope.
+Notation "∥ A ∥₋₂" := (Trunc -2 A).
+Notation "| a |₋₂" := (@tr -2 _ a) : trunc_scope.
 
-Notation "∥ A ∥₋₁" := (Truncation -1 A).
-Notation "| a |₋₁" := (@truncation_incl -1 _ a) : trunc_scope.
+Notation "∥ A ∥" := (Trunc -1 A) (only parsing).
+Notation "∥ A ∥₋₁" := (Trunc -1 A).
+Notation "| a |₋₁" := (@tr -1 _ a) : trunc_scope.
 
-Notation "∥ A ∥₀" := (Truncation 0 A).
-Notation "| a |₀" := (@truncation_incl 0_ a) : trunc_scope.
+Notation "∥ A ∥₀" := (Trunc 0 A).
+Notation "| a |₀" := (@tr 0 _ a) : trunc_scope.
 
-Notation "∥ A ∥₁" := (Truncation 1 A).
-Notation "| a |₁" := (@truncation_incl 1 _ a) : trunc_scope.
+Notation "∥ A ∥₁" := (Trunc 1 A).
+Notation "| a |₁" := (@tr 1 _ a) : trunc_scope.
 
-Notation "∥ A ∥₂" := (Truncation 2 A).
-Notation "| a |₂" := (@truncation_incl 2 _ a) : trunc_scope.
-
-(* N.B. If you swap which one of these is [only parsing], you should also swap which one is used to display [Truncation -1 A] above. *)
-Notation "∥ A ∥" := (minus1Trunc A) (only parsing).
-Notation "∥ A ∥₋₁" := (minus1Trunc A).
-Notation "| a |₋₁" := (min1 a) : prop_trunc_scope.
+Notation "∥ A ∥₂" := (Trunc 2 A).
+Notation "| a |₂" := (@tr 2 _ a) : trunc_scope.
 
 Notation "∞" := identity_modality.
 

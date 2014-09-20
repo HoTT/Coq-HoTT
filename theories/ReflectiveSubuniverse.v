@@ -205,6 +205,18 @@ Defined.
 Section Reflective_Subuniverse.
   Context {subU : ReflectiveSubuniverse}.
 
+  (** Functoriality of [O_rectnd] homotopies *)
+  Definition O_rectnd_homotopy {P Q} {Q_inO : inO Q} (f g : P -> Q) (pi : f == g)
+  : O_rectnd f == O_rectnd g.
+  Proof.
+    apply O_rectpaths; intro x.
+    etransitivity.
+    { apply O_rectnd_beta. }
+    { etransitivity.
+      { exact (pi _). }
+      { symmetry; apply O_rectnd_beta. } }
+  Defined.
+
   (** If [T] is in the subuniverse, then [O_unit T] is an equivalence. *)
   Global Instance isequiv_O_unit_inO (T : Type) {T_inO : inO T} : IsEquiv (O_unit T).
   Proof.
@@ -416,15 +428,13 @@ Section Reflective_Subuniverse.
       : f == g.
     Proof.
       intros x.
-      transitivity (f ((O_unit A)^-1 (O_unit A x))).
-      - apply ap; symmetry; apply eissect.
-      - transitivity (g ((O_unit A)^-1 (O_unit A x))).
-        { transitivity ((O_unit B)^-1 (O_functor f (O_unit A x))).
-          + symmetry; apply O_unit_inv_natural.
-          + transitivity ((O_unit B)^-1 (O_functor g (O_unit A x))).
-            * apply ap, e.
-            * apply O_unit_inv_natural. } 
-        { apply ap, eissect. }
+      refine (ap f (eissect (O_unit A) x)^ @ _).
+      refine (_ @ ap g (eissect (O_unit A) x)).
+      transitivity ((O_unit B)^-1 (O_functor f (O_unit A x))).
+      + symmetry; apply O_unit_inv_natural.
+      + transitivity ((O_unit B)^-1 (O_functor g (O_unit A x))).
+        * apply ap, e.
+        * apply O_unit_inv_natural.
     Defined.
 
     (** Any map to a type in the subuniverse that is inverted by [O] must be equivalent to [O_unit].  More precisely, the type of such maps is contractible. *)
@@ -515,7 +525,6 @@ Section Reflective_Subuniverse.
     Defined.
 
     (** We show that [OA*OB] has the same universal property as [O(A*B)] *)
-    (* TODO: Can this be done without funext? *)
 
     Definition equiv_O_prod_unit_precompose
                {fs : Funext} (A B C : Type) {C_inO : inO C}
@@ -530,35 +539,36 @@ Section Reflective_Subuniverse.
 
     (** The preceding equivalence turns out to be actually (judgmentally!) precomposition with the following function. *)
     Definition O_prod_unit (A B : Type) : A * B -> O A * O B
-      := fun ab => (O_unit A (fst ab) , O_unit B (snd ab)).
+      := functor_prod (O_unit A) (O_unit B).
 
     (** From this, we can define the comparison map for products, and show that precomposing with it is also an equivalence. *)
     Definition O_prod_cmp (A B : Type) : O (A * B) -> O A * O B
       := O_rectnd (O_prod_unit A B).
 
+    Global Instance isequiv_O_prod_cmp (A B : Type)
+    : IsEquiv (O_prod_cmp A B).
+    Proof.
+      refine (isequiv_adjointify _ _ _ _).
+      { apply prod_rect; intro a.
+        apply O_rectnd; intro b; revert a.
+        apply O_rectnd; intro a.
+        apply O_unit.
+        exact (a, b). }
+      { unfold prod_rect, O_prod_cmp, O_prod_unit.
+        intros [oa ob].
+        revert ob; refine (O_rectpaths _ _ _); intros b.
+        revert oa; refine (O_rectpaths _ _ _); intros a.
+        cbn. abstract (repeat rewrite O_rectnd_beta; reflexivity). }
+      { unfold prod_rect, O_prod_cmp, O_prod_unit.
+        refine (O_rectpaths _ _ _); intros [a b]; cbn.
+        abstract (repeat (rewrite O_rectnd_beta; cbn); reflexivity). }
+    Defined.
+
     Definition isequiv_O_prod_cmp_precompose
       {fs : Funext} (A B C : Type) {C_inO : inO C}
     : IsEquiv (fun h : O A * O B -> C => h o O_prod_cmp A B).
     Proof.
-      unfold O_prod_cmp.
-      refine (isequiv_homotopic
-                ((equiv_O_rectnd (A*B) C) o
-                 (equiv_O_prod_unit_precompose A B C)) _ _).
-      intros h; apply path_arrow.
-      refine (O_rectpaths _ _ _); intros x.
-      unfold compose; simpl.
-      transitivity (h (O_prod_unit A B x)).
-      - refine (O_rectnd_beta _ _).
-      - symmetry; apply ap; refine (O_rectnd_beta _ _).
-    Defined.
-
-    (** Thus, by the Yoneda lemma, the functor [O] preserves products. *)
-    Global Instance isequiv_O_prod_cmp {fs : Funext} (A B : Type)
-    : IsEquiv (O_prod_cmp A B).
-    Proof.
-      apply isequiv_isequiv_precompose;
-      apply isequiv_O_prod_cmp_precompose;
-      exact _.
+      apply isequiv_precompose; exact _.
     Defined.
 
     Definition equiv_O_prod_cmp {fs : Funext} (A B : Type)
@@ -618,4 +628,111 @@ Section Reflective_Subuniverse.
     Qed.
     
   End Types.
+
+  Section Monad.
+
+    Definition O_monad_mult A : O (O A) -> O A
+      := O_rectnd idmap.
+
+    Definition O_monad_mult_natural {A B} (f : A -> B)
+    : O_functor f o O_monad_mult A == O_monad_mult B o O_functor (O_functor f).
+    Proof.
+      apply O_rectpaths; intros x; unfold compose, O_monad_mult.
+      simpl rewrite (O_unit_natural (O_functor f) x).
+      rewrite (O_rectnd_beta idmap x).
+      rewrite (O_rectnd_beta idmap (O_functor f x)).
+      reflexivity.
+    Qed.
+
+    Definition O_monad_unitlaw1 A
+    : O_monad_mult A o (O_unit (O A)) == idmap.
+    Proof.
+      apply O_rectpaths; intros x; unfold compose, O_monad_mult.
+      exact (O_rectnd_beta idmap (O_unit A x)).
+    Defined.
+
+    Definition O_monad_unitlaw2 A
+    : O_monad_mult A o (O_functor (O_unit A)) == idmap.
+    Proof.
+      apply O_rectpaths; intros x; unfold O_monad_mult, O_functor, compose.
+      repeat rewrite O_rectnd_beta.
+      reflexivity.
+    Qed.
+
+    Definition O_monad_mult_assoc A
+    : O_monad_mult A o O_monad_mult (O A) == O_monad_mult A o O_functor (O_monad_mult A).
+    Proof.
+      apply O_rectpaths; intros x; unfold O_monad_mult, O_functor, compose.
+      repeat rewrite O_rectnd_beta.
+      reflexivity.
+    Qed.
+
+  End Monad.
+
+  Section StrongMonad.
+    Context {fs : Funext} {rep : Replete subU}.
+
+    Definition O_monad_strength A B : A * O B -> O (A * B)
+      := fun aob => O_rectnd (fun b a => O_unit (A*B) (a,b)) (snd aob) (fst aob).
+
+    Definition O_monad_strength_natural A A' B B' (f : A -> A') (g : B -> B')
+    : O_functor (functor_prod f g) o O_monad_strength A B ==
+      O_monad_strength A' B' o functor_prod f (O_functor g).
+    Proof.
+      intros [a ob]. revert a. apply ap10.
+      revert ob; apply O_rectpaths.
+      intros b; simpl.
+      apply path_arrow; intros a.
+      unfold O_monad_strength, O_functor, compose; simpl.
+      repeat rewrite O_rectnd_beta.
+      reflexivity.
+    Qed.
+      
+    (** The diagrams for strength, see http://en.wikipedia.org/wiki/Strong_monad *)
+    Definition O_monad_strength_unitlaw1 A
+    : O_functor (@snd Unit A) o O_monad_strength Unit A == @snd Unit (O A).
+    Proof.
+      intros [[] oa]; revert oa.
+      apply O_rectpaths; intros x; unfold O_monad_strength, O_functor, compose. simpl. 
+      repeat rewrite O_rectnd_beta.
+      reflexivity.
+    Qed.
+
+    Definition O_monad_strength_unitlaw2 A B
+    : O_monad_strength A B o functor_prod idmap (O_unit B) == O_unit (A*B).
+    Proof.
+      intros [a b].
+      unfold O_monad_strength, functor_prod, compose. simpl. 
+      repeat rewrite O_rectnd_beta.
+      reflexivity.
+    Qed.
+
+    Definition O_monad_strength_assoc1 A B C
+    : O_functor (equiv_prod_assoc A B C)^-1 o O_monad_strength (A*B) C ==
+      O_monad_strength A (B*C) o functor_prod idmap (O_monad_strength B C) o (equiv_prod_assoc A B (O C))^-1.
+    Proof.
+      intros [[a b] oc].
+      revert a; apply ap10. revert b; apply ap10.
+      revert oc; apply O_rectpaths.
+      intros c; simpl.
+      apply path_arrow; intros b. apply path_arrow; intros a.
+      unfold O_monad_strength, O_functor, functor_prod, compose. simpl. 
+      repeat rewrite O_rectnd_beta.
+      reflexivity.
+    Qed.
+
+    Definition O_monad_strength_assoc2 A B
+    : O_monad_mult (A*B) o O_functor (O_monad_strength A B) o O_monad_strength A (O B) ==
+      O_monad_strength A B o functor_prod idmap (O_monad_mult B).
+    Proof.
+      intros [a oob]. revert a; apply ap10.
+      revert oob; apply O_rectpaths. apply O_rectpaths.
+      intros b; simpl. apply path_arrow; intros a.
+      unfold O_monad_strength, O_functor, O_monad_mult, functor_prod, compose. simpl. 
+      repeat (rewrite O_rectnd_beta; simpl).
+      reflexivity.
+    Qed.
+      
+  End StrongMonad.
+      
 End Reflective_Subuniverse.

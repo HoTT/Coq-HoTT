@@ -121,11 +121,11 @@ Section lax_slice_category.
   Context `{forall a0, IsHSet (Functor (S a0) a)}.
   Context `{forall a0, IsHSet (Functor a (S a0))}.
 
-  Definition lax_slice_category : PreCategory := lax_comma_category S (Pseudofunctors.from_terminal a).
-  Definition lax_coslice_category : PreCategory := lax_comma_category (Pseudofunctors.from_terminal a) S.
+  Definition lax_slice_category : PreCategory := lax_comma_category S !a.
+  Definition lax_coslice_category : PreCategory := lax_comma_category !a S.
 
-  Definition oplax_slice_category : PreCategory := oplax_comma_category S (Pseudofunctors.from_terminal a).
-  Definition oplax_coslice_category : PreCategory := oplax_comma_category (Pseudofunctors.from_terminal a) S.
+  Definition oplax_slice_category : PreCategory := oplax_comma_category S !a.
+  Definition oplax_coslice_category : PreCategory := oplax_comma_category !a S.
 
 (** [x ↓ F] is a coslice category; [F ↓ x] is a slice category; [x ↓ F] deals with morphisms [x -> F y]; [F ↓ x] has morphisms [F y -> x] *)
 End lax_slice_category.

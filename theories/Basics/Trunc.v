@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Truncatedness *)
 
-Require Import Overture PathGroupoids Contractible Equivalences.
+Require Import Overture PathGroupoids Contractible Equivalences Fibrations.
 Local Open Scope equiv_scope.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
@@ -69,3 +69,10 @@ Qed.
 Definition trunc_equiv' `(f : A <~> B) `{IsTrunc n A}
   : IsTrunc n B
   := trunc_equiv f.
+
+(** ** Truncated morphisms *)
+
+Class IsTruncMap (n : trunc_index) {X Y : Type} (f : X -> Y) :=
+  istruncmap_fiber :> forall y:Y, IsTrunc n (hfiber f y).
+
+Notation IsEmbedding := (IsTruncMap -1).

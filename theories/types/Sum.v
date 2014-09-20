@@ -125,7 +125,7 @@ Defined.
 
 Definition equiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}
 : A + B <~> A' + B'
-  := BuildEquiv _ _ _ isequiv_functor_sum.
+  := BuildEquiv _ _ (functor_sum f g) _.
 
 Definition equiv_functor_sum' {A A' B B' : Type} (f : A <~> A') (g : B <~> B')
 : A + B <~> A' + B'
@@ -231,7 +231,7 @@ Proof.
 Defined.
 
 Instance isequiv_sum_of_sigT A B : IsEquiv (sum_of_sigT A B)
-  := isequiv_inverse.
+  := isequiv_inverse (@sigT_of_sum A B).
 
 (** An alternative way of proving the truncation property of [sum]. *)
 Definition trunc_sum' n A B `{IsTrunc n Bool, IsTrunc n A, IsTrunc n B}

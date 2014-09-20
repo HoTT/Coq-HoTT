@@ -170,6 +170,14 @@ Definition isinj {X Y} (f : X -> Y)
   := forall x0 x1 : X,
        f x0 = f x1 -> x0 = x1.
 
+Lemma isinj_embedding {A B : Type} (m : A -> B) : IsEmbedding m -> isinj m.
+Proof.
+  intros ise x y p.
+  pose (ise (m y)).
+  assert (q : (x;p) = (y;1) :> hfiber m (m y)) by apply allpath_hprop.
+  exact (ap pr1 q).
+Defined.
+
 Lemma isinj_ismono `{Funext} {X Y} (f : X -> Y) : isinj f -> ismono f.
 Proof.
   intros ? ? ? ? H'.
