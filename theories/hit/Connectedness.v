@@ -34,7 +34,7 @@ Definition isconnected_elim {n} {A} `{IsConnected n A}
            (C : Type) `{IsTrunc n C} (f : A -> C)
 : { c:C & forall a:A, f a = c }.
 Proof.
-  set (ff := Trunc_rect_nondep f).
+  set (ff := Trunc_rect_nondep (n:=n) f).
   exists (ff (center _)).
   intros a. symmetry; apply (ap ff (contr (tr _))).
 Defined.
@@ -229,11 +229,7 @@ Proof.
   exists (e .1 b 1).
   intros [a p]. symmetry. transitivity (e .1 (f a) p).
     2: exact (ap10 (e.2 a) p).
-  (* TODO: Can the following be simplified? A version of [ap] for binary functions would be one approach. *)
-  set (e1 := fun (bb : {b':B & b' = b}) => (e.1 (bb.1) (bb.2))).
-  change (e.1 b 1) with (e1 (b;1)).
-  change (e.1 (f a) p) with (e1 (f a; p)).
-  apply ap. apply path_sigma with (p^). simpl.
+  refine (ap011D e.1 p^ _).
   refine (transport_paths_l _ _ @ _). hott_simpl.
 Defined.
 

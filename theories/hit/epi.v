@@ -109,7 +109,7 @@ End cones.
 Lemma issurj_isepi {X Y} (f:X->Y): IsSurjection f -> isepi f.
 intros sur ? ? ? ep. apply path_forall. intro y.
 specialize (sur y). pose (center (merely (hfiber f y))).
-apply (Trunc_rect_nondep (A:=(sigT (fun x : X => f x = y))));
+apply (Trunc_rect_nondep (n:=-1) (A:=(sigT (fun x : X => f x = y))));
   try assumption.
  intros [x p]. set (p0:=apD10 ep x).
  transitivity (g (f x)). by apply ap.

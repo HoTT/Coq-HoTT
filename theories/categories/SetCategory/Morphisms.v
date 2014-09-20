@@ -45,8 +45,8 @@ Section equiv_iso_set_cat.
     := Build_IsIsomorphism
          set_cat s d
          m m^-1%equiv
-         (path_forall _ _ (eissect _))
-         (path_forall _ _ (eisretr _)).
+         (path_forall _ _ (eissect m))
+         (path_forall _ _ (eisretr m)).
 
   Definition isequiv_isiso s d (m : morphism set_cat s d)
              `{IsIsomorphism _ _ _ m}
@@ -100,8 +100,8 @@ Section equiv_iso_prop_cat.
     := Build_IsIsomorphism
          prop_cat s d
          m m^-1%equiv
-         (path_forall _ _ (eissect _))
-         (path_forall _ _ (eisretr _)).
+         (path_forall _ _ (eissect m))
+         (path_forall _ _ (eisretr m)).
 
   Definition isequiv_isiso_prop s d (m : morphism prop_cat s d)
              `{IsIsomorphism _ _ _ m}

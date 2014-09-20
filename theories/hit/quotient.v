@@ -126,7 +126,7 @@ Proof.
 intros x y H'.
 pattern (R x y).
 eapply transport. apply in_class_pr.
-pattern (class_of _ x). apply (transport _ (H'^)).
+pattern (class_of R x). apply (transport _ (H'^)).
 apply Hrefl.
 Defined.
 
@@ -170,7 +170,7 @@ quotient_rect_nondep (dclass x') (dequiv0 x') q) dequiv1 _).
 intros. apply iss.
 Defined.
 
-Definition quotient_ind : forall P : quotient _ -> Type,
+Definition quotient_ind : forall P : quotient R -> Type,
 forall (Hprop' : forall x, IsHProp (P (class_of _ x))),
 (forall x, P (class_of _ x)) -> forall y, P y.
 Proof.
@@ -179,7 +179,7 @@ intros. apply Hprop'.
 Defined.
 
 (** From Ch6 *)
-Theorem quotient_surjective: IsSurjection (class_of _).
+Theorem quotient_surjective: IsSurjection (class_of R).
 Proof.
   apply BuildIsSurjection.
   apply (quotient_ind (fun y => merely (hfiber (class_of R) y))); try exact _.
@@ -187,7 +187,7 @@ Proof.
 Defined.
 
 (** From Ch10 *)
-Definition quotient_ump' (B:hSet): (quotient _ -> B) ->
+Definition quotient_ump' (B:hSet): (quotient R -> B) ->
   (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
 intro f. exists (compose f (class_of R) ).
 intros. unfold compose. f_ap. by apply related_classes_eq.
@@ -199,7 +199,7 @@ intros [f H'].
 apply (quotient_rect_nondep _ H').
 Defined.
 
-Theorem quotient_ump (B:hSet): (quotient _ -> B) <~>
+Theorem quotient_ump (B:hSet): (quotient R -> B) <~>
   (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
 Proof.
 refine (equiv_adjointify (quotient_ump' B) (quotient_ump'' B) _ _).

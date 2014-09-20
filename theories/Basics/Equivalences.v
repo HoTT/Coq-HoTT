@@ -81,8 +81,8 @@ Section IsEquivHomotopic.
     apply whiskerR, eisadj.
   Qed.
 
-  (* It's unclear to me whether this should be a declared instance.  Will it cause the unifier to spin forever searching for homotopies?  For now, we give it a very large priority number, which means that other instances will be preferred over this one. *)
-  Global Instance isequiv_homotopic : IsEquiv g | 10000
+  (* This should not be an instance; it can cause the unifier to spin forever searching for functions to be hoomotpic to. *)
+  Definition isequiv_homotopic : IsEquiv g
     := BuildIsEquiv _ _ g (f ^-1) sect retr adj.
 
   Definition equiv_homotopic : A <~> B
@@ -94,7 +94,7 @@ End IsEquivHomotopic.
 (** The inverse of an equivalence is an equivalence. *)
 Section EquivInverse.
 
-  Context `{IsEquiv A B f}.
+  Context {A B : Type} (f : A -> B) {feq : IsEquiv f}.
   Open Scope long_path_scope.
 
   Theorem other_adj (b : B) : eissect f (f^-1 b) = ap f^-1 (eisretr f b).

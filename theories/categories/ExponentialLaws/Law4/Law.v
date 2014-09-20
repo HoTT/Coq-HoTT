@@ -42,7 +42,7 @@ Section Law4.
         repeat (apply path_forall || intro);
         rewrite !transport_forall_constant;
         simpl;
-        rewrite identity_of; simpl;
+        rewrite (identity_of c); simpl;
           by autorewrite with morphism
       ).
   Defined.

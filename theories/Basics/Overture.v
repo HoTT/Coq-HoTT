@@ -3,6 +3,10 @@
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
 
 (** ** Type classes *)
+
+(** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
+Local Set Typeclasses Strict Resolution.
+
 Definition relation (A : Type) := A -> A -> Type.
 
 Class Reflexive {A} (R : relation A) :=
