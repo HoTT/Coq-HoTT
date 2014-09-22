@@ -386,7 +386,7 @@ Definition Book_3_5_solution_1 := @HoTT.HProp.equiv_hprop_inhabited_contr.
 (* ================================================== ex:lem-mereprop *)
 (** Exercise 3.6 *)
 
-Lemma Book_3_6_solution_1 (A : Type) : IsHProp A -> IsHProp (A + ~A).
+Lemma Book_3_6_solution_1 `{Funext} (A : Type) : IsHProp A -> IsHProp (A + ~A).
 Proof.
   intro isHProp_A.
   apply hprop_allpath. intros x y.
@@ -839,7 +839,7 @@ End Book_5_5.
 Section Book_6_9.
   Hypothesis LEM : forall A, IsHProp A -> A + ~A.
 
-  Definition Book_6_9 : forall X, X -> X.
+  Definition Book_6_9 {ua : Univalence} : forall X, X -> X.
   Proof.
     intro X.
     pose proof (@LEM (Contr { f : X <~> X & ~(forall x, f x = x) }) _) as contrXEquiv.
@@ -868,7 +868,7 @@ Section Book_6_9.
       end.
   Qed.
 
-  Lemma Book_6_9_not_id `{Funext} : Book_6_9 Bool = negb.
+  Lemma Book_6_9_not_id {ua : Univalence} `{fs : Funext} : Book_6_9 Bool = negb.
   Proof.
     apply path_forall; intro b.
     unfold Book_6_9.
