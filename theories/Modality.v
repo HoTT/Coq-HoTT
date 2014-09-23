@@ -180,18 +180,21 @@ Local Existing Instance mod_usubu.
 Local Existing Instance mod_replete.
 Local Existing Instance inO_paths.
 
+Context (mod : Modality).
+
 (** Corollary 7.7.8, part 1 *)
-Global Instance modality_to_reflective_subuniverse (mod : Modality)
-: ReflectiveSubuniverse
+Global Instance modality_to_reflective_subuniverse : ReflectiveSubuniverse
 := Build_ReflectiveSubuniverse _
      (fun P Q H => O_rect (fun _ => Q))
      (fun P Q H => O_rect_beta (fun _ => Q))
      (fun P Q H g h => O_rect (fun y => g y = h y))
      (fun P Q H g h => O_rect_beta (fun y => g y = h y)).
 
-Global Instance replete_modality (mod : Modality)
-: Replete (modality_to_reflective_subuniverse mod)
-:= @mod_replete mod.
+Global Instance replete_modality 
+: Replete (modality_to_reflective_subuniverse)
+:= mod_replete.
+
+Global Existing Instance inO_paths.
 
 End M2RS.
 
@@ -241,6 +244,16 @@ Proof.
     intros; apply allpath_hprop.
 Defined.
 
+Global Instance inO_notnot_empty `{Funext}
+: @inO notnot_modality Empty.
+Proof.
+  refine (isequiv_adjointify _ _ _ _).
+  - intros nne; apply nne.
+    exact idmap.
+  - intros nne; apply allpath_hprop.
+  - intros e; apply allpath_hprop.
+Defined.
+
 (** Of course, there is also the trivial example. *)
 Definition identity_modality : Modality
   := Build_Modality
@@ -254,5 +267,9 @@ Definition identity_modality : Modality
      (fun A B _ f a => f a)
      (fun A B _ f a => 1)
      (fun A _ z z' => tt).
+
+Global Instance inO_identity (T : Type)
+: @inO identity_modality T
+  := tt.
 
 (** For more examples of modalities, see hit/Truncations.v and hit/PropositionalFracture.v. *)

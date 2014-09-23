@@ -63,7 +63,7 @@ Section Unit_Subuniverse.
     := {T : Type & inO T}.
 
   Global Coercion TypeO_pr1 (T : TypeO) := @pr1 Type inO T.
-  Global Instance inO_lProp (T : TypeO) : inO T := pr2 T.
+  Global Instance inO_TypeO (T : TypeO) : inO T := pr2 T.
 
   (** This function picks up the second component by typeclass resolution. *)
   Definition asTypeO (T : Type) {T_inO : inO T} : TypeO
@@ -631,7 +631,20 @@ Section Reflective_Subuniverse.
       - hnf.
         rewrite O_rectpaths_beta; reflexivity.
     Qed.
+
+    (** ** HProps *)
     
+    Global Instance ishprop_O_hprop (A : Type) `{IsHProp A}
+    : IsHProp (O A).
+    Proof.
+      apply hprop_allpath. intros x.
+      refine (O_rectpaths (fun _ => x) idmap _); intros y.
+      simpl; revert x.
+      refine (O_rectpaths idmap (fun _ => O_unit A y) _); intros x.
+      simpl.
+      apply ap, allpath_hprop.
+    Defined.
+
   End Types.
 
   Section Monad.
