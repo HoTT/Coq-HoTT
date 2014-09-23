@@ -1,6 +1,8 @@
 (** * Attributes of functors (full, faithful, split essentially surjective) *)
 Require Import Category.Core Functor.Core HomFunctor Category.Morphisms Category.Dual Functor.Dual Category.Prod Functor.Prod NaturalTransformation.Core SetCategory.Core Functor.Composition.Core.
 Require Import hit.epi types.Universe HSet hit.iso Overture hit.Truncations UnivalenceImpliesFunext.
+Require Import HoTT.Logic.
+Import Logic.Notations.Exists.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -137,7 +139,7 @@ Class IsSplitEssentiallySurjective A B (F : Functor A B)
     [b : B] there _merely_ exists an [a : A] such that [F a ≅ b]. *)
 Class IsEssentiallySurjective A B (F : Functor A B)
   := is_essentially_surjective
-     : forall b : B, hexists (fun a : A => F a <~=~> b).
+     : forall b : B, hexists a : A, F a <~=~> b.
 
 (** ** Weak Equivalence *)
 (** Quoting the HoTT Book:

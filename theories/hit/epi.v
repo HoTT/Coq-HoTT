@@ -2,6 +2,8 @@ Require Import HoTT.Basics.
 Require Import types.Universe types.Unit types.Forall types.Arrow types.Sigma types.Paths.
 Require Import HProp Misc TruncType HSet UnivalenceImpliesFunext.
 Require Import hit.Pushout hit.Truncations hit.Connectedness.
+Require Import HoTT.Logic.
+Import Logic.Notations.Exists.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
@@ -143,7 +145,7 @@ Section isepi_issurj.
   Definition epif := equiv_isepi_isepi' _ Hisepi.
   Definition fam (c : setcone f) : hProp.
   Proof.
-    pose (fib y := hp (hexists (fun x : X => f x = y)) _).
+    pose (fib y := hp (hexists (x:X), f x = y) _).
     apply (fun f => @Trunc_rect_nondep _ _ hProp _ f c).
     refine (pushout_rectnd hProp
                            (fun x : Y + Unit =>

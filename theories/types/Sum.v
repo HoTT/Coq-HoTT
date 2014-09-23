@@ -5,6 +5,7 @@ Require Import HoTT.Basics.
 Require Import types.Empty.
 (** The following are only required for the equivalence between [sum] and a sigma type *)
 Require Import types.Bool types.Forall types.Sigma.
+Require Import HProp.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -199,6 +200,16 @@ Defined.
 
 Instance hset_sum `{HA : IsHSet A, HB : IsHSet B} : IsHSet (A + B) | 100
   := @trunc_sum -2 A HA B HB.
+
+Definition hprop_sum `{IsHProp A, IsHProp B} (dj : A -> B -> Empty)
+: IsHProp (A+B).
+Proof.
+  apply hprop_allpath; intros [a1|b1] [a2|b2].
+  - apply ap, allpath_hprop.
+  - apply Empty_rect, dj; assumption.
+  - apply Empty_rect, dj; assumption.
+  - apply ap, allpath_hprop.
+Defined.
 
 (** ** Binary coproducts are equivalent to dependent sigmas where the first component is a bool. *)
 

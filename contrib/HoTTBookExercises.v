@@ -435,37 +435,29 @@ Defined.
 (** Exercise 3.13 *)
 
 Section Book_3_13.
-  Definition naive_LEM_impl_DN_elim (A : Type) (LEM : A + ~A)
-  : ~~A -> A
-    := fun nna => match LEM with
-                    | inl a => a
-                    | inr na => match nna na with end
-                  end.
+  Import Logic.Notations.
+  Local Existing Instance PAT_logic.
 
-  Lemma naive_LEM_implies_AC
-  : (forall A : Type, A + ~A)
-    -> forall X A P,
-         (forall x : X, ~~{ a : A x | P x a })
-         -> { g : forall x, A x | forall x, P x (g x) }.
+  Lemma naive_LEM_implies_AC `{l : @LEM_ oo} X A P
+  : (forall x : X, ~~{ a : A x | P x a })
+    -> { g : forall x, A x | forall x, P x (g x) }.
   Proof.
-    intros LEM X A P H.
-    pose (fun x => @naive_LEM_impl_DN_elim _ (LEM _) (H x)) as H'.
+    intros H. pose oo.
+    pose (fun x => double_negation _ (H x)) as H'.
     exists (fun x => (H' x).1).
     exact (fun x => (H' x).2).
   Defined.
 
-  Lemma Book_3_13 `{Funext}
-  : (forall A : Type, A + ~A)
-    -> forall X A P,
+  Lemma Book_3_13 `{fs : Funext} `{l : @LEM_ oo} X A P :
          IsHSet X
          -> (forall x : X, IsHSet (A x))
          -> (forall x (a : A x), IsHProp (P x a))
          -> (forall x, merely { a : A x & P x a })
          -> merely { g : forall x, A x & forall x, P x (g x) }.
   Proof.
-    intros LEM X A P HX HA HP H0.
+    intros HX HA HP H0.
     apply tr.
-    apply (naive_LEM_implies_AC LEM).
+    apply naive_LEM_implies_AC.
     intro x.
     specialize (H0 x).
     revert H0.
@@ -478,8 +470,7 @@ End Book_3_13.
 (** Exercise 3.14 *)
 
 Section Book_3_14.
-  Context `{Funext}.
-  Hypothesis LEM : forall A : Type, IsHProp A -> A + ~A.
+  Context `{Funext} `{LEM}.
 
   Definition Book_3_14
   : forall A (P : ~~A -> Type),
@@ -496,7 +487,7 @@ Section Book_3_14.
       assert (H' : idpath = allpath_hprop x x) by apply allpath_hprop.
       destruct H'.
       reflexivity.
-    - destruct (LEM (P nna) _) as [pnna|npnna]; trivial.
+    - destruct (lem' (P nna)) as [pnna|npnna]; trivial.
       refine (match _ : Empty with end).
       apply nna.
       intro a.
@@ -837,12 +828,12 @@ End Book_5_5.
 (** Exercise 6.9 *)
 
 Section Book_6_9.
-  Hypothesis LEM : forall A, IsHProp A -> A + ~A.
+  Context `{l : LEM}.
 
   Definition Book_6_9 {ua : Univalence} : forall X, X -> X.
   Proof.
     intro X.
-    pose proof (@LEM (Contr { f : X <~> X & ~(forall x, f x = x) }) _) as contrXEquiv.
+    pose proof (lem' (Contr { f : X <~> X & ~(forall x, f x = x) })) as contrXEquiv.
     destruct contrXEquiv as [[f H]|H].
     - (** In the case where we have exactly one autoequivalence which is not the identity, use it. *)
       exact (f.1).
@@ -872,7 +863,7 @@ Section Book_6_9.
   Proof.
     apply path_forall; intro b.
     unfold Book_6_9.
-    destruct (@LEM (Contr { f : Bool <~> Bool & ~(forall x, f x = x) }) _) as [[f H']|H'].
+    destruct (lem' (Contr { f : Bool <~> Bool & ~(forall x, f x = x) })) as [[f H']|H'].
     - pose proof (bool_map_equiv_not_idmap f b).
       destruct (f.1 b), b;
       match goal with

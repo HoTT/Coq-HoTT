@@ -365,7 +365,7 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 (* ================================================== thm:not-lem *)
 (** Corollary 3.2.7 *)
 
-
+Definition Book_3_2_7 := @HoTT.Logic.LEM.not_LEMoo.
 
 (* ================================================== defn:isprop *)
 (** Definition 3.3.1 *)

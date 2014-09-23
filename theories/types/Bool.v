@@ -6,7 +6,7 @@ Require Import types.Prod HSet HProp.
 Local Open Scope equiv_scope.
 
 (* coq calls it "bool", we call it "Bool" *)
-Inductive Bool : Type :=
+Inductive Bool : Type1 :=
   | true : Bool
   | false : Bool.
 

@@ -24,6 +24,9 @@ Instance contr_from_Empty {_ : Funext} (A : Type) :
 Instance hprop_Empty : IsHProp Empty.
 Proof. intro x. destruct x. Defined.
 
+Instance trunc_Empty (n : trunc_index) : IsTrunc (trunc_S n) Empty.
+Proof. induction n; exact _. Defined.
+
 (** ** Paths *)
 
 (** We could probably prove some theorems about non-existing paths in
