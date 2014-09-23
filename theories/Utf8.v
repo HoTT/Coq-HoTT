@@ -1,5 +1,5 @@
 Require Export Coq.Unicode.Utf8.
-Require Import HoTT.Basics (*types.Bool*) hit.Circle hit.TwoSphere hit.Truncations hit.Suspension Modality.
+Require Import HoTT.Basics (*types.Bool*) hit.Circle hit.TwoSphere hit.Truncations hit.Suspension Modality Logic.Notations.
 
 Notation Type₀ := Type0.
 Notation pr₁ := pr1.
@@ -52,3 +52,6 @@ Notation "| a |₂" := (@tr 2 _ a) : trunc_scope.
 Notation "∞" := identity_modality.
 
 Notation Σ := Susp.
+
+Notation "x ∨ y" := (x \/ y) (at level 85, right associativity) : type_scope.
+Notation "¬ x" := (~ x) (at level 75, right associativity) : type_scope.
