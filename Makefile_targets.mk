@@ -62,6 +62,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/hit/Connectedness.v \
 	$(srcdir)/theories/hit/Flattening.v \
 	$(srcdir)/theories/hit/Interval.v \
+	$(srcdir)/theories/hit/IntervalImpliesFunext.v \
 	$(srcdir)/theories/hit/Suspension.v \
 	$(srcdir)/theories/hit/Spheres.v \
 	$(srcdir)/theories/hit/TwoSphere.v \
