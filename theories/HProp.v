@@ -207,8 +207,13 @@ Canonical Structure default_HProp:= fun T P => (@hp T P).
 *)
 Existing Instance isp.
 Require Import Unit Empty.
-Definition Unit_hp:hProp:=(hp Unit _).
-Definition False_hp:hProp:=(hp Unit _).
+
+Definition Unit_hp : hProp := (hp Unit _).
+
+Definition False_hp : hProp := (hp Empty _).
+
+Definition Negation_hp `{Funext} (hprop : hProp) : hProp
+  := (hp ((hproptype hprop) -> Empty) trunc_forall).
 (** We could continue with products etc *)
 
 Definition issig_hProp: (sigT IsHProp) <~> hProp.
@@ -232,3 +237,10 @@ Proof.
 Defined.
 
 Definition path_hprop `{Funext} X Y := (@ap _ _ hproptype X Y)^-1%equiv.
+
+Require Import Bool.
+(** canonical map from Bool to hProp *)
+Definition Bool_to_hProp (b : Bool) : hProp
+  := if b then Unit_hp else False_hp.
+
+
