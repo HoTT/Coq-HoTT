@@ -212,8 +212,7 @@ Definition Unit_hp : hProp := (hp Unit _).
 
 Definition False_hp : hProp := (hp Empty _).
 
-Definition Negation_hp `{Funext} (hprop : hProp) : hProp
-  := (hp ((hproptype hprop) -> Empty) trunc_forall).
+Definition Negation_hp `{Funext} (hprop : hProp) : hProp := hp (~hprop) _.
 (** We could continue with products etc *)
 
 Definition issig_hProp: (sigT IsHProp) <~> hProp.
@@ -237,6 +236,3 @@ Proof.
 Defined.
 
 Definition path_hprop `{Funext} X Y := (@ap _ _ hproptype X Y)^-1%equiv.
-
-
-

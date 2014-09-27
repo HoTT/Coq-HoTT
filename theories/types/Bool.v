@@ -131,4 +131,3 @@ End EquivBoolEquiv.
 (** canonical map from Bool to hProp *)
 Definition is_true (b : Bool) : hProp
   := if b then Unit_hp else False_hp.
-
