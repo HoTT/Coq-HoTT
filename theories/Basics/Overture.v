@@ -368,24 +368,29 @@ Arguments trunc_S _%trunc_scope.
 
 (** Include the basic numerals, so we don't need to go through the coercion from [nat], and so that we get the right binding with [trunc_scope]. *)
 (** Note that putting the negative numbers at level 0 allows us to override the [- _] notation for negative numbers. *)
+Notation "n .+1" := (trunc_S n) (at level 2, left associativity, format "n .+1") : trunc_scope.
+Notation "n .+1" := (S n) (at level 2, left associativity, format "n .+1") : nat_scope.
+Notation "n .+2" := (n.+1.+1)%trunc (at level 2, left associativity, format "n .+2") : trunc_scope.
+Notation "n .+2" := (n.+1.+1)%nat (at level 2, left associativity, format "n .+2") : nat_scope.
+Local Open Scope trunc_scope.
 Notation "-2" := minus_two (at level 0) : trunc_scope.
-Notation "-1" := (trunc_S -2) (at level 0) : trunc_scope.
-Notation "0" := (trunc_S -1) : trunc_scope.
-Notation "1" := (trunc_S 0) : trunc_scope.
-Notation "2" := (trunc_S 1) : trunc_scope.
+Notation "-1" := (-2.+1) (at level 0) : trunc_scope.
+Notation "0" := (-1.+1) : trunc_scope.
+Notation "1" := (0.+1) : trunc_scope.
+Notation "2" := (1.+1) : trunc_scope.
 
 Fixpoint nat_to_trunc_index (n : nat) : trunc_index
   := match n with
-       | 0 => 0
-       | S n' => trunc_S (nat_to_trunc_index n')
+       | 0%nat => 0
+       | S n' => (nat_to_trunc_index n').+1
      end.
 
 Coercion nat_to_trunc_index : nat >-> trunc_index.
 
 Fixpoint IsTrunc_internal (n : trunc_index) (A : Type) : Type :=
   match n with
-    | -2%trunc => Contr_internal A
-    | trunc_S n' => forall (x y : A), IsTrunc_internal n' (x = y)
+    | -2 => Contr_internal A
+    | n'.+1 => forall (x y : A), IsTrunc_internal n' (x = y)
   end.
 
 Arguments IsTrunc_internal n A : simpl nomatch.
@@ -399,7 +404,7 @@ Typeclasses Opaque IsTrunc. (* don't auto-unfold [IsTrunc] in typeclass search *
 
 Arguments IsTrunc : simpl never. (* don't auto-unfold [IsTrunc] with [simpl] *)
 
-Instance istrunc_paths (A : Type) n `{H : IsTrunc (trunc_S n) A} (x y : A)
+Instance istrunc_paths (A : Type) n `{H : IsTrunc n.+1 A} (x y : A)
 : IsTrunc n (x = y)
   := H x y. (* but do fold [IsTrunc] *)
 
@@ -409,15 +414,15 @@ Hint Extern 0 => progress change IsTrunc_internal with IsTrunc in * : typeclass_
 Hint Extern 10 =>
 progress match goal with
            | [ H : forall x y : ?T, IsTrunc ?n (x = y) |- _ ]
-             => change (IsTrunc (trunc_S n) T) in H
+             => change (IsTrunc n.+1 T) in H
            | [ H : forall (a : ?A) (x y : @?T a), IsTrunc ?n (x = y) |- _ ]
-             => change (forall a : A, IsTrunc (trunc_S n) (T a)) in H; cbv beta in H
+             => change (forall a : A, IsTrunc n.+1 (T a)) in H; cbv beta in H
            | [ H : forall (a : ?A) (b : @?B a) (x y : @?T a b), IsTrunc ?n (x = y) |- _ ]
-             => change (forall (a : A) (b : B a), IsTrunc (trunc_S n) (T a b)) in H; cbv beta in H
+             => change (forall (a : A) (b : B a), IsTrunc n.+1 (T a b)) in H; cbv beta in H
            | [ H : forall (a : ?A) (b : @?B a) (c : @?C a b) (x y : @?T a b c), IsTrunc ?n (x = y) |- _ ]
-             => change (forall (a : A) (b : B a) (c : C a b), IsTrunc (trunc_S n) (T a b c)) in H; cbv beta in H
+             => change (forall (a : A) (b : B a) (c : C a b), IsTrunc n.+1 (T a b c)) in H; cbv beta in H
            | [ H : forall (a : ?A) (b : @?B a) (c : @?C a b) (d : @?D a b c) (x y : @?T a b c d), IsTrunc ?n (x = y) |- _ ]
-             => change (forall (a : A) (b : B a) (c : C a b) (d : D a b c), IsTrunc (trunc_S n) (T a b c d)) in H; cbv beta in H
+             => change (forall (a : A) (b : B a) (c : C a b) (d : D a b c), IsTrunc n.+1 (T a b c d)) in H; cbv beta in H
          end.
 
 Notation Contr := (IsTrunc -2).

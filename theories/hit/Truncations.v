@@ -15,8 +15,8 @@ If Coq supported higher inductive types natively, we would construct this as som
 
    Inductive Trunc n (A : Type) : Type :=
    | tr : A -> Trunc n A
-   | istrunc_truncation : forall (f : Sphere (trunc_S n) -> Trunc n A)
-       (x : Sphere (trunc_S n)), f x = f North.
+   | istrunc_truncation : forall (f : Sphere n.+1 -> Trunc n A)
+       (x : Sphere n.+1), f x = f North.
 
 However, while we are faking our higher-inductives anyway, we can take some shortcuts, rather than translating the definition above.  Firstly, we directly posit a “constructor” giving truncatedness, rather than rephrasing it in terms of maps of spheres.  Secondly, we omit the “computation rule” for this constructor, since it is implied by truncatedness of the result type (and, for essentially that reason, is never wanted in practice anyway).
 *)

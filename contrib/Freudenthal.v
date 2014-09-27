@@ -14,7 +14,7 @@ Generalizable Variables X A B f g n.
 (* ** Connectedness of the suspension *)
 
 Instance isconn_susp {n : trunc_index} {X : Type} `{H : IsConnected n X}
-  : IsConnected (trunc_S n) (Susp X).
+  : IsConnected n.+1 (Susp X).
 Proof.
   apply isconnected_from_elim.
   intros C H' f. exists (f North).
@@ -36,7 +36,7 @@ Context `{Funext} (funext_large : Funext * Unit) `{Univalence}
         (X : Type) (x0:X) `{IsConnMap n _ _ (unit_name x0)}.
 
 (* TODO: eventually, change these to the weaker assumptions:
-Context {n : trunc_index} (X : Type) `{IsConnected (trunc_S n) X}.
+Context {n : trunc_index} (X : Type) `{IsConnected n.+1 X}.
 *)
 
 (** For convenience, we add some local abbreviations. *)
@@ -74,14 +74,14 @@ Proof.
   refine (@wedge_incl_elim_uncurried _ n n X x0 _ X x0 _
     (fun x1 x2 => (mer x2 @ (mer x0) ^ = q @ (mer x1) ^)
                     -> Trunc (n -2+ n) (hfiber mer q)) _ _).
-  refine (pr1 (@isconnected_elim (trunc_S n) X _ _ _ _)).
+  refine (pr1 (@isconnected_elim n.+1 X _ _ _ _)).
   { apply @trunc_sigma; try typeclasses eauto.
     { apply @trunc_forall; try typeclasses eauto; intro.
       apply @trunc_arrow; try typeclasses eauto; intro.
       intros.
       admit. }
     admit. }
-  refine (pr1 (@isconnected_elim (trunc_S n) X _ _ _ _)).
+  refine (pr1 (@isconnected_elim n.+1 X _ _ _ _)).
   { apply @trunc_arrow; try typeclasses eauto; intros.
     admit. }
   { exists (fun b s => tr (hfiber_pair b (cancelR _ _ _ s))).

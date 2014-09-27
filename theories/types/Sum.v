@@ -5,6 +5,7 @@ Require Import Basics.
 Require Import types.Empty.
 (** The following are only required for the equivalence between [sum] and a sigma type *)
 Require Import types.Bool types.Forall types.Sigma.
+Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
@@ -184,7 +185,7 @@ Definition equiv_sum_distributive `{Funext} (A B C : Type)
 
 (** ** Sums preserve most truncation *)
 
-Instance trunc_sum n' (n := trunc_S (trunc_S n'))
+Instance trunc_sum n' (n := n'.+2)
          `{IsTrunc n A, IsTrunc n B}
 : IsTrunc n (A + B) | 100.
 Proof.

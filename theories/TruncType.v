@@ -20,7 +20,7 @@ Record TruncType (n : trunc_index) := BuildTruncType {
   trunctype_type :> Type ;
   istrunc_trunctype_type : IsTrunc n trunctype_type
 }.
-(* Note: the naming of the second constructor is more than a little clunky.  However, the more obvious [istrunc_trunctype] is taken by the theorem below, that [IsTrunc (trunc_S n) (TruncType n)], which seems to have an even better claim to it. *)
+(* Note: the naming of the second constructor is more than a little clunky.  However, the more obvious [istrunc_trunctype] is taken by the theorem below, that [IsTrunc n.+1 (TruncType n)], which seems to have an even better claim to it. *)
 
 Arguments BuildTruncType _ _ {_}.
 Arguments trunctype_type [_] _.
@@ -51,7 +51,7 @@ Definition path_trunctype {n : trunc_index} {A B : TruncType n}
 := equiv_path_trunctype A B.
 
 Global Instance istrunc_trunctype {n : trunc_index}
-  : IsTrunc (trunc_S n) (TruncType n) | 0.
+  : IsTrunc n.+1 (TruncType n) | 0.
 Proof.
   intros A B.
   apply (@trunc_equiv _ _ (equiv_path_trunctype A B)).
@@ -61,7 +61,7 @@ Proof.
   apply istrunc_equiv.
 Defined.
 
-Global Instance Sn_trunctype: forall n, IsTrunc (trunc_S n) (sigT (IsTrunc n)) |0.
+Global Instance Sn_trunctype: forall n, IsTrunc n.+1 (sigT (IsTrunc n)) |0.
 intro n.
 apply (@trunc_equiv' _ _ (equiv_inverse issig_trunctype) _ (@istrunc_trunctype n)).
 Defined.

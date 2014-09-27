@@ -259,7 +259,7 @@ Defined.
 (** The connectivity of a pointed type and (the inclusion of) its point are intimately connected. *)
 
 Global Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
- `{IsConnMap n _ _ (unit_name a0)} : IsConnected (trunc_S n) A | 1000.
+ `{IsConnMap n _ _ (unit_name a0)} : IsConnected n.+1 A | 1000.
 Proof.
   apply isconnected_from_elim.
   intros C HC f. exists (f a0).
@@ -267,12 +267,12 @@ Proof.
 Defined.
 
 Global Instance conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
- `{IsConnected (trunc_S n) A} : IsConnMap n (unit_name a0) | 1000.
+ `{IsConnected n.+1 A} : IsConnMap n (unit_name a0) | 1000.
 Proof.
   apply conn_map_from_extension_elim.
   intros P ?. set (PP := fun a => BuildTruncType n (P a) _).
   assert (QQ :=
-    @isconnected_elim (trunc_S n) _ _ (TruncType n) istrunc_trunctype PP).
+    @isconnected_elim n.+1 _ _ (TruncType n) istrunc_trunctype PP).
   destruct QQ as [[Q0 HQ] e].
   assert (e' := fun a => ap (trunctype_type _) (e a)); simpl in e'. clear HQ e.
   intros d. set (d0 := d tt).
@@ -295,8 +295,8 @@ Once again, we believe that the type of the conclusion is an hprop (though we do
 
 Context `{Univalence}
   {m n : trunc_index}
-  {A : Type} (a0 : A) `{IsConnected (trunc_S m) A}
-  {B : Type} (b0 : B) `{IsConnected (trunc_S n) B}
+  {A : Type} (a0 : A) `{IsConnected m.+1 A}
+  {B : Type} (b0 : B) `{IsConnected n.+1 B}
   (P : A -> B -> Type) {HP : forall a b, IsTrunc (m -2+ n) (P a b)}
   (f_a0 : forall b:B, P a0 b)
   (f_b0 : forall a:A, P a b0)
@@ -349,8 +349,8 @@ End Wedge_Incl_Conn.
 
 Definition wedge_incl_elim_uncurried `{Univalence}
   {m n : trunc_index}
-  {A : Type} (a0 : A) `{IsConnected (trunc_S m) A}
-  {B : Type} (b0 : B) `{IsConnected (trunc_S n) B}
+  {A : Type} (a0 : A) `{IsConnected m.+1 A}
+  {B : Type} (b0 : B) `{IsConnected n.+1 B}
   (P : A -> B -> Type) {HP : forall a b, IsTrunc (m -2+ n) (P a b)}
   (fs : {f_a0 : forall b:B, P a0 b
         & { f_b0 : forall a:A, P a b0
