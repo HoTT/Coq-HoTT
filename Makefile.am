@@ -341,9 +341,13 @@ TAGS : $(TAGS_FILES)
 	$^
 
 # Dependency files
-$(ALL_DEPFILES) : %.d : %.v
+$(MAIN_DEPFILES) : %.d : %.v
 	$(VECHO) COQDEP $<
 	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
+
+$(STD_DEPFILES) : %.d : %.v
+	$(VECHO) COQDEP $<
+	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
 
 clean-dpdgraph:
 	(cd etc/dpdgraph-0.4alpha && $(MAKE) clean)
