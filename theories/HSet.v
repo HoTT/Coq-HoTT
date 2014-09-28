@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * H-Sets *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Paths types.Sigma types.Empty types.Record types.Unit types.Arrow HProp.
 
 Local Open Scope equiv_scope.

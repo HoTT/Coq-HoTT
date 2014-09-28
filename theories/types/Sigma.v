@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about Sigma-types (dependent sums) *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Arrow.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.

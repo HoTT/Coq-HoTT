@@ -2,7 +2,7 @@
 
 (** * Truncations of types, in all dimensions. *)
 
-Require Import Basics types.Sigma ReflectiveSubuniverse Modality.
+Require Import HoTT.Basics types.Sigma ReflectiveSubuniverse Modality.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A X n.

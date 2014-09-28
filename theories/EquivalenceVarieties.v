@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Comparing definitions of equivalence *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Sigma types.Forall types.Record types.Paths types.Prod types.Arrow HProp.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.

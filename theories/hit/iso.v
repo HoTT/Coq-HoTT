@@ -1,4 +1,4 @@
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Universe.
 Require Import HSet UnivalenceImpliesFunext.
 Require Import hit.epi hit.unique_choice hit.Truncations.

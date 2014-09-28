@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Connectedness *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Forall types.Sigma types.Paths types.Unit types.Arrow types.Universe.
 Require Import TruncType UnivalenceImpliesFunext HProp EquivalenceVarieties.
 Require Import hit.Truncations.

@@ -2,7 +2,7 @@
 
 (** * The suspension of a type *)
 
-Require Import Basics types.Paths Misc.
+Require Import HoTT.Basics types.Paths Misc.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.

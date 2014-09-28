@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the empty type *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 Local Open Scope path_scope.
 
 (** ** Unpacking *)

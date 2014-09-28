@@ -1,4 +1,4 @@
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Universe types.Unit types.Forall types.Arrow types.Sigma types.Paths.
 Require Import HProp Misc TruncType HSet UnivalenceImpliesFunext.
 Require Import hit.Pushout hit.Truncations hit.Connectedness.
