@@ -72,12 +72,12 @@ Proof.
 Defined.
 
 (** We can induct on the truncation index to get that [IsTrunc] is (n+1)-truncated for all [n]. *)
-Lemma istrunc_s__ishprop `{IsHProp A} {n} : IsTrunc (trunc_S n) A.
+Lemma istrunc_s__ishprop `{IsHProp A} {n} : IsTrunc n.+1 A.
 Proof.
   induction n; typeclasses eauto.
 Defined.
 
-Global Instance trunc_trunc `{Funext} A m n : IsTrunc (trunc_S n) (IsTrunc m A) | 0
+Global Instance trunc_trunc `{Funext} A m n : IsTrunc n.+1 (IsTrunc m A) | 0
   := istrunc_s__ishprop.
 
 (** Chracterization of [IsHProp] in terms of all points being connected by paths. *)

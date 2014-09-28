@@ -18,7 +18,7 @@ Fixpoint Sphere (n : trunc_index)
   := match n return Type with
        | -2 => Empty
        | -1 => Empty
-       | trunc_S n' => Susp (Sphere (n'))
+       | n'.+1 => Susp (Sphere n')
      end.
 
 (** ** Explicit equivalences in low dimensions  *)
@@ -75,7 +75,7 @@ Defined.
 (** TODO: re-type these lemmas in terms of truncation. *)
 
 Fixpoint allnullhomot_trunc {n : trunc_index} {X : Type} `{IsTrunc n X}
-  (f : Sphere (trunc_S n) -> X) {struct n}
+  (f : Sphere n.+1 -> X) {struct n}
 : NullHomotopy f.
 Proof.
   destruct n as [ | n'].
@@ -85,8 +85,8 @@ Proof.
 Defined.
 
 Fixpoint trunc_allnullhomot {n : trunc_index} {X : Type}
-  (HX : forall (f : Sphere (trunc_S (trunc_S n)) -> X), NullHomotopy f) {struct n}
-: IsTrunc (trunc_S n) X.
+  (HX : forall (f : Sphere n.+2 -> X), NullHomotopy f) {struct n}
+: IsTrunc n.+1 X.
 Proof.
   destruct n as [ | n'].
   (* n = -2 *) apply hprop_allpath.
