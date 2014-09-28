@@ -241,12 +241,12 @@ Definition isequiv_path_equiv {A B : Type} {e1 e2 : A <~> B}
   : IsEquiv (@path_equiv _ _ e1 e2)
 := equiv_path_equiv e1 e2.
 
-Lemma istrunc_equiv {n : trunc_index} {A B : Type} `{IsTrunc (trunc_S n) B}
-  : IsTrunc (trunc_S n) (A <~> B).
+Lemma istrunc_equiv {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
+  : IsTrunc n.+1 (A <~> B).
 Proof.
   simpl. intros e1 e2.
   apply (@trunc_equiv _ _ (equiv_path_equiv e1 e2)).
-    apply (@trunc_arrow _ A B (trunc_S n) _).
+    apply (@trunc_arrow _ A B n.+1 _).
   apply equiv_isequiv.
 Defined.
 

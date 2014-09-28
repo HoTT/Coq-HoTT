@@ -11,7 +11,7 @@ Generalizable Variables A B m n f.
 Fixpoint trunc_index_add (m n : trunc_index) : trunc_index
   := match m with
        | -2 => n
-       | trunc_S m' => trunc_S (trunc_index_add m' n)
+       | m'.+1 => (trunc_index_add m' n).+1
      end.
 
 Notation "m -2+ n" := (trunc_index_add m n) (at level 50, left associativity) : trunc_scope.
@@ -19,8 +19,8 @@ Notation "m -2+ n" := (trunc_index_add m n) (at level 50, left associativity) : 
 Fixpoint trunc_index_leq (m n : trunc_index) : Type
   := match m, n with
        | -2, _ => Unit
-       | trunc_S m', -2 => Empty
-       | trunc_S m', trunc_S n' => trunc_index_leq m' n'
+       | m'.+1, -2 => Empty
+       | m'.+1, n'.+1 => trunc_index_leq m' n'
      end.
 
 Notation "m <= n" := (trunc_index_leq m n) (at level 70, no associativity) : trunc_scope.
@@ -32,7 +32,7 @@ Definition contr_trunc_minus_two `{H : IsTrunc -2 A} : Contr A
   := H.
 
 (** Truncation levels are cumulative. *)
-Instance trunc_succ `{IsTrunc n A} : IsTrunc (trunc_S n) A | 1000.
+Instance trunc_succ `{IsTrunc n A} : IsTrunc n.+1 A | 1000.
 Proof.
   generalize dependent A.
   induction n as [| n I]; simpl; intros A H x y.
