@@ -207,8 +207,12 @@ Canonical Structure default_HProp:= fun T P => (@hp T P).
 *)
 Existing Instance isp.
 Require Import Unit Empty.
-Definition Unit_hp:hProp:=(hp Unit _).
-Definition False_hp:hProp:=(hp Unit _).
+
+Definition Unit_hp : hProp := (hp Unit _).
+
+Definition False_hp : hProp := (hp Empty _).
+
+Definition Negation_hp `{Funext} (hprop : hProp) : hProp := hp (~hprop) _.
 (** We could continue with products etc *)
 
 Definition issig_hProp: (sigT IsHProp) <~> hProp.

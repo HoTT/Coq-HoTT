@@ -2,7 +2,7 @@
 (** * Theorems about the booleans *)
 
 Require Import HoTT.Basics.
-Require Import types.Prod HSet.
+Require Import types.Prod HSet HProp.
 Local Open Scope equiv_scope.
 
 (* coq calls it "bool", we call it "Bool" *)
@@ -127,3 +127,7 @@ Section EquivBoolEquiv.
     - intros []; reflexivity.
   Defined.
 End EquivBoolEquiv.
+
+(** canonical map from Bool to hProp *)
+Definition is_true (b : Bool) : hProp
+  := if b then Unit_hp else False_hp.
