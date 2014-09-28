@@ -1,4 +1,4 @@
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Universe.
 Require Import HSet HProp UnivalenceImpliesFunext.
 Require Import hit.epi hit.Truncations hit.Connectedness.

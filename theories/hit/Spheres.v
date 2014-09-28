@@ -2,7 +2,7 @@
 
 (** * The spheres, in all dimensions. *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Sigma types.Forall types.Paths types.Bool.
 Require Import HProp Misc.
 Require Import hit.Suspension hit.Circle.

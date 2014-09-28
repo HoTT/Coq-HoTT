@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the universe, including the Univalence Axiom. *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import HProp EquivalenceVarieties types.Sigma.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.

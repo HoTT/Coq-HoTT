@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Paths types.Forall types.Sigma types.Arrow types.Universe types.Unit types.Sum.
 Require Import HSet.
 Require Import hit.Truncations.

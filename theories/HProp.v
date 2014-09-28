@@ -1,6 +1,6 @@
 (** * HPropositions *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Forall types.Sigma types.Prod types.Record types.Paths.
 
 Local Open Scope equiv_scope.

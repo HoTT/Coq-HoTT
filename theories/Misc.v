@@ -12,7 +12,7 @@
 
 Conversely, several files in [hit] now depend on this file; so we should probably avoid using HIT’s in this file. *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Sigma types.Paths types.Record types.Arrow types.Forall types.Bool.
 Require Import HProp EquivalenceVarieties.
 Local Open Scope path_scope.

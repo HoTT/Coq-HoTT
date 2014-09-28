@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about the booleans *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Prod HSet.
 Local Open Scope equiv_scope.
 

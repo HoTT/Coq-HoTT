@@ -2,7 +2,7 @@
 
 (** * Theorems about the circle [S¹]. *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Paths types.Forall types.Arrow types.Universe types.Empty types.Unit.
 Require Import HSet UnivalenceImpliesFunext.
 Local Open Scope path_scope.

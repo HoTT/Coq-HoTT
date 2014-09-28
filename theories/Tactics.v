@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-Require Import Basics types.Prod types.Forall types.Paths.
+Require Import HoTT.Basics types.Prod types.Forall types.Paths.
 Require Export Tactics.BinderApply.
 
 (** * Extra tactics for homotopy type theory. *)

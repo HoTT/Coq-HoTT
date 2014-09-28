@@ -3,7 +3,7 @@
     But please do not use it in the HoTT library itself, or
     you are likely going to create a dependency loop. *)
 
-Require Export Basics.
+Require Export HoTT.Basics.
 
 Require Export Conjugation.
 Require Export HProp.

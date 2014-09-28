@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Theorems about disjoint unions *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Empty.
 (** The following are only required for the equivalence between [sum] and a sigma type *)
 Require Import types.Bool types.Forall types.Sigma.

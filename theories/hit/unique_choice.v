@@ -1,4 +1,4 @@
-Require Import Basics hit.Truncations HProp.
+Require Import HoTT.Basics hit.Truncations HProp.
 
 Definition atmost1 X:=(forall x1 x2:X, (x1 = x2)).
 Definition atmost1P {X} (P:X->Type):=

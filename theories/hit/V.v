@@ -2,7 +2,7 @@
 
 (** * The cumulative hierarchy [V]. *)
 
-Require Import Basics.
+Require Import HoTT.Basics.
 Require Import types.Unit types.Bool types.Universe types.Sigma types.Arrow types.Forall.
 Require Import HProp HSet EquivalenceVarieties UnivalenceImpliesFunext.
 Require Import hit.Truncations hit.quotient.
