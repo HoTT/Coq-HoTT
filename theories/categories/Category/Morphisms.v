@@ -20,7 +20,9 @@ Class IsIsomorphism {C : PreCategory} {s d} (m : morphism C s d) :=
   }.
 Local Set Primitive Projections.
 
-Local Notation "m ^-1" := (morphism_inverse (m := m)) (at level 3, format "m '^-1'") : morphism_scope.
+Arguments morphism_inverse {C s d} m {_}.
+
+Local Notation "m ^-1" := (morphism_inverse m) (at level 3, format "m '^-1'") : morphism_scope.
 
 Hint Resolve left_inverse right_inverse : category morphism.
 Hint Rewrite @left_inverse @right_inverse : category.
@@ -182,7 +184,7 @@ Section iso_equiv_relation.
 
   (** *** Being isomorphic is a symmetric relation *)
   Global Instance isomorphic_sym : Symmetric (@Isomorphic C)
-    := fun x y X => {| morphism_isomorphic := morphism_inverse |}.
+    := fun x y X => {| morphism_isomorphic := X^-1 |}.
 
   (** *** Being isomorphic is a transitive relation *)
   Global Instance isomorphic_trans : Transitive (@Isomorphic C)
@@ -636,7 +638,7 @@ Section associativity_composition.
 End associativity_composition.
 
 Module Export CategoryMorphismsNotations.
-  Notation "m ^-1" := (morphism_inverse (m := m)) (at level 3, format "m '^-1'") : morphism_scope.
+  Notation "m ^-1" := (morphism_inverse m) (at level 3, format "m '^-1'") : morphism_scope.
 
   Infix "<~=~>" := Isomorphic (at level 70, no associativity) : category_scope.
 
