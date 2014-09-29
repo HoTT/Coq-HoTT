@@ -58,25 +58,6 @@ Proof.
   path_forall_beta_t.
 Defined.
 
-(** Two lemmas about [transport]ing across [path_prod'], used for cleanup *)
-Definition transport_path_prod'_beta A B P (x x' : A) (y y' : B) (HA : x = x') (HB : y = y') (Px : P (x, y))
-: @transport (A * B) P (x, y) (x', y') (@path_prod' A B x x' y y' HA HB) Px
-  = @transport A (fun x => P (x, y')) x x' HA
-               (@transport B (fun y => P (x, y)) y y' HB Px).
-Proof.
-  path_induction.
-  reflexivity.
-Defined.
-
-Definition transport_path_prod'_beta' A B P (x x' : A) (y y' : B) (HA : x = x') (HB : y = y') (Px : P x y)
-: @transport (A * B) (fun xy => P (fst xy) (snd xy)) (x, y) (x', y') (@path_prod' A B x x' y y' HA HB) Px
-  = @transport A (fun x => P x y') x x' HA
-               (@transport B (fun y => P x y) y y' HB Px).
-Proof.
-  path_induction.
-  reflexivity.
-Defined.
-
 (** Rewrite the recursive case after clean-up *)
 Lemma path_forall_recr_beta `{Funext} A B x0 P f g e Px
 : @transport (forall a : A, B a)
@@ -99,7 +80,7 @@ Lemma path_forall_recr_beta `{Funext} A B x0 P f g e Px
 Proof.
   etransitivity.
   - apply path_forall_recr_beta'.
-  - apply transport_path_prod'_beta'.
+  - refine (transport_path_prod' _ _ _ _).
 Defined.
 
 
