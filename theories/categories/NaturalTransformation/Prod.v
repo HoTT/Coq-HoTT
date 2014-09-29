@@ -1,5 +1,5 @@
 (** * Natural transformations involving product categories *)
-Require Import Category.Core Functor.Core Category.Prod Functor.Prod NaturalTransformation.Core.
+Require Import Category.Core Functor.Core Category.Prod Functor.Prod.Core NaturalTransformation.Core.
 Require Functor.Composition.Core Functor.Identity.
 Require Import InitialTerminalCategory.Core.
 Require Import types.Prod.
@@ -45,8 +45,8 @@ Section induced.
     reflexivity.
 
   Definition induced_fst s d (m : morphism C s d)
-  : NaturalTransformation (Functor.Prod.induced_snd F s)
-                          (Functor.Prod.induced_snd F d).
+  : NaturalTransformation (Functor.Prod.Core.induced_snd F s)
+                          (Functor.Prod.Core.induced_snd F d).
   Proof.
     let F0 := match goal with |- NaturalTransformation ?F0 ?G0 => constr:(F0) end in
     let G0 := match goal with |- NaturalTransformation ?F0 ?G0 => constr:(G0) end in
@@ -58,8 +58,8 @@ Section induced.
   Defined.
 
   Definition induced_snd s d (m : morphism D s d)
-  : NaturalTransformation (Functor.Prod.induced_fst F s)
-                          (Functor.Prod.induced_fst F d).
+  : NaturalTransformation (Functor.Prod.Core.induced_fst F s)
+                          (Functor.Prod.Core.induced_fst F d).
   Proof.
     let F0 := match goal with |- NaturalTransformation ?F0 ?G0 => constr:(F0) end in
     let G0 := match goal with |- NaturalTransformation ?F0 ?G0 => constr:(G0) end in

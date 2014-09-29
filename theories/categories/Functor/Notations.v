@@ -1,12 +1,12 @@
 (** * Notations for functors *)
-Require Functor.Composition.Composition.
+Require Functor.Composition.
 Require Functor.Core.
 Require Functor.Dual.
 Require Functor.Identity.
 Require Functor.Prod.
 Require Functor.Sum.
 
-Include Functor.Composition.Composition.FunctorCompositionNotations.
+Include Functor.Composition.FunctorCompositionNotations.
 Include Functor.Core.FunctorCoreNotations.
 Include Functor.Dual.FunctorDualNotations.
 Include Functor.Identity.FunctorIdentityNotations.

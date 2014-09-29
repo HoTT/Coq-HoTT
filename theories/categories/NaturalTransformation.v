@@ -33,7 +33,5 @@ Include NaturalTransformation.Prod.
 (** We don't want to make utf-8 notations the default, so we don't export them. *)
 
 (** Since [Composition] is a separate sub-directory, we need to re-create the module structure *)
-Module Composition.
-  Require NaturalTransformation.Composition.Composition.
-  Include NaturalTransformation.Composition.Composition.
-End Composition.
+(** We want to have the following as subdirectories/modules, not at top level.  Unfortunately, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don't get the ability to rename subfolders by [Including] into other modules. *)
+Require NaturalTransformation.Composition.

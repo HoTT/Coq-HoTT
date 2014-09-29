@@ -58,7 +58,7 @@
 *)
 
 Require Import HoTT.
-Require HoTT.categories.categories.
+Require HoTT.categories.
 
 (* END OF PREAMBLE *)
 (* ================================================== lem:opp *)

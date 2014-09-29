@@ -1,7 +1,7 @@
 (** * Exponential laws about products and sums in exponents *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import ExponentialLaws.Law2.Functors.
-Require Import Functor.Pointwise Functor.Prod.
+Require Import Functor.Pointwise.Core Functor.Prod.Core.
 Require Import Category.Sum Functor.Sum NaturalTransformation.Sum.
 Require Import Functor.Paths NaturalTransformation.Paths.
 Require Import Functor.Identity Functor.Composition.Core.
