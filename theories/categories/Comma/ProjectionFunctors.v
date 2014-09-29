@@ -1,6 +1,6 @@
 (** * Functoriality of the comma category construction with projection functors *)
 Require Import Category.Core Functor.Core.
-Require Import Category.Prod Functor.Prod.
+Require Import Category.Prod Functor.Prod.Core.
 Require Import Category.Dual Functor.Dual.
 Require Import Functor.Composition.Core Functor.Identity.
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors NatCategory.

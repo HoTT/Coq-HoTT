@@ -16,7 +16,7 @@ Require Category.Prod.
 (** ** Dependent product precategories *)
 Require Category.Pi.
 (** ** ∑-precategories *)
-Require Category.Sigma.Sigma.
+Require Category.Sigma.
 (** ** Strict categories *)
 Require Category.Strict.
 (** ** Coproduct precategories *)
@@ -31,15 +31,12 @@ Include Category.Objects.
 Include Category.Prod.
 Include Category.Pi.
 (** We use the [Sigma] folder only to allow us to split up the various files and group conceptually similar lemmas, but not for namespacing.  So we include the main file in it. *)
-Include Category.Sigma.Sigma.
+Include Category.Sigma.
 Include Category.Strict.
 Include Category.Sum.
 Include Category.Univalent.
 (** We don't want to make utf-8 notations the default, so we don't export them. *)
 
 (** ** Subcategories *)
-(** For the subfolders, we need to re-create the module structure *)
-Module Subcategory.
-  Require Category.Subcategory.Subcategory.
-  Include Category.Subcategory.Subcategory.
-End Subcategory.
+(** For the subfolders, we need to re-create the module structure.  Alas, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don't get the ability to rename subfolders by [Including] into other modules. *)
+Require Category.Subcategory.

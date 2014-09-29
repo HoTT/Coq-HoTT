@@ -1,7 +1,7 @@
 (** * Hom Functor *)
 Require Import Category.Core Functor.Core SetCategory.Core Category.Dual Functor.Composition.Core.
-Require Category.Prod Functor.Prod.
-Import Category.Prod.CategoryProdNotations Functor.Prod.FunctorProdNotations.
+Require Category.Prod Functor.Prod.Core.
+Import Category.Prod.CategoryProdNotations Functor.Prod.Core.FunctorProdCoreNotations.
 Require Import HSet Overture.
 
 Set Universe Polymorphism.
@@ -52,13 +52,13 @@ Section covariant_contravariant.
 
   Local Open Scope functor_scope.
 
-  Local Arguments Functor.Prod.induced_snd / .
-  Local Arguments Functor.Prod.induced_fst / .
+  Local Arguments Functor.Prod.Core.induced_snd / .
+  Local Arguments Functor.Prod.Core.induced_fst / .
 
   (** ** Covariant hom functor [hom_C(A, ─) : C → set] *)
   Definition covariant_hom_functor (A : object C^op)
-    := Eval simpl in Functor.Prod.induced_snd (hom_functor C) A.
+    := Eval simpl in Functor.Prod.Core.induced_snd (hom_functor C) A.
   (** ** Contravariant hom functor [hom_C(─, A) : Cᵒᵖ → set] *)
   Definition contravariant_hom_functor (A : C)
-    := Eval simpl in Functor.Prod.induced_fst (hom_functor C) A.
+    := Eval simpl in Functor.Prod.Core.induced_fst (hom_functor C) A.
 End covariant_contravariant.

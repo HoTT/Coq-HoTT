@@ -17,7 +17,7 @@ Require Adjoint.Dual.
 (** ** Path spaces of adjunctions *)
 Require Adjoint.Paths.
 (** ** Composition *)
-Require Adjoint.Composition.Composition.
+Require Adjoint.Composition.
 
 Include Adjoint.Core.
 Include Adjoint.UnitCounit.
@@ -27,6 +27,6 @@ Include Adjoint.UnitCounitCoercions.
 Include Adjoint.HomCoercions.
 Include Adjoint.Dual.
 Include Adjoint.Paths.
-Include Adjoint.Composition.Composition.
+Include Adjoint.Composition.
 
 Require Export Adjoint.Notations.

@@ -1,6 +1,6 @@
 (** * Projection functors from comma categories *)
 Require Import Category.Core Functor.Core.
-Require Import Category.Prod Functor.Prod.
+Require Import Category.Prod Functor.Prod.Core.
 Require Import Functor.Composition.Core Functor.Identity.
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 Require Import Comma.Core.

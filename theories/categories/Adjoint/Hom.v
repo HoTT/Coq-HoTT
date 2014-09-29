@@ -3,7 +3,7 @@ Require Import Category.Core Functor.Core.
 Require Import Adjoint.Core Adjoint.UnitCounit.
 Require Import FunctorCategory.Core Category.Morphisms.
 Require Import Category.Dual Functor.Dual.
-Require Import Category.Prod Functor.Prod.
+Require Import Category.Prod Functor.Prod.Core.
 Require Import HomFunctor NaturalTransformation.Isomorphisms.
 Require Import Functor.Composition.Core.
 Require Import FunctorCategory.Morphisms.
