@@ -54,7 +54,7 @@ Ltac eval_under_binders tac H :=
   let rec_tac := eval_under_binders tac in
   (** If the hypothesis is a product ([forall]), we want to recurse under binders; if not, we're in the base case, and we simply compute the new term.  We use [match] rather than [lazymatch] so that if the tactic fails to apply under all of the binders, we try again under fewer binders.  We want to try first under as many binders as possible, in case the tactic, e.g., instantiates extra binders with evars. *)
   match type of H with
-      (** Standard pattern for recursing under binders.  We zeta-expand to work around https://coq.inria.fr/bugs/show_bug.cgi?id=3248 and https://coq.inria.fr/bugs/show_bug.cgi?id=3458; we'd otherwise need globally unique name for [x].  We zeta-reduce afterwards so the user doesn't see our zeta-expansion.  *)
+      (** Standard pattern for recursing under binders.  We zeta-expand to work around https://coq.inria.fr/bugs/show_bug.cgi?id=3248 and https://coq.inria.fr/bugs/show_bug.cgi?id=3458; we'd otherwise need globally unique name for [x].  We zeta-reduce afterwards so the user doesn't see our zeta-expansion.  We use [x] in both the pattern and the returned constructor so that we preserve the given name for the binder.  *)
     | forall x : ?T, @?P x
       => let ret := constr:(fun x : T =>
                               let Hx := H x in
