@@ -16,6 +16,17 @@ Ltac binder_apply apply_tac fail1_tac :=
         | fail 1 "Cannot re-revert some introduced hypothesis" ].
 
 
+(** The tactic [make_tac_under_binders_using_in tac using_tac H] uses [tac] to transform [H], solving side conditions (e.g., if [tac] uses [apply]) with [using_tac].  It returns the updated version of [H] as a constr, leaving the original hypothesis unmodified in the context.
+
+    The arguments are:
+
+    - [tac] - should take the name of a hypothesis, and modify that hypothesis in place.  It could, for example, be [fun H => rewrite lem in H] to do the [rewrite H] under binders.
+
+    - [using_tac] - used to solve any side conditions that [tac] generates.  Not strictly necessary, since [tac] can always solve its own side conditions, but it's sometimes convenient to instantiate [tac] with [fun H => eapply lem in H] or something, and solve the side conditions with [eassumption].
+
+    - [H] - the name of the hypothesis to start from.
+
+    N.B. We do not require [Funext] to use this tactic; [Funext] would only required to relate the term returned by this tactic and the original term.  Note also that we only rewrite under top-level binders (e.g., under the [x] in a hypothesis of type [forall x, P x], but not under the [x] in a hypothesis of type [(fun x y => x + y) = (fun x y => y + x)]). *)
 Ltac make_tac_under_binders_using_in tac using_tac H :=
   let rec_tac := make_tac_under_binders_using_in tac using_tac in
   match type of H with
