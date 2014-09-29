@@ -82,9 +82,9 @@ Defined.
 
 (** Now we show how these compute with transport. *)
 
-Lemma transport_path_prod_uncurried A B (P : A * B -> Type) (x y : A * B)
+Lemma transport_path_prod_uncurried {A B} (P : A * B -> Type) {x y : A * B}
       (H : (fst x = fst y) * (snd x = snd y))
-      Px
+      (Px : P x)
 : transport P (path_prod_uncurried _ _ H) Px
   = transport (fun x => P (x, snd y))
               (fst H)
@@ -97,32 +97,32 @@ Proof.
   reflexivity.
 Defined.
 
-Definition transport_path_prod A B (P : A * B -> Type) (x y : A * B)
+Definition transport_path_prod {A B} (P : A * B -> Type) {x y : A * B}
            (HA : fst x = fst y)
            (HB : snd x = snd y)
-           Px
+           (Px : P x)
 : transport P (path_prod _ _ HA HB) Px
   = transport (fun x => P (x, snd y))
               HA
               (transport (fun y => P (fst x, y))
                          HB
                          Px)
-  := transport_path_prod_uncurried _ _ P x y (HA, HB) Px.
+  := transport_path_prod_uncurried P (HA, HB) Px.
 
 Definition transport_path_prod'
-           A B (P : A * B -> Type)
-           (x y : A)
-           (x' y' : B)
+           {A B} (P : A * B -> Type)
+           {x y : A}
+           {x' y' : B}
            (HA : x = y)
            (HB : x' = y')
-           Px
+           (Px : P (x,x'))
 : transport P (path_prod' HA HB) Px
   = transport (fun x => P (x, y'))
               HA
               (transport (fun y => P (x, y))
                          HB
                          Px)
-  := transport_path_prod _ _ P (x, x') (y, y') HA HB Px.
+  := @transport_path_prod _ _ P (x, x') (y, y') HA HB Px.
 
 (** This lets us identify the path space of a product type, up to equivalence. *)
 
