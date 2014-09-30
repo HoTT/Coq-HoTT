@@ -23,7 +23,7 @@
 
 *)
 
-Require Import HoTT Coq.Init.Peano HoTTBook.
+Require Import HoTT Coq.Init.Peano.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -414,7 +414,16 @@ Defined.
 (* ================================================== ex:lem-impl-prop-equiv-bool *)
 (** Exercise 3.9 *)
 
-Lemma if_not_hprop_then_equiv_Empty (hprop : hProp)
+Lemma if_hprop_then_equiv_Unit_hp (hprop : hProp)
+  :  hprop -> hprop <~> Unit.
+Proof.
+  intro p. 
+  apply equiv_iff_hprop.
+  exact (fun _ => tt).
+  exact (fun _ => p).
+Defined.
+
+Lemma if_not_hprop_then_equiv_False_hp (hprop : hProp)
   : ~ hprop -> hprop <~> Empty.
 Proof.
   intro np. 
@@ -447,7 +456,7 @@ Proof.
   unfold LEM_hProp_Bool. elim (lem hprop _). simpl.
   intro useless.
   apply path_hprop. simpl. 
-  exact ((path_universe_uncurried (Book_3_3_2 hprop p))^).
+  exact ((path_universe_uncurried (if_hprop_then_equiv_Unit_hp hprop p))^).
   intro np.
   elim (np p).
   intro np.
@@ -456,7 +465,7 @@ Proof.
   elim (np p).
   intro useless.
   apply path_hprop. simpl. 
-  exact ((path_universe_uncurried (if_not_hprop_then_equiv_Empty hprop np))^).
+  exact ((path_universe_uncurried (if_not_hprop_then_equiv_False_hp hprop np))^).
 Defined.
 
 (* ================================================== ex:lem-impred *)
