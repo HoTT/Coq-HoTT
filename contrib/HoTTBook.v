@@ -375,12 +375,18 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 (* ================================================== thm:inhabprop-eqvunit *)
 (** Lemma 3.3.2 *)
 
-
+Lemma Book_3_3_2 (hprop : hProp) : hprop -> hprop <~> Unit.
+Proof.
+  intro p. 
+  apply equiv_iff_hprop.
+  exact (fun _ => tt).
+  exact (fun _ => p).
+Defined.
 
 (* ================================================== lem:equiv-iff-hprop *)
 (** Lemma 3.3.3 *)
 
-
+Definition Book_3_3_3 (A : Type) := (@HProp.equiv_iff_hprop A).
 
 (* ================================================== thm:prop-set *)
 (** Lemma 3.3.4 *)
