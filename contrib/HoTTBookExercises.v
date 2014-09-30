@@ -414,7 +414,59 @@ Defined.
 (* ================================================== ex:lem-impl-prop-equiv-bool *)
 (** Exercise 3.9 *)
 
+Lemma if_hprop_then_equiv_Unit_hp (hprop : hProp)
+  :  hprop -> hprop <~> Unit.
+Proof.
+  intro p. 
+  apply equiv_iff_hprop.
+  exact (fun _ => tt).
+  exact (fun _ => p).
+Defined.
 
+Lemma if_not_hprop_then_equiv_False_hp (hprop : hProp)
+  : ~ hprop -> hprop <~> Empty.
+Proof.
+  intro np. 
+  apply equiv_iff_hprop.
+  intro p.
+  elim (np p).
+  intro fals.
+  elim fals.
+Defined.
+
+Definition LEM := forall A : Type, IsHProp A -> A + ~A.
+
+Definition LEM_hProp_Bool (lem : LEM) (hprop : hProp) : Bool
+  := match (lem _ (isp hprop)) with inl _ => true | inr _ => false end.
+
+Lemma Book_3_9_solution_1 `{Univalence} : LEM -> hProp <~> Bool.
+Proof.
+  intro lem.
+  apply (equiv_adjointify (LEM_hProp_Bool lem) is_true).
+  unfold Sect. intro b. destruct b; simpl.
+  unfold LEM_hProp_Bool. elim (lem Unit_hp _).
+  exact (fun _ => 1).
+  intro nUnit. elim (nUnit tt). 
+  unfold LEM_hProp_Bool. elim (lem False_hp _).
+  intro fals. elim fals.
+  exact (fun _ => 1).
+  unfold Sect. intro hprop.
+  elim (lem hprop _).
+  intro p.
+  unfold LEM_hProp_Bool. elim (lem hprop _). simpl.
+  intro useless.
+  apply path_hprop. simpl. 
+  exact ((path_universe_uncurried (if_hprop_then_equiv_Unit_hp hprop p))^).
+  intro np.
+  elim (np p).
+  intro np.
+  unfold LEM_hProp_Bool. elim (lem hprop _). simpl.
+  intro p.
+  elim (np p).
+  intro useless.
+  apply path_hprop. simpl. 
+  exact ((path_universe_uncurried (if_not_hprop_then_equiv_False_hp hprop np))^).
+Defined.
 
 (* ================================================== ex:lem-impred *)
 (** Exercise 3.10 *)
