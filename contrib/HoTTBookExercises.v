@@ -23,7 +23,7 @@
 
 *)
 
-Require Import HoTT Coq.Init.Peano.
+Require Import HoTT Coq.Init.Peano HoTTBook.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -447,7 +447,7 @@ Proof.
   unfold LEM_hProp_Bool. elim (lem hprop _). simpl.
   intro useless.
   apply path_hprop. simpl. 
-  exact ((path_universe_uncurried (if_hprop_then_equiv_Unit hprop p))^).
+  exact ((path_universe_uncurried (Book_3_3_2 hprop p))^).
   intro np.
   elim (np p).
   intro np.
