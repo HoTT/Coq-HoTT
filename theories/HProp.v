@@ -236,3 +236,22 @@ Proof.
 Defined.
 
 Definition path_hprop `{Funext} X Y := (@ap _ _ hproptype X Y)^-1%equiv.
+
+Lemma if_hprop_then_equiv_Unit (hprop : hProp) :  hprop -> hprop <~> Unit.
+Proof.
+  intro p. 
+  apply equiv_iff_hprop.
+  exact (fun _ => tt).
+  exact (fun _ => p).
+Defined.
+
+Lemma if_not_hprop_then_equiv_Empty (hprop : hProp) : ~hprop -> hprop <~> Empty.
+Proof.
+  intro np. 
+  apply equiv_iff_hprop.
+  intro p.
+  elim (np p).
+  intro fals.
+  elim fals.
+Defined.
+
