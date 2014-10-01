@@ -10,13 +10,13 @@ Local Open Scope equiv_scope.
 
 Class Modality :=
   {
-    mod_usubu : UnitSubuniverse ;
+    mod_usubu : UnitSubuniverse@{i k} ;
     mod_replete : Replete mod_usubu ;
-    O_rect : forall A (B : O A -> Type) (B_inO : forall oa, inO (B oa)),
+    O_rect : forall (A : Type@{i}) (B : O A -> Type@{i}) (B_inO : forall oa, inO (B oa)),
                (forall a, B (O_unit A a)) -> forall a, B a ;
-    O_rect_beta : forall A B B_inO (f : forall a : A, B (O_unit A a)) a,
+    O_rect_beta : forall (A : Type@{i}) (B : O A -> Type@{i}) B_inO (f : forall a : A, B (O_unit A a)) a,
                     O_rect A B B_inO f (O_unit A a) = f a ;
-    inO_paths : forall A (A_inO : inO A) (z z' : A), inO (z = z')
+    inO_paths : forall (A : Type@{i}) (A_inO : inO A) (z z' : A), inO (z = z')
   }.
 
 Arguments O_rect {Modality} {A} B {B_inO} f a.

@@ -16,12 +16,13 @@ Local Arguments compose / .
 (** A UnitSubuniverse is the common underlying structure of a reflective subuniverse and a modality.  We make it a separate structure in order to use the same names for its fields and functions in the two cases. *)
 Class UnitSubuniverse :=
   {
-    inO_internal : Type -> Type ;
-    O : Type -> Type ;
-    O_inO_internal : forall T, inO_internal (O T) ;
-    O_unit : forall T, T -> O T ;
+    inO_internal : Type@{i} -> Type@{k} ;
+    (** We are using explicit universe annotations mainly for efficiency reasons.  We allow [inO T] to be in a different universe that [T], but we require [O T] to be in the same universe as [T].  I believe that due to the way universe polymorphism works, we technically have a different type of [UnitSubuniverse] objects for each universes [i] and [k].  *)
+    O : Type@{i} -> Type@{i} ;
+    O_inO_internal : forall (T : Type@{i}), inO_internal (O T) ;
+    O_unit : forall (T : Type@{i}), T -> O T ;
     (** In most examples, [Funext] is necessary to prove that the predicate of being in the subuniverse is an hprop.  To avoid needing to assume [Funext] as a global hypothesis when constructing such examples, and since [Funext] is often not needed for any of the rest of the theory, we add it as a hypothesis to this specific field of the record. *)
-    hprop_inO_internal : Funext -> forall T, IsHProp (inO_internal T)
+    hprop_inO_internal : Funext -> forall (T : Type@{i}), IsHProp (inO_internal T)
   }.
 
 (** For reflective subuniverses (and hence also modalities), it will turn out that [inO T] is equivalent to [IsEquiv (O_unit T)].  We could define the former as the latter, and it would simplify some of the general theory.  However, in many examples there is a "more basic" definition of [inO] which is equivalent, but not definitionally identical, to [IsEquiv (O_unit T)].  Thus, including [inO] as data makes more things turn out to be judgmentally what we would expect. *)
@@ -81,14 +82,15 @@ End Unit_Subuniverse.
 (** A reflective subuniverse is a [UnitSubuniverse], as above, whose unit has a universal property.  Our definition is somewhat different from that in the book, being instead more similar to the definition of a [Modality]; below we show that it is in fact equivalent. *)
 Class ReflectiveSubuniverse :=
   {
-    rsubu_usubu : UnitSubuniverse ;
-    O_rectnd : forall {P Q : Type} {Q_inO : inO Q} (f : P -> Q), O P -> Q ;
-    O_rectnd_beta : forall {P Q : Type} {Q_inO : inO Q} (f : P -> Q) (x : P),
+    rsubu_usubu : UnitSubuniverse@{i k} ;
+    (** Note that types in a universe [i] only have a universal property with respect to types in the same universe [i].  This is not desired, but it seems impossible to avoid since a typeclass cannot have fields that are individually universe polymorphic. *)
+    O_rectnd : forall {P : Type@{i}} {Q : Type@{i}} {Q_inO : inO Q} (f : P -> Q), O P -> Q ;
+    O_rectnd_beta : forall {P : Type@{i}} {Q : Type@{i}} {Q_inO : inO Q} (f : P -> Q) (x : P),
                       O_rectnd f (O_unit P x) = f x ;
-    O_rectpaths : forall {P Q : Type} {Q_inO : inO Q}
+    O_rectpaths : forall {P : Type@{i}} {Q : Type@{i}} {Q_inO : inO Q}
                          (g h : O P -> Q) (p : g o O_unit P == h o O_unit P),
                     g == h ;
-    O_rectpaths_beta : forall {P Q : Type} {Q_inO : inO Q}
+    O_rectpaths_beta : forall {P : Type@{i}} {Q : Type@{i}} {Q_inO : inO Q}
                          (g h : O P -> Q) (p : g o O_unit P == h o O_unit P)
                          (x : P),
                          O_rectpaths g h p (O_unit P x) = p x
@@ -192,8 +194,8 @@ End ReflectiveSubuniverseFromIsEquiv.
 
 (** A subuniverse is replete if it is closed under equivalence.  This is also a more usual sort of typeclass.  We are not very interested in non-replete subuniverses; the reason for not including repleteness in the main definition is so that functoriality, below, can not depend on it, so that in turn [Build_Modality_easy] can use functoriality to prove repleteness. *)
 
-Class Replete (subU : UnitSubuniverse) :=
-  inO_equiv_inO : forall T U (T_inO : @inO subU T) (f : T -> U) (feq : IsEquiv f), @inO subU U.
+Class Replete (subU : UnitSubuniverse@{i k}) :=
+  inO_equiv_inO : forall (T U : Type@{i}) (T_inO : @inO subU T) (f : T -> U) (feq : IsEquiv f), @inO subU U.
 
 (** Of course, with univalence this is automatic.  This is the only appearance of univalence in the theory of reflective subuniverses and (non-lex) modalities. *)
 Global Instance replete_univalence `{Univalence} (subU : UnitSubuniverse)
