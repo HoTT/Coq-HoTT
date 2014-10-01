@@ -42,6 +42,10 @@ Require Export hit.V.
 Require Export hit.Join.
 Require Export hit.PropositionalFracture.
 
+Require Export Logic.Generic.
+Require Logic.Notations.
+Require Export Logic.LEM.
+
 Require Export HoTT.Tactics.
 
 (** We do _not_ export [UnivalenceAxiom], [FunextAxiom], [UnivalenceImpliesFunext], or [hit.IntervalImpliesFunext] from this file; thus importing it does not prevent you from tracking usage of [Univalence] and [Funext] theorem-by-theorem in the same way that the library does.  If you want any of those files, you should import them separately. *)

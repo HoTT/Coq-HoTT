@@ -6,6 +6,9 @@ Require Import HoTT.Basics.
 Require Import types.Unit types.Bool types.Universe types.Sigma types.Arrow types.Forall.
 Require Import HProp HSet EquivalenceVarieties UnivalenceImpliesFunext.
 Require Import hit.Truncations hit.quotient.
+Require Import HoTT.Logic.
+Import Logic.Notations.Exists.
+
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -64,8 +67,8 @@ Defined.
 (** Bitotal relation *)
 
 Definition bitotal {A B : Type} (R : A -> B -> hProp) :=
-   (forall a : A, hexists (fun (b : B) => R a b))
- * (forall b : B, hexists (fun (a : A) => R a b)).
+   (forall a : A, hexists (b : B), R a b)
+ * (forall b : B, hexists (a : A), R a b).
 
 (** ** The cumulative hierarchy V *)
 
@@ -142,8 +145,8 @@ Defined.
 (** ** Alternative induction principle (This is close to the one from the book) *)
 
 Definition equal_img {A B C : Type} (f : A -> C) (g : B -> C) :=
-   (forall a : A, hexists (fun (b : B) => f a = g b))
- * (forall b : B, hexists (fun (a : A) => f a = g b)).
+   (forall a : A, hexists (b : B), f a = g b)
+ * (forall b : B, hexists (a : A), f a = g b).
 
 Definition setext' {A B : Type} (f : A -> V) (g : B -> V) (eq_img : equal_img f g)
 : set f = set g.
@@ -183,10 +186,10 @@ Definition V_rect' (P : V -> Type)
   (H_setext' : forall (A B : Type) (f : A -> V) (g : B -> V)
     (eq_img: equal_img f g)
     (H_f : forall a : A, P (f a)) (H_g : forall b : B, P (g b))
-    (H_eqimg : (forall a : A, hexists (fun (b : B) =>
-                  hexists (fun (p:f a = g b) => p # (H_f a) = H_g b)))
-             * (forall b : B, hexists (fun (a : A) =>
-                  hexists (fun (p:f a = g b) => p # (H_f a) = H_g b))) ),
+    (H_eqimg : (forall a : A, hexists (b : B) (p:f a = g b),
+                  p # (H_f a) = H_g b)
+             * (forall b : B, hexists (a : A) (p:f a = g b),
+                  p # (H_f a) = H_g b) ),
     (setext' f g eq_img) # (H_set A f H_f) = (H_set B g H_g)
   )
 : forall v : V, P v.
@@ -247,7 +250,7 @@ Context `{ua : Univalence}.
 Definition mem (x : V) : V -> hProp.
 Proof.
   refine (V_rect'_nd _ _ _ _). intros A f _.
-  exact (hp (hexists (fun a : A => f a = x)) _). simpl.
+  exact (hp (hexists (a : A), f a = x) _). simpl.
   intros A B f g eqimg _ _ _. apply path_iff_hProp_uncurried; split; simpl.
   - intro H. refine (Trunc_rect_nondep _ H).
     intros [a p]. generalize (fst eqimg a). apply (Trunc_functor -1).
@@ -277,8 +280,8 @@ Notation "x ⊆ y" := (subset x y)
 Local Definition bisim_aux (A : Type) (f : A -> V) (H_f : A -> V -> hProp) : V -> hProp.
 Proof.
   apply V_rect'_nd with
-    (fun B g _ => hp ( (forall a, hexists (fun b => H_f a (g b)))
-                      * forall b, hexists (fun a => H_f a (g b)) ) _
+    (fun B g _ => hp ( (forall a, hexists b, H_f a (g b))
+                      * forall b, hexists a, H_f a (g b) ) _
     ).
   exact _.
   intros B B' g g' eq_img H_g H_g' H_img; simpl.
@@ -286,7 +289,7 @@ Proof.
   - intros [H1 H2]; split.
     + intro a. refine (Trunc_rect_nondep _ (H1 a)).
       intros [b H3]. generalize (fst eq_img b).
-      unfold hexists. refine (@Trunc_functor -1 {b0 : B' & g b = g' b0} {b0 : B' & H_f a (g' b0)} _).
+      refine (@Trunc_functor -1 {b0 : B' & g b = g' b0} {b0 : B' & H_f a (g' b0)} _).
       intros [b' p]. exists b'. exact (transport (fun x => H_f a x) p H3).
     + intro b'. refine (Trunc_rect_nondep _ (snd eq_img b')).
       intros [b p]. generalize (H2 b). apply (Trunc_functor -1).
@@ -608,7 +611,7 @@ Notation " a × b " := (V_cart_prod a b)
 
 (** f is a function with domain a and codomain b *)
 Definition V_is_func (a : V) (b : V) (f : V) := f ⊆ a × b
- * (forall x, x ∈ a -> hexists (fun y => y ∈ b * [x,y] ∈ f))
+ * (forall x, x ∈ a -> hexists y, y ∈ b * [x,y] ∈ f)
  * (forall x y y', [x,y] ∈ f * [x,y'] ∈ f -> y = y').
 
 (** The set of functions from a to b *)
@@ -650,7 +653,7 @@ Proof.
   intros [ff _]. exact ff.
 Qed.
 
-Lemma pairing : forall u v, hexists (fun w => forall x, x ∈ w <-> hor (x = u) (x = v)).
+Lemma pairing : forall u v, hexists w, forall x, x ∈ w <-> hor (x = u) (x = v).
 Proof.
   intros u v. apply tr. exists (V_pair u v).
   intro; split; apply (Trunc_functor -1).
@@ -665,7 +668,7 @@ Proof.
   intros [n p]. exists (S n). rewrite p; auto.
 Qed.
 
-Lemma union : forall v, hexists (fun w => forall x, x ∈ w <-> hexists (fun u => x ∈ u * u ∈ v)).
+Lemma union : forall v, hexists w, forall x, x ∈ w <-> hexists u, x ∈ u * u ∈ v.
 Proof.
   intro v. apply tr; exists (V_union v).
   intro x; split.
@@ -684,7 +687,7 @@ Proof.
     apply tr. exists (u'; x'). exact px.
 Qed.
 
-Lemma function : forall u v, hexists (fun w => forall x, x ∈ w <-> V_is_func u v x).
+Lemma function : forall u v, hexists w, forall x, x ∈ w <-> V_is_func u v x.
 Proof.
   intros u v. apply tr; exists (V_func u v).
   assert (memb_u : u = set (@func_of_members u)) by exact (is_valid_presentation u).
@@ -733,7 +736,7 @@ Proof.
 Qed.
 
 Lemma replacement : forall (r : V -> V) (x : V),
-  hexists (fun w => forall y, y ∈ w <-> hexists (fun z => z ∈ x * (r z = y))).
+  hexists w, forall y, y ∈ w <-> hexists z, z ∈ x * (r z = y).
 Proof.
   intro r. refine (V_rect_hprop _ _ _).
   intros A f _. apply tr. exists (set (r o f)). split.
@@ -745,7 +748,7 @@ Proof.
 Qed.
 
 Lemma separation (C : V -> hProp) : forall a : V,
-  hexists (fun w => forall x, x ∈ w <-> x ∈ a * (C x)).
+  hexists w, forall x, x ∈ w <-> x ∈ a * (C x).
 Proof.
   refine (V_rect_hprop _ _ _).
   intros A f _. apply tr. exists (set (fun z : {a : A & C (f a)} => f (pr1 z))). split.

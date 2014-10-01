@@ -112,13 +112,9 @@ Coercion truncation_modality : trunc_index >-> Modality.
 (** It's sometimes convenient to use "infinity" to refer to the identity modality in a similar way.  This clashes with some uses in higher topos theory, where "oo-truncated" means instead "hypercomplete", but this has not yet been a big problem. *)
 Notation oo := identity_modality.
 
-(** ** A few special things about the (-1)-truncation. *)
+(** ** The (-1)-truncation has a special name. *)
 
 Notation merely := (Trunc -1).
-
-Definition hexists {X} (P : X -> Type) : Type := merely (sigT P).
-
-Definition hor (P Q : Type) : Type := merely (P + Q).
 
 (** ** Tactic to remove truncations in hypotheses if possible. *)
 Ltac strip_truncations :=

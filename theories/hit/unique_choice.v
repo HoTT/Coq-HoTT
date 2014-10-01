@@ -1,9 +1,11 @@
 Require Import HoTT.Basics hit.Truncations HProp.
+Require Import HoTT.Logic.
+Import Logic.Notations.Exists.
 
 Definition atmost1 X:=(forall x1 x2:X, (x1 = x2)).
 Definition atmost1P {X} (P:X->Type):=
     (forall x1 x2:X, P x1 -> P x2 -> (x1 = x2)).
-Definition hunique {X} (P:X->Type):=(hexists P) * (atmost1P P).
+Definition hunique {X} (P:X->Type):=(hexists x, P x) /\ (atmost1P P).
 
 Lemma atmost {X} {P : X -> Type}:
   (forall x, IsHProp (P x)) -> (atmost1P P) -> atmost1 (sigT  P).
