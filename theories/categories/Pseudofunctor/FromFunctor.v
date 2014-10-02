@@ -29,7 +29,7 @@ Section of_functor.
 
   Definition path_functor_helper A B (F1 F2 : Functor A B) (pf1 pf2 : F1 = F2)
   : P A -> P B -> pf1 = pf2
-    := fun PA PB => @allpath_hprop _ (@HP A B PA PB F1 F2) _ _.
+    := fun PA PB => @path_ishprop _ (@HP A B PA PB F1 F2) _ _.
 
   Local Hint Extern 0 (P ?x.1) => exact x.2.
 

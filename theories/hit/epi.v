@@ -24,8 +24,8 @@ Lemma path_equiv_biimp :
  forall P P': sigT IsHProp, (P.1<->P'.1) <~> (P = P').
 intros.
 apply equiv_adjointify with (path_biimp P P') (biimp_path P P').
-- intro x. destruct x. eapply allpath_hprop.
-- intros x. cut (IsHProp (P .1 <-> P' .1)). intro H. apply allpath_hprop.
+- intro x. destruct x. eapply path_ishprop.
+- intros x. cut (IsHProp (P .1 <-> P' .1)). intro H. apply path_ishprop.
   cut (Contr(P .1 <-> P' .1)). intro. apply trunc_succ.
   exists x. intro y. destruct y as [y1 y2]. destruct x as [x1 x2].
 f_ap; apply path_forall; intro x; [apply P'.2| apply P.2].
@@ -63,7 +63,7 @@ Proof.
     intro xy; specialize (hepi xy).
     apply path_sigma_uncurried.
     exists hepi.
-    apply allpath_hprop. }
+    apply path_ishprop. }
   { intros hepi xy.
     exact (ap pr1 ((contr (g; 1))^ @ contr xy)). }
 Defined.

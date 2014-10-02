@@ -108,7 +108,7 @@ Definition V_comp_setext (P : V -> Type)
 : apD (V_rect P H_0trunc H_set H_setext) (setext R bitot_R h)
   = H_setext A B R bitot_R h ((V_rect P H_0trunc H_set H_setext) oD h).
 Proof.
-  apply allpath_hprop.
+  apply path_ishprop.
 Defined.
 
 (** The non-dependent eliminator *)
@@ -135,7 +135,7 @@ Definition V_comp_nd_setext (P : Type)
 : ap (V_rect_nd P H_0trunc H_set H_setext) (setext R bitot_R h)
   = H_setext A B R bitot_R h ((V_rect_nd P H_0trunc H_set H_setext) o h).
 Proof.
-  apply allpath_hprop.
+  apply path_ishprop.
 Defined.
 
 
@@ -206,7 +206,7 @@ Proof.
   transitivity (transport P (setext' (h o inL R) (h o inR R) eq_img)
       (H_set A (h o inL R) (H_h oD inL R))).
   { apply (ap (fun p => transport P p (H_set A (h o inL R) (H_h oD inL R)))).
-    apply allpath_hprop. }
+    apply path_ishprop. }
   apply (H_setext' A B f g eq_img H_f H_g).  split.
   - intro a.
     set (truncb := fst bitot_R a). generalize truncb.
@@ -235,7 +235,7 @@ Definition V_rect_hprop (P : V -> Type)
   : forall v : V, P v.
 Proof.
   refine (V_rect _ _ H_set _).
-  intros. apply allpath_hprop.
+  intros. apply path_ishprop.
 Defined.
 
 
@@ -528,7 +528,7 @@ Definition V_singleton (u : V) : V@{U' U} := set (Unit_rect u).
 Instance isequiv_ap_V_singleton {u v : V}
 : IsEquiv (@ap _ _ V_singleton u v).
 Proof.
-  refine (BuildIsEquiv _ _ _ _ _ _ _); try solve [ intro; apply allpath_hprop ].
+  refine (BuildIsEquiv _ _ _ _ _ _ _); try solve [ intro; apply path_ishprop ].
   { intro H. specialize (path_V_eqimg H). intros (H1, H2).
     refine (Trunc_rect_nondep _ (H1 tt)). intros [t p]. destruct t; exact p. }
 Defined.
@@ -716,7 +716,7 @@ Proof.
       { apply hprop_allpath. intros [y (H1_y, H2_y)] [y' (H1_y', H2_y')].
         apply path_sigma_uncurried; simpl.
         exists (H3 x y y' (H2_y, H2_y')).
-        apply allpath_hprop. }
+        apply path_ishprop. }
       destruct H as [y (H1_y, H2_y)].
       destruct (@untrunc_istrunc -1 _ (IsEmbedding_funcofmembers y) (transport (fun z => y ∈ z) memb_v H1_y)) as [b Hb].
       exists b. exact (transport (fun z => [x, z] ∈ phi) Hb^ H2_y). }

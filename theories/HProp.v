@@ -82,7 +82,7 @@ Global Instance trunc_trunc `{Funext} A m n : IsTrunc n.+1 (IsTrunc m A) | 0
 
 (** Chracterization of [IsHProp] in terms of all points being connected by paths. *)
 
-Theorem allpath_hprop `{H : IsHProp A} : forall x y : A, x = y.
+Theorem path_ishprop `{H : IsHProp A} : forall x y : A, x = y.
 Proof.
   apply H.
 Defined.
@@ -96,7 +96,7 @@ Defined.
 Theorem equiv_hprop_allpath `{Funext} (A : Type)
   : IsHProp A <~> (forall (x y : A), x = y).
 Proof.
-  apply (equiv_adjointify (@allpath_hprop A) (@hprop_allpath A));
+  apply (equiv_adjointify (@path_ishprop A) (@hprop_allpath A));
   (* The proofs of the two homotopies making up this equivalence are almost identical.  First we start with a thing [f]. *)
     intro f;
   (* Then we apply funext a couple of times *)
@@ -117,7 +117,7 @@ Definition isequiv_iff_hprop `{IsHProp A} `{IsHProp B}
 : IsEquiv f.
 Proof.
   apply (isequiv_adjointify f g);
-    intros ?; apply allpath_hprop.
+    intros ?; apply path_ishprop.
 Defined.
 
 Definition equiv_iff_hprop_uncurried `{IsHProp A} `{IsHProp B}
@@ -125,7 +125,7 @@ Definition equiv_iff_hprop_uncurried `{IsHProp A} `{IsHProp B}
 Proof.
   intros [f g].
   apply (equiv_adjointify f g);
-    intros ?; apply allpath_hprop.
+    intros ?; apply path_ishprop.
 Defined.
 
 Definition equiv_iff_hprop `{IsHProp A} `{IsHProp B}

@@ -19,7 +19,7 @@ Proof.
   - intros A B f z u.
     refine (transport B _ (f (z u) u)).
     apply path_arrow; intros u'.
-    apply ap; apply allpath_hprop.
+    apply ap; apply path_ishprop.
   - intros A B f a.
     apply path_arrow; intros u.
     transitivity (transport B 1 (f a u));
@@ -40,7 +40,7 @@ Proof.
       + apply ap.
         apply path_forall; intros u'.
         apply (ap (fun u0 => ap10 (f u0) u')).
-        apply allpath_hprop.
+        apply path_ishprop.
       + apply eta_path_arrow.
     * intros p.
       apply eta_path_arrow.

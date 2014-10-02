@@ -40,7 +40,7 @@ Section opposite.
                   has_op x))
          x
          (Category.Dual.opposite_involutive x.1;
-          allpath_hprop _ _).
+          path_ishprop _ _).
 
   Local Open Scope functor_scope.
 

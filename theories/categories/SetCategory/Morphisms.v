@@ -56,7 +56,7 @@ Section equiv_iso_set_cat.
          m m^-1%morphism
          (ap10 right_inverse)
          (ap10 left_inverse)
-         (fun _ => allpath_hprop _ _).
+         (fun _ => path_ishprop _ _).
 
   Definition iso_equiv (s d : set_cat) (m : s <~> d)
   : s <~=~> d
@@ -77,7 +77,7 @@ Section equiv_iso_set_cat.
         intros [? ?]; simpl;
         unfold iso_equiv; simpl;
         apply ap;
-        apply allpath_hprop
+        apply path_ishprop
       ).
   Defined.
 
@@ -111,7 +111,7 @@ Section equiv_iso_prop_cat.
          m m^-1%morphism
          (ap10 right_inverse)
          (ap10 left_inverse)
-         (fun _ => allpath_hprop _ _).
+         (fun _ => path_ishprop _ _).
 
   Definition iso_equiv_prop (s d : prop_cat) (m : s <~> d)
   : s <~=~> d
@@ -132,7 +132,7 @@ Section equiv_iso_prop_cat.
         intros [? ?]; simpl;
         unfold iso_equiv_prop; simpl;
         apply ap;
-        apply allpath_hprop
+        apply path_ishprop
       ).
   Defined.
 

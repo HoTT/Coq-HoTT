@@ -144,7 +144,7 @@ Section sigT_mor_hProp.
     apply path_sigma_uncurried;
     simpl;
     ex_tac;
-    apply allpath_hprop.
+    apply path_ishprop.
 
   Let P_associativity
   : forall x1 x2 x3 x4 (m1 : mor x1 x2) (m2 : mor x2 x3) (m3 : mor x3 x4),

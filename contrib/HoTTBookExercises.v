@@ -372,7 +372,7 @@ Proof.
   split.
   intro isHProp_A.
   exists idmap.
-  apply allpath_hprop. (* automagically, from IsHProp A *)
+  apply path_ishprop. (* automagically, from IsHProp A *)
   intro contr_AA. 
   apply hprop_allpath; intros a1 a2.
   exact (ap10 (path_contr (fun x:A => a1) (fun x:A => a2)) a1).
@@ -390,7 +390,7 @@ Lemma Book_3_6_solution_1 `{Funext} (A : Type) : IsHProp A -> IsHProp (A + ~A).
 Proof.
   intro isHProp_A.
   apply hprop_allpath. intros x y.
-  destruct x as [a1|n1]; destruct y as [a2|n2]; apply path_sum; try apply allpath_hprop. 
+  destruct x as [a1|n1]; destruct y as [a2|n2]; apply path_sum; try apply path_ishprop. 
   exact (n2 a1). exact (n1 a2).
 Defined.
 
@@ -402,7 +402,7 @@ Lemma Book_3_7_solution_1 (A B: Type) :
 Proof.
   intros isHProp_A isProp_B nab.
   apply hprop_allpath. intros x y.
-  destruct x as [a1|b1]; destruct y as [a2|b2]; apply path_sum; try apply allpath_hprop. 
+  destruct x as [a1|b1]; destruct y as [a2|b2]; apply path_sum; try apply path_ishprop. 
   exact (nab (a1,b2)). exact (nab (a2,b1)).
 Defined.
 
@@ -484,7 +484,7 @@ Section Book_3_14.
   Definition Book_3_14
   : forall A (P : ~~A -> Type),
     (forall a, P (fun na => na a))
-    -> (forall x y (z : P x) (w : P y), transport P (allpath_hprop x y) z = w)
+    -> (forall x y (z : P x) (w : P y), transport P (path_ishprop x y) z = w)
     -> forall x, P x.
   Proof.
     intros A P base p nna.
@@ -493,7 +493,7 @@ Section Book_3_14.
       apply hprop_allpath.
       intros x' y'.
       etransitivity; [ symmetry; apply (p x x y' x') | ].
-      assert (H' : idpath = allpath_hprop x x) by apply allpath_hprop.
+      assert (H' : idpath = path_ishprop x x) by apply path_ishprop.
       destruct H'.
       reflexivity.
     - destruct (LEM (P nna) _) as [pnna|npnna]; trivial.
@@ -501,7 +501,7 @@ Section Book_3_14.
       apply nna.
       intro a.
       apply npnna.
-      exact (transport P (allpath_hprop _ _) (base a)).
+      exact (transport P (path_ishprop _ _) (base a)).
   Defined.
 
   Lemma Book_3_14_equiv A : merely A <~> ~~A.
@@ -513,7 +513,7 @@ Section Book_3_14.
       apply (@Book_3_14 A (fun _ => merely A)).
       * exact tr.
       * intros x y z w.
-        apply allpath_hprop.
+        apply path_ishprop.
       * exact nna.
   Defined.
 End Book_3_14.
@@ -892,7 +892,7 @@ Section Book_6_9.
       apply path_sigma_uncurried; simpl.
       refine ((fun H'' =>
                  (equiv_path_equiv _ _ H'';
-                  allpath_hprop _ _))
+                  path_ishprop _ _))
                 _);
         simpl.
       apply path_forall; intro b'.

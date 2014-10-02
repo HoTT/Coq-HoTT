@@ -471,7 +471,7 @@ Section Reflective_Subuniverse.
       refine (path_sigma _ _ _ _ _); cbn.
       - exact (path_universe f).
       - rewrite transport_sigma.
-        refine (path_sigma _ _ _ _ _); cbn; try apply allpath_hprop.
+        refine (path_sigma _ _ _ _ _); cbn; try apply path_ishprop.
         apply path_arrow; intros x.
         rewrite transport_arrow_fromconst.
         rewrite transport_path_universe.
