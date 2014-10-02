@@ -79,7 +79,7 @@ Proof.
   destruct z, z', p; exact idpath.
 Defined.
 
-Instance isequiv_path_sum {A B : Type} {z z' : A + B}
+Global Instance isequiv_path_sum {A B : Type} {z z' : A + B}
 : IsEquiv (path_sum z z') | 0.
 Proof.
   refine (BuildIsEquiv _ _
@@ -114,7 +114,7 @@ Definition functor_sum {A A' B B' : Type} (f : A -> A') (g : B -> B')
 
 (** ** Equivalences *)
 
-Instance isequiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}
+Global Instance isequiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}
 : IsEquiv (functor_sum f g) | 1000.
 Proof.
   apply (isequiv_adjointify
@@ -163,7 +163,7 @@ Definition sum_rect_uncurried {A B} (P : A + B -> Type)
 
 (* First the positive universal property.
    Doing this sort of thing without adjointifying will require very careful use of funext. *)
-Instance isequiv_sum_rect `{Funext} `(P : A + B -> Type)
+Global Instance isequiv_sum_rect `{Funext} `(P : A + B -> Type)
 : IsEquiv (sum_rect_uncurried P) | 0.
 Proof.
   apply (isequiv_adjointify
@@ -185,7 +185,7 @@ Definition equiv_sum_distributive `{Funext} (A B C : Type)
 
 (** ** Sums preserve most truncation *)
 
-Instance trunc_sum n' (n := n'.+2)
+Global Instance trunc_sum n' (n := n'.+2)
          `{IsTrunc n A, IsTrunc n B}
 : IsTrunc n (A + B) | 100.
 Proof.
@@ -197,7 +197,7 @@ Proof.
   intros [].
 Defined.
 
-Instance hset_sum `{HA : IsHSet A, HB : IsHSet B} : IsHSet (A + B) | 100
+Global Instance hset_sum `{HA : IsHSet A, HB : IsHSet B} : IsHSet (A + B) | 100
   := @trunc_sum -2 A HA B HB.
 
 (** ** Binary coproducts are equivalent to dependent sigmas where the first component is a bool. *)
@@ -224,14 +224,14 @@ Definition sum_of_sigT A B (x : { b : Bool & if b then A else B })
        | (false; b) => inr b
      end.
 
-Instance isequiv_sigT_of_sum A B : IsEquiv (@sigT_of_sum A B) | 0.
+Global Instance isequiv_sigT_of_sum A B : IsEquiv (@sigT_of_sum A B) | 0.
 Proof.
   apply (isequiv_adjointify (@sigT_of_sum A B)
                             (@sum_of_sigT A B));
   repeat (intros [] || intro); exact idpath.
 Defined.
 
-Instance isequiv_sum_of_sigT A B : IsEquiv (sum_of_sigT A B)
+Global Instance isequiv_sum_of_sigT A B : IsEquiv (sum_of_sigT A B)
   := isequiv_inverse (@sigT_of_sum A B).
 
 (** An alternative way of proving the truncation property of [sum]. *)

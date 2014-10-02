@@ -24,7 +24,7 @@ Proof.
 Defined.
 
 (** If inhabitation implies contractibility, then we have an h-proposition.  We probably won't often have a hypothesis of the form [A -> Contr A], so we make sure we give priority to other instances. *)
-Instance hprop_inhabited_contr (A : Type) : (A -> Contr A) -> IsHProp A | 10000.
+Global Instance hprop_inhabited_contr (A : Type) : (A -> Contr A) -> IsHProp A | 10000.
 Proof.
   intros H x y.
   pose (C := H x).
@@ -33,7 +33,7 @@ Defined.
 
 (** If a type is contractible, then so is its type of contractions.
     Using [issig_contr] and the [equiv_intro] tactic, we can transfer this to the equivalent problem of contractibility of a certain Sigma-type, in which case we can apply the general path-construction functions. *)
-Instance contr_contr `{Funext} (A : Type)
+Global Instance contr_contr `{Funext} (A : Type)
   : Contr A -> Contr (Contr A) | 100.
 Proof.
   intros c; exists c; generalize c.
@@ -46,7 +46,7 @@ Proof.
 Qed.
 
 (** This provides the base case in a proof that truncatedness is a proposition. *)
-Instance hprop_trunc `{Funext} (n : trunc_index) (A : Type)
+Global Instance hprop_trunc `{Funext} (n : trunc_index) (A : Type)
   : IsHProp (IsTrunc n A) | 0.
 Proof.
   apply hprop_inhabited_contr.
@@ -134,7 +134,7 @@ Definition equiv_iff_hprop `{IsHProp A} `{IsHProp B}
 
 (** Being a contractible space is a proposition. *)
 
-Instance hprop_contr `{Funext} (A : Type) : IsHProp (Contr A) | 0.
+Global Instance hprop_contr `{Funext} (A : Type) : IsHProp (Contr A) | 0.
 Proof.
   apply hprop_inhabited_contr.
   intro cA.
@@ -143,7 +143,7 @@ Defined.
 
 (** Here is an alternate characterization of propositions. *)
 
-Instance HProp_HProp `{Funext} A : IsHProp (IsHProp A) | 0
+Global Instance HProp_HProp `{Funext} A : IsHProp (IsHProp A) | 0
   := hprop_trunc -1 A.
 
 Theorem equiv_hprop_inhabited_contr `{Funext} {A}
@@ -185,7 +185,7 @@ Definition path_sigma_hprop {A : Type} {P : A -> Type}
 : u.1 = v.1 -> u = v
   := path_sigma_uncurried P u v o pr1^-1.
 
-Instance isequiv_path_sigma_hprop {A P} `{forall x : A, IsHProp (P x)} {u v : sigT P}
+Global Instance isequiv_path_sigma_hprop {A P} `{forall x : A, IsHProp (P x)} {u v : sigT P}
 : IsEquiv (@path_sigma_hprop A P _ u v) | 100
   := isequiv_compose.
 
@@ -205,7 +205,7 @@ into an [hProp].
 Canonical Structure default_HProp:= fun T P => (@hp T P).
 >>
 *)
-Existing Instance isp.
+Global Existing Instance isp.
 Require Import Unit Empty.
 
 Definition Unit_hp : hProp := (hp Unit _).

@@ -79,7 +79,7 @@ Definition neg_neq_pos {z w : Pos} : ~ (neg z = pos w)
 
 (* And prove that they are a set. *)
 
-Instance hset_int : IsHSet Int | 0.
+Global Instance hset_int : IsHSet Int | 0.
 Proof.
   apply hset_decidable.
   intros [n | | n] [m | | m].
@@ -124,7 +124,7 @@ Definition pred_int (z : Int) : Int
        | pos (succ_pos n) => pos n
      end.
 
-Instance isequiv_succ_int : IsEquiv succ_int | 0
+Global Instance isequiv_succ_int : IsEquiv succ_int | 0
   := isequiv_adjointify succ_int pred_int _ _.
 Proof.
   intros [[|n] | | [|n]]; reflexivity.

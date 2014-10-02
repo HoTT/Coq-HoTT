@@ -51,7 +51,7 @@ Defined.
 
 (** ** The interval is contractible. *)
 
-Instance contr_interval : Contr interval | 0.
+Global Instance contr_interval : Contr interval | 0.
 Proof.
   exists zero.
   refine (interval_rect _ 1 seg _).

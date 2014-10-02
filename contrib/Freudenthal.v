@@ -13,7 +13,7 @@ Generalizable Variables X A B f g n.
 
 (* ** Connectedness of the suspension *)
 
-Instance isconn_susp {n : trunc_index} {X : Type} `{H : IsConnected n X}
+Global Instance isconn_susp {n : trunc_index} {X : Type} `{H : IsConnected n X}
   : IsConnected n.+1 (Susp X).
 Proof.
   apply isconnected_from_elim.

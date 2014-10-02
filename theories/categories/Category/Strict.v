@@ -20,4 +20,4 @@ Record StrictCategory :=
     isstrict_StrictCategory :> IsStrictCategory precategory_strict
   }.
 
-Existing Instance isstrict_StrictCategory.
+Global Existing Instance isstrict_StrictCategory.

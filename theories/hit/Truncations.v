@@ -29,7 +29,7 @@ Private Inductive Trunc (n : trunc_index) (A :Type) : Type :=
 Bind Scope trunc_scope with Trunc.
 Arguments tr {n A} a.
 (** Make the priority 1, so that we don't override, e.g., [Unit]. *)
-Instance istrunc_truncation : forall n A, IsTrunc n (Trunc n A) | 1.
+Global Instance istrunc_truncation : forall n A, IsTrunc n (Trunc n A) | 1.
 Admitted.
 
 Definition Trunc_rect {n A}

@@ -103,7 +103,7 @@ Definition Build_PreCategory
        right_identity
        (fun _ => left_identity _ _ _).
 
-Existing Instance trunc_morphism.
+Global Existing Instance trunc_morphism.
 
 (** create a hint db for all category theory things *)
 Create HintDb category discriminated.

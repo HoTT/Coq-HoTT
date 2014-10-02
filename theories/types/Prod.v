@@ -126,7 +126,7 @@ Definition transport_path_prod'
 
 (** This lets us identify the path space of a product type, up to equivalence. *)
 
-Instance isequiv_path_prod {A B : Type} {z z' : A * B}
+Global Instance isequiv_path_prod {A B : Type} {z z' : A * B}
 : IsEquiv (path_prod_uncurried z z') | 0
   := BuildIsEquiv
        _ _ _
@@ -170,7 +170,7 @@ Defined.
 
 (** ** Equivalences *)
 
-Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
+Global Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
 : IsEquiv (functor_prod f g) | 1000
   := BuildIsEquiv
        _ _ (functor_prod f g) (functor_prod f^-1 g^-1)
@@ -248,7 +248,7 @@ Definition equiv_prod_assoc (A B C : Type) : A * (B * C) <~> (A * B) * C
 (** Ordinary universal mapping properties are expressed as equivalences of sets or spaces of functions.  In type theory, we can go beyond this and express an equivalence of types of *dependent* functions.  Moreover, because the product type can expressed both positively and negatively, it has both a left universal property and a right one. *)
 
 (* First the positive universal property. *)
-Instance isequiv_prod_rect `(P : A * B -> Type)
+Global Instance isequiv_prod_rect `(P : A * B -> Type)
 : IsEquiv (prod_rect P) | 0
   := BuildIsEquiv
        _ _
@@ -276,7 +276,7 @@ Definition prod_corect `(f : forall x:X, A x) `(g : forall x:X, B x)
   : forall x, A x * B x
   := prod_corect_uncurried (f, g).
 
-Instance isequiv_prod_corect `(A : X -> Type) (B : X -> Type)
+Global Instance isequiv_prod_corect `(A : X -> Type) (B : X -> Type)
 : IsEquiv (@prod_corect_uncurried X A B) | 0
   := BuildIsEquiv
        _ _
@@ -292,7 +292,7 @@ Definition equiv_prod_corect `(A : X -> Type) (B : X -> Type)
 
 (** ** Products preserve truncation *)
 
-Instance trunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B) | 100.
+Global Instance trunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B) | 100.
 Proof.
   generalize dependent B; generalize dependent A.
   induction n as [| n I]; simpl; (intros A ? B ?).
@@ -302,5 +302,5 @@ Proof.
     exact (trunc_equiv (equiv_path_prod x y)). }
 Defined.
 
-Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B) | 100
+Global Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B) | 100
   := @trunc_prod -2 A CA B CB.

@@ -125,7 +125,7 @@ Proof. rewrite <- H. exact X. Defined.
 Lemma paths_rew_r A a y P (X : P y) (H : a = y :> A) : P a.
 Proof. rewrite -> H. exact X. Defined.
 
-Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
+Global Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 Arguments reflexive_paths / .
 
 (** Our identity type is the Paulin-Mohring style.  We derive the Martin-Lof eliminator. *)
@@ -153,7 +153,7 @@ Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
 (** Declaring this as [simpl nomatch] prevents the tactic [simpl] from expanding it out into [match] statements.  We only want [inverse] to simplify when applied to an identity path. *)
 Arguments inverse {A x y} p : simpl nomatch.
 
-Instance symmetric_paths {A} : Symmetric (@paths A) | 0 := @inverse A.
+Global Instance symmetric_paths {A} : Symmetric (@paths A) | 0 := @inverse A.
 Arguments symmetric_paths / .
 
 (** If we wanted to not have the constant [symmetric_paths] floating around, and wanted to resolve [inverse] directly, instead, we could play this trick, discovered by Georges Gonthier to fool Coq's restriction on [Identity Coercion]s:
@@ -184,7 +184,7 @@ Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments concat {A x y z} p q : simpl nomatch.
 
-Instance transitive_paths {A} : Transitive (@paths A) | 0 := @concat A.
+Global Instance transitive_paths {A} : Transitive (@paths A) | 0 := @concat A.
 Arguments transitive_paths / .
 
 
@@ -311,7 +311,7 @@ Record Equiv A B := BuildEquiv {
   equiv_isequiv :> IsEquiv equiv_fun
 }.
 
-Existing Instance equiv_isequiv.
+Global Existing Instance equiv_isequiv.
 
 Arguments equiv_fun {A B} _ _.
 Arguments equiv_isequiv {A B} _.
@@ -404,7 +404,7 @@ Typeclasses Opaque IsTrunc. (* don't auto-unfold [IsTrunc] in typeclass search *
 
 Arguments IsTrunc : simpl never. (* don't auto-unfold [IsTrunc] with [simpl] *)
 
-Instance istrunc_paths (A : Type) n `{H : IsTrunc n.+1 A} (x y : A)
+Global Instance istrunc_paths (A : Type) n `{H : IsTrunc n.+1 A} (x y : A)
 : IsTrunc n (x = y)
   := H x y. (* but do fold [IsTrunc] *)
 

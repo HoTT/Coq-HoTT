@@ -6,4 +6,4 @@
 Require Import Basics.Overture.
 
 Axiom funext_axiom : Funext.
-Existing Instance funext_axiom.
+Global Existing Instance funext_axiom.

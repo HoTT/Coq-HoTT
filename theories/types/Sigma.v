@@ -170,7 +170,7 @@ Definition transport_pr1_path_sigma
 
 (** This lets us identify the path space of a sigma-type, up to equivalence. *)
 
-Instance isequiv_path_sigma `{P : A -> Type} {u v : sigT P}
+Global Instance isequiv_path_sigma `{P : A -> Type} {u v : sigT P}
 : IsEquiv (path_sigma_uncurried P u v) | 0
   := BuildIsEquiv
        _ _
@@ -343,7 +343,7 @@ Defined.
 
 (** ** Equivalences *)
 
-Instance isequiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
+Global Instance isequiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
          `{IsEquiv A B f} `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
 : IsEquiv (functor_sigma f g) | 1000.
 Proof.
@@ -380,7 +380,7 @@ Definition equiv_functor_sigma_id `{P : A -> Type} `{Q : A -> Type}
   := equiv_functor_sigma (equiv_idmap A) g.
 
 (** Summing up a contractible family of types does nothing. *)
-Instance isequiv_pr1_contr {A} {P : A -> Type}
+Global Instance isequiv_pr1_contr {A} {P : A -> Type}
          `{forall a, Contr (P a)}
 : IsEquiv (@pr1 A P) | 100.
 Proof.
@@ -425,7 +425,7 @@ Definition equiv_sigma_prod `(Q : (A * B) -> Type)
 (** ** Universal mapping properties *)
 
 (** *** The positive universal property. *)
-Instance isequiv_sigT_rect `{P : A -> Type}
+Global Instance isequiv_sigT_rect `{P : A -> Type}
          (Q : sigT P -> Type)
 : IsEquiv (sigT_rect Q) | 0
   := BuildIsEquiv
@@ -455,7 +455,7 @@ Definition sigT_corect
 : (forall x, sigT (P x))
   := sigT_corect_uncurried P (f;g).
 
-Instance isequiv_sigT_corect
+Global Instance isequiv_sigT_corect
          `{A : X -> Type} {P : forall x, A x -> Type}
 : IsEquiv (sigT_corect_uncurried P) | 0
   := BuildIsEquiv
@@ -476,7 +476,7 @@ Definition equiv_sigT_corect
 
 (** ** Sigmas preserve truncation *)
 
-Instance trunc_sigma `{P : A -> Type}
+Global Instance trunc_sigma `{P : A -> Type}
          `{IsTrunc n A} `{forall a, IsTrunc n (P a)}
 : IsTrunc n (sigT P) | 100.
 Proof.

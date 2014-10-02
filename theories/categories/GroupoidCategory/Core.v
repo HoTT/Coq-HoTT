@@ -17,7 +17,7 @@ Class IsGroupoid (C : PreCategory)
   := isgroupoid : forall s d (m : morphism C s d),
                     IsIsomorphism m.
 
-Instance trunc_isgroupoid `{Funext} C : IsHProp (IsGroupoid C)
+Global Instance trunc_isgroupoid `{Funext} C : IsHProp (IsGroupoid C)
   := trunc_forall.
 
 (** We don't want access to all of the internals of a groupoid category at top level. *)
@@ -56,7 +56,7 @@ Defined.
 
 Arguments groupoid_category X {_}.
 
-Instance isgroupoid_groupoid_category X `{IsTrunc 1 X}
+Global Instance isgroupoid_groupoid_category X `{IsTrunc 1 X}
 : IsGroupoid (groupoid_category X).
  Proof.
   intros s d m; simpl in *.

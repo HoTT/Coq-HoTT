@@ -28,7 +28,7 @@ Record TerminalObject (C : PreCategory) :=
     isterminal_object_terminal :> IsTerminalObject C object_terminal
   }.
 
-Existing Instance isterminal_object_terminal.
+Global Existing Instance isterminal_object_terminal.
 
 (** ** Initial objects *)
 (** An initial object is an object with a unique morphism from every
@@ -42,7 +42,7 @@ Record InitialObject (C : PreCategory) :=
     isinitial_object_initial :> IsInitialObject C object_initial
   }.
 
-Existing Instance isinitial_object_initial.
+Global Existing Instance isinitial_object_initial.
 
 Arguments unique_up_to_unique_isomorphism [C] P.
 

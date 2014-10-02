@@ -13,7 +13,7 @@ Local Open Scope path_scope.
 (** ** Universal mapping properties *)
 
 (** We eta-expand [_] to [fun _ => _] to work around a bug in HoTT/coq: https://github.com/HoTT/coq/issues/117 *)
-Instance contr_from_Empty {_ : Funext} (A : Type) :
+Global Instance contr_from_Empty {_ : Funext} (A : Type) :
   Contr (Empty -> A) :=
   BuildContr _
              (Empty_rect (fun _ => A))
@@ -21,7 +21,7 @@ Instance contr_from_Empty {_ : Funext} (A : Type) :
 
 (** ** Behavior with respect to truncation *)
 
-Instance hprop_Empty : IsHProp Empty.
+Global Instance hprop_Empty : IsHProp Empty.
 Proof. intro x. destruct x. Defined.
 
 (** ** Paths *)
