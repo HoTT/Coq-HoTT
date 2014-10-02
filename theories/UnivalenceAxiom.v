@@ -6,4 +6,4 @@
 Require Import types.Universe.
 
 Axiom univalence_axiom : Univalence.
-Existing Instance univalence_axiom.
+Global Existing Instance univalence_axiom.

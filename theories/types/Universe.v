@@ -10,7 +10,7 @@ Generalizable Variables A B f.
 
 (** ** Paths *)
 
-Instance isequiv_path {A B : Type} (p : A = B)
+Global Instance isequiv_path {A B : Type} (p : A = B)
   : IsEquiv (transport (fun X:Type => X) p) | 0
   := BuildIsEquiv _ _ _ (transport (fun X:Type => X) p^)
   (fun b => ((transport_pp idmap p^ p b)^ @ transport2 idmap (concat_Vp p) b))
@@ -123,7 +123,7 @@ Definition equiv_induction'_comp (P : forall U V, U <~> V -> Type)
 (** ** Facts about HProps using univalence *)
 
 (** It would be nice for these to go in [HProp.v], but this file depends on that one, and these depend on having [Univalence]. *)
-Instance trunc_path_IsHProp `{Funext} X Y `{IsHProp Y}
+Global Instance trunc_path_IsHProp `{Funext} X Y `{IsHProp Y}
 : IsHProp (X = Y).
 Proof.
   apply hprop_allpath.

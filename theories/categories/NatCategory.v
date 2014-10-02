@@ -20,7 +20,7 @@ Module Export Core.
   Coercion CardinalityRepresentative : nat >-> Type1.
 
   (** ** [Fin n] is an hSet *)
-  Instance trunc_cardinality_representative (n : nat)
+  Global Instance trunc_cardinality_representative (n : nat)
   : IsHSet (CardinalityRepresentative n).
   Proof.
     induction n; [ typeclasses eauto |].

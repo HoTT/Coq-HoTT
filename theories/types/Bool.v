@@ -27,7 +27,7 @@ Definition implb (b1 b2 : Bool) : Bool := if b1 then b2 else true.
 Infix "||" := orb : bool_scope.
 Infix "&&" := andb : bool_scope.
 
-Instance trunc_if n A B `{IsTrunc n A, IsTrunc n B} (b : Bool)
+Global Instance trunc_if n A B `{IsTrunc n A, IsTrunc n B} (b : Bool)
 : IsTrunc n (if b then A else B) | 100
   := if b as b return (IsTrunc n (if b then A else B)) then _ else _.
 

@@ -40,7 +40,7 @@ Coercion isisomorphism_isomorphic : Isomorphic >-> IsIsomorphism.
 
 Local Infix "<~=~>" := Isomorphic (at level 70, no associativity) : category_scope.
 
-Existing Instance isisomorphism_isomorphic.
+Global Existing Instance isisomorphism_isomorphic.
 
 (** ** Theorems about isomorphisms *)
 Section iso_contr.
@@ -233,7 +233,7 @@ Record Monomorphism {C} x y :=
     Monomorphism_IsMonomorphism :> IsMonomorphism Monomorphism_morphism
   }.
 
-Existing Instances Epimorphism_IsEpimorphism Monomorphism_IsMonomorphism.
+Global Existing Instances Epimorphism_IsEpimorphism Monomorphism_IsMonomorphism.
 
 Local Notation "x ->> y" := (Epimorphism x y)
                               (at level 99, right associativity, y at level 200).

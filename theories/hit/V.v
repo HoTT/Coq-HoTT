@@ -328,7 +328,7 @@ Defined.
 Notation "u ~~ v" := (bisimulation u v)
   (at level 30) : set_scope.
 
-Instance reflexive_bisimulation : Reflexive bisimulation.
+Global Instance reflexive_bisimulation : Reflexive bisimulation.
 Proof.
   refine (V_rect_hprop _ _ _).
   intros A f H_f; simpl. split.
@@ -494,7 +494,7 @@ Defined.
 
 (** ** Two useful lemmas *)
 
-Instance irreflexive_mem : Irreflexive mem.
+Global Instance irreflexive_mem : Irreflexive mem.
 Proof.
   refine (mem_induction (fun x => hp (~ x ∈ x) _) _); simpl in *.
   intros v H. intro Hv.
@@ -525,7 +525,7 @@ Definition V_empty : V := set (Empty_rect (fun _ => V)).
 (** The singleton {u} *)
 Definition V_singleton (u : V) : V@{U' U} := set (Unit_rect u).
 
-Instance isequiv_ap_V_singleton {u v : V}
+Global Instance isequiv_ap_V_singleton {u v : V}
 : IsEquiv (@ap _ _ V_singleton u v).
 Proof.
   refine (BuildIsEquiv _ _ _ _ _ _ _); try solve [ intro; apply allpath_hprop ].

@@ -32,7 +32,7 @@ Definition contr_trunc_minus_two `{H : IsTrunc -2 A} : Contr A
   := H.
 
 (** Truncation levels are cumulative. *)
-Instance trunc_succ `{IsTrunc n A} : IsTrunc n.+1 A | 1000.
+Global Instance trunc_succ `{IsTrunc n A} : IsTrunc n.+1 A | 1000.
 Proof.
   generalize dependent A.
   induction n as [| n I]; simpl; intros A H x y.
@@ -40,7 +40,7 @@ Proof.
   - apply I, H.
 Qed.
 
-Instance trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A} : IsTrunc n A | 1000.
+Global Instance trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A} : IsTrunc n A | 1000.
 Proof.
   generalize dependent A; generalize dependent m.
   induction n as [ | n' IH];

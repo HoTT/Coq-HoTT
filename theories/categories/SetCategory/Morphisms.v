@@ -146,7 +146,7 @@ Section equiv_iso_prop_cat.
 End equiv_iso_prop_cat.
 
 Local Close Scope morphism_scope.
-Instance iscategory_set_cat `{Univalence}
+Global Instance iscategory_set_cat `{Univalence}
 : IsCategory set_cat.
 Proof.
   intros C D.
@@ -155,7 +155,7 @@ Proof.
   typeclasses eauto.
 Defined.
 
-Instance iscategory_prop_cat `{Univalence}
+Global Instance iscategory_prop_cat `{Univalence}
 : IsCategory prop_cat.
 Proof.
   intros C D.
