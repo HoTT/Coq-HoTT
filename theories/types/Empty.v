@@ -24,6 +24,17 @@ Global Instance contr_from_Empty {_ : Funext} (A : Type) :
 Global Instance hprop_Empty : IsHProp Empty.
 Proof. intro x. destruct x. Defined.
 
+Lemma all_to_empty_isequiv (T : Type) (f : T -> Empty) : IsEquiv f.
+Proof.
+  refine (BuildIsEquiv _ _ _ 
+    (Empty_rect (fun _ => T))               (* := equiv_inf *)
+    (fun fals:Empty => match fals with end) (* : Sect equiv_inf f *)
+    (fun t:T => match (f t) with end)       (* : Sect f equiv_inf *)
+    (_)                                     (* adjointify part *)  ).
+  intro t. 
+  pose (f t) as my_false. elim my_false.
+Defined.
+
 (** ** Paths *)
 
 (** We could probably prove some theorems about non-existing paths in
