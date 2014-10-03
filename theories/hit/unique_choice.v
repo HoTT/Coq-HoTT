@@ -10,7 +10,7 @@ Lemma atmost {X} {P : X -> Type}:
 intros H H0 [x p] [y q].
 specialize (H0 x y p q).
 induction H0.
-assert (H0: (p =q)) by apply allpath_hprop.
+assert (H0: (p =q)) by apply path_ishprop.
 now induction H0.
 Qed.
 

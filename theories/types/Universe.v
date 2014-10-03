@@ -28,7 +28,7 @@ Definition equiv_path_V `{Funext} (A B : Type) (p : A = B) :
   equiv_path B A (p^) = equiv_inverse (equiv_path A B p).
 Proof.
   destruct p. simpl. unfold equiv_path, equiv_inverse. simpl. apply ap.
-  refine (@allpath_hprop _ (hprop_isequiv _) _ _).
+  refine (@path_ishprop _ (hprop_isequiv _) _ _).
 Defined.
 
 (** See the note by [Funext] in Overture.v *)
@@ -140,9 +140,9 @@ Proof.
   let f' := fresh in
   let g' := fresh in
   intros f' g' ? ?;
-    assert (f' = g'); [ | path_induction; apply ap; apply allpath_hprop ].
+    assert (f' = g'); [ | path_induction; apply ap; apply path_ishprop ].
   apply path_forall; intro.
-  apply allpath_hprop.
+  apply path_ishprop.
 Qed.
 
 Global Instance isset_hProp `{Funext} : IsHSet hProp | 0.
@@ -152,8 +152,8 @@ Proof.
   refine (hprop_allpath _ _).
   intros.
   apply path_path_sigma_uncurried.
-  (exists (allpath_hprop _ _)).
-  by apply allpath_hprop.
+  (exists (path_ishprop _ _)).
+  by apply path_ishprop.
 Qed.
 
 Definition path_iff_hprop_uncurried `{IsHProp A, IsHProp B}

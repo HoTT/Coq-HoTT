@@ -221,12 +221,12 @@ Proof.
             (fun X x nx => nx x)
             (fun A B f z nBz =>
               z (fun a => f a (transport (fun x => ~B x)
-                                          (allpath_hprop _ _)
+                                          (path_ishprop _ _)
                                           nBz)))
             _ _).
-  - intros; apply allpath_hprop.
+  - intros; apply path_ishprop.
   - intros; refine (isequiv_iff_hprop _ _).
-    intros; apply allpath_hprop.
+    intros; apply path_ishprop.
 Defined.
 
 (** Of course, there is also the trivial example. *)

@@ -210,7 +210,7 @@ Module PreCategoryOfStructures.
         f fh = f gi -> fh = gi.
     Proof.
       intros ? ? [? ?] [? ?] H; simpl in *; path_induction; apply ap.
-      apply allpath_hprop.
+      apply path_ishprop.
     Defined.
   End precategory.
 

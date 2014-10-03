@@ -35,7 +35,7 @@ Proof.
     cut (Contr (x=x)). intro. eapply path_contr.
     exists 1. intros. symmetry; apply K.
   - intro K. by_extensionality x. by_extensionality x'.
-    eapply allpath_hprop.
+    eapply path_ishprop.
 Defined.
 
 Global Instance axiomK_isprop A : IsHProp (axiomK A) | 0.
@@ -112,7 +112,7 @@ Proof.
   refine ((transport_arrow _ _ _)^ @ _).
   refine ((ap10 (apD (f x) p) (@reflexivity X R _ x)) @ _).
   apply ap.
-  apply allpath_hprop.
+  apply path_ishprop.
 Defined.
 
 Global Instance isequiv_hrel_subpaths
@@ -130,7 +130,7 @@ Proof.
             _
             _);
   intro;
-  apply allpath_hprop.
+  apply path_ishprop.
 Defined.
 
 Record hSet := BuildhSet {setT:> Type; iss :> IsHSet setT}.
@@ -174,7 +174,7 @@ Lemma isinj_embedding {A B : Type} (m : A -> B) : IsEmbedding m -> isinj m.
 Proof.
   intros ise x y p.
   pose (ise (m y)).
-  assert (q : (x;p) = (y;1) :> hfiber m (m y)) by apply allpath_hprop.
+  assert (q : (x;p) = (y;1) :> hfiber m (m y)) by apply path_ishprop.
   exact (ap pr1 q).
 Defined.
 

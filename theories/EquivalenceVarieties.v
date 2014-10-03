@@ -261,5 +261,5 @@ Proof.
             (fun e => (@equiv_fun _ _ e, @equiv_inv _ _ _ e))
             _ _);
     intro;
-    by apply allpath_hprop.
+    by apply path_ishprop.
 Defined.

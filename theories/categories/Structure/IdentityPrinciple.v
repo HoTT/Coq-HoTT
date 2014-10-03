@@ -42,7 +42,7 @@ Section sip.
   Proof.
     unfold sip_isotoid_helper, reflexivity, isomorphic_refl.
     apply ap.
-    apply allpath_hprop.
+    apply path_ishprop.
   Defined.
 
   Lemma sip_helper x y (p : x = y) (a : P x) (b : P y)

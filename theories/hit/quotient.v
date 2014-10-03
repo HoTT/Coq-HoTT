@@ -98,7 +98,7 @@ Global Instance in_class_is_prop : forall q x, IsHProp (in_class q x).
 Proof.
 apply (@quotient_rect A R _
     (fun q : quotient R => forall x, IsHProp (in_class q x)) (fun x y => transport _ (in_class_pr x y) (sR x y))).
-intros. apply allpath_hprop.
+intros. apply path_ishprop.
 Defined.
 
 Lemma quotient_rect_prop (P : quotient R -> hProp):
@@ -106,7 +106,7 @@ Lemma quotient_rect_prop (P : quotient R -> hProp):
   forall q, P q.
 Proof.
 intros. apply (quotient_rect R P dclass).
-intros. apply allpath_hprop.
+intros. apply path_ishprop.
 Defined.
 
 Lemma class_of_repr : forall q x, in_class q x -> q = class_of R x.
@@ -266,8 +266,8 @@ Proof.
         refine (is_ker a a' _).
         change (m (e a) = m (e a')).
         exact (p @ p'^).
-      + intros; apply allpath_hprop.
-      + intros; apply allpath_hprop. }
+      + intros; apply path_ishprop.
+      + intros; apply path_ishprop. }
     intros [x p] [y p'].
     apply path_sigma_hprop; simpl.
     exact (H x y p p').
