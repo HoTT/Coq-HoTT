@@ -33,9 +33,9 @@ Global Instance istrunc_truncation : forall n A, IsTrunc n (Trunc n A) | 1.
 Admitted.
 
 Definition Trunc_rect {n A}
-  (P : Trunc n A -> Type) `{forall aa, IsTrunc n (P aa)}
+  (P : Trunc n A -> Type) {Pt : forall aa, IsTrunc n (P aa)}
   : (forall a, P (tr a)) -> (forall aa, P aa)
-:= (fun f aa => match aa with tr a => f a end).
+:= (fun f aa => match aa with tr a => fun _ => f a end Pt).
 
 End Trunc.
 
