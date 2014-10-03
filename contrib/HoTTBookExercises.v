@@ -414,7 +414,32 @@ Defined.
 (* ================================================== ex:lem-impl-prop-equiv-bool *)
 (** Exercise 3.9 *)
 
+Definition LEM := forall (A : Type), IsHProp A -> A + ~A.
 
+Definition LEM_hProp_Bool (lem : LEM) (hprop : hProp) : Bool
+  := match (lem hprop _) with inl _ => true | inr _ => false end.
+
+Lemma Book_3_9_solution_1 `{Univalence} : LEM -> hProp <~> Bool.
+Proof.
+  intro lem.
+  apply (equiv_adjointify (LEM_hProp_Bool lem) is_true).
+  - unfold Sect. intros []; simpl.
+    + unfold LEM_hProp_Bool. elim (lem Unit_hp _).
+      * exact (fun _ => 1).
+      * intro nUnit. elim (nUnit tt). 
+    + unfold LEM_hProp_Bool. elim (lem False_hp _).
+      * intro fals. elim fals.
+      * exact (fun _ => 1).
+  - unfold Sect. intro hprop.
+    unfold LEM_hProp_Bool.
+    elim (lem hprop _).
+    + intro p.
+      apply path_hprop; simpl. (* path_prop is silent *)
+      exact ((path_universe_uncurried (if_hprop_then_equiv_Unit hprop p))^).
+    + intro np.
+      apply path_hprop; simpl. (* path_prop is silent *)
+      exact ((path_universe_uncurried (if_not_hprop_then_equiv_Empty hprop np))^).
+Defined.
 
 (* ================================================== ex:lem-impred *)
 (** Exercise 3.10 *)

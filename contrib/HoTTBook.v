@@ -375,12 +375,12 @@ Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
 (* ================================================== thm:inhabprop-eqvunit *)
 (** Lemma 3.3.2 *)
 
-
+Definition Book_3_3_2 := @HoTT.HProp.if_hprop_then_equiv_Unit.
 
 (* ================================================== lem:equiv-iff-hprop *)
 (** Lemma 3.3.3 *)
 
-
+Definition Book_3_3_3 := @HoTT.HProp.equiv_iff_hprop.
 
 (* ================================================== thm:prop-set *)
 (** Lemma 3.3.4 *)
@@ -2255,3 +2255,6 @@ Definition Book_10_5_8_item_ix := @HoTT.hit.V.separation.
 
 (* ================================================== eg:surreal-addition *)
 (** Example 11.6.18 *)
+
+
+
