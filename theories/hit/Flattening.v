@@ -23,7 +23,7 @@ Definition W_rect {A B f g} (P : W A B f g -> Type)
   (cc' : forall a, P (cc a))
   (pp' : forall b, (pp b) # (cc' (f b)) = cc' (g b))
   : forall w, P w
-  := fun w => match w with cc a => cc' a end.
+  := fun w => match w with cc a => fun _ => cc' a end pp'.
 
 Axiom W_rect_beta_pp
   : forall {A B f g} (P : W A B f g -> Type) (cc' : forall a, P (cc a))

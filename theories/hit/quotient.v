@@ -43,14 +43,11 @@ Axiom related_classes_eq : forall {x y : A}, R x y ->
 Axiom quotient_set : IsHSet (@quotient sR).
 Global Existing Instance quotient_set.
 
-Definition quotient_rect (P : (@quotient sR) -> Type):
-  forall dclass : forall x, P (class_of x),
-  forall dequiv : (forall x y (H : R x y),
-           transport _ (related_classes_eq H) (dclass x) = dclass y),
-  forall q, P q.
-Proof.
-intros ? ? [a]. apply dclass.
-Defined.
+Definition quotient_rect (P : (@quotient sR) -> Type)
+  (dclass : forall x, P (class_of x))
+  (dequiv : (forall x y (H : R x y), (related_classes_eq H) # (dclass x) = dclass y))
+  : forall q, P q
+  := fun q => match q with class_of a => fun _ => dclass a end dequiv.
 
 Definition quotient_rect_compute : forall {P} dclass dequiv x,
   quotient_rect P dclass dequiv (class_of x) = dclass x.
