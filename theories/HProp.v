@@ -248,10 +248,6 @@ Defined.
 Lemma if_not_hprop_then_equiv_Empty (hprop : hProp) : ~hprop -> hprop <~> Empty.
 Proof.
   intro np. 
-  apply equiv_iff_hprop.
-  intro p.
-  elim (np p).
-  intro fals.
-  elim fals.
+  exact (BuildEquiv _ _ np (all_to_empty_isequiv hprop np)).
 Defined.
 

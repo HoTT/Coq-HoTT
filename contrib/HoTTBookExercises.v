@@ -414,7 +414,7 @@ Defined.
 (* ================================================== ex:lem-impl-prop-equiv-bool *)
 (** Exercise 3.9 *)
 
-Definition LEM := forall (A : Type) `{IsHProp A}, A + ~A.
+Definition LEM := forall (A : Type), IsHProp A -> A + ~A.
 
 Definition LEM_hProp_Bool (lem : LEM) (hprop : hProp) : Bool
   := match (lem hprop _) with inl _ => true | inr _ => false end.
@@ -440,7 +440,6 @@ Proof.
       apply path_hprop; simpl. (* path_prop is silent *)
       exact ((path_universe_uncurried (if_not_hprop_then_equiv_Empty hprop np))^).
 Defined.
-
 
 (* ================================================== ex:lem-impred *)
 (** Exercise 3.10 *)

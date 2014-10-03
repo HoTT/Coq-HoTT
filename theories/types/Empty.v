@@ -32,7 +32,7 @@ Proof.
     (fun t:T => match (f t) with end)       (* : Sect f equiv_inf *)
     (_)                                     (* adjointify part *)  ).
   intro t. 
-  pose (f t) as my_false. elim my_false.
+  exact (Empty_rect (fun _: Empty => _) (f t)).
 Defined.
 
 (** ** Paths *)
