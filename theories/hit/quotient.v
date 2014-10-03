@@ -1,12 +1,13 @@
+(* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics.
-Require Import types.Universe.
+Require Import types.Universe types.Arrow.
 Require Import HSet HProp UnivalenceImpliesFunext.
 Require Import hit.epi hit.Truncations hit.Connectedness.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
 
-(** ** Quotient of a Type by an hprop-valued relation
+(** * Quotient of a Type by an hprop-valued relation
 
 We aim to model:
 <<
@@ -43,22 +44,22 @@ Axiom related_classes_eq : forall {x y : A}, R x y ->
 Axiom quotient_set : IsHSet (@quotient sR).
 Global Existing Instance quotient_set.
 
-Definition quotient_rect (P : (@quotient sR) -> Type)
+Definition quotient_rect (P : (@quotient sR) -> Type) {sP : forall x, IsHSet (P x)}
   (dclass : forall x, P (class_of x))
   (dequiv : (forall x y (H : R x y), (related_classes_eq H) # (dclass x) = dclass y))
   : forall q, P q
-  := fun q => match q with class_of a => fun _ => dclass a end dequiv.
+  := fun q => match q with class_of a => fun _ _ => dclass a end sP dequiv.
 
-Definition quotient_rect_compute : forall {P} dclass dequiv x,
-  quotient_rect P dclass dequiv (class_of x) = dclass x.
+Definition quotient_rect_compute : forall {P sP} dclass dequiv x,
+  @quotient_rect P sP dclass dequiv (class_of x) = dclass x.
 Proof.
 reflexivity.
 Defined.
 
 (** Again equality of paths needs to be postulated *)
-Axiom quotient_rect_compute_path : forall P dclass dequiv,
+Axiom quotient_rect_compute_path : forall P sP dclass dequiv,
 forall x y (H : R x y),
-apD (quotient_rect P dclass dequiv) (related_classes_eq H)
+apD (@quotient_rect P sP dclass dequiv) (related_classes_eq H)
  = dequiv x y H.
 
 End Domain.
@@ -77,25 +78,19 @@ Proof.
 apply @set_path2. apply _.
 Defined.
 
-Definition in_class : quotient R -> A -> Type.
+Definition in_class : quotient R -> A -> hProp.
 Proof.
-apply (@quotient_rect _ _ _ (fun _ => A -> Type) R).
+refine (quotient_rect R (fun _ => A -> hProp) (fun a b => hp (R a b) _) _).
 intros. eapply concat;[apply transport_const|].
-apply path_forall. intro z. apply path_universe_uncurried. apply @equiv_iff_hprop; eauto.
+apply path_forall. intro z. apply path_hprop; simpl.
+apply path_universe_uncurried. apply @equiv_iff_hprop; eauto.
 Defined.
 
 Context {Hrefl : Reflexive R}.
 
-Lemma in_class_pr : forall x y, in_class (class_of R x) y = R x y.
+Lemma in_class_pr : forall x y, hproptype (in_class (class_of R x) y) = R x y.
 Proof.
 reflexivity.
-Defined.
-
-Global Instance in_class_is_prop : forall q x, IsHProp (in_class q x).
-Proof.
-apply (@quotient_rect A R _
-    (fun q : quotient R => forall x, IsHProp (in_class q x)) (fun x y => transport _ (in_class_pr x y) (sR x y))).
-intros. apply path_ishprop.
 Defined.
 
 Lemma quotient_rect_prop (P : quotient R -> hProp):
@@ -108,7 +103,7 @@ Defined.
 
 Lemma class_of_repr : forall q x, in_class q x -> q = class_of R x.
 Proof.
-apply (@quotient_rect A R _
+apply (quotient_rect R
  (fun q : quotient R => forall x, in_class q x -> q = class_of _ x)
   (fun x y H => related_classes_eq R H)).
 intros.
@@ -128,19 +123,17 @@ apply Hrefl.
 Defined.
 
 (** Thm 10.1.8 *)
-Open Scope equiv_scope.
 Theorem sets_exact : forall x y, (class_of R x = class_of R y) <~> R x y.
 intros ??. apply equiv_iff_hprop.
  apply classes_eq_related.
 apply related_classes_eq.
 Defined.
 
-Definition quotient_rect_nondep : forall {B : Type},
-  forall dclass : (forall x : A, B),
-  forall dequiv : (forall x y, R x y -> dclass x = dclass y),
-  quotient R -> B.
+Definition quotient_rect_nondep {B : Type} {sB : IsHSet B}
+  (dclass : (forall x : A, B))
+  (dequiv : (forall x y, R x y -> dclass x = dclass y))
+  : quotient R -> B.
 Proof.
-intros ? ? ?.
 apply (quotient_rect R (fun _ : quotient _ => B)) with dclass.
 intros ?? H'. destruct (related_classes_eq R H'). by apply dequiv.
 Defined.
@@ -172,14 +165,16 @@ forall (Hprop' : forall x, IsHProp (P (class_of _ x))),
 (forall x, P (class_of _ x)) -> forall y, P y.
 Proof.
 intros ? ? dclass. apply quotient_rect with dclass.
-intros. apply Hprop'.
+- refine (quotient_rect R (fun x => IsHSet (P x)) _ _); try exact _.
+  intros; apply path_ishprop.
+- intros. apply Hprop'.
 Defined.
 
 (** From Ch6 *)
 Theorem quotient_surjective: IsSurjection (class_of R).
 Proof.
   apply BuildIsSurjection.
-  apply (quotient_ind (fun y => merely (hfiber (class_of R) y))); try exact _.
+  apply (quotient_rect_prop (fun y => hp (merely (hfiber (class_of R) y)) _)); try exact _.
   intro x. apply tr. by exists x.
 Defined.
 
@@ -246,7 +241,7 @@ Proof.
   pose (e := class_of R).
   exists e.
   transparent assert (m : (C -> B)).
-  { apply quotient_rect with f.
+  { apply quotient_rect with f; try exact _.
     intros x y H. transitivity (f x).
     - apply transport_const.
     - exact ((is_ker x y) ^-1 H). }
