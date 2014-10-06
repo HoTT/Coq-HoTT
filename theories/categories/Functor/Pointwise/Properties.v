@@ -13,10 +13,6 @@ Local Open Scope functor_scope.
 Section parts.
   Context `{Funext}.
 
-  Let transport_idmap_ap A (P : A -> Type) x y (p : x = y) (u : P x)
-  : transport idmap (ap P p) u = transport P p u
-  := inverse (transport_compose idmap _ _ _).
-
   (** We could do this all in a big [repeat match], but we split it
       up, to shave off about two seconds per proof. *)
   Local Ltac functor_pointwise_t helper_lem_match helper_lem :=
@@ -28,14 +24,7 @@ Section parts.
                => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => components_of) z)
            end;
     rewrite !transport_forall_constant;
-    repeat match goal with
-             | [ |- context[transport ?P ?p ?u] ]
-               => match P with
-                    | idmap => fail 1 (* we don't want to turn [transport idmap (ap _ _)] into [transport idmap (ap idmap (ap _ _))] *)
-                    | _ => idtac
-                  end;
-                 progress (rewrite <- (transport_idmap_ap P p u); simpl)
-           end;
+    transport_to_ap;
     repeat match goal with
              | [ x : _ |- context[ap (fun x3 : ?T => ?f (object_of x3 ?z))] ]
                => rewrite (@ap_compose' _ _ _ (fun x3' : T => object_of x3') (fun Ox3 => f (Ox3 x)))

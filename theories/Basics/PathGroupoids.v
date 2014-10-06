@@ -717,6 +717,17 @@ Definition transport_idmap_ap A (P : A -> Type) x y (p : x = y) (u : P x)
 : transport P p u = transport idmap (ap P p) u
   := match p with idpath => idpath end.
 
+(** Sometimes, it's useful to have the goal be in terms of [ap], so we can use lemmas about [ap].  However, we can't just [rewrite !transport_idmap_ap], as that's likely to loop.  So, instead, we provide a tactic [transport_to_ap], that replaces all [transport P p u] with [transport idmap (ap P p) u] for non-[idmap] [P]. *)
+Ltac transport_to_ap :=
+  repeat match goal with
+           | [ |- context[transport ?P ?p ?u] ]
+             => match P with
+                  | idmap => fail 1 (* we don't want to turn [transport idmap (ap _ _)] into [transport idmap (ap idmap (ap _ _))] *)
+                  | _ => idtac
+                end;
+               progress rewrite (transport_idmap_ap _ P _ _ p u)
+         end.
+
 (** *** The behavior of [ap] and [apD]. *)
 
 (** In a constant fibration, [apD] reduces to [ap], modulo [transport_const]. *)
