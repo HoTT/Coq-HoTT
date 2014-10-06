@@ -30,7 +30,11 @@ Section parts.
     rewrite !transport_forall_constant;
     repeat match goal with
              | [ |- context[transport ?P ?p ?u] ]
-               => progress (rewrite <- (transport_idmap_ap P p u); simpl)
+               => match P with
+                    | idmap => fail 1 (* we don't want to turn [transport idmap (ap _ _)] into [transport idmap (ap idmap (ap _ _))] *)
+                    | _ => idtac
+                  end;
+                 progress (rewrite <- (transport_idmap_ap P p u); simpl)
            end;
     repeat match goal with
              | [ x : _ |- context[ap (fun x3 : ?T => ?f (object_of x3 ?z))] ]
