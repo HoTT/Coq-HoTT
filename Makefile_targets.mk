@@ -154,6 +154,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/ExponentialLaws/Law4.v \
 	$(srcdir)/theories/categories/ExponentialLaws/Law4/Functors.v \
 	$(srcdir)/theories/categories/ExponentialLaws/Law4/Law.v \
+	$(srcdir)/theories/categories/ExponentialLaws/Tactics.v \
 	\
 	$(srcdir)/theories/categories/Functor/Composition/Functorial.v \
 	$(srcdir)/theories/categories/Functor/Composition/Functorial/Core.v \
