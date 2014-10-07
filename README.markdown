@@ -10,7 +10,9 @@ theory as it is used e.g. in the notion of a higher topos.
 
 The HoTT library is a development of homotopy-theoretic ideas in the Coq proof assistant.
 It draws many ideas from Vladimir Voevodsky's
-[Foundations](https://github.com/vladimirias/Foundations) library.
+[Foundations](https://github.com/vladimirias/Foundations) library (which has since been
+incorporated into the [UniMath](https://github.com/UniMath/UniMath) library) and also
+cross-pollinates with the [HoTT-Agda](https://github.com/HoTT/HoTT-Agda) library.
 
 ## INSTALLATION
 
@@ -42,20 +44,8 @@ to-do list.
 
 ## CONTRIBUTING
 
-Contributions to the HoTT library are very welcome!  We use the “fork
-and pull” model: to contribute, please [create your own
-fork](https://help.github.com/articles/fork-a-repo) and [issue a pull
-request](https://help.github.com/articles/using-pull-requests) when
-you have code ready to join the main library.  When you make large
-changes, feel free to include timing information in your commit
-message; run `./etc/coq-scripts/timing/make-pretty-timed-diff.sh &&
-git commit -at ./time-of-build-both.log`, or see the comments at the
-top of `etc/coq-scripts/timing/make-pretty-timed-diff.sh` for more
-detailed instructions and caveats.  To make use of these scripts, you
-must first run `git submodule update --init --recursive`.  Note that
-if you create a new file, you must update `Makefile_targets.mk`.  We
-suggest running `make strict` rather than just `make`, so that you
-will get an error if you forget.
+Contributions to the HoTT library are very welcome!  For style
+guidelines and further information, see the file `STYLE.md`.
 
 ## LICENSING
 
