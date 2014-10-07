@@ -133,11 +133,14 @@ Proof.
   apply path_ishprop.
 Defined.
 
-Record hSet := BuildhSet {setT:> Type; iss :> IsHSet setT}.
+Record hSet := BuildhSet {setT : Type; iss : IsHSet setT}.
+
+Coercion setT : hSet >-> Sortclass.
+Global Existing Instance iss.
+
 (** This one is needed in [epi_surj] to coerce [hProp] into [hSet]*)
 Canonical Structure default_HSet:= fun T P => (@BuildhSet T P).
 Hint Resolve iss.
-Global Existing Instance iss.
 
 Definition issig_hSet: (sigT IsHSet) <~> hSet.
 Proof.

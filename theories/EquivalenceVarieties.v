@@ -228,18 +228,17 @@ Lemma equiv_path_equiv {A B : Type} (e1 e2 : A <~> B)
 Proof.
   equiv_via ((issig_equiv A B) ^-1 e1 = (issig_equiv A B) ^-1 e2).
     2: symmetry; apply equiv_ap; refine _.
-(* TODO: why does this get the wrong type if [hprop_isequiv] is not supplied? *)
-  exact (@equiv_path_sigma_hprop _ _ hprop_isequiv
-    ((issig_equiv A B) ^-1 e1) ((issig_equiv A B) ^-1 e2)).
+  exact (equiv_path_sigma_hprop ((issig_equiv A B)^-1 e1) ((issig_equiv A B)^-1 e2)).
 Defined.
 
 Definition path_equiv {A B : Type} {e1 e2 : A <~> B}
   : (e1 = e2 :> (A -> B)) -> (e1 = e2 :> (A <~> B))
-:= equiv_path_equiv e1 e2.
+  := equiv_path_equiv e1 e2.
 
 Definition isequiv_path_equiv {A B : Type} {e1 e2 : A <~> B}
   : IsEquiv (@path_equiv _ _ e1 e2)
-:= equiv_path_equiv e1 e2.
+  (* Coq can find this instance by itself, but it's slow. *)
+  := equiv_isequiv (equiv_path_equiv e1 e2).
 
 Lemma istrunc_equiv {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
   : IsTrunc n.+1 (A <~> B).
@@ -258,7 +257,7 @@ Proof.
   pose (@istrunc_equiv).
   refine (isequiv_adjointify
             equiv_iff_hprop_uncurried
-            (fun e => (@equiv_fun _ _ e, @equiv_inv _ _ _ e))
+            (fun e => (@equiv_fun _ _ e, @equiv_inv _ _ e _))
             _ _);
     intro;
     by apply path_ishprop.
