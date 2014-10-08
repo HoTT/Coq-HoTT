@@ -260,7 +260,7 @@ Definition Book_1_10 := ack.
 (* ================================================== ex:eqvboolbool *)
 (** Exercise 2.13 *)
 
-Definition Book_2_13 := @HoTT.Misc.equiv_bool_equiv_bool_bool.
+Definition Book_2_13 := @HoTT.types.Bool.equiv_bool_equiv_bool_bool.
 
 (* ================================================== ex:equality-reflection *)
 (** Exercise 2.14 *)
