@@ -2,7 +2,7 @@
 (** * Theorems about the booleans *)
 
 Require Import HoTT.Basics.
-Require Import types.Prod HSet HProp.
+Require Import types.Prod HSet HProp EquivalenceVarieties.
 Local Open Scope equiv_scope.
 
 (* coq calls it "bool", we call it "Bool" *)
@@ -109,9 +109,8 @@ Section EquivBoolEquiv.
 
   (** We can't depend on [EquivalenceVarieties] nor [Misc] here, so we take the necessary lemma as a hypothesis, and put the theorem in [Misc.v] *)
   Context `{Funext}.
-  Hypothesis path_equiv : forall e1 e2 : Bool <~> Bool,
-                            (e1 = e2 :> (Bool -> Bool)) -> (e1 = e2 :> (Bool <~> Bool)).
-  Lemma equiv_bool_equiv_bool_bool_helper : Bool <~> (Bool <~> Bool).
+
+  Lemma equiv_bool_equiv_bool_bool : Bool <~> (Bool <~> Bool).
   Proof.
     refine (equiv_adjointify g f _ _);
     unfold f, g; clear f g;
