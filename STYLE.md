@@ -63,6 +63,8 @@ They are currently in several groups:
 
 A dependency graph of all the files in the library can be found on the
 [wiki][wiki]; this may be helpful in avoiding circular dependencies.
+It is updated automatically by Travis (see below) on every push to the
+master branch.
 
 [wiki]: https://github.com/HoTT/HoTT/wiki
 
@@ -286,10 +288,27 @@ The conventions for the typeclass `IsTrunc` are:
   `Instance foo : Contr bar := let x := {| center := ... |} in x.`
   rather than `Instance foo : Contr bar := { center := ... }.`.
 
-### Coercions ###
+### Coercions and Existing Instances ###
 
-TODO: Coercions, what `:>` means, when to use it or not use it (PR #558),
-existing instances, possibly renaming coercions.
+A "coercion" from `A` to `B` is a function that Coq will insert
+silently if given an `A` when it expects a `B`, and which it doesn't
+display.  For example, we have declared `equiv_fun` as a coercion from
+`A <~> B` to `A -> B`, so that we can use an equivalence as a function
+without needing to manually apply the projection `equiv_fun`.
+Coercions can make code easier to read and write, but when used
+carelessly they can have the opposite effect.
+
+When defining a record, Coq allows you to declare a field as a
+coercion by writing its type with `:>` instead of `:`.  Please do
+_not_ do this in the core: instead, give an explicit `Coercion`
+declaration after defining the record.  There are two reasons for
+this.  Firstly, the syntax `:>` is very short and easy to miss when
+reading the code, while coercions are important to be aware of.
+Secondly, it is potentially confusing because the same syntax `:>`
+when defining a typeclass (i.e. a `Class` instead of a `Record`) has a
+different meaning: it declares a field as an `Existing Instance`.
+Please do not use it in that case either; declare your `Existing
+Instance`s explicitly as well.
 
 
 ## Axioms ##
@@ -680,11 +699,28 @@ survey changes grouped into pull requests than in individual commits.
 Thirdly, it means we can make our work in progress as messy and
 uncertain as we want, while keeping the main library clean and tidy.
 
+It is suggested that you submit your pull request not from the master
+branch of your fork, but from another branch created specially for
+that purpose.  Among other things, this allows you to continue
+developing on your fork without changing the pull request, since a
+pull request is automatically updated to contain all commits pushed to
+the branch that it was made from.  It also allows you to submit
+multiple unrelated pull requests at the same time that do not depend
+on each other.
+
 [fork]: https://help.github.com/articles/fork-a-repo
 
 [pull]: https://help.github.com/articles/using-pull-requests
 
 [minor]: http://en.wikipedia.org/wiki/Help:Minor_edit
+
+### Two pairs of eyes ###
+
+In general, pull requests require "two pairs of eyes" from among the
+core developers, i.e. two people to approve them before they are
+merged.  This usually works fine, but can sometimes stall if most of
+the core developers are busy.  If a pull request seems to have
+stalled, feel free to bump it back to attention with a comment.
 
 ### Commit messages ###
 
@@ -722,6 +758,38 @@ Of course, you'll also need to `git add` it.
 You will probably also want to add your new file to `HoTT.v`, unless
 it is outside the core (e.g. in `contrib/`) or should not be exported
 for some other reason.
+
+### Travis ###
+
+We use the [Travis Continuous Integration Platform][travis] to check
+that pull requests do not break anything, and also to automatically
+update various things (such as the documentation, proviola, and
+dependency graph liked on the [project wiki][wiki]).  Normally you
+shouldn't need to know anything about this; Travis automatically
+checks every pull request made to the central repository.
+
+[travis]: https://travis-ci.org/
+
+[wiki]: https://github.com/HoTT/HoTT/wiki
+
+### Git rebase ###
+
+If the master branch has diverged in some significant way since a pull
+request was made, then the pull request may no longer build
+successfully (which Travis will warn about).  Or perhaps the changes
+may conflict so that github becomes unable to merge it automatically.
+In either case, the situation has to be resolved manually before the
+pull request can be merged, and the resolution should generally be
+done by the submitter of the pull request.
+
+One way to do the resolution is to merge the current master branch
+into the branch from which the pull request was made, resolving
+conflicts manually, and then make and commit whatever other changes
+may be necessary.  This has the disadvantage of creating new merge
+commits, so another option is to `git rebase` against the master
+branch.  We encourage the use of `rebase` if you are comfortable with
+it; but for newcomers to git, rebasing can be intimidating, so merges
+are also perfectly acceptable.
 
 ### Timing scripts ###
 
