@@ -61,6 +61,11 @@ They are currently in several groups:
   `hit/IntervalImpliesFunext`; see below.  None of these are exported
   by `HoTT`.
 
+A dependency graph of all the files in the library can be found on the
+[wiki][wiki]; this may be helpful in avoiding circular dependencies.
+
+[wiki]: https://github.com/HoTT/HoTT/wiki
+
 ### Non-core files ###
 
 - `theories/categories/*`: The categories library, which is not part of
@@ -135,8 +140,11 @@ TODO: Induction and recursion principles (issue #517)
 
 ### Path algebra functions ###
 
-See the introduction to `PathGroupoids.v`.
-[Should we move it to here?]
+The path algebra functions defined mainly in `Basics/PathGroupoids`
+follow a particular set of naming conventions.  Generally they are
+named according to the head constant of their primary input and the
+pattern of paths appearing therein.  For more details, see the
+comments in `Basics/PathGroupoids`.
 
 ### Equivalences ###
 
@@ -239,7 +247,7 @@ the comments in `ReflectiveSubuniverse.v` for details.
 Try to avoid ever giving a name to variables inhabiting typeclasses.
 When introducing such a variable, you can write `intros ?` to put it
 in the hypotheses without specifying a name for it.  When using such a
-variable, typeclass resolution means you shouldn't eve need to refer
+variable, typeclass resolution means you shouldn't even need to refer
 to it by name: you can write `_` in tactics such as `refine` and Coq
 will find typeclass instances from the context.  Even `exact _` works.
 (You can usually also use `typeclasses eauto` or `eauto with
@@ -387,7 +395,8 @@ types" hack.  This means the procedure for defining a HIT is:
    we write `fun x => match x with base => fun _ => b end l` instead
    of `fun x => match x with base => b end`.
 
-5. Assert the computation rules for the path-constructors as `Axiom`s.
+5. Assert the "computation rules" for the path-constructors, in the
+   form of propositional equalities, as `Axiom`s.
 
 6. Close the module.  It is important to do this immediately after
    defining the induction principle, so that the private inductive
@@ -445,12 +454,14 @@ understand.
 Here are some acceptable tactics to use in transparent definitions
 (this is probably not an exhaustive list):
 
-- `intros`, `revert`, `generalize`
+- `intros`, `revert`, `generalize`, `generalize dependent`
 - `pose`, `assert`, `set`, `cut`
+- `transparent assert` (see below)
 - `fold`, `unfold`, `simpl`, `cbn`, `hnf`
 - `case`, `elim`, `destruct`, `induction`
 - `apply`, `eapply`, `assumption`, `eassumption`, `refine`, `exact`
-- `reflexivity`
+- `reflexivity`, `symmetry`, `transitivity`, `etransitivity`
+- `by`, `done`
 
 Conversely, if you want to use `rewrite`, that is fine, but you should
 then make the thing you are defining opaque.  If it turns out later
@@ -518,7 +529,7 @@ and that not everyone's screen is as wide as yours.
 
 Text in comments, on the other hand, should not contain hard newlines.
 Putting hard newlines in text makes it extremely ugly when viewed in a
-window that is more narrow than the width to which you filled it.  If
+window that is narrower than the width to which you filled it.  If
 editing in Emacs, turn off `auto-fill-mode` and turn on
 `visual-line-mode`; then you'll be able to read comment paragraphs
 without scrolling horizontally, no matter how narrow your window is.
