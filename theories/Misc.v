@@ -40,12 +40,6 @@ Defined.
 
 End NullHomotopy.
 
-(** ** [Bool <~> (Bool <~> Bool)]
-
-    This should go in [types/Bool.v], but it depends on a lemma above. *)
-Definition equiv_bool_equiv_bool_bool `{Funext} : Bool <~> (Bool <~> Bool)
-  := @equiv_bool_equiv_bool_bool_helper _ (@path_equiv _ _ _).
-
 (** ** Equivalences between contractible types *)
 Section EquivContr.
 
