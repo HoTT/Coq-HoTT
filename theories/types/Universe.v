@@ -2,7 +2,7 @@
 (** * Theorems about the universe, including the Univalence Axiom. *)
 
 Require Import HoTT.Basics.
-Require Import HProp EquivalenceVarieties types.Sigma.
+Require Import HProp EquivalenceVarieties types.Sigma types.Arrow types.Paths.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -128,21 +128,9 @@ Global Instance trunc_path_IsHProp `{Funext} X Y `{IsHProp Y}
 Proof.
   apply hprop_allpath.
   intros pf1 pf2.
-  rewrite <- (eta_path_universe pf1), <- (eta_path_universe pf2).
-  lazymatch goal with
-    | [ |- @path_universe _ _ (equiv_fun ?f) ?Hf
-           = @path_universe _ _ (equiv_fun ?g) ?Hg ]
-      => change Hf with (equiv_isequiv f);
-        change Hg with (equiv_isequiv g);
-        generalize (equiv_isequiv f) (equiv_isequiv g);
-        generalize (equiv_fun f) (equiv_fun g)
-  end.
-  let f' := fresh in
-  let g' := fresh in
-  intros f' g' ? ?;
-    assert (f' = g'); [ | path_induction; apply ap; apply path_ishprop ].
-  apply path_forall; intro.
-  apply path_ishprop.
+  apply (equiv_inj (equiv_path X Y)).
+  apply path_equiv, path_arrow.
+  intros x; by apply path_ishprop.
 Qed.
 
 Global Instance isset_hProp `{Funext} : IsHSet hProp | 0.

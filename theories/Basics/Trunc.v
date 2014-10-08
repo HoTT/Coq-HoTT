@@ -73,6 +73,8 @@ Definition trunc_equiv' `(f : A <~> B) `{IsTrunc n A}
 (** ** Truncated morphisms *)
 
 Class IsTruncMap (n : trunc_index) {X Y : Type} (f : X -> Y) :=
-  istruncmap_fiber :> forall y:Y, IsTrunc n (hfiber f y).
+  istruncmap_fiber : forall y:Y, IsTrunc n (hfiber f y).
+
+Global Existing Instance istruncmap_fiber.
 
 Notation IsEmbedding := (IsTruncMap -1).

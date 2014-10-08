@@ -1,7 +1,7 @@
 (** * HPropositions *)
 
 Require Import HoTT.Basics.
-Require Import types.Forall types.Sigma types.Prod types.Record types.Paths.
+Require Import types.Forall types.Sigma types.Prod types.Record types.Paths types.Unit types.Empty.
 
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
@@ -198,15 +198,15 @@ Definition equiv_path_sigma_hprop {A : Type} {P : A -> Type}
   := BuildEquiv _ _ (path_sigma_hprop _ _) _.
 
 (** The type of Propositions *)
-Record hProp := hp { hproptype :> Type ; isp : IsHProp hproptype}.
+Record hProp := hp { hproptype : Type ; isp : IsHProp hproptype}.
 (** This one would allow us to turn the record type of contractible types
 into an [hProp].
 <<
 Canonical Structure default_HProp:= fun T P => (@hp T P).
 >>
 *)
+Coercion hproptype : hProp >-> Sortclass.
 Global Existing Instance isp.
-Require Import Unit Empty.
 
 Definition Unit_hp : hProp := (hp Unit _).
 

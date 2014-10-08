@@ -61,7 +61,7 @@ Section equiv_iso_set_cat.
   Definition iso_equiv (s d : set_cat) (m : s <~> d)
   : s <~=~> d
     := Build_Isomorphic
-         (@isiso_isequiv s d m m).
+         (@isiso_isequiv s d m _).
 
   Global Instance isequiv_isiso_isequiv s d
   : IsEquiv (@iso_equiv s d) | 0.
@@ -116,14 +116,14 @@ Section equiv_iso_prop_cat.
   Definition iso_equiv_prop (s d : prop_cat) (m : s <~> d)
   : s <~=~> d
     := Build_Isomorphic
-         (@isiso_isequiv_prop s d m m).
+         (@isiso_isequiv_prop s d m _).
 
   Global Instance isequiv_isiso_isequiv_prop s d
   : IsEquiv (@iso_equiv_prop s d) | 0.
   Proof.
     refine (isequiv_adjointify
               (@iso_equiv_prop s d)
-              (fun m => BuildEquiv _ _ _ (@isequiv_isiso_prop s d m m))
+              (fun m => BuildEquiv _ _ _ (@isequiv_isiso_prop s d m _))
               _
               _);
     simpl in *;

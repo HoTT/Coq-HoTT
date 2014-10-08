@@ -20,8 +20,11 @@ Class Transitive {A} (R : relation A) :=
 
 (** A [PreOrder] is both Reflexive and Transitive. *)
 Class PreOrder {A} (R : relation A) :=
-  { PreOrder_Reflexive :> Reflexive R | 2 ;
-    PreOrder_Transitive :> Transitive R | 2 }.
+  { PreOrder_Reflexive : Reflexive R | 2 ;
+    PreOrder_Transitive : Transitive R | 2 }.
+
+Global Existing Instance PreOrder_Reflexive.
+Global Existing Instance PreOrder_Transitive.
 
 Arguments reflexivity {A R _} / _.
 Arguments symmetry {A R _} / _ _ _.
@@ -307,9 +310,11 @@ Arguments eisadj {A B} f {_} _.
 
 (** A record that includes all the data of an adjoint equivalence. *)
 Record Equiv A B := BuildEquiv {
-  equiv_fun :> A -> B ;
-  equiv_isequiv :> IsEquiv equiv_fun
+  equiv_fun : A -> B ;
+  equiv_isequiv : IsEquiv equiv_fun
 }.
+
+Coercion equiv_fun : Equiv >-> Funclass.
 
 Global Existing Instance equiv_isequiv.
 

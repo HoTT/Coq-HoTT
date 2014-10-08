@@ -28,7 +28,9 @@ The former requires only core Coq, but blows up the size (universe level) of [Is
 Question: is there a definition of connectedness that neither blows up the universe level, nor requires HIT’s? *)
 
 Class IsConnected (n : trunc_index) (A : Type)
- := isconnected_contr_trunc :> Contr (Trunc n A).
+ := isconnected_contr_trunc : Contr (Trunc n A).
+
+Global Existing Instance isconnected_contr_trunc.
 
 Definition isconnected_elim {n} {A} `{IsConnected n A}
            (C : Type) `{IsTrunc n C} (f : A -> C)
@@ -66,8 +68,9 @@ Defined.
 (** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against truncated types.  We use the former; the equivalence with the latter is given below in [conn_map_elim], [conn_map_comp], and [conn_map_from_extension_elim]. *)
 
 Class IsConnMap (n : trunc_index) {A B : Type} (f : A -> B)
-  := isconnected_hfiber_conn_map :>
-       forall b:B, IsConnected n (hfiber f b).
+  := isconnected_hfiber_conn_map : forall b:B, IsConnected n (hfiber f b).
+
+Global Existing Instance isconnected_hfiber_conn_map.
 
 (** Surjections are the (-1)-connected maps, but they can be characterized more simply since an inhabited hprop is automatically contractible. *)
 Notation IsSurjection := (IsConnMap -1).

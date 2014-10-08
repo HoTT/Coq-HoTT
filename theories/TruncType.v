@@ -17,7 +17,7 @@ Section TruncType.
 Context `{Univalence}.
 
 Record TruncType (n : trunc_index) := BuildTruncType {
-  trunctype_type :> Type ;
+  trunctype_type : Type ;
   istrunc_trunctype_type : IsTrunc n trunctype_type
 }.
 (* Note: the naming of the second constructor is more than a little clunky.  However, the more obvious [istrunc_trunctype] is taken by the theorem below, that [IsTrunc n.+1 (TruncType n)], which seems to have an even better claim to it. *)
@@ -25,6 +25,8 @@ Record TruncType (n : trunc_index) := BuildTruncType {
 Arguments BuildTruncType _ _ {_}.
 Arguments trunctype_type [_] _.
 Arguments istrunc_trunctype_type [_] _.
+
+Coercion trunctype_type : TruncType >-> Sortclass.
 
 Global Existing Instance istrunc_trunctype_type.
 
