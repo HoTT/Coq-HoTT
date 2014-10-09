@@ -12,10 +12,12 @@ Local Open Scope equiv_scope.
 (** ** Factorizations *)
 
 Section Factorization.
-  Context (class1 class2 : forall X Y, (X -> Y) -> Type).
-  Context `{forall X Y (g:X->Y), IsHProp (class1 _ _ g)}.
-  Context `{forall X Y (g:X->Y), IsHProp (class2 _ _ g)}.
-  Context {A B} (f : A -> B).
+
+  (** It's important that these are all declared with a single [Context] command, so that the marker [@{i}] refers to the same universe level in all of them. *)
+  Context (class1 class2 : forall (X Y : Type@{i}), (X -> Y) -> Type@{i})
+          `{forall (X Y : Type@{i}) (g:X->Y), IsHProp (class1 _ _ g)}
+          `{forall (X Y : Type@{i}) (g:X->Y), IsHProp (class2 _ _ g)}
+          {A B : Type@{i}} (f : A -> B).
 
   (** A factorization of [f] into a first factor lying in [class1] and a second factor lying in [class2]. *)
   Record Factorization :=
@@ -159,19 +161,20 @@ Arguments PathFactorization {class1 class2 A B f} fact fact'.
 
 (** A ("unique" or "orthogonal") factorization system consists of a couple of classes of maps, closed under composition, such that every map admits a unique factorization. *)
 Record FactorizationSystem :=
-  { class1 : forall {X Y}, (X -> Y) -> Type ;
-    ishprop_class1 : forall {X Y} (g:X->Y), IsHProp (class1 g) ;
-    class1_compose : forall {X Y Z} (g:X->Y) (h:Y->Z),
+  { class1 : forall {X Y : Type@{i}}, (X -> Y) -> Type ;
+    ishprop_class1 : forall {X Y : Type@{i}} (g:X->Y), IsHProp (class1 g) ;
+    class1_compose : forall {X Y Z : Type@{i}} (g:X->Y) (h:Y->Z),
                        class1 g -> class1 h -> class1 (h o g) ;
-    class2 : forall {X Y}, (X -> Y) -> hProp ;
-    ishprop_class2 : forall {X Y} (g:X->Y), IsHProp (class2 g) ;
-    class2_compose : forall {X Y Z} (g:X->Y) (h:Y->Z),
+    class2 : forall {X Y : Type@{i}}, (X -> Y) -> hProp ;
+    ishprop_class2 : forall {X Y : Type@{i}} (g:X->Y), IsHProp (class2 g) ;
+    class2_compose : forall {X Y Z : Type@{i}} (g:X->Y) (h:Y->Z),
                        class2 g -> class2 h -> class2 (h o g) ;
     (** Morally, the uniqueness of factorizations says that [Factorization class1 class2 f] is contractible.  However, in practice we always *prove* that by way of [path_factorization], and we frequently want to *use* the components of a [PathFactorization] as well.  Thus, as data we store the canonical factorization and a [PathFactorization] between any two such, and prove in a moment that this implies contractibility of the space of factorizations. *)
-    factor : forall {X Y} (f:X->Y), Factorization (@class1) (@class2) f ;
-    path_factor : forall {X Y} (f:X->Y)
-                         (fact fact' : Factorization (@class1) (@class2) f),
-                    PathFactorization fact fact'
+    factor : forall {X Y : Type@{i}} (f:X->Y), Factorization@{i i} (@class1) (@class2) f ;
+    path_factor : forall {X Y : Type@{i}} (f:X->Y)
+                         (fact : Factorization@{i i} (@class1) (@class2) f)
+                         (fact' : Factorization@{i i} (@class1) (@class2) f),
+                    PathFactorization@{i i i} fact fact'
   }.
 
 Global Existing Instances ishprop_class1 ishprop_class2.
@@ -199,7 +202,7 @@ Section FactSys.
   Defined.
 
   (** The two classes of maps are automatically orthogonal, i.e. any commutative square from a [class1] map to a [class2] map has a unique diagonal filler.  For now, we only bother to define the lift; in principle we ought to show that the type of lifts is contractible. *)
-  Context {A B X Y : Type}
+  Context {A B X Y : Type@{i}}
           (i : A -> B) (c1i : class1 factsys i)
           (p : X -> Y) (c2p : class2 factsys p)
           (f : A -> X) (g : B -> Y) (h : p o f == g o i).
