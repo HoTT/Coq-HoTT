@@ -318,6 +318,18 @@ Proof.
   destruct p. destruct yz. reflexivity.
 Defined.
 
+(** Or if the second variable contains a first component that doesn't depend on the first.  Need to think about the naming of these. *)
+
+Definition transport_sigma_' {A : Type} {B C : A -> Type}
+           {D : forall a:A, B a -> C a -> Type}
+           {x1 x2 : A} (p : x1 = x2)
+           (yzw : { y : B x1 & { z : C x1 & D x1 y z } })
+: transport (fun x => { y : B x & { z : C x & D x y z } }) p yzw
+  = (p # yzw.1 ; (p # yzw.2.1 ; transportD2 _ _ _ p yzw.1 yzw.2.1 yzw.2.2)).
+Proof.
+  destruct p. reflexivity.
+Defined.
+
 (** ** Functorial action *)
 
 Definition functor_sigma `{P : A -> Type} `{Q : B -> Type}

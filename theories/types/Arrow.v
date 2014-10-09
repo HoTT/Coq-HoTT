@@ -73,6 +73,18 @@ Proof.
   destruct p; simpl; auto.
 Defined.
 
+(** And some naturality and coherence for these laws. *)
+
+Definition ap_transport_arrow_toconst {A : Type} {B : A -> Type} {C : Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B x1 -> C) {y1 y2 : B x2} (q : y1 = y2)
+  : ap (transport (fun x => B x -> C) p f) q
+    @ transport_arrow_toconst p f y2
+    = transport_arrow_toconst p f y1
+    @ ap (fun y => f (p^ # y)) q.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+
 
 (** ** Dependent paths *)
 

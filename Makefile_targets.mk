@@ -57,6 +57,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/ObjectClassifier.v \
 	$(srcdir)/theories/ReflectiveSubuniverse.v \
 	$(srcdir)/theories/Modality.v \
+	$(srcdir)/theories/Factorization.v \
 	$(srcdir)/theories/hit/Circle.v \
 	$(srcdir)/theories/hit/Truncations.v \
 	$(srcdir)/theories/hit/Connectedness.v \
