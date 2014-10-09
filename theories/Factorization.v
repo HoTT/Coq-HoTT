@@ -14,10 +14,10 @@ Local Open Scope equiv_scope.
 Section Factorization.
 
   (** It's important that these are all declared with a single [Context] command, so that the marker [@{i}] refers to the same universe level in all of them. *)
-  Context (class1 class2 : forall (X Y : Type@{i}), (X -> Y) -> Type@{i})
+  Context {class1 class2 : forall (X Y : Type@{i}), (X -> Y) -> Type@{i}}
           `{forall (X Y : Type@{i}) (g:X->Y), IsHProp (class1 _ _ g)}
           `{forall (X Y : Type@{i}) (g:X->Y), IsHProp (class2 _ _ g)}
-          {A B : Type@{i}} (f : A -> B).
+          {A B : Type@{i}} {f : A -> B}.
 
   (** A factorization of [f] into a first factor lying in [class1] and a second factor lying in [class2]. *)
   Record Factorization :=
@@ -41,7 +41,7 @@ Section Factorization.
   Local Arguments compose / .
 
   (** A path between factorizations is equivalent to a structure of the following sort. *)
-  Record PathFactorization (fact fact' : Factorization) :=
+  Record PathFactorization {fact fact' : Factorization} :=
     { path_intermediate : intermediate fact <~> intermediate fact' ;
       path_factor1 : path_intermediate o factor1 fact == factor1 fact' ;
       path_factor2 : factor2 fact == factor2 fact' o path_intermediate ;
@@ -53,7 +53,7 @@ Section Factorization.
 
   (** It's easy to extract such a structure from an actual path between factorizations. *)
   Definition pathfactorization_path (fact fact' : Factorization)
-    : (fact = fact') -> PathFactorization fact fact'.
+    : (fact = fact') -> @PathFactorization fact fact'.
   Proof.
     intros p.
     refine (Build_PathFactorization fact fact' _ _ _ _); destruct p.
@@ -65,14 +65,14 @@ Section Factorization.
 
   (** The converse, however, is more work. In the proof of Theorem 7.6.6, the book glosses over this theorem with the phrase "by univalence and the characterization of paths and transport in Sigma-types, function types, and path types".  Which is arguably fair informally, because it's "obvious", but it turns out to be a good deal of work to keep track of all the transport lemmas and apply naturality in the right places. *)
   Section PathFactorization.
-    Context `{Univalence} (fact fact' : Factorization)
-            (pf : PathFactorization fact fact').
+    Context `{Univalence} {fact fact' : Factorization}
+            (pf : @PathFactorization fact fact').
 
     (** Let's give short names to the fields of [pf]. *)
-    Let II := path_intermediate _ _ pf.
-    Let ff1 := path_factor1 _ _ pf.
-    Let ff2 := path_factor2 _ _ pf.
-    Let fff := path_fact_factors _ _ pf.
+    Let II := path_intermediate pf.
+    Let ff1 := path_factor1 pf.
+    Let ff2 := path_factor2 pf.
+    Let fff := path_fact_factors pf.
 
     (** Each of those fields now induces a corresponding (dependent) path.  The first one is easy. *)
     Local Definition II' : intermediate fact = intermediate fact'
@@ -197,6 +197,7 @@ Section Factorization.
   End PathFactorization.
 End Factorization.
 
+Arguments Factorization class1 class2 {A B} f.
 Arguments PathFactorization {class1 class2 A B f} fact fact'.
 
 (** ** Factorization Systems *)
@@ -249,79 +250,103 @@ Section FactSys.
           (p : X -> Y) (c2p : class2 factsys p)
           (f : A -> X) (g : B -> Y) (h : p o f == g o i).
 
-  (** We define the lift together with all the data proving that it is a lift at once, so we only have to do the setup once. *)
-  Local Definition lift_factsys_all
-  : { s : B -> X & { k : s o i == f & { l : p o s == g &
-      forall a, ap p (k a)^ @ l (i a) = h a }}}.
+  (** First we factor [f] *)
+  Let C  : Type         := intermediate (factor factsys f).
+  Let f1 : A -> C       := factor1      (factor factsys f).
+  Let f2 : C -> X       := factor2      (factor factsys f).
+  Let ff : f2 o f1 == f := fact_factors (factor factsys f).
+
+  (** and [g] *)
+  Let D  : Type         := intermediate (factor factsys g).
+  Let g1 : B -> D       := factor1      (factor factsys g).
+  Let g2 : D -> Y       := factor2      (factor factsys g).
+  Let gf : g2 o g1 == g := fact_factors (factor factsys g).
+
+  (** Now we observe that [p o f2] and [f1], and [g2] and [g1 o i], are both factorizations of the common diagonal of the commutative square (for which we use [p o f], but we could equally well use [g o i]. *)
+  Let fact  : Factorization (@class1 factsys) (@class2 factsys) (p o f) 
+            := Build_Factorization' (p o f) C f1 (p o f2)
+                 (fun a => ap p (ff a))
+                 (inclass1 (factor factsys f))
+                 (class2_compose factsys f2 p
+                                 (inclass2 (factor factsys f))
+                                 c2p).
+  Let fact' : Factorization (@class1 factsys) (@class2 factsys) (p o f)
+            := Build_Factorization' (p o f) D (g1 o i) g2
+                 (fun a => gf (i a) @ (h a)^)
+                 (class1_compose factsys i g1 c1i
+                                 (inclass1 (factor factsys g)))
+                 (inclass2 (factor factsys g)).
+
+  (** Therefore, by the uniqueness of factorizations, we have an equivalence [q] relating them. *)
+  Let q  : C <~> D          := path_intermediate
+                                 (path_factor factsys (p o f) fact fact').
+  Let q1 : q o f1 == g1 o i := path_factor1
+                                 (path_factor factsys (p o f) fact fact').
+  Let q2 : p o f2 == g2 o q := path_factor2
+                                 (path_factor factsys (p o f) fact fact').
+
+  (** Using this, we can define the lift. *)
+  Definition lift_factsys : B -> X
+    := f2 o q^-1 o g1.
+
+  (** And the commutative triangles making it a lift *)
+  Definition lift_factsys_tri1 : lift_factsys o i == f.
   Proof.
-    destruct (factor factsys f) as [C f1 f2 ff c1f1 c2f2].
-    destruct (factor factsys g) as [D g1 g2 gf c1g1 c2g2].
-    pose (fact := Build_Factorization' (p o f) C f1 (p o f2)
-                    (fun a => ap p (ff a))
-                    c1f1 (class2_compose factsys f2 p c2f2 c2p)).
-    pose (fact' := Build_Factorization' (p o f) D (g1 o i) g2
-                    (fun a => gf (i a) @ (h a)^)
-                    (class1_compose factsys i g1 c1i c1g1) c2g2).
-    destruct (path_factor factsys (p o f) fact fact')
-      as [q q1 q2 r]; simpl in *; clear fact fact'.
-    exists (f2 o q^-1 o g1).
-    refine (_ ; (_ ; _)); intros x; unfold compose.
-    - refine (ap (f2 o q^-1) (q1 x)^ @ _); unfold compose.
-      transitivity (f2 (f1 x)).
-      + apply ap, eissect.
-      + apply ff.
-    - refine (q2 _ @ _); unfold compose.
-      transitivity (g2 (g1 x)).
-      + apply ap, eisretr.
-      + apply gf.
-    - Open Scope long_path_scope.
-      (* First we massage the hypothesis [r] and apply it. *)
-      specialize (r x); rewrite concat_p_pp in r.
-      apply moveL_pM, moveR_Vp in r.
-      refine (_ @ r); clear r.
-      (* Now we can cancel some whiskered paths on both sides. *)
-      repeat rewrite inv_pp; repeat rewrite ap_pp; rewrite ap_V.
-      repeat rewrite concat_pp_p; apply whiskerL.
-      repeat rewrite concat_p_pp; apply whiskerR.
-      (* Next we set up for a naturality. *)
-      rewrite ap_compose, <- ap_pp, <- inv_pp.
-      Fail rewrite <- ap_pp.    (* rewrite, I hardly knew ye *)
-      refine (((ap (ap p) (inverse2 (ap_pp f2 _ _)^) @@ 1) @@ 1) @ _).
-      rewrite <- ap_V, <- ap_compose.
-      Fail rewrite concat_Ap.   (* la la la *)
-      refine ((concat_Ap q2 _ @@ 1) @ _).
-      (* Now we can cancel another path *)
-      rewrite concat_pp_p; apply whiskerL.
-      (* And set up for an application of [ap]. *)
-      rewrite ap_compose.
-      Fail rewrite <- ap_pp.    (* again? *)
-      refine ((ap_pp g2 _ _)^ @ _).
-      apply ap.
-      (* Now we apply the triangle identity [eisadj]. *)
-      rewrite inv_pp, ap_pp, ap_V.
-      Fail rewrite <- eisadj.   (* oh, let this be the last time please *)
-      refine ((((inverse2 (eisadj q (f1 x))^) @@ 1) @@ 1) @ _).
-      (* Finally, we rearrange and it becomes a naturality square. *)
-      rewrite concat_pp_p; apply moveR_Vp.
-      rewrite <- ap_V, inv_V, <- ap_compose.
-      exact (concat_A1p (eisretr q) (q1 x)).
-      Close Scope long_path_scope.
+    intros x.
+    refine (ap (f2 o q^-1) (q1 x)^ @ _); unfold compose.
+    transitivity (f2 (f1 x)).
+    + apply ap, eissect.
+    + apply ff.
   Defined.
 
-  Definition lift_factsys : B -> X
-    := lift_factsys_all.1.
-
-  Definition lift_factsys_tri1 : lift_factsys o i == f
-    := lift_factsys_all.2.1.
-
-  Definition lift_factsys_tri2 : p o lift_factsys == g
-    := lift_factsys_all.2.2.1.
-
-  (* Make this abstract, because we used [rewrite] in that part of the proof. *)
-  Definition lift_factsys_square
-  : forall a, ap p (lift_factsys_tri1 a)^ @ lift_factsys_tri2 (i a) = h a.
+  Definition lift_factsys_tri2 : p o lift_factsys == g.
   Proof.
-    exact lift_factsys_all.2.2.2.
+    intros x.
+    refine (q2 _ @ _); unfold compose.
+    transitivity (g2 (g1 x)).
+    + apply ap, eisretr.
+    + apply gf.
+  Defined.
+
+  (** And finally prove that these two triangles compose to the given commutative square. *)
+  Definition lift_factsys_square (x : A)
+  : ap p (lift_factsys_tri1 x)^ @ lift_factsys_tri2 (i x) = h x.
+  Proof.
+    unfold lift_factsys_tri1, lift_factsys_tri2.
+    Open Scope long_path_scope.
+    (* First we use the one aspect of the uniqueness of factorizations that we haven't mentioned yet. *)
+    pose (r := path_fact_factors (path_factor factsys (p o f) fact fact') x
+            : q2 (f1 x) @ ap g2 (q1 x) @ (gf (i x) @ (h x)^) = ap p (ff x)).
+    rewrite concat_p_pp in r.
+    apply moveL_pM, moveR_Vp in r.
+    refine (_ @ r); clear r.
+    (* Now we can cancel some whiskered paths on both sides. *)
+    repeat rewrite inv_pp; repeat rewrite ap_pp; rewrite ap_V.
+    repeat rewrite concat_pp_p; apply whiskerL.
+    repeat rewrite concat_p_pp; apply whiskerR.
+    (* Next we set up for a naturality. *)
+    rewrite ap_compose, <- ap_pp, <- inv_pp.
+    Fail rewrite <- ap_pp.    (* rewrite, I hardly knew ye *)
+    refine (((ap (ap p) (inverse2 (ap_pp f2 _ _)^) @@ 1) @@ 1) @ _).
+    rewrite <- ap_V, <- ap_compose.
+    Fail rewrite concat_Ap.   (* la la la *)
+    refine ((concat_Ap q2 _ @@ 1) @ _).
+    (* Now we can cancel another path *)
+    rewrite concat_pp_p; apply whiskerL.
+    (* And set up for an application of [ap]. *)
+    rewrite ap_compose.
+    Fail rewrite <- ap_pp.    (* again? *)
+    refine ((ap_pp g2 _ _)^ @ _).
+    apply ap.
+    (* Now we apply the triangle identity [eisadj]. *)
+    rewrite inv_pp, ap_pp, ap_V.
+    Fail rewrite <- eisadj.   (* oh, let this be the last time please *)
+    refine ((((inverse2 (eisadj q (f1 x))^) @@ 1) @@ 1) @ _).
+    (* Finally, we rearrange and it becomes a naturality square. *)
+    rewrite concat_pp_p; apply moveR_Vp.
+    rewrite <- ap_V, inv_V, <- ap_compose.
+    exact (concat_A1p (eisretr q) (q1 x)).
+    Close Scope long_path_scope.
   Qed.
 
 End FactSys.
