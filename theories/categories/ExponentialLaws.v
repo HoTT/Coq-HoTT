@@ -21,3 +21,7 @@ Require ExponentialLaws.Law3.
 (** ** Currying *)
 (** *** [(yⁿ)ᵐ ≅ yⁿᵐ] *)
 Require ExponentialLaws.Law4.
+
+
+Require ExponentialLaws.Tactics.
+Include ExponentialLaws.Tactics.
