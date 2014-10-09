@@ -55,10 +55,12 @@ Section Factorization.
   Definition pathfactorization_path (fact fact' : Factorization)
     : (fact = fact') -> PathFactorization fact fact'.
   Proof.
-    intros [].
-    exact (Build_PathFactorization fact fact
-             (equiv_idmap (intermediate fact))
-             (fun a => 1) (fun x => 1) (fun a => concat_1p _)).
+    intros p.
+    refine (Build_PathFactorization fact fact' _ _ _ _); destruct p.
+    - exact (equiv_idmap (intermediate fact)).
+    - exact (fun a => 1).
+    - exact (fun x => 1).
+    - exact (fun a => concat_1p _).
   Defined.
 
   (** The converse, however, is more work. In the proof of Theorem 7.6.6, the book glosses over this theorem with the phrase "by univalence and the characterization of paths and transport in Sigma-types, function types, and path types".  Which is arguably fair informally, because it's "obvious", but it turns out to be a good deal of work to keep track of all the transport lemmas and apply naturality in the right places. *)
