@@ -34,7 +34,7 @@ Section Factorization.
       { gin1 : class1 _ _ g & class2 _ _ h }}}}}
       <~> Factorization.
   Proof.
-    issig5 Build_Factorization intermediate factor1 factor2 fact_factors inclass1 inclass2.
+    issig Build_Factorization intermediate factor1 factor2 fact_factors inclass1 inclass2.
   Defined.
 
   (* This enables [simpl rewrite] to unfold [compose]. *)
