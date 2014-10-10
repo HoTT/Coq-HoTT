@@ -1,3 +1,5 @@
+(* -*- mode: coq; mode: visual-line -*-  *)
+
 (** * The groupid structure of paths *)
 
 Require Import Overture.
@@ -283,6 +285,18 @@ Proof.
   intro h. exact (h @ (concat_1p _)).
 Defined.
 
+(* In general, the path we want to move might be arbitrarily deeply nested at the beginning of a long concatenation.  Thus, instead of defining functions such as [moveL_Mp_p], we define a tactical that can repeatedly rewrite with associativity to expose it. *)
+Ltac with_rassoc tac :=
+  repeat rewrite concat_pp_p;
+  tac;
+  (* After moving, we reassociate to the left (the canonical direction for paths). *)
+  repeat rewrite concat_p_pp.
+
+Ltac rewrite_moveL_Mp_p := with_rassoc ltac:(apply moveL_Mp).
+Ltac rewrite_moveL_Vp_p := with_rassoc ltac:(apply moveL_Vp).
+Ltac rewrite_moveR_Mp_p := with_rassoc ltac:(apply moveR_Mp).
+Ltac rewrite_moveR_Vp_p := with_rassoc ltac:(apply moveR_Vp).
+
 Definition moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
   : u = p^ # v -> p # u = v.
@@ -339,15 +353,15 @@ Definition ap_pp {A B : Type} (f : A -> B) {x y z : A} (p : x = y) (q : y = z) :
     match p with idpath => 1 end
   end.
 
-Definition ap_p_pp {A B : Type} (f : A -> B) {w x y z : A}
-  (r : f w = f x) (p : x = y) (q : y = z) :
+Definition ap_p_pp {A B : Type} (f : A -> B) {w : B} {x y z : A}
+  (r : w = f x) (p : x = y) (q : y = z) :
   r @ (ap f (p @ q)) = (r @ ap f p) @ (ap f q).
 Proof.
   destruct p, q. simpl. exact (concat_p_pp r 1 1).
 Defined.
 
-Definition ap_pp_p {A B : Type} (f : A -> B) {w x y z : A}
-  (p : x = y) (q : y = z) (r : f z = f w) :
+Definition ap_pp_p {A B : Type} (f : A -> B) {x y z : A} {w : B}
+  (p : x = y) (q : y = z) (r : f z = w) :
   (ap f (p @ q)) @ r = (ap f p) @ (ap f q @ r).
 Proof.
   destruct p, q. simpl. exact (concat_pp_p 1 1 r).
@@ -605,13 +619,19 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
-(** Dependent transport in a doubly dependent type. *)
+(** Dependent transport in doubly dependent types and more. *)
 
 Definition transportD {A : Type} (B : A -> Type) (C : forall a:A, B a -> Type)
   {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C x1 y)
   : C x2 (p # y)
   :=
   match p with idpath => z end.
+
+Definition transportD2 {A : Type} (B C : A -> Type) (D : forall a:A, B a -> C a -> Type)
+  {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C x1) (w : D x1 y z)
+  : D x2 (p # y) (p # z)
+  :=
+  match p with idpath => w end.
 
 (** *** [ap] for multivariable functions *)
 
@@ -680,6 +700,25 @@ Proof.
   by induction p.
 Defined.
 
+Lemma ap_transportD {A : Type}
+      (B : A -> Type) (C1 C2 : forall a : A, B a -> Type)
+      (f : forall a b, C1 a b -> C2 a b)
+      {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C1 x1 y)
+: f x2 (p # y) (transportD B C1 p y z)
+  = transportD B C2 p y (f x1 y z).
+Proof.
+  by induction p.
+Defined.
+
+Lemma ap_transportD2 {A : Type}
+      (B C : A -> Type) (D1 D2 : forall a, B a -> C a -> Type)
+      (f : forall a b c, D1 a b c -> D2 a b c)
+      {x1 x2 : A} (p : x1 = x2) (y : B x1) (z : C x1) (w : D1 x1 y z)
+: f x2 (p # y) (p # z) (transportD2 B C D1 p y z w)
+  = transportD2 B C D2 p y z (f x1 y z w).
+Proof.
+  by induction p.
+Defined.
 
 (** *** Transporting in particular fibrations. *)
 
@@ -905,6 +944,16 @@ Definition apD02_pp {A} (B : A -> Type) (f : forall x:A, B x) {x y : A}
   @ (whiskerR (transport2_p2p B r1 r2 (f x))^ (apD f p3)).
 Proof.
   destruct r1, r2. destruct p1. reflexivity.
+Defined.
+
+(** This lemma needs a better name. *)
+Definition ap_transport_Vp {A B} (p q : A = B) (r : q = p) (z : A)
+: ap (transport idmap q^) (ap (fun s => transport idmap s z) r)
+  @ ap (fun s => transport idmap s (p # z)) (inverse2 r)
+  @ transport_Vp idmap p z
+  = transport_Vp idmap q z.
+Proof.
+  by path_induction.
 Defined.
 
 (** ** Tactics, hints, and aliases *)

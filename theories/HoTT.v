@@ -12,6 +12,7 @@ Require Export EquivalenceVarieties.
 Require Export Misc.
 Require Export Functorish.
 Require Export Modality.
+Require Export Factorization.
 Require Export ObjectClassifier.
 
 Require Export types.Unit.

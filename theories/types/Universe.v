@@ -13,8 +13,8 @@ Generalizable Variables A B f.
 Global Instance isequiv_path {A B : Type} (p : A = B)
   : IsEquiv (transport (fun X:Type => X) p) | 0
   := BuildIsEquiv _ _ _ (transport (fun X:Type => X) p^)
-  (fun b => ((transport_pp idmap p^ p b)^ @ transport2 idmap (concat_Vp p) b))
-  (fun a => ((transport_pp idmap p p^ a)^ @ transport2 idmap (concat_pV p) a))
+  (transport_pV idmap p)
+  (transport_Vp idmap p)
   (fun a => match p in _ = C return
               (transport_pp idmap p^ p (transport idmap p a))^ @
                  transport2 idmap (concat_Vp p) (transport idmap p a) =
@@ -72,9 +72,26 @@ Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}
 
 (** ** Transport *)
 
-Definition transport_path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
+(** There are two ways we could define [transport_path_universe]: we could give an explicit definition, or we could reduce it to paths by [equiv_rect] and give an explicit definition there.  The two should be equivalent, but we choose the second for now as it makes the currently needed coherence lemmas easier to prove. *)
+Definition transport_path_universe_uncurried
+           {A B : Type} (f : A <~> B) (z : A)
+  : transport (fun X:Type => X) (path_universe f) z = f z.
+Proof.
+  revert f.  equiv_intro (equiv_path A B) p.
+  exact (ap (fun s => transport idmap s z) (eissect _ p)).
+Defined.
+
+Definition transport_path_universe
+           {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
   : transport (fun X:Type => X) (path_universe f) z = f z
-  := ap10 (ap equiv_fun (eisretr (equiv_path A B) (BuildEquiv _ _ f feq))) z.
+  := transport_path_universe_uncurried (BuildEquiv A B f feq) z.
+(* Alternatively, [ap10 (ap equiv_fun (eisretr (equiv_path A B) (BuildEquiv _ _ f feq))) z]. *)
+
+Definition transport_path_universe_equiv_path
+           {A B : Type} (p : A = B) (z : A)
+  : transport_path_universe (equiv_path A B p) z =
+    (ap (fun s => transport idmap s z) (eissect _ p))
+  := equiv_rect_comp _ _ _.
 
 (* This somewhat fancier version is useful when working with HITs. *)
 Definition transport_path_universe'
@@ -85,10 +102,55 @@ Definition transport_path_universe'
    @ ap10 (ap (transport idmap) q) u
    @ transport_path_universe f u.
 
-Definition transport_path_universe_V `{Funext} {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : B)
+(** And a version for transporting backwards. *)
+
+Definition transport_path_universe_V_uncurried `{Funext}
+           {A B : Type} (f : A <~> B) (z : B)
+  : transport (fun X:Type => X) (path_universe f)^ z = f^-1 z.
+Proof.
+  revert f. equiv_intro (equiv_path A B) p.
+  exact (ap (fun s => transport idmap s z) (inverse2 (eissect _ p))).
+Defined.
+
+Definition transport_path_universe_V `{Funext}
+           {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : B)
   : transport (fun X:Type => X) (path_universe f)^ z = f^-1 z
-  := (transport2 idmap (path_universe_V f) z)^
-   @ (transport_path_universe (f^-1) z).
+  := transport_path_universe_V_uncurried (BuildEquiv _ _ f feq) z.
+(* Alternatively, [(transport2 idmap (path_universe_V f) z)^ @ (transport_path_universe (f^-1) z)]. *)
+
+Definition transport_path_universe_V_equiv_path `{Funext}
+           {A B : Type} (p : A = B) (z : B)
+  : transport_path_universe_V (equiv_path A B p) z =
+    ap (fun s => transport idmap s z) (inverse2 (eissect _ p))
+  := equiv_rect_comp _ _ _.
+
+(** And some coherence for it. *)
+
+Definition transport_path_universe_Vp_uncurried `{Funext}
+           {A B : Type} (f : A <~> B) (z : A)
+: ap (transport idmap (path_universe f)^) (transport_path_universe f z)
+  @ transport_path_universe_V f (f z)
+  @ eissect f z
+  = transport_Vp idmap (path_universe f) z.
+Proof.
+  pattern f.
+  refine (equiv_rect (equiv_path A B) _ _ _); intros p.
+  (* Something slightly sneaky happens here: by definition of [equiv_path], [eissect (equiv_path A B p)] is judgmentally equal to [transport_Vp idmap p].  Thus, we can apply [ap_transport_Vp]. *)
+  refine (_ @ ap_transport_Vp p (path_universe (equiv_path A B p))
+            (eissect (equiv_path A B) p) z).
+  apply whiskerR. apply concat2.
+  - apply ap. apply transport_path_universe_equiv_path.
+  - apply transport_path_universe_V_equiv_path.
+Defined.
+
+Definition transport_path_universe_Vp `{Funext}
+           {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : A)
+: ap (transport idmap (path_universe f)^) (transport_path_universe f z)
+  @ transport_path_universe_V f (f z)
+  @ eissect f z
+  = transport_Vp idmap (path_universe f) z
+:= transport_path_universe_Vp_uncurried (BuildEquiv A B f feq) z.
+
 
 (** ** Equivalence induction *)
 
