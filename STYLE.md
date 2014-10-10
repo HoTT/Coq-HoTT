@@ -328,7 +328,9 @@ which don't.  This means that any theorem which depends on one or the
 other must take an argument of the appropriate type.  It is simple to
 write this using typeclass magic as follows:
 
-    Theorem uses_univalence `{Univalence} (A : Type) ...
+```coq
+Theorem uses_univalence `{Univalence} (A : Type) ...
+```
 
 The axiom-term witnessing univalence does not have to be named, nor
 does it have to be passed explicitly to any other lemma which uses
@@ -338,8 +340,10 @@ automatically.
 For longer developments using `Univalence` or `Funext`, it is probably
 preferable to assume it as part of the context.
 
-    Section UsesUnivalence.
-      Context `{Univalence}.
+```coq
+Section UsesUnivalence.
+  Context `{Univalence}.
+```
 
 Now everything defined and proven in this section can use univalence
 without saying so explicitly, and at the end of the section it will be
@@ -601,25 +605,31 @@ line, then it is better to put the result type (the part after the
 colon) on an indented line by itself, together with the colon to make
 it clear that this is the result type.
 
-    Definition triangulator {A : Type} {x y z : A} (p : x = y) (q : y = z)
-      : concat_p_pp p 1 q @ whiskerR (concat_p1 p) q.
+```coq
+Definition triangulator {A : Type} {x y z : A} (p : x = y) (q : y = z)
+  : concat_p_pp p 1 q @ whiskerR (concat_p1 p) q.
+```
 
 Of course, if the list of input types does not fit on a line by
 itself, it should be broken across lines as well, with later lines
 indented, and similarly for the result type.
 
-    Definition pentagon {A : Type} {v w x y z : A}
-      (p : v = w) (q : w = x) (r : x = y) (s : y = z)
-      : whiskerL p (concat_p_pp q r s)
-          @ concat_p_pp p (q@r) s
-          @ whiskerR (concat_p_pp p q r) s.
+```coq
+Definition pentagon {A : Type} {v w x y z : A}
+  (p : v = w) (q : w = x) (r : x = y) (s : y = z)
+  : whiskerL p (concat_p_pp q r s)
+      @ concat_p_pp p (q@r) s
+      @ whiskerR (concat_p_pp p q r) s.
+```
 
 For definitions given with an explicit term, that term should usually
 also be on an indented line by itself, together with the := to make it
 clear that this is the definition.
 
-    Definition concat_p1 {A : Type} {x y : A} (p : x = y) : p @ 1 = p
-      := match p with idpath => 1 end.
+```coq
+Definition concat_p1 {A : Type} {x y : A} (p : x = y) : p @ 1 = p
+  := match p with idpath => 1 end.
+```
 
 Of course, if the term is longer than one line, it should be broken
 across lines, with later lines indented further.
