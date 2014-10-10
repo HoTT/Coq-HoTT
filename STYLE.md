@@ -201,7 +201,7 @@ Here are some of the typeclasses we are using:
 
 `IsHSet`, `IsHProp`, and `Contr` are notations for `IsTrunc 0`,
 `IsTrunc -1`, and `IsTrunc -2` respectively.  Since `IsTrunc` is
-defined recursively with contractibility as the pase case, there is a
+defined recursively with contractibility as the base case, there is a
 bit of magic involving a definition called `Contr_internal`; see the
 comments in `Overture.v`.
 
