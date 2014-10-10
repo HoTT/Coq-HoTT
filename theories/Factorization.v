@@ -206,10 +206,12 @@ Arguments PathFactorization {class1 class2 A B f} fact fact'.
 Record FactorizationSystem :=
   { class1 : forall {X Y : Type@{i}}, (X -> Y) -> Type ;
     ishprop_class1 : forall {X Y : Type@{i}} (g:X->Y), IsHProp (class1 g) ;
+    class1_isequiv : forall {X Y : Type@{i}} (g:X->Y) {geq:IsEquiv g}, class1 g ;
     class1_compose : forall {X Y Z : Type@{i}} (g:X->Y) (h:Y->Z),
                        class1 g -> class1 h -> class1 (h o g) ;
     class2 : forall {X Y : Type@{i}}, (X -> Y) -> hProp ;
     ishprop_class2 : forall {X Y : Type@{i}} (g:X->Y), IsHProp (class2 g) ;
+    class2_isequiv : forall {X Y : Type@{i}} (g:X->Y) {geq:IsEquiv g}, class2 g ;
     class2_compose : forall {X Y Z : Type@{i}} (g:X->Y) (h:Y->Z),
                        class2 g -> class2 h -> class2 (h o g) ;
     (** Morally, the uniqueness of factorizations says that [Factorization class1 class2 f] is contractible.  However, in practice we always *prove* that by way of [path_factorization], and we frequently want to *use* the components of a [PathFactorization] as well.  Thus, as data we store the canonical factorization and a [PathFactorization] between any two such, and prove in a moment that this implies contractibility of the space of factorizations. *)
