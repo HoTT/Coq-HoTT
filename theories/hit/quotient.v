@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics.
 Require Import types.Universe types.Arrow.
-Require Import HSet HProp UnivalenceImpliesFunext.
+Require Import HSet HProp UnivalenceImpliesFunext TruncType.
 Require Import hit.epi hit.Truncations hit.Connectedness.
 
 Open Local Scope path_scope.
@@ -80,15 +80,15 @@ Defined.
 
 Definition in_class : quotient R -> A -> hProp.
 Proof.
-refine (quotient_rect R (fun _ => A -> hProp) (fun a b => hp (R a b) _) _).
+refine (quotient_rect R (fun _ => A -> hProp) (fun a b => BuildhProp (R a b)) _).
 intros. eapply concat;[apply transport_const|].
 apply path_forall. intro z. apply path_hprop; simpl.
-apply path_universe_uncurried. apply @equiv_iff_hprop; eauto.
+apply @equiv_iff_hprop; eauto.
 Defined.
 
 Context {Hrefl : Reflexive R}.
 
-Lemma in_class_pr : forall x y, hproptype (in_class (class_of R x) y) = R x y.
+Lemma in_class_pr : forall x y, (in_class (class_of R x) y : Type) = R x y.
 Proof.
 reflexivity.
 Defined.
@@ -157,7 +157,7 @@ assert (dequiv1 : forall y : A,
 refine (quotient_rect R (fun q =>
 quotient_rect_nondep (dclass x) (dequiv0 x) q =
 quotient_rect_nondep (dclass x') (dequiv0 x') q) dequiv1 _).
-intros. apply iss.
+intros. apply path_ishprop.
 Defined.
 
 Definition quotient_ind : forall P : quotient R -> Type,
@@ -174,7 +174,7 @@ Defined.
 Theorem quotient_surjective: IsSurjection (class_of R).
 Proof.
   apply BuildIsSurjection.
-  apply (quotient_rect_prop (fun y => hp (merely (hfiber (class_of R) y)) _)); try exact _.
+  apply (quotient_rect_prop (fun y => merely_hp (hfiber (class_of R) y))); try exact _.
   intro x. apply tr. by exists x.
 Defined.
 

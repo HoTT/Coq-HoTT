@@ -1,7 +1,6 @@
-Require Import Overture PathGroupoids Contractible HProp Equivalences EquivalenceVarieties.
-Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths
-        types.Forall types.Prod types.Universe.
-Require Import ReflectiveSubuniverse Modality.
+Require Import HoTT.Basics.
+Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths types.Forall types.Prod types.Universe.
+Require Import HProp EquivalenceVarieties TruncType ReflectiveSubuniverse Modality.
 Require Import hit.Pushout hit.Join.
 
 Local Open Scope path_scope.

@@ -197,47 +197,7 @@ Definition equiv_path_sigma_hprop {A : Type} {P : A -> Type}
 : (u.1 = v.1) <~> (u = v)
   := BuildEquiv _ _ (path_sigma_hprop _ _) _.
 
-(** The type of Propositions *)
-Record hProp := hp { hproptype : Type ; isp : IsHProp hproptype}.
-(** This one would allow us to turn the record type of contractible types
-into an [hProp].
-<<
-Canonical Structure default_HProp:= fun T P => (@hp T P).
->>
-*)
-Coercion hproptype : hProp >-> Sortclass.
-Global Existing Instance isp.
-
-Definition Unit_hp : hProp := (hp Unit _).
-
-Definition False_hp : hProp := (hp Empty _).
-
-Definition Negation_hp `{Funext} (hprop : hProp) : hProp := hp (~hprop) _.
-(** We could continue with products etc *)
-
-Definition issig_hProp: (sigT IsHProp) <~> hProp.
-Proof.
-  issig hp hproptype isp.
-Defined.
-
-(** Prove that [ap hproptype] is an equivalence. *)
-Global Instance isequiv_ap_hproptype `{Funext} X Y : IsEquiv (@ap _ _ hproptype X Y).
-Proof.
-  (* TODO: This is a bit slow... can we speed it up? *)
-  pose proof
-       (isequiv_homotopic
-          ((@path_sigma_hprop _ _ _ _ _)^-1 o (@ap _ _ issig_hProp^-1 X Y)))
-    as H'.
-  apply H'; clear H'.
-  - apply @isequiv_compose.
-    + typeclasses eauto.
-    + apply @isequiv_inverse.
-  - intros []; reflexivity.
-Defined.
-
-Definition path_hprop `{Funext} X Y := (@ap _ _ hproptype X Y)^-1%equiv.
-
-Lemma if_hprop_then_equiv_Unit (hprop : hProp) :  hprop -> hprop <~> Unit.
+Lemma if_hprop_then_equiv_Unit (hprop : Type) `{IsHProp hprop} :  hprop -> hprop <~> Unit.
 Proof.
   intro p. 
   apply equiv_iff_hprop.
@@ -245,9 +205,8 @@ Proof.
   exact (fun _ => p).
 Defined.
 
-Lemma if_not_hprop_then_equiv_Empty (hprop : hProp) : ~hprop -> hprop <~> Empty.
+Lemma if_not_hprop_then_equiv_Empty (hprop : Type) `{IsHProp hprop} : ~hprop -> hprop <~> Empty.
 Proof.
   intro np. 
   exact (BuildEquiv _ _ np _).
 Defined.
-

@@ -2,7 +2,7 @@
 
 (** * Truncations of types, in all dimensions. *)
 
-Require Import HoTT.Basics types.Sigma ReflectiveSubuniverse Modality.
+Require Import HoTT.Basics types.Sigma ReflectiveSubuniverse Modality TruncType.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A X n.
@@ -115,10 +115,13 @@ Notation oo := identity_modality.
 (** ** A few special things about the (-1)-truncation. *)
 
 Notation merely := (Trunc -1).
+Definition merely_hp A := BuildhProp (Trunc -1 A).
 
 Definition hexists {X} (P : X -> Type) : Type := merely (sigT P).
+Definition hexists_hp {X} (P : X -> Type) : hProp := merely_hp (sigT P).
 
 Definition hor (P Q : Type) : Type := merely (P + Q).
+Definition hor_hp (P Q : Type) : hProp := merely_hp (P + Q).
 
 (** ** Tactic to remove truncations in hypotheses if possible. *)
 Ltac strip_truncations :=

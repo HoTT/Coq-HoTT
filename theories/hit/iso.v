@@ -1,6 +1,6 @@
 Require Import HoTT.Basics.
 Require Import types.Universe.
-Require Import HSet UnivalenceImpliesFunext.
+Require Import HSet UnivalenceImpliesFunext TruncType.
 Require Import hit.epi hit.unique_choice hit.Truncations.
 
 Open Local Scope path_scope.

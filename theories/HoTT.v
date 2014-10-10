@@ -14,6 +14,7 @@ Require Export Functorish.
 Require Export Modality.
 Require Export Factorization.
 Require Export ObjectClassifier.
+Require Export TruncType.
 
 Require Export types.Unit.
 Require Export types.Paths.

@@ -133,40 +133,9 @@ Proof.
   apply path_ishprop.
 Defined.
 
-Record hSet := BuildhSet {setT : Type; iss : IsHSet setT}.
-
-Coercion setT : hSet >-> Sortclass.
-Global Existing Instance iss.
-
-(** This one is needed in [epi_surj] to coerce [hProp] into [hSet]*)
-Canonical Structure default_HSet:= fun T P => (@BuildhSet T P).
-Hint Resolve iss.
-
-Definition issig_hSet: (sigT IsHSet) <~> hSet.
-Proof.
-  issig BuildhSet setT iss.
-Defined.
-
-(** Prove that [ap setT] is an equivalence. *)
-Global Instance isequiv_ap_setT `{Funext} X Y : IsEquiv (@ap _ _ setT X Y).
-Proof.
-  (* TODO: This is a bit slow... can we speed it up? *)
-  pose proof
-       (isequiv_homotopic
-          ((@path_sigma_hprop _ _ _ _ _)^-1 o (@ap _ _ issig_hSet^-1 X Y)))
-    as H'.
-  apply H'; clear H'.
-  - apply @isequiv_compose.
-    + typeclasses eauto.
-    + apply @isequiv_inverse.
-  - intros []; reflexivity.
-Defined.
-
-Definition path_hset `{Funext} X Y := (@ap _ _ setT X Y)^-1%equiv.
-
 (** We will now prove that for sets, monos and injections are equivalent.*)
 Definition ismono {X Y} (f : X -> Y)
-  := forall Z : hSet,
+  := forall (Z : Type) {Zs : IsHSet Z},
      forall g h : Z -> X, f o g = f o h -> g = h.
 
 Definition isinj {X Y} (f : X -> Y)
@@ -183,7 +152,7 @@ Defined.
 
 Lemma isinj_ismono `{Funext} {X Y} (f : X -> Y) : isinj f -> ismono f.
 Proof.
-  intros ? ? ? ? H'.
+  intros ? ? ? ? ? H'.
   apply path_forall.
   apply ap10 in H'.
   hnf in *; unfold compose in *.
@@ -194,7 +163,7 @@ Definition ismono_isinj {X Y} (f : X -> Y)
            (H : ismono f)
 : isinj f
   := fun x0 x1 H' =>
-       ap10 (H (BuildhSet Unit _)
+       ap10 (H Unit _
                (fun _ => x0)
                (fun _ => x1)
                (ap (fun x => unit_name x) H'))
@@ -203,7 +172,7 @@ Definition ismono_isinj {X Y} (f : X -> Y)
 Lemma ismono_isequiv `{Funext} X Y (f : X -> Y) `{IsEquiv _ _ f}
 : ismono f.
 Proof.
-  intros ? g h H'.
+  intros ? ? g h H'.
   apply ap10 in H'.
   apply path_forall.
   intro x.

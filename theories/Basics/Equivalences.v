@@ -250,6 +250,15 @@ Definition contr_equiv' `(f : A <~> B) `{Contr A}
   : Contr B
   := contr_equiv f.
 
+(** Any two contractible types are equivalent. *)
+(* TODO: the name [equiv_contr_contr] is not great in conjunction with the existing, unrelated [contr_equiv_contr].  Consider alternative names? *)
+Lemma equiv_contr_contr {A B : Type} `{Contr A} `{Contr B}
+  : (A <~> B).
+Proof.
+  apply equiv_adjointify with (fun _ => center B) (fun _ => center A);
+  intros ?; apply contr.
+Defined.
+
 (** Assuming function extensionality, composing with an equivalence is itself an equivalence *)
 
 Global Instance isequiv_precompose `{Funext} {A B C : Type}

@@ -273,11 +273,11 @@ Global Instance conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A
  `{IsConnected n.+1 A} : IsConnMap n (unit_name a0) | 1000.
 Proof.
   apply conn_map_from_extension_elim.
-  intros P ?. set (PP := fun a => BuildTruncType n (P a) _).
+  intros P ?. set (PP := fun a => BuildTruncType n (P a)).
   assert (QQ :=
     @isconnected_elim n.+1 _ _ (TruncType n) istrunc_trunctype PP).
   destruct QQ as [[Q0 HQ] e].
-  assert (e' := fun a => ap (trunctype_type _) (e a)); simpl in e'. clear HQ e.
+  assert (e' := fun a => ap trunctype_type (e a)); simpl in e'. clear HQ e.
   intros d. set (d0 := d tt).
   exists (fun a => (transport idmap (e' a0 @ (e' a)^) d0)).
   intros []. change (d tt) with (transport idmap 1 d0).
