@@ -19,7 +19,7 @@ They are currently in several groups:
   the "computational" rules for the path-types, transport, functorial
   action, etc. of that type former.  It also contains `types/Record`,
   which provides tactics for proving records equivalent to iterated
-  Sigma-types.  The univalence axiom is introduced, as a typeclass
+  sigma-types.  The univalence axiom is introduced, as a typeclass
   (see below) in `types/Universe`.  Function extensionality is
   introduced in `Basics/Overture` for dependency reasons, but
   developed further in `types/Forall` and `types/Arrow`.  Some type
@@ -36,14 +36,15 @@ They are currently in several groups:
   structure is kind of complicated; be sure you don't introduce any
   import loops.  The file `Misc` can be used to help resolve
   potentially circular dependencies, although it should be avoided
-  whenever possible.
+  whenever possible.  Note that `make clean; make` will produce an
+  error if there is a dependency loop (ordinary `make` may not).
 
 - `hit/*`: Files involving higher inductive types.  Each higher
   inductive type is defined in a corresponding file (see conventions
   on defining HITs, below).  Since the definition of a HIT involves
   axioms added to the core theory, we isolate them in this directory.
   In particular, nothing in the root directory should depend on
-  anything in `hit/`.
+  anything in `hit/` (except, of course, for `HoTT` and `Tests`, below).
 
 - `Tactics, Tactics/*`: some more advanced tactics.
 
@@ -51,6 +52,9 @@ They are currently in several groups:
   is, everything mentioned above).  Thus, in a development based on
   the HoTT library, you can say simply `Require Import HoTT` to pull
   in everything (but don't do this for files in the core itself).
+
+- `Tests`: Test suites for the rest of the library.  Currently nearly
+  empty.
 
 - `Utf8`: optional Unicode notations for the basic definitions
   (we avoid Unicode in the core libary).  Not exported by `HoTT`.
@@ -70,8 +74,9 @@ master branch.
 
 ### Non-core files ###
 
-- `theories/categories/*`: The categories library, which is not part of
-  the core, but nevertheless lives in `theories/` for some reason.
+- `theories/categories/*`: The categories library, which is not
+  considered part of the core (e.g. it uses unicode), but nevertheless
+  lives in `theories/`.
 
 - `contrib/HoTTBook`: This file lists all the definitions and theorems
   from the HoTT Book and gives pointers to where the corresponding
@@ -153,11 +158,11 @@ comments in `Basics/PathGroupoids`.
 When defining an equivalence, the standard naming procedure is to
 
 - Define the function in one direction with a name, say `foo`.
-- Define an IsEquiv instance for this function, called `isequiv_foo`.
-- Define an Equiv record putting them together, called `equiv_foo`.
+- Define an `IsEquiv` instance for this function, called `isequiv_foo`.
+- Define an `Equiv` record putting them together, called `equiv_foo`.
 
 The inverse function can then be referred to as `foo ^-1`.  Avoid
-using `equiv_foo` unless you really do need an Equiv object, rather
+using `equiv_foo` unless you really do need an `Equiv` object, rather
 than a function which happens to be an equivalence.
 
 
@@ -167,7 +172,7 @@ We use Coq Records when appropriate for important definitions.  For
 instance, contractibility (`Contr`) and equivalences (`Equiv`) are
 both Record types (in fact, the former is a typeclass).  The file
 `types/Record` contains some tactics for proving semiautomatically
-that record types are equivalent to the corresponding Sigma-types, so
+that record types are equivalent to the corresponding sigma-types, so
 that the relevant general theorems can be applied to them.
 
 ### Two-component records ###
@@ -194,28 +199,28 @@ Here are some of the typeclasses we are using:
   `Modality`.  These are treated somewhat specially; see the comments
   in `ReflectiveSubuniverse.v`.
 
-`HProp` and `HSet` are notations for `IsTrunc -1` and `IsTrunc 0`, and
-similarly `Contr` and `IsHProp` are notations for `IsTrunc -2` and
-`IsTrunc -1`.  There is a bit of magic involved in the definition of
-`IsTrunc` involving `Contr_internal`; see the comments in
-`Overture.v`.
+`IsHSet`, `IsHProp`, and `Contr` are notations for `IsTrunc 0`,
+`IsTrunc -1`, and `IsTrunc -2` respectively.  Since `IsTrunc` is
+defined recursively with contractibility as the pase case, there is a
+bit of magic involving a definition called `Contr_internal`; see the
+comments in `Overture.v`.
 
 ### When to declare instances ###
 
 When constructing terms in a typeclass record such as `IsEquiv`, `Contr`,
-or `Trunc`, one has the choice to declare it as an `Instance`, in which
+or `IsTrunc`, one has the choice to declare it as an `Instance`, in which
 case it is added to the hint database that is searched when Coq tries
 to do typeclass instance resolution.  Care must be taken with this, as
 indiscriminately adding theorems to this database can easily result in
 infinite loops (or at least very long loops).
 
-In general, it seems to be better not to add Instances which suggest
+In general, it seems to be better not to add instances which suggest
 an open-ended search.  E.g. the theorem that truncation levels are
 closed under equivalence is a bad candidate for an `Instance`, because
 when Coq is searching for a proof of `Contr B` this theorem could
 cause it to look through all possible types A for an equivalence `A
 <~> B` and a proof of `Contr A`.  Results of this sort should be
-proven as "Definition"s or `Theorem`s, not as `Instance`s.  If you
+proven as `Definition`s or `Theorem`s, not as `Instance`s.  If you
 need to use a result of this sort in the middle of a proof, use a
 tactic like `pose` or `assert` to add a particular instance of its
 conclusion to the context; then it will be found by subsequent
@@ -286,7 +291,7 @@ The conventions for the typeclass `IsTrunc` are:
   [bug in coq](https://coq.inria.fr/bugs/show_bug.cgi?id=3100), we
   need to iota-expand some explicit instances of `Contr`, such as
   `Instance foo : Contr bar := let x := {| center := ... |} in x.`
-  rather than `Instance foo : Contr bar := { center := ... }.`.
+  rather than `Instance foo : Contr bar := { center := ... }.`
 
 ### Coercions and Existing Instances ###
 
@@ -316,7 +321,8 @@ Instance`s explicitly as well.
 ### Univalence and function extensionality ###
 
 The "axioms" of `Univalence` and `Funext` (function extensionality)
-are typeclasses rather than Coq `Axiom`s.  In the core, we use these
+are typeclasses rather than Coq `Axiom`s.  (But see the technical note
+below on universe polymorphism.)  In the core, we use these
 typeclasses to keep track of which theorems depend on the axioms and
 which don't.  This means that any theorem which depends on one or the
 other must take an argument of the appropriate type.  It is simple to
@@ -375,7 +381,8 @@ by writing something such as `Axiom fs : Funext`.  The problem with
 this is that if two different files do this, and then a third file
 imports them both, it ends up with two different witnesses for
 `Funext`, not definitionally equal.  Thus, derived objects that should
-be equal may fail to be so because they use different witnesses.
+be judgmentally equal might fail to be so because they use different
+witnesses.
 
 ### Technical note: Universe-polymorphic axioms ###
 
@@ -505,8 +512,10 @@ generally be "completely transparent".
 It is possible to make subterms of a term opaque by using the
 `abstract` tactic, although that requires grouping the entire proof
 script to be abstracted into a single command with semicolons,
-e.g. `abstract (apply lem1; apply lem2; reflexivity)`.  The `assert`
-tactic also produces opaque subterms.
+e.g. `abstract (apply lem1; apply lem2; reflexivity)`.  Note that the
+`assert` tactic produces subterms that cannot be inspected by the rest
+of the proof script, but they remain transparent in the resulting
+proof term (at least if the proof is ended with `Defined.`).
 
 For a transparent subterm, use `refine` or `transparent assert` (the
 latter defined in `Basics/Overture`; see "Available tactics", below).
@@ -624,6 +633,11 @@ explicitly mark which arguments are implicit.  If necessary, you can
 use the `Arguments` command to adjust implicitness of arguments after
 a function is defined, but braces are preferable when possible.
 
+Warning: if you want to use `Arguments` to make *all* the arguments of
+a function explicit, the obvious-looking syntax `Arguments foo a b`
+does not work: you have to write `Arguments foo : clear implicits`
+instead.
+
 
 ## Coding Hints ##
 
@@ -664,10 +678,11 @@ where they are defined.
   `transparent assert (foo : bar baz)`.
 
 - `simpl rewrite`: Defined in `Tactics`, this tactic applies `simpl`
-  to the type of a lemma before rewriting with it.  In particular,
-  this is useful for rewriting with lemmas containing definitions like
-  `compose` that appear unfolded in the goal: if the operation has
-  `Arguments ... / .` as above then `simpl` will unfold it.
+  to the type of a lemma, and to the goal, before rewriting the goal
+  with the lemma.  In particular, this is useful for rewriting with
+  lemmas containing definitions like `compose` that appear unfolded in
+  the goal: if the operation has `Arguments ... / .` as above then
+  `simpl` will unfold it.
 
 - `binder apply`: Defined in `Tactics/BinderApply`, this tactic
   applies a lemma inside of a lambda abstraction, in the goal or in a
@@ -775,12 +790,11 @@ checks every pull request made to the central repository.
 ### Git rebase ###
 
 If the master branch has diverged in some significant way since a pull
-request was made, then the pull request may no longer build
-successfully (which Travis will warn about).  Or perhaps the changes
-may conflict so that github becomes unable to merge it automatically.
-In either case, the situation has to be resolved manually before the
-pull request can be merged, and the resolution should generally be
-done by the submitter of the pull request.
+request was made, then merging it may result in non-compiling code.
+Or the changes may conflict so that github becomes unable to merge it
+automatically.  In either case, the situation should be resolved
+manually before the pull request can be merged, and the resolution
+should generally be done by the submitter of the pull request.
 
 One way to do the resolution is to merge the current master branch
 into the branch from which the pull request was made, resolving
@@ -805,9 +819,8 @@ make use of these scripts, you must first run `git submodule update
     $ git add <all files mentioned above which you care to have in the repo>
     $ git status
 
-At this point you should ensure that there are no `.v` files
-mentioned, since `make` will try to compile all present `.v` files,
-and the timing scripts will pick them up.
+It's good practice at this point to ensure that there are no `.v`
+files mentioned.
 
     $ ./etc/coq-scripts/timing/make-pretty-timed-diff.sh
     $ make
