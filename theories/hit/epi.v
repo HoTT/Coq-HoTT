@@ -111,7 +111,7 @@ Section isepi_issurj.
   Definition epif := equiv_isepi_isepi' _ Hisepi.
   Definition fam (c : setcone f) : hProp.
   Proof.
-    pose (fib y := hexists_hp (fun x : X => f x = y)).
+    pose (fib y := hexists (fun x : X => f x = y)).
     apply (fun f => @Trunc_rect_nondep _ _ hProp _ f c).
     refine (pushout_rectnd hProp
                            (fun x : Y + Unit =>

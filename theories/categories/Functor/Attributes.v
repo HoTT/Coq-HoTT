@@ -1,6 +1,6 @@
 (** * Attributes of functors (full, faithful, split essentially surjective) *)
 Require Import Category.Core Functor.Core HomFunctor Category.Morphisms Category.Dual Functor.Dual Category.Prod Functor.Prod NaturalTransformation.Core SetCategory.Core Functor.Composition.Core.
-Require Import hit.epi types.Universe HSet hit.iso Overture hit.Truncations UnivalenceImpliesFunext TruncType.
+Require Import Basics.Overture Basics.Trunc hit.epi types.Universe HSet hit.iso hit.Truncations UnivalenceImpliesFunext TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -105,9 +105,8 @@ Section fully_faithful_helpers.
              (Hepi : IsEpimorphism (m : morphism set_cat x y))
              (Hmono : IsMonomorphism (m : morphism set_cat x y))
   : @IsEquiv _ _ m
-    := @isequiv_isepi_ismono _ x y m
-          Hepi
-          (fun Z HZ g h p => Hmono (@BuildhSet Z HZ) g h p).
+    (* NB: This depends on the (arguably accidental) fact that `ismono` and `isepi` from HoTT core are *definitionally* identical to the specialization of `IsMonomorphism` and `IsEpimorphism` to the category of sets. *)
+    := @isequiv_isepi_ismono _ x y m Hepi Hmono.
 End fully_faithful_helpers.
 
 Global Instance isfullyfaithful_isfull_isfaithful

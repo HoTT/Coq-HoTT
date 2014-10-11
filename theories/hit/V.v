@@ -247,7 +247,7 @@ Context `{ua : Univalence}.
 Definition mem (x : V) : V -> hProp.
 Proof.
   refine (V_rect'_nd _ _ _ _). intros A f _.
-  exact (hexists_hp (fun a : A => f a = x)). simpl.
+  exact (hexists (fun a : A => f a = x)). simpl.
   intros A B f g eqimg _ _ _.
   apply path_iff_hprop; simpl.
   - intro H. refine (Trunc_rect_nondep _ H).

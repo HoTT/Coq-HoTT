@@ -135,7 +135,7 @@ Defined.
 
 (** We will now prove that for sets, monos and injections are equivalent.*)
 Definition ismono {X Y} (f : X -> Y)
-  := forall (Z : Type) {Zs : IsHSet Z},
+  := forall (Z : hSet),
      forall g h : Z -> X, f o g = f o h -> g = h.
 
 Definition isinj {X Y} (f : X -> Y)
@@ -152,7 +152,7 @@ Defined.
 
 Lemma isinj_ismono `{Funext} {X Y} (f : X -> Y) : isinj f -> ismono f.
 Proof.
-  intros ? ? ? ? ? H'.
+  intros ? ? ? ? H'.
   apply path_forall.
   apply ap10 in H'.
   hnf in *; unfold compose in *.
@@ -163,7 +163,7 @@ Definition ismono_isinj {X Y} (f : X -> Y)
            (H : ismono f)
 : isinj f
   := fun x0 x1 H' =>
-       ap10 (H Unit _
+       ap10 (H (BuildhSet Unit)
                (fun _ => x0)
                (fun _ => x1)
                (ap (fun x => unit_name x) H'))
@@ -172,7 +172,7 @@ Definition ismono_isinj {X Y} (f : X -> Y)
 Lemma ismono_isequiv `{Funext} X Y (f : X -> Y) `{IsEquiv _ _ f}
 : ismono f.
 Proof.
-  intros ? ? g h H'.
+  intros ? g h H'.
   apply ap10 in H'.
   apply path_forall.
   intro x.

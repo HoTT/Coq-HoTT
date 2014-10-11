@@ -8,31 +8,9 @@ Local Open Scope equiv_scope.
 
 Generalizable Variables A B n f.
 
-(** ** [TruncType]: Universes of truncated types *)
+(** * Universes of truncated types
 
-(** It is convenient for some purposes to consider the universe of all n-truncated types (within a given universe of types).  In particular, this allows us to state the important fact that each such universe is itself (n+1)-truncated. *)
-
-Record TruncType (n : trunc_index) := BuildTruncType {
-  trunctype_type : Type ;
-  istrunc_trunctype_type : IsTrunc n trunctype_type
-}.
-(* Note: the naming of the second constructor is more than a little clunky.  However, the more obvious [istrunc_trunctype] is taken by the theorem below, that [IsTrunc n.+1 (TruncType n)], which seems to have an even better claim to it. *)
-
-Arguments BuildTruncType _ _ {_}.
-Arguments trunctype_type {_} _.
-Arguments istrunc_trunctype_type [_] _.
-
-Coercion trunctype_type : TruncType >-> Sortclass.
-Global Existing Instance istrunc_trunctype_type.
-
-Notation "n -Type" := (TruncType n) (at level 1) : type_scope.
-Notation hProp := (-1)-Type.
-Notation hSet := 0-Type.
-
-Notation BuildhProp := (BuildTruncType -1).
-Notation BuildhSet := (BuildTruncType 0).
-
-Canonical Structure default_TruncType := fun n T P => (@BuildTruncType n T P).
+Now that we have the univalence axiom (from [types/Universe]), we study further the universes [TruncType] of truncated types (including [hProp] and [hSet]) that were defined in [Basics/Trunc].  *)
 
 (** ** Paths in [TruncType] *)
 

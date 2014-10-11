@@ -174,7 +174,7 @@ Defined.
 Theorem quotient_surjective: IsSurjection (class_of R).
 Proof.
   apply BuildIsSurjection.
-  apply (quotient_rect_prop (fun y => merely_hp (hfiber (class_of R) y))); try exact _.
+  apply (quotient_rect_prop (fun y => merely (hfiber (class_of R) y))); try exact _.
   intro x. apply tr. by exists x.
 Defined.
 

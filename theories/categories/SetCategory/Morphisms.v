@@ -3,7 +3,7 @@ Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Morphisms NaturalTransformation.Paths.
 Require Import Category.Univalent.
 Require Import SetCategory.Core.
-Require Import Overture types.Record types.Sigma HProp HSet types.Universe Equivalences HoTT.Misc UnivalenceImpliesFunext TruncType.
+Require Import Basics.Overture Basics.Trunc types.Record types.Sigma HProp HSet types.Universe Equivalences HoTT.Misc UnivalenceImpliesFunext TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
