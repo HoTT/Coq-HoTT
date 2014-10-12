@@ -39,26 +39,3 @@ Proof.
 Defined.
 
 End NullHomotopy.
-
-(** ** Equivalences between contractible types *)
-Section EquivContr.
-
-(** Not at all sure where these naturally belong.  [Contr] is the obvious idea, but of course they depend on lots of subsequent material. *)
-
-(* TODO: the name [equiv_contr_contr] is not great in conjunction with the existing, unrelated [contr_equiv_contr].  Consider alternative names? *)
-
-Lemma equiv_contr_contr {A B : Type} `{Contr A} `{Contr B}
-  : (A <~> B).
-Proof.
-  apply equiv_adjointify with (fun _ => center B) (fun _ => center A);
-  intros ?; apply contr.
-Defined.
-
-Lemma contr_equiv_contr_contr `{Funext} {A B : Type} `{Contr A} `{Contr B}
-  : Contr (A <~> B).
-Proof.
-  exists equiv_contr_contr.
-  intros e. apply path_equiv, path_forall. intros ?; apply contr.
-Defined.
-
-End EquivContr.

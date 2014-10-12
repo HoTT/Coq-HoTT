@@ -262,3 +262,13 @@ Proof.
     intro;
     by apply path_ishprop.
 Defined.
+
+(** In particular, we can now show that the type of equivalences between two contractible types is contractible. *)
+
+Lemma contr_equiv_contr_contr `{Funext} {A B : Type} `{Contr A} `{Contr B}
+  : Contr (A <~> B).
+Proof.
+  exists equiv_contr_contr.
+  intros e. apply path_equiv, path_forall. intros ?; apply contr.
+Defined.
+

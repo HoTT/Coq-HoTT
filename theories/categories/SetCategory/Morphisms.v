@@ -3,7 +3,7 @@ Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Category.Morphisms NaturalTransformation.Paths.
 Require Import Category.Univalent.
 Require Import SetCategory.Core.
-Require Import Overture types.Record types.Sigma HProp HSet types.Universe Equivalences HoTT.Misc UnivalenceImpliesFunext.
+Require Import Basics.Overture Basics.Trunc types.Record types.Sigma HProp HSet types.Universe Equivalences HoTT.Misc UnivalenceImpliesFunext TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -17,7 +17,7 @@ Local Open Scope category_scope.
 
 Lemma isisomorphism_set_cat_natural_transformation_paths
       `{fs : Funext} (X : set_cat) C D F G
-      (T1 T2 : morphism set_cat X (BuildhSet (@NaturalTransformation C D F G) (@trunc_natural_transformation _ _ _ _ _)))
+      (T1 T2 : morphism set_cat X (BuildhSet (@NaturalTransformation C D F G)))
       (H : forall x y, T1 x y = T2 x y)
       `{@IsIsomorphism set_cat _ _ T1}
 : @IsIsomorphism set_cat _ _ T2.
@@ -82,7 +82,7 @@ Section equiv_iso_set_cat.
   Defined.
 
   Lemma path_idtoequiv_idtoiso (s d : set_cat) (p : s = d)
-  : iso_equiv s d (equiv_path _ _ (ap setT p)) = idtoiso set_cat p.
+  : iso_equiv s d (equiv_path _ _ (ap trunctype_type p)) = idtoiso set_cat p.
   Proof.
     apply path_isomorphic.
     case p.
@@ -137,7 +137,7 @@ Section equiv_iso_prop_cat.
   Defined.
 
   Lemma path_idtoequiv_idtoiso_prop (s d : prop_cat) (p : s = d)
-  : iso_equiv_prop s d (equiv_path _ _ (ap hproptype p)) = idtoiso prop_cat p.
+  : iso_equiv_prop s d (equiv_path _ _ (ap trunctype_type p)) = idtoiso prop_cat p.
   Proof.
     apply path_isomorphic.
     case p.
@@ -151,7 +151,7 @@ Global Instance iscategory_set_cat `{Univalence}
 Proof.
   intros C D.
   eapply @isequiv_homotopic; [ | intro; apply path_idtoequiv_idtoiso ].
-  change (IsEquiv (iso_equiv C D o equiv_path C D o @ap _ _ setT C D)).
+  change (IsEquiv (iso_equiv C D o equiv_path C D o @ap _ _ trunctype_type C D)).
   typeclasses eauto.
 Defined.
 
@@ -160,6 +160,6 @@ Global Instance iscategory_prop_cat `{Univalence}
 Proof.
   intros C D.
   eapply @isequiv_homotopic; [ | intro; apply path_idtoequiv_idtoiso_prop ].
-  change (IsEquiv (iso_equiv_prop C D o equiv_path C D o @ap _ _ hproptype C D)).
+  change (IsEquiv (iso_equiv_prop C D o equiv_path C D o @ap _ _ trunctype_type C D)).
   typeclasses eauto.
 Defined.

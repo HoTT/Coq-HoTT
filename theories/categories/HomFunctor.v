@@ -2,7 +2,7 @@
 Require Import Category.Core Functor.Core SetCategory.Core Category.Dual Functor.Composition.Core.
 Require Category.Prod Functor.Prod.Core.
 Import Category.Prod.CategoryProdNotations Functor.Prod.Core.FunctorProdCoreNotations.
-Require Import HSet Overture.
+Require Import Basics.Overture Basics.Trunc HSet TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -21,8 +21,7 @@ Section hom_functor.
        (morphism
           C
           (fst (c'c : object (C^op * C)))
-          (snd (c'c : object (C^op * C))))
-       _).
+          (snd (c'c : object (C^op * C))))).
 
   Let hom_functor_morphism_of s's d'd (hf : morphism (C^op * C) s's d'd)
   : morphism set_cat (obj_of s's) (obj_of d'd)

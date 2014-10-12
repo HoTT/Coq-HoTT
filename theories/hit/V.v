@@ -4,7 +4,7 @@
 
 Require Import HoTT.Basics.
 Require Import types.Unit types.Bool types.Universe types.Sigma types.Arrow types.Forall.
-Require Import HProp HSet EquivalenceVarieties UnivalenceImpliesFunext.
+Require Import HProp HSet EquivalenceVarieties UnivalenceImpliesFunext TruncType.
 Require Import hit.Truncations hit.quotient.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -148,7 +148,7 @@ Definition equal_img {A B C : Type} (f : A -> C) (g : B -> C) :=
 Definition setext' {A B : Type} (f : A -> V) (g : B -> V) (eq_img : equal_img f g)
 : set f = set g.
 Proof.
-  pose (R := fun a b => hp (f a = g b) _).
+  pose (R := fun a b => BuildhProp (f a = g b)).
   pose (h := RPushout_rect_nd R V f g (fun _ _ r => r)).
   exact (setext R eq_img h).
 Defined.
@@ -247,8 +247,9 @@ Context `{ua : Univalence}.
 Definition mem (x : V) : V -> hProp.
 Proof.
   refine (V_rect'_nd _ _ _ _). intros A f _.
-  exact (hp (hexists (fun a : A => f a = x)) _). simpl.
-  intros A B f g eqimg _ _ _. apply path_iff_hProp_uncurried; split; simpl.
+  exact (hexists (fun a : A => f a = x)). simpl.
+  intros A B f g eqimg _ _ _.
+  apply path_iff_hprop; simpl.
   - intro H. refine (Trunc_rect_nondep _ H).
     intros [a p]. generalize (fst eqimg a). apply (Trunc_functor -1).
     intros [b p']. exists b. transitivity (f a); auto with path_hints.
@@ -264,7 +265,7 @@ Open Scope set_scope.
 (** ** Subset relation *)
 
 Definition subset (x : V) (y : V) : hProp
-:= hp (forall z : V, z ∈ x -> z ∈ y) _.
+:= BuildhProp (forall z : V, z ∈ x -> z ∈ y).
 
 Notation "x ⊆ y" := (subset x y)
   (at level 30) : set_scope.
@@ -277,12 +278,12 @@ Notation "x ⊆ y" := (subset x y)
 Local Definition bisim_aux (A : Type) (f : A -> V) (H_f : A -> V -> hProp) : V -> hProp.
 Proof.
   apply V_rect'_nd with
-    (fun B g _ => hp ( (forall a, hexists (fun b => H_f a (g b)))
-                      * forall b, hexists (fun a => H_f a (g b)) ) _
+    (fun B g _ => BuildhProp ( (forall a, hexists (fun b => H_f a (g b)))
+                               * forall b, hexists (fun a => H_f a (g b)) )
     ).
   exact _.
   intros B B' g g' eq_img H_g H_g' H_img; simpl.
-  apply path_iff_hProp_uncurried; split; simpl.
+  apply path_iff_hprop; simpl.
   - intros [H1 H2]; split.
     + intro a. refine (Trunc_rect_nondep _ (H1 a)).
       intros [b H3]. generalize (fst eq_img b).
@@ -308,7 +309,7 @@ Proof.
   apply path_forall.
   refine (V_rect_hprop _ _ _).
   intros C h _; simpl.
-  apply path_iff_hProp_uncurried; split; simpl.
+  apply path_iff_hprop; simpl.
   - intros [H1 H2]; split.
     + intro b. refine (Trunc_rect_nondep _ (snd H_img b)).
       intros [a p]. generalize (H1 a). apply (Trunc_functor -1).
@@ -496,7 +497,7 @@ Defined.
 
 Global Instance irreflexive_mem : Irreflexive mem.
 Proof.
-  refine (mem_induction (fun x => hp (~ x ∈ x) _) _); simpl in *.
+  refine (mem_induction (fun x => BuildhProp (~ x ∈ x)) _); simpl in *.
   intros v H. intro Hv.
   exact (H v Hv Hv).
 Defined.

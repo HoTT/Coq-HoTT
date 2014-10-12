@@ -209,7 +209,7 @@ Record FactorizationSystem :=
     class1_isequiv : forall {X Y : Type@{i}} (g:X->Y) {geq:IsEquiv g}, class1 g ;
     class1_compose : forall {X Y Z : Type@{i}} (g:X->Y) (h:Y->Z),
                        class1 g -> class1 h -> class1 (h o g) ;
-    class2 : forall {X Y : Type@{i}}, (X -> Y) -> hProp ;
+    class2 : forall {X Y : Type@{i}}, (X -> Y) -> Type ;
     ishprop_class2 : forall {X Y : Type@{i}} (g:X->Y), IsHProp (class2 g) ;
     class2_isequiv : forall {X Y : Type@{i}} (g:X->Y) {geq:IsEquiv g}, class2 g ;
     class2_compose : forall {X Y Z : Type@{i}} (g:X->Y) (h:Y->Z),

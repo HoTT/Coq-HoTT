@@ -9,7 +9,7 @@ Require Import Functor.Composition.Core.
 Require Import FunctorCategory.Morphisms.
 Require Import Functor.Identity.
 Require Import SetCategory.Core SetCategory.Morphisms.
-Require Import HProp HSet types.Sigma HoTT.Tactics Equivalences.
+Require Import Basics.Trunc HProp HSet types.Sigma HoTT.Tactics Equivalences TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -1,48 +1,16 @@
 Require Import HoTT.Basics.
 Require Import types.Universe types.Unit types.Forall types.Arrow types.Sigma types.Paths.
-Require Import HProp Misc TruncType HSet UnivalenceImpliesFunext.
+Require Import HProp HSet TruncType UnivalenceImpliesFunext.
 Require Import hit.Pushout hit.Truncations hit.Connectedness.
 
 Open Local Scope path_scope.
 Open Local Scope equiv_scope.
 
+
 Section AssumingUA.
-(** The univalence axiom for HProp (Voevodsky's uahp) *)
-(** We need fs to be able to find hprop_trunc *)
 Context `{ua:Univalence}.
-Lemma path_biimp : forall P P': sigT IsHProp, (P.1<->P'.1) -> P = P'.
-intros ? ? X. apply (equiv_path_sigma_hprop P P'). apply path_universe_uncurried.
-destruct P, P'. destruct X.
-by apply equiv_iff_hprop.
-Defined.
 
-Lemma biimp_path : forall P P': sigT IsHProp, P = P' -> (P.1<->P'.1).
-intros ?? p. by destruct p.
-Defined.
-
-Lemma path_equiv_biimp :
- forall P P': sigT IsHProp, (P.1<->P'.1) <~> (P = P').
-intros.
-apply equiv_adjointify with (path_biimp P P') (biimp_path P P').
-- intro x. destruct x. eapply path_ishprop.
-- intros x. cut (IsHProp (P .1 <-> P' .1)). intro H. apply path_ishprop.
-  cut (Contr(P .1 <-> P' .1)). intro. apply trunc_succ.
-  exists x. intro y. destruct y as [y1 y2]. destruct x as [x1 x2].
-f_ap; apply path_forall; intro x; [apply P'.2| apply P.2].
-Defined.
-
-(** The variant of [uahp] for record types. *)
-Lemma path_equiv_biimp_rec {P P':hProp}: (P->P') -> (P'->P) -> P = P'.
-set (p:=issig_hProp^-1 P).
-set (p':=issig_hProp^-1 P').
-intros X X0.
-assert (p=p') by (by apply path_equiv_biimp).
-clear X X0.
-transitivity (issig_hProp (issig_hProp ^-1 P)); destruct P. reflexivity.
-transitivity (issig_hProp (issig_hProp ^-1 P')); destruct P';[f_ap|reflexivity].
-Defined.
-
-(** We will now prove that for sets epis and surjections are biequivalent.*)
+(** We will now prove that for sets, epis and surjections are equivalent.*)
 Definition isepi {X Y} `(f:X->Y) := forall Z: hSet,
   forall g h: Y -> Z, g o f = h o f -> g = h.
 
@@ -78,7 +46,7 @@ Section cones.
     pose (l := (tr o push o inl; idpath) : tot).
     pose (r := (@const B (setcone f) (setcone_point _); (ap (fun f => @tr 0 _ o f) (path_forall _ _ alpha1))) : tot).
     subst tot.
-    assert (X : l = r) by (pose (hepi {| setT := setcone f |} (tr o push o inl)); apply path_contr).
+    assert (X : l = r) by (pose (hepi (BuildhSet (setcone f)) (tr o push o inl)); apply path_contr).
     subst l r.
 
     pose (I0 b := ap10 (X ..1) b).
@@ -143,7 +111,7 @@ Section isepi_issurj.
   Definition epif := equiv_isepi_isepi' _ Hisepi.
   Definition fam (c : setcone f) : hProp.
   Proof.
-    pose (fib y := hp (hexists (fun x : X => f x = y)) _).
+    pose (fib y := hexists (fun x : X => f x = y)).
     apply (fun f => @Trunc_rect_nondep _ _ hProp _ f c).
     refine (pushout_rectnd hProp
                            (fun x : Y + Unit =>
@@ -155,7 +123,6 @@ Section isepi_issurj.
     (** Prove that the truncated sigma is equivalent to Unit *)
     pose (contr_inhabited_hprop (fib (f x)) (tr (x; idpath))) as i.
     apply path_hprop. simpl. simpl in i.
-    refine (path_universe_uncurried _).
     apply (equiv_contr_unit).
   Defined.
 
@@ -167,7 +134,7 @@ Section isepi_issurj.
     assert (X0 : forall x : setcone f, fam x = fam (setcone_point f)).
     { intros. apply contr_dom_equiv. apply i. }
     specialize (X0 (tr (push (inl y)))). simpl in X0.
-    exact (transport Contr (ap hproptype X0)^ _).
+    exact (transport Contr (ap trunctype_type X0)^ _).
   Defined.
 End isepi_issurj.
 

@@ -1,7 +1,7 @@
 (** * Grothendieck Construction of a functor to Set *)
 Require Import Category.Core Functor.Core.
 Require Import SetCategory.Core.
-Require Import HSet types.Sigma.
+Require Import Basics.Trunc HSet types.Sigma TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

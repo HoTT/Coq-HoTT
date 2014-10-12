@@ -2,7 +2,7 @@
 (** * Theorems about the booleans *)
 
 Require Import HoTT.Basics.
-Require Import types.Prod HSet HProp EquivalenceVarieties.
+Require Import types.Prod HSet HProp EquivalenceVarieties TruncType.
 Local Open Scope equiv_scope.
 
 (* coq calls it "bool", we call it "Bool" *)

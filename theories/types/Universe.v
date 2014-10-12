@@ -182,49 +182,4 @@ Definition equiv_induction'_comp (P : forall U V, U <~> V -> Type)
   : equiv_induction' P didmap U U (equiv_idmap U) = didmap U
   := (equiv_rect_comp (P U U) _ 1).
 
-(** ** Facts about HProps using univalence *)
-
-(** It would be nice for these to go in [HProp.v], but this file depends on that one, and these depend on having [Univalence]. *)
-Global Instance trunc_path_IsHProp `{Funext} X Y `{IsHProp Y}
-: IsHProp (X = Y).
-Proof.
-  apply hprop_allpath.
-  intros pf1 pf2.
-  apply (equiv_inj (equiv_path X Y)).
-  apply path_equiv, path_arrow.
-  intros x; by apply path_ishprop.
-Qed.
-
-Global Instance isset_hProp `{Funext} : IsHSet hProp | 0.
-Proof.
-  eapply trunc_equiv'; [ apply issig_hProp | ].
-  (intros ? [? ?]).
-  refine (hprop_allpath _ _).
-  intros.
-  apply path_path_sigma_uncurried.
-  (exists (path_ishprop _ _)).
-  by apply path_ishprop.
-Qed.
-
-Definition path_iff_hprop_uncurried `{IsHProp A, IsHProp B}
-: (A <-> B) -> A = B
-  := @path_universe_uncurried A B o equiv_iff_hprop_uncurried.
-
-Definition path_iff_hProp_uncurried `{Funext} {A B : hProp}
-: (A <-> B) -> A = B
-  := (@path_hprop _ A B) o path_iff_hprop_uncurried.
-
-Global Instance isequiv_path_iff_hprop_uncurried `{Funext} `{IsHProp A, IsHProp B}
-: IsEquiv (@path_iff_hprop_uncurried A _ B _) | 0
-  := _.
-
-Global Instance isequiv_path_iff_hProp_uncurried `{Funext} {A B : hProp}
-: IsEquiv (@path_iff_hProp_uncurried _ A B).
-Proof.
-  unfold path_iff_hProp_uncurried.
-  apply (@isequiv_compose).
-  - typeclasses eauto.
-  - unfold path_hprop.
-    apply isequiv_inverse.
-Defined.
 End Univalence.
