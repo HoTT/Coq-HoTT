@@ -380,7 +380,7 @@ Definition Book_3_3_2 := @HoTT.HProp.if_hprop_then_equiv_Unit.
 (* ================================================== lem:equiv-iff-hprop *)
 (** Lemma 3.3.3 *)
 
-Definition Book_3_3_3 := @HoTT.HProp.equiv_iff_hprop.
+Definition Book_3_3_3 := @HoTT.Basics.Trunc.equiv_iff_hprop.
 
 (* ================================================== thm:prop-set *)
 (** Lemma 3.3.4 *)

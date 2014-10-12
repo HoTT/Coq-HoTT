@@ -63,37 +63,6 @@ Proof.
   exact (@set_path2 (x=x) (T1A x x) _ _ _ _).
 Defined.
 
-(** Hedberg's theorem: any type with "decidable equality" is a set. *)
-
-Definition decidable_paths (A : Type) :=
-  forall (x y : A), (x = y) + (~ (x = y)).
-
-(* Usually this lemma would be proved with [discriminate], but unfortunately that tactic is hardcoded to work only with Coq's [Prop]-valued equality.
-   TODO: This should be in types/Sum. *)
-Definition inl_injective {A B : Type} {x y : A} (p : inl B x = inl B y) : x = y :=
-  (@transport _ (fun (s : A + B) => x = (match s with inl a => a | inr b => x end)) _ _ p (idpath x)).
-
-Theorem axiomK_decidable {A : Type} : @decidable_paths A -> @axiomK A.
-Proof.
-  intro d.
-  intros x p.
-  set (qp := apD (d x) p).
-  set (q := d x x) in *.
-  clearbody qp; revert qp.
-  destruct q as [q | q'].
-    intro qp0; apply (cancelL q). transitivity (transport _ p q).
-      symmetry; apply transport_paths_r.
-      transitivity q; auto with path_hints. apply @inl_injective with (B := (~ x = x)).
-      exact ((ap_transport p (fun y => @inl (x = y) (~x = y)) q) @ qp0).
-  induction (q' p).
-Defined.
-
-Corollary hset_decidable {A : Type} : @decidable_paths A -> IsHSet A.
-Proof.
-  intro.
-  by apply @hset_axiomK, @axiomK_decidable.
-Defined.
-
 End AssumeFunext.
 
 (** We prove that if [R] is a reflexive mere relation on [X] implying identity, then [X] is an hSet, and hence [R x y] is equivalent to [x = y]. *)

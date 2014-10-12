@@ -11,7 +11,7 @@ Generalizable Variables A B f.
 Section AssumeFunext.
 Context `{Funext}.
 
-(** In this file we show that several different definitions of "equivalence" are all equivalent to the one we have chosen. *)
+(** In this file we show that several different definitions of "equivalence" are all equivalent to the one we have chosen.  This also yields alternative proofs that [IsEquiv f] is an hprop. *)
 
 (** ** Contractible maps *)
 
@@ -44,7 +44,7 @@ Proof.
   exact ((@contr {x : A & f x = f a} _ (a;1))..2).
 Defined.
 
-(** Using this, we can show that if a map [f] is an equivalence, then the type of sections of [f] and the type of retractions of [f] are both contractible. *)
+(** Therefore, since both are hprops, they are equivalent by [equiv_iff_hprop].  However, we can also use this to *prove* that [IsEquiv] is an hprop.  We begin by showing that if [f] is an equivalence, then the type of sections of [f] and the type of retractions of [f] are both contractible. *)
 
 Definition contr_sect_equiv `(f : A -> B) `{IsEquiv A B f}
   : Contr {g : B -> A & Sect g f}.
@@ -69,9 +69,9 @@ Proof.
   apply fcontr_isequiv; exact _.
 Defined.
 
-(** Using this, we can prove that [IsEquiv f] is an h-proposition. *)
+(** Using this, we can prove that [IsEquiv f] is an h-proposition.  We make this a [Local Instance] since we already have a [Global Instance] of it available in [types/Universe].  *)
 
-Global Instance hprop_isequiv `(f : A -> B) : IsHProp (IsEquiv f) | 0.
+Local Instance hprop_isequiv `(f : A -> B) : IsHProp (IsEquiv f).
 Proof.
   apply hprop_inhabited_contr; intros ?.
   (* Get rid of that pesky record. *)
@@ -118,8 +118,7 @@ Defined.
 
 (** Alternatively, we could also construct this equivalence directly, and derive the fact that [IsEquiv f] is an HProp from that.  *)
 
-Section AnotherApproach.
-Let equiv_fcontr_isequiv' `(f : A -> B)
+Local Definition equiv_fcontr_isequiv' `(f : A -> B)
   : (forall b:B, Contr {a : A & f a = b}) <~> IsEquiv f.
 Proof.
   (* First we get rid of those pesky records. *)
@@ -174,7 +173,6 @@ Proof.
     (equiv_concat_r (concat_p1 _) _)
     (equiv_inverse (equiv_moveR_Vp (r (f a)) 1 (ap f (s a))))).
 Defined.
-End AnotherApproach.
 
 (** ** Bi-invertible maps *)
 
@@ -215,60 +213,3 @@ Proof.
 Defined.
 
 End AssumeFunext.
-
-(** ** Sigmas of hprops. *)
-Section SigmaHProp.
-
-Context `{Funext}.
-
-(** *** Paths between equivalences *)
-
-Lemma equiv_path_equiv {A B : Type} (e1 e2 : A <~> B)
-  : (e1 = e2 :> (A -> B)) <~> (e1 = e2 :> (A <~> B)).
-Proof.
-  equiv_via ((issig_equiv A B) ^-1 e1 = (issig_equiv A B) ^-1 e2).
-    2: symmetry; apply equiv_ap; refine _.
-  exact (equiv_path_sigma_hprop ((issig_equiv A B)^-1 e1) ((issig_equiv A B)^-1 e2)).
-Defined.
-
-Definition path_equiv {A B : Type} {e1 e2 : A <~> B}
-  : (e1 = e2 :> (A -> B)) -> (e1 = e2 :> (A <~> B))
-  := equiv_path_equiv e1 e2.
-
-Definition isequiv_path_equiv {A B : Type} {e1 e2 : A <~> B}
-  : IsEquiv (@path_equiv _ _ e1 e2)
-  (* Coq can find this instance by itself, but it's slow. *)
-  := equiv_isequiv (equiv_path_equiv e1 e2).
-
-Lemma istrunc_equiv {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
-  : IsTrunc n.+1 (A <~> B).
-Proof.
-  simpl. intros e1 e2.
-  apply (@trunc_equiv _ _ (equiv_path_equiv e1 e2)).
-    apply (@trunc_arrow _ A B n.+1 _).
-  apply equiv_isequiv.
-Defined.
-
-End SigmaHProp.
-
-Global Instance isequiv_equiv_iff_hprop_uncurried `{Funext, IsHProp A, IsHProp B}
-: IsEquiv (@equiv_iff_hprop_uncurried A _ B _) | 0.
-Proof.
-  pose (@istrunc_equiv).
-  refine (isequiv_adjointify
-            equiv_iff_hprop_uncurried
-            (fun e => (@equiv_fun _ _ e, @equiv_inv _ _ e _))
-            _ _);
-    intro;
-    by apply path_ishprop.
-Defined.
-
-(** In particular, we can now show that the type of equivalences between two contractible types is contractible. *)
-
-Lemma contr_equiv_contr_contr `{Funext} {A B : Type} `{Contr A} `{Contr B}
-  : Contr (A <~> B).
-Proof.
-  exists equiv_contr_contr.
-  intros e. apply path_equiv, path_forall. intros ?; apply contr.
-Defined.
-

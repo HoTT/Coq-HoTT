@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics.
 Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths types.Forall types.Prod types.Universe.
-Require Import HProp ObjectClassifier EquivalenceVarieties.
+Require Import UnivalenceImpliesFunext.
 Require Import HoTT.Tactics.
 
 Local Open Scope path_scope.

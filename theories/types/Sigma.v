@@ -500,3 +500,23 @@ Proof.
   { intros u v.
     refine (trunc_equiv (path_sigma_uncurried P u v)). }
 Defined.
+
+(** ** Subtypes (sigma types whose second components are hprops) *)
+
+(** To prove equality in a subtype, we only need equality of the first component. *)
+Definition path_sigma_hprop {A : Type} {P : A -> Type}
+           `{forall x, IsHProp (P x)}
+           (u v : sigT P)
+: u.1 = v.1 -> u = v
+  := path_sigma_uncurried P u v o pr1^-1.
+
+Global Instance isequiv_path_sigma_hprop {A P} `{forall x : A, IsHProp (P x)} {u v : sigT P}
+: IsEquiv (@path_sigma_hprop A P _ u v) | 100
+  := isequiv_compose.
+
+Hint Immediate isequiv_path_sigma_hprop : typeclass_instances.
+
+Definition equiv_path_sigma_hprop {A : Type} {P : A -> Type}
+           {HP : forall a, IsHProp (P a)} (u v : sigT P)
+: (u.1 = v.1) <~> (u = v)
+  := BuildEquiv _ _ (path_sigma_hprop _ _) _.

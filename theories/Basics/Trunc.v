@@ -8,6 +8,7 @@ Local Open Scope path_scope.
 Generalizable Variables A B m n f.
 
 (** ** Arithmetic on truncation-levels. *)
+
 Fixpoint trunc_index_add (m n : trunc_index) : trunc_index
   := match m with
        | -2 => n
@@ -51,6 +52,22 @@ Proof.
   - (* S m', S n' *) intros x y; apply (IH m');
                      auto with typeclass_instances.
 Qed.
+
+(** In particular, a contractible type, hprop, or hset is truncated at all higher levels. *)
+
+Definition trunc_contr {n} {A} `{Contr A} : IsTrunc n A
+  := (@trunc_leq -2 n tt _ _).
+
+Definition trunc_hprop {n} {A} `{IsHProp A} : IsTrunc n.+1 A
+  := (@trunc_leq -1 n.+1 tt _ _).
+
+Definition trunc_hset {n} {A} `{IsHSet A} : IsTrunc n.+1.+1 A
+  := (@trunc_leq 0 n.+1.+1 tt _ _).
+
+(** Consider the preceding definitions as instances for typeclass search, but only if the requisite hypothesis is already a known assumption; otherwise they result in long or interminable searches. *)
+Hint Immediate trunc_contr : typeclass_instances.
+Hint Immediate trunc_hprop : typeclass_instances.
+Hint Immediate trunc_hset : typeclass_instances.
 
 (** Equivalence preserves truncation (this is, of course, trivial with univalence).
    This is not an [Instance] because it causes infinite loops.
@@ -105,3 +122,116 @@ Notation BuildhSet := (BuildTruncType 0).
 
 (** This is (as of October 2014) the only [Canonical Structure] in the library.  It would be nice to do without it, in the interests of minimizing the number of fancy Coq features that the reader needs to know about. *)
 Canonical Structure default_TruncType := fun n T P => (@BuildTruncType n T P).
+
+(** ** Facts about hprops *)
+
+(** An inhabited proposition is contractible.
+   This is not an [Instance] because it causes infinite loops.
+   *)
+Lemma contr_inhabited_hprop (A : Type) `{H : IsHProp A} (x : A)
+  : Contr A.
+Proof.
+  exists x.
+  intro y.
+  apply center, H.
+Defined.
+
+(** If inhabitation implies contractibility, then we have an h-proposition.  We probably won't often have a hypothesis of the form [A -> Contr A], so we make sure we give priority to other instances. *)
+Global Instance hprop_inhabited_contr (A : Type) : (A -> Contr A) -> IsHProp A | 10000.
+Proof.
+  intros H x y.
+  pose (C := H x).
+  apply contr_paths_contr.
+Defined.
+
+(** Any two points in an hprop are connected by a path. *)
+Theorem path_ishprop `{H : IsHProp A} : forall x y : A, x = y.
+Proof.
+  apply H.
+Defined.
+
+(** Conversely, this property characterizes hprops. *)
+Theorem hprop_allpath (A : Type) : (forall (x y : A), x = y) -> IsHProp A.
+  intros H x y.
+  pose (C := BuildContr A x (H x)).
+  apply contr_paths_contr.
+Defined.
+
+(** Two propositions are equivalent as soon as there are maps in both directions. *)
+Definition isequiv_iff_hprop `{IsHProp A} `{IsHProp B}
+  (f : A -> B) (g : B -> A)
+: IsEquiv f.
+Proof.
+  apply (isequiv_adjointify f g);
+    intros ?; apply path_ishprop.
+Defined.
+
+Definition equiv_iff_hprop_uncurried `{IsHProp A} `{IsHProp B}
+  : (A <-> B) -> (A <~> B).
+Proof.
+  intros [f g].
+  apply (equiv_adjointify f g);
+    intros ?; apply path_ishprop.
+Defined.
+
+Definition equiv_iff_hprop `{IsHProp A} `{IsHProp B}
+  : (A -> B) -> (B -> A) -> (A <~> B)
+  := fun f g => equiv_iff_hprop_uncurried (f, g).
+
+(** ** Hedberg's theorem: any type with "decidable equality" is a set. *)
+
+Class Decidable (A : Type) :=
+  dec : A + (~ A).
+Arguments dec A {_}.
+
+Class DecidablePaths (A : Type) :=
+  dec_paths : forall (x y : A), Decidable (x = y).
+Global Existing Instance dec_paths.
+
+Class WeaklyConstant {A B} (f : A -> B) :=
+  wconst : forall x y, f x = f y.
+
+Class Collapsible (A : Type) :=
+  { collapse : A -> A ;
+    wconst_collapse : WeaklyConstant collapse
+  }.
+
+Global Existing Instance wconst_collapse.
+
+Class PathCollapsible (A : Type) :=
+  path_coll : forall (x y : A), Collapsible (x = y).
+Global Existing Instance path_coll.
+
+Global Instance collapsible_decidable (A : Type) `{Decidable A}
+: Collapsible A.
+Proof.
+  destruct (dec A) as [a | na].
+  - exists (const a).
+    intros x y; reflexivity.
+  - exists idmap.
+    intros x y; destruct (na x).
+Defined.
+
+Global Instance pathcoll_decpaths (A : Type) `{DecidablePaths A}
+: PathCollapsible A.
+Proof.
+  intros x y; exact _.
+Defined.
+
+Global Instance hset_pathcoll (A : Type) `{PathCollapsible A}
+: IsHSet A.
+Proof.
+  intros x y.
+  assert (h : forall p:x=y, p = (collapse (idpath x))^ @ collapse p).
+  { intros []; symmetry; by apply concat_Vp. }
+  apply hprop_allpath; intros p q.
+  refine (h p @ _ @ (h q)^).
+  apply whiskerL.
+  apply wconst.
+Defined.
+
+Corollary hset_decpaths (A : Type) `{DecidablePaths A}
+: IsHSet A.
+Proof.
+  exact _.
+Defined.

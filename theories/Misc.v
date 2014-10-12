@@ -14,7 +14,6 @@ Conversely, several files in [hit] now depend on this file; so we should probabl
 
 Require Import HoTT.Basics.
 Require Import types.Sigma types.Paths types.Record types.Arrow types.Forall types.Bool.
-Require Import HProp EquivalenceVarieties.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

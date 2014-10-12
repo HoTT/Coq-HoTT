@@ -3,7 +3,7 @@ Require Import Category.Core Functor.Core.
 Require Import Category.Dual Functor.Dual.
 Require Import Functor.Composition.Core Functor.Identity.
 Require Import Cat.Core Functor.Paths.
-Require Import types.Sigma HProp HoTT.Tactics types.Forall.
+Require Import Basics.Trunc types.Sigma HoTT.Tactics types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

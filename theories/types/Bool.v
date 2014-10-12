@@ -2,7 +2,7 @@
 (** * Theorems about the booleans *)
 
 Require Import HoTT.Basics.
-Require Import types.Prod HSet HProp EquivalenceVarieties TruncType.
+Require Import types.Prod types.Equiv.
 Local Open Scope equiv_scope.
 
 (* coq calls it "bool", we call it "Bool" *)
@@ -40,7 +40,7 @@ Section BoolDecidable.
   Definition true_ne_false : ~true = false
     := fun H => false_ne_true (symmetry _ _ H).
 
-  Definition decidable_paths_bool : decidable_paths Bool
+  Global Instance decidable_paths_bool : DecidablePaths Bool
     := fun x y => match x as x, y as y return ((x = y) + (~x = y)) with
                     | true, true => inl idpath
                     | false, false => inl idpath
@@ -48,8 +48,10 @@ Section BoolDecidable.
                     | false, true => inr false_ne_true
                   end.
 
-  Global Instance trunc_bool : IsHSet Bool | 0
-    := hset_decidable decidable_paths_bool.
+  Corollary hset_bool : IsHSet Bool.
+  Proof.
+    exact _.
+  Defined.
 End BoolDecidable.
 
 Section BoolForall.
@@ -129,7 +131,3 @@ Section EquivBoolEquiv.
   Defined.
 
 End EquivBoolEquiv.
-
-(** ** The canonical map from Bool to hProp *)
-Definition is_true (b : Bool) : hProp
-  := if b then Unit_hp else False_hp.
