@@ -2,7 +2,7 @@
 (** * Theorems about Non-dependent function types *)
 
 Require Import HoTT.Basics.
-Require Import types.Paths types.Forall.
+Require Import Types.Paths Types.Forall.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

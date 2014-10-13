@@ -3,7 +3,7 @@ Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Composition.Core.
 Require Import Functor.Composition.Laws.
 Require Import Adjoint.UnitCounit Adjoint.Paths.
-Require Import PathGroupoids HoTT.Tactics types.Prod types.Forall.
+Require Import PathGroupoids HoTT.Tactics Types.Prod Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

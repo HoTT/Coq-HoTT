@@ -5,7 +5,7 @@ Require Import Category.Morphisms NaturalTransformation.Isomorphisms Cat.Morphis
 Require Import Functor.Composition.Core Functor.Composition.Laws.
 Require Import Functor.Identity.
 Require Import FunctorCategory.Core.
-Require Import types.Sigma HoTT.Tactics PathGroupoids.
+Require Import Types.Sigma HoTT.Tactics PathGroupoids.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -2,7 +2,7 @@
 (** * Techniques for applying theorems from [Sigma.v] to record types. *)
 
 Require Import HoTT.Basics.
-Require Import types.Sigma types.Forall.
+Require Import Types.Sigma Types.Forall.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

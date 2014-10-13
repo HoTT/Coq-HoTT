@@ -1,6 +1,6 @@
 (** * Classify the path space of natural transformations *)
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
-Require Import Equivalences types.Sigma Trunc.
+Require Import Equivalences Types.Sigma Trunc.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

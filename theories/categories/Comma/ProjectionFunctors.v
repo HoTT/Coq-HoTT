@@ -9,7 +9,7 @@ Require Import Cat.Core.
 Require Import Functor.Paths.
 Require Import Comma.Core Comma.InducedFunctors Comma.Projection.
 Require ProductLaws ExponentialLaws.Law1.Functors ExponentialLaws.Law4.Functors.
-Require Import types.Prod types.Forall PathGroupoids HoTT.Tactics.
+Require Import Types.Prod Types.Forall PathGroupoids HoTT.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

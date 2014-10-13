@@ -4,7 +4,7 @@ Require Import Functor.Composition.Core.
 Require Import Functor.Composition.Laws.
 Require Import Adjoint.Composition.Core Adjoint.UnitCounit Adjoint.Core Adjoint.Paths Adjoint.Identity.
 Require Adjoint.Composition.LawsTactic.
-Require Import types.Sigma HoTT.Tactics types.Prod Basics.PathGroupoids types.Forall.
+Require Import Types.Sigma HoTT.Tactics Types.Prod Basics.PathGroupoids Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

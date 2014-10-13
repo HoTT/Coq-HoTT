@@ -13,7 +13,7 @@ Require Import Pseudofunctor.Core.
 Require Import NaturalTransformation.Composition.Laws.
 Require Import FunctorCategory.Morphisms.
 Require LaxComma.CoreLaws.
-Require Import types.Record Trunc HoTT.Tactics types.Paths types.Sigma.
+Require Import Types.Record Trunc HoTT.Tactics Types.Paths Types.Sigma.
 
 Import Functor.Identity.FunctorIdentityNotations.
 Import Pseudofunctor.Identity.PseudofunctorIdentityNotations.

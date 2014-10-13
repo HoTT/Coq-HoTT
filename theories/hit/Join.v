@@ -1,9 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-Require Import Overture PathGroupoids Equivalences.
-Require Import types.Paths types.Forall types.Sigma types.Arrow types.Universe.
-Require Import types.Unit HProp HSet types.Sum types.Paths.
-Require Import Trunc Contractible.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HProp HSet.
 Require Import hit.Pushout.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.

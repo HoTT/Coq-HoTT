@@ -4,7 +4,7 @@ Require Import Category.Prod Functor.Prod.Core.
 Require Import Functor.Composition.Core Functor.Identity.
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 Require Import Comma.Core.
-Require Import types.Prod.
+Require Import Types.Prod.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

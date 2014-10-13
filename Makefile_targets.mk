@@ -32,18 +32,18 @@ CORE_VFILES = \
 	$(srcdir)/theories/Basics/Pointed.v \
 	$(srcdir)/theories/Basics/Fibrations.v \
 	$(srcdir)/theories/Basics.v \
-	$(srcdir)/theories/types/Paths.v \
-	$(srcdir)/theories/types/Unit.v \
-	$(srcdir)/theories/types/Forall.v \
-	$(srcdir)/theories/types/Arrow.v \
-	$(srcdir)/theories/types/Sigma.v \
-	$(srcdir)/theories/types/Prod.v \
-	$(srcdir)/theories/types/Record.v \
-	$(srcdir)/theories/types/Empty.v \
-	$(srcdir)/theories/types/Bool.v \
-	$(srcdir)/theories/types/Sum.v \
-	$(srcdir)/theories/types/Equiv.v \
-	$(srcdir)/theories/types/Universe.v \
+	$(srcdir)/theories/Types/Paths.v \
+	$(srcdir)/theories/Types/Unit.v \
+	$(srcdir)/theories/Types/Forall.v \
+	$(srcdir)/theories/Types/Arrow.v \
+	$(srcdir)/theories/Types/Sigma.v \
+	$(srcdir)/theories/Types/Prod.v \
+	$(srcdir)/theories/Types/Record.v \
+	$(srcdir)/theories/Types/Empty.v \
+	$(srcdir)/theories/Types/Bool.v \
+	$(srcdir)/theories/Types/Sum.v \
+	$(srcdir)/theories/Types/Equiv.v \
+	$(srcdir)/theories/Types/Universe.v \
 	$(srcdir)/theories/Types.v \
 	$(srcdir)/theories/Conjugation.v \
 	$(srcdir)/theories/HProp.v \

@@ -2,7 +2,7 @@
 (** * Connectedness *)
 
 Require Import HoTT.Basics.
-Require Import types.Forall types.Sigma types.Paths types.Unit types.Arrow types.Universe.
+Require Import Types.Forall Types.Sigma Types.Paths Types.Unit Types.Arrow Types.Universe.
 Require Import TruncType UnivalenceImpliesFunext HProp EquivalenceVarieties.
 Require Import hit.Truncations.
 Local Open Scope equiv_scope.

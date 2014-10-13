@@ -4,7 +4,7 @@ Require Import Functor.Prod Functor.Prod.Functorial Functor.Prod.Universal.
 Require Import Functor.Paths NaturalTransformation.Paths.
 Require Import Functor.Identity Functor.Composition.Core.
 Require Import ExponentialLaws.Law3.Functors.
-Require Import types.Prod HoTT.Tactics ExponentialLaws.Tactics.
+Require Import Types.Prod HoTT.Tactics ExponentialLaws.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

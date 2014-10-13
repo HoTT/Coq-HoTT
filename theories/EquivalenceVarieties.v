@@ -2,7 +2,7 @@
 (** * Comparing definitions of equivalence *)
 
 Require Import HoTT.Basics.
-Require Import types.Sigma types.Forall types.Record types.Paths types.Prod types.Arrow HProp.
+Require Import Types.Sigma Types.Forall Types.Record Types.Paths Types.Prod Types.Arrow HProp.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

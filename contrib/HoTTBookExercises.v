@@ -44,7 +44,7 @@ Defined.
 (** Exercise 1.2 *)
 
 (** Recursor as equivalence. *)
-Definition Book_1_2_prod_lib := @HoTT.types.Prod.equiv_uncurry.
+Definition Book_1_2_prod_lib := @HoTT.Types.Prod.equiv_uncurry.
 Section Book_1_2_prod.
   Variable A B : Type.
 
@@ -65,7 +65,7 @@ Section Book_1_2_prod.
 End Book_1_2_prod.
 
 (** Recursor as (dependent) equivalence. *)
-Definition Book_1_2_sig_lib := @HoTT.types.Sigma.equiv_sigT_rect.
+Definition Book_1_2_sig_lib := @HoTT.Types.Sigma.equiv_sigT_rect.
 Section Book_1_2_sig.
   Variable A : Type.
   Variable B : A -> Type.
@@ -95,7 +95,7 @@ Section Book_1_3_prod.
   Variable A B : Type.
 
   Let prod_ind_eta (C : A * B -> Type) (g : forall (x : A) (y : B), C (x, y)) (x : A * B) : C x :=
-    transport C (HoTT.types.Prod.eta_prod x) (g (fst x) (snd x)).
+    transport C (HoTT.Types.Prod.eta_prod x) (g (fst x) (snd x)).
   Definition Book_1_3_prod := prod_ind_eta.
 
   Proposition Book_1_3_prod_refl : forall C g a b, prod_ind_eta C g (a, b) = g a b.
@@ -112,7 +112,7 @@ Section Book_1_3_sig.
   Let sig_ind_eta (C : (exists (a : A), B a) -> Type)
                           (g : forall (a : A) (b : B a), C (a; b))
                           (x : exists (a : A), B a) : C x :=
-    transport C (HoTT.types.Sigma.eta_sigma x) (g (pr1 x) (pr2 x)).
+    transport C (HoTT.Types.Sigma.eta_sigma x) (g (pr1 x) (pr2 x)).
   Definition Book_1_3_sig := sig_ind_eta.
 
   Proposition Book_1_3_sig_refl : forall C g a b, sig_ind_eta C g (a; b) = g a b.
@@ -260,7 +260,7 @@ Definition Book_1_10 := ack.
 (* ================================================== ex:eqvboolbool *)
 (** Exercise 2.13 *)
 
-Definition Book_2_13 := @HoTT.types.Bool.equiv_bool_equiv_bool_bool.
+Definition Book_2_13 := @HoTT.Types.Bool.equiv_bool_equiv_bool_bool.
 
 (* ================================================== ex:equality-reflection *)
 (** Exercise 2.14 *)
@@ -331,7 +331,7 @@ Defined.
 (* ================================================== ex:isset-coprod *)
 (** Exercise 3.2 *)
 
-Definition Book_3_2_solution_1 := @HoTT.types.Sum.hset_sum.
+Definition Book_3_2_solution_1 := @HoTT.Types.Sum.hset_sum.
 
 (** Alternative solution for replaying *)
 
@@ -351,9 +351,9 @@ Defined.
 (** Exercise 3.3 *)
 
 Definition Book_3_3_solution_1 (A : Type) (B : A -> Type)
-   := @HoTT.types.Sigma.trunc_sigma A B 0.
+   := @HoTT.Types.Sigma.trunc_sigma A B 0.
 
-(** This exercise is hard because 2-paths over Sigma types are not treated in the first three chapters of the book. Consult theories/types/Sigma.v *)
+(** This exercise is hard because 2-paths over Sigma types are not treated in the first three chapters of the book. Consult theories/Types/Sigma.v *)
 
 Lemma Book_3_3_solution_2 (A : Type) (B : A -> Type) :
   IsHSet A -> (forall x:A, IsHSet (B x)) -> IsHSet { x:A | B x}.
@@ -730,7 +730,7 @@ End Book_5_3.
 (* ================================================== ex:bool *)
 (** Exercise 5.4 *)
 
-Definition Book_5_4 := @HoTT.types.Bool.equiv_bool_forall_prod.
+Definition Book_5_4 := @HoTT.Types.Bool.equiv_bool_forall_prod.
 
 (* ================================================== ex:ind-nat-not-equiv *)
 (** Exercise 5.5 *)
