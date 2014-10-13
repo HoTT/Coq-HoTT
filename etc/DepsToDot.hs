@@ -79,11 +79,11 @@ label opts p' =
     myColor :: X11Color
     myColor
       | "theories/categories/"  `isPrefixOf` p = Magenta
-      | "theories/types/"       `isPrefixOf` p = BlueViolet
+      | "theories/Types"        `isPrefixOf` p = BlueViolet
       | "theories/hit/"         `isPrefixOf` p = Orange
       | "contrib/"              `isPrefixOf` p = Cyan4
       | "coq/theories/"         `isPrefixOf` p = Blue
-      | "theories/Basics/"      `isPrefixOf` p = LimeGreen
+      | "theories/Basics"       `isPrefixOf` p = LimeGreen
       | "theories/Tactics/"     `isPrefixOf` p = Red
 --      | "quote/"           `isPrefixOf` p = Gold3
 --      | "theory/"          `isPrefixOf` p = BlueViolet
