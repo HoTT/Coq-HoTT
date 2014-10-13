@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics.
-Require Import types.Universe types.Arrow.
+Require Import types.Universe types.Arrow types.Sigma.
 Require Import HSet HProp UnivalenceImpliesFunext TruncType.
 Require Import hit.epi hit.Truncations hit.Connectedness.
 

@@ -5,6 +5,8 @@
 
 Require Export HoTT.Basics.
 
+Require Export HoTT.Types.
+
 Require Export Conjugation.
 Require Export HProp.
 Require Export HSet.
@@ -15,18 +17,6 @@ Require Export Modality.
 Require Export Factorization.
 Require Export ObjectClassifier.
 Require Export TruncType.
-
-Require Export types.Unit.
-Require Export types.Paths.
-Require Export types.Forall.
-Require Export types.Empty.
-Require Export types.Bool.
-Require Export types.Arrow.
-Require Export types.Prod.
-Require Export types.Record.
-Require Export types.Sigma.
-Require Export types.Sum.
-Require Export types.Universe.
 
 Require Export hit.Interval.
 Require Export hit.Truncations.

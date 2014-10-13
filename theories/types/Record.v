@@ -12,7 +12,7 @@ Local Open Scope equiv_scope.
 >>
    You have to give it the record constructor and the two record projections as arguments (it has no way to guess what those might be). *)
 
-Ltac issig1 build pr1 pr2 :=
+Ltac issig2 build pr1 pr2 :=
   (** Just in case the user supplied a goal which only *reduces* to one of the desired form. *)
   hnf;
   (** Extract the fibration of which our Sigma-type is the total space, as well as the record type. We pull the terms out of a [match], rather than leaving everything inside the [match] because this gives us better error messages. *)
@@ -30,7 +30,7 @@ Ltac issig1 build pr1 pr2 :=
 
 (** This allows us to use the same notation for the tactics with varying numbers of variables. *)
 Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) :=
-  issig1 build pr1 pr2.
+  issig2 build pr1 pr2.
 
 (** We show how the tactic works in a couple of examples. *)
 
@@ -52,7 +52,7 @@ Defined.
 >>
    It takes the record constructor and its three projections as arguments, as before. *)
 
-Ltac issig2 build pr1 pr2 pr3 :=
+Ltac issig3 build pr1 pr2 pr3 :=
   hnf;
   let A := match goal with |- ?A <~> ?B => constr:(A) end in
   let B := match goal with |- ?A <~> ?B => constr:(B) end in
@@ -66,10 +66,10 @@ Ltac issig2 build pr1 pr2 pr3 :=
                        (fun _ => 1))).
 
 Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) :=
-  issig2 build pr1 pr2 pr3.
+  issig3 build pr1 pr2 pr3.
 
 (** And a similar version for four-component records.  It should be clear how to extend the pattern indefinitely. *)
-Ltac issig3 build pr1 pr2 pr3 pr4 :=
+Ltac issig4 build pr1 pr2 pr3 pr4 :=
   hnf;
   let A := match goal with |- ?A <~> ?B => constr:(A) end in
   let B := match goal with |- ?A <~> ?B => constr:(B) end in
@@ -83,20 +83,10 @@ Ltac issig3 build pr1 pr2 pr3 pr4 :=
                        (fun _ => 1))).
 
 Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) constr(pr4) :=
-  issig3 build pr1 pr2 pr3 pr4.
+  issig4 build pr1 pr2 pr3 pr4.
 
 
-(** The record [IsEquiv] has four components, so [issig3] can prove that it is equivalent to an iterated Sigma-type. *)
-
-Definition issig_isequiv {A B : Type} (f : A -> B) :
-  { g:B->A & { r:Sect g f & { s:Sect f g & forall x : A, r (f x) = ap f (s x) }}}
-  <~> IsEquiv f.
-Proof.
-  issig (BuildIsEquiv A B f) (@equiv_inv A B f) (@eisretr A B f)
-        (@eissect A B f) (@eisadj A B f).
-Defined.
-
-Ltac issig4 build pr1 pr2 pr3 pr4 pr5 :=
+Ltac issig5 build pr1 pr2 pr3 pr4 pr5 :=
   hnf;
   let A := match goal with |- ?A <~> ?B => constr:(A) end in
   let B := match goal with |- ?A <~> ?B => constr:(B) end in
@@ -110,9 +100,9 @@ Ltac issig4 build pr1 pr2 pr3 pr4 pr5 :=
                        (fun _ => 1))).
 
 Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) constr(pr4) constr(pr5) :=
-  issig4 build pr1 pr2 pr3 pr4 pr5.
+  issig5 build pr1 pr2 pr3 pr4 pr5.
 
-Ltac issig5 build pr1 pr2 pr3 pr4 pr5 pr6 :=
+Ltac issig6 build pr1 pr2 pr3 pr4 pr5 pr6 :=
   hnf;
   let A := match goal with |- ?A <~> ?B => constr:(A) end in
   let B := match goal with |- ?A <~> ?B => constr:(B) end in
@@ -126,4 +116,14 @@ Ltac issig5 build pr1 pr2 pr3 pr4 pr5 pr6 :=
                        (fun _ => 1))).
 
 Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) constr(pr4) constr(pr5) constr(pr6) :=
-  issig5 build pr1 pr2 pr3 pr4 pr5 pr6.
+  issig6 build pr1 pr2 pr3 pr4 pr5 pr6.
+
+(** The record [IsEquiv] has four components, so [issig4] can prove that it is equivalent to an iterated Sigma-type. *)
+
+Definition issig_isequiv {A B : Type} (f : A -> B) :
+  { g:B->A & { r:Sect g f & { s:Sect f g & forall x : A, r (f x) = ap f (s x) }}}
+  <~> IsEquiv f.
+Proof.
+  issig (BuildIsEquiv A B f) (@equiv_inv A B f) (@eisretr A B f)
+        (@eissect A B f) (@eisadj A B f).
+Defined.

@@ -510,6 +510,17 @@ Class Asymmetric {A} (R : relation A) :=
 Inductive Unit : Type1 :=
     tt : Unit.
 
+(** ** Decidable equality *)
+
+(* NB: This has to come after our definition of [not], so that it refers to our [not] rather than the one in [Coq.Logic]. *)
+Class Decidable (A : Type) :=
+  dec : A + (~ A).
+Arguments dec A {_}.
+
+Class DecidablePaths (A : Type) :=
+  dec_paths : forall (x y : A), Decidable (x = y).
+Global Existing Instance dec_paths.
+
 (** *** Pointed types *)
 
 (** A space is pointed if that space has a point. *)

@@ -4,7 +4,7 @@
 
 Require Import HoTT.Basics.
 Require Import types.Unit types.Bool types.Universe types.Sigma types.Arrow types.Forall.
-Require Import HProp HSet EquivalenceVarieties UnivalenceImpliesFunext TruncType.
+Require Import HProp HSet UnivalenceImpliesFunext TruncType.
 Require Import hit.Truncations hit.quotient.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.

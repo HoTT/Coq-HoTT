@@ -7,7 +7,7 @@ Require Import Cat.Core.
 Require Import FunctorCategory.Core.
 Require Import FunctorCategory.Morphisms NaturalTransformation.Isomorphisms.
 Require Import Category.Morphisms NaturalTransformation.Paths.
-Require Import HProp PathGroupoids.
+Require Import Basics.PathGroupoids Basics.Trunc.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

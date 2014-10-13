@@ -1,35 +1,13 @@
+(* -*- mode: coq; mode: visual-line -*-  *)
 (** * HPropositions *)
 
-Require Import HoTT.Basics.
-Require Import types.Forall types.Sigma types.Prod types.Record types.Paths types.Unit types.Empty.
-
+Require Import HoTT.Basics HoTT.Types.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 
-(** ** Facts about [IsHProp] *)
-
-(** Maybe this should go to a separate file? *)
-
 Generalizable Variables A B.
 
-(** An inhabited proposition is contractible.
-   This is not an [Instance] because it causes infinite loops.
-   *)
-Lemma contr_inhabited_hprop (A : Type) `{H : IsHProp A} (x : A)
-  : Contr A.
-Proof.
-  exists x.
-  intro y.
-  apply center, H.
-Defined.
-
-(** If inhabitation implies contractibility, then we have an h-proposition.  We probably won't often have a hypothesis of the form [A -> Contr A], so we make sure we give priority to other instances. *)
-Global Instance hprop_inhabited_contr (A : Type) : (A -> Contr A) -> IsHProp A | 10000.
-Proof.
-  intros H x y.
-  pose (C := H x).
-  apply contr_paths_contr.
-Defined.
+(** ** Truncatedness is an hprop *)
 
 (** If a type is contractible, then so is its type of contractions.
     Using [issig_contr] and the [equiv_intro] tactic, we can transfer this to the equivalent problem of contractibility of a certain Sigma-type, in which case we can apply the general path-construction functions. *)
@@ -62,6 +40,7 @@ Proof.
     apply @path_contr.
     apply I, AH1.
 Qed.
+(** By [trunc_hprop], it follows that [IsTrunc n A] is also [m]-truncated for any [m >= -1]. *)
 
 (** Similarly, a map being truncated is also a proposition. *)
 Global Instance isprop_istruncmap `{Funext} (n : trunc_index) {X Y : Type} (f : X -> Y)
@@ -71,27 +50,7 @@ Proof.
   exact _.
 Defined.
 
-(** We can induct on the truncation index to get that [IsTrunc] is (n+1)-truncated for all [n]. *)
-Lemma istrunc_s__ishprop `{IsHProp A} {n} : IsTrunc n.+1 A.
-Proof.
-  induction n; typeclasses eauto.
-Defined.
-
-Global Instance trunc_trunc `{Funext} A m n : IsTrunc n.+1 (IsTrunc m A) | 0
-  := istrunc_s__ishprop.
-
-(** Chracterization of [IsHProp] in terms of all points being connected by paths. *)
-
-Theorem path_ishprop `{H : IsHProp A} : forall x y : A, x = y.
-Proof.
-  apply H.
-Defined.
-
-Theorem hprop_allpath (A : Type) : (forall (x y : A), x = y) -> IsHProp A.
-  intros H x y.
-  pose (C := BuildContr A x (H x)).
-  apply contr_paths_contr.
-Defined.
+(** ** Alternate characterization of hprops. *)
 
 Theorem equiv_hprop_allpath `{Funext} (A : Type)
   : IsHProp A <~> (forall (x y : A), x = y).
@@ -109,43 +68,6 @@ Proof.
     apply path_contr.
 Defined.
 
-(** Two propositions are equivalent as soon as there are maps in both
-   directions. *)
-
-Definition isequiv_iff_hprop `{IsHProp A} `{IsHProp B}
-  (f : A -> B) (g : B -> A)
-: IsEquiv f.
-Proof.
-  apply (isequiv_adjointify f g);
-    intros ?; apply path_ishprop.
-Defined.
-
-Definition equiv_iff_hprop_uncurried `{IsHProp A} `{IsHProp B}
-  : (A <-> B) -> (A <~> B).
-Proof.
-  intros [f g].
-  apply (equiv_adjointify f g);
-    intros ?; apply path_ishprop.
-Defined.
-
-Definition equiv_iff_hprop `{IsHProp A} `{IsHProp B}
-  : (A -> B) -> (B -> A) -> (A <~> B)
-  := fun f g => equiv_iff_hprop_uncurried (f, g).
-
-(** Being a contractible space is a proposition. *)
-
-Global Instance hprop_contr `{Funext} (A : Type) : IsHProp (Contr A) | 0.
-Proof.
-  apply hprop_inhabited_contr.
-  intro cA.
-  exact _.
-Defined.
-
-(** Here is an alternate characterization of propositions. *)
-
-Global Instance HProp_HProp `{Funext} A : IsHProp (IsHProp A) | 0
-  := hprop_trunc -1 A.
-
 Theorem equiv_hprop_inhabited_contr `{Funext} {A}
   : IsHProp A <~> (A -> Contr A).
 Proof.
@@ -156,7 +78,8 @@ Proof.
     apply @path_contr. apply contr_contr. exact (hp x y).
 Defined.
 
-(** Here are some alternate characterizations of contractibility. *)
+(** ** Alternate characterizations of contractibility. *)
+
 Theorem equiv_contr_inhabited_hprop `{Funext} {A}
   : Contr A <~> A * IsHProp A.
 Proof.
@@ -178,25 +101,25 @@ Proof.
   apply equiv_functor_prod'. apply equiv_idmap. apply equiv_hprop_allpath.
 Defined.
 
-(** If the second component of a sigma type is an hProp, then to prove equality, we only need equality of the first component. *)
-Definition path_sigma_hprop {A : Type} {P : A -> Type}
-           `{forall x, IsHProp (P x)}
-           (u v : sigT P)
-: u.1 = v.1 -> u = v
-  := path_sigma_uncurried P u v o pr1^-1.
+(** ** Logical equivalence of hprops *)
 
-Global Instance isequiv_path_sigma_hprop {A P} `{forall x : A, IsHProp (P x)} {u v : sigT P}
-: IsEquiv (@path_sigma_hprop A P _ u v) | 100
-  := isequiv_compose.
+(** Logical equivalence of hprops is not just logically equivalent to equivalence, it is equivalent to it. *)
+Global Instance isequiv_equiv_iff_hprop_uncurried
+       `{Funext} {A B} `{IsHProp A} `{IsHProp B}
+: IsEquiv (@equiv_iff_hprop_uncurried A _ B _) | 0.
+Proof.
+  pose (@istrunc_equiv).
+  refine (isequiv_adjointify
+            equiv_iff_hprop_uncurried
+            (fun e => (@equiv_fun _ _ e, @equiv_inv _ _ e _))
+            _ _);
+    intro;
+      by apply path_ishprop.
+Defined.
 
-Hint Immediate isequiv_path_sigma_hprop : typeclass_instances.
+(** ** Inhabited and uninhabited hprops *)
 
-(** The sigma of an hprop over a type can be viewed as a subtype. In particular, paths in the subtype are equivalent to paths in the original type. *)
-Definition equiv_path_sigma_hprop {A : Type} {P : A -> Type}
-           {HP : forall a, IsHProp (P a)} (u v : sigT P)
-: (u.1 = v.1) <~> (u = v)
-  := BuildEquiv _ _ (path_sigma_hprop _ _) _.
-
+(** If an hprop is inhabited, then it is equivalent to [Unit]. *)
 Lemma if_hprop_then_equiv_Unit (hprop : Type) `{IsHProp hprop} :  hprop -> hprop <~> Unit.
 Proof.
   intro p. 
@@ -205,6 +128,7 @@ Proof.
   exact (fun _ => p).
 Defined.
 
+(** If an hprop is not inhabited, then it is equivalent to [Empty]. *)
 Lemma if_not_hprop_then_equiv_Empty (hprop : Type) `{IsHProp hprop} : ~hprop -> hprop <~> Empty.
 Proof.
   intro np. 

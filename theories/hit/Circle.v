@@ -79,9 +79,8 @@ Definition neg_neq_pos {z w : Pos} : ~ (neg z = pos w)
 
 (* And prove that they are a set. *)
 
-Global Instance hset_int : IsHSet Int | 0.
+Global Instance decpaths_int : DecidablePaths Int.
 Proof.
-  apply hset_decidable.
   intros [n | | n] [m | | m].
   revert m; induction n as [|n IHn]; intros m; induction m as [|m IHm].
   exact (inl 1).
@@ -104,6 +103,11 @@ Proof.
   destruct (IHn m) as [p | np].
   exact (inl (ap pos (ap succ_pos (pos_injective p)))).
   exact (inr (fun p => np (ap pos (succ_pos_injective (pos_injective p))))).
+Defined.
+
+Global Instance hset_int : IsHSet Int | 0.
+Proof.
+  exact _.
 Defined.
 
 (* Successor is an autoequivalence of [Int]. *)

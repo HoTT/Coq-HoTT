@@ -1,9 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Universes of truncated types. *)
 
-Require Import HoTT.Basics.
-Require Import types.Arrow types.Paths types.Sigma types.Universe types.Record.
-Require Import HProp EquivalenceVarieties UnivalenceImpliesFunext.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HProp UnivalenceImpliesFunext.
 Local Open Scope equiv_scope.
 
 Generalizable Variables A B n f.
@@ -88,6 +87,10 @@ Definition Unit_hp : hProp := (BuildhProp Unit).
 Definition False_hp : hProp := (BuildhProp Empty).
 Definition Negation_hp `{Funext} (hprop : hProp) : hProp := BuildhProp (~hprop).
 (** We could continue with products etc *)
+
+(** ** The canonical map from Bool to hProp *)
+Definition is_true (b : Bool) : hProp
+  := if b then Unit_hp else False_hp.
 
 (** ** Facts about HProps using univalence *)
 

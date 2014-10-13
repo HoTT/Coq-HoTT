@@ -40,13 +40,15 @@ CORE_VFILES = \
 	$(srcdir)/theories/types/Prod.v \
 	$(srcdir)/theories/types/Record.v \
 	$(srcdir)/theories/types/Empty.v \
+	$(srcdir)/theories/types/Bool.v \
+	$(srcdir)/theories/types/Sum.v \
+	$(srcdir)/theories/types/Equiv.v \
+	$(srcdir)/theories/types/Universe.v \
+	$(srcdir)/theories/Types.v \
 	$(srcdir)/theories/Conjugation.v \
 	$(srcdir)/theories/HProp.v \
 	$(srcdir)/theories/EquivalenceVarieties.v \
 	$(srcdir)/theories/HSet.v \
-	$(srcdir)/theories/types/Bool.v \
-	$(srcdir)/theories/types/Sum.v \
-	$(srcdir)/theories/types/Universe.v \
 	$(srcdir)/theories/UnivalenceImpliesFunext.v \
 	$(srcdir)/theories/Tactics/BinderApply.v \
 	$(srcdir)/theories/Tactics.v \
