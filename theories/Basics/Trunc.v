@@ -178,15 +178,7 @@ Definition equiv_iff_hprop `{IsHProp A} `{IsHProp B}
   : (A -> B) -> (B -> A) -> (A <~> B)
   := fun f g => equiv_iff_hprop_uncurried (f, g).
 
-(** ** Hedberg's theorem: any type with "decidable equality" is a set. *)
-
-Class Decidable (A : Type) :=
-  dec : A + (~ A).
-Arguments dec A {_}.
-
-Class DecidablePaths (A : Type) :=
-  dec_paths : forall (x y : A), Decidable (x = y).
-Global Existing Instance dec_paths.
+(** ** Hedberg's theorem: any type with decidable equality is a set. *)
 
 Class WeaklyConstant {A B} (f : A -> B) :=
   wconst : forall x y, f x = f y.
@@ -195,7 +187,6 @@ Class Collapsible (A : Type) :=
   { collapse : A -> A ;
     wconst_collapse : WeaklyConstant collapse
   }.
-
 Global Existing Instance wconst_collapse.
 
 Class PathCollapsible (A : Type) :=
@@ -228,6 +219,19 @@ Proof.
   refine (h p @ _ @ (h q)^).
   apply whiskerL.
   apply wconst.
+Defined.
+
+Definition collapsible_hprop (A : Type) `{IsHProp A}
+: Collapsible A.
+Proof.
+  exists idmap.
+  intros x y; apply path_ishprop.
+Defined.
+
+Definition pathcoll_hset (A : Type) `{IsHSet A}
+: PathCollapsible A.
+Proof.
+  intros x y; apply collapsible_hprop; exact _.
 Defined.
 
 Corollary hset_decpaths (A : Type) `{DecidablePaths A}
