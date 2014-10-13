@@ -1,6 +1,6 @@
 (** * Dependent Product Category *)
 Require Import Category.Core Category.Strict.
-Require Import types.Forall.
+Require Import Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

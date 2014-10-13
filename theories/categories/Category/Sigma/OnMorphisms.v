@@ -1,5 +1,5 @@
 (** * ∑-categories on morphisms - a category with the same objects, but a ∑ type for morphisms *)
-Require Import HSet types.Unit HoTT.Tactics types.Forall types.Sigma Basics.Trunc.
+Require Import HSet Types.Unit HoTT.Tactics Types.Forall Types.Sigma Basics.Trunc.
 Require Import Category.Core Functor.Core Category.Sigma.Core.
 Require Functor.Composition.Core Functor.Identity.
 Require Import Functor.Paths.

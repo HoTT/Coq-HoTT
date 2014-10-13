@@ -5,7 +5,7 @@ Require Import Functor.Pointwise.Core Functor.Prod.Core.
 Require Import Category.Sum Functor.Sum NaturalTransformation.Sum.
 Require Import Functor.Paths NaturalTransformation.Paths.
 Require Import Functor.Identity Functor.Composition.Core.
-Require Import types.Prod HoTT.Tactics ExponentialLaws.Tactics.
+Require Import Types.Prod HoTT.Tactics ExponentialLaws.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

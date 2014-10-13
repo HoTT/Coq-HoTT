@@ -3,7 +3,7 @@
 (** * The flattening lemma. *)
 
 Require Import HoTT.Basics UnivalenceImpliesFunext.
-Require Import types.Paths types.Forall types.Sigma types.Arrow types.Universe.
+Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

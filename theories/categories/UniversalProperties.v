@@ -4,7 +4,7 @@ Require Import Category.Dual Functor.Dual.
 Require Import Category.Objects Category.Morphisms.
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 Require Import Comma.Core.
-Require Import types.Unit Trunc types.Sigma HProp HoTT.Tactics Equivalences.
+Require Import Types.Unit Trunc Types.Sigma HProp HoTT.Tactics Equivalences.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

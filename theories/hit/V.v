@@ -3,7 +3,7 @@
 (** * The cumulative hierarchy [V]. *)
 
 Require Import HoTT.Basics.
-Require Import types.Unit types.Bool types.Universe types.Sigma types.Arrow types.Forall.
+Require Import Types.Unit Types.Bool Types.Universe Types.Sigma Types.Arrow Types.Forall.
 Require Import HProp HSet UnivalenceImpliesFunext TruncType.
 Require Import hit.Truncations hit.quotient.
 Local Open Scope path_scope.

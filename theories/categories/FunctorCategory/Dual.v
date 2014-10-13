@@ -4,7 +4,7 @@ Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.
 Require Import Functor.Composition.Core Functor.Identity.
 Require Import FunctorCategory.Core.
 Require Import Functor.Paths.
-Require Import HoTT.Tactics types.Forall.
+Require Import HoTT.Tactics Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

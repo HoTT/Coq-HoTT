@@ -1,6 +1,6 @@
 (** * Functors involving coproduct categories *)
 Require Import Category.Sum Functor.Core Functor.Composition.Core Functor.Identity.
-Require Import Functor.Paths HoTT.Tactics types.Forall.
+Require Import Functor.Paths HoTT.Tactics Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

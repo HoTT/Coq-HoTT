@@ -8,7 +8,7 @@ Require Functor.Identity NaturalTransformation.Identity.
 Require Import Category.Strict.
 Require Import Comma.Core.
 Import Functor.Identity.FunctorIdentityNotations NaturalTransformation.Identity.NaturalTransformationIdentityNotations.
-Require Import types.Record Trunc HoTT.Tactics PathGroupoids types.Forall.
+Require Import Types.Record Trunc HoTT.Tactics PathGroupoids Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

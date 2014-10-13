@@ -118,7 +118,7 @@ Definition Book_2_3_1 := @HoTT.Basics.Overture.transport.
 (** Lemma 2.3.2 *)
 
 (* special case of *)
-Definition Book_2_3_2 := @HoTT.types.Sigma.equiv_path_sigma.
+Definition Book_2_3_2 := @HoTT.Types.Sigma.equiv_path_sigma.
 
 (* ================================================== lem:mapdep *)
 (** Lemma 2.3.4 *)
@@ -205,37 +205,37 @@ Definition Book_2_4_12_item_iii := @HoTT.Basics.Equivalences.transitive_equiv.
 (* ================================================== thm:path-prod *)
 (** Theorem 2.6.2 *)
 
-Definition Book_2_6_2 := @HoTT.types.Prod.equiv_path_prod.
+Definition Book_2_6_2 := @HoTT.Types.Prod.equiv_path_prod.
 
 (* ================================================== thm:trans-prod *)
 (** Theorem 2.6.4 *)
 
-Definition Book_2_6_4 := @HoTT.types.Prod.transport_prod.
+Definition Book_2_6_4 := @HoTT.Types.Prod.transport_prod.
 
 (* ================================================== thm:ap-prod *)
 (** Theorem 2.6.5 *)
 
-Definition Book_2_6_5 := @HoTT.types.Prod.ap_functor_prod.
+Definition Book_2_6_5 := @HoTT.Types.Prod.ap_functor_prod.
 
 (* ================================================== thm:path-sigma *)
 (** Theorem 2.7.2 *)
 
-Definition Book_2_7_2 := @HoTT.types.Sigma.equiv_path_sigma.
+Definition Book_2_7_2 := @HoTT.Types.Sigma.equiv_path_sigma.
 
 (* ================================================== thm:eta-sigma *)
 (** Corollary 2.7.3 *)
 
-Definition Book_2_7_3 := @HoTT.types.Sigma.eta_sigma.
+Definition Book_2_7_3 := @HoTT.Types.Sigma.eta_sigma.
 
 (* ================================================== transport-Sigma *)
 (** Theorem 2.7.4 *)
 
-Definition Book_2_7_4 := @HoTT.types.Sigma.transportD_is_transport.
+Definition Book_2_7_4 := @HoTT.Types.Sigma.transportD_is_transport.
 
 (* ================================================== thm:path-unit *)
 (** Theorem 2.8.1 *)
 
-Definition Book_2_8_1 := @HoTT.types.Unit.equiv_path_unit.
+Definition Book_2_8_1 := @HoTT.Types.Unit.equiv_path_unit.
 
 (* ================================================== axiom:funext *)
 (** Axiom 2.9.3 *)
@@ -246,28 +246,28 @@ Definition Book_2_9_3 := @HoTT.Basics.Overture.path_forall.
 (** Lemma 2.9.6 *)
 
 (** non-dependent as special case of dependent *)
-Definition Book_2_9_6 := @HoTT.types.Forall.dpath_forall.
+Definition Book_2_9_6 := @HoTT.Types.Forall.dpath_forall.
 
 (* ================================================== thm:dpath-forall *)
 (** Lemma 2.9.7 *)
 
-Definition Book_2_9_7 := @HoTT.types.Forall.dpath_forall.
+Definition Book_2_9_7 := @HoTT.Types.Forall.dpath_forall.
 
 (* ================================================== thm:idtoeqv *)
 (** Lemma 2.10.1 *)
 
-Definition Book_2_10_1 := @HoTT.types.Universe.equiv_path.
+Definition Book_2_10_1 := @HoTT.Types.Universe.equiv_path.
 
 (* ================================================== axiom:univalence *)
 (** Axiom 2.10.3 *)
 
-Definition Book_2_10_3 := @HoTT.types.Universe.isequiv_equiv_path.
+Definition Book_2_10_3 := @HoTT.Types.Universe.isequiv_equiv_path.
 
 (* ================================================== thm:transport-is-ap *)
 (** Lemma 2.10.5 *)
 
 (** Lemma 2.10.5 is a special case of Lemma 2.3.10, but also of: *)
-Definition Book_2_10_5 := @HoTT.types.Universe.transport_path_universe'.
+Definition Book_2_10_5 := @HoTT.Types.Universe.transport_path_universe'.
 
 (* ================================================== thm:paths-respects-equiv *)
 (** Theorem 2.11.1 *)
@@ -277,45 +277,45 @@ Definition Book_2_11_1 := @HoTT.Basics.Equivalences.isequiv_ap.
 (* ================================================== cor:transport-path-prepost *)
 (** Lemma 2.11.2 *)
 
-Definition Book_2_11_2_item_1 := @HoTT.types.Paths.transport_paths_l.
-Definition Book_2_11_2_item_2 := @HoTT.types.Paths.transport_paths_r.
-Definition Book_2_11_2_item_3 := @HoTT.types.Paths.transport_paths_lr.
+Definition Book_2_11_2_item_1 := @HoTT.Types.Paths.transport_paths_l.
+Definition Book_2_11_2_item_2 := @HoTT.Types.Paths.transport_paths_r.
+Definition Book_2_11_2_item_3 := @HoTT.Types.Paths.transport_paths_lr.
 
 (* ================================================== thm:transport-path *)
 (** Theorem 2.11.3 *)
 
-Definition Book_2_11_3 := @HoTT.types.Paths.transport_paths_FlFr.
+Definition Book_2_11_3 := @HoTT.Types.Paths.transport_paths_FlFr.
 
 (* ================================================== thm:transport-path2 *)
 (** Theorem 2.11.4 *)
 
-Definition Book_2_11_4 := @HoTT.types.Paths.transport_paths_FlFr_D.
+Definition Book_2_11_4 := @HoTT.Types.Paths.transport_paths_FlFr_D.
 
 (* ================================================== thm:dpath-path *)
 (** Theorem 2.11.5 *)
 
-Definition Book_2_11_5 := @HoTT.types.Paths.dpath_path_lr.
+Definition Book_2_11_5 := @HoTT.Types.Paths.dpath_path_lr.
 
 (* ================================================== thm:path-coprod *)
 (** Theorem 2.12.5 *)
 
-Definition Book_2_12_5 := @HoTT.types.Sum.equiv_path_sum.
+Definition Book_2_12_5 := @HoTT.Types.Sum.equiv_path_sum.
 
 (* ================================================== thm:path-nat *)
 (** Theorem 2.13.1 *)
 
-(* Definition Book_2_13_1 := @HoTT.types... *)
+(* Definition Book_2_13_1 := @HoTT.Types... *)
 
 (* ================================================== thm:prod-ump *)
 (** Theorem 2.15.2 *)
 
 (** non-dependent as special case of dependent, Theorem 2.15.5 *)
-Definition Book_2_15_2 := @HoTT.types.Prod.isequiv_prod_corect.
+Definition Book_2_15_2 := @HoTT.Types.Prod.isequiv_prod_corect.
 
 (* ================================================== thm:prod-umpd *)
 (** Theorem 2.15.5 *)
 
-Definition Book_2_15_5 := @HoTT.types.Prod.isequiv_prod_corect.
+Definition Book_2_15_5 := @HoTT.Types.Prod.isequiv_prod_corect.
 
 (* ================================================== thm:ttac *)
 (** Theorem 2.15.7 *)
@@ -416,7 +416,7 @@ Definition Book_3_3_3 := @HoTT.Basics.Trunc.equiv_iff_hprop.
 (** Example 3.6.2 *)
 
 Definition Book_3_6_2 `{Funext} (A : Type) (B : A -> Type)
-  := @HoTT.types.Forall.trunc_forall _ A B -1.
+  := @HoTT.Types.Forall.trunc_forall _ A B -1.
 
 (* ================================================== defn:logical-notation *)
 (** Definition 3.7.1 *)

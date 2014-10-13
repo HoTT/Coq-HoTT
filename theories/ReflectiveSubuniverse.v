@@ -1,6 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import HoTT.Basics.
-Require Import types.Empty types.Unit types.Arrow types.Sigma types.Paths types.Forall types.Prod types.Universe.
+Require Import HoTT.Basics HoTT.Types.
 Require Import UnivalenceImpliesFunext.
 Require Import HoTT.Tactics.
 

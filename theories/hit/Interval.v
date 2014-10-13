@@ -3,7 +3,7 @@
 (** * Theorems about the homotopical interval. *)
 
 Require Import HoTT.Basics.
-Require Import types.Sigma types.Forall types.Paths.
+Require Import Types.Sigma Types.Forall Types.Paths.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

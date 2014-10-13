@@ -6,7 +6,7 @@ Require Import NaturalTransformation.Identity.
 Require Import FunctorCategory.Core Cat.Core.
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 Require Import Comma.Core Comma.Projection.
-Require Import types.Prod HoTT.Tactics types.Unit.
+Require Import Types.Prod HoTT.Tactics Types.Unit.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -2,7 +2,7 @@
 (** * Theorems about Sigma-types (dependent sums) *)
 
 Require Import HoTT.Basics.
-Require Import types.Arrow.
+Require Import Types.Arrow.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

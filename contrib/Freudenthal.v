@@ -3,7 +3,7 @@
 (** * The Freudenthal Suspension Theorem, and related results. (INCOMPLETE) *)
 
 Require Import HoTT.Basics.
-Require Import types.Forall types.Sigma types.Paths types.Unit types.Universe types.Arrow.
+Require Import Types.Forall Types.Sigma Types.Paths Types.Unit Types.Universe Types.Arrow.
 Require Import HProp EquivalenceVarieties.
 Require Import hit.Connectedness hit.Suspension hit.Truncations.
 Local Open Scope trunc_scope.

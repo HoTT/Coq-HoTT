@@ -4,7 +4,7 @@ Require Import Functor.Identity Functor.Composition.Core.
 Require Import Functor.Dual NaturalTransformation.Dual Category.Dual.
 Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.UnitCounitCoercions Adjoint.Dual.
 Require Import Comma.Core UniversalProperties Comma.Dual InitialTerminalCategory.Core InitialTerminalCategory.Functors.
-Require Import HProp types.Sigma HoTT.Tactics.
+Require Import HProp Types.Sigma HoTT.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

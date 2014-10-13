@@ -2,8 +2,7 @@
 
 (** * Factorizations and factorization systems. *)
 
-Require Import HoTT.Basics.
-Require Import types.Record types.Sigma types.Universe types.Arrow types.Forall types.Paths.
+Require Import HoTT.Basics HoTT.Types.
 Require Import ReflectiveSubuniverse Modality HProp.
 Require Import HoTT.Tactics.
 Local Open Scope path_scope.

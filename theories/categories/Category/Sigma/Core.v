@@ -1,6 +1,6 @@
 (** * ∑-categories - exploded Grothendieck constructions, or generalizations of subcategories *)
 Require Import Category.Core Functor.Core.
-Require Import Basics.Trunc types.Sigma.
+Require Import Basics.Trunc Types.Sigma.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

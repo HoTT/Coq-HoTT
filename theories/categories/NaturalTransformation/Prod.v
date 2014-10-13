@@ -2,7 +2,7 @@
 Require Import Category.Core Functor.Core Category.Prod Functor.Prod.Core NaturalTransformation.Core.
 Require Functor.Composition.Core Functor.Identity.
 Require Import InitialTerminalCategory.Core.
-Require Import types.Prod.
+Require Import Types.Prod.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

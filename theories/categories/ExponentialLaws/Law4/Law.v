@@ -4,7 +4,7 @@ Require Import Functor.Prod.Core.
 Require Import Functor.Paths NaturalTransformation.Paths.
 Require Import Functor.Identity Functor.Composition.Core.
 Require Import ExponentialLaws.Law4.Functors.
-Require Import types.Prod HoTT.Tactics types.Forall Basics.PathGroupoids ExponentialLaws.Tactics.
+Require Import Types.Prod HoTT.Tactics Types.Forall Basics.PathGroupoids ExponentialLaws.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

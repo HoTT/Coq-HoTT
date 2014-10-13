@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics.
-Require Import types.Paths types.Forall types.Sigma types.Arrow types.Universe types.Unit types.Sum.
+Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe Types.Unit Types.Sum.
 Require Import HSet TruncType.
 Require Import hit.Truncations.
 Local Open Scope path_scope.

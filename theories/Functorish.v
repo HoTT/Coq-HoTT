@@ -1,4 +1,4 @@
-Require Import HoTT.Basics types.Universe TruncType UnivalenceImpliesFunext.
+Require Import HoTT.Basics Types.Universe TruncType UnivalenceImpliesFunext.
 Open Scope equiv.
 Open Scope path.
 

@@ -3,7 +3,7 @@
 (** * Theorems about the 2-sphere [S²]. *)
 
 Require Import HoTT.Basics HSet.
-Require Import types.Paths types.Forall types.Arrow types.Universe types.Empty types.Unit.
+Require Import Types.Paths Types.Forall Types.Arrow Types.Universe Types.Empty Types.Unit.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.

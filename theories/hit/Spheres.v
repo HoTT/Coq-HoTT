@@ -3,7 +3,7 @@
 (** * The spheres, in all dimensions. *)
 
 Require Import HoTT.Basics.
-Require Import types.Sigma types.Forall types.Paths types.Bool.
+Require Import Types.Sigma Types.Forall Types.Paths Types.Bool.
 Require Import HProp Misc.
 Require Import hit.Suspension hit.Circle.
 Local Open Scope trunc_scope.

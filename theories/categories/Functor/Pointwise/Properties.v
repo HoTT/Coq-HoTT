@@ -1,6 +1,6 @@
 (** * Properties of pointwise functors *)
 Require Import Category.Core Functor.Core Functor.Pointwise.Core NaturalTransformation.Core NaturalTransformation.Paths Functor.Composition.Core Functor.Identity Functor.Paths.
-Require Import PathGroupoids types.Forall HoTT.Tactics.
+Require Import PathGroupoids Types.Forall HoTT.Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

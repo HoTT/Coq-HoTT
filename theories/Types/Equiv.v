@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
 Require Import HoTT.Basics.
-Require Import types.Prod types.Sigma types.Forall types.Arrow types.Paths types.Record.
+Require Import Types.Prod Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Record.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 

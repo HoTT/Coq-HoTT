@@ -1,6 +1,6 @@
 (** * Product Category *)
 Require Import Category.Core Category.Strict.
-Require Import types.Prod.
+Require Import Types.Prod.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
