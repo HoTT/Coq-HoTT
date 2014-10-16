@@ -44,6 +44,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/Types/Sum.v \
 	$(srcdir)/theories/Types/Equiv.v \
 	$(srcdir)/theories/Types/Universe.v \
+	$(srcdir)/theories/Types/Nat.v \
 	$(srcdir)/theories/Types.v \
 	$(srcdir)/theories/Conjugation.v \
 	$(srcdir)/theories/HProp.v \

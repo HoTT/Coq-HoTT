@@ -6,6 +6,9 @@ Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
 
+Scheme prod_ind := Induction for prod Sort Type.
+Arguments prod_ind {A B} P f p.
+
 (** ** Unpacking *)
 
 (** Sometimes we would like to prove [Q u] where [u : A * B] by writing [u] as a pair [(fst u ; snd u)]. This is accomplished by [unpack_prod]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
@@ -248,47 +251,47 @@ Definition equiv_prod_assoc (A B C : Type) : A * (B * C) <~> (A * B) * C
 (** Ordinary universal mapping properties are expressed as equivalences of sets or spaces of functions.  In type theory, we can go beyond this and express an equivalence of types of *dependent* functions.  Moreover, because the product type can expressed both positively and negatively, it has both a left universal property and a right one. *)
 
 (* First the positive universal property. *)
-Global Instance isequiv_prod_rect `(P : A * B -> Type)
-: IsEquiv (prod_rect P) | 0
+Global Instance isequiv_prod_ind `(P : A * B -> Type)
+: IsEquiv (prod_ind P) | 0
   := BuildIsEquiv
        _ _
-       (prod_rect P)
+       (prod_ind P)
        (fun f x y => f (x, y))
        (fun _ => 1)
        (fun _ => 1)
        (fun _ => 1).
 
-Definition equiv_prod_rect `(P : A * B -> Type)
+Definition equiv_prod_ind `(P : A * B -> Type)
   : (forall (a : A) (b : B), P (a, b)) <~> (forall p : A * B, P p)
-  := BuildEquiv _ _ (prod_rect P) _.
+  := BuildEquiv _ _ (prod_ind P) _.
 
 (* The non-dependent version, which is a special case, is the currying equivalence. *)
 Definition equiv_uncurry (A B C : Type)
   : (A -> B -> C) <~> (A * B -> C)
-  := equiv_prod_rect (fun _ => C).
+  := equiv_prod_ind (fun _ => C).
 
 (* Now the negative universal property. *)
-Definition prod_corect_uncurried `{A : X -> Type} `{B : X -> Type}
+Definition prod_coind_uncurried `{A : X -> Type} `{B : X -> Type}
   : (forall x, A x) * (forall x, B x) -> (forall x, A x * B x)
   := fun fg x => (fst fg x, snd fg x).
 
-Definition prod_corect `(f : forall x:X, A x) `(g : forall x:X, B x)
+Definition prod_coind `(f : forall x:X, A x) `(g : forall x:X, B x)
   : forall x, A x * B x
-  := prod_corect_uncurried (f, g).
+  := prod_coind_uncurried (f, g).
 
-Global Instance isequiv_prod_corect `(A : X -> Type) (B : X -> Type)
-: IsEquiv (@prod_corect_uncurried X A B) | 0
+Global Instance isequiv_prod_coind `(A : X -> Type) (B : X -> Type)
+: IsEquiv (@prod_coind_uncurried X A B) | 0
   := BuildIsEquiv
        _ _
-       (@prod_corect_uncurried X A B)
+       (@prod_coind_uncurried X A B)
        (fun h => (fun x => fst (h x), fun x => snd (h x)))
        (fun _ => 1)
        (fun _ => 1)
        (fun _ => 1).
 
-Definition equiv_prod_corect `(A : X -> Type) (B : X -> Type)
+Definition equiv_prod_coind `(A : X -> Type) (B : X -> Type)
   : ((forall x, A x) * (forall x, B x)) <~> (forall x, A x * B x)
-  := BuildEquiv _ _ (@prod_corect_uncurried X A B) _.
+  := BuildEquiv _ _ (@prod_coind_uncurried X A B) _.
 
 (** ** Products preserve truncation *)
 

@@ -72,7 +72,7 @@ Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}
 
 (** ** Transport *)
 
-(** There are two ways we could define [transport_path_universe]: we could give an explicit definition, or we could reduce it to paths by [equiv_rect] and give an explicit definition there.  The two should be equivalent, but we choose the second for now as it makes the currently needed coherence lemmas easier to prove. *)
+(** There are two ways we could define [transport_path_universe]: we could give an explicit definition, or we could reduce it to paths by [equiv_ind] and give an explicit definition there.  The two should be equivalent, but we choose the second for now as it makes the currently needed coherence lemmas easier to prove. *)
 Definition transport_path_universe_uncurried
            {A B : Type} (f : A <~> B) (z : A)
   : transport (fun X:Type => X) (path_universe f) z = f z.
@@ -91,7 +91,7 @@ Definition transport_path_universe_equiv_path
            {A B : Type} (p : A = B) (z : A)
   : transport_path_universe (equiv_path A B p) z =
     (ap (fun s => transport idmap s z) (eissect _ p))
-  := equiv_rect_comp _ _ _.
+  := equiv_ind_comp _ _ _.
 
 (* This somewhat fancier version is useful when working with HITs. *)
 Definition transport_path_universe'
@@ -122,7 +122,7 @@ Definition transport_path_universe_V_equiv_path `{Funext}
            {A B : Type} (p : A = B) (z : B)
   : transport_path_universe_V (equiv_path A B p) z =
     ap (fun s => transport idmap s z) (inverse2 (eissect _ p))
-  := equiv_rect_comp _ _ _.
+  := equiv_ind_comp _ _ _.
 
 (** And some coherence for it. *)
 
@@ -134,7 +134,7 @@ Definition transport_path_universe_Vp_uncurried `{Funext}
   = transport_Vp idmap (path_universe f) z.
 Proof.
   pattern f.
-  refine (equiv_rect (equiv_path A B) _ _ _); intros p.
+  refine (equiv_ind (equiv_path A B) _ _ _); intros p.
   (* Something slightly sneaky happens here: by definition of [equiv_path], [eissect (equiv_path A B p)] is judgmentally equal to [transport_Vp idmap p].  Thus, we can apply [ap_transport_Vp]. *)
   refine (_ @ ap_transport_Vp p (path_universe (equiv_path A B p))
             (eissect (equiv_path A B) p) z).
@@ -159,27 +159,27 @@ Theorem equiv_induction {U : Type} (P : forall V, U <~> V -> Type) :
   (P U (equiv_idmap U)) -> (forall V (w : U <~> V), P V w).
 Proof.
   intros H0 V w.
-  apply (equiv_rect (equiv_path U V)).
-  exact (paths_rect U (fun Y p => P Y (equiv_path U Y p)) H0 V).
+  apply (equiv_ind (equiv_path U V)).
+  exact (paths_ind U (fun Y p => P Y (equiv_path U Y p)) H0 V).
 Defined.
 
 Definition equiv_induction_comp {U : Type} (P : forall V, U <~> V -> Type)
   (didmap : P U (equiv_idmap U))
   : equiv_induction P didmap U (equiv_idmap U) = didmap
-  := (equiv_rect_comp (P U) _ 1).
+  := (equiv_ind_comp (P U) _ 1).
 
 (** Martin-Lof style *)
 Theorem equiv_induction' (P : forall U V, U <~> V -> Type) :
   (forall T, P T T (equiv_idmap T)) -> (forall U V (w : U <~> V), P U V w).
 Proof.
   intros H0 U V w.
-  apply (equiv_rect (equiv_path U V)).
-  exact (paths_rect' (fun X Y p => P X Y (equiv_path X Y p)) H0 U V).
+  apply (equiv_ind (equiv_path U V)).
+  exact (paths_ind' (fun X Y p => P X Y (equiv_path X Y p)) H0 U V).
 Defined.
 
 Definition equiv_induction'_comp (P : forall U V, U <~> V -> Type)
   (didmap : forall T, P T T (equiv_idmap T)) (U : Type)
   : equiv_induction' P didmap U U (equiv_idmap U) = didmap U
-  := (equiv_rect_comp (P U U) _ 1).
+  := (equiv_ind_comp (P U U) _ 1).
 
 End Univalence.

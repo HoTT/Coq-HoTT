@@ -36,10 +36,10 @@ Section functors.
   : Functor zero C
     := Build_Functor
          zero C
-         (fun x => initial_category_rect _ x)
-         (fun x _ _ => initial_category_rect _ x)
-         (fun x _ _ _ _ => initial_category_rect _ x)
-         (fun x => initial_category_rect _ x).
+         (fun x => initial_category_ind _ x)
+         (fun x _ _ => initial_category_ind _ x)
+         (fun x _ _ _ _ => initial_category_ind _ x)
+         (fun x => initial_category_ind _ x).
 End functors.
 
 Local Arguments to_terminal / .
@@ -62,11 +62,11 @@ Section unique.
   Global Instance trunc_initial_category_function
          `{@IsInitialCategory zero} T
   : Contr (zero -> T) :=
-    let x := {| center x := initial_category_rect _ x |} in x.
+    let x := {| center x := initial_category_ind _ x |} in x.
   Proof.
     intro y.
     apply path_forall; intro x.
-    apply (initial_category_rect _ x).
+    apply (initial_category_ind _ x).
   Defined.
 
   Variable C : PreCategory.
@@ -80,7 +80,7 @@ Section unique.
         intros; apply path_functor'_sig;
         (exists (center _));
         apply path_forall; intro x;
-        apply (initial_category_rect _ x)
+        apply (initial_category_ind _ x)
       ).
   Defined.
 
@@ -95,7 +95,7 @@ Section unique.
              `{@IsInitialCategory zero}
              (F : Functor C zero)
   : IsInitialCategory C
-    := fun P x => initial_category_rect P (F x).
+    := fun P x => initial_category_ind P (F x).
 
   Global Instance trunc_terminal_category
          `{@IsTerminalCategory one H0 H1}

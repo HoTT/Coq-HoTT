@@ -427,10 +427,10 @@ Defined.
 
 (** ** Universal mapping property *)
 
-Global Instance isequiv_paths_rect `{Funext} {A : Type} (a : A)
+Global Instance isequiv_paths_ind `{Funext} {A : Type} (a : A)
   (P : forall x, (a = x) -> Type)
-  : IsEquiv (paths_rect a P) | 0
-  := isequiv_adjointify (paths_rect a P) (fun f => f a 1) _ _.
+  : IsEquiv (paths_ind a P) | 0
+  := isequiv_adjointify (paths_ind a P) (fun f => f a 1) _ _.
 Proof.
   - intros f.
     apply path_forall; intros x.
@@ -439,10 +439,10 @@ Proof.
   - intros u. reflexivity.
 Defined.
 
-Definition equiv_paths_rect `{Funext} {A : Type} (a : A)
+Definition equiv_paths_ind `{Funext} {A : Type} (a : A)
   (P : forall x, (a = x) -> Type)
   : P a 1 <~> forall x p, P x p
-  := BuildEquiv _ _ (paths_rect a P) _.
+  := BuildEquiv _ _ (paths_ind a P) _.
 
 (** ** Truncation *)
 

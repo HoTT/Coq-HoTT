@@ -30,8 +30,8 @@ Module FundamentalPreGroupoidCategoryInternals.
     Definition compose s d d' (m : morphism d d') (m' : morphism s d)
     : morphism s d'.
     Proof.
-      revert m'; apply Trunc_rect_nondep; intro m'.
-      revert m; apply Trunc_rect_nondep; intro m.
+      revert m'; apply Trunc_rec; intro m'.
+      revert m; apply Trunc_rec; intro m.
       apply tr.
       exact (m' @ m).
     Defined.
@@ -61,7 +61,7 @@ Proof.
       repeat match goal with
                | [ m : Trunc _ _ |- _ ]
                  => revert m;
-               apply Trunc_rect;
+               apply Trunc_ind;
                [ intro;
                  match goal with
                    | [ |- IsHSet (?a = ?b :> ?T) ]

@@ -7,6 +7,9 @@
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
 Local Set Typeclasses Strict Resolution.
 
+(** This command prevents Coq from automatically defining the eliminator functions for inductive types.  We will define them ourselves to match the naming scheme of the HoTT Book. *)
+Unset Elimination Schemes.
+
 Definition relation (A : Type) := A -> A -> Type.
 
 Class Reflexive {A} (R : relation A) :=
@@ -114,9 +117,13 @@ Inductive paths {A : Type} (a : A) : A -> Type :=
 
 Arguments idpath {A a} , [A] a.
 
+Scheme paths_ind := Induction for paths Sort Type.
 Arguments paths_ind [A] a P f y p.
+Scheme paths_rec := Minimality for paths Sort Type.
 Arguments paths_rec [A] a P f y p.
-Arguments paths_rect [A] a P f y p.
+
+(* This seems to be necessary for the tactic [induction] to work. *)
+Definition paths_rect := paths_ind.
 
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
@@ -133,7 +140,7 @@ Arguments reflexive_paths / .
 
 (** Our identity type is the Paulin-Mohring style.  We derive the Martin-Lof eliminator. *)
 
-Definition paths_rect' {A : Type} (P : forall (a b : A), (a = b) -> Type)
+Definition paths_ind' {A : Type} (P : forall (a b : A), (a = b) -> Type)
   : (forall (a : A), P a a idpath) -> forall (a b : A) (p : a = b), P a b p.
 Proof.
   intros H ? ? [].
@@ -207,7 +214,7 @@ Notation "p @' q" := (concat p q) (at level 21, left associativity,
   format "'[v' p '/' '@''  q ']'") : long_path_scope.
 
 
-(** An important instance of [paths_rect] is that given any dependent type, one can _transport_ elements of instances of the type along equalities in the base.
+(** An important instance of [paths_ind] is that given any dependent type, one can _transport_ elements of instances of the type along equalities in the base.
 
    [transport P p u] transports [u : P x] to [P y] along [p : x = y]. *)
 Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
@@ -366,6 +373,12 @@ Inductive trunc_index : Type :=
 | minus_two : trunc_index
 | trunc_S : trunc_index -> trunc_index.
 
+Scheme trunc_index_ind := Induction for trunc_index Sort Type.
+Scheme trunc_index_rec := Minimality for trunc_index Sort Type.
+
+(* This seems to be necessary for the tactic [induction] to work. *)
+Definition trunc_index_rect := trunc_index_ind.
+
 (** We will use [Notation] for [trunc_index]es, so define a scope for them here. *)
 Delimit Scope trunc_scope with trunc.
 Bind Scope trunc_scope with trunc_index.
@@ -488,6 +501,9 @@ Ltac path_via mid :=
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
 Inductive Empty : Type1 := .
 
+Scheme Empty_ind := Induction for Empty Sort Type.
+Scheme Empty_rec := Minimality for Empty Sort Type.
+
 Definition not (A:Type) : Type := A -> Empty.
 Notation "~ x" := (not x) : type_scope.
 Hint Unfold not: core.
@@ -509,6 +525,9 @@ Class Asymmetric {A} (R : relation A) :=
 (** Likewise, we put [Unit] here, instead of in [Unit.v], because [Trunc] uses it. *)
 Inductive Unit : Type1 :=
     tt : Unit.
+
+Scheme Unit_ind := Induction for Unit Sort Type.
+Scheme Unit_rec := Minimality for Unit Sort Type.
 
 (** ** Decidable equality *)
 

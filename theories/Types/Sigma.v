@@ -256,12 +256,12 @@ Proof.
   destruct p. reflexivity.
 Defined.
 
-(** Applying a function constructed with [sigT_rect] to a [path_sigma] can be computed.  Technically this computation should probably go by way of a 2-variable [ap], and should be done in the dependently typed case. *)
+(** Applying a function constructed with [sigT_ind] to a [path_sigma] can be computed.  Technically this computation should probably go by way of a 2-variable [ap], and should be done in the dependently typed case. *)
 
-Definition ap_sigT_rectnd_path_sigma {A : Type} (P : A -> Type) {Q : Type}
+Definition ap_sigT_rec_path_sigma {A : Type} (P : A -> Type) {Q : Type}
            (x1 x2:A) (p:x1=x2) (y1:P x1) (y2:P x2) (q:p # y1 = y2)
            (d : forall a, P a -> Q)
-: ap (sigT_rect (fun _ => Q) d) (path_sigma' P p q)
+: ap (sigT_ind (fun _ => Q) d) (path_sigma' P p q)
   = (transport_const p _)^
     @ (ap ((transport (fun _ => Q) p) o (d x1)) (transport_Vp _ p y1))^
 
@@ -437,42 +437,42 @@ Definition equiv_sigma_prod `(Q : (A * B) -> Type)
 (** ** Universal mapping properties *)
 
 (** *** The positive universal property. *)
-Global Instance isequiv_sigT_rect `{P : A -> Type}
+Global Instance isequiv_sigT_ind `{P : A -> Type}
          (Q : sigT P -> Type)
-: IsEquiv (sigT_rect Q) | 0
+: IsEquiv (sigT_ind Q) | 0
   := BuildIsEquiv
        _ _
-       (sigT_rect Q)
+       (sigT_ind Q)
        (fun f x y => f (x;y))
        (fun _ => 1)
        (fun _ => 1)
        (fun _ => 1).
 
-Definition equiv_sigT_rect `{P : A -> Type}
+Definition equiv_sigT_ind `{P : A -> Type}
            (Q : sigT P -> Type)
 : (forall (x:A) (y:P x), Q (x;y)) <~> (forall xy, Q xy)
-  := BuildEquiv _ _ (sigT_rect Q) _.
+  := BuildEquiv _ _ (sigT_ind Q) _.
 
 (** *** The negative universal property. *)
 
-Definition sigT_corect_uncurried
+Definition sigT_coind_uncurried
            `{A : X -> Type} (P : forall x, A x -> Type)
 : { f : forall x, A x & forall x, P x (f x) }
   -> (forall x, sigT (P x))
   := fun fg => fun x => (fg.1 x ; fg.2 x).
 
-Definition sigT_corect
+Definition sigT_coind
            `{A : X -> Type} (P : forall x, A x -> Type)
            (f : forall x, A x) (g : forall x, P x (f x))
 : (forall x, sigT (P x))
-  := sigT_corect_uncurried P (f;g).
+  := sigT_coind_uncurried P (f;g).
 
-Global Instance isequiv_sigT_corect
+Global Instance isequiv_sigT_coind
          `{A : X -> Type} {P : forall x, A x -> Type}
-: IsEquiv (sigT_corect_uncurried P) | 0
+: IsEquiv (sigT_coind_uncurried P) | 0
   := BuildIsEquiv
        _ _
-       (sigT_corect_uncurried P)
+       (sigT_coind_uncurried P)
        (fun h => existT (fun f => forall x, P x (f x))
                         (fun x => (h x).1)
                         (fun x => (h x).2))
@@ -480,11 +480,11 @@ Global Instance isequiv_sigT_corect
        (fun _ => 1)
        (fun _ => 1).
 
-Definition equiv_sigT_corect
+Definition equiv_sigT_coind
            `(A : X -> Type) (P : forall x, A x -> Type)
 : { f : forall x, A x & forall x, P x (f x) }
     <~> (forall x, sigT (P x))
-  := BuildEquiv _ _ (sigT_corect_uncurried P) _.
+  := BuildEquiv _ _ (sigT_coind_uncurried P) _.
 
 (** ** Sigmas preserve truncation *)
 

@@ -36,7 +36,7 @@ Definition isconnected_elim {n} {A} `{IsConnected n A}
            (C : Type) `{IsTrunc n C} (f : A -> C)
 : { c:C & forall a:A, f a = c }.
 Proof.
-  set (ff := Trunc_rect_nondep (n:=n) f).
+  set (ff := Trunc_rec (n:=n) f).
   exists (ff (center _)).
   intros a. symmetry; apply (ap ff (contr (tr _))).
 Defined.
@@ -48,7 +48,7 @@ Proof.
   intros H.
   set (nh := H (Trunc n A) _ (@tr n A)).
   exists (nh .1).
-  apply Trunc_rect. apply trunc_succ.
+  apply Trunc_ind. apply trunc_succ.
   intros; symmetry; apply (nh .2).
 Defined.
 
