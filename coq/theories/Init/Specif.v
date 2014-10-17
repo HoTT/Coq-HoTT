@@ -19,11 +19,14 @@ Require Import Datatypes.
 Local Open Scope identity_scope.
 Require Import Logic.
 Local Set Primitive Projections.
+Local Unset Elimination Schemes.
 
 (** [(sig A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type.
     Similarly for [(sig2 A P Q)], also written [{x:A & (P x) & (Q x)}]. *)
 
 Record sig {A} (P : A -> Type) := exist { proj1_sig : A ; proj2_sig : P proj1_sig }.
+
+Scheme sig_rect := Induction for sig Sort Type.
 
 (** We make the parameters maximally inserted so that we can pass around [pr1] as a function and have it actually mean "first projection" in, e.g., [ap]. *)
 
@@ -33,6 +36,8 @@ Arguments proj2_sig {A P} _ / .
 
 Inductive sig2 (A:Type) (P Q:A -> Type) : Type :=
     exist2 : forall x:A, P x -> Q x -> sig2 P Q.
+
+Scheme sig2_rect := Induction for sig2 Sort Type.
 
 Arguments sig (A P)%type.
 Arguments sig2 (A P Q)%type.
