@@ -503,6 +503,7 @@ Inductive Empty : Type1 := .
 
 Scheme Empty_ind := Induction for Empty Sort Type.
 Scheme Empty_rec := Minimality for Empty Sort Type.
+Definition Empty_rect := Empty_ind.
 
 Definition not (A:Type) : Type := A -> Empty.
 Notation "~ x" := (not x) : type_scope.

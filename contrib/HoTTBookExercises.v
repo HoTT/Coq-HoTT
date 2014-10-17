@@ -426,9 +426,9 @@ Proof.
   - unfold Sect. intros []; simpl.
     + unfold LEM_hProp_Bool. elim (lem Unit_hp _).
       * exact (fun _ => 1).
-      * intro nUnit. destruct (nUnit tt). 
+      * intro nUnit. elim (nUnit tt). 
     + unfold LEM_hProp_Bool. elim (lem False_hp _).
-      * intro fals. destruct fals.
+      * intro fals. elim fals.
       * exact (fun _ => 1).
   - unfold Sect. intro hprop.
     unfold LEM_hProp_Bool.
