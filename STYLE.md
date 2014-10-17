@@ -14,27 +14,26 @@ They are currently in several groups:
   files in the library start with `Require Import HoTT.Basics.` (see
   remarks below on qualified imports).
 
-- `types/*`: This subdirectory contains a file corresponding to each
+- `Types/*`: This subdirectory contains a file corresponding to each
   basic type former (e.g. sigma-types, pi-types, etc.), which proves
   the "computational" rules for the path-types, transport, functorial
-  action, etc. of that type former.  It also contains `types/Record`,
+  action, etc. of that type former.  It also contains `Types/Record`,
   which provides tactics for proving records equivalent to iterated
-  sigma-types.  The univalence axiom is introduced, as a typeclass
-  (see below) in `types/Universe`.  Function extensionality is
-  introduced in `Basics/Overture` for dependency reasons, but
-  developed further in `types/Forall` and `types/Arrow`.  Some type
-  formers are defined in their corresponding `types/` file, while
+  sigma-types, and `Types/Equiv`, which proves that being an
+  equivalence is an hprop.  The univalence axiom is introduced, as a
+  typeclass (see below) in `Types/Universe`.  Function extensionality
+  is introduced in `Basics/Overture` for dependency reasons, but
+  developed further in `Types/Forall` and `Types/Arrow`.  Some type
+  formers are defined in their corresponding `Types/` file, while
   others are defined in `Basics/Overture` for dependency reasons but
-  studied further in their `types/` file.
+  studied further in their `Types/` file.  Files in `Types/` should
+  not depend on anything except `Basics` and other `Types/` files.
 
 - Other files in the root `theories/` directory, such as `Trunc`,
   `TruncType`, `HProp`, `HSet`, `EquivalenceVarieties`,
   `FunextVarieties`, `ObjectClassifier`, `ReflectiveSubuniverse`,
   `Modality`: These contain more advanced facts and theories which may
-  depend on files in `types/`.  Conversely, some files in `types/`
-  unfortunately depend on files in the root, so the dependency
-  structure is kind of complicated; be sure you don't introduce any
-  import loops.  The file `Misc` can be used to help resolve
+  depend on files in `Types/`.  The file `Misc` can be used to help resolve
   potentially circular dependencies, although it should be avoided
   whenever possible.  Note that `make clean; make` will produce an
   error if there is a dependency loop (ordinary `make` may not).
@@ -171,7 +170,7 @@ than a function which happens to be an equivalence.
 We use Coq Records when appropriate for important definitions.  For
 instance, contractibility (`Contr`) and equivalences (`Equiv`) are
 both Record types (in fact, the former is a typeclass).  The file
-`types/Record` contains some tactics for proving semiautomatically
+`Types/Record` contains some tactics for proving semiautomatically
 that record types are equivalent to the corresponding sigma-types, so
 that the relevant general theorems can be applied to them.
 
@@ -181,7 +180,7 @@ Sometimes a two-component record is better defined as a sigma-type,
 especially if it is a "subset type" whose second component is an
 hprop.  For instance, this has the advantage that we do not need new
 names for its constructor and its fields, and we can apply theorems in
-`types/Sigma` to it directly rather than via `issig`.
+`Types/Sigma` to it directly rather than via `issig`.
 
 TODO: Decide about `hProp` and `hSet` and `TruncType` (issue #514).
 
@@ -698,12 +697,13 @@ where they are defined.
   applies a lemma inside of a lambda abstraction, in the goal or in a
   hypothesis.
 
-- `issig`: Defined in `types/Record`, this tactic proves automatically
-  that a record type is equivalent to a nested sigma-type.  Actually,
-  there are separate tactics `issig`, `issig2`, `issig3`,
-  etc. depending on how many fields the record has, but their code is
-  virtually identical.  If you need a version with more fields than
-  yet exists, feel free to add it.
+- `issig`: Defined in `Types/Record`, this tactic proves automatically
+  that a record type is equivalent to a nested sigma-type.  (Actually,
+  there are separate tactics `issig2`, `issig3`, etc. depending on how
+  many fields the record has, but their code is virtually identical,
+  and a tactic notation `issig` invokes the appropriate one
+  automatically.  If you need a version with more fields than yet
+  exists, feel free to add it.)
 
 
 ## Contributing to the library ##
