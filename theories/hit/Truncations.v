@@ -50,7 +50,7 @@ Definition Trunc_rec {n A X} `{IsTrunc n X}
 Section TruncationModality.
   Context (n : trunc_index).
 
-  Local Instance truncation_modality : Modality.
+  Definition Tr : Modality.
   Proof.
     refine (Build_Modality
               (Build_UnitSubuniverse
@@ -67,9 +67,23 @@ Section TruncationModality.
     refine (trunc_equiv _ f); exact _.
   Defined.
 
+  Global Instance inO_tr_istrunc (A : Type) `{IsTrunc n A}
+  : In Tr A.
+  Proof.
+    assumption.
+  Defined.
+
+  Definition istrunc_inO_tr (A : Type) `{In Tr A}
+  : IsTrunc n A.
+  Proof.
+    assumption.
+  Defined.
+
+  Hint Immediate istrunc_inO_tr : typeclass_instances.
+
   Definition trunc_iff_isequiv_truncation (A : Type)
   : IsTrunc n A <-> IsEquiv (@tr n A)
-  := inO_iff_isequiv_O_unit A.
+  := @inO_iff_isequiv_to_O Tr _ A.
 
   Global Instance isequiv_tr A `{IsTrunc n A} : IsEquiv (@tr n A)
   := fst (trunc_iff_isequiv_truncation A) _.
@@ -84,30 +98,31 @@ Section TruncationModality.
 
   (** ** Functoriality *)
 
+  (* This ought to be [O_functor], but currently that would be insufficiently universe polymorphic. *)
   Definition Trunc_functor {X Y} (f : X -> Y)
   : Trunc n X -> Trunc n Y
   := Trunc_rec (tr o f).
 
   Definition Trunc_functor_compose {X Y Z} (f : X -> Y) (g : Y -> Z)
   : Trunc_functor (g o f) == Trunc_functor g o Trunc_functor f
-  := O_functor_compose f g.
+  := O_functor_compose Tr f g.
 
   Definition Trunc_functor_idmap (X : Type)
   : @Trunc_functor X X idmap == idmap
-  := O_functor_idmap X.
+  := O_functor_idmap Tr X.
 
   Definition isequiv_Trunc_functor {X Y} (f : X -> Y) `{IsEquiv _ _ f}
   : IsEquiv (Trunc_functor f)
-  := isequiv_O_functor f.
+  := isequiv_O_functor Tr f.
 
   Definition equiv_Trunc_prod_cmp `{Funext} {X Y}
   : Trunc n (X * Y) <~> Trunc n X * Trunc n Y
-  := equiv_O_prod_cmp X Y.
+  := equiv_O_prod_cmp Tr X Y.
 
 End TruncationModality.
 
 (** This coercion allows us to use truncation indices where a modality is expected and refer to the corresponding truncation modality.  For instance, the general theory of O-connected maps specializes to the theory of n-connected maps. *)
-Coercion truncation_modality : trunc_index >-> Modality.
+Coercion Tr : trunc_index >-> Modality.
 
 (** It's sometimes convenient to use "infinity" to refer to the identity modality in a similar way.  This clashes with some uses in higher topos theory, where "oo-truncated" means instead "hypercomplete", but this has not yet been a big problem. *)
 Notation oo := identity_modality.
