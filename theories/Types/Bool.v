@@ -6,7 +6,7 @@ Require Import Types.Prod Types.Equiv.
 Local Open Scope equiv_scope.
 
 (* coq calls it "bool", we call it "Bool" *)
-Unset Elimination Schemes.
+Local Unset Elimination Schemes.
 Inductive Bool : Type1 :=
   | true : Bool
   | false : Bool.
