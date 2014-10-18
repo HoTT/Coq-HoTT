@@ -169,6 +169,27 @@ Definition cancelL_equiv {A B C} (g : B -> C) {f : A -> B}
   : A <~> B
   := BuildEquiv _ _ f (cancelL_isequiv g).
 
+(** Combining these with [isequiv_compose], we see that equivalences can be transported across commutative squares. *)
+Definition isequiv_commsq {A B C D}
+           (f : A -> B) (g : C -> D) (h : A -> C) (k : B -> D)
+           (p : k o f == g o h)
+           `{IsEquiv _ _ f} `{IsEquiv _ _ h} `{IsEquiv _ _ k}
+: IsEquiv g.
+Proof.
+  refine (@cancelR_isequiv _ _ _ h g _ _).
+  refine (isequiv_homotopic (k o f) (g o h) p).
+Defined.
+
+Definition isequiv_commsq' {A B C D}
+           (f : A -> B) (g : C -> D) (h : A -> C) (k : B -> D)
+           (p : g o h == k o f)
+           `{IsEquiv _ _ g} `{IsEquiv _ _ h} `{IsEquiv _ _ k}
+: IsEquiv f.
+Proof.
+  refine (@cancelL_isequiv _ _ _ k f _ _).
+  refine (isequiv_homotopic (g o h) (k o f) p).
+Defined.
+
 (** Transporting is an equivalence. *)
 Section EquivTransport.
 
