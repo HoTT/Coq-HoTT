@@ -1,8 +1,9 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Comparing definitions of equivalence *)
 
-Require Import HoTT.Basics.
-Require Import Types.Sigma Types.Forall Types.Record Types.Paths Types.Prod Types.Arrow HProp.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HProp.
+Require Import HoTT.Tactics.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -210,6 +211,276 @@ Proof.
   intros ?.  split.
   by exists (f^-1); apply eissect.
   by exists (f^-1); apply eisretr.
+Defined.
+
+(** ** n-Path-split maps *)
+
+Fixpoint PathSplit (n : nat) `(f : A -> B) : Type
+  := match n with
+       | 0 => {g : B -> A & Sect g f}
+       | S n => {g : B -> A & Sect g f} *
+                forall (x y : A), PathSplit n (@ap _ _ f x y)
+     end.
+
+Definition split_pathsplit (n : nat) `{f : A -> B}
+: PathSplit n f -> {g : B -> A & Sect g f}
+:= match n with
+     | 0 => idmap
+     | S _ => fst
+   end.
+
+Definition isequiv_pathsplit (n : nat) `{f : A -> B}
+: PathSplit n.+1 f -> IsEquiv f.
+Proof.
+  intros [[g sg] k].
+  pose (h := fun x y => (split_pathsplit _ (k x y)).1).
+  pose (hs := fun x y => (split_pathsplit _ (k x y)).2
+                         : Sect (h x y) (ap f)).
+  clearbody hs; clearbody h; clear k.
+  apply isequiv_fcontr; intros b.
+  apply contr_inhabited_hprop.
+  2:exact (g b ; sg b).
+  apply hprop_allpath; intros [a p] [a' p'].
+  refine (path_sigma' _ (h a a' (p @ p'^)) _).
+  refine (transport_paths_Fl _ _ @ _).
+  refine ((inverse2 (hs a a' (p @ p'^)) @@ 1) @ _).
+  refine ((inv_pp p p'^ @@ 1) @ _).
+  refine (concat_pp_p _ _ _ @ _).
+  refine ((1 @@ concat_Vp _) @ _).
+  exact ((inv_V p' @@ 1) @ concat_p1 _).
+Defined.
+
+Global Instance contr_pathsplit_isequiv
+           (n : nat) `(f : A -> B) `{IsEquiv _ _ f}
+: Contr (PathSplit n f).
+Proof.
+  generalize dependent B; revert A.
+  induction n as [ | n IHn]; intros A B f ?.
+  - exact (contr_sect_equiv f).
+  - refine contr_prod.
+    exact (contr_sect_equiv f).
+Defined.
+      
+Global Instance ishprop_pathsplit (n : nat) `(f : A -> B)
+: IsHProp (PathSplit n.+1 f).
+Proof.
+  apply hprop_inhabited_contr; intros ps.
+  pose (isequiv_pathsplit n ps).
+  exact _.
+Defined.
+
+Definition equiv_pathsplit_isequiv (n : nat) `(f : A -> B)
+: PathSplit n.+1 f <~> IsEquiv f.
+Proof.
+  refine (equiv_iff_hprop _ _).
+  - apply isequiv_pathsplit.
+  - set (m := n.+1); clearbody m; clear n.
+    generalize dependent B; revert A.
+    induction m as [ | n IHn]; intros A B f ?.
+    + apply center, contr_sect_equiv; assumption.
+    + split.
+      * apply center, contr_sect_equiv; assumption.
+      * intros x y; apply IHn; exact _.
+Defined.
+
+(** And oo-path-split maps *)
+
+Definition ooPathSplit `(f : A -> B) : Type
+  := forall n, PathSplit n f.
+
+Definition isequiv_oopathsplit `{f : A -> B}
+: ooPathSplit f -> IsEquiv f
+  := fun ps => isequiv_pathsplit 0 (ps 1%nat).
+
+Global Instance contr_oopathsplit_isequiv
+           `(f : A -> B) `{IsEquiv _ _ f}
+: Contr (ooPathSplit f).
+Proof.
+  apply contr_forall.
+Defined.
+
+Global Instance ishprop_oopathsplit `(f : A -> B)
+: IsHProp (ooPathSplit f).
+Proof.
+  apply hprop_inhabited_contr; intros ps.
+  pose (isequiv_oopathsplit ps).
+  exact _.
+Defined.
+
+Definition equiv_oopathsplit_isequiv `(f : A -> B)
+: ooPathSplit f <~> IsEquiv f.
+Proof.
+  refine (equiv_iff_hprop _ _).
+  - apply isequiv_oopathsplit.
+  - intros ? n. destruct n as [ | n].
+    + apply center, contr_sect_equiv; exact _.
+    + refine ((equiv_pathsplit_isequiv n f)^-1 _).
+Defined.
+
+(** ** Pointwise path-split maps *)
+
+(** A nice thing about path-splitness is that when considering precomposition equivalences, we can define a version of it using only pointwise paths.  This often avoids the need to introduce funext redexes.
+
+Is there a more concise name for this type?  I haven't been able to think of any way to abbreviate it recognizably. *)
+
+Fixpoint Pointwise_PathSplit_Precompose
+         (n : nat) {A B : Type} (C : B -> Type) (f : A -> B) : Type
+  := match n with
+       | 0 => {rec : (forall a, C (f a)) -> (forall b, C b) &
+                     forall (g : forall a, C (f a)), rec g oD f == g }
+       | S n => {rec : (forall a, C (f a)) -> (forall b, C b) &
+                     forall (g : forall a, C (f a)), rec g oD f == g } *
+                forall (h k : forall b, C b),
+                  Pointwise_PathSplit_Precompose n (fun b => h b = k b) f
+     end.
+
+Lemma equiv_functor_pathsplit (n : nat) {A B C D}
+      (f : A -> B) (g : C -> D) (h : A <~> C) (k : B <~> D)
+      (p : g o h == k o f)
+: PathSplit n f <~> PathSplit n g.
+Proof.
+  destruct n as [|n].
+  - simpl.
+    refine (equiv_functor_sigma'
+              (equiv_compose' (equiv_precompose (equiv_inverse k))
+                              (equiv_postcompose h)) _);
+      intros fi; simpl; unfold compose, Sect.
+    refine (equiv_functor_forall' (equiv_inverse k) _); intros d.
+    refine (equiv_compose' (equiv_concat_l (p (fi (k^-1 d))) d) _).
+    unfold compose; simpl; apply equiv_moveR_equiv_M.
+  - refine (equiv_compose' _ (equiv_pathsplit_isequiv n f)).
+    refine (equiv_compose' (equiv_inverse (equiv_pathsplit_isequiv n g)) _).
+    apply equiv_iff_hprop; intros e.
+    + refine (isequiv_commsq f g h k (fun a => (p a)^)).
+    + refine (isequiv_commsq' f g h k p).
+Defined.
+
+Definition equiv_pointwise_pathsplit (n : nat)
+           {A B : Type} (C : B -> Type) (f : A -> B)
+: Pointwise_PathSplit_Precompose n C f
+  <~> PathSplit n (fun (g : forall b, C b) => g oD f).
+Proof.
+  generalize dependent C.
+  assert (H0 : forall C, Pointwise_PathSplit_Precompose 0 C f
+               <~> PathSplit 0 (fun g : forall b : B, C b => g oD f)).
+  { intros C.
+    refine (equiv_functor_sigma' (equiv_idmap _) _); intros rec.
+    refine (equiv_functor_forall' (equiv_idmap _) _); intros g; simpl.
+    apply equiv_path_forall. }
+  induction n as [ | n IHn]; intros C.
+  - apply H0.
+  - apply equiv_functor_prod'; simpl.
+    + apply H0.
+    + refine (equiv_functor_forall' (equiv_idmap _) _); intros h.
+      refine (equiv_functor_forall' (equiv_idmap _) _); intros k; simpl.
+      refine (equiv_compose' _ (IHn (fun b => h b = k b))).
+      symmetry; refine (equiv_functor_pathsplit n _ _
+                         (equiv_apD10 _ _ _) (equiv_apD10 _ _ _) _).
+      intros []; reflexivity.
+Defined.
+
+Definition isequiv_pointwise_pathsplit (n : nat)
+           {A B : Type} {C : B -> Type} {f : A -> B}
+  : Pointwise_PathSplit_Precompose n.+1 C f
+    -> IsEquiv (fun g => g oD f)
+  := isequiv_pathsplit n o (equiv_pointwise_pathsplit n.+1 C f).
+
+Global Instance ishprop_pointwise_pathsplit (n : nat)
+       {A B : Type} (C : B -> Type) (f : A -> B)
+: IsHProp (Pointwise_PathSplit_Precompose n.+1 C f).
+Proof.
+  (* TODO: Why is this so slow? *)
+  refine (trunc_equiv _ (equiv_pointwise_pathsplit n.+1 C f)^-1).
+Defined.
+
+Definition equiv_pointwise_pathsplit_isequiv (n : nat)
+       {A B : Type} (C : B -> Type) (f : A -> B)
+: Pointwise_PathSplit_Precompose n.+1 C f
+  <~> IsEquiv (fun (g : forall b, C b) => g oD f).
+Proof.
+  etransitivity.
+  - apply equiv_pointwise_pathsplit.
+  - apply equiv_pathsplit_isequiv.
+Defined.
+
+(** Postcomposition with a known equivalence. *)
+Definition pointwise_pathsplit_postcompose' (n : nat)
+           {A B : Type} (C D : B -> Type) (f : A -> B)
+           (g : forall b, C b <~> D b)
+: Pointwise_PathSplit_Precompose n C f
+  -> Pointwise_PathSplit_Precompose n D f.
+Proof.
+  assert (IH0 : forall C D (g : forall b, C b <~> D b),
+                Pointwise_PathSplit_Precompose 0 C f
+                -> Pointwise_PathSplit_Precompose 0 D f).
+  { intros C' D' g'; simpl.
+    refine (functor_sigma
+              (functor_arrow
+                 (functor_forall idmap (fun a => (g' (f a))^-1))
+                 (functor_forall idmap g')) _);
+      intros unf; simpl.
+    refine (functor_forall (functor_forall idmap
+             (fun a => (g' (f a))^-1)) _);
+      intros h; simpl.
+    refine (functor_forall idmap _);
+      intros a; unfold functor_arrow, functor_forall, composeD; simpl.
+    apply moveR_equiv_M. }
+  generalize dependent D; revert C.
+  induction n as [|n IHn]; intros C D g; simpl.
+  - apply (IH0 C D g).
+  - refine (functor_prod (IH0 C D g) _).
+    refine (functor_forall (functor_forall idmap (fun b => (g b)^-1)) _);
+      intros h.
+    refine (functor_forall (functor_forall idmap (fun b => (g b)^-1)) _);
+      intros k; simpl; unfold functor_forall.
+    refine (IHn _ _ _); intros b.
+    apply equiv_inverse, equiv_ap; exact _.
+Defined.
+
+Definition pointwise_pathsplit_postcompose (n : nat)
+           {A B : Type} (C D : B -> Type) (f : A -> B)
+           (g : forall b, C b -> D b) `{forall b, IsEquiv (g b)}
+: Pointwise_PathSplit_Precompose n C f
+  -> Pointwise_PathSplit_Precompose n D f
+:= pointwise_pathsplit_postcompose' n C D f
+     (fun b => BuildEquiv _ _ (g b) _).
+
+(** And their oo-version *)
+
+Definition oo_Pointwise_PathSplit_Precompose
+           {A B : Type} (C : B -> Type) (f : A -> B) : Type
+  := forall n, Pointwise_PathSplit_Precompose n C f.
+
+Definition isequiv_oo_pointwise_pathsplit
+           {A B : Type} (C : B -> Type) (f : A -> B)
+: oo_Pointwise_PathSplit_Precompose C f
+  -> IsEquiv (fun g => g oD f)
+  := fun ps => isequiv_pointwise_pathsplit 0 (ps 1%nat).
+
+Definition equiv_oo_pointwise_pathsplit
+           {A B : Type} (C : B -> Type) (f : A -> B)
+: oo_Pointwise_PathSplit_Precompose C f
+  <~> ooPathSplit (fun (g : forall b, C b) => g oD f).
+Proof.
+  refine (equiv_functor_forall' (equiv_idmap _) _); intros n.
+  apply equiv_pointwise_pathsplit.
+Defined.
+
+Global Instance ishprop_oo_pointwise_pathsplit
+       {A B : Type} (C : B -> Type) (f : A -> B)
+: IsHProp (oo_Pointwise_PathSplit_Precompose C f).
+Proof.
+  refine (trunc_equiv _ (equiv_oo_pointwise_pathsplit C f)^-1).
+Defined.
+
+Definition equiv_oo_pointwise_pathsplit_isequiv 
+           {A B : Type} (C : B -> Type) (f : A -> B)
+: oo_Pointwise_PathSplit_Precompose C f
+  <~> IsEquiv (fun (g : forall b, C b) => g oD f).
+Proof.
+  etransitivity.
+  - apply equiv_oo_pointwise_pathsplit.
+  - apply equiv_oopathsplit_isequiv.
 Defined.
 
 End AssumeFunext.

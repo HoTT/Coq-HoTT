@@ -40,6 +40,10 @@ Definition path_arrow_1 {A B : Type} (f : A -> B)
   : (path_arrow f f (fun x => 1)) = 1
   := eta_path_arrow f f 1.
 
+Definition equiv_ap10 `{Funext} {A B : Type} f g
+: (f = g) <~> (f == g)
+  := BuildEquiv _ _ (@ap10 A B f g) _.
+
 Global Instance isequiv_path_arrow {A B : Type} (f g : A -> B)
   : IsEquiv (path_arrow f g) | 0
   := isequiv_path_forall f g.

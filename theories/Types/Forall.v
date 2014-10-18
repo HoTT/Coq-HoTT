@@ -36,6 +36,10 @@ Definition path_forall_1 `{P : A -> Type} (f : forall x, P x)
 
 (** The identification of the path space of a dependent function space, up to equivalence, is of course just funext. *)
 
+Definition equiv_apD10 `{Funext} {A : Type} (P : A -> Type) f g
+: (f = g) <~> (f == g)
+  := BuildEquiv _ _ (@apD10 A P f g) _.
+
 Global Instance isequiv_path_forall `{P : A -> Type} (f g : forall x, P x)
   : IsEquiv (path_forall f g) | 0
   := @isequiv_inverse _ _ (@apD10 A P f g) _.

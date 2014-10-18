@@ -368,17 +368,49 @@ Proof.
   destruct r, p; simpl. apply isequiv_concat_r.
 Defined.
 
-Definition equiv_ap_l `(f : A -> B) `{IsEquiv A B f} (x : A) (z : B)
-  : (f x = z) <~> (x = f^-1 z).
+Global Instance isequiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+: IsEquiv (@moveR_equiv_M A B f _ x y).
 Proof.
-  transitivity (f x = f (f^-1 z)).
-  apply equiv_concat_r.
-  symmetry.
-  apply (eisretr f).
-  symmetry.
-  apply equiv_ap.
-  assumption.
+  unfold moveR_equiv_M.
+  refine (@isequiv_compose _ _ (ap f) _ _ (fun q => q @ eisretr f y) _).
 Defined.
+
+Definition equiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+  : (x = f^-1 y) <~> (f x = y)
+  := BuildEquiv _ _ (@moveR_equiv_M A B f _ x y) _.
+
+Global Instance isequiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+: IsEquiv (@moveR_equiv_V A B f _ x y).
+Proof.
+  unfold moveR_equiv_V.
+  refine (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => q @ eissect f y) _).
+Defined.
+
+Definition equiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+  : (x = f y) <~> (f^-1 x = y)
+  := BuildEquiv _ _ (@moveR_equiv_V A B f _ x y) _.
+
+Global Instance isequiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+: IsEquiv (@moveL_equiv_M A B f _ x y).
+Proof.
+  unfold moveL_equiv_M.
+  refine (@isequiv_compose _ _ (ap f) _ _ (fun q => (eisretr f y)^ @ q) _).
+Defined.
+
+Definition equiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+  : (f^-1 y = x) <~> (y = f x)
+  := BuildEquiv _ _ (@moveL_equiv_M A B f _ x y) _.
+
+Global Instance isequiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+: IsEquiv (@moveL_equiv_V A B f _ x y).
+Proof.
+  unfold moveL_equiv_V.
+  refine (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => (eissect f y)^ @ q) _).
+Defined.
+
+Definition equiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+  : (f y = x) <~> (y = f^-1 x)
+  := BuildEquiv _ _ (@moveL_equiv_V A B f _ x y) _.
 
 (** *** Dependent paths *)
 
