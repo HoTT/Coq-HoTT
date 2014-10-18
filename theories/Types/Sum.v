@@ -10,6 +10,9 @@ Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
 
+Scheme sum_ind := Induction for sum Sort Type.
+Arguments sum_ind {A B} P f g s : rename.
+
 (** ** CoUnpacking *)
 
 (** Sums are coproducts, so there should be a dual to [unpack_prod].  I'm not sure what it is, though. *)
@@ -156,18 +159,18 @@ Defined.
 
 (** Ordinary universal mapping properties are expressed as equivalences of sets or spaces of functions.  In type theory, we can go beyond this and express an equivalence of types of *dependent* functions. *)
 
-Definition sum_rect_uncurried {A B} (P : A + B -> Type)
+Definition sum_ind_uncurried {A B} (P : A + B -> Type)
            (fg : (forall a, P (inl a)) * (forall b, P (inr b)))
 : forall s, P s
-  := @sum_rect A B P (fst fg) (snd fg).
+  := @sum_ind A B P (fst fg) (snd fg).
 
 (* First the positive universal property.
    Doing this sort of thing without adjointifying will require very careful use of funext. *)
-Global Instance isequiv_sum_rect `{Funext} `(P : A + B -> Type)
-: IsEquiv (sum_rect_uncurried P) | 0.
+Global Instance isequiv_sum_ind `{Funext} `(P : A + B -> Type)
+: IsEquiv (sum_ind_uncurried P) | 0.
 Proof.
   apply (isequiv_adjointify
-           (sum_rect_uncurried P)
+           (sum_ind_uncurried P)
            (fun f => (fun a => f (inl a), fun b => f (inr b))));
   repeat ((exact idpath)
             || intros []
@@ -175,13 +178,13 @@ Proof.
             || apply path_forall).
 Defined.
 
-Definition equiv_sum_rect `{Funext} `(P : A + B -> Type)
-  := BuildEquiv _ _ _ (isequiv_sum_rect P).
+Definition equiv_sum_ind `{Funext} `(P : A + B -> Type)
+  := BuildEquiv _ _ _ (isequiv_sum_ind P).
 
 (* The non-dependent version, which is a special case, is the sum-distributive equivalence. *)
 Definition equiv_sum_distributive `{Funext} (A B C : Type)
 : (A -> C) * (B -> C) <~> (A + B -> C)
-  := equiv_sum_rect (fun _ => C).
+  := equiv_sum_ind (fun _ => C).
 
 (** ** Sums preserve most truncation *)
 

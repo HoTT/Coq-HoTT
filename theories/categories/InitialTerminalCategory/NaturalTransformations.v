@@ -16,8 +16,8 @@ Section NaturalTransformations.
   : NaturalTransformation F G
     := Build_NaturalTransformation
          F G
-         (fun x => initial_category_rect _ x)
-         (fun x _ _ => initial_category_rect _ x).
+         (fun x => initial_category_ind _ x)
+         (fun x _ _ => initial_category_ind _ x).
 
   Global Instance trunc_from_initial
          `{Funext}
@@ -30,7 +30,7 @@ Section NaturalTransformations.
         intros;
         apply path_natural_transformation;
         intro x;
-        exact (initial_category_rect _ x)
+        exact (initial_category_ind _ x)
       ).
   Defined.
 

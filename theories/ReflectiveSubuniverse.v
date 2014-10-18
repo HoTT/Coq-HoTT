@@ -76,16 +76,16 @@ End Unit_Subuniverse.
 Class ReflectiveSubuniverse :=
   {
     rsubu_usubu : UnitSubuniverse ;
-    O_rectnd : forall {P Q : Type} {Q_inO : inO Q} (f : P -> Q), O P -> Q ;
-    O_rectnd_beta : forall {P Q : Type} {Q_inO : inO Q} (f : P -> Q) (x : P),
-                      O_rectnd f (O_unit P x) = f x ;
-    O_rectpaths : forall {P Q : Type} {Q_inO : inO Q}
+    O_rec : forall {P Q : Type} {Q_inO : inO Q} (f : P -> Q), O P -> Q ;
+    O_rec_beta : forall {P Q : Type} {Q_inO : inO Q} (f : P -> Q) (x : P),
+                      O_rec f (O_unit P x) = f x ;
+    O_indpaths : forall {P Q : Type} {Q_inO : inO Q}
                          (g h : O P -> Q) (p : g o O_unit P == h o O_unit P),
                     g == h ;
-    O_rectpaths_beta : forall {P Q : Type} {Q_inO : inO Q}
+    O_indpaths_beta : forall {P Q : Type} {Q_inO : inO Q}
                          (g h : O P -> Q) (p : g o O_unit P == h o O_unit P)
                          (x : P),
-                         O_rectpaths g h p (O_unit P x) = p x
+                         O_indpaths g h p (O_unit P x) = p x
   }.
 
 Global Existing Instance rsubu_usubu.
@@ -99,31 +99,31 @@ Section IsEquiv.
   Global Instance isequiv_o_O_unit 
   : IsEquiv (fun g : O P -> Q => g o O_unit P).
   Proof.
-    refine (BuildIsEquiv _ _ _ O_rectnd _ _ _).
+    refine (BuildIsEquiv _ _ _ O_rec _ _ _).
     - intros f.
       apply path_arrow; intros x.
-      apply O_rectnd_beta.
+      apply O_rec_beta.
     - intros g.
       apply path_arrow; intros x.
-      apply O_rectpaths; intros a.
-      apply O_rectnd_beta.
+      apply O_indpaths; intros a.
+      apply O_rec_beta.
     - intros f; simpl.
       apply moveR_equiv_M; simpl.
       apply path_forall; intros x; symmetry.
       refine (apD10_ap_precompose (O_unit P) _ x @ _).
       refine (apD10_path_arrow _ _ _ (O_unit P x) @ _).
-      exact (O_rectpaths_beta _ f _ x).
+      exact (O_indpaths_beta _ f _ x).
   Defined.
 
   Definition equiv_o_O_unit : (O P -> Q) <~> (P -> Q)
     := BuildEquiv _ _ (fun g : O P -> Q => g o O_unit P) _.
 
-  Global Instance isequiv_O_rectnd
-  : IsEquiv (@O_rectnd subU P Q _)
+  Global Instance isequiv_O_rec
+  : IsEquiv (@O_rec subU P Q _)
   := (@isequiv_inverse _ _ _ isequiv_o_O_unit).
 
-  Definition equiv_O_rectnd : (P -> Q) <~> (O P -> Q)
-    := BuildEquiv _ _ O_rectnd _.
+  Definition equiv_O_rec : (P -> Q) <~> (O P -> Q)
+    := BuildEquiv _ _ O_rec _.
 
 End IsEquiv.
 
@@ -135,15 +135,15 @@ Section ReflectiveSubuniverseFromIsEquiv.
   Let precomp := fun P Q => (fun g : O P -> Q => g o O_unit P).
   Context (H : forall {P Q : Type} {Q_inO : inO Q}, IsEquiv (precomp P Q)).
   
-  Local Definition O_rectnd' {P Q : Type} {Q_inO : inO Q} (f : P -> Q)
+  Local Definition O_rec' {P Q : Type} {Q_inO : inO Q} (f : P -> Q)
   : O P -> Q
   := (precomp P Q)^-1 f.
 
-  Local Definition O_rectnd_beta' {P Q : Type} {Q_inO : inO Q} (f : P -> Q) (x : P)
-  : O_rectnd' f (O_unit P x) = f x
+  Local Definition O_rec_beta' {P Q : Type} {Q_inO : inO Q} (f : P -> Q) (x : P)
+  : O_rec' f (O_unit P x) = f x
   := ap10 (eisretr (precomp P Q) f) x.
 
-  Local Definition O_rectpaths' {P Q : Type} {Q_inO : inO Q}
+  Local Definition O_indpaths' {P Q : Type} {Q_inO : inO Q}
         (g h : O P -> Q) (p : g o O_unit P == h o O_unit P)
   : g == h.
   Proof.
@@ -153,11 +153,11 @@ Section ReflectiveSubuniverseFromIsEquiv.
     apply path_arrow, p.
   Defined.
 
-  Local Definition O_rectpaths_beta' {P Q : Type} {Q_inO : inO Q}
+  Local Definition O_indpaths_beta' {P Q : Type} {Q_inO : inO Q}
         (g h : O P -> Q) (p : g o O_unit P == h o O_unit P) (x : P)
-  : O_rectpaths' g h p (O_unit P x) = p x.
+  : O_indpaths' g h p (O_unit P x) = p x.
   Proof.
-    unfold O_rectpaths'.
+    unfold O_indpaths'.
     refine ((ap10_ap_precompose (O_unit P) _ x)^ @ _).
     refine (apD10 _ x).
     apply moveR_equiv_M.
@@ -170,7 +170,7 @@ Section ReflectiveSubuniverseFromIsEquiv.
   Definition reflective_subuniverse_from_isequiv
   : ReflectiveSubuniverse
   := Build_ReflectiveSubuniverse subU
-       (@O_rectnd') (@O_rectnd_beta') (@O_rectpaths') (@O_rectpaths_beta').
+       (@O_rec') (@O_rec_beta') (@O_indpaths') (@O_indpaths_beta').
 
 End ReflectiveSubuniverseFromIsEquiv.
 
@@ -204,29 +204,29 @@ Defined.
 Section Reflective_Subuniverse.
   Context {subU : ReflectiveSubuniverse}.
 
-  (** Functoriality of [O_rectnd] homotopies *)
-  Definition O_rectnd_homotopy {P Q} {Q_inO : inO Q} (f g : P -> Q) (pi : f == g)
-  : O_rectnd f == O_rectnd g.
+  (** Functoriality of [O_rec] homotopies *)
+  Definition O_rec_homotopy {P Q} {Q_inO : inO Q} (f g : P -> Q) (pi : f == g)
+  : O_rec f == O_rec g.
   Proof.
-    apply O_rectpaths; intro x.
+    apply O_indpaths; intro x.
     etransitivity.
-    { apply O_rectnd_beta. }
+    { apply O_rec_beta. }
     { etransitivity.
       { exact (pi _). }
-      { symmetry; apply O_rectnd_beta. } }
+      { symmetry; apply O_rec_beta. } }
   Defined.
 
   (** If [T] is in the subuniverse, then [O_unit T] is an equivalence. *)
   Global Instance isequiv_O_unit_inO (T : Type) {T_inO : inO T} : IsEquiv (O_unit T).
   Proof.
-    pose (g := O_rectnd idmap).
+    pose (g := O_rec idmap).
     refine (isequiv_adjointify (O_unit T) g _ _).
-    - refine (O_rectpaths (O_unit T o g) idmap _).
+    - refine (O_indpaths (O_unit T o g) idmap _).
       intros x; unfold compose.
       apply ap.
-      apply O_rectnd_beta.
+      apply O_rec_beta.
     - intros x.
-      apply O_rectnd_beta.
+      apply O_rec_beta.
   Defined.
 
   Definition equiv_O_unit (T : Type) {T_inO : inO T} : T <~> O T
@@ -237,27 +237,27 @@ Section Reflective_Subuniverse.
     (** In this section, we see that [O] is a functor. *)
     
     Definition O_functor {A B : Type} (f : A -> B) : O A -> O B
-      := O_rectnd (O_unit B o f).
+      := O_rec (O_unit B o f).
 
     (** Functoriality on composition *)
     Definition O_functor_compose {A B C : Type} (f : A -> B) (g : B -> C)
     : (O_functor (g o f)) == (O_functor g) o (O_functor f).
     Proof.
-      apply O_rectpaths; intros x; unfold compose.
-      refine (O_rectnd_beta (O_unit C o g o f) x @ _).
+      apply O_indpaths; intros x; unfold compose.
+      refine (O_rec_beta (O_unit C o g o f) x @ _).
       transitivity (O_functor g (O_unit B (f x))).
-      - symmetry. exact (O_rectnd_beta (O_unit C o g) (f x)).
+      - symmetry. exact (O_rec_beta (O_unit C o g) (f x)).
       - apply ap; symmetry.
-        exact (O_rectnd_beta (O_unit B o f) x).
+        exact (O_rec_beta (O_unit B o f) x).
     Defined.
 
     (** Functoriality on homotopies *)
     Definition O_functor_homotopy {A B : Type} (f g : A -> B) (pi : f == g)
     : O_functor f == O_functor g.
     Proof.
-      refine (O_rectpaths _ _ _); intros x.
-      refine (O_rectnd_beta (O_unit B o f) x @ _).
-      refine (_ @ (O_rectnd_beta (O_unit B o g) x)^).
+      refine (O_indpaths _ _ _); intros x.
+      refine (O_rec_beta (O_unit B o f) x @ _).
+      refine (_ @ (O_rec_beta (O_unit B o g) x)^).
       unfold compose; apply ap.
       apply pi.
     Defined.
@@ -280,20 +280,20 @@ Section Reflective_Subuniverse.
     Definition O_functor_idmap (A : Type)
     : @O_functor A A idmap == idmap.
     Proof.
-      refine (O_rectpaths _ _ _); intros x.
-      apply O_rectnd_beta.
+      refine (O_indpaths _ _ _); intros x.
+      apply O_rec_beta.
     Qed.
 
     (** Naturality of [O_unit] *)
     Definition O_unit_natural {A B} (f : A -> B)
     : (O_functor f) o (O_unit A) == (O_unit B) o f
-    := (O_rectnd_beta _).
+    := (O_rec_beta _).
 
     (** The pointed endofunctor ([O],[O_unit]) is well-pointed *)
     Definition O_functor_wellpointed (A : Type)
     : O_functor (O_unit A) == O_unit (O A).
     Proof.
-      refine (O_rectpaths _ _ _); intros x.
+      refine (O_indpaths _ _ _); intros x.
       apply O_unit_natural.
     Defined.
 
@@ -318,15 +318,15 @@ Section Reflective_Subuniverse.
     : O A <~> O B
     := BuildEquiv _ _ (O_functor f) _.
 
-    (** Postcomposition respects [O_rectnd] *)
-    Definition O_rectnd_postcompose {A B C} {B_inO : inO B} {C_inO : inO C}
+    (** Postcomposition respects [O_rec] *)
+    Definition O_rec_postcompose {A B C} {B_inO : inO B} {C_inO : inO C}
                (f : A -> B) (g : B -> C)
-    : g o O_rectnd f == O_rectnd (g o f).
+    : g o O_rec f == O_rec (g o f).
     Proof.
-      refine (O_rectpaths _ _ _); intros x; unfold compose.
+      refine (O_indpaths _ _ _); intros x; unfold compose.
       transitivity (g (f x)).
-      - apply ap. apply O_rectnd_beta.
-      - symmetry. exact (O_rectnd_beta (g o f) x).
+      - apply ap. apply O_rec_beta.
+      - symmetry. exact (O_rec_beta (g o f) x).
     Defined.
 
   End Functor.
@@ -375,7 +375,7 @@ Section Reflective_Subuniverse.
       unfold Sect; intros H.
       apply inO_isequiv_O_unit.
       apply isequiv_adjointify with (g:=mu).
-      - refine (O_rectpaths (O_unit T o mu) idmap _).
+      - refine (O_indpaths (O_unit T o mu) idmap _).
         intros x; exact (ap (O_unit T) (H x)).
       - exact H.
     Defined.
@@ -414,7 +414,7 @@ Section Reflective_Subuniverse.
                (f : A -> B)
     : (O_unit B)^-1 o (O_functor f) == f o (O_unit A)^-1.
     Proof.
-      refine (O_rectpaths _ _ _); intros x.
+      refine (O_indpaths _ _ _); intros x.
       unfold compose; apply moveR_equiv_V.
       refine (O_unit_natural f x @ _).
       unfold compose; do 2 apply ap.
@@ -445,7 +445,7 @@ Section Reflective_Subuniverse.
     Proof.
       exists (O A ; (O_unit A ; (_ , _))).
       intros [OA [Ou [? ?]]].
-      pose (f := O_rectnd Ou : O A -> OA).
+      pose (f := O_rec Ou : O A -> OA).
       pose (g := (O_functor Ou)^-1 o O_unit OA : (OA -> O A)).
       assert (IsEquiv f).
       { refine (isequiv_adjointify f g _ _).
@@ -460,10 +460,10 @@ Section Reflective_Subuniverse.
           set (y := (O_functor Ou)^-1 x).
           transitivity (O_functor Ou y); try apply eisretr.
           unfold f, O_functor, compose.
-          apply O_rectnd_postcompose.
-        - refine (O_rectpaths _ _ _); intros x.
+          apply O_rec_postcompose.
+        - refine (O_indpaths _ _ _); intros x.
           unfold f, compose.
-          rewrite O_rectnd_beta. unfold g.
+          rewrite O_rec_beta. unfold g.
           apply moveR_equiv_V.
           symmetry; apply O_unit_natural.
       }
@@ -474,7 +474,7 @@ Section Reflective_Subuniverse.
         apply path_arrow; intros x.
         rewrite transport_arrow_fromconst.
         rewrite transport_path_universe.
-        unfold f; apply O_rectnd_beta.
+        unfold f; apply O_rec_beta.
     Qed.
 
   End OInverts.
@@ -497,12 +497,12 @@ Section Reflective_Subuniverse.
     Proof.
       intro H.
       pose (ev := fun x => (fun (f:(forall x, (B x))) => f x)).
-      pose (zz := fun x:A => O_rectnd (ev x)).
+      pose (zz := fun x:A => O_rec (ev x)).
       apply inO_unit_retract with (mu := fun z => fun x => zz x z).
       intro phi.
       unfold zz, ev; clear zz; clear ev.
       apply path_forall; intro x.
-      exact (O_rectnd_beta (fun f : forall x0, (B x0) => f x) phi).
+      exact (O_rec_beta (fun f : forall x0, (B x0) => f x) phi).
     Defined.
 
     Global Instance inO_arrow {fs : Funext} (A B : Type) {B_inO : inO B}
@@ -517,10 +517,10 @@ Section Reflective_Subuniverse.
     : inO (A*B).
     Proof.
       apply inO_unit_retract with
-        (mu := fun X => (@O_rectnd _ (A * B) A _ fst X , O_rectnd snd X)).
+        (mu := fun X => (@O_rec _ (A * B) A _ fst X , O_rec snd X)).
       intros [a b]; apply path_prod; simpl.
-      - exact (O_rectnd_beta fst (a,b)). 
-      - exact (O_rectnd_beta snd (a,b)).
+      - exact (O_rec_beta fst (a,b)). 
+      - exact (O_rec_beta snd (a,b)).
     Defined.
 
     (** We show that [OA*OB] has the same universal property as [O(A*B)] *)
@@ -542,25 +542,25 @@ Section Reflective_Subuniverse.
 
     (** From this, we can define the comparison map for products, and show that precomposing with it is also an equivalence. *)
     Definition O_prod_cmp (A B : Type) : O (A * B) -> O A * O B
-      := O_rectnd (O_prod_unit A B).
+      := O_rec (O_prod_unit A B).
 
     Global Instance isequiv_O_prod_cmp (A B : Type)
     : IsEquiv (O_prod_cmp A B).
     Proof.
       refine (isequiv_adjointify _ _ _ _).
-      { apply prod_rect; intro a.
-        apply O_rectnd; intro b; revert a.
-        apply O_rectnd; intro a.
+      { apply prod_ind; intro a.
+        apply O_rec; intro b; revert a.
+        apply O_rec; intro a.
         apply O_unit.
         exact (a, b). }
-      { unfold prod_rect, O_prod_cmp, O_prod_unit.
+      { unfold prod_ind, O_prod_cmp, O_prod_unit.
         intros [oa ob].
-        revert ob; refine (O_rectpaths _ _ _); intros b.
-        revert oa; refine (O_rectpaths _ _ _); intros a.
-        cbn. abstract (repeat rewrite O_rectnd_beta; reflexivity). }
-      { unfold prod_rect, O_prod_cmp, O_prod_unit.
-        refine (O_rectpaths _ _ _); intros [a b]; cbn.
-        abstract (repeat (rewrite O_rectnd_beta; cbn); reflexivity). }
+        revert ob; refine (O_indpaths _ _ _); intros b.
+        revert oa; refine (O_indpaths _ _ _); intros a.
+        cbn. abstract (repeat rewrite O_rec_beta; reflexivity). }
+      { unfold prod_ind, O_prod_cmp, O_prod_unit.
+        refine (O_indpaths _ _ _); intros [a b]; cbn.
+        abstract (repeat (rewrite O_rec_beta; cbn); reflexivity). }
     Defined.
 
     Definition isequiv_O_prod_cmp_precompose
@@ -589,16 +589,16 @@ Section Reflective_Subuniverse.
         pose (Z := sigT B).
         assert (inO Z). apply H; exact _.
         pose (g' := (fun a:A => (O_unit A a ; g a)) : A -> Z).
-        pose (f' := O_rectnd g').
-        pose (eqf := (O_rectnd_beta g')  : f' o O_unit A == g').
-        pose (eqid := O_rectpaths (pr1 o f') idmap
+        pose (f' := O_rec g').
+        pose (eqf := (O_rec_beta g')  : f' o O_unit A == g').
+        pose (eqid := O_indpaths (pr1 o f') idmap
                                   (fun x => ap pr1 (eqf x))).
         exists (fun z => transport B (eqid z) ((f' z).2)); intros a.
-        unfold eqid. rewrite O_rectpaths_beta.
-        exact (pr2_path (O_rectnd_beta g' a)).
+        unfold eqid. rewrite O_indpaths_beta.
+        exact (pr2_path (O_rec_beta g' a)).
       - intros H A B ? ?.
-        pose (h := fun x => @O_rectnd _ ({x:A & B x}) A _ pr1 x).
-        pose (p := (fun z => O_rectnd_beta pr1 z)
+        pose (h := fun x => @O_rec _ ({x:A & B x}) A _ pr1 x).
+        pose (p := (fun z => O_rec_beta pr1 z)
                    : h o (O_unit _) == pr1).
         pose (g := fun z => (transport B ((p z)^) z.2)).
         simpl in *.
@@ -619,11 +619,11 @@ Section Reflective_Subuniverse.
     Proof.
       refine (inO_unit_retract _ _ _); intro u.
       - assert (p : (fun _ : O (x=y) => x) == (fun _=> y)). 
-        { refine (O_rectpaths _ _ _); unfold compose; simpl.
+        { refine (O_indpaths _ _ _); unfold compose; simpl.
           intro v; exact v. }
         exact (p u).
       - hnf.
-        rewrite O_rectpaths_beta; reflexivity.
+        rewrite O_indpaths_beta; reflexivity.
     Qed.
     
   End Types.
@@ -631,38 +631,38 @@ Section Reflective_Subuniverse.
   Section Monad.
 
     Definition O_monad_mult A : O (O A) -> O A
-      := O_rectnd idmap.
+      := O_rec idmap.
 
     Definition O_monad_mult_natural {A B} (f : A -> B)
     : O_functor f o O_monad_mult A == O_monad_mult B o O_functor (O_functor f).
     Proof.
-      apply O_rectpaths; intros x; unfold compose, O_monad_mult.
+      apply O_indpaths; intros x; unfold compose, O_monad_mult.
       simpl rewrite (O_unit_natural (O_functor f) x).
-      rewrite (O_rectnd_beta idmap x).
-      rewrite (O_rectnd_beta idmap (O_functor f x)).
+      rewrite (O_rec_beta idmap x).
+      rewrite (O_rec_beta idmap (O_functor f x)).
       reflexivity.
     Qed.
 
     Definition O_monad_unitlaw1 A
     : O_monad_mult A o (O_unit (O A)) == idmap.
     Proof.
-      apply O_rectpaths; intros x; unfold compose, O_monad_mult.
-      exact (O_rectnd_beta idmap (O_unit A x)).
+      apply O_indpaths; intros x; unfold compose, O_monad_mult.
+      exact (O_rec_beta idmap (O_unit A x)).
     Defined.
 
     Definition O_monad_unitlaw2 A
     : O_monad_mult A o (O_functor (O_unit A)) == idmap.
     Proof.
-      apply O_rectpaths; intros x; unfold O_monad_mult, O_functor, compose.
-      repeat rewrite O_rectnd_beta.
+      apply O_indpaths; intros x; unfold O_monad_mult, O_functor, compose.
+      repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
 
     Definition O_monad_mult_assoc A
     : O_monad_mult A o O_monad_mult (O A) == O_monad_mult A o O_functor (O_monad_mult A).
     Proof.
-      apply O_rectpaths; intros x; unfold O_monad_mult, O_functor, compose.
-      repeat rewrite O_rectnd_beta.
+      apply O_indpaths; intros x; unfold O_monad_mult, O_functor, compose.
+      repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
 
@@ -672,18 +672,18 @@ Section Reflective_Subuniverse.
     Context {fs : Funext} {rep : Replete subU}.
 
     Definition O_monad_strength A B : A * O B -> O (A * B)
-      := fun aob => O_rectnd (fun b a => O_unit (A*B) (a,b)) (snd aob) (fst aob).
+      := fun aob => O_rec (fun b a => O_unit (A*B) (a,b)) (snd aob) (fst aob).
 
     Definition O_monad_strength_natural A A' B B' (f : A -> A') (g : B -> B')
     : O_functor (functor_prod f g) o O_monad_strength A B ==
       O_monad_strength A' B' o functor_prod f (O_functor g).
     Proof.
       intros [a ob]. revert a. apply ap10.
-      revert ob; apply O_rectpaths.
+      revert ob; apply O_indpaths.
       intros b; simpl.
       apply path_arrow; intros a.
       unfold O_monad_strength, O_functor, compose; simpl.
-      repeat rewrite O_rectnd_beta.
+      repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
       
@@ -692,8 +692,8 @@ Section Reflective_Subuniverse.
     : O_functor (@snd Unit A) o O_monad_strength Unit A == @snd Unit (O A).
     Proof.
       intros [[] oa]; revert oa.
-      apply O_rectpaths; intros x; unfold O_monad_strength, O_functor, compose. simpl. 
-      repeat rewrite O_rectnd_beta.
+      apply O_indpaths; intros x; unfold O_monad_strength, O_functor, compose. simpl. 
+      repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
 
@@ -702,7 +702,7 @@ Section Reflective_Subuniverse.
     Proof.
       intros [a b].
       unfold O_monad_strength, functor_prod, compose. simpl. 
-      repeat rewrite O_rectnd_beta.
+      repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
 
@@ -712,11 +712,11 @@ Section Reflective_Subuniverse.
     Proof.
       intros [[a b] oc].
       revert a; apply ap10. revert b; apply ap10.
-      revert oc; apply O_rectpaths.
+      revert oc; apply O_indpaths.
       intros c; simpl.
       apply path_arrow; intros b. apply path_arrow; intros a.
       unfold O_monad_strength, O_functor, functor_prod, compose. simpl. 
-      repeat rewrite O_rectnd_beta.
+      repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
 
@@ -725,10 +725,10 @@ Section Reflective_Subuniverse.
       O_monad_strength A B o functor_prod idmap (O_monad_mult B).
     Proof.
       intros [a oob]. revert a; apply ap10.
-      revert oob; apply O_rectpaths. apply O_rectpaths.
+      revert oob; apply O_indpaths. apply O_indpaths.
       intros b; simpl. apply path_arrow; intros a.
       unfold O_monad_strength, O_functor, O_monad_mult, functor_prod, compose. simpl. 
-      repeat (rewrite O_rectnd_beta; simpl).
+      repeat (rewrite O_rec_beta; simpl).
       reflexivity.
     Qed.
       

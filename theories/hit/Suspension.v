@@ -25,7 +25,7 @@ Global Arguments South {X}.
 Axiom merid : forall (X : Type) (x : X), North = South :> Susp X.
 Global Arguments merid {X} x.
 
-Definition Susp_rect {X : Type} (P : Susp X -> Type)
+Definition Susp_ind {X : Type} (P : Susp X -> Type)
   (H_N : P North) (H_S : P South)
   (H_merid : forall x:X, (merid x) # H_N = H_S)
 : forall (y:Susp X), P y
@@ -36,40 +36,40 @@ Axiom Susp_comp_merid : forall {X : Type} (P : Susp X -> Type)
   (H_N : P North) (H_S : P South)
   (H_merid : forall x:X, (merid x) # H_N = H_S)
   (x:X),
-apD (Susp_rect P H_N H_S H_merid) (merid x) = H_merid x.
+apD (Susp_ind P H_N H_S H_merid) (merid x) = H_merid x.
 
 End Suspension.
 
 (* ** Non-dependent eliminator. *)
 
-Definition Susp_rect_nd {X Y : Type}
+Definition Susp_rec {X Y : Type}
   (H_N H_S : Y) (H_merid : X -> H_N = H_S)
 : Susp X -> Y.
 Proof.
-  apply (Susp_rect (fun _ => Y) H_N H_S).
+  apply (Susp_ind (fun _ => Y) H_N H_S).
   intros x. exact (transport_const _ _ @ H_merid x).
 Defined.
 
 Definition Susp_comp_nd_merid {X Y : Type}
   {H_N H_S : Y} {H_merid : X -> H_N = H_S} (x:X)
-: ap (Susp_rect_nd H_N H_S H_merid) (merid x) = H_merid x.
+: ap (Susp_rec H_N H_S H_merid) (merid x) = H_merid x.
 Proof.
   apply (cancelL (transport_const (merid x) H_N)).
-  transitivity (apD (Susp_rect_nd H_N H_S H_merid) (merid x)).
-  symmetry; refine (apD_const (Susp_rect_nd H_N H_S H_merid) _).
+  transitivity (apD (Susp_rec H_N H_S H_merid) (merid x)).
+  symmetry; refine (apD_const (Susp_rec H_N H_S H_merid) _).
   refine (Susp_comp_merid (fun _ : Susp X => Y) _ _ _ _).
 Defined.
 
 (** ** Eta-rule. *)
 
-(** The eta-rule for suspension states that any function out of a suspension is equal to one defined by [Susp_rect] in the obvious way. We give it first in a weak form, producing just a pointwise equality, and then turn this into an actual equality using [Funext]. *)
+(** The eta-rule for suspension states that any function out of a suspension is equal to one defined by [Susp_ind] in the obvious way. We give it first in a weak form, producing just a pointwise equality, and then turn this into an actual equality using [Funext]. *)
 Definition Susp_eta_homot {X : Type} {P : Susp X -> Type} (f : forall y, P y)
-  : f == Susp_rect P (f North) (f South) (fun x => apD f (merid x)).
+  : f == Susp_ind P (f North) (f South) (fun x => apD f (merid x)).
 Proof.
-  unfold pointwise_paths. refine (Susp_rect _ 1 1 _).
+  unfold pointwise_paths. refine (Susp_ind _ 1 1 _).
   intros x.
   refine (transport_paths_FlFr_D
-    (g := Susp_rect P (f North) (f South) (fun x : X => apD f (merid x)))
+    (g := Susp_ind P (f North) (f South) (fun x : X => apD f (merid x)))
     _ _ @ _); simpl.
   apply moveR_pM. apply (concat (concat_p1 _)), (concatR (concat_1p _)^).
   apply ap, inverse. refine (Susp_comp_merid _ _ _ _ _).
@@ -77,7 +77,7 @@ Defined.
 
 Definition Susp_eta `{Funext}
   {X : Type} {P : Susp X -> Type} (f : forall y, P y)
-  : f = Susp_rect P (f North) (f South) (fun x => apD f (merid x))
+  : f = Susp_ind P (f North) (f South) (fun x => apD f (merid x))
 := path_forall _ _ (Susp_eta_homot f).
 
 (** ** Nullhomotopies of maps out of suspensions *)
@@ -87,18 +87,18 @@ Definition nullhomot_susp_from_paths {X Z: Type} (f : Susp X -> Z)
 : NullHomotopy f.
 Proof.
   exists (f North).
-  refine (Susp_rect _ 1 n.1^ _); intros x.
+  refine (Susp_ind _ 1 n.1^ _); intros x.
   refine (transport_paths_Fl _ _ @ _).
   apply (concat (concat_p1 _)), ap. apply n.2.
 Defined.
 
 Definition nullhomot_paths_from_susp {X Z: Type} (H_N H_S : Z) (f : X -> H_N = H_S)
-  (n : NullHomotopy (Susp_rect_nd H_N H_S f))
+  (n : NullHomotopy (Susp_rec H_N H_S f))
 : NullHomotopy f.
 Proof.
   exists (n.2 North @ (n.2 South)^).
   intro x. apply moveL_pV.
-  transitivity (ap (Susp_rect_nd H_N H_S f) (merid x) @ n.2 South).
+  transitivity (ap (Susp_rec H_N H_S f) (merid x) @ n.2 South).
   apply whiskerR, inverse, Susp_comp_nd_merid.
   refine (concat_Ap n.2 (merid x) @ _).
   apply (concatR (concat_p1 _)), whiskerL. apply ap_const.

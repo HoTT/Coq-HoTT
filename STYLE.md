@@ -142,7 +142,56 @@ and no obvious concise way to distinguish them, one of them can be
 given a prime suffix, e.g. we have `path_sigma` and `path_sigma'`.
 Do this with caution.
 
-TODO: Induction and recursion principles (issue #517)
+### Induction and recursion principles ###
+
+In conformity with the HoTT Book, the induction principle of a
+(perhaps higher) inductive type `thing` (that is, its dependent
+eliminator) should be named `thing_ind`, while its recursion principle
+(non-dependent eliminator) should be named `thing_rec`.
+
+However, by default, when you declare a (non-higher) inductive type,
+Coq automatically defines induction principles named `thing_rect`,
+`thing_rec`, and `thing_ind` that vary only in the sort of their
+target (`Type`, `Set`, or `Prop`).  In order to turn this off, you
+must say `Local Unset Elimination Schemes` before defining an
+inductive type.  You can then have Coq automatically generate the
+correctly named induction principles with
+
+```coq
+Scheme thing_ind := Induction for thing Sort Type.
+Scheme thing_rec := Minimality for thing Sort Type.
+```
+
+Unfortunately, Coq's built-in tactics `induction` and `elim` assume
+that the induction principles are named in Coq's default manner.  We
+are hoping that this will be [fixed eventually][inductionbug], but in
+the meantime, to make those tactics work, you need to also say
+
+```coq
+Definition thing_rect := thing_ind.
+```
+
+(We have not turned on `Global Unset Elimination Schemes` because this
+would cause `induction` and `elim` to fail for all newly defined
+inductive types unless these `Scheme` commands are also given, which
+might be an unpleasant and confusing surprise to people who haven't
+read (or don't remember) these instructions.)
+
+Note that elimination schemes are always off for `Private Inductive`
+types such as are used to hack HITs.  For HITs, you must always define
+both the induction and recursion principles by hand, as described
+in the appropriate section below.
+
+Some types have a "coinduction" or "corecursion" principle; these
+should have instead the suffix `_coind` or `_corec`.
+
+Finally, a type will often have a universal property expressed by
+saying that its induction or recursion (or coinduction or corecursion)
+principle is an equivalence.  These should be named according to the
+naming conventions for equivalences below, e.g. `isequiv_thing_rec`
+and `equiv_thing_rec`.
+
+[inductionbug]: https://coq.inria.fr/bugs/show_bug.cgi?id=3745
 
 ### Path algebra functions ###
 

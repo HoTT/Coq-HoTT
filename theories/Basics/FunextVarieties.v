@@ -75,12 +75,12 @@ Section Homotopies.
   Context (Q : forall g (h : f == g), Type).
   Context (d : Q f idhtpy).
 
-  Definition htpy_rect g h : Q g h
+  Definition htpy_ind g h : Q g h
     := @transport _ (fun gh => Q gh.1 gh.2) (f;idhtpy) (g;h)
          (@path_contr _ _ _ _) d.
 
   (** The computation rule, of course, is only propositional. *)
-  Definition htpy_rect_beta : htpy_rect f idhtpy = d
+  Definition htpy_ind_beta : htpy_ind f idhtpy = d
     := transport (fun p : (f;idhtpy) = (f;idhtpy) =>
                     transport (fun gh => Q gh.1 gh.2) p d = d)
          (@path2_contr _ _ _ _
@@ -94,11 +94,11 @@ Theorem WeakFunext_implies_Funext : WeakFunext -> Funext_type.
 Proof.
   intros wf; hnf; intros A B f g.
   refine (isequiv_adjointify (@apD10 A B f g)
-    (htpy_rect wf f (fun g' _ => f = g') idpath g) _ _).
-  revert g; refine (htpy_rect wf _ _ _).
-    refine (ap _ (htpy_rect_beta wf _ _ _)).
+    (htpy_ind wf f (fun g' _ => f = g') idpath g) _ _).
+  revert g; refine (htpy_ind wf _ _ _).
+    refine (ap _ (htpy_ind_beta wf _ _ _)).
   intros h; destruct h.
-    refine (htpy_rect_beta wf _ _ _).
+    refine (htpy_ind_beta wf _ _ _).
 Defined.
 
 (** We add some hints to the typeclass database, so if we happen to have hypotheses of [WeakFunext] or [NaiveFunext] floating around, we get [Funext] automatically. *)
