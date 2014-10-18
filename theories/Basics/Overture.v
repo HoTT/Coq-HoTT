@@ -7,7 +7,7 @@
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
 Local Set Typeclasses Strict Resolution.
 
-(** This command prevents Coq from automatically defining the eliminator functions for inductive types.  We will define them ourselves to match the naming scheme of the HoTT Book.  In principle we ought to make this [Global], but unfortunately the tactics [induction] and [elim] assume that the eliminators are named in Coq's way, e.g. [thing_rect], so making it global could cause unpleasant surprises for people defining new inductive types.  However, when you do define your own inductive types you are encouraged to also do [Local Unset Elimination Schemes] and then use [Scheme] to define [thing_ind], [thing_rec], and (for compatibility with [induction] and [elim]) [thing_rect], as we have done below for [paths], [Empty], [Unit], etc.  *)
+(** This command prevents Coq from automatically defining the eliminator functions for inductive types.  We will define them ourselves to match the naming scheme of the HoTT Book.  In principle we ought to make this [Global], but unfortunately the tactics [induction] and [elim] assume that the eliminators are named in Coq's way, e.g. [thing_rect], so making it global could cause unpleasant surprises for people defining new inductive types.  However, when you do define your own inductive types you are encouraged to also do [Local Unset Elimination Schemes] and then use [Scheme] to define [thing_ind], [thing_rec], and (for compatibility with [induction] and [elim]) [thing_rect], as we have done below for [paths], [Empty], [Unit], etc.  We are hoping that this will be fixed eventually; see https://coq.inria.fr/bugs/show_bug.cgi?id=3745.  *)
 Local Unset Elimination Schemes.
 
 Definition relation (A : Type) := A -> A -> Type.
@@ -122,7 +122,7 @@ Arguments paths_ind [A] a P f y p.
 Scheme paths_rec := Minimality for paths Sort Type.
 Arguments paths_rec [A] a P f y p.
 
-(* This seems to be necessary for the tactic [induction] to work. *)
+(* See comment above about the tactic [induction]. *)
 Definition paths_rect := paths_ind.
 
 Notation "x = y :> A" := (@paths A x y) : type_scope.
@@ -376,7 +376,7 @@ Inductive trunc_index : Type :=
 Scheme trunc_index_ind := Induction for trunc_index Sort Type.
 Scheme trunc_index_rec := Minimality for trunc_index Sort Type.
 
-(* This seems to be necessary for the tactic [induction] to work. *)
+(* See comment above about the tactic [induction]. *)
 Definition trunc_index_rect := trunc_index_ind.
 
 (** We will use [Notation] for [trunc_index]es, so define a scope for them here. *)

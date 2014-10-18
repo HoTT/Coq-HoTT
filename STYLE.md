@@ -164,9 +164,9 @@ Scheme thing_rec := Minimality for thing Sort Type.
 ```
 
 Unfortunately, Coq's built-in tactics `induction` and `elim` assume
-that the induction principles are named in Coq's default manner.
-Thus, in order to make those tactics work with `thing`, you can also
-say
+that the induction principles are named in Coq's default manner.  We
+are hoping that this will be [fixed eventually][inductionbug], but in
+the meantime, to make those tactics work, you need to also say
 
 ```coq
 Definition thing_rect := thing_ind.
@@ -191,6 +191,8 @@ saying that its induction or recursion (or coinduction or corecursion)
 principle is an equivalence.  These should be named according to the
 naming conventions for equivalences below, e.g. `isequiv_thing_rec`
 and `equiv_thing_rec`.
+
+[inductionbug]: https://coq.inria.fr/bugs/show_bug.cgi?id=3745
 
 ### Path algebra functions ###
 
