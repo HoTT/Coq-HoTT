@@ -30,14 +30,14 @@ They are currently in several groups:
 - Other files in the root `theories/` directory, such as `Trunc`,
   `TruncType`, `HProp`, `HSet`, `EquivalenceVarieties`,
   `FunextVarieties`, `ObjectClassifier`, `ReflectiveSubuniverse`,
-  `Modality`: These contain more advanced facts and theories which may
-  depend on files in `types/`.  Conversely, some files in `types/`
-  unfortunately depend on files in the root, so the dependency
-  structure is kind of complicated; be sure you don't introduce any
-  import loops.  The file `Misc` can be used to help resolve
-  potentially circular dependencies, although it should be avoided
-  whenever possible.  Note that `make clean; make` will produce an
-  error if there is a dependency loop (ordinary `make` may not).
+  `CoReflectiveSubuniverse`, `Modality`, `CoModality`: These contain more
+  advanced facts and theories which may depend on files in `types/`.
+  Conversely, some files in `types/` unfortunately depend on files in the root,
+  so the dependency structure is kind of complicated; be sure you don't
+  introduce any import loops.  The file `Misc` can be used to help resolve
+  potentially circular dependencies, although it should be avoided whenever
+  possible.  Note that `make clean; make` will produce an error if there is a
+  dependency loop (ordinary `make` may not).
 
 - `hit/*`: Files involving higher inductive types.  Each higher
   inductive type is defined in a corresponding file (see conventions
