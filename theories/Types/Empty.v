@@ -15,8 +15,8 @@ Local Open Scope path_scope.
 Global Instance contr_from_Empty {_ : Funext} (A : Type) :
   Contr (Empty -> A) :=
   BuildContr _
-             (Empty_rect (fun _ => A))
-             (fun f => path_forall _ f (fun x => Empty_rect _ x)).
+             (Empty_ind (fun _ => A))
+             (fun f => path_forall _ f (fun x => Empty_ind _ x)).
 
 (** ** Behavior with respect to truncation *)
 
@@ -29,7 +29,7 @@ Proof. case falso. Defined.
 Global Instance all_to_empty_isequiv (T : Type) (f : T -> Empty) : IsEquiv f.
 Proof.
   refine (BuildIsEquiv _ _ _ 
-    (Empty_rect (fun _ => T))               (* := equiv_inf *)
+    (Empty_ind (fun _ => T))                (* := equiv_inf *)
     (fun fals:Empty => match fals with end) (* : Sect equiv_inf f *)
     (fun t:T => match (f t) with end)       (* : Sect f equiv_inf *)
     (_)                                     (* adjointify part *)  ).

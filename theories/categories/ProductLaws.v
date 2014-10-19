@@ -61,11 +61,11 @@ Module Law0.
 
     Global Instance is_initial_category__product
     : IsInitialCategory (C * 0)
-      := fun P c => initial_category_rect P (snd c).
+      := fun P c => initial_category_ind P (snd c).
 
     Global Instance is_initial_category__product'
     : IsInitialCategory (0 * C)
-      := fun P c => initial_category_rect P (fst c).
+      := fun P c => initial_category_ind P (fst c).
 
     Definition functor : Functor (C * 0) 0 := Functors.from_initial _.
     Definition functor' : Functor (0 * C) 0 := Functors.from_initial _.

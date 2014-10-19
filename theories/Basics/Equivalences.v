@@ -352,32 +352,32 @@ Global Instance isequiv_ap `{IsEquiv A B f} (x y : A)
     @ whiskerR (concat_Vp _) _
     @ concat_1p _).
 
-(** The function [equiv_rect] says that given an equivalence [f : A <~> B], and a hypothesis from [B], one may always assume that the hypothesis is in the image of [e].
+(** The function [equiv_ind] says that given an equivalence [f : A <~> B], and a hypothesis from [B], one may always assume that the hypothesis is in the image of [e].
 
 In fibrational terms, if we have a fibration over [B] which has a section once pulled back along an equivalence [f : A <~> B], then it has a section over all of [B].  *)
 
-Definition equiv_rect `{IsEquiv A B f} (P : B -> Type)
+Definition equiv_ind `{IsEquiv A B f} (P : B -> Type)
   : (forall x:A, P (f x)) -> forall y:B, P y
   := fun g y => transport P (eisretr f y) (g (f^-1 y)).
 
-Arguments equiv_rect {A B} f {_} P _ _.
+Arguments equiv_ind {A B} f {_} P _ _.
 
-Definition equiv_rect_comp `{IsEquiv A B f} (P : B -> Type)
+Definition equiv_ind_comp `{IsEquiv A B f} (P : B -> Type)
   (df : forall x:A, P (f x)) (x : A)
-  : equiv_rect f P df (f x) = df x.
+  : equiv_ind f P df (f x) = df x.
 Proof.
-  unfold equiv_rect.
+  unfold equiv_ind.
   rewrite eisadj.
   rewrite <- transport_compose.
   exact (apD df (eissect f x)).
 Defined.
 
-(** Using [equiv_rect], we define a handy little tactic which introduces a variable and simultaneously substitutes it along an equivalence. *)
+(** Using [equiv_ind], we define a handy little tactic which introduces a variable and simultaneously substitutes it along an equivalence. *)
 
 Ltac equiv_intro E x :=
   match goal with
     | |- forall y, @?Q y =>
-      refine (equiv_rect E Q _); intros x
+      refine (equiv_ind E Q _); intros x
   end.
 
 (** [equiv_composeR'], a flipped version of [equiv_compose'], is (like [concatR]) most often useful partially applied, to give the “first half” of an equivalence one is constructing and leave the rest as a subgoal. One could similarly define [equiv_composeR] as a flip of [equiv_compose], but it doesn’t seem so useful since it doesn’t leave the remaining equivalence as a subgoal. *)

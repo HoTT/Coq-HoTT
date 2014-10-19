@@ -44,13 +44,13 @@ Section pseudofunctors.
   : Pseudofunctor zero
     := Build_Pseudofunctor
          zero
-         (fun x => initial_category_rect _ x)
-         (fun x _ _ => initial_category_rect _ x)
-         (fun x _ _ _ _ => initial_category_rect _ x)
-         (fun x => initial_category_rect _ x)
-         (fun x => initial_category_rect _ x)
-         (fun x => initial_category_rect _ x)
-         (fun x => initial_category_rect _ x).
+         (fun x => initial_category_ind _ x)
+         (fun x _ _ => initial_category_ind _ x)
+         (fun x _ _ _ _ => initial_category_ind _ x)
+         (fun x => initial_category_ind _ x)
+         (fun x => initial_category_ind _ x)
+         (fun x => initial_category_ind _ x)
+         (fun x => initial_category_ind _ x).
 End pseudofunctors.
 
 Local Arguments from_terminal / .

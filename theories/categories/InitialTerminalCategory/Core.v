@@ -19,21 +19,21 @@ Class IsTerminalCategory (C : PreCategory)
 (** ** Initial categories *)
 (** An initial precategory is one whose objects have the recursion priniciple of the empty type *)
 Class IsInitialCategory (C : PreCategory)
-  := initial_category_rect : forall P : Type, C -> P.
+  := initial_category_ind : forall P : Type, C -> P.
 
 Global Instance trunc_initial_category `{IsInitialCategory C}
 : IsHProp C
-  := fun x y => initial_category_rect _ x.
+  := fun x y => initial_category_ind _ x.
 Global Instance trunc_initial_category_mor `{IsInitialCategory C} x y
 : Contr (morphism C x y)
-  := initial_category_rect _ x.
+  := initial_category_ind _ x.
 
 (** ** Default intitial ([0]) and terminal ([1]) precategories. *)
-Global Instance is_initial_category_0 : IsInitialCategory 0 := (fun T => @Empty_rect (fun _ => T)).
+Global Instance is_initial_category_0 : IsInitialCategory 0 := (fun T => @Empty_ind (fun _ => T)).
 Global Instance: IsTerminalCategory 1 | 0.
 Global Instance: Contr (object 1) | 0 := _.
 Global Instance: Contr (morphism 1 x y) | 0 := fun x y => _.
 Global Instance default_terminal C {H H1} : @IsTerminalCategory C H H1 | 10.
 
-Arguments initial_category_rect / .
+Arguments initial_category_ind / .
 Arguments is_initial_category_0 / .

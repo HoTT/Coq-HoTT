@@ -14,22 +14,25 @@ They are currently in several groups:
   files in the library start with `Require Import HoTT.Basics.` (see
   remarks below on qualified imports).
 
-- `types/*`: This subdirectory contains a file corresponding to each
+- `Types/*`: This subdirectory contains a file corresponding to each
   basic type former (e.g. sigma-types, pi-types, etc.), which proves
   the "computational" rules for the path-types, transport, functorial
-  action, etc. of that type former.  It also contains `types/Record`,
+  action, etc. of that type former.  It also contains `Types/Record`,
   which provides tactics for proving records equivalent to iterated
-  sigma-types.  The univalence axiom is introduced, as a typeclass
-  (see below) in `types/Universe`.  Function extensionality is
-  introduced in `Basics/Overture` for dependency reasons, but
-  developed further in `types/Forall` and `types/Arrow`.  Some type
-  formers are defined in their corresponding `types/` file, while
+  sigma-types, and `Types/Equiv`, which proves that being an
+  equivalence is an hprop.  The univalence axiom is introduced, as a
+  typeclass (see below) in `Types/Universe`.  Function extensionality
+  is introduced in `Basics/Overture` for dependency reasons, but
+  developed further in `Types/Forall` and `Types/Arrow`.  Some type
+  formers are defined in their corresponding `Types/` file, while
   others are defined in `Basics/Overture` for dependency reasons but
-  studied further in their `types/` file.
+  studied further in their `Types/` file.  Files in `Types/` should
+  not depend on anything except `Basics` and other `Types/` files.
 
 - Other files in the root `theories/` directory, such as `Trunc`,
   `TruncType`, `HProp`, `HSet`, `EquivalenceVarieties`,
   `FunextVarieties`, `ObjectClassifier`, `ReflectiveSubuniverse`,
+<<<<<<< HEAD
   `CoReflectiveSubuniverse`, `Modality`, `CoModality`: These contain more
   advanced facts and theories which may depend on files in `types/`.
   Conversely, some files in `types/` unfortunately depend on files in the root,
@@ -38,6 +41,13 @@ They are currently in several groups:
   potentially circular dependencies, although it should be avoided whenever
   possible.  Note that `make clean; make` will produce an error if there is a
   dependency loop (ordinary `make` may not).
+=======
+  `Modality`: These contain more advanced facts and theories which may
+  depend on files in `Types/`.  The file `Misc` can be used to help resolve
+  potentially circular dependencies, although it should be avoided
+  whenever possible.  Note that `make clean; make` will produce an
+  error if there is a dependency loop (ordinary `make` may not).
+>>>>>>> upstream/master
 
 - `hit/*`: Files involving higher inductive types.  Each higher
   inductive type is defined in a corresponding file (see conventions
@@ -143,7 +153,56 @@ and no obvious concise way to distinguish them, one of them can be
 given a prime suffix, e.g. we have `path_sigma` and `path_sigma'`.
 Do this with caution.
 
-TODO: Induction and recursion principles (issue #517)
+### Induction and recursion principles ###
+
+In conformity with the HoTT Book, the induction principle of a
+(perhaps higher) inductive type `thing` (that is, its dependent
+eliminator) should be named `thing_ind`, while its recursion principle
+(non-dependent eliminator) should be named `thing_rec`.
+
+However, by default, when you declare a (non-higher) inductive type,
+Coq automatically defines induction principles named `thing_rect`,
+`thing_rec`, and `thing_ind` that vary only in the sort of their
+target (`Type`, `Set`, or `Prop`).  In order to turn this off, you
+must say `Local Unset Elimination Schemes` before defining an
+inductive type.  You can then have Coq automatically generate the
+correctly named induction principles with
+
+```coq
+Scheme thing_ind := Induction for thing Sort Type.
+Scheme thing_rec := Minimality for thing Sort Type.
+```
+
+Unfortunately, Coq's built-in tactics `induction` and `elim` assume
+that the induction principles are named in Coq's default manner.  We
+are hoping that this will be [fixed eventually][inductionbug], but in
+the meantime, to make those tactics work, you need to also say
+
+```coq
+Definition thing_rect := thing_ind.
+```
+
+(We have not turned on `Global Unset Elimination Schemes` because this
+would cause `induction` and `elim` to fail for all newly defined
+inductive types unless these `Scheme` commands are also given, which
+might be an unpleasant and confusing surprise to people who haven't
+read (or don't remember) these instructions.)
+
+Note that elimination schemes are always off for `Private Inductive`
+types such as are used to hack HITs.  For HITs, you must always define
+both the induction and recursion principles by hand, as described
+in the appropriate section below.
+
+Some types have a "coinduction" or "corecursion" principle; these
+should have instead the suffix `_coind` or `_corec`.
+
+Finally, a type will often have a universal property expressed by
+saying that its induction or recursion (or coinduction or corecursion)
+principle is an equivalence.  These should be named according to the
+naming conventions for equivalences below, e.g. `isequiv_thing_rec`
+and `equiv_thing_rec`.
+
+[inductionbug]: https://coq.inria.fr/bugs/show_bug.cgi?id=3745
 
 ### Path algebra functions ###
 
@@ -171,7 +230,7 @@ than a function which happens to be an equivalence.
 We use Coq Records when appropriate for important definitions.  For
 instance, contractibility (`Contr`) and equivalences (`Equiv`) are
 both Record types (in fact, the former is a typeclass).  The file
-`types/Record` contains some tactics for proving semiautomatically
+`Types/Record` contains some tactics for proving semiautomatically
 that record types are equivalent to the corresponding sigma-types, so
 that the relevant general theorems can be applied to them.
 
@@ -181,7 +240,7 @@ Sometimes a two-component record is better defined as a sigma-type,
 especially if it is a "subset type" whose second component is an
 hprop.  For instance, this has the advantage that we do not need new
 names for its constructor and its fields, and we can apply theorems in
-`types/Sigma` to it directly rather than via `issig`.
+`Types/Sigma` to it directly rather than via `issig`.
 
 TODO: Decide about `hProp` and `hSet` and `TruncType` (issue #514).
 
@@ -698,12 +757,13 @@ where they are defined.
   applies a lemma inside of a lambda abstraction, in the goal or in a
   hypothesis.
 
-- `issig`: Defined in `types/Record`, this tactic proves automatically
-  that a record type is equivalent to a nested sigma-type.  Actually,
-  there are separate tactics `issig`, `issig2`, `issig3`,
-  etc. depending on how many fields the record has, but their code is
-  virtually identical.  If you need a version with more fields than
-  yet exists, feel free to add it.
+- `issig`: Defined in `Types/Record`, this tactic proves automatically
+  that a record type is equivalent to a nested sigma-type.  (Actually,
+  there are separate tactics `issig2`, `issig3`, etc. depending on how
+  many fields the record has, but their code is virtually identical,
+  and a tactic notation `issig` invokes the appropriate one
+  automatically.  If you need a version with more fields than yet
+  exists, feel free to add it.)
 
 
 ## Contributing to the library ##

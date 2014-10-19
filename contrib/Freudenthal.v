@@ -20,7 +20,7 @@ Proof.
   intros C H' f. exists (f North).
   assert ({ p0 : f North = f South & forall x:X, ap f (merid x) = p0 })
     as [p0 allpath_p0] by (apply isconnected_elim; apply H').
-  apply (Susp_rect (fun a => f a = f North) 1 p0^).
+  apply (Susp_ind (fun a => f a = f North) 1 p0^).
   intros x.
   apply (concat (transport_paths_Fl _ _)).
   apply (concat (concat_p1 _)).
@@ -57,7 +57,7 @@ Abort.
 Definition FST_Codes_No (p : No = No)
   := (Trunc (n -2+ n) (hfiber mer' p)).
 
-(** To prove it, we generalise it over [Susp X], by [Susp_rect].  This requires three components, which we construct (the main parts of) as lemmas in advance. *)
+(** To prove it, we generalise it over [Susp X], by [Susp_ind].  This requires three components, which we construct (the main parts of) as lemmas in advance. *)
 Definition FST_Codes_So (q : No = So)
   := (Trunc (n -2+ n) (hfiber mer q)).
 
@@ -69,7 +69,7 @@ Definition FST_Codes_cross (x1 : X) (q : No = So)
   : FST_Codes_No (q @ (mer x1) ^) -> FST_Codes_So q.
 Proof.
   unfold FST_Codes_No, FST_Codes_So, mer'.
-  apply Trunc_rect_nondep.
+  apply Trunc_rec.
   intros [x2 p]. revert x1 x2 p.
   refine (@wedge_incl_elim_uncurried _ n n X x0 _ X x0 _
     (fun x1 x2 => (mer x2 @ (mer x0) ^ = q @ (mer x1) ^)
@@ -114,7 +114,7 @@ Proof.
   { unfold FST_Codes_cross_x0.
     apply isequiv_Trunc_functor, @isequiv_functor_sigma. refine _.
     intros a. apply isequiv_cancelR. }
-  { hnf. apply Trunc_rect. intros ?; apply trunc_succ.
+  { hnf. apply Trunc_ind. intros ?; apply trunc_succ.
     intros [x r]; simpl.
     unfold functor_sigma; simpl.
     symmetry.
@@ -124,7 +124,7 @@ Defined.
 Definition FST_Codes
   : forall (y : Susp X), (No = y) -> Type.
 Proof.
-  apply (Susp_rect (fun y => (No = y -> Type)) FST_Codes_No FST_Codes_So).
+  apply (Susp_ind (fun y => (No = y -> Type)) FST_Codes_No FST_Codes_So).
   intros x. apply (@path_forall (fst funext_large)); intros p.
   refine (transport_arrow _ _ _ @ _).
   refine (transport_const _ _ @ _).
@@ -208,13 +208,13 @@ Definition FST_Codes_contr (y : Susp X) (p : No = y) (rr : FST_Codes y p)
   : rr = FST_Codes_center y p.
 Proof.
   revert y p rr.
-  Check (Susp_rect (fun y => forall p rr, rr = FST_Codes_center y p)).
+  Check (Susp_ind (fun y => forall p rr, rr = FST_Codes_center y p)).
 Abort.
 
 Definition FST_Codes_contr_No (p : No = No) (rr : FST_Codes No p)
   : (rr = FST_Codes_center No p).
 Proof.
-  revert rr. apply Trunc_rect. intros ?; apply trunc_succ.
+  revert rr. apply Trunc_ind. intros ?; apply trunc_succ.
   intros [x1 r]. destruct r. unfold FST_Codes_center. simpl.
   (*transitivity (tr
     (transport (fun p => hfiber mer' p) (transport_paths_r p 1 @ concat_1p p)

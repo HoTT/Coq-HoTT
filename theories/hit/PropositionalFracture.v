@@ -55,14 +55,14 @@ Section ClosedModality.
     split.
     - intros uac.
       refine (isequiv_adjointify _ _ _ _).
-      * refine (pushout_rectnd A _ _).
+      * refine (pushout_rec A _ _).
         + intros [u | a].
           { pose (uac u). exact (center A). }
           { assumption. }
         + intros [u a]. simpl.
           pose (uac u). apply contr.
       * intros z. pattern z.
-        refine (pushout_rect fst snd _ _ _ z).
+        refine (pushout_ind fst snd _ _ _ z).
         + intros [u | a].
           { pose (contr_inhabited_hprop U u).
             apply path_contr. } 
@@ -92,7 +92,7 @@ Section ClosedModality.
     - intros A B inO_A f ?; cbn in *; intros u; pose (inO_A u).
       apply contr_equiv with f; exact _.
     - intros A B ? f z.
-      refine (pushout_rect _ _ B _ _ z).
+      refine (pushout_ind _ _ B _ _ z).
       * intros [u | a].
         + apply center, B_inO, u.
         + apply f.

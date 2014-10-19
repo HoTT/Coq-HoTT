@@ -310,12 +310,12 @@ Definition Book_2_12_5 := @HoTT.Types.Sum.equiv_path_sum.
 (** Theorem 2.15.2 *)
 
 (** non-dependent as special case of dependent, Theorem 2.15.5 *)
-Definition Book_2_15_2 := @HoTT.Types.Prod.isequiv_prod_corect.
+Definition Book_2_15_2 := @HoTT.Types.Prod.isequiv_prod_coind.
 
 (* ================================================== thm:prod-umpd *)
 (** Theorem 2.15.5 *)
 
-Definition Book_2_15_5 := @HoTT.Types.Prod.isequiv_prod_corect.
+Definition Book_2_15_5 := @HoTT.Types.Prod.isequiv_prod_coind.
 
 (* ================================================== thm:ttac *)
 (** Theorem 2.15.7 *)

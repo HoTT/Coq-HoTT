@@ -44,22 +44,22 @@ Axiom related_classes_eq : forall {x y : A}, R x y ->
 Axiom quotient_set : IsHSet (@quotient sR).
 Global Existing Instance quotient_set.
 
-Definition quotient_rect (P : (@quotient sR) -> Type) {sP : forall x, IsHSet (P x)}
+Definition quotient_ind (P : (@quotient sR) -> Type) {sP : forall x, IsHSet (P x)}
   (dclass : forall x, P (class_of x))
   (dequiv : (forall x y (H : R x y), (related_classes_eq H) # (dclass x) = dclass y))
   : forall q, P q
   := fun q => match q with class_of a => fun _ _ => dclass a end sP dequiv.
 
-Definition quotient_rect_compute : forall {P sP} dclass dequiv x,
-  @quotient_rect P sP dclass dequiv (class_of x) = dclass x.
+Definition quotient_ind_compute : forall {P sP} dclass dequiv x,
+  @quotient_ind P sP dclass dequiv (class_of x) = dclass x.
 Proof.
 reflexivity.
 Defined.
 
 (** Again equality of paths needs to be postulated *)
-Axiom quotient_rect_compute_path : forall P sP dclass dequiv,
+Axiom quotient_ind_compute_path : forall P sP dclass dequiv,
 forall x y (H : R x y),
-apD (@quotient_rect P sP dclass dequiv) (related_classes_eq H)
+apD (@quotient_ind P sP dclass dequiv) (related_classes_eq H)
  = dequiv x y H.
 
 End Domain.
@@ -80,7 +80,7 @@ Defined.
 
 Definition in_class : quotient R -> A -> hProp.
 Proof.
-refine (quotient_rect R (fun _ => A -> hProp) (fun a b => BuildhProp (R a b)) _).
+refine (quotient_ind R (fun _ => A -> hProp) (fun a b => BuildhProp (R a b)) _).
 intros. eapply concat;[apply transport_const|].
 apply path_forall. intro z. apply path_hprop; simpl.
 apply @equiv_iff_hprop; eauto.
@@ -93,17 +93,17 @@ Proof.
 reflexivity.
 Defined.
 
-Lemma quotient_rect_prop (P : quotient R -> hProp):
+Lemma quotient_ind_prop (P : quotient R -> hProp):
   forall dclass : forall x, P (class_of R x),
   forall q, P q.
 Proof.
-intros. apply (quotient_rect R P dclass).
+intros. apply (quotient_ind R P dclass).
 intros. apply path_ishprop.
 Defined.
 
 Lemma class_of_repr : forall q x, in_class q x -> q = class_of R x.
 Proof.
-apply (quotient_rect R
+apply (quotient_ind R
  (fun q : quotient R => forall x, in_class q x -> q = class_of _ x)
   (fun x y H => related_classes_eq R H)).
 intros.
@@ -129,16 +129,16 @@ intros ??. apply equiv_iff_hprop.
 apply related_classes_eq.
 Defined.
 
-Definition quotient_rect_nondep {B : Type} {sB : IsHSet B}
+Definition quotient_rec {B : Type} {sB : IsHSet B}
   (dclass : (forall x : A, B))
   (dequiv : (forall x y, R x y -> dclass x = dclass y))
   : quotient R -> B.
 Proof.
-apply (quotient_rect R (fun _ : quotient _ => B)) with dclass.
+apply (quotient_ind R (fun _ : quotient _ => B)) with dclass.
 intros ?? H'. destruct (related_classes_eq R H'). by apply dequiv.
 Defined.
 
-Definition quotient_rect_nondep2 {B : hSet} {dclass : (A -> A -> B)}:
+Definition quotient_rec2 {B : hSet} {dclass : (A -> A -> B)}:
   forall dequiv : (forall x x', R x x' -> forall y y',  R y y' ->
                   dclass x y = dclass x' y'),
   quotient R -> quotient R -> B.
@@ -146,26 +146,26 @@ Proof.
 intro.
 assert (dequiv0 : forall x x0 y : A, R x0 y -> dclass x x0 = dclass x y)
  by (intros ? ? ? Hx; apply dequiv;[apply Hrefl|done]).
-refine (quotient_rect_nondep
-  (fun x => quotient_rect_nondep (dclass x) (dequiv0 x)) _).
+refine (quotient_rec
+  (fun x => quotient_rec (dclass x) (dequiv0 x)) _).
 intros x x' Hx.
 apply path_forall. red.
 assert (dequiv1 : forall y : A,
-  quotient_rect_nondep (dclass x) (dequiv0 x) (class_of _ y) =
-  quotient_rect_nondep (dclass x') (dequiv0 x') (class_of _ y))
+  quotient_rec (dclass x) (dequiv0 x) (class_of _ y) =
+  quotient_rec (dclass x') (dequiv0 x') (class_of _ y))
  by (intros; by apply dequiv).
-refine (quotient_rect R (fun q =>
-quotient_rect_nondep (dclass x) (dequiv0 x) q =
-quotient_rect_nondep (dclass x') (dequiv0 x') q) dequiv1 _).
+refine (quotient_ind R (fun q =>
+quotient_rec (dclass x) (dequiv0 x) q =
+quotient_rec (dclass x') (dequiv0 x') q) dequiv1 _).
 intros. apply path_ishprop.
 Defined.
 
-Definition quotient_ind : forall P : quotient R -> Type,
+Definition quotient_ind_prop' : forall P : quotient R -> Type,
 forall (Hprop' : forall x, IsHProp (P (class_of _ x))),
 (forall x, P (class_of _ x)) -> forall y, P y.
 Proof.
-intros ? ? dclass. apply quotient_rect with dclass.
-- refine (quotient_rect R (fun x => IsHSet (P x)) _ _); try exact _.
+intros ? ? dclass. apply quotient_ind with dclass.
+- refine (quotient_ind R (fun x => IsHSet (P x)) _ _); try exact _.
   intros; apply path_ishprop.
 - intros. apply Hprop'.
 Defined.
@@ -174,7 +174,7 @@ Defined.
 Theorem quotient_surjective: IsSurjection (class_of R).
 Proof.
   apply BuildIsSurjection.
-  apply (quotient_rect_prop (fun y => merely (hfiber (class_of R) y))); try exact _.
+  apply (quotient_ind_prop (fun y => merely (hfiber (class_of R) y))); try exact _.
   intro x. apply tr. by exists x.
 Defined.
 
@@ -188,7 +188,7 @@ Defined.
 Definition quotient_ump'' (B:hSet): (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0)))
  -> quotient R -> B.
 intros [f H'].
-apply (quotient_rect_nondep _ H').
+apply (quotient_rec _ H').
 Defined.
 
 Theorem quotient_ump (B:hSet): (quotient R -> B) <~>
@@ -199,7 +199,7 @@ intros [f Hf].
 - by apply equiv_path_sigma_hprop.
 - intros f.
   apply path_forall.
-  red. apply quotient_ind;[apply _|reflexivity].
+  red. apply quotient_ind_prop';[apply _|reflexivity].
 Defined.
 
 (** Missing
@@ -241,7 +241,7 @@ Proof.
   pose (e := class_of R).
   exists e.
   transparent assert (m : (C -> B)).
-  { apply quotient_rect with f; try exact _.
+  { apply quotient_ind with f; try exact _.
     intros x y H. transitivity (f x).
     - apply transport_const.
     - exact ((is_ker x y) ^-1 H). }
@@ -252,8 +252,8 @@ Proof.
   - intro u.
     apply hprop_allpath.
     assert (H : forall (x y : C) (p : m x = u) (p' : m y = u), x = y).
-    { refine (quotient_rect R _ _ _). intro a.
-      refine (quotient_rect R _ _ _). intros a' p p'; fold e in p, p'.
+    { refine (quotient_ind R _ _ _). intro a.
+      refine (quotient_ind R _ _ _). intros a' p p'; fold e in p, p'.
       + apply related_classes_eq.
         refine (is_ker a a' _).
         change (m (e a) = m (e a')).

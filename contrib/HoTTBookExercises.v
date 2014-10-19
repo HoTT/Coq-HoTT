@@ -65,7 +65,7 @@ Section Book_1_2_prod.
 End Book_1_2_prod.
 
 (** Recursor as (dependent) equivalence. *)
-Definition Book_1_2_sig_lib := @HoTT.Types.Sigma.equiv_sigT_rect.
+Definition Book_1_2_sig_lib := @HoTT.Types.Sigma.equiv_sigT_ind.
 Section Book_1_2_sig.
   Variable A : Type.
   Variable B : A -> Type.
@@ -90,7 +90,7 @@ End Book_1_2_sig.
 (** The propositional uniqueness principles are named with an
     'eta' postfix in the HoTT library. *)
 
-Definition Book_1_3_prod_lib := @Coq.Init.Datatypes.prod_rect.
+Definition Book_1_3_prod_lib := @HoTT.Types.Prod.prod_ind.
 Section Book_1_3_prod.
   Variable A B : Type.
 
@@ -104,7 +104,7 @@ Section Book_1_3_prod.
   Defined.
 End Book_1_3_prod.
 
-Definition Book_1_3_sig_lib := @Coq.Init.Specif.sigT_rect.
+Definition Book_1_3_sig_lib := @Coq.Init.Specif.sigT_ind.
 Section Book_1_3_sig.
   Variable A : Type.
   Variable B : A -> Type.
@@ -494,7 +494,7 @@ Section Book_3_13.
     intro x.
     specialize (H0 x).
     revert H0.
-    apply Trunc_rect_nondep.
+    apply Trunc_rec.
     exact (fun x nx => nx x).
   Defined.
 End Book_3_13.
@@ -532,7 +532,7 @@ Section Book_3_14.
   Lemma Book_3_14_equiv A : merely A <~> ~~A.
   Proof.
     apply equiv_iff_hprop.
-    - apply Trunc_rect_nondep.
+    - apply Trunc_rec.
       exact (fun a na => na a).
     - intro nna.
       apply (@Book_3_14 A (fun _ => merely A)).
@@ -688,7 +688,7 @@ Section Book_5_2.
   (** Here is one example of functions which are propositionally equal but not judgmentally equal.  They satisfy the same reucrrence propositionally. *)
   Let ez : Bool := true.
   Let es : nat -> Bool -> Bool := fun _ => idmap.
-  Definition Book_5_2_i : nat -> Bool := nat_rect (fun _ => Bool) ez es.
+  Definition Book_5_2_i : nat -> Bool := nat_ind (fun _ => Bool) ez es.
   Definition Book_5_2_ii : nat -> Bool := fun _ => true.
   Fail Definition Book_5_2_not_defn_eq : Book_5_2_i = Book_5_2_ii := idpath.
   Lemma Book_5_2_i_prop_eq : forall n, Book_5_2_i n = Book_5_2_ii n.
@@ -736,7 +736,7 @@ Definition Book_5_4 := @HoTT.Types.Bool.equiv_bool_forall_prod.
 (** Exercise 5.5 *)
 
 Section Book_5_5.
-  Let ind_nat (P : nat -> Type) := fun x => @nat_rect P (fst x) (snd x).
+  Let ind_nat (P : nat -> Type) := fun x => @nat_ind P (fst x) (snd x).
 
   Lemma Book_5_5 `{fs : Funext} : ~forall P : nat -> Type,
                                      IsEquiv (@ind_nat P).
@@ -979,7 +979,7 @@ Section Book_7_1.
     intros A a.
     apply (fun H' => (@H A (merely A) tr H' a).1).
     clear a.
-    apply Trunc_rect; try exact _.
+    apply Trunc_ind; try exact _.
     intro x; compute; apply tr.
     exists x; reflexivity.
   Defined.

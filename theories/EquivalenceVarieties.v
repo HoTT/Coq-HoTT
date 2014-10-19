@@ -90,7 +90,7 @@ Proof.
     (forall x, (existT (fun a => f a = f x) x 1) = (g (f x); r (f x)))
     _ (equiv_inverse _) _).
   (* The proof of this equivalence is basically just rearranging quantifiers and paths. *)
-  refine (equiv_compose' _ (equiv_sigT_corect (fun x => g (f x) = x)
+  refine (equiv_compose' _ (equiv_sigT_coind (fun x => g (f x) = x)
       (fun x p => r (f x) = ap f p))).
   refine (equiv_functor_forall' (equiv_idmap A) _); intros a; simpl.
   refine (equiv_compose' (equiv_path_inverse _ _) _).
@@ -127,12 +127,12 @@ Proof.
   refine (equiv_compose' (issig_isequiv f) _).
   (* Now we can really get to work.
      First we peel off the inverse function and the [eisretr]. *)
-  refine (equiv_compose' _ (equiv_inverse (equiv_sigT_corect _ _))).
+  refine (equiv_compose' _ (equiv_inverse (equiv_sigT_coind _ _))).
   refine (equiv_compose' _ (equiv_inverse
     (@equiv_functor_sigma' _ _ _ (fun f0 => forall x y, f0 x = y)
-      (equiv_sigT_corect _ _)
+      (equiv_sigT_coind _ _)
       (fun fg => equiv_idmap (forall x y,
-        (equiv_sigT_corect _ (fun b a => f a = b) fg x = y)))))).
+        (equiv_sigT_coind _ (fun b a => f a = b) fg x = y)))))).
   refine (equiv_compose' _ (equiv_inverse (equiv_sigma_assoc
     (fun g => forall x, f (g x) = x)
     (fun gh => forall x y,
@@ -144,13 +144,13 @@ Proof.
     (fun x => forall a (y : f a = x),
       (existT (fun a => f a = x) (g x) (r x)) = (a;y))
     _ _ (equiv_idmap _)
-    (fun x:B => equiv_sigT_rect
+    (fun x:B => equiv_sigT_ind
       (fun y:exists a:A, f a = x => (g x;r x) = y))))).
   refine (equiv_compose' _ (equiv_flip _)).
   refine (equiv_compose' _ (equiv_inverse (@equiv_functor_forall' _ _
     (fun a => existT (fun a' => f a' = f a) (g (f a)) (r (f a)) = (a;1))
     _ _ (equiv_idmap A)
-    (fun a => equiv_paths_rect (f a)
+    (fun a => equiv_paths_ind (f a)
       (fun b y => (existT (fun a => f a = b) (g b) (r b)) = (a;y)))))).
   (* We identify the paths in a Sigma-type. *)
   refine (equiv_compose' _ (equiv_inverse (@equiv_functor_forall' _ _
@@ -160,7 +160,7 @@ Proof.
     (fun a => equiv_path_sigma (fun a' => f a' = f a)
       (g (f a);r (f a)) (a;1))))).
   (* Now we can peel off the [eissect]. *)
-  refine (equiv_compose' _ (equiv_inverse (equiv_sigT_corect
+  refine (equiv_compose' _ (equiv_inverse (equiv_sigT_coind
     (fun a => g (f a) = a)
     (fun a p => transport (fun a' => f a' = f a) p (r (f a)) = 1)))).
   refine (equiv_functor_sigma' (equiv_idmap _) _). intros s.

@@ -49,23 +49,23 @@ Definition equiv_path_unit (z z' : Unit) : Unit <~> (z = z')
 (** ** Universal mapping properties *)
 
 (* The positive universal property *)
-Arguments Unit_rect [A] a u : rename.
+Arguments Unit_ind [A] a u : rename.
 
-Global Instance isequiv_unit_rect `{Funext} (A : Type) : IsEquiv (@Unit_rect (fun _ => A)) | 0
+Global Instance isequiv_unit_ind `{Funext} (A : Type) : IsEquiv (@Unit_ind (fun _ => A)) | 0
   := isequiv_adjointify _
   (fun f : Unit -> A => f tt)
-  (fun f : Unit -> A => path_forall (@Unit_rect (fun _ => A) (f tt)) f
+  (fun f : Unit -> A => path_forall (@Unit_ind (fun _ => A) (f tt)) f
                                     (fun x => match x with tt => 1 end))
   (fun _ => 1).
 
-(* For various reasons, it is typically more convenient to define functions out of the unit as constant maps, rather than [Unit_rect]. *)
+(* For various reasons, it is typically more convenient to define functions out of the unit as constant maps, rather than [Unit_ind]. *)
 Notation unit_name x := (fun (_ : Unit) => x).
 
 (* The negative universal property *)
-Definition unit_corect {A : Type} : Unit -> (A -> Unit)
+Definition unit_coind {A : Type} : Unit -> (A -> Unit)
   := fun _ _ => tt.
 
-Global Instance isequiv_unit_corect `{Funext} (A : Type) : IsEquiv (@unit_corect A) | 0
+Global Instance isequiv_unit_coind `{Funext} (A : Type) : IsEquiv (@unit_coind A) | 0
   := isequiv_adjointify _
   (fun f => tt)
   _ _.
@@ -74,9 +74,9 @@ Proof.
   - intro x; destruct x; reflexivity.
 Defined.
 
-Definition equiv_unit_corect `{Funext} (A : Type)
+Definition equiv_unit_coind `{Funext} (A : Type)
   : Unit <~> (A -> Unit)
-  := BuildEquiv _ _ (@unit_corect A) _.
+  := BuildEquiv _ _ (@unit_coind A) _.
 
 (** ** Truncation *)
 

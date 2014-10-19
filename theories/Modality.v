@@ -11,15 +11,15 @@ Class Modality :=
   {
     mod_usubu : UnitSubuniverse ;
     mod_replete : Replete mod_usubu ;
-    O_rect : forall A (B : O A -> Type) (B_inO : forall oa, inO (B oa)),
+    O_ind : forall A (B : O A -> Type) (B_inO : forall oa, inO (B oa)),
                (forall a, B (O_unit A a)) -> forall a, B a ;
-    O_rect_beta : forall A B B_inO (f : forall a : A, B (O_unit A a)) a,
-                    O_rect A B B_inO f (O_unit A a) = f a ;
+    O_ind_beta : forall A B B_inO (f : forall a : A, B (O_unit A a)) a,
+                    O_ind A B B_inO f (O_unit A a) = f a ;
     inO_paths : forall A (A_inO : inO A) (z z' : A), inO (z = z')
   }.
 
-Arguments O_rect {Modality} {A} B {B_inO} f a.
-Arguments O_rect_beta {Modality} {A} B {B_inO} f a.
+Arguments O_ind {Modality} {A} B {B_inO} f a.
+Arguments O_ind_beta {Modality} {A} B {B_inO} f a.
 
 (** See ReflectiveSubuniverse.v for explanation of how to use (and how not to use) [Modality] as a typeclass. *)
 
@@ -31,7 +31,7 @@ Global Existing Instance inO_paths.
 
 (** Our definition of modality is slightly different from the one in the book, which requires an induction principle only into families of the form [fun oa => O (B oa)], and similarly only that path-spaces of types [O A] are modal, where "modal" means that the unit is an equivalence.  This is equivalent, roughly since every modal type [A] (in this sense) is equivalent to [O A].
 
-However, our definition is more convenient in formalized applications because in some examples (such as [Trunc] and closed modalities), there is a naturally occurring [O_rect] into all modal types that is not judgmentally equal to the one that can be constructed by passing through [O] and back again.  Thus, when we apply general theorems about modalities to a particular modality such as [Trunc], the proofs will reduce definitionally to "the way we would have proved them directly" if we didn't know about general modalities.
+However, our definition is more convenient in formalized applications because in some examples (such as [Trunc] and closed modalities), there is a naturally occurring [O_ind] into all modal types that is not judgmentally equal to the one that can be constructed by passing through [O] and back again.  Thus, when we apply general theorems about modalities to a particular modality such as [Trunc], the proofs will reduce definitionally to "the way we would have proved them directly" if we didn't know about general modalities.
 
 On the other hand, in other examples (such as [~~] and open modalities) it is easier to construct the latter weaker induction principle.  Thus, we now show how to get from that to our definition of modality. *)
 
@@ -43,35 +43,35 @@ Section EasyModality.
 
   Let inO' A := IsEquiv (O_unit A).
 
-  Context (O_rectO : forall A (B : O A -> Type),
+  Context (O_indO : forall A (B : O A -> Type),
                        (forall a, O (B (O_unit A a)))
                        -> forall z, O (B z)).
 
-  Context (O_rectO_beta : forall A B (f : forall a, O (B (O_unit A a))) a,
-      O_rectO A B f (O_unit A a) = f a).
+  Context (O_indO_beta : forall A B (f : forall a, O (B (O_unit A a))) a,
+      O_indO A B f (O_unit A a) = f a).
 
   Context (inO_pathsO : forall A (z z' : O A), inO' (z = z')).
 
   (** Here is the defined more general induction principle. *)
 
-  Local Definition O_rect' A (B : O A -> Type)
+  Local Definition O_ind' A (B : O A -> Type)
         (B_inO : forall oa, inO' (B oa))
         (f : forall a, B (O_unit A a))
         (oa : O A) : B oa.
   Proof.
     pose (H := B_inO oa); unfold inO' in H.
     apply ((O_unit (B oa))^-1).
-    apply O_rectO.
+    apply O_indO.
     intros a; apply O_unit, f.
   Defined.
 
-  Local Definition O_rect_beta' A B {B_inO : forall oa, inO' (B oa)}
+  Local Definition O_ind_beta' A B {B_inO : forall oa, inO' (B oa)}
         (f : forall a : A, B (O_unit A a)) a
-  : O_rect' A B B_inO f (O_unit A a) = f a.
+  : O_ind' A B B_inO f (O_unit A a) = f a.
   Proof.
-    unfold O_rect'.
+    unfold O_ind'.
     apply moveR_equiv_V.
-    apply @O_rectO_beta with (f := fun x => O_unit _ (f x)).
+    apply @O_indO_beta with (f := fun x => O_unit _ (f x)).
   Qed.
 
   (** We start by building a [UnitSubuniverse]. *)
@@ -79,13 +79,13 @@ Section EasyModality.
   Local Definition O_inO' A : inO' (O A).
   Proof.
     refine (isequiv_adjointify (O_unit (O A))
-             (O_rectO (O A) (const A) idmap) _ _).
-    - intros x; pattern x; apply O_rect'.
+             (O_indO (O A) (const A) idmap) _ _).
+    - intros x; pattern x; apply O_ind'.
       + intros oa; apply inO_pathsO.
       + intros a; apply ap.
-        exact (O_rectO_beta (O A) (const A) idmap a).
+        exact (O_indO_beta (O A) (const A) idmap a).
     - intros a.
-      exact (O_rectO_beta (O A) (const A) idmap a).
+      exact (O_indO_beta (O A) (const A) idmap a).
   Defined.
 
   Local Instance usubU : UnitSubuniverse
@@ -99,16 +99,16 @@ Section EasyModality.
   Proof.
     refine (Build_ReflectiveSubuniverse _ _ _ _ _);
       intros P Q ?.
-    - intros f. exact (O_rect' P (fun _ => Q) (fun _ => Q_inO) f).
-    - intros f x. exact (O_rect_beta' P (fun _ => Q) f x).
+    - intros f. exact (O_ind' P (fun _ => Q) (fun _ => Q_inO) f).
+    - intros f x. exact (O_ind_beta' P (fun _ => Q) f x).
     - intros g h p x.
       cbn in Q_inO.
       refine ((ap (O_unit Q))^-1 _).
-      refine (O_rect' P (fun y => O_unit Q (g y) = O_unit Q (h y)) _ _ x).
+      refine (O_ind' P (fun y => O_unit Q (g y) = O_unit Q (h y)) _ _ x).
       + intros y. apply inO_pathsO.
       + intros a; apply ap, p.
     - intros g h p x; cbn.
-      rewrite O_rect_beta'.
+      rewrite O_ind_beta'.
       rewrite concat_pp_p.
       apply moveR_Vp.
       rewrite <- ap_compose.
@@ -124,7 +124,7 @@ Section EasyModality.
 
   Definition Build_Modality_easy : Modality.
   Proof.
-    refine (Build_Modality usubU _ O_rect' O_rect_beta' _); cbn.
+    refine (Build_Modality usubU _ O_ind' O_ind_beta' _); cbn.
     intros A A_inO x y.
     refine (inO_equiv_inO (O_unit A x = O_unit A y) (x = y)
                           (inO_pathsO A _ _)
@@ -133,43 +133,43 @@ Section EasyModality.
 
 End EasyModality.
 
-(** The induction principle [O_rect], like most induction principles, is an equivalence. *)
-Section ORectEquiv.
+(** The induction principle [O_ind], like most induction principles, is an equivalence. *)
+Section OIndEquiv.
   Context {fs : Funext}.
   Context {mod : Modality}.
 
-  Section ORectEquivData.
+  Section OIndEquivData.
 
     Context {A : Type} (B : O A -> Type) {B_inO : forall a, inO (B a)}.
 
-    Global Instance isequiv_O_rect : IsEquiv (O_rect B).
+    Global Instance isequiv_O_ind : IsEquiv (O_ind B).
     Proof.
       apply isequiv_adjointify with (g := fun h => h oD O_unit A).
       - intros h. apply path_forall.
-        refine (O_rect (fun oa => O_rect B (h oD O_unit A) oa = h oa) _).
-        exact (O_rect_beta B (h oD O_unit A)).
+        refine (O_ind (fun oa => O_ind B (h oD O_unit A) oa = h oa) _).
+        exact (O_ind_beta B (h oD O_unit A)).
       - intros f. apply path_forall.
-        exact (O_rect_beta B f).
+        exact (O_ind_beta B f).
     Defined.
 
-    Definition equiv_O_rect
+    Definition equiv_O_ind
     : (forall a, B (O_unit A a)) <~> (forall oa, B oa)
-    := BuildEquiv _ _ (O_rect B) _.
+    := BuildEquiv _ _ (O_ind B) _.
 
     (** Theorem 7.7.7 *)
     Definition isequiv_oD_O_unit
     : IsEquiv (fun (h : forall oa, B oa) => h oD O_unit A)
-    := equiv_isequiv (equiv_inverse equiv_O_rect).
+    := equiv_isequiv (equiv_inverse equiv_O_ind).
 
-  End ORectEquivData.
+  End OIndEquivData.
 
   Local Definition isequiv_o_O_unit (A B : Type) (B_inO : inO B)
   : IsEquiv (fun (h : O A -> B) => h o O_unit A)
     := isequiv_oD_O_unit (fun _ => B).
 
-End ORectEquiv.
+End OIndEquiv.
 
-(** We show that modalities have underlying reflective subuniverses.  It is important in some applications, such as [Trunc], that this construction uses the general [O_rect] given as part of the modality data, and not one constructed out of [O_rectO] as we did when proving [Build_Modality_easy].  For instance, this ensures that [O_functor] reduces to simply an application of [O_rect].
+(** We show that modalities have underlying reflective subuniverses.  It is important in some applications, such as [Trunc], that this construction uses the general [O_ind] given as part of the modality data, and not one constructed out of [O_indO] as we did when proving [Build_Modality_easy].  For instance, this ensures that [O_functor] reduces to simply an application of [O_ind].
 
  Note also that our choice of how to define reflective subuniverses differently from the book enables us to prove this without using funext. *)
 
@@ -177,10 +177,10 @@ End ORectEquiv.
 Global Instance modality_to_reflective_subuniverse (mod : Modality)
 : ReflectiveSubuniverse
 := Build_ReflectiveSubuniverse _
-     (fun P Q H => O_rect (fun _ => Q))
-     (fun P Q H => O_rect_beta (fun _ => Q))
-     (fun P Q H g h => O_rect (fun y => g y = h y))
-     (fun P Q H g h => O_rect_beta (fun y => g y = h y)).
+     (fun P Q H => O_ind (fun _ => Q))
+     (fun P Q H => O_ind_beta (fun _ => Q))
+     (fun P Q H g h => O_ind (fun y => g y = h y))
+     (fun P Q H g h => O_ind_beta (fun y => g y = h y)).
 
 Coercion modality_to_reflective_subuniverse : Modality >-> ReflectiveSubuniverse.
 
@@ -192,8 +192,8 @@ Proof.
   generalize dependent A.
   refine (snd inO_sigma_iff _).
   intros A B ? g.
-  exists (O_rect B g).
-  apply O_rect_beta.
+  exists (O_ind B g).
+  apply O_ind_beta.
 Defined.
 
 (** Conversely, if a reflective subuniverse is closed under sigmas, it is a modality. *)

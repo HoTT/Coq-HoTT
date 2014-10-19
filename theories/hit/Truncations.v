@@ -32,7 +32,7 @@ Arguments tr {n A} a.
 Global Instance istrunc_truncation : forall n A, IsTrunc n (Trunc n A) | 1.
 Admitted.
 
-Definition Trunc_rect {n A}
+Definition Trunc_ind {n A}
   (P : Trunc n A -> Type) {Pt : forall aa, IsTrunc n (P aa)}
   : (forall a, P (tr a)) -> (forall aa, P aa)
 := (fun f aa => match aa with tr a => fun _ => f a end Pt).
@@ -41,9 +41,9 @@ End Trunc.
 
 (** The non-dependent version of the eliminator. *)
 
-Definition Trunc_rect_nondep {n A X} `{IsTrunc n X}
+Definition Trunc_rec {n A X} `{IsTrunc n X}
   : (A -> X) -> (Trunc n A -> X)
-:= Trunc_rect (fun _ => X).
+:= Trunc_ind (fun _ => X).
 
 (** Trunc is a modality *)
 
@@ -60,7 +60,7 @@ Section TruncationModality.
                 (@tr n)
                 _)
               _
-              (@Trunc_rect n)
+              (@Trunc_ind n)
               (fun A B B_inO f a => 1)
               _); cbn; try exact _.
     intros A B ? f ?; cbn in *.
@@ -86,7 +86,7 @@ Section TruncationModality.
 
   Definition Trunc_functor {X Y} (f : X -> Y)
   : Trunc n X -> Trunc n Y
-  := Trunc_rect_nondep (tr o f).
+  := Trunc_rec (tr o f).
 
   Definition Trunc_functor_compose {X Y Z} (f : X -> Y) (g : Y -> Z)
   : Trunc_functor (g o f) == Trunc_functor g o Trunc_functor f
@@ -126,7 +126,7 @@ Ltac strip_truncations :=
   progress repeat match goal with
                     | [ T : _ |- _ ]
                       => revert T;
-                        refine (@Trunc_rect _ _ _ _ _);
+                        refine (@Trunc_ind _ _ _ _ _);
                         (** ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated *)
                         [];
                         intro T

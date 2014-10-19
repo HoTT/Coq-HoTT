@@ -23,7 +23,7 @@ Proof.
   apply (@equiv_functor_forall' _ _ _ _ _ (equiv_idmap _)); intro Z.
   apply (@equiv_functor_forall' _ _ _ _ _ (equiv_idmap _)); intro g.
   unfold equiv_idmap; simpl.
-  refine (transitivity (@equiv_sigT_rect _ (fun h : Y -> Z => g o f = h o f) (fun h => g = h.1)) _).
+  refine (transitivity (@equiv_sigT_ind _ (fun h : Y -> Z => g o f = h o f) (fun h => g = h.1)) _).
   (** TODO(JasonGross): Can we do this entirely by chaining equivalences? *)
   apply equiv_iff_hprop.
   { intro hepi.
@@ -50,12 +50,12 @@ Section cones.
     subst l r.
 
     pose (I0 b := ap10 (X ..1) b).
-    refine (Trunc_rect _ _).
+    refine (Trunc_ind _ _).
     pose (fun a : B + Unit => (match a as a return setcone_point _ = tr (push a) with
                                  | inl a' => (I0 a')^
                                  | inr tt => idpath
                                end)) as I0f.
-    refine (pushout_rect _ _ _ I0f _).
+    refine (pushout_ind _ _ _ I0f _).
 
     simpl. subst alpha1. intros.
     unfold setcone_point.
@@ -77,7 +77,7 @@ End cones.
 Lemma issurj_isepi {X Y} (f:X->Y): IsSurjection f -> isepi f.
 intros sur ? ? ? ep. apply path_forall. intro y.
 specialize (sur y). pose (center (merely (hfiber f y))).
-apply (Trunc_rect_nondep (n:=-1) (A:=(sigT (fun x : X => f x = y))));
+apply (Trunc_rec (n:=-1) (A:=(sigT (fun x : X => f x = y))));
   try assumption.
  intros [x p]. set (p0:=apD10 ep x).
  transitivity (g (f x)). by apply ap.
@@ -112,8 +112,8 @@ Section isepi_issurj.
   Definition fam (c : setcone f) : hProp.
   Proof.
     pose (fib y := hexists (fun x : X => f x = y)).
-    apply (fun f => @Trunc_rect_nondep _ _ hProp _ f c).
-    refine (pushout_rectnd hProp
+    apply (fun f => @Trunc_rec _ _ hProp _ f c).
+    refine (pushout_rec hProp
                            (fun x : Y + Unit =>
                               match x with
                                 | inl y => fib y
