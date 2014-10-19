@@ -95,4 +95,24 @@ Section AssumeFunext.
     intros e. apply path_equiv, path_forall. intros ?; apply contr.
   Defined.
 
+  (** Equivalences are functorial under equivalences. *)
+  Definition functor_equiv {A B C D} (h : A <~> C) (k : B <~> D)
+  : (A <~> B) -> (C <~> D)
+  := fun f => equiv_compose (equiv_compose' k f) (equiv_inverse h).
+
+  Global Instance isequiv_functor_equiv {A B C D} (h : A <~> C) (k : B <~> D)
+  : IsEquiv (functor_equiv h k).
+  Proof.
+    refine (isequiv_adjointify _
+              (functor_equiv (equiv_inverse h) (equiv_inverse k)) _ _).
+    - intros f; apply path_equiv, path_arrow; intros x; simpl.
+      exact (eisretr k _ @ ap f (eisretr h x)).
+    - intros g; apply path_equiv, path_arrow; intros x; simpl.
+      exact (eissect k _ @ ap g (eissect h x)).
+  Defined.
+
+  Definition equiv_functor_equiv {A B C D} (h : A <~> C) (k : B <~> D)
+  : (A <~> B) <~> (C <~> D)
+  := BuildEquiv _ _ (functor_equiv h k) _.  
+
 End AssumeFunext.

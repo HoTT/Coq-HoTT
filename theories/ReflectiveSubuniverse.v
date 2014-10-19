@@ -399,10 +399,8 @@ Section Reflective_Subuniverse.
       (f : A -> B) `{O_inverts f}
     : IsEquiv f.
     Proof.
-      assert (IsEquiv (O_unit B o f)).
-      { refine (isequiv_homotopic (O_functor f o O_unit A) _ _).
-        apply O_unit_natural. }
-      refine (cancelL_isequiv (O_unit B)).
+      refine (isequiv_commsq' f (O_functor f) (O_unit A) (O_unit B) _).
+      apply O_unit_natural.
     Defined.
 
     Definition equiv_O_inverts {A B} {A_inO : inO A} {B_inO : inO B}
