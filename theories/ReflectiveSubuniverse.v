@@ -189,6 +189,8 @@ End ReflectiveSubuniverseFromIsEquiv.
 Class Replete (subU : UnitSubuniverse) :=
   inO_equiv_inO : forall T U (T_inO : @inO subU T) (f : T -> U) (feq : IsEquiv f), @inO subU U.
 
+Arguments inO_equiv_inO {_ _} T {U _} f {_}.
+
 (** Of course, with univalence this is automatic.  This is the only appearance of univalence in the theory of reflective subuniverses and (non-lex) modalities. *)
 Global Instance replete_univalence `{Univalence} (subU : UnitSubuniverse)
 : Replete subU.
@@ -336,7 +338,7 @@ Section Reflective_Subuniverse.
     (** An equivalent formulation of repleteness is that a type lies in the subuniverse as soon as its unit map is an equivalence. *)
     Definition inO_isequiv_O_unit {rep : Replete subU} (T:Type)
     : IsEquiv (O_unit T) -> inO T
-    := fun _ => inO_equiv_inO (O T) T _ (O_unit T)^-1 _.
+    := fun _ => inO_equiv_inO (O T) (O_unit T)^-1.
 
     Definition inO_iff_isequiv_O_unit {rep : Replete subU} (T:Type)
     : inO T <-> IsEquiv (O_unit T).
