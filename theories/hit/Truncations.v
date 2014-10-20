@@ -64,7 +64,7 @@ Section TruncationModality.
               (fun A B B_inO f a => 1)
               _); cbn; try exact _.
     intros A B ? f ?; cbn in *.
-    apply trunc_equiv with f; exact _.
+    refine (trunc_equiv _ f); exact _.
   Defined.
 
   Definition trunc_iff_isequiv_truncation (A : Type)

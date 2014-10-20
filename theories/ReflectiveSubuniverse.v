@@ -390,7 +390,7 @@ Section Reflective_Subuniverse.
     Global Instance O_inverts_O_unit (A : Type)
     : O_inverts (O_unit A).
     Proof.
-      refine (isequiv_homotopic (O_unit (O A)) _ _).
+      refine (isequiv_homotopic (O_unit (O A)) _).
       intros x; symmetry; apply O_functor_wellpointed.
     Defined.
 

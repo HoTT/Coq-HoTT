@@ -17,7 +17,7 @@ Section AssumeFunext.
   Proof.
     apply hprop_inhabited_contr; intros feq.
     (* We will show that if [IsEquiv] is inhabited, then it is contractible, because it is equivalent to a sigma of a pointed path-space over a pointed path-space, both of which are contractible. *)
-    refine (@contr_equiv' { g : B -> A & g = f^-1 } _ _ _).
+    refine (contr_equiv' { g : B -> A & g = f^-1 } _).
     equiv_via ({ g:B->A & { r:g=f^-1 & { s:g=f^-1 & r=s }}}); symmetry.
     1:exact (equiv_functor_sigma' (equiv_idmap _) (fun _ => equiv_sigma_contr _)).
     (* First we apply [issig], peel off the first component, and convert to pointwise paths. *)
@@ -77,14 +77,14 @@ Section AssumeFunext.
     (* Coq can find this instance by itself, but it's slow. *)
     := equiv_isequiv (equiv_path_equiv e1 e2).
 
-  (** This implies that types of equivalences inherit truncation.  Note that we only state the theorem for [n.+1]-truncatedness, since it is not true for contractibility: if [B] is contractible but [A] is not, then [A <~> B] is not contractible because it is not inhabited. *)
+  (** This implies that types of equivalences inherit truncation.  Note that we only state the theorem for [n.+1]-truncatedness, since it is not true for contractibility: if [B] is contractible but [A] is not, then [A <~> B] is not contractible because it is not inhabited.
+
+   Don't confuse this lemma with [trunc_equiv], which says that if [A] is truncated and [A] is equivalent to [B], then [B] is truncated.  It would be nice to find a better pair of names for them. *)
   Global Instance istrunc_equiv {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
   : IsTrunc n.+1 (A <~> B).
   Proof.
     simpl. intros e1 e2.
-    apply (@trunc_equiv _ _ (equiv_path_equiv e1 e2)).
-    apply (@trunc_arrow _ A B n.+1 _).
-    apply equiv_isequiv.
+    apply (trunc_equiv _ (equiv_path_equiv e1 e2)).
   Defined.
 
   (** In the contractible case, we have to assume that *both* types are contractible to get a contractible type of equivalences. *)
