@@ -66,19 +66,7 @@ Proof.
 exists (help_objclasspb_is_fibrantreplacement P).
 apply equiv_biinv. split; exists (help_objclasspb_is_fibrantreplacement2 P); intros [a p]. apply idpath.
 destruct p as [[T t] p].
-eapply (@total_path A (fun b : A =>
-          sigT (fun c : sigT (fun u : Type => u) => paths (P b) (pr1 c)))
-(existT
-     (fun b : A =>
-      sigT (fun c : sigT (fun u : Type => u) => paths (P b) (pr1 c))) a
-     (existT (fun c : sigT (fun u : Type => u) => paths (P a) (pr1 c))
-        (existT (fun u : Type => u) (P a) (transport (fun X => X) (p^) t))
-        (idpath (P a))))
-(existT
-     (fun b : A =>
-      sigT (fun c : sigT (fun u : Type => u) => paths (P b) (pr1 c))) a
-     (existT (fun c : sigT (fun u : Type => u) => paths (P a) (pr1 c))
-        (existT (fun u : Type => u) T t) p)) (idpath a)).
+refine (path_sigma' _ (idpath a) _).
 simpl in p. by path_induction.
 Qed.
 
