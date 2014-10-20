@@ -59,6 +59,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/UnivalenceAxiom.v \
 	$(srcdir)/theories/ObjectClassifier.v \
 	$(srcdir)/theories/ReflectiveSubuniverse.v \
+	$(srcdir)/theories/NullHomotopy.v \
 	$(srcdir)/theories/Modality.v \
 	$(srcdir)/theories/Factorization.v \
 	$(srcdir)/theories/hit/Circle.v \
