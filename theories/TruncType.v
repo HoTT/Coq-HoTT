@@ -33,7 +33,7 @@ Proof.
                       (trunctype_type B; istrunc_trunctype_type B)).
     - symmetry. apply equiv_ap. refine _. }
   (* Apparently writing [equiv_inverse e] here instead of [e^-1] is much faster. *)
-  refine (isequiv_homotopic (equiv_inverse e) _ _).
+  refine (isequiv_homotopic (equiv_inverse e) _).
   intros p; destruct p; reflexivity.
 Defined.
 
@@ -63,11 +63,10 @@ Global Instance istrunc_trunctype {n : trunc_index}
   : IsTrunc n.+1 (TruncType n) | 0.
 Proof.
   intros A B.
-  apply (@trunc_equiv _ _ (equiv_path_trunctype A B)).
-    2: apply equiv_isequiv.
+  refine (trunc_equiv _ (equiv_path_trunctype A B)).
   case n as [ | n'].
-    apply contr_equiv_contr_contr. (* The reason is different in this case. *)
-  apply istrunc_equiv.
+  - apply contr_equiv_contr_contr. (* The reason is different in this case. *)
+  - apply istrunc_equiv.
 Defined.
 
 Global Instance isset_hProp : IsHSet hProp.
@@ -78,7 +77,7 @@ Defined.
 Global Instance Sn_trunctype: forall n, IsTrunc n.+1 (sigT (IsTrunc n)) |0.
 Proof.
   intro n.
-  apply (@trunc_equiv' _ _ (equiv_inverse issig_trunctype) _ (@istrunc_trunctype n)).
+  apply (trunc_equiv' _ (equiv_inverse issig_trunctype)).
 Defined.
 
 (** ** Some standard inhabitants *)

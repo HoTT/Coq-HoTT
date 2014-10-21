@@ -71,7 +71,7 @@ Section ClosedModality.
           apply path_contr.
       * intros a. reflexivity.
     - intros ? u.
-      refine (@contr_equiv (join U A) A (fun a:A => push (inr a))^-1 _ _).
+      refine (contr_equiv (join U A) (fun a:A => push (inr a))^-1).
       pose (contr_inhabited_hprop U u).
       exact _.
   Defined.
@@ -90,7 +90,7 @@ Section ClosedModality.
       pose (contr_inhabited_hprop U u).
       exact _.
     - intros A B inO_A f ?; cbn in *; intros u; pose (inO_A u).
-      apply contr_equiv with f; exact _.
+      refine (contr_equiv _ f); exact _.
     - intros A B ? f z.
       refine (pushout_ind _ _ B _ _ z).
       * intros [u | a].

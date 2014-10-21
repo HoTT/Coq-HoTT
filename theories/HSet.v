@@ -40,7 +40,7 @@ Defined.
 
 Global Instance axiomK_isprop A : IsHProp (axiomK A) | 0.
 Proof.
-  apply (trunc_equiv equiv_hset_axiomK).
+  apply (trunc_equiv _ equiv_hset_axiomK).
 Defined.
 
 Theorem set_path2 {A} `{IsHSet A} {x y : A} (p q : x = y):

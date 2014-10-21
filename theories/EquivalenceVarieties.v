@@ -50,7 +50,7 @@ Definition contr_sect_equiv `(f : A -> B) `{IsEquiv A B f}
   : Contr {g : B -> A & Sect g f}.
 Proof.
   (* First we turn homotopies into paths. *)
-  refine (@contr_equiv' { g : B -> A & f o g = idmap } _ _ _).
+  refine (contr_equiv' { g : B -> A & f o g = idmap } _).
   symmetry.
   refine (equiv_functor_sigma' (equiv_idmap _) _); intros g.
   exact (equiv_path_forall (f o g) idmap).
@@ -62,7 +62,7 @@ Definition contr_retr_equiv `(f : A -> B) `{IsEquiv A B f}
   : Contr {g : B -> A & Sect f g}.
 Proof.
   (* This proof is just like the previous one. *)
-  refine (@contr_equiv' { g : B -> A & g o f = idmap } _ _ _).
+  refine (contr_equiv' { g : B -> A & g o f = idmap } _).
   symmetry.
   refine (equiv_functor_sigma' (equiv_idmap _) _); intros g.
   exact (equiv_path_forall (g o f) idmap).
@@ -75,20 +75,20 @@ Local Instance hprop_isequiv `(f : A -> B) : IsHProp (IsEquiv f).
 Proof.
   apply hprop_inhabited_contr; intros ?.
   (* Get rid of that pesky record. *)
-  refine (@contr_equiv _ _ (issig_isequiv f) _ _).
+  refine (contr_equiv _ (issig_isequiv f)).
   (* Now we claim that the top two elements, [s] and the coherence relation, taken together are contractible, so we can peel them off. *)
-  refine (@contr_equiv' {g : B -> A & Sect g f} _
+  refine (contr_equiv' {g : B -> A & Sect g f}
     (equiv_inverse (equiv_functor_sigma' (equiv_idmap (B -> A))
       (fun g => (@equiv_sigma_contr (Sect g f)
         (fun r => {s : Sect f g & forall x, r (f x) = ap f (s x) })
-        _)))) _).
+        _))))).
   (* What remains afterwards is just the type of sections of [f]. *)
   2:apply contr_sect_equiv; assumption.
   intros r.
   (* Now we claim this is equivalent to a certain space of paths. *)
-  refine (@contr_equiv'
+  refine (contr_equiv'
     (forall x, (existT (fun a => f a = f x) x 1) = (g (f x); r (f x)))
-    _ (equiv_inverse _) _).
+    (equiv_inverse _)).
   (* The proof of this equivalence is basically just rearranging quantifiers and paths. *)
   refine (equiv_compose' _ (equiv_sigT_coind (fun x => g (f x) = x)
       (fun x p => r (f x) = ap f p))).

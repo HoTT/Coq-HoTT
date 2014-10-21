@@ -191,7 +191,7 @@ Module Import CommaCategory.
     Proof.
       assert (forall m1 m2,
                 IsTrunc n (a'b'f'.(f) o S _1 m1 = T _1 m2 o abf.(f)))
-        by (intros; apply (trunc_equiv inverse)).
+        by (intros; apply (trunc_equiv _ inverse)).
       eapply trunc_equiv';
       [ exact (issig_morphism _ _) | ].
       typeclasses eauto.

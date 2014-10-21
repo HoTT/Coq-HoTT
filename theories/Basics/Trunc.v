@@ -72,20 +72,20 @@ Hint Immediate trunc_hset : typeclass_instances.
 (** Equivalence preserves truncation (this is, of course, trivial with univalence).
    This is not an [Instance] because it causes infinite loops.
    *)
-Definition trunc_equiv `(f : A -> B)
+Definition trunc_equiv A {B} (f : A -> B)
   `{IsTrunc n A} `{IsEquiv A B f}
   : IsTrunc n B.
 Proof.
   generalize dependent B; generalize dependent A.
   induction n as [| n I]; simpl; intros A ? B f ?.
-  - exact (contr_equiv f).
+  - exact (contr_equiv _ f).
   - intros x y.
     exact (I (f^-1 x = f^-1 y) (H (f^-1 x) (f^-1 y)) (x = y) ((ap (f^-1))^-1) _).
 Qed.
 
-Definition trunc_equiv' `(f : A <~> B) `{IsTrunc n A}
+Definition trunc_equiv' A {B} (f : A <~> B) `{IsTrunc n A}
   : IsTrunc n B
-  := trunc_equiv f.
+  := trunc_equiv A f.
 
 (** ** Truncated morphisms *)
 

@@ -174,7 +174,7 @@ Proof.
   (* case [n = -2], i.e. contractibility *)
   - exact _.
   (* case n = n'.+1 *)
-  - intros f g; apply (trunc_equiv (apD10 ^-1)).
+  - intros f g; apply (trunc_equiv _ (apD10 ^-1)).
 Defined.
 
 

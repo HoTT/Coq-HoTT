@@ -302,7 +302,7 @@ Proof.
   { exists (center A, center B).
     intros z; apply path_prod; apply contr. }
   { intros x y.
-    exact (trunc_equiv (equiv_path_prod x y)). }
+    exact (trunc_equiv _ (equiv_path_prod x y)). }
 Defined.
 
 Global Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B) | 100

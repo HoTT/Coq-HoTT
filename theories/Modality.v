@@ -126,9 +126,8 @@ Section EasyModality.
   Proof.
     refine (Build_Modality usubU _ O_ind' O_ind_beta' _); cbn.
     intros A A_inO x y.
-    refine (inO_equiv_inO (O_unit A x = O_unit A y) (x = y)
-                          (inO_pathsO A _ _)
-                          (ap (O_unit A))^-1 _).
+    refine (inO_equiv_inO (O_unit A x = O_unit A y)
+                          (ap (O_unit A))^-1).
   Defined.
 
 End EasyModality.
