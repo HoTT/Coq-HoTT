@@ -56,7 +56,7 @@ Defined.
 
 Definition contr_trunc_conn {n} {A} `{IsTrunc n A} `{IsConnected n A} : Contr A.
 Proof.
-  apply (contr_equiv (@tr n A)^-1).
+  apply (contr_equiv _ (@tr n A)^-1).
 Defined.
 
 Definition contr_inhab_prop {A} `{IsHProp A} (ma : merely A) : Contr A.
@@ -252,7 +252,7 @@ Proof.
   exists (extension_conn_map_elim f P d).
   intros y. apply (allpath_extension_conn_map (n := n)); assumption.
   (* m = S m' *)
-  intros e e'. refine (trunc_equiv (path_extension e e')).
+  intros e e'. refine (trunc_equiv _ (path_extension e e')).
   (* magically infers: paths in extensions = extensions into paths,
                        which by induction is m'-truncated. *)
 Defined.

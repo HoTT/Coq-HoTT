@@ -32,22 +32,11 @@ They are currently in several groups:
 - Other files in the root `theories/` directory, such as `Trunc`,
   `TruncType`, `HProp`, `HSet`, `EquivalenceVarieties`,
   `FunextVarieties`, `ObjectClassifier`, `ReflectiveSubuniverse`,
-<<<<<<< HEAD
-  `CoReflectiveSubuniverse`, `Modality`, `CoModality`: These contain more
-  advanced facts and theories which may depend on files in `types/`.
-  Conversely, some files in `types/` unfortunately depend on files in the root,
-  so the dependency structure is kind of complicated; be sure you don't
-  introduce any import loops.  The file `Misc` can be used to help resolve
-  potentially circular dependencies, although it should be avoided whenever
-  possible.  Note that `make clean; make` will produce an error if there is a
-  dependency loop (ordinary `make` may not).
-=======
   `Modality`: These contain more advanced facts and theories which may
   depend on files in `Types/`.  The file `Misc` can be used to help resolve
   potentially circular dependencies, although it should be avoided
   whenever possible.  Note that `make clean; make` will produce an
   error if there is a dependency loop (ordinary `make` may not).
->>>>>>> upstream/master
 
 - `hit/*`: Files involving higher inductive types.  Each higher
   inductive type is defined in a corresponding file (see conventions
@@ -253,10 +242,7 @@ Here are some of the typeclasses we are using:
 - equivalences: `IsEquiv`
 - truncation levels: `Contr`, `IsTrunc`
 - axioms (see below): `Funext`, `Univalence`
-- membership in subuniverses; `inO`
-- records that we may want to "open": `ReflectiveSubuniverse`,
-  `Modality`.  These are treated somewhat specially; see the comments
-  in `ReflectiveSubuniverse.v`.
+- subuniverses: `In`, `Replete`
 
 `IsHSet`, `IsHProp`, and `Contr` are notations for `IsTrunc 0`,
 `IsTrunc -1`, and `IsTrunc -2` respectively.  Since `IsTrunc` is
@@ -292,6 +278,18 @@ prevents this), please add a comment to that effect where it is
 defined.  This way no one else will come along and helpfully change it
 back to an `Instance`.
 
+If a particular fact should not be made an ordinary instance, it can
+still be made an "immediate instance", meaning that Coq will use it
+automatically to solve a goal *if* its hypotheses are already present
+in the context, but will not initiate an instance search for those
+hypotheses otherwise.  This avoids infinite instance-search loops.  To
+declare a fact as an immediate instance, make it a `Definition` rather
+than an `Instance` and then say
+
+```coq
+Hint Immediate foo : typeclass_instances.
+```
+
 ### Local and Global Instances ###
 
 When declaring an `Instance` you should *always* use either the
@@ -303,10 +301,6 @@ file), while the latter puts it in the instance database globally.
 If you write `Instance` without `Local` or `Global`, Coq will
 sometimes make it local and sometimes global, so to avoid confusion it
 is better to always specify explicitly which you intend.
-
-The typeclasses for subuniverses and modalities are treated somewhat
-specially: their `Instance`s should *only* be declared `Local`.  See
-the comments in `ReflectiveSubuniverse.v` for details.
 
 ### Using Typeclasses ###
 
@@ -710,7 +704,7 @@ instead.
 
 ## Coding Hints ##
 
-### Unfolding compose ###
+### Unfolding compose and other definitions ###
 
 The operation `compose`, notation `g o f`, is a defined constant
 rather than simply a notation for `fun x => g (f x)` so that it can be
@@ -724,6 +718,17 @@ which tells `simpl` and related tactics to automatically unfold
 (defined in `Tactics`) to apply theorems containing `compose` to goals
 in which it has been unfolded.  It seems better not to make this
 declaration globally, however.
+
+Occasionally it may also be necessary to give a similar command for
+definitions other than `compose` as well, and it may not be obvious
+where the issue lies; sometimes the unification failure happens in an
+implicit argument that is not directly visible in the output.  One way
+to discover where the problem lies is to turn on printing of all
+implicit arguments with `Set Printing All`; another is to use `Set
+Debug Tactic Unification` and inspect the output to see where
+`rewrite` is failing to unify.  (As of Oct 2014, however, the latter
+requires a more up-to-date version of Coq than our submodule currently
+points to.)
 
 ### Simpl nomatch ###
 

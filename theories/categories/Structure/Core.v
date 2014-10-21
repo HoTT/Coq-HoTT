@@ -233,7 +233,7 @@ Section precategory.
               _
               _
               _
-              (fun s d => trunc_equiv' (issig_morphism P s d)));
+              (fun s d => trunc_equiv' _ (issig_morphism P s d)));
     simpl;
     abstract (
         repeat match goal with

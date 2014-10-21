@@ -63,7 +63,7 @@ Global Instance transitive_equiv : Transitive Equiv | 0 :=
 (** Anything homotopic to an equivalence is an equivalence. *)
 Section IsEquivHomotopic.
 
-  Context `(f : A -> B) `(g : A -> B).
+  Context {A B : Type} (f : A -> B) {g : A -> B}.
   Context `{IsEquiv A B f}.
   Hypothesis h : f == g.
 
@@ -149,7 +149,7 @@ Global Instance symmetric_equiv : Symmetric Equiv | 0 := @equiv_inverse.
 Definition cancelR_isequiv {A B C} (f : A -> B) {g : B -> C}
   `{IsEquiv A B f} `{IsEquiv A C (g o f)}
   : IsEquiv g
-  := isequiv_homotopic (compose (compose g f) f^-1) g
+  := isequiv_homotopic (compose (compose g f) f^-1)
        (fun b => ap g (eisretr f b)).
 
 Definition cancelR_equiv {A B C} (f : A -> B) {g : B -> C}
@@ -161,13 +161,34 @@ Definition cancelR_equiv {A B C} (f : A -> B) {g : B -> C}
 Definition cancelL_isequiv {A B C} (g : B -> C) {f : A -> B}
   `{IsEquiv B C g} `{IsEquiv A C (g o f)}
   : IsEquiv f
-  := isequiv_homotopic (compose g^-1 (compose g f)) f
+  := isequiv_homotopic (compose g^-1 (compose g f))
        (fun a => eissect g (f a)).
 
 Definition cancelL_equiv {A B C} (g : B -> C) {f : A -> B}
   `{IsEquiv B C g} `{IsEquiv A C (g o f)}
   : A <~> B
   := BuildEquiv _ _ f (cancelL_isequiv g).
+
+(** Combining these with [isequiv_compose], we see that equivalences can be transported across commutative squares. *)
+Definition isequiv_commsq {A B C D}
+           (f : A -> B) (g : C -> D) (h : A -> C) (k : B -> D)
+           (p : k o f == g o h)
+           `{IsEquiv _ _ f} `{IsEquiv _ _ h} `{IsEquiv _ _ k}
+: IsEquiv g.
+Proof.
+  refine (@cancelR_isequiv _ _ _ h g _ _).
+  refine (isequiv_homotopic _ p).
+Defined.
+
+Definition isequiv_commsq' {A B C D}
+           (f : A -> B) (g : C -> D) (h : A -> C) (k : B -> D)
+           (p : g o h == k o f)
+           `{IsEquiv _ _ g} `{IsEquiv _ _ h} `{IsEquiv _ _ k}
+: IsEquiv f.
+Proof.
+  refine (@cancelL_isequiv _ _ _ k f _ _).
+  refine (isequiv_homotopic _ p).
+Defined.
 
 (** Transporting is an equivalence. *)
 Section EquivTransport.
@@ -237,7 +258,7 @@ Definition moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A) (p : f y = x)
   := (eissect f y)^ @ ap (f^-1) p.
 
 (** Equivalence preserves contractibility (which of course is trivial under univalence). *)
-Lemma contr_equiv `(f : A -> B) `{IsEquiv A B f} `{Contr A}
+Lemma contr_equiv A {B} (f : A -> B) `{IsEquiv A B f} `{Contr A}
   : Contr B.
 Proof.
   exists (f (center A)).
@@ -246,9 +267,9 @@ Proof.
   apply contr.
 Qed.
 
-Definition contr_equiv' `(f : A <~> B) `{Contr A}
+Definition contr_equiv' A {B} `(f : A <~> B) `{Contr A}
   : Contr B
-  := contr_equiv f.
+  := contr_equiv A f.
 
 (** Any two contractible types are equivalent. *)
 (* TODO: the name [equiv_contr_contr] is not great in conjunction with the existing, unrelated [contr_equiv_contr].  Consider alternative names? *)

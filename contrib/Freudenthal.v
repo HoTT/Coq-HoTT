@@ -110,7 +110,7 @@ Proof.
       destruct (imposs 1).
       intros ?. apply (@trunc_leq -1). exact tt. apply hprop_isequiv.
   intros []. unfold FST_Codes_cross.
-  apply (isequiv_homotopic (FST_Codes_cross_x0 q)).
+  refine (isequiv_homotopic (FST_Codes_cross_x0 q) _).
   { unfold FST_Codes_cross_x0.
     apply isequiv_Trunc_functor, @isequiv_functor_sigma. refine _.
     intros a. apply isequiv_cancelR. }

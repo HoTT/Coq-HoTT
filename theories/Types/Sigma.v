@@ -501,7 +501,7 @@ Proof.
     intros [a ?].
     refine (path_sigma' P (contr a) (path_contr _ _)). }
   { intros u v.
-    refine (trunc_equiv (path_sigma_uncurried P u v)). }
+    refine (trunc_equiv _ (path_sigma_uncurried P u v)). }
 Defined.
 
 (** ** Subtypes (sigma types whose second components are hprops) *)

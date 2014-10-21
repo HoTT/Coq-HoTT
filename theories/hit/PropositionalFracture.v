@@ -13,7 +13,7 @@ Proof.
   refine (Build_Modality_easy
            (fun X => U -> X)
            (fun X x u => x)
-            _ _ _); unfold O, inO, O_unit.
+            _ _ _).
   - intros A B f z u.
     refine (transport B _ (f (z u) u)).
     apply path_arrow; intros u'.
@@ -30,7 +30,7 @@ Proof.
       apply ap_const.
     * apply eta_path_arrow.
   - intros A z z'.
-    refine (isequiv_adjointify _ _ _ _); unfold O.
+    refine (isequiv_adjointify _ _ _ _).
     * intros f; apply path_arrow; intros u.
       exact (ap10 (f u) u).
     * intros f; apply path_arrow; intros u.
@@ -71,12 +71,12 @@ Section ClosedModality.
           apply path_contr.
       * intros a. reflexivity.
     - intros ? u.
-      refine (@contr_equiv (join U A) A (fun a:A => push (inr a))^-1 _ _).
+      refine (contr_equiv (join U A) (fun a:A => push (inr a))^-1).
       pose (contr_inhabited_hprop U u).
       exact _.
   Defined.
 
-  Local Instance closed_modality : Modality.
+  Definition closed_modality : Modality.
   Proof.
     refine (Build_Modality
               (Build_UnitSubuniverse
@@ -90,7 +90,7 @@ Section ClosedModality.
       pose (contr_inhabited_hprop U u).
       exact _.
     - intros A B inO_A f ?; cbn in *; intros u; pose (inO_A u).
-      apply contr_equiv with f; exact _.
+      refine (contr_equiv _ f); exact _.
     - intros A B ? f z.
       refine (pushout_ind _ _ B _ _ z).
       * intros [u | a].

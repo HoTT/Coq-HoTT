@@ -124,12 +124,11 @@ Section Factorization.
       simpl rewrite (@ap_compose _ _ _ (transport idmap (path_universe II)^)
                                  (factor2 fact)).
       rewrite <- ap_p_pp; rewrite_moveL_Mp_p.
-      Fail rewrite (concat_Ap ff2). (* Maybe one day rewrite will be smarter *)
-      refine (_ @ (((concat_Ap ff2 _)^ @@ 1) @@ 1)).
+      (* We need to supply [ff2] here or else it will rewrite in the wrong place. *)
+      simpl rewrite (concat_Ap ff2).
       (* Next is another naturality  *)
-      rewrite ap_compose.
-      Fail rewrite <- ap_p_pp.    (* Yeah, rewrite. *)
-      refine (_ @ (ap_p_pp (factor2 fact') _ _ _ @@ 1)).
+      simpl rewrite ap_compose.
+      simpl rewrite <- ap_p_pp.
       repeat rewrite (ap_pp (transport idmap (path_universe II)^)).
       rewrite concat_pA_p.
       (* And another one *)
@@ -143,8 +142,7 @@ Section Factorization.
       repeat rewrite concat_p_pp.
       repeat rewrite <- ap_pp.
       rewrite <- ap_compose.
-      (* Here we [refine] rather than [rewrite] to specify exactly *where* we want to apply naturality. *)
-      refine (_ @ (((concat_Ap ff2 _) @@ 1) @@ 1)).
+      simpl rewrite <- (concat_Ap ff2).
       rewrite_moveL_Mp_p.
       (* Finally we can use [fff]! *)
       refine (_ @ (fff a)^).
@@ -309,6 +307,10 @@ Section FactSys.
     + apply gf.
   Defined.
 
+  (* Enable [simpl rewrite] to unfold [compose] and [lift_factsys] in the following proof.  It may not be obvious from the proof that the latter is necessary, but [lift_factsys] appears in the invisible implicit point-arguments of [paths].  One way to discover issues of that sort is to turn on printing of all implicit argumnets with [Set Printing All]; another is to use [Set Debug Tactic Unification] and inspect the output to see what [rewrite] is trying and failing to unify. *)
+  Local Arguments compose / .
+  Local Arguments lift_factsys / .
+
   (** And finally prove that these two triangles compose to the given commutative square. *)
   Definition lift_factsys_square (x : A)
   : ap p (lift_factsys_tri1 x)^ @ lift_factsys_tri2 (i x) = h x.
@@ -327,22 +329,18 @@ Section FactSys.
     repeat rewrite concat_p_pp; apply whiskerR.
     (* Next we set up for a naturality. *)
     rewrite ap_compose, <- ap_pp, <- inv_pp.
-    Fail rewrite <- ap_pp.    (* rewrite, I hardly knew ye *)
-    refine (((ap (ap p) (inverse2 (ap_pp f2 _ _)^) @@ 1) @@ 1) @ _).
+    simpl rewrite <- ap_pp.
     rewrite <- ap_V, <- ap_compose.
-    Fail rewrite concat_Ap.   (* la la la *)
-    refine ((concat_Ap q2 _ @@ 1) @ _).
+    simpl rewrite (concat_Ap q2).
     (* Now we can cancel another path *)
     rewrite concat_pp_p; apply whiskerL.
     (* And set up for an application of [ap]. *)
-    rewrite ap_compose.
-    Fail rewrite <- ap_pp.    (* again? *)
-    refine ((ap_pp g2 _ _)^ @ _).
+    simpl rewrite ap_compose.
+    simpl rewrite <- ap_pp.
     apply ap.
     (* Now we apply the triangle identity [eisadj]. *)
     rewrite inv_pp, ap_pp, ap_V.
-    Fail rewrite <- eisadj.   (* oh, let this be the last time please *)
-    refine ((((inverse2 (eisadj q (f1 x))^) @@ 1) @@ 1) @ _).
+    simpl rewrite <- eisadj.
     (* Finally, we rearrange and it becomes a naturality square. *)
     rewrite concat_pp_p; apply moveR_Vp.
     rewrite <- ap_V, inv_V, <- ap_compose.

@@ -4,7 +4,7 @@
 
 Require Import HoTT.Basics.
 Require Import Types.Sigma Types.Forall Types.Paths Types.Bool.
-Require Import HProp Misc.
+Require Import HProp NullHomotopy.
 Require Import hit.Suspension hit.Circle.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
