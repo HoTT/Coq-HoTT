@@ -242,10 +242,7 @@ Here are some of the typeclasses we are using:
 - equivalences: `IsEquiv`
 - truncation levels: `Contr`, `IsTrunc`
 - axioms (see below): `Funext`, `Univalence`
-- membership in subuniverses; `inO`
-- records that we may want to "open": `ReflectiveSubuniverse`,
-  `Modality`.  These are treated somewhat specially; see the comments
-  in `ReflectiveSubuniverse.v`.
+- subuniverses: `In`, `Replete`
 
 `IsHSet`, `IsHProp`, and `Contr` are notations for `IsTrunc 0`,
 `IsTrunc -1`, and `IsTrunc -2` respectively.  Since `IsTrunc` is
@@ -281,6 +278,18 @@ prevents this), please add a comment to that effect where it is
 defined.  This way no one else will come along and helpfully change it
 back to an `Instance`.
 
+If a particular fact should not be made an ordinary instance, it can
+still be made an "immediate instance", meaning that Coq will use it
+automatically to solve a goal *if* its hypotheses are already present
+in the context, but will not initiate an instance search for those
+hypotheses otherwise.  This avoids infinite instance-search loops.  To
+declare a fact as an immediate instance, make it a `Definition` rather
+than an `Instance` and then say
+
+```coq
+Hint Immediate foo : typeclass_instances.
+```
+
 ### Local and Global Instances ###
 
 When declaring an `Instance` you should *always* use either the
@@ -292,10 +301,6 @@ file), while the latter puts it in the instance database globally.
 If you write `Instance` without `Local` or `Global`, Coq will
 sometimes make it local and sometimes global, so to avoid confusion it
 is better to always specify explicitly which you intend.
-
-The typeclasses for subuniverses and modalities are treated somewhat
-specially: their `Instance`s should *only* be declared `Local`.  See
-the comments in `ReflectiveSubuniverse.v` for details.
 
 ### Using Typeclasses ###
 
