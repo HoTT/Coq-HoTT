@@ -307,7 +307,7 @@ Section FactSys.
     + apply gf.
   Defined.
 
-  (* Enable [simpl rewrite] to unfold [compose] and [lift_factsys] in the following proof.  It may not be obvious from the proof that the latter is necessary, but [lift_factsys] appears in the invisible implicit point-arguments of [paths]. *)
+  (* Enable [simpl rewrite] to unfold [compose] and [lift_factsys] in the following proof.  It may not be obvious from the proof that the latter is necessary, but [lift_factsys] appears in the invisible implicit point-arguments of [paths].  One way to discover issues of that sort is to turn on printing of all implicit argumnets with [Set Printing All]; another is to use [Set Debug Tactic Unification] and inspect the output to see what [rewrite] is trying and failing to unify. *)
   Local Arguments compose / .
   Local Arguments lift_factsys / .
 
