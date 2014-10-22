@@ -156,7 +156,7 @@ In particular, all of the [move] family are equivalences.
 
 (Note: currently, some but not all of these [isequiv_] lemmas have corresponding [equiv_] lemmas.  Also, they do *not* currently contain the computational content that e.g. the inverse of [moveR_Mp] is [moveL_Vp]; perhaps it would be useful if they did? *)
 
-Definition isequiv_moveR_Mp
+Global Instance isequiv_moveR_Mp
  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveR_Mp p q r).
 Proof.
@@ -164,7 +164,12 @@ Proof.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
-Definition isequiv_moveR_pM
+Definition equiv_moveR_Mp
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
+: (p = r^ @ q) <~> (r @ p = q)
+:= BuildEquiv _ _ (moveR_Mp p q r) _.
+
+Global Instance isequiv_moveR_pM
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveR_pM p q r).
 Proof.
@@ -172,7 +177,12 @@ Proof.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
-Definition isequiv_moveR_Vp
+Definition equiv_moveR_pM
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
+: (r = q @ p^) <~> (r @ p = q)
+:= BuildEquiv _ _ (moveR_pM p q r) _.
+
+Global Instance isequiv_moveR_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : IsEquiv (moveR_Vp p q r).
 Proof.
@@ -183,9 +193,9 @@ Defined.
 Definition equiv_moveR_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : (p = r @ q) <~> (r^ @ p = q)
-:= BuildEquiv _ _ _ (isequiv_moveR_Vp p q r).
+:= BuildEquiv _ _ (moveR_Vp p q r) _.
 
-Definition isequiv_moveR_pV
+Global Instance isequiv_moveR_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
 : IsEquiv (moveR_pV p q r).
 Proof.
@@ -193,13 +203,23 @@ Proof.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
-Definition isequiv_moveL_Mp
+Definition equiv_moveR_pV
+  {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
+: (r = q @ p) <~> (r @ p^ = q)
+:= BuildEquiv _ _ (moveR_pV p q r) _.
+
+Global Instance isequiv_moveL_Mp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveL_Mp p q r).
 Proof.
   destruct r.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
+
+Definition equiv_moveL_Mp
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
+: (r^ @ q = p) <~> (q = r @ p)
+:= BuildEquiv _ _ (moveL_Mp p q r) _.
 
 Definition isequiv_moveL_pM
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
@@ -214,7 +234,7 @@ Definition equiv_moveL_pM
   q @ p^ = r <~> q = r @ p
   := BuildEquiv _ _ _ (isequiv_moveL_pM p q r).
 
-Definition isequiv_moveL_Vp
+Global Instance isequiv_moveL_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : IsEquiv (moveL_Vp p q r).
 Proof.
@@ -222,13 +242,23 @@ Proof.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
-Definition isequiv_moveL_pV
+Definition equiv_moveL_Vp
+  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
+: r @ q = p <~> q = r^ @ p
+:= BuildEquiv _ _ (moveL_Vp p q r) _.
+
+Global Instance isequiv_moveL_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
 : IsEquiv (moveL_pV p q r).
 Proof.
   destruct p.
   apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
+
+Definition equiv_moveL_pV
+  {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
+: q @ p = r <~> q = r @ p^
+:= BuildEquiv _ _ (moveL_pV p q r) _.
 
 Definition isequiv_moveL_1M {A : Type} {x y : A} (p q : x = y)
 : IsEquiv (moveL_1M p q).
@@ -278,33 +308,53 @@ Proof.
   destruct p. apply isequiv_concat_r.
 Defined.
 
-Definition isequiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
+Global Instance isequiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : IsEquiv (moveR_transport_p P p u v).
 Proof.
   destruct p. apply isequiv_idmap.
 Defined.
 
-Definition isequiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
+Definition equiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
+  (p : x = y) (u : P x) (v : P y)
+: u = transport P p^ v <~> transport P p u = v
+:= BuildEquiv _ _ (moveR_transport_p P p u v) _.
+
+Global Instance isequiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : IsEquiv (moveR_transport_V P p u v).
 Proof.
   destruct p. apply isequiv_idmap.
 Defined.
 
-Definition isequiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
+Definition equiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
+  (p : y = x) (u : P x) (v : P y)
+: u = transport P p v <~> transport P p^ u = v
+:= BuildEquiv _ _ (moveR_transport_V P p u v) _.
+
+Global Instance isequiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : IsEquiv (moveL_transport_V P p u v).
 Proof.
   destruct p. apply isequiv_idmap.
 Defined.
 
-Definition isequiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
+Definition equiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
+  (p : x = y) (u : P x) (v : P y)
+: transport P p u = v <~> u = transport P p^ v
+:= BuildEquiv _ _ (moveL_transport_V P p u v) _.
+
+Global Instance isequiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : IsEquiv (moveL_transport_p P p u v).
 Proof.
   destruct p. apply isequiv_idmap.
 Defined.
+
+Definition equiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
+  (p : y = x) (u : P x) (v : P y)
+: transport P p^ u = v <~> u = transport P p v
+:= BuildEquiv _ _ (moveL_transport_p P p u v) _.
 
 Definition isequiv_cancelL {A} {x y z : A} (p : x = y) (q r : y = z)
   : IsEquiv (cancelL p q r).

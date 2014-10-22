@@ -2,7 +2,7 @@
 (** * Theorems about Sigma-types (dependent sums) *)
 
 Require Import HoTT.Basics.
-Require Import Types.Arrow.
+Require Import Types.Arrow Types.Prod Types.Paths Types.Unit.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -394,7 +394,8 @@ Definition equiv_functor_sigma_id `{P : A -> Type} `{Q : A -> Type}
 : sigT P <~> sigT Q
   := equiv_functor_sigma (equiv_idmap A) g.
 
-(** Summing up a contractible family of types does nothing. *)
+(** Lemma 3.11.9(i): Summing up a contractible family of types does nothing. *)
+
 Global Instance isequiv_pr1_contr {A} {P : A -> Type}
          `{forall a, Contr (P a)}
 : IsEquiv (@pr1 A P) | 100.
@@ -410,6 +411,20 @@ Definition equiv_sigma_contr {A : Type} (P : A -> Type)
            `{forall a, Contr (P a)}
 : sigT P <~> A
   := BuildEquiv _ _ pr1 _.
+
+(** Lemma 3.11.9(ii): Dually, summing up over a contractible type does nothing. *)
+
+Definition equiv_contr_sigma {A : Type} (P : A -> Type) `{Contr A}
+: { x : A & P x } <~> P (center A).
+Proof.
+  refine (equiv_adjointify (fun xp => (contr xp.1)^ # xp.2)
+                           (fun p => (center A ; p)) _ _).
+  - intros p; simpl.
+    exact (ap (fun q => q # p) (path_contr _ 1)).
+  - intros [a p].
+    refine (path_sigma' _ (contr a) _).
+    apply transport_pV.
+Defined.
 
 (** ** Associativity *)
 
@@ -436,6 +451,25 @@ Definition equiv_sigma_prod `(Q : (A * B) -> Type)
           (fun _ => 1)
           (fun _ => 1)
           (fun _ => 1)).
+
+(** ** Symmetry *)
+
+Definition equiv_sigma_symm `(P : A -> B -> Type)
+: {a : A & {b : B & P a b}} <~> {b : B & {a : A & P a b}}
+:= equiv_compose'
+     (equiv_inverse (equiv_sigma_prod (fun x => P (snd x) (fst x))))
+   (equiv_compose'
+      (equiv_functor_sigma' (equiv_prod_symm A B)
+                            (fun x => equiv_idmap (P (fst x) (snd x))))
+      (equiv_sigma_prod (fun x => P (fst x) (snd x)))).
+
+Definition equiv_sigma_symm0 (A B : Type)
+: {a : A & B} <~> {b : B & A}.
+Proof.
+  refine (BuildEquiv _ _ (fun (w:{a:A & B}) => (w.2 ; w.1)) _).
+  refine (BuildIsEquiv _ _ _ (fun (z:{b:B & A}) => (z.2 ; z.1))
+                       _ _ _); intros [x y]; reflexivity.
+Defined.
 
 (** ** Universal mapping properties *)
 

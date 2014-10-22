@@ -7,6 +7,7 @@ Require Export HoTT.Basics.
 
 Require Export HoTT.Types.
 
+Require Export Fibrations.
 Require Export Conjugation.
 Require Export HProp.
 Require Export HSet.
