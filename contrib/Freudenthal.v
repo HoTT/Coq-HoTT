@@ -19,7 +19,7 @@ Proof.
   apply isconnected_from_elim.
   intros C H' f. exists (f North).
   assert ({ p0 : f North = f South & forall x:X, ap f (merid x) = p0 })
-    as [p0 allpath_p0] by (apply isconnected_elim; apply H').
+    as [p0 allpath_p0] by (apply (isconnected_elim n); apply H').
   apply (Susp_ind (fun a => f a = f North) 1 p0^).
   intros x.
   apply (concat (transport_paths_Fl _ _)).
