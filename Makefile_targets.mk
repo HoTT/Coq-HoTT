@@ -30,7 +30,6 @@ CORE_VFILES = \
 	$(srcdir)/theories/Basics/Trunc.v \
 	$(srcdir)/theories/Basics/FunextVarieties.v \
 	$(srcdir)/theories/Basics/Pointed.v \
-	$(srcdir)/theories/Basics/Fibrations.v \
 	$(srcdir)/theories/Basics.v \
 	$(srcdir)/theories/Types/Paths.v \
 	$(srcdir)/theories/Types/Unit.v \
@@ -46,6 +45,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/Types/Universe.v \
 	$(srcdir)/theories/Types/Nat.v \
 	$(srcdir)/theories/Types.v \
+	$(srcdir)/theories/Fibrations.v \
 	$(srcdir)/theories/Conjugation.v \
 	$(srcdir)/theories/HProp.v \
 	$(srcdir)/theories/EquivalenceVarieties.v \

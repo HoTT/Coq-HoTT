@@ -549,6 +549,12 @@ Class IsPointed (A : Type) := point : A.
 Definition pointedType := { u : Type & IsPointed u }.
 Arguments point A {_}.
 
+(** *** Homotopy fibers *)
+
+(** Homotopy fibers are homotopical inverse images of points.  *)
+
+Definition hfiber {A B : Type} (f : A -> B) (y : B) := { x : A & f x = y }.
+
 (** Ssreflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=
   trivial; intros; solve
