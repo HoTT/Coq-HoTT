@@ -19,6 +19,9 @@ Record UnitSubuniverse :=
     O_reflector : Type -> Type ;
     O_inO_internal : forall T, inO_internal (O_reflector T) ;
     to : forall T, T -> O_reflector T ;
+    inO_equiv_inO_internal :
+      forall T U (T_inO : inO_internal T) (f : T -> U) (feq : IsEquiv f),
+        inO_internal U ;
     (** In most examples, [Funext] is necessary to prove that the predicate of being in the subuniverse is an hprop.  To avoid needing to assume [Funext] as a global hypothesis when constructing such examples, and since [Funext] is often not needed for any of the rest of the theory, we add it as a hypothesis to this specific field of the record. *)
     hprop_inO_internal : Funext -> forall T, IsHProp (inO_internal T)
   }.
@@ -40,6 +43,12 @@ Class In (O : UnitSubuniverse) (T : Type) :=
 Typeclasses Transparent In.
 Typeclasses Transparent inO_internal.
 Typeclasses Transparent O_reflector.
+
+(** We assumed repleteness of the subuniverse in the definition.  Of course, with univalence this would be automatic, but we include it as a hypothesis since this is the only appearance of univalence in the theory of reflective subuniverses and non-lex modalities, and most or all examples can be shown to be replete without using univalence. *)
+Definition inO_equiv_inO {O : UnitSubuniverse}
+           T {U} {T_inO : In O T} (f : T -> U) {feq : IsEquiv f}
+: In O U
+:= inO_equiv_inO_internal O T U T_inO f feq.
 
 (** Being in the subuniverse is a mere predicate (by hypothesis) *)
 Global Instance hprop_inO {fs : Funext} {O : UnitSubuniverse} (T : Type)
@@ -159,29 +168,9 @@ Definition reflective_subuniverse_from_isequiv
 
 3. In fact, the data of a reflective subuniverse according to our definition are precisely a couple of special cases of the data of a modality.  Thus, all the theorems we prove about reflective subuniverses will, when interpreted for a modality (coerced as above to a reflective subuniverse), reduce definitionally to "the way we would have proved them directly for a modality".  *)
 
-(** ** Replete Subuniverses *)
-
-(** A subuniverse is replete if it is closed under equivalence.  This is also a more usual sort of typeclass.  We are not very interested in non-replete subuniverses; the reason for not including repleteness in the main definition is so that functoriality, below, can not depend on it, so that in turn [Build_Modality_easy] can use functoriality to prove repleteness. *)
-
-Class Replete (O : UnitSubuniverse) :=
-  inO_equiv_inO :
-    forall T U (T_inO : In O T) (f : T -> U) (feq : IsEquiv f),
-      In O U.
-
-Arguments inO_equiv_inO {_ _} T {U _} f {_}.
-
-(** Of course, with univalence this is automatic.  This is the only appearance of univalence in the theory of reflective subuniverses and (non-lex) modalities. *)
-Global Instance replete_univalence `{Univalence} (O : UnitSubuniverse)
-: Replete O.
-Proof.
-  intros T U ? f ?.
-  refine (transport (In O) _ _).
-  apply path_universe with f; exact _.
-Defined.
-
 (** ** Properties of Reflective Subuniverses *)
 
-(** We now prove a bunch of things about an arbitrary reflective subuniverse (sometimes replete). *)
+(** We now prove a bunch of things about an arbitrary reflective subuniverse. *)
 Section Reflective_Subuniverse.
   Context (O : ReflectiveSubuniverse).
 
@@ -327,43 +316,21 @@ Section Reflective_Subuniverse.
   Section Replete.
 
     (** An equivalent formulation of repleteness is that a type lies in the subuniverse as soon as its unit map is an equivalence. *)
-    Definition inO_isequiv_to_O {rep : Replete O} (T:Type)
+    Definition inO_isequiv_to_O (T:Type)
     : IsEquiv (to O T) -> In O T
     := fun _ => inO_equiv_inO (O T) (to O T)^-1.
 
     (* We don't make this an ordinary instance, but we allow it to solve [In O] constraints if we already have [IsEquiv] as a hypothesis.  *)
     Hint Immediate inO_isequiv_to_O : typeclass_instances.
 
-    Definition inO_iff_isequiv_to_O {rep : Replete O} (T:Type)
+    Definition inO_iff_isequiv_to_O (T:Type)
     : In O T <-> IsEquiv (to O T).
     Proof.
       split; exact _.
     Defined.
 
-    Definition replete_inO_isequiv_to_O
-           (H : forall T, IsEquiv (to O T) -> In O T)
-    : Replete O.
-    Proof.
-      intros A B A_inO f feq.
-      pose (uA := BuildEquiv _ _ (to O A) _).
-      refine (H B (isequiv_adjointify (to O B) _ _ _)); cbn.
-      - exact (f o uA^-1 o (O_functor f)^-1).
-      - intros x; unfold compose.
-        refine ((to_O_natural f _)^ @ _).
-        transitivity (O_functor f ((O_functor f)^-1 x)).
-        + apply (ap (O_functor f)).
-          apply eisretr.
-        + apply eisretr.
-      - intros x; unfold compose.
-        transitivity (f (uA^-1 (to O A (f^-1 x)))).
-        + apply ap, ap, (to_O_natural f^-1 x).
-        + transitivity (f (f^-1 x)).
-          * apply ap, eissect.
-          * apply eisretr.
-    Defined.
-
-    (** Thus, [T] is in a replete subuniverse as soon as [to O T] admits a retraction. *)
-    Definition inO_to_O_retract {rep : Replete O} (T:Type) (mu : O T -> T)
+    (** Thus, [T] is in a subuniverse as soon as [to O T] admits a retraction. *)
+    Definition inO_to_O_retract (T:Type) (mu : O T -> T)
     : Sect (to O T) mu -> In O T.
     Proof.
       unfold Sect; intros H.
@@ -472,7 +439,6 @@ Section Reflective_Subuniverse.
   End OInverts.
 
   Section Types.
-    Context {rep : Replete O}.
 
     (** ** The [Unit] type *)
     Global Instance inO_unit : In O Unit.
@@ -673,7 +639,7 @@ Section Reflective_Subuniverse.
   End Monad.
 
   Section StrongMonad.
-    Context {fs : Funext} {rep : Replete O}.
+    Context {fs : Funext}.
 
     Definition O_monad_strength A B : A * O B -> O (A * B)
       := fun aob => O_rec (fun b a => to O (A*B) (a,b)) (snd aob) (fst aob).

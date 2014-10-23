@@ -58,8 +58,8 @@ Section TruncationModality.
                 (Trunc n)
                 _
                 (@tr n)
+                _
                 _)
-              _
               (@Trunc_ind n)
               (fun A B B_inO f a => 1)
               _); cbn; try exact _.
@@ -69,7 +69,7 @@ Section TruncationModality.
 
   Definition trunc_iff_isequiv_truncation (A : Type)
   : IsTrunc n A <-> IsEquiv (@tr n A)
-  := @inO_iff_isequiv_to_O Tr _ A.
+  := @inO_iff_isequiv_to_O Tr A.
 
   Global Instance isequiv_tr A `{IsTrunc n A} : IsEquiv (@tr n A)
   := fst (trunc_iff_isequiv_truncation A) _.

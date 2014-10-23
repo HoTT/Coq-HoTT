@@ -12,7 +12,6 @@ Local Open Scope equiv_scope.
 Record Modality :=
   {
     msubu : UnitSubuniverse ;
-    mreplete : Replete msubu ;
     O_ind : forall A (B : msubu A -> Type) (B_inO : forall oa, In msubu (B oa)),
                (forall a, B (to msubu A a)) -> forall a, B a ;
     O_ind_beta : forall A B B_inO (f : forall a : A, B (to msubu A a)) a,
@@ -25,7 +24,6 @@ Arguments O_ind_beta {O} {A} B {B_inO} f a : rename.
 
 (* We don't declare this as a coercion, since soon we're going to declare a coercion from [Modality] to [ReflectiveSubuniverse]; then we'll get this coercion automatically as a composite. *)
 (* Coercion mod_usubu : Modality >-> UnitSubuniverse. *)
-Global Existing Instance mreplete.
 Global Existing Instance inO_paths.
 
 (** ** Easy modalities *)
@@ -91,10 +89,9 @@ Section EasyModality.
 
   (** It seems to be surprisingly hard to show (without univalence) that this [UnitSubuniverse] is replete.  We basically have to manually develop enough functoriality of [O] and naturality of [to_O]. *)
 
-  Local Definition O := Build_UnitSubuniverse (fun T => IsEquiv (to_O T)) O' O_inO' to_O _.
-
-  Local Instance replete_O : Replete O.
+  Local Definition O : UnitSubuniverse.
   Proof.
+    refine (Build_UnitSubuniverse (fun T => IsEquiv (to_O T)) O' O_inO' to_O _ _).
     intros A B ? f ?; simpl in *.
     refine (isequiv_commsq (to_O A) (to_O B) f
              (O_ind' A (fun _ => O' B) _ (fun a => to_O B (f a))) _).
@@ -116,7 +113,7 @@ Section EasyModality.
 
   Definition Build_Modality_easy : Modality.
   Proof.
-    refine (Build_Modality O _ O_ind' O_ind_beta' _); cbn.
+    refine (Build_Modality O O_ind' O_ind_beta' _); cbn.
     intros A A_inO a a'; change (In O (a = a')).
     refine (inO_equiv_inO (to O A a = to O A a') (@ap _ _ (to O A) a a')^-1).
     apply inO_pathsO.
@@ -168,7 +165,7 @@ Defined.
 (** Conversely, if a reflective subuniverse is closed under sigmas, it is a modality. *)
 
 Theorem reflective_subuniverse_to_modality
-  (O : ReflectiveSubuniverse) {rep : Replete O}
+  (O : ReflectiveSubuniverse)
   (H : forall (A:Type) (B:A -> Type)
           `{In O A} `{forall a, In O (B a)},
      (In O ({x:A & B x})))
@@ -770,8 +767,8 @@ Definition identity_modality : Modality
         idmap
         (fun _ => tt)
         (fun T => idmap)
+        (fun T U _ _ _ => tt)
         _)
-     (fun T U _ _ _ => tt)
      (fun A B _ f a => f a)
      (fun A B _ f a => 1)
      (fun A _ z z' => tt).

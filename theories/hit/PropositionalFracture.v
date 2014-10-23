@@ -84,8 +84,8 @@ Section ClosedModality.
                  (fun X => join U X)
                  _
                  (fun X x => push (inr x))
-                 _)
-              _ _ _ _); cbn; try exact _.
+                 _ _)
+              _ _ _); cbn; try exact _.
     - intros A u.
       pose (contr_inhabited_hprop U u).
       exact _.
