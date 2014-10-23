@@ -451,8 +451,8 @@ Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_inst
 
 (** *** Truncated relations  *)
 
-(** Hprop-valued relations *)
-Notation is_mere_relation R := (forall x y, IsHProp (R x y)).
+(** Hprop-valued relations.  Making this a [Notation] rather than a [Definition] enables typeclass resolution to pick it up easily.  We include the base type [A] in the notation since otherwise e.g. [forall (x y : A) (z : B x y), IsHProp (C x y z)] will get displayed as [forall (x : A), is_mere_relation (C x)].  *)
+Notation is_mere_relation A R := (forall (x y : A), IsHProp (R x y)).
 
 (** *** Function extensionality *)
 
