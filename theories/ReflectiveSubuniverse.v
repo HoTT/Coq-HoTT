@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import UnivalenceImpliesFunext.
+Require Import UnivalenceImpliesFunext EquivalenceVarieties.
 Require Import HoTT.Tactics.
 
 Local Open Scope path_scope.
@@ -63,110 +63,93 @@ Definition path_TypeO {fs : Funext} O (T T' : Type_ O) (p : T.1 = T'.1)
 
 (** ** Reflective Subuniverses *)
 
-(** A reflective subuniverse is a [UnitSubuniverse], as above, whose unit has a universal property.  Our definition is somewhat different from that in the book, being instead more similar to the definition of a [Modality]; below we show that it is in fact equivalent. *)
+(** A reflective subuniverse is a [UnitSubuniverse], as above, whose unit has a universal property.  We express that universal property using the representation [oo_Pointwise_PathSplit_Precompose] of precomposition equivalences, since unlike most other ways to describe such an equivalence, it doesn't need [Funext] to prove or to use. *)
 Record ReflectiveSubuniverse :=
   {
     rsubu : UnitSubuniverse ;
-    O_rec : forall {P Q : Type} {Q_inO : In rsubu Q} (f : P -> Q),
-              rsubu P -> Q ;
-    O_rec_beta : forall {P Q : Type} {Q_inO : In rsubu Q} (f : P -> Q) (x : P),
-                   O_rec f (to rsubu P x) = f x ;
-    O_indpaths : forall {P Q : Type} {Q_inO : In rsubu Q}
-                        (g h : rsubu P -> Q) (p : g o to rsubu P == h o to rsubu P),
-                    g == h ;
-    O_indpaths_beta : forall {P Q : Type} {Q_inO : In rsubu Q}
-                         (g h : rsubu P -> Q) (p : g o to rsubu P == h o to rsubu P)
-                         (x : P),
-                         O_indpaths g h p (to rsubu P x) = p x
+    ppp_to_O : forall {P Q : Type} {Q_inO : In rsubu Q},
+                 oo_Pointwise_PathSplit_Precompose
+                   (fun _ => Q) (to rsubu P)
   }.
-
-Arguments O_rec {O P Q Q_inO} f x : rename.
-Arguments O_rec_beta {O P Q Q_inO} f x : rename.
-Arguments O_indpaths {O P Q Q_inO} g h p x : rename.
-Arguments O_indpaths_beta {O P Q Q_inO} g h p x : rename.
 
 Coercion rsubu : ReflectiveSubuniverse >-> UnitSubuniverse.
 
-(** Here we prove the definition of reflective subuniverse in the book. *)
-Section IsEquiv.
-  Context {fs : Funext} (O : ReflectiveSubuniverse).
-  Context (P Q : Type) `{In O Q}.
+(** We now extract the recursion principle and the restricted induction principles for paths. *)
+Section ORecursion.
+  Context {O : ReflectiveSubuniverse}.
 
-  Global Instance isequiv_o_to_O 
-  : IsEquiv (fun g : O P -> Q => g o to O P).
-  Proof.
-    refine (BuildIsEquiv _ _ _ O_rec _ _ _).
-    - intros f.
-      apply path_arrow; intros x.
-      apply O_rec_beta.
-    - intros g.
-      apply path_arrow; intros x.
-      apply O_indpaths; try exact _. intros a.
-      apply O_rec_beta.
-    - intros f; simpl.
-      apply moveR_equiv_M; simpl.
-      apply path_forall; intros x; symmetry.
-      refine (apD10_ap_precompose (to O P) _ x @ _).
-      refine (apD10_path_arrow _ _ _ (to O P x) @ _).
-      exact (O_indpaths_beta _ f _ x).
-  Defined.
+  Definition O_rec {P Q : Type} {Q_inO : In O Q}
+             (f : P -> Q)
+  : O P -> Q
+  := (ppp_to_O O 0).1 f.
 
-  Definition equiv_o_to_O : (O P -> Q) <~> (P -> Q)
-    := BuildEquiv _ _ (fun g : O P -> Q => g o to O P) _.
+  Definition O_rec_beta {P Q : Type} {Q_inO : In O Q}
+             (f : P -> Q) (x : P)
+  : O_rec f (to O P x) = f x
+  := (ppp_to_O O 0).2 f x.
 
-  Global Instance isequiv_O_rec
-  : IsEquiv (@O_rec O P Q _)
-  := (@isequiv_inverse _ _ _ isequiv_o_to_O).
+  Definition O_indpaths {P Q : Type} {Q_inO : In O Q}
+             (g h : O P -> Q) (p : g o to O P == h o to O P)
+  : g == h
+  := (snd (ppp_to_O O 1%nat) g h).1 p.
 
-  Definition equiv_O_rec : (P -> Q) <~> (O P -> Q)
-    := BuildEquiv _ _ O_rec _.
+  Definition O_indpaths_beta {P Q : Type} {Q_inO : In O Q}
+             (g h : O P -> Q) (p : g o (to O P) == h o (to O P)) (x : P)
+  : O_indpaths g h p (to O P x) = p x
+  := (snd (ppp_to_O O 1%nat) g h).2 p x.
 
-End IsEquiv.
+  Definition O_ind2paths {P Q : Type} {Q_inO : In O Q}
+             {g h : O P -> Q} (p q : g == h)
+             (r : p oD (to O P) == q oD (to O P))
+  : p == q
+  := (snd (snd (ppp_to_O O 2) g h) p q).1 r.
+
+  Definition O_ind2paths_beta {P Q : Type} {Q_inO : In O Q}
+             {g h : O P -> Q} (p q : g == h)
+             (r : p oD (to O P) == q oD (to O P)) (x : P)
+  : O_ind2paths p q r (to O P x) = r x
+  := (snd (snd (ppp_to_O O 2) g h) p q).2 r x.
+
+  (** Clearly we can continue indefinitely as needed. *)
+
+End ORecursion.
+
+(* We never want to see [ppp_to_O]. *)
+Arguments O_rec : simpl never.
+Arguments O_rec_beta : simpl never.
+Arguments O_indpaths : simpl never.
+Arguments O_indpaths_beta : simpl never.
+Arguments O_ind2paths : simpl never.
+Arguments O_ind2paths_beta : simpl never.
+
+(** Given [Funext], we prove the definition of reflective subuniverse in the book. *)
+Global Instance isequiv_o_to_O `{Funext}
+       (O : ReflectiveSubuniverse) (P Q : Type) `{In O Q}
+: IsEquiv (fun g : O P -> Q => g o to O P)
+:= isequiv_oo_pointwise_pathsplit _ _ (ppp_to_O O).
+
+Definition equiv_o_to_O `{Funext}
+           (O : ReflectiveSubuniverse) (P Q : Type) `{In O Q}
+: (O P -> Q) <~> (P -> Q)
+:= BuildEquiv _ _ (fun g : O P -> Q => g o to O P) _.
+
+  (* Global Instance isequiv_O_rec *)
+  (* : IsEquiv (@O_rec O P Q _) *)
+  (* := (@isequiv_inverse _ _ _ isequiv_o_to_O). *)
+
+  (* Definition equiv_O_rec : (P -> Q) <~> (O P -> Q) *)
+  (*   := BuildEquiv _ _ O_rec _. *)
 
 (** Conversely, from the book's definition we can reconstruct ours. *)
-Section ReflectiveSubuniverseFromIsEquiv.
-  Context {fs : Funext} (O : UnitSubuniverse).
-  Let precomp := fun P Q => (fun g : O P -> Q => g o to O P).
-  Context (H : forall {P Q : Type} `{In O Q}, IsEquiv (precomp P Q)).
-  
-  Local Definition O_rec' {P Q : Type} `{In O Q} (f : P -> Q)
-  : O P -> Q
-  := (precomp P Q)^-1 f.
-
-  Local Definition O_rec_beta' {P Q : Type} `{In O Q} (f : P -> Q) (x : P)
-  : O_rec' f (to O P x) = f x
-  := ap10 (eisretr (precomp P Q) f) x.
-
-  Local Definition O_indpaths' {P Q : Type} `{In O Q}
-        (g h : O P -> Q) (p : g o to O P == h o to O P)
-  : g == h.
-  Proof.
-    apply ap10.
-    refine ((eissect (precomp P Q) g)^ @ _ @ eissect (precomp P Q) h).
-    apply ap.
-    apply path_arrow, p.
-  Defined.
-
-  Local Definition O_indpaths_beta' {P Q : Type} `{In O Q}
-        (g h : O P -> Q) (p : g o to O P == h o to O P) (x : P)
-  : O_indpaths' g h p (to O P x) = p x.
-  Proof.
-    unfold O_indpaths'.
-    refine ((ap10_ap_precompose (to O P) _ x)^ @ _).
-    refine (apD10 _ x).
-    apply moveR_equiv_M.
-    rewrite ap_pp, ap_pp, ap_V, <- ap_compose, concat_pp_p.
-    do 2 rewrite <- eisadj.
-    apply moveR_Vp.
-    exact (concat_A1p (eisretr (precomp P Q)) (path_arrow _ _ p)).
-  Qed.
-
-  Definition reflective_subuniverse_from_isequiv
-  : ReflectiveSubuniverse
+Definition reflective_subuniverse_from_isequiv
+           `{Funext} (O : UnitSubuniverse)
+           (H : forall (P Q : Type) {Q_inO : In O Q},
+                  IsEquiv (fun g : O P -> Q => g o to O P))
+: ReflectiveSubuniverse
   := Build_ReflectiveSubuniverse O
-       (@O_rec') (@O_rec_beta') (@O_indpaths') (@O_indpaths_beta').
-
-End ReflectiveSubuniverseFromIsEquiv.
+      (fun P Q Q_inO =>
+         (equiv_oo_pointwise_pathsplit_isequiv
+            (fun _ => Q) (to O P))^-1 (H P Q)).
 
 (** So why do we use a different definition than the book?  Notice that *both* directions of the comparison between our definition and the book's make use of funext.  Moreover, it seems that in order to do anything useful with the book's definition, or construct any interesting examples, also requires funext.  However, this is not the case for our definition!  Thus, our choice has the following advantages:
 
@@ -249,7 +232,7 @@ Section Reflective_Subuniverse.
         exact (O_rec_beta (to O B o f) x).
     Defined.
 
-    (** Functoriality on homotopies *)
+    (** Functoriality on homotopies (2-functoriality) *)
     Definition O_functor_homotopy {A B : Type} (f g : A -> B) (pi : f == g)
     : O_functor f == O_functor g.
     Proof.
@@ -280,6 +263,18 @@ Section Reflective_Subuniverse.
     Proof.
       refine (O_indpaths _ _ _); intros x.
       apply O_rec_beta.
+    Qed.
+
+    (** 3-functoriality, as an example use of [O_ind2paths] *)
+    Definition O_functor_2homotopy {A B : Type} {f g : A -> B}
+               (p q : f == g) (r : p == q)
+    : O_functor_homotopy f g p == O_functor_homotopy f g q.
+    Proof.
+      refine (O_ind2paths _ _ _); intros x.
+      unfold O_functor_homotopy, composeD.
+      do 2 rewrite O_indpaths_beta.
+      apply whiskerL, whiskerR, ap, r.
+    (* Of course, if we wanted to prove 4-functoriality, we'd need to make this transparent. *)
     Qed.
 
     (** Naturality of [to O] *)

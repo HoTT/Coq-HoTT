@@ -89,44 +89,37 @@ Section EasyModality.
       exact (O_indO_beta (O' A) (const A) idmap a).
   Defined.
 
-  (** However, it seems to be surprisingly hard to show (without univalence) that this [UnitSubuniverse] is replete.  We basically have to develop enough functoriality of [O] and naturality of [to_O].  We could do that directly, but instead we piggyback by showing that it is a reflective subuniverse.  This is why we excluded repleteness from the basic definition of [ReflectiveSubuniverse] and the proofs of functoriality. *)
+  (** It seems to be surprisingly hard to show (without univalence) that this [UnitSubuniverse] is replete.  We basically have to manually develop enough functoriality of [O] and naturality of [to_O]. *)
 
-  Local Definition O : ReflectiveSubuniverse.
+  Local Definition O := Build_UnitSubuniverse (fun T => IsEquiv (to_O T)) O' O_inO' to_O _.
+
+  Local Instance replete_O : Replete O.
   Proof.
-    refine (Build_ReflectiveSubuniverse
-              (Build_UnitSubuniverse
-                 (fun T => IsEquiv (to_O T))
-                 O' O_inO' to_O _)
-              _ _ _ _);
-      intros P Q ?.
-    - intros f. exact (O_ind' P (fun _ => Q) (fun _ => Q_inO) f).
-    - intros f x. exact (O_ind_beta' P (fun _ => Q) f x).
-    - intros g h p x.
-      cbn in Q_inO.
-      refine ((ap (to_O Q))^-1 _).
-      refine (O_ind' P (fun y => to_O Q (g y) = to_O Q (h y)) _ _ x).
-      + intros y. apply inO_pathsO.
-      + intros a; apply ap, p.
-    - intros g h p x; cbn.
-      rewrite O_ind_beta'.
-      rewrite concat_pp_p.
-      apply moveR_Vp.
-      rewrite <- ap_compose.
-      exact (concat_A1p (eissect (to_O Q)) (p x)).
+    intros A B ? f ?; simpl in *.
+    refine (isequiv_commsq (to_O A) (to_O B) f
+             (O_ind' A (fun _ => O' B) _ (fun a => to_O B (f a))) _).
+    - intros; apply O_inO'.
+    - intros a; refine (O_ind_beta' A (fun _ => O' B) _ a).
+    - refine (isequiv_adjointify _
+               (O_ind' B (fun _ => O' A) _ (fun b => to_O A (f^-1 b))) _ _);
+        intros x.
+      + apply O_inO'.
+      + pattern x; refine (O_ind' B _ _ _ x); intros.
+        * apply inO_pathsO.
+        * unfold compose; simpl;
+            abstract (repeat rewrite O_ind_beta'; apply ap, eisretr).
+      + pattern x; refine (O_ind' A _ _ _ x); intros.
+        * apply inO_pathsO.
+        * unfold compose; simpl;
+            abstract (repeat rewrite O_ind_beta'; apply ap, eissect).
   Defined.
-
-  (** It is now automatically replete, since in our case [inO] means by definition that [to_O] is an equivalence. *)
-
-  Local Instance replete_rsubU : Replete O.
-  Proof.
-    apply replete_inO_isequiv_to_O; trivial.
-  Defined.
-
-  (** Finally, we can build a modality. *)
 
   Definition Build_Modality_easy : Modality.
   Proof.
     refine (Build_Modality O _ O_ind' O_ind_beta' _); cbn.
+    intros A A_inO a a'; change (In O (a = a')).
+    refine (inO_equiv_inO (to O A a = to O A a') (@ap _ _ (to O A) a a')^-1).
+    apply inO_pathsO.
   Defined.
 
 End EasyModality.
@@ -137,14 +130,26 @@ End EasyModality.
 
  Note also that our choice of how to define reflective subuniverses differently from the book enables us to prove this without using funext. *)
 
+Fixpoint O_pathsplit (O : Modality) A (B : msubu O A -> Type)
+         `{forall a, In (msubu O) (B a)} (n : nat)
+: Pointwise_PathSplit_Precompose n B (to (msubu O) A).
+Proof.
+  destruct n as [|n].
+  - exists (fun g => O_ind B g); intros g x.
+    apply O_ind_beta.
+  - split.
+    + exists (fun g => O_ind B g); intros g x.
+      apply O_ind_beta.
+    + intros h k.
+      apply O_pathsplit; intros x.
+      apply inO_paths; trivial.
+Defined.
+
 (** Corollary 7.7.8, part 1 *)
 Definition modality_to_reflective_subuniverse (O : Modality)
 : ReflectiveSubuniverse
 := Build_ReflectiveSubuniverse (msubu O)
-     (fun P Q H => O_ind (fun _ => Q))
-     (fun P Q H => O_ind_beta (fun _ => Q))
-     (fun P Q H g h => O_ind (fun y => g y = h y))
-     (fun P Q H g h => O_ind_beta (fun y => g y = h y)).
+     (fun A B B_inO n => O_pathsplit O A (fun _ => B) n).
 
 Coercion modality_to_reflective_subuniverse : Modality >-> ReflectiveSubuniverse.
 
