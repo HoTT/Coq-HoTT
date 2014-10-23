@@ -645,22 +645,17 @@ Section ModalFact.
       exact (inclass2 fact b).
   Defined.
 
-  (** TODO: Put this somewhere else or do without it. *)
-  Definition ev_equiv_compose {A B C} (f : A <~> B) (g : B <~> C) (a : A)
-  : (equiv_compose' g f) a = g (f a)
-    := 1.
-
   (** This is the corresponding first three of the displayed "mapsto"s in proof of Lemma 7.6.5, and also the last three in reverse order, generalized to an arbitrary path [p].  Note that it is much harder to prove than in the book, because we are working in the extra generality of a modality where [O_ind_beta] is only propositional. *)
   Lemma O_hfiber_O_fact_inverse_beta {A B} {f : A -> B}
         (fact : Factorization (@IsConnMap O) (@MapIn O) f)
         (a : A) (b : B) (p : factor2 fact (factor1 fact a) = b)
-  : equiv_inverse (O_hfiber_O_fact fact b)
+  : (O_hfiber_O_fact fact b)^-1
       (factor1 fact a ; p) = to O _ (a ; p).
   Proof.
     set (g := factor1 fact); set (h := factor2 fact).
     apply moveR_equiv_V.
     unfold O_hfiber_O_fact.
-    repeat rewrite ev_equiv_compose.
+    ev_equiv.
     apply moveL_equiv_M.
     transitivity (existT (fun (w : hfiber h b) => O (hfiber g w.1))
                          (g a; p) (to O (hfiber g (g a)) (a ; 1))).
@@ -672,14 +667,6 @@ Section ModalFact.
         repeat (rewrite O_ind_beta; simpl); reflexivity.
       + simpl rewrite O_ind_beta; reflexivity.
   Qed.
-
-  (** And a re-typing of that. *)
-  Definition O_hfiber_O_fact_inverse_beta' {A B} {f : A -> B}
-        (fact : Factorization (@IsConnMap O) (@MapIn O) f)
-        (a : A) (b : B) (p : factor2 fact (factor1 fact a) = b)
-  : (O_hfiber_O_fact fact b)^-1
-      (factor1 fact a ; p) = to O _ (a ; p)
-    := O_hfiber_O_fact_inverse_beta fact a b p.
 
   Section TwoFactorizations.
     Context {A B : Type} (f : A -> B)
@@ -705,10 +692,9 @@ Section ModalFact.
       = (factor1 fact' a ; (H a)^).
     Proof.
       unfold equiv_O_factor_hfibers.
-      rewrite !ev_equiv_compose.
-      rewrite O_hfiber_O_fact_inverse_beta.
+      ev_equiv.
       apply moveR_equiv_M.
-      rewrite O_hfiber_O_fact_inverse_beta'.
+      do 2 rewrite O_hfiber_O_fact_inverse_beta.
       unfold equiv_fun, equiv_O_functor.
       transitivity (to O _
                        (equiv_hfiber_homotopic
@@ -745,10 +731,10 @@ Section ModalFact.
       refine (_ @ pr2_path (equiv_O_factor_hfibers_beta f fact fact' a)).
       refine (_ @ (transport_paths_Fl _ _)^).
       (** Apparently Coq needs a little help to see that these paths are the same. *)
-      match goal with |- ((?pp)^ @ ?qq)^ = (?qq')^ @ ?pp' =>
-          pose (p := pp); pose (q := qq); change ((p^ @ q)^ = q^ @ p)
+      match goal with
+          |- ((?p)^ @ ?q)^ = _ @ _ => change ((p^ @ q)^ = q^ @ p)
       end.
-      refine (inv_pp p^ q @ (1 @@ inv_V p)).
+      refine (inv_pp _ _ @ (1 @@ inv_V _)).
   Defined.
 
 End ModalFact.
