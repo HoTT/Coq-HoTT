@@ -384,7 +384,7 @@ Section Reflective_Subuniverse.
   Section OInverts.
 
     (** The maps that are inverted by the reflector.  Note that this notation is NOT GLOBAL, it only exists in this section. *)
-    Notation O_inverts f := (IsEquiv (O_functor f)).
+    Local Notation O_inverts f := (IsEquiv (O_functor f)).
 
     Global Instance O_inverts_O_unit (A : Type)
     : O_inverts (to O A).
