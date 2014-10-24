@@ -621,7 +621,7 @@ Section Book_4_5.
 
     Local Instance Book_4_5_g : IsEquiv g.
     Proof.
-      apply equiv_biinv.
+      apply isequiv_biinv.
       split.
       - exists ((h o g)^-1 o h);
         repeat intro; simpl;
