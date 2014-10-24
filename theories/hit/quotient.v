@@ -24,7 +24,7 @@ Module Export Quotient.
 
 Section Domain.
 
-Context {A : Type} (R:relation A) {sR: is_mere_relation R}.
+Context {A : Type} (R:relation A) {sR: is_mere_relation _ R}.
 
 (** We choose to let the definition of quotient depend on the proof that [R] is a set-relations.  Alternatively, we could have defined it for all relations and only develop the theory for set-relations.  The former seems more natural.
 
@@ -34,7 +34,7 @@ We do not require [R] to be an equivalence relation, but implicitly consider its
 (** Note: If we wanted to be really accurate, we'd need to put [@quotient A R sr] in the max [U_{sup(i, j)}] of the universes of [A : U_i] and [R : A -> A -> U_j].  But this requires some hacky code, at the moment, and the only thing we gain is avoiding making use of an implicit hpropositional resizing "axiom". *)
 
 (** This definition has a parameter [sR] that shadows the ambient one in the Context in order to ensure that it actually ends up depending on everything in the Context when the section is closed, since its definition doesn't actually refer to any of them.  *)
-Private Inductive quotient {sR: is_mere_relation R} : Type :=
+Private Inductive quotient {sR: is_mere_relation _ R} : Type :=
   | class_of : A -> quotient.
 
 (** The path constructors. *)
@@ -70,7 +70,7 @@ Section Equiv.
 
 Context `{Univalence}.
 
-Context {A : Type} (R : relation A) {sR: is_mere_relation R}
+Context {A : Type} (R : relation A) {sR: is_mere_relation _ R}
  {Htrans : Transitive R} {Hsymm : Symmetric R}.
 
 Lemma quotient_path2 : forall {x y : quotient R} (p q : x=y), p=q.
@@ -226,7 +226,7 @@ Context {fs : Funext}.
 Context {A B : Type} `{IsHSet B} (f : A -> B).
 
 (** A mere relation equivalent to its kernel. *)
-Context (R : relation A) {sR : is_mere_relation R}.
+Context (R : relation A) {sR : is_mere_relation _ R}.
 Context (is_ker : forall x y, f x = f y <~> R x y).
 
 Theorem quotient_kernel_factor
