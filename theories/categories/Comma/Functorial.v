@@ -14,6 +14,7 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
+Set Keyed Unification.
 
 Local Open Scope equiv_scope.
 Local Open Scope morphism_scope.

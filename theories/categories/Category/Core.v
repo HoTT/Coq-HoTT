@@ -155,12 +155,6 @@ Module Export CategoryCoreNotations.
 End CategoryCoreNotations.
 
 (** We have a tactic for trying to run a tactic after associating morphisms either all the way to the left, or all the way to the right *)
-(** We must first eta-contract primitive projections so that [rewrite] works *)
 Tactic Notation "try_associativity_quick" tactic(tac) :=
-  repeat match goal with
-           | [ |- context[@compose ?C ?s ?d ?d' ?m1 ?m2] ]
-             => progress change (@compose C s d d' m1 m2)
-                with (compose (C := C) (s := s) (d := d) (d' := d') m1 m2)
-         end;
   first [ rewrite <- ?associativity; tac
         | rewrite -> ?associativity; tac ].
