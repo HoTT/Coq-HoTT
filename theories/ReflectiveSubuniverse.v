@@ -90,34 +90,34 @@ Section ORecursion.
   Definition O_rec {P Q : Type} {Q_inO : In O Q}
              (f : P -> Q)
   : O P -> Q
-  := (ppp_to_O O 0).1 f.
+  := (fst (ppp_to_O O 1%nat)).1 f.
 
   Definition O_rec_beta {P Q : Type} {Q_inO : In O Q}
              (f : P -> Q) (x : P)
   : O_rec f (to O P x) = f x
-  := (ppp_to_O O 0).2 f x.
+  := (fst (ppp_to_O O 1%nat)).2 f x.
 
   Definition O_indpaths {P Q : Type} {Q_inO : In O Q}
              (g h : O P -> Q) (p : g o to O P == h o to O P)
   : g == h
-  := (snd (ppp_to_O O 1%nat) g h).1 p.
+  := (fst (snd (ppp_to_O O 2) g h)).1 p.
 
   Definition O_indpaths_beta {P Q : Type} {Q_inO : In O Q}
              (g h : O P -> Q) (p : g o (to O P) == h o (to O P)) (x : P)
   : O_indpaths g h p (to O P x) = p x
-  := (snd (ppp_to_O O 1%nat) g h).2 p x.
+  := (fst (snd (ppp_to_O O 2) g h)).2 p x.
 
   Definition O_ind2paths {P Q : Type} {Q_inO : In O Q}
              {g h : O P -> Q} (p q : g == h)
              (r : p oD (to O P) == q oD (to O P))
   : p == q
-  := (snd (snd (ppp_to_O O 2) g h) p q).1 r.
+  := (fst (snd (snd (ppp_to_O O 3) g h) p q)).1 r.
 
   Definition O_ind2paths_beta {P Q : Type} {Q_inO : In O Q}
              {g h : O P -> Q} (p q : g == h)
              (r : p oD (to O P) == q oD (to O P)) (x : P)
   : O_ind2paths p q r (to O P x) = r x
-  := (snd (snd (ppp_to_O O 2) g h) p q).2 r x.
+  := (fst (snd (snd (ppp_to_O O 3) g h) p q)).2 r x.
 
   (** Clearly we can continue indefinitely as needed. *)
 

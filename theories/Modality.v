@@ -132,8 +132,7 @@ Fixpoint O_pathsplit (O : Modality) A (B : msubu O A -> Type)
 : Pointwise_PathSplit_Precompose n B (to (msubu O) A).
 Proof.
   destruct n as [|n].
-  - exists (fun g => O_ind B g); intros g x.
-    apply O_ind_beta.
+  - exact tt.
   - split.
     + exists (fun g => O_ind B g); intros g x.
       apply O_ind_beta.
