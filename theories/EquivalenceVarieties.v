@@ -183,7 +183,7 @@ Definition BiInv `(f : A -> B) : Type
 
 (** It seems that the easiest way to show that bi-invertibility is equivalent to being an equivalence is also to show that both are h-props and that they are logically equivalent. *)
 
-Definition equiv_biinv `(f : A -> B)
+Definition isequiv_biinv `(f : A -> B)
   : BiInv f -> IsEquiv f.
 Proof.
   intros [[g s] [h r]].
@@ -195,18 +195,18 @@ Defined.
 Global Instance isprop_biinv `(f : A -> B) : IsHProp (BiInv f) | 0.
 Proof.
   apply hprop_inhabited_contr.
-  intros bif; pose (fe := equiv_biinv f bif).
+  intros bif; pose (fe := isequiv_biinv f bif).
   apply @contr_prod.
   (* For this, we've done all the work already. *)
   by apply contr_retr_equiv.
   by apply contr_sect_equiv.
 Defined.
 
-Definition equiv_biinv_equiv `(f : A -> B)
+Definition equiv_biinv_isequiv `(f : A -> B)
   : BiInv f <~> IsEquiv f.
 Proof.
   apply equiv_iff_hprop.
-  by apply equiv_biinv.
+  by apply isequiv_biinv.
   intros ?.  split.
   by exists (f^-1); apply eissect.
   by exists (f^-1); apply eisretr.

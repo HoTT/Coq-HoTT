@@ -64,7 +64,7 @@ Defined.
 Lemma objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P) <~> (pullback P (@pr1 _ (fun u :Type => u))).
 Proof.
 exists (help_objclasspb_is_fibrantreplacement P).
-apply equiv_biinv. split; exists (help_objclasspb_is_fibrantreplacement2 P); intros [a p]. apply idpath.
+apply isequiv_biinv. split; exists (help_objclasspb_is_fibrantreplacement2 P); intros [a p]. apply idpath.
 destruct p as [[T t] p].
 refine (path_sigma' _ (idpath a) _).
 simpl in p. by path_induction.
