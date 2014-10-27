@@ -585,13 +585,19 @@ Ltac by_extensionality x :=
     simpl; auto with path_hints
   end.
 
+(** Test if a tactic succeeds, but always roll-back the results *)
+Tactic Notation "test" tactic3(tac) :=
+  try (first [ tac | fail 2 tac "does not succeed" ]; fail tac "succeeds"; [](* test for [t] solved all goals *)).
+
+(** [not tac] is equivalent to [fail tac "succeeds"] if [tac] succeeds, and is equivalent to [idtac] if [tac] fails *)
+Tactic Notation "not" tactic3(tac) := try ((test tac); fail 1 tac "succeeds").
+
 (** Removed auto. We can write "by (path_induction;auto with path_hints)"
  if we want to.*)
 Ltac path_induction :=
   intros; repeat progress (
     match goal with
-      | [ p : _ = _  |- _ ] => induction p
-      | _ => idtac
+      | [ p : ?x = ?y  |- _ ] => not constr_eq x y; induction p
     end
   ).
 
@@ -615,13 +621,6 @@ Ltac expand :=
     | [ |- ?X == ?Y ] =>
       let X' := eval hnf in X in let Y' := eval hnf in Y in change (X' == Y')
   end; simpl.
-
-(** Test if a tactic succeeds, but always roll-back the results *)
-Tactic Notation "test" tactic3(tac) :=
-  try (first [ tac | fail 2 tac "does not succeed" ]; fail tac "succeeds"; [](* test for [t] solved all goals *)).
-
-(** [not tac] is equivalent to [fail tac "succeeds"] if [tac] succeeds, and is equivalent to [idtac] if [tac] fails *)
-Tactic Notation "not" tactic3(tac) := try ((test tac); fail 1 tac "succeeds").
 
 (** [atomic x] is the same as [idtac] if [x] is a variable or hypothesis, but is [fail 0] if [x] has internal structure. *)
 Ltac atomic x :=
