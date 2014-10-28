@@ -118,8 +118,7 @@ Section AdjunctionEquivalences.
     change (idmap g0 = idmap g1).
     rewrite <- (ap10 (@left_inverse _ _ _ (A (c, d)) _)).
     simpl rewrite H0.
-    simpl rewrite (ap10 (@left_inverse _ _ _ (A (c, d)) _)).
-    reflexivity.
+    refine (ap10 (@left_inverse _ _ _ (A (c, d)) _) g1).   
   Qed.
 
   Lemma adjunction_unit__of__adjunction_hom__mate_of__commutes
