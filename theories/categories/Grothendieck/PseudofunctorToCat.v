@@ -68,7 +68,8 @@ Section Grothendieck.
              | _ => reflexivity
              | _ => progress rewrite ?Category.Core.left_identity, ?Category.Core.right_identity
              | [ |- context[components_of ?T ?x o components_of ?T^-1 ?x] ]
-               => simpl rewrite (@iso_compose_pV _ _ _ (T x) _)
+               => let k := constr:(@iso_compose_pV _ _ _ (T x) _) in
+                  simpl rewrite k (* https://coq.inria.fr/bugs/show_bug.cgi?id=3773 and https://coq.inria.fr/bugs/show_bug.cgi?id=3772 (probably) *)
              | _ => try_associativity_quick
                       first [ f_ap; []
                             | apply concat_left_identity
