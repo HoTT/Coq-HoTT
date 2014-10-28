@@ -12,6 +12,10 @@ Local Open Scope nat_scope.
 Fail Check Lift nat : Type0.
 Check 1 : Lift nat.
 
+Check lift'@{i j}.
+Check lower'@{i j}.
+Check isequiv_lift'@{i j}.
+
 (** Check that [ispointed_susp] doesn't require just a [Set] *)
 Check (fun A : Type => _ : IsPointed (Susp A)).
 Check (@ispointed_susp Type).
