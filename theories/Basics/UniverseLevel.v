@@ -21,11 +21,11 @@ Global Instance isequiv_lift T : IsEquiv (@lift T)
        (fun _ => idpath)
        (fun _ => idpath).
 
-(** This version doesn't force strict containment, i.e. it allows the two universes to possibly be the same. *)
+(** This version doesn't force strict containment, i.e. it allows the two universes to possibly be the same.  No fancy type is necessary here other than the universe annotations, because of cumulativity. *)
 
-Definition Lift' (A : Type@{i}) : Type@{j}
-  := Eval hnf in let enforce_le := (fun x => x) : Type@{i} -> Type@{j} in A.
+Definition Lift' (A : Type@{i}) : Type@{j} := A.
 
+(** However, if we don't give the universes as explicit arguments here, then Coq collapses them. *)
 Definition lift' {A : Type@{i}} : A -> Lift'@{i j} A := fun x => x.
 
 Definition lower' {A : Type@{i}} : Lift'@{i j} A -> A := fun x => x.
