@@ -4,34 +4,43 @@ Require Import Overture.
 
 (** We provide casting definitions for raising universe levels. *)
 
-Section local.
-  Let type_cast_up_type : Type.
-  Proof.
-    let U0 := constr:(Type) in
-    let U1 := constr:(Type) in
-    let unif := constr:(U0 : U1) in
-    exact (U0 -> U1).
-  Defined.
+(** Because we have cumulativity (that [T : U@{i}] gives us [T : U@{j}] when [i < j]), we may define [Lift : U@{i} → U@{j}] to be the identity function with a fancy type; the type says that [i < j]. *)
+Definition Lift (A : Type@{i}) : Type@{j}
+  := Eval hnf in let enforce_lt := Type@{i} : Type@{j} in A.
 
-  (** Because we have cumulativity (that [T : Uᵢ] gives us [T : Uᵢ₊₁]), we may define [Lift : U₀ → U₁] as the identity function with a fancy type; the type says that [U₀ ⊊ U₁]. *)
-  Definition Lift : type_cast_up_type
-    := fun T => T.
-End local.
+Definition lift {A} : A -> Lift A := fun x => x.
 
-Definition lift {T} : T -> Lift T := fun x => x.
+Definition lower {A} : Lift A -> A := fun x => x.
+
 Global Instance isequiv_lift T : IsEquiv (@lift T)
   := @BuildIsEquiv
        _ _
-       (fun x => x)
-       (fun x => x)
+       (@lift T)
+       (@lower T)
        (fun _ => idpath)
        (fun _ => idpath)
        (fun _ => idpath).
-Definition lower {A} := (@equiv_inv _ _ (@lift A) _).
+
+(** This version doesn't force strict containment, i.e. it allows the two universes to possibly be the same. *)
+
+Definition Lift' (A : Type@{i}) : Type@{j}
+  := Eval hnf in let enforce_le := (fun x => x) : Type@{i} -> Type@{j} in A.
+
+Definition lift' {A : Type@{i}} : A -> Lift'@{i j} A := fun x => x.
+
+Definition lower' {A : Type@{i}} : Lift'@{i j} A -> A := fun x => x.
+
+Global Instance isequiv_lift' T : IsEquiv (@lift'@{i j} T)
+  := @BuildIsEquiv
+       _ _
+       (@lift' T)
+       (@lower' T)
+       (fun _ => idpath)
+       (fun _ => idpath)
+       (fun _ => idpath).
 
 (** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreck havok. *)
-Typeclasses Opaque lift lower.
-
+Typeclasses Opaque lift lower lift' lower'.
 
 (*Fail Check Lift nat : Type0.
 Check 1 : Lift nat.*)
