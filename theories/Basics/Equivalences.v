@@ -408,3 +408,14 @@ Definition equiv_composeR' {A B C} (f : A <~> B) (g : B <~> C)
 (* Shouldn't this become transitivity mid ? *)
 Ltac equiv_via mid :=
   apply @equiv_composeR' with (B := mid).
+
+(** It's often convenient when constructing a chain of equivalences to use [equiv_compose'], etc.  But when we treat an [Equiv] object constructed in that way as a function, via the coercion [equiv_fun], Coq sometimes needs a little help to realize that the result is the same as ordinary composition.  This tactic provides that help. *)
+Ltac ev_equiv :=
+  repeat match goal with
+           | [ |- context[equiv_fun (equiv_compose' ?g ?f) ?a] ] =>
+             change ((equiv_compose' g f) a) with (g (f a))
+           | [ |- context[equiv_fun (equiv_compose ?g ?f) ?a] ] =>
+             change ((equiv_compose g f) a) with (g (f a))
+           | [ |- context[equiv_fun (equiv_inverse ?f) ?a] ] =>
+             change ((equiv_inverse f) a) with (f^-1 a)
+         end.

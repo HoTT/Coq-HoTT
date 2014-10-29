@@ -38,6 +38,8 @@ Class In (O : UnitSubuniverse) (T : Type) :=
   in_inO_internal : inO_internal O T.
 
 Typeclasses Transparent In.
+Typeclasses Transparent inO_internal.
+Typeclasses Transparent O_reflector.
 
 (** Being in the subuniverse is a mere predicate (by hypothesis) *)
 Global Instance hprop_inO {fs : Funext} {O : UnitSubuniverse} (T : Type)
@@ -225,7 +227,7 @@ Section Reflective_Subuniverse.
       apply O_rec_beta.
   Defined.
 
-  Definition equiv_O_unit (T : Type) `{In O T} : T <~> O T
+  Definition equiv_to_O (T : Type) `{In O T} : T <~> O T
     := BuildEquiv T (O T) (to O T) _.
 
   Section Functor.
@@ -381,8 +383,8 @@ Section Reflective_Subuniverse.
 
   Section OInverts.
 
-    (** The maps that are inverted by the reflector. *)
-    Notation O_inverts f := (IsEquiv (O_functor f)).
+    (** The maps that are inverted by the reflector.  Note that this notation is NOT GLOBAL, it only exists in this section. *)
+    Local Notation O_inverts f := (IsEquiv (O_functor f)).
 
     Global Instance O_inverts_O_unit (A : Type)
     : O_inverts (to O A).
@@ -483,7 +485,19 @@ Section Reflective_Subuniverse.
       apply inO_to_O_retract with (mu := fun x => tt).
       exact (@contr Unit _).
     Defined.
-    
+
+    (** It follows that any contractible type is in [O]. *)
+    Global Instance inO_contr {A} `{Contr A} : In O A.
+    Proof.
+      exact (inO_equiv_inO Unit (equiv_inverse equiv_contr_unit)).
+    Defined.
+
+    (** And that the reflection of a contractible type is still contractible. *)
+    Global Instance contr_O_contr {A} `{Contr A} : Contr (O A).
+    Proof.
+      exact (contr_equiv A (to O A)).
+    Defined.
+
     (** ** Dependent product and arrows *)
     (** Theorem 7.7.2 *)
     Global Instance inO_forall {fs : Funext} (A:Type) (B:A -> Type) 
