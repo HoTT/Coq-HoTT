@@ -2,7 +2,7 @@
 
 (** * Truncations of types, in all dimensions. *)
 
-Require Import HoTT.Basics Types.Sigma ReflectiveSubuniverse Modality TruncType.
+Require Import HoTT.Basics Types.Sigma ReflectiveSubuniverse Modality TruncType HProp.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A X n.
@@ -67,20 +67,6 @@ Section TruncationModality.
     refine (trunc_equiv _ f); exact _.
   Defined.
 
-  Global Instance inO_tr_istrunc (A : Type) `{IsTrunc n A}
-  : In Tr A.
-  Proof.
-    assumption.
-  Defined.
-
-  Definition istrunc_inO_tr (A : Type) `{In Tr A}
-  : IsTrunc n A.
-  Proof.
-    assumption.
-  Defined.
-
-  Hint Immediate istrunc_inO_tr : typeclass_instances.
-
   Definition trunc_iff_isequiv_truncation (A : Type)
   : IsTrunc n A <-> IsEquiv (@tr n A)
   := @inO_iff_isequiv_to_O Tr _ A.
@@ -124,16 +110,63 @@ End TruncationModality.
 (** This coercion allows us to use truncation indices where a modality is expected and refer to the corresponding truncation modality.  For instance, the general theory of O-connected maps specializes to the theory of n-connected maps. *)
 Coercion Tr : trunc_index >-> Modality.
 
+(** We have to teach Coq to translate back and forth between [IsTrunc n] and [In (Tr n)]. *)
+Global Instance inO_tr_istrunc {n : trunc_index} (A : Type) `{IsTrunc n A}
+: In (Tr n) A.
+Proof.
+  assumption.
+Defined.
+
+(** Having both of these as [Instance]s would cause infinite loops. *)
+Definition istrunc_inO_tr {n : trunc_index} (A : Type) `{In (Tr n) A}
+: IsTrunc n A.
+Proof.
+  assumption.
+Defined.
+
+(* Instead, we make the latter an immediate instance. *)
+Hint Immediate istrunc_inO_tr : typeclass_instances.
+
+(* Unfortunately, this isn't perfect; Coq still can't always find [In Tr] hypotheses in the context when it wants [IsTrunc]. *)
+
+
 (** It's sometimes convenient to use "infinity" to refer to the identity modality in a similar way.  This clashes with some uses in higher topos theory, where "oo-truncated" means instead "hypercomplete", but this has not yet been a big problem. *)
 Notation oo := identity_modality.
 
 (** ** A few special things about the (-1)-truncation. *)
 
-Definition merely A : hProp := BuildhProp (Trunc -1 A).
+Local Open Scope trunc_scope.
+
+(** This definition is doubly sneaky.  Firstly, we define [merely A] to be an inhabitant of the universe [hProp] of hprops, rather than a type.  We can always treat it as a type because there is a coercion, but this means that if we need an element of [hProp] then we don't need a separate name for it.  Secondly, rather than define it as [Trunc -1] we define it as [Tr -1], the action of the truncation modality.  These are of course judgmentally equal, but choosing the latter means that Coq has an easier time applying general modality theorems to it. *)
+Definition merely A : hProp := BuildhProp (Tr -1 A).
 
 Definition hexists {X} (P : X -> Type) : hProp := merely (sigT P).
 
 Definition hor (P Q : Type) : hProp := merely (P + Q).
+
+Definition contr_inhab_prop {A} `{IsHProp A} (ma : merely A) : Contr A.
+Proof.
+  refine (@contr_trunc_conn -1 A _ _); try assumption.
+  refine (contr_inhabited_hprop _ ma).
+Defined.
+
+(** Surjections are the (-1)-connected maps, but they can be characterized more simply since an inhabited hprop is automatically contractible. *)
+Notation IsSurjection := (IsConnMap -1).
+
+Definition BuildIsSurjection {A B} (f : A -> B) :
+  (forall b, merely (hfiber f b)) -> IsSurjection f.
+Proof.
+  intros H b; refine (contr_inhabited_hprop _ _).
+  apply H.
+Defined.
+
+Definition isequiv_surj_emb {A B} (f : A -> B)
+           `{IsSurjection f} `{IsEmbedding f}
+: IsEquiv f.
+Proof.
+  apply (@isequiv_conn_ino_map -1); assumption.
+Defined.
+
 
 (** ** Tactic to remove truncations in hypotheses if possible. *)
 Ltac strip_truncations :=
