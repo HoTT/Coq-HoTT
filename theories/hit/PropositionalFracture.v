@@ -80,8 +80,8 @@ Section ClosedModality.
   Proof.
     refine (Build_Modality
               (Build_UnitSubuniverse
-                 (fun X => U -> Contr X)
                  (fun X => join U X)
+                 (fun X => U -> Contr X)
                  _
                  (fun X x => push (inr x))
                  _ _)

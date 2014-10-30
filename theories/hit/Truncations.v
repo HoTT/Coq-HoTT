@@ -28,8 +28,10 @@ Private Inductive Trunc (n : trunc_index) (A :Type) : Type :=
   tr : A -> Trunc n A.
 Bind Scope trunc_scope with Trunc.
 Arguments tr {n A} a.
-(** Make the priority 1, so that we don't override, e.g., [Unit]. *)
-Global Instance istrunc_truncation : forall n A, IsTrunc n (Trunc n A) | 1.
+
+(** Without explicit universe parameters, this instance is insufficiently polymorphic. *)
+Global Instance istrunc_truncation (n : trunc_index) (A : Type@{i})
+: IsTrunc@{j} n (Trunc@{i} n A).
 Admitted.
 
 Definition Trunc_ind {n A}
@@ -50,21 +52,23 @@ Definition Trunc_rec {n A X} `{IsTrunc n X}
 Section TruncationModality.
   Context (n : trunc_index).
 
-  Definition Tr : Modality.
+  (** Without a universe annotation here, the two universe parameters of [Modality] get collapsed. *)
+  Definition Tr : Modality@{sm lg}.
   Proof.
     refine (Build_Modality
               (Build_UnitSubuniverse
-                (fun A => IsTrunc n A)
-                (Trunc n)
-                _
-                (@tr n)
-                _
-                _)
+                 (Trunc@{sm} n)
+                 (IsTrunc@{lg} n)
+                 _
+                 (@tr n)
+                 (** Again, we have to use [Lift'] to prevent the universes from getting collapsed. *)
+                 (fun A B Atr f feq =>
+                    (@trunc_equiv (Lift'@{sm lg} A) (Lift'@{sm lg} B)
+                                  (lift'@{sm lg} o f o lift'@{sm lg}^-1) n _ _))
+                 _)
               (@Trunc_ind n)
               (fun A B B_inO f a => 1)
               _); cbn; try exact _.
-    intros A B ? f ?; cbn in *.
-    refine (trunc_equiv _ f); exact _.
   Defined.
 
   Definition trunc_iff_isequiv_truncation (A : Type)
