@@ -107,6 +107,17 @@ minimal fuss, you should try your luck by following these instructions:
    	  (make-local-variable 'coq-prog-name)
    	  (setq coq-prog-name (expand-file-name "../hoqtop")))
 
+8. To update the library to the most current version, run "git pull".
+   You will then have to recompile it with "make".
+
+   If you have problems, you can try running "make clean" first, which
+   removes all old compiled files.  This might be necessary if the
+   library was reorganized.
+
+   If you still have problems, it could be because the library was
+   updated to use a newer version of Coq.  In this case you will have
+   to re-run "etc/install_coq.sh".
+
 In case of any problems, feel free to contact us by opening an issue at
 https://github.com/HoTT/HoTT.
 
