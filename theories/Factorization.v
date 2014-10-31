@@ -121,7 +121,7 @@ Section Factorization.
       (* Here is a fairly obvious beginning. *)
       rewrite (ap_transport_arrow_toconst (B := idmap) (C := B)).
       (* Now we set up for a naturality *)
-      simpl rewrite (@ap_compose _ _ _ (transport idmap (path_universe II)^)
+      simpl rewrite (@ap_compose _ _ _ (transport idmap II'^)
                                  (factor2 fact)).
       rewrite <- ap_p_pp; rewrite_moveL_Mp_p.
       (* We need to supply [ff2] here or else it will rewrite in the wrong place. *)
@@ -129,7 +129,7 @@ Section Factorization.
       (* Next is another naturality  *)
       simpl rewrite ap_compose.
       simpl rewrite <- ap_p_pp.
-      repeat rewrite (ap_pp (transport idmap (path_universe II)^)).
+      repeat rewrite (ap_pp (transport idmap II'^)).
       rewrite concat_pA_p.
       (* And another one *)
       repeat rewrite (ap_pp II).
@@ -148,7 +148,7 @@ Section Factorization.
       refine (_ @ (fff a)^).
       do 2 rewrite_moveR_Vp_p.
       (* Now we still have a mess, but with a little futzing we can put it into a form that we can do path induction over.  The point is to make it all a function of [path_universe II].  In particular, we need to eliminate [eissect II], which we do with [transport_path_universe_Vp]. *)
-      rewrite (ap_pp (transport idmap (path_universe II)^)).
+      rewrite (ap_pp (transport idmap II'^)).
       with_rassoc ltac:(rewrite (ap_pp (factor2 fact))).
       unfold II'; rewrite transport_path_universe_Vp.
       (* This mess is completely general in [path_universe II]! *)

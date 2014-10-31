@@ -10,6 +10,7 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
+Set Keyed Unification.
 
 Local Open Scope functor_scope.
 
