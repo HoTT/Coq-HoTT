@@ -720,6 +720,24 @@ Proof.
   by induction p.
 Defined.
 
+(* TODO: What should this be called? *)
+Lemma ap_transport_pV {X} (Y : X -> Type) {x1 x2 : X} (p : x1 = x2)
+      {y1 y2 : Y x2} (q : y1 = y2)
+: ap (transport Y p) (ap (transport Y p^) q) =
+  transport_pV Y p y1 @ q @ (transport_pV Y p y2)^.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+
+(* TODO: And this? *)
+Definition transport_pV_ap {X} (P : X -> Type) (f : forall x, P x)
+      {x1 x2 : X} (p : x1 = x2)
+: ap (transport P p) (apD f p^) @ apD f p = transport_pV P p (f x2).
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+
 (** *** Transporting in particular fibrations. *)
 
 (** One frequently needs lemmas showing that transport in a certain dependent type is equal to some more explicitly defined operation, defined according to the structure of that dependent type.  For most dependent types, we prove these lemmas in the appropriate file in the types/ subdirectory.  Here we consider only the most basic cases. *)
@@ -802,21 +820,13 @@ Definition whiskerR {A : Type} {x y z : A} {p q : x = y}
 
 (** *** Unwhiskering, a.k.a. cancelling. *)
 
-Lemma cancelL {A} {x y z : A} (p : x = y) (q r : y = z)
-  : (p @ q = p @ r) -> (q = r).
-Proof.
-  destruct p, r.
-  intro a.
-  exact ((concat_1p q)^ @ a).
-Defined.
+Definition cancelL {A} {x y z : A} (p : x = y) (q r : y = z)
+: (p @ q = p @ r) -> (q = r)
+:= fun h => (concat_V_pp p q)^ @ whiskerL p^ h @ (concat_V_pp p r).
 
-Lemma cancelR {A} {x y z : A} (p q : x = y) (r : y = z)
-  : (p @ r = q @ r) -> (p = q).
-Proof.
-  destruct r, p.
-  intro a.
-  exact (a @ concat_p1 q).
-Defined.
+Definition cancelR {A} {x y z : A} (p q : x = y) (r : y = z)
+: (p @ r = q @ r) -> (p = q)
+:= fun h => (concat_pp_V p r)^ @ whiskerR h r^ @ (concat_pp_V q r).
 
 (** Whiskering and identity paths. *)
 
@@ -856,6 +866,55 @@ Definition concat2_1p {A : Type} {x y : A} {p q : x = y} (h : p = q) :
   :=
   match h with idpath => 1 end.
 
+(** Whiskering and composition *)
+
+(* The naming scheme for these is a little unclear; should [pp] refer to concatenation of the 2-paths being whiskered or of the paths we are whiskering by? *)
+Definition whiskerL_pp {A} {x y z : A} (p : x = y) {q q' q'' : y = z}
+           (r : q = q') (s : q' = q'')
+: whiskerL p (r @ s) = whiskerL p r @ whiskerL p s.
+Proof.
+  destruct p, r, s; reflexivity.
+Defined.
+
+Definition whiskerR_pp {A} {x y z : A} {p p' p'' : x = y} (q : y = z)
+           (r : p = p') (s : p' = p'')
+: whiskerR (r @ s) q = whiskerR r q @ whiskerR s q.
+Proof.
+  destruct q, r, s; reflexivity.
+Defined.
+
+(* For now, I've put an [L] or [R] to mark when we're referring to the whiskering paths. *)
+Definition whiskerL_VpL {A} {x y z : A} (p : x = y)
+           {q q' : y = z} (r : q = q')
+: (concat_V_pp p q)^ @ whiskerL p^ (whiskerL p r) @ concat_V_pp p q'
+  = r.
+Proof.
+  destruct p, r, q. reflexivity.
+Defined.
+
+Definition whiskerL_pVL {A} {x y z : A} (p : y = x)
+           {q q' : y = z} (r : q = q')
+: (concat_p_Vp p q)^ @ whiskerL p (whiskerL p^ r) @ concat_p_Vp p q'
+  = r.
+Proof.
+  destruct p, r, q. reflexivity.
+Defined.
+
+Definition whiskerR_pVR {A} {x y z : A} {p p' : x = y}
+           (r : p = p') (q : y = z)
+: (concat_pp_V p q)^ @ whiskerR (whiskerR r q) q^ @ concat_pp_V p' q
+  = r.
+Proof.
+  destruct p, r, q. reflexivity.
+Defined.
+
+Definition whiskerR_VpR {A} {x y z : A} {p p' : x = y}
+           (r : p = p') (q : z = y)
+: (concat_pV_p p q)^ @ whiskerR (whiskerR r q^) q @ concat_pV_p p' q
+  = r.
+Proof.
+  destruct p, r, q. reflexivity.
+Defined.
 
 (** The interchange law for concatenation. *)
 Definition concat_concat2 {A : Type} {x y z : A} {p p' p'' : x = y} {q q' q'' : y = z}

@@ -464,4 +464,11 @@ Proof.
   - apply equiv_oopathsplit_isequiv.
 Defined.
 
+Definition oo_pointwise_pathsplit_postcompose
+           {A B : Type} (C D : B -> Type) (f : A -> B)
+           (g : forall b, C b -> D b) `{forall b, IsEquiv (g b)}
+: oo_Pointwise_PathSplit_Precompose C f
+  -> oo_Pointwise_PathSplit_Precompose D f
+  := fun ppp n => pointwise_pathsplit_postcompose n C D f g (ppp n).
+
 End AssumeFunext.
