@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations EquivalenceVarieties Factorization NullHomotopy.
+Require Import Fibrations EquivalenceVarieties Extensions Factorization NullHomotopy.
 Require Export ReflectiveSubuniverse. (* [Export] because many of the lemmas and facts about reflective subuniverses are equally important for modalities. *)
 Require Import HoTT.Tactics.
 
@@ -127,18 +127,19 @@ End EasyModality.
 
  Note also that our choice of how to define reflective subuniverses differently from the book enables us to prove this without using funext. *)
 
-Fixpoint O_pathsplit (O : Modality)
+Fixpoint O_extendable (O : Modality)
          (A : Type) (B : msubu O A -> Type)
          `{forall a, In (msubu O) (B a)} (n : nat)
-: Pointwise_PathSplit_Precompose n B (to (msubu O) A).
+: ExtendableAlong n (to (msubu O) A) B.
 Proof.
   destruct n as [|n].
   - exact tt.
   - split.
-    + exists (fun g => O_ind B g); intros g x.
+    + intros g.
+      exists (O_ind B g); intros x.
       apply O_ind_beta.
     + intros h k.
-      apply O_pathsplit; intros x.
+      apply O_extendable; intros x.
       apply minO_paths; trivial.
 Defined.
 
@@ -146,7 +147,7 @@ Defined.
 Definition modality_to_reflective_subuniverse (O : Modality@{sm lg})
 : ReflectiveSubuniverse@{sm lg}
 := Build_ReflectiveSubuniverse (msubu O)
-     (fun A B B_inO n => O_pathsplit O A (fun _ => B) n).
+     (fun A B B_inO n => O_extendable O A (fun _ => B) n).
 
 Coercion modality_to_reflective_subuniverse : Modality >-> ReflectiveSubuniverse.
 

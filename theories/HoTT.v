@@ -12,6 +12,7 @@ Require Export Conjugation.
 Require Export HProp.
 Require Export HSet.
 Require Export EquivalenceVarieties.
+Require Export Extensions.
 Require Export Misc.
 Require Export Functorish.
 Require Export Modality.

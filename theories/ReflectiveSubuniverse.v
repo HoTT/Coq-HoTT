@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import UnivalenceImpliesFunext EquivalenceVarieties.
+Require Import UnivalenceImpliesFunext EquivalenceVarieties Extensions.
 Require Import HoTT.Tactics.
 
 Local Open Scope path_scope.
@@ -78,10 +78,10 @@ Definition path_TypeO {fs : Funext} O (T T' : Type_ O) (p : T.1 = T'.1)
 Record ReflectiveSubuniverse :=
   {
     rsubu : UnitSubuniverse@{sm lg} ;
-    ppp_to_O : forall {P : Type@{sm}} {Q : Type@{lg}} {Q_inO : In rsubu Q},
+    extendable_to_O : forall {P : Type@{sm}} {Q : Type@{lg}} {Q_inO : In rsubu Q},
                  (** We give a monster universe annotation here to ensure that [ReflectiveSubuniverse] only has two universe parameters, so that we can give them explicitly hen needed. *)
-                 oo_Pointwise_PathSplit_Precompose@{sm sm lg lg lg lg lg lg lg}
-                   (fun _ => Q) (to rsubu P)
+                 ooExtendableAlong@{sm sm lg lg lg lg lg lg lg}
+                   (to rsubu P) (fun _ => Q)
   }.
 
 Coercion rsubu : ReflectiveSubuniverse >-> UnitSubuniverse.
@@ -93,40 +93,40 @@ Section ORecursion.
   Definition O_rec {P Q : Type} {Q_inO : In O Q}
              (f : P -> Q)
   : O P -> Q
-  := (fst (ppp_to_O O 1%nat)).1 f.
+  := (fst (extendable_to_O O 1%nat) f).1.
 
   Definition O_rec_beta {P Q : Type} {Q_inO : In O Q}
              (f : P -> Q) (x : P)
   : O_rec f (to O P x) = f x
-  := (fst (ppp_to_O O 1%nat)).2 f x.
+  := (fst (extendable_to_O O 1%nat) f).2 x.
 
   Definition O_indpaths {P Q : Type} {Q_inO : In O Q}
              (g h : O P -> Q) (p : g o to O P == h o to O P)
   : g == h
-  := (fst (snd (ppp_to_O O 2) g h)).1 p.
+  := (fst (snd (extendable_to_O O 2) g h) p).1.
 
   Definition O_indpaths_beta {P Q : Type} {Q_inO : In O Q}
              (g h : O P -> Q) (p : g o (to O P) == h o (to O P)) (x : P)
   : O_indpaths g h p (to O P x) = p x
-  := (fst (snd (ppp_to_O O 2) g h)).2 p x.
+  := (fst (snd (extendable_to_O O 2) g h) p).2 x.
 
   Definition O_ind2paths {P Q : Type} {Q_inO : In O Q}
              {g h : O P -> Q} (p q : g == h)
              (r : p oD (to O P) == q oD (to O P))
   : p == q
-  := (fst (snd (snd (ppp_to_O O 3) g h) p q)).1 r.
+  := (fst (snd (snd (extendable_to_O O 3) g h) p q) r).1.
 
   Definition O_ind2paths_beta {P Q : Type} {Q_inO : In O Q}
              {g h : O P -> Q} (p q : g == h)
              (r : p oD (to O P) == q oD (to O P)) (x : P)
   : O_ind2paths p q r (to O P x) = r x
-  := (fst (snd (snd (ppp_to_O O 3) g h) p q)).2 r x.
+  := (fst (snd (snd (extendable_to_O O 3) g h) p q) r).2 x.
 
   (** Clearly we can continue indefinitely as needed. *)
 
 End ORecursion.
 
-(* We never want to see [ppp_to_O]. *)
+(* We never want to see [extendable_to_O]. *)
 Arguments O_rec : simpl never.
 Arguments O_rec_beta : simpl never.
 Arguments O_indpaths : simpl never.
@@ -138,7 +138,7 @@ Arguments O_ind2paths_beta : simpl never.
 Global Instance isequiv_o_to_O `{Funext}
        (O : ReflectiveSubuniverse) (P Q : Type) `{In O Q}
 : IsEquiv (fun g : O P -> Q => g o to O P)
-:= isequiv_oo_pointwise_pathsplit _ _ (ppp_to_O O).
+:= isequiv_ooextendable _ _ (extendable_to_O O).
 
 Definition equiv_o_to_O `{Funext}
            (O : ReflectiveSubuniverse) (P Q : Type) `{In O Q}
@@ -160,7 +160,7 @@ Definition reflective_subuniverse_from_isequiv
 : ReflectiveSubuniverse
   := Build_ReflectiveSubuniverse O
       (fun P Q Q_inO =>
-         (equiv_oo_pointwise_pathsplit_isequiv
+         (equiv_ooextendable_isequiv
             (fun _ => Q) (to O P))^-1 (H P Q)).
 
 (** So why do we use a different definition than the book?  Notice that *both* directions of the comparison between our definition and the book's make use of funext.  Moreover, it seems that in order to do anything useful with the book's definition, or construct any interesting examples, also requires funext.  However, this is not the case for our definition!  Thus, our choice has the following advantages:

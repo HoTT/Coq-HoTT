@@ -49,6 +49,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/Conjugation.v \
 	$(srcdir)/theories/HProp.v \
 	$(srcdir)/theories/EquivalenceVarieties.v \
+	$(srcdir)/theories/Extensions.v \
 	$(srcdir)/theories/HSet.v \
 	$(srcdir)/theories/UnivalenceImpliesFunext.v \
 	$(srcdir)/theories/Tactics/BinderApply.v \

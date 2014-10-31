@@ -3,7 +3,7 @@
 
 Require Import HoTT.Basics.
 Require Import Types.Forall Types.Sigma Types.Paths Types.Unit Types.Arrow Types.Universe.
-Require Import TruncType UnivalenceImpliesFunext HProp EquivalenceVarieties Factorization.
+Require Import TruncType UnivalenceImpliesFunext HProp EquivalenceVarieties Extensions Factorization.
 Require Export Modality.        (* [Export] since the actual definitions of connectednes appear there, in the generality of a modality. *)
 Require Import hit.Truncations .
 Local Open Scope equiv_scope.
