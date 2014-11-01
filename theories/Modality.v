@@ -315,6 +315,31 @@ Section ConnectedTypes.
     apply (contr_equiv _ (to O A)^-1).
   Defined.
 
+  (** Here's another way of stating the universal property for mapping out of connected types into modal ones. *)
+  Definition ooextendable_const_isconnected_inO
+             (A : Type) `{IsConnected O A} (C : Type) `{In O C}
+  : ooExtendableAlong (@const A Unit tt) (fun _ => C).
+  Proof.
+    intros n; generalize dependent C;
+      induction n as [|n IHn]; intros C ?;
+      [ exact tt | split ].
+    - intros f.
+      exists (fun _ => (isconnected_elim C f).1); intros a.
+      symmetry; apply ((isconnected_elim C f).2).
+    - intros h k.
+      refine (extendable_postcompose' n _ _ _ _ (IHn (h tt = k tt) _)).
+      intros []; apply equiv_idmap.
+  Defined.
+
+  Definition isequiv_const_isconnected_inO `{Funext}
+             {A : Type} `{IsConnected O A} (C : Type) `{In O C}
+  : IsEquiv (@const A C).
+  Proof.
+    refine (@isequiv_compose _ _ (fun c u => c) _ _ _
+              (isequiv_ooextendable (fun _ => C) (@const A Unit tt)
+                                    (ooextendable_const_isconnected_inO A C))).
+  Defined.
+
 End ConnectedTypes.
 
 (** ** Modally truncated maps *)
@@ -746,10 +771,99 @@ Section ModalFact.
 
 End ModalFact.
 
+
+(** ** Accessible modalities *)
+
+(** A modality is accessible just when its underlying reflective (or unit-) subuniverse is accessible.  However, for modalities we have a simpler characterization in terms of families of generating connected objects rather than families of generating inverted maps. *)
+
+(** We make this notation local so that it can be redefined in [hit/Localization] to refer to the localization modality. *)
+Local Notation IsNull S X :=
+  (forall i, ooExtendableAlong (@const (S i) Unit tt) (fun _ => X)).
+
+(** If a type [X] is null for all the fibers of a map [f], then it is [f]-local. *)
+Definition ooextendable_isnull_fibers {A B} (f : A -> B) (C : B -> Type)
+: (forall b, ooExtendableAlong (@const (hfiber f b) Unit tt)
+                               (fun _ => C b))
+  -> ooExtendableAlong f C.
+Proof.
+  intros orth n; revert C orth.
+  induction n as [|n IHn]; intros C orth; [exact tt | split].
+  - intros g.
+    exists (fun b => (fst (orth b 1%nat) (fun x => x.2 # g x.1)).1 tt).
+    intros a.
+    rewrite (path_unit tt (const tt a)).
+    exact ((fst (orth (f a) 1%nat) _).2 (a ; 1)).
+  - intros h k.
+    apply IHn; intros b.
+    apply ooextendable_homotopy, orth.
+Defined.
+
+(** We will now show that if the underlying reflective subuniverse of a modality [O] is accessible, then the [O]-modal types are the null ones for some family  of types (not just the local ones for some family of morphisms). *)
+Section AccessibleModality.
+  Context {O : Modality} {acc : Accessible O}.
+
+  (** The idea is as follows.  By [ooextendable_isnull_fibers], we can detect locality with respect to a map by nullity with respect to its fibers.  Therefore, our first thought might be to just consider all the fibers of all the maps that we are localizing at.  However, this doesn't quite work because [ooextendable_isnull_fibers] is not an if-and-only-if, so not every modal type would necessarily be null for that type family.
+
+   We do know, however, that if [f] is an [O]-connected map, then any [O]-modal type is null for its fibers (since they are [O]-connected types).  There is no *a priori* why all the maps we localize at should end up being connected for the modality; they will always be inverted, but not every inverted map is connected (unless the modality is lex).  But if [f : A -> B] is [O]-inverted, then the [O]-connected map [to O A] is (up to equivalence) the composite of [f] with the [O]-connected map [to O B].  Thus, if [X] is null for the fibers of [to O A] and [to O B], it will be [f]-local and hence [O]-modal, while all [O]-modal types will be null for these fibers since they are connected. *)
+  Definition acc_conn_indices : Type
+    :=   { i : acc_gen_indices & O (acc_gen_domain i) }
+       + { i : acc_gen_indices & O (acc_gen_codomain i) }.
+
+  Definition acc_conn_types : acc_conn_indices -> Type.
+  Proof.
+    intros [ [i x] | [i x] ]; exact (hfiber (to O _) x).
+  Defined.
+
+  Global Instance isconnected_acc_conn_types (i : acc_conn_indices)
+  : IsConnected O (acc_conn_types i).
+  Proof.
+    destruct i as [ [i x ] | [i x ] ]; exact _.
+  Defined.
+
+  Definition inO_iff_orth_acc `{Funext} (X : Type)
+  : In O X <-> IsNull acc_conn_types X.
+  Proof.
+    split.
+    - intros ? [ [i x] | [i x] ];
+        refine (ooextendable_const_isconnected_inO O _ _).
+    - intros Xnull.
+      apply (snd (inO_iff_islocal X)); intros i.
+      refine (cancelL_ooextendable (fun _ => X) (acc_generator i)
+                                   (to O (acc_gen_codomain i)) _ _).
+      + apply ooextendable_isnull_fibers; intros x.
+        exact (Xnull (inr (i;x))).
+      + refine (ooextendable_homotopic _
+                  (O_functor O (acc_generator i) o to O (acc_gen_domain i)) _ _).
+        1:apply to_O_natural.
+        apply ooextendable_compose.
+        * apply ooextendable_equiv, O_inverts_generators.
+        * apply ooextendable_isnull_fibers; intros x.
+          exact (Xnull (inl (i;x))).
+  Defined.
+    
+End AccessibleModality.
+
+(** Here's a corresponding easier way to define accessibility for a modality. *)
+Definition Build_Accessible_Modality (O : Modality)
+           (acc_gen_indices : Type)
+           (acc_gen_types : acc_gen_indices -> Type)
+: (forall X : Type,
+     In O X <->
+     (forall i : acc_gen_indices,
+        ooExtendableAlong (@const (acc_gen_types i) Unit tt)
+                          (fun _ : Unit => X))) ->
+  Accessible O
+:= Build_Accessible O acc_gen_indices acc_gen_types
+                    (fun _ => Unit) (fun _ _ => tt).
+
+
+(** The construction of the nullification modality for any family of types will be in [hit/Localization]. *)
+
+
 (** ** Examples *)
 
-(** Finally, we give one nontrivial example of a modality.  This is Exercise 7.12 in the book. *)
-Definition notnot_modality `{Funext} : Modality.
+(** Finally, we give one nontrivial example of a modality.  This is Exercise 7.12 in the book.  Note that it is (apparently) *not* accessible unless we assume propositional resizing. *)
+Definition notnot `{Funext} : Modality.
 Proof.
   refine (Build_Modality_easy
             (fun X => ~~X)
@@ -765,7 +879,7 @@ Proof.
 Defined.
 
 (** Of course, there is also the trivial example. *)
-Definition identity_modality : Modality
+Definition purely : Modality
   := Build_Modality
      (Build_UnitSubuniverse
         idmap
@@ -778,4 +892,11 @@ Definition identity_modality : Modality
      (fun A B _ f a => 1)
      (fun A _ z z' => tt).
 
-(** For more examples of modalities, see hit/Truncations.v and hit/PropositionalFracture.v. *)
+Global Instance accessible_purely : Accessible purely.
+Proof.
+  refine (Build_Accessible _ Empty Empty_rec Empty_rec (Empty_ind _) _).
+  intros X; refine (_ , fun _ => tt).
+  intros _; apply Empty_ind.
+Defined.
+
+(** For more examples of modalities, see hit/Truncations.v, hit/PropositionalFracture.v, and hit/Localization.v. *)

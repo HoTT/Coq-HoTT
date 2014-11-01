@@ -160,6 +160,114 @@ Section AssumeFunext.
   : ExtendableAlong n f C -> ExtendableAlong n f D
     := extendable_postcompose' n C D f (fun b => BuildEquiv _ _ (g b) _).
 
+  (** Composition of the maps we extend along *)
+  Definition extendable_compose (n : nat)
+             {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
+  : ExtendableAlong n g P -> ExtendableAlong n f (P o g) -> ExtendableAlong n (g o f) P.
+  Proof.
+    revert P; induction n as [|n IHn]; intros P extg extf; [ exact tt | split ].
+    - intros h.
+      exists ((fst extg (fst extf h).1).1); intros a.
+      refine ((fst extg (fst extf h).1).2 (f a) @ _).
+      exact ((fst extf h).2 a).
+    - intros h k.
+      apply IHn.
+      + exact (snd extg h k).
+      + exact (snd extf (h oD g) (k oD g)).
+  Defined.
+
+  (** And cancellation *)
+  Definition cancelL_extendable (n : nat)
+             {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
+  : ExtendableAlong n g P -> ExtendableAlong n (g o f) P -> ExtendableAlong n f (P o g).
+  Proof.
+    revert P; induction n as [|n IHn]; intros P extg extgf; [ exact tt | split ].
+    - intros h.
+      exists ((fst extgf h).1 oD g); intros a.
+      exact ((fst extgf h).2 a).
+    - intros h k.
+      pose (h' := (fst extg h).1).
+      pose (k' := (fst extg k).1).
+      refine (extendable_postcompose' n (fun b => h' (g b) = k' (g b)) (fun b => h b = k b) f _ _).
+      + intros b.
+        exact (equiv_concat_lr ((fst extg h).2 b)^ ((fst extg k).2 b)).
+      + apply (IHn (fun c => h' c = k' c) (snd extg h' k') (snd extgf h' k')).
+  Defined.
+
+  Definition cancelR_extendable (n : nat)
+             {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
+  : ExtendableAlong n.+1 f (P o g) -> ExtendableAlong n (g o f) P -> ExtendableAlong n g P.
+  Proof.
+    revert P; induction n as [|n IHn]; intros P extf extgf; [ exact tt | split ].
+    - intros h.
+      exists ((fst extgf (h oD f)).1); intros b.
+      refine ((fst (snd extf ((fst extgf (h oD f)).1 oD g) h) _).1 b); intros a.
+      apply ((fst extgf (h oD f)).2).
+    - intros h k.
+      apply IHn.
+      + apply (snd extf (h oD g) (k oD g)).
+      + apply (snd extgf h k).
+  Defined.
+
+  (** And transfer across homotopies *)
+  Definition extendable_homotopic (n : nat)
+             {A B : Type} (C : B -> Type) (f : A -> B) {g : A -> B} (p : f == g)
+  : ExtendableAlong n f C -> ExtendableAlong n g C.
+  Proof.
+    revert C; induction n as [|n IHn]; intros C extf; [ exact tt | split ].
+    - intros h.
+      exists ((fst extf (fun a => (p a)^ # h a)).1); intros a.
+      refine ((apD ((fst extf (fun a => (p a)^ # h a)).1) (p a))^ @ _).
+      apply moveR_transport_p.
+      exact ((fst extf (fun a => (p a)^ # h a)).2 a).
+    - intros h k.
+      apply IHn, (snd extf h k).
+  Defined.
+
+  (** We can extend along equivalences *)
+  Definition extendable_equiv (n : nat)
+             {A B : Type} (C : B -> Type) (f : A -> B) `{IsEquiv _ _ f}
+  : ExtendableAlong n f C.
+  Proof.
+    revert C; induction n as [|n IHn]; intros C; [ exact tt | split ].
+    - intros h.
+      exists (fun b => eisretr f b # h (f^-1 b)); intros a.
+      refine (transport2 C (eisadj f a) _ @ _).
+      refine ((transport_compose C f _ _)^ @ _).
+      exact (apD h (eissect f a)).
+    - intros h k.
+      apply IHn.
+  Defined.
+
+  (** And into contractible types *)
+  Definition extendable_contr (n : nat)
+             {A B : Type} (C : B -> Type) (f : A -> B)
+             `{forall b, Contr (C b)}
+  : ExtendableAlong n f C.
+  Proof.
+    generalize dependent C; induction n as [|n IHn];
+      intros C ?; [ exact tt | split ].
+    - intros h.
+      exists (fun _ => center _); intros a.
+      apply contr.
+    - intros h k.
+      apply IHn; exact _.
+  Defined.
+
+  (** This is inherited by types of homotopies. *)
+  Definition extendable_homotopy (n : nat)
+             {A B : Type} (C : B -> Type) (f : A -> B)
+             (h k : forall b, C b)
+  : ExtendableAlong n.+1 f C -> ExtendableAlong n f (fun b => h b = k b).
+  Proof.
+    revert C h k; induction n as [|n IHn];
+      intros C h k ext; [exact tt | split].
+    - intros p.
+      exact (fst (snd ext h k) p).
+    - intros p q.
+      apply IHn, ext.
+  Defined.
+
   (** And the oo-version. *)
 
   Definition ooExtendableAlong
@@ -202,5 +310,44 @@ Section AssumeFunext.
              (g : forall b, C b -> D b) `{forall b, IsEquiv (g b)}
   : ooExtendableAlong f C -> ooExtendableAlong f D
     := fun ppp n => extendable_postcompose n C D f g (ppp n).
+
+  Definition ooextendable_compose
+             {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
+  : ooExtendableAlong g P -> ooExtendableAlong f (P o g) -> ooExtendableAlong (g o f) P
+    := fun extg extf n => extendable_compose n P f g (extg n) (extf n).
+
+  Definition cancelL_ooextendable
+             {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
+  : ooExtendableAlong g P -> ooExtendableAlong (g o f) P -> ooExtendableAlong f (P o g)
+  := fun extg extgf n => cancelL_extendable n P f g (extg n) (extgf n).
+
+  Definition cancelR_ooextendable
+             {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
+  : ooExtendableAlong f (P o g) -> ooExtendableAlong (g o f) P -> ooExtendableAlong g P
+    := fun extf extgf n => cancelR_extendable n P f g (extf n.+1) (extgf n).
+
+  Definition ooextendable_homotopic
+             {A B : Type} (C : B -> Type) (f : A -> B) {g : A -> B} (p : f == g)
+  : ooExtendableAlong f C -> ooExtendableAlong g C
+    := fun extf n => extendable_homotopic n C f p (extf n).
+
+  Definition ooextendable_equiv
+             {A B : Type} (C : B -> Type) (f : A -> B) `{IsEquiv _ _ f}
+  : ooExtendableAlong f C
+  := fun n => extendable_equiv n C f.
+
+  Definition ooextendable_contr
+             {A B : Type} (C : B -> Type) (f : A -> B)
+             `{forall b, Contr (C b)}
+  : ooExtendableAlong f C
+  := fun n => extendable_contr n C f.
+
+  Definition ooextendable_homotopy
+             {A B : Type} (C : B -> Type) (f : A -> B)
+             (h k : forall b, C b)
+  : ooExtendableAlong f C -> ooExtendableAlong f (fun b => h b = k b).
+  Proof.
+    intros ext n; apply extendable_homotopy, ext.
+  Defined.
 
 End AssumeFunext.

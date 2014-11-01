@@ -231,11 +231,11 @@ Qed.
 
 (** ** Local types *)
 
-(** Now we are finally ready to define and study local types, using [ooExtendableAlong] as our notion of equivalence.  Our first definition is called [IsLocal_internal] and shouldn't be used outside this file; once we build a reflective subuniverse [Loc f], we will define [IsLocal f] as a notation for [In (Loc f)], so that typeclass inference only has one class to worry about. *)
+(**  Our first definition is called [IsLocal_internal] and ideally shouldn't be used much explicitly.  Once we build a reflective subuniverse [Loc f], we will define [IsLocal f] as a notation for [In (Loc f)], so that typeclass inference only has one class to worry about. *)
 
 Section LocalTypesInternal.
 
-  Context {I : Type} {S T : I -> Type} (f : forall i, S i -> T i).
+  Context {I : Type@{i}} {S T : I -> Type@{i}} (f : forall i, S i -> T i).
 
   Definition IsLocal_internal (X : Type)
     := forall (i:I), ooExtendableAlong (f i) (fun _ => X).
@@ -268,7 +268,7 @@ Module Export LocalizationHIT.
     Context {I : Type} {S T : I -> Type} (f : forall i, S i -> T i)
             (X : Type).
 
-    (** Note that this axiom actually contains a point-constructor.  We could separate out that point-constructor and make it an actual argument of the private inductive type, thereby getting a judgmental computation rule for it.  However, since locality is an hprop, there seems little point to this. *)
+    (** Note that the following axiom actually contains a point-constructor.  We could separate out that point-constructor and make it an actual argument of the private inductive type, thereby getting a judgmental computation rule for it.  However, since locality is an hprop, there seems little point to this. *)
     Axiom islocal_localize : IsLocal_internal f (Localize f X).
 
     Section LocalizeInd.
@@ -336,9 +336,14 @@ Section Localization.
     apply ooextendable_over_const.
     apply Qloc.
   Defined.
+
+  (** It is accessible essentially by definition. *)
+  Global Instance accessible_loc : Accessible Loc
+    := Build_Accessible Loc I S T f (fun X => (idmap, idmap)).
     
 End Localization.
 
+(** Now we finally define this notation, so that it can refer directly to the modality.  This way there is only one typeclass hanging around, unlike (for instance) the slightly annoying case of [IsTrunc n] versus [In (Tr n)]. *)
 Notation IsLocal f := (In (Loc f)).
 
 Section LocalTypes.

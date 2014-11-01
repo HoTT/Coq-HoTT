@@ -708,3 +708,44 @@ Section Reflective_Subuniverse.
   End StrongMonad.
       
 End Reflective_Subuniverse.
+
+(** Make the [O_inverts] notation global. *)
+Notation O_inverts O f := (IsEquiv (O_functor O f)).
+
+(** ** Accessible subuniverses *)
+
+(** An accessible subuniverse is one that is localization at a small family of maps.  Accessibility is necessary for some constructions, and in practice it's a reasonable hypothesis that includes most examples (though a few examples, such as double negation, may only be accessible if we assume propositional resizing).  An accessible subuniverse can also be automatically extended to any larger universe level with a HIT localization.
+
+We now give the basic definitions related to accessibility, using [ooExtendableAlong] as our notion of equivalence as we did with reflective subuniverses.  The actual construction of a reflective subuniverse by localization will be in [hit/Localization]. *)
+
+Class Accessible (O : UnitSubuniverse@{sm lg}) :=
+  { acc_gen_indices  : Type@{sm} ;
+    acc_gen_domain   : acc_gen_indices -> Type@{sm} ;
+    acc_gen_codomain : acc_gen_indices -> Type@{sm} ;
+    acc_generator    : forall i, acc_gen_domain i -> acc_gen_codomain i ;
+    inO_iff_islocal  : forall (X : Type@{lg}),
+                         In O X <-> forall i, ooExtendableAlong (acc_generator i) (fun _ => X)
+  }.
+
+Definition O_inverts_generators {O : ReflectiveSubuniverse}
+           {acc : Accessible O} (i : acc_gen_indices)
+: O_inverts O (acc_generator i).
+Proof.
+  pose (ext_dom := fst (inO_iff_islocal (O (acc_gen_domain i))) _).
+  pose (ext_cod := fst (inO_iff_islocal (O (acc_gen_codomain i))) _).
+  refine (isequiv_adjointify _ _ _ _).
+  - apply O_rec.
+    exact ((fst (ext_dom i 1%nat) (to O _)).1).
+  - apply O_indpaths; intros x; simpl.
+    rewrite O_rec_beta.
+    refine ((fst (snd (ext_cod i 2)
+                      (fun x => O_functor O (acc_generator i)
+                                  ((fst (ext_dom i 1%nat) (to O _)).1 x))
+                      _) _).1 x); intros a.
+    rewrite ((fst (ext_dom i 1%nat) (to O _)).2 a).
+    apply to_O_natural.
+  - apply O_indpaths; intros x; simpl.
+    simpl rewrite (to_O_natural O (acc_generator i) x).
+    rewrite O_rec_beta.
+    apply ((fst (ext_dom i 1%nat) (to O _)).2 x).
+Qed.

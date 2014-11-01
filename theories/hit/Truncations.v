@@ -135,7 +135,7 @@ Hint Immediate istrunc_inO_tr : typeclass_instances.
 
 
 (** It's sometimes convenient to use "infinity" to refer to the identity modality in a similar way.  This clashes with some uses in higher topos theory, where "oo-truncated" means instead "hypercomplete", but this has not yet been a big problem. *)
-Notation oo := identity_modality.
+Notation oo := purely.
 
 (** ** A few special things about the (-1)-truncation. *)
 
