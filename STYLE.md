@@ -514,19 +514,20 @@ Universes`.  This causes Coq to print the universe parameters of every
 occurrence of a definition when displaying the current proof state or
 when giving an error message, and also to print the universe
 parameters and the constraints imposed on them when displaying a
-definition with `Print` or `Show`.  (Nowadays Coq is sometimes smart
-enough to display universes automatically when giving an error message
-that would otherwise look like "unable to unify `A` with `A`".)  To
-display the current universe _constraints_ during a proof, use `Show
-Universes` (this is not to be confused with `Print Universes`, which
-displays the current list of _global_ universes; the latter is usually
-quite small with universe polymorphism enabled).
+definition with `Print` or `About` or a typechecking a term with
+`Check`.  (Nowadays Coq is sometimes smart enough to display universes
+automatically when giving an error message that would otherwise look
+like "unable to unify `A` with `A`".)  To display the current universe
+_constraints_ during a proof, use `Show Universes` (this is not to be
+confused with `Print Universes`, which displays the current list of
+_global_ universes; the latter is usually quite small with universe
+polymorphism enabled).
 
 The universe parameters of an occurrence of a definition are displayed
 as `foo@{Top.1 Top.2}`.  Here `foo` is a definition which takes two
 universe parameters, and this occurrence of `foo` has those two
 parameters instantiated to the universes `Top.1` and `Top.2`.  When
-displaying a definition with `Print` or `Show`, its universe
+displaying a definition with `Print` or `About`, its universe
 parameters are shown in a comment below the definition, followed by
 `|-` and a list of the constraints on those parameters.
 
@@ -534,9 +535,15 @@ In general, the universe parameters of a definition are automatically
 computed from the parameters of its constituents, and the order of the
 parameters is likewise induced by the order in which they occur in the
 definition.  This means you must generally pay close attention to the
-output of `Print` or `Show` to learn which universe parameter is
+output of `Print` or `About` to learn which universe parameter is
 which, and insignificant-seeming changes in a definition can sometimes
 cause changes in the number or order of its universe parameters.
+
+Note that `Check foo` will often give a different list of universes
+than `Print foo` and `About foo`.  This is because the latter two
+display information about `foo` as a _definition_, while `Check`
+treats its argument as a _term_ to be typechecked, and Coq is willing
+to collapse some universes during typechecking.
 
 ### Universe annotations ###
 
