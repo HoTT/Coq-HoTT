@@ -139,23 +139,29 @@ Section path_functor.
   : path_functor'_T F G <~> F = G
     := BuildEquiv _ _ (@path_functor_uncurried F G) _.
 
-  Definition equiv_path_path_functor_uncurried (F G : Functor C D) (p q : F = G)
-  : p = q <~> ap object_of p = ap object_of q.
+  Local Open Scope function_scope.
+
+  Definition path_path_functor_uncurried (F G : Functor C D) (p q : F = G)
+  : ap object_of p = ap object_of q -> p = q.
   Proof.
-    etransitivity;
-    [ apply (equiv_ap (@path_functor_uncurried F G)^-1)
-    | ].
-    simpl.
-    unfold path_functor_uncurried_inv; simpl.
-    etransitivity;
-    [ symmetry; apply equiv_path_sigma
-    | ].
-    simpl.
-    apply equiv_sigma_contr;
-      abstract exact _.
+    refine ((ap (@path_functor_uncurried F G)^-1)^-1 o _).
+    refine ((path_sigma_uncurried _ _ _) o _); simpl.
+    refine (pr1^-1).
   Defined.
 
-  (** ** If the objects in [D] are n-truncated, then so is the type of  functors [C → D] *)
+  Global Instance isequiv_path_path_functor_uncurried F G p q
+  : IsEquiv (@path_path_functor_uncurried F G p q).
+  Proof.
+    unfold path_path_functor_uncurried.
+    (** N.B. [exact _] is super-slow here.  Not sure why. *)
+    repeat match goal with
+             | [ |- IsEquiv (_ o _) ] => eapply @isequiv_compose
+             | [ |- IsEquiv (_^-1) ] => eapply @isequiv_inverse
+             | [ |- IsEquiv (path_sigma_uncurried _ _ _) ] => eapply @isequiv_path_sigma
+           end.
+  Defined.
+
+  (** ** If the objects in [D] are n-truncated, then so is the type of functors [C → D] *)
   Global Instance trunc_functor `{IsTrunc n D} `{forall s d, IsTrunc n (morphism D s d)}
   : IsTrunc n (Functor C D).
   Proof.
@@ -176,3 +182,21 @@ Ltac path_functor :=
          end.
 
 Global Arguments path_functor_uncurried : simpl never.
+
+(** ** Tactic for pushing [ap object_of] through other [ap]s.
+
+    This allows lemmas like [path_functor_uncurried_fst] to apply more
+    easily. *)
+Ltac push_ap_object_of' :=
+  idtac;
+  match goal with
+    | [ |- context[ap object_of (ap ?f ?p)] ]
+      => rewrite <- (ap_compose' f object_of p); simpl
+    | [ |- context G[ap (fun F' x => object_of F' (@?f x)) ?p] ]
+      => let P := context_to_lambda G in
+         refine (transport P (ap_compose' object_of (fun F' x => F' (f x)) p)^ _)
+    | [ |- context G[ap (fun F' x => ?f (object_of F' x)) ?p] ]
+      => let P := context_to_lambda G in
+         refine (transport P (ap_compose' object_of (fun F' x => f (F' x)) p)^ _)
+  end.
+Ltac push_ap_object_of := repeat push_ap_object_of'.
