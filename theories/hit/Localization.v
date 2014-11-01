@@ -343,13 +343,19 @@ Section Localization.
     
 End Localization.
 
-(** Now we finally define this notation, so that it can refer directly to the modality.  This way there is only one typeclass hanging around, unlike (for instance) the slightly annoying case of [IsTrunc n] versus [In (Tr n)]. *)
+(** Conversely, if a reflective subuniverse is accessible, then it can be "nudged" to an equivalent localization.  The nudged version has the advantages of being universe polymorphic and satisfying its computation rules judgmentally. *)
+Definition nudge_reflective_subuniverse
+           (O : ReflectiveSubuniverse) `{Accessible O}
+: ReflectiveSubuniverse
+:= Loc acc_generator.
+
+(** Now we finally define the notation [IsLocal], so that it can refer directly to the reflective subuniverse.  This way there is only one typeclass hanging around, unlike (for instance) the slightly annoying case of [IsTrunc n] versus [In (Tr n)]. *)
 Notation IsLocal f := (In (Loc f)).
 
 Section LocalTypes.
   Context {I : Type} {S T : I -> Type} (f : forall i, S i -> T i).
 
-  Definition ext_islocal {X : Type} {Xloc : IsLocal f X} (i:I)
+  Definition ooextendable_islocal {X : Type} {Xloc : IsLocal f X} (i:I)
   : ooExtendableAlong (f i) (fun _ => X)
   := Xloc i.
 
@@ -359,7 +365,7 @@ Section LocalTypes.
   Global Instance isequiv_precomp_islocal `{Funext}
          {X : Type} `{IsLocal f X} (i : I)
   : IsEquiv (fun (g : T i -> X) => g o f i)
-  := isequiv_ooextendable (fun _ => X) (f i) (ext_islocal i).
+  := isequiv_ooextendable (fun _ => X) (f i) (ooextendable_islocal i).
 
   (** The non-dependent eliminator *)
   Definition Localize_rec {X Z : Type} `{IsLocal f Z} (g : X -> Z)
@@ -367,26 +373,26 @@ Section LocalTypes.
   Proof.
     refine (Localize_ind f X (fun _ => Z) g _); intros i.
     apply ooextendable_over_const.
-    apply ext_islocal.
+    apply ooextendable_islocal.
   Defined.
 
   Definition local_rec {X} `{IsLocal f X} {i} (g : S i -> X)
   : T i -> X
-  := (fst (ext_islocal i 1%nat) g).1.
+  := (fst (ooextendable_islocal i 1%nat) g).1.
 
   Definition local_rec_beta {X} `{IsLocal f X} {i} (g : S i -> X) (s : S i)
   : local_rec g (f i s) = g s
-    := (fst (ext_islocal i 1%nat) g).2 s.
+    := (fst (ooextendable_islocal i 1%nat) g).2 s.
 
   Definition local_indpaths {X} `{IsLocal f X} {i} {h k : T i -> X}
              (p : h o f i == k o f i)
   : h == k
-    := (fst (snd (ext_islocal i 2) h k) p).1.
+    := (fst (snd (ooextendable_islocal i 2) h k) p).1.
 
   Definition local_indpaths_beta {X} `{IsLocal f X} {i} (h k : T i -> X)
              (p : h o f i == k o f i) (s : S i)
   : local_indpaths p (f i s) = p s
-    := (fst (snd (ext_islocal i 2) h k) p).2 s.
+    := (fst (snd (ooextendable_islocal i 2) h k) p).2 s.
 
 End LocalTypes.
 
@@ -394,3 +400,63 @@ Arguments local_rec : simpl never.
 Arguments local_rec_beta : simpl never.
 Arguments local_indpaths : simpl never.
 Arguments local_indpaths_beta : simpl never.
+
+(** ** Nullification *)
+
+(** Nullification is the special case of localization where each [T i] is [Unit].  In this case, we get a modality and not just a reflective subuniverse. *)
+
+(** The hypotheses of this lemma may look slightly odd (why are we bothering to talk about type families dependent over [Unit]?), but they seem to be the most convenient to make the induction go through.  *)
+Definition extendable_over_unit (n : nat)
+  (A : Type) (C : Unit -> Type) (D : forall u, C u -> Type)
+  (ext : ExtendableAlong n (@const A Unit tt) C)
+  (ext' : forall (c : forall u, C u),
+            ExtendableAlong n (@const A Unit tt) (fun u => (D u (c u))))
+: ExtendableAlong_Over n (@const A Unit tt) C ext D.
+Proof.
+  generalize dependent C; induction n as [|n IHn];
+    intros C D ext ext'; [exact tt | split].
+  - intros g g'.
+    exists ((fst (ext' (fst ext g).1)
+                 (fun a => ((fst ext g).2 a)^ # (g' a))).1);
+      intros a; simpl.
+    apply moveR_transport_p.
+    exact ((fst (ext' (fst ext g).1)
+                (fun a => ((fst ext g).2 a)^ # (g' a))).2 a).
+  - intros h k h' k'.
+    apply IHn; intros g.
+    exact (snd (ext' k) (fun u => g u # h' u) k').
+Defined.
+
+Definition ooextendable_over_unit
+  (A : Type) (C : Unit -> Type) (D : forall u, C u -> Type)
+  (ext : ooExtendableAlong (@const A Unit tt) C)
+  (ext' : forall (c : forall u, C u),
+            ooExtendableAlong (@const A Unit tt) (fun u => (D u (c u))))
+: ooExtendableAlong_Over (@const A Unit tt) C ext D
+  := fun n => extendable_over_unit n A C D (ext n) (fun c => ext' c n).
+
+Section Nullification.
+
+  Context {I : Type@{i}} (S : I -> Type@{i}).
+  Let f := (fun (i:I) (s:S i) => tt).
+
+  Definition Nul : Modality.
+  Proof.
+    refine (Build_Modality (Loc f) _ _ _).
+    - intros A B ? g x.
+      apply Localize_ind.
+      + exact g.
+      + intros i.
+        apply ooextendable_over_unit; intros c.
+        refine (ooextendable_postcompose (fun (_:Unit) => B (c tt)) _ _
+                  (fun u => transport B (ap c (path_unit tt u))) _).
+        refine (ooextendable_islocal f i).
+    - reflexivity.
+  Defined.
+
+End Nullification.
+
+(** We can also nudge accessible modalities into nullifications. *)
+Definition nudge_modality (O : Modality) `{Accessible O}
+: Modality
+:= Nul acc_conn_types.

@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp TruncType Extensions ReflectiveSubuniverse Modality.
+Require Import HProp TruncType Extensions ReflectiveSubuniverse Modality Localization.
 Require Import hit.Pushout hit.Join.
 
 Local Open Scope path_scope.
@@ -10,7 +10,10 @@ Local Open Scope equiv_scope.
 (** * Open and closed modalities and the propositional fracture theorem *)
 
 (** Exercise 7.13(i): Open modalities *)
-Definition Op `{Funext} (U : hProp) : Modality.
+Section OpenModality.
+Context `{Funext} (U : hProp).
+
+Definition Op : Modality.
 Proof.
   refine (Build_Modality_easy
            (fun X => U -> X)
@@ -46,7 +49,7 @@ Proof.
       apply eta_path_arrow.
 Defined.
 
-Global Instance accessible_op `{Funext} (U : hProp) : Accessible (Op U).
+Global Instance accessible_op : Accessible Op.
 Proof.
   refine (Build_Accessible_Modality _ Unit (fun _ => U) _);
     intros X; split.
@@ -60,7 +63,11 @@ Proof.
     refine (isequiv_ooextendable (fun _ => X) (@const U Unit tt) ext).
 Defined.
 
-(** Thus, arguably a better definition of [Op] would be [Nul U], as it would not require [Funext], would be universe polymorphic, and would have a judgmental computation rule.  However, the above definition is also nice as it doesn't use HITs. *)
+(** Thus, arguably a better definition of [Op] would be [Nul (fun (_:Unit) => U)], as it would not require [Funext], would be universe polymorphic, and would have a judgmental computation rule.  However, the above definition is also nice to know, as it doesn't use HITs.  We call the other version [Op']. *)
+Definition Op' : Modality
+  := nudge_modality Op.
+
+End OpenModality.
 
 (** Exercise 7.13(ii): Closed modalities *)
 Section ClosedModality.
