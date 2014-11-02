@@ -63,7 +63,7 @@ Proof.
     refine (isequiv_ooextendable (fun _ => X) (@const U Unit tt) ext).
 Defined.
 
-(** Thus, arguably a better definition of [Op] would be [Nul (fun (_:Unit) => U)], as it would not require [Funext], would be universe polymorphic, and would have a judgmental computation rule.  However, the above definition is also nice to know, as it doesn't use HITs.  We call the other version [Op']. *)
+(** Thus, arguably a better definition of [Op] would be [Nul (fun (_:Unit) => U)], as it would not require [Funext], would be universe polymorphic, and would have a judgmental computation rule.  However, the above definition is also nice to know, as it doesn't use HITs.  We call the non-funext version defined by localization [Op']. *)
 Definition Op' : Modality
   := nudge_modality Op.
 

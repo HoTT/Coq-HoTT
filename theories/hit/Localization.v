@@ -8,28 +8,34 @@ Local Open Scope path_scope.
 
 (** Suppose given a family of maps [f : forall (i:I), S i -> T i].  A type [X] is said to be [f]-local if for all [i:I], the map [(T i -> X) -> (S i -> X)] given by precomposition with [f i] is an equivalence.  Our goal is to show that the [f]-local types form a reflective subuniverse, with a reflector constructed by localization.  That is, morally we want to say
 
-    Inductive Localize f (X : Type) : Type :=
-    | loc : X -> Localize X
-    | islocal_localize : forall i, IsEquiv (fun (g : T i -> X) => g o f i).
+<<
+Inductive Localize f (X : Type) : Type :=
+| loc : X -> Localize X
+| islocal_localize : forall i, IsEquiv (fun (g : T i -> X) => g o f i).
+>>
 
 This is not a valid HIT by the usual rules, but if we expand out the definition of [IsEquiv] and apply [path_sigma] and [path_forall], then it becomes one.  We get a simpler definition (no 2-path constructors) if we do this with [BiInv] rather than [IsEquiv]:
 
-    Inductive Localize f (X : Type) : Type :=
-    | loc : X -> Localize X
-    | lsect : forall i (g : S i -> X), T i -> X
-    | lissect : forall i (g : S i -> X) (s : S i), lsect i g (f i s) = g s
-    | lretr : forall i (g : S i -> X), T i -> X
-    | lisretr : forall i (h : T i -> X) (t : T i), lretr i (h o f i) t = h t.
+<<
+Inductive Localize f (X : Type) : Type :=
+| loc : X -> Localize X
+| lsect : forall i (g : S i -> X), T i -> X
+| lissect : forall i (g : S i -> X) (s : S i), lsect i g (f i s) = g s
+| lretr : forall i (g : S i -> X), T i -> X
+| lisretr : forall i (h : T i -> X) (t : T i), lretr i (h o f i) t = h t.
+>>
 
 This definition works, and from it one can prove that the [f]-local types form a reflective subuniverse.  However, the proof inextricably involves [Funext].  We can avoid [Funext] in the same way that we did in the definition of a [ReflectiveSubuniverse], by using pointwise path-split precomposition equivalences.  Observe that the assertion [ExtendableAlong n f C] consists entirely of points, paths, and higher paths in [C].  Therefore, for any [n] we might choose, we can define [Localize f X] as a HIT to universally force [ExtendableAlong n (f i) (fun _ => Localize f X)] to hold for all [i].  For instance, when [n] is 2 (the smallest value which will ensure that [Localize f X] is actually [f]-local), we get
 
-    Inductive Localize f (X : Type) : Type :=
-    | loc : X -> Localize X
-    | lrec : forall i (g : S i -> X), T i -> X
-    | lrec_beta : forall i (g : S i -> X) (s : T i), lrec i g (f i s) = g s
-    | lindpaths : forall i (h k : T i -> X) (p : h o f i == k o f i) (t : T i), h t = k t
-    | lindpaths_beta : forall i (h k : T i -> X) (p : h o f i == k o f i) (s : S i),
-                         lindpaths i h k p (f i s) = p s.
+<<
+Inductive Localize f (X : Type) : Type :=
+| loc : X -> Localize X
+| lrec : forall i (g : S i -> X), T i -> X
+| lrec_beta : forall i (g : S i -> X) (s : T i), lrec i g (f i s) = g s
+| lindpaths : forall i (h k : T i -> X) (p : h o f i == k o f i) (t : T i), h t = k t
+| lindpaths_beta : forall i (h k : T i -> X) (p : h o f i == k o f i) (s : S i),
+                     lindpaths i h k p (f i s) = p s.
+>>
 
 However, just as for [ReflectiveSubuniverse], in order to completely avoid [Funext] we need the [oo]-version of path-splitness.  Written out as above, this would involve infinitely many constructors (but it would not otherwise be problematic, so for instance it can be constructed semantically in model categories).  We can't actually write out infinitely many constructors in Coq, of course, but since we have a finite definition of [ooExtendableAlong], we can just assert directly that [ooExtendableAlong (f i) (fun _ => Localize f X)] holds for all [i].
 
