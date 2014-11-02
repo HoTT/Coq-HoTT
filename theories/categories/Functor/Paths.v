@@ -1,12 +1,13 @@
 (** * Classification of path spaces of functors *)
 Require Import Category.Core Functor.Core.
-Require Import HProp HoTT.Tactics Equivalences PathGroupoids Types.Sigma Trunc Types.Record.
+Require Import HProp HoTT.Tactics Equivalences Basics.PathGroupoids Types.Sigma Trunc Types.Record Types.Paths.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+Local Open Scope path_scope.
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.
 
@@ -48,7 +49,7 @@ Section path_functor.
 
   (**
 <<
-  Definition equiv_path_functor'_sig_sig (F G : Functor C D)
+  Definition equiv_path_functor_uncurried_sig (F G : Functor C D)
   : path_functor'_T F G <~> (@equiv_inv _ _ _ equiv_sig_functor F
                               = @equiv_inv _ _ _ equiv_sig_functor G).
   Proof.
@@ -64,7 +65,7 @@ Section path_functor.
    *)
 
   (** ** Classify sufficient conditions to prove functors equal *)
-  Definition path_functor'_sig (F G : Functor C D) : path_functor'_T F G -> F = G.
+  Definition path_functor_uncurried (F G : Functor C D) : path_functor'_T F G -> F = G.
   Proof.
     intros [? ?].
     destruct F, G; simpl in *.
@@ -74,16 +75,16 @@ Section path_functor.
   Defined.
 
   (** *** Said proof respects [object_of] *)
-  Lemma path_functor'_sig_fst F G HO HM
-  : ap object_of (@path_functor'_sig F G (HO; HM)) = HO.
+  Lemma path_functor_uncurried_fst F G HO HM
+  : ap object_of (@path_functor_uncurried F G (HO; HM)) = HO.
   Proof.
     destruct F, G; simpl in *.
     path_induction_hammer.
   Qed.
 
   (** *** Said proof respects [idpath] *)
-  Lemma path_functor'_sig_idpath F
-  : @path_functor'_sig F F (idpath; idpath) = idpath.
+  Lemma path_functor_uncurried_idpath F
+  : @path_functor_uncurried F F (idpath; idpath) = idpath.
   Proof.
     destruct F; simpl in *.
     rewrite !(contr idpath).
@@ -91,55 +92,76 @@ Section path_functor.
   Qed.
 
   (** ** Equality of functors gives rise to an inhabitant of the path-classifying-type *)
-  Definition path_functor'_sig_inv (F G : Functor C D) : F = G -> path_functor'_T F G
+  Definition path_functor_uncurried_inv (F G : Functor C D) : F = G -> path_functor'_T F G
     := fun H'
        => (ap object_of H';
            (transport_compose _ object_of _ _) ^ @ apD (@morphism_of _ _) H')%path.
 
   (** ** Curried version of path classifying lemma *)
-  Lemma path_functor' (F G : Functor C D)
-  : forall HO : object_of F = object_of G,
-      transport (fun GO => forall s d, morphism C s d -> morphism D (GO s) (GO d)) HO (morphism_of F) = morphism_of G
-      -> F = G.
-  Proof.
-    intros.
-    apply path_functor'_sig.
-    esplit; eassumption.
-  Defined.
+  Definition path_functor (F G : Functor C D)
+        (HO : object_of F = object_of G)
+        (HM : transport (fun GO => forall s d, morphism C s d -> morphism D (GO s) (GO d)) HO (morphism_of F) = morphism_of G)
+  : F = G
+    := path_functor_uncurried F G (HO; HM).
 
   (** ** Curried version of path classifying lemma, using [forall] in place of equality of functions *)
-  Lemma path_functor (F G : Functor C D)
-  : forall HO : object_of F == object_of G,
-      (forall s d m,
-         transport (fun GO => forall s d, morphism C s d -> morphism D (GO s) (GO d))
-                   (path_forall _ _ HO)
-                   (morphism_of F)
-                   s d m
-         = morphism_of G m)
-      -> F = G.
+  Definition path_functor_pointwise (F G : Functor C D)
+        (HO : object_of F == object_of G)
+        (HM : forall s d m,
+                transport (fun GO => forall s d, morphism C s d -> morphism D (GO s) (GO d))
+                          (path_forall _ _ HO)
+                          (morphism_of F)
+                          s d m
+                = morphism_of G m)
+  : F = G.
   Proof.
-    intros.
-    eapply (path_functor' F G (path_forall _ _ HO)).
-    repeat (apply path_forall; intro); apply_hyp.
+    refine (path_functor F G (path_forall _ _ HO) _).
+    repeat (apply path_forall; intro); apply HM.
   Defined.
 
   (** ** Classify equality of functors up to equivalence *)
-  Lemma equiv_path_functor'_sig (F G : Functor C D)
-  : path_functor'_T F G <~> F = G.
+  Global Instance isequiv_path_functor_uncurried (F G : Functor C D)
+  : IsEquiv (@path_functor_uncurried F G).
   Proof.
-    apply (equiv_adjointify (@path_functor'_sig F G)
-                            (@path_functor'_sig_inv F G)).
+    apply (isequiv_adjointify (@path_functor_uncurried F G)
+                              (@path_functor_uncurried_inv F G)).
     - hnf.
       intros [].
-      apply path_functor'_sig_idpath.
+      apply path_functor_uncurried_idpath.
     - hnf.
       intros [? ?].
       apply path_sigma_uncurried.
-      exists (path_functor'_sig_fst _ _ _).
+      exists (path_functor_uncurried_fst _ _ _).
       exact (center _).
   Defined.
 
-  (** ** If the objects in [D] are n-truncated, then so is the type of  functors [C → D] *)
+  Definition equiv_path_functor_uncurried (F G : Functor C D)
+  : path_functor'_T F G <~> F = G
+    := BuildEquiv _ _ (@path_functor_uncurried F G) _.
+
+  Local Open Scope function_scope.
+
+  Definition path_path_functor_uncurried (F G : Functor C D) (p q : F = G)
+  : ap object_of p = ap object_of q -> p = q.
+  Proof.
+    refine ((ap (@path_functor_uncurried F G)^-1)^-1 o _).
+    refine ((path_sigma_uncurried _ _ _) o _); simpl.
+    refine (pr1^-1).
+  Defined.
+
+  Global Instance isequiv_path_path_functor_uncurried F G p q
+  : IsEquiv (@path_path_functor_uncurried F G p q).
+  Proof.
+    unfold path_path_functor_uncurried.
+    (** N.B. [exact _] is super-slow here.  Not sure why. *)
+    repeat match goal with
+             | [ |- IsEquiv (_ o _) ] => eapply @isequiv_compose
+             | [ |- IsEquiv (_^-1) ] => eapply @isequiv_inverse
+             | [ |- IsEquiv (path_sigma_uncurried _ _ _) ] => eapply @isequiv_path_sigma
+           end.
+  Defined.
+
+  (** ** If the objects in [D] are n-truncated, then so is the type of functors [C → D] *)
   Global Instance trunc_functor `{IsTrunc n D} `{forall s d, IsTrunc n (morphism D s d)}
   : IsTrunc n (Functor C D).
   Proof.
@@ -155,8 +177,26 @@ Ltac path_functor :=
   repeat match goal with
            | _ => intro
            | _ => reflexivity
-           | _ => apply path_functor'_sig; simpl
+           | _ => apply path_functor_uncurried; simpl
            | _ => (exists idpath)
          end.
 
-Global Arguments path_functor'_sig : simpl never.
+Global Arguments path_functor_uncurried : simpl never.
+
+(** ** Tactic for pushing [ap object_of] through other [ap]s.
+
+    This allows lemmas like [path_functor_uncurried_fst] to apply more
+    easily. *)
+Ltac push_ap_object_of' :=
+  idtac;
+  match goal with
+    | [ |- context[ap object_of (ap ?f ?p)] ]
+      => rewrite <- (ap_compose' f object_of p); simpl
+    | [ |- context G[ap (fun F' x => object_of F' (@?f x)) ?p] ]
+      => let P := context_to_lambda G in
+         refine (transport P (ap_compose' object_of (fun F' x => F' (f x)) p)^ _)
+    | [ |- context G[ap (fun F' x => ?f (object_of F' x)) ?p] ]
+      => let P := context_to_lambda G in
+         refine (transport P (ap_compose' object_of (fun F' x => f (F' x)) p)^ _)
+  end.
+Ltac push_ap_object_of := repeat push_ap_object_of'.

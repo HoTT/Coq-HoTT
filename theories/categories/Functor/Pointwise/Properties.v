@@ -52,7 +52,7 @@ Section parts.
 
     Definition identity_of_helper_helper_object_of x
     : ap object_of (identity_of_helper_helper x) = idpath
-      := path_functor'_sig_fst _ _ _.
+      := path_functor_uncurried_fst _ _ _.
 
     Lemma identity_of_helper
     : (fun x : Functor C D => 1 o x o 1) = idmap.
@@ -95,7 +95,7 @@ Section parts.
 
     Definition composition_of_helper_helper_object_of x
     : ap object_of (composition_of_helper_helper x) = idpath
-      := path_functor'_sig_fst _ _ _.
+      := path_functor_uncurried_fst _ _ _.
 
     Lemma composition_of_helper
     : (fun x => G' o G o x o (F' o F)) = (fun x => G' o (G o x o F') o F).

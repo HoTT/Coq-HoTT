@@ -47,7 +47,7 @@ Ltac exp_laws_handle_contr' :=
 Ltac exp_laws_handle_transport' :=
   idtac;
   match goal with
-    | _ => progress rewrite ?transport_forall_constant, ?path_forall_2_beta, ?transport_const, ?path_functor'_sig_fst, ?transport_path_prod
+    | _ => progress rewrite ?transport_forall_constant, ?path_forall_2_beta, ?transport_const, ?path_functor_uncurried_fst, ?transport_path_prod
     | [ |- context[transport (fun y => ?f (@object_of ?C ?D y ?x))] ]
       => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x)) (@object_of C D))
     | [ |- context[transport (fun y => ?f (@object_of ?C ?D y ?x) ?z)] ]

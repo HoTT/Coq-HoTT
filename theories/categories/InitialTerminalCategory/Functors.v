@@ -77,7 +77,7 @@ Section unique.
     := let x := {| center := from_initial C |} in x.
   Proof.
     abstract (
-        intros; apply path_functor'_sig;
+        intros; apply path_functor_uncurried;
         (exists (center _));
         apply path_forall; intro x;
         apply (initial_category_ind _ x)

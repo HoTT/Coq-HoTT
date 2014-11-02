@@ -1571,6 +1571,7 @@ Definition Book_9_2_9 := @HoTT.categories.Functor.Composition.Laws.associativity
 
 Definition Book_9_2_11_l := @HoTT.categories.Functor.Composition.Laws.left_identity.
 Definition Book_9_2_11_r := @HoTT.categories.Functor.Composition.Laws.right_identity.
+Definition Book_9_2_11 := @HoTT.categories.Functor.Composition.Laws.triangle.
 
 (* ================================================== ct:adjoints *)
 (** Definition 9.3.1 *)
@@ -2256,6 +2257,3 @@ Definition Book_10_5_8_item_ix := @HoTT.hit.V.separation.
 
 (* ================================================== eg:surreal-addition *)
 (** Example 11.6.18 *)
-
-
-
