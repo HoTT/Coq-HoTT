@@ -69,7 +69,7 @@ Definition extendable_over_postcompose' (n : nat)
   -> ExtendableAlong_Over n f C ext E.
 Proof.
   revert C ext D E g; induction n as [|n IHn]; intros C ext D E g; simpl.
-  1:apply idmap.
+  1:by apply idmap.
   intros ext'.
   split.
   - intros h k.

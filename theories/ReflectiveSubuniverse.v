@@ -12,7 +12,7 @@ Local Arguments compose / .
 
 (** ** Unit Subuniverses *)
 
-(** A UnitSubuniverse is the common underlying structure of a reflective subuniverse and a modality.  We make it a separate structure in order to use the same names for its fields and functions in the two cases.
+(** A [UnitSubuniverse] is the common underlying structure of a reflective subuniverse and a modality.  We make it a separate structure in order to use the same names for its fields and functions in the two cases.
 
 We use explicit universe annotations for clarity, performance, and also since sometimes Coq doesn't manage to find the right levels.  Note that a single inhabitant of [UnitSubuniverse] (or [ReflectiveSubuniverse] or [Modality]) comes with a single choice of all the universe levels involved.  In all or almost all cases, our ways of *defining* subuniverses will be universe polymorphic, but technically what that means is that for each universe level we get a *different* inhabitant of the subuniverse record.  This is occasionally a problem because we need "large elims" for the subuniverse, particularly for truncation when using the fact that the type of [n]-types is an [n.+1]-type.  For this reason, we parametrize all of our subuniverse records by *two* universe levels, a "small" one [sm] consisting of the types to which we can apply the reflector, and a "large" one [lg] consisting of the types into which we can eliminate (at least when they also lie in the subuniverse).  It follows that the predicate of lying in the subuniverse must also apply to the large universe. *)
 Record UnitSubuniverse :=
@@ -79,7 +79,7 @@ Record ReflectiveSubuniverse :=
   {
     rsubu : UnitSubuniverse@{sm lg} ;
     extendable_to_O : forall {P : Type@{sm}} {Q : Type@{lg}} {Q_inO : In rsubu Q},
-                 (** We give a monster universe annotation here to ensure that [ReflectiveSubuniverse] only has two universe parameters, so that we can give them explicitly hen needed. *)
+                 (** We give a monster universe annotation here to ensure that [ReflectiveSubuniverse] only has two universe parameters, so that we can give them explicitly when needed. *)
                  ooExtendableAlong@{sm sm lg lg lg lg lg lg lg}
                    (to rsubu P) (fun _ => Q)
   }.
@@ -714,7 +714,7 @@ Notation O_inverts O f := (IsEquiv (O_functor O f)).
 
 (** ** Accessible subuniverses *)
 
-(** An accessible subuniverse is one that is localization at a small family of maps.  Accessibility is necessary for some constructions, and in practice it's a reasonable hypothesis that includes most examples (though a few examples, such as double negation, may only be accessible if we assume propositional resizing).  An accessible subuniverse can also be automatically extended to any larger universe level with a HIT localization.
+(** An accessible subuniverse is one that is the localization at a small family of maps.  Accessibility is necessary for some constructions, and in practice it's a reasonable hypothesis that includes most examples (though a few examples, such as double negation, may only be accessible if we assume propositional resizing).  An accessible subuniverse can also be automatically extended to any larger universe level with a HIT localization.
 
 We now give the basic definitions related to accessibility, using [ooExtendableAlong] as our notion of equivalence as we did with reflective subuniverses.  The actual construction of a reflective subuniverse by localization will be in [hit/Localization]. *)
 
