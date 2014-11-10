@@ -64,10 +64,13 @@ Proof.
 Defined.
 
 (** Thus, arguably a better definition of [Op] would be [Nul (fun (_:Unit) => U)], as it would not require [Funext], would be universe polymorphic, and would have a judgmental computation rule.  However, the above definition is also nice to know, as it doesn't use HITs.  We call the non-funext version defined by localization [Op']. *)
-Definition Op' : Modality
-  := nudge_modality Op.
+
+(** Morally this is the definition, but this way it would end up technically depending on funext, since [Op] and [accessible_op] do.  Thus, instead we close the section and give a direct definition.  *)
+(** Definition Op' : Modality := nudge_modality Op. *)
 
 End OpenModality.
+
+Definition Op' (U : hProp) : Modality := Nul (fun (_:Unit) => U).
 
 (** Exercise 7.13(ii): Closed modalities *)
 Section ClosedModality.
