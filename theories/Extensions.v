@@ -12,8 +12,7 @@ Local Open Scope equiv_scope.
 
 This turns out to be useful for several reasons.  For instance, by iterating it, we can to formulate universal properties without needing [Funext].  It also gives us a way to "quantify" a universal property by the connectedness of the type of extensions. *)
 
-Section AssumeFunext.
-  Context `{Funext}.
+Section Extensions.
 
   (* TODO: consider naming for [ExtensionAlong] and subsequent lemmas.  As a name for the type itself, [Extension] or [ExtensionAlong] seems great; but resultant lemma names such as [path_extension] (following existing naming conventions) are rather misleading. *)
 
@@ -22,7 +21,7 @@ Section AssumeFunext.
              (P : B -> Type) (d : forall x:A, P (f x))
     := { s : forall y:B, P y & forall x:A, s (f x) = d x }.
 
-  Definition path_extension {A B : Type} {f : A -> B}
+  Definition path_extension `{Funext} {A B : Type} {f : A -> B}
              {P : B -> Type} {d : forall x:A, P (f x)}
              (ext ext' : ExtensionAlong f P d)
   : (ExtensionAlong f
@@ -52,7 +51,7 @@ Section AssumeFunext.
     exact inverse.
   Defined.
 
-  Global Instance isequiv_path_extension {A B : Type} {f : A -> B}
+  Global Instance isequiv_path_extension `{Funext} {A B : Type} {f : A -> B}
          {P : B -> Type} {d : forall x:A, P (f x)}
          (ext ext' : ExtensionAlong f P d)
   : IsEquiv (path_extension ext ext') | 0.
@@ -86,10 +85,10 @@ Section AssumeFunext.
                     ExtendableAlong n f (fun b => h b = k b)
        end.
 
-  Definition equiv_extendable_pathsplit (n : nat)
+  Definition equiv_extendable_pathsplit `{Funext} (n : nat)
              {A B : Type} (C : B -> Type) (f : A -> B)
   : ExtendableAlong n f C
-                    <~> PathSplit n (fun (g : forall b, C b) => g oD f).
+    <~> PathSplit n (fun (g : forall b, C b) => g oD f).
   Proof.
     generalize dependent C; induction n as [ | n IHn]; intros C.
     1:apply equiv_idmap.
@@ -105,30 +104,30 @@ Section AssumeFunext.
       intros []; reflexivity.
   Defined.
 
-  Definition isequiv_extendable (n : nat)
+  Definition isequiv_extendable `{Funext} (n : nat)
              {A B : Type} {C : B -> Type} {f : A -> B}
   : ExtendableAlong n.+2 f C
     -> IsEquiv (fun g => g oD f)
     := isequiv_pathsplit n o (equiv_extendable_pathsplit n.+2 C f).
 
-  Global Instance ishprop_extendable (n : nat)
+  Global Instance ishprop_extendable `{Funext} (n : nat)
          {A B : Type} (C : B -> Type) (f : A -> B)
   : IsHProp (ExtendableAlong n.+2 f C).
   Proof.
     refine (trunc_equiv' _ (equiv_inverse (equiv_extendable_pathsplit n.+2 C f))).
   Defined.
 
-  Definition equiv_extendable_isequiv (n : nat)
+  Definition equiv_extendable_isequiv `{Funext} (n : nat)
              {A B : Type} (C : B -> Type) (f : A -> B)
   : ExtendableAlong n.+2 f C
-                    <~> IsEquiv (fun (g : forall b, C b) => g oD f).
+    <~> IsEquiv (fun (g : forall b, C b) => g oD f).
   Proof.
     etransitivity.
     - apply equiv_extendable_pathsplit.
     - apply equiv_pathsplit_isequiv.
   Defined.
 
-  (** Postcomposition with a known equivalence. *)
+  (** Postcomposition with a known equivalence.  Note that this does not require funext to define, although showing that it is an equivalence would require funext. *)
   Definition extendable_postcompose' (n : nat)
              {A B : Type} (C D : B -> Type) (f : A -> B)
              (g : forall b, C b <~> D b)
@@ -159,7 +158,7 @@ Section AssumeFunext.
   : ExtendableAlong n f C -> ExtendableAlong n f D
     := extendable_postcompose' n C D f (fun b => BuildEquiv _ _ (g b) _).
 
-  (** Composition of the maps we extend along *)
+  (** Composition of the maps we extend along.  This also does not require funext. *)
   Definition extendable_compose (n : nat)
              {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
   : ExtendableAlong n g P -> ExtendableAlong n f (P o g) -> ExtendableAlong n (g o f) P.
@@ -273,31 +272,31 @@ Section AssumeFunext.
              {A B : Type} (f : A -> B) (C : B -> Type) : Type
     := forall n, ExtendableAlong n f C.
 
-  Definition isequiv_ooextendable
+  Definition isequiv_ooextendable `{Funext}
              {A B : Type} (C : B -> Type) (f : A -> B)
   : ooExtendableAlong f C -> IsEquiv (fun g => g oD f)
     := fun ps => isequiv_extendable 0 (ps 2).
 
-  Definition equiv_ooextendable_pathsplit
+  Definition equiv_ooextendable_pathsplit `{Funext}
              {A B : Type} (C : B -> Type) (f : A -> B)
   : ooExtendableAlong f C <~>
-                      ooPathSplit (fun (g : forall b, C b) => g oD f).
+    ooPathSplit (fun (g : forall b, C b) => g oD f).
   Proof.
     refine (equiv_functor_forall' (equiv_idmap _) _); intros n.
     apply equiv_extendable_pathsplit.
   Defined.
 
-  Global Instance ishprop_ooextendable
+  Global Instance ishprop_ooextendable `{Funext}
          {A B : Type} (C : B -> Type) (f : A -> B)
   : IsHProp (ooExtendableAlong f C).
   Proof.
     refine (trunc_equiv _ (equiv_ooextendable_pathsplit C f)^-1).
   Defined.
 
-  Definition equiv_ooextendable_isequiv 
+  Definition equiv_ooextendable_isequiv `{Funext}
              {A B : Type} (C : B -> Type) (f : A -> B)
   : ooExtendableAlong f C
-                      <~> IsEquiv (fun (g : forall b, C b) => g oD f).
+    <~> IsEquiv (fun (g : forall b, C b) => g oD f).
   Proof.
     etransitivity.
     - apply equiv_ooextendable_pathsplit.
@@ -367,4 +366,4 @@ Section AssumeFunext.
       apply ooextendable_homotopy, orth.
   Defined.
 
-End AssumeFunext.
+End Extensions.
