@@ -774,9 +774,9 @@ End ModalFact.
 
 (** ** Accessible modalities *)
 
-(** A modality is accessible just when its underlying reflective (or unit-) subuniverse is accessible.  However, for modalities we have a simpler characterization in terms of families of generating connected objects rather than families of generating inverted maps. *)
+(** A modality is accessible just when its underlying reflective (or unit-) subuniverse is accessible.  However, for modalities, we have a simpler characterization of accessibility in terms of families of generating connected objects rather than families of generating inverted maps. *)
 
-(** We make this notation local so that it can be redefined in [hit/Localization] to refer to the localization modality. *)
+(** We make this notation local so that no one outside of this file will use it.  It will be redefined in [hit/Localization] to refer to the localization modality, which is judgmentally the same but will also pick up typeclass inference for [In]. *)
 Local Notation IsNull S X :=
   (forall i, ooExtendableAlong (@const (S i) Unit tt) (fun _ => X)).
 
@@ -798,7 +798,7 @@ Proof.
     apply ooextendable_homotopy, orth.
 Defined.
 
-(** We will now show that if the underlying reflective subuniverse of a modality [O] is accessible, then the [O]-modal types are the null ones for some family  of types (not just the local ones for some family of morphisms). *)
+(** We will now show that if the underlying reflective subuniverse of a modality [O] is accessible, then the [O]-modal types are the null ones for some family of types (not just the local ones for some family of morphisms). *)
 Section AccessibleModality.
   Context {O : Modality} {acc : Accessible O}.
 

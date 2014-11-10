@@ -266,7 +266,7 @@ Section Reflective_Subuniverse.
       unfold O_functor_homotopy, composeD.
       do 2 rewrite O_indpaths_beta.
       apply whiskerL, whiskerR, ap, r.
-    (* Of course, if we wanted to prove 4-functoriality, we'd need to make this transparent. *)
+    (** Of course, if we wanted to prove 4-functoriality, we'd need to make this transparent. *)
     Qed.
 
     (** Naturality of [to O] *)
