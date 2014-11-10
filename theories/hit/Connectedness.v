@@ -3,7 +3,7 @@
 
 Require Import HoTT.Basics.
 Require Import Types.Forall Types.Sigma Types.Paths Types.Unit Types.Arrow Types.Universe.
-Require Import TruncType UnivalenceImpliesFunext HProp EquivalenceVarieties Factorization.
+Require Import TruncType UnivalenceImpliesFunext HProp EquivalenceVarieties Extensions Factorization.
 Require Export Modality.        (* [Export] since the actual definitions of connectednes appear there, in the generality of a modality. *)
 Require Import hit.Truncations .
 Local Open Scope equiv_scope.
@@ -65,12 +65,13 @@ Proof.
   refine (conn_map_elim n (unit_name a0) _ (fun _ => idpath)).
 Defined.
 
-Global Instance conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
- `{IsConnected n.+1 A} : IsConnMap n (unit_name a0) | 1000.
+Global Instance conn_point_incl {n : trunc_index} {A : Type} (a0:A)
+       {conn : IsConnected n.+1 A} : IsConnMap n (unit_name a0) | 1000.
 Proof.
   apply conn_map_from_extension_elim.
   intros P ?. set (PP := fun a => BuildTruncType n (P a)).
-  assert (QQ := isconnected_elim n.+1 (TruncType n) PP).
+  (** We need a universe annotation here to point out to Coq that we can apply [isconnected_elim] for maps into a target living in a larger universe, such as [TruncType]. *)
+  assert (QQ := isconnected_elim@{i j i} n.+1 (H := conn) (TruncType@{i} n) PP).
   destruct QQ as [[Q0 HQ] e].
   assert (e' := fun a => ap trunctype_type (e a)); simpl in e'. clear HQ e.
   intros d. set (d0 := d tt).

@@ -12,6 +12,7 @@ Require Export Conjugation.
 Require Export HProp.
 Require Export HSet.
 Require Export EquivalenceVarieties.
+Require Export Extensions.
 Require Export Misc.
 Require Export Functorish.
 Require Export Modality.
@@ -35,6 +36,7 @@ Require Export hit.quotient.
 Require Export hit.V.
 Require Export hit.Join.
 Require Export hit.PropositionalFracture.
+Require Export hit.Localization.
 
 Require Export HoTT.Tactics.
 

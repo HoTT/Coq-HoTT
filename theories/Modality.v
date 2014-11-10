@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations EquivalenceVarieties Factorization NullHomotopy.
+Require Import Fibrations EquivalenceVarieties Extensions Factorization NullHomotopy.
 Require Export ReflectiveSubuniverse. (* [Export] because many of the lemmas and facts about reflective subuniverses are equally important for modalities. *)
 Require Import HoTT.Tactics.
 
@@ -11,13 +11,12 @@ Local Open Scope equiv_scope.
 
 Record Modality :=
   {
-    msubu : UnitSubuniverse ;
-    mreplete : Replete msubu ;
-    O_ind : forall A (B : msubu A -> Type) (B_inO : forall oa, In msubu (B oa)),
+    msubu : UnitSubuniverse@{sm lg} ;
+    O_ind : forall (A : Type@{sm}) (B : msubu A -> Type@{lg}) (B_inO : forall oa, In msubu (B oa)),
                (forall a, B (to msubu A a)) -> forall a, B a ;
-    O_ind_beta : forall A B B_inO (f : forall a : A, B (to msubu A a)) a,
+    O_ind_beta : forall (A : Type@{sm}) (B : msubu A -> Type@{lg}) B_inO (f : forall a : A, B (to msubu A a)) a,
                     O_ind A B B_inO f (to msubu A a) = f a ;
-    inO_paths : forall A (A_inO : In msubu A) (z z' : A), In msubu (z = z')
+    minO_paths : forall (A : Type@{lg}) (A_inO : In msubu A) (z z' : A), In msubu (z = z')
   }.
 
 Arguments O_ind {O} {A} B {B_inO} f a : rename.
@@ -25,8 +24,7 @@ Arguments O_ind_beta {O} {A} B {B_inO} f a : rename.
 
 (* We don't declare this as a coercion, since soon we're going to declare a coercion from [Modality] to [ReflectiveSubuniverse]; then we'll get this coercion automatically as a composite. *)
 (* Coercion mod_usubu : Modality >-> UnitSubuniverse. *)
-Global Existing Instance mreplete.
-Global Existing Instance inO_paths.
+Global Existing Instance minO_paths.
 
 (** ** Easy modalities *)
 
@@ -89,44 +87,36 @@ Section EasyModality.
       exact (O_indO_beta (O' A) (const A) idmap a).
   Defined.
 
-  (** However, it seems to be surprisingly hard to show (without univalence) that this [UnitSubuniverse] is replete.  We basically have to develop enough functoriality of [O] and naturality of [to_O].  We could do that directly, but instead we piggyback by showing that it is a reflective subuniverse.  This is why we excluded repleteness from the basic definition of [ReflectiveSubuniverse] and the proofs of functoriality. *)
+  (** It seems to be surprisingly hard to show (without univalence) that this [UnitSubuniverse] is replete.  We basically have to manually develop enough functoriality of [O] and naturality of [to_O]. *)
 
-  Local Definition O : ReflectiveSubuniverse.
+  Local Definition O : UnitSubuniverse.
   Proof.
-    refine (Build_ReflectiveSubuniverse
-              (Build_UnitSubuniverse
-                 (fun T => IsEquiv (to_O T))
-                 O' O_inO' to_O _)
-              _ _ _ _);
-      intros P Q ?.
-    - intros f. exact (O_ind' P (fun _ => Q) (fun _ => Q_inO) f).
-    - intros f x. exact (O_ind_beta' P (fun _ => Q) f x).
-    - intros g h p x.
-      cbn in Q_inO.
-      refine ((ap (to_O Q))^-1 _).
-      refine (O_ind' P (fun y => to_O Q (g y) = to_O Q (h y)) _ _ x).
-      + intros y. apply inO_pathsO.
-      + intros a; apply ap, p.
-    - intros g h p x; cbn.
-      rewrite O_ind_beta'.
-      rewrite concat_pp_p.
-      apply moveR_Vp.
-      rewrite <- ap_compose.
-      exact (concat_A1p (eissect (to_O Q)) (p x)).
+    refine (Build_UnitSubuniverse O' (fun T => IsEquiv (to_O T)) O_inO' to_O _ _).
+    intros A B ? f ?; simpl in *.
+    refine (isequiv_commsq (to_O A) (to_O B) f
+             (O_ind' A (fun _ => O' B) _ (fun a => to_O B (f a))) _).
+    - intros; apply O_inO'.
+    - intros a; refine (O_ind_beta' A (fun _ => O' B) _ a).
+    - refine (isequiv_adjointify _
+               (O_ind' B (fun _ => O' A) _ (fun b => to_O A (f^-1 b))) _ _);
+        intros x.
+      + apply O_inO'.
+      + pattern x; refine (O_ind' B _ _ _ x); intros.
+        * apply inO_pathsO.
+        * unfold compose; simpl;
+            abstract (repeat rewrite O_ind_beta'; apply ap, eisretr).
+      + pattern x; refine (O_ind' A _ _ _ x); intros.
+        * apply inO_pathsO.
+        * unfold compose; simpl;
+            abstract (repeat rewrite O_ind_beta'; apply ap, eissect).
   Defined.
-
-  (** It is now automatically replete, since in our case [inO] means by definition that [to_O] is an equivalence. *)
-
-  Local Instance replete_rsubU : Replete O.
-  Proof.
-    apply replete_inO_isequiv_to_O; trivial.
-  Defined.
-
-  (** Finally, we can build a modality. *)
 
   Definition Build_Modality_easy : Modality.
   Proof.
-    refine (Build_Modality O _ O_ind' O_ind_beta' _); cbn.
+    refine (Build_Modality O O_ind' O_ind_beta' _); cbn.
+    intros A A_inO a a'; change (In O (a = a')).
+    refine (inO_equiv_inO (to O A a = to O A a') (@ap _ _ (to O A) a a')^-1).
+    apply inO_pathsO.
   Defined.
 
 End EasyModality.
@@ -137,16 +127,31 @@ End EasyModality.
 
  Note also that our choice of how to define reflective subuniverses differently from the book enables us to prove this without using funext. *)
 
+Fixpoint O_extendable (O : Modality)
+         (A : Type) (B : msubu O A -> Type)
+         `{forall a, In (msubu O) (B a)} (n : nat)
+: ExtendableAlong n (to (msubu O) A) B.
+Proof.
+  destruct n as [|n].
+  - exact tt.
+  - split.
+    + intros g.
+      exists (O_ind B g); intros x.
+      apply O_ind_beta.
+    + intros h k.
+      apply O_extendable; intros x.
+      apply minO_paths; trivial.
+Defined.
+
 (** Corollary 7.7.8, part 1 *)
-Definition modality_to_reflective_subuniverse (O : Modality)
-: ReflectiveSubuniverse
+Definition modality_to_reflective_subuniverse (O : Modality@{sm lg})
+: ReflectiveSubuniverse@{sm lg}
 := Build_ReflectiveSubuniverse (msubu O)
-     (fun P Q H => O_ind (fun _ => Q))
-     (fun P Q H => O_ind_beta (fun _ => Q))
-     (fun P Q H g h => O_ind (fun y => g y = h y))
-     (fun P Q H g h => O_ind_beta (fun y => g y = h y)).
+     (fun A B B_inO n => O_extendable O A (fun _ => B) n).
 
 Coercion modality_to_reflective_subuniverse : Modality >-> ReflectiveSubuniverse.
+
+Global Arguments modality_to_reflective_subuniverse / .
 
 (** Corollary 7.7.8, part 2 *)
 Global Instance inO_sigma {O : Modality} (A:Type) (B:A -> Type)
@@ -163,17 +168,17 @@ Defined.
 (** Conversely, if a reflective subuniverse is closed under sigmas, it is a modality. *)
 
 Theorem reflective_subuniverse_to_modality
-  (O : ReflectiveSubuniverse) {rep : Replete O}
+  (O : ReflectiveSubuniverse)
   (H : forall (A:Type) (B:A -> Type)
           `{In O A} `{forall a, In O (B a)},
      (In O ({x:A & B x})))
   : Modality.
 Proof.
   pose (K := fst (inO_sigma_iff _) H).
-  exact (Build_Modality _ _
-                        (fun A B B_inO g => pr1 (K A B B_inO g))
-                        (fun A B B_inO g => pr2 (K A B B_inO g))
-                        _).
+  exact (Build_Modality _
+           (fun A B B_inO g => pr1 (K A B B_inO g))
+           (fun A B B_inO g => pr2 (K A B B_inO g))
+           _).
 Defined.
 
 (** Theorem 7.3.9: The reflector [O] can be discarded inside a reflected sum. *)
@@ -188,10 +193,10 @@ Proof.
     exact (to O _ (a ; to O _ p)).
   - unfold Sect; apply O_ind; try exact _.
     intros [a p]; simpl.
-    abstract (repeat (rewrite O_ind_beta; simpl); reflexivity).
+    abstract (repeat (simpl rewrite @O_rec_beta); reflexivity).
   - unfold Sect; apply O_ind; try exact _.
     intros [a op]; revert op; apply O_ind; try exact _; intros p; simpl.
-    abstract (repeat (rewrite O_ind_beta; simpl); reflexivity).
+    abstract (repeat (simpl rewrite @O_rec_beta); reflexivity).
 Defined.
 
 (** Corollary 7.3.10 *)
@@ -205,7 +210,7 @@ Defined.
 
 (** ** The induction principle [O_ind], like most induction principles, is an equivalence. *)
 Section OIndEquiv.
-  Context {fs : Funext} (O : Modality).
+  Context {fs : Funext} (O : Modality@{sm lg}).
 
   Section OIndEquivData.
 
@@ -244,13 +249,13 @@ End OIndEquiv.
 
 Question: is there a definition of connectedness (say, for n-types) that neither blows up the universe level, nor requires HIT's? *)
 
-Class IsConnected (O : Modality) (A : Type)
+Class IsConnected (O : Modality@{sm lg}) (A : Type@{sm})
   := isconnected_contr_O : Contr (O A).
 
 Global Existing Instance isconnected_contr_O.
 
 Section ConnectedTypes.
-  Context (O : Modality).
+  Context (O : Modality@{sm lg}).
 
   (** Being connected is an hprop *)
   Global Instance ishprop_isconnected `{Funext} A
@@ -260,17 +265,18 @@ Section ConnectedTypes.
   Defined.
 
   (** Anything equivalent to a connected type is connected. *)
-  Definition isconnected_equiv A {B} (f : A -> B) `{IsEquiv _ _ f}
+  Definition isconnected_equiv (A : Type) {B : Type} (f : A -> B) `{IsEquiv _ _ f}
   : IsConnected O A -> IsConnected O B.
   Proof.
     intros ?; refine (contr_equiv (O A) (O_functor O f)).
   Defined.
 
-  Definition isconnected_equiv' A {B} (f : A <~> B)
+  Definition isconnected_equiv' (A : Type) {B : Type} (f : A <~> B)
   : IsConnected O A -> IsConnected O B
     := isconnected_equiv A f.
 
-  Definition isconnected_elim {A} `{IsConnected O A} C `{In O C} (f : A -> C)
+  (** Connectedness of a type [A] can equivalently be characterized by the fact that any map to an [O]-type [C] is nullhomotopic.  Here is one direction of that equivalence. *)
+  Definition isconnected_elim {A : Type} `{IsConnected O A} (C : Type) `{In O C} (f : A -> C)
   : NullHomotopy f.
   Proof.
     set (ff := @O_rec O _ _ _ f).
@@ -280,23 +286,58 @@ Section ConnectedTypes.
     apply O_rec_beta.
   Defined.
 
-  Definition isconnected_from_elim {A}
-  : (forall (C : Type) `{In O C} (f : A -> C), NullHomotopy f)
-    -> IsConnected O A.
+  (** For the other direction of the equivalence, it's sufficient to consider the case when [C] is [O A].  We include universe annotations to make this sufficiently polymorphic. *)
+  Definition isconnected_from_elim_to_O {A : Type}
+  : NullHomotopy@{sm lg lg} (to O A) -> IsConnected@{sm lg} O A.
   Proof.
-    intros H.
-    set (nh := H (O A) _ (to O A)).
+    intros nh.
     exists (nh .1).
+    (** This apparent no-op is also necessary to prevent the universe parameters from getting collapsed. *)
+    intros; apply (ap lower').
     apply O_ind; try exact _.
     intros; symmetry; apply (nh .2).
   Defined.
 
+  (** Now the general case follows. *)
+  Definition isconnected_from_elim {A : Type}
+  : (forall (C : Type) `{In O C} (f : A -> C), NullHomotopy f)
+    -> IsConnected O A.
+  Proof.
+    intros H.
+    exact (isconnected_from_elim_to_O (H (O A) (O_inO A) (to O A))).
+  Defined.
+
   (** A type which is both connected and truncated is contractible. *)
 
-  Definition contr_trunc_conn {A} `{In O A} `{IsConnected O A}
+  Definition contr_trunc_conn {A : Type} `{In O A} `{IsConnected O A}
   : Contr A.
   Proof.
     apply (contr_equiv _ (to O A)^-1).
+  Defined.
+
+  (** Here's another way of stating the universal property for mapping out of connected types into modal ones. *)
+  Definition ooextendable_const_isconnected_inO
+             (A : Type) `{IsConnected O A} (C : Type) `{In O C}
+  : ooExtendableAlong (@const A Unit tt) (fun _ => C).
+  Proof.
+    intros n; generalize dependent C;
+      induction n as [|n IHn]; intros C ?;
+      [ exact tt | split ].
+    - intros f.
+      exists (fun _ => (isconnected_elim C f).1); intros a.
+      symmetry; apply ((isconnected_elim C f).2).
+    - intros h k.
+      refine (extendable_postcompose' n _ _ _ _ (IHn (h tt = k tt) _)).
+      intros []; apply equiv_idmap.
+  Defined.
+
+  Definition isequiv_const_isconnected_inO `{Funext}
+             {A : Type} `{IsConnected O A} (C : Type) `{In O C}
+  : IsEquiv (@const A C).
+  Proof.
+    refine (@isequiv_compose _ _ (fun c u => c) _ _ _
+              (isequiv_ooextendable (fun _ => C) (@const A Unit tt)
+                                    (ooextendable_const_isconnected_inO A C))).
   Defined.
 
 End ConnectedTypes.
@@ -305,13 +346,13 @@ End ConnectedTypes.
 
 (** A map is "in [O]" if each of its fibers is. *)
 
-Class MapIn (O : Modality) {A B : Type} (f : A -> B)
+Class MapIn (O : Modality@{sm lg}) {A B : Type@{lg}} (f : A -> B)
   := inO_hfiber_ino_map : forall (b:B), In O (hfiber f b).
 
 Global Existing Instance inO_hfiber_ino_map.
 
 Section ModalMaps.
-  Context (O : Modality).
+  Context (O : Modality@{sm lg}).
 
   (** Any equivalence is modal *)
   Global Instance mapinO_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
@@ -331,7 +372,7 @@ Section ModalMaps.
   Defined.
 
   (** Anything homotopic to a modal map is modal. *)
-  Definition mapinO_homotopic {A B} (f : A -> B) {g : A -> B}
+  Definition mapinO_homotopic {A B : Type} (f : A -> B) {g : A -> B}
              (p : f == g) `{MapIn O _ _ f}
   : MapIn O g.
   Proof.
@@ -341,14 +382,14 @@ Section ModalMaps.
   Defined.
 
   (** Being modal is an hprop *)
-  Global Instance ishprop_mapinO `{Funext} {A B} (f : A -> B)
+  Global Instance ishprop_mapinO `{Funext} {A B : Type} (f : A -> B)
   : IsHProp (MapIn O f).
   Proof.
     apply trunc_forall.
   Defined.
 
   (** The composite of modal maps is modal *)
-  Global Instance mapinO_compose {A B C} (f : A -> B) (g : B -> C)
+  Global Instance mapinO_compose {A B C : Type} (f : A -> B) (g : B -> C)
          `{MapIn O _ _ f} `{MapIn O _ _ g}
   : MapIn O (g o f).
   Proof.
@@ -362,14 +403,14 @@ End ModalMaps.
 
 (** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against truncated types.  We use the former; the equivalence with the latter is given below in [conn_map_elim], [conn_map_comp], and [conn_map_from_extension_elim]. *)
 
-Class IsConnMap (O : Modality) {A B : Type} (f : A -> B)
+Class IsConnMap (O : Modality@{sm lg}) {A B : Type@{sm}} (f : A -> B)
   := isconnected_hfiber_conn_map : forall b:B, IsConnected O (hfiber f b).
 
 Global Existing Instance isconnected_hfiber_conn_map.
 
 Section ConnectedMaps.
   Context `{Univalence} `{Funext}.
-  Context (O : Modality).
+  Context (O : Modality@{sm lg}).
 
   (** Any equivalence is connected *)
   Global Instance conn_map_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
@@ -390,7 +431,7 @@ Section ConnectedMaps.
   Defined.
 
   (** Being connected is an hprop *)
-  Global Instance ishprop_isconnmap `{Funext} {A B} (f : A -> B)
+  Global Instance ishprop_isconnmap `{Funext} {A B : Type} (f : A -> B)
   : IsHProp (IsConnMap O f).
   Proof.
     apply trunc_forall.
@@ -424,7 +465,7 @@ Section ConnectedMaps.
     apply inverse, e.
   Defined.
 
-  Definition isequiv_conn_ino_map {A B} (f : A -> B)
+  Definition isequiv_conn_ino_map {A B : Type} (f : A -> B)
              `{IsConnMap O _ _ f} `{MapIn O _ _ f}
   : IsEquiv f.
   Proof.
@@ -471,27 +512,18 @@ Section ConnectedMaps.
       apply path_forall; intros x; apply conn_map_comp.
   Defined.
 
-  (** Conversely, if a map satisfies this elimination principle (expressed via extensions), then it is connected.  This completes the proof of Lemma 7.5.7 from the book.
-
-Conceptually, this proof can be seen as an instance of the fact that a left adjoint (here, pullback) preserves a left class of maps if the right adjoint (here, dependent product) preserves the right class. *)
+  (** Conversely, if a map satisfies this elimination principle (expressed via extensions), then it is connected.  This completes the proof of Lemma 7.5.7 from the book. *)
   Lemma conn_map_from_extension_elim {A B : Type} (f : A -> B)
   : (forall (P : B -> Type) {P_inO : forall b:B, In O (P b)}
             (d : forall a:A, P (f a)),
        ExtensionAlong f P d)
     -> IsConnMap O f.
   Proof.
-    intros Hf b. apply isconnected_from_elim. intros X ? d.
-    set (P := fun (b':B) => (b' = b) -> X).
-    assert (forall b', In O (P b')).
-    { intros. apply inO_arrow; exact _. }
-    set (dP := (fun (a:A) (p:f a = b) => (d (a;p)))
-               : forall a:A, P (f a)).
-    set (e := Hf P _ dP).
-    exists (e .1 b 1).
-    intros [a p]. symmetry. transitivity (e .1 (f a) p).
-    2: exact (ap10 (e.2 a) p).
-    refine (ap011D e.1 p^ _).
-    refine (transport_paths_l _ _ @ _). hott_simpl.
+    intros Hf b. apply isconnected_from_elim_to_O.
+    assert (e := Hf (fun b => O (hfiber f b)) _ (fun a => to O _ (a;1))).
+    exists (e.1 b).
+    intros [a p]. destruct p.
+    symmetry; apply (e.2).
   Defined.
 
   (** Corollary 7.5.8: It follows that the unit maps [to O A] are connected. *)
@@ -503,7 +535,7 @@ Conceptually, this proof can be seen as an instance of the fact that a left adjo
   Defined.
 
   (** Lemma 7.5.6: Connected maps compose and cancel on the right. *)
-  Global Instance conn_map_compose {A B C} (f : A -> B) (g : B -> C)
+  Global Instance conn_map_compose {A B C : Type} (f : A -> B) (g : B -> C)
          `{IsConnMap O _ _ f} `{IsConnMap O _ _ g}
   : IsConnMap O (g o f).
   Proof.
@@ -512,7 +544,7 @@ Conceptually, this proof can be seen as an instance of the fact that a left adjo
     exact (conn_map_comp g P _ _ @ conn_map_comp f (P o g) d a).
   Defined.      
 
-  Definition cancelR_conn_map {A B C} (f : A -> B) (g : B -> C)
+  Definition cancelR_conn_map {A B C : Type} (f : A -> B) (g : B -> C)
          `{IsConnMap O _ _ f} `{IsConnMap O _ _ (g o f)}
   :  IsConnMap O g.
   Proof.
@@ -537,7 +569,7 @@ Conceptually, this proof can be seen as an instance of the fact that a left adjo
   (** Lemma 7.5.12 *)
   Section ConnMapFunctorSigma.
 
-    Context {A B} {P : A -> Type} {Q : B -> Type}
+    Context {A B : Type} {P : A -> Type} {Q : B -> Type}
             (f : A -> B) (g : forall a, P a -> Q (f a))
             `{forall a, IsConnMap O (g a)}.
 
@@ -572,7 +604,7 @@ Conceptually, this proof can be seen as an instance of the fact that a left adjo
 
   (** Lemma 7.5.13.  The "if" direction is a special case of [conn_map_functor_sigma], so we prove only the "only if" direction. *)
   Definition conn_map_fiber
-             {A} {P Q : A -> Type} (f : forall a, P a -> Q a)
+             {A : Type} {P Q : A -> Type} (f : forall a, P a -> Q a)
              `{IsConnMap O _ _ (functor_sigma idmap f)}
   : forall a, IsConnMap O (f a).
   Proof.
@@ -582,7 +614,7 @@ Conceptually, this proof can be seen as an instance of the fact that a left adjo
   Defined.
 
   (** Lemma 7.5.14: Connected maps are inverted by [O]. *)
-  Global Instance O_inverts_conn_map {A B} (f : A -> B)
+  Global Instance O_inverts_conn_map {A B : Type} (f : A -> B)
          `{IsConnMap O _ _ f}
   : IsEquiv (O_functor O f).
   Proof.
@@ -601,7 +633,7 @@ Conceptually, this proof can be seen as an instance of the fact that a left adjo
       unfold compose; refine (O_rec_beta _ _ @ _).
       transitivity (O_functor O pr1 (to O (hfiber f (f a)) (a;1))).
       + apply ap, contr.
-      + apply to_O_natural.
+      + refine (to_O_natural _ _ _).
   Defined.
 
 End ConnectedMaps.
@@ -609,10 +641,10 @@ End ConnectedMaps.
 (** ** The modal factorization system *)
 
 Section ModalFact.
-  Context `{fs : Funext} (O : Modality).
+  Context `{fs : Funext} (O : Modality@{sm lg}).
 
   (** Lemma 7.6.4 *)
-  Definition image {A B} (f : A -> B)
+  Definition image {A B : Type} (f : A -> B)
   : Factorization (@IsConnMap O) (@MapIn O) f.
   Proof.
     refine (Build_Factorization {b : B & O (hfiber f b)}
@@ -628,7 +660,7 @@ Section ModalFact.
   Defined.
 
   (** This is the composite of the three displayed equivalences at the beginning of the proof of Lemma 7.6.5.  Note that it involves only a single factorization of [f]. *)
-  Lemma O_hfiber_O_fact {A B} {f : A -> B}
+  Lemma O_hfiber_O_fact {A B : Type} {f : A -> B}
         (fact : Factorization (@IsConnMap O) (@MapIn O) f) (b : B)
   : O (hfiber (factor2 fact o factor1 fact) b)
       <~> hfiber (factor2 fact) b.
@@ -646,7 +678,7 @@ Section ModalFact.
   Defined.
 
   (** This is the corresponding first three of the displayed "mapsto"s in proof of Lemma 7.6.5, and also the last three in reverse order, generalized to an arbitrary path [p].  Note that it is much harder to prove than in the book, because we are working in the extra generality of a modality where [O_ind_beta] is only propositional. *)
-  Lemma O_hfiber_O_fact_inverse_beta {A B} {f : A -> B}
+  Lemma O_hfiber_O_fact_inverse_beta {A B : Type} {f : A -> B}
         (fact : Factorization (@IsConnMap O) (@MapIn O) f)
         (a : A) (b : B) (p : factor2 fact (factor1 fact a) = b)
   : (O_hfiber_O_fact fact b)^-1
@@ -664,8 +696,8 @@ Section ModalFact.
       transitivity (to O _ (existT (fun (w : hfiber h b) => (hfiber g w.1))
                          (g a; p) (a ; 1))).
       + simpl; unfold compose.
-        repeat (rewrite O_ind_beta; simpl); reflexivity.
-      + simpl rewrite O_ind_beta; reflexivity.
+        repeat (simpl rewrite @O_rec_beta); reflexivity.
+      + symmetry; apply to_O_natural.
   Qed.
 
   Section TwoFactorizations.
@@ -739,10 +771,77 @@ Section ModalFact.
 
 End ModalFact.
 
+
+(** ** Accessible modalities *)
+
+(** A modality is accessible just when its underlying reflective (or unit-) subuniverse is accessible.  However, for modalities, we have a simpler characterization of accessibility in terms of families of generating connected objects rather than families of generating inverted maps. *)
+
+(** We make this notation local so that no one outside of this file will use it.  It will be redefined in [hit/Localization] to refer to the localization modality, which is judgmentally the same but will also pick up typeclass inference for [In]. *)
+Local Notation IsNull S X :=
+  (forall i, ooExtendableAlong (@const (S i) Unit tt) (fun _ => X)).
+
+(** We will now show that if the underlying reflective subuniverse of a modality [O] is accessible, then the [O]-modal types are the null ones for some family of types (not just the local ones for some family of morphisms). *)
+Section AccessibleModality.
+  Context {O : Modality} {acc : Accessible O}.
+
+  (** The idea is as follows.  By [ooextendable_isnull_fibers], we can detect locality with respect to a map by nullity with respect to its fibers.  Therefore, our first thought might be to just consider all the fibers of all the maps that we are localizing at.  However, this doesn't quite work because [ooextendable_isnull_fibers] is not an if-and-only-if, so not every modal type would necessarily be null for that type family.
+
+   We do know, however, that if [f] is an [O]-connected map, then any [O]-modal type is null for its fibers (since they are [O]-connected types).  There is no *a priori* reason why all the maps we localize at should end up being connected for the modality; they will always be inverted, but not every inverted map is connected (unless the modality is lex).  But if [f : A -> B] is [O]-inverted, then the [O]-connected map [to O A] is (up to equivalence) the composite of [f] with the [O]-connected map [to O B].  Thus, if [X] is null for the fibers of [to O A] and [to O B], it will be [f]-local and hence [O]-modal, while all [O]-modal types will be null for these fibers since they are connected. *)
+  Definition acc_conn_indices : Type
+    :=   { i : acc_gen_indices & O (acc_gen_domain i) }
+       + { i : acc_gen_indices & O (acc_gen_codomain i) }.
+
+  Definition acc_conn_types : acc_conn_indices -> Type.
+  Proof.
+    intros [ [i x] | [i x] ]; exact (hfiber (to O _) x).
+  Defined.
+
+  Global Instance isconnected_acc_conn_types (i : acc_conn_indices)
+  : IsConnected O (acc_conn_types i).
+  Proof.
+    destruct i as [ [i x ] | [i x ] ]; exact _.
+  Defined.
+
+  Definition inO_iff_orth_acc `{Funext} (X : Type)
+  : In O X <-> IsNull acc_conn_types X.
+  Proof.
+    split.
+    - intros ? [ [i x] | [i x] ];
+        refine (ooextendable_const_isconnected_inO O _ _).
+    - intros Xnull.
+      apply (snd (inO_iff_islocal X)); intros i.
+      refine (cancelL_ooextendable (fun _ => X) (acc_generator i)
+                                   (to O (acc_gen_codomain i)) _ _).
+      + apply ooextendable_isnull_fibers; intros x.
+        exact (Xnull (inr (i;x))).
+      + refine (ooextendable_homotopic _
+                  (O_functor O (acc_generator i) o to O (acc_gen_domain i)) _ _).
+        1:apply to_O_natural.
+        apply ooextendable_compose.
+        * apply ooextendable_equiv, O_inverts_generators.
+        * apply ooextendable_isnull_fibers; intros x.
+          exact (Xnull (inl (i;x))).
+  Defined.
+    
+End AccessibleModality.
+
+(** Here's a corresponding easier way to define accessibility for a modality. *)
+Definition Build_Accessible_Modality (O : Modality)
+           (acc_gen_indices : Type)
+           (acc_gen_types : acc_gen_indices -> Type)
+: (forall X : Type, In O X <-> IsNull acc_gen_types X)
+  -> Accessible O
+:= Build_Accessible O acc_gen_indices acc_gen_types
+                    (fun _ => Unit) (fun _ _ => tt).
+
+
+(** The construction of the nullification modality for any family of types will be in [hit/Localization]. *)
+
+
 (** ** Examples *)
 
-(** Finally, we give one nontrivial example of a modality.  This is Exercise 7.12 in the book. *)
-Definition notnot_modality `{Funext} : Modality.
+(** Finally, we give one nontrivial example of a modality.  This is Exercise 7.12 in the book.  Note that it is (apparently) *not* accessible unless we assume propositional resizing. *)
+Definition notnot `{Funext} : Modality.
 Proof.
   refine (Build_Modality_easy
             (fun X => ~~X)
@@ -758,17 +857,24 @@ Proof.
 Defined.
 
 (** Of course, there is also the trivial example. *)
-Definition identity_modality : Modality
+Definition purely : Modality
   := Build_Modality
      (Build_UnitSubuniverse
-        (fun _ => Unit)
         idmap
+        (fun _ => Unit)
         (fun _ => tt)
         (fun T => idmap)
+        (fun T U _ _ _ => tt)
         _)
-     (fun T U _ _ _ => tt)
      (fun A B _ f a => f a)
      (fun A B _ f a => 1)
      (fun A _ z z' => tt).
 
-(** For more examples of modalities, see hit/Truncations.v and hit/PropositionalFracture.v. *)
+Global Instance accessible_purely : Accessible purely.
+Proof.
+  refine (Build_Accessible _ Empty Empty_rec Empty_rec (Empty_ind _) _).
+  intros X; refine (_ , fun _ => tt).
+  intros _; apply Empty_ind.
+Defined.
+
+(** For more examples of modalities, see hit/Truncations.v, hit/PropositionalFracture.v, and hit/Localization.v. *)

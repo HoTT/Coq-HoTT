@@ -49,6 +49,6 @@ Notation "| a |₁" := (@tr 1 _ a) : trunc_scope.
 Notation "∥ A ∥₂" := (Trunc 2 A).
 Notation "| a |₂" := (@tr 2 _ a) : trunc_scope.
 
-Notation "∞" := identity_modality.
+Notation "∞" := purely.
 
 Notation Σ := Susp.
