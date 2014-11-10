@@ -4,7 +4,15 @@ Require Import Tactics.BinderApply.
 
 Local Open Scope path_scope.
 
-(** rewrite [lem] modulo associativity using [assoc_tac] to associate the goal, [assoc_in_tac] to associate the hypothesis, and [compose_any] to pre/post compose an arbitrary morphism onto the lemma. *)
+(** Throughout this file, we prefix with [idtac; ] all imperative tactics (those not returning constrs) which would otherwise start with [let] or [match].  This prevents them from being evaluated at the call site.  See https://coq.inria.fr/bugs/show_bug.cgi?id=3498 for more details on this difference between tactics and tactic expressions. *)
+
+(** rewrite [lem] modulo associativity using:
+
+    - [assoc_tac : unit] to associate the goal (in place)
+    - [assoc_in_tac : hyp -> unit] to associate the hypothesis (in place)
+    - [postcompose_any_tac : constr -> constr] to pre/post compose an arbitrary morphism onto the lemma
+    - [rew_tac : hyp -> unit] to do the actual rewriting (in place).  This tactic is called first with the non-associated version of  the lemma, then with the associated version.
+ *)
 Ltac rewriteA_using_helper rew_tac lem postcompose_any_tac assoc_tac assoc_in_tac :=
   idtac;
   let lem' := postcompose_any_tac lem in
@@ -18,14 +26,15 @@ Ltac rewriteA_using_helper rew_tac lem postcompose_any_tac assoc_tac assoc_in_ta
     end;
     clear H.
 
-Ltac repeat_rewriteA_using_helper rew_tac lem postcompose_any_tac assoc_tac assoc_in_tac :=
+(** This tactic is similar to the above, except that it passes both the unassociated lemma and the associated lemma to [repeat_rew_tac], which may then contain optimizations over a manual [repeat] such as being [rewrite ?lem, ?lem']. *)
+Ltac repeat_rewriteA_using_helper repeat_rew_tac lem postcompose_any_tac assoc_tac assoc_in_tac :=
   idtac;
   let lem' := postcompose_any_tac lem in
   let H := fresh in
   pose proof lem' as H;
     assoc_in_tac H;
     assoc_tac;
-    rew_tac lem' H;
+    repeat_rew_tac lem' H;
     clear H.
 
 Module Export Compose.
@@ -135,7 +144,7 @@ Module Export Compose.
 End Compose.
 
 Module Export Concat.
-  (** ** Rewriting modulo associativity of composition ([o]) *)
+  (** ** Rewriting modulo associativity of concatenation ([@]) *)
   (** Turns a lemma of type [f = g] into [forall h, f @ h = g @ h] *)
   Ltac postconcat_any H :=
     let ret := make_tac_under_binders_using_in ltac:(fun H => (let H' := fresh in
