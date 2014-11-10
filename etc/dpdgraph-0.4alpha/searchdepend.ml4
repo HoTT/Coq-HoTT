@@ -40,8 +40,8 @@ let add_inductive ((k,i):Names.inductive)(d:Data.t) =
 let add_constructor(((k,i),j):Names.constructor)(d:Data.t) =
   Data.add (Globnames.ConstructRef ((k,i),j)) d
 
-(*let add_projection (p:Data.t) (d:Data.t) =
-  Data.add (Globnames.ConstRef (Projection.constant p))*)
+let add_projection (p:Names.constant) (d:Data.t) =
+  Data.add (Globnames.ConstRef p) d
 
 let collect_long_names (c:Term.constr) (acc:Data.t) =
   let rec add c acc =
@@ -56,7 +56,7 @@ let collect_long_names (c:Term.constr) (acc:Data.t) =
       | Term.Lambda(n,t,c) -> add t (add c acc)
       | Term.LetIn(_,v,t,c) -> add v (add t (add c acc))
       | Term.App(c,ca) -> add c (Array.fold_right add ca acc)
-      (*| Term.Proj (p, _) -> add_projection p acc*)
+      | Term.Proj (p, _) -> add_projection p acc
       | Term.Const (cst,univ) -> add_constant cst acc (* abstraction-barrier-breaking hack! *)
       | Term.Ind (i,univ) -> add_inductive i acc (* abstraction-barrier-breaking hack! *)
       | Term.Construct (cnst,univ) -> add_constructor cnst acc (* abstraction-barrier-breaking hack! *)
