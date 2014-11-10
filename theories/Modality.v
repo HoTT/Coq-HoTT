@@ -847,12 +847,8 @@ End AccessibleModality.
 Definition Build_Accessible_Modality (O : Modality)
            (acc_gen_indices : Type)
            (acc_gen_types : acc_gen_indices -> Type)
-: (forall X : Type,
-     In O X <->
-     (forall i : acc_gen_indices,
-        ooExtendableAlong (@const (acc_gen_types i) Unit tt)
-                          (fun _ : Unit => X))) ->
-  Accessible O
+: (forall X : Type, In O X <-> IsNull acc_gen_types X)
+  -> Accessible O
 := Build_Accessible O acc_gen_indices acc_gen_types
                     (fun _ => Unit) (fun _ _ => tt).
 

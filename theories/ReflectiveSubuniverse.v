@@ -718,13 +718,16 @@ Notation O_inverts O f := (IsEquiv (O_functor O f)).
 
 We now give the basic definitions related to accessibility, using [ooExtendableAlong] as our notion of equivalence as we did with reflective subuniverses.  The actual construction of a reflective subuniverse by localization will be in [hit/Localization]. *)
 
+(** We make this notation local so that no one outside of this file will use it.  It will be redefined in [hit/Localization] to refer to the localization reflective subuniverse, which is judgmentally the same but will also pick up typeclass inference for [In]. *)
+Local Notation IsLocal f X :=
+  (forall i, ooExtendableAlong (f i) (fun _ => X)).
+
 Class Accessible (O : UnitSubuniverse@{sm lg}) :=
   { acc_gen_indices  : Type@{sm} ;
     acc_gen_domain   : acc_gen_indices -> Type@{sm} ;
     acc_gen_codomain : acc_gen_indices -> Type@{sm} ;
     acc_generator    : forall i, acc_gen_domain i -> acc_gen_codomain i ;
-    inO_iff_islocal  : forall (X : Type@{lg}),
-                         In O X <-> forall i, ooExtendableAlong (acc_generator i) (fun _ => X)
+    inO_iff_islocal  : forall (X : Type@{lg}), In O X <-> IsLocal acc_generator X
   }.
 
 Definition O_inverts_generators {O : ReflectiveSubuniverse}
