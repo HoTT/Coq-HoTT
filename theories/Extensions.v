@@ -115,8 +115,7 @@ Section AssumeFunext.
          {A B : Type} (C : B -> Type) (f : A -> B)
   : IsHProp (ExtendableAlong n.+2 f C).
   Proof.
-    (* TODO: Why is this so slow? *)
-    refine (trunc_equiv _ (equiv_extendable_pathsplit n.+2 C f)^-1).
+    refine (trunc_equiv' _ (equiv_inverse (equiv_extendable_pathsplit n.+2 C f))).
   Defined.
 
   Definition equiv_extendable_isequiv (n : nat)
