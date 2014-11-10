@@ -10,12 +10,12 @@ Local Open Scope path_scope.
 
     - [assoc_tac : unit] to associate the goal (in place)
     - [assoc_in_tac : hyp -> unit] to associate the hypothesis (in place)
-    - [postcompose_any_tac : constr -> constr] to pre/post compose an arbitrary morphism onto the lemma
+    - [prepostcompose_any_tac : constr -> constr] to pre/post compose an arbitrary morphism onto the lemma
     - [rew_tac : hyp -> unit] to do the actual rewriting (in place).  This tactic is called first with the non-associated version of  the lemma, then with the associated version.
  *)
-Ltac rewriteA_using_helper rew_tac lem postcompose_any_tac assoc_tac assoc_in_tac :=
+Ltac rewriteA_using_helper rew_tac lem prepostcompose_any_tac assoc_tac assoc_in_tac :=
   idtac;
-  let lem' := postcompose_any_tac lem in
+  let lem' := prepostcompose_any_tac lem in
   let H := fresh in
   pose proof lem' as H;
     assoc_tac;
@@ -27,9 +27,9 @@ Ltac rewriteA_using_helper rew_tac lem postcompose_any_tac assoc_tac assoc_in_ta
     clear H.
 
 (** This tactic is similar to the above, except that it passes both the unassociated lemma and the associated lemma to [repeat_rew_tac], which may then contain optimizations over a manual [repeat] such as being [rewrite ?lem, ?lem']. *)
-Ltac repeat_rewriteA_using_helper repeat_rew_tac lem postcompose_any_tac assoc_tac assoc_in_tac :=
+Ltac repeat_rewriteA_using_helper repeat_rew_tac lem prepostcompose_any_tac assoc_tac assoc_in_tac :=
   idtac;
-  let lem' := postcompose_any_tac lem in
+  let lem' := prepostcompose_any_tac lem in
   let H := fresh in
   pose proof lem' as H;
     assoc_in_tac H;
@@ -39,86 +39,86 @@ Ltac repeat_rewriteA_using_helper repeat_rew_tac lem postcompose_any_tac assoc_t
 
 Module Export Compose.
   (** ** Rewriting modulo associativity of composition ([o]) *)
-  (** Turns a lemma of type [f = g] into [forall h, f o h = g o h] *)
-  Ltac postcompose_any H :=
+  (** Turns a lemma of type [f = g] into [forall h, h o f = h o g] *)
+  Ltac precompose_any H :=
     let ret := make_tac_under_binders_using_in ltac:(fun H => (let H' := fresh in
                                                                rename H into H';
-                                                               pose proof (fun src (g : src -> _) => @ap _ _ (fun f => f o g) _ _ H') as H))
+                                                               pose proof (fun src (g : _ -> src) => @ap _ _ (fun f => g o f) _ _ H') as H))
                                                       ltac:idtac H in
     let T := type of ret in
     let T' := (eval cbv beta in T) in
     constr:(ret : T').
 
-  (** Associates a type fully to the right *)
-  Ltac right_associate_compose_type T :=
-    let rec_tac := right_associate_compose_type in
+  (** Associates a type fully to the left *)
+  Ltac left_associate_compose_type T :=
+    let rec_tac := left_associate_compose_type in
     match T with
       | forall a : ?A, @?P a => let ret := constr:(forall a : A, let T' := P a in
                                                                  $(let T'' := (eval unfold T' in T') in
                                                                    let ret := rec_tac T'' in
                                                                    exact ret)$) in
                                 eval cbv beta zeta in ret
-      | context T'[(?a o ?b) o ?c] => let T'' := context T'[a o (b o c)] in
+      | context T'[?a o (?b o ?c)] => let T'' := context T'[(a o b) o c] in
                                       rec_tac T''
       | ?T' => constr:(T')
     end.
 
-  Ltac right_associate_compose_in_type_of H :=
+  Ltac left_associate_compose_in_type_of H :=
     let T := type of H in
-    let T' := right_associate_compose_type T in
+    let T' := left_associate_compose_type T in
     constr:(H : T').
 
-  Ltac right_associate_compose :=
+  Ltac left_associate_compose :=
     idtac;
     (lazymatch goal with
-    | [ |- ?G ] => let G' := right_associate_compose_type G in change G'
+    | [ |- ?G ] => let G' := left_associate_compose_type G in change G'
      end).
 
-  Ltac right_associate_compose_in H :=
+  Ltac left_associate_compose_in H :=
     idtac;
     (lazymatch type of H with
-    | ?T => let T' := right_associate_compose_type T in change T' in H
+    | ?T => let T' := left_associate_compose_type T in change T' in H
      end).
 
   Tactic Notation "rewriteoA" constr(lem) :=
-    rewriteA_using_helper ltac:(fun lem' => rewrite lem') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    rewriteA_using_helper ltac:(fun lem' => rewrite lem') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "rewriteoA" "->" constr(lem) :=
-    rewriteA_using_helper ltac:(fun lem' => rewrite -> lem') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    rewriteA_using_helper ltac:(fun lem' => rewrite -> lem') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "rewriteoA" "<-" constr(lem) :=
-    rewriteA_using_helper ltac:(fun lem' => rewrite <- lem') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    rewriteA_using_helper ltac:(fun lem' => rewrite <- lem') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "rewriteoA" "!" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite ?lem', ?lem'') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite ?lem', ?lem'') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "rewriteoA" "?" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite ?lem', ?lem'') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite ?lem', ?lem'') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "rewriteoA" "->" "!" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite -> ?lem', -> ?lem'') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite -> ?lem', -> ?lem'') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "rewriteoA" "<-" "!" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite <- ?lem', <- ?lem'') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite <- ?lem', <- ?lem'') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "rewriteoA" "->" "?" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite -> ?lem', -> ?lem'') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite -> ?lem', -> ?lem'') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "rewriteoA" "<-" "?" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite <- ?lem', <- ?lem'') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite <- ?lem', <- ?lem'') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
 
 
 
   Tactic Notation "erewriteoA" constr(lem) :=
-    rewriteA_using_helper ltac:(fun lem' => erewrite lem') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    rewriteA_using_helper ltac:(fun lem' => erewrite lem') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "erewriteoA" "->" constr(lem) :=
-    rewriteA_using_helper ltac:(fun lem' => erewrite -> lem') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    rewriteA_using_helper ltac:(fun lem' => erewrite -> lem') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "erewriteoA" "<-" constr(lem) :=
-    rewriteA_using_helper ltac:(fun lem' => erewrite <- lem') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    rewriteA_using_helper ltac:(fun lem' => erewrite <- lem') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "erewriteoA" "!" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite ?lem', ?lem'') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite ?lem', ?lem'') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "erewriteoA" "?" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite ?lem', ?lem'') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite ?lem', ?lem'') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "erewriteoA" "->" "!" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite -> ?lem', -> ?lem'') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite -> ?lem', -> ?lem'') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "erewriteoA" "<-" "!" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite <- ?lem', <- ?lem'') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite <- ?lem', <- ?lem'') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "erewriteoA" "->" "?" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite -> ?lem', -> ?lem'') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite -> ?lem', -> ?lem'') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
   Tactic Notation "erewriteoA" "<-" "?" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite <- ?lem', <- ?lem'') lem ltac:postcompose_any ltac:right_associate_compose ltac:right_associate_compose_in.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite <- ?lem', <- ?lem'') lem ltac:precompose_any ltac:left_associate_compose ltac:left_associate_compose_in.
 
 
   Tactic Notation "rewrite∘A" constr(lem) := rewriteoA lem.
@@ -145,19 +145,19 @@ End Compose.
 
 Module Export Concat.
   (** ** Rewriting modulo associativity of concatenation ([@]) *)
-  (** Turns a lemma of type [f = g] into [forall h, f @ h = g @ h] *)
-  Ltac postconcat_any H :=
+  (** Turns a lemma of type [f = g] into [forall h, h @ f = h @ g] *)
+  Ltac preconcat_any H :=
     let ret := make_tac_under_binders_using_in ltac:(fun H => (let H' := fresh in
                                                                rename H into H';
-                                                               pose proof (fun dst (g : _ = dst) => @ap _ _ (fun f => f @ g) _ _ H') as H))
+                                                               pose proof (fun dst (g : dst = _) => @ap _ _ (fun f => g @ f) _ _ H') as H))
                                                       ltac:idtac H in
     let T := type of ret in
     let T' := (eval cbv beta in T) in
     constr:(ret : T').
 
-  (** Associates a path fully to the right *)
-  Ltac right_associate_concat_in H :=
-    let rec_tac := right_associate_concat_in in
+  (** Associates a path fully to the left *)
+  Ltac left_associate_concat_in H :=
+    let rec_tac := left_associate_concat_in in
     let T := type of H in
     match eval cbv beta in T with
       | forall a : ?A, @?P a => let ret := constr:(fun a : A => let H' := H a in
@@ -168,70 +168,70 @@ Module Export Concat.
                                 let T' := (eval cbv beta zeta in T) in
                                 let ret' := (eval cbv beta zeta in ret) in
                                 constr:(ret' : T')
-      | context[(?a @ ?b) @?c] =>
-        (lazymatch eval pattern ((a @ b) @ c) in T with
-        | ?P _ => let H' := constr:(transport P (concat_pp_p a b c) H) in
+      | context[?a @ (?b @?c)] =>
+        (lazymatch eval pattern (a @ (b @ c)) in T with
+        | ?P _ => let H' := constr:(transport P (concat_p_pp a b c) H) in
                   rec_tac H'
          end)
       | ?T' => constr:(H : T')
     end.
 
-  (** We really should just use [setoid_rewrite <- !concat_p_pp] here, to take care of binders, but we threw away Setoids. *)
-  Ltac right_associate_concat :=
+  (** We really should just use [setoid_rewrite -> !concat_p_pp] here, to take care of binders, but we threw away Setoids. *)
+  Ltac left_associate_concat :=
     repeat match goal with
-             | _ => rewrite <- !concat_p_pp
+             | _ => rewrite -> !concat_p_pp
              | [ |- forall a : ?A, _ ] => let H := fresh in
                                           intro H;
-                                            right_associate_concat;
+                                            left_associate_concat;
                                             revert H
            end.
 
-  Ltac right_associate_concat_in_hyp H :=
+  Ltac left_associate_concat_in_hyp H :=
     let H' := fresh in
     rename H into H';
-      let H_rep := right_associate_concat_in H' in
+      let H_rep := left_associate_concat_in H' in
       pose proof H_rep as H;
         clear H'.
 
   Tactic Notation "rewrite@A" constr(lem) :=
-    rewriteA_using_helper ltac:(fun lem' => rewrite lem') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    rewriteA_using_helper ltac:(fun lem' => rewrite lem') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "rewrite@A" "->" constr(lem) :=
-    rewriteA_using_helper ltac:(fun lem' => rewrite -> lem') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    rewriteA_using_helper ltac:(fun lem' => rewrite -> lem') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "rewrite@A" "<-" constr(lem) :=
-    rewriteA_using_helper ltac:(fun lem' => rewrite <- lem') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    rewriteA_using_helper ltac:(fun lem' => rewrite <- lem') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "rewrite@A" "!" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite ?lem', ?lem'') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite ?lem', ?lem'') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "rewrite@A" "?" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite ?lem', ?lem'') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite ?lem', ?lem'') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "rewrite@A" "->" "!" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite -> ?lem', -> ?lem'') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite -> ?lem', -> ?lem'') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "rewrite@A" "<-" "!" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite <- ?lem', <- ?lem'') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite <- ?lem', <- ?lem'') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "rewrite@A" "->" "?" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite -> ?lem', -> ?lem'') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite -> ?lem', -> ?lem'') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "rewrite@A" "<-" "?" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite <- ?lem', <- ?lem'') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite <- ?lem', <- ?lem'') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
 
 
 
   Tactic Notation "erewrite@A" constr(lem) :=
-    rewriteA_using_helper ltac:(fun lem' => erewrite lem') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    rewriteA_using_helper ltac:(fun lem' => erewrite lem') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "erewrite@A" "->" constr(lem) :=
-    rewriteA_using_helper ltac:(fun lem' => erewrite -> lem') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    rewriteA_using_helper ltac:(fun lem' => erewrite -> lem') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "erewrite@A" "<-" constr(lem) :=
-    rewriteA_using_helper ltac:(fun lem' => erewrite <- lem') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    rewriteA_using_helper ltac:(fun lem' => erewrite <- lem') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "erewrite@A" "!" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite ?lem', ?lem'') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite ?lem', ?lem'') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "erewrite@A" "?" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite ?lem', ?lem'') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite ?lem', ?lem'') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "erewrite@A" "->" "!" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite -> ?lem', -> ?lem'') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite -> ?lem', -> ?lem'') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "erewrite@A" "<-" "!" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite <- ?lem', <- ?lem'') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite <- ?lem', <- ?lem'') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "erewrite@A" "->" "?" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite -> ?lem', -> ?lem'') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite -> ?lem', -> ?lem'') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
   Tactic Notation "erewrite@A" "<-" "?" constr(lem) :=
-    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite <- ?lem', <- ?lem'') lem ltac:postconcat_any ltac:right_associate_concat ltac:right_associate_concat_in_hyp.
+    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite <- ?lem', <- ?lem'') lem ltac:preconcat_any ltac:left_associate_concat ltac:left_associate_concat_in_hyp.
 
   Tactic Notation "rewrite•A" constr(lem) := rewrite@A lem.
   Tactic Notation "rewrite•A" "->" constr(lem) := rewrite@A -> lem.
