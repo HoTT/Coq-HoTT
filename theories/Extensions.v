@@ -127,14 +127,14 @@ Section Extensions.
     - apply equiv_pathsplit_isequiv.
   Defined.
 
-  (** Postcomposition with a known equivalence.  Note that this does not require funext to define, although showing that it is an equivalence would require funext. *)
-  Definition extendable_postcompose' (n : nat)
+  (** Postcomposition with a known equivalence.  Note that this does not require funext to define, although showing that it is an equivalence would require funext.  We define it as a [Fixpoint] rather than as a [Definition] with [induction], because the latter would introduce an undesired extra universe parameter (the size of the inductive motive, which must be strictly larger than the size of [C] and [D] since it is generalized over them). *)
+  Fixpoint extendable_postcompose' (n : nat)
              {A B : Type} (C D : B -> Type) (f : A -> B)
              (g : forall b, C b <~> D b)
+             {struct n}
   : ExtendableAlong n f C -> ExtendableAlong n f D.
   Proof.
-    generalize dependent D; revert C.
-    induction n as [|n IHn]; intros C D g; simpl.
+    destruct n as [|n]; simpl.
     1:apply idmap.
     refine (functor_prod _ _).
     - refine (functor_forall (functor_forall idmap
@@ -148,7 +148,7 @@ Section Extensions.
       intros h.
       refine (functor_forall (functor_forall idmap (fun b => (g b)^-1)) _);
         intros k; simpl; unfold functor_forall.
-      refine (IHn _ _ _); intros b.
+      refine (extendable_postcompose' _ _ _ _ _ _ _); intros b.
       apply equiv_inverse, equiv_ap; exact _.
   Defined.
 

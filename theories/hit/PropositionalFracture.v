@@ -1,80 +1,115 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp TruncType Extensions ReflectiveSubuniverse Modality Localization.
-Require Import hit.Pushout hit.Join.
+Require Import HProp TruncType Extensions ReflectiveSubuniverse Modality.
+Require Import hit.Pushout hit.Join hit.Localization hit.Nullification.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
 (** * Open and closed modalities and the propositional fracture theorem *)
 
-(** Exercise 7.13(i): Open modalities *)
-Section OpenModality.
-Context `{Funext} (U : hProp).
+Record Open_Modality :=
+  Op { funext_Op : Funext ;
+       unOp : hProp
+     }.
 
-Definition Op : Modality.
-Proof.
-  refine (Build_Modality_easy
-           (fun X => U -> X)
-           (fun X x u => x)
-            _ _ _).
-  - intros A B f z u.
-    refine (transport B _ (f (z u) u)).
+(** Exercise 7.13(i): Open modalities *)
+Module OpenModalities_easy <: EasyModalities.
+
+  Definition Modality : Type@{u} := Open_Modality@{a}.
+
+  Definition O_reflector : Modality@{u a} -> Type@{i} -> Type@{i}
+    := fun fU X => unOp fU -> X.
+
+  Definition to (O : Modality@{u a}) (T : Type@{i}) : T -> O_reflector@{u a i} O T
+    := fun x u => x.
+
+  Definition O_indO (O : Modality@{u a}) (A : Type@{i})
+             (B : O_reflector O A -> Type@{j})
+             (f : forall a, O_reflector@{u a j} O (B (to@{u a i} O A a)))
+    : forall z, O_reflector@{u a j} O (B z).
+  Proof.
+    intros z u; pose (funext_Op O).
+    refine (transport@{i j} B _ (f (z u) u)).
     apply path_arrow; intros u'.
-    apply ap; apply path_ishprop.
-  - intros A B f a.
-    apply path_arrow; intros u.
+    unfold to; apply ap; apply path_ishprop.
+  Defined.
+
+  Definition O_indO_beta (O : Modality@{u a}) (A : Type@{i})
+             (B : O_reflector O A -> Type@{j})
+             (f : forall a, O_reflector O (B (to O A a))) (a : A)
+  : O_indO O A B f (to O A a) = f a.
+  Proof.
+    pose (funext_Op O); apply path_arrow; intros u.
     transitivity (transport B 1 (f a u));
       auto with path_hints.
     apply (ap (fun p => transport B p (f a u))).
-    transitivity (path_arrow (fun _ => a) (fun _ => a) (@ap10 U _ _ _ 1));
+    transitivity (path_arrow (fun _ => a) (fun _ => a) (@ap10 (unOp O) _ _ _ 1));
       auto with path_hints.
     * apply ap.
       apply path_forall; intros u'.
       apply ap_const.
     * apply eta_path_arrow.
-  - intros A z z'.
-    refine (isequiv_adjointify _ _ _ _).
+  Defined.
+
+  Definition minO_pathsO (O : Modality@{u a}) (A : Type@{i})
+             (z z' : O_reflector O A)
+  : IsEquiv (to O (z = z')).
+  Proof.
+    pose (fs := funext_Op O); refine (isequiv_adjointify _ _ _ _).
     * intros f; apply path_arrow; intros u.
       exact (ap10 (f u) u).
     * intros f; apply path_arrow; intros u.
       transitivity (path_arrow z z' (ap10 (f u))).
-      + apply ap.
+      + unfold to; apply ap.
         apply path_forall; intros u'.
         apply (ap (fun u0 => ap10 (f u0) u')).
         apply path_ishprop.
       + apply eta_path_arrow.
     * intros p.
-      apply eta_path_arrow.
-Defined.
+      refine (eta_path_arrow _ _ _).
+  Defined.
 
-Global Instance accessible_op : Accessible Op.
-Proof.
-  refine (Build_Accessible_Modality _ Unit (fun _ => U) _);
-    intros X; split.
-  - intros X_inO u.
-    apply ((equiv_ooextendable_isequiv _ _)^-1).
-    refine (cancelR_isequiv (fun x (u:Unit) => x)).
-    apply X_inO.
-  - intros ext; specialize (ext tt).
-    refine (isequiv_compose (f := (fun x => unit_name x))
-                            (g := (fun h => h o (@const U Unit tt)))).
-    refine (isequiv_ooextendable (fun _ => X) (@const U Unit tt) ext).
-Defined.
+End OpenModalities_easy.
 
-(** Thus, arguably a better definition of [Op] would be [Nul (fun (_:Unit) => U)], as it would not require [Funext], would be universe polymorphic, and would have a judgmental computation rule.  However, the above definition is also nice to know, as it doesn't use HITs.  We call the non-funext version defined by localization [Op']. *)
+Module OpenModalities <: Modalities
+  := EasyModalities_to_Modalities OpenModalities_easy.
 
-(** Morally this is the definition, but this way it would end up technically depending on funext, since [Op] and [accessible_op] do.  Thus, instead we close the section and give a direct definition.  *)
-(** Definition Op' : Modality := nudge_modality Op. *)
+Module OpM := Modalities_Theory OpenModalities.
 
-End OpenModality.
+Coercion Open_Modality_to_Modality :=
+  idmap : Open_Modality -> OpenModalities.Modality.
 
-Definition Op' (U : hProp) : Modality := Nul (fun (_:Unit) => U).
+(** The open modality is accessible. *)
+Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
+
+  Definition acc_gen
+    := fun (O : OpenModalities.Modality@{u a}) =>
+         Build_NullGenerators@{a} Unit@{a} (fun _ => unOp O).
+
+  Definition inO_iff_isnull_internal (O : OpenModalities.Modality@{u a}) (X : Type@{i})
+  : OpenModalities.inO_internal O X <-> IsNull (acc_gen O) X.
+  Proof.
+    pose (funext_Op O); split.
+    - intros X_inO u.
+      apply (equiv_inverse (equiv_ooextendable_isequiv _ _)).
+      refine (cancelR_isequiv (fun x (u:Unit) => x)).
+      apply X_inO.
+    - intros ext; specialize (ext tt).
+      refine (isequiv_compose (f := (fun x => unit_name x))
+                              (g := (fun h => h o (@const (unOp O) Unit tt)))).
+      refine (isequiv_ooextendable (fun _ => X) (@const (unOp O) Unit tt) ext).
+  Defined.
+
+End Accessible_OpenModalities.
+
+(** Thus, arguably a better definition of [Op] would be [Nul (fun (_:Unit) => U)], as it would not require [Funext] and would have a judgmental computation rule.  However, the above definition is also nice to know, as it doesn't use HITs. *)
 
 (** Exercise 7.13(ii): Closed modalities *)
-Section ClosedModality.
 
+(** We begin by characterizing the modal types. *)
+Section ClosedModalTypes.
   Context (U : hProp).
 
   Definition equiv_inO_closed (A : Type)
@@ -104,38 +139,97 @@ Section ClosedModality.
       exact _.
   Defined.
 
-  Definition Cl : Modality.
+End ClosedModalTypes.
+
+Record Closed_Modality := Cl { unCl : hProp }.
+
+Module ClosedModalities <: Modalities.
+
+  Definition Modality : Type@{u} := Closed_Modality@{a}.
+
+  Definition O_reflector : Modality@{u a} -> Type@{i} -> Type@{i}
+    := fun O X => join@{a i i} (unCl O) X.
+
+  Definition inO_internal : Modality@{u a} -> Type@{i} -> Type@{i}
+    := fun O X => unCl O -> Contr X.
+
+  Definition O_inO_internal (O : Modality) (T : Type)
+  : inO_internal O (O_reflector O T).
   Proof.
-    refine (Build_Modality
-              (Build_UnitSubuniverse
-                 (fun X => join U X)
-                 (fun X => U -> Contr X)
-                 _
-                 (fun X x => push (inr x))
-                 _ _)
-              _ _ _); cbn; try exact _.
-    - intros A u.
-      pose (contr_inhabited_hprop U u).
-      exact _.
-    - intros A B inO_A f ?; cbn in *; intros u; pose (inO_A u).
-      refine (contr_equiv _ f); exact _.
-    - intros A B ? f z.
-      refine (pushout_ind _ _ B _ _ z).
-      * intros [u | a].
-        + apply center, B_inO, u.
-        + apply f.
-      * intros [u a].
-        pose (B_inO (push (inr a)) u).
-        apply path_contr.
-    - reflexivity.
-    - intros A A_inO z z' u.
-      pose (A_inO u); exact _.
+    intros u.
+    pose (contr_inhabited_hprop _ u).
+    exact _.
   Defined.
 
-  Global Instance accessible_cl (U : hProp) : Accessible Cl.
+  Definition to (O : Modality@{u a}) (T : Type@{i})
+  : T -> O_reflector@{u a i} O T
+    := fun x => push (inr x).
+
+  Definition inO_equiv_inO_internal (O : Modality) (T U : Type)
+     (T_inO : inO_internal O T) (f : T -> U) (feq : IsEquiv f)
+  : inO_internal O U.
   Proof.
-    refine (Build_Accessible_Modality Cl U (fun _ => Empty) _);
-      intros X; split.
+    intros u; pose (T_inO u).
+    refine (contr_equiv _ f); exact _.
+  Defined.
+
+  Definition hprop_inO_internal `{Funext} (O : Modality) (T : Type)
+  : IsHProp (inO_internal O T).
+  Proof.
+    exact _.
+  Defined.
+
+  Definition O_ind_internal (O : Modality@{u a}) (A : Type@{i})
+             (B : O_reflector@{u a i} O A -> Type@{j})
+             (B_inO : forall oa, inO_internal@{u a j} O (B oa))
+             (f : forall a : A, B (to O A a))
+             (z : O_reflector O A)
+  : B z.
+  Proof.
+    refine (pushout_ind@{i a i j j} _ _ B _ _ z).
+    - intros [u | a].
+      + apply center, B_inO, u.
+      + apply f.
+    - intros [u a].
+      pose (B_inO (push (inr a)) u).
+      apply path_contr.
+  Defined.
+
+  Definition O_ind_beta_internal (O : Modality) (A : Type)
+             (B : O_reflector O A -> Type)
+             (B_inO : forall oa : O_reflector O A, inO_internal O (B oa))
+             (f : forall a : A, B (to O A a)) (a : A)
+  : O_ind_internal O A B B_inO f (to O A a) = f a
+  := 1.
+
+  Definition minO_paths (O : Modality) (A : Type)
+             (A_inO : inO_internal O A)
+             (z z' : A)
+  : inO_internal O (z = z').
+  Proof.
+    intros u; pose (A_inO u); exact _.
+  Defined.
+
+End ClosedModalities.
+
+Module ClM := Modalities_Theory ClosedModalities.
+
+Coercion Closed_Modality_to_Modality :=
+  idmap : Closed_Modality -> ClosedModalities.Modality.
+
+(** The closed modality is accessible. *)
+Module Accessible_ClosedModalities
+  <: Accessible_Modalities ClosedModalities.
+
+  Definition acc_gen
+    := fun (O : ClosedModalities.Modality@{u a}) =>
+         Build_NullGenerators@{a} (unCl O) (fun _ => Empty@{a}).
+
+  Definition inO_iff_isnull_internal
+             (O : ClosedModalities.Modality@{u a}) (X : Type@{i})
+  : ClosedModalities.inO_internal O X <-> IsNull (acc_gen O) X.
+  Proof.
+    split.
     - intros X_inO u.
       pose (X_inO u).
       apply ooextendable_contr; exact _.
@@ -146,4 +240,4 @@ Section ClosedModality.
                        (fun _ => x)) (Empty_ind _)).1 tt).
   Defined.
 
-End ClosedModality.
+End Accessible_ClosedModalities.

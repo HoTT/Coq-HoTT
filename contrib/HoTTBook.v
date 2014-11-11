@@ -1066,7 +1066,7 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== cor:totrunc-is-connected *)
 (** Corollary 7.5.8 *)
 
-Definition Book_7_5_8 := @HoTT.Modality.conn_map_to_O.
+Definition Book_7_5_8 := @HoTT.hit.Truncations.TrM.conn_map_to_O.
 
 
 (* ================================================== thm:nconn-to-ntype-const *)

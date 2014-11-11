@@ -589,8 +589,7 @@ annotations Coq will automatically collapse one or more universe
 parameters which could be kept separate if annotated.  It is not clear
 under exactly what situations this occurs, but one culprit appears to
 be section variables: if you declare a section variable which you need
-to be universe polymorphic, you may need to annotate it (this happens
-frequently with `ReflectiveSubuniverse` and `Modality`).
+to be universe polymorphic, you may need to annotate it.
 
 (Another occasional culprit of less-polymorphic-than-expected
 definitions seems to be giving type parameters without a type.  At
@@ -604,6 +603,19 @@ situations, Coq seems to make a default guess that doesn't work
 (perhaps collapsing some universes that need to remain distinct) and
 then complains without trying anything else; an annotation can point
 it in the right direction.
+
+### Induction and fixpoints ###
+
+One other thing to be aware of when paying attention to universes is
+that the `induction` tactic invokes the appropriate induction
+principle, which is a function generally named `*_ind` or `*_rect`
+(see notes on naming conventions above).  This function, in turn,
+requires a universe parameter describing the size of its output.
+Therefore, if you prove something by `induction` that is generalized
+over a "large" argument (e.g. a type or a type family), the resulting
+definition will pick up an extra universe parameter that's larger than
+the argument in question.  One way to avoid this is to instead use a
+`Fixpoint` definition, or the tactic `fix`, along with `destruct`.
 
 ### Lifting and lowering ###
 

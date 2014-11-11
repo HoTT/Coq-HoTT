@@ -80,6 +80,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/hit/Join.v \
 	$(srcdir)/theories/hit/PropositionalFracture.v \
 	$(srcdir)/theories/hit/Localization.v \
+	$(srcdir)/theories/hit/Nullification.v \
 	$(srcdir)/theories/hit/V.v \
 	$(srcdir)/theories/Misc.v \
 	$(srcdir)/theories/Utf8.v \

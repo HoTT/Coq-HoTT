@@ -332,7 +332,7 @@ Notation "u ~~ v" := (bisimulation u v)
 Global Instance reflexive_bisimulation : Reflexive bisimulation.
 Proof.
   refine (V_ind_hprop _ _ _).
-  intros A f H_f; simpl. split.
+  intros A f H_f. split.
   - intro a; apply tr; exists a; auto.
   - intro a; apply tr; exists a; auto.
 Defined.
@@ -345,7 +345,7 @@ Proof.
   generalize u v.
   refine (V_ind_hprop _ _ _); intros A f H_f.
   refine (V_ind_hprop _ _ _); intros B g _.
-  simpl; intros [H1 H2].
+  intros [H1 H2].
   apply setext'. split.
   - intro a. generalize (H1 a). apply (Trunc_functor -1).
     intros [b h]. exists b; exact (H_f a (g b) h).

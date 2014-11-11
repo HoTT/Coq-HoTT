@@ -37,6 +37,7 @@ Require Export hit.V.
 Require Export hit.Join.
 Require Export hit.PropositionalFracture.
 Require Export hit.Localization.
+Require Export hit.Nullification.
 
 Require Export HoTT.Tactics.
 
