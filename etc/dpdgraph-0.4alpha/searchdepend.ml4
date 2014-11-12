@@ -40,6 +40,9 @@ let add_inductive ((k,i):Names.inductive)(d:Data.t) =
 let add_constructor(((k,i),j):Names.constructor)(d:Data.t) =
   Data.add (Globnames.ConstructRef ((k,i),j)) d
 
+let add_projection (p:Names.constant) (d:Data.t) =
+  Data.add (Globnames.ConstRef p) d
+
 let collect_long_names (c:Term.constr) (acc:Data.t) =
   let rec add c acc =
     match Term.kind_of_term c with
@@ -53,6 +56,7 @@ let collect_long_names (c:Term.constr) (acc:Data.t) =
       | Term.Lambda(n,t,c) -> add t (add c acc)
       | Term.LetIn(_,v,t,c) -> add v (add t (add c acc))
       | Term.App(c,ca) -> add c (Array.fold_right add ca acc)
+      | Term.Proj (p, _) -> add_projection p acc
       | Term.Const (cst,univ) -> add_constant cst acc (* abstraction-barrier-breaking hack! *)
       | Term.Ind (i,univ) -> add_inductive i acc (* abstraction-barrier-breaking hack! *)
       | Term.Construct (cnst,univ) -> add_constructor cnst acc (* abstraction-barrier-breaking hack! *)
@@ -72,8 +76,8 @@ let collect_dependance gref =
   | Globnames.ConstRef cst ->
       let cb = Environ.lookup_constant cst (Global.env()) in
       let c = match cb.Declarations.const_body with
-        | Declarations.Def c -> Lazyconstr.force c
-        | Declarations.OpaqueDef c -> Lazyconstr.force_opaque c
+        | Declarations.Def c -> Mod_subst.force_constr c
+        | Declarations.OpaqueDef c -> Opaqueproof.force_proof c
         | Declarations.Undef _ -> raise (NoDef gref)
       in
       collect_long_names c Data.empty
@@ -92,6 +96,6 @@ let display_dependance gref =
   with NoDef gref ->
     Pp.msgerrnl (Printer.pr_global gref ++ str " has no value")
 
-VERNAC COMMAND EXTEND Searchdepend
+VERNAC COMMAND EXTEND Searchdepend CLASSIFIED AS QUERY
    ["SearchDepend" global(ref) ] -> [ display_dependance (Nametab.global ref) ]
 END
