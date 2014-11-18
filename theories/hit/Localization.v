@@ -2,7 +2,7 @@
 (** * Localization *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import Extensions Factorization ReflectiveSubuniverse Modality EquivalenceVarieties.
+Require Import Extensions ReflectiveSubuniverse Modality EquivalenceVarieties.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 
@@ -68,7 +68,7 @@ Definition extendable_over_postcompose' (n : nat)
 : ExtendableAlong_Over n f C ext D
   -> ExtendableAlong_Over n f C ext E.
 Proof.
-  revert C ext D E g; induction n as [|n IHn]; intros C ext D E g; simpl.
+  revert C ext D E g; simple_induction n n IHn; intros C ext D E g; simpl.
   1:by apply idmap.
   intros ext'.
   split.
@@ -106,13 +106,13 @@ Definition extendable_over_postcompose (n : nat)
 
 (** And if the dependency is trivial, we obtain them from an ordinary [ExtendableAlong]. *)
 Definition extendable_over_const
-         (n : nat) {A B : Type} (C : B -> Type) (f : A -> B)
-         (ext : ExtendableAlong n f C) (D : B -> Type)
+           (n : nat) {A B : Type} (C : B -> Type) (f : A -> B)
+           (ext : ExtendableAlong n f C) (D : B -> Type)
 : ExtendableAlong n f D
   -> ExtendableAlong_Over n f C ext (fun b _ => D b).
 Proof.
   revert C ext D.
-  induction n as [|n IHn]; intros C ext D ext'.
+  simple_induction n n IHn; intros C ext D ext'.
   1:exact tt.
   split.
   - intros g g'.
@@ -171,7 +171,7 @@ Definition ooextendable_over_homotopy
 Proof.
   intros ext' n.
   revert C ext D r s ext'.
-  induction n as [|n IHn]; intros C ext D r s ext'.
+  simple_induction n n IHn; intros C ext D r s ext'.
   1:exact tt.
   split.
   - intros g g'.
@@ -241,9 +241,9 @@ Import IsLocal_Internal.
 
 Definition islocal_equiv_islocal (f : LocalGenerators@{a})
            (X : Type@{i}) {Y : Type@{i}}
-           (Xloc : IsLocal@{i i i i i i a} f X)
+           (Xloc : IsLocal@{i i a} f X)
            (g : X -> Y) `{IsEquiv@{i j} _ _ g}
-: IsLocal@{j j j j j j a} f Y
+: IsLocal@{j j a} f Y
   := fun i => ooextendable_postcompose _ _ (f i) (fun _ => g) (Xloc i).
 
 
@@ -263,7 +263,7 @@ Module Export LocalizationHIT.
     Context (f : LocalGenerators) (X : Type).
 
     (** Note that the following axiom actually contains a point-constructor.  We could separate out that point-constructor and make it an actual argument of the private inductive type, thereby getting a judgmental computation rule for it.  However, since locality is an hprop, there seems little point to this. *)
-    Axiom islocal_localize : IsLocal@{i i i i i i u} f (Localize f X).
+    Axiom islocal_localize : IsLocal@{i i u} f (Localize f X).
 
     Section LocalizeInd.
 
@@ -305,7 +305,7 @@ Section Localization.
   : ooExtendableAlong loc P.
   Proof.
     intros n; generalize dependent P.
-    induction n as [|n IHn]; intros P Ploc.
+    simple_induction n n IHn; intros P Ploc.
     1:exact tt.
     split.
     - intros g.
@@ -331,7 +331,7 @@ Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.
     := fun O => Localize@{a i} (unLoc O).
 
   Definition inO_internal : ReflectiveSubuniverse@{u a} -> Type@{i} -> Type@{i}
-    := fun O X => IsLocal@{i i i i i i a} (unLoc O) X.
+    := fun O X => IsLocal@{i i a} (unLoc O) X.
 
   Definition O_inO_internal :
     forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
@@ -343,27 +343,26 @@ Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.
     := fun O => @loc@{a i} (unLoc O).
 
   Definition inO_equiv_inO_internal :
-    forall (O : ReflectiveSubuniverse) (T U : Type@{i}),
+    forall (O : ReflectiveSubuniverse@{u a}) (T U : Type@{i}),
       inO_internal@{u a i} O T -> forall f : T -> U, IsEquiv f -> inO_internal@{u a i} O U
-    := fun O => islocal_equiv_islocal@{a i i i} (unLoc O).
-    
-  Definition hprop_inO_internal : Funext ->
-    forall (O : ReflectiveSubuniverse) (T : Type),
-      IsHProp (inO_internal O T).
+    := fun O => islocal_equiv_islocal@{a i i} (unLoc O).
+
+  Definition hprop_inO_internal `{Funext}
+             (O : ReflectiveSubuniverse@{u a}) (T : Type@{i})
+  : IsHProp (inO_internal@{u a i} O T).
   Proof.
-    (** We get an extra larger universe parameter here, because instances like [trunc_forall] and [trunc_equiv] do an induction over [trunc_index] whose motive is generalized over the type, hence must live in some larger universe.  Fortunately, the module implementation is a little generous and doesn't complain about it, even though it doesn't appear in the module type specification. *)
-    exact _.
+    apply (@trunc_forall@{a i i} _); intros i.
+    apply ishprop_ooextendable@{a a i i i i i}.
   Defined.
 
-  Definition extendable_to_O_internal :
-    forall (O : ReflectiveSubuniverse) (P : Type) (Q : Type),
-      inO_internal O Q ->
-      ooExtendableAlong (to O P) (fun _ : O_reflector O P => Q).
+  Definition extendable_to_O_internal
+             (O : ReflectiveSubuniverse@{u a}) {P : Type@{i}}
+             {Q : Type@{j}} {Q_inO : inO_internal@{u a j} O Q}
+  : ooExtendableAlong@{i i j j} (to O P) (fun _ => Q).
   Proof.
-    intros O P Q Qloc.
-    apply ext_localize_ind; intros i.
+    apply ext_localize_ind@{a i j j i j j j j}; intros ?.
     apply ooextendable_over_const.
-    apply Qloc.
+    apply Q_inO.
   Defined.
 
 End Localization_ReflectiveSubuniverses.
@@ -372,6 +371,7 @@ End Localization_ReflectiveSubuniverses.
 (** If you import the following module [LocM], then you can call all the reflective subuniverse functions with a [LocalGenerators] as the parameter. *)
 Module Import LocM := ReflectiveSubuniverses_Theory Localization_ReflectiveSubuniverses.
 (** If you don't import it, then you'll need to write [LocM.function_name]. *)
+Export LocM.Coercions.
 
 Coercion Localization_ReflectiveSubuniverse_to_ReflectiveSubuniverse := idmap
   : Localization_ReflectiveSubuniverse -> ReflectiveSubuniverse.
@@ -439,8 +439,9 @@ Module Accessible_Localization
   Definition acc_gen : ReflectiveSubuniverse -> LocalGenerators
     := unLoc.
 
-  Definition inO_iff_islocal_internal (O : ReflectiveSubuniverse) (X : Type)
-  : inO_internal O X <-> IsLocal (acc_gen O) X
+  Definition inO_iff_islocal_internal
+             (O : ReflectiveSubuniverse@{u a}) (X : Type@{i})
+  : iff@{i i i} (inO_internal O X) (IsLocal (acc_gen O) X)
     := (idmap , idmap).
 
 End Accessible_Localization.

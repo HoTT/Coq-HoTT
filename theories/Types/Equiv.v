@@ -11,15 +11,14 @@ Section AssumeFunext.
   Context `{Funext}.
 
   (** We begin by showing that, assuming function extensionality, [IsEquiv f] is an hprop. *)
-
   Global Instance hprop_isequiv {A B} `(f : A -> B)
   : IsHProp (IsEquiv f).
   Proof.
     apply hprop_inhabited_contr; intros feq.
     (* We will show that if [IsEquiv] is inhabited, then it is contractible, because it is equivalent to a sigma of a pointed path-space over a pointed path-space, both of which are contractible. *)
     refine (contr_equiv' { g : B -> A & g = f^-1 } _).
-    equiv_via ({ g:B->A & { r:g=f^-1 & { s:g=f^-1 & r=s }}}); symmetry.
-    1:exact (equiv_functor_sigma' (equiv_idmap _) (fun _ => equiv_sigma_contr _)).
+    equiv_via ({ g:B->A & { r:g=f^-1 & { s:g=f^-1 & r=s }}}); apply equiv_inverse.
+    1:exact (equiv_functor_sigma' (equiv_idmap _) (fun _ => equiv_sigma_contr _ )).
     (* First we apply [issig], peel off the first component, and convert to pointwise paths. *)
     refine (equiv_compose' _ (equiv_inverse (issig_isequiv f))).
     refine (equiv_functor_sigma' (equiv_idmap (B -> A)) _); intros g; simpl.
@@ -31,8 +30,9 @@ Section AssumeFunext.
                             (equiv_inverse (equiv_functor_forall f (fun a p => p @ (eissect f a)))) _));
       intros s; simpl.
       (* What remains is to show that under these equivalences, the remaining datum [eisadj] reduces simply to [r == s].  Pleasingly, Coq can compute for us exactly what this means. *)
-      symmetry; refine (equiv_functor_forall' (BuildEquiv _ _ f _) _);
-      intros a; simpl; unfold functor_forall.
+      apply equiv_inverse;
+        refine (equiv_functor_forall' (BuildEquiv _ _ f _) _);
+        intros a; simpl; unfold functor_forall.
       rewrite transport_paths_FlFr.
       (* At this point it's just naturality wrangling, potentially automatable.  It's a little unusual because what we have to prove is not just the existence of some path, but that one path-type is equivalent to another one, but we can mostly still use [rewrite]. *)
       Open Scope long_path_scope.

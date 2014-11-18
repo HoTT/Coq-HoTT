@@ -92,24 +92,25 @@ Another issue that must be dealt with is the fact, mentioned above, that a modul
 
 Module Type ReflectiveSubuniverses.
 
-  (** As mentioned above, an implementation of this module type is a *family* of reflective subuniverses, indexed by the below type [ReflectiveSubuniverse].  If we just wrote [ReflectiveSubuniverse : Type], then it would end up parametrized by one universe, but in many examples the natural definition of the parametrizing type involves also a smaller universe, which would cause problems with Coq's strict polymorphism enforcement for module type implementations.  Thus, the following hack adds an extra smaller universe here as well. *)
-  Parameter ReflectiveSubuniverse : let enforce := Type@{a} : Type@{u} in Type@{u}.
+  (** As mentioned above, an implementation of this module type is a *family* of reflective subuniverses, indexed by the below type [ReflectiveSubuniverse].  If we just wrote [ReflectiveSubuniverse : Type], then it would end up parametrized by one universe, but in many examples the natural definition of the parametrizing type involves also a smaller universe, which would cause problems with Coq's strict polymorphism enforcement for module type implementations.  Thus, we use [Type2] instead, which takes two universe parameters. *)
+  Parameter ReflectiveSubuniverse : Type2@{u a}.
   Check ReflectiveSubuniverse@{u a}.
 
   (** The universe parameters occurring in the definitions here play one of four roles, which we indicate consistently by [u], [a], [i], and [j].
 
   - [u] is the size of the parametrizing type [ReflectiveSubuniverse] (and, later, also [Modality]).
-  - [a] is the size of smaller type-data occurring in that type, such as the family of generators for a localization.
+  - [a] is the size of smaller type-data occurring in that type, such as the family of generators for a localization.  This generally must be strictly smaller than [u].
   - [i] is the size of a type that we are reflecting or testing to be in the subuniverse.  This is generally at least as big as [a].
-  - [j] is the size of a type that we are eliminating into (out of a type in [i]) with a universal property.  This is generally at least as big as [i]. *)
+  - [j] is the size of a type that we are eliminating into (out of a type in [i]) with a universal property.  Also generally at least as big as [a].
+  - [k] is a universe at least as large as both [i] and [j], in which statements about types in both of them can live. *)
 
   Parameter O_reflector : forall (O : ReflectiveSubuniverse@{u a}),
-                            Type@{i} -> Type@{i}.
+                            Type2le@{i a} -> Type2le@{i a}.
   Check O_reflector@{u a i}.
 
   (** For reflective subuniverses (and hence also modalities), it will turn out that [In O T] is equivalent to [IsEquiv (O_unit T)].  We could define the former as the latter, and it would simplify some of the general theory.  However, in many examples there is a "more basic" definition of [In O] which is equivalent, but not definitionally identical, to [IsEquiv (O_unit T)].  Thus, including [In O] as data makes more things turn out to be judgmentally what we would expect. *)
   Parameter inO_internal : forall (O : ReflectiveSubuniverse@{u a}),
-                             Type@{i} -> Type@{i}.
+                             Type2le@{i a} -> Type2le@{i a}.
   Check inO_internal@{u a i}.
 
   Parameter O_inO_internal : forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
@@ -134,9 +135,9 @@ Module Type ReflectiveSubuniverses.
 
   (** We express the universal property using the representation [ooExtendableAlong] of precomposition equivalences.  This has the advantage that it avoids the funext redexes that otherwise infect the theory, thereby simplifying the proofs and proof terms.  We never have to worry about whether we have a path between functions or a homotopy; we use only homotopies, with no need for [ap10] or [path_arrow] to mediate.  Furthermore, the data in [ooExtendableAlong] are all special cases of the induction principle of a modality.  Thus, all the theorems we prove about reflective subuniverses will, when interpreted for a modality (coerced as above to a reflective subuniverse), reduce definitionally to "the way we would have proved them directly for a modality".  *)
   Parameter extendable_to_O_internal
-  : forall (O : ReflectiveSubuniverse@{u a}) {P : Type@{i}} {Q : Type@{j}} {Q_inO : inO_internal@{u a j} O Q},
-      ooExtendableAlong (to O P) (fun _ => Q).
-  (** TODO: We should really add universe annotations to [ooExtendableAlong] so that this takes only 4 universes, but doing that seems to be causing anomalies. *)
+  : forall (O : ReflectiveSubuniverse@{u a}) {P : Type2le@{i a}} {Q : Type2le@{j a}} {Q_inO : inO_internal@{u a j} O Q},
+      ooExtendableAlong@{i i j k} (to O P) (fun _ => Q).
+  Check extendable_to_O_internal@{u a i j k}.
 
 End ReflectiveSubuniverses.
 
@@ -145,14 +146,26 @@ End ReflectiveSubuniverses.
 Module ReflectiveSubuniverses_Theory (Os : ReflectiveSubuniverses).
 Export Os.
 
-(** We allow the name of a subuniverse or modality to be used as the name of its reflector.  This means that when defining a particular example, you should generally put the parametrizing family in a wrapper, so that you can notate the subuniverse as parametrized by, rather than identical to, its parameter.  See Modality.v, Truncations.v, and Localization.v for examples.  *)
-Coercion O_reflector : ReflectiveSubuniverse >-> Funclass.
-
 (** We now give new names or identities to all the "internal" fields.  This serves several purposes.  Firstly, it allows us to make "being in the subuniverse" into a typeclass. *)
-Class In (O : ReflectiveSubuniverse) (T : Type) :=
-  in_inO_internal : inO_internal O T.
+Class In (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}) :=
+  in_inO_internal : inO_internal@{u a i} O T.
 
 Typeclasses Transparent In.
+
+(** The type of types in the subuniverse *)
+Definition Type_ (O : ReflectiveSubuniverse) : Type
+  := {T : Type & In O T}.
+
+(** Before going on, we declare some coercions in a module, so that they can be imported separately.  In fact, this submodule should be exported by any file that defines a reflective subuniverse.  *)
+Module Export Coercions.
+
+  (** We allow the name of a subuniverse or modality to be used as the name of its reflector.  This means that when defining a particular example, you should generally put the parametrizing family in a wrapper, so that you can notate the subuniverse as parametrized by, rather than identical to, its parameter.  See Modality.v, Truncations.v, and Localization.v for examples. *)
+  Coercion O_reflector : ReflectiveSubuniverse >-> Funclass.
+
+  (** Obviously, every element of [Type_ O] is a type. *)
+  Coercion TypeO_pr1 O (T : Type_ O) := @pr1 Type (In O) T.
+
+End Coercions.
 
 (** With this given, we now essentially have to redefine almost all the other fields so that they refer explicitly to the class [In] rather than to [inO_internal], so that Coq is willing to do typeclass inference for them. *)
 
@@ -170,12 +183,6 @@ Global Instance hprop_inO {fs : Funext} {O : ReflectiveSubuniverse} (T : Type)
 (** [O T] is always in the subuniverse (by hypothesis).  This needs a universe annotation to become sufficiently polymorphic. *)
 Global Instance O_inO {O : ReflectiveSubuniverse} (T : Type) : In O (O T)
   := O_inO_internal O T.
-
-(** The type of types in the subuniverse *)
-Definition Type_ (O : ReflectiveSubuniverse) : Type
-  := {T : Type & In O T}.
-
-Coercion TypeO_pr1 O (T : Type_ O) := @pr1 Type (In O) T.
 
 (** The second component of [TypeO] is unique *)
 Definition path_TypeO {fs : Funext} O (T T' : Type_ O) (p : T.1 = T'.1)
@@ -625,12 +632,12 @@ Section Reflective_Subuniverse.
     (** ** Dependent sums *)
     (** Theorem 7.7.4 *)
     Definition inO_sigma_from_O_ind
-    : (forall (A:Type@{i}) (B: (O A) -> Type@{j}) `{forall a, In@{j u a} O (B a)}
+    : (forall (A:Type@{i}) (B: (O A) -> Type@{j}) `{forall a, In@{u a j} O (B a)}
               (g : forall (a:A), (B (to O A a))),
          {f : forall (z:O A), (B z) & forall a:A, f (to@{u a i} O A a) = g a})
       ->
-      (forall (A:Type@{i}) (B:A -> Type@{j}) `{In@{i u} O A} `{forall a, In@{j u a} O (B a)},
-         (In@{j u a} O (sig@{i j} (fun x:A => B x)))).
+      (forall (A:Type@{i}) (B:A -> Type@{j}) `{In@{u a i} O A} `{forall a, In@{u a j} O (B a)},
+         (In@{u a j} O (sig@{i j} (fun x:A => B x)))).
     Proof.
       intros H A B ? ?.
              pose (h := fun x => @O_rec _ ({x:A & B x}) A _ pr1 x).
@@ -649,16 +656,18 @@ Section Reflective_Subuniverse.
     Qed.
 
     Definition O_ind_from_inO_sigma
-    : (forall (A:Type@{i}) (B:A -> Type@{j}) `{In@{i u a} O A} `{forall a, In@{j u a} O (B a)},
-         (In@{j u a} O (sig@{i j} (fun x:A => B x))))
+    (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3811 *)
+    : (forall (A:Type@{i}) (B:A -> Type@{j}) {A_inO : In@{u a i} O A} `{forall a, In@{u a j} O (B a)},
+         (In@{u a j} O (sig@{i j} (fun x:A => B x))))
       ->
-      (forall (A:Type@{i}) (B: (O A) -> Type@{j}) `{forall a, In@{j u a} O (B a)}
+      (forall (A:Type@{i}) (B: (O A) -> Type@{j}) `{forall a, In@{u a j} O (B a)}
               (g : forall (a:A), (B (to O A a))),
          {f : forall (z:O A), (B z) & forall a:A, f (to@{u a i} O A a) = g a}).
     Proof.
       intro H. intros A B ? g.
       pose (Z := sigT B).
-      assert (In O Z). apply H; exact _.
+      assert (In@{u a j} O Z).
+      { apply H; [ exact _ | assumption ]. }
       pose (g' := (fun a:A => (to O A a ; g a)) : A -> Z).
       pose (f' := O_rec g').
       pose (eqf := (O_rec_beta g')  : f' o to O A == g').
@@ -803,10 +812,12 @@ End ReflectiveSubuniverses_Theory.
 (** Recall that an implementation of [ReflectiveSubuniverses] is a family of reflective subuniverses indexed by the type [ReflectiveSubuniverse].  Sometimes we want to consider only a subfamily of a known one, or more generally a restriction of such a family along a function.  The second-class nature of modules makes this a bit of a pain to construct, but we can do it. *)
 Module Type ReflectiveSubuniverses_Restriction_Data (Os : ReflectiveSubuniverses).
 
-  Parameter New_ReflectiveSubuniverse : let enforce := Type@{a} : Type@{u} in Type@{u}.
+  Parameter New_ReflectiveSubuniverse : Type2@{u a}.
+  Check New_ReflectiveSubuniverse@{u a}.
 
   Parameter ReflectiveSubuniverses_restriction
-  : New_ReflectiveSubuniverse -> Os.ReflectiveSubuniverse.
+  : New_ReflectiveSubuniverse@{u a} -> Os.ReflectiveSubuniverse@{u a}.
+  Check ReflectiveSubuniverses_restriction@{u a}.
 
 End ReflectiveSubuniverses_Restriction_Data.
 
@@ -830,7 +841,7 @@ Module ReflectiveSubuniverses_Restriction
   Definition hprop_inO_internal (H : Funext) (O : ReflectiveSubuniverse@{u a})
     := Os.hprop_inO_internal@{u a i} H (Res.ReflectiveSubuniverses_restriction O).
   Definition extendable_to_O_internal (O : ReflectiveSubuniverse@{u a})
-    := @Os.extendable_to_O_internal (Res.ReflectiveSubuniverses_restriction O).
+    := @Os.extendable_to_O_internal@{u a i j k} (Res.ReflectiveSubuniverses_restriction@{u a} O).
 
 End ReflectiveSubuniverses_Restriction.
 
@@ -871,7 +882,11 @@ Module Type Accessible_ReflectiveSubuniverses
 
   Parameter inO_iff_islocal_internal
   : forall (O : ReflectiveSubuniverse@{u a}) (X : Type@{i}),
-      inO_internal@{u a i} O X <-> IsLocal (acc_gen@{u a} O) X.
+      (** We call [iff] explicitly to control the number of universe parameters. *)
+      iff@{i i i}
+         (inO_internal@{u a i} O X)
+         (IsLocal@{i i a} (acc_gen@{u a} O) X).
+  Check inO_iff_islocal_internal@{u a i}.
 
 End Accessible_ReflectiveSubuniverses.
 

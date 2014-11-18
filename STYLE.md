@@ -604,18 +604,44 @@ situations, Coq seems to make a default guess that doesn't work
 then complains without trying anything else; an annotation can point
 it in the right direction.
 
-### Induction and fixpoints ###
+### Unexpected universes ###
 
-One other thing to be aware of when paying attention to universes is
-that the `induction` tactic invokes the appropriate induction
-principle, which is a function generally named `*_ind` or `*_rect`
-(see notes on naming conventions above).  This function, in turn,
-requires a universe parameter describing the size of its output.
-Therefore, if you prove something by `induction` that is generalized
-over a "large" argument (e.g. a type or a type family), the resulting
-definition will pick up an extra universe parameter that's larger than
-the argument in question.  One way to avoid this is to instead use a
+If you ever need to pay close attention to universes, it is useful to
+know that there are several ways in which extra universe parameters
+can creep into a definition unexpectedly.  Here are a few.
+
+The `induction` tactic invokes the appropriate induction principle,
+which is a function generally named `*_ind` or `*_rect` (see notes on
+naming conventions above).  This function, in turn, requires a
+universe parameter describing the size of its output.  Therefore, if
+you prove something by `induction` that is generalized over a "large"
+argument (e.g. a type or a type family), the resulting definition will
+pick up an extra universe parameter that's strictly larger than the
+argument in question.  One way to avoid this is to instead use a
 `Fixpoint` definition, or the tactic `fix`, along with `destruct`.
+There is a tactic `simple_induction` defined in `Overture` whose
+interface is almost the same as `induction` but does this internally,
+although it only works for induction over `nat` and `trunc_index`.
+
+If you apply the `symmetry` tactic when constructing an equivalence to
+reverse the direction of the goal, then rather than applying
+`equiv_inverse` directly it goes through the `Symmetric` typeclass.
+This involves a universe for the size of the type *on which* the
+symmetric relation lives, which in the case of `Equiv` is the
+universe.  Thus, applying `symmetry` to an `Equiv` introduces a
+strictly larger universe.  A solution is to `apply equiv_inverse`
+instead.  Similarly, use `equiv_compose'` instead of `transitivity`.
+
+Given `P : B -> Type` and `f : A -> B`, writing `P o f` introduces a
+universe parameter strictly larger than the codomain of `P` (since it
+has to be passed to the function `compose`).  A solution is to write
+`fun a => P (f a)` instead.
+
+Typeclass inference doesn't always find the simplest solution, and may
+insert unnecessary calls to instances that introduce additional
+universes.  One solution is to alter the proofs of those instances as
+described above; another is to call the instance(s) you need
+explicitly, rather than relying on typeclass inference to find them.
 
 ### Lifting and lowering ###
 

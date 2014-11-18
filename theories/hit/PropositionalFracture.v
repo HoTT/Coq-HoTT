@@ -37,8 +37,8 @@ Module OpenModalities_easy <: EasyModalities.
   Defined.
 
   Definition O_indO_beta (O : Modality@{u a}) (A : Type@{i})
-             (B : O_reflector O A -> Type@{j})
-             (f : forall a, O_reflector O (B (to O A a))) (a : A)
+             (B : O_reflector@{u a i} O A -> Type@{j})
+             (f : forall a, O_reflector@{u a j} O (B (to O A a))) (a : A)
   : O_indO O A B f (to O A a) = f a.
   Proof.
     pose (funext_Op O); apply path_arrow; intros u.
@@ -47,22 +47,22 @@ Module OpenModalities_easy <: EasyModalities.
     apply (ap (fun p => transport B p (f a u))).
     transitivity (path_arrow (fun _ => a) (fun _ => a) (@ap10 (unOp O) _ _ _ 1));
       auto with path_hints.
-    * apply ap.
+    * apply ap@{i i}.
       apply path_forall; intros u'.
       apply ap_const.
     * apply eta_path_arrow.
   Defined.
 
   Definition minO_pathsO (O : Modality@{u a}) (A : Type@{i})
-             (z z' : O_reflector O A)
-  : IsEquiv (to O (z = z')).
+             (z z' : O_reflector@{u a i} O A)
+  : IsEquiv@{i i} (to O (z = z')).
   Proof.
     pose (fs := funext_Op O); refine (isequiv_adjointify _ _ _ _).
     * intros f; apply path_arrow; intros u.
       exact (ap10 (f u) u).
     * intros f; apply path_arrow; intros u.
       transitivity (path_arrow z z' (ap10 (f u))).
-      + unfold to; apply ap.
+      + unfold to; apply ap@{i i}.
         apply path_forall; intros u'.
         apply (ap (fun u0 => ap10 (f u0) u')).
         apply path_ishprop.
@@ -77,6 +77,8 @@ Module OpenModalities <: Modalities
   := EasyModalities_to_Modalities OpenModalities_easy.
 
 Module OpM := Modalities_Theory OpenModalities.
+Export OpM.Coercions.
+Export OpM.RSU.Coercions.
 
 Coercion Open_Modality_to_Modality :=
   idmap : Open_Modality -> OpenModalities.Modality.
@@ -88,8 +90,11 @@ Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
     := fun (O : OpenModalities.Modality@{u a}) =>
          Build_NullGenerators@{a} Unit@{a} (fun _ => unOp O).
 
-  Definition inO_iff_isnull_internal (O : OpenModalities.Modality@{u a}) (X : Type@{i})
-  : OpenModalities.inO_internal O X <-> IsNull (acc_gen O) X.
+  Definition inO_iff_isnull_internal
+             (O : OpenModalities.Modality@{u a}) (X : Type@{i})
+  : iff@{i i i}
+      (OpenModalities.inO_internal@{u a i} O X)
+      (IsNull (acc_gen O) X).
   Proof.
     pose (funext_Op O); split.
     - intros X_inO u.
@@ -153,8 +158,8 @@ Module ClosedModalities <: Modalities.
   Definition inO_internal : Modality@{u a} -> Type@{i} -> Type@{i}
     := fun O X => unCl O -> Contr X.
 
-  Definition O_inO_internal (O : Modality) (T : Type)
-  : inO_internal O (O_reflector O T).
+  Definition O_inO_internal (O : Modality@{u a}) (T : Type@{i})
+  : inO_internal@{u a i} O (O_reflector@{u a i} O T).
   Proof.
     intros u.
     pose (contr_inhabited_hprop _ u).
@@ -165,16 +170,17 @@ Module ClosedModalities <: Modalities.
   : T -> O_reflector@{u a i} O T
     := fun x => push (inr x).
 
-  Definition inO_equiv_inO_internal (O : Modality) (T U : Type)
-     (T_inO : inO_internal O T) (f : T -> U) (feq : IsEquiv f)
-  : inO_internal O U.
+  Definition inO_equiv_inO_internal (O : Modality@{u a}) (T U : Type@{i})
+     (T_inO : inO_internal@{u a i} O T) (f : T -> U) (feq : IsEquiv@{i i} f)
+  : inO_internal@{u a i} O U.
   Proof.
     intros u; pose (T_inO u).
     refine (contr_equiv _ f); exact _.
   Defined.
 
-  Definition hprop_inO_internal `{Funext} (O : Modality) (T : Type)
-  : IsHProp (inO_internal O T).
+  Definition hprop_inO_internal `{Funext}
+             (O : Modality@{u a}) (T : Type@{i})
+  : IsHProp (inO_internal@{u a i} O T).
   Proof.
     exact _.
   Defined.
@@ -195,24 +201,26 @@ Module ClosedModalities <: Modalities.
       apply path_contr.
   Defined.
 
-  Definition O_ind_beta_internal (O : Modality) (A : Type)
-             (B : O_reflector O A -> Type)
-             (B_inO : forall oa : O_reflector O A, inO_internal O (B oa))
+  Definition O_ind_beta_internal (O : Modality@{u a}) (A : Type@{i})
+             (B : O_reflector@{u a i} O A -> Type@{j})
+             (B_inO : forall oa, inO_internal@{u a j} O (B oa))
              (f : forall a : A, B (to O A a)) (a : A)
   : O_ind_internal O A B B_inO f (to O A a) = f a
   := 1.
 
-  Definition minO_paths (O : Modality) (A : Type)
-             (A_inO : inO_internal O A)
+  Definition minO_paths (O : Modality@{u a}) (A : Type@{i})
+             (A_inO : inO_internal@{u a i} O A)
              (z z' : A)
-  : inO_internal O (z = z').
+  : inO_internal@{u a i} O (z = z').
   Proof.
-    intros u; pose (A_inO u); exact _.
+    intros u; pose (A_inO u); apply contr_paths_contr.
   Defined.
 
 End ClosedModalities.
 
 Module ClM := Modalities_Theory ClosedModalities.
+Export ClM.Coercions.
+Export ClM.RSU.Coercions.
 
 Coercion Closed_Modality_to_Modality :=
   idmap : Closed_Modality -> ClosedModalities.Modality.
@@ -227,7 +235,9 @@ Module Accessible_ClosedModalities
 
   Definition inO_iff_isnull_internal
              (O : ClosedModalities.Modality@{u a}) (X : Type@{i})
-  : ClosedModalities.inO_internal O X <-> IsNull (acc_gen O) X.
+  : iff@{i i i}
+      (ClosedModalities.inO_internal@{u a i} O X)
+      (IsNull (acc_gen O) X).
   Proof.
     split.
     - intros X_inO u.

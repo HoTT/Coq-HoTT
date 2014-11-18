@@ -57,7 +57,7 @@ Definition Tr : trunc_index -> Truncation_Modality := idmap.
 
 Module Truncation_Modalities <: Modalities.
 
-  Definition Modality : let enforce := Type@{u'} : Type@{u} in Type@{u} := Truncation_Modality.
+  Definition Modality : Type2@{u a} := Truncation_Modality.
 
   Definition O_reflector (n : Modality@{u u'}) A := Trunc n A.
 
@@ -70,7 +70,8 @@ Module Truncation_Modalities <: Modalities.
 
   Definition to (n : Modality@{u u'}) A := @tr n A.
 
-  Definition inO_equiv_inO_internal (n : Modality@{u u'}) A B Atr f feq
+  Definition inO_equiv_inO_internal (n : Modality@{u u'})
+             (A B : Type@{i}) Atr f feq
   := @trunc_equiv A B f n Atr feq.
 
   Definition hprop_inO_internal `{Funext} (n : Modality@{u u'}) A
@@ -87,9 +88,9 @@ Module Truncation_Modalities <: Modalities.
   : O_ind_internal n A B Btr f (to n A a) = f a
     := 1.
 
-  Definition minO_paths (n : Modality@{u u'})
-             A (Atr : inO_internal n A) (a a' : A)
-  : inO_internal n (a = a').
+  Definition minO_paths (n : Modality@{u a})
+             (A : Type@{i}) (Atr : inO_internal@{u a i} n A) (a a' : A)
+  : inO_internal@{u a i} n (a = a').
   Proof.
     unfold inO_internal in *; exact _.
   Defined.
@@ -99,6 +100,8 @@ End Truncation_Modalities.
 (** If you import the following module [TrM], then you can call all the modality functions with a [trunc_index] as the modality parameter, since we defined [Truncation_Modalities.Modality] to be [trunc_index]. *)
 Module Import TrM := Modalities_Theory Truncation_Modalities.
 (** If you don't import it, then you'll need to write [TrM.function_name] or [TrM.RSU.function_name] depending on whether [function_name] pertains only to modalities or also to reflective subuniverses.  (Having to know this is a bit unfortunate, but apparently the fact that [TrM] [Export]s reflective subuniverses still doesn't make the fields of the latter accessible as [TrM.field].) *)
+Export TrM.Coercions.
+Export TrM.RSU.Coercions.
 
 (** Here is the additional coercion promised above. *)
 Coercion Truncation_Modality_to_Modality := idmap : Truncation_Modality -> Modality.
@@ -123,7 +126,7 @@ Section TruncationModality.
 
   (** ** Functoriality *)
 
-  Definition Trunc_functor {X Y} (f : X -> Y)
+  Definition Trunc_functor {X Y : Type} (f : X -> Y)
   : Tr n X -> Tr n Y
   := O_functor n f.
 

@@ -298,7 +298,7 @@ Definition equiv_prod_coind `(A : X -> Type) (B : X -> Type)
 Global Instance trunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B) | 100.
 Proof.
   generalize dependent B; generalize dependent A.
-  induction n as [| n I]; simpl; (intros A ? B ?).
+  simple_induction n n IH; simpl; (intros A ? B ?).
   { exists (center A, center B).
     intros z; apply path_prod; apply contr. }
   { intros x y.
