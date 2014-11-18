@@ -573,6 +573,17 @@ library.  Note in particular that universes declared with `Universe`
 are _not_ generalized upon closing sections; they are permanently
 global wherever they are defined.)
 
+Unfortunately it is not currently possible to declare the universe
+parameters of a definition; Coq simply decides after you make a
+definition how many universe parameters it ends up with (and what the
+constraints on them are).  The best we can do is to document the
+result.  A sort of "checked documentation" is possible by writing
+`Check foo@{a b c}.` after the definition; this will fail with an
+`Error` unless `foo` takes exactly three universe parameters.  In
+general `Check` is discouraged outside of test suites, so use this
+sparingly; currently it is mainly restricted to the fields of module
+types (see `ReflectiveSubuniverse` for details).
+
 There are several uses for universe annotations.  One is to force a
 definition to have fewer universe parameters than it would otherwise.
 This can sometimes improve performance: if you know that in practice,

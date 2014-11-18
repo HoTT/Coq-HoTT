@@ -83,9 +83,11 @@ In the case in point, if a reflective subuniverse were a record, then "a reflect
 
 Therefore, we choose to make a reflective subuniverse a module.  This means that in order to define "a reflective subuniverse", you have to give a *polymorphic* definition of the reflector, the universal property, etc.  In particular, the universal property must be polymorphic enough to allow the situation with [X : Type@{i}] and [Y : Type@{j}] considered above.
 
-There are some issues involving this choice that must be addressed.  One of them is that when implementing a polymorphic module types, Coq is *very* strict about matching up the polymorphism.  Specifically, with very few exceptions, each [Definition] in the implementing module must have *exactly* the same number of universe parameters as the corresponding [Parameter] in the module type, and all the constraints in the former must be implied by those in the latter.  This ensures that the implementation is "at least as polymorphic" as the specification.
+There are some issues involving this choice that must be addressed.  One of them is that when implementing a polymorphic module types, Coq is *very* strict about matching up the polymorphism.  Specifically, each [Definition] in the implementing module must have *exactly* the same number of universe parameters as the corresponding [Parameter] in the module type, and all the constraints in the former must be implied by those in the latter.  This ensures that the implementation is "at least as polymorphic" as the specification.
 
 Now normally, a polymorphic definition will end up with many more universes than it needs, and we have little control over how many those are.  Therefore, in order to have a chance of ensuring that our implementations of module types match up in polymorphism, we almost always need to add explicit universe annotations in order to control how many universe parameters they end up with.  This is slightly annoying, but fortunately it only needs to be dealt with when *defining* a particular reflective subuniverse; to users the polymorphism should be invisible and automatic.
+
+This also means it is important that we know exactly how many universe parameters each field of our module types is *expected* to take.  It would be nice if Coq had a feature for declaring (and verifying) the universe parameters of a definition in the same way that we declare the type parameters.  In the absence of this (requested at https://coq.inria.fr/bugs/show_bug.cgi?id=3818), we write [Check foo@{a b c}.] after the definition of [foo] to declare that [foo] takes three universe parameters.  Note that this will fail with an [Error] unless [foo] does in fact take exactly three universe parameters.
 
 Another issue that must be dealt with is the fact, mentioned above, that a module cannot be parametrized over an ordinary type.  However, it frequently happens that we do want to define a family of reflective subuniverses, e.g. the n-truncation modalities for all [n : trunc_index], or the open and closed modalities for all [U : hProp].  The solution we choose is for our basic [Module Type] to represent not a *single* reflective subuniverse, but an entire *family* of them, parametrized by some type.  This can be regarded as analogous to how when doing mathematics relative to a base topos, the correct notion of "large category" is an *indexed category* (a.k.a. fibration), which comes with a basic notion of "[I]-indexed family of objects" for all [I] in the base topos.
 *)
@@ -106,7 +108,7 @@ Module Type ReflectiveSubuniverses.
 
   Parameter O_reflector : forall (O : ReflectiveSubuniverse@{u a}),
                             Type2le@{i a} -> Type2le@{i a}.
-  Check O_reflector@{u a i}.
+  Check O_reflector@{u a i}.    (** Verify that we have the right number of universes *)
 
   (** For reflective subuniverses (and hence also modalities), it will turn out that [In O T] is equivalent to [IsEquiv (O_unit T)].  We could define the former as the latter, and it would simplify some of the general theory.  However, in many examples there is a "more basic" definition of [In O] which is equivalent, but not definitionally identical, to [IsEquiv (O_unit T)].  Thus, including [In O] as data makes more things turn out to be judgmentally what we would expect. *)
   Parameter inO_internal : forall (O : ReflectiveSubuniverse@{u a}),
@@ -813,7 +815,7 @@ End ReflectiveSubuniverses_Theory.
 Module Type ReflectiveSubuniverses_Restriction_Data (Os : ReflectiveSubuniverses).
 
   Parameter New_ReflectiveSubuniverse : Type2@{u a}.
-  Check New_ReflectiveSubuniverse@{u a}.
+  Check New_ReflectiveSubuniverse@{u a}.    (** Verify that we have the right number of universes *)
 
   Parameter ReflectiveSubuniverses_restriction
   : New_ReflectiveSubuniverse@{u a} -> Os.ReflectiveSubuniverse@{u a}.
@@ -878,7 +880,7 @@ Module Type Accessible_ReflectiveSubuniverses
 
   (** In examples (such as localization), the reason we need the extra universe parameter [a] is that it describes the size of the generators.  Therefore, here we intentionally collapse that parameter with the parameter of [LocalGenerators]. *)
   Parameter acc_gen : ReflectiveSubuniverse@{u a} -> LocalGenerators@{a}.
-  Check acc_gen@{u a}.
+  Check acc_gen@{u a}.    (** Verify that we have the right number of universes *)
 
   Parameter inO_iff_islocal_internal
   : forall (O : ReflectiveSubuniverse@{u a}) (X : Type@{i}),

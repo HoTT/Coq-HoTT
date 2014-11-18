@@ -17,7 +17,7 @@ Module Type Modalities.
 
   Parameter O_reflector : forall (O : Modality@{u a}),
                             Type2le@{i a} -> Type2le@{i a}.
-  Check O_reflector@{u a i}.
+  Check O_reflector@{u a i}.    (** Verify that we have the right number of universes *)
 
   Parameter inO_internal : forall (O : Modality@{u a}),
                             Type2le@{i a} -> Type2le@{i a}.
@@ -125,7 +125,7 @@ Module Type SigmaClosed (Os : ReflectiveSubuniverses).
            (A_inO : inO_internal@{u a i} O A)
            (B_inO : forall a, inO_internal@{u a j} O (B a)),
       inO_internal@{u a k} O {x:A & B x}.
-  Check inO_sigma@{u a i j k}.
+  Check inO_sigma@{u a i j k}.    (** Verify that we have the right number of universes *)
 
 End SigmaClosed.
 
@@ -182,7 +182,7 @@ On the other hand, in other examples (such as [~~] and open modalities) it is ea
 Module Type EasyModalities.
 
   Parameter Modality : Type2@{u a}.
-  Check Modality@{u a}.
+  Check Modality@{u a}.    (** Verify that we have the right number of universes *)
 
   Parameter O_reflector : forall (O : Modality@{u a}),
                             Type2le@{i a} -> Type2le@{i a}.
@@ -1040,7 +1040,7 @@ Module Type Accessible_Modalities (Os : Modalities).
 
   (** See comment in [Accessible_ReflectiveSubuniverses] about collapsing universes. *)
   Parameter acc_gen : Modality@{u a} -> NullGenerators@{a}.
-  Check acc_gen@{u a}.
+  Check acc_gen@{u a}.    (** Verify that we have the right number of universes *)
 
   Parameter inO_iff_isnull_internal
   : forall (O : Modality@{u a}) (X : Type@{i}),
