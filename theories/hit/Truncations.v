@@ -170,7 +170,7 @@ Hint Immediate istrunc_inO_tr : typeclass_instances.
 
 (** It's sometimes convenient to use "infinity" to refer to the identity modality in a similar way.  This clashes with some uses in higher topos theory, where "oo-truncated" means instead "hypercomplete", but this has not yet been a big problem. *)
 Notation oo := purely.
-(** TODO: Unfortunately, it doesn't quite work to have two copies of [Modalities_Theory] imported at the same time.  If we ever want to talk about truncation and include [oo], we may want to define a "union" instance of [Modality]. *)
+(** Unfortunately, we can't import two or more copies of [Modalities_Theory] at the same time (the most recently imported shadows the other(s)).  If we ever want to talk about truncation and include [oo], we may want to define a "union" instance of [Modality]. *)
 
 (** ** A few special things about the (-1)-truncation. *)
 

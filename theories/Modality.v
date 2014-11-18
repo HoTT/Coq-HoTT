@@ -1057,7 +1057,7 @@ End Accessible_Modalities.
 Module Accessible_Modalities_to_ReflectiveSubuniverses
        (Os : Modalities) (Acc : Accessible_Modalities Os).
 
-  (** Coq won't let us write [<: Accessible_ReflectiveSubuniverses (Modalities_to_ReflectiveSubuniverses Os)]; it says "Application of modules is restricted to paths", whatever that means.  So we have to do it this way. *)
+  (** Coq won't let us write [<: Accessible_ReflectiveSubuniverses (Modalities_to_ReflectiveSubuniverses Os)]; it says "Application of modules is restricted to paths" (a "path" being something like [Foo.Bar.Baz]).  Thus, every intermediate module has to be given its own name. *)
   Module Os_RSU := Modalities_to_ReflectiveSubuniverses Os.
   Module AccRSU <: Accessible_ReflectiveSubuniverses Os_RSU.
 
