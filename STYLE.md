@@ -455,8 +455,8 @@ something you generally need to worry about; see the comments in
 ## Higher Inductive Types ##
 
 At present, higher inductive types are restricted to the `hit/`
-directory, and are all defined using Dan Licata's "private inductive
-types" hack.  This means the procedure for defining a HIT is:
+directory, and are all defined using [Dan Licata's "private inductive
+types" hack][hit-hack].  This means the procedure for defining a HIT is:
 
 1. Wrap the entire definition in a module, which you will usually want
    to export to the rest of the file containing the definition.
@@ -490,6 +490,8 @@ types" hack.  This means the procedure for defining a HIT is:
    its computation rules as well.
 
 Look at some of the existing files in `hit/*` for examples.
+
+[hit-hack]: http://homotopytypetheory.org/2011/04/23/running-circles-around-in-your-proof-assistant/
 
 
 ## Universe Polymorphism ##
