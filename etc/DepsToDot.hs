@@ -80,7 +80,8 @@ label opts p' =
     myColor
       | "theories/categories"  `isPrefixOf` p = Magenta
       | "theories/Types"        `isPrefixOf` p = BlueViolet
-      | "theories/hit/"         `isPrefixOf` p = Orange
+      | "theories/hit"          `isPrefixOf` p = Orange
+      | "theories/Modalities"   `isPrefixOf` p = Black
       | "contrib/"              `isPrefixOf` p = Cyan4
       | "coq/theories/"         `isPrefixOf` p = Blue
       | "theories/Basics"       `isPrefixOf` p = SaddleBrown

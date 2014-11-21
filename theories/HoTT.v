@@ -15,7 +15,6 @@ Require Export EquivalenceVarieties.
 Require Export Extensions.
 Require Export Misc.
 Require Export Functorish.
-Require Export Modality.
 Require Export Factorization.
 Require Export ObjectClassifier.
 Require Export TruncType.
@@ -35,9 +34,16 @@ Require Export hit.iso.
 Require Export hit.quotient.
 Require Export hit.V.
 Require Export hit.Join.
-Require Export hit.PropositionalFracture.
-Require Export hit.Localization.
-Require Export hit.Nullification.
+
+Require Export Modalities.ReflectiveSubuniverse.
+Require Export Modalities.Modality.
+Require Export Modalities.Accessible.
+Require Export Modalities.Notnot.
+Require Export Modalities.Identity.
+Require Export Modalities.Localization.
+Require Export Modalities.Nullification.
+Require Export Modalities.Open.
+Require Export Modalities.Closed.
 
 Require Export HoTT.Tactics.
 

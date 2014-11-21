@@ -2,7 +2,8 @@
 
 (** * Truncations of types, in all dimensions. *)
 
-Require Import HoTT.Basics Types.Sigma ReflectiveSubuniverse Modality TruncType HProp.
+Require Import HoTT.Basics Types.Sigma TruncType HProp.
+Require Import Modalities.Modality Modalities.Identity.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A X n.
