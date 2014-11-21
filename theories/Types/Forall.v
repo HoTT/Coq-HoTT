@@ -174,13 +174,12 @@ Global Instance trunc_forall `{P : A -> Type} `{forall a, IsTrunc n (P a)}
   : IsTrunc n (forall a, P a) | 100.
 Proof.
   generalize dependent P.
-  induction n as [ | n' IH]; simpl; intros P ?.
+  simple_induction n n IH; simpl; intros P ?.
   (* case [n = -2], i.e. contractibility *)
   - exact _.
   (* case n = n'.+1 *)
   - intros f g; apply (trunc_equiv _ (apD10 ^-1)).
 Defined.
-
 
 (** ** Symmetry of curried arguments *)
 

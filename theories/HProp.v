@@ -29,7 +29,7 @@ Global Instance hprop_trunc `{Funext} (n : trunc_index) (A : Type)
 Proof.
   apply hprop_inhabited_contr.
   revert A.
-  induction n as [| n I]; unfold IsTrunc; simpl.
+  simple_induction n n IH; unfold IsTrunc; simpl.
   - intros A ?.
     exact _.
   - intros A AH1.
@@ -38,7 +38,7 @@ Proof.
     apply path_forall; intro x.
     apply path_forall; intro y.
     apply @path_contr.
-    apply I, AH1.
+    apply IH, AH1.
 Qed.
 (** By [trunc_hprop], it follows that [IsTrunc n A] is also [m]-truncated for any [m >= -1]. *)
 

@@ -575,6 +575,17 @@ library.  Note in particular that universes declared with `Universe`
 are _not_ generalized upon closing sections; they are permanently
 global wherever they are defined.)
 
+Unfortunately it is not currently possible to declare the universe
+parameters of a definition; Coq simply decides after you make a
+definition how many universe parameters it ends up with (and what the
+constraints on them are).  The best we can do is to document the
+result.  A sort of "checked documentation" is possible by writing
+`Check foo@{a b c}.` after the definition; this will fail with an
+`Error` unless `foo` takes exactly three universe parameters.  In
+general `Check` is discouraged outside of test suites, so use this
+sparingly; currently it is mainly restricted to the fields of module
+types (see `ReflectiveSubuniverse` for details).
+
 There are several uses for universe annotations.  One is to force a
 definition to have fewer universe parameters than it would otherwise.
 This can sometimes improve performance: if you know that in practice,
@@ -591,8 +602,7 @@ annotations Coq will automatically collapse one or more universe
 parameters which could be kept separate if annotated.  It is not clear
 under exactly what situations this occurs, but one culprit appears to
 be section variables: if you declare a section variable which you need
-to be universe polymorphic, you may need to annotate it (this happens
-frequently with `ReflectiveSubuniverse` and `Modality`).
+to be universe polymorphic, you may need to annotate it.
 
 (Another occasional culprit of less-polymorphic-than-expected
 definitions seems to be giving type parameters without a type.  At
@@ -606,6 +616,45 @@ situations, Coq seems to make a default guess that doesn't work
 (perhaps collapsing some universes that need to remain distinct) and
 then complains without trying anything else; an annotation can point
 it in the right direction.
+
+### Unexpected universes ###
+
+If you ever need to pay close attention to universes, it is useful to
+know that there are several ways in which extra universe parameters
+can creep into a definition unexpectedly.  Here are a few.
+
+The `induction` tactic invokes the appropriate induction principle,
+which is a function generally named `*_ind` or `*_rect` (see notes on
+naming conventions above).  This function, in turn, requires a
+universe parameter describing the size of its output.  Therefore, if
+you prove something by `induction` that is generalized over a "large"
+argument (e.g. a type or a type family), the resulting definition will
+pick up an extra universe parameter that's strictly larger than the
+argument in question.  One way to avoid this is to instead use a
+`Fixpoint` definition, or the tactic `fix`, along with `destruct`.
+There is a tactic `simple_induction` defined in `Overture` whose
+interface is almost the same as `induction` but does this internally,
+although it only works for induction over `nat` and `trunc_index`.
+
+If you apply the `symmetry` tactic when constructing an equivalence to
+reverse the direction of the goal, then rather than applying
+`equiv_inverse` directly it goes through the `Symmetric` typeclass.
+This involves a universe for the size of the type *on which* the
+symmetric relation lives, which in the case of `Equiv` is the
+universe.  Thus, applying `symmetry` to an `Equiv` introduces a
+strictly larger universe.  A solution is to `apply equiv_inverse`
+instead.  Similarly, use `equiv_compose'` instead of `transitivity`.
+
+Given `P : B -> Type` and `f : A -> B`, writing `P o f` introduces a
+universe parameter strictly larger than the codomain of `P` (since it
+has to be passed to the function `compose`).  A solution is to write
+`fun a => P (f a)` instead.
+
+Typeclass inference doesn't always find the simplest solution, and may
+insert unnecessary calls to instances that introduce additional
+universes.  One solution is to alter the proofs of those instances as
+described above; another is to call the instance(s) you need
+explicitly, rather than relying on typeclass inference to find them.
 
 ### Lifting and lowering ###
 

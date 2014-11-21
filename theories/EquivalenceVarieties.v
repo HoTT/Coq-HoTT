@@ -70,9 +70,9 @@ Proof.
   apply fcontr_isequiv; exact _.
 Defined.
 
-(** Using this, we can prove that [IsEquiv f] is an h-proposition.  We make this a [Local Instance] since we already have a [Global Instance] of it available in [types/Universe].  *)
+(** Using this, we can prove that [IsEquiv f] is an h-proposition.  We make this a [Local Definition] since we already have a [Global Instance] of it available in [types/Equiv].  *)
 
-Local Instance hprop_isequiv `(f : A -> B) : IsHProp (IsEquiv f).
+Local Definition hprop_isequiv `(f : A -> B) : IsHProp (IsEquiv f).
 Proof.
   apply hprop_inhabited_contr; intros ?.
   (* Get rid of that pesky record. *)
@@ -250,13 +250,13 @@ Global Instance contr_pathsplit_isequiv
 : Contr (PathSplit n f).
 Proof.
   generalize dependent B; revert A.
-  induction n as [ | n IHn]; intros A B f ?.
+  simple_induction n n IHn; intros A B f ?.
   - exact _.
   - refine contr_prod.
     refine contr_forall.
     intros; apply fcontr_isequiv; exact _.
 Defined.
-      
+
 Global Instance ishprop_pathsplit (n : nat) `(f : A -> B)
 : IsHProp (PathSplit n.+2 f).
 Proof.

@@ -36,15 +36,15 @@ Definition contr_trunc_minus_two `{H : IsTrunc -2 A} : Contr A
 Global Instance trunc_succ `{IsTrunc n A} : IsTrunc n.+1 A | 1000.
 Proof.
   generalize dependent A.
-  induction n as [| n I]; simpl; intros A H x y.
+  simple_induction n n IH; simpl; intros A H x y.
   - apply contr_paths_contr.
-  - apply I, H.
+  - apply IH, H.
 Qed.
 
 Global Instance trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A} : IsTrunc n A | 1000.
 Proof.
   generalize dependent A; generalize dependent m.
-  induction n as [ | n' IH];
+  simple_induction n n' IH;
     intros [ | m'] Hmn A ? .
   - (* -2, -2 *) assumption.
   - (* S m', -2 *) destruct Hmn.
@@ -77,10 +77,10 @@ Definition trunc_equiv A {B} (f : A -> B)
   : IsTrunc n B.
 Proof.
   generalize dependent B; generalize dependent A.
-  induction n as [| n I]; simpl; intros A ? B f ?.
+  simple_induction n n IH; simpl; intros A ? B f ?.
   - exact (contr_equiv _ f).
   - intros x y.
-    exact (I (f^-1 x = f^-1 y) (H (f^-1 x) (f^-1 y)) (x = y) ((ap (f^-1))^-1) _).
+    exact (IH (f^-1 x = f^-1 y) (H (f^-1 x) (f^-1 y)) (x = y) ((ap (f^-1))^-1) _).
 Qed.
 
 Definition trunc_equiv' A {B} (f : A <~> B) `{IsTrunc n A}

@@ -9,22 +9,167 @@ Local Open Scope equiv_scope.
 
 (** * Modalities *)
 
-Record Modality :=
-  {
-    msubu : UnitSubuniverse@{sm lg} ;
-    O_ind : forall (A : Type@{sm}) (B : msubu A -> Type@{lg}) (B_inO : forall oa, In msubu (B oa)),
-               (forall a, B (to msubu A a)) -> forall a, B a ;
-    O_ind_beta : forall (A : Type@{sm}) (B : msubu A -> Type@{lg}) B_inO (f : forall a : A, B (to msubu A a)) a,
-                    O_ind A B B_inO f (to msubu A a) = f a ;
-    minO_paths : forall (A : Type@{lg}) (A_inO : In msubu A) (z z' : A), In msubu (z = z')
-  }.
+Module Type Modalities.
 
-Arguments O_ind {O} {A} B {B_inO} f a : rename.
-Arguments O_ind_beta {O} {A} B {B_inO} f a : rename.
+  Parameter Modality : Type2@{u a}.
 
-(* We don't declare this as a coercion, since soon we're going to declare a coercion from [Modality] to [ReflectiveSubuniverse]; then we'll get this coercion automatically as a composite. *)
-(* Coercion mod_usubu : Modality >-> UnitSubuniverse. *)
-Global Existing Instance minO_paths.
+  (** These are the same as for a reflective subuniverse. *)
+
+  Parameter O_reflector : forall (O : Modality@{u a}),
+                            Type2le@{i a} -> Type2le@{i a}.
+  Check O_reflector@{u a i}.    (** Verify that we have the right number of universes *)
+
+  Parameter inO_internal : forall (O : Modality@{u a}),
+                            Type2le@{i a} -> Type2le@{i a}.
+  Check inO_internal@{u a i}.
+
+  Parameter O_inO_internal : forall (O : Modality@{u a}) (T : Type@{i}),
+                               inO_internal@{u a i} O (O_reflector@{u a i} O T).
+  Check O_inO_internal@{u a i}.
+
+  Parameter to : forall (O : Modality@{u a}) (T : Type@{i}),
+                   T -> O_reflector@{u a i} O T.
+  Check to@{u a i}.
+
+  Parameter inO_equiv_inO_internal :
+      forall (O : Modality@{u a}) (T U : Type@{i})
+             (T_inO : inO_internal@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
+        inO_internal@{u a i} O U.
+  Check inO_equiv_inO_internal@{u a i}.
+
+  Parameter hprop_inO_internal
+  : Funext -> forall (O : Modality@{u a}) (T : Type@{i}),
+                IsHProp (inO_internal@{u a i} O T).
+  Check hprop_inO_internal@{u a i}.
+
+  (** Now instead of [extendable_to_O], we have an ordinary induction principle. *)
+
+  Parameter O_ind_internal
+  : forall (O : Modality@{u a})
+           (A : Type2le@{i a}) (B : O_reflector O A -> Type2le@{j a})
+           (B_inO : forall oa, inO_internal@{u a j} O (B oa)),
+      (forall a, B (to O A a)) -> forall a, B a.
+  Check O_ind_internal@{u a i j}.
+
+  Parameter O_ind_beta_internal
+  : forall (O : Modality@{u a})
+           (A : Type@{i}) (B : O_reflector O A -> Type@{j})
+           (B_inO : forall oa, inO_internal@{u a j} O (B oa))
+           (f : forall a : A, B (to O A a)) (a:A),
+      O_ind_internal@{u a i j} O A B B_inO f (to O A a) = f a.
+  Check O_ind_beta_internal@{u a i j}.
+
+  Parameter minO_paths
+  : forall (O : Modality@{u a})
+           (A : Type2le@{i a}) (A_inO : inO_internal@{u a i} O A) (z z' : A),
+      inO_internal@{u a i} O (z = z').
+  Check minO_paths@{u a i}.
+
+End Modalities.
+
+(** ** Modalities are reflective subuniverses *)
+
+(** We show that modalities have underlying reflective subuniverses.  It is important in some applications, such as [Trunc], that this construction uses the general [O_ind] given as part of the modality data.  For instance, this ensures that [O_functor] reduces to simply an application of [O_ind].
+
+  Note also that our choice of how to define reflective subuniverses differently from the book, using [ooExtendableAlong] enables us to prove this without using funext. *)
+
+Module Modalities_to_ReflectiveSubuniverses
+       (Os : Modalities) <: ReflectiveSubuniverses.
+
+  Import Os.
+
+  Fixpoint O_extendable (O : Modality@{u a})
+           (A : Type@{i}) (B : O_reflector O A -> Type@{j})
+           (B_inO : forall a, inO_internal@{u a j} O (B a)) (n : nat)
+  : ExtendableAlong@{i i j k} n (to O A) B.
+  Proof.
+    destruct n as [|n].
+    - exact tt.
+    - split.
+      + intros g.
+        exists (O_ind_internal@{u a i j} O A B B_inO g); intros x.
+        apply O_ind_beta_internal.
+      + intros h k.
+        apply O_extendable; intros x.
+        apply minO_paths; trivial.
+  Defined.
+
+  Definition ReflectiveSubuniverse := Modality.
+
+  Definition O_reflector := O_reflector.
+  (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3807 *)
+  Definition inO_internal := inO_internal@{u a i}.
+  Definition O_inO_internal := O_inO_internal@{u a i}.
+  Definition to := to.
+  Definition inO_equiv_inO_internal := inO_equiv_inO_internal@{u a i}.
+  Definition hprop_inO_internal := hprop_inO_internal@{u a i}.
+
+  (** Corollary 7.7.8, part 1 *)
+  Definition extendable_to_O_internal (O : ReflectiveSubuniverse@{u a})
+    {P : Type@{i}} {Q : Type@{j}} {Q_inO : inO_internal@{u a j} O Q}
+  : ooExtendableAlong@{i i j k} (to O P) (fun _ => Q)
+    := fun n => O_extendable O P (fun _ => Q) (fun _ => Q_inO) n.
+
+End Modalities_to_ReflectiveSubuniverses.
+
+
+(** Conversely, if a reflective subuniverse is closed under sigmas, it is a modality.  This is a bit annoying to state using modules, and in fact with our current definitions there doesn't seem to be a way to actually convince Coq to accept it.  However, this is not really a problem in practice: in most or all examples, constructing [O_ind] directly is just as easy, and preferable because it sometimes gives a judgmental computation rule.  However, for the sake of completeness, we include here the code that almost works. *)
+
+Module Type SigmaClosed (Os : ReflectiveSubuniverses).
+
+  Import Os.
+
+  Parameter inO_sigma
+  : forall (O : ReflectiveSubuniverse@{u a})
+           (A:Type@{i}) (B:A -> Type@{j})
+           (A_inO : inO_internal@{u a i} O A)
+           (B_inO : forall a, inO_internal@{u a j} O (B a)),
+      inO_internal@{u a k} O {x:A & B x}.
+  Check inO_sigma@{u a i j k}.    (** Verify that we have the right number of universes *)
+
+End SigmaClosed.
+
+(** We omit the module type, because Coq won't actually accept it (see below for why). *)
+Module ReflectiveSubuniverses_to_Modalities
+       (Os : ReflectiveSubuniverses) (OsSigma : SigmaClosed Os).
+(** <: Modalities. *)
+
+  Import Os OsSigma.
+  Module Import Os_Theory := ReflectiveSubuniverses_Theory Os.
+
+  Definition Modality := ReflectiveSubuniverse.
+
+  Definition O_reflector := O_reflector.
+  (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3807 *)
+  Definition inO_internal := inO_internal@{u a i}.
+  Definition O_inO_internal := O_inO_internal@{u a i}.
+  Definition to := to.
+  Definition inO_equiv_inO_internal := inO_equiv_inO_internal@{u a i}.
+  Definition hprop_inO_internal := hprop_inO_internal@{u a i}.
+
+  (** The reason Coq won't actually accept this as a module of type [Modalities] is that the following definitions of [O_ind_internal] and [O_ind_beta_internal] have an extra universe parameter [k] that's at least as large as both [i] and [j].  This is because [extendable_to_O_internal] has such a parameter, which in turn is because [ooExtendableAlong] does.  Unfortunately, we can't directly instantiate [k] to [max(i,j)] because Coq doesn't allow "algebraic universes" in arbitrary position.  We could probably work around it by defining [ExtendableAlong] inductively rather than recursively, but given the non-usefulness of this construction in practice, that doesn't seem to be worth the trouble at the moment. *)
+  Definition O_ind_internal (O : Modality@{u a})
+             (A : Type@{i}) (B : O_reflector@{u a i} O A -> Type@{j})
+             (B_inO : forall oa, inO_internal@{u a j} O (B oa))
+  : (forall a, B (to O A a)) -> forall a, B a
+  := fun g => pr1 ((O_ind_from_inO_sigma@{u a i j k k j} O (inO_sigma O))
+                     A B B_inO g).
+
+  Definition O_ind_beta_internal (O : Modality@{u a})
+             (A : Type@{i}) (B : O_reflector@{u a i} O A -> Type@{j})
+             (B_inO : forall oa, inO_internal@{u a j} O (B oa))
+             (f : forall a : A, B (to O A a)) (a:A)
+  : O_ind_internal O A B B_inO f (to O A a) = f a
+  := pr2 ((O_ind_from_inO_sigma@{u a i j k k j} O (inO_sigma O))
+                     A B B_inO f) a.
+
+  Definition minO_paths (O : Modality@{u a})
+             (A : Type@{i}) (A_inO : inO_internal@{u a i} O A) (z z' : A)
+  : inO_internal O (z = z')
+  := @inO_paths@{u a i i} O A A_inO z z'.
+
+End ReflectiveSubuniverses_to_Modalities.
+
 
 (** ** Easy modalities *)
 
@@ -34,124 +179,165 @@ However, our definition is more convenient in formalized applications because in
 
 On the other hand, in other examples (such as [~~] and open modalities) it is easier to construct the latter weaker induction principle.  Thus, we now show how to get from that to our definition of modality. *)
 
-Section EasyModality.
+Module Type EasyModalities.
 
-  Context (O' : Type -> Type).
+  Parameter Modality : Type2@{u a}.
+  Check Modality@{u a}.    (** Verify that we have the right number of universes *)
 
-  Context (to_O : forall T, T -> O' T).
+  Parameter O_reflector : forall (O : Modality@{u a}),
+                            Type2le@{i a} -> Type2le@{i a}.
+  Check O_reflector@{u a i}.
 
-  Let inO' A := IsEquiv (to_O A).
+  Parameter to : forall (O : Modality@{u a}) (T : Type@{i}),
+                   T -> O_reflector@{u a i} O T.
+  Check to@{u a i}.
 
-  Context (O_indO : forall A (B : O' A -> Type),
-                       (forall a, O' (B (to_O A a)))
-                       -> forall z, O' (B z)).
+  Parameter O_indO
+  : forall (O : Modality@{u a}) (A : Type@{i})
+           (B : O_reflector@{u a i} O A -> Type@{j}),
+      (forall a, O_reflector@{u a j} O (B (to O A a)))
+      -> forall z, O_reflector@{u a j} O (B z).
+  Check O_indO@{u a i j}.
 
-  Context (O_indO_beta : forall A B (f : forall a, O' (B (to_O A a))) a,
-      O_indO A B f (to_O A a) = f a).
+  Parameter O_indO_beta
+  : forall (O : Modality@{u a}) (A : Type@{i})
+           (B : O_reflector@{u a i} O A -> Type@{j})
+           (f : forall a, O_reflector@{u a j} O (B (to O A a))) a,
+      O_indO O A B f (to O A a) = f a.
+  Check O_indO_beta@{u a i j}.
 
-  Context (inO_pathsO : forall A (z z' : O' A), inO' (z = z')).
+  Parameter minO_pathsO
+  : forall (O : Modality@{u a}) (A : Type@{i})
+           (z z' : O_reflector@{u a i} O A),
+      IsEquiv (to@{u a i} O (z = z')).
+  Check minO_pathsO@{u a i}.
 
-  (** Here is the defined more general induction principle. *)
+End EasyModalities.
 
-  Local Definition O_ind' A (B : O' A -> Type)
-        (B_inO : forall oa, inO' (B oa))
-        (f : forall a, B (to_O A a))
-        (oa : O' A) : B oa.
+Module EasyModalities_to_Modalities (Os : EasyModalities)
+<: Modalities.
+
+  Import Os.
+
+  Definition Modality := Modality.
+  (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3807 *)
+  Definition O_reflector := O_reflector@{u a i}.
+  Definition to := to@{u a i}.
+
+  Definition inO_internal
+  : forall (O : Modality@{u a}), Type@{i} -> Type@{i}
+  := fun O A => IsEquiv@{i i} (to O A).
+
+  Definition hprop_inO_internal `{Funext} (O : Modality@{u a})
+             (T : Type@{i})
+  : IsHProp (inO_internal@{u a i} O T).
   Proof.
-    pose (H := B_inO oa); unfold inO' in H.
-    apply ((to_O (B oa))^-1).
-    apply O_indO.
-    intros a; apply to_O, f.
+    unfold inO_internal.
+    exact (hprop_isequiv (to O T)).
   Defined.
 
-  Local Definition O_ind_beta' A B {B_inO : forall oa, inO' (B oa)}
-        (f : forall a : A, B (to_O A a)) a
-  : O_ind' A B B_inO f (to_O A a) = f a.
+  Definition O_ind_internal (O : Modality@{u a})
+             (A : Type@{i}) (B : O_reflector@{u a i} O A -> Type@{j})
+             (B_inO : forall oa, inO_internal@{u a j} O (B oa))
+             (f : forall a, B (to@{u a i} O A a)) (oa : O_reflector@{u a i} O A)
+  : B oa.
   Proof.
-    unfold O_ind'.
+    pose (H := B_inO oa); unfold inO_internal in H.
+    apply ((to O (B oa))^-1).
+    apply O_indO.
+    intros a; apply to, f.
+  Defined.
+
+  Definition O_ind_beta_internal (O : Modality@{u a})
+             (A : Type@{i}) (B : O_reflector@{u a i} O A -> Type@{j})
+             (B_inO : forall oa, inO_internal@{u a j} O (B oa))
+             (f : forall a : A, B (to O A a)) (a:A)
+  : O_ind_internal O A B B_inO f (to O A a) = f a.
+  Proof.
+    unfold O_ind_internal.
     apply moveR_equiv_V.
-    apply @O_indO_beta with (f := fun x => to_O _ (f x)).
+    apply @O_indO_beta with (f := fun x => to O _ (f x)).
   Qed.
 
-  (** We start by building a [UnitSubuniverse]. *)
-
-  Local Definition O_inO' A : inO' (O' A).
+  Definition O_inO_internal (O : Modality@{u a}) (A : Type@{i})
+  : inO_internal@{u a i} O (O_reflector@{u a i} O A).
   Proof.
-    refine (isequiv_adjointify (to_O (O' A))
-             (O_indO (O' A) (const A) idmap) _ _).
-    - intros x; pattern x; apply O_ind'.
-      + intros oa; apply inO_pathsO.
+    refine (isequiv_adjointify (to O (O_reflector O A))
+             (O_indO O (O_reflector O A) (fun _ => A) idmap) _ _).
+    - intros x; pattern x; apply O_ind_internal.
+      + intros oa; apply minO_pathsO.
       + intros a; apply ap.
-        exact (O_indO_beta (O' A) (const A) idmap a).
+        exact (O_indO_beta O (O_reflector O A) (fun _ => A) idmap a).
     - intros a.
-      exact (O_indO_beta (O' A) (const A) idmap a).
+      exact (O_indO_beta O (O_reflector O A) (fun _ => A) idmap a).
   Defined.
 
-  (** It seems to be surprisingly hard to show (without univalence) that this [UnitSubuniverse] is replete.  We basically have to manually develop enough functoriality of [O] and naturality of [to_O]. *)
-
-  Local Definition O : UnitSubuniverse.
+  (** It seems to be surprisingly hard to show repleteness (without univalence).  We basically have to manually develop enough functoriality of [O] and naturality of [to O]. *)
+  Definition inO_equiv_inO_internal (O : Modality@{u a}) (A B : Type@{i})
+    (A_inO : inO_internal@{u a i} O A) (f : A -> B) (feq : IsEquiv f)
+  : inO_internal@{u a i} O B.
   Proof.
-    refine (Build_UnitSubuniverse O' (fun T => IsEquiv (to_O T)) O_inO' to_O _ _).
-    intros A B ? f ?; simpl in *.
-    refine (isequiv_commsq (to_O A) (to_O B) f
-             (O_ind' A (fun _ => O' B) _ (fun a => to_O B (f a))) _).
-    - intros; apply O_inO'.
-    - intros a; refine (O_ind_beta' A (fun _ => O' B) _ a).
+    refine (isequiv_commsq (to O A) (to O B) f
+             (O_ind_internal O A (fun _ => O_reflector O B) _ (fun a => to O B (f a))) _).
+    - intros; apply O_inO_internal.
+    - intros a; refine (O_ind_beta_internal O A (fun _ => O_reflector O B) _ _ a).
+    - apply A_inO.
     - refine (isequiv_adjointify _
-               (O_ind' B (fun _ => O' A) _ (fun b => to_O A (f^-1 b))) _ _);
+               (O_ind_internal O B (fun _ => O_reflector O A) _ (fun b => to O A (f^-1 b))) _ _);
         intros x.
-      + apply O_inO'.
-      + pattern x; refine (O_ind' B _ _ _ x); intros.
-        * apply inO_pathsO.
+      + apply O_inO_internal.
+      + pattern x; refine (O_ind_internal O B _ _ _ x); intros.
+        * apply minO_pathsO.
         * unfold compose; simpl;
-            abstract (repeat rewrite O_ind_beta'; apply ap, eisretr).
-      + pattern x; refine (O_ind' A _ _ _ x); intros.
-        * apply inO_pathsO.
+            abstract (repeat rewrite O_ind_beta_internal; apply ap, eisretr).
+      + pattern x; refine (O_ind_internal O A _ _ _ x); intros.
+        * apply minO_pathsO.
         * unfold compose; simpl;
-            abstract (repeat rewrite O_ind_beta'; apply ap, eissect).
+            abstract (repeat rewrite O_ind_beta_internal; apply ap, eissect).
   Defined.
 
-  Definition Build_Modality_easy : Modality.
+  Definition minO_paths (O : Modality@{u a})
+             (A : Type@{i}) (A_inO : inO_internal@{u a i} O A) (a a' : A)
+  : inO_internal O (a = a').
   Proof.
-    refine (Build_Modality O O_ind' O_ind_beta' _); cbn.
-    intros A A_inO a a'; change (In O (a = a')).
-    refine (inO_equiv_inO (to O A a = to O A a') (@ap _ _ (to O A) a a')^-1).
-    apply inO_pathsO.
+    refine (inO_equiv_inO_internal O (to O A a = to O A a') _ _
+                          (@ap _ _ (to O A) a a')^-1 _).
+    - apply minO_pathsO.
+    - refine (@isequiv_ap _ _ _ A_inO _ _).
+    - apply isequiv_inverse.
   Defined.
 
-End EasyModality.
+End EasyModalities_to_Modalities.
 
-(** ** Modalities are reflective subuniverses *)
+(** We now move on to the general theory of modalities. *)
 
-(** We show that modalities have underlying reflective subuniverses.  It is important in some applications, such as [Trunc], that this construction uses the general [O_ind] given as part of the modality data, and not one constructed out of [O_indO] as we did when proving [Build_Modality_easy].  For instance, this ensures that [O_functor] reduces to simply an application of [O_ind].
+Module Modalities_Theory (Os : Modalities).
 
- Note also that our choice of how to define reflective subuniverses differently from the book enables us to prove this without using funext. *)
+Export Os.
+Module Export Os_ReflectiveSubuniverses
+  := Modalities_to_ReflectiveSubuniverses Os.
+Module Export RSU
+  := ReflectiveSubuniverses_Theory Os_ReflectiveSubuniverses.
 
-Fixpoint O_extendable (O : Modality)
-         (A : Type) (B : msubu O A -> Type)
-         `{forall a, In (msubu O) (B a)} (n : nat)
-: ExtendableAlong n (to (msubu O) A) B.
-Proof.
-  destruct n as [|n].
-  - exact tt.
-  - split.
-    + intros g.
-      exists (O_ind B g); intros x.
-      apply O_ind_beta.
-    + intros h k.
-      apply O_extendable; intros x.
-      apply minO_paths; trivial.
-Defined.
+(** As with reflective subuniverses, we put this in a module so it can be exported separately (and it should be). *)
+Module Export Coercions.
+  Coercion modality_to_reflective_subuniverse
+    := idmap : Modality -> ReflectiveSubuniverse.
+End Coercions.
 
-(** Corollary 7.7.8, part 1 *)
-Definition modality_to_reflective_subuniverse (O : Modality@{sm lg})
-: ReflectiveSubuniverse@{sm lg}
-:= Build_ReflectiveSubuniverse (msubu O)
-     (fun A B B_inO n => O_extendable O A (fun _ => B) n).
+Definition O_ind {O : Modality@{u a}}
+           {A : Type@{i}} (B : O A -> Type@{j})
+           {B_inO : forall oa, In O (B oa)}
+           (f : forall a, B (to O A a)) (oa : O A)
+: B oa
+:= O_ind_internal O A B B_inO f oa.
 
-Coercion modality_to_reflective_subuniverse : Modality >-> ReflectiveSubuniverse.
-
-Global Arguments modality_to_reflective_subuniverse / .
+Definition O_ind_beta {O : Modality@{u a}}
+           {A : Type@{i}} (B : O A -> Type@{j})
+           {B_inO : forall oa, In O (B oa)}
+           (f : forall a : A, B (to O A a)) (a : A)
+: @O_ind O A B B_inO f (to O A a) = f a
+:= O_ind_beta_internal O A B B_inO f a.
 
 (** Corollary 7.7.8, part 2 *)
 Global Instance inO_sigma {O : Modality} (A:Type) (B:A -> Type)
@@ -159,26 +345,10 @@ Global Instance inO_sigma {O : Modality} (A:Type) (B:A -> Type)
 : In O {x:A & B x}.
 Proof.
   generalize dependent A.
-  refine (snd (inO_sigma_iff _) _).
+  refine (inO_sigma_from_O_ind _ _).
   intros A B ? g.
   exists (O_ind B g).
   apply O_ind_beta.
-Defined.
-
-(** Conversely, if a reflective subuniverse is closed under sigmas, it is a modality. *)
-
-Theorem reflective_subuniverse_to_modality
-  (O : ReflectiveSubuniverse)
-  (H : forall (A:Type) (B:A -> Type)
-          `{In O A} `{forall a, In O (B a)},
-     (In O ({x:A & B x})))
-  : Modality.
-Proof.
-  pose (K := fst (inO_sigma_iff _) H).
-  exact (Build_Modality _
-           (fun A B B_inO g => pr1 (K A B B_inO g))
-           (fun A B B_inO g => pr2 (K A B B_inO g))
-           _).
 Defined.
 
 (** Theorem 7.3.9: The reflector [O] can be discarded inside a reflected sum. *)
@@ -210,7 +380,7 @@ Defined.
 
 (** ** The induction principle [O_ind], like most induction principles, is an equivalence. *)
 Section OIndEquiv.
-  Context {fs : Funext} (O : Modality@{sm lg}).
+  Context {fs : Funext} (O : Modality).
 
   Section OIndEquivData.
 
@@ -249,13 +419,13 @@ End OIndEquiv.
 
 Question: is there a definition of connectedness (say, for n-types) that neither blows up the universe level, nor requires HIT's? *)
 
-Class IsConnected (O : Modality@{sm lg}) (A : Type@{sm})
+Class IsConnected (O : Modality) (A : Type)
   := isconnected_contr_O : Contr (O A).
 
 Global Existing Instance isconnected_contr_O.
 
 Section ConnectedTypes.
-  Context (O : Modality@{sm lg}).
+  Context (O : Modality).
 
   (** Being connected is an hprop *)
   Global Instance ishprop_isconnected `{Funext} A
@@ -286,14 +456,12 @@ Section ConnectedTypes.
     apply O_rec_beta.
   Defined.
 
-  (** For the other direction of the equivalence, it's sufficient to consider the case when [C] is [O A].  We include universe annotations to make this sufficiently polymorphic. *)
+  (** For the other direction of the equivalence, it's sufficient to consider the case when [C] is [O A]. *)
   Definition isconnected_from_elim_to_O {A : Type}
-  : NullHomotopy@{sm lg lg} (to O A) -> IsConnected@{sm lg} O A.
+  : NullHomotopy (to O A) -> IsConnected O A.
   Proof.
     intros nh.
     exists (nh .1).
-    (** This apparent no-op is also necessary to prevent the universe parameters from getting collapsed. *)
-    intros; apply (ap lower').
     apply O_ind; try exact _.
     intros; symmetry; apply (nh .2).
   Defined.
@@ -316,12 +484,13 @@ Section ConnectedTypes.
   Defined.
 
   (** Here's another way of stating the universal property for mapping out of connected types into modal ones. *)
-  Definition ooextendable_const_isconnected_inO
-             (A : Type) `{IsConnected O A} (C : Type) `{In O C}
-  : ooExtendableAlong (@const A Unit tt) (fun _ => C).
+  Definition extendable_const_isconnected_inO (n : nat)
+             (A : Type@{i}) `{IsConnected@{u a i} O A}
+             (C : Type@{j}) `{In@{u a j} O C}
+  : ExtendableAlong@{i i j j} n (@const A Unit@{i} tt) (fun _ => C).
   Proof.
-    intros n; generalize dependent C;
-      induction n as [|n IHn]; intros C ?;
+    generalize dependent C;
+      simple_induction n n IHn; intros C ?;
       [ exact tt | split ].
     - intros f.
       exists (fun _ => (isconnected_elim C f).1); intros a.
@@ -330,6 +499,12 @@ Section ConnectedTypes.
       refine (extendable_postcompose' n _ _ _ _ (IHn (h tt = k tt) _)).
       intros []; apply equiv_idmap.
   Defined.
+
+  Definition ooextendable_const_isconnected_inO
+             (A : Type@{i}) `{IsConnected@{u a i} O A}
+             (C : Type@{j}) `{In@{u a j} O C}
+  : ooExtendableAlong (@const A Unit tt) (fun _ => C)
+    := fun n => extendable_const_isconnected_inO@{i j k j} n A C.
 
   Definition isequiv_const_isconnected_inO `{Funext}
              {A : Type} `{IsConnected O A} (C : Type) `{In O C}
@@ -346,13 +521,13 @@ End ConnectedTypes.
 
 (** A map is "in [O]" if each of its fibers is. *)
 
-Class MapIn (O : Modality@{sm lg}) {A B : Type@{lg}} (f : A -> B)
+Class MapIn (O : Modality) {A B : Type} (f : A -> B)
   := inO_hfiber_ino_map : forall (b:B), In O (hfiber f b).
 
 Global Existing Instance inO_hfiber_ino_map.
 
 Section ModalMaps.
-  Context (O : Modality@{sm lg}).
+  Context (O : Modality).
 
   (** Any equivalence is modal *)
   Global Instance mapinO_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
@@ -403,14 +578,14 @@ End ModalMaps.
 
 (** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against truncated types.  We use the former; the equivalence with the latter is given below in [conn_map_elim], [conn_map_comp], and [conn_map_from_extension_elim]. *)
 
-Class IsConnMap (O : Modality@{sm lg}) {A B : Type@{sm}} (f : A -> B)
+Class IsConnMap (O : Modality) {A B : Type} (f : A -> B)
   := isconnected_hfiber_conn_map : forall b:B, IsConnected O (hfiber f b).
 
 Global Existing Instance isconnected_hfiber_conn_map.
 
 Section ConnectedMaps.
   Context `{Univalence} `{Funext}.
-  Context (O : Modality@{sm lg}).
+  Context (O : Modality).
 
   (** Any equivalence is connected *)
   Global Instance conn_map_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
@@ -641,7 +816,7 @@ End ConnectedMaps.
 (** ** The modal factorization system *)
 
 Section ModalFact.
-  Context `{fs : Funext} (O : Modality@{sm lg}).
+  Context `{fs : Funext} (O : Modality).
 
   (** Lemma 7.6.4 *)
   Definition image {A B : Type} (f : A -> B)
@@ -771,110 +946,350 @@ Section ModalFact.
 
 End ModalFact.
 
+End Modalities_Theory.
+
+(** ** Restriction of a family of modalities *)
+
+(** This is just like restriction of reflective subuniverses. *)
+Module Type Modalities_Restriction_Data (Os : Modalities).
+
+  Parameter New_Modality : Type2@{u a}.
+
+  Parameter Modalities_restriction
+  : New_Modality -> Os.Modality.
+
+End Modalities_Restriction_Data.
+
+Module Modalities_Restriction
+       (Os : Modalities)
+       (Res : Modalities_Restriction_Data Os)
+<: Modalities.
+
+  Definition Modality := Res.New_Modality.
+
+  Definition O_reflector (O : Modality@{u a})
+    := Os.O_reflector@{u a i} (Res.Modalities_restriction O).
+  Definition inO_internal (O : Modality@{u a})
+    := Os.inO_internal@{u a i} (Res.Modalities_restriction O).
+  Definition O_inO_internal (O : Modality@{u a})
+    := Os.O_inO_internal@{u a i} (Res.Modalities_restriction O).
+  Definition to (O : Modality@{u a})
+    := Os.to@{u a i} (Res.Modalities_restriction O).
+  Definition inO_equiv_inO_internal (O : Modality@{u a})
+    := Os.inO_equiv_inO_internal@{u a i} (Res.Modalities_restriction O).
+  Definition hprop_inO_internal (H : Funext) (O : Modality@{u a})
+    := Os.hprop_inO_internal@{u a i} H (Res.Modalities_restriction O).
+  Definition O_ind_internal (O : Modality@{u a})
+    := Os.O_ind_internal@{u a i j} (Res.Modalities_restriction O).
+  Definition O_ind_beta_internal (O : Modality@{u a})
+    := Os.O_ind_beta_internal@{u a i j} (Res.Modalities_restriction O).
+  Definition minO_paths (O : Modality@{u a})
+    := Os.minO_paths@{u a i} (Res.Modalities_restriction O).
+
+End Modalities_Restriction.
 
 (** ** Accessible modalities *)
 
-(** A modality is accessible just when its underlying reflective (or unit-) subuniverse is accessible.  However, for modalities, we have a simpler characterization of accessibility in terms of families of generating connected objects rather than families of generating inverted maps. *)
+(** A modality is accessible just when its underlying reflective (or unit-) subuniverse is accessible.  However, for modalities we have a simpler characterization in terms of families of generating connected objects rather than families of generating inverted maps.  We call an object [S]-null if it is local with respect to the maps [S i -> Unit]. *)
 
-(** We make this notation local so that no one outside of this file will use it.  It will be redefined in [hit/Localization] to refer to the localization modality, which is judgmentally the same but will also pick up typeclass inference for [In]. *)
-Local Notation IsNull S X :=
-  (forall i, ooExtendableAlong (@const (S i) Unit tt) (fun _ => X)).
+Record NullGenerators :=
+  { ngen_indices : Type@{a} ;
+    ngen_type : ngen_indices -> Type@{a}
+  }.
 
-(** We will now show that if the underlying reflective subuniverse of a modality [O] is accessible, then the [O]-modal types are the null ones for some family of types (not just the local ones for some family of morphisms). *)
-Section AccessibleModality.
-  Context {O : Modality} {acc : Accessible O}.
+Coercion ngen_type : NullGenerators >-> Funclass.
 
-  (** The idea is as follows.  By [ooextendable_isnull_fibers], we can detect locality with respect to a map by nullity with respect to its fibers.  Therefore, our first thought might be to just consider all the fibers of all the maps that we are localizing at.  However, this doesn't quite work because [ooextendable_isnull_fibers] is not an if-and-only-if, so not every modal type would necessarily be null for that type family.
+Definition null_to_local_generators : NullGenerators@{a1} -> LocalGenerators@{a2}
+  := fun S => Build_LocalGenerators (ngen_indices S) (ngen_type S) (fun _ => Unit@{a2}) (fun _ _ => tt).
 
-   We do know, however, that if [f] is an [O]-connected map, then any [O]-modal type is null for its fibers (since they are [O]-connected types).  There is no *a priori* reason why all the maps we localize at should end up being connected for the modality; they will always be inverted, but not every inverted map is connected (unless the modality is lex).  But if [f : A -> B] is [O]-inverted, then the [O]-connected map [to O A] is (up to equivalence) the composite of [f] with the [O]-connected map [to O B].  Thus, if [X] is null for the fibers of [to O A] and [to O B], it will be [f]-local and hence [O]-modal, while all [O]-modal types will be null for these fibers since they are connected. *)
-  Definition acc_conn_indices : Type
-    :=   { i : acc_gen_indices & O (acc_gen_domain i) }
-       + { i : acc_gen_indices & O (acc_gen_codomain i) }.
+(** We recall the nonce definition [IsLocal] from [ReflectiveSubuniverse]. *)
+Import IsLocal_Internal.
+(** Similarly, the real version of this notation will be defined in hit/Localizations. *)
+Local Definition IsNull (S : NullGenerators@{a}) (X : Type@{i})
+  := IsLocal@{i i a} (null_to_local_generators@{a a} S) X.
 
-  Definition acc_conn_types : acc_conn_indices -> Type.
-  Proof.
-    intros [ [i x] | [i x] ]; exact (hfiber (to O _) x).
-  Defined.
 
-  Global Instance isconnected_acc_conn_types (i : acc_conn_indices)
-  : IsConnected O (acc_conn_types i).
-  Proof.
-    destruct i as [ [i x ] | [i x ] ]; exact _.
-  Defined.
+(** A central fact: if a type [X] is null for all the fibers of a map [f], then it is [f]-local.  (NB: the converse is *not* generally true.) *)
+Definition extendable_isnull_fibers (n : nat)
+           {A B} (f : A -> B) (C : B -> Type)
+: (forall b, ooExtendableAlong (@const (hfiber f b) Unit tt)
+                               (fun _ => C b))
+  -> ExtendableAlong n f C.
+Proof.
+  revert C.
+  simple_induction n n IHn; intros C null; [exact tt | split].
+  - intros g.
+    exists (fun b => (fst (null b 1%nat) (fun x => x.2 # g x.1)).1 tt).
+    intros a.
+    rewrite (path_unit tt (const tt a)).
+    exact ((fst (null (f a) 1%nat) _).2 (a ; 1)).
+  - intros h k.
+    apply IHn; intros b.
+    apply ooextendable_homotopy, null.
+Defined.
 
-  Definition inO_iff_orth_acc `{Funext} (X : Type)
-  : In O X <-> IsNull acc_conn_types X.
-  Proof.
-    split.
-    - intros ? [ [i x] | [i x] ];
-        refine (ooextendable_const_isconnected_inO O _ _).
-    - intros Xnull.
-      apply (snd (inO_iff_islocal X)); intros i.
-      refine (cancelL_ooextendable (fun _ => X) (acc_generator i)
-                                   (to O (acc_gen_codomain i)) _ _).
-      + apply ooextendable_isnull_fibers; intros x.
-        exact (Xnull (inr (i;x))).
-      + refine (ooextendable_homotopic _
-                  (O_functor O (acc_generator i) o to O (acc_gen_domain i)) _ _).
-        1:apply to_O_natural.
-        apply ooextendable_compose.
-        * apply ooextendable_equiv, O_inverts_generators.
-        * apply ooextendable_isnull_fibers; intros x.
-          exact (Xnull (inl (i;x))).
-  Defined.
+Definition ooextendable_isnull_fibers {A B} (f : A -> B) (C : B -> Type)
+: (forall b, ooExtendableAlong (@const (hfiber f b) Unit tt)
+                               (fun _ => C b))
+  -> ooExtendableAlong f C
+:= fun null n => extendable_isnull_fibers n f C null.
+
+(** We define a modality to be accessible if it consists of the null types for some family of generators as above. *)
+Module Type Accessible_Modalities (Os : Modalities).
+  Import Os.
+
+  (** See comment in [Accessible_ReflectiveSubuniverses] about collapsing universes. *)
+  Parameter acc_gen : Modality@{u a} -> NullGenerators@{a}.
+  Check acc_gen@{u a}.    (** Verify that we have the right number of universes *)
+
+  Parameter inO_iff_isnull_internal
+  : forall (O : Modality@{u a}) (X : Type@{i}),
+      iff@{i i i}
+         (inO_internal@{u a i} O X)
+         (IsNull@{a i} (acc_gen@{u a} O) X).
+  Check inO_iff_isnull_internal@{u a i}.
+
+End Accessible_Modalities.
+
+(** We will now show that a modality is accessible in this sense if and only if its underlying reflective subuniverse is accessible in the sense previously defined.  These proofs involve a bit of annoying module wrangling.  Fortunately, we (almost?) never need to actually use them; in practice accessible modalities usually seem to be given to us with the appropriate sort of generators. *)
+
+(** One direction of this implication is trivial. *)
+Module Accessible_Modalities_to_ReflectiveSubuniverses
+       (Os : Modalities) (Acc : Accessible_Modalities Os).
+
+  (** Coq won't let us write [<: Accessible_ReflectiveSubuniverses (Modalities_to_ReflectiveSubuniverses Os)]; it says "Application of modules is restricted to paths" (a "path" being something like [Foo.Bar.Baz]).  Thus, every intermediate module has to be given its own name. *)
+  Module Os_RSU := Modalities_to_ReflectiveSubuniverses Os.
+  Module AccRSU <: Accessible_ReflectiveSubuniverses Os_RSU.
+
+    Import Os_RSU Acc.
+
+    Definition acc_gen : ReflectiveSubuniverse@{u a} -> LocalGenerators@{a}
+      := fun (O : ReflectiveSubuniverse@{u a}) =>
+           (null_to_local_generators (acc_gen O)).
+
+    Definition inO_iff_islocal_internal
+    : forall (O : ReflectiveSubuniverse@{u a}) (X : Type@{i}),
+      iff@{i i i}
+         (inO_internal@{u a i} O X)
+         (IsLocal@{i i a} (acc_gen@{u a} O) X)
+      := inO_iff_isnull_internal@{u a i}.
+
+  End AccRSU.
+End Accessible_Modalities_to_ReflectiveSubuniverses.
+
+(** The converse is less trivial. *)
+Module Accessible_Modalities_from_ReflectiveSubuniverses
+       (Os : Modalities).
+
+  Module Os_RSU := Modalities_to_ReflectiveSubuniverses Os.
+  Module AccMod (Acc : Accessible_ReflectiveSubuniverses Os_RSU)
+    <: Accessible_Modalities Os.
+
+    Import Os Acc.
+    Module Import Os_Theory := Modalities_Theory Os.
+    Module Import Acc_Theory := Accessible_ReflectiveSubuniverses_Theory Os_RSU Acc.
+
+    (** The idea is as follows.  By [ooextendable_isnull_fibers], we can detect locality with respect to a map by nullity with respect to its fibers.  Therefore, our first thought might be to just consider all the fibers of all the maps that we are localizing at.  However, this doesn't quite work because [ooextendable_isnull_fibers] is not an if-and-only-if, so not every modal type would necessarily be null for that type family.
+
+     We do know, however, that if [f] is an [O]-connected map, then any [O]-modal type is null for its fibers (since they are [O]-connected types).  There is no *a priori* why all the maps we localize at should end up being connected for the modality; they will always be inverted, but not every inverted map is connected (unless the modality is lex).  But if [f : A -> B] is [O]-inverted, then the [O]-connected map [to O A] is (up to equivalence) the composite of [f] with the [O]-connected map [to O B].  Thus, if [X] is null for the fibers of [to O A] and [to O B], it will be [f]-local and hence [O]-modal, while all [O]-modal types will be null for these fibers since they are connected. *)
+
+    Definition acc_gen (O : Modality@{u a}) : NullGenerators@{a}.
+    Proof.
+      refine (Build_NullGenerators
+                (  { i : lgen_indices@{a} (acc_gen O)
+                     & O (lgen_domain@{a} (acc_gen O) i) }
+                 + { i : lgen_indices@{a} (acc_gen O)
+                     & O (lgen_codomain@{a} (acc_gen O) i) })
+                _).
+      intros [ [i x] | [i x] ]; exact (hfiber (to O _) x).
+    Defined.
+
+    Definition inO_iff_isnull_internal (O : Modality@{u a}) (X : Type@{i})
+    : iff@{i i i} (In@{u a i} O X) (IsNull@{a i} (acc_gen O) X).
+    Proof.
+      split.
+      - intros X_inO [ [i x] | [i x] ];
+          exact (ooextendable_const_isconnected_inO@{u a a i i} O _ _ ).
+      - intros Xnull.
+        apply (snd (inO_iff_islocal_internal O X)); intros i.
+        refine (cancelL_ooextendable@{a a a i i i i i i i}
+                  (fun _ => X) (Acc.acc_gen O i)
+                  (to O (lgen_codomain (Acc.acc_gen O) i)) _ _).
+        + apply ooextendable_isnull_fibers@{a a i i a a i}; intros x.
+          exact (Xnull (inr (i;x))).
+        + refine (ooextendable_homotopic _
+                   (O_functor O (Acc.acc_gen O i)
+                              o to O (lgen_domain (Acc.acc_gen O) i)) _ _).
+          1:apply to_O_natural.
+          apply ooextendable_compose@{a a a i i i i}.
+          * apply ooextendable_equiv, O_inverts_generators.
+          * apply ooextendable_isnull_fibers; intros x.
+            exact (Xnull (inl (i;x))).
+    Defined.
     
-End AccessibleModality.
-
-(** Here's a corresponding easier way to define accessibility for a modality. *)
-Definition Build_Accessible_Modality (O : Modality)
-           (acc_gen_indices : Type)
-           (acc_gen_types : acc_gen_indices -> Type)
-: (forall X : Type, In O X <-> IsNull acc_gen_types X)
-  -> Accessible O
-:= Build_Accessible O acc_gen_indices acc_gen_types
-                    (fun _ => Unit) (fun _ _ => tt).
-
+  End AccMod.
+End Accessible_Modalities_from_ReflectiveSubuniverses.
 
 (** The construction of the nullification modality for any family of types will be in [hit/Localization]. *)
 
 
 (** ** Examples *)
 
+(** *** Double negation *)
+
 (** Finally, we give one nontrivial example of a modality.  This is Exercise 7.12 in the book.  Note that it is (apparently) *not* accessible unless we assume propositional resizing. *)
-Definition notnot `{Funext} : Modality.
-Proof.
-  refine (Build_Modality_easy
-            (fun X => ~~X)
-            (fun X x nx => nx x)
-            (fun A B f z nBz =>
-              z (fun a => f a (transport (fun x => ~B x)
-                                          (path_ishprop _ _)
-                                          nBz)))
-            _ _).
-  - intros; apply path_ishprop.
-  - intros; refine (isequiv_iff_hprop _ _).
+
+(** We are defining only one modality, but it depends on funext.  Therefore, we let the family of modalities be the type [Funext].  However, since there is a coercion [O_reflector] from [Modality] to [Funclass], we don't want to simply *define* [Modality] to be [Funext], or else we could start applying [Funext] hypotheses to types and having it act as double negation.
+
+Instead, we define a [Record] wrapper around it.  This is the recommended best practice for all modules (with one exception, see Truncations.v).  The constructor of the record should generally be a short name (here [Notnot]) that makes sense as the reflector. *)
+
+Record Notnot_Modality := Notnot { unNotnot : Funext }.
+
+Module Notnot_Easy_Modalities <: EasyModalities.
+
+  Definition Modality : Type2@{u a}
+    := Notnot_Modality.
+
+  Definition O_reflector : Modality@{u a} -> Type@{i} -> Type@{i}
+    (** We call [not] explicitly with universe annotations so that [O_reflector] has the right number of universe parameters to satisfy the module type. *)
+    := fun O X => not@{i i i} (not@{i i i} X).
+
+  Definition to (O : Modality@{u a}) (T : Type@{i})
+  : T -> O_reflector@{u a i} O T
+  := fun x nx => nx x.
+
+  Definition O_indO (O : Modality@{u a}) (A : Type@{i})
+             (B : O_reflector@{u a i} O A -> Type@{j})
+  : (forall a : A, O_reflector@{u a j} O (B (to O A a))) ->
+    forall z : O_reflector@{u a i} O A, O_reflector@{u a j} O (B z).
+  Proof.
+    intros f z nBz.
+    pose (unNotnot O).          (** Access the [Funext] hypothesis *)
+    (** The goal is [Empty@{j}], whereas [z] has codomain [Empty@{i}].  Thus, simply applying [z] would collapse the universe parameters undesirably, so we first alter the goal to be [Empty@{i}]. *)
+    cut (Empty@{i}); [ intros [] | ].
+    apply z; intros a.
+    (** Now the goal is [Empty@{i}], whereas [f] has codomain [Empty@{j}]. *)
+    cut (Empty@{j}); [ intros [] | ].
+    exact (f a (transport (fun x => not@{j j j} (B x))
+                          (path_ishprop _ _)
+                          nBz)).
+  Defined.
+
+  Definition O_indO_beta (O : Modality@{u a}) (A : Type@{i})
+             (B : O_reflector@{u a i} O A -> Type@{j})
+             (f : forall a, O_reflector@{u a j} O (B (to O A a))) (a:A)
+  : O_indO O A B f (to O A a) = f a.
+  Proof.
+    pose (unNotnot O).
+    apply path_ishprop.
+  Defined.
+
+  Definition minO_pathsO (O : Modality@{u a}) (A : Type@{i})
+             (z z' : O_reflector@{u a i} O A)
+  : IsEquiv@{i i} (to@{u a i} O (z = z')).
+  Proof.
+    pose (unNotnot O).
+    refine (isequiv_iff_hprop _ _).
     intros; apply path_ishprop.
-Defined.
+  Defined.
+
+End Notnot_Easy_Modalities.
+
+Module Notnot_Modalities <: Modalities := EasyModalities_to_Modalities Notnot_Easy_Modalities.
+
+(** After we define any family of modalities or reflective subuniverses, we give a corresponding name to the theory module, generally by postfixing the above-mentioned record constructor with [M] (for "module").  This way, one can either [Import] the theory module (here [NotnotM]) and get access to all the modality functions for the modalities in question, or not import it and access them qualified as [NotnotM.function_name]. *)
+Module NotNotM := Modalities_Theory Notnot_Modalities.
+Export NotNotM.Coercions.
+Export NotNotM.RSU.Coercions.
+
+(** Finally, we declare a coercion allowing us to use elements of the record wrapper as modalities. *)
+Coercion Notnot_Modalities_to_Modalities := idmap
+  : Notnot_Modality -> Notnot_Modalities.Modality.
+
+(** *** The identity modality *)
 
 (** Of course, there is also the trivial example. *)
-Definition purely : Modality
-  := Build_Modality
-     (Build_UnitSubuniverse
-        idmap
-        (fun _ => Unit)
-        (fun _ => tt)
-        (fun T => idmap)
-        (fun T U _ _ _ => tt)
-        _)
-     (fun A B _ f a => f a)
-     (fun A B _ f a => 1)
-     (fun A _ z z' => tt).
 
-Global Instance accessible_purely : Accessible purely.
-Proof.
-  refine (Build_Accessible _ Empty Empty_rec Empty_rec (Empty_ind _) _).
-  intros X; refine (_ , fun _ => tt).
-  intros _; apply Empty_ind.
-Defined.
+Inductive Identity_Modality : Type1
+  := purely : Identity_Modality.
+
+Module Identity_Modalities <: Modalities.
+
+  Definition Modality : Type2@{u a}
+    := Identity_Modality@{a}.
+
+  Definition O_reflector : forall (O : Modality@{u a}),
+                            Type@{i} -> Type@{i}
+    := fun O X => X.
+
+  Definition inO_internal : forall (O : Modality@{u a}),
+                             Type@{i} -> Type@{i}
+    := fun O X => Unit@{i}.
+
+  Definition O_inO_internal : forall (O : Modality@{u a}) (T : Type@{i}),
+                               inO_internal@{u a i} O (O_reflector@{u a i} O T)
+    := fun O X => tt.
+
+  Definition to : forall (O : Modality@{u a}) (T : Type@{i}),
+                   T -> O_reflector@{u a i} O T
+    := fun O X x => x.
+
+  Definition inO_equiv_inO_internal :
+      forall (O : Modality@{u a}) (T U : Type@{i})
+             (T_inO : inO_internal@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
+        inO_internal@{u a i} O U
+    := fun O T U _ _ _ => tt.
+
+  Definition hprop_inO_internal
+  : Funext -> forall (O : Modality@{u a}) (T : Type@{i}),
+                IsHProp (inO_internal@{u a i} O T)
+    := fun _ O T => _.
+
+  Definition O_ind_internal
+  : forall (O : Modality@{u a})
+           (A : Type@{i}) (B : O_reflector O A -> Type@{j})
+           (B_inO : forall oa, inO_internal@{u a j} O (B oa)),
+      (forall a, B (to O A a)) -> forall a, B a
+  := fun O A B _ f a => f a.
+
+  Definition O_ind_beta_internal
+  : forall (O : Modality@{u a})
+           (A : Type@{i}) (B : O_reflector O A -> Type@{j})
+           (B_inO : forall oa, inO_internal@{u a j} O (B oa))
+           (f : forall a : A, B (to O A a)) (a:A),
+      O_ind_internal O A B B_inO f (to O A a) = f a
+    := fun _ _ _ _ _ _ => 1.
+
+  Definition minO_paths
+  : forall (O : Modality@{u a})
+           (A : Type@{i}) (A_inO : inO_internal@{u a i} O A) (z z' : A),
+      inO_internal@{u a i} O (z = z')
+    := fun _ _ _ _ _ => tt.
+
+End Identity_Modalities.
+
+Module purelyM := Modalities_Theory Identity_Modalities.
+Export purelyM.Coercions.
+Export purelyM.RSU.Coercions.
+
+Coercion Identity_Modalities_to_Modalities := idmap
+  : Identity_Modality -> Identity_Modalities.Modality.
+
+
+Module Accessible_Identity <: Accessible_Modalities Identity_Modalities.
+
+  Import Identity_Modalities.
+
+  Definition acc_gen : Modality@{u a} -> NullGenerators@{a}
+    := fun _ => Build_NullGenerators Empty@{a} (fun _ => Empty@{a}).
+
+  Definition inO_iff_isnull_internal
+  : forall (O : Modality@{u a}) (X : Type@{i}),
+      iff@{i i i}
+        (inO_internal@{u a i} O X)
+        (IsNull@{a i} (acc_gen O) X)
+    := fun O X => (fun _ => Empty_ind _ , fun _ => tt).
+
+End Accessible_Identity.
 
 (** For more examples of modalities, see hit/Truncations.v, hit/PropositionalFracture.v, and hit/Localization.v. *)

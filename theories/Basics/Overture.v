@@ -64,10 +64,32 @@ Ltac transitivity x := etransitivity x.
 
 (** Define an alias for [Set], which is really [Type₀]. *)
 Notation Type0 := Set.
+
 (** Define [Type₁] (really, [Type_i] for any [i > 0]) so that we can enforce having universes that are not [Set].  In trunk, universes will not be unified with [Set] in most places, so we want to never use [Set] at all. *)
-Definition Type1 := Eval hnf in let U := Type in let gt := (Set : U) in U.
+Definition Type1 := Eval hnf in let gt := (Set : Type@{i}) in Type@{i}.
 Arguments Type1 / .
 Identity Coercion unfold_Type1 : Type1 >-> Sortclass.
+
+(** We also define "the next couple of universes", which are actually an arbitrary universe with another one or two strictly below it.  Note when giving universe annotations to these that their universe parameters appear in order of *decreasing* size. *)
+Definition Type2 := Eval hnf in let gt := (Type1 : Type@{i}) in Type@{i}.
+Arguments Type2 / .
+Identity Coercion unfold_Type2 : Type2 >-> Sortclass.
+
+Definition Type3 := Eval hnf in let gt := (Type2 : Type@{i}) in Type@{i}.
+Arguments Type3 / .
+Identity Coercion unfold_Type3 : Type3 >-> Sortclass.
+
+(** Along the same lines, here is a universe with an extra universe parameter that's less than or equal to it in size.  The [gt] isn't necessary to force the larger universe to be bigger than [Set] (since we refer to the smaller universe by [Type1] which is already bigger than [Set]), but we include it anyway to make the universe parameters occur again in (now non-strictly) decreasing order. *)
+Definition Type2le := Eval hnf in let gt := (Set : Type@{i}) in
+                                  let ge := ((fun x => x) : Type1 -> Type@{i}) in Type@{i}.
+Arguments Type2le / .
+Identity Coercion unfold_Type2le : Type2le >-> Sortclass.
+
+Definition Type3le := Eval hnf in let gt := (Set : Type@{i}) in
+                                  let ge := ((fun x => x) : Type2le@{j k} -> Type@{i}) in Type@{i}.
+Arguments Type3le / .
+Identity Coercion unfold_Type3le : Type3le >-> Sortclass.
+
 
 (** We make the identity map a notation so we do not have to unfold it,
     or complicate matters with its type. *)
@@ -448,6 +470,16 @@ Notation IsHProp := (IsTrunc -1).
 Notation IsHSet := (IsTrunc 0).
 
 Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_instances.
+
+(** *** Simple induction *)
+
+(** The following tactic is designed to be more or less interchangeable with [induction n as [ | n' IH ]] whenever [n] is a [nat] or a [trunc_index].  The difference is that it produces proof terms involving [match] and [fix] explicitly rather than [nat_ind] or [trunc_index_ind], and therefore does not introduce higher universe parameters. *)
+
+Ltac simple_induction n n' IH :=
+  generalize dependent n;
+  fix IH 1;
+  intros [| n'];
+  [ clear IH | specialize (IH n') ].
 
 (** *** Truncated relations  *)
 

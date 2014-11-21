@@ -17,9 +17,19 @@ Section Extensions.
   (* TODO: consider naming for [ExtensionAlong] and subsequent lemmas.  As a name for the type itself, [Extension] or [ExtensionAlong] seems great; but resultant lemma names such as [path_extension] (following existing naming conventions) are rather misleading. *)
 
   (** This elimination rule (and others) can be seen as saying that, given a fibration over the codomain and a section of it over the domain, there is some *extension* of this to a section over the whole domain.  It can also be considered as an equivalent form of an [hfiber] of precomposition-with-[f] that replaces paths by pointwise paths, thereby avoiding [Funext]. *)
+
   Definition ExtensionAlong {A B : Type} (f : A -> B)
              (P : B -> Type) (d : forall x:A, P (f x))
     := { s : forall y:B, P y & forall x:A, s (f x) = d x }.
+  (** [ExtensionAlong] takes 5 universe parameters:
+      - the size of A
+      - the size of B
+      - the size of P
+      - >= max(B,P)
+      - >= max(A,P).
+    The following [Check] verifies that this is in fact the case. *)
+  Check ExtensionAlong@{a b p m n}.
+  (** If necessary, we could coalesce the latter two with a universe annotation, but that would make the definition harder to read. *)
 
   Definition path_extension `{Funext} {A B : Type} {f : A -> B}
              {P : B -> Type} {d : forall x:A, P (f x)}
@@ -77,20 +87,28 @@ Section Extensions.
   (** Here is the iterated version. *)
 
   Fixpoint ExtendableAlong
-           (n : nat) {A B : Type} (f : A -> B) (C : B -> Type) : Type
+           (n : nat) {A : Type@{i}} {B : Type@{j}}
+           (f : A -> B) (C : B -> Type@{k}) : Type@{l}
     := match n with
-         | 0 => Unit
-         | S n => (forall (g : forall a, C (f a)), ExtensionAlong f C g) *
+         | 0 => Unit@{l}
+         | S n => (forall (g : forall a, C (f a)),
+                     ExtensionAlong@{i j k l l} f C g) *
                   forall (h k : forall b, C b),
                     ExtendableAlong n f (fun b => h b = k b)
        end.
+  (** [ExtendableAlong] takes 4 universe parameters:
+      - size of A
+      - size of B
+      - size of C
+      - size of result (>= A,B,C) *)
+  Check ExtendableAlong@{a b c r}.
 
   Definition equiv_extendable_pathsplit `{Funext} (n : nat)
              {A B : Type} (C : B -> Type) (f : A -> B)
   : ExtendableAlong n f C
     <~> PathSplit n (fun (g : forall b, C b) => g oD f).
   Proof.
-    generalize dependent C; induction n as [ | n IHn]; intros C.
+    generalize dependent C; simple_induction n n IHn; intros C.
     1:apply equiv_idmap.
     apply equiv_functor_prod'; simpl.
     - refine (equiv_functor_forall' (equiv_idmap _) _); intros g; simpl.
@@ -99,8 +117,9 @@ Section Extensions.
     - refine (equiv_functor_forall' (equiv_idmap _) _); intros h.
       refine (equiv_functor_forall' (equiv_idmap _) _); intros k; simpl.
       refine (equiv_compose' _ (IHn (fun b => h b = k b))).
-      symmetry; refine (equiv_functor_pathsplit n _ _
-                                                (equiv_apD10 _ _ _) (equiv_apD10 _ _ _) _).
+      apply equiv_inverse.
+      refine (equiv_functor_pathsplit n _ _
+               (equiv_apD10 _ _ _) (equiv_apD10 _ _ _) _).
       intros []; reflexivity.
   Defined.
 
@@ -133,8 +152,8 @@ Section Extensions.
              (g : forall b, C b <~> D b)
   : ExtendableAlong n f C -> ExtendableAlong n f D.
   Proof.
-    generalize dependent D; revert C.
-    induction n as [|n IHn]; intros C D g; simpl.
+    generalize dependent C; revert D.
+    simple_induction n n IH; intros C D g; simpl.
     1:apply idmap.
     refine (functor_prod _ _).
     - refine (functor_forall (functor_forall idmap
@@ -148,7 +167,7 @@ Section Extensions.
       intros h.
       refine (functor_forall (functor_forall idmap (fun b => (g b)^-1)) _);
         intros k; simpl; unfold functor_forall.
-      refine (IHn _ _ _); intros b.
+      refine (IH _ _ _); intros b.
       apply equiv_inverse, equiv_ap; exact _.
   Defined.
 
@@ -161,9 +180,9 @@ Section Extensions.
   (** Composition of the maps we extend along.  This also does not require funext. *)
   Definition extendable_compose (n : nat)
              {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
-  : ExtendableAlong n g P -> ExtendableAlong n f (P o g) -> ExtendableAlong n (g o f) P.
+  : ExtendableAlong n g P -> ExtendableAlong n f (fun b => P (g b)) -> ExtendableAlong n (g o f) P.
   Proof.
-    revert P; induction n as [|n IHn]; intros P extg extf; [ exact tt | split ].
+    revert P; simple_induction n n IHn; intros P extg extf; [ exact tt | split ].
     - intros h.
       exists ((fst extg (fst extf h).1).1); intros a.
       refine ((fst extg (fst extf h).1).2 (f a) @ _).
@@ -177,9 +196,9 @@ Section Extensions.
   (** And cancellation *)
   Definition cancelL_extendable (n : nat)
              {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
-  : ExtendableAlong n g P -> ExtendableAlong n (g o f) P -> ExtendableAlong n f (P o g).
+  : ExtendableAlong n g P -> ExtendableAlong n (g o f) P -> ExtendableAlong n f (fun b => P (g b)).
   Proof.
-    revert P; induction n as [|n IHn]; intros P extg extgf; [ exact tt | split ].
+    revert P; simple_induction n n IHn; intros P extg extgf; [ exact tt | split ].
     - intros h.
       exists ((fst extgf h).1 oD g); intros a.
       exact ((fst extgf h).2 a).
@@ -194,9 +213,9 @@ Section Extensions.
 
   Definition cancelR_extendable (n : nat)
              {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
-  : ExtendableAlong n.+1 f (P o g) -> ExtendableAlong n (g o f) P -> ExtendableAlong n g P.
+  : ExtendableAlong n.+1 f (fun b => P (g b)) -> ExtendableAlong n (g o f) P -> ExtendableAlong n g P.
   Proof.
-    revert P; induction n as [|n IHn]; intros P extf extgf; [ exact tt | split ].
+    revert P; simple_induction n n IHn; intros P extf extgf; [ exact tt | split ].
     - intros h.
       exists ((fst extgf (h oD f)).1); intros b.
       refine ((fst (snd extf ((fst extgf (h oD f)).1 oD g) h) _).1 b); intros a.
@@ -212,7 +231,7 @@ Section Extensions.
              {A B : Type} (C : B -> Type) (f : A -> B) {g : A -> B} (p : f == g)
   : ExtendableAlong n f C -> ExtendableAlong n g C.
   Proof.
-    revert C; induction n as [|n IHn]; intros C extf; [ exact tt | split ].
+    revert C; simple_induction n n IHn; intros C extf; [ exact tt | split ].
     - intros h.
       exists ((fst extf (fun a => (p a)^ # h a)).1); intros a.
       refine ((apD ((fst extf (fun a => (p a)^ # h a)).1) (p a))^ @ _).
@@ -227,7 +246,7 @@ Section Extensions.
              {A B : Type} (C : B -> Type) (f : A -> B) `{IsEquiv _ _ f}
   : ExtendableAlong n f C.
   Proof.
-    revert C; induction n as [|n IHn]; intros C; [ exact tt | split ].
+    revert C; simple_induction n n IHn; intros C; [ exact tt | split ].
     - intros h.
       exists (fun b => eisretr f b # h (f^-1 b)); intros a.
       refine (transport2 C (eisadj f a) _ @ _).
@@ -243,7 +262,7 @@ Section Extensions.
              `{forall b, Contr (C b)}
   : ExtendableAlong n f C.
   Proof.
-    generalize dependent C; induction n as [|n IHn];
+    generalize dependent C; simple_induction n n IHn;
       intros C ?; [ exact tt | split ].
     - intros h.
       exists (fun _ => center _); intros a.
@@ -258,7 +277,7 @@ Section Extensions.
              (h k : forall b, C b)
   : ExtendableAlong n.+1 f C -> ExtendableAlong n f (fun b => h b = k b).
   Proof.
-    revert C h k; induction n as [|n IHn];
+    revert C h k; simple_induction n n IHn;
       intros C h k ext; [exact tt | split].
     - intros p.
       exact (fst (snd ext h k) p).
@@ -269,8 +288,11 @@ Section Extensions.
   (** And the oo-version. *)
 
   Definition ooExtendableAlong
-             {A B : Type} (f : A -> B) (C : B -> Type) : Type
-    := forall n, ExtendableAlong n f C.
+             {A : Type@{i}} {B : Type@{j}}
+             (f : A -> B) (C : B -> Type@{k}) : Type@{l}
+    := forall n, ExtendableAlong@{i j k l} n f C.
+  (** Universe parameters are the same as for [ExtendableAlong]. *)
+  Check ooExtendableAlong@{a b c r}.
 
   Definition isequiv_ooextendable `{Funext}
              {A B : Type} (C : B -> Type) (f : A -> B)
@@ -298,9 +320,9 @@ Section Extensions.
   : ooExtendableAlong f C
     <~> IsEquiv (fun (g : forall b, C b) => g oD f).
   Proof.
-    etransitivity.
-    - apply equiv_ooextendable_pathsplit.
+    eapply equiv_compose'.
     - apply equiv_oopathsplit_isequiv.
+    - apply equiv_ooextendable_pathsplit.
   Defined.
 
   Definition ooextendable_postcompose
@@ -311,17 +333,17 @@ Section Extensions.
 
   Definition ooextendable_compose
              {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
-  : ooExtendableAlong g P -> ooExtendableAlong f (P o g) -> ooExtendableAlong (g o f) P
+  : ooExtendableAlong g P -> ooExtendableAlong f (fun b => P (g b)) -> ooExtendableAlong (g o f) P
     := fun extg extf n => extendable_compose n P f g (extg n) (extf n).
 
   Definition cancelL_ooextendable
              {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
-  : ooExtendableAlong g P -> ooExtendableAlong (g o f) P -> ooExtendableAlong f (P o g)
+  : ooExtendableAlong g P -> ooExtendableAlong (g o f) P -> ooExtendableAlong f (fun b => P (g b))
   := fun extg extgf n => cancelL_extendable n P f g (extg n) (extgf n).
 
   Definition cancelR_ooextendable
              {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
-  : ooExtendableAlong f (P o g) -> ooExtendableAlong (g o f) P -> ooExtendableAlong g P
+  : ooExtendableAlong f (fun b => P (g b)) -> ooExtendableAlong (g o f) P -> ooExtendableAlong g P
     := fun extf extgf n => cancelR_extendable n P f g (extf n.+1) (extgf n).
 
   Definition ooextendable_homotopic
