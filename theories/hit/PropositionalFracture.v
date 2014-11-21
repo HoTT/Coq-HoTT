@@ -109,7 +109,9 @@ Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
 
 End Accessible_OpenModalities.
 
-(** Thus, arguably a better definition of [Op] would be [Nul (fun (_:Unit) => U)], as it would not require [Funext] and would have a judgmental computation rule.  However, the above definition is also nice to know, as it doesn't use HITs. *)
+(** Thus, arguably a better definition of [Op] would be as a nullification modality, as it would not require [Funext] and would have a judgmental computation rule.  However, the above definition is also nice to know, as it doesn't use HITs.  We name the other version [Op']. *)
+Definition Op' (U : hProp) : Nullification_Modality
+  := Nul (Build_NullGenerators Unit (fun (_:Unit) => U)).
 
 (** Exercise 7.13(ii): Closed modalities *)
 
@@ -251,3 +253,7 @@ Module Accessible_ClosedModalities
   Defined.
 
 End Accessible_ClosedModalities.
+
+(** Thus, it also has the following alternative version. *)
+Definition Cl' (U : hProp) : Nullification_Modality
+  := Nul (Build_NullGenerators U (fun _ => Empty)).
