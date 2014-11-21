@@ -26,7 +26,10 @@ Section Extensions.
       - the size of B
       - the size of P
       - >= max(B,P)
-      - >= max(A,P). *)
+      - >= max(A,P).
+    The following [Check] verifies that this is in fact the case. *)
+  Check ExtensionAlong@{a b p m n}.
+  (** If necessary, we could coalesce the latter two with a universe annotation, but that would make the definition harder to read. *)
 
   Definition path_extension `{Funext} {A B : Type} {f : A -> B}
              {P : B -> Type} {d : forall x:A, P (f x)}
@@ -98,6 +101,7 @@ Section Extensions.
       - size of B
       - size of C
       - size of result (>= A,B,C) *)
+  Check ExtendableAlong@{a b c r}.
 
   Definition equiv_extendable_pathsplit `{Funext} (n : nat)
              {A B : Type} (C : B -> Type) (f : A -> B)
@@ -288,6 +292,7 @@ Section Extensions.
              (f : A -> B) (C : B -> Type@{k}) : Type@{l}
     := forall n, ExtendableAlong@{i j k l} n f C.
   (** Universe parameters are the same as for [ExtendableAlong]. *)
+  Check ooExtendableAlong@{a b c r}.
 
   Definition isequiv_ooextendable `{Funext}
              {A B : Type} (C : B -> Type) (f : A -> B)
