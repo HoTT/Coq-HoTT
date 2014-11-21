@@ -176,9 +176,11 @@ Notation oo := purely.
 
 Local Open Scope trunc_scope.
 
-(** The following definition is doubly sneaky.  Firstly, we define [merely A] to be an inhabitant of the universe [hProp] of hprops, rather than a type.  We can always treat it as a type because there is a coercion, but this means that if we need an element of [hProp] then we don't need a separate name for it.  Secondly, rather than define it as [Trunc -1] we define it as [Tr -1], the action of the truncation modality.  These are of course judgmentally equal, but choosing the latter means that Coq has an easier time applying general modality theorems to it. *)
+(** We define [merely A] to be an inhabitant of the universe [hProp] of hprops, rather than a type.  We can always treat it as a type because there is a coercion, but this means that if we need an element of [hProp] then we don't need a separate name for it. *)
 
-Definition merely (A : Type@{i}) : hProp@{i} := BuildhProp (Tr -1 A).
+Definition merely (A : Type@{i}) : hProp@{i} := BuildhProp (Trunc -1 A).
+
+(** Note that we define [merely] using [Trunc -1] rather than [Tr -1].  These are of course judgmentally equal, but our choice introduces fewer universe parameters, resulting in faster compilation times.  The other choice might in theory give Coq an easier time applying general modality theorems to [merely], but currently things seem to be transparent enough that it doesn't matter. *)
 
 Definition hexists {X} (P : X -> Type) : hProp := merely (sigT P).
 
