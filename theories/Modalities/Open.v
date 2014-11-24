@@ -3,7 +3,6 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp TruncType Extensions.
 Require Import Modality Accessible Nullification.
-Require Import hit.Pushout hit.Join.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
