@@ -59,11 +59,11 @@ Defined.
 Definition trunc_contr {n} {A} `{Contr A} : IsTrunc n.+1 A
   := (@trunc_leq -2 n.+1 tt _ _).
 
-Definition trunc_hprop {n} {A} `{IsHProp A} : IsTrunc n.+1.+1 A
-  := (@trunc_leq -1 n.+1.+1 tt _ _).
+Definition trunc_hprop {n} {A} `{IsHProp A} : IsTrunc n.+2 A
+  := (@trunc_leq -1 n.+2 tt _ _).
 
-Definition trunc_hset {n} {A} `{IsHSet A} : IsTrunc n.+1.+1.+1 A
-  := (@trunc_leq 0 n.+1.+1.+1 tt _ _).
+Definition trunc_hset {n} {A} `{IsHSet A} : IsTrunc n.+3 A
+  := (@trunc_leq 0 n.+3 tt _ _).
 
 (** Consider the preceding definitions as instances for typeclass search, but only if the requisite hypothesis is already a known assumption; otherwise they result in long or interminable searches. *)
 Hint Immediate trunc_contr : typeclass_instances.

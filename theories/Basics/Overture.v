@@ -412,6 +412,12 @@ Notation "n .+1" := (trunc_S n) (at level 2, left associativity, format "n .+1")
 Notation "n .+1" := (S n) (at level 2, left associativity, format "n .+1") : nat_scope.
 Notation "n .+2" := (n.+1.+1)%trunc (at level 2, left associativity, format "n .+2") : trunc_scope.
 Notation "n .+2" := (n.+1.+1)%nat (at level 2, left associativity, format "n .+2") : nat_scope.
+Notation "n .+3" := (n.+1.+2)%trunc (at level 2, left associativity, format "n .+3") : trunc_scope.
+Notation "n .+3" := (n.+1.+2)%nat (at level 2, left associativity, format "n .+3") : nat_scope.
+Notation "n .+4" := (n.+1.+3)%trunc (at level 2, left associativity, format "n .+4") : trunc_scope.
+Notation "n .+4" := (n.+1.+3)%nat (at level 2, left associativity, format "n .+4") : nat_scope.
+Notation "n .+5" := (n.+1.+4)%trunc (at level 2, left associativity, format "n .+5") : trunc_scope.
+Notation "n .+5" := (n.+1.+4)%nat (at level 2, left associativity, format "n .+5") : nat_scope.
 Local Open Scope trunc_scope.
 Notation "-2" := minus_two (at level 0) : trunc_scope.
 Notation "-1" := (-2.+1) (at level 0) : trunc_scope.
