@@ -2,7 +2,8 @@
 (** * Localization *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import Extensions ReflectiveSubuniverse Modality EquivalenceVarieties.
+Require Import Extensions EquivalenceVarieties.
+Require Import ReflectiveSubuniverse Accessible.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 

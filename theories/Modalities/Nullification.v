@@ -2,8 +2,9 @@
 (** * Nullification *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import Extensions Modality.
-Require Import hit.Localization.
+Require Import Extensions.
+Require Import Modality Accessible.
+Require Export Localization.    (** Nullification is a special case of localization *)
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 

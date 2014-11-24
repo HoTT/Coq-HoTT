@@ -1,5 +1,7 @@
 Require Export Coq.Unicode.Utf8.
-Require Import HoTT.Basics (*types.Bool*) hit.Circle hit.TwoSphere hit.Truncations hit.Suspension Modality.
+Require Import HoTT.Basics (*types.Bool*).
+Require Import Modalities.Identity.
+Require Import hit.Circle hit.TwoSphere hit.Truncations hit.Suspension.
 
 Notation Type₀ := Type0.
 Notation pr₁ := pr1.
