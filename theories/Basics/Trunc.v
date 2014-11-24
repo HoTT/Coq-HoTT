@@ -41,7 +41,7 @@ Proof.
   - apply IH, H.
 Qed.
 
-(** This could be an [Instance] (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like [m <= n], so it wouldn't ever actually be used.  *)
+(** This could be an [Instance] (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like [m <= n], so it would only ever be used trivially.  *)
 Definition trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A} : IsTrunc n A.
 Proof.
   generalize dependent A; generalize dependent m.
