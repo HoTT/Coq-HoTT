@@ -98,9 +98,7 @@ Section UnstableOctahedral.
               (fun b => equiv_sigma_symm0 _ _)) _); simpl.
     refine (equiv_compose' (equiv_inverse (equiv_sigma_assoc (fun b => f a = b) (fun w => g w.1 = c))) _).
     symmetry.
-    refine (@equiv_contr_sigma _ (fun w => g w.1 = c)
-             (* Unfortunately, we appear to have to give this argument explicitly so that Coq finds the correct instance. *)
-             (contr_basedpaths (f a))).
+    exact (equiv_contr_sigma (fun (w:{b:B & f a = b}) => g w.1 = c)).
   Defined.
 
 End UnstableOctahedral.
@@ -139,8 +137,6 @@ Definition hfiber_functor_sigma_idmap {A} (P Q : A -> Type)
    hfiber (g b) v.
 Proof.
   refine (equiv_compose' _ (hfiber_functor_sigma P Q idmap g b v)).
-  refine (@equiv_contr_sigma _
-           (fun w => hfiber (g w.1) (transport Q (w.2)^ v))
-           (* Unfortunately, we appear to have to give this argument explicitly so that Coq finds the correct instance. *)
-           (contr_basedpaths' b)).
+  exact (equiv_contr_sigma
+           (fun (w:hfiber idmap b) => hfiber (g w.1) (transport Q (w.2)^ v))).
 Defined.
