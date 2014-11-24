@@ -41,7 +41,8 @@ Proof.
   - apply IH, H.
 Qed.
 
-Global Instance trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A} : IsTrunc n A | 1000.
+(** This could be an [Instance] (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like [m <= n], so it would only ever be used trivially.  *)
+Definition trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A} : IsTrunc n A.
 Proof.
   generalize dependent A; generalize dependent m.
   simple_induction n n' IH;
@@ -51,18 +52,18 @@ Proof.
   - (* -2, S n' *) apply @trunc_succ, (IH -2); auto.
   - (* S m', S n' *) intros x y; apply (IH m');
                      auto with typeclass_instances.
-Qed.
+Defined.
 
-(** In particular, a contractible type, hprop, or hset is truncated at all higher levels. *)
+(** In particular, a contractible type, hprop, or hset is truncated at all higher levels.  We don't allow these to be used as idmaps, since there would be no point to it. *)
 
-Definition trunc_contr {n} {A} `{Contr A} : IsTrunc n A
-  := (@trunc_leq -2 n tt _ _).
+Definition trunc_contr {n} {A} `{Contr A} : IsTrunc n.+1 A
+  := (@trunc_leq -2 n.+1 tt _ _).
 
-Definition trunc_hprop {n} {A} `{IsHProp A} : IsTrunc n.+1 A
-  := (@trunc_leq -1 n.+1 tt _ _).
+Definition trunc_hprop {n} {A} `{IsHProp A} : IsTrunc n.+1.+1 A
+  := (@trunc_leq -1 n.+1.+1 tt _ _).
 
-Definition trunc_hset {n} {A} `{IsHSet A} : IsTrunc n.+1.+1 A
-  := (@trunc_leq 0 n.+1.+1 tt _ _).
+Definition trunc_hset {n} {A} `{IsHSet A} : IsTrunc n.+1.+1.+1 A
+  := (@trunc_leq 0 n.+1.+1.+1 tt _ _).
 
 (** Consider the preceding definitions as instances for typeclass search, but only if the requisite hypothesis is already a known assumption; otherwise they result in long or interminable searches. *)
 Hint Immediate trunc_contr : typeclass_instances.

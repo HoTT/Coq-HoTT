@@ -353,7 +353,7 @@ Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.
   : IsHProp (inO_internal@{u a i} O T).
   Proof.
     apply (@trunc_forall@{a i i} _); intros i.
-    apply ishprop_ooextendable@{a a i i i i i}.
+    apply ishprop_ooextendable@{a a i i i i}.
   Defined.
 
   Definition extendable_to_O_internal
