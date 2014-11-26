@@ -244,6 +244,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Adjoint/Dual.v \
 	$(srcdir)/theories/categories/Adjoint/UnitCounitCoercions.v \
 	$(srcdir)/theories/categories/Adjoint/UniversalMorphisms.v \
+	$(srcdir)/theories/categories/Adjoint/UniversalMorphisms/Core.v \
 	$(srcdir)/theories/categories/Adjoint/Hom.v \
 	$(srcdir)/theories/categories/Adjoint/HomCoercions.v \
 	$(srcdir)/theories/categories/Adjoint/Pointwise.v \

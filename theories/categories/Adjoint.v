@@ -23,7 +23,7 @@ Require Adjoint.Pointwise.
 
 Include Adjoint.Core.
 Include Adjoint.UnitCounit.
-Include Adjoint.UniversalMorphisms.
+Include Adjoint.UniversalMorphisms.Core.
 Include Adjoint.Hom.
 Include Adjoint.UnitCounitCoercions.
 Include Adjoint.HomCoercions.
