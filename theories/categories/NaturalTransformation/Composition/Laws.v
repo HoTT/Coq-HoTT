@@ -199,10 +199,8 @@ Ltac nt_solve_associator' :=
              refine (whisker_r _ F)
          end.
 Ltac nt_solve_associator :=
-  repeat match goal with
-           | _ => refine (compose (associator_1 _ _ _) _); progress nt_solve_associator'
-           | _ => refine (compose _ (associator_1 _ _ _)); progress nt_solve_associator'
-           | _ => refine (compose (associator_2 _ _ _) _); progress nt_solve_associator'
-           | _ => refine (compose _ (associator_2 _ _ _)); progress nt_solve_associator'
-           | _ => progress nt_solve_associator'
-         end.
+  repeat first [ progress nt_solve_associator'
+               | refine (compose (associator_1 _ _ _) _); progress nt_solve_associator'
+               | refine (compose _ (associator_1 _ _ _)); progress nt_solve_associator'
+               | refine (compose (associator_2 _ _ _) _); progress nt_solve_associator'
+               | refine (compose _ (associator_2 _ _ _)); progress nt_solve_associator' ].
