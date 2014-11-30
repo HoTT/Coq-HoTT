@@ -198,6 +198,20 @@ Proof.
   - intros f g; apply (trunc_equiv _ (apD10 ^-1)).
 Defined.
 
+(** ** Contractibility: A product over a contractible type is equivalent to the fiber over the center. *)
+
+Definition equiv_contr_forall `{Contr A} `(P : A -> Type)
+: (forall a, P a) <~> P (center A).
+Proof.
+  refine (equiv_adjointify (fun (f:forall a, P a) => f (center A)) _ _ _).
+  - intros p a; exact (transport P (path_contr _ _) p).
+  - intros p.
+    refine (transport2 P (q := 1) _ p).
+    apply path_contr.
+  - intros f; apply path_forall; intros a.
+    apply apD.
+Defined.
+
 (** ** Symmetry of curried arguments *)
 
 (** Using the standard Haskell name for this, as it’s a handy utility function.

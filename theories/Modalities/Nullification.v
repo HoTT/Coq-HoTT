@@ -10,16 +10,16 @@ Local Open Scope path_scope.
 
 (** Nullification is the special case of localization where the codomains of the generating maps are all [Unit].  In this case, we get a modality and not just a reflective subuniverse. *)
 
-(** The hypotheses of this lemma may look slightly odd (why are we bothering to talk about type families dependent over [Unit]?), but they seem to be the most convenient to make the induction go through.  We define it as a [Fixpoint] rather than as a [Definition] with [induction], because the latter would introduce an undesired extra universe parameter (the size of the inductive motive, which must be strictly larger than the size of [C] and [D] since it is generalized over them). *)
-Fixpoint extendable_over_unit (n : nat)
-  (A : Type) (C : Unit -> Type) (D : forall u, C u -> Type)
-  (ext : ExtendableAlong n (@const A Unit tt) C)
+(** The hypotheses of this lemma may look slightly odd (why are we bothering to talk about type families dependent over [Unit]?), but they seem to be the most convenient to make the induction go through.  *)
+Definition extendable_over_unit (n : nat)
+  (A : Type@{a}) (C : Unit@{a} -> Type@{i}) (D : forall u, C u -> Type@{j})
+  (ext : ExtendableAlong@{a a i i} n (@const A Unit tt) C)
   (ext' : forall (c : forall u, C u),
-            ExtendableAlong n (@const A Unit tt) (fun u => (D u (c u))))
-  {struct n}
-: ExtendableAlong_Over n (@const A Unit tt) C D ext.
+            ExtendableAlong@{a a j j} n (@const A Unit tt) (fun u => (D u (c u))))
+: ExtendableAlong_Over@{a a i i j j i j j j} n (@const A Unit tt) C ext D.
 Proof.
-  destruct n as [|n]; [exact tt | split].
+  generalize dependent C; simple_induction n n IH;
+    intros C D ext ext'; [exact tt | split].
   - intros g g'.
     exists ((fst (ext' (fst ext g).1)
                  (fun a => ((fst ext g).2 a)^ # (g' a))).1);
@@ -28,7 +28,7 @@ Proof.
     exact ((fst (ext' (fst ext g).1)
                 (fun a => ((fst ext g).2 a)^ # (g' a))).2 a).
   - intros h k h' k'.
-    apply extendable_over_unit; intros g.
+    apply IH; intros g.
     exact (snd (ext' k) (fun u => g u # h' u) k').
 Defined.
 
