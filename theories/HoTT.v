@@ -46,6 +46,7 @@ Require Export Modalities.ReflectiveSubuniverse.
 Require Export Modalities.Modality.
 Require Export Modalities.Accessible.
 Require Export Modalities.Lex.
+Require Export Modalities.Topological.
 Require Export Modalities.Notnot.
 Require Export Modalities.Identity.
 Require Export Modalities.Localization.

@@ -2,7 +2,7 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp TruncType Extensions.
-Require Import Modality Accessible Nullification.
+Require Import Modality Accessible Nullification Lex Topological.
 Require Import hit.Pushout hit.Join.
 
 Local Open Scope path_scope.
@@ -151,6 +151,32 @@ Module Accessible_ClosedModalities
 
 End Accessible_ClosedModalities.
 
+(** In fact, it is topological. *)
+Module Topological_ClosedModalities (uaM : UnivalenceM)
+       <: Topological_Modalities ClosedModalities Accessible_ClosedModalities.
+
+  Definition ua : Closed_Modality -> Univalence
+    := fun _ => uaM.ua.
+
+  Definition ishprop_acc_gen
+  : forall (O : Closed_Modality) i, IsHProp (Accessible_ClosedModalities.acc_gen O i).
+  Proof.
+    exact _.
+  Defined.
+
+End Topological_ClosedModalities.
+
+(** And therefore, assuming univalence, lex. *)
+Module Lex_ClosedModalities (uaM : UnivalenceM).
+  Module TopCl := Topological_ClosedModalities uaM.
+  Module LexTop
+    := Lex_Topological_Modalities
+         ClosedModalities
+         Accessible_ClosedModalities
+         TopCl.
+End Lex_ClosedModalities.
+
 (** Thus, it also has the following alternative version. *)
-Definition Cl' (U : hProp) : Nullification_Modality
-  := Nul (Build_NullGenerators U (fun _ => Empty)).
+Definition Cl' `{Univalence} (U : hProp)
+: TopologicalNullification_Modality
+  := TNul _ (Build_NullGenerators U (fun _ => Empty)) _.

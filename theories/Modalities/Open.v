@@ -2,7 +2,7 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp TruncType Extensions.
-Require Import Modality Accessible Nullification.
+Require Import Modality Accessible Nullification Lex.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -13,6 +13,8 @@ Record Open_Modality :=
   Op { funext_Op : Funext ;
        unOp : hProp
      }.
+
+(** ** Open modalities *)
 
 (** Exercise 7.13(i): Open modalities *)
 Module OpenModalities_easy <: EasyModalities.
@@ -83,7 +85,34 @@ Export OpM.RSU.Coercions.
 Coercion Open_Modality_to_Modality :=
   idmap : Open_Modality -> OpenModalities.Modality.
 
-(** The open modality is accessible. *)
+(** ** The open modality is lex *)
+
+(** Note that unlike the case for closed and topological modalities, we can prove this without univalence (though we do of course need funext). *)
+Module Lex_OpenModalities <: Lex_Modalities OpenModalities.
+
+  Module Import Os_Theory := OpM.
+
+  Definition isconnected_paths
+  : forall (O : Modality@{u a}) (A : Type@{i}) (x y : A),
+      IsConnected@{u a i} O A -> IsConnected@{u a i} O (x = y).
+  Proof.
+    intros O A x y.
+    pose (U := unOp O); pose proof (funext_Op O).
+    change (Contr (U -> A) -> Contr (U -> (x = y))); intros ?.
+    assert (uc : U -> Contr A).
+    { intros u.
+      pose (contr_inhabited_hprop U u).
+      refine (contr_equiv (U -> A) (equiv_contr_forall _)). }
+    refine (BuildContr _ _ _).
+    - intros u; pose (uc u); exact (center (x=y)).
+    - intros f; apply path_arrow; intros u.
+      pose proof (uc u); apply path_contr.
+  Defined.
+
+End Lex_OpenModalities.
+
+(** ** The open modality is accessible. *)
+
 Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
 
   Definition acc_gen
