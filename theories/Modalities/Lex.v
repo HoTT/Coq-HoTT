@@ -11,27 +11,23 @@ Local Open Scope equiv_scope.
 
 (** A lex modality is one that preserves finite limits, or equivalently pullbacks.  It turns out that a more basic and useful way to say this is that all path-spaces of connected types are connected.  Note how different this is from the behavior of, say, truncation modalities!
 
-  Unfortunately, this is a "large" definition, and we don't know of any small one that's equivalent to it (see <http://mathoverflow.net/questions/185980/a-small-definition-of-sub-%E2%88%9E-1-topoi>), so lex-ness has to be a module type. *)
-Module Type Lex_Modalities (Os : Modalities).
-  Export Os.
+  This is a "large" definition, and we don't know of any small one that's equivalent to it (see <http://mathoverflow.net/questions/185980/a-small-definition-of-sub-%E2%88%9E-1-topoi>.  However, so far we never need to apply it "at multiple universes at once".  Thus, rather than making it a module type, we can make it a typeclass and rely on ordinary universe polymorphism. *)
+
+Module Lex_Modalities_Theory (Os : Modalities).
+
   Module Export Os_Theory := Modalities_Theory Os.
 
-  Parameter isconnected_paths
-  : forall (O : Modality@{u a}) (A : Type@{i}) (x y : A),
-      IsConnected@{u a i} O A -> IsConnected@{u a i} O (x = y).
+  Class Lex (O : Modality@{u a})
+    := isconnected_paths : forall (A : Type@{i}) (x y : A),
+                             IsConnected@{u a i} O A ->
+                             IsConnected@{u a i} O (x = y).
 
-End Lex_Modalities.
+  Existing Instance isconnected_paths.
 
-Module Lex_Modalities_Theory
-       (Os : Modalities)
-       (Lex : Lex_Modalities Os).
-
-  Export Lex.
-
-  (** The next six lemmas are actually equivalent characterizations of lex-ness. *)
+  (** The next six lemmas are equivalent characterizations of lex-ness. *)
 
   (** 1. Every map between connected types is a connected map. *)
-  Global Instance conn_map_lex {O : Modality}
+  Global Instance conn_map_lex {O : Modality} `{Lex O}
          {A : Type@{i}} {B : Type@{j}} {f : A -> B}
          `{IsConnected O A} `{IsConnected O B}
   : IsConnMap O f.
@@ -40,7 +36,7 @@ Module Lex_Modalities_Theory
   Defined.
 
   (** 2. Connected maps are left- as well as right-cancellable. *)
-  Definition cancelL_conn_map (O : Modality)
+  Definition cancelL_conn_map (O : Modality) `{Lex O}
              {A B C : Type} (f : A -> B) (g : B -> C)
   : IsConnMap O g -> IsConnMap O (g o f) -> IsConnMap O f.
   Proof.
@@ -49,7 +45,7 @@ Module Lex_Modalities_Theory
   Defined.
 
   (** 3. Every map inverted by [O] is [O]-connected. *)
-  Definition isconnected_O_inverts (O : Modality)
+  Definition isconnected_O_inverts (O : Modality) `{Lex O}
              {A B : Type} (f : A -> B) `{O_inverts O f}
   : IsConnMap O f.
   Proof.
@@ -59,7 +55,7 @@ Module Lex_Modalities_Theory
   Defined.
 
   (** 4. Connected types are closed under pullbacks. *)
-  Global Instance isconnected_pullback (O : Modality)
+  Global Instance isconnected_pullback (O : Modality) `{Lex O}
          {A B C : Type} {f : A -> C} {g : B -> C}
          `{IsConnected O A} `{IsConnected O B} `{IsConnected O C}
   : IsConnected O (Pullback f g).
@@ -71,8 +67,8 @@ Module Lex_Modalities_Theory
                               _).
   Defined.
 
-  (** 5. The reflector preserves pullbacks.  This justifies the terminology "lex" (and is another equivalent characterization of it. *)
-  Definition O_functor_pullback (O : Modality)
+  (** 5. The reflector preserves pullbacks.  This justifies the terminology "lex". *)
+  Definition O_functor_pullback (O : Modality) `{Lex O}
              {A B C} (f : B -> A) (g : C -> A)
   : IsPullback (O_functor_square O _ _ _ _ (pullback_commsq f g)).
   Proof.
@@ -115,7 +111,7 @@ Module Lex_Modalities_Theory
   : O (x = y) -> (to O A x = to O A y)
     := O_rec (ap (to O A)).
 
-  Global Instance isequiv_O_path_cmp {O : Modality} {A} (x y : A)
+  Global Instance isequiv_O_path_cmp {O : Modality} `{Lex O} {A} (x y : A)
   : IsEquiv (O_path_cmp O x y).
   Proof.
     refine (isequiv_conn_ino_map O _).
@@ -126,10 +122,10 @@ Module Lex_Modalities_Theory
       refine (isconnected_equiv O _ (equiv_inverse (hfiber_ap p)) _).
   Defined.
 
-  (** We will not prove that any of these lemmas are equivalent characterizations of lex-ness, because (1) they are all fairly obvious, (2) modules would make them rather annoying to prove, and (3) we don't yet know of any use for them, since [isconnected_paths] is usually strictly easier to prove than they are. *)
+  (** We will not prove that any of these lemmas are equivalent characterizations of lex-ness, because they are all fairly obvious and we don't yet know of any use for them; [isconnected_paths] is usually strictly easier to prove than they are. *)
 
   (** Another useful lemma, which is probably not equivalent to lex-ness: any commutative square with connected maps in one direction and modal ones in the other must necessarily be a pullback. *)
-  Definition ispullback_connmap_mapino_commsq (O : Modality) {A B C D}
+  Definition ispullback_connmap_mapino_commsq (O : Modality) `{Lex O} {A B C D}
              {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
              `{IsConnMap O _ _ f} `{IsConnMap O _ _ g}
              `{MapIn O _ _ h} `{MapIn O _ _ k}
@@ -143,7 +139,7 @@ Module Lex_Modalities_Theory
   Defined.
 
   (** Lex modalities preserve [n]-types for all [n].  This is definitely not equivalent to lex-ness, since it is true for the truncation modalities that are not lex.  But it is also not true of all modalities; e.g. the shape modality in a cohesive topos can take 0-types to [oo]-types. *)
-  Global Instance istrunc_O_lex `{Funext} {O : Modality}
+  Global Instance istrunc_O_lex `{Funext} {O : Modality} `{Lex O}
          {n} {A} `{IsTrunc n A}
   : IsTrunc n (O A).
   Proof.
@@ -159,13 +155,12 @@ End Lex_Modalities_Theory.
 (** We now restrict to lex modalities that are also accessible. *)
 Module Accessible_Lex_Modalities_Theory
        (Os : Modalities)
-       (Acc : Accessible_Modalities Os)
-       (Lex : Lex_Modalities Os).
+       (Acc : Accessible_Modalities Os).
 
-  Export Os Acc Lex.
   Module Export Acc_Theory := Accessible_Modalities_Theory Os Acc.
-  Module Export Lex_Theory := Lex_Modalities_Theory Os Lex.
-  (** Unfortunately, another subtlety of modules bites us here.  It appears that each application of a parametrized module to arguments creates a *new* module, and Coq has no algorithm (not even syntactic identity) for considering two such modules "the same".  In particular, the applications [Module Os_Theory := Modalities_Theory Os] that occur in both [Accessible_Modalities_Theory Os Acc] and [Lex_Modalities_Theory Os Lex] create two *different* modules, which appear here as [Acc_Theory.Os_Theory] and [Lex_Theory.Os_Theory].  Thus, for instance, we have two different definitions [Acc_Theory.Os_Theory.O_ind] and [Lex_Theory.Os_Theory.O_ind], etc.
+  Module Export Lex_Theory := Lex_Modalities_Theory Os.
+
+  (** Unfortunately, another subtlety of modules bites us here.  It appears that each application of a parametrized module to arguments creates a *new* module, and Coq has no algorithm (not even syntactic identity) for considering two such modules "the same".  In particular, the applications [Module Os_Theory := Modalities_Theory Os] that occur in both [Accessible_Modalities_Theory Os Acc] and [Lex_Modalities_Theory Os] create two *different* modules, which appear here as [Acc_Theory.Os_Theory] and [Lex_Theory.Os_Theory].  Thus, for instance, we have two different definitions [Acc_Theory.Os_Theory.O_ind] and [Lex_Theory.Os_Theory.O_ind], etc.
 
   Fortunately, since these duplicate pairs of definitions each have the same body *and are (usually) transparent*, Coq is willing to consider them identical.  Thus, this doesn't cause a great deal of trouble.  However, there are certain contexts in which this doesn't apply.  For instance, if any definition in [Modalities_Theory] is opaque, then Coq will be unable to notice that its duplicate copies in [Acc_Theory.Os_Theory] and [Lex_Theory.Os_Theory] were identical, potentially causing problems.  But since we generally only make definitions opaque if we aren't going to depend on their actual value anywhere else, this is unlikely to be much of an issue.
 
@@ -177,11 +172,11 @@ Module Accessible_Lex_Modalities_Theory
 
   Global Instance isconnected_acc_to_lex {O : Modality} {A : Type}
          {H : Acc_Theory.Os_Theory.IsConnected O A}
-            : Lex.Os_Theory.IsConnected O A
+            : Lex_Theory.Os_Theory.IsConnected O A
          := H.
 
   (** Probably the most important thing about an accessible lex modality is that the universe of modal types is again modal.  Here by "the universe" we mean a universe large enough to contain the generating family; this is why we need accessibility. *)
-  Global Instance inO_typeO `{Univalence} (O : Modality)
+  Global Instance inO_typeO `{Univalence} (O : Modality) `{Lex O}
   : In O (Type_ O).
   Proof.
     apply (snd (inO_iff_isnull O _)); intros i n; simpl in *.
@@ -219,37 +214,12 @@ Module Accessible_Lex_Modalities_Theory
       (** Typeclass magic! *)
   Defined.
 
-End Accessible_Lex_Modalities_Theory.
-
-(** [inO_typeO] is also an equivalent characterization of lex-ness for a modality.  Unlike the previous equivalences, we *will* jump through the module hoops necessary to prove this, because it is less obvious, and also more useful. *)
-
-Module Type InO_Type (Os : Modalities).
-
-  Export Os.
-  Module Export Os_Theory := Modalities_Theory Os.
-
-  Parameter inO_typeO
-  : forall (O : Modality@{u a}),
-      let enforce_le := idmap : Type@{a} -> Type@{i} in
-      In@{u a j} O (Type_@{u a j i} O).
-  Check inO_typeO@{u a i j}.
-
-End InO_Type.
-
-Module Lex_InO_Type (Os : Modalities) (InOT : InO_Type Os)
-       <: Lex_Modalities Os.
-
-  Export Os.
-  Module Export Os_Theory := Modalities_Theory Os.
-  Import InOT.
-
-  Definition isconnected_paths
-  : forall (O : Modality@{u a}) (A : Type@{i}) (x y : A),
-      IsConnected@{u a i} O A -> IsConnected@{u a i} O (x = y).
+  (** [inO_typeO] is also an equivalent characterization of lex-ness for a modality.  We will prove this, because it is less obvious, and also more useful. *)
+  Definition lex_inO_typeO (O : Modality) `{In O (Type_ O)}
+  : Lex O.
   Proof.
-    intros O A x y ?.
+    intros A x y ?.
     apply isconnected_from_elim_to_O.
-    pose (inO_typeO O).
     (** The idea is that if [A] is connected and [Type_ O] is modal, then [fun y => O (x = y) : A -> Type_ O] is constant.  Thus, [to O (x=x) 1] can be transported around to make it contractible everywhere. *)
     pose (e := isconnected_elim O (Type_ O)
                  (fun y' => (O (x = y') ; O_inO _))).
@@ -258,4 +228,4 @@ Module Lex_InO_Type (Os : Modalities) (InOT : InO_Type Os)
     exact ((transport2 idmap (ap (ap pr1) (concat_pV (e.2 x))) _)^).
   Defined.
 
-End Lex_InO_Type.
+End Accessible_Lex_Modalities_Theory.
