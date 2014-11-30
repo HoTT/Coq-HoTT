@@ -72,6 +72,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/Modalities/ReflectiveSubuniverse.v \
 	$(srcdir)/theories/Modalities/Modality.v \
 	$(srcdir)/theories/Modalities/Accessible.v \
+	$(srcdir)/theories/Modalities/Lex.v \
 	$(srcdir)/theories/Modalities/Notnot.v \
 	$(srcdir)/theories/Modalities/Identity.v \
 	$(srcdir)/theories/Modalities/Localization.v \
