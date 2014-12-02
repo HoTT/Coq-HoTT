@@ -26,7 +26,7 @@ Local Ltac path_forall_beta_t :=
            generalize (@path_forall H A B f g e);
            clear X; clear e;
            intro X; destruct X;
-           simpl;
+           cbn;
            unfold apD10;
            rewrite !(path_forall_1 f)
   end;
@@ -144,7 +144,7 @@ Proof.
   repeat match goal with
            | [ |- context[e ?x] ] => induction (e x)
          end;
-    simpl.
+    cbn.
   reflexivity.
 Qed.
 
@@ -243,7 +243,7 @@ Ltac step_path_induction_hammer :=
   match goal with
     | _ => reflexivity
     | _ => intro
-    | _ => progress simpl in *
+    | _ => progress cbn in *
     | _ => exact (contr _)
     | [ p : _ = _ |- _ ]
       => progress destruct p (* placed up here for speed *)
@@ -290,7 +290,7 @@ Ltac eapply_hyp := repeat eapply_hyp'.
 Ltac simpl_do_clear tac term :=
   let H := fresh in
   assert (H := term);
-    simpl in H |- *;
+    cbn in H |- *;
     tac H;
     clear H.
 
