@@ -1113,4 +1113,92 @@ Module Modalities_Restriction
 
 End Modalities_Restriction.
 
+(** ** Union of families of modalities *)
+
+Module Modalities_FamUnion (Os1 Os2 : Modalities)
+       <: Modalities.
+
+  Definition Modality : Type2@{u a}
+    := Os1.Modality@{u a} + Os2.Modality@{u a}.
+
+  Coercion Mod_inl := inl : Os1.Modality -> Modality.
+  Coercion Mod_inr := inr : Os2.Modality -> Modality.
+
+  Definition O_reflector : forall (O : Modality@{u a}),
+                            Type2le@{i a} -> Type2le@{i a}.
+  Proof.
+    intros [O|O]; [ exact (Os1.O_reflector@{u a i} O)
+                  | exact (Os2.O_reflector@{u a i} O) ].
+  Defined.
+
+  Definition inO_internal : forall (O : Modality@{u a}),
+                            Type2le@{i a} -> Type2le@{i a}.
+  Proof.
+    intros [O|O]; [ exact (Os1.inO_internal@{u a i} O)
+                  | exact (Os2.inO_internal@{u a i} O) ].
+  Defined.
+
+  Definition O_inO_internal : forall (O : Modality@{u a}) (T : Type@{i}),
+                               inO_internal@{u a i} O (O_reflector@{u a i} O T).
+  Proof.
+    intros [O|O]; [ exact (Os1.O_inO_internal@{u a i} O)
+                  | exact (Os2.O_inO_internal@{u a i} O) ].
+  Defined.
+
+  Definition to : forall (O : Modality@{u a}) (T : Type@{i}),
+                   T -> O_reflector@{u a i} O T.
+  Proof.
+    intros [O|O]; [ exact (Os1.to@{u a i} O)
+                  | exact (Os2.to@{u a i} O) ].
+  Defined.
+
+  Definition inO_equiv_inO_internal :
+      forall (O : Modality@{u a}) (T U : Type@{i})
+             (T_inO : inO_internal@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
+        inO_internal@{u a i} O U.
+  Proof.
+    intros [O|O]; [ exact (Os1.inO_equiv_inO_internal@{u a i} O)
+                  | exact (Os2.inO_equiv_inO_internal@{u a i} O) ].
+  Defined.
+
+  Definition hprop_inO_internal
+  : Funext -> forall (O : Modality@{u a}) (T : Type@{i}),
+                IsHProp (inO_internal@{u a i} O T).
+  Proof.
+    intros ? [O|O]; [ exact (Os1.hprop_inO_internal@{u a i} _ O)
+                    | exact (Os2.hprop_inO_internal@{u a i} _ O) ].
+  Defined.
+
+  Definition O_ind_internal
+  : forall (O : Modality@{u a})
+           (A : Type2le@{i a}) (B : O_reflector O A -> Type2le@{j a})
+           (B_inO : forall oa, inO_internal@{u a j} O (B oa)),
+      (forall a, B (to O A a)) -> forall a, B a.
+  Proof.
+    intros [O|O]; [ exact (Os1.O_ind_internal@{u a i j} O)
+                  | exact (Os2.O_ind_internal@{u a i j} O) ].
+  Defined.
+
+  Definition O_ind_beta_internal
+  : forall (O : Modality@{u a})
+           (A : Type@{i}) (B : O_reflector O A -> Type@{j})
+           (B_inO : forall oa, inO_internal@{u a j} O (B oa))
+           (f : forall a : A, B (to O A a)) (a:A),
+      O_ind_internal@{u a i j} O A B B_inO f (to O A a) = f a.
+  Proof.
+    intros [O|O]; [ exact (Os1.O_ind_beta_internal@{u a i j} O)
+                  | exact (Os2.O_ind_beta_internal@{u a i j} O) ].
+  Defined.
+
+  Definition minO_paths
+  : forall (O : Modality@{u a})
+           (A : Type2le@{i a}) (A_inO : inO_internal@{u a i} O A) (z z' : A),
+      inO_internal@{u a i} O (z = z').
+  Proof.
+    intros [O|O]; [ exact (Os1.minO_paths@{u a i} O)
+                  | exact (Os2.minO_paths@{u a i} O) ].
+  Defined.
+
+End Modalities_FamUnion.
+
 (** For examples of modalities, see the files Notnot, Identity, Nullification, PropositionalFracture, and hit/Localization. *)

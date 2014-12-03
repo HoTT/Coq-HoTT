@@ -960,6 +960,70 @@ End ReflectiveSubuniverses_Restriction.
 
 (** ** Union of families of reflective subuniverses *)
 
-(** TODO *)
+Module ReflectiveSubuniverses_FamUnion
+       (Os1 Os2 : ReflectiveSubuniverses)
+<: ReflectiveSubuniverses.
+
+  Definition ReflectiveSubuniverse : Type2@{u a}
+    := Os1.ReflectiveSubuniverse@{u a} + Os2.ReflectiveSubuniverse@{u a}.
+
+  Coercion RSU_inl := inl : Os1.ReflectiveSubuniverse -> ReflectiveSubuniverse.
+  Coercion RSU_inr := inr : Os2.ReflectiveSubuniverse -> ReflectiveSubuniverse.
+
+  Definition O_reflector : forall (O : ReflectiveSubuniverse@{u a}),
+                             Type2le@{i a} -> Type2le@{i a}.
+  Proof.
+    intros [O|O]; [ exact (Os1.O_reflector@{u a i} O)
+                  | exact (Os2.O_reflector@{u a i} O) ].
+  Defined.
+
+  Definition inO_internal : forall (O : ReflectiveSubuniverse@{u a}),
+                             Type2le@{i a} -> Type2le@{i a}.
+  Proof.
+    intros [O|O]; [ exact (Os1.inO_internal@{u a i} O)
+                  | exact (Os2.inO_internal@{u a i} O) ].
+  Defined.
+
+  Definition O_inO_internal
+  : forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
+      inO_internal@{u a i} O (O_reflector@{u a i} O T).
+  Proof.
+    intros [O|O]; [ exact (Os1.O_inO_internal@{u a i} O)
+                  | exact (Os2.O_inO_internal@{u a i} O) ].
+  Defined.
+
+  Definition to : forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
+                   T -> O_reflector@{u a i} O T.
+  Proof.
+    intros [O|O]; [ exact (Os1.to@{u a i} O)
+                  | exact (Os2.to@{u a i} O) ].
+  Defined.
+
+  Definition inO_equiv_inO_internal :
+      forall (O : ReflectiveSubuniverse@{u a}) (T U : Type@{i})
+             (T_inO : inO_internal@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
+        inO_internal@{u a i} O U.
+  Proof.
+    intros [O|O]; [ exact (Os1.inO_equiv_inO_internal@{u a i} O)
+                  | exact (Os2.inO_equiv_inO_internal@{u a i} O) ].
+  Defined.
+
+  Definition hprop_inO_internal
+  : Funext -> forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
+                IsHProp (inO_internal@{u a i} O T).
+  Proof.
+    intros ? [O|O]; [ exact (Os1.hprop_inO_internal@{u a i} _ O)
+                    | exact (Os2.hprop_inO_internal@{u a i} _ O) ].
+  Defined.
+
+  Definition extendable_to_O_internal
+  : forall (O : ReflectiveSubuniverse@{u a}) {P : Type2le@{i a}} {Q : Type2le@{j a}} {Q_inO : inO_internal@{u a j} O Q},
+      ooExtendableAlong@{i i j k} (to O P) (fun _ => Q).
+  Proof.
+    intros [O|O]; [ exact (@Os1.extendable_to_O_internal@{u a i j k} O)
+                  | exact (@Os2.extendable_to_O_internal@{u a i j k} O) ].
+  Defined.
+
+End ReflectiveSubuniverses_FamUnion.
 
 (** For examples of reflective subuniverses, see the examples of modalities listed in the file [Modality], and also [Localization]. *)
