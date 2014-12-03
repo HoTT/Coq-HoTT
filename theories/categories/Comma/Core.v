@@ -51,9 +51,7 @@ Local Open Scope category_scope.
 (** ** Comma category [(S / T)] *)
 Module Import CommaCategory.
   Section comma_category_parts.
-    Variable A : PreCategory.
-    Variable B : PreCategory.
-    Variable C : PreCategory.
+    Variables A B C : PreCategory.
     Variable S : Functor A C.
     Variable T : Functor B C.
 
@@ -311,8 +309,7 @@ Hint Constructors morphism object : category.
 
 (** ** (co)slice category [(a / F)], [(F / a)] *)
 Section slice_category.
-  Variable A : PreCategory.
-  Variable C : PreCategory.
+  Variables A C : PreCategory.
   Variable a : C.
   Variable S : Functor A C.
 

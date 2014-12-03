@@ -33,8 +33,7 @@ Section adjunction_from_universal.
 
     Section identity_of.
       Context `{Funext}.
-      Variable C : PreCategory.
-      Variable D : PreCategory.
+      Variables C D : PreCategory.
 
       Variable G : Functor D C.
       Context `(HM : forall Y, @IsInitialMorphism _ _ Y G (M Y)).
@@ -63,12 +62,9 @@ Section adjunction_from_universal.
     Section composition_of.
       Context `{Funext}.
       (** TODO: How do I write the dependent version? *)
-      Variable C : PreCategory.
-      Variable D : PreCategory.
+      Variables C D : PreCategory.
 
-      Variable G : Functor D C.
-      Variable G' : Functor D C.
-      Variable G'' : Functor D C.
+      Variables G G' G'' : Functor D C.
       Variable T : NaturalTransformation G G'.
       Variable T' : NaturalTransformation G' G''.
       Context `(HM : forall Y, @IsInitialMorphism _ _ Y G (M Y)).
@@ -106,8 +102,7 @@ Section adjunction_from_universal.
   Section terminal.
     Section identity_of.
       Context `{Funext}.
-      Variable C : PreCategory.
-      Variable D : PreCategory.
+      Variables C D : PreCategory.
 
       Variable F : Functor C D.
       Context `(HM : forall X, @IsTerminalMorphism _ _ F X (M X)).
@@ -123,12 +118,9 @@ Section adjunction_from_universal.
     Section composition_of.
       Context `{Funext}.
       (** TODO: How do I write the dependent version? *)
-      Variable C : PreCategory.
-      Variable D : PreCategory.
+      Variables C D : PreCategory.
 
-      Variable F : Functor C D.
-      Variable F' : Functor C D.
-      Variable F'' : Functor C D.
+      Variables F F' F'' : Functor C D.
       Variable T : NaturalTransformation F F'.
       Variable T' : NaturalTransformation F' F''.
       Context `(HM : forall X, @IsTerminalMorphism _ _ F X (M X)).

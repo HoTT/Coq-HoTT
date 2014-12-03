@@ -13,8 +13,7 @@ Local Open Scope natural_transformation_scope.
 Section path_natural_transformation.
   Context `{Funext}.
 
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
   Variables F G : Functor C D.
 
   Local Open Scope equiv_scope.

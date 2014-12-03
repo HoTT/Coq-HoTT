@@ -16,9 +16,7 @@ Local Open Scope category_scope.
 
 (** ** First projection [(S / T) → A × B] (for [S : A → C ← B : T]) *)
 Section comma_category.
-  Variable A : PreCategory.
-  Variable B : PreCategory.
-  Variable C : PreCategory.
+  Variables A B C : PreCategory.
   Variable S : Functor A C.
   Variable T : Functor B C.
 

@@ -31,9 +31,7 @@ Local Infix "*" := prod : natural_transformation_scope.
 
 (** ** Natural transformations between partially applied functors *)
 Section induced.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
-  Variable E : PreCategory.
+  Variables C D E : PreCategory.
 
   Variable F : Functor (C * D) E.
 

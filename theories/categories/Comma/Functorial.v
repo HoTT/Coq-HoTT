@@ -64,16 +64,12 @@ Local Ltac functorial_helper_t unfold_lem :=
 
 Section functorial.
   Section single_source.
-    Variable A : PreCategory.
-    Variable B : PreCategory.
-    Variable C : PreCategory.
+    Variables A B C : PreCategory.
     Variable S : Functor A C.
     Variable T : Functor B C.
 
     Section morphism_of.
-      Variable A' : PreCategory.
-      Variable B' : PreCategory.
-      Variable C' : PreCategory.
+      Variables A' B' C' : PreCategory.
       Variable S' : Functor A' C'.
       Variable T' : Functor B' C'.
 
@@ -148,21 +144,15 @@ Section functorial.
   End single_source.
 
   Section composition_of.
-    Variable A : PreCategory.
-    Variable B : PreCategory.
-    Variable C : PreCategory.
+    Variables A B C : PreCategory.
     Variable S : Functor A C.
     Variable T : Functor B C.
 
-    Variable A' : PreCategory.
-    Variable B' : PreCategory.
-    Variable C' : PreCategory.
+    Variables A' B' C' : PreCategory.
     Variable S' : Functor A' C'.
     Variable T' : Functor B' C'.
 
-    Variable A'' : PreCategory.
-    Variable B'' : PreCategory.
-    Variable C'' : PreCategory.
+    Variables A'' B'' C'' : PreCategory.
     Variable S'' : Functor A'' C''.
     Variable T'' : Functor B'' C''.
 

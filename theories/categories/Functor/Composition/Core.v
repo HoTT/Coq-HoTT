@@ -9,10 +9,7 @@ Set Asymmetric Patterns.
 Local Open Scope morphism_scope.
 
 Section composition.
-  Variable B : PreCategory.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
-  Variable E : PreCategory.
+  Variables B C D E : PreCategory.
   Variable G : Functor D E.
   Variable F : Functor C D.
 

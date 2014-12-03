@@ -11,8 +11,7 @@ Delimit Scope functor_scope with functor.
 Local Open Scope morphism_scope.
 
 Section Functor.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
 
   (** Quoting from the lecture notes for MIT's 18.705, Commutative Algebra:
 

@@ -130,9 +130,7 @@ Section kan_extensions.
 
   (** *** Pullback-along functor *)
   Context `{Funext}.
-  Variable C  : PreCategory.
-  Variable C' : PreCategory.
-  Variable D  : PreCategory.
+  Variables C C' D : PreCategory.
 
   Section pullback_along.
     Definition pullback_along_functor

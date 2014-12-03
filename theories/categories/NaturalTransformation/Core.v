@@ -12,8 +12,7 @@ Local Open Scope morphism_scope.
 Local Open Scope natural_transformation_scope.
 
 Section NaturalTransformation.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
   Variables F G : Functor C D.
 
   (**

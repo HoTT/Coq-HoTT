@@ -13,9 +13,7 @@ Set Asymmetric Patterns.
 (** * Construction of the functor [_∘_ : (C → D) × (D → E) → (C → E)] and it's curried variant *)
 Section functorial_composition.
   Context `{Funext}.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
-  Variable E : PreCategory.
+  Variables C D E : PreCategory.
 
   Local Open Scope natural_transformation_scope.
 

@@ -21,10 +21,7 @@ Section composition_lemmas.
 
   Context `{H0 : Funext}.
 
-  Variable B : PreCategory.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
-  Variable E : PreCategory.
+  Variables B C D E : PreCategory.
 
   Variable F : Functor B C.
   Variable F' : Functor C B.

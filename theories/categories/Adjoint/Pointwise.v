@@ -27,8 +27,7 @@ Local Open Scope natural_transformation_scope.
 Section AdjointPointwise.
   Context `{Funext}.
 
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
 
   (** ** [F ⊣ G] → [E^F ⊣ E^G] *)
   Section l.

@@ -12,8 +12,7 @@ Local Open Scope natural_transformation_scope.
 Section natural_transformation_identity.
   Context `{Funext}.
 
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
 
   (** ** left identity : [1 ∘ T = T] *)
   Lemma left_identity (F F' : Functor C D)
@@ -56,9 +55,7 @@ Section whisker.
 
   (** ** whisker exchange law : [(G' ∘ᴸ T) ∘ (T' ∘ᴿ F) = (T' ∘ᴿ F') ∘ (G ∘ᴸ T)] *)
   Section exch.
-    Variable C : PreCategory.
-    Variable D : PreCategory.
-    Variable E : PreCategory.
+    Variables C D E : PreCategory.
     Variables G G' : Functor D E.
     Variables F F' : Functor C D.
     Variable T' : NaturalTransformation G G'.
@@ -74,8 +71,7 @@ Section whisker.
   End exch.
 
   Section whisker.
-    Variable C : PreCategory.
-    Variable D : PreCategory.
+    Variables C D : PreCategory.
     Variables F G H : Functor C D.
     Variable T : NaturalTransformation G H.
     Variable T' : NaturalTransformation F G.
@@ -99,10 +95,7 @@ End whisker.
 Section associativity.
   (** ** associators - natural transformations between [F ∘ (G ∘ H)] and [(F ∘ G) ∘ H] *)
   Section functors.
-    Variable B : PreCategory.
-    Variable C : PreCategory.
-    Variable D : PreCategory.
-    Variable E : PreCategory.
+    Variables B C D E : PreCategory.
     Variable F : Functor D E.
     Variable G : Functor C D.
     Variable H : Functor B C.
@@ -141,8 +134,7 @@ End associativity.
 Section functor_identity.
   Context `{Funext}.
 
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
 
   Local Ltac nt_id_t := split; path_natural_transformation;
                         autorewrite with morphism; reflexivity.
