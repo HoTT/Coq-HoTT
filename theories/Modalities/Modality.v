@@ -641,6 +641,14 @@ Section ModalMaps.
     refine (inO_equiv_inO _ (hfiber_pullback_along f g b)^-1).
   Defined.
 
+  Global Instance mapinO_pullback' {A B C}
+         (g : C -> A) (f : B -> A) `{MapIn O _ _ f}
+  : MapIn O (g^*' f).
+  Proof.
+    intros c.
+    refine (inO_equiv_inO _ (hfiber_pullback_along' g f c)^-1).
+  Defined.
+
 End ModalMaps.
 
 (** ** Modally connected maps *)
@@ -685,6 +693,14 @@ Section ConnectedMaps.
   Proof.
     intros b.
     refine (isconnected_equiv _ _ (hfiber_pullback_along f g b)^-1 _).
+  Defined.
+
+  Global Instance conn_map_pullback' {A B C}
+         (g : C -> A) (f : B -> A) `{IsConnMap O _ _ f}
+  : IsConnMap O (g^*' f).
+  Proof.
+    intros c.
+    refine (isconnected_equiv _ _ (hfiber_pullback_along' g f c)^-1 _).
   Defined.
 
   (** The projection from a family of connected types is connected. *)

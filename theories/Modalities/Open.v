@@ -14,6 +14,8 @@ Record Open_Modality :=
        unOp : hProp
      }.
 
+Arguments Op {_} _.
+
 (** ** Open modalities *)
 
 (** Exercise 7.13(i): Open modalities *)

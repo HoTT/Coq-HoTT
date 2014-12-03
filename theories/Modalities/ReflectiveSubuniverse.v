@@ -422,6 +422,26 @@ Section Reflective_Subuniverse.
     : O A <~> O B
     := BuildEquiv _ _ (O_functor f) _.
 
+    (** This corresponds to [ap O] on the universe. *)
+    Definition ap_O_path_universe' `{Univalence}
+               {A B : Type} (f : A <~> B)
+    : ap O (path_universe_uncurried f)
+      = path_universe_uncurried (equiv_O_functor f).
+    Proof.
+      revert f.
+      equiv_intro (equiv_path A B) p.
+      refine (ap (ap O) (eta_path_universe p) @ _).
+      destruct p; simpl.
+      apply moveL_equiv_V.
+      apply path_equiv, path_arrow, O_indpaths; intros x.
+      symmetry; apply to_O_natural.
+    Defined.
+
+    Definition ap_O_path_universe `{Univalence}
+               {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
+    : ap O (path_universe f) = path_universe (O_functor f)
+    := ap_O_path_universe' (BuildEquiv _ _ f _).
+
     (** Postcomposition respects [O_rec] *)
     Definition O_rec_postcompose {A B C : Type} `{In O B} {C_inO : In O C}
                (f : A -> B) (g : B -> C)
@@ -477,7 +497,7 @@ Section Reflective_Subuniverse.
       intros x; symmetry; apply O_functor_wellpointed.
     Defined.
 
-    (** A map between modal types that is inverted by [O] is already an equivalence. *)
+    (** A map between modal types that is inverted by [O] is already an equivalence.  This can't be an [Instance], probably because it causes an infinite regress applying more and more [O_functor]. *)
     Definition isequiv_O_inverts {A B : Type} `{In O A} `{In O B}
       (f : A -> B) `{O_inverts f}
     : IsEquiv f.
@@ -486,10 +506,25 @@ Section Reflective_Subuniverse.
       apply to_O_natural.
     Defined.
 
+    (** Strangely, even this seems to cause infinite loops *)
+    (** Hint Immediate isequiv_O_inverts : typeclass_instances. *)
+
     Definition equiv_O_inverts {A B : Type} `{In O A} `{In O B}
       (f : A -> B) `{O_inverts f}
     : A <~> B
     := BuildEquiv _ _ f (isequiv_O_inverts f).
+
+    Definition isequiv_O_rec_O_inverts
+           {A B : Type} `{In O B} (f : A -> B) `{O_inverts f}
+    : IsEquiv (O_rec f).
+    Proof.
+      apply isequiv_O_inverts.
+      refine (cancelR_isequiv (O_functor (to O A))).
+      refine (isequiv_homotopic (O_functor (O_rec f o to O A))
+                                (O_functor_compose _ _)).
+      refine (isequiv_homotopic (O_functor f)
+               (O_functor_homotopy _ _ (fun x => (O_rec_beta f x)^))).
+    Defined.
 
     Definition to_O_inv_natural {A B : Type} `{In O A} `{In O B}
                (f : A -> B)

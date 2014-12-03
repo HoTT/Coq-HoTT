@@ -71,6 +71,7 @@ Proof.
   refine (equiv_compose' _
             (equiv_inverse (equiv_sigma_assoc (fun b' => {c : C & f b' = g c})
                                               (fun x => (f^* g) x = b)))).
+  simpl.
   refine (equiv_compose' _
             (@equiv_functor_sigma'
                B (fun b' => {_ : {c:C & f b' = g c} & b' = b})
@@ -83,6 +84,40 @@ Proof.
   refine (equiv_compose' _ (equiv_contr_sigma _)).
   exact (equiv_functor_sigma' (equiv_idmap C)
                               (fun c => equiv_path_inverse _ _)).
+Defined.
+
+(** And the dual sort of pullback *)
+Definition pullback_along' {A B C} (g : C -> A) (f : B -> A)
+: Pullback f g -> C
+  := fun z => z.2.1.
+
+Arguments pullback_along' / .
+
+Notation "g ^*' f" := (pullback_along' g f) (at level 30, format "g '^*''  f").
+
+Definition hfiber_pullback_along' {A B C} (g : C -> A) (f : B -> A) (c:C)
+: hfiber (g ^*' f) c <~> hfiber f (g c).
+Proof.
+  unfold hfiber, Pullback.
+  refine (equiv_compose' _
+           (equiv_inverse (equiv_sigma_assoc (fun b' => {c : C & f b' = g c})
+                                             (fun x => (g^*' f) x = c)))).
+  refine (equiv_functor_sigma' (equiv_idmap B) _); intros b.
+  refine (equiv_compose' _
+           (equiv_inverse (equiv_sigma_assoc (fun c' => f b = g c')
+                                             (fun x => (g^*' f) (b;x) = c)))).
+  simpl.
+  refine (equiv_compose' _
+           (@equiv_functor_sigma'
+              C (fun c' => {_ : f b = g c' & c' = c})
+              C (fun c' => {_ : c' = c & f b = g c'})
+              (equiv_idmap C)
+              (fun c' => equiv_sigma_symm0 (f b = g c') (c' = c)))).
+  refine (equiv_compose' _
+            (equiv_sigma_assoc (fun c' => c' = c)
+                               (fun c'p => f b = g c'p.1))).
+  refine (equiv_compose' _ (equiv_contr_sigma _)).
+  apply equiv_idmap.
 Defined.
 
 Section Functor_Pullback.
