@@ -17,8 +17,7 @@ Local Open Scope functor_scope.
 Section FunctorSectionCategory.
   Context `{Funext}.
 
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
   Variable R : Functor C D.
 
   (** There is a category [Sect(R)] of sections of [R]. *)

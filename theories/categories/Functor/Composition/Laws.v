@@ -13,8 +13,7 @@ Local Open Scope morphism_scope.
 Section identity_lemmas.
   Context `{Funext}.
 
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
 
   Local Open Scope functor_scope.
 
@@ -48,10 +47,7 @@ Hint Immediate @left_identity @right_identity : category functor.
 Section composition_lemmas.
   Context `{fs : Funext}.
 
-  Variable B : PreCategory.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
-  Variable E : PreCategory.
+  Variables B C D E : PreCategory.
 
   Local Open Scope functor_scope.
 

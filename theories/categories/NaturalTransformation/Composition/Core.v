@@ -52,8 +52,7 @@ Section composition.
   *)
 
   Section compose.
-    Variable C : PreCategory.
-    Variable D : PreCategory.
+    Variables C D : PreCategory.
     Variables F F' F'' : Functor C D.
 
     Variable T' : NaturalTransformation F' F''.
@@ -98,9 +97,7 @@ Section composition.
                  | progress (etransitivity; try (symmetry; apply composition_of)); [] ].
 
   Section whisker.
-    Variable C : PreCategory.
-    Variable D : PreCategory.
-    Variable E : PreCategory.
+    Variables C D E : PreCategory.
 
     Section L.
       Variable F : Functor D E.

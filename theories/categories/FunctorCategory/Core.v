@@ -12,8 +12,7 @@ Set Asymmetric Patterns.
 Section functor_category.
   Context `{Funext}.
 
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
 
   (** There is a category Fun(C, D) of functors from [C] to [D]. *)
   Definition functor_category : PreCategory

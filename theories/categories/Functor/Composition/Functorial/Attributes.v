@@ -32,9 +32,7 @@ Section faithfull_precomposition_essential_surjective.
   is faithful. *)
 
   Context `{fs : Funext}.
-  Variable A : PreCategory.
-  Variable B : PreCategory.
-  Variable C : PreCategory.
+  Variables A B C : PreCategory.
 
   Variable H : Functor A B.
 

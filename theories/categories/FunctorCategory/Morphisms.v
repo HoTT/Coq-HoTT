@@ -76,8 +76,7 @@ Hint Immediate isisomorphism_natural_transformation : typeclass_instances.
 (** ** Variant of [idtoiso] for natural transformations *)
 Section idtoiso.
   Context `{Funext}.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
 
   Definition idtoiso_natural_transformation
              (F G : object (C -> D))

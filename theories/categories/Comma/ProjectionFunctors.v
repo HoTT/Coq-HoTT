@@ -28,9 +28,7 @@ Section comma.
 
   Local Notation Cat := (@sub_pre_cat _ P HF).
 
-  Variable A : PreCategory.
-  Variable B : PreCategory.
-  Variable C : PreCategory.
+  Variables A B C : PreCategory.
 
   Hypothesis PAB : P (A * B).
   Hypothesis P_comma : forall (S : Functor A C) (T : Functor B C),
@@ -133,8 +131,7 @@ Section slice_category_projection_functor.
 
   Local Notation Cat := (@sub_pre_cat _ P HF).
 
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
 
   Hypothesis P1C : P (1 * C).
   Hypothesis PC1 : P (C * 1).

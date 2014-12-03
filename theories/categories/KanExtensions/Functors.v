@@ -12,9 +12,7 @@ Set Asymmetric Patterns.
 
 Section kan_extension_functors.
   Context `{Funext}.
-  Variable C  : PreCategory.
-  Variable C' : PreCategory.
-  Variable D  : PreCategory.
+  Variables C C' D : PreCategory.
   Variable p : object (C -> C').
 
   (** ** Left Kan extension functor *)

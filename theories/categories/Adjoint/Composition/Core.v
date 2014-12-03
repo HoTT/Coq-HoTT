@@ -16,9 +16,7 @@ Local Open Scope natural_transformation_scope.
 
 (** ** via the unit+counit+zig+zag definition *)
 Section compose.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
-  Variable E : PreCategory.
+  Variables C D E : PreCategory.
 
   Variable F : Functor C D.
   Variable F' : Functor D E.

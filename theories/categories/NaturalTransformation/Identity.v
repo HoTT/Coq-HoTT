@@ -12,8 +12,7 @@ Local Open Scope path_scope.
 Local Open Scope natural_transformation_scope.
 
 Section identity.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
 
   (** There is an identity natrual transformation.  We create a number
       of variants, for various uses. *)

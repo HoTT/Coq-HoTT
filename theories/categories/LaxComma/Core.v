@@ -115,8 +115,7 @@ Global Instance isstrict_oplax_comma_category `{fs : Funext} A B S T HA HB H
 (** ** Definition of Lax (Co)Slice Category *)
 Section lax_slice_category.
   Context `{Funext}.
-  Variable A : PreCategory.
-  Variable a : PreCategory.
+  Variables A a : PreCategory.
   Variable S : Pseudofunctor A.
   Context `{forall a0, IsHSet (Functor (S a0) a)}.
   Context `{forall a0, IsHSet (Functor a (S a0))}.

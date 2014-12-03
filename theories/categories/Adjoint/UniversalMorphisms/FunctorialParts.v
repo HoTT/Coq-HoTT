@@ -20,11 +20,9 @@ Section initial.
   (** ** action on morphisms of the construction of a left adjoint to [G] from an initial object of [(Y / G)] for all [Y : C] *)
   (** *** functoriality on [C], [D], and [G] *)
   Section also_categories.
-    Variable C : PreCategory.
-    Variable C' : PreCategory.
+    Variables C C' : PreCategory.
     Variable CF : Functor C C'.
-    Variable D : PreCategory.
-    Variable D' : PreCategory.
+    Variables D D' : PreCategory.
     Variable DF : Functor D D'.
 
     Variable G : Functor D C.
@@ -51,11 +49,9 @@ Section initial.
 
   (** *** functoriality in [G] *)
   Section only_functor.
-    Variable C : PreCategory.
-    Variable D : PreCategory.
+    Variables C D : PreCategory.
 
-    Variable G : Functor D C.
-    Variable G' : Functor D C.
+    Variables G G' : Functor D C.
     Variable T : NaturalTransformation G G'.
     Context `(HM : forall Y, @IsInitialMorphism _ _ Y G (M Y)).
     Context `(HM' : forall Y, @IsInitialMorphism _ _ Y G' (M' Y)).

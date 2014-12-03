@@ -20,8 +20,7 @@ Section iso_lemmas.
   Variables m1 m2 : morphism C s d.
   Variable p : m1 = m2.
 
-  Variable Fs : PreCategory.
-  Variable Fd : PreCategory.
+  Variables Fs Fd : PreCategory.
   Variable Fm : morphism C s d -> Functor Fs Fd.
 
   Lemma transport_Fc_to_idtoiso

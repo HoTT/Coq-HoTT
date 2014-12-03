@@ -37,9 +37,7 @@ End proj.
 
 (** ** Product of two functors from the same domain *)
 Section prod.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
-  Variable D' : PreCategory.
+  Variables C D D' : PreCategory.
 
   Definition prod (F : Functor C D) (F' : Functor C D')
   : Functor C (D * D')
@@ -56,10 +54,7 @@ Local Infix "*" := prod : functor_scope.
 
 (** ** Pairing of two functors *)
 Section pair.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
-  Variable C' : PreCategory.
-  Variable D' : PreCategory.
+  Variables C D C' D' : PreCategory.
   Variable F : Functor C D.
   Variable F' : Functor C' D'.
 
@@ -73,9 +68,7 @@ Local Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : functor_scope
 
 (** ** Partially applied functors out of a product precategory *)
 Section induced.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
-  Variable E : PreCategory.
+  Variables C D E : PreCategory.
 
   Variable F : Functor (C * D) E.
 

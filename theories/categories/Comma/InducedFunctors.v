@@ -19,9 +19,7 @@ Local Open Scope category_scope.
 (** ** Morphisms in [(A → C)ᵒᵖ × (B → C)] from [(s₀, s₁)] to [(d₀, d₁)] induce functors [(s₀ / s₁) → (d₀ / d₁)] *)
 Section comma_category_induced_functor.
   Context `{Funext}.
-  Variable A : PreCategory.
-  Variable B : PreCategory.
-  Variable C : PreCategory.
+  Variables A B C : PreCategory.
 
   Definition comma_category_induced_functor_object_of s d
              (m : morphism ((A -> C)^op * (B -> C)) s d)

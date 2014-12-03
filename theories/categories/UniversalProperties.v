@@ -37,8 +37,7 @@ Section UniversalMorphism.
   (** ** Initial morphisms *)
   Section InitialMorphism.
     (** *** Definition *)
-    Variable C : PreCategory.
-    Variable D : PreCategory.
+    Variables C D : PreCategory.
 
     Variable X : C.
     Variable U : Functor D C.
@@ -256,8 +255,7 @@ Section UniversalMorphism.
   (** ** Terminal morphisms *)
   Section TerminalMorphism.
     (** *** Definition *)
-    Variable C : PreCategory.
-    Variable D : PreCategory.
+    Variables C D : PreCategory.
 
     Variable U : Functor D C.
     Variable X : C.

@@ -17,9 +17,7 @@ Local Open Scope functor_scope.
 (** ** The dual functors [(S / T) ↔ ((Tᵒᵖ / Sᵒᵖ)ᵒᵖ)] *)
 Section opposite.
   Section op.
-    Variable A : PreCategory.
-    Variable B : PreCategory.
-    Variable C : PreCategory.
+    Variables A B C : PreCategory.
 
     Variable S : Functor A C.
     Variable T : Functor B C.

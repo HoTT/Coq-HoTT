@@ -14,8 +14,7 @@ Local Open Scope functor_scope.
 Section path_functor.
   Context `{Funext}.
 
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
 
   Local Open Scope equiv_scope.
 

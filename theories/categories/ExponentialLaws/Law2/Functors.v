@@ -15,9 +15,7 @@ Local Notation pair_type := Coq.Init.Datatypes.pair.
 
 Section law2.
   Context `{Funext}.
-  Variable D : PreCategory.
-  Variable C1 : PreCategory.
-  Variable C2 : PreCategory.
+  Variables D C1 C2 : PreCategory.
 
   (** ** [yⁿ⁺ᵐ → yⁿ × yᵐ] *)
   Definition functor

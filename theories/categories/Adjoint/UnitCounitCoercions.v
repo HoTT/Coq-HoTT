@@ -95,8 +95,7 @@ Section equivalences.
 
     (** ** unit+UMP → unit+counit+zig+zag *)
     Section from_unit.
-      Variable C : PreCategory.
-      Variable D : PreCategory.
+      Variables C D : PreCategory.
       Variable F : Functor C D.
       Variable G : Functor D C.
 
