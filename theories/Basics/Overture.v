@@ -122,6 +122,15 @@ Hint Unfold compose.
 Notation "g 'o' f" := (compose g f) (at level 40, left associativity) : function_scope.
 Open Scope function_scope.
 
+(** Composition of logical equivalences *)
+Definition iff_compose {A B C : Type} (g : B <-> C) (f : A <-> B)
+: A <-> C
+:= (fst g o fst f , snd f o snd g).
+
+(** While we're at it, inverses of logical equivalences *)
+Definition iff_inverse {A B : Type} : (A <-> B) -> (B <-> A)
+  := fun f => (snd f , fst f).
+
 (** Dependent composition of functions. *)
 Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).
 
