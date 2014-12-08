@@ -57,6 +57,12 @@ Section BoolDecidable.
   Defined.
 End BoolDecidable.
 
+Definition not_fixed_negb (b : Bool) : negb b <> b
+  := match b return negb b <> b with
+       | true => false_ne_true
+       | false => true_ne_false
+     end.
+
 Section BoolForall.
   Variable P : Bool -> Type.
 

@@ -51,6 +51,10 @@ Definition path_sum_inv {A B : Type} {z z' : A + B}
               end
      end.
 
+Definition inl_ne_inr {A B : Type} (a : A) (b : B)
+: inl a <> inr b
+:= path_sum_inv.
+
 (** This version produces only paths between closed terms, as opposed to paths between arbitrary inhabitants of sum types. *)
 Definition path_sum_inl {A B : Type} {x x' : A}
 : inl x = inl x' -> x = x'
@@ -155,6 +159,19 @@ Proof.
   intros [?|?]; exact idpath.
 Defined.
 
+(** ** Associativity *)
+
+Definition equiv_sum_assoc (A B C : Type) : (A + B) + C <~> A + (B + C).
+Proof.
+  refine (equiv_adjointify _ _ _ _).
+  - intros [[a|b]|c];
+    [ exact (inl a) | exact (inr (inl b)) | exact (inr (inr c)) ].
+  - intros [a|[b|c]];
+    [ exact (inl (inl a)) | exact (inl (inr b)) | exact (inr c) ].
+  - intros [a|[b|c]]; reflexivity.
+  - intros [[a|b]|c]; reflexivity.
+Defined.
+
 (** ** Universal mapping properties *)
 
 (** Ordinary universal mapping properties are expressed as equivalences of sets or spaces of functions.  In type theory, we can go beyond this and express an equivalence of types of *dependent* functions. *)
@@ -246,3 +263,37 @@ Proof.
                        | ].
   typeclasses eauto.
 Defined.
+
+(** ** Detecting the summands *)
+
+Definition is_inl_and {A B} (P : A -> Type) : A + B -> Type
+  := fun x => match x with inl a => P a | inr _ => Empty end.
+
+Definition is_inr_and {A B} (P : B -> Type) : A + B -> Type
+  := fun x => match x with inl _ => Empty | inr b => P b end.
+
+Definition is_inl {A B} : A + B -> Type
+  := is_inl_and (fun _ => Unit).
+
+Definition is_inr {A B} : A + B -> Type
+  := is_inr_and (fun _ => Unit).
+
+Definition not_is_inl_and_inr {A B} (P : A -> Type) (Q : B -> Type)
+           (x : A + B)
+: is_inl_and P x -> is_inr_and Q x -> Empty.
+Proof.
+  destruct x as [a|b]; simpl.
+  - exact (fun _ e => e).
+  - exact (fun e _ => e).
+Defined.
+
+Definition not_is_inl_and_inr' {A B} (x : A + B)
+: is_inl x -> is_inr x -> Empty
+  := not_is_inl_and_inr (fun _ => Unit) (fun _ => Unit) x.
+
+Definition is_inl_or_is_inr {A B} (x : A + B)
+: (is_inl x) + (is_inr x)
+  := match x return (is_inl x) + (is_inr x) with
+       | inl _ => inl tt
+       | inr _ => inr tt
+     end.
