@@ -48,7 +48,7 @@ Section CoherentIdempotents.
 
   (** The splitting will be the sequential limit of the sequence [... -> X -> X -> X]. *)
   Definition split_idempotent : Type
-    := { a : nat -> X & forall n, f (a (n.+1)) = a n }.
+    := { a : nat -> X & forall n, f (a n.+1) = a n }.
 
   Definition split_idempotent_pr1 : split_idempotent -> (nat -> X)
     := pr1.
@@ -217,13 +217,13 @@ Defined.
 
 (** *** An idempotent on BAut(2^N) *)
 
-(** We go into a non-exported module so that we can use short names for definitions without polluting the global namespace.. *)
+(** We go into a non-exported module so that we can use short names for definitions without polluting the global namespace. *)
 
 Module BAut_Cantor_Idempotent.
 Section Assumptions.
   Context `{Univalence}.
 
-  Definition f : BAut(cantor) -> BAut(cantor).
+  Definition f : BAut cantor -> BAut cantor.
   Proof.
     intros Z.
     (** Here is the important part of this definition. *)
