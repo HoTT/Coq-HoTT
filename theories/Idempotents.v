@@ -170,6 +170,24 @@ Proof.
     apply ap, split_idempotent_issect.
 Defined.
 
+(** In particular, this implies that if two section/retraction pairs induce the same endomap, then their splitting objects are equivalent.  Informally, "a given endomap splits through at most one type". *)
+
+Definition equiv_split_coherent `{fs : Funext} {X A A' : Type}
+           (r : X -> A) (s : A -> X) (H : r o s == idmap)
+           (r' : X -> A') (s' : A' -> X) (H' : r' o s' == idmap)
+           (K : s o r == s' o r')
+: A <~> A'.
+Proof.
+  refine (equiv_compose' (equiv_split_coherent_split r' s' H') _).
+  refine (equiv_compose' _ (equiv_inverse (equiv_split_coherent_split r s H))).
+  unfold split_idempotent.
+  refine (equiv_functor_sigma' (equiv_idmap _) (fun a => _)).
+  refine (equiv_functor_forall' (equiv_idmap nat) (fun n => _)); simpl. 
+  exact (equiv_concat_l (K (a n.+1))^ _).
+Defined.
+
+(** However, it could still be the case that a given endomap [f : X -> X] splits *in more than one way* through the same splitting type [A].  In other words, the above equivalence may not respect all the section/retraction data. *)
+
 (** ** An incoherent idempotent *)
 
 (** Finally, we give a specific example of an incoherent idempotent that does not split, hence is not coherentifiable.  This is inspired by Warning 1.2.4.8 in *Higher Algebra*. *)
