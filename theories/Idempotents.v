@@ -147,9 +147,28 @@ Section CoherentIdempotents.
     Close Scope long_path_scope.
   Qed.
 
-  (** Note that a splitting of [f] induces a witness of idempotency of [f] and also any amount of coherence on it that one might ask for.  We ought in theory to investigate whether these witnesses arising from this splitting agree with the given [I] and [J]. *)
+  (** Note that a splitting of [f] induces a witness of idempotency of [f] and also any amount of coherence on it that one might ask for.  We ought in theory to investigate whether these witnesses arising from this splitting agree with the given [I] and [J], but this would involve a lot of path algebra. *)
 
 End CoherentIdempotents.
+
+(** ** Splitting already-split idempotents *)
+
+(** What we can do, without too much trouble, is verify that if we are given a section/retraction pair, deduce a coherent idempotent, and then split it by the above construction, we get an equivalent type to the one in the original pair. *)
+
+Definition equiv_split_coherent_split `{fs : Funext}
+           {X A : Type} (r : X -> A) (s : A -> X) (H : r o s == idmap)
+: split_idempotent (s o r) <~> A.
+Proof.
+  refine (equiv_adjointify (r o split_idempotent_sect (s o r))
+                           (split_idempotent_retr (s o r) (coherent_split r s H) o s) _ _).
+  - intros a; simpl.
+    refine (H _ @ H _).
+  - intros a; simpl.
+    refine (_ @ split_idempotent_issect (s o r) (coherent_split r s H) a).
+    apply ap.
+    refine ((split_idempotent_splits (s o r) (coherent_split r s H) _)^ @ _).
+    apply ap, split_idempotent_issect.
+Defined.
 
 (** ** An incoherent idempotent *)
 
