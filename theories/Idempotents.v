@@ -43,7 +43,8 @@ Section CoherentIdempotents.
   Context (IJ : CoherentIdempotent f).
 
   Let I := IJ.1.
-  Let J := IJ.2.
+  Let J : forall x, ap f (I x) = I (f x)
+    := IJ.2.
 
   (** The splitting will be the sequential limit of the sequence [... -> X -> X -> X]. *)
   Definition split_idempotent : Type
@@ -84,14 +85,28 @@ Section CoherentIdempotents.
     - apply path_arrow; intros n.
       exact (p n).
     - apply path_forall; intros n.
-      rewrite transport_forall_constant.
-      rewrite transport_paths_FlFr.
-      rewrite ap_apply_l, ap10_path_arrow.
-      rewrite (ap_compose (fun b => b n.+1) (fun x => f x) _).
-      rewrite ap_apply_l, ap10_path_arrow.
-      rewrite concat_pp_p.
-      apply moveR_Vp; by symmetry.
-  Qed.
+      abstract (
+          rewrite transport_forall_constant;
+          rewrite transport_paths_FlFr;
+          rewrite ap_apply_l, ap10_path_arrow;
+          rewrite (ap_compose (fun b => b n.+1) (fun x => f x) _);
+          rewrite ap_apply_l, ap10_path_arrow;
+          rewrite concat_pp_p;
+          apply moveR_Vp; by symmetry ).
+  Defined.
+
+  Definition sect_path_split_idempotent {a a' : split_idempotent}
+             (p : a.1 == a'.1)
+             (q : forall n, a.2 n @ p n
+                            = ap f (p n.+1) @ a'.2 n)
+  : ap (fun (a:split_idempotent) => a 0) (path_split_idempotent p q) = p 0.
+  Proof.
+    change (ap ((fun b => b 0) o pr1) (path_split_idempotent p q) = p 0).
+    refine (ap_compose _ _ _ @ _).
+    refine (ap (ap (fun b => b 0)) (pr1_path_sigma _ _) @ _).
+    refine (ap_apply_l _ 0 @ _).
+    apply ap10_path_arrow.
+  Defined.
 
   (** Next we show that every element of [split_idempotent] can be nudged to an equivalent one in which all the elements of [X] occurring are double applications of [f]. *)
 
@@ -124,36 +139,69 @@ Section CoherentIdempotents.
     transparent assert (p : (forall n, f (f (a n.+1)) = f (a 0))).
     { induction n as [|n IH].
       - exact (ap f (a.2 0)).
-      - exact ((I (f (a n.+2)))^ @ (ap f (ap f (a.2 n.+1))) @ IH). }
+      - exact (ap f (a.2 n.+1) @ (I (a n.+1))^ @ IH). }
     refine (path_split_idempotent _ _); [ exact p | intros n; simpl ].
     induction n as [|n IH]; simpl.
+    (** We make these proofs abstract since they contain [rewrite]s.  Since this requires joining the steps with [;] rather than [.], we can't step through them, so there is no point to [long_path_scope].  However, we leave it here since the reader may want to remove the [abstract]s and change the [;]s back to [.]s in order to step through the proofs, in which case [long_path_scope] may be helpful. *)
     Open Scope long_path_scope.
-    - rewrite !ap_pp, ap_V.
-      rewrite_moveL_Vp_p.
-      rewrite J.
-      rewrite <- !ap_pp.
-      with_rassoc ltac:(rewrite <- !ap_pp).
-      rewrite <- ap_compose.
-      exact ((concat_Ap I (ap f (a.2 1%nat) @ a.2 0))^).
-    - (* For some reason [rewrite concat_pp_p] here rewrites *twice*? *)
-      refine ((1 @@ concat_pp_p _ _ _) @ _).
-      rewrite IH.
-      rewrite !ap_pp, !concat_p_pp.
-      do 4 apply whiskerR.
-      rewrite ap_V; apply moveL_Vp; rewrite concat_p_pp; apply moveR_pV.
-      refine (_ @ (ap_compose f f _ @@ 1)).
-      rewrite J.
-      exact ((concat_Ap I (ap f (a.2 n.+2)))^).
+    - abstract (
+      rewrite !ap_pp, ap_V, !concat_pp_p;
+      apply whiskerL, moveL_Vp;
+      rewrite J;
+      rewrite <- ap_compose; symmetry; apply (concat_Ap I) ).
+    - abstract (
+      rewrite ap_pp;
+      refine (_ @ (1 @@ IH) @ concat_p_pp _ _ _);
+      rewrite !ap_pp, !concat_p_pp, ap_V;
+      rewrite J;
+      rewrite <- !ap_compose;
+      refine ((concat_pA_p (fun x => (I x)^) _ _) @@ 1) ).
     Close Scope long_path_scope.
+  Defined.
+
+  (** The following observation shows that the resulting splitting is "coherent" with the given witness of idempotence [I]. *)
+  Definition split_idempotent_coherent (x : X)
+  : ap split_idempotent_sect (split_idempotent_issect (split_idempotent_retr x))
+    @ split_idempotent_splits x
+    = split_idempotent_splits (split_idempotent_sect (split_idempotent_retr x))
+      @ ap f (split_idempotent_splits x)
+      @ I x.
+  Proof.
+    (** Brace yourself *)
+    unfold split_idempotent_issect, nudge_eq.
+    repeat (rewrite !ap_pp, ?ap_V, !sect_path_split_idempotent; simpl).
+    (** Whew! *)
+    unfold split_idempotent_splits.
+    rewrite concat_p1, concat_1p; apply moveR_Vp.
+    apply whiskerR; symmetry; apply J.
   Qed.
 
-  (** Note that a splitting of [f] induces a witness of idempotency of [f] and also any amount of coherence on it that one might ask for.  We ought in theory to investigate whether these witnesses arising from this splitting agree with the given [I] and [J], but this would involve a lot of path algebra. *)
+  (** Another way to say this is that if we use [coherent_split] to recover a witness of idempotence from the above splitting, we recover the same witness [I] that we started with. *)
+  Definition idempotent_split_idempotent
+  : transport Idempotent
+    (path_arrow (split_idempotent_sect o split_idempotent_retr) f split_idempotent_splits)
+    (coherent_split split_idempotent_retr split_idempotent_sect split_idempotent_issect).1
+    = I.
+  Proof.
+    unfold coherent_split; simpl.
+    apply path_forall; intros x.
+    unfold Idempotent; rewrite transport_forall_constant.
+    rewrite transport_paths_FlFr.
+    rewrite ap_apply_l, ap10_path_arrow.
+    rewrite_moveR_Vp_p.
+    refine (split_idempotent_coherent x @ _).
+    apply whiskerR.
+    unfold split_idempotent_splits.
+    rewrite path_arrow_1; reflexivity.
+  Qed.
+
+  (** It would be nice to know whether [J] is also recovered, but that would involve a lot of path algebra. *)
 
 End CoherentIdempotents.
 
 (** ** Splitting already-split idempotents *)
 
-(** What we can do, without too much trouble, is verify that if we are given a section/retraction pair, deduce a coherent idempotent, and then split it by the above construction, we get an equivalent type to the one in the original pair. *)
+(** In the other direction, suppose we are given a section/retraction pair, we deduce a coherent idempotent, and then split it by the above construction.  Then we get an equivalent type to the one occurring in the original pair. *)
 
 Definition equiv_split_coherent_split `{fs : Funext}
            {X A : Type} (r : X -> A) (s : A -> X) (H : r o s == idmap)
@@ -185,6 +233,20 @@ Proof.
   refine (equiv_functor_forall' (equiv_idmap nat) (fun n => _)); simpl. 
   exact (equiv_concat_l (K (a n.+1))^ _).
 Defined.
+
+(** Moreover, these equivalences respect the section and the retraction map. *)
+
+Definition equiv_split_coherent_split_retr `{fs : Funext}
+           {X A : Type} (r : X -> A) (s : A -> X) (H : r o s == idmap)
+           (x : X)
+: equiv_split_coherent_split r s H (split_idempotent_retr (s o r) (coherent_split r s H) x) = r x
+  := H (r x).
+
+Definition equiv_split_coherent_split_sect `{fs : Funext}
+           {X A : Type} (r : X -> A) (s : A -> X) (H : r o s == idmap)
+           (a : A)
+: split_idempotent_sect (s o r) ((equiv_split_coherent_split r s H)^-1 a) = s a
+  := ap s (H a).
 
 (** However, it could still be the case that a given endomap [f : X -> X] splits *in more than one way* through the same splitting type [A].  In other words, the above equivalence may not respect all the section/retraction data. *)
 
