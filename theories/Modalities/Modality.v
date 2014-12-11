@@ -419,8 +419,9 @@ End OIndEquiv.
 
 Question: is there a definition of connectedness (say, for n-types) that neither blows up the universe level, nor requires HIT's? *)
 
-Class IsConnected (O : Modality) (A : Type)
-  := isconnected_contr_O : Contr (O A).
+Class IsConnected (O : Modality@{u a}) (A : Type@{i})
+  := isconnected_contr_O : IsTrunc@{i} -2 (O A).
+Check IsConnected@{u a i}.
 
 Global Existing Instance isconnected_contr_O.
 
@@ -485,7 +486,8 @@ Section ConnectedTypes.
 
   (** Here's another way of stating the universal property for mapping out of connected types into modal ones. *)
   Definition extendable_const_isconnected_inO (n : nat)
-             (A : Type@{i}) `{IsConnected@{u a i} O A}
+             (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3811 *)
+             (A : Type@{i}) {conn_A : IsConnected@{u a i} O A}
              (C : Type@{j}) `{In@{u a j} O C}
   : ExtendableAlong@{i i j j} n (@const A Unit@{i} tt) (fun _ => C).
   Proof.
@@ -504,7 +506,7 @@ Section ConnectedTypes.
              (A : Type@{i}) `{IsConnected@{u a i} O A}
              (C : Type@{j}) `{In@{u a j} O C}
   : ooExtendableAlong (@const A Unit tt) (fun _ => C)
-    := fun n => extendable_const_isconnected_inO@{i j k j} n A C.
+    := fun n => extendable_const_isconnected_inO@{i j k k j} n A C.
 
   Definition isequiv_const_isconnected_inO `{Funext}
              {A : Type} `{IsConnected O A} (C : Type) `{In O C}
@@ -521,8 +523,9 @@ End ConnectedTypes.
 
 (** A map is "in [O]" if each of its fibers is. *)
 
-Class MapIn (O : Modality) {A B : Type} (f : A -> B)
-  := inO_hfiber_ino_map : forall (b:B), In O (hfiber f b).
+Class MapIn (O : Modality@{u a}) {A : Type@{i}} {B : Type@{j}} (f : A -> B)
+  := inO_hfiber_ino_map : forall (b:B), In@{u a k} O (hfiber f b).
+Check MapIn@{u a i j k}.        (** k >= max(i,j) *)
 
 Global Existing Instance inO_hfiber_ino_map.
 
@@ -578,8 +581,9 @@ End ModalMaps.
 
 (** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against truncated types.  We use the former; the equivalence with the latter is given below in [conn_map_elim], [conn_map_comp], and [conn_map_from_extension_elim]. *)
 
-Class IsConnMap (O : Modality) {A B : Type} (f : A -> B)
-  := isconnected_hfiber_conn_map : forall b:B, IsConnected O (hfiber f b).
+Class IsConnMap (O : Modality@{u a}) {A : Type@{i}} {B : Type@{j}} (f : A -> B)
+  := isconnected_hfiber_conn_map : forall b:B, IsConnected@{u a k} O (hfiber f b).
+Check IsConnMap@{u a i j k}.        (** k >= max(i,j) *)
 
 Global Existing Instance isconnected_hfiber_conn_map.
 
