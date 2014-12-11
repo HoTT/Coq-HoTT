@@ -45,20 +45,30 @@ Then, however, we have to express the hypotheses of the induction principle.  We
 (** ** Dependent extendability *)
 
 Fixpoint ExtendableAlong_Over
-         (n : nat) {A B : Type} (f : A -> B) (C : B -> Type)
-         (ext : ExtendableAlong n f C) (D : forall b, C b -> Type)
-: Type
-  := match n return ExtendableAlong n f C -> Type with
-       | 0 => fun _ => Unit
+         (n : nat) {A : Type@{a}} {B : Type@{b}} (f : A -> B)
+         (C : B -> Type@{c})
+         (D : forall b, C b -> Type@{d})
+         (ext : ExtendableAlong@{a b c m} n f C)
+: Type@{m}
+  := match n return ExtendableAlong@{a b c m} n f C -> Type with
+       | 0 => fun _ => Unit@{m}
        | S n => fun ext' =>
                 (forall (g : forall a, C (f a)) (g' : forall a, D (f a) (g a)),
-                  {rec : forall b, D b ((fst ext' g).1 b) &
-                         forall a, (fst ext' g).2 a # rec (f a) = g' a }) *
+                  sig@{m m}     (** Control universe parameters *)
+                  (fun (rec : forall b, D b ((fst ext' g).1 b)) =>
+                         forall a, (fst ext' g).2 a # rec (f a) = g' a )) *
                 forall (h k : forall b, C b)
                        (h' : forall b, D b (h b)) (k' : forall b, D b (k b)),
                   ExtendableAlong_Over n f (fun b => h b = k b)
-                    (snd ext' h k) (fun b c => c # h' b = k' b)
+                    (fun b c => c # h' b = k' b) (snd ext' h k)
      end ext.
+Check ExtendableAlong_Over@{a b c d m}.
+(** [ExtendableAlong_Over] takes 5 universe parameters:
+    - size of A
+    - size of B
+    - size of C
+    - size of D
+    - size of result (>= A,B,C,D) *)
 
 (** Like [ExtendableAlong], these can be postcomposed with known equivalences. *)
 Definition extendable_over_postcompose' (n : nat)
@@ -66,8 +76,8 @@ Definition extendable_over_postcompose' (n : nat)
            (ext : ExtendableAlong n f C)
            (D E : forall b, C b -> Type)
            (g : forall b c, D b c <~> E b c)
-: ExtendableAlong_Over n f C ext D
-  -> ExtendableAlong_Over n f C ext E.
+: ExtendableAlong_Over n f C D ext
+  -> ExtendableAlong_Over n f C E ext.
 Proof.
   revert C ext D E g; simple_induction n n IHn; intros C ext D E g; simpl.
   1:by apply idmap.
@@ -100,8 +110,8 @@ Definition extendable_over_postcompose (n : nat)
            (D E : forall b, C b -> Type)
            (g : forall b c, D b c -> E b c)
            `{forall b c, IsEquiv (g b c)}
-: ExtendableAlong_Over n f C ext D
-  -> ExtendableAlong_Over n f C ext E
+: ExtendableAlong_Over n f C D ext
+  -> ExtendableAlong_Over n f C E ext
 := extendable_over_postcompose' n C f ext D E
      (fun b c => BuildEquiv _ _ (g b c) _).
 
@@ -110,7 +120,7 @@ Definition extendable_over_const
            (n : nat) {A B : Type} (C : B -> Type) (f : A -> B)
            (ext : ExtendableAlong n f C) (D : B -> Type)
 : ExtendableAlong n f D
-  -> ExtendableAlong_Over n f C ext (fun b _ => D b).
+  -> ExtendableAlong_Over n f C (fun b _ => D b) ext.
 Proof.
   revert C ext D.
   simple_induction n n IHn; intros C ext D ext'.
@@ -131,7 +141,7 @@ Defined.
 Fixpoint apD_extendable_eq (n : nat) {A B : Type} (C : B -> Type) (f : A -> B)
          (ext : ExtendableAlong n f C) (D : forall b, C b -> Type)
          (g : forall b c, D b c)
-         (ext' : ExtendableAlong_Over n f C ext D)
+         (ext' : ExtendableAlong_Over n f C D ext)
          {struct n}
 : Type.
 Proof.
@@ -150,15 +160,17 @@ Defined.
 (** Here's the [oo]-version. *)
 Definition ooExtendableAlong_Over
          {A B : Type} (f : A -> B) (C : B -> Type)
-         (ext : ooExtendableAlong f C) (D : forall b, C b -> Type)
-  := forall n, ExtendableAlong_Over n f C (ext n) D.
+         (D : forall b, C b -> Type) (ext : ooExtendableAlong f C)
+  := forall n, ExtendableAlong_Over n f C D (ext n).
+(** Universe parameters are the same as for [ExtendableAlong_Over]. *)
+Check ooExtendableAlong_Over@{a b c d r}.
 
 (** The [oo]-version for trivial dependency. *)
 Definition ooextendable_over_const
            {A B : Type} (C : B -> Type) (f : A -> B)
            (ext : ooExtendableAlong f C) (D : B -> Type)
 : ooExtendableAlong f D
-  -> ooExtendableAlong_Over f C ext (fun b _ => D b)
+  -> ooExtendableAlong_Over f C (fun b _ => D b) ext
 := fun ext' n => extendable_over_const n C f (ext n) D (ext' n).
 
 (** A crucial fact: the [oo]-version is inherited by types of homotopies. *)
@@ -167,8 +179,8 @@ Definition ooextendable_over_homotopy
            (ext : ooExtendableAlong f C)
            (D : forall b, C b -> Type)
            (r s : forall b c, D b c)
-: ooExtendableAlong_Over f C ext D
-  -> ooExtendableAlong_Over f C ext (fun b c => r b c = s b c).
+: ooExtendableAlong_Over f C D ext
+  -> ooExtendableAlong_Over f C (fun b c => r b c = s b c) ext.
 Proof.
   intros ext' n.
   revert C ext D r s ext'.
@@ -252,43 +264,46 @@ Definition islocal_equiv_islocal (f : LocalGenerators@{a})
 
 Module Export LocalizationHIT.
 
-  Private Inductive Localize (f : LocalGenerators) (X : Type) : Type :=
+  Private Inductive Localize (f : LocalGenerators@{a}) (X : Type@{i})
+  : Type :=
   | loc : X -> Localize f X.
 
   Arguments loc {f X} x.
 
-  (** TODO: Force [Localize f X] to have size influenced by [f] in addition to [X]. *)
+  (** Note that the following axiom actually contains a point-constructor.  We could separate out that point-constructor and make it an actual argument of the private inductive type, thereby getting a judgmental computation rule for it.  However, since locality is an hprop, there seems little point to this. *)
+  Axiom islocal_localize
+  : forall (f : LocalGenerators@{a}) (X : Type@{i}),
+      IsLocal@{i k a} f (Localize f X).
 
-  Section Localization.
+  Fixpoint Localize_ind
+           (f : LocalGenerators@{a}) (X : Type@{i})
+           (P : Localize f X -> Type@{j})
+           (loc' : forall x, P (loc x))
+           (islocal' : forall i, ooExtendableAlong_Over@{a a i j k}
+                                   (f i) (fun _ => Localize@{a i} f X)
+                                   (fun _ => P)
+                                   (islocal_localize@{a i k} f X i))
+           (z : Localize f X) {struct z}
+  : P z
+    := match z with
+         | loc x => fun _ => loc' x
+       end islocal'.
 
-    Context (f : LocalGenerators) (X : Type).
+  (** We now state the computation rule for [islocal_localize].  Since locality is an hprop, we never actually have any use for it, but the fact that we can state it is a reassuring check that we have defined a meaningful HIT. *)
+  Axiom Localize_ind_islocal_localize_beta :
+    forall (f : LocalGenerators) (X : Type)
+           (P : Localize f X -> Type)
+           (loc' : forall x, P (loc x))
+           (islocal' : forall i, ooExtendableAlong_Over
+                                   (f i) (fun _ => Localize f X)
+                                   (fun _ => P)
+                                   (islocal_localize f X i))
+           i n,
+      apD_extendable_eq n (fun _ => Localize f X) (f i)
+                        (islocal_localize f X i n) (fun _ => P)
+                        (fun _ => Localize_ind f X P loc' islocal')
+                        (islocal' i n).
 
-    (** Note that the following axiom actually contains a point-constructor.  We could separate out that point-constructor and make it an actual argument of the private inductive type, thereby getting a judgmental computation rule for it.  However, since locality is an hprop, there seems little point to this. *)
-    Axiom islocal_localize : IsLocal@{i i u} f (Localize f X).
-
-    Section LocalizeInd.
-
-      Context (P : Localize f X -> Type)
-      (loc' : forall x, P (loc x))
-      (islocal' : forall i, ooExtendableAlong_Over
-                              (f i) (fun _ => Localize f X)
-                              (islocal_localize i) (fun _ => P)).
-
-      Fixpoint Localize_ind (z : Localize f X) {struct z}
-      : P z
-        := match z with
-             | loc x => fun _ => loc' x
-           end islocal'.
-
-      (** We now state the computation rule for [islocal_localize].  Since locality is an hprop, we never actually have any use for it, but the fact that we can state it is a reassuring check that we have defined a meaningful HIT. *)
-      Axiom Localize_ind_islocal_localize_beta :
-        forall i n, apD_extendable_eq n (fun _ => Localize f X) (f i)
-                                      (islocal_localize i n) (fun _ => P)
-                                      (fun _ => Localize_ind)
-                                      (islocal' i n).
-
-    End LocalizeInd.
-  End Localization.
 End LocalizationHIT.
 
 (** Now we prove that localization is a reflective subuniverse. *)
@@ -302,7 +317,7 @@ Section Localization.
       (P : Localize f X -> Type)
       (Ploc : forall i, ooExtendableAlong_Over
                           (f i) (fun _ => Localize f X)
-                          (islocal_localize f X i) (fun _ => P))
+                          (fun _ => P) (islocal_localize f X i))
   : ooExtendableAlong loc P.
   Proof.
     intros n; generalize dependent P.
@@ -359,9 +374,9 @@ Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.
   Definition extendable_to_O_internal
              (O : ReflectiveSubuniverse@{u a}) {P : Type@{i}}
              {Q : Type@{j}} {Q_inO : inO_internal@{u a j} O Q}
-  : ooExtendableAlong@{i i j j} (to O P) (fun _ => Q).
+  : ooExtendableAlong@{i i j k} (to O P) (fun _ => Q).
   Proof.
-    apply ext_localize_ind@{a i j j i j j j j}; intros ?.
+    apply ext_localize_ind@{a i j k k}; intros ?.
     apply ooextendable_over_const.
     apply Q_inO.
   Defined.

@@ -46,18 +46,22 @@ Module Type Modalities.
 
   Parameter O_ind_internal
   : forall (O : Modality@{u a})
-           (A : Type2le@{i a}) (B : O_reflector O A -> Type2le@{j a})
+           (A : Type2le@{i a})
+           (B : O_reflector@{u a i} O A -> Type2le@{j a})
            (B_inO : forall oa, inO_internal@{u a j} O (B oa)),
+      (** We add an extra unused universe parameter [k] that's [>= max(i,j)].  This seems to be necessary for some examples, such as [Nullification], which are constructed by way of an operation that requires such a universe.  *)
+      let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
+      let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
       (forall a, B (to O A a)) -> forall a, B a.
-  Check O_ind_internal@{u a i j}.
+  Check O_ind_internal@{u a i j k}.
 
   Parameter O_ind_beta_internal
   : forall (O : Modality@{u a})
            (A : Type@{i}) (B : O_reflector O A -> Type@{j})
            (B_inO : forall oa, inO_internal@{u a j} O (B oa))
            (f : forall a : A, B (to O A a)) (a:A),
-      O_ind_internal@{u a i j} O A B B_inO f (to O A a) = f a.
-  Check O_ind_beta_internal@{u a i j}.
+      O_ind_internal@{u a i j k} O A B B_inO f (to O A a) = f a.
+  Check O_ind_beta_internal@{u a i j k}.
 
   Parameter minO_paths
   : forall (O : Modality@{u a})
@@ -87,7 +91,7 @@ Module Modalities_to_ReflectiveSubuniverses
     - exact tt.
     - split.
       + intros g.
-        exists (O_ind_internal@{u a i j} O A B B_inO g); intros x.
+        exists (O_ind_internal@{u a i j k} O A B B_inO g); intros x.
         apply O_ind_beta_internal.
       + intros h k.
         apply O_extendable; intros x.
@@ -239,9 +243,11 @@ Module EasyModalities_to_Modalities (Os : EasyModalities)
   Definition O_ind_internal (O : Modality@{u a})
              (A : Type@{i}) (B : O_reflector@{u a i} O A -> Type@{j})
              (B_inO : forall oa, inO_internal@{u a j} O (B oa))
-             (f : forall a, B (to@{u a i} O A a)) (oa : O_reflector@{u a i} O A)
-  : B oa.
+  : let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
+    let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
+    (forall a, B (to O A a)) -> forall oa, B oa.
   Proof.
+    simpl; intros f oa.
     pose (H := B_inO oa); unfold inO_internal in H.
     apply ((to O (B oa))^-1).
     apply O_indO.
@@ -984,9 +990,9 @@ Module Modalities_Restriction
   Definition hprop_inO_internal (H : Funext) (O : Modality@{u a})
     := Os.hprop_inO_internal@{u a i} H (Res.Modalities_restriction O).
   Definition O_ind_internal (O : Modality@{u a})
-    := Os.O_ind_internal@{u a i j} (Res.Modalities_restriction O).
+    := Os.O_ind_internal@{u a i j k} (Res.Modalities_restriction O).
   Definition O_ind_beta_internal (O : Modality@{u a})
-    := Os.O_ind_beta_internal@{u a i j} (Res.Modalities_restriction O).
+    := Os.O_ind_beta_internal@{u a i j k} (Res.Modalities_restriction O).
   Definition minO_paths (O : Modality@{u a})
     := Os.minO_paths@{u a i} (Res.Modalities_restriction O).
 

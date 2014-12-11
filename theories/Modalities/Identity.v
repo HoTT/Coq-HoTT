@@ -48,6 +48,8 @@ Module Identity_Modalities <: Modalities.
   : forall (O : Modality@{u a})
            (A : Type@{i}) (B : O_reflector O A -> Type@{j})
            (B_inO : forall oa, inO_internal@{u a j} O (B oa)),
+      let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
+      let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
       (forall a, B (to O A a)) -> forall a, B a
   := fun O A B _ f a => f a.
 
