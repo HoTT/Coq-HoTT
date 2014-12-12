@@ -48,6 +48,8 @@ Require Limits.
 Require Pseudofunctor.
 (** ** Pseudonatural Transformations *)
 Require PseudonaturalTransformation.
+(** ** Lax Comma Categories *)
+Require LaxComma.
 (** ** Duality as a Functor *)
 Require DualFunctor.
 (** ** The Grothendieck Construction *)
@@ -89,6 +91,7 @@ Include Adjoint.Core.
 Include Limits.Core.
 Include Pseudofunctor.Core.
 Include PseudonaturalTransformation.Core.
+Include LaxComma.Core.
 Include DualFunctor.
 Include CategoryOfSections.Core.
 Include DependentProduct.
