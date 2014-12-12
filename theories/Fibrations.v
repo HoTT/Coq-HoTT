@@ -87,7 +87,7 @@ Section UnstableOctahedral.
   Definition hfiber_compose (c : C)
   : hfiber (g o f) c <~> { w : hfiber g c & hfiber f w.1 }.
   Proof.
-    unfold hfiber, compose.
+    unfold hfiber.
     refine (equiv_compose' (equiv_sigma_assoc
               (fun x => g x = c) (fun w => {x : A & f x = w.1})) _).
     refine (equiv_compose' (equiv_functor_sigma' (equiv_idmap B)

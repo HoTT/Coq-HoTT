@@ -37,7 +37,7 @@ Section AssumeFunext.
       (* At this point it's just naturality wrangling, potentially automatable.  It's a little unusual because what we have to prove is not just the existence of some path, but that one path-type is equivalent to another one, but we can mostly still use [rewrite]. *)
       Open Scope long_path_scope.
       rewrite ap_pp, !concat_p_pp, eisadj, <- !ap_V, <- !ap_compose.
-      unfold compose; rewrite (concat_pA1_p (eissect f) (eissect f a)^).
+      rewrite (concat_pA1_p (eissect f) (eissect f a)^).
       rewrite (concat_A1p s (eissect f a)^).
       rewrite (concat_pp_A1 (fun x => (eissect f x)^) (eissect f a)).
       (* Here instead of [whiskerR] we have to be a bit fancier. *)

@@ -69,7 +69,7 @@ Proof.
   revert f. equiv_intro ((equiv_path_universe A B)^-1) p. simpl.
   transitivity (p^).
     2: exact (inverse2 (eisretr (equiv_path_universe A B) p)^).
-  unfold compose. transitivity (path_universe_uncurried (equiv_path B A p^)).
+  transitivity (path_universe_uncurried (equiv_path B A p^)).
     by refine (ap _ (equiv_path_V A B p)^).
   by refine (eissect (equiv_path B A) p^).
 Defined.

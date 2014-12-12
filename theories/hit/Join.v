@@ -30,7 +30,7 @@ Section Join.
       rewrite transport_paths_r, transport_paths_FlFr.
       rewrite ap_V, inv_V, concat_pp_p.
       unfold pushl, pushr; simpl.
-      rewrite <- ap_compose; unfold compose, joinpp.
+      rewrite <- ap_compose; unfold joinpp.
       rewrite ap_const, concat_p1.
       reflexivity.
   Defined.

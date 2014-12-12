@@ -28,7 +28,7 @@ Theorem transport_exp (U V:Type)(w:U<~>V): forall (f:U->A),
 Proof.
   intros f; apply path_arrow; intros y.
   refine (transport_arrow_toconst _ _ _ @ _).
-  unfold compose; apply ap.
+  apply ap.
   by apply transport_path_universe_V.
 Qed.
 

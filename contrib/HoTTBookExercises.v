@@ -32,7 +32,7 @@ Local Open Scope equiv_scope.
 (* ================================================== ex:composition *)
 (** Exercise 1.1 *)
 
-Definition Book_1_1 := @compose.
+Definition Book_1_1 := (fun (A B C : Type) (f : A -> B) (g : B -> C) => g o f).
 
 Theorem Book_1_1_refl : forall (A B C D : Type) (f : A -> B) (g : B -> C) (h : C -> D),
                           h o (g o f) = (h o g) o f.

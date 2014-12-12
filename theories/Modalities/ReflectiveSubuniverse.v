@@ -6,8 +6,6 @@ Require Import HoTT.Tactics.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
-Local Arguments compose / .
-
 (** * Reflective Subuniverses *)
 
 (** We will define reflective subuniverses using modules.  Since modules are one of the more difficult parts of Coq to understand, and the documentation in the reference manual is a bit sparse, we include here a brief introduction to modules.
@@ -279,7 +277,7 @@ Section Reflective_Subuniverse.
     pose (g := O_rec idmap).
     refine (isequiv_adjointify (to O T) g _ _).
     - refine (O_indpaths (to O T o g) idmap _).
-      intros x; unfold compose.
+      intros x.
       apply ap.
       apply O_rec_beta.
     - intros x.
@@ -300,7 +298,7 @@ Section Reflective_Subuniverse.
     Definition O_functor_compose {A B C : Type} (f : A -> B) (g : B -> C)
     : (O_functor (g o f)) == (O_functor g) o (O_functor f).
     Proof.
-      apply O_indpaths; intros x; unfold compose.
+      apply O_indpaths; intros x.
       refine (O_rec_beta (to O C o g o f) x @ _).
       transitivity (O_functor g (to O B (f x))).
       - symmetry. exact (O_rec_beta (to O C o g) (f x)).
@@ -315,7 +313,7 @@ Section Reflective_Subuniverse.
       refine (O_indpaths _ _ _); intros x.
       refine (O_rec_beta (to O B o f) x @ _).
       refine (_ @ (O_rec_beta (to O B o g) x)^).
-      unfold compose; apply ap.
+      apply ap.
       apply pi.
     Defined.
 
@@ -392,7 +390,7 @@ Section Reflective_Subuniverse.
                (f : A -> B) (g : B -> C)
     : g o O_rec f == O_rec (g o f).
     Proof.
-      refine (O_indpaths _ _ _); intros x; unfold compose.
+      refine (O_indpaths _ _ _); intros x.
       transitivity (g (f x)).
       - apply ap. apply O_rec_beta.
       - symmetry. exact (O_rec_beta (g o f) x).
@@ -461,9 +459,9 @@ Section Reflective_Subuniverse.
     : (to O B)^-1 o (O_functor f) == f o (to O A)^-1.
     Proof.
       refine (O_indpaths _ _ _); intros x.
-      unfold compose; apply moveR_equiv_V.
+      apply moveR_equiv_V.
       refine (to_O_natural f x @ _).
-      unfold compose; do 2 apply ap.
+      do 2 apply ap.
       symmetry; apply eissect.
     Defined.
 
@@ -497,7 +495,7 @@ Section Reflective_Subuniverse.
       { refine (isequiv_adjointify f g _ _).
         - apply O_functor_faithful_inO; intros x.
           rewrite O_functor_idmap.
-          fold (f o g); rewrite O_functor_compose.
+          rewrite O_functor_compose.
           unfold g.
           simpl rewrite (O_functor_compose (to O OA) (O_functor Ou)^-1).
           rewrite O_functor_wellpointed.
@@ -505,10 +503,10 @@ Section Reflective_Subuniverse.
           refine (to_O_natural f _ @ _).
           set (y := (O_functor Ou)^-1 x).
           transitivity (O_functor Ou y); try apply eisretr.
-          unfold f, O_functor, compose.
+          unfold f, O_functor.
           apply O_rec_postcompose.
         - refine (O_indpaths _ _ _); intros x.
-          unfold f, compose.
+          unfold f.
           rewrite O_rec_beta. unfold g.
           apply moveR_equiv_V.
           symmetry; apply to_O_natural.
@@ -687,7 +685,7 @@ Section Reflective_Subuniverse.
     Proof.
       refine (inO_to_O_retract _ _ _); intro u.
       - assert (p : (fun _ : O (x=y) => x) == (fun _=> y)). 
-        { refine (O_indpaths _ _ _); unfold compose; simpl.
+        { refine (O_indpaths _ _ _); simpl.
           intro v; exact v. }
         exact (p u).
       - hnf.
@@ -704,7 +702,7 @@ Section Reflective_Subuniverse.
     Definition O_monad_mult_natural {A B} (f : A -> B)
     : O_functor f o O_monad_mult A == O_monad_mult B o O_functor (O_functor f).
     Proof.
-      apply O_indpaths; intros x; unfold compose, O_monad_mult.
+      apply O_indpaths; intros x; unfold O_monad_mult.
       simpl rewrite (to_O_natural (O_functor f) x).
       rewrite (O_rec_beta idmap x).
       rewrite (O_rec_beta idmap (O_functor f x)).
@@ -714,14 +712,14 @@ Section Reflective_Subuniverse.
     Definition O_monad_unitlaw1 (A : Type)
     : O_monad_mult A o (to O (O A)) == idmap.
     Proof.
-      apply O_indpaths; intros x; unfold compose, O_monad_mult.
+      apply O_indpaths; intros x; unfold O_monad_mult.
       exact (O_rec_beta idmap (to O A x)).
     Defined.
 
     Definition O_monad_unitlaw2 (A : Type)
     : O_monad_mult A o (O_functor (to O A)) == idmap.
     Proof.
-      apply O_indpaths; intros x; unfold O_monad_mult, O_functor, compose.
+      apply O_indpaths; intros x; unfold O_monad_mult, O_functor.
       repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
@@ -729,7 +727,7 @@ Section Reflective_Subuniverse.
     Definition O_monad_mult_assoc (A : Type)
     : O_monad_mult A o O_monad_mult (O A) == O_monad_mult A o O_functor (O_monad_mult A).
     Proof.
-      apply O_indpaths; intros x; unfold O_monad_mult, O_functor, compose.
+      apply O_indpaths; intros x; unfold O_monad_mult, O_functor.
       repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
@@ -750,7 +748,7 @@ Section Reflective_Subuniverse.
       revert ob; apply O_indpaths.
       intros b; simpl.
       apply path_arrow; intros a.
-      unfold O_monad_strength, O_functor, compose; simpl.
+      unfold O_monad_strength, O_functor; simpl.
       repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
@@ -760,7 +758,7 @@ Section Reflective_Subuniverse.
     : O_functor (@snd Unit A) o O_monad_strength Unit A == @snd Unit (O A).
     Proof.
       intros [[] oa]; revert oa.
-      apply O_indpaths; intros x; unfold O_monad_strength, O_functor, compose. simpl. 
+      apply O_indpaths; intros x; unfold O_monad_strength, O_functor. simpl. 
       repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
@@ -769,7 +767,7 @@ Section Reflective_Subuniverse.
     : O_monad_strength A B o functor_prod idmap (to O B) == to O (A*B).
     Proof.
       intros [a b].
-      unfold O_monad_strength, functor_prod, compose. simpl. 
+      unfold O_monad_strength, functor_prod. simpl. 
       repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
@@ -783,7 +781,7 @@ Section Reflective_Subuniverse.
       revert oc; apply O_indpaths.
       intros c; simpl.
       apply path_arrow; intros b. apply path_arrow; intros a.
-      unfold O_monad_strength, O_functor, functor_prod, compose. simpl. 
+      unfold O_monad_strength, O_functor, functor_prod. simpl. 
       repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
@@ -795,7 +793,7 @@ Section Reflective_Subuniverse.
       intros [a oob]. revert a; apply ap10.
       revert oob; apply O_indpaths. apply O_indpaths.
       intros b; simpl. apply path_arrow; intros a.
-      unfold O_monad_strength, O_functor, O_monad_mult, functor_prod, compose. simpl. 
+      unfold O_monad_strength, O_functor, O_monad_mult, functor_prod. simpl. 
       repeat (rewrite O_rec_beta; simpl).
       reflexivity.
     Qed.

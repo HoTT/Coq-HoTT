@@ -28,7 +28,7 @@ Proof.
   refine (path_sigma' _ ((ap f^-1 p)^ @ eissect f a) _).
   rewrite (transport_compose (fun y => y = b) f _ _), transport_paths_l.
   rewrite ap_pp, ap_V, <- ap_compose, inv_Vp, concat_pp_p.
-  unfold compose; rewrite (concat_A1p (eisretr f) p).
+  rewrite (concat_A1p (eisretr f) p).
   rewrite eisadj.  by apply concat_V_pp.
 Defined.
 
@@ -289,7 +289,7 @@ Proof.
     unfold hfiber.
     refine (equiv_functor_sigma' h _); intros a.
     refine (equiv_compose' (equiv_concat_l (p a) d) _).
-    unfold compose; simpl; apply equiv_moveR_equiv_M.
+    simpl; apply equiv_moveR_equiv_M.
   - refine (equiv_compose' _ (equiv_pathsplit_isequiv n f)).
     refine (equiv_compose' (equiv_inverse (equiv_pathsplit_isequiv n g)) _).
     apply equiv_iff_hprop; intros e.

@@ -72,7 +72,6 @@ Section coherence.
 
   Local Open Scope path_scope.
   Local Open Scope functor_scope.
-  Local Arguments Overture.compose / .
 
   Local Ltac coherence_t :=
     repeat match goal with

@@ -27,7 +27,6 @@ Proof.
       first [ apply @iso_moveR_Vp
             | apply @iso_moveR_pV ];
       repeat first [ intro
-                   | progress unfold Overture.compose
                    | solve [ auto
                            | symmetry; auto ]
                    | apply @path_forall
