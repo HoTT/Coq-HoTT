@@ -45,20 +45,20 @@ Section Extensions.
     apply (compose (path_forall _ _)). unfold pointwise_paths.
     apply (functor_forall idmap). intros x.
     apply (compose (B := (p (f x))^ @ (ext .2 x) = (ext' .2 x))).
-    apply concat.
-    transitivity ((apD10 (path_forall _ _ p) (f x))^ @ ext .2 x).
-    assert (transp_extension : forall p : ext .1 = ext' .1,
-                                 (transport (fun (s : forall y : B, P y) => forall x : A, s (f x) = d x)
-                                            p (ext .2) x
-                                  = ((apD10 p (f x))^ @ ext .2 x))).
-    destruct ext as [g gd], ext' as [g' gd']; simpl.
-    intros q; destruct q; simpl.
-    apply inverse, concat_1p.
-    apply transp_extension.
-    apply whiskerR, ap, apD10_path_forall.
-    apply (compose (moveR_Vp _ _ _)).
-    apply (compose (moveL_pM _ _ _)).
-    exact inverse.
+    - apply concat.
+      transitivity ((apD10 (path_forall _ _ p) (f x))^ @ ext .2 x).
+      + assert (transp_extension : forall p : ext .1 = ext' .1,
+                                     (transport (fun (s : forall y : B, P y) => forall x : A, s (f x) = d x)
+                                                p (ext .2) x
+                                      = ((apD10 p (f x))^ @ ext .2 x))).
+        * destruct ext as [g gd], ext' as [g' gd']; simpl.
+          intros q; destruct q; simpl.
+          apply inverse, concat_1p.
+        * apply transp_extension.
+      + apply whiskerR, ap, apD10_path_forall.
+    - apply (compose (moveR_Vp _ _ _)).
+      apply (compose (moveL_pM _ _ _)).
+      exact inverse.
   Defined.
 
   Global Instance isequiv_path_extension `{Funext} {A B : Type} {f : A -> B}
