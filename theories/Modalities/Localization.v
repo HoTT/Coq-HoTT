@@ -265,7 +265,7 @@ Definition islocal_equiv_islocal (f : LocalGenerators@{a})
 Module Export LocalizationHIT.
 
   Private Inductive Localize (f : LocalGenerators@{a}) (X : Type@{i})
-  : Type :=
+  : Type@{max(a,i)} :=
   | loc : X -> Localize f X.
 
   Arguments loc {f X} x.
@@ -376,7 +376,7 @@ Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.
              {Q : Type@{j}} {Q_inO : inO_internal@{u a j} O Q}
   : ooExtendableAlong@{i i j k} (to O P) (fun _ => Q).
   Proof.
-    apply ext_localize_ind@{a i j k k}; intros ?.
+    apply ext_localize_ind@{a i j i k i k}; intros ?.
     apply ooextendable_over_const.
     apply Q_inO.
   Defined.
