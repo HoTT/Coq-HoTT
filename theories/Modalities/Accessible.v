@@ -78,7 +78,7 @@ Module Accessible_ReflectiveSubuniverses_Theory
       rewrite ((fst (ext_dom i 1%nat) (to O _)).2 a).
       apply to_O_natural.
     - apply O_indpaths; intros x; simpl.
-      simpl rewrite (to_O_natural O (acc_gen O i) x).
+      rewrite (to_O_natural O (acc_gen O i) x).
       rewrite O_rec_beta.
       apply ((fst (ext_dom i 1%nat) (to O _)).2 x).
   Qed.

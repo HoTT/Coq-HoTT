@@ -497,9 +497,9 @@ Section Reflective_Subuniverse.
           rewrite O_functor_idmap.
           rewrite O_functor_compose.
           unfold g.
-          simpl rewrite (O_functor_compose (to O OA) (O_functor Ou)^-1).
+          rewrite (O_functor_compose (to O OA) (O_functor Ou)^-1).
           rewrite O_functor_wellpointed.
-          simpl rewrite (to_O_natural (O_functor Ou)^-1 x).
+          rewrite (to_O_natural (O_functor Ou)^-1 x).
           refine (to_O_natural f _ @ _).
           set (y := (O_functor Ou)^-1 x).
           transitivity (O_functor Ou y); try apply eisretr.
@@ -703,7 +703,7 @@ Section Reflective_Subuniverse.
     : O_functor f o O_monad_mult A == O_monad_mult B o O_functor (O_functor f).
     Proof.
       apply O_indpaths; intros x; unfold O_monad_mult.
-      simpl rewrite (to_O_natural (O_functor f) x).
+      rewrite (to_O_natural (O_functor f) x).
       rewrite (O_rec_beta idmap x).
       rewrite (O_rec_beta idmap (O_functor f x)).
       reflexivity.

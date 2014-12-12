@@ -367,10 +367,10 @@ Proof.
     exact (to O _ (a ; to O _ p)).
   - unfold Sect; apply O_ind; try exact _.
     intros [a p]; simpl.
-    abstract (repeat (simpl rewrite @O_rec_beta); reflexivity).
+    abstract (repeat rewrite O_rec_beta; reflexivity).
   - unfold Sect; apply O_ind; try exact _.
     intros [a op]; revert op; apply O_ind; try exact _; intros p; simpl.
-    abstract (repeat (simpl rewrite @O_rec_beta); reflexivity).
+    abstract (repeat rewrite O_rec_beta; reflexivity).
 Defined.
 
 (** Corollary 7.3.10 *)
@@ -878,7 +878,7 @@ Section ModalFact.
     - apply moveL_equiv_V.
       transitivity (to O _ (existT (fun (w : hfiber h b) => (hfiber g w.1))
                          (g a; p) (a ; 1))).
-      + simpl; repeat (simpl rewrite @O_rec_beta); reflexivity.
+      + simpl; repeat rewrite O_rec_beta; reflexivity.
       + symmetry; apply to_O_natural.
   Qed.
 

@@ -118,14 +118,13 @@ Section Factorization.
       (* Here is a fairly obvious beginning. *)
       rewrite (ap_transport_arrow_toconst (B := idmap) (C := B)).
       (* Now we set up for a naturality *)
-      let k := constr:(@ap_compose _ _ _ (transport idmap (path_universe II)^)
-                                   (factor2 fact)) in
-      simpl rewrite k. (* https://coq.inria.fr/bugs/show_bug.cgi?id=3773 and https://coq.inria.fr/bugs/show_bug.cgi?id=3772 (probably) *)
+      rewrite (ap_compose (transport idmap II'^) (factor2 fact)).
+      unfold II'.
       rewrite <- ap_p_pp; rewrite_moveL_Mp_p.
       (* We need to supply [ff2] here or else it will rewrite in the wrong place. *)
-      simpl rewrite (concat_Ap ff2).
+      rewrite (concat_Ap ff2).
       (* Next is another naturality  *)
-      simpl rewrite ap_compose.
+      rewrite ap_compose.
       rewrite <- ap_p_pp.
       repeat rewrite (ap_pp (transport idmap (path_universe II)^)).
       rewrite concat_pA_p.
@@ -140,7 +139,7 @@ Section Factorization.
       repeat rewrite concat_p_pp.
       repeat rewrite <- ap_pp.
       rewrite <- ap_compose.
-      simpl rewrite <- (concat_Ap ff2).
+      rewrite <- (concat_Ap ff2).
       rewrite_moveL_Mp_p.
       (* Finally we can use [fff]! *)
       refine (_ @ (fff a)^).
@@ -179,10 +178,9 @@ Section Factorization.
       rewrite ap_apply_l, ap10_path_arrow.
       rewrite transport_sigma_'; cbn.
       rewrite transport_forall_constant, transport_paths_Fl.
-      simpl rewrite (@ap_compose _ _ _
-                                 (fun g:A->intermediate fact' => g a)
-                                 (fun x => transport (fun X => X -> B) (path_universe II)
-                                                     (factor2 fact) x)).
+      rewrite (ap_compose (fun g:A->intermediate fact' => g a)
+                          (fun x => transport (fun X => X -> B) (path_universe II)
+                                              (factor2 fact) x)).
       rewrite ap_apply_l, ap10_path_arrow.
       (* Finally we can apply our monster lemma [fff']. *)
       do 2 apply moveR_Vp; repeat rewrite concat_p_pp.
@@ -347,9 +345,6 @@ Section FactSys.
     + apply gf.
   Defined.
 
-  (* Enable [simpl rewrite] to unfold [lift_factsys] in the following proof.  It may not be obvious from the proof that this is necessary, but [lift_factsys] appears in the invisible implicit point-arguments of [paths].  One way to discover issues of that sort is to turn on printing of all implicit argumnets with [Set Printing All]; another is to use [Set Debug Tactic Unification] and inspect the output to see what [rewrite] is trying and failing to unify. *)
-  Local Arguments lift_factsys / .
-
   (** And finally prove that these two triangles compose to the given commutative square. *)
   Definition lift_factsys_square (x : A)
   : ap p (lift_factsys_tri1 x)^ @ lift_factsys_tri2 (i x) = h x.
@@ -368,13 +363,15 @@ Section FactSys.
     repeat rewrite concat_p_pp; apply whiskerR.
     (* Next we set up for a naturality. *)
     rewrite (ap_compose q^-1 f2), <- ap_pp, <- inv_pp.
-    simpl rewrite <- ap_pp.
+    (* The next line appears to do nothing, but in fact it is necessary for the subsequent [rewrite] to succeed, because [lift_factsys] appears in the invisible implicit point-arguments of [paths].  One way to discover issues of that sort is to turn on printing of all implicit argumnets with [Set Printing All]; another is to use [Set Debug Tactic Unification] and inspect the output to see what [rewrite] is trying and failing to unify. *)
+    unfold lift_factsys.
+    rewrite <- ap_pp.
     rewrite <- ap_V, <- ap_compose.
-    simpl rewrite (concat_Ap q2).
+    rewrite (concat_Ap q2).
     (* Now we can cancel another path *)
     rewrite concat_pp_p; apply whiskerL.
     (* And set up for an application of [ap]. *)
-    simpl rewrite ap_compose.
+    rewrite ap_compose.
     rewrite <- ap_pp.
     apply ap.
     (* Now we apply the triangle identity [eisadj]. *)
