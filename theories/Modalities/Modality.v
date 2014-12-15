@@ -46,18 +46,22 @@ Module Type Modalities.
 
   Parameter O_ind_internal
   : forall (O : Modality@{u a})
-           (A : Type2le@{i a}) (B : O_reflector O A -> Type2le@{j a})
+           (A : Type2le@{i a})
+           (B : O_reflector@{u a i} O A -> Type2le@{j a})
            (B_inO : forall oa, inO_internal@{u a j} O (B oa)),
+      (** We add an extra unused universe parameter [k] that's [>= max(i,j)].  This seems to be necessary for some examples, such as [Nullification], which are constructed by way of an operation that requires such a universe.  *)
+      let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
+      let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
       (forall a, B (to O A a)) -> forall a, B a.
-  Check O_ind_internal@{u a i j}.
+  Check O_ind_internal@{u a i j k}.
 
   Parameter O_ind_beta_internal
   : forall (O : Modality@{u a})
            (A : Type@{i}) (B : O_reflector O A -> Type@{j})
            (B_inO : forall oa, inO_internal@{u a j} O (B oa))
            (f : forall a : A, B (to O A a)) (a:A),
-      O_ind_internal@{u a i j} O A B B_inO f (to O A a) = f a.
-  Check O_ind_beta_internal@{u a i j}.
+      O_ind_internal@{u a i j k} O A B B_inO f (to O A a) = f a.
+  Check O_ind_beta_internal@{u a i j k}.
 
   Parameter minO_paths
   : forall (O : Modality@{u a})
@@ -87,7 +91,7 @@ Module Modalities_to_ReflectiveSubuniverses
     - exact tt.
     - split.
       + intros g.
-        exists (O_ind_internal@{u a i j} O A B B_inO g); intros x.
+        exists (O_ind_internal@{u a i j k} O A B B_inO g); intros x.
         apply O_ind_beta_internal.
       + intros h k.
         apply O_extendable; intros x.
@@ -239,9 +243,11 @@ Module EasyModalities_to_Modalities (Os : EasyModalities)
   Definition O_ind_internal (O : Modality@{u a})
              (A : Type@{i}) (B : O_reflector@{u a i} O A -> Type@{j})
              (B_inO : forall oa, inO_internal@{u a j} O (B oa))
-             (f : forall a, B (to@{u a i} O A a)) (oa : O_reflector@{u a i} O A)
-  : B oa.
+  : let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
+    let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
+    (forall a, B (to O A a)) -> forall oa, B oa.
   Proof.
+    simpl; intros f oa.
     pose (H := B_inO oa); unfold inO_internal in H.
     apply ((to O (B oa))^-1).
     apply O_indO.
@@ -419,8 +425,9 @@ End OIndEquiv.
 
 Question: is there a definition of connectedness (say, for n-types) that neither blows up the universe level, nor requires HIT's? *)
 
-Class IsConnected (O : Modality) (A : Type)
-  := isconnected_contr_O : Contr (O A).
+Class IsConnected (O : Modality@{u a}) (A : Type@{i})
+  := isconnected_contr_O : IsTrunc@{i} -2 (O A).
+Check IsConnected@{u a i}.
 
 Global Existing Instance isconnected_contr_O.
 
@@ -485,7 +492,8 @@ Section ConnectedTypes.
 
   (** Here's another way of stating the universal property for mapping out of connected types into modal ones. *)
   Definition extendable_const_isconnected_inO (n : nat)
-             (A : Type@{i}) `{IsConnected@{u a i} O A}
+             (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3811 *)
+             (A : Type@{i}) {conn_A : IsConnected@{u a i} O A}
              (C : Type@{j}) `{In@{u a j} O C}
   : ExtendableAlong@{i i j j} n (@const A Unit@{i} tt) (fun _ => C).
   Proof.
@@ -504,7 +512,7 @@ Section ConnectedTypes.
              (A : Type@{i}) `{IsConnected@{u a i} O A}
              (C : Type@{j}) `{In@{u a j} O C}
   : ooExtendableAlong (@const A Unit tt) (fun _ => C)
-    := fun n => extendable_const_isconnected_inO@{i j k j} n A C.
+    := fun n => extendable_const_isconnected_inO@{i j k k j} n A C.
 
   Definition isequiv_const_isconnected_inO `{Funext}
              {A : Type} `{IsConnected O A} (C : Type) `{In O C}
@@ -521,8 +529,9 @@ End ConnectedTypes.
 
 (** A map is "in [O]" if each of its fibers is. *)
 
-Class MapIn (O : Modality) {A B : Type} (f : A -> B)
-  := inO_hfiber_ino_map : forall (b:B), In O (hfiber f b).
+Class MapIn (O : Modality@{u a}) {A : Type@{i}} {B : Type@{j}} (f : A -> B)
+  := inO_hfiber_ino_map : forall (b:B), In@{u a k} O (hfiber f b).
+Check MapIn@{u a i j k}.        (** k >= max(i,j) *)
 
 Global Existing Instance inO_hfiber_ino_map.
 
@@ -578,8 +587,9 @@ End ModalMaps.
 
 (** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against truncated types.  We use the former; the equivalence with the latter is given below in [conn_map_elim], [conn_map_comp], and [conn_map_from_extension_elim]. *)
 
-Class IsConnMap (O : Modality) {A B : Type} (f : A -> B)
-  := isconnected_hfiber_conn_map : forall b:B, IsConnected O (hfiber f b).
+Class IsConnMap (O : Modality@{u a}) {A : Type@{i}} {B : Type@{j}} (f : A -> B)
+  := isconnected_hfiber_conn_map : forall b:B, IsConnected@{u a k} O (hfiber f b).
+Check IsConnMap@{u a i j k}.        (** k >= max(i,j) *)
 
 Global Existing Instance isconnected_hfiber_conn_map.
 
@@ -980,9 +990,9 @@ Module Modalities_Restriction
   Definition hprop_inO_internal (H : Funext) (O : Modality@{u a})
     := Os.hprop_inO_internal@{u a i} H (Res.Modalities_restriction O).
   Definition O_ind_internal (O : Modality@{u a})
-    := Os.O_ind_internal@{u a i j} (Res.Modalities_restriction O).
+    := Os.O_ind_internal@{u a i j k} (Res.Modalities_restriction O).
   Definition O_ind_beta_internal (O : Modality@{u a})
-    := Os.O_ind_beta_internal@{u a i j} (Res.Modalities_restriction O).
+    := Os.O_ind_beta_internal@{u a i j k} (Res.Modalities_restriction O).
   Definition minO_paths (O : Modality@{u a})
     := Os.minO_paths@{u a i} (Res.Modalities_restriction O).
 

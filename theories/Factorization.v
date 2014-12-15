@@ -121,8 +121,9 @@ Section Factorization.
       (* Here is a fairly obvious beginning. *)
       rewrite (ap_transport_arrow_toconst (B := idmap) (C := B)).
       (* Now we set up for a naturality *)
-      simpl rewrite (@ap_compose _ _ _ (transport idmap (path_universe II)^)
-                                 (factor2 fact)).
+      let k := constr:(@ap_compose _ _ _ (transport idmap (path_universe II)^)
+                                   (factor2 fact)) in
+      simpl rewrite k. (* https://coq.inria.fr/bugs/show_bug.cgi?id=3773 and https://coq.inria.fr/bugs/show_bug.cgi?id=3772 (probably) *)
       rewrite <- ap_p_pp; rewrite_moveL_Mp_p.
       (* We need to supply [ff2] here or else it will rewrite in the wrong place. *)
       simpl rewrite (concat_Ap ff2).
@@ -304,7 +305,7 @@ Section FactSys.
   Let gf : g2 o g1 == g := fact_factors (factor factsys g).
 
   (** Now we observe that [p o f2] and [f1], and [g2] and [g1 o i], are both factorizations of the common diagonal of the commutative square (for which we use [p o f], but we could equally well use [g o i]. *)
-  Let fact  : Factorization (@class1 factsys) (@class2 factsys) (p o f) 
+  Let fact  : Factorization (@class1 factsys) (@class2 factsys) (p o f)
             := Build_Factorization' (p o f) C f1 (p o f2)
                  (fun a => ap p (ff a))
                  (inclass1 (factor factsys f))

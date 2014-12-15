@@ -83,14 +83,15 @@ Module ClosedModalities <: Modalities.
     exact _.
   Defined.
 
-  Definition O_ind_internal (O : Modality@{u a}) (A : Type@{i})
-             (B : O_reflector@{u a i} O A -> Type@{j})
+  Definition O_ind_internal (O : Modality@{u a})
+             (A : Type@{i}) (B : O_reflector O A -> Type@{j})
              (B_inO : forall oa, inO_internal@{u a j} O (B oa))
-             (f : forall a : A, B (to O A a))
-             (z : O_reflector O A)
-  : B z.
+  : let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
+    let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
+    (forall a, B (to@{u a i} O A a)) -> forall a, B a.
   Proof.
-    refine (pushout_ind@{i a i j j} _ _ B _ _ z).
+    simpl; intros f z.
+    refine (pushout_ind@{i a i j i} _ _ B _ _ z).
     - intros [u | a].
       + apply center, B_inO, u.
       + apply f.

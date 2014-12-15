@@ -117,7 +117,8 @@ Section AdjunctionEquivalences.
     change (idmap g0 = idmap g1).
     rewrite <- (ap10 (@left_inverse _ _ _ (A (c, d)) _)).
     simpl rewrite H0.
-    simpl rewrite (ap10 (@left_inverse _ _ _ (A (c, d)) _)).
+    let k := constr:(ap10 (@left_inverse _ _ _ (A (c, d)) _)) in
+    simpl rewrite k. (* https://coq.inria.fr/bugs/show_bug.cgi?id=3773 and https://coq.inria.fr/bugs/show_bug.cgi?id=3772 (probably) *)
     reflexivity.
   Qed.
 

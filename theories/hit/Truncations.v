@@ -81,8 +81,14 @@ Module Truncation_Modalities <: Modalities.
     unfold inO_internal; exact _.
   Defined.
 
-  Definition O_ind_internal (n : Modality@{u u'}) A B Btr f
-    := @Trunc_ind n A B Btr f.
+  Definition O_ind_internal
+  : forall (n : Modality@{u a})
+           (A : Type@{i}) (B : O_reflector n A -> Type@{j})
+           (B_inO : forall oa, inO_internal@{u a j} n (B oa)),
+      let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
+      let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
+      (forall a, B (to n A a)) -> forall a, B a
+    := @Trunc_ind.
 
   Definition O_ind_beta_internal (n : Modality@{u u'})
              A B Btr f a
