@@ -31,6 +31,16 @@ Section Extensions.
   Check ExtensionAlong@{a b p m n}.
   (** If necessary, we could coalesce the latter two with a universe annotation, but that would make the definition harder to read. *)
 
+  (** It's occasionally useful to be able to modify those max universes. *)
+  Definition lift_extensionalong {A : Type@{a}} {B : Type@{b}} (f : A -> B)
+             (P : B -> Type@{p}) (d : forall x:A, P (f x))
+  : ExtensionAlong@{a b p m1 n1} f P d -> ExtensionAlong@{a b p m2 n2} f P d
+    := fun ext => (ext.1 ; ext.2).
+  (** We called it [lift_extensionalong], but in fact it doesn't require the new universes to be bigger than the old ones, only that they both satisfy the max condition. *)
+  Definition lower_extensionalong {A : Type@{a}} {B : Type@{b}} (f : A -> B)
+             (P : B -> Type@{p}) (d : forall x:A, P (f x))
+    := lift_extensionalong f P d.
+
   Definition equiv_path_extension `{Funext} {A B : Type} {f : A -> B}
              {P : B -> Type} {d : forall x:A, P (f x)}
              (ext ext' : ExtensionAlong f P d)
@@ -95,6 +105,24 @@ Section Extensions.
       - size of C
       - size of result (>= A,B,C) *)
   Check ExtendableAlong@{a b c r}.
+
+  (** We can modify the universes, as with [ExtensionAlong]. *)
+  Definition lift_extendablealong
+             (n : nat) {A : Type@{i}} {B : Type@{j}}
+             (f : A -> B) (C : B -> Type@{k})
+  : ExtendableAlong@{i j k l1} n f C -> ExtendableAlong@{i j k l2} n f C.
+  Proof.
+    revert C; simple_induction n n IH; intros C.
+    - intros _; exact tt.
+    - intros ext; split.
+      + intros g; exact (lift_extensionalong _ _ _ (fst ext g)).
+      + intros h k; exact (IH _ (snd ext h k)).
+  Defined.
+
+  Definition lower_extendablealong
+             (n : nat) {A : Type@{i}} {B : Type@{j}}
+             (f : A -> B) (C : B -> Type@{k})
+    := lift_extendablealong n f C.
 
   Definition equiv_extendable_pathsplit `{Funext} (n : nat)
              {A B : Type} (C : B -> Type) (f : A -> B)
@@ -286,6 +314,18 @@ Section Extensions.
     := forall n, ExtendableAlong@{i j k l} n f C.
   (** Universe parameters are the same as for [ExtendableAlong]. *)
   Check ooExtendableAlong@{a b c r}.
+
+  (** Universe modification. *)
+  Definition lift_ooextendablealong
+             {A : Type@{i}} {B : Type@{j}}
+             (f : A -> B) (C : B -> Type@{k})
+  : ooExtendableAlong@{i j k l1} f C -> ooExtendableAlong@{i j k l2} f C
+    := fun ext n => lift_extendablealong n f C (ext n).
+
+  Definition lower_ooextendablealong
+             {A : Type@{i}} {B : Type@{j}}
+             (f : A -> B) (C : B -> Type@{k})
+    := lift_ooextendablealong f C.
 
   Definition isequiv_ooextendable `{Funext}
              {A B : Type} (C : B -> Type) (f : A -> B)

@@ -300,7 +300,7 @@ Module Accessible_Restriction_Modalities
     : forall (O : New.Modality@{u a}) (X : Type@{i}),
         iff@{i i i}
            (inO_internal@{u a i} O X)
-           (IsNull@{i a} (acc_gen@{u a} O) X)
+           (IsNull@{a i} (acc_gen@{u a} O) X)
       := fun O => Acc.inO_iff_isnull_internal (Res.Modalities_restriction O).
 
   End Accessible_New.

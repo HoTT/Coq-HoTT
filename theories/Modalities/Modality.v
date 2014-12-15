@@ -1191,8 +1191,8 @@ Module Modalities_FamUnion (Os1 Os2 : Modalities)
            (B_inO : forall oa, inO_internal@{u a j} O (B oa)),
       (forall a, B (to O A a)) -> forall a, B a.
   Proof.
-    intros [O|O]; [ exact (Os1.O_ind_internal@{u a i j} O)
-                  | exact (Os2.O_ind_internal@{u a i j} O) ].
+    intros [O|O]; [ exact (Os1.O_ind_internal@{u a i j k} O)
+                  | exact (Os2.O_ind_internal@{u a i j k} O) ].
   Defined.
 
   Definition O_ind_beta_internal
@@ -1200,10 +1200,10 @@ Module Modalities_FamUnion (Os1 Os2 : Modalities)
            (A : Type@{i}) (B : O_reflector O A -> Type@{j})
            (B_inO : forall oa, inO_internal@{u a j} O (B oa))
            (f : forall a : A, B (to O A a)) (a:A),
-      O_ind_internal@{u a i j} O A B B_inO f (to O A a) = f a.
+      O_ind_internal@{u a i j k} O A B B_inO f (to O A a) = f a.
   Proof.
-    intros [O|O]; [ exact (Os1.O_ind_beta_internal@{u a i j} O)
-                  | exact (Os2.O_ind_beta_internal@{u a i j} O) ].
+    intros [O|O]; [ exact (Os1.O_ind_beta_internal@{u a i j k} O)
+                  | exact (Os2.O_ind_beta_internal@{u a i j k} O) ].
   Defined.
 
   Definition minO_paths

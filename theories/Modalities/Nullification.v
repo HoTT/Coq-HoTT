@@ -11,12 +11,13 @@ Local Open Scope path_scope.
 (** Nullification is the special case of localization where the codomains of the generating maps are all [Unit].  In this case, we get a modality and not just a reflective subuniverse. *)
 
 (** The hypotheses of this lemma may look slightly odd (why are we bothering to talk about type families dependent over [Unit]?), but they seem to be the most convenient to make the induction go through.  *)
+
 Definition extendable_over_unit (n : nat)
   (A : Type@{a}) (C : Unit@{a} -> Type@{i}) (D : forall u, C u -> Type@{j})
-  (ext : ExtendableAlong@{a a i i} n (@const A Unit tt) C)
+  (ext : ExtendableAlong@{a a i k} n (@const A Unit tt) C)
   (ext' : forall (c : forall u, C u),
-            ExtendableAlong@{a a j j} n (@const A Unit tt) (fun u => (D u (c u))))
-: ExtendableAlong_Over@{a a i i j j i j j j} n (@const A Unit tt) C ext D.
+            ExtendableAlong@{a a j k} n (@const A Unit tt) (fun u => (D u (c u))))
+: ExtendableAlong_Over@{a a i j k} n (@const A Unit tt) C D ext.
 Proof.
   generalize dependent C; simple_induction n n IH;
     intros C D ext ext'; [exact tt | split].
@@ -76,8 +77,8 @@ Module Nullification_Modalities <: Modalities.
   Proof.
     refine (Localize_ind@{a i j k}
              (null_to_local_generators@{a a} (unNul O)) A B g _); intros i.
-    apply (ooextendable_over_unit@{a i j a k j}); intros c.
-    refine (ooextendable_postcompose@{a a j j j j j j j j j}
+    apply (ooextendable_over_unit@{a i j a k}); intros c.
+    refine (ooextendable_postcompose@{a a j j k j j j k j k}
               (fun (_:Unit) => B (c tt)) _ _
               (fun u => transport@{i j} B (ap c (path_unit tt u))) _).
     refine (ooextendable_islocal _ i).
