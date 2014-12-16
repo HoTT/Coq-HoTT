@@ -254,8 +254,9 @@ Module Export Concat.
   Tactic Notation "erewrite•A" "->" "?" open_constr(lem) := erewrite@A -> ? lem.
   Tactic Notation "erewrite•A" "<-" "?" open_constr(lem) := erewrite@A <- ? lem.
 End Concat.
-(*
+
 Section examples.
+(*
   Section compose.
     Example simple_01 {A} (f g h i j : A -> A) : f o g = h -> (i o f) o (g o j) = i o h o j.
     Proof.
@@ -271,7 +272,7 @@ Section examples.
       reflexivity.
     Abort.
   End compose.
-
+*)
   Section concat.
     Example simple_01 {A} {a : A} (f g h i j : a = a) : f @ g = h -> (i @ f) @ (g @ j) = i @ h @ j.
     Proof.
@@ -288,4 +289,3 @@ Section examples.
     Abort.
   End concat.
 End examples.
-*)
