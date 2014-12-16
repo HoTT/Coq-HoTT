@@ -635,12 +635,12 @@ Ltac by_extensionality x :=
     simpl; auto with path_hints
   end.
 
-(** Test if a tactic succeeds, but always roll-back the results *)
-Tactic Notation "test" tactic3(tac) :=
-  try (first [ tac | fail 2 tac "does not succeed" ]; fail tac "succeeds"; [](* test for [t] solved all goals *)).
-
 (** [not tac] is equivalent to [fail tac "succeeds"] if [tac] succeeds, and is equivalent to [idtac] if [tac] fails *)
-Tactic Notation "not" tactic3(tac) := try ((test tac); fail 1 tac "succeeds").
+Tactic Notation "not" tactic3(tac) :=
+  (tryif tac then fail 0 tac "succeeds" else idtac); (* error if the tactic solved all goals *) [].
+
+(** Test if a tactic succeeds, but always roll-back the results *)
+Tactic Notation "test" tactic3(tac) := tryif not tac then fail 0 tac "fails" else idtac.
 
 (** Removed auto. We can write "by (path_induction;auto with path_hints)"
  if we want to.*)
@@ -676,9 +676,15 @@ Ltac expand :=
 Ltac atomic x :=
   idtac;
   match x with
-    | ?f _ => fail 1 x "is not atomic"
-    | (fun _ => _) => fail 1 x "is not atomic"
-    | forall _, _ => fail 1 x "is not atomic"
+    | _ => is_evar x; fail 1 x "is not atomic (evar)"
+    | ?f _ => fail 1 x "is not atomic (application)"
+    | (fun _ => _) => fail 1 x "is not atomic (fun)"
+    | forall _, _ => fail 1 x "is not atomic (forall)"
+    | let x := _ in _ => fail 1 x "is not atomic (let in)"
+    | match _ with _ => _ end => fail 1 x "is not atomic (match)"
+    | _ => is_fix x; fail 1 x "is not atomic (fix)"
+    | _ => is_cofix x; fail 1 x "is not atomic (cofix)"
+    | context[?E] => (* catch-all *) (not constr_eq E x); fail 1 x "is not atomic (has subterm" E ")"
     | _ => idtac
   end.
 
