@@ -63,6 +63,9 @@ Definition isequiv_path_universe {A B : Type}
 Definition equiv_path_universe (A B : Type) : (A <~> B) <~> (A = B)
   := BuildEquiv _ _ (@path_universe_uncurried A B) isequiv_path_universe.
 
+Definition equiv_equiv_path  (A B : Type) : (A = B) <~> (A <~> B)
+  := equiv_inverse (equiv_path_universe A B).
+
 Definition path_universe_V_uncurried `{Funext} {A B : Type} (f : A <~> B)
   : path_universe_uncurried (equiv_inverse f) = (path_universe_uncurried f)^.
 Proof.
@@ -217,5 +220,24 @@ Definition equiv_induction'_comp (P : forall U V, U <~> V -> Type)
   (didmap : forall T, P T T (equiv_idmap T)) (U : Type)
   : equiv_induction' P didmap U U (equiv_idmap U) = didmap U
   := (equiv_ind_comp (P U U) _ 1).
+
+(** ** Based equivalence types *)
+
+Global Instance contr_basedequiv {X : Type}
+: Contr {Y : Type & X <~> Y}.
+Proof.
+  refine (trunc_equiv' {Y : Type & X = Y}
+           (equiv_functor_sigma' (equiv_idmap Type)
+             (fun Y => equiv_equiv_path X Y))).
+Defined.
+
+Global Instance contr_basedequiv' {X : Type}
+: Contr {Y : Type & Y <~> X}.
+Proof.
+Proof.
+  refine (trunc_equiv' {Y : Type & Y = X}
+           (equiv_functor_sigma' (equiv_idmap Type)
+             (fun Y => equiv_equiv_path Y X))).
+Defined.
 
 End Univalence.
