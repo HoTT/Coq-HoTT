@@ -56,7 +56,7 @@ let collect_long_names (c:Term.constr) (acc:Data.t) =
       | Term.Lambda(n,t,c) -> add t (add c acc)
       | Term.LetIn(_,v,t,c) -> add v (add t (add c acc))
       | Term.App(c,ca) -> add c (Array.fold_right add ca acc)
-      | Term.Proj (p, _) -> add_projection p acc
+      | Term.Proj (p,_) -> add_projection (Names.Projection.constant p) acc
       | Term.Const (cst,univ) -> add_constant cst acc (* abstraction-barrier-breaking hack! *)
       | Term.Ind (i,univ) -> add_inductive i acc (* abstraction-barrier-breaking hack! *)
       | Term.Construct (cnst,univ) -> add_constructor cnst acc (* abstraction-barrier-breaking hack! *)
@@ -77,7 +77,7 @@ let collect_dependance gref =
       let cb = Environ.lookup_constant cst (Global.env()) in
       let c = match cb.Declarations.const_body with
         | Declarations.Def c -> Mod_subst.force_constr c
-        | Declarations.OpaqueDef c -> Opaqueproof.force_proof c
+        | Declarations.OpaqueDef c -> Opaqueproof.force_proof (Global.opaque_tables ()) c
         | Declarations.Undef _ -> raise (NoDef gref)
       in
       collect_long_names c Data.empty
