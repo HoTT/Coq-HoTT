@@ -157,7 +157,7 @@ Section path_functor.
              | [ |- IsEquiv (_ o _) ] => eapply @isequiv_compose
              | [ |- IsEquiv (_^-1) ] => eapply @isequiv_inverse
              | [ |- IsEquiv (path_sigma_uncurried _ _ _) ] => eapply @isequiv_path_sigma
-             | _ => try apply @isequiv_compose
+             | _ => apply @isequiv_compose
            end.
   Defined.
 
