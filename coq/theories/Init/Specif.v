@@ -18,7 +18,6 @@ Require Import Notations.
 Require Import Datatypes.
 Local Open Scope identity_scope.
 Require Import Logic.
-Local Set Primitive Projections.
 Local Unset Elimination Schemes.
 
 (** [(sig A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type.

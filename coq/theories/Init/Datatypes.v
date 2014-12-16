@@ -17,7 +17,7 @@ Declare ML Module "nat_syntax_plugin".
 
 Global Set Universe Polymorphism.
 Global Set Asymmetric Patterns.
-Local Set Primitive Projections.
+Global Set Primitive Projections.
 Global Set Nonrecursive Elimination Schemes.
 Local Unset Elimination Schemes.
 
