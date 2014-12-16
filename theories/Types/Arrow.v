@@ -52,6 +52,13 @@ Definition equiv_path_arrow {A B : Type} (f g : A -> B)
   : (f == g) <~> (f = g)
   := equiv_path_forall f g.
 
+(** ** Path algebra *)
+
+Definition path_arrow_pp {A B : Type} (f g h : A -> B)
+           (p : f == g) (q : g == h)
+: path_arrow f h (fun x => p x @ q x) = path_arrow f g p @ path_arrow g h q
+:= path_forall_pp f g h p q.
+
 (** ** Transport *)
 
 (** Transporting in non-dependent function types is somewhat simpler than in dependent ones. *)

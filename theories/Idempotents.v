@@ -1,12 +1,16 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import HoTT.Tactics.
+Require Import UnivalenceImpliesFunext.
 Require Import hit.Truncations.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
 (** * Splitting of Idempotents *)
+
+(** TODO: [IsIdempotent] should be a section/retraction pair.  By HTT 4.4.5.7 this has the correct homotopy type for being a *coherent* idempotent.  Then we can have [IsPreIdempotent] and [IsQuasiIdempotent] or something for the incoherent and "partially coherent" ones.  We should be able to prove that the [J] of a quasi-idempotent is not generally recovered from its splitting, e.g. the same [id,I] can admit different [J], but their splitting factor through the contractible type [{Z:Type & Z <~> X}].  Thus quasi-idempotents are analogous to quasi-inverses, with splitting being analogous to adjointification. *)
+
 
 (** The naive definition of "idempotent" would be a morphism [f : X -> X] such that [forall x, f (f x) = f x].  However, homotopically we may naturally expect to need some coherence on the witness to idempotency.  Indeed, in homotopy theory there are "idempotents" in this sense which do not split; see for instance Warning 1.2.4.8 in *Higher Algebra*.
 
@@ -102,7 +106,7 @@ Section CoherentIdempotents.
   : ap (fun (a:split_idempotent) => a 0) (path_split_idempotent p q) = p 0.
   Proof.
     change (ap ((fun b => b 0) o pr1) (path_split_idempotent p q) = p 0).
-    refine (ap_compose _ _ _ @ _).
+    refine (ap_compose pr1 (fun b => b 0) _ @ _).
     refine (ap (ap (fun b => b 0)) (pr1_path_sigma _ _) @ _).
     refine (ap_apply_l _ 0 @ _).
     apply ap10_path_arrow.
@@ -132,31 +136,40 @@ Section CoherentIdempotents.
 
   (** Now we're ready to prove the final condition. *)
 
+  Local Definition split_idempotent_issect_1 (a : split_idempotent) (n : nat)
+  : f (f (a n.+1)) = f (a 0).
+  Proof.
+    induction n as [|n IH].
+    - exact (ap f (a.2 0)).
+    - exact (ap f (a.2 n.+1) @ (I (a n.+1))^ @ IH).
+  Defined.
+
+  Local Definition split_idempotent_issect_2 (a : split_idempotent) (n : nat)
+  : ap f (ap f (a.2 n.+1)) @ split_idempotent_issect_1 a n =
+    ap f ((ap f (a.2 n.+1) @ (I (a.1 n.+1))^) @ split_idempotent_issect_1 a n) @ I (a.1 0).
+  Proof.
+    induction n as [|n IH]; simpl.
+    Open Scope long_path_scope.
+    - rewrite !ap_pp, ap_V, !concat_pp_p.
+      apply whiskerL, moveL_Vp.
+      rewrite J.
+      rewrite <- ap_compose; symmetry; apply (concat_Ap I).
+    - rewrite ap_pp.
+      refine (_ @ (1 @@ IH) @ concat_p_pp _ _ _).
+      rewrite !ap_pp, !concat_p_pp, ap_V.
+      rewrite J.
+      rewrite <- !ap_compose.
+      refine ((concat_pA_p (fun x => (I x)^) _ _) @@ 1).
+    Close Scope long_path_scope.
+  Qed.
+
   Definition split_idempotent_issect (a : split_idempotent)
   : split_idempotent_retr (split_idempotent_sect a) = a.
   Proof.
     refine (_ @ nudge_eq a); symmetry.
-    transparent assert (p : (forall n, f (f (a n.+1)) = f (a 0))).
-    { induction n as [|n IH].
-      - exact (ap f (a.2 0)).
-      - exact (ap f (a.2 n.+1) @ (I (a n.+1))^ @ IH). }
-    refine (path_split_idempotent _ _); [ exact p | intros n; simpl ].
-    induction n as [|n IH]; simpl.
-    (** We make these proofs abstract since they contain [rewrite]s.  Since this requires joining the steps with [;] rather than [.], we can't step through them, so there is no point to [long_path_scope].  However, we leave it here since the reader may want to remove the [abstract]s and change the [;]s back to [.]s in order to step through the proofs, in which case [long_path_scope] may be helpful. *)
-    Open Scope long_path_scope.
-    - abstract (
-      rewrite !ap_pp, ap_V, !concat_pp_p;
-      apply whiskerL, moveL_Vp;
-      rewrite J;
-      rewrite <- ap_compose; symmetry; apply (concat_Ap I) ).
-    - abstract (
-      rewrite ap_pp;
-      refine (_ @ (1 @@ IH) @ concat_p_pp _ _ _);
-      rewrite !ap_pp, !concat_p_pp, ap_V;
-      rewrite J;
-      rewrite <- !ap_compose;
-      refine ((concat_pA_p (fun x => (I x)^) _ _) @@ 1) ).
-    Close Scope long_path_scope.
+    refine (path_split_idempotent _ _).
+    - exact (split_idempotent_issect_1 a).
+    - exact (split_idempotent_issect_2 a).
   Defined.
 
   (** The following observation shows that the resulting splitting is "coherent" with the given witness of idempotence [I]. *)
@@ -167,10 +180,8 @@ Section CoherentIdempotents.
       @ ap f (split_idempotent_splits x)
       @ I x.
   Proof.
-    (** Brace yourself *)
     unfold split_idempotent_issect, nudge_eq.
     repeat (rewrite !ap_pp, ?ap_V, !sect_path_split_idempotent; simpl).
-    (** Whew! *)
     unfold split_idempotent_splits.
     rewrite concat_p1, concat_1p; apply moveR_Vp.
     apply whiskerR; symmetry; apply J.
@@ -201,14 +212,54 @@ End CoherentIdempotents.
 
 (** ** Splitting already-split idempotents *)
 
-(** In the other direction, suppose we are given a section/retraction pair, we deduce a coherent idempotent, and then split it by the above construction.  Then we get an equivalent type to the one occurring in the original pair. *)
+(** In the other direction, suppose we are given a section/retraction pair, we deduce a coherent idempotent, and then split it by the above construction.  Then we get an equivalent type to the one occurring in the original pair .*)
 
+(** We want to make the equivalence transparent so that we can reason about it later.  In fact, we want to reason not only about the equivalence function and its inverse, but the section and retraction homotopies!  Therefore, instead of using [equiv_adjointify] we will give the coherence proof explicitly.  However, we can (and should) make the coherence proof opaque.  Thus, we prove it first and end it with [Qed].  *)
+Lemma equiv_split_coherent_split_2 `{fs : Funext}
+           {X A : Type} (r : X -> A) (s : A -> X) (H : r o s == idmap)
+           (a : split_idempotent (s o r))
+: H (r (s (r (split_idempotent_sect (s o r) a)))) @
+   H (r (split_idempotent_sect (s o r) a)) =
+   ap (r o split_idempotent_sect (s o r))
+     (ap (split_idempotent_retr (s o r) (coherent_split r s H))
+        (1 @
+         ap (split_idempotent_sect (s o r))
+           (split_idempotent_issect (s o r) (coherent_split r s H) a)) @
+      split_idempotent_issect (s o r) (coherent_split r s H) a).
+Proof.
+  rewrite ap_pp.
+  rewrite <- ap_compose; simpl.
+  rewrite concat_1p.
+  rewrite <- (ap_compose (split_idempotent_sect (s o r)) (r o s o r)
+                         (split_idempotent_issect (s o r) (coherent_split r s H) a)).
+  rewrite (ap_compose _ (r o s o r) (split_idempotent_issect (s o r) (coherent_split r s H) a)).
+  rewrite (ap_compose _ r (split_idempotent_issect (s o r) (coherent_split r s H) a)).
+  unfold split_idempotent_issect, nudge_eq;
+    repeat (rewrite !ap_pp, ?ap_V, !sect_path_split_idempotent; simpl).
+  rewrite !concat_pp_p.
+  rewrite <- !ap_compose.
+  rewrite <- (ap_compose (s o r) r).
+  rewrite <- (ap_compose (s o r) (r o s o r)).
+  rewrite (concat_p_Vp (ap (r o s o r) (a.2 0))).
+  rewrite_moveL_Vp_p.
+  rewrite (ap_compose (r o s o r) (r o s) (a.2 0)).
+  rewrite (concat_A1p H (ap (r o s o r) (a.2 0))).
+  rewrite (ap_compose r (r o s) (a.2 0)).
+  rewrite (concat_pA1_p H (ap r (a.2 0))).
+  apply whiskerR.
+  refine (cancelR _ _ (H (r (a.1 1%nat))) _).
+  rewrite (concat_pA1_p H (H (r (a 1%nat)))).
+  rewrite !concat_pp_p; symmetry; refine (_ @ concat_pp_p _ _ _).
+  exact (concat_A1p (fun x => H (r (s x)) @ H x) (H (r (a 1%nat)))).
+Qed.
+
+(** Now we can construct the desired equivalence. *)
 Definition equiv_split_coherent_split `{fs : Funext}
            {X A : Type} (r : X -> A) (s : A -> X) (H : r o s == idmap)
 : split_idempotent (s o r) <~> A.
 Proof.
-  refine (equiv_adjointify (r o split_idempotent_sect (s o r))
-                           (split_idempotent_retr (s o r) (coherent_split r s H) o s) _ _).
+  refine (BuildEquiv _ _ (r o split_idempotent_sect (s o r))
+            (BuildIsEquiv _ _ _ (split_idempotent_retr (s o r) (coherent_split r s H) o s) _ _ _)).
   - intros a; simpl.
     refine (H _ @ H _).
   - intros a; simpl.
@@ -216,6 +267,7 @@ Proof.
     apply ap.
     refine ((split_idempotent_splits (s o r) (coherent_split r s H) _)^ @ _).
     apply ap, split_idempotent_issect.
+  - intros a; simpl; apply equiv_split_coherent_split_2.
 Defined.
 
 (** In particular, this implies that if two section/retraction pairs induce the same endomap, then their splitting objects are equivalent.  Informally, "a given endomap splits through at most one type". *)
@@ -248,8 +300,229 @@ Definition equiv_split_coherent_split_sect `{fs : Funext}
 : split_idempotent_sect (s o r) ((equiv_split_coherent_split r s H)^-1 a) = s a
   := ap s (H a).
 
-(** However, it could still be the case that a given endomap [f : X -> X] splits *in more than one way* through the same splitting type [A].  In other words, the above equivalence may not respect all the section/retraction data. *)
+(** However, it could still be the case that a given endomap [f : X -> X] splits *in more than one way* through the same splitting type [A].  In other words, the above equivalence may not respect all the section/retraction data.
 
+TODO: Try to verify whether this holds.  Is [IsIdempotent f] maybe a retract of [IsQuasiIdempotent f], the way that [IsEquiv f] is a retract of [QInv f]? *)
+
+Definition equiv_split_coherent_split_splits `{fs : Funext}
+           {X A : Type} (r : X -> A) (s : A -> X) (H : r o s == idmap)
+           (x : X)
+: split_idempotent_splits (s o r) (coherent_split r s H) x
+  = ap (split_idempotent_sect (s o r))
+       (eissect (equiv_split_coherent_split r s H)
+                (split_idempotent_retr (s o r) (coherent_split r s H) x))^
+    @ equiv_split_coherent_split_sect r s H
+        (equiv_split_coherent_split r s H (split_idempotent_retr (s o r) (coherent_split r s H) x))
+    @ ap s (equiv_split_coherent_split_retr r s H x).
+Proof.
+  simpl.
+  unfold equiv_split_coherent_split_retr, equiv_split_coherent_split_sect, split_idempotent_splits.
+  rewrite concat_1p, concat_pp_p, ap_V; apply moveL_Vp; rewrite concat_p1.
+  (** Brace yourself. *)
+  unfold split_idempotent_issect, nudge_eq.
+  repeat (rewrite !ap_pp, ?ap_V, !sect_path_split_idempotent; simpl).
+  (** Whew, that's not so bad. *)
+  Open Scope long_path_scope.
+  rewrite !concat_p_pp.
+  rewrite <- !ap_compose; simpl.
+  apply whiskerR.
+  refine (_ @ (concat_1p _)); apply whiskerR.
+  apply moveR_pV; rewrite concat_1p, concat_pp_p; apply moveR_Vp.
+  rewrite <- (ap_compose (s o r o s) (s o r)).
+  rewrite (ap_compose (r o s) s _).
+  rewrite (ap_compose (r o s) s _).
+  rewrite (ap_compose (r o s o r o s) s _).
+  rewrite <- !ap_pp; apply ap.
+  refine (cancelR _ _ (H (r x)) _).
+  rewrite (concat_pA1_p H (H (r x)) _).
+  rewrite (concat_pA1_p H (H (r x)) _).
+  refine ((concat_A1p H (H (r (s (r x)))) @@ 1) @ _).
+  rewrite (ap_compose (r o s) (r o s) _).
+  rewrite (concat_A1p H (ap (r o s) (H (r x)))).
+  rewrite !concat_pp_p; apply whiskerL.
+  symmetry; refine (concat_A1p H (H (r x))).
+  Close Scope long_path_scope.
+Qed.
+
+Definition equiv_split_coherent_split_issect `{fs : Funext}
+           {X A : Type} (r : X -> A) (s : A -> X) (H : r o s == idmap)
+           (a : A)
+: ap (equiv_split_coherent_split r s H)
+     (split_idempotent_issect (s o r) (coherent_split r s H)
+                              ((equiv_split_coherent_split r s H)^-1 a))
+  @ eisretr (equiv_split_coherent_split r s H) a
+  = equiv_split_coherent_split_retr r s H
+      (split_idempotent_sect (s o r) ((equiv_split_coherent_split r s H)^-1 a))
+    @ ap r (equiv_split_coherent_split_sect r s H a)
+    @ H a.
+Proof.
+  simpl.
+  unfold equiv_split_coherent_split_retr, equiv_split_coherent_split_sect.
+  rewrite ap_compose.
+  unfold split_idempotent_issect, nudge_eq.
+  repeat (rewrite !ap_pp, ?ap_V, !sect_path_split_idempotent; simpl).
+  Open Scope long_path_scope.
+  rewrite !concat_pp_p; apply moveR_Vp; rewrite !concat_p_pp.
+  do 4 rewrite <- ap_compose.
+  (** For some reason this last one needs help. *)
+  rewrite <- (ap_compose (s o r o s) r (H (r (s a)))).
+  rewrite <- (ap_pp (r o s) _ _).
+  rewrite <- (concat_A1p H (H (r (s a)))).
+  rewrite ap_pp.
+  rewrite <- (ap_compose (r o s) (r o s) _).
+  rewrite !concat_pp_p; apply whiskerL; rewrite !concat_p_pp.
+  rewrite (concat_A1p H (H (r (s a)))).
+  rewrite !concat_pp_p; apply whiskerL.
+  symmetry; refine (concat_A1p H (H a)).
+  Close Scope long_path_scope.
+Qed.
+
+(** Therefore, the type of retractions of [X] is a retract of the type of "coherent idempotents". *)
+
+Definition retraction_to_cohidem {X : Type}
+: { A : Type & {rs : (X -> A) * (A -> X) & fst rs o snd rs == idmap }}
+  -> {f : X -> X & CoherentIdempotent f}.
+Proof.
+  intros [A [[r s] H]].
+  exists (s o r).
+  exact (coherent_split r s H).
+Defined.
+
+Definition cohidem_to_retraction `{Funext} {X : Type}
+: {f : X -> X & CoherentIdempotent f}
+  -> { A : Type & {rs : (X -> A) * (A -> X) & fst rs o snd rs == idmap }}.
+Proof.
+  intros [f IJ].
+  exists (split_idempotent f).
+  exists (split_idempotent_retr f IJ , split_idempotent_sect f).
+  exact (split_idempotent_issect f IJ).
+Defined.
+
+Definition path_retraction `{ua : Univalence} {X : Type}
+           {A : Type} {r : X -> A} {s : A -> X} {H : r o s == idmap}
+           {A' : Type} {r' : X -> A'} {s' : A' -> X} {H' : r' o s' == idmap}
+           (Ap : A' <~> A) (rp : Ap o r' == r) (sp : s' o Ap^-1 == s)
+           (Hp : forall a, ap Ap (H' (Ap^-1 a))
+                           @ eisretr Ap a
+                           = rp (s' (Ap^-1 a))
+                             @ ap r (sp a)
+                             @ H a)
+: (A' ; ((r' , s') ; H')) = (A ; ((r , s) ; H))
+    :> { A : Type & {rs : (X -> A) * (A -> X) & fst rs o snd rs == idmap }}.
+Proof.
+  refine (path_sigma' _ _ _).
+  { apply path_universe_uncurried.
+    exact Ap. }
+  refine (transport_sigma _ _ @ _).
+  refine (path_sigma' _ _ _); simpl.
+  { refine (transport_prod _ _ @ _).
+    apply path_prod; simpl.
+    - apply path_arrow; intros x.
+      refine (transport_arrow_fromconst _ _ _ @ _).
+      refine (transport_path_universe_uncurried _ _ @ _).
+      apply rp.
+    - apply path_arrow; intros a.
+      refine (transport_arrow_toconst _ _ _ @ _).
+      refine (_ @ sp a); simpl; apply ap.
+      refine (transport_path_universe_V_uncurried Ap a). }
+  apply path_forall; intros a.
+  unfold pointwise_paths.
+  rewrite transport_forall_constant; simpl.
+  rewrite transport_paths_Fl; simpl.
+  apply moveR_Vp.
+  rewrite ap_pp, concat_pp_p.
+  apply moveL_Mp.
+  (** Sneaky! *)
+  transitivity (transport_arrow_fromconst (path_universe_uncurried Ap) r'
+                 (transport (fun Z => Z -> X) (path_universe_uncurried Ap) s' a)
+                @ ap (transport idmap (path_universe_uncurried Ap) o r')
+                     (transport_arrow_toconst (path_universe_uncurried Ap) s' a)
+                @ ap _ (H' _)
+                @ transport_pV idmap (path_universe_uncurried Ap) a).
+  - generalize (path_universe_uncurried Ap).
+    intros p; destruct p; simpl.
+    rewrite !concat_1p.
+    symmetry; unfold transport. rewrite ap_idmap.
+    (** I don't know why Coq won't simplify [transport_pV idmap 1 a] to [1]. *)
+    apply concat_p1.
+  - rewrite (ap_apply_FlFr _ (fun rs b => fst rs b) (fun rs => snd rs a)).
+    rewrite (ap_compose (fun (rs:(X->A)*(A->X)) => snd rs) (fun (s:A->X) => s a)).
+    rewrite ap_snd_path_prod.
+    rewrite (ap_compose (fun (rs:(X->A)*(A->X)) => fst rs) (fun (r:X->A) => fun b => r b)).
+    rewrite ap_fst_path_prod.
+    rewrite ap_apply_l, ap10_path_arrow.
+    rewrite ap11_is_ap10_ap01; simpl.
+    rewrite ap_idmap.
+    rewrite ap10_path_arrow; simpl.
+    Open Scope long_path_scope.
+    rewrite !concat_pp_p; apply whiskerL; rewrite !concat_p_pp.
+    rewrite <- (concat_pA_p rp).
+    rewrite ap_pp, concat_p_pp.
+    rewrite (concat_pA_p rp).
+    specialize (Hp a).
+    rewrite concat_pp_p in Hp.
+    rewrite !concat_pp_p, <- Hp, !concat_p_pp. clear Hp.
+    rewrite (ap_compose r' Ap).
+    rewrite !ap_pp, !concat_p_pp.
+    rewrite <- (ap_compose r' Ap).
+    rewrite <- (concat_Ap (fun x => transport_path_universe_uncurried Ap (r' x))).
+    rewrite !concat_pp_p; apply whiskerL; rewrite !concat_p_pp.
+    rewrite <- (ap_p_pp Ap).
+    rewrite <- (ap_compose s' r').
+    rewrite (concat_A1p H').
+    rewrite ap_pp, concat_p_pp.
+    rewrite <- (concat_Ap (transport_path_universe_uncurried Ap)).
+    rewrite !concat_pp_p; apply whiskerL; rewrite !concat_p_pp.
+    symmetry; apply transport_path_universe_pV.
+Qed.
+
+Definition retraction_to_cohidem_retr `{ua : Univalence} {X : Type}
+           (Z : { A : Type & {rs : (X -> A) * (A -> X) & fst rs o snd rs == idmap }})
+: cohidem_to_retraction (retraction_to_cohidem Z) = Z
+:= path_retraction (equiv_split_coherent_split (fst Z.2.1) (snd Z.2.1) Z.2.2)
+                   (equiv_split_coherent_split_retr (fst Z.2.1) (snd Z.2.1) Z.2.2)
+                   (equiv_split_coherent_split_sect (fst Z.2.1) (snd Z.2.1) Z.2.2)
+                   (equiv_split_coherent_split_issect (fst Z.2.1) (snd Z.2.1) Z.2.2).
+
+Definition fully_coherent_idempotents `{Funext} (X : Type)
+  := split_idempotent ((@retraction_to_cohidem X) o (@cohidem_to_retraction _ X)).
+
+Definition equiv_coherentidempotent_retraction `{ua : Univalence} (X : Type)
+: fully_coherent_idempotents X
+  <~> { A : Type & {rs : (X -> A) * (A -> X) & fst rs o snd rs == idmap }}
+:= equiv_split_coherent_split (@cohidem_to_retraction _ X) (@retraction_to_cohidem X)
+                              (@retraction_to_cohidem_retr _ X).
+
+(** For instance, here is the standard coherent idempotent structure on the identity map. *)
+Definition fully_coherent_idmap `{ua : Univalence} (X : Type@{i})
+: fully_coherent_idempotents@{i i j} X.
+Proof.
+  refine (split_idempotent_retr _
+           (coherent_split (@cohidem_to_retraction _ X) (@retraction_to_cohidem X)
+                           (@retraction_to_cohidem_retr _ X)) _).
+  exists idmap.
+  exists (fun x => 1).
+  exact (fun x => 1).
+Defined.
+
+(** We note that [fully_coherent_idempotents X], unlike the type of retractions, lives in the same universe as [X], even if we demand that it contain the identity. *)
+Check (fun (ua:Univalence) (X:Type@{i}) =>
+         (fully_coherent_idmap X : (fully_coherent_idempotents X : Type@{i}))).
+
+(** By contrast, the type of retractions does not live in the same universe as [X] if it is required to contain the identity retraction. *)
+Definition identity_retraction (X:Type)
+: { A : Type & {rs : (X -> A) * (A -> X) & fst rs o snd rs == idmap }}.
+Proof.
+  exists X.
+  exists (idmap,idmap).
+  intros x; reflexivity.
+Defined.
+
+Fail Check (fun (X:Type@{i}) =>
+              (identity_retraction X :
+                 ({ A : Type & {rs : (X -> A) * (A -> X) & fst rs o snd rs == idmap }}
+                  : Type@{i}))).
+  
 (** ** An incoherent idempotent *)
 
 (** Finally, we give a specific example of an incoherent idempotent that does not split, hence is not coherentifiable.  This is inspired by Warning 1.2.4.8 in *Higher Algebra*. *)

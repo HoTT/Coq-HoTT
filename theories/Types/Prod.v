@@ -83,6 +83,14 @@ Proof.
   destruct p. reflexivity.
 Defined.
 
+Definition ap_path_prod {A B C : Type} (f : A -> B -> C)
+           {z z' : A * B} (p : fst z = fst z') (q : snd z = snd z')
+: ap (fun z => f (fst z) (snd z)) (path_prod _ _ p q)
+  = ap011 f p q.
+Proof.
+  destruct z, z'; simpl in *; destruct p, q; reflexivity.
+Defined.
+
 (** Now we show how these compute with transport. *)
 
 Lemma transport_path_prod_uncurried {A B} (P : A * B -> Type) {x y : A * B}
@@ -148,6 +156,17 @@ Defined.
 Definition equiv_path_prod {A B : Type} (z z' : A * B)
   : (fst z = fst z') * (snd z = snd z')  <~>  (z = z')
   := BuildEquiv _ _ (path_prod_uncurried z z') _.
+
+(** Path algebra *)
+
+Definition path_prod_pp {A B : Type} (z z' z'' : A * B)
+           (p : fst z = fst z') (p' : fst z' = fst z'')
+           (q : snd z = snd z') (q' : snd z' = snd z'')
+: path_prod z z'' (p @ p') (q @ q') = path_prod z z' p q @ path_prod z' z'' p' q'.
+Proof.
+  destruct z, z', z''; simpl in *; destruct p, p', q, q'.
+  reflexivity.
+Defined.
 
 (** ** Transport *)
 
