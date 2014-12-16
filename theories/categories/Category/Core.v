@@ -142,9 +142,6 @@ End identity_unique.
 
 (** Make a separate module for Notations, which can be exported/imported separately. *)
 Module Export CategoryCoreNotations.
-  (** We have notations for both the eta-expanded and non-eta-expanded
-      forms. *)
-  Infix "o" := (@compose _ _ _ _) : morphism_scope.
   Infix "o" := compose : morphism_scope.
   (** Perhaps we should consider making this notation more global. *)
   (** Perhaps we should pre-reserve all of the notations. *)
