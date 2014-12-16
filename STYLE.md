@@ -648,7 +648,8 @@ instead.  Similarly, use `equiv_compose'` instead of `transitivity`.
 Given `P : B -> Type` and `f : A -> B`, writing `P o f` introduces a
 universe parameter strictly larger than the codomain of `P` (since it
 has to be passed to the function `compose`).  A solution is to write
-`fun a => P (f a)` instead.
+`fun a => P (f a)` instead.  (This may no longer be true with
+`compose` a notation rather than a function.)
 
 Typeclass inference doesn't always find the simplest solution, and may
 insert unnecessary calls to instances that introduce additional
@@ -898,8 +899,10 @@ instead.
 
 The operation `compose`, notation `g o f`, is simply a notation for
 `fun x => g (f x)` rather than a defined constant.  This means that,
-for instance, you can't partially apply it and write `compose g` to
-mean `fun f => g o f`.
+for instance, you can't partially apply it and write `compose g` for
+`fun f => g o f`.  We could define `compose := (fun g f x => g (f x))`
+instead of `compose g f := (fun x => g (f x))` to allow this, but we
+take the point of view that `fun f => g o f` is more readable anyway.
 
 ### Unfolding definitions ###
 
