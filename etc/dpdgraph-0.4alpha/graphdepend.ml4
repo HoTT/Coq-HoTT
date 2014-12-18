@@ -10,7 +10,7 @@
 open Pp
 
 let gen_filtered_search : Search.filter_function -> Search.display_function -> unit =
-    fun filt disp -> Search.generic_search 0 (fun gr e c -> if filt gr e c then disp gr e c else ())
+    fun filt disp -> Search.generic_search None (fun gr e c -> if filt gr e c then disp gr e c else ())
 
 let debug msg = if false then Pp.msgnl msg
 
