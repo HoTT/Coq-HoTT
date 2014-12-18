@@ -89,13 +89,6 @@ Section composition.
   End compose.
 
   (** ** Whiskering *)
-  Local Ltac whisker_t :=
-    simpl;
-    repeat first [ apply commutes
-                 | apply ap
-                 | progress (etransitivity; try apply composition_of); []
-                 | progress (etransitivity; try (symmetry; apply composition_of)); [] ].
-
   Section whisker.
     Variables C D E : PreCategory.
 
@@ -107,18 +100,26 @@ Section composition.
       Local Notation CO c := (morphism_of F (T c)).
 
       Definition whisker_l_commutes s d (m : morphism C s d)
-      : F _1 (T d) o (F o G) _1 m = (F o G') _1 m o F _1 (T s).
-      Proof.
-        whisker_t.
-      Defined.
+      : F _1 (T d) o (F o G) _1 m = (F o G') _1 m o F _1 (T s)
+        := ((composition_of F _ _ _ _ _)^)
+             @ (ap (fun m => F _1 m) (commutes T _ _ _))
+             @ (composition_of F _ _ _ _ _).
+
+      Definition whisker_l_commutes_sym s d (m : morphism C s d)
+      : (F o G') _1 m o F _1 (T s) = F _1 (T d) o (F o G) _1 m
+        := ((composition_of F _ _ _ _ _)^)
+             @ (ap (fun m => F _1 m) (commutes_sym T _ _ _))
+             @ (composition_of F _ _ _ _ _).
 
       Global Arguments whisker_l_commutes : simpl never.
+      Global Arguments whisker_l_commutes_sym : simpl never.
 
       Definition whisker_l
-        := Build_NaturalTransformation
+        := Build_NaturalTransformation'
              (F o G) (F o G')
              (fun c => CO c)
-             whisker_l_commutes.
+             whisker_l_commutes
+             whisker_l_commutes_sym.
     End L.
 
     Section R.
@@ -129,18 +130,22 @@ Section composition.
       Local Notation CO c := (T (G c)).
 
       Definition whisker_r_commutes s d (m : morphism C s d)
-      : T (G d) o (F o G) _1 m = (F' o G) _1 m o T (G s).
-      Proof.
-        whisker_t.
-      Defined.
+      : T (G d) o (F o G) _1 m = (F' o G) _1 m o T (G s)
+        := commutes T _ _ _.
+
+      Definition whisker_r_commutes_sym s d (m : morphism C s d)
+      : (F' o G) _1 m o T (G s) = T (G d) o (F o G) _1 m
+        := commutes_sym T _ _ _.
 
       Global Arguments whisker_r_commutes : simpl never.
+      Global Arguments whisker_r_commutes_sym : simpl never.
 
       Definition whisker_r
-        := Build_NaturalTransformation
+        := Build_NaturalTransformation'
              (F o G) (F' o G)
              (fun c => CO c)
-             whisker_r_commutes.
+             whisker_r_commutes
+             whisker_r_commutes_sym.
     End R.
   End whisker.
 End composition.
