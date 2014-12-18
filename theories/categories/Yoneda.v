@@ -94,7 +94,6 @@ End yoneda.
 
 (** ** The (co)yoneda lemma *)
 Section coyoneda_lemma.
-  Local Arguments Overture.compose / .
 
   Section functor.
     Context `{Funext}.
@@ -242,8 +241,6 @@ Section yoneda_lemma.
 
       [Nat(hₐ, G) ≅ G(a)]. *)
 
-  Local Arguments Overture.compose / .
-
   Section functor.
     Context `{Funext}.
 
@@ -338,8 +335,6 @@ End yoneda_lemma.
 
 Section FullyFaithful.
   Context `{Funext}.
-
-  Local Arguments Overture.compose / .
 
   Definition coyoneda_embedding (A : PreCategory) : IsFullyFaithful (coyoneda A).
   Proof.

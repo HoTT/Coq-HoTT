@@ -9,8 +9,6 @@ Require Import ReflectiveSubuniverse Modality.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
-Local Arguments compose / .
-
 (** ** Accessible reflective subuniverses *)
 
 (** An accessible reflective subuniverse is one that is the localization at a small family of maps.  Accessibility is necessary for some constructions, and in practice it's a reasonable hypothesis that includes most examples (though a few examples, such as double negation, may only be accessible if we assume propositional resizing).
@@ -80,7 +78,7 @@ Module Accessible_ReflectiveSubuniverses_Theory
       rewrite ((fst (ext_dom i 1%nat) (to O _)).2 a).
       apply to_O_natural.
     - apply O_indpaths; intros x; simpl.
-      simpl rewrite (to_O_natural O (acc_gen O i) x).
+      rewrite (to_O_natural O (acc_gen O i) x).
       rewrite O_rec_beta.
       apply ((fst (ext_dom i 1%nat) (to O _)).2 x).
   Qed.

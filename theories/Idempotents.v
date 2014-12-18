@@ -5,7 +5,6 @@ Require Import hit.Truncations.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
-Local Arguments compose / .
 
 (** * Splitting of Idempotents *)
 
@@ -292,7 +291,7 @@ Section Assumptions.
     unfold I. refine ((equiv_path_pp _ _)^ @ _ @ (equiv_path_pp _ _)).
     apply ap.
     refine ((pr1_path_pp (ap (f o f) p) (IJ.1 Z'))^ @ _ @ pr1_path_pp _ _).
-    apply ap, concat_Ap.
+    apply ap. apply (concat_Ap IJ.1).
   Qed.
 
   (** To show our claim about the action of [I0], we will apply this naturality to the flip automorphism of [cantor + cantor].  Here are the images of that automorphism under [f] and [f o f]. *)

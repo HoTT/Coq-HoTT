@@ -30,8 +30,6 @@ Section AdjunctionEquivalences.
   Variable F : Functor C D.
   Variable G : Functor D C.
 
-  Local Arguments Overture.compose / .
-
   Local Open Scope morphism_scope.
 
   (** We need to jump through some hoops with [simpl] for speed *)
@@ -155,8 +153,6 @@ Section isequiv.
   Variable F : Functor C D.
   Variable G : Functor D C.
 
-  Local Arguments Overture.compose / .
-
   Local Open Scope morphism_scope.
 
   Variable T : AdjunctionUnit F G.
@@ -189,8 +185,6 @@ Section AdjunctionEquivalences'.
   Variables C D : PreCategory.
   Variable F : Functor C D.
   Variable G : Functor D C.
-
-  Local Arguments Overture.compose / .
 
   Local Open Scope morphism_scope.
 

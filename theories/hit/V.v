@@ -215,7 +215,7 @@ Proof.
     apply tr.
     exists (ap h (glue R _ _ Rab)).
     apply (concatR (apD H_h (glue R _ _ Rab))).
-    apply inverse. unfold f, g, compose. apply transport_compose.
+    apply inverse. unfold f, g. apply transport_compose.
   - intros b.
     set (trunca := snd bitot_R b). generalize trunca.
     apply (Trunc_functor -1).
@@ -223,7 +223,7 @@ Proof.
     apply tr.
     exists (ap h (glue R _ _ Rab)).
     apply (concatR (apD H_h (glue R _ _ Rab))).
-    apply inverse. unfold f, g, compose. apply transport_compose.
+    apply inverse. unfold f, g. apply transport_compose.
 Defined.
 
 

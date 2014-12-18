@@ -294,12 +294,10 @@ Module EasyModalities_to_Modalities (Os : EasyModalities)
       + apply O_inO_internal.
       + pattern x; refine (O_ind_internal O B _ _ _ x); intros.
         * apply minO_pathsO.
-        * unfold compose; simpl;
-            abstract (repeat rewrite O_ind_beta_internal; apply ap, eisretr).
+        * simpl; abstract (repeat rewrite O_ind_beta_internal; apply ap, eisretr).
       + pattern x; refine (O_ind_internal O A _ _ _ x); intros.
         * apply minO_pathsO.
-        * unfold compose; simpl;
-            abstract (repeat rewrite O_ind_beta_internal; apply ap, eissect).
+        * simpl; abstract (repeat rewrite O_ind_beta_internal; apply ap, eissect).
   Defined.
 
   Definition minO_paths (O : Modality@{u a})
@@ -369,10 +367,10 @@ Proof.
     exact (to O _ (a ; to O _ p)).
   - unfold Sect; apply O_ind; try exact _.
     intros [a p]; simpl.
-    abstract (repeat (simpl rewrite @O_rec_beta); reflexivity).
+    abstract (repeat rewrite O_rec_beta; reflexivity).
   - unfold Sect; apply O_ind; try exact _.
     intros [a op]; revert op; apply O_ind; try exact _; intros p; simpl.
-    abstract (repeat (simpl rewrite @O_rec_beta); reflexivity).
+    abstract (repeat rewrite O_rec_beta; reflexivity).
 Defined.
 
 (** Corollary 7.3.10 *)
@@ -815,7 +813,7 @@ Section ConnectedMaps.
       exact (ap (to O B) p).
     - unfold Sect; apply O_ind; try exact _; intros a.
       refine (ap (O_rec _) (to_O_natural O f a) @ _).
-      unfold compose; refine (O_rec_beta _ _ @ _).
+      refine (O_rec_beta _ _ @ _).
       transitivity (O_functor O pr1 (to O (hfiber f (f a)) (a;1))).
       + apply ap, contr.
       + refine (to_O_natural _ _ _).
@@ -880,8 +878,7 @@ Section ModalFact.
     - apply moveL_equiv_V.
       transitivity (to O _ (existT (fun (w : hfiber h b) => (hfiber g w.1))
                          (g a; p) (a ; 1))).
-      + simpl; unfold compose.
-        repeat (simpl rewrite @O_rec_beta); reflexivity.
+      + simpl; repeat rewrite O_rec_beta; reflexivity.
       + symmetry; apply to_O_natural.
   Qed.
 

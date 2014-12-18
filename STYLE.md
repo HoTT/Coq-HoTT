@@ -648,7 +648,8 @@ instead.  Similarly, use `equiv_compose'` instead of `transitivity`.
 Given `P : B -> Type` and `f : A -> B`, writing `P o f` introduces a
 universe parameter strictly larger than the codomain of `P` (since it
 has to be passed to the function `compose`).  A solution is to write
-`fun a => P (f a)` instead.
+`fun a => P (f a)` instead.  (This may no longer be true with
+`compose` a notation rather than a function.)
 
 Typeclass inference doesn't always find the simplest solution, and may
 insert unnecessary calls to instances that introduce additional
@@ -894,31 +895,30 @@ instead.
 
 ## Coding Hints ##
 
-### Unfolding compose and other definitions ###
+### Notations ###
 
-The operation `compose`, notation `g o f`, is a defined constant
-rather than simply a notation for `fun x => g (f x)` so that it can be
-used as a head for typeclass resolution, e.g. in `isequiv_compose`.
-However, this means that frequently it has to be folded and unfolded
-in the middle of proofs.
+The operation `compose`, notation `g o f`, is simply a notation for
+`fun x => g (f x)` rather than a defined constant.  This means that,
+for instance, you can't partially apply it and write `compose g` for
+`fun f => g o f`.  We could define `compose := (fun g f x => g (f x))`
+instead of `compose g f := (fun x => g (f x))` to allow this, but we
+take the point of view that `fun f => g o f` is more readable anyway.
 
-One trick that is sometimes helpful is `Local Arguments compose / .`,
-which tells `simpl` and related tactics to automatically unfold
-`compose`.  In particular, this allows the tactic `simpl rewrite`
-(defined in `Tactics`) to apply theorems containing `compose` to goals
-in which it has been unfolded.  It seems better not to make this
-declaration globally, however.
+### Unfolding definitions ###
 
-Occasionally it may also be necessary to give a similar command for
-definitions other than `compose` as well, and it may not be obvious
-where the issue lies; sometimes the unification failure happens in an
-implicit argument that is not directly visible in the output.  One way
-to discover where the problem lies is to turn on printing of all
-implicit arguments with `Set Printing All`; another is to use `Set
-Debug Tactic Unification` and inspect the output to see where
-`rewrite` is failing to unify.  (As of Oct 2014, however, the latter
-requires a more up-to-date version of Coq than our submodule currently
-points to.)
+When a definition has to be unfolded repeatedly in the middle of
+proofs, you can say `Local Arguments name / .`, which tells `simpl`
+and related tactics to automatically unfold `name`.  In particular,
+this allows the tactic `simpl rewrite` (defined in `Tactics`) to apply
+theorems containing `name` to goals in which it has been unfolded.  It
+seems better not to make these declarations globally, however.
+
+It may not always be obvious which definition this needs to be applied
+to; sometimes the unification failure happens in an implicit argument
+that is not directly visible in the output.  One way to discover where
+the problem lies is to turn on printing of all implicit arguments with
+`Set Printing All`; another is to use `Set Debug Tactic Unification`
+and inspect the output to see where `rewrite` is failing to unify.
 
 ### Simpl nomatch ###
 

@@ -124,7 +124,7 @@ Proof.
   intros ? ? ? ? H'.
   apply path_forall.
   apply ap10 in H'.
-  hnf in *; unfold compose in *.
+  hnf in *.
   eauto.
 Qed.
 

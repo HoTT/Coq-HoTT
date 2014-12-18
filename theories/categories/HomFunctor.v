@@ -37,7 +37,6 @@ Section hom_functor.
     simpl;
     abstract (
         repeat (apply path_forall || intros [] || intro);
-        unfold compose, Overture.compose;
         simpl in *;
         rewrite <- ?associativity, ?left_identity, ?right_identity;
         reflexivity

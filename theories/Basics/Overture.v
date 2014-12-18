@@ -116,10 +116,8 @@ Notation "x .1" := (pr1 x) (at level 3, format "x '.1'") : fibration_scope.
 Notation "x .2" := (pr2 x) (at level 3, format "x '.2'") : fibration_scope.
 
 (** Composition of functions. *)
-Definition compose {A B C : Type} (g : B -> C) (f : A -> B) :=
-  fun x => g (f x).
 
-Hint Unfold compose.
+Notation compose g f := (fun x => g (f x)).
 
 (** We put the following notation in a scope because leaving it unscoped causes it to override identical notations in other scopes.  It's convenient to use the same notation for, e.g., function composition, morphism composition in a category, and functor composition, and let Coq automatically infer which one we mean by scopes.  We can't do this if this notation isn't scoped.  Unfortunately, Coq doesn't have a built-in [function_scope] like [type_scope]; [type_scope] is automatically opened wherever Coq is expecting a [Sort], and it would be nice if [function_scope] were automatically opened whenever Coq expects a thing of type [forall _, _] or [_ -> _].  To work around this, we open [function_scope] globally. *)
 Notation "g 'o' f" := (compose g f) (at level 40, left associativity) : function_scope.
@@ -624,7 +622,7 @@ Tactic Notation "by" tactic(tac) :=
 
 (** A convenient tactic for using function extensionality. *)
 Ltac by_extensionality x :=
-  intros; unfold compose;
+  intros;
   match goal with
   | [ |- ?f = ?g ] => eapply path_forall; intro x;
       match goal with

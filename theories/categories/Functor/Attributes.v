@@ -30,7 +30,6 @@ Section full_faithful.
         repeat (intros [] || intro);
         simpl in *;
           repeat (apply path_forall; intro);
-        unfold compose, Overture.compose;
         simpl;
         rewrite !composition_of;
         reflexivity

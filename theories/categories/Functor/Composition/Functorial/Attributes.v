@@ -38,8 +38,6 @@ Section faithfull_precomposition_essential_surjective.
 
   Context `{H_is_essentially_surjective : IsEssentiallySurjective A B H}.
 
-  Local Arguments Overture.compose / .
-
   Lemma isfaithful_precomposition_essentially_surjective_helper
         (F G : Functor B C)
         (T U : NaturalTransformation F G)

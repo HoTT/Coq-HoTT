@@ -31,58 +31,51 @@ Section Extensions.
   Check ExtensionAlong@{a b p m n}.
   (** If necessary, we could coalesce the latter two with a universe annotation, but that would make the definition harder to read. *)
 
+  Definition equiv_path_extension `{Funext} {A B : Type} {f : A -> B}
+             {P : B -> Type} {d : forall x:A, P (f x)}
+             (ext ext' : ExtensionAlong f P d)
+  : (ExtensionAlong f
+                    (fun y => pr1 ext y = pr1 ext' y)
+                    (fun x => pr2 ext x @ (pr2 ext' x)^))
+    <~> ext = ext'.
+  Proof.
+    refine (equiv_compose' (equiv_path_sigma _ _ _) _).
+    refine (equiv_functor_sigma' (equiv_path_forall (ext .1) (ext' .1)) _). intros p.
+    refine (equiv_compose' (equiv_path_forall _ _) _). unfold pointwise_paths.
+    refine (equiv_functor_forall' (equiv_idmap _) _). intros x.
+    refine (equiv_compose' (B := (p (f x))^ @ (ext .2 x) = (ext' .2 x)) _ _).
+    - refine (equiv_concat_l _ _).
+      transitivity ((apD10 (path_forall _ _ p) (f x))^ @ ext .2 x).
+      + assert (transp_extension : forall p : ext .1 = ext' .1,
+                                     (transport (fun (s : forall y : B, P y) => forall x : A, s (f x) = d x)
+                                                p (ext .2) x
+                                      = ((apD10 p (f x))^ @ ext .2 x))).
+        * destruct ext as [g gd], ext' as [g' gd']; simpl.
+          intros q; destruct q; simpl.
+          apply inverse, concat_1p.
+        * apply transp_extension.
+      + apply whiskerR, ap, apD10_path_forall.
+    - refine (equiv_compose' (equiv_moveR_Vp _ _ _) _).
+      refine (equiv_compose' (equiv_moveL_pM _ _ _) _).
+      apply equiv_path_inverse.
+  Defined.
+
   Definition path_extension `{Funext} {A B : Type} {f : A -> B}
              {P : B -> Type} {d : forall x:A, P (f x)}
              (ext ext' : ExtensionAlong f P d)
   : (ExtensionAlong f
                     (fun y => pr1 ext y = pr1 ext' y)
                     (fun x => pr2 ext x @ (pr2 ext' x)^))
-    -> ext = ext'.
-  Proof.
-    (* Note: written with liberal use of [compose], to facilitate later proving that it’s an equivalance. *)
-    apply (compose (path_sigma_uncurried _ _ _)).
-    apply (functor_sigma (path_forall (ext .1) (ext' .1))). intros p.
-    apply (compose (path_forall _ _)). unfold pointwise_paths.
-    apply (functor_forall idmap). intros x.
-    apply (compose (B := (p (f x))^ @ (ext .2 x) = (ext' .2 x))).
-    apply concat.
-    transitivity ((apD10 (path_forall _ _ p) (f x))^ @ ext .2 x).
-    assert (transp_extension : forall p : ext .1 = ext' .1,
-                                 (transport (fun (s : forall y : B, P y) => forall x : A, s (f x) = d x)
-                                            p (ext .2) x
-                                  = ((apD10 p (f x))^ @ ext .2 x))).
-    destruct ext as [g gd], ext' as [g' gd']; simpl.
-    intros q; destruct q; simpl.
-    apply inverse, concat_1p.
-    apply transp_extension.
-    apply whiskerR, ap, apD10_path_forall.
-    apply (compose (moveR_Vp _ _ _)).
-    apply (compose (moveL_pM _ _ _)).
-    exact inverse.
-  Defined.
+    -> ext = ext'
+  := equiv_path_extension ext ext'.
 
   Global Instance isequiv_path_extension `{Funext} {A B : Type} {f : A -> B}
          {P : B -> Type} {d : forall x:A, P (f x)}
          (ext ext' : ExtensionAlong f P d)
   : IsEquiv (path_extension ext ext') | 0.
   Proof.
-    apply @isequiv_compose.
-    2: apply @isequiv_path_sigma.
-    apply @isequiv_functor_sigma.
-    apply @isequiv_path_forall.
-    intros a. apply @isequiv_compose.
-    2: apply @isequiv_path_forall.
-    apply (@isequiv_functor_forall _).
-    apply isequiv_idmap.
-    intros x. apply @isequiv_compose.
-    apply @isequiv_compose.
-    apply @isequiv_compose.
-    apply isequiv_path_inverse.
-    apply isequiv_moveL_pM.
-    apply isequiv_moveR_Vp.
-    apply isequiv_concat_l.
-  Qed.
-  (** Note: opaque, since this term is big enough that using its computational content will probably be pretty intractable. *)
+    exact _.
+  Defined.
 
   (** Here is the iterated version. *)
 

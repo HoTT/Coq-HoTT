@@ -184,7 +184,7 @@ Section Equiv.
   Definition quotient_ump' (B:hSet): (quotient R -> B) ->
                                      (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
     intro f. exists (compose f (class_of R) ).
-    intros. unfold compose. f_ap. by apply related_classes_eq.
+    intros. f_ap. by apply related_classes_eq.
   Defined.
 
   Definition quotient_ump'' (B:hSet): (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0)))
