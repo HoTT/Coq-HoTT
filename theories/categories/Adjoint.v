@@ -20,6 +20,8 @@ Require Adjoint.Paths.
 Require Adjoint.Composition.
 (** ** Pointwise adjunctions *)
 Require Adjoint.Pointwise.
+(** ** Functoriality of any adjoint construction *)
+Require Adjoint.Functorial.
 
 Include Adjoint.Core.
 Include Adjoint.UnitCounit.
@@ -31,5 +33,6 @@ Include Adjoint.Dual.
 Include Adjoint.Paths.
 Include Adjoint.Composition.
 Include Adjoint.Pointwise.
+Include Adjoint.Functorial.Core.
 
 Require Export Adjoint.Notations.

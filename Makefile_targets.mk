@@ -248,8 +248,10 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Adjoint/UnitCounitCoercions.v \
 	$(srcdir)/theories/categories/Adjoint/UniversalMorphisms.v \
 	$(srcdir)/theories/categories/Adjoint/UniversalMorphisms/Core.v \
-	$(srcdir)/theories/categories/Adjoint/UniversalMorphisms/FunctorialParts.v \
-	$(srcdir)/theories/categories/Adjoint/UniversalMorphisms/FunctorialLaws.v \
+	$(srcdir)/theories/categories/Adjoint/Functorial.v \
+	$(srcdir)/theories/categories/Adjoint/Functorial/Core.v \
+	$(srcdir)/theories/categories/Adjoint/Functorial/Parts.v \
+	$(srcdir)/theories/categories/Adjoint/Functorial/Laws.v \
 	$(srcdir)/theories/categories/Adjoint/Hom.v \
 	$(srcdir)/theories/categories/Adjoint/HomCoercions.v \
 	$(srcdir)/theories/categories/Adjoint/Pointwise.v \
