@@ -762,6 +762,23 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
+Lemma transportD_compose {A A'} B {x x' : A} (C : forall x : A', B x -> Type) (f : A -> A')
+      (p : x = x') y (z : C (f x) y)
+: transportD (B o f) (C oD f) p y z
+  = transport (C (f x')) (transport_compose B f p y)^ (transportD B C (ap f p) y z).
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+(* TODO: Is there a lemma like [transportD_compose], but for [apD], which subsumes this? *)
+Lemma transport_apD_transportD {A} B (f : forall x : A, B x) (C : forall x, B x -> Type)
+      {x1 x2 : A} (p : x1 = x2) (z : C x1 (f x1))
+: apD f p # transportD B C p _ z
+  = transport (fun x => C x (f x)) p z.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
 Lemma transport_precompose {A B C} (f : A -> B) (g g' : B -> C) (p : g = g')
 : transport (fun h : B -> C => g o f = h o f) p 1 =
   ap (fun h => h o f) p.
