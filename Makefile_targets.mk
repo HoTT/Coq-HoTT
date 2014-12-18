@@ -183,6 +183,7 @@ CATEGORY_VFILES = \
 	\
 	$(srcdir)/theories/categories/GroupoidCategory.v \
 	$(srcdir)/theories/categories/GroupoidCategory/Core.v \
+	$(srcdir)/theories/categories/GroupoidCategory/Dual.v \
 	\
 	$(srcdir)/theories/categories/CategoryOfGroupoids.v \
 	\
