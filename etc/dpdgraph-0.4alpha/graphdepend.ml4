@@ -121,12 +121,7 @@ module G = struct
           let n = (!gref_cpt, gref) in
             g, n
 
-  let add_edge (nds, eds) n1 n2 nb
-    = (nds,
-       (* strip self-references, which make `dot` stack-overflow *)
-       (if Node.equal n1 n2
-        then eds
-        else Edges.add (n1, n2, nb) eds))
+  let add_edge (nds, eds) n1 n2 nb = nds, Edges.add (n1, n2, nb) eds
 
   (* let succ (_nds, eds) n =
     let do_e e acc =
