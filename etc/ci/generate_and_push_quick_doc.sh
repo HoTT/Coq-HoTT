@@ -29,11 +29,11 @@ git config --global user.email "Travis-CI-Bot@travis.fake"
 
 export MESSAGE="Autoupdate documentation with DepsToDot.hs"
 echo '$ make HoTT.deps HoTTCore.deps'
-make HoTT.deps HoTTCore.deps
-runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Library Dependency Graph" < HoTT.deps > HoTT.dot
-runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Core Library Dependency Graph" < HoTTCore.deps > HoTTCore.dot
-dot -Tsvg HoTT.dot -o HoTT.svg
-dot -Tsvg HoTTCore.dot -o HoTTCore.svg
+make HoTT.deps HoTTCore.deps || exit $?
+runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Library Dependency Graph" < HoTT.deps > HoTT.dot || exit $?
+runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Core Library Dependency Graph" < HoTTCore.deps > HoTTCore.dot || exit $?
+dot -Tsvg HoTT.dot -o HoTT.svg || exit $?
+dot -Tsvg HoTTCore.dot -o HoTTCore.svg || exit $?
 echo '$ git checkout -b gh-pages upstream/gh-pages'
 git checkout -b gh-pages upstream/gh-pages
 rm -rf dependencies
