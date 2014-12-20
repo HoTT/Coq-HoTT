@@ -109,6 +109,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Category/Univalent.v \
 	$(srcdir)/theories/categories/Category/Objects.v \
 	$(srcdir)/theories/categories/Category/Dual.v \
+	$(srcdir)/theories/categories/Category/Paths.v \
 	$(srcdir)/theories/categories/Category/Prod.v \
 	$(srcdir)/theories/categories/Category/Pi.v \
 	$(srcdir)/theories/categories/Category/Sum.v \
@@ -182,6 +183,7 @@ CATEGORY_VFILES = \
 	\
 	$(srcdir)/theories/categories/GroupoidCategory.v \
 	$(srcdir)/theories/categories/GroupoidCategory/Core.v \
+	$(srcdir)/theories/categories/GroupoidCategory/Dual.v \
 	\
 	$(srcdir)/theories/categories/CategoryOfGroupoids.v \
 	\
