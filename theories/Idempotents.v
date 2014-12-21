@@ -141,8 +141,7 @@ Proof.
     generalize (path_universe_uncurried Ap).
     intros p; destruct p; simpl.
     rewrite !concat_1p.
-    symmetry; unfold transport. rewrite ap_idmap.
-    (** I don't know why Coq won't simplify [transport_pV idmap 1 a] to [1], since it *can* tell that they're judgmentally equal. *)
+    symmetry; unfold transport. rewrite ap_idmap. cbn.
     apply concat_p1.
   - (** This half is trickier because [transport_path_universe] and friends don't simplify under path induction.  We start with some more path computation. *)
     rewrite (ap_apply_FlFr _ (fun rs b => fst rs b) (fun rs => snd rs a)).
