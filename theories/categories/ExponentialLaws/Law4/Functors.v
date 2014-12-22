@@ -10,9 +10,7 @@ Local Open Scope functor_scope.
 
 Section law4.
   Context `{Funext}.
-  Variable C1 : PreCategory.
-  Variable C2 : PreCategory.
-  Variable D : PreCategory.
+  Variables C1 C2 D : PreCategory.
 
   Local Open Scope morphism_scope.
 

@@ -215,7 +215,7 @@ Proof.
     apply tr.
     exists (ap h (glue R _ _ Rab)).
     apply (concatR (apD H_h (glue R _ _ Rab))).
-    apply inverse. unfold f, g, compose. apply transport_compose.
+    apply inverse. unfold f, g. apply transport_compose.
   - intros b.
     set (trunca := snd bitot_R b). generalize trunca.
     apply (Trunc_functor -1).
@@ -223,7 +223,7 @@ Proof.
     apply tr.
     exists (ap h (glue R _ _ Rab)).
     apply (concatR (apD H_h (glue R _ _ Rab))).
-    apply inverse. unfold f, g, compose. apply transport_compose.
+    apply inverse. unfold f, g. apply transport_compose.
 Defined.
 
 
@@ -364,7 +364,7 @@ Definition ker_bisim_is_ker {A} (f : A -> V)
 Proof.
   intros; apply bisimulation_equiv_id.
 Defined.
-  
+
 Section MonicSetPresent_Uniqueness.
 (** Given u : V, we want to show that the representation u = @set Au mu, where Au is an hSet and mu is monic, is unique. *)
 
@@ -497,6 +497,10 @@ Defined.
 
 Global Instance irreflexive_mem : Irreflexive mem.
 Proof.
+  assert (forall v, IsHProp (complement (fun x x0 : V => x ∈ x0) v v)). (* https://coq.inria.fr/bugs/show_bug.cgi?id=3854 *)
+  { intro.
+    unfold complement.
+    exact _. }
   refine (mem_induction (fun x => BuildhProp (~ x ∈ x)) _); simpl in *.
   intros v H. intro Hv.
   exact (H v Hv Hv).

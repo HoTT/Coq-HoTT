@@ -31,6 +31,14 @@ Proof.
   refine (@path_ishprop _ (hprop_isequiv _) _ _).
 Defined.
 
+Definition equiv_path_pp `{Funext} {A B C : Type} (p : A = B) (q : B = C)
+: equiv_path A C (p @ q) = equiv_compose' (equiv_path B C q) (equiv_path A B p).
+Proof.
+  destruct p, q. simpl.
+  apply path_equiv, path_arrow.
+  intros x; reflexivity.
+Defined.
+
 (** See the note by [Funext] in Overture.v *)
 Class Univalence.
 Axiom isequiv_equiv_path : forall `{Univalence} (A B : Type), IsEquiv (equiv_path A B).
@@ -61,7 +69,7 @@ Proof.
   revert f. equiv_intro ((equiv_path_universe A B)^-1) p. simpl.
   transitivity (p^).
     2: exact (inverse2 (eisretr (equiv_path_universe A B) p)^).
-  unfold compose. transitivity (path_universe_uncurried (equiv_path B A p^)).
+  transitivity (path_universe_uncurried (equiv_path B A p^)).
     by refine (ap _ (equiv_path_V A B p)^).
   by refine (eissect (equiv_path B A) p^).
 Defined.

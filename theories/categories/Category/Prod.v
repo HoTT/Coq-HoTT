@@ -12,8 +12,7 @@ Local Open Scope morphism_scope.
 
 (** ** Definition of [*] for categories *)
 Section prod.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
 
   Definition prod : PreCategory.
     refine (@Build_PreCategory

@@ -32,15 +32,11 @@ Section faithfull_precomposition_essential_surjective.
   is faithful. *)
 
   Context `{fs : Funext}.
-  Variable A : PreCategory.
-  Variable B : PreCategory.
-  Variable C : PreCategory.
+  Variables A B C : PreCategory.
 
   Variable H : Functor A B.
 
   Context `{H_is_essentially_surjective : IsEssentiallySurjective A B H}.
-
-  Local Arguments Overture.compose / .
 
   Lemma isfaithful_precomposition_essentially_surjective_helper
         (F G : Functor B C)

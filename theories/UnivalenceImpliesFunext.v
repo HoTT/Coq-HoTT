@@ -16,12 +16,12 @@ Section UnivalenceImpliesFunext.
 
   (* Should this go somewhere else? *)
 
-  Theorem univalence_isequiv_postcompose `{H0 : IsEquiv A B w} C : IsEquiv (@compose C A B w).
+  Theorem univalence_isequiv_postcompose `{H0 : IsEquiv A B w} C : IsEquiv (fun (g:C->A) => w o g).
   Proof.
     unfold Univalence_type in *.
     refine (isequiv_adjointify
-              (@compose C A B w)
-              (@compose C B A w^-1)%equiv
+              (fun (g:C->A) => w o g)
+              (fun (g:C->B) => w^-1 o g)%equiv
               _
               _);
     intro;
@@ -42,7 +42,7 @@ Section UnivalenceImpliesFunext.
   Local Instance isequiv_src_compose A B
   : @IsEquiv (A -> {xy : B * B & fst xy = snd xy})
              (A -> B)
-             (compose (fst o pr1)).
+             (fun g => (fst o pr1) o g).
   Proof.
     apply @univalence_isequiv_postcompose.
     refine (isequiv_adjointify
@@ -59,7 +59,7 @@ Section UnivalenceImpliesFunext.
   Local Instance isequiv_tgt_compose A B
   : @IsEquiv (A -> {xy : B * B & fst xy = snd xy})
              (A -> B)
-             (compose (snd o pr1)).
+             (fun g => (snd o pr1) o g).
   Proof.
     apply @univalence_isequiv_postcompose.
     refine (isequiv_adjointify
@@ -82,7 +82,7 @@ Section UnivalenceImpliesFunext.
     (** If we compose [d] and [e] with [free_path_target], we get [f] and [g], respectively. So, if we had a path from [d] to [e], we would get one from [f] to [g]. *)
     change f with ((snd o pr1) o d).
     change g with ((snd o pr1) o e).
-    apply ap.
+    apply (ap (fun g => snd o pr1 o g)).
     (** Since composition with [src] is an equivalence, we can freely compose with [src]. *)
     pose (fun A B x y=> @equiv_inv _ _ _ (@isequiv_ap _ _ _ (@isequiv_src_compose A B) x y)) as H'.
     apply H'.

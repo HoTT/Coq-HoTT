@@ -1066,7 +1066,7 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== cor:totrunc-is-connected *)
 (** Corollary 7.5.8 *)
 
-Definition Book_7_5_8 := @HoTT.Modality.conn_map_to_O.
+Definition Book_7_5_8 := @HoTT.hit.Truncations.TrM.conn_map_to_O.
 
 
 (* ================================================== thm:nconn-to-ntype-const *)
@@ -1571,6 +1571,7 @@ Definition Book_9_2_9 := @HoTT.categories.Functor.Composition.Laws.associativity
 
 Definition Book_9_2_11_l := @HoTT.categories.Functor.Composition.Laws.left_identity.
 Definition Book_9_2_11_r := @HoTT.categories.Functor.Composition.Laws.right_identity.
+Definition Book_9_2_11 := @HoTT.categories.Functor.Composition.Laws.triangle.
 
 (* ================================================== ct:adjoints *)
 (** Definition 9.3.1 *)
@@ -2256,6 +2257,3 @@ Definition Book_10_5_8_item_ix := @HoTT.hit.V.separation.
 
 (* ================================================== eg:surreal-addition *)
 (** Example 11.6.18 *)
-
-
-

@@ -36,6 +36,10 @@ Definition path_forall_1 `{P : A -> Type} (f : forall x, P x)
 
 (** The identification of the path space of a dependent function space, up to equivalence, is of course just funext. *)
 
+Definition equiv_apD10 `{Funext} {A : Type} (P : A -> Type) f g
+: (f = g) <~> (f == g)
+  := BuildEquiv _ _ (@apD10 A P f g) _.
+
 Global Instance isequiv_path_forall `{P : A -> Type} (f g : forall x, P x)
   : IsEquiv (path_forall f g) | 0
   := @isequiv_inverse _ _ (@apD10 A P f g) _.
@@ -124,6 +128,7 @@ Proof.
     (functor_forall (f^-1)
       (fun (x:A) (y:Q (f^-1 x)) => eisretr f x # (g (f^-1 x))^-1 y
       )) _ _);
+  try assumption; (* https://coq.inria.fr/bugs/show_bug.cgi?id=3848 *)
   intros h.
   - abstract (
         apply path_forall; intros b; unfold functor_forall;
@@ -170,13 +175,12 @@ Global Instance trunc_forall `{P : A -> Type} `{forall a, IsTrunc n (P a)}
   : IsTrunc n (forall a, P a) | 100.
 Proof.
   generalize dependent P.
-  induction n as [ | n' IH]; simpl; intros P ?.
+  simple_induction n n IH; simpl; intros P ?.
   (* case [n = -2], i.e. contractibility *)
   - exact _.
   (* case n = n'.+1 *)
   - intros f g; apply (trunc_equiv _ (apD10 ^-1)).
 Defined.
-
 
 (** ** Symmetry of curried arguments *)
 

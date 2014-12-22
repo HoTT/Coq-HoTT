@@ -124,8 +124,8 @@ nobase_hott_DATA = \
 # The Coq compiler, adapted to HoTT
 HOQC=$(srcdir)/hoqc
 
-# Which files should be cleaned
-CLEANFILES = $(ALL_VOFILES) $(ALL_VFILES:.v=.vi) $(ALL_GLOBFILES) $(ALL_DEPFILES) $(ALL_HTMLFILES) $(ALL_XMLFILES) $(ALL_PROVIOLA_HTMLFILES) $(ALL_TIMINGFILES) $(ALL_TIMING_HTMLFILES) html-done.timestamp HoTT.deps HoTTCore.deps $(ALL_SVGFILES) $(ALL_DPDFILES) $(ALL_DOTFILES) file-dep-graphs/hott-all.dot file-dep-graphs/hott-all.dpd file-dep-graphs/hott-all.svg file-dep-graphs/hott-lib.dot file-dep-graphs/hott-lib.dpd file-dep-graphs/hott-lib.svg
+# Which extra files should be cleaned
+EXTRA_CLEANFILES = html-done.timestamp HoTT.deps HoTTCore.deps file-dep-graphs/hott-all.dot file-dep-graphs/hott-all.dpd file-dep-graphs/hott-all.svg file-dep-graphs/hott-lib.dot file-dep-graphs/hott-lib.dpd file-dep-graphs/hott-lib.svg
 
 # automake is very stupid and wants to put the 'include' line above
 # after this target.  But this target depends on variables defined in
@@ -352,8 +352,21 @@ $(STD_DEPFILES) : %.d : %.v
 clean-dpdgraph:
 	(cd etc/dpdgraph-0.4alpha && $(MAKE) clean)
 
+# We separate things to work around `make: execvp: /bin/bash: Argument list too long`
 clean:
-	rm -f $(CLEANFILES)
+	rm -f $(ALL_VOFILES)
+	rm -f $(ALL_VFILES:.v=.vi)
+	rm -f $(ALL_GLOBFILES)
+	rm -f $(ALL_DEPFILES)
+	rm -f $(ALL_HTMLFILES)
+	rm -f $(ALL_XMLFILES)
+	rm -f $(ALL_PROVIOLA_HTMLFILES)
+	rm -f $(ALL_TIMINGFILES)
+	rm -f $(ALL_TIMING_HTMLFILES)
+	rm -f $(ALL_SVGFILES)
+	rm -f $(ALL_DPDFILES)
+	rm -f $(ALL_DOTFILES)
+	rm -f $(EXTRA_CLEANFILES)
 	find "$(SRCCOQLIB)/theories" $(srcdir)/theories -name \*.vo -o -name \*.glob -o -name \*.timing | xargs rm -f
 
 -include $(ALL_DEPFILES)

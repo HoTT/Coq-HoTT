@@ -11,8 +11,7 @@ Local Open Scope category_scope.
 
 Section full_faithful.
   Context `{Funext}.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
   Variable F : Functor C D.
 
   (** ** Natural transformation [hom_C(─, ─) → hom_D(Fᵒᵖ(─), F(─))] *)
@@ -31,7 +30,6 @@ Section full_faithful.
         repeat (intros [] || intro);
         simpl in *;
           repeat (apply path_forall; intro);
-        unfold compose, Overture.compose;
         simpl;
         rewrite !composition_of;
         reflexivity

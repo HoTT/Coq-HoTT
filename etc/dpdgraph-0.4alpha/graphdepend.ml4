@@ -10,7 +10,7 @@
 open Pp
 
 let gen_filtered_search : Search.filter_function -> Search.display_function -> unit =
-    fun filt disp -> Search.generic_search (fun gr e c -> if filt gr e c then disp gr e c else ())
+    fun filt disp -> Search.generic_search None (fun gr e c -> if filt gr e c then disp gr e c else ())
 
 let debug msg = if false then Pp.msgnl msg
 
@@ -40,7 +40,7 @@ let is_prop gref = match gref with
       let env = Global.env() in
       let cb = Environ.lookup_constant cnst env in
       let cnst_type =
-          (*Typeops.type_of_constant_type env *)cb.Declarations.const_type in
+          Typeops.type_of_constant_type env cb.Declarations.const_type in
       let is_prop =
         if Term.is_Prop cnst_type then true
         else begin
@@ -264,7 +264,7 @@ let locate_mp_dirpath ref =
     Errors.user_err_loc
       (loc,"",str "Unknown module" ++ spc() ++ Libnames.pr_qualid qid)
 
-VERNAC COMMAND EXTEND DependGraphSetFile
+VERNAC COMMAND EXTEND DependGraphSetFile CLASSIFIED AS SIDEFF
   | ["Set" "DependGraph" "File" string(str)] -> [ filename := str ]
 END
 
@@ -279,7 +279,7 @@ VERNAC ARGUMENT EXTEND dirlist
 END
 *)
 
-VERNAC COMMAND EXTEND DependGraph
+VERNAC COMMAND EXTEND DependGraph CLASSIFIED AS QUERY
   | ["Print" "DependGraph" reference(ref) ] ->
       [ mk_dpds_graph (Nametab.global ref) ]
   | ["Print" "FileDependGraph" reference_list(dl) ] ->

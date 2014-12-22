@@ -49,20 +49,29 @@ CORE_VFILES = \
 	$(srcdir)/theories/Conjugation.v \
 	$(srcdir)/theories/HProp.v \
 	$(srcdir)/theories/EquivalenceVarieties.v \
+	$(srcdir)/theories/Extensions.v \
 	$(srcdir)/theories/HSet.v \
 	$(srcdir)/theories/UnivalenceImpliesFunext.v \
-	$(srcdir)/theories/Tactics/BinderApply.v \
 	$(srcdir)/theories/Tactics.v \
+	$(srcdir)/theories/Tactics/RewriteModuloAssociativity.v \
+	$(srcdir)/theories/Tactics/BinderApply.v \
 	$(srcdir)/theories/TruncType.v \
 	$(srcdir)/theories/Functorish.v \
 	$(srcdir)/theories/FunextAxiom.v \
 	$(srcdir)/theories/UnivalenceAxiom.v \
 	$(srcdir)/theories/ObjectClassifier.v \
-	$(srcdir)/theories/ReflectiveSubuniverse.v \
 	$(srcdir)/theories/NullHomotopy.v \
-	$(srcdir)/theories/Modality.v \
-	$(srcdir)/theories/CoModality.v \
+	$(srcdir)/theories/Idempotents.v \
 	$(srcdir)/theories/Factorization.v \
+	$(srcdir)/theories/Modalities/ReflectiveSubuniverse.v \
+	$(srcdir)/theories/Modalities/Modality.v \
+	$(srcdir)/theories/Modalities/Accessible.v \
+	$(srcdir)/theories/Modalities/Notnot.v \
+	$(srcdir)/theories/Modalities/Identity.v \
+	$(srcdir)/theories/Modalities/Localization.v \
+	$(srcdir)/theories/Modalities/Nullification.v \
+	$(srcdir)/theories/Modalities/Open.v \
+	$(srcdir)/theories/Modalities/Closed.v \
 	$(srcdir)/theories/hit/Circle.v \
 	$(srcdir)/theories/hit/Truncations.v \
 	$(srcdir)/theories/hit/Connectedness.v \
@@ -78,7 +87,6 @@ CORE_VFILES = \
 	$(srcdir)/theories/hit/iso.v \
 	$(srcdir)/theories/hit/Pushout.v \
 	$(srcdir)/theories/hit/Join.v \
-	$(srcdir)/theories/hit/PropositionalFracture.v \
 	$(srcdir)/theories/hit/V.v \
 	$(srcdir)/theories/Misc.v \
 	$(srcdir)/theories/Utf8.v \
@@ -101,6 +109,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Category/Univalent.v \
 	$(srcdir)/theories/categories/Category/Objects.v \
 	$(srcdir)/theories/categories/Category/Dual.v \
+	$(srcdir)/theories/categories/Category/Paths.v \
 	$(srcdir)/theories/categories/Category/Prod.v \
 	$(srcdir)/theories/categories/Category/Pi.v \
 	$(srcdir)/theories/categories/Category/Sum.v \
@@ -174,6 +183,7 @@ CATEGORY_VFILES = \
 	\
 	$(srcdir)/theories/categories/GroupoidCategory.v \
 	$(srcdir)/theories/categories/GroupoidCategory/Core.v \
+	$(srcdir)/theories/categories/GroupoidCategory/Dual.v \
 	\
 	$(srcdir)/theories/categories/CategoryOfGroupoids.v \
 	\
@@ -237,8 +247,14 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/Adjoint/Dual.v \
 	$(srcdir)/theories/categories/Adjoint/UnitCounitCoercions.v \
 	$(srcdir)/theories/categories/Adjoint/UniversalMorphisms.v \
+	$(srcdir)/theories/categories/Adjoint/UniversalMorphisms/Core.v \
+	$(srcdir)/theories/categories/Adjoint/Functorial.v \
+	$(srcdir)/theories/categories/Adjoint/Functorial/Core.v \
+	$(srcdir)/theories/categories/Adjoint/Functorial/Parts.v \
+	$(srcdir)/theories/categories/Adjoint/Functorial/Laws.v \
 	$(srcdir)/theories/categories/Adjoint/Hom.v \
 	$(srcdir)/theories/categories/Adjoint/HomCoercions.v \
+	$(srcdir)/theories/categories/Adjoint/Pointwise.v \
 	$(srcdir)/theories/categories/Adjoint/Notations.v \
 	$(srcdir)/theories/categories/Adjoint/Utf8.v \
 	\

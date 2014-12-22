@@ -36,33 +36,34 @@ Definition contr_trunc_minus_two `{H : IsTrunc -2 A} : Contr A
 Global Instance trunc_succ `{IsTrunc n A} : IsTrunc n.+1 A | 1000.
 Proof.
   generalize dependent A.
-  induction n as [| n I]; simpl; intros A H x y.
+  simple_induction n n IH; simpl; intros A H x y.
   - apply contr_paths_contr.
-  - apply I, H.
+  - apply IH, H.
 Qed.
 
-Global Instance trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A} : IsTrunc n A | 1000.
+(** This could be an [Instance] (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like [m <= n], so it would only ever be used trivially.  *)
+Definition trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A} : IsTrunc n A.
 Proof.
   generalize dependent A; generalize dependent m.
-  induction n as [ | n' IH];
+  simple_induction n n' IH;
     intros [ | m'] Hmn A ? .
   - (* -2, -2 *) assumption.
   - (* S m', -2 *) destruct Hmn.
   - (* -2, S n' *) apply @trunc_succ, (IH -2); auto.
   - (* S m', S n' *) intros x y; apply (IH m');
                      auto with typeclass_instances.
-Qed.
+Defined.
 
-(** In particular, a contractible type, hprop, or hset is truncated at all higher levels. *)
+(** In particular, a contractible type, hprop, or hset is truncated at all higher levels.  We don't allow these to be used as idmaps, since there would be no point to it. *)
 
-Definition trunc_contr {n} {A} `{Contr A} : IsTrunc n A
-  := (@trunc_leq -2 n tt _ _).
+Definition trunc_contr {n} {A} `{Contr A} : IsTrunc n.+1 A
+  := (@trunc_leq -2 n.+1 tt _ _).
 
-Definition trunc_hprop {n} {A} `{IsHProp A} : IsTrunc n.+1 A
-  := (@trunc_leq -1 n.+1 tt _ _).
+Definition trunc_hprop {n} {A} `{IsHProp A} : IsTrunc n.+2 A
+  := (@trunc_leq -1 n.+2 tt _ _).
 
-Definition trunc_hset {n} {A} `{IsHSet A} : IsTrunc n.+1.+1 A
-  := (@trunc_leq 0 n.+1.+1 tt _ _).
+Definition trunc_hset {n} {A} `{IsHSet A} : IsTrunc n.+3 A
+  := (@trunc_leq 0 n.+3 tt _ _).
 
 (** Consider the preceding definitions as instances for typeclass search, but only if the requisite hypothesis is already a known assumption; otherwise they result in long or interminable searches. *)
 Hint Immediate trunc_contr : typeclass_instances.
@@ -77,10 +78,10 @@ Definition trunc_equiv A {B} (f : A -> B)
   : IsTrunc n B.
 Proof.
   generalize dependent B; generalize dependent A.
-  induction n as [| n I]; simpl; intros A ? B f ?.
+  simple_induction n n IH; simpl; intros A ? B f ?.
   - exact (contr_equiv _ f).
   - intros x y.
-    exact (I (f^-1 x = f^-1 y) (H (f^-1 x) (f^-1 y)) (x = y) ((ap (f^-1))^-1) _).
+    exact (IH (f^-1 x = f^-1 y) (H (f^-1 x) (f^-1 y)) (x = y) ((ap (f^-1))^-1) _).
 Qed.
 
 Definition trunc_equiv' A {B} (f : A <~> B) `{IsTrunc n A}

@@ -26,12 +26,9 @@ Local Open Scope natural_transformation_scope.
 (** ** unit+UMP from hom-set adjunction *)
 Section AdjunctionEquivalences.
   Context `{Funext}.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
   Variable F : Functor C D.
   Variable G : Functor D C.
-
-  Local Arguments Overture.compose / .
 
   Local Open Scope morphism_scope.
 
@@ -118,7 +115,8 @@ Section AdjunctionEquivalences.
     change (idmap g0 = idmap g1).
     rewrite <- (ap10 (@left_inverse _ _ _ (A (c, d)) _)).
     simpl rewrite H0.
-    simpl rewrite (ap10 (@left_inverse _ _ _ (A (c, d)) _)).
+    let k := constr:(ap10 (@left_inverse _ _ _ (A (c, d)) _)) in
+    simpl rewrite k. (* https://coq.inria.fr/bugs/show_bug.cgi?id=3773 and https://coq.inria.fr/bugs/show_bug.cgi?id=3772 (probably) *)
     reflexivity.
   Qed.
 
@@ -151,12 +149,9 @@ End AdjunctionEquivalences.
 
 Section isequiv.
   (** We want to be able to use this without needing [Funext].  So, first, we prove that the types of hom-sets are equivalent. *)
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
   Variable F : Functor C D.
   Variable G : Functor D C.
-
-  Local Arguments Overture.compose / .
 
   Local Open Scope morphism_scope.
 
@@ -187,12 +182,9 @@ End isequiv.
 (** ** hom-set adjunction from unit+ump adjunction *)
 Section AdjunctionEquivalences'.
   Context `{Funext}.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
   Variable F : Functor C D.
   Variable G : Functor D C.
-
-  Local Arguments Overture.compose / .
 
   Local Open Scope morphism_scope.
 

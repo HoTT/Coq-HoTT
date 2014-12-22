@@ -16,7 +16,7 @@ Definition pullback {A0 B C} (f:B-> A0) (g:C->A0):= {b:B & {c:C & f b = g c}}.
 
 Section FamPow.
 (** We consider Families and Powers over a fixed type [A] *)
-Variable A:Type.
+Variable A : Type.
 Definition Fam A:=sigT (fun I:Type  => I->A).
 Definition p2f: (A->Type)-> Fam A:=  fun Q:(A->Type) => ( (sigT Q) ; @pr1 _ _).
 Definition f2p: Fam A -> (A->Type):=
@@ -28,7 +28,7 @@ Theorem transport_exp (U V:Type)(w:U<~>V): forall (f:U->A),
 Proof.
   intros f; apply path_arrow; intros y.
   refine (transport_arrow_toconst _ _ _ @ _).
-  unfold compose; apply ap.
+  apply ap.
   by apply transport_path_universe_V.
 Qed.
 
@@ -76,9 +76,9 @@ Section Subobjectclassifier.
 (** We prove that hProp is the subobject classifier *)
 (** In fact, the proof works for general mere predicates on [Type], 
 not just [IsHProp], truncations and modalities are important examples.*)
-Variable A:Type.
-Variable isP:Type -> Type.
-Variable ishprop_isP: forall I, IsHProp (isP I).
+Variable A : Type.
+Variable isP : Type -> Type.
+Variable ishprop_isP : forall I, IsHProp (isP I).
 Definition IsPfibered {I} (f:I->A):=forall i, isP (hfiber f i).
 Definition PFam := (sig (fun F:Fam A => IsPfibered (pr2 F))).
 (* Bug: abstract should accept more than one tactic.

@@ -242,7 +242,7 @@ Here are some of the typeclasses we are using:
 - equivalences: `IsEquiv`
 - truncation levels: `Contr`, `IsTrunc`
 - axioms (see below): `Funext`, `Univalence`
-- subuniverses: `In`, `Replete`
+- subuniverses: `In`, `Replete`, `MapIn`, `IsConnected`, `IsConnMap`
 
 `IsHSet`, `IsHProp`, and `Contr` are notations for `IsTrunc 0`,
 `IsTrunc -1`, and `IsTrunc -2` respectively.  Since `IsTrunc` is
@@ -455,8 +455,8 @@ something you generally need to worry about; see the comments in
 ## Higher Inductive Types ##
 
 At present, higher inductive types are restricted to the `hit/`
-directory, and are all defined using Dan Licata's "private inductive
-types" hack.  This means the procedure for defining a HIT is:
+directory, and are all defined using [Dan Licata's "private inductive
+types" hack][hit-hack].  This means the procedure for defining a HIT is:
 
 1. Wrap the entire definition in a module, which you will usually want
    to export to the rest of the file containing the definition.
@@ -490,6 +490,197 @@ types" hack.  This means the procedure for defining a HIT is:
    its computation rules as well.
 
 Look at some of the existing files in `hit/*` for examples.
+
+[hit-hack]: http://homotopytypetheory.org/2011/04/23/running-circles-around-in-your-proof-assistant/
+
+
+## Universe Polymorphism ##
+
+We have Coq's new "universe polymorphism" feature turned on throughout
+the library.  Thus, all definitions are universe polymorphic by
+default, i.e. they can be applied to types that live in any universe
+level.
+
+Usually, this is not something you have to worry about, as Coq tries
+to automatically make everything maximally polymorphic, but sometimes
+a bit of attention is required.  If Coq is claiming that an instance
+is not found which is "obviously" present, or a term doesn't have a
+type that it "clearly" does (or, of course, if it complains about a
+universe inconsistency), then a universe problem may be the culprit.
+
+### Displaying universes ###
+
+If you suspect a universe problem, usually the first thing to do is to
+turn on the display of universes with the command `Set Printing
+Universes`.  This causes Coq to print the universe parameters of every
+occurrence of a definition when displaying the current proof state or
+when giving an error message, and also to print the universe
+parameters and the constraints imposed on them when displaying a
+definition with `Print` or `About` or a typechecking a term with
+`Check`.  (Nowadays Coq is sometimes smart enough to display universes
+automatically when giving an error message that would otherwise look
+like "unable to unify `A` with `A`".)  To display the current universe
+_constraints_ during a proof, use `Show Universes` (this is not to be
+confused with `Print Universes`, which displays the current list of
+_global_ universes; the latter is usually quite small with universe
+polymorphism enabled).
+
+The universe parameters of an occurrence of a definition are displayed
+as `foo@{Top.1 Top.2}`.  Here `foo` is a definition which takes two
+universe parameters, and this occurrence of `foo` has those two
+parameters instantiated to the universes `Top.1` and `Top.2`.  When
+displaying a definition with `Print` or `About`, its universe
+parameters are shown in a comment below the definition, followed by
+`|-` and a list of the constraints on those parameters.
+
+In general, the universe parameters of a definition are automatically
+computed from the parameters of its constituents, and the order of the
+parameters is likewise induced by the order in which they occur in the
+definition.  This means you must generally pay close attention to the
+output of `Print` or `About` to learn which universe parameter is
+which, and insignificant-seeming changes in a definition can sometimes
+cause changes in the number or order of its universe parameters.
+
+Note that `Check foo` will often give a different list of universes
+than `Print foo` and `About foo`.  This is because the latter two
+display information about `foo` as a _definition_, while `Check`
+treats its argument as a _term_ to be typechecked, and Coq is willing
+to collapse some universes during typechecking.
+
+### Universe annotations ###
+
+You can exert a certain degree of control over universe polymorphism
+by using explicit universe annotations, which use the same syntax as
+the display of universes: if you write `foo@{i j}`, that means `foo`
+with its two universe parameters instantiated to the universes `i` and
+`j`.  You are required to supply exactly the right number of
+universes, and be careful about the order in which they occur.
+
+It is very important to note that universe names such as `i` and `j`
+are _definition local_ and _implicitly declared_.  This means that
+whenever you write `i` inside a universe annotation, Coq implicitly
+declares a universe named `i`, and all occurrences of the universe `i`
+_in the same definition_ refer to the same universe.  When the
+definition is complete, this universe will become one of its universe
+parameters.  An annotation named `i` in a different definition will
+instead become one of _that_ definition's parameters.  Thus, if you
+define `foo` using a universe `i`, and then define `bar` which uses
+`foo`, in order to force a particular universe parameter of `bar` to
+coincide with `i` in `foo`, you must annotate the occurrences of `foo`
+in `bar` appropriately.
+
+(It is possible to explicitly declare and name universes globally with
+the `Universe` command, but we are not using that in the HoTT
+library.  Note in particular that universes declared with `Universe`
+are _not_ generalized upon closing sections; they are permanently
+global wherever they are defined.)
+
+Unfortunately it is not currently possible to declare the universe
+parameters of a definition; Coq simply decides after you make a
+definition how many universe parameters it ends up with (and what the
+constraints on them are).  The best we can do is to document the
+result.  A sort of "checked documentation" is possible by writing
+`Check foo@{a b c}.` after the definition; this will fail with an
+`Error` unless `foo` takes exactly three universe parameters.  In
+general `Check` is discouraged outside of test suites, so use this
+sparingly; currently it is mainly restricted to the fields of module
+types (see `ReflectiveSubuniverse` for details).
+
+There are several uses for universe annotations.  One is to force a
+definition to have fewer universe parameters than it would otherwise.
+This can sometimes improve performance: if you know that in practice,
+several of the universes occurring in a definition will always be the
+same, then saving Coq the burden of carrying them all around
+separately can sometimes make it run faster.  Additionally, reducing
+the number of universe parameters in a definition can make it
+significantly easier to universe-annotate uses of that definition
+later on.
+
+Another reason for universe annotations is to make a definition _more_
+universe polymorphic.  In some situations, in the absence of
+annotations Coq will automatically collapse one or more universe
+parameters which could be kept separate if annotated.  It is not clear
+under exactly what situations this occurs, but one culprit appears to
+be section variables: if you declare a section variable which you need
+to be universe polymorphic, you may need to annotate it.
+
+(Another occasional culprit of less-polymorphic-than-expected
+definitions seems to be giving type parameters without a type.  At
+least in some situations, writing `Definition foo {A B} ...` rather
+than `Definition foo {A B : Type} ...` can cause `A` and `B` to live
+in the same universe.)
+
+Finally, universe annotations can also be necessary to instruct Coq
+how to instantiate the universes when using a definition.  In some
+situations, Coq seems to make a default guess that doesn't work
+(perhaps collapsing some universes that need to remain distinct) and
+then complains without trying anything else; an annotation can point
+it in the right direction.
+
+### Unexpected universes ###
+
+If you ever need to pay close attention to universes, it is useful to
+know that there are several ways in which extra universe parameters
+can creep into a definition unexpectedly.  Here are a few.
+
+The `induction` tactic invokes the appropriate induction principle,
+which is a function generally named `*_ind` or `*_rect` (see notes on
+naming conventions above).  This function, in turn, requires a
+universe parameter describing the size of its output.  Therefore, if
+you prove something by `induction` that is generalized over a "large"
+argument (e.g. a type or a type family), the resulting definition will
+pick up an extra universe parameter that's strictly larger than the
+argument in question.  One way to avoid this is to instead use a
+`Fixpoint` definition, or the tactic `fix`, along with `destruct`.
+There is a tactic `simple_induction` defined in `Overture` whose
+interface is almost the same as `induction` but does this internally,
+although it only works for induction over `nat` and `trunc_index`.
+
+If you apply the `symmetry` tactic when constructing an equivalence to
+reverse the direction of the goal, then rather than applying
+`equiv_inverse` directly it goes through the `Symmetric` typeclass.
+This involves a universe for the size of the type *on which* the
+symmetric relation lives, which in the case of `Equiv` is the
+universe.  Thus, applying `symmetry` to an `Equiv` introduces a
+strictly larger universe.  A solution is to `apply equiv_inverse`
+instead.  Similarly, use `equiv_compose'` instead of `transitivity`.
+
+Given `P : B -> Type` and `f : A -> B`, writing `P o f` introduces a
+universe parameter strictly larger than the codomain of `P` (since it
+has to be passed to the function `compose`).  A solution is to write
+`fun a => P (f a)` instead.  (This may no longer be true with
+`compose` a notation rather than a function.)
+
+Typeclass inference doesn't always find the simplest solution, and may
+insert unnecessary calls to instances that introduce additional
+universes.  One solution is to alter the proofs of those instances as
+described above; another is to call the instance(s) you need
+explicitly, rather than relying on typeclass inference to find them.
+
+### Lifting and lowering ###
+
+The file `Basics/UniverseLevel` contains an operation `Lift` which
+lifts a type from one universe to a larger one, with maps `lift` and
+`lower` relating the two types and forming an equivalence.  This is
+occasionally useful when universe wrangling; for instance, using a
+lifted version of a type rather than a type itself can prevent
+collapse of two universes that ought to remain distinct.  There are
+primed versions `Lift'`, `lift'`, and `lower'` which allow the two
+universe levels to possibly be the same.
+
+### Universes and HITs ###
+
+Another use for universe annotations is to force HITs to live in the
+correct universe.  Coq assigns a universe level to an inductive type
+based on the levels of its indices and constructors, which is correct
+for ordinary inductive types.  However, the universe level of a HIT
+should depend also on the levels of its path-constructors, but since
+these are not actually constructors of the `Private Inductive`, Coq
+doesn't take them into account.
+
+We have not yet formulated a general method for resolving this.  In
+the few cases when it arises, it should be solvable with universe
+annotations, but we have not yet implemented such a fix; see bug #565.
 
 
 ## Transparency and Opacity ##
@@ -704,31 +895,30 @@ instead.
 
 ## Coding Hints ##
 
-### Unfolding compose and other definitions ###
+### Notations ###
 
-The operation `compose`, notation `g o f`, is a defined constant
-rather than simply a notation for `fun x => g (f x)` so that it can be
-used as a head for typeclass resolution, e.g. in `isequiv_compose`.
-However, this means that frequently it has to be folded and unfolded
-in the middle of proofs.
+The operation `compose`, notation `g o f`, is simply a notation for
+`fun x => g (f x)` rather than a defined constant.  This means that,
+for instance, you can't partially apply it and write `compose g` for
+`fun f => g o f`.  We could define `compose := (fun g f x => g (f x))`
+instead of `compose g f := (fun x => g (f x))` to allow this, but we
+take the point of view that `fun f => g o f` is more readable anyway.
 
-One trick that is sometimes helpful is `Local Arguments compose / .`,
-which tells `simpl` and related tactics to automatically unfold
-`compose`.  In particular, this allows the tactic `simpl rewrite`
-(defined in `Tactics`) to apply theorems containing `compose` to goals
-in which it has been unfolded.  It seems better not to make this
-declaration globally, however.
+### Unfolding definitions ###
 
-Occasionally it may also be necessary to give a similar command for
-definitions other than `compose` as well, and it may not be obvious
-where the issue lies; sometimes the unification failure happens in an
-implicit argument that is not directly visible in the output.  One way
-to discover where the problem lies is to turn on printing of all
-implicit arguments with `Set Printing All`; another is to use `Set
-Debug Tactic Unification` and inspect the output to see where
-`rewrite` is failing to unify.  (As of Oct 2014, however, the latter
-requires a more up-to-date version of Coq than our submodule currently
-points to.)
+When a definition has to be unfolded repeatedly in the middle of
+proofs, you can say `Local Arguments name / .`, which tells `simpl`
+and related tactics to automatically unfold `name`.  In particular,
+this allows the tactic `simpl rewrite` (defined in `Tactics`) to apply
+theorems containing `name` to goals in which it has been unfolded.  It
+seems better not to make these declarations globally, however.
+
+It may not always be obvious which definition this needs to be applied
+to; sometimes the unification failure happens in an implicit argument
+that is not directly visible in the output.  One way to discover where
+the problem lies is to turn on printing of all implicit arguments with
+`Set Printing All`; another is to use `Set Debug Tactic Unification`
+and inspect the output to see where `rewrite` is failing to unify.
 
 ### Simpl nomatch ###
 

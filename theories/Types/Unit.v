@@ -61,6 +61,15 @@ Global Instance isequiv_unit_ind `{Funext} (A : Type) : IsEquiv (@Unit_ind (fun 
 (* For various reasons, it is typically more convenient to define functions out of the unit as constant maps, rather than [Unit_ind]. *)
 Notation unit_name x := (fun (_ : Unit) => x).
 
+Global Instance isequiv_unit_name `{Funext} (A : Type)
+: IsEquiv (fun (a:A) => unit_name a).
+Proof.
+  refine (isequiv_adjointify _ (fun f => f tt) _ _).
+  - intros f; apply path_forall; intros x.
+    apply ap, path_unit.
+  - intros a; reflexivity.
+Defined.
+
 (* The negative universal property *)
 Definition unit_coind {A : Type} : Unit -> (A -> Unit)
   := fun _ _ => tt.

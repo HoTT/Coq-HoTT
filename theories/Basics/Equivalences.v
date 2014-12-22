@@ -77,7 +77,7 @@ Section IsEquivHomotopic.
     rewrite ap_pp. apply moveR_Vp.
     rewrite concat_p_pp, <- concat_Ap, concat_pp_p, <- concat_Ap.
     rewrite ap_V; apply moveL_Vp.
-    rewrite <- ap_compose; unfold compose; rewrite (concat_A1p (eisretr f) (h a)).
+    rewrite <- ap_compose; rewrite (concat_A1p (eisretr f) (h a)).
     apply whiskerR, eisadj.
   Qed.
 
@@ -113,17 +113,17 @@ Section EquivInverse.
     rewrite <- (concat_pp_A1 (fun a => (eissect f a)^) _ _).
     rewrite (ap_compose' f f^-1).
     rewrite <- (ap_p_pp _ _ (ap f (ap f^-1 (eisretr f (f (f^-1 b))))) _).
-    rewrite <- (ap_compose f^-1 f); unfold compose.
+    rewrite <- (ap_compose f^-1 f).
     rewrite (concat_A1p (eisretr f) _).
     rewrite ap_pp, concat_p_pp.
     rewrite (concat_pp_V _ (ap f^-1 (eisretr f (f (f^-1 b))))).
     repeat rewrite <- ap_V; rewrite <- ap_pp.
     rewrite <- (concat_pA1 (fun y => (eissect f y)^) _).
-    rewrite ap_compose', <- (ap_compose f^-1 f); unfold compose.
+    rewrite ap_compose', <- (ap_compose f^-1 f).
     rewrite <- ap_p_pp.
     rewrite (concat_A1p (eisretr f) _).
     rewrite concat_p_Vp.
-    rewrite <- ap_compose; unfold compose.
+    rewrite <- ap_compose.
     rewrite (concat_pA1_p (eissect f) _).
     rewrite concat_pV_p; apply concat_Vp.
   Qed.
@@ -223,10 +223,10 @@ Section Adjointify.
   Proof.
     unfold issect'.
     apply moveR_M1.
-    repeat rewrite ap_pp, concat_p_pp; rewrite <- ap_compose; unfold compose.
+    repeat rewrite ap_pp, concat_p_pp; rewrite <- ap_compose.
     rewrite (concat_pA1 (fun b => (isretr b)^) (ap f (issect a)^)).
     repeat rewrite concat_pp_p; rewrite ap_V; apply moveL_Vp; rewrite concat_p1.
-    rewrite concat_p_pp, <- ap_compose; unfold compose.
+    rewrite concat_p_pp, <- ap_compose.
     rewrite (concat_pA1 (fun b => (isretr b)^) (isretr (f a))).
     rewrite concat_pV, concat_1p; reflexivity.
   Qed.
@@ -284,37 +284,37 @@ Defined.
 
 Global Instance isequiv_precompose `{Funext} {A B C : Type}
   (f : A -> B) `{IsEquiv A B f}
-  : IsEquiv (fun g => @compose A B C g f) | 1000
-  := isequiv_adjointify (fun g => @compose A B C g f)
-    (fun h => @compose B A C h f^-1)
+  : IsEquiv (fun (g:B->C) => g o f) | 1000
+  := isequiv_adjointify (fun (g:B->C) => g o f)
+    (fun h => h o f^-1)
     (fun h => path_forall _ _ (fun x => ap h (eissect f x)))
     (fun g => path_forall _ _ (fun y => ap g (eisretr f y))).
 
 Definition equiv_precompose `{Funext} {A B C : Type}
   (f : A -> B) `{IsEquiv A B f}
   : (B -> C) <~> (A -> C)
-  := BuildEquiv _ _ (fun g => @compose A B C g f) _.
+  := BuildEquiv _ _ (fun (g:B->C) => g o f) _.
 
 Definition equiv_precompose' `{Funext} {A B C : Type} (f : A <~> B)
   : (B -> C) <~> (A -> C)
-  := BuildEquiv _ _ (fun g => @compose A B C g f) _.
+  := BuildEquiv _ _ (fun (g:B->C) => g o f) _.
 
 Global Instance isequiv_postcompose `{Funext} {A B C : Type}
   (f : B -> C) `{IsEquiv B C f}
-  : IsEquiv (fun g => @compose A B C f g) | 1000
-  := isequiv_adjointify (fun g => @compose A B C f g)
-    (fun h => @compose A C B f^-1 h)
+  : IsEquiv (fun (g:A->B) => f o g) | 1000
+  := isequiv_adjointify (fun (g:A->B) => f o g)
+    (fun h => f^-1 o h)
     (fun h => path_forall _ _ (fun x => eisretr f (h x)))
     (fun g => path_forall _ _ (fun y => eissect f (g y))).
 
 Definition equiv_postcompose `{Funext} {A B C : Type}
   (f : B -> C) `{IsEquiv B C f}
   : (A -> B) <~> (A -> C)
-  := BuildEquiv _ _ (fun g => @compose A B C f g) _.
+  := BuildEquiv _ _ (fun (g:A->B) => f o g) _.
 
 Definition equiv_postcompose' `{Funext} {A B C : Type} (f : B <~> C)
   : (A -> B) <~> (A -> C)
-  := BuildEquiv _ _ (fun g => @compose A B C f g) _.
+  := BuildEquiv _ _ (fun (g:A->B) => f o g) _.
 
 (** Conversely, if pre- or post-composing with a function is always an equivalence, then that function is also an equivalence.  It's convenient to know that we only need to assume the equivalence when the other type is the domain or the codomain. *)
 

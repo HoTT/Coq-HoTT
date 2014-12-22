@@ -2,7 +2,7 @@
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import KanExtensions.Core KanExtensions.Functors.
 Require Import Limits.Core.
-Require Import Adjoint.UniversalMorphisms.
+Require Import Adjoint.UniversalMorphisms.Core.
 Require Import FunctorCategory.Core.
 Require Import Adjoint.Core.
 Require Import InitialTerminalCategory.Core NatCategory.
@@ -18,8 +18,7 @@ Local Open Scope category_scope.
 
 Section functors.
   Context `{Funext}.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
 
   (** ** Colimit functor, which is left adjoint to Δ *)
   Section colimit.

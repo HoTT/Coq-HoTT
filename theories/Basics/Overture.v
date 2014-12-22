@@ -10,6 +10,9 @@ Local Set Typeclasses Strict Resolution.
 (** This command prevents Coq from automatically defining the eliminator functions for inductive types.  We will define them ourselves to match the naming scheme of the HoTT Book.  In principle we ought to make this [Global], but unfortunately the tactics [induction] and [elim] assume that the eliminators are named in Coq's way, e.g. [thing_rect], so making it global could cause unpleasant surprises for people defining new inductive types.  However, when you do define your own inductive types you are encouraged to also do [Local Unset Elimination Schemes] and then use [Scheme] to define [thing_ind], [thing_rec], and (for compatibility with [induction] and [elim]) [thing_rect], as we have done below for [paths], [Empty], [Unit], etc.  We are hoping that this will be fixed eventually; see https://coq.inria.fr/bugs/show_bug.cgi?id=3745.  *)
 Local Unset Elimination Schemes.
 
+(** This command changes Coq's subterm selection to always use full conversion after finding a subterm whose head/key matches the key of the term we're looking for.  This applies to [rewrite] and higher-order unification in [apply]/[elim]/[destruct].  Again, if you don't know what that means, ignore it. *)
+Global Set Keyed Unification.
+
 Definition relation (A : Type) := A -> A -> Type.
 
 Class Reflexive {A} (R : relation A) :=
@@ -64,10 +67,32 @@ Ltac transitivity x := etransitivity x.
 
 (** Define an alias for [Set], which is really [Type₀]. *)
 Notation Type0 := Set.
+
 (** Define [Type₁] (really, [Type_i] for any [i > 0]) so that we can enforce having universes that are not [Set].  In trunk, universes will not be unified with [Set] in most places, so we want to never use [Set] at all. *)
-Definition Type1 := Eval hnf in let U := Type in let gt := (Set : U) in U.
+Definition Type1 := Eval hnf in let gt := (Set : Type@{i}) in Type@{i}.
 Arguments Type1 / .
 Identity Coercion unfold_Type1 : Type1 >-> Sortclass.
+
+(** We also define "the next couple of universes", which are actually an arbitrary universe with another one or two strictly below it.  Note when giving universe annotations to these that their universe parameters appear in order of *decreasing* size. *)
+Definition Type2 := Eval hnf in let gt := (Type1 : Type@{i}) in Type@{i}.
+Arguments Type2 / .
+Identity Coercion unfold_Type2 : Type2 >-> Sortclass.
+
+Definition Type3 := Eval hnf in let gt := (Type2 : Type@{i}) in Type@{i}.
+Arguments Type3 / .
+Identity Coercion unfold_Type3 : Type3 >-> Sortclass.
+
+(** Along the same lines, here is a universe with an extra universe parameter that's less than or equal to it in size.  The [gt] isn't necessary to force the larger universe to be bigger than [Set] (since we refer to the smaller universe by [Type1] which is already bigger than [Set]), but we include it anyway to make the universe parameters occur again in (now non-strictly) decreasing order. *)
+Definition Type2le := Eval hnf in let gt := (Set : Type@{i}) in
+                                  let ge := ((fun x => x) : Type1 -> Type@{i}) in Type@{i}.
+Arguments Type2le / .
+Identity Coercion unfold_Type2le : Type2le >-> Sortclass.
+
+Definition Type3le := Eval hnf in let gt := (Set : Type@{i}) in
+                                  let ge := ((fun x => x) : Type2le@{j k} -> Type@{i}) in Type@{i}.
+Arguments Type3le / .
+Identity Coercion unfold_Type3le : Type3le >-> Sortclass.
+
 
 (** We make the identity map a notation so we do not have to unfold it,
     or complicate matters with its type. *)
@@ -91,14 +116,21 @@ Notation "x .1" := (pr1 x) (at level 3, format "x '.1'") : fibration_scope.
 Notation "x .2" := (pr2 x) (at level 3, format "x '.2'") : fibration_scope.
 
 (** Composition of functions. *)
-Definition compose {A B C : Type} (g : B -> C) (f : A -> B) :=
-  fun x => g (f x).
 
-Hint Unfold compose.
+Notation compose g f := (fun x => g (f x)).
 
 (** We put the following notation in a scope because leaving it unscoped causes it to override identical notations in other scopes.  It's convenient to use the same notation for, e.g., function composition, morphism composition in a category, and functor composition, and let Coq automatically infer which one we mean by scopes.  We can't do this if this notation isn't scoped.  Unfortunately, Coq doesn't have a built-in [function_scope] like [type_scope]; [type_scope] is automatically opened wherever Coq is expecting a [Sort], and it would be nice if [function_scope] were automatically opened whenever Coq expects a thing of type [forall _, _] or [_ -> _].  To work around this, we open [function_scope] globally. *)
 Notation "g 'o' f" := (compose g f) (at level 40, left associativity) : function_scope.
 Open Scope function_scope.
+
+(** Composition of logical equivalences *)
+Definition iff_compose {A B C : Type} (g : B <-> C) (f : A <-> B)
+: A <-> C
+:= (fst g o fst f , snd f o snd g).
+
+(** While we're at it, inverses of logical equivalences *)
+Definition iff_inverse {A B : Type} : (A <-> B) -> (B <-> A)
+  := fun f => (snd f , fst f).
 
 (** Dependent composition of functions. *)
 Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).
@@ -390,6 +422,12 @@ Notation "n .+1" := (trunc_S n) (at level 2, left associativity, format "n .+1")
 Notation "n .+1" := (S n) (at level 2, left associativity, format "n .+1") : nat_scope.
 Notation "n .+2" := (n.+1.+1)%trunc (at level 2, left associativity, format "n .+2") : trunc_scope.
 Notation "n .+2" := (n.+1.+1)%nat (at level 2, left associativity, format "n .+2") : nat_scope.
+Notation "n .+3" := (n.+1.+2)%trunc (at level 2, left associativity, format "n .+3") : trunc_scope.
+Notation "n .+3" := (n.+1.+2)%nat (at level 2, left associativity, format "n .+3") : nat_scope.
+Notation "n .+4" := (n.+1.+3)%trunc (at level 2, left associativity, format "n .+4") : trunc_scope.
+Notation "n .+4" := (n.+1.+3)%nat (at level 2, left associativity, format "n .+4") : nat_scope.
+Notation "n .+5" := (n.+1.+4)%trunc (at level 2, left associativity, format "n .+5") : trunc_scope.
+Notation "n .+5" := (n.+1.+4)%nat (at level 2, left associativity, format "n .+5") : nat_scope.
 Local Open Scope trunc_scope.
 Notation "-2" := minus_two (at level 0) : trunc_scope.
 Notation "-1" := (-2.+1) (at level 0) : trunc_scope.
@@ -448,6 +486,16 @@ Notation IsHProp := (IsTrunc -1).
 Notation IsHSet := (IsTrunc 0).
 
 Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_instances.
+
+(** *** Simple induction *)
+
+(** The following tactic is designed to be more or less interchangeable with [induction n as [ | n' IH ]] whenever [n] is a [nat] or a [trunc_index].  The difference is that it produces proof terms involving [match] and [fix] explicitly rather than [nat_ind] or [trunc_index_ind], and therefore does not introduce higher universe parameters. *)
+
+Ltac simple_induction n n' IH :=
+  generalize dependent n;
+  fix IH 1;
+  intros [| n'];
+  [ clear IH | specialize (IH n') ].
 
 (** *** Truncated relations  *)
 
@@ -574,7 +622,7 @@ Tactic Notation "by" tactic(tac) :=
 
 (** A convenient tactic for using function extensionality. *)
 Ltac by_extensionality x :=
-  intros; unfold compose;
+  intros;
   match goal with
   | [ |- ?f = ?g ] => eapply path_forall; intro x;
       match goal with
@@ -585,13 +633,19 @@ Ltac by_extensionality x :=
     simpl; auto with path_hints
   end.
 
+(** [not tac] is equivalent to [fail tac "succeeds"] if [tac] succeeds, and is equivalent to [idtac] if [tac] fails *)
+Tactic Notation "not" tactic3(tac) :=
+  (tryif tac then fail 0 tac "succeeds" else idtac); (* error if the tactic solved all goals *) [].
+
+(** Test if a tactic succeeds, but always roll-back the results *)
+Tactic Notation "test" tactic3(tac) := tryif not tac then fail 0 tac "fails" else idtac.
+
 (** Removed auto. We can write "by (path_induction;auto with path_hints)"
  if we want to.*)
 Ltac path_induction :=
   intros; repeat progress (
     match goal with
-      | [ p : _ = _  |- _ ] => induction p
-      | _ => idtac
+      | [ p : ?x = ?y  |- _ ] => not constr_eq x y; induction p
     end
   ).
 
@@ -616,20 +670,19 @@ Ltac expand :=
       let X' := eval hnf in X in let Y' := eval hnf in Y in change (X' == Y')
   end; simpl.
 
-(** Test if a tactic succeeds, but always roll-back the results *)
-Tactic Notation "test" tactic3(tac) :=
-  try (first [ tac | fail 2 tac "does not succeed" ]; fail tac "succeeds"; [](* test for [t] solved all goals *)).
-
-(** [not tac] is equivalent to [fail tac "succeeds"] if [tac] succeeds, and is equivalent to [idtac] if [tac] fails *)
-Tactic Notation "not" tactic3(tac) := try ((test tac); fail 1 tac "succeeds").
-
-(** [atomic x] is the same as [idtac] if [x] is a variable or hypothesis, but is [fail 0] if [x] has internal structure. *)
+(** [atomic x] is the same as [idtac] if [x] is a variable or hypothesis, but is [fail 0] if [x] has internal structure.  This is useful, for example, to easily destruct all variables that show up as the discriminees of [match] statements, without destructing more complicated terms whose structures might matter. *)
 Ltac atomic x :=
   idtac;
   match x with
-    | ?f _ => fail 1 x "is not atomic"
-    | (fun _ => _) => fail 1 x "is not atomic"
-    | forall _, _ => fail 1 x "is not atomic"
+    | _ => is_evar x; fail 1 x "is not atomic (evar)"
+    | ?f _ => fail 1 x "is not atomic (application)"
+    | (fun _ => _) => fail 1 x "is not atomic (fun)"
+    | forall _, _ => fail 1 x "is not atomic (forall)"
+    | let x := _ in _ => fail 1 x "is not atomic (let in)"
+    | match _ with _ => _ end => fail 1 x "is not atomic (match)"
+    | _ => is_fix x; fail 1 x "is not atomic (fix)"
+    | _ => is_cofix x; fail 1 x "is not atomic (cofix)"
+    | context[?E] => (* catch-all *) (not constr_eq E x); fail 1 x "is not atomic (has subterm" E ")"
     | _ => idtac
   end.
 

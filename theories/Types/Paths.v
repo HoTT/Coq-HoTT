@@ -150,6 +150,66 @@ Definition equiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
   : (x = y) <~> (x' = y')
   := BuildEquiv _ _ (fun r:x=y => p @ r @ q) _.
 
+Global Instance isequiv_whiskerL {A} {x y z : A} (p : x = y) {q r : y = z}
+: IsEquiv (@whiskerL A x y z p q r).
+Proof.
+  refine (isequiv_adjointify _ _ _ _).
+  - apply cancelL.
+  - intros k. unfold cancelL.
+    rewrite !whiskerL_pp.
+    refine ((_ @@ 1 @@ _) @ whiskerL_pVL p k).
+    + destruct p, q; reflexivity.
+    + destruct p, r; reflexivity.
+  - intros k. unfold cancelL.
+    refine ((_ @@ 1 @@ _) @ whiskerL_VpL p k).
+    + destruct p, q; reflexivity.
+    + destruct p, r; reflexivity.
+Defined.
+
+Definition equiv_whiskerL {A} {x y z : A} (p : x = y) (q r : y = z)
+: (q = r) <~> (p @ q = p @ r)
+  := BuildEquiv _ _ (whiskerL p) _.
+
+Definition equiv_cancelL {A} {x y z : A} (p : x = y) (q r : y = z)
+: (p @ q = p @ r) <~> (q = r)
+  := equiv_inverse (equiv_whiskerL p q r).
+
+Definition isequiv_cancelL {A} {x y z : A} (p : x = y) (q r : y = z)
+  : IsEquiv (cancelL p q r).
+Proof.
+  change (IsEquiv (equiv_cancelL p q r)); exact _.
+Defined.
+
+Global Instance isequiv_whiskerR {A} {x y z : A} {p q : x = y} (r : y = z)
+: IsEquiv (fun h => @whiskerR A x y z p q h r).
+Proof.
+  refine (isequiv_adjointify _ _ _ _).
+  - apply cancelR.
+  - intros k. unfold cancelR.
+    rewrite !whiskerR_pp.
+    refine ((_ @@ 1 @@ _) @ whiskerR_VpR k r).
+    + destruct p, r; reflexivity.
+    + destruct q, r; reflexivity.
+  - intros k. unfold cancelR.
+    refine ((_ @@ 1 @@ _) @ whiskerR_pVR k r).
+    + destruct p, r; reflexivity.
+    + destruct q, r; reflexivity.
+Defined.
+
+Definition equiv_whiskerR {A} {x y z : A} (p q : x = y) (r : y = z)
+: (p = q) <~> (p @ r = q @ r)
+  := BuildEquiv _ _ (fun h => whiskerR h r) _.
+
+Definition equiv_cancelR {A} {x y z : A} (p q : x = y) (r : y = z)
+: (p @ r = q @ r) <~> (p = q)
+  := equiv_inverse (equiv_whiskerR p q r).
+
+Definition isequiv_cancelR {A} {x y z : A} (p q : x = y) (r : y = z)
+  : IsEquiv (cancelR p q r).
+Proof.
+  change (IsEquiv (equiv_cancelR p q r)); exact _.
+Defined.
+
 (** We can use these to build up more complicated equivalences.
 
 In particular, all of the [move] family are equivalences.
@@ -356,29 +416,49 @@ Definition equiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
 : transport P p^ u = v <~> u = transport P p v
 := BuildEquiv _ _ (moveL_transport_p P p u v) _.
 
-Definition isequiv_cancelL {A} {x y z : A} (p : x = y) (q r : y = z)
-  : IsEquiv (cancelL p q r).
+Global Instance isequiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+: IsEquiv (@moveR_equiv_M A B f _ x y).
 Proof.
-  destruct r, p; simpl. apply isequiv_concat_l.
+  unfold moveR_equiv_M.
+  refine (@isequiv_compose _ _ (ap f) _ _ (fun q => q @ eisretr f y) _).
 Defined.
 
-Definition isequiv_cancelR {A} {x y z : A} (p q : x = y) (r : y = z)
-  : IsEquiv (cancelR p q r).
+Definition equiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+  : (x = f^-1 y) <~> (f x = y)
+  := BuildEquiv _ _ (@moveR_equiv_M A B f _ x y) _.
+
+Global Instance isequiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+: IsEquiv (@moveR_equiv_V A B f _ x y).
 Proof.
-  destruct r, p; simpl. apply isequiv_concat_r.
+  unfold moveR_equiv_V.
+  refine (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => q @ eissect f y) _).
 Defined.
 
-Definition equiv_ap_l `(f : A -> B) `{IsEquiv A B f} (x : A) (z : B)
-  : (f x = z) <~> (x = f^-1 z).
+Definition equiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+  : (x = f y) <~> (f^-1 x = y)
+  := BuildEquiv _ _ (@moveR_equiv_V A B f _ x y) _.
+
+Global Instance isequiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+: IsEquiv (@moveL_equiv_M A B f _ x y).
 Proof.
-  transitivity (f x = f (f^-1 z)).
-  apply equiv_concat_r.
-  symmetry.
-  apply (eisretr f).
-  symmetry.
-  apply equiv_ap.
-  assumption.
+  unfold moveL_equiv_M.
+  refine (@isequiv_compose _ _ (ap f) _ _ (fun q => (eisretr f y)^ @ q) _).
 Defined.
+
+Definition equiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+  : (f^-1 y = x) <~> (y = f x)
+  := BuildEquiv _ _ (@moveL_equiv_M A B f _ x y) _.
+
+Global Instance isequiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+: IsEquiv (@moveL_equiv_V A B f _ x y).
+Proof.
+  unfold moveL_equiv_V.
+  refine (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => (eissect f y)^ @ q) _).
+Defined.
+
+Definition equiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+  : (f y = x) <~> (y = f^-1 x)
+  := BuildEquiv _ _ (@moveL_equiv_V A B f _ x y) _.
 
 (** *** Dependent paths *)
 

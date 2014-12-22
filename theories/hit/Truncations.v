@@ -2,7 +2,8 @@
 
 (** * Truncations of types, in all dimensions. *)
 
-Require Import HoTT.Basics Types.Sigma ReflectiveSubuniverse Modality TruncType HProp.
+Require Import HoTT.Basics Types.Sigma TruncType HProp.
+Require Import Modalities.Modality Modalities.Identity.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables A X n.
@@ -28,8 +29,10 @@ Private Inductive Trunc (n : trunc_index) (A :Type) : Type :=
   tr : A -> Trunc n A.
 Bind Scope trunc_scope with Trunc.
 Arguments tr {n A} a.
-(** Make the priority 1, so that we don't override, e.g., [Unit]. *)
-Global Instance istrunc_truncation : forall n A, IsTrunc n (Trunc n A) | 1.
+
+(** Without explicit universe parameters, this instance is insufficiently polymorphic. *)
+Global Instance istrunc_truncation (n : trunc_index) (A : Type@{i})
+: IsTrunc@{j} n (Trunc@{i} n A).
 Admitted.
 
 Definition Trunc_ind {n A}
@@ -45,70 +48,112 @@ Definition Trunc_rec {n A X} `{IsTrunc n X}
   : (A -> X) -> (Trunc n A -> X)
 := Trunc_ind (fun _ => X).
 
-(** Trunc is a modality *)
+(** [Trunc] is a modality *)
+
+(** We will define a truncation modality to be parametrized by a [trunc_index].  However, as described in Modality.v, we don't want to simply define [Truncation_Modalities.Modality] to *be* [trunc_index]; we want to think of the truncation modality as being *derived from* rather than *identical to* its truncation index.  In particular, there is a coercion [O_reflector] from [Modality] to [Funclass], but we don't want Coq to print things like [2 X] to mean [Trunc 2 X].  However, in the special case of truncation, it is nevertheless convenient for [Truncation_Modalities.Modality] to be definitionally equal to [trunc_index], so that we can call modality functions (particularly connectedness functions) passing a truncation index directly.
+
+These may seem like contradictory requirements, but it appears to be possible to satisfy them because coercions don't unfold definitions.  Thus, rather than a record wrapper, we define a *definitional* wrapper [Truncation_Modality] around [trunc_index], and a notation [Tr] for the identity.  We will define [Truncation_Modalities.Modality] to be [Truncation_Modality] and declare the identity as a coercion; thus a [Truncation_Modality] can be used as a modality and therefore also as a function (via the [O_reflector] coercion).  However, the identity from [trunc_index] to [Truncation_Modality] is not a coercion, so we don't get notation like [2 X]. *)
+Definition Truncation_Modality := trunc_index.
+Definition Tr : trunc_index -> Truncation_Modality := idmap.
+
+Module Truncation_Modalities <: Modalities.
+
+  Definition Modality : Type2@{u a} := Truncation_Modality.
+
+  Definition O_reflector (n : Modality@{u u'}) A := Trunc n A.
+
+  Definition inO_internal (n : Modality@{u u'}) A := IsTrunc n A.
+
+  Definition O_inO_internal (n : Modality@{u u'}) A : inO_internal n (O_reflector n A).
+  Proof.
+    unfold inO_internal, O_reflector; exact _.
+  Defined.
+
+  Definition to (n : Modality@{u u'}) A := @tr n A.
+
+  Definition inO_equiv_inO_internal (n : Modality@{u u'})
+             (A B : Type@{i}) Atr f feq
+  := @trunc_equiv A B f n Atr feq.
+
+  Definition hprop_inO_internal `{Funext} (n : Modality@{u u'}) A
+  : IsHProp (inO_internal n A).
+  Proof.
+    unfold inO_internal; exact _.
+  Defined.
+
+  Definition O_ind_internal
+  : forall (n : Modality@{u a})
+           (A : Type@{i}) (B : O_reflector n A -> Type@{j})
+           (B_inO : forall oa, inO_internal@{u a j} n (B oa)),
+      let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
+      let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
+      (forall a, B (to n A a)) -> forall a, B a
+    := @Trunc_ind.
+
+  Definition O_ind_beta_internal (n : Modality@{u u'})
+             A B Btr f a
+  : O_ind_internal n A B Btr f (to n A a) = f a
+    := 1.
+
+  Definition minO_paths (n : Modality@{u a})
+             (A : Type@{i}) (Atr : inO_internal@{u a i} n A) (a a' : A)
+  : inO_internal@{u a i} n (a = a').
+  Proof.
+    unfold inO_internal in *; exact _.
+  Defined.
+
+End Truncation_Modalities.
+
+(** If you import the following module [TrM], then you can call all the modality functions with a [trunc_index] as the modality parameter, since we defined [Truncation_Modalities.Modality] to be [trunc_index]. *)
+Module Import TrM := Modalities_Theory Truncation_Modalities.
+(** If you don't import it, then you'll need to write [TrM.function_name] or [TrM.RSU.function_name] depending on whether [function_name] pertains only to modalities or also to reflective subuniverses.  (Having to know this is a bit unfortunate, but apparently the fact that [TrM] [Export]s reflective subuniverses still doesn't make the fields of the latter accessible as [TrM.field].) *)
+Export TrM.Coercions.
+Export TrM.RSU.Coercions.
+
+(** Here is the additional coercion promised above. *)
+Coercion Truncation_Modality_to_Modality := idmap : Truncation_Modality -> Modality.
 
 Section TruncationModality.
   Context (n : trunc_index).
 
-  Definition Tr : Modality.
-  Proof.
-    refine (Build_Modality
-              (Build_UnitSubuniverse
-                (fun A => IsTrunc n A)
-                (Trunc n)
-                _
-                (@tr n)
-                _)
-              _
-              (@Trunc_ind n)
-              (fun A B B_inO f a => 1)
-              _); cbn; try exact _.
-    intros A B ? f ?; cbn in *.
-    refine (trunc_equiv _ f); exact _.
-  Defined.
-
   Definition trunc_iff_isequiv_truncation (A : Type)
   : IsTrunc n A <-> IsEquiv (@tr n A)
-  := @inO_iff_isequiv_to_O Tr _ A.
+  := inO_iff_isequiv_to_O n A.
 
   Global Instance isequiv_tr A `{IsTrunc n A} : IsEquiv (@tr n A)
   := fst (trunc_iff_isequiv_truncation A) _.
 
   Definition equiv_tr (A : Type) `{IsTrunc n A}
-  : A <~> Trunc n A
+  : A <~> Tr n A
   := BuildEquiv _ _ (@tr n A) _.
 
   Definition untrunc_istrunc {A : Type} `{IsTrunc n A}
-  : Trunc n A -> A
+  : Tr n A -> A
   := (@tr n A)^-1.
 
   (** ** Functoriality *)
 
-  (* This ought to be [O_functor], but currently that would be insufficiently universe polymorphic. *)
-  Definition Trunc_functor {X Y} (f : X -> Y)
-  : Trunc n X -> Trunc n Y
-  := Trunc_rec (tr o f).
+  Definition Trunc_functor {X Y : Type} (f : X -> Y)
+  : Tr n X -> Tr n Y
+  := O_functor n f.
 
   Definition Trunc_functor_compose {X Y Z} (f : X -> Y) (g : Y -> Z)
   : Trunc_functor (g o f) == Trunc_functor g o Trunc_functor f
-  := O_functor_compose Tr f g.
+  := O_functor_compose n f g.
 
   Definition Trunc_functor_idmap (X : Type)
   : @Trunc_functor X X idmap == idmap
-  := O_functor_idmap Tr X.
+  := O_functor_idmap n X.
 
   Definition isequiv_Trunc_functor {X Y} (f : X -> Y) `{IsEquiv _ _ f}
   : IsEquiv (Trunc_functor f)
-  := isequiv_O_functor Tr f.
+  := isequiv_O_functor n f.
 
   Definition equiv_Trunc_prod_cmp `{Funext} {X Y}
-  : Trunc n (X * Y) <~> Trunc n X * Trunc n Y
-  := equiv_O_prod_cmp Tr X Y.
+  : Tr n (X * Y) <~> Tr n X * Tr n Y
+  := equiv_O_prod_cmp n X Y.
 
 End TruncationModality.
-
-(** This coercion allows us to use truncation indices where a modality is expected and refer to the corresponding truncation modality.  For instance, the general theory of O-connected maps specializes to the theory of n-connected maps. *)
-Coercion Tr : trunc_index >-> Modality.
 
 (** We have to teach Coq to translate back and forth between [IsTrunc n] and [In (Tr n)]. *)
 Global Instance inO_tr_istrunc {n : trunc_index} (A : Type) `{IsTrunc n A}
@@ -127,18 +172,22 @@ Defined.
 (* Instead, we make the latter an immediate instance. *)
 Hint Immediate istrunc_inO_tr : typeclass_instances.
 
-(* Unfortunately, this isn't perfect; Coq still can't always find [In Tr] hypotheses in the context when it wants [IsTrunc]. *)
+(* Unfortunately, this isn't perfect; Coq still can't always find [In n] hypotheses in the context when it wants [IsTrunc]. *)
 
 
 (** It's sometimes convenient to use "infinity" to refer to the identity modality in a similar way.  This clashes with some uses in higher topos theory, where "oo-truncated" means instead "hypercomplete", but this has not yet been a big problem. *)
-Notation oo := identity_modality.
+Notation oo := purely.
+(** Unfortunately, we can't import two or more copies of [Modalities_Theory] at the same time (the most recently imported shadows the other(s)).  If we ever want to talk about truncation and include [oo], we may want to define a "union" instance of [Modality]. *)
 
 (** ** A few special things about the (-1)-truncation. *)
 
 Local Open Scope trunc_scope.
 
-(** This definition is doubly sneaky.  Firstly, we define [merely A] to be an inhabitant of the universe [hProp] of hprops, rather than a type.  We can always treat it as a type because there is a coercion, but this means that if we need an element of [hProp] then we don't need a separate name for it.  Secondly, rather than define it as [Trunc -1] we define it as [Tr -1], the action of the truncation modality.  These are of course judgmentally equal, but choosing the latter means that Coq has an easier time applying general modality theorems to it. *)
-Definition merely A : hProp := BuildhProp (Tr -1 A).
+(** We define [merely A] to be an inhabitant of the universe [hProp] of hprops, rather than a type.  We can always treat it as a type because there is a coercion, but this means that if we need an element of [hProp] then we don't need a separate name for it. *)
+
+Definition merely (A : Type@{i}) : hProp@{i} := BuildhProp (Trunc -1 A).
+
+(** Note that we define [merely] using [Trunc -1] rather than [Tr -1].  These are of course judgmentally equal, but our choice introduces fewer universe parameters, resulting in faster compilation times.  The other choice might in theory give Coq an easier time applying general modality theorems to [merely], but currently things seem to be transparent enough that it doesn't matter. *)
 
 Definition hexists {X} (P : X -> Type) : hProp := merely (sigT P).
 

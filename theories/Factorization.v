@@ -3,7 +3,7 @@
 (** * Factorizations and factorization systems. *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp UnivalenceImpliesFunext.
+Require Import HProp UnivalenceImpliesFunext Extensions.
 Require Import HoTT.Tactics.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -35,9 +35,6 @@ Section Factorization.
   Proof.
     issig Build_Factorization intermediate factor1 factor2 fact_factors inclass1 inclass2.
   Defined.
-
-  (* This enables [simpl rewrite] to unfold [compose]. *)
-  Local Arguments compose / .
 
   (** A path between factorizations is equivalent to a structure of the following sort. *)
   Record PathFactorization {fact fact' : Factorization} :=
@@ -95,7 +92,7 @@ Section Factorization.
       refine (transport_arrow_toconst (B := idmap) _ _ a @ _).
       etransitivity; [ apply ap, transport_path_universe_V | ].
       etransitivity; [ apply ff2 | ].
-      unfold compose; apply ap.
+      apply ap.
       apply eisretr.
     Defined.
 
@@ -121,28 +118,28 @@ Section Factorization.
       (* Here is a fairly obvious beginning. *)
       rewrite (ap_transport_arrow_toconst (B := idmap) (C := B)).
       (* Now we set up for a naturality *)
-      simpl rewrite (@ap_compose _ _ _ (transport idmap (path_universe II)^)
-                                 (factor2 fact)).
+      rewrite (ap_compose (transport idmap II'^) (factor2 fact)).
+      unfold II'.
       rewrite <- ap_p_pp; rewrite_moveL_Mp_p.
       (* We need to supply [ff2] here or else it will rewrite in the wrong place. *)
-      simpl rewrite (concat_Ap ff2).
+      rewrite (concat_Ap ff2).
       (* Next is another naturality  *)
-      simpl rewrite ap_compose.
-      simpl rewrite <- ap_p_pp.
+      rewrite ap_compose.
+      rewrite <- ap_p_pp.
       repeat rewrite (ap_pp (transport idmap (path_universe II)^)).
       rewrite concat_pA_p.
       (* And another one *)
       repeat rewrite (ap_pp II).
-      rewrite <- (ap_compose (II^-1) II); unfold compose.
+      rewrite <- (ap_compose (II^-1) II).
       rewrite (concat_pA1_p (eisretr II) (ff1 a)).
       (* Now we use the triangle identity of our equivalence [II]. *)
       rewrite (ap_pp (factor2 fact')).
-      unfold compose; rewrite eisadj.
+      rewrite eisadj.
       (* And one more naturality *)
       repeat rewrite concat_p_pp.
       repeat rewrite <- ap_pp.
       rewrite <- ap_compose.
-      simpl rewrite <- (concat_Ap ff2).
+      rewrite <- (concat_Ap ff2).
       rewrite_moveL_Mp_p.
       (* Finally we can use [fff]! *)
       refine (_ @ (fff a)^).
@@ -181,10 +178,9 @@ Section Factorization.
       rewrite ap_apply_l, ap10_path_arrow.
       rewrite transport_sigma_'; cbn.
       rewrite transport_forall_constant, transport_paths_Fl.
-      simpl rewrite (@ap_compose _ _ _
-                                 (fun g:A->intermediate fact' => g a)
-                                 (fun x => transport (fun X => X -> B) (path_universe II)
-                                                     (factor2 fact) x)).
+      rewrite (ap_compose (fun g:A->intermediate fact' => g a)
+                          (fun x => transport (fun X => X -> B) (path_universe II)
+                                              (factor2 fact) x)).
       rewrite ap_apply_l, ap10_path_arrow.
       (* Finally we can apply our monster lemma [fff']. *)
       do 2 apply moveR_Vp; repeat rewrite concat_p_pp.
@@ -304,7 +300,7 @@ Section FactSys.
   Let gf : g2 o g1 == g := fact_factors (factor factsys g).
 
   (** Now we observe that [p o f2] and [f1], and [g2] and [g1 o i], are both factorizations of the common diagonal of the commutative square (for which we use [p o f], but we could equally well use [g o i]. *)
-  Let fact  : Factorization (@class1 factsys) (@class2 factsys) (p o f) 
+  Let fact  : Factorization (@class1 factsys) (@class2 factsys) (p o f)
             := Build_Factorization' (p o f) C f1 (p o f2)
                  (fun a => ap p (ff a))
                  (inclass1 (factor factsys f))
@@ -334,7 +330,7 @@ Section FactSys.
   Definition lift_factsys_tri1 : lift_factsys o i == f.
   Proof.
     intros x.
-    refine (ap (f2 o q^-1) (q1 x)^ @ _); unfold compose.
+    refine (ap (f2 o q^-1) (q1 x)^ @ _).
     transitivity (f2 (f1 x)).
     + apply ap, eissect.
     + apply ff.
@@ -343,15 +339,11 @@ Section FactSys.
   Definition lift_factsys_tri2 : p o lift_factsys == g.
   Proof.
     intros x.
-    refine (q2 _ @ _); unfold compose.
+    refine (q2 _ @ _).
     transitivity (g2 (g1 x)).
     + apply ap, eisretr.
     + apply gf.
   Defined.
-
-  (* Enable [simpl rewrite] to unfold [compose] and [lift_factsys] in the following proof.  It may not be obvious from the proof that the latter is necessary, but [lift_factsys] appears in the invisible implicit point-arguments of [paths].  One way to discover issues of that sort is to turn on printing of all implicit argumnets with [Set Printing All]; another is to use [Set Debug Tactic Unification] and inspect the output to see what [rewrite] is trying and failing to unify. *)
-  Local Arguments compose / .
-  Local Arguments lift_factsys / .
 
   (** And finally prove that these two triangles compose to the given commutative square. *)
   Definition lift_factsys_square (x : A)
@@ -370,19 +362,21 @@ Section FactSys.
     repeat rewrite concat_pp_p; apply whiskerL.
     repeat rewrite concat_p_pp; apply whiskerR.
     (* Next we set up for a naturality. *)
-    rewrite ap_compose, <- ap_pp, <- inv_pp.
-    simpl rewrite <- ap_pp.
+    rewrite (ap_compose q^-1 f2), <- ap_pp, <- inv_pp.
+    (* The next line appears to do nothing, but in fact it is necessary for the subsequent [rewrite] to succeed, because [lift_factsys] appears in the invisible implicit point-arguments of [paths].  One way to discover issues of that sort is to turn on printing of all implicit argumnets with [Set Printing All]; another is to use [Set Debug Tactic Unification] and inspect the output to see what [rewrite] is trying and failing to unify. *)
+    unfold lift_factsys.
+    rewrite <- ap_pp.
     rewrite <- ap_V, <- ap_compose.
-    simpl rewrite (concat_Ap q2).
+    rewrite (concat_Ap q2).
     (* Now we can cancel another path *)
     rewrite concat_pp_p; apply whiskerL.
     (* And set up for an application of [ap]. *)
-    simpl rewrite ap_compose.
-    simpl rewrite <- ap_pp.
+    rewrite ap_compose.
+    rewrite <- ap_pp.
     apply ap.
     (* Now we apply the triangle identity [eisadj]. *)
     rewrite inv_pp, ap_pp, ap_V.
-    simpl rewrite <- eisadj.
+    rewrite <- eisadj.
     (* Finally, we rearrange and it becomes a naturality square. *)
     rewrite concat_pp_p; apply moveR_Vp.
     rewrite <- ap_V, inv_V, <- ap_compose.
@@ -391,75 +385,6 @@ Section FactSys.
   Qed.
 
 End FactSys.
-
-(** ** Extensions
-
-An equivalent way to state the above lifting property is that sections of families whose first projection is in [class2] extend along maps in [class1].  This is equivalently the existence of fillers for commutative squares, restricted to the case where the bottom of the square is the identity; type-theoretically, this approach is sometimes more convenient. *)
-
-Section Extensions.
-  Context {ua : Univalence}.
-
-  (* TODO: consider naming for [ExtensionAlong] and subsequent lemmas.  As a name for the type itself, [Extension] or [ExtensionAlong] seems great; but resultant lemma names such as [path_extension] (following existing naming conventions) are rather misleading. *)
-
-  (** This elimination rule (and others) can be seen as saying that, given a fibration over the codomain and a section of it over the domain, there is some *extension* of this to a section over the whole domain. *)
-  Definition ExtensionAlong {A B : Type} (f : A -> B)
-             (P : B -> Type) (d : forall x:A, P (f x))
-    := { s : forall y:B, P y & forall x:A, s (f x) = d x }.
-
-  Definition path_extension {A B : Type} {f : A -> B}
-             {P : B -> Type} {d : forall x:A, P (f x)}
-             (ext ext' : ExtensionAlong f P d)
-  : (ExtensionAlong f
-                    (fun y => pr1 ext y = pr1 ext' y)
-                    (fun x => pr2 ext x @ (pr2 ext' x)^))
-    -> ext = ext'.
-  Proof.
-    (* Note: written with liberal use of [compose], to facilitate later proving that it’s an equivalance. *)
-    apply (compose (path_sigma_uncurried _ _ _)).
-    apply (functor_sigma (path_forall (ext .1) (ext' .1))). intros p.
-    apply (compose (path_forall _ _)). unfold pointwise_paths.
-    apply (functor_forall idmap). intros x.
-    apply (compose (B := (p (f x))^ @ (ext .2 x) = (ext' .2 x))).
-    apply concat.
-    transitivity ((apD10 (path_forall _ _ p) (f x))^ @ ext .2 x).
-    assert (transp_extension : forall p : ext .1 = ext' .1,
-                                 (transport (fun (s : forall y : B, P y) => forall x : A, s (f x) = d x)
-                                            p (ext .2) x
-                                  = ((apD10 p (f x))^ @ ext .2 x))).
-    destruct ext as [g gd], ext' as [g' gd']; simpl.
-    intros q; destruct q; simpl.
-    apply inverse, concat_1p.
-    apply transp_extension.
-    apply whiskerR, ap, apD10_path_forall.
-    apply (compose (moveR_Vp _ _ _)).
-    apply (compose (moveL_pM _ _ _)).
-    exact inverse.
-  Defined.
-
-  Global Instance isequiv_path_extension {A B : Type} {f : A -> B}
-         {P : B -> Type} {d : forall x:A, P (f x)}
-         (ext ext' : ExtensionAlong f P d)
-  : IsEquiv (path_extension ext ext') | 0.
-  Proof.
-    apply @isequiv_compose.
-    2: apply @isequiv_path_sigma.
-    apply @isequiv_functor_sigma.
-    apply @isequiv_path_forall.
-    intros a. apply @isequiv_compose.
-    2: apply @isequiv_path_forall.
-    apply (@isequiv_functor_forall _).
-    apply isequiv_idmap.
-    intros x. apply @isequiv_compose.
-    apply @isequiv_compose.
-    apply @isequiv_compose.
-    apply isequiv_path_inverse.
-    apply isequiv_moveL_pM.
-    apply isequiv_moveR_Vp.
-    apply isequiv_concat_l.
-  Qed.
-  (** Note: opaque, since this term is big enough that using its computational content will probably be pretty intractable. *)
-
-End Extensions.
 
 Section FactsysExtensions.
   Context {factsys : FactorizationSystem} {ua : Univalence}.

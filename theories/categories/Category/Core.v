@@ -5,7 +5,6 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-Global Set Primitive Projections.
 
 Delimit Scope morphism_scope with morphism.
 Delimit Scope category_scope with category.
@@ -143,9 +142,6 @@ End identity_unique.
 
 (** Make a separate module for Notations, which can be exported/imported separately. *)
 Module Export CategoryCoreNotations.
-  (** We have notations for both the eta-expanded and non-eta-expanded
-      forms. *)
-  Infix "o" := (@compose _ _ _ _) : morphism_scope.
   Infix "o" := compose : morphism_scope.
   (** Perhaps we should consider making this notation more global. *)
   (** Perhaps we should pre-reserve all of the notations. *)
@@ -155,12 +151,6 @@ Module Export CategoryCoreNotations.
 End CategoryCoreNotations.
 
 (** We have a tactic for trying to run a tactic after associating morphisms either all the way to the left, or all the way to the right *)
-(** We must first eta-contract primitive projections so that [rewrite] works *)
 Tactic Notation "try_associativity_quick" tactic(tac) :=
-  repeat match goal with
-           | [ |- context[@compose ?C ?s ?d ?d' ?m1 ?m2] ]
-             => progress change (@compose C s d d' m1 m2)
-                with (compose (C := C) (s := s) (d := d) (d' := d') m1 m2)
-         end;
   first [ rewrite <- ?associativity; tac
         | rewrite -> ?associativity; tac ].

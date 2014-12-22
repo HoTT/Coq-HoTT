@@ -15,12 +15,10 @@ Local Open Scope functor_scope.
 Section pointwise.
   Context `{Funext}.
 
-  Variable C : PreCategory.
-  Variable C' : PreCategory.
+  Variables C C' : PreCategory.
   Variable F : Functor C' C.
 
-  Variable D : PreCategory.
-  Variable D' : PreCategory.
+  Variables D D' : PreCategory.
   Variable G : Functor D D'.
 
   Local Notation pointwise_object_of H := (G o H o F : object (C' -> D')).

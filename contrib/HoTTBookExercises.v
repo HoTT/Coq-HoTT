@@ -32,7 +32,7 @@ Local Open Scope equiv_scope.
 (* ================================================== ex:composition *)
 (** Exercise 1.1 *)
 
-Definition Book_1_1 := @compose.
+Definition Book_1_1 := (fun (A B C : Type) (f : A -> B) (g : B -> C) => g o f).
 
 Theorem Book_1_1_refl : forall (A B C D : Type) (f : A -> B) (g : B -> C) (h : C -> D),
                           h o (g o f) = (h o g) o f.
@@ -1037,13 +1037,13 @@ End Book_7_1.
 (* ================================================== ex:double-negation-modality *)
 (** Exercise 7.12 *)
 
-Definition Book_7_12 := @HoTT.Modality.notnot_modality.
+Definition Book_7_12 := HoTT.Modalities.Notnot.Notnot.
 
 (* ================================================== ex:prop-modalities *)
 (** Exercise 7.13 *)
 
-Definition Book_7_13_part_i := @HoTT.hit.PropositionalFracture.open_modality.
-Definition Book_7_13_part_ii := @HoTT.hit.PropositionalFracture.closed_modality.
+Definition Book_7_13_part_i := @HoTT.Modalities.Open.Op.
+Definition Book_7_13_part_ii := @HoTT.Modalities.Closed.Cl.
 
 (* ================================================== ex:f-local-type *)
 (** Exercise 7.14 *)

@@ -11,14 +11,12 @@ Local Open Scope category_scope.
 Local Open Scope morphism_scope.
 
 (** ** Definition of isomorphism *)
-Local Unset Primitive Projections. (* https://coq.inria.fr/bugs/show_bug.cgi?id=3624 *)
 Class IsIsomorphism {C : PreCategory} {s d} (m : morphism C s d) :=
   {
     morphism_inverse : morphism C d s;
     left_inverse : morphism_inverse o m = identity _;
     right_inverse : m o morphism_inverse = identity _
   }.
-Local Set Primitive Projections.
 
 Arguments morphism_inverse {C s d} m {_}.
 

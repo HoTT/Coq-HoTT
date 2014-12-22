@@ -8,8 +8,7 @@ Set Asymmetric Patterns.
 
 (** ** Definition of [+] for categories *)
 Section internals.
-  Variable C : PreCategory.
-  Variable D : PreCategory.
+  Variables C D : PreCategory.
 
   Definition sum_morphism (s d : C + D) : Type
     := match s, d with

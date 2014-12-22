@@ -27,3 +27,8 @@ Definition set_cat `{Funext} : PreCategory := cat_of hSet.
 Global Instance isstrict_prop_cat `{Univalence}
 : IsStrictCategory prop_cat
   := _.
+
+(** Because, e.g., [@identity set_cat x ≡ x], and we want [rewrite] to
+    notice this, we must inform it that it can try treating [identity]
+    as [idmap]. *)
+Declare Equivalent Keys identity idmap.

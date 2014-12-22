@@ -34,9 +34,7 @@ End Swap.
 (** ** [A * (B * C) ≅ (A * B) * C] *)
 Module Associativity.
   Section associativity.
-    Variable A : PreCategory.
-    Variable B : PreCategory.
-    Variable C : PreCategory.
+    Variables A B C : PreCategory.
 
     Definition functor : Functor (A * (B * C)) ((A * B) * C)
       := (fst * (fst o snd)) * (snd o snd).
