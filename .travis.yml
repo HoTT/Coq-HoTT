@@ -12,12 +12,12 @@ branches:
 env:
 
  matrix:
-   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS="yes" BUILD_COQ="yes"
-   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC="yes"  UPDATE_AUTOGEN="yes"  UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"
-   - UPDATE_HTML="yes"    WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"
-   - UPDATE_HTML=""       WITH_AUTORECONF=""     UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"
-   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ=""
-   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS="yes" BUILD_COQ="yes"  UPDATE_OPAM=""
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC="yes"  UPDATE_AUTOGEN="yes"  UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM="yes"
+   - UPDATE_HTML="yes"    WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""
+   - UPDATE_HTML=""       WITH_AUTORECONF=""     UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ=""     UPDATE_OPAM=""
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""
 
  global:
 # encrypted version of deploy key for pushing
@@ -36,6 +36,7 @@ before_script:
  - uname -a
  - ./etc/ci/before_script.sh
  - source ./etc/ci/travis_keep_alive.sh
+ - export COMMITISH="$(git rev-list HEAD -1)"
 
 
 # we must run make at the end, because the success of

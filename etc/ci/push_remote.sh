@@ -12,7 +12,7 @@ ROOT_DIR="$(git rev-parse --show-toplevel)"
 pushd "$ROOT_DIR" 1>/dev/null
 
 if [ -z "$OAUTH_TOKEN" ]; then
-    echo 'Error: Not making html because $OAUTH_TOKEN is empty'
+    echo 'Error: Not pushing because $OAUTH_TOKEN is empty'
     exit 1
 fi
 
