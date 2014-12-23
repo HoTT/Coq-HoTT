@@ -27,7 +27,7 @@ env:
 matrix:
   fast_finish: true
   allow_failures:
-    - env: UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ=""
+    - env: UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ=""     UPDATE_OPAM=""
 
 
 

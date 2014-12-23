@@ -22,7 +22,7 @@ git config --global user.email "Travis-CI-Bot@travis.fake"
 
 export MESSAGE="Bump HoTT Coq for $COMMITISH"
 
-export COQ_COMMITISH="$(cd coq-HoTT/ && git rev-list HEAD -1)"
+export COQ_COMMITISH="$(cd coq-HoTT/ && git rev-parse HEAD)"
 
 git clone https://github.com/coq/repo-coqs.git || exit $?
 echo "http: \"https://github.com/coq/coq/archive/$COQ_COMMITISH.tar.gz\"" > repo-coqs/packages/coq.hott/url
