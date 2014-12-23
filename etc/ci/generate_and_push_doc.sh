@@ -32,9 +32,9 @@ export MESSAGE="Autoupdate documentation with coqdoc and proviola and time2html
 Generated with \`make html proviola\`"
 
 echo '$ make html'
-make html
-make proviola -j4 -k
-make timing-html
+make html || exit $?
+make proviola -j4 -k; make proviola || exit $?
+make timing-html || exit $?
 mv proviola-html proviola-html-bak
 mv timing-html timing-html-bak
 git remote update
