@@ -155,7 +155,7 @@ Section Functor_Pullback.
     refine (equiv_compose' _
               (equiv_transport (hfiber (fun e0 => (p b1 @ ap h e0) @ (q c1)^)) _ _
                                (transport_paths_Fr e3^ _))).
-    unfold functor_hfiber, compose; simpl.
+    unfold functor_hfiber; simpl.
     refine (equiv_compose'
               (equiv_concat_l (transport_sigma' e2 _) _) _); simpl.
     refine (equiv_compose' (equiv_path_sigma _ _ _) _); simpl.

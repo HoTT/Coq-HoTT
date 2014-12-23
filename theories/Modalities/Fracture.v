@@ -7,8 +7,6 @@ Require Import HoTT.Tactics.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
-Local Arguments compose / .
-
 (** * The lex-modal fracture theorem *)
 
 (** The fracture theorem for two modalities [O1] and [O2] and a type [A], when it holds, states that the naturality square

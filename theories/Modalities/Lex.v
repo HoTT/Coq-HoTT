@@ -82,7 +82,7 @@ Module Lex_Modalities_Theory (Os : Modalities).
              _ _ _).
     (** This *seems* like it ought to be the easier goal, but it turns out to involve lots of naturality wrangling.  If we ever want to make real use of this theorem, we might want to separate out this goal into an opaque lemma so we could make the main theorem transparent. *)
     - intros [b [c e]];
-        unfold compose, functor_pullback, functor_sigma, pullback_corec;
+        unfold functor_pullback, functor_sigma, pullback_corec;
         simpl.
       refine (path_sigma' _ (to_O_natural O pullback_pr1 (b;(c;e)))^ _).
       rewrite transport_sigma'; simpl.
