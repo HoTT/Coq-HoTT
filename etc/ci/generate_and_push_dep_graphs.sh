@@ -21,6 +21,8 @@ if [ -z "$UPDATE_DEP_GRAPHS" ]; then
     exit 0
 fi
 
+COMMITISH="$(git rev-parse HEAD)"
+
 EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 
 echo 'Configuring git for pushing...'
@@ -49,7 +51,7 @@ git commit -m "$MESSAGE"
 "$DIR"/push_remote_tmp.sh gh-pages:gh-pages $EXTRA_ARGS
 
 # checkout the original commit
-echo '$ git checkout HEAD@{2}'
-git checkout HEAD@{2} -f
+echo '$ git checkout '"$COMMITISH"
+git checkout "$COMMITISH" -f
 
 popd 1>/dev/null

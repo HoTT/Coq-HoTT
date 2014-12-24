@@ -16,5 +16,6 @@ cd "$ROOT_DIR"
 "$DIR"/generate_and_push_quick_doc.sh "$@" || exit $?
 "$DIR"/generate_and_push_dep_graphs.sh "$@" || exit $?
 "$DIR"/autogen_and_push.sh "$@" || exit $?
+"$DIR"/update_opam.sh "$@" || exit $?
 
 popd 1>/dev/null
