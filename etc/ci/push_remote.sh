@@ -18,7 +18,10 @@ fi
 
 echo "Updating ~/.netrc file"
 echo >> ~/.netrc
+# don't leak the OAUTH Token
+set +x
 echo "machine github.com login $OAUTH_TOKEN" >> ~/.netrc
+set -x
 
 echo "Configuring git for commit"
 git config --global user.name "Travis-CI Bot"
