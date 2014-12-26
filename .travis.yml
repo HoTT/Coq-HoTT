@@ -21,7 +21,7 @@ env:
 
  global:
 # encrypted version of deploy key for pushing
-    - secure: "ZY1D8tDl+rA5w99l1AL07iXEFUFJDk/PS/z5eGYjK+iAE8/+E7B9RgX042BYIWpqV+hkUL5qW1P5PDW9Q3hwjmCYHE5r9OMLFsrMj5W9Gldvh7iLPiePEOr3erXjute90m1+y0jIg2zgE+nvQu1KewZ6wBYi8TGvnoaqVi8xkRE="
+    - secure: "Cm2e4Tvpm+sPTGXZV1ztSA81+PXjYCKOm0rqsfPVZprHSpucP6wbn+6HYJxbrbsI6UIE90/MhEpYScQLVR4OfpOKEQCTdWFMBi0uwhYRygeizdApY4pn/yHR6+pqSm7g5ZF5qOFVUDi48gimVeCgs7hoEEb1Ka8ucaI7Oo0q0f8="
 
 
 matrix:
