@@ -11,6 +11,9 @@ pushd "$DIR" 1>/dev/null
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 pushd "$ROOT_DIR" 1>/dev/null
 
+# don't leak the OAUTH Token
+set +x
+
 if [ -z "$OAUTH_TOKEN" ]; then
     echo 'Error: Not pushing because $OAUTH_TOKEN is empty'
     exit 1
@@ -18,8 +21,6 @@ fi
 
 echo "Updating ~/.netrc file"
 echo >> ~/.netrc
-# don't leak the OAUTH Token
-set +x
 echo "machine github.com login $OAUTH_TOKEN" >> ~/.netrc
 set -x
 

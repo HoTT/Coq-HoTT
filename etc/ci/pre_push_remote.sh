@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PS4='$ '
-set -x
+set +x
 
 if [ -z "$OAUTH_TOKEN" ]; then
     echo 'Error: Not pushing because $OAUTH_TOKEN is empty'
