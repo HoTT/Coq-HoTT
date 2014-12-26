@@ -25,7 +25,12 @@ export MESSAGE="Bump HoTT Coq for $COMMITISH"
 export COQ_COMMITISH="$(cd coq-HoTT/ && git rev-parse HEAD)"
 
 git clone https://github.com/coq/repo-coqs.git || exit $?
-echo "http: \"https://github.com/coq/coq/archive/$COQ_COMMITISH.tar.gz\"" > repo-coqs/packages/coq.hott/url
+NEW_URL="http: \"https://github.com/coq/coq/archive/$COQ_COMMITISH.tar.gz\""
+if [ ! -z "$(grep "$NEW_URL" repo-coqs/packages/coq.hott/url)" ]; then
+    echo "opam up to date"
+    exit 0
+fi
+echo "$NEW_URL" > repo-coqs/packages/coq.hott/url
 
 cd repo-coqs || exit $?
 git add -f packages/coq.hott/url || exit $?
