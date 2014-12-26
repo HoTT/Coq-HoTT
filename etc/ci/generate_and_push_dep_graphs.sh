@@ -17,7 +17,7 @@ cp "$DIR"/{push_remote,push_remote_tmp}.sh
 
 
 if [ -z "$UPDATE_DEP_GRAPHS" ]; then
-    echo 'Not making quick doc becuase $UPDATE_DEP_GRAPHS variable not set.'
+    echo 'Not making dep graphs becuase $UPDATE_DEP_GRAPHS variable not set.'
     exit 0
 fi
 
