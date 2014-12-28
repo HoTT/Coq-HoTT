@@ -22,7 +22,7 @@ Module Lex_Modalities_Theory (Os : Modalities).
                              IsConnected@{u a i} O A ->
                              IsConnected@{u a i} O (x = y).
 
-  Existing Instance isconnected_paths.
+  Global Existing Instance isconnected_paths.
 
   (** The next six lemmas are equivalent characterizations of lex-ness. *)
 

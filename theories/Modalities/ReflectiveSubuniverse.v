@@ -507,7 +507,7 @@ Section Reflective_Subuniverse.
     Defined.
 
     (** Strangely, even this seems to cause infinite loops *)
-    (** Hint Immediate isequiv_O_inverts : typeclass_instances. *)
+    (** [Hint Immediate isequiv_O_inverts : typeclass_instances.] *)
 
     Definition equiv_O_inverts {A B : Type} `{In O A} `{In O B}
       (f : A -> B) `{O_inverts f}

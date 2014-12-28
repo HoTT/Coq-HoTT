@@ -36,6 +36,7 @@ Section Extensions.
              (P : B -> Type@{p}) (d : forall x:A, P (f x))
   : ExtensionAlong@{a b p m1 n1} f P d -> ExtensionAlong@{a b p m2 n2} f P d
     := fun ext => (ext.1 ; ext.2).
+  Check lift_extensionalong@{a b p m1 n1 m2 n2}.
   (** We called it [lift_extensionalong], but in fact it doesn't require the new universes to be bigger than the old ones, only that they both satisfy the max condition. *)
   Definition lower_extensionalong {A : Type@{a}} {B : Type@{b}} (f : A -> B)
              (P : B -> Type@{p}) (d : forall x:A, P (f x))
@@ -118,6 +119,7 @@ Section Extensions.
       + intros g; exact (lift_extensionalong _ _ _ (fst ext g)).
       + intros h k; exact (IH _ (snd ext h k)).
   Defined.
+  Check lift_extendablealong@{i j k l1 l2}.
 
   Definition lower_extendablealong
              (n : nat) {A : Type@{i}} {B : Type@{j}}
@@ -321,6 +323,7 @@ Section Extensions.
              (f : A -> B) (C : B -> Type@{k})
   : ooExtendableAlong@{i j k l1} f C -> ooExtendableAlong@{i j k l2} f C
     := fun ext n => lift_extendablealong n f C (ext n).
+  Check lift_ooextendablealong@{i j k l1 l2}.
 
   Definition lower_ooextendablealong
              {A : Type@{i}} {B : Type@{j}}

@@ -260,12 +260,10 @@ Module Accessible_Restriction_ReflectiveSubuniverses
        (Acc : Accessible_ReflectiveSubuniverses Os)
        (Res : ReflectiveSubuniverses_Restriction_Data Os).
 
-  Module New <: ReflectiveSubuniverses
+  Module Import New <: ReflectiveSubuniverses
     := ReflectiveSubuniverses_Restriction Os Res.
 
   Module Accessible_New <: Accessible_ReflectiveSubuniverses New.
-
-    Import New.
 
     Definition acc_gen : New.ReflectiveSubuniverse@{u a} -> LocalGenerators@{a}
       := fun O => Acc.acc_gen (Res.ReflectiveSubuniverses_restriction O).
@@ -286,12 +284,10 @@ Module Accessible_Restriction_Modalities
        (Acc : Accessible_Modalities Os)
        (Res : Modalities_Restriction_Data Os).
 
-  Module New <: Modalities
+  Module Import New <: Modalities
     := Modalities_Restriction Os Res.
 
   Module Accessible_New <: Accessible_Modalities New.
-
-    Import New.
 
     Definition acc_gen : New.Modality@{u a} -> NullGenerators@{a}
       := fun O => Acc.acc_gen (Res.Modalities_restriction O).

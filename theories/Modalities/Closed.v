@@ -151,7 +151,7 @@ Module Accessible_ClosedModalities
 
 End Accessible_ClosedModalities.
 
-(** In fact, it is topological, and therefore (assuming univalence) lex.  As for topological modalities generally, we don't need to declare these as global instances, but we prove them here as local instaces for exposition. *)
+(** In fact, it is topological, and therefore (assuming univalence) lex.  As for topological modalities generally, we don't need to declare these as global instances, but we prove them here as local instances for exposition. *)
 Module Import ClT :=
   Topological_Modalities_Theory
     ClosedModalities
