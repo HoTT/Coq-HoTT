@@ -13,10 +13,11 @@ Local Open Scope path_scope.
 (** ** Universal mapping properties *)
 
 Global Instance contr_from_Empty {_ : Funext} (A : Type) :
-  Contr (Empty -> A) :=
-  BuildContr _
-             (Empty_ind (fun _ => A))
-             (fun f => path_forall _ f (fun x => Empty_ind _ x)).
+  Contr (Empty -> A).
+Proof.
+  refine (BuildContr (Empty -> A) (Empty_rec A) _).
+  intros f; apply path_forall; intros x; elim x.
+Defined.  
 
 (** ** Behavior with respect to truncation *)
 
