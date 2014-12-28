@@ -225,7 +225,7 @@ Global Instance ispreidem_preidem {X : Type} (f : PreIdempotent X)
 : IsPreIdempotent f
   := f.2.
 
-(** The identity has a canonical structure of pre-idempotent. *)
+(** The identity function has a canonical structure of a pre-idempotent. *)
 Global Instance ispreidem_idmap (X : Type) : @IsPreIdempotent X idmap
   := fun _ => 1.
 
@@ -236,7 +236,7 @@ Defined.
 
 (** *** Quasi-idempotents *)
 
-(* However, homotopically we may naturally expect to need some coherence on the witness [isidem] of idempotency.  And indeed, in homotopy theory there are pre-idempotents which do not split; we will see an example later on.  We expect a "coherent idempotent" to involve infinitely many data.  However, Lemma 7.3.5.14 of *Higher Algebra* suggests that for an idempotent to admit *some* coherentification, hence also a splitting, it suffices to have *one* additional datum.  By modifying the construction given there, we can show similarly in type theory that any idempotent satisfying an additional coherence datum splits.  We will call a pre-idempotent with this one additional datum a "quasi-idempotent", since it is related to a fully coherent idempotent similarly to the way having a "quasi-inverse" is related to being a coherent equivalence. *)
+(** However, homotopically we may naturally expect to need some coherence on the witness [isidem] of idempotency.  And indeed, in homotopy theory there are pre-idempotents which do not split; we will see an example later on.  We expect a "coherent idempotent" to involve infinitely many data.  However, Lemma 7.3.5.14 of *Higher Algebra* suggests that for an idempotent to admit *some* coherentification, hence also a splitting, it suffices to have *one* additional datum.  By modifying the construction given there, we can show similarly in type theory that any idempotent satisfying an additional coherence datum splits.  We will call a pre-idempotent with this one additional datum a "quasi-idempotent", since it is related to a fully coherent idempotent similarly to the way having a "quasi-inverse" is related to being a coherent equivalence. *)
 
 Class IsQuasiIdempotent {X : Type} (f : X -> X) `{IsPreIdempotent _ f}
   := isidem2 : forall x, ap f (isidem x) = isidem (f x).
@@ -269,7 +269,7 @@ Global Instance isqidem_qidem {X : Type} (f : QuasiIdempotent X)
 : IsQuasiIdempotent f
   := f.2.
 
-(** The identity has a canonical structure of quasi-idempotent. *)
+(** The identity function has a canonical structure of a quasi-idempotent. *)
 Global Instance isqidem_idmap (X : Type) : @IsQuasiIdempotent X idmap _
   := fun _ => 1.
 
@@ -337,7 +337,7 @@ Arguments qidem_split / .
 (** We now show the converse, that every quasi-idempotent splits. *)
 
 Section Splitting.
-  (** We need funext because our construction will involve a sequential limit.  We could probably also use a HIT sequential colimit, which is more like what Lurie does. *)
+  (** We need funext because our construction will involve a sequential limit.  We could probably also use a HIT sequential colimit, which is more like what Lurie does.  (Note that, like an interval type, HIT sequential colimits probably imply funext, so our construction uses strictly weaker hypotheses.) *)
   Context `{Funext}.
   Context {X : Type} (f : X -> X).
   Context `{IsQuasiIdempotent _ f}.
@@ -739,7 +739,7 @@ End RetractOfRetracts.
 
 (** ** Fully coherent idempotents *)
 
-(** This gives us a way to define fully coherent idempotents.  By Corollary 4.4.5.14 of *Higher Topos Theory*, [RetractOf X] has the correct homotopy type of the type of fully coherent idempotents on [X].  However, its defect is that it raises the universe level.  But now that we've shown that [RetractOf X] is a retract of the type [QuasiIdempotent X], which is of the same size as [X], we can obtain an equivalent type by splitting the resulting idempotent on [QuasiIdempotent X].  
+(** This gives us a way to define fully coherent idempotents.  By Corollary 4.4.5.14 of *Higher Topos Theory*, if we assume univalence then [RetractOf X] has the correct homotopy type of the type of fully coherent idempotents on [X].  However, its defect is that it raises the universe level.  But now that we've shown that [RetractOf X] is a retract of the type [QuasiIdempotent X], which is of the same size as [X], we can obtain an equivalent type by splitting the resulting idempotent on [QuasiIdempotent X].  
 
 For convenience, we instead split the idempotent on splittings of a fixed map [f], and then sum them up to obtain the type of idempotents. *)
 
@@ -778,7 +778,7 @@ Section CoherentIdempotents.
   Global Instance isidem_idem (X : Type) (f : Idempotent X) : IsIdempotent f
     := f.2.
 
-  (** Question: do these still have the correct homotopy type in the absence of univalence? *)
+  (** The above definitions depend on [Univalence].  Technically this is the case by their construction, since they are a splitting of a map that we only know to be idempotent in the presence of univalence.  This map could be defined, and hence "split", without univalence; but also only with univalence do we know that they have the right homotopy type.  Thus univalence is used in two places: concluding (meta-theoretically) from HTT 4.4.5.14 that [RetractOf X] has the right homotopy type, and showing (in the next lemma) that it is equivalent to [Idempotent X].  In the absence of univalence, we don't currently have *any* provably-correct definition of the type of coherent idempotents; it ought to involve an infinite tower of coherences as defined in HTT section 4.4.5.   However, there may be some Yoneda-like meta-theoretic argument which would imply that the above-defined types do have the correct homotopy type without univalence (though almost certainly not without funext). *)
 
   Definition equiv_idempotent_retractof (X : Type)
   : Idempotent X <~> RetractOf X.
