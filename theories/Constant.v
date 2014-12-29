@@ -130,14 +130,14 @@ Definition merely_rec_hset_beta `{Funext} {X Y : Type} (f : X -> Y)
   := (cconst_wconst_hset f).2 x.
 
 (** More generally, the type of weakly constant functions [X -> Y], when [Y] is a set, is equivalent to [merely X -> Y]. *)
-Definition equiv_cconst_wconst_hset `{Funext} (X Y : Type)
+Definition equiv_merely_rec_hset `{Funext} (X Y : Type)
            `{Ys : X -> IsHSet Y}
 : { f : X -> Y & WeaklyConstant f } <~> (merely X -> Y).
 Proof.
   assert (Ys' : merely X -> IsHSet Y).
   { apply Trunc_rec. intros x; exact (Ys x). }
   refine (equiv_adjointify
-            (fun fc => (@cconst_wconst_hset _ _ _ fc.1 _ fc.2).1)
+            (fun fc => @merely_rec_hset _ _ _ fc.1 _ fc.2)
             (fun g => (g o tr ; _)) _ _); try exact _.
   - intros x y; apply (ap g), path_ishprop.
   - intros g; apply path_arrow; intros mx.
