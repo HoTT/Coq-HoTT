@@ -63,6 +63,9 @@ Definition isequiv_path_universe {A B : Type}
 Definition equiv_path_universe (A B : Type) : (A <~> B) <~> (A = B)
   := BuildEquiv _ _ (@path_universe_uncurried A B) isequiv_path_universe.
 
+Definition equiv_equiv_path  (A B : Type) : (A = B) <~> (A <~> B)
+  := equiv_inverse (equiv_path_universe A B).
+
 Definition path_universe_V_uncurried `{Funext} {A B : Type} (f : A <~> B)
   : path_universe_uncurried (equiv_inverse f) = (path_universe_uncurried f)^.
 Proof.
@@ -83,7 +86,7 @@ Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}
 (** There are two ways we could define [transport_path_universe]: we could give an explicit definition, or we could reduce it to paths by [equiv_ind] and give an explicit definition there.  The two should be equivalent, but we choose the second for now as it makes the currently needed coherence lemmas easier to prove. *)
 Definition transport_path_universe_uncurried
            {A B : Type} (f : A <~> B) (z : A)
-  : transport (fun X:Type => X) (path_universe f) z = f z.
+  : transport (fun X:Type => X) (path_universe_uncurried f) z = f z.
 Proof.
   revert f.  equiv_intro (equiv_path A B) p.
   exact (ap (fun s => transport idmap s z) (eissect _ p)).
@@ -114,7 +117,7 @@ Definition transport_path_universe'
 
 Definition transport_path_universe_V_uncurried `{Funext}
            {A B : Type} (f : A <~> B) (z : B)
-  : transport (fun X:Type => X) (path_universe f)^ z = f^-1 z.
+  : transport (fun X:Type => X) (path_universe_uncurried f)^ z = f^-1 z.
 Proof.
   revert f. equiv_intro (equiv_path A B) p.
   exact (ap (fun s => transport idmap s z) (inverse2 (eissect _ p))).
@@ -143,8 +146,8 @@ Definition transport_path_universe_Vp_uncurried `{Funext}
 Proof.
   pattern f.
   refine (equiv_ind (equiv_path A B) _ _ _); intros p.
-  (* Something slightly sneaky happens here: by definition of [equiv_path], [eissect (equiv_path A B p)] is judgmentally equal to [transport_Vp idmap p].  Thus, we can apply [ap_transport_Vp]. *)
-  refine (_ @ ap_transport_Vp p (path_universe (equiv_path A B p))
+  (* Something slightly sneaky happens here: by definition of [equiv_path], [eissect (equiv_path A B p)] is judgmentally equal to [transport_Vp idmap p].  Thus, we can apply [ap_transport_Vp_idmap]. *)
+  refine (_ @ ap_transport_Vp_idmap p (path_universe (equiv_path A B p))
             (eissect (equiv_path A B) p) z).
   apply whiskerR. apply concat2.
   - apply ap. apply transport_path_universe_equiv_path.
@@ -159,6 +162,34 @@ Definition transport_path_universe_Vp `{Funext}
   = transport_Vp idmap (path_universe f) z
 := transport_path_universe_Vp_uncurried (BuildEquiv A B f feq) z.
 
+
+Definition transport_path_universe_pV_uncurried `{Funext}
+           {A B : Type} (f : A <~> B) (z : B)
+: transport_path_universe f (transport idmap (path_universe f)^ z)
+  @ ap f (transport_path_universe_V f z)
+  @ eisretr f z
+  = transport_pV idmap (path_universe f) z.
+Proof.
+  pattern f.
+  refine (equiv_ind (equiv_path A B) _ _ _); intros p.
+  refine (_ @ ap_transport_pV_idmap p (path_universe (equiv_path A B p))
+            (eissect (equiv_path A B) p) z).
+  apply whiskerR.
+  refine ((concat_Ap _ _)^ @ _).
+  apply concat2.
+  - apply ap.
+    refine (transport_path_universe_V_equiv_path _ _ @ _).
+    unfold inverse2. symmetry; apply (ap_compose inverse (fun s => transport idmap s z)).
+  - apply transport_path_universe_equiv_path.
+Defined.
+
+Definition transport_path_universe_pV `{Funext}
+           {A B : Type} (f : A -> B) {feq : IsEquiv f } (z : B)
+: transport_path_universe f (transport idmap (path_universe f)^ z)
+  @ ap f (transport_path_universe_V f z)
+  @ eisretr f z
+  = transport_pV idmap (path_universe f) z
+:= transport_path_universe_pV_uncurried (BuildEquiv A B f feq) z.
 
 (** ** Equivalence induction *)
 
@@ -189,5 +220,24 @@ Definition equiv_induction'_comp (P : forall U V, U <~> V -> Type)
   (didmap : forall T, P T T (equiv_idmap T)) (U : Type)
   : equiv_induction' P didmap U U (equiv_idmap U) = didmap U
   := (equiv_ind_comp (P U U) _ 1).
+
+(** ** Based equivalence types *)
+
+Global Instance contr_basedequiv {X : Type}
+: Contr {Y : Type & X <~> Y}.
+Proof.
+  refine (trunc_equiv' {Y : Type & X = Y}
+           (equiv_functor_sigma' (equiv_idmap Type)
+             (fun Y => equiv_equiv_path X Y))).
+Defined.
+
+Global Instance contr_basedequiv' {X : Type}
+: Contr {Y : Type & Y <~> X}.
+Proof.
+Proof.
+  refine (trunc_equiv' {Y : Type & Y = X}
+           (equiv_functor_sigma' (equiv_idmap Type)
+             (fun Y => equiv_equiv_path Y X))).
+Defined.
 
 End Univalence.

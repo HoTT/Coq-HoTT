@@ -117,3 +117,14 @@ Proof.
   case (H (Lift A) (fun x => Lift (P x)) f g (fun x => ap lift (H' x))).
   exact idpath.
 Defined.
+
+(** We re-declare this instance depending on the global [Funext] typeclass, since it is useful on its own. *)
+Global Instance contr_basedhomotopy `{Funext}
+       {A:Type} {B : A -> Type} (f : forall x, B x)
+: Contr {g : forall x, B x & f == g }.
+Proof.
+  apply contr_basedhtpy.
+  apply NaiveFunext_implies_WeakFunext.
+  apply Funext_implies_NaiveFunext.
+  unfold Funext_type; exact _.
+Defined.

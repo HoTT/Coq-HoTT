@@ -48,6 +48,22 @@ Definition equiv_path_forall `{P : A -> Type} (f g : forall x, P x)
   : (f == g)  <~>  (f = g)
   := BuildEquiv _ _ (path_forall f g) _.
 
+(** ** Path algebra *)
+
+Definition path_forall_pp `{P : A -> Type} (f g h : forall x, P x)
+           (p : f == g) (q : g == h)
+: path_forall f h (fun x => p x @ q x) = path_forall f g p @ path_forall g h q.
+Proof.
+  revert p q.
+  equiv_intro (@apD10 A P f g) p.
+  equiv_intro (@apD10 A P g h) q.
+  transitivity (path_forall f h (apD10 (p @ q))).
+  - apply ap, path_forall; intros x.
+    symmetry; apply apD10_pp.
+  - refine (eta_path_forall _ _ _ @ _).
+    apply concat2; symmetry; apply eta_path_forall.
+Defined.
+
 (** ** Transport *)
 
 (** The concrete description of transport in sigmas and pis is rather trickier than in the other types. In particular, these cannot be described just in terms of transport in simpler types; they require the full Id-elim rule by way of "dependent transport" [transportD].
