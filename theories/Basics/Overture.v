@@ -579,17 +579,6 @@ Scheme Unit_ind := Induction for Unit Sort Type.
 Scheme Unit_rec := Minimality for Unit Sort Type.
 Definition Unit_rect := Unit_ind.
 
-(** ** Decidable equality *)
-
-(* NB: This has to come after our definition of [not], so that it refers to our [not] rather than the one in [Coq.Logic]. *)
-Class Decidable (A : Type) :=
-  dec : A + (~ A).
-Arguments dec A {_}.
-
-Class DecidablePaths (A : Type) :=
-  dec_paths : forall (x y : A), Decidable (x = y).
-Global Existing Instance dec_paths.
-
 (** *** Pointed types *)
 
 (** A space is pointed if that space has a point. *)

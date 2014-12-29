@@ -28,6 +28,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/Basics/Contractible.v \
 	$(srcdir)/theories/Basics/Equivalences.v \
 	$(srcdir)/theories/Basics/Trunc.v \
+	$(srcdir)/theories/Basics/Decidable.v \
 	$(srcdir)/theories/Basics/FunextVarieties.v \
 	$(srcdir)/theories/Basics/Pointed.v \
 	$(srcdir)/theories/Basics.v \
