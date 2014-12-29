@@ -1036,6 +1036,7 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== thm:path-truncation *)
 (** Theorem 7.3.12 *)
 
+Definition Book_7_3_12 := @HoTT.hit.Truncations.equiv_path_Tr.
 
 
 (* ================================================== lem:truncation-le *)
