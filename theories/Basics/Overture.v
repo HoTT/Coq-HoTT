@@ -686,6 +686,14 @@ Ltac atomic x :=
     | _ => idtac
   end.
 
+(** [revert_opaque x] is like [revert x], except that it fails if [x] is not an opaque variable (i.e. if it has a [:=] definition rather than just a type). *)
+Ltac revert_opaque x :=
+  revert x;
+  match goal with
+    | [ |- forall _, _ ] => idtac
+    | _ => fail 1 "Reverted constant is not an opaque variable"
+  end.
+
 (** [transparent assert (H : T)] is like [assert (H : T)], but leaves the body transparent. *)
 (** Since binders don't respect [fresh], we use a name unlikely to be reused. *)
 Tactic Notation "transparent" "assert" "(" ident(name) ":" constr(type) ")" :=

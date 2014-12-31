@@ -216,13 +216,12 @@ Proof.
   apply (@isequiv_conn_ino_map -1); assumption.
 Defined.
 
-
 (** ** Tactic to remove truncations in hypotheses if possible. *)
 Ltac strip_truncations :=
   (** search for truncated hypotheses *)
   progress repeat match goal with
                     | [ T : _ |- _ ]
-                      => revert T;
+                      => revert_opaque T;
                         refine (@Trunc_ind _ _ _ _ _);
                         (** ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated *)
                         [];
@@ -246,9 +245,7 @@ Proof.
     exact (tr idpath). }
   transparent assert (decode : (forall z w, code z w -> z = w)).
   { intros z w.
-    (** [strip_truncations] behaves weirdly here, so let's do it manually instead. *)
-    revert z; refine (Trunc_ind _ _); intro z.
-    revert w; refine (Trunc_ind _ _); intro w.
+    strip_truncations.
     simpl. apply Trunc_rec, (ap tr). }
   pose (encode := (fun z w p => transport (code z) p (idcode z))
                   : (forall z w, z = w -> code z w)).
