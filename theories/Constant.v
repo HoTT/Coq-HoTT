@@ -10,24 +10,24 @@ Open Scope trunc_scope.
 
 (** * Varieties of constant function *)
 
-(** Recall that a function [f : X -> Y] is *weakly constant*, [WeaklyConstant f], if [forall x y, f x = f y].  We show, following Kraus, Escardo, Coquand, and Altenkirch, that the type of fixed points of a weakly constant endofunction is an hprop. *)
+(** Recall that a function [f : X -> Y] is *weakly constant*, [WeaklyConstant f], if [forall x y, f x = f y].  We show, following Kraus, Escardo, Coquand, and Altenkirch, that the type of fixed points of a weakly constant endofunction is an hprop.  However, to avoid potential confusion with [Coq.Init.Wf.Fix], instead of their notation [Fix], we denote this type by [FixedBy]. *)
 
-Definition Fix {X : Type} (f : X -> X) := {x : X & f x = x}.
+Definition FixedBy {X : Type} (f : X -> X) := {x : X & f x = x}.
 
 Global Instance ishprop_fix_wconst {X : Type} (f : X -> X)
        `{WeaklyConstant _ _ f}
-: IsHProp (Fix f).
+: IsHProp (FixedBy f).
 Proof.
   apply hprop_inhabited_contr; intros [x0 p0].
-  refine (contr_equiv' {x:X & f x0 = x} _); unfold Fix.
+  refine (contr_equiv' {x:X & f x0 = x} _); unfold FixedBy.
   refine (equiv_functor_sigma' (equiv_idmap X)
            (fun x => equiv_concat_l (wconst x x0) x)).
 Defined.
 
-(** It follows that if a type [X] admits a weakly constant endofunction [f], then [Fix f] is equivalent to [merely X]. *)
+(** It follows that if a type [X] admits a weakly constant endofunction [f], then [FixedBy f] is equivalent to [merely X]. *)
 Definition equiv_fix_merely {X : Type} (f : X -> X)
            `{WeaklyConstant _ _ f}
-: Fix f <~> merely X.
+: FixedBy f <~> merely X.
 Proof.
   apply equiv_iff_hprop.
   - intros [x p]; exact (tr x).
@@ -56,6 +56,13 @@ Defined.
 Definition ConditionallyConstant {X Y : Type} (f : X -> Y)
   := ExtensionAlong (@tr -1 X) (fun _ => Y) f.
 
+(** We don't yet have a need for a predicate [Constant] on functions; we do already have the operation [const] which constructs the constant function at a given point.  Every such constant function is, of course, conditionally constant. *)
+Definition cconst_const {X Y} (y : Y)
+: ConditionallyConstant (@const X Y y).
+Proof.
+  exists (const y); intros x; reflexivity.
+Defined.
+
 (** The type of conditionally constant functions is equivalent to [merely X -> Y]. *)
 Definition equiv_cconst_from_merely `{Funext} (X Y : Type)
 : { f : X -> Y & ConditionallyConstant f } <~> (merely X -> Y).
@@ -82,7 +89,8 @@ Definition cconst_factors_contr `{Funext}  {X Y : Type} (f : X -> Y)
 : ConditionallyConstant f.
 Proof.
   assert (merely X -> IsHProp P).
-  { apply Trunc_rec. intros x; pose (Pc x); apply trunc_succ. }
+  { apply Trunc_rec.            (** Uses funext *)
+    intros x; pose (Pc x); apply trunc_succ. }
   pose (g' := Trunc_ind (fun _ => P) g : merely X -> P).
   exists (h o g'); intros x.
   apply p.
