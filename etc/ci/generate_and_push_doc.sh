@@ -21,6 +21,8 @@ if [ -z "$UPDATE_HTML" ]; then
     exit 0
 fi
 
+COMMITISH="$(git rev-parse HEAD)"
+
 EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 
 echo 'Configuring git for pushing...'
@@ -32,9 +34,9 @@ export MESSAGE="Autoupdate documentation with coqdoc and proviola and time2html
 Generated with \`make html proviola\`"
 
 echo '$ make html'
-make html
-make proviola -j4 -k
-make timing-html
+make html || exit $?
+make proviola -j4 -k; make proviola || exit $?
+make timing-html || exit $?
 mv proviola-html proviola-html-bak
 mv timing-html timing-html-bak
 git remote update
@@ -56,7 +58,7 @@ git commit -m "$MESSAGE"
 "$DIR"/push_remote_tmp.sh gh-pages:gh-pages $EXTRA_ARGS
 
 # checkout the original commit
-echo '$ git checkout HEAD@{2}'
-git checkout HEAD@{2} -f
+echo '$ git checkout '"$COMMITISH"
+git checkout "$COMMITISH" -f
 
 popd 1>/dev/null

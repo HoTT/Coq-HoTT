@@ -21,6 +21,8 @@ if [ -z "$UPDATE_QUICK_DOC" ]; then
     exit 0
 fi
 
+COMMITISH="$(git rev-parse HEAD)"
+
 EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 
 echo 'Configuring git for pushing...'
@@ -29,11 +31,11 @@ git config --global user.email "Travis-CI-Bot@travis.fake"
 
 export MESSAGE="Autoupdate documentation with DepsToDot.hs"
 echo '$ make HoTT.deps HoTTCore.deps'
-make HoTT.deps HoTTCore.deps
-runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Library Dependency Graph" < HoTT.deps > HoTT.dot
-runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Core Library Dependency Graph" < HoTTCore.deps > HoTTCore.dot
-dot -Tsvg HoTT.dot -o HoTT.svg
-dot -Tsvg HoTTCore.dot -o HoTTCore.svg
+make HoTT.deps HoTTCore.deps || exit $?
+runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Library Dependency Graph" < HoTT.deps > HoTT.dot || exit $?
+runhaskell etc/DepsToDot.hs --coqdocbase="http://hott.github.io/HoTT/proviola-html/" --title="HoTT Core Library Dependency Graph" < HoTTCore.deps > HoTTCore.dot || exit $?
+dot -Tsvg HoTT.dot -o HoTT.svg || exit $?
+dot -Tsvg HoTTCore.dot -o HoTTCore.svg || exit $?
 echo '$ git checkout -b gh-pages upstream/gh-pages'
 git checkout -b gh-pages upstream/gh-pages
 rm -rf dependencies
@@ -47,7 +49,7 @@ git commit -m "$MESSAGE"
 "$DIR"/push_remote_tmp.sh gh-pages:gh-pages $EXTRA_ARGS
 
 # checkout the original commit
-echo '$ git checkout HEAD@{2}'
-git checkout HEAD@{2} -f
+echo '$ git checkout '"$COMMITISH"
+git checkout "$COMMITISH" -f
 
 popd 1>/dev/null

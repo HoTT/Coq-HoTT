@@ -16,6 +16,8 @@ if [ -z "$UPDATE_AUTOGEN" ]; then
     exit 0
 fi
 
+COMMITISH="$(git rev-parse HEAD)"
+
 EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 
 # copy the push_remote script so it stays around after we change branches
@@ -39,6 +41,8 @@ git commit -m "$MESSAGE"
 # use the copy of the script which stayed around when we changed branches
 "$DIR"/push_remote_tmp.sh $BRANCH:$BRANCH -f $EXTRA_ARGS
 
-git checkout HEAD@{2} -f
+# checkout the original commit
+echo '$ git checkout '"$COMMITISH"
+git checkout "$COMMITISH" -f
 
 popd 1>/dev/null

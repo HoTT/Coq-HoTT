@@ -11,6 +11,8 @@ if [ -z "$BUILD_COQ" ]
 then
     sudo add-apt-repository -y ppa:ezyang/coq-git
 fi
+# new version of graphviz (>= 2.38) to work around trouble in init_rank
+sudo add-apt-repository -y ppa:jgross-h/graphviz
 sudo apt-get update -q
 # (un)install autoreconf
 if [ ! -z "$WITH_AUTORECONF" ]; then

@@ -619,6 +619,14 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
+(** ** [ap11] *)
+
+Definition ap11_is_ap10_ap01 {A B} {f g:A->B} (h:f=g) {x y:A} (p:x=y)
+: ap11 h p = ap10 h x @ ap g p.
+Proof.
+  by path_induction.
+Defined.
+
 (** Dependent transport in doubly dependent types and more. *)
 
 Definition transportD {A : Type} (B : A -> Type) (C : forall a:A, B a -> Type)
@@ -823,7 +831,7 @@ Notation "p @@ q" := (concat2 p q)%path (at level 20) : path_scope.
 (** 2-dimensional path inversion *)
 Definition inverse2 {A : Type} {x y : A} {p q : x = y} (h : p = q)
   : p^ = q^
-:= match h with idpath => 1 end.
+:= ap inverse h.
 
 (** *** Whiskering *)
 
@@ -1022,12 +1030,21 @@ Proof.
   destruct r1, r2. destruct p1. reflexivity.
 Defined.
 
-(** This lemma needs a better name. *)
-Definition ap_transport_Vp {A B} (p q : A = B) (r : q = p) (z : A)
+(** These lemmas need better names. *)
+Definition ap_transport_Vp_idmap {A B} (p q : A = B) (r : q = p) (z : A)
 : ap (transport idmap q^) (ap (fun s => transport idmap s z) r)
   @ ap (fun s => transport idmap s (p # z)) (inverse2 r)
   @ transport_Vp idmap p z
   = transport_Vp idmap q z.
+Proof.
+  by path_induction.
+Defined.
+
+Definition ap_transport_pV_idmap {A B} (p q : A = B) (r : q = p) (z : B)
+: ap (transport idmap q) (ap (fun s => transport idmap s^ z) r)
+  @ ap (fun s => transport idmap s (p^ # z)) r
+  @ transport_pV idmap p z
+  = transport_pV idmap q z.
 Proof.
   by path_induction.
 Defined.

@@ -17,9 +17,11 @@ cp "$DIR"/{push_remote,push_remote_tmp}.sh
 
 
 if [ -z "$UPDATE_DEP_GRAPHS" ]; then
-    echo 'Not making quick doc becuase $UPDATE_DEP_GRAPHS variable not set.'
+    echo 'Not making dep graphs becuase $UPDATE_DEP_GRAPHS variable not set.'
     exit 0
 fi
+
+COMMITISH="$(git rev-parse HEAD)"
 
 EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 
@@ -30,10 +32,10 @@ git config --global user.email "Travis-CI-Bot@travis.fake"
 export MESSAGE="Autoupdate documentation with dpdgraphs"
 
 echo '$ make svg-file-dep-graphs svg-aggregate-dep-graphs'
-make etc/dpdgraph-0.4alpha/coqthmdep || exit 1
-make svg-file-dep-graphs -k
-make svg-aggregate-dep-graphs -k
-make file-dep-graphs/index.html -k
+make etc/dpdgraph-0.4alpha/coqthmdep || exit $?
+make svg-file-dep-graphs -k || exit $?
+make svg-aggregate-dep-graphs -k || exit $?
+make file-dep-graphs/index.html -k || exit $?
 
 mv file-dep-graphs file-dep-graphs-bak
 git remote update
@@ -49,7 +51,7 @@ git commit -m "$MESSAGE"
 "$DIR"/push_remote_tmp.sh gh-pages:gh-pages $EXTRA_ARGS
 
 # checkout the original commit
-echo '$ git checkout HEAD@{2}'
-git checkout HEAD@{2} -f
+echo '$ git checkout '"$COMMITISH"
+git checkout "$COMMITISH" -f
 
 popd 1>/dev/null
