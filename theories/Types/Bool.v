@@ -29,6 +29,16 @@ Definition implb (b1 b2 : Bool) : Bool := if b1 then b2 else true.
 
 Infix "||" := orb : bool_scope.
 Infix "&&" := andb : bool_scope.
+Infix "->" := implb : bool_scope.
+
+Definition implb_true {b} : implb b true = true
+  := if b as b return implb b true = true then idpath else idpath.
+
+Definition implb_impl {a b} : (a -> b)%Bool = true <-> (a = true -> b = true).
+Proof.
+  destruct a; simpl; split; trivial using idpath with nocore;
+  destruct b; simpl; auto using idpath with nocore.
+Defined.
 
 Global Instance trunc_if n A B `{IsTrunc n A, IsTrunc n B} (b : Bool)
 : IsTrunc n (if b then A else B) | 100

@@ -91,6 +91,21 @@ Definition Negation_hp `{Funext} (hprop : hProp) : hProp := BuildhProp (~hprop).
 Definition is_true (b : Bool) : hProp
   := if b then Unit_hp else False_hp.
 
+Definition path_b_true__of__is_true (b : Bool) : is_true b -> true = b.
+Proof.
+  destruct b; [ exact (const idpath) | intros [] ].
+Defined.
+
+Global Instance isequiv__path_b_true__of__is_true {b} : IsEquiv (path_b_true__of__is_true b).
+Proof.
+  refine (BuildIsEquiv _ _ _ _ _ _ _).
+  { destruct b; simpl; try constructor.
+    apply true_ne_false. }
+  { intros []; reflexivity. }
+  { destruct b; intros []; reflexivity. }
+  { destruct b; intros []; reflexivity. }
+Defined.
+
 (** ** Facts about HProps using univalence *)
 
 Global Instance trunc_path_IsHProp X Y `{IsHProp Y}

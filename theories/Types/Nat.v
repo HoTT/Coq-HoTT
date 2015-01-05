@@ -28,24 +28,24 @@ Fixpoint code_nat (m n : nat) {struct m} :=
 
 Infix "=n" := code_nat (at level 70, no associativity) : nat_scope.
 
-Fixpoint idcode_nat {n} : (n =n n) = true :=
+Fixpoint idcode_nat' {n} : (n =n n) = true :=
   match n as n return (n =n n) = true with
     | 0 => idpath
-    | S n' => @idcode_nat n'
+    | S n' => @idcode_nat' n'
   end.
 
-Fixpoint path_nat {n m} : (n =n m) = true -> n = m :=
+Fixpoint path_nat' {n m} : (n =n m) = true -> n = m :=
   match m as m, n as n return (n =n m) = true -> n = m with
     | 0, 0 => fun _ => idpath
-    | m'.+1, n'.+1 => fun H : (n' =n m') = true => ap S (path_nat H)
+    | m'.+1, n'.+1 => fun H : (n' =n m') = true => ap S (path_nat' H)
     | _, _ => fun H => match false_ne_true H with end
   end.
 
-Global Instance isequiv_path_nat {n m} : IsEquiv (@path_nat n m).
+Global Instance isequiv_path_nat' {n m} : IsEquiv (@path_nat' n m).
 Proof.
   refine (isequiv_adjointify
-            (@path_nat n m)
-            (fun H => transport (fun m' => (n =n m') = true) H idcode_nat)
+            (@path_nat' n m)
+            (fun H => transport (fun m' => (n =n m') = true) H idcode_nat')
             _ _).
   { intros []; simpl.
     induction n; simpl; trivial.
@@ -53,11 +53,11 @@ Proof.
   { intro. apply path_ishprop. }
 Defined.
 
-Definition equiv_path_nat {n m} : ((n =n m) = true) <~> (n = m)
-  := BuildEquiv _ _ (@path_nat n m) _.
+Definition equiv_path_nat' {n m} : ((n =n m) = true) <~> (n = m)
+  := BuildEquiv _ _ (@path_nat' n m) _.
 
 Global Instance decidable_paths_nat : DecidablePaths nat
-  := fun n m => @decidable_equiv _ _ (@path_nat n m) _ _.
+  := fun n m => @decidable_equiv _ _ (@path_nat' n m) _ _.
 
 Corollary hset_nat : IsHSet nat.
 Proof.
