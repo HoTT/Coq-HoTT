@@ -20,6 +20,8 @@ Require DiscreteCategory.
 Require IndiscreteCategory.
 (** ** Finite Discrete Categories (natural numbers as categories) *)
 Require NatCategory.
+(** ** Chain Categories [[n]] *)
+Require ChainCategory.
 (** ** Initial and Terminal Categories *)
 Require InitialTerminalCategory.
 (** ** The Category of Sets *)
@@ -79,6 +81,7 @@ Include CategoryOfGroupoids.
 Include DiscreteCategory.Core.
 Include IndiscreteCategory.Core.
 Include NatCategory.Core.
+Include ChainCategory.Core.
 Include InitialTerminalCategory.Core.
 Include SetCategory.Core.
 Include HomFunctor.

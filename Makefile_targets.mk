@@ -199,6 +199,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/IndiscreteCategory.v \
 	\
 	$(srcdir)/theories/categories/NatCategory.v \
+	$(srcdir)/theories/categories/ChainCategory.v \
 	\
 	$(srcdir)/theories/categories/InitialTerminalCategory.v \
 	$(srcdir)/theories/categories/InitialTerminalCategory/Core.v \
