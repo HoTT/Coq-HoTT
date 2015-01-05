@@ -132,3 +132,8 @@ Definition path_iff_hprop {A B : hProp}
   := fun f g => path_iff_hprop_uncurried (f,g).
 
 End TruncType.
+
+(** We do not export the coercion from [Bool] to [Type] via [is_true] by default, but allow the coercion to be used via [Import BoolSortCoercion]. *)
+Module BoolSortCoercion.
+  Coercion is_true : Bool >-> hProp.
+End BoolSortCoercion.
