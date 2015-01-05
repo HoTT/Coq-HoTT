@@ -46,6 +46,10 @@ Require Export Modalities.Nullification.
 Require Export Modalities.Open.
 Require Export Modalities.Closed.
 
+Require Export Spaces.Cantor.
+Require Export Spaces.BAut.
+Require Export Spaces.BAut.Cantor.
+
 Require Export HoTT.Tactics.
 
 (** We do _not_ export [UnivalenceAxiom], [FunextAxiom], [UnivalenceImpliesFunext], or [hit.IntervalImpliesFunext] from this file; thus importing it does not prevent you from tracking usage of [Univalence] and [Funext] theorem-by-theorem in the same way that the library does.  If you want any of those files, you should import them separately. *)

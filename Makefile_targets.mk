@@ -89,6 +89,9 @@ CORE_VFILES = \
 	$(srcdir)/theories/hit/Pushout.v \
 	$(srcdir)/theories/hit/Join.v \
 	$(srcdir)/theories/hit/V.v \
+	$(srcdir)/theories/Spaces/Cantor.v \
+	$(srcdir)/theories/Spaces/BAut.v \
+	$(srcdir)/theories/Spaces/BAut/Cantor.v \
 	$(srcdir)/theories/Misc.v \
 	$(srcdir)/theories/Utf8.v \
 	$(srcdir)/theories/HoTT.v \
