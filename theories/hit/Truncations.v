@@ -2,7 +2,7 @@
 
 (** * Truncations of types, in all dimensions. *)
 
-Require Import HoTT.Basics Types.Sigma TruncType HProp.
+Require Import HoTT.Basics Types.Sigma Types.Universe TruncType HProp.
 Require Import Modalities.Modality Modalities.Identity.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -216,15 +216,44 @@ Proof.
   apply (@isequiv_conn_ino_map -1); assumption.
 Defined.
 
-
 (** ** Tactic to remove truncations in hypotheses if possible. *)
 Ltac strip_truncations :=
   (** search for truncated hypotheses *)
   progress repeat match goal with
                     | [ T : _ |- _ ]
-                      => revert T;
+                      => revert_opaque T;
                         refine (@Trunc_ind _ _ _ _ _);
                         (** ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated *)
                         [];
                         intro T
                   end.
+
+(** ** Path-spaces of truncations *)
+
+Definition equiv_path_Tr `{Univalence} {n A} (x y : A)
+: Tr n (x = y) <~> (tr x = tr y :> Tr n.+1 A).
+Proof.
+  (** Encode-decode *)
+  transparent assert (code : (Tr n.+1 A -> Tr n.+1 A -> TruncType n)).
+  { intros z w; strip_truncations.
+    refine (BuildTruncType n (Tr n (z = w))). }
+  revert x y.
+  cut (forall z w, code z w <~> z = w).
+  { intros e x y; exact (e (tr x) (tr y)). }
+  transparent assert (idcode : (forall z, code z z)).
+  { intros z; strip_truncations; simpl.
+    exact (tr idpath). }
+  transparent assert (decode : (forall z w, code z w -> z = w)).
+  { intros z w.
+    strip_truncations.
+    simpl. apply Trunc_rec, (ap tr). }
+  pose (encode := (fun z w p => transport (code z) p (idcode z))
+                  : (forall z w, z = w -> code z w)).
+  intros z w; refine (equiv_adjointify (decode z w) (encode z w) _ _).
+  - intros p. destruct p.
+    strip_truncations. reflexivity.
+  - revert z; refine (Trunc_ind _ _); intro z.
+    revert w; refine (Trunc_ind _ _); intro w.
+    intros c; simpl in *.
+    strip_truncations. destruct c. reflexivity.
+Defined.
