@@ -290,7 +290,7 @@ Section Reflective_Subuniverse.
   Section Functor.
 
     (** In this section, we see that [O] is a functor. *)
-    
+
     Definition O_functor {A B : Type} (f : A -> B) : O A -> O B
       := O_rec (to O B o f).
 
@@ -325,10 +325,10 @@ Section Reflective_Subuniverse.
     Proof.
       intros x.
       transitivity (O_functor (f o pi1) x).
-      - symmetry; apply O_functor_compose.
+      - symmetry; erapply O_functor_compose.
       - transitivity (O_functor (g o pi2) x).
         * apply O_functor_homotopy, comm.
-        * apply O_functor_compose.
+        * erapply O_functor_compose.
     Defined.
 
     (** Functoriality on identities *)
@@ -380,7 +380,7 @@ Section Reflective_Subuniverse.
         + intros y; apply eissect.
         + apply O_functor_idmap.
     Defined.
-      
+
     Definition equiv_O_functor {A B : Type} (f : A <~> B)
     : O A <~> O B
     := BuildEquiv _ _ (O_functor f) _.
@@ -546,7 +546,7 @@ Section Reflective_Subuniverse.
 
     (** ** Dependent product and arrows *)
     (** Theorem 7.7.2 *)
-    Global Instance inO_forall {fs : Funext} (A:Type) (B:A -> Type) 
+    Global Instance inO_forall {fs : Funext} (A:Type) (B:A -> Type)
     : (forall x, (In O (B x)))
       -> (In O (forall x:A, (B x))).
     Proof.
@@ -574,7 +574,7 @@ Section Reflective_Subuniverse.
       apply inO_to_O_retract with
         (mu := fun X => (@O_rec _ (A * B) A _ fst X , O_rec snd X)).
       intros [a b]; apply path_prod; simpl.
-      - exact (O_rec_beta fst (a,b)). 
+      - exact (O_rec_beta fst (a,b)).
       - exact (O_rec_beta snd (a,b)).
     Defined.
 
@@ -712,14 +712,14 @@ Section Reflective_Subuniverse.
     : In O (x=y).
     Proof.
       refine (inO_to_O_retract _ _ _); intro u.
-      - assert (p : (fun _ : O (x=y) => x) == (fun _=> y)). 
+      - assert (p : (fun _ : O (x=y) => x) == (fun _=> y)).
         { refine (O_indpaths _ _ _); simpl.
           intro v; exact v. }
         exact (p u).
       - hnf.
         rewrite O_indpaths_beta; reflexivity.
     Qed.
-    
+
   End Types.
 
   Section Monad.
@@ -780,13 +780,13 @@ Section Reflective_Subuniverse.
       repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
-      
+
     (** The diagrams for strength, see http://en.wikipedia.org/wiki/Strong_monad *)
     Definition O_monad_strength_unitlaw1 (A : Type)
     : O_functor (@snd Unit A) o O_monad_strength Unit A == @snd Unit (O A).
     Proof.
       intros [[] oa]; revert oa.
-      apply O_indpaths; intros x; unfold O_monad_strength, O_functor. simpl. 
+      apply O_indpaths; intros x; unfold O_monad_strength, O_functor. simpl.
       repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
@@ -795,7 +795,7 @@ Section Reflective_Subuniverse.
     : O_monad_strength A B o functor_prod idmap (to O B) == to O (A*B).
     Proof.
       intros [a b].
-      unfold O_monad_strength, functor_prod. simpl. 
+      unfold O_monad_strength, functor_prod. simpl.
       repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
@@ -809,7 +809,7 @@ Section Reflective_Subuniverse.
       revert oc; apply O_indpaths.
       intros c; simpl.
       apply path_arrow; intros b. apply path_arrow; intros a.
-      unfold O_monad_strength, O_functor, functor_prod. simpl. 
+      unfold O_monad_strength, O_functor, functor_prod. simpl.
       repeat rewrite O_rec_beta.
       reflexivity.
     Qed.
@@ -821,13 +821,13 @@ Section Reflective_Subuniverse.
       intros [a oob]. revert a; apply ap10.
       revert oob; apply O_indpaths. apply O_indpaths.
       intros b; simpl. apply path_arrow; intros a.
-      unfold O_monad_strength, O_functor, O_monad_mult, functor_prod. simpl. 
+      unfold O_monad_strength, O_functor, O_monad_mult, functor_prod. simpl.
       repeat (rewrite O_rec_beta; simpl).
       reflexivity.
     Qed.
-      
+
   End StrongMonad.
-      
+
 End Reflective_Subuniverse.
 
 (** Make the [O_inverts] notation global. *)
