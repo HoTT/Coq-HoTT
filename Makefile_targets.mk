@@ -64,6 +64,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/NullHomotopy.v \
 	$(srcdir)/theories/Idempotents.v \
 	$(srcdir)/theories/Factorization.v \
+	$(srcdir)/theories/Constant.v \
 	$(srcdir)/theories/Modalities/ReflectiveSubuniverse.v \
 	$(srcdir)/theories/Modalities/Modality.v \
 	$(srcdir)/theories/Modalities/Accessible.v \
