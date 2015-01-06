@@ -48,6 +48,11 @@ Section iso_contr.
 
   Variables s d : C.
 
+  Local Notation IsIsomorphism_sig_T m :=
+    { inverse : morphism C d s
+    | { _ : inverse o m = identity _
+      | m o inverse = identity _ } } (only parsing).
+
   Section IsIsomorphism.
     Variable m : morphism C s d.
 
@@ -64,14 +69,9 @@ Section iso_contr.
                       autorewrite with morphism) ].
     Qed.
 
-    Local Notation IsIsomorphism_sig_T :=
-      { inverse : morphism C d s
-      | { _ : inverse o m = identity _
-        | m o inverse = identity _ } } (only parsing).
-
     (** *** Equivalence between the record and sigma versions of [IsIsomorphism] *)
     Lemma issig_isisomorphism
-    : IsIsomorphism_sig_T <~> IsIsomorphism m.
+    : IsIsomorphism_sig_T m <~> IsIsomorphism m.
     Proof.
       issig (@Build_IsIsomorphism _ _ _ m)
             (@morphism_inverse _ _ _ m)
@@ -109,6 +109,15 @@ Section iso_contr.
           (@morphism_isomorphic C s d)
           (@isisomorphism_isomorphic C s d).
   Defined.
+
+  Local Notation Isomorphic_full_sig_T :=
+    { m : morphism C s d
+    | IsIsomorphism_sig_T m } (only parsing).
+
+  (** *** Equivalence between record and fully sigma versions of [Isomorphic] *)
+  Definition issig_full_isomorphic
+  : Isomorphic_full_sig_T <~> Isomorphic s d
+    := equiv_compose' issig_isomorphic (equiv_functor_sigma_id issig_isisomorphism).
 
   (** *** Isomorphisms form an hSet *)
   Global Instance trunc_Isomorphic : IsHSet (Isomorphic s d).
