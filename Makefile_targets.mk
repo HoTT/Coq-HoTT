@@ -145,6 +145,9 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/SetCategory/Functors.v \
 	$(srcdir)/theories/categories/SetCategory/Functors/SetProp.v \
 	\
+	$(srcdir)/theories/categories/SimplicialSets.v \
+	$(srcdir)/theories/categories/SemiSimplicialSets.v \
+	\
 	$(srcdir)/theories/categories/FundamentalPreGroupoidCategory.v \
 	$(srcdir)/theories/categories/HomotopyPreCategory.v \
 	\

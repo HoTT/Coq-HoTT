@@ -9,3 +9,5 @@ Require Export Structure.Utf8.
 
 Require ChainCategory.
 Export ChainCategory.Utf8.
+Require SimplicialSets.
+Export SimplicialSets.Utf8.

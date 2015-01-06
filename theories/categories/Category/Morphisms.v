@@ -228,6 +228,11 @@ Class IsMonomorphism {C} {x y} (m : morphism C x y) :=
                       m o m1 = m o m2
                       -> m1 = m2.
 
+(** We make [IsEpimorphism] and [IsMonomorphism] transparent to
+    typeclass search so that we can infer things like [IsHProp]
+    automatically. *)
+Typeclasses Transparent IsEpimorphism IsMonomorphism.
+
 Record Epimorphism {C} x y :=
   {
     Epimorphism_morphism :> morphism C x y;
