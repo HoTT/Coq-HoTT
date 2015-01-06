@@ -22,6 +22,8 @@ Require Export TruncType.
 Require Export NullHomotopy.
 Require Export Idempotents.
 
+Require Export Spaces.Nat.
+
 Require Export hit.Interval.
 Require Export hit.Truncations.
 Require Export hit.Connectedness.

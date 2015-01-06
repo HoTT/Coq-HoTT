@@ -53,6 +53,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/Extensions.v \
 	$(srcdir)/theories/HSet.v \
 	$(srcdir)/theories/UnivalenceImpliesFunext.v \
+	$(srcdir)/theories/Spaces/Nat.v \
 	$(srcdir)/theories/Tactics.v \
 	$(srcdir)/theories/Tactics/RewriteModuloAssociativity.v \
 	$(srcdir)/theories/Tactics/BinderApply.v \
