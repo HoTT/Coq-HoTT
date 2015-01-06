@@ -9,3 +9,7 @@ Include Category.Sigma.Core.
 Include Category.Sigma.OnMorphisms.
 Include Category.Sigma.OnObjects.
 Include Category.Sigma.Univalent.
+
+Module CategorySigmaNotations.
+  Include Category.Sigma.OnObjects.CategorySigmaOnObjectsNotations.
+End CategorySigmaNotations.
