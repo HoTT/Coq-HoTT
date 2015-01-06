@@ -1,5 +1,6 @@
 (** * The category ω of (ℕ, ≤), and the chain categories [[n]] *)
 Require Import Category.Core Category.Subcategory.Full.
+Require Import Category.Sigma.Univalent.
 Require Import Category.Morphisms Category.Univalent Category.Strict.
 Require Import HoTT.Basics.Trunc HoTT.Types.Nat HoTT.Types.Bool HoTT.TruncType HoTT.Spaces.Nat.
 Import BoolSortCoercion.
@@ -62,5 +63,8 @@ Module Export Univalent.
     { intro m; apply leq_antisym; apply m. }
   Defined.
 
-  (** TODO: Derive [IsCategory (chain n)] from a lemma about sigma categories. *)
+  Definition iscategory_chain {n} : IsCategory [n].
+  Proof.
+    exact _.
+  Defined.
 End Univalent.
