@@ -90,6 +90,22 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
+(** Some useful computation laws for based path spaces *)
+
+Definition ap_pr1_path_contr_basedpaths {X : Type}
+           {x y z : X} (p : x = y) (q : x = z)
+: ap pr1 (path_contr ((y;p):{y':X & x = y'}) (z;q)) = p^ @ q.
+Proof.
+  destruct p,q; reflexivity.
+Defined.
+
+Definition ap_pr1_path_contr_basedpaths' {X : Type}
+           {x y z : X} (p : y = x) (q : z = x)
+: ap pr1 (path_contr ((y;p):{y':X & y' = x}) (z;q)) = p @ q^.
+Proof.
+  destruct p,q; reflexivity.
+Defined.
+
 (** If the domain is contractible, the function is propositionally constant. *)
 Definition contr_dom_equiv {A B} (f : A -> B) `{Contr A} : forall x y : A, f x = f y
   := fun x y => ap f ((contr x)^ @ contr y).

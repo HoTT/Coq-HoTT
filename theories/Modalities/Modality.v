@@ -976,6 +976,14 @@ Section ModalFact.
               (functor_sigma idmap (fun b => to O (hfiber f b)))).
   Defined.
 
+  Global Instance conn_map_factor1_image {A B : Type} (f : A -> B)
+  : IsConnMap O (factor1 (image f))
+    := inclass1 (image f).
+
+  Global Instance inO_map_factor1_image {A B : Type} (f : A -> B)
+  : MapIn O (factor2 (image f))
+    := inclass2 (image f).
+
   (** This is the composite of the three displayed equivalences at the beginning of the proof of Lemma 7.6.5.  Note that it involves only a single factorization of [f]. *)
   Lemma O_hfiber_O_fact {A B : Type} {f : A -> B}
         (fact : Factorization (@IsConnMap O) (@MapIn O) f) (b : B)

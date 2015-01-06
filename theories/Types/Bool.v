@@ -44,6 +44,8 @@ Global Instance trunc_if n A B `{IsTrunc n A, IsTrunc n B} (b : Bool)
 : IsTrunc n (if b then A else B) | 100
   := if b as b return (IsTrunc n (if b then A else B)) then _ else _.
 
+(** ** Decidability *)
+
 Section BoolDecidable.
   Definition false_ne_true : ~false = true
     := fun H => match H in (_ = y) return (if y then Empty else Bool) with
@@ -67,11 +69,25 @@ Section BoolDecidable.
   Defined.
 End BoolDecidable.
 
+(** In particular, [negb] has no fixed points *)
 Definition not_fixed_negb (b : Bool) : negb b <> b
   := match b return negb b <> b with
        | true => false_ne_true
        | false => true_ne_false
      end.
+
+(** And conversely, if two elements of [Bool] are unequal, they must be related by [negb]. *)
+Definition negb_ne {b1 b2 : Bool}
+: (b1 <> b2) -> (b1 = negb b2).
+Proof.
+  destruct b1, b2.
+  - intros oops; case (oops idpath).
+  - intros _; reflexivity.
+  - intros _; reflexivity.
+  - intros oops; case (oops idpath).
+Defined.
+
+(** ** Products as [forall] over [Bool] *)
 
 Section BoolForall.
   Variable P : Bool -> Type.
@@ -133,7 +149,7 @@ Section EquivBoolEquiv.
                                               then (equiv_idmap Bool)
                                               else equiv_negb.
 
-  Lemma equiv_bool_equiv_bool_bool `{Funext} : Bool <~> (Bool <~> Bool).
+  Lemma equiv_bool_aut_bool `{Funext} : Bool <~> (Bool <~> Bool).
   Proof.
     refine (equiv_adjointify g f _ _);
     unfold f, g; clear f g;
@@ -147,6 +163,32 @@ Section EquivBoolEquiv.
       * etransitivity; [ | symmetry; apply eval_bool_isequiv; trivial ].
         destruct (e true); reflexivity.
     - intros []; reflexivity.
+  Defined.
+
+  (** It follows that every automorphism of [Bool] is either [idmap] or [negb]. *)
+  Definition aut_bool_idmap_or_negb `{Funext} (e : Bool <~> Bool)
+  : (e = equiv_idmap Bool) + (e = equiv_negb).
+  Proof.
+    revert e. equiv_intro equiv_bool_aut_bool e.
+    destruct e; simpl.
+    - exact (inl idpath).
+    - exact (inr idpath).
+  Defined.
+
+  (** But, obviously, not both. *)
+  Definition idmap_bool_ne_negb : equiv_idmap Bool <> equiv_negb.
+  Proof.
+    intros oops.
+    exact (true_ne_false (ap10_equiv oops true)).
+  Defined.
+
+  (** In particular, every pair of automorphisms of [Bool] commute with each other. *)
+  Definition abelian_aut_bool `{Funext} (e1 e2 : Bool <~> Bool)
+  : e1 o e2 == e2 o e1.
+  Proof.
+    revert e1. equiv_intro equiv_bool_aut_bool e1.
+    revert e2. equiv_intro equiv_bool_aut_bool e2.
+    destruct e1, e2; simpl; exact (fun x => 1%path).
   Defined.
 
 End EquivBoolEquiv.

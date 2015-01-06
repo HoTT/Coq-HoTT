@@ -123,4 +123,16 @@ Section AssumeFunext.
   : (A <~> B) <~> (C <~> D)
   := BuildEquiv _ _ (functor_equiv h k) _.  
 
+  (** Reversing equivalences is an equivalence *)
+  Global Instance isequiv_equiv_inverse {A B}
+  : IsEquiv (@equiv_inverse A B).
+  Proof.
+    refine (isequiv_adjointify _ equiv_inverse _ _);
+      intros e; apply path_equiv; reflexivity.
+  Defined.
+
+  Definition equiv_equiv_inverse A B
+  : (A <~> B) <~> (B <~> A)
+    := BuildEquiv _ _ (@equiv_inverse A B) _.
+
 End AssumeFunext.
