@@ -1,7 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import HoTT.Tactics.
-Require Import Fibrations UnivalenceImpliesFunext.
+Require Import Fibrations UnivalenceImpliesFunext EquivalenceVarieties.
 Require Import hit.Truncations.
 
 Local Open Scope path_scope.
@@ -288,20 +287,20 @@ Defined.
 
 (** First we show that given a retract, the composite [s o r] is quasi-idempotent. *)
 
-Global Instance preidem_retract {X : Type} (R : RetractOf X)
+Global Instance ispreidem_retract {X : Type} (R : RetractOf X)
 : IsPreIdempotent (retract_idem R).
 Proof.
   exact (fun x => ap (retract_sect R) (retract_issect R (retract_retr R x))).
 Defined.
 
-Definition preidem_retract' {X : Type} (R : RetractOf X)
+Definition preidem_retract {X : Type} (R : RetractOf X)
 : PreIdempotent X
-:= (retract_idem R ; preidem_retract R).
+:= (retract_idem R ; ispreidem_retract R).
 
+Arguments ispreidem_retract / .
 Arguments preidem_retract / .
-Arguments preidem_retract' / .
 
-Global Instance qidem_retract {X : Type} (R : RetractOf X)
+Global Instance isqidem_retract {X : Type} (R : RetractOf X)
 : IsQuasiIdempotent (retract_idem R).
 Proof.
   destruct R as [A r s H]; intros x; unfold isidem; simpl.
@@ -312,29 +311,29 @@ Proof.
   refine (concat_A1p H (H (r x))).
 Defined.
 
-Definition qidem_retract' {X : Type} (R : RetractOf X)
+Definition qidem_retract {X : Type} (R : RetractOf X)
 : QuasiIdempotent X
-:= (preidem_retract' R ; qidem_retract R).
+:= (preidem_retract R ; isqidem_retract R).
 
 (** In particular, it follows that any split function is quasi-idempotent. *)
 
-Global Instance preidem_split {X : Type} (f : X -> X) (S : Splitting f)
+Global Instance ispreidem_split {X : Type} (f : X -> X) (S : Splitting f)
 : IsPreIdempotent f.
 Proof.
   destruct S as [R p].
   refine (ispreidem_homotopic _ p); exact _.
 Defined.
 
-Arguments preidem_split / .
+Arguments ispreidem_split / .
 
-Global Instance qidem_split {X : Type} (f : X -> X) (S : Splitting f)
-: @IsQuasiIdempotent X f (preidem_split f S).
+Global Instance isqidem_split {X : Type} (f : X -> X) (S : Splitting f)
+: @IsQuasiIdempotent X f (ispreidem_split f S).
 Proof.
   destruct S as [R p].
   refine (isqidem_homotopic _ p); exact _.
 Defined.
 
-Arguments qidem_split / .
+Arguments isqidem_split / .
 
 (** ** Quasi-idempotents split *)
 
@@ -488,7 +487,7 @@ Section Splitting.
     apply moveR_Vp, whiskerR; symmetry; apply J.
   Qed.
 
-  (** We conjucture that the particular witness [J] of quasi-idempotence can *not* in general be recovered from the splitting.  This is analogous to how [eissect] and [eisretr] cannot both be recovered after [isequiv_adjointify]; one of them has to be modified. *)
+  (** However, the particular witness [J] of quasi-idempotence can *not* in general be recovered from the splitting; we will mention a counterexample below.  This is analogous to how [eissect] and [eisretr] cannot both be recovered after [isequiv_adjointify]; one of them has to be modified. *)
 
 End Splitting.
 
@@ -663,10 +662,10 @@ Section RetractOfRetracts.
     refine (Build_RetractOf (QuasiIdempotent X)
                             (RetractOf X)
                             split_idem_retract'
-                            qidem_retract' _).
+                            qidem_retract _).
     intros R.
     exact (@path_retractof _ _
-             R (split_idem_retract' (qidem_retract' R))
+             R (split_idem_retract' (qidem_retract R))
              (equiv_split_idem_retract R)
              (equiv_split_idem_retract_retr R)
              (equiv_split_idem_retract_sect R)
@@ -717,7 +716,7 @@ Section RetractOfRetracts.
               _ (@retractof_equiv'
                    (hfiber (@pr1 _ (fun fi => @IsQuasiIdempotent _ fi.1 fi.2)) f) _ _
                    (retractof_hfiber
-                      retract_retractof_qidem pr1 preidem_retract'
+                      retract_retractof_qidem pr1 preidem_retract
                       _ f))
               (Splitting_PreIdempotent f) _).
     - symmetry; refine (hfiber_fibration f _).
@@ -815,9 +814,9 @@ End CoherentIdempotents.
 
 (** ** Quasi-idempotents need not be fully coherent *)
 
-(** We have shown that every quasi-idempotent can be "coherentified" into a fully coherent idempotent, analogously to how every quasi-inverse can be coherentified into an equivalence.  We now show that, just as for quasi-inverses, not every witness to quasi-idempotency *is itself* coherent.  This is in contrast to a witness of pre-idempotency, which (if it extends to a quasi-idempotent) can itself be extended to a coherent idempotent; this is roughly the content of [split_idem_preidem] and [splitting_preidem_retractof_qidem]. *)
+(** We have shown that every quasi-idempotent can be "coherentified" into a fully coherent idempotent, analogously to how every quasi-inverse can be coherentified into an equivalence.  However, just as for quasi-inverses, not every witness to quasi-idempotency *is itself* coherent.  This is in contrast to a witness of pre-idempotency, which (if it extends to a quasi-idempotent) can itself be extended to a coherent idempotent; this is roughly the content of [split_idem_preidem] and [splitting_preidem_retractof_qidem].
 
-(** We begin by observing that when [f] is the identity, the retract type [Splitting_PreIdempotent f] of [splitting_preidem_retractof_qidem] is equivalent to the type of types-equivalent-to-[X], and hence contractible. *)
+  The key step in showing this is to observe that when [f] is the identity, the retract type [Splitting_PreIdempotent f] of [splitting_preidem_retractof_qidem] is equivalent to the type of types-equivalent-to-[X], and hence contractible. *)
 
 Definition contr_splitting_preidem_idmap {ua : Univalence} (X : Type)
 : Contr (Splitting_PreIdempotent (preidem_idmap X)).
@@ -859,9 +858,8 @@ Proof.
     exact (equiv_ap (ap s) _ _).
 Qed.
 
-(** Therefore, there is a unique coherentification of the canonical witness [preidem_idmap] of pre-idempotency for the identity.  Hence, to show that not every quasi-idempotent is coherent, it suffices to give a witness of quasi-idempotency extending [preidem_idmap] which is nontrivial (i.e. not equal to [qidem_idmap]).
+(** Therefore, there is a unique coherentification of the canonical witness [preidem_idmap] of pre-idempotency for the identity.  Hence, to show that not every quasi-idempotent is coherent, it suffices to give a witness of quasi-idempotency extending [preidem_idmap] which is nontrivial (i.e. not equal to [qidem_idmap]).  Such a witness is exactly an element of the 2-center, and we know that some types such as [BAut (BAut Bool)] have nontrivial 2-centers.  In [Spaces.BAut.Bool.IncoherentIdempotent] we use this to construct an explicit counterexample. *)
 
-TODO: Do this, using [BAut (BAut Bool)]. *)
 
 (** ** A pre-idempotent that is not quasi-idempotent *)
 

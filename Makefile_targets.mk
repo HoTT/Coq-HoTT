@@ -102,6 +102,8 @@ CORE_VFILES = \
 	$(srcdir)/theories/Spaces/BAut.v \
 	$(srcdir)/theories/Spaces/BAut/Cantor.v \
 	$(srcdir)/theories/Spaces/Finite.v \
+	$(srcdir)/theories/Spaces/BAut/Bool.v \
+	$(srcdir)/theories/Spaces/BAut/Bool/IncoherentIdempotent.v \
 	$(srcdir)/theories/Misc.v \
 	$(srcdir)/theories/Utf8.v \
 	$(srcdir)/theories/HoTT.v \
