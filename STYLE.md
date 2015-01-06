@@ -920,6 +920,32 @@ the problem lies is to turn on printing of all implicit arguments with
 `Set Printing All`; another is to use `Set Debug Tactic Unification`
 and inspect the output to see where `rewrite` is failing to unify.
 
+### Finding theorems ###
+
+The naming conventions mentioned above often help to guess the name of
+a theorem.  However, it still may happen that you expect that a
+theorem should exist but don't know what it is called.  One approach
+to finding it is to guess what file it should live in and look there;
+for instance, theorems about sigma-types are often in `Types/Sigma.v`,
+and so on.
+
+Another approach is to use Coq's command `SearchAbout` to display all
+the theorems that relate to a particular definition.  This has the
+[disadvantage](https://coq.inria.fr/bugs/show_bug.cgi?id=3904) that it
+doesn't "look through" definitions and notations.  For instance,
+`IsHProp` is a `Notation` for `IsTrunc -1`, but `SearchAbout IsHProp`
+won't show you theorems about `IsTrunc`.  So if you can't find
+something at first using `SearchAbout`, think about ways that your
+desired theorem might be generalized and search for those instead.
+
+Generalizing from a particular truncation level (like `IsHProp`) to
+all truncation levels is a good example.  Another one that it's
+important to be aware of is a generalization from truncation
+(`IsTrunc` and `Trunc`) to all reflective subuniverses or modalities;
+many many theorems about truncation are actually proven more generally
+in the latter situations.  (To obtain those theorems for the special
+case of truncation, you'll generally need to `Import TrM`.)
+
 ### Simpl nomatch ###
 
 If a theorem or definition is defined by `destruct` or `match` (as

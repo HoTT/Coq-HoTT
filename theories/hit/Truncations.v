@@ -257,3 +257,5 @@ Proof.
     intros c; simpl in *.
     strip_truncations. destruct c. reflexivity.
 Defined.
+
+(** If you are looking for a theorem about truncation, you may want to read the note "Finding Theorems" in "STYLE.md". *)

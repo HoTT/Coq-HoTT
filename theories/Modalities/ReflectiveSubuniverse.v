@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import UnivalenceImpliesFunext EquivalenceVarieties Extensions.
+Require Import UnivalenceImpliesFunext EquivalenceVarieties Extensions Fibrations.
 Require Import HoTT.Tactics.
 
 Local Open Scope path_scope.
@@ -677,6 +677,34 @@ Section Reflective_Subuniverse.
       unfold eqid. rewrite O_indpaths_beta.
       exact (pr2_path (O_rec_beta g' a)).
     Defined.
+
+    (** ** Fibers *)
+
+    Global Instance inO_hfiber {A B : Type} `{In O A} `{In O B}
+           (f : A -> B) (b : B)
+    : In O (hfiber f b).
+    Proof.
+      refine (inO_to_O_retract _ _ _).
+      - intros x; refine (_;_).
+        + exact (O_rec pr1 x).
+        + revert x; apply O_indpaths; intros x; simpl.
+          refine (ap f (O_rec_beta pr1 x) @ _).
+          exact (x.2).
+      - intros [a p]; refine (path_sigma' _ _ _).
+        + exact (O_rec_beta pr1 (a;p)). 
+        + refine (ap (transport _ _) (O_indpaths_beta _ _ _ _) @ _); simpl.
+          refine (transport_paths_Fl _ _ @ _).
+          apply concat_V_pp.
+    Defined.
+
+    Definition inO_unsigma {A : Type} (B : A -> Type)
+               `{In O A} {B_inO : In O {x:A & B x}} (x : A)
+    : In O (B x).
+    Proof.
+      refine (inO_equiv_inO _ (hfiber_fibration x B)^-1).
+    Defined.
+
+    Hint Immediate inO_unsigma : typeclass_instances.
 
     (** ** Paths *)
 
