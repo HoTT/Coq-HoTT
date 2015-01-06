@@ -10,7 +10,23 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+(** ** Definitions *)
+(** Quoting Wikipedia (http://en.wikipedia.org/wiki/Total_order##Chains):
+
+    While chain is sometimes merely a synonym for totally ordered set,
+    it can also refer to a totally ordered subset of some partially
+    ordered set. The latter definition has a crucial role in Zorn's
+    lemma. *)
+(** We take the convention that a "chain" is a totally ordered or
+    linearly ordered set; the corresponding category on that set has,
+    as morphisms, the order relation. *)
+(* N.B. The notation here (including that [[n]] have as objects the
+   set [{0, 1, ..., n}]) was originally suggested by David Spivak.
+   It's possible that we should pick a different or more common
+   terminology. *)
+
 Module Export Core.
+  (** *** [[ω]], the linear order on ℕ *)
   Definition omega : PreCategory
     := @Build_PreCategory
          nat
@@ -22,6 +38,10 @@ Module Export Core.
          (fun _ _ _ => path_ishprop _ _)
          _.
 
+  (** *** [[n]], a linear order on a finite set with [n + 1] elements *)
+  (** Using [n + 1] elements allows us to agree with the common
+      definition of an [n]-simplex, where a 0-simplex is a point, and
+      a 1-simplex has two end-points, etc. *)
   Definition chain (n : nat) : PreCategory
     := { m : omega | m <= n }%category.
 
