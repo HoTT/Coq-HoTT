@@ -704,6 +704,8 @@ Section Reflective_Subuniverse.
       refine (inO_equiv_inO _ (hfiber_fibration x B)^-1).
     Defined.
 
+    Hint Immediate inO_unsigma : typeclass_instances.
+
     (** ** Paths *)
 
     Global Instance inO_paths (S : Type) {S_inO : In O S} (x y : S)
