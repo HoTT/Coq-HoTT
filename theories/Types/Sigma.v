@@ -367,14 +367,18 @@ Proof.
                                             (fun x y => ((g (f^-1 x))^-1 ((eisretr f x)^ # y)))) _ _);
   intros [x y].
   - refine (path_sigma' _ (eisretr f x) _); simpl.
-    rewrite (eisretr (g (f^-1 x))).
-    apply transport_pV.
+    abstract (
+        rewrite (eisretr (g (f^-1 x)));
+        apply transport_pV
+      ).
   - refine (path_sigma' _ (eissect f x) _); simpl.
     refine ((ap_transport (eissect f x) (fun x' => (g x') ^-1)
                           (transport Q (eisretr f (f x)) ^ (g x y)))^ @ _).
-    rewrite transport_compose, eisadj, transport_pV.
-    apply eissect.
-Qed.
+    abstract (
+        rewrite transport_compose, eisadj, transport_pV;
+        apply eissect
+      ).
+Defined.
 
 Definition equiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
            (f : A -> B) `{IsEquiv A B f}
