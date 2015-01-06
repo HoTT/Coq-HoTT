@@ -557,3 +557,18 @@ Definition equiv_path_sigma_hprop {A : Type} {P : A -> Type}
            {HP : forall a, IsHProp (P a)} (u v : sigT P)
 : (u.1 = v.1) <~> (u = v)
   := BuildEquiv _ _ (path_sigma_hprop _ _) _.
+
+Definition isequiv_pr1_path_hprop {A} {P : A -> Type}
+         `{forall a, IsHProp (P a)}
+         x y
+: IsEquiv (@pr1_path A P x y)
+  := _ : IsEquiv (path_sigma_hprop x y)^-1.
+
+Hint Immediate isequiv_pr1_path_hprop : typeclass_instances.
+
+(** We define this for ease of [SearchAbout IsEquiv ap pr1] *)
+Definition isequiv_ap_pr1_hprop {A} {P : A -> Type}
+           `{forall a, IsHProp (P a)}
+           x y
+: IsEquiv (@ap _ _ (@pr1 A P) x y)
+  := _.
