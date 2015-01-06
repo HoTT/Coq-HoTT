@@ -129,6 +129,7 @@ CATEGORY_VFILES = \
 	\
 	$(srcdir)/theories/categories/Category/Sigma/OnMorphisms.v \
 	$(srcdir)/theories/categories/Category/Sigma/OnObjects.v \
+	$(srcdir)/theories/categories/Category/Sigma/Univalent.v \
 	$(srcdir)/theories/categories/Category/Subcategory.v \
 	$(srcdir)/theories/categories/Category/Subcategory/Full.v \
 	$(srcdir)/theories/categories/Category/Subcategory/Wide.v \

@@ -3,7 +3,9 @@
 Require Category.Sigma.Core.
 Require Category.Sigma.OnMorphisms.
 Require Category.Sigma.OnObjects.
+Require Category.Sigma.Univalent.
 
 Include Category.Sigma.Core.
 Include Category.Sigma.OnMorphisms.
 Include Category.Sigma.OnObjects.
+Include Category.Sigma.Univalent.
