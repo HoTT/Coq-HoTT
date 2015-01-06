@@ -45,6 +45,9 @@ Module Export Core.
   Definition chain (n : nat) : PreCategory
     := { m : omega | m <= n }%category.
 
+  (** TODO: Possibly generalize this to arbitrary sets with arbitrary
+      (total?) orders on them? *)
+
   Module Export ChainCategoryCoreNotations.
     Notation "[ n ]" := (chain n) : category_scope.
   End ChainCategoryCoreNotations.

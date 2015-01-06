@@ -21,9 +21,9 @@ Module Export Core.
         Consider the subcategory of [Δ] with the same objects (wide)
         but only injective morphisms.  If we call that [Γ] (which is
         nonstandard), then semi-simplicial sets (also a non-standard
-        term) are [Fun(Γᵒᵖ, Set)]. Define the obvious inclusion [Γ ->
-        Δ], which we will use to make simplicial sets without having
-        to worry about "degneracies". *)
+        term) (sic) are [Fun(Γᵒᵖ, Set)]. Define the obvious inclusion
+        [Γ -> Δ], which we will use to make simplicial sets without
+        having to worry about "degneracies". *)
 
     Definition semisimplex_category : PreCategory
       := wide simplex_category
