@@ -367,14 +367,18 @@ Proof.
                                             (fun x y => ((g (f^-1 x))^-1 ((eisretr f x)^ # y)))) _ _);
   intros [x y].
   - refine (path_sigma' _ (eisretr f x) _); simpl.
-    rewrite (eisretr (g (f^-1 x))).
-    apply transport_pV.
+    abstract (
+        rewrite (eisretr (g (f^-1 x)));
+        apply transport_pV
+      ).
   - refine (path_sigma' _ (eissect f x) _); simpl.
     refine ((ap_transport (eissect f x) (fun x' => (g x') ^-1)
                           (transport Q (eisretr f (f x)) ^ (g x y)))^ @ _).
-    rewrite transport_compose, eisadj, transport_pV.
-    apply eissect.
-Qed.
+    abstract (
+        rewrite transport_compose, eisadj, transport_pV;
+        apply eissect
+      ).
+Defined.
 
 Definition equiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
            (f : A -> B) `{IsEquiv A B f}
@@ -557,3 +561,18 @@ Definition equiv_path_sigma_hprop {A : Type} {P : A -> Type}
            {HP : forall a, IsHProp (P a)} (u v : sigT P)
 : (u.1 = v.1) <~> (u = v)
   := BuildEquiv _ _ (path_sigma_hprop _ _) _.
+
+Definition isequiv_pr1_path_hprop {A} {P : A -> Type}
+         `{forall a, IsHProp (P a)}
+         x y
+: IsEquiv (@pr1_path A P x y)
+  := _ : IsEquiv (path_sigma_hprop x y)^-1.
+
+Hint Immediate isequiv_pr1_path_hprop : typeclass_instances.
+
+(** We define this for ease of [SearchAbout IsEquiv ap pr1] *)
+Definition isequiv_ap_pr1_hprop {A} {P : A -> Type}
+           `{forall a, IsHProp (P a)}
+           x y
+: IsEquiv (@ap _ _ (@pr1 A P) x y)
+  := _.
