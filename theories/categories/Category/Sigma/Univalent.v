@@ -16,6 +16,12 @@ Local Open Scope morphism_scope.
 Local Open Scope equiv_scope.
 Local Open Scope function_scope.
 
+(** TODO: Following a comment from Mike Shulman
+    (https://github.com/HoTT/HoTT/pull/670##issuecomment-68907833),
+    much of this can probably be subsumed by a general theorem proving
+    that univalence lifts along suitable pseudomonic functors
+    (http://ncatlab.org/nlab/show/pseudomonic+functor). *)
+
 (** ** Lift saturation to sigma on objects whenever the property is an hProp *)
 Section onobjects.
   Variable A : PreCategory.
