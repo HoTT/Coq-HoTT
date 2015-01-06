@@ -199,7 +199,7 @@ Section on_both.
 
   Global Arguments Pidtoiso / .
 
-  (** TODO: generalize this to a theorem [forall A P, IsHSet A -> IsHSet { x : A | P x } -> forall x, IsHSet (P x)] *)
+  (** TODO: generalize this to a theorem [forall A P, IsHSet A -> IsHSet { x : A | P x } -> forall x, IsHSet (P x)], [inO_unsigma] of ##672 *)
   Local Instance ishset_pmor {s d m} : IsHSet (Pmor s d m).
   Proof.
     intros p q.
