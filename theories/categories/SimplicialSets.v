@@ -13,9 +13,21 @@ Set Asymmetric Patterns.
 Local Open Scope functor_scope.
 Local Open Scope category_scope.
 
+(** We define the precategory Δ of simplexes, or finite non-empty linear
+    orders *)
+
 Module Export Core.
   Section simplicial_sets.
     Context `{Funext}.
+
+    (** We say that the objects of Δ are natural numbers, where a
+        number [n] is morally considered as the canonical [n]-simplex,
+        a finite linear order on [n + 1] elements.  By declaring
+        [chain] to be a local coercion from [nat] to [PreCategory], we
+        can rely on on-the-fly eta-expansion to make this moral
+        consideration a reality, telling Coq that it can unify, for
+        example, [nat -> nat -> Type] with [PreCategory -> PreCategory
+        -> Type] by silently inserting [chain]. *)
 
     Local Coercion chain : nat >-> PreCategory.
 
