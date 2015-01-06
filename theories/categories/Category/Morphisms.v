@@ -137,6 +137,21 @@ Section iso_contr.
     exact (center _).
   Defined.
 
+  (** *** Relations between [path_isomorphic], [ap morphism_inverse], and [ap morphism_isomorphic] *)
+  Definition ap_morphism_isomorphic_path_isomorphic (i j : Isomorphic s d) p
+  : ap (@morphism_isomorphic _ _ _) (path_isomorphic i j p) = p.
+  Proof.
+    unfold path_isomorphic.
+    destruct i, j.
+    path_induction_hammer.
+  Qed.
+
+  Definition ap_morphism_inverse_path_isomorphic (i j : Isomorphic s d) p q
+  : ap (fun e : Isomorphic s d => e^-1)%morphism (path_isomorphic i j p) = q.
+  Proof.
+    apply path_ishprop.
+  Qed.
+
   (** *** Equality between isomorphisms is equivalent to by equality between their forward components *)
   Global Instance isequiv_path_isomorphic
   : IsEquiv (path_isomorphic i j).
