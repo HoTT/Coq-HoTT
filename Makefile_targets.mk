@@ -129,6 +129,7 @@ CATEGORY_VFILES = \
 	\
 	$(srcdir)/theories/categories/Category/Sigma/OnMorphisms.v \
 	$(srcdir)/theories/categories/Category/Sigma/OnObjects.v \
+	$(srcdir)/theories/categories/Category/Sigma/Univalent.v \
 	$(srcdir)/theories/categories/Category/Subcategory.v \
 	$(srcdir)/theories/categories/Category/Subcategory/Full.v \
 	$(srcdir)/theories/categories/Category/Subcategory/Wide.v \
@@ -143,6 +144,9 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/SetCategory/Morphisms.v \
 	$(srcdir)/theories/categories/SetCategory/Functors.v \
 	$(srcdir)/theories/categories/SetCategory/Functors/SetProp.v \
+	\
+	$(srcdir)/theories/categories/SimplicialSets.v \
+	$(srcdir)/theories/categories/SemiSimplicialSets.v \
 	\
 	$(srcdir)/theories/categories/FundamentalPreGroupoidCategory.v \
 	$(srcdir)/theories/categories/HomotopyPreCategory.v \
@@ -198,6 +202,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/IndiscreteCategory.v \
 	\
 	$(srcdir)/theories/categories/NatCategory.v \
+	$(srcdir)/theories/categories/ChainCategory.v \
 	\
 	$(srcdir)/theories/categories/InitialTerminalCategory.v \
 	$(srcdir)/theories/categories/InitialTerminalCategory/Core.v \

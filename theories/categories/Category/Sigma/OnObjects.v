@@ -75,3 +75,7 @@ Section sigT_obj.
 End sigT_obj.
 
 Arguments pr1_obj {A Pobj}.
+
+Module Export CategorySigmaOnObjectsNotations.
+  Notation "{ x : A | P }" := (sigT_obj A (fun x => P)) : category_scope.
+End CategorySigmaOnObjectsNotations.

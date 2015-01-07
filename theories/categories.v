@@ -20,10 +20,16 @@ Require DiscreteCategory.
 Require IndiscreteCategory.
 (** ** Finite Discrete Categories (natural numbers as categories) *)
 Require NatCategory.
+(** ** Chain Categories [[n]] *)
+Require ChainCategory.
 (** ** Initial and Terminal Categories *)
 Require InitialTerminalCategory.
 (** ** The Category of Sets *)
 Require SetCategory.
+(** ** The Category of Simplicial Sets *)
+Require SimplicialSets.
+(** ** The Category of Semi-Simplicial Sets *)
+Require SemiSimplicialSets.
 (** ** The Hom Functor *)
 Require HomFunctor.
 (** ** Profunctors *)
@@ -79,8 +85,11 @@ Include CategoryOfGroupoids.
 Include DiscreteCategory.Core.
 Include IndiscreteCategory.Core.
 Include NatCategory.Core.
+Include ChainCategory.Core.
 Include InitialTerminalCategory.Core.
 Include SetCategory.Core.
+Include SimplicialSets.Core.
+Include SemiSimplicialSets.Core.
 Include HomFunctor.
 Include Profunctor.Core.
 Include Cat.Core.

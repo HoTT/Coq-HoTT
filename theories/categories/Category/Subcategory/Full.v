@@ -3,3 +3,5 @@
 Require Import Category.Sigma.OnObjects.
 
 Notation full := sigT_obj.
+
+Notation "{ x : A | P }" := (full A (fun x => P)) : category_scope.

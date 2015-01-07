@@ -48,6 +48,11 @@ Section iso_contr.
 
   Variables s d : C.
 
+  Local Notation IsIsomorphism_sig_T m :=
+    { inverse : morphism C d s
+    | { _ : inverse o m = identity _
+      | m o inverse = identity _ } } (only parsing).
+
   Section IsIsomorphism.
     Variable m : morphism C s d.
 
@@ -64,14 +69,9 @@ Section iso_contr.
                       autorewrite with morphism) ].
     Qed.
 
-    Local Notation IsIsomorphism_sig_T :=
-      { inverse : morphism C d s
-      | { _ : inverse o m = identity _
-        | m o inverse = identity _ } } (only parsing).
-
     (** *** Equivalence between the record and sigma versions of [IsIsomorphism] *)
     Lemma issig_isisomorphism
-    : IsIsomorphism_sig_T <~> IsIsomorphism m.
+    : IsIsomorphism_sig_T m <~> IsIsomorphism m.
     Proof.
       issig (@Build_IsIsomorphism _ _ _ m)
             (@morphism_inverse _ _ _ m)
@@ -110,6 +110,15 @@ Section iso_contr.
           (@isisomorphism_isomorphic C s d).
   Defined.
 
+  Local Notation Isomorphic_full_sig_T :=
+    { m : morphism C s d
+    | IsIsomorphism_sig_T m } (only parsing).
+
+  (** *** Equivalence between record and fully sigma versions of [Isomorphic] *)
+  Definition issig_full_isomorphic
+  : Isomorphic_full_sig_T <~> Isomorphic s d
+    := equiv_compose' issig_isomorphic (equiv_functor_sigma_id issig_isisomorphism).
+
   (** *** Isomorphisms form an hSet *)
   Global Instance trunc_Isomorphic : IsHSet (Isomorphic s d).
   Proof.
@@ -127,6 +136,21 @@ Section iso_contr.
     f_ap.
     exact (center _).
   Defined.
+
+  (** *** Relations between [path_isomorphic], [ap morphism_inverse], and [ap morphism_isomorphic] *)
+  Definition ap_morphism_isomorphic_path_isomorphic (i j : Isomorphic s d) p
+  : ap (@morphism_isomorphic _ _ _) (path_isomorphic i j p) = p.
+  Proof.
+    unfold path_isomorphic.
+    destruct i, j.
+    path_induction_hammer.
+  Qed.
+
+  Definition ap_morphism_inverse_path_isomorphic (i j : Isomorphic s d) p q
+  : ap (fun e : Isomorphic s d => e^-1)%morphism (path_isomorphic i j p) = q.
+  Proof.
+    apply path_ishprop.
+  Qed.
 
   (** *** Equality between isomorphisms is equivalent to by equality between their forward components *)
   Global Instance isequiv_path_isomorphic
@@ -218,6 +242,11 @@ Class IsMonomorphism {C} {x y} (m : morphism C x y) :=
   is_monomorphism : forall z (m1 m2 : morphism C z x),
                       m o m1 = m o m2
                       -> m1 = m2.
+
+(** We make [IsEpimorphism] and [IsMonomorphism] transparent to
+    typeclass search so that we can infer things like [IsHProp]
+    automatically. *)
+Typeclasses Transparent IsEpimorphism IsMonomorphism.
 
 Record Epimorphism {C} x y :=
   {
