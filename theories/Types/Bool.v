@@ -4,6 +4,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Prod Types.Equiv.
 Local Open Scope equiv_scope.
+Local Open Scope path_scope.
 
 (* coq calls it "bool", we call it "Bool" *)
 Local Unset Elimination Schemes.
@@ -149,19 +150,21 @@ Section EquivBoolEquiv.
                                               then (equiv_idmap Bool)
                                               else equiv_negb.
 
+  Definition aut_bool_canonical (e : Bool <~> Bool)
+  : e == g (f e).
+  Proof.
+    unfold f, g; clear f g; intros []; simpl.
+    - destruct (e true); reflexivity.
+    - refine (eval_bool_isequiv e @ _).
+      destruct (e true); reflexivity.
+  Defined.
+
   Lemma equiv_bool_aut_bool `{Funext} : Bool <~> (Bool <~> Bool).
   Proof.
-    refine (equiv_adjointify g f _ _);
-    unfold f, g; clear f g;
-    hnf; simpl.
+    refine (equiv_adjointify g f _ _).
     - intro e.
-      destruct e as [e ?].
-      apply path_equiv; try assumption.
-      apply path_forall.
-      intros []; simpl.
-      * destruct (e true); reflexivity.
-      * etransitivity; [ | symmetry; apply eval_bool_isequiv; trivial ].
-        destruct (e true); reflexivity.
+      apply path_equiv, path_forall.
+      intros b; symmetry; apply aut_bool_canonical.
     - intros []; reflexivity.
   Defined.
 
@@ -183,12 +186,16 @@ Section EquivBoolEquiv.
   Defined.
 
   (** In particular, every pair of automorphisms of [Bool] commute with each other. *)
-  Definition abelian_aut_bool `{Funext} (e1 e2 : Bool <~> Bool)
+  Definition abelian_aut_bool (e1 e2 : Bool <~> Bool)
   : e1 o e2 == e2 o e1.
   Proof.
-    revert e1. equiv_intro equiv_bool_aut_bool e1.
-    revert e2. equiv_intro equiv_bool_aut_bool e2.
-    destruct e1, e2; simpl; exact (fun x => 1%path).
+    intro b.
+    refine (ap e1 (aut_bool_canonical e2 b) @ _).
+    refine (aut_bool_canonical e1 _ @ _).
+    refine (_ @ ap e2 (aut_bool_canonical e1 b)^).
+    refine (_ @ (aut_bool_canonical e2 _)^).
+    unfold f, g.
+    destruct (e1 true), (e2 true), b; reflexivity.
   Defined.
 
 End EquivBoolEquiv.
