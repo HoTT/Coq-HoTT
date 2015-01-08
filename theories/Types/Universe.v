@@ -285,55 +285,55 @@ but I haven't managed to prove them yet.  Fortunately, for existing applications
 
 (** Coq is too eager about unfolding [equiv_path_equiv] in the following proofs, so we tell it not to.  We go into a section in order to limit the scope of the [Opaque] command. *)
 Section OpaquePathEquiv.
-Opaque equiv_path_equiv.
+  Opaque equiv_path_equiv.
 
-Definition path2_universe_postcompose_idmap `{Funext}
-           {A C : Type} (p : forall a:A, a = a)
-           (g : A <~> C)
-: equiv_path2_universe g g (fun a => ap g (p a))
-  = (concat_1p _)^
-    @ whiskerR (path_universe_1)^ (path_universe g)
-    @ whiskerR (equiv_path2_universe (equiv_idmap A) (equiv_idmap A) p)
-               (path_universe g)
-    @ whiskerR path_universe_1 (path_universe g)
-    @ concat_1p _.
-Proof.
-  transitivity ((eta_path_universe (path_universe g))^
-                @ equiv_path2_universe
-                  (equiv_path A C (path_universe g))
-                  (equiv_path A C (path_universe g))
-                  (fun a => ap (equiv_path A C (path_universe g)) (p a))
-                @ eta_path_universe (path_universe g)).
-  - refine ((apD (fun g' => equiv_path2_universe g' g'
-                              (fun a => ap g' (p a)))
-              (eisretr (equiv_path A C) g))^ @ _).
-    refine (transport_paths_FlFr (eisretr (equiv_path A C) g) _ @ _).
-    apply concat2.
-    + apply whiskerR.
-      apply inverse2, symmetry.
-      refine (eisadj (equiv_path A C)^-1 g).
-    + symmetry; refine (eisadj (equiv_path A C)^-1 g).
-  - generalize (path_universe g).
-    intros h. destruct h. simpl.
-    rewrite !concat_1p, !concat_p1.
-    refine (_ @ whiskerR (whiskerR_pp 1 path_universe_1^ _) _).
-    refine (_ @ whiskerR_pp 1 _ path_universe_1).
-    refine (_ @ (whiskerR_p1_1 _)^).
-    apply whiskerR, whiskerL, ap, ap, ap.
-    apply path_forall; intros x; apply ap_idmap.
-Defined.
+  Definition path2_universe_postcompose_idmap `{Funext}
+             {A C : Type} (p : forall a:A, a = a)
+             (g : A <~> C)
+  : equiv_path2_universe g g (fun a => ap g (p a))
+    = (concat_1p _)^
+      @ whiskerR (path_universe_1)^ (path_universe g)
+      @ whiskerR (equiv_path2_universe (equiv_idmap A) (equiv_idmap A) p)
+        (path_universe g)
+      @ whiskerR path_universe_1 (path_universe g)
+      @ concat_1p _.
+  Proof.
+    transitivity ((eta_path_universe (path_universe g))^
+                  @ equiv_path2_universe
+                    (equiv_path A C (path_universe g))
+                    (equiv_path A C (path_universe g))
+                    (fun a => ap (equiv_path A C (path_universe g)) (p a))
+                    @ eta_path_universe (path_universe g)).
+    - refine ((apD (fun g' => equiv_path2_universe g' g'
+                                (fun a => ap g' (p a)))
+                   (eisretr (equiv_path A C) g))^ @ _).
+      refine (transport_paths_FlFr (eisretr (equiv_path A C) g) _ @ _).
+      apply concat2.
+      + apply whiskerR.
+        apply inverse2, symmetry.
+        refine (eisadj (equiv_path A C)^-1 g).
+      + symmetry; refine (eisadj (equiv_path A C)^-1 g).
+    - generalize (path_universe g).
+      intros h. destruct h. simpl.
+      rewrite !concat_1p, !concat_p1.
+      refine (_ @ whiskerR (whiskerR_pp 1 path_universe_1^ _) _).
+      refine (_ @ whiskerR_pp 1 _ path_universe_1).
+      refine (_ @ (whiskerR_p1_1 _)^).
+      apply whiskerR, whiskerL, ap, ap, ap.
+      apply path_forall; intros x; apply ap_idmap.
+  Defined.
 
-Definition path2_universe_precompose_idmap `{Funext}
-           {A B : Type} (p : forall b:B, b = b)
-           (g : A <~> B)
-: equiv_path2_universe g g (fun a => (p (g a)))
-  = (concat_p1 _)^
-    @ whiskerL (path_universe g) (path_universe_1)^
-    @ whiskerL (path_universe g)
-       (equiv_path2_universe (equiv_idmap B) (equiv_idmap B) p)
-    @ whiskerL (path_universe g) (path_universe_1)
-    @ concat_p1 _.
-Proof.
+  Definition path2_universe_precompose_idmap `{Funext}
+             {A B : Type} (p : forall b:B, b = b)
+             (g : A <~> B)
+  : equiv_path2_universe g g (fun a => (p (g a)))
+    = (concat_p1 _)^
+      @ whiskerL (path_universe g) (path_universe_1)^
+      @ whiskerL (path_universe g)
+          (equiv_path2_universe (equiv_idmap B) (equiv_idmap B) p)
+      @ whiskerL (path_universe g) (path_universe_1)
+      @ concat_p1 _.
+  Proof.
   transitivity ((eta_path_universe (path_universe g))^
                 @ equiv_path2_universe
                   (equiv_path A B (path_universe g))
@@ -356,7 +356,7 @@ Proof.
     refine (_ @ whiskerR (whiskerL_pp 1 path_universe_1^ _) _).
     refine (_ @ whiskerL_pp 1 _ path_universe_1).
     exact ((whiskerL_1p_1 _)^).
-Defined.
+  Defined.
 
 End OpaquePathEquiv.
 
