@@ -82,8 +82,8 @@ Definition negb_ne {b1 b2 : Bool}
 Proof.
   destruct b1, b2.
   - intros oops; case (oops idpath).
-  - intros _; reflexivity.
-  - intros _; reflexivity.
+  - reflexivity.
+  - reflexivity.
   - intros oops; case (oops idpath).
 Defined.
 

@@ -25,8 +25,8 @@ Section IncoherentQuasiIdempotent.
   : ~ (s o r == idmap).
   Proof.
     intros oops.
-    pose (p := oops nontrivial_qidem_baut_baut_bool); clearbody p.
-    pose (q := oops (isqidem_idmap (BAut (BAut Bool)))); clearbody q; clear oops.
+    assert (p := oops nontrivial_qidem_baut_baut_bool).
+    assert (q := oops (isqidem_idmap (BAut (BAut Bool)))); clear oops.
     apply nontrivial_negb_center_baut_baut_bool.
     refine (p^ @ ap s _ @ q).
     pose (contr_splitting_preidem_idmap (BAut (BAut Bool))).

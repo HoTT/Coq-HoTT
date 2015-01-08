@@ -94,7 +94,9 @@ Ltac baut_reduce :=
       | [ Z : BAut ?X |- _ ]
         => let Zispoint := fresh "Zispoint" in
            assert (Zispoint := merely_path_baut (point (BAut X)) Z);
-           strip_truncations;
+           revert Zispoint;
+           refine (@Trunc_ind _ _ _ _ _);
+           intro Zispoint;
            destruct Zispoint
     end.
 
@@ -162,8 +164,8 @@ Defined.
 
 (** This implies that if [X] is a set, then the center of [BAut X] is the set of automorphisms of [X] that commute with every other automorphism (i.e. the center, in the usual sense, of the group of automorphisms of [X]). *)
 
-Definition center_baut `{Univalence} X `{IsHSet X} :
-  { f : X <~> X & forall g:X<~>X, g o f == f o g }
+Definition center_baut `{Univalence} X `{IsHSet X}
+: { f : X <~> X & forall g:X<~>X, g o f == f o g }
   <~> (forall Z:BAut X, Z = Z).
 Proof.
   refine (equiv_compose'
@@ -209,61 +211,62 @@ Defined.
 
 (** Coq is too eager about unfolding some things appearing in this proof. *)
 Section Center2BAut.
-Opaque equiv_path_equiv.
-Opaque equiv_path2_universe.
+  (** TODO: Can we use [Local Arguments ... : simpl never] instead? *)
+  Opaque equiv_path_equiv.
+  Opaque equiv_path2_universe.
 
-Definition center2_baut `{Univalence} X `{IsTrunc 1 X} :
-  { f : forall x:X, x=x & forall (g:X<~>X) (x:X), ap g (f x) = f (g x) }
-  <~> (forall Z:BAut X, (idpath Z) = (idpath Z)).
-Proof.
-  refine (equiv_compose'
-            (equiv_functor_forall'
-               (P := fun Z => idpath Z.1 = idpath Z.1)
-               (equiv_idmap (BAut X))
-               (fun Z => equiv_compose' (equiv_concat_lr _ _)
-                                        (equiv_ap (equiv_path_sigma_hprop Z Z)
-                                                  (idpath Z.1) (idpath Z.1)))) _).
-  1:symmetry; apply path_sigma_hprop_1.
-  1:apply path_sigma_hprop_1.
-  assert (forall Z:BAut X, IsHSet (idpath Z.1 = idpath Z.1)) by exact _.
-  refine (equiv_compose' (baut_ind_hset X (fun Z => idpath Z = idpath Z)) _).
-  refine (equiv_functor_sigma' _ _).
-  { refine (equiv_compose' _
-              (equiv_path2_universe (equiv_idmap X) (equiv_idmap X))).
-    apply equiv_concat_lr.
-    - symmetry; apply path_universe_1.
-    - apply path_universe_1. }
-  intros f.
-  refine (equiv_functor_forall' (equiv_idmap _) _); intros g.
-  refine (equiv_compose' _ (equiv_path3_universe _ _)).
-  refine (equiv_compose' (dpath_paths2 (path_universe g) _ _) _).
-  simpl.
-  change (equiv_idmap X == equiv_idmap X) in f.
-  refine (equiv_concat_lr _ _).
-  - refine (_ @ (path2_universe_postcompose_idmap f g)^).
-    abstract (rewrite !whiskerR_pp, !concat_pp_p; reflexivity).
-  - refine (path2_universe_precompose_idmap f g @ _).
-    abstract (rewrite !whiskerL_pp, !concat_pp_p; reflexivity).
-Defined.
+  Definition center2_baut `{Univalence} X `{IsTrunc 1 X}
+  : { f : forall x:X, x=x & forall (g:X<~>X) (x:X), ap g (f x) = f (g x) }
+      <~> (forall Z:BAut X, (idpath Z) = (idpath Z)).
+  Proof.
+    refine (equiv_compose'
+              (equiv_functor_forall'
+                 (P := fun Z => idpath Z.1 = idpath Z.1)
+                 (equiv_idmap (BAut X))
+                 (fun Z => equiv_compose' (equiv_concat_lr _ _)
+                             (equiv_ap (equiv_path_sigma_hprop Z Z)
+                                       (idpath Z.1) (idpath Z.1)))) _).
+    { symmetry; apply path_sigma_hprop_1. }
+    { apply path_sigma_hprop_1. }
+    assert (forall Z:BAut X, IsHSet (idpath Z.1 = idpath Z.1)) by exact _.
+    refine (equiv_compose' (baut_ind_hset X (fun Z => idpath Z = idpath Z)) _).
+    refine (equiv_functor_sigma' _ _).
+    { refine (equiv_compose' _
+                             (equiv_path2_universe (equiv_idmap X) (equiv_idmap X))).
+      apply equiv_concat_lr.
+      - symmetry; apply path_universe_1.
+      - apply path_universe_1. }
+    intros f.
+    refine (equiv_functor_forall' (equiv_idmap _) _); intros g.
+    refine (equiv_compose' _ (equiv_path3_universe _ _)).
+    refine (equiv_compose' (dpath_paths2 (path_universe g) _ _) _).
+    cbn.
+    change (equiv_idmap X == equiv_idmap X) in f.
+    refine (equiv_concat_lr _ _).
+    - refine (_ @ (path2_universe_postcompose_idmap f g)^).
+      abstract (rewrite !whiskerR_pp, !concat_pp_p; reflexivity).
+    - refine (path2_universe_precompose_idmap f g @ _).
+      abstract (rewrite !whiskerL_pp, !concat_pp_p; reflexivity).
+  Defined.
 
-(** Once again we compute it on the identity.  In this case it seems to be unavoidable to do some [simpl]ing, making this proof somewhat slower. *)
-Definition id_center2_baut `{Univalence} X `{IsTrunc 1 X}
-: center2_baut X (existT
-                   (fun (f:forall x:X, x=x) =>
-                      forall (g:X<~>X) (x:X), ap g (f x) = f (g x))
-                   (fun x => idpath x)
-                   (fun (g:X<~>X) (x:X) => idpath (idpath (g x))))
-  = fun Z => idpath (idpath Z).
-Proof.
-  apply path_forall; intros Z.
-  assert (IsHSet (idpath Z.1 = idpath Z.1)) by exact _.
-  baut_reduce.
-  simpl. unfold functor_forall, sig_rect, merely_rec_hset. simpl.
-  rewrite equiv_path2_universe_1.
-  rewrite !concat_p1, !concat_Vp.
-  simpl.
-  rewrite !concat_p1, !concat_Vp.
-  reflexivity.
-Defined.
+  (** Once again we compute it on the identity.  In this case it seems to be unavoidable to do some [simpl]ing, making this proof somewhat slower. *)
+  Definition id_center2_baut `{Univalence} X `{IsTrunc 1 X}
+  : center2_baut X (existT
+                      (fun (f:forall x:X, x=x) =>
+                         forall (g:X<~>X) (x:X), ap g (f x) = f (g x))
+                      (fun x => idpath x)
+                      (fun (g:X<~>X) (x:X) => idpath (idpath (g x))))
+    = fun Z => idpath (idpath Z).
+  Proof.
+    apply path_forall; intros Z.
+    assert (IsHSet (idpath Z.1 = idpath Z.1)) by exact _.
+    baut_reduce.
+    cbn. unfold functor_forall, sig_rect, merely_rec_hset. simpl.
+    rewrite equiv_path2_universe_1.
+    rewrite !concat_p1, !concat_Vp.
+    simpl.
+    rewrite !concat_p1, !concat_Vp.
+    reflexivity.
+  Defined.
 
 End Center2BAut.
