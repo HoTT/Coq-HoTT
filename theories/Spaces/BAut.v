@@ -211,9 +211,8 @@ Defined.
 
 (** Coq is too eager about unfolding some things appearing in this proof. *)
 Section Center2BAut.
-  (** TODO: Can we use [Local Arguments ... : simpl never] instead? *)
-  Opaque equiv_path_equiv.
-  Opaque equiv_path2_universe.
+  Local Arguments equiv_path_equiv : simpl never.
+  Local Arguments equiv_path2_universe : simpl never.
 
   Definition center2_baut `{Univalence} X `{IsTrunc 1 X}
   : { f : forall x:X, x=x & forall (g:X<~>X) (x:X), ap g (f x) = f (g x) }
@@ -249,7 +248,7 @@ Section Center2BAut.
       abstract (rewrite !whiskerL_pp, !concat_pp_p; reflexivity).
   Defined.
 
-  (** Once again we compute it on the identity.  In this case it seems to be unavoidable to do some [simpl]ing, making this proof somewhat slower. *)
+  (** Once again we compute it on the identity.  In this case it seems to be unavoidable to do some [simpl]ing (or at least [cbn]ing), making this proof somewhat slower. *)
   Definition id_center2_baut `{Univalence} X `{IsTrunc 1 X}
   : center2_baut X (existT
                       (fun (f:forall x:X, x=x) =>
@@ -261,7 +260,7 @@ Section Center2BAut.
     apply path_forall; intros Z.
     assert (IsHSet (idpath Z.1 = idpath Z.1)) by exact _.
     baut_reduce.
-    cbn. unfold functor_forall, sig_rect, merely_rec_hset. simpl.
+    cbn. unfold functor_forall, sig_rect, merely_rec_hset. cbn.
     rewrite equiv_path2_universe_1.
     rewrite !concat_p1, !concat_Vp.
     simpl.

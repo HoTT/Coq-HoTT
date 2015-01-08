@@ -283,9 +283,9 @@ Definition path2_universe_precompose `{Funext}
 
 but I haven't managed to prove them yet.  Fortunately, for existing applications what we actually need is the following rather different-looking version that applies only when [f1] and [f2] are identities. *)
 
-(** Coq is too eager about unfolding [equiv_path_equiv] in the following proofs, so we tell it not to.  We go into a section in order to limit the scope of the [Opaque] command. *)
-Section OpaquePathEquiv.
-  Opaque equiv_path_equiv.
+(** Coq is too eager about unfolding [equiv_path_equiv] in the following proofs, so we tell it not to.  We go into a section in order to limit the scope of the [simpl never] command. *)
+Section PathEquivSimplNever.
+  Local Arguments equiv_path_equiv : simpl never.
 
   Definition path2_universe_postcompose_idmap `{Funext}
              {A C : Type} (p : forall a:A, a = a)
@@ -314,7 +314,7 @@ Section OpaquePathEquiv.
         refine (eisadj (equiv_path A C)^-1 g).
       + symmetry; refine (eisadj (equiv_path A C)^-1 g).
     - generalize (path_universe g).
-      intros h. destruct h. simpl.
+      intros h. destruct h. cbn.
       rewrite !concat_1p, !concat_p1.
       refine (_ @ whiskerR (whiskerR_pp 1 path_universe_1^ _) _).
       refine (_ @ whiskerR_pp 1 _ path_universe_1).
@@ -350,7 +350,7 @@ Section OpaquePathEquiv.
       refine (eisadj (equiv_path A B)^-1 g).
     + symmetry; refine (eisadj (equiv_path A B)^-1 g).
   - generalize (path_universe g).
-    intros h. destruct h. simpl.
+    intros h. destruct h. cbn.
     rewrite !concat_p1.
     refine (_ @ (((concat_1p (whiskerL 1 path_universe_1^))^ @@ 1) @@ 1)).
     refine (_ @ whiskerR (whiskerL_pp 1 path_universe_1^ _) _).
@@ -358,7 +358,7 @@ Section OpaquePathEquiv.
     exact ((whiskerL_1p_1 _)^).
   Defined.
 
-End OpaquePathEquiv.
+End PathEquivSimplNever.
 
 (** ** 3-paths *)
 
