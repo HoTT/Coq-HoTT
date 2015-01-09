@@ -33,7 +33,7 @@ Global Instance contr_paths_contr `{Contr A} (x y : A) : Contr (x = y) | 10000 :
 (** Also, the total space of any based path space is contractible.  We define the [contr] fields as separate definitions, so that we can give them [simpl nomatch] annotations. *)
 
 Definition path_basedpaths {X : Type} {x y : X} (p : x = y)
-: (exist (fun y => x = y) x 1) = (y;p).
+: (x;1) = (y;p) :> {z:X & x=z}.
 Proof.
   destruct p; reflexivity.
 Defined.
@@ -41,18 +41,20 @@ Defined.
 Arguments path_basedpaths {X x y} p : simpl nomatch.
 
 Global Instance contr_basedpaths {X : Type} (x : X) : Contr {y : X & x = y} | 100.
+Proof.
   exists (x ; 1).
   intros [y p]; apply path_basedpaths.
 Defined.
 
 Definition path_basedpaths' {X : Type} {x y : X} (p : y = x)
-: (exist (fun y => y = x) x 1) = (y;p).
+: (x;1) = (y;p) :> {z:X & z=x}.
 Proof.
   destruct p; reflexivity.
 Defined.
 
 Global Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x} | 100.
-  exists (existT (fun y => y = x) x 1).
+Proof.
+  refine (BuildContr _ (x;1) _).
   intros [y p]; apply path_basedpaths'.
 Defined.
 

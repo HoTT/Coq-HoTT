@@ -363,14 +363,14 @@ Proof.
     refine (pmap_postwhisker _ (loop_susp_unit_natural g)^* @* _).
     refine ((pmap_compose_assoc _ _ _)^* @* _).
     refine (pmap_prewhisker g (loop_susp_triangle1 B) @* _).
-    apply pmap_compose_postid.
+    apply pmap_postcompose_idmap.
   - intros f. apply path_pmap.
     refine (pmap_postwhisker _ (psusp_functor_compose _ _) @* _).
     refine ((pmap_compose_assoc _ _ _)^* @* _).
     refine (pmap_prewhisker _ (loop_susp_counit_natural f)^* @* _).
     refine (pmap_compose_assoc _ _ _ @* _).
     refine (pmap_postwhisker f (loop_susp_triangle2 A) @* _).
-    apply pmap_compose_preid.
+    apply pmap_precompose_idmap.
 Defined.
 
 (** And its naturality is easy. *)

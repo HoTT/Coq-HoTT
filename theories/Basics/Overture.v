@@ -713,7 +713,7 @@ Ltac remember_as term name eqname :=
   pose (eqname := idpath : term = name);
   clearbody eqname name.
 
-Tactic Notation "remember" constr(term) "as" ident(name) "eqn" ident(eqname) :=
+Tactic Notation "remember" constr(term) "as" ident(name) "eqn:" ident(eqname) :=
   remember_as term name eqname.
 
 (** A variant that doesn't substitute in the goal and hypotheses. *)
@@ -722,5 +722,5 @@ Ltac recall_as term name eqname :=
   pose (eqname := idpath : term = name);
   clearbody eqname name.
 
-Tactic Notation "recall" constr(term) "as" ident(name) "eqn" ident(eqname) :=
+Tactic Notation "recall" constr(term) "as" ident(name) "eqn:" ident(eqname) :=
   recall_as term name eqname.

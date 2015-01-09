@@ -101,8 +101,8 @@ Ltac pointed_reduce :=
          end;
   cbn in *; unfold point in *;
   path_induction; cbn;
-  try rewrite !concat_p1;
-  try rewrite !concat_1p.
+  (** TODO: [pointed_reduce] uses [rewrite], and thus according to our current general rules, it should only be used in opaque proofs.  We don't yet need any of the proofs that use it to be transparent, but there's a good chance we will eventually.  At that point we can consider whether to allow it in transparent proofs, modify it to not use [rewrite], or exclude it from proofs that need to be transparent. *)
+  rewrite ?concat_p1, ?concat_1p.
 
 Definition loops_2functor {A B : pType} {f g : A ->* B} (p : f ==* g)
 : (loops_functor f) ==* (loops_functor g).
@@ -116,7 +116,7 @@ Proof.
     refine (concat_Ap p q).
   - simpl.
     abstract (rewrite !concat_p1; reflexivity).
-Defined.
+Qed.
 
 (** ** Associativity of pointed map composition *)
 
@@ -128,25 +128,25 @@ Proof.
   refine (Build_pHomotopy _ _); cbn.
   - intros ?; reflexivity.
   - reflexivity.
-Defined.
+Qed.
 
-Definition pmap_compose_preid {A B : pType} (f : A ->* B)
+Definition pmap_precompose_idmap {A B : pType} (f : A ->* B)
 : f o* pmap_idmap A ==* f.
 Proof.
   pointed_reduce.
   refine (Build_pHomotopy _ _); cbn.
   - intros ?; reflexivity.
   - reflexivity.
-Defined.
+Qed.
 
-Definition pmap_compose_postid {A B : pType} (f : A ->* B)
+Definition pmap_postcompose_idmap {A B : pType} (f : A ->* B)
 : pmap_idmap B o* f ==* f.
 Proof.
   pointed_reduce.
   refine (Build_pHomotopy _ _); cbn.
   - intros ?; reflexivity.
   - reflexivity.
-Defined.
+Qed.
 
 (** ** Whiskering of pointed homotopies by pointed functions *)
 
@@ -158,7 +158,7 @@ Proof.
   refine (Build_pHomotopy _ _); cbn.
   - intros a; apply ap, p.
   - reflexivity.
-Defined.
+Qed.
 
 Definition pmap_prewhisker {A B C : pType} (f : A ->* B)
            {g h : B ->* C} (p : g ==* h)
@@ -168,7 +168,7 @@ Proof.
   refine (Build_pHomotopy _ _); cbn.
   - intros a; apply p.
   - refine (concat_p1 _ @ (concat_1p _)^).
-Defined.
+Qed.
 
 (** ** Composition of pointed homotopies *)
 
@@ -180,7 +180,7 @@ Proof.
   refine (Build_pHomotopy _ _); cbn.
   - intros x; exact (p x @ q x).
   - apply concat_p1.
-Defined.
+Qed.
 
 Infix "@*" := phomotopy_compose (at level 30).
 
@@ -191,7 +191,7 @@ Proof.
   refine (Build_pHomotopy _ _); cbn.
   - intros x; exact ((p x)^).
   - apply concat_Vp.
-Defined.
+Qed.
 
 Notation "p ^*" := (phomotopy_inverse p) (at level 20).
 
@@ -210,7 +210,7 @@ Proof.
     refine (_ @ ap (ap g) (concat_p1 _)^).
     apply ap_compose.
   - reflexivity.
-Defined.
+Qed.
 
 Definition loops_functor_idmap (A : pType)
 : loops_functor (pmap_idmap A) ==* pmap_idmap (loops A).
@@ -220,7 +220,7 @@ Proof.
   - intros p.
     refine (concat_1p _ @ concat_p1 _ @ ap_idmap _).
   - reflexivity.
-Defined.
+Qed.
 
 (** ** Pointed equivalences *)
 
