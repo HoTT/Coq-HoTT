@@ -33,7 +33,7 @@ Definition dprop_to_bool (P : DProp) : Bool
 
 Coercion dprop_to_bool : DProp >-> Bool.
 
-(** ** Truncation *)
+(** ** The type of decidable props *)
 
 Definition issig_dprop
   : { X : Type & { _ : Funext -> IsHProp X & Decidable X } } <~> DProp.
@@ -41,19 +41,46 @@ Proof.
   issig Build_DProp dprop_type ishprop_dprop dec_dprop.
 Defined.
 
+Definition equiv_path_dprop `{Funext} (P Q : DProp)
+: (P = Q :> Type) <~> (P = Q :> DProp).
+Proof.
+  destruct P as [P hP dP]. destruct Q as [Q hQ dQ].
+  refine (equiv_compose'
+            (equiv_inverse (equiv_ap' (equiv_inverse issig_dprop) _ _))
+            _); cbn.
+  refine (equiv_compose'
+            (equiv_ap' (equiv_inverse
+                          (equiv_sigma_assoc _ (fun Xp => Decidable Xp.1)))
+                       ((P;hP);dP) ((Q;hQ);dQ)) _).
+  refine (equiv_compose' (equiv_path_sigma_hprop _ _) _); cbn.
+  { intros [X hX]; exact _. }
+  refine (equiv_path_sigma_hprop (P;hP) (Q;hQ)).
+Defined.
+
+Definition path_dprop `{Funext} {P Q : DProp}
+: (P = Q :> Type) -> (P = Q :> DProp)
+  := equiv_path_dprop P Q.
+
 Global Instance ishset_dprop `{Univalence} : IsHSet DProp.
 Proof.
-  refine (trunc_equiv' _ issig_dprop).
-  refine (trunc_equiv _ (equiv_sigma_assoc _ (fun Xp => Decidable Xp.1))^-1).
-  refine (trunc_sigma).
-  2:intros [X ?]; exact _.
-  refine (trunc_equiv' hProp _).
-  refine (equiv_compose' _ (equiv_inverse issig_trunctype)).
-  refine (equiv_functor_sigma' (equiv_idmap Type) _); intros X.
-  apply equiv_iff_hprop.
-  - intros; assumption.
-  - intros f; apply f; exact _.
+  intros P Q.
+  refine (trunc_equiv' _ (n := -1) (equiv_path_dprop P Q)).
 Defined.
+
+Global Instance isequiv_dprop_to_bool `{Univalence}
+: IsEquiv dprop_to_bool.
+Proof.
+  refine (isequiv_adjointify _ (fun b:Bool => if b then True else False) _ _).
+  - intros []; reflexivity.
+  - intros P; unfold dprop_to_bool.
+    destruct (dec P); symmetry; apply path_dprop, path_universe_uncurried.
+    + apply if_hprop_then_equiv_Unit; [ exact _ | assumption ].
+    + apply if_not_hprop_then_equiv_Empty; [ exact _ | assumption ].
+Defined.
+
+Definition equiv_dprop_to_bool `{Univalence}
+: DProp <~> Bool
+  := BuildEquiv _ _ dprop_to_bool _.
 
 (** ** Operations *)
 
