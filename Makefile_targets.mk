@@ -77,6 +77,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/Modalities/Closed.v \
 	$(srcdir)/theories/hit/Circle.v \
 	$(srcdir)/theories/hit/Truncations.v \
+	$(srcdir)/theories/hit/TruncImpliesFunext.v \
 	$(srcdir)/theories/hit/Connectedness.v \
 	$(srcdir)/theories/hit/Flattening.v \
 	$(srcdir)/theories/hit/Interval.v \
