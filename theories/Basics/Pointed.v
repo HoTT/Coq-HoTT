@@ -77,6 +77,14 @@ Definition pmap_compose {A B C : pType}
 
 Infix "o*" := pmap_compose (at level 40).
 
+(** Another option would be
+<<
+Delimit Scope pmap_scope with pmap.
+Bind Scope pmap_scope with pMap.
+Infix "o" := pmap_compose : pmap_scope.
+>>
+which would allow us to use [o] for pointed maps as well most of the time.  However, it would sometimes require adding [%pmap] scoping markers. *)
+
 (** ** Pointed homotopies *)
 
 Record pHomotopy {A B : pType} (f g : pMap A B) :=
