@@ -525,6 +525,24 @@ Proof.
   reflexivity.
 Defined.
 
+(** Some coherence lemmas for functoriality *)
+
+Lemma concat_1p_1 {A} {x : A} (p : x = x) (q : p = 1)
+: concat_1p p @ q = ap (fun p' => 1 @ p') q.
+Proof.
+  rewrite <- (inv_V q).
+  set (r := q^). clearbody r; clear q; destruct r.
+  reflexivity.
+Defined.
+
+Lemma concat_p1_1 {A} {x : A} (p : x = x) (q : p = 1)
+: concat_p1 p @ q = ap (fun p' => p' @ 1) q.
+Proof.
+  rewrite <- (inv_V q).
+  set (r := q^). clearbody r; clear q; destruct r.
+  reflexivity.
+Defined.
+
 (** *** Action of [apD10] and [ap10] on paths. *)
 
 (** Application of paths between functions preserves the groupoid structure *)
@@ -828,10 +846,40 @@ Definition concat2 {A} {x y z : A} {p p' : x = y} {q q' : y = z} (h : p = p') (h
 
 Notation "p @@ q" := (concat2 p q)%path (at level 20) : path_scope.
 
+Arguments concat2 : simpl nomatch.
+
 (** 2-dimensional path inversion *)
 Definition inverse2 {A : Type} {x y : A} {p q : x = y} (h : p = q)
   : p^ = q^
 := ap inverse h.
+
+(** Some higher coherences *)
+
+Lemma ap_pp_concat_pV {A B} (f : A -> B) {x y : A} (p : x = y)
+: ap_pp f p p^ @ ((1 @@ ap_V f p) @ concat_pV (ap f p))
+  = ap (ap f) (concat_pV p).
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+Lemma ap_pp_concat_Vp {A B} (f : A -> B) {x y : A} (p : x = y)
+: ap_pp f p^ p @ ((ap_V f p @@ 1) @ concat_Vp (ap f p))
+  = ap (ap f) (concat_Vp p).
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+Lemma concat_pV_inverse2 {A} {x y : A} (p q : x = y) (r : p = q)
+: (r @@ inverse2 r) @ concat_pV q = concat_pV p.
+Proof.
+  destruct r, p; reflexivity.
+Defined.
+
+Lemma concat_Vp_inverse2 {A} {x y : A} (p q : x = y) (r : p = q)
+: (inverse2 r @@ r) @ concat_Vp q = concat_Vp p.
+Proof.
+  destruct r, p; reflexivity.
+Defined.
 
 (** *** Whiskering *)
 
