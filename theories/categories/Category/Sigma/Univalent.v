@@ -295,6 +295,7 @@ Section on_both.
                  | [ |- transport (fun x => ?f (@morphism_inverse _ _ _ (@morphism_isomorphic _ _ _ x) _)) _ _ = _ ]
                    => rewrite (@transport_compose _ _ _ _ f (fun x => (@morphism_inverse _ _ _ (@morphism_isomorphic _ _ _ x) (@isisomorphism_isomorphic _ _ _ x))))
                  | [ |- transport (?f o ?g) _ _ = _ ] => rewrite (@transport_compose _ _ _ _ f g)
+                 | [ |- transport (fun x => ?f (?g x)) _ _ = _ ] => rewrite (@transport_compose _ _ _ _ f g)
                  | [ |- context[ap (@morphism_isomorphic ?a ?b ?c) (path_isomorphic ?i ?j ?x)] ]
                    => change (ap (@morphism_isomorphic a b c)) with ((path_isomorphic i j)^-1%equiv);
                      rewrite (@eissect _ _ (path_isomorphic i j) _ x)
