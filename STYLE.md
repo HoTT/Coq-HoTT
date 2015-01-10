@@ -645,12 +645,6 @@ universe.  Thus, applying `symmetry` to an `Equiv` introduces a
 strictly larger universe.  A solution is to `apply equiv_inverse`
 instead.  Similarly, use `equiv_compose'` instead of `transitivity`.
 
-Given `P : B -> Type` and `f : A -> B`, writing `P o f` introduces a
-universe parameter strictly larger than the codomain of `P` (since it
-has to be passed to the function `compose`).  A solution is to write
-`fun a => P (f a)` instead.  (This may no longer be true with
-`compose` a notation rather than a function.)
-
 Typeclass inference doesn't always find the simplest solution, and may
 insert unnecessary calls to instances that introduce additional
 universes.  One solution is to alter the proofs of those instances as
@@ -898,10 +892,14 @@ instead.
 ### Notations ###
 
 The operation `compose`, notation `g o f`, is simply a notation for
-`fun x => g (f x)` rather than a defined constant.  This means that,
-for instance, you can't partially apply it and write `compose g` for
-`fun f => g o f`.  We could define `compose := (fun g f x => g (f x))`
-instead of `compose g f := (fun x => g (f x))` to allow this, but we
+`fun x => g (f x)` rather than a defined constant.  We define `compose
+:= (fun g f x => g (f x))` so that typeclass inference can pick up
+`isequiv_compose` instances.  This has the unfortunate side-effect
+that `simpl`/`cbn` is enough to "unfold" `compose`, and there's no way
+to prevent this.  We could additionally define `g o f := (fun x => g
+(f x))` to change this, but this would result in identically looking
+goals which are really different.  We consider it poor style to use
+`compose` as a partially applied constant, such as `compose g`; we
 take the point of view that `fun f => g o f` is more readable anyway.
 
 ### Unfolding definitions ###
@@ -986,6 +984,20 @@ where they are defined.
   automatically.  If you need a version with more fields than yet
   exists, feel free to add it.)
 
+- `rapply`, `erapply`: Defined in `coq/theories/Program/Tactics` and
+  `Basics/Overture` respectively, these tactics are more well-behaved
+  variants of `apply` for theorems with fewer than 16 arguments.  (It
+  is trivial to extend it to *n* arguments for any finite fixed *n*.)
+  The unification algorithm used by `apply` is different and often
+  less powerful than the one used by `refine`, though it is
+  occasionally better at pattern matching.  If `apply` fails with a
+  unification error you think it shouldn't have, try `rapply` or
+  `erapply`.
+
+  The difference between `rapply` and `erapply` is that `rapply` only
+  accepts lemmas with no holes (and will do typeclass inference
+  early), while `erapply` accepts lemmas with holes (such as `ap f`,
+  i.e., `@ap _ _ f _ _`), and does typeclass inference late.
 
 ## Contributing to the library ##
 

@@ -117,7 +117,7 @@ Notation "x .2" := (pr2 x) (at level 3, format "x '.2'") : fibration_scope.
 
 (** Composition of functions. *)
 
-Notation compose g f := (fun x => g (f x)).
+Notation compose := (fun g' f' x => g' (f' x)). (* use primed names because https://coq.inria.fr/bugs/show_bug.cgi?id=3892 *)
 
 (** We put the following notation in a scope because leaving it unscoped causes it to override identical notations in other scopes.  It's convenient to use the same notation for, e.g., function composition, morphism composition in a category, and functor composition, and let Coq automatically infer which one we mean by scopes.  We can't do this if this notation isn't scoped.  Unfortunately, Coq doesn't have a built-in [function_scope] like [type_scope]; [type_scope] is automatically opened wherever Coq is expecting a [Sort], and it would be nice if [function_scope] were automatically opened whenever Coq expects a thing of type [forall _, _] or [_ -> _].  To work around this, we open [function_scope] globally. *)
 Notation "g 'o' f" := (compose g f) (at level 40, left associativity) : function_scope.
@@ -601,6 +601,14 @@ Global Existing Instance ispointed_type.
 (** Homotopy fibers are homotopical inverse images of points.  *)
 
 Definition hfiber {A B : Type} (f : A -> B) (y : B) := { x : A & f x = y }.
+
+(** *** More tactics *)
+
+(** We want access to useful standard library tactics, such as [rapply]. *)
+Require Export Coq.Program.Tactics.
+
+(** [erapply lem] is like [apply lem] (rather, [rapply lem]), but it allows holes in [lem] *)
+Tactic Notation "erapply" open_constr(term) := rapply term.
 
 (** Ssreflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=
