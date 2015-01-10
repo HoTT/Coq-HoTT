@@ -58,6 +58,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/Tactics/RewriteModuloAssociativity.v \
 	$(srcdir)/theories/Tactics/BinderApply.v \
 	$(srcdir)/theories/TruncType.v \
+	$(srcdir)/theories/PType.v \
 	$(srcdir)/theories/Functorish.v \
 	$(srcdir)/theories/FunextAxiom.v \
 	$(srcdir)/theories/UnivalenceAxiom.v \

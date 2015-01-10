@@ -100,6 +100,10 @@ Definition equiv_ap `(f : A -> B) `{IsEquiv A B f} (x y : A)
   : (x = y) <~> (f x = f y)
   := BuildEquiv _ _ (ap f) _.
 
+Definition equiv_ap' `(f : A <~> B) (x y : A)
+  : (x = y) <~> (f x = f y)
+  := equiv_ap f x y.
+
 (* TODO: Is this really necessary? *)
 Definition equiv_inj `(f : A -> B) `{IsEquiv A B f} {x y : A}
   : (f x = f y) -> (x = y)

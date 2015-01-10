@@ -49,8 +49,8 @@ apply (equiv_adjointify p2f f2p).
 Defined.
 
 (** We construct the universal diagram for the object classifier *)
-Definition topmap {B} (f:B->A) (b:B): pointedType :=
-  (hfiber f (f b) ; (b ; idpath (f b))).
+Definition topmap {B} (f:B->A) (b:B): pType :=
+  Build_pType (hfiber f (f b)) (b ; idpath (f b)).
 
 Local Definition help_objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P)->
   (pullback P (@pr1 _ (fun u :Type => u))):=
