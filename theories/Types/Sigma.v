@@ -174,13 +174,13 @@ Definition transport_pr1_path_sigma
 (** This lets us identify the path space of a sigma-type, up to equivalence. *)
 
 Global Instance isequiv_path_sigma `{P : A -> Type} {u v : sigT P}
-: IsEquiv (path_sigma_uncurried P u v) | 0
-  := BuildIsEquiv
-       _ _
-       _ (fun r => (r..1; r..2))
-       eta_path_sigma
-       _ _.
+: IsEquiv (path_sigma_uncurried P u v) | 0.
 Proof.
+  refine (BuildIsEquiv
+            _ _
+            _ (fun r => (r..1; r..2))
+            eta_path_sigma
+            _ _).
   all: destruct u, v; intros [p q].
   all: simpl in *.
   all: destruct q, p; simpl in *.

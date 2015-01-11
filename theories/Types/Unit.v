@@ -74,11 +74,9 @@ Defined.
 Definition unit_coind {A : Type} : Unit -> (A -> Unit)
   := fun _ _ => tt.
 
-Global Instance isequiv_unit_coind `{Funext} (A : Type) : IsEquiv (@unit_coind A) | 0
-  := isequiv_adjointify _
-  (fun f => tt)
-  _ _.
+Global Instance isequiv_unit_coind `{Funext} (A : Type) : IsEquiv (@unit_coind A) | 0.
 Proof.
+  refine (isequiv_adjointify _ (fun f => tt) _ _).
   - intro f. apply path_forall; intros x; apply path_unit.
   - intro x; destruct x; reflexivity.
 Defined.

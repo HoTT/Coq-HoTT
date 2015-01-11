@@ -128,9 +128,9 @@ Definition pred_int (z : Int) : Int
        | pos (succ_pos n) => pos n
      end.
 
-Global Instance isequiv_succ_int : IsEquiv succ_int | 0
-  := isequiv_adjointify succ_int pred_int _ _.
+Global Instance isequiv_succ_int : IsEquiv succ_int | 0.
 Proof.
+  refine (isequiv_adjointify succ_int pred_int _ _).
   intros [[|n] | | [|n]]; reflexivity.
   intros [[|n] | | [|n]]; reflexivity.
 Defined.

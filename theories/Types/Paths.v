@@ -112,9 +112,10 @@ Definition equiv_inj `(f : A -> B) `{IsEquiv A B f} {x y : A}
 (** ** Path operations are equivalences *)
 
 Global Instance isequiv_path_inverse {A : Type} (x y : A)
-  : IsEquiv (@inverse A x y) | 0
-  := BuildIsEquiv _ _ _ (@inverse A y x) (@inv_V A y x) (@inv_V A x y) _.
+  : IsEquiv (@inverse A x y) | 0.
 Proof.
+  refine (BuildIsEquiv _ _ _ (@inverse A y x)
+                       (@inv_V A y x) (@inv_V A x y) _).
   intros p; destruct p; reflexivity.
 Defined.
 
@@ -123,10 +124,10 @@ Definition equiv_path_inverse {A : Type} (x y : A)
   := BuildEquiv _ _ (@inverse A x y) _.
 
 Global Instance isequiv_concat_l {A : Type} `(p : x = y:>A) (z : A)
-  : IsEquiv (@transitivity A _ _ x y z p) | 0
-  := BuildIsEquiv _ _ _ (concat p^)
-     (concat_p_Vp p) (concat_V_pp p) _.
+  : IsEquiv (@transitivity A _ _ x y z p) | 0.
 Proof.
+  refine (BuildIsEquiv _ _ _ (concat p^)
+                       (concat_p_Vp p) (concat_V_pp p) _).
   intros q; destruct p; destruct q; reflexivity.
 Defined.
 
@@ -135,10 +136,10 @@ Definition equiv_concat_l {A : Type} `(p : x = y) (z : A)
   := BuildEquiv _ _ (concat p) _.
 
 Global Instance isequiv_concat_r {A : Type} `(p : y = z) (x : A)
-  : IsEquiv (fun q:x=y => q @ p) | 0
-  := BuildIsEquiv _ _ (fun q => q @ p) (fun q => q @ p^)
-     (fun q => concat_pV_p q p) (fun q => concat_pp_V q p) _.
+  : IsEquiv (fun q:x=y => q @ p) | 0.
 Proof.
+  refine (BuildIsEquiv _ _ (fun q => q @ p) (fun q => q @ p^)
+           (fun q => concat_pV_p q p) (fun q => concat_pp_V q p) _).
   intros q; destruct p; destruct q; reflexivity.
 Defined.
 
@@ -563,9 +564,9 @@ Defined.
 
 Global Instance isequiv_paths_ind `{Funext} {A : Type} (a : A)
   (P : forall x, (a = x) -> Type)
-  : IsEquiv (paths_ind a P) | 0
-  := isequiv_adjointify (paths_ind a P) (fun f => f a 1) _ _.
+  : IsEquiv (paths_ind a P) | 0.
 Proof.
+  refine (isequiv_adjointify (paths_ind a P) (fun f => f a 1) _ _).
   - intros f.
     apply path_forall; intros x.
     apply path_forall; intros p.

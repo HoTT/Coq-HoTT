@@ -61,9 +61,9 @@ Section unique.
 
   Global Instance trunc_initial_category_function
          `{@IsInitialCategory zero} T
-  : Contr (zero -> T) :=
-    let x := {| center x := initial_category_ind _ x |} in x.
+  : Contr (zero -> T).
   Proof.
+    refine (BuildContr _ (initial_category_ind _) _).
     intro y.
     apply path_forall; intro x.
     apply (initial_category_ind _ x).
@@ -73,9 +73,9 @@ Section unique.
 
   Global Instance trunc_initial_category
          `{@IsInitialCategory zero}
-  : Contr (Functor zero C)
-    := let x := {| center := from_initial C |} in x.
+  : Contr (Functor zero C).
   Proof.
+    refine (BuildContr _ (from_initial C) _).
     abstract (
         intros; apply path_functor_uncurried;
         (exists (center _));
@@ -99,9 +99,9 @@ Section unique.
 
   Global Instance trunc_terminal_category
          `{@IsTerminalCategory one H0 H1}
-  : Contr (Functor C one)
-    := let x := {| center := to_terminal C |} in x.
+  : Contr (Functor C one).
   Proof.
+    refine (BuildContr _ (to_terminal C) _).
     intros.
     exact (center _).
   Defined.
