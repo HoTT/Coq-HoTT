@@ -454,9 +454,9 @@ Section iso_lemmas.
 
   (** *** Functors preserve isomorphisms *)
   Global Instance iso_functor C D (F : Functor C D) `(@IsIsomorphism C s d m)
-  : IsIsomorphism (morphism_of F m)
-    := {| morphism_inverse := morphism_of F m^-1 |}.
+  : IsIsomorphism (morphism_of F m).
   Proof.
+    refine ({| morphism_inverse := morphism_of F m^-1 |}).
     abstract (rewrite <- composition_of, ?left_inverse, ?right_inverse, identity_of; reflexivity).
     abstract (rewrite <- composition_of, ?left_inverse, ?right_inverse, identity_of; reflexivity).
   Defined.

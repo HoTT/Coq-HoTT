@@ -138,16 +138,15 @@ Definition transport_path_prod'
 (** This lets us identify the path space of a product type, up to equivalence. *)
 
 Global Instance isequiv_path_prod {A B : Type} {z z' : A * B}
-: IsEquiv (path_prod_uncurried z z') | 0
-  := BuildIsEquiv
-       _ _ _
-       (fun r => (ap fst r, ap snd r))
-       eta_path_prod
-       (fun pq => path_prod'
-                    (ap_fst_path_prod (fst pq) (snd pq))
-                    (ap_snd_path_prod (fst pq) (snd pq)))
-       _.
+: IsEquiv (path_prod_uncurried z z') | 0.
 Proof.
+  refine (BuildIsEquiv _ _ _
+            (fun r => (ap fst r, ap snd r))
+            eta_path_prod
+            (fun pq => path_prod'
+                         (ap_fst_path_prod (fst pq) (snd pq))
+                         (ap_snd_path_prod (fst pq) (snd pq)))
+            _).
   destruct z as [x y], z' as [x' y'].
   intros [p q]; simpl in p, q.
   destruct p, q; reflexivity.
@@ -193,13 +192,15 @@ Defined.
 (** ** Equivalences *)
 
 Global Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
-: IsEquiv (functor_prod f g) | 1000
-  := BuildIsEquiv
-       _ _ (functor_prod f g) (functor_prod f^-1 g^-1)
-       (fun z => path_prod' (eisretr f (fst z)) (eisretr g (snd z)) @ eta_prod z)
-       (fun w => path_prod' (eissect f (fst w)) (eissect g (snd w)) @ eta_prod w)
-       _.
+: IsEquiv (functor_prod f g) | 1000.
 Proof.
+  refine (BuildIsEquiv
+            _ _ (functor_prod f g) (functor_prod f^-1 g^-1)
+            (fun z => path_prod' (eisretr f (fst z)) (eisretr g (snd z))
+                      @ eta_prod z)
+            (fun w => path_prod' (eissect f (fst w)) (eissect g (snd w))
+                      @ eta_prod w)
+            _).
   intros [a b]; simpl.
   unfold path_prod'.
   rewrite !concat_p1.

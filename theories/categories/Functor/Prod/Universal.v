@@ -101,12 +101,9 @@ Section universal.
            `{IsHSet (Functor C A), IsHSet (Functor C B)}
     : Contr { F : Functor C (A * B)
             | fst o F = a
-              /\ snd o F = b }
-      := let x := {| center := (a * b;
-                                (compose_fst_prod,
-                                 compose_snd_prod)) |}
-         in x.
+              /\ snd o F = b }.
     Proof.
+      refine (BuildContr _ (a * b; (compose_fst_prod, compose_snd_prod)) _).
       intro y.
       apply path_sigma_uncurried.
       simpl.
