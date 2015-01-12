@@ -206,11 +206,13 @@ Definition splitting_idmap (X : Type) : @Splitting X idmap
 Class IsPreIdempotent {X : Type} (f : X -> X)
   := isidem : forall x, f (f x) = f x.
 
+Arguments isidem {X} f {_} x.
+
 Definition ispreidem_homotopic {X : Type}
            (f : X -> X) `{IsPreIdempotent _ f} {g : X -> X} (p : f == g)
 : IsPreIdempotent g.
 Proof.
-  intros x; refine (_ @ isidem x @ p x).
+  intros x; refine (_ @ isidem f x @ p x).
   refine (_ @ (p (f x))^).
   apply ap; symmetry; apply p.
 Defined.
@@ -239,7 +241,9 @@ Defined.
 (** However, homotopically we may naturally expect to need some coherence on the witness [isidem] of idempotency.  And indeed, in homotopy theory there are pre-idempotents which do not split; we will see an example later on.  We expect a "coherent idempotent" to involve infinitely many data.  However, Lemma 7.3.5.14 of *Higher Algebra* suggests that for an idempotent to admit *some* coherentification, hence also a splitting, it suffices to have *one* additional datum.  By modifying the construction given there, we can show similarly in type theory that any idempotent satisfying an additional coherence datum splits.  We will call a pre-idempotent with this one additional datum a "quasi-idempotent", since it is related to a fully coherent idempotent similarly to the way having a "quasi-inverse" is related to being a coherent equivalence. *)
 
 Class IsQuasiIdempotent {X : Type} (f : X -> X) `{IsPreIdempotent _ f}
-  := isidem2 : forall x, ap f (isidem x) = isidem (f x).
+  := isidem2 : forall x, ap f (isidem f x) = isidem f (f x).
+
+Arguments isidem2 {X} f {_ _} x.
 
 Definition isqidem_homotopic {X : Type}
            (f : X -> X) `{IsQuasiIdempotent _ f} {g : X -> X} (p : f == g)
@@ -251,13 +255,13 @@ Proof.
   rewrite !ap_pp, !concat_pp_p; apply whiskerL.
   rewrite !concat_p_pp; apply moveL_pM.
   rewrite (concat_pA_p (fun x => (p x)^) (p x)).
-  rewrite (concat_pA_p (fun x => (p x)^) (isidem x)).
+  rewrite (concat_pA_p (fun x => (p x)^) (isidem _ x)).
   rewrite (concat_Ap (fun x => (p x)^) (ap f (p x)^)).
   rewrite !concat_pp_p; apply whiskerL.
   rewrite !ap_V; apply moveR_Vp.
   rewrite <- ap_compose.
-  rewrite isidem2.
-  symmetry; refine (concat_Ap (@isidem X f _) (p x)).
+  rewrite isidem2; try exact _.
+  symmetry; refine (concat_Ap (isidem f) (p x)).
   Close Scope long_path_scope.
 Qed.
 
@@ -342,9 +346,9 @@ Section Splitting.
   Context {X : Type} (f : X -> X).
   Context `{IsQuasiIdempotent _ f}.
 
-  Let I := @isidem X f _.
+  Let I := isidem f.
   Let J : forall x, ap f (I x) = I (f x)
-    := @isidem2 X f _ _.
+    := isidem2 f.
 
   (** The splitting will be the sequential limit of the sequence [... -> X -> X -> X]. *)
   Definition split_idem : Type
@@ -704,7 +708,7 @@ Section RetractOfRetracts.
                  @ (S.2 (retract_idem S.1 x))^
                  @ ap (retract_sect S.1) (retract_issect S.1 (retract_retr S.1 x))
                  @ S.2 x
-                 = (@isidem _ f _ x) }.
+                 = (isidem f x) }.
 
   Definition splitting_preidem_retractof_qidem (f : PreIdempotent X)
   : RetractOf (IsQuasiIdempotent f).
@@ -825,7 +829,7 @@ Proof.
   - intros [A [[r s] H]]; simpl in *.
     exact {p : s o r == idmap &
            forall x, ((ap idmap (p x)^ @ (p (s (r x)))^)
-                        @ ap s (H (r x))) @ p x = isidem (f := idmap) x }. (* https://coq.inria.fr/bugs/show_bug.cgi?id=3914 *)
+                        @ ap s (H (r x))) @ p x = isidem idmap x }.
   - intros [A [[r s] H]]; simpl. apply equiv_idmap.
   - refine (equiv_compose' (equiv_sigma_assoc _ _) _); simpl.
     refine (equiv_functor_sigma' (equiv_idmap Type) _); intros Y; simpl.
