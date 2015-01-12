@@ -695,7 +695,7 @@ Section RetractOfRetracts.
       refine (equiv_functor_sigma' (equiv_idmap (RetractOf X)) _);
         intros R; simpl.
       apply equiv_ap10.
-  Defined.      
+  Defined.
 
   (** And also for splittings of a fixed map that also induce a given witness of pre-idempotency. *)
   Definition Splitting_PreIdempotent (f : PreIdempotent X)
@@ -739,7 +739,7 @@ End RetractOfRetracts.
 
 (** ** Fully coherent idempotents *)
 
-(** This gives us a way to define fully coherent idempotents.  By Corollary 4.4.5.14 of *Higher Topos Theory*, if we assume univalence then [RetractOf X] has the correct homotopy type of the type of fully coherent idempotents on [X].  However, its defect is that it raises the universe level.  But now that we've shown that [RetractOf X] is a retract of the type [QuasiIdempotent X], which is of the same size as [X], we can obtain an equivalent type by splitting the resulting idempotent on [QuasiIdempotent X].  
+(** This gives us a way to define fully coherent idempotents.  By Corollary 4.4.5.14 of *Higher Topos Theory*, if we assume univalence then [RetractOf X] has the correct homotopy type of the type of fully coherent idempotents on [X].  However, its defect is that it raises the universe level.  But now that we've shown that [RetractOf X] is a retract of the type [QuasiIdempotent X], which is of the same size as [X], we can obtain an equivalent type by splitting the resulting idempotent on [QuasiIdempotent X].
 
 For convenience, we instead split the idempotent on splittings of a fixed map [f], and then sum them up to obtain the type of idempotents. *)
 
@@ -748,7 +748,7 @@ Section CoherentIdempotents.
 
   Class IsIdempotent {X : Type} (f : X -> X)
     := is_coherent_idem : split_idem (retract_idem (splitting_retractof_isqidem f)).
-  
+
   Definition Build_IsIdempotent {X : Type} (f : X -> X)
   : Splitting f -> IsIdempotent f
     := (equiv_split_idem_retract (splitting_retractof_isqidem f))^-1.
@@ -762,7 +762,7 @@ Section CoherentIdempotents.
   Proof.
     refine (split_idem_sect (retract_idem (splitting_retractof_isqidem f)) _).1.
     assumption.
-  Defined.    
+  Defined.
 
   Global Instance isqidem_isidem {X : Type} (f : X -> X)
          `{IsIdempotent _ f} : @IsQuasiIdempotent X f (ispreidem_isidem f).
@@ -789,9 +789,9 @@ Section CoherentIdempotents.
       refine (equiv_split_idem_retract (splitting_retractof_isqidem f)).
     - unfold Splitting.
       refine (equiv_compose' _ (equiv_sigma_symm _)).
-      apply equiv_sigma_contr; intros R. 
+      apply equiv_sigma_contr; intros R.
       apply contr_basedhomotopy.
-  Defined.      
+  Defined.
 
   (** For instance, here is the standard coherent idempotent structure on the identity map. *)
   Global Instance isidem_idmap (X : Type@{i})
@@ -806,7 +806,7 @@ Section CoherentIdempotents.
 
   (** By contrast, [RetractOf X] does not live in the same universe as [X] if it is required to contain the identity retraction. *)
   Fail Check (fun (X:Type@{i}) => (idmap_retractof X : (RetractOf X : Type@{i}))).
-  
+
 End CoherentIdempotents.
 
 (** ** Quasi-idempotents need not be fully coherent *)
@@ -825,7 +825,7 @@ Proof.
   - intros [A [[r s] H]]; simpl in *.
     exact {p : s o r == idmap &
            forall x, ((ap idmap (p x)^ @ (p (s (r x)))^)
-                        @ ap s (H (r x))) @ p x = isidem x }.
+                        @ ap s (H (r x))) @ p x = isidem (f := idmap) x }. (* https://coq.inria.fr/bugs/show_bug.cgi?id=3914 *)
   - intros [A [[r s] H]]; simpl. apply equiv_idmap.
   - refine (equiv_compose' (equiv_sigma_assoc _ _) _); simpl.
     refine (equiv_functor_sigma' (equiv_idmap Type) _); intros Y; simpl.
