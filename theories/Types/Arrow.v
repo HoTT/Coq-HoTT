@@ -198,3 +198,19 @@ Definition equiv_functor_arrow' `(f : B <~> A) `(g : C <~> D)
 (** What remains is really identical to that in [Forall].  *)
 
 End AssumeFunext.
+
+(** ** Decidability *)
+
+(** This doesn't require funext *)
+Global Instance decidable_arrow {A B : Type}
+       `{Decidable A} `{Decidable B}
+: Decidable (A -> B).
+Proof.
+  destruct (dec B) as [x2|y2].
+  - exact (inl (fun _ => x2)).
+  - destruct (dec A) as [x1|y1].
+    + apply inr; intros f.
+      exact (y2 (f x1)).
+    + apply inl; intros x1.
+      elim (y1 x1).
+Defined.

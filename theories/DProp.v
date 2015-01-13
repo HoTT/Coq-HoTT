@@ -18,20 +18,60 @@ Record DProp :=
     dec_dprop : Decidable dprop_type
   }.
 
+(** A fancier definition, which would have the property that negation is judgmentally involutive, would be
+
+<<
+Record DProp :=
+  { dprop_holds : Type ;
+    ishprop_holds : Funext -> IsHProp dprop_holds ;
+    dprop_denies : Type ;
+    ishprop_denies : Funext -> IsHProp dprop_denies ;
+    holds_or_denies : dprop_holds + dprop_denies ;
+    denies_or_holds : dprop_denies + dprop_holds ;
+    not_holds_and_denies : dprop_holds -> dprop_denies -> Empty
+  }.
+>>
+
+At some point we may want to go that route, but it would be more work.  In particualar, [Instance]s of [Decidable] wouldn't be automatically computed for us, and the characterization of the homotopy type of [DProp] itself would be a lot harder. *)
+
 Coercion dprop_type : DProp >-> Sortclass.
 Global Existing Instance ishprop_dprop.
 Global Existing Instance dec_dprop.
 
-Definition True : DProp
-  := Build_DProp Unit _ (inl tt).
+(** Sometimes, however, we have decidable props that are hprops without funext, and we want to remember that. *)
 
-Definition False : DProp
-  := Build_DProp Empty _ (inr idmap).
+Record DHProp :=
+  { dhprop_hprop : hProp ;
+    dec_dhprop : Decidable dhprop_hprop
+  }.
+
+Coercion dhprop_hprop : DHProp >-> hProp.
+Global Existing Instance dec_dhprop.
+
+Definition dhprop_to_dprop : DHProp -> DProp
+  := fun P => Build_DProp P (fun _ => _) _.
+
+Coercion dhprop_to_dprop : DHProp >-> DProp.
+
+(** In particular, [True] and [False] are always hprops. *)
+
+Definition True : DHProp
+  := Build_DHProp Unit_hp (inl tt).
+
+Definition False : DHProp
+  := Build_DHProp False_hp (inr idmap).
+
+(** Decidable props can be coerced to [Bool]. *)
 
 Definition dprop_to_bool (P : DProp) : Bool
   := if dec P then true else false.
 
 Coercion dprop_to_bool : DProp >-> Bool.
+
+(** And back again, but we don't declare that as a coercion. *)
+
+Definition bool_to_dhprop (b : Bool) : DHProp
+  := if b then True else False.
 
 (** ** The type of decidable props *)
 
@@ -70,7 +110,8 @@ Defined.
 Global Instance isequiv_dprop_to_bool `{Univalence}
 : IsEquiv dprop_to_bool.
 Proof.
-  refine (isequiv_adjointify _ (fun b:Bool => if b then True else False) _ _).
+  refine (isequiv_adjointify dprop_to_bool
+            (fun b:Bool => if b then True else False) _ _).
   - intros []; reflexivity.
   - intros P; unfold dprop_to_bool.
     destruct (dec P); symmetry; apply path_dprop, path_universe_uncurried.
@@ -84,58 +125,36 @@ Definition equiv_dprop_to_bool `{Univalence}
 
 (** ** Operations *)
 
-(** We define the logical operations on decidable hprops to be the operations on ordinary hprops, with decidability carrying over. *)
+(** We define the logical operations on decidable hprops to be the operations on ordinary hprops, with decidability carrying over.  For the operations which preserve hprops without funext, we define separate versions that act on [DHProp]. *)
 
-Definition dand (b1 b2 : DProp) : DProp.
-Proof.
-  refine (Build_DProp (b1 *  b2) _ _).
-  destruct (dec b1) as [x1|y1]; destruct (dec b2) as [x2|y2].
-  - exact (inl (x1,x2)).
-  - apply inr; intros [_ x2]; exact (y2 x2).
-  - apply inr; intros [x1 _]; exact (y1 x1).
-  - apply inr; intros [x1 _]; exact (y1 x1).
-Defined.
+Definition dand (b1 b2 : DProp) : DProp
+  := Build_DProp (b1 * b2) _ _.
 
-Definition dor (b1 b2 : DProp) : DProp.
-Proof.
-  refine (Build_DProp (hor b1 b2) _ _).
-  destruct (dec b1) as [x1|y1].
-  - exact (inl (tr (inl x1))).
-  - destruct (dec b2) as [x2|y2].
-    + exact (inl (tr (inr x2))).
-    + apply inr; intros z; strip_truncations.
-      destruct z as [x1|x2].
-      * exact (y1 x1).
-      * exact (y2 x2).
-Defined.
+Definition dhand (b1 b2 : DHProp) : DHProp
+  := Build_DHProp (BuildhProp (b1 * b2)) _.
 
-Definition dneg (b : DProp) : DProp.
-Proof.
-  refine (Build_DProp (~b) _ _).
-  destruct (dec b) as [x|y].
-  - apply inr; intros nx; exact (nx x).
-  - exact (inl y).
-Defined.
+Definition dor (b1 b2 : DProp) : DProp
+  := Build_DProp (hor b1 b2) _ _.
 
-Definition dimpl (b1 b2 : DProp) : DProp.
-Proof.
-  refine (Build_DProp (b1 -> b2) _ _).
-  destruct (dec b2) as [x2|y2].
-  - exact (inl (fun _ => x2)).
-  - destruct (dec b1) as [x1|y1].
-    + apply inr; intros f.
-      exact (y2 (f x1)).
-    + apply inl; intros x1.
-      elim (y1 x1).
-Defined.
+Definition dhor (b1 b2 : DHProp) : DHProp
+  := Build_DHProp (BuildhProp (hor b1 b2)) _.
+
+Definition dneg (b : DProp) : DProp
+  := Build_DProp (~b) _ _.
+
+Definition dimpl (b1 b2 : DProp) : DProp
+  := Build_DProp (b1 -> b2) _ _.
 
 Infix "&&" := dand : dprop_scope.
+Infix "&&" := dhand : dhprop_scope.
 Infix "||" := dor : dprop_scope.
+Infix "||" := dhor : dhprop_scope.
 Infix "->" := dimpl : dprop_scope.
 Notation "!! P" := (dneg P) (at level 75, right associativity)
                    : dprop_scope.
 
 Delimit Scope dprop_scope with dprop.
+Delimit Scope dhprop_scope with dhprop.
 Local Open Scope dprop_scope.
 
 (** ** Computation *)
@@ -172,6 +191,27 @@ Proof.
   exact (dprop_isfalse q).
 Defined.
 
+Global Instance dhand_true_true {P Q : DHProp} `{IsTrue P} `{IsTrue Q}
+: IsTrue (P && Q)%dhprop.
+Proof.
+  (** Why does Coq need the argument [P] here? *)
+  exact (@dprop_istrue P _, dprop_istrue).
+Defined.
+
+Global Instance dhand_false_l {P Q : DHProp} `{IsFalse P}
+: IsFalse (P && Q)%dhprop.
+Proof.
+  intros [p q].
+  exact (dprop_isfalse p).
+Defined.
+
+Global Instance dhand_false_r {P Q : DHProp} `{IsFalse Q}
+: IsFalse (P && Q)%dhprop.
+Proof.
+  intros [p q].
+  exact (dprop_isfalse q).
+Defined.
+
 Global Instance dor_true_l {P Q} `{IsTrue P}
 : IsTrue (P || Q).
 Proof.
@@ -189,6 +229,27 @@ Global Instance dor_false_false {P Q} `{IsFalse P} `{IsFalse Q}
 Proof.
   intros pq. strip_truncations. destruct pq as [p|q].
   - exact (dprop_isfalse p).
+  - exact (dprop_isfalse q).
+Defined.
+
+Global Instance dhor_true_l {P Q : DHProp} `{IsTrue P}
+: IsTrue (P || Q)%dhprop.
+Proof.
+  exact (tr (inl Q dprop_istrue)).
+Defined.
+
+Global Instance dhor_true_r {P Q : DHProp} `{IsTrue Q}
+: IsTrue (P || Q)%dhprop.
+Proof.
+  exact (tr (inr P dprop_istrue)).
+Defined.
+
+Global Instance dhor_false_false {P Q : DHProp} `{IsFalse P} `{IsFalse Q}
+: IsFalse (P || Q)%dhprop.
+Proof.
+  intros pq. strip_truncations. destruct pq as [p|q].
+  - (** Why does Coq need the argument [P] here? *)
+    exact (@dprop_isfalse P _ p).
   - exact (dprop_isfalse q).
 Defined.
 

@@ -203,6 +203,22 @@ Definition equiv_sum_distributive `{Funext} (A B C : Type)
 : (A -> C) * (B -> C) <~> (A + B -> C)
   := equiv_sum_ind (fun _ => C).
 
+(** ** Decidability *)
+
+Global Instance decidable_sum {A B : Type}
+       `{Decidable A} `{Decidable B}
+: Decidable (A + B).
+Proof.
+  destruct (dec A) as [x1|y1].
+  - exact (inl (inl x1)).
+  - destruct (dec B) as [x2|y2].
+    + exact (inl (inr x2)).
+    + apply inr; intros z.
+      destruct z as [x1|x2].
+      * exact (y1 x1).
+      * exact (y2 x2).
+Defined.
+
 (** ** Sums preserve most truncation *)
 
 Global Instance trunc_sum n' (n := n'.+2)

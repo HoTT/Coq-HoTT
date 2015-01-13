@@ -12,7 +12,7 @@ Local Open Scope equiv_scope.
 (** ** Equality *)
 (** *** Boolean equality and its properties *)
 
-Fixpoint code_nat (m n : nat) {struct m} : DProp :=
+Fixpoint code_nat (m n : nat) {struct m} : DHProp :=
   match m, n with
     | 0, 0 => True
     | m'.+1, n'.+1 => code_nat m' n'
@@ -20,12 +20,6 @@ Fixpoint code_nat (m n : nat) {struct m} : DProp :=
   end.
 
 Infix "=n" := code_nat (at level 70, no associativity) : nat_scope.
-
-(** Decidable props may not be hprops without funext, but since the definition of [code_nat] doesn't involve any function types, its values are always hprops. *)
-Global Instance ishprop_code_nat (m n : nat) : IsHProp (m =n n).
-Proof.
-  revert n; induction m; induction n; exact _.
-Defined.
 
 Fixpoint idcode_nat {n} : (n =n n) :=
   match n as n return (n =n n) with

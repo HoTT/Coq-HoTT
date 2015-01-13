@@ -327,3 +327,16 @@ Defined.
 
 Global Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B) | 100
   := @trunc_prod -2 A CA B CB.
+
+(** ** Decidability *)
+
+Global Instance decidable_prod {A B : Type}
+       `{Decidable A} `{Decidable B}
+: Decidable (A * B).
+Proof.
+  destruct (dec A) as [x1|y1]; destruct (dec B) as [x2|y2].
+  - exact (inl (x1,x2)).
+  - apply inr; intros [_ x2]; exact (y2 x2).
+  - apply inr; intros [x1 _]; exact (y1 x1).
+  - apply inr; intros [x1 _]; exact (y1 x1).
+Defined.
