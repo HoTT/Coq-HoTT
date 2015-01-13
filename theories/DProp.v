@@ -110,8 +110,7 @@ Defined.
 Global Instance isequiv_dprop_to_bool `{Univalence}
 : IsEquiv dprop_to_bool.
 Proof.
-  refine (isequiv_adjointify dprop_to_bool
-            (fun b:Bool => if b then True else False) _ _).
+  refine (isequiv_adjointify dprop_to_bool bool_to_dhprop _ _).
   - intros []; reflexivity.
   - intros P; unfold dprop_to_bool.
     destruct (dec P); symmetry; apply path_dprop, path_universe_uncurried.
@@ -154,7 +153,9 @@ Notation "!! P" := (dneg P) (at level 75, right associativity)
                    : dprop_scope.
 
 Delimit Scope dprop_scope with dprop.
+Bind Scope dprop_scope with DProp.
 Delimit Scope dhprop_scope with dhprop.
+Bind Scope dhprop_scope with DHProp.
 Local Open Scope dprop_scope.
 
 (** ** Computation *)
@@ -166,6 +167,8 @@ Class IsTrue (P : DProp) :=
 
 Class IsFalse (P : DProp) :=
   dprop_isfalse : ~ P.
+
+(** Note that we are not using [Typeclasses Strict Resolution] for [IsTrue] and [IsFalse]; this enables us to write simply [dprop_istrue] as a proof of some true dprop, and Coq will infer from context what the dprop is that we're proving. *)
 
 Global Instance true_istrue : IsTrue True := tt.
 
@@ -194,8 +197,8 @@ Defined.
 Global Instance dhand_true_true {P Q : DHProp} `{IsTrue P} `{IsTrue Q}
 : IsTrue (P && Q)%dhprop.
 Proof.
-  (** Why does Coq need the argument [P] here? *)
-  exact (@dprop_istrue P _, dprop_istrue).
+  (** We have to give [P] as an explicit argument here.  This is apparently because with two [IsTrue] instances in the context, when we write simply [dprop_istrue], Coq guesses one of them during typeclass resolution, and isn't willing to backtrack once it realizes that that choice fails to be what's needed to solve the goal.  Coq currently seems to consistently guess [Q] rather than [P], so that we don't have to give the argument [Q] to the second call to [dprop_istrue]; but rather than depend on such behavior, we give both arguments explicitly.  (The problem doesn't arise with [dand_true_true] because in that case, unification, which fires before typeclass search, is able to guess that the argument must be [P].) *)
+  exact (@dprop_istrue P _, @dprop_istrue Q _).
 Defined.
 
 Global Instance dhand_false_l {P Q : DHProp} `{IsFalse P}
@@ -248,9 +251,9 @@ Global Instance dhor_false_false {P Q : DHProp} `{IsFalse P} `{IsFalse Q}
 : IsFalse (P || Q)%dhprop.
 Proof.
   intros pq. strip_truncations. destruct pq as [p|q].
-  - (** Why does Coq need the argument [P] here? *)
-    exact (@dprop_isfalse P _ p).
-  - exact (dprop_isfalse q).
+  (** See comment in the proof of [dhand_true_true]. *)
+  - exact (@dprop_isfalse P _ p).
+  - exact (@dprop_isfalse Q _ q).
 Defined.
 
 Global Instance dneg_true {P} `{IsTrue P}
