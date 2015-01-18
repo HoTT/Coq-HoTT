@@ -17,6 +17,25 @@ Class DecidablePaths (A : Type) :=
   dec_paths : forall (x y : A), Decidable (x = y).
 Global Existing Instance dec_paths.
 
+(** ** Decidable hprops *)
+
+(** Contractible types are decidable and have decidable equality. *)
+
+Global Instance decidable_contr X `{Contr X} : Decidable X
+  := inl (center X).
+
+Global Instance decidablepaths_contr X `{Contr X} : DecidablePaths X
+  := fun x y => inl (path_contr x y).
+
+(** So do empty types. *)
+
+Global Instance decidable_empty : Decidable Empty
+  := inr idmap.
+
+Global Instance decidablepaths_empty : DecidablePaths Empty
+  := fun x y => match x with end.
+
+
 (** ** Transfer along equivalences *)
 
 Definition decidable_equiv (A : Type) {B : Type} (f : A -> B) `{IsEquiv A B f}

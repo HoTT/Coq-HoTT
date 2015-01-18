@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations EquivalenceVarieties Extensions Factorization NullHomotopy.
+Require Import Fibrations EquivalenceVarieties Extensions Factorization NullHomotopy HProp.
 Require Export ReflectiveSubuniverse. (* [Export] because many of the lemmas and facts about reflective subuniverses are equally important for modalities. *)
 Require Import HoTT.Tactics.
 
@@ -579,6 +579,28 @@ Section ModalMaps.
     refine (inO_equiv_inO _ (hfiber_compose f g c)^-1).
   Defined.
 
+  (** The projection from the sum of a family of modal types is modal. *)
+  Global Instance mapinO_pr1 {A : Type} (P : A -> Type)
+         `{forall a, In O (P a)}
+  : MapIn O (@pr1 A P).
+  Proof.
+    intros a.
+    exact (inO_equiv_inO (P a) (hfiber_fibration a P)).
+  Defined.
+
+  (** A slightly specialized result: if [Empty] is modal, then a map with decidable hprop fibers (such as [inl] or [inr]) is modal. *)
+  Global Instance mapinO_hfiber_decidable_hprop {A B : Type} (f : A -> B)
+         `{In O Empty}
+         `{forall b, IsHProp (hfiber f b)}
+         `{forall b, Decidable (hfiber f b)}
+  : MapIn O f.
+  Proof.
+    intros b.
+    destruct (equiv_decidable_hprop (hfiber f b)) as [e|e].
+    - exact (inO_equiv_inO Unit e^-1).
+    - exact (inO_equiv_inO Empty e^-1).
+  Defined.
+
 End ModalMaps.
 
 (** ** Modally connected maps *)
@@ -838,8 +860,6 @@ Section ModalFact.
     - exact (conn_map_compose O
               (equiv_fibration_replacement f)
               (functor_sigma idmap (fun b => to O (hfiber f b)))).
-    - intros b.
-      exact (inO_equiv_inO _ (hfiber_fibration b (O o (hfiber f)))).
   Defined.
 
   (** This is the composite of the three displayed equivalences at the beginning of the proof of Lemma 7.6.5.  Note that it involves only a single factorization of [f]. *)

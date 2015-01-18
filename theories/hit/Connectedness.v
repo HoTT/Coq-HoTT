@@ -58,6 +58,7 @@ Defined.
 
 (** The connectivity of a pointed type and (the inclusion of) its point are intimately connected. *)
 
+(** We can't make both of these [Instance]s, as that would result in infinite loops. *)
 Global Instance conn_pointed_type {n : trunc_index} {A : Type} (a0:A)
  `{IsConnMap n _ _ (unit_name a0)} : IsConnected n.+1 A | 1000.
 Proof.
@@ -66,8 +67,8 @@ Proof.
   refine (conn_map_elim n (unit_name a0) _ (fun _ => idpath)).
 Defined.
 
-Global Instance conn_point_incl {n : trunc_index} {A : Type} (a0:A)
-       `{IsConnected n.+1 A} : IsConnMap n (unit_name a0) | 1000.
+Definition conn_point_incl {n : trunc_index} {A : Type} (a0:A)
+       `{IsConnected n.+1 A} : IsConnMap n (unit_name a0).
 Proof.
   apply conn_map_from_extension_elim.
   intros P ?. set (PP := fun a => BuildTruncType n (P a)).
@@ -79,6 +80,8 @@ Proof.
   intros []. change (d tt) with (transport idmap 1 d0).
   apply ap10, ap, concat_pV.
 Defined.
+
+Hint Immediate conn_point_incl : typeclass_instances.
 
 (** TODO: generalise the above to any map with a section. *)
 

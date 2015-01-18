@@ -54,6 +54,7 @@ Require Export Modalities.Closed.
 Require Export Spaces.Cantor.
 Require Export Spaces.BAut.
 Require Export Spaces.BAut.Cantor.
+Require Export Spaces.Finite.
 
 Require Export HoTT.Tactics.
 

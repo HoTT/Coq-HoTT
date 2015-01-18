@@ -550,6 +550,16 @@ Proof.
     refine (trunc_equiv _ (path_sigma_uncurried P u v)). }
 Defined.
 
+(** The sigma of an arbitrary family of *disjoint* hprops is an hprop. *)
+Definition ishprop_sigma_disjoint
+           `{P : A -> Type} `{forall a, IsHProp (P a)}
+: (forall x y, P x -> P y -> x = y) -> IsHProp { x : A & P x }.
+Proof.
+  intros dj; apply hprop_allpath; intros [x px] [y py].
+  refine (path_sigma' P (dj x y px py) _).
+  apply path_ishprop.
+Defined.
+
 (** ** Subtypes (sigma types whose second components are hprops) *)
 
 (** To prove equality in a subtype, we only need equality of the first component. *)

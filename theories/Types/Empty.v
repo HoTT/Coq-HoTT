@@ -12,12 +12,12 @@ Local Open Scope path_scope.
 (** ** Equivalences *)
 (** ** Universal mapping properties *)
 
-Global Instance contr_from_Empty {_ : Funext} (A : Type) :
-  Contr (Empty -> A).
+Global Instance contr_from_Empty {_ : Funext} (A : Empty -> Type) :
+  Contr (forall x:Empty, A x).
 Proof.
-  refine (BuildContr (Empty -> A) (Empty_rec A) _).
+  refine (BuildContr (forall x:Empty, A x) (Empty_ind A) _).
   intros f; apply path_forall; intros x; elim x.
-Defined.  
+Defined.
 
 (** ** Behavior with respect to truncation *)
 
@@ -44,8 +44,3 @@ Defined.
    [Empty], but this is really quite useless. As soon as an element
    of [Empty] is hypothesized, we can prove whatever we like with
    a simple elimination. *)
-
-(** ** Decidability *)
-
-Global Instance decidable_empty : Decidable Empty
-  := inr idmap.

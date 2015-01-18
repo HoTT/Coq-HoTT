@@ -134,3 +134,13 @@ Proof.
   intro np. 
   exact (BuildEquiv _ _ np _).
 Defined.
+
+(** Thus, a decidable hprop is either equivalent to [Unit] or [Empty]. *)
+Definition equiv_decidable_hprop (hprop : Type)
+           `{IsHProp hprop} `{Decidable hprop}
+: (hprop <~> Unit) + (hprop <~> Empty).
+Proof.
+  destruct (dec hprop) as [x|nx].
+  - exact (inl (if_hprop_then_equiv_Unit hprop x)).
+  - exact (inr (if_not_hprop_then_equiv_Empty hprop nx)).
+Defined.
