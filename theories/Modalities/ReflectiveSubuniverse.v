@@ -722,6 +722,19 @@ Section Reflective_Subuniverse.
 
   End Types.
 
+  Section Decidable.
+
+    (** If [Empty] belongs to [O], then [O] preserves decidability. *)
+    Global Instance O_decidable `{In O Empty} (A : Type) `{Decidable A}
+    : Decidable (O A).
+    Proof.
+      destruct (dec A) as [y|n].
+      - exact (inl (to O A y)).
+      - exact (inr (O_rec n)).
+    Defined.
+
+  End Decidable.
+
   Section Monad.
 
     Definition O_monad_mult (A : Type) : O (O A) -> O A

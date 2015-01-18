@@ -2,25 +2,69 @@
 (** * Theorems about the natural numbers, depending on TruncType *)
 
 Require Import HoTT.Basics.
-Require Import HoTT.Types.Bool HoTT.Types.Nat HoTT.TruncType.
-Import BoolSortCoercion.
+Require Import HoTT.Types.Bool HoTT.Types.Nat.
+Require Import HoTT.TruncType HoTT.DProp.
 
 Local Open Scope equiv_scope.
+
+(** Much of the layout of this file is adapted from ssreflect *)
 
 (** ** Equality *)
 (** *** Boolean equality and its properties *)
 
-Local Notation cast p := (transport is_true p^ tt)%path.
-Local Notation cast' := (inverse o @path_b_true__of__is_true _).
+Fixpoint code_nat (m n : nat) {struct m} : DHProp :=
+  match m, n with
+    | 0, 0 => True
+    | m'.+1, n'.+1 => code_nat m' n'
+    | _, _ => False
+  end.
 
-Definition idcode_nat {n} : n =n n := cast idcode_nat'.
-Definition path_nat {n m} : n =n m -> n = m := path_nat' o cast'.
+Infix "=n" := code_nat (at level 70, no associativity) : nat_scope.
+
+Fixpoint idcode_nat {n} : (n =n n) :=
+  match n as n return (n =n n) with
+    | 0 => tt
+    | S n' => @idcode_nat n'
+  end.
+
+Fixpoint path_nat {n m} : (n =n m) -> (n = m) :=
+  match m as m, n as n return (n =n m) -> (n = m) with
+    | 0, 0 => fun _ => idpath
+    | m'.+1, n'.+1 => fun H : (n' =n m') => ap S (path_nat H)
+    | _, _ => fun H => match H with end
+  end.
+
 Global Instance isequiv_path_nat {n m} : IsEquiv (@path_nat n m).
+Proof.
+  refine (isequiv_adjointify
+            (@path_nat n m)
+            (fun H => transport (fun m' => (n =n m')) H idcode_nat)
+            _ _).
+  { intros []; simpl.
+    induction n; simpl; trivial.
+    by destruct (IHn^)%path. }
+  { intro. apply path_ishprop. }
+Defined.
+
+Definition equiv_path_nat {n m} : (n =n m) <~> (n = m)
+  := BuildEquiv _ _ (@path_nat n m) _.
+
+Global Instance decidable_paths_nat : DecidablePaths nat
+  := fun n m => decidable_equiv _ (@path_nat n m) _.
+
+Corollary hset_nat : IsHSet nat.
 Proof.
   exact _.
 Defined.
-Definition equiv_path_nat {n m} : (n =n m) <~> (n = m)
-  := BuildEquiv _ _ (@path_nat n m) _.
+
+(** ** Natural number ordering *)
+
+Definition leq m n := ((m - n) =n 0).
+
+Notation "m <= n" := (leq m n) : nat_scope.
+Notation "m < n" := (m.+1 <= n) : nat_scope.
+Notation "m >= n" := (n <= m) (only parsing) : nat_scope.
+Notation "m > n" := (n < m) (only parsing) : nat_scope.
 
 (** ** Theorems about natural number ordering *)
 
@@ -39,45 +83,31 @@ Fixpoint subnn {n} : n - n =n 0 :=
 Global Instance leq_refl : Reflexive leq
   := @subnn.
 
-Fixpoint leq_transb {x y z} : (x <= y -> y <= z -> x <= z)%Bool :=
-  match x as x, y as y, z as z return (x <= y -> y <= z -> x <= z)%Bool with
-    | 0, 0, 0 => tt
-    | x'.+1, 0, 0 => tt
-    | 0, y'.+1, 0 => tt
-    | 0, 0, z'.+1 => tt
-    | x'.+1, y'.+1, 0 => cast implb_true
-    | x'.+1, 0, z'.+1 => tt
-    | 0, y'.+1, z'.+1 => @leq_transb 0 y' z'
-    | x'.+1, y'.+1, z'.+1 => @leq_transb x' y' z'
+Fixpoint leq_transd {x y z} : (x <= y -> y <= z -> x <= z)%dprop :=
+  match x as x, y as y, z as z return (x <= y -> y <= z -> x <= z)%dprop with
+    | 0, 0, 0 => dprop_istrue
+    | x'.+1, 0, 0 => dprop_istrue
+    | 0, y'.+1, 0 => dprop_istrue
+    | 0, 0, z'.+1 => dprop_istrue
+    | x'.+1, y'.+1, 0 => dprop_istrue
+    | x'.+1, 0, z'.+1 => dprop_istrue
+    | 0, y'.+1, z'.+1 => @leq_transd 0 y' z'
+    | x'.+1, y'.+1, z'.+1 => @leq_transd x' y' z'
   end.
 
-(** TODO: Move this *)
-Definition implb_impl' {a b : Bool} : (a -> b)%Bool <-> (a -> b).
-Proof.
-  destruct a, b; simpl; split; try constructor; try (intros; assumption).
-  intro p; apply p; constructor.
-Defined.
+Global Instance leq_trans : Transitive (fun n m => leq n m)
+  := @leq_transd.
 
-Global Instance leq_trans : Transitive (fun n m => leq n m).
-Proof.
-  intros x y z p.
-  apply implb_impl'; revert p.
-  apply implb_impl'.
-  apply leq_transb.
-Defined.
-
-Fixpoint leq_antisymb {x y} : (x <= y -> y <= x -> x =n y)%Bool :=
-  match x as x, y as y return (x <= y -> y <= x -> x =n y)%Bool with
-    | 0, 0 => tt
-    | x'.+1, y'.+1 => @leq_antisymb x' y'
-    | _, _ => tt
+Fixpoint leq_antisymd {x y} : (x <= y -> y <= x -> x =n y)%dprop :=
+  match x as x, y as y return (x <= y -> y <= x -> x =n y)%dprop with
+    | 0, 0 => dprop_istrue
+    | x'.+1, y'.+1 => @leq_antisymd x' y'
+    | _, _ => dprop_istrue
   end.
 
 Lemma leq_antisym : forall {x y}, x <= y -> y <= x -> x = y.
 Proof.
   intros x y p q.
   apply path_nat.
-  revert q; apply implb_impl'.
-  revert p; apply implb_impl'.
-  apply leq_antisymb.
+  apply leq_antisymd; assumption.
 Defined.

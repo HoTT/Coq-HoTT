@@ -203,6 +203,22 @@ Definition equiv_sum_distributive `{Funext} (A B C : Type)
 : (A -> C) * (B -> C) <~> (A + B -> C)
   := equiv_sum_ind (fun _ => C).
 
+(** ** Decidability *)
+
+Global Instance decidable_sum {A B : Type}
+       `{Decidable A} `{Decidable B}
+: Decidable (A + B).
+Proof.
+  destruct (dec A) as [x1|y1].
+  - exact (inl (inl x1)).
+  - destruct (dec B) as [x2|y2].
+    + exact (inl (inr x2)).
+    + apply inr; intros z.
+      destruct z as [x1|x2].
+      * exact (y1 x1).
+      * exact (y2 x2).
+Defined.
+
 (** ** Sums preserve most truncation *)
 
 Global Instance trunc_sum n' (n := n'.+2)
@@ -219,6 +235,28 @@ Defined.
 
 Global Instance hset_sum `{HA : IsHSet A, HB : IsHSet B} : IsHSet (A + B) | 100
   := @trunc_sum -2 A HA B HB.
+
+(** Sums don't preserve hprops in general, but they do for disjoint sums. *)
+
+Definition ishprop_sum A B `{IsHProp A} `{IsHProp B}
+: (A -> B -> Empty) -> IsHProp (A + B).
+Proof.
+  intros H.
+  apply hprop_allpath; intros [a1|b1] [a2|b2].
+  - apply ap, path_ishprop.
+  - case (H a1 b2).
+  - case (H a2 b1).
+  - apply ap, path_ishprop.
+Defined.
+
+(** It follows that decidability of an hprop is again an hprop. *)
+
+Global Instance ishprop_decidable_hprop `{Funext} A `{IsHProp A}
+: IsHProp (Decidable A).
+Proof.
+  unfold Decidable; refine (ishprop_sum _ _ _).
+  intros a na; exact (na a).
+Defined.
 
 (** ** Binary coproducts are equivalent to dependent sigmas where the first component is a bool. *)
 
