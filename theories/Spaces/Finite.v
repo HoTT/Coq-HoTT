@@ -333,7 +333,16 @@ Proof.
   refine (decidablepaths_equiv _ e^-1 _).
 Defined.
 
-(** However, contrary to what you might expect, we cannot assert that "every finite set is decidable"!  That would be claiming a *uniform* way to select an element from every nonempty finite set, which contradicts univalence.  The most we can say is that any finite hprop is decidable.  Question: can this be proven without funext? *)
+(** However, contrary to what you might expect, we cannot assert that "every finite set is decidable"!  That would be claiming a *uniform* way to select an element from every nonempty finite set, which contradicts univalence.  The most we can say is that any finite set is *merely* decidable. *)
+Definition merely_decidable_finite X `{Finite X}
+: merely (Decidable X).
+Proof.
+  assert (e := merely_equiv_fin X).
+  strip_truncations.
+  apply tr; refine (decidable_equiv _ e^-1 _).
+Defined.
+
+(** We can also prove that any finite hprop is decidable.  Question: can this be proven without funext? *)
 Global Instance decidable_finite_hprop `{Funext} X `{IsHProp X} `{Finite X}
 : Decidable X.
 Proof.
@@ -357,6 +366,13 @@ Defined.
 Definition finite_equiv' X {Y} (e : X <~> Y)
 : Finite X -> Finite Y
   := finite_equiv X e.
+
+Corollary finite_equiv_equiv X Y
+: (X <~> Y) -> (Finite X <~> Finite Y).
+Proof.
+  intros ?; apply equiv_iff_hprop; apply finite_equiv';
+    [ assumption | symmetry; assumption ]. 
+Defined.
 
 Definition fcard_equiv {X Y} (e : X -> Y) `{IsEquiv X Y e}
            `{Finite X} `{Finite Y}

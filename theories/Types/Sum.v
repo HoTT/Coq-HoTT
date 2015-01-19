@@ -259,7 +259,9 @@ Definition functor_sum {A A' B B' : Type} (f : A -> A') (g : B -> B')
 : A + B -> A' + B'
   := fun z => match z with inl z' => inl (f z') | inr z' => inr (g z') end.
 
-(** ** Unfunctorial action *)
+(** ** "Unfunctorial action" *)
+
+(** Not every function [A + B -> A' + B'] is of the form [functor_sum f g].  However, this is the case if it preserves the summands, i.e. if it maps [A] into [A'] and [B] into [B'].  More generally, if a function [A + B -> A' + B'] maps [A] into [A'] only, then we can extract from it a function [A -> A'].  Since these operations are a sort of inverse to [functor_sum], we call them [unfunctor_sum_*]. *)
 
 Definition unfunctor_sum_l {A A' B B' : Type} (h : A + B -> A' + B')
            (Ha : forall a:A, is_inl (h (inl a)))
