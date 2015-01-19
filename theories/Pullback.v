@@ -62,7 +62,7 @@ Definition pullback_along {A B C} (f : B -> A) (g : C -> A)
 : Pullback f g -> B
   := pr1.
 
-Notation "f ^* g" := (pullback_along f g) (at level 30, format "f '^*'  g").
+Notation "f ^*" := (pullback_along f) : function_scope.
 
 Definition hfiber_pullback_along {A B C} (f : B -> A) (g : C -> A) (b:B)
 : hfiber (f ^* g) b <~> hfiber g (f b).
@@ -93,7 +93,7 @@ Definition pullback_along' {A B C} (g : C -> A) (f : B -> A)
 
 Arguments pullback_along' / .
 
-Notation "g ^*' f" := (pullback_along' g f) (at level 30, format "g '^*''  f").
+Notation "g ^*'" := (pullback_along' g) (at level 20) : function_scope.
 
 Definition hfiber_pullback_along' {A B C} (g : C -> A) (f : B -> A) (c:C)
 : hfiber (g ^*' f) c <~> hfiber f (g c).
@@ -135,7 +135,7 @@ Section Functor_Pullback.
 
   Definition hfiber_functor_pullback (z : Pullback f2 g2)
   : hfiber functor_pullback z
-    <~> Pullback (transport (hfiber h) z.2.2 o functor_hfiber p z.1)
+    <~> Pullback (transport (hfiber h) z.2.2 o functor_hfiber (k := f2) p z.1)
                  (functor_hfiber q z.2.1).
   Proof.
     destruct z as [b2 [c2 e2]].

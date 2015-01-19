@@ -6,6 +6,7 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import PType NullHomotopy.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
+Local Open Scope pointed_scope.
 Generalizable Variables X A B f g n.
 
 (* ** Definition of suspension. *)

@@ -484,14 +484,6 @@ Proof.
                        _ _ _); intros [x y]; reflexivity.
 Defined.
 
-Definition equiv_sigma_prod0 (A B : Type)
-: {a : A & B} <~> A * B.
-Proof.
-  refine (BuildEquiv _ _ (fun (w:{a:A & B}) => (w.1 , w.2)) _).
-  refine (BuildIsEquiv _ _ _ (fun (z:A*B) => (fst z ; snd z))
-                       _ _ _); intros [x y]; reflexivity.
-Defined.
-
 (** ** Universal mapping properties *)
 
 (** *** The positive universal property. *)

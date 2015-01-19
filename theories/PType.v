@@ -4,6 +4,7 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import hit.Truncations.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
+Local Open Scope pointed_scope.
 
 (** * More about pointed types *)
 

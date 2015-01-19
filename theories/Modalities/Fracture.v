@@ -107,11 +107,11 @@ Module Fracture (Os : Modalities).
       transitivity (transport idmap
                      (ap O2 (path_universe (O_rec ((to O2 B)^*' f))))
                      (O_functor O2 (to O1 (Pullback f (to O2 B)))
-                                ((O_rec (f^* to O2 B))^-1 c)));
+                                ((O_rec (f^* (to O2 B)))^-1 c)));
         [ apply ap11; repeat apply ap
         | transitivity (O_functor O2 (O_rec (to O2 B^*' f))
                           (O_functor O2 (to O1 (Pullback f (to O2 B)))
-                                     ((O_rec (f^* to O2 B))^-1 c))) ].
+                                     ((O_rec (f^* (to O2 B)))^-1 c))) ].
       + refine (pr1_path_sigma_uncurried _ @ eisretr pr1 _).
       + refine (transport_compose idmap (TypeO_pr1 O2)
                   (path_TypeO O2 (O2 (Pullback f (to O2 B)); _) C _)^
@@ -126,7 +126,7 @@ Module Fracture (Os : Modalities).
       (** Now we're down to the real point. *)
       + refine ((O_functor_compose O2 _ _ _)^ @ _).
         refine (O_functor_homotopy O2 _ _ (O_rec_beta _) _ @ _).
-        revert c; equiv_intro (O_rec (f^* to O2 B)) x.
+        revert c; equiv_intro (O_rec (f^* (to O2 B))) x.
         refine (ap _ (eissect _ _) @ _).
         revert x; apply O_indpaths; intros x; simpl.
         refine (to_O_natural O2 _ x @ _); simpl.
