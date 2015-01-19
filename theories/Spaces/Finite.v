@@ -105,7 +105,7 @@ Proof.
     + destruct k as [k|].
       * simpl. rewrite IH; reflexivity.
       * simpl. apply ap, ap, path_contr.
-  - (** For some reason [simpl]/[cbn] won't simplify this until [n] is destructed. *)
+  - (** We have to destruct [n] since fixpoints don't reduce unless their argument is a constructor. *)
     destruct n; simpl.
     all:apply ap, path_contr.
 Qed.
@@ -342,13 +342,16 @@ Proof.
   apply tr; refine (decidable_equiv _ e^-1 _).
 Defined.
 
-(** We can also prove that any finite hprop is decidable.  Question: can this be proven without funext? *)
-Global Instance decidable_finite_hprop `{Funext} X `{IsHProp X} `{Finite X}
+(** We can also prove that any finite hprop is decidable. *)
+Global Instance decidable_finite_hprop X `{IsHProp X} {fX : Finite X}
 : Decidable X.
 Proof.
-  assert (e := merely_equiv_fin X).
-  strip_truncations.
-  refine (decidable_equiv _ e^-1 _).
+  (** To avoid having to use [Funext], we case on the cardinality of [X] before stripping the truncation from its equivalence to [Fin n]; if we did things in the other order then we'd have to know that [Decidable X] is an hprop, which requires funext. *)
+  destruct fX as [[|n] e].
+  - right; intros x.
+    strip_truncations; exact (e x).
+  - left.
+    strip_truncations; exact (e^-1 (inr tt)).
 Defined.
 
 (** ** Preservation of finiteness by equivalences *)
@@ -422,15 +425,15 @@ Defined.
 Hint Immediate finite_decidable_hprop : typeclass_instances.
 
 (** It follows that the propositional truncation of any finite set is finite. *)
-Global Instance finite_merely `{Funext} X `{Finite X}
+Global Instance finite_merely X {fX : Finite X}
 : Finite (merely X).
 Proof.
-  refine (finite_decidable_hprop _).
-  assert (e := merely_equiv_fin X).
-  strip_truncations.
-  generalize dependent (fcard X); intros [|n] e.
-  - apply inr; intros x; strip_truncations; exact (e x).
-  - refine (decidable_equiv _ (O_functor _ e)^-1 _).
+  (** As in decidable_finite_hprop, we case on cardinality first to avoid needing funext. *)
+  destruct fX as [[|n] e]; refine (finite_decidable_hprop _).
+  - right.
+    intros x; strip_truncations; exact (e x).
+  - left.
+    strip_truncations; exact (tr (e^-1 (inr tt))).
 Defined.
 
 (** Finite sets are closed under path-spaces. *)
@@ -445,6 +448,9 @@ Proof.
 Defined.
 
 (** Finite sets are also closed under successors. *)
+
+Locate "*".
+
 Global Instance finite_succ X `{Finite X} : Finite (X + Unit).
 Proof.
   refine (Build_Finite _ (fcard X).+1 _).
@@ -456,6 +462,7 @@ Defined.
 Definition fcard_succ X `{Finite X}
 : fcard (X + Unit) = (fcard X).+1
   := 1.
+
 
 (** ** Induction over finite sets *)
 
@@ -574,18 +581,27 @@ Proof.
 
 (** *** Function types *)
 
-Global Instance finite_arrow `{Funext} X Y `{Finite X} `{Finite Y}
-: Finite (X -> Y).
+(** Finite sets are closed under function types, and even dependent function types. *)
+
+Global Instance finite_forall `{Funext} {X} (Y : X -> Type)
+       `{Finite X} `{forall x, Finite (Y x)}
+: Finite (forall x:X, Y x).
 Proof.
   assert (e := merely_equiv_fin X).
   strip_truncations.
-  refine (finite_equiv _ (functor_arrow e idmap) _).
-  generalize (fcard X); intros n.
+  refine (finite_equiv' _
+            (equiv_functor_forall' (P := fun x => Y (e^-1 x)) e _) _); try exact _.
+  { intros x; refine (equiv_transport _ _ _ (eissect e x)). }
+  set (Y' := Y o e^-1); change (Finite (forall x, Y' x)).
+  assert (forall x, Finite (Y' x)) by exact _; clearbody Y'; clear e.
+  generalize dependent (fcard X); intros n Y' ?.
   induction n as [|n IH].
   - exact _.
-  - refine (finite_equiv _ (equiv_sum_ind (fun (_:Fin n.+1) => Y)) _).
-    apply finite_prod; try assumption.
-    refine (finite_equiv _ (@Unit_ind (fun (_:Unit) => Y)) _).
+  - refine (finite_equiv _ (equiv_sum_ind Y') _).
+    apply finite_prod.
+    + apply IH; exact _.
+    + refine (finite_equiv _ (@Unit_ind (fun u => Y' (inr u))) _).
+      refine (isequiv_unit_ind (Y' o inr)).
 Defined.
 
 Definition fcard_arrow `{Funext} X Y `{Finite X} `{Finite Y}
@@ -715,12 +731,39 @@ Proof.
 Defined.
 
 (** In particular, the image of a map between finite sets is finite. *)
-Global Instance finite_image `{Funext}
+Global Instance finite_image
        {X Y} `{Finite X} `{Finite Y} (f : X -> Y)
 : Finite (himage f).
 Proof.
   exact _.
 Defined.
+
+(** ** Finite products of natural numbers *)
+
+(** Similarly, closure of finite sets under [forall] automatically gives us a way to multiply a family of natural numbers indexed by any finite set.  Of course, if we defined this explicitly, it wouldn't need funext. *)
+
+Definition finmult `{Funext} {X} `{Finite X} (f : X -> nat) : nat
+  := fcard (forall x:X, Fin (f x)).
+
+Definition fcard_forall `{Funext} {X} (Y : X -> Type)
+       `{Finite X} `{forall x, Finite (Y x)}
+: fcard (forall x:X, Y x) = finmult (fun x => fcard (Y x)).
+Proof.
+  set (f := fun x => fcard (Y x)).
+  set (g := fun x => merely_equiv_fin (Y x) : merely (Y x <~> Fin (f x))).
+  apply finite_choice in g.
+  strip_truncations.
+  unfold finmult.
+  refine (fcard_equiv' (equiv_functor_forall' (equiv_idmap X) g)).
+Defined.
+
+(** The product of a finite constant family is the exponential by its cardinality. *)
+Definition finmult_const `{Funext} X `{Finite X} n
+: finmult (fun x:X => n) = nat_exp n (fcard X).
+Proof.
+  refine (fcard_arrow X (Fin n)).
+Defined.
+
 
 (** ** Finite subsets *)
 
@@ -733,38 +776,18 @@ Proof.
 Defined.
 
 (** Conversely, if a subset of a finite set is finite, then it is detachable.  We show first that an embedding between finite subsets has detachable image. *)
-Definition detachable_image_finite `{Funext}
+Definition detachable_image_finite
            {X Y} `{Finite X} `{Finite Y} (f : X -> Y) `{IsEmbedding f}
 : forall y, Decidable (hfiber f y).
 Proof.
-  assert (e := merely_equiv_fin X).
-  strip_truncations.
-  generalize dependent (fcard X); intros n; generalize dependent X.
-  induction n as [|n IH]; intros X ? f ? e y.
-  - apply inr; intros [x p]. exact (e x).
-  - destruct (dec_paths (f (e^-1 (inr tt))) y) as [p|np].
-    { exact (inl (e^-1 (inr tt); p)). }
-    { pose (g := f o e^-1 o inl).
-      assert (IsEmbedding g).
-      (** It would be nice if typeclass inference could do this on its own. *)
-      { unfold g; apply mapinO_compose; exact _. }
-      destruct (IH (Fin n) _ g _ (equiv_idmap (Fin n)) y) as [[x q]|nq].
-      - apply inl.
-        exists (e^-1 (inl x)).
-        exact q.
-      - apply inr; intros [x q].
-        remember (e x) as z eqn:p.
-        destruct z as [z|[]].
-        + apply nq.
-          exists z; unfold g.
-          refine (ap f _ @ q).
-          apply moveR_equiv_V; symmetry; exact p.
-        + apply np.
-          refine (ap f _ @ q).
-          apply moveR_equiv_V; symmetry; exact p. }
+  intros y.
+  assert (ff : Finite (hfiber f y)) by exact _.
+  destruct ff as [[|n] e].
+  - right; intros u; strip_truncations; exact (e u).
+  - left; strip_truncations; exact (e^-1 (inr tt)).
 Defined.
 
-Definition detachable_finite_subset `{Funext} {X} `{Finite X}
+Definition detachable_finite_subset {X} `{Finite X}
            (P : X -> Type) `{forall x, IsHProp (P x)}
            {Pf : Finite ({ x:X & P x })}
 : forall x, Decidable (P x).

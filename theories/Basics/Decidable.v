@@ -19,21 +19,20 @@ Global Existing Instance dec_paths.
 
 (** ** Decidable hprops *)
 
-(** Contractible types are decidable and have decidable equality. *)
+(** Contractible types are decidable. *)
 
 Global Instance decidable_contr X `{Contr X} : Decidable X
   := inl (center X).
 
-Global Instance decidablepaths_contr X `{Contr X} : DecidablePaths X
-  := fun x y => inl (path_contr x y).
+(** Thus, hprops have decidable equality. *)
 
-(** So do empty types. *)
+Global Instance decidablepaths_hprop X `{IsHProp X} : DecidablePaths X
+  := fun x y => dec (x = y).
+
+(** Empty types are trivial. *)
 
 Global Instance decidable_empty : Decidable Empty
   := inr idmap.
-
-Global Instance decidablepaths_empty : DecidablePaths Empty
-  := fun x y => match x with end.
 
 
 (** ** Transfer along equivalences *)
@@ -95,8 +94,9 @@ Proof.
   intros x y; exact _.
 Defined.
 
+(** We give this a relatively high-numbered priority so that in deducing [IsHProp -> IsHSet] Coq doesn't detour via [DecidablePaths]. *)
 Global Instance hset_pathcoll (A : Type) `{PathCollapsible A}
-: IsHSet A.
+: IsHSet A | 1000.
 Proof.
   intros x y.
   assert (h : forall p:x=y, p = (collapse (idpath x))^ @ collapse p).
