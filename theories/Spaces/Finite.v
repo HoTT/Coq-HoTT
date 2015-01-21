@@ -322,38 +322,6 @@ Proof.
   refine (nat_eq_fin_equiv n m (equiv_compose' Hm (equiv_inverse Hn))).
 Defined.
 
-(** ** Decidability *)
-
-(** Like canonical finite sets, finite sets have decidable equality. *)
-Global Instance decidablepaths_finite `{Funext} X `{Finite X}
-: DecidablePaths X.
-Proof.
-  assert (e := merely_equiv_fin X).
-  strip_truncations.
-  refine (decidablepaths_equiv _ e^-1 _).
-Defined.
-
-(** However, contrary to what you might expect, we cannot assert that "every finite set is decidable"!  That would be claiming a *uniform* way to select an element from every nonempty finite set, which contradicts univalence.  The most we can say is that any finite set is *merely* decidable. *)
-Definition merely_decidable_finite X `{Finite X}
-: merely (Decidable X).
-Proof.
-  assert (e := merely_equiv_fin X).
-  strip_truncations.
-  apply tr; refine (decidable_equiv _ e^-1 _).
-Defined.
-
-(** We can also prove that any finite hprop is decidable. *)
-Global Instance decidable_finite_hprop X `{IsHProp X} {fX : Finite X}
-: Decidable X.
-Proof.
-  (** To avoid having to use [Funext], we case on the cardinality of [X] before stripping the truncation from its equivalence to [Fin n]; if we did things in the other order then we'd have to know that [Decidable X] is an hprop, which requires funext. *)
-  destruct fX as [[|n] e].
-  - right; intros x.
-    strip_truncations; exact (e x).
-  - left.
-    strip_truncations; exact (e^-1 (inr tt)).
-Defined.
-
 (** ** Preservation of finiteness by equivalences *)
 
 Definition finite_equiv X {Y} (e : X -> Y) `{IsEquiv X Y e}
@@ -449,8 +417,6 @@ Defined.
 
 (** Finite sets are also closed under successors. *)
 
-Locate "*".
-
 Global Instance finite_succ X `{Finite X} : Finite (X + Unit).
 Proof.
   refine (Build_Finite _ (fcard X).+1 _).
@@ -463,6 +429,44 @@ Definition fcard_succ X `{Finite X}
 : fcard (X + Unit) = (fcard X).+1
   := 1.
 
+(** ** Decidability *)
+
+(** Like canonical finite sets, finite sets have decidable equality. *)
+Global Instance decidablepaths_finite `{Funext} X `{Finite X}
+: DecidablePaths X.
+Proof.
+  assert (e := merely_equiv_fin X).
+  strip_truncations.
+  refine (decidablepaths_equiv _ e^-1 _).
+Defined.
+
+(** However, contrary to what you might expect, we cannot assert that "every finite set is decidable"!  That would be claiming a *uniform* way to select an element from every nonempty finite set, which contradicts univalence. *)
+
+(** One thing we can prove is that any finite hprop is decidable. *)
+Global Instance decidable_finite_hprop X `{IsHProp X} {fX : Finite X}
+: Decidable X.
+Proof.
+  (** To avoid having to use [Funext], we case on the cardinality of [X] before stripping the truncation from its equivalence to [Fin n]; if we did things in the other order then we'd have to know that [Decidable X] is an hprop, which requires funext. *)
+  destruct fX as [[|n] e].
+  - right; intros x.
+    strip_truncations; exact (e x).
+  - left.
+    strip_truncations; exact (e^-1 (inr tt)).
+Defined.
+
+(** It follows that if [X] is finite, then its propositional truncation is decidable. *)
+Global Instance decidable_merely_finite X {fX : Finite X}
+: Decidable (merely X).
+Proof.
+  exact _.
+Defined.
+
+(** From this, it follows that any finite set is *merely* decidable. *)
+Definition merely_decidable_finite X `{Finite X}
+: merely (Decidable X).
+Proof.
+  apply O_decidable; exact _.
+Defined.
 
 (** ** Induction over finite sets *)
 
