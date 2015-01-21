@@ -680,7 +680,7 @@ Proof.
   refine (finite_equiv' _
             (equiv_functor_sigma (equiv_inverse e)
                                  (fun x (y:Y (e^-1 x)) => y)) _).
-  (** For some reason, [set (Y' := Y o e^-1)] doesn't change the goal. *)
+  (** Unfortunately, because [compose] is currently beta-expanded, [set (Y' := Y o e^-1)] doesn't change the goal. *)
   set (Y' := fun x => Y (e^-1 x)).
   assert (forall x, Finite (Y' x)) by exact _; clearbody Y'; clear e.
   generalize dependent (fcard X); intros n Y' ?.
@@ -719,7 +719,7 @@ Proof.
 Defined.
 
 (** Closure under sigmas and paths also implies closure under hfibers. *)
-Global Instance finite_hfiber {X Y} (f : X -> Y) (y : Y)
+Definition finite_hfiber {X Y} (f : X -> Y) (y : Y)
        `{Finite X} `{Finite Y}
 : Finite (hfiber f y).
 Proof.
@@ -735,7 +735,7 @@ Proof.
 Defined.
 
 (** In particular, the image of a map between finite sets is finite. *)
-Global Instance finite_image
+Definition finite_image
        {X Y} `{Finite X} `{Finite Y} (f : X -> Y)
 : Finite (himage f).
 Proof.

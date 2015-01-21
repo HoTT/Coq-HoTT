@@ -357,7 +357,7 @@ Definition equiv_functor_sum_r {A A' B : Type} (f : A <~> A')
 
 (** ** Unfunctoriality on equivalences *)
 
-Definition isequiv_unfunctor_sum_l {A A' B B' : Type}
+Global Instance isequiv_unfunctor_sum_l {A A' B B' : Type}
            (h : A + B <~> A' + B')
            (Ha : forall a:A, is_inl (h (inl a)))
            (Hb : forall b:B, is_inr (h (inr b)))
@@ -390,7 +390,7 @@ Definition equiv_unfunctor_sum_l {A A' B B' : Type}
   := BuildEquiv _ _ (unfunctor_sum_l h Ha)
                 (isequiv_unfunctor_sum_l h Ha Hb).
 
-Definition isequiv_unfunctor_sum_r {A A' B B' : Type}
+Global Instance isequiv_unfunctor_sum_r {A A' B B' : Type}
            (h : A + B <~> A' + B')
            (Ha : forall a:A, is_inl (h (inl a)))
            (Hb : forall b:B, is_inr (h (inr b)))
