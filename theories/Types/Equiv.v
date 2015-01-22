@@ -95,6 +95,14 @@ Section AssumeFunext.
     intros e. apply path_equiv, path_forall. intros ?; apply contr.
   Defined.
 
+  (** The type of *automorphisms* of an hprop is always contractible *)
+  Global Instance contr_aut_hprop A `{IsHProp A}
+  : Contr (A <~> A).
+  Proof.
+    exists (equiv_idmap A).
+    intros e; apply path_equiv, path_forall. intros ?; apply path_ishprop.
+  Defined.
+
   (** Equivalences are functorial under equivalences. *)
   Definition functor_equiv {A B C D} (h : A <~> C) (k : B <~> D)
   : (A <~> B) -> (C <~> D)

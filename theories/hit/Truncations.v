@@ -169,10 +169,27 @@ Proof.
   assumption.
 Defined.
 
-(* Instead, we make the latter an immediate instance. *)
+(** Instead, we make the latter an immediate instance. *)
 Hint Immediate istrunc_inO_tr : typeclass_instances.
 
-(* Unfortunately, this isn't perfect; Coq still can't always find [In n] hypotheses in the context when it wants [IsTrunc]. *)
+(** Unfortunately, this isn't perfect; Coq still can't always find [In n] hypotheses in the context when it wants [IsTrunc]. *)
+
+(** We do the same for [IsTruncMap n] and [MapIn (Tr n)]. *)
+Global Instance mapinO_tr_istruncmap {n : trunc_index} {A B : Type}
+       (f : A -> B) `{IsTruncMap n A B f}
+: MapIn (Tr n) f.
+Proof.
+  assumption.
+Defined.
+
+Definition istruncmap_mapinO_tr {n : trunc_index} {A B : Type}
+           (f : A -> B) `{MapIn (Tr n) _ _ f}
+: IsTruncMap n f.
+Proof.
+  assumption.
+Defined.
+
+Hint Immediate istruncmap_mapinO_tr : typeclass_instances.
 
 
 (** It's sometimes convenient to use "infinity" to refer to the identity modality in a similar way.  This clashes with some uses in higher topos theory, where "oo-truncated" means instead "hypercomplete", but this has not yet been a big problem. *)
@@ -192,6 +209,8 @@ Definition merely (A : Type@{i}) : hProp@{i} := BuildhProp (Trunc -1 A).
 Definition hexists {X} (P : X -> Type) : hProp := merely (sigT P).
 
 Definition hor (P Q : Type) : hProp := merely (P + Q).
+
+Definition himage {X Y} (f : X -> Y) := image -1 f.
 
 Definition contr_inhab_prop {A} `{IsHProp A} (ma : merely A) : Contr A.
 Proof.

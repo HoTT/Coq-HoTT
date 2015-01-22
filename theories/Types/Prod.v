@@ -2,6 +2,7 @@
 (** * Theorems about cartesian products *)
 
 Require Import HoTT.Basics.
+Require Import Types.Empty Types.Unit.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Generalizable Variables X A B f g n.
@@ -265,6 +266,32 @@ Definition equiv_prod_assoc (A B C : Type) : A * (B * C) <~> (A * B) * C
           (fun _ => 1)
           (fun _ => 1)
           (fun _ => 1)).
+
+(** ** Unit and annihilation *)
+
+Definition prod_empty_r X : X * Empty <~> Empty
+  := (BuildEquiv _ _ snd _).
+
+Definition prod_empty_l X : Empty * X <~> Empty
+  := (BuildEquiv _ _ fst _).
+
+Definition prod_unit_r X : X * Unit <~> X.
+Proof.
+  refine (BuildEquiv _ _ fst _).
+  refine (BuildIsEquiv _ _ _ (fun x => (x,tt)) _ _ _).
+  - intros x; reflexivity.
+  - intros [x []]; reflexivity.
+  - intros [x []]; reflexivity.
+Defined.
+
+Definition prod_unit_l X : Unit * X <~> X.
+Proof.
+  refine (BuildEquiv _ _ snd _).
+  refine (BuildIsEquiv _ _ _ (fun x => (tt,x)) _ _ _).
+  - intros x; reflexivity.
+  - intros [[] x]; reflexivity.
+  - intros [[] x]; reflexivity.
+Defined.
 
 (** ** Universal mapping properties *)
 

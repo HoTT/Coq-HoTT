@@ -725,12 +725,23 @@ Section Reflective_Subuniverse.
   Section Decidable.
 
     (** If [Empty] belongs to [O], then [O] preserves decidability. *)
-    Global Instance O_decidable `{In O Empty} (A : Type) `{Decidable A}
+    Global Instance decidable_O `{In O Empty} (A : Type) `{Decidable A}
     : Decidable (O A).
     Proof.
       destruct (dec A) as [y|n].
       - exact (inl (to O A y)).
       - exact (inr (O_rec n)).
+    Defined.
+
+    (** Dually, if [O A] is decidable, then [O (Decidable A)]. *)
+    Definition O_decidable (A : Type) `{Decidable (O A)}
+    : O (Decidable A).
+    Proof.
+      destruct (dec (O A)) as [y|n].
+      - exact (O_functor inl y).
+      - refine (O_functor inr _).
+        apply to; intros a.
+        exact (n (to O A a)).
     Defined.
 
   End Decidable.
