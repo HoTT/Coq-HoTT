@@ -131,14 +131,14 @@ Require Export HoTT.Homotopy.ClassifyingSpace.
 Require Export HoTT.Spectra.Spectrum.
 
 Require Export HoTT.Tactics.
-Require Export HoTT.Tactics.EvalIn.
 Require Export HoTT.Tactics.BinderApply.
-Require Export HoTT.Tactics.RewriteModuloAssociativity.
 Require Export HoTT.Tactics.EquivalenceInduction.
+Require Export HoTT.Tactics.EvalIn.
+Require Export HoTT.Tactics.Nameless.
+Require Export HoTT.Tactics.RewriteModuloAssociativity.
 
 (** We do _not_ export [UnivalenceAxiom], [FunextAxiom], [UnivalenceImpliesFunext], [HIT.IntervalImpliesFunext], nor [HIT.TruncImpliesFunext] from this file; thus importing it does not prevent you from tracking usage of [Univalence] and [Funext] theorem-by-theorem in the same way that the library does.  If you want any of those files, you should import them separately. *)
 
 (** We check that UnivalenceAxiom, FunextAxiom aren't being leaked. This is so that these can be imported seperately. *)
 Fail Check HoTT.UnivalenceAxiom.univalence_axiom.
 Fail Check HoTT.FunextAxiom.funext_axiom.
-
