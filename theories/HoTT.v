@@ -61,6 +61,7 @@ Require Export Spaces.BAut.Cantor.
 Require Export Spaces.Finite.
 Require Export Spaces.BAut.Bool.
 Require Export Spaces.BAut.Bool.IncoherentIdempotent.
+Require Export Spaces.No.
 
 Require Export HoTT.Tactics.
 
