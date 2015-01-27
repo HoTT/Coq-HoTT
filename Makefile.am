@@ -14,6 +14,9 @@ EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdow
 # The path to the Coq library in $(srcdir)
 SRCCOQLIB=$(srcdir)/coq
 
+# Extra standard library replacements to install
+STDLIB_EXTRA_DIST = $(shell find -P $(addprefix "$(SRCCOQLIB)/",$(STDLIB_REPLACEMENT_DIRS)) -type f)
+
 # support the TIMED variable like coq_makefile
 TIMED=
 TIMECMD=
@@ -30,6 +33,11 @@ Q = $(Q_$(V))
 VECHO_0 := @echo
 VECHO_1 := @true
 VECHO = $(VECHO_$(V))
+
+# inner vecho, without the @
+VIECHO_0 := echo
+VIECHO_1 := true
+VIECHO = $(VIECHO_$(V))
 
 SILENCE_HOQC_0 := @echo \"HOQC $$<\"; #
 SILENCE_HOQC_1 :=
@@ -119,6 +127,7 @@ nobase_hott_DATA = \
 	$(CORE_VOFILES) \
 	$(CATEGORY_VOFILES) \
 	$(CONTRIB_VOFILES) \
+	$(STDLIB_EXTRA_DIST) \
 	$(shell find "$(SRCCOQLIB)/theories" -name "README.txt")
 
 # The Coq compiler, adapted to HoTT
@@ -137,12 +146,15 @@ all-am: Makefile $(SCRIPTS) $(DATA) $(MAKEFILE_TARGETS_FILE)
 
 .PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom quick vi2vo checkproofs
 
-# TODO(JasonGross): Get this to work on Windows, where symlinks are unreliable
+if install_stdlib_symlinks
 install-data-local:
 	$(MKDIR_P) "$(hottdir)/coq"
-	rm -f "$(hottdir)/coq/dev" "$(hottdir)/coq/plugins"
-	$(LN_S) "$(COQLIB)/dev" "$(hottdir)/coq"
-	$(LN_S) "$(COQLIB)/plugins" "$(hottdir)/coq"
+	$(Q)for i in $(STDLIB_REPLACEMENT_DIRS); do \
+		$(VIECHO) "INSTALL coq/$$i"; \
+		rm -f "$(hottdir)/coq/$$i"; \
+		$(LN_S) "$(COQLIB)/$$i" "$(hottdir)/coq"; \
+	done
+endif
 
 # The standard library files must be compiled in a special way
 stdlib: $(STD_VOFILES)

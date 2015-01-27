@@ -163,29 +163,25 @@ AC_MSG_NOTICE([Creating symbolic links into Coq standard library])
 # First remove existing links.  If they are symlinks, use -f.  If they are
 # physical directories, use -rf.  This ensures that we don't delete the
 # contents of symlinked directories.
-AS_IF([test -h "$srcdir/coq/dev"], [rm -f "$srcdir/coq/dev"],
-      [test -d "$srcdir/coq/dev"], [rm -rf "$srcdir/coq/dev"])
-AS_IF([test -h "$srcdir/coq/kernel"], [rm -f "$srcdir/coq/kernel"],
-      [test -d "$srcdir/coq/kernel"], [rm -rf "$srcdir/coq/kernel"])
-AS_IF([test -h "$srcdir/coq/library"], [rm -f "$srcdir/coq/library"],
-      [test -d "$srcdir/coq/library"], [rm -rf "$srcdir/coq/library"])
-AS_IF([test -h "$srcdir/coq/plugins"], [rm -f "$srcdir/coq/plugins"],
-      [test -d "$srcdir/coq/plugins"], [rm -rf "$srcdir/coq/plugins"])
-AS_IF([test -h "$srcdir/coq/stm"], [rm -f "$srcdir/coq/stm"],
-      [test -d "$srcdir/coq/stm"], [rm -rf "$srcdir/coq/stm"])
-AS_IF([test -h "$srcdir/coq/toploop"], [rm -f "$srcdir/coq/toploop"],
-      [test -d "$srcdir/coq/toploop"], [rm -rf "$srcdir/coq/toploop"])
-AS_IF([test -d "$COQLIB/ide"],
-      [AS_IF([test -h "$srcdir/coq/ide"], [rm -f "$srcdir/coq/ide"],
-             [test -d "$srcdir/coq/ide"], [rm -rf "$srcdir/coq/ide"])
-       ln -s "$COQLIB/ide" "$srcdir/coq"
-      ])
-ln -s "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$COQLIB/stm" "$COQLIB/toploop" "$srcdir/coq"
-# TODO(jgross): Should we use AC_CONFIG_LINKS?  But $COQLIB/dev
-# doesn't exist in my installation, and that would make configure
-# error...
-#AC_CONFIG_LINKS([$srcdir/coq/plugins:$COQLIB/plugins
-#                 $srcdir/coq/dev:$COQLIB/dev])
+#
+# We do not use AC_CONFIG_LINKS because it creates links in the build
+# directory, not the source directory.  (Question: Even if that were
+# not a problem, would it work for directory links, or only file
+# links?)
+#
+# We also add successful directories to STDLIB_REPLACEMENT_DIRS, so
+# that the Makefile can manipulate them
+STDLIB_REPLACEMENT_DIRS=""
+for stdlibdir in dev kernel library plugins stm toploop ide ; do
+    AS_IF([test -h "$srcdir/coq/$stdlibdir"], [rm -f "$srcdir/coq/$stdlibdir"],
+          [test -d "$srcdir/coq/$stdlibdir"], [rm -rf "$srcdir/coq/$stdlibdir"])
+    AS_IF([test -d "$COQLIB/$stdlibdir"],
+          [ln -s "$COQLIB/$stdlibdir" "$srcdir/coq"
+           STDLIB_REPLACEMENT_DIRS="$STDLIB_REPLACEMENT_DIRS $stdlibdir"
+          ])
+done
+AC_SUBST([STDLIB_REPLACEMENT_DIRS])
+
 AC_MSG_CHECKING([whether your coqtop supports directory symlinks to the stdlib])
 coqtop_out="$("$COQTOP" -coqlib "$srcdir/coq" < /dev/null 2>&1 | grep -c 'Warning: Cannot open')"
 AS_IF([test "$coqtop_out" = 0],
@@ -197,6 +193,7 @@ AS_IF([test "$coqtop_out" = 0],
        AS_IF([test -d "$COQLIB/ide"],
              [cp -R "$COQLIB/ide" "$srcdir/coq"])])
 
+AM_CONDITIONAL(install_stdlib_symlinks, [test "$coqtop_out" = 0])
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([hoq-config])
