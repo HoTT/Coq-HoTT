@@ -23,6 +23,7 @@ Require Export PType.
 Require Export DProp.
 Require Export NullHomotopy.
 Require Export Idempotents.
+Require Export Pullback.
 
 Require Export Spaces.Nat.
 
@@ -44,12 +45,15 @@ Require Export hit.Join.
 Require Export Modalities.ReflectiveSubuniverse.
 Require Export Modalities.Modality.
 Require Export Modalities.Accessible.
+Require Export Modalities.Lex.
+Require Export Modalities.Topological.
 Require Export Modalities.Notnot.
 Require Export Modalities.Identity.
 Require Export Modalities.Localization.
 Require Export Modalities.Nullification.
 Require Export Modalities.Open.
 Require Export Modalities.Closed.
+Require Export Modalities.Fracture.
 
 Require Export Spaces.Cantor.
 Require Export Spaces.BAut.

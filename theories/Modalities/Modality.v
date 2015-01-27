@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations EquivalenceVarieties Extensions Factorization NullHomotopy HProp.
+Require Import Fibrations EquivalenceVarieties Extensions Factorization NullHomotopy HProp Pullback.
 Require Export ReflectiveSubuniverse. (* [Export] because many of the lemmas and facts about reflective subuniverses are equally important for modalities. *)
 Require Import HoTT.Tactics.
 
@@ -355,6 +355,16 @@ Proof.
   apply O_ind_beta.
 Defined.
 
+(** This has useful consequences like closure under [Equiv]. *)
+Global Instance inO_equiv `{Funext} {O : Modality} (A B : Type)
+       `{In O A} `{In O B}
+: In O (A <~> B).
+Proof.
+  refine (inO_equiv_inO _ (issig_equiv A B)).
+  refine (inO_sigma _ _).
+  intros f; refine (inO_equiv_inO _ (issig_isequiv f)).
+Defined.
+
 (** Theorem 7.3.9: The reflector [O] can be discarded inside a reflected sum. *)
 Definition equiv_O_sigma_O {O : Modality} {A} (P : A -> Type)
 : O {x:A & O (P x)} <~> O {x:A & P x}.
@@ -423,7 +433,9 @@ End OIndEquiv.
 
 Question: is there a definition of connectedness (say, for n-types) that neither blows up the universe level, nor requires HIT's? *)
 
+(** We give annotations to reduce the number of universe parameters. *)
 Class IsConnected (O : Modality@{u a}) (A : Type@{i})
+  (** Since [Contr] is a [Notation], we can't annotate it for universes (see https://coq.inria.fr/bugs/show_bug.cgi?id=3825); thus we write [IsTrunc -2] explicitly instead. *)
   := isconnected_contr_O : IsTrunc@{i} -2 (O A).
 Check IsConnected@{u a i}.
 
@@ -480,8 +492,19 @@ Section ConnectedTypes.
     exact (isconnected_from_elim_to_O (H (O A) (O_inO A) (to O A))).
   Defined.
 
-  (** A type which is both connected and truncated is contractible. *)
+  (** Connected types are closed under sigmas. *)
+  Global Instance isconnected_sigma {A : Type} {B : A -> Type}
+             `{IsConnected O A} `{forall a, IsConnected O (B a)}
+  : IsConnected O {a:A & B a}.
+  Proof.
+    apply isconnected_from_elim; intros C ? f.
+    pose (nB := fun a => @isconnected_elim (B a) _ C _ (fun b => f (a;b))).
+    pose (nA := isconnected_elim C (fun a => (nB a).1)).
+    exists (nA.1); intros [a b].
+    exact ((nB a).2 b @ nA.2 a).
+  Defined.
 
+  (** A type which is both connected and truncated is contractible. *)
   Definition contr_trunc_conn {A : Type} `{In O A} `{IsConnected O A}
   : Contr A.
   Proof.
@@ -546,7 +569,7 @@ Section ModalMaps.
   Defined.
 
   (** Any map between modal types is modal. *)
-  Definition mapinO_between_inO {A B : Type} (f : A -> B)
+  Global Instance mapinO_between_inO {A B : Type} (f : A -> B)
              `{In O A} `{In O B}
   : MapIn O f.
   Proof.
@@ -601,15 +624,43 @@ Section ModalMaps.
     - exact (inO_equiv_inO Empty e^-1).
   Defined.
 
+  (** Modal maps cancel on the left *)
+  Definition cancelL_mapinO {A B C : Type} (f : A -> B) (g : B -> C)
+  : MapIn O g -> MapIn O (g o f) -> MapIn O f.
+  Proof.
+    intros ? ? b.
+    refine (inO_equiv_inO _ (hfiber_hfiber_compose_map f g b)).
+  Defined.
+
+  (** The pullback of a modal map is modal *)
+  Global Instance mapinO_pullback {A B C}
+         (f : B -> A) (g : C -> A) `{MapIn O _ _ g}
+  : MapIn O (f^* g).
+  Proof.
+    intros b.
+    refine (inO_equiv_inO _ (hfiber_pullback_along f g b)^-1).
+  Defined.
+
+  Global Instance mapinO_pullback' {A B C}
+         (g : C -> A) (f : B -> A) `{MapIn O _ _ f}
+  : MapIn O (g^*' f).
+  Proof.
+    intros c.
+    refine (inO_equiv_inO _ (hfiber_pullback_along' g f c)^-1).
+  Defined.
+
 End ModalMaps.
 
 (** ** Modally connected maps *)
 
 (** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against truncated types.  We use the former; the equivalence with the latter is given below in [conn_map_elim], [conn_map_comp], and [conn_map_from_extension_elim]. *)
 
-Class IsConnMap (O : Modality@{u a}) {A : Type@{i}} {B : Type@{j}} (f : A -> B)
-  := isconnected_hfiber_conn_map : forall b:B, IsConnected@{u a k} O (hfiber f b).
-Check IsConnMap@{u a i j k}.        (** k >= max(i,j) *)
+Class IsConnMap (O : Modality@{u a})
+      {A : Type@{i}} {B : Type@{j}} (f : A -> B)
+  := isconnected_hfiber_conn_map
+     (** The extra universe [k] is >= max(i,j). *)
+     : forall b:B, IsConnected@{u a k} O (hfiber@{i j} f b).
+Check IsConnMap@{u a i j k}.
 
 Global Existing Instance isconnected_hfiber_conn_map.
 
@@ -633,6 +684,32 @@ Section ConnectedMaps.
     intros ? b.
     exact (isconnected_equiv O (hfiber f b)
                              (equiv_hfiber_homotopic f g h b) _).
+  Defined.
+
+  (** The pullback of a connected map is connected *)
+  Global Instance conn_map_pullback {A B C}
+         (f : B -> A) (g : C -> A) `{IsConnMap O _ _ g}
+  : IsConnMap O (f^* g).
+  Proof.
+    intros b.
+    refine (isconnected_equiv _ _ (hfiber_pullback_along f g b)^-1 _).
+  Defined.
+
+  Global Instance conn_map_pullback' {A B C}
+         (g : C -> A) (f : B -> A) `{IsConnMap O _ _ f}
+  : IsConnMap O (g^*' f).
+  Proof.
+    intros c.
+    refine (isconnected_equiv _ _ (hfiber_pullback_along' g f c)^-1 _).
+  Defined.
+
+  (** The projection from a family of connected types is connected. *)
+  Global Instance conn_map_pr1 {A : Type} {B : A -> Type}
+         `{forall a, IsConnected O (B a)}
+  : IsConnMap O (@pr1 A B).
+  Proof.
+    intros a.
+    refine (isconnected_equiv O (B a) (hfiber_fibration a B) _).
   Defined.
 
   (** Being connected is an hprop *)
@@ -670,6 +747,7 @@ Section ConnectedMaps.
     apply inverse, e.
   Defined.
 
+  (** A map which is both connected and modal is an equivalence. *)
   Definition isequiv_conn_ino_map {A B : Type} (f : A -> B)
              `{IsConnMap O _ _ f} `{MapIn O _ _ f}
   : IsEquiv f.
@@ -688,6 +766,23 @@ Section ConnectedMaps.
     exists (conn_map_elim f P d).
     apply conn_map_comp.
   Defined.
+
+  Definition extendable_conn_map_inO (n : nat)
+             {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
+             (P : B -> Type) `{forall b:B, In O (P b)}
+  : ExtendableAlong n f P.
+  Proof.
+    generalize dependent P.
+    simple_induction n n IHn; intros P ?; [ exact tt | split ].
+    - intros d; apply extension_conn_map_elim; exact _.
+    - intros h k; apply IHn; exact _.
+  Defined.
+
+  Definition ooextendable_conn_map_inO
+             {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
+             (P : B -> Type) `{forall b:B, In O (P b)}
+  : ooExtendableAlong f P
+    := fun n => extendable_conn_map_inO n f P.
 
   Lemma allpath_extension_conn_map
         {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
@@ -771,6 +866,26 @@ Section ConnectedMaps.
     - apply mapinO_between_inO; exact _.
   Defined.
 
+  (** The constant map to [Unit] is connected just when its domain is. *)
+  Definition isconnected_conn_map_to_unit {A : Type}
+             `{IsConnMap O _ _ (@const A Unit tt)}
+  : IsConnected O A.
+  Proof.
+    refine (isconnected_equiv O (hfiber (@const A Unit tt) tt)
+              (equiv_sigma_contr (fun a:A => const tt a = tt)) _).
+  Defined.
+
+  Hint Immediate isconnected_conn_map_to_unit : typeclass_instances.
+
+  Global Instance conn_map_to_unit_isconnected {A : Type}
+         `{IsConnected O A}
+  : IsConnMap O (@const A Unit tt).
+  Proof.
+    intros u.
+    refine (isconnected_equiv O A
+              (equiv_sigma_contr (fun a:A => const tt a = u))^-1 _).
+  Defined.
+
   (** Lemma 7.5.12 *)
   Section ConnMapFunctorSigma.
 
@@ -793,8 +908,7 @@ Section ConnectedMaps.
     : IsConnMap O (functor_sigma f g).
     Proof.
       intros [b v].
-      (* Why is this so slow? *)
-      refine (contr_equiv _ (equiv_inverse (equiv_O_hfiber_functor_sigma b v))).
+      refine (contr_equiv' _ (equiv_inverse (equiv_O_hfiber_functor_sigma b v))).
     Defined.
 
     Definition conn_map_base_inhabited (inh : forall b, Q b)
@@ -1014,5 +1128,93 @@ Module Modalities_Restriction
     := Os.minO_paths@{u a i} (Res.Modalities_restriction O).
 
 End Modalities_Restriction.
+
+(** ** Union of families of modalities *)
+
+Module Modalities_FamUnion (Os1 Os2 : Modalities)
+       <: Modalities.
+
+  Definition Modality : Type2@{u a}
+    := Os1.Modality@{u a} + Os2.Modality@{u a}.
+
+  Coercion Mod_inl := inl : Os1.Modality -> Modality.
+  Coercion Mod_inr := inr : Os2.Modality -> Modality.
+
+  Definition O_reflector : forall (O : Modality@{u a}),
+                            Type2le@{i a} -> Type2le@{i a}.
+  Proof.
+    intros [O|O]; [ exact (Os1.O_reflector@{u a i} O)
+                  | exact (Os2.O_reflector@{u a i} O) ].
+  Defined.
+
+  Definition inO_internal : forall (O : Modality@{u a}),
+                            Type2le@{i a} -> Type2le@{i a}.
+  Proof.
+    intros [O|O]; [ exact (Os1.inO_internal@{u a i} O)
+                  | exact (Os2.inO_internal@{u a i} O) ].
+  Defined.
+
+  Definition O_inO_internal : forall (O : Modality@{u a}) (T : Type@{i}),
+                               inO_internal@{u a i} O (O_reflector@{u a i} O T).
+  Proof.
+    intros [O|O]; [ exact (Os1.O_inO_internal@{u a i} O)
+                  | exact (Os2.O_inO_internal@{u a i} O) ].
+  Defined.
+
+  Definition to : forall (O : Modality@{u a}) (T : Type@{i}),
+                   T -> O_reflector@{u a i} O T.
+  Proof.
+    intros [O|O]; [ exact (Os1.to@{u a i} O)
+                  | exact (Os2.to@{u a i} O) ].
+  Defined.
+
+  Definition inO_equiv_inO_internal :
+      forall (O : Modality@{u a}) (T U : Type@{i})
+             (T_inO : inO_internal@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
+        inO_internal@{u a i} O U.
+  Proof.
+    intros [O|O]; [ exact (Os1.inO_equiv_inO_internal@{u a i} O)
+                  | exact (Os2.inO_equiv_inO_internal@{u a i} O) ].
+  Defined.
+
+  Definition hprop_inO_internal
+  : Funext -> forall (O : Modality@{u a}) (T : Type@{i}),
+                IsHProp (inO_internal@{u a i} O T).
+  Proof.
+    intros ? [O|O]; [ exact (Os1.hprop_inO_internal@{u a i} _ O)
+                    | exact (Os2.hprop_inO_internal@{u a i} _ O) ].
+  Defined.
+
+  Definition O_ind_internal
+  : forall (O : Modality@{u a})
+           (A : Type2le@{i a}) (B : O_reflector O A -> Type2le@{j a})
+           (B_inO : forall oa, inO_internal@{u a j} O (B oa)),
+      (forall a, B (to O A a)) -> forall a, B a.
+  Proof.
+    intros [O|O]; [ exact (Os1.O_ind_internal@{u a i j k} O)
+                  | exact (Os2.O_ind_internal@{u a i j k} O) ].
+  Defined.
+
+  Definition O_ind_beta_internal
+  : forall (O : Modality@{u a})
+           (A : Type@{i}) (B : O_reflector O A -> Type@{j})
+           (B_inO : forall oa, inO_internal@{u a j} O (B oa))
+           (f : forall a : A, B (to O A a)) (a:A),
+      O_ind_internal@{u a i j k} O A B B_inO f (to O A a) = f a.
+  Proof.
+    intros [O|O]; [ exact (Os1.O_ind_beta_internal@{u a i j k} O)
+                  | exact (Os2.O_ind_beta_internal@{u a i j k} O) ].
+  Defined.
+
+  Definition minO_paths
+  : forall (O : Modality@{u a})
+           (A : Type2le@{i a}) (A_inO : inO_internal@{u a i} O A) (z z' : A),
+      inO_internal@{u a i} O (z = z').
+  Proof.
+    intros [O|O]; [ exact (Os1.minO_paths@{u a i} O)
+                  | exact (Os2.minO_paths@{u a i} O) ].
+  Defined.
+
+End Modalities_FamUnion.
 
 (** For examples of modalities, see the files Notnot, Identity, Nullification, PropositionalFracture, and hit/Localization. *)

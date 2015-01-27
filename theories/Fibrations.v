@@ -1,6 +1,8 @@
+(* -*- mode: coq; mode: visual-line -*- *)
 (** * Basic facts about fibrations *)
 
 Require Import HoTT.Basics Types.Sigma Types.Paths.
+Require Import EquivalenceVarieties.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 
@@ -8,13 +10,38 @@ Local Open Scope equiv_scope.
 
 (** Paths in homotopy fibers can be constructed using [path_sigma] and [transport_paths_Fl]. *)
 
+Definition equiv_path_hfiber {A B : Type} {f : A -> B} {y : B}
+  (x1 x2 : hfiber f y)
+: { q : x1.1 = x2.1 & x1.2 = ap f q @ x2.2 } <~> (x1 = x2).
+Proof.
+  refine (equiv_compose' (equiv_path_sigma _ _ _) _).
+  refine (equiv_functor_sigma' (equiv_idmap _) _).
+  intros p; simpl.
+  refine (equiv_compose' _ (equiv_moveR_Vp _ _ _)).
+  exact (equiv_concat_l (transport_paths_Fl _ _) _).
+Defined.
+
+Definition path_hfiber_uncurried {A B : Type} {f : A -> B} {y : B}
+  {x1 x2 : hfiber f y}
+: { q : x1.1 = x2.1 & x1.2 = ap f q @ x2.2 } -> (x1 = x2)
+  := equiv_path_hfiber x1 x2.
+
 Definition path_hfiber {A B : Type} {f : A -> B} {y : B}
   {x1 x2 : hfiber f y} (q : x1.1 = x2.1) (r : x1.2 = ap f q @ x2.2)
-: x1 = x2.
+: x1 = x2
+:= path_hfiber_uncurried (q;r).
+
+(** If we rearrange this a bit, then it characterizes the fibers of [ap]. *)
+
+Definition hfiber_ap {A B : Type} {f : A -> B} {x1 x2 : A}
+           (p : f x1 = f x2)
+: hfiber (ap f) p <~> ((x1 ; p) = (x2 ; 1) :> hfiber f (f x2)).
 Proof.
-  refine (path_sigma _ _ _ q _).
-  refine (transport_paths_Fl _ _ @ _).
-  apply moveR_Vp, r.
+  refine (equiv_compose' (equiv_path_hfiber (x1;p) (x2;1)) _).
+  unfold hfiber; simpl.
+  refine (equiv_functor_sigma' (equiv_idmap _) _); intros q.
+  refine (equiv_compose' _ (equiv_path_inverse _ _)).
+  exact (equiv_concat_r (concat_p1 _)^ _).
 Defined.
 
 (** Homotopic maps have equivalent fibers. *)
@@ -28,6 +55,18 @@ Proof.
     intros [a p]; simpl.
   - apply ap, concat_V_pp.
   - apply ap, concat_p_Vp.
+Defined.
+
+(** Commutative squares induce maps between fibers. *)
+
+Definition functor_hfiber {A B C D}
+           {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
+           (p : k o f == g o h) (b : B)
+: hfiber f b -> hfiber g (k b).
+Proof.
+  intros [a e].
+  exists (h a).
+  exact ((p a)^ @ ap k e).
 Defined.
 
 (** ** Replacing a map with a fibration *)
@@ -139,4 +178,14 @@ Proof.
   refine (equiv_compose' _ (hfiber_functor_sigma P Q idmap g b v)).
   exact (equiv_contr_sigma
            (fun (w:hfiber idmap b) => hfiber (g w.1) (transport Q (w.2)^ v))).
+Defined.
+
+Definition isequiv_from_functor_sigma {A} (P Q : A -> Type)
+           (g : forall a, P a -> Q a)
+           `{IsEquiv _ _ (functor_sigma idmap g)}
+: forall (a : A), IsEquiv (g a).
+Proof.
+  intros a; apply isequiv_fcontr; intros v.
+  refine (contr_equiv' _ (hfiber_functor_sigma_idmap P Q g a v)).
+  by apply fcontr_isequiv.
 Defined.

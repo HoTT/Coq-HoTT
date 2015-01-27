@@ -2,7 +2,7 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp TruncType Extensions.
-Require Import Modality Accessible Nullification.
+Require Import Modality Accessible Nullification Lex Topological.
 Require Import hit.Pushout hit.Join.
 
 Local Open Scope path_scope.
@@ -117,7 +117,7 @@ Module ClosedModalities <: Modalities.
 
 End ClosedModalities.
 
-Module ClM := Modalities_Theory ClosedModalities.
+Module Import ClM := Modalities_Theory ClosedModalities.
 Export ClM.Coercions.
 Export ClM.RSU.Coercions.
 
@@ -151,6 +151,25 @@ Module Accessible_ClosedModalities
 
 End Accessible_ClosedModalities.
 
+(** In fact, it is topological, and therefore (assuming univalence) lex.  As for topological modalities generally, we don't need to declare these as global instances, but we prove them here as local instances for exposition. *)
+Module Import ClT :=
+  Topological_Modalities_Theory
+    ClosedModalities
+    Accessible_ClosedModalities.
+
+Local Instance topological_closed (O : Modality)
+: Topological O.
+Proof.
+  exact _.
+Defined.
+
+Local Instance lex_closed `{Univalence} (O : Modality)
+: Lex O.
+Proof.
+  exact _.
+Defined.
+
 (** Thus, it also has the following alternative version. *)
-Definition Cl' (U : hProp) : Nullification_Modality
+Definition Cl' (U : hProp)
+: Nullification_Modality
   := Nul (Build_NullGenerators U (fun _ => Empty)).

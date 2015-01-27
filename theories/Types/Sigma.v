@@ -456,6 +456,15 @@ Definition equiv_sigma_prod `(Q : (A * B) -> Type)
           (fun _ => 1)
           (fun _ => 1)).
 
+Definition equiv_sigma_prod0 A B
+: {a : A & B} <~> A * B
+  := BuildEquiv _ _ _
+       (BuildIsEquiv
+          {a : A & B} (A * B)
+          (fun (ab : {a:A & B}) => (ab.1 , ab.2))
+          (fun (ab : A*B) => (fst ab ; snd ab))
+          (fun _ => 1) (fun _ => 1) (fun _ => 1)).
+
 (** ** Symmetry *)
 
 Definition equiv_sigma_symm `(P : A -> B -> Type)
@@ -472,14 +481,6 @@ Definition equiv_sigma_symm0 (A B : Type)
 Proof.
   refine (BuildEquiv _ _ (fun (w:{a:A & B}) => (w.2 ; w.1)) _).
   refine (BuildIsEquiv _ _ _ (fun (z:{b:B & A}) => (z.2 ; z.1))
-                       _ _ _); intros [x y]; reflexivity.
-Defined.
-
-Definition equiv_sigma_prod0 (A B : Type)
-: {a : A & B} <~> A * B.
-Proof.
-  refine (BuildEquiv _ _ (fun (w:{a:A & B}) => (w.1 , w.2)) _).
-  refine (BuildIsEquiv _ _ _ (fun (z:A*B) => (fst z ; snd z))
                        _ _ _); intros [x y]; reflexivity.
 Defined.
 

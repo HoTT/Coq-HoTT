@@ -3,7 +3,7 @@
 (** * Accessible subuniverses and modalities *)
 
 Require Import HoTT.Basics HoTT.Types HoTT.Tactics.
-Require Import Extensions.
+Require Import Extensions NullHomotopy.
 Require Import ReflectiveSubuniverse Modality.
 
 Local Open Scope path_scope.
@@ -150,6 +150,28 @@ Module Type Accessible_Modalities (Os : Modalities).
 
 End Accessible_Modalities.
 
+Module Accessible_Modalities_Theory
+       (Os : Modalities)
+       (Acc : Accessible_Modalities Os).
+
+  Export Os Acc.
+  Module Export Os_Theory := Modalities_Theory Os.
+
+  Definition inO_iff_isnull
+  : forall O (X : Type), In O X <-> IsNull (acc_gen O) X
+  := inO_iff_isnull_internal.
+
+  Global Instance isconnected_acc_gen O i : IsConnected O (acc_gen O i).
+  Proof.
+    apply isconnected_from_elim_to_O.
+    pose (H := fst (fst (inO_iff_isnull O (O (acc_gen O i))) _ i 1%nat)
+                   (to O ((acc_gen O) i))).
+    exists (H.1 tt).
+    exact (fun x => (H.2 x)^).
+  Defined.
+
+End Accessible_Modalities_Theory.
+
 (** We will now show that a modality is accessible in this sense if and only if its underlying reflective subuniverse is accessible in the sense previously defined.  These proofs involve a bit of annoying module wrangling.  Fortunately, we (almost?) never need to actually use them; in practice accessible modalities usually seem to be given to us with the appropriate sort of generators. *)
 
 (** One direction of this implication is trivial. *)
@@ -231,3 +253,52 @@ End Accessible_Modalities_from_ReflectiveSubuniverses.
 
 (** The construction of the nullification modality for any family of types will be in [Nullification]. *)
 
+(** ** Restrictions are accessible *)
+
+Module Accessible_Restriction_ReflectiveSubuniverses
+       (Os : ReflectiveSubuniverses)
+       (Acc : Accessible_ReflectiveSubuniverses Os)
+       (Res : ReflectiveSubuniverses_Restriction_Data Os).
+
+  Module Import New <: ReflectiveSubuniverses
+    := ReflectiveSubuniverses_Restriction Os Res.
+
+  Module Accessible_New <: Accessible_ReflectiveSubuniverses New.
+
+    Definition acc_gen : New.ReflectiveSubuniverse@{u a} -> LocalGenerators@{a}
+      := fun O => Acc.acc_gen (Res.ReflectiveSubuniverses_restriction O).
+
+    Definition inO_iff_islocal_internal
+    : forall (O : New.ReflectiveSubuniverse@{u a}) (X : Type@{i}),
+        iff@{i i i}
+           (inO_internal@{u a i} O X)
+           (IsLocal@{i i a} (acc_gen@{u a} O) X)
+      := fun O => Acc.inO_iff_islocal_internal (Res.ReflectiveSubuniverses_restriction O).
+
+  End Accessible_New.
+
+End Accessible_Restriction_ReflectiveSubuniverses.
+
+Module Accessible_Restriction_Modalities
+       (Os : Modalities)
+       (Acc : Accessible_Modalities Os)
+       (Res : Modalities_Restriction_Data Os).
+
+  Module Import New <: Modalities
+    := Modalities_Restriction Os Res.
+
+  Module Accessible_New <: Accessible_Modalities New.
+
+    Definition acc_gen : New.Modality@{u a} -> NullGenerators@{a}
+      := fun O => Acc.acc_gen (Res.Modalities_restriction O).
+
+    Definition inO_iff_isnull_internal
+    : forall (O : New.Modality@{u a}) (X : Type@{i}),
+        iff@{i i i}
+           (inO_internal@{u a i} O X)
+           (IsNull@{a i} (acc_gen@{u a} O) X)
+      := fun O => Acc.inO_iff_isnull_internal (Res.Modalities_restriction O).
+
+  End Accessible_New.
+
+End Accessible_Restriction_Modalities.

@@ -66,17 +66,21 @@ CORE_VFILES = \
 	$(srcdir)/theories/ObjectClassifier.v \
 	$(srcdir)/theories/NullHomotopy.v \
 	$(srcdir)/theories/Idempotents.v \
+	$(srcdir)/theories/Pullback.v \
 	$(srcdir)/theories/Factorization.v \
 	$(srcdir)/theories/Constant.v \
 	$(srcdir)/theories/Modalities/ReflectiveSubuniverse.v \
 	$(srcdir)/theories/Modalities/Modality.v \
 	$(srcdir)/theories/Modalities/Accessible.v \
+	$(srcdir)/theories/Modalities/Lex.v \
+	$(srcdir)/theories/Modalities/Topological.v \
 	$(srcdir)/theories/Modalities/Notnot.v \
 	$(srcdir)/theories/Modalities/Identity.v \
 	$(srcdir)/theories/Modalities/Localization.v \
 	$(srcdir)/theories/Modalities/Nullification.v \
 	$(srcdir)/theories/Modalities/Open.v \
 	$(srcdir)/theories/Modalities/Closed.v \
+	$(srcdir)/theories/Modalities/Fracture.v \
 	$(srcdir)/theories/hit/Circle.v \
 	$(srcdir)/theories/hit/Truncations.v \
 	$(srcdir)/theories/hit/TruncImpliesFunext.v \

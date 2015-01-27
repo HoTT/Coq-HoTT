@@ -78,6 +78,31 @@ Proof.
     apply @path_contr. apply contr_contr. exact (hp x y).
 Defined.
 
+(** Being an hprop is also equivalent to the diagonal being an equivalence. *)
+Definition ishprop_isequiv_diag {A} `{IsEquiv _ _ (fun (a:A) => (a,a))}
+: IsHProp A.
+Proof.
+  apply hprop_allpath; intros x y.
+  set (d := fun (a:A) => (a,a)) in *.
+  transitivity (fst (d (d^-1 (x,y)))).
+  - exact (ap fst (eisretr d (x,y))^).
+  - transitivity (snd (d (d^-1 (x,y)))).
+    + unfold d; reflexivity.
+    + exact (ap snd (eisretr d (x,y))).
+Defined.
+
+Global Instance isequiv_diag_ishprop {A} `{IsHProp A}
+: IsEquiv (fun (a:A) => (a,a)).
+Proof.
+  refine (isequiv_adjointify _ fst _ _).
+  - intros [x y].
+    apply path_prod; simpl.
+    + reflexivity.
+    + apply path_ishprop.
+  - intros a; simpl.
+    reflexivity.
+Defined.
+
 (** ** Alternate characterizations of contractibility. *)
 
 Theorem equiv_contr_inhabited_hprop `{Funext} {A}

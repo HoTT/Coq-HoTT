@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import UnivalenceImpliesFunext EquivalenceVarieties Extensions Fibrations.
+Require Import UnivalenceImpliesFunext EquivalenceVarieties Extensions Fibrations HProp.
 Require Import HoTT.Tactics.
 
 Local Open Scope path_scope.
@@ -153,8 +153,9 @@ Class In (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}) :=
 Typeclasses Transparent In.
 
 (** The type of types in the subuniverse *)
-Definition Type_ (O : ReflectiveSubuniverse) : Type
-  := {T : Type & In O T}.
+Definition Type_ (O : ReflectiveSubuniverse@{u a}) : Type@{j}
+  := sig@{j i} (fun (T : Type@{i}) => In@{u a i} O T).
+Check Type_@{u a j i}.
 
 (** Before going on, we declare some coercions in a module, so that they can be imported separately.  In fact, this submodule should be exported by any file that defines a reflective subuniverse.  *)
 Module Export Coercions.
@@ -188,6 +189,15 @@ Global Instance O_inO {O : ReflectiveSubuniverse} (T : Type) : In O (O T)
 Definition path_TypeO {fs : Funext} O (T T' : Type_ O) (p : T.1 = T'.1)
   : T = T'
   := path_sigma_hprop T T' p.
+
+Definition equiv_path_TypeO {fs : Funext} O (T T' : Type_ O)
+: (T.1 = T'.1) <~> (T = T')
+:= equiv_path_sigma_hprop T T'.
+
+(** Types in [TypeO] are always in [O]. *)
+Global Instance inO_TypeO {O : ReflectiveSubuniverse} (A : Type_ O)
+: In O A
+:= A.2.
 
 Definition extendable_to_O (O : ReflectiveSubuniverse)
            {P Q : Type} {Q_inO : In O Q}
@@ -356,6 +366,19 @@ Section Reflective_Subuniverse.
     : (O_functor f) o (to O A) == (to O B) o f
     := (O_rec_beta _).
 
+    (** 2-naturality: Functoriality on homotopies is also natural *)
+    Definition O_functor_homotopy_beta
+               {A B : Type} (f g : A -> B) (pi : f == g) (x : A)
+    : O_functor_homotopy f g pi (to O A x)
+      = to_O_natural f x
+      @ ap (to O B) (pi x)
+      @ (to_O_natural g x)^.
+    Proof.
+      unfold O_functor_homotopy, to_O_natural.
+      refine (O_indpaths_beta _ _ _ x @ _).
+      refine (concat_p_pp _ _ _).
+    Defined.
+
     (** The pointed endofunctor ([O],[to O]) is well-pointed *)
     Definition O_functor_wellpointed (A : Type)
     : O_functor (to O A) == to O (O A).
@@ -363,6 +386,20 @@ Section Reflective_Subuniverse.
       refine (O_indpaths _ _ _); intros x.
       apply to_O_natural.
     Defined.
+
+    (** "Functoriality of naturality": the pseudonaturality axiom for composition *)
+    Definition to_O_natural_compose {A B C : Type}
+               (f : A -> B) (g : B -> C) (a : A)
+    : ap (O_functor g) (to_O_natural f a)
+      @ to_O_natural g (f a)
+      = (O_functor_compose f g (to O A a))^
+      @ to_O_natural (g o f) a.
+    Proof.
+      unfold O_functor_compose, to_O_natural.
+      rewrite O_indpaths_beta.
+      rewrite !inv_pp, ap_V, !inv_V, !concat_pp_p.
+      rewrite concat_Vp, concat_p1; reflexivity.
+    Qed.
 
     (** Preservation of equivalences *)
     Global Instance isequiv_O_functor {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
@@ -384,6 +421,26 @@ Section Reflective_Subuniverse.
     Definition equiv_O_functor {A B : Type} (f : A <~> B)
     : O A <~> O B
     := BuildEquiv _ _ (O_functor f) _.
+
+    (** This corresponds to [ap O] on the universe. *)
+    Definition ap_O_path_universe' `{Univalence}
+               {A B : Type} (f : A <~> B)
+    : ap O (path_universe_uncurried f)
+      = path_universe_uncurried (equiv_O_functor f).
+    Proof.
+      revert f.
+      equiv_intro (equiv_path A B) p.
+      refine (ap (ap O) (eta_path_universe p) @ _).
+      destruct p; simpl.
+      apply moveL_equiv_V.
+      apply path_equiv, path_arrow, O_indpaths; intros x.
+      symmetry; apply to_O_natural.
+    Defined.
+
+    Definition ap_O_path_universe `{Univalence}
+               {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
+    : ap O (path_universe f) = path_universe (O_functor f)
+    := ap_O_path_universe' (BuildEquiv _ _ f _).
 
     (** Postcomposition respects [O_rec] *)
     Definition O_rec_postcompose {A B C : Type} `{In O B} {C_inO : In O C}
@@ -440,7 +497,7 @@ Section Reflective_Subuniverse.
       intros x; symmetry; apply O_functor_wellpointed.
     Defined.
 
-    (** A map between modal types that is inverted by [O] is already an equivalence. *)
+    (** A map between modal types that is inverted by [O] is already an equivalence.  This can't be an [Instance], probably because it causes an infinite regress applying more and more [O_functor]. *)
     Definition isequiv_O_inverts {A B : Type} `{In O A} `{In O B}
       (f : A -> B) `{O_inverts f}
     : IsEquiv f.
@@ -449,10 +506,25 @@ Section Reflective_Subuniverse.
       apply to_O_natural.
     Defined.
 
+    (** Strangely, even this seems to cause infinite loops *)
+    (** [Hint Immediate isequiv_O_inverts : typeclass_instances.] *)
+
     Definition equiv_O_inverts {A B : Type} `{In O A} `{In O B}
       (f : A -> B) `{O_inverts f}
     : A <~> B
     := BuildEquiv _ _ f (isequiv_O_inverts f).
+
+    Definition isequiv_O_rec_O_inverts
+           {A B : Type} `{In O B} (f : A -> B) `{O_inverts f}
+    : IsEquiv (O_rec f).
+    Proof.
+      apply isequiv_O_inverts.
+      refine (cancelR_isequiv (O_functor (to O A))).
+      refine (isequiv_homotopic (O_functor (O_rec f o to O A))
+                                (O_functor_compose _ _)).
+      refine (isequiv_homotopic (O_functor f)
+               (O_functor_homotopy _ _ (fun x => (O_rec_beta f x)^))).
+    Defined.
 
     Definition to_O_inv_natural {A B : Type} `{In O A} `{In O B}
                (f : A -> B)
@@ -720,6 +792,30 @@ Section Reflective_Subuniverse.
         rewrite O_indpaths_beta; reflexivity.
     Qed.
 
+    (** ** Truncations  *)
+
+    (** The reflector preserves hprops (and, as we have already seen, contractible types), although it doesn't generally preserve [n]-types for other [n]. *)
+    Global Instance ishprop_O_ishprop {A} `{IsHProp A} : IsHProp (O A).
+    Proof.
+      refine ishprop_isequiv_diag.
+      refine (isequiv_homotopic (O_prod_cmp A A
+                               o O_functor (fun (a:A) => (a,a))) _).
+      apply O_indpaths; intros x; simpl.
+      refine (ap (O_prod_cmp A A) (to_O_natural (fun (a:A) => (a,a)) x) @ _).
+      unfold O_prod_cmp; apply O_rec_beta.
+    Defined.
+
+    (** If [A] is [In O], then so is [IsTrunc n A]. *)
+    Global Instance inO_istrunc `{Funext} {n} {A} `{In O A}
+    : In O (IsTrunc n A).
+    Proof.
+      generalize dependent A; simple_induction n n IH; intros A ?.
+      - (** We have to be slightly clever here: the actual definition of [Contr] involves a sigma, which [O] is not generally closed under, but fortunately we have [equiv_contr_inhabited_allpath]. *)
+        refine (inO_equiv_inO _ equiv_contr_inhabited_allpath^-1).
+      - change (In O (forall x y:A, IsTrunc n (x=y))).
+        exact _.
+    Defined.
+
   End Types.
 
   Section Decidable.
@@ -899,6 +995,70 @@ End ReflectiveSubuniverses_Restriction.
 
 (** ** Union of families of reflective subuniverses *)
 
-(** TODO *)
+Module ReflectiveSubuniverses_FamUnion
+       (Os1 Os2 : ReflectiveSubuniverses)
+<: ReflectiveSubuniverses.
+
+  Definition ReflectiveSubuniverse : Type2@{u a}
+    := Os1.ReflectiveSubuniverse@{u a} + Os2.ReflectiveSubuniverse@{u a}.
+
+  Coercion RSU_inl := inl : Os1.ReflectiveSubuniverse -> ReflectiveSubuniverse.
+  Coercion RSU_inr := inr : Os2.ReflectiveSubuniverse -> ReflectiveSubuniverse.
+
+  Definition O_reflector : forall (O : ReflectiveSubuniverse@{u a}),
+                             Type2le@{i a} -> Type2le@{i a}.
+  Proof.
+    intros [O|O]; [ exact (Os1.O_reflector@{u a i} O)
+                  | exact (Os2.O_reflector@{u a i} O) ].
+  Defined.
+
+  Definition inO_internal : forall (O : ReflectiveSubuniverse@{u a}),
+                             Type2le@{i a} -> Type2le@{i a}.
+  Proof.
+    intros [O|O]; [ exact (Os1.inO_internal@{u a i} O)
+                  | exact (Os2.inO_internal@{u a i} O) ].
+  Defined.
+
+  Definition O_inO_internal
+  : forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
+      inO_internal@{u a i} O (O_reflector@{u a i} O T).
+  Proof.
+    intros [O|O]; [ exact (Os1.O_inO_internal@{u a i} O)
+                  | exact (Os2.O_inO_internal@{u a i} O) ].
+  Defined.
+
+  Definition to : forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
+                   T -> O_reflector@{u a i} O T.
+  Proof.
+    intros [O|O]; [ exact (Os1.to@{u a i} O)
+                  | exact (Os2.to@{u a i} O) ].
+  Defined.
+
+  Definition inO_equiv_inO_internal :
+      forall (O : ReflectiveSubuniverse@{u a}) (T U : Type@{i})
+             (T_inO : inO_internal@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
+        inO_internal@{u a i} O U.
+  Proof.
+    intros [O|O]; [ exact (Os1.inO_equiv_inO_internal@{u a i} O)
+                  | exact (Os2.inO_equiv_inO_internal@{u a i} O) ].
+  Defined.
+
+  Definition hprop_inO_internal
+  : Funext -> forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
+                IsHProp (inO_internal@{u a i} O T).
+  Proof.
+    intros ? [O|O]; [ exact (Os1.hprop_inO_internal@{u a i} _ O)
+                    | exact (Os2.hprop_inO_internal@{u a i} _ O) ].
+  Defined.
+
+  Definition extendable_to_O_internal
+  : forall (O : ReflectiveSubuniverse@{u a}) {P : Type2le@{i a}} {Q : Type2le@{j a}} {Q_inO : inO_internal@{u a j} O Q},
+      ooExtendableAlong@{i i j k} (to O P) (fun _ => Q).
+  Proof.
+    intros [O|O]; [ exact (@Os1.extendable_to_O_internal@{u a i j k} O)
+                  | exact (@Os2.extendable_to_O_internal@{u a i j k} O) ].
+  Defined.
+
+End ReflectiveSubuniverses_FamUnion.
 
 (** For examples of reflective subuniverses, see the examples of modalities listed in the file [Modality], and also [Localization]. *)
