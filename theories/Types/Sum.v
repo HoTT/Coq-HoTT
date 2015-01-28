@@ -179,6 +179,18 @@ Definition is_inl {A B} : A + B -> Type
 Definition is_inr {A B} : A + B -> Type
   := is_inr_and (fun _ => Unit).
 
+Global Instance ishprop_is_inl {A B} (x : A + B)
+: IsHProp (is_inl x).
+Proof.
+  destruct x; exact _.
+Defined.
+
+Global Instance ishprop_is_inr {A B} (x : A + B)
+: IsHProp (is_inr x).
+Proof.
+  destruct x; exact _.
+Defined.
+
 Definition un_inl {A B} (z : A + B)
 : is_inl z -> A.
 Proof.
@@ -423,6 +435,13 @@ Definition equiv_unfunctor_sum_r {A A' B B' : Type}
   := BuildEquiv _ _ (unfunctor_sum_r h Hb)
                 (isequiv_unfunctor_sum_r h Ha Hb).
 
+Definition equiv_unfunctor_sum {A A' B B' : Type}
+           (h : A + B <~> A' + B')
+           (Ha : forall a:A, is_inl (h (inl a)))
+           (Hb : forall b:B, is_inr (h (inr b)))
+: (A <~> A') * (B <~> B')
+  := (equiv_unfunctor_sum_l h Ha Hb , equiv_unfunctor_sum_r h Ha Hb).
+
 (** ** Symmetry *)
 
 (* This is a special property of [sum], of course, not an instance of a general family of facts about types. *)
@@ -512,8 +531,11 @@ Proof.
   - intros [[b|c] a]; reflexivity.
 Defined.
 
-(** ** Sigmas over sums (extensivity) *)
+(** ** Extensivity *)
 
+(** We can phrase extensivity in two ways, using either dependent types or functions. *)
+
+(** The first is a statement about types dependent on a sum type. *)
 Definition equiv_sigma_sum A B (C : A + B -> Type)
 : { x : A+B & C x } <~>
   { a : A & C (inl a) } + { b : B & C (inr b) }.
@@ -537,6 +559,114 @@ Proof.
   - intros [[a|b] c]; reflexivity.
   - intros [[a|b] c]; reflexivity.
 Defined.
+
+(** The second is a statement about functions into a sum type. *)
+Definition decompose_l {A B C} (f : C -> A + B) : Type
+  := { c:C & is_inl (f c) }.
+
+Definition decompose_r {A B C} (f : C -> A + B) : Type
+  := { c:C & is_inr (f c) }.
+
+Definition equiv_decompose {A B C} (f : C -> A + B)
+: decompose_l f + decompose_r f <~> C.
+Proof.
+  refine (equiv_adjointify (sum_ind (fun _ => C) pr1 pr1) _ _ _).
+  - intros c; destruct (is_inl_or_is_inr (f c));
+    [ left | right ]; exists c; assumption.
+  - intros c; destruct (is_inl_or_is_inr (f c)); reflexivity.
+  - intros [[c l]|[c r]]; simpl; destruct (is_inl_or_is_inr (f c)).
+    + apply ap, ap, path_ishprop.
+    + elim (not_is_inl_and_inr' _ l i). 
+    + elim (not_is_inl_and_inr' _ i r). 
+    + apply ap, ap, path_ishprop.
+Defined.
+
+Definition is_inl_decompose_l {A B C} (f : C -> A + B)
+           (z : decompose_l f)
+: is_inl (f (equiv_decompose f (inl z)))
+  := z.2.
+
+Definition is_inr_decompose_r {A B C} (f : C -> A + B)
+           (z : decompose_r f)
+: is_inr (f (equiv_decompose f (inr z)))
+  := z.2.
+
+(** ** Indecomposability *)
+
+(** A type is indecomposable if whenever it maps into a finite sum, it lands entirely in one of the summands.  It suffices to assert this for binary and nullary sums; in the latter case it reduces to nonemptiness. *)
+Class Indecomposable (X : Type) :=
+  { indecompose : forall A B (f : X -> A + B),
+                    (forall x, is_inl (f x)) + (forall x, is_inr (f x))
+  ; indecompose0 : ~~X }.
+
+(** For instance, contractible types are indecomposable. *)
+Global Instance indecomposable_contr `{Contr X} : Indecomposable X.
+Proof.
+  constructor.
+  - intros A B f.
+    destruct (is_inl_or_is_inr (f (center X))); [ left | right ]; intros x.
+    all:refine (transport _ (ap f (contr x)) _); assumption.
+  - intros nx; exact (nx (center X)).
+Defined.
+
+(** In particular, if an indecomposable type is equivalent to a sum type, then one summand is empty and it is equivalent to the other. *)
+Definition equiv_indecomposable_sum {X A B} `{Indecomposable X}
+           (f : X <~> A + B)
+: ((X <~> A) * (Empty <~> B)) + ((X <~> B) * (Empty <~> A)).
+Proof.
+  destruct (indecompose A B f) as [i|i]; [ left | right ].
+  1:pose (g := equiv_compose' f (sum_empty_r X)).
+  2:pose (g := equiv_compose' f (sum_empty_l X)).
+  2:apply (equiv_prod_symm _ _).
+  all:refine (equiv_unfunctor_sum g _ _); try assumption; try intros [].
+Defined.
+
+(** Summing with an indecomposable type is injective on equivalence classes of types. *)
+Definition equiv_unfunctor_sum_indecomposable_ll {A B B' : Type}
+           `{Indecomposable A} (h : A + B <~> A + B')
+: B <~> B'.
+Proof.
+  pose (f := equiv_decompose (h o inl)).
+  pose (g := equiv_decompose (h o inr)).
+  pose (k := equiv_compose' h (equiv_functor_sum' f g)).
+  (** This looks messy, but it just amounts to swapping the middle two summands in [k]. *)
+  pose (k' := equiv_compose' k
+             (equiv_compose' (equiv_sum_assoc _ _ _)
+             (equiv_compose' (equiv_functor_sum'
+                                (equiv_inverse (equiv_sum_assoc _ _ _))
+                                (equiv_idmap _))
+             (equiv_compose' (equiv_functor_sum'
+                                (equiv_functor_sum' (equiv_idmap _)
+                                                    (equiv_sum_symm _ _))
+                                (equiv_idmap _))
+             (equiv_compose' (equiv_functor_sum' (equiv_sum_assoc _ _ _)
+                                                 (equiv_idmap _))
+                             (equiv_inverse (equiv_sum_assoc _ _ _))))))).
+  destruct (equiv_unfunctor_sum k'
+             (fun x => match x with | inl x => x.2 | inr x => x.2 end)
+             (fun x => match x with | inl x => x.2 | inr x => x.2 end))
+    as [s t]; clear k k'.
+  refine (equiv_compose' t _).
+  refine (equiv_compose' _ (equiv_inverse g)).
+  refine (equiv_functor_sum' _ (equiv_idmap _)).
+  destruct (equiv_indecomposable_sum (equiv_inverse s)) as [[p q]|[p q]];
+  destruct (equiv_indecomposable_sum (equiv_inverse f)) as [[u v]|[u v]].
+  - refine (equiv_compose' v (equiv_inverse q)).
+  - elim (indecompose0 (v^-1 o p)).
+  - refine (Empty_rec (indecompose0 _)); intros a.
+    destruct (is_inl_or_is_inr (h (inl a))) as [l|r].
+    * exact (q^-1 (a;l)).
+    * exact (v^-1 (a;r)).
+  - refine (equiv_compose' u (equiv_inverse p)).
+Defined.
+
+Definition equiv_unfunctor_sum_contr_ll {A A' B B' : Type}
+           `{Contr A} `{Contr A'}
+           (h : A + B <~> A' + B')
+: B <~> B'
+  := equiv_unfunctor_sum_indecomposable_ll
+       (equiv_compose (equiv_functor_sum' equiv_contr_contr
+                                          (equiv_idmap B')) h).
 
 (** ** Universal mapping properties *)
 
