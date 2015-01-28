@@ -54,6 +54,29 @@ Proof.
                        which by induction is m'-truncated. *)
 Defined.
 
+(** ** 0-connectedness *)
+
+(** To be 0-connected is the same as to be (-1)-connected and that any two points are merely equal. *)
+Definition merely_path_is0connected `{Univalence}
+           (A : Type) `{IsConnected 0 A} (x y : A)
+: merely (x = y).
+Proof.
+  refine ((equiv_path_Tr x y)^-1 (path_contr (tr x) (tr y))).
+Defined.
+
+Definition is0connected_merely_allpath `{Univalence}
+           (A : Type) `{merely A}
+           (p : forall (x y:A), merely (x = y))
+: IsConnected 0 A.
+Proof.
+  strip_truncations.
+  apply (contr_inhabited_hprop).
+  - apply hprop_allpath; intros z w.
+    strip_truncations.
+    refine (equiv_path_Tr z w (p z w)).
+  - apply tr; assumption.
+Defined.
+
 (** ** Connectivity of pointed types *)
 
 (** The connectivity of a pointed type and (the inclusion of) its point are intimately connected. *)

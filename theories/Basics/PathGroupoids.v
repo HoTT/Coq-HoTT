@@ -929,6 +929,20 @@ Definition whiskerL_1p {A : Type} {x y : A} {p q : x = y} (h : p = q) :
       1
     end end.
 
+Definition whiskerR_p1_1 {A} {x : A} (h : idpath x = idpath x)
+: whiskerR h 1 = h.
+Proof.
+  refine (_ @ whiskerR_p1 h); simpl.
+  symmetry; refine (concat_p1 _ @ concat_1p _).
+Defined.
+
+Definition whiskerL_1p_1 {A} {x : A} (h : idpath x = idpath x)
+: whiskerL 1 h = h.
+Proof.
+  refine (_ @ whiskerL_1p h); simpl.
+  symmetry; refine (concat_p1 _ @ concat_1p _).
+Defined.
+
 Definition concat2_p1 {A : Type} {x y : A} {p q : x = y} (h : p = q) :
   h @@ 1 = whiskerR h 1 :> (p @ 1 = q @ 1)
   :=

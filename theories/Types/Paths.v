@@ -87,6 +87,27 @@ Proof.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
+(** ** Transporting in 2-path types *)
+
+Definition transport_paths2 {A : Type} {x y : A}
+           (p : x = y) (q : idpath x = idpath x)
+: transport (fun a => idpath a = idpath a) p q
+  =  (concat_Vp p)^
+    @ whiskerL p^ ((concat_1p p)^ @ whiskerR q p @ concat_1p p)
+    @ concat_Vp p.
+Proof.
+  destruct p. simpl.
+  refine (_ @ (concat_p1 _)^).
+  refine (_ @ (concat_1p _)^).
+  (** The tricky thing here is getting a sufficiently general statement that we can prove it by path induction. *)
+  assert (H : forall (p : x = x) (q : 1 = p),
+                (q @ (concat_p1 p)^) @ (concat_1p (p @ 1))^
+                = whiskerL (idpath x) (idpath 1 @ whiskerR q 1 @ idpath (p @ 1))).
+  { intros p' q'. destruct q'. reflexivity. }
+  transitivity (q @ (concat_p1 1)^ @ (concat_1p 1)^).
+  { simpl; exact ((concat_p1 _)^ @ (concat_p1 _)^). }
+  refine (H 1 q).
+Defined.
 
 (** ** Functorial action *)
 
@@ -559,6 +580,21 @@ Proof.
   exact (equiv_concat_r (concat_1p r) (q @ 1)).
 Defined.
 
+Definition dpath_paths2 {A : Type} {x y : A}
+           (p : x = y) (q : idpath x = idpath x)
+           (r : idpath y = idpath y)
+: (concat_1p p)^ @ whiskerR q p @ concat_1p p
+  = (concat_p1 p)^ @ whiskerL p r @ concat_p1 p
+  <~>
+  transport (fun a => idpath a = idpath a) p q = r.
+Proof.
+  destruct p. simpl.
+  refine (equiv_compose' _ (equiv_inverse (equiv_whiskerR _ _ 1))).
+  refine (equiv_compose' _ (equiv_inverse (equiv_whiskerL 1 _ _))).
+  refine (equiv_concat_lr _ _).
+  - symmetry; apply whiskerR_p1_1.
+  - apply whiskerL_1p_1.
+Defined.
 
 (** ** Universal mapping property *)
 

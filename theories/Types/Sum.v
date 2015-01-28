@@ -588,7 +588,7 @@ Global Instance hset_sum `{HA : IsHSet A, HB : IsHSet B} : IsHSet (A + B) | 100
 
 (** Sums don't preserve hprops in general, but they do for disjoint sums. *)
 
-Definition ishprop_sum A B `{IsHProp A} `{IsHProp B}
+Global Instance ishprop_sum A B `{IsHProp A} `{IsHProp B}
 : (A -> B -> Empty) -> IsHProp (A + B).
 Proof.
   intros H.

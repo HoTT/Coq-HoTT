@@ -240,6 +240,15 @@ Section Adjointify.
 
 End Adjointify.
 
+(** An involution is an endomap that is its own inverse. *)
+Definition isequiv_involution {X : Type} (f : X -> X) (isinvol : Sect f f)
+: IsEquiv f
+  := isequiv_adjointify f f isinvol isinvol.
+
+Definition equiv_involution {X : Type} (f : X -> X) (isinvol : Sect f f)
+: X <~> X
+  := equiv_adjointify f f isinvol isinvol.
+
 (** Several lemmas useful for rewriting. *)
 Definition moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B) (p : x = f^-1 y)
   : (f x = y)

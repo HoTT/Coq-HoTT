@@ -595,3 +595,32 @@ Definition isequiv_ap_pr1_hprop {A} {P : A -> Type}
            x y
 : IsEquiv (@ap _ _ (@pr1 A P) x y)
   := _.
+
+Definition path_sigma_hprop_1 {A : Type} {P : A -> Type}
+           `{forall x, IsHProp (P x)} (u : sigT P)
+: path_sigma_hprop u u 1 = 1.
+Proof.
+  unfold path_sigma_hprop.
+  unfold isequiv_pr1_contr; simpl.
+  (** Ugh *)
+  refine (ap (fun p => match p in (_ = v2) return (u = (u.1; v2)) with 1 => 1 end)
+             (contr (idpath u.2))).
+Defined.
+
+(** The inverse of [path_sigma_hprop] has its own name, so we give special names to the section and retraction homotopies to help [rewrite] out. *)
+Definition path_sigma_hprop_ap_pr1 {A : Type} {P : A -> Type}
+           `{forall x, IsHProp (P x)} (u v : sigT P) (p : u = v)
+: path_sigma_hprop u v (ap pr1 p) = p
+  := eisretr (path_sigma_hprop u v) p.
+Definition path_sigma_hprop_pr1_path {A : Type} {P : A -> Type}
+           `{forall x, IsHProp (P x)} (u v : sigT P) (p : u = v)
+: path_sigma_hprop u v p..1 = p
+  := eisretr (path_sigma_hprop u v) p.
+Definition ap_pr1_path_sigma_hprop {A : Type} {P : A -> Type}
+           `{forall x, IsHProp (P x)} (u v : sigT P) (p : u.1 = v.1)
+: ap pr1 (path_sigma_hprop u v p) = p
+  := eissect (path_sigma_hprop u v) p.
+Definition pr1_path_path_sigma_hprop {A : Type} {P : A -> Type}
+           `{forall x, IsHProp (P x)} (u v : sigT P) (p : u.1 = v.1)
+: (path_sigma_hprop u v p)..1 = p
+  := eissect (path_sigma_hprop u v) p.

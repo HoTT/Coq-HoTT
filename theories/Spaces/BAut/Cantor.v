@@ -102,9 +102,9 @@ Section Assumptions.
   Definition I0nat_flip
         (x : ((cantor + cantor) + cantor) + cantor)
   : I0 (ff_flip x) = f_flip (I0 x)
-    := ap10 (ap equiv_fun
+    := ap10_equiv
          (Inat (f (point (BAut cantor))) (f (point (BAut cantor)))
-               (equiv_sum_symm cantor cantor)))
+               (equiv_sum_symm cantor cantor))
          x.
 
   (** The value of this is that we can detect which summand an element is in depending on whether or not it is fixed by [f_flip] or [ff_flip]. *)
@@ -178,7 +178,7 @@ Section Assumptions.
                : ((f (point (BAut cantor))) + cantor) + cantor).
     apply (not_is_inl_and_inr' (I (f (point (BAut cantor))) x)).
     - exact (transport is_inl
-                       (ap10 (ap equiv_fun (J (point (BAut cantor)))) x) tt).
+                       (ap10_equiv (J (point (BAut cantor))) x) tt).
     - exact (fst (I0_preserves_inr x) (inr tt)).
   Defined.
 
