@@ -346,34 +346,34 @@ Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.
   Definition O_reflector : ReflectiveSubuniverse@{u a} -> Type@{i} -> Type@{i}
     := fun O => Localize@{a i} (unLoc O).
 
-  Definition inO_internal : ReflectiveSubuniverse@{u a} -> Type@{i} -> Type@{i}
+  Definition In : ReflectiveSubuniverse@{u a} -> Type@{i} -> Type@{i}
     := fun O X => IsLocal@{i i a} (unLoc O) X.
 
-  Definition O_inO_internal :
+  Definition O_inO :
     forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
-      inO_internal O (O_reflector O T)
+      In O (O_reflector O T)
     := fun O => islocal_localize@{a i i} (unLoc O).
 
   Definition to :
     forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}), T -> O_reflector O T
     := fun O => @loc@{a i} (unLoc O).
 
-  Definition inO_equiv_inO_internal :
+  Definition inO_equiv_inO :
     forall (O : ReflectiveSubuniverse@{u a}) (T U : Type@{i}),
-      inO_internal@{u a i} O T -> forall f : T -> U, IsEquiv f -> inO_internal@{u a i} O U
+      In@{u a i} O T -> forall f : T -> U, IsEquiv f -> In@{u a i} O U
     := fun O => islocal_equiv_islocal@{a i i} (unLoc O).
 
-  Definition hprop_inO_internal `{Funext}
+  Definition hprop_inO `{Funext}
              (O : ReflectiveSubuniverse@{u a}) (T : Type@{i})
-  : IsHProp (inO_internal@{u a i} O T).
+  : IsHProp (In@{u a i} O T).
   Proof.
     apply (@trunc_forall@{a i i} _); intros i.
     apply ishprop_ooextendable@{a a i i i i}.
   Defined.
 
-  Definition extendable_to_O_internal
+  Definition extendable_to_O
              (O : ReflectiveSubuniverse@{u a}) {P : Type@{i}}
-             {Q : Type@{j}} {Q_inO : inO_internal@{u a j} O Q}
+             {Q : Type@{j}} {Q_inO : In@{u a j} O Q}
   : ooExtendableAlong@{i i j k} (to O P) (fun _ => Q).
   Proof.
     apply ext_localize_ind@{a i j i k i k}; intros ?.
@@ -456,9 +456,9 @@ Module Accessible_Localization
   Definition acc_gen : ReflectiveSubuniverse -> LocalGenerators
     := unLoc.
 
-  Definition inO_iff_islocal_internal
+  Definition inO_iff_islocal
              (O : ReflectiveSubuniverse@{u a}) (X : Type@{i})
-  : iff@{i i i} (inO_internal O X) (IsLocal (acc_gen O) X)
+  : iff@{i i i} (In O X) (IsLocal (acc_gen O) X)
     := (idmap , idmap).
 
 End Accessible_Localization.

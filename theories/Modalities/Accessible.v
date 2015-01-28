@@ -39,13 +39,13 @@ Module Type Accessible_ReflectiveSubuniverses
   Parameter acc_gen : ReflectiveSubuniverse@{u a} -> LocalGenerators@{a}.
   Check acc_gen@{u a}.    (** Verify that we have the right number of universes *)
 
-  Parameter inO_iff_islocal_internal
+  Parameter inO_iff_islocal
   : forall (O : ReflectiveSubuniverse@{u a}) (X : Type@{i}),
       (** We call [iff] explicitly to control the number of universe parameters. *)
       iff@{i i i}
-         (inO_internal@{u a i} O X)
+         (In@{u a i} O X)
          (IsLocal@{i i a} (acc_gen@{u a} O) X).
-  Check inO_iff_islocal_internal@{u a i}.
+  Check inO_iff_islocal@{u a i}.
 
 End Accessible_ReflectiveSubuniverses.
 
@@ -55,10 +55,6 @@ Module Accessible_ReflectiveSubuniverses_Theory
 
   Import Os Acc.
   Module Import Os_Theory := ReflectiveSubuniverses_Theory Os.
-
-  Definition inO_iff_islocal
-  : forall O (X : Type), In O X <-> IsLocal (acc_gen O) X
-  := inO_iff_islocal_internal.
 
   Definition O_inverts_generators {O : ReflectiveSubuniverse}
              (i : lgen_indices (acc_gen O))
@@ -136,17 +132,18 @@ Definition ooextendable_isnull_fibers {A B} (f : A -> B) (C : B -> Type)
 (** We define a modality to be accessible if it consists of the null types for some family of generators as above. *)
 Module Type Accessible_Modalities (Os : Modalities).
   Import Os.
+  Module Import Os_Theory := Modalities_Theory Os.
 
   (** See comment in [Accessible_ReflectiveSubuniverses] about collapsing universes. *)
   Parameter acc_gen : Modality@{u a} -> NullGenerators@{a}.
   Check acc_gen@{u a}.    (** Verify that we have the right number of universes *)
 
-  Parameter inO_iff_isnull_internal
+  Parameter inO_iff_isnull
   : forall (O : Modality@{u a}) (X : Type@{i}),
       iff@{i i i}
-         (inO_internal@{u a i} O X)
+         (In@{u a i} O X)
          (IsNull@{a i} (acc_gen@{u a} O) X).
-  Check inO_iff_isnull_internal@{u a i}.
+  Check inO_iff_isnull@{u a i}.
 
 End Accessible_Modalities.
 
@@ -156,10 +153,6 @@ Module Accessible_Modalities_Theory
 
   Export Os Acc.
   Module Export Os_Theory := Modalities_Theory Os.
-
-  Definition inO_iff_isnull
-  : forall O (X : Type), In O X <-> IsNull (acc_gen O) X
-  := inO_iff_isnull_internal.
 
   Global Instance isconnected_acc_gen O i : IsConnected O (acc_gen O i).
   Proof.
@@ -188,12 +181,12 @@ Module Accessible_Modalities_to_ReflectiveSubuniverses
       := fun (O : ReflectiveSubuniverse@{u a}) =>
            (null_to_local_generators (acc_gen O)).
 
-    Definition inO_iff_islocal_internal
+    Definition inO_iff_islocal
     : forall (O : ReflectiveSubuniverse@{u a}) (X : Type@{i}),
       iff@{i i i}
-         (inO_internal@{u a i} O X)
+         (In@{u a i} O X)
          (IsLocal@{i i a} (acc_gen@{u a} O) X)
-      := inO_iff_isnull_internal@{u a i}.
+      := inO_iff_isnull@{u a i}.
 
   End AccRSU.
 End Accessible_Modalities_to_ReflectiveSubuniverses.
@@ -225,14 +218,14 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
       intros [ [i x] | [i x] ]; exact (hfiber (to O _) x).
     Defined.
 
-    Definition inO_iff_isnull_internal (O : Modality@{u a}) (X : Type@{i})
+    Definition inO_iff_isnull (O : Modality@{u a}) (X : Type@{i})
     : iff@{i i i} (In@{u a i} O X) (IsNull@{a i} (acc_gen O) X).
     Proof.
       split.
       - intros X_inO [ [i x] | [i x] ];
           exact (ooextendable_const_isconnected_inO@{u a a i i} O _ _ ).
       - intros Xnull.
-        apply (snd (inO_iff_islocal_internal O X)); intros i.
+        apply (snd (inO_iff_islocal O X)); intros i.
         refine (cancelL_ooextendable@{a a a i i i i i i i}
                   (fun _ => X) (Acc.acc_gen O i)
                   (to O (lgen_codomain (Acc.acc_gen O) i)) _ _).
@@ -268,12 +261,12 @@ Module Accessible_Restriction_ReflectiveSubuniverses
     Definition acc_gen : New.ReflectiveSubuniverse@{u a} -> LocalGenerators@{a}
       := fun O => Acc.acc_gen (Res.ReflectiveSubuniverses_restriction O).
 
-    Definition inO_iff_islocal_internal
+    Definition inO_iff_islocal
     : forall (O : New.ReflectiveSubuniverse@{u a}) (X : Type@{i}),
         iff@{i i i}
-           (inO_internal@{u a i} O X)
+           (In@{u a i} O X)
            (IsLocal@{i i a} (acc_gen@{u a} O) X)
-      := fun O => Acc.inO_iff_islocal_internal (Res.ReflectiveSubuniverses_restriction O).
+      := fun O => Acc.inO_iff_islocal (Res.ReflectiveSubuniverses_restriction O).
 
   End Accessible_New.
 
@@ -289,15 +282,17 @@ Module Accessible_Restriction_Modalities
 
   Module Accessible_New <: Accessible_Modalities New.
 
+    Module Import Os_Theory := Modalities_Theory New.
+
     Definition acc_gen : New.Modality@{u a} -> NullGenerators@{a}
       := fun O => Acc.acc_gen (Res.Modalities_restriction O).
 
-    Definition inO_iff_isnull_internal
+    Definition inO_iff_isnull
     : forall (O : New.Modality@{u a}) (X : Type@{i}),
         iff@{i i i}
-           (inO_internal@{u a i} O X)
+           (In@{u a i} O X)
            (IsNull@{a i} (acc_gen@{u a} O) X)
-      := fun O => Acc.inO_iff_isnull_internal (Res.Modalities_restriction O).
+      := fun O => Acc.inO_iff_isnull (Res.Modalities_restriction O).
 
   End Accessible_New.
 

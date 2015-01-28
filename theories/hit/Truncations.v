@@ -62,29 +62,29 @@ Module Truncation_Modalities <: Modalities.
 
   Definition O_reflector (n : Modality@{u u'}) A := Trunc n A.
 
-  Definition inO_internal (n : Modality@{u u'}) A := IsTrunc n A.
+  Definition In (n : Modality@{u u'}) A := IsTrunc n A.
 
-  Definition O_inO_internal (n : Modality@{u u'}) A : inO_internal n (O_reflector n A).
+  Definition O_inO (n : Modality@{u u'}) A : In n (O_reflector n A).
   Proof.
-    unfold inO_internal, O_reflector; exact _.
+    unfold In, O_reflector; exact _.
   Defined.
 
   Definition to (n : Modality@{u u'}) A := @tr n A.
 
-  Definition inO_equiv_inO_internal (n : Modality@{u u'})
+  Definition inO_equiv_inO (n : Modality@{u u'})
              (A B : Type@{i}) Atr f feq
   := @trunc_equiv A B f n Atr feq.
 
-  Definition hprop_inO_internal `{Funext} (n : Modality@{u u'}) A
-  : IsHProp (inO_internal n A).
+  Definition hprop_inO `{Funext} (n : Modality@{u u'}) A
+  : IsHProp (In n A).
   Proof.
-    unfold inO_internal; exact _.
+    unfold In; exact _.
   Defined.
 
   Definition O_ind_internal
   : forall (n : Modality@{u a})
            (A : Type@{i}) (B : O_reflector n A -> Type@{j})
-           (B_inO : forall oa, inO_internal@{u a j} n (B oa)),
+           (B_inO : forall oa, In@{u a j} n (B oa)),
       let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
       let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
       (forall a, B (to n A a)) -> forall a, B a
@@ -96,10 +96,10 @@ Module Truncation_Modalities <: Modalities.
     := 1.
 
   Definition minO_paths (n : Modality@{u a})
-             (A : Type@{i}) (Atr : inO_internal@{u a i} n A) (a a' : A)
-  : inO_internal@{u a i} n (a = a').
+             (A : Type@{i}) (Atr : In@{u a i} n A) (a a' : A)
+  : In@{u a i} n (a = a').
   Proof.
-    unfold inO_internal in *; exact _.
+    unfold In in *; exact _.
   Defined.
 
 End Truncation_Modalities.
