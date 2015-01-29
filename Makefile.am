@@ -123,10 +123,8 @@ ALL_DOTFILES=$(ALL_DPDFILES:.dpd=.dot)
 
 # Definitions that let autoconf know how to install things.
 nobase_hott_DATA = \
-	$(STD_VOFILES) \
-	$(CORE_VOFILES) \
-	$(CATEGORY_VOFILES) \
-	$(CONTRIB_VOFILES) \
+	$(ALL_VOFILES) \
+	$(ALL_GLOBFILES) \
 	$(STDLIB_EXTRA_DIST) \
 	$(shell find "$(SRCCOQLIB)/theories" -name "README.txt")
 
