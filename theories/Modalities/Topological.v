@@ -19,7 +19,7 @@ Module Topological_Modalities_Theory
 
   (** ** Topological modalities are lex *)
 
-  (** We prove left-exactness by proving that the universe of modal types is modal.  Of course, this require univalence. *)
+  (** We prove left-exactness by proving that the universe of modal types is modal.  Of course, this requires univalence. *)
 
   Global Instance lex_topological `{Univalence}
          (O : Modality) `{Topological O}
@@ -48,7 +48,7 @@ Module Topological_Modalities_Theory
       apply path_TypeO, path_universe_uncurried.
       unfold composeD; simpl.
       pose (e := isequiv_ooextendable _ _
-                                      (fst (inO_iff_isnull O (B tt)) _ i)).
+                                      (fst (inO_iff_isnull O (B tt)) (inO_TypeO (B tt)) i)).
       unfold composeD in e; simpl in e.
       refine (equiv_compose' _ (equiv_inverse (BuildEquiv _ _ _ e))).
       exact (equiv_contr_forall _).

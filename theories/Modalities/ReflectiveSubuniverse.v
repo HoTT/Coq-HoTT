@@ -109,35 +109,35 @@ Module Type ReflectiveSubuniverses.
   Check O_reflector@{u a i}.    (** Verify that we have the right number of universes *)
 
   (** For reflective subuniverses (and hence also modalities), it will turn out that [In O T] is equivalent to [IsEquiv (O_unit T)].  We could define the former as the latter, and it would simplify some of the general theory.  However, in many examples there is a "more basic" definition of [In O] which is equivalent, but not definitionally identical, to [IsEquiv (O_unit T)].  Thus, including [In O] as data makes more things turn out to be judgmentally what we would expect. *)
-  Parameter inO_internal : forall (O : ReflectiveSubuniverse@{u a}),
-                             Type2le@{i a} -> Type2le@{i a}.
-  Check inO_internal@{u a i}.
+  Parameter In : forall (O : ReflectiveSubuniverse@{u a}),
+                   Type2le@{i a} -> Type2le@{i a}.
+  Check In@{u a i}.
 
-  Parameter O_inO_internal : forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
-                               inO_internal@{u a i} O (O_reflector@{u a i} O T).
-  Check O_inO_internal@{u a i}.
+  Parameter O_inO : forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
+                               In@{u a i} O (O_reflector@{u a i} O T).
+  Check O_inO@{u a i}.
 
   Parameter to : forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
                    T -> O_reflector@{u a i} O T.
   Check to@{u a i}.
 
-  Parameter inO_equiv_inO_internal :
+  Parameter inO_equiv_inO :
       forall (O : ReflectiveSubuniverse@{u a}) (T U : Type@{i})
-             (T_inO : inO_internal@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
-        inO_internal@{u a i} O U.
-  Check inO_equiv_inO_internal@{u a i}.
+             (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
+        In@{u a i} O U.
+  Check inO_equiv_inO@{u a i}.
 
   (** In most examples, [Funext] is necessary to prove that the predicate of being in the subuniverse is an hprop.  To avoid needing to assume [Funext] as a global hypothesis when constructing such examples, and since [Funext] is often not needed for any of the rest of the theory, we add it as a hypothesis to this specific field. *)
-  Parameter hprop_inO_internal
+  Parameter hprop_inO
   : Funext -> forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
-                IsHProp (inO_internal@{u a i} O T).
-  Check hprop_inO_internal@{u a i}.
+                IsHProp (In@{u a i} O T).
+  Check hprop_inO@{u a i}.
 
   (** We express the universal property using the representation [ooExtendableAlong] of precomposition equivalences.  This has the advantage that it avoids the funext redexes that otherwise infect the theory, thereby simplifying the proofs and proof terms.  We never have to worry about whether we have a path between functions or a homotopy; we use only homotopies, with no need for [ap10] or [path_arrow] to mediate.  Furthermore, the data in [ooExtendableAlong] are all special cases of the induction principle of a modality.  Thus, all the theorems we prove about reflective subuniverses will, when interpreted for a modality (coerced as above to a reflective subuniverse), reduce definitionally to "the way we would have proved them directly for a modality".  *)
-  Parameter extendable_to_O_internal
-  : forall (O : ReflectiveSubuniverse@{u a}) {P : Type2le@{i a}} {Q : Type2le@{j a}} {Q_inO : inO_internal@{u a j} O Q},
+  Parameter extendable_to_O
+  : forall (O : ReflectiveSubuniverse@{u a}) {P : Type2le@{i a}} {Q : Type2le@{j a}} {Q_inO : In@{u a j} O Q},
       ooExtendableAlong@{i i j k} (to O P) (fun _ => Q).
-  Check extendable_to_O_internal@{u a i j k}.
+  Check extendable_to_O@{u a i j k}.
 
 End ReflectiveSubuniverses.
 
@@ -146,11 +146,8 @@ End ReflectiveSubuniverses.
 Module ReflectiveSubuniverses_Theory (Os : ReflectiveSubuniverses).
 Export Os.
 
-(** We now give new names or identities to all the "internal" fields.  This serves several purposes.  Firstly, it allows us to make "being in the subuniverse" into a typeclass. *)
-Class In (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}) :=
-  in_inO_internal : inO_internal@{u a i} O T.
-
-Typeclasses Transparent In.
+(** Membership in the subuniverse is a typeclass. *)
+Existing Class In.
 
 (** The type of types in the subuniverse *)
 Definition Type_ (O : ReflectiveSubuniverse@{u a}) : Type@{j}
@@ -168,22 +165,15 @@ Module Export Coercions.
 
 End Coercions.
 
-(** With this given, we now essentially have to redefine almost all the other fields so that they refer explicitly to the class [In] rather than to [inO_internal], so that Coq is willing to do typeclass inference for them. *)
-
 (** We assumed repleteness of the subuniverse in the definition.  Of course, with univalence this would be automatic, but we include it as a hypothesis since this is the only appearance of univalence in the theory of reflective subuniverses and non-lex modalities, and most or all examples can be shown to be replete without using univalence. *)
-Definition inO_equiv_inO {O : ReflectiveSubuniverse}
-           T {U} {T_inO : In O T} (f : T -> U) {feq : IsEquiv f}
-: In O U
-:= inO_equiv_inO_internal O T U T_inO f feq.
+Arguments inO_equiv_inO {O} T {U} {_} f {_}.
 
 (** Being in the subuniverse is a mere predicate (by hypothesis) *)
-Global Instance hprop_inO {fs : Funext} {O : ReflectiveSubuniverse} (T : Type)
-  : IsHProp (In O T)
-  := hprop_inO_internal fs O T.
+Global Existing Instance hprop_inO.
 
 (** [O T] is always in the subuniverse (by hypothesis).  This needs a universe annotation to become sufficiently polymorphic. *)
-Global Instance O_inO {O : ReflectiveSubuniverse} (T : Type) : In O (O T)
-  := O_inO_internal O T.
+Arguments O_inO {O} T.
+Global Existing Instance O_inO.
 
 (** The second component of [TypeO] is unique *)
 Definition path_TypeO {fs : Funext} O (T T' : Type_ O) (p : T.1 = T'.1)
@@ -202,7 +192,7 @@ Global Instance inO_TypeO {O : ReflectiveSubuniverse} (A : Type_ O)
 Definition extendable_to_O (O : ReflectiveSubuniverse)
            {P Q : Type} {Q_inO : In O Q}
 : ooExtendableAlong (to O P) (fun _ => Q)
-  := @extendable_to_O_internal O P Q Q_inO.
+  := @extendable_to_O O P Q Q_inO.
 
 (** We now extract the recursion principle and the restricted induction principles for paths. *)
 Section ORecursion.
@@ -774,6 +764,8 @@ Section Reflective_Subuniverse.
     : In O (B x).
     Proof.
       refine (inO_equiv_inO _ (hfiber_fibration x B)^-1).
+      (** TODO: Why doesn't Coq find this instance? *)
+      refine (inO_hfiber pr1 x); assumption.
     Defined.
 
     Hint Immediate inO_unsigma : typeclass_instances.
@@ -978,18 +970,18 @@ Module ReflectiveSubuniverses_Restriction
 
   Definition O_reflector (O : ReflectiveSubuniverse@{u a})
     := Os.O_reflector@{u a i} (Res.ReflectiveSubuniverses_restriction O).
-  Definition inO_internal (O : ReflectiveSubuniverse@{u a})
-    := Os.inO_internal@{u a i} (Res.ReflectiveSubuniverses_restriction O).
-  Definition O_inO_internal (O : ReflectiveSubuniverse@{u a})
-    := Os.O_inO_internal@{u a i} (Res.ReflectiveSubuniverses_restriction O).
+  Definition In (O : ReflectiveSubuniverse@{u a})
+    := Os.In@{u a i} (Res.ReflectiveSubuniverses_restriction O).
+  Definition O_inO (O : ReflectiveSubuniverse@{u a})
+    := Os.O_inO@{u a i} (Res.ReflectiveSubuniverses_restriction O).
   Definition to (O : ReflectiveSubuniverse@{u a})
     := Os.to@{u a i} (Res.ReflectiveSubuniverses_restriction O).
-  Definition inO_equiv_inO_internal (O : ReflectiveSubuniverse@{u a})
-    := Os.inO_equiv_inO_internal@{u a i} (Res.ReflectiveSubuniverses_restriction O).
-  Definition hprop_inO_internal (H : Funext) (O : ReflectiveSubuniverse@{u a})
-    := Os.hprop_inO_internal@{u a i} H (Res.ReflectiveSubuniverses_restriction O).
-  Definition extendable_to_O_internal (O : ReflectiveSubuniverse@{u a})
-    := @Os.extendable_to_O_internal@{u a i j k} (Res.ReflectiveSubuniverses_restriction@{u a} O).
+  Definition inO_equiv_inO (O : ReflectiveSubuniverse@{u a})
+    := Os.inO_equiv_inO@{u a i} (Res.ReflectiveSubuniverses_restriction O).
+  Definition hprop_inO (H : Funext) (O : ReflectiveSubuniverse@{u a})
+    := Os.hprop_inO@{u a i} H (Res.ReflectiveSubuniverses_restriction O).
+  Definition extendable_to_O (O : ReflectiveSubuniverse@{u a})
+    := @Os.extendable_to_O@{u a i j k} (Res.ReflectiveSubuniverses_restriction@{u a} O).
 
 End ReflectiveSubuniverses_Restriction.
 
@@ -1012,19 +1004,19 @@ Module ReflectiveSubuniverses_FamUnion
                   | exact (Os2.O_reflector@{u a i} O) ].
   Defined.
 
-  Definition inO_internal : forall (O : ReflectiveSubuniverse@{u a}),
+  Definition In : forall (O : ReflectiveSubuniverse@{u a}),
                              Type2le@{i a} -> Type2le@{i a}.
   Proof.
-    intros [O|O]; [ exact (Os1.inO_internal@{u a i} O)
-                  | exact (Os2.inO_internal@{u a i} O) ].
+    intros [O|O]; [ exact (Os1.In@{u a i} O)
+                  | exact (Os2.In@{u a i} O) ].
   Defined.
 
-  Definition O_inO_internal
+  Definition O_inO
   : forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
-      inO_internal@{u a i} O (O_reflector@{u a i} O T).
+      In@{u a i} O (O_reflector@{u a i} O T).
   Proof.
-    intros [O|O]; [ exact (Os1.O_inO_internal@{u a i} O)
-                  | exact (Os2.O_inO_internal@{u a i} O) ].
+    intros [O|O]; [ exact (Os1.O_inO@{u a i} O)
+                  | exact (Os2.O_inO@{u a i} O) ].
   Defined.
 
   Definition to : forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
@@ -1034,29 +1026,29 @@ Module ReflectiveSubuniverses_FamUnion
                   | exact (Os2.to@{u a i} O) ].
   Defined.
 
-  Definition inO_equiv_inO_internal :
+  Definition inO_equiv_inO :
       forall (O : ReflectiveSubuniverse@{u a}) (T U : Type@{i})
-             (T_inO : inO_internal@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
-        inO_internal@{u a i} O U.
+             (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
+        In@{u a i} O U.
   Proof.
-    intros [O|O]; [ exact (Os1.inO_equiv_inO_internal@{u a i} O)
-                  | exact (Os2.inO_equiv_inO_internal@{u a i} O) ].
+    intros [O|O]; [ exact (Os1.inO_equiv_inO@{u a i} O)
+                  | exact (Os2.inO_equiv_inO@{u a i} O) ].
   Defined.
 
-  Definition hprop_inO_internal
+  Definition hprop_inO
   : Funext -> forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
-                IsHProp (inO_internal@{u a i} O T).
+                IsHProp (In@{u a i} O T).
   Proof.
-    intros ? [O|O]; [ exact (Os1.hprop_inO_internal@{u a i} _ O)
-                    | exact (Os2.hprop_inO_internal@{u a i} _ O) ].
+    intros ? [O|O]; [ exact (Os1.hprop_inO@{u a i} _ O)
+                    | exact (Os2.hprop_inO@{u a i} _ O) ].
   Defined.
 
-  Definition extendable_to_O_internal
-  : forall (O : ReflectiveSubuniverse@{u a}) {P : Type2le@{i a}} {Q : Type2le@{j a}} {Q_inO : inO_internal@{u a j} O Q},
+  Definition extendable_to_O
+  : forall (O : ReflectiveSubuniverse@{u a}) {P : Type2le@{i a}} {Q : Type2le@{j a}} {Q_inO : In@{u a j} O Q},
       ooExtendableAlong@{i i j k} (to O P) (fun _ => Q).
   Proof.
-    intros [O|O]; [ exact (@Os1.extendable_to_O_internal@{u a i j k} O)
-                  | exact (@Os2.extendable_to_O_internal@{u a i j k} O) ].
+    intros [O|O]; [ exact (@Os1.extendable_to_O@{u a i j k} O)
+                  | exact (@Os2.extendable_to_O@{u a i j k} O) ].
   Defined.
 
 End ReflectiveSubuniverses_FamUnion.

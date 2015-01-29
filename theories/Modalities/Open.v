@@ -112,14 +112,16 @@ Defined.
 
 Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
 
+  Module Import Os_Theory := Modalities_Theory OpenModalities.
+
   Definition acc_gen
     := fun (O : OpenModalities.Modality@{u a}) =>
          Build_NullGenerators@{a} Unit@{a} (fun _ => unOp O).
 
-  Definition inO_iff_isnull_internal
+  Definition inO_iff_isnull
              (O : OpenModalities.Modality@{u a}) (X : Type@{i})
   : iff@{i i i}
-      (OpenModalities.inO_internal@{u a i} O X)
+      (OpenModalities.In@{u a i} O X)
       (IsNull (acc_gen O) X).
   Proof.
     pose (funext_Op O); split.

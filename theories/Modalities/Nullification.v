@@ -63,15 +63,15 @@ Module Nullification_Modalities <: Modalities.
   Module LocRSUTh := ReflectiveSubuniverses_Theory LocRSU.
 
   Definition O_reflector := LocRSU.O_reflector.
-  Definition inO_internal := LocRSU.inO_internal.
-  Definition O_inO_internal := LocRSU.O_inO_internal.
+  Definition In := LocRSU.In.
+  Definition O_inO := @LocRSU.O_inO.
   Definition to := LocRSU.to.
-  Definition inO_equiv_inO_internal := LocRSU.inO_equiv_inO_internal.
-  Definition hprop_inO_internal := LocRSU.hprop_inO_internal.
+  Definition inO_equiv_inO := @LocRSU.inO_equiv_inO.
+  Definition hprop_inO := LocRSU.hprop_inO.
 
   Definition O_ind_internal (O : Modality@{u a}) (A : Type@{i})
              (B : O_reflector@{u a i} O A -> Type@{j})
-             (B_inO : forall oa : O_reflector@{u a i} O A, inO_internal@{u a j} O (B oa))
+             (B_inO : forall oa : O_reflector@{u a i} O A, In@{u a j} O (B oa))
              (g : forall a : A, B (to@{u a i} O A a))
   : forall x, B x.
   Proof.
@@ -87,14 +87,14 @@ Module Nullification_Modalities <: Modalities.
 
   Definition O_ind_beta_internal (O : Modality@{u a}) (A : Type@{i})
              (B : O_reflector@{u a i} O A -> Type@{j})
-             (B_inO : forall oa : O_reflector O A, inO_internal@{u a j} O (B oa))
+             (B_inO : forall oa : O_reflector O A, In@{u a j} O (B oa))
              (f : forall a : A, B (to O A a)) (a : A)
   : O_ind_internal@{u a i j k} O A B B_inO f (to O A a) = f a
     := 1.
 
   Definition minO_paths (O : Modality@{u a}) (A : Type@{i})
-             (A_inO : inO_internal@{u a i} O A) (z z' : A)
-  : inO_internal@{u a i} O (z = z').
+             (A_inO : In@{u a i} O A) (z z' : A)
+  : In@{u a i} O (z = z').
   Proof.
     apply (LocRSUTh.inO_paths@{u a i i}); assumption.
   Defined.
@@ -119,13 +119,13 @@ Notation IsNull f := (In (Nul f)).
 Module Accessible_Nullification
   <: Accessible_Modalities Nullification_Modalities.
 
-  Import Nullification_Modalities.
+  Module Import Os_Theory := Modalities_Theory Nullification_Modalities.
 
   Definition acc_gen : Modality -> NullGenerators
     := unNul.
 
-  Definition inO_iff_isnull_internal (O : Modality@{u a}) (X : Type@{i})
-  : iff@{i i i} (inO_internal@{u a i} O X) (IsNull (acc_gen O) X)
+  Definition inO_iff_isnull (O : Modality@{u a}) (X : Type@{i})
+  : iff@{i i i} (In@{u a i} O X) (IsNull (acc_gen O) X)
     := (idmap , idmap).
 
 End Accessible_Nullification.
