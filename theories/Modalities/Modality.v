@@ -733,32 +733,28 @@ Section ConnectedMaps.
   Defined.
 
   (** n-connected maps are orthogonal to n-truncated maps (i.e. familes of n-truncated types). *)
-  Definition conn_map_elim
-             {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
-             (P : B -> Type) `{forall b:B, In O (P b)}
-             (d : forall a:A, P (f a))
-  : forall b:B, P b.
-  Proof.
-    intros b.
-    refine (pr1 (isconnected_elim O _ _)).
-    2:exact b.
-    intros [a p].
-    exact (transport P p (d a)).
-  Defined.
+  Section ConnMapElim.
+    Context {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
+            (P : B -> Type) {HP : forall b:B, In O (P b)}
+            (d : forall a:A, P (f a)).
 
-  Definition conn_map_comp
-             {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
-             (P : B -> Type) `{forall b:B, In O (P b)}
-             (d : forall a:A, P (f a))
-  : forall a:A, conn_map_elim f P d (f a) = d a.
-  Proof.
-    intros a. unfold conn_map_elim.
-    set (fibermap := (fun a0p : hfiber f (f a)
-                      => let (a0, p) := a0p in transport P p (d a0))).
-    destruct (isconnected_elim O (P (f a)) fibermap) as [x e].
-    change (d a) with (fibermap (a;1)).
-    apply inverse, e.
-  Defined.
+    Let fibermap (b : B) : hfiber f b -> P b
+      := fun x => transport P x.2 (d x.1).
+
+    Let g (b : B) : {c : P b & forall a, fibermap b a = c}
+      := isconnected_elim O (P b) (fibermap b).
+
+    Definition conn_map_elim (b : B) : P b
+      := (g b).1.
+
+    Definition conn_map_comp (a : A) : conn_map_elim (f a) = d a.
+    Proof.
+      unfold conn_map_elim.
+      change (d a) with (fibermap (f a) (a;1)).
+      symmetry. apply ((g (f a)).2).
+    Defined.
+
+  End ConnMapElim.
 
   (** A map which is both connected and modal is an equivalence. *)
   Definition isequiv_conn_ino_map {A B : Type} (f : A -> B)
