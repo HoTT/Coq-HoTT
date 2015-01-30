@@ -9,8 +9,12 @@ Local Open Scope equiv_scope.
 
 (** * The surreal numbers *)
 
+(** Based on section 11.6 of the HoTT Book. *)
+
 Delimit Scope surreal_scope with No.
 Local Open Scope surreal_scope.
+
+(** The surreal numbers use a lot of universes.  We include some universe annotations here and there to reduce the number of overall universe parameters from an unmanageable 100K to a slightly less unmanageable 50-60K.  This improves performance significantly. *)
 
 (** ** Definition *)
 
@@ -23,28 +27,28 @@ Module Export Surreals.
   It should be emphasized that this is *not* currently a correct higher inductive-inductive definition of games; these "games" are only being used inside this module as a trick to produce [No] in a way that computes on the point-constructor.  It should be possible to make a higher inductive-inductive definition of games, but this is not it. *)
 
   Private Inductive Game : Type :=
-  | opt : forall (L R : Type) (xL : L -> Game) (xR : R -> Game), Game.
+  | opt : forall (L R : Type@{i}) (xL : L -> Game) (xR : R -> Game), Game.
 
   Arguments opt {L R} xL xR.
 
-  Private Inductive game_le : Game -> Game -> Type :=
+  Private Inductive game_le : Game@{i} -> Game@{i} -> Type :=
   | game_le_lr
-    : forall (L R : Type) (xL : L -> Game) (xR : R -> Game)
-             (L' R' : Type) (yL : L' -> Game) (yR : R' -> Game),
+    : forall (L R : Type@{i}) (xL : L -> Game@{i}) (xR : R -> Game@{i})
+             (L' R' : Type@{i}) (yL : L' -> Game@{i}) (yR : R' -> Game@{i}),
         (forall (l:L), game_lt (xL l) (opt yL yR)) ->
         (forall (r:R'), game_lt (opt xL xR) (yR r)) ->
         game_le (opt xL xR) (opt yL yR)
 
-  with game_lt : Game -> Game -> Type :=
+  with game_lt : Game@{i} -> Game@{i} -> Type :=
   | game_lt_l
-    : forall (L R : Type) (xL : L -> Game) (xR : R -> Game)
-             (L' R' : Type) (yL : L' -> Game) (yR : R' -> Game)
+    : forall (L R : Type@{i}) (xL : L -> Game@{i}) (xR : R -> Game@{i})
+             (L' R' : Type@{i}) (yL : L' -> Game@{i}) (yR : R' -> Game@{i})
              (l : L'),
         (game_le (opt xL xR) (yL l)) ->
         game_lt (opt xL xR) (opt yL yR)
   | game_lt_r
-    : forall (L R : Type) (xL : L -> Game) (xR : R -> Game)
-             (L' R' : Type) (yL : L' -> Game) (yR : R' -> Game)
+    : forall (L R : Type@{i}) (xL : L -> Game@{i}) (xR : R -> Game@{i})
+             (L' R' : Type@{i}) (yL : L' -> Game@{i}) (yR : R' -> Game@{i})
              (r : R),
         (game_le (xR r) (opt yL yR)) ->
         game_lt (opt xL xR) (opt yL yR).
@@ -55,8 +59,8 @@ Module Export Surreals.
   
   (** *** Now the surreals *)
 
-  Private Inductive is_surreal : Game -> Type :=
-  | isno : forall (L R : Type) (xL : L -> Game) (xR : R -> Game),
+  Private Inductive is_surreal : Game@{i} -> Type :=
+  | isno : forall (L R : Type@{i}) (xL : L -> Game@{i}) (xR : R -> Game@{i}),
              (forall l, is_surreal (xL l))
              -> (forall r, is_surreal (xR r))
              -> (forall (l:L) (r:R), game_lt (xL l) (xR r))
@@ -74,7 +78,7 @@ Module Export Surreals.
   Infix "<" := lt : surreal_scope.
   Infix "<=" := le : surreal_scope.
 
-  Definition No_cut {L R : Type} (xL : L -> No) (xR : R -> No)
+  Definition No_cut {L R : Type@{i}} (xL : L -> No@{i}) (xR : R -> No@{i})
              (xcut : forall (l:L) (r:R), (xL l) < (xR r))
   : No
     := Build_No (opt (game_of o xL) (game_of o xR))
@@ -87,9 +91,9 @@ Module Export Surreals.
   Arguments path_No {x y} _ _.
 
   Definition le_lr
-             {L R : Type} (xL : L -> No) (xR : R -> No)
+             {L R : Type@{i} } (xL : L -> No) (xR : R -> No)
              (xcut : forall (l:L) (r:R), (xL l) < (xR r))
-             {L' R' : Type} (yL : L' -> No) (yR : R' -> No)
+             {L' R' : Type@{i} } (yL : L' -> No) (yR : R' -> No)
              (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
   : (forall (l:L), xL l < {{ yL | yR // ycut }}) ->
     (forall (r:R'), {{ xL | xR // xcut }} < yR r) ->
@@ -98,9 +102,9 @@ Module Export Surreals.
                   (game_of o yL) (game_of o yR).
 
   Definition lt_l
-             {L R : Type} (xL : L -> No) (xR : R -> No)
+             {L R : Type@{i} } (xL : L -> No) (xR : R -> No)
              (xcut : forall (l:L) (r:R), (xL l) < (xR r))
-             {L' R' : Type} (yL : L' -> No) (yR : R' -> No)
+             {L' R' : Type@{i} } (yL : L' -> No) (yR : R' -> No)
              (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
              (l : L')
   : ({{ xL | xR // xcut }} <= yL l) ->
@@ -109,9 +113,9 @@ Module Export Surreals.
                  (game_of o yL) (game_of o yR) l.
 
   Definition lt_r
-             {L R : Type} (xL : L -> No) (xR : R -> No)
+             {L R : Type@{i} } (xL : L -> No) (xR : R -> No)
              (xcut : forall (l:L) (r:R), (xL l) < (xR r))
-             {L' R' : Type} (yL : L' -> No) (yR : R' -> No)
+             {L' R' : Type@{i} } (yL : L' -> No) (yR : R' -> No)
              (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
              (r : R)
   : (xR r <= {{ yL | yR // ycut }}) ->
@@ -132,12 +136,12 @@ Module Export Surreals.
   Section NoInd.
 
     Context
-      (A : No -> Type)
-      (dle : forall (x y:No), (x <= y) -> A x -> A y -> Type)
-      (dlt : forall (x y:No), (x < y) -> A x -> A y -> Type)
+      (A : No@{i} -> Type)
+      (dle : forall (x y:No@{i}), (x <= y) -> A x -> A y -> Type)
+      (dlt : forall (x y:No@{i}), (x < y) -> A x -> A y -> Type)
       {ishprop_le : forall x y a b p, IsHProp (dle x y p a b)}
       {ishprop_lt : forall x y a b p, IsHProp (dlt x y p a b)}
-      (dcut : forall (L R : Type) (xL : L -> No) (xR : R -> No)
+      (dcut : forall (L R : Type@{i}) (xL : L -> No) (xR : R -> No)
                      (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                      (fxL : forall l, A (xL l)) (fxR : forall r, A (xR r))
                      (fxcut : forall l r, dlt _ _ (xcut l r) (fxL l) (fxR r)),
@@ -145,11 +149,11 @@ Module Export Surreals.
       (dpath : forall (x y:No) (a:A x) (b:A y) (p : x <= y) (q : y <= x)
                       (dp : dle x y p a b) (dq : dle y x q b a),
                  path_No p q # a = b)
-      (dle_lr : forall (L R : Type) (xL : L -> No) (xR : R -> No)
+      (dle_lr : forall (L R : Type@{i}) (xL : L -> No) (xR : R -> No)
                        (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                        (fxL : forall l, A (xL l)) (fxR : forall r, A (xR r))
                        (fxcut : forall l r, dlt _ _ (xcut l r) (fxL l) (fxR r))
-                       (L' R' : Type) (yL : L' -> No) (yR : R' -> No)
+                       (L' R' : Type@{i}) (yL : L' -> No) (yR : R' -> No)
                        (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
                        (fyL : forall l, A (yL l)) (fyR : forall r, A (yR r))
                        (fycut : forall l r, dlt _ _ (ycut l r) (fyL l) (fyR r))
@@ -167,11 +171,11 @@ Module Export Surreals.
                       (le_lr xL xR xcut yL yR ycut p q)
                       (dcut _ _ xL xR xcut fxL fxR fxcut)
                       (dcut _ _ yL yR ycut fyL fyR fycut))
-      (dlt_l : forall (L R : Type) (xL : L -> No) (xR : R -> No)
+      (dlt_l : forall (L R : Type@{i}) (xL : L -> No) (xR : R -> No)
                       (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                       (fxL : forall l, A (xL l)) (fxR : forall r, A (xR r))
                       (fxcut : forall l r, dlt _ _ (xcut l r) (fxL l) (fxR r))
-                      (L' R' : Type) (yL : L' -> No) (yR : R' -> No)
+                      (L' R' : Type@{i}) (yL : L' -> No) (yR : R' -> No)
                       (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
                       (fyL : forall l, A (yL l)) (fyR : forall r, A (yR r))
                       (fycut : forall l r, dlt _ _ (ycut l r) (fyL l) (fyR r))
@@ -184,11 +188,11 @@ Module Export Surreals.
                      (lt_l xL xR xcut yL yR ycut l p)
                      (dcut _ _ xL xR xcut fxL fxR fxcut)
                      (dcut _ _ yL yR ycut fyL fyR fycut))
-      (dlt_r : forall (L R : Type) (xL : L -> No) (xR : R -> No)
+      (dlt_r : forall (L R : Type@{i}) (xL : L -> No) (xR : R -> No)
                       (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                       (fxL : forall l, A (xL l)) (fxR : forall r, A (xR r))
                       (fxcut : forall l r, dlt _ _ (xcut l r) (fxL l) (fxR r))
-                      (L' R' : Type) (yL : L' -> No) (yR : R' -> No)
+                      (L' R' : Type@{i}) (yL : L' -> No) (yR : R' -> No)
                       (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
                       (fyL : forall l, A (yL l)) (fyR : forall r, A (yR r))
                       (fycut : forall l r, dlt _ _ (ycut l r) (fyL l) (fyR r))
@@ -230,45 +234,12 @@ Module Export Surreals.
     Axiom No_ind_lt : forall (x y : No) (p : x < y),
                         dlt x y p (No_ind x) (No_ind y).
 
-    (** The beta-reduction rule holds definitionally, but we state it separately since its conclusion involves a nasty axiom. *)
-
-    Definition No_ind_dcut_hyp
-               (L R : Type) (xL : L -> No) (xR : R -> No)
-               (xcut : forall (l:L) (r:R), (xL l) < (xR r))
-      := match proof_admitted return
-               (forall (l : L) (r : R),
-                  dlt (Build_No (game_of (xL l)) (isno_game_of (xL l)))
-                      (Build_No (game_of (xR r)) (isno_game_of (xR r))) 
-                      (xcut l r)
-                      (No_ind_internal (game_of (xL l)) (isno_game_of (xL l)))
-                      (No_ind_internal (game_of (xR r)) (isno_game_of (xR r))))
-        with
-        end.
-
-    Definition No_ind_cut
-               (L R : Type) (xL : L -> No) (xR : R -> No)
-               (xcut : forall (l:L) (r:R), (xL l) < (xR r))
-    : No_ind {{ xL | xR // xcut }} =
-      dcut L R xL xR xcut
-           (fun l => No_ind (xL l)) (fun r => No_ind (xR r))
-           (No_ind_dcut_hyp L R xL xR xcut)
-      := 1.
-
     (** Sometimes it's convenient to have all three parts of [No_ind] in one package, so that we only have to verify the hypotheses once. *)
     Definition No_ind_package
     : { f : forall x, A x &
       (forall (x y : No) (p : x <= y), dle x y p (f x) (f y)) *
       (forall (x y : No) (p : x < y), dlt x y p (f x) (f y)) }
       := ( No_ind ; (No_ind_le , No_ind_lt) ).
-
-    Definition No_ind_package_cut
-               (L R : Type) (xL : L -> No) (xR : R -> No)
-               (xcut : forall (l:L) (r:R), (xL l) < (xR r))
-    : No_ind_package.1 {{ xL | xR // xcut }} =
-      dcut L R xL xR xcut
-           (fun l => No_ind (xL l)) (fun r => No_ind (xR r))
-           (No_ind_dcut_hyp L R xL xR xcut)
-      := 1.
 
     (** It's also sometimes convenient to have just the inequality parts together. *)
     Definition No_ind_le_lt (x y : No)
@@ -319,17 +290,17 @@ Section NoRec.
   Context  (A : Type)
            (dle : A -> A -> Type) `{is_mere_relation A dle}
            (dlt : A -> A -> Type) `{is_mere_relation A dlt}
-           (dcut : forall (L R : Type) (xL : L -> No) (xR : R -> No)
+           (dcut : forall (L R : Type@{i}) (xL : L -> No) (xR : R -> No)
                           (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                           (fxL : L -> A) (fxR : R -> A)
                           (fxcut : forall l r, dlt (fxL l) (fxR r)),
                      A)
            (dpath : forall a b, dle a b -> dle b a -> a = b)
-           (dle_lr : forall (L R : Type) (xL : L -> No) (xR : R -> No)
+           (dle_lr : forall (L R : Type@{i}) (xL : L -> No) (xR : R -> No)
                             (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                             (fxL : L -> A) (fxR : R -> A)
                             (fxcut : forall l r, dlt (fxL l) (fxR r))
-                            (L' R' : Type) (yL : L' -> No) (yR : R' -> No)
+                            (L' R' : Type@{i}) (yL : L' -> No) (yR : R' -> No)
                             (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
                             (fyL : L' -> A) (fyR : R' -> A)
                             (fycut : forall l r, dlt (fyL l) (fyR r))
@@ -341,11 +312,11 @@ Section NoRec.
                                     dlt (dcut _ _ xL xR xcut fxL fxR fxcut) (fyR r)),
                        dle (dcut _ _ xL xR xcut fxL fxR fxcut)
                            (dcut _ _ yL yR ycut fyL fyR fycut))
-           (dlt_l : forall (L R : Type) (xL : L -> No) (xR : R -> No)
+           (dlt_l : forall (L R : Type@{i}) (xL : L -> No) (xR : R -> No)
                            (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                            (fxL : L -> A) (fxR : R -> A)
                            (fxcut : forall l r, dlt (fxL l) (fxR r))
-                           (L' R' : Type) (yL : L' -> No) (yR : R' -> No)
+                           (L' R' : Type@{i}) (yL : L' -> No) (yR : R' -> No)
                            (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
                            (fyL : L' -> A) (fyR : R' -> A)
                            (fycut : forall l r, dlt (fyL l) (fyR r))
@@ -353,11 +324,11 @@ Section NoRec.
                            (dp : dle (dcut _ _ xL xR xcut fxL fxR fxcut) (fyL l)),
                       dlt (dcut _ _ xL xR xcut fxL fxR fxcut)
                           (dcut _ _ yL yR ycut fyL fyR fycut))
-           (dlt_r : forall (L R : Type) (xL : L -> No) (xR : R -> No)
+           (dlt_r : forall (L R : Type@{i}) (xL : L -> No) (xR : R -> No)
                            (xcut : forall (l:L) (r:R), (xL l) < (xR r))
                            (fxL : L -> A) (fxR : R -> A)
                            (fxcut : forall l r, dlt (fxL l) (fxR r))
-                           (L' R' : Type) (yL : L' -> No) (yR : R' -> No)
+                           (L' R' : Type@{i}) (yL : L' -> No) (yR : R' -> No)
                            (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
                            (fyL : L' -> A) (fyR : R' -> A)
                            (fycut : forall l r, dlt (fyL l) (fyR r))
@@ -401,8 +372,8 @@ End NoRec.
 
 (** ** Conway's Theorem 0 *)
 
-Lemma Conway_theorem0_lemma1 `{Funext} (x : No) (xle : x <= x)
-      (L' R' : Type) (yL : L' -> No) (yR : R' -> No)
+Lemma Conway_theorem0_lemma1 `{Funext} (x : No@{i}) (xle : x <= x)
+      (L' R' : Type@{i}) (yL : L' -> No@{i}) (yR : R' -> No@{i})
       (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
       (l : L') (p : x = yL l)
 : x < {{ yL | yR // ycut }}.
@@ -412,8 +383,8 @@ Proof.
   exact (transport (fun z => {{ xL | xR // xcut}} <= z) p xle).
 Defined.
 
-Lemma Conway_theorem0_lemma2 `{Funext} (x : No) (xle : x <= x)
-      (L' R' : Type) (yL : L' -> No) (yR : R' -> No)
+Lemma Conway_theorem0_lemma2 `{Funext} (x : No@{i}) (xle : x <= x)
+      (L' R' : Type@{i}) (yL : L' -> No@{i}) (yR : R' -> No@{i})
       (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
       (r : R') (p : x = yR r)
 : {{ yL | yR // ycut }} < x.
@@ -436,7 +407,7 @@ Instance reflexive_le `{Funext} : Reflexive le
   := Conway_theorem0_i.
 
 Theorem Conway_theorem0_ii_l `{Funext}
-        (L R : Type) (xL : L -> No) (xR : R -> No)
+        (L R : Type@{i}) (xL : L -> No@{i}) (xR : R -> No@{i})
         (xcut : forall (l:L) (r:R), (xL l) < (xR r))
         (l : L)
 : xL l < {{ xL | xR // xcut }}.
@@ -446,7 +417,7 @@ Proof.
 Defined.
 
 Theorem Conway_theorem0_ii_r `{Funext}
-        (L R : Type) (xL : L -> No) (xR : R -> No)
+        (L R : Type@{i}) (xL : L -> No@{i}) (xR : R -> No@{i})
         (xcut : forall (l:L) (r:R), (xL l) < (xR r))
         (r : R)
 : {{ xL | xR // xcut }} < xR r.
@@ -502,7 +473,7 @@ Section NoCodes.
 
   Section Inner.
 
-    Context {L R : Type} (xL : L -> No) (xR : R -> No)
+    Context {L R : Type@{i} } (xL : L -> No@{i}) (xR : R -> No@{i})
             (xcut : forall (l : L) (r : R), xL l < xR r)
             (xL_let : L -> A) (xR_let : R -> A)
             (x_lt_le : forall (l : L) (r : R) (y : No),
@@ -599,19 +570,21 @@ Section NoCodes.
     Local Definition inner (y : No) : A' y
       := inner_package.1 y.
 
-    Definition inner_cut_le (L' R' : Type) (yL : L' -> No) (yR : R' -> No)
-          (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
+    Definition inner_cut_le
+               (L' R' : Type@{i}) (yL : L' -> No@{i}) (yR : R' -> No@{i})
+               (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
     : fst (inner {{ yL | yR // ycut }}).1 =
       (BuildhProp ((forall l, (xL_let l).2.1 {{ yL | yR // ycut }}) *
                    (forall r', snd (inner (yR r')).1)))
-      := ap fst (No_ind_package_cut A' A'le A'lt _ _ _ _ _ _ _ _ _ _)..1.
+      := 1.
 
-    Definition inner_cut_lt (L' R' : Type) (yL : L' -> No) (yR : R' -> No)
-          (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
+    Definition inner_cut_lt
+               (L' R' : Type@{i}) (yL : L' -> No@{i}) (yR : R' -> No@{i})
+               (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
     : snd (inner {{ yL | yR // ycut }}).1 =
       (hor {l':L' & fst (inner (yL l')).1}
            {r:R & (xR_let r).1 {{ yL | yR // ycut }} })
-      := ap snd (No_ind_package_cut A' A'le A'lt _ _ _ _ _ _ _ _ _ _)..1.
+      := 1.
         
     Local Definition inner_le y z p : A'le y z p (inner y) (inner z)
       := fst (inner_package.2) y z p.
