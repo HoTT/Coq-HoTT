@@ -570,6 +570,7 @@ Section NoCodes.
     Local Definition inner (y : No) : A' y
       := inner_package.1 y.
 
+    (** These computation laws hold definitionally, but it helps Coq out if we prove them explicitly and then rewrite along them later. *)
     Definition inner_cut_le
                (L' R' : Type@{i}) (yL : L' -> No@{i}) (yR : R' -> No@{i})
                (ycut : forall (l:L') (r:R'), (yL l) < (yR r))
@@ -708,6 +709,29 @@ Section NoCodes.
   : lt' x y -> y <= z -> lt' x z
     := fun p q => (snd (No_codes_package.1 x).2.2 y z p q).
 
+  (** These computation laws hold definitionally, but it takes Coq a little while to verify that.  Thus, we prove them once and then [rewrite] along them later, so we don't have to do the verification every time. *)
+  Definition le'_cut
+             (L R : Type) (xL : L -> No) (xR : R -> No)
+             (xcut : forall (l : L) (r : R), xL l < xR r)
+             (L' R' : Type) (yL : L' -> No) (yR : R' -> No)
+             (ycut : forall (l : L') (r : R'), yL l < yR r)
+  : le' {{xL | xR // xcut}} {{yL | yR // ycut}}
+    = ((forall l, lt' (xL l) {{ yL | yR // ycut }}) *
+       (forall r', lt' {{ xL | xR // xcut }} (yR r')))
+        (** For some reason, Coq has a really hard time checking the version of this that asserts an equality in [hProp].  But fortunately, we only ever really need the equality of types. *)
+        :> Type
+    := 1.
+
+  Definition lt'_cut
+             (L R : Type) (xL : L -> No) (xR : R -> No)
+             (xcut : forall (l : L) (r : R), xL l < xR r)
+             (L' R' : Type) (yL : L' -> No) (yR : R' -> No)
+             (ycut : forall (l : L') (r : R'), yL l < yR r)
+  : lt' {{xL | xR // xcut}} {{yL | yR // ycut}}
+    = (hor {l':L' & le' {{ xL | xR // xcut }} (yL l')}
+                  {r:R   & le' (xR r) {{ yL | yR // ycut }} })
+    := 1.
+
   Definition No_encode_le_lt (x y : No)
   : ((x <= y) -> (le' x y)) * ((x < y) -> (lt' x y)).
   Proof.
@@ -720,19 +744,17 @@ Section NoCodes.
     + intros L R xL xR xcut _ _ xcut'
              L' R' yL yR ycut _ _ ycut'
              xL_lt_y xL_lt_y' x_lt_yR x_lt_yR'.
-      (** Coq doesn't seem able to simplify this goal to come out with a product as the result, but it can at least check that a pair has the correct type.  *)
+      rewrite le'_cut.
       exact (xL_lt_y' , x_lt_yR').
     + intros L R xL xR xcut _ _ xcut'
              L' R' yL yR ycut _ _ ycut'
              l x_le_yL x_le_yL'.
-      change (hor {l':L' & le' {{ xL | xR // xcut }} (yL l')}
-                  {r:R   & le' (xR r) {{ yL | yR // ycut }} }).
+      rewrite lt'_cut.
       apply tr; left. exists l. exact x_le_yL'.
     + intros L R xL xR xcut _ _ xcut'
              L' R' yL yR ycut _ _ ycut'
              r xR_le_y xR_le_y'.
-      change (hor {l':L' & le' {{ xL | xR // xcut }} (yL l')}
-                  {r:R   & le' (xR r) {{ yL | yR // ycut }} }).
+      rewrite lt'_cut.
       apply tr; right. exists r. exact xR_le_y'.
   Qed.
 
@@ -746,15 +768,12 @@ Section NoCodes.
               (fun y => @trunc_prod _ _ trunc_arrow _ trunc_arrow) _).
     intros L' R' yL yR ycut yHL yHR. split.
     - intros x_le_y.
-      change ((forall l, lt' (xL l) {{ yL | yR // ycut }}) *
-              (forall r', lt' {{ xL | xR // xcut }} (yR r'))) in x_le_y.
+      rewrite le'_cut in x_le_y.
       exact (le_lr xL xR xcut yL yR ycut
                    (fun l => snd (xHL l _) (fst x_le_y l))
                    (fun r => snd (yHR r) (snd x_le_y r))).
     - intros x_lt_y.
-      change (hor {l':L' & le' {{ xL | xR // xcut }} (yL l')}
-                  {r:R   & le' (xR r) {{ yL | yR // ycut }} } : Type)
-        in x_lt_y.
+      rewrite lt'_cut in x_lt_y.
       strip_truncations; destruct x_lt_y as [[l x_le_yL]|[r xR_le_y]].
       + apply lt_l with l.
         exact (fst (yHL l) x_le_yL).
