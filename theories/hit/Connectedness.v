@@ -1,8 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Connectedness *)
 
-Require Import HoTT.Basics.
-Require Import Types.Forall Types.Sigma Types.Paths Types.Unit Types.Arrow Types.Universe.
+Require Import HoTT.Basics HoTT.Types.
 Require Import TruncType UnivalenceImpliesFunext HProp EquivalenceVarieties Extensions Factorization.
 Require Export Modality.        (* [Export] since the actual definitions of connectednes appear there, in the generality of a modality. *)
 Require Import hit.Truncations.
@@ -10,8 +9,6 @@ Import TrM.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 Local Open Scope trunc_scope.
-
-(** ** Connectedness *)
 
 (** There is a slight controversy of indexing for connectedness — in particular, how the indexing for maps shoud relate to the indexing for types.  One may reasonably take the connectedness of a map to correspond either to that of its *fibers*, or of its *cofiber*; these differ by 1.  The traditional topological indexing uses the cofiber.  We use the fiber, as does Lurie in [HTT]; but we choose to agree with the traditional indexing on types, while Lurie agrees with it on maps.
 
@@ -54,29 +51,6 @@ Proof.
                        which by induction is m'-truncated. *)
 Defined.
 
-(** ** 0-connectedness *)
-
-(** To be 0-connected is the same as to be (-1)-connected and that any two points are merely equal. *)
-Definition merely_path_is0connected `{Univalence}
-           (A : Type) `{IsConnected 0 A} (x y : A)
-: merely (x = y).
-Proof.
-  refine ((equiv_path_Tr x y)^-1 (path_contr (tr x) (tr y))).
-Defined.
-
-Definition is0connected_merely_allpath `{Univalence}
-           (A : Type) `{merely A}
-           (p : forall (x y:A), merely (x = y))
-: IsConnected 0 A.
-Proof.
-  strip_truncations.
-  apply (contr_inhabited_hprop).
-  - apply hprop_allpath; intros z w.
-    strip_truncations.
-    refine (equiv_path_Tr z w (p z w)).
-  - apply tr; assumption.
-Defined.
-
 (** ** Connectivity of pointed types *)
 
 (** The connectivity of a pointed type and (the inclusion of) its point are intimately connected. *)
@@ -109,6 +83,64 @@ Hint Immediate conn_point_incl : typeclass_instances.
 (** TODO: generalise the above to any map with a section. *)
 
 End Extensions.
+
+(** ** Decreasing connectedness *)
+
+(** An [n.+1]-connected type is also [n]-connected.  This obviously can't be an [Instance]! *)
+Definition isconnected_pred n A `{IsConnected n.+1 A}
+: IsConnected n A.
+Proof.
+  apply isconnected_from_elim; intros C ? f.
+  refine (isconnected_elim n.+1 C f).
+Defined.
+
+(** ** 0-connectedness *)
+
+(** To be 0-connected is the same as to be (-1)-connected and that any two points are merely equal.  *)
+Definition merely_path_is0connected `{Univalence}
+           (A : Type) `{IsConnected 0 A} (x y : A)
+: merely (x = y).
+Proof.
+  refine ((equiv_path_Tr x y)^-1 (path_contr (tr x) (tr y))).
+Defined.
+
+Definition is0connected_merely_allpath `{Univalence}
+           (A : Type) `{merely A}
+           (p : forall (x y:A), merely (x = y))
+: IsConnected 0 A.
+Proof.
+  strip_truncations.
+  apply (contr_inhabited_hprop).
+  - apply hprop_allpath; intros z w.
+    strip_truncations.
+    refine (equiv_path_Tr z w (p z w)).
+  - apply tr; assumption.
+Defined.
+
+(** 0-connected types are indecomposable *)
+Global Instance indecomposable_0connected `{Univalence}
+       (X : Type) `{IsConnected 0 X}
+: Indecomposable X.
+Proof.
+  assert (IsConnected -1 X) by refine (isconnected_pred -1 X).
+  constructor.
+  - intros A B f.
+    assert (z := center (merely X) : merely X); generalize z.
+    refine (Trunc_rec _).
+    + apply ishprop_sum; try exact _.
+      intros l r. strip_truncations.
+      exact (not_is_inl_and_inr' (f z) (l z) (r z)).
+    + intros x.
+      remember (f x) as y eqn:p.
+      destruct y as [a|b]; [ left | right ]; intros x'.
+      all:assert (q := merely_path_is0connected X x x');
+        strip_truncations.
+      all:refine (transport _ (ap f q) _).
+      all:exact (transport _ p^ tt).
+  - intros nx.
+    apply (Trunc_rec (n := -1) nx).
+    exact (center (merely X)).
+Defined.
 
 Section Wedge_Incl_Conn.
 
