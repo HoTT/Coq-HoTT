@@ -14,7 +14,7 @@ Local Open Scope equiv_scope.
 Delimit Scope surreal_scope with No.
 Local Open Scope surreal_scope.
 
-(** The surreal numbers use a lot of universes.  We include some universe annotations here and there to reduce the number of overall universe parameters from an unmanageable 100K to a slightly less unmanageable 50-60K.  This improves performance significantly. *)
+(** The surreal numbers use a lot of universes.  We include some universe annotations here and there to reduce the number of overall universe parameters from an unmanageable number to a slightly less unmanageable number.  This improves performance significantly.  We also use [abstract] and [Qed] whenever possible, for the same reason. *)
 
 (** ** Definition *)
 
@@ -218,7 +218,7 @@ Module Export Surreals.
                    (fun r => Build_No (xR r) (Rno r)) xcut _ _ _).
       - intros l; exact (No_ind_internal (xL l) (Lno l)).
       - intros r; exact (No_ind_internal (xR r) (Rno r)).
-      (** I'm not entirely sure about the status of this last goal, but fortunately we don't really need to specify it, since generally when computing the value of [No_ind] we only care about the options of its output, not the proofs that they satisfy the inequality condition. *)
+      (** The following goal ought to be proven with [No_ind_lt], below.  Unfortunately, we can't state that axiom until *after* we've defined this function!  So instead we make it a different axiom.  This unfortunately means that the computation rule of [No_ind] is not as judgmental as we would like; see below. *)
       - admit.
     Defined.
 
@@ -246,6 +246,18 @@ Module Export Surreals.
     : (forall (p : x <= y), dle x y p (No_ind x) (No_ind y)) *
       (forall (p : x < y), dlt x y p (No_ind x) (No_ind y))
       := (No_ind_le x y , No_ind_lt x y).
+
+  (** Our definition ensures that [No_ind] computes on cuts to a cut, but it doesn't compute to quite what you would expect, since we had to assert the axioms [No_ind_lt] and [No_ind_le] *after* defining it.  So the options are what you think they should be, but the proof of cut-ness isn't, at least not judgmentally.  The following lemma observes that propositionally, at least, this doesn't matter. *)
+  Definition No_ind_cut `{Funext}
+             (L R : Type@{i}) (xL : L -> No) (xR : R -> No)
+             (xcut : forall (l:L) (r:R), (xL l) < (xR r))
+  : No_ind {{ xL | xR // xcut }}
+    = dcut L R xL xR xcut
+           (fun l => No_ind (xL l)) (fun r => No_ind (xR r))
+           (fun l r => No_ind_lt (xL l) (xR r) (xcut l r)).
+    Proof.
+      cbn; apply ap. apply path_ishprop.
+    Qed.
 
   End NoInd.
 
@@ -368,6 +380,17 @@ Section NoRec.
       (forall (x y : No) (p : x < y), dlt (f x) (f y)) }
     := ( No_rec ; (No_rec_le , No_rec_lt) ).
 
+  Definition No_rec_cut `{Funext}
+             (L R : Type@{i}) (xL : L -> No) (xR : R -> No)
+             (xcut : forall (l:L) (r:R), (xL l) < (xR r))
+  : No_rec {{ xL | xR // xcut }}
+    = dcut L R xL xR xcut
+           (fun l => No_rec (xL l)) (fun r => No_rec (xR r))
+           (fun l r => No_rec_lt (xL l) (xR r) (xcut l r)).
+    Proof.
+      cbn; apply ap. apply path_ishprop.
+    Qed.
+
 End NoRec.
 
 (** ** Conway's Theorem 0 *)
@@ -433,6 +456,34 @@ Proof.
   - intros x y [xley ylex]; apply path_No; assumption.
 Defined.
 
+
+(** ** The proofs of cut-ness don't impact equality of surreals *)
+Definition path_No_easy `{Funext}
+           {L R : Type} (xL xL' : L -> No) (xR xR' : R -> No)
+           (xLeq : forall l, xL l = xL' l)
+           (xReq : forall r, xR r = xR' r)
+           (xcut : forall (l:L) (r:R), (xL l) < (xR r))
+           (xcut' : forall (l:L) (r:R), (xL' l) < (xR' r))
+: {{ xL | xR // xcut }} = {{ xL' | xR' // xcut' }}.
+Proof.
+  apply path_No; apply le_lr; intros;
+  [ rewrite xLeq | rewrite <- xReq | rewrite <- xLeq | rewrite xReq ];
+  try apply Conway_theorem0_ii_l;
+  try apply Conway_theorem0_ii_r.
+Qed.
+
+Definition path_No_easy' `{Funext}
+           {L R : Type} (xL xL' : L -> No) (xR xR' : R -> No)
+           (xLeq : forall l, xL l = xL' l)
+           (xReq : forall r, xR r = xR' r)
+           (xcut : forall (l:L) (r:R), (xL l) < (xR r))
+: {{ xL | xR // xcut }}
+  = {{ xL' | xR' //
+       (fun l r => transport (fun xy => fst xy < snd xy)
+                             (path_prod' (xLeq l) (xReq r))
+                             (xcut l r)) }}
+  := path_No_easy xL xL' xR xR' xLeq xReq xcut _.
+
 (** ** Negation *)
 
 Definition negate : No -> No.
@@ -446,7 +497,7 @@ Proof.
   - cbn in *. apply lt_l with r; intros; assumption.
 Defined.
 
-(** The following proof verifies that [No_rec] reduces definitionally when applied to a cut (although it does produce quite a large term). *)
+(** The following proof verifies that [No_rec] applied to a cut reduces definitionally to a cut with the expected options (although it does produce quite a large term). *)
 Goal negate one = minusone.
 Proof.
   apply path_No; apply le_lr; intros.
@@ -786,7 +837,7 @@ Section NoCodes.
   Definition No_decode_le x y := fst (No_decode_le_lt x y).
   Definition No_decode_lt x y := snd (No_decode_le_lt x y).
 
-  Corollary lt_le (x y : No) (p : x < y) : x <= y.
+  Corollary lt_le {x y : No} (p : x < y) : x <= y.
   Proof.
     apply No_decode_le.
     apply lt'_le'.
@@ -795,7 +846,7 @@ Section NoCodes.
   Qed.
 
   (** Conway's theorem 1 *)
-  Corollary le_le_trans (x y z : No)
+  Corollary le_le_trans {x y z : No}
   : (x <= y) -> (y <= z) -> (x <= z).
   Proof.
     intros p q.
@@ -805,7 +856,10 @@ Section NoCodes.
     assumption.
   Qed.
 
-  Corollary le_lt_trans (x y z : No)
+  Global Instance trans_le : Transitive le
+    := @le_le_trans.
+
+  Corollary le_lt_trans {x y z : No}
   : (x <= y) -> (y < z) -> (x < z).
   Proof.
     intros p q.
@@ -815,7 +869,7 @@ Section NoCodes.
     assumption.
   Qed.
 
-  Corollary lt_le_trans (x y z : No)
+  Corollary lt_le_trans {x y z : No}
   : (x < y) -> (y <= z) -> (x < z).
   Proof.
     intros p q.
@@ -825,4 +879,271 @@ Section NoCodes.
     assumption.
   Qed.
 
+  Definition lt_lt_trans {x y z : No}
+  : (x < y) -> (y < z) -> (x < z)
+    := fun p q => lt_le_trans p (lt_le q).
+
+  Global Instance trans_lt : Transitive lt
+    := @lt_lt_trans.
+
 End NoCodes.
+
+(** ** Addition *)
+
+Section Addition.
+  Context `{Univalence}.
+
+  Section Inner.
+
+Set Printing Universes.
+
+    Context {L R : Type@{i} } (xL : L -> No@{i}) (xR : R -> No@{i})
+            (xcut : forall (l : L) (r : R), xL l < xR r).
+
+    Let A := {g : No@{i} -> No@{i} &
+              (forall x y : No@{i}, x <= y -> g x <= g y) *
+              (forall x y : No@{i}, x < y -> g x < g y)}.
+
+    Context (xL_plus : L -> A) (xR_plus : R -> A)
+            (xL_lt_xR_plus : forall (l : L) (r : R) (x : No),
+                               (xL_plus l).1 x < (xR_plus r).1 x).
+
+    Definition plus_inner
+    : { g : forall (y : No@{i}),
+              { x_plus_y : No@{i} &
+                (forall l, (xL_plus l).1 y < x_plus_y) *
+                (forall r, x_plus_y < (xR_plus r).1 y) } &
+        (forall y z : No, y <= z -> (g y).1 <= (g z).1) *
+        (forall y z : No, y <  z -> (g y).1 <  (g z).1) }.
+    Proof.
+      refine (No_ind_package
+                (fun y => { x_plus_y : No &
+                            (forall l, (xL_plus l).1 y < x_plus_y) *
+                            (forall r, x_plus_y < (xR_plus r).1 y) })
+                (fun _ _ _ z w => z.1 <= w.1)
+                (fun _ _ _ z w => z.1 < w.1)
+                _ _ _ _ _).
+      - intros L' R' yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR.
+        pose (L'' := L + L').  pose (R'' := R + R').
+        pose (zL := sum_ind (fun _ => No)
+                            (fun l => (xL_plus l).1 {{ yL | yR // ycut }})
+                            (fun l => (x_plus_yL l).1)
+                    : L'' -> No).
+        pose (zR := sum_ind (fun _ => No)
+                            (fun r => (xR_plus r).1 {{ yL | yR // ycut }})
+                            (fun r => (x_plus_yR r).1)
+                    : R'' -> No).
+        assert (zcut : forall (l:L'') (r:R''), zL l < zR r).
+        { abstract (
+          intros [l|l] [r|r]; cbn;
+          [ apply xL_lt_xR_plus
+          | transitivity ((xL_plus l).1 (yR r));
+            [ apply (snd (xL_plus l).2), Conway_theorem0_ii_r
+            | exact (fst (x_plus_yR r).2 l) ]
+          | transitivity ((xR_plus r).1 (yL l));
+            [ exact (snd (x_plus_yL l).2 r)
+            | apply (snd (xR_plus r).2), Conway_theorem0_ii_l ]
+          | apply x_plus_yL_lt_yR ]). }
+        exists ({{ zL | zR // zcut }}); split.
+        + intros l.
+          refine (Conway_theorem0_ii_l _ _ zL zR zcut (inl l)).
+        + intros r.
+          refine (Conway_theorem0_ii_r _ _ zL zR zcut (inl r)).
+      - abstract (
+        intros x y [a ?] [b ?] p q r s;
+        rewrite transport_sigma; cbn in *;
+        apply path_sigma_hprop, path_No; cbn;
+        rewrite transport_const; assumption).
+      - abstract (
+        intros L' R' yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR
+               L'' R'' zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
+               yL_lt_z x_plus_yL_lt_z y_lt_zR x_plus_y_lt_zR;
+        cbn in *;
+        apply le_lr; [ intros [l|l] | intros [r|r] ]; cbn;
+        [ refine (le_lt_trans
+                    (fst (xL_plus l).2 _ {{ zL | zR // zcut}} _) _);
+          [ by (apply le_lr; assumption)
+          | refine (Conway_theorem0_ii_l _ _ _ _ _ (inl l)) ]
+        | exact (x_plus_yL_lt_z l)
+        | refine (lt_le_trans _
+                    (fst (xR_plus r).2 {{ yL | yR // ycut}} _ _));
+          [ refine (Conway_theorem0_ii_r _ _ _ _ _ (inl r))
+          | by (apply le_lr; assumption) ]
+        | exact (x_plus_y_lt_zR r) ] ).
+      - abstract (
+        intros L' R' yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR
+               L'' R'' zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
+               l y_le_zL x_plus_y_le_zL; cbn;
+        apply lt_l with (inr l);
+        apply x_plus_y_le_zL ).
+      - abstract (
+        intros L' R' yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR
+               L'' R'' zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
+               r yR_le_z x_plus_yR_le_z; cbn;
+        apply lt_r with (inr r);
+        apply x_plus_yR_le_z).
+    Defined.
+
+    (** We now prove a computation law for [inner_cut].  It holds definitionally, so we would like to prove it with just [:= 1] and then rewrite along it later, as we did above.  However, there is a subtlety in that the output should be a surreal defined by a cut, which in particular includes a proof of cut-ness, and that proof is rather long, so we would not like to see it in the type of this lemma.  Thus, instead we assert only that there *exists* some proof of cut-ness and an equality. *)
+    Definition plus_inner_cut
+               {L' R' : Type@{i} } (yL : L' -> No@{i}) (yR : R' -> No@{i})
+               (ycut : forall (l : L') (r : R'), yL l < yR r)
+    : let L'' := L + L' in
+      let R'' := R + R' in
+      let zL := sum_ind (fun _ => No)
+                        (fun l => (xL_plus l).1 {{ yL | yR // ycut }})
+                        (fun l => (plus_inner.1 (yL l)).1)
+                : L'' -> No in
+      let zR := sum_ind (fun _ => No)
+                        (fun r => (xR_plus r).1 {{ yL | yR // ycut }})
+                        (fun r => (plus_inner.1 (yR r)).1)
+                : R'' -> No in
+      { zcut : forall (l:L'') (r:R''), zL l < zR r &
+        (plus_inner.1 {{ yL | yR // ycut }}).1 = {{ zL | zR // zcut }} }.
+    Proof.
+      (** Now we tell Coq that we want the equality to be definitional, and let it figure out what the proof of cut-ness has to be. *)
+      eexists.
+      (** TODO: The following line takes over 1/3 of the compilation time of this entire file.  It would be nice to speed it up. *)
+      reflexivity.
+    Qed.
+
+  End Inner.
+
+  Definition plus_outer
+  : { f : No@{i} -> { g : No@{i} -> No@{i} &
+                  (forall x y, x <= y -> g x <= g y) *
+                  (forall x y, x <  y -> g x <  g y) } &
+      (forall x y, x <= y -> forall z, (f x).1 z <= (f y).1 z) *
+      (forall x y, x <  y -> forall z, (f x).1 z <  (f y).1 z) }.
+  Proof.
+    refine (No_rec_package
+              {g : No -> No &
+                (forall x y, x <= y -> g x <= g y) *
+                (forall x y, x <  y -> g x <  g y) }
+              (fun g h => forall x, g.1 x <= h.1 x)
+              (fun g h => forall x, g.1 x <  h.1 x)
+              (fun L R xL xR xcut xL_plus xR_plus xL_lt_xR_plus =>
+                 let g := plus_inner xL_plus xR_plus xL_lt_xR_plus in
+                 ((fun y => (g.1 y).1) ; (g.2)))
+               _ _ _ _).
+    - abstract (
+      intros [g ?] [h ?] p q;
+      apply path_sigma_hprop; cbn in *;
+      apply path_arrow; intros x;
+      apply path_No; [ apply p | apply q ] ).
+    - abstract (
+      intros L R xL xR xcut xL_plus xR_plus xL_lt_xR_plus
+           L' R' yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
+      intros xL_lt_y xL_lt_y_plus x_lt_yR x_lt_yR_plus z;
+      lazy beta zeta in *; cbn [pr1] in *;
+      pattern z; refine (No_ind_hprop _ _ z);
+      intros L'' R'' zL zR zcut x_le_y_plus_zL x_le_y_plus_zR;
+      destruct (plus_inner_cut xL_plus xR_plus xL_lt_xR_plus
+                               zL zR zcut) as [xzcut p]; rewrite p;
+      destruct (plus_inner_cut yL_plus yR_plus yL_lt_yR_plus
+                               zL zR zcut) as [yzcut q];rewrite q;
+      apply le_lr; [ intros [l|l] | intros [r|r] ];
+      [ (** x^L + z < y + z *)
+        specialize (xL_lt_y_plus l {{ zL | zR // zcut }});
+        rewrite q in xL_lt_y_plus;
+        exact xL_lt_y_plus
+      | (** x + z^L < y + z *)
+        refine (le_lt_trans (x_le_y_plus_zL l) _);
+        refine (Conway_theorem0_ii_l _ _ _ _ _ (inr l))
+      | (** x + z < y^R + z *)
+        specialize (x_lt_yR_plus r {{ zL | zR // zcut }});
+        rewrite p in x_lt_yR_plus;
+        exact x_lt_yR_plus
+      | (** x + z < y + z^R *)
+        refine (lt_le_trans _ (x_le_y_plus_zR r));
+        refine (Conway_theorem0_ii_r _ _ _ _ _ (inr r)) ]).
+    - abstract (
+      intros L R xL xR xcut xL_plus xR_plus xL_lt_xR_plus
+             L' R' yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
+      intros l x_le_yL x_le_yL_plus z;
+      lazy beta zeta in *; cbn [pr1] in *;
+      pattern z; refine (No_ind_hprop _ _ z);
+      intros L'' R'' zL zR zcut x_le_y_plus_zL x_le_y_plus_zR;
+      destruct (plus_inner_cut xL_plus xR_plus xL_lt_xR_plus
+                               zL zR zcut) as [xzcut p]; rewrite p;
+      destruct (plus_inner_cut yL_plus yR_plus yL_lt_yR_plus
+                               zL zR zcut) as [yzcut q];rewrite q;
+      refine (le_lt_trans (x_le_yL_plus {{ zL | zR // zcut }}) _);
+      refine (Conway_theorem0_ii_l _ _ _ _ _ (inl l)) ).
+    - abstract (
+      intros L R xL xR xcut xL_plus xR_plus xL_lt_xR_plus
+             L' R' yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
+      intros r xR_le_y xR_le_y_plus z;
+      lazy beta zeta in *; cbn [pr1] in *;
+      pattern z; refine (No_ind_hprop _ _ z);
+      intros L'' R'' zL zR zcut x_le_y_plus_zL x_le_y_plus_zR;
+      destruct (plus_inner_cut xL_plus xR_plus xL_lt_xR_plus
+                               zL zR zcut) as [xzcut p]; rewrite p;
+      destruct (plus_inner_cut yL_plus yR_plus yL_lt_yR_plus
+                               zL zR zcut) as [yzcut q];rewrite q;
+      refine (lt_le_trans _ (xR_le_y_plus {{ zL | zR // zcut }}));
+      refine (Conway_theorem0_ii_r _ _ _ _ _ (inl r)) ).
+  Defined.
+
+  (** Oddly, without the universe annotations here, Coq turns all these [No]s into [No@{Set}]. *)
+  Definition plus (x y : No@{i}) : No@{i}
+    := (plus_outer.1 x).1 y.
+
+  Infix "+" := plus : surreal_scope.
+
+  Definition plus_le_l (x x' y : No@{i}) (p : x <= x')
+  : (x + y) <= (x' + y)
+    := fst (plus_outer.2) x x' p y.
+
+  Definition plus_lt_l (x x' y : No@{i}) (p : x < x')
+  : (x + y) < (x' + y)
+    := snd (plus_outer.2) x x' p y.
+
+  Definition plus_le_r (x y y' : No@{i}) (p : y <= y')
+  : (x + y) <= (x + y')
+    := fst (plus_outer.1 x).2 y y' p.
+
+  Definition plus_lt_r (x y y' : No@{i}) (p : y < y')
+  : (x + y) < (x + y')
+    := snd (plus_outer.1 x).2 y y' p.
+
+  (** See the remarks above [plus_inner_cut] to explain the type of this lemma. *)
+  Definition plus_cut
+             {L R : Type@{i} } (xL : L -> No@{i}) (xR : R -> No@{i})
+             (xcut : forall (l : L) (r : R), xL l < xR r)
+             {L' R' : Type@{i} } (yL : L' -> No@{i}) (yR : R' -> No@{i})
+             (ycut : forall (l : L') (r : R'), yL l < yR r)
+  : let L'' := (L + L')%type in
+    let R'' := (R + R')%type in
+    let x := {{ xL | xR // xcut }} in
+    let y := {{ yL | yR // ycut }} in
+    let zL := sum_ind (fun _ => No)
+                      (fun l => (xL l) + y) (fun l => x + (yL l))
+              : L'' -> No in
+    let zR := sum_ind (fun _ => No)
+                      (fun r => (xR r) + y) (fun r => x + (yR r))
+              : R'' -> No in
+    { zcut : forall (l:L'') (r:R''), zL l < zR r &
+      x + y = {{ zL | zR // zcut }} }.
+  Proof.
+    (** Unfortunately, this computation law doesn't seem to hold definitionally, due to the fact that [No_rec_cut] is not definitional. *)
+    destruct (plus_inner_cut
+                (fun l => plus_outer.1 (xL l))
+                (fun r => plus_outer.1 (xR r))
+                (fun l r => snd plus_outer.2 (xL l) (xR r) (xcut l r))
+                yL yR ycut) as [zcut p].
+    eexists.
+    refine (_ @ p @ _); clear p.
+    - unfold plus, plus_outer, No_rec_package; cbn [pr1].
+      rewrite No_rec_cut.
+      + reflexivity.
+      + (** TODO: Why doesn't Coq find this?  (Also below.) *)
+        exact _.
+    - refine (path_No_easy' _ _ _ _ _ _ _);
+      [ intros [l|l] | intros [r|r] ]; cbn [sum_ind].
+      all:try reflexivity.
+      all:unfold plus, plus_outer, No_rec_package; cbn [pr1].
+      all:rewrite No_rec_cut; [ reflexivity | exact _ ].
+  Qed.
+
+End Addition.
