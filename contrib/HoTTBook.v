@@ -2224,7 +2224,7 @@ Definition Book_10_5_8_item_ix := @HoTT.hit.V.separation.
 (* ================================================== defn:surreals *)
 (** Definition 11.6.1 *)
 
-
+Definition Book_11_6_1 := @HoTT.Spaces.No.Surreals.No.
 
 (* ================================================== thm:NO-simplicity *)
 (** Theorem 11.6.2 *)
@@ -2234,27 +2234,38 @@ Definition Book_10_5_8_item_ix := @HoTT.hit.V.separation.
 (* ================================================== thm:NO-refl-opt *)
 (** Theorem 11.6.4 *)
 
-
+Definition Book_11_6_4_i := @HoTT.Spaces.No.Conway_theorem0_i.
+Definition Book_11_6_4_ii_l := @HoTT.Spaces.No.Conway_theorem0_ii_l.
+Definition Book_11_6_4_ii_r := @HoTT.Spaces.No.Conway_theorem0_ii_r.
 
 (* ================================================== thm:NO-set *)
 (** Corollary 11.6.5 *)
 
+Definition Book_11_6_5 := @HoTT.Spaces.No.isset_No.
 
 
 (* ================================================== defn:No-codes *)
 (** Theorem 11.6.7 *)
 
+Definition Book_11_6_7 := @HoTT.Spaces.No.No_codes_package.
 
 
 (* ================================================== thm:NO-encode-decode *)
 (** Theorem 11.6.16 *)
 
+Definition Book_11_6_16_i := @HoTT.Spaces.No.No_encode_le_lt.
+Definition Book_11_6_16_ii := @HoTT.Spaces.No.No_decode_le_lt.
 
 
 (* ================================================== thm:NO-unstrict-transitive *)
 (** Corollary 11.6.17 *)
 
-
+Definition Book_11_6_17_i := @HoTT.Spaces.No.lt_le.
+Definition Book_11_6_17_ii := @HoTT.Spaces.No.le_le_trans.
+Definition Book_11_6_17_iii := @HoTT.Spaces.No.le_lt_trans.
+Definition Book_11_6_17_iv := @HoTT.Spaces.No.lt_le_trans.
 
 (* ================================================== eg:surreal-addition *)
 (** Example 11.6.18 *)
+
+Definition Book_11_6_18 := @HoTT.Spaces.No.plus.

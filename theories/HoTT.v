@@ -25,8 +25,6 @@ Require Export NullHomotopy.
 Require Export Idempotents.
 Require Export Pullback.
 
-Require Export Spaces.Nat.
-
 Require Export hit.Interval.
 Require Export hit.Truncations.
 Require Export hit.Connectedness.
@@ -55,12 +53,14 @@ Require Export Modalities.Open.
 Require Export Modalities.Closed.
 Require Export Modalities.Fracture.
 
+Require Export Spaces.Nat.
 Require Export Spaces.Cantor.
 Require Export Spaces.BAut.
 Require Export Spaces.BAut.Cantor.
 Require Export Spaces.Finite.
 Require Export Spaces.BAut.Bool.
 Require Export Spaces.BAut.Bool.IncoherentIdempotent.
+Require Export Spaces.No.
 
 Require Export HoTT.Tactics.
 
