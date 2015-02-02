@@ -740,3 +740,23 @@ Ltac recall_as term name eqname :=
 
 Tactic Notation "recall" constr(term) "as" ident(name) "eqn:" ident(eqname) :=
   recall_as term name eqname.
+
+(** A variant of [apply] using [refine], doing as much conversion as necessary, instantiating as few arguments as possible. *)
+
+Ltac rapply' p :=
+  refine p ||
+  refine (p _) ||
+  refine (p _ _) ||
+  refine (p _ _ _) ||
+  refine (p _ _ _ _) ||
+  refine (p _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
