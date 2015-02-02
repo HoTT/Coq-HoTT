@@ -171,7 +171,7 @@ Definition inv_V {A : Type} {x y : A} (p : x = y) :
   match p with idpath => 1 end.
 
 
-(* *** Theorems for moving things around in equations. *)
+(** *** Theorems for moving things around in equations. *)
 
 Definition moveR_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   p = r^ @ q -> r @ p = q.

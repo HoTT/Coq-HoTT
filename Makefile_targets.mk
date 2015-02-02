@@ -46,6 +46,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/Types/Universe.v \
 	$(srcdir)/theories/Types/Nat.v \
 	$(srcdir)/theories/Types.v \
+	$(srcdir)/theories/EquivGroupoids.v \
 	$(srcdir)/theories/Fibrations.v \
 	$(srcdir)/theories/Conjugation.v \
 	$(srcdir)/theories/HProp.v \
