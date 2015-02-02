@@ -22,7 +22,7 @@ Module Export Surreals.
 
   (** *** Games first *)
 
-  (** Since Coq doesn't support inductive-inductive types natively, we have to hack a bit.  Inspired by Conway, we define [Game]s to be constructed by the point-constructor of [No] but without the hypothesis on inequality of options.  Then we define the inequalities as a mutual inductive family over [Game], and put an inductive predicate on [Game] characterizing those that are Numbers.  We then proceed to add axioms for the path-constructors of [No].
+  (** Since Coq doesn't support inductive-inductive types natively, we have to hack a bit.  Inspired by Conway, we define [Game]s to be constructed by the point-constructor of [No] but without the hypothesis on inequality of options.  Then we define the inequalities as a mutual inductive family over [Game], and put an inductive predicate on [Game] characterizing those that are Numbers.  (This is roughly a standard technique described by Fredrik Nordvall Forsberg for reducing induction-induction to parametrized induction.)  We then proceed to add axioms for the path-constructors of [No].
 
   It should be emphasized that this is *not* currently a correct higher inductive-inductive definition of games; these "games" are only being used inside this module as a trick to produce [No] in a way that computes on the point-constructor.  It should be possible to make a higher inductive-inductive definition of games, but this is not it. *)
 
@@ -206,9 +206,19 @@ Module Export Surreals.
                      (dcut _ _ xL xR xcut fxL fxR fxcut)
                      (dcut _ _ yL yR ycut fyL fyR fycut)).
 
-    (** Technically, we induct over the inductive predicate witnessing Numberhood of games. *)
-    Local Fixpoint No_ind_internal (x : Game) (xno : is_surreal x)
-          {struct xno}
+    (** As usual for HITs implemented with [Private Inductive], we will define [No_ind] inside this module using a fixpoint over [No], thereby obtaining a judgmental computation rule for the point-constructor [No_cut], and then assert the other computation rules as axioms.  In this case, the relevant other rules are the preservation of inequalities.
+
+However, it turns out that in defining [No_cut] we already need to know that it preserves inequalities.  Since this is eventually an axiom anyway, we could just assert it with [admit] in the proof.  However, if we did this then the [admit] would not be *judgmentally* equal to the axiom [No_ind_lt] that we assert afterwards.  Instead, we make use of the fact that [admit] is essentially by definition [match proof_admitted with end] for a global axiom [proof_admitted : Empty], so that if we use the same [admit] both inside the definition of [No_ind] and in asserting [No_ind_lt] as an axiom, they will be the same term judgmentally.
+
+Finally, for conceptual isolation, and so as not to depend on the particular implementation of [admit], we introduce here local copies of [Empty] and [proof_admitted]. *)
+    Local Inductive No_Empty_for_admitted := .
+    Axiom No_Empty_admitted : No_Empty_for_admitted.
+
+    (** Technically, we induct over the inductive predicate witnessing Numberhood of games.  We prove the "induction step" separately to improve performance, possibly by preventing bare [fix]s from appearing upon simplification. *)
+    Local Definition No_ind_internal_step
+          (No_ind_internal : forall (x : Game) (xno : is_surreal x),
+                               A (Build_No x xno))
+          (x : Game) (xno : is_surreal x)
     : A (Build_No x xno).
     Proof.
       revert ishprop_le ishprop_lt dpath dle_lr dlt_l dlt_r.
@@ -218,8 +228,15 @@ Module Export Surreals.
                    (fun r => Build_No (xR r) (Rno r)) xcut _ _ _).
       - intros l; exact (No_ind_internal (xL l) (Lno l)).
       - intros r; exact (No_ind_internal (xR r) (Rno r)).
-      (** The following goal ought to be proven with [No_ind_lt], below.  Unfortunately, we can't state that axiom until *after* we've defined this function!  So instead we make it a different axiom.  This unfortunately means that the computation rule of [No_ind] is not as judgmental as we would like; see below. *)
-      - admit.
+      - intros; exact (match No_Empty_admitted with end).
+    Defined.
+
+    Local Fixpoint No_ind_internal (x : Game) (xno : is_surreal x)
+          {struct xno}
+    : A (Build_No x xno).
+    Proof.
+      destruct xno.
+      exact (No_ind_internal_step No_ind_internal _ _).
     Defined.
 
     Definition No_ind (x : No) : A x.
@@ -228,11 +245,13 @@ Module Export Surreals.
       exact (No_ind_internal x xno).
     Defined.
 
-    Axiom No_ind_le : forall (x y : No) (p : x <= y),
-                        dle x y p (No_ind x) (No_ind y).
+    Definition No_ind_le (x y : No) (p : x <= y)
+    : dle x y p (No_ind x) (No_ind y)
+      := match No_Empty_admitted with end.
 
-    Axiom No_ind_lt : forall (x y : No) (p : x < y),
-                        dlt x y p (No_ind x) (No_ind y).
+    Definition No_ind_lt (x y : No) (p : x < y)
+    : dlt x y p (No_ind x) (No_ind y)
+      := match No_Empty_admitted with end.
 
     (** Sometimes it's convenient to have all three parts of [No_ind] in one package, so that we only have to verify the hypotheses once. *)
     Definition No_ind_package
@@ -247,17 +266,15 @@ Module Export Surreals.
       (forall (p : x < y), dlt x y p (No_ind x) (No_ind y))
       := (No_ind_le x y , No_ind_lt x y).
 
-  (** Our definition ensures that [No_ind] computes on cuts to a cut, but it doesn't compute to quite what you would expect, since we had to assert the axioms [No_ind_lt] and [No_ind_le] *after* defining it.  So the options are what you think they should be, but the proof of cut-ness isn't, at least not judgmentally.  The following lemma observes that propositionally, at least, this doesn't matter. *)
-  Definition No_ind_cut `{Funext}
-             (L R : Type@{i}) (xL : L -> No) (xR : R -> No)
-             (xcut : forall (l:L) (r:R), (xL l) < (xR r))
-  : No_ind {{ xL | xR // xcut }}
-    = dcut L R xL xR xcut
-           (fun l => No_ind (xL l)) (fun r => No_ind (xR r))
-           (fun l r => No_ind_lt (xL l) (xR r) (xcut l r)).
-    Proof.
-      cbn; apply ap. apply path_ishprop.
-    Qed.
+    (** We verify that our definition computes judgmentally. *)
+    Definition No_ind_cut `{Funext}
+               (L R : Type@{i}) (xL : L -> No) (xR : R -> No)
+               (xcut : forall (l:L) (r:R), (xL l) < (xR r))
+    : No_ind {{ xL | xR // xcut }}
+      = dcut L R xL xR xcut
+             (fun l => No_ind (xL l)) (fun r => No_ind (xR r))
+             (fun l r => No_ind_lt (xL l) (xR r) (xcut l r))
+      := 1.
 
   End NoInd.
 
@@ -298,6 +315,7 @@ Defined.
 (** *** The non-dependent recursion principle *)
 
 Section NoRec.
+  Context `{Funext}.
 
   Context  (A : Type)
            (dle : A -> A -> Type) `{is_mere_relation A dle}
@@ -379,17 +397,6 @@ Section NoRec.
       (forall (x y : No) (p : x <= y), dle (f x) (f y)) *
       (forall (x y : No) (p : x < y), dlt (f x) (f y)) }
     := ( No_rec ; (No_rec_le , No_rec_lt) ).
-
-  Definition No_rec_cut `{Funext}
-             (L R : Type@{i}) (xL : L -> No) (xR : R -> No)
-             (xcut : forall (l:L) (r:R), (xL l) < (xR r))
-  : No_rec {{ xL | xR // xcut }}
-    = dcut L R xL xR xcut
-           (fun l => No_rec (xL l)) (fun r => No_rec (xR r))
-           (fun l r => No_rec_lt (xL l) (xR r) (xcut l r)).
-    Proof.
-      cbn; apply ap. apply path_ishprop.
-    Qed.
 
 End NoRec.
 
@@ -578,7 +585,7 @@ Section NoCodes.
                    [[x_le_z x_lt_z] ?]
                    p q;
             cbn; intros [p1 p2] [q1 q2];
-            rewrite transport_sigma'; cbn;
+            rewrite transport_sigma'; (* cbn; *)
             refine (path_sigma' _
                       (path_prod' (path_hprop (equiv_iff_hprop p1 q1))
                                   (path_hprop (equiv_iff_hprop p2 q2)))
@@ -646,6 +653,7 @@ Section NoCodes.
 
   End Inner.
 
+  (** We instruct [simpl]/[cbn] not to unfold [inner].  We will do the "unfolding" ourselves by rewriting along [inner_cut_le] and [inner_cut_lt], so as to keep better control over the resulting terms (and particularly their size).  *)
   Arguments inner : simpl never.
 
   Definition No_codes_package
@@ -895,8 +903,6 @@ Section Addition.
 
   Section Inner.
 
-Set Printing Universes.
-
     Context {L R : Type@{i} } (xL : L -> No@{i}) (xR : R -> No@{i})
             (xcut : forall (l : L) (r : R), xL l < xR r).
 
@@ -1003,8 +1009,8 @@ Set Printing Universes.
     Proof.
       (** Now we tell Coq that we want the equality to be definitional, and let it figure out what the proof of cut-ness has to be. *)
       eexists.
-      (** TODO: The following line takes over 1/3 of the compilation time of this entire file.  It would be nice to speed it up. *)
-      reflexivity.
+      (** Adding [rel_hnf] here speeds things up considerably, possibly because it puts the terms in a form where the evar can be instantiated without unfolding or reduction, preventing backtracking across the evar instantiation. *)
+      rel_hnf. reflexivity.
     Qed.
 
   End Inner.
@@ -1124,26 +1130,11 @@ Set Printing Universes.
                       (fun r => (xR r) + y) (fun r => x + (yR r))
               : R'' -> No in
     { zcut : forall (l:L'') (r:R''), zL l < zR r &
-      x + y = {{ zL | zR // zcut }} }.
-  Proof.
-    (** Unfortunately, this computation law doesn't seem to hold definitionally, due to the fact that [No_rec_cut] is not definitional. *)
-    destruct (plus_inner_cut
-                (fun l => plus_outer.1 (xL l))
-                (fun r => plus_outer.1 (xR r))
-                (fun l r => snd plus_outer.2 (xL l) (xR r) (xcut l r))
-                yL yR ycut) as [zcut p].
-    eexists.
-    refine (_ @ p @ _); clear p.
-    - unfold plus, plus_outer, No_rec_package; cbn [pr1].
-      rewrite No_rec_cut.
-      + reflexivity.
-      + (** TODO: Why doesn't Coq find this?  (Also below.) *)
-        exact _.
-    - refine (path_No_easy' _ _ _ _ _ _ _);
-      [ intros [l|l] | intros [r|r] ]; cbn [sum_ind].
-      all:try reflexivity.
-      all:unfold plus, plus_outer, No_rec_package; cbn [pr1].
-      all:rewrite No_rec_cut; [ reflexivity | exact _ ].
-  Qed.
+      x + y = {{ zL | zR // zcut }} }
+    := plus_inner_cut
+         (fun l => plus_outer.1 (xL l))
+         (fun r => plus_outer.1 (xR r))
+         (fun l r => snd plus_outer.2 (xL l) (xR r) (xcut l r))
+         yL yR ycut.
 
 End Addition.

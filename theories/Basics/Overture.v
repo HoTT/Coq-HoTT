@@ -740,3 +740,12 @@ Ltac recall_as term name eqname :=
 
 Tactic Notation "recall" constr(term) "as" ident(name) "eqn:" ident(eqname) :=
   recall_as term name eqname.
+
+(** [rel_hnf], when given a goal of the form [R x y] for any relation [R], puts [x] and [y] in head normal form. *)
+Ltac rel_hnf :=
+  idtac;
+  match goal with
+    | [ |- ?R ?x ?y ] => let x' := (eval hnf in x) in
+                         let y' := (eval hnf in y) in
+                         change (R x' y')
+  end.

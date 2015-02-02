@@ -329,6 +329,14 @@ names `H`, your name will result in a conflict.  Conversely, we
 sometimes give a hypothesis a name that won't be used, to pre-empt
 such conflicts, such as `{ua : Univalence}` or `{fs : Funext}`.
 
+One gotcha about typeclass arguments is that they cannot be inferred automatically when preceeded by non-implicit arguments.  So for instance if we write
+
+```coq
+Definition foo (A : Type) `{Funext}
+```
+
+then the `Funext` argument will not generally be inferrable.  Thus, typeclass arguments should generally come first if possible.  In addition, note that when section variables are generalized at the close of a section, they appear first.  Thus, if anything in a section requires `Funext` or `Univalence`, those hypotheses should go in the `Context` at the top of the section in order that they'll come first in the eventual argument lists.
+
 ### Truncation ###
 
 The conventions for the typeclass `IsTrunc` are:
