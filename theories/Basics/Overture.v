@@ -615,8 +615,31 @@ Definition hfiber {A B : Type} (f : A -> B) (y : B) := { x : A & f x = y }.
 (** We want access to useful standard library tactics, such as [rapply]. *)
 Require Export Coq.Program.Tactics.
 
+(** A variant of [apply] using [refine], doing as much conversion as necessary, instantiating as few arguments as possible.  This is useful if your lemma constructs an equivalence, and you want to use that equivalence, rather than the underlying function. *)
+
+Ltac rapply' p :=
+  refine p ||
+  refine (p _) ||
+  refine (p _ _) ||
+  refine (p _ _ _) ||
+  refine (p _ _ _ _) ||
+  refine (p _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
+
 (** [erapply lem] is like [apply lem] (rather, [rapply lem]), but it allows holes in [lem] *)
 Tactic Notation "erapply" open_constr(term) := rapply term.
+
+(** [erapply' lem] is like [apply lem] (rather, [rapply' lem]), but it allows holes in [lem] *)
+Tactic Notation "erapply'" open_constr(term) := rapply' term.
 
 (** Ssreflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=

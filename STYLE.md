@@ -984,20 +984,26 @@ where they are defined.
   automatically.  If you need a version with more fields than yet
   exists, feel free to add it.)
 
-- `rapply`, `erapply`: Defined in `coq/theories/Program/Tactics` and
-  `Basics/Overture` respectively, these tactics are more well-behaved
-  variants of `apply` for theorems with fewer than 16 arguments.  (It
-  is trivial to extend it to *n* arguments for any finite fixed *n*.)
-  The unification algorithm used by `apply` is different and often
-  less powerful than the one used by `refine`, though it is
-  occasionally better at pattern matching.  If `apply` fails with a
-  unification error you think it shouldn't have, try `rapply` or
-  `erapply`.
+- `rapply`, `rapply'`, `erapply`, `erapply': Defined in
+  `coq/theories/Program/Tactics` and `Basics/Overture`, these tactics
+  are more well-behaved variants of `apply` for theorems with fewer
+  than 16 arguments.  (It is trivial to extend it to *n* arguments for
+  any finite fixed *n*.)  The unification algorithm used by `apply` is
+  different and often less powerful than the one used by `refine`,
+  though it is occasionally better at pattern matching.  If `apply`
+  fails with a unification error you think it shouldn't have, try
+  `rapply` or `erapply`.  If `rapply` or `erapply` loops on, say,
+  typeclass resolution, try `rapply'` or `erapply'`.  In particular,
+  when the lemma you are applying constructs an equivalence,
+  `(e)rapply` will tend to apply the underlying function to the goal,
+  while `(e)rapply'` will tend to apply the construction of the
+  equivalence itself.
 
-  The difference between `rapply` and `erapply` is that `rapply` only
-  accepts lemmas with no holes (and will do typeclass inference
-  early), while `erapply` accepts lemmas with holes (such as `ap f`,
-  i.e., `@ap _ _ f _ _`), and does typeclass inference late.
+  The difference between `rapply(')` and `erapply(')` is that
+  `rapply(')` only accepts lemmas with no holes (and will do typeclass
+  inference early), while `erapply(')` accepts lemmas with holes (such
+  as `ap f`, i.e., `@ap _ _ f _ _`), and does typeclass inference
+  late.
 
 ## Contributing to the library ##
 
