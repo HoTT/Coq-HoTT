@@ -2,7 +2,6 @@
 (** * Truncatedness *)
 
 Require Import Overture PathGroupoids Contractible Equivalences.
-Local Open Scope equiv_scope.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Generalizable Variables A B m n f.

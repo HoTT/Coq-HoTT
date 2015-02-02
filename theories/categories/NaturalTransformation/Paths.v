@@ -16,7 +16,7 @@ Section path_natural_transformation.
   Variables C D : PreCategory.
   Variables F G : Functor C D.
 
-  Local Open Scope equiv_scope.
+
 
   (** ** Equivalence between record and sigma versions of natural transformation *)
   Lemma equiv_sig_natural_transformation

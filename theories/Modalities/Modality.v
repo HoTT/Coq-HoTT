@@ -5,7 +5,7 @@ Require Export ReflectiveSubuniverse. (* [Export] because many of the lemmas and
 Require Import HoTT.Tactics.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** * Modalities *)
 

@@ -6,7 +6,7 @@ Require Import Modality Accessible Nullification Lex Topological.
 Require Import hit.Pushout hit.Join.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** * Closed modalities *)
 

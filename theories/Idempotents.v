@@ -4,7 +4,7 @@ Require Import Fibrations UnivalenceImpliesFunext EquivalenceVarieties.
 Require Import hit.Truncations.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** * Idempotents and their splittings *)
 

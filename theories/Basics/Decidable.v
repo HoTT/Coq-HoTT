@@ -1,6 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import Overture PathGroupoids Contractible Equivalences Trunc.
-Local Open Scope equiv_scope.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 

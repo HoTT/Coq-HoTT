@@ -5,8 +5,8 @@ Require Import Modalities.Modality hit.Truncations hit.Connectedness.
 Import TrM.
 Require Import Spaces.BAut.
 
-Open Scope path_scope.
-Open Scope equiv_scope.
+Local Open Scope trunc_scope.
+Local Open Scope path_scope.
 
 (** * BAut(Bool) *)
 
@@ -14,9 +14,9 @@ Section AssumeUnivalence.
   Context `{Univalence}.
 
   (** ** Nontrivial central homotopy *)
-  
+
   (** The equivalence [Bool <~> (Bool <~> Bool)], and particularly its consequence [abelian_aut_bool], implies that [BAut Bool] has a nontrivial center.  *)
-  
+
   Definition negb_center_baut_bool
   : forall (Z:BAut Bool), Z = Z.
   Proof.
@@ -24,7 +24,7 @@ Section AssumeUnivalence.
     exists equiv_negb.
     intros g; apply abelian_aut_bool.
   Defined.
-  
+
   Definition nontrivial_negb_center_baut_bool
   : negb_center_baut_bool <> (fun Z => idpath Z).
   Proof.
@@ -34,11 +34,11 @@ Section AssumeUnivalence.
                   (oops @ (id_center_baut Bool)^))..1 true).
     exact (false_ne_true p).
   Defined.
-  
+
   (** In particular, every element of [BAut Bool] has a canonical flip automorphism.  *)
   Definition negb_baut_bool (Z : BAut Bool) : Z <~> Z
     := equiv_path Z Z (negb_center_baut_bool Z)..1.
-  
+
   Definition negb_baut_bool_ne_idmap (Z : BAut Bool)
   : negb_baut_bool Z <> equiv_idmap Z.
   Proof.
@@ -56,7 +56,7 @@ Section AssumeUnivalence.
       refine (eisretr (equiv_path_sigma_hprop Z Z) _).
     - apply moveR_equiv_M; reflexivity.
   Defined.
-  
+
   (** If [Z] is [Bool], then the flip is the usual one. *)
   Definition negb_baut_bool_bool_negb
   : negb_baut_bool (point _) = equiv_negb.
@@ -67,14 +67,14 @@ Section AssumeUnivalence.
       contradiction.
     - assumption.
   Defined.
-  
+
   Definition ap_pr1_negb_baut_bool_bool
   : (negb_center_baut_bool (point _))..1 = path_universe negb.
   Proof.
     apply moveL_equiv_V.
     apply negb_baut_bool_bool_negb.
   Defined.
-  
+
   (** Moreover, we can show that every automorphism of a [Z : BAut Bool] must be either the flip or the identity. *)
   Definition aut_baut_bool_idmap_or_negb (Z : BAut Bool) (e : Z <~> Z)
   : (e = equiv_idmap Z) + (e = negb_baut_bool Z).
@@ -88,9 +88,9 @@ Section AssumeUnivalence.
     - intros q; apply inr.
       exact (q @ negb_baut_bool_bool_negb^).
   Defined.
-  
+
   (** ** Connectedness *)
-  
+
   Global Instance isminusoneconnected_baut_bool `{Funext} (Z : BAut Bool)
   : IsConnected -1 Z.
   Proof.
@@ -98,13 +98,13 @@ Section AssumeUnivalence.
     apply contr_inhabited_hprop; try exact _.
     exact (tr true).
   Defined.
-  
+
   Definition merely_inhab_baut_bool `{Funext} (Z : BAut Bool)
   : merely Z
     := center (merely Z).
-  
+
   (** ** Equivalence types *)
-  
+
   (** As soon as an element of [BAut Bool] is inhabited, it is (purely) equivalent to [Bool].  (Of course, every element of [BAut Bool] is *merely* inhabited, since [Bool] is.)  In fact, it is equivalent in two canonical ways.
 
 First we define the function that will be the equivalence. *)
@@ -115,7 +115,7 @@ First we define the function that will be the equivalence. *)
                   if b then z else negb_baut_bool Z z
                 else
                   if b then negb_baut_bool Z z else z.
-  
+
   (** We compute this in the case when [Z] is [Bool]. *)
   Definition inhab_baut_bool_from_bool_bool (t : Bool)
   : inhab_baut_bool_from_bool t (point _) =
@@ -131,33 +131,33 @@ First we define the function that will be the equivalence. *)
     try reflexivity;
     try apply (ap10_equiv negb_baut_bool_bool_negb).
   Defined.
-  
+
   (** Now we show that it is an equivalence. *)
   Global Instance isequiv_inhab_baut_bool_from_bool (t : Bool)
          (Z : BAut Bool) (z : Z)
   : IsEquiv (inhab_baut_bool_from_bool t Z z).
   Proof.
     baut_reduce.
-    refine (transport IsEquiv (ap10 (inhab_baut_bool_from_bool_bool t)^ z) _). 
+    refine (transport IsEquiv (ap10 (inhab_baut_bool_from_bool_bool t)^ z) _).
     simpl in z; destruct z, t; simpl.
     - refine (isequiv_homotopic idmap _); intros []; reflexivity.
     - apply isequiv_negb.
     - apply isequiv_negb.
     - refine (isequiv_homotopic idmap _); intros []; reflexivity.
   Defined.
-  
+
   Definition equiv_inhab_baut_bool_bool (t : Bool)
              (Z : BAut Bool) (z : Z)
   : Bool <~> Z
     := BuildEquiv _ _ (inhab_baut_bool_from_bool t Z z) _.
-  
+
   Definition path_baut_bool_inhab (Z : BAut Bool) (z : Z)
   : (point (BAut Bool)) = Z.
   Proof.
     apply path_baut.
     exact (equiv_inhab_baut_bool_bool true Z z). (** [true] is a choice! *)
   Defined.
-  
+
   (** In fact, the map sending [z:Z] to this equivalence [Bool <~> Z] is also an equivalence.  To assist with computing the result when [Z] is [Bool], we prove it with an extra parameter first. *)
   Definition isequiv_equiv_inhab_baut_bool_bool_lemma
              (t : Bool) (Z : BAut Bool) (m : merely (point _ = Z))
@@ -177,7 +177,7 @@ First we define the function that will be the equivalence. *)
       refine (ap10 (ap10 (inhab_baut_bool_from_bool_bool t) z) t @ _).
       destruct t; reflexivity.
   Defined.
-  
+
   Global Instance isequiv_equiv_inhab_baut_bool_bool
          (t : Bool) (Z : BAut Bool)
   : IsEquiv (equiv_inhab_baut_bool_bool t Z).
@@ -185,13 +185,13 @@ First we define the function that will be the equivalence. *)
     exact (isequiv_equiv_inhab_baut_bool_bool_lemma t Z
             (merely_path_baut _ _)).
   Defined.
-  
+
   (** The names are getting pretty ridiculous; below we suggest a better name for this. *)
   Definition equiv_equiv_inhab_baut_bool_bool (t : Bool)
              (Z : BAut Bool)
   : Z <~> (Bool <~> Z)
     := BuildEquiv _ _ (equiv_inhab_baut_bool_bool t Z) _.
-  
+
   (** We compute its inverse in the case of [Bool]. *)
   Definition equiv_equiv_inhab_baut_bool_bool_bool_inv (t : Bool)
              (e : Bool <~> Bool)
@@ -206,11 +206,11 @@ First we define the function that will be the equivalence. *)
       apply path_ishprop. }
     exact (ap10_equiv (ap equiv_inverse p) e).
   Defined.
-  
+
   (** ** Group structure *)
-  
+
   (** Homotopically, [BAut Bool] is a [K(Z/2,1)].  In particular, it has a (coherent) abelian group structure induced from that of [Z/2].  With our definition of [BAut Bool], we can construct this operation as follows. *)
-  
+
   Definition baut_bool_pairing : BAut Bool -> BAut Bool -> BAut Bool.
   Proof.
     intros Z W.
@@ -219,38 +219,38 @@ First we define the function that will be the equivalence. *)
     apply tr, symmetry.
     exact (path_universe equiv_bool_aut_bool).
   Defined.
-  
+
   Notation "Z ** W" := (baut_bool_pairing Z W)
                          (at level 40, no associativity)
                        : baut_bool_scope.
   Local Open Scope baut_bool_scope.
-  
+
   Local Notation pt := (point (BAut Bool)).
-  
+
   (** Now [equiv_equiv_inhab_baut_bool_bool] is revealed as simply the left unit law of this pairing. *)
   Definition baut_bool_pairing_1Z Z : pt ** Z = Z.
   Proof.
     apply path_baut, equiv_inverse, equiv_equiv_inhab_baut_bool_bool.
     exact true.                   (** This is a choice! *)
   Defined.
-  
+
   (** The pairing is obviously symmetric. *)
   Definition baut_bool_pairing_symm Z W : Z ** W = W ** Z.
   Proof.
     apply path_baut, equiv_equiv_inverse.
   Defined.
-  
+
   (** Whence we get the right unit law as well. *)
   Definition baut_bool_pairing_Z1 Z : Z ** pt = Z
     := baut_bool_pairing_symm Z pt @ baut_bool_pairing_1Z Z.
-  
+
   (** Every element is its own inverse. *)
   Definition baut_bool_pairing_ZZ Z : Z ** Z = pt.
   Proof.
     apply symmetry, path_baut_bool_inhab.
     apply equiv_idmap.            (** A choice!  Could be the flip. *)
   Defined.
-  
+
   (** Associativity is easiest to think about in terms of "curried 2-variable equivalences".  We start with some auxiliary lemmas. *)
   Definition baut_bool_pairing_ZZ_Z_symm_part1 {Y Z W}
              (e : Y ** (Z ** W)) (z : Z)
@@ -274,7 +274,7 @@ First we define the function that will be the equivalence. *)
       destruct (path_baut_bool_inhab Y y).
       destruct (path_baut_bool_inhab Z z).
       destruct (path_baut_bool_inhab W (e y z)).
-      simpl. 
+      simpl.
       case (dec (z = e y z)); intros p; apply moveR_equiv_V;
       destruct (aut_bool_idmap_or_negb (e y)) as [q|q].
       * symmetry; assumption.
@@ -340,7 +340,7 @@ First we define the function that will be the equivalence. *)
                  (path_ishprop _ (tr y)) @ _).
       simpl. refine (eissect _ _).
   Defined.
-  
+
   Definition baut_bool_pairing_ZZ_Z_symm_inv Y Z W
   : baut_bool_pairing_ZZ_Z_symm_map Y Z W
     o baut_bool_pairing_ZZ_Z_symm_map Z Y W
@@ -351,7 +351,7 @@ First we define the function that will be the equivalence. *)
     apply path_equiv, path_arrow; intros y.
     reflexivity.
   Defined.
-  
+
   Definition baut_bool_pairing_ZZ_Z_symm Y Z W
   : Y ** (Z ** W) <~> Z ** (Y ** W).
   Proof.
@@ -361,7 +361,7 @@ First we define the function that will be the equivalence. *)
               (baut_bool_pairing_ZZ_Z_symm_inv Y Z W)
               (baut_bool_pairing_ZZ_Z_symm_inv Z Y W)).
   Defined.
-  
+
   (** Finally, we can prove associativity. *)
   Definition baut_bool_pairing_ZZ_Z Z W Y
   : (Z ** W) ** Y = Z ** (W ** Y).
@@ -370,13 +370,13 @@ First we define the function that will be the equivalence. *)
     refine (_ @ ap (fun X => Z ** X) (baut_bool_pairing_symm Y W)).
     apply path_baut, baut_bool_pairing_ZZ_Z_symm.
   Defined.
-  
+
   (** Since [BAut Bool] is not a set, we ought to have some coherence for these operations too, but we'll leave that for another time. *)
-  
+
   (** ** Automorphisms of [BAut Bool] *)
-  
+
   (** Interestingly, like [Bool] itself, [BAut Bool] is equivalent to its own automorphism group. *)
-  
+
   (** An initial lemma: every automorphism of [BAut Bool] and its inverse are "adjoint" with respect to the pairing. *)
   Definition aut_baut_bool_moveR_pairing_V
              (e : BAut Bool <~> BAut Bool) (Z W : BAut Bool)
@@ -438,9 +438,9 @@ First we define the function that will be the equivalence. *)
   Defined.
 
   (** ** [BAut (BAut Bool)]  *)
-  
+
   (** Putting all of this together, we can construct a nontrivial 2-central element of [BAut (BAut Bool)]. *)
-  
+
   Definition center_baut_bool_central
              (g : BAut Bool <~> BAut Bool) (W : BAut Bool)
   : ap g (negb_center_baut_bool W) = negb_center_baut_bool (g W).

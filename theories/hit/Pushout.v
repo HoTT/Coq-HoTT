@@ -4,7 +4,7 @@ Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe T
 Require Import HSet TruncType.
 Require Import hit.Truncations.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** * Homotopy Pushouts *)
 

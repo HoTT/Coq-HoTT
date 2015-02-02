@@ -5,7 +5,6 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import HProp.
 Require Import HoTT.Tactics.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
 
 Generalizable Variables A B f.
 
@@ -214,7 +213,7 @@ Proof.
 Defined.
 
 (** ** n-Path-split maps.
- 
+
 A map is n-path-split if its induced maps on the first n iterated path-spaces are split surjections.  Thus every map is 0-path-split, the 1-path-split maps are the split surjections, and so on.  It turns out that for n>1, being n-path-split is the same as being an equivalence. *)
 
 Fixpoint PathSplit (n : nat) `(f : A -> B) : Type

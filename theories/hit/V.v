@@ -7,7 +7,7 @@ Require Import Types.Unit Types.Bool Types.Universe Types.Sigma Types.Arrow Type
 Require Import HProp HSet UnivalenceImpliesFunext TruncType.
 Require Import hit.Truncations hit.quotient.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 
 (** ** Pushout with respect to a relation *)

@@ -4,8 +4,7 @@ Require Import Constant Factorization UnivalenceImpliesFunext.
 Require Import Modalities.Modality hit.Truncations hit.Connectedness.
 Import TrM.
 
-Open Scope path_scope.
-Open Scope equiv_scope.
+Local Open Scope path_scope.
 
 (** * BAut(X) *)
 

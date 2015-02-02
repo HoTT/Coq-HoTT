@@ -5,7 +5,7 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Extensions.
 Require Import Modality Accessible.
 Require Export Localization.    (** Nullification is a special case of localization *)
-Local Open Scope equiv_scope.
+
 Local Open Scope path_scope.
 
 (** Nullification is the special case of localization where the codomains of the generating maps are all [Unit].  In this case, we get a modality and not just a reflective subuniverse. *)

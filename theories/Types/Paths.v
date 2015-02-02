@@ -3,7 +3,7 @@
 
 Require Import HoTT.Basics.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 Generalizable Variables A B f x y z.
 

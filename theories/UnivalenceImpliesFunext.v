@@ -21,7 +21,7 @@ Section UnivalenceImpliesFunext.
     unfold Univalence_type in *.
     refine (isequiv_adjointify
               (fun (g:C->A) => w o g)
-              (fun (g:C->B) => w^-1 o g)%equiv
+              (fun (g:C->B) => w^-1 o g)
               _
               _);
     intro;
@@ -30,7 +30,7 @@ Section UnivalenceImpliesFunext.
     change w with (@equiv_fun _ _ w');
     clearbody w'; clear H0 w;
     rewrite <- (@eisretr _ _ (@equiv_path A B) (ua A B) w');
-    generalize ((@equiv_inv _ _ (equiv_path A B) (ua A B)) w')%equiv;
+    generalize ((@equiv_inv _ _ (equiv_path A B) (ua A B)) w');
     intro p;
     clear w';
     destruct p;

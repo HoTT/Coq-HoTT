@@ -13,7 +13,7 @@ Local Notation pr1_type := Overture.pr1 (only parsing).
 
 Local Open Scope path_scope.
 Local Open Scope morphism_scope.
-Local Open Scope equiv_scope.
+
 Local Open Scope function_scope.
 
 (** TODO: Following a comment from Mike Shulman
@@ -297,7 +297,7 @@ Section on_both.
                  | [ |- transport (?f o ?g) _ _ = _ ] => rewrite (@transport_compose _ _ _ _ f g)
                  | [ |- transport (fun x => ?f (?g x)) _ _ = _ ] => rewrite (@transport_compose _ _ _ _ f g)
                  | [ |- context[ap (@morphism_isomorphic ?a ?b ?c) (path_isomorphic ?i ?j ?x)] ]
-                   => change (ap (@morphism_isomorphic a b c)) with ((path_isomorphic i j)^-1%equiv);
+                   => change (ap (@morphism_isomorphic a b c)) with ((path_isomorphic i j)^-1%function);
                      rewrite (@eissect _ _ (path_isomorphic i j) _ x)
                  | [ |- context[ap (fun e : Isomorphic _ _ => @morphism_inverse ?C ?s ?d _ _) (path_isomorphic ?i ?j ?x)] ]
                    => rewrite (@ap_morphism_inverse_path_isomorphic C s d i j x 1)

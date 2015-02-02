@@ -170,7 +170,7 @@ Defined.
     (iii) and (iv) ensure that these lift to [A]. *)
 
 Module PreCategoryOfStructures.
-  Local Open Scope equiv_scope.
+
   Section precategory.
     (** We use [Records] because they are faster than sigma types. *)
 

@@ -6,7 +6,7 @@ Import TrM.
 Require Import Spaces.Nat.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 Local Open Scope nat_scope.
 

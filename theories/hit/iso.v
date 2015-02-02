@@ -3,8 +3,7 @@ Require Import Types.Universe.
 Require Import HSet UnivalenceImpliesFunext TruncType.
 Require Import hit.epi hit.unique_choice hit.Truncations.
 
-Open Local Scope path_scope.
-Open Local Scope equiv_scope.
+Local Open Scope path_scope.
 
 (** We prove that [epi + mono <-> IsEquiv] *)
 Section iso.

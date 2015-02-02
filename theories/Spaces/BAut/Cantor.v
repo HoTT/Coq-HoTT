@@ -4,7 +4,7 @@ Require Import Idempotents.
 Require Import hit.Truncations Spaces.BAut Spaces.Cantor.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** * BAut(Cantor) *)
 

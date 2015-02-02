@@ -1,6 +1,6 @@
 Require Import HoTT.Basics Types.Universe TruncType UnivalenceImpliesFunext.
-Open Scope equiv.
-Open Scope path.
+
+Local Open Scope path_scope.
 
 Section Functorish.
 Context `{Univalence}.

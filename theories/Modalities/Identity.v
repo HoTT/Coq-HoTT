@@ -3,7 +3,7 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Modality Accessible Nullification.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** * The identity modality *)
 

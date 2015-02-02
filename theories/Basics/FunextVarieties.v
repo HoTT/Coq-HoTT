@@ -32,7 +32,7 @@ Definition Funext_implies_NaiveFunext : Funext_type -> NaiveFunext.
 Proof.
   intros fe A P f g h.
   unfold Funext_type in *.
-  exact ((@apD10 A P f g)^-1 h)%equiv.
+  exact ((@apD10 A P f g)^-1 h).
 Defined.
 
 Definition NaiveFunext_implies_WeakFunext : NaiveFunext -> WeakFunext.

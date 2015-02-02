@@ -3,7 +3,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Prod Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Record.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** * Equivalences *)
 

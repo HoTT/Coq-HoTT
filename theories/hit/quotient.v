@@ -4,8 +4,7 @@ Require Import Types.Universe Types.Arrow Types.Sigma.
 Require Import HSet HProp UnivalenceImpliesFunext TruncType.
 Require Import hit.epi hit.Truncations hit.Connectedness.
 
-Open Local Scope path_scope.
-Open Local Scope equiv_scope.
+Local Open Scope path_scope.
 
 (** * Quotient of a Type by an hprop-valued relation
 

@@ -92,7 +92,7 @@ Section fully_faithful_helpers.
         `{H' : IsEquiv _ _ m}
   : IsIsomorphism (m : morphism set_cat x y).
   Proof.
-    exists (m^-1)%equiv;
+    exists (m^-1)%core;
     apply path_forall; intro;
     destruct H';
     simpl in *;

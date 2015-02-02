@@ -9,7 +9,8 @@ Notation pr₂ := pr2.
 Local Open Scope fibration_scope.
 Notation "x ₁" := (x.1) (at level 3) : fibration_scope.
 Notation "x ₂" := (x.2) (at level 3) : fibration_scope.
-Notation "g ∘ f" := (g o f) (at level 40, left associativity) : function_scope.
+Notation "g ∘ f" := (g o f)%function (at level 40, left associativity) : function_scope.
+Notation "g ∘ f" := (g o f)%equiv (at level 40, left associativity) : equiv_scope.
 (** We copy the HoTT-Agda library with regard to path concatenation. *)
 Notation "p • q" := (p @ q)%path (at level 20) : path_scope.
 Notation "p '⁻¹'" := (p^)%path (at level 3, format "p '⁻¹'") : path_scope.
@@ -19,7 +20,8 @@ Notation "p •' q" := (p @ q)%path (at level 21, left associativity,
 Infix "∙" := $(fail "You used '∙' (BULLET OPERATOR, #x2219) when you probably meant to use '•' (BULLET, #x2022)")$ (at level 20, only parsing) : path_scope.
 (*Notation "p # x" := (transport _ p x) (right associativity, at level 65, only parsing) : path_scope.*)
 (*Notation "f == g" := (pointwise_paths f g) (at level 70, no associativity) : type_scope.*)
-Notation "A ≃ B" := (A <~> B)%equiv (at level 85) : equiv_scope.
+Notation "A ≃ B" := (A <~> B) (at level 85) : type_scope.
+Notation "f '⁻¹'" := (f^-1)%function (at level 3, format "f '⁻¹'") : function_scope.
 Notation "f '⁻¹'" := (f^-1)%equiv (at level 3, format "f '⁻¹'") : equiv_scope.
 Notation "¬ x" := (~x) (at level 75, right associativity) : type_scope.
 Notation "x ≠ y" := (x <> y) (at level 70) : type_scope.

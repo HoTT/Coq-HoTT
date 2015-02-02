@@ -4,7 +4,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Equiv.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 Generalizable Variables A B f.
 

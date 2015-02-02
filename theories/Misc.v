@@ -10,6 +10,6 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** Currently there is nothing here. *)
