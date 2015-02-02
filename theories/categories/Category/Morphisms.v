@@ -117,7 +117,7 @@ Section iso_contr.
   (** *** Equivalence between record and fully sigma versions of [Isomorphic] *)
   Definition issig_full_isomorphic
   : Isomorphic_full_sig_T <~> Isomorphic s d
-    := equiv_compose' issig_isomorphic (equiv_functor_sigma_id issig_isisomorphism).
+    := (issig_isomorphic o equiv_functor_sigma_id issig_isisomorphism)%equiv.
 
   (** *** Isomorphisms form an hSet *)
   Global Instance trunc_Isomorphic : IsHSet (Isomorphic s d).

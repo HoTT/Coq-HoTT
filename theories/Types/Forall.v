@@ -48,6 +48,8 @@ Definition equiv_path_forall `{P : A -> Type} (f g : forall x, P x)
   : (f == g)  <~>  (f = g)
   := BuildEquiv _ _ (path_forall f g) _.
 
+Global Arguments equiv_path_forall {A%type_scope P} (f g)%function_scope.
+
 (** ** Path algebra *)
 
 Definition path_forall_pp `{P : A -> Type} (f g h : forall x, P x)

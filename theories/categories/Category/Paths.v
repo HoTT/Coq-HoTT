@@ -188,10 +188,10 @@ Section path_category.
 
   Definition equiv_path_precategory_uncurried `{Funext} (C D : PreCategory)
   : path_precategory'_T C D <~> C = D
-    := equiv_compose' (equiv_path_precategory_uncurried' C D)
-                      (BuildEquiv
-                         _ _ _
-                         (isequiv__path_precategory''_T__of__path_precategory'_T C D)).
+    := ((equiv_path_precategory_uncurried' C D)
+          o (BuildEquiv
+               _ _ _
+               (isequiv__path_precategory''_T__of__path_precategory'_T C D)))%equiv.
 
   Definition path_precategory_uncurried `{Funext} C D : _ -> _
     := equiv_path_precategory_uncurried C D.

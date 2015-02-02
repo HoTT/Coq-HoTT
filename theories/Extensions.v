@@ -5,8 +5,9 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp EquivalenceVarieties.
 Require Import HoTT.Tactics.
-Local Open Scope path_scope.
 
+Local Open Scope equiv_scope.
+Local Open Scope path_scope.
 
 (** Given [C : B -> Type] and [f : A -> B], an extension of [g : forall a, C (f a)] along [f] is a section [h : forall b, C b] such that [h (f a) = g a] for all [a:A].  This is equivalently the existence of fillers for commutative squares, restricted to the case where the bottom of the square is the identity; type-theoretically, this approach is sometimes more convenient.  In this file we study the type of such extensions.  One of its crucial properties is that a path between extensions is equivalently an extension in a fibration of paths.
 
@@ -50,10 +51,10 @@ Section Extensions.
                     (fun x => pr2 ext x @ (pr2 ext' x)^))
     <~> ext = ext'.
   Proof.
-    refine (equiv_compose' (equiv_path_sigma _ _ _) _).
+    refine (equiv_path_sigma _ _ _ o _).
     refine (equiv_functor_sigma' (equiv_path_forall (ext .1) (ext' .1)) _). intros p.
-    refine (equiv_compose' (equiv_path_forall _ _) _). unfold pointwise_paths.
-    refine (equiv_functor_forall' (equiv_idmap _) _). intros x.
+    refine (equiv_path_forall _ _ o _). unfold pointwise_paths.
+    refine (equiv_functor_forall' 1 _). intros x.
     refine (equiv_compose' (B := (p (f x))^ @ (ext .2 x) = (ext' .2 x)) _ _).
     - refine (equiv_concat_l _ _).
       transitivity ((apD10 (path_forall _ _ p) (f x))^ @ ext .2 x).
@@ -66,8 +67,8 @@ Section Extensions.
           apply inverse, concat_1p.
         * apply transp_extension.
       + apply whiskerR, ap, apD10_path_forall.
-    - refine (equiv_compose' (equiv_moveR_Vp _ _ _) _).
-      refine (equiv_compose' (equiv_moveL_pM _ _ _) _).
+    - refine (equiv_moveR_Vp _ _ _ o _).
+      refine (equiv_moveL_pM _ _ _ o _).
       apply equiv_path_inverse.
   Defined.
 
@@ -107,6 +108,8 @@ Section Extensions.
       - size of result (>= A,B,C) *)
   Check ExtendableAlong@{a b c r}.
 
+  Global Arguments ExtendableAlong n%nat_scope {A B}%type_scope (f C)%function_scope.
+
   (** We can modify the universes, as with [ExtensionAlong]. *)
   Definition lift_extendablealong
              (n : nat) {A : Type@{i}} {B : Type@{j}}
@@ -134,12 +137,12 @@ Section Extensions.
     generalize dependent C; simple_induction n n IHn; intros C.
     1:apply equiv_idmap.
     apply equiv_functor_prod'; simpl.
-    - refine (equiv_functor_forall' (equiv_idmap _) _); intros g; simpl.
-      refine (equiv_functor_sigma' (equiv_idmap _) _); intros rec.
+    - refine (equiv_functor_forall' 1 _); intros g; simpl.
+      refine (equiv_functor_sigma' 1 _); intros rec.
       apply equiv_path_forall.
-    - refine (equiv_functor_forall' (equiv_idmap _) _); intros h.
-      refine (equiv_functor_forall' (equiv_idmap _) _); intros k; simpl.
-      refine (equiv_compose' _ (IHn (fun b => h b = k b))).
+    - refine (equiv_functor_forall' 1 _); intros h.
+      refine (equiv_functor_forall' 1 _); intros k; simpl.
+      refine (_ o IHn (fun b => h b = k b)).
       apply equiv_inverse.
       refine (equiv_functor_pathsplit n _ _
                (equiv_apD10 _ _ _) (equiv_apD10 _ _ _) _).
@@ -150,13 +153,13 @@ Section Extensions.
              {A B : Type} {C : B -> Type} {f : A -> B}
   : ExtendableAlong n.+2 f C
     -> IsEquiv (fun g => g oD f)
-    := isequiv_pathsplit n o (equiv_extendable_pathsplit n.+2 C f).
+    := (isequiv_pathsplit n o (equiv_extendable_pathsplit n.+2 C f))%function.
 
   Global Instance ishprop_extendable `{Funext} (n : nat)
          {A B : Type} (C : B -> Type) (f : A -> B)
   : IsHProp (ExtendableAlong n.+2 f C).
   Proof.
-    refine (trunc_equiv' _ (equiv_inverse (equiv_extendable_pathsplit n.+2 C f))).
+    refine (trunc_equiv' _ (equiv_extendable_pathsplit n.+2 C f)^-1).
   Defined.
 
   Definition equiv_extendable_isequiv `{Funext} (n : nat)
@@ -271,7 +274,7 @@ Section Extensions.
   Proof.
     revert C; simple_induction n n IHn; intros C; [ exact tt | split ].
     - intros h.
-      exists (fun b => eisretr f b # h (f^-1 b)); intros a.
+      exists (fun b => eisretr f b # h (f^-1 b)%function); intros a.
       refine (transport2 C (eisadj f a) _ @ _).
       refine ((transport_compose C f _ _)^ @ _).
       exact (apD h (eissect f a)).
@@ -317,6 +320,8 @@ Section Extensions.
   (** Universe parameters are the same as for [ExtendableAlong]. *)
   Check ooExtendableAlong@{a b c r}.
 
+  Global Arguments ooExtendableAlong {A B}%type_scope (f C)%function_scope.
+
   (** Universe modification. *)
   Definition lift_ooextendablealong
              {A : Type@{i}} {B : Type@{j}}
@@ -340,7 +345,7 @@ Section Extensions.
   : ooExtendableAlong f C <~>
     ooPathSplit (fun (g : forall b, C b) => g oD f).
   Proof.
-    refine (equiv_functor_forall' (equiv_idmap _) _); intros n.
+    refine (equiv_functor_forall' 1 _); intros n.
     apply equiv_extendable_pathsplit.
   Defined.
 
@@ -354,12 +359,8 @@ Section Extensions.
   Definition equiv_ooextendable_isequiv `{Funext}
              {A B : Type} (C : B -> Type) (f : A -> B)
   : ooExtendableAlong f C
-    <~> IsEquiv (fun (g : forall b, C b) => g oD f).
-  Proof.
-    eapply equiv_compose'.
-    - apply equiv_oopathsplit_isequiv.
-    - apply equiv_ooextendable_pathsplit.
-  Defined.
+    <~> IsEquiv (fun (g : forall b, C b) => g oD f)
+    := equiv_oopathsplit_isequiv _ o equiv_ooextendable_pathsplit _ _.
 
   Definition ooextendable_postcompose
              {A B : Type} (C D : B -> Type) (f : A -> B)

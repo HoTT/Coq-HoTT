@@ -116,7 +116,7 @@ Global Instance ishprop_hfiber_inl {A B : Type} (z : A + B)
 Proof.
   destruct z as [a|b]; unfold hfiber.
   - refine (trunc_equiv' _
-              (equiv_functor_sigma' (equiv_idmap A)
+              (equiv_functor_sigma' 1
                  (fun x => equiv_path_sum (inl x) (inl a)))).
   - refine (trunc_equiv _
               (fun xp => inl_ne_inr (xp.1) b xp.2)^-1).
@@ -127,7 +127,7 @@ Global Instance decidable_hfiber_inl {A B : Type} (z : A + B)
 Proof.
   destruct z as [a|b]; unfold hfiber.
   - refine (decidable_equiv' _
-              (equiv_functor_sigma' (equiv_idmap A)
+              (equiv_functor_sigma' 1
                  (fun x => equiv_path_sum (inl x) (inl a))) _).
   - refine (decidable_equiv _
               (fun xp => inl_ne_inr (xp.1) b xp.2)^-1 _).
@@ -140,7 +140,7 @@ Proof.
   - refine (trunc_equiv _
               (fun xp => inr_ne_inl (xp.1) a xp.2)^-1).
   - refine (trunc_equiv' _
-              (equiv_functor_sigma' (equiv_idmap B)
+              (equiv_functor_sigma' 1
                  (fun x => equiv_path_sum (inr x) (inr b)))).
 Defined.
 
@@ -151,7 +151,7 @@ Proof.
   - refine (decidable_equiv _
               (fun xp => inr_ne_inl (xp.1) a xp.2)^-1 _).
   - refine (decidable_equiv' _
-              (equiv_functor_sigma' (equiv_idmap B)
+              (equiv_functor_sigma' 1
                  (fun x => equiv_path_sum (inr x) (inr b))) _).
 Defined.
 
@@ -617,8 +617,8 @@ Definition equiv_indecomposable_sum {X A B} `{Indecomposable X}
 : ((X <~> A) * (Empty <~> B)) + ((X <~> B) * (Empty <~> A)).
 Proof.
   destruct (indecompose A B f) as [i|i]; [ left | right ].
-  1:pose (g := equiv_compose' f (sum_empty_r X)).
-  2:pose (g := equiv_compose' f (sum_empty_l X)).
+  1:pose (g := (f o sum_empty_r X)%equiv).
+  2:pose (g := (f o sum_empty_l X)%equiv).
   2:apply (equiv_prod_symm _ _).
   all:refine (equiv_unfunctor_sum g _ _); try assumption; try intros [].
 Defined.
@@ -630,36 +630,28 @@ Definition equiv_unfunctor_sum_indecomposable_ll {A B B' : Type}
 Proof.
   pose (f := equiv_decompose (h o inl)).
   pose (g := equiv_decompose (h o inr)).
-  pose (k := equiv_compose' h (equiv_functor_sum' f g)).
+  pose (k := (h o (f + g))%equiv).
   (** This looks messy, but it just amounts to swapping the middle two summands in [k]. *)
-  pose (k' := equiv_compose' k
-             (equiv_compose' (equiv_sum_assoc _ _ _)
-             (equiv_compose' (equiv_functor_sum'
-                                (equiv_inverse (equiv_sum_assoc _ _ _))
-                                (equiv_idmap _))
-             (equiv_compose' (equiv_functor_sum'
-                                (equiv_functor_sum' (equiv_idmap _)
-                                                    (equiv_sum_symm _ _))
-                                (equiv_idmap _))
-             (equiv_compose' (equiv_functor_sum' (equiv_sum_assoc _ _ _)
-                                                 (equiv_idmap _))
-                             (equiv_inverse (equiv_sum_assoc _ _ _))))))).
+  pose (k' := (k
+                 o (equiv_sum_assoc _ _ _)
+                 o ((equiv_sum_assoc _ _ _)^-1 + 1)
+                 o (1 + (equiv_sum_symm _ _) + 1)
+                 o ((equiv_sum_assoc _ _ _) + 1)
+                 o (equiv_sum_assoc _ _ _)^-1)%equiv).
   destruct (equiv_unfunctor_sum k'
              (fun x => match x with | inl x => x.2 | inr x => x.2 end)
              (fun x => match x with | inl x => x.2 | inr x => x.2 end))
     as [s t]; clear k k'.
-  refine (equiv_compose' t _).
-  refine (equiv_compose' _ (equiv_inverse g)).
-  refine (equiv_functor_sum' _ (equiv_idmap _)).
-  destruct (equiv_indecomposable_sum (equiv_inverse s)) as [[p q]|[p q]];
-  destruct (equiv_indecomposable_sum (equiv_inverse f)) as [[u v]|[u v]].
-  - refine (equiv_compose' v (equiv_inverse q)).
+  refine (t o (_ + 1) o g^-1)%equiv.
+  destruct (equiv_indecomposable_sum s^-1) as [[p q]|[p q]];
+  destruct (equiv_indecomposable_sum f^-1) as [[u v]|[u v]].
+  - refine (v o q^-1)%equiv.
   - elim (indecompose0 (v^-1 o p)).
   - refine (Empty_rec (indecompose0 _)); intros a.
     destruct (is_inl_or_is_inr (h (inl a))) as [l|r].
     * exact (q^-1 (a;l)).
     * exact (v^-1 (a;r)).
-  - refine (equiv_compose' u (equiv_inverse p)).
+  - refine (u o p^-1)%equiv.
 Defined.
 
 Definition equiv_unfunctor_sum_contr_ll {A A' B B' : Type}
@@ -667,8 +659,7 @@ Definition equiv_unfunctor_sum_contr_ll {A A' B B' : Type}
            (h : A + B <~> A' + B')
 : B <~> B'
   := equiv_unfunctor_sum_indecomposable_ll
-       (equiv_compose (equiv_functor_sum' equiv_contr_contr
-                                          (equiv_idmap B')) h).
+       ((equiv_contr_contr + 1) o h).
 
 (** ** Universal mapping properties *)
 

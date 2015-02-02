@@ -6,8 +6,6 @@ Import TrM.
 Require Import Spaces.Nat.
 
 Local Open Scope path_scope.
-
-
 Local Open Scope nat_scope.
 
 (** * Finite sets *)
@@ -37,7 +35,7 @@ Defined.
 
 Global Instance contr_fin1 : Contr (Fin 1).
 Proof.
-  refine (contr_equiv' Unit (equiv_inverse (sum_empty_l Unit))).
+  refine (contr_equiv' Unit (sum_empty_l Unit)^-1).
 Defined.
 
 Definition fin_empty (n : nat) (f : Fin n -> Empty) : n = 0.
@@ -54,12 +52,9 @@ Defined.
 
 Definition fin_transpose_last_two (n : nat)
 : Fin n.+2 <~> Fin n.+2
-  := (equiv_compose'
-        (equiv_inverse (equiv_sum_assoc _ _ _))
-     (equiv_compose'
-        (equiv_functor_sum' (equiv_idmap _)
-                            (equiv_sum_symm _ _))
-        (equiv_sum_assoc _ _ _))).
+  := (((equiv_sum_assoc _ _ _)^-1)
+        o (1 + (equiv_sum_symm _ _))
+        o (equiv_sum_assoc _ _ _))%equiv.
 
 Arguments fin_transpose_last_two : simpl nomatch.
 
@@ -84,12 +79,10 @@ Proof.
   - destruct n as [|n IH].
     + elim k.
     + destruct k as [k|].
-      * refine (equiv_compose'
-                  (fin_transpose_last_two n)
-                  (equiv_compose' _ (fin_transpose_last_two n))).
-        refine (equiv_functor_sum'
-                  (fin_transpose_last_with n (inl k))
-                  (equiv_idmap Unit)).
+      * refine ((fin_transpose_last_two n)
+                  o _
+                  o (fin_transpose_last_two n))%equiv.
+        refine ((fin_transpose_last_with n (inl k)) + 1)%equiv.
       * apply fin_transpose_last_two.
   - exact (equiv_idmap _).
 Defined.
@@ -176,9 +169,8 @@ Qed.
 Definition fin_equiv (n m : nat)
            (k : Fin m.+1) (e : Fin n <~> Fin m)
 : Fin n.+1 <~> Fin m.+1
-  := (equiv_compose'
-        (fin_transpose_last_with m k)
-        (equiv_functor_sum' e (equiv_idmap Unit))).
+  := ((fin_transpose_last_with m k)
+        o (e + 1))%equiv.
 
 (** Here is the curried version that we will prove to be an equivalence. *)
 Definition fin_equiv' (n m : nat)
@@ -196,9 +188,7 @@ Proof.
   exists y.
   destruct y as [y|[]].
   + refine (equiv_unfunctor_sum_l
-              (equiv_compose'
-                 (fin_transpose_last_with m (inl y))
-                 e)
+              (fin_transpose_last_with m (inl y) o e)
               _ _ ; _).
     { intros a. ev_equiv.
       assert (q : inl y <> e (inl a))
@@ -319,7 +309,7 @@ Proof.
   refine (trunc_equiv' _ (issig_finite X)).
   apply ishprop_sigma_disjoint; intros n m Hn Hm.
   strip_truncations.
-  refine (nat_eq_fin_equiv n m (equiv_compose' Hm (equiv_inverse Hn))).
+  refine (nat_eq_fin_equiv n m (Hm o Hn^-1)).
 Defined.
 
 (** ** Preservation of finiteness by equivalences *)
@@ -342,7 +332,7 @@ Corollary finite_equiv_equiv X Y
 : (X <~> Y) -> (Finite X <~> Finite Y).
 Proof.
   intros ?; apply equiv_iff_hprop; apply finite_equiv';
-    [ assumption | symmetry; assumption ]. 
+    [ assumption | symmetry; assumption ].
 Defined.
 
 Definition fcard_equiv {X Y} (e : X -> Y) `{IsEquiv X Y e}
@@ -422,7 +412,7 @@ Proof.
   refine (Build_Finite _ (fcard X).+1 _).
   pose proof (merely_equiv_fin X).
   strip_truncations; apply tr.
-  refine (equiv_functor_sum' _ (equiv_idmap _)); assumption.
+  refine (_ + 1)%equiv; assumption.
 Defined.
 
 Definition fcard_succ X `{Finite X}
@@ -540,7 +530,7 @@ Proof.
   refine (_ @ nat_plus_comm _ _).
   assert (e := merely_equiv_fin Y).
   strip_truncations.
-  refine (fcard_equiv' (equiv_functor_sum' (equiv_idmap X) e) @ _).
+  refine (fcard_equiv' (1 + e) @ _).
   refine (_ @ ap (fun y => (y + fcard X)) (fcard_equiv e^-1)).
   generalize (fcard Y); intros n.
   induction n as [|n IH].
@@ -569,7 +559,7 @@ Definition fcard_prod X Y `{Finite X} `{Finite Y}
 Proof.
   assert (e := merely_equiv_fin X).
   strip_truncations.
-  refine (fcard_equiv' (equiv_functor_prod' e (equiv_idmap Y)) @ _).
+  refine (fcard_equiv' (e * 1) @ _).
   refine (_ @ ap (fun x => x * fcard Y) (fcard_equiv e^-1)).
   generalize (fcard X); intros n.
   induction n as [|n IH].
@@ -638,7 +628,7 @@ Proof.
   assert (e := merely_equiv_fin X).
   strip_truncations.
   refine (finite_equiv _
-            (equiv_functor_equiv (equiv_inverse e) (equiv_inverse e)) _).
+            (equiv_functor_equiv e^-1 e^-1) _).
   generalize (fcard X); intros n.
   induction n as [|n IH].
   - exact _.
@@ -651,7 +641,7 @@ Proof.
   assert (e := merely_equiv_fin X).
   strip_truncations.
   refine (fcard_equiv
-            (equiv_functor_equiv (equiv_inverse e) (equiv_inverse e))^-1 @ _).
+            (equiv_functor_equiv e^-1 e^-1)^-1 @ _).
   generalize (fcard X); intros n.
   induction n as [|n IH].
   - reflexivity.
@@ -896,8 +886,8 @@ Section DecidableQuotients.
     apply ap, path_arrow; intros z; revert z.
     refine (quotient_ind_prop _ _ _); intros x; simpl.
     apply fcard_equiv'; unfold hfiber.
-    refine (equiv_functor_sigma' (equiv_idmap X) _); intros y; simpl.
-    refine (equiv_compose' _ (sets_exact R y x)).
+    refine (equiv_functor_sigma' 1 _); intros y; simpl.
+    refine (_ o sets_exact R y x)%equiv.
     apply equiv_iff_hprop; apply symmetry.
   Defined.
 

@@ -123,10 +123,12 @@ Notation "x .2" := (pr2 x) (at level 3, format "x '.2'") : fibration_scope.
 Notation compose := (fun g f x => g (f x)).
 
 (** We put the following notation in a scope because leaving it unscoped causes it to override identical notations in other scopes.  It's convenient to use the same notation for, e.g., function composition, morphism composition in a category, and functor composition, and let Coq automatically infer which one we mean by scopes.  We can't do this if this notation isn't scoped.  Unfortunately, Coq doesn't have a built-in [function_scope] like [type_scope]; [type_scope] is automatically opened wherever Coq is expecting a [Sort], and it would be nice if [function_scope] were automatically opened whenever Coq expects a thing of type [forall _, _] or [_ -> _].  To work around this, we open [function_scope] globally. *)
-Notation "g 'o' f" := (compose g f) (at level 40, left associativity) : function_scope.
-Open Scope function_scope.
+
 (** We allow writing [(f o g)%function] to force [function_scope] over, e.g., [equiv_scope]. *)
 Delimit Scope function_scope with function.
+
+Notation "g 'o' f" := (compose g%function f%function) (at level 40, left associativity) : function_scope.
+Open Scope function_scope.
 
 (** Composition of logical equivalences *)
 Definition iff_compose {A B C : Type} (g : B <-> C) (f : A <-> B)
@@ -139,6 +141,8 @@ Definition iff_inverse {A B : Type} : (A <-> B) -> (B <-> A)
 
 (** Dependent composition of functions. *)
 Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).
+
+Global Arguments composeD {A B C}%type_scope (g f)%function_scope x.
 
 Hint Unfold composeD.
 
@@ -258,7 +262,7 @@ Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) 
   match p with idpath => u end.
 
 (** See above for the meaning of [simpl nomatch]. *)
-Arguments transport {A} P {x y} p%path_scope u : simpl nomatch.
+Arguments transport {A}%type_scope P%function_scope {x y} p%path_scope u : simpl nomatch.
 
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression.*)
 Delimit Scope fib_scope with fib.
@@ -277,6 +281,8 @@ We will first see this appearing in the type of [apD]. *)
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
 
+Global Arguments ap {A B}%type_scope f%function_scope {x y} p%path_scope.
+
 (** We introduce the convention that [apKN] denotes the application of a K-path between
    functions to an N-path between elements, where a 0-path is simply a function or an
    element. Thus, [ap] is a shorthand for [ap01]. *)
@@ -286,7 +292,7 @@ Notation ap01 := ap (only parsing).
 Definition pointwise_paths {A} {P:A->Type} (f g:forall x:A, P x)
   := forall x:A, f x = g x.
 
-Arguments pointwise_paths {A}%type_scope {P} (f g)%function_scope.
+Global Arguments pointwise_paths {A}%type_scope {P} (f g)%function_scope.
 
 Hint Unfold pointwise_paths : typeclass_instances.
 
@@ -296,8 +302,12 @@ Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g)
   : f == g
   := fun x => match h with idpath => 1 end.
 
+Global Arguments apD10 {A%type_scope B} {f g}%function_scope h%path_scope _.
+
 Definition ap10 {A B} {f g:A->B} (h:f=g) : f == g
   := apD10 h.
+
+Global Arguments ap10 {A B}%type_scope {f g}%function_scope h%path_scope _.
 
 (** For the benefit of readers of the HoTT Book: *)
 Notation happly := ap10 (only parsing).
@@ -306,6 +316,8 @@ Definition ap11 {A B} {f g:A->B} (h:f=g) {x y:A} (p:x=y) : f x = g y.
 Proof.
   case h, p; reflexivity.
 Defined.
+
+Global Arguments ap11 {A B}%type_scope {f g}%function_scope h%path_scope {x y} p%path_scope.
 
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments ap {A B} f {x y} p : simpl nomatch.
@@ -320,7 +332,7 @@ Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
   match p with idpath => idpath end.
 
 (** See above for the meaning of [simpl nomatch]. *)
-Arguments apD {A B} f {x y} p : simpl nomatch.
+Arguments apD {A%type_scope B} f%function_scope {x y} p%path_scope : simpl nomatch.
 
 (** ** Equivalences *)
 
@@ -341,6 +353,8 @@ Arguments apD {A B} f {x y} p : simpl nomatch.
 (** The fact that [r] is a left inverse of [s]. As a mnemonic, note that the partially applied type [Sect s] is the type of proofs that [s] is a section. *)
 Definition Sect {A B : Type} (s : A -> B) (r : B -> A) :=
   forall x : A, r (s x) = x.
+
+Global Arguments Sect {A B}%type_scope (s r)%function_scope.
 
 (** A typeclass that includes the data making [f] into an adjoint equivalence. *)
 Class IsEquiv {A B : Type} (f : A -> B) := BuildIsEquiv {
@@ -536,11 +550,14 @@ Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A,
   :=
   (@apD10 A P f g)^-1.
 
+Global Arguments path_forall {_ A%type_scope P} (f g)%function_scope _.
+
 Definition path_forall2 `{Funext} {A B : Type} {P : A -> B -> Type} (f g : forall x y, P x y) :
   (forall x y, f x y = g x y) -> f = g
   :=
   (fun E => path_forall f g (fun x => path_forall (f x) (g x) (E x))).
 
+Global Arguments path_forall2 {_} {A B}%type_scope {P} (f g)%function_scope _.
 
 (** *** Tactics *)
 
@@ -613,6 +630,8 @@ Global Existing Instance ispointed_type.
 (** Homotopy fibers are homotopical inverse images of points.  *)
 
 Definition hfiber {A B : Type} (f : A -> B) (y : B) := { x : A & f x = y }.
+
+Global Arguments hfiber {A B}%type_scope f%function_scope y.
 
 (** *** More tactics *)
 

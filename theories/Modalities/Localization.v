@@ -98,7 +98,7 @@ Proof.
                 (snd ext' p q (fun b => (g b (p b))^-1 (p' b))
                               (fun b => (g b (q b))^-1 (q' b)))).
     intros b c.
-    refine (equiv_compose' _ (equiv_moveR_equiv_M _ _)).
+    refine (_ o equiv_moveR_equiv_M _ _)%equiv.
     apply equiv_concat_l.
     refine (_ @ (ap_transport c (g b) _)^).
     apply ap, symmetry, eisretr.
@@ -401,7 +401,7 @@ Section LocalTypes.
   (** A remark on universes: recall that [ooExtendableAlong] takes four universe parameters, three for the sizes of the types involved and one for the max of all of them.  In the definition of [IsLocal f X] we set that max universe to be the same as the size of [X], so that [In (Loc f) X] would lie in the same universes as [X], which is necessary for our definition of a reflective subuniverse.  However, in practice we may need this extendability property with the max universe being larger, to avoid coalescing universes undesiredly.  Thus, in making it available by the following name, we also insert a [lift] to generalize the max universe. *)
   Definition ooextendable_islocal {X : Type@{i}} {Xloc : IsLocal f X} i
   : ooExtendableAlong@{a a i k} (f i) (fun _ => X)
-    := (lift_ooextendablealong _ _ (Xloc i)).  
+    := (lift_ooextendablealong _ _ (Xloc i)).
 
   Global Instance islocal_loc (X : Type) : IsLocal f (Localize f X)
     := islocal_localize f X.
@@ -477,7 +477,7 @@ Module Nudge_ReflectiveSubuniverses
     : New_ReflectiveSubuniverse -> Localization_ReflectiveSubuniverses.ReflectiveSubuniverse
       := fun O => Loc (Acc.acc_gen O).
   End Data.
-  
+
   Module Nudged <: ReflectiveSubuniverses
     := ReflectiveSubuniverses_Restriction Localization_ReflectiveSubuniverses Data.
 
