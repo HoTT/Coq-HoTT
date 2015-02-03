@@ -469,10 +469,10 @@ Definition equiv_sigma_prod0 A B
 
 Definition equiv_sigma_symm `(P : A -> B -> Type)
 : {a : A & {b : B & P a b}} <~> {b : B & {a : A & P a b}}
-  := (((equiv_sigma_prod (fun x => P (snd x) (fst x)))^-1)
-        o (equiv_functor_sigma' (equiv_prod_symm A B)
+  := ((equiv_sigma_prod (fun x => P (snd x) (fst x)))^-1)
+       oE (equiv_functor_sigma' (equiv_prod_symm A B)
                                 (fun x => equiv_idmap (P (fst x) (snd x))))
-        o (equiv_sigma_prod (fun x => P (fst x) (snd x))))%equiv.
+       oE (equiv_sigma_prod (fun x => P (fst x) (snd x))).
 
 Definition equiv_sigma_symm0 (A B : Type)
 : {a : A & B} <~> {b : B & A}.

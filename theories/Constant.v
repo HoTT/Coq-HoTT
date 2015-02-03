@@ -66,7 +66,7 @@ Defined.
 Definition equiv_cconst_from_merely `{Funext} (X Y : Type)
 : { f : X -> Y & ConditionallyConstant f } <~> (merely X -> Y).
 Proof.
-  refine (_ o (equiv_sigma_symm _))%equiv.
+  refine (_ oE (equiv_sigma_symm _)).
   refine (equiv_sigma_contr _).
 Defined.
 

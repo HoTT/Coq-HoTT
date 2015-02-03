@@ -646,9 +646,9 @@ Section Reflective_Subuniverse.
                {fs : Funext} (A B C : Type) `{In O C}
     : ((O A) * (O B) -> C) <~> (A * B -> C).
     Proof.
-      refine (equiv_uncurry A B C o _)%equiv.
-      refine (_ o (equiv_uncurry (O A) (O B) C)^-1)%equiv.
-      refine (equiv_o_to_O _ A (B -> C) o _)%equiv; simpl.
+      refine (equiv_uncurry A B C oE _).
+      refine (_ oE (equiv_uncurry (O A) (O B) C)^-1).
+      refine (equiv_o_to_O _ A (B -> C) oE _); simpl.
       apply equiv_postcompose'.
       exact (equiv_o_to_O _ B C).
     Defined.

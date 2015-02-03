@@ -2,8 +2,8 @@
 (** * Theorems about path spaces *)
 
 Require Import HoTT.Basics.
-Local Open Scope path_scope.
 
+Local Open Scope path_scope.
 
 Generalizable Variables A B f x y z.
 
@@ -591,8 +591,8 @@ Definition dpath_paths2 {A : Type} {x y : A}
   transport (fun a => idpath a = idpath a) p q = r.
 Proof.
   destruct p. simpl.
-  refine (_ o (equiv_whiskerR _ _ 1)^-1)%equiv.
-  refine (_ o (equiv_whiskerL 1 _ _)^-1)%equiv.
+  refine (_ oE (equiv_whiskerR _ _ 1)^-1).
+  refine (_ oE (equiv_whiskerL 1 _ _)^-1).
   refine (equiv_concat_lr _ _).
   - symmetry; apply whiskerR_p1_1.
   - apply whiskerL_1p_1.

@@ -998,10 +998,10 @@ Section ModalFact.
   : O (hfiber (factor2 fact o factor1 fact) b)
       <~> hfiber (factor2 fact) b.
   Proof.
-    refine (_ o
+    refine (_ oE
              (equiv_O_functor O
-               (hfiber_compose (factor1 fact) (factor2 fact) b)))%equiv.
-    refine (equiv_sigma_contr (fun w => O (hfiber (factor1 fact) w.1)) o _)%equiv.
+               (hfiber_compose (factor1 fact) (factor2 fact) b))).
+    refine (equiv_sigma_contr (fun w => O (hfiber (factor1 fact) w.1)) oE _).
     - intros w; exact (inclass1 fact w.1).
     - refine ((equiv_sigma_inO_O (fun w => hfiber (factor1 fact) w.1))^-1)%equiv.
       exact (inclass2 fact b).
@@ -1039,8 +1039,8 @@ Section ModalFact.
     Definition equiv_O_factor_hfibers (b:B)
     : hfiber (factor2 fact) b <~> hfiber (factor2 fact') b.
     Proof.
-      refine (O_hfiber_O_fact fact' b o _)%equiv.
-      refine (_ o (O_hfiber_O_fact fact b)^-1)%equiv.
+      refine (O_hfiber_O_fact fact' b oE _).
+      refine (_ oE (O_hfiber_O_fact fact b)^-1).
       apply equiv_O_functor.
       apply equiv_hfiber_homotopic.
       exact H.
@@ -1079,8 +1079,8 @@ Section ModalFact.
               (@image) _).
     intros A B f fact fact'.
     refine (Build_PathFactorization fact fact' _ _ _ _).
-    - refine (_ o equiv_fibration_replacement (factor2 fact))%equiv.
-      refine ((equiv_fibration_replacement (factor2 fact'))^-1 o _)%equiv.
+    - refine (_ oE equiv_fibration_replacement (factor2 fact)).
+      refine ((equiv_fibration_replacement (factor2 fact'))^-1 oE _).
       refine (equiv_functor_sigma' 1 _); intros b; simpl.
       apply equiv_O_factor_hfibers.
     - intros a; exact (pr1_path (equiv_O_factor_hfibers_beta f fact fact' a)).

@@ -684,7 +684,7 @@ Section RetractOfRetracts.
                       (fun _ => 1) f))
               (Splitting f) _).
     - refine ((hfiber_fibration f
-                  (fun g => { I : IsPreIdempotent g & @IsQuasiIdempotent _ g I }))^-1 o _)%equiv.
+                  (fun g => { I : IsPreIdempotent g & @IsQuasiIdempotent _ g I }))^-1 oE _).
       unfold hfiber.
       refine (equiv_functor_sigma'
                 (equiv_sigma_assoc IsPreIdempotent
@@ -722,13 +722,13 @@ Section RetractOfRetracts.
       refine (path_sigma' _ 1 _); simpl.
       apply path_forall; intros x; apply split_idem_preidem.
     - simpl; unfold hfiber, Splitting.
-      refine (equiv_sigma_assoc _ _ o _)%equiv.
+      refine (equiv_sigma_assoc _ _ oE _).
       refine (equiv_functor_sigma' 1 _); intros R; simpl.
-      refine (_ o (equiv_path_sigma _ _ _)^-1)%equiv; simpl.
+      refine (_ oE (equiv_path_sigma _ _ _)^-1); simpl.
       refine (equiv_functor_sigma' (equiv_ap10 _ _) _); intros H; simpl.
       destruct f as [f I]; simpl in *.
       destruct H; simpl.
-      refine (_ o (equiv_path_forall _ _)^-1)%equiv;
+      refine (_ oE (equiv_path_forall _ _)^-1);
         unfold pointwise_paths.
       refine (equiv_functor_forall' 1 _); intros x; simpl.
       unfold isidem.
@@ -789,7 +789,7 @@ Section CoherentIdempotents.
       refine (equiv_functor_sigma' (equiv_idmap _) _); intros f; simpl.
       refine (equiv_split_idem_retract (splitting_retractof_isqidem f)).
     - unfold Splitting.
-      refine (_ o equiv_sigma_symm _)%equiv.
+      refine (_ oE equiv_sigma_symm _).
       apply equiv_sigma_contr; intros R.
       apply contr_basedhomotopy.
   Defined.
@@ -821,20 +821,20 @@ Definition contr_splitting_preidem_idmap {ua : Univalence} (X : Type)
 Proof.
   refine (contr_equiv' {Y : Type & X <~> Y} _).
   unfold Splitting_PreIdempotent, Splitting; simpl.
-  refine (equiv_sigma_assoc _ _ o _)%equiv; simpl.
-  refine (equiv_functor_sigma' (issig_retractof X) _ o _)%equiv.
+  refine (equiv_sigma_assoc _ _ oE _); simpl.
+  refine (equiv_functor_sigma' (issig_retractof X) _ oE _).
   - intros [A [[r s] H]]; simpl in *.
     exact {p : s o r == idmap &
            forall x, ((ap idmap (p x)^ @ (p (s (r x)))^)
                         @ ap s (H (r x))) @ p x = isidem idmap x }.
   - intros [A [[r s] H]]; simpl. apply equiv_idmap.
-  - refine (equiv_sigma_assoc _ _ o _)%equiv; simpl.
+  - refine (equiv_sigma_assoc _ _ oE _); simpl.
     refine (equiv_functor_sigma' (equiv_idmap Type) _); intros Y; simpl.
-    refine (equiv_sigma_assoc _ _ o _)%equiv; simpl.
-    refine (equiv_sigma_prod _ o _)%equiv.
-    refine (_ o (issig_equiv X Y)^-1)%equiv.
+    refine (equiv_sigma_assoc _ _ oE _); simpl.
+    refine (equiv_sigma_prod _ oE _).
+    refine (_ oE (issig_equiv X Y)^-1).
     refine (equiv_functor_sigma' 1 _); intros r; simpl.
-    refine (_ o (issig_isequiv r)^-1)%equiv.
+    refine (_ oE (issig_isequiv r)^-1).
     refine (equiv_functor_sigma' 1 _); intros s; simpl.
     unfold Sect.
     refine (equiv_functor_sigma' 1 _); intros eta; simpl.
@@ -842,13 +842,13 @@ Proof.
     refine (equiv_functor_forall' 1 _).
     intros x; unfold isidem, ispreidem_idmap; simpl.
     rewrite ap_idmap, !concat_pp_p.
-    refine (equiv_moveR_Vp _ _ _ o _)%equiv.
+    refine (equiv_moveR_Vp _ _ _ oE _).
     rewrite concat_p1, concat_p_pp.
-    refine (equiv_concat_r (concat_1p _) _ o _)%equiv.
-    refine (equiv_whiskerR _ _ _ o _)%equiv.
-    refine (equiv_moveR_Vp _ _ _ o _)%equiv.
+    refine (equiv_concat_r (concat_1p _) _ oE _).
+    refine (equiv_whiskerR _ _ _ oE _).
+    refine (equiv_moveR_Vp _ _ _ oE _).
     rewrite concat_p1.
-    refine (equiv_concat_r (y := ap s (ap r (ep x))) _ _ o _)%equiv.
+    refine (equiv_concat_r (y := ap s (ap r (ep x))) _ _ oE _).
     { refine (cancelR _ _ (ep x) _).
       rewrite <- ap_compose.
       refine (concat_A1p ep (ep x)). }

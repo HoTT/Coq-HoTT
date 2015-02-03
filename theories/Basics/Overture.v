@@ -101,12 +101,27 @@ Identity Coercion unfold_Type3le : Type3le >-> Sortclass.
     or complicate matters with its type. *)
 Notation idmap := (fun x => x).
 
+(** We define various scopes and open them in the order we expect to use them. *)
+Delimit Scope equiv_scope with equiv.
+Delimit Scope function_scope with function.
+Delimit Scope path_scope with path.
+Delimit Scope fibration_scope with fibration.
+Delimit Scope trunc_scope with trunc.
+
+Open Scope trunc_scope.
+Open Scope equiv_scope.
+Open Scope path_scope.
+Open Scope fibration_scope.
+Open Scope nat_scope.
+Open Scope function_scope.
+Open Scope type_scope.
+Open Scope core_scope.
+
 (** *** Constant functions *)
 Definition const {A B} (b : B) := fun x : A => b.
 
 (** We define notation for dependent pairs because it is too annoying to write and see [existT P x y] all the time.  However, we put it in its own scope, because sometimes it is necessary to give the particular dependent type, so we'd like to be able to turn off this notation selectively. *)
 Notation "( x ; y )" := (existT _ x y) : fibration_scope.
-Open Scope fibration_scope.
 (** We bind [fibration_scope] with [sigT] so that we are automatically in [fibration_scope] when we are passing an argument of type [sigT]. *)
 Bind Scope fibration_scope with sigT.
 
@@ -124,11 +139,9 @@ Notation compose := (fun g f x => g (f x)).
 
 (** We put the following notation in a scope because leaving it unscoped causes it to override identical notations in other scopes.  It's convenient to use the same notation for, e.g., function composition, morphism composition in a category, and functor composition, and let Coq automatically infer which one we mean by scopes.  We can't do this if this notation isn't scoped.  Unfortunately, Coq doesn't have a built-in [function_scope] like [type_scope]; [type_scope] is automatically opened wherever Coq is expecting a [Sort], and it would be nice if [function_scope] were automatically opened whenever Coq expects a thing of type [forall _, _] or [_ -> _].  To work around this, we open [function_scope] globally. *)
 
-(** We allow writing [(f o g)%function] to force [function_scope] over, e.g., [equiv_scope]. *)
-Delimit Scope function_scope with function.
+(** We allow writing [(f o g)%function] to force [function_scope] over, e.g., [morphism_scope]. *)
 
 Notation "g 'o' f" := (compose g%function f%function) (at level 40, left associativity) : function_scope.
-Open Scope function_scope.
 
 (** Composition of logical equivalences *)
 Definition iff_compose {A B C : Type} (g : B <-> C) (f : A <-> B)
@@ -190,12 +203,10 @@ Defined.
 
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
 
-Delimit Scope path_scope with path.
-Local Open Scope path_scope.
-
 (** We bind [path_scope] to [paths] so that when we are constructing arguments to things like [concat], we automatically are in [path_scope]. *)
 Bind Scope path_scope with paths.
 
+Local Open Scope path_scope.
 
 (** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
@@ -245,10 +256,12 @@ Arguments transitive_paths / .
 Notation "1" := idpath : path_scope.
 
 (** The composition of two paths. *)
-Notation "p @ q" := (concat p q) (at level 20) : path_scope.
+(** We put [p] and [q] in [path_scope] explcitly.  This is a partial work-around for https://coq.inria.fr/bugs/show_bug.cgi?id=3990, which is that implicitly bound scopes don't nest well. *)
+Notation "p @ q" := (concat p%path q%path) (at level 20) : path_scope.
 
 (** The inverse of a path. *)
-Notation "p ^" := (inverse p) (at level 3, format "p '^'") : path_scope.
+(** See above about explicitly placing [p] in [path_scope]. *)
+Notation "p ^" := (inverse p%path) (at level 3, format "p '^'") : path_scope.
 
 (** An alternative notation which puts each path on its own line.  Useful as a temporary device during proofs of equalities between very long composites; to turn it on inside a section, say [Open Scope long_path_scope]. *)
 Notation "p @' q" := (concat p q) (at level 21, left associativity,
@@ -265,8 +278,6 @@ Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) 
 Arguments transport {A}%type_scope P%function_scope {x y} p%path_scope u : simpl nomatch.
 
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression.*)
-Delimit Scope fib_scope with fib.
-Local Open Scope fib_scope.
 
 Notation "p # x" := (transport _ p x) (right associativity, at level 65, only parsing) : path_scope.
 
@@ -382,8 +393,6 @@ Global Existing Instance equiv_isequiv.
 Arguments equiv_fun {A B} _ _.
 Arguments equiv_isequiv {A B} _.
 
-Delimit Scope equiv_scope with equiv.
-
 Bind Scope equiv_scope with Equiv.
 
 Notation "A <~> B" := (Equiv A B) (at level 85) : type_scope.
@@ -440,7 +449,6 @@ Scheme trunc_index_rec := Minimality for trunc_index Sort Type.
 Definition trunc_index_rect := trunc_index_ind.
 
 (** We will use [Notation] for [trunc_index]es, so define a scope for them here. *)
-Delimit Scope trunc_scope with trunc.
 Bind Scope trunc_scope with trunc_index.
 Arguments trunc_S _%trunc_scope.
 

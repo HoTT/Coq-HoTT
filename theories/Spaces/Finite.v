@@ -50,11 +50,11 @@ Defined.
 
 (** *** Swap the last two elements. *)
 
-Definition fin_transpose_last_two (n : nat)
+Timeout 1 Definition fin_transpose_last_two (n : nat)
 : Fin n.+2 <~> Fin n.+2
-  := (((equiv_sum_assoc _ _ _)^-1)
-        o (1 + (equiv_sum_symm _ _))
-        o (equiv_sum_assoc _ _ _))%equiv.
+  := ((equiv_sum_assoc _ _ _)^-1)
+       oE (1 + (equiv_sum_symm _ _))
+       oE (equiv_sum_assoc _ _ _).
 
 Arguments fin_transpose_last_two : simpl nomatch.
 
@@ -80,8 +80,8 @@ Proof.
     + elim k.
     + destruct k as [k|].
       * refine ((fin_transpose_last_two n)
-                  o _
-                  o (fin_transpose_last_two n))%equiv.
+                  oE _
+                  oE (fin_transpose_last_two n)).
         refine ((fin_transpose_last_with n (inl k)) + 1)%equiv.
       * apply fin_transpose_last_two.
   - exact (equiv_idmap _).
@@ -169,8 +169,8 @@ Qed.
 Definition fin_equiv (n m : nat)
            (k : Fin m.+1) (e : Fin n <~> Fin m)
 : Fin n.+1 <~> Fin m.+1
-  := ((fin_transpose_last_with m k)
-        o (e + 1))%equiv.
+  := (fin_transpose_last_with m k)
+       oE (e + 1).
 
 (** Here is the curried version that we will prove to be an equivalence. *)
 Definition fin_equiv' (n m : nat)
@@ -188,7 +188,7 @@ Proof.
   exists y.
   destruct y as [y|[]].
   + refine (equiv_unfunctor_sum_l
-              (fin_transpose_last_with m (inl y) o e)
+              (fin_transpose_last_with m (inl y) oE e)
               _ _ ; _).
     { intros a. ev_equiv.
       assert (q : inl y <> e (inl a))
@@ -309,7 +309,7 @@ Proof.
   refine (trunc_equiv' _ (issig_finite X)).
   apply ishprop_sigma_disjoint; intros n m Hn Hm.
   strip_truncations.
-  refine (nat_eq_fin_equiv n m (Hm o Hn^-1)).
+  refine (nat_eq_fin_equiv n m (Hm oE Hn^-1)).
 Defined.
 
 (** ** Preservation of finiteness by equivalences *)
@@ -887,7 +887,7 @@ Section DecidableQuotients.
     refine (quotient_ind_prop _ _ _); intros x; simpl.
     apply fcard_equiv'; unfold hfiber.
     refine (equiv_functor_sigma' 1 _); intros y; simpl.
-    refine (_ o sets_exact R y x)%equiv.
+    refine (_ oE sets_exact R y x).
     apply equiv_iff_hprop; apply symmetry.
   Defined.
 

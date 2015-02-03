@@ -26,7 +26,7 @@ Section Assumptions.
     strip_truncations.
     apply tr.
     apply path_universe_uncurried.
-    refine (equiv_fold_cantor o _).
+    refine (equiv_fold_cantor oE _).
     refine (equiv_path _ _ e + 1).
   Defined.
 
@@ -36,7 +36,7 @@ Section Assumptions.
     intros Z.
     apply path_baut.
     unfold f; simpl.
-    refine (_ o equiv_sum_assoc Z cantor cantor).
+    refine (_ oE equiv_sum_assoc Z cantor cantor).
     apply (1 + equiv_fold_cantor).
   Defined.
 
@@ -70,8 +70,8 @@ Section Assumptions.
 
   (** We don't know much about [I0], but we can show that it maps the rightmost two summands to the rightmost one, using the naturality of [I].  Here is the naturality. *)
   Definition Inat (Z Z' : BAut cantor) (e : Z <~> Z')
-  : I Z' o (e + 1 + 1)
-    = (e + 1) o I Z.
+  : I Z' oE (e + 1 + 1)
+    = (e + 1) oE I Z.
   Proof.
     revert e; equiv_intro (equiv_path Z Z') q.
     revert q; equiv_intro ((equiv_path_sigma_hprop Z Z')^-1) p.

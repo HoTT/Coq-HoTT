@@ -205,7 +205,7 @@ Module Accessible_Lex_Modalities_Theory
       (** The case [n>0] is actually quite easy, using univalence and the fact that modal types are closed under [Equiv]. *)
       refine (extendable_postcompose' n _ _ _
                 (fun b => (equiv_path_TypeO O (A b) (B b))
-                            o (equiv_path_universe (A b) (B b)))%equiv
+                            oE (equiv_path_universe (A b) (B b)))
                 _).
       refine (extendable_conn_map_inO O n (@const (acc_gen O i) Unit tt)
                                       (fun b => A b <~> B b)).

@@ -98,7 +98,7 @@ Proof.
                 (snd ext' p q (fun b => (g b (p b))^-1 (p' b))
                               (fun b => (g b (q b))^-1 (q' b)))).
     intros b c.
-    refine (_ o equiv_moveR_equiv_M _ _)%equiv.
+    refine (_ oE equiv_moveR_equiv_M _ _).
     apply equiv_concat_l.
     refine (_ @ (ap_transport c (g b) _)^).
     apply ap, symmetry, eisretr.

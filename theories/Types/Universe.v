@@ -4,9 +4,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Equiv.
 
-Local Open Scope equiv_scope.
 Local Open Scope path_scope.
-
 
 Generalizable Variables A B f.
 
@@ -41,7 +39,7 @@ Section Univalence.
 Context `{Univalence}.
 
 Definition path_universe_uncurried {A B : Type} (f : A <~> B) : A = B
-  := (equiv_path A B)^-1%function f.
+  := (equiv_path A B)^-1 f.
 
 Definition path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} : (A = B)
   := path_universe_uncurried (BuildEquiv _ _ f feq).
@@ -96,7 +94,7 @@ Definition transport_idmap_path_universe_uncurried {A B : Type} (f : A <~> B)
 (** ** Behavior on path operations *)
 
 Definition equiv_path_pp `{Funext} {A B C : Type} (p : A = B) (q : B = C)
-: equiv_path A C (p @ q) = equiv_path B C q o equiv_path A B p.
+: equiv_path A C (p @ q) = equiv_path B C q oE equiv_path A B p.
 Proof.
   destruct p, q. simpl.
   apply path_equiv, path_arrow.
@@ -190,7 +188,7 @@ Defined.
 
 Definition transport_path_universe_V `{Funext}
            {A B : Type} (f : A -> B) {feq : IsEquiv f} (z : B)
-  : transport (fun X:Type => X) (path_universe f)^ z = f^-1%function z
+  : transport (fun X:Type => X) (path_universe f)^ z = f^-1 z
   := transport_path_universe_V_uncurried (BuildEquiv _ _ f feq) z.
 (* Alternatively, [(transport2 idmap (path_universe_V f) z)^ @ (transport_path_universe (f^-1) z)]. *)
 
@@ -233,8 +231,8 @@ Definition equiv_path2_universe `{Funext}
            {A B : Type} (f g : A <~> B)
 : (f == g) <~> (path_universe f = path_universe g).
 Proof.
-  refine (_ o equiv_path_arrow f g).
-  refine (_ o equiv_path_equiv f g).
+  refine (_ oE equiv_path_arrow f g).
+  refine (_ oE equiv_path_equiv f g).
   exact (equiv_ap (equiv_path A B)^-1 _ _).
 Defined.
 
@@ -370,9 +368,9 @@ Definition equiv_path3_universe `{Funext}
            {A B : Type} {f g : A <~> B} (p q : f == g)
 : (p == q) <~> (path2_universe p = path2_universe q).
 Proof.
-  refine (_ o equiv_path_forall p q).
-  refine (_ o equiv_ap (equiv_path_arrow f g) p q).
-  refine (_ o equiv_ap (equiv_path_equiv f g) _ _).
+  refine (_ oE equiv_path_forall p q).
+  refine (_ oE equiv_ap (equiv_path_arrow f g) p q).
+  refine (_ oE equiv_ap (equiv_path_equiv f g) _ _).
   unfold path2_universe, equiv_path2_universe.
   simpl. refine (equiv_ap (ap (equiv_path A B)^-1) _ _).
 Defined.

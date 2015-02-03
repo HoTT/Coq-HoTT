@@ -5,6 +5,7 @@ Require Import HoTT.Basics.
 Require Import Types.Empty Types.Prod Types.Sigma.
 (** The following are only required for the equivalence between [sum] and a sigma type *)
 Require Import Types.Bool Types.Forall.
+
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 
@@ -617,8 +618,8 @@ Definition equiv_indecomposable_sum {X A B} `{Indecomposable X}
 : ((X <~> A) * (Empty <~> B)) + ((X <~> B) * (Empty <~> A)).
 Proof.
   destruct (indecompose A B f) as [i|i]; [ left | right ].
-  1:pose (g := (f o sum_empty_r X)%equiv).
-  2:pose (g := (f o sum_empty_l X)%equiv).
+  1:pose (g := (f oE sum_empty_r X)).
+  2:pose (g := (f oE sum_empty_l X)).
   2:apply (equiv_prod_symm _ _).
   all:refine (equiv_unfunctor_sum g _ _); try assumption; try intros [].
 Defined.
@@ -630,28 +631,28 @@ Definition equiv_unfunctor_sum_indecomposable_ll {A B B' : Type}
 Proof.
   pose (f := equiv_decompose (h o inl)).
   pose (g := equiv_decompose (h o inr)).
-  pose (k := (h o (f + g))%equiv).
+  pose (k := (h oE (f + g))).
   (** This looks messy, but it just amounts to swapping the middle two summands in [k]. *)
-  pose (k' := (k
-                 o (equiv_sum_assoc _ _ _)
-                 o ((equiv_sum_assoc _ _ _)^-1 + 1)
-                 o (1 + (equiv_sum_symm _ _) + 1)
-                 o ((equiv_sum_assoc _ _ _) + 1)
-                 o (equiv_sum_assoc _ _ _)^-1)%equiv).
+  pose (k' := k
+                oE (equiv_sum_assoc _ _ _)
+                oE ((equiv_sum_assoc _ _ _)^-1 + 1)
+                oE (1 + (equiv_sum_symm _ _) + 1)
+                oE ((equiv_sum_assoc _ _ _) + 1)
+                oE (equiv_sum_assoc _ _ _)^-1).
   destruct (equiv_unfunctor_sum k'
              (fun x => match x with | inl x => x.2 | inr x => x.2 end)
              (fun x => match x with | inl x => x.2 | inr x => x.2 end))
     as [s t]; clear k k'.
-  refine (t o (_ + 1) o g^-1)%equiv.
+  refine (t oE (_ + 1) oE g^-1).
   destruct (equiv_indecomposable_sum s^-1) as [[p q]|[p q]];
   destruct (equiv_indecomposable_sum f^-1) as [[u v]|[u v]].
-  - refine (v o q^-1)%equiv.
+  - refine (v oE q^-1).
   - elim (indecompose0 (v^-1 o p)).
   - refine (Empty_rec (indecompose0 _)); intros a.
     destruct (is_inl_or_is_inr (h (inl a))) as [l|r].
     * exact (q^-1 (a;l)).
     * exact (v^-1 (a;r)).
-  - refine (u o p^-1)%equiv.
+  - refine (u oE p^-1).
 Defined.
 
 Definition equiv_unfunctor_sum_contr_ll {A A' B B' : Type}
@@ -659,7 +660,7 @@ Definition equiv_unfunctor_sum_contr_ll {A A' B B' : Type}
            (h : A + B <~> A' + B')
 : B <~> B'
   := equiv_unfunctor_sum_indecomposable_ll
-       ((equiv_contr_contr + 1) o h).
+       ((equiv_contr_contr + 1) oE h).
 
 (** ** Universal mapping properties *)
 
