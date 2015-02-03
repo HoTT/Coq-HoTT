@@ -4,7 +4,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Arrow Types.Prod Types.Paths Types.Unit.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 Generalizable Variables X A B C f g n.
 

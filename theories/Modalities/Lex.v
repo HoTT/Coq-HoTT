@@ -5,7 +5,7 @@ Require Import Modality Accessible.
 Require Import HoTT.Tactics.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** * Lex modalities *)
 

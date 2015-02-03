@@ -4,7 +4,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Paths Types.Sigma Types.Empty Types.Record Types.Unit Types.Arrow HProp.
 
-Local Open Scope equiv_scope.
+
 Local Open Scope path_scope.
 
 (** A type is a set if and only if it satisfies Axiom K. *)

@@ -4,7 +4,6 @@
 Require Import Overture PathGroupoids Equivalences.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
 
 (** Allow ourselves to implicitly generalize over types [A] and [B], and a function [f]. *)
 Generalizable Variables A B f.

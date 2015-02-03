@@ -3,7 +3,6 @@
 
 Require Import Overture PathGroupoids.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
 
 (** Naming convention: we consistently abbreviate "contractible" as "contr".  A theorem about a space [X] being contractible (which will usually be an instance of the typeclass [Contr]) is called [contr_X]. *)
 

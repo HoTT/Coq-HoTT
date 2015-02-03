@@ -8,7 +8,7 @@ Require Import hit.Connectedness hit.Suspension hit.Truncations.
 Import TrM.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 Generalizable Variables X A B f g n.
 
 (* ** Connectedness of the suspension *)

@@ -2,7 +2,7 @@
 Require Import HoTT.Basics HoTT.Types.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** * Cantor space 2^N *)
 

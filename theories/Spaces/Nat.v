@@ -5,7 +5,7 @@ Require Import HoTT.Basics.
 Require Import HoTT.Types.Bool HoTT.Types.Nat.
 Require Import HoTT.TruncType HoTT.DProp.
 
-Local Open Scope equiv_scope.
+
 
 (** Much of the layout of this file is adapted from ssreflect *)
 

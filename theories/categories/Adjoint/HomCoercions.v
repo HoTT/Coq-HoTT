@@ -17,7 +17,7 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 Local Open Scope functor_scope.

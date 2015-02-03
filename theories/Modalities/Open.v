@@ -5,7 +5,7 @@ Require Import HProp TruncType Extensions.
 Require Import Modality Accessible Nullification Lex.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** * Open modalities *)
 

@@ -3,7 +3,7 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp UnivalenceImpliesFunext.
-Local Open Scope equiv_scope.
+
 
 Generalizable Variables A B n f.
 

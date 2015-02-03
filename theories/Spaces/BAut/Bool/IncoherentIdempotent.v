@@ -3,8 +3,7 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import EquivalenceVarieties Idempotents.
 Require Import Spaces.BAut Spaces.BAut.Bool.
 
-Open Scope path_scope.
-Open Scope equiv_scope.
+Local Open Scope path_scope.
 
 (** * An incoherent quasi-idempotent on [BAut (BAut Bool)]. *)
 
@@ -53,4 +52,3 @@ Section IncoherentQuasiIdempotent.
   (** These results show only that not *every* quasi-idempotence witness is coherent.  "Clearly" the nontrivial quasi-idempotence witness [nontrivial_qidem_baut_baut_bool] should be the one that is not coherent.  To show this, we would probably need to show that [isqidem_idmap] *is* in the image of [s], and this seems rather annoying to do based on our construction of [splitting_preidem_retractof_qidem]. *)
 
 End IncoherentQuasiIdempotent.
-

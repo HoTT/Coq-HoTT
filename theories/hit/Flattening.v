@@ -5,7 +5,7 @@
 Require Import HoTT.Basics UnivalenceImpliesFunext.
 Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 
 (** First we define the general non-recursive HIT. *)

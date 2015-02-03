@@ -6,7 +6,7 @@ Require Import HoTT.Basics.
 Require Import Types.Paths Types.Forall Types.Arrow Types.Universe Types.Empty Types.Unit.
 Require Import HSet UnivalenceImpliesFunext.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 Generalizable Variables X A B f g n.
 
 (* ** Definition of the circle. *)

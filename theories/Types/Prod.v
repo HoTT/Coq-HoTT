@@ -4,7 +4,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Empty Types.Unit.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 Generalizable Variables X A B f g n.
 
 Scheme prod_ind := Induction for prod Sort Type.

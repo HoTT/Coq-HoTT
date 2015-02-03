@@ -4,9 +4,8 @@ Require Import Extensions Factorization Modalities.Modality.
 Require Import hit.Truncations hit.Connectedness.
 Import TrM.
 
-Open Scope path_scope.
-Open Scope equiv_scope.
-Open Scope trunc_scope.
+Local Open Scope path_scope.
+Local Open Scope trunc_scope.
 
 (** * Varieties of constant function *)
 

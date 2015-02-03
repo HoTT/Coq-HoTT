@@ -6,7 +6,7 @@ Require Import TruncType UnivalenceImpliesFunext HProp EquivalenceVarieties Exte
 Require Export Modality.        (* [Export] since the actual definitions of connectednes appear there, in the generality of a modality. *)
 Require Import hit.Truncations.
 Import TrM.
-Local Open Scope equiv_scope.
+
 Local Open Scope path_scope.
 Local Open Scope trunc_scope.
 

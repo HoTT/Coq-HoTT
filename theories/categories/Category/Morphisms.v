@@ -44,7 +44,7 @@ Global Existing Instance isisomorphism_isomorphic.
 Section iso_contr.
   Variable C : PreCategory.
 
-  Local Open Scope equiv_scope.
+
 
   Variables s d : C.
 

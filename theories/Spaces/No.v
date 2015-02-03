@@ -5,7 +5,6 @@ Require Import hit.Truncations.
 Import TrM.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
 
 (** * The surreal numbers *)
 
@@ -56,7 +55,7 @@ Module Export Surreals.
   Arguments game_le_lr {L R} xL xR {L' R'} yL yR _ _.
   Arguments game_lt_l {L R} xL xR {L' R'} yL yR l _.
   Arguments game_lt_r {L R} xL xR {L' R'} yL yR r _.
-  
+
   (** *** Now the surreals *)
 
   Private Inductive is_surreal : Game@{i} -> Type :=
@@ -624,7 +623,7 @@ Section NoCodes.
             intros r' yR_le_z [h1 h2] x_le_y;
             apply h2; exact (snd x_le_y r') ).
     Defined.
-  
+
     Local Definition inner (y : No) : A' y
       := inner_package.1 y.
 
@@ -644,7 +643,7 @@ Section NoCodes.
       (hor {l':L' & fst (inner (yL l')).1}
            {r:R & (xR_let r).1 {{ yL | yR // ycut }} })
       := 1.
-        
+
     Local Definition inner_le y z p : A'le y z p (inner y) (inner z)
       := fst (inner_package.2) y z p.
 

@@ -5,7 +5,7 @@ This equivalence is close to the existence of an object classifier.
 Require Import HoTT.Basics.
 Require Import Types.Universe Types.Sigma Types.Arrow.
 Require Import Fibrations HProp EquivalenceVarieties UnivalenceImpliesFunext Pullback.
-Local Open Scope equiv_scope.
+
 Local Open Scope path_scope.
 
 Section AssumeUnivalence.

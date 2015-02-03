@@ -5,7 +5,7 @@ Require Import HoTT.Basics.
 Require Import Types.Paths.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 Generalizable Variables A B f g e n.
 

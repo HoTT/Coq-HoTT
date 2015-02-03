@@ -2,7 +2,7 @@
 (** * HPropositions *)
 
 Require Import HoTT.Basics HoTT.Types.
-Local Open Scope equiv_scope.
+
 Local Open Scope path_scope.
 
 Generalizable Variables A B.

@@ -7,7 +7,7 @@ Require Import Extensions NullHomotopy.
 Require Import ReflectiveSubuniverse Modality.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** ** Accessible reflective subuniverses *)
 

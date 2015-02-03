@@ -4,7 +4,7 @@ Require Import Extensions.
 Require Import Modality Accessible Lex Nullification.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** * Topological localizations *)
 

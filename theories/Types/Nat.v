@@ -12,7 +12,7 @@ Global Open Scope core_scope.
 (** But in this file, we want to be able to use the usual symbols for natural number arithmetic. *)
 Local Open Scope nat_scope.
 
-Local Open Scope equiv_scope.
+
 
 Scheme nat_ind := Induction for nat Sort Type.
 Scheme nat_rec := Minimality for nat Sort Type.

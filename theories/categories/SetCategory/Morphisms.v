@@ -11,7 +11,7 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 
@@ -43,7 +43,7 @@ Section equiv_iso_set_cat.
   : IsIsomorphism m
     := Build_IsIsomorphism
          set_cat s d
-         m m^-1%equiv
+         m m^-1%function
          (path_forall _ _ (eissect m))
          (path_forall _ _ (eisretr m)).
 
@@ -98,7 +98,7 @@ Section equiv_iso_prop_cat.
   : IsIsomorphism m
     := Build_IsIsomorphism
          prop_cat s d
-         m m^-1%equiv
+         m m^-1%function
          (path_forall _ _ (eissect m))
          (path_forall _ _ (eisretr m)).
 

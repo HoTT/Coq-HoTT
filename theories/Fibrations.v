@@ -4,7 +4,7 @@
 Require Import HoTT.Basics Types.Sigma Types.Paths.
 Require Import EquivalenceVarieties.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (* ** Homotopy fibers *)
 

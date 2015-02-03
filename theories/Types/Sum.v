@@ -7,7 +7,7 @@ Require Import Types.Empty Types.Prod Types.Sigma.
 Require Import Types.Bool Types.Forall.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 Generalizable Variables X A B f g n.
 
 Scheme sum_ind := Induction for sum Sort Type.

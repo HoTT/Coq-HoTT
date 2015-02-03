@@ -3,7 +3,7 @@
 
 Require Import HoTT.Basics.
 Require Import Types.Prod Types.Equiv.
-Local Open Scope equiv_scope.
+
 Local Open Scope path_scope.
 
 (* coq calls it "bool", we call it "Bool" *)

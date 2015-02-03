@@ -286,6 +286,8 @@ Notation ap01 := ap (only parsing).
 Definition pointwise_paths {A} {P:A->Type} (f g:forall x:A, P x)
   := forall x:A, f x = g x.
 
+Arguments pointwise_paths {A}%type_scope {P} (f g)%function_scope.
+
 Hint Unfold pointwise_paths : typeclass_instances.
 
 Notation "f == g" := (pointwise_paths f g) (at level 70, no associativity) : type_scope.
@@ -348,9 +350,10 @@ Class IsEquiv {A B : Type} (f : A -> B) := BuildIsEquiv {
   eisadj : forall x : A, eisretr (f x) = ap f (eissect x)
 }.
 
-Arguments eisretr {A B} f {_} _.
-Arguments eissect {A B} f {_} _.
-Arguments eisadj {A B} f {_} _.
+Arguments eisretr {A B}%type_scope f%function_scope {_} _.
+Arguments eissect {A B}%type_scope f%function_scope {_} _.
+Arguments eisadj {A B}%type_scope f%function_scope {_} _.
+Arguments IsEquiv {A B}%type_scope f%function_scope.
 
 (** A record that includes all the data of an adjoint equivalence. *)
 Record Equiv A B := BuildEquiv {
@@ -366,13 +369,14 @@ Arguments equiv_fun {A B} _ _.
 Arguments equiv_isequiv {A B} _.
 
 Delimit Scope equiv_scope with equiv.
-Local Open Scope equiv_scope.
 
-Notation "A <~> B" := (Equiv A B) (at level 85) : equiv_scope.
+Bind Scope equiv_scope with Equiv.
+
+Notation "A <~> B" := (Equiv A B) (at level 85) : type_scope.
 
 (** A notation for the inverse of an equivalence.  We can apply this to a function as long as there is a typeclass instance asserting it to be an equivalence.  We can also apply it to an element of [A <~> B], since there is an implicit coercion to [A -> B] and also an existing instance of [IsEquiv]. *)
 
-Notation "f ^-1" := (@equiv_inv _ _ f _) (at level 3, format "f '^-1'") : equiv_scope.
+Notation "f ^-1" := (@equiv_inv _ _ f _) (at level 3, format "f '^-1'") : function_scope.
 
 (** ** Applying paths between equivalences like functions *)
 

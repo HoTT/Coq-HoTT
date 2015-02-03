@@ -14,7 +14,7 @@ Local Open Scope category_scope.
 
 Section path_category.
   Local Open Scope path_scope.
-  Local Open Scope equiv_scope.
+
 
   (** We add a prime ([']) as an arbitrary convention to denote that
       we are talking about equality of functions (less convenient for

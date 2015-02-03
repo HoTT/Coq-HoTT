@@ -4,7 +4,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Sigma Types.Forall.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** The following tactic proves automatically that a two-component record type is equivalent to a Sigma-type.  Specifically, it proves a goal that looks like
 <<

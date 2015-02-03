@@ -3,7 +3,7 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Fibrations.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** * Pullbacks *)
 

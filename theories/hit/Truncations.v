@@ -5,7 +5,7 @@
 Require Import HoTT.Basics Types.Sigma Types.Universe TruncType HProp.
 Require Import Modalities.Modality Modalities.Identity.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 Generalizable Variables A X n.
 
 (** ** Definition. *)
