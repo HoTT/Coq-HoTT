@@ -13,13 +13,10 @@ Generalizable Variables X A B f g n.
 
 Module Export Suspension.
 
-(** We play games to ensure that [Susp X] does not live in a lower universe than [X] *)
-Section hack_my_types.
-Let U := Type.
-Private Inductive Susp (X : U) : U :=
+(** We ensure that [Susp X] does not live in a lower universe than [X] *)
+Private Inductive Susp (X : Type@{i}) : Type@{i} :=
   | North : Susp X
   | South : Susp X.
-End hack_my_types.
 
 Global Arguments North {X}.
 Global Arguments South {X}.
