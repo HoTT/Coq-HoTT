@@ -224,6 +224,8 @@ Proof.
   exact _.
 Defined.
 
+Notation "f * g" := (equiv_functor_prod' f g) : equiv_scope.
+
 Definition equiv_functor_prod_l {A B B' : Type} (g : B <~> B')
   : A * B <~> A * B'.
 Proof.

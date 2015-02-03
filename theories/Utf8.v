@@ -1,5 +1,5 @@
 Require Export Coq.Unicode.Utf8.
-Require Import HoTT.Basics (*types.Bool*).
+Require Import HoTT.Basics HoTT.Types.Arrow.
 Require Import Modalities.Identity.
 Require Import hit.Circle hit.TwoSphere hit.Truncations hit.Suspension.
 
@@ -7,6 +7,7 @@ Notation Type₀ := Type0.
 Notation pr₁ := pr1.
 Notation pr₂ := pr2.
 Local Open Scope fibration_scope.
+Notation "f → g" := (f -> g)%equiv : equiv_scope.
 Notation "x ₁" := (x.1) (at level 3) : fibration_scope.
 Notation "x ₂" := (x.2) (at level 3) : fibration_scope.
 Notation "g ∘ f" := (g o f)%function (at level 40, left associativity) : function_scope.

@@ -359,6 +359,8 @@ Definition equiv_functor_sum' {A A' B B' : Type} (f : A <~> A') (g : B <~> B')
 : A + B <~> A' + B'
   := equiv_functor_sum (f := f) (g := g).
 
+Notation "f + g" := (equiv_functor_sum' f g) : equiv_scope.
+
 Definition equiv_functor_sum_l {A B B' : Type} (g : B <~> B')
 : A + B <~> A + B'
   := equiv_functor_sum (f := idmap) (g := g).
@@ -576,8 +578,8 @@ Proof.
   - intros c; destruct (is_inl_or_is_inr (f c)); reflexivity.
   - intros [[c l]|[c r]]; simpl; destruct (is_inl_or_is_inr (f c)).
     + apply ap, ap, path_ishprop.
-    + elim (not_is_inl_and_inr' _ l i). 
-    + elim (not_is_inl_and_inr' _ i r). 
+    + elim (not_is_inl_and_inr' _ l i).
+    + elim (not_is_inl_and_inr' _ i r).
     + apply ap, ap, path_ishprop.
 Defined.
 
