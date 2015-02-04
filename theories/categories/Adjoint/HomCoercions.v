@@ -72,7 +72,7 @@ Section AdjunctionEquivalences.
   End adjunction_naturality.
 
   (**
-     Quoting from Awody's "Category Theory":
+     Quoting from Awodey's "Category Theory":
 
      Proposition 9.4. Given categories and functors,
 
