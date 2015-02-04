@@ -195,7 +195,8 @@ Definition equiv_functor_arrow' `(f : B <~> A) `(g : C <~> D)
   := @equiv_functor_forall' _ A (fun _ => C) B (fun _ => D)
   f (fun _ => g).
 
-Notation "f -> g" := (equiv_functor_arrow' f g) : equiv_scope.
+(* We could do something like this notation, but it's not clear that it would be that useful, and might be confusing. *)
+(* Notation "f -> g" := (equiv_functor_arrow' f g) : equiv_scope. *)
 
 (** What remains is really identical to that in [Forall].  *)
 
