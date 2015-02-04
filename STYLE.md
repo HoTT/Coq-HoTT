@@ -464,7 +464,8 @@ something you generally need to worry about; see the comments in
 
 At present, higher inductive types are restricted to the `hit/`
 directory, and are all defined using [Dan Licata's "private inductive
-types" hack][hit-hack].  This means the procedure for defining a HIT is:
+types" hack][hit-hack] which was [implemented in Coq](https://coq.inria.fr/files/coq5_submission_3.pdf) by Yves Bertot.
+This means the procedure for defining a HIT is:
 
 1. Wrap the entire definition in a module, which you will usually want
    to export to the rest of the file containing the definition.
