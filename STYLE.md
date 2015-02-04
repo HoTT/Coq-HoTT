@@ -231,7 +231,7 @@ hprop.  For instance, this has the advantage that we do not need new
 names for its constructor and its fields, and we can apply theorems in
 `Types/Sigma` to it directly rather than via `issig`.
 
-TODO: Decide about `hProp` and `hSet` and `TruncType` (issue #514).
+TODO: Decide about `hProp` and `hSet` and `TruncType` (issue [#514](https://github.com/HoTT/HoTT/issues/514)).
 
 ### Typeclasses ###
 
