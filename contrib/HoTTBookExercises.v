@@ -434,10 +434,10 @@ Proof.
     elim (lem hprop _).
     + intro p.
       apply path_hprop; simpl. (* path_prop is silent *)
-      exact ((if_hprop_then_equiv_Unit hprop p)^-1)%equiv.
+      exact ((if_hprop_then_equiv_Unit hprop p)^-1).
     + intro np.
       apply path_hprop; simpl. (* path_prop is silent *)
-      exact ((if_not_hprop_then_equiv_Empty hprop np)^-1)%equiv.
+      exact ((if_not_hprop_then_equiv_Empty hprop np)^-1).
 Defined.
 
 (* ================================================== ex:lem-impred *)
