@@ -50,7 +50,7 @@ Defined.
 
 (** *** Swap the last two elements. *)
 
-Timeout 1 Definition fin_transpose_last_two (n : nat)
+Definition fin_transpose_last_two (n : nat)
 : Fin n.+2 <~> Fin n.+2
   := ((equiv_sum_assoc _ _ _)^-1)
        oE (1 + (equiv_sum_symm _ _))
