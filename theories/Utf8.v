@@ -1,5 +1,5 @@
 Require Export Coq.Unicode.Utf8.
-Require Import HoTT.Basics HoTT.Types.Arrow.
+Require Import HoTT.Basics HoTT.Types.Arrow HoTT.Types.Prod HoTT.Types.Sum.
 Require Import Modalities.Identity.
 Require Import hit.Circle hit.TwoSphere hit.Truncations hit.Suspension.
 
@@ -7,11 +7,15 @@ Notation Type₀ := Type0.
 Notation pr₁ := pr1.
 Notation pr₂ := pr2.
 Local Open Scope fibration_scope.
-Notation "f → g" := (f -> g)%equiv : equiv_scope.
+(*Notation "f → g" := (f -> g)%equiv : equiv_scope.*)
 Notation "x ₁" := (x.1) (at level 3) : fibration_scope.
 Notation "x ₂" := (x.2) (at level 3) : fibration_scope.
 Notation "g ∘ f" := (g o f)%function (at level 40, left associativity) : function_scope.
-Notation "g ∘ f" := (g o f)%equiv (at level 40, left associativity) : equiv_scope.
+Notation "g ∘ᴱ f" := (g oE f)%equiv (at level 40, left associativity) : equiv_scope.
+Notation "f *ᴱ g" := (f *E g)%equiv (at level 40, no associativity) : equiv_scope.
+Notation "f ×ᴱ g" := (f *E g)%equiv (at level 40, no associativity) : equiv_scope.
+Notation "A × B" := (A * B)%type (at level 40, no associativity) : type_scope.
+Notation "f +ᴱ g" := (f +E g)%equiv (at level 50, left associativity) : equiv_scope.
 (** We copy the HoTT-Agda library with regard to path concatenation. *)
 Notation "p • q" := (p @ q)%path (at level 20) : path_scope.
 Notation "p '⁻¹'" := (p^)%path (at level 3, format "p '⁻¹'") : path_scope.
