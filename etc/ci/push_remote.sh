@@ -24,9 +24,7 @@ echo >> ~/.netrc
 echo "machine github.com login $OAUTH_TOKEN" >> ~/.netrc
 set -x
 
-echo "Configuring git for commit"
-git config --global user.name "Travis-CI Bot"
-git config --global user.email "Travis-CI-Bot@travis.fake"
+"$DIR"/configure_commit.sh
 
 REPO="$(git remote -v | grep -o 'origin\s\+\(.*\?\)\s\+(push)' | sed s'/origin\s\+//g' | sed s'/\s\+(push)//g' | sed s'#git://github.com/#https://github.com/#g')"
 

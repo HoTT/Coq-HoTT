@@ -25,9 +25,7 @@ COMMITISH="$(git rev-parse HEAD)"
 
 EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 
-echo 'Configuring git for pushing...'
-git config --global user.name "Travis-CI Bot"
-git config --global user.email "Travis-CI-Bot@travis.fake"
+"$DIR"/configure_commit.sh
 
 export MESSAGE="Autoupdate documentation with DepsToDot.hs"
 echo '$ make HoTT.deps HoTTCore.deps'
