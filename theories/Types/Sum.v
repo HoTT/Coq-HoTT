@@ -360,15 +360,15 @@ Definition equiv_functor_sum' {A A' B B' : Type} (f : A <~> A') (g : B <~> B')
 : A + B <~> A' + B'
   := equiv_functor_sum (f := f) (g := g).
 
-Notation "f + g" := (equiv_functor_sum' f g) : equiv_scope.
+Notation "f +E g" := (equiv_functor_sum' f g) (at level 50, left associativity) : equiv_scope.
 
 Definition equiv_functor_sum_l {A B B' : Type} (g : B <~> B')
 : A + B <~> A + B'
-  := equiv_functor_sum (f := idmap) (g := g).
+  := 1 +E g.
 
 Definition equiv_functor_sum_r {A A' B : Type} (f : A <~> A')
 : A + B <~> A' + B
-  := equiv_functor_sum (f := f) (g := idmap).
+  := f +E 1.
 
 (** ** Unfunctoriality on equivalences *)
 
@@ -486,7 +486,7 @@ Defined.
 Definition sum_empty_r (A : Type) : A + Empty <~> A.
 Proof.
   refine (equiv_adjointify
-       (fun z => match z:A+Empty with
+       (fun z => match z : A + Empty with
                    | inr e => match e with end
                    | inl a => a
                  end)
@@ -631,19 +631,19 @@ Definition equiv_unfunctor_sum_indecomposable_ll {A B B' : Type}
 Proof.
   pose (f := equiv_decompose (h o inl)).
   pose (g := equiv_decompose (h o inr)).
-  pose (k := (h oE (f + g))).
+  pose (k := (h oE (f +E g))).
   (** This looks messy, but it just amounts to swapping the middle two summands in [k]. *)
   pose (k' := k
                 oE (equiv_sum_assoc _ _ _)
-                oE ((equiv_sum_assoc _ _ _)^-1 + 1)
-                oE (1 + (equiv_sum_symm _ _) + 1)
-                oE ((equiv_sum_assoc _ _ _) + 1)
+                oE ((equiv_sum_assoc _ _ _)^-1 +E 1)
+                oE (1 +E (equiv_sum_symm _ _) +E 1)
+                oE ((equiv_sum_assoc _ _ _) +E 1)
                 oE (equiv_sum_assoc _ _ _)^-1).
   destruct (equiv_unfunctor_sum k'
              (fun x => match x with | inl x => x.2 | inr x => x.2 end)
              (fun x => match x with | inl x => x.2 | inr x => x.2 end))
     as [s t]; clear k k'.
-  refine (t oE (_ + 1) oE g^-1).
+  refine (t oE (_ +E 1) oE g^-1).
   destruct (equiv_indecomposable_sum s^-1) as [[p q]|[p q]];
   destruct (equiv_indecomposable_sum f^-1) as [[u v]|[u v]].
   - refine (v oE q^-1).
@@ -660,7 +660,7 @@ Definition equiv_unfunctor_sum_contr_ll {A A' B B' : Type}
            (h : A + B <~> A' + B')
 : B <~> B'
   := equiv_unfunctor_sum_indecomposable_ll
-       ((equiv_contr_contr + 1) oE h).
+       ((equiv_contr_contr +E 1) oE h).
 
 (** ** Universal mapping properties *)
 

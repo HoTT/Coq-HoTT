@@ -53,7 +53,7 @@ Defined.
 Definition fin_transpose_last_two (n : nat)
 : Fin n.+2 <~> Fin n.+2
   := ((equiv_sum_assoc _ _ _)^-1)
-       oE (1 + (equiv_sum_symm _ _))
+       oE (1 +E (equiv_sum_symm _ _))
        oE (equiv_sum_assoc _ _ _).
 
 Arguments fin_transpose_last_two : simpl nomatch.
@@ -82,7 +82,7 @@ Proof.
       * refine ((fin_transpose_last_two n)
                   oE _
                   oE (fin_transpose_last_two n)).
-        refine ((fin_transpose_last_with n (inl k)) + 1)%equiv.
+        refine ((fin_transpose_last_with n (inl k)) +E 1).
       * apply fin_transpose_last_two.
   - exact (equiv_idmap _).
 Defined.
@@ -170,7 +170,7 @@ Definition fin_equiv (n m : nat)
            (k : Fin m.+1) (e : Fin n <~> Fin m)
 : Fin n.+1 <~> Fin m.+1
   := (fin_transpose_last_with m k)
-       oE (e + 1).
+       oE (e +E 1).
 
 (** Here is the curried version that we will prove to be an equivalence. *)
 Definition fin_equiv' (n m : nat)
@@ -412,7 +412,7 @@ Proof.
   refine (Build_Finite _ (fcard X).+1 _).
   pose proof (merely_equiv_fin X).
   strip_truncations; apply tr.
-  refine (_ + 1)%equiv; assumption.
+  refine (_ +E 1); assumption.
 Defined.
 
 Definition fcard_succ X `{Finite X}
@@ -530,7 +530,7 @@ Proof.
   refine (_ @ nat_plus_comm _ _).
   assert (e := merely_equiv_fin Y).
   strip_truncations.
-  refine (fcard_equiv' (1 + e) @ _).
+  refine (fcard_equiv' (1 +E e) @ _).
   refine (_ @ ap (fun y => (y + fcard X)) (fcard_equiv e^-1)).
   generalize (fcard Y); intros n.
   induction n as [|n IH].
@@ -559,7 +559,7 @@ Definition fcard_prod X Y `{Finite X} `{Finite Y}
 Proof.
   assert (e := merely_equiv_fin X).
   strip_truncations.
-  refine (fcard_equiv' (e * 1) @ _).
+  refine (fcard_equiv' (e *E 1) @ _).
   refine (_ @ ap (fun x => x * fcard Y) (fcard_equiv e^-1)).
   generalize (fcard X); intros n.
   induction n as [|n IH].

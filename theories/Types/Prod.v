@@ -224,21 +224,15 @@ Proof.
   exact _.
 Defined.
 
-Notation "f * g" := (equiv_functor_prod' f g) : equiv_scope.
+Notation "f *E g" := (equiv_functor_prod' f g) (at level 40, no associativity) : equiv_scope.
 
 Definition equiv_functor_prod_l {A B B' : Type} (g : B <~> B')
-  : A * B <~> A * B'.
-Proof.
-  exists (functor_prod idmap g).
-  exact _.
-Defined.
+  : A * B <~> A * B'
+  := 1 *E g.
 
 Definition equiv_functor_prod_r {A A' B : Type} (f : A <~> A')
-  : A * B <~> A' * B.
-Proof.
-  exists (functor_prod f idmap).
-  exact _.
-Defined.
+  : A * B <~> A' * B
+  := f *E 1.
 
 (** ** Symmetry *)
 

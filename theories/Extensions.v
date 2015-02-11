@@ -135,7 +135,7 @@ Section Extensions.
   Proof.
     generalize dependent C; simple_induction n n IHn; intros C.
     1:apply equiv_idmap.
-    apply equiv_functor_prod'; simpl.
+    refine (_ *E _); simpl.
     - refine (equiv_functor_forall' 1 _); intros g; simpl.
       refine (equiv_functor_sigma' 1 _); intros rec.
       apply equiv_path_forall.

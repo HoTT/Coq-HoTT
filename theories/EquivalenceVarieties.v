@@ -282,8 +282,7 @@ Proof.
   1:apply equiv_idmap.
   destruct n as [|n].
   - simpl.
-    apply equiv_functor_prod'.
-    2:apply equiv_contr_contr.
+    refine (_ *E equiv_contr_contr).
     refine (equiv_functor_forall' k^-1 _); intros d.
     unfold hfiber.
     refine (equiv_functor_sigma' h _); intros a.
