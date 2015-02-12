@@ -272,18 +272,44 @@ Section equiv.
 End equiv.
 
 Section ap.
-  Global Instance equiv_ap_respects_equivalenceL {A} {a}
-  : @RespectsEquivalenceL A (fun (B : Type) (e : A <~> B) => e a = e a).
+  Global Instance equiv_ap_respects_equivalenceL {A} {P Q : forall B, A <~> B -> A}
+         `{HP : @RespectsEquivalenceL A (fun B (e : A <~> B) => P B e = Q B e)}
+  : @RespectsEquivalenceL A (fun (B : Type) (e : A <~> B) => e (P B e) = e (Q B e)).
   Proof.
-    exists (fun _ _ => equiv_ap' _ _ _).
-    t.
+    refine (fun B e => _; fun _ => _).
+    { refine (equiv_ap' _ _ _ oE _); simpl.
+      refine (respects_equivalenceL.1 B e). }
+    { t. }
   Defined.
 
-  Global Instance equiv_ap_respects_equivalenceR {A} {a}
-  : @RespectsEquivalenceR A (fun (B : Type) (e : B <~> A) => e^-1 a = e^-1 a).
+  Global Instance equiv_ap_inv_respects_equivalenceL {A} {P Q : forall B, A <~> B -> B}
+         `{HP : @RespectsEquivalenceL A (fun B (e : A <~> B) => P B e = Q B e)}
+  : @RespectsEquivalenceL A (fun (B : Type) (e : A <~> B) => e^-1 (P B e) = e^-1 (Q B e)).
   Proof.
-    exists (fun _ _ => equiv_ap' _ _ _).
-    t.
+    refine (fun B e => _; fun _ => _).
+    { refine (equiv_ap' _ _ _ oE _); simpl.
+      refine (respects_equivalenceL.1 B e). }
+    { t. }
+  Defined.
+
+  Global Instance equiv_ap_respects_equivalenceR {A} {P Q : forall B, B <~> A -> B}
+         `{HP : @RespectsEquivalenceR A (fun B (e : B <~> A) => P B e = Q B e)}
+  : @RespectsEquivalenceR A (fun (B : Type) (e : B <~> A) => e (P B e) = e (Q B e)).
+  Proof.
+    refine (fun B e => _; fun _ => _).
+    { refine (equiv_ap' _ _ _ oE _); simpl.
+      refine (respects_equivalenceR.1 B e). }
+    { t. }
+  Defined.
+
+  Global Instance equiv_ap_inv_respects_equivalenceR {A} {P Q : forall B, B <~> A -> A}
+         `{HP : @RespectsEquivalenceR A (fun B (e : B <~> A) => P B e = Q B e)}
+  : @RespectsEquivalenceR A (fun (B : Type) (e : B <~> A) => e^-1 (P B e) = e^-1 (Q B e)).
+  Proof.
+    refine (fun B e => _; fun _ => _).
+    { refine (equiv_ap' _ _ _ oE _); simpl.
+      refine (respects_equivalenceR.1 B e). }
+    { t. }
   Defined.
 End ap.
 
@@ -299,6 +325,8 @@ Ltac step_respects_equiv :=
     | [ |- RespectsEquivalenceL _ (fun _ _ => ?T _) ] => rapply' (get_lem T)
     | [ |- RespectsEquivalenceL _ (fun _ _ => ?T _ _) ] => rapply' (get_lem T)
     | [ |- RespectsEquivalenceL _ (fun _ _ => ?T _ _ _) ] => rapply' (get_lem T)
+    | [ |- RespectsEquivalenceL _ (fun B e => equiv_fun e _ = equiv_fun e _) ] => refine equiv_ap_respects_equivalenceL
+    | [ |- RespectsEquivalenceL _ (fun B e => equiv_inv e _ = equiv_inv e _) ] => refine equiv_ap_inv_respects_equivalenceL
     | [ |- RespectsEquivalenceL _ (fun B _ => B) ] => refine idmap_respects_equivalenceL
     | [ |- RespectsEquivalenceL _ (fun _ _ => forall _, _) ] => refine forall_respects_equivalenceL
   end.
@@ -314,16 +342,11 @@ Ltac equiv_induction p :=
       refine ((fun g H B e => (@respects_equivalenceL _ P H).1 B e g) _ _);
         [ | repeat step_respects_equiv ].
 
-Goal forall `{Funext} A B (e : A <~> B), { y : B & forall Q, Contr Q -> (y = y) <~> (y = y) * Q }.
-  intros.
+Goal forall `{Funext} A B (e : A <~> B), A -> { y : B & forall Q, Contr Q -> ((e^-1 y = e^-1 y) <~> (y = y)) * Q }.
+  intros ? ? ? ? a.
   equiv_induction e.
-  (* 1 subgoals, subgoal 1 (ID 115)
-
-  A : Type
-  H : Funext
-  ============================
-   {y : A & forall Q : Type, Contr Q -> y = y <~> (y = y) * Q}
-
-(dependent evars: ?X279 using ?X445 , ?X445 using ?X446 , ?X446 using ?X447 , ?X447 using , ?X559 using ?X665 , ?X665 using ?X666 , ?X666 using ?X667 , ?X667 using ?X668 , ?X668 using ,)
-*)
+  simpl.
+  exists a.
+  intros Q q.
+  exact (1, center _).
 Abort.
