@@ -5,25 +5,29 @@ Require Import HoTT.Basics HoTT.Types.
 
 Local Open Scope equiv_scope.
 
-Class RespectsEquivalenceL A (P : forall B, A <~> B -> Type)
-  := respects_equivalenceL : { e' : forall B (e : A <~> B), P A (equiv_idmap A) <~> P B e | Funext -> equiv_idmap _ = e' A (equiv_idmap _) }.
-Class RespectsEquivalenceR A (P : forall B, B <~> A -> Type)
-  := respects_equivalenceR : { e' : forall B (e : B <~> A), P A (equiv_idmap A) <~> P B e | Funext -> equiv_idmap _ = e' A (equiv_idmap _) }.
+Class RespectsEquivalenceL A (P : forall B, (A <~> B) -> Type)
+  := respects_equivalenceL : { e' : forall B (e : A <~> B), P A (equiv_idmap A) <~> P B e & Funext -> equiv_idmap _ = e' A (equiv_idmap _) }.
+Class RespectsEquivalenceR A (P : forall B, (B <~> A) -> Type)
+  := respects_equivalenceR : { e' : forall B (e : B <~> A), P A (equiv_idmap A) <~> P B e & Funext -> equiv_idmap _ = e' A (equiv_idmap _) }.
 
+Global Arguments RespectsEquivalenceL : clear implicits.
+Global Arguments RespectsEquivalenceR : clear implicits.
+
+(** When doing equivalence induction, typeclass inference will either fully solve the respectfulness side-conditions, or not make any progress.  We would like to progress as far as we can on the side-conditions, so that we leave the user with as little to prove as possible.  To do this, we create a "database", implemented using typeclasses, to look up the refinement lemma, keyed on the head of the term we want to respect equivalence. *)
 Class respects_equivalence_db {KT VT} (Key : KT) {lem : VT} := make_respects_equivalence_db : Unit.
 Definition get_lem' {KT VT} Key {lem} `{@respects_equivalence_db KT VT Key lem} : VT := lem.
-Notation get_lem key := $(let res := constr:(get_lem' key) in let res' := (eval unfold get_lem' in res) in exact res')$.
+Notation get_lem key := $(let res := constr:(get_lem' key) in let res' := (eval unfold get_lem' in res) in exact res')$ (only parsing).
 
 Section const.
   Context {A : Type} {T : Type}.
   Global Instance const_respects_equivalenceL
-  : @RespectsEquivalenceL A (fun _ _ => T).
+  : RespectsEquivalenceL A (fun _ _ => T).
   Proof.
     refine (fun _ _ => equiv_idmap T; fun _ => _).
     exact idpath.
   Defined.
   Global Instance const_respects_equivalenceR
-  : @RespectsEquivalenceR A (fun _ _ => T).
+  : RespectsEquivalenceR A (fun _ _ => T).
   Proof.
     refine (fun _ _ => equiv_idmap _; fun _ => _).
     exact idpath.
@@ -35,13 +39,13 @@ Global Instance: forall {T}, @respects_equivalence_db _ _ T (fun A => @const_res
 Section id.
   Context {A : Type}.
   Global Instance idmap_respects_equivalenceL
-  : @RespectsEquivalenceL A (fun B _ => B).
+  : RespectsEquivalenceL A (fun B _ => B).
   Proof.
     refine (fun B e => e; fun _ => _).
     exact idpath.
   Defined.
   Global Instance idmap_respects_equivalenceR
-  : @RespectsEquivalenceR A (fun B _ => B).
+  : RespectsEquivalenceR A (fun B _ => B).
   Proof.
     refine (fun B e => equiv_inverse e; fun _ => path_equiv _).
     apply path_forall; intro; reflexivity.
@@ -51,17 +55,17 @@ End id.
 Section unit.
   Context {A : Type}.
   Definition unit_respects_equivalenceL
-  : @RespectsEquivalenceL A (fun _ _ => Unit)
+  : RespectsEquivalenceL A (fun _ _ => Unit)
     := @const_respects_equivalenceL A Unit.
   Definition unit_respects_equivalenceR
-  : @RespectsEquivalenceR A (fun _ _ => Unit)
+  : RespectsEquivalenceR A (fun _ _ => Unit)
     := @const_respects_equivalenceR A Unit.
 End unit.
 
 Section prod.
-  Global Instance prod_respects_equivalenceL {A} {P Q : forall B, A <~> B -> Type}
-         `{@RespectsEquivalenceL A P, @RespectsEquivalenceL A Q}
-  : @RespectsEquivalenceL A (fun B e => P B e * Q B e).
+  Global Instance prod_respects_equivalenceL {A} {P Q : forall B, (A <~> B) -> Type}
+         `{RespectsEquivalenceL A P, RespectsEquivalenceL A Q}
+  : RespectsEquivalenceL A (fun B e => P B e * Q B e).
   Proof.
     refine ((fun B e => equiv_functor_prod' (respects_equivalenceL.1 B e) (respects_equivalenceL.1 B e)); _).
     exact (fun fs =>
@@ -72,9 +76,9 @@ Section prod.
                   idpath)).
   Defined.
 
-  Global Instance prod_respects_equivalenceR {A} {P Q : forall B, B <~> A -> Type}
-         `{@RespectsEquivalenceR A P, @RespectsEquivalenceR A Q}
-  : @RespectsEquivalenceR A (fun B e => P B e * Q B e).
+  Global Instance prod_respects_equivalenceR {A} {P Q : forall B, (B <~> A) -> Type}
+         `{RespectsEquivalenceR A P, RespectsEquivalenceR A Q}
+  : RespectsEquivalenceR A (fun B e => P B e * Q B e).
   Proof.
     refine ((fun B e => equiv_functor_prod' (respects_equivalenceR.1 B e) (respects_equivalenceR.1 B e)); _).
     exact (fun fs =>
@@ -88,7 +92,8 @@ Section prod.
   Global Instance: @respects_equivalence_db _ _ (@prod) (@prod_respects_equivalenceL) := tt.
 End prod.
 
-Local Ltac t' :=
+(** A tactic to solve the identity-preservation part of equivalence-respectfulness. *)
+Local Ltac t_step :=
   idtac;
   match goal with
     | [ |- _ = _ :> (_ <~> _) ] => apply path_equiv
@@ -105,13 +110,13 @@ Local Ltac t' :=
     | _ => progress rewrite ?eisretr, ?eissect
   end.
 Local Ltac t :=
-  repeat t'.
+  repeat t_step.
 
 Section pi.
-  Global Instance forall_respects_equivalenceL `{Funext} {A} {P : forall B, A <~> B -> Type} {Q : forall B e, P B e -> Type}
-         `{HP : @RespectsEquivalenceL A P}
-         `{HQ : forall a : P A (equiv_idmap A), @RespectsEquivalenceL A (fun B e => Q B e (respects_equivalenceL.1 B e a))}
-  : @RespectsEquivalenceL A (fun B e => forall x : P B e, Q B e x).
+  Global Instance forall_respects_equivalenceL `{Funext} {A} {P : forall B, (A <~> B) -> Type} {Q : forall B e, P B e -> Type}
+         `{HP : RespectsEquivalenceL A P}
+         `{HQ : forall a : P A (equiv_idmap A), RespectsEquivalenceL A (fun B e => Q B e (respects_equivalenceL.1 B e a))}
+  : RespectsEquivalenceL A (fun B e => forall x : P B e, Q B e x).
   Proof.
     refine (fun B e => _; _).
     { refine (equiv_functor_forall'
@@ -126,10 +131,10 @@ Section pi.
     { t. }
   Defined.
 
-  Global Instance forall_respects_equivalenceR `{Funext} {A} {P : forall B, B <~> A -> Type} {Q : forall B e, P B e -> Type}
-         `{HP : @RespectsEquivalenceR A P}
-         `{HQ : forall a : P A (equiv_idmap A), @RespectsEquivalenceR A (fun B e => Q B e (respects_equivalenceR.1 B e a))}
-  : @RespectsEquivalenceR A (fun B e => forall x : P B e, Q B e x).
+  Global Instance forall_respects_equivalenceR `{Funext} {A} {P : forall B, (B <~> A) -> Type} {Q : forall B e, P B e -> Type}
+         `{HP : RespectsEquivalenceR A P}
+         `{HQ : forall a : P A (equiv_idmap A), RespectsEquivalenceR A (fun B e => Q B e (respects_equivalenceR.1 B e a))}
+  : RespectsEquivalenceR A (fun B e => forall x : P B e, Q B e x).
   Proof.
     refine (fun B e => _; _).
     { refine (equiv_functor_forall'
@@ -146,10 +151,10 @@ Section pi.
 End pi.
 
 Section sigma.
-  Global Instance sigma_respects_equivalenceL `{Funext} {A} {P : forall B, A <~> B -> Type} {Q : forall B e, P B e -> Type}
-         `{HP : @RespectsEquivalenceL A P}
-         `{HQ : forall a : P A (equiv_idmap A), @RespectsEquivalenceL A (fun B e => Q B e (respects_equivalenceL.1 B e a))}
-  : @RespectsEquivalenceL A (fun B e => sig (Q B e)).
+  Global Instance sigma_respects_equivalenceL `{Funext} {A} {P : forall B, (A <~> B) -> Type} {Q : forall B e, P B e -> Type}
+         `{HP : RespectsEquivalenceL A P}
+         `{HQ : forall a : P A (equiv_idmap A), RespectsEquivalenceL A (fun B e => Q B e (respects_equivalenceL.1 B e a))}
+  : RespectsEquivalenceL A (fun B e => sig (Q B e)).
   Proof.
     refine ((fun B e => equiv_functor_sigma' (respects_equivalenceL.1 B e) (fun b => _));
             _).
@@ -160,10 +165,10 @@ Section sigma.
     { t. }
   Defined.
 
-  Global Instance sigma_respects_equivalenceR `{Funext} {A} {P : forall B, B <~> A -> Type} {Q : forall B e, P B e -> Type}
-         `{HP : @RespectsEquivalenceR A P}
-         `{HQ : forall a : P A (equiv_idmap A), @RespectsEquivalenceR A (fun B e => Q B e (respects_equivalenceR.1 B e a))}
-  : @RespectsEquivalenceR A (fun B e => sig (Q B e)).
+  Global Instance sigma_respects_equivalenceR `{Funext} {A} {P : forall B, (B <~> A) -> Type} {Q : forall B e, P B e -> Type}
+         `{HP : RespectsEquivalenceR A P}
+         `{HQ : forall a : P A (equiv_idmap A), RespectsEquivalenceR A (fun B e => Q B e (respects_equivalenceR.1 B e a))}
+  : RespectsEquivalenceR A (fun B e => sig (Q B e)).
   Proof.
     refine ((fun B e => equiv_functor_sigma' (respects_equivalenceR.1 B e) (fun b => _));
             _).
@@ -178,11 +183,11 @@ Section sigma.
 End sigma.
 
 Section equiv_transfer.
-  Definition respects_equivalenceL_equiv {A A'} {P : forall B, A <~> B -> Type} {P' : forall B, A' <~> B -> Type}
+  Definition respects_equivalenceL_equiv {A A'} {P : forall B, (A <~> B) -> Type} {P' : forall B, A' <~> B -> Type}
              (eA : A <~> A')
              (eP : forall B e, P B (equiv_compose' e eA) <~> P' B e)
-             `{HP : @RespectsEquivalenceL A P}
-  : @RespectsEquivalenceL A' P'.
+             `{HP : RespectsEquivalenceL A P}
+  : RespectsEquivalenceL A' P'.
   Proof.
     refine ((fun B e => _); _).
     { refine (equiv_compose'
@@ -195,11 +200,11 @@ Section equiv_transfer.
     { t. }
   Defined.
 
-  Definition respects_equivalenceR_equiv {A A'} {P : forall B, B <~> A -> Type} {P' : forall B, B <~> A' -> Type}
+  Definition respects_equivalenceR_equiv {A A'} {P : forall B, (B <~> A) -> Type} {P' : forall B, B <~> A' -> Type}
              (eA : A' <~> A)
              (eP : forall B e, P B (equiv_compose' eA e) <~> P' B e)
-             `{HP : @RespectsEquivalenceR A P}
-  : @RespectsEquivalenceR A' P'.
+             `{HP : RespectsEquivalenceR A P}
+  : RespectsEquivalenceR A' P'.
   Proof.
     refine ((fun B e => _); _).
     { refine (equiv_compose'
@@ -212,10 +217,10 @@ Section equiv_transfer.
     { t. }
   Defined.
 
-  Definition respects_equivalenceL_equiv' {A} {P P' : forall B, A <~> B -> Type}
+  Definition respects_equivalenceL_equiv' {A} {P P' : forall B, (A <~> B) -> Type}
              (eP : forall B e, P B e <~> P' B e)
-             `{HP : @RespectsEquivalenceL A P}
-  : @RespectsEquivalenceL A P'.
+             `{HP : RespectsEquivalenceL A P}
+  : RespectsEquivalenceL A P'.
   Proof.
     refine ((fun B e => _); _).
     { refine (equiv_compose'
@@ -228,10 +233,10 @@ Section equiv_transfer.
     { t. }
   Defined.
 
-  Definition respects_equivalenceR_equiv' {A} {P P' : forall B, B <~> A -> Type}
+  Definition respects_equivalenceR_equiv' {A} {P P' : forall B, (B <~> A) -> Type}
              (eP : forall B e, P B e <~> P' B e)
-             `{HP : @RespectsEquivalenceR A P}
-  : @RespectsEquivalenceR A P'.
+             `{HP : RespectsEquivalenceR A P}
+  : RespectsEquivalenceR A P'.
   Proof.
     refine ((fun B e => _); _).
     { refine (equiv_compose'
@@ -246,10 +251,10 @@ Section equiv_transfer.
 End equiv_transfer.
 
 Section equiv.
-  Global Instance equiv_respects_equivalenceL `{Funext} {A} {P Q : forall B, A <~> B -> Type}
-         `{HP : @RespectsEquivalenceL A P}
-         `{HP : @RespectsEquivalenceL A Q}
-  : @RespectsEquivalenceL A (fun B e => P B e <~> Q B e).
+  Global Instance equiv_respects_equivalenceL `{Funext} {A} {P Q : forall B, (A <~> B) -> Type}
+         `{HP : RespectsEquivalenceL A P}
+         `{HP : RespectsEquivalenceL A Q}
+  : RespectsEquivalenceL A (fun B e => P B e <~> Q B e).
   Proof.
     refine (fun B e => _; fun _ => _).
     { refine (equiv_functor_equiv _ _);
@@ -257,10 +262,10 @@ Section equiv.
     { t. }
   Defined.
 
-  Global Instance equiv_respects_equivalenceR `{Funext} {A} {P Q : forall B, B <~> A -> Type}
-         `{HP : @RespectsEquivalenceR A P}
-         `{HP : @RespectsEquivalenceR A Q}
-  : @RespectsEquivalenceR A (fun B e => P B e <~> Q B e).
+  Global Instance equiv_respects_equivalenceR `{Funext} {A} {P Q : forall B, (B <~> A) -> Type}
+         `{HP : RespectsEquivalenceR A P}
+         `{HP : RespectsEquivalenceR A Q}
+  : RespectsEquivalenceR A (fun B e => P B e <~> Q B e).
   Proof.
     refine (fun B e => _; fun _ => _).
     { refine (equiv_functor_equiv _ _);
@@ -272,9 +277,9 @@ Section equiv.
 End equiv.
 
 Section ap.
-  Global Instance equiv_ap_respects_equivalenceL {A} {P Q : forall B, A <~> B -> A}
-         `{HP : @RespectsEquivalenceL A (fun B (e : A <~> B) => P B e = Q B e)}
-  : @RespectsEquivalenceL A (fun (B : Type) (e : A <~> B) => e (P B e) = e (Q B e)).
+  Global Instance equiv_ap_respects_equivalenceL {A} {P Q : forall B, (A <~> B) -> A}
+         `{HP : RespectsEquivalenceL A (fun B (e : A <~> B) => P B e = Q B e)}
+  : RespectsEquivalenceL A (fun (B : Type) (e : A <~> B) => e (P B e) = e (Q B e)).
   Proof.
     refine (fun B e => _; fun _ => _).
     { refine (equiv_ap' _ _ _ oE _); simpl.
@@ -282,9 +287,9 @@ Section ap.
     { t. }
   Defined.
 
-  Global Instance equiv_ap_inv_respects_equivalenceL {A} {P Q : forall B, A <~> B -> B}
-         `{HP : @RespectsEquivalenceL A (fun B (e : A <~> B) => P B e = Q B e)}
-  : @RespectsEquivalenceL A (fun (B : Type) (e : A <~> B) => e^-1 (P B e) = e^-1 (Q B e)).
+  Global Instance equiv_ap_inv_respects_equivalenceL {A} {P Q : forall B, (A <~> B) -> B}
+         `{HP : RespectsEquivalenceL A (fun B (e : A <~> B) => P B e = Q B e)}
+  : RespectsEquivalenceL A (fun (B : Type) (e : A <~> B) => e^-1 (P B e) = e^-1 (Q B e)).
   Proof.
     refine (fun B e => _; fun _ => _).
     { refine (equiv_ap' _ _ _ oE _); simpl.
@@ -292,9 +297,9 @@ Section ap.
     { t. }
   Defined.
 
-  Global Instance equiv_ap_respects_equivalenceR {A} {P Q : forall B, B <~> A -> B}
-         `{HP : @RespectsEquivalenceR A (fun B (e : B <~> A) => P B e = Q B e)}
-  : @RespectsEquivalenceR A (fun (B : Type) (e : B <~> A) => e (P B e) = e (Q B e)).
+  Global Instance equiv_ap_respects_equivalenceR {A} {P Q : forall B, (B <~> A) -> B}
+         `{HP : RespectsEquivalenceR A (fun B (e : B <~> A) => P B e = Q B e)}
+  : RespectsEquivalenceR A (fun (B : Type) (e : B <~> A) => e (P B e) = e (Q B e)).
   Proof.
     refine (fun B e => _; fun _ => _).
     { refine (equiv_ap' _ _ _ oE _); simpl.
@@ -302,9 +307,9 @@ Section ap.
     { t. }
   Defined.
 
-  Global Instance equiv_ap_inv_respects_equivalenceR {A} {P Q : forall B, B <~> A -> A}
-         `{HP : @RespectsEquivalenceR A (fun B (e : B <~> A) => P B e = Q B e)}
-  : @RespectsEquivalenceR A (fun (B : Type) (e : B <~> A) => e^-1 (P B e) = e^-1 (Q B e)).
+  Global Instance equiv_ap_inv_respects_equivalenceR {A} {P Q : forall B, (B <~> A) -> A}
+         `{HP : RespectsEquivalenceR A (fun B (e : B <~> A) => P B e = Q B e)}
+  : RespectsEquivalenceR A (fun (B : Type) (e : B <~> A) => e^-1 (P B e) = e^-1 (Q B e)).
   Proof.
     refine (fun B e => _; fun _ => _).
     { refine (equiv_ap' _ _ _ oE _); simpl.
@@ -313,6 +318,7 @@ Section ap.
   Defined.
 End ap.
 
+(** We now write the tactic that partially solves the respectfulness side-condition.  We include cases for generic typeclass resolution, keys (heads) with zero, one, two, and three arguments, and a few cases that cannot be easily keyed (where the head is one of the arguments, or [forall]), or the head is [paths], for which we have only ad-hoc solutions at the moment. *)
 Ltac step_respects_equiv :=
   idtac;
   match goal with
@@ -320,7 +326,7 @@ Ltac step_respects_equiv :=
     | _ => assumption
     | _ => progress unfold respects_equivalenceL
     | _ => progress cbn
-    | _ => exact _
+    | _ => exact _ (* case for fully solving the side-condition, when possible *)
     | [ |- RespectsEquivalenceL _ (fun _ _ => ?T) ] => rapply' (get_lem T)
     | [ |- RespectsEquivalenceL _ (fun _ _ => ?T _) ] => rapply' (get_lem T)
     | [ |- RespectsEquivalenceL _ (fun _ _ => ?T _ _) ] => rapply' (get_lem T)
