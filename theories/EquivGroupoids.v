@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-(** * The groupid structure of [Equiv] *)
+(** * The pregroupid structure of [Equiv] *)
 
 Require Import Basics.Overture Basics.Equivalences Types.Equiv.
 
@@ -219,4 +219,6 @@ Section AssumeFunext.
     intro h.
     refine ((ecompose_e1 _)^ @ ap (fun ef => e^-1 oE ef) h @ ecompose_V_ee _ _).
   Defined.
+
+  (** We could package these up into tactics, much the same as the [with_rassoc] and [rewrite_move*] of [PathGroupoids.v].  I have not done so yet because there is currently no place where we would use these tactics.  If there is a use case, they are easy enough to copy from [PathGroupoids.v]. *)
 End AssumeFunext.
