@@ -23,17 +23,17 @@ minimal fuss, you should try your luck by following these instructions:
      which installs the dependencies automatically.
 
    * OSX: we recommend that you install the Opam package manager for Ocaml
-     (`http://opam.ocamlpro.com/`) and go from there.
+     (http://opam.ocamlpro.com/) and go from there.
 ```
      brew install opam
      brew update; brew upgrade objective-caml
 ```
    * MS Windows: we recommend that you install the 32-bit version of
-     cygwin (installer at `http://www.cygwin.com/setup-x86.exe`) and,
+     cygwin (installer at http://www.cygwin.com/setup-x86.exe) and,
      in the setup process install all of the packages mentioning
      `ocaml`, as well as `make` and `git` and `dos2unix`.  (The 64-bit
      version of cygwin seems to be missing some ocaml packages.  See
-     also `https://coq.inria.fr/bugs/show_bug.cgi?id=3154`.)  To prevent
+     also https://coq.inria.fr/bugs/show_bug.cgi?id=3154.)  To prevent
      bash from complaining about unrecognized `\r` commands, use
      `dos2unix`.  The following commands, from the root of the HoTT
      library, should mostly take care of things:
@@ -133,7 +133,7 @@ minimal fuss, you should try your luck by following these instructions:
    to re-run `etc/install_coq.sh`.
 
 In case of any problems, feel free to contact us by opening an issue at
-`https://github.com/HoTT/HoTT`.
+https://github.com/HoTT/HoTT.
 
 
 # DETAILED INSTALLATION INSTRUCTIONS
