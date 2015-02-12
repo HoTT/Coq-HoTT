@@ -63,5 +63,7 @@ Require Export Spaces.BAut.Bool.IncoherentIdempotent.
 Require Export Spaces.No.
 
 Require Export HoTT.Tactics.
+Require Export HoTT.Tactics.RewriteModuloAssociativity.
+Require Export HoTT.Tactics.EquivalenceInduction.
 
 (** We do _not_ export [UnivalenceAxiom], [FunextAxiom], [UnivalenceImpliesFunext], [hit.IntervalImpliesFunext], nor [hit.TruncImpliesFunext] from this file; thus importing it does not prevent you from tracking usage of [Univalence] and [Funext] theorem-by-theorem in the same way that the library does.  If you want any of those files, you should import them separately. *)
