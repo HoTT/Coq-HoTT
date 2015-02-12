@@ -9,6 +9,11 @@ Class RespectsEquivalenceL A (P : forall B, (A <~> B) -> Type)
   := respects_equivalenceL : { e' : forall B (e : A <~> B), P A (equiv_idmap A) <~> P B e & Funext -> equiv_idmap _ = e' A (equiv_idmap _) }.
 Class RespectsEquivalenceR A (P : forall B, (B <~> A) -> Type)
   := respects_equivalenceR : { e' : forall B (e : B <~> A), P A (equiv_idmap A) <~> P B e & Funext -> equiv_idmap _ = e' A (equiv_idmap _) }.
+(** We use a sigma type rather than a record for two reasons:
+
+    1. In the dependent cases, where one equivalence-respectfulness proof will show up in the body of another goal, it might be the case that using sigma types allows us to reuse the respectfulness lemmas of sigma types, rather than writing new ones for this type.
+
+    2. We expect it to be significantly useful to see the type of the fields than the type of the record, because we expect this type to show up as a goal infrequently.  Sigma types have more informative notations than record type names; the user can run hnf to see what is left to do in the side conditions. *)
 
 Global Arguments RespectsEquivalenceL : clear implicits.
 Global Arguments RespectsEquivalenceR : clear implicits.
