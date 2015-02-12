@@ -28,9 +28,6 @@ Section const.
     refine (fun _ _ => equiv_idmap _; fun _ => _).
     exact idpath.
   Defined.
-
-  (*Global Instance: @respects_equivalence_db _ _ (fun (B : Type) (e : A <~> B) => T) const_respects_equivalenceL := tt.
-  Global Instance: @respects_equivalence_db _ _ (fun (B : Type) (e : B <~> A) => T) const_respects_equivalenceR := tt.*)
 End const.
 
 Global Instance: forall {T}, @respects_equivalence_db _ _ T (fun A => @const_respects_equivalenceL A T) := fun _ => tt.
@@ -49,8 +46,6 @@ Section id.
     refine (fun B e => equiv_inverse e; fun _ => path_equiv _).
     apply path_forall; intro; reflexivity.
   Defined.
-  (*Global Instance: @respects_equivalence_db _ _ (fun (B : Type) (e : A <~> B) => B) idmap_respects_equivalenceL := tt.
-  Global Instance: @respects_equivalence_db _ _ (fun (B : Type) (e : B <~> A) => B) idmap_respects_equivalenceR := tt.*)
 End id.
 
 Section unit.
@@ -91,10 +86,6 @@ Section prod.
   Defined.
 
   Global Instance: @respects_equivalence_db _ _ (@prod) (@prod_respects_equivalenceL) := tt.
-  (*Global Instance: forall {A} {P Q : forall B, A <~> B -> Type},
-                     @respects_equivalence_db _ _ (fun (B : Type) (e : A <~> B) => P B e * Q B e) (@prod_respects_equivalenceL A P Q) := fun _ _ _ => tt.
-  Global Instance: forall {A} {P Q : forall B, B <~> A -> Type},
-                     @respects_equivalence_db _ _ (fun (B : Type) (e : B <~> A) => P B e * Q B e) (@prod_respects_equivalenceR A P Q) := fun _ _ _ => tt.*)
 End prod.
 
 Local Ltac t' :=
@@ -152,11 +143,6 @@ Section pi.
       refine (ap10 (ap equiv_fun (respects_equivalenceR.2 _)) _). }
     { t. }
   Defined.
-
-  (*Global Instance: forall `{Funext} {A} {P : forall B, A <~> B -> Type} {Q : forall B e, P B e -> Type},
-                     @respects_equivalence_db _ _ (fun (B : Type) (e : A <~> B) => forall a : P B e, Q B e a) (@forall_respects_equivalenceL _ A P Q) := fun _ _ _ _ => tt.
-  Global Instance: forall `{Funext} {A} {P : forall B, B <~> A -> Type} {Q : forall B e, P B e -> Type},
-                     @respects_equivalence_db _ _ (fun (B : Type) (e : B <~> A) => forall a : P B e, Q B e a) (@forall_respects_equivalenceR _ A P Q) := fun _ _ _ _ => tt.*)
 End pi.
 
 Section sigma.
@@ -189,10 +175,6 @@ Section sigma.
   Defined.
 
   Global Instance: @respects_equivalence_db _ _ (@sigT) (@sigma_respects_equivalenceL) := tt.
-  (*Global Instance: forall `{Funext} {A} {P : forall B, A <~> B -> Type} {Q : forall B e, P B e -> Type},
-                     @respects_equivalence_db _ _ (fun (B : Type) (e : A <~> B) => sigT (Q B e)) (@sigma_respects_equivalenceL _ A P Q) := fun _ _ _ _ => tt.
-  Global Instance: forall `{Funext} {A} {P : forall B, B <~> A -> Type} {Q : forall B e, P B e -> Type},
-                     @respects_equivalence_db _ _ (fun (B : Type) (e : B <~> A) => sigT (Q B e)) (@sigma_respects_equivalenceR _ A P Q) := fun _ _ _ _ => tt.*)
 End sigma.
 
 Section equiv_transfer.
@@ -287,10 +269,6 @@ Section equiv.
   Defined.
 
   Global Instance: @respects_equivalence_db _ _ (@Equiv) (@equiv_respects_equivalenceL) := tt.
-  (*Global Instance: forall `{Funext} {A} {P Q : forall B, A <~> B -> Type},
-                     @respects_equivalence_db _ _ (fun (B : Type) (e : A <~> B) => P B e <~> Q B e) (@equiv_respects_equivalenceL _ A P Q) := fun _ _ _ _ => tt.
-  Global Instance: forall `{Funext} {A} {P Q : forall B, B <~> A -> Type},
-                     @respects_equivalence_db _ _ (fun (B : Type) (e : B <~> A) => P B e <~> Q B e) (@equiv_respects_equivalenceR _ A P Q) := fun _ _ _ _ => tt.*)
 End equiv.
 
 Section ap.
