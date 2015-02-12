@@ -4,7 +4,7 @@ However, the latter cannot be used by people using git to contribute to the libr
 Moreover, opam support on windows is experimental.
 [1]: https://github.com/HoTT/HoTT/issues/694
 
-Moreover, we are compatible with [Coq8.5beta](https://coq.inria.fr/coq-85), so binary packages can be used. 
+Moreover, we are compatible with [Coq8.5 beta](https://coq.inria.fr/coq-85), so binary packages can be used. 
 However, paths need to be set manually.
 
 
@@ -64,7 +64,7 @@ make
    On linux this can be found with `nproc` or `lscpu`. 
    On OSX Apple menu -> About this Mac -> System Report, then look for "number of cores"
 
-   If you are using Debian/Ubuntu, and don't mind not having HoTT/coq
+   If you are using Debian/Ubuntu, and don't mind having HoTT/coq
    as your only version of Coq, you can install it using apt-get:
 
       ```
