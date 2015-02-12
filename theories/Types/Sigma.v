@@ -80,7 +80,7 @@ Definition dpath_forall'
     (forall p, transportD P (fun x => fun p => Q ( x ; p)) h p (f p) = g (transport P h p)).
 Proof.
   destruct h.
-  apply equiv_idmap.
+  apply 1%equiv.
 Defined.
 
 
@@ -396,7 +396,7 @@ Definition equiv_functor_sigma' `{P : A -> Type} `{Q : B -> Type}
 Definition equiv_functor_sigma_id `{P : A -> Type} `{Q : A -> Type}
            (g : forall a, P a <~> Q a)
 : sigT P <~> sigT Q
-  := equiv_functor_sigma (equiv_idmap A) g.
+  := equiv_functor_sigma' 1 g.
 
 (** Lemma 3.11.9(i): Summing up a contractible family of types does nothing. *)
 
@@ -469,12 +469,10 @@ Definition equiv_sigma_prod0 A B
 
 Definition equiv_sigma_symm `(P : A -> B -> Type)
 : {a : A & {b : B & P a b}} <~> {b : B & {a : A & P a b}}
-:= equiv_compose'
-     (equiv_inverse (equiv_sigma_prod (fun x => P (snd x) (fst x))))
-   (equiv_compose'
-      (equiv_functor_sigma' (equiv_prod_symm A B)
-                            (fun x => equiv_idmap (P (fst x) (snd x))))
-      (equiv_sigma_prod (fun x => P (fst x) (snd x)))).
+  := ((equiv_sigma_prod (fun x => P (snd x) (fst x)))^-1)
+       oE (equiv_functor_sigma' (equiv_prod_symm A B)
+                                (fun x => equiv_idmap (P (fst x) (snd x))))
+       oE (equiv_sigma_prod (fun x => P (fst x) (snd x))).
 
 Definition equiv_sigma_symm0 (A B : Type)
 : {a : A & B} <~> {b : B & A}.

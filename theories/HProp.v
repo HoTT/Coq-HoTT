@@ -121,9 +121,9 @@ Defined.
 Theorem equiv_contr_inhabited_allpath `{Funext} {A}
   : Contr A <~> A * forall (x y : A), x = y.
 Proof.
-  transitivity ( A * IsHProp A).
+  transitivity (A * IsHProp A).
   apply equiv_contr_inhabited_hprop.
-  apply equiv_functor_prod'. apply equiv_idmap. apply equiv_hprop_allpath.
+  exact (1 *E equiv_hprop_allpath _).
 Defined.
 
 (** ** Logical equivalence of hprops *)
@@ -147,7 +147,7 @@ Defined.
 (** If an hprop is inhabited, then it is equivalent to [Unit]. *)
 Lemma if_hprop_then_equiv_Unit (hprop : Type) `{IsHProp hprop} :  hprop -> hprop <~> Unit.
 Proof.
-  intro p. 
+  intro p.
   apply equiv_iff_hprop.
   exact (fun _ => tt).
   exact (fun _ => p).
@@ -156,7 +156,7 @@ Defined.
 (** If an hprop is not inhabited, then it is equivalent to [Empty]. *)
 Lemma if_not_hprop_then_equiv_Empty (hprop : Type) `{IsHProp hprop} : ~hprop -> hprop <~> Empty.
 Proof.
-  intro np. 
+  intro np.
   exact (BuildEquiv _ _ np _).
 Defined.
 

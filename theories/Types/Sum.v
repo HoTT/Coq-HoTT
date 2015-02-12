@@ -5,6 +5,7 @@ Require Import HoTT.Basics.
 Require Import Types.Empty Types.Prod Types.Sigma.
 (** The following are only required for the equivalence between [sum] and a sigma type *)
 Require Import Types.Bool Types.Forall.
+
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 
@@ -116,7 +117,7 @@ Global Instance ishprop_hfiber_inl {A B : Type} (z : A + B)
 Proof.
   destruct z as [a|b]; unfold hfiber.
   - refine (trunc_equiv' _
-              (equiv_functor_sigma' (equiv_idmap A)
+              (equiv_functor_sigma' 1
                  (fun x => equiv_path_sum (inl x) (inl a)))).
   - refine (trunc_equiv _
               (fun xp => inl_ne_inr (xp.1) b xp.2)^-1).
@@ -127,7 +128,7 @@ Global Instance decidable_hfiber_inl {A B : Type} (z : A + B)
 Proof.
   destruct z as [a|b]; unfold hfiber.
   - refine (decidable_equiv' _
-              (equiv_functor_sigma' (equiv_idmap A)
+              (equiv_functor_sigma' 1
                  (fun x => equiv_path_sum (inl x) (inl a))) _).
   - refine (decidable_equiv _
               (fun xp => inl_ne_inr (xp.1) b xp.2)^-1 _).
@@ -140,7 +141,7 @@ Proof.
   - refine (trunc_equiv _
               (fun xp => inr_ne_inl (xp.1) a xp.2)^-1).
   - refine (trunc_equiv' _
-              (equiv_functor_sigma' (equiv_idmap B)
+              (equiv_functor_sigma' 1
                  (fun x => equiv_path_sum (inr x) (inr b)))).
 Defined.
 
@@ -151,7 +152,7 @@ Proof.
   - refine (decidable_equiv _
               (fun xp => inr_ne_inl (xp.1) a xp.2)^-1 _).
   - refine (decidable_equiv' _
-              (equiv_functor_sigma' (equiv_idmap B)
+              (equiv_functor_sigma' 1
                  (fun x => equiv_path_sum (inr x) (inr b))) _).
 Defined.
 
@@ -359,13 +360,15 @@ Definition equiv_functor_sum' {A A' B B' : Type} (f : A <~> A') (g : B <~> B')
 : A + B <~> A' + B'
   := equiv_functor_sum (f := f) (g := g).
 
+Notation "f +E g" := (equiv_functor_sum' f g) (at level 50, left associativity) : equiv_scope.
+
 Definition equiv_functor_sum_l {A B B' : Type} (g : B <~> B')
 : A + B <~> A + B'
-  := equiv_functor_sum (f := idmap) (g := g).
+  := 1 +E g.
 
 Definition equiv_functor_sum_r {A A' B : Type} (f : A <~> A')
 : A + B <~> A' + B
-  := equiv_functor_sum (f := f) (g := idmap).
+  := f +E 1.
 
 (** ** Unfunctoriality on equivalences *)
 
@@ -483,7 +486,7 @@ Defined.
 Definition sum_empty_r (A : Type) : A + Empty <~> A.
 Proof.
   refine (equiv_adjointify
-       (fun z => match z:A+Empty with
+       (fun z => match z : A + Empty with
                    | inr e => match e with end
                    | inl a => a
                  end)
@@ -576,8 +579,8 @@ Proof.
   - intros c; destruct (is_inl_or_is_inr (f c)); reflexivity.
   - intros [[c l]|[c r]]; simpl; destruct (is_inl_or_is_inr (f c)).
     + apply ap, ap, path_ishprop.
-    + elim (not_is_inl_and_inr' _ l i). 
-    + elim (not_is_inl_and_inr' _ i r). 
+    + elim (not_is_inl_and_inr' _ l i).
+    + elim (not_is_inl_and_inr' _ i r).
     + apply ap, ap, path_ishprop.
 Defined.
 
@@ -615,8 +618,8 @@ Definition equiv_indecomposable_sum {X A B} `{Indecomposable X}
 : ((X <~> A) * (Empty <~> B)) + ((X <~> B) * (Empty <~> A)).
 Proof.
   destruct (indecompose A B f) as [i|i]; [ left | right ].
-  1:pose (g := equiv_compose' f (sum_empty_r X)).
-  2:pose (g := equiv_compose' f (sum_empty_l X)).
+  1:pose (g := (f oE sum_empty_r X)).
+  2:pose (g := (f oE sum_empty_l X)).
   2:apply (equiv_prod_symm _ _).
   all:refine (equiv_unfunctor_sum g _ _); try assumption; try intros [].
 Defined.
@@ -628,36 +631,28 @@ Definition equiv_unfunctor_sum_indecomposable_ll {A B B' : Type}
 Proof.
   pose (f := equiv_decompose (h o inl)).
   pose (g := equiv_decompose (h o inr)).
-  pose (k := equiv_compose' h (equiv_functor_sum' f g)).
+  pose (k := (h oE (f +E g))).
   (** This looks messy, but it just amounts to swapping the middle two summands in [k]. *)
-  pose (k' := equiv_compose' k
-             (equiv_compose' (equiv_sum_assoc _ _ _)
-             (equiv_compose' (equiv_functor_sum'
-                                (equiv_inverse (equiv_sum_assoc _ _ _))
-                                (equiv_idmap _))
-             (equiv_compose' (equiv_functor_sum'
-                                (equiv_functor_sum' (equiv_idmap _)
-                                                    (equiv_sum_symm _ _))
-                                (equiv_idmap _))
-             (equiv_compose' (equiv_functor_sum' (equiv_sum_assoc _ _ _)
-                                                 (equiv_idmap _))
-                             (equiv_inverse (equiv_sum_assoc _ _ _))))))).
+  pose (k' := k
+                oE (equiv_sum_assoc _ _ _)
+                oE ((equiv_sum_assoc _ _ _)^-1 +E 1)
+                oE (1 +E (equiv_sum_symm _ _) +E 1)
+                oE ((equiv_sum_assoc _ _ _) +E 1)
+                oE (equiv_sum_assoc _ _ _)^-1).
   destruct (equiv_unfunctor_sum k'
              (fun x => match x with | inl x => x.2 | inr x => x.2 end)
              (fun x => match x with | inl x => x.2 | inr x => x.2 end))
     as [s t]; clear k k'.
-  refine (equiv_compose' t _).
-  refine (equiv_compose' _ (equiv_inverse g)).
-  refine (equiv_functor_sum' _ (equiv_idmap _)).
-  destruct (equiv_indecomposable_sum (equiv_inverse s)) as [[p q]|[p q]];
-  destruct (equiv_indecomposable_sum (equiv_inverse f)) as [[u v]|[u v]].
-  - refine (equiv_compose' v (equiv_inverse q)).
+  refine (t oE (_ +E 1) oE g^-1).
+  destruct (equiv_indecomposable_sum s^-1) as [[p q]|[p q]];
+  destruct (equiv_indecomposable_sum f^-1) as [[u v]|[u v]].
+  - refine (v oE q^-1).
   - elim (indecompose0 (v^-1 o p)).
   - refine (Empty_rec (indecompose0 _)); intros a.
     destruct (is_inl_or_is_inr (h (inl a))) as [l|r].
     * exact (q^-1 (a;l)).
     * exact (v^-1 (a;r)).
-  - refine (equiv_compose' u (equiv_inverse p)).
+  - refine (u oE p^-1).
 Defined.
 
 Definition equiv_unfunctor_sum_contr_ll {A A' B B' : Type}
@@ -665,8 +660,7 @@ Definition equiv_unfunctor_sum_contr_ll {A A' B B' : Type}
            (h : A + B <~> A' + B')
 : B <~> B'
   := equiv_unfunctor_sum_indecomposable_ll
-       (equiv_compose (equiv_functor_sum' equiv_contr_contr
-                                          (equiv_idmap B')) h).
+       ((equiv_contr_contr +E 1) oE h).
 
 (** ** Universal mapping properties *)
 

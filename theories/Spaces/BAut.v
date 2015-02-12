@@ -21,7 +21,7 @@ Proof.
   unfold BAut, image; simpl.
   refine (equiv_functor_sigma' (equiv_idmap Type) _); intros Z; simpl.
   apply equiv_O_functor; unfold hfiber.
-  refine (equiv_compose' (equiv_inverse (equiv_contr_sigma _)) _).
+  refine ((equiv_contr_sigma _)^-1 oE _).
   apply equiv_path_inverse.
 Defined.
 
@@ -33,12 +33,8 @@ Definition BAut_pr1 X : BAut X -> Type := pr1.
 Coercion BAut_pr1 : BAut >-> Sortclass.
 
 Definition path_baut `{Univalence} {X} (Z Z' : BAut X)
-: (Z <~> Z') <~> (Z = Z' :> BAut X).
-Proof.
-  eapply equiv_compose'.
-  - apply equiv_path_sigma_hprop.
-  - apply equiv_path_universe.
-Defined.
+: (Z <~> Z') <~> (Z = Z' :> BAut X)
+  := equiv_path_sigma_hprop _ _ oE equiv_path_universe _ _.
 
 Definition ap_pr1_path_baut `{Univalence} {X}
            {Z Z' : BAut X} (f : Z <~> Z')
@@ -118,45 +114,44 @@ Lemma baut_ind_hset `{Univalence} X
     forall g : X <~> X, transport P (path_universe g) e = e }
   <~> (forall (Z:BAut X), P Z).
 Proof.
-  refine (equiv_compose' (equiv_sigT_ind _) _).
+  refine (equiv_sigT_ind _ oE _).
   (** We use the fact that maps out of a propositional truncation into an hset are equivalent to weakly constant functions. *)
-  refine (equiv_compose'
-           (equiv_functor_forall'
+  refine ((equiv_functor_forall'
              (P := fun Z => { f : (Z=X) -> P Z & WeaklyConstant f })
-             (equiv_idmap Type)
-             (fun Z => equiv_merely_rec_hset _ _)) _); simpl.
+             1
+             (fun Z => equiv_merely_rec_hset _ _)) oE _); simpl.
   { intros p. change (IsHSet (P (BAut_pr1 X (Z ; tr p)))). exact _. }
   unfold WeaklyConstant.
   (** Now we peel away a bunch of contractible types. *)
-  refine (equiv_compose' (equiv_sigT_coind _ _) _).
-  refine (equiv_compose' (equiv_functor_sigma'
+  refine (equiv_sigT_coind _ _ oE _).
+  refine (equiv_functor_sigma'
            (P := fun k => forall Z p q, k (Z;p) = k (Z;q))
-           (equiv_inverse (equiv_sigT_ind
-              (fun Zp => P Zp.1))) (fun k => equiv_idmap _)) _).
-  refine (equiv_compose' (equiv_functor_sigma'
+           (equiv_sigT_ind
+              (fun Zp => P Zp.1))^-1 (fun k => equiv_idmap _) oE _).
+  refine (equiv_functor_sigma'
+            (equiv_idmap (forall Zp : {Z:Type & Z=X}, P Zp.1))
+            (fun k => (equiv_sigT_ind
+                         (fun Zp => forall q, k Zp = k (Zp.1;q)))^-1) oE _).
+  refine (equiv_functor_sigma'
            (equiv_idmap (forall Zp : {Z:Type & Z=X}, P Zp.1))
-           (fun k => equiv_inverse (equiv_sigT_ind
-                     (fun Zp => forall q, k Zp = k (Zp.1;q))))) _).
-  refine (equiv_compose' (equiv_functor_sigma'
-           (equiv_idmap (forall Zp : {Z:Type & Z=X}, P Zp.1))
-           (fun k => equiv_inverse (equiv_contr_forall
-                     (fun Zp => forall q, k Zp = k (Zp.1;q))))) _); simpl.
-  refine (equiv_compose' (equiv_functor_sigma'
-           (P := fun (e : P X) => forall q:X=X, transport P q^ e = e)
-           (equiv_inverse (equiv_contr_forall
-             (fun (Zp:{Z:Type & Z=X}) => P Zp.1)))
-             (fun f => equiv_functor_forall' (equiv_idmap (X=X)) _)) _).
+           (fun k => (equiv_contr_forall
+                        (fun Zp => forall q, k Zp = k (Zp.1;q)))^-1) oE _); simpl.
+  refine (equiv_functor_sigma'
+            (P := fun (e : P X) => forall q:X=X, transport P q^ e = e)
+            ((equiv_contr_forall
+                (fun (Zp:{Z:Type & Z=X}) => P Zp.1))^-1)
+            (fun f => equiv_functor_forall' (equiv_idmap (X=X)) _) oE _).
   { intros g; simpl.
-    refine (equiv_compose' (equiv_path_inverse _ _) _).
+    refine (equiv_path_inverse _ _ oE _).
     apply equiv_concat_l.
     refine (transport_compose P pr1 (path_contr (X;1) (X;g)) f @ _).
     apply transport2.
     refine (ap_pr1_path_contr_basedpaths' _ _ @ concat_1p g^). }
-  refine (equiv_functor_sigma' (equiv_idmap _) _); intros e.
-  refine (equiv_functor_forall' (equiv_inverse (equiv_path_universe X X)) _).
+  refine (equiv_functor_sigma' 1 _); intros e.
+  refine (equiv_functor_forall' (equiv_path_universe X X)^-1 _).
   intros g; simpl.
-  refine (equiv_compose' (equiv_moveR_transport_V _ _ _ _) _).
-  refine (equiv_compose' (equiv_path_inverse _ _) _).
+  refine (equiv_moveR_transport_V _ _ _ _ oE _).
+  refine (equiv_path_inverse _ _ oE _).
   apply equiv_concat_l, transport2.
   symmetry; apply (eissect (equiv_path X X)).
 Defined.
@@ -167,26 +162,25 @@ Definition center_baut `{Univalence} X `{IsHSet X}
 : { f : X <~> X & forall g:X<~>X, g o f == f o g }
   <~> (forall Z:BAut X, Z = Z).
 Proof.
-  refine (equiv_compose'
-            (equiv_functor_forall'
-               (P := fun Z => Z.1 = Z.1)
-               (equiv_idmap (BAut X))
-               (fun Z => equiv_path_sigma_hprop Z Z)) _).
-  refine (equiv_compose' (baut_ind_hset X (fun Z => Z = Z)) _).
+  refine (equiv_functor_forall'
+            (P := fun Z => Z.1 = Z.1)
+            1
+            (fun Z => equiv_path_sigma_hprop Z Z) oE _).
+  refine (baut_ind_hset X (fun Z => Z = Z) oE _).
   simpl.
   refine (equiv_functor_sigma' (equiv_path_universe X X) _); intros f.
-  refine (equiv_functor_forall' (equiv_idmap _) _); intros g; simpl.
-  refine (equiv_compose' _ (equiv_path_arrow _ _)).
-  refine (equiv_compose' _ (equiv_path_equiv (equiv_compose' g f) (equiv_compose' f g))).
+  refine (equiv_functor_forall' 1 _); intros g; simpl.
+  refine (_ oE equiv_path_arrow _ _).
+  refine (_ oE equiv_path_equiv (g oE f) (f oE g)).
   revert g. equiv_intro (equiv_path X X) g.
   revert f. equiv_intro (equiv_path X X) f.
-  refine (equiv_compose' _ (equiv_concat_l (equiv_path_pp _ _) _)).
-  refine (equiv_compose' _ (equiv_concat_r (equiv_path_pp _ _)^ _)).
-  refine (equiv_compose' _ (equiv_inverse (equiv_ap (equiv_path X X) _ _))).
-  refine (equiv_compose' (equiv_concat_l (transport_paths_lr _ _) _) _).
-  refine (equiv_compose' (equiv_concat_l (concat_pp_p _ _ _) _) _).
-  refine (equiv_compose' (equiv_moveR_Vp _ _ _) _).
-  refine (equiv_compose' (equiv_concat_l _ _) (equiv_concat_r _ _)).
+  refine (_ oE equiv_concat_l (equiv_path_pp _ _) _).
+  refine (_ oE equiv_concat_r (equiv_path_pp _ _)^ _).
+  refine (_ oE (equiv_ap (equiv_path X X) _ _)^-1).
+  refine (equiv_concat_l (transport_paths_lr _ _) _ oE _).
+  refine (equiv_concat_l (concat_pp_p _ _ _) _ oE _).
+  refine (equiv_moveR_Vp _ _ _ oE _).
+  refine (equiv_concat_l _ _ oE equiv_concat_r _ _).
   - apply concat2; apply eissect.
   - symmetry; apply concat2; apply eissect.
 Defined.
@@ -217,27 +211,24 @@ Section Center2BAut.
   : { f : forall x:X, x=x & forall (g:X<~>X) (x:X), ap g (f x) = f (g x) }
       <~> (forall Z:BAut X, (idpath Z) = (idpath Z)).
   Proof.
-    refine (equiv_compose'
-              (equiv_functor_forall'
-                 (P := fun Z => idpath Z.1 = idpath Z.1)
-                 (equiv_idmap (BAut X))
-                 (fun Z => equiv_compose' (equiv_concat_lr _ _)
-                             (equiv_ap (equiv_path_sigma_hprop Z Z)
-                                       (idpath Z.1) (idpath Z.1)))) _).
+    refine ((equiv_functor_forall'
+               (P := fun Z => idpath Z.1 = idpath Z.1)
+               1
+               (fun Z => (equiv_concat_lr _ _)
+                           oE (equiv_ap (equiv_path_sigma_hprop Z Z) 1%path 1%path))) oE _).
     { symmetry; apply path_sigma_hprop_1. }
     { apply path_sigma_hprop_1. }
     assert (forall Z:BAut X, IsHSet (idpath Z.1 = idpath Z.1)) by exact _.
-    refine (equiv_compose' (baut_ind_hset X (fun Z => idpath Z = idpath Z)) _).
+    refine (baut_ind_hset X (fun Z => idpath Z = idpath Z) oE _).
     refine (equiv_functor_sigma' _ _).
-    { refine (equiv_compose' _
-                             (equiv_path2_universe (equiv_idmap X) (equiv_idmap X))).
+    { refine (_ oE equiv_path2_universe 1 1).
       apply equiv_concat_lr.
       - symmetry; apply path_universe_1.
       - apply path_universe_1. }
     intros f.
-    refine (equiv_functor_forall' (equiv_idmap _) _); intros g.
-    refine (equiv_compose' _ (equiv_path3_universe _ _)).
-    refine (equiv_compose' (dpath_paths2 (path_universe g) _ _) _).
+    refine (equiv_functor_forall' 1 _); intros g.
+    refine (_ oE equiv_path3_universe _ _).
+    refine (dpath_paths2 (path_universe g) _ _ oE _).
     cbn.
     change (equiv_idmap X == equiv_idmap X) in f.
     refine (equiv_concat_lr _ _).

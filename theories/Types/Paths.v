@@ -2,8 +2,8 @@
 (** * Theorems about path spaces *)
 
 Require Import HoTT.Basics.
-Local Open Scope path_scope.
 
+Local Open Scope path_scope.
 
 Generalizable Variables A B f x y z.
 
@@ -120,6 +120,8 @@ Defined.
 Definition equiv_ap `(f : A -> B) `{IsEquiv A B f} (x y : A)
   : (x = y) <~> (f x = f y)
   := BuildEquiv _ _ (ap f) _.
+
+Global Arguments equiv_ap (A B)%type_scope f%function_scope _ _ _.
 
 Definition equiv_ap' `(f : A <~> B) (x y : A)
   : (x = y) <~> (f x = f y)
@@ -519,9 +521,9 @@ Definition dpath_path_lr {A : Type} {x1 x2 : A}
   transport (fun x => x = x) p q = r.
 Proof.
   destruct p; simpl.
-  refine (equiv_compose' (B := (q @ 1 = r)) _ _).
-  exact (equiv_concat_l (concat_p1 q)^ r).
+  transitivity (q @ 1 = r).
   exact (equiv_concat_r (concat_1p r) (q @ 1)).
+  exact (equiv_concat_l (concat_p1 q)^ r).
 Defined.
 
 Definition dpath_path_Fl {A B : Type} {f : A -> B} {x1 x2 : A} {y : B}
@@ -551,9 +553,9 @@ Definition dpath_path_FlFr {A B : Type} {f g : A -> B} {x1 x2 : A}
   transport (fun x => f x = g x) p q = r.
 Proof.
   destruct p; simpl.
-  refine (equiv_compose' (B := (q @ 1 = r)) _ _).
-  exact (equiv_concat_l (concat_p1 q)^ r).
+  transitivity (q @ 1 = r).
   exact (equiv_concat_r (concat_1p r) (q @ 1)).
+  exact (equiv_concat_l (concat_p1 q)^ r).
 Defined.
 
 Definition dpath_path_FFlr {A B : Type} {f : A -> B} {g : B -> A}
@@ -563,9 +565,9 @@ Definition dpath_path_FFlr {A B : Type} {f : A -> B} {g : B -> A}
   transport (fun x => g (f x) = x) p q = r.
 Proof.
   destruct p; simpl.
-  refine (equiv_compose' (B := (q @ 1 = r)) _ _).
-  exact (equiv_concat_l (concat_p1 q)^ r).
+  transitivity (q @ 1 = r).
   exact (equiv_concat_r (concat_1p r) (q @ 1)).
+  exact (equiv_concat_l (concat_p1 q)^ r).
 Defined.
 
 Definition dpath_path_lFFr {A B : Type} {f : A -> B} {g : B -> A}
@@ -575,9 +577,9 @@ Definition dpath_path_lFFr {A B : Type} {f : A -> B} {g : B -> A}
   transport (fun x => x = g (f x)) p q = r.
 Proof.
   destruct p; simpl.
-  refine (equiv_compose' (B := (q @ 1 = r)) _ _).
-  exact (equiv_concat_l (concat_p1 q)^ r).
+  transitivity (q @ 1 = r).
   exact (equiv_concat_r (concat_1p r) (q @ 1)).
+  exact (equiv_concat_l (concat_p1 q)^ r).
 Defined.
 
 Definition dpath_paths2 {A : Type} {x y : A}
@@ -589,8 +591,8 @@ Definition dpath_paths2 {A : Type} {x y : A}
   transport (fun a => idpath a = idpath a) p q = r.
 Proof.
   destruct p. simpl.
-  refine (equiv_compose' _ (equiv_inverse (equiv_whiskerR _ _ 1))).
-  refine (equiv_compose' _ (equiv_inverse (equiv_whiskerL 1 _ _))).
+  refine (_ oE (equiv_whiskerR _ _ 1)^-1).
+  refine (_ oE (equiv_whiskerL 1 _ _)^-1).
   refine (equiv_concat_lr _ _).
   - symmetry; apply whiskerR_p1_1.
   - apply whiskerL_1p_1.

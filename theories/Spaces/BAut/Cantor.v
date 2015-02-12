@@ -3,8 +3,8 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Idempotents.
 Require Import hit.Truncations Spaces.BAut Spaces.Cantor.
 
+Local Open Scope equiv_scope.
 Local Open Scope path_scope.
-
 
 (** * BAut(Cantor) *)
 
@@ -20,16 +20,14 @@ Section Assumptions.
   Proof.
     intros Z.
     (** Here is the important part of this definition. *)
-    exists (Z + cantor).
+    exists (Z + cantor)%type.
     (** The rest is just a proof that [Z+cantor] is again equivalent to [cantor], using [fold_cantor] and the assumption that [Z] is equivalent to [cantor]. *)
     pose (e := Z.2); simpl in e; clearbody e.
     strip_truncations.
     apply tr.
     apply path_universe_uncurried.
-    refine (equiv_compose' equiv_fold_cantor _).
-    apply equiv_functor_sum'.
-    - apply equiv_path, e.
-    - apply equiv_idmap.
+    refine (equiv_fold_cantor oE _).
+    refine (equiv_path _ _ e +E 1).
   Defined.
 
   (** For the pre-idempotence of [f], the main point is again the existence of the equivalence [fold_cantor]. *)
@@ -38,14 +36,14 @@ Section Assumptions.
     intros Z.
     apply path_baut.
     unfold f; simpl.
-    refine (equiv_compose' _ (equiv_sum_assoc Z cantor cantor)).
-    apply (equiv_functor_sum' (equiv_idmap Z) equiv_fold_cantor).
+    refine (_ oE equiv_sum_assoc Z cantor cantor).
+    apply (1 +E equiv_fold_cantor).
   Defined.
 
   (** We record how the action of [f] and [f o f] on paths corresponds to an action on equivalences. *)
   Definition ap_f {Z Z' : BAut cantor} (p : Z = Z')
   : equiv_path _ _ (ap f p)..1
-    = equiv_functor_sum' (equiv_path Z Z' p..1) (equiv_idmap cantor).
+    = equiv_path Z Z' p..1 +E 1.
   Proof.
     destruct p. apply path_equiv, path_arrow.
     intros [z|a]; reflexivity.
@@ -53,9 +51,7 @@ Section Assumptions.
 
   Definition ap_ff {Z Z' : BAut cantor} (p : Z = Z')
   : equiv_path _ _ (ap (f o f) p)..1
-    = equiv_functor_sum'
-        (equiv_functor_sum' (equiv_path Z Z' p..1) (equiv_idmap cantor))
-        (equiv_idmap cantor).
+    = equiv_path Z Z' p..1 +E 1 +E 1.
   Proof.
     destruct p. apply path_equiv, path_arrow.
     intros [[z|a]|a]; reflexivity.
@@ -74,13 +70,11 @@ Section Assumptions.
 
   (** We don't know much about [I0], but we can show that it maps the rightmost two summands to the rightmost one, using the naturality of [I].  Here is the naturality. *)
   Definition Inat (Z Z' : BAut cantor) (e : Z <~> Z')
-  : equiv_compose' (I Z') (equiv_functor_sum'
-                             (equiv_functor_sum' e (equiv_idmap cantor))
-                             (equiv_idmap cantor))
-    = equiv_compose' (equiv_functor_sum' e (equiv_idmap cantor)) (I Z).
+  : I Z' oE (e +E 1 +E 1)
+    = (e +E 1) oE I Z.
   Proof.
     revert e; equiv_intro (equiv_path Z Z') q.
-    revert q; equiv_intro (equiv_inverse (equiv_path_sigma_hprop Z Z')) p.
+    revert q; equiv_intro ((equiv_path_sigma_hprop Z Z')^-1) p.
     simpl. rewrite <- ap_ff, <- ap_f.
     unfold I. refine ((equiv_path_pp _ _)^ @ _ @ (equiv_path_pp _ _)).
     apply ap.
@@ -90,13 +84,9 @@ Section Assumptions.
 
   (** To show our claim about the action of [I0], we will apply this naturality to the flip automorphism of [cantor + cantor].  Here are the images of that automorphism under [f] and [f o f]. *)
   Definition f_flip :=
-    equiv_functor_sum' (equiv_sum_symm cantor cantor)
-                       (equiv_idmap cantor).
+    equiv_sum_symm cantor cantor +E equiv_idmap cantor.
   Definition ff_flip :=
-    equiv_functor_sum'
-      (equiv_functor_sum' (equiv_sum_symm cantor cantor)
-                          (equiv_idmap cantor))
-      (equiv_idmap cantor).
+    (equiv_sum_symm cantor cantor +E equiv_idmap cantor) +E (equiv_idmap cantor).
 
   (** The naturality of [I] implies that [I0] commutes with these images of the flip. *)
   Definition I0nat_flip
@@ -162,7 +152,7 @@ Section Assumptions.
 
   (** Now we bring quasi-idempotence into play. *)
   Definition J (Z : BAut cantor)
-  : equiv_functor_sum' (I Z) (equiv_idmap cantor)
+  : I Z +E 1
     = I (f Z).
   Proof.
     unfold I; simpl.

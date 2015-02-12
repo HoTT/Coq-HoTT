@@ -32,8 +32,8 @@ Proof.
                       (trunctype_type A; istrunc_trunctype_type A)
                       (trunctype_type B; istrunc_trunctype_type B)).
     - symmetry. apply equiv_ap. refine _. }
-  (* Apparently writing [equiv_inverse e] here instead of [e^-1] is much faster. *)
-  refine (isequiv_homotopic (equiv_inverse e) _).
+  (* Apparently writing [e^-1%equiv] here instead of [e^-1%function] is much faster. *)
+  refine (isequiv_homotopic e^-1%equiv _).
   intros p; destruct p; reflexivity.
 Defined.
 
@@ -42,7 +42,7 @@ Definition equiv_path_trunctype {n : trunc_index} (A B : TruncType n)
 Proof.
   equiv_via (A = B :> Type).
   - apply equiv_path_universe.
-  - exact (equiv_inverse (BuildEquiv _ _ (@ap _ _ (@trunctype_type n) A B) _)).
+  - exact ((BuildEquiv _ _ (@ap _ _ (@trunctype_type n) A B) _)^-1).
 Defined.
 
 Definition path_trunctype {n : trunc_index} {A B : TruncType n}
@@ -77,7 +77,7 @@ Defined.
 Global Instance Sn_trunctype: forall n, IsTrunc n.+1 (sigT (IsTrunc n)) |0.
 Proof.
   intro n.
-  apply (trunc_equiv' _ (equiv_inverse issig_trunctype)).
+  apply (trunc_equiv' _ issig_trunctype^-1).
 Defined.
 
 (** ** Some standard inhabitants *)

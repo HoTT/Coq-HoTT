@@ -2,8 +2,8 @@
 
 Require Import HoTT.Basics.
 Require Import Types.Prod Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Record.
-Local Open Scope path_scope.
 
+Local Open Scope path_scope.
 
 (** * Equivalences *)
 
@@ -18,16 +18,16 @@ Section AssumeFunext.
     (* We will show that if [IsEquiv] is inhabited, then it is contractible, because it is equivalent to a sigma of a pointed path-space over a pointed path-space, both of which are contractible. *)
     refine (contr_equiv' { g : B -> A & g = f^-1 } _).
     equiv_via ({ g:B->A & { r:g=f^-1 & { s:g=f^-1 & r=s }}}); apply equiv_inverse.
-    1:exact (equiv_functor_sigma' (equiv_idmap _) (fun _ => equiv_sigma_contr _ )).
+    1:exact (equiv_functor_sigma' 1 (fun _ => equiv_sigma_contr _ )).
     (* First we apply [issig], peel off the first component, and convert to pointwise paths. *)
-    refine (equiv_compose' _ (equiv_inverse (issig_isequiv f))).
+    refine (_ oE (issig_isequiv f)^-1).
     refine (equiv_functor_sigma' (equiv_idmap (B -> A)) _); intros g; simpl.
     equiv_via ({ r : g == f^-1 & { s : g == f^-1 & r == s }}).
     (* Now the idea is that if [f] is an equivalence, then [g f == 1] and [f g == 1] are both equivalent to [g == f^-1]. *)
     { refine (equiv_functor_sigma'
                 (equiv_functor_forall idmap (fun b p => (ap f)^-1 (p @ (eisretr f b)^)))
                 (fun r => equiv_functor_sigma'
-                            (equiv_inverse (equiv_functor_forall f (fun a p => p @ (eissect f a)))) _));
+                            (equiv_functor_forall f (fun a p => p @ (eissect f a)))^-1 _));
       intros s; simpl.
       (* What remains is to show that under these equivalences, the remaining datum [eisadj] reduces simply to [r == s].  Pleasingly, Coq can compute for us exactly what this means. *)
       apply equiv_inverse;
@@ -41,10 +41,9 @@ Section AssumeFunext.
       rewrite (concat_A1p s (eissect f a)^).
       rewrite (concat_pp_A1 (fun x => (eissect f x)^) (eissect f a)).
       (* Here instead of [whiskerR] we have to be a bit fancier. *)
-      refine (equiv_compose'
-                _ (equiv_inverse (equiv_ap (equiv_concat_r (eissect f a)^ _) _ _))).
+      refine (_ oE (equiv_ap (equiv_concat_r (eissect f a)^ _) _ _)^-1).
       rewrite concat_pV_p.
-      refine (equiv_compose' _ (equiv_ap (ap f) _ _)).
+      refine (_ oE equiv_ap (ap f) _ _).
       (* Now we can get rid of the [<~>] and reduce the question to constructing some path. *)
       apply equiv_concat_l.
       rewrite !ap_pp, !ap_V, <- !eisadj, <- ap_compose.
@@ -55,7 +54,7 @@ Section AssumeFunext.
     { refine (equiv_functor_sigma' (equiv_path_arrow g f^-1)
                                    (fun r => equiv_functor_sigma' (equiv_path_arrow g f^-1) _));
       intros s; simpl.
-      refine (equiv_compose' _ (equiv_path_forall r s)).
+      refine (_ oE equiv_path_forall r s).
       exact (equiv_ap (path_forall g f^-1) r s). }
   Qed.
 
@@ -99,14 +98,14 @@ Section AssumeFunext.
   Global Instance contr_aut_hprop A `{IsHProp A}
   : Contr (A <~> A).
   Proof.
-    exists (equiv_idmap A).
+    exists 1%equiv.
     intros e; apply path_equiv, path_forall. intros ?; apply path_ishprop.
   Defined.
 
   (** Equivalences are functorial under equivalences. *)
   Definition functor_equiv {A B C D} (h : A <~> C) (k : B <~> D)
   : (A <~> B) -> (C <~> D)
-  := fun f => equiv_compose (equiv_compose' k f) (equiv_inverse h).
+  := fun f => ((k oE f) oE h^-1).
 
   Global Instance isequiv_functor_equiv {A B C D} (h : A <~> C) (k : B <~> D)
   : IsEquiv (functor_equiv h k).
@@ -121,7 +120,7 @@ Section AssumeFunext.
 
   Definition equiv_functor_equiv {A B C D} (h : A <~> C) (k : B <~> D)
   : (A <~> B) <~> (C <~> D)
-  := BuildEquiv _ _ (functor_equiv h k) _.  
+  := BuildEquiv _ _ (functor_equiv h k) _.
 
   (** Reversing equivalences is an equivalence *)
   Global Instance isequiv_equiv_inverse {A B}

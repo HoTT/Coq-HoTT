@@ -2,8 +2,8 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import hit.Truncations.
-Local Open Scope path_scope.
 
+Local Open Scope path_scope.
 Local Open Scope pointed_scope.
 
 (** * More about pointed types *)
@@ -30,12 +30,12 @@ Defined.
 Definition equiv_path_pmap `{Funext} {A B : pType} (f g : A ->* B)
 : (f ==* g) <~> (f = g).
 Proof.
-  refine (equiv_compose' (equiv_inverse (equiv_ap' (equiv_inverse (issig_pmap A B)) f g)) _); cbn.
-  refine (equiv_compose' _ (equiv_inverse (issig_phomotopy f g))).
-  refine (equiv_compose' (equiv_path_sigma _ _ _) _); cbn.
+  refine ((equiv_ap' (issig_pmap A B)^-1 f g)^-1 oE _); cbn.
+  refine (_ oE (issig_phomotopy f g)^-1).
+  refine (equiv_path_sigma _ _ _ oE _); cbn.
   refine (equiv_functor_sigma' (equiv_path_arrow f g) _); intros p. cbn.
-  refine (equiv_compose' _ (equiv_moveL_Vp _ _ _)).
-  refine (equiv_compose' _ (equiv_path_inverse _ _)).
+  refine (_ oE equiv_moveL_Vp _ _ _).
+  refine (_ oE equiv_path_inverse _ _).
   apply equiv_concat_l.
   refine (transport_paths_Fl (path_forall f g p) (point_eq f) @ _).
   apply whiskerR, inverse2.
@@ -50,18 +50,18 @@ Definition path_pmap `{Funext} {A B : pType} {f g : A ->* B}
 Definition issig_pequiv (A B : pType)
 : { f : A <~> B & f (point A) = point B } <~> (A <~>* B).
 Proof.
-  refine (equiv_compose' (B := { f : A ->* B & IsEquiv f }) _ _).
-  1:issig (@Build_pEquiv A B) (@pointed_equiv_fun A B) (@pointed_isequiv A B).
-  refine (equiv_compose' (equiv_functor_sigma'
-                            (P := fun f => IsEquiv f.1)
-                            (issig_pmap A B) (fun f => equiv_idmap _)) _).
-  refine (equiv_compose' _ (equiv_functor_sigma'
-                              (Q := fun f => f.1 (point A) = point B)
-                              (equiv_inverse (issig_equiv A B))
-                              (fun f => equiv_idmap _))).
-  refine (equiv_compose' _ (equiv_inverse (equiv_sigma_assoc _ _))).
-  refine (equiv_compose' (equiv_sigma_assoc _ _) _).
-  refine (equiv_functor_sigma' (equiv_idmap _) _); intros f; simpl. 
+  transitivity { f : A ->* B & IsEquiv f }.
+  2:issig (@Build_pEquiv A B) (@pointed_equiv_fun A B) (@pointed_isequiv A B).
+  refine ((equiv_functor_sigma'
+             (P := fun f => IsEquiv f.1)
+             (issig_pmap A B) (fun f => equiv_idmap _)) oE _).
+  refine (_ oE (equiv_functor_sigma'
+                 (Q := fun f => f.1 (point A) = point B)
+                 (issig_equiv A B)^-1
+                 (fun f => equiv_idmap _))).
+  refine (_ oE (equiv_sigma_assoc _ _)^-1).
+  refine (equiv_sigma_assoc _ _ oE _).
+  refine (equiv_functor_sigma' 1 _); intros f; simpl.
   apply equiv_sigma_symm0.
 Defined.
 
@@ -69,9 +69,9 @@ Definition equiv_path_ptype `{Univalence} (A B : pType)
 : (A <~>* B) <~> (A = B :> pType).
 Proof.
   destruct A as [A a]. destruct B as [B b].
-  refine (equiv_compose' (equiv_ap issig_ptype (A;a) (B;b)) _).
-  refine (equiv_compose' (equiv_path_sigma _ _ _) _).
-  refine (equiv_compose' _ (equiv_inverse (issig_pequiv _ _))); simpl.
+  refine (equiv_ap issig_ptype (A;a) (B;b) oE _).
+  refine (equiv_path_sigma _ _ _ oE _).
+  refine (_ oE (issig_pequiv _ _)^-1); simpl.
   refine (equiv_functor_sigma' (equiv_path_universe A B) _); intros f.
   apply equiv_concat_l.
   apply transport_path_universe.
@@ -108,14 +108,13 @@ Definition pfiber2_loops {A B : pType} (f : A ->* B)
 Proof.
   apply issig_pequiv; refine (_;_).
   - simpl; unfold hfiber.
-    refine (equiv_compose' _ (equiv_inverse (equiv_sigma_assoc _ _))); simpl.
-    refine (equiv_compose' _
-              (equiv_functor_sigma'
-                 (P := fun a => {_ : f a = point B & a = point A})
-                 (Q := fun a => {_ : a = point A & f a = point B })
-                 (equiv_idmap A) (fun a => equiv_sigma_symm0 _ _))).
-    refine (equiv_compose' _ (equiv_sigma_assoc _ (fun a => f a.1 = point B))).
-    refine (equiv_compose' _ (equiv_contr_sigma _)); simpl.
+    refine (_ oE (equiv_sigma_assoc _ _)^-1); simpl.
+    refine (_ oE (equiv_functor_sigma'
+                   (P := fun a => {_ : f a = point B & a = point A})
+                   (Q := fun a => {_ : a = point A & f a = point B })
+                   1 (fun a => equiv_sigma_symm0 _ _))).
+    refine (_ oE equiv_sigma_assoc _ (fun a => f a.1 = point B)).
+    refine (_ oE equiv_contr_sigma _); simpl.
     apply equiv_concat_l.
     symmetry; apply point_eq.
   - simpl.

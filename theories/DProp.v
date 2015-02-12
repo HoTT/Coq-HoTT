@@ -85,14 +85,12 @@ Definition equiv_path_dprop `{Funext} (P Q : DProp)
 : (P = Q :> Type) <~> (P = Q :> DProp).
 Proof.
   destruct P as [P hP dP]. destruct Q as [Q hQ dQ].
-  refine (equiv_compose'
-            (equiv_inverse (equiv_ap' (equiv_inverse issig_dprop) _ _))
-            _); cbn.
-  refine (equiv_compose'
-            (equiv_ap' (equiv_inverse
-                          (equiv_sigma_assoc _ (fun Xp => Decidable Xp.1)))
-                       ((P;hP);dP) ((Q;hQ);dQ)) _).
-  refine (equiv_compose' (equiv_path_sigma_hprop _ _) _); cbn.
+  refine (((equiv_ap' issig_dprop^-1 _ _)^-1)
+            oE _); cbn.
+  refine ((equiv_ap' (equiv_sigma_assoc _ (fun Xp => Decidable Xp.1))^-1
+                     ((P;hP);dP) ((Q;hQ);dQ))
+            oE _).
+  refine (equiv_path_sigma_hprop _ _ oE _); cbn.
   { intros [X hX]; exact _. }
   refine (equiv_path_sigma_hprop (P;hP) (Q;hQ)).
 Defined.

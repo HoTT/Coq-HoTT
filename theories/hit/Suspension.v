@@ -4,9 +4,10 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import PType NullHomotopy.
-Local Open Scope path_scope.
 
+Local Open Scope path_scope.
 Local Open Scope pointed_scope.
+
 Generalizable Variables X A B f g n.
 
 (* ** Definition of suspension. *)
@@ -48,6 +49,8 @@ Proof.
   apply (Susp_ind (fun _ => Y) H_N H_S).
   intros x. exact (transport_const _ _ @ H_merid x).
 Defined.
+
+Global Arguments Susp_rec {X Y}%type_scope H_N H_S H_merid%function_scope _.
 
 Definition Susp_comp_nd_merid {X Y : Type}
   {H_N H_S : Y} {H_merid : X -> H_N = H_S} (x:X)
@@ -172,48 +175,44 @@ Module Book_Loop_Susp_Adjunction.
   Definition loop_susp_adjoint `{Funext} (A B : pType)
   : (psusp A ->* B) <~> (A ->* loops B).
   Proof.
-    refine (equiv_compose' _ (equiv_inverse (issig_pmap (psusp A) B))).
-    refine (equiv_compose' _
-              (equiv_functor_sigma'
+    refine (_ oE (issig_pmap (psusp A) B)^-1).
+    refine (_ oE (equiv_functor_sigma'
                  (Q := fun NSm => fst NSm.1 = point B)
                  (equiv_Susp_rec A B)
-                 (fun f => equiv_idmap _))).
-    refine (equiv_compose' _
-              (equiv_inverse (equiv_sigma_assoc _ _))); simpl.
-    refine (equiv_compose' _
+                 (fun f => 1%equiv))).
+    refine (_ oE (equiv_sigma_assoc _ _)^-1); simpl.
+    refine (_ oE
               (equiv_functor_sigma'
                  (Q := fun a => {_ : fst a = point B & A -> fst a = snd a })
                  (equiv_idmap (B * B))
                  (fun NS => equiv_sigma_symm0
                               (A -> fst NS = snd NS)
                               (fst NS = point B)))).
-    refine (equiv_compose' _ (equiv_inverse (equiv_sigma_prod _))); simpl.
-    refine (equiv_compose' _
+    refine (_ oE (equiv_sigma_prod _)^-1); simpl.
+    refine (_ oE
               (equiv_functor_sigma'
                  (Q := fun b => {_ : b = point B & { p : B & A -> b = p}})
-                 (equiv_idmap B)
+                 1
                  (fun b => equiv_sigma_symm (A := B) (B := b = point B)
                              (fun p _ => A -> b = p)))).
-    refine (equiv_compose' _
+    refine (_ oE
               (equiv_sigma_assoc (fun b => b = point B)
                                  (fun bq => {p:B & A -> bq.1 = p}))).
-    refine (equiv_compose' _ (equiv_contr_sigma _)); simpl.
-    refine (equiv_compose' _
-              (equiv_inverse
-                 (equiv_sigma_contr
-                    (A := {p : B & A -> point B = p})
-                    (fun pm => { q : point B = pm.1 & pm.2 (point A) = q })))).
-    refine (equiv_compose' _ (equiv_inverse (equiv_sigma_assoc _ _))); simpl.
-    refine (equiv_compose' _
+    refine (_ oE equiv_contr_sigma _); simpl.
+    refine (_ oE (equiv_sigma_contr
+                   (A := {p : B & A -> point B = p})
+                   (fun pm => { q : point B = pm.1 & pm.2 (point A) = q }))^-1).
+    refine (_ oE (equiv_sigma_assoc _ _)^-1); simpl.
+    refine (_ oE
               (equiv_functor_sigma'
                  (Q := fun b => {q : point B = b & {p : A -> point B = b & p (point A) = q}})
-                 (equiv_idmap B)
+                 1
                  (fun b => equiv_sigma_symm (fun p q => p (point A) = q)))).
-    refine (equiv_compose' _
+    refine (_ oE
               (equiv_sigma_assoc
                  (fun b => point B = b)
                  (fun bq => {p : A -> point B = bq.1 & p (point A) = bq.2}))).
-    refine (equiv_compose' _ (equiv_contr_sigma _)); simpl.
+    refine (_ oE equiv_contr_sigma _); simpl.
     refine (issig_pmap A (loops B)).
   Defined.
 

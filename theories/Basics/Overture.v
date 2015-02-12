@@ -101,12 +101,27 @@ Identity Coercion unfold_Type3le : Type3le >-> Sortclass.
     or complicate matters with its type. *)
 Notation idmap := (fun x => x).
 
+(** We define various scopes and open them in the order we expect to use them. *)
+Delimit Scope equiv_scope with equiv.
+Delimit Scope function_scope with function.
+Delimit Scope path_scope with path.
+Delimit Scope fibration_scope with fibration.
+Delimit Scope trunc_scope with trunc.
+
+Open Scope trunc_scope.
+Open Scope equiv_scope.
+Open Scope path_scope.
+Open Scope fibration_scope.
+Open Scope nat_scope.
+Open Scope function_scope.
+Open Scope type_scope.
+Open Scope core_scope.
+
 (** *** Constant functions *)
 Definition const {A B} (b : B) := fun x : A => b.
 
 (** We define notation for dependent pairs because it is too annoying to write and see [existT P x y] all the time.  However, we put it in its own scope, because sometimes it is necessary to give the particular dependent type, so we'd like to be able to turn off this notation selectively. *)
 Notation "( x ; y )" := (existT _ x y) : fibration_scope.
-Open Scope fibration_scope.
 (** We bind [fibration_scope] with [sigT] so that we are automatically in [fibration_scope] when we are passing an argument of type [sigT]. *)
 Bind Scope fibration_scope with sigT.
 
@@ -123,10 +138,10 @@ Notation "x .2" := (pr2 x) (at level 3, format "x '.2'") : fibration_scope.
 Notation compose := (fun g f x => g (f x)).
 
 (** We put the following notation in a scope because leaving it unscoped causes it to override identical notations in other scopes.  It's convenient to use the same notation for, e.g., function composition, morphism composition in a category, and functor composition, and let Coq automatically infer which one we mean by scopes.  We can't do this if this notation isn't scoped.  Unfortunately, Coq doesn't have a built-in [function_scope] like [type_scope]; [type_scope] is automatically opened wherever Coq is expecting a [Sort], and it would be nice if [function_scope] were automatically opened whenever Coq expects a thing of type [forall _, _] or [_ -> _].  To work around this, we open [function_scope] globally. *)
-Notation "g 'o' f" := (compose g f) (at level 40, left associativity) : function_scope.
-Open Scope function_scope.
-(** We allow writing [(f o g)%function] to force [function_scope] over, e.g., [equiv_scope]. *)
-Delimit Scope function_scope with function.
+
+(** We allow writing [(f o g)%function] to force [function_scope] over, e.g., [morphism_scope]. *)
+
+Notation "g 'o' f" := (compose g%function f%function) (at level 40, left associativity) : function_scope.
 
 (** Composition of logical equivalences *)
 Definition iff_compose {A B C : Type} (g : B <-> C) (f : A <-> B)
@@ -139,6 +154,8 @@ Definition iff_inverse {A B : Type} : (A <-> B) -> (B <-> A)
 
 (** Dependent composition of functions. *)
 Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).
+
+Global Arguments composeD {A B C}%type_scope (g f)%function_scope x.
 
 Hint Unfold composeD.
 
@@ -186,12 +203,10 @@ Defined.
 
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
 
-Delimit Scope path_scope with path.
-Local Open Scope path_scope.
-
 (** We bind [path_scope] to [paths] so that when we are constructing arguments to things like [concat], we automatically are in [path_scope]. *)
 Bind Scope path_scope with paths.
 
+Local Open Scope path_scope.
 
 (** The inverse of a path. *)
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
@@ -241,10 +256,12 @@ Arguments transitive_paths / .
 Notation "1" := idpath : path_scope.
 
 (** The composition of two paths. *)
-Notation "p @ q" := (concat p q) (at level 20) : path_scope.
+(** We put [p] and [q] in [path_scope] explcitly.  This is a partial work-around for https://coq.inria.fr/bugs/show_bug.cgi?id=3990, which is that implicitly bound scopes don't nest well. *)
+Notation "p @ q" := (concat p%path q%path) (at level 20) : path_scope.
 
 (** The inverse of a path. *)
-Notation "p ^" := (inverse p) (at level 3, format "p '^'") : path_scope.
+(** See above about explicitly placing [p] in [path_scope]. *)
+Notation "p ^" := (inverse p%path) (at level 3, format "p '^'") : path_scope.
 
 (** An alternative notation which puts each path on its own line.  Useful as a temporary device during proofs of equalities between very long composites; to turn it on inside a section, say [Open Scope long_path_scope]. *)
 Notation "p @' q" := (concat p q) (at level 21, left associativity,
@@ -258,11 +275,9 @@ Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) 
   match p with idpath => u end.
 
 (** See above for the meaning of [simpl nomatch]. *)
-Arguments transport {A} P {x y} p%path_scope u : simpl nomatch.
+Arguments transport {A}%type_scope P%function_scope {x y} p%path_scope u : simpl nomatch.
 
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression.*)
-Delimit Scope fib_scope with fib.
-Local Open Scope fib_scope.
 
 Notation "p # x" := (transport _ p x) (right associativity, at level 65, only parsing) : path_scope.
 
@@ -277,6 +292,8 @@ We will first see this appearing in the type of [apD]. *)
 Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
 
+Global Arguments ap {A B}%type_scope f%function_scope {x y} p%path_scope.
+
 (** We introduce the convention that [apKN] denotes the application of a K-path between
    functions to an N-path between elements, where a 0-path is simply a function or an
    element. Thus, [ap] is a shorthand for [ap01]. *)
@@ -286,7 +303,7 @@ Notation ap01 := ap (only parsing).
 Definition pointwise_paths {A} {P:A->Type} (f g:forall x:A, P x)
   := forall x:A, f x = g x.
 
-Arguments pointwise_paths {A}%type_scope {P} (f g)%function_scope.
+Global Arguments pointwise_paths {A}%type_scope {P} (f g)%function_scope.
 
 Hint Unfold pointwise_paths : typeclass_instances.
 
@@ -296,8 +313,12 @@ Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g)
   : f == g
   := fun x => match h with idpath => 1 end.
 
+Global Arguments apD10 {A%type_scope B} {f g}%function_scope h%path_scope _.
+
 Definition ap10 {A B} {f g:A->B} (h:f=g) : f == g
   := apD10 h.
+
+Global Arguments ap10 {A B}%type_scope {f g}%function_scope h%path_scope _.
 
 (** For the benefit of readers of the HoTT Book: *)
 Notation happly := ap10 (only parsing).
@@ -306,6 +327,8 @@ Definition ap11 {A B} {f g:A->B} (h:f=g) {x y:A} (p:x=y) : f x = g y.
 Proof.
   case h, p; reflexivity.
 Defined.
+
+Global Arguments ap11 {A B}%type_scope {f g}%function_scope h%path_scope {x y} p%path_scope.
 
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments ap {A B} f {x y} p : simpl nomatch.
@@ -320,7 +343,7 @@ Definition apD {A:Type} {B:A->Type} (f:forall a:A, B a) {x y:A} (p:x=y):
   match p with idpath => idpath end.
 
 (** See above for the meaning of [simpl nomatch]. *)
-Arguments apD {A B} f {x y} p : simpl nomatch.
+Arguments apD {A%type_scope B} f%function_scope {x y} p%path_scope : simpl nomatch.
 
 (** ** Equivalences *)
 
@@ -341,6 +364,8 @@ Arguments apD {A B} f {x y} p : simpl nomatch.
 (** The fact that [r] is a left inverse of [s]. As a mnemonic, note that the partially applied type [Sect s] is the type of proofs that [s] is a section. *)
 Definition Sect {A B : Type} (s : A -> B) (r : B -> A) :=
   forall x : A, r (s x) = x.
+
+Global Arguments Sect {A B}%type_scope (s r)%function_scope.
 
 (** A typeclass that includes the data making [f] into an adjoint equivalence. *)
 Class IsEquiv {A B : Type} (f : A -> B) := BuildIsEquiv {
@@ -367,8 +392,6 @@ Global Existing Instance equiv_isequiv.
 
 Arguments equiv_fun {A B} _ _.
 Arguments equiv_isequiv {A B} _.
-
-Delimit Scope equiv_scope with equiv.
 
 Bind Scope equiv_scope with Equiv.
 
@@ -426,7 +449,6 @@ Scheme trunc_index_rec := Minimality for trunc_index Sort Type.
 Definition trunc_index_rect := trunc_index_ind.
 
 (** We will use [Notation] for [trunc_index]es, so define a scope for them here. *)
-Delimit Scope trunc_scope with trunc.
 Bind Scope trunc_scope with trunc_index.
 Arguments trunc_S _%trunc_scope.
 
@@ -536,11 +558,14 @@ Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A,
   :=
   (@apD10 A P f g)^-1.
 
+Global Arguments path_forall {_ A%type_scope P} (f g)%function_scope _.
+
 Definition path_forall2 `{Funext} {A B : Type} {P : A -> B -> Type} (f g : forall x y, P x y) :
   (forall x y, f x y = g x y) -> f = g
   :=
   (fun E => path_forall f g (fun x => path_forall (f x) (g x) (E x))).
 
+Global Arguments path_forall2 {_} {A B}%type_scope {P} (f g)%function_scope _.
 
 (** *** Tactics *)
 
@@ -613,6 +638,8 @@ Global Existing Instance ispointed_type.
 (** Homotopy fibers are homotopical inverse images of points.  *)
 
 Definition hfiber {A B : Type} (f : A -> B) (y : B) := { x : A & f x = y }.
+
+Global Arguments hfiber {A B}%type_scope f%function_scope y.
 
 (** *** More tactics *)
 

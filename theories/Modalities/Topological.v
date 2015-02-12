@@ -50,7 +50,7 @@ Module Topological_Modalities_Theory
       pose (e := isequiv_ooextendable _ _
                                       (fst (inO_iff_isnull O (B tt)) (inO_TypeO (B tt)) i)).
       unfold composeD in e; simpl in e.
-      refine (equiv_compose' _ (equiv_inverse (BuildEquiv _ _ _ e))).
+      refine (_ oE (BuildEquiv _ _ _ e)^-1).
       exact (equiv_contr_forall _).
   Defined.
 

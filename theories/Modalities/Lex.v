@@ -102,8 +102,7 @@ Module Lex_Modalities_Theory (Os : Modalities).
     (** By contrast, this goal, which seems to contain all the mathematical content, is solved fairly easily by [hfiber_functor_pullback] and typeclass magic invoking [isconnected_pullback]. *)
     - intros [ob [oc oe]].
       refine (isconnected_equiv O _
-                (equiv_inverse
-                   (hfiber_functor_pullback _ _ _ _ _ _ _ _ _ _)) _).
+                (hfiber_functor_pullback _ _ _ _ _ _ _ _ _ _)^-1 _).
   Qed.
 
   (** 6. Lex modalities preserve path-spaces. *)
@@ -119,7 +118,7 @@ Module Lex_Modalities_Theory (Os : Modalities).
     refine (conn_map_homotopic O (ap (to O A)) _ _ _).
     - intros ?; symmetry; by apply O_rec_beta.
     - intros p.
-      refine (isconnected_equiv O _ (equiv_inverse (hfiber_ap p)) _).
+      refine (isconnected_equiv O _ (hfiber_ap p)^-1 _).
   Defined.
 
   (** We will not prove that any of these lemmas are equivalent characterizations of lex-ness, because they are all fairly obvious and we don't yet know of any use for them; [isconnected_paths] is usually strictly easier to prove than they are. *)
@@ -201,13 +200,12 @@ Module Accessible_Lex_Modalities_Theory
                   (equiv_compose
                     (equiv_prod_symm (O (sigT P)) (acc_gen O i))
                     (equiv_pullback_unit_prod (O (sigT P)) (acc_gen O i)))
-                  _ _ (equiv_inverse (equiv_sigma_prod0 _ _)) _).
+                  _ _ (equiv_sigma_prod0 _ _)^-1 _).
     - intros A B.
       (** The case [n>0] is actually quite easy, using univalence and the fact that modal types are closed under [Equiv]. *)
       refine (extendable_postcompose' n _ _ _
-                (fun b => equiv_compose'
-                            (equiv_path_TypeO O (A b) (B b))
-                            (equiv_path_universe (A b) (B b)))
+                (fun b => (equiv_path_TypeO O (A b) (B b))
+                            oE (equiv_path_universe (A b) (B b)))
                 _).
       refine (extendable_conn_map_inO O n (@const (acc_gen O i) Unit tt)
                                       (fun b => A b <~> B b)).

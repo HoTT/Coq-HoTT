@@ -597,7 +597,7 @@ Section Reflective_Subuniverse.
     (** It follows that any contractible type is in [O]. *)
     Global Instance inO_contr {A : Type} `{Contr A} : In O A.
     Proof.
-      exact (inO_equiv_inO Unit (equiv_inverse equiv_contr_unit)).
+      exact (inO_equiv_inO Unit equiv_contr_unit^-1).
     Defined.
 
     (** And that the reflection of a contractible type is still contractible. *)
@@ -646,9 +646,9 @@ Section Reflective_Subuniverse.
                {fs : Funext} (A B C : Type) `{In O C}
     : ((O A) * (O B) -> C) <~> (A * B -> C).
     Proof.
-      apply (equiv_compose' (equiv_uncurry A B C)).
-      refine (equiv_compose' _ (equiv_inverse (equiv_uncurry (O A) (O B) C))).
-      apply (equiv_compose' (equiv_o_to_O _ A (B -> C))); simpl.
+      refine (equiv_uncurry A B C oE _).
+      refine (_ oE (equiv_uncurry (O A) (O B) C)^-1).
+      refine (equiv_o_to_O _ A (B -> C) oE _); simpl.
       apply equiv_postcompose'.
       exact (equiv_o_to_O _ B C).
     Defined.
@@ -753,7 +753,7 @@ Section Reflective_Subuniverse.
           refine (ap f (O_rec_beta pr1 x) @ _).
           exact (x.2).
       - intros [a p]; refine (path_sigma' _ _ _).
-        + exact (O_rec_beta pr1 (a;p)). 
+        + exact (O_rec_beta pr1 (a;p)).
         + refine (ap (transport _ _) (O_indpaths_beta _ _ _ _) @ _); simpl.
           refine (transport_paths_Fl _ _ @ _).
           apply concat_V_pp.

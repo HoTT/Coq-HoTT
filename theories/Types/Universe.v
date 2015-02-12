@@ -3,8 +3,8 @@
 
 Require Import HoTT.Basics.
 Require Import Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Equiv.
-Local Open Scope path_scope.
 
+Local Open Scope path_scope.
 
 Generalizable Variables A B f.
 
@@ -25,7 +25,7 @@ Definition equiv_path (A B : Type) (p : A = B) : A <~> B
   := BuildEquiv _ _ (transport (fun X:Type => X) p) _.
 
 Definition equiv_path_V `{Funext} (A B : Type) (p : A = B) :
-  equiv_path B A (p^) = equiv_inverse (equiv_path A B p).
+  equiv_path B A (p^) = (equiv_path A B p)^-1%equiv.
 Proof.
   destruct p. simpl. unfold equiv_path, equiv_inverse. simpl. apply ap.
   refine (@path_ishprop _ (hprop_isequiv _) _ _).
@@ -44,6 +44,8 @@ Definition path_universe_uncurried {A B : Type} (f : A <~> B) : A = B
 Definition path_universe {A B : Type} (f : A -> B) {feq : IsEquiv f} : (A = B)
   := path_universe_uncurried (BuildEquiv _ _ f feq).
 
+Global Arguments path_universe {A B}%type_scope f%function_scope {feq}.
+
 Definition eta_path_universe {A B : Type} (p : A = B)
   : path_universe (equiv_path A B p) = p
   := eissect (equiv_path A B) p.
@@ -61,7 +63,7 @@ Definition equiv_path_universe (A B : Type) : (A <~> B) <~> (A = B)
 
 
 Definition equiv_equiv_path  (A B : Type) : (A = B) <~> (A <~> B)
-  := equiv_inverse (equiv_path_universe A B).
+  := (equiv_path_universe A B)^-1%equiv.
 
 (** These operations have too many names, making [rewrite] a pain.  So we give lots of names to the computation laws. *)
 Definition path_universe_equiv_path {A B : Type} (p : A = B)
@@ -92,7 +94,7 @@ Definition transport_idmap_path_universe_uncurried {A B : Type} (f : A <~> B)
 (** ** Behavior on path operations *)
 
 Definition equiv_path_pp `{Funext} {A B C : Type} (p : A = B) (q : B = C)
-: equiv_path A C (p @ q) = equiv_compose' (equiv_path B C q) (equiv_path A B p).
+: equiv_path A C (p @ q) = equiv_path B C q oE equiv_path A B p.
 Proof.
   destruct p, q. simpl.
   apply path_equiv, path_arrow.
@@ -101,7 +103,7 @@ Defined.
 
 Definition path_universe_compose `{Funext} {A B C : Type}
            (f : A <~> B) (g : B <~> C)
-: path_universe (equiv_compose' g f) = path_universe f @ path_universe g.
+: path_universe (g o f) = path_universe f @ path_universe g.
 Proof.
   revert f. equiv_intro (equiv_path A B) f.
   revert g. equiv_intro (equiv_path B C) g.
@@ -115,7 +117,7 @@ Definition path_universe_1 {A : Type}
   := eta_path_universe 1.
 
 Definition path_universe_V_uncurried `{Funext} {A B : Type} (f : A <~> B)
-  : path_universe_uncurried (equiv_inverse f) = (path_universe_uncurried f)^.
+  : path_universe_uncurried f^-1 = (path_universe_uncurried f)^.
 Proof.
   revert f. equiv_intro ((equiv_path_universe A B)^-1) p. simpl.
   transitivity (p^).
@@ -229,8 +231,8 @@ Definition equiv_path2_universe `{Funext}
            {A B : Type} (f g : A <~> B)
 : (f == g) <~> (path_universe f = path_universe g).
 Proof.
-  refine (equiv_compose' _ (equiv_path_arrow f g)).
-  refine (equiv_compose' _ (equiv_path_equiv f g)).
+  refine (_ oE equiv_path_arrow f g).
+  refine (_ oE equiv_path_equiv f g).
   exact (equiv_ap (equiv_path A B)^-1 _ _).
 Defined.
 
@@ -259,8 +261,8 @@ Definition path2_universe_1 `{Funext}
 Definition path2_universe_postcompose `{Funext}
            {A B C : Type} {f1 f2 : A <~> B} (p : f1 == f2)
            (g : B <~> C)
-: equiv_path2_universe (equiv_compose' g f1)
-                       (equiv_compose' g f2)
+: equiv_path2_universe (g o f1)
+                       (g o f2)
                        (fun a => ap g (p a))
   = path_universe_compose f1 g
     @ whiskerR (path2_universe p) (path_universe g)
@@ -273,8 +275,8 @@ and similarly
 Definition path2_universe_precompose `{Funext}
            {A B C : Type} {f1 f2 : B <~> C} (p : f1 == f2)
            (g : A <~> B)
-: equiv_path2_universe (equiv_compose' f1 g)
-                       (equiv_compose' f2 g)
+: equiv_path2_universe (f1 o g)
+                       (f2 o g)
                        (fun a => (p (g a)))
   = path_universe_compose g f1
     @ whiskerL (path_universe g) (path2_universe p)
@@ -366,9 +368,9 @@ Definition equiv_path3_universe `{Funext}
            {A B : Type} {f g : A <~> B} (p q : f == g)
 : (p == q) <~> (path2_universe p = path2_universe q).
 Proof.
-  refine (equiv_compose' _ (equiv_path_forall p q)).
-  refine (equiv_compose' _ (equiv_ap (equiv_path_arrow f g) p q)).
-  refine (equiv_compose' _ (equiv_ap (equiv_path_equiv f g) _ _)).
+  refine (_ oE equiv_path_forall p q).
+  refine (_ oE equiv_ap (equiv_path_arrow f g) p q).
+  refine (_ oE equiv_ap (equiv_path_equiv f g) _ _).
   unfold path2_universe, equiv_path2_universe.
   simpl. refine (equiv_ap (ap (equiv_path A B)^-1) _ _).
 Defined.

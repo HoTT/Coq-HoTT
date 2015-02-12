@@ -6,7 +6,6 @@ Require Import HoTT.Tactics.
 
 Local Open Scope path_scope.
 
-
 (** * Modalities *)
 
 Module Type Modalities.
@@ -430,7 +429,7 @@ Section OIndEquiv.
     (** Theorem 7.7.7 *)
     Definition isequiv_oD_to_O
     : IsEquiv (fun (h : forall oa, B oa) => h oD to O A)
-    := equiv_isequiv (equiv_inverse equiv_O_ind).
+    := equiv_isequiv equiv_O_ind^-1.
 
   End OIndEquivData.
 
@@ -805,7 +804,7 @@ Section ConnectedMaps.
   Defined.
 
   (** It follows that [conn_map_elim] is actually an equivalence. *)
-  Theorem isequiv_o_conn_map 
+  Theorem isequiv_o_conn_map
           {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
           (P : B -> Type) `{forall b:B, In O (P b)}
   : IsEquiv (fun (g : forall b:B, P b) => g oD f).
@@ -851,7 +850,7 @@ Section ConnectedMaps.
     apply conn_map_from_extension_elim; intros P ? d.
     exists (conn_map_elim g P (conn_map_elim f (P o g) d)); intros a.
     exact (conn_map_comp g P _ _ @ conn_map_comp f (P o g) d a).
-  Defined.      
+  Defined.
 
   Definition cancelR_conn_map {A B C : Type} (f : A -> B) (g : B -> C)
          `{IsConnMap O _ _ f} `{IsConnMap O _ _ (g o f)}
@@ -917,7 +916,7 @@ Section ConnectedMaps.
     : IsConnMap O (functor_sigma f g).
     Proof.
       intros [b v].
-      refine (contr_equiv' _ (equiv_inverse (equiv_O_hfiber_functor_sigma b v))).
+      refine (contr_equiv' _ (equiv_O_hfiber_functor_sigma b v)^-1).
     Defined.
 
     Definition conn_map_base_inhabited (inh : forall b, Q b)
@@ -999,15 +998,12 @@ Section ModalFact.
   : O (hfiber (factor2 fact o factor1 fact) b)
       <~> hfiber (factor2 fact) b.
   Proof.
-    refine (equiv_compose' _
+    refine (_ oE
              (equiv_O_functor O
                (hfiber_compose (factor1 fact) (factor2 fact) b))).
-    refine (equiv_compose'
-             (equiv_sigma_contr (fun w => O (hfiber (factor1 fact) w.1)))
-             _).
+    refine (equiv_sigma_contr (fun w => O (hfiber (factor1 fact) w.1)) oE _).
     - intros w; exact (inclass1 fact w.1).
-    - refine (equiv_inverse
-                (equiv_sigma_inO_O (fun w => hfiber (factor1 fact) w.1))).
+    - refine ((equiv_sigma_inO_O (fun w => hfiber (factor1 fact) w.1))^-1)%equiv.
       exact (inclass2 fact b).
   Defined.
 
@@ -1043,8 +1039,8 @@ Section ModalFact.
     Definition equiv_O_factor_hfibers (b:B)
     : hfiber (factor2 fact) b <~> hfiber (factor2 fact') b.
     Proof.
-      refine (equiv_compose' (O_hfiber_O_fact fact' b) _).
-      refine (equiv_compose' _ (equiv_inverse (O_hfiber_O_fact fact b))).
+      refine (O_hfiber_O_fact fact' b oE _).
+      refine (_ oE (O_hfiber_O_fact fact b)^-1).
       apply equiv_O_functor.
       apply equiv_hfiber_homotopic.
       exact H.
@@ -1083,9 +1079,9 @@ Section ModalFact.
               (@image) _).
     intros A B f fact fact'.
     refine (Build_PathFactorization fact fact' _ _ _ _).
-    - refine (equiv_compose' _ (equiv_fibration_replacement (factor2 fact))).
-      refine (equiv_compose' (equiv_inverse (equiv_fibration_replacement (factor2 fact'))) _).
-      refine (equiv_functor_sigma' (equiv_idmap B) _); intros b; simpl.
+    - refine (_ oE equiv_fibration_replacement (factor2 fact)).
+      refine ((equiv_fibration_replacement (factor2 fact'))^-1 oE _).
+      refine (equiv_functor_sigma' 1 _); intros b; simpl.
       apply equiv_O_factor_hfibers.
     - intros a; exact (pr1_path (equiv_O_factor_hfibers_beta f fact fact' a)).
     - intros x.
