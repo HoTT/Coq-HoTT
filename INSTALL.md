@@ -1,11 +1,10 @@
 # EXPERIMENTAL INSTALL INSTRUCTIONS
 We have experimental opam packages to install both the correct Coq version and the library[1].
 However, the latter cannot be used by people using git to contribute to the library.
-Moreover, opam support on windows is experimental.
+Opam support on windows is experimental.
 [1]: https://github.com/HoTT/HoTT/issues/694
 
-Moreover, we are compatible with [Coq8.5 beta](https://coq.inria.fr/coq-85), so binary packages can be used. 
-However, paths need to be set manually.
+We are compatible with [Coq8.5 beta](https://coq.inria.fr/coq-85), so binary packages can be used. Paths still need to be set manually.
 
 
 # QUICK INSTALLATION INSTRUCTIONS
