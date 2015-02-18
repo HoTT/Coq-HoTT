@@ -11,6 +11,7 @@ Require Export Fibrations.
 Require Export Conjugation.
 Require Export HProp.
 Require Export HSet.
+Require Export EquivGroupoids.
 Require Export EquivalenceVarieties.
 Require Export Extensions.
 Require Export Misc.
