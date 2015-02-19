@@ -22,7 +22,7 @@ minimal fuss, you should try your luck by following these instructions:
      which installs the dependencies automatically.
 
    * OSX: we recommend that you install the Opam package manager for Ocaml
-(http://opam.ocamlpro.com/) and go from there.
+     (http://opam.ocamlpro.com/) and go from there.
 
     brew install opam
     brew update; brew upgrade objective-caml
@@ -115,9 +115,9 @@ minimal fuss, you should try your luck by following these instructions:
    sessions`.
 
     (let ((default-directory
-         (locate-dominating-file buffer-file-name ".dir-locals.el")))
-    (make-local-variable 'coq-prog-name)
-    (setq coq-prog-name (expand-file-name "../hoqtop")))
+           (locate-dominating-file buffer-file-name ".dir-locals.el")))
+      (make-local-variable 'coq-prog-name)
+      (setq coq-prog-name (expand-file-name "../hoqtop")))
 
 8. To update the library to the most current version, run `git pull`.
    You will then have to recompile it with `make`.
