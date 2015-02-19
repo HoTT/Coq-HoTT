@@ -34,14 +34,13 @@ minimal fuss, you should try your luck by following these instructions:
      version of cygwin seems to be missing some ocaml packages.  See
      also https://coq.inria.fr/bugs/show_bug.cgi?id=3154.)  To prevent
      bash from complaining about unrecognized `\r` commands, use
-     `dos2unix`.  The following commands, from the root of the HoTT
+     `dos2unix`.  If you wish to build CoqIDE/hoqide on Windows, we wish you good
+     luck.  The following commands, from the root of the HoTT
      library, should mostly take care of things:
 
         dos2unix hoq*
         /usr/bin/find . -name '*.sh' | xargs dos2unix
 
-     If you wish to build CoqIDE/hoqide on Windows, we wish you good
-     luck.
 
 2. Get the HoTT library (skip this step if you already have it):
 
