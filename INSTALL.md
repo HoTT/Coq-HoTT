@@ -24,8 +24,8 @@ minimal fuss, you should try your luck by following these instructions:
    * OSX: we recommend that you install the Opam package manager for Ocaml
      (http://opam.ocamlpro.com/) and go from there.
 
-        brew install opam
-        brew update; brew upgrade objective-caml
+         brew install opam
+         brew update; brew upgrade objective-caml
 
    * MS Windows: we recommend that you install the 32-bit version of
      cygwin (installer at http://www.cygwin.com/setup-x86.exe) and,
@@ -34,14 +34,13 @@ minimal fuss, you should try your luck by following these instructions:
      version of cygwin seems to be missing some ocaml packages.  See
      also https://coq.inria.fr/bugs/show_bug.cgi?id=3154.)  To prevent
      bash from complaining about unrecognized `\r` commands, use
-     `dos2unix`.  If you wish to build CoqIDE/hoqide on Windows, we wish you good
-     luck.  The following commands, from the root of the HoTT
+     `dos2unix`.  The following commands, from the root of the HoTT
      library, should mostly take care of things:
 
-        dos2unix hoq*
-        /usr/bin/find . -name '*.sh' | xargs dos2unix
-
-
+         dos2unix hoq*
+         /usr/bin/find . -name '*.sh' | xargs dos2unix
+        
+     If you wish to build CoqIDE/hoqide on Windows, we wish you good luck.
 2. Get the HoTT library (skip this step if you already have it):
 
         git clone https://github.com/HoTT/HoTT.git
@@ -69,11 +68,11 @@ minimal fuss, you should try your luck by following these instructions:
    line option "-fno-defer-pop", then you might be running Mac OS X 10.9 with
    an ocaml compiler installed by "brew".  In that case try
 
-     	  brew update; brew upgrade objective-caml
+       brew update; brew upgrade objective-caml
 
    If that doesn't work, try
 
-       	  brew remove objective-caml; brew install objective-caml
+       brew remove objective-caml; brew install objective-caml
 
 4. You can now use the HoTT library in place by running `./hoqtop` and
    `./hoqc`. You can also use `./hoqide` which is the version of coqide
@@ -204,15 +203,15 @@ the configuration, you can run the following steps manually.
    depend on, you can run the following in the root of the HoTT
    directory:
 
-        git submodule sync
-        git submodule update --init --recursive
+       git submodule sync
+       git submodule update --init --recursive
 
    This will give you the relevant version of coq/coq in the
    subdirectory `coq-HoTT`.
 
    Alternatively, if you have `git`, clone the fork with
 
-        git clone https://github.com/coq/coq.git --branch trunk
+       git clone https://github.com/coq/coq.git --branch trunk
 
     If you do not have git, you may still download the files as an
     archive file at https://github.com/coq/coq/archive/trunk.zip (but
@@ -223,7 +222,7 @@ the configuration, you can run the following steps manually.
    If you do not want the custom Coq to override one that you already have
    installed, configure Coq with either `./configure -local` so that it will work in-place, or use
 
-        ./configure -prefix <dir>
+       ./configure -prefix <dir>
 
    as explained by `./configure -help`.
 
@@ -235,8 +234,8 @@ Next you should configure the HoTT library:
 1. If you installed the custom Coq as your default version of Coq,
    which means that it it can be fond in PATH, run
 
-        ./autogen.sh
-        ./configure
+       ./autogen.sh
+       ./configure
 
    in the HoTT directory.
 
@@ -244,15 +243,15 @@ Next you should configure the HoTT library:
    with `-local`, you should tell `./configure` where to find the custom
    Coq:
 
-        ./autogen.sh
-        ./configure COQBIN=<directory-containing-coq-executables>
+       ./autogen.sh
+       ./configure COQBIN=<directory-containing-coq-executables>
 
    where you should specify the *absolute* path name (starting with /)
    of the directory which contains `coqtop`, `coqc`, etc.
 
 To compile the HoTT library type
 
-        make
+    make
 
 Because it is a bit tricky to run Coq with a custom standard library,
 we provided scripts `hoqtop` and `hoqc` that do this for you, so you
