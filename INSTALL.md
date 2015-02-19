@@ -23,10 +23,10 @@ minimal fuss, you should try your luck by following these instructions:
 
    * OSX: we recommend that you install the Opam package manager for Ocaml
      (http://opam.ocamlpro.com/) and go from there.
-
+```
          brew install opam
          brew update; brew upgrade objective-caml
-
+```
    * MS Windows: we recommend that you install the 32-bit version of
      cygwin (installer at http://www.cygwin.com/setup-x86.exe) and,
      in the setup process install all of the packages mentioning
@@ -36,10 +36,10 @@ minimal fuss, you should try your luck by following these instructions:
      bash from complaining about unrecognized `\r` commands, use
      `dos2unix`.  The following commands, from the root of the HoTT
      library, should mostly take care of things:
-
+```
          dos2unix hoq*
          /usr/bin/find . -name '*.sh' | xargs dos2unix
-
+```
      If you wish to build CoqIDE/hoqide on Windows, we wish you good
      luck.
 
