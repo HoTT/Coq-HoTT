@@ -195,6 +195,21 @@ AS_IF([test "$coqtop_out" = 0],
 
 AM_CONDITIONAL(install_stdlib_symlinks, [test "$coqtop_out" = 0])
 
+# create a snippet to get a Makefile conditional through automake,
+# from http://stackoverflow.com/a/8643550/377022 and
+# http://stackoverflow.com/a/28652045/377022
+include_snippet='
+ifneq ($(filter-out $(FAST_TARGETS),$(MAKECMDGOALS)),)
+-include $(ALL_DEPFILES)
+else
+ifeq ($(MAKECMDGOALS),)
+-include $(ALL_DEPFILES)
+endif
+endif
+'
+AC_SUBST([include_snippet])
+AM_SUBST_NOTMAKE([include_snippet])
+
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([hoq-config])
 
