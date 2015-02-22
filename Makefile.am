@@ -362,23 +362,35 @@ $(STD_DEPFILES) : %.d : %.v
 	$(VECHO) COQDEP $<
 	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
 
-clean-dpdgraph:
+clean-dpdgraph::
 	(cd etc/dpdgraph-0.4alpha && $(MAKE) clean)
 
 # We separate things to work around `make: execvp: /bin/bash: Argument list too long`
-clean:
-	rm -f $(ALL_VOFILES)
-	rm -f $(ALL_VFILES:.v=.vi)
-	rm -f $(ALL_GLOBFILES)
-	rm -f $(ALL_DEPFILES)
-	rm -f $(ALL_HTMLFILES)
-	rm -f $(ALL_XMLFILES)
-	rm -f $(ALL_PROVIOLA_HTMLFILES)
-	rm -f $(ALL_TIMINGFILES)
-	rm -f $(ALL_TIMING_HTMLFILES)
-	rm -f $(ALL_SVGFILES)
-	rm -f $(ALL_DPDFILES)
-	rm -f $(ALL_DOTFILES)
+clean::
+	$(VECHO) "RM *.VO"
+	$(Q)rm -f $(ALL_VOFILES)
+	$(VECHO) "RM *.VIO"
+	$(Q)rm -f $(ALL_VFILES:.v=.vio)
+	$(VECHO) "RM *.GLOB"
+	$(Q)rm -f $(ALL_GLOBFILES)
+	$(VECHO) "RM *.V.D"
+	$(Q)rm -f $(ALL_DEPFILES)
+	$(VECHO) "RM *.HTML"
+	$(Q)rm -f $(ALL_HTMLFILES)
+	$(VECHO) "RM *.XML"
+	$(Q)rm -f $(ALL_XMLFILES)
+	$(VECHO) "RM *.HTML"
+	$(Q)rm -f $(ALL_PROVIOLA_HTMLFILES)
+	$(VECHO) "RM *.TIMING"
+	$(Q)rm -f $(ALL_TIMINGFILES)
+	$(VECHO) "RM *.TIMING.HTML"
+	$(Q)rm -f $(ALL_TIMING_HTMLFILES)
+	$(VECHO) "RM *.SVG"
+	$(Q)rm -f $(ALL_SVGFILES)
+	$(VECHO) "RM *.DPD"
+	$(Q)rm -f $(ALL_DPDFILES)
+	$(VECHO) "RM *.DOT"
+	$(Q)rm -f $(ALL_DOTFILES)
 	rm -f $(EXTRA_CLEANFILES)
 	find "$(SRCCOQLIB)/theories" $(srcdir)/theories -name \*.vo -o -name \*.glob -o -name \*.timing | xargs rm -f
 
