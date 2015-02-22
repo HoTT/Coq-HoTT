@@ -144,6 +144,9 @@ all-am: Makefile $(SCRIPTS) $(DATA) $(MAKEFILE_TARGETS_FILE)
 
 .PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom quick vi2vo checkproofs
 
+# targets that we don't need to run coqdep for
+FAST_TARGETS = clean clean-local clean-dpdgraph TAGS
+
 if install_stdlib_symlinks
 install-data-local:
 	$(MKDIR_P) "$(hottdir)/coq"
@@ -379,4 +382,4 @@ clean:
 	rm -f $(EXTRA_CLEANFILES)
 	find "$(SRCCOQLIB)/theories" $(srcdir)/theories -name \*.vo -o -name \*.glob -o -name \*.timing | xargs rm -f
 
--include $(ALL_DEPFILES)
+@include_snippet@
