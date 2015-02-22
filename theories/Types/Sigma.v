@@ -68,6 +68,23 @@ Definition path_sigma {A : Type} (P : A -> Type) (u v : sigT P)
            (p : u.1 = v.1) (q : p # u.2 = v.2)
 : u = v
   := path_sigma_uncurried P u v (p;q).
+  
+(* Added a contravariant instance of path_sigma_uncurried *)
+Definition path_sigma_uncurried' {A : Type} (P : A -> Type) (u v : sigT P)
+  (pq : {p : u.1 = v.1 & u.2 = p^ # v.2})
+  : u = v
+  := match pq with
+       | existT p q =>
+         match u, v return (forall p0, (u.2 = p0^ # v.2) -> (u=v)) with
+           | (x;y), (x';y') => fun p1 q1 =>
+             match p1 in (_ = x'') return (forall y'', (y = p1^ # y'') -> (x;y)=(x'';y'')) with
+               | idpath => fun y' q2 =>
+                 match q2 with
+                   | idpath => 1
+                 end
+             end y' q1
+         end p q
+     end.  
 
 (** A variant of [Forall.dpath_forall] from which uses dependent sums to package things. It cannot go into [Forall] because [Sigma] depends on [Forall]. *)
 
@@ -190,6 +207,22 @@ Defined.
 Definition equiv_path_sigma `(P : A -> Type) (u v : sigT P)
 : {p : u.1 = v.1 &  p # u.2 = v.2} <~> (u = v)
   := BuildEquiv _ _ (path_sigma_uncurried P u v) _.
+  
+(* Added a contravariant version of isequiv_path_sigma' *)
+Instance isequiv_path_sigma' {A : Type} `{P : A -> Type} {u v : sigT P}
+  : IsEquiv (path_sigma_uncurried' P u v) | 0.
+  apply (isequiv_adjointify (path_sigma_uncurried' P u v) (fun r => match r with idpath => (1; 1) end)).
+    by intro r; induction r; destruct u as [u1 u2]; reflexivity.
+  destruct u as [u1 u2]; destruct v as [v1 v2]; intros [p q].
+  simpl in p, q.
+  destruct p; simpl in q.
+  destruct q; reflexivity.
+Defined.
+
+(* Added a contravariant version of equiv_path_sigma *)
+Definition equiv_path_sigma' {A : Type} `(P : A -> Type) (u v : sigT P)
+  : {p : u.1 = v.1 & u.2 = p^ # v.2} <~> (u = v)
+  := BuildEquiv _ _ (path_sigma_uncurried' P u v) _.  
 
 (** This identification respects path concatenation. *)
 
