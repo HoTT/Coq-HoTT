@@ -70,6 +70,8 @@ Module Export Surreals.
     { game_of : Game
     ; isno_game_of : is_surreal (game_of) }.
 
+  Bind Scope surreal_scope with No.
+
   Definition lt (x y : No) := game_lt (game_of x) (game_of y).
 
   Definition le (x y : No) := game_le (game_of x) (game_of y).
