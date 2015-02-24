@@ -20,3 +20,6 @@ Check isequiv_lift'@{i j}.
 Check (fun A : Type => _ : IsPointed (Susp A)).
 Check (@ispointed_susp Type).
 Check (@ispointed_susp Set).
+
+(** Check that nested sigma-type notation didn't get clobbered by surreal cuts *)
+Check ({ l : Unit & { n : Unit & Unit }}).
