@@ -38,6 +38,7 @@ function readlink_f() {
 # script, then use that one, otherwise use the global one. This trick
 # allows hoqc to work "in place" on the source files.
 mydir="$(dirname "$(readlink_f "${BASH_SOURCE[0]}")")"
+which cygpath 2>/dev/null >/dev/null && mydir="$(cygpath -m "$mydir")"
 if test -d "$mydir/coq/theories"
 then
   export COQLIB="$mydir/coq"
