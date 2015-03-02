@@ -33,6 +33,10 @@ echo '$ git submodule update --init --recursive'
 git submodule update --init --recursive
 
 pushd coq-HoTT
+if [ ! -z "$FORCE_COQ_VERSION" ]
+then
+    git checkout "$FORCE_COQ_VERSION" || exit $?
+fi
 echo '$ ./configure -no-native-compiler '"$@"
 ./configure -no-native-compiler "$@"
 echo '$ make coqlight'
