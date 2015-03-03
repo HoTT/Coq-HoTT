@@ -330,6 +330,9 @@ CATEGORY_VFILES = \
 	\
 	$(srcdir)/theories/categories/Grothendieck.v \
 	$(srcdir)/theories/categories/Grothendieck/ToSet.v \
+	$(srcdir)/theories/categories/Grothendieck/ToSet/Core.v \
+	$(srcdir)/theories/categories/Grothendieck/ToSet/Morphisms.v \
+	$(srcdir)/theories/categories/Grothendieck/ToSet/Univalent.v \
 	$(srcdir)/theories/categories/Grothendieck/PseudofunctorToCat.v \
 	$(srcdir)/theories/categories/Grothendieck/ToCat.v \
 	\
