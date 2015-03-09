@@ -55,7 +55,7 @@ Arguments eta3_sigma / .
 
 (** With this version of the function, we often have to give [u] and [v] explicitly, so we make them explicit arguments. *)
 Definition path_sigma_uncurried {A : Type} (P : A -> Type) (u v : sigT P)
-           (pq : {p : u.1 = v.1 &  p # u.2 = v.2})
+           (pq : {p : u.1 = v.1 & p # u.2 = v.2})
 : u = v
   := match pq.2 in (_ = v2) return u = (v.1; v2) with
        | 1 => match pq.1 as p in (_ = v1) return u = (v1; p # u.2) with
@@ -68,6 +68,12 @@ Definition path_sigma {A : Type} (P : A -> Type) (u v : sigT P)
            (p : u.1 = v.1) (q : p # u.2 = v.2)
 : u = v
   := path_sigma_uncurried P u v (p;q).
+
+(** A contravariant instance of [path_sigma_uncurried] *)
+Definition path_sigma_uncurried_contra {A : Type} (P : A -> Type) (u v : sigT P)
+           (pq : {p : u.1 = v.1 & u.2 = p^ # v.2})
+: u = v
+  := (path_sigma_uncurried P v u (pq.1^;pq.2^))^.
 
 (** A variant of [Forall.dpath_forall] from which uses dependent sums to package things. It cannot go into [Forall] because [Sigma] depends on [Forall]. *)
 
@@ -190,6 +196,23 @@ Defined.
 Definition equiv_path_sigma `(P : A -> Type) (u v : sigT P)
 : {p : u.1 = v.1 &  p # u.2 = v.2} <~> (u = v)
   := BuildEquiv _ _ (path_sigma_uncurried P u v) _.
+  
+(* A contravariant version of [isequiv_path_sigma'] *)
+Instance isequiv_path_sigma_contra `{P : A -> Type} {u v : sigT P}
+  : IsEquiv (path_sigma_uncurried_contra P u v) | 0.
+  apply (isequiv_adjointify (path_sigma_uncurried_contra P u v)
+        (fun r => match r with idpath => (1; 1) end)).
+    by intro r; induction r; destruct u as [u1 u2]; reflexivity.
+  destruct u, v; intros [p q].
+  simpl in *.
+  destruct p; simpl in q.
+  destruct q; reflexivity.
+Defined.
+
+(* A contravariant version of [equiv_path_sigma] *)
+Definition equiv_path_sigma_contra {A : Type} `(P : A -> Type) (u v : sigT P)
+  : {p : u.1 = v.1 & u.2 = p^ # v.2} <~> (u = v)
+  := BuildEquiv _ _ (path_sigma_uncurried_contra P u v) _.
 
 (** This identification respects path concatenation. *)
 
