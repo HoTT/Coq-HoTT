@@ -70,6 +70,8 @@ Module Export Surreals.
     { game_of : Game
     ; isno_game_of : is_surreal (game_of) }.
 
+  Bind Scope surreal_scope with No.
+
   Definition lt (x y : No) := game_lt (game_of x) (game_of y).
 
   Definition le (x y : No) := game_le (game_of x) (game_of y).
@@ -84,7 +86,7 @@ Module Export Surreals.
                 (isno _ _ _ _ (isno_game_of o xL)
                       (isno_game_of o xR) xcut).
 
-  Notation "{{ xL | xR // xcut }}" := (No_cut xL xR xcut).
+  Local Notation "{{ xL | xR // xcut }}" := (No_cut xL xR xcut) : surreal_scope.
 
   Axiom path_No : forall (x y : No), (x <= y) -> (y <= x) -> (x = y).
   Arguments path_No {x y} _ _.
@@ -278,6 +280,11 @@ Finally, for conceptual isolation, and so as not to depend on the particular imp
   End NoInd.
 
 End Surreals.
+
+(** We put this in a module so that it doesn't prevent other people from using notations with double `}}`, e.g. nested sigma-types.  Apparently just putting it in a closed scope is not good enough for that.  Anyone else who wants to use this notation can import this module. *)
+Module Import Surreal_Cut_Notation.
+  Notation "{{ xL | xR // xcut }}" := (No_cut xL xR xcut) : surreal_scope.
+End Surreal_Cut_Notation.
 
 (** ** A few surreal numbers *)
 
