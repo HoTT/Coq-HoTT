@@ -87,6 +87,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/hit/Truncations.v \
 	$(srcdir)/theories/hit/TruncImpliesFunext.v \
 	$(srcdir)/theories/hit/Connectedness.v \
+	$(srcdir)/theories/hit/Coeq.v \
 	$(srcdir)/theories/hit/Flattening.v \
 	$(srcdir)/theories/hit/Interval.v \
 	$(srcdir)/theories/hit/IntervalImpliesFunext.v \

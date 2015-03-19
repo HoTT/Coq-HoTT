@@ -29,6 +29,7 @@ Require Export Pullback.
 Require Export hit.Interval.
 Require Export hit.Truncations.
 Require Export hit.Connectedness.
+Require Export hit.Coeq.
 Require Export hit.Flattening.
 Require Export hit.Circle.
 Require Export hit.Suspension.

@@ -5,50 +5,11 @@
 Require Import HoTT.Basics UnivalenceImpliesFunext.
 Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe.
 Local Open Scope path_scope.
+Require Import HoTT.hit.Coeq.
 
+(** The base HIT [W] is just a homotopy coequalizer [Coeq]. *)
 
-
-(** First we define the general non-recursive HIT. *)
-
-Module Export BaseHIT.
-
-Private Inductive W (A B : Type) (f g : B -> A) : Type :=
-| cc : A -> W A B f g.
-
-Arguments cc {A B f g} a.
-
-Axiom pp : forall {A B f g} (b:B), @cc A B f g (f b) = cc (g b).
-
-Definition W_ind {A B f g} (P : W A B f g -> Type)
-  (cc' : forall a, P (cc a))
-  (pp' : forall b, (pp b) # (cc' (f b)) = cc' (g b))
-  : forall w, P w
-  := fun w => match w with cc a => fun _ => cc' a end pp'.
-
-Axiom W_ind_beta_pp
-  : forall {A B f g} (P : W A B f g -> Type) (cc' : forall a, P (cc a))
-  (pp' : forall b, (pp b) # (cc' (f b)) = cc' (g b)) (b:B),
-  apD (W_ind P cc' pp') (pp b) = pp' b.
-
-End BaseHIT.
-
-Definition W_rec {A B f g} (P : Type) (cc' : A -> P)
-  (pp' : forall b, cc' (f b) = cc' (g b))
-  : W A B f g -> P
-  := W_ind (fun _ => P) cc' (fun b => transport_const _ _ @ pp' b).
-
-Definition W_rec_beta_pp {A B f g} (P : Type) (cc' : A -> P)
-  (pp' : forall b:B, cc' (f b) = cc' (g b)) (b:B)
-  : ap (W_rec P cc' pp') (pp b) = pp' b.
-Proof.
-  unfold W_rec.
-  (** Use [eapply] rather than [refine] so that we don't get evars as goals, and don't have to shelve any goals with [shelve_unifiable]. *)
-  eapply (cancelL (transport_const (pp b) _)).
-  refine ((apD_const (@W_ind A B f g (fun _ => P) cc' _) (pp b))^ @ _).
-  refine (W_ind_beta_pp (fun _ => P) _ _ _).
-Defined.
-
-
+(** TODO: Make the names in this file more usable, move it into [Coeq.v], and use it to derive corresponding flattening lemmas for [pushout], etc. *)
 
 (** Now we define the flattened HIT which will be equivalent to the total space of a fibration over [W]. *)
 
@@ -106,13 +67,13 @@ Defined.
 Section AssumeAxioms.
 Context `{Univalence}.
 
-Context {A B : Type} {f g : B -> A}.
+Context {B A : Type} {f g : B -> A}.
 Context {C : A -> Type} {D : forall b, C (f b) <~> C (g b)}.
 
-Let W' := W A B f g.
+Let W' := Coeq f g.
 
 Let P : W' -> Type
-  := W_rec Type C (fun b => path_universe (D b)).
+  := Coeq_rec Type C (fun b => path_universe (D b)).
 
 
 
@@ -120,12 +81,12 @@ Let P : W' -> Type
 
 Let sWtil := { w:W' & P w }.
 
-Let scct (a:A) (x:C a) : sWtil := (existT P (cc a) x).
+Let scct (a:A) (x:C a) : sWtil := (existT P (coeq a) x).
 
 Let sppt (b:B) (y:C (f b)) : scct (f b) y = scct (g b) (D b y)
-  := path_sigma' P (pp b)
-       (transport_path_universe' P (pp b) (D b)
-         (W_rec_beta_pp Type C (fun b0 => path_universe (D b0)) b) y).
+  := path_sigma' P (cp b)
+       (transport_path_universe' P (cp b) (D b)
+         (Coeq_rec_beta_cp Type C (fun b0 => path_universe (D b0)) b) y).
 
 (** Here is the dependent eliminator *)
 Definition sWtil_ind (Q : sWtil -> Type)
@@ -134,21 +95,21 @@ Definition sWtil_ind (Q : sWtil -> Type)
   : forall w, Q w.
 Proof.
   apply sigT_ind.
-  refine (W_ind (fun w => forall x:P w, Q (w;x))
+  refine (Coeq_ind (fun w => forall x:P w, Q (w;x))
     (fun a x => scct' a x) _).
   intros b.
-  apply (dpath_forall P (fun a b => Q (a;b)) _ _ (pp b)
+  apply (dpath_forall P (fun a b => Q (a;b)) _ _ (cp b)
     (scct' (f b)) (scct' (g b))).
   intros y.
-  set (q := transport_path_universe' P (pp b) (D b)
-    (W_rec_beta_pp Type C (fun b0 : B => path_universe (D b0)) b) y).
+  set (q := transport_path_universe' P (cp b) (D b)
+    (Coeq_rec_beta_cp Type C (fun b0 : B => path_universe (D b0)) b) y).
   rewrite transportD_is_transport.
   refine (_ @ apD (scct' (g b)) q^).
   refine (moveL_transport_V (fun x => Q (scct (g b) x)) q _ _ _).
   rewrite transport_compose, <- transport_pp.
   refine (_ @ sppt' b y).
   apply ap10, ap.
-  refine (whiskerL _ (ap_existT P (cc (g b)) _ _ q) @ _).
+  refine (whiskerL _ (ap_existT P (coeq (g b)) _ _ q) @ _).
   exact ((path_sigma_p1_1p' _ _ _)^).
 Defined.
 
@@ -192,14 +153,14 @@ Definition sWtil_rec (Q : Type)
   : sWtil -> Q.
 Proof.
   apply sigT_ind.
-  refine (W_ind (fun w => P w -> Q) (fun a x => scct' a x) _).
+  refine (Coeq_ind (fun w => P w -> Q) (fun a x => scct' a x) _).
   intros b.
   refine (dpath_arrow P (fun _ => Q) _ _ _ _).
   intros y.
   refine (transport_const _ _ @ _).
   refine (sppt' b _ @ ap _ _).
-  refine ((transport_path_universe' P (pp b) (D b) _ _)^).
-  exact (W_rec_beta_pp _ _ _ _).
+  refine ((transport_path_universe' P (cp b) (D b) _ _)^).
+  exact (Coeq_rec_beta_cp _ _ _ _).
 Defined.
 
 Open Scope long_path_scope.
@@ -211,9 +172,9 @@ Definition sWtil_rec_beta_ppt (Q : Type)
   : ap (sWtil_rec Q scct' sppt') (sppt b y) = sppt' b y.
 Proof.
   unfold sWtil_rec, sppt.
-  refine (@ap_sigT_rec_path_sigma W' P Q _ _ (pp b) _ _ _ _ @ _); simpl.
-  rewrite (@W_ind_beta_pp A B f g).
-  rewrite (ap10_dpath_arrow P (fun _ => Q) (pp b) _ _ _ y).
+  refine (@ap_sigT_rec_path_sigma W' P Q _ _ (cp b) _ _ _ _ @ _); simpl.
+  rewrite (@Coeq_ind_beta_cp B A f g).
+  rewrite (ap10_dpath_arrow P (fun _ => Q) (cp b) _ _ _ y).
   repeat rewrite concat_p_pp.
   (** Now everything cancels! *)
   rewrite ap_V, concat_pV_p, concat_pV_p, concat_pV_p, concat_Vp.
