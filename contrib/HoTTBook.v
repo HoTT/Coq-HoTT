@@ -1843,7 +1843,7 @@ hit.epi.issurj_isepi *)
 
 (* ================================================== lem:sets_exact *)
 (** Lemma 10.1.8 *)
-Definition Book_10_1_8 :=@hit.quotient.sets_exact.
+Definition Book_10_1_8 := @hit.quotient.sets_exact.
 
 
 (* ================================================== prop:kernels_are_effective *)
