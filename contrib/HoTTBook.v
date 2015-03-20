@@ -1810,12 +1810,20 @@ Definition Book_9_8_2 := @HoTT.categories.Structure.IdentityPrinciple.structure_
 
 (* ================================================== thm:mono *)
 (** Lemma 10.1.1 *)
-
+(* No complete equivalence yet, but see:
+HSet.isinj_embedding
+HSet.isembedding_isinj_hset
+HSet.isinj_ismono
+HSet.ismono_isinj
+HSet.ismono_isequiv *)
 
 
 (* ================================================== epis-surj *)
 (** Lemma 10.1.4 *)
-
+(* The proof are slightly different, but see:
+hit.epi.isepi_issurj
+hit.epi.isepi'_contr_cone
+hit.epi.issurj_isepi *)
 
 
 (* ================================================== lem:images_are_coequalizers *)
@@ -1835,12 +1843,14 @@ Definition Book_9_8_2 := @HoTT.categories.Structure.IdentityPrinciple.structure_
 
 (* ================================================== lem:sets_exact *)
 (** Lemma 10.1.8 *)
-
+Definition Book_10_1_8 :=@hit.quotient.sets_exact.
 
 
 (* ================================================== prop:kernels_are_effective *)
 (** Theorem 10.1.9 *)
-
+(* See: hit.unique_choice.unique_choice
+theories.ObjectClassifier.PowisoPFam
+Apparently closure under Pi and Sigma are still missing ? *)
 
 
 (* ================================================== thm:settopos *)
