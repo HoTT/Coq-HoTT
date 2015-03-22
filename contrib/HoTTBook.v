@@ -1810,21 +1810,20 @@ Definition Book_9_8_2 := @HoTT.categories.Structure.IdentityPrinciple.structure_
 
 (* ================================================== thm:mono *)
 (** Lemma 10.1.1 *)
-(* No complete equivalence yet, but see:
-HSet.isinj_embedding
-HSet.isembedding_isinj_hset
-HSet.isinj_ismono
-HSet.ismono_isinj
-HSet.ismono_isequiv *)
+(** The third notion in the book is called embedding. No complete equivalence yet, but see:*)
+Definition Book_10_1_1_iii := @HSet.isinj_embedding.
 
+Definition Book_10_1_2rl := @HSet.isinj_ismono.
+Definition Book_10_1_2lr := @HSet.ismono_isinj.
+(* This one is not in the book, but close to 10.1.2:
+ HSet.isembedding_isinj_hset*)
 
 (* ================================================== epis-surj *)
 (** Lemma 10.1.4 *)
-(* The proof are slightly different, but see:
-hit.epi.isepi_issurj
-hit.epi.isepi'_contr_cone
-hit.epi.issurj_isepi *)
 
+Definition Book_10_1_4_i_iii := @hit.epi.isepi_issurj.
+Definition Book_10_1_4_i_ii := @hit.epi.isepi'_contr_cone.
+Definition Book_10_1_4_iii_i := @hit.epi.issurj_isepi.
 
 (* ================================================== lem:images_are_coequalizers *)
 (** Theorem 10.1.5 *)
