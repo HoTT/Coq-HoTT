@@ -828,6 +828,16 @@ Ltac transport_to_ap :=
                progress rewrite (transport_idmap_ap _ P _ _ p u)
          end.
 
+(** Transporting in a fibration dependent on two independent types commutes. *)
+Definition transport_transport {A B} (C : A -> B -> Type)
+           {x1 x2 : A} (p : x1 = x2) {y1 y2 : B} (q : y1 = y2)
+           (c : C x1 y1)
+: transport (C x2) q (transport (fun x => C x y1) p c)
+  = transport (fun x => C x y2) p (transport (C x1) q c).
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+
 (** *** The behavior of [ap] and [apD]. *)
 
 (** In a constant fibration, [apD] reduces to [ap], modulo [transport_const]. *)

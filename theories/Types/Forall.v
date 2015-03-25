@@ -88,6 +88,19 @@ Definition transport_forall_constant
     == (fun y => transport (fun x => C x y) p (f y))
   := match p with idpath => fun _ => 1 end.
 
+Definition apD_transport_forall_constant
+  {A B : Type} (C : A -> B -> Type)
+  {x1 x2 : A} (p : x1 = x2) (f : forall y : B, C x1 y)
+  {y1 y2 : B} (q : y1 = y2)
+: apD (transport (fun x => forall y : B, C x y) p f) q
+  = ap (transport (C x2) q) (transport_forall_constant p f y1)
+    @ transport_transport C p q (f y1)
+    @ ap (transport (fun x : A => C x y2) p) (apD f q)
+    @ (transport_forall_constant p f y2)^.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+
 (** ** Maps on paths *)
 
 (** The action of maps given by lambda. *)
