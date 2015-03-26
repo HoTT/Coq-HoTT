@@ -1,10 +1,11 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-(** * Theorems about the circle [S¹]. *)
+(** * Theorems about the circle [S1]. *)
 
 Require Import HoTT.Basics.
 Require Import Types.Paths Types.Forall Types.Arrow Types.Universe Types.Empty Types.Unit.
 Require Import HSet UnivalenceImpliesFunext.
+Require Import Spaces.Int.
 Local Open Scope path_scope.
 
 Generalizable Variables X A B f g n.
@@ -45,97 +46,7 @@ Defined.
 
 (* ** The loop space of the circle is the Integers. *)
 
-(* First we define the appropriate integers. *)
-
-Inductive Pos : Type1 :=
-| one : Pos
-| succ_pos : Pos -> Pos.
-
-Definition one_neq_succ_pos (z : Pos) : ~ (one = succ_pos z)
-  := fun p => transport (fun s => match s with one => Unit | succ_pos t => Empty end) p tt.
-
-Definition succ_pos_injective {z w : Pos} (p : succ_pos z = succ_pos w) : z = w
-  := transport (fun s => z = (match s with one => w | succ_pos a => a end)) p (idpath z).
-
-Inductive Int : Type1 :=
-| neg : Pos -> Int
-| zero : Int
-| pos : Pos -> Int.
-
-Definition neg_injective {z w : Pos} (p : neg z = neg w) : z = w
-  := transport (fun s => z = (match s with neg a => a | zero => w | pos a => w end)) p (idpath z).
-
-Definition pos_injective {z w : Pos} (p : pos z = pos w) : z = w
-  := transport (fun s => z = (match s with neg a => w | zero => w | pos a => a end)) p (idpath z).
-
-Definition neg_neq_zero {z : Pos} : ~ (neg z = zero)
-  := fun p => transport (fun s => match s with neg a => z = a | zero => Empty | pos _ => Empty end) p (idpath z).
-
-Definition pos_neq_zero {z : Pos} : ~ (pos z = zero)
-  := fun p => transport (fun s => match s with pos a => z = a | zero => Empty | neg _ => Empty end) p (idpath z).
-
-Definition neg_neq_pos {z w : Pos} : ~ (neg z = pos w)
-  := fun p => transport (fun s => match s with neg a => z = a | zero => Empty | pos _ => Empty end) p (idpath z).
-
-(* And prove that they are a set. *)
-
-Global Instance decpaths_int : DecidablePaths Int.
-Proof.
-  intros [n | | n] [m | | m].
-  revert m; induction n as [|n IHn]; intros m; induction m as [|m IHm].
-  exact (inl 1).
-  exact (inr (fun p => one_neq_succ_pos _ (neg_injective p))).
-  exact (inr (fun p => one_neq_succ_pos _ (symmetry _ _ (neg_injective p)))).
-  destruct (IHn m) as [p | np].
-  exact (inl (ap neg (ap succ_pos (neg_injective p)))).
-  exact (inr (fun p => np (ap neg (succ_pos_injective (neg_injective p))))).
-  exact (inr neg_neq_zero).
-  exact (inr neg_neq_pos).
-  exact (inr (neg_neq_zero o symmetry _ _)).
-  exact (inl 1).
-  exact (inr (pos_neq_zero o symmetry _ _)).
-  exact (inr (neg_neq_pos o symmetry _ _)).
-  exact (inr pos_neq_zero).
-  revert m; induction n as [|n IHn]; intros m; induction m as [|m IHm].
-  exact (inl 1).
-  exact (inr (fun p => one_neq_succ_pos _ (pos_injective p))).
-  exact (inr (fun p => one_neq_succ_pos _ (symmetry _ _ (pos_injective p)))).
-  destruct (IHn m) as [p | np].
-  exact (inl (ap pos (ap succ_pos (pos_injective p)))).
-  exact (inr (fun p => np (ap pos (succ_pos_injective (pos_injective p))))).
-Defined.
-
-Global Instance hset_int : IsHSet Int | 0.
-Proof.
-  exact _.
-Defined.
-
-(* Successor is an autoequivalence of [Int]. *)
-
-Definition succ_int (z : Int) : Int
-  := match z with
-       | neg (succ_pos n) => neg n
-       | neg one => zero
-       | zero => pos one
-       | pos n => pos (succ_pos n)
-     end.
-
-Definition pred_int (z : Int) : Int
-  := match z with
-       | neg n => neg (succ_pos n)
-       | zero => neg one
-       | pos one => zero
-       | pos (succ_pos n) => pos n
-     end.
-
-Global Instance isequiv_succ_int : IsEquiv succ_int | 0.
-Proof.
-  refine (isequiv_adjointify succ_int pred_int _ _).
-  intros [[|n] | | [|n]]; reflexivity.
-  intros [[|n] | | [|n]]; reflexivity.
-Defined.
-
-(* Now we do the encode/decode. *)
+(** We use encode-decode. *)
 
 Section AssumeUnivalence.
 Context `{Univalence}.
@@ -170,22 +81,9 @@ Definition S1_encode (x:S1) : (base = x) -> S1_code x
 
 (* Decode by iterating loop. *)
 
-Fixpoint loopexp {A : Type} {x : A} (p : x = x) (n : Pos) : (x = x)
-  := match n with
-       | one => p
-       | succ_pos n => loopexp p n @ p
-     end.
-
-Definition looptothe (z : Int) : (base = base)
-  := match z with
-       | neg n => loopexp (loop^) n
-       | zero => 1
-       | pos n => loopexp (loop) n
-     end.
-
 Definition S1_decode (x:S1) : S1_code x -> (base = x).
 Proof.
-  revert x; refine (S1_ind (fun x => S1_code x -> base = x) looptothe _).
+  revert x; refine (S1_ind (fun x => S1_code x -> base = x) (loopexp loop) _).
   apply path_forall; intros z; simpl in z.
   refine (transport_arrow _ _ _ @ _).
   refine (transport_paths_r loop _ @ _).
@@ -200,8 +98,8 @@ Defined.
 
 (* The nontrivial part of the proof that decode and encode are equivalences is showing that decoding followed by encoding is the identity on the fibers over [base]. *)
 
-Definition S1_encode_looptothe (z:Int)
-  : S1_encode base (looptothe z) = z.
+Definition S1_encode_loopexp (z:Int)
+  : S1_encode base (loopexp loop z) = z.
 Proof.
   destruct z as [n | | n]; unfold S1_encode.
   induction n; simpl in *.
@@ -227,7 +125,7 @@ Proof.
   refine (isequiv_adjointify (S1_encode x) (S1_decode x) _ _).
   (* Here we induct on [x:S1].  We just did the case when [x] is [base]. *)
   refine (S1_ind (fun x => Sect (S1_decode x) (S1_encode x))
-    S1_encode_looptothe _ _).
+    S1_encode_loopexp _ _).
   (* What remains is easy since [Int] is known to be a set. *)
   by apply path_forall; intros z; apply set_path2.
   (* The other side is trivial by path induction. *)

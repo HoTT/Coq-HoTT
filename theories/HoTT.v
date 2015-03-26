@@ -56,6 +56,7 @@ Require Export Modalities.Closed.
 Require Export Modalities.Fracture.
 
 Require Export Spaces.Nat.
+Require Export Spaces.Int.
 Require Export Spaces.Cantor.
 Require Export Spaces.BAut.
 Require Export Spaces.BAut.Cantor.
