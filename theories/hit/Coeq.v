@@ -125,7 +125,7 @@ Section CoeqInd2.
                   ap (transport (P (coeq (g b))) (cp b')) (cpl b (f' b'))
                   @ cpr (g b) b'
                   = transport_transport P (cp b) (cp b') (coeq' (f b) (f' b'))
-                  @ ap (transport (fun x : Coeq f g => P x (coeq (g' b'))) (cp b))
+                  @ ap (transport (fun x => P x (coeq (g' b'))) (cp b))
                        (cpr (f b) b')
                   @ cpl b (g' b')).
 

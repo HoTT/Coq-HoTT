@@ -6,28 +6,45 @@ Require Import HoTT.Basics.
 Require Import Types.Paths Types.Forall Types.Arrow Types.Universe Types.Empty Types.Unit.
 Require Import HSet UnivalenceImpliesFunext.
 Require Import Spaces.Int.
+Require Import hit.Coeq.
 Local Open Scope path_scope.
 
 Generalizable Variables X A B f g n.
 
 (* ** Definition of the circle. *)
 
-Module Export Circle.
+(** We define the circle as the coequalizer of two copies of the identity map of [Unit].  This is easily equivalent to the naive definition
 
+<<<
 Private Inductive S1 : Type1 :=
-| base : S1.
+| base : S1
+| loop : base = base.
+>>>
 
-Axiom loop : base = base.
+but it allows us to apply the flattening lemma directly rather than having to pass across that equivalence.  *)
+
+Definition S1 := @Coeq Unit Unit idmap idmap.
+Definition base : S1 := coeq tt.
+Definition loop : base = base := cp tt.
 
 Definition S1_ind (P : S1 -> Type) (b : P base) (l : loop # b = b)
-  : forall (x:S1), P x
-  := fun x => match x with base => fun _ => b end l.
+  : forall (x:S1), P x.
+Proof.
+  refine (Coeq_ind P (fun u => transport P (ap coeq (path_unit tt u)) b) _).
+  intros []; exact l.
+Defined.
 
-Axiom S1_ind_beta_loop
-  : forall (P : S1 -> Type) (b : P base) (l : loop # b = b),
-  apD (S1_ind P b l) loop = l.
+Definition S1_ind_beta_loop
+           (P : S1 -> Type) (b : P base) (l : loop # b = b)
+: apD (S1_ind P b l) loop = l
+  := Coeq_ind_beta_cp P _ _ tt.
 
-End Circle.
+(** But we want to allow the user to forget that we've defined the circle in that way. *)
+Arguments S1 : simpl never.
+Arguments base : simpl never.
+Arguments loop : simpl never.
+Arguments S1_ind : simpl never.
+Arguments S1_ind_beta_loop : simpl never.
 
 (* ** The non-dependent eliminator *)
 
