@@ -12,7 +12,6 @@ Inductive W (A : Type) (B : A -> Type) : Type :=
 
 (** ** Paths *)
 
-
 Definition path_wtype {A B} (z z' : W A B)
            (pq : match z, z' with
                    | sup a1 t1, sup a2 t2 =>
