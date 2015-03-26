@@ -73,16 +73,16 @@ Definition equiv_path_wtype {A B} (z z' : W A B)
 
 (** ** W-types preserve truncation *)
 
-Global Instance trunc_sigma `{Funext} `{B : A -> Type}
+Global Instance trunc_wtype `{Funext} `{B : A -> Type}
          `{IsTrunc n.+1 A}
 : IsTrunc n.+1 (W A B) | 100.
 Proof.
   generalize dependent A; intros A B ac; intros z; induction z; intro y.
   destruct y; refine (trunc_equiv _ (equiv_path_wtype _ _)).
   apply (trunc_equiv' {p : a = a0 & forall b, w b = w0 (p # b)}).
-    transitivity {p : a = a0 & transport (fun a => B a -> W A B) p w = w0}.
-      apply equiv_functor_sigma_id; intro p; induction p.
-      by apply equiv_path_forall.
-    by erapply (equiv_path_sigma _ (a;w) (a0;w0)).
+  { transitivity {p : a = a0 & transport (fun a => B a -> W A B) p w = w0}.
+    { apply equiv_functor_sigma_id; intro p; induction p.
+      by apply equiv_path_forall. }
+    by erapply (equiv_path_sigma _ (a;w) (a0;w0)). }
   apply (@trunc_sigma _ _ _ (ac a a0)); intro p; rapply @trunc_forall.
 Defined.
