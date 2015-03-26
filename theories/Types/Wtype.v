@@ -12,12 +12,14 @@ Inductive W (A : Type) (B : A -> Type) : Type :=
 
 (** ** Paths *)
 
+
 Definition path_wtype {A B} (z z' : W A B)
            (pq : match z, z' with
                    | sup a1 t1, sup a2 t2 =>
-                       (existT (fun a => B a -> W A B) a1 t1) = (a2;t2)
+                       (a1;t1) = (a2;t2) :> {a : _ & B a -> W A B}
                  end)
 : z = z'.
+Proof.
   destruct z, z'; apply (path_sigma_uncurried _ _ _)^-1 in pq.
   destruct pq as [p q]; cbn in p; destruct p; cbn in q; destruct q.
   exact idpath.
