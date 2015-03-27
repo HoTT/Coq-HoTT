@@ -7,6 +7,8 @@ Require Import Types.Paths Types.Forall Types.Arrow Types.Universe Types.Empty T
 Require Import HSet UnivalenceImpliesFunext.
 Require Import Spaces.Int.
 Require Import hit.Coeq.
+Require Import Modalities.Modality hit.Truncations hit.Connectedness.
+Import TrM.
 Local Open Scope path_scope.
 
 Generalizable Variables X A B f g n.
@@ -43,7 +45,6 @@ Definition S1_ind_beta_loop
 Arguments S1 : simpl never.
 Arguments base : simpl never.
 Arguments loop : simpl never.
-Arguments S1_ind : simpl never.
 Arguments S1_ind_beta_loop : simpl never.
 
 (* ** The non-dependent eliminator *)
@@ -151,5 +152,47 @@ Defined.
 
 Definition equiv_loopS1_int : (base = base) <~> Int
   := BuildEquiv _ _ (S1_encode base) (S1_encode_isequiv base).
+
+(** ** Connectedness and truncatedness *)
+
+(** The circle is 0-connected. *)
+Global Instance isconnected_S1 : IsConnected 0 S1.
+Proof.
+  apply is0connected_merely_allpath.
+  - exact (tr base).
+  - refine (S1_ind _ _ _).
+    + refine (S1_ind _ _ _).
+      * exact (tr 1).
+      * apply path_ishprop.
+    + apply path_ishprop.
+Defined.
+
+(** It follows that the circle is a 1-type. *)
+Global Instance is1type_S1 : IsTrunc 1 S1.
+Proof.
+  intros x y.
+  assert (p := merely_path_is0connected S1 base x).
+  assert (q := merely_path_is0connected S1 base y).
+  strip_truncations.
+  destruct p, q.
+  refine (trunc_equiv' (n := 0) Int equiv_loopS1_int^-1).
+Defined.
+
+(** ** Iteration of equivalences *)
+
+(** If [P : S1 -> Type] is defined by a type [X] and an autoequivalence [f], then the image of [n:Int] regarded as in [base = base] is [iter_int f n]. *)
+Definition S1_action_is_iter X (f : X <~> X) (n : Int) (x : X)
+: transport (S1_rec Type X (path_universe f)) (equiv_loopS1_int^-1 n) x
+  = iter_int f n x.
+Proof.
+  refine (_ @ loopexp_path_universe _ _ _).
+  refine (transport_compose idmap _ _ _ @ _).
+  refine (ap (fun p => transport idmap p x) _).
+  unfold equiv_loopS1_int; cbn.
+  unfold S1_decode; simpl.
+  rewrite ap_loopexp.
+  refine (ap (fun p => loopexp p n) _).
+  apply S1_rec_beta_loop.
+Qed.
 
 End AssumeUnivalence.

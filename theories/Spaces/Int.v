@@ -207,6 +207,18 @@ Definition loopexp {A : Type} {x : A} (p : x = x) (z : Int) : (x = x)
        | pos n => loopexp_pos p n
      end.
 
+Definition ap_loopexp {A B} (f : A -> B) {x : A} (p : x = x) (z : Int)
+: ap f (loopexp p z) = loopexp (ap f p) z.
+Proof.
+  destruct z as [n| |n]; try reflexivity.
+  - induction n as [|n IH]; simpl.
+    * apply ap_V.
+    * rewrite ap_pp, IH.
+      apply whiskerL, ap_V.
+  - induction n as [|n IH]; try reflexivity; simpl.
+    rewrite ap_pp, IH; reflexivity.
+Qed.
+
 (** Under univalence, exponentiation of loops corresponds to iteration of autoequivalences. *)
 
 Definition equiv_path_loopexp `{Univalence}
