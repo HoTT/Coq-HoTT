@@ -8,30 +8,26 @@ Local Open Scope path_scope.
 Generalizable Variables X A B C f g n.
 
 Inductive W (A : Type) (B : A -> Type) : Type :=
-  sup : forall a, (B a -> W A B) -> W A B.
+  sup { w_label : A ; w_arg : B w_label -> W A B }.
+
+Arguments w_label {A B} _.
+Arguments w_arg {A B} _ _.
 
 (** ** Paths *)
 
-Definition path_wtype {A B} (z z' : W A B)
-           (pq : match z, z' with
-                   | sup a1 t1, sup a2 t2 =>
-                       (a1;t1) = (a2;t2) :> {a : _ & B a -> W A B}
-                 end)
-: z = z'.
+Definition path_wtype {A B} (u v : W A B)
+  (pq : (w_label u;w_arg u) = (w_label v;w_arg v) :> {a : _ & B a -> W A B})
+: u = v.
 Proof.
-  destruct z, z'; apply (path_sigma_uncurried _ _ _)^-1 in pq.
+  destruct u,v; apply (path_sigma_uncurried _ _ _)^-1 in pq.
   destruct pq as [p q]; cbn in p; destruct p; cbn in q; destruct q.
   exact idpath.
 Defined.
 
-Definition path_wtype_inv {A B} {z z' : W A B}
-           (pq : z = z')
-: match z, z' with
-    | sup a1 t1, sup a2 t2 =>
-         (existT (fun a => B a -> W A B) a1 t1) = (a2;t2)
-  end
+Definition path_wtype_inv {A B} {u v : W A B} (pq : u = v)
+: (w_label u;w_arg u) = (w_label v;w_arg v) :> {a : _ & B a -> W A B}
   := match pq with
-       | 1 => match z with
+       | 1 => match u with
                 | sup _ _ => 1
               end
      end.
@@ -49,7 +45,6 @@ Definition eisretr_path_wtype {A B} {z z' : W A B}
                          | sup _ _ => 1
                        end
               end.
-
 
 Definition eissect_path_wtype {A B} {z z' : W A B}
 : Sect (path_wtype z z') (@path_wtype_inv _ _ z z').
