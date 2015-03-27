@@ -42,7 +42,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/Types/Empty.v \
 	$(srcdir)/theories/Types/Bool.v \
 	$(srcdir)/theories/Types/Sum.v \
-  $(srcdir)/theories/Types/Wtype.v \
+	$(srcdir)/theories/Types/Wtype.v \
 	$(srcdir)/theories/Types/Equiv.v \
 	$(srcdir)/theories/Types/Universe.v \
 	$(srcdir)/theories/Types/Nat.v \
