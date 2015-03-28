@@ -2,6 +2,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe Types.Unit Types.Sum.
 Require Import HSet TruncType.
+Require Export hit.Coeq.
 Require Import hit.Truncations.
 Local Open Scope path_scope.
 
@@ -20,34 +21,39 @@ Record Cocone (S : Span) (D : Type) :=
     h : forall c, i (f S c) = j (g S c) }.
 *)
 
-Module Export Pushout.
+(** We define pushouts in terms of coproducts and coequalizers. *)
 
-Private Inductive pushout {A B C : Type} (f : A -> B) (g : A -> C) : Type :=
-| push : B + C -> pushout f g.
+Definition pushout {A B C : Type} (f : A -> B) (g : A -> C) : Type
+  := Coeq (inl o f) (inr o g).
 
-Arguments push {A B C f g} a.
+Definition push {A B C : Type} {f : A -> B} {g : A -> C}
+  := @coeq _ _ (inl o f) (inr o g).
 
 Definition pushl {A B C} {f : A -> B} {g : A -> C} (a : A) : pushout f g := push (inl (f a)).
 Definition pushr {A B C} {f : A -> B} {g : A -> C} (a : A) : pushout f g := push (inr (g a)).
 
-Axiom pp : forall {A B C f g} (a:A), @pushl A B C f g a = pushr a.
+Definition pp {A B C : Type} {f : A -> B} {g : A -> C} (a : A) : pushl a = pushr a
+  := @cp A (B+C) (inl o f) (inr o g) a.
 
 Definition pushout_ind {A B C} (f : A -> B) (g : A -> C) (P : pushout f g -> Type)
   (push' : forall a : B + C, P (push a))
-  (pp' : forall a : A, (@pp A B C f g a) # (push' (inl (f a))) = push' (inr (g a)))
+  (pp' : forall a : A, (pp a) # (push' (inl (f a))) = push' (inr (g a)))
   : forall w, P w
-  := fun w => match w with push a => fun _ => push' a end pp'.
+  := Coeq_ind P push' pp'.
 
-Axiom pushout_ind_beta_pp
-  : forall {A B C f g} (P : @pushout A B C f g -> Type)
-  (push' : forall a : B + C, P (push a))
-  (pp' : forall a : A, (@pp A B C f g a) # (push' (inl (f a))) = push' (inr (g a)))
-  (a : A),
-  apD (pushout_ind f g P push' pp') (pp a) = pp' a.
+Definition pushout_ind_beta_pp {A B C f g}
+           (P : @pushout A B C f g -> Type)
+           (push' : forall a : B + C, P (push a))
+           (pp' : forall a : A, (pp a) # (push' (inl (f a))) = push' (inr (g a))) (a : A)
+: apD (pushout_ind f g P push' pp') (pp a) = pp' a
+  := Coeq_ind_beta_cp P push' pp' a.
 
-End Pushout.
-
-(** ** The non-dependent eliminator *)
+(** But we want to allow the user to forget that we've defined pushouts in terms of coequalizers. *)
+Arguments pushout : simpl never.
+Arguments push : simpl never.
+Arguments pp : simpl never.
+Arguments pushout_ind : simpl never.
+Arguments pushout_ind_beta_pp : simpl never.
 
 Definition pushout_rec {A B C} {f : A -> B} {g : A -> C} (P : Type)
   (push' : B + C -> P)
