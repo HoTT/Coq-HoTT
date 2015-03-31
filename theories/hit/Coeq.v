@@ -143,21 +143,30 @@ Proof.
   Close Scope long_path_scope.
 Qed.
 
-Global Instance isequiv_functor_coeq {B A f g B' A' f' g'}
-       (h : B -> B') (k : A -> A')
-       `{IsEquiv _ _ h} `{IsEquiv _ _ k}
-       (p : k o f == f' o h) (q : k o g == g' o h)
-: IsEquiv (functor_coeq h k p q).
-Proof.
-  refine (isequiv_adjointify _ (functor_coeq h^-1 k^-1 _ _) _ _).
-  - intros b.
-    refine (ap (k^-1 o f') (eisretr h b)^ @ _ @ eissect k (f (h^-1 b))).
-    apply ap, inverse, p.
-  - intros b.
-    refine (ap (k^-1 o g') (eisretr h b)^ @ _ @ eissect k (g (h^-1 b))).
-    apply ap, inverse, q.
-  Open Scope long_path_scope.
-  - refine (functor_coeq_sect _ _ _ _ _ _ _ _
+Section IsEquivFunctorCoeq.
+
+  Context {B A f g B' A' f' g'}
+          (h : B -> B') (k : A -> A')
+          `{IsEquiv _ _ h} `{IsEquiv _ _ k}
+          (p : k o f == f' o h) (q : k o g == g' o h).
+
+  Definition functor_coeq_inverse
+  : @Coeq B' A' f' g' -> @Coeq B A f g.
+  Proof.
+    refine (functor_coeq h^-1 k^-1 _ _).
+    - intros b.
+      refine (ap (k^-1 o f') (eisretr h b)^ @ _ @ eissect k (f (h^-1 b))).
+      apply ap, inverse, p.
+    - intros b.
+      refine (ap (k^-1 o g') (eisretr h b)^ @ _ @ eissect k (g (h^-1 b))).
+      apply ap, inverse, q.
+  Defined.
+
+  Definition functor_coeq_eissect
+  : Sect functor_coeq_inverse (functor_coeq h k p q).
+  Proof.
+    Open Scope long_path_scope.
+    refine (functor_coeq_sect _ _ _ _ _ _ _ _
                               (eisretr h) (eisretr k) _ _); intros b.
     (** The two proofs are identical modulo replacing [f] by [g], [f'] by [g'], and [p] by [q]. *)
     all:rewrite !ap_pp, <- eisadj.
@@ -168,7 +177,14 @@ Proof.
     all:rewrite (ap_compose _ (k o k^-1)).
     all:rewrite (concat_A1p (eisretr k) (ap _ (eisretr h b)^)).
     all:rewrite ap_V, concat_pV_p; reflexivity.
-  - refine (functor_coeq_sect _ _ _ _ _ _ _ _
+    Close Scope long_path_scope.
+  Qed.
+
+  Definition functor_coeq_eisretr
+  : Sect (functor_coeq h k p q) functor_coeq_inverse.
+  Proof.
+    Open Scope long_path_scope.
+    refine (functor_coeq_sect _ _ _ _ _ _ _ _
                               (eissect h) (eissect k) _ _); intros b.
     all:rewrite !concat_p_pp, eisadj, <- ap_V, <- !ap_compose.
     all:rewrite (ap_compose (_ o h) k^-1).
@@ -179,15 +195,19 @@ Proof.
     all:rewrite <- (ap_compose (k o _) k^-1), (ap_compose _ (k^-1 o k)).
     all:rewrite (concat_A1p (eissect k) _).
     all:rewrite ap_V, concat_pV_p; reflexivity.
-  Close Scope long_path_scope.
-Qed.
+    Close Scope long_path_scope.
+  Qed.
 
-Definition equiv_functor_coeq {B A f g B' A' f' g'}
-           (h : B -> B') (k : A -> A')
-           `{IsEquiv _ _ h} `{IsEquiv _ _ k}
-           (p : k o f == f' o h) (q : k o g == g' o h)
-: @Coeq B A f g <~> @Coeq B' A' f' g'
-  := BuildEquiv _ _ (functor_coeq h k p q) _.
+  Global Instance isequiv_functor_coeq
+  : IsEquiv (functor_coeq h k p q)
+    := isequiv_adjointify _ functor_coeq_inverse
+                          functor_coeq_eissect functor_coeq_eisretr.
+
+  Definition equiv_functor_coeq
+  : @Coeq B A f g <~> @Coeq B' A' f' g'
+    := BuildEquiv _ _ (functor_coeq h k p q) _.
+
+End IsEquivFunctorCoeq.
 
 Definition equiv_functor_coeq' {B A f g B' A' f' g'}
            (h : B <~> B') (k : A <~> A')
@@ -199,7 +219,7 @@ Definition equiv_functor_coeq' {B A f g B' A' f' g'}
 
 Section CoeqRec2.
   Context `{Funext}
-          {B A : Type } {f g : B -> A} {B' A' : Type} {f' g' : B' -> A'}
+          {B A : Type} {f g : B -> A} {B' A' : Type} {f' g' : B' -> A'}
           (P : Type) (coeq' : A -> A' -> P)
           (cpl : forall b a', coeq' (f b) a' = coeq' (g b) a')
           (cpr : forall a b', coeq' a (f' b') = coeq' a (g' b'))
@@ -261,7 +281,7 @@ End CoeqRec2.
 
 Section CoeqInd2.
   Context `{Funext}
-          {B A : Type } {f g : B -> A} {B' A' : Type} {f' g' : B' -> A'}
+          {B A : Type} {f g : B -> A} {B' A' : Type} {f' g' : B' -> A'}
           (P : Coeq f g -> Coeq f' g' -> Type)
           (coeq' : forall a a', P (coeq a) (coeq a'))
           (cpl : forall b a',
@@ -302,18 +322,18 @@ Section CoeqInd2.
         Open Scope long_path_scope.
         rewrite ap_pp.
         repeat rewrite concat_p_pp.
-        (* Our first order of business is to get rid of the [Coeq_ind]s, which only occur in the following incarnation. *)
+        (** Our first order of business is to get rid of the [Coeq_ind]s, which only occur in the following incarnation. *)
         set (G := (Coeq_ind (P (coeq (f b)))
                             (fun a' : A' => coeq' (f b) a')
                             (fun b'0 : B' => cpr (f b) b'0))).
-        (* Let's reduce the [apD (loop # G)] first. *)
+        (** Let's reduce the [apD (loop # G)] first. *)
         rewrite (apD_transport_forall_constant P (cp b) G (cp b')); simpl.
         rewrite !inv_pp, !inv_V.
-        (* Now we can cancel a [transport_forall_constant]. *)
+        (** Now we can cancel a [transport_forall_constant]. *)
         rewrite !concat_pp_p; apply whiskerL.
-        (* And a path-inverse pair.  This removes all the [transport_forall_constant]s. *)
+        (** And a path-inverse pair.  This removes all the [transport_forall_constant]s. *)
         rewrite !concat_p_pp, concat_pV_p.
-        (* Now we can beta-reduce the last remaining [G]. *)
+        (** Now we can beta-reduce the last remaining [G]. *)
         subst G; rewrite Coeq_ind_beta_cp; simpl.
         (** Now we just have to rearrange it a bit. *)
         rewrite !concat_pp_p; do 2 apply moveR_Vp; rewrite !concat_p_pp.
