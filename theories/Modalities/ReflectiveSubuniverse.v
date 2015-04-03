@@ -424,7 +424,8 @@ Section Reflective_Subuniverse.
       rewrite !concat_pV_p.
       apply whiskerL. apply inverse2.
       apply ap_compose.
-    Defined.
+      Close Scope long_path_scope.
+    Qed.
 
     (** Preservation of equivalences *)
     Global Instance isequiv_O_functor {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
