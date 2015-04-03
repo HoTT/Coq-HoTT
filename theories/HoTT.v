@@ -32,6 +32,7 @@ Require Export hit.Connectedness.
 Require Export hit.Coeq.
 Require Export hit.Flattening.
 Require Export hit.Circle.
+Require Export hit.FreeIntQuotient.
 Require Export hit.Suspension.
 Require Export hit.Spheres.
 Require Export hit.Pushout.
