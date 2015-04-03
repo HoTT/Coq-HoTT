@@ -33,7 +33,7 @@ Section FreeIntAction.
                                   (fun _ => R) (fun _ => f))^-1
               oE _));
     try exact _.
-    - refine (equiv_adjointify _ _ _ _).
+    - erapply' equiv_adjointify.
       + refine (Wtil_rec _ _ _).
         * intros u r; exact (coeq r).
         * intros u r; cbn. exact ((cp r)^).
@@ -97,5 +97,7 @@ Section FreeIntAction.
       intros p. apply ap.
       exact (f_free u n m p).
   Qed.
+
+  (** TODO: Prove that this [RmodZ] is equivalent to the set-quotient of [R] by a suitably defined equivalence relation. *)
 
 End FreeIntAction.
