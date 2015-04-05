@@ -9,6 +9,8 @@ Local Open Scope path_scope.
 
 (** * Lex modalities *)
 
+(** ** Basic theory *)
+
 (** A lex modality is one that preserves finite limits, or equivalently pullbacks.  It turns out that a more basic and useful way to say this is that all path-spaces of connected types are connected.  Note how different this is from the behavior of, say, truncation modalities!
 
   This is a "large" definition, and we don't know of any small one that's equivalent to it (see <http://mathoverflow.net/questions/185980/a-small-definition-of-sub-%E2%88%9E-1-topoi>.  However, so far we never need to apply it "at multiple universes at once".  Thus, rather than making it a module type, we can make it a typeclass and rely on ordinary universe polymorphism. *)
@@ -178,6 +180,79 @@ Module Lex_Modalities_Theory (Os : Modalities).
   Defined.
 
 End Lex_Modalities_Theory.
+
+(** ** Lex reflective subuniverses *)
+
+(** A reflective subuniverse that preserves fibers is in fact a modality (and hence lex). *)
+Module Type Preserves_Fibers (Os : ReflectiveSubuniverses).
+
+  Export Os.
+  Module Export Os_Theory := ReflectiveSubuniverses_Theory Os.
+
+  Parameter isequiv_O_functor_hfiber :
+     forall (O : ReflectiveSubuniverse) {A B} (f : A -> B) (b : B),
+       IsEquiv (O_functor_hfiber O f b).
+
+End Preserves_Fibers.
+
+(** We omit the module type as with [ReflectiveSubuniverses_to_Modalities]; see below. *)
+Module Lex_Reflective_Subuniverses
+       (Os : ReflectiveSubuniverses) (Opf : Preserves_Fibers Os).
+  (** <: SigmaClosed Os. *)
+
+  Import Opf.
+
+  Definition inO_sigma (O : ReflectiveSubuniverse@{u a})
+             (A:Type@{i}) (B:A -> Type@{j})
+             (A_inO : In@{u a i} O A)
+             (B_inO : forall a, In@{u a j} O (B a))
+  : In@{u a k} O {x:A & B x}.
+  Proof.
+    pose (g := O_rec pr1 : O {x : A & B x} -> A).
+    transparent assert (p : (forall x, g (to O _ x) = x.1)).
+    { intros x; subst g; apply O_rec_beta. }
+    apply inO_isequiv_to_O.
+    apply isequiv_fcontr; intros x.
+    refine (contr_equiv' _ (hfiber_hfiber_compose_map _ g x)).
+    apply fcontr_isequiv.
+    unfold hfiber_compose_map.
+    transparent assert (h : (hfiber (@pr1 A B) (g x) <~> hfiber g (g x))).
+    { refine (_ oE equiv_to_O O _).
+      - refine (_ oE BuildEquiv _ _ (O_functor_hfiber O (@pr1 A B) (g x)) _).
+        unfold hfiber.
+        refine (equiv_functor_sigma' 1 _). intros y; cbn.
+        refine (_ oE (equiv_moveR_equiv_V _ _)).
+        apply equiv_concat_l.
+        apply moveL_equiv_V.
+        unfold g, O_functor.
+        revert y; apply O_indpaths; intros [a q]; cbn.
+        refine (_ @ (O_rec_beta _ _)^).
+        apply ap, O_rec_beta.
+      - refine (inO_equiv_inO _ (hfiber_fibration (g x) B)). }
+    refine (isequiv_homotopic (h oE equiv_hfiber_homotopic _ _ p (g x)) _).
+    intros [[a b] q]; cbn. clear h.
+    unfold O_functor_hfiber.
+    rewrite O_rec_beta.
+    unfold functor_sigma; cbn.
+    refine (path_sigma' _ 1 _).
+    rewrite O_indpaths_beta; cbn.
+    unfold moveL_equiv_V, moveR_equiv_V.
+    Open Scope long_path_scope.
+    rewrite !ap_pp, !concat_p_pp, !ap_V.
+    unfold to_O_natural.
+    rewrite concat_pV_p.
+    subst p.
+    rewrite concat_pp_V.
+    rewrite concat_pp_p; apply moveR_Vp.
+    rewrite <- !(ap_compose (to O A) (to O A)^-1).
+    rapply @concat_A1p.
+    Close Scope long_path_scope.
+  Qed.
+
+(** As with [ReflectiveSubuniverses_to_Modalities], Coq won't actually accept this as a module of type [SigmaClosed Os] because the above proof introduces way too many universe parameters.  It might be possible to bring it down to become acceptable with heavy use of universe annotations, but this is probably not worthwhile bothering about because the only point of [SigmaClosed] is to be passed to [ReflectiveSubuniverses_to_Modalities], which in turn can't actually instantiate [Modalities] for more fundamental reasons.  *)
+End Lex_Reflective_Subuniverses.
+
+(** ** Accessible lex modalities *)
 
 (** We now restrict to lex modalities that are also accessible. *)
 Module Accessible_Lex_Modalities_Theory
