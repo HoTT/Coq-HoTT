@@ -770,6 +770,16 @@ Section Reflective_Subuniverse.
 
     Hint Immediate inO_unsigma : typeclass_instances.
 
+    (** The reflector preserving hfibers is a characterization of lex modalities.  Here is the comparison map. *)
+    Definition O_functor_hfiber {A B} (f : A -> B) (b : B)
+    : O (hfiber f b) -> hfiber (O_functor f) (to O B b).
+    Proof.
+      apply O_rec. intros [a p].
+      exists (to O A a).
+      refine (to_O_natural f a @ _).
+      apply ap, p.
+    Defined.
+
     (** ** Paths *)
 
     Global Instance inO_paths (S : Type) {S_inO : In O S} (x y : S)

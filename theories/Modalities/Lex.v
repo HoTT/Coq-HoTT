@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations Extensions Pullback NullHomotopy.
+Require Import EquivalenceVarieties Fibrations Extensions Pullback NullHomotopy.
 Require Import Modality Accessible.
 Require Import HoTT.Tactics.
 
@@ -24,7 +24,7 @@ Module Lex_Modalities_Theory (Os : Modalities).
 
   Global Existing Instance isconnected_paths.
 
-  (** The next six lemmas are equivalent characterizations of lex-ness. *)
+  (** The following numbered lemmas are all actually equivalent characterizations of lex-ness. *)
 
   (** 1. Every map between connected types is a connected map. *)
   Global Instance conn_map_lex {O : Modality} `{Lex O}
@@ -54,7 +54,7 @@ Module Lex_Modalities_Theory (Os : Modalities).
     (** Typeclass magic! *)
   Defined.
 
-  (** 4. Connected types are closed under pullbacks. *)
+  (** 4. Connected types are closed under pullbacks.  (Closure under fibers is [conn_map_lex] above. *)
   Global Instance isconnected_pullback (O : Modality) `{Lex O}
          {A B C : Type} {f : A -> C} {g : B -> C}
          `{IsConnected O A} `{IsConnected O B} `{IsConnected O C}
@@ -105,7 +105,35 @@ Module Lex_Modalities_Theory (Os : Modalities).
                 (hfiber_functor_pullback _ _ _ _ _ _ _ _ _ _)^-1 _).
   Qed.
 
-  (** 6. Lex modalities preserve path-spaces. *)
+  (** 6. The reflector preserves fibers.  This is a slightly simpler version of the previous. *)
+  Global Instance isequiv_O_functor_hfiber (O : Modality) `{Lex O}
+             {A B} (f : A -> B) (b : B)
+  : IsEquiv (O_functor_hfiber O f b).
+  Proof.
+    refine (isequiv_O_inverts O _).
+    apply O_inverts_conn_map.
+    refine (cancelR_conn_map O (to O _) _).
+    unfold O_functor_hfiber.
+    refine (conn_map_homotopic O
+             (@functor_hfiber _ _ _ _ f (O_functor O f) 
+                               (to O A) (to O B)
+                               (fun x => (to_O_natural O f x)^) b)
+             _ _ _).
+    - intros [a p].
+      rewrite O_rec_beta.
+      unfold functor_hfiber, functor_sigma. apply ap.
+      apply whiskerR, inv_V.
+    - intros [oa p].
+      refine (isconnected_equiv O _
+               (hfiber_functor_hfiber _ _ _ _)^-1 _).
+  Defined.
+
+  Definition equiv_O_functor_hfiber (O : Modality) `{Lex O}
+             {A B} (f : A -> B) (b : B)
+  : O (hfiber f b) <~> hfiber (O_functor O f) (to O B b)
+    := BuildEquiv _ _ (O_functor_hfiber O f b) _.
+
+  (** 7. Lex modalities preserve path-spaces. *)
   Definition O_path_cmp (O : Modality) {A} (x y : A)
   : O (x = y) -> (to O A x = to O A y)
     := O_rec (ap (to O A)).
