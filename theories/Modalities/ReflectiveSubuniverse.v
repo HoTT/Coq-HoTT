@@ -921,7 +921,7 @@ Section Reflective_Subuniverse.
           rewrite concat_pp_p in p.
           apply moveR_Vp in p.
           rewrite@A <- p; clear p.
-          (** for the next one, [rewrite@A] spins forever *)
+          (** TODO: use [rewrite@A] here *)
           apply moveL_pV; rewrite !concat_pp_p; apply moveR_Vp.
           rewrite (to_O_natural_compose g
                        (fun x => @coeq _ _ (O_functor f) (O_functor g)

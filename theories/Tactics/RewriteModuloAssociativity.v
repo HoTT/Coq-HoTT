@@ -195,8 +195,8 @@ Module Export Concat.
                                 let T' := (eval cbv beta zeta in T) in
                                 let ret' := (eval cbv beta zeta in ret) in
                                 constr:(ret' : T')
-      | context[?a @ (?b @?c)] =>
-        (lazymatch eval pattern (a @ (b @ c)) in T with
+      | context[@concat ?A1 ?x1 ?y1 ?z1 ?a (@concat ?A2 ?x2 ?y2 ?z2 ?b ?c)] =>
+        (lazymatch eval pattern (@concat A1 x1 y1 z1 a (@concat A2 x2 y2 z2 b c)) in T with
         | ?P _ => let H' := constr:(transport P (concat_p_pp a b c) H) in
                   rec_tac H'
          end)
