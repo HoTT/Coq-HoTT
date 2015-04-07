@@ -915,48 +915,33 @@ Section Reflective_Subuniverse.
           rewrite !ap_pp, !concat_p_pp.
           unfold O_functor_homotopy; rewrite O_indpaths_beta.
           rewrite !ap_pp, !concat_p_pp.
-          pose (p := O_functor_compose_compose
-                       g coeq coeq_to (to O B b)).
-          apply moveL_pV in p.
-          rewrite concat_pp_p in p.
-          apply moveR_Vp in p.
-          rewrite@A <- p; clear p.
-          (** TODO: use [rewrite@A] here *)
-          apply moveL_pV; rewrite !concat_pp_p; apply moveR_Vp.
-          rewrite (to_O_natural_compose g
+          pose (p := O_functor_compose_compose g coeq coeq_to (to O B b)).
+          apply moveL_pV in p; rewrite concat_pp_p in p; apply moveR_Vp in p.
+          rewrite@A <- p. clear p.
+          rewrite@A (to_O_natural_compose g
                        (fun x => @coeq _ _ (O_functor f) (O_functor g)
                                        (to O A x)) b).
-          rewrite !concat_p_pp, concat_pp_V.
-          pose (p := O_functor_compose_compose
-                       f coeq coeq_to (to O B b)).
-          apply moveR_pV in p.
-          rewrite concat_pp_p, <- ap_V in p.
-          apply moveL_Vp in p.
-          rewrite p; clear p.
-          rewrite (to_O_natural_compose f
+          rewrite concat_pp_V.
+          rewrite@A (to_O_natural_compose f
                      (fun x => @coeq _ _ (O_functor f) (O_functor g)
                                      (to O A x)) b).
+          rewrite <- inv_pp.
+          rewrite (O_functor_compose_compose f coeq coeq_to (to O B b)).
+          rewrite inv_pp, ap_V.
           rewrite !concat_pp_p; apply whiskerL; rewrite !concat_p_pp.
-          apply moveL_pM.
           (** The trick here is to notice that [(fun x => coeq (to O A (f x)))] is definitionally equal to [(fun x => coeq_to (coeq (f x)))]. *)
-          rewrite !concat_pp_p; apply moveR_Mp; rewrite !concat_p_pp.
-          pose (p := to_O_natural_compose
-                       (fun x => coeq (f x)) coeq_to b).
-          apply inverse2 in p.
-          rewrite !inv_pp, inv_V in p.
-          rewrite <- p, concat_pV_p; clear p.
+          rewrite <- (to_O_natural_compose
+                        (fun x => coeq (f x)) coeq_to b).
           rewrite <- ap_compose.
+          rewrite !concat_pp_p; apply whiskerL, moveR_Mp; rewrite !concat_p_pp.
           rewrite <- (concat_Ap (fun x => (to_O_natural coeq_to x)^) (cp b)).
-          apply moveL_pV.
-          rewrite !concat_pp_p, ap_V, <- inv_pp.
-          rewrite @to_O_natural_compose.
-          rewrite inv_pp, inv_V, !concat_p_pp.
-          do 2 apply whiskerR.
+          rewrite !concat_pp_p; apply moveL_Mp; rewrite !concat_p_pp.
+          rewrite ap_V, <- !inv_pp, @to_O_natural_compose.
+          rewrite concat_p_Vp, concat_Vp, concat_1p.
           rewrite (ap_compose coeq_to (to O (Coeq (O_functor f) (O_functor g)))).
-          subst coeq_to.
-          rewrite functor_coeq_beta_cp.
-          rewrite !ap_pp, <- !ap_compose, inv_V, ap_V.
-          reflexivity.
+          subst coeq_to; rewrite functor_coeq_beta_cp.
+          rewrite !ap_pp, <- !ap_compose, !inv_pp, !concat_p_pp, !ap_V, !inv_V.
+          rewrite concat_pp_V, concat_pV_p; reflexivity.
           Close Scope long_path_scope.
       Qed.
 
