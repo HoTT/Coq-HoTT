@@ -186,7 +186,8 @@ Module Export Concat.
   Ltac left_associate_concat_in H :=
     let rec_tac := left_associate_concat_in in
     let T := type of H in
-    match eval cbv beta in T with
+    let T' := (eval cbv beta in T) in
+    match T' with
       | forall a : ?A, @?P a => let ret := constr:(fun a : A => let H' := H a in
                                                                 $(let H'' := (eval unfold H' in H') in
                                                                   let ret := rec_tac H'' in
@@ -196,7 +197,7 @@ Module Export Concat.
                                 let ret' := (eval cbv beta zeta in ret) in
                                 constr:(ret' : T')
       | context[@concat ?A1 ?x1 ?y1 ?z1 ?a (@concat ?A2 ?x2 ?y2 ?z2 ?b ?c)] =>
-        (lazymatch eval pattern (@concat A1 x1 y1 z1 a (@concat A2 x2 y2 z2 b c)) in T with
+        (lazymatch eval pattern (@concat A1 x1 y1 z1 a (@concat A2 x2 y2 z2 b c)) in T' with
         | ?P _ => let H' := constr:(transport P (concat_p_pp a b c) H) in
                   rec_tac H'
          end)
