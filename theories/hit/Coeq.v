@@ -134,9 +134,7 @@ Proof.
   rewrite <- u, !ap_pp, !(ap_compose k' coeq).
   rewrite !concat_pp_p; do 2 apply whiskerL.
   rewrite !concat_p_pp.
-  (** Apparently Coq can't handle this: it gives the "metavariables deep inside the term" error. *)
-  (** rewrite <- s. *)
-  refine (_ @ whiskerL _ (ap (ap coeq) (v b))).
+  rewrite <- v.
   rewrite !ap_pp, !ap_V, !concat_p_pp, !concat_pV_p.
   rewrite <- !ap_compose.
   exact (concat_Ap cp (r b)).
