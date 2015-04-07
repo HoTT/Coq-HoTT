@@ -332,10 +332,10 @@ Ltac step_respects_equiv :=
     | _ => progress unfold respects_equivalenceL
     | _ => progress cbn
     | _ => exact _ (* case for fully solving the side-condition, when possible *)
-    | [ |- RespectsEquivalenceL _ (fun _ _ => ?T) ] => rapply' (get_lem T)
-    | [ |- RespectsEquivalenceL _ (fun _ _ => ?T _) ] => rapply' (get_lem T)
-    | [ |- RespectsEquivalenceL _ (fun _ _ => ?T _ _) ] => rapply' (get_lem T)
-    | [ |- RespectsEquivalenceL _ (fun _ _ => ?T _ _ _) ] => rapply' (get_lem T)
+    | [ |- RespectsEquivalenceL _ (fun _ _ => ?T) ] => rapply (get_lem T)
+    | [ |- RespectsEquivalenceL _ (fun _ _ => ?T _) ] => rapply (get_lem T)
+    | [ |- RespectsEquivalenceL _ (fun _ _ => ?T _ _) ] => rapply (get_lem T)
+    | [ |- RespectsEquivalenceL _ (fun _ _ => ?T _ _ _) ] => rapply (get_lem T)
     | [ |- RespectsEquivalenceL _ (fun B e => equiv_fun e _ = equiv_fun e _) ] => refine equiv_ap_respects_equivalenceL
     | [ |- RespectsEquivalenceL _ (fun B e => equiv_inv e _ = equiv_inv e _) ] => refine equiv_ap_inv_respects_equivalenceL
     | [ |- RespectsEquivalenceL _ (fun B _ => B) ] => refine idmap_respects_equivalenceL

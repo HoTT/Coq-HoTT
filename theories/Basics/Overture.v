@@ -643,12 +643,9 @@ Global Arguments hfiber {A B}%type_scope f%function_scope y.
 
 (** *** More tactics *)
 
-(** We want access to useful standard library tactics, such as [rapply]. *)
-Require Export Coq.Program.Tactics.
-
 (** A variant of [apply] using [refine], doing as much conversion as necessary, instantiating as few arguments as possible.  This is useful if your lemma constructs an equivalence, and you want to use that equivalence, rather than the underlying function. *)
 
-Ltac rapply' p :=
+Ltac rapply p :=
   refine p ||
   refine (p _) ||
   refine (p _ _) ||
@@ -665,6 +662,27 @@ Ltac rapply' p :=
   refine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
   refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
   refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
+
+(** An alternative version that instead instantiates as *many* arguments as possible.  This is what the Coq standard library calls [rapply], but for us it seems that the other version is more useful, hence deserves the unprimed name. *)
+
+Ltac rapply' p :=
+  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _ _) ||
+  refine (p _ _ _ _ _) ||
+  refine (p _ _ _ _) ||
+  refine (p _ _ _) ||
+  refine (p _ _) ||
+  refine (p _) ||
+  refine p.
+
 
 (** [erapply lem] is like [apply lem] (rather, [rapply lem]), but it allows holes in [lem] *)
 Tactic Notation "erapply" open_constr(term) := rapply term.
