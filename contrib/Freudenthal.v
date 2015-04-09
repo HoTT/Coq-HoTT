@@ -11,6 +11,8 @@ Local Open Scope path_scope.
 
 Generalizable Variables X A B f g n.
 
+Local Ltac admit := case proof_admitted.
+
 (* ** Connectedness of the suspension *)
 
 Global Instance isconn_susp {n : trunc_index} {X : Type} `{H : IsConnected n X}
