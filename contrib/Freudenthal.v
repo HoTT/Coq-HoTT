@@ -11,6 +11,10 @@ Local Open Scope path_scope.
 
 Generalizable Variables X A B f g n.
 
+(** [proof_admitted] is used to implement the admit tactic, as in Coq 8.5 beta 1. *)
+Local Axiom proof_admitted : False.
+Local Ltac admit := case proof_admitted.
+
 (* ** Connectedness of the suspension *)
 
 Global Instance isconn_susp {n : trunc_index} {X : Type} `{H : IsConnected n X}
