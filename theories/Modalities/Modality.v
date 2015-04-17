@@ -31,10 +31,13 @@ Module Type Modalities.
   Check to@{u a i}.
 
   Parameter inO_equiv_inO :
-      forall (O : Modality@{u a}) (T U : Type@{i})
+      forall (O : Modality@{u a}) (T : Type@{i}) (U : Type@{j})
              (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
-        In@{u a i} O U.
-  Check inO_equiv_inO@{u a i}.
+        (** We add an extra universe parameter that's bigger than both [i] and [j].  This seems to be necessary for the proof of repleteness in some examples, such as easy modalities. *)
+        let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
+        let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
+        In@{u a j} O U.
+  Check inO_equiv_inO@{u a i j k}.
 
   Parameter hprop_inO
   : Funext -> forall (O : Modality@{u a}) (T : Type@{i}),
@@ -110,10 +113,10 @@ Module Modalities_to_ReflectiveSubuniverses
     := O_inO@{u a i}.
   Definition to := to.
   Definition inO_equiv_inO :
-      forall (O : ReflectiveSubuniverse@{u a}) (T U : Type@{i})
+      forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}) (U : Type@{j})
              (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
-        In@{u a i} O U
-    := inO_equiv_inO@{u a i}.
+        In@{u a j} O U
+    := inO_equiv_inO@{u a i j k}.
   Definition hprop_inO
   : Funext -> forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
                 IsHProp (In@{u a i} O T)
@@ -159,7 +162,7 @@ Module ReflectiveSubuniverses_to_Modalities
   Definition In := In@{u a i}.
   Definition O_inO := @O_inO@{u a i}.
   Definition to := to.
-  Definition inO_equiv_inO := @inO_equiv_inO@{u a i}.
+  Definition inO_equiv_inO := @inO_equiv_inO@{u a i j k}.
   Definition hprop_inO := hprop_inO@{u a i}.
 
   (** The reason Coq won't actually accept this as a module of type [Modalities] is that the following definitions of [O_ind_internal] and [O_ind_beta_internal] have an extra universe parameter [k] that's at least as large as both [i] and [j].  This is because [extendable_to_O] has such a parameter, which in turn is because [ooExtendableAlong] does.  Unfortunately, we can't directly instantiate [k] to [max(i,j)] because Coq doesn't allow "algebraic universes" in arbitrary position.  We could probably work around it by defining [ExtendableAlong] inductively rather than recursively, but given the non-usefulness of this construction in practice, that doesn't seem to be worth the trouble at the moment. *)
@@ -290,9 +293,9 @@ Module EasyModalities_to_Modalities (Os : EasyModalities)
   Defined.
 
   (** It seems to be surprisingly hard to show repleteness (without univalence).  We basically have to manually develop enough functoriality of [O] and naturality of [to O]. *)
-  Definition inO_equiv_inO (O : Modality@{u a}) (A B : Type@{i})
+  Definition inO_equiv_inO (O : Modality@{u a}) (A : Type@{i}) (B : Type@{j})
     (A_inO : In@{u a i} O A) (f : A -> B) (feq : IsEquiv f)
-  : In@{u a i} O B.
+  : In@{u a j} O B.
   Proof.
     refine (isequiv_commsq (to O A) (to O B) f
              (O_ind_internal O A (fun _ => O_reflector O B) _ (fun a => to O B (f a))) _).
@@ -1130,7 +1133,7 @@ Module Modalities_Restriction
   Definition to (O : Modality@{u a})
     := Os.to@{u a i} (Res.Modalities_restriction O).
   Definition inO_equiv_inO (O : Modality@{u a})
-    := Os.inO_equiv_inO@{u a i} (Res.Modalities_restriction O).
+    := Os.inO_equiv_inO@{u a i j k} (Res.Modalities_restriction O).
   Definition hprop_inO (H : Funext) (O : Modality@{u a})
     := Os.hprop_inO@{u a i} H (Res.Modalities_restriction O).
   Definition O_ind_internal (O : Modality@{u a})
@@ -1182,12 +1185,12 @@ Module Modalities_FamUnion (Os1 Os2 : Modalities)
   Defined.
 
   Definition inO_equiv_inO :
-      forall (O : Modality@{u a}) (T U : Type@{i})
+      forall (O : Modality@{u a}) (T : Type@{i}) (U : Type@{j})
              (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
-        In@{u a i} O U.
+        In@{u a j} O U.
   Proof.
-    intros [O|O]; [ exact (Os1.inO_equiv_inO@{u a i} O)
-                  | exact (Os2.inO_equiv_inO@{u a i} O) ].
+    intros [O|O]; [ exact (Os1.inO_equiv_inO@{u a i j k} O)
+                  | exact (Os2.inO_equiv_inO@{u a i j k} O) ].
   Defined.
 
   Definition hprop_inO

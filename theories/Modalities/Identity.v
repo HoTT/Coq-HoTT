@@ -34,9 +34,11 @@ Module Identity_Modalities <: Modalities.
     := fun O X x => x.
 
   Definition inO_equiv_inO :
-      forall (O : Modality@{u a}) (T U : Type@{i})
+      forall (O : Modality@{u a}) (T : Type@{i}) (U : Type@{j})
              (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
-        In@{u a i} O U
+        let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
+        let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
+        In@{u a j} O U
     := fun O T U _ _ _ => tt.
 
   Definition hprop_inO

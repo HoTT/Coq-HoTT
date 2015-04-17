@@ -66,7 +66,7 @@ Module Nullification_Modalities <: Modalities.
   Definition In := LocRSU.In.
   Definition O_inO := @LocRSU.O_inO.
   Definition to := LocRSU.to.
-  Definition inO_equiv_inO := @LocRSU.inO_equiv_inO.
+  Definition inO_equiv_inO := @LocRSU.inO_equiv_inO@{u a i j k}.
   Definition hprop_inO := LocRSU.hprop_inO.
 
   Definition O_ind_internal (O : Modality@{u a}) (A : Type@{i})

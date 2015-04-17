@@ -124,10 +124,13 @@ Module Type ReflectiveSubuniverses.
   Check to@{u a i}.
 
   Parameter inO_equiv_inO :
-      forall (O : ReflectiveSubuniverse@{u a}) (T U : Type@{i})
+      forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}) (U : Type@{j})
              (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
-        In@{u a i} O U.
-  Check inO_equiv_inO@{u a i}.
+        (** We add an extra universe parameter that's bigger than both [i] and [j].  This seems to be necessary for the proof of repleteness in some examples, such as easy modalities. *)
+        let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
+        let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
+        In@{u a j} O U.
+  Check inO_equiv_inO@{u a i j k}.
 
   (** In most examples, [Funext] is necessary to prove that the predicate of being in the subuniverse is an hprop.  To avoid needing to assume [Funext] as a global hypothesis when constructing such examples, and since [Funext] is often not needed for any of the rest of the theory, we add it as a hypothesis to this specific field. *)
   Parameter hprop_inO
@@ -1162,7 +1165,7 @@ Module ReflectiveSubuniverses_Restriction
   Definition to (O : ReflectiveSubuniverse@{u a})
     := Os.to@{u a i} (Res.ReflectiveSubuniverses_restriction O).
   Definition inO_equiv_inO (O : ReflectiveSubuniverse@{u a})
-    := Os.inO_equiv_inO@{u a i} (Res.ReflectiveSubuniverses_restriction O).
+    := Os.inO_equiv_inO@{u a i j k} (Res.ReflectiveSubuniverses_restriction O).
   Definition hprop_inO (H : Funext) (O : ReflectiveSubuniverse@{u a})
     := Os.hprop_inO@{u a i} H (Res.ReflectiveSubuniverses_restriction O).
   Definition extendable_to_O (O : ReflectiveSubuniverse@{u a})
@@ -1212,12 +1215,12 @@ Module ReflectiveSubuniverses_FamUnion
   Defined.
 
   Definition inO_equiv_inO :
-      forall (O : ReflectiveSubuniverse@{u a}) (T U : Type@{i})
+      forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}) (U : Type@{j})
              (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
-        In@{u a i} O U.
+        In@{u a j} O U.
   Proof.
-    intros [O|O]; [ exact (Os1.inO_equiv_inO@{u a i} O)
-                  | exact (Os2.inO_equiv_inO@{u a i} O) ].
+    intros [O|O]; [ exact (Os1.inO_equiv_inO@{u a i j k} O)
+                  | exact (Os2.inO_equiv_inO@{u a i j k} O) ].
   Defined.
 
   Definition hprop_inO

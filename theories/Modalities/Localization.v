@@ -253,12 +253,19 @@ Qed.
 Import IsLocal_Internal.
 
 Definition islocal_equiv_islocal (f : LocalGenerators@{a})
-           (X : Type@{i}) {Y : Type@{i}}
-           (Xloc : IsLocal@{i i a} f X)
+           (X : Type@{i}) {Y : Type@{j}}
+           (Xloc : IsLocal@{i i' a} f X)
            (g : X -> Y) `{IsEquiv@{i j} _ _ g}
-: IsLocal@{j j a} f Y
-  := fun i => ooextendable_postcompose _ _ (f i) (fun _ => g) (Xloc i).
-
+: IsLocal@{j j' a} f Y.
+Proof.
+  intros i.
+  (** We have to fiddle with the max universes to get this to work, since [ooextendable_postcompose] requires the max universe in both cases to be the same, whereas we don't want to assume that the hypothesis and conclusion are related in any way. *)
+  apply lift_ooextendablealong@{a a j k j'}.
+  refine (ooextendable_postcompose@{a a i j k k k k k k k}
+            _ _ (f i) (fun _ => g) _).
+  apply lift_ooextendablealong@{a a i i' k}.
+  apply Xloc.
+Defined.
 
 (** ** Localization as a HIT *)
 
@@ -359,9 +366,10 @@ Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.
     := fun O => @loc@{a i} (unLoc O).
 
   Definition inO_equiv_inO :
-    forall (O : ReflectiveSubuniverse@{u a}) (T U : Type@{i}),
-      In@{u a i} O T -> forall f : T -> U, IsEquiv f -> In@{u a i} O U
-    := fun O => islocal_equiv_islocal@{a i i} (unLoc O).
+    forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}) (U : Type@{j}),
+      In@{u a i} O T -> forall f : T -> U, IsEquiv f ->
+      In@{u a j} O U
+    := fun O => islocal_equiv_islocal@{a i j i j k} (unLoc O).
 
   Definition hprop_inO `{Funext}
              (O : ReflectiveSubuniverse@{u a}) (T : Type@{i})
