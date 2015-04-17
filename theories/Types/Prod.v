@@ -180,7 +180,7 @@ Definition path_prod_pp_p  {A B : Type} (u v z w : A * B)
     @ path_prod_pp u v w p (q @ r) p' (q' @ r')
     @ whiskerL (path_prod u v p p') (path_prod_pp v z w q r q' r').
 Proof.
-  destruct u, v, z ,w; simpl in *; destruct p, p', q, q', r, r'.
+  destruct u, v, z, w; simpl in *; destruct p, p', q, q', r, r'.
   reflexivity.
 Defined.
 
