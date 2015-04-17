@@ -277,11 +277,12 @@ Section Reflective_Subuniverse.
   Defined.
 
   (** If [T] is in the subuniverse, then [to O T] is an equivalence. *)
-  Global Instance isequiv_to_O_inO (T : Type) `{In O T} : IsEquiv (to O T).
+  Global Instance isequiv_to_O_inO (T : Type@{i}) `{In O T} : IsEquiv@{i i} (to O T).
   Proof.
-    pose (g := O_rec idmap).
+    (** Using universe annotations to reduce superfluous universes *)
+    pose (g := O_rec@{u a i i i i i} idmap).
     refine (isequiv_adjointify (to O T) g _ _).
-    - refine (O_indpaths (to O T o g) idmap _).
+    - refine (O_indpaths@{u a i i i i i} (to O T o g) idmap _).
       intros x.
       apply ap.
       apply O_rec_beta.

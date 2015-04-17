@@ -148,12 +148,12 @@ Section UnstableOctahedral.
     unfold hfiber, hfiber_compose_map.
     refine (_ oE (equiv_sigma_assoc _ _)^-1).
     refine (equiv_functor_sigma' 1 _); intros a; simpl.
-    transitivity ({p : g (f a) = g b & {q : f a = b & transport (fun y => g y = g b) q p = 1}}).
-    - refine (equiv_functor_sigma' 1
-                (fun p => (equiv_path_sigma _ _ _)^-1)).
+    refine (equiv_compose' (B := {p : g (f a) = g b & {q : f a = b & transport (fun y => g y = g b) q p = 1}}) _ _).
     - refine (_ oE equiv_sigma_symm _).
       apply equiv_sigma_contr; intros p.
       destruct p; simpl; exact _.
+    - refine (equiv_functor_sigma' 1
+                (fun p => (equiv_path_sigma _ _ _)^-1)).
   Defined.
 
   Definition hfiber_compose (c : C)
