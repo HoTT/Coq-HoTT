@@ -65,9 +65,41 @@ Definition functor_hfiber {A B C D}
            (p : k o f == g o h) (b : B)
 : hfiber f b -> hfiber g (k b).
 Proof.
-  intros [a e].
-  exists (h a).
-  exact ((p a)^ @ ap k e).
+  rapply @functor_sigma.
+  - exact h.
+  - intros a e; exact ((p a)^ @ ap k e).
+Defined.
+
+(** ** The 3x3 lemma *)
+
+Definition hfiber_functor_hfiber {A B C D}
+           {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
+           (p : k o f == g o h) (b : B) (c : C) (q : g c = k b)
+: hfiber (functor_hfiber p b) (c;q)
+  <~> hfiber (functor_hfiber (fun x => (p x)^) c) (b;q^).
+Proof.
+  unfold hfiber, functor_hfiber, functor_sigma.
+  refine (_ oE (equiv_sigma_assoc _ _)^-1).
+  refine (equiv_sigma_assoc _ _ oE _).
+  apply (equiv_functor_sigma' 1); intros a; cbn.  
+  refine (_ oE
+         (equiv_functor_sigma'
+            (P := fun r => { s : h a = c & s # ((p a)^ @ ap k r) = q })
+            1 (fun r => equiv_path_sigma _
+                          (h a; (p a)^ @ ap k r) (c; q)))^-1).
+  refine (equiv_functor_sigma'
+            (P := fun r => { s : f a = b & s # (((p a)^)^ @ ap g r) = q^ })
+            1 (fun r => equiv_path_sigma _
+                          (f a; ((p a)^)^ @ ap g r) (b; q^)) oE _).
+  refine (equiv_sigma_symm _ oE _).
+  refine (equiv_functor_sigma' 1 _); intros r.
+  refine (equiv_functor_sigma' 1 _); intros s; cbn.
+  refine (equiv_concat_l (transport_paths_Fl _ _) _ oE _).
+  refine (_ oE (equiv_concat_l (transport_paths_Fl _ _) _)^-1).
+  refine ((equiv_ap inverse _ _)^-1 oE _).
+  refine (equiv_concat_r (inv_V q)^ _ oE _).
+  apply equiv_concat_l.
+  abstract (rewrite !inv_pp, !inv_V, concat_pp_p; reflexivity).
 Defined.
 
 (** ** Replacing a map with a fibration *)
