@@ -159,12 +159,28 @@ Definition equiv_path_prod {A B : Type} (z z' : A * B)
 
 (** Path algebra *)
 
+(** Composition.  This and the next lemma are displayed equations in section 2.6 of the book, but they have no numbers so we can't put them into [HoTTBook.v]. *)
 Definition path_prod_pp {A B : Type} (z z' z'' : A * B)
            (p : fst z = fst z') (p' : fst z' = fst z'')
            (q : snd z = snd z') (q' : snd z' = snd z'')
 : path_prod z z'' (p @ p') (q @ q') = path_prod z z' p q @ path_prod z' z'' p' q'.
 Proof.
   destruct z, z', z''; simpl in *; destruct p, p', q, q'.
+  reflexivity.
+Defined.
+
+(** Associativity *)
+Definition path_prod_pp_p  {A B : Type} (u v z w : A * B)
+           (p : fst u = fst v) (q : fst v = fst z) (r : fst z = fst w)
+           (p' : snd u = snd v) (q' : snd v = snd z) (r' : snd z = snd w)
+: path_prod_pp u z w (p @ q) r (p' @ q') r'
+  @ whiskerR (path_prod_pp u v z p q p' q') (path_prod z w r r')
+  @ concat_pp_p (path_prod u v p p') (path_prod v z q q') (path_prod z w r r')
+  = ap011 (path_prod u w) (concat_pp_p p q r) (concat_pp_p p' q' r')
+    @ path_prod_pp u v w p (q @ r) p' (q' @ r')
+    @ whiskerL (path_prod u v p p') (path_prod_pp v z w q r q' r').
+Proof.
+  destruct u, v, z ,w; simpl in *; destruct p, p', q, q', r, r'.
   reflexivity.
 Defined.
 
