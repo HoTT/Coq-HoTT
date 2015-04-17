@@ -68,11 +68,13 @@ Module ClosedModalities <: Modalities.
   : T -> O_reflector@{u a i} O T
     := fun x => push (inr x).
 
-  Definition inO_equiv_inO (O : Modality@{u a}) (T U : Type@{i})
-     (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv@{i i} f)
-  : In@{u a i} O U.
+  Definition inO_equiv_inO (O : Modality@{u a}) (T : Type@{i}) (U : Type@{j})
+     (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv f)
+  : let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
+    let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
+    In@{u a j} O U.
   Proof.
-    intros u; pose (T_inO u).
+    cbn; intros u; pose (T_inO u).
     refine (contr_equiv _ f); exact _.
   Defined.
 

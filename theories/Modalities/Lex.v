@@ -195,10 +195,9 @@ Module Type Preserves_Fibers (Os : ReflectiveSubuniverses).
 
 End Preserves_Fibers.
 
-(** We omit the module type as with [ReflectiveSubuniverses_to_Modalities]; see below. *)
 Module Lex_Reflective_Subuniverses
-       (Os : ReflectiveSubuniverses) (Opf : Preserves_Fibers Os).
-  (** <: SigmaClosed Os. *)
+       (Os : ReflectiveSubuniverses) (Opf : Preserves_Fibers Os)
+  <: SigmaClosed Os.
 
   Import Opf.
 
@@ -208,27 +207,31 @@ Module Lex_Reflective_Subuniverses
              (B_inO : forall a, In@{u a j} O (B a))
   : In@{u a k} O {x:A & B x}.
   Proof.
-    pose (g := O_rec pr1 : O {x : A & B x} -> A).
+    pose (g := O_rec@{u a k i k k i} pr1 : O {x : A & B x} -> A).
     transparent assert (p : (forall x, g (to O _ x) = x.1)).
     { intros x; subst g; apply O_rec_beta. }
-    apply inO_isequiv_to_O.
+    apply inO_isequiv_to_O@{u a k k}.
     apply isequiv_fcontr; intros x.
-    refine (contr_equiv' _ (hfiber_hfiber_compose_map _ g x)).
+    refine (contr_equiv' _ (hfiber_hfiber_compose_map@{k k i k k k k k k} _ g x)).
     apply fcontr_isequiv.
     unfold hfiber_compose_map.
-    transparent assert (h : (hfiber (@pr1 A B) (g x) <~> hfiber g (g x))).
-    { refine (_ oE equiv_to_O O _).
-      - refine (_ oE BuildEquiv _ _ (O_functor_hfiber O (@pr1 A B) (g x)) _).
+    transparent assert (h : (Equiv@{k k} (hfiber@{k i} (@pr1 A B) (g x))
+                                         (hfiber@{k i} g (g x)))).
+    { refine (_ oE equiv_to_O@{u a k k} O _).
+      - refine (_ oE BuildEquiv _ _
+                  (O_functor_hfiber@{u a k i k k i k irrelevant k k k k k k}
+                                   O (@pr1 A B) (g x)) _).
         unfold hfiber.
         refine (equiv_functor_sigma' 1 _). intros y; cbn.
         refine (_ oE (equiv_moveR_equiv_V _ _)).
         apply equiv_concat_l.
         apply moveL_equiv_V.
         unfold g, O_functor.
-        revert y; apply O_indpaths; intros [a q]; cbn.
+        revert y; apply O_indpaths@{u a k i i k k}; intros [a q]; cbn.
         refine (_ @ (O_rec_beta _ _)^).
         apply ap, O_rec_beta.
-      - refine (inO_equiv_inO _ (hfiber_fibration (g x) B)). }
+      - refine (inO_equiv_inO@{dwim1 dwim2 dwim3 dwim4 k} _
+                 (hfiber_fibration@{i j k k} (g x) B)). }
     refine (isequiv_homotopic (h oE equiv_hfiber_homotopic _ _ p (g x)) _).
     intros [[a b] q]; cbn. clear h.
     unfold O_functor_hfiber.
@@ -249,7 +252,6 @@ Module Lex_Reflective_Subuniverses
     Close Scope long_path_scope.
   Qed.
 
-(** As with [ReflectiveSubuniverses_to_Modalities], Coq won't actually accept this as a module of type [SigmaClosed Os] because the above proof introduces way too many universe parameters.  It might be possible to bring it down to become acceptable with heavy use of universe annotations, but this is probably not worthwhile bothering about because the only point of [SigmaClosed] is to be passed to [ReflectiveSubuniverses_to_Modalities], which in turn can't actually instantiate [Modalities] for more fundamental reasons.  *)
 End Lex_Reflective_Subuniverses.
 
 (** ** Accessible lex modalities *)

@@ -72,7 +72,10 @@ Module Truncation_Modalities <: Modalities.
   Definition to (n : Modality@{u u'}) A := @tr n A.
 
   Definition inO_equiv_inO (n : Modality@{u u'})
-             (A B : Type@{i}) Atr f feq
+             (A : Type@{i}) (B : Type@{j}) Atr f feq
+  : let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
+    let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
+    In n B
   := @trunc_equiv A B f n Atr feq.
 
   Definition hprop_inO `{Funext} (n : Modality@{u u'}) A
