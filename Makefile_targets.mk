@@ -85,6 +85,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/Modalities/Closed.v \
 	$(srcdir)/theories/Modalities/Fracture.v \
 	$(srcdir)/theories/Spaces/Int.v \
+	$(srcdir)/theories/Comodalities/CoreflectiveSubuniverse.v \
 	$(srcdir)/theories/hit/Circle.v \
 	$(srcdir)/theories/hit/Truncations.v \
 	$(srcdir)/theories/hit/TruncImpliesFunext.v \
