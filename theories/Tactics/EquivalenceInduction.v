@@ -5,9 +5,9 @@ Require Import HoTT.Basics HoTT.Types.
 
 Local Open Scope equiv_scope.
 
-Class RespectsEquivalenceL A (P : forall B, (A <~> B) -> Type)
+Class RespectsEquivalenceL (A : Type@{i}) (P : forall (B : Type@{j}), (A <~> B) -> Type)
   := respects_equivalenceL : { e' : forall B (e : A <~> B), P A (equiv_idmap A) <~> P B e & Funext -> equiv_idmap _ = e' A (equiv_idmap _) }.
-Class RespectsEquivalenceR A (P : forall B, (B <~> A) -> Type)
+Class RespectsEquivalenceR (A : Type@{i}) (P : forall (B : Type@{j}), (B <~> A) -> Type)
   := respects_equivalenceR : { e' : forall B (e : B <~> A), P A (equiv_idmap A) <~> P B e & Funext -> equiv_idmap _ = e' A (equiv_idmap _) }.
 (** We use a sigma type rather than a record for two reasons:
 
@@ -350,8 +350,9 @@ Ltac equiv_induction p :=
     move p' at top;
       generalize dependent y;
       let P := match goal with |- forall y p, @?P y p => constr:P end in
-      refine ((fun g H B e => (@respects_equivalenceL _ P H).1 B e g) _ _);
-        [ | repeat step_respects_equiv ].
+      (* We use [(fun x => x) _] to block automatic typeclass resolution in the hole for the equivalence respectful proof. *)
+      refine ((fun g H B e => (@respects_equivalenceL _ P H).1 B e g) _ (_ : (fun x => x) _));
+        [ intros | repeat step_respects_equiv ].
 
 Goal forall `{Funext} A B (e : A <~> B), A -> { y : B & forall Q, Contr Q -> ((e^-1 y = e^-1 y) <~> (y = y)) * Q }.
   intros ? ? ? ? a.

@@ -34,3 +34,34 @@ Module Foo (Os : ReflectiveSubuniverses).
     pose test.
   Admitted.
 End Foo.
+
+(** Test 1 from issue #754 *)
+Module Issue754_1.
+  Inductive nat : Type1 :=
+  | O : nat
+  | S : nat -> nat.
+  Fixpoint code_nat (m n : nat) {struct m} : DProp.DHProp :=
+    match m with
+      | O => match n with
+               | O => DProp.True
+               | S _ => DProp.False
+             end
+      | S m' => match n with
+                  | O => DProp.False
+                  | S n' => code_nat m' n'
+                end
+    end.
+
+  Notation "x =n y" := (code_nat x y) : nat_scope.
+  Bind Scope nat_scope with nat.
+  Axiom equiv_path_nat :
+    forall n m : nat,
+      Trunc.trunctype_type (DProp.dhprop_hprop (n =n m)) <~> n = m.
+
+  Definition nat_discr `{Funext} {n: nat}: O <> S n.
+  Proof.
+    intro H'.
+    equiv_induction (@equiv_path_nat O (S n)).
+    assumption.
+  Qed.
+End Issue754_1.
