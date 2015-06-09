@@ -30,7 +30,6 @@ CORE_VFILES = \
 	$(srcdir)/theories/Basics/Trunc.v \
 	$(srcdir)/theories/Basics/Decidable.v \
 	$(srcdir)/theories/Basics/FunextVarieties.v \
-	$(srcdir)/theories/Basics/Pointed.v \
 	$(srcdir)/theories/Basics.v \
 	$(srcdir)/theories/Types/Paths.v \
 	$(srcdir)/theories/Types/Unit.v \
@@ -61,7 +60,7 @@ CORE_VFILES = \
 	$(srcdir)/theories/Tactics/EquivalenceInduction.v \
 	$(srcdir)/theories/Tactics/BinderApply.v \
 	$(srcdir)/theories/TruncType.v \
-	$(srcdir)/theories/PType.v \
+	$(srcdir)/theories/Pointed.v \
 	$(srcdir)/theories/DProp.v \
 	$(srcdir)/theories/Functorish.v \
 	$(srcdir)/theories/FunextAxiom.v \
