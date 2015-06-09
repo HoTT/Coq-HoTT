@@ -664,6 +664,39 @@ Section ModalMaps.
     refine (inO_equiv_inO _ (hfiber_pullback_along' g f c)^-1).
   Defined.
 
+  (** [functor_sum] preserves modal maps. *)
+  Global Instance mapinO_functor_sum {A A' B B'}
+         (f : A -> A') (g : B -> B') `{MapIn O _ _ f} `{MapIn O _ _ g}
+  : MapIn O (functor_sum f g).
+  Proof.
+    intros [a|b].
+    - refine (inO_equiv_inO _ (hfiber_functor_sum_l f g a)^-1).
+    - refine (inO_equiv_inO _ (hfiber_functor_sum_r f g b)^-1).
+  Defined.
+
+  (** So does [unfunctor_sum], if both summands are preserved.  These can't be [Instance]s since they require [Ha] and [Hb] to be supplied. *)
+  Definition mapinO_unfunctor_sum_l {A A' B B'}
+         (h : A + B -> A' + B')
+         (Ha : forall a:A, is_inl (h (inl a)))
+         (Hb : forall b:B, is_inr (h (inr b)))
+         `{MapIn O _ _ h}
+  : MapIn O (unfunctor_sum_l h Ha).
+  Proof.
+    intros a.
+    refine (inO_equiv_inO _ (hfiber_unfunctor_sum_l h Ha Hb a)^-1).
+  Defined.
+
+  Definition mapinO_unfunctor_sum_r {A A' B B'}
+         (h : A + B -> A' + B')
+         (Ha : forall a:A, is_inl (h (inl a)))
+         (Hb : forall b:B, is_inr (h (inr b)))
+         `{MapIn O _ _ h}
+  : MapIn O (unfunctor_sum_r h Hb).
+  Proof.
+    intros b.
+    refine (inO_equiv_inO _ (hfiber_unfunctor_sum_r h Ha Hb b)^-1).
+  Defined.
+
 End ModalMaps.
 
 (** ** Modally connected maps *)
