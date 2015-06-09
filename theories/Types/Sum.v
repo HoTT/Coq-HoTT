@@ -35,7 +35,9 @@ Definition path_sum {A B : Type} (z z' : A + B)
                    | _, _ => Empty
                  end)
 : z = z'.
-  destruct z, z', pq; exact idpath.
+  destruct z, z'.
+  all:try apply ap, pq.
+  all:elim pq.
 Defined.
 
 Definition path_sum_inv {A B : Type} {z z' : A + B}
@@ -268,9 +270,60 @@ Defined.
 
 (** ** Functorial action *)
 
-Definition functor_sum {A A' B B' : Type} (f : A -> A') (g : B -> B')
-: A + B -> A' + B'
-  := fun z => match z with inl z' => inl (f z') | inr z' => inr (g z') end.
+Section FunctorSum.
+  Context {A A' B B' : Type} (f : A -> A') (g : B -> B').
+
+  Definition functor_sum : A + B -> A' + B'
+    := fun z => match z with inl z' => inl (f z') | inr z' => inr (g z') end.
+
+  (** The fibers of [functor_sum] are those of [f] and [g]. *)
+  Definition hfiber_functor_sum_l (a' : A')
+  : hfiber functor_sum (inl a') <~> hfiber f a'.
+  Proof.
+    refine (equiv_adjointify _ _ _ _).
+    - intros [[a|b] p].
+      + exists a.
+        exact (path_sum_inl _ p).
+      + elim (inr_ne_inl _ _ p).
+    - intros [a p].
+      exists (inl a).
+      exact (ap inl p).
+    - intros [a p].
+      apply ap.
+      (** Why doesn't Coq find this? *)
+      pose (@isequiv_path_sum A' B' (inl (f a)) (inl a')).
+      exact (eissect (@path_sum A' B' (inl (f a)) (inl a')) p).
+    - intros [[a|b] p]; simpl.
+      + apply ap.
+        pose (@isequiv_path_sum A' B' (inl (f a)) (inl a')).
+        exact (eisretr (@path_sum A' B' (inl (f a)) (inl a')) p).
+      + elim (inr_ne_inl _ _ p).
+  Defined.
+
+  Definition hfiber_functor_sum_r (b' : B')
+  : hfiber functor_sum (inr b') <~> hfiber g b'.
+  Proof.
+    refine (equiv_adjointify _ _ _ _).
+    - intros [[a|b] p].
+      + elim (inl_ne_inr _ _ p).
+      + exists b.
+        exact (path_sum_inr _ p).
+    - intros [b p].
+      exists (inr b).
+      exact (ap inr p).
+    - intros [b p].
+      apply ap.
+      (** Why doesn't Coq find this? *)
+      pose (@isequiv_path_sum A' B' (inr (g b)) (inr b')).
+      exact (eissect (@path_sum A' B' (inr (g b)) (inr b')) p).
+    - intros [[a|b] p]; simpl.
+      + elim (inl_ne_inr _ _ p).
+      + apply ap.
+        pose (@isequiv_path_sum A' B' (inr (g b)) (inr b')).
+        exact (eisretr (@path_sum A' B' (inr (g b)) (inr b')) p).
+  Defined.
+
+End FunctorSum.
 
 (** ** "Unfunctorial action" *)
 
@@ -338,6 +391,77 @@ Proof.
   refine (unfunctor_sum_r_beta _ _ _ @ _).
   refine (ap k (unfunctor_sum_r_beta _ _ _) @ _).
   refine ((unfunctor_sum_r_beta _ _ _)^).
+Defined.
+
+(** [unfunctor_sum] also preserves fibers, if both summands are preserved. *)
+Definition hfiber_unfunctor_sum_l {A A' B B' : Type}
+           (h : A + B -> A' + B')
+           (Ha : forall a:A, is_inl (h (inl a)))
+           (Hb : forall b:B, is_inr (h (inr b)))
+           (a' : A')
+: hfiber (unfunctor_sum_l h Ha) a' <~> hfiber h (inl a').
+Proof.
+  refine (equiv_adjointify _ _ _ _).
+  - intros [a p].
+    exists (inl a).
+    refine (_ @ ap inl p).
+    symmetry; apply inl_un_inl.
+  - intros [[a|b] p].
+    + exists a.
+      apply path_sum_inl with B'.
+      refine (_ @ p).
+      apply inl_un_inl.
+    + specialize (Hb b).
+      abstract (rewrite p in Hb; elim Hb).
+  - intros [[a|b] p]; simpl.
+    + apply ap.
+      apply moveR_Vp.
+      exact (eisretr (@path_sum A' B' _ _)
+                     (inl_un_inl (h (inl a)) (Ha a) @ p)).
+    + apply Empty_rec.
+      specialize (Hb b).
+      abstract (rewrite p in Hb; elim Hb).
+  - intros [a p].
+    apply ap.
+    rewrite concat_p_Vp.
+    pose (@isequiv_path_sum
+            A' B' (inl (unfunctor_sum_l h Ha a)) (inl a')).
+    exact (eissect (@path_sum A' B' (inl (unfunctor_sum_l h Ha a)) (inl a')) p).
+Defined.
+
+Definition hfiber_unfunctor_sum_r {A A' B B' : Type}
+           (h : A + B -> A' + B')
+           (Ha : forall a:A, is_inl (h (inl a)))
+           (Hb : forall b:B, is_inr (h (inr b)))
+           (b' : B')
+: hfiber (unfunctor_sum_r h Hb) b' <~> hfiber h (inr b').
+Proof.
+  refine (equiv_adjointify _ _ _ _).
+  - intros [b p].
+    exists (inr b).
+    refine (_ @ ap inr p).
+    symmetry; apply inr_un_inr.
+  - intros [[a|b] p].
+    + specialize (Ha a).
+      abstract (rewrite p in Ha; elim Ha).
+    + exists b.
+      apply path_sum_inr with A'.
+      refine (_ @ p).
+      apply inr_un_inr.
+  - intros [[a|b] p]; simpl.
+    + apply Empty_rec.
+      specialize (Ha a).
+      abstract (rewrite p in Ha; elim Ha).
+    + apply ap.
+      apply moveR_Vp.
+      exact (eisretr (@path_sum A' B' _ _)
+                     (inr_un_inr (h (inr b)) (Hb b) @ p)).
+  - intros [b p].
+    apply ap.
+    rewrite concat_p_Vp.
+    pose (@isequiv_path_sum
+            A' B' (inr (unfunctor_sum_r h Hb b)) (inr b')).
+    exact (eissect (@path_sum A' B' (inr (unfunctor_sum_r h Hb b)) (inr b')) p).
 Defined.
 
 (** ** Functoriality on equivalences *)
