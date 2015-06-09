@@ -22,6 +22,7 @@ STD_VFILES = \
 	$(SRCCOQLIB)/theories/Program/Tactics.v
 
 CORE_VFILES = \
+	$(srcdir)/theories/Basics/Notations.v \
 	$(srcdir)/theories/Basics/Overture.v \
 	$(srcdir)/theories/Basics/UniverseLevel.v \
 	$(srcdir)/theories/Basics/PathGroupoids.v \

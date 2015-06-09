@@ -202,7 +202,7 @@ Proof.
   - apply concat_Vp.
 Qed.
 
-Notation "p ^*" := (phomotopy_inverse p) (at level 20) : pointed_scope.
+Notation "p ^*" := (phomotopy_inverse p) : pointed_scope.
 
 (** ** Functoriality of loop spaces *)
 

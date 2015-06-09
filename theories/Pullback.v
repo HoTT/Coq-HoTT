@@ -63,7 +63,7 @@ Definition pullback_along {A B C} (f : B -> A) (g : C -> A)
 : Pullback f g -> B
   := pr1.
 
-Notation "f ^*" := (pullback_along f) (at level 20) : function_scope.
+Notation "f ^*" := (pullback_along f) : function_scope.
 
 Definition hfiber_pullback_along {A B C} (f : B -> A) (g : C -> A) (b:B)
 : hfiber (f ^* g) b <~> hfiber g (f b).

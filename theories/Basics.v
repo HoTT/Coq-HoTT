@@ -1,3 +1,4 @@
+Require Export Basics.Notations.
 Require Export Basics.Overture.
 Require Export Basics.UniverseLevel.
 Require Export Basics.PathGroupoids.
