@@ -599,6 +599,9 @@ Notation "x <> y  :>  T" := (not (x = y :> T))
 (at level 70, y at next level, no associativity) : type_scope.
 Notation "x <> y" := (x <> y :> _) (at level 70, no associativity) : type_scope.
 
+Definition symmetric_neq {A} {x y : A} : x <> y -> y <> x
+  := fun np p => np (p^).
+
 Definition complement {A} (R : relation A) : relation A :=
   fun x y => ~ (R x y).
 
