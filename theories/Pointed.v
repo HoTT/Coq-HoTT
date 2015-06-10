@@ -2,9 +2,12 @@
 (** * Pointed Types *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import hit.Truncations.
+Require Import Fibrations Factorization.
+Require Import Modalities.Modality hit.Truncations hit.Connectedness.
+Import TrM.
 
 Local Open Scope path_scope.
+Local Open Scope trunc_scope.
 
 (** Allow ourselves to implicitly generalize over types [A] and [B], and a function [f]. *)
 Generalizable Variables A B f.
@@ -46,6 +49,21 @@ Fixpoint iterated_loops (n : nat) (A : Type) `{H : IsPointed A}
        | S p => iterated_loops p (point A = point A)
      end.
 
+(** The loop space decreases the truncation level by one.  We don't bother making this an instance because it is automatically found by typeclass search, but we record it here in case anyone is l. *)
+Definition istrunc_loops {n} (A : pType) `{IsTrunc n.+1 A}
+: IsTrunc n (loops A).
+Proof.
+  exact _.
+Defined.
+
+(** Similarly for connectedness. *)
+Definition isconnected_loops `{Univalence} {n} (A : pType)
+           `{IsConnected n.+1 A}
+: IsConnected n (loops A).
+Proof.
+  exact _.
+Defined.
+
 (** ** Pointed functions *)
 
 Record pMap (A B : pType) :=
@@ -57,15 +75,6 @@ Coercion pointed_fun : pMap >-> Funclass.
 
 Infix "->*" := pMap (at level 99) : pointed_scope.
 Local Open Scope pointed_scope.
-
-Definition loops_functor {A B : pType} (f : A ->* B)
-: (loops A) ->* (loops B).
-Proof.
-  refine (Build_pMap (loops A) (loops B)
-            (fun p => (point_eq f)^ @ (ap f p @ point_eq f)) _).
-  apply moveR_Vp; simpl.
-  refine (concat_1p _ @ (concat_p1 _)^).
-Defined.
 
 Definition pmap_idmap (A : pType): A ->* A
   := Build_pMap A A idmap 1.
@@ -112,6 +121,17 @@ Ltac pointed_reduce :=
   path_induction; cbn;
   (** TODO: [pointed_reduce] uses [rewrite], and thus according to our current general rules, it should only be used in opaque proofs.  We don't yet need any of the proofs that use it to be transparent, but there's a good chance we will eventually.  At that point we can consider whether to allow it in transparent proofs, modify it to not use [rewrite], or exclude it from proofs that need to be transparent. *)
   rewrite ?concat_p1, ?concat_1p.
+
+(** ** Functoriality of loop spaces *)
+
+Definition loops_functor {A B : pType} (f : A ->* B)
+: (loops A) ->* (loops B).
+Proof.
+  refine (Build_pMap (loops A) (loops B)
+            (fun p => (point_eq f)^ @ (ap f p @ point_eq f)) _).
+  apply moveR_Vp; simpl.
+  refine (concat_1p _ @ (concat_p1 _)^).
+Defined.
 
 Definition loops_2functor {A B : pType} {f g : A ->* B} (p : f ==* g)
 : (loops_functor f) ==* (loops_functor g).
@@ -230,6 +250,51 @@ Proof.
     refine (concat_1p _ @ concat_p1 _ @ ap_idmap _).
   - reflexivity.
 Qed.
+
+(** ** Loop spaces and truncation and connectedness *)
+
+(** The loop space functor decreases the truncation level by one.  *)
+Global Instance istrunc_loops_functor {n : trunc_index}
+       (A B : pType) (f : A ->* B) `{IsTruncMap n.+1 _ _ f}
+: IsTruncMap n (loops_functor f).
+Proof.
+  intros p. unfold hfiber; simpl.
+  refine (trunc_equiv' _ (equiv_functor_sigma' 1 (fun q => equiv_moveR_Vp _ _ _))); simpl.
+  refine (trunc_equiv' _ (equiv_functor_sigma' 1 (fun q => equiv_moveR_pM _ _ _))); simpl.
+  refine (trunc_equiv' _ (hfiber_ap _)^-1).
+Defined.
+
+(** And likewise the connectedness.  *)
+Global Instance isconnected_loops_functor `{Univalence} {n : trunc_index}
+       (A B : pType) (f : A ->* B) `{IsConnMap n.+1 _ _ f}
+: IsConnMap n (loops_functor f).
+Proof.
+  intros p. unfold hfiber; simpl.
+  refine (isconnected_equiv' n _ (equiv_functor_sigma' 1 (fun q => equiv_moveR_Vp _ _ _)) _); simpl.
+  refine (isconnected_equiv' n _ (equiv_functor_sigma' 1 (fun q => equiv_moveR_pM _ _ _)) _); simpl.
+  refine (isconnected_equiv' n _ (hfiber_ap _)^-1 _).
+Defined.
+
+(** It follows that loop spaces "commute with images". *)
+Definition equiv_loops_image `{Univalence} (n : trunc_index)
+           {A B : pType} (f : A ->* B)
+: loops (Build_pType (image n.+1 f) (factor1 (image n.+1 f) (point A)))
+        <~> image n (loops_functor f).
+Proof.
+  set (C := (Build_pType (image n.+1 f) (factor1 (image n.+1 f) (point A)))).
+  pose (g := Build_pMap A C (factor1 (image n.+1 f)) 1).
+  pose (h := Build_pMap C B (factor2 (image n.+1 f)) (point_eq f)).
+  transparent assert (I : (Factorization (@IsConnMap n) (@MapIn n) (loops_functor f))).
+  { refine (@Build_Factorization
+              (@IsConnMap n) (@MapIn n) (loops A) (loops B) (loops_functor f)
+              (loops C) (loops_functor g) (loops_functor h) _ _ _).
+    intros x; symmetry.
+    refine (_ @ pointed_htpy (loops_functor_compose h g) x).
+    simpl.
+    abstract (rewrite !concat_1p; reflexivity). }
+  exact (path_intermediate
+           (path_factor (O_factsys n) (loops_functor f) I (image n (loops_functor f)))).
+Defined.
 
 (** ** Pointed equivalences *)
 

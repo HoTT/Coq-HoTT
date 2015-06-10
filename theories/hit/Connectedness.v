@@ -94,6 +94,15 @@ Proof.
   refine (isconnected_elim n.+1 C f).
 Defined.
 
+(** ** Connectedness of path spaces *)
+
+Global Instance isconnected_paths `{Univalence} {n A}
+       `{IsConnected n.+1 A} (x y : A)
+: IsConnected n (x = y).
+Proof.
+  refine (contr_equiv' _ (equiv_path_Tr x y)^-1).
+Defined.
+
 (** ** 0-connectedness *)
 
 (** To be 0-connected is the same as to be (-1)-connected and that any two points are merely equal.  *)
