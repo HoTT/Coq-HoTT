@@ -111,3 +111,10 @@ Proof.
   apply path_nat.
   apply leq_antisymd; assumption.
 Defined.
+
+Definition not_nltn n : ~ (n < n).
+Proof.
+  induction n as [|n IH]; simpl.
+  - auto.
+  - apply IH.
+Defined.

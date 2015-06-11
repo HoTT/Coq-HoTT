@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations Factorization EquivalenceVarieties UnivalenceImpliesFunext HSet.
+Require Import Fibrations Factorization EquivalenceVarieties UnivalenceImpliesFunext HSet HProp DProp.
 Require Import hit.Truncations hit.quotient.
 Import TrM.
 Require Import Spaces.Nat.
@@ -892,3 +892,145 @@ Section DecidableQuotients.
   Defined.
 
 End DecidableQuotients.
+
+(** ** Injections *)
+
+(** An injection between finite sets induces an inequality between their cardinalities. *)
+Definition leq_inj_finite `{Funext} {X Y} {fX : Finite X} {fY : Finite Y}
+           (f : X -> Y) (i : IsEmbedding f)
+: fcard X <= fcard Y.
+Proof.
+  assert (MapIn -1 f) by exact _. clear i.
+  destruct fX as [n e]; simpl.
+  destruct fY as [m e']; simpl.
+  strip_truncations.
+  pose (g := e' o f o e^-1).
+  assert (MapIn -1 g) by (unfold g; exact _).
+  clearbody g. clear e e'. generalize dependent m.
+  induction n as [|n IHn].
+  { intros; exact tt. }
+  intros m g ?.
+  assert (i : isinj g) by (apply isinj_embedding; exact _).
+  destruct m as [|m].
+  { elim (g (inr tt)). }
+  pose (h := (fin_transpose_last_with m (g (inr tt)))^-1 o g).
+  assert (MapIn -1 h) by (unfold h; exact _).
+  assert (Ha : forall a:Fin n, is_inl (h (inl a))).
+  { intros a.
+    remember (g (inl a)) as b eqn:p.
+    destruct b as [b|[]].
+    - assert (q : g (inl a) <> (g (inr tt))).
+      { intros r. exact (inl_ne_inr _ _ (i _ _ r)). }
+      rewrite p in q; apply symmetric_neq in q.
+      assert (r : h (inl a) = inl b).
+      { unfold h; apply moveR_equiv_V; symmetry.
+        refine (fin_transpose_last_with_rest m (g (inr tt)) b q @ p^). }
+      rewrite r; exact tt.
+    - assert (q : h (inl a) = g (inr tt)).
+      { unfold h; apply moveR_equiv_V; symmetry.
+        refine (_ @ p^); apply fin_transpose_last_with_with. }
+      rewrite q.
+      destruct (is_inl_or_is_inr (g (inr tt))) as [l|r]; try assumption.
+      assert (s := inr_un_inr _ r).
+      revert s; generalize (un_inr (g (inr tt)) r); intros [] s.
+      elim (inl_ne_inr _ _ (i _ _ (p @ s))). }
+  assert (Hb : forall b:Unit, is_inr (h (inr b))).
+  { intros [].
+    assert (q : h (inr tt) = inr tt).
+    { unfold h; apply moveR_equiv_V; symmetry.
+      apply fin_transpose_last_with_last. }
+    rewrite q; exact tt. }
+  exact (IHn m (unfunctor_sum_l h Ha)
+             (mapinO_unfunctor_sum_l -1 h Ha Hb)).
+Qed.
+
+(** ** Initial segments of [nat] *)
+
+Definition nat_fin (n : nat) (k : Fin n) : nat.
+Proof.
+  induction n as [|n nf].
+  - contradiction.
+  - destruct k as [k|_].
+    + exact (nf k).
+    + exact n.
+Defined.
+
+Definition nat_fin_inl (n : nat) (k : Fin n)
+: nat_fin n.+1 (inl k) = nat_fin n k
+  := 1.
+
+Definition nat_fin_compl (n : nat) (k : Fin n) : nat.
+Proof.
+  induction n as [|n nfc].
+  - contradiction.
+  - destruct k as [k|_].
+    + exact (nfc k).+1.
+    + exact 0.
+Defined.
+
+Definition nat_fin_compl_compl n k
+: (nat_fin n k + nat_fin_compl n k).+1 = n.  
+Proof.
+  induction n as [|n IH].
+  - contradiction.
+  - destruct k as [k|?]; simpl.
+    + rewrite nat_plus_comm.
+      specialize (IH k).
+      rewrite nat_plus_comm in IH.
+      exact (ap S IH).
+    + rewrite nat_plus_comm; reflexivity.
+Qed.
+
+(** ** Enumerations *)
+
+(** A function from [nat] to a finite set must repeat itself eventually. *)
+Section Enumeration.
+  Context `{Funext} {X} `{Finite X} (e : nat -> X).
+
+  Let er (n : nat) : Fin n -> X
+    := fun k => e (nat_fin n k).
+
+  Lemma finite_enumeration_stage (n : nat)
+  : IsEmbedding (er n)
+    + { n : nat & { k : nat & e n = e (n + k).+1 }}.
+  Proof.
+    induction n as [|n [IH|IH]].
+    - left. intros x.
+      apply hprop_inhabited_contr; intros [[] _].
+    - destruct (detachable_image_finite (er n) (er n.+1 (inr tt)))
+        as [[k p]|ne].
+      + right.
+        exists (nat_fin n k).
+        exists (nat_fin_compl n k).
+        rewrite nat_fin_compl_compl.
+        exact p.
+      + left. intros x.
+        apply hprop_allpath.
+        intros k l.
+        apply path_sigma_hprop.
+        destruct k as [[k|[]] p], l as [[l|[]] q]; simpl.
+        * apply isinj_embedding in IH.
+          apply ap.
+          apply IH.
+          unfold er in p, q. simpl in p, q.
+          exact (p @ q^).
+        * refine (Empty_rec (ne _)).
+          exists k.
+          exact (p @ q^).
+        * refine (Empty_rec (ne _)).
+          exists l.
+          exact (q @ p^).
+        * reflexivity.
+    - right; exact IH.
+  Defined.
+
+  Definition finite_enumeration_repeats
+  : { n : nat & { k : nat & e n = e (n + k).+1 }}.
+  Proof.
+    destruct (finite_enumeration_stage (fcard X).+1) as [p|?].
+    - assert (q := leq_inj_finite (er (fcard X).+1) p); simpl in q.
+      elim (not_nltn _ q).
+    - assumption.
+  Defined.
+
+End Enumeration.
