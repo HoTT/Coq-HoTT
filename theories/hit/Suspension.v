@@ -3,7 +3,7 @@
 (** * The suspension of a type *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import PType NullHomotopy.
+Require Import Pointed NullHomotopy.
 
 Local Open Scope path_scope.
 Local Open Scope pointed_scope.
