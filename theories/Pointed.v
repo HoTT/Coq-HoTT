@@ -49,7 +49,7 @@ Fixpoint iterated_loops (n : nat) (A : Type) `{H : IsPointed A}
        | S p => iterated_loops p (point A = point A)
      end.
 
-(** The loop space decreases the truncation level by one.  We don't bother making this an instance because it is automatically found by typeclass search, but we record it here in case anyone is l. *)
+(** The loop space decreases the truncation level by one.  We don't bother making this an instance because it is automatically found by typeclass search, but we record it here in case anyone is looking for it. *)
 Definition istrunc_loops {n} (A : pType) `{IsTrunc n.+1 A}
 : IsTrunc n (loops A).
 Proof.
