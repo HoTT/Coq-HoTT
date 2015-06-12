@@ -12,8 +12,8 @@ Local Open Scope path_scope.
 (** ** Definition *)
 
 Record ooGroup :=
-  { classifying_space : pType ;
-    isconn_classifying_space : IsConnected 0 classifying_space
+  { classifying_space : pType@{i} ;
+    isconn_classifying_space : IsConnected@{u a i} 0 classifying_space
   }.
 
 Global Existing Instance isconn_classifying_space.
@@ -28,11 +28,14 @@ Coercion group_type : ooGroup >-> Sortclass.
 Definition group_loops (X : pType)
 : ooGroup.
 Proof.
-  refine (Build_ooGroup
-            (Build_pType
+  pose (BG := (Build_pType
                { x:X & merely (x = point X) }
-               ( point X ; tr 1 )) _); try exact _.
-  refine (conn_pointed_type (point _)); try exact _.
+               ( point X ; tr 1 ))).
+  (** Using [cut] prevents Coq from looking for these facts with typeclass search, which is slow and (for some reason) introduces scads of extra universes. *)
+  cut (IsConnected 0 BG).
+  { exact (Build_ooGroup BG). }
+  cut (IsSurjection (unit_name (point BG))).
+  { intros; refine (conn_pointed_type (point _)). }
   apply BuildIsSurjection; simpl; intros [x p].
   strip_truncations; apply tr; exists tt.
   apply path_sigma_hprop; simpl.
@@ -74,7 +77,7 @@ Definition loops_functor_group
 : loops_functor (group_loops_functor f) o loops_group X
   == loops_group Y o loops_functor f.
 Proof.
-  intros x; simpl.
+  intros x.
   apply (equiv_inj (equiv_path_sigma_hprop _ _)^-1).
   simpl.
   unfold pr1_path; rewrite !ap_pp.

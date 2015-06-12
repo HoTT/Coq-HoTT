@@ -2,6 +2,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Constant Factorization UnivalenceImpliesFunext.
 Require Import Modalities.Modality hit.Truncations hit.Connectedness.
+Require Export Algebra.ooGroup Algebra.Aut.
 Import TrM.
 
 Local Open Scope path_scope.
@@ -10,24 +11,7 @@ Local Open Scope path_scope.
 
 (** ** Basics *)
 
-(** [BAut X] is the type of types that are merely equivalent to [X]. *)
-Definition BAut (X : Type) := { Z : Type & merely (Z = X) }.
-
-(** Equivalently, [BAut X] is the (-1)-image of the classifying map [1 -> Type] of [X]. *)
-
-Definition equiv_baut_image_unit X
-: BAut X <~> image (Tr -1) (unit_name X).
-Proof.
-  unfold BAut, image; simpl.
-  refine (equiv_functor_sigma' (equiv_idmap Type) _); intros Z; simpl.
-  apply equiv_O_functor; unfold hfiber.
-  refine ((equiv_contr_sigma _)^-1 oE _).
-  apply equiv_path_inverse.
-Defined.
-
-(** It is canonically pointed by [X] itself. *)
-Global Instance ispointed_baut X : IsPointed (BAut X)
-  := (X ; tr 1).
+(** The type [BAut X] is defined in [Algebra.Aut]. *)
 
 Definition BAut_pr1 X : BAut X -> Type := pr1.
 Coercion BAut_pr1 : BAut >-> Sortclass.
@@ -67,17 +51,7 @@ Proof.
   exact _.
 Defined.
 
-(** And it is 0-connected *)
-Global Instance isconnected_baut X : IsConnected 0 (BAut X).
-Proof.
-  refine (conn_pointed_type (point (BAut X))); try exact _.
-  pose (c := conn_map_compose (Tr -1)
-                              (factor1 (image (Tr -1) (unit_name X)))
-                              (equiv_baut_image_unit X)^-1).
-  refine (conn_map_homotopic _ _ _ _ c); intros []; reflexivity.
-Defined.
-
-(** Therefore, any two points in it are merely equal. *)
+(** Since it is 0-connected, any two points in it are merely equal. *)
 Definition merely_path_baut `{Univalence} {X} (Z Z' : BAut X)
 : merely (Z = Z')
 := merely_path_is0connected (BAut X) Z Z'.
