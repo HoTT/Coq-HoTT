@@ -10,8 +10,8 @@ Local Open Scope path_scope.
 
 (** * Actions of oo-Groups *)
 
-Definition ooAction (G : ooGroup) :=
-  classifying_space G -> Type.
+Definition ooAction (G : ooGroup)
+  := classifying_space G -> Type.
 
 Definition action_space {G} : ooAction G -> Type
   := fun X => X (point _).

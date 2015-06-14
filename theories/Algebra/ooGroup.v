@@ -51,8 +51,8 @@ Defined.
 
 (** ** Homomorphisms *)
 
-Definition ooGroupHom (G H : ooGroup) :=
-  pMap (B G) (B H).
+Definition ooGroupHom (G H : ooGroup)
+  := pMap (B G) (B H).
 
 Definition grouphom_fun {G H} (phi : ooGroupHom G H) : G -> H
   := loops_functor phi.
