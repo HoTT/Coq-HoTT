@@ -9,6 +9,8 @@ Local Open Scope path_scope.
 
 (** * oo-Groups *)
 
+(** We want a workable definition of "oo-group" (what a classical homotopy theorist would call a "grouplike Aoo-space"). The classical definitions using operads or Segal spaces involve infinitely much data, which we don't know how to handle in HoTT. But instead, we can invoke the theorem (which is a theorem in classical homotopy theory, and also in any oo-topos) that every oo-group is the loop space of some pointed connected object, and use it instead as a definition: we define an oo-group to be a pointed connected type (its classifying space or delooping). Then we make subsidiary definitions to allow us to treat such an object in the way we would expect, e.g. an oo-group homomorphism is a pointed map between classifying spaces. *)
+
 (** ** Definition *)
 
 Record ooGroup :=
@@ -23,14 +25,20 @@ Local Notation B := classifying_space.
 Definition group_type (G : ooGroup) : Type
   := point (B G) = point (B G).
 
+(** The following is fundamental: we declare a coercion from oo-groups to types which takes a pointed connected type not to its underlying type, but to its loop space. Thus, if [G : ooGroup], then [g : G] means that [g] is an element of the oo-group that [G] is intended to denote, which is the loop space of the pointed connected type that is technically the data of which [G : ooGroup] consists. This makes it easier to really think of [G] as "really being" an oo-group rather than its classifying space.
+
+This is also convenient because elements of oo-groups are, definitionally, loops in some type. Thus, the oo-group operations like multiplication, inverse, associativity, higher associativity, etc. are simply special cases of the corresponding operations for paths. *)
+
 Coercion group_type : ooGroup >-> Sortclass.
 
+(** Every pointed type has a loop space that is an oo-group. *)
 Definition group_loops (X : pType)
 : ooGroup.
 Proof.
+  pose (existT (fun x:X => merely (x = point X)) (point X) (tr 1)).
   pose (BG := (Build_pType
                { x:X & merely (x = point X) }
-               ( point X ; tr 1 ))).
+               (existT (fun x:X => merely (x = point X)) (point X) (tr 1)))).
   (** Using [cut] prevents Coq from looking for these facts with typeclass search, which is slow and (for some reason) introduces scads of extra universes. *)
   cut (IsConnected 0 BG).
   { exact (Build_ooGroup BG). }
@@ -42,6 +50,7 @@ Proof.
   exact (p^).
 Defined.
 
+(** Unfortunately, the underlying type of that oo-group is not *definitionally* the same as the ordinary loop space, but it is equivalent to it. *)
 Definition loops_group (X : pType)
 : loops X <~> group_loops X.
 Proof.
@@ -51,6 +60,8 @@ Defined.
 
 (** ** Homomorphisms *)
 
+(** *** Definition *)
+
 Definition ooGroupHom (G H : ooGroup)
   := pMap (B G) (B H).
 
@@ -59,6 +70,7 @@ Definition grouphom_fun {G H} (phi : ooGroupHom G H) : G -> H
 
 Coercion grouphom_fun : ooGroupHom >-> Funclass.
 
+(** The loop group functor takes values in oo-group homomorphisms. *)
 Definition group_loops_functor
            {X Y : pType} (f : pMap X Y)
 : ooGroupHom (group_loops X) (group_loops Y).
@@ -72,6 +84,7 @@ Proof.
     apply point_eq.
 Defined.
 
+(** And this functor "is" the same as the ordinary loop space functor. *)
 Definition loops_functor_group
            {X Y : pType} (f : pMap X Y)
 : loops_functor (group_loops_functor f) o loops_group X
@@ -97,6 +110,8 @@ Definition grouphom_compose {G H K : ooGroup}
            (psi : ooGroupHom H K) (phi : ooGroupHom G H)
 : ooGroupHom G K
   := pmap_compose psi phi.
+
+(** *** Functoriality *)
 
 Definition group_loops_functor_compose
            {X Y Z : pType}
@@ -150,7 +165,9 @@ Proof.
   apply loops_2functor; assumption.
 Defined.
 
-(** The following tactic often allows us to "pretend" that phi preserves basepoints strictly. *)
+(** *** Homomorphic properties *)
+
+(** The following tactic often allows us to "pretend" that phi preserves basepoints strictly.  This is basically a simple extension of [pointed_reduce], which see. *)
 Ltac grouphom_reduce :=
   unfold grouphom_fun; cbn;
   repeat match goal with
@@ -211,6 +228,7 @@ Abort.
 Section Subgroups.
   Context {G H : ooGroup} (incl : ooGroupHom H G) `{IsEmbedding incl}.
 
+  (** A subgroup induces an equivalence relation on the ambient group, whose equivalence classes are called "cosets". *)
   Definition in_coset : G -> G -> Type
     := fun g1 g2 => hfiber incl (g1 @ g2^).
 
@@ -242,6 +260,7 @@ Section Subgroups.
             @ whiskerR (concat_pV_p _ _) _).
   Defined.
 
+  (** Every coset is equivalent (as a type) to the subgroup itself. *)
   Definition equiv_coset_subgroup (g : G)
   : { g' : G & in_coset g g'} <~> H.
   Proof.
