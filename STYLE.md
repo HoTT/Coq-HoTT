@@ -1117,6 +1117,10 @@ merged.  This usually works fine, but can sometimes stall if most of
 the core developers are busy.  If a pull request seems to have
 stalled, feel free to bump it back to attention with a comment.
 
+You may see the abbreviations LGTM ("Looks Good To Me") meaning that
+the commenter counts as one pair of eyes, and APOE ("Another Pair Of
+Eyes") asking for a second pair.
+
 ### Commit messages ###
 
 Please try to keep commit messages clear and informative.  We don’t
@@ -1216,3 +1220,87 @@ performance table.
 
 See the comments at the top of `make-pretty-timed-diff.sh` for more
 detailed instructions and caveats.
+
+## Bugs in Coq ##
+
+More often than we would like, we run across bugs in Coq.  A sure sign
+of a bug in Coq is when you get a message about an "Anomaly", but a
+bug can also be unjustifiable behavior.  If you aren't sure whether
+something is a bug in Coq, feel free to open an issue about it on the
+HoTT github project.
+
+### Reporting bugs ###
+
+Bugs in Coq should be reported on the [Coq bug tracker][bugs].  You
+should probably search the tracker first to see whether your bug has
+already been reported.
+
+After reporting a bug, you may need to add a temporary workaround to
+the HoTT library until the bug is fixed.  In this case, please add a
+comment labeling this as a workaround and citing the bug report.  That
+way when the bug is fixed, we can remove the workaround.
+
+[bugs]: https://coq.inria.fr/bugs
+
+### Minimizing bugs ###
+
+When submitting a bug report, it is appreciated to submit a minimal
+test example.  Since the HoTT library is quite large, it can be quite
+some work to track down the actual trigger of a bug.  Fortunately,
+Jason Gross has written a convenient "bug minimizing" script, which is
+available in his [coq-tools][coq-tools] repository.  To use it:
+
+1. Clone the coq-tools repository somewhere (usually somewhere outside
+   the HoTT library directory).
+
+2. Attempt to compile the file where the bug occurs, e.g. by running
+   `make theories/Path/To/Buggy.vo` from the root of the HoTT library
+   directory.  This creates a `.glob` file which the bug-finder needs.
+
+3. `cd theories` and then run the bug-finder script `find-bug.py`.  It
+   will combine the file with all the rest of the library that it
+   needs, ask you to confirm the error, and then proceed to minimize
+   it as much as possible.
+
+You will need to pass the bug-finder several arguments to tell it to
+use the HoTT version of Coq and where to find the rest of the library;
+a common invocation would be something like
+
+    $ /path/to/find-bug.py --coqc ../hoqc --coqtop ../hoqtop -R . HoTT Path/To/Buggy.v bug_minimized.v
+
+When it exits, the minimized code producing the bug will be in
+`bug_minimized.v`.
+
+There are a few "gotchas" to be aware of when using the bug-finder
+script with the HoTT library.  One is that sometimes `coqc` and
+`coqtop` can exhibit different behavior, and one may produce a bug
+while the other doesn't.  (One reason for this is that they give
+different names to universe parameters, `Top.1` versus `Filename.1`,
+and this can result in different results from sorting, which can
+affect the output of the universe minimization algorithm, yielding
+different numbers or different ordering of universe parameters for the
+same definitions.  This is itself a bug, but as of June 2015 it has
+not yet been fixed.)  The bug-finder normally uses both `coqc` and
+`coqtop`, but you can tell it to "fake" `coqc` using `coqtop` by
+passing the argument `--coqc-as-coqtop` instead of `--coqc`.
+
+Another "gotcha" is that with the above invocation, the minimized file
+will produce the bug with the `hoq*` scripts, but not necessarily with
+the ordinary `coq*` executables, because the HoTT standard library is
+modified.  Before submitting a bug report, you should check whether
+the minimized file gives the bug with the ordinary Coq executables
+(which can be found in `coq-HoTT/bin`).  If not, you may need to add a
+bit to it.  Often it is enough to add at the top some of the flags
+that the HoTT standard library turns on, such as
+
+    Global Set Universe Polymorphism.
+    Global Set Asymmetric Patterns.
+    Global Set Primitive Projections.
+    Global Set Nonrecursive Elimination Schemes.
+
+If this isn't good enough, then you can try pasting in more of the
+HoTT standard library.  For instance, you may need to redefine `sig`
+after setting universe polymorphism on.  Unfortunately there is no
+single answer that always works here.
+
+[coq-tools]: https://github.com/JasonGross/coq-tools
