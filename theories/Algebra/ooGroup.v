@@ -168,7 +168,7 @@ Defined.
 
 (** *** Homomorphic properties *)
 
-(** The following tactic often allows us to "pretend" that phi preserves basepoints strictly.  This is basically a simple extension of [pointed_reduce], which see. *)
+(** The following tactic often allows us to "pretend" that phi preserves basepoints strictly.  This is basically a simple extension of [pointed_reduce] (see Pointed.v). *)
 Ltac grouphom_reduce :=
   unfold grouphom_fun; cbn;
   repeat match goal with
