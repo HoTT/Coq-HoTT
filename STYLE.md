@@ -1226,8 +1226,10 @@ detailed instructions and caveats.
 More often than we would like, we run across bugs in Coq.  A sure sign
 of a bug in Coq is when you get a message about an "Anomaly", but a
 bug can also be unjustifiable behavior.  If you aren't sure whether
-something is a bug in Coq, feel free to open an issue about it on the
-HoTT github project.
+something is a bug in Coq, feel free to [open an issue][new issue]
+about it on the HoTT GitHub project.
+
+[new issue]: https://github.com/HoTT/HoTT/issues/new
 
 ### Reporting bugs ###
 
@@ -1279,10 +1281,11 @@ different names to universe parameters, `Top.1` versus `Filename.1`,
 and this can result in different results from sorting, which can
 affect the output of the universe minimization algorithm, yielding
 different numbers or different ordering of universe parameters for the
-same definitions.  This is itself a bug, but as of June 2015 it has
-not yet been fixed.)  The bug-finder normally uses both `coqc` and
-`coqtop`, but you can tell it to "fake" `coqc` using `coqtop` by
-passing the argument `--coqc-as-coqtop` instead of `--coqc`.
+same definitions.  This is [itself a bug][instance bug], but as of
+June 2015 it has not yet been fixed.)  The bug-finder normally uses
+both `coqc` and `coqtop`, but you can tell it to "fake" `coqc` using
+`coqtop` by passing the argument `--coqc-as-coqtop` instead of
+`--coqc`.
 
 Another "gotcha" is that with the above invocation, the minimized file
 will produce the bug with the `hoq*` scripts, but not necessarily with
@@ -1300,7 +1303,35 @@ that the HoTT standard library turns on, such as
 
 If this isn't good enough, then you can try pasting in more of the
 HoTT standard library.  For instance, you may need to redefine `sig`
-after setting universe polymorphism on.  Unfortunately there is no
-single answer that always works here.
+after setting universe polymorphism on.  A solution that almost always
+works is to insert
+
+    Module Import Coq.
+    Module Import Init.
+    Module Import Notations.
+    (* paste contents of coq/theories/Init/Notations.v here *)
+    End Notations.
+    Module Import Logic.
+    (* paste contents of coq/theories/Init/Logic.v here *)
+    End Logic.
+    Module Import Datatypes.
+    (* paste contents of coq/theories/Init/Datatypes.v here *)
+    End Datatypes.
+    Module Import Specif.
+    (* paste contents of coq/theories/Init/Specif.v here *)
+    End Specif.
+    End Init.
+    End Coq.
+
+and then replace all `Require Import`s in the pasted files with simply
+`Import`, remove the definition of `nat` (because there's no way to
+get special syntax for it), and possibly remove dependent choice.  You
+can then run the bug-finder on this file again to remove the parts of
+the pasted stdlib that aren't needed, telling it to use the unmodified
+Coq executables, e.g.
+
+    $ /path/to/find-bug.py --coqc ../coq-HoTT/bin/coqc --coqtop ../coq-HoTT/bin/coqtop bug_minimized.v bug_minimized_2.v
 
 [coq-tools]: https://github.com/JasonGross/coq-tools
+
+[instance bug]: https://coq.inria.fr/bugs/show_bug.cgi?id=3863
