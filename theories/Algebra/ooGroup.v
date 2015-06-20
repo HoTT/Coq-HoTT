@@ -35,10 +35,11 @@ Coercion group_type : ooGroup >-> Sortclass.
 Definition group_loops (X : pType)
 : ooGroup.
 Proof.
-  pose (existT (fun x:X => merely (x = point X)) (point X) (tr 1)).
+  (* Work around https://coq.inria.fr/bugs/show_bug.cgi?id=4256 *)
+  pose (x0 := point X);
   pose (BG := (Build_pType
                { x:X & merely (x = point X) }
-               (existT (fun x:X => merely (x = point X)) (point X) (tr 1)))).
+               (existT (fun x:X => merely (x = point X)) x0 (tr 1)))).
   (** Using [cut] prevents Coq from looking for these facts with typeclass search, which is slow and (for some reason) introduces scads of extra universes. *)
   cut (IsConnected 0 BG).
   { exact (Build_ooGroup BG). }
