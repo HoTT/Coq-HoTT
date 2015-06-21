@@ -68,6 +68,10 @@ Require Export Spaces.BAut.Bool.
 Require Export Spaces.BAut.Bool.IncoherentIdempotent.
 Require Export Spaces.No.
 
+Require Export Algebra.ooGroup.
+Require Export Algebra.Aut.
+Require Export Algebra.ooAction.
+
 Require Export HoTT.Tactics.
 Require Export HoTT.Tactics.RewriteModuloAssociativity.
 Require Export HoTT.Tactics.EquivalenceInduction.

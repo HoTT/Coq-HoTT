@@ -112,6 +112,9 @@ CORE_VFILES = \
 	$(srcdir)/theories/Spaces/BAut/Bool.v \
 	$(srcdir)/theories/Spaces/BAut/Bool/IncoherentIdempotent.v \
 	$(srcdir)/theories/Spaces/No.v \
+	$(srcdir)/theories/Algebra/ooGroup.v \
+	$(srcdir)/theories/Algebra/Aut.v \
+	$(srcdir)/theories/Algebra/ooAction.v \
 	$(srcdir)/theories/Misc.v \
 	$(srcdir)/theories/Utf8.v \
 	$(srcdir)/theories/HoTT.v \
