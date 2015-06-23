@@ -1,3 +1,12 @@
+# EXPERIMENTAL INSTALL INSTRUCTIONS
+We have experimental opam packages to install both the correct Coq version and the library[1].
+However, the latter cannot be used by people using git to contribute to the library.
+Opam support on windows is experimental.
+[1]: https://github.com/HoTT/HoTT/issues/694
+
+We are compatible with [Coq8.5 beta](https://coq.inria.fr/coq-85), so binary packages can be used. Paths still need to be set manually.
+
+
 # QUICK INSTALLATION INSTRUCTIONS
 
 If you are not a Coq expert and just want to get the HoTT library to work with
@@ -15,8 +24,11 @@ minimal fuss, you should try your luck by following these instructions:
    * OSX: we recommend that you install the Opam package manager for Ocaml
      (http://opam.ocamlpro.com/) and go from there.
 
+         brew install opam
+         brew update; brew upgrade objective-caml
+
    * MS Windows: we recommend that you install the 32-bit version of
-     cygwin (installer at `http://www.cygwin.com/setup-x86.exe`) and,
+     cygwin (installer at http://www.cygwin.com/setup-x86.exe) and,
      in the setup process install all of the packages mentioning
      `ocaml`, as well as `make` and `git` and `dos2unix`.  (The 64-bit
      version of cygwin seems to be missing some ocaml packages.  See
@@ -25,48 +37,49 @@ minimal fuss, you should try your luck by following these instructions:
      `dos2unix`.  The following commands, from the root of the HoTT
      library, should mostly take care of things:
 
-       dos2unix hoq*
-       /usr/bin/find . -name '*.sh' | xargs dos2unix
-
-     If you wish to build CoqIDE/hoqide on Windows, we wish you good
-     luck.
-
+         dos2unix hoq*
+         /usr/bin/find . -name '*.sh' | xargs dos2unix
+        
+     If you wish to build CoqIDE/hoqide on Windows, we wish you good luck.
 2. Get the HoTT library (skip this step if you already have it):
 
-       git clone https://github.com/HoTT/HoTT.git
-       cd HoTT
+        git clone https://github.com/HoTT/HoTT.git
+        cd HoTT
 
 3. From the HoTT directory run the following commands:
 
-       etc/install_coq.sh
-       ./autogen.sh
-       ./configure COQBIN="`pwd`/coq-HoTT/bin"
-       make
+        etc/install_coq.sh
+        ./autogen.sh
+        ./configure COQBIN="`pwd`/coq-HoTT/bin"
+        make
 
-   It may take a while to compile the custom Coq.
+   It may take a while to compile the custom Coq. To speed this up, use `make -jn`, where n is the number of cores you have on your machine.
+   On linux this can be found with `nproc` or `lscpu`. 
+   On OSX Apple menu -> About this Mac -> System Report, then look for "number of cores"
 
-
-   If you are using Debian/Ubuntu, and don't mind not having HoTT/coq
+   If you are using Debian/Ubuntu, and don't mind having HoTT/coq
    as your only version of Coq, you can install it using apt-get:
 
-       sudo add-apt-repository ppa:ezyang/coq-hott-git
-       sudo apt-get update
-       sudo apt-get install coq
-
+        sudo add-apt-repository ppa:ezyang/coq-hott-git
+        sudo apt-get update
+        sudo apt-get install coq
 
    If you get error messages during the compilation of Coq about the command
    line option "-fno-defer-pop", then you might be running Mac OS X 10.9 with
    an ocaml compiler installed by "brew".  In that case try
-	  brew update; brew upgrade objective-caml
+
+       brew update; brew upgrade objective-caml
+
    If that doesn't work, try
-	  brew remove objective-caml; brew install objective-caml
+
+       brew remove objective-caml; brew install objective-caml
 
 4. You can now use the HoTT library in place by running `./hoqtop` and
    `./hoqc`. You can also use `./hoqide` which is the version of coqide
    running the hoqtop toplevel if you have compiled it successfully.  If you
    want the commands `hoqtop`, `hoqc`, `hoqide` available system-wide, run:
 
-       make install
+        make install
 
    The library can be loaded into a Coq session with `Require Import HoTT.`
 
@@ -81,7 +94,7 @@ minimal fuss, you should try your luck by following these instructions:
 
 6. To use the Emacs tags facility with the `*.v` files here, run the command
 
-   	make TAGS
+        make TAGS
 
    (The Emacs command `M-x find-tag`, bound to `M-.` , will take you to
    a definition or theorem, the default name for which is located under
@@ -102,21 +115,21 @@ minimal fuss, you should try your luck by following these instructions:
    lisp form, then click `State` and select `Save for future
    sessions`.
 
-   	(let ((default-directory
-   	       (locate-dominating-file buffer-file-name ".dir-locals.el")))
-   	  (make-local-variable 'coq-prog-name)
-   	  (setq coq-prog-name (expand-file-name "../hoqtop")))
+        (let ((default-directory
+               (locate-dominating-file buffer-file-name ".dir-locals.el")))
+          (make-local-variable 'coq-prog-name)
+          (setq coq-prog-name (expand-file-name "../hoqtop")))
 
-8. To update the library to the most current version, run "git pull".
-   You will then have to recompile it with "make".
+8. To update the library to the most current version, run `git pull`.
+   You will then have to recompile it with `make`.
 
-   If you have problems, you can try running "make clean" first, which
+   If you have problems, you can try running `make clean` first, which
    removes all old compiled files.  This might be necessary if the
    library was reorganized.
 
    If you still have problems, it could be because the library was
    updated to use a newer version of Coq.  In this case you will have
-   to re-run "etc/install_coq.sh".
+   to re-run `etc/install_coq.sh`.
 
 In case of any problems, feel free to contact us by opening an issue at
 https://github.com/HoTT/HoTT.
@@ -150,7 +163,7 @@ To get these:
 
 Clone the HoTT repository with
 
-   git clone https://github.com/HoTT/HoTT.git
+    git clone https://github.com/HoTT/HoTT.git
 
 Even better, if you would like to contribute to HoTT, first fork the repository
 on github.com and then use your own fork. This way you will be able to make pull
@@ -176,7 +189,7 @@ At present only the Coq trunk supports these options. Unfortunately
 for you that means you will have to compile a version of Coq,
 available at
 
-   https://github.com/coq/coq
+    https://github.com/coq/coq
 
 If you have never compiled Coq you may prefer to ask a friend for help. If you
 feel brave you should try doing it yourself:
@@ -193,25 +206,23 @@ the configuration, you can run the following steps manually.
        git submodule sync
        git submodule update --init --recursive
 
-  This will give you the relevant version of coq/coq in the
-  subdirectory `coq-HoTT`.
+   This will give you the relevant version of coq/coq in the
+   subdirectory `coq-HoTT`.
 
-  Alternatively, if you have `git`, clone the fork with
+   Alternatively, if you have `git`, clone the fork with
 
        git clone https://github.com/coq/coq.git --branch trunk
 
-   If you do not have git, you may still download the files as an
-   archive file at https://github.com/coq/coq/archive/trunk.zip (but
-   it is better for you in the long run to learn `git`).
+    If you do not have git, you may still download the files as an
+    archive file at https://github.com/coq/coq/archive/trunk.zip (but
+    it is better for you in the long run to learn `git`).
 
-2. Compile Coq, as explained in the `INSTALL` file of Coq distribution. You will
-   need some prerequisites for compilation, such as OCaml 3.11.2 or later.
+2. Compile Coq, as explained in the `INSTALL` file of Coq distribution. You will need some prerequisites for compilation, such as OCaml 3.11.2 or later.
 
    If you do not want the custom Coq to override one that you already have
-   installed, configure Coq with either `./configure -local` so that it will
-   work in-place, or use
+   installed, configure Coq with either `./configure -local` so that it will work in-place, or use
 
-       ./configure -prefix <dir>`
+       ./configure -prefix <dir>
 
    as explained by `./configure -help`.
 
@@ -251,7 +262,7 @@ can run
 directly from the HoTT directory to start using the library. Load it
 with
 
-   Require Import HoTT.
+    Require Import HoTT.
 
 There is also `hoqc` for compiling files. You may prefer to install
 `hoqtop`, `hoqc` and the library files globally, in which case you

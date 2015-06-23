@@ -4,7 +4,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Arrow Types.Prod Types.Paths Types.Unit.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 Generalizable Variables X A B C f g n.
 
@@ -55,7 +55,7 @@ Arguments eta3_sigma / .
 
 (** With this version of the function, we often have to give [u] and [v] explicitly, so we make them explicit arguments. *)
 Definition path_sigma_uncurried {A : Type} (P : A -> Type) (u v : sigT P)
-           (pq : {p : u.1 = v.1 &  p # u.2 = v.2})
+           (pq : {p : u.1 = v.1 & p # u.2 = v.2})
 : u = v
   := match pq.2 in (_ = v2) return u = (v.1; v2) with
        | 1 => match pq.1 as p in (_ = v1) return u = (v1; p # u.2) with
@@ -69,6 +69,12 @@ Definition path_sigma {A : Type} (P : A -> Type) (u v : sigT P)
 : u = v
   := path_sigma_uncurried P u v (p;q).
 
+(** A contravariant instance of [path_sigma_uncurried] *)
+Definition path_sigma_uncurried_contra {A : Type} (P : A -> Type) (u v : sigT P)
+           (pq : {p : u.1 = v.1 & u.2 = p^ # v.2})
+: u = v
+  := (path_sigma_uncurried P v u (pq.1^;pq.2^))^.
+
 (** A variant of [Forall.dpath_forall] from which uses dependent sums to package things. It cannot go into [Forall] because [Sigma] depends on [Forall]. *)
 
 Definition dpath_forall'
@@ -80,7 +86,7 @@ Definition dpath_forall'
     (forall p, transportD P (fun x => fun p => Q ( x ; p)) h p (f p) = g (transport P h p)).
 Proof.
   destruct h.
-  apply equiv_idmap.
+  apply 1%equiv.
 Defined.
 
 
@@ -174,13 +180,13 @@ Definition transport_pr1_path_sigma
 (** This lets us identify the path space of a sigma-type, up to equivalence. *)
 
 Global Instance isequiv_path_sigma `{P : A -> Type} {u v : sigT P}
-: IsEquiv (path_sigma_uncurried P u v) | 0
-  := BuildIsEquiv
-       _ _
-       _ (fun r => (r..1; r..2))
-       eta_path_sigma
-       _ _.
+: IsEquiv (path_sigma_uncurried P u v) | 0.
 Proof.
+  refine (BuildIsEquiv
+            _ _
+            _ (fun r => (r..1; r..2))
+            eta_path_sigma
+            _ _).
   all: destruct u, v; intros [p q].
   all: simpl in *.
   all: destruct q, p; simpl in *.
@@ -190,6 +196,23 @@ Defined.
 Definition equiv_path_sigma `(P : A -> Type) (u v : sigT P)
 : {p : u.1 = v.1 &  p # u.2 = v.2} <~> (u = v)
   := BuildEquiv _ _ (path_sigma_uncurried P u v) _.
+  
+(* A contravariant version of [isequiv_path_sigma'] *)
+Instance isequiv_path_sigma_contra `{P : A -> Type} {u v : sigT P}
+  : IsEquiv (path_sigma_uncurried_contra P u v) | 0.
+  apply (isequiv_adjointify (path_sigma_uncurried_contra P u v)
+        (fun r => match r with idpath => (1; 1) end)).
+    by intro r; induction r; destruct u as [u1 u2]; reflexivity.
+  destruct u, v; intros [p q].
+  simpl in *.
+  destruct p; simpl in q.
+  destruct q; reflexivity.
+Defined.
+
+(* A contravariant version of [equiv_path_sigma] *)
+Definition equiv_path_sigma_contra {A : Type} `(P : A -> Type) (u v : sigT P)
+  : {p : u.1 = v.1 & u.2 = p^ # v.2} <~> (u = v)
+  := BuildEquiv _ _ (path_sigma_uncurried_contra P u v) _.
 
 (** This identification respects path concatenation. *)
 
@@ -367,14 +390,18 @@ Proof.
                                             (fun x y => ((g (f^-1 x))^-1 ((eisretr f x)^ # y)))) _ _);
   intros [x y].
   - refine (path_sigma' _ (eisretr f x) _); simpl.
-    rewrite (eisretr (g (f^-1 x))).
-    apply transport_pV.
+    abstract (
+        rewrite (eisretr (g (f^-1 x)));
+        apply transport_pV
+      ).
   - refine (path_sigma' _ (eissect f x) _); simpl.
     refine ((ap_transport (eissect f x) (fun x' => (g x') ^-1)
                           (transport Q (eisretr f (f x)) ^ (g x y)))^ @ _).
-    rewrite transport_compose, eisadj, transport_pV.
-    apply eissect.
-Qed.
+    abstract (
+        rewrite transport_compose, eisadj, transport_pV;
+        apply eissect
+      ).
+Defined.
 
 Definition equiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
            (f : A -> B) `{IsEquiv A B f}
@@ -392,7 +419,7 @@ Definition equiv_functor_sigma' `{P : A -> Type} `{Q : B -> Type}
 Definition equiv_functor_sigma_id `{P : A -> Type} `{Q : A -> Type}
            (g : forall a, P a <~> Q a)
 : sigT P <~> sigT Q
-  := equiv_functor_sigma (equiv_idmap A) g.
+  := equiv_functor_sigma' 1 g.
 
 (** Lemma 3.11.9(i): Summing up a contractible family of types does nothing. *)
 
@@ -452,16 +479,23 @@ Definition equiv_sigma_prod `(Q : (A * B) -> Type)
           (fun _ => 1)
           (fun _ => 1)).
 
+Definition equiv_sigma_prod0 A B
+: {a : A & B} <~> A * B
+  := BuildEquiv _ _ _
+       (BuildIsEquiv
+          {a : A & B} (A * B)
+          (fun (ab : {a:A & B}) => (ab.1 , ab.2))
+          (fun (ab : A*B) => (fst ab ; snd ab))
+          (fun _ => 1) (fun _ => 1) (fun _ => 1)).
+
 (** ** Symmetry *)
 
 Definition equiv_sigma_symm `(P : A -> B -> Type)
 : {a : A & {b : B & P a b}} <~> {b : B & {a : A & P a b}}
-:= equiv_compose'
-     (equiv_inverse (equiv_sigma_prod (fun x => P (snd x) (fst x))))
-   (equiv_compose'
-      (equiv_functor_sigma' (equiv_prod_symm A B)
-                            (fun x => equiv_idmap (P (fst x) (snd x))))
-      (equiv_sigma_prod (fun x => P (fst x) (snd x)))).
+  := ((equiv_sigma_prod (fun x => P (snd x) (fst x)))^-1)
+       oE (equiv_functor_sigma' (equiv_prod_symm A B)
+                                (fun x => equiv_idmap (P (fst x) (snd x))))
+       oE (equiv_sigma_prod (fun x => P (fst x) (snd x))).
 
 Definition equiv_sigma_symm0 (A B : Type)
 : {a : A & B} <~> {b : B & A}.
@@ -538,6 +572,16 @@ Proof.
     refine (trunc_equiv _ (path_sigma_uncurried P u v)). }
 Defined.
 
+(** The sigma of an arbitrary family of *disjoint* hprops is an hprop. *)
+Definition ishprop_sigma_disjoint
+           `{P : A -> Type} `{forall a, IsHProp (P a)}
+: (forall x y, P x -> P y -> x = y) -> IsHProp { x : A & P x }.
+Proof.
+  intros dj; apply hprop_allpath; intros [x px] [y py].
+  refine (path_sigma' P (dj x y px py) _).
+  apply path_ishprop.
+Defined.
+
 (** ** Subtypes (sigma types whose second components are hprops) *)
 
 (** To prove equality in a subtype, we only need equality of the first component. *)
@@ -557,3 +601,47 @@ Definition equiv_path_sigma_hprop {A : Type} {P : A -> Type}
            {HP : forall a, IsHProp (P a)} (u v : sigT P)
 : (u.1 = v.1) <~> (u = v)
   := BuildEquiv _ _ (path_sigma_hprop _ _) _.
+
+Definition isequiv_pr1_path_hprop {A} {P : A -> Type}
+         `{forall a, IsHProp (P a)}
+         x y
+: IsEquiv (@pr1_path A P x y)
+  := _ : IsEquiv (path_sigma_hprop x y)^-1.
+
+Hint Immediate isequiv_pr1_path_hprop : typeclass_instances.
+
+(** We define this for ease of [SearchAbout IsEquiv ap pr1] *)
+Definition isequiv_ap_pr1_hprop {A} {P : A -> Type}
+           `{forall a, IsHProp (P a)}
+           x y
+: IsEquiv (@ap _ _ (@pr1 A P) x y)
+  := _.
+
+Definition path_sigma_hprop_1 {A : Type} {P : A -> Type}
+           `{forall x, IsHProp (P x)} (u : sigT P)
+: path_sigma_hprop u u 1 = 1.
+Proof.
+  unfold path_sigma_hprop.
+  unfold isequiv_pr1_contr; simpl.
+  (** Ugh *)
+  refine (ap (fun p => match p in (_ = v2) return (u = (u.1; v2)) with 1 => 1 end)
+             (contr (idpath u.2))).
+Defined.
+
+(** The inverse of [path_sigma_hprop] has its own name, so we give special names to the section and retraction homotopies to help [rewrite] out. *)
+Definition path_sigma_hprop_ap_pr1 {A : Type} {P : A -> Type}
+           `{forall x, IsHProp (P x)} (u v : sigT P) (p : u = v)
+: path_sigma_hprop u v (ap pr1 p) = p
+  := eisretr (path_sigma_hprop u v) p.
+Definition path_sigma_hprop_pr1_path {A : Type} {P : A -> Type}
+           `{forall x, IsHProp (P x)} (u v : sigT P) (p : u = v)
+: path_sigma_hprop u v p..1 = p
+  := eisretr (path_sigma_hprop u v) p.
+Definition ap_pr1_path_sigma_hprop {A : Type} {P : A -> Type}
+           `{forall x, IsHProp (P x)} (u v : sigT P) (p : u.1 = v.1)
+: ap pr1 (path_sigma_hprop u v p) = p
+  := eissect (path_sigma_hprop u v) p.
+Definition pr1_path_path_sigma_hprop {A : Type} {P : A -> Type}
+           `{forall x, IsHProp (P x)} (u v : sigT P) (p : u.1 = v.1)
+: (path_sigma_hprop u v p)..1 = p
+  := eissect (path_sigma_hprop u v) p.

@@ -8,7 +8,7 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 Local Open Scope category_scope.
 
 (** Quoting the HoTT Book:

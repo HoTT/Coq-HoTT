@@ -89,7 +89,7 @@ Definition Book_2_1_6 := @HoTT.Basics.PathGroupoids.eckmann_hilton.
 (* ================================================== def:pointedtype *)
 (** Definition 2.1.7 *)
 
-Definition Book_2_1_7 := @HoTT.Basics.Overture.pointedType.
+Definition Book_2_1_7 := @HoTT.Basics.Overture.pType.
 
 (* ================================================== def:loopspace *)
 (** Definition 2.1.8 *)
@@ -801,7 +801,7 @@ Definition Book_6_5_1 := @HoTT.hit.Spheres.isequiv_Sph1_to_S1.
 (* ================================================== lem:susp-loop-adj *)
 (** Lemma 6.5.4 *)
 
-
+Definition Book_6_5_4 := @HoTT.hit.Suspension.loop_susp_adjoint.
 
 (* ================================================== defn:cocone *)
 (** Definition 6.8.1 *)
@@ -1036,6 +1036,7 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== thm:path-truncation *)
 (** Theorem 7.3.12 *)
 
+Definition Book_7_3_12 := @HoTT.hit.Truncations.equiv_path_Tr.
 
 
 (* ================================================== lem:truncation-le *)
@@ -1809,13 +1810,20 @@ Definition Book_9_8_2 := @HoTT.categories.Structure.IdentityPrinciple.structure_
 
 (* ================================================== thm:mono *)
 (** Lemma 10.1.1 *)
+(** The third notion in the book is called embedding. No complete equivalence yet, but see:*)
+Definition Book_10_1_1_iii := @HSet.isinj_embedding.
 
-
+Definition Book_10_1_2rl := @HSet.isinj_ismono.
+Definition Book_10_1_2lr := @HSet.ismono_isinj.
+(* This one is not in the book, but close to 10.1.2:
+ HSet.isembedding_isinj_hset*)
 
 (* ================================================== epis-surj *)
 (** Lemma 10.1.4 *)
 
-
+Definition Book_10_1_4_i_iii := @hit.epi.isepi_issurj.
+Definition Book_10_1_4_i_ii := @hit.epi.isepi'_contr_cone.
+Definition Book_10_1_4_iii_i := @hit.epi.issurj_isepi.
 
 (* ================================================== lem:images_are_coequalizers *)
 (** Theorem 10.1.5 *)
@@ -1834,12 +1842,14 @@ Definition Book_9_8_2 := @HoTT.categories.Structure.IdentityPrinciple.structure_
 
 (* ================================================== lem:sets_exact *)
 (** Lemma 10.1.8 *)
-
+Definition Book_10_1_8 := @hit.quotient.sets_exact.
 
 
 (* ================================================== prop:kernels_are_effective *)
 (** Theorem 10.1.9 *)
-
+(* See: hit.unique_choice.unique_choice
+theories.ObjectClassifier.PowisoPFam
+Apparently closure under Pi and Sigma are still missing ? *)
 
 
 (* ================================================== thm:settopos *)
@@ -2223,7 +2233,7 @@ Definition Book_10_5_8_item_ix := @HoTT.hit.V.separation.
 (* ================================================== defn:surreals *)
 (** Definition 11.6.1 *)
 
-
+Definition Book_11_6_1 := @HoTT.Spaces.No.Surreals.No.
 
 (* ================================================== thm:NO-simplicity *)
 (** Theorem 11.6.2 *)
@@ -2233,27 +2243,38 @@ Definition Book_10_5_8_item_ix := @HoTT.hit.V.separation.
 (* ================================================== thm:NO-refl-opt *)
 (** Theorem 11.6.4 *)
 
-
+Definition Book_11_6_4_i := @HoTT.Spaces.No.Conway_theorem0_i.
+Definition Book_11_6_4_ii_l := @HoTT.Spaces.No.Conway_theorem0_ii_l.
+Definition Book_11_6_4_ii_r := @HoTT.Spaces.No.Conway_theorem0_ii_r.
 
 (* ================================================== thm:NO-set *)
 (** Corollary 11.6.5 *)
 
+Definition Book_11_6_5 := @HoTT.Spaces.No.isset_No.
 
 
 (* ================================================== defn:No-codes *)
 (** Theorem 11.6.7 *)
 
+Definition Book_11_6_7 := @HoTT.Spaces.No.No_codes_package.
 
 
 (* ================================================== thm:NO-encode-decode *)
 (** Theorem 11.6.16 *)
 
+Definition Book_11_6_16_i := @HoTT.Spaces.No.No_encode_le_lt.
+Definition Book_11_6_16_ii := @HoTT.Spaces.No.No_decode_le_lt.
 
 
 (* ================================================== thm:NO-unstrict-transitive *)
 (** Corollary 11.6.17 *)
 
-
+Definition Book_11_6_17_i := @HoTT.Spaces.No.lt_le.
+Definition Book_11_6_17_ii := @HoTT.Spaces.No.le_le_trans.
+Definition Book_11_6_17_iii := @HoTT.Spaces.No.le_lt_trans.
+Definition Book_11_6_17_iv := @HoTT.Spaces.No.lt_le_trans.
 
 (* ================================================== eg:surreal-addition *)
 (** Example 11.6.18 *)
+
+Definition Book_11_6_18 := @HoTT.Spaces.No.plus.

@@ -22,10 +22,9 @@ Section NaturalTransformations.
   Global Instance trunc_from_initial
          `{Funext}
          `{@IsInitialCategory zero} (F G : Functor zero C)
-  : Contr (NaturalTransformation F G)
-    := let x := {| center := from_initial F G |}
-       in x.
+  : Contr (NaturalTransformation F G).
   Proof.
+    refine (BuildContr _ (from_initial F G) _).
     abstract (
         intros;
         apply path_natural_transformation;
@@ -54,9 +53,9 @@ Section NaturalTransformations.
   Global Instance trunc_to_terminal
          `{Funext}
          `{@IsTerminalCategory one H0 H1} (F G : Functor C one)
-  : Contr (NaturalTransformation F G)
-    := let x := {| center := to_terminal F G |} in x.
+  : Contr (NaturalTransformation F G).
   Proof.
+    refine (BuildContr _ (to_terminal F G) _).
     abstract (path_natural_transformation; exact (contr _)).
   Defined.
 End NaturalTransformations.

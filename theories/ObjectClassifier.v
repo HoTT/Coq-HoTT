@@ -4,15 +4,12 @@ This equivalence is close to the existence of an object classifier.
 
 Require Import HoTT.Basics.
 Require Import Types.Universe Types.Sigma Types.Arrow.
-Require Import Fibrations HProp EquivalenceVarieties UnivalenceImpliesFunext.
-Local Open Scope equiv_scope.
+Require Import Fibrations HProp EquivalenceVarieties UnivalenceImpliesFunext Pullback.
+
 Local Open Scope path_scope.
 
 Section AssumeUnivalence.
 Context `{ua:Univalence}.
-
-(** This should be moved. *)
-Definition pullback {A0 B C} (f:B-> A0) (g:C->A0):= {b:B & {c:C & f b = g c}}.
 
 Section FamPow.
 (** We consider Families and Powers over a fixed type [A] *)
@@ -49,19 +46,19 @@ apply (equiv_adjointify p2f f2p).
 Defined.
 
 (** We construct the universal diagram for the object classifier *)
-Definition topmap {B} (f:B->A) (b:B): pointedType :=
-  (hfiber f (f b) ; (b ; idpath (f b))).
+Definition topmap {B} (f:B->A) (b:B): pType :=
+  Build_pType (hfiber f (f b)) (b ; idpath (f b)).
 
 Local Definition help_objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P)->
-  (pullback P (@pr1 _ (fun u :Type => u))):=
+  (Pullback P (@pr1 _ (fun u :Type => u))):=
 (fun (X : {a : A & P a}) => (fun (a : A) (q : P a) => (a; ((P a; q); 1))) X.1 X.2).
 
 Local Definition help_objclasspb_is_fibrantreplacement2 (P:A-> Type):
- (pullback P (@pr1 _ (fun u :Type => u))) -> (sigT P).
+ (Pullback P (@pr1 _ (fun u :Type => u))) -> (sigT P).
 intros [a [[T t] p]]. exact (a;(transport (fun X => X) (p^) t)).
 Defined.
 
-Lemma objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P) <~> (pullback P (@pr1 _ (fun u :Type => u))).
+Lemma objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P) <~> (Pullback P (@pr1 _ (fun u :Type => u))).
 Proof.
 exists (help_objclasspb_is_fibrantreplacement P).
 apply isequiv_biinv. split; exists (help_objclasspb_is_fibrantreplacement2 P); intros [a p]. apply idpath.

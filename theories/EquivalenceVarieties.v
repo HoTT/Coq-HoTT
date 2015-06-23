@@ -4,8 +4,8 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp.
 Require Import HoTT.Tactics.
+
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
 
 Generalizable Variables A B f.
 
@@ -53,7 +53,7 @@ Proof.
   (* First we turn homotopies into paths. *)
   refine (contr_equiv' { g : B -> A & f o g = idmap } _).
   symmetry.
-  refine (equiv_functor_sigma' (equiv_idmap _) _); intros g.
+  refine (equiv_functor_sigma' 1 _); intros g.
   exact (equiv_path_forall (f o g) idmap).
   (* Now this is just the fiber over [idmap] of postcomposition with [f], and the latter is an equivalence since [f] is. *)
   apply fcontr_isequiv; exact _.
@@ -65,7 +65,7 @@ Proof.
   (* This proof is just like the previous one. *)
   refine (contr_equiv' { g : B -> A & g o f = idmap } _).
   symmetry.
-  refine (equiv_functor_sigma' (equiv_idmap _) _); intros g.
+  refine (equiv_functor_sigma' 1 _); intros g.
   exact (equiv_path_forall (g o f) idmap).
   apply fcontr_isequiv; exact _.
 Defined.
@@ -79,27 +79,27 @@ Proof.
   refine (contr_equiv _ (issig_isequiv f)).
   (* Now we claim that the top two elements, [s] and the coherence relation, taken together are contractible, so we can peel them off. *)
   refine (contr_equiv' {g : B -> A & Sect g f}
-    (equiv_inverse (equiv_functor_sigma' (equiv_idmap (B -> A))
+    (equiv_functor_sigma' 1
       (fun g => (@equiv_sigma_contr (Sect g f)
         (fun r => {s : Sect f g & forall x, r (f x) = ap f (s x) })
-        _))))).
+        _)))^-1).
   (* What remains afterwards is just the type of sections of [f]. *)
   2:apply contr_sect_equiv; assumption.
   intros r.
   (* Now we claim this is equivalent to a certain space of paths. *)
   refine (contr_equiv'
     (forall x, (existT (fun a => f a = f x) x 1) = (g (f x); r (f x)))
-    (equiv_inverse _)).
+    _^-1).
   (* The proof of this equivalence is basically just rearranging quantifiers and paths. *)
-  refine (equiv_compose' _ (equiv_sigT_coind (fun x => g (f x) = x)
+  refine (_ oE (equiv_sigT_coind (fun x => g (f x) = x)
       (fun x p => r (f x) = ap f p))).
-  refine (equiv_functor_forall' (equiv_idmap A) _); intros a; simpl.
-  refine (equiv_compose' (equiv_path_inverse _ _) _).
-  refine (equiv_compose' (equiv_path_sigma (fun x => f x = f a)
-    (g (f a) ; r (f a)) (a ; 1)) _); simpl.
-  refine (equiv_functor_sigma' (equiv_idmap _) _); intros p; simpl.
+  refine (equiv_functor_forall' 1 _); intros a; simpl.
+  refine (equiv_path_inverse _ _ oE _).
+  refine ((equiv_path_sigma (fun x => f x = f a)
+    (g (f a) ; r (f a)) (a ; 1%path)) oE _); simpl.
+  refine (equiv_functor_sigma' 1 _); intros p; simpl.
   rewrite (transport_compose (fun y => y = f a) f), transport_paths_l.
-  refine (equiv_compose' (equiv_moveR_Vp _ _ _) _).
+  refine (equiv_moveR_Vp _ _ _ oE _).
   by rewrite concat_p1; apply equiv_idmap.
   (* Finally, this is a space of paths in a fiber of [f]. *)
   refine (@contr_forall _ _ _ _); intros a.
@@ -123,56 +123,55 @@ Local Definition equiv_fcontr_isequiv' `(f : A -> B)
   : (forall b:B, Contr {a : A & f a = b}) <~> IsEquiv f.
 Proof.
   (* First we get rid of those pesky records. *)
-  refine (equiv_compose' _ (equiv_functor_forall idmap
-    (fun b => equiv_inverse (issig_contr {a : A & f a = b})))).
-  refine (equiv_compose' (issig_isequiv f) _).
+  refine (_ oE (equiv_functor_forall idmap
+    (fun b => (issig_contr {a : A & f a = b})^-1))).
+  refine (issig_isequiv f oE _).
   (* Now we can really get to work.
      First we peel off the inverse function and the [eisretr]. *)
-  refine (equiv_compose' _ (equiv_inverse (equiv_sigT_coind _ _))).
-  refine (equiv_compose' _ (equiv_inverse
+  refine (_ oE (equiv_sigT_coind _ _)^-1).
+  refine (_ oE
     (@equiv_functor_sigma' _ _ _ (fun f0 => forall x y, f0 x = y)
       (equiv_sigT_coind _ _)
       (fun fg => equiv_idmap (forall x y,
-        (equiv_sigT_coind _ (fun b a => f a = b) fg x = y)))))).
-  refine (equiv_compose' _ (equiv_inverse (equiv_sigma_assoc
+        (equiv_sigT_coind _ (fun b a => f a = b) fg x = y))))^-1).
+  refine (_ oE (equiv_sigma_assoc
     (fun g => forall x, f (g x) = x)
     (fun gh => forall x y,
-      (fun b => (gh.1 b; gh.2 b)) x = y)))).
-  refine (equiv_functor_sigma' (equiv_idmap _) _). intros g.
-  refine (equiv_functor_sigma' (equiv_idmap _) _). intros r. simpl.
+      (fun b => (gh.1 b; gh.2 b)) x = y))^-1).
+  refine (equiv_functor_sigma' 1 _). intros g.
+  refine (equiv_functor_sigma' 1 _). intros r. simpl.
   (* Now we use the fact that Paulin-Mohring J is an equivalence. *)
-  refine (equiv_compose' _ (equiv_inverse (@equiv_functor_forall' _ _
+  refine (_ oE (@equiv_functor_forall' _ _
     (fun x => forall a (y : f a = x),
       (existT (fun a => f a = x) (g x) (r x)) = (a;y))
-    _ _ (equiv_idmap _)
+    _ _ 1
     (fun x:B => equiv_sigT_ind
-      (fun y:exists a:A, f a = x => (g x;r x) = y))))).
-  refine (equiv_compose' _ (equiv_flip _)).
-  refine (equiv_compose' _ (equiv_inverse (@equiv_functor_forall' _ _
-    (fun a => existT (fun a' => f a' = f a) (g (f a)) (r (f a)) = (a;1))
-    _ _ (equiv_idmap A)
+      (fun y:exists a:A, f a = x => (g x;r x) = y)))^-1).
+  refine (_ oE equiv_flip _).
+  refine (_ oE (@equiv_functor_forall' _ _
+    (fun a => existT (fun a' => f a' = f a) (g (f a)) (r (f a)) = (a;1%path))
+    _ _ 1
     (fun a => equiv_paths_ind (f a)
-      (fun b y => (existT (fun a => f a = b) (g b) (r b)) = (a;y)))))).
+      (fun b y => (existT (fun a => f a = b) (g b) (r b)) = (a;y))))^-1).
   (* We identify the paths in a Sigma-type. *)
-  refine (equiv_compose' _ (equiv_inverse (@equiv_functor_forall' _ _
+  refine (_ oE (@equiv_functor_forall' _ _
     (fun a =>
-      exists p, transport (fun a' : A => f a' = f a) p (r (f a)) = 1)
-    _ _ (equiv_idmap A)
+      exists p, transport (fun a' : A => f a' = f a) p (r (f a)) = 1%path)
+    _ _ 1
     (fun a => equiv_path_sigma (fun a' => f a' = f a)
-      (g (f a);r (f a)) (a;1))))).
+      (g (f a);r (f a)) (a;1%path)))^-1).
   (* Now we can peel off the [eissect]. *)
-  refine (equiv_compose' _ (equiv_inverse (equiv_sigT_coind
+  refine (_ oE (equiv_sigT_coind
     (fun a => g (f a) = a)
-    (fun a p => transport (fun a' => f a' = f a) p (r (f a)) = 1)))).
-  refine (equiv_functor_sigma' (equiv_idmap _) _). intros s.
+    (fun a p => transport (fun a' => f a' = f a) p (r (f a)) = 1%path))^-1).
+  refine (equiv_functor_sigma' 1 _). intros s.
   (* And what's left is the [eisadj]. *)
-  refine (equiv_functor_forall' (equiv_idmap _) _). intros a; simpl.
-  refine (equiv_compose' _ (equiv_concat_l
+  refine (equiv_functor_forall' 1 _). intros a; simpl.
+  refine (_ oE (equiv_concat_l
              (transport_compose (fun b => b = f a) f (s a) (r (f a))
-              @ transport_paths_l (ap f (s a)) (r (f a)))^ 1)).
-  exact (equiv_compose'
-    (equiv_concat_r (concat_p1 _) _)
-    (equiv_inverse (equiv_moveR_Vp (r (f a)) 1 (ap f (s a))))).
+              @ transport_paths_l (ap f (s a)) (r (f a)))^ 1%path)).
+  exact ((equiv_concat_r (concat_p1 _) _)
+           oE ((equiv_moveR_Vp (r (f a)) 1 (ap f (s a)))^-1)).
 Defined.
 
 (** ** Bi-invertible maps *)
@@ -214,7 +213,7 @@ Proof.
 Defined.
 
 (** ** n-Path-split maps.
- 
+
 A map is n-path-split if its induced maps on the first n iterated path-spaces are split surjections.  Thus every map is 0-path-split, the 1-path-split maps are the split surjections, and so on.  It turns out that for n>1, being n-path-split is the same as being an equivalence. *)
 
 Fixpoint PathSplit (n : nat) `(f : A -> B) : Type
@@ -283,15 +282,14 @@ Proof.
   1:apply equiv_idmap.
   destruct n as [|n].
   - simpl.
-    apply equiv_functor_prod'.
-    2:apply equiv_contr_contr.
-    refine (equiv_functor_forall' (equiv_inverse k) _); intros d.
+    refine (_ *E equiv_contr_contr).
+    refine (equiv_functor_forall' k^-1 _); intros d.
     unfold hfiber.
     refine (equiv_functor_sigma' h _); intros a.
-    refine (equiv_compose' (equiv_concat_l (p a) d) _).
+    refine (equiv_concat_l (p a) d oE _).
     simpl; apply equiv_moveR_equiv_M.
-  - refine (equiv_compose' _ (equiv_pathsplit_isequiv n f)).
-    refine (equiv_compose' (equiv_inverse (equiv_pathsplit_isequiv n g)) _).
+  - refine (_ oE equiv_pathsplit_isequiv n f).
+    refine ((equiv_pathsplit_isequiv n g)^-1 oE _).
     apply equiv_iff_hprop; intros e.
     + refine (isequiv_commsq f g h k (fun a => (p a)^)).
     + refine (isequiv_commsq' f g h k p).
@@ -330,3 +328,70 @@ Proof.
 Defined.
 
 End AssumeFunext.
+
+(** ** Relational equivalences *)
+(** This definition is due to Peter LeFanu Lumsdaine on the HoTT mailing list.  This definition gives more judgmental properties, though has the downside of jumping universe levels. *)
+Section relational.
+  Record RelEquiv A B :=
+    { equiv_rel : A -> B -> Type;
+      relequiv_contr_f : forall a, Contr { b : B & equiv_rel a b };
+      relequiv_contr_g : forall b, Contr { a : A & equiv_rel a b } }.
+
+  Arguments equiv_rel {A B} _ _ _.
+  Global Existing Instance relequiv_contr_f.
+  Global Existing Instance relequiv_contr_g.
+
+  Definition issig_relequiv {A B}
+  : { equiv_rel : A -> B -> Type
+    | { f : forall a, Contr { b : B & equiv_rel a b }
+      | forall b, Contr { a : A & equiv_rel a b } } }
+      <~> RelEquiv A B.
+  Proof.
+    issig (@Build_RelEquiv A B) (@equiv_rel A B) (@relequiv_contr_f A B) (@relequiv_contr_g A B).
+  Defined.
+
+  Definition relequiv_of_equiv {A B} (e : A <~> B) : RelEquiv A B.
+  Proof.
+    refine {| equiv_rel a b := e a = b |}.
+    { intro b.
+      exists (e^-1 b; eisretr e b).
+      intros [a H].
+      destruct H.
+      refine (path_sigma _ _ _ _ _).
+      { simpl; apply eissect. }
+      { simpl.
+        abstract (rewrite eisadj; destruct (eissect e a); reflexivity). } }
+  Defined.
+
+  Definition equiv_of_relequiv {A B} (e : RelEquiv A B) : A <~> B.
+  Proof.
+    refine (equiv_adjointify
+              (fun a => (center { b : B & equiv_rel e a b}).1)
+              (fun b => (center { a : A & equiv_rel e a b}).1)
+              _ _);
+    intro x; cbn.
+    { refine (ap pr1 (contr _) : _.1 = (x; _).1).
+      exact (center {a : A & equiv_rel e a x}).2. }
+    { refine (ap pr1 (contr _) : _.1 = (x; _).1).
+      exact (center {b : B & equiv_rel e x b}).2. }
+  Defined.
+
+  Definition RelIsEquiv {A B} (f : A -> B)
+    := { r : RelEquiv A B | forall x, (center { b : B & equiv_rel r x b }).1 = f x }.
+
+  (** TODO: Prove [ishprop_relisequiv `{Funext} {A B} f : IsHProp (@RelIsEquiv A B f)] *)
+
+  (** * Judgmental property *)
+  Definition inverse_relequiv {A B} (e : RelEquiv A B) : RelEquiv B A
+    := {| equiv_rel a b := equiv_rel e b a |}.
+
+  Definition reinv_V {A B} (e : RelEquiv A B)
+  : inverse_relequiv (inverse_relequiv e) = e
+    := 1.
+
+  (** TODO: Is there a definition of this that makes [inverse_relequiv (relequiv_idmap A)] be [relequiv_idmap A], judgmentally? *)
+  Definition relequiv_idmap A : RelEquiv A A
+    := {| equiv_rel a b := a = b |}.
+
+  (** TODO: Define composition; we probably need truncation to do this? *)
+End relational.

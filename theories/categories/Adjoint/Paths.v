@@ -20,7 +20,7 @@ Section path_adjunction.
   Variable F : Functor C D.
   Variable G : Functor D C.
 
-  Local Open Scope equiv_scope.
+
 
   Notation adjunction_sigT :=
     { eta : NaturalTransformation 1 (G o F)

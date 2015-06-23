@@ -4,7 +4,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Paths Types.Forall.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 Generalizable Variables A B C D f g n.
 
@@ -195,6 +195,25 @@ Definition equiv_functor_arrow' `(f : B <~> A) `(g : C <~> D)
   := @equiv_functor_forall' _ A (fun _ => C) B (fun _ => D)
   f (fun _ => g).
 
+(* We could do something like this notation, but it's not clear that it would be that useful, and might be confusing. *)
+(* Notation "f -> g" := (equiv_functor_arrow' f g) : equiv_scope. *)
+
 (** What remains is really identical to that in [Forall].  *)
 
 End AssumeFunext.
+
+(** ** Decidability *)
+
+(** This doesn't require funext *)
+Global Instance decidable_arrow {A B : Type}
+       `{Decidable A} `{Decidable B}
+: Decidable (A -> B).
+Proof.
+  destruct (dec B) as [x2|y2].
+  - exact (inl (fun _ => x2)).
+  - destruct (dec A) as [x1|y1].
+    + apply inr; intros f.
+      exact (y2 (f x1)).
+    + apply inl; intros x1.
+      elim (y1 x1).
+Defined.

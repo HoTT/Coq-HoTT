@@ -12,12 +12,14 @@ branches:
 env:
 
  matrix:
-   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS="yes" BUILD_COQ="yes"  UPDATE_OPAM=""
-   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC="yes"  UPDATE_AUTOGEN="yes"  UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM="yes"
-   - UPDATE_HTML="yes"    WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""
-   - UPDATE_HTML=""       WITH_AUTORECONF=""     UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""
-   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ=""     UPDATE_OPAM=""
-   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS="yes" BUILD_COQ="yes"  UPDATE_OPAM=""       FORCE_COQ_VERSION=""
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC="yes"  UPDATE_AUTOGEN="yes"  UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM="yes"       FORCE_COQ_VERSION=""
+   - UPDATE_HTML="yes"    WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""       FORCE_COQ_VERSION=""
+   - UPDATE_HTML=""       WITH_AUTORECONF=""     UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""       FORCE_COQ_VERSION=""
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ=""     UPDATE_OPAM=""       FORCE_COQ_VERSION=""
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""       FORCE_COQ_VERSION=""
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""       FORCE_COQ_VERSION="v8.5"
+   - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""       FORCE_COQ_VERSION="trunk"
 
  global:
 # encrypted version of deploy key for pushing
@@ -27,8 +29,9 @@ env:
 matrix:
   fast_finish: true
   allow_failures:
-    - env: UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ=""     UPDATE_OPAM=""
-
+    - env: UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ=""     UPDATE_OPAM=""       FORCE_COQ_VERSION=""
+    - env: UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""       FORCE_COQ_VERSION="v8.5"
+    - env: UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""       FORCE_COQ_VERSION="trunk"
 
 
 
@@ -43,7 +46,7 @@ before_script:
 # `make-pretty-timed` is not an indication that the build succeeded.
 # We also use `make strict-test` at the beginning so that we error
 # quickly if someone commited .v files but neglected to mention them.
-script: "./autogen.sh && ./configure && if [ -z \"$UPDATE_QUICK_DOC\" ]; then make strict-test && ./etc/coq-scripts/timing/make-pretty-timed.sh V=1 -j2 && make && ./etc/coq-scripts/timing/cat-timing-files.sh && cat ./time-of-build-pretty.log && echo; fi && ./etc/ci/after_success.sh"
+script: "./autogen.sh && ./configure && if [ -z \"$UPDATE_QUICK_DOC\" ]; then make strict-test && ./etc/coq-scripts/timing/make-pretty-timed.sh V=1 -j2 && make && ./etc/ci/test-install-target.sh && ./etc/coq-scripts/timing/cat-timing-files.sh && cat ./time-of-build-pretty.log && echo; fi && ./etc/ci/after_success.sh"
 
 
 after_success:

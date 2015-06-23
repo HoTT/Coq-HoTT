@@ -3,7 +3,8 @@
 
 Require Import HoTT.Basics.
 Require Import Types.Prod Types.Equiv.
-Local Open Scope equiv_scope.
+
+Local Open Scope path_scope.
 
 (* coq calls it "bool", we call it "Bool" *)
 Local Unset Elimination Schemes.
@@ -29,10 +30,22 @@ Definition implb (b1 b2 : Bool) : Bool := if b1 then b2 else true.
 
 Infix "||" := orb : bool_scope.
 Infix "&&" := andb : bool_scope.
+Infix "->" := implb : bool_scope.
+
+Definition implb_true {b} : implb b true = true
+  := if b as b return implb b true = true then idpath else idpath.
+
+Definition implb_impl {a b} : (a -> b)%Bool = true <-> (a = true -> b = true).
+Proof.
+  destruct a; simpl; split; trivial using idpath with nocore;
+  destruct b; simpl; auto using idpath with nocore.
+Defined.
 
 Global Instance trunc_if n A B `{IsTrunc n A, IsTrunc n B} (b : Bool)
 : IsTrunc n (if b then A else B) | 100
   := if b as b return (IsTrunc n (if b then A else B)) then _ else _.
+
+(** ** Decidability *)
 
 Section BoolDecidable.
   Definition false_ne_true : ~false = true
@@ -57,11 +70,25 @@ Section BoolDecidable.
   Defined.
 End BoolDecidable.
 
+(** In particular, [negb] has no fixed points *)
 Definition not_fixed_negb (b : Bool) : negb b <> b
   := match b return negb b <> b with
        | true => false_ne_true
        | false => true_ne_false
      end.
+
+(** And conversely, if two elements of [Bool] are unequal, they must be related by [negb]. *)
+Definition negb_ne {b1 b2 : Bool}
+: (b1 <> b2) -> (b1 = negb b2).
+Proof.
+  destruct b1, b2.
+  - intros oops; case (oops idpath).
+  - reflexivity.
+  - reflexivity.
+  - intros oops; case (oops idpath).
+Defined.
+
+(** ** Products as [forall] over [Bool] *)
 
 Section BoolForall.
   Variable P : Bool -> Type.
@@ -123,20 +150,52 @@ Section EquivBoolEquiv.
                                               then (equiv_idmap Bool)
                                               else equiv_negb.
 
-  Lemma equiv_bool_equiv_bool_bool `{Funext} : Bool <~> (Bool <~> Bool).
+  Definition aut_bool_canonical (e : Bool <~> Bool)
+  : e == g (f e).
   Proof.
-    refine (equiv_adjointify g f _ _);
-    unfold f, g; clear f g;
-    hnf; simpl.
+    unfold f, g; clear f g; intros []; simpl.
+    - destruct (e true); reflexivity.
+    - refine (eval_bool_isequiv e @ _).
+      destruct (e true); reflexivity.
+  Defined.
+
+  Lemma equiv_bool_aut_bool `{Funext} : Bool <~> (Bool <~> Bool).
+  Proof.
+    refine (equiv_adjointify g f _ _).
     - intro e.
-      destruct e as [e ?].
-      apply path_equiv; try assumption.
-      apply path_forall.
-      intros []; simpl.
-      * destruct (e true); reflexivity.
-      * etransitivity; [ | symmetry; apply eval_bool_isequiv; trivial ].
-        destruct (e true); reflexivity.
+      apply path_equiv, path_forall.
+      intros b; symmetry; apply aut_bool_canonical.
     - intros []; reflexivity.
+  Defined.
+
+  (** It follows that every automorphism of [Bool] is either [idmap] or [negb]. *)
+  Definition aut_bool_idmap_or_negb `{Funext} (e : Bool <~> Bool)
+  : (e = equiv_idmap Bool) + (e = equiv_negb).
+  Proof.
+    revert e. equiv_intro equiv_bool_aut_bool e.
+    destruct e; simpl.
+    - exact (inl idpath).
+    - exact (inr idpath).
+  Defined.
+
+  (** But, obviously, not both. *)
+  Definition idmap_bool_ne_negb : equiv_idmap Bool <> equiv_negb.
+  Proof.
+    intros oops.
+    exact (true_ne_false (ap10_equiv oops true)).
+  Defined.
+
+  (** In particular, every pair of automorphisms of [Bool] commute with each other. *)
+  Definition abelian_aut_bool (e1 e2 : Bool <~> Bool)
+  : e1 o e2 == e2 o e1.
+  Proof.
+    intro b.
+    refine (ap e1 (aut_bool_canonical e2 b) @ _).
+    refine (aut_bool_canonical e1 _ @ _).
+    refine (_ @ ap e2 (aut_bool_canonical e1 b)^).
+    refine (_ @ (aut_bool_canonical e2 _)^).
+    unfold f, g.
+    destruct (e1 true), (e2 true), b; reflexivity.
   Defined.
 
 End EquivBoolEquiv.

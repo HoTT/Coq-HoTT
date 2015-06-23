@@ -16,9 +16,7 @@ if [ -z "$UPDATE_OPAM" ]; then
     exit 0
 fi
 
-echo 'Configuring git for pushing...'
-git config --global user.name "Travis-CI Bot"
-git config --global user.email "Travis-CI-Bot@travis.fake"
+"$DIR"/configure_commit.sh
 
 export MESSAGE="Bump HoTT Coq for $COMMITISH"
 

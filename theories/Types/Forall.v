@@ -5,7 +5,7 @@ Require Import HoTT.Basics.
 Require Import Types.Paths.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 Generalizable Variables A B f g e n.
 
@@ -48,6 +48,8 @@ Definition equiv_path_forall `{P : A -> Type} (f g : forall x, P x)
   : (f == g)  <~>  (f = g)
   := BuildEquiv _ _ (path_forall f g) _.
 
+Global Arguments equiv_path_forall {A%type_scope P} (f g)%function_scope.
+
 (** ** Path algebra *)
 
 Definition path_forall_pp `{P : A -> Type} (f g h : forall x, P x)
@@ -85,6 +87,19 @@ Definition transport_forall_constant
   : (transport (fun x => forall y : B, C x y) p f)
     == (fun y => transport (fun x => C x y) p (f y))
   := match p with idpath => fun _ => 1 end.
+
+Definition apD_transport_forall_constant
+  {A B : Type} (C : A -> B -> Type)
+  {x1 x2 : A} (p : x1 = x2) (f : forall y : B, C x1 y)
+  {y1 y2 : B} (q : y1 = y2)
+: apD (transport (fun x => forall y : B, C x y) p f) q
+  = ap (transport (C x2) q) (transport_forall_constant p f y1)
+    @ transport_transport C p q (f y1)
+    @ ap (transport (fun x : A => C x y2) p) (apD f q)
+    @ (transport_forall_constant p f y2)^.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
 
 (** ** Maps on paths *)
 
@@ -196,6 +211,20 @@ Proof.
   - exact _.
   (* case n = n'.+1 *)
   - intros f g; apply (trunc_equiv _ (apD10 ^-1)).
+Defined.
+
+(** ** Contractibility: A product over a contractible type is equivalent to the fiber over the center. *)
+
+Definition equiv_contr_forall `{Contr A} `(P : A -> Type)
+: (forall a, P a) <~> P (center A).
+Proof.
+  refine (equiv_adjointify (fun (f:forall a, P a) => f (center A)) _ _ _).
+  - intros p a; exact (transport P (path_contr _ _) p).
+  - intros p.
+    refine (transport2 P (q := 1) _ p).
+    apply path_contr.
+  - intros f; apply path_forall; intros a.
+    apply apD.
 Defined.
 
 (** ** Symmetry of curried arguments *)

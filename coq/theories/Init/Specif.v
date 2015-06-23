@@ -60,8 +60,8 @@ Notation  ex_intro := existT (only parsing).
 
 Notation "{ x | P }" := (sigT (fun x => P)) : type_scope.
 Notation "{ x | P & Q }" := (sigT2 (fun x => P) (fun x => Q)) : type_scope.
-Notation "{ x : A | P }" := (sigT (fun x:A => P)) : type_scope.
-Notation "{ x : A | P & Q }" := (sigT2 (fun x:A => P) (fun x:A => Q)) :
+Notation "{ x : A | P }" := (sigT (A := A) (fun x => P)) : type_scope.
+Notation "{ x : A | P & Q }" := (sigT2 (A := A) (fun x => P) (fun x => Q)) :
   type_scope.
 
 Notation "'exists' x .. y , p" := (sigT (fun x => .. (sigT (fun y => p)) ..))

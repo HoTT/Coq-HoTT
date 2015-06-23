@@ -35,11 +35,11 @@ Section sigT_obj_mor.
   : forall x1 x2 x3 x4 (m1 : mor x1 x2) (m2 : mor x2 x3) (m3 : mor x3 x4),
       compose (compose m3 m2) m1 = compose m3 (compose m2 m1).
 
-  Hypothesis P_LeftIdentity
+  Hypothesis P_left_identity
   : forall a b (f : mor a b),
       compose (identity b) f = f.
 
-  Hypothesis P_RightIdentity
+  Hypothesis P_right_identity
   : forall a b (f : mor a b),
       compose f (identity a) = f.
 
@@ -68,7 +68,7 @@ Section sigT_obj_mor.
          (fun _ => idpath).
 End sigT_obj_mor.
 
-Arguments pr1 {A Pobj Pmor HPmor Pidentity Pcompose P_associativity P_LeftIdentity P_RightIdentity}.
+Arguments pr1 {A Pobj Pmor HPmor Pidentity Pcompose P_associativity P_left_identity P_right_identity}.
 
 (** ** Variant of [sigT]-precategory when we are taking a subset of morphisms *)
 Section sigT_obj_mor_hProp.

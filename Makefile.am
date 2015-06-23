@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I etc
 
-bin_SCRIPTS = hoqtop hoqc hoq-config
+bin_SCRIPTS = hoqtop hoqc hoqdep hoq-config
 if make_hoqide
   bin_SCRIPTS += hoqide
 endif
@@ -13,6 +13,9 @@ EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdow
 
 # The path to the Coq library in $(srcdir)
 SRCCOQLIB=$(srcdir)/coq
+
+# Extra standard library replacements to install
+STDLIB_EXTRA_DIST = $(shell find -P $(addprefix "$(SRCCOQLIB)/",$(STDLIB_REPLACEMENT_DIRS)) -type f)
 
 # support the TIMED variable like coq_makefile
 TIMED=
@@ -30,6 +33,11 @@ Q = $(Q_$(V))
 VECHO_0 := @echo
 VECHO_1 := @true
 VECHO = $(VECHO_$(V))
+
+# inner vecho, without the @
+VIECHO_0 := echo
+VIECHO_1 := true
+VIECHO = $(VIECHO_$(V))
 
 SILENCE_HOQC_0 := @echo \"HOQC $$<\"; #
 SILENCE_HOQC_1 :=
@@ -115,10 +123,9 @@ ALL_DOTFILES=$(ALL_DPDFILES:.dpd=.dot)
 
 # Definitions that let autoconf know how to install things.
 nobase_hott_DATA = \
-	$(STD_VOFILES) \
-	$(CORE_VOFILES) \
-	$(CATEGORY_VOFILES) \
-	$(CONTRIB_VOFILES) \
+	$(ALL_VOFILES) \
+	$(ALL_GLOBFILES) \
+	$(STDLIB_EXTRA_DIST) \
 	$(shell find "$(SRCCOQLIB)/theories" -name "README.txt")
 
 # The Coq compiler, adapted to HoTT
@@ -137,12 +144,18 @@ all-am: Makefile $(SCRIPTS) $(DATA) $(MAKEFILE_TARGETS_FILE)
 
 .PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom quick vi2vo checkproofs
 
-# TODO(JasonGross): Get this to work on Windows, where symlinks are unreliable
+# targets that we don't need to run coqdep for
+FAST_TARGETS = clean clean-local clean-dpdgraph TAGS
+
+if install_stdlib_symlinks
 install-data-local:
 	$(MKDIR_P) "$(hottdir)/coq"
-	rm -f "$(hottdir)/coq/dev" "$(hottdir)/coq/plugins"
-	$(LN_S) "$(COQLIB)/dev" "$(hottdir)/coq"
-	$(LN_S) "$(COQLIB)/plugins" "$(hottdir)/coq"
+	$(Q)for i in $(STDLIB_REPLACEMENT_DIRS); do \
+		$(VIECHO) "INSTALL coq/$$i"; \
+		rm -f "$(hottdir)/coq/$$i"; \
+		$(LN_S) "$(COQLIB)/$$i" "$(hottdir)/coq"; \
+	done
+endif
 
 # The standard library files must be compiled in a special way
 stdlib: $(STD_VOFILES)
@@ -349,24 +362,36 @@ $(STD_DEPFILES) : %.d : %.v
 	$(VECHO) COQDEP $<
 	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
 
-clean-dpdgraph:
+clean-dpdgraph::
 	(cd etc/dpdgraph-0.4alpha && $(MAKE) clean)
 
 # We separate things to work around `make: execvp: /bin/bash: Argument list too long`
-clean:
-	rm -f $(ALL_VOFILES)
-	rm -f $(ALL_VFILES:.v=.vi)
-	rm -f $(ALL_GLOBFILES)
-	rm -f $(ALL_DEPFILES)
-	rm -f $(ALL_HTMLFILES)
-	rm -f $(ALL_XMLFILES)
-	rm -f $(ALL_PROVIOLA_HTMLFILES)
-	rm -f $(ALL_TIMINGFILES)
-	rm -f $(ALL_TIMING_HTMLFILES)
-	rm -f $(ALL_SVGFILES)
-	rm -f $(ALL_DPDFILES)
-	rm -f $(ALL_DOTFILES)
+clean::
+	$(VECHO) "RM *.VO"
+	$(Q)rm -f $(ALL_VOFILES)
+	$(VECHO) "RM *.VIO"
+	$(Q)rm -f $(ALL_VFILES:.v=.vio)
+	$(VECHO) "RM *.GLOB"
+	$(Q)rm -f $(ALL_GLOBFILES)
+	$(VECHO) "RM *.V.D"
+	$(Q)rm -f $(ALL_DEPFILES)
+	$(VECHO) "RM *.HTML"
+	$(Q)rm -f $(ALL_HTMLFILES)
+	$(VECHO) "RM *.XML"
+	$(Q)rm -f $(ALL_XMLFILES)
+	$(VECHO) "RM *.HTML"
+	$(Q)rm -f $(ALL_PROVIOLA_HTMLFILES)
+	$(VECHO) "RM *.TIMING"
+	$(Q)rm -f $(ALL_TIMINGFILES)
+	$(VECHO) "RM *.TIMING.HTML"
+	$(Q)rm -f $(ALL_TIMING_HTMLFILES)
+	$(VECHO) "RM *.SVG"
+	$(Q)rm -f $(ALL_SVGFILES)
+	$(VECHO) "RM *.DPD"
+	$(Q)rm -f $(ALL_DPDFILES)
+	$(VECHO) "RM *.DOT"
+	$(Q)rm -f $(ALL_DOTFILES)
 	rm -f $(EXTRA_CLEANFILES)
 	find "$(SRCCOQLIB)/theories" $(srcdir)/theories -name \*.vo -o -name \*.glob -o -name \*.timing | xargs rm -f
 
--include $(ALL_DEPFILES)
+@include_snippet@

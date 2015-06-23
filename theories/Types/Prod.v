@@ -2,8 +2,9 @@
 (** * Theorems about cartesian products *)
 
 Require Import HoTT.Basics.
+Require Import Types.Empty Types.Unit.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 Generalizable Variables X A B f g n.
 
 Scheme prod_ind := Induction for prod Sort Type.
@@ -138,16 +139,15 @@ Definition transport_path_prod'
 (** This lets us identify the path space of a product type, up to equivalence. *)
 
 Global Instance isequiv_path_prod {A B : Type} {z z' : A * B}
-: IsEquiv (path_prod_uncurried z z') | 0
-  := BuildIsEquiv
-       _ _ _
-       (fun r => (ap fst r, ap snd r))
-       eta_path_prod
-       (fun pq => path_prod'
-                    (ap_fst_path_prod (fst pq) (snd pq))
-                    (ap_snd_path_prod (fst pq) (snd pq)))
-       _.
+: IsEquiv (path_prod_uncurried z z') | 0.
 Proof.
+  refine (BuildIsEquiv _ _ _
+            (fun r => (ap fst r, ap snd r))
+            eta_path_prod
+            (fun pq => path_prod'
+                         (ap_fst_path_prod (fst pq) (snd pq))
+                         (ap_snd_path_prod (fst pq) (snd pq)))
+            _).
   destruct z as [x y], z' as [x' y'].
   intros [p q]; simpl in p, q.
   destruct p, q; reflexivity.
@@ -159,12 +159,28 @@ Definition equiv_path_prod {A B : Type} (z z' : A * B)
 
 (** Path algebra *)
 
+(** Composition.  This and the next lemma are displayed equations in section 2.6 of the book, but they have no numbers so we can't put them into [HoTTBook.v]. *)
 Definition path_prod_pp {A B : Type} (z z' z'' : A * B)
            (p : fst z = fst z') (p' : fst z' = fst z'')
            (q : snd z = snd z') (q' : snd z' = snd z'')
 : path_prod z z'' (p @ p') (q @ q') = path_prod z z' p q @ path_prod z' z'' p' q'.
 Proof.
   destruct z, z', z''; simpl in *; destruct p, p', q, q'.
+  reflexivity.
+Defined.
+
+(** Associativity *)
+Definition path_prod_pp_p  {A B : Type} (u v z w : A * B)
+           (p : fst u = fst v) (q : fst v = fst z) (r : fst z = fst w)
+           (p' : snd u = snd v) (q' : snd v = snd z) (r' : snd z = snd w)
+: path_prod_pp u z w (p @ q) r (p' @ q') r'
+  @ whiskerR (path_prod_pp u v z p q p' q') (path_prod z w r r')
+  @ concat_pp_p (path_prod u v p p') (path_prod v z q q') (path_prod z w r r')
+  = ap011 (path_prod u w) (concat_pp_p p q r) (concat_pp_p p' q' r')
+    @ path_prod_pp u v w p (q @ r) p' (q' @ r')
+    @ whiskerL (path_prod u v p p') (path_prod_pp v z w q r q' r').
+Proof.
+  destruct u, v, z, w; simpl in *; destruct p, p', q, q', r, r'.
   reflexivity.
 Defined.
 
@@ -193,13 +209,15 @@ Defined.
 (** ** Equivalences *)
 
 Global Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
-: IsEquiv (functor_prod f g) | 1000
-  := BuildIsEquiv
-       _ _ (functor_prod f g) (functor_prod f^-1 g^-1)
-       (fun z => path_prod' (eisretr f (fst z)) (eisretr g (snd z)) @ eta_prod z)
-       (fun w => path_prod' (eissect f (fst w)) (eissect g (snd w)) @ eta_prod w)
-       _.
+: IsEquiv (functor_prod f g) | 1000.
 Proof.
+  refine (BuildIsEquiv
+            _ _ (functor_prod f g) (functor_prod f^-1 g^-1)
+            (fun z => path_prod' (eisretr f (fst z)) (eisretr g (snd z))
+                      @ eta_prod z)
+            (fun w => path_prod' (eissect f (fst w)) (eissect g (snd w))
+                      @ eta_prod w)
+            _).
   intros [a b]; simpl.
   unfold path_prod'.
   rewrite !concat_p1.
@@ -222,19 +240,15 @@ Proof.
   exact _.
 Defined.
 
+Notation "f *E g" := (equiv_functor_prod' f g) (at level 40, no associativity) : equiv_scope.
+
 Definition equiv_functor_prod_l {A B B' : Type} (g : B <~> B')
-  : A * B <~> A * B'.
-Proof.
-  exists (functor_prod idmap g).
-  exact _.
-Defined.
+  : A * B <~> A * B'
+  := 1 *E g.
 
 Definition equiv_functor_prod_r {A A' B : Type} (f : A <~> A')
-  : A * B <~> A' * B.
-Proof.
-  exists (functor_prod f idmap).
-  exact _.
-Defined.
+  : A * B <~> A' * B
+  := f *E 1.
 
 (** ** Symmetry *)
 
@@ -264,6 +278,32 @@ Definition equiv_prod_assoc (A B C : Type) : A * (B * C) <~> (A * B) * C
           (fun _ => 1)
           (fun _ => 1)
           (fun _ => 1)).
+
+(** ** Unit and annihilation *)
+
+Definition prod_empty_r X : X * Empty <~> Empty
+  := (BuildEquiv _ _ snd _).
+
+Definition prod_empty_l X : Empty * X <~> Empty
+  := (BuildEquiv _ _ fst _).
+
+Definition prod_unit_r X : X * Unit <~> X.
+Proof.
+  refine (BuildEquiv _ _ fst _).
+  refine (BuildIsEquiv _ _ _ (fun x => (x,tt)) _ _ _).
+  - intros x; reflexivity.
+  - intros [x []]; reflexivity.
+  - intros [x []]; reflexivity.
+Defined.
+
+Definition prod_unit_l X : Unit * X <~> X.
+Proof.
+  refine (BuildEquiv _ _ snd _).
+  refine (BuildIsEquiv _ _ _ (fun x => (tt,x)) _ _ _).
+  - intros x; reflexivity.
+  - intros [[] x]; reflexivity.
+  - intros [[] x]; reflexivity.
+Defined.
 
 (** ** Universal mapping properties *)
 
@@ -326,3 +366,16 @@ Defined.
 
 Global Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B) | 100
   := @trunc_prod -2 A CA B CB.
+
+(** ** Decidability *)
+
+Global Instance decidable_prod {A B : Type}
+       `{Decidable A} `{Decidable B}
+: Decidable (A * B).
+Proof.
+  destruct (dec A) as [x1|y1]; destruct (dec B) as [x2|y2].
+  - exact (inl (x1,x2)).
+  - apply inr; intros [_ x2]; exact (y2 x2).
+  - apply inr; intros [x1 _]; exact (y1 x1).
+  - apply inr; intros [x1 _]; exact (y1 x1).
+Defined.

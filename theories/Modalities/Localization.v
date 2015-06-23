@@ -4,7 +4,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Extensions EquivalenceVarieties.
 Require Import ReflectiveSubuniverse Accessible.
-Local Open Scope equiv_scope.
+
 Local Open Scope path_scope.
 
 (** Suppose given a family of maps [f : forall (i:I), S i -> T i].  A type [X] is said to be [f]-local if for all [i:I], the map [(T i -> X) -> (S i -> X)] given by precomposition with [f i] is an equivalence.  Our goal is to show that the [f]-local types form a reflective subuniverse, with a reflector constructed by localization.  That is, morally we want to say
@@ -98,7 +98,7 @@ Proof.
                 (snd ext' p q (fun b => (g b (p b))^-1 (p' b))
                               (fun b => (g b (q b))^-1 (q' b)))).
     intros b c.
-    refine (equiv_compose' _ (equiv_moveR_equiv_M _ _)).
+    refine (_ oE equiv_moveR_equiv_M _ _).
     apply equiv_concat_l.
     refine (_ @ (ap_transport c (g b) _)^).
     apply ap, symmetry, eisretr.
@@ -253,12 +253,19 @@ Qed.
 Import IsLocal_Internal.
 
 Definition islocal_equiv_islocal (f : LocalGenerators@{a})
-           (X : Type@{i}) {Y : Type@{i}}
-           (Xloc : IsLocal@{i i a} f X)
+           (X : Type@{i}) {Y : Type@{j}}
+           (Xloc : IsLocal@{i i' a} f X)
            (g : X -> Y) `{IsEquiv@{i j} _ _ g}
-: IsLocal@{j j a} f Y
-  := fun i => ooextendable_postcompose _ _ (f i) (fun _ => g) (Xloc i).
-
+: IsLocal@{j j' a} f Y.
+Proof.
+  intros i.
+  (** We have to fiddle with the max universes to get this to work, since [ooextendable_postcompose] requires the max universe in both cases to be the same, whereas we don't want to assume that the hypothesis and conclusion are related in any way. *)
+  apply lift_ooextendablealong@{a a j k j'}.
+  refine (ooextendable_postcompose@{a a i j k k k k k k k}
+            _ _ (f i) (fun _ => g) _).
+  apply lift_ooextendablealong@{a a i i' k}.
+  apply Xloc.
+Defined.
 
 (** ** Localization as a HIT *)
 
@@ -346,34 +353,35 @@ Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.
   Definition O_reflector : ReflectiveSubuniverse@{u a} -> Type@{i} -> Type@{i}
     := fun O => Localize@{a i} (unLoc O).
 
-  Definition inO_internal : ReflectiveSubuniverse@{u a} -> Type@{i} -> Type@{i}
+  Definition In : ReflectiveSubuniverse@{u a} -> Type@{i} -> Type@{i}
     := fun O X => IsLocal@{i i a} (unLoc O) X.
 
-  Definition O_inO_internal :
+  Definition O_inO :
     forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
-      inO_internal O (O_reflector O T)
+      In O (O_reflector O T)
     := fun O => islocal_localize@{a i i} (unLoc O).
 
   Definition to :
     forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}), T -> O_reflector O T
     := fun O => @loc@{a i} (unLoc O).
 
-  Definition inO_equiv_inO_internal :
-    forall (O : ReflectiveSubuniverse@{u a}) (T U : Type@{i}),
-      inO_internal@{u a i} O T -> forall f : T -> U, IsEquiv f -> inO_internal@{u a i} O U
-    := fun O => islocal_equiv_islocal@{a i i} (unLoc O).
+  Definition inO_equiv_inO :
+    forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}) (U : Type@{j}),
+      In@{u a i} O T -> forall f : T -> U, IsEquiv f ->
+      In@{u a j} O U
+    := fun O => islocal_equiv_islocal@{a i j i j k} (unLoc O).
 
-  Definition hprop_inO_internal `{Funext}
+  Definition hprop_inO `{Funext}
              (O : ReflectiveSubuniverse@{u a}) (T : Type@{i})
-  : IsHProp (inO_internal@{u a i} O T).
+  : IsHProp (In@{u a i} O T).
   Proof.
     apply (@trunc_forall@{a i i} _); intros i.
     apply ishprop_ooextendable@{a a i i i i}.
   Defined.
 
-  Definition extendable_to_O_internal
+  Definition extendable_to_O
              (O : ReflectiveSubuniverse@{u a}) {P : Type@{i}}
-             {Q : Type@{j}} {Q_inO : inO_internal@{u a j} O Q}
+             {Q : Type@{j}} {Q_inO : In@{u a j} O Q}
   : ooExtendableAlong@{i i j k} (to O P) (fun _ => Q).
   Proof.
     apply ext_localize_ind@{a i j i k i k}; intros ?.
@@ -398,9 +406,10 @@ Notation IsLocal f := (In (Loc f)).
 Section LocalTypes.
   Context (f : LocalGenerators).
 
-  Definition ooextendable_islocal {X : Type} {Xloc : IsLocal f X} i
-  : ooExtendableAlong (f i) (fun _ => X)
-  := Xloc i.
+  (** A remark on universes: recall that [ooExtendableAlong] takes four universe parameters, three for the sizes of the types involved and one for the max of all of them.  In the definition of [IsLocal f X] we set that max universe to be the same as the size of [X], so that [In (Loc f) X] would lie in the same universes as [X], which is necessary for our definition of a reflective subuniverse.  However, in practice we may need this extendability property with the max universe being larger, to avoid coalescing universes undesiredly.  Thus, in making it available by the following name, we also insert a [lift] to generalize the max universe. *)
+  Definition ooextendable_islocal {X : Type@{i}} {Xloc : IsLocal f X} i
+  : ooExtendableAlong@{a a i k} (f i) (fun _ => X)
+    := (lift_ooextendablealong _ _ (Xloc i)).
 
   Global Instance islocal_loc (X : Type) : IsLocal f (Localize f X)
     := islocal_localize f X.
@@ -455,9 +464,9 @@ Module Accessible_Localization
   Definition acc_gen : ReflectiveSubuniverse -> LocalGenerators
     := unLoc.
 
-  Definition inO_iff_islocal_internal
+  Definition inO_iff_islocal
              (O : ReflectiveSubuniverse@{u a}) (X : Type@{i})
-  : iff@{i i i} (inO_internal O X) (IsLocal (acc_gen O) X)
+  : iff@{i i i} (In O X) (IsLocal (acc_gen O) X)
     := (idmap , idmap).
 
 End Accessible_Localization.
@@ -476,7 +485,7 @@ Module Nudge_ReflectiveSubuniverses
     : New_ReflectiveSubuniverse -> Localization_ReflectiveSubuniverses.ReflectiveSubuniverse
       := fun O => Loc (Acc.acc_gen O).
   End Data.
-  
+
   Module Nudged <: ReflectiveSubuniverses
     := ReflectiveSubuniverses_Restriction Localization_ReflectiveSubuniverses Data.
 

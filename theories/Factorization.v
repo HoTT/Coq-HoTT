@@ -6,7 +6,7 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import HProp UnivalenceImpliesFunext Extensions.
 Require Import HoTT.Tactics.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** ** Factorizations *)
 

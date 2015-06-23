@@ -17,7 +17,6 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 Local Open Scope functor_scope.
@@ -47,7 +46,7 @@ Section AdjunctionEquivalences.
 
       Lemma adjunction_naturality : adjunction_naturalityT.
       Proof.
-        pose proof (ap10 (commutes A (c, d) (c, d') (1, g))^ f) as H'; simpl in *.
+        pose proof (ap10 (commutes A (c, d) (c, d') (1%morphism, g))^ f) as H'; simpl in *.
         rewrite ?identity_of, ?left_identity, ?right_identity in H'.
         exact H'.
       Qed.
@@ -64,7 +63,7 @@ Section AdjunctionEquivalences.
 
       Lemma adjunction_naturality' : adjunction_naturalityT'.
       Proof.
-        pose proof (ap10 (commutes A (c', d) (c, d) (g, 1))^ f) as H'; simpl in *.
+        pose proof (ap10 (commutes A (c', d) (c, d) (g, 1%morphism))^ f) as H'; simpl in *.
         rewrite ?identity_of, ?left_identity, ?right_identity in H'.
         exact H'.
       Qed.
@@ -72,7 +71,7 @@ Section AdjunctionEquivalences.
   End adjunction_naturality.
 
   (**
-     Quoting from Awody's "Category Theory":
+     Quoting from Awodey's "Category Theory":
 
      Proposition 9.4. Given categories and functors,
 
@@ -212,7 +211,7 @@ Section AdjunctionEquivalences'.
              @isiso_isequiv
                _ _ _ _
                (equiv_isequiv
-                  (equiv_inverse (equiv_hom_set_adjunction T (fst cd) (snd cd))))).
+                  (equiv_hom_set_adjunction T (fst cd) (snd cd))^-1)).
     Grab Existential Variables.
     simpl.
     intros.

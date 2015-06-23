@@ -16,17 +16,7 @@ cross-pollinates with the [HoTT-Agda](https://github.com/HoTT/HoTT-Agda) library
 
 ## INSTALLATION
 
-Installation details are explained in the file `INSTALL.txt`. You will
-need to compile a version of Coq which supports the `-indices-matter`
-flag, universe polymorphism, and private types. At present, only Coq
-trunk supports these features; it's available at
-https://github.com/coq/coq/branches/trunk.  The particular version of
-Coq which the current version of this repository is compatible is
-bundled as a git submodule.
-
-If you are looking for an older version of HoTT which works with standard Coq, have a look
-at the one tagged as `pure-coq-8.3`. Note however that we do not support the old
-library anymore.
+Installation details are explained in the file `INSTALL.md`. 
 
 ## USAGE
 

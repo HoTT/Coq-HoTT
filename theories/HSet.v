@@ -4,7 +4,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Paths Types.Sigma Types.Empty Types.Record Types.Unit Types.Arrow HProp.
 
-Local Open Scope equiv_scope.
+
 Local Open Scope path_scope.
 
 (** A type is a set if and only if it satisfies Axiom K. *)
@@ -117,6 +117,16 @@ Proof.
   pose (ise (m y)).
   assert (q : (x;p) = (y;1) :> hfiber m (m y)) by apply path_ishprop.
   exact (ap pr1 q).
+Defined.
+
+Lemma isembedding_isinj_hset {A B : Type} `{IsHSet A} `{IsHSet B}
+      (m : A -> B)
+: isinj m -> IsEmbedding m.
+Proof.
+  intros isi b.
+  apply hprop_allpath; intros [x p] [y q].
+  apply path_sigma_hprop; simpl.
+  exact (isi x y (p @ q^)).
 Defined.
 
 Lemma isinj_ismono `{Funext} {X Y} (f : X -> Y) : isinj f -> ismono f.

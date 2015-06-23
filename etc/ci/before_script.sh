@@ -26,6 +26,7 @@ sudo apt-get install -q time
 ./install_coq_deps.sh
 if [ ! -z "$UPDATE_QUICK_DOC" ]; then
     ./install_coq_dot_deps.sh
+    ./install_doctoc.sh
 fi
 if [ ! -z "$UPDATE_HTML" ]; then
     ./install_timing_deps.sh

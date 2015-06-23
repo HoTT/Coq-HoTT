@@ -3,7 +3,7 @@
 
 Require Import HoTT.Basics.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 Generalizable Variables A.
 
 (** ** Eta conversion *)
@@ -51,12 +51,17 @@ Definition equiv_path_unit (z z' : Unit) : Unit <~> (z = z')
 (* The positive universal property *)
 Arguments Unit_ind [A] a u : rename.
 
-Global Instance isequiv_unit_ind `{Funext} (A : Type) : IsEquiv (@Unit_ind (fun _ => A)) | 0
+Global Instance isequiv_unit_ind `{Funext} (A : Unit -> Type)
+: IsEquiv (@Unit_ind A) | 0
   := isequiv_adjointify _
-  (fun f : Unit -> A => f tt)
-  (fun f : Unit -> A => path_forall (@Unit_ind (fun _ => A) (f tt)) f
-                                    (fun x => match x with tt => 1 end))
+  (fun f : forall u:Unit, A u => f tt)
+  (fun f : forall u:Unit, A u => path_forall (@Unit_ind A (f tt)) f
+                                             (fun x => match x with tt => 1 end))
   (fun _ => 1).
+
+Global Instance isequiv_unit_rec `{Funext} (A : Type)
+: IsEquiv (@Unit_ind (fun _ => A)) | 0
+  := isequiv_unit_ind (fun _ => A).
 
 (* For various reasons, it is typically more convenient to define functions out of the unit as constant maps, rather than [Unit_ind]. *)
 Notation unit_name x := (fun (_ : Unit) => x).
@@ -74,11 +79,9 @@ Defined.
 Definition unit_coind {A : Type} : Unit -> (A -> Unit)
   := fun _ _ => tt.
 
-Global Instance isequiv_unit_coind `{Funext} (A : Type) : IsEquiv (@unit_coind A) | 0
-  := isequiv_adjointify _
-  (fun f => tt)
-  _ _.
+Global Instance isequiv_unit_coind `{Funext} (A : Type) : IsEquiv (@unit_coind A) | 0.
 Proof.
+  refine (isequiv_adjointify _ (fun f => tt) _ _).
   - intro f. apply path_forall; intros x; apply path_unit.
   - intro x; destruct x; reflexivity.
 Defined.

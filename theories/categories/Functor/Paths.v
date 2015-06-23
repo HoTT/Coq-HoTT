@@ -16,7 +16,7 @@ Section path_functor.
 
   Variables C D : PreCategory.
 
-  Local Open Scope equiv_scope.
+
 
   Local Notation functor_sig_T :=
     { OO : C -> D

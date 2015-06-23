@@ -5,21 +5,22 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Extensions.
 Require Import Modality Accessible.
 Require Export Localization.    (** Nullification is a special case of localization *)
-Local Open Scope equiv_scope.
+
 Local Open Scope path_scope.
 
 (** Nullification is the special case of localization where the codomains of the generating maps are all [Unit].  In this case, we get a modality and not just a reflective subuniverse. *)
 
-(** The hypotheses of this lemma may look slightly odd (why are we bothering to talk about type families dependent over [Unit]?), but they seem to be the most convenient to make the induction go through.  We define it as a [Fixpoint] rather than as a [Definition] with [induction], because the latter would introduce an undesired extra universe parameter (the size of the inductive motive, which must be strictly larger than the size of [C] and [D] since it is generalized over them). *)
-Fixpoint extendable_over_unit (n : nat)
-  (A : Type) (C : Unit -> Type) (D : forall u, C u -> Type)
-  (ext : ExtendableAlong n (@const A Unit tt) C)
+(** The hypotheses of this lemma may look slightly odd (why are we bothering to talk about type families dependent over [Unit]?), but they seem to be the most convenient to make the induction go through.  *)
+
+Definition extendable_over_unit (n : nat)
+  (A : Type@{a}) (C : Unit@{a} -> Type@{i}) (D : forall u, C u -> Type@{j})
+  (ext : ExtendableAlong@{a a i k} n (@const A Unit tt) C)
   (ext' : forall (c : forall u, C u),
-            ExtendableAlong n (@const A Unit tt) (fun u => (D u (c u))))
-  {struct n}
-: ExtendableAlong_Over n (@const A Unit tt) C D ext.
+            ExtendableAlong@{a a j k} n (@const A Unit tt) (fun u => (D u (c u))))
+: ExtendableAlong_Over@{a a i j k} n (@const A Unit tt) C D ext.
 Proof.
-  destruct n as [|n]; [exact tt | split].
+  generalize dependent C; simple_induction n n IH;
+    intros C D ext ext'; [exact tt | split].
   - intros g g'.
     exists ((fst (ext' (fst ext g).1)
                  (fun a => ((fst ext g).2 a)^ # (g' a))).1);
@@ -28,7 +29,7 @@ Proof.
     exact ((fst (ext' (fst ext g).1)
                 (fun a => ((fst ext g).2 a)^ # (g' a))).2 a).
   - intros h k h' k'.
-    apply extendable_over_unit; intros g.
+    apply IH; intros g.
     exact (snd (ext' k) (fun u => g u # h' u) k').
 Defined.
 
@@ -62,22 +63,22 @@ Module Nullification_Modalities <: Modalities.
   Module LocRSUTh := ReflectiveSubuniverses_Theory LocRSU.
 
   Definition O_reflector := LocRSU.O_reflector.
-  Definition inO_internal := LocRSU.inO_internal.
-  Definition O_inO_internal := LocRSU.O_inO_internal.
+  Definition In := LocRSU.In.
+  Definition O_inO := @LocRSU.O_inO.
   Definition to := LocRSU.to.
-  Definition inO_equiv_inO_internal := LocRSU.inO_equiv_inO_internal.
-  Definition hprop_inO_internal := LocRSU.hprop_inO_internal.
+  Definition inO_equiv_inO := @LocRSU.inO_equiv_inO@{u a i j k}.
+  Definition hprop_inO := LocRSU.hprop_inO.
 
   Definition O_ind_internal (O : Modality@{u a}) (A : Type@{i})
              (B : O_reflector@{u a i} O A -> Type@{j})
-             (B_inO : forall oa : O_reflector@{u a i} O A, inO_internal@{u a j} O (B oa))
+             (B_inO : forall oa : O_reflector@{u a i} O A, In@{u a j} O (B oa))
              (g : forall a : A, B (to@{u a i} O A a))
   : forall x, B x.
   Proof.
     refine (Localize_ind@{a i j k}
              (null_to_local_generators@{a a} (unNul O)) A B g _); intros i.
-    apply (ooextendable_over_unit@{a i j a k j}); intros c.
-    refine (ooextendable_postcompose@{a a j j j j j j j j j}
+    apply (ooextendable_over_unit@{a i j a k}); intros c.
+    refine (ooextendable_postcompose@{a a j j k j j j k j k}
               (fun (_:Unit) => B (c tt)) _ _
               (fun u => transport@{i j} B (ap c (path_unit tt u))) _).
     refine (ooextendable_islocal _ i).
@@ -86,14 +87,14 @@ Module Nullification_Modalities <: Modalities.
 
   Definition O_ind_beta_internal (O : Modality@{u a}) (A : Type@{i})
              (B : O_reflector@{u a i} O A -> Type@{j})
-             (B_inO : forall oa : O_reflector O A, inO_internal@{u a j} O (B oa))
+             (B_inO : forall oa : O_reflector O A, In@{u a j} O (B oa))
              (f : forall a : A, B (to O A a)) (a : A)
   : O_ind_internal@{u a i j k} O A B B_inO f (to O A a) = f a
     := 1.
 
   Definition minO_paths (O : Modality@{u a}) (A : Type@{i})
-             (A_inO : inO_internal@{u a i} O A) (z z' : A)
-  : inO_internal@{u a i} O (z = z').
+             (A_inO : In@{u a i} O A) (z z' : A)
+  : In@{u a i} O (z = z').
   Proof.
     apply (LocRSUTh.inO_paths@{u a i i}); assumption.
   Defined.
@@ -118,13 +119,13 @@ Notation IsNull f := (In (Nul f)).
 Module Accessible_Nullification
   <: Accessible_Modalities Nullification_Modalities.
 
-  Import Nullification_Modalities.
+  Module Import Os_Theory := Modalities_Theory Nullification_Modalities.
 
   Definition acc_gen : Modality -> NullGenerators
     := unNul.
 
-  Definition inO_iff_isnull_internal (O : Modality@{u a}) (X : Type@{i})
-  : iff@{i i i} (inO_internal@{u a i} O X) (IsNull (acc_gen O) X)
+  Definition inO_iff_isnull (O : Modality@{u a}) (X : Type@{i})
+  : iff@{i i i} (In@{u a i} O X) (IsNull (acc_gen O) X)
     := (idmap , idmap).
 
 End Accessible_Nullification.

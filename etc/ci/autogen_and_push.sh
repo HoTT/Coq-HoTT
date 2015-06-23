@@ -23,9 +23,7 @@ EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 # copy the push_remote script so it stays around after we change branches
 cp -f "$DIR"/{push_remote,push_remote_tmp}.sh
 
-echo 'Configuring git for pushing...'
-git config --global user.name "Travis-CI Bot"
-git config --global user.email "Travis-CI-Bot@travis.fake"
+"$DIR"/configure_commit.sh
 
 export MESSAGE="./autogen.sh"
 

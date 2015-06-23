@@ -2,7 +2,6 @@
 (** * Truncatedness *)
 
 Require Import Overture PathGroupoids Contractible Equivalences.
-Local Open Scope equiv_scope.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 Generalizable Variables A B m n f.
@@ -178,3 +177,5 @@ Defined.
 Definition equiv_iff_hprop `{IsHProp A} `{IsHProp B}
   : (A -> B) -> (B -> A) -> (A <~> B)
   := fun f g => equiv_iff_hprop_uncurried (f, g).
+
+(** If you are looking for a theorem about truncation, you may want to read the note "Finding Theorems" in "STYLE.md". *)

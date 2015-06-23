@@ -26,7 +26,6 @@
 Require Import HoTT Coq.Init.Peano.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
 
 (* END OF PREAMBLE *)
 (* ================================================== ex:composition *)
@@ -260,7 +259,7 @@ Definition Book_1_10 := ack.
 (* ================================================== ex:eqvboolbool *)
 (** Exercise 2.13 *)
 
-Definition Book_2_13 := @HoTT.Types.Bool.equiv_bool_equiv_bool_bool.
+Definition Book_2_13 := @HoTT.Types.Bool.equiv_bool_aut_bool.
 
 (* ================================================== ex:equality-reflection *)
 (** Exercise 2.14 *)
@@ -373,7 +372,7 @@ Proof.
   intro isHProp_A.
   exists idmap.
   apply path_ishprop. (* automagically, from IsHProp A *)
-  intro contr_AA. 
+  intro contr_AA.
   apply hprop_allpath; intros a1 a2.
   exact (ap10 (path_contr (fun x:A => a1) (fun x:A => a2)) a1).
 Defined.
@@ -390,19 +389,19 @@ Lemma Book_3_6_solution_1 `{Funext} (A : Type) : IsHProp A -> IsHProp (A + ~A).
 Proof.
   intro isHProp_A.
   apply hprop_allpath. intros x y.
-  destruct x as [a1|n1]; destruct y as [a2|n2]; apply path_sum; try apply path_ishprop. 
+  destruct x as [a1|n1]; destruct y as [a2|n2]; apply path_sum; try apply path_ishprop.
   exact (n2 a1). exact (n1 a2).
 Defined.
 
 (* ================================================== ex:disjoint-or *)
 (** Exercise 3.7 *)
 
-Lemma Book_3_7_solution_1 (A B: Type) : 
+Lemma Book_3_7_solution_1 (A B: Type) :
   IsHProp A -> IsHProp B -> ~(A*B) -> IsHProp (A+B).
 Proof.
   intros isHProp_A isProp_B nab.
   apply hprop_allpath. intros x y.
-  destruct x as [a1|b1]; destruct y as [a2|b2]; apply path_sum; try apply path_ishprop. 
+  destruct x as [a1|b1]; destruct y as [a2|b2]; apply path_sum; try apply path_ishprop.
   exact (nab (a1,b2)). exact (nab (a2,b1)).
 Defined.
 
@@ -426,7 +425,7 @@ Proof.
   - unfold Sect. intros []; simpl.
     + unfold LEM_hProp_Bool. elim (lem Unit_hp _).
       * exact (fun _ => 1).
-      * intro nUnit. elim (nUnit tt). 
+      * intro nUnit. elim (nUnit tt).
     + unfold LEM_hProp_Bool. elim (lem False_hp _).
       * intro fals. elim fals.
       * exact (fun _ => 1).
@@ -435,10 +434,10 @@ Proof.
     elim (lem hprop _).
     + intro p.
       apply path_hprop; simpl. (* path_prop is silent *)
-      exact (equiv_inverse (if_hprop_then_equiv_Unit hprop p)).
+      exact ((if_hprop_then_equiv_Unit hprop p)^-1).
     + intro np.
       apply path_hprop; simpl. (* path_prop is silent *)
-      exact (equiv_inverse (if_not_hprop_then_equiv_Empty hprop np)).
+      exact ((if_not_hprop_then_equiv_Empty hprop np)^-1).
 Defined.
 
 (* ================================================== ex:lem-impred *)
@@ -1347,6 +1346,3 @@ Definition Book_7_13_part_ii := @HoTT.Modalities.Closed.Cl.
 
 (* ================================================== ex:pseudo-ordinals *)
 (** Exercise 11.18 *)
-
-
-

@@ -3,7 +3,6 @@
 
 Require Import Overture PathGroupoids.
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
 
 (** We now give many ways to construct equivalences.  In each case, we define an instance of the typeclass [IsEquiv] named [isequiv_X], followed by an element of the record type [Equiv] named [equiv_X].
 
@@ -19,7 +18,11 @@ Global Instance isequiv_idmap (A : Type) : IsEquiv idmap | 0 :=
 
 Definition equiv_idmap (A : Type) : A <~> A := BuildEquiv A A idmap _.
 
-Global Instance reflexive_equiv : Reflexive Equiv | 0 := equiv_idmap.
+Arguments equiv_idmap {A} , A.
+
+Notation "1" := equiv_idmap : equiv_scope.
+
+Global Instance reflexive_equiv : Reflexive Equiv | 0 := @equiv_idmap.
 
 (** The composition of equivalences is an equivalence. *)
 Global Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
@@ -54,6 +57,9 @@ Definition equiv_compose {A B C : Type} (g : B -> C) (f : A -> B)
 Definition equiv_compose' {A B C : Type} (g : B <~> C) (f : A <~> B)
   : A <~> C
   := equiv_compose g f.
+
+(** We put [g] and [f] in [equiv_scope] explcitly.  This is a partial work-around for https://coq.inria.fr/bugs/show_bug.cgi?id=3990, which is that implicitly bound scopes don't nest well. *)
+Notation "g 'oE' f" := (equiv_compose' g%equiv f%equiv) (at level 40, left associativity) : equiv_scope.
 
 (* The TypeClass [Transitive] has a different order of parameters than [equiv_compose].  Thus in declaring the instance we have to switch the order of arguments. *)
 Global Instance transitive_equiv : Transitive Equiv | 0 :=
@@ -142,6 +148,8 @@ Proof.
   exists (e^-1).
   apply isequiv_inverse.
 Defined.
+
+Notation "e ^-1" := (@equiv_inverse _ _ e) (at level 3, format "e '^-1'") : equiv_scope.
 
 Global Instance symmetric_equiv : Symmetric Equiv | 0 := @equiv_inverse.
 
@@ -239,6 +247,18 @@ Section Adjointify.
     := BuildEquiv A B f isequiv_adjointify.
 
 End Adjointify.
+
+Arguments isequiv_adjointify {A B}%type_scope (f g)%function_scope isretr issect.
+Arguments equiv_adjointify {A B}%type_scope (f g)%function_scope isretr issect.
+
+(** An involution is an endomap that is its own inverse. *)
+Definition isequiv_involution {X : Type} (f : X -> X) (isinvol : Sect f f)
+: IsEquiv f
+  := isequiv_adjointify f f isinvol isinvol.
+
+Definition equiv_involution {X : Type} (f : X -> X) (isinvol : Sect f f)
+: X <~> X
+  := equiv_adjointify f f isinvol isinvol.
 
 (** Several lemmas useful for rewriting. *)
 Definition moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B) (p : x = f^-1 y)

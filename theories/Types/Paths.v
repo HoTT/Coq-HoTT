@@ -2,8 +2,8 @@
 (** * Theorems about path spaces *)
 
 Require Import HoTT.Basics.
+
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
 
 Generalizable Variables A B f x y z.
 
@@ -87,6 +87,27 @@ Proof.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
+(** ** Transporting in 2-path types *)
+
+Definition transport_paths2 {A : Type} {x y : A}
+           (p : x = y) (q : idpath x = idpath x)
+: transport (fun a => idpath a = idpath a) p q
+  =  (concat_Vp p)^
+    @ whiskerL p^ ((concat_1p p)^ @ whiskerR q p @ concat_1p p)
+    @ concat_Vp p.
+Proof.
+  destruct p. simpl.
+  refine (_ @ (concat_p1 _)^).
+  refine (_ @ (concat_1p _)^).
+  (** The tricky thing here is getting a sufficiently general statement that we can prove it by path induction. *)
+  assert (H : forall (p : x = x) (q : 1 = p),
+                (q @ (concat_p1 p)^) @ (concat_1p (p @ 1))^
+                = whiskerL (idpath x) (idpath 1 @ whiskerR q 1 @ idpath (p @ 1))).
+  { intros p' q'. destruct q'. reflexivity. }
+  transitivity (q @ (concat_p1 1)^ @ (concat_1p 1)^).
+  { simpl; exact ((concat_p1 _)^ @ (concat_p1 _)^). }
+  refine (H 1 q).
+Defined.
 
 (** ** Functorial action *)
 
@@ -100,6 +121,12 @@ Definition equiv_ap `(f : A -> B) `{IsEquiv A B f} (x y : A)
   : (x = y) <~> (f x = f y)
   := BuildEquiv _ _ (ap f) _.
 
+Global Arguments equiv_ap (A B)%type_scope f%function_scope _ _ _.
+
+Definition equiv_ap' `(f : A <~> B) (x y : A)
+  : (x = y) <~> (f x = f y)
+  := equiv_ap f x y.
+
 (* TODO: Is this really necessary? *)
 Definition equiv_inj `(f : A -> B) `{IsEquiv A B f} {x y : A}
   : (f x = f y) -> (x = y)
@@ -108,9 +135,10 @@ Definition equiv_inj `(f : A -> B) `{IsEquiv A B f} {x y : A}
 (** ** Path operations are equivalences *)
 
 Global Instance isequiv_path_inverse {A : Type} (x y : A)
-  : IsEquiv (@inverse A x y) | 0
-  := BuildIsEquiv _ _ _ (@inverse A y x) (@inv_V A y x) (@inv_V A x y) _.
+  : IsEquiv (@inverse A x y) | 0.
 Proof.
+  refine (BuildIsEquiv _ _ _ (@inverse A y x)
+                       (@inv_V A y x) (@inv_V A x y) _).
   intros p; destruct p; reflexivity.
 Defined.
 
@@ -119,10 +147,10 @@ Definition equiv_path_inverse {A : Type} (x y : A)
   := BuildEquiv _ _ (@inverse A x y) _.
 
 Global Instance isequiv_concat_l {A : Type} `(p : x = y:>A) (z : A)
-  : IsEquiv (@transitivity A _ _ x y z p) | 0
-  := BuildIsEquiv _ _ _ (concat p^)
-     (concat_p_Vp p) (concat_V_pp p) _.
+  : IsEquiv (@transitivity A _ _ x y z p) | 0.
 Proof.
+  refine (BuildIsEquiv _ _ _ (concat p^)
+                       (concat_p_Vp p) (concat_V_pp p) _).
   intros q; destruct p; destruct q; reflexivity.
 Defined.
 
@@ -131,10 +159,10 @@ Definition equiv_concat_l {A : Type} `(p : x = y) (z : A)
   := BuildEquiv _ _ (concat p) _.
 
 Global Instance isequiv_concat_r {A : Type} `(p : y = z) (x : A)
-  : IsEquiv (fun q:x=y => q @ p) | 0
-  := BuildIsEquiv _ _ (fun q => q @ p) (fun q => q @ p^)
-     (fun q => concat_pV_p q p) (fun q => concat_pp_V q p) _.
+  : IsEquiv (fun q:x=y => q @ p) | 0.
 Proof.
+  refine (BuildIsEquiv _ _ (fun q => q @ p) (fun q => q @ p^)
+           (fun q => concat_pV_p q p) (fun q => concat_pp_V q p) _).
   intros q; destruct p; destruct q; reflexivity.
 Defined.
 
@@ -493,9 +521,9 @@ Definition dpath_path_lr {A : Type} {x1 x2 : A}
   transport (fun x => x = x) p q = r.
 Proof.
   destruct p; simpl.
-  refine (equiv_compose' (B := (q @ 1 = r)) _ _).
-  exact (equiv_concat_l (concat_p1 q)^ r).
+  transitivity (q @ 1 = r).
   exact (equiv_concat_r (concat_1p r) (q @ 1)).
+  exact (equiv_concat_l (concat_p1 q)^ r).
 Defined.
 
 Definition dpath_path_Fl {A B : Type} {f : A -> B} {x1 x2 : A} {y : B}
@@ -525,9 +553,9 @@ Definition dpath_path_FlFr {A B : Type} {f g : A -> B} {x1 x2 : A}
   transport (fun x => f x = g x) p q = r.
 Proof.
   destruct p; simpl.
-  refine (equiv_compose' (B := (q @ 1 = r)) _ _).
-  exact (equiv_concat_l (concat_p1 q)^ r).
+  transitivity (q @ 1 = r).
   exact (equiv_concat_r (concat_1p r) (q @ 1)).
+  exact (equiv_concat_l (concat_p1 q)^ r).
 Defined.
 
 Definition dpath_path_FFlr {A B : Type} {f : A -> B} {g : B -> A}
@@ -537,9 +565,9 @@ Definition dpath_path_FFlr {A B : Type} {f : A -> B} {g : B -> A}
   transport (fun x => g (f x) = x) p q = r.
 Proof.
   destruct p; simpl.
-  refine (equiv_compose' (B := (q @ 1 = r)) _ _).
-  exact (equiv_concat_l (concat_p1 q)^ r).
+  transitivity (q @ 1 = r).
   exact (equiv_concat_r (concat_1p r) (q @ 1)).
+  exact (equiv_concat_l (concat_p1 q)^ r).
 Defined.
 
 Definition dpath_path_lFFr {A B : Type} {f : A -> B} {g : B -> A}
@@ -549,19 +577,34 @@ Definition dpath_path_lFFr {A B : Type} {f : A -> B} {g : B -> A}
   transport (fun x => x = g (f x)) p q = r.
 Proof.
   destruct p; simpl.
-  refine (equiv_compose' (B := (q @ 1 = r)) _ _).
-  exact (equiv_concat_l (concat_p1 q)^ r).
+  transitivity (q @ 1 = r).
   exact (equiv_concat_r (concat_1p r) (q @ 1)).
+  exact (equiv_concat_l (concat_p1 q)^ r).
 Defined.
 
+Definition dpath_paths2 {A : Type} {x y : A}
+           (p : x = y) (q : idpath x = idpath x)
+           (r : idpath y = idpath y)
+: (concat_1p p)^ @ whiskerR q p @ concat_1p p
+  = (concat_p1 p)^ @ whiskerL p r @ concat_p1 p
+  <~>
+  transport (fun a => idpath a = idpath a) p q = r.
+Proof.
+  destruct p. simpl.
+  refine (_ oE (equiv_whiskerR _ _ 1)^-1).
+  refine (_ oE (equiv_whiskerL 1 _ _)^-1).
+  refine (equiv_concat_lr _ _).
+  - symmetry; apply whiskerR_p1_1.
+  - apply whiskerL_1p_1.
+Defined.
 
 (** ** Universal mapping property *)
 
 Global Instance isequiv_paths_ind `{Funext} {A : Type} (a : A)
   (P : forall x, (a = x) -> Type)
-  : IsEquiv (paths_ind a P) | 0
-  := isequiv_adjointify (paths_ind a P) (fun f => f a 1) _ _.
+  : IsEquiv (paths_ind a P) | 0.
 Proof.
+  refine (isequiv_adjointify (paths_ind a P) (fun f => f a 1) _ _).
   - intros f.
     apply path_forall; intros x.
     apply path_forall; intros p.

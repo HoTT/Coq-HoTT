@@ -4,8 +4,7 @@ Require Import Types.Universe Types.Arrow Types.Sigma.
 Require Import HSet HProp UnivalenceImpliesFunext TruncType.
 Require Import hit.epi hit.Truncations hit.Connectedness.
 
-Open Local Scope path_scope.
-Open Local Scope equiv_scope.
+Local Open Scope path_scope.
 
 (** * Quotient of a Type by an hprop-valued relation
 
@@ -95,12 +94,20 @@ Section Equiv.
     reflexivity.
   Defined.
 
-  Lemma quotient_ind_prop (P : quotient R -> hProp):
+  Lemma quotient_ind_prop (P : quotient R -> Type)
+        `{forall x, IsHProp (P x)} :
     forall dclass : forall x, P (class_of R x),
     forall q, P q.
   Proof.
     intros. apply (quotient_ind R P dclass).
     intros. apply path_ishprop.
+  Defined.
+
+  Global Instance decidable_in_class `{forall x y, Decidable (R x y)}
+  : forall x a, Decidable (in_class x a).
+  Proof.
+    refine (quotient_ind_prop _ _).
+    intros a b; exact (transport Decidable (in_class_pr a b) _).
   Defined.
 
   Lemma class_of_repr : forall q x, in_class q x -> q = class_of R x.
@@ -218,6 +225,54 @@ Section Equiv.
  *)
 
 End Equiv.
+
+Section Functoriality.
+
+  Definition quotient_functor
+             {A : Type} (R : relation A) {sR: is_mere_relation _ R}
+             {B : Type} (S : relation B) {sS: is_mere_relation _ S}
+             (f : A -> B) (fresp : forall x y, R x y -> S (f x) (f y))
+  : quotient R -> quotient S.
+  Proof.
+    refine (quotient_rec R (class_of S o f) _).
+    intros x y r.
+    apply related_classes_eq, fresp, r.
+  Defined.
+
+  Context {A : Type} (R : relation A) {sR: is_mere_relation _ R}
+          {B : Type} (S : relation B) {sS: is_mere_relation _ S}.
+
+  Global Instance quotient_functor_isequiv
+             (f : A -> B) (fresp : forall x y, R x y <-> S (f x) (f y))
+             `{IsEquiv _ _ f}
+  : IsEquiv (quotient_functor R S f (fun x y => fst (fresp x y))).
+  Proof.
+    refine (isequiv_adjointify _ (quotient_functor S R f^-1 _)
+                               _ _).
+    - intros u v s.
+      apply (snd (fresp _ _)).
+      abstract (do 2 rewrite eisretr; apply s).
+    - intros x; revert x; refine (quotient_ind S _ _ _).
+      + intros b; simpl. apply ap, eisretr.
+      + intros; apply path_ishprop.
+    - intros x; revert x; refine (quotient_ind R _ _ _).
+      + intros a; simpl. apply ap, eissect.
+      + intros; apply path_ishprop.
+  Defined.
+
+  Definition quotient_functor_equiv
+             (f : A -> B) (fresp : forall x y, R x y <-> S (f x) (f y))
+             `{IsEquiv _ _ f}
+  : quotient R <~> quotient S
+    := BuildEquiv _ _
+         (quotient_functor R S f (fun x y => fst (fresp x y))) _.
+
+  Definition quotient_functor_equiv'
+             (f : A <~> B) (fresp : forall x y, R x y <-> S (f x) (f y))
+  : quotient R <~> quotient S
+    := quotient_functor_equiv f fresp.
+
+End Functoriality.
 
 Section Kernel.
 

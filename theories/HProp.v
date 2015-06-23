@@ -2,7 +2,7 @@
 (** * HPropositions *)
 
 Require Import HoTT.Basics HoTT.Types.
-Local Open Scope equiv_scope.
+
 Local Open Scope path_scope.
 
 Generalizable Variables A B.
@@ -78,6 +78,31 @@ Proof.
     apply @path_contr. apply contr_contr. exact (hp x y).
 Defined.
 
+(** Being an hprop is also equivalent to the diagonal being an equivalence. *)
+Definition ishprop_isequiv_diag {A} `{IsEquiv _ _ (fun (a:A) => (a,a))}
+: IsHProp A.
+Proof.
+  apply hprop_allpath; intros x y.
+  set (d := fun (a:A) => (a,a)) in *.
+  transitivity (fst (d (d^-1 (x,y)))).
+  - exact (ap fst (eisretr d (x,y))^).
+  - transitivity (snd (d (d^-1 (x,y)))).
+    + unfold d; reflexivity.
+    + exact (ap snd (eisretr d (x,y))).
+Defined.
+
+Global Instance isequiv_diag_ishprop {A} `{IsHProp A}
+: IsEquiv (fun (a:A) => (a,a)).
+Proof.
+  refine (isequiv_adjointify _ fst _ _).
+  - intros [x y].
+    apply path_prod; simpl.
+    + reflexivity.
+    + apply path_ishprop.
+  - intros a; simpl.
+    reflexivity.
+Defined.
+
 (** ** Alternate characterizations of contractibility. *)
 
 Theorem equiv_contr_inhabited_hprop `{Funext} {A}
@@ -96,9 +121,9 @@ Defined.
 Theorem equiv_contr_inhabited_allpath `{Funext} {A}
   : Contr A <~> A * forall (x y : A), x = y.
 Proof.
-  transitivity ( A * IsHProp A).
+  transitivity (A * IsHProp A).
   apply equiv_contr_inhabited_hprop.
-  apply equiv_functor_prod'. apply equiv_idmap. apply equiv_hprop_allpath.
+  exact (1 *E equiv_hprop_allpath _).
 Defined.
 
 (** ** Logical equivalence of hprops *)
@@ -122,7 +147,7 @@ Defined.
 (** If an hprop is inhabited, then it is equivalent to [Unit]. *)
 Lemma if_hprop_then_equiv_Unit (hprop : Type) `{IsHProp hprop} :  hprop -> hprop <~> Unit.
 Proof.
-  intro p. 
+  intro p.
   apply equiv_iff_hprop.
   exact (fun _ => tt).
   exact (fun _ => p).
@@ -131,6 +156,16 @@ Defined.
 (** If an hprop is not inhabited, then it is equivalent to [Empty]. *)
 Lemma if_not_hprop_then_equiv_Empty (hprop : Type) `{IsHProp hprop} : ~hprop -> hprop <~> Empty.
 Proof.
-  intro np. 
+  intro np.
   exact (BuildEquiv _ _ np _).
+Defined.
+
+(** Thus, a decidable hprop is either equivalent to [Unit] or [Empty]. *)
+Definition equiv_decidable_hprop (hprop : Type)
+           `{IsHProp hprop} `{Decidable hprop}
+: (hprop <~> Unit) + (hprop <~> Empty).
+Proof.
+  destruct (dec hprop) as [x|nx].
+  - exact (inl (if_hprop_then_equiv_Unit hprop x)).
+  - exact (inr (if_not_hprop_then_equiv_Empty hprop nx)).
 Defined.

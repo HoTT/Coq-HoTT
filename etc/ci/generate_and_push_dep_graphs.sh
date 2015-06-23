@@ -25,16 +25,16 @@ COMMITISH="$(git rev-parse HEAD)"
 
 EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 
-echo 'Configuring git for pushing...'
-git config --global user.name "Travis-CI Bot"
-git config --global user.email "Travis-CI-Bot@travis.fake"
+"$DIR"/configure_commit.sh
 
 export MESSAGE="Autoupdate documentation with dpdgraphs"
 
 echo '$ make svg-file-dep-graphs svg-aggregate-dep-graphs'
 make etc/dpdgraph-0.4alpha/coqthmdep || exit $?
 make svg-file-dep-graphs -k || exit $?
-make svg-aggregate-dep-graphs -k || exit $?
+# `dot` hates file-dep-graphs/hott-all.dot, because it's too big, and
+# makes `dot` spin for over a dozen minutes.  So disable it for now.
+#make svg-aggregate-dep-graphs -k || exit $?
 make file-dep-graphs/index.html -k || exit $?
 
 mv file-dep-graphs file-dep-graphs-bak

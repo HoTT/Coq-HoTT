@@ -1,6 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import Overture PathGroupoids Contractible Equivalences Trunc.
-Local Open Scope equiv_scope.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 
@@ -16,6 +15,24 @@ Arguments dec A {_}.
 Class DecidablePaths (A : Type) :=
   dec_paths : forall (x y : A), Decidable (x = y).
 Global Existing Instance dec_paths.
+
+(** ** Decidable hprops *)
+
+(** Contractible types are decidable. *)
+
+Global Instance decidable_contr X `{Contr X} : Decidable X
+  := inl (center X).
+
+(** Thus, hprops have decidable equality. *)
+
+Global Instance decidablepaths_hprop X `{IsHProp X} : DecidablePaths X
+  := fun x y => dec (x = y).
+
+(** Empty types are trivial. *)
+
+Global Instance decidable_empty : Decidable Empty
+  := inr idmap.
+
 
 (** ** Transfer along equivalences *)
 
@@ -76,8 +93,9 @@ Proof.
   intros x y; exact _.
 Defined.
 
+(** We give this a relatively high-numbered priority so that in deducing [IsHProp -> IsHSet] Coq doesn't detour via [DecidablePaths]. *)
 Global Instance hset_pathcoll (A : Type) `{PathCollapsible A}
-: IsHSet A.
+: IsHSet A | 1000.
 Proof.
   intros x y.
   assert (h : forall p:x=y, p = (collapse (idpath x))^ @ collapse p).

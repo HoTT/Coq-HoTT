@@ -50,7 +50,7 @@ Local Open Scope pseudonatural_transformation_scope.
     between their two images in [B] which results in a commutative
     triangle between their three images in [C]. *)
 
-(** Later, he said (https://github.com/HoTT/HoTT/pull/382#issuecomment-41240787):
+(** Later, he said (https://github.com/HoTT/HoTT/pull/382##issuecomment-41240787):
 
     The "naturality" axiom is only necessary if the domain is a
     2-category rather than a 1-category. However, the respect for

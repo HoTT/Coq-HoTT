@@ -13,7 +13,7 @@ Local Open Scope morphism_scope.
 
 Section Adjunction.
   (** ** Unit + UMP definition of adjunction *)
-  (** Quoting from Awody's "Category Theory":
+  (** Quoting from Awodey's "Category Theory":
 
       An adjunction between categories [C] and [D] consists of
       functors

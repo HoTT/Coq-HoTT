@@ -11,3 +11,4 @@ Require Export Types.Universe.
 Require Export Types.Bool.
 Require Export Types.Sum.
 Require Export Types.Nat.
+Require Export Types.Wtype.

@@ -2,10 +2,10 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp TruncType Extensions.
-Require Import Modality Accessible Nullification.
+Require Import Modality Accessible Nullification Lex.
 
 Local Open Scope path_scope.
-Local Open Scope equiv_scope.
+
 
 (** * Open modalities *)
 
@@ -13,6 +13,10 @@ Record Open_Modality :=
   Op { funext_Op : Funext ;
        unOp : hProp
      }.
+
+Arguments Op {_} _.
+
+(** ** Open modalities *)
 
 (** Exercise 7.13(i): Open modalities *)
 Module OpenModalities_easy <: EasyModalities.
@@ -76,24 +80,48 @@ End OpenModalities_easy.
 Module OpenModalities <: Modalities
   := EasyModalities_to_Modalities OpenModalities_easy.
 
-Module OpM := Modalities_Theory OpenModalities.
+Module Import OpM := Modalities_Theory OpenModalities.
 Export OpM.Coercions.
 Export OpM.RSU.Coercions.
 
 Coercion Open_Modality_to_Modality :=
   idmap : Open_Modality -> OpenModalities.Modality.
 
-(** The open modality is accessible. *)
+(** ** The open modality is lex *)
+
+(** Note that unlike the case for closed and topological modalities, we can prove this without univalence (though we do of course need funext). *)
+Module Import Lex_OpenModalities := Lex_Modalities_Theory OpenModalities.
+
+Global Instance lex_open (O : Modality)
+: Lex O.
+Proof.
+  intros A x y.
+  pose (U := unOp O); pose proof (funext_Op O).
+  change (Contr (U -> A) -> Contr (U -> (x = y))); intros ?.
+  assert (uc : U -> Contr A).
+  { intros u.
+    pose (contr_inhabited_hprop U u).
+    refine (contr_equiv (U -> A) (equiv_contr_forall _)). }
+  refine (BuildContr _ _ _).
+  - intros u; pose (uc u); exact (center (x=y)).
+  - intros f; apply path_arrow; intros u.
+    pose proof (uc u); apply path_contr.
+Defined.
+
+(** ** The open modality is accessible. *)
+
 Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
+
+  Module Import Os_Theory := Modalities_Theory OpenModalities.
 
   Definition acc_gen
     := fun (O : OpenModalities.Modality@{u a}) =>
          Build_NullGenerators@{a} Unit@{a} (fun _ => unOp O).
 
-  Definition inO_iff_isnull_internal
+  Definition inO_iff_isnull
              (O : OpenModalities.Modality@{u a}) (X : Type@{i})
   : iff@{i i i}
-      (OpenModalities.inO_internal@{u a i} O X)
+      (OpenModalities.In@{u a i} O X)
       (IsNull (acc_gen O) X).
   Proof.
     pose (funext_Op O); split.

@@ -3,9 +3,7 @@ Require Import Types.Universe Types.Unit Types.Forall Types.Arrow Types.Sigma Ty
 Require Import HProp HSet TruncType UnivalenceImpliesFunext.
 Require Import hit.Pushout hit.Truncations hit.Connectedness.
 
-Open Local Scope path_scope.
-Open Local Scope equiv_scope.
-
+Local Open Scope path_scope.
 
 Section AssumingUA.
 Context `{ua:Univalence}.

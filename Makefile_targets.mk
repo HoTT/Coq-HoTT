@@ -22,6 +22,7 @@ STD_VFILES = \
 	$(SRCCOQLIB)/theories/Program/Tactics.v
 
 CORE_VFILES = \
+	$(srcdir)/theories/Basics/Notations.v \
 	$(srcdir)/theories/Basics/Overture.v \
 	$(srcdir)/theories/Basics/UniverseLevel.v \
 	$(srcdir)/theories/Basics/PathGroupoids.v \
@@ -30,7 +31,6 @@ CORE_VFILES = \
 	$(srcdir)/theories/Basics/Trunc.v \
 	$(srcdir)/theories/Basics/Decidable.v \
 	$(srcdir)/theories/Basics/FunextVarieties.v \
-	$(srcdir)/theories/Basics/Pointed.v \
 	$(srcdir)/theories/Basics.v \
 	$(srcdir)/theories/Types/Paths.v \
 	$(srcdir)/theories/Types/Unit.v \
@@ -42,10 +42,12 @@ CORE_VFILES = \
 	$(srcdir)/theories/Types/Empty.v \
 	$(srcdir)/theories/Types/Bool.v \
 	$(srcdir)/theories/Types/Sum.v \
+	$(srcdir)/theories/Types/Wtype.v \
 	$(srcdir)/theories/Types/Equiv.v \
 	$(srcdir)/theories/Types/Universe.v \
 	$(srcdir)/theories/Types/Nat.v \
 	$(srcdir)/theories/Types.v \
+	$(srcdir)/theories/EquivGroupoids.v \
 	$(srcdir)/theories/Fibrations.v \
 	$(srcdir)/theories/Conjugation.v \
 	$(srcdir)/theories/HProp.v \
@@ -53,29 +55,43 @@ CORE_VFILES = \
 	$(srcdir)/theories/Extensions.v \
 	$(srcdir)/theories/HSet.v \
 	$(srcdir)/theories/UnivalenceImpliesFunext.v \
+	$(srcdir)/theories/Spaces/Nat.v \
 	$(srcdir)/theories/Tactics.v \
 	$(srcdir)/theories/Tactics/RewriteModuloAssociativity.v \
+	$(srcdir)/theories/Tactics/EquivalenceInduction.v \
 	$(srcdir)/theories/Tactics/BinderApply.v \
 	$(srcdir)/theories/TruncType.v \
+	$(srcdir)/theories/Pointed.v \
+	$(srcdir)/theories/DProp.v \
 	$(srcdir)/theories/Functorish.v \
 	$(srcdir)/theories/FunextAxiom.v \
 	$(srcdir)/theories/UnivalenceAxiom.v \
 	$(srcdir)/theories/ObjectClassifier.v \
 	$(srcdir)/theories/NullHomotopy.v \
 	$(srcdir)/theories/Idempotents.v \
+	$(srcdir)/theories/Pullback.v \
 	$(srcdir)/theories/Factorization.v \
+	$(srcdir)/theories/Constant.v \
 	$(srcdir)/theories/Modalities/ReflectiveSubuniverse.v \
 	$(srcdir)/theories/Modalities/Modality.v \
 	$(srcdir)/theories/Modalities/Accessible.v \
+	$(srcdir)/theories/Modalities/Lex.v \
+	$(srcdir)/theories/Modalities/Topological.v \
 	$(srcdir)/theories/Modalities/Notnot.v \
 	$(srcdir)/theories/Modalities/Identity.v \
 	$(srcdir)/theories/Modalities/Localization.v \
 	$(srcdir)/theories/Modalities/Nullification.v \
 	$(srcdir)/theories/Modalities/Open.v \
 	$(srcdir)/theories/Modalities/Closed.v \
+	$(srcdir)/theories/Modalities/Fracture.v \
+	$(srcdir)/theories/Spaces/Int.v \
+	$(srcdir)/theories/Comodalities/CoreflectiveSubuniverse.v \
 	$(srcdir)/theories/hit/Circle.v \
 	$(srcdir)/theories/hit/Truncations.v \
+	$(srcdir)/theories/hit/TruncImpliesFunext.v \
 	$(srcdir)/theories/hit/Connectedness.v \
+	$(srcdir)/theories/hit/Coeq.v \
+	$(srcdir)/theories/hit/FreeIntQuotient.v \
 	$(srcdir)/theories/hit/Flattening.v \
 	$(srcdir)/theories/hit/Interval.v \
 	$(srcdir)/theories/hit/IntervalImpliesFunext.v \
@@ -89,6 +105,16 @@ CORE_VFILES = \
 	$(srcdir)/theories/hit/Pushout.v \
 	$(srcdir)/theories/hit/Join.v \
 	$(srcdir)/theories/hit/V.v \
+	$(srcdir)/theories/Spaces/Cantor.v \
+	$(srcdir)/theories/Spaces/BAut.v \
+	$(srcdir)/theories/Spaces/BAut/Cantor.v \
+	$(srcdir)/theories/Spaces/Finite.v \
+	$(srcdir)/theories/Spaces/BAut/Bool.v \
+	$(srcdir)/theories/Spaces/BAut/Bool/IncoherentIdempotent.v \
+	$(srcdir)/theories/Spaces/No.v \
+	$(srcdir)/theories/Algebra/ooGroup.v \
+	$(srcdir)/theories/Algebra/Aut.v \
+	$(srcdir)/theories/Algebra/ooAction.v \
 	$(srcdir)/theories/Misc.v \
 	$(srcdir)/theories/Utf8.v \
 	$(srcdir)/theories/HoTT.v \
@@ -124,6 +150,7 @@ CATEGORY_VFILES = \
 	\
 	$(srcdir)/theories/categories/Category/Sigma/OnMorphisms.v \
 	$(srcdir)/theories/categories/Category/Sigma/OnObjects.v \
+	$(srcdir)/theories/categories/Category/Sigma/Univalent.v \
 	$(srcdir)/theories/categories/Category/Subcategory.v \
 	$(srcdir)/theories/categories/Category/Subcategory/Full.v \
 	$(srcdir)/theories/categories/Category/Subcategory/Wide.v \
@@ -138,6 +165,9 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/SetCategory/Morphisms.v \
 	$(srcdir)/theories/categories/SetCategory/Functors.v \
 	$(srcdir)/theories/categories/SetCategory/Functors/SetProp.v \
+	\
+	$(srcdir)/theories/categories/SimplicialSets.v \
+	$(srcdir)/theories/categories/SemiSimplicialSets.v \
 	\
 	$(srcdir)/theories/categories/FundamentalPreGroupoidCategory.v \
 	$(srcdir)/theories/categories/HomotopyPreCategory.v \
@@ -193,6 +223,7 @@ CATEGORY_VFILES = \
 	$(srcdir)/theories/categories/IndiscreteCategory.v \
 	\
 	$(srcdir)/theories/categories/NatCategory.v \
+	$(srcdir)/theories/categories/ChainCategory.v \
 	\
 	$(srcdir)/theories/categories/InitialTerminalCategory.v \
 	$(srcdir)/theories/categories/InitialTerminalCategory/Core.v \
@@ -307,6 +338,9 @@ CATEGORY_VFILES = \
 	\
 	$(srcdir)/theories/categories/Grothendieck.v \
 	$(srcdir)/theories/categories/Grothendieck/ToSet.v \
+	$(srcdir)/theories/categories/Grothendieck/ToSet/Core.v \
+	$(srcdir)/theories/categories/Grothendieck/ToSet/Morphisms.v \
+	$(srcdir)/theories/categories/Grothendieck/ToSet/Univalent.v \
 	$(srcdir)/theories/categories/Grothendieck/PseudofunctorToCat.v \
 	$(srcdir)/theories/categories/Grothendieck/ToCat.v \
 	\
