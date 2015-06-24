@@ -183,7 +183,7 @@ done
 AC_SUBST([STDLIB_REPLACEMENT_DIRS])
 
 AC_MSG_CHECKING([whether your coqtop supports directory symlinks to the stdlib])
-coqtop_out="$("$COQTOP" -coqlib "$srcdir/coq" < /dev/null 2>&1 | grep -c 'Warning: Cannot open')"
+coqtop_out="$("$COQTOP" -coqlib "$srcdir/coq" < /dev/null 2>&1 | grep -c 'Warning: Cannot open\|Error: File not found on loadpath')"
 AS_IF([test "$coqtop_out" = 0],
       [AC_MSG_RESULT([yes])],
       [AC_MSG_RESULT([no])
