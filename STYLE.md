@@ -1145,10 +1145,10 @@ Some bad examples:
 
 ### Creating new files ###
 
-If you create a new file, you must add it to `Makefile_targets.mk` so
-that it will get compiled by `make`.  We suggest running `make strict`
-rather than just `make`, so that you will get an error if you forget.
-Of course, you'll also need to `git add` it.
+If you create a new file, you must add it to `_CoqProject` so that it
+will get compiled by `make`.  We suggest running `make strict` rather
+than just `make`, so that you will get an error if you forget.  Of
+course, you'll also need to `git add` it.
 
 You will probably also want to add your new file to `HoTT.v`, unless
 it is outside the core (e.g. in `contrib/`) or should not be exported

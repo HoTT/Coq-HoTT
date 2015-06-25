@@ -50,15 +50,27 @@ SILENCE_COQDEP = $(SILENCE_COQDEP_$(V))
 # the proviola camera
 CAMERA = python proviola/camera/camera.py
 
-# include the makefile listing all the targets.  This way, we don't
-# need to rerun configure every time we add a new file.  The targets
-# makefile should provide CORE_VFILES and STD_VFILES and
-# CATEGORY_VFILES.  To add more targets (e.g., ANALYSIS_VFILES), you'll
-# need to update Makefile.am and run autogen.sh and configure again.
+# read the targets from _CoqMakefile, except for STD_VFILES
 
-MAKEFILE_TARGETS_FILE = Makefile_targets.mk
+STD_VFILES = \
+	$(SRCCOQLIB)/theories/Init/Notations.v \
+	$(SRCCOQLIB)/theories/Init/Logic.v \
+	$(SRCCOQLIB)/theories/Init/Datatypes.v \
+	$(SRCCOQLIB)/theories/Init/Logic_Type.v \
+	$(SRCCOQLIB)/theories/Init/Peano.v \
+	$(SRCCOQLIB)/theories/Init/Tactics.v \
+	$(SRCCOQLIB)/theories/Init/Specif.v \
+	$(SRCCOQLIB)/theories/Init/Prelude.v \
+	$(SRCCOQLIB)/theories/Bool/Bool.v \
+	$(SRCCOQLIB)/theories/Unicode/Utf8_core.v \
+	$(SRCCOQLIB)/theories/Unicode/Utf8.v \
+	$(SRCCOQLIB)/theories/Program/Tactics.v
 
-include $(MAKEFILE_TARGETS_FILE)
+COQ_PROJECT_CONTENTS = $(shell cat $(srcdir)/_CoqProject)
+
+CATEGORY_VFILES = $(addprefix $(srcdir)/,$(filter theories/categories%.v, $(COQ_PROJECT_CONTENTS)))
+CORE_VFILES = $(filter-out $(CATEGORY_VFILES),$(addprefix $(srcdir)/,$(filter theories/%.v, $(COQ_PROJECT_CONTENTS))))
+CONTRIB_VFILES = $(addprefix $(srcdir)/,$(filter contrib/%.v, $(COQ_PROJECT_CONTENTS)))
 
 # The list of files that comprise the HoTT library
 VO=vo
@@ -138,7 +150,7 @@ EXTRA_CLEANFILES = html-done.timestamp HoTT.deps HoTTCore.deps file-dep-graphs/h
 # after this target.  But this target depends on variables defined in
 # that file, so we explicitly put the target here to trick automake
 # into putting the include in the right place.
-all-am: Makefile $(SCRIPTS) $(DATA) $(MAKEFILE_TARGETS_FILE)
+all-am: Makefile $(SCRIPTS) $(DATA) _CoqProject
 
 .SECONDEXPANSION:
 
@@ -185,10 +197,10 @@ contrib: $(CONTRIB_VOFILES)
 
 hottlib: hott-core hott-categories contrib
 
-# a strict rule that will error if there are .v files around which aren't in Makefile_targets.mk
+# a strict rule that will error if there are .v files around which aren't in _CoqProject
 strict-test:
 	$(Q) if [ x"$(UNBUILT_VFILES)" != x ]; then \
-	    echo "Error: The files '$(UNBUILT_VFILES)' are present but are not in $(MAKEFILE_TARGETS_FILE)"; \
+	    echo "Error: The files '$(UNBUILT_VFILES)' are present but are not in _CoqProject"; \
 	    exit 1; \
 	fi
 
@@ -321,7 +333,7 @@ file-dep-graphs/hott-lib.dpd: etc/dpdgraph-0.4alpha/coqthmdep $(CORE_VOFILES)
 #        HOTT_ALL_FILES=$(subst /,.,$(patsubst $(srcdir)/theories/%.v,HoTT.%,$(CORE_VFILES) $(CATEGORY_VFILES)))
 #	$(Q) (echo "Require $(HOTT_ALL_FILES)."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_ALL_FILES).') | etc/dpdgraph-0.4alpha/hoqthmdep 2>/dev/null >/dev/null
 
-file-dep-graphs/index.html: Makefile_targets.mk
+file-dep-graphs/index.html: Makefile _CoqProject
 	@ $(mkdir_p) $(dir $@)
 	$(VECHO) MAKE $@
 	$(Q) (echo "<html><head><title>Dependency Graphs</title></head><body>"; \
