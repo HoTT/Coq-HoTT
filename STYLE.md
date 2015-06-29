@@ -57,6 +57,9 @@
     - [Travis](#travis)
     - [Git rebase](#git-rebase)
     - [Timing scripts](#timing-scripts)
+  - [Bugs in Coq](#bugs-in-coq)
+    - [Reporting bugs](#reporting-bugs)
+    - [Minimizing bugs](#minimizing-bugs)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
