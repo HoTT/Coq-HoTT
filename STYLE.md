@@ -1296,32 +1296,36 @@ the minimized file gives the bug with the ordinary Coq executables
 bit to it.  Often it is enough to add at the top some of the flags
 that the HoTT standard library turns on, such as
 
-    Global Set Universe Polymorphism.
-    Global Set Asymmetric Patterns.
-    Global Set Primitive Projections.
-    Global Set Nonrecursive Elimination Schemes.
+```coq
+Global Set Universe Polymorphism.
+Global Set Asymmetric Patterns.
+Global Set Primitive Projections.
+Global Set Nonrecursive Elimination Schemes.
+```
 
 If this isn't good enough, then you can try pasting in more of the
 HoTT standard library.  For instance, you may need to redefine `sig`
 after setting universe polymorphism on.  A solution that almost always
 works is to insert
 
-    Module Import Coq.
-    Module Import Init.
-    Module Import Notations.
-    (* paste contents of coq/theories/Init/Notations.v here *)
-    End Notations.
-    Module Import Logic.
-    (* paste contents of coq/theories/Init/Logic.v here *)
-    End Logic.
-    Module Import Datatypes.
-    (* paste contents of coq/theories/Init/Datatypes.v here *)
-    End Datatypes.
-    Module Import Specif.
-    (* paste contents of coq/theories/Init/Specif.v here *)
-    End Specif.
-    End Init.
-    End Coq.
+```coq
+Module Import Coq.
+Module Import Init.
+Module Import Notations.
+(* paste contents of coq/theories/Init/Notations.v here *)
+End Notations.
+Module Import Logic.
+(* paste contents of coq/theories/Init/Logic.v here *)
+End Logic.
+Module Import Datatypes.
+(* paste contents of coq/theories/Init/Datatypes.v here *)
+End Datatypes.
+Module Import Specif.
+(* paste contents of coq/theories/Init/Specif.v here *)
+End Specif.
+End Init.
+End Coq.
+```
 
 and then replace all `Require Import`s in the pasted files with simply
 `Import`, remove the definition of `nat` (because there's no way to
