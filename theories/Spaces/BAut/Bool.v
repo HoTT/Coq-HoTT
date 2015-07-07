@@ -382,38 +382,11 @@ First we define the function that will be the equivalence. *)
              (e : BAut Bool <~> BAut Bool) (Z W : BAut Bool)
   : (e^-1 Z ** W) = (Z ** e W).
   Proof.
-    apply path_baut; refine (equiv_adjointify _ _ _ _).
-    - intros f.
-      exact (equiv_path _ _ (moveL_equiv_M _ _ (path_baut _ _ f))..1).
-    - intros g.
-      exact (equiv_path _ _ (moveR_equiv_V _ _ (path_baut _ _ g))..1).
-    - intros g.
-      unfold path_baut; simpl.
-      refine (_ @ eisretr (equiv_path Z (e W)) g); apply ap.
-      refine (@moveR_equiv_V _ _ (path_sigma_hprop Z (e W)) _ _ _ _).
-      apply moveR_equiv_M.
-      apply moveR_equiv_M.
-      refine (eta_path_universe _ @ _).
-      apply ap. unfold moveR_equiv_V; simpl.
-      apply whiskerR, moveL_Vp.
-      refine (_ @ (ap_pp _ _ _)^).
-      apply whiskerR.
-      refine (_ @ ap (ap e^-1) (inv_V _)^).
-      exact (eisadj e^-1 Z).
-    - intros f.
-      unfold path_baut; simpl.
-      apply moveR_equiv_M.
-      refine (@moveR_equiv_V _ _ (path_sigma_hprop (e^-1 Z) W) _ _ _ _).
-      apply moveR_equiv_M.
-      apply moveR_equiv_M.
-      refine (eta_path_universe _ @ _).
-      apply ap. unfold moveL_equiv_M; simpl.
-      refine (_ @ concat_p_pp _ _ _).
-      apply whiskerL, moveL_pM.
-      refine (_ @ (ap_pp _ _ _)^).
-      apply whiskerL.
-      refine (_ @ (ap_V _ _)^).
-      apply inverse2, eisadj.
+    apply path_baut; simpl.
+    refine ((equiv_equiv_path _ _) oE _ oE (equiv_equiv_path _ _)^-1).
+    refine (_ oE (@equiv_moveL_equiv_M _ _ e _ W Z) oE _).
+    - apply equiv_inverse, equiv_path_sigma_hprop.
+    - apply equiv_path_sigma_hprop.
   Defined.
 
   Definition equiv_baut_bool_aut_baut_bool
@@ -450,28 +423,8 @@ First we define the function that will be the equivalence. *)
     baut_reduce.
     refine (_ @ apD negb_center_baut_bool (baut_bool_pairing_1Z pt)^).
     rewrite transport_paths_lr, inv_V.
-    apply ((ap (equiv_inverse (equiv_path_sigma_hprop _ _)))^-1).
-    simpl.
-    unfold pr1_path.
-    rewrite <- ap_compose. simpl.
-    rewrite ap_compose.
-    rewrite !ap_pp.
-    refine (ap (ap (Equiv Bool)) ap_pr1_negb_baut_bool_bool @ _).
-    refine (_ @ ((1 @@ ap_pr1_negb_baut_bool_bool^) @@ 1)).
-    apply (equiv_inj (equiv_path _ _)).
-    rewrite !equiv_path_pp.
-    apply path_equiv, path_arrow; intros e.
-    simpl.
-    rewrite (transport_idmap_path_universe equiv_negb).
-    refine (ap10_equiv (ap_equiv_path_universe Bool equiv_negb) e @ _).
-    simpl.
-    unfold baut_bool_pairing_1Z, path_baut.
-    simpl.
-    rewrite ap_V, !ap_pr1_path_sigma_hprop.
-    refine (moveL_transport_V idmap _ _ _ _).
-    rewrite !transport_idmap_path_universe_uncurried.
-    rewrite !equiv_equiv_inhab_baut_bool_bool_bool_inv.
-    reflexivity.
+    apply moveL_pV.    
+    exact (concat_A1p baut_bool_pairing_1Z (negb_center_baut_bool pt)).
   Qed.
 
   Definition negb_center2_baut_baut_bool
