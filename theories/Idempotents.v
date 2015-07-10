@@ -258,39 +258,44 @@ Proof.
   - simpl. intros x; reflexivity.
 Defined.
 
-(** If [f] is pre-idempotent and [f x = x] has split support for all [x], then [f] splits (Escardo). *)
+(** If [f] is pre-idempotent and [f x = x] is collapsible for all [x], then [f] splits (Escardo). *)
 Definition split_preidem_splitsupp (X : Type) (f : PreIdempotent X)
-           (ss : forall x, merely (f x = x) -> (f x = x))
+           (ss : forall x, Collapsible (f x = x))
 : Splitting f.
 Proof.
-  refine (Build_RetractOf X { x : X & merely (f x = x) }
-                          (fun x => (f x ; tr (isidem f x))) pr1 _ ; _).
-  - intros [x p]; simpl.
-    apply path_sigma with (ss x p).
+  refine (Build_RetractOf X { x : X & FixedBy (@collapse (f x = x) _) }
+                          _ pr1 _ ; _).
+  - intros x; exists (f x); unfold FixedBy.
+    exists (collapse (isidem f x)).
+    apply wconst.
+  - intros [x [p q]]; simpl.
+    apply path_sigma with p.
     apply path_ishprop.
   - simpl. intros x; reflexivity.
 Defined.
 
 (** Moreover, in this case the section is an embedding. *)
 Definition isemb_split_preidem_splitsupp (X : Type) (f : PreIdempotent X)
-           (ss : forall x, merely (f x = x) -> (f x = x))
+           (ss : forall x, Collapsible (f x = x))
 : IsEmbedding (retract_sect (split_preidem_splitsupp X f ss).1).
 Proof.
   apply istruncmap_mapinO_tr; exact _.
 Defined.
 
-(** Conversely, if [f] splits with a section that is an embedding, then (it is pre-idempotent and) [f x = x] has split support for all [x] (Escardo). *)
+(** Conversely, if [f] splits with a section that is an embedding, then (it is pre-idempotent and) [f x = x] is collapsible for all [x] (Escardo). *)
 Definition splitsupp_split_isemb (X : Type) (f : X -> X) (S : Splitting f)
            `{IsEmbedding (retract_sect S.1)}
-: forall x, merely (f x = x) -> (f x = x).
+: forall x, Collapsible (f x = x).
 Proof.
-  intros x p. destruct S as [[A r s H] K]; simpl in *.
-  cut { a : A & s a = x }.
-  - intros [a q].
-    exact ((K x)^ @ ap (s o r) q^ @ ap s (H a) @ q).
-  - strip_truncations.
-    exists (r x).
-    exact (K x @ p).
+  intros x. destruct S as [[A r s H] K]; simpl in *.
+  assert (c1 : f x = x -> { a : A & s a = x }).
+  { intros p; exists (r x).
+    exact (K x @ p). }
+  assert (c2 : { a : A & s a = x } -> f x = x).
+  { intros [a q].
+    exact ((K x)^ @ ap (s o r) q^ @ ap s (H a) @ q). }
+  exists (c2 o c1).
+  apply wconst_through_hprop.
 Defined.
 
 (** *** Quasi-idempotents *)
