@@ -117,7 +117,7 @@ Defined.
 
 (** Usually, a dependent path over [p:x1=x2] in [P:A->Type] between [y1:P x1] and [y2:P x2] is a path [transport P p y1 = y2] in [P x2].  However, when [P] is a function space, these dependent paths have a more convenient description: rather than transporting the argument of [y1] forwards and backwards, we transport only forwards but on both sides of the equation, yielding a "naturality square". *)
 
-Definition dpath_forall `{Funext}
+Definition dpath_forall
   {A:Type} (B:A -> Type) (C:forall a, B a -> Type) (x1 x2:A) (p:x1=x2)
   (f:forall y1:B x1, C x1 y1) (g:forall (y2:B x2), C x2 y2)
   : (forall (y1:B x1), transportD B C p y1 (f y1) = g (transport B p y1))
