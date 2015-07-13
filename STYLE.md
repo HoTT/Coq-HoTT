@@ -1058,7 +1058,7 @@ where they are defined.
   automatically.  If you need a version with more fields than yet
   exists, feel free to add it.)
 
-- `rapply`, `rapply'`, `erapply`, `erapply': Defined in
+- `rapply`, `rapply'`, `erapply`, `erapply'`: Defined in
   `coq/theories/Program/Tactics` and `Basics/Overture`, these tactics
   are more well-behaved variants of `apply` for theorems with fewer
   than 16 arguments.  (It is trivial to extend it to *n* arguments for
