@@ -858,6 +858,14 @@ Notation "p @@ q" := (concat2 p q)%path (at level 20) : path_scope.
 
 Arguments concat2 : simpl nomatch.
 
+Lemma concat2_ap_ap {A B : Type} {x' y' z' : B} 
+           (f : A -> (x' = y')) (g : A -> (y' = z'))
+           {x y : A} (p : x = y) 
+: (ap f p) @@ (ap g p) = ap (fun u => f u @ g u) p.
+Proof.
+    by path_induction.
+Defined.
+
 (** 2-dimensional path inversion *)
 Definition inverse2 {A : Type} {x y : A} {p q : x = y} (h : p = q)
   : p^ = q^

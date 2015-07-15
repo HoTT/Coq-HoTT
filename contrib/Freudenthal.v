@@ -197,7 +197,7 @@ Definition FST_Codes_transportD (x1 : X) (p : No = No) (rr : FST_Codes No p)
 Proof.
   refine (transportD_as_apD _ _ _ _ _ @ _).
   unfold transportD'.
-  unfold FST_Codes. rewrite (Susp_comp_merid _ _ _ _ x1); simpl.
+  unfold FST_Codes. rewrite (Susp_ind_beta_merid _ _ _ _ x1); simpl.
     rewrite (@ap10_path_forall (fst funext_large)).
   unfold FST_Codes_transportD_concrete.
   rewrite ! transport_pp.

@@ -32,7 +32,7 @@ Definition Susp_ind {X : Type} (P : Susp X -> Type)
 := fun y => (match y return (_ -> P y)
      with North => (fun _ => H_N) | South => (fun _ => H_S) end) H_merid.
 
-Axiom Susp_comp_merid : forall {X : Type} (P : Susp X -> Type)
+Axiom Susp_ind_beta_merid : forall {X : Type} (P : Susp X -> Type)
   (H_N : P North) (H_S : P South)
   (H_merid : forall x:X, (merid x) # H_N = H_S)
   (x:X),
@@ -52,14 +52,14 @@ Defined.
 
 Global Arguments Susp_rec {X Y}%type_scope H_N H_S H_merid%function_scope _.
 
-Definition Susp_comp_nd_merid {X Y : Type}
+Definition Susp_rec_beta_merid {X Y : Type}
   {H_N H_S : Y} {H_merid : X -> H_N = H_S} (x:X)
 : ap (Susp_rec H_N H_S H_merid) (merid x) = H_merid x.
 Proof.
   apply (cancelL (transport_const (merid x) H_N)).
   transitivity (apD (Susp_rec H_N H_S H_merid) (merid x)).
   symmetry; refine (apD_const (Susp_rec H_N H_S H_merid) _).
-  refine (Susp_comp_merid (fun _ : Susp X => Y) _ _ _ _).
+  refine (Susp_ind_beta_merid (fun _ : Susp X => Y) _ _ _ _).
 Defined.
 
 (** ** Eta-rule. *)
@@ -74,13 +74,28 @@ Proof.
     (g := Susp_ind P (f North) (f South) (fun x : X => apD f (merid x)))
     _ _ @ _); simpl.
   apply moveR_pM. apply (concat (concat_p1 _)), (concatR (concat_1p _)^).
-  apply ap, inverse. refine (Susp_comp_merid _ _ _ _ _).
+  apply ap, inverse. refine (Susp_ind_beta_merid _ _ _ _ _).
 Defined.
+
+Definition Susp_rec_eta_homot {X Y : Type} (f : Susp X -> Y)
+: f == Susp_rec (f North) (f South) (fun x => ap f (merid x)).
+Proof.
+  refine (Susp_ind _ 1 1 _).
+  intro x.
+  refine ((transport_paths_FlFr _ _) @ _). apply moveR_Mp.
+  refine ((Susp_rec_beta_merid _) @ _). hott_simpl.
+  refine (_ @ (ap_V f _)). f_ap.
+  refine (inv_V _)^.
+Defined.  
 
 Definition Susp_eta `{Funext}
   {X : Type} {P : Susp X -> Type} (f : forall y, P y)
   : f = Susp_ind P (f North) (f South) (fun x => apD f (merid x))
 := path_forall _ _ (Susp_eta_homot f).
+
+Definition Susp_rec_eta `{Funext} {X Y : Type} (f : Susp X -> Y)
+  : f = Susp_rec (f North) (f South) (fun x => ap f (merid x))
+:= path_forall _ _ (Susp_rec_eta_homot f).
 
 (** ** Universal property *)
 
@@ -96,7 +111,7 @@ Proof.
   - intros [[N S] m].
     exact (Susp_rec N S m).
   - intros [[N S] m].
-    apply ap, path_arrow. intros x; apply Susp_comp_nd_merid.
+    apply ap, path_arrow. intros x; apply Susp_rec_beta_merid.
   - intros f.
     symmetry.
     refine (Susp_eta f @ _).
@@ -124,7 +139,7 @@ Proof.
   exists (n.2 North @ (n.2 South)^).
   intro x. apply moveL_pV.
   transitivity (ap (Susp_rec H_N H_S f) (merid x) @ n.2 South).
-  apply whiskerR, inverse, Susp_comp_nd_merid.
+  apply whiskerR, inverse, Susp_rec_beta_merid.
   refine (concat_Ap n.2 (merid x) @ _).
   apply (concatR (concat_p1 _)), whiskerL. apply ap_const.
 Defined.
@@ -162,7 +177,7 @@ Proof.
     rewrite transport_paths_FlFr.
     rewrite concat_p1; apply moveR_Vp; rewrite concat_p1.
     rewrite ap_compose.
-    rewrite !Susp_comp_nd_merid.
+    rewrite !Susp_rec_beta_merid.
     reflexivity.
   - reflexivity.
 Qed.
@@ -264,10 +279,10 @@ Proof.
     refine (ap_pp (Susp_rec North South (merid o f))
                   (merid x) (merid (point X))^ @ _).
     refine ((1 @@ ap_V _ _) @ _).
-    refine (Susp_comp_nd_merid _ @@ inverse2 (Susp_comp_nd_merid _)).
+    refine (Susp_rec_beta_merid _ @@ inverse2 (Susp_rec_beta_merid _)).
   - cbn. rewrite !inv_pp, !concat_pp_p, concat_1p; symmetry.
     apply moveL_Vp.
-    refine (concat_pV_inverse2 _ _ (Susp_comp_nd_merid (point X)) @ _).
+    refine (concat_pV_inverse2 _ _ (Susp_rec_beta_merid (point X)) @ _).
     do 2 apply moveL_Vp.
     refine (ap_pp_concat_pV _ _ @ _).
     do 2 apply moveL_Vp.
@@ -294,14 +309,15 @@ Definition loop_susp_counit_natural {X Y : pType} (f : X ->* Y)
 Proof.
   pointed_reduce.
   simple refine (Build_pHomotopy _ _); simpl.
-  - refine (Susp_ind _ _ _ _); cbn; try reflexivity; intros p.
+  - simple refine (Susp_ind _ _ _ _); cbn; try reflexivity; intros p.
     rewrite transport_paths_FlFr, ap_compose, concat_p1.
     apply moveR_Vp.
     refine (ap_compose
               (Susp_rec North South (fun x0 => merid (1 @ (ap f x0 @ 1))))
               (Susp_rec (point Y) (point Y) idmap) (merid p) @ _).
-    rewrite !Susp_comp_nd_merid.
-    apply concat_1p.
+    do 2 rewrite Susp_rec_beta_merid.
+    refine (concat_1p _ @ _). f_ap. f_ap. symmetry.
+    refine (Susp_rec_beta_merid _). 
   - reflexivity.
 Qed.
 
@@ -317,13 +333,13 @@ Proof.
     refine (ap_pp (Susp_rec (point X) (point X) idmap)
                   (merid p) (merid (point (point X = point X)))^ @ _).
     refine ((1 @@ ap_V _ _) @ _).
-    refine ((Susp_comp_nd_merid p @@ inverse2 (Susp_comp_nd_merid (point (loops X)))) @ _).
+    refine ((Susp_rec_beta_merid p @@ inverse2 (Susp_rec_beta_merid (point (loops X)))) @ _).
     exact (concat_p1 _).
   - destruct X as [X x]; cbn; unfold point.
     apply whiskerR.
     rewrite (concat_pV_inverse2
                (ap (Susp_rec x x idmap) (merid 1))
-               1 (Susp_comp_nd_merid 1)).
+               1 (Susp_rec_beta_merid 1)).
     rewrite (ap_pp_concat_pV (Susp_rec x x idmap) (merid 1)).
     rewrite ap_compose, (ap_compose _ (fun p => p @ 1)).
     rewrite concat_1p_1; apply ap.
@@ -339,9 +355,9 @@ Proof.
   - exact (merid (point X)).
   - intros x.
     rewrite transport_paths_FlFr, ap_idmap, ap_compose.
-    rewrite Susp_comp_nd_merid.
+    rewrite Susp_rec_beta_merid.
     apply moveR_pM; rewrite concat_p1.
-    refine (inverse2 (Susp_comp_nd_merid _) @ _).
+    refine (inverse2 (Susp_rec_beta_merid _) @ _).
     rewrite inv_pp, inv_V; reflexivity.
 Qed.
 
