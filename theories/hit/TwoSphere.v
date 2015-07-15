@@ -44,13 +44,14 @@ Proof.
   refine ((apD02_const (S2_rec P b s) surf)^ @ _).
   refine ((S2_ind_beta_surf _ _ _) @ _).
   hott_simpl. 
-  apply moveL_pM. hott_simpl. apply moveR_pV. apply moveL_Mp.
+  apply moveL_pM. hott_simpl. apply moveR_pV, moveL_Mp.
   path_via (concat_pp_p (transport2 (fun _ : S2 => P) surf b) 
      (transport_const 1 b) 1).
   refine (_ @ (concat_pp_1 _ _)^). hott_simpl.
   refine (_ @ (apD concat_p1 (transport2_const _ _))). simpl.
   symmetry.
-  refine (@dpath_path_FlFr _ _ (fun p : b = b => p @ 1) (fun p : b = b => p) _ _ _ _ _ _).
+  refine (@dpath_path_FlFr _ _ (fun p : b = b => p @ 1) (fun p : b = b => p) _ 
+                           _ _ _ _ _).
   refine ((concat_1p _) @ _). hott_simpl. apply moveL_pM.
   refine ((concat_pV _) @ _). apply moveL_pM. 
   refine ((concat_1p _) @ _). apply moveL_Mp.
@@ -59,11 +60,12 @@ Proof.
   refine ((inv_V _) @ _). apply moveL_Mp.
   path_via ((transport2_const surf b @@ s)^ @ (1 @@ s)).
   f_ap. refine (_ @ (concat2_1p s)^). refine (whiskerL_1p_1 _)^.
-  path_via (((transport2_const surf b)^ @@ s^) @ (1 @@ s)). f_ap.
-  apply concat2_V.
+  path_via (((transport2_const surf b)^ @@ s^) @ (1 @@ s)). 
+  { f_ap. apply concat2_V. }
   refine ((concat_concat2 _ _ _ _) @ _). hott_simpl.
   refine ((concat2_p1 _) @ _). 
-  path_via (whiskerR (transport2_const surf b)^ 1). f_ap. hott_simpl.
+  path_via (whiskerR (transport2_const surf b)^ 1). 
+  { f_ap. hott_simpl. }
   refine (_ @ (ap_V _ (transport2_const surf b))).
   hott_simpl.
 Defined.

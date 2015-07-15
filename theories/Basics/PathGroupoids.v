@@ -891,29 +891,15 @@ Proof.
   destruct r, p; reflexivity.
 Defined.
 
-Definition concat2_pp_p {A : Type} {x y z w : A} 
-           {p p' : x = y} {q q' : y = z} {r r' : z = w} 
-           (g : p = p') (h : q = q') (k : r = r')
-: (g @@ h) @@ k = (concat_pp_p _ _ _)
-                  @ (g @@ (h @@ k))
-                  @ (concat_pp_p _ _ _)^.
+Definition concat_pp_1 {A : Type} {x y z : A} 
+           (p : x = y) (q : y = z) 
+: (concat_pp_p p q 1) = (concat_p1 _) @ ((idpath p) @@ (concat_p1 q)^).
 Proof. 
     by path_induction. 
 Defined.
 
-Definition concat2_p_pp {A : Type} {x y z w : A} 
-           {p p' : x = y} {q q' : y = z} {r r' : z = w} 
-           (g : p = p') (h : q = q') (k : r = r')
-: g @@ (h @@ k) = (concat_p_pp _ _ _)
-                  @ ((g @@ h) @@ k)
-                  @ (concat_p_pp _ _ _)^.
-Proof. 
-  by path_induction. 
-Defined.
-  
-Definition concat_pp_1 {A : Type} {x y z : A} 
-           (p : x = y) (q : y = z) 
-: (concat_pp_p p q 1) = (concat_p1 _) @ ((idpath p) @@ (concat_p1 q)^).
+Definition concat_1_pp {A : Type} {x y z : A} (p : x = y) (q : y = z) 
+: (concat_pp_p 1 p q) = ((concat_1p p) @@ (idpath q)) @ (concat_1p _)^.
 Proof. 
     by path_induction. 
 Defined.
@@ -998,14 +984,24 @@ Definition concat2_1p {A : Type} {x y : A} {p q : x = y} (h : p = q) :
   :=
   match h with idpath => 1 end.
 
-(** 2D cancelling *)
+(** 2D canceling *)
 
-Definition cancel2L {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z} (g : p = p') (h k : q = q')
+Definition cancel2L {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z} 
+           (g : p = p') (h k : q = q')
 : (g @@ h = g @@ k) -> (h = k).
 Proof.
-  intro r. induction g.
-  induction p. induction q.
+  intro r. induction g, p, q.
   refine ((whiskerL_1p h)^ @ _). refine (_ @ (whiskerL_1p k)). 
+  refine (whiskerR _ _). refine (whiskerL _ _).
+  apply r.
+Defined.
+
+Definition cancel2R {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z} 
+           (g h : p = p') (k : q = q')
+: (g @@ k = h @@ k) -> (g = h).
+Proof.
+  intro r. induction k, p, q.
+  refine ((whiskerR_p1 g)^ @ _). refine (_ @ (whiskerR_p1 h)).
   refine (whiskerR _ _). refine (whiskerL _ _).
   apply r.
 Defined.
@@ -1138,7 +1134,6 @@ Definition apD02 {A : Type} {B : A -> Type} {x y : A} {p q : x = y}
   : apD f p = transport2 B r (f x) @ apD f q
   := match r with idpath => (concat_1p _)^ end.
 
-(** In a constant fibration, [apD] reduces to [ap], modulo [transport_const]. *)
 Definition apD02_const {A B : Type} (f : A -> B) {x y : A} {p q : x = y} (r : p = q)
 : apD02 f r = (apD_const f p) 
               @ (transport2_const r (f x) @@ ap02 f r)
