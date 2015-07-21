@@ -128,6 +128,17 @@ Proof.
   apply equiv_path_forall.
 Defined.
 
+Definition dpath_forall_constant
+  {A B:Type} (C : A -> B -> Type) (x1 x2:A) (p:x1=x2)
+  (f:forall (y1:B), C x1 y1) (g:forall (y2:B), C x2 y2)
+  : (forall (y1:B), transport (fun x => C x y1) p (f y1) = g y1)
+  <~>
+  (transport (fun x => forall y:B, C x y) p f = g).
+Proof.
+  destruct p.
+  apply equiv_path_forall.
+Defined.
+
 (** ** Functorial action *)
 
 (** The functoriality of [forall] is slightly subtle: it is contravariant in the domain type and covariant in the codomain, but the codomain is dependent on the domain. *)
