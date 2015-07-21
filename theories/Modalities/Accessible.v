@@ -3,7 +3,7 @@
 (** * Accessible subuniverses and modalities *)
 
 Require Import HoTT.Basics HoTT.Types HoTT.Tactics.
-Require Import Extensions NullHomotopy.
+Require Import Extensions NullHomotopy EquivalenceVarieties.
 Require Import ReflectiveSubuniverse Modality.
 
 Local Open Scope path_scope.
@@ -154,6 +154,7 @@ Module Accessible_Modalities_Theory
   Export Os Acc.
   Module Export Os_Theory := Modalities_Theory Os.
 
+  (** Unsurprisingly, the generators are connected. *)
   Global Instance isconnected_acc_gen O i : IsConnected O (acc_gen O i).
   Proof.
     apply isconnected_from_elim_to_O.
@@ -162,6 +163,40 @@ Module Accessible_Modalities_Theory
     exists (H.1 tt).
     exact (fun x => (H.2 x)^).
   Defined.
+
+  (** If all the generators are inhabited, some things become a bit simpler. *)
+  Section InhabitedGenerators.
+
+    Context (O : Modality) (inhab : forall i, acc_gen O i).
+
+    (** For testing modal-ness of types, it suffices for all maps out of a generator to be constant.  Probably one could do without [Funext].  *)
+    Definition inO_const_fromgen `{Funext} A
+               (c : forall i (f : acc_gen O i -> A), NullHomotopy f)
+    : In O A.
+    Proof.
+      apply (snd (inO_iff_isnull O A)); intros i.
+      apply (equiv_ooextendable_isequiv _ _)^-1.
+      refine (isequiv_adjointify _ _ _ _).
+      - intros f []; exact (c i f).1.
+      - intros f; apply path_arrow; intros x.
+        simpl; unfold composeD.
+        symmetry; exact ((c i f).2 x).
+      - intros g; apply path_arrow; intros [].
+        pose ((c i (g oD (null_to_local_generators (acc_gen O)) i)).2).
+        simpl in p; unfold composeD in p.
+        symmetry; apply p, inhab.
+    Defined.
+
+    (** In particular, all hprops are modal. *)
+    Definition inO_hprop_inhab_gen `{Funext} (A : Type) `{IsHProp A}
+    : In O A.
+    Proof.
+      apply inO_const_fromgen; intros i f.
+      exists (f (inhab i)).
+      intros; apply path_ishprop.
+    Defined.
+
+  End InhabitedGenerators.
 
 End Accessible_Modalities_Theory.
 
