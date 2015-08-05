@@ -8,6 +8,7 @@ then # autoreconf found
     autoreconf -fvi
 else
     echo 'Warning: autoreconf not found.  Falling back on git.'
+    echo 'This fallback may not work for building older versions of the library.  In that case, try installing autoconf or autoreconf.'
     if test -d .git
     then
 	git remote update
