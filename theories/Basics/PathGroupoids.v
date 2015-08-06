@@ -963,6 +963,27 @@ Definition concat2_1p {A : Type} {x y : A} {p q : x = y} (h : p = q) :
   :=
   match h with idpath => 1 end.
 
+Definition cancel2L {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z} 
+           (g : p = p') (h k : q = q')
+: (g @@ h = g @@ k) -> (h = k).
+Proof.
+  intro r. induction g, p, q.
+  refine ((whiskerL_1p h)^ @ _). refine (_ @ (whiskerL_1p k)). 
+  refine (whiskerR _ _). refine (whiskerL _ _).
+  apply r.
+Defined.
+
+Definition cancel2R {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z} 
+           (g h : p = p') (k : q = q')
+: (g @@ k = h @@ k) -> (g = h).
+Proof.
+  intro r. induction k, p, q.
+  refine ((whiskerR_p1 g)^ @ _). refine (_ @ (whiskerR_p1 h)).
+  refine (whiskerR _ _). refine (whiskerL _ _).
+  apply r.
+Defined.
+
+
 (** Whiskering and composition *)
 
 (* The naming scheme for these is a little unclear; should [pp] refer to concatenation of the 2-paths being whiskered or of the paths we are whiskering by? *)
@@ -1089,6 +1110,16 @@ Definition apD02 {A : Type} {B : A -> Type} {x y : A} {p q : x = y}
   (f : forall x, B x) (r : p = q)
   : apD f p = transport2 B r (f x) @ apD f q
   := match r with idpath => (concat_1p _)^ end.
+
+Definition apD02_const {A B : Type} (f : A -> B) {x y : A} {p q : x = y} (r : p = q)
+: apD02 f r = (apD_const f p) 
+              @ (transport2_const r (f x) @@ ap02 f r)
+              @ (concat_p_pp _ _ _)^
+              @ (whiskerL (transport2 _ r (f x)) (apD_const f q)^)
+:=
+  match r with idpath =>
+    match p with idpath => 1
+    end end.
 
 (* And now for a lemma whose statement is much longer than its proof. *)
 Definition apD02_pp {A} (B : A -> Type) (f : forall x:A, B x) {x y : A}
