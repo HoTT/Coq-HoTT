@@ -126,7 +126,7 @@ Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
   Proof.
     pose (funext_Op O); split.
     - intros X_inO u.
-      apply (equiv_inverse (equiv_ooextendable_isequiv _ _)).
+      apply (equiv_inverse (equiv_ooextendable_isequiv@{a a i i i i i} _ _)).
       refine (cancelR_isequiv (fun x (u:Unit) => x)).
       apply X_inO.
     - intros ext; specialize (ext tt).
