@@ -340,7 +340,7 @@ Section on_both.
     all:repeat (refine isequiv_compose; []).
     { destruct s, d; cbn.
       intro p; destruct p; cbn.
-      refine ((Pmor_iso_adjust _ _)^-1 o _).
+      refine ((@Pmor_iso_adjust proj1_sig proj2_sig proj2_sig0)^-1 o _).
       refine (@Pidtoiso _ _ _). }
     { refine isequiv_functor_sigma.
       destruct s, d.
