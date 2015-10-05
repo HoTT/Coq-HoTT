@@ -96,7 +96,7 @@ Module Nullification_Modalities <: Modalities.
              (A_inO : In@{u a i} O A) (z z' : A)
   : In@{u a i} O (z = z').
   Proof.
-    apply (LocRSUTh.inO_paths@{u a i i}); assumption.
+    apply (LocRSUTh.inO_paths@{u a i i i}); assumption.
   Defined.
 
 End Nullification_Modalities.

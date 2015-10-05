@@ -46,4 +46,4 @@ fi
 # or using more evil (but portable) 'eval', do
 # $ eval 'exec "$COQC" '"$COQ_ARGS"' "$@"'
 # Instead, we duplicate code, because it's simpler.
-exec "$COQC" -no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter "$@"
+exec "$COQC" -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter "$@"
