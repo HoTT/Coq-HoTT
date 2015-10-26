@@ -16,7 +16,7 @@ cross-pollinates with the [HoTT-Agda](https://github.com/HoTT/HoTT-Agda) library
 
 ## INSTALLATION
 
-Installation details are explained in the file `INSTALL.md`. 
+Installation details are explained in the file [`INSTALL.md`](https://github.com/HoTT/HoTT/blob/master/INSTALL.md). 
 
 ## USAGE
 
@@ -35,10 +35,10 @@ to-do list.
 ## CONTRIBUTING
 
 Contributions to the HoTT library are very welcome!  For style
-guidelines and further information, see the file `STYLE.md`.
+guidelines and further information, see the file [`STYLE.md`](https://github.com/HoTT/HoTT/blob/master/STYLE.md).
 
 ## LICENSING
 
 The library is released under the permissive BSD 2-clause license, see the file
-`LICENSE.txt` for further information. In brief, this means you can do whatever you like
+[`LICENSE.txt`](https://github.com/HoTT/HoTT/blob/master/LICENSE.txt) for further information. In brief, this means you can do whatever you like
 with it, as long as you preserve the Copyright messages. And of course, no warranty!
