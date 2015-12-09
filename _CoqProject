@@ -38,6 +38,7 @@ theories/Spaces/Nat.v
 theories/Tactics.v
 theories/Tactics/RewriteModuloAssociativity.v
 theories/Tactics/EquivalenceInduction.v
+theories/Tactics/EvalIn.v
 theories/Tactics/BinderApply.v
 theories/TruncType.v
 theories/Pointed.v
