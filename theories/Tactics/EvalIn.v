@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
 (** * Evaluating tactics on terms *)
-Require Import Basics.Overture.
+Require Import Basics.Overture Basics.PathGroupoids.
 
 (** It sometimes happens, in the course of writing a tactic, that we have some term in an Ltac variable (more precisely, we have what Ltac calls a "constr") and we would like to act on it with some tactic such as [cbv] or [rewrite].  Ordinarily, such tactics only act on the current *goal*, and generally they have a version such as [rewrite ... in ...] which acts on something in the current *context*, but neither of these is the same as acting on a term held in an Ltac variable.
 
@@ -40,4 +40,42 @@ Proof.
   pose x as b.
   (** we get a [b : B] *)
   (** We [Abort], so that we don't get an extra constant floating around. *)
+Abort.
+
+(** ** Rewriting with reflexivity *)
+
+(** As an example application, we define a tactic that takes a lemma whose definition is [idpath] and behaves like [rewrite], except that it doesn't insert any transport lemmas like [Overture.internal_paths_rew_r].  In other words, it does a [change], but leverages the pattern-matching and substitution engine of [rewrite] to decide what to [change] into. *)
+
+(** We use a dummy inductive type since [rewrite] acts on the *type* of a hypothesis rather than its body (if any). *)
+Inductive dummy (A:Type) := adummy : dummy A.
+
+Ltac rewrite_refl H :=
+  match goal with
+    | [ |- ?X ] => 
+      let dX' := eval_in ltac:(fun H' => rewrite H in H') (adummy X) in
+      match type of dX' with
+        | dummy ?X' => change X'
+      end
+  end.
+
+(** Here's what it would look like with ordinary [rewrite]: *)
+Example rewrite_refl_example {A B : Type} (x : A) (f : A -> B) :
+  ap f idpath = idpath :> (f x = f x).
+Proof.
+  rewrite ap_1.
+  reflexivity.
+  (** Show Proof. *)
+  (** ==> (fun (A B : Type) (x : A) (f : A -> B) =>
+ Overture.internal_paths_rew_r (f x = f x) (ap f 1) 1
+   (fun p : f x = f x => p = 1) 1 (ap_1 x f)) *)
+Abort.
+
+(** And here's what we get with [rewrite_refl]: *)
+Example rewrite_refl_example {A B : Type} (x : A) (f : A -> B) :
+  ap f idpath = idpath :> (f x = f x).
+Proof.
+  rewrite_refl @ap_1.
+  reflexivity.
+  (** Show Proof. *)
+  (** ==> (fun (A B : Type) (x : A) (f : A -> B) => 1) *)
 Abort.
