@@ -73,6 +73,8 @@ Require Export Algebra.Aut.
 Require Export Algebra.ooAction.
 
 Require Export HoTT.Tactics.
+Require Export HoTT.Tactics.EvalIn.
+Require Export HoTT.Tactics.BinderApply.
 Require Export HoTT.Tactics.RewriteModuloAssociativity.
 Require Export HoTT.Tactics.EquivalenceInduction.
 
