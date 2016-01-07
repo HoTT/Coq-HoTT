@@ -76,8 +76,6 @@ induction n.
 * simpl. exact IHn.
 Defined.
 
-(*  Empty_Is_HProp : IsTrunc -1 Empty.  *)
-
 Lemma code_Is_HProp : forall (m n : nat), IsTrunc -1 (code m n).
 Proof.
   induction m, n.
@@ -88,8 +86,8 @@ Proof.
 Defined.
 
 Definition encode (m n : nat): m = n -> code m n.
-intro p.
-  exact (transport (code m) p (r m)). (* @transport nat (code m) m n p (r m). *)
+path_induction.
+exact (r m).
 Defined.
 
 Fixpoint decode (m n : nat) : code m n -> m = n.
@@ -98,22 +96,16 @@ induction m, n.
 * exact idpath.
 * elim u.
 * elim u.
-* apply (ap S). exact (decode m n u). (* @ap nat nat S m n *)
-Defined.
-
-Lemma decode_encode_diag : forall (n : nat), decode n n (encode n n idpath) = idpath.
-Proof.
-  induction n.
-  * trivial.
-  * simpl. rewrite IHn. trivial.
+* exact (ap S (decode m n u)).
 Defined.
 
 Lemma decode_encode : forall (m n : nat) (p : m = n), decode m n (encode m n p) = p.
 Proof.
-  apply paths_ind'.
+  apply paths_ind'. (* Why does [path_induction] not work? *)
+  simpl.
   induction a.
   * trivial.
-  * simpl. apply decode_encode_diag.
+  * simpl. rewrite IHa. trivial.
 Defined.
 
 Lemma encode_decode : forall (m n : nat) (u : code m n), encode m n (decode m n u) = u.
@@ -121,43 +113,21 @@ Proof.
   intros.
   apply hprop_allpath.
   apply code_Is_HProp.
-Qed.
-
-(* by the way *)
-Lemma O_is_not_a_successor : forall (m : nat), ~ (S m = O).
-Proof.
-  intros.
-  unfold not.
-  exact (encode (S m) O).
-Qed.
-
-Lemma S_is_injective : forall (m n : nat), (S m = S n) -> m = n.
-Proof.
-  intros.
-  apply decode.
-  apply (encode (S m) (S n)).
-  exact H.
-Qed.
+Defined.
 
 Proposition equiv_types : forall (m n : nat), Equiv (code m n) (m = n).
 Proof.
   intros.
   refine (equiv_adjointify (decode m n) (encode m n) _ _).
-    unfold Sect. apply decode_encode.
-    unfold Sect. apply encode_decode.
-Qed.
+  * unfold Sect. apply decode_encode.
+  * unfold Sect. apply encode_decode.
+Defined.
 
-Lemma idmn_Is_HProp : forall (m n : nat), IsTrunc -1 (m = n).
+Proposition hset_nat : IsHSet nat.
 Proof.
-  intros.
+  intros m n.
   exact (@trunc_equiv' (code m n) (m = n) (equiv_types m n) -1 (code_Is_HProp m n)).
-Qed.
-
-Proposition N_is_HSet : IsHSet nat.
-Proof.
-  repeat intro.
-  apply idmn_Is_HProp.
-Qed.
+Defined.
 
 
 
