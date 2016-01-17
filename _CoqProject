@@ -24,7 +24,6 @@ theories/Types/Sum.v
 theories/Types/Wtype.v
 theories/Types/Equiv.v
 theories/Types/Universe.v
-theories/Types/Nat.v
 theories/Types.v
 theories/EquivGroupoids.v
 theories/Fibrations.v
