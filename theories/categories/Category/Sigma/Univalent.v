@@ -338,9 +338,9 @@ Section on_both.
     { exact (@idtoiso A _ _). }
     1:revert Pisotoid; clear; intro Pisotoid.
     all:repeat (refine isequiv_compose; []).
-    { destruct s, d; cbn.
+    { destruct s as [s0 s1], d as [d0 d1]; cbn.
       intro p; destruct p; cbn.
-      refine ((@Pmor_iso_adjust proj1_sig proj2_sig proj2_sig0)^-1 o _).
+      refine ((@Pmor_iso_adjust s0 s1 d1)^-1 o _).
       refine (@Pidtoiso _ _ _). }
     { refine isequiv_functor_sigma.
       destruct s, d.
