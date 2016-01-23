@@ -28,19 +28,22 @@ Section Extensions.
       - >= max(B,P)
       - >= max(A,P).
     The following [Check] verifies that this is in fact the case. *)
-  Check ExtensionAlong@{a b p m n}.
+  (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
+  Definition check_ExtensionAlong@{a b p m n} : True.
+  Proof.
+    Check ExtensionAlong@{a b p m n}.
+  Abort.
   (** If necessary, we could coalesce the latter two with a universe annotation, but that would make the definition harder to read. *)
 
   (** It's occasionally useful to be able to modify those max universes. *)
-  Definition lift_extensionalong {A : Type@{a}} {B : Type@{b}} (f : A -> B)
+  Definition lift_extensionalong@{a b p m1 n1 m2 n2} {A : Type@{a}} {B : Type@{b}} (f : A -> B)
              (P : B -> Type@{p}) (d : forall x:A, P (f x))
   : ExtensionAlong@{a b p m1 n1} f P d -> ExtensionAlong@{a b p m2 n2} f P d
     := fun ext => (ext.1 ; ext.2).
-  Check lift_extensionalong@{a b p m1 n1 m2 n2}.
   (** We called it [lift_extensionalong], but in fact it doesn't require the new universes to be bigger than the old ones, only that they both satisfy the max condition. *)
-  Definition lower_extensionalong {A : Type@{a}} {B : Type@{b}} (f : A -> B)
+  Definition lower_extensionalong@{a b p e0 e1} {A : Type@{a}} {B : Type@{b}} (f : A -> B)
              (P : B -> Type@{p}) (d : forall x:A, P (f x))
-    := lift_extensionalong f P d.
+    := lift_extensionalong@{a b p e0 e1 e0 e1} f P d.
 
   Definition equiv_path_extension `{Funext} {A B : Type} {f : A -> B}
              {P : B -> Type} {d : forall x:A, P (f x)}
@@ -90,7 +93,7 @@ Section Extensions.
 
   (** Here is the iterated version. *)
 
-  Fixpoint ExtendableAlong
+  Fixpoint ExtendableAlong@{i j k l}
            (n : nat) {A : Type@{i}} {B : Type@{j}}
            (f : A -> B) (C : B -> Type@{k}) : Type@{l}
     := match n with
@@ -105,12 +108,16 @@ Section Extensions.
       - size of B
       - size of C
       - size of result (>= A,B,C) *)
-  Check ExtendableAlong@{a b c r}.
+  (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
+  Definition check_ExtendableAlong@{a b c r} : True.
+  Proof.
+    Check ExtendableAlong@{a b c r}.
+  Abort.
 
   Global Arguments ExtendableAlong n%nat_scope {A B}%type_scope (f C)%function_scope.
 
   (** We can modify the universes, as with [ExtensionAlong]. *)
-  Definition lift_extendablealong
+  Definition lift_extendablealong@{i j k l1 l2}
              (n : nat) {A : Type@{i}} {B : Type@{j}}
              (f : A -> B) (C : B -> Type@{k})
   : ExtendableAlong@{i j k l1} n f C -> ExtendableAlong@{i j k l2} n f C.
@@ -121,12 +128,16 @@ Section Extensions.
       + intros g; exact (lift_extensionalong _ _ _ (fst ext g)).
       + intros h k; exact (IH _ (snd ext h k)).
   Defined.
-  Check lift_extendablealong@{i j k l1 l2}.
+  (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
+  Definition check_lift_extendablealong@{i j k l1 l2} : True.
+  Proof.
+    Check lift_extendablealong@{i j k l1 l2}.
+  Abort.
 
-  Definition lower_extendablealong
+  Definition lower_extendablealong@{i j k e}
              (n : nat) {A : Type@{i}} {B : Type@{j}}
              (f : A -> B) (C : B -> Type@{k})
-    := lift_extendablealong n f C.
+    := lift_extendablealong@{i j k e e} n f C.
 
   Definition equiv_extendable_pathsplit `{Funext} (n : nat)
              {A B : Type} (C : B -> Type) (f : A -> B)
@@ -312,27 +323,34 @@ Section Extensions.
 
   (** And the oo-version. *)
 
-  Definition ooExtendableAlong
+  Definition ooExtendableAlong@{i j k l}
              {A : Type@{i}} {B : Type@{j}}
              (f : A -> B) (C : B -> Type@{k}) : Type@{l}
     := forall n, ExtendableAlong@{i j k l} n f C.
   (** Universe parameters are the same as for [ExtendableAlong]. *)
-  Check ooExtendableAlong@{a b c r}.
+  (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
+  Definition check_ooExtendableAlong@{a b c r} : True.
+  Proof.
+    Check ooExtendableAlong@{a b c r}.
+  Abort.
 
   Global Arguments ooExtendableAlong {A B}%type_scope (f C)%function_scope.
 
   (** Universe modification. *)
-  Definition lift_ooextendablealong
+  Definition lift_ooextendablealong@{i j k l1 l2}
              {A : Type@{i}} {B : Type@{j}}
              (f : A -> B) (C : B -> Type@{k})
   : ooExtendableAlong@{i j k l1} f C -> ooExtendableAlong@{i j k l2} f C
     := fun ext n => lift_extendablealong n f C (ext n).
-  Check lift_ooextendablealong@{i j k l1 l2}.
-
-  Definition lower_ooextendablealong
+  (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
+  Definition check_ooextendablealong@{i j k l1 l2} : True.
+  Proof.
+    Check lift_ooextendablealong@{i j k l1 l2}.
+  Abort.
+  Definition lower_ooextendablealong@{i j k e1 e2}
              {A : Type@{i}} {B : Type@{j}}
              (f : A -> B) (C : B -> Type@{k})
-    := lift_ooextendablealong f C.
+    := lift_ooextendablealong@{i j k e1 e2} f C.
 
   Definition isequiv_ooextendable `{Funext}
              {A B : Type} (C : B -> Type) (f : A -> B)

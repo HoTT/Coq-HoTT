@@ -75,27 +75,27 @@ Ltac transitivity x := etransitivity x.
 Notation Type0 := Set.
 
 (** Define [Type₁] (really, [Type_i] for any [i > 0]) so that we can enforce having universes that are not [Set].  In trunk, universes will not be unified with [Set] in most places, so we want to never use [Set] at all. *)
-Definition Type1 := Eval hnf in let gt := (Set : Type@{i}) in Type@{i}.
+Definition Type1@{i} := Eval hnf in let gt := (Set : Type@{i}) in Type@{i}.
 Arguments Type1 / .
 Identity Coercion unfold_Type1 : Type1 >-> Sortclass.
 
 (** We also define "the next couple of universes", which are actually an arbitrary universe with another one or two strictly below it.  Note when giving universe annotations to these that their universe parameters appear in order of *decreasing* size. *)
-Definition Type2 := Eval hnf in let gt := (Type1 : Type@{i}) in Type@{i}.
+Definition Type2@{i j} := Eval hnf in let gt := (Type1@{j} : Type@{i}) in Type@{i}.
 Arguments Type2 / .
 Identity Coercion unfold_Type2 : Type2 >-> Sortclass.
 
-Definition Type3 := Eval hnf in let gt := (Type2 : Type@{i}) in Type@{i}.
+Definition Type3@{i j k} := Eval hnf in let gt := (Type2@{j k} : Type@{i}) in Type@{i}.
 Arguments Type3 / .
 Identity Coercion unfold_Type3 : Type3 >-> Sortclass.
 
 (** Along the same lines, here is a universe with an extra universe parameter that's less than or equal to it in size.  The [gt] isn't necessary to force the larger universe to be bigger than [Set] (since we refer to the smaller universe by [Type1] which is already bigger than [Set]), but we include it anyway to make the universe parameters occur again in (now non-strictly) decreasing order. *)
-Definition Type2le := Eval hnf in let gt := (Set : Type@{i}) in
-                                  let ge := ((fun x => x) : Type1 -> Type@{i}) in Type@{i}.
+Definition Type2le@{i j} := Eval hnf in let gt := (Set : Type@{i}) in
+                                        let ge := ((fun x => x) : Type1@{j} -> Type@{i}) in Type@{i}.
 Arguments Type2le / .
 Identity Coercion unfold_Type2le : Type2le >-> Sortclass.
 
-Definition Type3le := Eval hnf in let gt := (Set : Type@{i}) in
-                                  let ge := ((fun x => x) : Type2le@{j k} -> Type@{i}) in Type@{i}.
+Definition Type3le@{i j k} := Eval hnf in let gt := (Set : Type@{i}) in
+                                          let ge := ((fun x => x) : Type2le@{j k} -> Type@{i}) in Type@{i}.
 Arguments Type3le / .
 Identity Coercion unfold_Type3le : Type3le >-> Sortclass.
 

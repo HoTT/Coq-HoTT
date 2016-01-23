@@ -10,44 +10,38 @@ Local Open Scope path_scope.
 
 Module Type Modalities.
 
-  Parameter Modality : Type2@{u a}.
+  Parameter Modality@{u a} : Type2@{u a}.
 
   (** These are the same as for a reflective subuniverse. *)
 
-  Parameter O_reflector : forall (O : Modality@{u a}),
+  Parameter O_reflector@{u a i} : forall (O : Modality@{u a}),
                             Type2le@{i a} -> Type2le@{i a}.
-  Check O_reflector@{u a i}.    (** Verify that we have the right number of universes *)
 
-  Parameter In : forall (O : Modality@{u a}),
+  Parameter In@{u a i} : forall (O : Modality@{u a}),
                             Type2le@{i a} -> Type2le@{i a}.
-  Check In@{u a i}.
 
-  Parameter O_inO : forall (O : Modality@{u a}) (T : Type@{i}),
+  Parameter O_inO@{u a i} : forall (O : Modality@{u a}) (T : Type@{i}),
                                In@{u a i} O (O_reflector@{u a i} O T).
-  Check O_inO@{u a i}.
 
-  Parameter to : forall (O : Modality@{u a}) (T : Type@{i}),
+  Parameter to@{u a i} : forall (O : Modality@{u a}) (T : Type@{i}),
                    T -> O_reflector@{u a i} O T.
-  Check to@{u a i}.
 
-  Parameter inO_equiv_inO :
+  Parameter inO_equiv_inO@{u a i j k} :
       forall (O : Modality@{u a}) (T : Type@{i}) (U : Type@{j})
              (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
         (** We add an extra universe parameter that's bigger than both [i] and [j].  This seems to be necessary for the proof of repleteness in some examples, such as easy modalities. *)
         let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
         let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
         In@{u a j} O U.
-  Check inO_equiv_inO@{u a i j k}.
 
-  Parameter hprop_inO
+  Parameter hprop_inO@{u a i}
   : Funext -> forall (O : Modality@{u a}) (T : Type@{i}),
                 IsHProp (In@{u a i} O T).
-  Check hprop_inO@{u a i}.
 
   (** Now instead of [extendable_to_O], we have an ordinary induction principle. *)
 
   (** Unfortunately, we have to define these parameters as [_internal] versions and redefine them later.  This is because eventually we want the [In] fields of [O_ind] and [O_ind_beta] to refer to the [In] typeclass defined for [ReflectiveSubuniverse]s, but in order to prove that modalities *are* reflective subuniverses we need to already have [O_ind] and [O_ind_beta]. *)
-  Parameter O_ind_internal
+  Parameter O_ind_internal@{u a i j k}
   : forall (O : Modality@{u a})
            (A : Type2le@{i a})
            (B : O_reflector@{u a i} O A -> Type2le@{j a})
@@ -56,21 +50,18 @@ Module Type Modalities.
       let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
       let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
       (forall a, B (to O A a)) -> forall a, B a.
-  Check O_ind_internal@{u a i j k}.
 
-  Parameter O_ind_beta_internal
+  Parameter O_ind_beta_internal@{u a i j k}
   : forall (O : Modality@{u a})
            (A : Type@{i}) (B : O_reflector O A -> Type@{j})
            (B_inO : forall oa, In@{u a j} O (B oa))
            (f : forall a : A, B (to O A a)) (a:A),
       O_ind_internal@{u a i j k} O A B B_inO f (to O A a) = f a.
-  Check O_ind_beta_internal@{u a i j k}.
 
-  Parameter minO_paths
+  Parameter minO_paths@{u a i}
   : forall (O : Modality@{u a})
            (A : Type2le@{i a}) (A_inO : In@{u a i} O A) (z z' : A),
       In@{u a i} O (z = z').
-  Check minO_paths@{u a i}.
 
 End Modalities.
 
@@ -85,7 +76,7 @@ Module Modalities_to_ReflectiveSubuniverses
 
   Import Os.
 
-  Fixpoint O_extendable (O : Modality@{u a})
+  Fixpoint O_extendable@{u a i j k} (O : Modality@{u a})
            (A : Type@{i}) (B : O_reflector O A -> Type@{j})
            (B_inO : forall a, In@{u a j} O (B a)) (n : nat)
   : ExtendableAlong@{i i j k} n (to O A) B.
@@ -105,25 +96,25 @@ Module Modalities_to_ReflectiveSubuniverses
 
   Definition O_reflector := O_reflector.
   (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3807 *)
-  Definition In : forall (O : ReflectiveSubuniverse@{u a}),
+  Definition In@{u a i} : forall (O : ReflectiveSubuniverse@{u a}),
                    Type2le@{i a} -> Type2le@{i a}
     := In@{u a i}.
-  Definition O_inO : forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
+  Definition O_inO@{u a i} : forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
                                In@{u a i} O (O_reflector@{u a i} O T)
     := O_inO@{u a i}.
   Definition to := to.
-  Definition inO_equiv_inO :
+  Definition inO_equiv_inO@{u a i j k} :
       forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}) (U : Type@{j})
              (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
         In@{u a j} O U
     := inO_equiv_inO@{u a i j k}.
-  Definition hprop_inO
+  Definition hprop_inO@{u a i}
   : Funext -> forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
                 IsHProp (In@{u a i} O T)
     := hprop_inO@{u a i}.
 
   (** Corollary 7.7.8, part 1 *)
-  Definition extendable_to_O (O : ReflectiveSubuniverse@{u a})
+  Definition extendable_to_O@{u a i j k} (O : ReflectiveSubuniverse@{u a})
              {P : Type2le@{i a}} {Q : Type2le@{j a}} {Q_inO : In@{u a j} O Q}
   : ooExtendableAlong@{i i j k} (to O P) (fun _ => Q)
     := fun n => O_extendable O P (fun _ => Q) (fun _ => Q_inO) n.
@@ -137,13 +128,12 @@ Module Type SigmaClosed (Os : ReflectiveSubuniverses).
 
   Import Os.
 
-  Parameter inO_sigma
+  Parameter inO_sigma@{u a i j k}
   : forall (O : ReflectiveSubuniverse@{u a})
            (A:Type@{i}) (B:A -> Type@{j})
            (A_inO : In@{u a i} O A)
            (B_inO : forall a, In@{u a j} O (B a)),
       In@{u a k} O {x:A & B x}.
-  Check inO_sigma@{u a i j k}.    (** Verify that we have the right number of universes *)
 
 End SigmaClosed.
 
@@ -159,32 +149,32 @@ Module ReflectiveSubuniverses_to_Modalities
 
   Definition O_reflector := O_reflector.
   (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3807 *)
-  Definition In := In@{u a i}.
-  Definition O_inO := @O_inO@{u a i}.
+  Definition In@{u a i} := In@{u a i}.
+  Definition O_inO@{u a i} := @O_inO@{u a i}.
   Definition to := to.
-  Definition inO_equiv_inO := @inO_equiv_inO@{u a i j k}.
-  Definition hprop_inO := hprop_inO@{u a i}.
+  Definition inO_equiv_inO@{u a i j k} := @inO_equiv_inO@{u a i j k}.
+  Definition hprop_inO@{u a i} := hprop_inO@{u a i}.
 
   (** The reason Coq won't actually accept this as a module of type [Modalities] is that the following definitions of [O_ind_internal] and [O_ind_beta_internal] have an extra universe parameter [k] that's at least as large as both [i] and [j].  This is because [extendable_to_O] has such a parameter, which in turn is because [ooExtendableAlong] does.  Unfortunately, we can't directly instantiate [k] to [max(i,j)] because Coq doesn't allow "algebraic universes" in arbitrary position.  We could probably work around it by defining [ExtendableAlong] inductively rather than recursively, but given the non-usefulness of this construction in practice, that doesn't seem to be worth the trouble at the moment. *)
-  Definition O_ind_internal (O : Modality@{u a})
+  Definition O_ind_internal@{u a i j k} (O : Modality@{u a})
              (A : Type@{i}) (B : O_reflector@{u a i} O A -> Type@{j})
              (B_inO : forall oa, In@{u a j} O (B oa))
   : (forall a, B (to O A a)) -> forall a, B a
-  := fun g => pr1 ((O_ind_from_inO_sigma@{u a i j k k j} O (inO_sigma O))
+  := fun g => pr1 ((O_ind_from_inO_sigma@{u a i j j j k k} O (inO_sigma O))
                      A B B_inO g).
 
-  Definition O_ind_beta_internal (O : Modality@{u a})
+  Definition O_ind_beta_internal@{u a i j k} (O : Modality@{u a})
              (A : Type@{i}) (B : O_reflector@{u a i} O A -> Type@{j})
              (B_inO : forall oa, In@{u a j} O (B oa))
              (f : forall a : A, B (to O A a)) (a:A)
   : O_ind_internal O A B B_inO f (to O A a) = f a
-  := pr2 ((O_ind_from_inO_sigma@{u a i j k k j} O (inO_sigma O))
+  := pr2 ((O_ind_from_inO_sigma@{u a i j j j k k} O (inO_sigma O))
                      A B B_inO f) a.
 
-  Definition minO_paths (O : Modality@{u a})
+  Definition minO_paths@{u a i} (O : Modality@{u a})
              (A : Type@{i}) (A_inO : In@{u a i} O A) (z z' : A)
   : In O (z = z')
-  := @inO_paths@{u a i i i} O A A_inO z z'.
+  := @inO_paths@{u a i i} O A A_inO z z'.
 
 End ReflectiveSubuniverses_to_Modalities.
 
@@ -199,36 +189,30 @@ On the other hand, in other examples (such as [~~] and open modalities) it is ea
 
 Module Type EasyModalities.
 
-  Parameter Modality : Type2@{u a}.
-  Check Modality@{u a}.    (** Verify that we have the right number of universes *)
+  Parameter Modality@{u a} : Type2@{u a}.
 
-  Parameter O_reflector : forall (O : Modality@{u a}),
+  Parameter O_reflector@{u a i} : forall (O : Modality@{u a}),
                             Type2le@{i a} -> Type2le@{i a}.
-  Check O_reflector@{u a i}.
 
-  Parameter to : forall (O : Modality@{u a}) (T : Type@{i}),
+  Parameter to@{u a i} : forall (O : Modality@{u a}) (T : Type@{i}),
                    T -> O_reflector@{u a i} O T.
-  Check to@{u a i}.
 
-  Parameter O_indO
+  Parameter O_indO@{u a i j}
   : forall (O : Modality@{u a}) (A : Type@{i})
            (B : O_reflector@{u a i} O A -> Type@{j}),
       (forall a, O_reflector@{u a j} O (B (to O A a)))
       -> forall z, O_reflector@{u a j} O (B z).
-  Check O_indO@{u a i j}.
 
-  Parameter O_indO_beta
+  Parameter O_indO_beta@{u a i j}
   : forall (O : Modality@{u a}) (A : Type@{i})
            (B : O_reflector@{u a i} O A -> Type@{j})
            (f : forall a, O_reflector@{u a j} O (B (to O A a))) a,
       O_indO O A B f (to O A a) = f a.
-  Check O_indO_beta@{u a i j}.
 
-  Parameter minO_pathsO
+  Parameter minO_pathsO@{u a i}
   : forall (O : Modality@{u a}) (A : Type@{i})
            (z z' : O_reflector@{u a i} O A),
       IsEquiv (to@{u a i} O (z = z')).
-  Check minO_pathsO@{u a i}.
 
 End EasyModalities.
 
@@ -239,14 +223,14 @@ Module EasyModalities_to_Modalities (Os : EasyModalities)
 
   Definition Modality := Modality.
   (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3807 *)
-  Definition O_reflector := O_reflector@{u a i}.
-  Definition to := to@{u a i}.
+  Definition O_reflector@{u a i} := O_reflector@{u a i}.
+  Definition to@{u a i} := to@{u a i}.
 
-  Definition In
+  Definition In@{u a i}
   : forall (O : Modality@{u a}), Type@{i} -> Type@{i}
   := fun O A => IsEquiv@{i i} (to O A).
 
-  Definition hprop_inO `{Funext} (O : Modality@{u a})
+  Definition hprop_inO@{u a i} `{Funext} (O : Modality@{u a})
              (T : Type@{i})
   : IsHProp (In@{u a i} O T).
   Proof.
@@ -254,7 +238,7 @@ Module EasyModalities_to_Modalities (Os : EasyModalities)
     exact (hprop_isequiv (to O T)).
   Defined.
 
-  Definition O_ind_internal (O : Modality@{u a})
+  Definition O_ind_internal@{u a i j k} (O : Modality@{u a})
              (A : Type@{i}) (B : O_reflector@{u a i} O A -> Type@{j})
              (B_inO : forall oa, In@{u a j} O (B oa))
   : let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
@@ -268,18 +252,18 @@ Module EasyModalities_to_Modalities (Os : EasyModalities)
     intros a; apply to, f.
   Defined.
 
-  Definition O_ind_beta_internal (O : Modality@{u a})
+  Definition O_ind_beta_internal@{u a i j k} (O : Modality@{u a})
              (A : Type@{i}) (B : O_reflector@{u a i} O A -> Type@{j})
              (B_inO : forall oa, In@{u a j} O (B oa))
              (f : forall a : A, B (to O A a)) (a:A)
-  : O_ind_internal O A B B_inO f (to O A a) = f a.
+  : O_ind_internal@{u a i j k} O A B B_inO f (to O A a) = f a.
   Proof.
     unfold O_ind_internal.
     apply moveR_equiv_V.
     apply @O_indO_beta with (f := fun x => to O _ (f x)).
   Qed.
 
-  Definition O_inO (O : Modality@{u a}) (A : Type@{i})
+  Definition O_inO@{u a i} (O : Modality@{u a}) (A : Type@{i})
   : In@{u a i} O (O_reflector@{u a i} O A).
   Proof.
     refine (isequiv_adjointify (to O (O_reflector O A))
@@ -293,14 +277,14 @@ Module EasyModalities_to_Modalities (Os : EasyModalities)
   Defined.
 
   (** It seems to be surprisingly hard to show repleteness (without univalence).  We basically have to manually develop enough functoriality of [O] and naturality of [to O]. *)
-  Definition inO_equiv_inO (O : Modality@{u a}) (A : Type@{i}) (B : Type@{j})
+  Definition inO_equiv_inO@{u a i j k} (O : Modality@{u a}) (A : Type@{i}) (B : Type@{j})
     (A_inO : In@{u a i} O A) (f : A -> B) (feq : IsEquiv f)
   : In@{u a j} O B.
   Proof.
     simple refine (isequiv_commsq (to O A) (to O B) f
              (O_ind_internal O A (fun _ => O_reflector O B) _ (fun a => to O B (f a))) _).
     - intros; apply O_inO.
-    - intros a; refine (O_ind_beta_internal O A (fun _ => O_reflector O B) _ _ a).
+    - intros a; refine (O_ind_beta_internal@{u a i j k} O A (fun _ => O_reflector O B) _ _ a).
     - apply A_inO.
     - simple refine (isequiv_adjointify _
                (O_ind_internal O B (fun _ => O_reflector O A) _ (fun b => to O A (f^-1 b))) _ _);
@@ -314,7 +298,7 @@ Module EasyModalities_to_Modalities (Os : EasyModalities)
         * simpl; abstract (repeat rewrite O_ind_beta_internal; apply ap, eissect).
   Defined.
 
-  Definition minO_paths (O : Modality@{u a})
+  Definition minO_paths@{u a i} (O : Modality@{u a})
              (A : Type@{i}) (A_inO : In@{u a i} O A) (a a' : A)
   : In O (a = a').
   Proof.
@@ -344,12 +328,12 @@ Module Export Coercions.
 End Coercions.
 
 (** As promised, we redefine [O_ind] and [O_ind_beta] so that their [In] hypotheses refer to the typeclass [RSU.In]. *)
-Definition O_ind {O : Modality@{u a}}
+Definition O_ind@{u a i j e0 e1 e2} {O : Modality@{u a}}
            {A : Type@{i}} (B : O A -> Type@{j})
            {B_inO : forall oa, In O (B oa)}
            (f : forall a, B (to O A a)) (oa : O A)
 : B oa
-:= O_ind_internal O A B B_inO f oa.
+:= O_ind_internal@{u a e0 e1 e2} O A B B_inO f oa.
 
 Definition O_ind_beta {O : Modality@{u a}}
            {A : Type@{i}} (B : O A -> Type@{j})
@@ -457,7 +441,8 @@ Check IsConnected@{u a i}.
 Global Existing Instance isconnected_contr_O.
 
 Section ConnectedTypes.
-  Context (O : Modality).
+  Universes Ou Oa.
+  Context (O : Modality@{Ou Oa}).
 
   (** Being connected is an hprop *)
   Global Instance ishprop_isconnected `{Funext} A
@@ -527,26 +512,26 @@ Section ConnectedTypes.
   Defined.
 
   (** Here's another way of stating the universal property for mapping out of connected types into modal ones. *)
-  Definition extendable_const_isconnected_inO (n : nat)
+  Definition extendable_const_isconnected_inO@{i j k l m} (n : nat)
              (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3811 *)
-             (A : Type@{i}) {conn_A : IsConnected@{u a i} O A}
-             (C : Type@{j}) `{In@{u a j} O C}
+             (A : Type@{i}) {conn_A : IsConnected@{Ou Oa i} O A}
+             (C : Type@{j}) `{In@{Ou Oa j} O C}
   : ExtendableAlong@{i i j j} n (@const A Unit@{i} tt) (fun _ => C).
   Proof.
     generalize dependent C;
       simple_induction n n IHn; intros C ?;
       [ exact tt | split ].
     - intros f.
-      exists (fun _ => (isconnected_elim C f).1); intros a.
-      symmetry; apply ((isconnected_elim C f).2).
+      exists (fun _ => (isconnected_elim@{i j j k i} C f).1); intros a.
+      symmetry; apply ((isconnected_elim@{i j j k i} C f).2).
     - intros h k.
-      refine (extendable_postcompose' n _ _ _ _ (IHn (h tt = k tt) _)).
+      refine (extendable_postcompose'@{i i j j j l l l l l l} n _ _ _ _ (IHn (h tt = k tt) (inO_paths@{Ou Oa j m} _ _ _ _))).
       intros []; apply equiv_idmap.
   Defined.
 
-  Definition ooextendable_const_isconnected_inO
-             (A : Type@{i}) `{IsConnected@{u a i} O A}
-             (C : Type@{j}) `{In@{u a j} O C}
+  Definition ooextendable_const_isconnected_inO@{i j k}
+             (A : Type@{i}) `{IsConnected@{Ou Oa i} O A}
+             (C : Type@{j}) `{In@{Ou Oa j} O C}
   : ooExtendableAlong (@const A Unit tt) (fun _ => C)
     := fun n => extendable_const_isconnected_inO@{i j k k j} n A C.
 

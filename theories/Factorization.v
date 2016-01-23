@@ -11,12 +11,12 @@ Local Open Scope path_scope.
 (** ** Factorizations *)
 
 Section Factorization.
-
+  Universes ctxi.
   (** It's important that these are all declared with a single [Context] command, so that the marker [@{i}] refers to the same universe level in all of them. *)
-  Context {class1 class2 : forall (X Y : Type@{i}), (X -> Y) -> Type@{i}}
-          `{forall (X Y : Type@{i}) (g:X->Y), IsHProp (class1 _ _ g)}
-          `{forall (X Y : Type@{i}) (g:X->Y), IsHProp (class2 _ _ g)}
-          {A B : Type@{i}} {f : A -> B}.
+  Context {class1 class2 : forall (X Y : Type@{ctxi}), (X -> Y) -> Type@{ctxi}}
+          `{forall (X Y : Type@{ctxi}) (g:X->Y), IsHProp (class1 _ _ g)}
+          `{forall (X Y : Type@{ctxi}) (g:X->Y), IsHProp (class2 _ _ g)}
+          {A B : Type@{ctxi}} {f : A -> B}.
 
   (** A factorization of [f] into a first factor lying in [class1] and a second factor lying in [class2]. *)
   Record Factorization :=
@@ -199,13 +199,13 @@ Coercion intermediate : Factorization >-> Sortclass.
 (** ** Factorization Systems *)
 
 (** A ("unique" or "orthogonal") factorization system consists of a couple of classes of maps, closed under composition, such that every map admits a unique factorization. *)
-Record FactorizationSystem :=
-  { class1 : forall {X Y : Type@{i}}, (X -> Y) -> Type ;
+Record FactorizationSystem@{i j k} :=
+  { class1 : forall {X Y : Type@{i}}, (X -> Y) -> Type@{j} ;
     ishprop_class1 : forall {X Y : Type@{i}} (g:X->Y), IsHProp (class1 g) ;
     class1_isequiv : forall {X Y : Type@{i}} (g:X->Y) {geq:IsEquiv g}, class1 g ;
     class1_compose : forall {X Y Z : Type@{i}} (g:X->Y) (h:Y->Z),
                        class1 g -> class1 h -> class1 (h o g) ;
-    class2 : forall {X Y : Type@{i}}, (X -> Y) -> Type ;
+    class2 : forall {X Y : Type@{i}}, (X -> Y) -> Type@{k} ;
     ishprop_class2 : forall {X Y : Type@{i}} (g:X->Y), IsHProp (class2 g) ;
     class2_isequiv : forall {X Y : Type@{i}} (g:X->Y) {geq:IsEquiv g}, class2 g ;
     class2_compose : forall {X Y Z : Type@{i}} (g:X->Y) (h:Y->Z),
@@ -282,7 +282,8 @@ Section FactSys.
   Defined.
 
   (** The two classes of maps are automatically orthogonal, i.e. any commutative square from a [class1] map to a [class2] map has a unique diagonal filler.  For now, we only bother to define the lift; in principle we ought to show that the type of lifts is contractible. *)
-  Context {A B X Y : Type@{i}}
+  Universe ctxi.
+  Context {A B X Y : Type@{ctxi}}
           (i : A -> B) (c1i : class1 factsys i)
           (p : X -> Y) (c2p : class2 factsys p)
           (f : A -> X) (g : B -> Y) (h : p o f == g o i).

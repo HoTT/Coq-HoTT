@@ -44,13 +44,13 @@ Then, however, we have to express the hypotheses of the induction principle.  We
 
 (** ** Dependent extendability *)
 
-Fixpoint ExtendableAlong_Over
+Fixpoint ExtendableAlong_Over@{a b c d m}
          (n : nat) {A : Type@{a}} {B : Type@{b}} (f : A -> B)
          (C : B -> Type@{c})
          (D : forall b, C b -> Type@{d})
          (ext : ExtendableAlong@{a b c m} n f C)
 : Type@{m}
-  := match n return ExtendableAlong@{a b c m} n f C -> Type with
+  := match n return ExtendableAlong@{a b c m} n f C -> Type@{m} with
        | 0 => fun _ => Unit@{m}
        | S n => fun ext' =>
                 (forall (g : forall a, C (f a)) (g' : forall a, D (f a) (g a)),
