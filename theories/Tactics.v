@@ -106,8 +106,9 @@ Ltac infer_path_forall_recr_beta term :=
   let P0 := match term with @transport _ (fun f => @?P0 f) _ _ _ _ => constr:(P0) end in
   (** pattern some [f x0] in [P0] *)
   (** Hopefully, no goal will have a variable called [WORKAROUND_FOR_BUG_3458] in the context.  At least not until bug #3458 is fixed. *)
-  let P0f := constr:(fun WORKAROUND_FOR_BUG_3458 => $(let ret := pull_app (P0 WORKAROUND_FOR_BUG_3458) WORKAROUND_FOR_BUG_3458 in
-                                                      exact ret)$) in
+  let P0f := constr:(fun WORKAROUND_FOR_BUG_3458 => ltac:(
+                                                      let ret := pull_app (P0 WORKAROUND_FOR_BUG_3458) WORKAROUND_FOR_BUG_3458 in
+                                                      exact ret)) in
   let x0 := match P0f with fun f => (?x0, @?P f) => constr:(x0) end in
   let P := match P0f with fun f => (?x0, @?P f) => constr:(P) end in
   let ret := constr:(path_forall_recr_beta' x0 P Px) in
@@ -408,6 +409,7 @@ Ltac destruct_head_hnf' T := destruct_all_matches' ltac:(destruct_head_hnf_match
 (** Turns a context object, obtained via, e.g., [match goal with |- context G[...] => ... end], into a lambda / gallina function. *)
 Ltac context_to_lambda G :=
   let ret := constr:(fun x => let k := x in
-                              $(let ret := context G[k] in
-                                exact ret)$) in
+                              ltac:(
+                                let ret := context G[k] in
+                                exact ret)) in
   (eval cbv zeta in ret).

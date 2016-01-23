@@ -67,9 +67,10 @@ Module Export Compose.
     let rec_tac := left_associate_compose_type in
     match to_compose T with
       | forall a : ?A, @?P a => let ret := constr:(forall a : A, let T' := P a in
-                                                                 $(let T'' := (eval unfold T' in T') in
+                                                                 ltac:(
+                                                                   let T'' := (eval unfold T' in T') in
                                                                    let ret := rec_tac T'' in
-                                                                   exact ret)$) in
+                                                                   exact ret)) in
                                 eval cbv beta zeta in ret
       | context T'[compose ?a (compose ?b ?c)]
         => let T'' := context T'[compose (compose a b) c] in
@@ -189,9 +190,10 @@ Module Export Concat.
     let T' := (eval cbv beta in T) in
     match T' with
       | forall a : ?A, @?P a => let ret := constr:(fun a : A => let H' := H a in
-                                                                $(let H'' := (eval unfold H' in H') in
+                                                                ltac:(
+                                                                  let H'' := (eval unfold H' in H') in
                                                                   let ret := rec_tac H'' in
-                                                                  exact ret)$) in
+                                                                  exact ret)) in
                                 let T := type of ret in
                                 let T' := (eval cbv beta zeta in T) in
                                 let ret' := (eval cbv beta zeta in ret) in

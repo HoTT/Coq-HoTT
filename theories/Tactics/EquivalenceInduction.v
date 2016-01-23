@@ -21,7 +21,7 @@ Global Arguments RespectsEquivalenceR : clear implicits.
 (** When doing equivalence induction, typeclass inference will either fully solve the respectfulness side-conditions, or not make any progress.  We would like to progress as far as we can on the side-conditions, so that we leave the user with as little to prove as possible.  To do this, we create a "database", implemented using typeclasses, to look up the refinement lemma, keyed on the head of the term we want to respect equivalence. *)
 Class respects_equivalence_db {KT VT} (Key : KT) {lem : VT} := make_respects_equivalence_db : Unit.
 Definition get_lem' {KT VT} Key {lem} `{@respects_equivalence_db KT VT Key lem} : VT := lem.
-Notation get_lem key := $(let res := constr:(get_lem' key) in let res' := (eval unfold get_lem' in res) in exact res')$ (only parsing).
+Notation get_lem key := ltac:(let res := constr:(get_lem' key) in let res' := (eval unfold get_lem' in res) in exact res') (only parsing).
 
 Section const.
   Context {A : Type} {T : Type}.
