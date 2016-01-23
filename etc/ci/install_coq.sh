@@ -37,8 +37,8 @@ if [ ! -z "$FORCE_COQ_VERSION" ]
 then
     git checkout "$FORCE_COQ_VERSION" || exit $?
 fi
-echo '$ ./configure -no-native-compiler '"$@"
-./configure -no-native-compiler "$@"
+echo '$ ./configure '"$@"
+./configure "$@"
 echo '$ make coqlight'
 make coqlight
 echo '$ sudo make install-coqlight install-devfiles'
