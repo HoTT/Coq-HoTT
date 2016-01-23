@@ -287,7 +287,7 @@ Module Accessible_Lex_Modalities_Theory
     destruct n; [ exact tt | split ].
     - intros P.
       (** Here is the core of the proof: we must show that any family of modal types indexed by a (generating) connected type is equivalent to a constant family.  We take the constant family to be constant at the reflection of the sum of our given family [P]. *)
-      refine (fun u => (O (sigT P) ; _) ; _).
+      simple refine (fun u => (O (sigT P) ; _) ; _); cbn beta.
       1:exact _.
       intros x; symmetry; apply path_TypeO; simpl.
       refine (path_universe (fun p => to O _ (x ; p))).

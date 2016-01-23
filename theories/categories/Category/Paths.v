@@ -279,5 +279,5 @@ Ltac path_category :=
   repeat match goal with
            | _ => intro
            | _ => reflexivity
-           | _ => refine (lem _ _ _ _ _); cbn
+           | _ => simple refine (lem _ _ _ _ _); cbn
          end.

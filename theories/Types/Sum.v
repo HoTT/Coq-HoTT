@@ -280,7 +280,7 @@ Section FunctorSum.
   Definition hfiber_functor_sum_l (a' : A')
   : hfiber functor_sum (inl a') <~> hfiber f a'.
   Proof.
-    refine (equiv_adjointify _ _ _ _).
+    simple refine (equiv_adjointify _ _ _ _).
     - intros [[a|b] p].
       + exists a.
         exact (path_sum_inl _ p).
@@ -303,7 +303,7 @@ Section FunctorSum.
   Definition hfiber_functor_sum_r (b' : B')
   : hfiber functor_sum (inr b') <~> hfiber g b'.
   Proof.
-    refine (equiv_adjointify _ _ _ _).
+    simple refine (equiv_adjointify _ _ _ _).
     - intros [[a|b] p].
       + elim (inl_ne_inr _ _ p).
       + exists b.
@@ -401,7 +401,7 @@ Definition hfiber_unfunctor_sum_l {A A' B B' : Type}
            (a' : A')
 : hfiber (unfunctor_sum_l h Ha) a' <~> hfiber h (inl a').
 Proof.
-  refine (equiv_adjointify _ _ _ _).
+  simple refine (equiv_adjointify _ _ _ _).
   - intros [a p].
     exists (inl a).
     refine (_ @ ap inl p).
@@ -436,7 +436,7 @@ Definition hfiber_unfunctor_sum_r {A A' B B' : Type}
            (b' : B')
 : hfiber (unfunctor_sum_r h Hb) b' <~> hfiber h (inr b').
 Proof.
-  refine (equiv_adjointify _ _ _ _).
+  simple refine (equiv_adjointify _ _ _ _).
   - intros [b p].
     exists (inr b).
     refine (_ @ ap inr p).
@@ -502,7 +502,7 @@ Global Instance isequiv_unfunctor_sum_l {A A' B B' : Type}
            (Hb : forall b:B, is_inr (h (inr b)))
 : IsEquiv (unfunctor_sum_l h Ha).
 Proof.
-  refine (isequiv_adjointify _ _ _ _).
+  simple refine (isequiv_adjointify _ _ _ _).
   - refine (unfunctor_sum_l h^-1 _); intros a'.
     remember (h^-1 (inl a')) as x eqn:p.
     destruct x as [a|b].
@@ -535,7 +535,7 @@ Global Instance isequiv_unfunctor_sum_r {A A' B B' : Type}
            (Hb : forall b:B, is_inr (h (inr b)))
 : IsEquiv (unfunctor_sum_r h Hb).
 Proof.
-  refine (isequiv_adjointify _ _ _ _).
+  simple refine (isequiv_adjointify _ _ _ _).
   - refine (unfunctor_sum_r h^-1 _); intros b'.
     remember (h^-1 (inr b')) as x eqn:p.
     destruct x as [a|b].
@@ -585,7 +585,7 @@ Defined.
 
 Definition equiv_sum_assoc (A B C : Type) : (A + B) + C <~> A + (B + C).
 Proof.
-  refine (equiv_adjointify _ _ _ _).
+  simple refine (equiv_adjointify _ _ _ _).
   - intros [[a|b]|c];
     [ exact (inl a) | exact (inr (inl b)) | exact (inr (inr c)) ].
   - intros [a|[b|c]];
@@ -629,7 +629,7 @@ Proof.
                           | inl b => inl (a,b)
                           | inr c => inr (a,c)
                         end) _).
-  refine (BuildIsEquiv (A * (B + C)) ((A * B) + (A * C)) _
+  simple refine (BuildIsEquiv (A * (B + C)) ((A * B) + (A * C)) _
             (fun ax => match ax with
                          | inl (a,b) => (a,inl b)
                          | inr (a,c) => (a,inr c)
@@ -648,7 +648,7 @@ Proof.
                           | inl b => inl (b,a)
                           | inr c => inr (c,a)
                         end) _).
-  refine (BuildIsEquiv ((B + C) * A) ((B * A) + (C * A)) _
+  simple refine (BuildIsEquiv ((B + C) * A) ((B * A) + (C * A)) _
             (fun ax => match ax with
                          | inl (b,a) => (inl b,a)
                          | inr (c,a) => (inr c,a)
@@ -676,7 +676,7 @@ Proof.
                         | inl a => fun c => inl (a;c)
                         | inr b => fun c => inr (b;c)
                       end c) _).
-  refine (BuildIsEquiv { x : A+B & C x }
+  simple refine (BuildIsEquiv { x : A+B & C x }
                        ({ a : A & C (inl a) } + { b : B & C (inr b) }) _
            (fun abc => match abc with
                          | inl (a;c) => (inl a ; c)
@@ -697,7 +697,7 @@ Definition decompose_r {A B C} (f : C -> A + B) : Type
 Definition equiv_decompose {A B C} (f : C -> A + B)
 : decompose_l f + decompose_r f <~> C.
 Proof.
-  refine (equiv_adjointify (sum_ind (fun _ => C) pr1 pr1) _ _ _).
+  simple refine (equiv_adjointify (sum_ind (fun _ => C) pr1 pr1) _ _ _).
   - intros c; destruct (is_inl_or_is_inr (f c));
     [ left | right ]; exists c; assumption.
   - intros c; destruct (is_inl_or_is_inr (f c)); reflexivity.

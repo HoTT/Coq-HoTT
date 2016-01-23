@@ -613,10 +613,10 @@ Section Reflective_Subuniverse.
           apply moveR_equiv_V.
           symmetry; apply to_O_natural.
       }
-      refine (path_sigma _ _ _ _ _); cbn.
+      simple refine (path_sigma _ _ _ _ _); cbn.
       - exact (path_universe f).
       - rewrite transport_sigma.
-        refine (path_sigma _ _ _ _ _); cbn; try apply path_ishprop.
+        simple refine (path_sigma _ _ _ _ _); cbn; try apply path_ishprop.
         apply path_arrow; intros x.
         rewrite transport_arrow_fromconst.
         rewrite transport_path_universe.
@@ -704,7 +704,7 @@ Section Reflective_Subuniverse.
     Global Instance isequiv_O_prod_cmp (A B : Type)
     : IsEquiv (O_prod_cmp A B).
     Proof.
-      refine (isequiv_adjointify _ _ _ _).
+      simple refine (isequiv_adjointify _ _ _ _).
       { apply prod_ind; intro a.
         apply O_rec; intro b; revert a.
         apply O_rec; intro a.
@@ -751,7 +751,7 @@ Section Reflective_Subuniverse.
       destruct H as [f q].
       apply inO_to_O_retract with (mu := fun w => (h w; f w)).
       intros [x1 x2].
-      refine (path_sigma B _ _ _ _); simpl.
+      simple refine (path_sigma B _ _ _ _); simpl.
       - apply p.
       - rewrite (q (x1;x2)).
         unfold g; simpl. exact (transport_pV B _ _).
@@ -786,13 +786,13 @@ Section Reflective_Subuniverse.
            (f : A -> B) (b : B)
     : In O (hfiber f b).
     Proof.
-      refine (inO_to_O_retract _ _ _).
-      - intros x; refine (_;_).
+      simple refine (inO_to_O_retract _ _ _).
+      - intros x; simple refine (_;_).
         + exact (O_rec pr1 x).
         + revert x; apply O_indpaths; intros x; simpl.
           refine (ap f (O_rec_beta pr1 x) @ _).
           exact (x.2).
-      - intros [a p]; refine (path_sigma' _ _ _).
+      - intros [a p]; simple refine (path_sigma' _ _ _).
         + exact (O_rec_beta pr1 (a;p)).
         + refine (ap (transport _ _) (O_indpaths_beta _ _ _ _) @ _); simpl.
           refine (transport_paths_Fl _ _ @ _).
@@ -825,7 +825,7 @@ Section Reflective_Subuniverse.
     Global Instance inO_paths (S : Type) {S_inO : In O S} (x y : S)
     : In O (x=y).
     Proof.
-      refine (inO_to_O_retract _ _ _); intro u.
+      simple refine (inO_to_O_retract _ _ _); intro u.
       - assert (p : (fun _ : O (x=y) => x) == (fun _=> y)).
         { refine (O_indpaths _ _ _); simpl.
           intro v; exact v. }
@@ -863,7 +863,7 @@ Section Reflective_Subuniverse.
     Definition equiv_O_sum {A B} :
       O (A + B) <~> O (O A + O B).
     Proof.
-      refine (equiv_adjointify _ _ _ _).
+      simple refine (equiv_adjointify _ _ _ _).
       - apply O_rec; intros x.
         exact (to O _ (functor_sum (to O A) (to O B) x)).
       - apply O_rec; intros [x|x].
@@ -897,7 +897,7 @@ Section Reflective_Subuniverse.
       Definition O_coeq_cmp_inverse
       : O (Coeq (O_functor f) (O_functor g)) -> O (Coeq f g).
       Proof.
-        apply O_rec; refine (Coeq_rec _ _ _).
+        apply O_rec; simple refine (Coeq_rec _ _ _).
         - apply O_functor, coeq.
         - intros b.
           refine ((O_functor_compose f coeq b)^ @ _).
@@ -912,7 +912,7 @@ Section Reflective_Subuniverse.
         unfold O_coeq_cmp, O_coeq_cmp_inverse.
         apply O_indpaths; intros z.
         rewrite O_rec_beta.
-        revert z; refine (Coeq_ind _ _ _).
+        revert z; simple refine (Coeq_ind _ _ _).
         - cbn; intros a.
           refine ((O_functor_compose _ _ _)^ @ _); cbn.
           revert a; apply O_indpaths, to_O_natural.
@@ -968,7 +968,7 @@ Section Reflective_Subuniverse.
         unfold O_coeq_cmp, O_coeq_cmp_inverse.
         apply O_indpaths; intros z.
         rewrite to_O_natural, O_rec_beta.
-        revert z; refine (Coeq_ind _ _ _).
+        revert z; simple refine (Coeq_ind _ _ _).
         - intros a. cbn.
           apply to_O_natural.
         - intros b; cbn.

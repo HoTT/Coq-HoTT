@@ -52,7 +52,7 @@ Section Factorization.
     : (fact = fact') -> @PathFactorization fact fact'.
   Proof.
     intros p.
-    refine (Build_PathFactorization fact fact' _ _ _ _); destruct p.
+    simple refine (Build_PathFactorization fact fact' _ _ _ _); destruct p.
     - exact (equiv_idmap (intermediate fact)).
     - exact (fun a => 1).
     - exact (fun x => 1).
@@ -168,7 +168,7 @@ Section Factorization.
       refine (transport_sigma (A := intermediate fact' -> B)
                               (B := fun g => g o factor1 fact' == f)
                               _ _ @ _); cbn.
-      refine (path_sigma' _ _ _); cbn.
+      simple refine (path_sigma' _ _ _); cbn.
       2:apply path_ishprop.
       (* It's still pretty scary-looking, but we press ahead undaunted, looking for transport redexes and path redexes. *)
       apply path_forall; intros a.

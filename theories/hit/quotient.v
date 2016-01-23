@@ -174,7 +174,7 @@ Section Equiv.
                                     (forall x, P (class_of _ x)) -> forall y, P y.
   Proof.
     intros ? ? dclass. apply quotient_ind with dclass.
-    - refine (quotient_ind R (fun x => IsHSet (P x)) _ _); try exact _.
+    - simple refine (quotient_ind R (fun x => IsHSet (P x)) _ _); cbn beta; try exact _.
       intros; apply path_ishprop.
     - intros. apply Hprop'.
   Defined.
@@ -247,15 +247,15 @@ Section Functoriality.
              `{IsEquiv _ _ f}
   : IsEquiv (quotient_functor R S f (fun x y => fst (fresp x y))).
   Proof.
-    refine (isequiv_adjointify _ (quotient_functor S R f^-1 _)
+    simple refine (isequiv_adjointify _ (quotient_functor S R f^-1 _)
                                _ _).
     - intros u v s.
       apply (snd (fresp _ _)).
       abstract (do 2 rewrite eisretr; apply s).
-    - intros x; revert x; refine (quotient_ind S _ _ _).
+    - intros x; revert x; simple refine (quotient_ind S _ _ _).
       + intros b; simpl. apply ap, eisretr.
       + intros; apply path_ishprop.
-    - intros x; revert x; refine (quotient_ind R _ _ _).
+    - intros x; revert x; simple refine (quotient_ind R _ _ _).
       + intros a; simpl. apply ap, eissect.
       + intros; apply path_ishprop.
   Defined.
@@ -309,8 +309,8 @@ Section Kernel.
     - intro u.
       apply hprop_allpath.
       assert (H : forall (x y : C) (p : m x = u) (p' : m y = u), x = y).
-      { refine (quotient_ind R _ _ _). intro a.
-        refine (quotient_ind R _ _ _). intros a' p p'; fold e in p, p'.
+      { simple refine (quotient_ind R _ _ _). intro a.
+        simple refine (quotient_ind R _ _ _). intros a' p p'; fold e in p, p'.
         + apply related_classes_eq.
           refine (is_ker a a' _).
           change (m (e a) = m (e a')).

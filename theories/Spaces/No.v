@@ -225,7 +225,7 @@ Finally, for conceptual isolation, and so as not to depend on the particular imp
       revert ishprop_le ishprop_lt dpath dle_lr dlt_l dlt_r.
       destruct xno as [L R xL xR Lno Rno xcut].
       intros ishprop_le ishprop_lt dpath dle_lr dlt_l dlt_r.
-      refine (dcut L R (fun l => Build_No (xL l) (Lno l))
+      simple refine (dcut L R (fun l => Build_No (xL l) (Lno l))
                    (fun r => Build_No (xR r) (Rno r)) xcut _ _ _).
       - intros l; exact (No_ind_internal (xL l) (Lno l)).
       - intros r; exact (No_ind_internal (xR r) (Rno r)).
@@ -376,7 +376,7 @@ Section NoRec.
   Definition No_rec (x : No) : A.
   Proof.
     revert x;
-    refine (No_ind (fun _ => A) (fun _ _ _ a b => dle a b)
+    simple refine (No_ind (fun _ => A) (fun _ _ _ a b => dle a b)
                    (fun _ _ _ a b => dlt a b)
                    _ _ _ _ _);
     intros.
@@ -501,7 +501,7 @@ Definition path_No_easy' `{Funext}
 
 Definition negate : No -> No.
 Proof.
-  refine (No_rec No (fun x y => y <= x) (fun x y => y < x)
+  simple refine (No_rec No (fun x y => y <= x) (fun x y => y < x)
                  _ _ _ _ _); intros.
   - exact {{ fxR | fxL // fun r l => fxcut l r }}.
   - apply path_No; assumption.
@@ -560,7 +560,7 @@ Section NoCodes.
        (forall y z p, A'le y z p (inner y) (inner z)) *
        (forall y z p, A'lt y z p (inner y) (inner z)) }.
     Proof.
-      refine (No_ind_package A' A'le A'lt _ _ _ _ _ );
+      simple refine (No_ind_package A' A'le A'lt _ _ _ _ _ );
       unfold A', A'le, A'lt; try exact _.
       - intros L' R' yL yR ycut x_let_yL x_let_yR y_lt_le.
         set (y := {{ yL | yR // ycut }}).
@@ -670,7 +670,7 @@ Section NoCodes.
          (forall (x y : No), (x < y) ->
             forall z, ((lelt y).1 z -> (lelt x).2.1 z)) }.
   Proof.
-    refine (No_rec_package A
+    simple refine (No_rec_package A
               (fun dm ht => forall y, (ht.1 y -> dm.1 y)
                                       * (ht.2.1 y -> dm.2.1 y))
               (fun dm ht => forall y, (ht.1 y -> dm.2.1 y))
@@ -690,11 +690,11 @@ Section NoCodes.
             exact (snd (inner_le xL_let xR_let x_lt_le y z y_le_z) x_lt_y) ]).
     - abstract (
           intros [x_le [x_lt ?]] [x_le' [x_lt' ?]] p q; cbn in p, q;
-          refine (path_sigma' _ _ _);
+          simple refine (path_sigma' _ _ _);
           [ apply path_arrow; intros y; apply path_hprop, equiv_iff_hprop;
             [ exact (fst (q y)) | exact (fst (p y)) ]
           | rewrite transport_sigma'; cbn;
-            refine (path_sigma' _ _ _);
+            simple refine (path_sigma' _ _ _);
             [ apply path_arrow; intros y; apply path_hprop, equiv_iff_hprop;
               [ exact (snd (q y)) | exact (snd (p y)) ]
             | apply path_ishprop ] ] ).
@@ -928,7 +928,7 @@ Section Addition.
         (forall y z : No, y <= z -> (g y).1 <= (g z).1) *
         (forall y z : No, y <  z -> (g y).1 <  (g z).1) }.
     Proof.
-      refine (No_ind_package
+      simple refine (No_ind_package
                 (fun y => { x_plus_y : No &
                             (forall l, (xL_plus l).1 y < x_plus_y) *
                             (forall r, x_plus_y < (xR_plus r).1 y) })

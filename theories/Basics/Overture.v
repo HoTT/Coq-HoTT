@@ -790,7 +790,7 @@ Ltac revert_opaque x :=
 (** [transparent assert (H : T)] is like [assert (H : T)], but leaves the body transparent. *)
 (** Since binders don't respect [fresh], we use a name unlikely to be reused. *)
 Tactic Notation "transparent" "assert" "(" ident(name) ":" constr(type) ")" :=
-  refine (let __transparent_assert_hypothesis := (_ : type) in _);
+  simple refine (let __transparent_assert_hypothesis := (_ : type) in _);
   [
   | ((* We cannot use the name [__transparent_assert_hypothesis], due to some infelicities in the naming of bound variables.  So instead we pull the bottommost hypothesis. *)
     let H := match goal with H := _ |- _ => constr:(H) end in

@@ -61,7 +61,7 @@ Module OpenModalities_easy <: EasyModalities.
              (z z' : O_reflector@{u a i} O A)
   : IsEquiv@{i i} (to O (z = z')).
   Proof.
-    pose (fs := funext_Op O); refine (isequiv_adjointify _ _ _ _).
+    pose (fs := funext_Op O); simple refine (isequiv_adjointify _ _ _ _).
     * intros f; apply path_arrow; intros u.
       exact (ap10 (f u) u).
     * intros f; apply path_arrow; intros u.
@@ -102,7 +102,7 @@ Proof.
   { intros u.
     pose (contr_inhabited_hprop U u).
     refine (contr_equiv (U -> A) (equiv_contr_forall _)). }
-  refine (BuildContr _ _ _).
+  simple refine (BuildContr _ _ _).
   - intros u; pose (uc u); exact (center (x=y)).
   - intros f; apply path_arrow; intros u.
     pose proof (uc u); apply path_contr.

@@ -290,7 +290,7 @@ Definition prod_empty_l X : Empty * X <~> Empty
 Definition prod_unit_r X : X * Unit <~> X.
 Proof.
   refine (BuildEquiv _ _ fst _).
-  refine (BuildIsEquiv _ _ _ (fun x => (x,tt)) _ _ _).
+  simple refine (BuildIsEquiv _ _ _ (fun x => (x,tt)) _ _ _).
   - intros x; reflexivity.
   - intros [x []]; reflexivity.
   - intros [x []]; reflexivity.
@@ -299,7 +299,7 @@ Defined.
 Definition prod_unit_l X : Unit * X <~> X.
 Proof.
   refine (BuildEquiv _ _ snd _).
-  refine (BuildIsEquiv _ _ _ (fun x => (tt,x)) _ _ _).
+  simple refine (BuildIsEquiv _ _ _ (fun x => (tt,x)) _ _ _).
   - intros x; reflexivity.
   - intros [[] x]; reflexivity.
   - intros [[] x]; reflexivity.

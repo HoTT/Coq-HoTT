@@ -33,11 +33,11 @@ Section FreeIntAction.
                                   (fun _ => R) (fun _ => f))^-1
               oE _));
     try exact _.
-    - erapply equiv_adjointify.
-      + refine (Wtil_rec _ _ _).
+    - unshelve erapply equiv_adjointify.
+      + simple refine (Wtil_rec _ _ _).
         * intros u r; exact (coeq r).
         * intros u r; cbn. exact ((cp r)^).
-      + refine (Coeq_rec _ _ _).
+      + simple refine (Coeq_rec _ _ _).
         * exact (cct tt).
         * intros r; exact ((ppt tt r)^).
       + refine (Coeq_ind _ (fun a => 1) _); cbn; intros b.
@@ -52,7 +52,7 @@ Section FreeIntAction.
                   (Wtil_rec_beta_ppt
                      RmodZ (unit_name (fun r => coeq r))
                      (unit_name (fun r => (cp r)^)) tt b) @ inv_V _).
-      + refine (Wtil_ind _ _ _); cbn.
+      + simple refine (Wtil_ind _ _ _); cbn.
         { intros [] ?; reflexivity. }
         intros [] r; cbn.
         rewrite transport_paths_FlFr, concat_p1, ap_idmap.
@@ -81,7 +81,7 @@ Section FreeIntAction.
       intros [p r] [q s].
       set (P := S1_rec Type R (path_universe f)) in *.
       assert (forall z, IsHSet (P z)).
-      { refine (S1_ind _ _ _).
+      { simple refine (S1_ind _ _ _); cbn beta.
         - exact _.
         - apply path_ishprop. }
       apply path_sigma_hprop; cbn.

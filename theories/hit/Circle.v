@@ -160,8 +160,8 @@ Global Instance isconnected_S1 : IsConnected 0 S1.
 Proof.
   apply is0connected_merely_allpath.
   - exact (tr base).
-  - refine (S1_ind _ _ _).
-    + refine (S1_ind _ _ _).
+  - simple refine (S1_ind _ _ _).
+    + simple refine (S1_ind _ _ _).
       * exact (tr 1).
       * apply path_ishprop.
     + apply path_ishprop.

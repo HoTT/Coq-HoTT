@@ -187,7 +187,7 @@ Proof.
   assert (p' := (moveL_equiv_V _ _ p)^).
   exists y.
   destruct y as [y|[]].
-  + refine (equiv_unfunctor_sum_l
+  + simple refine (equiv_unfunctor_sum_l
               (fin_transpose_last_with m (inl y) oE e)
               _ _ ; _).
     { intros a. ev_equiv.
@@ -206,7 +206,7 @@ Proof.
     * rewrite unfunctor_sum_l_beta.
       apply fin_transpose_last_with_invol.
     * refine (fin_transpose_last_with_last _ _ @ p^).
-  + refine (equiv_unfunctor_sum_l e _ _ ; _).
+  + simple refine (equiv_unfunctor_sum_l e _ _ ; _).
     { intros a.
       destruct (is_inl_or_is_inr (e (inl a))) as [l|r].
       - exact l.
@@ -583,7 +583,7 @@ Global Instance finite_forall `{Funext} {X} (Y : X -> Type)
 Proof.
   assert (e := merely_equiv_fin X).
   strip_truncations.
-  refine (finite_equiv' _
+  simple refine (finite_equiv' _
             (equiv_functor_forall' (P := fun x => Y (e^-1 x)) e _) _); try exact _.
   { intros x; refine (equiv_transport _ _ _ (eissect e x)). }
   set (Y' := Y o e^-1); change (Finite (forall x, Y' x)).
@@ -813,7 +813,7 @@ Section DecidableQuotients.
     assert (Symmetric R') by (intros ? ?; unfold R'; apply symmetry).
     assert (Transitive R') by (intros ? ? ?; unfold R'; apply transitivity).
     assert (R'd : forall x y, Decidable (R' x y)) by (intros ? ?; unfold R'; apply Rd).
-    refine (finite_equiv' (quotient R') (quotient_functor_equiv R' R e^-1 _) _); try exact _.
+    simple refine (finite_equiv' (quotient R') (quotient_functor_equiv R' R e^-1 _) _); try exact _.
     { intros x y; split; apply idmap. }
     clearbody R'; clear e.
     generalize dependent (fcard X);
@@ -969,7 +969,7 @@ Proof.
 Defined.
 
 Definition nat_fin_compl_compl n k
-: (nat_fin n k + nat_fin_compl n k).+1 = n.  
+: (nat_fin n k + nat_fin_compl n k).+1 = n.
 Proof.
   induction n as [|n IH].
   - contradiction.

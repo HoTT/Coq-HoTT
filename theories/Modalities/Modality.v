@@ -297,12 +297,12 @@ Module EasyModalities_to_Modalities (Os : EasyModalities)
     (A_inO : In@{u a i} O A) (f : A -> B) (feq : IsEquiv f)
   : In@{u a j} O B.
   Proof.
-    refine (isequiv_commsq (to O A) (to O B) f
+    simple refine (isequiv_commsq (to O A) (to O B) f
              (O_ind_internal O A (fun _ => O_reflector O B) _ (fun a => to O B (f a))) _).
     - intros; apply O_inO.
     - intros a; refine (O_ind_beta_internal O A (fun _ => O_reflector O B) _ _ a).
     - apply A_inO.
-    - refine (isequiv_adjointify _
+    - simple refine (isequiv_adjointify _
                (O_ind_internal O B (fun _ => O_reflector O A) _ (fun b => to O A (f^-1 b))) _ _);
         intros x.
       + apply O_inO.
@@ -318,7 +318,7 @@ Module EasyModalities_to_Modalities (Os : EasyModalities)
              (A : Type@{i}) (A_inO : In@{u a i} O A) (a a' : A)
   : In O (a = a').
   Proof.
-    refine (inO_equiv_inO O (to O A a = to O A a') _ _
+    simple refine (inO_equiv_inO O (to O A a = to O A a') _ _
                           (@ap _ _ (to O A) a a')^-1 _).
     - apply minO_pathsO.
     - refine (@isequiv_ap _ _ _ A_inO _ _).
@@ -384,7 +384,7 @@ Defined.
 Definition equiv_O_sigma_O {O : Modality} {A} (P : A -> Type)
 : O {x:A & O (P x)} <~> O {x:A & P x}.
 Proof.
-  refine (equiv_adjointify _ _ _ _).
+  simple refine (equiv_adjointify _ _ _ _).
   - apply O_rec; intros [a op]; revert op.
     apply O_rec; intros p.
     exact (to O _ (a;p)).
@@ -981,7 +981,7 @@ Section ConnectedMaps.
          `{IsConnMap O _ _ f}
   : IsEquiv (O_functor O f).
   Proof.
-    refine (isequiv_adjointify _ _ _ _).
+    simple refine (isequiv_adjointify _ _ _ _).
     - apply O_rec; intros y.
       exact (O_functor O pr1 (center (O (hfiber f y)))).
     - unfold Sect; apply O_ind; try exact _; intros b.
@@ -1114,7 +1114,7 @@ Section ModalFact.
               (@MapIn O) _ _ _
               (@image) _).
     intros A B f fact fact'.
-    refine (Build_PathFactorization fact fact' _ _ _ _).
+    simple refine (Build_PathFactorization fact fact' _ _ _ _).
     - refine (_ oE equiv_fibration_replacement (factor2 fact)).
       refine ((equiv_fibration_replacement (factor2 fact'))^-1 oE _).
       refine (equiv_functor_sigma' 1 _); intros b; simpl.

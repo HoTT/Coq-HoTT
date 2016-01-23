@@ -76,7 +76,7 @@ Definition group_loops_functor
            {X Y : pType} (f : pMap X Y)
 : ooGroupHom (group_loops X) (group_loops Y).
 Proof.
-  refine (Build_pMap _ _ _ _); simpl.
+  simple refine (Build_pMap _ _ _ _); simpl.
   - intros [x p].
     exists (f x).
     strip_truncations; apply tr.
@@ -265,7 +265,7 @@ Section Subgroups.
   Definition equiv_coset_subgroup (g : G)
   : { g' : G & in_coset g g'} <~> H.
   Proof.
-    refine (equiv_adjointify _ _ _ _).
+    simple refine (equiv_adjointify _ _ _ _).
     - intros [? [h ?]]; exact h.
     - intros h; exists (incl h^ @ g); exists h; simpl.
       abstract (rewrite inv_pp, grouphom_V, inv_V, concat_p_Vp; reflexivity).

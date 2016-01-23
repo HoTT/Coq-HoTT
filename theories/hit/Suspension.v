@@ -87,12 +87,12 @@ Definition Susp_eta `{Funext}
 Definition equiv_Susp_rec `{Funext} (X Y : Type)
 : (Susp X -> Y) <~> { NS : Y * Y & X -> fst NS = snd NS }.
 Proof.
-  refine (BuildEquiv (Susp X -> Y)
+  simple refine (BuildEquiv (Susp X -> Y)
                      { NS : Y * Y & X -> fst NS = snd NS } _ _).
   { intros f.
     exists (f North , f South).
     intros x. exact (ap f (merid x)). }
-  refine (isequiv_adjointify _ _ _ _).
+  simple refine (isequiv_adjointify _ _ _ _).
   - intros [[N S] m].
     exact (Susp_rec N S m).
   - intros [[N S] m].
@@ -156,7 +156,7 @@ Definition psusp_functor_compose {X Y Z : pType}
            (g : Y ->* Z) (f : X ->* Y)
 : psusp_functor (g o* f) ==* psusp_functor g o* psusp_functor f.
 Proof.
-  pointed_reduce; refine (Build_pHomotopy _ _); cbn.
+  pointed_reduce; simple refine (Build_pHomotopy _ _); cbn.
   - refine (Susp_ind _ _ _ _); cbn; try reflexivity.
     intros x.
     rewrite transport_paths_FlFr.
@@ -258,7 +258,7 @@ Definition loop_susp_unit_natural {X Y : pType} (f : X ->* Y)
   ==* loops_functor (psusp_functor f) o* loop_susp_unit X.
 Proof.
   pointed_reduce.
-  refine (Build_pHomotopy _ _); cbn.
+  simple refine (Build_pHomotopy _ _); cbn.
   - intros x; symmetry.
     refine (concat_1p _@ (concat_p1 _ @ _)).
     refine (ap_pp (Susp_rec North South (merid o f))
@@ -293,7 +293,7 @@ Definition loop_susp_counit_natural {X Y : pType} (f : X ->* Y)
   ==* loop_susp_counit Y o* psusp_functor (loops_functor f).
 Proof.
   pointed_reduce.
-  refine (Build_pHomotopy _ _); simpl.
+  simple refine (Build_pHomotopy _ _); simpl.
   - refine (Susp_ind _ _ _ _); cbn; try reflexivity; intros p.
     rewrite transport_paths_FlFr, ap_compose, concat_p1.
     apply moveR_Vp.
@@ -312,7 +312,7 @@ Definition loop_susp_triangle1 (X : pType)
 : loops_functor (loop_susp_counit X) o* loop_susp_unit (loops X)
   ==* pmap_idmap (loops X).
 Proof.
-  refine (Build_pHomotopy _ _).
+  simple refine (Build_pHomotopy _ _).
   - intros p; cbn.
     refine (concat_1p _ @ (concat_p1 _ @ _)).
     refine (ap_pp (Susp_rec (point X) (point X) idmap)
@@ -335,8 +335,8 @@ Definition loop_susp_triangle2 (X : pType)
 : loop_susp_counit (psusp X) o* psusp_functor (loop_susp_unit X)
   ==* pmap_idmap (psusp X).
 Proof.
-  refine (Build_pHomotopy _ _);
-  [ refine (Susp_ind _ _ _ _) | ]; try reflexivity; cbn.
+  simple refine (Build_pHomotopy _ _);
+  [ simple refine (Susp_ind _ _ _ _) | ]; try reflexivity; cbn.
   - exact (merid (point X)).
   - intros x.
     rewrite transport_paths_FlFr, ap_idmap, ap_compose.

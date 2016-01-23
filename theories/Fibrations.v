@@ -65,7 +65,7 @@ Definition functor_hfiber {A B C D}
            (p : k o f == g o h) (b : B)
 : hfiber f b -> hfiber g (k b).
 Proof.
-  rapply @functor_sigma.
+  unshelve rapply @functor_sigma.
   - exact h.
   - intros a e; exact ((p a)^ @ ap k e).
 Defined.
@@ -81,7 +81,7 @@ Proof.
   unfold hfiber, functor_hfiber, functor_sigma.
   refine (_ oE (equiv_sigma_assoc _ _)^-1).
   refine (equiv_sigma_assoc _ _ oE _).
-  apply (equiv_functor_sigma' 1); intros a; cbn.  
+  apply (equiv_functor_sigma' 1); intros a; cbn.
   refine (_ oE
          (equiv_functor_sigma'
             (P := fun r => { s : h a = c & s # ((p a)^ @ ap k r) = q })
@@ -107,7 +107,7 @@ Defined.
 Definition equiv_fibration_replacement  {B C} (f:C ->B):
   C <~> {y:B & hfiber f y}.
 Proof.
-  refine (BuildEquiv _ _ _ (BuildIsEquiv
+  simple refine (BuildEquiv _ _ _ (BuildIsEquiv
                C {y:B & {x:C & f x = y}}
                (fun c => (f c; (c; idpath)))
                (fun c => c.2.1)
@@ -121,7 +121,7 @@ Defined.
 Definition hfiber_fibration {X} (x : X) (P:X->Type):
     P x <~> @hfiber (sigT P) X pr1 x.
 Proof.
-  refine (BuildEquiv _ _ _ (BuildIsEquiv
+  simple refine (BuildEquiv _ _ _ (BuildIsEquiv
                (P x) { z : sigT P & z.1 = x }
                (fun Px => ((x; Px); idpath))
                (fun Px => transport P Px.2 Px.1.2)

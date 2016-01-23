@@ -97,11 +97,11 @@ Section onmorphisms.
   Local Instance isequiv_iscategory_sigT_mor_helper s d
   : IsEquiv (@iscategory_sigT_mor_helper s d).
   Proof.
-    refine (isequiv_adjointify _ _ _ _).
+    simple refine (isequiv_adjointify _ _ _ _).
     { intro e.
       exists (e : morphism _ _ _; center _).
       exists (e^-1%morphism; center _);
-        refine (path_sigma _ _ _ _ _);
+        simple refine (path_sigma _ _ _ _ _);
         first [ apply left_inverse
               | apply right_inverse
               | by apply path_ishprop ]. }
@@ -244,7 +244,7 @@ Section on_both.
        | Pmor_iso_T s d e e^-1 (@left_inverse _ _ _ e e) right_inverse }.
   Proof.
     intro e.
-    refine (_; _).
+    simple refine (_; _).
     { exists (e : morphism _ _ _).1.
       exists (e^-1%morphism).1.
       exact (@left_inverse _ _ _ e e)..1.
@@ -286,8 +286,8 @@ Section on_both.
       (path_isomorphic (iso_A'_code (iso_A'_decode x)).1 x.1 1)
       (iso_A'_code (iso_A'_decode x)).2 = x.2.
   Proof.
-    refine (path_sigma _ _ _ _ _); cycle 1.
-    refine (path_sigma _ _ _ _ (path_ishprop _ _)).
+    simple refine (path_sigma _ _ _ _ _); cycle 1.
+    simple refine (path_sigma _ _ _ _ (path_ishprop _ _)).
     all:repeat match goal with
                  | [ |- (transport ?P ?p ?z).1 = _ ] => rewrite (@ap_transport _ P _ _ _ p (fun _ x => x.1))
                  | [ |- (transport ?P ?p ?z).2.1 = _ ] => rewrite (@ap_transport _ P _ _ _ p (fun _ x => x.2.1))
@@ -314,7 +314,7 @@ Section on_both.
   Proof.
     refine (equiv_adjointify iso_A'_code iso_A'_decode _ _).
     { intro.
-      refine (path_sigma _ _ _ _ _).
+      simple refine (path_sigma _ _ _ _ _).
       { apply path_isomorphic; reflexivity. }
       { apply equiv_iso_A'_eisretr_helper. }  }
     { intro.
@@ -330,7 +330,7 @@ Section on_both.
   : IsCategory A'.
   Proof.
     intros s d.
-    refine (isequiv_homotopic
+    simple refine (isequiv_homotopic
               ((equiv_iso_A'^-1)
                  o (functor_sigma _ _)
                  o (path_sigma_uncurried _ _ _)^-1)

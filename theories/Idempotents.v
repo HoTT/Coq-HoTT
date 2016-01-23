@@ -63,7 +63,7 @@ Definition retractof_hfiber {X Y : Type} (R : RetractOf X) (f : X -> Y)
 : RetractOf (hfiber f y).
 Proof.
   destruct R as [A r s H]; simpl in *.
-  refine (Build_RetractOf (hfiber f y) (hfiber g y) _ _ _).
+  simple refine (Build_RetractOf (hfiber f y) (hfiber g y) _ _ _).
   - intros [x q].
     exists (r x).
     exact (p x @ q).
@@ -71,7 +71,7 @@ Proof.
     exists (s a).
     exact ((p (s a))^ @ ap g (H a) @ q).
   - intros [a q].
-    refine (path_sigma' _ _ _).
+    simple refine (path_sigma' _ _ _).
     + exact (H a).
     + abstract (
         rewrite transport_paths_Fl, !concat_p_pp, concat_pp_V, concat_Vp, concat_1p;
@@ -81,11 +81,11 @@ Defined.
 (** Retraction preserves contractibility **)
 Definition contr_retracttype {X : Type} (R : RetractOf X ) (contra : Contr X) : Contr (retract_type R ).
 Proof.
- refine (BuildContr _ _ _).
+ simple refine (BuildContr _ _ _).
  - refine (retract_retr _ _).
    exact (center X).
  - intro y.
-   refine (concat _ _).
+   simple refine (concat _ _).
    + exact (retract_retr R (retract_sect R y)).
    + refine (ap (retract_retr R) _).
      * exact (contr _).
@@ -120,11 +120,11 @@ Proof.
   destruct R as [A r s H]; destruct R' as [A' r' s' H']; simpl in *.
   refine (@ap _ _ (issig_retractof X) (A';((r',s');H')) (A;((r,s);H)) _).
   (** The first few components are pretty straightforward. *)
-  refine (path_sigma' _ _ _).
+  simple refine (path_sigma' _ _ _).
   { apply path_universe_uncurried.
     exact Ap. }
   refine (transport_sigma _ _ @ _).
-  refine (path_sigma' _ _ _); simpl.
+  simple refine (path_sigma' _ _ _); simpl.
   { refine (transport_prod _ _ @ _).
     apply path_prod; simpl.
     - apply path_arrow; intros x.
@@ -397,7 +397,7 @@ Section Splitting.
     (q : forall n, a.2 n @ p n = ap f (p n.+1) @ a'.2 n)
   : a = a'.
   Proof.
-    refine (path_sigma' _ _ _).
+    simple refine (path_sigma' _ _ _).
     - apply path_arrow; intros n.
       exact (p n).
     - apply path_forall; intros n.
@@ -437,7 +437,7 @@ Section Splitting.
     transparent assert (a' : split_idem).
     { exists (fun n => f (a (n.+1))).
       exact (fun n => ap f (a.2 n.+1)). }
-    transitivity a'; refine (path_split_idem _ _); intros n; simpl.
+    transitivity a'; simple refine (path_split_idem _ _); intros n; simpl.
     - exact (I (a n.+1)).
     - exact ((ap_compose f f _ @@ 1)^
                @ concat_Ap I (a.2 n.+1)
@@ -479,7 +479,7 @@ Section Splitting.
   : split_idem_retr (split_idem_sect a) = a.
   Proof.
     refine (_ @ nudge_eq a); symmetry.
-    refine (path_split_idem _ _).
+    simple refine (path_split_idem _ _).
     - exact (split_idem_issect_part1 a).
     - exact (split_idem_issect_part2 a).
   Defined.
@@ -569,7 +569,7 @@ Section AlreadySplit.
   Definition equiv_split_idem_retract
   : split_idem (s o r) <~> A.
   Proof.
-    refine (BuildEquiv _ _ (r o split_idem_sect (s o r))
+    simple refine (BuildEquiv _ _ (r o split_idem_sect (s o r))
               (BuildIsEquiv _ _ _ (split_idem_retr (s o r) o s) _ _ _)).
     - intros a; simpl.
       refine (H _ @ H _).
@@ -690,7 +690,7 @@ Section RetractOfRetracts.
   Definition splitting_retractof_isqidem (f : X -> X)
   : RetractOf { I : IsPreIdempotent f & IsQuasiIdempotent f }.
   Proof.
-    refine (@equiv_retractof'
+    simple refine (@equiv_retractof'
               _ (@retractof_equiv'
                    (hfiber quasiidempotent_pr1 f) _ _
                    (retractof_hfiber
@@ -724,7 +724,7 @@ Section RetractOfRetracts.
   Definition splitting_preidem_retractof_qidem (f : PreIdempotent X)
   : RetractOf (IsQuasiIdempotent f).
   Proof.
-    refine (@equiv_retractof'
+    simple refine (@equiv_retractof'
               _ (@retractof_equiv'
                    (hfiber (@pr1 _ (fun fi => @IsQuasiIdempotent _ fi.1 fi.2)) f) _ _
                    (retractof_hfiber
@@ -836,7 +836,7 @@ Proof.
   refine (contr_equiv' {Y : Type & X <~> Y} _).
   unfold Splitting_PreIdempotent, Splitting; simpl.
   refine (equiv_sigma_assoc _ _ oE _); simpl.
-  refine (equiv_functor_sigma' (issig_retractof X) _ oE _).
+  simple refine (equiv_functor_sigma' (issig_retractof X) _ oE _).
   - intros [A [[r s] H]]; simpl in *.
     exact {p : s o r == idmap &
            forall x, ((ap idmap (p x)^ @ (p (s (r x)))^)

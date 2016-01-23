@@ -188,7 +188,7 @@ Proof.
   1:exact tt.
   split.
   - intros g g'.
-    refine (_;_); simpl.
+    simple refine (_;_); simpl.
     + intros b.
       refine (_ @ (fst (snd (ext' 2) _ _
                             (fun b' => r b' ((fst (ext n.+1) g).1 b'))

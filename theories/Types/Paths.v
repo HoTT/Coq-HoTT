@@ -181,7 +181,7 @@ Definition equiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
 Global Instance isequiv_whiskerL {A} {x y z : A} (p : x = y) {q r : y = z}
 : IsEquiv (@whiskerL A x y z p q r).
 Proof.
-  refine (isequiv_adjointify _ _ _ _).
+  simple refine (isequiv_adjointify _ _ _ _).
   - apply cancelL.
   - intros k. unfold cancelL.
     rewrite !whiskerL_pp.
@@ -211,7 +211,7 @@ Defined.
 Global Instance isequiv_whiskerR {A} {x y z : A} {p q : x = y} (r : y = z)
 : IsEquiv (fun h => @whiskerR A x y z p q h r).
 Proof.
-  refine (isequiv_adjointify _ _ _ _).
+  simple refine (isequiv_adjointify _ _ _ _).
   - apply cancelR.
   - intros k. unfold cancelR.
     rewrite !whiskerR_pp.

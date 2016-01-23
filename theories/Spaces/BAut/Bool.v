@@ -256,7 +256,7 @@ First we define the function that will be the equivalence. *)
              (e : Y ** (Z ** W)) (z : Z)
   : Y ** W.
   Proof.
-    refine (equiv_adjointify _ _ _ _).
+    simple refine (equiv_adjointify _ _ _ _).
     + exact (fun y => e y z).
     + intros w.
       destruct (path_baut_bool_inhab W w).
@@ -320,7 +320,7 @@ First we define the function that will be the equivalence. *)
   : Y ** (Z ** W) -> Z ** (Y ** W).
   Proof.
     intros e.
-    refine (equiv_adjointify (baut_bool_pairing_ZZ_Z_symm_part1 e)
+    simple refine (equiv_adjointify (baut_bool_pairing_ZZ_Z_symm_part1 e)
                              _ _ _).
     - intros f.
       exact (baut_bool_pairing_ZZ_Z_symm_lemma e f
@@ -392,7 +392,7 @@ First we define the function that will be the equivalence. *)
   Definition equiv_baut_bool_aut_baut_bool
   : BAut Bool <~> (BAut Bool <~> BAut Bool).
   Proof.
-    refine (equiv_adjointify _ _ _ _).
+    simple refine (equiv_adjointify _ _ _ _).
     - intros Z.
       refine (equiv_involution (fun W => Z ** W) _).
       intros W.
@@ -423,7 +423,7 @@ First we define the function that will be the equivalence. *)
     baut_reduce.
     refine (_ @ apD negb_center_baut_bool (baut_bool_pairing_1Z pt)^).
     rewrite transport_paths_lr, inv_V.
-    apply moveL_pV.    
+    apply moveL_pV.
     exact (concat_A1p baut_bool_pairing_1Z (negb_center_baut_bool pt)).
   Qed.
 

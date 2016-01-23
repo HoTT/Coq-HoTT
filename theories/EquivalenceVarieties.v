@@ -357,7 +357,7 @@ Section relational.
       exists (e^-1 b; eisretr e b).
       intros [a H].
       destruct H.
-      refine (path_sigma _ _ _ _ _).
+      simple refine (path_sigma _ _ _ _ _).
       { simpl; apply eissect. }
       { simpl.
         abstract (rewrite eisadj; destruct (eissect e a); reflexivity). } }

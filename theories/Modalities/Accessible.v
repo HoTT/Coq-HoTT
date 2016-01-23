@@ -62,7 +62,7 @@ Module Accessible_ReflectiveSubuniverses_Theory
   Proof.
     pose (ext_dom := fst (inO_iff_islocal O (O (lgen_domain (acc_gen O) i))) _).
     pose (ext_cod := fst (inO_iff_islocal O (O (lgen_codomain (acc_gen O) i))) _).
-    refine (isequiv_adjointify _ _ _ _).
+    simple refine (isequiv_adjointify _ _ _ _).
     - apply O_rec.
       exact ((fst (ext_dom i 1%nat) (to O _)).1).
     - apply O_indpaths; intros x; simpl.
@@ -176,7 +176,7 @@ Module Accessible_Modalities_Theory
     Proof.
       apply (snd (inO_iff_isnull O A)); intros i.
       apply (equiv_ooextendable_isequiv _ _)^-1.
-      refine (isequiv_adjointify _ _ _ _).
+      simple refine (isequiv_adjointify _ _ _ _).
       - intros f []; exact (c i f).1.
       - intros f; apply path_arrow; intros x.
         simpl; unfold composeD.
@@ -275,7 +275,7 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
           * apply ooextendable_isnull_fibers; intros x.
             exact (Xnull (inl (i;x))).
     Defined.
-  
+
   End AccMod.
 End Accessible_Modalities_from_ReflectiveSubuniverses.
 

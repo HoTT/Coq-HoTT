@@ -37,7 +37,7 @@ Module Fracture (Os : Modalities).
     Definition fracture_square (A : Type)
     : O_functor O2 (to O1 A) o to O2 A == to O2 (O1 A) o to O1 A
     := to_O_natural O2 (to O1 A).
-    
+
     (** Here are the hypotheses of the fracture theorem *)
     Context `{Lex O2}.
 
@@ -89,11 +89,11 @@ Module Fracture (Os : Modalities).
       { apply isequiv_O_rec_O_inverts.
         apply O_inverts_conn_map, conn_map_pullback; exact _. }
       (** Now we start building the path. *)
-      refine (path_sigma' _ _ _).
+      simple refine (path_sigma' _ _ _).
       { apply path_TypeO; simpl.
         refine (path_universe (O_rec ((to O2 B)^*' f))). }
       refine (transport_sigma' _ _ @ _); simpl.
-      refine (path_sigma' _ _ _).
+      simple refine (path_sigma' _ _ _).
       { apply path_TypeO; simpl.
         refine (path_universe (O_rec (f^* (to O2 B)))). }
       (** It remains to identify the induced function with the given [f].  We begin with some boilerplate. *)
@@ -199,7 +199,7 @@ Proof.
   intros A ? u; simpl in *.
   pose proof (contr_inhabited_hprop U u).
   assert (Contr A).
-  { refine (contr_equiv (Op' U A) _).
+  { simple refine (contr_equiv (Op' U A) _).
     - refine (O_rec idmap).
       intros []; simpl.
       apply ooextendable_equiv.
@@ -207,7 +207,7 @@ Proof.
     - refine (isequiv_adjointify _ (to (Op' U) A) _ _).
       + intros a; apply O_rec_beta.
       + intros oa; revert oa; apply O_indpaths; intros a; simpl.
-        apply ap, O_rec_beta. }       
+        apply ap, O_rec_beta. }
   apply ooextendable_contr; exact _.
 Defined.
 
@@ -216,7 +216,7 @@ Definition disjoint_open_closed' (U : hProp)
 Proof.
   intros A An.
   apply isconnected_from_elim; intros C Cn f.
-  refine (@local_rec _ C Cn tt _ tt ; _); simpl.
+  simple refine (@local_rec _ C Cn tt _ tt ; _); simpl.
   - intros u.
     exact (f (@local_rec _ A An u Empty_rec tt)).
   - intros a; simpl.

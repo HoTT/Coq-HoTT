@@ -20,9 +20,9 @@ Section Grothendieck.
   Definition isequiv_sigma_category_isomorphism {s d : category F}
   : (s <~=~> d)%category <~> { e : (s.(c) <~=~> d.(c))%category | (F _1 e s.(x) = d.(x))%category }.
   Proof.
-    refine (equiv_adjointify _ _ _ _).
+    simple refine (equiv_adjointify _ _ _ _).
     { intro m.
-      refine (_; _).
+      simple refine (_; _).
       { exists (m : morphism _ _ _).1.
         exists (m^-1).1.
         { exact (ap projT1 (@left_inverse _ _ _ m _)). }
