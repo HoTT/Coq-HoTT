@@ -796,10 +796,10 @@ Section CoherentIdempotents.
 
   (** For instance, here is the standard coherent idempotent structure on the identity map. *)
   Global Instance isidem_idmap (X : Type@{i})
-  : @IsIdempotent@{i i j} X idmap
+  : @IsIdempotent@{i i j j} X idmap
     := Build_IsIdempotent idmap (splitting_idmap X).
 
-  Definition idem_idmap (X : Type@{i}) : Idempotent@{i i j} X
+  Definition idem_idmap (X : Type@{i}) : Idempotent@{i i j j} X
   := (idmap ; isidem_idmap X).
 
   (** Note that [Idempotent X], unlike [RetractOf X], lives in the same universe as [X], even if we demand that it contain the identity. *)
