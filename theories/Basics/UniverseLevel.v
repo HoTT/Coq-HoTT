@@ -85,7 +85,7 @@ Definition lower'2 {A : Type@{i}} {B : A -> Type@{i'}}
 (** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreck havok. *)
 Typeclasses Opaque lift' lower' lift'2 lower'2.
 
-Global Instance isequiv_lift' T : IsEquiv (@lift'@{i j} T)
+Definition isequiv_lift'@{i j} (T : Type@{i}) : IsEquiv (@lift'@{i j} T)
   := @BuildIsEquiv
        _ _
        (@lift' T)
@@ -93,6 +93,7 @@ Global Instance isequiv_lift' T : IsEquiv (@lift'@{i j} T)
        (fun _ => idpath)
        (fun _ => idpath)
        (fun _ => idpath).
+Global Existing Instance isequiv_lift'.
 
 Global Instance isequiv_lift'2 A B : IsEquiv (@lift'2@{i i' j j'} A B)
   := @BuildIsEquiv
