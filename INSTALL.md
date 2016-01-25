@@ -4,7 +4,7 @@ However, the latter cannot be used by people using git to contribute to the libr
 Opam support on windows is experimental.
 [1]: https://github.com/HoTT/HoTT/issues/694
 
-We are compatible with [Coq8.5 beta](https://coq.inria.fr/coq-85), so binary packages can be used. Paths still need to be set manually.
+We are compatible with [Coq 8.5beta3](https://coq.inria.fr/distrib/V8.5beta3/files/), so binary packages can be used. Paths still need to be set manually.
 
 
 # QUICK INSTALLATION INSTRUCTIONS
@@ -39,7 +39,7 @@ minimal fuss, you should try your luck by following these instructions:
 
          dos2unix hoq*
          /usr/bin/find . -name '*.sh' | xargs dos2unix
-        
+
      If you wish to build CoqIDE/hoqide on Windows, we wish you good luck.
 2. Get the HoTT library (skip this step if you already have it):
 
@@ -54,7 +54,7 @@ minimal fuss, you should try your luck by following these instructions:
         make
 
    It may take a while to compile the custom Coq. To speed this up, use `make -jn`, where n is the number of cores you have on your machine.
-   On linux this can be found with `nproc` or `lscpu`. 
+   On linux this can be found with `nproc` or `lscpu`.
    On OSX Apple menu -> About this Mac -> System Report, then look for "number of cores"
 
    If you are using Debian/Ubuntu, and don't mind having HoTT/coq
