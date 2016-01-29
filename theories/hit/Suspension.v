@@ -163,7 +163,7 @@ Proof.
     rewrite concat_p1; apply moveR_Vp; rewrite concat_p1.
     rewrite ap_compose.
     rewrite !Susp_comp_nd_merid.
-    refine (Susp_comp_nd_merid _).
+    reflexivity.
   - reflexivity.
 Qed.
 
@@ -300,8 +300,7 @@ Proof.
     refine (ap_compose
               (Susp_rec North South (fun x0 => merid (1 @ (ap f x0 @ 1))))
               (Susp_rec (point Y) (point Y) idmap) (merid p) @ _).
-    do 2 rewrite Susp_comp_nd_merid.
-    refine (Susp_comp_nd_merid _ @ _). (** Not sure why [rewrite] fails here *)
+    rewrite !Susp_comp_nd_merid.
     apply concat_1p.
   - reflexivity.
 Qed.
