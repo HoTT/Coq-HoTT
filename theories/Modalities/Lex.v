@@ -241,6 +241,8 @@ Module Lex_Reflective_Subuniverses
     rewrite O_indpaths_beta; cbn.
     unfold moveL_equiv_V, moveR_equiv_V.
     Open Scope long_path_scope.
+    Local Opaque eissect. (* work around bug 4533 *)
+    set (k := @eissect); change @eissect with k; subst k. (* work around bug 4543 *)
     rewrite !ap_pp, !concat_p_pp, !ap_V.
     unfold to_O_natural.
     rewrite concat_pV_p.
@@ -249,6 +251,7 @@ Module Lex_Reflective_Subuniverses
     rewrite concat_pp_p; apply moveR_Vp.
     rewrite <- !(ap_compose (to O A) (to O A)^-1).
     rapply @concat_A1p.
+    Local Transparent eissect. (* work around bug 4533 *)
     Close Scope long_path_scope.
   Qed.
 
