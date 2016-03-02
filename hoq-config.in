@@ -43,8 +43,10 @@ if test -d "$mydir/coq/theories"
 then
   export COQLIB="$mydir/coq"
   export HOTTLIB="$mydir/theories"
+  export HOTTCONTRIB="${prefix}/contrib"
 else
-  export COQLIB="@hottdir@/coq"
-  export HOTTLIB="@hottdir@/theories"
+  export COQLIB="${prefix}/share/hott/coq"
+  export HOTTLIB="${prefix}/share/hott/theories"
+  export HOTTCONTRIB="${prefix}/share/hott/contrib"
 fi
-#export COQ_ARGS=(-no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -indices-matter)
+#export COQ_ARGS=(-no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" -R "$HOTTCONTRIB" "" -indices-matter)
