@@ -225,7 +225,7 @@ $(MAIN_VFILES:.v=.vi) : %.vi : %.v $(STD_VOFILES) coq-HoTT
 # The deps file, for graphs
 HoTT.deps: $(ALL_VFILES)
 	$(VECHO) COQDEP > $@
-	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq $(ALL_VFILES) | sed s'#\\#/#g' >$@
+	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -Q "$(srcdir)/contrib" "" -R "$(SRCCOQLIB)/theories" Coq $(ALL_VFILES) | sed s'#\\#/#g' >$@
 
 HoTTCore.deps: $(CORE_VFILES)
 	$(VECHO) COQDEP > $@
@@ -238,7 +238,7 @@ HoTTCore.deps: $(CORE_VFILES)
 html-done.timestamp: $(ALL_GLOBFILES) $(ALL_VFILES)
 	- $(mkdir_p) html
 	touch html-done.timestamp
-	"$(COQDOC)" -toc -interpolate -utf8 -html --coqlib_path "$(SRCCOQLIB)" --no-externals -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq -d html $(ALL_VFILES)
+	"$(COQDOC)" -toc -interpolate -utf8 -html --coqlib_path "$(SRCCOQLIB)" --no-externals -R "$(srcdir)/theories" HoTT -Q "$(srcdir)/contrib" "" -R "$(SRCCOQLIB)/theories" Coq -d html $(ALL_VFILES)
 
 html:
 	rm -f html-done.timestamp
@@ -368,7 +368,7 @@ TAGS : $(TAGS_FILES)
 # Dependency files
 $(MAIN_DEPFILES) : %.d : %.v
 	$(VECHO) COQDEP $<
-	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
+	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -Q "$(srcdir)/contrib" "" -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
 
 $(STD_DEPFILES) : %.d : %.v
 	$(VECHO) COQDEP $<
