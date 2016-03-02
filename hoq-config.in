@@ -43,7 +43,7 @@ if test -d "$mydir/coq/theories"
 then
   export COQLIB="$mydir/coq"
   export HOTTLIB="$mydir/theories"
-  export HOTTCONTRIB="${prefix}/contrib"
+  export HOTTCONTRIB="$mydir/contrib"
 else
   export COQLIB="${prefix}/share/hott/coq"
   export HOTTLIB="${prefix}/share/hott/theories"
