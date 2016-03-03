@@ -1,4 +1,5 @@
 -R theories HoTT
+-Q contrib ""
 COQC = hoqc
 
 theories/Basics/Notations.v
