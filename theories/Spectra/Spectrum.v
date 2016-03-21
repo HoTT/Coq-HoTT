@@ -1,0 +1,46 @@
+(* -*- mode: coq; mode: visual-line -*- *)
+
+(** * Spectra *)
+
+Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Tactics.
+Require Import Pointed.
+Require Import hit.Truncations.
+Import TrM.
+Local Open Scope path_scope.
+Local Open Scope equiv_scope.
+Local Open Scope pointed_scope.
+
+(** ** Basic Definitions of Spectra *)
+
+Record Prespectrum :=
+  { deloop :> nat -> pType
+    ; glue : forall n, deloop n ->* loops (deloop (n .+1)) }.
+
+Class IsSpectrum (E : Prespectrum) :=
+  is_equiv_glue : forall n, IsEquiv (glue E n).
+
+Existing Instance is_equiv_glue.
+
+Definition equiv_glue (E : Prespectrum) `{IsSpectrum E}
+: forall n, E n <~>* loops (E n.+1)
+  := fun n => Build_pEquiv _ _ (glue E n) _.
+
+Record Spectrum :=
+  { to_prespectrum :> Prespectrum
+    ; to_is_spectrum : IsSpectrum to_prespectrum }.
+
+Existing Instance to_is_spectrum.
+
+(** ** Truncations of spectra *)
+
+Fixpoint inc (n : nat) (k : trunc_index) : trunc_index
+  := match n with 0 => k | S m => (inc m k).+1 end.
+
+Definition strunc `{Univalence} (k : trunc_index) (E : Spectrum) : Spectrum.
+Proof.
+  refine (Build_Spectrum (Build_Prespectrum (fun n => pTr (inc n k) (E n)) _) _).
+  - intros n.
+    exact ((ptr_loops _ (E n.+1)) o*E (pTr_pequiv _ (equiv_glue E n))).
+  - intros n. unfold glue. exact _.
+Defined.

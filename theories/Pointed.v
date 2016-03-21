@@ -323,6 +323,14 @@ Proof.
   apply moveR_equiv_V; symmetry; apply point_eq.
 Defined.
 
+Definition pequiv_compose {A B C : pType}
+           (f : A <~>* B) (g : B <~>* C)
+: A <~>* C
+  := (Build_pEquiv A C (g o* f) isequiv_compose).
+
+Notation "g o*E f" := (pequiv_compose f g) (at level 40, left associativity) : pointed_scope.
+
+
 (** ** Equivalences *)
 
 Definition issig_ptype : { X : Type & X } <~> pType.
@@ -469,6 +477,17 @@ Global Instance ispointed_tr (n : trunc_index) (A : Type) `{IsPointed A}
 
 Definition pTr (n : trunc_index) (A : pType) : pType
   := Build_pType (Tr n A) _.
+
+Definition pTr_functor {X Y : pType} (n : trunc_index) (f : X ->* Y)
+: pTr n X ->* pTr n Y.
+Proof.
+  refine (Build_pMap (pTr n X) (pTr n Y) (Trunc_functor n f) _).
+  exact (ap (@tr n Y) (point_eq f)).
+Defined.
+
+Definition pTr_pequiv {X Y : pType} (n : trunc_index) (f : X <~>* Y)
+: pTr n X <~>* pTr n Y
+  := Build_pEquiv _ _ (pTr_functor n f) _.
 
 Definition ptr_loops `{Univalence} (n : trunc_index) (A : pType)
 : pTr n (loops A) <~>* loops (pTr n.+1 A).
