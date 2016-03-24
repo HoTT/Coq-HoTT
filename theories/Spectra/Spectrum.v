@@ -34,12 +34,9 @@ Existing Instance to_is_spectrum.
 
 (** ** Truncations of spectra *)
 
-Fixpoint inc (n : nat) (k : trunc_index) : trunc_index
-  := match n with 0 => k | S m => (inc m k).+1 end.
-
 Definition strunc `{Univalence} (k : trunc_index) (E : Spectrum) : Spectrum.
 Proof.
-  refine (Build_Spectrum (Build_Prespectrum (fun n => pTr (inc n k) (E n)) _) _).
+  refine (Build_Spectrum (Build_Prespectrum (fun n => pTr (trunc_index_inc n k) (E n)) _) _).
   - intros n.
     exact ((ptr_loops _ (E n.+1)) o*E (pTr_pequiv _ (equiv_glue E n))).
   - intros n. unfold glue. exact _.
