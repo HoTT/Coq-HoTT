@@ -328,7 +328,7 @@ Definition pequiv_compose {A B C : pType}
 : A <~>* C
   := (Build_pEquiv A C (g o* f) isequiv_compose).
 
-Notation "g o*E f" := (pequiv_compose f g) (at level 40, left associativity) : pointed_scope.
+Notation "g o*E f" := (pequiv_compose f g) : pointed_scope.
 
 
 (** ** Equivalences *)
