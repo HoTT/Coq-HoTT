@@ -7,8 +7,11 @@ Local Open Scope path_scope.
 
 Generalizable Variables X A B C f g n.
 
+(** Primitive projections do not work for recursive records; see bug #4648 - https://coq.inria.fr/bugs/show_bug.cgi?id=4648. *)
+Local Unset Primitive Projections.
 Inductive W (A : Type) (B : A -> Type) : Type :=
   sup { w_label : A ; w_arg : B w_label -> W A B }.
+Local Set Primitive Projections.
 
 Arguments w_label {A B} _.
 Arguments w_arg {A B} _ _.
