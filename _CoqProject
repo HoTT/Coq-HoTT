@@ -95,6 +95,8 @@ theories/Spaces/No.v
 theories/Algebra/ooGroup.v
 theories/Algebra/Aut.v
 theories/Algebra/ooAction.v
+theories/Spectra/Spectrum.v
+theories/Spectra/Coinductive.v
 theories/Misc.v
 theories/Utf8.v
 theories/HoTT.v
