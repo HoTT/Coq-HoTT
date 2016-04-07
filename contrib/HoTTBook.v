@@ -946,7 +946,7 @@ Definition Book_6_5_4 := @HoTT.hit.Suspension.loop_susp_adjoint.
 (* ================================================== thm:hlevel-prod *)
 (** Theorem 7.1.9 *)
 
-
+Definition Book_7_1_9 := @HoTT.Types.Forall.trunc_forall.
 
 (* ================================================== thm:isaprop-isofhlevel *)
 (** Theorem 7.1.10 *)
