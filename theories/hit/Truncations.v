@@ -140,6 +140,14 @@ Section TruncationModality.
   : Tr n X -> Tr n Y
   := O_functor n f.
 
+  Global Instance Trunc_functor_isequiv {X Y : Type} (f : X -> Y) `{IsEquiv _ _ f}
+  : IsEquiv (Trunc_functor f)
+    := isequiv_O_functor n f.
+
+  Definition Trunc_functor_equiv {X Y : Type} (f : X <~> Y)
+  : Tr n X <~> Tr n Y
+    := equiv_O_functor n f.
+
   Definition Trunc_functor_compose {X Y Z} (f : X -> Y) (g : Y -> Z)
   : Trunc_functor (g o f) == Trunc_functor g o Trunc_functor f
   := O_functor_compose n f g.

@@ -25,6 +25,9 @@ Fixpoint trunc_index_leq (m n : trunc_index) : Type
 
 Notation "m <= n" := (trunc_index_leq m n) (at level 70, no associativity) : trunc_scope.
 
+Fixpoint trunc_index_inc (n : nat) (k : trunc_index) : trunc_index
+  := match n with O => k | S m => (trunc_index_inc m k).+1 end.
+
 (** ** Truncatedness proper. *)
 
 (** A contractible space is (-2)-truncated, by definition. *)
