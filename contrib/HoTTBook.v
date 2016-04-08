@@ -466,7 +466,7 @@ Definition Book_3_6_2 `{Funext} (A : Type) (B : A -> Type)
 (* ================================================== thm:retract-contr *)
 (** Lemma 3.11.7 *)
 
-
+Definition Book_3_11_7 := @HoTT.Idempotents.contr_retracttype.
 
 (* ================================================== thm:contr-paths *)
 (** Lemma 3.11.8 *)
@@ -946,7 +946,7 @@ Definition Book_6_5_4 := @HoTT.hit.Suspension.loop_susp_adjoint.
 (* ================================================== thm:hlevel-prod *)
 (** Theorem 7.1.9 *)
 
-
+Definition Book_7_1_9 := @HoTT.Types.Forall.trunc_forall.
 
 (* ================================================== thm:isaprop-isofhlevel *)
 (** Theorem 7.1.10 *)

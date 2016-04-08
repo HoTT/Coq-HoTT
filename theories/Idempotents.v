@@ -78,6 +78,20 @@ Proof.
         reflexivity).
 Defined.
 
+(** Retraction preserves contractibility **)
+Definition contr_retracttype {X : Type} (R : RetractOf X ) (contra : Contr X) : Contr (retract_type R ).
+Proof.
+ refine (BuildContr _ _ _).
+ - refine (retract_retr _ _).
+   exact (center X).
+ - intro y.
+   refine (concat _ _).
+   + exact (retract_retr R (retract_sect R y)).
+   + refine (ap (retract_retr R) _).
+     * exact (contr _).
+   + exact (retract_issect R _).
+Defined.
+
 (** Like any record type, [RetractOf X] is equivalent to a nested sigma-type.  We use a product at one place in the middle, rather than a sigma, to simplify the next proof. *)
 Definition issig_retractof (X : Type)
 : { A : Type & {rs : (X -> A) * (A -> X) & fst rs o snd rs == idmap }}
