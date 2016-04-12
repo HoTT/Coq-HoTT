@@ -41,11 +41,15 @@ Section cones.
     exists (setcone_point _).
     pose (alpha1 := @pp A B Unit f (const tt)).
     pose (tot:= { h : B -> setcone f & tr o push o inl o f = h o f }).
-    pose (l := (tr o push o inl; idpath) : tot).
+    transparent assert (l : tot).
+    { refine (tr o _ o inl; _).
+      { refine push. }
+      { refine idpath. } }
     pose (r := (@const B (setcone f) (setcone_point _); (ap (fun f => @tr 0 _ o f) (path_forall _ _ alpha1))) : tot).
     subst tot.
     assert (X : l = r).
-      { pose (hepi (BuildhSet (setcone f)) (tr o push o inl)).
+      { let lem := constr:(fun X push' => hepi (BuildhSet (setcone f)) (tr o push' o @inl _ X)) in
+        pose (lem _ push).
         refine (path_contr l r). }
     subst l r.
 
@@ -61,7 +65,7 @@ Section cones.
     unfold setcone_point.
     subst I0. simpl.
     pose (X..2) as p. simpl in p.
-    rewrite (transport_precompose f (tr o push o inl) _ X..1) in p.
+    rewrite (transport_precompose f _ _ X..1) in p.
     assert (H':=concat (ap (fun x => ap10 x a) p) (ap10_ap_postcompose tr (path_arrow pushl pushr pp) _)).
     rewrite ap10_path_arrow in H'.
     clear p.

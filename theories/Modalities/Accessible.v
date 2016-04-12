@@ -216,7 +216,7 @@ Module Accessible_Modalities_to_ReflectiveSubuniverses
       := fun (O : ReflectiveSubuniverse@{u a}) =>
            (null_to_local_generators (acc_gen O)).
 
-    Definition inO_iff_islocal
+    Definition inO_iff_islocal@{u a i}
     : forall (O : ReflectiveSubuniverse@{u a}) (X : Type@{i}),
       iff@{i i i}
          (In@{u a i} O X)
@@ -253,7 +253,7 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
       intros [ [i x] | [i x] ]; exact (hfiber (to O _) x).
     Defined.
 
-    Definition inO_iff_isnull (O : Modality@{u a}) (X : Type@{i})
+    Definition inO_iff_isnull@{u a i} (O : Modality@{u a}) (X : Type@{i})
     : iff@{i i i} (In@{u a i} O X) (IsNull@{a i} (acc_gen O) X).
     Proof.
       split.
@@ -264,7 +264,7 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
         refine (cancelL_ooextendable@{a a a i i i i i i i}
                   (fun _ => X) (Acc.acc_gen O i)
                   (to O (lgen_codomain (Acc.acc_gen O) i)) _ _).
-        + apply ooextendable_isnull_fibers@{a a i i a a i}; intros x.
+        + apply ooextendable_isnull_fibers@{a a i i a i a}; intros x.
           exact (Xnull (inr (i;x))).
         + refine (ooextendable_homotopic _
                    (O_functor O (Acc.acc_gen O i)
@@ -275,7 +275,7 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
           * apply ooextendable_isnull_fibers; intros x.
             exact (Xnull (inl (i;x))).
     Defined.
-    
+  
   End AccMod.
 End Accessible_Modalities_from_ReflectiveSubuniverses.
 

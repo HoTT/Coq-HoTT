@@ -45,7 +45,7 @@ let is_prop gref = match gref with
         if Term.is_Prop cnst_type then true
         else begin
           try
-            let s = Typing.type_of env Evd.empty cnst_type
+            let s = Typing.unsafe_type_of env Evd.empty cnst_type
             in Term.is_Prop s
           with _ -> false
         end

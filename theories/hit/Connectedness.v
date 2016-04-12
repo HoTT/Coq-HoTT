@@ -194,7 +194,7 @@ Proof.
   apply (concatR (apD10 (ea_eab ..2) tt)).
   set (ea := ea_eab ..1). generalize ea; simpl. clear ea_eab ea. intros.
   rewrite transport_arrow. rewrite transport_const. rewrite transport_paths_Fl.
-  exact 1.
+  exact 1%path.
 Qed.
 
 (** It is easier to apply the above result with its components separated. *)

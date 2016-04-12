@@ -184,7 +184,7 @@ Module ReflectiveSubuniverses_to_Modalities
   Definition minO_paths (O : Modality@{u a})
              (A : Type@{i}) (A_inO : In@{u a i} O A) (z z' : A)
   : In O (z = z')
-  := @inO_paths@{u a i i} O A A_inO z z'.
+  := @inO_paths@{u a i i i} O A A_inO z z'.
 
 End ReflectiveSubuniverses_to_Modalities.
 

@@ -867,8 +867,11 @@ Section Reflective_Subuniverse.
       - apply O_rec; intros x.
         exact (to O _ (functor_sum (to O A) (to O B) x)).
       - apply O_rec; intros [x|x].
-        + exact (O_rec (to O _ o inl) x).
-        + exact (O_rec (to O _ o inr) x).
+        + (* Work around https://coq.inria.fr/bugs/show_bug.cgi?id=4525, stack overflow in exact *)
+          let lem := constr:(fun A B => to O _ o @inl A B) in
+          exact (O_rec (lem _ _) x).
+        + let lem := constr:(fun A B => to O _ o @inr A B) in
+          exact (O_rec (lem _ _) x).
       - apply O_indpaths; intros [x|x].
         all:revert x; apply O_indpaths; intros x.
         all:abstract (rewrite !O_rec_beta; reflexivity).

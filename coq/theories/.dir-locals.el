@@ -1,4 +1,4 @@
 ((coq-mode . ((eval . (let ((default-directory (locate-dominating-file
                                                 buffer-file-name ".dir-locals.el")))
                         (make-local-variable 'coq-prog-args)
-                        (setq coq-prog-args `("-no-native-compiler" "-indices-matter" "-boot" "-nois" "-coqlib" ,(expand-file-name "..") "-R" ,(expand-file-name ".") "Coq" "-emacs")))))))
+                        (setq coq-prog-args `("-indices-matter" "-boot" "-nois" "-coqlib" ,(expand-file-name "..") "-R" ,(expand-file-name ".") "Coq" "-emacs")))))))
