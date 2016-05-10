@@ -137,7 +137,7 @@ Definition loops_2functor {A B : pType} {f g : A ->* B} (p : f ==* g)
 : (loops_functor f) ==* (loops_functor g).
 Proof.
   pointed_reduce.
-  refine (Build_pHomotopy _ _); simpl.
+  simple refine (Build_pHomotopy _ _); simpl.
   - intros q.
     refine (_ @ (concat_1p _)^).
     refine (_ @ (concat_p1 _)^).
@@ -154,7 +154,7 @@ Definition pmap_compose_assoc {A B C D : pType}
 : (h o* g) o* f ==* h o* (g o* f).
 Proof.
   pointed_reduce.
-  refine (Build_pHomotopy _ _); cbn.
+  simple refine (Build_pHomotopy _ _); cbn.
   - intros ?; reflexivity.
   - reflexivity.
 Qed.
@@ -163,7 +163,7 @@ Definition pmap_precompose_idmap {A B : pType} (f : A ->* B)
 : f o* pmap_idmap A ==* f.
 Proof.
   pointed_reduce.
-  refine (Build_pHomotopy _ _); cbn.
+  simple refine (Build_pHomotopy _ _); cbn.
   - intros ?; reflexivity.
   - reflexivity.
 Qed.
@@ -172,7 +172,7 @@ Definition pmap_postcompose_idmap {A B : pType} (f : A ->* B)
 : pmap_idmap B o* f ==* f.
 Proof.
   pointed_reduce.
-  refine (Build_pHomotopy _ _); cbn.
+  simple refine (Build_pHomotopy _ _); cbn.
   - intros ?; reflexivity.
   - reflexivity.
 Qed.
@@ -184,7 +184,7 @@ Definition pmap_postwhisker {A B C : pType} {f g : A ->* B}
 : h o* f ==* h o* g.
 Proof.
   pointed_reduce.
-  refine (Build_pHomotopy _ _); cbn.
+  simple refine (Build_pHomotopy _ _); cbn.
   - intros a; apply ap, p.
   - reflexivity.
 Qed.
@@ -194,7 +194,7 @@ Definition pmap_prewhisker {A B C : pType} (f : A ->* B)
 : g o* f ==* h o* f.
 Proof.
   pointed_reduce.
-  refine (Build_pHomotopy _ _); cbn.
+  simple refine (Build_pHomotopy _ _); cbn.
   - intros a; apply p.
   - refine (concat_p1 _ @ (concat_1p _)^).
 Qed.
@@ -206,7 +206,7 @@ Definition phomotopy_compose {A B : pType} {f g h : A ->* B}
 : f ==* h.
 Proof.
   pointed_reduce.
-  refine (Build_pHomotopy _ _); cbn.
+  simple refine (Build_pHomotopy _ _); cbn.
   - intros x; exact (p x @ q x).
   - apply concat_p1.
 Qed.
@@ -217,7 +217,7 @@ Definition phomotopy_inverse {A B : pType} {f g : A ->* B}
 : (f ==* g) -> (g ==* f).
 Proof.
   intros p; pointed_reduce.
-  refine (Build_pHomotopy _ _); cbn.
+  simple refine (Build_pHomotopy _ _); cbn.
   - intros x; exact ((p x)^).
   - apply concat_Vp.
 Qed.
@@ -232,7 +232,7 @@ Definition loops_functor_compose {A B C : pType}
    ==* (pmap_compose (loops_functor g) (loops_functor f)).
 Proof.
   pointed_reduce.
-  refine (Build_pHomotopy _ _); simpl.
+  simple refine (Build_pHomotopy _ _); simpl.
   - intros p.
     apply whiskerL, whiskerR.
     refine (_ @ ap (ap g) (concat_1p _)^).
@@ -245,7 +245,7 @@ Definition loops_functor_idmap (A : pType)
 : loops_functor (pmap_idmap A) ==* pmap_idmap (loops A).
 Proof.
   pointed_reduce.
-  refine (Build_pHomotopy _ _); simpl.
+  simple refine (Build_pHomotopy _ _); simpl.
   - intros p.
     refine (concat_1p _ @ concat_p1 _ @ ap_idmap _).
   - reflexivity.
@@ -429,7 +429,7 @@ Definition pfib {A B : pType} (f : A ->* B) : pfiber f ->* A
 Definition pfiber2_loops {A B : pType} (f : A ->* B)
 : pfiber (pfib f) <~>* loops B.
 Proof.
-  apply issig_pequiv; refine (_;_).
+  apply issig_pequiv; simple refine (_;_).
   - simpl; unfold hfiber.
     refine (_ oE (equiv_sigma_assoc _ _)^-1); simpl.
     refine (_ oE (equiv_functor_sigma'
@@ -450,7 +450,7 @@ Definition pfiber2_loops_functor {A B : pType} (f : A ->* B)
   ==* loops_functor f o* pfiber2_loops (pfib f).
 Proof.
   pointed_reduce.
-  refine (Build_pHomotopy _ _).
+  simple refine (Build_pHomotopy _ _).
   - intros [[xp q] r]. simpl in *.
     rewrite !transport_paths_Fl.
     rewrite inv_pp, !ap_V, !inv_V, ap_compose, !ap_pp, inv_pp.
@@ -492,7 +492,7 @@ Definition pTr_pequiv {X Y : pType} (n : trunc_index) (f : X <~>* Y)
 Definition ptr_loops `{Univalence} (n : trunc_index) (A : pType)
 : pTr n (loops A) <~>* loops (pTr n.+1 A).
 Proof.
-  refine (issig_pequiv _ _ (_;_)).
+  simple refine (issig_pequiv _ _ (_;_)).
   - apply equiv_path_Tr.
   - reflexivity.
 Defined.

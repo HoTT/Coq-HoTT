@@ -144,7 +144,7 @@ Module Nudge_Modalities
     : New_Modality -> Nullification_Modalities.Modality
       := Nul o Acc.acc_gen.
   End Data.
-  
+
   Module Nudged <: Modalities
     := Modalities_Restriction Nullification_Modalities Data.
 

@@ -36,14 +36,14 @@ Section CoreflectiveSubuniverse.
   Proof.
     refine ((fun (g : Y -> F X) => fromF F X o g)^-1 f).
     by apply isequiv_fromF_postcompose.
-  Defined.    
+  Defined.
 
   Definition F_corec_beta {Y X} (YF : inF F Y) (f : Y -> X)
   : fromF F X o F_corec YF f == f.
   Proof.
     apply ap10, (eisretr (fun g => fromF F X o g)).
   Defined.
-  
+
   Definition F_coindpaths {Y X} `(inF F Y) (g h : Y -> F X)
              (p : fromF F X o g == fromF F X o h)
   : g == h.
@@ -85,7 +85,7 @@ Section CoreflectiveSubuniverse.
     - intros ?. apply F_corec; try assumption.
       exact (fun _ => tt).
     - intros f.
-      refine (inF_fromF_sect X _ _).
+      simple refine (inF_fromF_sect X _ _).
       + intros x.
         exact (F_functor (unit_name x) (f x)).
       + intros x; unfold F_functor.
@@ -101,7 +101,7 @@ Section CoOpen.
 
   Definition coOp : CoreflectiveSubuniverse.
   Proof.
-    refine (Build_CoreflectiveSubuniverse
+    simple refine (Build_CoreflectiveSubuniverse
               (fun X => BuildhProp (X -> U))
               (fun X => X * U)
               (fun X => @snd X U)

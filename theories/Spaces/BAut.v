@@ -194,7 +194,7 @@ Section Center2BAut.
     { apply path_sigma_hprop_1. }
     assert (forall Z:BAut X, IsHSet (idpath Z.1 = idpath Z.1)) by exact _.
     refine (baut_ind_hset X (fun Z => idpath Z = idpath Z) oE _).
-    refine (equiv_functor_sigma' _ _).
+    simple refine (equiv_functor_sigma' _ _).
     { refine (_ oE equiv_path2_universe 1 1).
       apply equiv_concat_lr.
       - symmetry; apply path_universe_1.

@@ -16,6 +16,9 @@ Global Set Keyed Unification.
 (** This command makes it so that when defining an [Instance], if you give a term explicitly with [:=], then Coq must be able to fill in all the holes in that term.  This is the same as the behavior of [Definition].  (Without this command, if Coq is unable to fill in all the holes in a term given to an [Instance], it silently drops into interactive proof mode.  This is a source of hard-to-find bugs, and you can always obtain equivalent behavior by beginning an interactive proof with [refine].) *)
 Global Unset Refine Instance Mode.
 
+(** This command makes it so that you don't have to declare universes explicitly when mentioning them in the type.  (Without this command, if you want to say [Definition foo := Type@{i}.], you must instead say [Definition foo@{i} := Type@{i}.]. *)
+Global Unset Strict Universe Declaration.
+
 Definition relation (A : Type) := A -> A -> Type.
 
 Class Reflexive {A} (R : relation A) :=
@@ -72,27 +75,27 @@ Ltac transitivity x := etransitivity x.
 Notation Type0 := Set.
 
 (** Define [Type₁] (really, [Type_i] for any [i > 0]) so that we can enforce having universes that are not [Set].  In trunk, universes will not be unified with [Set] in most places, so we want to never use [Set] at all. *)
-Definition Type1 := Eval hnf in let gt := (Set : Type@{i}) in Type@{i}.
+Definition Type1@{i} := Eval hnf in let gt := (Set : Type@{i}) in Type@{i}.
 Arguments Type1 / .
 Identity Coercion unfold_Type1 : Type1 >-> Sortclass.
 
 (** We also define "the next couple of universes", which are actually an arbitrary universe with another one or two strictly below it.  Note when giving universe annotations to these that their universe parameters appear in order of *decreasing* size. *)
-Definition Type2 := Eval hnf in let gt := (Type1 : Type@{i}) in Type@{i}.
+Definition Type2@{i j} := Eval hnf in let gt := (Type1@{j} : Type@{i}) in Type@{i}.
 Arguments Type2 / .
 Identity Coercion unfold_Type2 : Type2 >-> Sortclass.
 
-Definition Type3 := Eval hnf in let gt := (Type2 : Type@{i}) in Type@{i}.
+Definition Type3@{i j k} := Eval hnf in let gt := (Type2@{j k} : Type@{i}) in Type@{i}.
 Arguments Type3 / .
 Identity Coercion unfold_Type3 : Type3 >-> Sortclass.
 
 (** Along the same lines, here is a universe with an extra universe parameter that's less than or equal to it in size.  The [gt] isn't necessary to force the larger universe to be bigger than [Set] (since we refer to the smaller universe by [Type1] which is already bigger than [Set]), but we include it anyway to make the universe parameters occur again in (now non-strictly) decreasing order. *)
-Definition Type2le := Eval hnf in let gt := (Set : Type@{i}) in
-                                  let ge := ((fun x => x) : Type1 -> Type@{i}) in Type@{i}.
+Definition Type2le@{i j} := Eval hnf in let gt := (Set : Type@{i}) in
+                                        let ge := ((fun x => x) : Type1@{j} -> Type@{i}) in Type@{i}.
 Arguments Type2le / .
 Identity Coercion unfold_Type2le : Type2le >-> Sortclass.
 
-Definition Type3le := Eval hnf in let gt := (Set : Type@{i}) in
-                                  let ge := ((fun x => x) : Type2le@{j k} -> Type@{i}) in Type@{i}.
+Definition Type3le@{i j k} := Eval hnf in let gt := (Set : Type@{i}) in
+                                          let ge := ((fun x => x) : Type2le@{j k} -> Type@{i}) in Type@{i}.
 Arguments Type3le / .
 Identity Coercion unfold_Type3le : Type3le >-> Sortclass.
 
@@ -787,7 +790,7 @@ Ltac revert_opaque x :=
 (** [transparent assert (H : T)] is like [assert (H : T)], but leaves the body transparent. *)
 (** Since binders don't respect [fresh], we use a name unlikely to be reused. *)
 Tactic Notation "transparent" "assert" "(" ident(name) ":" constr(type) ")" :=
-  refine (let __transparent_assert_hypothesis := (_ : type) in _);
+  simple refine (let __transparent_assert_hypothesis := (_ : type) in _);
   [
   | ((* We cannot use the name [__transparent_assert_hypothesis], due to some infelicities in the naming of bound variables.  So instead we pull the bottommost hypothesis. *)
     let H := match goal with H := _ |- _ => constr:(H) end in

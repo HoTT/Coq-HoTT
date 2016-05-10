@@ -49,4 +49,4 @@ else
   export HOTTLIB="@hottdir@/theories"
   export HOTTCONTRIB="@hottdir@/contrib"
 fi
-#export COQ_ARGS=(-no-native-compiler -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -Q "$HOTTCONTRIB" "" -indices-matter)
+#export COQ_ARGS=(-coqlib "$COQLIB" -R "$HOTTLIB" HoTT -Q "$HOTTCONTRIB" "" -indices-matter)

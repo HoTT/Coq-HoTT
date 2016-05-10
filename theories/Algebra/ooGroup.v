@@ -7,6 +7,9 @@ Import TrM.
 
 Local Open Scope path_scope.
 
+(** Keyed unification makes [rewrite !loops_functor_group] take a really long time.  See https://coq.inria.fr/bugs/show_bug.cgi?id=4544 for more discussion. *)
+Local Unset Keyed Unification.
+
 (** * oo-Groups *)
 
 (** We want a workable definition of "oo-group" (what a classical homotopy theorist would call a "grouplike Aoo-space"). The classical definitions using operads or Segal spaces involve infinitely much data, which we don't know how to handle in HoTT. But instead, we can invoke the theorem (which is a theorem in classical homotopy theory, and also in any oo-topos) that every oo-group is the loop space of some pointed connected object, and use it instead as a definition: we define an oo-group to be a pointed connected type (its classifying space or delooping). Then we make subsidiary definitions to allow us to treat such an object in the way we would expect, e.g. an oo-group homomorphism is a pointed map between classifying spaces. *)
@@ -76,7 +79,7 @@ Definition group_loops_functor
            {X Y : pType} (f : pMap X Y)
 : ooGroupHom (group_loops X) (group_loops Y).
 Proof.
-  refine (Build_pMap _ _ _ _); simpl.
+  simple refine (Build_pMap _ _ _ _); simpl.
   - intros [x p].
     exists (f x).
     strip_truncations; apply tr.
@@ -265,7 +268,7 @@ Section Subgroups.
   Definition equiv_coset_subgroup (g : G)
   : { g' : G & in_coset g g'} <~> H.
   Proof.
-    refine (equiv_adjointify _ _ _ _).
+    simple refine (equiv_adjointify _ _ _ _).
     - intros [? [h ?]]; exact h.
     - intros h; exists (incl h^ @ g); exists h; simpl.
       abstract (rewrite inv_pp, grouphom_V, inv_V, concat_p_Vp; reflexivity).

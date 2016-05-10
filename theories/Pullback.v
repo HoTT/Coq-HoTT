@@ -42,7 +42,7 @@ Defined.
 Definition equiv_pullback_unit_prod (A B : Type)
 : Pullback (@const A Unit tt) (@const B Unit tt) <~> A * B.
 Proof.
-  refine (equiv_adjointify _ _ _ _).
+  simple refine (equiv_adjointify _ _ _ _).
   - intros [a [b _]]; exact (a , b).
   - intros [a b]; exact (a ; (b ; 1)).
   - intros [a b]; exact 1.

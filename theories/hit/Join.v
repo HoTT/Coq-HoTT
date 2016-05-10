@@ -19,7 +19,7 @@ Section Join.
   Global Instance contr_join A B `{Contr A} : Contr (join A B).
   Proof.
     exists (push (inl (center A))).
-    intros y; refine (pushout_ind _ _ _ _ _ y).
+    intros y; simple refine (pushout_ind _ _ _ _ _ y).
     - intros [a | b].
       * apply ap, ap, contr.
       * exact (pp (center A , b)).

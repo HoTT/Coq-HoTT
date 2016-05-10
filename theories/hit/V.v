@@ -246,7 +246,7 @@ Context `{ua : Univalence}.
 
 Definition mem (x : V) : V -> hProp.
 Proof.
-  refine (V_rec' _ _ _ _). intros A f _.
+  simple refine (V_rec' _ _ _ _). intros A f _.
   exact (hexists (fun a : A => f a = x)). simpl.
   intros A B f g eqimg _ _ _.
   apply path_iff_hprop; simpl.
@@ -533,7 +533,7 @@ Definition V_singleton (u : V) : V@{U' U} := set (Unit_ind u).
 Global Instance isequiv_ap_V_singleton {u v : V}
 : IsEquiv (@ap _ _ V_singleton u v).
 Proof.
-  refine (BuildIsEquiv _ _ _ _ _ _ _); try solve [ intro; apply path_ishprop ].
+  simple refine (BuildIsEquiv _ _ _ _ _ _ _); try solve [ intro; apply path_ishprop ].
   { intro H. specialize (path_V_eqimg H). intros (H1, H2).
     refine (Trunc_rec _ (H1 tt)). intros [t p]. destruct t; exact p. }
 Defined.
@@ -627,7 +627,7 @@ Definition V_union (v : V) :=
 (** The ordinal successor x ∪ {x} *)
 Definition V_succ : V -> V.
 Proof.
-  refine (V_rec' _ _ _ _). intros A f _.
+  simple refine (V_rec' _ _ _ _). intros A f _.
   exact (set (fun (x : A + Unit) => match x with inl a => f a
                                           | inr tt => set f end)).
   simpl; intros A B f g eq_img _ _ _. apply setext'. split.

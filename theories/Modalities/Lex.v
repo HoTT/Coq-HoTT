@@ -117,7 +117,7 @@ Module Lex_Modalities_Theory (Os : Modalities).
     refine (cancelR_conn_map O (to O _) _).
     unfold O_functor_hfiber.
     refine (conn_map_homotopic O
-             (@functor_hfiber _ _ _ _ f (O_functor O f) 
+             (@functor_hfiber _ _ _ _ f (O_functor O f)
                                (to O A) (to O B)
                                (fun x => (to_O_natural O f x)^) b)
              _ _ _).
@@ -201,7 +201,7 @@ Module Lex_Reflective_Subuniverses
 
   Import Opf.
 
-  Definition inO_sigma (O : ReflectiveSubuniverse@{u a})
+  Definition inO_sigma@{u a i j k} (O : ReflectiveSubuniverse@{u a})
              (A:Type@{i}) (B:A -> Type@{j})
              (A_inO : In@{u a i} O A)
              (B_inO : forall a, In@{u a j} O (B a))
@@ -219,7 +219,7 @@ Module Lex_Reflective_Subuniverses
                                          (hfiber@{k i} g (g x)))).
     { refine (_ oE equiv_to_O@{u a k k} O _).
       - refine (_ oE BuildEquiv _ _
-                  (O_functor_hfiber@{u a k i k k i k irrelevant k k k k k k}
+                  (O_functor_hfiber@{u a k i k k i k k (* <- this k is irrelevant *) k k k k k k}
                                    O (@pr1 A B) (g x)) _).
         unfold hfiber.
         refine (equiv_functor_sigma' 1 _). intros y; cbn.
@@ -230,7 +230,7 @@ Module Lex_Reflective_Subuniverses
         revert y; apply O_indpaths@{u a k i i k k}; intros [a q]; cbn.
         refine (_ @ (O_rec_beta _ _)^).
         apply ap, O_rec_beta.
-      - refine (inO_equiv_inO@{dwim1 dwim2 dwim3 dwim4 k} _
+      - refine (inO_equiv_inO@{u (*dwim1*) a (*dwim2*) j (*dwim3*) k (* <- dwim4 *) k} _
                  (hfiber_fibration@{i j k k} (g x) B)). }
     refine (isequiv_homotopic (h oE equiv_hfiber_homotopic _ _ p (g x)) _).
     intros [[a b] q]; cbn. clear h.
@@ -241,6 +241,8 @@ Module Lex_Reflective_Subuniverses
     rewrite O_indpaths_beta; cbn.
     unfold moveL_equiv_V, moveR_equiv_V.
     Open Scope long_path_scope.
+    Local Opaque eissect. (* work around bug 4533 *)
+    set (k := @eissect); change @eissect with k; subst k. (* work around bug 4543 *)
     rewrite !ap_pp, !concat_p_pp, !ap_V.
     unfold to_O_natural.
     rewrite concat_pV_p.
@@ -249,6 +251,7 @@ Module Lex_Reflective_Subuniverses
     rewrite concat_pp_p; apply moveR_Vp.
     rewrite <- !(ap_compose (to O A) (to O A)^-1).
     rapply @concat_A1p.
+    Local Transparent eissect. (* work around bug 4533 *)
     Close Scope long_path_scope.
   Qed.
 
@@ -287,7 +290,7 @@ Module Accessible_Lex_Modalities_Theory
     destruct n; [ exact tt | split ].
     - intros P.
       (** Here is the core of the proof: we must show that any family of modal types indexed by a (generating) connected type is equivalent to a constant family.  We take the constant family to be constant at the reflection of the sum of our given family [P]. *)
-      refine (fun u => (O (sigT P) ; _) ; _).
+      simple refine (fun u => (O (sigT P) ; _) ; _); cbn beta.
       1:exact _.
       intros x; symmetry; apply path_TypeO; simpl.
       refine (path_universe (fun p => to O _ (x ; p))).

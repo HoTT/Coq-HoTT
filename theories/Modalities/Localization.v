@@ -44,13 +44,13 @@ Then, however, we have to express the hypotheses of the induction principle.  We
 
 (** ** Dependent extendability *)
 
-Fixpoint ExtendableAlong_Over
+Fixpoint ExtendableAlong_Over@{a b c d m}
          (n : nat) {A : Type@{a}} {B : Type@{b}} (f : A -> B)
          (C : B -> Type@{c})
          (D : forall b, C b -> Type@{d})
          (ext : ExtendableAlong@{a b c m} n f C)
 : Type@{m}
-  := match n return ExtendableAlong@{a b c m} n f C -> Type with
+  := match n return ExtendableAlong@{a b c m} n f C -> Type@{m} with
        | 0 => fun _ => Unit@{m}
        | S n => fun ext' =>
                 (forall (g : forall a, C (f a)) (g' : forall a, D (f a) (g a)),
@@ -188,7 +188,7 @@ Proof.
   1:exact tt.
   split.
   - intros g g'.
-    refine (_;_); simpl.
+    simple refine (_;_); simpl.
     + intros b.
       refine (_ @ (fst (snd (ext' 2) _ _
                             (fun b' => r b' ((fst (ext n.+1) g).1 b'))
@@ -229,7 +229,9 @@ Proof.
       rewrite concat_Vp; simpl; rewrite concat_1p.
       refine (transport_paths_FlFr_D _ _ @ _).
       Open Scope long_path_scope.
+      Local Opaque transport_pV. (* work around bug 4533 *)
       rewrite !ap_pp, !concat_p_pp, ap_transport_pV, !concat_p_pp.
+      Local Transparent transport_pV. (* work around bug 4533 *)
       refine ((((_  @@ 1) @ concat_1p _) @@ 1 @@ 1 @@ 1) @ _).
       * rewrite ap_V, concat_pp_p.
         do 2 apply moveR_Vp.
@@ -376,7 +378,7 @@ Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.
   : IsHProp (In@{u a i} O T).
   Proof.
     apply (@trunc_forall@{a i i} _); intros i.
-    apply ishprop_ooextendable@{a a i i i i}.
+    apply ishprop_ooextendable@{a a i i i i i}.
   Defined.
 
   Definition extendable_to_O

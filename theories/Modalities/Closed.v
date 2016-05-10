@@ -19,18 +19,18 @@ Section ClosedModalTypes.
   Proof.
     split.
     - intros uac.
-      refine (isequiv_adjointify _ _ _ _).
-      * refine (pushout_rec A _ _).
+      simple refine (isequiv_adjointify _ _ _ _).
+      * simple refine (pushout_rec A _ _).
         + intros [u | a].
           { pose (uac u). exact (center A). }
           { assumption. }
         + intros [u a]. simpl.
           pose (uac u). apply contr.
       * intros z. pattern z.
-        refine (pushout_ind fst snd _ _ _ z).
+        simple refine (pushout_ind fst snd _ _ _ z).
         + intros [u | a].
           { pose (contr_inhabited_hprop U u).
-            apply path_contr. } 
+            apply path_contr. }
           { reflexivity. }
         + intros [u a]; pose (contr_inhabited_hprop U u).
           apply path_contr.
@@ -93,7 +93,7 @@ Module ClosedModalities <: Modalities.
     (forall a, B (to@{u a i} O A a)) -> forall a, B a.
   Proof.
     simpl; intros f z.
-    refine (pushout_ind@{i a i j i} _ _ B _ _ z).
+    simple refine (pushout_ind@{i a i j i} _ _ B _ _ z).
     - intros [u | a].
       + apply center, B_inO, u.
       + apply f.

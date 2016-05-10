@@ -40,7 +40,7 @@ Section Grothendieck.
     refine (isequiv_sigma_category_isomorphism^-1 oE _ oE (equiv_ap' (issig_pair F)^-1 s d)).
     refine (_ oE (equiv_path_sigma _ _ _)^-1).
     simpl.
-    refine (equiv_functor_sigma' _ _).
+    simple refine (equiv_functor_sigma' _ _).
     { exists (@idtoiso C _ _).
       exact _. }
     { exact category_isotoid_helper. }

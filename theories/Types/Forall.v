@@ -166,7 +166,7 @@ Global Instance isequiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv B A f} `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
   : IsEquiv (functor_forall f g) | 1000.
 Proof.
-  refine (isequiv_adjointify (functor_forall f g)
+  simple refine (isequiv_adjointify (functor_forall f g)
     (functor_forall (f^-1)
       (fun (x:A) (y:Q (f^-1 x)) => eisretr f x # (g (f^-1 x))^-1 y
       )) _ _);
@@ -229,7 +229,7 @@ Defined.
 Definition equiv_contr_forall `{Contr A} `(P : A -> Type)
 : (forall a, P a) <~> P (center A).
 Proof.
-  refine (equiv_adjointify (fun (f:forall a, P a) => f (center A)) _ _ _).
+  simple refine (equiv_adjointify (fun (f:forall a, P a) => f (center A)) _ _ _).
   - intros p a; exact (transport P (path_contr _ _) p).
   - intros p.
     refine (transport2 P (q := 1) _ p).

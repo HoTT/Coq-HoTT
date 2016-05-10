@@ -28,7 +28,7 @@ Module Topological_Modalities_Theory
     apply lex_inO_typeO.
     refine (snd (inO_iff_isnull O _) _); intros i.
     refine (equiv_inverse (equiv_ooextendable_isequiv _ _) _).
-    refine (isequiv_adjointify _ _ _ _); simpl.
+    simple refine (isequiv_adjointify _ _ _ _); simpl.
     - intros B _.
       refine ((forall a, B a) ; _).
       exact _.
@@ -36,7 +36,7 @@ Module Topological_Modalities_Theory
       apply path_arrow; intros a.
       apply path_TypeO, path_universe_uncurried.
       unfold composeD; simpl.
-      refine (equiv_adjointify _ _ _ _).
+      simple refine (equiv_adjointify _ _ _ _).
       + intros f. exact (f a).
       + intros b a'. exact (transport B (path_ishprop a a') b).
       + intros b.

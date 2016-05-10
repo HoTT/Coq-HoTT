@@ -5,10 +5,10 @@ Require Import HoTT.Basics HoTT.Types.
 
 Local Open Scope equiv_scope.
 
-Class RespectsEquivalenceL (A : Type@{i}) (P : forall (B : Type@{j}), (A <~> B) -> Type)
-  := respects_equivalenceL : { e' : forall B (e : A <~> B), P A (equiv_idmap A) <~> P B e & Funext -> equiv_idmap _ = e' A (equiv_idmap _) }.
-Class RespectsEquivalenceR (A : Type@{i}) (P : forall (B : Type@{j}), (B <~> A) -> Type)
-  := respects_equivalenceR : { e' : forall B (e : B <~> A), P A (equiv_idmap A) <~> P B e & Funext -> equiv_idmap _ = e' A (equiv_idmap _) }.
+Class RespectsEquivalenceL@{i j k s0 s1} (A : Type@{i}) (P : forall (B : Type@{j}), (A <~> B) -> Type@{k})
+  := respects_equivalenceL : sig@{s0 s1} (fun e' : forall B (e : A <~> B), P A (equiv_idmap A) <~> P B e => Funext -> equiv_idmap _ = e' A (equiv_idmap _) ).
+Class RespectsEquivalenceR@{i j k s0 s1} (A : Type@{i}) (P : forall (B : Type@{j}), (B <~> A) -> Type@{k})
+  := respects_equivalenceR : sig@{s0 s1} (fun e' : forall B (e : B <~> A), P A (equiv_idmap A) <~> P B e => Funext -> equiv_idmap _ = e' A (equiv_idmap _) ).
 (** We use a sigma type rather than a record for two reasons:
 
     1. In the dependent cases, where one equivalence-respectfulness proof will show up in the body of another goal, it might be the case that using sigma types allows us to reuse the respectfulness lemmas of sigma types, rather than writing new ones for this type.
@@ -21,7 +21,7 @@ Global Arguments RespectsEquivalenceR : clear implicits.
 (** When doing equivalence induction, typeclass inference will either fully solve the respectfulness side-conditions, or not make any progress.  We would like to progress as far as we can on the side-conditions, so that we leave the user with as little to prove as possible.  To do this, we create a "database", implemented using typeclasses, to look up the refinement lemma, keyed on the head of the term we want to respect equivalence. *)
 Class respects_equivalence_db {KT VT} (Key : KT) {lem : VT} := make_respects_equivalence_db : Unit.
 Definition get_lem' {KT VT} Key {lem} `{@respects_equivalence_db KT VT Key lem} : VT := lem.
-Notation get_lem key := $(let res := constr:(get_lem' key) in let res' := (eval unfold get_lem' in res) in exact res')$ (only parsing).
+Notation get_lem key := ltac:(let res := constr:(get_lem' key) in let res' := (eval unfold get_lem' in res) in exact res') (only parsing).
 
 Section const.
   Context {A : Type} {T : Type}.
@@ -123,7 +123,7 @@ Section pi.
          `{HQ : forall a : P A (equiv_idmap A), RespectsEquivalenceL A (fun B e => Q B e (respects_equivalenceL.1 B e a))}
   : RespectsEquivalenceL A (fun B e => forall x : P B e, Q B e x).
   Proof.
-    refine (fun B e => _; _).
+    simple refine (fun B e => _; _).
     { refine (equiv_functor_forall'
                 (equiv_inverse ((@respects_equivalenceL _ _ HP).1 B e))
                 (fun b => _)).
@@ -141,7 +141,7 @@ Section pi.
          `{HQ : forall a : P A (equiv_idmap A), RespectsEquivalenceR A (fun B e => Q B e (respects_equivalenceR.1 B e a))}
   : RespectsEquivalenceR A (fun B e => forall x : P B e, Q B e x).
   Proof.
-    refine (fun B e => _; _).
+    simple refine (fun B e => _; _).
     { refine (equiv_functor_forall'
                 (equiv_inverse ((@respects_equivalenceR _ _ HP).1 B e))
                 (fun b => _)).
@@ -161,7 +161,7 @@ Section sigma.
          `{HQ : forall a : P A (equiv_idmap A), RespectsEquivalenceL A (fun B e => Q B e (respects_equivalenceL.1 B e a))}
   : RespectsEquivalenceL A (fun B e => sig (Q B e)).
   Proof.
-    refine ((fun B e => equiv_functor_sigma' (respects_equivalenceL.1 B e) (fun b => _));
+    simple refine ((fun B e => equiv_functor_sigma' (respects_equivalenceL.1 B e) (fun b => _));
             _).
     { refine (equiv_compose'
                 ((HQ b).1 B e)
@@ -175,7 +175,7 @@ Section sigma.
          `{HQ : forall a : P A (equiv_idmap A), RespectsEquivalenceR A (fun B e => Q B e (respects_equivalenceR.1 B e a))}
   : RespectsEquivalenceR A (fun B e => sig (Q B e)).
   Proof.
-    refine ((fun B e => equiv_functor_sigma' (respects_equivalenceR.1 B e) (fun b => _));
+    simple refine ((fun B e => equiv_functor_sigma' (respects_equivalenceR.1 B e) (fun b => _));
             _).
     { refine (equiv_compose'
                 ((HQ b).1 B e)
@@ -194,7 +194,7 @@ Section equiv_transfer.
              `{HP : RespectsEquivalenceL A P}
   : RespectsEquivalenceL A' P'.
   Proof.
-    refine ((fun B e => _); _).
+    simple refine ((fun B e => _); _).
     { refine (equiv_compose'
                 (eP _ _)
                 (equiv_compose'
@@ -211,7 +211,7 @@ Section equiv_transfer.
              `{HP : RespectsEquivalenceR A P}
   : RespectsEquivalenceR A' P'.
   Proof.
-    refine ((fun B e => _); _).
+    simple refine ((fun B e => _); _).
     { refine (equiv_compose'
                 (eP _ _)
                 (equiv_compose'
@@ -227,7 +227,7 @@ Section equiv_transfer.
              `{HP : RespectsEquivalenceL A P}
   : RespectsEquivalenceL A P'.
   Proof.
-    refine ((fun B e => _); _).
+    simple refine ((fun B e => _); _).
     { refine (equiv_compose'
                 (eP _ _)
                 (equiv_compose'
@@ -243,7 +243,7 @@ Section equiv_transfer.
              `{HP : RespectsEquivalenceR A P}
   : RespectsEquivalenceR A P'.
   Proof.
-    refine ((fun B e => _); _).
+    simple refine ((fun B e => _); _).
     { refine (equiv_compose'
                 (eP _ _)
                 (equiv_compose'
@@ -261,7 +261,7 @@ Section equiv.
          `{HP : RespectsEquivalenceL A Q}
   : RespectsEquivalenceL A (fun B e => P B e <~> Q B e).
   Proof.
-    refine (fun B e => _; fun _ => _).
+    simple refine (fun B e => _; fun _ => _).
     { refine (equiv_functor_equiv _ _);
       apply respects_equivalenceL.1. }
     { t. }
@@ -272,7 +272,7 @@ Section equiv.
          `{HP : RespectsEquivalenceR A Q}
   : RespectsEquivalenceR A (fun B e => P B e <~> Q B e).
   Proof.
-    refine (fun B e => _; fun _ => _).
+    simple refine (fun B e => _; fun _ => _).
     { refine (equiv_functor_equiv _ _);
       apply respects_equivalenceR.1. }
     { t. }
@@ -286,7 +286,7 @@ Section ap.
          `{HP : RespectsEquivalenceL A (fun B (e : A <~> B) => P B e = Q B e)}
   : RespectsEquivalenceL A (fun (B : Type) (e : A <~> B) => e (P B e) = e (Q B e)).
   Proof.
-    refine (fun B e => _; fun _ => _).
+    simple refine (fun B e => _; fun _ => _).
     { refine (equiv_ap' _ _ _ oE _); simpl.
       refine (respects_equivalenceL.1 B e). }
     { t. }
@@ -296,7 +296,7 @@ Section ap.
          `{HP : RespectsEquivalenceL A (fun B (e : A <~> B) => P B e = Q B e)}
   : RespectsEquivalenceL A (fun (B : Type) (e : A <~> B) => e^-1 (P B e) = e^-1 (Q B e)).
   Proof.
-    refine (fun B e => _; fun _ => _).
+    simple refine (fun B e => _; fun _ => _).
     { refine (equiv_ap' _ _ _ oE _); simpl.
       refine (respects_equivalenceL.1 B e). }
     { t. }
@@ -306,7 +306,7 @@ Section ap.
          `{HP : RespectsEquivalenceR A (fun B (e : B <~> A) => P B e = Q B e)}
   : RespectsEquivalenceR A (fun (B : Type) (e : B <~> A) => e (P B e) = e (Q B e)).
   Proof.
-    refine (fun B e => _; fun _ => _).
+    simple refine (fun B e => _; fun _ => _).
     { refine (equiv_ap' _ _ _ oE _); simpl.
       refine (respects_equivalenceR.1 B e). }
     { t. }
@@ -316,7 +316,7 @@ Section ap.
          `{HP : RespectsEquivalenceR A (fun B (e : B <~> A) => P B e = Q B e)}
   : RespectsEquivalenceR A (fun (B : Type) (e : B <~> A) => e^-1 (P B e) = e^-1 (Q B e)).
   Proof.
-    refine (fun B e => _; fun _ => _).
+    simple refine (fun B e => _; fun _ => _).
     { refine (equiv_ap' _ _ _ oE _); simpl.
       refine (respects_equivalenceR.1 B e). }
     { t. }

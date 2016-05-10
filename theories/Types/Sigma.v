@@ -182,7 +182,7 @@ Definition transport_pr1_path_sigma
 Global Instance isequiv_path_sigma `{P : A -> Type} {u v : sigT P}
 : IsEquiv (path_sigma_uncurried P u v) | 0.
 Proof.
-  refine (BuildIsEquiv
+  simple refine (BuildIsEquiv
             _ _
             _ (fun r => (r..1; r..2))
             eta_path_sigma
@@ -196,7 +196,7 @@ Defined.
 Definition equiv_path_sigma `(P : A -> Type) (u v : sigT P)
 : {p : u.1 = v.1 &  p # u.2 = v.2} <~> (u = v)
   := BuildEquiv _ _ (path_sigma_uncurried P u v) _.
-  
+
 (* A contravariant version of [isequiv_path_sigma'] *)
 Instance isequiv_path_sigma_contra `{P : A -> Type} {u v : sigT P}
   : IsEquiv (path_sigma_uncurried_contra P u v) | 0.
@@ -501,7 +501,7 @@ Definition equiv_sigma_symm0 (A B : Type)
 : {a : A & B} <~> {b : B & A}.
 Proof.
   refine (BuildEquiv _ _ (fun (w:{a:A & B}) => (w.2 ; w.1)) _).
-  refine (BuildIsEquiv _ _ _ (fun (z:{b:B & A}) => (z.2 ; z.1))
+  simple refine (BuildIsEquiv _ _ _ (fun (z:{b:B & A}) => (z.2 ; z.1))
                        _ _ _); intros [x y]; reflexivity.
 Defined.
 

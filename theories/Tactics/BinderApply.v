@@ -27,8 +27,9 @@ Ltac eval_under_binders tac H :=
     | forall x : ?T, @?P x
       => let ret := constr:(fun x : T =>
                               let Hx := H x in
-                              $(let ret' := rec_tac Hx in
-                                exact ret')$) in
+                              ltac:(
+                                let ret' := rec_tac Hx in
+                                exact ret')) in
          let ret' := (eval cbv zeta in ret) in
          constr:(ret')
     (** Base case - simply return [tac H]  *)

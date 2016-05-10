@@ -227,16 +227,16 @@ Section CoeqRec2.
   Definition Coeq_rec2
   : Coeq f g -> Coeq f' g' -> P.
   Proof.
-    refine (Coeq_rec _ _ _).
+    simple refine (Coeq_rec _ _ _).
     - intros a.
-      refine (Coeq_rec _ _ _).
+      simple refine (Coeq_rec _ _ _).
       + intros a'.
         exact (coeq' a a').
       + intros b'; cbn.
         apply cpr.
     - intros b.
       apply path_arrow; intros a.
-      revert a; refine (Coeq_ind _ _ _).
+      revert a; simple refine (Coeq_ind _ _ _).
       + intros a'. cbn.
         apply cpl.
       + intros b'; cbn.
@@ -300,16 +300,16 @@ Section CoeqInd2.
   Definition Coeq_ind2
   : forall x y, P x y.
   Proof.
-    refine (Coeq_ind _ _ _).
+    simple refine (Coeq_ind _ _ _).
     - intros a.
-      refine (Coeq_ind _ _ _).
+      simple refine (Coeq_ind _ _ _).
       + intros a'.
         exact (coeq' a a').
       + intros b'; cbn.
         apply cpr.
     - intros b.
       apply path_forall; intros a.
-      revert a; refine (Coeq_ind _ _ _).
+      revert a; simple refine (Coeq_ind _ _ _).
       + intros a'. cbn.
         refine (transport_forall_constant _ _ _ @ _).
         apply cpl.

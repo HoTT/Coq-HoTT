@@ -62,7 +62,7 @@ Module Accessible_ReflectiveSubuniverses_Theory
   Proof.
     pose (ext_dom := fst (inO_iff_islocal O (O (lgen_domain (acc_gen O) i))) _).
     pose (ext_cod := fst (inO_iff_islocal O (O (lgen_codomain (acc_gen O) i))) _).
-    refine (isequiv_adjointify _ _ _ _).
+    simple refine (isequiv_adjointify _ _ _ _).
     - apply O_rec.
       exact ((fst (ext_dom i 1%nat) (to O _)).1).
     - apply O_indpaths; intros x; simpl.
@@ -176,7 +176,7 @@ Module Accessible_Modalities_Theory
     Proof.
       apply (snd (inO_iff_isnull O A)); intros i.
       apply (equiv_ooextendable_isequiv _ _)^-1.
-      refine (isequiv_adjointify _ _ _ _).
+      simple refine (isequiv_adjointify _ _ _ _).
       - intros f []; exact (c i f).1.
       - intros f; apply path_arrow; intros x.
         simpl; unfold composeD.
@@ -216,7 +216,7 @@ Module Accessible_Modalities_to_ReflectiveSubuniverses
       := fun (O : ReflectiveSubuniverse@{u a}) =>
            (null_to_local_generators (acc_gen O)).
 
-    Definition inO_iff_islocal
+    Definition inO_iff_islocal@{u a i}
     : forall (O : ReflectiveSubuniverse@{u a}) (X : Type@{i}),
       iff@{i i i}
          (In@{u a i} O X)
@@ -253,7 +253,7 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
       intros [ [i x] | [i x] ]; exact (hfiber (to O _) x).
     Defined.
 
-    Definition inO_iff_isnull (O : Modality@{u a}) (X : Type@{i})
+    Definition inO_iff_isnull@{u a i} (O : Modality@{u a}) (X : Type@{i})
     : iff@{i i i} (In@{u a i} O X) (IsNull@{a i} (acc_gen O) X).
     Proof.
       split.
@@ -264,7 +264,7 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
         refine (cancelL_ooextendable@{a a a i i i i i i i}
                   (fun _ => X) (Acc.acc_gen O i)
                   (to O (lgen_codomain (Acc.acc_gen O) i)) _ _).
-        + apply ooextendable_isnull_fibers@{a a i i a a i}; intros x.
+        + apply ooextendable_isnull_fibers@{a a i i a i a}; intros x.
           exact (Xnull (inr (i;x))).
         + refine (ooextendable_homotopic _
                    (O_functor O (Acc.acc_gen O i)
@@ -275,7 +275,7 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
           * apply ooextendable_isnull_fibers; intros x.
             exact (Xnull (inl (i;x))).
     Defined.
-    
+
   End AccMod.
 End Accessible_Modalities_from_ReflectiveSubuniverses.
 
