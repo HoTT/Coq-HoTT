@@ -1,0 +1,10 @@
+#!/bin/sh
+
+mkdir -p _build/
+
+cp coqopts.in _build/coqopts
+
+find . -name '*.v' >> _build/coqopts
+
+coq_makefile -f _build/coqopts -o Makefile
+
