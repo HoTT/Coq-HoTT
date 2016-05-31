@@ -1,0 +1,3 @@
+_build/
+Makefile
+*.v.d
