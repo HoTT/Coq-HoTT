@@ -9,8 +9,10 @@ Notable differences:
 # Build
 
 If the set of `.v` files has changed since the last time,
+
     $ ./configure
 
 Then
+
     $ make
 
