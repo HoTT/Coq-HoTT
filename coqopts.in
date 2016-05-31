@@ -1,5 +1,5 @@
 # Library name
 -R . HoTTClasses
 
-# Coq files (filled by the configure)
+# Stuff from configure
 

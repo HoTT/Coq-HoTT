@@ -8,6 +8,9 @@ Notable differences:
 
 # Build
 
+Dependencies:
+- HoTT must be present on your system, with `hoqc` and `hoqdep` in your `$PATH` or pointed to by `$HOQC` and `$HOQDEP` respectively.
+
 If the set of `.v` files has changed since the last time,
 
     $ ./configure

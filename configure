@@ -1,10 +1,35 @@
 #!/bin/sh
 
+OPTFILE="_build/coqopts"
+
+if [ -z "${HOQC}" ];
+then
+  if which hoqc > /dev/null;
+  then HOQC="hoqc"
+  else
+    >&2 echo "HOQC not set and hoqc not in path"
+    exit 1
+  fi
+fi
+
+if [ -z "${HOQDEP}" ];
+then
+  if which hoqdep > /dev/null;
+  then HOQDEP="hoqdep"
+  else
+    >&2 echo "HOQDEP not set and hoqdep not in path"
+    exit 1
+  fi
+fi
+
 mkdir -p _build/
 
-cp coqopts.in _build/coqopts
+cp coqopts.in "$OPTFILE"
 
-find . -name '*.v' >> _build/coqopts
+echo "COQC = $HOQC" >> "$OPTFILE"
+echo "COQDEP = $HOQDEP" >> "$OPTFILE"
 
-coq_makefile -f _build/coqopts -o Makefile
+find . -name '*.v' >> "$OPTFILE"
+
+coq_makefile -f "$OPTFILE" -o Makefile
 
