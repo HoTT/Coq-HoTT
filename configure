@@ -1,6 +1,6 @@
 #!/bin/sh
 
-OPTFILE="_build/coqopts"
+OPTFILE="coqopts"
 
 if [ -z "${HOQC}" ];
 then
@@ -21,8 +21,6 @@ then
     exit 1
   fi
 fi
-
-mkdir -p _build/
 
 cp coqopts.in "$OPTFILE"
 
