@@ -2,7 +2,6 @@ Global Generalizable All Variables.
 Global Set Automatic Introduction.
 Global Set Automatic Coercions Import.
 
-Require Export Coq.Unicode.Utf8 Coq.Unicode.Utf8_core.
 Require Export HoTT.Basics.Overture HoTTClasses.misc.stdlib_hints.
 
 Definition id {A : Type} (a : A) := a.
@@ -18,6 +17,15 @@ Notation "(≠ x )" := (λ y, y ≠ x) (only parsing) : mc_scope.
 
 Delimit Scope mc_scope with mc. 
 Global Open Scope mc_scope.
+
+Infix "≡" := paths (at level 70, no associativity) : mc_scope.
+Notation "(≡)" := paths (only parsing) : mc_scope.
+Notation "( x ≡)" := (paths x) (only parsing) : mc_scope.
+Notation "(≡ x )" := (λ y, paths y x) (only parsing) : mc_scope.
+Notation "(≢)" := (λ x y, ¬x ≡ y) (only parsing) : mc_scope.
+Notation "x ≢ y":= (¬x ≡ y) (at level 70, no associativity) : mc_scope.
+Notation "( x ≢)" := (λ y, x ≢ y) (only parsing) : mc_scope.
+Notation "(≢ x )" := (λ y, y ≢ x) (only parsing) : mc_scope.
 
 Hint Extern 2 (?x = ?x) => reflexivity.
 Hint Extern 2 (?x = ?y) => auto_symm.

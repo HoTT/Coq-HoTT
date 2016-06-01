@@ -33,3 +33,36 @@ Ltac exist_proj1 :=
     | [ |- context [proj1_sig ?x] ] => apply (proj2_sig x)
   end.
 Hint Extern 0 => exist_proj1: core typeclass_instances.
+
+(* HoTT compat *)
+Notation False := Empty (only parsing).
+Notation True := Unit (only parsing).
+Hint Resolve tt : core.
+
+Notation False_rect := Empty_rect (only parsing).
+
+Notation left := inl (only parsing).
+Notation right := inr (only parsing).
+
+(* Unicode *)
+
+Reserved Notation "x ≤ y" (at level 70, no associativity).
+Reserved Notation "x ≥ y" (at level 70, no associativity).
+
+Notation "∀  x .. y , P" := (forall x, .. (forall y, P) ..)
+  (at level 200, x binder, y binder, right associativity) : type_scope.
+
+Notation "∃  x .. y , P" := (exists x, .. (exists y, P) ..)
+  (at level 200, x binder, y binder, right associativity) : type_scope.
+
+Notation "x ∨ y" := (x \/ y) (at level 85, right associativity) : type_scope.
+Notation "x ∧ y" := (x /\ y) (at level 80, right associativity) : type_scope.
+Notation "x → y" := (x -> y)
+  (at level 99, y at level 200, right associativity): type_scope.
+
+Notation "x ↔ y" := (x <-> y) (at level 95, no associativity): type_scope.
+Notation "¬ x" := (~x) (at level 75, right associativity) : type_scope.
+Notation "x ≠ y" := (x <> y) (at level 70) : type_scope.
+
+Notation "'λ'  x .. y , t" := (fun x => .. (fun y => t) ..)
+  (at level 200, x binder, y binder, right associativity).

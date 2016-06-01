@@ -38,7 +38,7 @@ Section obvious.
   Context (A B C: Type).
 
   Global Instance: Obvious (A → A) := id.
-  Global Instance: Obvious (False → A) := False_rect _.
+  Global Instance: Obvious (False → A) := Empty_rect _.
   Global Instance: Obvious (A → A + B) := inl.
   Global Instance: Obvious (A → B + A) := inr.
   Global Instance obvious_sum_src  `{Obvious (A → C)} `{Obvious (B → C)}: Obvious (A+B → C).
@@ -146,12 +146,12 @@ unfold is_None. destruct x as [a|].
 - apply iff_true. reflexivity.
 Qed.
 
-Lemma None_ne_Some `(x : option A) y :
-  x = None → ¬ x = Some y.
+Lemma None_ne_Some `(x : A) :
+  ~ (None = Some x).
 Proof.
-intros e1 e2.
-change (is_None (Some y)).
+intros e.
+change (is_None (Some x)).
 apply transport with None.
-- path_via x.
+- assumption.
 - simpl;auto.
 Qed.
