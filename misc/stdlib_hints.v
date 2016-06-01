@@ -67,5 +67,9 @@ Notation "x ≠ y" := (x <> y) (at level 70) : type_scope.
 Notation "'λ'  x .. y , t" := (fun x => .. (fun y => t) ..)
   (at level 200, x binder, y binder, right associativity).
 
+Definition compose {A B C : Type} (g : B → C) (f : A → B) : A -> C := compose g f.
+
 Notation " g ∘ f " := (compose g f)
   (at level 40, left associativity).
+
+Ltac class_apply c := autoapply c using typeclass_instances.

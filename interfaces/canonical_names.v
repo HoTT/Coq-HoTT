@@ -1,7 +1,4 @@
-Global Generalizable All Variables.
-Global Set Automatic Introduction.
-Global Set Automatic Coercions Import.
-
+Require Export HoTTClasses.misc.settings.
 Require Export HoTT.Basics.Overture HoTTClasses.misc.stdlib_hints.
 
 Definition id {A : Type} (a : A) := a.
