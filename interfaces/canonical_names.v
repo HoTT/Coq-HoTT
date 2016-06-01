@@ -264,6 +264,12 @@ Arguments cotransitive {A R CoTransitive x y} _ _.
 Class AntiSymmetric `(R : relation A) : Type := antisymmetry: ∀ x y, R x y → R y x → x = y.
 Arguments antisymmetry {A} _ {AntiSymmetric} _ _ _ _.
 
+Class Equivalence `(R : relation A) : Type :=
+  { Equivalence_Reflexive :> Reflexive R ;
+    Equivalence_Symmetric :> Symmetric R ;
+    Equivalence_Transitive :> Transitive R }.
+
+
 Class LeftHeteroDistribute {A B C} (f : A → B → C) (g_r : B → B → B) (g : C → C → C) : Type
   := distribute_l : ∀ a b c, f a (g_r b c) = g (f a b) (f a c).
 Class RightHeteroDistribute {A B C} (f : A → B → C) (g_l : A → A → A) (g : C → C → C) : Type
