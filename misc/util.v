@@ -1,6 +1,11 @@
 Require Import
   HoTTClasses.interfaces.canonical_names.
 
+Definition ap2 `(f : A -> B -> C) {x1 x2 y1 y2}: x1 = x2 -> y1 = y2 -> f x1 y1 = f x2 y2.
+Proof.
+intros H1 H2;destruct H1,H2;reflexivity.
+Defined.
+
 Section pointwise_dependent_relation.
   Context A (B: A → Type) (R: ∀ a, relation (B a)).
 
