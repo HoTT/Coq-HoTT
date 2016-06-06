@@ -129,6 +129,13 @@ Section contents.
   Global Instance poly_zero: Zero poly := of_list [].
   Global Instance poly_one: One poly := poly_constant 1.
 
+  Lemma all_zero_eq_zero : forall ps, all_zero ps -> of_list ps = 0.
+  Proof.
+  intros ps Hps.
+  apply poly_path.
+  destruct ps;auto.
+  Qed.
+
   Definition poly_ind (Pr : poly -> Type) {hPr : forall P, IsHProp (Pr P)} :
     (forall ps, Pr (of_list ps)) -> forall P, Pr P.
   Proof.
@@ -542,7 +549,6 @@ Section contents.
   Qed.
 
   (* Doesn't work for rect because we need to verify some nutty identity *)
-  (* TODO try for rec *)
   Lemma ind (Pr : poly -> Type) `{forall P, IsHProp (Pr P)} :
     Pr 0 -> (forall (c:R) P, Pr P -> Pr ((c : poly) + mlX P)) ->
     forall P, Pr P.
@@ -552,6 +558,76 @@ Section contents.
   induction ps as [|p ps IHps].
   - exact init.
   - rewrite cons_plus_mlX. apply next. assumption.
+  Qed.
+
+  Fixpoint rec_aux {T : Type} (val0 : T) (val_c_X : R -> poly -> T -> T) ps :=
+    match ps with
+    | [] => val0
+    | p :: ps => val_c_X p (of_list ps) (rec_aux val0 val_c_X ps)
+    end.
+
+  Lemma rec_aux_zero {T : Type}
+    (val0 : T) (val_c_X : R -> poly -> T -> T)
+    (pr0 : val_c_X 0 0 val0 = val0)
+    : forall ps, all_zero ps -> rec_aux val0 val_c_X ps = val0.
+  Proof.
+  induction ps as [|p ps IHps].
+  - reflexivity.
+  - intros [[] Hps];clear p.
+    simpl.
+    rewrite (all_zero_eq_zero ps Hps).
+    rewrite (IHps Hps).
+    exact pr0.
+  Qed.
+
+  Lemma rec_aux_same {T : Type}
+    (val0 : T) (val_c_X : R -> poly -> T -> T)
+    (pr0 : val_c_X 0 0 val0 = val0)
+    : forall ps qs, same_poly ps qs ->
+      rec_aux val0 val_c_X ps = rec_aux val0 val_c_X qs.
+  Proof.
+  intros ps;induction ps as [|p ps IHps];intros [|q qs] Hsame.
+  - reflexivity.
+  - simpl.
+    apply symmetry.
+    destruct Hsame as [[] Hsame];clear q.
+    rewrite rec_aux_zero by assumption.
+    rewrite (all_zero_eq_zero _ Hsame). assumption.
+  - apply rec_aux_zero;auto.
+  - simpl;destruct Hsame as [[] Hsame];clear q.
+    rewrite (poly_path Hsame).
+    apply ap.
+    auto.
+  Qed.
+
+  Lemma rec {T : Type} {sT : IsHSet T}
+    (val0 : T) (val_c_X : R -> poly -> T -> T)
+    (pr0 : val_c_X 0 0 val0 = val0)
+    : poly -> T.
+  Proof.
+  apply (poly_rec (rec_aux val0 val_c_X)).
+  apply rec_aux_same. assumption.
+  Defined.
+
+  Lemma rec_compute_zero {T : Type} {sT : IsHSet T}
+    (val0 : T) (val_c_X : R -> poly -> T -> T)
+    (pr0 : val_c_X 0 0 val0 = val0)
+    : rec val0 val_c_X pr0 0 = val0.
+  Proof.
+  reflexivity.
+  Qed.
+
+  Lemma rec_compute_X {T : Type} {sT : IsHSet T}
+    (val0 : T) (val_c_X : R -> poly -> T -> T)
+    (pr0 : val_c_X 0 0 val0 = val0)
+    : forall (c:R) P,
+      rec val0 val_c_X pr0 ((c:poly) + mlX P) =
+       val_c_X c P (rec val0 val_c_X pr0 P).
+  Proof.
+  intros c. apply (poly_ind _).
+  intros [|p ps].
+  - simpl. rewrite right_identity. reflexivity.
+  - simpl. rewrite right_identity. reflexivity.
   Qed.
 
   Instance: @LeftDistribute poly mult plus.
