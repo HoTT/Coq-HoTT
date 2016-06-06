@@ -44,6 +44,15 @@ Notation False_rect := Empty_rect (only parsing).
 Notation left := inl (only parsing).
 Notation right := inr (only parsing).
 
+(** When rewrite fails *)
+Ltac transport eq := match type of eq with
+  ?a = ?b => pattern b; apply (transport _ eq) end.
+
+Ltac transport_r eq := transport (inverse eq).
+
+Tactic Notation "transport" "<-" constr(t) := transport_r t.
+
+
 (* Unicode *)
 
 Reserved Notation "x ≤ y" (at level 70, no associativity).
