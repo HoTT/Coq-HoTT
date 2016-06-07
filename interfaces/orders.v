@@ -79,9 +79,9 @@ Class FullPseudoOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
 Section order_maps.
   Context {A B : Type} {Ale: Le A} {Alt: Lt A} {Ble: Le B} {Blt: Lt B} (f : A → B).
 
-  (* An Order_Morphism is just the factoring out of the common parts of
+  (* An Order_Pair is just the factoring out of the common parts of
     OrderPreserving and OrderReflecting *)
-  Class Order_Morphism :=
+  Class Order_Pair :=
     { order_morphism_po_a : PartialOrder Ale
     ; order_morphism_po_b : PartialOrder Ble }.
 
@@ -90,11 +90,11 @@ Section order_maps.
     ; strict_order_morphism_so_b : StrictOrder Blt }.
 
   Class OrderPreserving :=
-    { order_preserving_morphism :> Order_Morphism
+    { order_preserving_morphism :> Order_Pair
     ; order_preserving : `(x ≤ y → f x ≤ f y) }.
 
   Class OrderReflecting :=
-    { order_reflecting_morphism :> Order_Morphism
+    { order_reflecting_morphism :> Order_Pair
     ; order_reflecting : `(f x ≤ f y → x ≤ y) }.
 
   Class OrderEmbedding :=
@@ -117,6 +117,8 @@ Section order_maps.
     { strict_order_embedding_preserving :> StrictlyOrderPreserving
     ; strict_order_embedding_reflecting :> StrictlyOrderReflecting }.
 End order_maps.
+
+Arguments Order_Pair {_ _} _ _.
 
 Hint Extern 4 (?f _ ≤ ?f _) => apply (order_preserving f).
 Hint Extern 4 (?f _ < ?f _) => apply (strictly_order_preserving f).
