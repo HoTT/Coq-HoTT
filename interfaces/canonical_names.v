@@ -162,6 +162,11 @@ Notation "(≤)" := le (only parsing) : mc_scope.
 Notation "( x ≤)" := (le x) (only parsing) : mc_scope.
 Notation "(≤ x )" := (λ y, y ≤ x) (only parsing) : mc_scope.
 
+Infix "<=" := le (only parsing) : mc_scope.
+Notation "(<=)" := le (only parsing) : mc_scope.
+Notation "( x <=)" := (le x) (only parsing) : mc_scope.
+Notation "(<= x )" := (λ y, y ≤ x) (only parsing) : mc_scope.
+
 Infix "<" := lt : mc_scope.
 Notation "(<)" := lt (only parsing) : mc_scope.
 Notation "( x <)" := (lt x) (only parsing) : mc_scope.
