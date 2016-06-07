@@ -70,6 +70,11 @@ Qed.
     such as inequality as separate relations rather than notations, so that the existing [symmetry]
     will work for them. However, this most likely breaks other things. *)
 
+Instance iff_refl : Reflexive iff.
+Proof.
+intros x;split;auto.
+Defined.
+
 Instance iff_trans : Transitive iff.
 Proof.
 intros P Q R H1 H2.

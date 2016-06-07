@@ -198,3 +198,85 @@ Section from_another_ab_group.
   - apply (projected_comm f);assumption.
   Qed.
 End from_another_ab_group.
+
+Instance id_sg_morphism `{SemiGroup A}: SemiGroup_Morphism (@id A).
+Proof.
+split;try apply _.
+auto.
+Qed.
+
+Instance id_monoid_morphism `{Monoid A}: Monoid_Morphism (@id A).
+Proof.
+split;try apply _.
+reflexivity.
+Qed.
+
+Section compose_mor.
+
+  Context `{SgOp A} `{MonUnit A}
+    `{SgOp B} `{MonUnit B}
+    `{SgOp C} `{MonUnit C}
+    (f : A -> B) (g : B -> C).
+
+  Instance compose_sg_morphism : SemiGroup_Morphism f -> SemiGroup_Morphism g ->
+    SemiGroup_Morphism (g ∘ f).
+  Proof.
+  intros;split.
+  - apply sgmor_a.
+  - apply sgmor_b.
+  - intros. unfold compose.
+    rewrite (preserves_sg_op x y).
+    apply preserves_sg_op.
+  Qed.
+
+  Instance compose_monoid_morphism : Monoid_Morphism f -> Monoid_Morphism g ->
+    Monoid_Morphism (g ∘ f).
+  Proof.
+  intros;split.
+  - apply monmor_a.
+  - apply monmor_b.
+  - apply _.
+  - unfold compose.
+    rewrite (preserves_mon_unit (f:=f)).
+    apply preserves_mon_unit.
+  Qed.
+
+  Instance invert_sg_morphism:
+    ∀ `{!Inverse f}, Bijective f → SemiGroup_Morphism f → SemiGroup_Morphism (f⁻¹).
+  Proof.
+  intros.
+  split.
+  - apply sgmor_b.
+  - apply sgmor_a.
+  - intros.
+    apply (injective f).
+    rewrite (preserves_sg_op (f:=f)).
+    change ((f ∘ inverse f) (x & y) = (f ∘ inverse f) x & (f ∘ inverse f) y).
+    rewrite (surjective f).
+    reflexivity.
+  Qed.
+
+  Instance invert_monoid_morphism :
+    ∀ `{!Inverse f}, Bijective f → Monoid_Morphism f → Monoid_Morphism (f⁻¹).
+  Proof.
+  intros. split.
+  - apply monmor_b.
+  - apply monmor_a.
+  - apply _.
+  - apply (injective f).
+    change (compose f (inverse f) mon_unit = f mon_unit).
+    rewrite (surjective f).
+    rewrite (preserves_mon_unit (f:=f)). reflexivity.
+  Qed.
+
+End compose_mor.
+
+Hint Extern 4 (SemiGroup_Morphism (_ ∘ _)) =>
+  class_apply @compose_sg_morphism : typeclass_instances.
+Hint Extern 4 (Monoid_Morphism (_ ∘ _)) =>
+  class_apply @compose_monoid_morphism : typeclass_instances.
+
+Hint Extern 4 (SemiGroup_Morphism (_⁻¹)) =>
+  class_apply @invert_sg_morphism : typeclass_instances.
+Hint Extern 4 (Monoid_Morphism (_⁻¹)) =>
+  class_apply @invert_monoid_morphism : typeclass_instances.
