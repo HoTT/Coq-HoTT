@@ -36,9 +36,12 @@ Notation "(≶ x )" := (λ y, apart y x) (only parsing) : mc_scope.
 
 (* Even for setoids with decidable equality x ≠ y does not imply x ≶ y.
 Therefore we introduce the following class. *)
-Class TrivialApart A {Aap : Apart A} := trivial_apart : ∀ x y, x ≶ y ↔ x ≠ y.
+Class TrivialApart A {Aap : Apart A} := trivial_apart : ∀ x y, x ≶ y <~> x ≠ y.
 
 Notation "x ↾ p" := (exist _ x p) (at level 20) : mc_scope.
+
+Definition sig_apart `{Apart A} (P: A → Type) : Apart (sig P) := λ x y, x.1 ≶ y.1.
+Hint Extern 10 (Apart (sig _)) => apply @sig_apart : typeclass_instances.
 
 Class Cast A B := cast: A → B.
 Arguments cast _ _ {Cast} _.
@@ -117,7 +120,8 @@ Notation "( x +)" := (plus x) (only parsing) : mc_scope.
 Notation "(+ x )" := (λ y, y + x) (only parsing) : mc_scope.
 
 Infix "*" := mult : mc_scope.
-(* We don't add "( * )", "( * x )" and "( x * )" notations because they conflict with comments. *)
+(* We don't add "( * )", "( * x )" and "( x * )" notations
+   because they conflict with comments. *)
 Notation "( x *.)" := (mult x) (only parsing) : mc_scope.
 Notation "(.*.)" := mult (only parsing) : mc_scope.
 Notation "(.* x )" := (λ y, y * x) (only parsing) : mc_scope.
@@ -193,7 +197,8 @@ Notation "( x ∉)" := (λ X, x ∉ X) (only parsing) : mc_scope.
 Notation "(∉ X )" := (λ x, x ∉ X) (only parsing) : mc_scope.
 
 Notation "{{ x }}" := (singleton x) : mc_scope.
-Notation "{{ x ; y ; .. ; z }}" := (join .. (join (singleton x) (singleton y)) .. (singleton z)) : mc_scope.
+Notation "{{ x ; y ; .. ; z }}" := (join .. (join (singleton x) (singleton y))
+                                         .. (singleton z)) : mc_scope.
 
 Infix "◎" := (comp _ _ _) (at level 40, left associativity) : mc_scope.
   (* Taking over ∘ is just a little too zealous at this point. With our current
@@ -237,18 +242,26 @@ change (compose f f = f).
 apply idempotency. apply _.
 Qed.
 
-Class BinaryIdempotent `(op: A → A → A) : Type := binary_idempotent :> ∀ x, Idempotent op x.
+Class BinaryIdempotent `(op: A → A → A) : Type
+  := binary_idempotent :> ∀ x, Idempotent op x.
 
-Class LeftIdentity {A B} (op : A → B → B) (x : A): Type := left_identity: ∀ y, op x y = y.
-Class RightIdentity {A B} (op : A → B → A) (y : B): Type := right_identity: ∀ x, op x y = x.
+Class LeftIdentity {A B} (op : A → B → B) (x : A): Type
+  := left_identity: ∀ y, op x y = y.
+Class RightIdentity {A B} (op : A → B → A) (y : B): Type
+  := right_identity: ∀ x, op x y = x.
 
-Class Absorption {A B C} (op1: A → C → A) (op2: A → B → C) : Type := absorption: ∀ x y, op1 x (op2 x y) = x.
+Class Absorption {A B C} (op1: A → C → A) (op2: A → B → C) : Type
+  := absorption: ∀ x y, op1 x (op2 x y) = x.
 
-Class LeftAbsorb {A B} (op : A → B → A) (x : A): Type := left_absorb: ∀ y, op x y = x.
-Class RightAbsorb {A B} (op : A → B → B) (y : B): Type := right_absorb: ∀ x, op x y = y.
+Class LeftAbsorb {A B} (op : A → B → A) (x : A): Type
+  := left_absorb: ∀ y, op x y = x.
+Class RightAbsorb {A B} (op : A → B → B) (y : B): Type
+  := right_absorb: ∀ x, op x y = y.
 
-Class LeftInverse {A} {B} {C} (op : A → B → C) (inv : B → A) (unit : C) := left_inverse: ∀ x, op (inv x) x = unit.
-Class RightInverse {A} {B} {C} (op : A → B → C) (inv : A → B) (unit : C) := right_inverse: ∀ x, op x (inv x) = unit.
+Class LeftInverse {A} {B} {C} (op : A → B → C) (inv : B → A) (unit : C)
+  := left_inverse: ∀ x, op (inv x) x = unit.
+Class RightInverse {A} {B} {C} (op : A → B → C) (inv : A → B) (unit : C)
+  := right_inverse: ∀ x, op x (inv x) = unit.
 
 Class Commutative {B A} (f : A → A → B) : Type := commutativity: ∀ x y, f x y = f y x.
 
@@ -256,7 +269,8 @@ Class HeteroAssociative {A B C AB BC ABC}
      (fA_BC: A → BC → ABC) (fBC: B → C → BC) (fAB_C: AB → C → ABC) (fAB : A → B → AB): Type
    := associativity : ∀ x y z, fA_BC x (fBC y z) = fAB_C (fAB x y) z.
 Class Associative {A} (f : A -> A -> A) := simple_associativity:> HeteroAssociative f f f f.
-Notation ArrowsAssociative C := (∀ {w x y z: C}, HeteroAssociative (◎) (comp z _ _ ) (◎) (comp y x w)).
+Notation ArrowsAssociative C
+  := (∀ {w x y z: C}, HeteroAssociative (◎) (comp z _ _ ) (◎) (comp y x w)).
 
 Class Involutive {A} (f : A → A) := involutive: ∀ x, f (f x) = x.
 
@@ -268,10 +282,12 @@ Arguments trichotomy {A} R {Trichotomy} _ _.
 
 Arguments irreflexivity {A} _ {Irreflexive} _ _.
 
-Class CoTransitive `(R : relation A) : Type := cotransitive : ∀ x y, R x y → ∀ z, R x z ∨ R z y.
+Class CoTransitive `(R : relation A) : Type := cotransitive
+  : ∀ x y, R x y → ∀ z, R x z ∨ R z y.
 Arguments cotransitive {A R CoTransitive x y} _ _.
 
-Class AntiSymmetric `(R : relation A) : Type := antisymmetry: ∀ x y, R x y → R y x → x = y.
+Class AntiSymmetric `(R : relation A) : Type
+  := antisymmetry: ∀ x y, R x y → R y x → x = y.
 Arguments antisymmetry {A} _ {AntiSymmetric} _ _ _ _.
 
 Class Equivalence `(R : relation A) : Type :=
@@ -284,11 +300,13 @@ Class LeftHeteroDistribute {A B C} (f : A → B → C) (g_r : B → B → B) (g 
   := distribute_l : ∀ a b c, f a (g_r b c) = g (f a b) (f a c).
 Class RightHeteroDistribute {A B C} (f : A → B → C) (g_l : A → A → A) (g : C → C → C) : Type
   := distribute_r: ∀ a b c, f (g_l a b) c = g (f a c) (f b c).
-Class LeftDistribute {A} (f g: A → A → A) := simple_distribute_l :> LeftHeteroDistribute f g g.
-Class RightDistribute {A} (f g: A → A → A) := simple_distribute_r :> RightHeteroDistribute f g g.
+Class LeftDistribute {A} (f g: A → A → A)
+  := simple_distribute_l :> LeftHeteroDistribute f g g.
+Class RightDistribute {A} (f g: A → A → A)
+  := simple_distribute_r :> RightHeteroDistribute f g g.
 
-Class HeteroSymmetric {A} {T : A → A → Type} (R : ∀ {x y}, T x y → T y x → Type) : Type :=
-  hetero_symmetric `(a : T x y) (b : T y x) : R a b → R b a.
+Class HeteroSymmetric {A} {T : A → A → Type} (R : ∀ {x y}, T x y → T y x → Type) : Type
+  := hetero_symmetric `(a : T x y) (b : T y x) : R a b → R b a.
 
 (* Although cancellation is the same as being injective, we want a proper
   name to refer to this commonly used property. *)
@@ -298,8 +316,10 @@ Section cancellation.
   Class LeftCancellation := left_cancellation : ∀ x y, op z x = op z y → x = y.
   Class RightCancellation := right_cancellation : ∀ x y, op x z = op y z → x = y.
 
-  Class StrongLeftCancellation := strong_left_cancellation : ∀ x y, x ≶ y → op z x ≶ op z y.
-  Class StrongRightCancellation := strong_right_cancellation : ∀ x y, x ≶ y → op x z ≶ op y z.
+  Class StrongLeftCancellation := strong_left_cancellation
+    : ∀ x y, x ≶ y → op z x ≶ op z y.
+  Class StrongRightCancellation := strong_right_cancellation
+    : ∀ x y, x ≶ y → op x z ≶ op y z.
 End cancellation.
 
 (* Common names for properties that hold in N, Z, Q, ... *)

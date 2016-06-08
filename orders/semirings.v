@@ -740,7 +740,7 @@ Hint Extern 7 (PropHolds (0 ≤ 4)) => eapply @le_0_4 : typeclass_instances.
 
 Section dec_semiring_order.
   (* Maybe these assumptions can be weakened? *)
-  Context `{SemiRingOrder R} `{Apart R} `{!TrivialApart R}
+  Context `{Funext} `{SemiRingOrder R} `{Apart R} `{!TrivialApart R}
     `{!NoZeroDivisors R} `{!TotalRelation (≤)} `{∀ x y : R, Decision (x = y)}.
 
   Context `{Rlt : Lt R} (lt_correct : ∀ x y, x < y ↔ x ≤ y ∧ x ≠ y).

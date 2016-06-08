@@ -24,11 +24,14 @@ End contents.
 (* Due to bug #2528 *)
 Hint Extern 3 (PropHolds (_ ≠ _)) => eapply @apart_ne : typeclass_instances.
 
-Lemma projected_strong_setoid `{IsApart B} `{Apart A} (f: A → B)
-  (eq_correct : ∀ x y, x = y ↔ f x = f y) (apart_correct : ∀ x y, x ≶ y ↔ f x ≶ f y)
+Lemma projected_strong_setoid `{IsApart B} `{Apart A} `{is_mere_relation A apart}
+  (f: A → B)
+  (eq_correct : ∀ x y, x = y ↔ f x = f y)
+  (apart_correct : ∀ x y, x ≶ y ↔ f x ≶ f y)
     : IsApart A.
 Proof.
 split.
+- apply _.
 - intros x y ap. apply apart_correct, symmetry, apart_correct.
   assumption.
 - intros x y ap z.
@@ -130,13 +133,19 @@ Typeclasses Opaque default_apart.
 
 Instance default_apart_trivial {A} : TrivialApart A (Aap:=default_apart).
 Proof.
-intros x y;split;auto.
+intros x y. apply reflexivity.
+Qed.
+
+Instance trivial_apart_mere `{Funext} `{TrivialApart A} : is_mere_relation A apart.
+Proof.
+intros.
+apply (Trunc.trunc_equiv' _ (symmetry _ _ (trivial_apart x y))).
 Qed.
 
 (* In case we have a decidable setoid, we can construct a strong setoid. Again
   we do not make this an instance as it will cause loops *)
 Section dec_setoid.
-  Context `{Apart A} `{!TrivialApart A} `{∀ x y : A, Decision (x = y)}.
+  Context `{Funext} `{Apart A} `{!TrivialApart A} `{∀ x y : A, Decision (x = y)}.
 
   (* Not Global in order to avoid loops *)
   Instance ne_apart x y : PropHolds (x ≠ y) → PropHolds (x ≶ y).
@@ -148,6 +157,7 @@ Section dec_setoid.
   Instance dec_strong_setoid: IsApart A.
   Proof.
   split.
+  - apply _.
   - intros x y ne.
     apply trivial_apart. apply trivial_apart in ne.
     intros e;apply ne,symmetry,e.

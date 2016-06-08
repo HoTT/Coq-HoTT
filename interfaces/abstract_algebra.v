@@ -25,8 +25,9 @@ Setoid_Morphism as a substructure, setoid rewriting will become horribly slow.
 (* An unbundled variant of the former CoRN CSetoid. We do not 
   include a proof that A is a Setoid because it can be derived. *)
 Class IsApart A {Aap : Apart A} : Type :=
-  { apart_symmetric :> Symmetric (≶) 
-  ; apart_cotrans :> CoTransitive (≶) 
+  { apart_mere :> is_mere_relation _ apart
+  ; apart_symmetric :> Symmetric (≶)
+  ; apart_cotrans :> CoTransitive (≶)
   ; tight_apart : ∀ x y, ¬x ≶ y ↔ x = y }.
 
 Instance apart_irrefl `{IsApart A} : Irreflexive (≶).

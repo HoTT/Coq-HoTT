@@ -404,7 +404,8 @@ semirings.lt_0_1 → lt_ne_flip → ...
 *)
 
 Section dec_strict_setoid_order.
-  Context `{StrictOrder A} `{Apart A} `{!TrivialApart A} `{∀ x y : A, Decision (x = y)}.
+  Context `{Funext}
+    `{StrictOrder A} `{Apart A} `{!TrivialApart A} `{∀ x y : A, Decision (x = y)}.
 
   Instance: IsApart A := dec_strong_setoid.
 
@@ -418,7 +419,7 @@ Section dec_strict_setoid_order.
   - intros x y Exy z.
     destruct (trichotomy (<) x z) as [? | [Exz | Exz]]; try auto.
     right. rewrite <-Exz. assumption.
-  - intros x y. transitivity (~ x = y);[apply trivial_apart|].
+  - intros x y. transitivity (~ x = y);[split;apply trivial_apart|].
     split.
     + destruct (trichotomy (<) x y) as [?|[?|?]]; auto.
       intros E;contradiction E.
@@ -449,7 +450,7 @@ Section dec_partial_order.
       rewrite <-E3. assumption.
   Qed.
 
-  Context `{Apart A} `{!TrivialApart A}.
+  Context `{Funext} `{Apart A} `{!TrivialApart A}.
 
   Instance: IsApart A := dec_strong_setoid.
 
