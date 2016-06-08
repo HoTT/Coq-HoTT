@@ -145,8 +145,8 @@ Section Assumptions.
         (x : cantor + cantor + cantor + cantor)
   : (is_inr x + is_inl_and is_inr x) <-> is_inr (I0 x).
   Proof.
-    refine (iff_compose (f_flip_fixed_iff_inr (I0 x)) _).
-    refine (iff_compose (I0_fixed_iff_fixed x) _).
+    refine (iff_compose _ (f_flip_fixed_iff_inr (I0 x))).
+    refine (iff_compose _ (I0_fixed_iff_fixed x)).
     apply iff_inverse, ff_flip_fixed_iff_inr.
   Defined.
 
