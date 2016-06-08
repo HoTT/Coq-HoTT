@@ -341,6 +341,18 @@ Section ring_props.
   intros ? ?.
   apply (right_cancel_from_left (.*.)).
   Qed.
+
+  Lemma plus_conjugate x y : x = y + x - y.
+  Proof.
+  rewrite plus_comm, plus_assoc, plus_negate_l, plus_0_l.
+  reflexivity.
+  Qed.
+
+  Lemma plus_conjugate_alt x y : x = y + (x - y).
+  Proof.
+  rewrite plus_comm, <-plus_assoc, plus_negate_l, plus_0_r.
+  reflexivity.
+  Qed.
 End ring_props.
 
 Section integral_domain_props.

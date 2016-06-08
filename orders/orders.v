@@ -491,3 +491,8 @@ Section dec_partial_order.
       apply symmetric_neq;assumption.
   Qed.
 End dec_partial_order.
+
+Lemma lt_eq_trans `{Lt A} : forall x y z, x < y -> y = z -> x < z.
+Proof.
+intros ???? [];trivial.
+Qed.
