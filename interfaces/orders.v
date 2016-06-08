@@ -85,7 +85,7 @@ Section order_maps.
     { order_morphism_po_a : PartialOrder Ale
     ; order_morphism_po_b : PartialOrder Ble }.
 
-  Class StrictOrder_Morphism :=
+  Class StrictOrder_Pair :=
     { strict_order_morphism_so_a : StrictOrder Alt
     ; strict_order_morphism_so_b : StrictOrder Blt }.
 
@@ -106,11 +106,11 @@ Section order_maps.
     ; order_iso_surjective :> Surjective f }.
 
   Class StrictlyOrderPreserving :=
-    { strictly_order_preserving_morphism :> StrictOrder_Morphism
+    { strictly_order_preserving_morphism :> StrictOrder_Pair
     ; strictly_order_preserving : `(x < y → f x < f y) }.
 
   Class StrictlyOrderReflecting :=
-    { strictly_order_reflecting_morphism :> StrictOrder_Morphism
+    { strictly_order_reflecting_morphism :> StrictOrder_Pair
     ; strictly_order_reflecting : `(f x < f y → x < y) }.
 
   Class StrictOrderEmbedding :=
@@ -119,6 +119,7 @@ Section order_maps.
 End order_maps.
 
 Arguments Order_Pair {_ _} _ _.
+Arguments StrictOrder_Pair {_ _} _ _.
 
 Hint Extern 4 (?f _ ≤ ?f _) => apply (order_preserving f).
 Hint Extern 4 (?f _ < ?f _) => apply (strictly_order_preserving f).
