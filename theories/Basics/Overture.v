@@ -46,6 +46,15 @@ Arguments transitivity {A R _} / {_ _ _} _ _.
 
     If we want to remove the use of [cbn], we can play tricks with [Module Type]s and [Module]s to declare [inverse] directly as an instance of [Symmetric] without changing its type.  Then we can simply [unfold symmetry].  See the comments around the definition of [inverse]. *)
 
+(** Overwrite [reflexivity] so that we use our version of [Reflexive] rather than having the tactic look for it in the standard library.  We make use of the built-in reflexivity to handle, e.g., single-constructor inductives. *)
+Ltac reflexivity :=
+  Coq.Init.Notations.reflexivity
+  || (intros;
+      let R := match goal with |- ?R ?x ?y => constr:(R) end in
+      let pre_proof_term_head := constr:(@reflexivity _ R _) in
+      let proof_term_head := (eval cbn in pre_proof_term_head) in
+      apply (pre_proof_term_head : forall x, R x x)).
+
 (** Even if we weren't using [cbn], we would have to redefine symmetry, since the built-in Coq version is sometimes too smart for its own good, and will occasionally fail when it should not. *)
 Ltac symmetry :=
   let R := match goal with |- ?R ?x ?y => constr:(R) end in
