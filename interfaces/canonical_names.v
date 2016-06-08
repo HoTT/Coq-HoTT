@@ -102,6 +102,11 @@ Instance top_is_mon_unit `{s : Top A} : MonUnit A := s.
 Instance bottom_is_mon_unit `{s : Bottom A} : MonUnit A := s.
 Instance singleton_is_cast `{s : Singleton A B} : Cast A B := s.
 
+Hint Extern 4 (Apart (ApartZero _)) => apply @sig_apart : typeclass_instances.
+Hint Extern 4 (Apart (NonNeg _)) => apply @sig_apart : typeclass_instances.
+Hint Extern 4 (Apart (Pos _)) => apply @sig_apart : typeclass_instances.
+Hint Extern 4 (Apart (PosInf _)) => apply @sig_apart : typeclass_instances.
+
 (* Notations: *)
 Notation "R ₀" := (ApartZero R) (at level 20, no associativity) : mc_scope.
 Notation "R ⁺" := (NonNeg R) (at level 20, no associativity) : mc_scope.

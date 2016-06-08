@@ -44,13 +44,18 @@ split.
     apply tight_apart. apply eq_correct;assumption.
 Qed.
 
-(* 
+Instance sg_apart_mere `{IsApart A} (P : A -> Type) : is_mere_relation (sig P) apart.
+Proof.
+intros. unfold apart,sig_apart. apply _.
+Qed.
+
 Instance sig_strong_setoid `{IsApart A} (P: A → Type) `{forall x, IsHProp (P x)}
   : IsApart (sig P).
 Proof.
 apply (projected_strong_setoid (@proj1_sig _ P)).
+- intros. split;apply Sigma.equiv_path_sigma_hprop.
+- intros;apply reflexivity.
 Qed.
- *)
 
 Section morphisms.
   Context `{Apart A} `{Apart B} `{Apart C}.
