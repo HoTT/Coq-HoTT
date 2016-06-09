@@ -12,7 +12,7 @@ End initial_maps.
 Class Naturals A {plus mult zero one} `{U: NaturalsToSemiRing A} :=
   { naturals_ring:> @SemiRing A plus mult zero one
   ; naturals_to_semiring_mor:> ∀ `{SemiRing B}, SemiRing_Morphism (naturals_to_semiring A B)
-  ; naturals_initial:> forall `{SemiRing B} {h : A -> B} `{!SemiRing_Morphism h},
+  ; naturals_initial: forall `{SemiRing B} {h : A -> B} `{!SemiRing_Morphism h},
     naturals_to_semiring A B = h }.
 
 (* Specializable operations: *)
