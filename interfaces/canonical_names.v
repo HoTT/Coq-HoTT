@@ -36,7 +36,9 @@ Notation "(≶ x )" := (λ y, apart y x) (only parsing) : mc_scope.
 
 (* Even for setoids with decidable equality x ≠ y does not imply x ≶ y.
 Therefore we introduce the following class. *)
-Class TrivialApart A {Aap : Apart A} := trivial_apart : ∀ x y, x ≶ y <~> x ≠ y.
+Class TrivialApart A {Aap : Apart A} :=
+  { trivial_apart_prop :> is_mere_relation A apart
+  ; trivial_apart : ∀ x y, x ≶ y <-> x ≠ y }.
 
 Notation "x ↾ p" := (exist _ x p) (at level 20) : mc_scope.
 

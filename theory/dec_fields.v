@@ -178,8 +178,8 @@ Hint Extern 7 (PropHolds (/ _ ≠ 0)) => eapply @dec_recip_ne_0 : typeclass_inst
 
 (* Given a decidable field we can easily construct a constructive field. *)
 Section is_field.
-  Context `{Funext} `{DecField F} `{Apart F} `{!TrivialApart F}
-    `{∀ x y : F, Decision (x = y)}.
+  Context `{DecField F} `{Apart F} `{!TrivialApart F}
+    `{Decidable.DecidablePaths F}.
 
   Global Instance recip_dec_field: Recip F := λ x, / x.1.
 
@@ -240,7 +240,7 @@ Qed. *)
 End from_stdlib_field_theory. *)
 
 Section morphisms.
-  Context  `{DecField F} `{∀ x y: F, Decision (x = y)}.
+  Context  `{DecField F} `{TrivialApart F} `{Decidable.DecidablePaths F}.
 
   Global Instance dec_field_to_domain_inj `{IntegralDomain R}
     `{!SemiRing_Morphism (f : F → R)} : Injective f.

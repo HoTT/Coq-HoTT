@@ -1,3 +1,4 @@
+Require Import HoTT.Basics.Decidable.
 Require Import
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.theory.jections.
@@ -133,24 +134,37 @@ Section more_morphisms.
   Qed.
 End more_morphisms.
 
-Instance default_apart {A} : Apart A | 20 := (≠).
-Typeclasses Opaque default_apart.
+Section default_apart.
+  Context `{DecidablePaths A}.
 
-Instance default_apart_trivial {A} : TrivialApart A (Aap:=default_apart).
-Proof.
-intros x y. apply reflexivity.
-Qed.
+  Instance default_apart : Apart A | 20
+    := fun x y =>
+      match decide (x = y) with
+      | inl _ => False
+      | inr _ => True
+      end.
+  Typeclasses Opaque default_apart.
 
-Instance trivial_apart_mere `{Funext} `{TrivialApart A} : is_mere_relation A apart.
-Proof.
-intros.
-apply (Trunc.trunc_equiv' _ (symmetry _ _ (trivial_apart x y))).
-Qed.
+  Global Instance default_apart_trivial : TrivialApart A (Aap:=default_apart).
+  Proof.
+  split.
+  - intros x y;unfold apart,default_apart.
+    destruct (decide (x=y));apply _.
+  -  intros x y;unfold apart,default_apart;split.
+    + intros E. destruct (decide (x=y)).
+      * destruct E.
+      * trivial.
+    + intros E;destruct (decide (x=y)).
+      * auto.
+      * split.
+  Qed.
+
+End default_apart.
 
 (* In case we have a decidable setoid, we can construct a strong setoid. Again
   we do not make this an instance as it will cause loops *)
 Section dec_setoid.
-  Context `{Funext} `{Apart A} `{!TrivialApart A} `{∀ x y : A, Decision (x = y)}.
+  Context `{TrivialApart A} `{DecidablePaths A}.
 
   (* Not Global in order to avoid loops *)
   Instance ne_apart x y : PropHolds (x ≠ y) → PropHolds (x ≶ y).

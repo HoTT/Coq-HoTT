@@ -1,3 +1,4 @@
+Require Import HoTT.Basics.Decidable.
 Require Import
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.interfaces.orders
@@ -404,8 +405,7 @@ semirings.lt_0_1 → lt_ne_flip → ...
 *)
 
 Section dec_strict_setoid_order.
-  Context `{Funext}
-    `{StrictOrder A} `{Apart A} `{!TrivialApart A} `{∀ x y : A, Decision (x = y)}.
+  Context `{StrictOrder A} `{Apart A} `{!TrivialApart A} `{DecidablePaths A}.
 
   Instance: IsApart A := dec_strong_setoid.
 
@@ -428,7 +428,7 @@ Section dec_strict_setoid_order.
 End dec_strict_setoid_order.
 
 Section dec_partial_order.
-  Context `{PartialOrder A} `{∀ x y : A, Decision (x = y)}.
+  Context `{PartialOrder A} `{DecidablePaths A}.
 
   Definition dec_lt: Lt A := λ x y, x ≤ y ∧ x ≠ y.
 
@@ -450,7 +450,7 @@ Section dec_partial_order.
       rewrite <-E3. assumption.
   Qed.
 
-  Context `{Funext} `{Apart A} `{!TrivialApart A}.
+  Context `{Apart A} `{!TrivialApart A}.
 
   Instance: IsApart A := dec_strong_setoid.
 
