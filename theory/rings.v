@@ -336,7 +336,7 @@ Section ring_props.
     apply mult_0_r.
   Qed.
 
-  Global Instance: ∀ z, PropHolds (z ≠ 0) → RightCancellation (.*.) z.
+  Global Instance mult_right_cancel: ∀ z, PropHolds (z ≠ 0) → RightCancellation (.*.) z.
   Proof.
   intros ? ?.
   apply (right_cancel_from_left (.*.)).
