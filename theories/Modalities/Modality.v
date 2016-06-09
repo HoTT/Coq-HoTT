@@ -300,7 +300,7 @@ Module EasyModalities_to_Modalities (Os : EasyModalities)
 
   Definition minO_paths@{u a i} (O : Modality@{u a})
              (A : Type@{i}) (A_inO : In@{u a i} O A) (a a' : A)
-  : In O (a = a').
+  : In@{u a i} O (a = a').
   Proof.
     simple refine (inO_equiv_inO O (to O A a = to O A a') _ _
                           (@ap _ _ (to O A) a a')^-1 _).
