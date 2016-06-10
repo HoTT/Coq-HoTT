@@ -70,25 +70,6 @@ Qed.
     such as inequality as separate relations rather than notations, so that the existing [symmetry]
     will work for them. However, this most likely breaks other things. *)
 
-Instance iff_refl : Reflexive iff.
-Proof.
-intros x;split;auto.
-Defined.
-
-Instance iff_trans : Transitive iff.
-Proof.
-intros P Q R H1 H2.
-split.
-- intros p; apply H2; apply H1; assumption.
-- intros r; apply H1; apply H2; assumption.
-Defined.
-
-Instance iff_symm : Symmetric iff.
-Proof.
-intros P Q H.
-split;intro;apply H;assumption.
-Defined.
-
 Lemma iff_true : forall P, P -> True <-> P.
 Proof.
 intros P p;split;auto.
