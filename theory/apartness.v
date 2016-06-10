@@ -172,7 +172,7 @@ Section dec_setoid.
   assumption.
   Qed.
 
-  Instance dec_strong_setoid: IsApart A.
+  Global Instance dec_strong_setoid: IsApart A.
   Proof.
   split.
   - apply _.

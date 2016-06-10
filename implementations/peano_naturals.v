@@ -274,9 +274,14 @@ induction b as [|b IHb];intros [|c];simpl_nat;intros a Ea E.
   apply ap. apply IHb with a;trivial.
 Qed.
 
+
+Unset Universe Minimization ToSet.
+
 (* Order *)
 Instance nat_le: Le nat := Peano.le.
 Instance nat_lt: Lt nat := Peano.lt.
+
+Set Universe Minimization ToSet.
 
 Lemma le_plus : forall n k, n <= k + n.
 Proof.
@@ -394,12 +399,6 @@ split.
   reflexivity.
 Qed.
 
-
-(*
-Instance nat_apart : Apart nat := default_apart.
-Instance nat_apartness : IsApart nat := dec_strong_setoid.
-*)
-
 Instance: is_mere_relation nat le.
 Proof.
 intros m n;apply Trunc.hprop_allpath.
@@ -438,8 +437,11 @@ intros a b. destruct (le_lt_dec a b) as [[|]|E];auto.
 left. apply le_S_S. trivial.
 Qed.
 
+Unset Universe Minimization ToSet.
+
 Instance nat_apart : Apart nat := fun n m => n < m \/ m < n.
-Instance nat_trivial_apart : TrivialApart nat.
+
+Instance nat_trivial_apart : TrivialApart@{i Set j k l} nat.
 Proof.
 split.
 - intros;apply ishprop_sum;try apply _.
@@ -452,34 +454,14 @@ split.
     destruct E;trivial.
 Qed.
 
-Fail Definition bob := @dec_strict_pseudo_order
-  nat nat_lt nat_strict nat_apart nat_trivial_apart _ nat_trichotomy.
+Set Universe Minimization ToSet.
 
-(*
-Instance nat_full : FullPseudoSemiRingOrder nat_le nat_lt.
+Lemma nat_not_lt_le : forall a b, ~ a < b -> b <= a.
 Proof.
-split;[split|]. 
-- exact bob. refine dec_strict_pseudo_order.
-
-STOP.
-
-repeat (split;try apply _).
-assert (SemiRingOrder nat_le).
- repeat (split; try apply _).
-    intros x y E. exists (y - x)%nat. now apply le_plus_minus.
-   intros. now apply Plus.plus_le_compat_l.
-  intros. now apply plus_le_reg_l with z.
- intros x y ? ?. change (0 * 0 <= x * y)%nat. now apply Mult.mult_le_compat.
-apply dec_full_pseudo_srorder.
-now apply Nat.le_neq.
+intros ?? E.
+destruct (le_lt_dec b a);auto.
+destruct E;auto.
 Qed.
-
-Instance: OrderEmbedding S.
-Proof. repeat (split; try apply _). exact le_n_S. exact le_S_n. Qed.
-
-Instance: StrictOrderEmbedding S.
-Proof. split; try apply _. Qed.
- *)
 
 Lemma nat_lt_not_le : forall a b : nat, a < b -> ~ b <= a.
 Proof.
@@ -502,6 +484,75 @@ intros a b. destruct (le_lt_dec a b).
 - left;trivial.
 - right. apply nat_lt_not_le. trivial.
 Qed.
+
+Lemma S_gt_0 : forall a, 0 < S a.
+Proof.
+intros;apply le_S_S,zero_least.
+Qed.
+
+Lemma nonzero_gt_0 : forall a, ~ a = 0 -> 0 < a.
+Proof.
+intros [|a] E.
+- destruct E;split.
+- apply S_gt_0.
+Qed.
+
+Unset Universe Minimization ToSet.
+
+Instance nat_full : FullPseudoSemiRingOrder nat_le nat_lt.
+Proof.
+split;[split|]. 
+- apply dec_strict_pseudo_order.
+- apply _.
+- intros a b E. apply nat_not_lt_le,le_exists in E.
+  destruct E as [k E];exists k;rewrite plus_comm;auto.
+- repeat (split;try apply _).
+  + intros a b E.
+    apply le_exists in E;destruct E as [k Hk].
+    rewrite Hk. rewrite add_S_r,<-add_S_l.
+    rewrite plus_assoc,(plus_comm z (S k)), <-plus_assoc.
+    apply le_S_S,le_plus.
+  + intros a b E.
+    apply le_exists in E;destruct E as [k E].
+    rewrite <-add_S_r,plus_assoc,(plus_comm k z),<-plus_assoc in E.
+    apply (left_cancellation plus _) in E.
+    rewrite E;apply le_plus.
+- split;try apply _.
+  intros ???? E.
+  apply trivial_apart in E.
+  destruct (decide (apart x₁ x₂)) as [?|ex];auto.
+  right. apply tight_apart in ex.
+  apply trivial_apart. intros ey.
+  apply E. apply ap2;trivial.
+- unfold PropHolds.
+  intros a b Ea Eb.
+  apply nonzero_gt_0. intros E.
+  apply mult_eq_zero in E.
+  destruct E as [E|E];[rewrite E in Ea|rewrite E in Eb];
+  apply (irreflexivity lt 0);trivial.
+- intros a b;split.
+  + intros E1 E2. apply nat_lt_not_le in E2.
+    auto.
+  + intros E.
+    destruct (le_lt_dec a b);auto.
+    destruct E;auto.
+Qed.
+
+Instance: OrderEmbedding S.
+Proof.
+repeat (split; try apply _).
+- intros ??;apply le_S_S.
+- intros ??;apply le_S_S.
+Qed.
+
+(* unsetting minimization to set for the whole file makes this slow *)
+Instance: StrictOrderEmbedding S.
+Proof.
+split; try apply _.
+Qed.
+
+Set Universe Minimization ToSet.
+
 (* 
 Instance nat_cut_minus: CutMinus nat := minus.
 Instance: CutMinusSpec nat nat_cut_minus.
