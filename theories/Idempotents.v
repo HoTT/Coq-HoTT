@@ -253,8 +253,8 @@ Defined.
 Definition split_preidem_set (X : Type) `{IsHSet X} (f : PreIdempotent X)
 : Splitting f.
 Proof.
-  refine (Build_RetractOf X { x : X & f x = x }
-                          (fun x => (f x ; isidem f x)) pr1 _ ; _).
+  simple refine (Build_RetractOf X { x : X & f x = x }
+                                 (fun x => (f x ; isidem f x)) pr1 _ ; _).
   - intros [x p]; simpl.
     apply path_sigma with p; simpl.
     apply path_ishprop.
@@ -266,8 +266,8 @@ Definition split_preidem_wconst (X : Type) (f : PreIdempotent X)
            `{WeaklyConstant _ _ f}
 : Splitting f.
 Proof.
-  refine (Build_RetractOf X (FixedBy f)
-                          (fun x => (f x ; isidem f x)) pr1 _ ; _).
+  simple refine (Build_RetractOf X (FixedBy f)
+                                 (fun x => (f x ; isidem f x)) pr1 _ ; _).
   - intros x; apply path_ishprop.
   - simpl. intros x; reflexivity.
 Defined.
@@ -277,8 +277,8 @@ Definition split_preidem_splitsupp (X : Type) (f : PreIdempotent X)
            (ss : forall x, Collapsible (f x = x))
 : Splitting f.
 Proof.
-  refine (Build_RetractOf X { x : X & FixedBy (@collapse (f x = x) _) }
-                          _ pr1 _ ; _).
+  simple refine (Build_RetractOf X { x : X & FixedBy (@collapse (f x = x) _) }
+                                 _ pr1 _ ; _).
   - intros x; exists (f x); unfold FixedBy.
     exists (collapse (isidem f x)).
     apply wconst.
