@@ -1,4 +1,4 @@
-Require Import HoTT.Basics.Decidable.
+Require Import HoTT.Basics.Decidable HoTT.Types.Bool.
 Require Import
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.theory.jections.
@@ -140,22 +140,21 @@ Section default_apart.
   Instance default_apart : Apart A | 20
     := fun x y =>
       match decide (x = y) with
-      | inl _ => False
-      | inr _ => True
-      end.
+      | inl _ => false
+      | inr _ => true
+      end = true.
   Typeclasses Opaque default_apart.
 
   Global Instance default_apart_trivial : TrivialApart A (Aap:=default_apart).
   Proof.
   split.
-  - intros x y;unfold apart,default_apart.
-    destruct (decide (x=y));apply _.
-  -  intros x y;unfold apart,default_apart;split.
+  - unfold apart,default_apart. apply _.
+  - intros x y;unfold apart,default_apart;split.
     + intros E. destruct (decide (x=y)).
-      * destruct E.
+      * destruct (false_ne_true E).
       * trivial.
-    + intros E;destruct (decide (x=y)).
-      * auto.
+    + intros E;destruct (decide (x=y)) as [e|_].
+      * destruct (E e).
       * split.
   Qed.
 

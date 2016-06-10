@@ -1,5 +1,5 @@
 Require Coq.Init.Peano.
-Require Import HoTT.Basics.Decidable.
+Require Import HoTT.Basics.Decidable HoTT.Types.Sum.
 Require Import
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.interfaces.naturals
@@ -373,30 +373,62 @@ repeat split.
     trivial.
 Qed.
 
-Instance nat_apart : Apart nat := default_apart.
-Instance nat_apartness : IsApart nat := dec_strong_setoid.
 
-Local Instance lt_trans : Transitive (lt:Lt nat).
+Local Instance nat_strict : StrictOrder (_:Lt nat).
 Proof.
-hnf. intros a b c E1 E2.
-apply le_exists;apply le_exists in E1;apply le_exists in E2.
-destruct E1 as [k1 E1], E2 as [k2 E2].
-exists (S (k1+k2)).
-rewrite E2,E1.
-rewrite !add_S_r,add_S_l.
-rewrite (add_assoc k2), (add_comm k2).
-reflexivity.
+split.
+- hnf. intros x E.
+  apply le_exists in E.
+  destruct E as [k E].
+  apply (S_neq_0 k).
+  apply (left_cancellation (+) x).
+  rewrite plus_0_r,add_S_r,<-add_S_l.
+  rewrite add_comm. apply symmetry,E.
+- hnf. intros a b c E1 E2.
+  apply le_exists;apply le_exists in E1;apply le_exists in E2.
+  destruct E1 as [k1 E1], E2 as [k2 E2].
+  exists (S (k1+k2)).
+  rewrite E2,E1.
+  rewrite !add_S_r,add_S_l.
+  rewrite (add_assoc k2), (add_comm k2).
+  reflexivity.
 Qed.
 
-Local Instance lt_irrefl : Irreflexive (lt:Lt nat).
+
+(*
+Instance nat_apart : Apart nat := default_apart.
+Instance nat_apartness : IsApart nat := dec_strong_setoid.
+*)
+
+Instance: is_mere_relation nat le.
 Proof.
-hnf. intros x E.
-apply le_exists in E.
-destruct E as [k E].
-apply (S_neq_0 k).
-apply (left_cancellation (+) x).
-rewrite plus_0_r,add_S_r,<-add_S_l.
-rewrite add_comm. apply symmetry,E.
+intros m n;apply Trunc.hprop_allpath.
+generalize (idpath (S n)).
+generalize n at 2 3 4 5.
+change (forall n0 : nat,
+S n = S n0 -> forall le_mn1 le_mn2 : m <= n0, le_mn1 = le_mn2).
+induction (S n) as [|n0 IHn0].
+- intros ? E;destruct (S_neq_0 _ (symmetry _ _ E)).
+- clear n; intros n H.
+  apply (injective S) in H.
+  rewrite <- H; intros le_mn1 le_mn2; clear n H.
+  pose (def_n2 := idpath n0);
+  path_via (paths_ind n0 (fun n _ => le m _) le_mn2 n0 def_n2).
+  generalize def_n2; revert le_mn1 le_mn2.
+  generalize n0 at 1 4 5 8; intros n1 le_mn1.
+  destruct le_mn1; intros le_mn2; destruct le_mn2.
+  + intros def_n0.
+    rewrite (Trunc.path_ishprop def_n0 idpath).
+    simpl. reflexivity.
+  + intros def_n0; generalize le_mn2; rewrite <-def_n0; intros le_mn0.
+    destruct (irreflexivity nat_lt _ le_mn0).
+  + intros def_n0.
+    destruct (irreflexivity nat_lt m0).
+    rewrite def_n0 in le_mn1;trivial.
+  + intros def_n0. pose proof (injective S _ _ def_n0) as E.
+    destruct E.
+    rewrite (Trunc.path_ishprop def_n0 idpath). simpl.
+    apply ap. auto.
 Qed.
 
 Instance nat_trichotomy : Trichotomy (lt:Lt nat).
@@ -405,11 +437,29 @@ hnf.
 intros a b. destruct (le_lt_dec a b) as [[|]|E];auto.
 left. apply le_S_S. trivial.
 Qed.
-(* 
+
+Instance nat_apart : Apart nat := fun n m => n < m \/ m < n.
+Instance nat_trivial_apart : TrivialApart nat.
+Proof.
+split.
+- intros;apply ishprop_sum;try apply _.
+  intros E1 E2. apply (irreflexivity nat_lt x).
+  transitivity y;trivial.
+- intros a b;split;intros E.
+  + destruct E as [E|E];apply irrefl_neq in E;trivial.
+    apply symmetric_neq;trivial.
+  + hnf. destruct (trichotomy _ a b) as [?|[?|?]];auto.
+    destruct E;trivial.
+Qed.
+
+Fail Definition bob := @dec_strict_pseudo_order
+  nat nat_lt nat_strict nat_apart nat_trivial_apart _ nat_trichotomy.
+
+(*
 Instance nat_full : FullPseudoSemiRingOrder nat_le nat_lt.
 Proof.
 split;[split|]. 
-- refine dec_strict_pseudo_order.
+- exact bob. refine dec_strict_pseudo_order.
 
 STOP.
 

@@ -4,6 +4,11 @@ Require Import
   HoTTClasses.interfaces.orders
   HoTTClasses.theory.apartness.
 
+Lemma irrefl_neq `{R : relation A} `{!Irreflexive R} : forall x y, R x y -> ~ x = y.
+Proof.
+intros ?? E e;rewrite e in E. apply (irreflexivity _ _ E).
+Qed.
+
 Lemma le_flip `{Le A} `{!TotalRelation (≤)} x y : ¬y ≤ x → x ≤ y.
 Proof.
 intros nle.
