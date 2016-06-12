@@ -645,9 +645,8 @@ in `bar` appropriately.
 
 (It is possible to explicitly declare and name universes globally with
 the `Universe` command, but we are not using that in the HoTT
-library.  Note in particular that universes declared with `Universe`
-are _not_ generalized upon closing sections; they are permanently
-global wherever they are defined.)
+library.  Universes declared with `Universe` will be discharged on each 
+section definition independently.)
 
 Unfortunately it is not currently possible to declare the universe
 parameters of a definition; Coq simply decides after you make a
