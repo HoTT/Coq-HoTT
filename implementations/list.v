@@ -1,4 +1,6 @@
-Require Import HoTTClasses.interfaces.abstract_algebra HoTT.Types.Unit HoTT.Types.Prod.
+Require Import
+  HoTTClasses.interfaces.abstract_algebra
+  HoTT.Types.Unit HoTT.Types.Prod HoTT.Types.Bool.
 
 Open Scope list_scope.
 
@@ -7,7 +9,8 @@ In a special module to avoid conflicts. *)
 Module ListNotations.
 Notation " [ ] " := nil (format "[ ]") : list_scope.
 Notation " [ x ] " := (cons x nil) : list_scope.
-Notation " [ x ; y ; .. ; z ] " :=  (cons x (cons y .. (cons z nil) ..)) : list_scope.
+Notation " [ x ; y ; .. ; z ] " :=  (cons x (cons y .. (cons z nil) ..))
+  : list_scope.
 End ListNotations.
 
 Import ListNotations.
@@ -68,7 +71,8 @@ Fixpoint for_all {A} (P : A -> Type) l :=
   | x :: l => P x /\ for_all P l
   end.
 
-Lemma for_all_trivial {A} (P : A -> Type) : (forall x, P x) -> forall l, for_all P l.
+Lemma for_all_trivial {A} (P : A -> Type) : (forall x, P x) ->
+  forall l, for_all P l.
 Proof.
 intros HP l;induction l as [|x l IHl];split;auto.
 Qed.
@@ -85,7 +89,8 @@ Lemma for_all_map2 {A B C} P Q R
   `(f : A -> B -> C) (Hf : forall x y, P x -> Q y -> R (f x y))
   def_l (Hdefl : forall l1, for_all P l1 -> for_all R (def_l l1))
   def_r (Hdefr : forall l2, for_all Q l2 -> for_all R (def_r l2))
-  : forall l1 l2, for_all P l1 -> for_all Q l2 -> for_all R (map2 f def_l def_r l1 l2).
+  : forall l1 l2, for_all P l1 -> for_all Q l2 ->
+    for_all R (map2 f def_l def_r l1 l2).
 Proof.
 intros l1;induction l1 as [|x l1 IHl1].
 - simpl. intros [|y l2] _; auto.
@@ -93,7 +98,8 @@ intros l1;induction l1 as [|x l1 IHl1].
   apply Hdefl. simpl;auto.
 Qed.
 
-Lemma fold_preserves {A B} P Q (f : A -> B -> A) (Hf : forall x y, P x -> Q y -> P (f x y))
+Lemma fold_preserves {A B} P Q (f : A -> B -> A)
+  (Hf : forall x y, P x -> Q y -> P (f x y))
   : forall acc (Ha : P acc) l (Hl : for_all Q l), P (fold_left f acc l).
 Proof.
 intros acc Ha l Hl;revert l Hl acc Ha.

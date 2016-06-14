@@ -3,8 +3,7 @@ Require Import HoTT.hit.quotient
   HoTT.Types.Universe
   HoTT.Basics.Trunc
   HoTT.Basics.Decidable
-  HoTT.Types.Record
-  .
+  HoTT.Types.Record.
 Require Import 
   HoTTClasses.interfaces.abstract_algebra 
   HoTTClasses.theory.rings
@@ -14,7 +13,7 @@ Module Frac.
 
 Section contents.
 
-Context R `{Funext} `{Univalence} `{IntegralDomain R} `{DecidablePaths R}.
+Context `{Funext} `{Univalence} R `{IntegralDomain R} `{DecidablePaths R}.
 
 (* TODO why does making this Inductive not work? *)
 Record Frac : Type
@@ -250,11 +249,6 @@ Global Instance class : Cast (Frac R) F := class_of _.
 Global Instance: Cast R F := compose class (Frac_inject _).
 
 Definition path {x y} : equiv x y -> class x = class y := related_classes_eq _.
-
-Goal forall x, x = (quotient_ind equiv) -> False.
-intros x _. change (quotient equiv) with F in x.
-change (class_of equiv) with class in x.
-change (@related_classes_eq _ equiv _) with @path in x.
 
 Definition F_rect (P : F -> Type) {sP : forall x, IsHSet (P x)}
   (dclass : forall x, P (class x))
