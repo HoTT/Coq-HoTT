@@ -1,5 +1,5 @@
 # Library name
--R . HoTTClasses
+-R theories HoTTClasses
 
 # Stuff from configure
 

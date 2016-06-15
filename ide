@@ -1,4 +1,4 @@
 #!/bin/sh
 
-hoqide -R . HoTTClasses "$@"
+hoqide -R theories HoTTClasses "$@"
 
