@@ -1,4 +1,6 @@
-Require Import HoTTClasses.interfaces.abstract_algebra.
+Require Export HoTT.Types.Bool.
+Require Export
+  HoTTClasses.interfaces.abstract_algebra.
 
 Class Pow A B := pow : A → B → A.
 Infix "**" := pow (at level 30, right associativity) : mc_scope.
@@ -6,7 +8,8 @@ Notation "(.**.)" := pow (only parsing) : mc_scope.
 Notation "( x **.)" := (pow x) (only parsing) : mc_scope.
 Notation "(.** n )" := (λ x, x ^ n) (only parsing) : mc_scope.
 
-Class NatPowSpec A B (pw : Pow A B) `{One A} `{Mult A} `{Zero B} `{One B} `{Plus B} := {
+Class NatPowSpec A B (pw : Pow A B)
+  `{One A} `{Mult A} `{Zero B} `{One B} `{Plus B} := {
   nat_pow_0 : ∀ x, x ** 0 = 1 ;
   nat_pow_S : ∀ x n, x ** (1 + n) = x * x ** n
 }.
@@ -62,7 +65,8 @@ Class ShiftRSpec A B (sl : ShiftR A B)
   `{One A} `{Plus A} `{Mult A}
   `{Zero B} `{One B} `{Plus B} := {
   shiftr_0 :> RightIdentity (≫) 0 ;
-  shiftr_S : ∀ x n, x ≫ n = (2 * x ≫ (1 + n))%mc ∨ x ≫ n = (2 * x ≫ (1 + n) + 1)%mc
+  shiftr_S : ∀ x n, x ≫ n = (2 * x ≫ (1 + n))%mc ∨
+                    x ≫ n = (2 * x ≫ (1 + n) + 1)%mc
 }.
 
 Class DivEuclid A := div_euclid : A → A → A.
@@ -94,3 +98,61 @@ Class CutMinusSpec A (cm : CutMinus A) `{Zero A} `{Plus A} `{Le A} := {
   cut_minus_le : ∀ x y, y ≤ x → x ∸ y + y = x ;
   cut_minus_0 : ∀ x y, x ≤ y → x ∸ y = 0
 }.
+
+
+Inductive comparison : Set := LT | EQ | GT.
+
+Lemma LT_EQ : ~ LT = EQ.
+Proof.
+intros E.
+change ((fun r => match r with LT => Unit | _ => Empty end) EQ).
+transport E. split.
+Qed.
+
+Lemma LT_GT : ~ LT = GT.
+Proof.
+intros E.
+change ((fun r => match r with LT => Unit | _ => Empty end) GT).
+transport E. split.
+Qed.
+
+Lemma EQ_LT : ~ EQ = LT.
+Proof.
+apply symmetric_neq, LT_EQ.
+Qed.
+
+Lemma EQ_GT : ~ EQ = GT.
+Proof.
+intros E.
+change ((fun r => match r with EQ => Unit | _ => Empty end) GT).
+transport E. split.
+Qed.
+
+Lemma GT_EQ : ~ GT = EQ.
+Proof.
+apply symmetric_neq, EQ_GT.
+Qed.
+
+Class Compare A := compare : A -> A -> comparison.
+Infix "?=" := compare (at level 70, no associativity) : mc_scope.
+Notation "(?=)" := compare (only parsing) : mc_scope.
+Notation "( x ?=)" := (compare x) (only parsing) : mc_scope.
+Notation "(?= y )" := (fun x => x ?= y) (only parsing) : mc_scope.
+
+Class Eqb A := eqb : A -> A -> Bool.
+Infix "=?" := eqb (at level 70, no associativity) : mc_scope.
+Notation "(=?)" := eqb (only parsing) : mc_scope.
+Notation "( x =?)" := (eqb x) (only parsing) : mc_scope.
+Notation "(=? y )" := (fun x => x =? y) (only parsing) : mc_scope.
+
+Class Ltb A := ltb : A -> A -> Bool.
+Infix "<?" := ltb (at level 70, no associativity) : mc_scope.
+Notation "(<?)" := ltb (only parsing) : mc_scope.
+Notation "( x <?)" := (ltb x) (only parsing) : mc_scope.
+Notation "(<? y )" := (fun x => x <? y) (only parsing) : mc_scope.
+
+Class Leb A := leb : A -> A -> Bool.
+Infix "<=?" := leb (at level 70, no associativity) : mc_scope.
+Notation "(<=?)" := leb (only parsing) : mc_scope.
+Notation "( x <=?)" := (leb x) (only parsing) : mc_scope.
+Notation "(<=? y )" := (fun x => x <=? y) (only parsing) : mc_scope.
