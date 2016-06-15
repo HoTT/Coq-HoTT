@@ -235,11 +235,6 @@ rewrite eval_map. apply eval_ext.
 intros [[]|?]. reflexivity.
 Qed.
 
-Goal forall x y : R, x + (x * y) = x * (y + 1).
-Proof.
-intros. apply eval_eqquote.
-pose (E := (_
-  : FakeOrdered ((Unit ∨ Empty ∨ Empty ∨ Unit) ∨ Empty ∨ Empty ∨ Empty))).
-Abort.
+End contents.
 
-
+End Quoting.

@@ -298,8 +298,9 @@ first [change sg_op with mult; change mon_unit with 1|
 - apply (R_ind3 _).
   intros [pa na] [pb nb] [pc nc];apply path;red;simpl.
   
-
-
+Abort.
+End contents.
+(* 
 Qed.
 
 (* A final word about inject *)
@@ -540,3 +541,4 @@ End semiring_pairs.
 
 Typeclasses Opaque SRpair_equiv.
 Typeclasses Opaque SRpair_le.
+ *)
