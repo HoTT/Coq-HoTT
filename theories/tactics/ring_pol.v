@@ -169,61 +169,61 @@ induction P as [c | P1 IHP1 v P2 IHP2];intros Q.
       rewrite 2!plus_assoc,(plus_comm (eval vs P2));reflexivity.
 Qed.
 
+(* V * P *)
+Fixpoint mulX v P :=
+  match P with
+  | Pconst c => mkPX (Pconst c) v 0
+  | PX P1 w P2 =>
+    (* P1 <= w, P2 < w *)
+    match v ?= w with
+    | LT => PX (mulX v P1) w (mulX v P2)
+    | _ => PX P v 0
+    end
+  end.
+
+Lemma eval_mulX vs : forall v P, eval vs (mulX v P) = eval vs P * vs v.
+Proof.
+induction P as [c | P1 IHP1 w P2 IHP2].
+- simpl. rewrite eval_mkPX. simpl.
+  rewrite (preserves_0 (f:=phi)),plus_0_r. reflexivity.
+- change (eval vs (mulX v (PX P1 w P2)) ≡ (eval vs P1 * vs w + eval vs P2) * vs v).
+  simpl. destruct (v ?= w);simpl.
+  + rewrite plus_mult_distr_r.
+    rewrite IHP1,IHP2.
+    apply ap2;trivial. rewrite <-2!mult_assoc;apply ap,mult_comm.
+  + rewrite (preserves_0 (f:=phi)),plus_0_r. reflexivity.
+  + rewrite (preserves_0 (f:=phi)),plus_0_r. reflexivity.
+Qed.
+
 Fixpoint mul P Q :=
   match P, Q with
   | Pconst c, _ => mulC c Q
   | _, Pconst d => mulC d P
   | PX P1 v P2, PX Q1 w Q2 =>
-    (* P1 <= v, P2 < v, Q1 <= w, Q2 < w *)
     (* P1 Q1 v w + P1 Q2 v + P2 Q1 w + P2 Q2 *)
-    match v ?= w with
-    | EQ =>
-      mkPX (mkPX (mul P1 Q1) v (add (mul P1 Q2) (mul P2 Q1))) v (mul P2 Q2)
-    | LT =>
-      (*  (P1 Q1 * w + P2 Q1) * w + (P1 Q2 * v + P2 Q2) *)
-      mkPX (mkPX (mul P1 Q1) v (mul P2 Q1)) w (mkPX (mul P1 Q2) v (mul P2 Q2))
-    | GT =>
-      mkPX (mkPX (mul P1 Q1) w (mul P1 Q2)) v (mkPX (mul P2 Q1) w (mul P2 Q2))
-    end
+    add (mulX v (add (mulX w (mul P1 Q1)) (mul P1 Q2)))
+        (add (mulX w (mul P2 Q1)) (mul P2 Q2))
   end.
 
 Lemma eval_mul vs : forall P Q, eval vs (mul P Q) = eval vs P * eval vs Q.
 Proof.
-induction P as [c | P1 IHP1 v P2 IHP2];intros Q.
-- simpl. apply eval_mulC.
-- destruct Q as [d | Q1 w Q2].
-  + simpl. rewrite eval_mkPX,2!eval_mulC.
-    rewrite <-mult_assoc,<-plus_mult_distr_l,mult_comm. reflexivity.
-  + simpl.
-    rewrite plus_mult_distr_l,plus_mult_distr_r.
-    rewrite (plus_mult_distr_r _ _ (eval vs Q2)).
-    rewrite <-IHP2.
-    rewrite <-mult_assoc,(mult_assoc (vs v)),(mult_comm (vs v)).
-    rewrite <-(mult_assoc (eval vs Q1)),mult_assoc,<-IHP1.
-    rewrite (mult_assoc (eval vs P2)),<-IHP2.
-    rewrite (mult_comm (eval vs P1)),<-(mult_assoc (vs v)),<-IHP1.
-    pose proof (tricho_compare_eq v w) as E.
-    destruct (v ?= w).
-    * clear E.
-      rewrite !eval_mkPX.
-      rewrite plus_mult_distr_r.
-      apply ap2;apply ap2;trivial;[|apply mult_comm].
-      symmetry;apply mult_assoc.
-    * rewrite E by split;rewrite !eval_mkPX.
-      rewrite plus_mult_distr_r.
-      rewrite eval_add. rewrite (plus_mult_distr_r (eval vs (mul P1 Q2))).
-      rewrite (plus_comm (eval vs (mul P1 Q2) * _)).
-      rewrite !plus_assoc. apply ap2;[apply ap2;[apply ap2|apply mult_comm]|];
-      trivial.
-      symmetry;apply mult_assoc.
-    * clear E.
-      rewrite !eval_mkPX.
-      rewrite plus_mult_distr_r.
-      rewrite <-plus_assoc,(plus_assoc (eval vs _ * vs v)).
-      rewrite (plus_comm (eval _ _ * vs v)).
-      rewrite !plus_assoc.
-      apply ap2;apply ap2;trivial;[|apply mult_comm];apply ap2;trivial.
-      rewrite (mult_comm (vs v));symmetry;apply mult_assoc.
+induction P as [c | P1 IHP1 v P2 IHP2];[apply eval_mulC|].
+destruct Q as [d | Q1 w Q2].
+- change (mul (PX P1 v P2) (Pconst d)) with (mulC d (PX P1 v P2)).
+  rewrite eval_mulC. apply mult_comm.
+- simpl.
+  rewrite plus_mult_distr_r,!plus_mult_distr_l.
+  repeat (rewrite eval_add || rewrite eval_mulX).
+  rewrite plus_mult_distr_r,(plus_mult_distr_l (eval vs P2)).
+  rewrite IHP1,IHP2.
+  apply ap2;apply ap2.
+  + rewrite <-!mult_assoc.
+    apply ap.
+    rewrite (mult_comm (vs v)). apply mult_assoc.
+  + rewrite <-mult_assoc,(mult_comm (vs v)),mult_assoc.
+    rewrite IHP1;reflexivity.
+  + symmetry;apply mult_assoc.
+  + auto.
 Qed.
 
 Fixpoint toPol (e: Expr V) :=
@@ -245,5 +245,7 @@ induction e as [v| | |a IHa b IHb|a IHa b IHb];simpl.
 - rewrite eval_add,IHa,IHb. reflexivity.
 - rewrite eval_mul,IHa,IHb. reflexivity.
 Qed.
+
+(* Now we need to normalize *)
 
 End content.

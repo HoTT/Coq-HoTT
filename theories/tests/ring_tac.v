@@ -20,17 +20,12 @@ apply (by_quoting (naturals_to_semiring nat R)).
 compute. reflexivity.
 Qed.
 
-Import ring_pol. Import ring_quote.Quoting.
-
 Lemma test3 `{SemiRing R}
-  (pa pb pc na nb nc : R) : ( pa * (pb * pc + nb * nc) + na * (pb * nc + nb * pc) +
-((pa * pb + na * nb) * nc + (pa * nb + na * pb) * pc)
-≡ (pa * pb + na * nb) * pc + (pa * nb + na * pb) * nc +
-  (pa * (pb * nc + nb * pc) + na * (pb * pc + nb * nc))).
+  (pa pb pc : R) :
+  pa * (pb * pc)
+≡ pa * pb * pc.
 Proof.
 intros.
-apply (normalize_eq (naturals_to_semiring nat R)).
-compute.
-change Aplus with (@plus R Aplus);change Amult with (@mult R Amult);
-change Azero with (@zero R Azero);change Aone with (@one R Aone).
-Abort.
+apply (by_quoting (naturals_to_semiring nat R)). compute.
+reflexivity.
+Qed.

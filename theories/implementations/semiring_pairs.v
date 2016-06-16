@@ -300,11 +300,7 @@ first [change sg_op with mult; change mon_unit with 1|
   apply ap2;apply plus_comm.
 - apply (R_ind3 _).
   intros [pa na] [pb nb] [pc nc];apply path;red;simpl.
-  apply (normalize_eq (naturals_to_semiring nat _)).
-  compute.
-  change Aplus with (@plus SR Aplus);change Amult with (@mult SR Amult);
-  change Azero with (@zero SR Azero);change Aone with (@one SR Aone).
-  rewrite !plus_0_l,!mult_1_l,!plus_0_r.
+  
 Abort.
 End contents.
 (* 

@@ -155,7 +155,8 @@ Defined.
 Close Scope nat_scope.
 
 Instance: NaturalsToSemiRing nat :=
-  λ _ _ _ _ _, fix f (n: nat) := match n with 0%nat => 0 | S n' => f n' + 1 end.
+  λ _ _ _ _ _, fix f (n: nat) := match n with 0%nat => 0 | 1%nat => 1 |
+   S n' => f n' + 1 end.
 
 Section for_another_semiring.
   Context `{SemiRing R}.
@@ -168,8 +169,13 @@ Section for_another_semiring.
   Proof. reflexivity. Qed.
 
   Let f_preserves_1: toR 1 = 1.
+  Proof. reflexivity. Qed.
+
+  Let f_S : forall x, toR (S x) = toR x + 1.
   Proof.
-  exact (plus_0_l _).
+  intros [|x].
+  - symmetry;apply plus_0_l.
+  - reflexivity.
   Qed.
 
   Let f_preserves_plus a a': toR (a + a') = toR a + toR a'.
@@ -177,7 +183,8 @@ Section for_another_semiring.
   induction a as [|a IHa].
   - change (toR a' = 0 + toR a').
     apply symmetry,plus_0_l.
-  - change (toR (a + a') + 1 = toR (a) + 1 + toR a'). rewrite IHa.
+  - change (toR (S (a + a')) = toR (S a) + toR a').
+    rewrite !f_S,IHa.
     rewrite <-(plus_assoc _ 1), (plus_comm 1), plus_assoc.
     reflexivity.
   Qed.
@@ -187,7 +194,7 @@ Section for_another_semiring.
   induction a as [|a IHa].
   - change (0 = 0 * toR a').
     rewrite mult_0_l. reflexivity.
-  - change (toR (a' + a * a') = (toR a + 1) * toR a').
+  - rewrite f_S;change (toR (a' + a * a') = (toR a + 1) * toR a').
     rewrite f_preserves_plus, IHa.
     rewrite plus_mult_distr_r,mult_1_l.
     apply commutativity.
@@ -196,6 +203,19 @@ Section for_another_semiring.
   Global Instance: SemiRing_Morphism (naturals_to_semiring nat R).
   Proof.
   repeat (split;try apply _);trivial.
+  Qed.
+
+  Lemma toR_unique `{Funext} (h : nat -> R) `{!SemiRing_Morphism h} :
+    naturals_to_semiring nat R = h.
+  Proof.
+  apply path_forall. red.
+  induction x as [|n E].
+  + change (0 = h 0).
+    apply symmetry,preserves_0.
+  + rewrite f_S. change (naturals_to_semiring nat R n + 1 = h (1+n)).
+    rewrite (add_comm 1).
+    rewrite (preserves_plus (f:=h)).
+    rewrite E. apply ap,symmetry,preserves_1.
   Qed.
 End for_another_semiring.
 
@@ -217,16 +237,7 @@ Proof nat_rect P.
 Instance nat_naturals `{Funext} : Naturals nat.
 Proof.
 split;try apply _.
-intros.
-apply path_forall. red.
-apply (nat_induction _).
-+ change (0 = h 0).
-  apply symmetry,preserves_0.
-+ intros n E.
-  change (naturals_to_semiring nat B n + 1 = h (1+n)).
-  rewrite (add_comm 1).
-  rewrite (preserves_plus (f:=h)).
-  rewrite E. apply ap,symmetry,preserves_1.
+intros;apply toR_unique, _.
 Qed.
 
 Lemma plus_eq_zero : forall a b : nat, a + b = 0 -> a = 0 /\ b = 0.
