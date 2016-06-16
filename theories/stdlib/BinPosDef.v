@@ -19,7 +19,8 @@
 Require Coq.Init.Peano.
 Require Import HoTT.Types.Bool.
 Require Export HoTTClasses.stdlib.BinNums
-  HoTTClasses.interfaces.additional_operations.
+  HoTTClasses.interfaces.abstract_algebra.
+Require Import HoTTClasses.theory.additional_operations.
 
 (** Postfix notation for positive numbers, which allows mimicking
     the position of bits in a big-endian representation.

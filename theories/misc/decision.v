@@ -1,6 +1,7 @@
 Require Import HoTT.Types.Bool HoTT.Types.Prod HoTT.Basics.Decidable.
 Require Import
-  HoTTClasses.interfaces.canonical_names HoTTClasses.misc.util.
+  HoTTClasses.interfaces.canonical_names
+  HoTTClasses.misc.util.
 
 (* HoTT compat *)
 Notation Decision := Decidable (only parsing).
@@ -26,7 +27,8 @@ Ltac solve_trivial_decision :=
   end.
 
 Ltac solve_decision :=
-  first [solve_trivial_decision | unfold Decision; decide equality; solve_trivial_decision].
+  first [solve_trivial_decision
+    | unfold Decision; decide equality; solve_trivial_decision].
 
 Instance decision_proper (P Q : Type) (PiffQ : P ↔ Q) (P_dec : Decision P)
   : Decision Q.
@@ -54,23 +56,29 @@ unfold bool_decide. split; intro X; destruct dec as [p|np]; auto.
 Qed.
 
 (*
-  Because [vm_compute] evaluates terms in [PROP] eagerly and does not remove dead code we
+  Because [vm_compute] evaluates terms in [PROP] eagerly
+  and does not remove dead code we
   need the decide_rel hack. Suppose we have [(x = y) =def  (f x = f y)], now:
      bool_decide (x = y) → bool_decide (f x = f y) → ...
-  As we see, the dead code [f x] and [f y] is actually evaluated, which is of course an utter waste.
+  As we see, the dead code [f x] and [f y] is actually evaluated,
+  which is of course an utter waste.
   Therefore we introduce decide_rel and bool_decide_rel.
      bool_decide_rel (=) x y → bool_decide_rel (λ a b, f a = f b) x y → ...
-  Now the definition of equality remains under a lambda and our problem does not occur anymore!
+  Now the definition of equality remains under a lambda and
+  our problem does not occur anymore!
 *)
 
-Definition decide_rel `(R : A → B → Type) {dec : ∀ x y, Decision (R x y)} (x : A) (y : B)
+Definition decide_rel `(R : A → B → Type)
+  {dec : ∀ x y, Decision (R x y)} (x : A) (y : B)
   : Decision (R x y)
   := dec x y.
 
-Definition bool_decide_rel `(R : relation A) {dec : ∀ x y, Decision (R x y)} : A → A → Bool
+Definition bool_decide_rel `(R : relation A)
+  {dec : ∀ x y, Decision (R x y)} : A → A → Bool
   := λ x y, if dec x y then true else false.
 
-Lemma bool_decide_rel_true `(R : relation A) {dec : ∀ x y, Decision (R x y)} :
+Lemma bool_decide_rel_true `(R : relation A)
+  {dec : ∀ x y, Decision (R x y)} :
   ∀ x y, bool_decide_rel R x y = true ↔ R x y.
 Proof.
 unfold bool_decide_rel. split; intro X; destruct dec as [p|np];auto.
@@ -78,8 +86,8 @@ unfold bool_decide_rel. split; intro X; destruct dec as [p|np];auto.
 - destruct (np X).
 Qed.
 
-Lemma bool_decide_rel_false `(R : relation A)`{dec : ∀ x y, Decision (R x y)} :
-  ∀ x y, bool_decide_rel R x y = false ↔ ¬R x y.
+Lemma bool_decide_rel_false `(R : relation A)`{dec : ∀ x y, Decision (R x y)}
+  : ∀ x y, bool_decide_rel R x y = false ↔ ¬R x y.
 Proof.
 unfold bool_decide_rel. split; intro X; destruct dec as [p|np];auto.
 - apply true_ne_false in X;destruct X.
@@ -153,3 +161,18 @@ Qed.
 
 Instance True_dec: Decision True := left tt.
 Instance False_dec: Decision False := right id.
+
+
+Instance Empty_cmp : Compare Empty.
+Proof. intros []. Defined.
+
+Instance Unit_cmp : Compare Unit := fun _ _ => EQ.
+
+Instance Sum_cmp `{Compare A} `{Compare B} : Compare (A + B) | 2
+  := fun s1 s2 =>
+  match s1, s2 with
+  | inl a1, inl a2 => compare a1 a2
+  | inr b1, inr b2 => compare b1 b2
+  | inl _, inr _ => LT
+  | inr _, inl _ => GT
+  end.

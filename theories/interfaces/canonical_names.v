@@ -1,5 +1,5 @@
 Require Export HoTTClasses.misc.settings.
-Require Export HoTT.Basics.Overture HoTTClasses.misc.stdlib_hints.
+Require Export HoTT.Basics.Overture HoTT.Types.Bool HoTTClasses.misc.stdlib_hints.
 
 Definition id {A : Type} (a : A) := a.
 
@@ -218,7 +218,8 @@ Notation "(◎ f )" := (λ g, comp _ _ _ g f) (only parsing) : mc_scope.
 
 (* Haskell style! *)
 Notation "(→)" := (λ x y, x → y) : mc_scope.
-Notation "t $ r" := (t r) (at level 65, right associativity, only parsing) : mc_scope.
+Notation "t $ r" := (t r)
+  (at level 65, right associativity, only parsing) : mc_scope.
 Notation "(∘)" := compose (only parsing) : mc_scope.
 
 Hint Extern 2 (?x ≤ ?y) => reflexivity.
@@ -270,12 +271,15 @@ Class LeftInverse {A} {B} {C} (op : A → B → C) (inv : B → A) (unit : C)
 Class RightInverse {A} {B} {C} (op : A → B → C) (inv : A → B) (unit : C)
   := right_inverse: ∀ x, op x (inv x) = unit.
 
-Class Commutative {B A} (f : A → A → B) : Type := commutativity: ∀ x y, f x y = f y x.
+Class Commutative {B A} (f : A → A → B) : Type
+  := commutativity: ∀ x y, f x y = f y x.
 
 Class HeteroAssociative {A B C AB BC ABC}
-     (fA_BC: A → BC → ABC) (fBC: B → C → BC) (fAB_C: AB → C → ABC) (fAB : A → B → AB): Type
-   := associativity : ∀ x y z, fA_BC x (fBC y z) = fAB_C (fAB x y) z.
-Class Associative {A} (f : A -> A -> A) := simple_associativity:> HeteroAssociative f f f f.
+  (fA_BC: A → BC → ABC) (fBC: B → C → BC)
+  (fAB_C: AB → C → ABC) (fAB : A → B → AB): Type
+  := associativity : ∀ x y z, fA_BC x (fBC y z) = fAB_C (fAB x y) z.
+Class Associative {A} (f : A -> A -> A)
+  := simple_associativity :> HeteroAssociative f f f f.
 Notation ArrowsAssociative C
   := (∀ {w x y z: C}, HeteroAssociative (◎) (comp z _ _ ) (◎) (comp y x w)).
 
@@ -284,7 +288,8 @@ Class Involutive {A} (f : A → A) := involutive: ∀ x, f (f x) = x.
 Class TotalRelation `(R : relation A) : Type := total : ∀ x y : A, R x y ∨ R y x.
 Arguments total {A} _ {TotalRelation} _ _.
 
-Class Trichotomy `(R : relation A) := trichotomy : ∀ x y : A, R x y ∨ x = y ∨ R y x.
+Class Trichotomy `(R : relation A)
+  := trichotomy : ∀ x y : A, R x y ∨ x = y ∨ R y x.
 Arguments trichotomy {A} R {Trichotomy} _ _.
 
 Arguments irreflexivity {A} _ {Irreflexive} _ _.
@@ -303,16 +308,19 @@ Class Equivalence `(R : relation A) : Type :=
     Equivalence_Transitive :> Transitive R }.
 
 
-Class LeftHeteroDistribute {A B C} (f : A → B → C) (g_r : B → B → B) (g : C → C → C) : Type
+Class LeftHeteroDistribute {A B C}
+  (f : A → B → C) (g_r : B → B → B) (g : C → C → C) : Type
   := distribute_l : ∀ a b c, f a (g_r b c) = g (f a b) (f a c).
-Class RightHeteroDistribute {A B C} (f : A → B → C) (g_l : A → A → A) (g : C → C → C) : Type
+Class RightHeteroDistribute {A B C}
+  (f : A → B → C) (g_l : A → A → A) (g : C → C → C) : Type
   := distribute_r: ∀ a b c, f (g_l a b) c = g (f a c) (f b c).
 Class LeftDistribute {A} (f g: A → A → A)
   := simple_distribute_l :> LeftHeteroDistribute f g g.
 Class RightDistribute {A} (f g: A → A → A)
   := simple_distribute_r :> RightHeteroDistribute f g g.
 
-Class HeteroSymmetric {A} {T : A → A → Type} (R : ∀ {x y}, T x y → T y x → Type) : Type
+Class HeteroSymmetric {A} {T : A → A → Type}
+  (R : ∀ {x y}, T x y → T y x → Type) : Type
   := hetero_symmetric `(a : T x y) (b : T y x) : R a b → R b a.
 
 (* Although cancellation is the same as being injective, we want a proper
@@ -351,3 +359,65 @@ Class RingUnit `{Mult R} `{One R} (x : R) : Type := ring_unit : ∃ y, x * y = 1
 Class Biinduction R `{Zero R} `{One R} `{Plus R} : Type
   := biinduction (P : R → Type)
   : P 0 → (∀ n, P n ↔ P (1 + n)) → ∀ n, P n.
+
+
+(** Additional operations **)
+
+Class Pow A B := pow : A → B → A.
+Infix "**" := pow (at level 30, right associativity) : mc_scope.
+Notation "(.**.)" := pow (only parsing) : mc_scope.
+Notation "( x **.)" := (pow x) (only parsing) : mc_scope.
+Notation "(.** n )" := (λ x, x ^ n) (only parsing) : mc_scope.
+
+Class ShiftL A B := shiftl: A → B → A.
+Infix "≪" := shiftl (at level 33, left associativity) : mc_scope.
+Notation "(≪)" := shiftl (only parsing) : mc_scope.
+Notation "( x ≪)" := (shiftl x) (only parsing) : mc_scope.
+Notation "(≪ n )" := (λ x, x ≪ n) (only parsing) : mc_scope.
+
+Class ShiftR A B := shiftr: A → B → A.
+Infix "≫" := shiftr (at level 33, left associativity) : mc_scope.
+Notation "(≫)" := shiftr (only parsing) : mc_scope.
+
+Class DivEuclid A := div_euclid : A → A → A.
+Class ModEuclid A := mod_euclid : A → A → A.
+Infix "`div`" := div_euclid (at level 35) : mc_scope.
+Notation "(`div`)" := div_euclid (only parsing) : mc_scope.
+Notation "( x `div`)" := (div_euclid x) (only parsing) : mc_scope.
+Notation "(`div` y )" := (λ x, x `div` y) (only parsing) : mc_scope.
+Infix "`mod`" := mod_euclid (at level 40) : mc_scope.
+Notation "(`mod` )" := mod_euclid (only parsing) : mc_scope.
+Notation "( x `mod`)" := (mod_euclid x) (only parsing) : mc_scope.
+Notation "(`mod` y )" := (λ x, x `mod` y) (only parsing) : mc_scope.
+
+Class CutMinus A := cut_minus : A → A → A.
+Infix "∸" := cut_minus (at level 50, left associativity) : mc_scope.
+Notation "(∸)" := cut_minus (only parsing) : mc_scope.
+Notation "( x ∸)" := (cut_minus x) (only parsing) : mc_scope.
+Notation "(∸ y )" := (λ x, x ∸ y) (only parsing) : mc_scope.
+
+Inductive comparison : Set := LT | EQ | GT.
+
+Class Compare A := compare : A -> A -> comparison.
+Infix "?=" := compare (at level 70, no associativity) : mc_scope.
+Notation "(?=)" := compare (only parsing) : mc_scope.
+Notation "( x ?=)" := (compare x) (only parsing) : mc_scope.
+Notation "(?= y )" := (fun x => x ?= y) (only parsing) : mc_scope.
+
+Class Eqb A := eqb : A -> A -> Bool.
+Infix "=?" := eqb (at level 70, no associativity) : mc_scope.
+Notation "(=?)" := eqb (only parsing) : mc_scope.
+Notation "( x =?)" := (eqb x) (only parsing) : mc_scope.
+Notation "(=? y )" := (fun x => x =? y) (only parsing) : mc_scope.
+
+Class Ltb A := ltb : A -> A -> Bool.
+Infix "<?" := ltb (at level 70, no associativity) : mc_scope.
+Notation "(<?)" := ltb (only parsing) : mc_scope.
+Notation "( x <?)" := (ltb x) (only parsing) : mc_scope.
+Notation "(<? y )" := (fun x => x <? y) (only parsing) : mc_scope.
+
+Class Leb A := leb : A -> A -> Bool.
+Infix "<=?" := leb (at level 70, no associativity) : mc_scope.
+Notation "(<=?)" := leb (only parsing) : mc_scope.
+Notation "( x <=?)" := (leb x) (only parsing) : mc_scope.
+Notation "(<=? y )" := (fun x => x <=? y) (only parsing) : mc_scope.

@@ -11,7 +11,8 @@ Require Import HoTT.Basics.Decidable.
 Require Export HoTTClasses.stdlib.BinPosDef.
 Require Import
   HoTTClasses.interfaces.abstract_algebra
-  HoTTClasses.interfaces.orders.
+  HoTTClasses.interfaces.orders
+  HoTTClasses.theory.additional_operations.
 
 (**********************************************************************)
 (** * Binary positive numbers, operations and properties *)
@@ -697,7 +698,7 @@ induction p.
 Qed.
 
 (** ** Properties of [sub_mask] *)
-
+(* 
 Lemma sub_mask_succ_r p q :
   sub_mask p (succ q) = sub_mask_carry p q.
 Proof.
@@ -1959,3 +1960,4 @@ Lemma Pplus_minus : forall p q, p > q -> q+(p-q) = p.
 Proof.
  intros. rewrite Pos.add_comm. now apply Pos.sub_add, Pos.gt_lt.
 Qed.
+ *)

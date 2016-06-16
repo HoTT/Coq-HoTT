@@ -1,8 +1,7 @@
-Require Import HoTT.Basics HoTT.Types.Bool.
+(* Require Import HoTT.Basics HoTT.Types.Bool.
 Require Import
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.implementations.list.
-Require Import HoTTClasses.tactics.fakeord HoTTClasses.stdlib.BinPos.
 
 Section content.
 
@@ -21,4 +20,4 @@ Inductive Pol :=
    PX P v i Q = P * v^i + Q *)
 
 
-End content.
+End content. *)

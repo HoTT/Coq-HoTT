@@ -128,7 +128,8 @@ Section upper_classes.
     ; intdom_nontrivial : PropHolds (1 ≠ 0)
     ; intdom_nozeroes :> NoZeroDivisors A }.
 
-  (* We do not include strong extensionality for (-) and (/) because it can de derived *)
+  (* We do not include strong extensionality for (-) and (/)
+    because it can de derived *)
   Class Field {Aap: Apart A} {Arecip: Recip A} :=
     { field_ring :> Ring
     ; field_apart :> IsApart A
@@ -137,7 +138,8 @@ Section upper_classes.
     ; field_nontrivial : PropHolds (1 ≶ 0)
     ; recip_inverse : ∀ x, x.1 // x = 1 }.
 
-  (* We let /0 = 0 so properties as Injective (/), f (/x) = / (f x), / /x = x, /x * /y = /(x * y) 
+  (* We let /0 = 0 so properties as Injective (/),
+    f (/x) = / (f x), / /x = x, /x * /y = /(x * y) 
     hold without any additional assumptions *)
   Class DecField {Adec_recip : DecRecip A} :=
     { decfield_ring :> Ring
@@ -147,9 +149,12 @@ Section upper_classes.
 End upper_classes.
 
 (* Due to bug #2528 *)
-Hint Extern 4 (PropHolds (1 ≠ 0)) => eapply @intdom_nontrivial : typeclass_instances.
-Hint Extern 5 (PropHolds (1 ≶ 0)) => eapply @field_nontrivial : typeclass_instances.
-Hint Extern 5 (PropHolds (1 ≠ 0)) => eapply @decfield_nontrivial : typeclass_instances.
+Hint Extern 4 (PropHolds (1 ≠ 0)) =>
+  eapply @intdom_nontrivial : typeclass_instances.
+Hint Extern 5 (PropHolds (1 ≶ 0)) =>
+  eapply @field_nontrivial : typeclass_instances.
+Hint Extern 5 (PropHolds (1 ≠ 0)) =>
+  eapply @decfield_nontrivial : typeclass_instances.
 
 (* 
 For a strange reason Ring instances of Integers are sometimes obtained by
@@ -160,7 +165,8 @@ take the right way
 Hint Extern 10 (Ring _) => apply @intdom_ring : typeclass_instances.
 
 Arguments recip_inverse {A Aplus Amult Azero Aone Anegate Aap Arecip Field} _.
-Arguments dec_recip_inverse {A Aplus Amult Azero Aone Anegate Adec_recip DecField} _ _.
+Arguments dec_recip_inverse
+  {A Aplus Amult Azero Aone Anegate Adec_recip DecField} _ _.
 Arguments dec_recip_0 {A Aplus Amult Azero Aone Anegate Adec_recip DecField}.
 
 Section lattice.
@@ -169,7 +175,8 @@ Section lattice.
   Class JoinSemiLattice := 
     join_semilattice :> @SemiLattice A join_is_sg_op.
   Class BoundedJoinSemiLattice := 
-    bounded_join_semilattice :> @BoundedSemiLattice A join_is_sg_op bottom_is_mon_unit.
+    bounded_join_semilattice :> @BoundedSemiLattice A
+      join_is_sg_op bottom_is_mon_unit.
   Class MeetSemiLattice := 
     meet_semilattice :> @SemiLattice A meet_is_sg_op.
 
@@ -216,16 +223,24 @@ Section morphism_classes.
     ; monmor_sgmor :> SemiGroup_Morphism f
     ; preserves_mon_unit : f mon_unit = mon_unit }.
 
-  Class BoundedJoinSemiLattice_Morphism {Abottom Bbottom Ajoin Bjoin} (f : A → B) :=
+  Class BoundedJoinSemiLattice_Morphism {Abottom Bbottom Ajoin Bjoin}
+    (f : A → B) :=
     { bounded_join_slmor_a : @BoundedJoinSemiLattice A Ajoin Abottom
     ; bounded_join_slmor_b : @BoundedJoinSemiLattice B Bjoin Bbottom
-    ; bounded_join_slmor_monmor :> @Monoid_Morphism bottom_is_mon_unit bottom_is_mon_unit join_is_sg_op join_is_sg_op f }.
+    ; bounded_join_slmor_monmor
+      :> @Monoid_Morphism bottom_is_mon_unit bottom_is_mon_unit
+        join_is_sg_op join_is_sg_op f }.
 
-  Class SemiRing_Morphism {Aplus Amult Azero Aone Bplus Bmult Bzero Bone} (f : A → B) :=
+  Class SemiRing_Morphism {Aplus Amult Azero Aone Bplus Bmult Bzero Bone}
+    (f : A → B) :=
     { semiringmor_a : @SemiRing A Aplus Amult Azero Aone
     ; semiringmor_b : @SemiRing B Bplus Bmult Bzero Bone
-    ; semiringmor_plus_mor :> @Monoid_Morphism zero_is_mon_unit zero_is_mon_unit plus_is_sg_op plus_is_sg_op f
-    ; semiringmor_mult_mor :> @Monoid_Morphism one_is_mon_unit one_is_mon_unit mult_is_sg_op mult_is_sg_op f }.
+    ; semiringmor_plus_mor
+      :> @Monoid_Morphism zero_is_mon_unit zero_is_mon_unit
+        plus_is_sg_op plus_is_sg_op f
+    ; semiringmor_mult_mor
+      :> @Monoid_Morphism one_is_mon_unit one_is_mon_unit
+        mult_is_sg_op mult_is_sg_op f }.
 
   Class Lattice_Morphism {Ajoin Ameet Bjoin Bmeet} (f : A → B) :=
     { latticemor_a : @Lattice A Ajoin Ameet
@@ -234,8 +249,10 @@ Section morphism_classes.
     ; latticemor_meet_mor :> MeetSemiLattice_Morphism f }.
 
   Context {Aap : Apart A} {Bap : Apart B}.
-  Class StrongSemiRing_Morphism {Aplus Amult Azero Aone Bplus Bmult Bzero Bone} (f : A → B) :=
-    { strong_semiringmor_sr_mor :> @SemiRing_Morphism Aplus Amult Azero Aone Bplus Bmult Bzero Bone f
+  Class StrongSemiRing_Morphism {Aplus Amult Azero Aone Bplus Bmult Bzero Bone}
+    (f : A → B) :=
+    { strong_semiringmor_sr_mor
+      :> @SemiRing_Morphism Aplus Amult Azero Aone Bplus Bmult Bzero Bone f
     ; strong_semiringmor_strong_mor :> StrongMorphism f }.
 End morphism_classes.
 
@@ -257,3 +274,48 @@ Section jections.
     { bijective_injective :> Injective
     ; bijective_surjective :> Surjective }.
 End jections.
+
+Section extras.
+
+Class NatPowSpec A B (pw : Pow A B)
+  `{One A} `{Mult A} `{Zero B} `{One B} `{Plus B} := {
+  nat_pow_0 : ∀ x, x ** 0 = 1 ;
+  nat_pow_S : ∀ x n, x ** (1 + n) = x * x ** n
+}.
+
+Class IntPowSpec A B (pow : Pow A B)
+                 `{Zero A} `{One A} `{Mult A}
+                 `{Zero B} `{One B} `{Plus B} :=
+{ int_pow_0 : ∀ x, x ** 0 = 1
+; int_pow_base_0 : ∀ (n : B), n ≠ 0 → 0 ** n = 0
+; int_pow_S : ∀ x n, x ≠ 0 → x ** (1 + n) = x * x ** n }.
+
+Class ShiftLSpec A B (sl : ShiftL A B)
+  `{One A} `{Plus A} `{Mult A}
+  `{Zero B} `{One B} `{Plus B} := {
+  shiftl_0 :> RightIdentity (≪) 0 ;
+  shiftl_S : ∀ x n, x ≪ (1 + n) = 2 * x ≪ n
+}.
+
+Class ShiftRSpec A B (sl : ShiftR A B)
+  `{One A} `{Plus A} `{Mult A}
+  `{Zero B} `{One B} `{Plus B} := {
+  shiftr_0 :> RightIdentity (≫) 0 ;
+  shiftr_S : ∀ x n, x ≫ n = (2 * x ≫ (1 + n))%mc ∨
+                    x ≫ n = (2 * x ≫ (1 + n) + 1)%mc
+}.
+
+Class EuclidSpec A (d : DivEuclid A) (m : ModEuclid A)
+  `{Le A} `{Lt A} `{Zero A} `{Plus A} `{Mult A} := {
+  div_mod : ∀ x y, y ≠ 0 → x = y * x `div` y + x `mod` y ;
+  mod_rem : ∀ x y, y ≠ 0 → 0 ≤ x `mod` y < y ∨ y < x `mod` y ≤ 0 ;
+  div_0 : ∀ x, x `div` 0 = 0 ;
+  mod_0 : ∀ x, x `mod` 0 = 0
+}.
+
+Class CutMinusSpec A (cm : CutMinus A) `{Zero A} `{Plus A} `{Le A} := {
+  cut_minus_le : ∀ x y, y ≤ x → x ∸ y + y = x ;
+  cut_minus_0 : ∀ x y, x ≤ y → x ∸ y = 0
+}.
+
+End extras.
