@@ -7,4 +7,4 @@ Global Generalizable Variables
   Fa Ga
   Rle Rlt
   R1le R2le
-  R1lt R2lt.
+  Alt Blt R1lt R2lt Vlt.

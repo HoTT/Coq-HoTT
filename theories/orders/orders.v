@@ -165,7 +165,7 @@ Section pseudo_order.
   apply apart_total_lt. assumption.
   Qed.
 
-  Global Instance lt_trichotomy `{!TrivialApart A} `{∀ x y : A, Decision (x = y)}
+  Global Instance lt_trichotomy `{!TrivialApart A} `{DecidablePaths A}
     : Trichotomy (<).
   Proof.
   intros x y.
@@ -277,9 +277,9 @@ Section full_partial_order.
   Qed.
 
   Instance dec_from_lt_dec `{!TrivialApart A} `{∀ x y, Decision (x ≤ y)}
-    : ∀ x y : A, Decision (x = y).
+    : DecidablePaths A.
   Proof.
-  intros.
+  intros x y.
   destruct (decide_rel (<=) x y) as [E1|E1];
   [destruct (decide_rel (<=) y x) as [E2|E2]|].
   - left. apply (antisymmetry (<=));assumption.
@@ -360,14 +360,14 @@ Section full_pseudo_order.
   intros E';apply le_iff_not_lt_flip in E';auto.
   Qed.
 
-  Lemma le_or_lt `{!TrivialApart A} `{∀ x y : A, Decision (x = y)} x y : x ≤ y ∨ y < x.
+  Lemma le_or_lt `{!TrivialApart A} `{DecidablePaths A} x y : x ≤ y ∨ y < x.
   Proof.
   destruct (trichotomy (<) x y) as [|[|]]; try auto.
   - left. apply lt_le;trivial.
   - left. apply eq_le;trivial.
   Qed.
 
-  Global Instance le_total `{!TrivialApart A} `{∀ x y : A, Decision (x = y)}
+  Global Instance le_total `{!TrivialApart A} `{DecidablePaths A}
     : TotalOrder (≤).
   Proof.
   split; try apply _.
@@ -377,7 +377,7 @@ Section full_pseudo_order.
   trivial.
   Qed.
 
-  Lemma not_le_lt_flip `{!TrivialApart A} `{∀ x y : A, Decision (x = y)} x y
+  Lemma not_le_lt_flip `{!TrivialApart A} `{DecidablePaths A} x y
     : ¬y ≤ x → x < y.
   Proof.
   intros.

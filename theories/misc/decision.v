@@ -104,6 +104,18 @@ destruct b.
   destruct p.
 Qed.
 
+Instance decide_eqb `{DecidablePaths A} : Eqb A
+  := fun a b => if decide_rel (=) a b then true else false.
+
+Lemma decide_eqb_ok `{DecidablePaths A} :
+  forall a b, a =? b = true <-> a = b.
+Proof.
+unfold eqb,decide_eqb.
+intros a b;destruct (decide_rel (=) a b) as [E1|E1];split;intros E2;auto.
+- destruct (false_ne_true E2).
+- destruct (E1 E2).
+Qed.
+
 Instance prod_eq_dec `(A_dec : ∀ x y : A, Decision (x = y))
      `(B_dec : ∀ x y : B, Decision (x = y)) : ∀ x y : A * B, Decision (x = y).
 Proof.
@@ -161,18 +173,3 @@ Qed.
 
 Instance True_dec: Decision True := left tt.
 Instance False_dec: Decision False := right id.
-
-
-Instance Empty_cmp : Compare Empty.
-Proof. intros []. Defined.
-
-Instance Unit_cmp : Compare Unit := fun _ _ => EQ.
-
-Instance Sum_cmp `{Compare A} `{Compare B} : Compare (A + B) | 2
-  := fun s1 s2 =>
-  match s1, s2 with
-  | inl a1, inl a2 => compare a1 a2
-  | inr b1, inr b2 => compare b1 b2
-  | inl _, inr _ => LT
-  | inr _, inl _ => GT
-  end.
