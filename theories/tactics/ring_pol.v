@@ -226,16 +226,16 @@ induction P as [c | P1 IHP1 v P2 IHP2];intros Q.
       rewrite (mult_comm (vs v));symmetry;apply mult_assoc.
 Qed.
 
-Fixpoint norm (e: Expr V) :=
+Fixpoint toPol (e: Expr V) :=
   match e with
   | Var v => PX 1 v 0
   | Zero => 0
   | One => 1
-  | Plus a b => add (norm a) (norm b)
-  | Mult a b => mul (norm a) (norm b)
+  | Plus a b => add (toPol a) (toPol b)
+  | Mult a b => mul (toPol a) (toPol b)
   end.
 
-Lemma eval_norm vs : forall e, eval vs (norm e) = Quoting.eval _ vs e.
+Lemma eval_toPol vs : forall e, eval vs (toPol e) = Quoting.eval _ vs e.
 Proof.
 induction e as [v| | |a IHa b IHb|a IHa b IHb];simpl.
 - rewrite (preserves_1 (f:=phi)),(preserves_0 (f:=phi)),plus_0_r,mult_1_l.
