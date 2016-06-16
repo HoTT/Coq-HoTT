@@ -51,5 +51,8 @@ Arguments normalize_eq {C _ R} phi {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.
 Arguments by_quoting {C _ R} phi {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.
 
 Ltac ring_with_nat :=
-  apply (by_quoting (naturals_to_semiring nat _));
-  compute;reflexivity.
+  match goal with
+  |- @paths ?R _ _ =>
+    apply (by_quoting (naturals_to_semiring nat R));
+    compute;reflexivity
+  end.
