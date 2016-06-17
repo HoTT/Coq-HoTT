@@ -117,19 +117,129 @@ intros q1 q2 E.
 rewrite !(plus_comm (neg _)). symmetry. apply E.
 Qed.
 
+Context `{Le SR} `{Lt SR} `{is_mere_relation SR le} `{is_mere_relation SR lt}.
+Context `{Apart SR} `{is_mere_relation SR apart}.
+
+Definition SRle : Le (SRpair SR)
+  := fun a b => pos a + neg b <= pos b + neg a.
+Definition SRlt : Lt (SRpair SR)
+  := fun a b => pos a + neg b < pos b + neg a.
+Definition SRapart : Apart (SRpair SR)
+  := fun a b => apart (pos a + neg b) (pos b + neg a).
+
+Global Instance : is_mere_relation (SRpair SR) SRle.
+Proof.
+intros;unfold SRle;apply _.
+Qed.
+
+Global Instance : is_mere_relation (SRpair SR) SRlt.
+Proof.
+intros;unfold SRlt;apply _.
+Qed.
+
+Global Instance : is_mere_relation (SRpair SR) SRapart.
+Proof.
+intros;unfold SRlt;apply _.
+Qed.
+
 End contents.
 
 Arguments equiv {_ _} _ _.
+Arguments SRle {_ _ _} _ _.
+Arguments SRlt {_ _ _} _ _.
+Arguments SRapart {_ _ _} _ _.
 
-(* Section with_apart.
-Context SR `{SemiRing SR} `{Apart SR} `{!IsApart SR} `{IsHSet SR}.
-Context `{∀ z, LeftCancellation (+) z}.
+Section with_srorder.
 
-Instance: CoTransitive SRapart.
+Context SR `{SemiRingOrder SR} `{∀ z, LeftCancellation (+) z}
+  `{is_mere_relation SR le}.
+
+Instance : SemiRing SR := srorder_semiring.
+
+Lemma le_respects_aux : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
+  SRle q1 r1 -> SRle q2 r2.
+Proof.
+unfold equiv,SRle;intros [pa na] [pb nb] Eq [pc nc] [pd nd] Er E;simpl in *.
+apply (order_reflecting (+ (pc + na))).
+assert (Erw : pb + nd + (pc + na)
+  = (pb + na) + (pc + nd)) by ring_with_nat.
+rewrite Erw,<-Eq,Er;clear Erw.
+assert (Erw : pa + nb + (pd + nc) = pd + nb + (pa + nc)) by ring_with_nat.
+rewrite Erw.
+apply (order_preserving _), E.
+Qed.
+
+Lemma le_respects : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
+  SRle q1 r1 <~> SRle q2 r2.
+Proof.
+intros. apply equiv_iff_hprop_uncurried.
+split;apply le_respects_aux;trivial;apply symmetry;trivial.
+Qed.
+
+End with_srorder.
+
+Section with_strict_srorder.
+
+Context SR `{StrictSemiRingOrder SR} `{∀ z, LeftCancellation (+) z}
+  `{is_mere_relation SR lt}.
+
+Instance : SemiRing SR := strict_srorder_semiring.
+
+Lemma lt_respects_aux : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
+  SRlt q1 r1 -> SRlt q2 r2.
+Proof.
+unfold equiv,SRlt;intros [pa na] [pb nb] Eq [pc nc] [pd nd] Er E;simpl in *.
+apply (strictly_order_reflecting (+ (pc + na))).
+assert (Erw : pb + nd + (pc + na)
+  = (pb + na) + (pc + nd)) by ring_with_nat.
+rewrite Erw,<-Eq,Er;clear Erw.
+assert (Erw : pa + nb + (pd + nc) = pd + nb + (pa + nc)) by ring_with_nat.
+rewrite Erw.
+apply (strictly_order_preserving _), E.
+Qed.
+
+Lemma lt_respects : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
+  SRlt q1 r1 <~> SRlt q2 r2.
+Proof.
+intros. apply equiv_iff_hprop_uncurried.
+split;apply lt_respects_aux;trivial;apply symmetry;trivial.
+Qed.
+
+End with_strict_srorder.
+
+Section with_apart.
+Context SR `{FullPseudoSemiRingOrder SR} `{IsHSet SR}.
+Context `{∀ z, StrongLeftCancellation (+) z}.
+
+Instance : IsApart SR := pseudo_order_apart.
+Instance : SemiRing SR := pseudo_srorder_semiring.
+
+Instance SRapart_cotrans : CoTransitive SRapart.
 Proof.
 hnf.
 unfold SRapart. intros q1 q2 Eq r.
 apply (strong_left_cancellation (+) (neg r)) in Eq.
+destruct (cotransitive Eq (pos r + neg q1 + neg q2)) as [E|E].
+- left. apply (strong_extensionality (+ (neg q2))).
+  assert (Hrw : pos q1 + neg r + neg q2
+    = neg r + (pos q1 + neg q2)) by ring_with_nat.
+  rewrite Hrw;clear Hrw.
+  trivial.
+- right. apply (strong_extensionality (+ (neg q1))).
+  assert (Hrw : pos r + neg q2 + neg q1 = pos r + neg q1 + neg q2)
+  by ring_with_nat.
+  rewrite Hrw;clear Hrw.
+  assert (Hrw : pos q2 + neg r + neg q1 = neg r + (pos q2 + neg q1))
+  by ring_with_nat.
+  rewrite Hrw;clear Hrw.
+  trivial.
+Qed.
+
+Instance : Symmetric SRapart.
+Proof.
+hnf.
+unfold SRapart.
+intros ??;apply symmetry.
 Qed.
 
 Lemma apart_respects_aux
@@ -140,24 +250,38 @@ assert (forall q1 q2, equiv q1 q2 -> forall r, SRapart q1 r -> SRapart q2 r)
   as E.
 - intros q1 q2 Eq r Er.
   unfold SRapart,equiv in *.
-  destruct (cotransitive Er (pos r + neg q2)).
+  apply (strong_extensionality (+ (neg q1))).
+  assert (Hrw : pos q2 + neg r + neg q1 = (pos q2 + neg q1) + neg r)
+  by ring_with_nat.
+  rewrite Hrw;clear Hrw.
+  rewrite <-Eq.
+  assert (Hrw : pos q1 + neg q2 + neg r = neg q2 + (pos q1 + neg r))
+  by ring_with_nat.
+  rewrite Hrw;clear Hrw.
+  assert (Hrw : pos r + neg q2 + neg q1 = neg q2 + (pos r + neg q1))
+  by ring_with_nat;rewrite Hrw;clear Hrw.
+  apply (strong_left_cancellation _ _),Er.
+- intros ?? Eq ?? Er E'.
+  apply E with q1;trivial.
+  apply symmetry;apply E with r1;apply symmetry;trivial.
+  apply symmetry;trivial.
 Qed.
 
 Lemma apart_respects : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
   SRapart q1 r1 <~> SRapart q2 r2.
 Proof.
 intros ?? Eq ?? Er.
-unfold SRapart.
 apply equiv_iff_hprop_uncurried.
+split;apply apart_respects_aux;trivial;apply symmetry;trivial.
 Qed.
 
-End with_apart. *)
+End with_apart.
 
 End SRPair.
 Import SRPair.
 
 Section contents.
-Context `{Funext} `{Univalence} SR `{SemiRing SR} `{IsApart SR} `{IsHSet SR}.
+Context `{Funext} `{Univalence} SR `{SemiRing SR} `{IsHSet SR}.
 Context `{∀ z, LeftCancellation (+) z}.
 
 (* Add Ring SR : (rings.stdlib_semiring_theory SR). *)
@@ -169,6 +293,9 @@ Global Instance class : Cast (SRpair SR) R := class_of _.
 Global Instance: Cast SR R := compose class (SRpair_inject _).
 
 Definition path {x y} : equiv x y -> class x = class y := related_classes_eq _.
+
+Definition related_path {x y} : class x = class y -> equiv x y
+  := classes_eq_related _ _ _.
 
 Definition R_rect (P : R -> Type) {sP : forall x, IsHSet (P x)}
   (dclass : forall x, P (class x))
@@ -312,187 +439,256 @@ first [change sg_op with mult; change mon_unit with 1|
   ring_with_nat.
 - apply (R_ind3 _).
   intros [pa na] [pb nb] [pc nc];apply path;red;simpl.
-  apply (normalize_eq (naturals_to_semiring nat SR)).
-  compute.
-  change Aplus with (@plus SR Aplus);change Amult with (@mult SR Amult);
-  change Azero with (@zero SR Azero);change Aone with (@one SR Aone).
-  rewrite !plus_0_r,!mult_1_l.
-- 
-Abort.
-End contents.
-(* 
+  ring_with_nat.
 Qed.
 
 (* A final word about inject *)
-Global Instance: SemiRing_Morphism SRpair_inject.
+Global Instance: SemiRing_Morphism (cast SR R).
 Proof.
-  repeat (constructor; try apply _); try reflexivity.
-   intros x y. change (x + y + (0 + 0) = x + y + 0). ring.
-  intros x y. change (x * y + (x * 0 + 0 * y) = x * y + 0 * 0 + 0). ring.
+repeat (constructor; try apply _).
+- intros x y.
+  apply path. red. simpl. ring_with_nat.
+- intros x y. apply path. red;simpl.
+  ring_with_nat.
 Qed.
 
-Global Instance: Injective SRpair_inject.
+Global Instance: Injective (cast SR R).
 Proof.
-  repeat (constructor; try apply _).
-  intros x y. unfolds. now rewrite 2!rings.plus_0_r.
+split.
+intros x y E. apply related_path in E.
+red in E. simpl in E. rewrite 2!plus_0_r in E. trivial.
 Qed.
 
-Lemma SRpair_splits n m : C n m = 'n + -'m.
-Proof. ring_on_sr. Qed.
+Lemma SRpair_splits n m : class (C n m) = 'n + - 'm.
+Proof.
+apply path;red;simpl.
+ring_with_nat.
+Qed.
 
-Global Instance SRpair_le `{Le SR} : Le (SRpair SR)
-  := λ x y, pos x + neg y ≤ pos y + neg x.
-Global Instance SRpair_lt `{Lt SR} : Lt (SRpair SR)
-  := λ x y, pos x + neg y < pos y + neg x.
-Ltac unfold_le := unfold le, SRpair_le, equiv, SRpair_equiv; simpl.
-Ltac unfold_lt := unfold lt, SRpair_lt, equiv, SRpair_equiv; simpl.
+End contents.
 
 Section with_semiring_order.
-  Context `{!SemiRingOrder SRle}.
+  Context `{Funext} `{Univalence} SR `{SemiRingOrder SR} `{IsHSet SR}
+    `{is_mere_relation SR le}
+    `{∀ z, LeftCancellation (+) z}.
 
-  Instance: Proper ((=) ==> (=) ==> iff) SRpair_le.
+  Instance : SemiRing SR := srorder_semiring.
+
+  Notation R := (R SR).
+
+  Definition Rle_hProp : R -> R -> hProp.
   Proof.
-    assert (∀ x1 y1 : SRpair SR, x1 = y1 →
-            ∀ x2 y2, x2 = y2 → x1 ≤ x2 → y1 ≤ y2) as E.
-     unfold_le. intros [xp1 xn1] [yp1 yn1] E1 [xp2 xn2] [yp2 yn2] E2 F. simpl in *.
-     apply (order_reflecting (+ (xp2 + xn1))).
-     setoid_replace (yp1 + yn2 + (xp2 + xn1)) with ((yp1 + xn1) + (xp2 + yn2))
-      by ring.
-     rewrite <-E1, E2.
-     setoid_replace (xp1 + yn1 + (yp2 + xn2)) with ((yp2 + yn1) + (xp1 + xn2))
-      by ring.
-     now apply (order_preserving _).
-    split; repeat intro; eapply E; eauto; symmetry; eauto.
+  apply (R_rec2 SR (fun q r => BuildhProp (SRle q r))).
+  intros. apply path_hprop. simpl.
+  apply (le_respects _);trivial.
+  Defined.
+
+  Global Instance Rle : Le R := fun x y => Rle_hProp x y.
+
+  Lemma Rle_def : forall a b, class SR a <= class SR b = SRle a b.
+  Proof. reflexivity. Qed.
+
+  Instance: PartialOrder (le:Le R).
+  Proof.
+  split;[split|].
+  - hnf. apply (R_ind _ _).
+    intros. change (SRle x x). red. reflexivity.
+  - hnf. apply (R_ind3 _ (fun _ _ _ => _ -> _ -> _)).
+    intros [pa na] [pb nb] [pc nc]. rewrite !Rle_def. unfold SRle;simpl.
+    intros E1 E2.
+    apply (order_reflecting (+ (nb + pb))).
+    assert (Hrw : pa + nc + (nb + pb) = (pa + nb) + (pb + nc)) by ring_with_nat.
+    rewrite Hrw;clear Hrw.
+    assert (Hrw : pc + na + (nb + pb) = (pb + na) + (pc + nb)) by ring_with_nat.
+    rewrite Hrw;clear Hrw.
+    apply plus_le_compat;trivial.
+  - hnf. apply (R_ind2 _ (fun _ _ => _ -> _ -> _)).
+    intros [pa na] [pb nb];rewrite !Rle_def;unfold SRle;simpl.
+    intros E1 E2;apply path;red;simpl.
+    apply (antisymmetry le);trivial.
   Qed.
 
-  Instance: Reflexive SRpair_le.
-  Proof. intros [? ?]. unfold_le. reflexivity. Qed.
-
-  Instance: Transitive SRpair_le.
+  Global Instance: OrderEmbedding (cast SR R).
   Proof.
-    intros [xp xn] [yp yn] [zp zn] E1 E2.
-    unfold SRpair_le in *. simpl in *.
-    apply (order_reflecting (+ (yn + yp))).
-    setoid_replace (xp + zn + (yn + yp)) with ((xp + yn) + (yp + zn)) by ring.
-    setoid_replace (zp + xn + (yn + yp)) with ((yp + xn) + (zp + yn)) by ring.
-    now apply plus_le_compat.
+  repeat (split; try apply _).
+  - intros. rewrite Rle_def. unfold SRle. simpl.
+    rewrite 2!plus_0_r;trivial.
+  - intros ??. rewrite Rle_def. unfold SRle. simpl.
+    rewrite 2!plus_0_r;trivial.
   Qed.
 
-  Instance: AntiSymmetric SRpair_le.
+  Instance: ∀ z : R, OrderPreserving ((+) z).
   Proof.
-    intros [xp xn] [yp yn] E1 E2. unfold_le.
-    now apply (antisymmetry (≤)).
+  intro z;repeat (split; try apply _).
+  revert z.
+  apply (R_ind3 _ (fun _ _ _ => _ -> _)).
+  intros [pc nc] [pa na] [pb nb]. rewrite !Rle_def;unfold SRle;simpl.
+  intros E.
+  assert (Hrw : pc + pa + (nc + nb) = (pc + nc) + (pa + nb)) by ring_with_nat.
+  rewrite Hrw;clear Hrw.
+  assert (Hrw : pc + pb + (nc + na) = (pc + nc) + (pb + na)) by ring_with_nat.
+  rewrite Hrw;clear Hrw.
+  apply (order_preserving _),E.
   Qed.
 
-  Instance: PartialOrder SRpair_le.
-  Proof. repeat (split; try apply _). Qed.
-
-  Global Instance: OrderEmbedding SRpair_inject.
-  Proof.
-    repeat (split; try apply _).
-     intros x y E. unfold_le. simpl. now rewrite 2!rings.plus_0_r.
-    intros x y E. unfold le, SRpair_le in E. simpl in E.
-      now rewrite 2!rings.plus_0_r in E.
-  Qed.
-
-  Instance: ∀ z : SRpair SR, OrderPreserving ((+) z).
-  Proof.
-    repeat (split; try apply _). unfold_le.
-    destruct z as [zp zn]. intros [xp xn] [yp yn] E. simpl in *.
-    setoid_replace (zp + xp + (zn + yn)) with ((zp + zn) + (xp + yn)) by ring.
-    setoid_replace (zp + yp + (zn + xn)) with ((zp + zn) + (yp + xn)) by ring.
-    now apply (order_preserving _).
-  Qed.
-
-  Instance: ∀ x y : SRpair SR, PropHolds (0 ≤ x) → PropHolds (0 ≤ y) →
+  Instance: ∀ x y : R, PropHolds (0 ≤ x) → PropHolds (0 ≤ y) →
     PropHolds (0 ≤ x * y).
   Proof.
-    intros [xp xn] [yp yn].
-    unfold PropHolds. unfold_le. intros E1 E2.
-    ring_simplify in E1. ring_simplify in E2.
-    destruct (decompose_le E1) as [a [Ea1 Ea2]], (decompose_le E2) as [b [Eb1 Eb2]].
-    rewrite Ea2, Eb2. ring_simplify.
-    apply compose_le with (a * b).
-     now apply nonneg_mult_compat.
-    ring.
+  unfold PropHolds.
+  apply (R_ind2 _ (fun _ _ => _ -> _ -> _)).
+  intros [pa na] [pb nb]. rewrite !Rle_def;unfold SRle;simpl.
+  rewrite !plus_0_l,!plus_0_r.
+  intros E1 E2.
+  destruct (decompose_le E1) as [a [Ea1 Ea2]], (decompose_le E2) as [b [Eb1 Eb2]].
+  rewrite Ea2, Eb2.
+  apply compose_le with (a * b).
+  - apply nonneg_mult_compat;trivial.
+  - ring_with_nat.
   Qed.
 
-  Global Instance: SemiRingOrder SRpair_le.
+  Global Instance: SemiRingOrder (le : Le R).
   Proof. apply rings.from_ring_order; apply _. Qed.
+
+  Global Instance Rle_dec `{forall x y : SR, Decidable (x <= y)}
+    : forall x y : R, Decidable (x <= y).
+  Proof.
+  apply (R_ind2 _ _).
+  intros a b;rewrite Rle_def.
+  unfold SRle. apply _.
+  Qed.
+
 End with_semiring_order.
 
 Section with_strict_semiring_order.
-  Context `{!StrictSemiRingOrder SRle}.
+  Context `{Funext} `{Univalence} SR `{StrictSemiRingOrder SR} `{IsHSet SR}
+    `{is_mere_relation SR lt}
+    `{∀ z, LeftCancellation (+) z}.
 
-  Instance: Proper ((=) ==> (=) ==> iff) SRpair_lt.
+  Instance : SemiRing SR := strict_srorder_semiring.
+
+  Notation R := (R SR).
+
+  Definition Rlt_hProp : R -> R -> hProp.
   Proof.
-    assert (∀ x1 y1 : SRpair SR, x1 = y1 →
-            ∀ x2 y2, x2 = y2 → x1 < x2 → y1 < y2) as E.
-     unfold_lt. intros [xp1 xn1] [yp1 yn1] E1 [xp2 xn2] [yp2 yn2] E2 F. simpl in *.
-     apply (strictly_order_reflecting (+ (xp2 + xn1))).
-     setoid_replace (yp1 + yn2 + (xp2 + xn1)) with ((yp1 + xn1) + (xp2 + yn2))
-      by ring.
-     rewrite <-E1, E2.
-     setoid_replace (xp1 + yn1 + (yp2 + xn2)) with ((yp2 + yn1) + (xp1 + xn2))
-      by ring.
-     now apply (strictly_order_preserving _).
-    split; repeat intro; eapply E; eauto; symmetry; eauto.
+  apply (R_rec2 SR (fun q r => BuildhProp (SRlt q r))).
+  intros. apply path_hprop. simpl.
+  apply (lt_respects _);trivial.
+  Defined.
+
+  Global Instance Rlt : Lt R := fun x y => Rlt_hProp x y.
+
+  Lemma Rlt_def : forall a b, class SR a < class SR b = SRlt a b.
+  Proof. reflexivity. Qed.
+
+  Instance: StrictOrder (lt:Lt R).
+  Proof.
+  split.
+  - (* we need to change so that it sees Empty,
+       needed to figure out IsHProp (using Funext) *)
+    change (forall x, x < x -> Empty). apply (R_ind _ (fun _ => _ -> _)).
+    intros [pa na];rewrite Rlt_def;unfold SRlt;simpl.
+    apply irreflexivity,_.
+  - hnf. apply (R_ind3 _ (fun _ _ _ => _ -> _ -> _)).
+    intros [pa na] [pb nb] [pc nc];rewrite !Rlt_def;unfold SRlt;simpl.
+    intros E1 E2.
+    apply (strictly_order_reflecting (+ (nb + pb))).
+    assert (Hrw : pa + nc + (nb + pb) = (pa + nb) + (pb + nc)) by ring_with_nat.
+    rewrite Hrw;clear Hrw.
+    assert (Hrw : pc + na + (nb + pb) = (pb + na) + (pc + nb)) by ring_with_nat.
+    rewrite Hrw;clear Hrw.
+    apply plus_lt_compat;trivial.
   Qed.
 
-  Instance: Irreflexive SRpair_lt.
-  Proof. intros [? ?] E. edestruct (irreflexivity (<)); eauto. Qed.
-
-  Instance: Transitive SRpair_lt.
+  Instance: ∀ z : R, StrictlyOrderPreserving ((+) z).
   Proof.
-    intros [xp xn] [yp yn] [zp zn] E1 E2.
-    unfold SRpair_lt in *. simpl in *.
-    apply (strictly_order_reflecting (+ (yn + yp))).
-    setoid_replace (xp + zn + (yn + yp)) with ((xp + yn) + (yp + zn)) by ring.
-    setoid_replace (zp + xn + (yn + yp)) with ((yp + xn) + (zp + yn)) by ring.
-    now apply plus_lt_compat.
+  intros z;split;[split;apply _|].
+  revert z.
+  apply (R_ind3 _ (fun _ _ _ => _ -> _)).
+  intros [pa na] [pb nb] [pc nc].
+  rewrite !Rlt_def;unfold SRlt;simpl.
+  intros E.
+  assert (Hrw : pa + pb + (na + nc) = (pa + na) + (pb + nc)) by ring_with_nat.
+  rewrite Hrw;clear Hrw.
+  assert (Hrw : pa + pc + (na + nb) = (pa + na) + (pc + nb)) by ring_with_nat.
+  rewrite Hrw;clear Hrw.
+  apply (strictly_order_preserving _),E.
   Qed.
 
-  Instance: ∀ z : SRpair SR, StrictlyOrderPreserving ((+) z).
-  Proof.
-    repeat (split; try apply _). unfold_lt.
-    destruct z as [zp zn]. intros [xp xn] [yp yn] E. simpl in *.
-    setoid_replace (zp + xp + (zn + yn)) with ((zp + zn) + (xp + yn)) by ring.
-    setoid_replace (zp + yp + (zn + xn)) with ((zp + zn) + (yp + xn)) by ring.
-    now apply (strictly_order_preserving _).
-  Qed.
-
-  Instance: StrictSetoidOrder SRpair_lt.
-  Proof. repeat (split; try apply _). Qed.
-
-  Instance: ∀ x y : SRpair SR, PropHolds (0 < x) → PropHolds (0 < y) →
+  Instance: ∀ x y : R, PropHolds (0 < x) → PropHolds (0 < y) →
     PropHolds (0 < x * y).
   Proof.
-    intros [xp xn] [yp yn].
-    unfold PropHolds. unfold_lt. intros E1 E2.
-    ring_simplify in E1. ring_simplify in E2.
-    destruct (decompose_lt E1) as [a [Ea1 Ea2]], (decompose_lt E2) as [b [Eb1 Eb2]].
-    rewrite Ea2, Eb2. ring_simplify.
-    apply compose_lt with (a * b).
-     now apply pos_mult_compat.
-    ring.
+  unfold PropHolds.
+  apply (R_ind2 _ (fun _ _ => _ -> _ -> _)).
+  intros [pa na] [pb nb]. rewrite !Rlt_def;unfold SRlt;simpl.
+  rewrite !plus_0_l,!plus_0_r.
+  intros E1 E2.
+  destruct (decompose_lt E1) as [a [Ea1 Ea2]], (decompose_lt E2) as [b [Eb1 Eb2]].
+  rewrite Ea2, Eb2.
+  apply compose_lt with (a * b).
+  - apply pos_mult_compat;trivial.
+  - ring_with_nat.
   Qed.
 
-  Global Instance: StrictSemiRingOrder SRpair_lt.
+  Global Instance: StrictSemiRingOrder (lt:Lt R).
   Proof. apply from_strict_ring_order; apply _. Qed.
+
+  Global Instance Rlt_dec `{forall x y : SR, Decidable (x < y)}
+    : forall x y : R, Decidable (x < y).
+  Proof.
+  apply (R_ind2 _ _).
+  intros a b;rewrite Rlt_def;unfold SRlt.
+  apply _.
+  Qed.
 End with_strict_semiring_order.
 
 Section with_full_pseudo_semiring_order.
-  Context `{!FullPseudoSemiRingOrder SRle SRlt}.
+  Context `{Funext} `{Univalence} SR `{FullPseudoSemiRingOrder SR} `{IsHSet SR}
+    `{is_mere_relation SR le} `{is_mere_relation SR lt}
+    `{∀ z, LeftCancellation (+) z}.
 
-  Instance: StrongSetoid SR := pseudo_order_setoid.
+  Instance: IsApart SR := pseudo_order_apart.
+  Instance: SemiRing SR := pseudo_srorder_semiring.
 
+  Notation R := (R SR).
 
+  Definition Rapart_hProp : R -> R -> hProp.
+  Proof.
+  apply (R_rec2 SR (fun q r => BuildhProp (SRapart q r))).
+  intros. apply path_hprop. simpl.
+  apply (apart_respects _);trivial.
+  Defined.
 
+  Global Instance Rapart : Apart R := fun x y => Rapart_hProp x y.
 
-Global Instance SRpair_trivial_apart `{!TrivialApart SR}
-  : TrivialApart (SRpair SR).
-Proof. intros x y. now rapply trivial_apart. Qed.
+  Lemma Rapart_def : forall a b, apart (class SR a) (class SR b) = SRapart a b.
+  Proof. reflexivity. Qed.
 
+  Global Instance SRpair_trivial_apart `{!TrivialApart SR}
+    : TrivialApart R.
+  Proof.
+  split;try apply _.
+  apply (R_ind2 _ _).
+  intros [pa na] [pb nb];rewrite Rapart_def;unfold SRapart;simpl.
+  split;intros E1.
+  - intros E2. apply (related_path SR) in E2.
+    red in E2;simpl in E2.
+    apply trivial_apart in E1. auto.
+  - apply trivial_apart. intros E2.
+    apply E1,path. red;simpl. trivial.
+  Qed.
+
+  Instance: IsApart R.
+  Proof.
+  split.
+  - apply _.
+  - hnf. apply (R_ind2 _ (fun _ _ => _ -> _)).
+    intros [pa na] [pb nb];rewrite !Rapart_def;unfold SRapart;simpl.
+    apply symmetry.
+  - hnf. intros x y E z;revert x y z E.
+    (* can't produce x <> z \/ z <> y !! *)
+    (* apply (R_ind3 _ (fun _ _ _ => _ -> _)). *)
+  Abort.
+(* 
   Instance: StrongSetoid (SRpair SR).
   Proof.
     split.
@@ -543,22 +739,8 @@ Proof. intros x y. now rapply trivial_apart. Qed.
   Proof.
     apply from_full_pseudo_ring_order; try apply _.
     now apply strong_setoids.strong_binary_setoid_morphism_commutative.
-  Qed.
+  Qed. *)
 End with_full_pseudo_semiring_order.
 
-Global Instance SRpair_dec `{∀ x y : SR, Decision (x = y)}
-  : ∀ x y : SRpair SR, Decision (x = y)
-  := λ x y, decide_rel (=) (pos x + neg y) (pos y + neg x).
-
-Global Program Instance SRpair_le_dec `{Le SR} `{∀ x y: SR, Decision (x ≤ y)}
-  : ∀ x y : SRpair SR, Decision (x ≤ y) := λ x y,
-  match decide_rel (≤) (pos x + neg y) (pos y + neg x) with
-  | left E => left _
-  | right E => right _
-  end.
-
-End semiring_pairs.
-
-Typeclasses Opaque SRpair_equiv.
-Typeclasses Opaque SRpair_le.
- *)
+(* Not sure if this does anything since we go through quotient but oh well *)
+Typeclasses Opaque Rle.
