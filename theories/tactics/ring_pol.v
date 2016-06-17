@@ -97,16 +97,61 @@ induction P;simpl.
   reflexivity.
 Qed.
 
-Definition mkPX P v Q :=
-  if P =? 0 then Q else PX P v Q.
+(* c * v + Q *)
+Fixpoint addX' c v Q :=
+  match Q with
+  | Pconst d => PX (Pconst c) v Q
+  | PX Q1 w Q2 =>
+    match v ?= w with
+    | LT =>
+      PX Q1 w (addX' c v Q2)
+    | EQ =>
+      PX (addC c Q1) v Q2
+    | GT => PX (Pconst c) v Q
+    end
+  end.
 
-Lemma eval_mkPX vs : forall P v Q,
-  eval vs (mkPX P v Q) = (eval vs P) * (vs v) + eval vs Q.
+Definition addX c v Q := if c =? 0 then Q else addX' c v Q.
+
+Lemma eval_addX' vs : forall c v Q,
+  eval vs (addX' c v Q) = phi c * vs v + eval vs Q.
 Proof.
-intros. unfold mkPX.
+induction Q as [d|Q1 IH1 w Q2 IH2].
+- simpl.
+  reflexivity.
+- simpl.
+  pose proof (tricho_compare_eq v w) as E.
+  destruct (v ?= w);[clear E|rewrite <-E by split;clear E w|clear E].
+  + simpl. rewrite IH2.
+    rewrite 2!plus_assoc. apply ap2;trivial.
+    apply plus_comm.
+  + simpl. rewrite eval_addC.
+    rewrite plus_mult_distr_r.
+    symmetry;apply plus_assoc.
+  + simpl. reflexivity.
+Qed.
+
+Lemma eval_addX vs : forall c v Q,
+  eval vs (addX c v Q) = phi c * vs v + eval vs Q.
+Proof.
+intros. unfold addX.
+pose proof (decide_eqb_ok c 0) as E.
+destruct (c =? 0).
+- rewrite (fst E) by split. rewrite (preserves_0 (f:=phi)).
+  rewrite mult_0_l,plus_0_l. split.
+- apply eval_addX'.
+Qed.
+
+Definition PXguard P v Q := if P =? 0 then Q else PX P v Q.
+
+Lemma eval_PXguard vs : forall P v Q,
+  eval vs (PXguard P v Q) = eval vs P * vs v + eval vs Q.
+Proof.
+intros. unfold PXguard.
 pose proof (eval_0 P) as E.
 destruct (P =? 0).
-- rewrite E by split. rewrite mult_0_l,plus_0_l;reflexivity.
+- rewrite E by split.
+  rewrite mult_0_l,plus_0_l. split.
 - reflexivity.
 Qed.
 
@@ -114,85 +159,102 @@ Fixpoint mulC c P :=
   match P with
   | Pconst d => Pconst (c * d)
   | PX P v Q =>
-    mkPX (mulC c P) v (mulC c Q)
+    (* in some semirings we can have zero divisors, so P' might be zero *)
+    PXguard (mulC c P) v (mulC c Q)
   end.
 
 Lemma eval_mulC vs : forall c P, eval vs (mulC c P) = (phi c) * eval vs P.
 Proof.
-induction P;simpl.
+induction P as [d | P1 IH1 v P2 IH2];simpl.
 - apply preserves_mult.
-- rewrite eval_mkPX.
-  rewrite IHP1,IHP2,plus_mult_distr_l,mult_assoc. reflexivity.
+- rewrite eval_PXguard.
+  rewrite IH1,IH2,plus_mult_distr_l,mult_assoc. reflexivity.
 Qed.
 
-Fixpoint add P Q :=
-  match P, Q with
-  | Pconst c, _ => addC c Q
-  | _, Pconst d => addC d P
-  | PX P1 v P2, PX Q1 w Q2 =>
-    (* P1 <= v, P2 < v, Q1 <= w, Q2 < w *)
+(* if P <= v, P <> 0, and addP Q = P + Q then P * v + Q *)
+Fixpoint add_aux addP P v Q :=
+  match Q with
+  | Pconst _ => PX P v Q
+  | PX Q1 w Q2 =>
     match v ?= w with
-    | EQ =>
-      mkPX (add P1 Q1) v (add P2 Q2)
     | LT =>
-      PX Q1 w (PX P1 v (add P2 Q2))
+      PX Q1 w (add_aux addP P v Q2)
+    | EQ => PXguard (addP Q1) v Q2
     | GT =>
-      PX P1 v (PX Q1 w (add P2 Q2))
+      PX P v Q
     end
   end.
 
-Lemma eval_add vs : forall P Q, eval vs (add P Q) = eval vs P + eval vs Q.
+Fixpoint add P Q :=
+  match P with
+  | Pconst c => addC c Q
+  | PX P1 v P2 => add_aux (add P1) P1 v (add P2 Q)
+  end.
+
+Lemma eval_add_aux vs P addP
+  (Eadd : forall Q, eval vs (addP Q) = eval vs P + eval vs Q)
+  : forall v Q, eval vs (add_aux addP P v Q) = eval vs P * vs v + eval vs Q.
 Proof.
-induction P as [c | P1 IHP1 v P2 IHP2];intros Q.
-- apply eval_addC.
-- destruct Q as [d | Q1 w Q2].
-  + simpl. rewrite <-plus_assoc.
-    apply ap. rewrite plus_comm; apply eval_addC.
+induction Q as [d|Q1 IH1 w Q2 IH2].
+- simpl. reflexivity.
+- simpl.
+  pose proof (tricho_compare_eq v w) as E.
+  destruct (v ?= w);[clear E|rewrite <-E by split;clear E w|clear E].
   + simpl.
-    pose proof (tricho_compare_eq v w) as E.
-    destruct (v ?= w).
-    * simpl.
-      rewrite IHP2.
-      rewrite plus_assoc, (plus_comm (eval vs Q1 * vs w)).
-      rewrite <-2!plus_assoc. apply ap.
-      rewrite 2!plus_assoc. rewrite (plus_comm (eval vs P2)). reflexivity.
-    * rewrite E by split;clear E;clear v.
-      rewrite eval_mkPX.
-      rewrite <-plus_assoc,(plus_assoc (eval vs P2)).
-      rewrite (plus_comm (eval vs P2)).
-      rewrite <-plus_assoc,plus_assoc.
-      rewrite <-plus_mult_distr_r.
-      rewrite IHP1,IHP2;reflexivity.
-    * simpl.
-      rewrite IHP2.
-      rewrite <-plus_assoc. apply ap.
-      rewrite 2!plus_assoc,(plus_comm (eval vs P2));reflexivity.
+    rewrite IH2.
+    rewrite 2!plus_assoc. rewrite (plus_comm (eval vs Q1 * vs w)).
+    reflexivity.
+  + rewrite eval_PXguard. rewrite Eadd.
+    rewrite plus_mult_distr_r.
+    symmetry;apply plus_assoc.
+  + simpl. reflexivity.
 Qed.
 
-(* V * P *)
+Lemma eval_add vs : forall P Q, eval vs (add P Q) = eval vs P + eval vs Q.
+Proof.
+induction P as [c|P1 IH1 v P2 IH2];intros Q.
+- simpl. apply eval_addC.
+- simpl. rewrite eval_add_aux;auto.
+  rewrite IH2. apply plus_assoc.
+Qed.
+
 Fixpoint mulX v P :=
   match P with
-  | Pconst c => mkPX (Pconst c) v 0
+  | Pconst c => addX c v 0
   | PX P1 w P2 =>
-    (* P1 <= w, P2 < w *)
     match v ?= w with
-    | LT => PX (mulX v P1) w (mulX v P2)
+    | LT =>
+      PX (mulX v P1) w (mulX v P2)
     | _ => PX P v 0
     end
   end.
 
 Lemma eval_mulX vs : forall v P, eval vs (mulX v P) = eval vs P * vs v.
 Proof.
-induction P as [c | P1 IHP1 w P2 IHP2].
-- simpl. rewrite eval_mkPX. simpl.
-  rewrite (preserves_0 (f:=phi)),plus_0_r. reflexivity.
-- change (eval vs (mulX v (PX P1 w P2)) ≡ (eval vs P1 * vs w + eval vs P2) * vs v).
-  simpl. destruct (v ?= w);simpl.
-  + rewrite plus_mult_distr_r.
-    rewrite IHP1,IHP2.
-    apply ap2;trivial. rewrite <-2!mult_assoc;apply ap,mult_comm.
-  + rewrite (preserves_0 (f:=phi)),plus_0_r. reflexivity.
-  + rewrite (preserves_0 (f:=phi)),plus_0_r. reflexivity.
+induction P as [c|P1 IH1 w P2 IH2].
+- simpl. rewrite eval_addX.
+  simpl. rewrite (preserves_0 (f:=phi)),plus_0_r.
+  split.
+- simpl.
+  pose proof (tricho_compare_eq v w) as E.
+  destruct (v ?= w);[clear E|rewrite <-E by split;clear E w|clear E].
+  + simpl.
+    rewrite plus_mult_distr_r,IH1,IH2.
+    apply ap2;trivial.
+    rewrite <-2!mult_assoc;apply ap,mult_comm.
+  + simpl. rewrite (preserves_0 (f:=phi)),plus_0_r.
+    reflexivity.
+  + simpl. rewrite (preserves_0 (f:=phi)),plus_0_r.
+    reflexivity.
+Qed.
+
+Definition mkPX P v Q := add (mulX v P) Q.
+
+Lemma eval_mkPX vs : forall P v Q,
+  eval vs (mkPX P v Q) = (eval vs P) * (vs v) + eval vs Q.
+Proof.
+intros. unfold mkPX.
+rewrite eval_add,eval_mulX. reflexivity.
 Qed.
 
 Fixpoint mul P Q :=

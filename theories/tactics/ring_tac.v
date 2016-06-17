@@ -53,6 +53,7 @@ Arguments by_quoting {C _ R} phi {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.
 Ltac ring_with_nat :=
   match goal with
   |- @paths ?R _ _ =>
+    ((pose proof (_ : SemiRing R)) || fail "not a semiring");
     apply (by_quoting (naturals_to_semiring nat R));
     compute;reflexivity
   end.
