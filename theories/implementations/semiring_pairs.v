@@ -4,6 +4,9 @@ Require Import HoTT.hit.quotient
   HoTT.Basics.Trunc
   HoTT.Basics.Decidable
   HoTT.Types.Record
+  HoTT.Types.Prod
+  HoTT.Types.Arrow
+  HoTT.Types.Sum
   HoTT.TruncType.
 Require Import
   HoTTClasses.interfaces.abstract_algebra
@@ -631,7 +634,7 @@ Section with_strict_semiring_order.
   - ring_with_nat.
   Qed.
 
-  Global Instance: StrictSemiRingOrder (lt:Lt R).
+  Global Instance R_strict_srorder : StrictSemiRingOrder (lt:Lt R).
   Proof. apply from_strict_ring_order; apply _. Qed.
 
   Global Instance Rlt_dec `{forall x y : SR, Decidable (x < y)}
@@ -687,61 +690,91 @@ Section with_full_pseudo_semiring_order.
     intros [pa na] [pb nb];rewrite !Rapart_def;unfold SRapart;simpl.
     apply symmetry.
   - hnf. intros x y E z;revert x y z E.
-    (* can't produce x <> z \/ z <> y !! *)
-    (* apply (R_ind3 _ (fun _ _ _ => _ -> _)). *)
+    apply (R_ind3 _ (fun _ _ _ => _ -> _)).
+    intros a b c;rewrite !Rapart_def;unfold SRapart;simpl.
+    intros E1.
+    apply (strong_left_cancellation (+) (neg c)) in E1.
+    eapply (merely_destruct (cotransitive E1 _));intros [E2|E2];apply tr.
+    + left. apply (strong_extensionality (+ (neg b))).
+      assert (Hrw : pos a + neg c + neg b = neg c + (pos a + neg b))
+      by ring_with_nat;rewrite Hrw;exact E2.
+    + right. apply (strong_extensionality (+ (neg a))).
+      assert (Hrw : pos c + neg b + neg a = pos c + neg a + neg b)
+      by ring_with_nat;rewrite Hrw;clear Hrw.
+      assert (Hrw : pos b + neg c + neg a = neg c + (pos b + neg a))
+      by ring_with_nat;rewrite Hrw;clear Hrw.
+      trivial.
+  - apply (R_ind2 _ _).
+    intros a b;rewrite Rapart_def;unfold SRapart.
+    split;intros E.
+    + apply path;red.
+      apply tight_apart,E.
+    + apply (related_path _) in E. apply tight_apart,E.
+  Qed.
+
+  Instance: FullPseudoOrder (le:Le R) (lt:Lt R).
+  Proof.
+  split;[split;try apply _|].
+  - apply (R_ind2 _ _).
+    intros a b;rewrite !Rlt_def;unfold SRlt.
+    apply pseudo_order_antisym.
+  - hnf. intros a b E c;revert a b c E.
+    apply (R_ind3 _ (fun _ _ _ => _ -> _)).
+    intros a b c;rewrite !Rlt_def;unfold SRlt.
+    intros E1.
+    apply (strictly_order_preserving (+ neg c)) in E1.
+    eapply (merely_destruct (cotransitive E1 _));intros [E2|E2];apply tr.
+    + left. apply (strictly_order_reflecting ((neg b) +)).
+      assert (Hrw : neg b + (pos a + neg c) = pos a + neg b + neg c)
+      by ring_with_nat;rewrite Hrw;exact E2.
+    + right. apply (strictly_order_reflecting ((neg a) +)).
+      assert (Hrw : neg a + (pos c + neg b) = neg b + (pos c + neg a))
+      by ring_with_nat;rewrite Hrw;clear Hrw.
+      assert (Hrw : neg a + (pos b + neg c) = pos b + neg a + neg c)
+      by ring_with_nat;rewrite Hrw;clear Hrw.
+      trivial.
+  - apply (@R_ind2 _).
+    + intros a b.
+      apply @trunc_prod;[|apply _].
+      apply (@trunc_arrow _).
+      apply ishprop_sum;try apply _.
+      intros E1 E2;apply (irreflexivity lt a).
+      transitivity b;trivial.
+    + intros a b;rewrite Rapart_def,!Rlt_def;unfold SRapart,SRlt.
+      apply apart_iff_total_lt.
+  - apply (R_ind2 _ _).
+    intros a b;rewrite Rle_def,Rlt_def;unfold SRlt,SRle.
+    apply le_iff_not_lt_flip.
+  Qed.
+
+  Instance: ∀ z : R, StrongMorphism (z *.).
+  Proof.
+  intros z;split;try apply _.
+  revert z;apply (R_ind3 _ (fun _ _ _ => _ -> _)).
+  intros [zp zn] [xp xn] [yp yn];rewrite !Rapart_def;unfold SRapart;simpl.
+  intros E1.
+  refine (merely_destruct (strong_binary_extensionality (+)
+       (zp * (xp + yn)) (zn * (yp + xn)) (zp * (yp + xn)) (zn * (xp + yn)) _) _).
+  - assert (Hrw : zp * (xp + yn) + zn * (yp + xn)
+    = zp * xp + zn * xn + (zp * yn + zn * yp))
+    by ring_with_nat;rewrite Hrw;clear Hrw.
+    assert (Hrw : zp * (yp + xn) + zn * (xp + yn)
+    = zp * yp + zn * yn + (zp * xn + zn * xp))
+    by ring_with_nat;rewrite Hrw;exact E1.
+  - intros [E2|E2].
+    + apply (strong_extensionality (zp *.)).
+      trivial.
+    + apply symmetry;apply (strong_extensionality (zn *.)).
+      trivial.
+  Qed.
+
+  Global Instance: FullPseudoSemiRingOrder (le:Le R) (lt:Lt R).
+  Proof.
+  pose proof (R_strict_srorder SR) as E.
+  apply from_full_pseudo_ring_order; try apply _.
+  - pose (@strict_srorder_plus _ _ _ _ _ _ E).
+    intros z. Fail exact (@strict_order_embedding_preserving _ _ _ _ _ (s z)).
   Abort.
-(* 
-  Instance: StrongSetoid (SRpair SR).
-  Proof.
-    split.
-       intros [??] E. now eapply (irreflexivity (≶)); eauto.
-      intros [??] [??] E. unfold apart, SRpair_apart. now symmetry.
-     intros [xp xn] [yp yn] E [zp zn]. unfold apart, SRpair_apart in *. simpl in *.
-     apply (strong_left_cancellation (+) zn) in E.
-     edestruct (cotransitive E).
-      left. apply (strong_extensionality (+ yn)).
-      setoid_replace (xp + zn + yn) with (zn + (xp + yn)) by ring. eassumption.
-     right. apply (strong_extensionality (+ xn)).
-     setoid_replace (zp + yn + xn) with (zp + xn + yn) by ring.
-     setoid_replace (yp + zn + xn) with (zn + (yp + xn)) by ring.
-     eassumption.
-    intros [??] [??]. now rapply tight_apart.
-  Qed.
-
-  Instance: FullPseudoOrder SRpair_le SRpair_lt.
-  Proof.
-    split.
-     split; try apply _.
-       intros [??] [??]. unfold_lt. now apply pseudo_order_antisym.
-      intros [xp xn] [yp yn] E [zp zn]. unfold lt, SRpair_lt in *. simpl in *.
-      apply (strictly_order_preserving (zn +)) in E.
-      edestruct (cotransitive E).
-       left. apply (strictly_order_reflecting (+ yn)).
-       setoid_replace (xp + zn + yn) with (zn + (xp + yn)) by ring. eassumption.
-      right. apply (strictly_order_reflecting (+ xn)).
-      setoid_replace (zp + yn + xn) with (zp + xn + yn) by ring.
-      setoid_replace (yp + zn + xn) with (zn + (yp + xn)) by ring.
-      eassumption.
-     intros [??] [??]. now rapply apart_iff_total_lt.
-    intros [??] [??]. now rapply le_iff_not_lt_flip.
-  Qed.
-
-  Instance: ∀ z : SRpair SR, StrongSetoid_Morphism (z *.).
-  Proof.
-    intros [zp zn]. split; try apply _. intros [xp xn] [yp yn] E1.
-    unfold apart, SRpair_apart in *. simpl in *.
-    destruct (strong_binary_extensionality (+)
-       (zp * (xp + yn)) (zn * (yp + xn)) (zp * (yp + xn)) (zn * (xp + yn))).
-      eapply strong_setoids.apart_proper; eauto; ring.
-     now apply (strong_extensionality (zp *.)).
-    symmetry. now apply (strong_extensionality (zn *.)).
-  Qed.
-
-  Global Instance: FullPseudoSemiRingOrder SRpair_le SRpair_lt.
-  Proof.
-    apply from_full_pseudo_ring_order; try apply _.
-    now apply strong_setoids.strong_binary_setoid_morphism_commutative.
-  Qed. *)
 End with_full_pseudo_semiring_order.
 
 (* Not sure if this does anything since we go through quotient but oh well *)
