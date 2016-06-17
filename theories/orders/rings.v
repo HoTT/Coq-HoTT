@@ -273,7 +273,8 @@ Section another_ring_order.
 End another_ring_order.
 
 Section another_strict_ring_order.
-  Context `{Ring R1} `{!StrictSemiRingOrder R1lt} `{Ring R2} `{R2lt : Lt R2}.
+  Context `{Ring R1} `{!StrictSemiRingOrder R1lt} `{Ring R2} `{R2lt : Lt R2}
+    `{is_mere_relation R2 lt}.
 
   Lemma projected_strict_ring_order (f : R2 → R1) `{!SemiRing_Morphism f} :
     (∀ x y, x < y ↔ f x < f y) → StrictSemiRingOrder R2lt.
@@ -291,7 +292,8 @@ End another_strict_ring_order.
 
 Section another_pseudo_ring_order.
   Context `{Ring R1} `{Apart R1} `{!PseudoSemiRingOrder R1lt}
-    `{Ring R2} `{Apart R2} `{R2lt : Lt R2}.
+    `{Ring R2} `{Apart R2} `{R2lt : Lt R2}
+    `{is_mere_relation R2 lt}.
 
   Lemma projected_pseudo_ring_order (f : R2 → R1) `{!SemiRing_Morphism f}
     `{!StrongInjective f}
@@ -306,14 +308,16 @@ Section another_pseudo_ring_order.
   repeat (split; try apply _).
   intros x₁ y₁ x₂ y₂ E.
   apply (strong_injective f) in E. rewrite 2!(preserves_mult (f:=f)) in E.
-  destruct (strong_binary_extensionality (.*.) _ _ _ _ E); [left | right];
+  apply (merely_destruct (strong_binary_extensionality (.*.) _ _ _ _ E));
+  intros [?|?];apply tr; [left | right];
   apply (strong_extensionality f); trivial.
   Qed.
 End another_pseudo_ring_order.
 
 Section another_full_pseudo_ring_order.
   Context `{Ring R1} `{Apart R1} `{!FullPseudoSemiRingOrder R1le R1lt}
-    `{Ring R2} `{Apart R2} `{R2le : Le R2} `{R2lt : Lt R2}.
+    `{Ring R2} `{Apart R2} `{R2le : Le R2} `{R2lt : Lt R2}
+    `{is_mere_relation R2 lt}.
 
   Lemma projected_full_pseudo_ring_order (f : R2 → R1) `{!SemiRing_Morphism f}
     `{!StrongInjective f}

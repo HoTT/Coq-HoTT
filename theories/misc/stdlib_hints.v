@@ -1,4 +1,5 @@
-Require Import HoTT.Basics.Overture.
+Require Export HoTTClasses.misc.settings.
+Require Export HoTT.Basics.Overture HoTT.Basics.Trunc HoTT.hit.Truncations.
 Require Import Coq.Unicode.Utf8.
 
 Hint Unfold Reflexive Symmetric Transitive.
@@ -52,6 +53,23 @@ Ltac transport_r eq := transport (inverse eq).
 
 Tactic Notation "transport" "<-" constr(t) := transport_r t.
 
+Lemma merely_ind {A} (P : merely A -> Type) {sP : forall x, IsHProp (P x)}
+  x : (forall y, P (tr y)) -> P x.
+Proof.
+intros E;revert x.
+apply Trunc_ind.
+- apply _.
+- exact E.
+Qed.
+
+Lemma merely_destruct {A} {P : Type} {sP : IsHProp P}
+  (x : merely A) : (A -> P) -> P.
+Proof.
+intros E;revert x.
+apply Trunc_ind.
+- apply _.
+- exact E.
+Qed.
 
 (* Unicode *)
 

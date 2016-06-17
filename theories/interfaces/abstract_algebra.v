@@ -61,7 +61,7 @@ Section setoid_binary_morphisms.
     ; strong_binary_mor_b : IsApart B
     ; strong_binary_mor_c : IsApart C
     ; strong_binary_extensionality : ∀ x₁ y₁ x₂ y₂, f x₁ y₁ ≶ f x₂ y₂ →
-                                     x₁ ≶ x₂ ∨ y₁ ≶ y₂ }.
+                                     hor (x₁ ≶ x₂) (y₁ ≶ y₂) }.
 End setoid_binary_morphisms.
 
 (*

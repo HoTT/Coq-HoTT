@@ -389,25 +389,15 @@ repeat split.
     trivial.
 Qed.
 
-
-Local Instance nat_strict : StrictOrder (_:Lt nat).
+Local Instance : Irreflexive (_:Lt nat).
 Proof.
-split.
-- hnf. intros x E.
-  apply le_exists in E.
-  destruct E as [k E].
-  apply (S_neq_0 k).
-  apply (left_cancellation (+) x).
-  rewrite plus_0_r,add_S_r,<-add_S_l.
-  rewrite add_comm. apply symmetry,E.
-- hnf. intros a b c E1 E2.
-  apply le_exists;apply le_exists in E1;apply le_exists in E2.
-  destruct E1 as [k1 E1], E2 as [k2 E2].
-  exists (S (k1+k2)).
-  rewrite E2,E1.
-  rewrite !add_S_r,add_S_l.
-  rewrite (add_assoc k2), (add_comm k2).
-  reflexivity.
+hnf. intros x E.
+apply le_exists in E.
+destruct E as [k E].
+apply (S_neq_0 k).
+apply (left_cancellation (+) x).
+rewrite plus_0_r,add_S_r,<-add_S_l.
+rewrite add_comm. apply symmetry,E.
 Qed.
 
 Instance: is_mere_relation nat le.
@@ -439,6 +429,21 @@ induction (S n) as [|n0 IHn0].
     destruct E.
     rewrite (Trunc.path_ishprop def_n0 idpath). simpl.
     apply ap. auto.
+Qed.
+
+Local Instance nat_strict : StrictOrder (_:Lt nat).
+Proof.
+split.
+- apply _.
+- apply _.
+- hnf. intros a b c E1 E2.
+  apply le_exists;apply le_exists in E1;apply le_exists in E2.
+  destruct E1 as [k1 E1], E2 as [k2 E2].
+  exists (S (k1+k2)).
+  rewrite E2,E1.
+  rewrite !add_S_r,add_S_l.
+  rewrite (add_assoc k2), (add_comm k2).
+  reflexivity.
 Qed.
 
 Instance nat_trichotomy : Trichotomy (lt:Lt nat).
@@ -508,12 +513,34 @@ intros [|a] E.
 - apply S_gt_0.
 Qed.
 
+Lemma nat_le_lt_trans : forall a b c : nat, a <= b -> b < c -> a < c.
+Proof.
+intros a b c E1 E2.
+apply le_exists in E1;apply le_exists in E2.
+destruct E1 as [k1 E1],E2 as [k2 E2];rewrite E2,E1.
+rewrite add_S_r,add_assoc. apply le_S_S,le_plus.
+Qed.
+
+Lemma lt_strong_cotrans : forall a b : nat, a < b -> forall c, a < c \/ c < b.
+Proof.
+intros a b E1 c.
+destruct (le_lt_dec c a) as [E2|E2].
+- right. apply nat_le_lt_trans with a;trivial.
+- left;trivial.
+Qed.
+
 Unset Universe Minimization ToSet.
 
 Instance nat_full : FullPseudoSemiRingOrder nat_le nat_lt.
 Proof.
 split;[split|]. 
-- apply dec_strict_pseudo_order.
+- split;try apply _.
+  + intros a b [E1 E2].
+    destruct (irreflexivity lt a).
+    transitivity b;trivial.
+  + hnf.
+    intros a b E c;apply tr;apply lt_strong_cotrans;trivial.
+  + reflexivity.
 - apply _.
 - intros a b E. apply nat_not_lt_le,le_exists in E.
   destruct E as [k E];exists k;rewrite plus_comm;auto.
@@ -531,7 +558,7 @@ split;[split|].
 - split;try apply _.
   intros ???? E.
   apply trivial_apart in E.
-  destruct (decide (apart x₁ x₂)) as [?|ex];auto.
+  destruct (decide (apart x₁ x₂)) as [?|ex];apply tr;auto.
   right. apply tight_apart in ex.
   apply trivial_apart. intros ey.
   apply E. apply ap2;trivial.
@@ -559,7 +586,10 @@ Qed.
 (* unsetting minimization to set for the whole file makes this slow *)
 Instance: StrictOrderEmbedding S.
 Proof.
-split; try apply _.
+repeat (split;try apply _).
+- intros ??;apply le_S_S.
+- intros ??;apply le_S_S.
+Unshelve. exact 0. exact 0. (* <- I don't even want to know *)
 Qed.
 
 Set Universe Minimization ToSet.

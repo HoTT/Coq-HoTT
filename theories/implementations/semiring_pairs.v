@@ -219,7 +219,8 @@ Proof.
 hnf.
 unfold SRapart. intros q1 q2 Eq r.
 apply (strong_left_cancellation (+) (neg r)) in Eq.
-destruct (cotransitive Eq (pos r + neg q1 + neg q2)) as [E|E].
+apply (merely_destruct (cotransitive Eq (pos r + neg q1 + neg q2)));
+intros [E|E];apply tr.
 - left. apply (strong_extensionality (+ (neg q2))).
   assert (Hrw : pos q1 + neg r + neg q2
     = neg r + (pos q1 + neg q2)) by ring_with_nat.
@@ -583,6 +584,7 @@ Section with_strict_semiring_order.
   Instance: StrictOrder (lt:Lt R).
   Proof.
   split.
+  - apply _.
   - (* we need to change so that it sees Empty,
        needed to figure out IsHProp (using Funext) *)
     change (forall x, x < x -> Empty). apply (R_ind _ (fun _ => _ -> _)).

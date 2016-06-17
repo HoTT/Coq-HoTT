@@ -61,7 +61,7 @@ Instance compare_eqb `{Compare A} : Eqb A | 2 := fun a b =>
   | _ => false
   end.
 
-Lemma compare_eqb_eq `{Compare A} : forall a b, a =? b = true -> a ?= b = EQ.
+Lemma compare_eqb_eq `{Compare A} : forall a b : A, a =? b = true -> a ?= b = EQ.
 Proof.
 unfold eqb,compare_eqb;simpl.
 intros a b. destruct (a ?= b);trivial;intros E;destruct (false_ne_true E).

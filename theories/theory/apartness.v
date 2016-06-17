@@ -1,4 +1,4 @@
-Require Import HoTT.Basics.Decidable HoTT.Types.Bool.
+Require Import HoTT.Basics.Decidable HoTT.Types.Bool HoTT.hit.Truncations.
 Require Import
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.theory.jections.
@@ -37,7 +37,8 @@ split.
   assumption.
 - intros x y ap z.
   apply apart_correct in ap.
-  destruct (cotransitive ap (f z));[left|right];apply apart_correct;assumption.
+  apply (merely_destruct (cotransitive ap (f z))).
+  intros [?|?];apply tr;[left|right];apply apart_correct;assumption.
 - intros x y;split.
   + intros nap. apply eq_correct. apply tight_apart.
     intros ap. apply nap. apply apart_correct;assumption.
@@ -45,7 +46,8 @@ split.
     apply tight_apart. apply eq_correct;assumption.
 Qed.
 
-Instance sg_apart_mere `{IsApart A} (P : A -> Type) : is_mere_relation (sig P) apart.
+Instance sg_apart_mere `{IsApart A} (P : A -> Type)
+  : is_mere_relation (sig P) apart.
 Proof.
 intros. unfold apart,sig_apart. apply _.
 Qed.
@@ -77,7 +79,8 @@ Section morphisms.
 
   (* If a morphism satisfies the binary strong extensionality property, it is
     strongly extensional in both coordinates. *)
-  Global Instance strong_setoid_morphism_1 `{!StrongBinaryMorphism (f : A → B → C)} :
+  Global Instance strong_setoid_morphism_1
+    `{!StrongBinaryMorphism (f : A → B → C)} :
     ∀ z, StrongMorphism (f z).
   Proof.
   pose proof (strong_binary_mor_a f).
@@ -86,11 +89,13 @@ Section morphisms.
   intros z.
   split; try apply _.
   intros x y E.
-  destruct (strong_binary_extensionality f z x z y); trivial.
+  apply (merely_destruct (strong_binary_extensionality f z x z y E)).
+  intros [?|?];trivial.
   destruct (irreflexivity (≶) z). assumption.
   Qed.
 
-  Global Instance strong_setoid_morphism_unary_2 `{!StrongBinaryMorphism (f : A → B → C)} :
+  Global Instance strong_setoid_morphism_unary_2
+    `{!StrongBinaryMorphism (f : A → B → C)} :
     ∀ z, StrongMorphism (λ x, f x z).
   Proof.
   pose proof (strong_binary_mor_a f).
@@ -99,7 +104,8 @@ Section morphisms.
   intros z.
   split; try apply _.
   intros x y E.
-  destruct (strong_binary_extensionality f x z y z); trivial.
+  apply (merely_destruct (strong_binary_extensionality f x z y z E)).
+  intros [?|?];trivial.
   destruct (irreflexivity (≶) z);assumption.
   Qed.
 
@@ -113,7 +119,8 @@ Section morphisms.
   Proof.
   split; try apply _.
   intros x₁ y₁ x₂ y₂ E.
-  destruct (cotransitive E (f x₂ y₁)).
+  apply (merely_destruct (cotransitive E (f x₂ y₁))).
+  intros [?|?];apply tr.
   - left. apply (strong_extensionality (λ x, f x y₁));trivial.
   - right. apply (strong_extensionality (f x₂));trivial.
   Qed.
@@ -183,8 +190,8 @@ Section dec_setoid.
     apply trivial_apart in ne.
     destruct (decide (x=z)) as [e|ne'];[destruct (decide (z=y)) as [e'|ne']|].
     + destruct ne. path_via z.
-    + right. apply trivial_apart. assumption.
-    + left.  apply trivial_apart. assumption.
+    + apply tr;right. apply trivial_apart. assumption.
+    + apply tr;left.  apply trivial_apart. assumption.
   - intros x y;split.
     + intros nap.
       destruct (decide (x=y));auto.
@@ -226,7 +233,7 @@ Section dec_setoid_morphisms.
   Proof.
   split;try apply _.
   intros x1 y1 x2 y2 hap.
-  destruct (cotransitive hap (f x2 y1)) as [h|h].
+  apply (merely_destruct (cotransitive hap (f x2 y1)));intros [h|h];apply tr.
   - left. apply trivial_apart.
     intros e.
     apply tight_apart in h;auto.

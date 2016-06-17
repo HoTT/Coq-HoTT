@@ -1,5 +1,6 @@
-Require Export HoTTClasses.misc.settings.
+Require Export HoTTClasses.misc.settings HoTTClasses.misc.stdlib_hints.
 Require Export HoTT.Basics.Overture HoTT.Types.Bool HoTTClasses.misc.stdlib_hints.
+Require Export HoTT.hit.Truncations.
 
 Definition id {A : Type} (a : A) := a.
 
@@ -295,7 +296,7 @@ Arguments trichotomy {A} R {Trichotomy} _ _.
 Arguments irreflexivity {A} _ {Irreflexive} _ _.
 
 Class CoTransitive `(R : relation A) : Type := cotransitive
-  : ∀ x y, R x y → ∀ z, R x z ∨ R z y.
+  : ∀ x y, R x y → ∀ z, hor (R x z) (R z y).
 Arguments cotransitive {A R CoTransitive x y} _ _.
 
 Class AntiSymmetric `(R : relation A) : Type

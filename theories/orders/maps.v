@@ -47,7 +47,8 @@ Section strictly_order_preserving_dec.
 
   Local Existing Instance strict_po_apart.
 
-  Global Instance dec_strictly_order_preserving_inj  `{!OrderPreserving (f : A → B)}
+  Global Instance dec_strictly_order_preserving_inj
+    `{!OrderPreserving (f : A → B)}
     `{!Injective f} :
     StrictlyOrderPreserving f | 19.
   Proof.
@@ -55,8 +56,9 @@ Section strictly_order_preserving_dec.
   apply _.
   Qed.
 
-  Global Instance dec_strictly_order_reflecting_mor `{!OrderReflecting (f : A → B)} :
-    StrictlyOrderReflecting f | 19.
+  Global Instance dec_strictly_order_reflecting_mor
+    `{!OrderReflecting (f : A → B)}
+    : StrictlyOrderReflecting f | 19.
   Proof.
   pose proof (dec_strong_morphism f). apply _.
   Qed.
@@ -86,8 +88,8 @@ Section pseudo_injective.
   Qed.
 End pseudo_injective.
 
-(* If a function between pseudo partial orders is strictly order preserving (back), we can
-  derive that it is order preserving (back) *)
+(* If a function between pseudo partial orders is strictly order preserving (back),
+   we can derive that it is order preserving (back) *)
 Section full_pseudo_strictly_preserving.
   Context `{FullPseudoOrder A} `{FullPseudoOrder B}.
 
@@ -224,16 +226,18 @@ intros P x y.
 destruct (total (≤) (f x) (f y)); [left | right]; apply P;trivial.
 Qed.
 
-Lemma projected_strict_order `{Alt : Lt A} `{Blt : Lt B}
+Lemma projected_strict_order `{Alt : Lt A} `{is_mere_relation A lt} `{Blt : Lt B}
   (f : A → B) `{!StrictOrder Blt}
   : (∀ x y, x < y ↔ f x < f y) → StrictOrder Alt.
 Proof.
 intros P. split.
+- apply _.
 - intros x E. destruct (irreflexivity (<) (f x)). apply P. trivial.
 - intros x y z E1 E2. apply P. transitivity (f y); apply P;trivial.
 Qed.
 
-Lemma projected_pseudo_order `{Apart A} `{Alt : Lt A} `{Apart B} `{Blt : Lt B}
+Lemma projected_pseudo_order `{Apart A} `{Alt : Lt A} `{is_mere_relation A lt}
+  `{Apart B} `{Blt : Lt B}
   (f : A → B) `{!StrongInjective f} `{!PseudoOrder Blt}
   : (∀ x y, x < y ↔ f x < f y) → PseudoOrder Alt.
 Proof.
@@ -244,7 +248,8 @@ intros P. split; try apply _.
 - intros x y E. apply (pseudo_order_antisym (f x) (f y)).
   split; apply P,E.
 - intros x y E z. apply P in E.
-  destruct (cotransitive E (f z)); [left | right]; apply P;trivial.
+  apply (merely_destruct (cotransitive E (f z)));
+  intros [?|?];apply tr; [left | right]; apply P;trivial.
 - intros x y; split; intros E.
   + apply (strong_injective f) in E.
     apply apart_iff_total_lt in E.
@@ -255,9 +260,11 @@ intros P. split; try apply _.
 Qed.
 
 Lemma projected_full_pseudo_order `{Apart A} `{Ale : Le A} `{Alt : Lt A}
+  `{is_mere_relation A lt}
   `{Apart B} `{Ble : Le B} `{Blt : Lt B}
   (f : A → B) `{!StrongInjective f} `{!FullPseudoOrder Ble Blt}
-  : (∀ x y, x ≤ y ↔ f x ≤ f y) → (∀ x y, x < y ↔ f x < f y) → FullPseudoOrder Ale Alt.
+  : (∀ x y, x ≤ y ↔ f x ≤ f y) → (∀ x y, x < y ↔ f x < f y) →
+    FullPseudoOrder Ale Alt.
 Proof.
 intros P1 P2. split.
 - apply (projected_pseudo_order f);assumption.

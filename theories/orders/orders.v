@@ -1,10 +1,11 @@
-Require Import HoTT.Basics.Decidable.
+Require Import HoTT.Basics.Decidable HoTT.Basics.Trunc.
 Require Import
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.interfaces.orders
   HoTTClasses.theory.apartness.
 
-Lemma irrefl_neq `{R : relation A} `{!Irreflexive R} : forall x y, R x y -> ~ x = y.
+Lemma irrefl_neq `{R : relation A} `{!Irreflexive R}
+  : forall x y, R x y -> ~ x = y.
 Proof.
 intros ?? E e;rewrite e in E. apply (irreflexivity _ _ E).
 Qed.
@@ -121,27 +122,32 @@ Section pseudo_order.
   - auto.
   Qed.
 
-  Lemma pseudo_order_cotrans_twice x₁ y₁ x₂ y₂ : x₁ < y₁ → x₂ < y₂ ∨ x₁ < x₂ ∨ y₂ < y₁.
+  Lemma pseudo_order_cotrans_twice x₁ y₁ x₂ y₂
+    : x₁ < y₁ → merely (x₂ < y₂ ∨ x₁ < x₂ ∨ y₂ < y₁).
   Proof.
   intros E1.
-  destruct (cotransitive E1 x₂) as [?|E2];auto.
-  destruct (cotransitive E2 y₂);auto.
+  apply (merely_destruct (cotransitive E1 x₂));intros [?|E2];
+  try solve [apply tr;auto].
+  apply (merely_destruct (cotransitive E2 y₂));intros [?|?];apply tr;auto.
   Qed.
 
-  Lemma pseudo_order_lt_ext x₁ y₁ x₂ y₂ : x₁ < y₁ → x₂ < y₂ ∨ x₁ ≶ x₂ ∨ y₂ ≶ y₁.
+  Lemma pseudo_order_lt_ext x₁ y₁ x₂ y₂ : x₁ < y₁ →
+    merely (x₂ < y₂ ∨ x₁ ≶ x₂ ∨ y₂ ≶ y₁).
   Proof.
   intros E.
-  destruct (pseudo_order_cotrans_twice x₁ y₁ x₂ y₂ E) as [?|[?|?]];
+  apply (merely_destruct (pseudo_order_cotrans_twice x₁ y₁ x₂ y₂ E));
+  intros [?|[?|?]];apply tr;
   auto using pseudo_order_lt_apart.
   Qed.
 
   Global Instance: StrictOrder (_ : Lt A).
   Proof.
   split.
+  - apply _.
   - intros x E.
     destruct (pseudo_order_antisym x x); auto.
   - intros x y z E1 E2.
-    destruct (cotransitive E1 z); trivial.
+    apply (merely_destruct (cotransitive E1 z));intros [?|?]; trivial.
     destruct (pseudo_order_antisym y z); auto.
   Qed.
 
@@ -149,7 +155,8 @@ Section pseudo_order.
   Proof.
   intros x y z.
   intros E1 E2 E3.
-  destruct (cotransitive E3 y); contradiction.
+  apply (merely_destruct (cotransitive E3 y));
+  intros [?|?]; contradiction.
   Qed.
 
   Global Instance: AntiSymmetric (complement (<)).
@@ -189,10 +196,11 @@ Section full_partial_order.
   Global Instance: StrictOrder (<).
   Proof.
   split; try apply _.
-  intros x. red. intros E;apply lt_iff_le_apart in E.
-  destruct E as [_ ?].
-  apply (irreflexivity (≶) x).
-  assumption.
+  - apply strict_po_mere_lt.
+  - intros x. red. intros E;apply lt_iff_le_apart in E.
+    destruct E as [_ ?].
+    apply (irreflexivity (≶) x).
+    assumption.
   Qed.
 
   Lemma lt_le x y : PropHolds (x < y) → PropHolds (x ≤ y).
@@ -243,7 +251,7 @@ Section full_partial_order.
   destruct E1 as [E1a E1b].
   split.
   - transitivity y;assumption.
-  - destruct (cotransitive E1b z) as [E3 | E3]; trivial.
+  - apply (merely_destruct (cotransitive E1b z));intros [E3 | E3]; trivial.
     apply lt_apart. apply symmetry in E3.
     transitivity y;apply lt_iff_le_apart; auto.
   Qed.
@@ -255,7 +263,7 @@ Section full_partial_order.
   destruct E1 as [E1a E1b].
   split.
   - transitivity y;auto.
-  - destruct (cotransitive E1b x) as [E3 | E3]; trivial.
+  - apply (merely_destruct (cotransitive E1b x));intros [E3 | E3]; trivial.
     apply lt_apart. apply symmetry in E3.
     transitivity y; apply lt_iff_le_apart; auto.
   Qed.
@@ -304,9 +312,12 @@ Section full_partial_order.
 End full_partial_order.
 
 (* Due to bug #2528 *)
-Hint Extern 5 (PropHolds (_ ≠ _)) => eapply @strict_po_apart_ne :  typeclass_instances.
-Hint Extern 10 (PropHolds (_ ≤ _)) => eapply @lt_le : typeclass_instances.
-Hint Extern 20 (Decision (_ < _)) => eapply @lt_dec_slow : typeclass_instances.
+Hint Extern 5 (PropHolds (_ ≠ _)) =>
+  eapply @strict_po_apart_ne :  typeclass_instances.
+Hint Extern 10 (PropHolds (_ ≤ _)) =>
+  eapply @lt_le : typeclass_instances.
+Hint Extern 20 (Decision (_ < _)) =>
+  eapply @lt_dec_slow : typeclass_instances.
 
 Section full_pseudo_order.
   Context `{FullPseudoOrder A}.
@@ -422,7 +433,7 @@ Section dec_strict_setoid_order.
   - intros x y [??].
     destruct (lt_antisym x y); auto.
   - intros x y Exy z.
-    destruct (trichotomy (<) x z) as [? | [Exz | Exz]]; try auto.
+    destruct (trichotomy (<) x z) as [? | [Exz | Exz]];apply tr; try auto.
     right. rewrite <-Exz. assumption.
   - intros x y. transitivity (~ x = y);[split;apply trivial_apart|].
     split.
@@ -437,11 +448,13 @@ Section dec_partial_order.
 
   Definition dec_lt: Lt A := λ x y, x ≤ y ∧ x ≠ y.
 
-  Context `{Alt : Lt A} (lt_correct : ∀ x y, x < y ↔ x ≤ y ∧ x ≠ y).
+  Context `{Alt : Lt A} `{is_mere_relation A lt}
+    (lt_correct : ∀ x y, x < y ↔ x ≤ y ∧ x ≠ y).
 
   Instance dec_order: StrictOrder (<).
   Proof.
   split.
+  - apply _.
   - intros x E. apply lt_correct in E. destruct E as [_ []];trivial.
   - intros x y z E1 E2.
     apply lt_correct;

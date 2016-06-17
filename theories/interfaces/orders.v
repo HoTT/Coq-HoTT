@@ -51,13 +51,15 @@ Class LatticeOrder `(Ale : Le A) `{Meet A} `{Join A} :=
   ; lattice_order_join :> JoinSemiLatticeOrder (≤) }.
 
 Class StrictOrder `(Alt : Lt A) :=
-  { strictorder_irrefl :> Irreflexive (<)
+  { strict_order_mere :> is_mere_relation A lt
+  ; strictorder_irrefl :> Irreflexive (<)
   ; strictorder_trans :> Transitive (<) }.
 
 (* The constructive notion of a total strict total order.
    We will prove that (<) is in fact a StrictOrder. *)
 Class PseudoOrder `{Aap : Apart A} (Alt : Lt A) :=
   { pseudo_order_apart : IsApart A
+  ; pseudo_order_mere_lt :> is_mere_relation A lt
   ; pseudo_order_antisym : ∀ x y, ¬(x < y ∧ y < x)
   ; pseudo_order_cotrans :> CoTransitive (<)
   ; apart_iff_total_lt : ∀ x y, x ≶ y ↔ x < y ∨ y < x }.
@@ -66,6 +68,7 @@ Class PseudoOrder `{Aap : Apart A} (Alt : Lt A) :=
   a StrictOrder *)
 Class FullPartialOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
   { strict_po_apart : IsApart A
+  ; strict_po_mere_lt : is_mere_relation A lt
   ; strict_po_po :> PartialOrder (≤)
   ; strict_po_trans :> Transitive (<)
   ; lt_iff_le_apart : ∀ x y, x < y ↔ x ≤ y ∧ x ≶ y }.

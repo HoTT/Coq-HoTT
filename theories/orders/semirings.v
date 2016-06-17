@@ -744,9 +744,11 @@ Section dec_semiring_order.
   Context `{SemiRingOrder R} `{Apart R} `{!TrivialApart R}
     `{!NoZeroDivisors R} `{!TotalRelation (≤)} `{DecidablePaths R}.
 
-  Context `{Rlt : Lt R} (lt_correct : ∀ x y, x < y ↔ x ≤ y ∧ x ≠ y).
+  Context `{Rlt : Lt R} `{is_mere_relation R lt}
+    (lt_correct : ∀ x y, x < y ↔ x ≤ y ∧ x ≠ y).
 
-  Instance: FullPseudoOrder (_ : Le R) (_ : Lt R) := dec_full_pseudo_order lt_correct.
+  Instance: FullPseudoOrder (_ : Le R) (_ : Lt R)
+    := dec_full_pseudo_order lt_correct.
   Instance: IsApart R := pseudo_order_apart.
 
   Instance dec_pseudo_srorder: PseudoSemiRingOrder (<).
