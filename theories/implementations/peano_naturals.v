@@ -8,8 +8,17 @@ Require Import
   HoTTClasses.orders.semirings
   HoTTClasses.theory.apartness.
 
-Instance nat_0: Zero nat := 0%nat.
-Instance nat_1: One nat := 1%nat.
+Section nat_lift.
+
+Universe N.
+
+Let natpaths := @paths@{N} nat.
+Infix "=N=" := natpaths (at level 70, no associativity).
+Let natpaths_symm : Symmetric@{N N} natpaths.
+Proof. unfold natpaths;apply _. Qed.
+
+Global Instance nat_0: Zero@{N} nat := 0%nat.
+Global Instance nat_1: One@{N} nat := 1%nat.
 
 Fixpoint add n m :=
   match n with
@@ -17,7 +26,7 @@ Fixpoint add n m :=
   | S p => S (add p m)
   end.
 
-Instance nat_plus: Plus nat := add.
+Global Instance nat_plus: Plus@{N} nat := add.
 
 Fixpoint mul n m :=
   match n with
@@ -25,7 +34,7 @@ Fixpoint mul n m :=
   | S p => m + (mul p m)
   end.
 
-Instance nat_mult: Mult nat := mul.
+Global Instance nat_mult: Mult@{N} nat := mul.
 
 Ltac simpl_nat :=
   change plus with nat_plus;
@@ -33,7 +42,7 @@ Ltac simpl_nat :=
   simpl;
   change nat_plus with plus; change nat_mult with mult.
 
-Local Instance add_assoc : Associative (plus : Plus nat).
+Local Instance add_assoc : Associative@{N} (plus : Plus nat).
 Proof.
 intros a;induction a as [|a IH];intros b c.
 + reflexivity.
@@ -41,27 +50,27 @@ intros a;induction a as [|a IH];intros b c.
   apply ap,IH.
 Qed.
 
-Lemma add_0_r : forall x, x + 0 = x.
+Lemma add_0_r : forall x:nat, x + 0 =N= x.
 Proof.
 intros a;induction a as [|a IH].
 + reflexivity.
 + apply (ap S),IH.
 Qed.
 
-Lemma add_S_r : forall a b, a + S b = S (a + b).
+Lemma add_S_r : forall a b, a + S b =N= S (a + b).
 Proof.
 induction a as [|a IHa];intros b.
 - reflexivity.
 - simpl_nat. apply (ap S),IHa.
 Qed.
 
-Lemma add_S_l a b : S a + b = S (a + b).
-Proof 1.
+Lemma add_S_l a b : S a + b =N= S (a + b).
+Proof idpath.
 
-Lemma add_0_l a : 0 + a = a.
-Proof 1.
+Lemma add_0_l a : 0 + a =N= a.
+Proof idpath.
 
-Local Instance add_comm : Commutative (plus : Plus nat).
+Local Instance add_comm : Commutative@{N N} (plus : Plus nat).
 Proof.
 intros a;induction a as [|a IHa];intros b;induction b as [|b IHb].
 - reflexivity.
@@ -71,7 +80,8 @@ intros a;induction a as [|a IHa];intros b;induction b as [|b IHb].
   rewrite IHa,<-IHb. apply (ap S),(ap S),symmetry,IHa.
 Qed.
 
-Local Instance add_mul_distr_l : LeftDistribute (mult :Mult nat) (plus:Plus nat).
+Local Instance add_mul_distr_l : LeftDistribute@{N}
+  (mult :Mult nat) (plus:Plus nat).
 Proof.
 hnf. induction a as [|a IHa];simpl_nat.
 - intros _ _;reflexivity.
@@ -81,28 +91,30 @@ hnf. induction a as [|a IHa];simpl_nat.
   reflexivity.
 Qed.
 
-Lemma mul_0_r : forall a : nat, a * 0 = 0.
+Lemma mul_0_r : forall a : nat, a * 0 =N= 0.
 Proof.
 induction a;simpl_nat;trivial.
+reflexivity.
 Qed.
 
-Lemma mul_S_r : forall a b : nat, a * S b = a + a * b.
+Lemma mul_S_r : forall a b : nat, a * S b =N= a + a * b.
 Proof.
 induction a as [|a IHa];intros b;simpl_nat.
-- trivial.
+- reflexivity.
 - simpl_nat. rewrite IHa.
-  rewrite (associativity b a), (commutativity (f:=plus) b a), <-(associativity a b).
+  rewrite (simple_associativity b a).
+  rewrite (commutativity (f:=plus) b a), <-(associativity a b).
   reflexivity.
 Qed.
 
-Local Instance mul_comm : Commutative (mult : Mult nat).
+Local Instance mul_comm : Commutative@{N N} (mult : Mult nat).
 Proof.
 hnf. intros a;induction a as [|a IHa];simpl_nat.
 - intros;apply symmetry,mul_0_r.
 - intros b;rewrite IHa. rewrite mul_S_r,<-IHa. reflexivity.
 Qed.
 
-Local Instance mul_assoc : Associative (mult : Mult nat).
+Local Instance mul_assoc : Associative@{N} (mult : Mult nat).
 Proof.
 hnf. intros a;induction a as [|a IHa].
 - intros;reflexivity.
@@ -114,7 +126,7 @@ hnf. intros a;induction a as [|a IHa].
   rewrite <-IHa. rewrite (mul_comm b c). reflexivity.
 Qed.
 
-Instance nat_semiring : SemiRing nat.
+Global Instance nat_semiring : SemiRing@{N} nat.
 Proof.
 repeat (split; try apply _);
 first [change sg_op with plus; change mon_unit with 0
@@ -126,19 +138,21 @@ first [change sg_op with plus; change mon_unit with 0
 Qed.
 
 (* misc *)
-Instance S_neq_0 x : PropHolds (~ S x = 0).
+Global Instance S_neq_0 x : PropHolds (~ S x =N= 0).
 Proof.
 intros E.
 change ((fun a => match a with S _ => True | 0 => False end) 0).
-transport E. split.
+eapply transport.
+- exact E.
+- split.
 Qed.
 
 Definition pred x := match x with | 0 => 0 | S k => k end.
 
-Instance S_inj : Injective@{Set Set Set Set} S
+Global Instance S_inj : Injective@{N N N N} S
   := { injective := fun a b E => ap pred E }.
 
-Global Instance nat_dec: DecidablePaths nat.
+Global Instance nat_dec: DecidablePaths@{N N N} nat.
 Proof.
 hnf. intros a;induction a as [|a IHa].
 - intros [|b].
@@ -155,12 +169,13 @@ Defined.
 
 (* Close Scope nat_scope. *)
 
-Instance nat_naturals_to_semiring : NaturalsToSemiRing nat :=
+Global Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
   λ _ _ _ _ _, fix f (n: nat) := match n with 0%nat => 0 | 1%nat => 1 |
    S n' => f n' + 1 end.
 
 Section for_another_semiring.
-  Context `{SemiRing R}.
+  Universe U.
+  Context `{SemiRing@{U} R}.
 
   Notation toR := (naturals_to_semiring nat R).
 
@@ -206,10 +221,9 @@ Section for_another_semiring.
   repeat (split;try apply _);trivial.
   Qed.
 
-  Lemma toR_unique `{Funext} (h : nat -> R) `{!SemiRing_Morphism h} :
-    naturals_to_semiring nat R = h.
+  Lemma toR_unique (h : nat -> R) `{!SemiRing_Morphism h} x :
+    naturals_to_semiring nat R x = h x.
   Proof.
-  apply path_forall. red.
   induction x as [|n E].
   + change (0 = h 0).
     apply symmetry,preserves_0.
@@ -220,40 +234,42 @@ Section for_another_semiring.
   Qed.
 End for_another_semiring.
 
-Lemma O_nat_0 : O ≡ 0.
+Global Instance nat_naturals : Naturals@{N U} nat.
+Proof.
+split;try apply _.
+intros;apply toR_unique, _.
+Qed.
+
+Lemma O_nat_0 : O =N= 0.
 Proof. reflexivity. Qed.
 
-Lemma S_nat_plus_1 x : S x ≡ x + 1.
+Lemma S_nat_plus_1 x : S x =N= x + 1.
 Proof.
 rewrite add_comm. reflexivity.
 Qed.
 
-Lemma S_nat_1_plus x : S x ≡ 1 + x.
+Lemma S_nat_1_plus x : S x =N= 1 + x.
 Proof. reflexivity. Qed.
 
 Lemma nat_induction (P : nat → Type) :
   P 0 → (∀ n, P n → P (1 + n)) → ∀ n, P n.
 Proof nat_rect P.
 
-Instance nat_naturals `{Funext} : Naturals nat.
-Proof.
-split;try apply _.
-intros;apply toR_unique, _.
-Qed.
-
-Lemma plus_eq_zero : forall a b : nat, a + b = 0 -> a = 0 /\ b = 0.
+Lemma plus_eq_zero : forall a b : nat, a + b =N= 0 -> a =N= 0 /\ b =N= 0.
 Proof.
 intros [|];[intros [|];auto|].
-intros ? E. destruct (S_neq_0 _ E).
+- intros E. destruct (S_neq_0 _ E).
+- intros ? E. destruct (S_neq_0 _ E).
 Qed.
 
-Lemma mult_eq_zero : forall a b : nat, a * b = 0 -> a = 0 \/ b = 0.
+Lemma mult_eq_zero : forall a b : nat, a * b =N= 0 -> a =N= 0 \/ b =N= 0.
 Proof.
 intros [|] [|];auto.
-simpl_nat.
-intros E.
-apply plus_eq_zero in E.
-destruct (S_neq_0 _ (fst E)).
+- intros _;right;reflexivity.
+- simpl_nat.
+  intros E.
+  apply plus_eq_zero in E.
+  destruct (S_neq_0 _ (fst E)).
 Qed.
 
 Instance nat_zero_divisors : NoZeroDivisors nat.
@@ -263,7 +279,7 @@ apply mult_eq_zero in Ey2.
 destruct Ey2;auto.
 Qed.
 
-Instance nat_plus_cancel_l : forall z:nat, LeftCancellation plus z.
+Instance nat_plus_cancel_l : forall z:nat, LeftCancellation@{N} plus z.
 Proof.
 red. intros a;induction a as [|a IHa];simpl_nat;intros b c E.
 - trivial.
@@ -271,7 +287,7 @@ red. intros a;induction a as [|a IHa];simpl_nat;intros b c E.
 Qed.
 
 Instance nat_mult_cancel_l
-  : ∀ z : nat, PropHolds (z ≠ 0) → LeftCancellation@{Set} (.*.) z.
+  : ∀ z : nat, PropHolds (~ z =N= 0) → LeftCancellation@{N} (.*.) z.
 Proof.
 unfold PropHolds. unfold LeftCancellation.
 intros a Ea b c E;revert b c a Ea E.
@@ -288,8 +304,8 @@ induction b as [|b IHb];intros [|c];simpl_nat;intros a Ea E.
 Qed.
 
 (* Order *)
-Instance nat_le: Le nat := Peano.le.
-Instance nat_lt: Lt nat := Peano.lt.
+Global Instance nat_le: Le@{N Set} nat := Peano.le.
+Global Instance nat_lt: Lt@{N Set} nat := Peano.lt.
 
 Lemma le_plus : forall n k, n <= k + n.
 Proof.
@@ -299,7 +315,7 @@ induction k.
 Qed.
 
 Lemma le_exists : forall n m : nat,
-  iff@{Set Set Set} (n <= m) (exists k, m = k + n).
+  iff@{N N N} (n <= m) (exists k, m =N= k + n).
 Proof.
 intros n m;split.
 - intros E;induction E as [|m E IH].
@@ -315,7 +331,7 @@ Proof.
 induction a;constructor;auto.
 Qed.
 
-Lemma le_S_S : forall a b : nat, a <= b <-> S a <= S b.
+Lemma le_S_S : forall a b : nat, iff@{N N N} (a <= b) (S a <= S b).
 Proof.
 intros. etransitivity;[apply le_exists|].
 etransitivity;[|apply symmetry,le_exists].
@@ -344,7 +360,7 @@ Lemma not_lt_0 : forall a, ~ a < 0.
 Proof.
 intros a E. apply le_exists in E.
 destruct E as [k E].
-apply symmetry,plus_eq_zero in E.
+apply natpaths_symm,plus_eq_zero in E.
 apply (S_neq_0 _ (snd E)).
 Qed.
 
@@ -387,26 +403,27 @@ repeat split.
     trivial.
 Qed.
 
-Local Instance nat_lt_irrefl : Irreflexive (_:Lt nat).
+Local Instance nat_lt_irrefl : Irreflexive@{N i Set j} (_:Lt nat).
 Proof.
 hnf. intros x E.
 apply le_exists in E.
 destruct E as [k E].
 apply (S_neq_0 k).
-apply (left_cancellation (+) x).
-rewrite plus_0_r,add_S_r,<-add_S_l.
-rewrite add_comm. apply symmetry,E.
+apply (left_cancellation@{N} (+) x).
+fold natpaths.
+rewrite add_0_r, add_S_r,<-add_S_l.
+rewrite add_comm. apply natpaths_symm,E.
 Qed.
 
 Instance nat_le_hprop : is_mere_relation nat le.
 Proof.
 intros m n;apply Trunc.hprop_allpath.
-generalize (idpath (S n)).
+generalize (idpath (S n) : S n =N= S n).
 generalize n at 2 3 4 5.
 change (forall n0 : nat,
-S n = S n0 -> forall le_mn1 le_mn2 : m <= n0, le_mn1 = le_mn2).
+S n =N= S n0 -> forall le_mn1 le_mn2 : m <= n0, le_mn1 = le_mn2).
 induction (S n) as [|n0 IHn0].
-- intros ? E;destruct (S_neq_0 _ (symmetry _ _ E)).
+- intros ? E;destruct (S_neq_0 _ (natpaths_symm _ _ E)).
 - clear n; intros n H.
   apply (injective S) in H.
   rewrite <- H; intros le_mn1 le_mn2; clear n H.
@@ -444,14 +461,15 @@ split.
   reflexivity.
 Qed.
 
-Instance nat_trichotomy : Trichotomy (lt:Lt nat).
+Instance nat_trichotomy : Trichotomy@{N i j} (lt:Lt nat).
 Proof.
-hnf.
+hnf. fold natpaths.
 intros a b. destruct (le_lt_dec a b) as [[|]|E];auto.
-left. apply le_S_S. trivial.
+- right;left;split.
+- left. apply le_S_S. trivial.
 Qed.
 
-Instance nat_apart : Apart nat := fun n m => n < m \/ m < n.
+Instance nat_apart : Apart@{N Set} nat := fun n m => n < m \/ m < n.
 
 Instance nat_trivial_apart : TrivialApart nat.
 Proof.
@@ -480,15 +498,15 @@ apply le_exists in E1;apply le_exists in E2.
 destruct E1 as [k1 E1], E2 as [k2 E2].
 apply (S_neq_0 (k1 + k2)).
 apply (left_cancellation (+) a).
-rewrite plus_0_r.
+fold natpaths. rewrite add_0_r.
 rewrite E1 in E2.
 rewrite add_S_r;rewrite !add_S_r in E2.
 rewrite (add_assoc a), (add_comm a), <-(add_assoc k1), (add_comm a).
 rewrite (add_assoc k1), (add_comm k1), <-(add_assoc k2).
-apply symmetry,E2.
+apply natpaths_symm,E2.
 Qed.
 
-Instance nat_le_dec: forall x y, Decision (x ≤ y).
+Instance nat_le_dec: forall x y : nat, Decision (x ≤ y).
 Proof.
 intros a b. destruct (le_lt_dec a b).
 - left;trivial.
@@ -500,7 +518,7 @@ Proof.
 intros;apply le_S_S,zero_least.
 Qed.
 
-Lemma nonzero_gt_0 : forall a, ~ a = 0 -> 0 < a.
+Lemma nonzero_gt_0 : forall a, ~ a =N= 0 -> 0 < a.
 Proof.
 intros [|a] E.
 - destruct E;split.
@@ -524,12 +542,12 @@ destruct (le_lt_dec c a) as [E2|E2].
 Qed.
 
 Instance nat_full : FullPseudoSemiRingOrder@{
-    Set i i i i
-    Set Set Set i Set
-    Set Set}
+    a b d N f
+    Set Set Set h i
+    N Set}
   nat_le nat_lt.
 Proof.
-split;[split|]. 
+split;[split|].
 - split;try apply _.
   + intros a b [E1 E2].
     destruct (irreflexivity lt a).
@@ -586,6 +604,8 @@ repeat (split;try apply _).
 - intros ??;apply le_S_S.
 Unshelve. exact 0. exact 0. (* <- I don't even want to know *)
 Qed.
+
+End nat_lift.
 
 (* 
 Instance nat_cut_minus: CutMinus nat := minus.
