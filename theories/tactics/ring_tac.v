@@ -57,3 +57,9 @@ Ltac ring_with_nat :=
     apply (by_quoting (naturals_to_semiring nat R));
     compute;reflexivity
   end.
+
+Ltac ring_repl a b :=
+  let Hrw := fresh "Hrw" in
+  assert (Hrw : a = b);[ring_with_nat|rewrite Hrw;clear Hrw].
+
+Tactic Notation "ring_replace" constr(x) "with" constr(y) := ring_repl x y.
