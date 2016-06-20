@@ -327,10 +327,12 @@ Class HeteroSymmetric {A} {T : A → A → Type}
 (* Although cancellation is the same as being injective, we want a proper
   name to refer to this commonly used property. *)
 Section cancellation.
-  Context `{Aap : Apart A} (op : A → A → A) (z : A).
+  Context `(op : A → A → A) (z : A).
 
   Class LeftCancellation := left_cancellation : ∀ x y, op z x = op z y → x = y.
   Class RightCancellation := right_cancellation : ∀ x y, op x z = op y z → x = y.
+
+  Context {Aap : Apart A}.
 
   Class StrongLeftCancellation := strong_left_cancellation
     : ∀ x y, x ≶ y → op z x ≶ op z y.

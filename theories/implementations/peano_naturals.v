@@ -81,12 +81,12 @@ hnf. induction a as [|a IHa];simpl_nat.
   reflexivity.
 Qed.
 
-Lemma mul_0_r : forall a:nat, a * 0 = 0.
+Lemma mul_0_r : forall a : nat, a * 0 = 0.
 Proof.
 induction a;simpl_nat;trivial.
 Qed.
 
-Lemma mul_S_r : forall a b, a * S b = a + a * b.
+Lemma mul_S_r : forall a b : nat, a * S b = a + a * b.
 Proof.
 induction a as [|a IHa];intros b;simpl_nat.
 - trivial.
@@ -114,7 +114,7 @@ hnf. intros a;induction a as [|a IHa].
   rewrite <-IHa. rewrite (mul_comm b c). reflexivity.
 Qed.
 
-Instance: SemiRing nat.
+Instance nat_semiring : SemiRing nat.
 Proof.
 repeat (split; try apply _);
 first [change sg_op with plus; change mon_unit with 0
@@ -135,7 +135,8 @@ Qed.
 
 Definition pred x := match x with | 0 => 0 | S k => k end.
 
-Instance: Injective S := { injective := fun a b E => ap pred E }.
+Instance S_inj : Injective@{Set Set Set Set} S
+  := { injective := fun a b E => ap pred E }.
 
 Global Instance nat_dec: DecidablePaths nat.
 Proof.
@@ -152,9 +153,9 @@ Defined.
 
 (* Add Ring nat: (rings.stdlib_semiring_theory nat). *)
 
-Close Scope nat_scope.
+(* Close Scope nat_scope. *)
 
-Instance: NaturalsToSemiRing nat :=
+Instance nat_naturals_to_semiring : NaturalsToSemiRing nat :=
   λ _ _ _ _ _, fix f (n: nat) := match n with 0%nat => 0 | 1%nat => 1 |
    S n' => f n' + 1 end.
 
@@ -255,21 +256,22 @@ apply plus_eq_zero in E.
 destruct (S_neq_0 _ (fst E)).
 Qed.
 
-Instance: NoZeroDivisors nat.
+Instance nat_zero_divisors : NoZeroDivisors nat.
 Proof.
 intros x [Ex [y [Ey1 Ey2]]].
 apply mult_eq_zero in Ey2.
 destruct Ey2;auto.
 Qed.
 
-Instance: forall z:nat, LeftCancellation plus z.
+Instance nat_plus_cancel_l : forall z:nat, LeftCancellation plus z.
 Proof.
 red. intros a;induction a as [|a IHa];simpl_nat;intros b c E.
 - trivial.
 - apply IHa. apply (injective S). assumption.
 Qed.
 
-Instance: ∀ z : nat, PropHolds (z ≠ 0) → LeftCancellation (.*.) z.
+Instance nat_mult_cancel_l
+  : ∀ z : nat, PropHolds (z ≠ 0) → LeftCancellation@{Set} (.*.) z.
 Proof.
 unfold PropHolds. unfold LeftCancellation.
 intros a Ea b c E;revert b c a Ea E.
@@ -285,14 +287,9 @@ induction b as [|b IHb];intros [|c];simpl_nat;intros a Ea E.
   apply ap. apply IHb with a;trivial.
 Qed.
 
-
-Unset Universe Minimization ToSet.
-
 (* Order *)
 Instance nat_le: Le nat := Peano.le.
 Instance nat_lt: Lt nat := Peano.lt.
-
-Set Universe Minimization ToSet.
 
 Lemma le_plus : forall n k, n <= k + n.
 Proof.
@@ -301,7 +298,8 @@ induction k.
 - simpl_nat. constructor. assumption.
 Qed.
 
-Lemma le_exists : forall n m, n <= m <-> exists k, m = k + n.
+Lemma le_exists : forall n m : nat,
+  iff@{Set Set Set} (n <= m) (exists k, m = k + n).
 Proof.
 intros n m;split.
 - intros E;induction E as [|m E IH].
@@ -317,7 +315,7 @@ Proof.
 induction a;constructor;auto.
 Qed.
 
-Lemma le_S_S : forall a b, a <= b <-> S a <= S b.
+Lemma le_S_S : forall a b : nat, a <= b <-> S a <= S b.
 Proof.
 intros. etransitivity;[apply le_exists|].
 etransitivity;[|apply symmetry,le_exists].
@@ -358,7 +356,7 @@ destruct b.
 - constructor. apply le_S_S. trivial.
 Qed.
 
-Local Instance : TotalRelation (_:Le nat).
+Local Instance nat_le_total : TotalRelation (_:Le nat).
 Proof.
 hnf. intros a b.
 destruct (le_lt_dec a b);[left|right].
@@ -366,7 +364,7 @@ destruct (le_lt_dec a b);[left|right].
 - apply lt_le;trivial.
 Qed.
 
-Local Instance: PartialOrder nat_le.
+Local Instance nat_le_po : PartialOrder nat_le.
 Proof.
 repeat split.
 - hnf;intros; constructor.
@@ -389,7 +387,7 @@ repeat split.
     trivial.
 Qed.
 
-Local Instance : Irreflexive (_:Lt nat).
+Local Instance nat_lt_irrefl : Irreflexive (_:Lt nat).
 Proof.
 hnf. intros x E.
 apply le_exists in E.
@@ -400,7 +398,7 @@ rewrite plus_0_r,add_S_r,<-add_S_l.
 rewrite add_comm. apply symmetry,E.
 Qed.
 
-Instance: is_mere_relation nat le.
+Instance nat_le_hprop : is_mere_relation nat le.
 Proof.
 intros m n;apply Trunc.hprop_allpath.
 generalize (idpath (S n)).
@@ -453,11 +451,9 @@ intros a b. destruct (le_lt_dec a b) as [[|]|E];auto.
 left. apply le_S_S. trivial.
 Qed.
 
-Unset Universe Minimization ToSet.
-
 Instance nat_apart : Apart nat := fun n m => n < m \/ m < n.
 
-Instance nat_trivial_apart : TrivialApart@{i Set j k l} nat.
+Instance nat_trivial_apart : TrivialApart nat.
 Proof.
 split.
 - intros;apply ishprop_sum;try apply _.
@@ -469,8 +465,6 @@ split.
   + hnf. destruct (trichotomy _ a b) as [?|[?|?]];auto.
     destruct E;trivial.
 Qed.
-
-Set Universe Minimization ToSet.
 
 Lemma nat_not_lt_le : forall a b, ~ a < b -> b <= a.
 Proof.
@@ -494,7 +488,7 @@ rewrite (add_assoc k1), (add_comm k1), <-(add_assoc k2).
 apply symmetry,E2.
 Qed.
 
-Instance nat_le_dec: Decision (x ≤ y).
+Instance nat_le_dec: forall x y, Decision (x ≤ y).
 Proof.
 intros a b. destruct (le_lt_dec a b).
 - left;trivial.
@@ -529,9 +523,11 @@ destruct (le_lt_dec c a) as [E2|E2].
 - left;trivial.
 Qed.
 
-Unset Universe Minimization ToSet.
-
-Instance nat_full : FullPseudoSemiRingOrder nat_le nat_lt.
+Instance nat_full : FullPseudoSemiRingOrder@{
+    Set i i i i
+    Set Set Set i Set
+    Set Set}
+  nat_le nat_lt.
 Proof.
 split;[split|]. 
 - split;try apply _.
@@ -576,23 +572,20 @@ split;[split|].
     destruct E;auto.
 Qed.
 
-Instance: OrderEmbedding S.
+Instance S_embedding : OrderEmbedding S.
 Proof.
 repeat (split; try apply _).
 - intros ??;apply le_S_S.
 - intros ??;apply le_S_S.
 Qed.
 
-(* unsetting minimization to set for the whole file makes this slow *)
-Instance: StrictOrderEmbedding S.
+Instance S_strict_embedding : StrictOrderEmbedding S.
 Proof.
 repeat (split;try apply _).
 - intros ??;apply le_S_S.
 - intros ??;apply le_S_S.
 Unshelve. exact 0. exact 0. (* <- I don't even want to know *)
 Qed.
-
-Set Universe Minimization ToSet.
 
 (* 
 Instance nat_cut_minus: CutMinus nat := minus.
