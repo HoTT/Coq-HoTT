@@ -604,7 +604,8 @@ Section with_strict_semiring_order.
     apply plus_lt_compat;trivial.
   Qed.
 
-  Instance: ∀ z : R, StrictlyOrderPreserving ((+) z).
+  Instance plus_strict_order_preserving_l
+    : ∀ z : R, StrictlyOrderPreserving ((+) z).
   Proof.
   intros z;split;[split;apply _|].
   revert z.
@@ -772,8 +773,12 @@ Section with_full_pseudo_semiring_order.
   Proof.
   pose proof (R_strict_srorder SR) as E.
   apply from_full_pseudo_ring_order; try apply _.
-  - pose (@strict_srorder_plus _ _ _ _ _ _ E).
-    intros z. Fail exact (@strict_order_embedding_preserving _ _ _ _ _ (s z)).
+  - Fail refine (plus_strict_order_preserving_l _ ).
+    (* This appears to be a problem because the operations
+       in the quotient depend on the proof that SR is a strictsemiringorder
+       and this is proven in different ways in the goal and the lemma
+       (with QED being opaque).
+       Not sure if setting some QEDs to Defined would work. *)
   Abort.
 End with_full_pseudo_semiring_order.
 
