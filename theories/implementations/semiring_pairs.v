@@ -771,15 +771,37 @@ Section with_full_pseudo_semiring_order.
 
   Global Instance: FullPseudoSemiRingOrder (le:Le R) (lt:Lt R).
   Proof.
-  pose proof (R_strict_srorder SR) as E.
   apply from_full_pseudo_ring_order; try apply _.
-  - Fail refine (plus_strict_order_preserving_l _ ).
+  - (* Fail refine (plus_strict_order_preserving_l _ ). *)
     (* This appears to be a problem because the operations
        in the quotient depend on the proof that SR is a strictsemiringorder
        and this is proven in different ways in the goal and the lemma
        (with QED being opaque).
        Not sure if setting some QEDs to Defined would work. *)
-  Abort.
+    intros z;split;[split;apply _|].
+    revert z.
+    apply (R_ind3 _ (fun _ _ _ => _ -> _)).
+    intros [pa na] [pb nb] [pc nc].
+    rewrite !Rlt_def;unfold SRlt;simpl.
+    intros E.
+    assert (Hrw : pa + pb + (na + nc) = (pa + na) + (pb + nc)) by ring_with_nat.
+    rewrite Hrw;clear Hrw.
+    assert (Hrw : pa + pc + (na + nb) = (pa + na) + (pc + nb)) by ring_with_nat.
+    rewrite Hrw;clear Hrw.
+    apply (strictly_order_preserving _),E.
+  - apply apartness.strong_binary_setoid_morphism_commutative.
+  - (* same problem as bullet one *)
+    unfold PropHolds.
+    apply (R_ind2 _ (fun _ _ => _ -> _ -> _)).
+    intros [pa na] [pb nb]. rewrite !Rlt_def;unfold SRlt;simpl.
+    rewrite !plus_0_l,!plus_0_r.
+    intros E1 E2.
+    destruct (decompose_lt E1) as [a [Ea1 Ea2]], (decompose_lt E2) as [b [Eb1 Eb2]].
+    rewrite Ea2, Eb2.
+    apply compose_lt with (a * b).
+    + apply pos_mult_compat;trivial.
+    + ring_with_nat.
+  Qed.
 End with_full_pseudo_semiring_order.
 
 (* Not sure if this does anything since we go through quotient but oh well *)
