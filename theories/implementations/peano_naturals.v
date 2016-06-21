@@ -8,6 +8,7 @@ Require Import
   HoTTClasses.orders.semirings
   HoTTClasses.theory.apartness.
 
+(* This should go away one Coq has universe cumulativity through inductives. *)
 Section nat_lift.
 
 Universe N.
@@ -304,8 +305,8 @@ induction b as [|b IHb];intros [|c];simpl_nat;intros a Ea E.
 Qed.
 
 (* Order *)
-Global Instance nat_le: Le@{N Set} nat := Peano.le.
-Global Instance nat_lt: Lt@{N Set} nat := Peano.lt.
+Global Instance nat_le: Le@{N N} nat := Peano.le.
+Global Instance nat_lt: Lt@{N N} nat := Peano.lt.
 
 Lemma le_plus : forall n k, n <= k + n.
 Proof.
@@ -315,7 +316,7 @@ induction k.
 Qed.
 
 Lemma le_exists : forall n m : nat,
-  iff@{N N N} (n <= m) (exists k, m =N= k + n).
+  iff@{N N N} (n <= m) (sig@{N N} (fun k => m =N= k + n)).
 Proof.
 intros n m;split.
 - intros E;induction E as [|m E IH].
@@ -372,7 +373,7 @@ destruct b.
 - constructor. apply le_S_S. trivial.
 Qed.
 
-Local Instance nat_le_total : TotalRelation (_:Le nat).
+Local Instance nat_le_total : TotalRelation@{N N} (_:Le nat).
 Proof.
 hnf. intros a b.
 destruct (le_lt_dec a b);[left|right].
@@ -403,7 +404,7 @@ repeat split.
     trivial.
 Qed.
 
-Local Instance nat_lt_irrefl : Irreflexive@{N i Set j} (_:Lt nat).
+Local Instance nat_lt_irrefl : Irreflexive@{N i N j} (_:Lt nat).
 Proof.
 hnf. intros x E.
 apply le_exists in E.
@@ -443,7 +444,7 @@ induction (S n) as [|n0 IHn0].
   + intros def_n0. pose proof (injective S _ _ def_n0) as E.
     destruct E.
     rewrite (Trunc.path_ishprop def_n0 idpath). simpl.
-    apply ap. auto.
+    apply ap. apply IHn0;trivial.
 Qed.
 
 Local Instance nat_strict : StrictOrder (_:Lt nat).
@@ -461,7 +462,7 @@ split.
   reflexivity.
 Qed.
 
-Instance nat_trichotomy : Trichotomy@{N i j} (lt:Lt nat).
+Instance nat_trichotomy : Trichotomy@{N N i} (lt:Lt nat).
 Proof.
 hnf. fold natpaths.
 intros a b. destruct (le_lt_dec a b) as [[|]|E];auto.
@@ -469,9 +470,9 @@ intros a b. destruct (le_lt_dec a b) as [[|]|E];auto.
 - left. apply le_S_S. trivial.
 Qed.
 
-Instance nat_apart : Apart@{N Set} nat := fun n m => n < m \/ m < n.
+Instance nat_apart : Apart@{N N} nat := fun n m => n < m \/ m < n.
 
-Instance nat_trivial_apart : TrivialApart nat.
+Global Instance nat_trivial_apart : TrivialApart nat.
 Proof.
 split.
 - intros;apply ishprop_sum;try apply _.
@@ -506,7 +507,7 @@ rewrite (add_assoc k1), (add_comm k1), <-(add_assoc k2).
 apply natpaths_symm,E2.
 Qed.
 
-Instance nat_le_dec: forall x y : nat, Decision (x ≤ y).
+Global Instance nat_le_dec: forall x y : nat, Decision (x ≤ y).
 Proof.
 intros a b. destruct (le_lt_dec a b).
 - left;trivial.
@@ -541,10 +542,10 @@ destruct (le_lt_dec c a) as [E2|E2].
 - left;trivial.
 Qed.
 
-Instance nat_full : FullPseudoSemiRingOrder@{
-    a b d N f
-    Set Set Set h i
-    N Set}
+Global Instance nat_full : FullPseudoSemiRingOrder@{
+    a b c g f
+    d e N h N
+    N N}
   nat_le nat_lt.
 Proof.
 split;[split|].
@@ -597,12 +598,9 @@ repeat (split; try apply _).
 - intros ??;apply le_S_S.
 Qed.
 
-Instance S_strict_embedding : StrictOrderEmbedding S.
+Global Instance S_strict_embedding : StrictOrderEmbedding S.
 Proof.
 repeat (split;try apply _).
-- intros ??;apply le_S_S.
-- intros ??;apply le_S_S.
-Unshelve. exact 0. exact 0. (* <- I don't even want to know *)
 Qed.
 
 End nat_lift.

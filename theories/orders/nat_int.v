@@ -166,7 +166,7 @@ Section another_semiring.
   - apply pos_plus_lt_compat_r; solve_propholds.
   Qed.
 
-  Global Instance: OrderEmbedding f | 50.
+  Global Instance nat_morphism_order_embedding : OrderEmbedding f | 50.
   Proof. split; try apply _. apply full_pseudo_order_reflecting. Qed.
 End another_semiring.
 End nat_int_order.

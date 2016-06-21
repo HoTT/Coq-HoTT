@@ -147,7 +147,7 @@ Section borrowed_from_nat.
   apply ES.
   Qed.
 
-  Global Instance: ∀ z : N, LeftCancellation (+) z.
+  Global Instance nat_plus_cancel_l : ∀ z : N, LeftCancellation (+) z.
   Proof.
   refine (from_nat_stmt (fun s => forall z : s, LeftCancellation plus z) _).
   simpl. apply nat_plus_cancel_l.
