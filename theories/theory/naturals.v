@@ -133,6 +133,13 @@ Section borrowed_from_nat.
   exact nat_induction.
   Qed.
 
+  Lemma case : forall x : N, x = 0 \/ exists y : N, (x = 1 + y)%mc.
+  Proof.
+  refine (from_nat_stmt
+    (fun s => forall x : s, x = 0 \/ exists y : s, (x = 1 + y)%mc) _).
+  simpl. intros [|x];eauto.
+  Qed.
+
   Global Instance: Biinduction N.
   Proof.
   hnf. intros P E0 ES.
