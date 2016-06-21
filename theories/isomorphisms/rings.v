@@ -21,6 +21,11 @@ Instance SR_mult (s : SemiRingOperations) : Mult s := snd (fst (fst s.2)).
 Instance SR_zero (s : SemiRingOperations) : Zero s := snd (fst s.2).
 Instance SR_one (s : SemiRingOperations) : One s := snd s.2.
 
+Arguments SR_plus !_ / _ _.
+Arguments SR_mult !_ / _ _.
+Arguments SR_zero !_ /.
+Arguments SR_one !_ /.
+
 Section iso.
 
 Context `{Funext} `{Univalence}.
