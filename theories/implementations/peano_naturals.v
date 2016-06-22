@@ -603,17 +603,45 @@ Proof.
 repeat (split;try apply _).
 Qed.
 
-End nat_lift.
+Global Instance nat_cut_minus: CutMinus@{N} nat := Peano.minus.
 
-(* 
-Instance nat_cut_minus: CutMinus nat := minus.
-Instance: CutMinusSpec nat nat_cut_minus.
+Lemma plus_minus : forall a b, cut_minus (a + b) b =N= a.
 Proof.
-  split.
-   symmetry. rewrite commutativity.
-   now apply le_plus_minus.
-  intros x y E. destruct (orders.le_equiv_lt x y E) as [E2|E2].
-   rewrite E2. now apply minus_diag.
-  apply not_le_minus_0. now apply orders.lt_not_le_flip.
+unfold cut_minus,nat_cut_minus.
+intros a b;revert a;induction b as [|b IH].
+- intros [|a];simpl;try split.
+  apply ap,add_0_r.
+- intros [|a].
+  + simpl. pose proof (IH 0) as E.
+    rewrite add_0_l in E. exact E.
+  + simpl. change nat_plus with plus.
+    rewrite add_S_r,<-add_S_l;apply IH.
 Qed.
- *)
+
+Lemma le_plus_minus : forall n m : nat, n <= m → m =N= (n + (cut_minus m  n)).
+Proof.
+intros n m E. apply le_exists in E.
+destruct E as [k E];rewrite E.
+rewrite plus_minus. apply add_comm.
+Qed.
+
+Lemma minus_ge : forall a b, a <= b -> cut_minus a b =N= 0.
+Proof.
+unfold cut_minus,nat_cut_minus.
+intros a b;revert a;induction b as [|b IH];intros [|a];simpl.
+- split.
+- intros E;destruct (not_lt_0 _ E).
+- split.
+- intros E. apply IH;apply le_S_S,E.
+Qed.
+
+Global Instance nat_cut_minus_spec : CutMinusSpec@{N N} nat nat_cut_minus.
+Proof.
+split.
+- intros x y E. rewrite add_comm.
+  symmetry.
+  apply (le_plus_minus _ _ E).
+- apply minus_ge.
+Qed.
+
+End nat_lift.
