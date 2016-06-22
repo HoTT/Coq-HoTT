@@ -284,6 +284,8 @@ End with_apart.
 End SRPair.
 Import SRPair.
 
+Module Completion.
+
 Section contents.
 Context `{Funext} `{Univalence} SR `{SemiRing SR} `{IsHSet SR}.
 Context `{∀ z, LeftCancellation (+) z}.
@@ -807,3 +809,5 @@ End with_full_pseudo_semiring_order.
 
 (* Not sure if this does anything since we go through quotient but oh well *)
 Typeclasses Opaque Rle.
+
+End Completion.

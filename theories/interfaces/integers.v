@@ -14,8 +14,8 @@ End initial_maps.
 Class Integers A {plus mult zero one negate} `{U : IntegersToRing A} :=
   { integers_ring:> @Ring A plus mult zero one negate
   ; integers_to_ring_mor:> ∀ `{Ring B}, SemiRing_Morphism (integers_to_ring A B)
-  ; integers_initial: forall `{Ring B} {h : A -> B} `{!SemiRing_Morphism h},
-      integers_to_ring A B = h }.
+  ; integers_initial: forall `{Ring B} {h : A -> B} `{!SemiRing_Morphism h} x,
+      integers_to_ring A B x = h x}.
 
 Section specializable.
   Context (Z N : Type) `{Integers Z} `{Naturals N}.
