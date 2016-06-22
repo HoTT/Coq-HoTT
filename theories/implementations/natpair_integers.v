@@ -51,6 +51,8 @@ Definition Z_rect : forall (P : Z -> Type) {sP : forall x, IsHSet (P x)}
 Definition Z_compute P {sP} dclass dequiv x
   : @Z_rect P sP dclass dequiv (' x) = dclass x := 1.
 
+
+
 Definition Z_ind : forall (P : Z -> Type) {sP : forall x, IsHProp (P x)}
   (dclass : forall x : Npair, P (' x)), forall x, P x
   := Completion.R_ind _.
@@ -232,18 +234,128 @@ Qed.
 
 Context `{!NatDistance N}.
 
+Lemma Z_abs_aux_0 : forall a b z : N, a + z = b -> z = 0 ->
+  naturals_to_semiring N Z 0 ≡ ' {| SRPair.pos := a; SRPair.neg := b |}.
+Proof.
+intros a b z E E'.
+rewrite (preserves_0 (A:=N)).
+rewrite E',plus_0_r in E. rewrite E.
+apply Z_eq. red;simpl. apply plus_comm.
+Qed.
+
+Lemma Z_abs_aux_neg : forall a b z : N, a + z = b ->
+  naturals_to_semiring N Z z ≡ - ' {| SRPair.pos := a; SRPair.neg := b |}.
+Proof.
+intros a b z E.
+rewrite <-(naturals.to_semiring_unique (cast N Z)).
+apply Z_eq. red;simpl. rewrite plus_0_r,plus_comm;trivial.
+Qed.
+
+Lemma Z_abs_aux_pos : forall a b z : N, b + z = a ->
+  naturals_to_semiring N Z z ≡ ' {| SRPair.pos := a; SRPair.neg := b |}.
+Proof.
+intros a b z E.
+rewrite <-(naturals.to_semiring_unique (cast N Z)). apply Z_eq;red;simpl.
+rewrite plus_0_r,plus_comm;trivial.
+Qed.
+
+(* We use decidability of equality on N
+   to make sure we always go left when the inputs are equal.
+   Otherwise we would have to truncate IntAbs. *)
+Definition Z_abs_def : ∀ x : Npair,
+  (∃ n : N, naturals_to_semiring N Z n ≡ ' x)
+  ∨ (∃ n : N, naturals_to_semiring N Z n ≡ - ' x).
+Proof.
+intros [a b].
+destruct (nat_distance_sig a b) as [[z E]|[z E]].
+- destruct (decide (z = 0)) as [E'|_].
+  + left. exists 0. apply Z_abs_aux_0 with z;trivial.
+  + right. exists z. apply Z_abs_aux_neg;trivial.
+- left. exists z. apply Z_abs_aux_pos;trivial.
+Defined.
+
+Lemma Z_abs_respects : ∀ (x y : Npair) (E : SRPair.equiv x y),
+  transport
+    (λ q : Z,
+     (∃ n : N, naturals_to_semiring N Z n ≡ q)
+     ∨ (∃ n : N, naturals_to_semiring N Z n ≡ - q)) (Z_eq E) (Z_abs_def x)
+  ≡ Z_abs_def y.
+Proof.
+intros [pa pb] [na nb] E.
+red in E; simpl in E.
+unfold Z_abs_def.
+destruct (nat_distance_sig pa pb) as [[z1 E1] | [z1 E1]];simpl.
+- destruct (decide (z1 = 0)) as [E2 | E2].
+  + rewrite Sum.transport_sum. rewrite Sigma.transport_sigma.
+    destruct (nat_distance_sig na nb) as [[z2 E3] | [z2 E3]];
+    [destruct (decide (z2 = 0)) as [E4 | E4]|];simpl.
+    * apply ap.
+      apply Sigma.path_sigma_hprop;simpl.
+      apply PathGroupoids.transport_const.
+    * destruct E4.
+      rewrite <-E1,<-E3,E2,plus_0_r,<-(plus_0_r (na+pa)) in E.
+      rewrite plus_assoc,(plus_comm pa) in E.
+      apply (left_cancellation plus _) in E. trivial.
+    * apply ap. apply Sigma.path_sigma_hprop. simpl.
+      rewrite PathGroupoids.transport_const.
+      rewrite E2,plus_0_r in E1.
+      rewrite <-E3,E1 in E.
+      apply (left_cancellation plus (pb + nb)).
+      rewrite plus_0_r. etransitivity;[apply E|].
+      ring_with_nat.
+  + rewrite Sum.transport_sum,Sigma.transport_sigma.
+    destruct (nat_distance_sig na nb) as [[z2 E3] | [z2 E3]];
+    [destruct (decide (z2 = 0)) as [E4 | E4]|];simpl.
+    * destruct E2.
+      rewrite E4,plus_0_r in E3;rewrite <-E1,<-E3 in E.
+      apply (left_cancellation plus (pa+na)).
+      rewrite (plus_comm pa na),plus_0_r,<-plus_assoc.
+      rewrite (plus_comm na pa). symmetry;trivial.
+    * apply ap. apply Sigma.path_sigma_hprop.
+      simpl. rewrite PathGroupoids.transport_const.
+      rewrite <-E1,<-E3 in E.
+      apply (left_cancellation plus (pa + na)).
+      rewrite <-(plus_assoc pa na z2),(plus_comm pa na),<-plus_assoc.
+      symmetry;trivial.
+    * destruct E2.
+      rewrite <-E1,<-E3 in E.
+      assert (Erw : nb + z2 + (pa + z1) = (pa + nb) + (z2 + z1))
+      by ring_with_nat.
+      rewrite <-(plus_0_r (pa+nb)),Erw in E.
+      apply (left_cancellation plus _),symmetry,naturals.zero_sum in E.
+      apply E.
+- rewrite Sum.transport_sum,Sigma.transport_sigma. simpl.
+  destruct (nat_distance_sig na nb) as [[z2 E3] | [z2 E3]];
+  [destruct (decide (z2 = 0)) as [E4 | E4]|];simpl.
+  + apply ap. apply Sigma.path_sigma_hprop. simpl.
+    rewrite PathGroupoids.transport_const.
+    rewrite <-E1,<-E3,E4,plus_0_r in E.
+    apply (left_cancellation plus (na+pb)).
+    rewrite plus_0_r.
+    path_via (pb + z1 + na). ring_with_nat.
+  + destruct E4.
+    rewrite <-E1,<-E3 in E.
+    assert (Hrw : pb + z1 + (na + z2) = (na + pb) + (z1 + z2))
+    by ring_with_nat.
+    rewrite <-(plus_0_r (na+pb)),Hrw in E.
+    apply (left_cancellation _ _),naturals.zero_sum in E.
+    apply E.
+  + apply ap,Sigma.path_sigma_hprop. simpl.
+    rewrite PathGroupoids.transport_const.
+    rewrite <-E1,<-E3 in E.
+    apply (left_cancellation plus (pb+nb)).
+    path_via (pb + z1 + nb);[|path_via (nb + z2 + pb)];ring_with_nat.
+Qed.
+
 Global Instance Z_abs : IntAbs Z N.
 Proof.
-red. (* Not hprop, what do? *)
-Abort.
+red. apply (Z_rect _ Z_abs_def).
+exact Z_abs_respects.
+Qed.
 
 Notation n_to_z := (naturals_to_semiring N Z).
 
-(* Without this opaque, typeclasses find a proof of Injective zero,
- from [id_injective] *)
-Typeclasses Opaque zero.
-
-Let zero_product_aux a b :
+Definition zero_product_aux a b :
   n_to_z a * n_to_z b = 0 → n_to_z a = 0 ∨ n_to_z b = 0.
 Proof.
 rewrite <-rings.preserves_mult.
@@ -256,7 +368,39 @@ Qed.
 
 Global Instance Z_zero_product : ZeroProduct Z.
 Proof.
-red.
-(* Not hprop, what do? *)
-Abort.
+intros x y E.
+destruct (int_abs_sig Z N x) as [[a Ea]|[a Ea]],
+  (int_abs_sig Z N y) as [[b Eb]|[b Eb]].
+- rewrite <-Ea,<-Eb in E.
+  apply zero_product_aux in E.
+  rewrite <-Ea,<-Eb.
+  trivial.
+- apply (ap negate) in E. rewrite negate_mult_distr_r in E.
+  rewrite <-Ea,<-Eb in E.
+  rewrite negate_0 in E.
+  apply zero_product_aux in E.
+  destruct E as [E|E].
+  + left;rewrite <-Ea;trivial.
+  + right.
+    apply (injective negate).
+    rewrite negate_0,<-Eb;trivial.
+- apply (ap negate) in E. rewrite negate_mult_distr_l in E.
+  rewrite <-Ea,<-Eb in E.
+  rewrite negate_0 in E.
+  apply zero_product_aux in E.
+  destruct E as [E|E].
+  + left.
+    apply (injective negate).
+    rewrite negate_0,<-Ea;trivial.
+  + right;rewrite <-Eb;trivial.
+- rewrite <-negate_mult_negate,<-Ea,<-Eb in E.
+  apply zero_product_aux in E.
+  destruct E as [E|E].
+  + left.
+    apply (injective negate).
+    rewrite negate_0,<-Ea;trivial.
+  + right.
+    apply (injective negate).
+    rewrite negate_0,<-Eb;trivial.
+Qed.
 End contents.
