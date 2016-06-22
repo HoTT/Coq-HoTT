@@ -408,7 +408,7 @@ Defined.
 Definition opp_compute q : - (class q) = class (SRPair.opp _ q)
   := 1.
 
-Global Instance: Ring R.
+Global Instance R_ring : Ring R.
 Proof.
 repeat split;try apply _;
 first [change sg_op with mult; change mon_unit with 1|

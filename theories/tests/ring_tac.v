@@ -29,3 +29,12 @@ intros.
 apply (by_quoting (naturals_to_semiring nat R)). compute.
 reflexivity.
 Qed.
+
+Lemma test4 `{SemiRing R}
+  (a b : R)
+  : a * b = b * a.
+Proof.
+apply (ring_quote.Quoting.eval_eqquote R).
+apply (prove_prequoted (naturals_to_semiring nat R)).
+reflexivity.
+Qed.

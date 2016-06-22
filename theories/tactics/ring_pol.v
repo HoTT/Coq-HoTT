@@ -10,17 +10,20 @@ Import Quoting.
 
 Section content.
 
+Universe UC UV Upol.
+Context {C : Type@{UC} } {V : Type@{UV} }.
+
+Inductive Pol : Type@{Upol} :=
+  | Pconst (c : C)
+  | PX (P : Pol) (v : V) (Q : Pol).
+
 (* [C] is the scalar semiring: Z when working on rings,
    N on semirings, other sometimes. *)
-Context `{SemiRing C} `{DecidablePaths C}.
+Context `{SemiRing C} `{DecidablePaths@{UC UV UV} C}.
 
 (* [V] is the type of variables, ie we are defining polynomials [C[V]].
    It has a computable compare so we can normalise polynomials. *)
-Context `{Trichotomy V Vlt}.
-
-Inductive Pol :=
-  | Pconst (c : C)
-  | PX (P : Pol) (v : V) (Q : Pol).
+Context `{Trichotomy@{UV UV UV} V Vlt}.
 
 (* Polynomials are supposed (at the meta level) to be in normal form:
    PX P v Q verifies
@@ -142,7 +145,7 @@ destruct (c =? 0).
 - apply eval_addX'.
 Qed.
 
-Definition PXguard P v Q := if P =? 0 then Q else PX P v Q.
+Definition PXguard P v Q := if eqb@{UV UV} P 0 then Q else PX P v Q.
 
 Lemma eval_PXguard vs : forall P v Q,
   eval vs (PXguard P v Q) = eval vs P * vs v + eval vs Q.
@@ -307,7 +310,5 @@ induction e as [v| | |a IHa b IHb|a IHa b IHb];simpl.
 - rewrite eval_add,IHa,IHb. reflexivity.
 - rewrite eval_mul,IHa,IHb. reflexivity.
 Qed.
-
-(* Now we need to normalize *)
 
 End content.

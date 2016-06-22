@@ -11,12 +11,13 @@ Require Import
   HoTTClasses.interfaces.naturals.
 
 Section content.
+Universe U.
 
 Context `{DecidablePaths C}.
 
 Context `(phi : C -> R) `{SemiRing_Morphism C R phi}.
 
-Notation Vars V := (V -> R).
+Let Vars (V:Type@{U}) := (V -> R).
 
 Lemma normalize_eq `{Q : @Quoting.EqQuote R _ _ _ _ V l n m V' l'}
   `{Trichotomy V Vlt} `{Trichotomy V' Vlt'}
@@ -43,6 +44,23 @@ Proof.
 intros E.
 apply normalize_eq.
 apply eval_eqb,E.
+Qed.
+
+Lemma normalize_prequoted `{Trichotomy V Vlt} (a b : Quoting.Expr V) vs
+  : eval phi vs (toPol a) = eval phi vs (toPol b) ->
+  Quoting.eval _ vs a = Quoting.eval _ vs b.
+Proof.
+pose proof semiringmor_b.
+rewrite !(eval_toPol _).
+trivial.
+Qed.
+
+Lemma prove_prequoted `{Trichotomy V Vlt} (a b : Quoting.Expr V) vs
+  : toPol a =? toPol b = true -> Quoting.eval _ vs a = Quoting.eval _ vs b.
+Proof.
+intros.
+apply normalize_prequoted.
+apply eval_eqb;trivial.
 Qed.
 
 End content.
