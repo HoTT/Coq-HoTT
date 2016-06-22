@@ -6,7 +6,8 @@ Section initial_maps.
   Variable A: Type.
 
   Class IntegersToRing :=
-    integers_to_ring: ∀ R `{Mult R} `{Plus R} `{One R} `{Zero R} `{Negate R}, A → R.
+    integers_to_ring: ∀ R
+      `{Ring R}, A → R.
 
 End initial_maps.
 
@@ -14,7 +15,7 @@ Class Integers A {plus mult zero one negate} `{U : IntegersToRing A} :=
   { integers_ring:> @Ring A plus mult zero one negate
   ; integers_to_ring_mor:> ∀ `{Ring B}, SemiRing_Morphism (integers_to_ring A B)
   ; integers_initial: forall `{Ring B} {h : A -> B} `{!SemiRing_Morphism h},
-    integers_to_ring A B = h }.
+      integers_to_ring A B = h }.
 
 Section specializable.
   Context (Z N : Type) `{Integers Z} `{Naturals N}.

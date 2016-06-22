@@ -49,6 +49,7 @@ Section join_semilattice_order.
   Instance join_sl_order_join_sl: JoinSemiLattice L.
   Proof.
   repeat split.
+  - apply _.
   - intros x y z. apply (antisymmetry (≤)).
     + apply join_lub.
       * apply join_ub_3_l.
@@ -187,6 +188,7 @@ Section meet_semilattice_order.
   Instance meet_sl_order_meet_sl: MeetSemiLattice L.
   Proof.
   repeat split.
+  - apply _.
   - intros x y z. apply (antisymmetry (≤)).
     + apply meet_glb.
       * apply meet_glb.
@@ -328,6 +330,7 @@ Section join_sl_order_alt.
   Lemma alt_Build_JoinSemiLatticeOrder : JoinSemiLatticeOrder (≤).
   Proof.
   repeat split.
+  - apply _.
   - intros x.
     apply le_correct. apply binary_idempotent.
   - intros x y z E1 E2.
@@ -359,6 +362,7 @@ Section meet_sl_order_alt.
   Lemma alt_Build_MeetSemiLatticeOrder : MeetSemiLatticeOrder (≤).
   Proof.
   repeat split.
+  - apply _.
   - intros ?. apply le_correct. apply (idempotency _ _).
   - intros ? ? ? E1 E2.
     apply le_correct in E1;apply le_correct in E2;apply le_correct.

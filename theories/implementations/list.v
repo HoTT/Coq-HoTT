@@ -57,9 +57,8 @@ Qed.
 
 Instance sg_op_app A : SgOp (list A) := @app A.
 
-Instance app_assoc A : SemiGroup (list A).
+Instance app_assoc A : Associative (@app A).
 Proof.
-split. change sg_op with (@app A).
 intros l1. induction l1 as [|x l1 IH];intros l2 l3.
 - reflexivity.
 - simpl;apply ap;apply IH.

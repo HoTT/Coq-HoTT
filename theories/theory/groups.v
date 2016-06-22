@@ -94,15 +94,16 @@ Section groupmor_props.
 End groupmor_props.
 
 Section from_another_sg.
-  Context `{SemiGroup A} {B}
+  Context `{SemiGroup A} `{IsHSet B}
    `{Bop : SgOp B} (f : B → A) `{!Injective f}
    (op_correct : ∀ x y, f (x & y) = f x & f y).
 
   Lemma projected_sg: SemiGroup B.
   Proof.
   split.
-  repeat intro; apply (injective f).
-  rewrite !op_correct. apply associativity.
+  - apply _.
+  - repeat intro; apply (injective f).
+    rewrite !op_correct. apply associativity.
   Qed.
 End from_another_sg.
 
@@ -123,7 +124,7 @@ Section from_another_com.
 End from_another_com.
 
 Section from_another_com_sg.
-  Context `{CommutativeSemiGroup A} {B}
+  Context `{CommutativeSemiGroup A} `{IsHSet B}
    `{Bop : SgOp B} (f : B → A) `{!Injective f}
    (op_correct : ∀ x y, f (x & y) = f x & f y).
 
@@ -136,7 +137,7 @@ Section from_another_com_sg.
 End from_another_com_sg.
 
 Section from_another_monoid.
-  Context `{Monoid A} {B}
+  Context `{Monoid A} `{IsHSet B}
    `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B → A) `{!Injective f}
    (op_correct : ∀ x y, f (x & y) = f x & f y) (unit_correct : f mon_unit = mon_unit).
 
@@ -154,9 +155,10 @@ Section from_another_monoid.
 End from_another_monoid.
 
 Section from_another_com_monoid.
-  Context `{CommutativeMonoid A} {B}
+  Context `{CommutativeMonoid A} `{IsHSet B}
    `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B → A) `{!Injective f}
-   (op_correct : ∀ x y, f (x & y) = f x & f y) (unit_correct : f mon_unit = mon_unit).
+   (op_correct : ∀ x y, f (x & y) = f x & f y)
+   (unit_correct : f mon_unit = mon_unit).
 
   Lemma projected_com_monoid: CommutativeMonoid B.
   Proof.
@@ -167,9 +169,11 @@ Section from_another_com_monoid.
 End from_another_com_monoid.
 
 Section from_another_group.
-  Context `{Group A} {B}
-   `{Bop : SgOp B} `{Bunit : MonUnit B} `{Bnegate : Negate B} (f : B → A) `{!Injective f}
-   (op_correct : ∀ x y, f (x & y) = f x & f y) (unit_correct : f mon_unit = mon_unit)
+  Context `{Group A} `{IsHSet B}
+   `{Bop : SgOp B} `{Bunit : MonUnit B} `{Bnegate : Negate B}
+   (f : B → A) `{!Injective f}
+   (op_correct : ∀ x y, f (x & y) = f x & f y)
+   (unit_correct : f mon_unit = mon_unit)
    (negate_correct : ∀ x, f (-x) = -f x).
 
   Lemma projected_group: Group B.
@@ -186,9 +190,11 @@ Section from_another_group.
 End from_another_group.
 
 Section from_another_ab_group.
-  Context `{AbGroup A} {B}
-   `{Bop : SgOp B} `{Bunit : MonUnit B} `{Bnegate : Negate B} (f : B → A) `{!Injective f}
-   (op_correct : ∀ x y, f (x & y) = f x & f y) (unit_correct : f mon_unit = mon_unit)
+  Context `{AbGroup A} `{IsHSet B}
+   `{Bop : SgOp B} `{Bunit : MonUnit B} `{Bnegate : Negate B}
+   (f : B → A) `{!Injective f}
+   (op_correct : ∀ x y, f (x & y) = f x & f y)
+   (unit_correct : f mon_unit = mon_unit)
    (negate_correct : ∀ x, f (-x) = -f x).
 
   Lemma projected_ab_group: AbGroup B.

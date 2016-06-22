@@ -29,6 +29,7 @@ Qed.
 Instance: BoundedJoinSemiLattice Bool.
 Proof.
 repeat split.
+- apply _.
 - apply orb_assoc.
 - exact orb_false_r.
 - apply orb_comm.
@@ -53,6 +54,7 @@ Qed.
 Instance: MeetSemiLattice Bool.
 Proof.
 repeat split.
+- apply _.
 - apply andb_assoc.
 - apply andb_comm.
 - apply andb_diag.

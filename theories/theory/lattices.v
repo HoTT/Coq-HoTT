@@ -111,7 +111,7 @@ Section lower_bounded_lattice.
 End lower_bounded_lattice.
 
 Section from_another_sl.
-  Context `{SemiLattice A}
+  Context `{SemiLattice A} `{IsHSet B}
    `{Bop : SgOp B} (f : B → A) `{!Injective f}
    (op_correct : ∀ x y, f (x & y) = f x & f y).
 
@@ -125,7 +125,7 @@ Section from_another_sl.
 End from_another_sl.
 
 Section from_another_bounded_sl.
-  Context `{BoundedSemiLattice A}
+  Context `{BoundedSemiLattice A} `{IsHSet B}
    `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B → A) `{!Injective f}
    (op_correct : ∀ x y, f (x & y) = f x & f y)
    (unit_correct : f mon_unit = mon_unit).

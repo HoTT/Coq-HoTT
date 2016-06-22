@@ -114,6 +114,7 @@ Qed.
 Instance: PartialOrder nat_le.
 Proof.
 repeat split.
+- apply _.
 - exists 0. apply rings.plus_0_r.
 - hnf. intros a b c [d Ed] [e Ee].
   rewrite <-Ee, <-Ed.

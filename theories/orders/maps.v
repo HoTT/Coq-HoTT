@@ -206,11 +206,12 @@ Section order_preserving_ops.
   Qed.
 End order_preserving_ops.
 
-Lemma projected_partial_order `{Ale : Le A} `{Ble : Le B}
+Lemma projected_partial_order `{IsHSet A} `{Ale : Le A} `{Ble : Le B}
   (f : A → B) `{!Injective f} `{!PartialOrder Ble}
   : (∀ x y, x ≤ y ↔ f x ≤ f y) → PartialOrder Ale.
 Proof.
 intros P. repeat split.
+- apply _.
 - intros x. apply P. apply reflexivity.
 - intros x y z E1 E2. apply P.
   transitivity (f y); apply P;trivial.

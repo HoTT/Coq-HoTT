@@ -4,9 +4,12 @@ Require
 Require Import
   HoTTClasses.interfaces.abstract_algebra.
 
-Definition is_ne_0 `(x : R) `{Zero R} `{p : PropHolds (x ≠ 0)} : x ≠ 0 := p.
-Definition is_nonneg `(x : R) `{Le R} `{Zero R} `{p : PropHolds (0 ≤ x)} : 0 ≤ x := p.
-Definition is_pos `(x : R) `{Lt R} `{Zero R} `{p : PropHolds (0 < x)} : 0 < x := p.
+Definition is_ne_0 `(x : R) `{Zero R} `{p : PropHolds (x ≠ 0)}
+  : x ≠ 0 := p.
+Definition is_nonneg `(x : R) `{Le R} `{Zero R} `{p : PropHolds (0 ≤ x)}
+  : 0 ≤ x := p.
+Definition is_pos `(x : R) `{Lt R} `{Zero R} `{p : PropHolds (0 < x)}
+  : 0 < x := p.
 
 (* Lemma stdlib_semiring_theory R `{SemiRing R}
   : Ring_theory.semi_ring_theory 0 1 (+) (.*.) (=).
@@ -19,11 +22,13 @@ Qed.
 Section cancellation.
   Context `(op : A → A → A) `{!Zero A}.
 
-  Lemma left_cancellation_ne_0 `{∀ z, PropHolds (z ≠ 0) → LeftCancellation op z} z
+  Lemma left_cancellation_ne_0
+    `{∀ z, PropHolds (z ≠ 0) → LeftCancellation op z} z
     : z ≠ 0 → LeftCancellation op z.
   Proof. auto. Qed.
 
-  Lemma right_cancellation_ne_0 `{∀ z, PropHolds (z ≠ 0) → RightCancellation op z} z
+  Lemma right_cancellation_ne_0
+    `{∀ z, PropHolds (z ≠ 0) → RightCancellation op z} z
     : z ≠ 0 → RightCancellation op z.
   Proof. auto. Qed.
 
@@ -40,7 +45,8 @@ End cancellation.
 Section strong_cancellation.
   Context `{IsApart A} (op : A → A → A).
 
-  Lemma strong_right_cancel_from_left `{!Commutative op} `{!StrongLeftCancellation op z}
+  Lemma strong_right_cancel_from_left `{!Commutative op} 
+    `{!StrongLeftCancellation op z}
     : StrongRightCancellation op z.
   Proof.
   intros x y E.
@@ -173,7 +179,8 @@ Section semiringmor_props.
 End semiringmor_props.
 
 (* Due to bug #2528 *)
-Hint Extern 12 (PropHolds (_ _ ≠ 0)) => eapply @injective_ne_0 : typeclass_instances.
+Hint Extern 12 (PropHolds (_ _ ≠ 0)) =>
+  eapply @injective_ne_0 : typeclass_instances.
 
 (* Lemma stdlib_ring_theory R `{Ring R} :
   Ring_theory.ring_theory 0 1 (+) (.*.) (λ x y, x - y) (-) (=).
@@ -302,7 +309,8 @@ Section ring_props.
   Proof.
   split; intros E.
   - apply (injective (-)). rewrite negate_mult_distr_l, negate_0. trivial.
-  - apply (injective (-)). rewrite negate_mult_distr_l, negate_involutive, negate_0.
+  - apply (injective (-)).
+    rewrite negate_mult_distr_l, negate_involutive, negate_0.
     trivial.
   Qed.
 
@@ -324,7 +332,8 @@ Section ring_props.
 
   Context `{!NoZeroDivisors R} `{∀ x y:R, Stable (x = y)}.
 
-  Global Instance mult_left_cancel:  ∀ z, PropHolds (z ≠ 0) → LeftCancellation (.*.) z.
+  Global Instance mult_left_cancel:  ∀ z, PropHolds (z ≠ 0) →
+    LeftCancellation (.*.) z.
   Proof.
   intros z z_nonzero x y E.
   apply stable.
@@ -336,7 +345,8 @@ Section ring_props.
     apply mult_0_r.
   Qed.
 
-  Global Instance mult_right_cancel: ∀ z, PropHolds (z ≠ 0) → RightCancellation (.*.) z.
+  Global Instance mult_right_cancel: ∀ z, PropHolds (z ≠ 0) →
+    RightCancellation (.*.) z.
   Proof.
   intros ? ?.
   apply (right_cancel_from_left (.*.)).
@@ -366,7 +376,8 @@ Section integral_domain_props.
 End integral_domain_props.
 
 (* Due to bug #2528 *)
-Hint Extern 6 (PropHolds (1 ≶ 0)) => eapply @intdom_nontrivial_apart : typeclass_instances.
+Hint Extern 6 (PropHolds (1 ≶ 0)) =>
+  eapply @intdom_nontrivial_apart : typeclass_instances.
 
 Section ringmor_props.
   Context `{Ring A} `{Ring B} `{!SemiRing_Morphism (f : A → B)}.
@@ -393,7 +404,7 @@ Section ringmor_props.
 End ringmor_props.
 
 Section from_another_ring.
-  Context `{Ring A} {B}
+  Context `{Ring A} `{IsHSet B}
    `{Bplus : Plus B} `{Zero B} `{Bmult : Mult B} `{One B} `{Bnegate : Negate B}
     (f : B → A) `{!Injective f}
     (plus_correct : ∀ x y, f (x + y) = f x + f y) (zero_correct : f 0 = 0)
@@ -405,7 +416,8 @@ Section from_another_ring.
   split.
   - apply (groups.projected_ab_group f);assumption.
   - apply (groups.projected_com_monoid f mult_correct one_correct);assumption.
-  - repeat intro; apply (injective f). rewrite plus_correct, !mult_correct, plus_correct.
+  - repeat intro; apply (injective f).
+    rewrite plus_correct, !mult_correct, plus_correct.
     apply distribute_l.
   Qed.
 End from_another_ring.

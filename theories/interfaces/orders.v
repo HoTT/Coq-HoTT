@@ -18,7 +18,8 @@ usual properties like Trichotomy (<) and TotalRelation (≤).
 *)
 
 Class PartialOrder `(Ale : Le A) :=
-  { po_preorder:> PreOrder (≤)
+  { po_hset :> IsHSet A
+  ; po_preorder:> PreOrder (≤)
   ; po_antisym:> AntiSymmetric (≤) }.
 
 Class TotalOrder `(Ale : Le A) :=

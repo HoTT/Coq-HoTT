@@ -408,7 +408,7 @@ Definition opp_compute q : - (class q) = class (SRPair.opp _ q)
 
 Global Instance: Ring R.
 Proof.
-repeat split;
+repeat split;try apply _;
 first [change sg_op with mult; change mon_unit with 1|
        change sg_op with plus; change mon_unit with 0];hnf.
 - apply (R_ind3 _).
@@ -494,7 +494,7 @@ Section with_semiring_order.
 
   Instance: PartialOrder (le:Le R).
   Proof.
-  split;[split|].
+  split;[apply _|split|].
   - hnf. apply (R_ind _ _).
     intros. change (SRle x x). red. reflexivity.
   - hnf. apply (R_ind3 _ (fun _ _ _ => _ -> _ -> _)).
@@ -686,6 +686,7 @@ Section with_full_pseudo_semiring_order.
   Instance: IsApart R.
   Proof.
   split.
+  - apply _.
   - apply _.
   - hnf. apply (R_ind2 _ (fun _ _ => _ -> _)).
     intros [pa na] [pb nb];rewrite !Rapart_def;unfold SRapart;simpl.

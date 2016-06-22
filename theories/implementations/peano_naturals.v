@@ -127,18 +127,6 @@ hnf. intros a;induction a as [|a IHa].
   rewrite <-IHa. rewrite (mul_comm b c). reflexivity.
 Qed.
 
-Global Instance nat_semiring : SemiRing@{N} nat.
-Proof.
-repeat (split; try apply _);
-first [change sg_op with plus; change mon_unit with 0
-      |change sg_op with mult; change mon_unit with 1].
-- exact add_0_r.
-- exact add_0_r.
-- hnf;simpl_nat. intros a.
-  rewrite mul_S_r,mul_0_r. apply add_0_r.
-Qed.
-
-(* misc *)
 Global Instance S_neq_0 x : PropHolds (~ S x =N= 0).
 Proof.
 intros E.
@@ -165,6 +153,17 @@ hnf. intros a;induction a as [|a IHa].
     * left. apply ap;trivial.
     * right;intros E. apply (injective S) in E. auto.
 Defined.
+
+Global Instance nat_semiring : SemiRing@{N} nat.
+Proof.
+repeat (split; try apply _);
+first [change sg_op with plus; change mon_unit with 0
+      |change sg_op with mult; change mon_unit with 1].
+- exact add_0_r.
+- exact add_0_r.
+- hnf;simpl_nat. intros a.
+  rewrite mul_S_r,mul_0_r. apply add_0_r.
+Qed.
 
 (* Add Ring nat: (rings.stdlib_semiring_theory nat). *)
 
@@ -384,6 +383,7 @@ Qed.
 Local Instance nat_le_po : PartialOrder nat_le.
 Proof.
 repeat split.
+- apply _.
 - hnf;intros; constructor.
 - hnf. intros a b c E1 E2.
   apply le_exists in E1;apply le_exists in E2.

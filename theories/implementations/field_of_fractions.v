@@ -346,9 +346,10 @@ Qed.
 
 Global Instance: Ring F.
 Proof.
-repeat (split);
+repeat split;
 first [change sg_op with mult; change mon_unit with 1|
        change sg_op with plus; change mon_unit with 0].
+- apply _.
 - hnf. apply (F_ind3 _).
   intros;apply path. apply Frac.pl_assoc.
 - hnf. apply (F_ind _).
@@ -361,6 +362,7 @@ first [change sg_op with mult; change mon_unit with 1|
   rewrite (commutativity (f:=plus)).
   revert x;apply (F_ind _).
   intros;apply path, Frac.pl_neg_l.
+- apply _.
 - apply _.
 - hnf; apply (F_ind3 _).
   intros;apply path, Frac.ml_assoc.
@@ -488,7 +490,7 @@ Qed.
 
 End contents.
 
-Arguments F R {_ _ _}.
+Arguments F R {_ _ _ _ _ _}.
 
 Module Lift.
 

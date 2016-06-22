@@ -25,13 +25,15 @@ End contents.
 (* Due to bug #2528 *)
 Hint Extern 3 (PropHolds (_ ≠ _)) => eapply @apart_ne : typeclass_instances.
 
-Lemma projected_strong_setoid `{IsApart B} `{Apart A} `{is_mere_relation A apart}
+Lemma projected_strong_setoid `{IsApart B} `{Apart A} `{IsHSet A}
+  `{is_mere_relation A apart}
   (f: A → B)
   (eq_correct : ∀ x y, x = y ↔ f x = f y)
   (apart_correct : ∀ x y, x ≶ y ↔ f x ≶ f y)
     : IsApart A.
 Proof.
 split.
+- apply _.
 - apply _.
 - intros x y ap. apply apart_correct, symmetry, apart_correct.
   assumption.
@@ -182,6 +184,7 @@ Section dec_setoid.
   Global Instance dec_strong_setoid: IsApart A.
   Proof.
   split.
+  - apply _.
   - apply _.
   - intros x y ne.
     apply trivial_apart. apply trivial_apart in ne.
