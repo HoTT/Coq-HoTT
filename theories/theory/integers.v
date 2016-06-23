@@ -162,7 +162,7 @@ apply (injective (naturals_to_semiring nat Z)).
 exact E. (* because [naturals_to_semiring nat] plays nice with 1 *)
 Qed.
 
-Global Instance: ZeroProduct Z.
+Global Instance int_zero_product : ZeroProduct Z.
 Proof.
 intros x y E.
 destruct (zero_product (integers_to_ring Z (NatPair.Z nat) x)
@@ -175,5 +175,6 @@ destruct (zero_product (integers_to_ring Z (NatPair.Z nat) x)
   rewrite rings.preserves_0. trivial.
 Qed.
 
-Global Instance: IntegralDomain Z := {}.
+Global Instance int_integral_domain : IntegralDomain Z := {}.
+
 End contents.

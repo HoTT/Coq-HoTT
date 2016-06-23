@@ -233,6 +233,8 @@ End morphisms.
 End Frac.
 Import Frac.
 
+Module FracField.
+
 Section contents.
 Context `{Funext} `{Univalence} `{IntegralDomain R} `{DecidablePaths R}.
 
@@ -540,3 +542,5 @@ Qed.
 End morphisms.
 
 End Lift.
+
+End FracField.
