@@ -45,7 +45,8 @@ Ltac simpl_nat :=
 
 Local Instance add_assoc : Associative@{N} (plus : Plus nat).
 Proof.
-intros a;induction a as [|a IH];intros b c.
+hnf. apply (nat_rect@{N} (fun a => forall b c, _));[|intros a IH];
+intros b c.
 + reflexivity.
 + change ((a + (b + c)).+1 = (a + b + c).+1).
   apply ap,IH.
@@ -73,7 +74,8 @@ Proof idpath.
 
 Local Instance add_comm : Commutative@{N N} (plus : Plus nat).
 Proof.
-intros a;induction a as [|a IHa];intros b;induction b as [|b IHb].
+hnf. apply (nat_rect@{N} (fun a => forall b, _));[|intros a IHa];
+intros b;induction b as [|b IHb].
 - reflexivity.
 - change (S b = S (b + 0)). apply ap,IHb.
 - apply (ap S),IHa.
@@ -84,7 +86,8 @@ Qed.
 Local Instance add_mul_distr_l : LeftDistribute@{N}
   (mult :Mult nat) (plus:Plus nat).
 Proof.
-hnf. induction a as [|a IHa];simpl_nat.
+hnf. apply (nat_rect@{N} (fun a => forall b c, _));[|intros a IHa];
+simpl_nat.
 - intros _ _;reflexivity.
 - intros. rewrite IHa.
   rewrite <-(associativity b), (associativity c), (commutativity c),
@@ -100,7 +103,7 @@ Qed.
 
 Lemma mul_S_r : forall a b : nat, a * S b =N= a + a * b.
 Proof.
-induction a as [|a IHa];intros b;simpl_nat.
+apply (nat_rect@{N} (fun a => forall b, _));[|intros a IHa];intros b;simpl_nat.
 - reflexivity.
 - simpl_nat. rewrite IHa.
   rewrite (simple_associativity b a).
@@ -110,14 +113,14 @@ Qed.
 
 Local Instance mul_comm : Commutative@{N N} (mult : Mult nat).
 Proof.
-hnf. intros a;induction a as [|a IHa];simpl_nat.
+hnf. apply (nat_rect@{N} (fun a => forall b, _));[|intros a IHa];simpl_nat.
 - intros;apply symmetry,mul_0_r.
 - intros b;rewrite IHa. rewrite mul_S_r,<-IHa. reflexivity.
 Qed.
 
 Local Instance mul_assoc : Associative@{N} (mult : Mult nat).
 Proof.
-hnf. intros a;induction a as [|a IHa].
+hnf. apply (nat_rect@{N} (fun a => forall b c, _));[|intros a IHa].
 - intros;reflexivity.
 - unfold mult;simpl;change nat_mult with mult.
   intros b c.
@@ -143,16 +146,22 @@ Global Instance S_inj : Injective@{N N N N} S
 
 Global Instance nat_dec: DecidablePaths@{N N N} nat.
 Proof.
-hnf. intros a;induction a as [|a IHa].
+hnf.
+apply (nat_rect@{N} (fun x => forall y, _)).
 - intros [|b].
   + left;reflexivity.
   + right;apply symmetric_neq,S_neq_0.
-- intros [|b].
+- intros a IHa [|b].
   + right;apply S_neq_0.
   + destruct (IHa b).
     * left. apply ap;trivial.
     * right;intros E. apply (injective S) in E. auto.
 Defined.
+
+Global Instance nat_set : IsTrunc@{N} 0 nat.
+Proof.
+apply hset_pathcoll, pathcoll_decpaths, nat_dec.
+Qed.
 
 Global Instance nat_semiring : SemiRing@{N} nat.
 Proof.
@@ -175,7 +184,7 @@ Global Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
 
 Section for_another_semiring.
   Universe U.
-  Context `{SemiRing@{U} R}.
+  Context {R:Type@{U} } `{SemiRing@{U} R}.
 
   Notation toR := (naturals_to_semiring nat R).
 
@@ -216,7 +225,8 @@ Section for_another_semiring.
     apply commutativity.
   Qed.
 
-  Global Instance: SemiRing_Morphism (naturals_to_semiring nat R).
+  Global Instance nat_to_sr_morphism
+    : SemiRing_Morphism (naturals_to_semiring nat R).
   Proof.
   repeat (split;try apply _);trivial.
   Qed.

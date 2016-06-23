@@ -31,9 +31,9 @@ Arguments SR_one !_ /.
 
 
 Section contents.
-
+Universe U V.
 Context `{Funext} `{Univalence}.
-Context (A B : Operations).
+Context (A B : Operations@{U V}).
 
 Context (f : A -> B) `{!IsEquiv f} `{!SemiRing_Morphism f}.
 
@@ -62,7 +62,8 @@ Qed.
 
 Lemma iso_leibnitz : forall P : Operations -> Type, P A -> P B.
 Proof.
-rewrite iso_same_semirings. trivial.
+intros P;apply transport.
+exact iso_same_semirings.
 Qed.
 
 End contents.

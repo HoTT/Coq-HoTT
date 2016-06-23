@@ -104,7 +104,7 @@ Definition Z_one_pair : @paths Z 1 (@cast N Z _ 1) := idpath.
 
 Local Instance Z_ring : Ring Z := _.
 
-Global Instance : SemiRing_Morphism (cast N Z) := _.
+Global Instance N_to_Z_morphism : SemiRing_Morphism (cast N Z) := _.
 Global Instance : Injective (cast N Z) := _.
 
 Definition Npair_splits : forall n m, ' (SRPair.C n m) = ' n - ' m
@@ -162,9 +162,6 @@ Section for_another_ring.
   Notation n_to_sr := (naturals_to_semiring N R).
   Notation z_to_r := (integers_to_ring Z R).
 
-  Ltac derive_preservation f := unfold integers_to_ring; simpl;
-    preservation f; ring_with_nat.
-
   Let preserves_plus : forall x y, z_to_r (x + y) = z_to_r x + z_to_r y.
   Proof.
   apply (Z_ind2 _).
@@ -198,7 +195,7 @@ Section for_another_ring.
   rewrite negate_0,plus_0_r;split.
   Qed.
 
-  Global Instance: SemiRing_Morphism z_to_r.
+  Global Instance z_to_ring_morphism : SemiRing_Morphism z_to_r.
   Proof.
   repeat (split; try apply _).
   - exact preserves_plus.
@@ -212,7 +209,7 @@ Section for_another_ring.
 
     Definition g : N → R := f ∘ cast N Z.
 
-    Instance: SemiRing_Morphism g.
+    Instance : SemiRing_Morphism g.
     Proof. unfold g. repeat (split; try apply _). Qed.
 
     Lemma same_morphism : forall x, z_to_r x = f x.
@@ -405,6 +402,7 @@ destruct (int_abs_sig Z N x) as [[a Ea]|[a Ea]],
     apply (injective negate).
     rewrite negate_0,<-Eb;trivial.
 Qed.
+
 End contents.
 
 End NatPair.

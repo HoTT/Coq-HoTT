@@ -120,27 +120,27 @@ intros q1 q2 E.
 rewrite !(plus_comm (neg _)). symmetry. apply E.
 Qed.
 
-Context `{Le SR} `{Lt SR} `{is_mere_relation SR le} `{is_mere_relation SR lt}.
-Context `{Apart SR} `{is_mere_relation SR apart}.
-
-Definition SRle : Le (SRpair SR)
+Definition SRle `{Le SR} : Le (SRpair SR)
   := fun a b => pos a + neg b <= pos b + neg a.
-Definition SRlt : Lt (SRpair SR)
+Definition SRlt `{Lt SR} : Lt (SRpair SR)
   := fun a b => pos a + neg b < pos b + neg a.
-Definition SRapart : Apart (SRpair SR)
+Definition SRapart `{Apart SR} : Apart (SRpair SR)
   := fun a b => apart (pos a + neg b) (pos b + neg a).
 
-Global Instance : is_mere_relation (SRpair SR) SRle.
+Global Instance SRle_hprop `{Le SR} `{is_mere_relation SR le}
+  : is_mere_relation (SRpair SR) SRle.
 Proof.
 intros;unfold SRle;apply _.
 Qed.
 
-Global Instance : is_mere_relation (SRpair SR) SRlt.
+Global Instance SRlt_hprop `{Lt SR} `{is_mere_relation SR lt}
+  : is_mere_relation (SRpair SR) SRlt.
 Proof.
 intros;unfold SRlt;apply _.
 Qed.
 
-Global Instance : is_mere_relation (SRpair SR) SRapart.
+Global Instance SRapart_hprop `{Apart SR} `{is_mere_relation SR apart}
+  : is_mere_relation (SRpair SR) SRapart.
 Proof.
 intros;unfold SRlt;apply _.
 Qed.
@@ -296,7 +296,7 @@ Definition R := quotient equiv.
 
 Global Instance class : Cast (SRpair SR) R := class_of _.
 
-Global Instance: Cast SR R := compose class (SRpair_inject _).
+Global Instance SR_to_R : Cast SR R := compose class (SRpair_inject _).
 
 Definition path {x y} : equiv x y -> class x = class y := related_classes_eq _.
 
@@ -449,8 +449,10 @@ first [change sg_op with mult; change mon_unit with 1|
 Qed.
 
 (* A final word about inject *)
-Global Instance: SemiRing_Morphism (cast SR R).
+Global Instance SR_to_R_morphism : SemiRing_Morphism (cast SR R).
 Proof.
+(* This produces less universes. *)
+pose proof R_ring.
 repeat (constructor; try apply _).
 - intros x y.
   apply path. red. simpl. ring_with_nat.

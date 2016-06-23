@@ -109,9 +109,9 @@ Section contents.
 Universe U.
 
 (* {U U} because we do forall n : N, {id} n = nat_to_sr N N n *)
-Context `{Funext} `{Univalence} `{Naturals@{U U} N}.
+Context `{Funext} `{Univalence} {N : Type@{U} } `{Naturals@{U U} N}.
 
-Lemma from_nat_stmt  N' `{Naturals@{U U} N'}
+Lemma from_nat_stmt  (N':Type@{U}) `{Naturals@{U U} N'}
   : forall (P : SemiRings.Operations -> Type),
   P (SemiRings.BuildOperations N') -> P (SemiRings.BuildOperations N).
 Proof.
