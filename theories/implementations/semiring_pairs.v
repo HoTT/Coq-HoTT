@@ -449,7 +449,7 @@ first [change sg_op with mult; change mon_unit with 1|
 Qed.
 
 (* A final word about inject *)
-Global Instance SR_to_R_morphism : SemiRing_Morphism (cast SR R).
+Lemma SR_to_R_morphism_aux : SemiRing_Morphism (cast SR R).
 Proof.
 (* This produces less universes. *)
 pose proof R_ring.
@@ -460,10 +460,16 @@ repeat (constructor; try apply _).
   ring_with_nat.
 Qed.
 
-Global Instance: Injective (cast SR R).
+Global Instance SR_to_R_morphism@{Uop}
+  : @SemiRing_Morphism _ _ _ _ _ _ pl@{Uop} ml@{Uop} _ _ (cast SR R).
+Proof.
+exact (SR_to_R_morphism_aux@{Uop Uop Uop Uop Uop Uop Uop Uop Uop}).
+Qed.
+
+Global Instance SR_to_R_injective : Injective (cast SR R).
 Proof.
 split.
-intros x y E. apply related_path in E.
+intros x y E. apply related_path@{i i j} in E.
 red in E. simpl in E. rewrite 2!plus_0_r in E. trivial.
 Qed.
 

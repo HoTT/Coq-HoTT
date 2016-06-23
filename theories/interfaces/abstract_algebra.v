@@ -259,15 +259,12 @@ Section morphism_classes.
 End morphism_classes.
 
 Section jections.
-  Context {A B} {Aap : Apart A} 
-    {Bap : Apart B} (f : A → B) `{inv : !Inverse f}.
-
-  Class StrongInjective :=
-    { strong_injective : ∀ x y, x ≶ y → f x ≶ f y
-    ; strong_injective_mor : StrongMorphism f }.
+  Context {A B} (f : A → B).
 
   Class Injective :=
     { injective : ∀ x y, f x = f y → x = y }.
+
+  Context `{inv : !Inverse f}.
 
   Class Surjective :=
     { surjective : f ∘ (f ⁻¹) = id (* a.k.a. "split-epi" *) }.
@@ -276,6 +273,13 @@ Section jections.
     { bijective_injective :> Injective
     ; bijective_surjective :> Surjective }.
 End jections.
+
+Section strong_injective.
+  Context {A B} {Aap : Apart A} {Bap : Apart B} (f : A -> B) .
+  Class StrongInjective :=
+    { strong_injective : ∀ x y, x ≶ y → f x ≶ f y
+    ; strong_injective_mor : StrongMorphism f }.
+End strong_injective.
 
 Section extras.
 

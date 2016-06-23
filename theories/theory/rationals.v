@@ -121,6 +121,8 @@ Definition rationals_to_rationals_aux Z `{Integers Z}
   := (rationals_to_frac Q2 Z)⁻¹ ∘
     rationals_to_frac Q1 Z.
 (* wtf is even going on *)
+End Univ.
+(* 
 Definition rationals_to_rationals
   : forall Q1 Q2 `{Rationals Q1} `{Rationals Q2}, Q1 → Q2
   := rationals_to_rationals_aux (NatPair.Z nat).
@@ -279,3 +281,4 @@ Section alt_Build_Rationals.
   Lemma alt_Build_Rationals: Rationals F.
   Proof. split; intros; apply _. Qed.
 End alt_Build_Rationals.
+ *)

@@ -21,7 +21,7 @@ Require Import
 Module NatPair.
 
 Section contents.
-Context `{Funext} `{Univalence} N `{Naturals N}.
+Context `{Funext} `{Univalence} N `{Naturals@{N N} N}.
 (* Add Ring N : (rings.stdlib_semiring_theory N). *)
 
 Notation Npair := (SRPair.SRpair N).

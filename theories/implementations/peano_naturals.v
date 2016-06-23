@@ -141,7 +141,7 @@ Qed.
 
 Definition pred x := match x with | 0 => 0 | S k => k end.
 
-Global Instance S_inj : Injective@{N N N N} S
+Global Instance S_inj : Injective@{N N} S
   := { injective := fun a b E => ap pred E }.
 
 Global Instance nat_dec: DecidablePaths@{N N N} nat.
