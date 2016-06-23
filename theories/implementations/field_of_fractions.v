@@ -236,7 +236,10 @@ Import Frac.
 Module FracField.
 
 Section contents.
-Context `{Funext} `{Univalence} `{IntegralDomain R} `{DecidablePaths R}.
+(* NB: we need a separate IsHSet instance
+   so we don't need to depend on everything to define F. *)
+Context `{Funext} `{Univalence} `{IsHSet R} `{IntegralDomain R}
+  `{DecidablePaths R}.
 
 Instance: forall f, PropHolds (~ den f = 0) := den_ne_0.
 
@@ -453,6 +456,21 @@ split;try apply _.
   apply mult_comm.
 Qed.
 
+Lemma dec_class : forall q r, Decidable (class q = class r).
+Proof.
+intros q r.
+destruct (decide (equiv q r)) as [E|E].
+- left. apply path,E.
+- right. intros E'.
+  apply E. apply (classes_eq_related _ _ E').
+Defined.
+
+Global Instance F_dec : DecidablePaths F.
+Proof.
+hnf. apply (F_ind2 _).
+apply dec_class.
+Qed.
+
 Lemma mult_num_den q :
   class q = ('num q) / 'den q.
 Proof.
@@ -492,7 +510,7 @@ Qed.
 
 End contents.
 
-Arguments F R {_ _ _ _ _ _}.
+Arguments F R {_ _ _}.
 
 Module Lift.
 

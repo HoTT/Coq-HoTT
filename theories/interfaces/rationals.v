@@ -6,7 +6,6 @@ Require Import
   HoTTClasses.theory.integers.
 
 Section contents.
-Context `{Funext} `{Univalence}.
 
 Section rationals_to_frac.
   Context (A : Type).
@@ -25,6 +24,7 @@ Therefore we provide a way (theory.rationals.alt_Build_Rationals) to construct
 a rationals implementation if the required properties hold for some specific
 implementation of the integers.
 *)
+Context `{Funext} `{Univalence}.
 
 Class Rationals A {plus mult zero one neg recip} `{U : !RationalsToFrac A} :=
   { rationals_field:> @DecField A plus mult zero one neg recip

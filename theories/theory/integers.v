@@ -136,7 +136,7 @@ Proof.
 apply Rings.iso_leibnitz with (integers_to_ring Z' Z);apply _.
 Qed.
 
-Global Instance : DecidablePaths Z.
+Global Instance int_dec : DecidablePaths Z | 10.
 Proof.
 apply decidablepaths_equiv with (NatPair.Z nat)
   (integers_to_ring (NatPair.Z nat) Z);apply _.
