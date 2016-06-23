@@ -8,28 +8,32 @@ Require Export
   HoTTClasses.interfaces.abstract_algebra.
 Require Import HoTTClasses.theory.rings.
 
-Class SemiRingOperations
-  := semiringoperations : sigT (fun T => Plus T * Mult T * Zero T * One T)%type.
 
-Definition BuildSemiRingOperations (T : Type) `{Plus T} `{Mult T} `{Zero T} `{One T}
-  : SemiRingOperations
+Module SemiRings.
+
+Class Operations
+  := operations : sigT (fun T => Plus T * Mult T * Zero T * One T)%type.
+
+Definition BuildOperations (T : Type) `{Plus T} `{Mult T} `{Zero T} `{One T}
+  : Operations
   := existT _ T (plus,mult,zero,one).
 
-Coercion SR_carrier (s : SemiRingOperations) : Type := s.1.
-Instance SR_plus (s : SemiRingOperations) : Plus s := fst (fst (fst s.2)).
-Instance SR_mult (s : SemiRingOperations) : Mult s := snd (fst (fst s.2)).
-Instance SR_zero (s : SemiRingOperations) : Zero s := snd (fst s.2).
-Instance SR_one (s : SemiRingOperations) : One s := snd s.2.
+Coercion SR_carrier (s : Operations) : Type := s.1.
+Instance SR_plus (s : Operations) : Plus s := fst (fst (fst s.2)).
+Instance SR_mult (s : Operations) : Mult s := snd (fst (fst s.2)).
+Instance SR_zero (s : Operations) : Zero s := snd (fst s.2).
+Instance SR_one (s : Operations) : One s := snd s.2.
 
 Arguments SR_plus !_ / _ _.
 Arguments SR_mult !_ / _ _.
 Arguments SR_zero !_ /.
 Arguments SR_one !_ /.
 
-Section iso.
+
+Section contents.
 
 Context `{Funext} `{Univalence}.
-Context (A B : SemiRingOperations).
+Context (A B : Operations).
 
 Context (f : A -> B) `{!IsEquiv f} `{!SemiRing_Morphism f}.
 
@@ -56,9 +60,78 @@ rewrite transport_path_universe, ?transport_path_universe_V.
 - apply preserves_1.
 Qed.
 
-Lemma iso_leibnitz : forall P : SemiRingOperations -> Type, P A -> P B.
+Lemma iso_leibnitz : forall P : Operations -> Type, P A -> P B.
 Proof.
 rewrite iso_same_semirings. trivial.
 Qed.
 
-End iso.
+End contents.
+
+End SemiRings.
+
+Module Rings.
+
+Class Operations
+  := operations : sigT (fun T => Plus T * Mult T * Zero T * One T * Negate T)%type.
+
+Definition BuildOperations (T : Type)
+  `{Plus T} `{Mult T} `{Zero T} `{One T} `{Negate T}
+  : Operations
+  := existT _ T (plus,mult,zero,one,negate).
+
+Coercion R_carrier (s : Operations) : Type := s.1.
+Instance R_plus (s : Operations) : Plus s := fst (fst (fst (fst s.2))).
+Instance R_mult (s : Operations) : Mult s := snd (fst (fst (fst s.2))).
+Instance R_zero (s : Operations) : Zero s := snd (fst (fst s.2)).
+Instance R_one (s : Operations) : One s := snd (fst s.2).
+Instance R_negate (s : Operations) : Negate s := snd s.2.
+
+Arguments R_plus !_ / _ _.
+Arguments R_mult !_ / _ _.
+Arguments R_zero !_ /.
+Arguments R_one !_ /.
+Arguments R_negate !_ / _.
+
+Section contents.
+
+Context `{Funext} `{Univalence}.
+Context (A B : Operations).
+
+Context (f : A -> B) `{!IsEquiv f} `{!Ring A} `{!Ring B} `{!SemiRing_Morphism f}.
+
+Lemma iso_same_rings : A = B.
+Proof.
+apply path_sigma_uncurried.
+destruct A as [TA [[[[plA mlA] zA] uA] nA]],
+  B as [TB [[[[plB mlB] zB] uB] nB]];simpl in *.
+change plA with (@plus TA plA);change plB with (@plus TB plB);
+change mlA with (@mult TA mlA);change mlB with (@mult TB mlB);
+change zA with (@zero TA zA);change zB with (@zero TB zB);
+change uA with (@one TA uA);change uB with (@one TB uB);
+change nA with (@negate TA nA);change nB with (@negate TB nB).
+exists (path_universe f).
+rewrite !transport_prod;simpl.
+unfold Plus,Mult,Zero,One,Negate.
+repeat apply path_prod;simpl;try
+( apply path_forall;intros x;rewrite transport_arrow;
+  try (apply path_forall;intros y;rewrite transport_arrow));
+rewrite transport_path_universe, ?transport_path_universe_V.
+- rewrite (preserves_plus (f:=f)).
+  apply ap2;apply eisretr.
+- rewrite (preserves_mult (f:=f)).
+  apply ap2;apply eisretr.
+- apply preserves_0.
+- apply preserves_1.
+- rewrite (preserves_negate (f:=f)).
+  apply ap,eisretr.
+Qed.
+
+Lemma iso_leibnitz : forall P : Operations -> Type, P A -> P B.
+Proof.
+rewrite iso_same_rings. trivial.
+Qed.
+
+End contents.
+
+
+End Rings.

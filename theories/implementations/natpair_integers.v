@@ -18,8 +18,10 @@ Require Import
  HoTTClasses.tactics.ring_tac
  HoTTClasses.theory.rings.
 
+Module NatPair.
+
 Section contents.
-Context `{Funext} `{Univalence} `{Naturals N}.
+Context `{Funext} `{Univalence} N `{Naturals N}.
 (* Add Ring N : (rings.stdlib_semiring_theory N). *)
 
 Notation Npair := (SRPair.SRpair N).
@@ -404,3 +406,5 @@ destruct (int_abs_sig Z N x) as [[a Ea]|[a Ea]],
     rewrite negate_0,<-Eb;trivial.
 Qed.
 End contents.
+
+End NatPair.

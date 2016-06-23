@@ -85,7 +85,7 @@ Section retract_is_nat.
   End for_another_semirings.
 
   (* If we make this an instance, instance resolution will loop *)
-  Definition retract_is_nat : Naturals SR (U:=retract_is_nat_to_sr).
+  Lemma retract_is_nat : Naturals SR (U:=retract_is_nat_to_sr).
   Proof.
   split;try apply _.
   - unfold naturals_to_semiring, retract_is_nat_to_sr. apply _.
@@ -114,19 +114,19 @@ Context `{Funext} `{Univalence} `{Naturals@{U U} N}.
 Section borrowed_from_nat.
 
   Lemma from_nat_stmt :
-    forall P : SemiRingOperations -> Type,
-    P (BuildSemiRingOperations nat) -> P (BuildSemiRingOperations N).
+    forall P : SemiRings.Operations -> Type,
+    P (SemiRings.BuildOperations nat) -> P (SemiRings.BuildOperations N).
   Proof.
-  apply iso_leibnitz with (naturals_to_semiring nat N);apply _.
+  apply SemiRings.iso_leibnitz with (naturals_to_semiring nat N);apply _.
   Qed.
 
   Lemma induction
     : forall (P: N → Type),
     P 0 → (∀ n, P n → P (1 + n)) → ∀ n, P n.
   Proof.
-  pose (Q := fun s : SemiRingOperations =>
+  pose (Q := fun s : SemiRings.Operations =>
     forall P : s -> Type, P 0 -> (forall n, P n -> P (1 + n)) -> forall n, P n).
-  change (Q (BuildSemiRingOperations N)).
+  change (Q (SemiRings.BuildOperations N)).
   apply from_nat_stmt.
   unfold Q;clear Q.
   simpl.
