@@ -129,6 +129,13 @@ Universe U.
 Context `{Funext} `{Univalence}.
 Context `{Integers@{U U} Z}.
 
+Lemma from_int_stmt  Z' `{Integers@{U U} Z'}
+  : forall (P : Rings.Operations -> Type),
+  P (Rings.BuildOperations Z') -> P (Rings.BuildOperations Z).
+Proof.
+apply Rings.iso_leibnitz with (integers_to_ring Z' Z);apply _.
+Qed.
+
 Global Instance : DecidablePaths Z.
 Proof.
 apply decidablepaths_equiv with (NatPair.Z nat)

@@ -111,14 +111,14 @@ Universe U.
 (* {U U} because we do forall n : N, {id} n = nat_to_sr N N n *)
 Context `{Funext} `{Univalence} `{Naturals@{U U} N}.
 
-Section borrowed_from_nat.
+Lemma from_nat_stmt  N' `{Naturals@{U U} N'}
+  : forall (P : SemiRings.Operations -> Type),
+  P (SemiRings.BuildOperations N') -> P (SemiRings.BuildOperations N).
+Proof.
+apply SemiRings.iso_leibnitz with (naturals_to_semiring N' N);apply _.
+Qed.
 
-  Lemma from_nat_stmt :
-    forall P : SemiRings.Operations -> Type,
-    P (SemiRings.BuildOperations nat) -> P (SemiRings.BuildOperations N).
-  Proof.
-  apply SemiRings.iso_leibnitz with (naturals_to_semiring nat N);apply _.
-  Qed.
+Section borrowed_from_nat.
 
   Lemma induction
     : forall (P: N → Type),
@@ -127,7 +127,7 @@ Section borrowed_from_nat.
   pose (Q := fun s : SemiRings.Operations =>
     forall P : s -> Type, P 0 -> (forall n, P n -> P (1 + n)) -> forall n, P n).
   change (Q (SemiRings.BuildOperations N)).
-  apply from_nat_stmt.
+  apply (from_nat_stmt nat).
   unfold Q;clear Q.
   simpl.
   exact nat_induction.
@@ -135,7 +135,7 @@ Section borrowed_from_nat.
 
   Lemma case : forall x : N, x = 0 \/ exists y : N, (x = 1 + y)%mc.
   Proof.
-  refine (from_nat_stmt
+  refine (from_nat_stmt nat
     (fun s => forall x : s, x = 0 \/ exists y : s, (x = 1 + y)%mc) _).
   simpl. intros [|x];eauto.
   Qed.
@@ -149,7 +149,7 @@ Section borrowed_from_nat.
 
   Global Instance nat_plus_cancel_l : ∀ z : N, LeftCancellation (+) z.
   Proof.
-  refine (from_nat_stmt (fun s => forall z : s, LeftCancellation plus z) _).
+  refine (from_nat_stmt nat (fun s => forall z : s, LeftCancellation plus z) _).
   simpl. apply nat_plus_cancel_l.
   Qed.
 
@@ -158,7 +158,7 @@ Section borrowed_from_nat.
 
   Global Instance: ∀ z : N, PropHolds (z ≠ 0) → LeftCancellation (.*.) z.
   Proof.
-  refine (from_nat_stmt (fun s =>
+  refine (from_nat_stmt nat (fun s =>
     forall z : s, PropHolds (~ z = 0) -> LeftCancellation mult z) _).
   simpl. apply nat_mult_cancel_l.
   Qed.
@@ -168,7 +168,7 @@ Section borrowed_from_nat.
 
   Instance nat_nontrivial: PropHolds ((1:N) ≠ 0).
   Proof.
-  refine (from_nat_stmt (fun s => PropHolds (~ (1:s) = 0)) _).
+  refine (from_nat_stmt nat (fun s => PropHolds (~ (1:s) = 0)) _).
   apply _.
   Qed.
 
@@ -178,13 +178,14 @@ Section borrowed_from_nat.
 
   Lemma zero_sum : forall (x y : N), x + y = 0 → x = 0 ∧ y = 0.
   Proof.
-  refine (from_nat_stmt (fun s => forall x y : s, x + y = 0 -> x = 0 /\ y = 0) _).
+  refine (from_nat_stmt nat
+    (fun s => forall x y : s, x + y = 0 -> x = 0 /\ y = 0) _).
   simpl. apply plus_eq_zero.
   Qed.
 
   Lemma one_sum : forall (x y : N), x + y = 1 → (x = 1 ∧ y = 0) ∨ (x = 0 ∧ y = 1).
   Proof.
-  refine (from_nat_stmt (fun s =>
+  refine (from_nat_stmt nat (fun s =>
     forall (x y : s), x + y = 1 → (x = 1 ∧ y = 0) ∨ (x = 0 ∧ y = 1)) _).
   simpl.
   intros [|x] [|y];auto.
@@ -198,7 +199,7 @@ Section borrowed_from_nat.
 
   Global Instance: ZeroProduct N.
   Proof.
-  refine (from_nat_stmt (fun s => ZeroProduct s) _).
+  refine (from_nat_stmt nat (fun s => ZeroProduct s) _).
   simpl. red. apply mult_eq_zero.
   Qed.
 End borrowed_from_nat.
