@@ -21,18 +21,21 @@ Require Import
 Module NatPair.
 
 Section contents.
-Context `{Funext} `{Univalence} N `{Naturals@{N N} N}.
+Universe UN.
+Context `{Funext} `{Univalence} (N : Type@{UN}) `{Naturals@{UN UN} N}.
 (* Add Ring N : (rings.stdlib_semiring_theory N). *)
 
 Notation Npair := (SRPair.SRpair N).
+
 Definition Z := Completion.R N.
 
 (* Copy results from srpairs for performance / ease of calling. *)
-Global Instance Z_plus : Plus Z := _.
-Global Instance Z_mult : Mult Z := _.
+
+Global Instance Z_plus : Plus Z := Completion.pl@{UN UN} N.
+Global Instance Z_mult : Mult Z := Completion.ml@{UN UN} N.
 Global Instance Z_zero : Zero Z := _.
 Global Instance Z_one : One Z := _.
-Global Instance Z_negate : Negate Z := _.
+Global Instance Z_negate : Negate Z := Completion.opp@{UN UN} N.
 
 Global Instance Z_of_pair : Cast Npair Z := _.
 Global Instance Z_of_nat : Cast N Z := compose Z_of_pair (SRPair.SRpair_inject _).
@@ -41,7 +44,8 @@ Definition Z_eq {x y : Npair} : SRPair.equiv x y -> ' x = ' y
   := Completion.path _.
 
 Definition Z_equiv {x y : Npair} : ' x = ' y -> SRPair.equiv x y
-  := Completion.related_path _.
+  := let cancel_l := @naturals.nat_plus_cancel_l@{UN i} in
+  Completion.related_path@{UN i j j} _.
 
 Definition Z_rect : forall (P : Z -> Type) {sP : forall x, IsHSet (P x)}
   (dclass : forall x, P (' x))
@@ -54,10 +58,9 @@ Definition Z_compute P {sP} dclass dequiv x
   : @Z_rect P sP dclass dequiv (' x) = dclass x := 1.
 
 
-
-Definition Z_ind : forall (P : Z -> Type) {sP : forall x, IsHProp (P x)}
+Definition Z_ind : forall (P : Z -> Type@{i}) {sP : forall x, IsHProp (P x)}
   (dclass : forall x : Npair, P (' x)), forall x, P x
-  := Completion.R_ind _.
+  := Completion.R_ind@{UN i UN} _.
 
 Definition Z_ind2 : forall (P : Z -> Z -> Type) {sP : forall x y, IsHProp (P x y)}
   (dclass : forall x y : Npair, P (' x) (' y)), forall x y, P x y
@@ -67,7 +70,7 @@ Definition Z_ind3 : forall (P : Z -> Z -> Z -> Type)
   {sP : forall x y z, IsHProp (P x y z)}
   (dclass : forall x y z : Npair, P (' x) (' y) (' z)),
   forall x y z, P x y z
-  := Completion.R_ind3 _.
+  := Completion.R_ind3@{UN i j k j} _.
 
 Definition Z_rec {T : Type} {sT : IsHSet T}
   : forall (dclass : Npair -> T)
@@ -105,7 +108,7 @@ Definition Z_one_pair : @paths Z 1 (@cast N Z _ 1) := idpath.
 Local Instance Z_ring : Ring Z := _.
 
 Global Instance N_to_Z_morphism : SemiRing_Morphism (cast N Z) := _.
-Global Instance : Injective (cast N Z) := _.
+Global Instance N_to_Z_injective : Injective (cast N Z) := _.
 
 Definition Npair_splits : forall n m, ' (SRPair.C n m) = ' n - ' m
   := Completion.SRpair_splits _.
@@ -144,7 +147,7 @@ Proof.
 intros B ??????.
 apply (Z_rec (fun s => naturals_to_semiring N _ (SRPair.pos s)
     + - naturals_to_semiring N _ (SRPair.neg s))).
-exact Z_to_ring_respects.
+exact Z_to_ring_respects@{UN UN UN UN}.
 Defined.
 
 (* Hint Rewrite preserves_0 preserves_1 preserves_mult preserves_plus: preservation.
@@ -155,7 +158,7 @@ Ltac preservation F :=
     rewrite (rings.preserves_1 (f:=F)) || rewrite (preserves_negate (f:=F))).
 
 Section for_another_ring.
-  Context `{Ring R}.
+  Context {R : Type@{UN} } `{Ring R}.
 
 (*   Add Ring R : (rings.stdlib_ring_theory R). *)
 
@@ -195,7 +198,7 @@ Section for_another_ring.
   rewrite negate_0,plus_0_r;split.
   Qed.
 
-  Global Instance z_to_ring_morphism : SemiRing_Morphism z_to_r.
+  Instance z_to_ring_morphism : SemiRing_Morphism z_to_r.
   Proof.
   repeat (split; try apply _).
   - exact preserves_plus.
@@ -212,7 +215,7 @@ Section for_another_ring.
     Instance : SemiRing_Morphism g.
     Proof. unfold g. repeat (split; try apply _). Qed.
 
-    Lemma same_morphism : forall x, z_to_r x = f x.
+    Lemma same_morphism : forall x : Z, z_to_r x = f x.
     Proof.
     apply (Z_ind _).
     intros x.
@@ -228,8 +231,10 @@ End for_another_ring.
 Global Instance Z_integers : Integers Z.
 Proof.
 split;try apply _.
-exact @same_morphism.
+- exact @z_to_ring_morphism@{i i i i i i i i}.
+- exact @same_morphism@{i i i i i i i i i}.
 Qed.
+
 
 Context `{!NatDistance N}.
 

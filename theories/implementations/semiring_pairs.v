@@ -287,7 +287,8 @@ Import SRPair.
 Module Completion.
 
 Section contents.
-Context `{Funext} `{Univalence} SR `{SemiRing SR} `{IsHSet SR}.
+Universe UR.
+Context `{Funext} `{Univalence} (SR : Type@{UR}) `{SemiRing SR} `{IsHSet SR}.
 Context `{∀ z, LeftCancellation (+) z}.
 
 (* Add Ring SR : (rings.stdlib_semiring_theory SR). *)
@@ -375,15 +376,16 @@ hnf. apply (R_ind2 _).
 apply dec_class.
 Defined.
 
-
 (* Relations, operations and constants *)
 
 Global Instance z : Zero R := (' 0 : R).
 Global Instance u : One R := (' 1 : R).
 
+Universe UR2.
+
 Global Instance pl : Plus R.
 Proof.
-refine (R_rec2 (fun x y => class (SRPair.pl _ x y)) _).
+refine (R_rec2@{UR UR2 UR} (fun x y => class (SRPair.pl _ x y)) _).
 intros;apply path;eapply pl_respects;trivial.
 Defined.
 
@@ -392,7 +394,7 @@ Definition pl_compute q r : (class q) + (class r) = class (SRPair.pl _ q r)
 
 Global Instance ml : Mult R.
 Proof.
-refine (R_rec2 (fun x y => class (SRPair.ml _ x y)) _).
+refine (R_rec2@{UR UR2 UR} (fun x y => class (SRPair.ml _ x y)) _).
 intros;apply path;eapply ml_respects;trivial.
 Defined.
 
@@ -408,7 +410,7 @@ Defined.
 Definition opp_compute q : - (class q) = class (SRPair.opp _ q)
   := 1.
 
-Global Instance R_ring : Ring R.
+Lemma R_ring' : Ring R.
 Proof.
 repeat split;try apply _;
 first [change sg_op with mult; change mon_unit with 1|
@@ -448,6 +450,11 @@ first [change sg_op with mult; change mon_unit with 1|
   ring_with_nat.
 Qed.
 
+Global Instance R_ring : Ring R.
+Proof.
+exact R_ring'@{UR2 UR2 UR2 UR2 UR2 UR2 UR2}.
+Qed.
+
 (* A final word about inject *)
 Lemma SR_to_R_morphism_aux : SemiRing_Morphism (cast SR R).
 Proof.
@@ -460,10 +467,10 @@ repeat (constructor; try apply _).
   ring_with_nat.
 Qed.
 
-Global Instance SR_to_R_morphism@{Uop}
-  : @SemiRing_Morphism _ _ _ _ _ _ pl@{Uop} ml@{Uop} _ _ (cast SR R).
+Global Instance SR_to_R_morphism
+  : @SemiRing_Morphism _ _ _ _ _ _ pl ml _ _ (cast SR R).
 Proof.
-exact (SR_to_R_morphism_aux@{Uop Uop Uop Uop Uop Uop Uop Uop Uop}).
+exact (SR_to_R_morphism_aux@{UR2 UR2 UR2 UR2}).
 Qed.
 
 Global Instance SR_to_R_injective : Injective (cast SR R).
@@ -473,10 +480,16 @@ intros x y E. apply related_path@{i i j} in E.
 red in E. simpl in E. rewrite 2!plus_0_r in E. trivial.
 Qed.
 
-Lemma SRpair_splits n m : class (C n m) = 'n + - 'm.
+Lemma SRpair_splits' : forall n m : SR, class (C n m) = 'n + - 'm.
 Proof.
+intros.
 apply path;red;simpl.
 ring_with_nat.
+Qed.
+
+Lemma SRpair_splits : forall n m, class (C n m) = 'n + - 'm.
+Proof.
+exact SRpair_splits'@{UR2 UR2 UR2}.
 Qed.
 
 End contents.
