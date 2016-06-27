@@ -23,7 +23,7 @@ Module Identity_Modalities <: Modalities.
 
   Definition In : forall (O : Modality@{u a}),
                              Type@{i} -> Type@{i}
-    := fun O X => Unit@{i}.
+    := fun O X => Unit.
 
   Definition O_inO : forall (O : Modality@{u a}) (T : Type@{i}),
                                In@{u a i} O (O_reflector@{u a i} O T)
@@ -41,10 +41,10 @@ Module Identity_Modalities <: Modalities.
         In@{u a j} O U
     := fun O T U _ _ _ => tt.
 
-  Definition hprop_inO
+  Definition hprop_inO@{u a i}
   : Funext -> forall (O : Modality@{u a}) (T : Type@{i}),
                 IsHProp (In@{u a i} O T)
-    := fun _ O T => _.
+    := fun _ O T => trunc_contr@{i a}.
 
   Definition O_ind_internal
   : forall (O : Modality@{u a})
@@ -84,13 +84,19 @@ Module Accessible_Identity <: Accessible_Modalities Identity_Modalities.
   Module Import Os_Theory := Modalities_Theory Identity_Modalities.
 
   Definition acc_gen : Modality@{u a} -> NullGenerators@{a}
-    := fun _ => Build_NullGenerators Empty@{a} (fun _ => Empty@{a}).
+    := fun _ => Build_NullGenerators Empty (fun _ => Empty).
 
-  Definition inO_iff_isnull
+  Definition inO_iff_isnull@{u a i}
   : forall (O : Modality@{u a}) (X : Type@{i}),
       iff@{i i i}
         (In@{u a i} O X)
-        (IsNull@{u a i} (acc_gen O) X)
-    := fun O X => (fun _ => Empty_ind _ , fun _ => tt).
+        (IsNull@{u a i} (acc_gen@{u a} O) X).
+  Proof.
+  intros O X.
+  split.
+  - intros ?.
+    exact (Empty_ind _).
+  - intros ?;exact tt.
+  Defined.
 
 End Accessible_Identity.

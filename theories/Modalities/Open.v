@@ -116,9 +116,9 @@ Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
 
   Definition acc_gen
     := fun (O : OpenModalities.Modality@{u a}) =>
-         Build_NullGenerators@{a} Unit@{a} (fun _ => unOp O).
+         Build_NullGenerators@{a} Unit (fun _ => unOp O).
 
-  Definition inO_iff_isnull
+  Definition inO_iff_isnull'
              (O : OpenModalities.Modality@{u a}) (X : Type@{i})
   : iff@{i i i}
       (OpenModalities.In@{u a i} O X)
@@ -126,7 +126,7 @@ Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
   Proof.
     pose (funext_Op O); split.
     - intros X_inO u.
-      apply (equiv_inverse (equiv_ooextendable_isequiv@{a a i i i i i} _ _)).
+      apply (equiv_inverse (equiv_ooextendable_isequiv@{a a i i i i i i i i i i i} _ _)).
       refine (cancelR_isequiv (fun x (u:Unit) => x)).
       apply X_inO.
     - intros ext; specialize (ext tt).
@@ -134,6 +134,8 @@ Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
                               (g := (fun h => h o (@const (unOp O) Unit tt)))).
       refine (isequiv_ooextendable (fun _ => X) (@const (unOp O) Unit tt) ext).
   Defined.
+
+  Definition inO_iff_isnull@{u a i} := inO_iff_isnull'@{u a i i i i i i i i i i i i i i}.
 
 End Accessible_OpenModalities.
 

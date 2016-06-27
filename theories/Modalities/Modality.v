@@ -516,16 +516,16 @@ Section ConnectedTypes.
              (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3811 *)
              (A : Type@{i}) {conn_A : IsConnected@{Ou Oa i} O A}
              (C : Type@{j}) `{In@{Ou Oa j} O C}
-  : ExtendableAlong@{i i j j} n (@const A Unit@{i} tt) (fun _ => C).
+  : ExtendableAlong@{i i j j} n (@const@{i i} A Unit tt) (fun _ => C).
   Proof.
     generalize dependent C;
       simple_induction n n IHn; intros C ?;
       [ exact tt | split ].
     - intros f.
-      exists (fun _ => (isconnected_elim@{i j j k i} C f).1); intros a.
+      exists (fun _ : Unit => (isconnected_elim@{i j j k i} C f).1); intros a.
       symmetry; apply ((isconnected_elim@{i j j k i} C f).2).
     - intros h k.
-      refine (extendable_postcompose'@{i i j j j l l l l l l} n _ _ _ _ (IHn (h tt = k tt) (inO_paths@{Ou Oa j m} _ _ _ _))).
+      refine (extendable_postcompose'@{i i j j j j l l l l l l} n _ _ _ _ (IHn (h tt = k tt) (inO_paths@{Ou Oa j m} _ _ _ _))).
       intros []; apply equiv_idmap.
   Defined.
 

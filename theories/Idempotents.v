@@ -5,6 +5,7 @@ Require Import hit.Truncations.
 
 Local Open Scope path_scope.
 
+Local Set Universe Minimization ToSet.
 
 (** * Idempotents and their splittings *)
 
@@ -428,7 +429,7 @@ Section Splitting.
 
   (** The splitting will be the sequential limit of the sequence [... -> X -> X -> X]. *)
   Definition split_idem : Type
-    := { a : nat -> X & forall n, f (a n.+1) = a n }.
+    := { a : nat -> X & forall n : nat, f (a n.+1) = a n }.
 
   Definition split_idem_pr1 : split_idem -> (nat -> X)
     := pr1.
@@ -457,7 +458,7 @@ Section Splitting.
 
   Definition path_split_idem {a a' : split_idem}
     (p : a.1 == a'.1)
-    (q : forall n, a.2 n @ p n = ap f (p n.+1) @ a'.2 n)
+    (q : forall n : nat, a.2 n @ p n = ap f (p n.+1) @ a'.2 n)
   : a = a'.
   Proof.
     simple refine (path_sigma' _ _ _).

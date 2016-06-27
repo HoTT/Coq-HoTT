@@ -51,7 +51,7 @@ Fixpoint ExtendableAlong_Over@{a b c d m}
          (ext : ExtendableAlong@{a b c m} n f C)
 : Type@{m}
   := match n return ExtendableAlong@{a b c m} n f C -> Type@{m} with
-       | 0 => fun _ => Unit@{m}
+       | 0 => fun _ => Unit
        | S n => fun ext' =>
                 (forall (g : forall a, C (f a)) (g' : forall a, D (f a) (g a)),
                   sig@{m m}     (** Control universe parameters *)
@@ -263,7 +263,7 @@ Proof.
   intros i.
   (** We have to fiddle with the max universes to get this to work, since [ooextendable_postcompose] requires the max universe in both cases to be the same, whereas we don't want to assume that the hypothesis and conclusion are related in any way. *)
   apply lift_ooextendablealong@{a a j k j'}.
-  refine (ooextendable_postcompose@{a a i j k k k k k k k}
+  refine (ooextendable_postcompose@{a a i j k k k k k k k k}
             _ _ (f i) (fun _ => g) _).
   apply lift_ooextendablealong@{a a i i' k}.
   apply Xloc.
@@ -373,12 +373,12 @@ Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.
       In@{u a j} O U
     := fun O => islocal_equiv_islocal@{a i j i j k} (unLoc O).
 
-  Definition hprop_inO `{Funext}
+  Definition hprop_inO@{u a i} `{Funext}
              (O : ReflectiveSubuniverse@{u a}) (T : Type@{i})
   : IsHProp (In@{u a i} O T).
   Proof.
     apply (@trunc_forall@{a i i} _); intros i.
-    apply ishprop_ooextendable@{a a i i i i i}.
+    apply ishprop_ooextendable@{a a i i i i i i i i i i}.
   Defined.
 
   Definition extendable_to_O
