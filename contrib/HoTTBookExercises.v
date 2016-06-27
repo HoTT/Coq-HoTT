@@ -505,8 +505,6 @@ Section Book_3_14.
   Context `{Funext}.
   Hypothesis LEM : forall A : Type, IsHProp A -> A + ~A.
 
-  Local Set Universe Minimization ToSet.
-
   Definition Book_3_14
   : forall A (P : ~~A -> Type),
     (forall a, P (fun na => na a))
@@ -519,7 +517,9 @@ Section Book_3_14.
       apply hprop_allpath.
       intros x' y'.
       etransitivity; [ symmetry; apply (p x x y' x') | ].
-      assert (H' : idpath = path_ishprop x x) by apply path_ishprop.
+     (* Without this it somehow proves [H'] using the wrong universe for hprop_Empty and fails when we do [Defined]. *)
+      set (path := path_ishprop x x).
+      assert (H' : idpath = path) by apply path_ishprop.
       destruct H'.
       reflexivity.
     - destruct (LEM (P nna) _) as [pnna|npnna]; trivial.
@@ -529,8 +529,6 @@ Section Book_3_14.
       apply npnna.
       exact (transport P (path_ishprop _ _) (base a)).
   Defined.
-
-  Local Unset Universe Minimization ToSet.
 
   Lemma Book_3_14_equiv A : merely A <~> ~~A.
   Proof.
