@@ -90,13 +90,9 @@ Module Accessible_Identity <: Accessible_Modalities Identity_Modalities.
   : forall (O : Modality@{u a}) (X : Type@{i}),
       iff@{i i i}
         (In@{u a i} O X)
-        (IsNull@{u a i} (acc_gen@{u a} O) X).
-  Proof.
-  intros O X.
-  split.
-  - intros ?.
-    exact (Empty_ind _).
-  - intros ?;exact tt.
-  Defined.
+        (IsNull@{u a i} (acc_gen@{u a} O) X)
+  := fun O X => @pair _ (_ -> Unit)
+     (fun _ => Empty_ind _)
+     (fun _ => tt).
 
 End Accessible_Identity.
