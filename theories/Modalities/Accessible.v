@@ -125,7 +125,7 @@ Defined.
 
 Definition ooextendable_isnull_fibers {A B} (f : A -> B) (C : B -> Type)
 : (forall b, ooExtendableAlong (@const (hfiber f b) Unit tt)
-                               (fun _ : Unit => C b))
+                               (fun _ => C b))
   -> ooExtendableAlong f C
 := fun null n => extendable_isnull_fibers n f C null.
 
