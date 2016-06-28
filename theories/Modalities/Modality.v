@@ -1251,4 +1251,4 @@ Module Modalities_FamUnion (Os1 Os2 : Modalities)
 
 End Modalities_FamUnion.
 
-(** For examples of modalities, see the files Notnot, Identity, Nullification, PropositionalFracture, and hit/Localization. *)
+(** For examples of modalities, see the files Notnot, Identity, Nullification, PropositionalFracture, and Localization. *)
