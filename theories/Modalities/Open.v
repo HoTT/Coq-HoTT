@@ -132,10 +132,14 @@ Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
     - intros ext; specialize (ext tt).
       refine (isequiv_compose (f := (fun x => unit_name x))
                               (g := (fun h => h o (@const (unOp O) Unit tt)))).
-      refine (isequiv_ooextendable (fun _ => X) (@const (unOp O) Unit tt) ext).
+      refine (isequiv_ooextendable@{a a i i i i i i} (fun _ => X) (@const@{i a} (unOp O) Unit tt) ext).
   Defined.
 
-  Definition inO_iff_isnull@{u a i} := inO_iff_isnull'@{u a i i i i i i i i i i i i i i}.
+  (* Phantom universes (ie not appearing in the term) are produced by some un-annotated functions and foralls.
+     For instance if we explicitate [(B:=(Unit -> _))] in the [isequiv_compose] use above only one extra is produced.
+     I can't figure out where the last extra is coming from so we have to manually identify it with [i].
+     Since we have to do this manual identification step we might as well use it for the universe from [B] too. *)
+  Definition inO_iff_isnull@{u a i} := inO_iff_isnull'@{u a i i i}.
 
 End Accessible_OpenModalities.
 
