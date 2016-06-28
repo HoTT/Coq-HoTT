@@ -127,7 +127,7 @@ Section contents.
 Universe U.
 
 Context `{Funext} `{Univalence}.
-Context `{Integers@{U U} Z}.
+Context (Z : Type@{U}) `{Integers@{U U} Z}.
 
 Lemma from_int_stmt  Z' `{Integers@{U U} Z'}
   : forall (P : Rings.Operations -> Type),
@@ -154,7 +154,7 @@ as [[n E]|[n E]];[left|right];exists n.
   apply (naturals.to_semiring_twice _ _ _).
 Qed.
 
-Instance int_nontrivial : PropHolds ((1:Z) ≠ 0).
+Instance int_nontrivial : PropHolds ((1:Z) ≠0).
 Proof.
 intros E.
 apply (rings.is_ne_0 (1:nat)).

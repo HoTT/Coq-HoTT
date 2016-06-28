@@ -350,7 +350,8 @@ Class ZeroDivisor {R} `{Zero R} `{Mult R} (x : R) : Type
 Class NoZeroDivisors R `{Zero R} `{Mult R} : Type
   := no_zero_divisors x : ¬ZeroDivisor x.
 
-Instance zero_product_no_zero_divisors `{ZeroProduct A} : NoZeroDivisors A.
+Instance zero_product_no_zero_divisors {A:Type@{i} } `{ZeroProduct A}
+  : NoZeroDivisors@{j j j j j j i} A.
 Proof.
 intros x [? [? [? E]]].
 destruct (zero_product _ _ E); auto.

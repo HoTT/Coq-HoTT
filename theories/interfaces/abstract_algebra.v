@@ -71,7 +71,7 @@ real numbers), we do not include it in the lower part of the algebraic hierarchy
 (as opposed to CoRN).
 *)
 Section upper_classes.
-  Context (A : Type).
+  Context (A : Type@{i}).
 
   Class SemiGroup {Aop: SgOp A} :=
     { sg_set :> IsHSet A
@@ -126,9 +126,9 @@ Section upper_classes.
     require commutative multiplication. *)
 
   Class IntegralDomain :=
-    { intdom_ring : Ring 
-    ; intdom_nontrivial : PropHolds (1 ≠ 0)
-    ; intdom_nozeroes :> NoZeroDivisors A }.
+    { intdom_ring : Ring
+    ; intdom_nontrivial : PropHolds (not@{i j k} (1 = 0))
+    ; intdom_nozeroes :> NoZeroDivisors@{k j k k k k i} A }.
 
   (* We do not include strong extensionality for (-) and (/)
     because it can de derived *)

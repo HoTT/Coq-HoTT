@@ -370,7 +370,7 @@ apply zero_product in E.
 destruct E as [E|E];rewrite E;[left|right];apply preserves_0.
 Qed.
 
-Global Instance Z_zero_product : ZeroProduct Z.
+Lemma Z_zero_product' : ZeroProduct Z.
 Proof.
 intros x y E.
 destruct (int_abs_sig Z N x) as [[a Ea]|[a Ea]],
@@ -407,6 +407,10 @@ destruct (int_abs_sig Z N x) as [[a Ea]|[a Ea]],
     apply (injective negate).
     rewrite negate_0,<-Eb;trivial.
 Qed.
+
+Global Instance Z_zero_product@{i k k' k''} : ZeroProduct Z
+  := Z_zero_product'@{i k UN k' UN UN UN UN k' UN UN UN UN
+   UN UN UN UN UN UN UN UN UN UN UN UN UN UN UN i UN k'' UN UN UN}.
 
 End contents.
 
