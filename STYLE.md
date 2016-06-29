@@ -724,11 +724,12 @@ universes.  One solution is to alter the proofs of those instances as
 described above; another is to call the instance(s) you need
 explicitly, rather than relying on typeclass inference to find them.
 
-Sometimes binders without type annotation, like `forall n, foo n`
+Sometimes binders without type annotations, like `forall n, foo n`
 where `foo : nat -> Type0`, will produce a fresh universe for
 the variable's type, eg `forall n : (? : Type@{fresh}), foo n`,
 which will remain in the definition as a phantom type:
 `fresh |= forall n : nat, foo n`. Annotating the binder will get rid of it.
+See also [bug #4868](https://coq.inria.fr/bugs/show_bug.cgi?id=4868).
 
 ### Lifting and lowering ###
 
