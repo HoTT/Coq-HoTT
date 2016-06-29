@@ -66,7 +66,7 @@ Global Instance isequiv_unit_rec `{Funext} (A : Type)
 (* For various reasons, it is typically more convenient to define functions out of the unit as constant maps, rather than [Unit_ind]. *)
 Notation unit_name x := (fun (_ : Unit) => x).
 
-Global Instance isequiv_unit_name `{Funext} (A : Type@{i})
+Global Instance isequiv_unit_name@{i j} `{Funext} (A : Type@{i})
 : @IsEquiv@{i j} _ (Unit -> _) (fun (a:A) => unit_name a).
 Proof.
   refine (isequiv_adjointify _ (fun f : Unit -> _ => f tt) _ _).
