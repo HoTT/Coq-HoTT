@@ -517,7 +517,8 @@ Section Book_3_14.
       apply hprop_allpath.
       intros x' y'.
       etransitivity; [ symmetry; apply (p x x y' x') | ].
-     (* Without this it somehow proves [H'] using the wrong universe for hprop_Empty and fails when we do [Defined]. *)
+     (* Without this it somehow proves [H'] using the wrong universe for hprop_Empty and fails when we do [Defined].
+        See Coq #4862. *)
       set (path := path_ishprop x x).
       assert (H' : idpath = path) by apply path_ishprop.
       destruct H'.
