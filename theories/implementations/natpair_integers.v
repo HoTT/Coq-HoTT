@@ -11,6 +11,7 @@ Require
  HoTTClasses.theory.naturals.
 Require Import
  HoTTClasses.interfaces.abstract_algebra
+ HoTTClasses.interfaces.orders
  HoTTClasses.interfaces.naturals
  HoTTClasses.interfaces.integers
  HoTTClasses.theory.jections
@@ -411,6 +412,26 @@ Qed.
 Global Instance Z_zero_product@{i k k' k''} : ZeroProduct Z
   := Z_zero_product'@{i k UN k' UN UN UN UN k' UN UN UN UN
    UN UN UN UN UN UN UN UN UN UN UN UN UN UN UN i UN k'' UN UN UN}.
+
+Section with_full_order.
+Context `{Apart N} {Nle: Le N} {Nlt: Lt N}.
+Context `{!FullPseudoSemiRingOrder Nle Nlt}
+  `{is_mere_relation N le} `{is_mere_relation N lt}.
+
+Global Instance Z_apart : Apart Z := Completion.Rapart N.
+Global Instance Z_le : Le Z := Completion.Rle N.
+Global Instance Z_lt : Lt Z := Completion.Rlt N.
+
+Global Instance Z_full_pseudo_srorder : FullPseudoSemiRingOrder
+  (le:Le Z) (lt:Lt Z).
+Proof.
+pose proof (Completion.R_full_pseudo_srorder N) as E.
+unfold Z_apart,Z_le,Z_lt,Z_plus,Z_mult,Z_one,Z_zero,Z.
+unfold le. unfold le in E.
+exact E.
+Qed.
+STAHP.
+End with_full_order.
 
 End contents.
 

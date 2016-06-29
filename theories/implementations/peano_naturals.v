@@ -426,7 +426,7 @@ rewrite add_0_r, add_S_r,<-add_S_l.
 rewrite add_comm. apply natpaths_symm,E.
 Qed.
 
-Instance nat_le_hprop : is_mere_relation nat le.
+Global Instance nat_le_hprop : is_mere_relation nat le.
 Proof.
 intros m n;apply Trunc.hprop_allpath.
 generalize (idpath (S n) : S n =N= S n).
@@ -480,14 +480,19 @@ intros a b. destruct (le_lt_dec a b) as [[|]|E];auto.
 - left. apply le_S_S. trivial.
 Qed.
 
-Instance nat_apart : Apart@{N N} nat := fun n m => n < m \/ m < n.
+Global Instance nat_apart : Apart@{N N} nat := fun n m => n < m \/ m < n.
+
+Global Instance nat_apart_mere : is_mere_relation nat nat_apart.
+Proof.
+intros;apply ishprop_sum;try apply _.
+intros E1 E2. apply (irreflexivity nat_lt x).
+transitivity y;trivial.
+Qed.
 
 Global Instance nat_trivial_apart : TrivialApart nat.
 Proof.
 split.
-- intros;apply ishprop_sum;try apply _.
-  intros E1 E2. apply (irreflexivity nat_lt x).
-  transitivity y;trivial.
+- apply _.
 - intros a b;split;intros E.
   + destruct E as [E|E];apply irrefl_neq in E;trivial.
     apply symmetric_neq;trivial.

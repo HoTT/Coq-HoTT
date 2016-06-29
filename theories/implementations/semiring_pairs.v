@@ -793,7 +793,8 @@ Section with_full_pseudo_semiring_order.
       trivial.
   Qed.
 
-  Global Instance: FullPseudoSemiRingOrder (le:Le R) (lt:Lt R).
+  Global Instance R_full_pseudo_srorder
+    : FullPseudoSemiRingOrder (le:Le R) (lt:Lt R).
   Proof.
   apply from_full_pseudo_ring_order; try apply _.
   - (* Fail refine (plus_strict_order_preserving_l _ ). *)
