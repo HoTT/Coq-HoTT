@@ -414,26 +414,40 @@ Global Instance Z_zero_product@{i k k' k''} : ZeroProduct Z
    UN UN UN UN UN UN UN UN UN UN UN UN UN UN UN i UN k'' UN UN UN}.
 
 
-(* Section with_full_order.
+Section with_full_order.
 Context `{Apart N} {Nle: Le N} {Nlt: Lt N}.
 Context `{!FullPseudoSemiRingOrder Nle Nlt}
   `{is_mere_relation N le} `{is_mere_relation N lt}.
 
-Global Instance Z_apart : Apart Z := Completion.Rapart N.
-Global Instance Z_le : Le Z := Completion.Rle N.
-Global Instance Z_lt : Lt Z := Completion.Rlt N.
+(* [forall n : N, LeftCancellation (+) n] can be gotten from FullPseudoSROrder,
+   but when defining the other operations we used naturals.nat_plus_cancel_l. *)
+Global Instance Z_apart : Apart Z.
+Proof.
+eapply @Completion.Rapart.
+2:apply naturals.nat_plus_cancel_l.
+all:apply _.
+Defined.
+Global Instance Z_le : Le Z.
+Proof.
+eapply @Completion.Rle.
+2:apply naturals.nat_plus_cancel_l.
+all:apply _.
+Defined.
+Global Instance Z_lt : Lt Z.
+Proof.
+eapply @Completion.Rlt.
+2:apply naturals.nat_plus_cancel_l.
+all:apply _.
+Defined.
 
 Global Instance Z_full_pseudo_srorder : FullPseudoSemiRingOrder
   (le:Le Z) (lt:Lt Z).
 Proof.
-pose proof (Completion.R_full_pseudo_srorder N) as E.
-unfold Z_apart,Z_le,Z_lt,Z_plus,Z_mult,Z_one,Z_zero,Z.
-unfold le. unfold le in E.
-exact E.
+apply Completion.R_full_pseudo_srorder.
 Qed.
-STAHP.
+
 End with_full_order.
- *)
+
 End contents.
 
 End NatPair.
