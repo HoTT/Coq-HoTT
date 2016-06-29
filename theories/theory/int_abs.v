@@ -39,7 +39,7 @@ Qed.
 
 Context `{!IntAbs Z N}.
 
-Context `{!SemiRing_Morphism (f : N → Z)}.
+Context `{!SemiRingPreserving (f : N → Z)}.
 
 Lemma int_abs_spec x :
   (0 ≤ x ∧ f (int_abs Z N x) = x) \/ (x ≤ 0 ∧ f (int_abs Z N x) = -x).

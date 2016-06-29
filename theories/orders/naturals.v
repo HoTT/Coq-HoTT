@@ -63,8 +63,7 @@ Qed.
 
 Global Instance: ∀ (z : N), PropHolds (z ≠ 0) → OrderReflecting (z *.).
 Proof.
-intros z ?.
-repeat (split; try apply _). apply (order_reflecting_pos (.*.) z).
+intros z ?. red. apply (order_reflecting_pos (.*.) z).
 apply nat_ne_0_pos. trivial.
 Qed.
 
@@ -81,7 +80,7 @@ Qed.
 
 Section another_ring.
   Context `{Ring R} `{Apart R} `{!FullPseudoSemiRingOrder (A:=R) Rle Rlt}
-    `{!SemiRing_Morphism (f : N → R)}.
+    `{!SemiRingPreserving (f : N → R)}.
 
   Lemma negate_to_ring_nonpos n : -f n ≤ 0.
   Proof. apply flip_nonneg_negate. apply to_semiring_nonneg. Qed.

@@ -35,13 +35,13 @@ Instance: Le positive := fun x y => (x ?= y) = LT \/ (x ?= y) = EQ.
 
 Instance xI_inj : Injective xI.
 Proof.
-split. intros x y E.
+intros x y E.
 apply (ap (fun z => match z with z~1 => z | _ => z end) E).
 Defined.
 
 Instance xO_inj : Injective xO.
 Proof.
-split;intros x y E.
+intros x y E.
 apply (ap (fun z => match z with z~0 => z | _ => z end) E).
 Defined.
 
@@ -219,7 +219,7 @@ Qed.
 
 Instance succ_inj : Injective succ.
 Proof.
-split;intros p q.
+intros p q.
 revert q.
 induction p; intros [q|q| ] H; simpl in H;auto.
 - apply ap,IHp,(injective xO),H.

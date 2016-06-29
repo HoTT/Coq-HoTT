@@ -20,7 +20,6 @@ Qed.
 
 Global Instance: Injective (-).
 Proof.
-split.
 intros x y E.
 rewrite <-(involutive x), <-(involutive y), E. reflexivity.
 Qed.
@@ -81,7 +80,7 @@ End abgroup_props.
 
 Section groupmor_props.
 
-  Context `{Group A} `{Group B} {f : A → B} `{!Monoid_Morphism f}.
+  Context `{Group A} `{Group B} {f : A → B} `{!MonoidPreserving f}.
 
   Lemma preserves_negate x : f (-x) = -f x.
   Proof.
@@ -205,16 +204,14 @@ Section from_another_ab_group.
   Qed.
 End from_another_ab_group.
 
-Instance id_sg_morphism `{SemiGroup A}: SemiGroup_Morphism (@id A).
+Instance id_sg_morphism `{SemiGroup A}: SemiGroupPreserving (@id A).
 Proof.
-split;try apply _.
-auto.
+red. split.
 Qed.
 
-Instance id_monoid_morphism `{Monoid A}: Monoid_Morphism (@id A).
+Instance id_monoid_morphism `{Monoid A}: MonoidPreserving (@id A).
 Proof.
-split;try apply _.
-reflexivity.
+split;split.
 Qed.
 
 Section compose_mor.
@@ -224,50 +221,41 @@ Section compose_mor.
     `{SgOp C} `{MonUnit C}
     (f : A -> B) (g : B -> C).
 
-  Instance compose_sg_morphism : SemiGroup_Morphism f -> SemiGroup_Morphism g ->
-    SemiGroup_Morphism (g ∘ f).
+  Instance compose_sg_morphism : SemiGroupPreserving f -> SemiGroupPreserving g ->
+    SemiGroupPreserving (g ∘ f).
   Proof.
-  intros;split.
-  - apply sgmor_a.
-  - apply sgmor_b.
-  - intros. unfold compose.
-    rewrite (preserves_sg_op x y).
-    apply preserves_sg_op.
+  red;intros.
+  unfold compose.
+  rewrite (preserves_sg_op x y).
+  apply preserves_sg_op.
   Qed.
 
-  Instance compose_monoid_morphism : Monoid_Morphism f -> Monoid_Morphism g ->
-    Monoid_Morphism (g ∘ f).
+  Instance compose_monoid_morphism : MonoidPreserving f -> MonoidPreserving g ->
+    MonoidPreserving (g ∘ f).
   Proof.
   intros;split.
-  - apply monmor_a.
-  - apply monmor_b.
   - apply _.
-  - unfold compose.
-    rewrite (preserves_mon_unit (f:=f)).
-    apply preserves_mon_unit.
+  - red;unfold compose.
+    etransitivity;[|apply preserves_mon_unit].
+    apply ap,preserves_mon_unit.
   Qed.
 
   Instance invert_sg_morphism:
-    ∀ `{!Inverse f}, Bijective f → SemiGroup_Morphism f → SemiGroup_Morphism (f⁻¹).
+    ∀ `{!Inverse f}, Bijective f → SemiGroupPreserving f →
+      SemiGroupPreserving (f⁻¹).
   Proof.
-  intros.
-  split.
-  - apply sgmor_b.
-  - apply sgmor_a.
-  - intros.
-    apply (injective f).
-    rewrite (preserves_sg_op (f:=f)).
-    change ((f ∘ inverse f) (x & y) = (f ∘ inverse f) x & (f ∘ inverse f) y).
-    rewrite (surjective f).
-    reflexivity.
+  red;intros.
+  apply (injective f).
+  rewrite (preserves_sg_op (f:=f)).
+  change ((f ∘ inverse f) (x & y) = (f ∘ inverse f) x & (f ∘ inverse f) y).
+  rewrite (surjective f).
+  reflexivity.
   Qed.
 
   Instance invert_monoid_morphism :
-    ∀ `{!Inverse f}, Bijective f → Monoid_Morphism f → Monoid_Morphism (f⁻¹).
+    ∀ `{!Inverse f}, Bijective f → MonoidPreserving f → MonoidPreserving (f⁻¹).
   Proof.
-  intros. split.
-  - apply monmor_b.
-  - apply monmor_a.
+  intros;split.
   - apply _.
   - apply (injective f).
     change (compose f (inverse f) mon_unit = f mon_unit).
@@ -277,12 +265,12 @@ Section compose_mor.
 
 End compose_mor.
 
-Hint Extern 4 (SemiGroup_Morphism (_ ∘ _)) =>
+Hint Extern 4 (SemiGroupPreserving (_ ∘ _)) =>
   class_apply @compose_sg_morphism : typeclass_instances.
-Hint Extern 4 (Monoid_Morphism (_ ∘ _)) =>
+Hint Extern 4 (MonoidPreserving (_ ∘ _)) =>
   class_apply @compose_monoid_morphism : typeclass_instances.
 
-Hint Extern 4 (SemiGroup_Morphism (_⁻¹)) =>
+Hint Extern 4 (SemiGroupPreserving (_⁻¹)) =>
   class_apply @invert_sg_morphism : typeclass_instances.
-Hint Extern 4 (Monoid_Morphism (_⁻¹)) =>
+Hint Extern 4 (MonoidPreserving (_⁻¹)) =>
   class_apply @invert_monoid_morphism : typeclass_instances.

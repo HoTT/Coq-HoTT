@@ -63,16 +63,12 @@ apply (projected_strong_setoid (@proj1_sig _ P)).
 Qed.
 
 Section morphisms.
-  Context `{Apart A} `{Apart B} `{Apart C}.
-
-  Existing Instance strong_mor_a.
-  Existing Instance strong_mor_b.
+  Context `{IsApart A} `{IsApart B} `{IsApart C}.
 
   Global Instance strong_injective_injective `{!StrongInjective (f : A → B)} :
     Injective f.
   Proof.
   pose proof (strong_injective_mor f).
-  split.
   intros ? ? e.
   apply tight_apart. intros ap.
   apply tight_apart in e. apply e.
@@ -82,30 +78,20 @@ Section morphisms.
   (* If a morphism satisfies the binary strong extensionality property, it is
     strongly extensional in both coordinates. *)
   Global Instance strong_setoid_morphism_1
-    `{!StrongBinaryMorphism (f : A → B → C)} :
-    ∀ z, StrongMorphism (f z).
+    `{!StrongBinaryExtensionality (f : A → B → C)} :
+    ∀ z, StrongExtensionality (f z).
   Proof.
-  pose proof (strong_binary_mor_a f).
-  pose proof (strong_binary_mor_b f).
-  pose proof (strong_binary_mor_c f).
-  intros z.
-  split; try apply _.
-  intros x y E.
+  intros z x y E.
   apply (merely_destruct (strong_binary_extensionality f z x z y E)).
   intros [?|?];trivial.
   destruct (irreflexivity (≶) z). assumption.
   Qed.
 
   Global Instance strong_setoid_morphism_unary_2
-    `{!StrongBinaryMorphism (f : A → B → C)} :
-    ∀ z, StrongMorphism (λ x, f x z).
+    `{!StrongBinaryExtensionality (f : A → B → C)} :
+    ∀ z, StrongExtensionality (λ x, f x z).
   Proof.
-  pose proof (strong_binary_mor_a f).
-  pose proof (strong_binary_mor_b f).
-  pose proof (strong_binary_mor_c f).
-  intros z.
-  split; try apply _.
-  intros x y E.
+  intros z x y E.
   apply (merely_destruct (strong_binary_extensionality f x z y z E)).
   intros [?|?];trivial.
   destruct (irreflexivity (≶) z);assumption.
@@ -116,10 +102,9 @@ Section morphisms.
     instance in order to avoid loops. *)
   Lemma strong_binary_setoid_morphism_both_coordinates
     `{!IsApart A} `{!IsApart B} `{!IsApart C} {f : A → B → C}
-    `{∀ z, StrongMorphism (f z)} `{∀ z, StrongMorphism (λ x, f x z)}
-     : StrongBinaryMorphism f.
+    `{∀ z, StrongExtensionality (f z)} `{∀ z, StrongExtensionality (λ x, f x z)}
+     : StrongBinaryExtensionality f.
   Proof.
-  split; try apply _.
   intros x₁ y₁ x₂ y₂ E.
   apply (merely_destruct (cotransitive E (f x₂ y₁))).
   intros [?|?];apply tr.
@@ -133,11 +118,10 @@ Section more_morphisms.
   Context `{IsApart A} `{IsApart B}.
 
   Lemma strong_binary_setoid_morphism_commutative {f : A → A → B} `{!Commutative f}
-    `{∀ z, StrongMorphism (f z)} : StrongBinaryMorphism f.
+    `{∀ z, StrongExtensionality (f z)} : StrongBinaryExtensionality f.
   Proof.
   apply @strong_binary_setoid_morphism_both_coordinates;try apply _.
-  split; try apply _.
-  intros x y.
+  intros z x y.
   rewrite !(commutativity _ z).
   apply (strong_extensionality (f z)).
   Qed.
@@ -209,9 +193,8 @@ Section dec_setoid_morphisms.
   Context `{IsApart A} `{!TrivialApart A} `{IsApart B}.
 
   Instance dec_strong_morphism (f : A → B) :
-    StrongMorphism f.
+    StrongExtensionality f.
   Proof.
-  split; try apply _.
   intros x y E. apply trivial_apart.
   intros e.
   apply tight_apart in E;auto.
@@ -232,9 +215,8 @@ Section dec_setoid_morphisms.
   Context `{IsApart C}.
 
   Instance dec_strong_binary_morphism (f : A → B → C) :
-    StrongBinaryMorphism f.
+    StrongBinaryExtensionality f.
   Proof.
-  split;try apply _.
   intros x1 y1 x2 y2 hap.
   apply (merely_destruct (cotransitive hap (f x2 y1)));intros [h|h];apply tr.
   - left. apply trivial_apart.

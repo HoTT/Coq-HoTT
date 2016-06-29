@@ -15,7 +15,8 @@ Universe U.
 
 Context `{DecidablePaths C}.
 
-Context `(phi : C -> R) `{SemiRing_Morphism C R phi}.
+Context `(phi : C -> R) `{SemiRingPreserving C R phi}
+  `{!SemiRing C} `{!SemiRing R}.
 
 Let Vars (V:Type@{U}) := (V -> R).
 
@@ -26,8 +27,6 @@ Lemma normalize_eq `{Q : @Quoting.EqQuote R _ _ _ _ V l n m V' l'}
   ≡ eval phi (Quoting.merge R l l') (toPol (Quoting.eqquote_r R))
   -> n = m.
 Proof.
-pose proof semiringmor_a.
-pose proof semiringmor_b.
 intros E.
 eapply Quoting.eval_eqquote.
 etransitivity;[symmetry;apply (eval_toPol _)|].
@@ -50,7 +49,6 @@ Lemma normalize_prequoted `{Trichotomy V Vlt} (a b : Quoting.Expr V) vs
   : eval phi vs (toPol a) = eval phi vs (toPol b) ->
   Quoting.eval _ vs a = Quoting.eval _ vs b.
 Proof.
-pose proof semiringmor_b.
 rewrite !(eval_toPol _).
 trivial.
 Qed.
@@ -65,8 +63,8 @@ Qed.
 
 End content.
 
-Arguments normalize_eq {C _ R} phi {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.
-Arguments by_quoting {C _ R} phi {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.
+Arguments normalize_eq {C _ R} phi {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.
+Arguments by_quoting {C _ R} phi {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.
 
 Ltac ring_with_nat :=
   match goal with

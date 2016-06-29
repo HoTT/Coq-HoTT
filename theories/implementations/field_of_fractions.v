@@ -212,7 +212,7 @@ Arguments equiv {R _ _} _ _.
 Section morphisms.
 Context `{IntegralDomain R1} `{DecidablePaths R1}.
 Context `{IntegralDomain R2} `{DecidablePaths R2}.
-Context `(f : R1 → R2) `{!SemiRing_Morphism f} `{!Injective f}.
+Context `(f : R1 → R2) `{!SemiRingPreserving f} `{!Injective f}.
 
 Definition lift (x : Frac R1) : Frac R2.
 Proof.
@@ -492,7 +492,7 @@ destruct (decide_rel paths (num q) 0) as [E|E];simpl.
 Qed.
 
 (* A final word about inject *)
-Global Instance: SemiRing_Morphism (_:Cast R F).
+Global Instance: SemiRingPreserving (_:Cast R F).
 Proof.
 repeat (split; try apply _).
 - intros x y. apply path. change ((x + y) * (1 * 1) = (x * 1 + y * 1) * 1).
@@ -518,7 +518,7 @@ Section morphisms.
 Context `{Funext} `{Univalence}.
 Context `{IntegralDomain R1} `{DecidablePaths R1}.
 Context `{IntegralDomain R2} `{DecidablePaths R2}.
-Context `(f : R1 → R2) `{!SemiRing_Morphism f} `{!Injective f}.
+Context `(f : R1 → R2) `{!SemiRingPreserving f} `{!Injective f}.
 
 Definition lift : F R1 -> F R2.
 Proof.
@@ -526,10 +526,10 @@ apply (F_rec (fun x => class (Frac.lift f x))).
 intros;apply path,Frac.lift_respects;trivial.
 Defined.
 
-Global Instance: SemiRing_Morphism lift.
+Global Instance: SemiRingPreserving lift.
 Proof.
 (* This takes a few seconds. *)
-repeat (split;try apply _).
+split;split;red.
 - apply (F_ind2 _).
   intros;simpl.
   apply @path. (* very slow or doesn't terminate without the @ but fast with it *)
@@ -548,7 +548,7 @@ Qed.
 
 Global Instance: Injective lift.
 Proof.
-split.
+red.
 apply (F_ind2 (fun _ _ => _ -> _)).
 intros x y E.
 simpl in E.

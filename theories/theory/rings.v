@@ -117,10 +117,10 @@ Section semiring_props.
   apply _.
   Qed.
 
-  Global Instance: ∀ r : R, @Monoid_Morphism R R (0:R) (0:R) (+) (+) (r *.).
+  Global Instance: ∀ r : R, @MonoidPreserving R R (+) (+) 0 0 (r *.).
   Proof.
   repeat (constructor; try apply _).
-  - apply distribute_l.
+  - red. apply distribute_l.
   - apply right_absorb.
   Qed.
 End semiring_props.
@@ -129,7 +129,7 @@ End semiring_props.
 Hint Extern 3 (PropHolds (_ * _ ≠ 0)) => eapply @mult_ne_0 : typeclass_instances.
 
 Section semiringmor_props.
-  Context `{SemiRing_Morphism A B f}.
+  Context `{SemiRingPreserving A B f}.
 
   Lemma preserves_0: f 0 = 0.
   Proof (preserves_mon_unit (f:=f)).
@@ -143,8 +143,6 @@ Section semiringmor_props.
   Proof.
   intros. apply preserves_sg_op.
   Qed.
-
-  Instance: SemiRing B := semiringmor_b.
 
   Lemma preserves_2: f 2 = 2.
   Proof.
@@ -380,7 +378,7 @@ Hint Extern 6 (PropHolds (1 ≶ 0)) =>
   eapply @intdom_nontrivial_apart : typeclass_instances.
 
 Section ringmor_props.
-  Context `{Ring A} `{Ring B} `{!SemiRing_Morphism (f : A → B)}.
+  Context `{Ring A} `{Ring B} `{!SemiRingPreserving (f : A → B)}.
 
   Definition preserves_negate x : f (-x) = -f x := groups.preserves_negate x.
   (* alias for convenience *)
@@ -393,9 +391,7 @@ Section ringmor_props.
 
   Lemma injective_preserves_0 : (∀ x, f x = 0 → x = 0) → Injective f.
   Proof.
-  intros E1.
-  split; try apply _.
-  intros x y E.
+  intros E1 x y E.
   apply equal_by_zero_sum.
   apply E1.
   rewrite preserves_minus, E.
@@ -457,7 +453,7 @@ Section from_stdlib_ring_theory.
   Qed.
 End from_stdlib_ring_theory. *)
 
-Instance id_sr_morphism `{SemiRing A}: SemiRing_Morphism (@id A) := {}.
+Instance id_sr_morphism `{SemiRing A}: SemiRingPreserving (@id A) := {}.
 
 Section morphism_composition.
   Context `{Mult A} `{Plus A} `{One A} `{Zero A}
@@ -466,23 +462,19 @@ Section morphism_composition.
     (f : A → B) (g : B → C).
 
   Instance compose_sr_morphism:
-    SemiRing_Morphism f → SemiRing_Morphism g → SemiRing_Morphism (g ∘ f).
+    SemiRingPreserving f → SemiRingPreserving g → SemiRingPreserving (g ∘ f).
   Proof.
-  split; try apply _.
-  - apply semiringmor_a.
-  - apply semiringmor_b.
+  split; apply _.
   Qed.
 
   Instance invert_sr_morphism:
-    ∀ `{!Inverse f}, Bijective f → SemiRing_Morphism f → SemiRing_Morphism (f⁻¹).
+    ∀ `{!Inverse f}, Bijective f → SemiRingPreserving f → SemiRingPreserving (f⁻¹).
   Proof.
-  split; try apply _.
-  - apply semiringmor_b.
-  - apply semiringmor_a.
+  split; apply _.
   Qed.
 End morphism_composition.
 
-Hint Extern 4 (SemiRing_Morphism (_ ∘ _)) =>
+Hint Extern 4 (SemiRingPreserving (_ ∘ _)) =>
   class_apply @compose_sr_morphism : typeclass_instances.
-Hint Extern 4 (SemiRing_Morphism (_⁻¹)) =>
+Hint Extern 4 (SemiRingPreserving (_⁻¹)) =>
   class_apply @invert_sr_morphism : typeclass_instances.

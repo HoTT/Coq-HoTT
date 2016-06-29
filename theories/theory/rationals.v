@@ -30,7 +30,7 @@ Section another_integers.
   Notation ZtoQ := (integers_to_ring Z Q).
   Notation QtoFrac := (rationals_to_frac Q Z).
 
-  Lemma rationals_decompose `{!SemiRing_Morphism (f : Z → Q)} (x : Q) :
+  Lemma rationals_decompose `{!SemiRingPreserving (f : Z → Q)} (x : Q) :
     merely (∃ num, ∃ den, den ≠ 0 ∧ x = f num / f den).
   Proof.
   assert (Eq : exists q, q = QtoFrac x);[econstructor;split|].
@@ -50,10 +50,9 @@ Section another_integers.
   apply FracField.mult_num_den.
   Qed.
 
-  Global Instance integers_to_rationals_injective `{!SemiRing_Morphism (f: Z → Q)}
+  Global Instance integers_to_rationals_injective `{!SemiRingPreserving (f: Z → Q)}
     : Injective f.
   Proof.
-  split.
   intros x y E.
   apply (injective (integers_to_ring Z Q)).
   rewrite <-2!(to_ring_unique f). trivial.
@@ -80,15 +79,14 @@ Section another_integers.
   rewrite !mult_1_r,!mult_1_l. trivial.
   Qed.
 
-  Context `{f : Q → FracField.F Z} `{!SemiRing_Morphism f}.
+  Context `{f : Q → FracField.F Z} `{!SemiRingPreserving f}.
 
   Global Instance to_frac_inverse: Inverse f
     := FracField.F_rec _ to_frac_inverse_respects.
 
   Global Instance: Surjective f.
   Proof.
-  split.
-  apply path_forall. red.
+  red;apply path_forall. red.
   apply (FracField.F_ind _).
   intros [n d Ed].
   unfold compose,id,inverse;simpl.
@@ -101,11 +99,11 @@ Section another_integers.
   (* Making this instance global results in loops *)
   Instance to_frac_bijective: Bijective f := {}.
   Global Instance to_frac_inverse_bijective : Bijective (f⁻¹) := _.
-  Global Instance to_frac_inverse_morphism : SemiRing_Morphism (f⁻¹) := {}.
+  Global Instance to_frac_inverse_morphism : SemiRingPreserving (f⁻¹) := {}.
 End another_integers.
 
 Lemma to_frac_unique `{Rationals Q} `{Integers Z} (f g : Q → FracField.F Z)
-  `{!SemiRing_Morphism f} `{!SemiRing_Morphism g} :
+  `{!SemiRingPreserving f} `{!SemiRingPreserving g} :
   ∀ x, f x = g x.
 Proof.
 intros x.
@@ -128,7 +126,7 @@ Section another_rationals.
 
   Local Existing Instance to_frac_bijective.
 
-  Global Instance: SemiRing_Morphism (rationals_to_rationals Q1 Q2) := _.
+  Global Instance: SemiRingPreserving (rationals_to_rationals Q1 Q2) := _.
   Global Instance: Bijective (rationals_to_rationals Q1 Q2) := _.
   Global Instance: Bijective (rationals_to_rationals Q2 Q1) := _.
 
@@ -143,7 +141,7 @@ Section another_rationals.
   apply (jections.bijective_applied _).
   Qed.
 
-  Lemma to_rationals_unique (f : Q1 → Q2) `{!SemiRing_Morphism f} :
+  Lemma to_rationals_unique (f : Q1 → Q2) `{!SemiRingPreserving f} :
     ∀ x, f x = rationals_to_rationals Q1 Q2 x.
   Proof.
   intros x.
@@ -158,7 +156,7 @@ Section another_rationals.
 End another_rationals.
 
 Lemma to_rationals_unique_alt `{Rationals Q1} `{Rationals Q2} (f g : Q1 → Q2)
-  `{!SemiRing_Morphism f} `{!SemiRing_Morphism g} :
+  `{!SemiRingPreserving f} `{!SemiRingPreserving g} :
   ∀ x, f x = g x.
 Proof.
 intros x.
@@ -167,7 +165,7 @@ trivial.
 Qed.
 
 Lemma morphisms_involutive `{Rationals Q1} `{Rationals Q2} (f : Q1 → Q2)
-  (g : Q2 → Q1) `{!SemiRing_Morphism f} `{!SemiRing_Morphism g} :
+  (g : Q2 → Q1) `{!SemiRingPreserving f} `{!SemiRingPreserving g} :
   ∀ x, f (g x) = x.
 Proof.
 intros x.
@@ -176,9 +174,8 @@ apply to_rationals_involutive.
 Qed.
 
 Global Instance injective_nats `{Rationals Q} `{Naturals N}
-  `{!SemiRing_Morphism (f : N → Q)} : Injective f.
+  `{!SemiRingPreserving (f : N → Q)} : Injective f.
 Proof.
-split; try apply _.
 intros x y E.
 apply (injective (naturals_to_semiring N (NatPair.Z nat))).
 apply rationals_embed_ints.
@@ -190,19 +187,19 @@ Qed.
 
 Section isomorphic_image_is_rationals.
   Context `{Rationals Q} `{DecField F}.
-  Context (f : Q → F) `{!Inverse f} `{!Bijective f} `{!SemiRing_Morphism f}.
+  Context (f : Q → F) `{!Inverse f} `{!Bijective f} `{!SemiRingPreserving f}.
 
   Instance iso_to_frac: RationalsToFrac F := λ Z _ _ _ _ _ _ _,
     rationals_to_frac Q Z ∘ f⁻¹.
   Hint Unfold iso_to_frac: typeclass_instances.
 
   Instance: Bijective (f⁻¹) := _.
-  Instance: SemiRing_Morphism (f⁻¹) := {}.
+  Instance: SemiRingPreserving (f⁻¹) := {}.
 
   Lemma iso_is_rationals: Rationals F.
   Proof.
   esplit;unfold rationals_to_frac;try apply _.
-  split. intros x y E.
+  intros;intros x y E.
   apply (injective (f ∘ integers_to_ring Z Q)).
   rewrite 2!(to_ring_unique (f ∘ integers_to_ring Z Q)).
   trivial.
@@ -211,8 +208,8 @@ End isomorphic_image_is_rationals.
 
 Section alt_Build_Rationals.
   Context `{DecField F} `{Integers Z} (F_to_fracZ : F → FracField.F Z)
-    `{!SemiRing_Morphism F_to_fracZ} `{!Injective F_to_fracZ}.
-  Context (Z_to_F : Z → F) `{!SemiRing_Morphism Z_to_F} `{!Injective Z_to_F}.
+    `{!SemiRingPreserving F_to_fracZ} `{!Injective F_to_fracZ}.
+  Context (Z_to_F : Z → F) `{!SemiRingPreserving Z_to_F} `{!Injective Z_to_F}.
 
   Lemma alt_to_frac_respects `{Integers B} : ∀ x y : Frac.Frac Z, Frac.equiv x y →
     FracField.class
@@ -240,10 +237,10 @@ Section alt_Build_Rationals.
   - exact (F_to_fracZ x).
   Defined.
 
-  Instance: ∀ `{Integers B}, SemiRing_Morphism (rationals_to_frac F B).
+  Instance: ∀ `{Integers B}, SemiRingPreserving (rationals_to_frac F B).
   Proof.
   intros. unfold rationals_to_frac,alt_to_frac.
-  repeat (split;try apply _).
+  repeat split;red.
   - intros.
     rewrite (preserves_plus (f:=F_to_fracZ)).
     generalize (F_to_fracZ x),(F_to_fracZ y);clear x y.
@@ -272,9 +269,7 @@ Section alt_Build_Rationals.
 
   Instance: ∀ `{Integers B}, Injective (rationals_to_frac F B).
   Proof.
-  intros.
-  split.
-  intros x y E.
+  intros;intros x y E.
   unfold rationals_to_frac,alt_to_frac in E.
   destruct (quotient.quotient_surjective _ (F_to_fracZ x)) as [Ex _].
   apply (merely_destruct Ex);clear Ex;intros [X Ex].
@@ -291,9 +286,7 @@ Section alt_Build_Rationals.
 
   Instance: ∀ `{Integers B}, Injective (integers_to_ring B F).
   Proof.
-  intros.
-  split; try apply _.
-  intros x y E.
+  intros;intros x y E.
   apply (injective (Z_to_F ∘ integers_to_ring B Z)).
   rewrite 2!(to_ring_unique (Z_to_F ∘ integers_to_ring B Z)).
   trivial.

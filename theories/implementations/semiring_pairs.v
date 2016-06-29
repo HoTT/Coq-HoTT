@@ -25,7 +25,7 @@ Arguments pos {SR} _.
 Arguments neg {SR} _.
 
 Section contents.
-Context SR `{SemiRing SR} `{IsHSet SR}.
+Context SR `{SemiRing SR}.
 Context `{∀ z, LeftCancellation (+) z}.
 
 Global Instance: IsHSet (SRpair SR).
@@ -154,10 +154,8 @@ Arguments SRapart {_ _ _} _ _.
 
 Section with_srorder.
 
-Context SR `{SemiRingOrder SR} `{∀ z, LeftCancellation (+) z}
+Context SR `{SemiRingOrder SR} `{!SemiRing SR} `{∀ z, LeftCancellation (+) z}
   `{is_mere_relation SR le}.
-
-Instance : SemiRing SR := srorder_semiring.
 
 Lemma le_respects_aux : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
   SRle q1 r1 -> SRle q2 r2.
@@ -183,10 +181,9 @@ End with_srorder.
 
 Section with_strict_srorder.
 
-Context SR `{StrictSemiRingOrder SR} `{∀ z, LeftCancellation (+) z}
+Context SR `{StrictSemiRingOrder SR} `{!SemiRing SR}
+  `{∀ z, LeftCancellation (+) z}
   `{is_mere_relation SR lt}.
-
-Instance : SemiRing SR := strict_srorder_semiring.
 
 Lemma lt_respects_aux : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
   SRlt q1 r1 -> SRlt q2 r2.
@@ -211,11 +208,10 @@ Qed.
 End with_strict_srorder.
 
 Section with_apart.
-Context SR `{FullPseudoSemiRingOrder SR} `{IsHSet SR}.
+Context SR `{FullPseudoSemiRingOrder SR} `{!SemiRing SR}.
 Context `{∀ z, StrongLeftCancellation (+) z}.
 
 Instance : IsApart SR := pseudo_order_apart.
-Instance : SemiRing SR := pseudo_srorder_semiring.
 
 Instance SRapart_cotrans : CoTransitive SRapart.
 Proof.
@@ -288,7 +284,7 @@ Module Completion.
 
 Section contents.
 Universe UR.
-Context `{Funext} `{Univalence} (SR : Type@{UR}) `{SemiRing SR} `{IsHSet SR}.
+Context `{Funext} `{Univalence} (SR : Type@{UR}) `{SemiRing SR}.
 Context `{∀ z, LeftCancellation (+) z}.
 
 (* Add Ring SR : (rings.stdlib_semiring_theory SR). *)
@@ -456,7 +452,7 @@ exact R_ring'@{UR2 UR2 UR2 UR2 UR2 UR2 UR2}.
 Qed.
 
 (* A final word about inject *)
-Lemma SR_to_R_morphism_aux : SemiRing_Morphism (cast SR R).
+Lemma SR_to_R_morphism_aux : SemiRingPreserving (cast SR R).
 Proof.
 (* This produces less universes. *)
 pose proof R_ring.
@@ -467,15 +463,13 @@ repeat (constructor; try apply _).
   ring_with_nat.
 Qed.
 
-Global Instance SR_to_R_morphism
-  : @SemiRing_Morphism _ _ _ _ _ _ pl ml _ _ (cast SR R).
+Global Instance SR_to_R_morphism : SemiRingPreserving (cast SR R).
 Proof.
 exact (SR_to_R_morphism_aux@{UR2 UR2 UR2 UR2}).
 Qed.
 
 Global Instance SR_to_R_injective : Injective (cast SR R).
 Proof.
-split.
 intros x y E. apply related_path@{i i j} in E.
 red in E. simpl in E. rewrite 2!plus_0_r in E. trivial.
 Qed.
@@ -495,11 +489,10 @@ Qed.
 End contents.
 
 Section with_semiring_order.
-  Context `{Funext} `{Univalence} SR `{SemiRingOrder SR} `{IsHSet SR}
+  Context `{Funext} `{Univalence} SR `{SemiRingOrder SR}
+    `{!SemiRing SR}
     `{is_mere_relation SR le}
     `{∀ z, LeftCancellation (+) z}.
-
-  Instance : SemiRing SR := srorder_semiring.
 
   Notation R := (R SR).
 
@@ -537,7 +530,7 @@ Section with_semiring_order.
 
   Global Instance: OrderEmbedding (cast SR R).
   Proof.
-  repeat (split; try apply _).
+  split;red.
   - intros. rewrite Rle_def. unfold SRle. simpl.
     rewrite 2!plus_0_r;trivial.
   - intros ??. rewrite Rle_def. unfold SRle. simpl.
@@ -546,8 +539,7 @@ Section with_semiring_order.
 
   Instance: ∀ z : R, OrderPreserving ((+) z).
   Proof.
-  intro z;repeat (split; try apply _).
-  revert z.
+  red.
   apply (R_ind3 _ (fun _ _ _ => _ -> _)).
   intros [pc nc] [pa na] [pb nb]. rewrite !Rle_def;unfold SRle;simpl.
   intros E.
@@ -587,11 +579,10 @@ Section with_semiring_order.
 End with_semiring_order.
 
 Section with_strict_semiring_order.
-  Context `{Funext} `{Univalence} SR `{StrictSemiRingOrder SR} `{IsHSet SR}
+  Context `{Funext} `{Univalence} SR `{StrictSemiRingOrder SR}
+    `{!SemiRing SR}
     `{is_mere_relation SR lt}
     `{∀ z, LeftCancellation (+) z}.
-
-  Instance : SemiRing SR := strict_srorder_semiring.
 
   Notation R := (R SR).
 
@@ -630,9 +621,7 @@ Section with_strict_semiring_order.
   Instance plus_strict_order_preserving_l
     : ∀ z : R, StrictlyOrderPreserving ((+) z).
   Proof.
-  intros z;split;[split;apply _|].
-  revert z.
-  apply (R_ind3 _ (fun _ _ _ => _ -> _)).
+  red; apply (R_ind3 _ (fun _ _ _ => _ -> _)).
   intros [pa na] [pb nb] [pc nc].
   rewrite !Rlt_def;unfold SRlt;simpl.
   intros E.
@@ -671,12 +660,12 @@ Section with_strict_semiring_order.
 End with_strict_semiring_order.
 
 Section with_full_pseudo_semiring_order.
-  Context `{Funext} `{Univalence} SR `{FullPseudoSemiRingOrder SR} `{IsHSet SR}
+  Context `{Funext} `{Univalence} SR `{FullPseudoSemiRingOrder SR}
+    `{!SemiRing SR}
     `{is_mere_relation SR le} `{is_mere_relation SR lt}
     `{∀ z, LeftCancellation (+) z}.
 
   Instance: IsApart SR := pseudo_order_apart.
-  Instance: SemiRing SR := pseudo_srorder_semiring.
 
   Notation R := (R SR).
 
@@ -772,10 +761,9 @@ Section with_full_pseudo_semiring_order.
     apply le_iff_not_lt_flip.
   Qed.
 
-  Instance: ∀ z : R, StrongMorphism (z *.).
+  Instance: ∀ z : R, StrongExtensionality (z *.).
   Proof.
-  intros z;split;try apply _.
-  revert z;apply (R_ind3 _ (fun _ _ _ => _ -> _)).
+  red;apply (R_ind3 _ (fun _ _ _ => _ -> _)).
   intros [zp zn] [xp xn] [yp yn];rewrite !Rapart_def;unfold SRapart;simpl.
   intros E1.
   refine (merely_destruct (strong_binary_extensionality (+)
@@ -797,35 +785,7 @@ Section with_full_pseudo_semiring_order.
     : FullPseudoSemiRingOrder (le:Le R) (lt:Lt R).
   Proof.
   apply from_full_pseudo_ring_order; try apply _.
-  - (* Fail refine (plus_strict_order_preserving_l _ ). *)
-    (* This appears to be a problem because the operations
-       in the quotient depend on the proof that SR is a strictsemiringorder
-       and this is proven in different ways in the goal and the lemma
-       (with QED being opaque).
-       Not sure if setting some QEDs to Defined would work. *)
-    intros z;split;[split;apply _|].
-    revert z.
-    apply (R_ind3 _ (fun _ _ _ => _ -> _)).
-    intros [pa na] [pb nb] [pc nc].
-    rewrite !Rlt_def;unfold SRlt;simpl.
-    intros E.
-    assert (Hrw : pa + pb + (na + nc) = (pa + na) + (pb + nc)) by ring_with_nat.
-    rewrite Hrw;clear Hrw.
-    assert (Hrw : pa + pc + (na + nb) = (pa + na) + (pc + nb)) by ring_with_nat.
-    rewrite Hrw;clear Hrw.
-    apply (strictly_order_preserving _),E.
-  - apply apartness.strong_binary_setoid_morphism_commutative.
-  - (* same problem as bullet one *)
-    unfold PropHolds.
-    apply (R_ind2 _ (fun _ _ => _ -> _ -> _)).
-    intros [pa na] [pb nb]. rewrite !Rlt_def;unfold SRlt;simpl.
-    rewrite !plus_0_l,!plus_0_r.
-    intros E1 E2.
-    destruct (decompose_lt E1) as [a [Ea1 Ea2]], (decompose_lt E2) as [b [Eb1 Eb2]].
-    rewrite Ea2, Eb2.
-    apply compose_lt with (a * b).
-    + apply pos_mult_compat;trivial.
-    + ring_with_nat.
+  apply apartness.strong_binary_setoid_morphism_commutative.
   Qed.
 End with_full_pseudo_semiring_order.
 

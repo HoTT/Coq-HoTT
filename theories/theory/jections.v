@@ -19,7 +19,8 @@ apply (ap (fun F => F x)).
 apply (surjective f).
 Qed.
 
-Lemma bijective_cancel_left {A B : Type} (f : A → B) `{!Inverse f} `{!Bijective f} x y
+Lemma bijective_cancel_left {A B : Type} (f : A → B) `{!Inverse f}
+  `{!Bijective f} x y
  : f x = y → x = f⁻¹ y.
 Proof.
   intros E.
@@ -60,9 +61,9 @@ Qed.
 Instance id_inverse {A} : Inverse (@id A) := (@id A).
 
 Instance id_injective {A : Type} : Injective (@id A).
-Proof. split; try apply _. easy. Qed.
+Proof. red;trivial. Qed.
 Instance id_surjective {A : Type} : Surjective (@id A).
-Proof. split; try apply _. now repeat intro. Qed.
+Proof. red;trivial. Qed.
 Instance id_bijective {A : Type} : Bijective (@id A).
 Proof. split; try apply _. Qed.
 
@@ -73,52 +74,54 @@ Section compositions.
 
   Instance compose_injective: Injective f → Injective g → Injective (f ∘ g).
   Proof.
-  intros. split.
-  intros.
+  red;intros.
   apply (injective g).
   apply (injective f).
   assumption.
   Qed.
 
-  Instance compose_surjective `{Funext}: Surjective f → Surjective g → Surjective (f ∘ g).
+  Instance compose_surjective : Surjective f → Surjective g →
+    Surjective (f ∘ g).
   Proof.
-    split.
-    apply path_forall;intro x.
-    change (compose f (compose (compose g (inverse g)) (inverse f)) x = id x).
-    rewrite (surjective g).
-    apply (surjective_applied f).
+  red;intros.
+  change (compose f (compose (compose g (inverse g)) (inverse f)) = id).
+  rewrite (surjective g).
+  apply (surjective f).
   Qed.
 
-  Instance compose_bijective `{Funext}: Bijective f → Bijective g → Bijective (f ∘ g)
+  Instance compose_bijective : Bijective f → Bijective g → Bijective (f ∘ g)
     := {}.
 End compositions.
 
-Hint Extern 4 (Inverse (_ ∘ _)) => class_apply @compose_inverse : typeclass_instances.
-Hint Extern 4 (Injective (_ ∘ _)) => class_apply @compose_injective : typeclass_instances.
-Hint Extern 4 (Surjective (_ ∘ _)) => class_apply @compose_surjective : typeclass_instances.
-Hint Extern 4 (Bijective (_ ∘ _)) => class_apply @compose_bijective : typeclass_instances.
+Hint Extern 4 (Inverse (_ ∘ _)) =>
+  class_apply @compose_inverse : typeclass_instances.
+Hint Extern 4 (Injective (_ ∘ _)) =>
+  class_apply @compose_injective : typeclass_instances.
+Hint Extern 4 (Surjective (_ ∘ _)) =>
+  class_apply @compose_surjective : typeclass_instances.
+Hint Extern 4 (Bijective (_ ∘ _)) =>
+  class_apply @compose_bijective : typeclass_instances.
 
 Lemma alt_Build_Injective `(f : A → B) `{!Inverse f} : f⁻¹ ∘ f = id → Injective f.
 Proof.
-  intros E.
-  split.
-  intros x y F.
-  path_via (id x).
-  rewrite <- (ap (fun F => F x) E).
-  path_via (id y); rewrite <- (ap (fun F => F y) E).
-  unfold compose. rewrite F. reflexivity.
+intros E x y F.
+path_via (id x).
+rewrite <- (ap (fun F => F x) E).
+path_via (id y); rewrite <- (ap (fun F => F y) E).
+unfold compose. rewrite F. reflexivity.
 Qed.
 
 Lemma alt_Build_Bijective `(f : A → B) `{!Inverse f} :
   f⁻¹ ∘ f = id → f ∘ f⁻¹ = id → Bijective f.
 Proof.
-  intros. split.
-  - apply (alt_Build_Injective f). assumption.
-  - split; assumption.
+intros. split.
+- apply (alt_Build_Injective f). assumption.
+- red; assumption.
 Qed.
 
 Definition inverse_inverse `{Inverse A B f} : Inverse (f⁻¹) := f.
-Hint Extern 4 (Inverse (_ ⁻¹)) => class_apply @inverse_inverse : typeclass_instances.
+Hint Extern 4 (Inverse (_ ⁻¹)) =>
+  class_apply @inverse_inverse : typeclass_instances.
 
 Lemma flip_bijection `{Funext} `{Bijective A B f} : Bijective (f⁻¹).
 Proof.
@@ -144,5 +147,6 @@ Ltac setoid_inject :=
   match goal with
   | E : _ = ?f _ |- _ => apply (injective f) in E
   | E : ?f _ = _ |- _ => apply (injective f) in E
-  | E : _ ≡ _ |-  ?G => change (id G); injection E; clear E; intros; unfold id at 1 
+  | E : _ ≡ _ |-  ?G => change (id G); injection E; clear E; intros;
+    unfold id at 1 
   end.

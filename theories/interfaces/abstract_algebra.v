@@ -44,10 +44,7 @@ Arguments tight_apart {A Aap IsApart} _ _.
 Section setoid_morphisms.
   Context {A B} {Aap : Apart A} {Bap : Apart B} (f : A → B).
 
-  Class StrongMorphism :=
-    { strong_mor_a : IsApart A
-    ; strong_mor_b : IsApart B
-    ; strong_extensionality : ∀ x y, f x ≶ f y → x ≶ y }.
+  Class StrongExtensionality := strong_extensionality : ∀ x y, f x ≶ f y → x ≶ y.
 End setoid_morphisms.
 
 (* HOTT TODO check if this is ok/useful *)
@@ -57,12 +54,8 @@ Section setoid_binary_morphisms.
   Context {A B C} {Aap: Apart A} 
     {Bap : Apart B} {Cap : Apart C} (f : A → B → C).
 
-  Class StrongBinaryMorphism :=
-    { strong_binary_mor_a : IsApart A
-    ; strong_binary_mor_b : IsApart B
-    ; strong_binary_mor_c : IsApart C
-    ; strong_binary_extensionality : ∀ x₁ y₁ x₂ y₂, f x₁ y₁ ≶ f x₂ y₂ →
-                                     hor (x₁ ≶ x₂) (y₁ ≶ y₂) }.
+  Class StrongBinaryExtensionality := strong_binary_extensionality
+    : ∀ x₁ y₁ x₂ y₂, f x₁ y₁ ≶ f x₂ y₂ → hor (x₁ ≶ x₂) (y₁ ≶ y₂).
 End setoid_binary_morphisms.
 
 (*
@@ -135,8 +128,8 @@ Section upper_classes.
   Class Field {Aap: Apart A} {Arecip: Recip A} :=
     { field_ring :> Ring
     ; field_apart :> IsApart A
-    ; field_plus_ext :> StrongBinaryMorphism (+)
-    ; field_mult_ext :> StrongBinaryMorphism (.*.)
+    ; field_plus_ext :> StrongBinaryExtensionality (+)
+    ; field_mult_ext :> StrongBinaryExtensionality (.*.)
     ; field_nontrivial : PropHolds (1 ≶ 0)
     ; recip_inverse : ∀ x, x.1 // x = 1 }.
 
@@ -202,72 +195,68 @@ Class Category O `{!Arrows O} `{!CatId O} `{!CatComp O} :=
 Arguments comp_assoc {O arrows CatId CatComp Category w x y z} _ _ _ : rename.
 
 Section morphism_classes.
-  Context {A B : Type}.
 
-  Class SemiGroup_Morphism {Aop Bop} (f : A → B) :=
-    { sgmor_a : @SemiGroup A Aop
-    ; sgmor_b : @SemiGroup B Bop
-    ; preserves_sg_op : ∀ x y, f (x & y) = f x & f y }.
+  Section sgmorphism_classes.
+  Context {A B : Type} {Aop : SgOp A} {Bop : SgOp B}
+    {Aunit : MonUnit A} {Bunit : MonUnit B}.
 
-  Class JoinSemiLattice_Morphism {Ajoin Bjoin} (f : A → B) :=
-    { join_slmor_a : @JoinSemiLattice A Ajoin
-    ; join_slmor_b : @JoinSemiLattice B Bjoin
-    ; join_slmor_sgmor :> @SemiGroup_Morphism join_is_sg_op join_is_sg_op f }.
+  Class SemiGroupPreserving (f : A → B) :=
+    preserves_sg_op : ∀ x y, f (x & y) = f x & f y.
 
-  Class MeetSemiLattice_Morphism {Ameet Bmeet} (f : A → B) :=
-    { meet_slmor_a : @MeetSemiLattice A Ameet
-    ; meet_slmor_b : @MeetSemiLattice B Bmeet
-    ; meet_slmor_sgmor :> @SemiGroup_Morphism meet_is_sg_op meet_is_sg_op f }.
+  Class UnitPreserving (f : A -> B) :=
+    preserves_mon_unit : f mon_unit = mon_unit.
 
-  Class Monoid_Morphism {Aunit Bunit Aop Bop} (f : A → B) :=
-    { monmor_a : @Monoid A Aop Aunit
-    ; monmor_b : @Monoid B Bop Bunit
-    ; monmor_sgmor :> SemiGroup_Morphism f
-    ; preserves_mon_unit : f mon_unit = mon_unit }.
+  Class MonoidPreserving (f : A → B) :=
+    { monmor_sgmor :> SemiGroupPreserving f
+    ; monmor_unitmor :> UnitPreserving f }.
+  End sgmorphism_classes.
 
-  Class BoundedJoinSemiLattice_Morphism {Abottom Bbottom Ajoin Bjoin}
-    (f : A → B) :=
-    { bounded_join_slmor_a : @BoundedJoinSemiLattice A Ajoin Abottom
-    ; bounded_join_slmor_b : @BoundedJoinSemiLattice B Bjoin Bbottom
-    ; bounded_join_slmor_monmor
-      :> @Monoid_Morphism bottom_is_mon_unit bottom_is_mon_unit
-        join_is_sg_op join_is_sg_op f }.
+  Section ringmorphism_classes.
+  Context {A B : Type} {Aplus : Plus A} {Bplus : Plus B}
+    {Amult : Mult A} {Bmult : Mult B} {Azero : Zero A} {Bzero : Zero B}
+    {Aone : One A} {Bone : One B}.
 
-  Class SemiRing_Morphism {Aplus Amult Azero Aone Bplus Bmult Bzero Bone}
-    (f : A → B) :=
-    { semiringmor_a : @SemiRing A Aplus Amult Azero Aone
-    ; semiringmor_b : @SemiRing B Bplus Bmult Bzero Bone
-    ; semiringmor_plus_mor
-      :> @Monoid_Morphism zero_is_mon_unit zero_is_mon_unit
-        plus_is_sg_op plus_is_sg_op f
-    ; semiringmor_mult_mor
-      :> @Monoid_Morphism one_is_mon_unit one_is_mon_unit
-        mult_is_sg_op mult_is_sg_op f }.
-
-  Class Lattice_Morphism {Ajoin Ameet Bjoin Bmeet} (f : A → B) :=
-    { latticemor_a : @Lattice A Ajoin Ameet
-    ; latticemor_b : @Lattice B Bjoin Bmeet
-    ; latticemor_join_mor :> JoinSemiLattice_Morphism f
-    ; latticemor_meet_mor :> MeetSemiLattice_Morphism f }.
+  Class SemiRingPreserving (f : A -> B) :=
+    { semiringmor_plus_mor :> @MonoidPreserving A B
+        plus_is_sg_op plus_is_sg_op zero_is_mon_unit zero_is_mon_unit f
+    ; semiringmor_mult_mor :> @MonoidPreserving A B
+        mult_is_sg_op mult_is_sg_op one_is_mon_unit one_is_mon_unit f }.
 
   Context {Aap : Apart A} {Bap : Apart B}.
-  Class StrongSemiRing_Morphism {Aplus Amult Azero Aone Bplus Bmult Bzero Bone}
-    (f : A → B) :=
-    { strong_semiringmor_sr_mor
-      :> @SemiRing_Morphism Aplus Amult Azero Aone Bplus Bmult Bzero Bone f
-    ; strong_semiringmor_strong_mor :> StrongMorphism f }.
+  Class SemiRingStrongPreserving (f : A -> B) :=
+    { strong_semiringmor_sr_mor :> SemiRingPreserving f
+    ; strong_semiringmor_strong_mor :> StrongExtensionality f }.
+  End ringmorphism_classes.
+
+  Section latticemorphism_classes.
+  Context {A B : Type} {Ajoin : Join A} {Bjoin : Join B}
+    {Ameet : Meet A} {Bmeet : Meet B}.
+
+  Class JoinPreserving (f : A → B) :=
+    join_slmor_sgmor :> @SemiGroupPreserving A B join_is_sg_op join_is_sg_op f.
+
+  Class MeetPreserving (f : A → B) :=
+    meet_slmor_sgmor :> @SemiGroupPreserving A B meet_is_sg_op meet_is_sg_op f.
+
+  Context {Abottom : Bottom A} {Bbottom : Bottom B}.
+  Class BoundedJoinPreserving (f : A → B) := bounded_join_slmor_monmor
+      :> @MonoidPreserving A B join_is_sg_op join_is_sg_op
+         bottom_is_mon_unit bottom_is_mon_unit f.
+
+  Class LatticePreserving (f : A → B) :=
+    { latticemor_join_mor :> JoinPreserving f
+    ; latticemor_meet_mor :> MeetPreserving f }.
+  End latticemorphism_classes.
 End morphism_classes.
 
 Section jections.
   Context {A B} (f : A → B).
 
-  Class Injective :=
-    { injective : ∀ x y, f x = f y → x = y }.
+  Class Injective := injective : ∀ x y, f x = f y → x = y.
 
   Context `{inv : !Inverse f}.
 
-  Class Surjective :=
-    { surjective : f ∘ (f ⁻¹) = id (* a.k.a. "split-epi" *) }.
+  Class Surjective := surjective : f ∘ (f ⁻¹) = id (* a.k.a. "split-epi" *).
 
   Class Bijective :=
     { bijective_injective :> Injective
@@ -278,7 +267,7 @@ Section strong_injective.
   Context {A B} {Aap : Apart A} {Bap : Apart B} (f : A -> B) .
   Class StrongInjective :=
     { strong_injective : ∀ x y, x ≶ y → f x ≶ f y
-    ; strong_injective_mor : StrongMorphism f }.
+    ; strong_injective_mor : StrongExtensionality f }.
 End strong_injective.
 
 Section extras.

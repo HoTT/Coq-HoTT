@@ -110,7 +110,8 @@ intros x. destruct (decide (x = 0)) as [Ex|Ex].
     * apply dec_recip_ne_0. trivial.
 Qed.
 
-Lemma equal_dec_quotients (a b c d : F) : b ≠ 0 → d ≠ 0 → (a * d = c * b ↔ a / b = c / d).
+Lemma equal_dec_quotients (a b c d : F) : b ≠ 0 → d ≠ 0 →
+  (a * d = c * b ↔ a / b = c / d).
 Proof.
 split; intro E.
 - apply (right_cancellation_ne_0 (.*.) b);trivial.
@@ -174,7 +175,8 @@ Qed.
 End contents.
 
 (* Due to bug #2528 *)
-Hint Extern 7 (PropHolds (/ _ ≠ 0)) => eapply @dec_recip_ne_0 : typeclass_instances.
+Hint Extern 7 (PropHolds (/ _ ≠ 0)) =>
+  eapply @dec_recip_ne_0 : typeclass_instances.
 
 (* Given a decidable field we can easily construct a constructive field. *)
 Section is_field.
@@ -204,7 +206,8 @@ Section is_field.
 End is_field.
 
 (* Definition stdlib_field_theory F `{DecField F} :
-  Field_theory.field_theory 0 1 (+) (.*.) (λ x y, x - y) (-) (λ x y, x / y) (/) (=).
+  Field_theory.field_theory 0 1 (+) (.*.) (λ x y, x - y)
+    (-) (λ x y, x / y) (/) (=).
 Proof with auto.
   intros.
   constructor.
@@ -216,7 +219,8 @@ Proof with auto.
 Qed. *)
 
 (* Section from_stdlib_field_theory.
-  Context `(ftheory : @field_theory F Fzero Fone Fplus Fmult Fminus Fnegate Fdiv Frecip Fe)
+  Context `(ftheory : @field_theory F Fzero Fone Fplus Fmult Fminus Fnegate
+    Fdiv Frecip Fe)
     (rinv_0 : Fe (Frecip Fzero) Fzero)
     `{!@Setoid F Fe}
     `{!Proper (Fe ==> Fe ==> Fe) Fplus}
@@ -226,7 +230,8 @@ Qed. *)
 
   Add Field F2 : ftheory.
 
-  Definition from_stdlib_field_theory: @DecField F Fe Fplus Fmult Fzero Fone Fnegate Frecip.
+  Definition from_stdlib_field_theory: @DecField F Fe Fplus Fmult
+    Fzero Fone Fnegate Frecip.
   Proof with auto.
    destruct ftheory.
    repeat (constructor; try assumption); repeat intro
@@ -243,7 +248,7 @@ Section morphisms.
   Context  `{DecField F} `{TrivialApart F} `{Decidable.DecidablePaths F}.
 
   Global Instance dec_field_to_domain_inj `{IntegralDomain R}
-    `{!SemiRing_Morphism (f : F → R)} : Injective f.
+    `{!SemiRingPreserving (f : F → R)} : Injective f.
   Proof.
   apply injective_preserves_0.
   intros x Efx.
@@ -256,7 +261,7 @@ Section morphisms.
   Qed.
 
   Lemma preserves_dec_recip `{DecField F2} `{∀ x y: F2, Decision (x = y)}
-    `{!SemiRing_Morphism (f : F → F2)} x : f (/ x) = / f x.
+    `{!SemiRingPreserving (f : F → F2)} x : f (/ x) = / f x.
   Proof.
   case (decide (x = 0)) as [E | E].
   - rewrite E, dec_recip_0, preserves_0, dec_recip_0. reflexivity.
@@ -269,8 +274,8 @@ Section morphisms.
       * trivial.
   Qed.
 
-  Lemma dec_recip_to_recip `{Field F2} `{!StrongSemiRing_Morphism (f : F → F2)} x Pfx :
-    f (/ x) = // (f x)↾Pfx.
+  Lemma dec_recip_to_recip `{Field F2} `{!SemiRingStrongPreserving (f : F → F2)}
+    x Pfx : f (/ x) = // (f x)↾Pfx.
   Proof.
   assert (x ≠ 0).
   - intros Ex.

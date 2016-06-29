@@ -35,7 +35,7 @@ Universe U V.
 Context `{Funext} `{Univalence}.
 Context (A B : Operations@{U V}).
 
-Context (f : A -> B) `{!IsEquiv f} `{!SemiRing_Morphism f}.
+Context (f : A -> B) `{!IsEquiv f} `{!SemiRingPreserving f}.
 
 Lemma iso_same_semirings : A = B.
 Proof.
@@ -98,7 +98,8 @@ Section contents.
 Context `{Funext} `{Univalence}.
 Context (A B : Operations).
 
-Context (f : A -> B) `{!IsEquiv f} `{!Ring A} `{!Ring B} `{!SemiRing_Morphism f}.
+(* NB: we need to know they're rings for preserves_negate *)
+Context (f : A -> B) `{!IsEquiv f} `{!Ring A} `{!Ring B} `{!SemiRingPreserving f}.
 
 Lemma iso_same_rings : A = B.
 Proof.
@@ -133,6 +134,5 @@ rewrite iso_same_rings. trivial.
 Qed.
 
 End contents.
-
 
 End Rings.

@@ -83,19 +83,9 @@ Class FullPseudoOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
 Section order_maps.
   Context {A B : Type} {Ale: Le A} {Ble: Le B}(f : A → B).
 
-  (* An Order_Pair is just the factoring out of the common parts of
-    OrderPreserving and OrderReflecting *)
-  Class Order_Pair :=
-    { order_morphism_po_a : PartialOrder Ale
-    ; order_morphism_po_b : PartialOrder Ble }.
+  Class OrderPreserving := order_preserving : `(x ≤ y → f x ≤ f y).
 
-  Class OrderPreserving :=
-    { order_preserving_morphism :> Order_Pair
-    ; order_preserving : `(x ≤ y → f x ≤ f y) }.
-
-  Class OrderReflecting :=
-    { order_reflecting_morphism :> Order_Pair
-    ; order_reflecting : `(f x ≤ f y → x ≤ y) }.
+  Class OrderReflecting := order_reflecting : `(f x ≤ f y → x ≤ y).
 
   Class OrderEmbedding :=
     { order_embedding_preserving :> OrderPreserving
@@ -108,25 +98,17 @@ End order_maps.
 
 Section srorder_maps.
   Context {A B : Type} {Alt: Lt A} {Blt: Lt B} (f : A → B).
-  Class StrictOrder_Pair :=
-    { strict_order_morphism_so_a : StrictOrder Alt
-    ; strict_order_morphism_so_b : StrictOrder Blt }.
 
-  Class StrictlyOrderPreserving :=
-    { strictly_order_preserving_morphism :> StrictOrder_Pair
-    ; strictly_order_preserving : `(x < y → f x < f y) }.
+  Class StrictlyOrderPreserving := strictly_order_preserving
+    : `(x < y → f x < f y).
 
-  Class StrictlyOrderReflecting :=
-    { strictly_order_reflecting_morphism :> StrictOrder_Pair
-    ; strictly_order_reflecting : `(f x < f y → x < y) }.
+  Class StrictlyOrderReflecting := strictly_order_reflecting
+    : `(f x < f y → x < y).
 
   Class StrictOrderEmbedding :=
     { strict_order_embedding_preserving :> StrictlyOrderPreserving
     ; strict_order_embedding_reflecting :> StrictlyOrderReflecting }.
 End srorder_maps.
-
-Arguments Order_Pair {_ _} _ _.
-Arguments StrictOrder_Pair {_ _} _ _.
 
 Hint Extern 4 (?f _ ≤ ?f _) => apply (order_preserving f).
 Hint Extern 4 (?f _ < ?f _) => apply (strictly_order_preserving f).
@@ -141,7 +123,6 @@ Davorin Lešnik's PhD thesis.
 Class SemiRingOrder `{Plus A} `{Mult A}
     `{Zero A} `{One A} (Ale : Le A) :=
   { srorder_po :> PartialOrder Ale
-  ; srorder_semiring : SemiRing A
   ; srorder_partial_minus : ∀ x y, x ≤ y → ∃ z, y = x + z
   ; srorder_plus :> ∀ z, OrderEmbedding (z +)
   ; nonneg_mult_compat : ∀ x y, PropHolds (0 ≤ x) → PropHolds (0 ≤ y) →
@@ -150,7 +131,6 @@ Class SemiRingOrder `{Plus A} `{Mult A}
 Class StrictSemiRingOrder `{Plus A} `{Mult A}
     `{Zero A} `{One A} (Alt : Lt A) :=
   { strict_srorder_so :> StrictOrder Alt
-  ; strict_srorder_semiring : SemiRing A
   ; strict_srorder_partial_minus : ∀ x y, x < y → ∃ z, y = x + z
   ; strict_srorder_plus :> ∀ z, StrictOrderEmbedding (z +)
   ; pos_mult_compat : ∀ x y, PropHolds (0 < x) → PropHolds (0 < y) →
@@ -159,10 +139,9 @@ Class StrictSemiRingOrder `{Plus A} `{Mult A}
 Class PseudoSemiRingOrder `{Apart A} `{Plus A}
     `{Mult A} `{Zero A} `{One A} (Alt : Lt A) :=
   { pseudo_srorder_strict :> PseudoOrder Alt
-  ; pseudo_srorder_semiring : SemiRing A
   ; pseudo_srorder_partial_minus : ∀ x y, ¬y < x → ∃ z, y = x + z
   ; pseudo_srorder_plus :> ∀ z, StrictOrderEmbedding (z +)
-  ; pseudo_srorder_mult_ext :> StrongBinaryMorphism (.*.)
+  ; pseudo_srorder_mult_ext :> StrongBinaryExtensionality (.*.)
   ; pseudo_srorder_pos_mult_compat : ∀ x y, PropHolds (0 < x) → PropHolds (0 < y) →
                                             PropHolds (0 < x * y) }.
 
@@ -172,8 +151,10 @@ Class FullPseudoSemiRingOrder `{Apart A} `{Plus A}
   ; full_pseudo_srorder_le_iff_not_lt_flip : ∀ x y, x ≤ y ↔ ¬y < x }.
 
 (* Due to bug #2528 *)
-Hint Extern 7 (PropHolds (0 < _ * _)) => eapply @pos_mult_compat : typeclass_instances.
-Hint Extern 7 (PropHolds (0 ≤ _ * _)) => eapply @nonneg_mult_compat : typeclass_instances.
+Hint Extern 7 (PropHolds (0 < _ * _)) =>
+  eapply @pos_mult_compat : typeclass_instances.
+Hint Extern 7 (PropHolds (0 ≤ _ * _)) =>
+  eapply @nonneg_mult_compat : typeclass_instances.
 
 (*
 Alternatively, we could have defined the standard notion of a RingOrder:
@@ -188,7 +169,8 @@ naturals). Moreover, in case of rings, we prove that this notion is equivalent
 to our SemiRingOrder class (see orders.rings.from_ring_order). Hence we omit
 defining such a class.
 
-Similarly we prove that a FullSemiRingOrder and a FullPseudoRingOrder are equivalent.
+Similarly we prove that a FullSemiRingOrder
+and a FullPseudoRingOrder are equivalent.
 
 Class FullPseudoRingOrder `{Apart A} `{Plus A}
     `{Mult A} `{Zero A} (Ale : Le A) (Alt : Lt A) :=

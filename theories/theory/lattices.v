@@ -12,21 +12,21 @@ Proof.
 repeat (split; try apply _).
 Qed.
 
-Instance bounded_sl_mor_is_sl_mor `{H : BoundedJoinSemiLattice_Morphism A B f}
-  : JoinSemiLattice_Morphism f.
+Instance bounded_sl_mor_is_sl_mor `{H : BoundedJoinPreserving A B f}
+  : JoinPreserving f.
 Proof.
-destruct H. split; apply _.
+red;apply _.
 Qed.
 
-Lemma preserves_join `{JoinSemiLattice_Morphism L K f} x y
+Lemma preserves_join `{JoinPreserving L K f} x y
   : f (x ⊔ y) = f x ⊔ f y.
 Proof preserves_sg_op x y.
 
-Lemma preserves_bottom `{BoundedJoinSemiLattice_Morphism L K f}
+Lemma preserves_bottom `{BoundedJoinPreserving L K f}
   : f ⊥ = ⊥.
 Proof (preserves_mon_unit (f:=f)).
 
-Lemma preserves_meet `{MeetSemiLattice_Morphism L K f} x y :
+Lemma preserves_meet `{MeetPreserving L K f} x y :
   f (x ⊓ y) = f x ⊓ f y.
 Proof preserves_sg_op x y.
 
@@ -76,7 +76,8 @@ Section distributive_lattice_props.
   apply distribute_l.
   Qed.
 
-  Lemma distribute_alt x y z : (x ⊓ y) ⊔ (x ⊓ z) ⊔ (y ⊓ z) = (x ⊔ y) ⊓ (x ⊔ z) ⊓ (y ⊔ z).
+  Lemma distribute_alt x y z
+    : (x ⊓ y) ⊔ (x ⊓ z) ⊔ (y ⊓ z) = (x ⊔ y) ⊓ (x ⊔ z) ⊓ (y ⊔ z).
   Proof.
   rewrite (distribute_r x y (x ⊓ z)), join_meet_absorption.
   rewrite (distribute_r _ _ (y ⊓ z)).
@@ -140,17 +141,17 @@ Section from_another_bounded_sl.
   Qed.
 End from_another_bounded_sl.
 
-Instance id_join_sl_morphism `{JoinSemiLattice A} : JoinSemiLattice_Morphism (@id A)
+Instance id_join_sl_morphism `{JoinSemiLattice A} : JoinPreserving (@id A)
   := {}.
 
-Instance id_meet_sl_morphism `{MeetSemiLattice A} : MeetSemiLattice_Morphism (@id A)
+Instance id_meet_sl_morphism `{MeetSemiLattice A} : MeetPreserving (@id A)
   := {}.
 
 Instance id_bounded_join_sl_morphism `{BoundedJoinSemiLattice A}
-  : BoundedJoinSemiLattice_Morphism (@id A)
+  : BoundedJoinPreserving (@id A)
   := {}.
 
-Instance id_lattice_morphism `{Lattice A} : Lattice_Morphism (@id A)
+Instance id_lattice_morphism `{Lattice A} : LatticePreserving (@id A)
   := {}.
 
 Section morphism_composition.
@@ -160,89 +161,73 @@ Section morphism_composition.
     (f : A → B) (g : B → C).
 
   Instance compose_join_sl_morphism:
-    JoinSemiLattice_Morphism f → JoinSemiLattice_Morphism g →
-    JoinSemiLattice_Morphism (g ∘ f).
+    JoinPreserving f → JoinPreserving g →
+    JoinPreserving (g ∘ f).
   Proof.
-  split; try apply _.
-  - apply join_slmor_a.
-  - apply join_slmor_b.
+  red; apply _.
   Qed.
 
   Instance compose_meet_sl_morphism:
-    MeetSemiLattice_Morphism f → MeetSemiLattice_Morphism g →
-    MeetSemiLattice_Morphism (g ∘ f).
+    MeetPreserving f → MeetPreserving g →
+    MeetPreserving (g ∘ f).
   Proof.
-  split; try apply _.
-  - apply meet_slmor_a.
-  - apply meet_slmor_b.
+  red;apply _.
   Qed.
 
   Instance compose_bounded_join_sl_morphism:
-    BoundedJoinSemiLattice_Morphism f → BoundedJoinSemiLattice_Morphism g →
-    BoundedJoinSemiLattice_Morphism (g ∘ f).
+    BoundedJoinPreserving f → BoundedJoinPreserving g →
+    BoundedJoinPreserving (g ∘ f).
   Proof.
-  split; try apply _.
-  - apply bounded_join_slmor_a.
-  - apply bounded_join_slmor_b.
+  red; apply _.
   Qed.
 
   Instance compose_lattice_morphism:
-    Lattice_Morphism f → Lattice_Morphism g → Lattice_Morphism (g ∘ f).
+    LatticePreserving f → LatticePreserving g → LatticePreserving (g ∘ f).
   Proof.
-  split; try apply _.
-  - apply latticemor_a.
-  - apply latticemor_b.
+  split; apply _.
   Qed.
 
   Instance invert_join_sl_morphism:
-    ∀ `{!Inverse f}, Bijective f → JoinSemiLattice_Morphism f →
-    JoinSemiLattice_Morphism (f⁻¹).
+    ∀ `{!Inverse f}, Bijective f → JoinPreserving f →
+    JoinPreserving (f⁻¹).
   Proof.
-  split; try apply _.
-  - apply join_slmor_b.
-  - apply join_slmor_a.
+  red; apply _.
   Qed.
 
   Instance invert_meet_sl_morphism:
-    ∀ `{!Inverse f}, Bijective f → MeetSemiLattice_Morphism f →
-    MeetSemiLattice_Morphism (f⁻¹).
+    ∀ `{!Inverse f}, Bijective f → MeetPreserving f →
+    MeetPreserving (f⁻¹).
   Proof.
-  split; try apply _.
-  - apply meet_slmor_b.
-  - apply meet_slmor_a.
+  red; apply _.
   Qed.
 
   Instance invert_bounded_join_sl_morphism:
-    ∀ `{!Inverse f}, Bijective f → BoundedJoinSemiLattice_Morphism f →
-    BoundedJoinSemiLattice_Morphism (f⁻¹).
+    ∀ `{!Inverse f}, Bijective f → BoundedJoinPreserving f →
+    BoundedJoinPreserving (f⁻¹).
   Proof.
-  split; try apply _.
-  - apply bounded_join_slmor_b.
-  - apply bounded_join_slmor_a.
+  red; apply _.
   Qed.
 
   Instance invert_lattice_morphism:
-    ∀ `{!Inverse f}, Bijective f → Lattice_Morphism f → Lattice_Morphism (f⁻¹).
+    ∀ `{!Inverse f}, Bijective f → LatticePreserving f → LatticePreserving (f⁻¹).
   Proof.
-  split; try apply _.
-  - apply latticemor_b.
-  - apply latticemor_a.
+  split; apply _.
   Qed.
 End morphism_composition.
 
-Hint Extern 4 (JoinSemiLattice_Morphism (_ ∘ _)) =>
+Hint Extern 4 (JoinPreserving (_ ∘ _)) =>
   class_apply @compose_join_sl_morphism : typeclass_instances.
-Hint Extern 4 (MeetSemiLattice_Morphism (_ ∘ _)) =>
+Hint Extern 4 (MeetPreserving (_ ∘ _)) =>
   class_apply @compose_meet_sl_morphism : typeclass_instances.
-Hint Extern 4 (BoundedJoinSemiLattice_Morphism (_ ∘ _)) =>
+Hint Extern 4 (BoundedJoinPreserving (_ ∘ _)) =>
   class_apply @compose_bounded_join_sl_morphism : typeclass_instances.
-Hint Extern 4 (Lattice_Morphism (_ ∘ _)) =>
+Hint Extern 4 (LatticePreserving (_ ∘ _)) =>
   class_apply @compose_lattice_morphism : typeclass_instances.
-Hint Extern 4 (JoinSemiLattice_Morphism (_⁻¹)) =>
+Hint Extern 4 (JoinPreserving (_⁻¹)) =>
   class_apply @invert_join_sl_morphism : typeclass_instances.
-Hint Extern 4 (MeetSemiLattice_Morphism (_⁻¹)) =>
+Hint Extern 4 (MeetPreserving (_⁻¹)) =>
   class_apply @invert_meet_sl_morphism : typeclass_instances.
-Hint Extern 4 (BoundedJoinSemiLattice_Morphism (_⁻¹)) =>
+Hint Extern 4 (BoundedJoinPreserving (_⁻¹)) =>
   class_apply @invert_bounded_join_sl_morphism : typeclass_instances.
-Hint Extern 4 (Lattice_Morphism (_⁻¹)) =>
+Hint Extern 4 (LatticePreserving (_⁻¹)) =>
   class_apply @invert_lattice_morphism : typeclass_instances.

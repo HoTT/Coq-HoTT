@@ -7,12 +7,8 @@ Require Export
   HoTTClasses.orders.orders
   HoTTClasses.orders.maps.
 
-Local Existing Instance srorder_semiring.
-Local Existing Instance strict_srorder_semiring.
-Local Existing Instance pseudo_srorder_semiring.
-
 Section semiring_order.
-  Context `{SemiRingOrder R}.
+  Context `{SemiRingOrder R} `{!SemiRing R}.
 (*   Add Ring R : (stdlib_semiring_theory R). *)
 
   Global Instance: ∀ (z : R), OrderEmbedding (+z).
@@ -181,7 +177,8 @@ Section semiring_order.
 End semiring_order.
 
 (* Due to bug #2528 *)
-Hint Extern 7 (PropHolds (0 ≤ _ + _)) => eapply @nonneg_plus_compat : typeclass_instances.
+Hint Extern 7 (PropHolds (0 ≤ _ + _)) =>
+  eapply @nonneg_plus_compat : typeclass_instances.
 
 Section strict_semiring_order.
   Context `{SemiRing R} `{Apart R} `{!StrictSemiRingOrder Rlt}.
@@ -257,13 +254,11 @@ Section strict_semiring_order.
 
   Global Instance: ∀ (z : R), PropHolds (0 < z) → StrictlyOrderPreserving (z *.).
   Proof.
-  intros z E. split.
-  - split;apply _.
-  - intros x y F.
-    destruct (decompose_lt F) as [a [Ea1 Ea2]].
-    rewrite Ea2, plus_mult_distr_l.
-    apply pos_plus_lt_compat_r.
-    apply pos_mult_compat;trivial.
+  intros z E x y F.
+  destruct (decompose_lt F) as [a [Ea1 Ea2]].
+  rewrite Ea2, plus_mult_distr_l.
+  apply pos_plus_lt_compat_r.
+  apply pos_mult_compat;trivial.
   Qed.
 
   Global Instance: ∀ (z : R), PropHolds (0 < z) → StrictlyOrderPreserving (.* z).
@@ -336,10 +331,11 @@ Section strict_semiring_order.
 End strict_semiring_order.
 
 (* Due to bug #2528 *)
-Hint Extern 7 (PropHolds (0 < _ + _)) => eapply @pos_plus_compat : typeclass_instances.
+Hint Extern 7 (PropHolds (0 < _ + _)) =>
+  eapply @pos_plus_compat : typeclass_instances.
 
 Section pseudo_semiring_order.
-  Context `{PseudoSemiRingOrder R}.
+  Context `{PseudoSemiRingOrder R} `{!SemiRing R}.
 (*   Add Ring Rp : (stdlib_semiring_theory R). *)
 
   Instance: IsApart R := pseudo_order_apart.
@@ -351,9 +347,9 @@ Section pseudo_semiring_order.
   - apply pseudo_srorder_pos_mult_compat.
   Qed.
 
-  Global Instance: StrongBinaryMorphism (+).
+  Global Instance: StrongBinaryExtensionality (+).
   Proof.
-  assert (∀ z, StrongMorphism (z +)).
+  assert (∀ z, StrongExtensionality (z +)).
   - intros. apply pseudo_order_embedding_ext.
   - apply apartness.strong_binary_setoid_morphism_commutative.
   Qed.
@@ -408,14 +404,12 @@ Section pseudo_semiring_order.
 
   Global Instance: ∀ (z : R), PropHolds (0 < z) → StrictlyOrderReflecting (z *.).
   Proof.
-  intros z Ez. split.
-  - split;apply _.
-  - intros x y E1.
-    apply not_lt_apart_lt_flip.
-    + intros E2. apply (lt_flip _ _ E1).
-      apply (strictly_order_preserving (z *.));trivial.
-    + apply (strong_extensionality (z *.)).
-      apply pseudo_order_lt_apart_flip;trivial.
+  intros z Ez x y E1.
+  apply not_lt_apart_lt_flip.
+  + intros E2. apply (lt_flip _ _ E1).
+    apply (strictly_order_preserving (z *.));trivial.
+  + apply (strong_extensionality (z *.)).
+    apply pseudo_order_lt_apart_flip;trivial.
   Qed.
 
   Global Instance: ∀ (z : R), PropHolds (0 < z) → StrictlyOrderReflecting (.* z).
@@ -548,7 +542,7 @@ Hint Extern 7 (PropHolds (0 < 4)) => eapply @lt_0_4 : typeclass_instances.
 Hint Extern 7 (PropHolds (2 ≶ 0)) => eapply @apart_0_2 : typeclass_instances.
 
 Section full_pseudo_semiring_order.
-  Context `{FullPseudoSemiRingOrder R}.
+  Context `{FullPseudoSemiRingOrder R} `{!SemiRing R}.
 
 (*   Add Ring Rf : (stdlib_semiring_theory R). *)
 
@@ -632,6 +626,7 @@ Section full_pseudo_semiring_order.
   destruct (lt_antisym (x * x) 0).
   split; [trivial |].
   apply square_pos.
+  pose proof pseudo_order_apart.
   apply (strong_extensionality (x *.)).
   rewrite mult_0_r.
   apply lt_apart. trivial.
@@ -761,7 +756,8 @@ Section dec_semiring_order.
     + apply (order_preserving (z+));trivial.
     + intros E3. apply E2b. apply (left_cancellation (+) z);trivial.
   - apply (apartness.dec_strong_binary_morphism (.*.)).
-  - intros x y E1 E2. apply lt_correct in E1;apply lt_correct in E2;apply lt_correct.
+  - intros x y E1 E2.
+    apply lt_correct in E1;apply lt_correct in E2;apply lt_correct.
     destruct E1 as [E1a E1b], E2 as [E2a E2b]. split.
     + apply nonneg_mult_compat;trivial.
     + apply not_symmetry.
@@ -779,22 +775,23 @@ Section another_semiring.
   Context `{SemiRingOrder R1}.
 
   Lemma projected_srorder `{SemiRing R2} `{R2le : Le R2} (f : R2 → R1)
-    `{!SemiRing_Morphism f} `{!Injective f}
+    `{!SemiRingPreserving f} `{!Injective f}
     : (∀ x y, x ≤ y ↔ f x ≤ f y) → (∀ x y : R2, x ≤ y → ∃ z, y = x + z) →
       SemiRingOrder R2le.
   Proof.
   intros P. pose proof (projected_partial_order f P).
   repeat (split; try apply _).
   - assumption.
-  - intros. apply P.
+  - red;intros. apply P.
     rewrite 2!(preserves_plus (f:=f)). apply (order_preserving _), P. trivial.
-  - intros. apply P. apply (order_reflecting (f z +)).
+  - red;intros. apply P. apply (order_reflecting (f z +)).
     rewrite <-2!preserves_plus. apply P. trivial.
   - intros. apply P. rewrite preserves_mult, preserves_0.
     apply nonneg_mult_compat; rewrite <-(preserves_0 (f:=f)); apply P;trivial.
   Qed.
 
- Context `{SemiRingOrder R2} `{!SemiRing_Morphism (f : R1 → R2)}.
+ Context `{!SemiRing R1} `{SemiRingOrder R2} `{!SemiRing R2}
+   `{!SemiRingPreserving (f : R1 → R2)}.
 
   (* If a morphism agrees on the positive cone then it is order preserving *)
   Lemma preserving_preserves_nonneg : (∀ x, 0 ≤ x → 0 ≤ f x) → OrderPreserving f.
@@ -832,7 +829,8 @@ End another_semiring.
 
 Section another_semiring_strict.
   Context `{StrictSemiRingOrder R1} `{StrictSemiRingOrder R2}
-    `{!SemiRing_Morphism (f : R1 → R2)}.
+    `{!SemiRing R1} `{!SemiRing R2}
+    `{!SemiRingPreserving (f : R1 → R2)}.
 
   Lemma strictly_preserving_preserves_pos
     : (∀ x, 0 < x → 0 < f x) → StrictlyOrderPreserving f.
@@ -849,32 +847,40 @@ Section another_semiring_strict.
   Instance preserves_pos `{!StrictlyOrderPreserving f} x 
    : PropHolds (0 < x) → PropHolds (0 < f x).
   Proof.
-  intros. rewrite <-(preserves_0 (f:=f)). apply (strictly_order_preserving f);trivial.
+  intros. rewrite <-(preserves_0 (f:=f)).
+  apply (strictly_order_preserving f);trivial.
   Qed.
 
   Lemma preserves_neg `{!StrictlyOrderPreserving f} x
     : x < 0 → f x < 0.
   Proof.
-  intros. rewrite <-(preserves_0 (f:=f)). apply (strictly_order_preserving f);trivial.
+  intros. rewrite <-(preserves_0 (f:=f)).
+  apply (strictly_order_preserving f);trivial.
   Qed.
 
   Lemma preserves_gt_1 `{!StrictlyOrderPreserving f} x
     : 1 < x → 1 < f x.
   Proof.
-  intros. rewrite <-(preserves_1 (f:=f)). apply (strictly_order_preserving f);trivial.
+  intros. rewrite <-(preserves_1 (f:=f)).
+  apply (strictly_order_preserving f);trivial.
   Qed.
 
   Lemma preserves_lt_1 `{!StrictlyOrderPreserving f} x
     : x < 1 → f x < 1.
   Proof.
-  intros. rewrite <-(preserves_1 (f:=f)). apply (strictly_order_preserving f);trivial.
+  intros. rewrite <-(preserves_1 (f:=f)).
+  apply (strictly_order_preserving f);trivial.
   Qed.
 End another_semiring_strict.
 
 (* Due to bug #2528 *)
-Hint Extern 15 (PropHolds (_ ≤ _ _)) => eapply @preserves_nonneg : typeclass_instances.
-Hint Extern 15 (PropHolds (_ < _ _)) => eapply @preserves_pos : typeclass_instances.
+Hint Extern 15 (PropHolds (_ ≤ _ _)) =>
+  eapply @preserves_nonneg : typeclass_instances.
+Hint Extern 15 (PropHolds (_ < _ _)) =>
+  eapply @preserves_pos : typeclass_instances.
 
 (* Oddly enough, the above hints do not work for goals of the following shape? *)
-Hint Extern 15 (PropHolds (_ ≤ '_)) => eapply @preserves_nonneg : typeclass_instances.
-Hint Extern 15 (PropHolds (_ < '_)) => eapply @preserves_pos : typeclass_instances.
+Hint Extern 15 (PropHolds (_ ≤ '_)) =>
+  eapply @preserves_nonneg : typeclass_instances.
+Hint Extern 15 (PropHolds (_ < '_)) =>
+  eapply @preserves_pos : typeclass_instances.

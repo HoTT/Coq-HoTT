@@ -105,7 +105,7 @@ Section join_semilattice_order.
 
   Global Instance: ∀ z, OrderPreserving (z ⊔).
   Proof.
-  intros. repeat (split; try apply _). intros.
+  red;intros.
   apply join_lub.
   - apply join_ub_l.
   - apply join_le_compat_l. trivial.
@@ -243,7 +243,7 @@ Section meet_semilattice_order.
 
   Global Instance: ∀ z, OrderPreserving (z ⊓).
   Proof.
-  intros. repeat (split; try apply _). intros.
+  red;intros.
   apply meet_glb.
   - apply meet_lb_l.
   - apply  meet_le_compat_l. trivial.
@@ -387,13 +387,10 @@ End meet_sl_order_alt.
 
 Section join_order_preserving.
   Context `{JoinSemiLatticeOrder L} `{JoinSemiLatticeOrder K} (f : L → K)
-    `{!JoinSemiLattice_Morphism f}.
-
-  Local Existing Instance join_sl_order_join_sl.
+    `{!JoinPreserving f}.
 
   Lemma join_sl_mor_preserving: OrderPreserving f.
   Proof.
-  repeat (split; try apply _).
   intros x y E.
   apply join_sl_le_spec in E. apply join_sl_le_spec.
   rewrite <-preserves_join.
@@ -402,7 +399,6 @@ Section join_order_preserving.
 
   Lemma join_sl_mor_reflecting `{!Injective f}: OrderReflecting f.
   Proof.
-  repeat (split; try apply _).
   intros x y E.
   apply join_sl_le_spec in E. apply join_sl_le_spec.
   rewrite <-preserves_join in E.
@@ -412,13 +408,10 @@ End join_order_preserving.
 
 Section meet_order_preserving.
   Context `{MeetSemiLatticeOrder L} `{MeetSemiLatticeOrder K} (f : L → K)
-    `{!MeetSemiLattice_Morphism f}.
-
-  Local Existing Instance meet_sl_order_meet_sl.
+    `{!MeetPreserving f}.
 
   Lemma meet_sl_mor_preserving: OrderPreserving f.
   Proof.
-  repeat (split; try apply _).
   intros x y E.
   apply meet_sl_le_spec in E. apply meet_sl_le_spec.
   rewrite <-preserves_meet.
@@ -427,7 +420,6 @@ Section meet_order_preserving.
 
   Lemma meet_sl_mor_reflecting `{!Injective f}: OrderReflecting f.
   Proof.
-  repeat (split; try apply _).
   intros x y E.
   apply meet_sl_le_spec in E. apply meet_sl_le_spec.
   rewrite <-preserves_meet in E.
@@ -437,13 +429,11 @@ End meet_order_preserving.
 
 Section order_preserving_join_sl_mor.
   Context `{JoinSemiLatticeOrder L} `{JoinSemiLatticeOrder K}
-    `{!TotalOrder (_ : Le L)} `{!TotalOrder (_ : Le K)} `{!OrderPreserving (f : L → K)}.
+    `{!TotalOrder (_ : Le L)} `{!TotalOrder (_ : Le K)}
+    `{!OrderPreserving (f : L → K)}.
 
-  Local Existing Instance join_sl_order_join_sl.
-
-  Lemma order_preserving_join_sl_mor: JoinSemiLattice_Morphism f.
+  Lemma order_preserving_join_sl_mor: JoinPreserving f.
   Proof.
-  repeat (split; try apply _).
   intros x y. case (total (≤) x y); intros E.
   - change (f (join x y) = join (f x) (f y)).
     rewrite (join_r _ _ E),join_r;trivial.
@@ -455,13 +445,11 @@ End order_preserving_join_sl_mor.
 
 Section order_preserving_meet_sl_mor.
   Context `{MeetSemiLatticeOrder L} `{MeetSemiLatticeOrder K}
-    `{!TotalOrder (_ : Le L)} `{!TotalOrder (_ : Le K)} `{!OrderPreserving (f : L → K)}.
+    `{!TotalOrder (_ : Le L)} `{!TotalOrder (_ : Le K)}
+    `{!OrderPreserving (f : L → K)}.
 
-  Local Existing Instance meet_sl_order_meet_sl.
-
-  Lemma order_preserving_meet_sl_mor: SemiGroup_Morphism f.
+  Lemma order_preserving_meet_sl_mor: SemiGroupPreserving f.
   Proof.
-  repeat (split; try apply _).
   intros x y. case (total (≤) x y); intros E.
   - change (f (meet x y) = meet (f x) (f y)).
     rewrite 2!meet_l;trivial.

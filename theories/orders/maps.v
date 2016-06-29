@@ -4,11 +4,6 @@ Require Import
   HoTTClasses.orders.orders
   HoTTClasses.theory.apartness.
 
-Local Existing Instance order_morphism_po_a.
-Local Existing Instance order_morphism_po_b.
-Local Existing Instance strict_order_morphism_so_a.
-Local Existing Instance strict_order_morphism_so_b.
-
 (* If a function between strict partial orders is order preserving (back), we can
   derive that it is strictly order preserving (back) *)
 Section strictly_order_preserving.
@@ -18,7 +13,6 @@ Section strictly_order_preserving.
     `{!StrongInjective f} :
     StrictlyOrderPreserving f | 20.
   Proof.
-  repeat (split; try apply _).
   intros x y E.
   apply lt_iff_le_apart in E. apply lt_iff_le_apart.
   destruct E as [E1 E2]. split.
@@ -27,10 +21,9 @@ Section strictly_order_preserving.
   Qed.
 
   Global Instance strictly_order_reflecting_mor `{!OrderReflecting (f : A → B)}
-    `{!StrongMorphism f} :
+    `{!StrongExtensionality f} :
     StrictlyOrderReflecting f | 20.
   Proof.
-  repeat (split; try apply _).
   intros x y E.
   apply lt_iff_le_apart in E. apply lt_iff_le_apart.
   destruct E as [E1 E2]. split.
@@ -70,9 +63,8 @@ Section pseudo_injective.
   Local Existing Instance pseudo_order_apart.
 
   Instance pseudo_order_embedding_ext `{!StrictOrderEmbedding (f : A → B)} :
-    StrongMorphism f.
+    StrongExtensionality f.
   Proof.
-  split; try apply _.
   intros x y E.
   apply apart_iff_total_lt;apply apart_iff_total_lt in E.
   destruct E; [left | right]; apply (strictly_order_reflecting f);trivial.
@@ -81,7 +73,7 @@ Section pseudo_injective.
   Lemma pseudo_order_embedding_inj `{!StrictOrderEmbedding (f : A → B)} :
     StrongInjective f.
   Proof.
-  split; try apply _.
+  split;try apply _.
   intros x y E.
   apply apart_iff_total_lt;apply apart_iff_total_lt in E.
   destruct E; [left | right]; apply (strictly_order_preserving f);trivial.
@@ -98,7 +90,6 @@ Section full_pseudo_strictly_preserving.
   Lemma full_pseudo_order_preserving `{!StrictlyOrderReflecting (f : A → B)}
     : OrderPreserving f.
   Proof.
-  repeat (split; try apply _).
   intros x y E1.
   apply le_iff_not_lt_flip;apply le_iff_not_lt_flip in E1.
   intros E2. apply E1.
@@ -109,7 +100,6 @@ Section full_pseudo_strictly_preserving.
   Lemma full_pseudo_order_reflecting `{!StrictlyOrderPreserving (f : A → B)}
     : OrderReflecting f.
   Proof.
-  repeat (split; try apply _).
   intros x y E1.
   apply le_iff_not_lt_flip;apply le_iff_not_lt_flip in E1.
   intros E2. apply E1.
@@ -125,7 +115,6 @@ Section order_preserving_ops.
   Lemma order_preserving_flip {op} `{!Commutative op} `{!OrderPreserving (op z)}
     : OrderPreserving (λ y, op y z).
   Proof.
-  repeat (split; try apply _).
   intros x y E.
   rewrite 2!(commutativity _ z).
   apply order_preserving;trivial.
@@ -135,7 +124,6 @@ Section order_preserving_ops.
     `{!StrictlyOrderPreserving (op z)}
     : StrictlyOrderPreserving (λ y, op y z).
   Proof.
-  repeat (split; try apply _).
   intros x y E.
   rewrite 2!(commutativity _ z).
   apply strictly_order_preserving;trivial.
@@ -145,7 +133,6 @@ Section order_preserving_ops.
     `{!OrderReflecting (op z) }
     : OrderReflecting (λ y, op y z).
   Proof.
-  repeat (split; try apply _).
   intros x y E.
   apply (order_reflecting (op z)).
   rewrite 2!(commutativity (f:=op) z).
@@ -156,7 +143,6 @@ Section order_preserving_ops.
     `{!StrictlyOrderReflecting (op z) }
     : StrictlyOrderReflecting (λ y, op y z).
   Proof.
-  repeat (split; try apply _).
   intros x y E.
   apply (strictly_order_reflecting (op z)).
   rewrite 2!(commutativity (f:=op) z).
@@ -237,14 +223,12 @@ intros P. split.
 - intros x y z E1 E2. apply P. transitivity (f y); apply P;trivial.
 Qed.
 
-Lemma projected_pseudo_order `{Apart A} `{Alt : Lt A} `{is_mere_relation A lt}
+Lemma projected_pseudo_order `{IsApart A} `{Alt : Lt A} `{is_mere_relation A lt}
   `{Apart B} `{Blt : Lt B}
   (f : A → B) `{!StrongInjective f} `{!PseudoOrder Blt}
   : (∀ x y, x < y ↔ f x < f y) → PseudoOrder Alt.
 Proof.
 pose proof (strong_injective_mor f).
-pose proof (strong_mor_a f).
-pose proof (strong_mor_b f).
 intros P. split; try apply _.
 - intros x y E. apply (pseudo_order_antisym (f x) (f y)).
   split; apply P,E.
@@ -260,7 +244,7 @@ intros P. split; try apply _.
     destruct E; [left | right]; apply P;trivial.
 Qed.
 
-Lemma projected_full_pseudo_order `{Apart A} `{Ale : Le A} `{Alt : Lt A}
+Lemma projected_full_pseudo_order `{IsApart A} `{Ale : Le A} `{Alt : Lt A}
   `{is_mere_relation A lt}
   `{Apart B} `{Ble : Le B} `{Blt : Lt B}
   (f : A → B) `{!StrongInjective f} `{!FullPseudoOrder Ble Blt}
@@ -275,35 +259,23 @@ intros P1 P2. split.
     intros F. apply E,P2. trivial.
 Qed.
 
-Instance id_order_morphism `{PartialOrder A} : Order_Pair (_:Le A) (_:Le A) := {}.
-
 Instance id_order_preserving `{PartialOrder A} : OrderPreserving (@id A).
 Proof.
-split; try apply _.
-trivial.
+red;trivial.
 Qed.
 
 Instance id_order_reflecting `{PartialOrder A} : OrderReflecting (@id A).
 Proof.
-split; try apply _. trivial.
+red;trivial.
 Qed.
 
 Section composition.
   Context {A B C} `{Le A} `{Le B} `{Le C} (f : A → B) (g : B → C).
 
-  (* TODO replace with mode stuff? *)
-  Instance compose_order_pair:
-    Order_Pair (_:Le A) (_:Le B) → Order_Pair (_:Le B) (_:Le C) →
-    Order_Pair (_:Le A) (_:Le C).
-  Proof.
-  split;[ apply order_morphism_po_a | apply order_morphism_po_b ].
-  Qed.
-
   Instance compose_order_preserving:
     OrderPreserving f → OrderPreserving g → OrderPreserving (g ∘ f).
   Proof.
-  repeat (split; try apply _).
-  intros. unfold compose.
+  red;intros. unfold compose.
   do 2 apply (order_preserving _).
   trivial.
   Qed.
@@ -311,8 +283,7 @@ Section composition.
   Instance compose_order_reflecting:
     OrderReflecting f → OrderReflecting g → OrderReflecting (g ∘ f).
   Proof.
-  split; try apply _.
-  intros x y E. unfold compose in E.
+  intros ?? x y E. unfold compose in E.
   do 2 apply (order_reflecting _) in E.
   trivial.
   Qed.
@@ -321,8 +292,6 @@ Section composition.
     OrderEmbedding f → OrderEmbedding g → OrderEmbedding (g ∘ f) := {}.
 End composition.
 
-Hint Extern 4 (Order_Pair (_ ∘ _)) =>
-  class_apply @compose_order_pair : typeclass_instances.
 Hint Extern 4 (OrderPreserving (_ ∘ _)) =>
   class_apply @compose_order_preserving : typeclass_instances.
 Hint Extern 4 (OrderReflecting (_ ∘ _)) =>

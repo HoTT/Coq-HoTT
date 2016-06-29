@@ -37,7 +37,8 @@ Proof.
 repeat (split; try apply _); intros x y E.
 - apply (strong_extensionality (+ x + y)).
   rewrite simple_associativity, left_inverse, plus_0_l.
-  rewrite (commutativity (f:=plus) x y), simple_associativity, left_inverse, plus_0_l.
+  rewrite (commutativity (f:=plus) x y), simple_associativity,
+    left_inverse, plus_0_l.
   apply symmetry;trivial.
 - apply (strong_extensionality (+ -x + -y)).
   rewrite simple_associativity, right_inverse, plus_0_l.
@@ -64,7 +65,8 @@ Qed.
 Global Instance: ∀ z, StrongLeftCancellation (+) z.
 Proof.
 intros z x y E. apply (strong_extensionality (+ -z)).
-do 2 rewrite (commutativity (f:=plus) z _),<-simple_associativity,right_inverse,plus_0_r.
+do 2 rewrite (commutativity (f:=plus) z _),
+  <-simple_associativity,right_inverse,plus_0_r.
 trivial.
 Qed.
 
@@ -191,11 +193,13 @@ Qed.
 End field_properties.
 
 (* Due to bug #2528 *)
-Hint Extern 8 (PropHolds (// _ ≶ 0)) => eapply @recip_apart_zero : typeclass_instances.
-Hint Extern 8 (PropHolds (_ * _ ≶ 0)) => eapply @mult_apart_zero : typeclass_instances.
+Hint Extern 8 (PropHolds (// _ ≶ 0)) =>
+  eapply @recip_apart_zero : typeclass_instances.
+Hint Extern 8 (PropHolds (_ * _ ≶ 0)) =>
+  eapply @mult_apart_zero : typeclass_instances.
 
 Section morphisms.
-  Context `{Field F1} `{Field F2} `{!StrongSemiRing_Morphism (f : F1 → F2)}.
+  Context `{Field F1} `{Field F2} `{!SemiRingStrongPreserving (f : F1 → F2)}.
 
 (*   Add Ring F1 : (stdlib_ring_theory F1). *)
 
@@ -210,8 +214,8 @@ Section morphisms.
   trivial.
   Qed.
 
-  (* We have the following for morphisms to non-trivial strong rings as well. However,
-    since we do not have an interface for strong rings, we ignore it. *)
+  (* We have the following for morphisms to non-trivial strong rings as well.
+    However, since we do not have an interface for strong rings, we ignore it. *)
   Global Instance: StrongInjective f.
   Proof.
   apply strong_injective_preserves_0.

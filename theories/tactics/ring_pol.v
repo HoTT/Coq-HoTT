@@ -44,7 +44,7 @@ Global Instance : Eqb Pol := Peqb.
 Global Instance P0 : canonical_names.Zero Pol := Pconst 0.
 Global Instance P1 : canonical_names.One Pol := Pconst 1.
 
-Context `{SemiRing R} (phi : C -> R) `{!SemiRing_Morphism phi}.
+Context `{SemiRing R} (phi : C -> R) `{!SemiRingPreserving phi}.
 
 Notation Vars V := (V -> R).
 

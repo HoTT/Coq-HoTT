@@ -108,7 +108,7 @@ Definition Z_one_pair : @paths Z 1 (@cast N Z _ 1) := idpath.
 
 Local Instance Z_ring : Ring Z := _.
 
-Global Instance N_to_Z_morphism : SemiRing_Morphism (cast N Z) := _.
+Global Instance N_to_Z_morphism : SemiRingPreserving (cast N Z) := _.
 Global Instance N_to_Z_injective : Injective (cast N Z) := _.
 
 Definition Npair_splits : forall n m, ' (SRPair.C n m) = ' n - ' m
@@ -199,7 +199,7 @@ Section for_another_ring.
   rewrite negate_0,plus_0_r;split.
   Qed.
 
-  Instance z_to_ring_morphism : SemiRing_Morphism z_to_r.
+  Instance z_to_ring_morphism : SemiRingPreserving z_to_r.
   Proof.
   repeat (split; try apply _).
   - exact preserves_plus.
@@ -209,11 +209,11 @@ Section for_another_ring.
   Qed.
 
   Section for_another_morphism.
-    Context (f : Z → R) `{!SemiRing_Morphism f}.
+    Context (f : Z → R) `{!SemiRingPreserving f}.
 
     Definition g : N → R := f ∘ cast N Z.
 
-    Instance : SemiRing_Morphism g.
+    Instance : SemiRingPreserving g.
     Proof. unfold g. repeat (split; try apply _). Qed.
 
     Lemma same_morphism : forall x : Z, z_to_r x = f x.
@@ -413,7 +413,8 @@ Global Instance Z_zero_product@{i k k' k''} : ZeroProduct Z
   := Z_zero_product'@{i k UN k' UN UN UN UN k' UN UN UN UN
    UN UN UN UN UN UN UN UN UN UN UN UN UN UN UN i UN k'' UN UN UN}.
 
-Section with_full_order.
+
+(* Section with_full_order.
 Context `{Apart N} {Nle: Le N} {Nlt: Lt N}.
 Context `{!FullPseudoSemiRingOrder Nle Nlt}
   `{is_mere_relation N le} `{is_mere_relation N lt}.
@@ -432,7 +433,7 @@ exact E.
 Qed.
 STAHP.
 End with_full_order.
-
+ *)
 End contents.
 
 End NatPair.

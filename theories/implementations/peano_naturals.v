@@ -226,12 +226,12 @@ Section for_another_semiring.
   Qed.
 
   Global Instance nat_to_sr_morphism
-    : SemiRing_Morphism (naturals_to_semiring nat R).
+    : SemiRingPreserving (naturals_to_semiring nat R).
   Proof.
   repeat (split;try apply _);trivial.
   Qed.
 
-  Lemma toR_unique (h : nat -> R) `{!SemiRing_Morphism h} x :
+  Lemma toR_unique (h : nat -> R) `{!SemiRingPreserving h} x :
     naturals_to_semiring nat R x = h x.
   Proof.
   induction x as [|n E].
@@ -571,10 +571,9 @@ split;[split|].
   + hnf.
     intros a b E c;apply tr;apply lt_strong_cotrans;trivial.
   + reflexivity.
-- apply _.
 - intros a b E. apply nat_not_lt_le,le_exists in E.
   destruct E as [k E];exists k;rewrite plus_comm;auto.
-- repeat (split;try apply _).
+- split.
   + intros a b E.
     apply le_exists in E;destruct E as [k Hk].
     rewrite Hk. rewrite add_S_r,<-add_S_l.
@@ -585,8 +584,7 @@ split;[split|].
     rewrite <-add_S_r,plus_assoc,(plus_comm k z),<-plus_assoc in E.
     apply (left_cancellation plus _) in E.
     rewrite E;apply le_plus.
-- split;try apply _.
-  intros ???? E.
+- intros ???? E.
   apply trivial_apart in E.
   destruct (decide (apart x₁ x₂)) as [?|ex];apply tr;auto.
   right. apply tight_apart in ex.
@@ -608,14 +606,14 @@ Qed.
 
 Instance S_embedding : OrderEmbedding S.
 Proof.
-repeat (split; try apply _).
+split.
 - intros ??;apply le_S_S.
 - intros ??;apply le_S_S.
 Qed.
 
 Global Instance S_strict_embedding : StrictOrderEmbedding S.
 Proof.
-repeat (split;try apply _).
+split;apply _.
 Qed.
 
 Global Instance nat_cut_minus: CutMinus@{N} nat := Peano.minus.
