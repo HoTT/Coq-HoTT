@@ -521,7 +521,7 @@ Section with_semiring_order.
     apply (antisymmetry le);trivial.
   Qed.
 
-  Global Instance: OrderEmbedding (cast SR R).
+  Global Instance Rle_cast_embedding : OrderEmbedding (cast SR R).
   Proof.
   split;red.
   - intros. rewrite Rle_def. unfold SRle. simpl.
@@ -558,7 +558,7 @@ Section with_semiring_order.
   - ring_with_nat.
   Qed.
 
-  Global Instance: SemiRingOrder (le : Le R).
+  Global Instance R_order : SemiRingOrder (le : Le R).
   Proof. apply rings.from_ring_order; apply _. Qed.
 
   Global Instance Rle_dec `{forall x y : SR, Decidable (x <= y)}

@@ -425,6 +425,15 @@ eapply @Completion.Rle.
 all:apply _.
 Defined.
 
+Definition Zle_def a b : ' a <= ' b = SRPair.SRle a b := idpath.
+
+Global Instance Zle_cast_embedding : OrderEmbedding (cast N Z)
+  := Completion.Rle_cast_embedding N.
+
+Global Instance Z_order : SemiRingOrder Z_le := Completion.R_order N.
+
+Global Instance Zle_dec `{forall a b : N, Decidable (a <= b)}
+  : forall a b : Z, Decidable (a <= b) := Completion.Rle_dec N.
 End with_order.
 
 Section with_strict_order.
@@ -437,6 +446,13 @@ eapply @Completion.Rlt.
 all:apply _.
 Defined.
 
+Definition Zlt_def a b : ' a < ' b = SRPair.SRlt a b := idpath.
+
+Global Instance Z_strict_srorder : StrictSemiRingOrder Z_lt
+  := Completion.R_strict_srorder N.
+
+Global Instance Zlt_dec `{forall a b : N, Decidable (a < b)}
+  : forall a b : Z, Decidable (a < b) := Completion.Rlt_dec N.
 End with_strict_order.
 
 Section with_full_order.
@@ -451,11 +467,13 @@ eapply @Completion.Rapart.
 all:apply _.
 Defined.
 
+Definition Zapart_def a b : apart (' a) (' b) = SRPair.SRapart a b := idpath.
+
+Global Instance Zapart_trivial `{!TrivialApart N} : TrivialApart Z
+  := Completion.SRpair_trivial_apart N.
+
 Global Instance Z_full_pseudo_srorder : FullPseudoSemiRingOrder
-  (le:Le Z) (lt:Lt Z).
-Proof.
-apply Completion.R_full_pseudo_srorder.
-Qed.
+  (le:Le Z) (lt:Lt Z) := Completion.R_full_pseudo_srorder N.
 
 End with_full_order.
 
