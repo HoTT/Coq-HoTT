@@ -413,29 +413,40 @@ Global Instance Z_zero_product@{i k k' k''} : ZeroProduct Z
   := Z_zero_product'@{i k UN k' UN UN UN UN k' UN UN UN UN
    UN UN UN UN UN UN UN UN UN UN UN UN UN UN UN i UN k'' UN UN UN}.
 
+Section with_order.
+Context {Nle : Le N} `{!SemiRingOrder Nle} `{is_mere_relation N le}.
 
-Section with_full_order.
-Context `{Apart N} {Nle: Le N} {Nlt: Lt N}.
-Context `{!FullPseudoSemiRingOrder Nle Nlt}
-  `{is_mere_relation N le} `{is_mere_relation N lt}.
-
-(* [forall n : N, LeftCancellation (+) n] can be gotten from FullPseudoSROrder,
+(* [forall n : N, LeftCancellation (+) n] can be gotten from SROrder,
    but when defining the other operations we used naturals.nat_plus_cancel_l. *)
-Global Instance Z_apart : Apart Z.
-Proof.
-eapply @Completion.Rapart.
-2:apply naturals.nat_plus_cancel_l.
-all:apply _.
-Defined.
 Global Instance Z_le : Le Z.
 Proof.
 eapply @Completion.Rle.
 2:apply naturals.nat_plus_cancel_l.
 all:apply _.
 Defined.
+
+End with_order.
+
+Section with_strict_order.
+Context {Nlt : Lt N} `{!StrictSemiRingOrder Nlt} `{is_mere_relation N lt}.
+
 Global Instance Z_lt : Lt Z.
 Proof.
 eapply @Completion.Rlt.
+2:apply naturals.nat_plus_cancel_l.
+all:apply _.
+Defined.
+
+End with_strict_order.
+
+Section with_full_order.
+Context `{Apart N} {Nle: Le N} {Nlt: Lt N}.
+Context `{!FullPseudoSemiRingOrder Nle Nlt}
+  `{is_mere_relation N le} `{is_mere_relation N lt}.
+
+Global Instance Z_apart : Apart Z.
+Proof.
+eapply @Completion.Rapart.
 2:apply naturals.nat_plus_cancel_l.
 all:apply _.
 Defined.
