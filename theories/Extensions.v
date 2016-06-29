@@ -97,7 +97,7 @@ Section Extensions.
            (n : nat) {A : Type@{i}} {B : Type@{j}}
            (f : A -> B) (C : B -> Type@{k}) : Type@{l}
     := match n with
-         | 0 => Unit@{l}
+         | 0 => Unit
          | S n => (forall (g : forall a, C (f a)),
                      ExtensionAlong@{i j k l l} f C g) *
                   forall (h k : forall b, C b),
@@ -326,7 +326,7 @@ Section Extensions.
   Definition ooExtendableAlong@{i j k l}
              {A : Type@{i}} {B : Type@{j}}
              (f : A -> B) (C : B -> Type@{k}) : Type@{l}
-    := forall n, ExtendableAlong@{i j k l} n f C.
+    := forall n : nat, ExtendableAlong@{i j k l} n f C.
   (** Universe parameters are the same as for [ExtendableAlong]. *)
   (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
   Definition check_ooExtendableAlong@{a b c r} : True@{Set}.

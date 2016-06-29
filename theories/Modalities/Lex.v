@@ -219,7 +219,7 @@ Module Lex_Reflective_Subuniverses
                                          (hfiber@{k i} g (g x)))).
     { refine (_ oE equiv_to_O@{u a k k} O _).
       - refine (_ oE BuildEquiv _ _
-                  (O_functor_hfiber@{u a k i k k i k k (* <- this k is irrelevant *) k k k k k k}
+                  (O_functor_hfiber@{u a k i k k i k k (* <- this k is irrelevant *) k k k k}
                                    O (@pr1 A B) (g x)) _).
         unfold hfiber.
         refine (equiv_functor_sigma' 1 _). intros y; cbn.

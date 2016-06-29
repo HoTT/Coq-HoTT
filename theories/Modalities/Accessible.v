@@ -96,7 +96,7 @@ Record NullGenerators :=
 Coercion ngen_type : NullGenerators >-> Funclass.
 
 Definition null_to_local_generators : NullGenerators@{a1} -> LocalGenerators@{a2}
-  := fun S => Build_LocalGenerators (ngen_indices S) (ngen_type S) (fun _ => Unit@{a2}) (fun _ _ => tt).
+  := fun S => Build_LocalGenerators (ngen_indices S) (ngen_type S) (fun _ => Unit) (fun _ _ => tt).
 
 (** As with [IsLocal], the real version of this notation will be defined in [Nullification]. *)
 Module Import IsNull_Internal.
@@ -256,6 +256,7 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
     Definition inO_iff_isnull@{u a i} (O : Modality@{u a}) (X : Type@{i})
     : iff@{i i i} (In@{u a i} O X) (IsNull@{a i} (acc_gen O) X).
     Proof.
+      pose proof (@conn_map_to_O@{u a a a i a a a}).
       split.
       - intros X_inO [ [i x] | [i x] ];
           exact (ooextendable_const_isconnected_inO@{u a a i i} O _ _ ).
@@ -264,7 +265,7 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
         refine (cancelL_ooextendable@{a a a i i i i i i i}
                   (fun _ => X) (Acc.acc_gen O i)
                   (to O (lgen_codomain (Acc.acc_gen O) i)) _ _).
-        + apply ooextendable_isnull_fibers@{a a i i a i a}; intros x.
+        + apply ooextendable_isnull_fibers@{a a i i a a i a a a}; intros x.
           exact (Xnull (inr (i;x))).
         + refine (ooextendable_homotopic _
                    (O_functor O (Acc.acc_gen O i)
@@ -272,7 +273,7 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
           1:apply to_O_natural.
           apply ooextendable_compose@{a a a i i i i}.
           * apply ooextendable_equiv, O_inverts_generators.
-          * apply ooextendable_isnull_fibers; intros x.
+          * apply ooextendable_isnull_fibers@{a a i i a a i a a a}; intros x.
             exact (Xnull (inl (i;x))).
     Defined.
 

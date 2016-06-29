@@ -19,6 +19,9 @@ Global Unset Refine Instance Mode.
 (** This command makes it so that you don't have to declare universes explicitly when mentioning them in the type.  (Without this command, if you want to say [Definition foo := Type@{i}.], you must instead say [Definition foo@{i} := Type@{i}.]. *)
 Global Unset Strict Universe Declaration.
 
+(** This command makes it so that when we say something like [IsHSet nat] we get [IsHSet@{i} nat] instead of [IsHSet@{Set} nat]. *)
+Global Unset Universe Minimization ToSet.
+
 Definition relation (A : Type) := A -> A -> Type.
 
 Class Reflexive {A} (R : relation A) :=
@@ -603,7 +606,7 @@ Ltac path_via mid :=
   apply @concat with (y := mid); auto with path_hints.
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
-Inductive Empty : Type1 := .
+Inductive Empty : Type0 := .
 
 Scheme Empty_ind := Induction for Empty Sort Type.
 Scheme Empty_rec := Minimality for Empty Sort Type.
@@ -631,7 +634,7 @@ Class Asymmetric {A} (R : relation A) :=
   asymmetry : forall {x y}, R x y -> (complement R y x : Type).
 
 (** Likewise, we put [Unit] here, instead of in [Unit.v], because [Trunc] uses it. *)
-Inductive Unit : Type1 :=
+Inductive Unit : Type0 :=
     tt : Unit.
 
 Scheme Unit_ind := Induction for Unit Sort Type.

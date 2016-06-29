@@ -5,6 +5,7 @@ Require Import hit.Truncations.
 
 Local Open Scope path_scope.
 
+Local Set Universe Minimization ToSet.
 
 (** * Idempotents and their splittings *)
 
