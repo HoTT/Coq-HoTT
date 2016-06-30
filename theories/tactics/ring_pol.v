@@ -10,8 +10,8 @@ Import Quoting.
 
 Section content.
 
-Universe UC UV Upol.
-Context {C : Type@{UC} } {V : Type@{UV} }.
+Universe UC Upol.
+Context {C : Type@{UC} } {V : Type0 }.
 
 Inductive Pol : Type@{Upol} :=
   | Pconst (c : C)
@@ -19,11 +19,11 @@ Inductive Pol : Type@{Upol} :=
 
 (* [C] is the scalar semiring: Z when working on rings,
    N on semirings, other sometimes. *)
-Context `{SemiRing C} `{DecidablePaths@{UC UV UV} C}.
+Context `{SemiRing C} `{DecidablePaths C}.
 
 (* [V] is the type of variables, ie we are defining polynomials [C[V]].
    It has a computable compare so we can normalise polynomials. *)
-Context `{Trichotomy@{UV UV UV} V Vlt}.
+Context `{Trichotomy@{Set Set Set} V Vlt}.
 
 (* Polynomials are supposed (at the meta level) to be in normal form:
    PX P v Q verifies
@@ -44,7 +44,8 @@ Global Instance : Eqb Pol := Peqb.
 Global Instance P0 : canonical_names.Zero Pol := Pconst 0.
 Global Instance P1 : canonical_names.One Pol := Pconst 1.
 
-Context `{SemiRing R} (phi : C -> R) `{!SemiRingPreserving phi}.
+Universe UR.
+Context {R : Type@{UR} } `{SemiRing R} (phi : C -> R) `{!SemiRingPreserving phi}.
 
 Notation Vars V := (V -> R).
 
@@ -60,7 +61,8 @@ Proof.
 intros [|] [|];simpl;auto.
 Qed.
 
-Lemma eval_eqb : forall P Q, P =? Q = true -> forall vs, eval vs P = eval vs Q.
+Lemma eval_eqb : forall P Q : Pol, P =? Q = true ->
+  forall vs : Vars V, eval vs P = eval vs Q.
 Proof.
 induction P as [c|P1 IHP1 v P2 IHP2];destruct Q as [d|Q1 w Q2];intros E vs;
 change eqb with Peqb in E;simpl in E.
@@ -130,7 +132,7 @@ induction Q as [d|Q1 IH1 w Q2 IH2].
     apply plus_comm.
   + simpl. rewrite eval_addC.
     rewrite plus_mult_distr_r.
-    symmetry;apply plus_assoc.
+    Symmetry;apply plus_assoc.
   + simpl. reflexivity.
 Qed.
 
@@ -209,7 +211,7 @@ induction Q as [d|Q1 IH1 w Q2 IH2].
     reflexivity.
   + rewrite eval_PXguard. rewrite Eadd.
     rewrite plus_mult_distr_r.
-    symmetry;apply plus_assoc.
+    Symmetry;apply plus_assoc.
   + simpl. reflexivity.
 Qed.
 
@@ -287,7 +289,7 @@ destruct Q as [d | Q1 w Q2].
     rewrite (mult_comm (vs v)). apply mult_assoc.
   + rewrite <-mult_assoc,(mult_comm (vs v)),mult_assoc.
     rewrite IHP1;reflexivity.
-  + symmetry;apply mult_assoc.
+  + Symmetry;apply mult_assoc.
   + auto.
 Qed.
 
@@ -300,7 +302,7 @@ Fixpoint toPol (e: Expr V) :=
   | Mult a b => mul (toPol a) (toPol b)
   end.
 
-Lemma eval_toPol vs : forall e, eval vs (toPol e) = Quoting.eval _ vs e.
+Lemma eval_toPol' vs : forall e, eval vs (toPol e) = Quoting.eval _ vs e.
 Proof.
 induction e as [v| | |a IHa b IHb|a IHa b IHb];simpl.
 - rewrite (preserves_1 (f:=phi)),(preserves_0 (f:=phi)),plus_0_r,mult_1_l.
@@ -310,5 +312,13 @@ induction e as [v| | |a IHa b IHb|a IHa b IHb];simpl.
 - rewrite eval_add,IHa,IHb. reflexivity.
 - rewrite eval_mul,IHa,IHb. reflexivity.
 Qed.
+
+Definition eval_toPol@{} := eval_toPol'@{Set Upol Upol Set Set Set Set
+Set Upol Set Set Set Set Set Set
+Set Set Set Set Set Set Set Set
+Upol Set Set Set Set Set Set Set
+Set Set Set Set Set Set Set Set
+Set Set Set Set Set Set Set Set
+Set Set Set Set Set Set Set}.
 
 End content.

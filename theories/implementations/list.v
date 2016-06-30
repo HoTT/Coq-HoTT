@@ -64,7 +64,7 @@ intros l1. induction l1 as [|x l1 IH];intros l2 l3.
 - simpl;apply ap;apply IH.
 Qed.
 
-Fixpoint for_all {A} (P : A -> Type) l :=
+Fixpoint for_all {A} (P : A -> Type) l : Type :=
   match l with
   | [] => True
   | x :: l => P x /\ for_all P l

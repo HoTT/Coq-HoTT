@@ -17,7 +17,7 @@ Lemma to_ring_unique `{Integers Z} `{Ring R} (f: Z → R)
   {h: SemiRingPreserving f} x
   : f x = integers_to_ring Z R x.
 Proof.
-symmetry. apply integers_initial.
+Symmetry. apply integers_initial.
 Qed.
 
 Lemma to_ring_unique_alt `{Integers Z} `{Ring R} (f g: Z → R)
@@ -95,7 +95,7 @@ Section retract_is_int.
     Lemma same_morphism x : (integers_to_ring Z R ∘ f⁻¹) x = h x.
     Proof.
     transitivity ((h ∘ (f ∘ f⁻¹)) x).
-    - symmetry. apply (to_ring_unique (h ∘ f)).
+    - Symmetry. apply (to_ring_unique (h ∘ f)).
     - unfold compose. rewrite jections.surjective_applied;trivial.
     Qed.
   End for_another_ring.

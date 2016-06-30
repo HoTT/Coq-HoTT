@@ -8,6 +8,8 @@ Require Import
   HoTTClasses.orders.semirings
   HoTTClasses.theory.apartness.
 
+Local Set Universe Minimization ToSet.
+
 (* This should go away one Coq has universe cumulativity through inductives. *)
 Section nat_lift.
 
@@ -144,7 +146,7 @@ Definition pred x := match x with | 0 => 0 | S k => k end.
 Global Instance S_inj : Injective@{N N} S
   := { injective := fun a b E => ap pred E }.
 
-Global Instance nat_dec: DecidablePaths@{N N N} nat.
+Global Instance nat_dec: DecidablePaths@{N} nat.
 Proof.
 hnf.
 apply (nat_rect@{N} (fun x => forall y, _)).
@@ -199,7 +201,7 @@ Section for_another_semiring.
   Let f_S : forall x, toR (S x) = toR x + 1.
   Proof.
   intros [|x].
-  - symmetry;apply plus_0_l.
+  - Symmetry;apply plus_0_l.
   - reflexivity.
   Qed.
 
@@ -414,7 +416,7 @@ repeat split.
     trivial.
 Qed.
 
-Local Instance nat_lt_irrefl : Irreflexive@{N i N j} (_:Lt nat).
+Local Instance nat_lt_irrefl : Irreflexive@{N N} (_:Lt nat).
 Proof.
 hnf. intros x E.
 apply le_exists in E.
@@ -557,11 +559,7 @@ destruct (le_lt_dec c a) as [E2|E2].
 - left;trivial.
 Qed.
 
-Global Instance nat_full : FullPseudoSemiRingOrder@{
-    a b c g f
-    d e N h N
-    N N}
-  nat_le nat_lt.
+Global Instance nat_full : FullPseudoSemiRingOrder nat_le nat_lt.
 Proof.
 split;[split|].
 - split;try apply _.
@@ -652,7 +650,7 @@ Global Instance nat_cut_minus_spec : CutMinusSpec@{N N} nat nat_cut_minus.
 Proof.
 split.
 - intros x y E. rewrite add_comm.
-  symmetry.
+  Symmetry.
   apply (le_plus_minus _ _ E).
 - apply minus_ge.
 Qed.

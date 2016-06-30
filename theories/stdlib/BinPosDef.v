@@ -27,6 +27,7 @@ Require Import HoTTClasses.theory.additional_operations.
     For instance, we can write [1~1~0] instead of [(xO (xI xH))]
     for the number 6 (which is 110 in binary notation).
 *)
+Local Set Universe Minimization ToSet.
 
 Notation "p ~ 1" := (xI p)
  (at level 7, left associativity, format "p '~' '1'") : positive_scope.

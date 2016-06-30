@@ -93,7 +93,7 @@ Section another_integers.
   rewrite (preserves_mult (f:=f)),(preserves_dec_recip (f:=f)).
   change (f (ZtoQ n) / f (ZtoQ d)) with ((f ∘ ZtoQ) n / (f ∘ ZtoQ) d).
   rewrite !(to_ring_unique_alt (f ∘ ZtoQ) (cast Z (FracField.F Z))).
-  symmetry. apply FracField.mult_num_den.
+  Symmetry. apply FracField.mult_num_den.
   Qed.
 
   (* Making this instance global results in loops *)

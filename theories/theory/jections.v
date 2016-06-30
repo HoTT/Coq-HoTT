@@ -40,7 +40,7 @@ Qed.
 
 Lemma bijective_applied `(f : A → B) `{!Inverse f} `{!Bijective f} x: f⁻¹ (f x) = x.
 Proof.
-  symmetry. apply (bijective_cancel_left f). reflexivity.
+  Symmetry. apply (bijective_cancel_left f). reflexivity.
 Qed.
 
 Lemma bijective `{Funext} `(f : A → B) `{!Inverse f} `{!Bijective f} : f⁻¹ ∘ f = id.

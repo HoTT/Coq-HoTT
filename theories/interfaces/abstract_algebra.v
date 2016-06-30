@@ -120,8 +120,8 @@ Section upper_classes.
 
   Class IntegralDomain :=
     { intdom_ring : Ring
-    ; intdom_nontrivial : PropHolds (not@{i j k} (1 = 0))
-    ; intdom_nozeroes :> NoZeroDivisors@{k j k k k k i} A }.
+    ; intdom_nontrivial : PropHolds (not (1 = 0))
+    ; intdom_nozeroes :> NoZeroDivisors A }.
 
   (* We do not include strong extensionality for (-) and (/)
     because it can de derived *)

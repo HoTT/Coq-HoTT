@@ -174,8 +174,9 @@ End Trace.
 Fixpoint real_rect A B (I : Inductors A B) (x : real) : A x
 with equiv_rect A B (I : Inductors A B) (x y : real) (e : Qpos) (xi : Requiv e x y)
   : B x y (real_rect A B I x) (real_rect A B I y) e.
- *)
+
 End induction.
+  *)
 
 End VarSec.
 

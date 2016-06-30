@@ -14,6 +14,8 @@ Require Import
   HoTTClasses.interfaces.orders
   HoTTClasses.theory.additional_operations.
 
+Local Set Universe Minimization ToSet.
+
 (**********************************************************************)
 (** * Binary positive numbers, operations and properties *)
 (**********************************************************************)
@@ -533,7 +535,7 @@ Lemma mul_succ_l p q : (succ p) * q = q + p * q.
 Proof.
 induction p as [p IHp | p IHp | ]; unfold mult; simpl; fold mult; trivial.
 - rewrite IHp, add_assoc, add_diag, <-add_xO. reflexivity.
-- symmetry; apply add_diag.
+- Symmetry; apply add_diag.
 Qed.
 
 Lemma mul_succ_r p q : p * (succ q) = p + p * q.
@@ -574,14 +576,14 @@ induction p as [p IHp| p IHp| ]; intros [q|q| ] r H;try reflexivity.
 - apply mul_xI_mul_xO_discr in H. destruct H.
 - unfold mult in H;simpl in H;fold mult in H;change mul with mult in H.
   rewrite add_comm in H;apply add_no_neutral in H;destruct H.
-- symmetry in H. apply mul_xI_mul_xO_discr in H. destruct H.
+- Symmetry in H. apply mul_xI_mul_xO_discr in H. destruct H.
 - unfold mult in H;simpl in H;fold mult in H;change mul with mult in H.
   apply (injective xO) in H. apply ap;eauto.
 - apply mul_xO_discr in H. destruct H.
 - unfold mult in H;simpl in H;fold mult in H;change mul with mult in H.
-  symmetry in H. rewrite add_comm in H;apply add_no_neutral in H.
+  Symmetry in H. rewrite add_comm in H;apply add_no_neutral in H.
   destruct H.
-- symmetry in H;apply mul_xO_discr in H;destruct H.
+- Symmetry in H;apply mul_xO_discr in H;destruct H.
 Qed.
 
 Instance mul_reg_l r : LeftCancellation mult r.
@@ -644,7 +646,7 @@ Theorem iter_swap :
   forall p (A:Type) (f:A -> A) (x:A),
     iter f (f x) p = f (iter f x p).
 Proof.
-intros. symmetry. apply iter_swap_gen. split.
+intros. Symmetry. apply iter_swap_gen. split.
 Qed.
 
 Theorem iter_succ :
@@ -726,7 +728,7 @@ Proof.
   now apply SubIsNeg with r~0.
  (* p~1 q~0 *)
  destruct (IHp q); subst; try now constructor.
-  apply SubIsNeg with (pred_double r). symmetry. apply add_xI_pred_double.
+  apply SubIsNeg with (pred_double r). Symmetry. apply add_xI_pred_double.
  (* p~0 q~1 *)
  rewrite sub_mask_carry_spec.
  destruct (IHp q); subst; try constructor.
@@ -780,7 +782,7 @@ Qed.
 Lemma sub_mask_add_diag_r p q : sub_mask p (p+q) = IsNeg.
 Proof.
  case sub_mask_spec; trivial.
- intros H. symmetry in H; rewrite add_comm in H. elim (add_no_neutral _ _ H).
+ intros H. Symmetry in H; rewrite add_comm in H. elim (add_no_neutral _ _ H).
  intros r H. rewrite <- add_assoc, add_comm in H. elim (add_no_neutral _ _ H).
 Qed.
 
@@ -1151,7 +1153,7 @@ Qed.
 
 Lemma le_succ_l n m : succ n <= m <-> n < m.
 Proof.
- rewrite <- lt_succ_r. symmetry. apply succ_lt_mono.
+ rewrite <- lt_succ_r. Symmetry. apply succ_lt_mono.
 Qed.
 
 Lemma le_antisym p q : p <= q -> q <= p -> p = q.
@@ -1313,7 +1315,7 @@ Qed.
 
 Lemma pred_sub p : pred p = sub p 1.
 Proof.
-  symmetry. apply sub_1_r.
+  Symmetry. apply sub_1_r.
 Qed.
 
 Theorem sub_succ_r p q : p - (succ q) = pred (p - q).
@@ -1356,7 +1358,7 @@ Proof.
  apply add_reg_r with (p*r).
  rewrite <- mul_add_distr_l.
  rewrite sub_add; trivial.
- symmetry. apply sub_add; trivial.
+ Symmetry. apply sub_add; trivial.
  now apply mul_lt_mono_l.
 Qed.
 
@@ -1570,13 +1572,13 @@ Proof. rewrite min_comm. apply min_1_l. Qed.
 
 Lemma succ_max_distr n m : succ (max n m) = max (succ n) (succ m).
 Proof.
- symmetry. apply max_monotone.
+ Symmetry. apply max_monotone.
  intros x x'. apply succ_le_mono.
 Qed.
 
 Lemma succ_min_distr n m : succ (min n m) = min (succ n) (succ m).
 Proof.
- symmetry. apply min_monotone.
+ Symmetry. apply min_monotone.
  intros x x'. apply succ_le_mono.
 Qed.
 
@@ -1716,7 +1718,7 @@ Proof.
  exists (t-s).
  rewrite mul_sub_distr_r.
  rewrite <- Hs, <- Ht.
- symmetry. apply add_sub.
+ Symmetry. apply add_sub.
  apply mul_lt_mono_r with p.
  rewrite <- Hs, <- Ht, add_comm.
  apply lt_add_r.
@@ -1784,12 +1786,12 @@ Proof.
  (* Lt *)
  intros (H',H) LT; split; auto.
  rewrite mul_add_distr_l, mul_xO_r, <- H, <- H'.
- simpl. f_equal. symmetry.
+ simpl. f_equal. Symmetry.
  rewrite add_comm. now apply sub_add.
  (* Gt *)
  intros (H',H) LT; split; auto.
  rewrite mul_add_distr_l, mul_xO_r, <- H, <- H'.
- simpl. f_equal. symmetry.
+ simpl. f_equal. Symmetry.
  rewrite add_comm. now apply sub_add.
  (* Then... *)
  intros (H,H'); split; auto. rewrite mul_xO_r, H'; auto.

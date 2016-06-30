@@ -19,6 +19,8 @@ Require Import
  HoTTClasses.tactics.ring_tac
  HoTTClasses.theory.rings.
 
+Local Set Universe Minimization ToSet.
+
 Module NatPair.
 
 Section contents.
@@ -67,11 +69,11 @@ Definition Z_ind2 : forall (P : Z -> Z -> Type) {sP : forall x y, IsHProp (P x y
   (dclass : forall x y : Npair, P (' x) (' y)), forall x y, P x y
   := Completion.R_ind2 _.
 
-Definition Z_ind3 : forall (P : Z -> Z -> Z -> Type)
+Definition Z_ind3@{i j} : forall (P : Z -> Z -> Z -> Type@{i})
   {sP : forall x y z, IsHProp (P x y z)}
   (dclass : forall x y z : Npair, P (' x) (' y) (' z)),
   forall x y z, P x y z
-  := Completion.R_ind3@{UN i j k j} _.
+  := Completion.R_ind3@{UN i j j j j j} _.
 
 Definition Z_rec {T : Type} {sT : IsHSet T}
   : forall (dclass : Npair -> T)
@@ -148,7 +150,7 @@ Proof.
 intros B ??????.
 apply (Z_rec (fun s => naturals_to_semiring N _ (SRPair.pos s)
     + - naturals_to_semiring N _ (SRPair.neg s))).
-exact Z_to_ring_respects@{UN UN UN UN}.
+exact Z_to_ring_respects@{UN UN UN UN UN UN UN UN UN UN UN}.
 Defined.
 
 (* Hint Rewrite preserves_0 preserves_1 preserves_mult preserves_plus: preservation.
@@ -232,10 +234,9 @@ End for_another_ring.
 Global Instance Z_integers : Integers Z.
 Proof.
 split;try apply _.
-- exact @z_to_ring_morphism@{i i i i i i i i}.
-- exact @same_morphism@{i i i i i i i i i}.
+- exact @z_to_ring_morphism@{i i i i i i i i i i i i i i i i i i i i}.
+- exact @same_morphism@{i i i i i i i i i i i i i i i i i i i i i}.
 Qed.
-
 
 Context `{!NatDistance N}.
 
@@ -315,13 +316,13 @@ destruct (nat_distance_sig pa pb) as [[z1 E1] | [z1 E1]];simpl.
       rewrite E4,plus_0_r in E3;rewrite <-E1,<-E3 in E.
       apply (left_cancellation plus (pa+na)).
       rewrite (plus_comm pa na),plus_0_r,<-plus_assoc.
-      rewrite (plus_comm na pa). symmetry;trivial.
+      rewrite (plus_comm na pa). Symmetry;trivial.
     * apply ap. apply Sigma.path_sigma_hprop.
       simpl. rewrite PathGroupoids.transport_const.
       rewrite <-E1,<-E3 in E.
       apply (left_cancellation plus (pa + na)).
       rewrite <-(plus_assoc pa na z2),(plus_comm pa na),<-plus_assoc.
-      symmetry;trivial.
+      Symmetry;trivial.
     * destruct E2.
       rewrite <-E1,<-E3 in E.
       assert (Erw : nb + z2 + (pa + z1) = (pa + nb) + (z2 + z1))
@@ -352,10 +353,16 @@ destruct (nat_distance_sig pa pb) as [[z1 E1] | [z1 E1]];simpl.
     path_via (pb + z1 + nb);[|path_via (nb + z2 + pb)];ring_with_nat.
 Qed.
 
-Global Instance Z_abs : IntAbs Z N.
+Lemma Z_abs' : IntAbs Z N.
 Proof.
 red. apply (Z_rect _ Z_abs_def).
 exact Z_abs_respects.
+Qed.
+
+Global Instance Z_abs@{i j} : IntAbs@{UN UN i UN UN} Z N.
+Proof.
+exact Z_abs'@{i j UN UN i j i i UN UN UN i i i i i i i j i
+i i i i i i i i i i i i i i i}.
 Qed.
 
 Notation n_to_z := (naturals_to_semiring N Z).
@@ -409,9 +416,8 @@ destruct (int_abs_sig Z N x) as [[a Ea]|[a Ea]],
     rewrite negate_0,<-Eb;trivial.
 Qed.
 
-Global Instance Z_zero_product@{i k k' k''} : ZeroProduct Z
-  := Z_zero_product'@{i k UN k' UN UN UN UN k' UN UN UN UN
-   UN UN UN UN UN UN UN UN UN UN UN UN UN UN UN i UN k'' UN UN UN}.
+Global Instance Z_zero_product@{i j} : ZeroProduct Z
+  := Z_zero_product'@{i Set Set Set i i Set j i Set Set Set}.
 
 Section with_order.
 Context {Nle : Le N} `{!SemiRingOrder Nle} `{is_mere_relation N le}.

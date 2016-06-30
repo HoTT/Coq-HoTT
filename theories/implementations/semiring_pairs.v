@@ -17,6 +17,8 @@ Require Import
   HoTTClasses.interfaces.naturals
   HoTTClasses.implementations.peano_naturals.
 
+Local Set Universe Minimization ToSet.
+
 Module SRPair.
 
 Record SRpair (SR : Type) := C { pos : SR ; neg : SR }.
@@ -117,7 +119,7 @@ Lemma opp_respects : forall q1 q2, equiv q1 q2 -> equiv (opp q1) (opp q2).
 Proof.
 unfold equiv;simpl.
 intros q1 q2 E.
-rewrite !(plus_comm (neg _)). symmetry. apply E.
+rewrite !(plus_comm (neg _)). Symmetry. apply E.
 Qed.
 
 Definition SRle `{Le SR} : Le (SRpair SR)
@@ -448,7 +450,10 @@ Qed.
 
 Global Instance R_ring : Ring R.
 Proof.
-exact R_ring'@{UR2 UR2 UR2 UR2 UR2 UR2 UR2}.
+exact R_ring'@{UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2
+  UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2
+  UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2
+  UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2}.
 Qed.
 
 (* A final word about inject *)
@@ -465,7 +470,7 @@ Qed.
 
 Global Instance SR_to_R_morphism : SemiRingPreserving (cast SR R).
 Proof.
-exact (SR_to_R_morphism_aux@{UR2 UR2 UR2 UR2}).
+exact (SR_to_R_morphism_aux@{UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2 UR2}).
 Qed.
 
 Global Instance SR_to_R_injective : Injective (cast SR R).
@@ -483,7 +488,7 @@ Qed.
 
 Lemma SRpair_splits : forall n m, class (C n m) = 'n + - 'm.
 Proof.
-exact SRpair_splits'@{UR2 UR2 UR2}.
+exact SRpair_splits'@{UR2 UR2 UR2 UR2 UR2 UR2 UR2}.
 Qed.
 
 Section with_semiring_order.

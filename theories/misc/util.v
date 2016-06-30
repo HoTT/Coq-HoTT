@@ -114,7 +114,7 @@ destruct x.
 - apply iff_false. intros [y H].
   change (@is_Some A None).
   apply transport with (Some y).
-  + symmetry. assumption.
+  + Symmetry. assumption.
   + simpl. auto.
 Qed.
 
@@ -132,7 +132,7 @@ unfold is_None. destruct x as [a|].
   intros H.
   change (is_None (Some a)).
   apply transport with None.
-  + symmetry;assumption.
+  + Symmetry;assumption.
   + simpl;auto.
 - apply iff_true. reflexivity.
 Qed.

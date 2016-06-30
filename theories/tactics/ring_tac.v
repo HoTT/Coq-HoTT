@@ -29,7 +29,7 @@ Lemma normalize_eq `{Q : @Quoting.EqQuote R _ _ _ _ V l n m V' l'}
 Proof.
 intros E.
 eapply Quoting.eval_eqquote.
-etransitivity;[symmetry;apply (eval_toPol _)|].
+etransitivity;[Symmetry;apply (eval_toPol _)|].
 etransitivity;[|apply (eval_toPol _)].
 exact E.
 Qed.

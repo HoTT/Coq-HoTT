@@ -36,7 +36,7 @@ Proof. apply le_not_lt_flip, nat_nonneg. Qed.
 Lemma nat_0_or_pos x : x = 0 ∨ 0 < x.
 Proof.
 destruct (trichotomy (<) 0 x) as [?|[?|?]]; auto.
-- left;symmetry;trivial.
+- left;Symmetry;trivial.
 - destruct (nat_not_neg x). trivial.
 Qed.
 
@@ -149,7 +149,7 @@ assert (∀ x y, n_to_sr x ≤ n_to_sr y → x ≤ y) as P.
   exists (naturals_to_semiring nat N a).
   apply (injective n_to_sr).
   rewrite rings.preserves_plus. rewrite (naturals.to_semiring_involutive _ _).
-  symmetry;trivial.
+  Symmetry;trivial.
 - intros x y.
   destruct (total (≤) (n_to_sr x) (n_to_sr y)); [left | right]; apply P;trivial.
 Qed.

@@ -173,7 +173,7 @@ Section default_order.
        apply dec_recip_ne_0. apply injective_ne_0...
       ring_simplify.
       etransitivity.
-       2: now symmetry; eauto.
+       2: now Symmetry; eauto.
       field.
       split; apply injective_ne_0...
      rewrite F. rewrite preserves_0. ring.

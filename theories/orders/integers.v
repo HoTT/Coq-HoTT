@@ -120,7 +120,7 @@ repeat split.
   exists (k + k').
   rewrite E2,E1.
   rewrite (preserves_plus (f:=naturals_to_semiring nat Z)).
-  symmetry;apply associativity.
+  Symmetry;apply associativity.
 - intros x y [k E1] [k' E2].
   rewrite E1.
   assert (k = 0).
@@ -167,8 +167,7 @@ assert (∀ x y, i_to_r x ≤ i_to_r y → x ≤ y) as P.
   + clear E A x y.
     change (' (pa ∸ na) ≡ (compose i_to_r (naturals_to_semiring nat Z)) (pa ∸ na)).
     generalize (pa ∸ na);intros n.
-    apply naturals.to_semiring_unique_alt;try apply _.
-    apply compose_sr_morphism;apply _.
+    apply naturals.to_semiring_unique_alt;apply _.
 - intros x y.
   destruct (total (≤) (i_to_r x) (i_to_r y)); [left|right]; eapply P;trivial.
 Qed.
