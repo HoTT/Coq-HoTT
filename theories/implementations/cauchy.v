@@ -150,33 +150,109 @@ Arguments ind_rat_rat {_ _} _ _ _ _ _.
 Arguments ind_rat_lim {_ _} _ _ _ _ _ _ _ _ _ _.
 Arguments ind_lim_rat {_ _} _ _ _ _ _ _ _ _ _ _.
 Arguments ind_lim_lim {_ _} _ _ _ _ _ _ _ _ _ _ _ _.
-(* 
-(* Everything in this section should not be exposed! *)
-Section Trace.
 
-(* We need to simultaneously define real_rect
-   and equiv_rect where the type of equiv_rect
-   depends on real_rect. So instead we define [real_trace x v]
-   which means [v = real_rect x] (and the same for equiv_rect). *)
-Inductive real_trace {A B} (I : Inductors A B) : forall x : real, A x -> Type :=
-  | trace_rat : forall q, real_trace I (rat q) (ind_rat I q)
-  | trace_lim : forall x (a : DApproximation A B x),
-    (forall e, real_trace I (x e) (a e)) ->
-    real_trace I (lim x) (ind_lim I x a)
+Section induction.
+Variable A : real -> Type.
+Variable B : forall x y : real, A x -> A y -> forall e `{Requiv e x y}, Type.
 
-with equiv_trace {A B} (I : Inductors A B) : forall x y a b e xi,
-  @B x y a b e xi -> Type :=
+Definition real_rect : Inductors A B -> forall x : real, A x :=
+  fun I x =>
+  fix real_rect (x : real) {struct x} : Inductors A B -> A x :=
+    match x return (Inductors A B -> A x) with
+    | rat q => fun I => ind_rat I q
+    | lim' f Hf => fun I =>
+      let x := Build_Approximation f Hf in
+      let a := Build_DApproximation A B x (fun e => real_rect (f e) I)
+        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+      ind_lim I x a
+    end
+  with equiv_rect (x y : real) (e : Qpos) (xi : Requiv e x y) {struct xi}
+    : forall I : Inductors A B, @B x y (real_rect x I) (real_rect y I) e xi :=
+    match xi in equiv' e' x' y' return
+      (forall I : Inductors A B,
+        @B x' y' (real_rect x' I) (real_rect y' I) e' xi) with
+    | equiv_rat_rat' q r e H => fun I => ind_rat_rat I q r e H
+    | equiv_rat_lim' q f Hf e d d' He xi =>
+      fun I =>
+      let y := Build_Approximation f Hf in
+      let b := Build_DApproximation A B y (fun e => real_rect (f e) I)
+        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+      ind_rat_lim I q d d' e y b He xi (equiv_rect _ _ _ xi I)
+    | equiv_lim_rat' f Hf r e d d' He xi =>
+      fun I =>
+      let x := Build_Approximation f Hf in
+      let a := Build_DApproximation A B x (fun e => real_rect (f e) I)
+        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+      ind_lim_rat I r d d' e x a He xi (equiv_rect _ _ _ xi I)
+    | equiv_lim_lim' f Hf g Hg e d n e' He xi =>
+      fun I =>
+      let x := Build_Approximation f Hf in
+      let a := Build_DApproximation A B x (fun e => real_rect (f e) I)
+        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+      let y := Build_Approximation g Hg in
+      let b := Build_DApproximation A B y (fun e => real_rect (g e) I)
+        (fun d e => equiv_rect (g d) (g e) _ (Hg d e) I) in
+      ind_lim_lim I x y a b e d n e' He xi (equiv_rect _ _ _ xi I)
+    end
+  for real_rect x I.
 
-.
+Definition equiv_rect : forall (I : Inductors A B)
+  (x y : real) (e : Qpos) (xi : Requiv e x y),
+  @B x y (real_rect I x) (real_rect I y) e xi :=
+  fun I x y e xi =>
+  fix real_rect (x : real) {struct x} : Inductors A B -> A x :=
+    match x return (Inductors A B -> A x) with
+    | rat q => fun I => ind_rat I q
+    | lim' f Hf => fun I =>
+      let x := Build_Approximation f Hf in
+      let a := Build_DApproximation A B x (fun e => real_rect (f e) I)
+        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+      ind_lim I x a
+    end
+  with equiv_rect (x y : real) (e : Qpos) (xi : Requiv e x y) {struct xi}
+    : forall I : Inductors A B, @B x y (real_rect x I) (real_rect y I) e xi :=
+    match xi in equiv' e' x' y' return
+      (forall I : Inductors A B,
+        @B x' y' (real_rect x' I) (real_rect y' I) e' xi) with
+    | equiv_rat_rat' q r e H => fun I => ind_rat_rat I q r e H
+    | equiv_rat_lim' q f Hf e d d' He xi =>
+      fun I =>
+      let y := Build_Approximation f Hf in
+      let b := Build_DApproximation A B y (fun e => real_rect (f e) I)
+        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+      ind_rat_lim I q d d' e y b He xi (equiv_rect _ _ _ xi I)
+    | equiv_lim_rat' f Hf r e d d' He xi =>
+      fun I =>
+      let x := Build_Approximation f Hf in
+      let a := Build_DApproximation A B x (fun e => real_rect (f e) I)
+        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+      ind_lim_rat I r d d' e x a He xi (equiv_rect _ _ _ xi I)
+    | equiv_lim_lim' f Hf g Hg e d n e' He xi =>
+      fun I =>
+      let x := Build_Approximation f Hf in
+      let a := Build_DApproximation A B x (fun e => real_rect (f e) I)
+        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+      let y := Build_Approximation g Hg in
+      let b := Build_DApproximation A B y (fun e => real_rect (g e) I)
+        (fun d e => equiv_rect (g d) (g e) _ (Hg d e) I) in
+      ind_lim_lim I x y a b e d n e' He xi (equiv_rect _ _ _ xi I)
+    end
+  for equiv_rect x y e xi I.
 
-End Trace.
+Definition approx_rect (I : Inductors A B) (x : Approximation)
+  : DApproximation A B x
+  := Build_DApproximation A B x (fun e => real_rect I (x e))
+      (fun d e => equiv_rect I (x d) (x e) _ (approx_equiv x d e)).
 
-Fixpoint real_rect A B (I : Inductors A B) (x : real) : A x
-with equiv_rect A B (I : Inductors A B) (x y : real) (e : Qpos) (xi : Requiv e x y)
-  : B x y (real_rect A B I x) (real_rect A B I y) e.
+Variable I : Inductors A B.
+
+Definition real_rect_rat q : real_rect I (rat q) = ind_rat I q
+  := idpath.
+
+Definition real_rect_lim x : real_rect I (lim x) = ind_lim I x (approx_rect I x)
+  := idpath.
 
 End induction.
-  *)
 
 End VarSec.
 
