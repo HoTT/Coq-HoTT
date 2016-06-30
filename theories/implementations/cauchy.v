@@ -144,10 +144,37 @@ Record Inductors (A : real -> Type)
 
    ; ind_hprop_B : forall x y a b e xi, IsHProp (@B x y a b e xi) }.
 
+Arguments ind_rat {_ _} _ _.
+Arguments ind_lim {_ _} _ _ _.
+Arguments ind_rat_rat {_ _} _ _ _ _ _.
+Arguments ind_rat_lim {_ _} _ _ _ _ _ _ _ _ _ _.
+Arguments ind_lim_rat {_ _} _ _ _ _ _ _ _ _ _ _.
+Arguments ind_lim_lim {_ _} _ _ _ _ _ _ _ _ _ _ _ _.
+(* 
+(* Everything in this section should not be exposed! *)
+Section Trace.
+
+(* We need to simultaneously define real_rect
+   and equiv_rect where the type of equiv_rect
+   depends on real_rect. So instead we define [real_trace x v]
+   which means [v = real_rect x] (and the same for equiv_rect). *)
+Inductive real_trace {A B} (I : Inductors A B) : forall x : real, A x -> Type :=
+  | trace_rat : forall q, real_trace I (rat q) (ind_rat I q)
+  | trace_lim : forall x (a : DApproximation A B x),
+    (forall e, real_trace I (x e) (a e)) ->
+    real_trace I (lim x) (ind_lim I x a)
+
+with equiv_trace {A B} (I : Inductors A B) : forall x y a b e xi,
+  @B x y a b e xi -> Type :=
+
+.
+
+End Trace.
+
 Fixpoint real_rect A B (I : Inductors A B) (x : real) : A x
 with equiv_rect A B (I : Inductors A B) (x y : real) (e : Qpos) (xi : Requiv e x y)
   : B x y (real_rect A B I x) (real_rect A B I y) e.
-
+ *)
 End induction.
 
 End VarSec.
