@@ -36,7 +36,7 @@ Section rationals_and_integers.
     apply lt_iff_le_ne. split;trivial. apply not_symmetry;trivial.
   Qed.
 End rationals_and_integers.
-
+(* 
 (* A PseudoRingOrder uniquely specifies the orders on the rationals *)
 Section rationals_and_another_rationals.
   Context `{Rationals Q1} `{Apart Q1} `{!TrivialApart Q1}
@@ -227,3 +227,4 @@ Section default_order.
   Global Instance: FullPseudoSemiRingOrder rationals_le rationals_lt.
   Proof. now apply dec_full_pseudo_srorder. Qed.
 End default_order.
+ *)
