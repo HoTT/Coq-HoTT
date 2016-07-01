@@ -10,13 +10,14 @@ Require Import
   HoTTClasses.theory.rings
   HoTTClasses.theory.integers
   HoTTClasses.theory.dec_fields
+  HoTTClasses.orders.dec_fields
   HoTTClasses.theory.rationals.
 
 Module Export Cauchy.
 
 Section VarSec.
-
-Context `{Rationals Q} `{Qap : Apart Q} `{Qlt : Lt Q} `{Qle : Le Q}
+Universe UQ.
+Context (Q:Type@{UQ}) `{Rationals Q} `{Qap : Apart Q} `{Qlt : Lt Q} `{Qle : Le Q}
   `{!FullPseudoSemiRingOrder (_:Le Q) (_:Lt Q)}.
 
 Record Qpos := mkQpos { pos : Q; is_pos : 0 < pos }.
@@ -31,14 +32,6 @@ apply semirings.pos_plus_compat;apply is_pos.
 Qed.
 
 Instance Qpos_plus : Plus Qpos := fun a b => mkQpos _ (Qpos_plus_pr a b).
-
-Lemma Qpos_eq : forall a b : Qpos, ' a = ' b -> a = b.
-Proof.
-intros [a pa] [b pb] E.
-change (a=b) in E.
-destruct E. apply ap.
-apply path_ishprop.
-Qed.
 
 Private Inductive real : Type :=
   | rat : Q -> real
@@ -197,7 +190,7 @@ Definition real_rect : Inductors A B -> forall x : real, A x :=
   for real_rect x I.
 
 Definition equiv_rect : forall (I : Inductors A B)
-  (x y : real) (e : Qpos) (xi : Requiv e x y),
+  {x y : real} {e : Qpos} (xi : Requiv e x y),
   @B x y (real_rect I x) (real_rect I y) e xi :=
   fun I x y e xi =>
   fix real_rect (x : real) {struct x} : Inductors A B -> A x :=
@@ -242,7 +235,7 @@ Definition equiv_rect : forall (I : Inductors A B)
 Definition approx_rect (I : Inductors A B) (x : Approximation)
   : DApproximation A B x
   := Build_DApproximation A B x (fun e => real_rect I (x e))
-      (fun d e => equiv_rect I (x d) (x e) _ (approx_equiv x d e)).
+      (fun d e => equiv_rect I (approx_equiv x d e)).
 
 Variable I : Inductors A B.
 
@@ -252,9 +245,196 @@ Definition real_rect_rat q : real_rect I (rat q) = ind_rat I q
 Definition real_rect_lim x : real_rect I (lim x) = ind_lim I x (approx_rect I x)
   := idpath.
 
+Definition equiv_rect_rat_rat q r e E : equiv_rect I (equiv_rat_rat q r e E)
+  = ind_rat_rat I q r e E
+  := idpath.
+
+Definition equiv_rect_rat_lim q y e d d' He xi
+  : equiv_rect I (equiv_rat_lim q y e d d' He xi)
+  = ind_rat_lim I q d d' e y (approx_rect I y) He xi (equiv_rect I xi)
+  := idpath.
+
+Definition equiv_rect_lim_rat x r e d d' He xi
+  : equiv_rect I (equiv_lim_rat x r e d d' He xi)
+  = ind_lim_rat I r d d' e x (approx_rect I x) He xi (equiv_rect I xi)
+  := idpath.
+
+Definition equiv_rect_lim_lim x y e d n e' He xi
+  : equiv_rect I (equiv_lim_lim x y e d n e' He xi)
+  = ind_lim_lim I x y (approx_rect I x) (approx_rect I y)
+                  e d n e' He xi (equiv_rect I xi)
+  := idpath.
+
 End induction.
 
 End VarSec.
 
 End Cauchy.
 
+Arguments equiv_path {Q _ _ _ _ _ _ _ _ _ _ _ _} u v {_}.
+
+Section contents.
+Universe UQ.
+Context (Q:Type@{UQ}) `{Rationals Q} `{Qap : Apart Q} `{!TrivialApart Q}
+   `{Qlt : Lt Q} `{Qle : Le Q}
+  `{!FullPseudoSemiRingOrder (_:Le Q) (_:Lt Q)}.
+
+Notation "Q+" := (Qpos Q).
+
+Instance : Cast (Qpos Q) Q := pos Q.
+
+Instance pos_is_pos : forall q : Qpos Q, PropHolds (0 < ' q)
+  := is_pos Q.
+
+Lemma pos_eq : forall a b : Qpos Q, @paths Q (' a) (' b) -> a = b.
+Proof.
+intros [a Ea] [b Eb] E.
+change (a = b) in E.
+destruct E;apply ap;apply path_ishprop.
+Qed.
+
+Existing Instance Qpos_plus.
+
+Instance Qpos_one : One Q+.
+Proof.
+exists 1;solve_propholds.
+Defined.
+
+Instance Qpos_mult : Mult Q+.
+Proof.
+intros a b;exists (' a * ' b).
+solve_propholds.
+Defined.
+
+Let rat := rat Q.
+Let lim := lim Q.
+
+Definition real_rect0 (A : real Q -> Type) (val_rat : forall q, A (rat q))
+  (val_lim : forall (x : Approximation Q) (a : forall e, A (x e)), A (lim x))
+  (val_respects : forall u v (h : forall e, Requiv Q e u v) (a : A u) (b : A v),
+    equiv_path u v # a = b)
+  : forall x, A x.
+Proof.
+apply (real_rect Q A (fun _ _ _ _ _ _ => Unit)).
+split;auto;try apply _.
+intros. apply val_lim. intros;apply a.
+Defined.
+
+Definition real_ind0 (A : real Q -> Type) `{forall q, IsHProp (A q)}
+  (A_rat : forall q, A (rat q))
+  (A_lim : forall (x : Approximation Q) (a : forall e, A (x e)), A (lim x))
+  : forall x, A x.
+Proof.
+apply real_rect0;auto.
+intros. apply path_ishprop.
+Qed.
+
+Instance pos_recip : DecRecip Q+.
+Proof.
+intros e. exists (/ ' e).
+solve_propholds.
+Defined.
+
+Instance pos_of_nat : Cast nat Q+.
+Proof.
+intros n. destruct n as [|k].
+- exists 1;solve_propholds.
+- exists (naturals_to_semiring nat Q (S k)).
+  induction k as [|k Ik].
+  + change (0 < 1). solve_propholds.
+  + change (0 < 1 + naturals_to_semiring nat Q (S k)).
+    set (K := naturals_to_semiring nat Q (S k)) in *;clearbody K.
+    solve_propholds.
+Defined.
+
+Lemma pos_recip_r : forall e : Q+, e / e = 1.
+Proof.
+intros;apply pos_eq.
+unfold dec_recip,cast,pos_recip;simpl.
+change (' e / ' e = 1). apply dec_recip_inverse.
+apply lt_ne_flip. solve_propholds.
+Qed.
+
+Lemma pos_recip_r' : forall e : Q+, @paths Q (' e / ' e) 1.
+Proof.
+intros. change (' (e / e) = 1). rewrite pos_recip_r. reflexivity.
+Qed.
+
+Lemma pos_mult_1_r : forall e : Q+, e * 1 = e.
+Proof.
+intros;apply pos_eq. apply mult_1_r.
+Qed.
+
+Lemma pos_split2 : forall e : Qpos Q, e = e / 2 + e / 2.
+Proof.
+intros.
+path_via (e * (2 / 2)).
+- rewrite pos_recip_r,pos_mult_1_r;reflexivity.
+- apply pos_eq. change (' e * (2 / 2) = ' e / 2 + ' e / 2).
+  ring_tac.ring_with_nat.
+Qed.
+
+Lemma pos_split3 : forall e : Qpos Q, e = e / 3 + e / 3 + e / 3.
+Proof.
+intros.
+path_via (e * (3 / 3)).
+- rewrite pos_recip_r,pos_mult_1_r;reflexivity.
+- apply pos_eq. change (' e * (3 / 3) = ' e / 3 + ' e / 3 + ' e / 3).
+  ring_tac.ring_with_nat.
+Qed.
+
+Instance : forall e, Reflexive (Requiv Q e).
+Proof.
+red. intros e u;revert u e.
+apply (real_ind0 (fun u => forall e, _)).
+- intros. apply equiv_rat_rat. rewrite plus_negate_r.
+  split;[apply rings.flip_pos_negate|];apply is_pos.
+- intros. eapply equiv_lim_lim;[apply pos_split3|].
+  auto.
+Qed.
+
+Global Instance real_isset : IsHSet (real Q).
+Proof.
+eapply @HSet.isset_hrel_subpaths.
+3:apply equiv_path.
+- red. intros;reflexivity.
+- apply _.
+Qed.
+
+Definition const_approx : real Q -> Approximation Q.
+Proof.
+intros x;exists (fun _ => x).
+intros;reflexivity.
+Defined.
+
+Lemma lim_cons : forall x, lim (const_approx x) = x.
+Proof.
+apply (real_ind0 _).
+- intros. apply equiv_path.
+  intros. eapply equiv_lim_rat;[apply pos_split2|].
+  simpl. reflexivity.
+- intros x Hx. apply equiv_path. intros.
+  eapply equiv_lim_lim;[|
+  simpl; rewrite <-Hx;
+  eapply equiv_lim_lim;[|simpl;reflexivity]].
+  + path_via (e / 5 + e / 5 + (e * 3 / 5)).
+    path_via (e * (5 / 5)).
+    * rewrite pos_recip_r,pos_mult_1_r;reflexivity.
+    * apply pos_eq.
+      change (' e * (5 / 5) = ' e / 5 + ' e / 5 + ' e * 3 / 5).
+      ring_tac.ring_with_nat.
+  + path_via (e / 5 + e / 5 + e / 5).
+    apply pos_eq.
+    unfold cast,mult,Qpos_mult;simpl.
+    unfold cast,dec_recip;simpl. ring_tac.ring_with_nat.
+Qed.
+
+Lemma lim_epi : epi.isepi lim.
+Proof.
+apply epi.issurj_isepi.
+apply BuildIsSurjection.
+intros. apply tr. exists (const_approx b).
+apply lim_cons.
+Qed.
+
+End contents.
