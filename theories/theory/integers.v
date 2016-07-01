@@ -7,6 +7,7 @@ Require
 Require Import
  HoTTClasses.interfaces.naturals
  HoTTClasses.interfaces.abstract_algebra
+ HoTTClasses.interfaces.orders
  HoTTClasses.implementations.natpair_integers
  HoTTClasses.isomorphisms.rings.
 Require Export
@@ -65,12 +66,13 @@ Instance integers_to_integers_injective `{Integers Z} `{Integers Z2}
 Proof (to_ring_injective (integers_to_ring Z2 Z) _).
 
 Instance naturals_to_integers_injective `{Funext} `{Univalence}
-  `{Integers Z} `{Naturals N}
+  `{Integers@{i i i i i i i i} Z} `{Naturals@{i i i i i i i i} N}
   (f: N → Z) `{!SemiRingPreserving f}
   : Injective f.
 Proof.
 intros x y E.
 apply (injective (cast N (NatPair.Z N))).
+(* needs <= and < of N to be mere relations *)
 rewrite <-2!(naturals.to_semiring_twice (integers_to_ring Z (NatPair.Z N))
   f (cast N (NatPair.Z N))).
 apply ap,E.
@@ -78,7 +80,8 @@ Qed.
 
 Section retract_is_int.
   Context `{Funext} `{Univalence}.
-  Context `{Integers Z} `{Ring Z2}.
+  Context `{Integers Z} `{Ring Z2}
+    {Z2ap : Apart Z2} {Z2le Z2lt} `{!FullPseudoSemiRingOrder (A:=Z2) Z2le Z2lt}.
   Context (f : Z → Z2) `{!Inverse f} `{!Surjective f} `{!SemiRingPreserving f}
     `{!SemiRingPreserving (f⁻¹)}.
 
@@ -126,9 +129,9 @@ Section contents.
 Universe U.
 
 Context `{Funext} `{Univalence}.
-Context (Z : Type@{U}) `{Integers@{U U} Z}.
+Context (Z : Type@{U}) `{Integers@{U U U U U U U U} Z}.
 
-Lemma from_int_stmt  Z' `{Integers@{U U} Z'}
+Lemma from_int_stmt  Z' `{Integers@{U U U U U U U U} Z'}
   : forall (P : Rings.Operations -> Type),
   P (Rings.BuildOperations Z') -> P (Rings.BuildOperations Z).
 Proof.

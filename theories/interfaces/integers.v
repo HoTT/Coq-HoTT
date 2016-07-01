@@ -35,4 +35,3 @@ Section specializable.
     | inr (n↾_) => 0
     end.
 End specializable.
-
