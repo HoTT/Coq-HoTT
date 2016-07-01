@@ -165,7 +165,7 @@ Proof.
 apply hset_pathcoll, pathcoll_decpaths, nat_dec.
 Qed.
 
-Global Instance nat_semiring : SemiRing@{N} nat.
+Instance nat_semiring : SemiRing@{N} nat.
 Proof.
 repeat (split; try apply _);
 first [change sg_op with plus; change mon_unit with 0
@@ -179,77 +179,6 @@ Qed.
 (* Add Ring nat: (rings.stdlib_semiring_theory nat). *)
 
 (* Close Scope nat_scope. *)
-
-Global Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
-  λ _ _ _ _ _, fix f (n: nat) := match n with 0%nat => 0 | 1%nat => 1 |
-   S n' => 1 + f n' end.
-
-Section for_another_semiring.
-  Universe U.
-  Context {R:Type@{U} } `{SemiRing@{U} R}.
-
-  Notation toR := (naturals_to_semiring nat R).
-
-(*   Add Ring R: (rings.stdlib_semiring_theory R). *)
-
-  Let f_preserves_0: toR 0 = 0.
-  Proof. reflexivity. Qed.
-
-  Let f_preserves_1: toR 1 = 1.
-  Proof. reflexivity. Qed.
-
-  Let f_S : forall x, toR (S x) = 1 + toR x.
-  Proof.
-  intros [|x].
-  - Symmetry;apply plus_0_r.
-  - reflexivity.
-  Qed.
-
-  Let f_preserves_plus a a': toR (a + a') = toR a + toR a'.
-  Proof.
-  induction a as [|a IHa].
-  - change (toR a' = 0 + toR a').
-    apply symmetry,plus_0_l.
-  - change (toR (S (a + a')) = toR (S a) + toR a').
-    rewrite !f_S,IHa.
-    apply associativity.
-  Qed.
-
-  Let f_preserves_mult a a': toR (a * a') = toR a * toR a'.
-  Proof.
-  induction a as [|a IHa].
-  - change (0 = 0 * toR a').
-    rewrite mult_0_l. reflexivity.
-  - rewrite f_S.
-    change (toR (a' + a * a') = (1 + toR a) * toR a').
-    rewrite f_preserves_plus, IHa.
-    rewrite plus_mult_distr_r,mult_1_l.
-    reflexivity.
-  Qed.
-
-  Global Instance nat_to_sr_morphism
-    : SemiRingPreserving (naturals_to_semiring nat R).
-  Proof.
-  repeat (split;try apply _);trivial.
-  Qed.
-
-  Lemma toR_unique (h : nat -> R) `{!SemiRingPreserving h} x :
-    naturals_to_semiring nat R x = h x.
-  Proof.
-  induction x as [|n E].
-  + change (0 = h 0).
-    apply symmetry,preserves_0.
-  + rewrite f_S. change (1 + naturals_to_semiring nat R n = h (1+n)).
-    rewrite (preserves_plus (f:=h)).
-    rewrite E. apply ap10,ap,symmetry,preserves_1.
-  Qed.
-End for_another_semiring.
-
-Global Instance nat_naturals : Naturals@{N U} nat.
-Proof.
-split;try apply _.
-intros;apply toR_unique, _.
-Qed.
 
 Lemma O_nat_0 : O =N= 0.
 Proof. reflexivity. Qed.
@@ -483,7 +412,7 @@ Qed.
 
 Global Instance nat_apart : Apart@{N N} nat := fun n m => n < m \/ m < n.
 
-Global Instance nat_apart_mere : is_mere_relation nat nat_apart.
+Instance nat_apart_mere : is_mere_relation nat nat_apart.
 Proof.
 intros;apply ishprop_sum;try apply _.
 intros E1 E2. apply (irreflexivity nat_lt x).
@@ -558,7 +487,7 @@ destruct (le_lt_dec c a) as [E2|E2].
 - left;trivial.
 Qed.
 
-Global Instance nat_full : FullPseudoSemiRingOrder nat_le nat_lt.
+Instance nat_full : FullPseudoSemiRingOrder nat_le nat_lt.
 Proof.
 split;[split|].
 - split;try apply _.
@@ -611,6 +540,77 @@ Qed.
 Global Instance S_strict_embedding : StrictOrderEmbedding S.
 Proof.
 split;apply _.
+Qed.
+
+Global Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
+  λ _ _ _ _ _ _, fix f (n: nat) := match n with 0%nat => 0 | 1%nat => 1 |
+   S n' => 1 + f n' end.
+
+Section for_another_semiring.
+  Universe U.
+  Context {R:Type@{U} } `{SemiRing@{U} R}.
+
+  Notation toR := (naturals_to_semiring nat R).
+
+(*   Add Ring R: (rings.stdlib_semiring_theory R). *)
+
+  Let f_preserves_0: toR 0 =  0.
+  Proof. reflexivity. Qed.
+
+  Let f_preserves_1: toR 1 = 1.
+  Proof. reflexivity. Qed.
+
+  Let f_S : forall x, toR (S x) = 1 + toR x.
+  Proof.
+  intros [|x].
+  - Symmetry;apply plus_0_r.
+  - reflexivity.
+  Qed.
+
+  Let f_preserves_plus a a': toR (a + a') = toR a + toR a'.
+  Proof.
+  induction a as [|a IHa].
+  - change (toR a' = 0 + toR a').
+    apply symmetry,plus_0_l.
+  - change (toR (S (a + a')) = toR (S a) + toR a').
+    rewrite !f_S,IHa.
+    apply associativity.
+  Qed.
+
+  Let f_preserves_mult a a': toR (a * a') = toR a * toR a'.
+  Proof.
+  induction a as [|a IHa].
+  - change (0 = 0 * toR a').
+    rewrite mult_0_l. reflexivity.
+  - rewrite f_S.
+    change (toR (a' + a * a') = (1 + toR a) * toR a').
+    rewrite f_preserves_plus, IHa.
+    rewrite plus_mult_distr_r,mult_1_l.
+    reflexivity.
+  Qed.
+
+  Global Instance nat_to_sr_morphism
+    : SemiRingPreserving (naturals_to_semiring nat R).
+  Proof.
+  repeat (split;try apply _);trivial.
+  Qed.
+
+  Lemma toR_unique (h : nat -> R) `{!SemiRingPreserving h} x :
+    naturals_to_semiring nat R x = h x.
+  Proof.
+  induction x as [|n E].
+  + change (0 = h 0).
+    apply symmetry,preserves_0.
+  + rewrite f_S. change (1 + naturals_to_semiring nat R n = h (1+n)).
+    rewrite (preserves_plus (f:=h)).
+    rewrite E. apply ap10,ap,symmetry,preserves_1.
+  Qed.
+End for_another_semiring.
+
+Global Instance nat_naturals : Naturals nat.
+Proof.
+split;try apply _.
+intros;apply toR_unique, _.
 Qed.
 
 Global Instance nat_cut_minus: CutMinus@{N} nat := Peano.minus.

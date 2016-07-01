@@ -3,6 +3,7 @@ Require Import
   HoTT.Basics.Decidable.
 Require Import
   HoTTClasses.interfaces.abstract_algebra
+  HoTTClasses.interfaces.orders
   HoTTClasses.implementations.peano_naturals
   HoTTClasses.theory.rings
   HoTTClasses.isomorphisms.rings.
@@ -60,13 +61,14 @@ Instance naturals_to_naturals_injective `{Naturals N} `{Naturals N2} (f: N → N
 Proof (to_semiring_injective (naturals_to_semiring N2 N) _).
 
 Section retract_is_nat.
-  Context `{Naturals N} `{SemiRing SR}.
+  Context `{Naturals N} `{SemiRing SR}
+    {SRap : Apart SR} {SRle SRlt} `{!FullPseudoSemiRingOrder (A:=SR) SRle SRlt}.
   Context (f : N → SR) `{inv_f : !Inverse f} `{!Surjective f}
     `{!SemiRingPreserving f} `{!SemiRingPreserving (f⁻¹)}.
 
   (* If we make this an instance, instance resolution will loop *)
   Definition retract_is_nat_to_sr : NaturalsToSemiRing SR
-    := λ R _ _ _ _ , naturals_to_semiring N R ∘ f⁻¹.
+    := λ R _ _ _ _ _, naturals_to_semiring N R ∘ f⁻¹.
 
   Section for_another_semirings.
     Context `{SemiRing R}.
@@ -108,9 +110,9 @@ Section contents.
 Universe U.
 
 (* {U U} because we do forall n : N, {id} n = nat_to_sr N N n *)
-Context `{Funext} `{Univalence} {N : Type@{U} } `{Naturals@{U U} N}.
+Context `{Funext} `{Univalence} {N : Type@{U} } `{Naturals@{U U U U U U U U} N}.
 
-Lemma from_nat_stmt  (N':Type@{U}) `{Naturals@{U U} N'}
+Lemma from_nat_stmt  (N':Type@{U}) `{Naturals@{U U U U U U U U} N'}
   : forall (P : SemiRings.Operations -> Type),
   P (SemiRings.BuildOperations N') -> P (SemiRings.BuildOperations N).
 Proof.

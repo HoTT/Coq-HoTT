@@ -159,6 +159,7 @@ Definition real_rect : Inductors A B -> forall x : real, A x :=
         (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
       ind_lim I x a
     end
+
   with equiv_rect (x y : real) (e : Qpos) (xi : Requiv e x y) {struct xi}
     : forall I : Inductors A B, @B x y (real_rect x I) (real_rect y I) e xi :=
     match xi in equiv' e' x' y' return

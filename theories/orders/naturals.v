@@ -16,8 +16,7 @@ Require Export
 
 Section naturals_order.
 Context `{Funext} `{Univalence}.
-Context `{Naturals N} `{Apart N} `{!TrivialApart N}
-  `{!FullPseudoSemiRingOrder Nle Nlt}.
+Context `{Naturals N} `{!TrivialApart N}.
 
 Instance nat_nonneg x : PropHolds (0 ≤ x).
 Proof. apply (to_semiring_nonneg (f:=id)). Qed.
@@ -91,72 +90,3 @@ End another_ring.
 End naturals_order.
 
 Hint Extern 20 (PropHolds (_ ≤ _)) => eapply @nat_nonneg : typeclass_instances.
-
-(* A default order on the naturals *)
-Instance nat_le `{Naturals N} : Le N | 10 :=  λ x y, ∃ z, x + z = y.
-Instance nat_lt `{Naturals N} : Lt N | 10 := dec_lt.
-
-Section default_order.
-Context `{Funext} `{Univalence} `{Naturals N} `{Apart N} `{!TrivialApart N}.
-(* Add Ring N2 : (rings.stdlib_semiring_theory N). *)
-
-Global Instance : is_mere_relation N nat_le.
-Proof.
-unfold nat_le.
-intros a b.
-apply ishprop_sigma_disjoint.
-intros x y E1 E2.
-apply (left_cancellation plus a).
-path_via b.
-Qed.
-
-Instance: PartialOrder nat_le.
-Proof.
-repeat split.
-- apply _.
-- exists 0. apply rings.plus_0_r.
-- hnf. intros a b c [d Ed] [e Ee].
-  rewrite <-Ee, <-Ed.
-  exists (d+e).
-  ring_with_nat.
-- hnf. intros a b [c Ec] [d Ed].
-  rewrite <-(rings.plus_0_r a),<-Ec,<-rings.plus_assoc in Ed.
-  apply (left_cancellation _ _) in Ed.
-  apply naturals.zero_sum in Ed.
-  destruct Ed as [E1 _];rewrite E1,rings.plus_0_r in Ec;trivial.
-Qed.
-
-Instance: SemiRingOrder nat_le.
-Proof.
-repeat (split; try apply _).
-- intros a b [c E];exists c. apply symmetry;trivial.
-- intros a b [c E];exists c.
-  rewrite <-E;ring_with_nat.
-- intros a b [c E];exists c.
-  rewrite <-plus_assoc in E. apply (left_cancellation _ _) in E.
-  trivial.
-- intros a b _ _.
-  exists (a*b). apply plus_0_l.
-Qed.
-
-Notation n_to_sr := (naturals_to_semiring N nat).
-
-Instance: TotalRelation nat_le.
-Proof.
-assert (∀ x y, n_to_sr x ≤ n_to_sr y → x ≤ y) as P.
-- intros x y E.
-  destruct (decompose_le E) as [a [_ A]].
-  exists (naturals_to_semiring nat N a).
-  apply (injective n_to_sr).
-  rewrite rings.preserves_plus. rewrite (naturals.to_semiring_involutive _ _).
-  Symmetry;trivial.
-- intros x y.
-  destruct (total (≤) (n_to_sr x) (n_to_sr y)); [left | right]; apply P;trivial.
-Qed.
-
-Global Instance: FullPseudoSemiRingOrder nat_le nat_lt.
-Proof.
-apply dec_full_pseudo_srorder.
-reflexivity.
-Qed.
-End default_order.

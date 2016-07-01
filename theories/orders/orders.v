@@ -322,7 +322,7 @@ Hint Extern 20 (Decision (_ < _)) =>
 Section full_pseudo_order.
   Context `{FullPseudoOrder A}.
 
-  Instance: IsApart A := pseudo_order_apart.
+  Local Existing Instance pseudo_order_apart.
 
   Lemma not_lt_le_flip x y : ¬y < x → x ≤ y.
   Proof.
@@ -348,7 +348,7 @@ Section full_pseudo_order.
     apply (antisymmetry (complement (<)));assumption.
   Qed.
 
-  Global Instance: FullPartialOrder (_ : Le A) (_ : Lt A).
+  Lemma fullpseudo_fullpartial' : FullPartialOrder Ale Alt.
   Proof.
   split; try apply _.
   intros x y.
@@ -364,7 +364,10 @@ Section full_pseudo_order.
     + apply symmetry. assumption.
   Qed.
 
-  Global Instance: ∀ x y, Stable (x ≤ y).
+  Global Instance fullpseudo_fullpartial@{i} : FullPartialOrder Ale Alt
+    := fullpseudo_fullpartial'@{i i i i}.
+
+  Global Instance le_stable : ∀ x y, Stable (x ≤ y).
   Proof.
   intros x y. unfold Stable, DN.
   intros dn. apply le_iff_not_lt_flip.

@@ -1,18 +1,17 @@
 Require Import
   HoTTClasses.interfaces.abstract_algebra
-  HoTTClasses.interfaces.naturals.
+  HoTTClasses.interfaces.orders
+  HoTTClasses.interfaces.naturals
+  HoTTClasses.theory.rings (* for Ring -> SemiRing *).
 
-Section initial_maps.
-  Variable A: Type.
+Class IntegersToRing@{i j} (A:Type@{i})
+  := integers_to_ring: ∀ (R:Type@{j}) `{Ring R}, A → R.
+Arguments integers_to_ring A {_} R {_ _ _ _ _ _} _.
 
-  Class IntegersToRing :=
-    integers_to_ring: ∀ R
-      `{Ring R}, A → R.
-
-End initial_maps.
-
-Class Integers A {plus mult zero one negate} `{U : IntegersToRing A} :=
-  { integers_ring:> @Ring A plus mult zero one negate
+Class Integers A {Aap:Apart A} {Aplus Amult Azero Aone Anegate Ale Alt}
+  `{U : IntegersToRing A} :=
+  { integers_ring :> @Ring A Aplus Amult Azero Aone Anegate
+  ; integers_order :> FullPseudoSemiRingOrder Ale Alt
   ; integers_to_ring_mor:> ∀ `{Ring B}, SemiRingPreserving (integers_to_ring A B)
   ; integers_initial: forall `{Ring B} {h : A -> B} `{!SemiRingPreserving h} x,
       integers_to_ring A B x = h x}.
@@ -36,3 +35,4 @@ Section specializable.
     | inr (n↾_) => 0
     end.
 End specializable.
+
