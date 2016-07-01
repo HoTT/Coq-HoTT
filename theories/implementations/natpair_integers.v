@@ -124,7 +124,7 @@ Lemma Z_to_ring_respects `{Ring B} :
   SRPair.equiv x y →
   naturals_to_semiring N B (SRPair.pos x) -
   naturals_to_semiring N B (SRPair.neg x)
-  ≡ naturals_to_semiring N B (SRPair.pos y) -
+  = naturals_to_semiring N B (SRPair.pos y) -
     naturals_to_semiring N B (SRPair.neg y).
 Proof.
 unfold SRPair.equiv;intros [pa na] [pb nb];simpl;intros E.
@@ -241,7 +241,7 @@ Qed.
 Context `{!NatDistance N}.
 
 Lemma Z_abs_aux_0 : forall a b z : N, a + z = b -> z = 0 ->
-  naturals_to_semiring N Z 0 ≡ ' {| SRPair.pos := a; SRPair.neg := b |}.
+  naturals_to_semiring N Z 0 = ' {| SRPair.pos := a; SRPair.neg := b |}.
 Proof.
 intros a b z E E'.
 rewrite (preserves_0 (A:=N)).
@@ -250,7 +250,7 @@ apply Z_eq. red;simpl. apply plus_comm.
 Qed.
 
 Lemma Z_abs_aux_neg : forall a b z : N, a + z = b ->
-  naturals_to_semiring N Z z ≡ - ' {| SRPair.pos := a; SRPair.neg := b |}.
+  naturals_to_semiring N Z z = - ' {| SRPair.pos := a; SRPair.neg := b |}.
 Proof.
 intros a b z E.
 rewrite <-(naturals.to_semiring_unique (cast N Z)).
@@ -258,7 +258,7 @@ apply Z_eq. red;simpl. rewrite plus_0_r,plus_comm;trivial.
 Qed.
 
 Lemma Z_abs_aux_pos : forall a b z : N, b + z = a ->
-  naturals_to_semiring N Z z ≡ ' {| SRPair.pos := a; SRPair.neg := b |}.
+  naturals_to_semiring N Z z = ' {| SRPair.pos := a; SRPair.neg := b |}.
 Proof.
 intros a b z E.
 rewrite <-(naturals.to_semiring_unique (cast N Z)). apply Z_eq;red;simpl.
@@ -269,8 +269,8 @@ Qed.
    to make sure we always go left when the inputs are equal.
    Otherwise we would have to truncate IntAbs. *)
 Definition Z_abs_def : ∀ x : Npair,
-  (∃ n : N, naturals_to_semiring N Z n ≡ ' x)
-  ∨ (∃ n : N, naturals_to_semiring N Z n ≡ - ' x).
+  (∃ n : N, naturals_to_semiring N Z n = ' x)
+  ∨ (∃ n : N, naturals_to_semiring N Z n = - ' x).
 Proof.
 intros [a b].
 destruct (nat_distance_sig a b) as [[z E]|[z E]].
@@ -283,9 +283,9 @@ Defined.
 Lemma Z_abs_respects : ∀ (x y : Npair) (E : SRPair.equiv x y),
   transport
     (λ q : Z,
-     (∃ n : N, naturals_to_semiring N Z n ≡ q)
-     ∨ (∃ n : N, naturals_to_semiring N Z n ≡ - q)) (Z_eq E) (Z_abs_def x)
-  ≡ Z_abs_def y.
+     (∃ n : N, naturals_to_semiring N Z n = q)
+     ∨ (∃ n : N, naturals_to_semiring N Z n = - q)) (Z_eq E) (Z_abs_def x)
+  = Z_abs_def y.
 Proof.
 intros [pa pb] [na nb] E.
 red in E; simpl in E.

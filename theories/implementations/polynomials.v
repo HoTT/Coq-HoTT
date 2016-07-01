@@ -303,7 +303,7 @@ Section contents.
   Qed.
 
   Lemma mult_pr : ∀ ps1 ps2, same_poly ps1 ps2 ->
-    forall Q, ml ps1 Q ≡ ml ps2 Q.
+    forall Q, ml ps1 Q = ml ps2 Q.
   Proof.
   intros ps1;induction ps1 as [|p1 ps1 IH1].
   - simpl. intros. apply symmetry, ml_zero_l. assumption.
@@ -313,7 +313,7 @@ Section contents.
       simpl; apply ap, ap, IH1, H1.
   Defined.
 
-  Lemma mult_respectful : ∀ ps qs : list R, same_poly ps qs → ml ps ≡ ml qs.
+  Lemma mult_respectful : ∀ ps qs : list R, same_poly ps qs → ml ps = ml qs.
   Proof.
   intros ps1 ps2 Hps. apply path_forall.
   red; apply poly_ind.
@@ -525,7 +525,7 @@ Section contents.
   Proof.
   hnf. apply (poly_ind (fun x => forall y, _)).
   intros ps. apply (poly_ind _).
-  change (∀ qs, ml ps (of_list qs) ≡ ml qs (of_list ps)).
+  change (∀ qs, ml ps (of_list qs) = ml qs (of_list ps)).
   induction ps as [|p ps IHps].
   - intros qs;simpl. apply symmetry, ml_zero_r.
   - intros qs;simpl.

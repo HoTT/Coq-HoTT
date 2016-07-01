@@ -165,7 +165,7 @@ assert (∀ x y, i_to_r x ≤ i_to_r y → x ≤ y) as P.
     change (0 + na <= pa + 0) in A.
     rewrite plus_0_l,plus_0_r in A;trivial.
   + clear E A x y.
-    change (' (pa ∸ na) ≡ (compose i_to_r (naturals_to_semiring nat Z)) (pa ∸ na)).
+    change (' (pa ∸ na) = (compose i_to_r (naturals_to_semiring nat Z)) (pa ∸ na)).
     generalize (pa ∸ na);intros n.
     apply naturals.to_semiring_unique_alt;apply _.
 - intros x y.

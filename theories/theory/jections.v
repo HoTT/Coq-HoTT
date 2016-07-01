@@ -135,7 +135,7 @@ Qed.
    otherwise it gets applied too eagerly, resulting in cycles. *)
 Hint Extern 4 (Bijective (_ ⁻¹)) => apply flip_bijection : typeclass_instances.
 
-Lemma inverse_involutive `(f : A → B) `{!Inverse f} : (f⁻¹)⁻¹ ≡ f.
+Lemma inverse_involutive `(f : A → B) `{!Inverse f} : (f⁻¹)⁻¹ = f.
 Proof. reflexivity. Qed.
 
 (* This second version is strictly for manual application. *)
@@ -147,6 +147,6 @@ Ltac setoid_inject :=
   match goal with
   | E : _ = ?f _ |- _ => apply (injective f) in E
   | E : ?f _ = _ |- _ => apply (injective f) in E
-  | E : _ ≡ _ |-  ?G => change (id G); injection E; clear E; intros;
+  | E : _ = _ |-  ?G => change (id G); injection E; clear E; intros;
     unfold id at 1 
   end.

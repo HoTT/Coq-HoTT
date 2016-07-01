@@ -152,8 +152,8 @@ Proof.
 destruct x;simpl;red;auto.
 Qed.
 
-Instance option_eq_dec `(A_dec : ∀ x y : A, Decision (x ≡ y))
-     : ∀ x y : option A, Decision (x ≡ y).
+Instance option_eq_dec `(A_dec : ∀ x y : A, Decision (x = y))
+     : ∀ x y : option A, Decision (x = y).
 Proof.
 intros [x|] [y|].
 - destruct (decide (x = y)) as [e|n].

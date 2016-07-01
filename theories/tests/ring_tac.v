@@ -23,7 +23,7 @@ Qed.
 Lemma test3 `{SemiRing R}
   (pa pb pc : R) :
   pa * (pb * pc)
-≡ pa * pb * pc.
+= pa * pb * pc.
 Proof.
 intros.
 apply (by_quoting (naturals_to_semiring nat R)). compute.

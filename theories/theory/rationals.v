@@ -61,7 +61,7 @@ Section another_integers.
   Lemma to_frac_inverse_respects : ∀ x y : Frac.Frac Z,
     Frac.equiv x y
     → ZtoQ (Frac.num x) / ZtoQ (Frac.den x)
-      ≡ ZtoQ (Frac.num y) / ZtoQ (Frac.den y).
+      = ZtoQ (Frac.num y) / ZtoQ (Frac.den y).
   Proof.
   intros [na da Ea] [nb db Eb] E.
   red in E;simpl in E.
@@ -217,7 +217,7 @@ Section alt_Build_Rationals.
     Frac.num := integers_to_ring Z B (Frac.num x);
     Frac.den := integers_to_ring Z B (Frac.den x);
     Frac.den_ne_0 := injective_ne_0 (Frac.den x) (Frac.den_ne_0 x) |}
-  ≡ FracField.class
+  = FracField.class
     {|
     Frac.num := integers_to_ring Z B (Frac.num y);
     Frac.den := integers_to_ring Z B (Frac.den y);

@@ -24,7 +24,7 @@ Lemma normalize_eq `{Q : @Quoting.EqQuote R _ _ _ _ V l n m V' l'}
   `{Trichotomy V Vlt} `{Trichotomy V' Vlt'}
   : eval phi (Quoting.merge R l l')
   (toPol (Quoting.expr_map inl (Quoting.eqquote_l R)))
-  ≡ eval phi (Quoting.merge R l l') (toPol (Quoting.eqquote_r R))
+  = eval phi (Quoting.merge R l l') (toPol (Quoting.eqquote_r R))
   -> n = m.
 Proof.
 intros E.

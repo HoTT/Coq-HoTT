@@ -127,7 +127,7 @@ Section Quote.
     (V':Type0) (v': Vars V') m (V'':Type0) (v'': Vars V'')
     `{!Quote v n v'} `{!Quote (merge v v') m v''}
     : eval (merge v (merge v' v''))
-      (Plus (expr_map sum_aux (quote n)) (expr_map sum_assoc (quote m))) ≡ 
+      (Plus (expr_map sum_aux (quote n)) (expr_map sum_assoc (quote m))) = 
       n + m.
   Proof.
   simpl.
@@ -149,7 +149,7 @@ Section Quote.
     (V':Type0) (v': Vars V') m (V'':Type0) (v'': Vars V'')
     `{!Quote v n v'} `{!Quote (merge v v') m v''}
     : eval (merge v (merge v' v''))
-      (Mult (expr_map sum_aux (quote n)) (expr_map sum_assoc (quote m))) ≡ 
+      (Mult (expr_map sum_aux (quote n)) (expr_map sum_assoc (quote m))) = 
       n * m.
   Proof.
   simpl.
