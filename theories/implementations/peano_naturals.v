@@ -182,7 +182,7 @@ Qed.
 
 Global Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
   λ _ _ _ _ _, fix f (n: nat) := match n with 0%nat => 0 | 1%nat => 1 |
-   S n' => f n' + 1 end.
+   S n' => 1 + f n' end.
 
 Section for_another_semiring.
   Universe U.
@@ -198,10 +198,10 @@ Section for_another_semiring.
   Let f_preserves_1: toR 1 = 1.
   Proof. reflexivity. Qed.
 
-  Let f_S : forall x, toR (S x) = toR x + 1.
+  Let f_S : forall x, toR (S x) = 1 + toR x.
   Proof.
   intros [|x].
-  - Symmetry;apply plus_0_l.
+  - Symmetry;apply plus_0_r.
   - reflexivity.
   Qed.
 
@@ -212,8 +212,7 @@ Section for_another_semiring.
     apply symmetry,plus_0_l.
   - change (toR (S (a + a')) = toR (S a) + toR a').
     rewrite !f_S,IHa.
-    rewrite <-(plus_assoc _ 1), (plus_comm 1), plus_assoc.
-    reflexivity.
+    apply associativity.
   Qed.
 
   Let f_preserves_mult a a': toR (a * a') = toR a * toR a'.
@@ -221,10 +220,11 @@ Section for_another_semiring.
   induction a as [|a IHa].
   - change (0 = 0 * toR a').
     rewrite mult_0_l. reflexivity.
-  - rewrite f_S;change (toR (a' + a * a') = (toR a + 1) * toR a').
+  - rewrite f_S.
+    change (toR (a' + a * a') = (1 + toR a) * toR a').
     rewrite f_preserves_plus, IHa.
     rewrite plus_mult_distr_r,mult_1_l.
-    apply commutativity.
+    reflexivity.
   Qed.
 
   Global Instance nat_to_sr_morphism
@@ -239,10 +239,9 @@ Section for_another_semiring.
   induction x as [|n E].
   + change (0 = h 0).
     apply symmetry,preserves_0.
-  + rewrite f_S. change (naturals_to_semiring nat R n + 1 = h (1+n)).
-    rewrite (add_comm 1).
+  + rewrite f_S. change (1 + naturals_to_semiring nat R n = h (1+n)).
     rewrite (preserves_plus (f:=h)).
-    rewrite E. apply ap,symmetry,preserves_1.
+    rewrite E. apply ap10,ap,symmetry,preserves_1.
   Qed.
 End for_another_semiring.
 
