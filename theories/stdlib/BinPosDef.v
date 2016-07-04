@@ -375,7 +375,7 @@ Definition gcd (a b : positive)
 
 (** Generalized Gcd, also computing the division of a and b by the gcd *)
 Set Printing Universes.
-Fixpoint ggcdn (n : nat) (a b : positive) : (positive*(positive*positive)) :=
+Fixpoint ggcdn (n : nat) (a b : positive) : (positive*(positive*positive))%type :=
   match n with
     | O => (1,(a,b))
     | S n =>

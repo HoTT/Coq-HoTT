@@ -20,7 +20,7 @@ Section specializable.
   Context (Z N : Type) `{Integers Z} `{Naturals N}.
 
   Class IntAbs := int_abs_sig : ∀ x,
-    { n : N | naturals_to_semiring N Z n = x } +
+    { n : N | naturals_to_semiring N Z n = x } \/
     { n : N | naturals_to_semiring N Z n = -x }.
 
   Definition int_abs `{ia : IntAbs} (x : Z) : N :=

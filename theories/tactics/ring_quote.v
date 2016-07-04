@@ -101,12 +101,12 @@ Section Quote.
   Global Arguments quote {V l} n {V' r _}.
   Global Arguments eval_quote {V l} n {V' r _}.
 
-  Definition sum_assoc {A B C}: (A+B)+C → A+(B+C).
+  Definition sum_assoc {A B C}: (A\/B)\/C → A\/(B\/C).
   Proof.
   intros [[?|?]|?];auto.
   Defined.
 
-  Definition sum_aux {A B C}: (A+B) → A+(B+C).
+  Definition sum_aux {A B C}: (A\/B) → A\/(B\/C).
   Proof.
   intros [?|?];auto.
   Defined.
@@ -228,7 +228,7 @@ etransitivity;[etransitivity;[|exact E]|].
   apply eval_ext. intros [[?|?]|?];reflexivity.
 Defined.
 
-Definition sum_forget {A B} : Empty + A -> A + B.
+Definition sum_forget {A B} : Empty \/ A -> A \/ B.
 Proof.
 intros [[]|?];auto.
 Defined.

@@ -85,9 +85,9 @@ Class FullPseudoOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
 Section order_maps.
   Context {A B : Type} {Ale: Le A} {Ble: Le B}(f : A → B).
 
-  Class OrderPreserving := order_preserving : `(x ≤ y → f x ≤ f y).
+  Class OrderPreserving := order_preserving : forall x y, (x ≤ y → f x ≤ f y).
 
-  Class OrderReflecting := order_reflecting : `(f x ≤ f y → x ≤ y).
+  Class OrderReflecting := order_reflecting : forall x y, (f x ≤ f y → x ≤ y).
 
   Class OrderEmbedding :=
     { order_embedding_preserving :> OrderPreserving
@@ -102,10 +102,10 @@ Section srorder_maps.
   Context {A B : Type} {Alt: Lt A} {Blt: Lt B} (f : A → B).
 
   Class StrictlyOrderPreserving := strictly_order_preserving
-    : `(x < y → f x < f y).
+    : forall x y, (x < y → f x < f y).
 
   Class StrictlyOrderReflecting := strictly_order_reflecting
-    : `(f x < f y → x < y).
+    : forall x y, (f x < f y → x < y).
 
   Class StrictOrderEmbedding :=
     { strict_order_embedding_preserving :> StrictlyOrderPreserving

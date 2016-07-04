@@ -44,19 +44,21 @@ Section obvious.
 
   Global Instance: Obvious (A → A) := id.
   Global Instance: Obvious (False → A) := Empty_rect _.
-  Global Instance: Obvious (A → A + B) := inl.
-  Global Instance: Obvious (A → B + A) := inr.
-  Global Instance obvious_sum_src  `{Obvious (A → C)} `{Obvious (B → C)}: Obvious (A+B → C).
+  Global Instance: Obvious (A → A + B)%type := inl.
+  Global Instance: Obvious (A → B + A)%type := inr.
+  Global Instance obvious_sum_src `{Obvious (A → C)} `{Obvious (B → C)}
+    : Obvious (A+B → C)%type.
   Proof.
     intros [?|?]; auto.
   Defined.
 
-  Global Instance obvious_sum_dst_l `{Obvious (A → B)}: Obvious (A → B+C).
+  Global Instance obvious_sum_dst_l `{Obvious (A → B)}
+    : Obvious (A → B+C)%type.
   Proof.
     red;auto.
   Defined.
 
-  Global Instance obvious_sum_dst_r `{Obvious (A → B)}: Obvious (A → C+B).
+  Global Instance obvious_sum_dst_r `{Obvious (A → B)}: Obvious (A → C\/B).
   Proof.
     red;auto.
   Defined.

@@ -535,8 +535,7 @@ exact Npair_splits'@{
   Ularge Ularge}.
 Qed.
 
-
-Definition Zle_hProp@{} : Z -> Z -> hProp.
+Definition Zle_hProp@{} : Z -> Z -> TruncType@{UN} -1.
 Proof.
 apply (@Z_rec2@{Ularge Ularge} _ (@istrunc_trunctype@{Ularge Uhuge UN} _ _)
   (fun q r => BuildhProp (PairT.Tle q r))).
@@ -645,7 +644,7 @@ intros a b. change (Decidable (PairT.Tle a b)).
 unfold PairT.Tle. apply _.
 Qed.
 
-Definition Zlt_hProp@{} : Z -> Z -> hProp.
+Definition Zlt_hProp@{} : Z -> Z -> TruncType@{UN} -1.
 Proof.
 apply (@Z_rec2@{Ularge Ularge} _ (@istrunc_trunctype@{Ularge Uhuge UN} _ _)
   (fun q r => BuildhProp (PairT.Tlt q r))).
@@ -745,7 +744,7 @@ Qed.
 
 Local Existing Instance pseudo_order_apart.
 
-Definition Zapart_hProp@{} : Z -> Z -> hProp.
+Definition Zapart_hProp@{} : Z -> Z -> TruncType@{UN} -1.
 Proof.
 apply (@Z_rec2@{Ularge Ularge} _ (@istrunc_trunctype@{Ularge Uhuge UN} _ _)
   (fun q r => BuildhProp (PairT.Tapart q r))).

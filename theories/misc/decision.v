@@ -117,7 +117,8 @@ intros a b;destruct (decide_rel (=) a b) as [E1|E1];split;intros E2;auto.
 Qed.
 
 Instance prod_eq_dec `(A_dec : ∀ x y : A, Decision (x = y))
-     `(B_dec : ∀ x y : B, Decision (x = y)) : ∀ x y : A * B, Decision (x = y).
+     `(B_dec : ∀ x y : B, Decision (x = y))
+     : ∀ x y : (A * B)%type, Decision (x = y).
 Proof.
 intros [x1 x2] [y1 y2].
 destruct (A_dec x1 y1) as [?|na].
