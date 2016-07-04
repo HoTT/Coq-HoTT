@@ -320,30 +320,6 @@ destruct (le_lt_dec a b);[left|right].
 - apply lt_le;trivial.
 Qed.
 
-Local Instance nat_le_po : PartialOrder nat_le.
-Proof.
-repeat split.
-- apply _.
-- hnf;intros; constructor.
-- hnf. intros a b c E1 E2.
-  apply le_exists in E1;apply le_exists in E2.
-  destruct E1 as [k1 E1], E2 as [k2 E2].
-  rewrite E2,E1,add_assoc. apply le_plus.
-- hnf. intros a b E1 E2.
-  apply le_exists in E1;apply le_exists in E2.
-  destruct E1 as [k1 E1], E2 as [k2 E2].
-  assert (k1 + k2 = 0) as E.
-  + apply (left_cancellation (+) a).
-    rewrite plus_0_r.
-    path_via (k2 + b).
-    rewrite E1.
-    rewrite (plus_comm a), (plus_assoc k2), (plus_comm k2).
-    reflexivity.
-  + apply plus_eq_zero in E. destruct E as [Ek1 Ek2].
-    rewrite Ek2,plus_0_l in E2.
-    trivial.
-Qed.
-
 Local Instance nat_lt_irrefl : Irreflexive@{N N} (_:Lt nat).
 Proof.
 hnf. intros x E.
@@ -356,7 +332,7 @@ rewrite add_0_r, add_S_r,<-add_S_l.
 rewrite add_comm. apply natpaths_symm,E.
 Qed.
 
-Global Instance nat_le_hprop : is_mere_relation nat le.
+Local Instance nat_le_hprop : is_mere_relation nat le.
 Proof.
 intros m n;apply Trunc.hprop_allpath.
 generalize (idpath (S n) : S n =N= S n).
@@ -385,6 +361,31 @@ induction (S n) as [|n0 IHn0].
     destruct E.
     rewrite (Trunc.path_ishprop def_n0 idpath). simpl.
     apply ap. apply IHn0;trivial.
+Qed.
+
+Local Instance nat_le_po : PartialOrder nat_le.
+Proof.
+repeat split.
+- apply _.
+- apply _.
+- hnf;intros; constructor.
+- hnf. intros a b c E1 E2.
+  apply le_exists in E1;apply le_exists in E2.
+  destruct E1 as [k1 E1], E2 as [k2 E2].
+  rewrite E2,E1,add_assoc. apply le_plus.
+- hnf. intros a b E1 E2.
+  apply le_exists in E1;apply le_exists in E2.
+  destruct E1 as [k1 E1], E2 as [k2 E2].
+  assert (k1 + k2 = 0) as E.
+  + apply (left_cancellation (+) a).
+    rewrite plus_0_r.
+    path_via (k2 + b).
+    rewrite E1.
+    rewrite (plus_comm a), (plus_assoc k2), (plus_comm k2).
+    reflexivity.
+  + apply plus_eq_zero in E. destruct E as [Ek1 Ek2].
+    rewrite Ek2,plus_0_l in E2.
+    trivial.
 Qed.
 
 Local Instance nat_strict : StrictOrder (_:Lt nat).
@@ -489,7 +490,7 @@ Qed.
 
 Instance nat_full : FullPseudoSemiRingOrder nat_le nat_lt.
 Proof.
-split;[split|].
+split;[apply _|split|].
 - split;try apply _.
   + intros a b [E1 E2].
     destruct (irreflexivity lt a).

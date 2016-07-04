@@ -139,22 +139,21 @@ Definition Tlt : Lt (T N)
 Definition Tapart : Apart (T N)
   := fun a b => apart (pos a + neg b) (pos b + neg a).
 
-Context `{is_mere_relation N le}.
-Global Instance Tle_hprop
+Global Instance Tle_hprop@{}
   : is_mere_relation (T N) Tle.
 Proof.
-intros;unfold Tle;apply _.
+intros;unfold Tle.
+apply full_pseudo_srorder_le_hprop.
 Qed.
 
-Context `{is_mere_relation N lt}.
-Global Instance Tlt_hprop 
+Global Instance Tlt_hprop@{}
   : is_mere_relation (T N) Tlt.
 Proof.
 intros;unfold Tlt;apply _.
 Qed.
 
 Local Existing Instance pseudo_order_apart.
-Global Instance Tapart_hprop : is_mere_relation (T N) Tapart.
+Global Instance Tapart_hprop@{} : is_mere_relation (T N) Tapart.
 Proof.
 intros;unfold Tapart;apply _.
 Qed.
@@ -326,8 +325,7 @@ Context `{Funext} `{Univalence} (N : Type@{UN})
 Instance N_fullpartial : FullPartialOrder Ale Alt
   := fullpseudo_fullpartial@{UN UN UN UN UN UN UN Ularge}.
 
-Definition Z := @quotient _ PairT.equiv@{UN UNalt}
-  (fun x y : PairT.T N => PairT.Tlt_hprop@{UN UNalt} _ _ _).
+Definition Z@{} : Type@{UN} := @quotient _ PairT.equiv@{UN UNalt} _.
 
 Global Instance Z_of_pair : Cast (PairT.T N) Z := class_of _.
 
@@ -537,7 +535,6 @@ exact Npair_splits'@{
   Ularge Ularge}.
 Qed.
 
-Context `{is_mere_relation N le}.
 
 Definition Zle_hProp@{} : Z -> Z -> hProp.
 Proof.
@@ -557,7 +554,7 @@ Definition Zle_def@{i} := Zle_def'@{Uhuge i}.
 
 Lemma Z_partial_order' : PartialOrder Zle.
 Proof.
-split;[apply _|split|].
+split;[apply _|apply _|split|].
 - hnf. apply (Z_ind _).
   intros. change (PairT.Tle x x). red. reflexivity.
 - hnf. apply (Z_ind3 (fun _ _ _ => _ -> _ -> _)).
@@ -647,8 +644,6 @@ apply (Z_ind2 _).
 intros a b. change (Decidable (PairT.Tle a b)).
 unfold PairT.Tle. apply _.
 Qed.
-
-Context `{is_mere_relation N lt}.
 
 Definition Zlt_hProp@{} : Z -> Z -> hProp.
 Proof.
@@ -827,7 +822,7 @@ Instance Z_is_apart@{} : IsApart Z
 
 Lemma Z_full_psorder' : FullPseudoOrder Zle Zlt.
 Proof.
-split;[split;try apply _|].
+split;[apply _|split;try apply _|].
 - apply (Z_ind2 _).
   intros a b;rewrite !Zlt_def;unfold PairT.Tlt.
   apply pseudo_order_antisym.
@@ -899,9 +894,14 @@ Instance Z_full_pseudo_srorder@{}
   : FullPseudoSemiRingOrder Zle Zlt.
 Proof.
 pose proof Z_ring.
-apply from_full_pseudo_ring_order; try apply _.
+apply from_full_pseudo_ring_order@{UN UN UN UN UN UN UN Ularge}; try apply _.
 apply apartness.strong_binary_setoid_morphism_commutative.
 Qed.
+
+Goal FullPseudoSemiRingOrder Zle Zlt.
+Proof.
+Fail exact Z_full_pseudo_srorder@{i}.
+Abort.
 
 Global Instance Z_to_ring@{} : IntegersToRing@{UN UNalt} Z.
 Proof.
@@ -1106,7 +1106,7 @@ Ularge Ularge Set Set Set Set Set
 Set Set Set Set Set Ularge Set
 Set Set Set Set Set Set Set
 Set Set Set Set Set Set Set
-Set Set Set Set}.
+Set Set Set}.
 
 Notation n_to_z := (naturals_to_semiring N Z).
 
@@ -1160,7 +1160,7 @@ destruct (int_abs_sig Z N x) as [[a Ea]|[a Ea]],
 Qed.
 
 Global Instance Z_zero_product@{} : ZeroProduct Z
-  := Z_zero_product'@{Ularge Ularge Ularge}.
+  := Z_zero_product'@{Ularge Ularge}.
 
 End contents.
 

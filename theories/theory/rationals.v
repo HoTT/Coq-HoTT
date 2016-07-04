@@ -189,7 +189,7 @@ Section isomorphic_image_is_rationals.
   Context `{Rationals Q} `{DecField F}.
   Context (f : Q → F) `{!Inverse f} `{!Bijective f} `{!SemiRingPreserving f}.
 
-  Instance iso_to_frac: RationalsToFrac F := λ Z _ _ _ _ _ _ _,
+  Instance iso_to_frac: RationalsToFrac F := λ Z _ _ _ _ _ _ _ _ _ _,
     rationals_to_frac Q Z ∘ f⁻¹.
   Hint Unfold iso_to_frac: typeclass_instances.
 
@@ -231,7 +231,7 @@ Section alt_Build_Rationals.
 
   Instance alt_to_frac: RationalsToFrac F.
   Proof.
-  red. intros B ??????? x.
+  red. intros B ?????????? x.
   eapply (FracField.F_rec (R:=Z)).
   - exact alt_to_frac_respects.
   - exact (F_to_fracZ x).

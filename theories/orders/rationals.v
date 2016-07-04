@@ -13,8 +13,7 @@ Require Import
 
 Section rationals_and_integers.
   Context `{Rationals Q} {Qle : Le Q} `{!SemiRingOrder Qle}
-    Z `{Integers Z} `{Apart Z} `{!TrivialApart Z}
-    `{!FullPseudoSemiRingOrder (A:=Z) Zle Zlt}
+    Z `{Integers Z} `{!TrivialApart Z}
     {f : Z → Q} `{!SemiRingPreserving f}.
 (*   Add Field Q : (stdlib_field_theory Q). *)
 

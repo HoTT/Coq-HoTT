@@ -63,7 +63,7 @@ Qed.
 Lemma iso_leibnitz : forall P : Operations -> Type, P A -> P B.
 Proof.
 intros P;apply transport.
-exact iso_same_semirings.
+exact iso_same_semirings@{U V V}.
 Qed.
 
 End contents.
@@ -94,9 +94,9 @@ Arguments R_one !_ /.
 Arguments R_negate !_ / _.
 
 Section contents.
-
+Universe U V.
 Context `{Funext} `{Univalence}.
-Context (A B : Operations).
+Context (A B : Operations@{U V}).
 
 (* NB: we need to know they're rings for preserves_negate *)
 Context (f : A -> B) `{!IsEquiv f} `{!Ring A} `{!Ring B} `{!SemiRingPreserving f}.
@@ -130,7 +130,8 @@ Qed.
 
 Lemma iso_leibnitz : forall P : Operations -> Type, P A -> P B.
 Proof.
-rewrite iso_same_rings. trivial.
+intros P;apply transport.
+exact iso_same_rings@{U V V}.
 Qed.
 
 End contents.

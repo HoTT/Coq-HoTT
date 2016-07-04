@@ -19,8 +19,8 @@ Lemma int_abs_unique (a b : IntAbs Z N) (z : Z) :
   int_abs Z N (ia:=a) z = int_abs Z N (ia:=b) z.
 Proof.
 unfold int_abs.
-destruct (@int_abs_sig Z N _ _ _ _ _ _ _ z) as [[n1 E1]|[n1 E1]];
-destruct (@int_abs_sig Z N _ _ _ _ _ _ _ z) as [[n2 E2]|[n2 E2]].
+destruct (int_abs_sig Z N (IntAbs:=a) z) as [[n1 E1]|[n1 E1]];
+destruct (int_abs_sig Z N (IntAbs:=b) z) as [[n2 E2]|[n2 E2]].
 - apply (injective (naturals_to_semiring N Z)). path_via z.
 - assert (E : n1 + n2 = 0);[|path_via 0;[|Symmetry];
   apply (naturals.zero_sum _ _ E)].

@@ -19,6 +19,7 @@ usual properties like Trichotomy (<) and TotalRelation (≤).
 
 Class PartialOrder `(Ale : Le A) :=
   { po_hset :> IsHSet A
+  ; po_hprop :> is_mere_relation A Ale
   ; po_preorder:> PreOrder (≤)
   ; po_antisym:> AntiSymmetric (≤) }.
 
@@ -77,7 +78,8 @@ Class FullPartialOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
 (* A pseudo order (<) with a corresponding (≤). We will prove that (≤) is in fact
   a PartialOrder. *)
 Class FullPseudoOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
-  { full_pseudo_order_pseudo :> PseudoOrder Alt
+  { fullpseudo_le_hprop :> is_mere_relation A Ale
+  ; full_pseudo_order_pseudo :> PseudoOrder Alt
   ; le_iff_not_lt_flip : ∀ x y, x ≤ y ↔ ¬y < x }.
 
 Section order_maps.
@@ -147,7 +149,8 @@ Class PseudoSemiRingOrder `{Apart A} `{Plus A}
 
 Class FullPseudoSemiRingOrder `{Apart A} `{Plus A}
     `{Mult A} `{Zero A} `{One A} (Ale : Le A) (Alt : Lt A) :=
-  { full_pseudo_srorder_pso :> PseudoSemiRingOrder Alt
+  { full_pseudo_srorder_le_hprop :> is_mere_relation A Ale
+  ; full_pseudo_srorder_pso :> PseudoSemiRingOrder Alt
   ; full_pseudo_srorder_le_iff_not_lt_flip : ∀ x y, x ≤ y ↔ ¬y < x }.
 
 (* Due to bug #2528 *)

@@ -335,6 +335,7 @@ Section full_pseudo_order.
   Proof.
   repeat split.
   - apply _.
+  - apply _.
   - intros x. apply not_lt_le_flip, (irreflexivity (<)).
   - intros x y z E1 E2.
     apply le_iff_not_lt_flip;

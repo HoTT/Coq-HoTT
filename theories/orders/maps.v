@@ -192,11 +192,13 @@ Section order_preserving_ops.
   Qed.
 End order_preserving_ops.
 
-Lemma projected_partial_order `{IsHSet A} `{Ale : Le A} `{Ble : Le B}
+Lemma projected_partial_order `{IsHSet A} {Ale : Le A}
+  `{is_mere_relation A Ale} `{Ble : Le B}
   (f : A → B) `{!Injective f} `{!PartialOrder Ble}
   : (∀ x y, x ≤ y ↔ f x ≤ f y) → PartialOrder Ale.
 Proof.
 intros P. repeat split.
+- apply _.
 - apply _.
 - intros x. apply P. apply reflexivity.
 - intros x y z E1 E2. apply P.
@@ -245,13 +247,14 @@ intros P. split; try apply _.
 Qed.
 
 Lemma projected_full_pseudo_order `{IsApart A} `{Ale : Le A} `{Alt : Lt A}
-  `{is_mere_relation A lt}
+  `{is_mere_relation A le} `{is_mere_relation A lt}
   `{Apart B} `{Ble : Le B} `{Blt : Lt B}
   (f : A → B) `{!StrongInjective f} `{!FullPseudoOrder Ble Blt}
   : (∀ x y, x ≤ y ↔ f x ≤ f y) → (∀ x y, x < y ↔ f x < f y) →
     FullPseudoOrder Ale Alt.
 Proof.
 intros P1 P2. split.
+- apply _.
 - apply (projected_pseudo_order f);assumption.
 - intros x y; split; intros E.
   + intros F. destruct (le_not_lt_flip (f y) (f x));[apply P1|apply P2];trivial.

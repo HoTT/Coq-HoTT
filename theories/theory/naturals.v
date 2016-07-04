@@ -150,7 +150,7 @@ Section borrowed_from_nat.
 
   Global Instance nat_plus_cancel_l : ∀ z : N, LeftCancellation (+) z.
   Proof.
-  refine (from_nat_stmt@{i U i}
+  refine (from_nat_stmt@{i U}
     nat (fun s => forall z : s, LeftCancellation plus z) _).
   simpl. apply nat_plus_cancel_l@{U i}.
   Qed.

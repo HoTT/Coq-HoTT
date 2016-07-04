@@ -325,11 +325,13 @@ End lattice_order.
 Definition default_join_sl_le `{JoinSemiLattice L} : Le L :=  λ x y, x ⊔ y = y.
 
 Section join_sl_order_alt.
-  Context `{JoinSemiLattice L} `{Le L} (le_correct : ∀ x y, x ≤ y ↔ x ⊔ y = y).
+  Context `{JoinSemiLattice L} `{Le L} `{is_mere_relation L le}
+    (le_correct : ∀ x y, x ≤ y ↔ x ⊔ y = y).
 
   Lemma alt_Build_JoinSemiLatticeOrder : JoinSemiLatticeOrder (≤).
   Proof.
   repeat split.
+  - apply _.
   - apply _.
   - intros x.
     apply le_correct. apply binary_idempotent.
@@ -357,11 +359,13 @@ End join_sl_order_alt.
 Definition default_meet_sl_le `{MeetSemiLattice L} : Le L :=  λ x y, x ⊓ y = x.
 
 Section meet_sl_order_alt.
-  Context `{MeetSemiLattice L} `{Le L} (le_correct : ∀ x y, x ≤ y ↔ x ⊓ y = x).
+  Context `{MeetSemiLattice L} `{Le L} `{is_mere_relation L le}
+    (le_correct : ∀ x y, x ≤ y ↔ x ⊓ y = x).
 
   Lemma alt_Build_MeetSemiLatticeOrder : MeetSemiLatticeOrder (≤).
   Proof.
   repeat split.
+  - apply _.
   - apply _.
   - intros ?. apply le_correct. apply (idempotency _ _).
   - intros ? ? ? E1 E2.

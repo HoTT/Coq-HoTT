@@ -72,7 +72,6 @@ Instance naturals_to_integers_injective `{Funext} `{Univalence}
 Proof.
 intros x y E.
 apply (injective (cast N (NatPair.Z N))).
-(* needs <= and < of N to be mere relations *)
 rewrite <-2!(naturals.to_semiring_twice (integers_to_ring Z (NatPair.Z N))
   f (cast N (NatPair.Z N))).
 apply ap,E.
@@ -131,7 +130,7 @@ Universe U.
 Context `{Funext} `{Univalence}.
 Context (Z : Type@{U}) `{Integers@{U U U U U U U U} Z}.
 
-Lemma from_int_stmt  Z' `{Integers@{U U U U U U U U} Z'}
+Lemma from_int_stmt  (Z':Type@{U}) `{Integers@{U U U U U U U U} Z'}
   : forall (P : Rings.Operations -> Type),
   P (Rings.BuildOperations Z') -> P (Rings.BuildOperations Z).
 Proof.

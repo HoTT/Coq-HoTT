@@ -74,6 +74,7 @@ Section from_full_pseudo_ring_order.
   Lemma from_full_pseudo_ring_order: FullPseudoSemiRingOrder (≤) (<).
   Proof.
   split.
+  - apply _.
   - apply from_pseudo_ring_order;trivial.
   - apply le_iff_not_lt_flip;trivial.
   Qed.
@@ -241,7 +242,8 @@ Section strict_ring_order.
 End strict_ring_order.
 
 Section another_ring_order.
-  Context `{Ring R1} `{!SemiRingOrder R1le} `{Ring R2} `{R2le : Le R2}.
+  Context `{Ring R1} `{!SemiRingOrder R1le} `{Ring R2} `{R2le : Le R2}
+    `{is_mere_relation R2 R2le}.
 
   Lemma projected_ring_order (f : R2 → R1) `{!SemiRingPreserving f} `{!Injective f}
     : (∀ x y, x ≤ y ↔ f x ≤ f y) → SemiRingOrder R2le.
@@ -320,7 +322,7 @@ End another_pseudo_ring_order.
 Section another_full_pseudo_ring_order.
   Context `{Ring R1} `{Apart R1} `{!FullPseudoSemiRingOrder R1le R1lt}
     `{Ring R2} `{IsApart R2} `{R2le : Le R2} `{R2lt : Lt R2}
-    `{is_mere_relation R2 lt}.
+    `{is_mere_relation R2 le} `{is_mere_relation R2 lt}.
 
   Lemma projected_full_pseudo_ring_order (f : R2 → R1) `{!SemiRingPreserving f}
     `{!StrongInjective f}

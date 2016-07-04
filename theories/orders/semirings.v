@@ -550,6 +550,7 @@ Section full_pseudo_semiring_order.
   Proof.
   split.
   - apply _.
+  - apply _.
   - apply full_pseudo_srorder_le_iff_not_lt_flip.
   Qed.
 
@@ -774,7 +775,8 @@ End dec_semiring_order.
 Section another_semiring.
   Context `{SemiRingOrder R1}.
 
-  Lemma projected_srorder `{SemiRing R2} `{R2le : Le R2} (f : R2 → R1)
+  Lemma projected_srorder `{SemiRing R2} `{R2le : Le R2}
+    `{is_mere_relation R2 R2le} (f : R2 → R1)
     `{!SemiRingPreserving f} `{!Injective f}
     : (∀ x y, x ≤ y ↔ f x ≤ f y) → (∀ x y : R2, x ≤ y → ∃ z, y = x + z) →
       SemiRingOrder R2le.
