@@ -443,7 +443,7 @@ destruct (decide_rel paths (num q) 0) as [E'|?];[destruct E;apply E'|].
 simpl. reflexivity.
 Qed.
 
-Global Instance: DecField F.
+Global Instance F_field : DecField F.
 Proof.
 split;try apply _.
 - red. apply class_neq.

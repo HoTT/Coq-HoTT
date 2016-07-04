@@ -17,8 +17,7 @@ Module Export Cauchy.
 
 Section VarSec.
 Universe UQ.
-Context (Q:Type@{UQ}) `{Rationals Q} `{Qap : Apart Q} `{Qlt : Lt Q} `{Qle : Le Q}
-  `{!FullPseudoSemiRingOrder (_:Le Q) (_:Lt Q)}.
+Context (Q:Type@{UQ}) `{Rationals Q}.
 
 Record Qpos := mkQpos { pos : Q; is_pos : 0 < pos }.
 Notation "Q+" := Qpos.
@@ -272,13 +271,12 @@ End VarSec.
 
 End Cauchy.
 
-Arguments equiv_path {Q _ _ _ _ _ _ _ _ _ _ _ _} u v {_}.
+Arguments equiv_path {Q _ _ _ _ _ _ _ _ _ _ _} u v {_}.
 
 Section contents.
+Context `{Funext} `{Universe.Univalence}.
 Universe UQ.
-Context (Q:Type@{UQ}) `{Rationals Q} `{Qap : Apart Q} `{!TrivialApart Q}
-   `{Qlt : Lt Q} `{Qle : Le Q}
-  `{!FullPseudoSemiRingOrder (_:Le Q) (_:Lt Q)}.
+Context (Q:Type@{UQ}) `{Rationals Q} `{!TrivialApart Q} `{DecidablePaths Q}.
 
 Notation "Q+" := (Qpos Q).
 
@@ -298,7 +296,7 @@ Existing Instance Qpos_plus.
 
 Instance Qpos_one : One Q+.
 Proof.
-exists 1;solve_propholds.
+exists 1. solve_propholds.
 Defined.
 
 Instance Qpos_mult : Mult Q+.

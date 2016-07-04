@@ -1,3 +1,4 @@
+Require Coq.Init.Peano.
 Require Export
   HoTTClasses.interfaces.canonical_names
   HoTTClasses.misc.util
@@ -64,6 +65,7 @@ real numbers), we do not include it in the lower part of the algebraic hierarchy
 (as opposed to CoRN).
 *)
 Section upper_classes.
+  Universe i.
   Context (A : Type@{i}).
 
   Class SemiGroup {Aop: SgOp A} :=
@@ -141,6 +143,12 @@ Section upper_classes.
     ; decfield_nontrivial : PropHolds (1 ≠ 0)
     ; dec_recip_0 : /0 = 0
     ; dec_recip_inverse : ∀ x, x ≠ 0 → x / x = 1 }.
+
+  Class FieldCharacteristic@{j} {Aap : Apart@{i j} A} (k : nat) : Type@{j}
+    := field_characteristic : forall n : nat, Peano.lt 0 n ->
+      iff@{j j j} (forall m : nat, not@{j j} (paths@{Set} n (Peano.mult k m)))
+        (@apart A Aap (util.repeat n (1 +) 0) 0).
+
 End upper_classes.
 
 (* Due to bug #2528 *)

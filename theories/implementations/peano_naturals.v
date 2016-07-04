@@ -23,27 +23,20 @@ Proof. unfold natpaths;apply _. Qed.
 Global Instance nat_0: Zero@{N} nat := 0%nat.
 Global Instance nat_1: One@{N} nat := 1%nat.
 
-Fixpoint add n m :=
-  match n with
-  | 0 => m
-  | S p => S (add p m)
-  end.
+Global Instance nat_plus: Plus@{N} nat := Peano.plus.
 
-Global Instance nat_plus: Plus@{N} nat := add.
+Notation mul := Peano.mult.
 
-Fixpoint mul n m :=
-  match n with
-  | 0 => 0
-  | S p => m + (mul p m)
-  end.
-
-Global Instance nat_mult: Mult@{N} nat := mul.
+Global Instance nat_mult: Mult@{N} nat := Peano.mult.
 
 Ltac simpl_nat :=
-  change plus with nat_plus;
-  change mult with nat_mult;
+  change (@plus nat _) with Peano.plus;
+  change (@mult nat _) with Peano.mult;
   simpl;
-  change nat_plus with plus; change nat_mult with mult.
+  change nat_plus with (@plus nat nat_plus);
+  change Peano.plus with (@plus nat nat_plus);
+  change nat_mult with (@mult nat nat_mult);
+  change Peano.mult with (@mult nat nat_mult).
 
 Local Instance add_assoc : Associative@{N} (plus : Plus nat).
 Proof.
@@ -208,8 +201,7 @@ intros [|] [|];auto.
 - intros _;right;reflexivity.
 - simpl_nat.
   intros E.
-  apply plus_eq_zero in E.
-  destruct (S_neq_0 _ (fst E)).
+  destruct (S_neq_0 _ E).
 Qed.
 
 Instance nat_zero_divisors : NoZeroDivisors nat.
