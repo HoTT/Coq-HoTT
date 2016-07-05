@@ -1,4 +1,5 @@
 Require Import
+  HoTT.Types.Universe
   HoTT.Basics.Decidable
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.interfaces.integers
@@ -12,6 +13,8 @@ Require Import
   HoTTClasses.theory.dec_fields
   HoTTClasses.orders.dec_fields
   HoTTClasses.theory.rationals.
+
+Coercion trunctype_type : TruncType >-> Sortclass.
 
 Module Export Cauchy.
 
@@ -305,6 +308,13 @@ intros a b;exists (' a * ' b).
 solve_propholds.
 Defined.
 
+Instance qpos_plus_comm : Commutative (@plus Q+ _).
+Proof.
+hnf. intros.
+apply pos_eq. change (' x + ' y = ' y + ' x).
+apply plus_comm.
+Qed.
+
 Let rat := rat Q.
 Let lim := lim Q.
 
@@ -436,4 +446,374 @@ intros. apply tr. exists (const_approx b).
 apply lim_cons.
 Qed.
 
-End contents.
+Definition equiv_rect0 (P : forall e u v, Requiv Q e u v -> Type)
+  `{forall e u v xi, IsHProp (P e u v xi)}
+  (val_rat_rat : forall q r e He, P _ _ _ (equiv_rat_rat Q q r e He))
+  (val_rat_lim : forall q (y : Approximation Q) e d d' He xi,
+    P d' (rat q) (y d) xi ->
+    P e (rat q) (lim y) (equiv_rat_lim Q q y e d d' He xi))
+  (val_lim_rat : forall (x : Approximation Q) r e d d' He xi,
+    P d' (x d) (rat r) xi ->
+    P e (lim x) (rat r) (equiv_lim_rat Q x r e d d' He xi))
+  (val_lim_lim : forall (x y : Approximation Q) e d n e' He xi,
+    P e' (x d) (y n) xi ->
+    P e (lim x) (lim y) (equiv_lim_lim Q x y e d n e' He xi))
+  : forall e u v xi, P e u v xi.
+Proof.
+intros e u v;revert u v e.
+apply (equiv_rect Q (fun _ => Unit) (fun x y _ _ e xi => P e x y xi)).
+split;auto.
+intros. apply path_ishprop. 
+Defined.
+
+Definition equiv_rec0 (P : Q+ -> real Q -> real Q -> Type)
+  `{forall e u v, IsHProp (P e u v)}
+  := equiv_rect0 (fun e u v _ => P e u v).
+
+Lemma equiv_symm : forall e, Symmetric (Requiv Q e).
+Proof.
+red. apply (equiv_rec0 _).
+- intros q r e He. apply equiv_rat_rat.
+  split;apply flip_lt_negate;rewrite <-negate_swap_r,?involutive;apply He.
+- intros q y e d d' He _ xi.
+  apply equiv_lim_rat with d d';trivial.
+- intros x r e d d' He _ xi.
+  apply equiv_rat_lim with d d';trivial.
+- intros x y e d n e' He _ xi.
+  apply equiv_lim_lim with n d e';trivial.
+  rewrite (commutativity (f:=plus) n d).
+  trivial.
+Qed.
+
+Lemma equiv_symm_rw : forall e u v, Requiv Q e u v = Requiv Q e v u.
+Proof.
+intros. apply path_universe_uncurried.
+apply equiv_iff_hprop_uncurried.
+split;apply equiv_symm.
+Qed.
+
+Section mutual_recursion.
+
+Record Recursors (A : Type) (B : Q+ -> A -> A -> Type) :=
+  { rec_rat : Q -> A
+  ; rec_lim : Approximation Q ->
+      forall val_ind : Q+ -> A,
+      (forall d e, B (d + e) (val_ind d) (val_ind e)) -> A
+  ; rec_separated : forall x y, (forall e, B e x y) -> x = y
+  ; rec_hprop : forall e x y, IsHProp (B e x y)
+  ; rec_rat_rat : forall q r e, - ' e < q - r < ' e -> B e (rec_rat q) (rec_rat r)
+  ; rec_rat_lim : forall q d d' e (y : Approximation Q) (b : Q+ -> A)
+      (Eb : forall d e, B (d + e) (b d) (b e)),
+      e = d + d' -> Requiv Q d' (rat q) (y d) ->
+      B d' (rec_rat q) (b d) ->
+      B e (rec_rat q) (rec_lim y b Eb)
+  ; rec_lim_rat : forall r d d' e (x : Approximation Q) (a : Q+ -> A)
+      (Ea : forall d e, B (d+e) (a d) (a e)),
+      e = d + d' ->
+      Requiv Q d' (x d) (rat r) ->
+      B d' (a d) (rec_rat r) ->
+      B e (rec_lim x a Ea) (rec_rat r)
+  ; rec_lim_lim : forall (x y : Approximation Q) (a b : Q+ -> A)
+      (Ea : forall d e, B (d + e) (a d) (a e))
+      (Eb : forall d e, B (d + e) (b d) (b e))
+      e d n e',
+      e = d + n + e' ->
+      Requiv Q e' (x d) (y n) ->
+      B e' (a d) (b n) ->
+      B e (rec_lim x a Ea) (rec_lim y b Eb) }.
+
+Definition recursors_inductors : forall A B, Recursors A B ->
+  Inductors Q (fun _ => A) (fun _ _ x y e _ => B e x y).
+Proof.
+intros A B I.
+esplit. Unshelve. 7:exact (rec_rat _ _ I).
+7:intros x [a Ea];revert x a Ea;simpl;exact (rec_lim _ _ I).
+- intros;rewrite PathGroupoids.transport_const;apply (rec_separated _ _ I);trivial.
+- exact (rec_rat_rat _ _ I).
+- intros ????? [b Eb];simpl. apply rec_rat_lim.
+- intros ????? [a Ea];simpl. apply rec_lim_rat.
+- intros ?? [a Ea] [b Eb];simpl;apply rec_lim_lim.
+- intros;apply (rec_hprop _ _ I).
+Defined.
+
+Definition real_rec A B (I : Recursors A B) : real Q -> A.
+Proof.
+apply (real_rect Q _ _ (recursors_inductors A B I)).
+Defined.
+
+Definition equiv_rec A B I
+  : forall x y e, Requiv Q e x y -> B e (real_rec A B I x) (real_rec A B I y)
+  := (equiv_rect Q) _ _ (recursors_inductors A B I).
+
+End mutual_recursion.
+
+Class Closeness (A : Type) := close : Q+ -> relation A.
+
+Instance Q_close : Closeness Q := fun e q r => - ' e < q - r < ' e.
+Instance R_close : Closeness (real Q) := Requiv Q.
+
+Class Lipschitz `{Closeness A} `{Closeness B} (f : A -> B)
+  := lipschitz : exists L : Q+, forall e x y, close e x y ->
+    close (L * e) (f x) (f y).
+
+Instance Qpos_mult_assoc : Associative (@mult Q+ _).
+Proof.
+hnf.
+intros;apply pos_eq.
+apply mult_assoc.
+Qed.
+
+Instance lipschitz_compose `{Closeness A} `{Closeness B} `{Closeness C}
+  (g : B -> C) {Eg : Lipschitz g} (f : A -> B) {Ef : Lipschitz f}
+  : Lipschitz (compose g f).
+Proof.
+hnf.
+exists (Eg.1 * Ef.1).
+intros ??? He.
+unfold compose. apply Ef.2,Eg.2 in He.
+pattern (Eg.1 * Ef.1 * e).
+eapply transport;[|exact He].
+apply Qpos_mult_assoc.
+Defined.
+
+Lemma Qpos_mult_1_l : forall e : Q+, 1 * e = e.
+Proof.
+intros;apply pos_eq;apply mult_1_l.
+Qed.
+
+Instance rat_lipschitz : Lipschitz rat.
+Proof.
+hnf. exists 1.
+intros e x y. rewrite Qpos_mult_1_l.
+apply equiv_rat_rat.
+Qed.
+
+Lemma pos_recip_through_plus : forall a b c : Q+,
+  a + b = c * (a / c + b / c).
+Proof.
+intros. path_via ((a + b) * (c / c)).
+- rewrite pos_recip_r;apply pos_eq,symmetry,mult_1_r.
+- apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma pos_unconjugate : forall a b : Q+, a * b / a = b.
+Proof.
+intros. path_via (a / a * b).
+- apply pos_eq;ring_tac.ring_with_nat.
+- rewrite pos_recip_r;apply Qpos_mult_1_l.
+Qed.
+
+Lemma separate_mult : forall l u v, (forall e, Requiv Q (l * e) u v) -> u = v.
+Proof.
+intros l x y E. apply equiv_path.
+intros. assert (Hrw : e = l * (e / l)).
++ path_via ((l / l) * e).
+   * rewrite pos_recip_r. apply symmetry,Qpos_mult_1_l.
+   * apply pos_eq. ring_tac.ring_with_nat.
++ rewrite Hrw;apply E.
+Qed.
+
+Lemma lipschitz_extend_rat_lim (f : Q -> Q) {Ef : Lipschitz f} :
+  ∀ (q : Q) (d d' e : Q+) (y : Approximation Q) (b : Q+ → real Q)
+  (Eb : ∀ d0 e0 : Q+, Requiv Q (Ef.1 * (d0 + e0)) (b d0) (b e0)) Eequiv,
+  e = d + d'
+  → Requiv Q d' (rat q) (y d)
+  → Requiv Q (Ef.1 * d') ((rat ∘ f) q) (b d)
+  → Requiv Q (Ef.1 * e) ((rat ∘ f) q)
+      (lim
+         {|
+         approximate := λ e0 : Q+, b (e0 / Ef.1);
+         approx_equiv := Eequiv |}).
+Proof.
+simpl. intros ???????? He xi IH.
+apply equiv_rat_lim with (Ef.1 * d) (Ef.1 * d').
++ rewrite He;apply pos_eq;ring_tac.ring_with_nat.
++ simpl. rewrite (pos_unconjugate Ef.1 d). apply IH.
+Qed.
+
+Lemma lipschitz_extend_lim_lim (f : Q -> Q) {Ef : Lipschitz f} :
+  ∀ (x y : Approximation Q) (a b : Q+ → real Q)
+  (Ea : ∀ d e : Q+, Requiv Q (Ef.1 * (d + e)) (a d) (a e))
+  (Eb : ∀ d e : Q+, Requiv Q (Ef.1 * (d + e)) (b d) (b e)) (e d n e' : Q+)
+  Eequiv1 Eequiv2,
+  e = d + n + e'
+  → Requiv Q e' (x d) (y n)
+  → Requiv Q (Ef.1 * e') (a d) (b n)
+  → Requiv Q (Ef.1 * e)
+      (lim
+         {|
+         approximate := λ e0 : Q+, a (e0 / Ef.1);
+         approx_equiv := Eequiv1 |})
+      (lim
+         {|
+         approximate := λ e0 : Q+, b (e0 / Ef.1);
+         approx_equiv := Eequiv2 |}).
+Proof.
+intros ???????????? He xi IH;simpl.
+apply equiv_lim_lim with (Ef.1 * d) (Ef.1 * n) (Ef.1 * e').
++ rewrite He;apply pos_eq;ring_tac.ring_with_nat.
++ simpl. rewrite 2!pos_unconjugate. apply IH.
+Qed.
+
+Lemma lipschitz_extend_lim (f : Q -> Q) {Ef : Lipschitz f} :
+  forall (a : Q+ → real Q)
+  (Ea : ∀ d e : Q+, Requiv Q (Ef.1 * (d + e)) (a d) (a e)),
+  ∀ d e : Q+, Requiv Q (d + e) (a (d / Ef.1)) (a (e / Ef.1)).
+Proof.
+intros. pattern (d+e);eapply transport.
+apply symmetry, (pos_recip_through_plus d e Ef.1).
+apply Ea.
+Qed.
+
+Definition lipshitz_extend_recursor (f : Q -> Q) {Ef : Lipschitz f}
+  : Recursors (real Q) (fun e x y => Requiv Q (Ef.1 * e) x y).
+Proof.
+esplit. Unshelve.
+Focus 7.
+- exact (compose rat f).
+Focus 7.
+- intros _ a Ea.
+  apply lim. exists (fun e => a (e / Ef.1)).
+  apply lipschitz_extend_lim. trivial.
+- apply separate_mult.
+- apply _.
+- intros ??? He. apply equiv_rat_rat.
+  apply Ef.2,He.
+- intros ????????;apply lipschitz_extend_rat_lim;trivial.
+- simpl;intros ??????? He xi IH.
+  apply equiv_symm in xi;apply equiv_symm in IH.
+  apply equiv_symm;revert He xi IH;apply lipschitz_extend_rat_lim;trivial.
+- simpl. intros ??????????;apply lipschitz_extend_lim_lim;trivial.
+Defined.
+
+Definition lipschitz_extend (f : Q -> Q) {Ef : Lipschitz f}
+  : real Q -> real Q
+  := real_rec (real Q) (fun e x y => Requiv Q (Ef.1 * e) x y)
+    (lipshitz_extend_recursor f).
+
+Lemma lipschitz_extend_lipshitz_pr (f : Q -> Q) {Ef : Lipschitz f}
+  : ∀ (e : Q+) (x y : real Q), close e x y →
+    close (Ef.1 * e) (lipschitz_extend f x) (lipschitz_extend f y).
+Proof.
+intros ???;apply (equiv_rec _ _ (lipshitz_extend_recursor f)).
+Qed.
+
+Instance lipschitz_extend_lipshitz (f : Q -> Q) {Ef : Lipschitz f}
+  : Lipschitz (lipschitz_extend f).
+Proof.
+exists Ef.1. apply lipschitz_extend_lipshitz_pr.
+Defined.
+
+Definition lipschitz_extend_rat (f : Q -> Q) {Ef : Lipschitz f}
+  q : lipschitz_extend f (rat q) = rat (f q)
+  := idpath.
+
+Section Requiv_alt.
+
+Let A := sigT (fun half : real Q -> Q+ -> hProp =>
+  (forall u e, half u e <-> merely (exists d d', e = d + d' /\ half u d))
+  /\ (forall u v n e, Requiv Q e u v ->
+    ((half u n -> half v (n+e)) /\ (half v n -> half v (n+e))))).
+
+Let A_close e (R1 R2 : A)
+  := forall u n, (R1.1 u n -> R2.1 u (e+n)) /\ (R2.1 u n -> R1.1 u (e+n)).
+
+Let C := sigT (fun R : Q+ -> hProp =>
+    forall e, R e <-> merely (exists d d', e = d + d' /\ R d)).
+
+Let C_close e (R1 R2 : C)
+  := forall n, (R1.1 n -> R2.1 (e+n)) /\ (R2.1 n -> R1.1 (e+n)).
+
+Lemma A_separated : forall u v, (forall e, A_close e u v) -> u = v.
+Proof.
+intros u v E. eapply Sigma.path_sigma. Unshelve.
+apply path_ishprop.
+apply path_forall. intro x. apply path_forall. intro e.
+apply TruncType.path_iff_hprop_uncurried.
+unfold A_close in E.
+split;intros E'.
++ generalize (fst (fst u.2 _ _) E').
+  apply (Trunc_ind _).
+  intros [d [d' [He Ed]]].
+  rewrite He. rewrite qpos_plus_comm. apply (fst (E _ _ _)).
+  trivial.
++ generalize (fst (fst v.2 _ _) E').
+  apply (Trunc_ind _).
+  intros [d [d' [He Ed]]].
+  rewrite He. rewrite qpos_plus_comm. apply (snd (E _ _ _)).
+  trivial.
+Qed.
+
+Instance A_close_hprop : forall e u v, IsHProp (A_close e u v).
+Proof.
+unfold A_close. intros. apply _.
+Qed.
+
+Lemma Qclose_rounded : ∀ (q r : Q) e, close e q r ↔
+  merely (∃ d d' : Q+, e = d + d' ∧ close d q r).
+Proof. Admitted.
+
+Definition Requiv_alt_rat_rat (q r : Q) : C.
+Proof.
+exists (fun e => BuildhProp (close e q r)).
+simpl. apply Qclose_rounded.
+Defined.
+
+Lemma rat_lim_rounded_step :
+  ∀ val_ind : Q+ → C, (∀ d e : Q+, C_close (d + e) (val_ind d) (val_ind e)) ->
+  ∀ e : Q+,
+  merely (∃ d d' : Q+, e = d + d' ∧ (val_ind d).1 d')
+  ↔ merely (∃ d d' : Q+,
+     e = d + d' ∧ merely (∃ d0 d'0 : Q+, d = d0 + d'0 ∧ (val_ind d0).1 d'0)).
+Proof. Admitted.
+
+Definition Requiv_alt_rat_lim
+  : ∀ val_ind : Q+ → C, (∀ d e : Q+, C_close (d + e) (val_ind d) (val_ind e)) →
+  C.
+Proof.
+intros val_ind IH.
+exists (fun e => merely (exists d d', e = d + d' /\ (val_ind d).1 d')).
+apply rat_lim_rounded_step. trivial.
+Defined.
+
+Lemma C_separated : ∀ x y : C, (∀ e : Q+, C_close e x y) → x = y.
+Proof.
+intros x y E.
+unfold C,C_close in *;clear A A_close C C_close.
+simple refine (Sigma.path_sigma _ _ _ _ _);[|apply path_ishprop].
+apply path_forall;intros e.
+apply TruncType.path_iff_hprop_uncurried.
+split;intros E'.
+- generalize (fst (x.2 _) E').
+  apply (Trunc_ind _).
+  intros [d [d' [He Ed]]].
+  rewrite He,qpos_plus_comm.
+  apply (fst (E _ _)). trivial.
+- generalize (fst (y.2 _) E').
+  apply (Trunc_ind _).
+  intros [d [d' [He Ed]]].
+  rewrite He,qpos_plus_comm.
+  apply (snd (E _ _)). trivial.
+Qed.
+
+Definition Requiv_alt : Q+ -> real Q -> real Q -> Type.
+Proof.
+transparent assert (V : (real Q -> A)).
+Focus 2. - intros e x y;exact ((V x).1 y e).
+apply (real_rec A A_close).
+simple refine (Build_Recursors A A_close _ _ A_separated _ _ _ _ _).
+- intros q.
+  transparent assert (Requiv_q : (real Q -> C)).
+  + apply (real_rec C C_close).
+    simple refine (Build_Recursors C C_close _ _ C_separated _ _ _ _ _).
+    * intros r. apply (Requiv_alt_rat_rat q r).
+    * intros _. apply Requiv_alt_rat_lim.
+    * unfold C_close. apply _.
+    * unfold Requiv_alt_rat_rat.
+      red;simpl. intros r1 r2 e Hr n.
+      admit. (* triangular equality for Q *)
+    * unfold C_close;simpl.
+Defined.
+
+End Requiv_alt.
+
