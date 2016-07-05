@@ -9,7 +9,7 @@ Local Open Scope path_scope.
 
 (* ** Positive Numbers *)
 
-Inductive Pos : Type1 :=
+Inductive Pos : Type0 :=
 | one : Pos
 | succ_pos : Pos -> Pos.
 
@@ -21,7 +21,7 @@ Definition succ_pos_injective {z w : Pos} (p : succ_pos z = succ_pos w) : z = w
 
 (** ** Definition of the Integers *)
 
-Inductive Int : Type1 :=
+Inductive Int : Type0 :=
 | neg : Pos -> Int
 | zero : Int
 | pos : Pos -> Int.

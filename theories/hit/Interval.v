@@ -9,7 +9,7 @@ Local Open Scope path_scope.
 
 Module Export Interval.
 
-Private Inductive interval : Type1 :=
+Private Inductive interval : Type0 :=
   | zero : interval
   | one : interval.
 

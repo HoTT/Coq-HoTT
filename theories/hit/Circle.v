@@ -18,7 +18,7 @@ Generalizable Variables X A B f g n.
 (** We define the circle as the coequalizer of two copies of the identity map of [Unit].  This is easily equivalent to the naive definition
 
 <<<
-Private Inductive S1 : Type1 :=
+Private Inductive S1 : Type0 :=
 | base : S1
 | loop : base = base.
 >>>
