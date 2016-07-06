@@ -392,7 +392,7 @@ path_via (e * (3 / 3)).
   ring_tac.ring_with_nat.
 Qed.
 
-Instance : forall e, Reflexive (Requiv Q e).
+Instance Requiv_refl : forall e, Reflexive (Requiv Q e).
 Proof.
 red. intros e u;revert u e.
 apply (real_ind0 (fun u => forall e, _)).
@@ -713,7 +713,7 @@ Section Requiv_alt.
 Let A := sigT (fun half : real Q -> Q+ -> hProp =>
   (forall u e, half u e <-> merely (exists d d', e = d + d' /\ half u d))
   /\ (forall u v n e, Requiv Q e u v ->
-    ((half u n -> half v (n+e)) /\ (half v n -> half v (n+e))))).
+    ((half u n -> half v (n+e)) /\ (half v n -> half u (n+e))))).
 
 Let A_close e (R1 R2 : A)
   := forall u n, (R1.1 u n -> R2.1 u (e+n)) /\ (R2.1 u n -> R1.1 u (e+n)).
@@ -796,24 +796,720 @@ split;intros E'.
   apply (snd (E _ _)). trivial.
 Qed.
 
-Definition Requiv_alt : Q+ -> real Q -> real Q -> Type.
+Lemma Requiv_alt_rat_rat_rat_pr :
+∀ (q q0 r : Q) (e : Q+),
+- ' e < q0 - r < ' e
+→ C_close e ((λ r0 : Q, Requiv_alt_rat_rat q r0) q0)
+    ((λ r0 : Q, Requiv_alt_rat_rat q r0) r).
 Proof.
-transparent assert (V : (real Q -> A)).
-Focus 2. - intros e x y;exact ((V x).1 y e).
-apply (real_rec A A_close).
-simple refine (Build_Recursors A A_close _ _ A_separated _ _ _ _ _).
-- intros q.
-  transparent assert (Requiv_q : (real Q -> C)).
-  + apply (real_rec C C_close).
-    simple refine (Build_Recursors C C_close _ _ C_separated _ _ _ _ _).
-    * intros r. apply (Requiv_alt_rat_rat q r).
-    * intros _. apply Requiv_alt_rat_lim.
-    * unfold C_close. apply _.
-    * unfold Requiv_alt_rat_rat.
-      red;simpl. intros r1 r2 e Hr n.
-      admit. (* triangular equality for Q *)
-    * unfold C_close;simpl.
+unfold Requiv_alt_rat_rat.
+red;simpl. intros q r1 r2 e Hr n.
+Admitted. (* triangular equality for Q *)
+
+Lemma Requiv_alt_rat_rat_lim_pr :
+∀ (q q0 : Q) (d d' e : Q+) (y : Approximation Q) (b : Q+ → C)
+(Eb : ∀ d0 e0 : Q+, C_close (d0 + e0) (b d0) (b e0)),
+e = d + d'
+→ Requiv Q d' (rat q0) (y d)
+  → C_close d' ((λ r : Q, Requiv_alt_rat_rat q r) q0) (b d)
+    → C_close e ((λ r : Q, Requiv_alt_rat_rat q r) q0)
+        ((λ _ : Approximation Q, Requiv_alt_rat_lim) y b Eb).
+Proof.
+unfold C_close;simpl. intros q q' d d' e y b Eb He xi IH e'.
+split.
+- intros E1.
+  pose proof (fst (IH _) E1) as E2.
+  apply tr. exists d, (d' + e').
+  split;trivial.
+  rewrite He. apply pos_eq;ring_tac.ring_with_nat.
+- apply (Trunc_ind _). intros [n [n' [He' E1]]].
+  pose proof (fst (Eb _ d _) E1) as E2.
+  apply IH in E2.
+  rewrite He,He'.
+  assert (Hrw : (d + d' + (n + n')) = (d' + (n + d + n')))
+  by (apply pos_eq;ring_tac.ring_with_nat).
+  rewrite Hrw;trivial.
+Qed.
+
+Lemma Requiv_alt_rat_lim_rat_pr :
+∀ (q r : Q) (d d' e : Q+) (x : Approximation Q) (a : Q+ → C)
+(Ea : ∀ d0 e0 : Q+, C_close (d0 + e0) (a d0) (a e0)),
+e = d + d'
+→ Requiv Q d' (x d) (rat r)
+  → C_close d' (a d) ((λ r0 : Q, Requiv_alt_rat_rat q r0) r)
+    → C_close e ((λ _ : Approximation Q, Requiv_alt_rat_lim) x a Ea)
+        ((λ r0 : Q, Requiv_alt_rat_rat q r0) r).
+Proof.
+unfold C_close;simpl;intros q r d d' e x a Ea He xi IH e'.
+split.
+- apply (Trunc_ind _). intros [n [n' [He' E1]]].
+  pose proof (fst (Ea _ d _) E1) as E2.
+  apply IH in E2.
+  rewrite He,He'.
+  assert (Hrw : (d + d' + (n + n')) = (d' + (n + d + n')))
+  by (apply pos_eq;ring_tac.ring_with_nat).
+  rewrite Hrw;trivial.
+- intros E1.
+  pose proof (snd (IH _) E1) as E2.
+  apply tr. exists d, (d' + e').
+  split;trivial.
+  rewrite He. apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma Requiv_alt_rat_lim_lim_pr :
+∀ (x y : Approximation Q) (a b : Q+ → C)
+(Ea : ∀ d e : Q+, C_close (d + e) (a d) (a e))
+(Eb : ∀ d e : Q+, C_close (d + e) (b d) (b e)) (e d n n' : Q+),
+e = d + n + n'
+→ Requiv Q n' (x d) (y n)
+  → C_close n' (a d) (b n)
+    → C_close e ((λ _ : Approximation Q, Requiv_alt_rat_lim) x a Ea)
+        ((λ _ : Approximation Q, Requiv_alt_rat_lim) y b Eb).
+Proof.
+unfold C_close;simpl;intros x y a b Ea Eb e d n n' He xi IH.
+intros e';split;apply (Trunc_ind _).
+- intros [d0 [d0' [He' E1]]].
+  apply tr.
+  pose proof (fst (Ea _ d _) E1) as E2.
+  apply (fst (IH _)) in E2.
+  exists n, (n' + (d0 + d + d0')).
+  split;trivial.
+  rewrite He,He'. apply pos_eq; ring_tac.ring_with_nat.
+- intros [d0 [d0' [He' E1]]].
+  apply tr.
+  pose proof (fst (Eb _ n _) E1) as E2.
+  apply (snd (IH _)) in E2.
+  exists d, (n' + (d0 + n + d0')).
+  split;trivial.
+  rewrite He,He'. apply pos_eq; ring_tac.ring_with_nat.
+Qed.
+
+Lemma Requiv_alt_lim_rat_ok : forall (Requiv_alt_x_e : Q+ → A)
+(IHx : ∀ d e : Q+, A_close (d + e) (Requiv_alt_x_e d) (Requiv_alt_x_e e))
+(r : Q) (e : Q+),
+merely (∃ d d' : Q+, e = d + d' ∧ (Requiv_alt_x_e d).1 (rat r) d')
+↔ merely
+    (∃ d d' : Q+,
+     e = d + d'
+     ∧ merely
+         (∃ d0 d'0 : Q+, d = d0 + d'0 ∧ (Requiv_alt_x_e d0).1 (rat r) d'0)).
+Proof.
+Admitted.
+
+Definition Requiv_alt_lim_rat : forall (Requiv_alt_x_e : Q+ → A)
+(IHx : ∀ d e : Q+, A_close (d + e) (Requiv_alt_x_e d) (Requiv_alt_x_e e))
+(r : Q), C.
+Proof.
+intros ???.
+red. exists (fun e => merely (exists d d' : Q+, e = d + d' /\
+  (Requiv_alt_x_e d).1 (rat r) d')).
+apply Requiv_alt_lim_rat_ok;trivial.
 Defined.
+
+Lemma Requiv_alt_lim_lim_ok (Requiv_alt_x_e : Q+ → A)
+(IHx : ∀ d e : Q+, A_close (d + e) (Requiv_alt_x_e d) (Requiv_alt_x_e e))
+(y : Approximation Q)
+(e : Q+)
+  : merely (∃ d d' n : Q+, e = d + d' + n ∧ (Requiv_alt_x_e d).1 (y n) d')
+    ↔ merely
+    (∃ d d' : Q+,
+     e = d + d'
+     ∧ merely
+         (∃ d0 d'0 n : Q+, d = d0 + d'0 + n ∧ (Requiv_alt_x_e d0).1 (y n) d'0)).
+Proof.
+pose proof (fun e => (Requiv_alt_x_e e).2) as E1.
+red in IHx. simpl in E1.
+split;apply (Trunc_ind _).
+- intros [d [d' [n [He E2]]]].
+  apply (merely_destruct (fst (fst (E1 _) _ _) E2)).
+  intros [d0 [d0' [Hd' E3]]].
+  apply tr;exists (d+d0+n);exists d0';split;
+  [|apply tr;econstructor;econstructor;econstructor;split;[reflexivity|exact E3]].
+  rewrite He,Hd'. apply pos_eq; ring_tac.ring_with_nat.
+- intros [d [d' [He E2]]]. revert E2;apply (Trunc_ind _).
+  intros [d0 [d0' [n [Hd E2]]]].
+  pose proof (fun e u v n e0 xi => fst (snd (E1 e) u v n e0 xi)) as E3.
+  pose proof (fun a b c c' => E3 c _ _ c' _ (approx_equiv Q y a b)) as E4;clear E3.
+  pose proof (fun a => E4 _ a _ _ E2) as E3. clear E4.
+  rewrite Hd in He.
+  apply tr;repeat econstructor;[|exact (E3 (d' / 2))].
+  path_via (d0 + d0' + n + (2 / 2) * d').
+  + rewrite pos_recip_r,Qpos_mult_1_l.
+    trivial.
+  + apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Definition Requiv_alt_lim_lim (Requiv_alt_x_e : Q+ → A)
+(IHx : ∀ d e : Q+, A_close (d + e) (Requiv_alt_x_e d) (Requiv_alt_x_e e))
+(y : Approximation Q) : C.
+Proof.
+red.
+exists (fun e => merely (exists d d' n, e = d + d' + n /\
+  (Requiv_alt_x_e d).1 (y n) d')).
+apply Requiv_alt_lim_lim_ok. trivial.
+Defined.
+
+Lemma Requiv_alt_lim_lim_rat_lim_rat_pr (Requiv_alt_x_e : Q+ → A)
+(IHx : ∀ d e : Q+, A_close (d + e) (Requiv_alt_x_e d) (Requiv_alt_x_e e))
+(q r : Q) (e : Q+)
+(He : - ' e < q - r < ' e)
+  : C_close e (Requiv_alt_lim_rat Requiv_alt_x_e IHx q)
+    (Requiv_alt_lim_rat Requiv_alt_x_e IHx r).
+Proof.
+red. unfold Requiv_alt_lim_rat;simpl. red in IHx.
+pose proof (fun e => (Requiv_alt_x_e e).2) as Requiv_alt_x_e_pr.
+simpl in Requiv_alt_x_e_pr.
+intros n;split;apply (Trunc_ind _).
+- intros [d [d' [Hn E1]]].
+  pose proof (equiv_rat_rat Q _ _ _ He) as E2.
+  pose proof (fst (snd (Requiv_alt_x_e_pr _) _ _ _ _ E2) E1) as E3.
+  change (Cauchy.rat Q) with rat in E3.
+  apply tr;exists d, (d'+e);split;[|exact E3].
+  rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
+- intros [d [d' [Hn E1]]].
+  pose proof (equiv_rat_rat Q _ _ _ He) as E2.
+  pose proof (snd (snd (Requiv_alt_x_e_pr _) _ _ _ _ E2) E1) as E3.
+  change (Cauchy.rat Q) with rat in E3.
+  apply tr;exists d, (d'+e);split;[|exact E3].
+  rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma Requiv_alt_lim_lim_rat_lim_lim_pr (Requiv_alt_x_e : Q+ → A)
+(IHx : ∀ d e : Q+, A_close (d + e) (Requiv_alt_x_e d) (Requiv_alt_x_e e))
+(q : Q) (d d' e : Q+) (y : Approximation Q) (b : Q+ → C)
+(IHb : ∀ d0 e0 : Q+, C_close (d0 + e0) (b d0) (b e0))
+(He : e = d + d')
+(xi : Requiv Q d' (rat q) (y d))
+  : C_close d' (Requiv_alt_lim_rat Requiv_alt_x_e IHx q) (b d) ->
+    C_close e (Requiv_alt_lim_rat Requiv_alt_x_e IHx q)
+              (Requiv_alt_lim_lim Requiv_alt_x_e IHx y).
+Proof.
+unfold C_close,Requiv_alt_lim_rat,Requiv_alt_lim_lim;simpl;intros E1.
+pose proof (fun e => (Requiv_alt_x_e e).2) as Requiv_alt_x_e_pr.
+simpl in Requiv_alt_x_e_pr.
+intros n;split;apply (Trunc_ind _).
+- intros [d0 [d0' [Hn E2]]].
+  pose proof (fst (snd (Requiv_alt_x_e_pr _) _ _ _ _ xi) E2) as E3.
+  apply tr;do 3 econstructor;split;[|exact E3].
+  rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+- intros [d0 [d0' [n0 [Hn E2]]]].
+  pose proof (fun a b => snd (snd (Requiv_alt_x_e_pr a) _ _ b _ xi) ) as E3.
+  pose proof (fun a b a' b' => snd (snd (Requiv_alt_x_e_pr a) _ _ b _
+    (approx_equiv Q y a' b'))) as E4.
+  pose proof (fun a => E4 _ _ a _ E2) as E5. clear E4.
+  pose proof (E3 _ _ (E5 _)) as E4. clear E3 E5.
+  apply tr;do 2 econstructor;split;[|exact E4].
+  rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma Requiv_alt_lim_lim_lim_lim_rat_pr (Requiv_alt_x_e : Q+ → A)
+(IHx : ∀ d e : Q+, A_close (d + e) (Requiv_alt_x_e d) (Requiv_alt_x_e e))
+(r : Q) (d d' e : Q+) (x : Approximation Q) (a : Q+ → C)
+(IHa : ∀ d0 e0 : Q+, C_close (d0 + e0) (a d0) (a e0))
+(He : e = d + d')
+(xi : Requiv Q d' (x d) (rat r))
+  : C_close d' (a d) (Requiv_alt_lim_rat Requiv_alt_x_e IHx r) ->
+    C_close e (Requiv_alt_lim_lim Requiv_alt_x_e IHx x)
+              (Requiv_alt_lim_rat Requiv_alt_x_e IHx r).
+Proof.
+unfold C_close,Requiv_alt_lim_rat,Requiv_alt_lim_lim;simpl;intros E1.
+pose proof (fun e => (Requiv_alt_x_e e).2) as Requiv_alt_x_e_pr.
+simpl in Requiv_alt_x_e_pr.
+intros n;split;apply (Trunc_ind _).
+- intros [d0 [d0' [n0 [Hn E2]]]].
+  pose proof (fun a b => fst (snd (Requiv_alt_x_e_pr a) _ _ b _ xi) ) as E3.
+  pose proof (fun a b a' b' => fst (snd (Requiv_alt_x_e_pr a) _ _ b _
+    (approx_equiv Q x a' b'))) as E4.
+  pose proof (fun a => E4 _ _ _ a E2) as E5. clear E4.
+  pose proof (E3 _ _ (E5 _)) as E4. clear E3 E5.
+  apply tr;do 2 econstructor;split;[|exact E4].
+  rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+- intros [d0 [d0' [Hn E2]]].
+  pose proof (snd (snd (Requiv_alt_x_e_pr _) _ _ _ _ xi) E2) as E3.
+  apply tr;do 3 econstructor;split;[|exact E3].
+  rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma Requiv_alt_lim_lim_lim_lim_lim_pr (Requiv_alt_x_e : Q+ → A)
+(IHx : ∀ d e : Q+, A_close (d + e) (Requiv_alt_x_e d) (Requiv_alt_x_e e))
+(x y : Approximation Q) (a b : Q+ → C)
+(IHa : ∀ d e : Q+, C_close (d + e) (a d) (a e))
+(IHb : ∀ d e : Q+, C_close (d + e) (b d) (b e))
+(e d n e' : Q+)
+(He : e = d + n + e')
+(xi : Requiv Q e' (x d) (y n))
+(IH : C_close e' (a d) (b n))
+  : C_close e (Requiv_alt_lim_lim Requiv_alt_x_e IHx x)
+              (Requiv_alt_lim_lim Requiv_alt_x_e IHx y).
+Proof.
+red in IH. red. unfold Requiv_alt_lim_lim;simpl.
+clear IH IHa IHb a b.
+pose proof (fun e => (Requiv_alt_x_e e).2) as Requiv_alt_x_e_pr.
+simpl in Requiv_alt_x_e_pr.
+intros n0;split;apply (Trunc_ind _);intros [d0 [d' [n1 [Hn0 E1]]]].
+- pose proof (fun f g => fst (snd (Requiv_alt_x_e_pr f) _ _ g _ xi)) as E2.
+  pose proof (fun f g h i => fst (snd (Requiv_alt_x_e_pr f) _ _ g _
+    (approx_equiv Q x h i))) as E3.
+  pose proof (E2 _ _ (E3 _ _ _ _ E1)) as E4.
+  apply tr;do 3 econstructor;split;[|exact E4].
+  rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
+- pose proof (fun f g => snd (snd (Requiv_alt_x_e_pr f) _ _ g _ xi)) as E2.
+  pose proof (fun f g h i => snd (snd (Requiv_alt_x_e_pr f) _ _ g _
+    (approx_equiv Q y h i))) as E3.
+  pose proof (E2 _ _ (E3 _ _ _ _ E1)) as E4.
+  apply tr;do 3 econstructor;split;[|exact E4].
+  rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma C_to_A_second (I : Recursors C C_close)
+(R := real_rec C C_close I : real Q → C)
+  : forall (u v : real Q) (n e : Q+),
+    Requiv Q e u v
+    → ((R u).1 n → (R v).1 (n + e)) ∧ ((R v).1 n → (R u).1 (n + e)).
+Proof.
+pose proof (equiv_rec C C_close I) as R_pr.
+red in R_pr.
+change (real_rec C C_close I) with R in R_pr.
+intros u v n e xi.
+rewrite !(qpos_plus_comm n).
+apply (R_pr u v e xi n).
+Qed.
+
+Definition C_to_A : Recursors C C_close -> A.
+Proof.
+intros I.
+pose (R := real_rec C C_close I).
+exists (fun r => (R r).1).
+split.
+- exact (fun u => (R u).2).
+- apply C_to_A_second.
+Defined.
+
+Instance C_close_hprop : forall e a b, IsHProp (C_close e a b).
+Proof.
+unfold C_close;apply _.
+Qed.
+
+Definition Requiv_alt_rat : Q -> A.
+Proof.
+intros q. apply C_to_A.
+simple refine (Build_Recursors C C_close _ _ C_separated C_close_hprop _ _ _ _).
+- intros r. apply (Requiv_alt_rat_rat q r).
+- intros _. apply Requiv_alt_rat_lim.
+- exact (Requiv_alt_rat_rat_rat_pr q).
+- exact (Requiv_alt_rat_rat_lim_pr q).
+- exact (Requiv_alt_rat_lim_rat_pr q).
+- exact Requiv_alt_rat_lim_lim_pr.
+Defined.
+
+Definition Requiv_alt_rat_lim_compute : forall q x e,
+  (Requiv_alt_rat q).1 (lim x) e =
+  merely (exists d d', e = d + d' /\ (Requiv_alt_rat q).1 (x d) d').
+Proof.
+reflexivity.
+Defined.
+
+Definition Requiv_alt_lim : forall (Requiv_alt_x_e : Q+ -> A),
+  (∀ d e : Q+, A_close (d + e) (Requiv_alt_x_e d) (Requiv_alt_x_e e)) -> A.
+Proof.
+intros Requiv_alt_x_e IHx.
+(* forall e u n, Requiv_alt_x_e e u n means Requiv_alt n (x e) u *)
+apply C_to_A.
+simple refine (Build_Recursors C C_close _ _ C_separated C_close_hprop _ _ _ _).
+- exact (Requiv_alt_lim_rat _ IHx).
+- intros y _ _;exact (Requiv_alt_lim_lim Requiv_alt_x_e IHx y).
+- apply Requiv_alt_lim_lim_rat_lim_rat_pr.
+- simpl. apply Requiv_alt_lim_lim_rat_lim_lim_pr.
+- simpl. apply Requiv_alt_lim_lim_lim_lim_rat_pr.
+- simpl. apply Requiv_alt_lim_lim_lim_lim_lim_pr.
+Defined.
+
+Lemma Requiv_alt_lim_lim_compute : forall (a : Q+ -> A) Ea x e,
+  (Requiv_alt_lim a Ea).1 (lim x) e =
+  merely (exists d d' n, e = d + d' + n /\
+    (a d).1 (x n) d').
+Proof.
+reflexivity.
+Defined.
+
+Lemma Q_triangular : forall (q r : Q)
+(e : Q+) (Hqr : close e q r)
+(q0 : Q) (n : Q+),
+  (close n q q0 → close (e + n) r q0) ∧ (close n r q0 → close (e + n) q q0).
+Proof.
+Admitted.
+
+Lemma Requiv_alt_rat_rat_pr : ∀ (q r : Q) (e : Q+), - ' e < q - r < ' e →
+  A_close e (Requiv_alt_rat q) (Requiv_alt_rat r).
+Proof.
+intros q r e Hqr.
+red. apply (real_ind0 (fun u => forall n, _)).
+- simpl. apply Q_triangular. trivial.
+- intros x Ex n.
+  rewrite !Requiv_alt_rat_lim_compute.
+  split;apply (Trunc_ind _);intros [d [d' [Hn E1]]].
+  + apply Ex in E1. apply tr;do 2 econstructor;split;[|exact E1].
+    rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
+  + apply Ex in E1. apply tr;do 2 econstructor;split;[|exact E1].
+    rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma Requiv_alt_rat_lim_pr : ∀ (q : Q) (d d' e : Q+) (y : Approximation Q)
+(b : Q+ → A) (Eb : ∀ d0 e0 : Q+, A_close (d0 + e0) (b d0) (b e0)),
+e = d + d'
+→ Requiv Q d' (rat q) (y d)
+  → A_close d' (Requiv_alt_rat q) (b d)
+    → A_close e (Requiv_alt_rat q) (Requiv_alt_lim b Eb).
+Proof.
+intros q d d' e y b Eb He xi IH.
+red. apply (real_ind0 (fun u => forall n, _)).
+- simpl. intros q0 n.
+  red in IH. pose proof (fun x => IH (rat x)) as E1.
+  simpl in E1. clear IH. split.
+  + intros E2.
+    apply E1 in E2. apply tr;do 2 econstructor;split;[|exact E2].
+    rewrite He;apply pos_eq;ring_tac.ring_with_nat.
+  + apply (Trunc_ind _);intros [d0 [d0' [Hn E2]]].
+    rewrite He.
+    assert (Hrw : (d + d' + n) = d' + (d + n))
+    by (apply pos_eq;ring_tac.ring_with_nat);rewrite Hrw;clear Hrw.
+    apply E1.
+    rewrite Hn.
+    red in Eb.
+    pose proof (fst (Eb _ d _ _) E2) as E3.
+    assert (Hrw : (d + (d0 + d0')) = (d0 + d + d0'))
+    by (apply pos_eq;ring_tac.ring_with_nat);rewrite Hrw;clear Hrw.
+    trivial.
+- intros x Ex n.
+  rewrite !Requiv_alt_rat_lim_compute,!Requiv_alt_lim_lim_compute.
+  split;apply (Trunc_ind _).
+  + intros [d0 [d0' [Hn E1]]].
+    apply IH in E1.
+    apply tr;do 3 econstructor;split;[|exact E1].
+    rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+  + intros [d0 [d0' [n0 [Hn E1]]]].
+    red in Eb. pose proof (fst (Eb _ d _ _) E1) as E2.
+    apply IH in E2.
+    apply tr;do 2 econstructor;split;[|exact E2].
+    rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma Requiv_alt_lim_rat_pr : ∀ (r : Q) (d d' e : Q+) (x : Approximation Q)
+(a : Q+ → A)
+(Ea : ∀ d0 e0 : Q+, A_close (d0 + e0) (a d0) (a e0)),
+e = d + d'
+→ Requiv Q d' (x d) (rat r)
+  → A_close d' (a d) (Requiv_alt_rat r)
+    → A_close e (Requiv_alt_lim a Ea) (Requiv_alt_rat r).
+Proof.
+intros r d d' e x a Ea He xi IH.
+red. apply (real_ind0 (fun u => forall n, _)).
+- simpl. intros q n;split.
+  + apply (Trunc_ind _). intros [d0 [d0' [Hn E1]]].
+    pose proof (fun x => fst (Ea _ x _ _) E1) as E2.
+    pose proof (fst (IH _ _) (E2 _)) as E3.
+    simpl in E3.
+    rewrite He,Hn.
+    assert (Hrw : (d + d' + (d0 + d0')) = (d' + (d0 + d + d0')))
+    by (apply pos_eq;ring_tac.ring_with_nat);rewrite Hrw;clear Hrw.
+    trivial.
+  + intros E1.
+    red in IH.
+    pose proof (snd (IH (rat _) _) E1) as E2.
+    apply tr;do 2 econstructor;split;[|exact E2].
+    rewrite He. apply pos_eq;ring_tac.ring_with_nat.
+- intros y Ey n.
+  rewrite !Requiv_alt_rat_lim_compute,!Requiv_alt_lim_lim_compute.
+  split;apply (Trunc_ind _).
+  + intros [d0 [d0' [n0 [Hn E1]]]].
+    pose proof (fun x => fst (Ea _ x _ _) E1) as E2.
+    pose proof (fst (IH _ _) (E2 _)) as E3.
+    apply tr;do 2 econstructor;split;[|exact E3].
+    rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+  + intros [d0 [d0' [Hn E1]]].
+    pose proof (snd (IH _ _) E1) as E2.
+    apply tr;do 3 econstructor;split;[|exact E2].
+    rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma Requiv_alt_lim_lim_pr : ∀ (x y : Approximation Q) (a b : Q+ → A)
+(Ea : ∀ d e : Q+, A_close (d + e) (a d) (a e))
+(Eb : ∀ d e : Q+, A_close (d + e) (b d) (b e)) (e d n e' : Q+),
+e = d + n + e'
+→ Requiv Q e' (x d) (y n)
+  → A_close e' (a d) (b n)
+    → A_close e (Requiv_alt_lim a Ea) (Requiv_alt_lim b Eb).
+Proof.
+intros x y a b Ea Eb e d n e' He xi IH.
+red. apply (real_ind0 (fun u => forall n0, _)).
+- intros q n0.
+  simpl. split;apply (Trunc_ind _).
+  + intros [d0 [d' [Hn0 E1]]].
+    pose proof (fst (Ea _ d _ _) E1) as E2.
+    apply IH in E2.
+    apply tr;do 2 econstructor;split;[|exact E2].
+    rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
+  + intros [d0 [d' [Hn0 E1]]].
+    pose proof (fst (Eb _ n _ _) E1) as E2.
+    apply IH in E2.
+    apply tr;do 2 econstructor;split;[|exact E2].
+    rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
+- intros z Ez n0.
+  simpl.
+  split;apply (Trunc_ind _).
+  + intros [d0 [d' [n1 [Hn0 E1]]]].
+    pose proof (fst (IH _ _) (fst (Ea _ _ _ _) E1)) as E2.
+    apply tr;do 3 econstructor;split;[|exact E2].
+    rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
+  + intros [d0 [d' [n1 [Hn0 E1]]]].
+    pose proof (snd (IH _ _) (fst (Eb _ _ _ _) E1)) as E2.
+    apply tr;do 3 econstructor;split;[|exact E2].
+    rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Definition Requiv_alt_A : real Q -> A.
+Proof.
+apply (real_rec A A_close).
+apply (Build_Recursors A A_close Requiv_alt_rat (fun _ => Requiv_alt_lim)
+  A_separated A_close_hprop).
+- exact Requiv_alt_rat_rat_pr.
+- exact Requiv_alt_rat_lim_pr.
+- exact Requiv_alt_lim_rat_pr.
+- exact Requiv_alt_lim_lim_pr.
+Defined.
+
+Definition Requiv_alt : Q+ -> real Q -> real Q -> Type
+  := fun e x y => (Requiv_alt_A x).1 y e.
+
+Definition Requiv_alt_rat_rat_def : forall e q r,
+  Requiv_alt e (rat q) (rat r) = close e q r.
+Proof.
+intros;reflexivity.
+Defined.
+
+Definition Requiv_alt_rat_lim_def : forall e q y,
+  Requiv_alt e (rat q) (lim y) =
+  merely (exists d d', e = d + d' /\ Requiv_alt d' (rat q) (y d)).
+Proof.
+intros;reflexivity.
+Defined.
+
+Definition Requiv_alt_lim_rat_def : forall e x r,
+  Requiv_alt e (lim x) (rat r) =
+  merely (exists d d', e = d + d' /\ Requiv_alt d' (x d) (rat r)).
+Proof.
+intros;reflexivity.
+Defined.
+
+Definition Requiv_alt_lim_lim_def : forall e x y,
+  Requiv_alt e (lim x) (lim y) =
+  merely (exists d d' n, e = d + d' + n /\ Requiv_alt d' (x d) (y n)).
+Proof.
+intros;reflexivity.
+Defined.
+
+Lemma Requiv_alt_round : forall e u v, Requiv_alt e u v <->
+  merely (exists d d', e = d + d' /\ Requiv_alt d u v).
+Proof.
+intros. apply ((Requiv_alt_A u).2).
+Qed.
+
+Lemma Requiv_alt_Requiv : forall u v w n e, Requiv_alt n u v -> Requiv Q e v w ->
+  Requiv_alt (n+e) u w.
+Proof.
+intros ????? E1 E2.
+apply (snd (Requiv_alt_A u).2 _ _ _ _ E2). trivial.
+Qed.
+
+Lemma Requiv_Requiv_alt : forall u v w n e, Requiv Q n u v -> Requiv_alt e v w ->
+  Requiv_alt (n+e) u w.
+Proof.
+intros ????? E1 E2.
+pose proof (fun x y => snd (Requiv_alt_A x).2 _ _ y _ E1).
+(* do we need to prove Symmetric (Requiv_alt _)? *)
+Abort.
+
+Lemma Requiv_to_Requiv_alt : forall e u v, Requiv Q e u v -> Requiv_alt e u v.
+Proof.
+apply (equiv_rec0 _).
+- auto.
+- intros q y e d d' He _ IH.
+  rewrite Requiv_alt_rat_lim_def. apply tr;eauto.
+- intros;rewrite Requiv_alt_lim_rat_def;apply tr;eauto.
+- intros x y e d n e' He _ IH;rewrite Requiv_alt_lim_lim_def.
+  apply tr;do 3 econstructor;split;[|exact IH].
+  rewrite He;apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma Requiv_alt_to_Requiv : forall e u v, Requiv_alt e u v -> Requiv Q e u v.
+Proof.
+intros e u v;revert u v e.
+apply (real_ind0 (fun u => forall v e, _ -> _)).
+- intros q;apply (real_ind0 (fun v => forall e, _ -> _)).
+  + intros r e;rewrite Requiv_alt_rat_rat_def.
+    apply equiv_rat_rat.
+  + intros x Ex e;rewrite Requiv_alt_rat_lim_def.
+    apply (Trunc_ind _);intros [d [d' [He E1]]].
+    eapply equiv_rat_lim;eauto.
+- intros x Ex;apply (real_ind0 (fun v => forall e, _ -> _)).
+  + intros r e;rewrite Requiv_alt_lim_rat_def.
+    apply (Trunc_ind _);intros [d [d' [He E1]]].
+    eapply equiv_lim_rat;eauto.
+  + intros y Ey e;rewrite Requiv_alt_lim_lim_def.
+    apply (Trunc_ind _);intros [d [d' [n [He E1]]]].
+    eapply equiv_lim_lim;[|eauto].
+    rewrite He;apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma Requiv_alt_rw : Requiv_alt = Requiv Q.
+Proof.
+repeat (apply path_forall;intro);apply TruncType.path_iff_ishprop_uncurried.
+split.
+- apply Requiv_alt_to_Requiv.
+- apply Requiv_to_Requiv_alt.
+Qed.
+
+Lemma Requiv_rat_rat_def : forall e q r, Requiv Q e (rat q) (rat r) = close e q r.
+Proof.
+rewrite <-Requiv_alt_rw;trivial.
+Qed.
+
+Lemma Requiv_rat_lim_def : forall e q y,
+  Requiv Q e (rat q) (lim y) =
+  merely (exists d d', e = d + d' /\ Requiv Q d' (rat q) (y d)).
+Proof.
+rewrite <-Requiv_alt_rw;trivial.
+Defined.
+
+Definition Requiv_lim_rat_def : forall e x r,
+  Requiv Q e (lim x) (rat r) =
+  merely (exists d d', e = d + d' /\ Requiv Q d' (x d) (rat r)).
+Proof.
+rewrite <-Requiv_alt_rw;trivial.
+Defined.
+
+Definition Requiv_lim_lim_def : forall e x y,
+  Requiv Q e (lim x) (lim y) =
+  merely (exists d d' n, e = d + d' + n /\ Requiv Q d' (x d) (y n)).
+Proof.
+rewrite <-Requiv_alt_rw;trivial.
+Defined.
+
+Lemma Requiv_rounded : forall {e u v}, Requiv Q e u v <->
+  merely (exists d d', e = d + d' /\ Requiv Q d u v).
+Proof.
+rewrite <-Requiv_alt_rw;exact Requiv_alt_round.
+Qed.
+
+Lemma Requiv_triangle : forall {u v w e d}, Requiv Q e u v -> Requiv Q d v w ->
+  Requiv Q (e+d) u w.
+Proof.
+intros. rewrite <-Requiv_alt_rw.
+apply Requiv_alt_Requiv with v;trivial.
+rewrite Requiv_alt_rw;trivial.
+Qed.
 
 End Requiv_alt.
 
+Lemma two_fourth_is_one_half : @paths Q+ (2/4) (1/2).
+Proof. Admitted.
+
+Lemma equiv_through_approx : forall u (y : Approximation Q) e d,
+  Requiv Q e u (y d) -> Requiv Q (e+d) u (lim y).
+Proof.
+apply (real_ind0 (fun u => forall y e d, _ -> _)).
+- intros q y e d E.
+  rewrite Requiv_rat_lim_def.
+  apply tr;do 2 econstructor;split;[|exact E].
+  apply qpos_plus_comm.
+- intros x Ex y e d xi.
+  pose proof (fun e n => Ex n x e n (Requiv_refl _ _)) as E1.
+  apply (merely_destruct (fst Requiv_rounded xi)).
+  intros [d0 [d' [He E2]]].
+  pose proof (Requiv_triangle (E1 (d' / 2) (d' / 4)) E2) as E3.
+  eapply equiv_lim_lim;[|exact E3].
+  rewrite He.
+  path_via (d0 + (4 / 4) * d' + d).
+  { rewrite pos_recip_r,Qpos_mult_1_l. trivial. }
+  assert (Hrw : 4 / 4 = 2 / 4 + 1 / 2).
+  { rewrite two_fourth_is_one_half. rewrite pos_recip_r;path_via (2/ 2).
+    { rewrite pos_recip_r;trivial. }
+    { apply pos_eq;ring_tac.ring_with_nat. }
+  }
+  rewrite Hrw.
+  apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma equiv_lim : forall (x : Approximation Q) e d, Requiv Q (e+d) (x d) (lim x).
+Proof.
+intros. apply equiv_through_approx.
+apply Requiv_refl.
+Qed.
+
+Class Continuous (f : real Q -> real Q)
+  := continuous : forall u e, merely (exists d, forall v, Requiv Q d u v ->
+    Requiv Q e (f u) (f v)).
+
+Arguments continuous f {_} _ _.
+
+Lemma Qpos_lt_min : forall a b : Q+, exists c ca cb, a = c + ca /\ b = c + cb.
+Proof.
+Admitted.
+
+Lemma unique_continuous_extension `{Continuous f} `{Continuous g}
+  : (forall q, f (rat q) = g (rat q)) -> forall u, f u = g u.
+Proof.
+intros E.
+apply (real_ind0 _).
+- exact E.
+- intros x IHx.
+  apply equiv_path.
+  intros e.
+  apply (merely_destruct (continuous f (lim x) (e/2))).
+  intros [d Ed].
+  apply (merely_destruct (continuous g (lim x) (e/2))).
+  intros [d' Ed'].
+  destruct (Qpos_lt_min d d') as [n [nd [nd' [En En']]]].
+  assert (Hx : Requiv Q d (lim x) (x n)).
+  { apply Requiv_rounded. apply tr;do 2 econstructor;split;[|
+    apply equiv_symm,equiv_lim].
+    path_via (nd/2 + n + nd/2).
+    path_via (2 / 2 * nd + n).
+    { rewrite pos_recip_r,Qpos_mult_1_l,qpos_plus_comm;trivial. }
+    apply pos_eq;ring_tac.ring_with_nat.
+  }
+  assert (Hx' : Requiv Q d' (lim x) (x n)).
+  { apply Requiv_rounded. apply tr;do 2 econstructor;split;[|
+    apply equiv_symm,equiv_lim].
+    path_via (nd'/2 + n + nd'/2).
+    path_via (2 / 2 * nd' + n).
+    { rewrite pos_recip_r,Qpos_mult_1_l,qpos_plus_comm;trivial. }
+    apply pos_eq;ring_tac.ring_with_nat.
+  }
+  apply Ed in Hx. apply Ed' in Hx'.
+  rewrite IHx in Hx.
+  pose proof (Requiv_triangle Hx (equiv_symm _ _ _ Hx')) as E1.
+  rewrite (pos_split2 e). trivial.
+Qed.
+
+Instance R0 : Zero (real Q) := rat 0.
+
+Instance R1 : One (real Q) := rat 1.
+
+Lemma Qclose_neg : forall e x y, close e x y <-> close e (- x) (- y).
+Proof.
+Admitted.
+
+Instance Qneg_lipschitz : Lipschitz ((-) : Negate Q).
+Proof.
+exists 1.
+intros e x y.
+rewrite Qpos_mult_1_l. apply Qclose_neg.
+Defined.
+
+Instance Rneg : Negate (real Q).
+Proof.
+red. apply (lipschitz_extend (-)).
+Defined.
+
+End contents.
