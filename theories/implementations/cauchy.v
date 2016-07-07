@@ -1590,7 +1590,7 @@ Definition lipschitz_extend
   := real_rec (real Q) (fun e x y => Requiv Q (L * e) x y)
     lipshitz_extend_recursor.
 
-Global Instance lipschitz_extend_lipshitz : Lipschitz lipschitz_extend L.
+Global Instance lipschitz_extend_lipschitz : Lipschitz lipschitz_extend L.
 Proof.
 intros ???;apply (equiv_rec _ _ lipshitz_extend_recursor).
 Defined.
@@ -1668,7 +1668,6 @@ Proof.
 intros e u v E;rewrite <-(Qpos_mult_1_l e). apply lipschitz;trivial.
 Qed.
 
-
 Section extend_binary.
 
 Definition non_expanding
@@ -1731,14 +1730,20 @@ simple refine (Build_Recursors non_expanding non_expanding_close
   non_expanding_separated _
   _ _ _ _).
 - intros q. exists (lipschitz_extend (compose rat (f q)) 1).
-  apply @lipschitz_1,lipschitz_extend_lipshitz.
+  apply @lipschitz_1,lipschitz_extend_lipschitz.
 - intros x a Ea.
   simple refine (exist _ _ _).
   + intros v;apply lim. exists (fun e => (a e).1 v).
     exact (non_expanding_approx_pr a Ea v).
   + simpl. exact (lim_is_non_expanding a Ea).
 - do 3 red. simpl. intros q r e He.
-  admit.
+  apply Qclose_rounded in He.
+  apply (real_ind0 _).
+  + intros s;change (close e (rat (f q s)) (rat (f r s))).
+    apply (lipschitz_1 rat).
+    apply (lipschitz_1 (fun a => f a s)). exact He.
+  + intros x Ex.
+    rewrite !lipschitz_extend_lim. admit.
 - simpl. intros q d d' e y b Eb He xi IH.
   hnf. intros u;simpl.
   rewrite He,qpos_plus_comm. apply equiv_through_approx.
@@ -1750,7 +1755,6 @@ simple refine (Build_Recursors non_expanding non_expanding_close
 - simpl;intros x y a b Ea Eb e d n e' He xi IH u;simpl.
   eapply equiv_lim_lim;[|apply IH]. trivial.
 Abort.
-
 
 End extend_binary.
 
