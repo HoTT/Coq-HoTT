@@ -1668,6 +1668,29 @@ Proof.
 intros e u v E;rewrite <-(Qpos_mult_1_l e). apply lipschitz;trivial.
 Qed.
 
+Lemma lim_same_distance : forall (x y : Approximation Q) e,
+  (forall d n, Requiv Q (e+d) (x n) (y n)) ->
+  forall d, Requiv Q (e+d) (lim x) (lim y).
+Proof.
+intros x y e E d.
+apply equiv_lim_lim with (d/3) (d/3) (e + d/3);[|apply E].
+path_via (e + 3 / 3 * d).
+- rewrite pos_recip_r,Qpos_mult_1_l;trivial.
+- apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma lipschitz_extend_same_distance (f g : Q -> real Q) L
+  `{!Lipschitz f L} `{!Lipschitz g L} : forall e,
+  (forall d q, close (e+d) (f q) (g q)) ->
+  forall d u, close (e+d) (lipschitz_extend f L u) (lipschitz_extend g L u).
+Proof.
+intros e E1 d u;revert u d;apply (real_ind0 (fun u => forall d, _)).
+- intros q d;apply E1.
+- intros x Ex d. rewrite !lipschitz_extend_lim.
+  apply lim_same_distance. simpl.
+  clear d. intros;apply Ex.
+Qed.
+
 Section extend_binary.
 
 Definition non_expanding
@@ -1723,6 +1746,101 @@ apply equiv_lim_lim with (d'/2) (d'/2) d.
 - simpl. apply ((a _).2). trivial.
 Qed.
 
+Lemma rat_non_expanding_pr :
+∀ q (e : Q+) (u v : real Q),
+Requiv Q e u v
+→ Requiv Q e (lipschitz_extend (rat ∘ f q) 1 u)
+    (lipschitz_extend (rat ∘ f q) 1 v).
+Proof.
+intro;apply @lipschitz_1,lipschitz_extend_lipschitz.
+Qed.
+
+Lemma non_expanding_rat_rat_pr :
+∀ (q r : Q) (e : Q+),
+- ' e < q - r < ' e
+→ non_expanding_close e
+    (lipschitz_extend (rat ∘ f q) 1 ↾ rat_non_expanding_pr q)
+    (lipschitz_extend (rat ∘ f r) 1 ↾ rat_non_expanding_pr r).
+Proof.
+do 3 red. simpl. intros q r e He.
+apply Qclose_rounded in He.
+apply (merely_destruct He);clear He;intros [d [d' [He E1]]].
+rewrite He. apply lipschitz_extend_same_distance.
+intros n s;apply (lipschitz_1 rat).
+apply (lipschitz_1 (fun q => f q s)).
+apply Qclose_rounded.
+apply tr;exists d,n;auto.
+Qed.
+
+Lemma non_expanding_rat_lim_pr :
+∀ (q : Q) (d d' e : Q+) (y : Approximation Q) (b : Q+ → non_expanding)
+(Eb : ∀ d0 e0 : Q+, non_expanding_close (d0 + e0) (b d0) (b e0)),
+e = d + d'
+→ Requiv Q d' (rat q) (y d)
+  → non_expanding_close d'
+      (lipschitz_extend (rat ∘ f q) 1 ↾ rat_non_expanding_pr q) (b d)
+    → non_expanding_close e
+        (lipschitz_extend (rat ∘ f q) 1 ↾ rat_non_expanding_pr q)
+        ((λ v : real Q,
+          lim
+            {|
+            approximate := λ e0 : Q+, (b e0).1 v;
+            approx_equiv := non_expanding_approx_pr b Eb v |})
+         ↾ lim_is_non_expanding b Eb).
+Proof.
+intros q d d' e y b Eb He xi IH.
+hnf. intros u;simpl.
+rewrite He,qpos_plus_comm. apply equiv_through_approx.
+simpl. hnf in IH. apply IH.
+Qed.
+
+Lemma non_expanding_lim_rat_pr :
+∀ (r : Q) (d d' e : Q+) (x : Approximation Q) (a : Q+ → non_expanding)
+(Ea : ∀ d0 e0 : Q+, non_expanding_close (d0 + e0) (a d0) (a e0)),
+e = d + d'
+→ Requiv Q d' (x d) (rat r)
+  → non_expanding_close d' (a d)
+      (lipschitz_extend (rat ∘ f r) 1 ↾ rat_non_expanding_pr r)
+    → non_expanding_close e
+        ((λ v : real Q,
+          lim
+            {|
+            approximate := λ e0 : Q+, (a e0).1 v;
+            approx_equiv := non_expanding_approx_pr a Ea v |})
+         ↾ lim_is_non_expanding a Ea)
+        (lipschitz_extend (rat ∘ f r) 1 ↾ rat_non_expanding_pr r).
+Proof.
+intros r d d' e x a Ea He xi IH u;simpl.
+apply equiv_symm.
+rewrite He,qpos_plus_comm;apply equiv_through_approx,equiv_symm.
+apply IH.
+Qed.
+
+Lemma non_expanding_lim_lim_pr :
+∀ (x y : Approximation Q) (a b : Q+ → non_expanding)
+(Ea : ∀ d e : Q+, non_expanding_close (d + e) (a d) (a e))
+(Eb : ∀ d e : Q+, non_expanding_close (d + e) (b d) (b e)) (e d n e' : Q+),
+e = d + n + e'
+→ Requiv Q e' (x d) (y n)
+  → non_expanding_close e' (a d) (b n)
+    → non_expanding_close e
+        ((λ v : real Q,
+          lim
+            {|
+            approximate := λ e0 : Q+, (a e0).1 v;
+            approx_equiv := non_expanding_approx_pr a Ea v |})
+         ↾ lim_is_non_expanding a Ea)
+        ((λ v : real Q,
+          lim
+            {|
+            approximate := λ e0 : Q+, (b e0).1 v;
+            approx_equiv := non_expanding_approx_pr b Eb v |})
+         ↾ lim_is_non_expanding b Eb).
+Proof.
+intros x y a b Ea Eb e d n e' He xi IH u;simpl.
+eapply equiv_lim_lim;[|apply IH]. trivial.
+Qed.
+
 Definition non_expanding_recursor : Recursors non_expanding non_expanding_close.
 Proof.
 simple refine (Build_Recursors non_expanding non_expanding_close
@@ -1730,32 +1848,134 @@ simple refine (Build_Recursors non_expanding non_expanding_close
   non_expanding_separated _
   _ _ _ _).
 - intros q. exists (lipschitz_extend (compose rat (f q)) 1).
-  apply @lipschitz_1,lipschitz_extend_lipschitz.
+  exact (rat_non_expanding_pr q).
 - intros x a Ea.
   simple refine (exist _ _ _).
   + intros v;apply lim. exists (fun e => (a e).1 v).
     exact (non_expanding_approx_pr a Ea v).
   + simpl. exact (lim_is_non_expanding a Ea).
-- do 3 red. simpl. intros q r e He.
-  apply Qclose_rounded in He.
-  apply (real_ind0 _).
-  + intros s;change (close e (rat (f q s)) (rat (f r s))).
-    apply (lipschitz_1 rat).
-    apply (lipschitz_1 (fun a => f a s)). exact He.
-  + intros x Ex.
-    rewrite !lipschitz_extend_lim. admit.
-- simpl. intros q d d' e y b Eb He xi IH.
-  hnf. intros u;simpl.
-  rewrite He,qpos_plus_comm. apply equiv_through_approx.
-  simpl. hnf in IH. apply IH.
-- simpl. intros r d d' e x a Ea He xi IH u;simpl.
-  apply equiv_symm.
-  rewrite He,qpos_plus_comm;apply equiv_through_approx,equiv_symm.
-  apply IH.
-- simpl;intros x y a b Ea Eb e d n e' He xi IH u;simpl.
-  eapply equiv_lim_lim;[|apply IH]. trivial.
-Abort.
+- exact non_expanding_rat_rat_pr. 
+- exact non_expanding_rat_lim_pr.
+- exact non_expanding_lim_rat_pr.
+- exact non_expanding_lim_lim_pr.
+Defined.
+
+Definition non_expanding_extend : real Q -> real Q -> real Q
+  := fun u => (real_rec _ _ non_expanding_recursor u).1.
+
+Lemma non_expanding_extend_close_l {u v w e} : close e u v ->
+  close e (non_expanding_extend u w) (non_expanding_extend v w).
+Proof.
+intros xi.
+apply (equiv_rec _ _ non_expanding_recursor _ _ _ xi).
+Qed.
+
+Lemma non_expanding_extend_close_r {u v w e} : close e v w ->
+  close e (non_expanding_extend u v) (non_expanding_extend u w).
+Proof.
+apply ((real_rec _ _ non_expanding_recursor u).2).
+Qed.
+
+Global Instance non_expanding_lipschitz_l
+  : forall w, Lipschitz (fun u => non_expanding_extend u w) 1.
+Proof.
+red. intros ????;rewrite Qpos_mult_1_l. apply non_expanding_extend_close_l.
+Qed.
+
+Global Instance non_expanding_lipschitz_r
+  : forall u, Lipschitz (non_expanding_extend u) 1.
+Proof.
+intros ????;rewrite Qpos_mult_1_l;apply non_expanding_extend_close_r.
+Qed.
+
+Definition non_expanding_extend_rat q v :
+  non_expanding_extend (rat q) v =
+  lipschitz_extend (compose rat (f q)) 1 v
+  := idpath.
+
+Definition non_expanding_extend_lim_pr (x : Approximation Q) v
+  : ∀ d e : Q+,
+    Requiv Q (d + e) (non_expanding_extend (x d) v)
+      (non_expanding_extend (x e) v)
+  :=
+  non_expanding_approx_pr
+    (λ e : Q+,
+     real_rec non_expanding non_expanding_close
+       non_expanding_recursor (x e))
+    (λ d e : Q+,
+     equiv_rec non_expanding non_expanding_close
+       non_expanding_recursor (x d) (x e) (d + e)
+       (approx_equiv Q x d e)) v.
+
+Definition non_expanding_extend_lim x v :
+  non_expanding_extend (lim x) v =
+  lim (Build_Approximation Q
+    (fun e => non_expanding_extend (x e) v) (non_expanding_extend_lim_pr x v))
+  := idpath.
+
+Definition non_expanding_extend_rat_rat q r :
+  non_expanding_extend (rat q) (rat r) = rat (f q r)
+  := idpath.
 
 End extend_binary.
+
+Instance Qplus_lipschitz_l : forall s : Q, Lipschitz (+ s) 1.
+Proof.
+red. unfold close;simpl. intros s e q r E;rewrite Qpos_mult_1_l.
+assert (Hrw : q + s - (r + s) = q - r);[|rewrite Hrw;trivial].
+rewrite negate_plus_distr. path_via (q - r + (s - s)).
+- ring_tac.ring_with_nat.
+- rewrite plus_negate_r;apply plus_0_r.
+Qed.
+
+Instance Qplus_lipschitz_r : forall s : Q, Lipschitz (s +) 1.
+Proof.
+red;unfold close;simpl. intros s e q r E;rewrite Qpos_mult_1_l.
+assert (Hrw : s + q - (s + r) = q - r);[|rewrite Hrw;trivial].
+rewrite negate_plus_distr. path_via (q - r + (s - s)).
+- ring_tac.ring_with_nat.
+- rewrite plus_negate_r;apply plus_0_r.
+Qed.
+
+Global Instance Rplus : Plus (real Q) := non_expanding_extend plus.
+
+Definition Rplus_rat_rat q r : rat q + rat r = rat (q + r)
+  := idpath.
+
+Global Instance Rplus_lipschitz_l : forall s : real Q, Lipschitz (+ s) 1 := _.
+Global Instance Rplus_lipschitz_r : forall s : real Q, Lipschitz (s +) 1 := _.
+
+Lemma unique_continuous_binary_extension {f : real Q -> real Q -> real Q}
+  `{forall x, Continuous (f x)} `{forall y, Continuous (fun x => f x y)}
+  {g : real Q -> real Q -> real Q}
+  `{forall x, Continuous (g x)} `{forall y, Continuous (fun x => g x y)}
+  : (forall q r, f (rat q) (rat r) = g (rat q) (rat r)) ->
+  forall u v, f u v = g u v.
+Proof.
+intros E.
+intros x;apply unique_continuous_extension.
+intros r;revert x;apply unique_continuous_extension.
+trivial.
+Qed.
+
+Lemma Rplus_comm : Commutative (@plus _ Rplus).
+Proof.
+hnf. apply unique_continuous_binary_extension.
+intros q r;apply (ap rat),plus_comm.
+Qed.
+
+Lemma Rplus_assoc : Associative (@plus _ Rplus).
+Proof.
+hnf. intros x;apply @unique_continuous_binary_extension.
+{ apply _. }
+{ apply _. }
+{ apply _. }
+{ change (forall y, Continuous (compose (+ y) (x +))).
+  apply _. }
+intros r s;revert x;apply @unique_continuous_extension.
+{ apply _. }
+{ change (Continuous (compose (+ rat s) (+ rat r))). apply _. }
+intros q;apply (ap rat),plus_assoc.
+Qed.
 
 End contents.
