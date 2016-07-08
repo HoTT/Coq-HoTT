@@ -26,7 +26,17 @@ split.
 - reflexivity.
 Qed.
 
-Global Instance F_field : Field F := _.
+Lemma F_field' : Field F.
+Proof. exact _. Qed.
+
+Global Instance F_field@{i} : Field F
+  := F_field'@{i Ularge Set Set Set Set Set
+Set Set Set Set Set Ularge Ularge Set
+Set Set Set Set Set Set Set
+Set Set Set Set Set Set Set
+Set Set Set Set Set Set Ularge
+Uhuge Set Set Set Set Set Set
+Set Set Set Set Set}.
 
 Instance inject_nat : Cast nat F
   := compose (cast (NatPair.Z nat) F) (cast nat (NatPair.Z nat)).
@@ -50,7 +60,7 @@ induction n as [|n IHn].
   reflexivity.
 Qed.
 
-Global Instance F_characteristic_0 : FieldCharacteristic F 0.
+Lemma F_characteristic_0' : FieldCharacteristic F 0.
 Proof.
 change (forall n : nat, 0 < n ->
   (forall m, ~ n = 0 * m) <-> apart (repeat n (plus 1) 0) 0).
@@ -61,11 +71,11 @@ induction n as [|n IH].
     split;intros E'.
     * solve_propholds.
     * intros;rewrite mult_0_l.
-      solve_propholds.
+      apply S_neq_0.
   + simpl. pose proof (IH (lt_0_S _)) as IH'.
     clear IH.
     split;intros E'.
-    * intro.
+    * intro H1.
       rewrite repeat_is_inject in H1.
       apply FracField.classes_eq_related in H1.
       red in H1;simpl in H1.
@@ -74,6 +84,19 @@ induction n as [|n IH].
     * intros. rewrite mult_0_l.
       apply S_neq_0.
 Qed.
+
+Global Instance F_characteristic_0@{i} : FieldCharacteristic F 0
+  := F_characteristic_0'@{i Ularge Set Set Set
+Set Set Set Set Set Set Ularge
+Ularge Set Set Set Set Set Set
+Set Set Set Set Set Set Set
+Set Set Set Set i i Set
+Set Set Set Set Set Set Set
+Set Set Set Set Set Set Set
+Set Set Set Set Set Set Set
+Set Ularge Ularge Set Set Ularge Uhuge
+Set Set Set Set Set Set Set
+Set Set}.
 
 End Univ.
 End ExampleField.
