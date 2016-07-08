@@ -1978,4 +1978,58 @@ intros r s;revert x;apply @unique_continuous_extension.
 intros q;apply (ap rat),plus_assoc.
 Qed.
 
+Instance lipschitz_const : forall a L, Lipschitz (fun _ => a) L.
+Proof.
+intros;hnf.
+intros e _ _ _. apply Requiv_refl.
+Qed.
+
+Instance lipschitz_dup (f : real Q -> real Q -> real Q) L1 L2
+  `{!forall x, Lipschitz (f x) L1} `{!forall y, Lipschitz (fun x => f x y) L2}
+  : Lipschitz (fun x => f x x) (L1 + L2).
+Proof.
+hnf. intros e x y xi.
+assert (Hrw : (L1 + L2) * e = L1 * e + L2 * e)
+by (apply pos_eq;ring_tac.ring_with_nat);
+rewrite Hrw;clear Hrw.
+apply (Requiv_triangle (v:=f x y)).
+- apply (lipschitz _ _ xi).
+- apply (lipschitz (fun x => f x y) _ xi).
+Qed.
+
+Lemma Rplus_group : Group (real Q).
+Proof.
+repeat split.
+- apply _.
+- exact Rplus_assoc.
+- hnf. change mon_unit with 0.
+  change sg_op with plus.
+  apply unique_continuous_extension.
+  intros;apply (ap rat);apply plus_0_l.
+- hnf. change mon_unit with 0.
+  change sg_op with plus.
+  apply unique_continuous_extension.
+  intros;apply (ap rat);apply plus_0_r.
+- hnf; change mon_unit with 0.
+  change sg_op with plus.
+  apply @unique_continuous_extension.
+  { apply @lipschitz_continuous with (1+1).
+    apply (@lipschitz_dup (fun a b => - a + b) 1 1).
+    { apply _. }
+    { change (forall y, Lipschitz (compose (+ y) (-)) 1). apply _. } 
+  }
+  { apply (lipschitz_continuous (L:=1)). }
+  intros;apply (ap rat),plus_negate_l.
+- hnf; change mon_unit with 0.
+  change sg_op with plus.
+  apply @unique_continuous_extension.
+  { apply @lipschitz_continuous with (1+1).
+    apply (@lipschitz_dup (fun a b => a - b) 1 1).
+    { change (forall x, Lipschitz (compose (x +) (-)) 1). apply _. }
+    { apply _. } 
+  }
+  { apply (lipschitz_continuous (L:=1)). }
+  intros;apply (ap rat),plus_negate_r.
+Qed.
+
 End contents.
