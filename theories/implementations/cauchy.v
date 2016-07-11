@@ -386,7 +386,7 @@ Proof.
 intros;apply pos_eq. apply mult_1_r.
 Qed.
 
-Lemma pos_split2 : forall e : Qpos Q, e = e / 2 + e / 2.
+Lemma pos_split2' : forall e : Qpos Q, e = e / 2 + e / 2.
 Proof.
 intros.
 path_via (e * (2 / 2)).
@@ -395,7 +395,10 @@ path_via (e * (2 / 2)).
   ring_tac.ring_with_nat.
 Qed.
 
-Lemma pos_split3 : forall e : Qpos Q, e = e / 3 + e / 3 + e / 3.
+Lemma pos_split2@{} : forall e : Qpos Q, e = e / 2 + e / 2.
+Proof. exact pos_split2'@{Set Ularge Ularge Ularge Set Set Set}. Qed.
+
+Lemma pos_split3' : forall e : Qpos Q, e = e / 3 + e / 3 + e / 3.
 Proof.
 intros.
 path_via (e * (3 / 3)).
@@ -404,7 +407,10 @@ path_via (e * (3 / 3)).
   ring_tac.ring_with_nat.
 Qed.
 
-Instance Requiv_refl : forall e, Reflexive (Requiv Q e).
+Lemma pos_split3@{} : forall e : Qpos Q, e = e / 3 + e / 3 + e / 3.
+Proof. exact pos_split3'@{Set Ularge Ularge Ularge Set Set Set}. Qed.
+
+Instance Requiv_refl@{} : forall e, Reflexive (Requiv Q e).
 Proof.
 red. intros e u;revert u e.
 apply (real_ind0 (fun u => forall e, _)).
@@ -414,7 +420,7 @@ apply (real_ind0 (fun u => forall e, _)).
   auto.
 Qed.
 
-Global Instance real_isset : IsHSet (real Q).
+Global Instance real_isset@{} : IsHSet (real Q).
 Proof.
 eapply @HSet.isset_hrel_subpaths.
 3:apply equiv_path.
@@ -422,13 +428,13 @@ eapply @HSet.isset_hrel_subpaths.
 - apply _.
 Qed.
 
-Definition const_approx : real Q -> Approximation Q.
+Definition const_approx@{} : real Q -> Approximation Q.
 Proof.
 intros x;exists (fun _ => x).
 intros;reflexivity.
 Defined.
 
-Lemma lim_cons : forall x, lim (const_approx x) = x.
+Lemma lim_cons' : forall x, lim (const_approx x) = x.
 Proof.
 apply (real_ind0 _).
 - intros. apply equiv_path.
@@ -450,15 +456,23 @@ apply (real_ind0 _).
     unfold cast,dec_recip;simpl. ring_tac.ring_with_nat.
 Qed.
 
-Lemma lim_epi : epi.isepi lim.
+Lemma lim_cons@{} : forall x, lim (const_approx x) = x.
 Proof.
-apply epi.issurj_isepi.
+exact lim_cons'@{Set Ularge Ularge Ularge Set
+  Set Set Set Set Set
+  Set}.
+Qed.
+
+Lemma lim_epi@{i j k} : epi.isepi@{UQ UQ i j k} lim.
+Proof.
+apply epi.issurj_isepi@{UQ UQ Uhuge Ularge i
+  k Ularge j}.
 apply BuildIsSurjection.
 intros. apply tr. exists (const_approx b).
 apply lim_cons.
 Qed.
 
-Definition equiv_rect0 (P : forall e u v, Requiv Q e u v -> Type)
+Definition equiv_rect0@{i} (P : forall e u v, Requiv Q e u v -> Type@{i})
   `{forall e u v xi, IsHProp (P e u v xi)}
   (val_rat_rat : forall q r e He, P _ _ _ (equiv_rat_rat Q q r e He))
   (val_rat_lim : forall q (y : Approximation Q) e d d' He xi,
@@ -475,14 +489,14 @@ Proof.
 intros e u v;revert u v e.
 apply (equiv_rect Q (fun _ => Unit) (fun x y _ _ e xi => P e x y xi)).
 split;auto.
-intros. apply path_ishprop. 
+intros. apply @path_ishprop,trunc_succ.
 Defined.
 
-Definition equiv_rec0 (P : Q+ -> real Q -> real Q -> Type)
+Definition equiv_rec0@{i} (P : Q+ -> real Q -> real Q -> Type@{i})
   `{forall e u v, IsHProp (P e u v)}
   := equiv_rect0 (fun e u v _ => P e u v).
 
-Lemma equiv_symm : forall e, Symmetric (Requiv Q e).
+Lemma equiv_symm@{} : forall e, Symmetric (Requiv Q e).
 Proof.
 red. apply (equiv_rec0 _).
 - intros q r e He. apply equiv_rat_rat.
@@ -497,7 +511,8 @@ red. apply (equiv_rec0 _).
   trivial.
 Qed.
 
-Lemma equiv_symm_rw : forall e u v, Requiv Q e u v = Requiv Q e v u.
+Lemma equiv_symm_rw@{i} : forall e u v,
+  paths@{i} (Requiv Q e u v) (Requiv Q e v u).
 Proof.
 intros. apply path_universe_uncurried.
 apply equiv_iff_hprop_uncurried.
@@ -506,7 +521,7 @@ Qed.
 
 Section mutual_recursion.
 
-Record Recursors (A : Type) (B : Q+ -> A -> A -> Type) :=
+Record Recursors@{UA UB} (A : Type@{UA}) (B : Q+ -> A -> A -> Type@{UB}) :=
   { rec_rat : Q -> A
   ; rec_lim : Approximation Q ->
       forall val_ind : Q+ -> A,
@@ -534,7 +549,8 @@ Record Recursors (A : Type) (B : Q+ -> A -> A -> Type) :=
       B e' (a d) (b n) ->
       B e (rec_lim x a Ea) (rec_lim y b Eb) }.
 
-Definition recursors_inductors : forall A B, Recursors A B ->
+Definition recursors_inductors@{UA UB}
+  : forall (A : Type@{UA}) (B : Q+ -> A -> A -> Type@{UB}), Recursors A B ->
   Inductors Q (fun _ => A) (fun _ _ x y e _ => B e x y).
 Proof.
 intros A B I.
@@ -569,13 +585,13 @@ End mutual_recursion.
 
 Class Closeness (A : Type) := close : Q+ -> relation A.
 
-Instance Q_close : Closeness Q := fun e q r => - ' e < q - r < ' e.
-Instance R_close : Closeness (real Q) := Requiv Q.
+Instance Q_close@{} : Closeness Q := fun e q r => - ' e < q - r < ' e.
+Instance R_close@{} : Closeness (real Q) := Requiv Q.
 
 Arguments Q_close /.
 Arguments R_close /.
 
-Instance Q_close_symm : forall e, Symmetric (@close Q _ e).
+Instance Q_close_symm@{} : forall e, Symmetric (@close Q _ e).
 Proof.
 red;unfold close;simpl.
 intros e x y [E1 E2];split.
@@ -585,19 +601,19 @@ intros e x y [E1 E2];split.
   rewrite negate_swap_r,involutive. trivial.
 Qed.
 
-Instance Qpos_mult_assoc : Associative (@mult Q+ _).
+Instance Qpos_mult_assoc@{} : Associative (@mult Q+ _).
 Proof.
 hnf.
 intros;apply pos_eq.
 apply mult_assoc.
 Qed.
 
-Lemma Qpos_mult_1_l : forall e : Q+, 1 * e = e.
+Lemma Qpos_mult_1_l@{} : forall e : Q+, 1 * e = e.
 Proof.
 intros;apply pos_eq;apply mult_1_l.
 Qed.
 
-Lemma pos_recip_through_plus : forall a b c : Q+,
+Lemma pos_recip_through_plus' : forall a b c : Q+,
   a + b = c * (a / c + b / c).
 Proof.
 intros. path_via ((a + b) * (c / c)).
@@ -605,14 +621,27 @@ intros. path_via ((a + b) * (c / c)).
 - apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma pos_unconjugate : forall a b : Q+, a * b / a = b.
+Lemma pos_recip_through_plus@{} : forall a b c : Q+,
+  a + b = c * (a / c + b / c).
+Proof.
+exact pos_recip_through_plus'@{Set Ularge Ularge Ularge Set
+  Set Set}.
+Qed.
+
+Lemma pos_unconjugate' : forall a b : Q+, a * b / a = b.
 Proof.
 intros. path_via (a / a * b).
 - apply pos_eq;ring_tac.ring_with_nat.
 - rewrite pos_recip_r;apply Qpos_mult_1_l.
 Qed.
 
-Lemma separate_mult : forall l u v, (forall e, Requiv Q (l * e) u v) -> u = v.
+Lemma pos_unconjugate@{} : forall a b : Q+, a * b / a = b.
+Proof.
+exact pos_unconjugate'@{Set Ularge Ularge Ularge Set
+  Set Set}.
+Qed.
+
+Lemma separate_mult' : forall l u v, (forall e, Requiv Q (l * e) u v) -> u = v.
 Proof.
 intros l x y E. apply equiv_path.
 intros. assert (Hrw : e = l * (e / l)).
@@ -622,7 +651,13 @@ intros. assert (Hrw : e = l * (e / l)).
 + rewrite Hrw;apply E.
 Qed.
 
-Lemma Q_triangular_one : forall (q r : Q)
+Lemma separate_mult@{} : forall l u v, (forall e, Requiv Q (l * e) u v) -> u = v.
+Proof.
+exact separate_mult'@{Set Ularge Ularge Ularge Set
+  Set Set}.
+Qed.
+
+Lemma Q_triangular_one' : forall (q r : Q)
 (e : Q+) (Hqr : close e q r)
 (q0 : Q) (n : Q+),
   (close n q q0 → close (e + n) r q0).
@@ -647,7 +682,18 @@ split.
   rewrite <-(plus_negate_r q). ring_tac.ring_with_nat.
 Qed.
 
-Lemma Q_triangular : forall (q r : Q)
+Lemma Q_triangular_one@{} : forall (q r : Q)
+(e : Q+) (Hqr : close e q r)
+(q0 : Q) (n : Q+),
+  (close n q q0 → close (e + n) r q0).
+Proof.
+exact Q_triangular_one'@{Set Set Set Set Ularge
+  Ularge Ularge Set Set Set
+  Set Set Set Set Set
+  Set Set}.
+Qed.
+
+Lemma Q_triangular@{} : forall (q r : Q)
 (e : Q+) (Hqr : close e q r)
 (q0 : Q) (n : Q+),
   (close n q q0 → close (e + n) r q0) ∧ (close n r q0 → close (e + n) q q0).
