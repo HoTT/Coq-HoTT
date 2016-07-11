@@ -705,24 +705,26 @@ Qed.
 
 Section Requiv_alt.
 
-Definition rounded_halfrel := sigT (fun half : real Q -> Q+ -> hProp =>
+Definition rounded_halfrel@{} := sigT@{Ularge UQ}
+  (fun half : real Q -> Q+ -> TruncType@{UQ} -1 =>
   (forall u e, half u e <-> merely (exists d d', e = d + d' /\ half u d))
   /\ (forall u v n e, Requiv Q e u v ->
     ((half u n -> half v (n+e)) /\ (half v n -> half u (n+e))))).
 
-Definition rounded_halfrel_close e (R1 R2 : rounded_halfrel)
+Definition rounded_halfrel_close@{} e (R1 R2 : rounded_halfrel)
   := forall u n, (R1.1 u n -> R2.1 u (e+n)) /\ (R2.1 u n -> R1.1 u (e+n)).
 
-Definition rounded_zeroary := sigT (fun R : Q+ -> hProp =>
+Definition rounded_zeroary@{} := sigT@{Ularge UQ}
+  (fun R : Q+ -> TruncType@{UQ} -1 =>
     forall e, R e <-> merely (exists d d', e = d + d' /\ R d)).
 
-Definition rounded_zeroary_close e (R1 R2 : rounded_zeroary)
+Definition rounded_zeroary_close@{} e (R1 R2 : rounded_zeroary)
   := forall n, (R1.1 n -> R2.1 (e+n)) /\ (R2.1 n -> R1.1 (e+n)).
 
-Lemma rounded_halfrel_separated : forall u v,
+Lemma rounded_halfrel_separated' : forall u v,
   (forall e, rounded_halfrel_close e u v) -> u = v.
 Proof.
-intros u v E. eapply Sigma.path_sigma. Unshelve.
+intros u v E. eapply Sigma.path_sigma@{Ularge UQ Ularge}. Unshelve.
 apply path_ishprop.
 apply path_forall. intro x. apply path_forall. intro e.
 apply TruncType.path_iff_hprop_uncurried.
@@ -740,23 +742,26 @@ split;intros E'.
   trivial.
 Qed.
 
-Instance rounded_halfrel_close_hprop
+Definition rounded_halfrel_separated@{}
+  := rounded_halfrel_separated'@{Ularge Ularge Ularge Uhuge}.
+
+Instance rounded_halfrel_close_hprop@{}
   : forall e u v, IsHProp (rounded_halfrel_close e u v).
 Proof.
 unfold rounded_halfrel_close. intros. apply _.
 Qed.
 
-Lemma Qclose_rounded : ∀ (q r : Q) e, close e q r ↔
+Lemma Qclose_rounded@{} : ∀ (q r : Q) e, close e q r ↔
   merely (∃ d d' : Q+, e = d + d' ∧ close d q r).
 Proof. Admitted.
 
-Definition Requiv_alt_rat_rat (q r : Q) : rounded_zeroary.
+Definition Requiv_alt_rat_rat@{} (q r : Q) : rounded_zeroary.
 Proof.
 exists (fun e => BuildhProp (close e q r)).
 simpl. apply Qclose_rounded.
 Defined.
 
-Lemma rat_lim_rounded_step :
+Lemma rat_lim_rounded_step' :
   ∀ val_ind : Q+ → rounded_zeroary,
   (∀ d e : Q+, rounded_zeroary_close (d + e) (val_ind d) (val_ind e)) ->
   ∀ e : Q+,
@@ -779,7 +784,11 @@ split;apply (Trunc_ind _);intros [d [d' [He E]]].
   apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_rat_lim
+Definition rat_lim_rounded_step@{}
+  := rat_lim_rounded_step'@{Set Ularge Ularge Ularge Set
+    Set Set}.
+
+Definition Requiv_alt_rat_lim@{}
   : ∀ val_ind : Q+ → rounded_zeroary,
   (∀ d e : Q+, rounded_zeroary_close (d + e) (val_ind d) (val_ind e)) →
   rounded_zeroary.
@@ -789,7 +798,7 @@ exists (fun e => merely (exists d d', e = d + d' /\ (val_ind d).1 d')).
 apply rat_lim_rounded_step. trivial.
 Defined.
 
-Lemma rounded_zeroary_separated : ∀ x y : rounded_zeroary,
+Lemma rounded_zeroary_separated' : ∀ x y : rounded_zeroary,
   (∀ e : Q+, rounded_zeroary_close e x y) → x = y.
 Proof.
 intros x y E.
@@ -810,7 +819,10 @@ split;intros E'.
   apply (snd (E _ _)). trivial.
 Qed.
 
-Lemma Requiv_alt_rat_rat_rat_pr :
+Definition rounded_zeroary_separated@{}
+  := rounded_zeroary_separated'@{Ularge Ularge Uhuge}.
+
+Lemma Requiv_alt_rat_rat_rat_pr@{} :
 ∀ (q q0 r : Q) (e : Q+),
 - ' e < q0 - r < ' e
 → rounded_zeroary_close e ((λ r0 : Q, Requiv_alt_rat_rat q r0) q0)
@@ -826,7 +838,7 @@ split.
   apply symmetry; trivial.
 Qed.
 
-Lemma Requiv_alt_rat_rat_lim_pr :
+Lemma Requiv_alt_rat_rat_lim_pr' :
 ∀ (q q0 : Q) (d d' e : Q+) (y : Approximation Q) (b : Q+ → rounded_zeroary)
 (Eb : ∀ d0 e0 : Q+, rounded_zeroary_close (d0 + e0) (b d0) (b e0)),
 e = d + d'
@@ -851,7 +863,12 @@ split.
   rewrite Hrw;trivial.
 Qed.
 
-Lemma Requiv_alt_rat_lim_rat_pr :
+Definition Requiv_alt_rat_rat_lim_pr@{}
+  := Requiv_alt_rat_rat_lim_pr'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set}.
+
+Lemma Requiv_alt_rat_lim_rat_pr' :
 ∀ (q r : Q) (d d' e : Q+) (x : Approximation Q) (a : Q+ → rounded_zeroary)
 (Ea : ∀ d0 e0 : Q+, rounded_zeroary_close (d0 + e0) (a d0) (a e0)),
 e = d + d'
@@ -876,7 +893,12 @@ split.
   rewrite He. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma Requiv_alt_rat_lim_lim_pr :
+Definition Requiv_alt_rat_lim_rat_pr@{}
+  := Requiv_alt_rat_lim_rat_pr'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set}.
+
+Lemma Requiv_alt_rat_lim_lim_pr' :
 ∀ (x y : Approximation Q) (a b : Q+ → rounded_zeroary)
 (Ea : ∀ d e : Q+, rounded_zeroary_close (d + e) (a d) (a e))
 (Eb : ∀ d e : Q+, rounded_zeroary_close (d + e) (b d) (b e)) (e d n n' : Q+),
@@ -904,7 +926,12 @@ intros e';split;apply (Trunc_ind _).
   rewrite He,He'. apply pos_eq; ring_tac.ring_with_nat.
 Qed.
 
-Lemma Requiv_alt_lim_rat_ok : forall (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Definition Requiv_alt_rat_lim_lim_pr@{}
+  := Requiv_alt_rat_lim_lim_pr'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set}.
+
+Lemma Requiv_alt_lim_rat_ok' : forall (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (r : Q) (e : Q+),
@@ -930,7 +957,11 @@ split;apply (Trunc_ind _);intros [d [d' [He E]]].
   apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_lim_rat : forall (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Definition Requiv_alt_lim_rat_ok@{}
+  := Requiv_alt_lim_rat_ok'@{Set Ularge Ularge Ularge Set
+    Set Set}.
+
+Definition Requiv_alt_lim_rat@{} : forall (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (r : Q), rounded_zeroary.
@@ -941,7 +972,7 @@ red. exists (fun e => merely (exists d d' : Q+, e = d + d' /\
 apply Requiv_alt_lim_rat_ok;trivial.
 Defined.
 
-Lemma Requiv_alt_lim_lim_ok (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Lemma Requiv_alt_lim_lim_ok' (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (y : Approximation Q)
@@ -975,7 +1006,12 @@ split;apply (Trunc_ind _).
   + apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_lim_lim (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Definition Requiv_alt_lim_lim_ok@{} :=
+  Requiv_alt_lim_lim_ok'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set}.
+
+Definition Requiv_alt_lim_lim@{} (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (y : Approximation Q) : rounded_zeroary.
@@ -986,7 +1022,7 @@ exists (fun e => merely (exists d d' n, e = d + d' + n /\
 apply Requiv_alt_lim_lim_ok. trivial.
 Defined.
 
-Lemma Requiv_alt_lim_lim_rat_lim_rat_pr (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Lemma Requiv_alt_lim_lim_rat_lim_rat_pr' (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (q r : Q) (e : Q+)
@@ -1012,7 +1048,12 @@ intros n;split;apply (Trunc_ind _).
   rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma Requiv_alt_lim_lim_rat_lim_lim_pr (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Definition Requiv_alt_lim_lim_rat_lim_rat_pr@{}
+  := Requiv_alt_lim_lim_rat_lim_rat_pr'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set}.
+
+Lemma Requiv_alt_lim_lim_rat_lim_lim_pr' (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (q : Q) (d d' e : Q+) (y : Approximation Q) (b : Q+ → rounded_zeroary)
@@ -1041,7 +1082,12 @@ intros n;split;apply (Trunc_ind _).
   rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma Requiv_alt_lim_lim_lim_lim_rat_pr (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Definition Requiv_alt_lim_lim_rat_lim_lim_pr@{}
+  := Requiv_alt_lim_lim_rat_lim_lim_pr'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set}.
+
+Lemma Requiv_alt_lim_lim_lim_lim_rat_pr' (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (r : Q) (d d' e : Q+) (x : Approximation Q) (a : Q+ → rounded_zeroary)
@@ -1070,7 +1116,12 @@ intros n;split;apply (Trunc_ind _).
   rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma Requiv_alt_lim_lim_lim_lim_lim_pr (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Definition Requiv_alt_lim_lim_lim_lim_rat_pr@{}
+  := Requiv_alt_lim_lim_lim_lim_rat_pr'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set}.
+
+Lemma Requiv_alt_lim_lim_lim_lim_lim_pr' (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (x y : Approximation Q) (a b : Q+ → rounded_zeroary)
@@ -1102,8 +1153,13 @@ intros n0;split;apply (Trunc_ind _);intros [d0 [d' [n1 [Hn0 E1]]]].
   rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma rounded_zeroary_to_rounded_halfrel_second
-  (I : Recursors rounded_zeroary rounded_zeroary_close)
+Definition Requiv_alt_lim_lim_lim_lim_lim_pr@{}
+  := Requiv_alt_lim_lim_lim_lim_lim_pr'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set}.
+
+Lemma rounded_zeroary_to_rounded_halfrel_second@{}
+  (I : Recursors@{Ularge UQ} rounded_zeroary rounded_zeroary_close)
   (R := real_rec rounded_zeroary rounded_zeroary_close I
     : real Q → rounded_zeroary)
   : forall (u v : real Q) (n e : Q+),
@@ -1118,8 +1174,8 @@ rewrite !(qpos_plus_comm n).
 apply (R_pr u v e xi n).
 Qed.
 
-Definition rounded_zeroary_to_rounded_halfrel
-  : Recursors rounded_zeroary rounded_zeroary_close -> rounded_halfrel.
+Definition rounded_zeroary_to_rounded_halfrel@{}
+  : Recursors@{Ularge UQ} rounded_zeroary rounded_zeroary_close -> rounded_halfrel.
 Proof.
 intros I.
 pose (R := real_rec rounded_zeroary rounded_zeroary_close I).
@@ -1129,13 +1185,13 @@ split.
 - apply rounded_zeroary_to_rounded_halfrel_second.
 Defined.
 
-Instance rounded_zeroary_close_hprop : forall e a b,
+Instance rounded_zeroary_close_hprop@{} : forall e a b,
   IsHProp (rounded_zeroary_close e a b).
 Proof.
 unfold rounded_zeroary_close;apply _.
 Qed.
 
-Definition Requiv_alt_rat : Q -> rounded_halfrel.
+Definition Requiv_alt_rat@{} : Q -> rounded_halfrel.
 Proof.
 intros q. apply rounded_zeroary_to_rounded_halfrel.
 simple refine (Build_Recursors rounded_zeroary rounded_zeroary_close
@@ -1148,14 +1204,14 @@ simple refine (Build_Recursors rounded_zeroary rounded_zeroary_close
 - exact Requiv_alt_rat_lim_lim_pr.
 Defined.
 
-Definition Requiv_alt_rat_lim_compute : forall q x e,
-  (Requiv_alt_rat q).1 (lim x) e =
-  merely (exists d d', e = d + d' /\ (Requiv_alt_rat q).1 (x d) d').
+Definition Requiv_alt_rat_lim_compute@{} : forall q x e,
+  paths@{Ularge} ((Requiv_alt_rat q).1 (lim x) e)
+  (merely (exists d d', e = d + d' /\ (Requiv_alt_rat q).1 (x d) d')).
 Proof.
 reflexivity.
 Defined.
 
-Definition Requiv_alt_lim : forall (Requiv_alt_x_e : Q+ -> rounded_halfrel),
+Definition Requiv_alt_lim@{} : forall (Requiv_alt_x_e : Q+ -> rounded_halfrel),
   (∀ d e : Q+, rounded_halfrel_close (d + e)
     (Requiv_alt_x_e d) (Requiv_alt_x_e e)) -> rounded_halfrel.
 Proof.
@@ -1172,15 +1228,15 @@ simple refine (Build_Recursors rounded_zeroary rounded_zeroary_close
 - simpl. apply Requiv_alt_lim_lim_lim_lim_lim_pr.
 Defined.
 
-Lemma Requiv_alt_lim_lim_compute : forall (a : Q+ -> rounded_halfrel) Ea x e,
-  (Requiv_alt_lim a Ea).1 (lim x) e =
-  merely (exists d d' n, e = d + d' + n /\
-    (a d).1 (x n) d').
+Lemma Requiv_alt_lim_lim_compute@{} : forall (a : Q+ -> rounded_halfrel) Ea x e,
+  paths@{Ularge} ((Requiv_alt_lim a Ea).1 (lim x) e)
+  (merely (exists d d' n, e = d + d' + n /\
+    (a d).1 (x n) d')).
 Proof.
 reflexivity.
 Defined.
 
-Lemma Requiv_alt_rat_rat_pr : ∀ (q r : Q) (e : Q+), - ' e < q - r < ' e →
+Lemma Requiv_alt_rat_rat_pr' : ∀ (q r : Q) (e : Q+), - ' e < q - r < ' e →
   rounded_halfrel_close e (Requiv_alt_rat q) (Requiv_alt_rat r).
 Proof.
 intros q r e Hqr.
@@ -1195,7 +1251,12 @@ red. apply (real_ind0 (fun u => forall n, _)).
     rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma Requiv_alt_rat_lim_pr : ∀ (q : Q) (d d' e : Q+) (y : Approximation Q)
+Definition Requiv_alt_rat_rat_pr@{} :=
+  Requiv_alt_rat_rat_pr'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set}.
+
+Lemma Requiv_alt_rat_lim_pr' : ∀ (q : Q) (d d' e : Q+) (y : Approximation Q)
 (b : Q+ → rounded_halfrel)
 (Eb : ∀ d0 e0 : Q+, rounded_halfrel_close (d0 + e0) (b d0) (b e0)),
 e = d + d'
@@ -1236,7 +1297,14 @@ red. apply (real_ind0 (fun u => forall n, _)).
     rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma Requiv_alt_lim_rat_pr : ∀ (r : Q) (d d' e : Q+) (x : Approximation Q)
+Definition Requiv_alt_rat_lim_pr@{}
+  := Requiv_alt_rat_lim_pr'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set Set Set Set Set
+    Set Set Set Set Set
+    Set Set Set}.
+
+Lemma Requiv_alt_lim_rat_pr' : ∀ (r : Q) (d d' e : Q+) (x : Approximation Q)
 (a : Q+ → rounded_halfrel)
 (Ea : ∀ d0 e0 : Q+, rounded_halfrel_close (d0 + e0) (a d0) (a e0)),
 e = d + d'
@@ -1274,13 +1342,20 @@ red. apply (real_ind0 (fun u => forall n, _)).
     rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma Requiv_alt_lim_lim_pr : ∀ (x y : Approximation Q) (a b : Q+ → rounded_halfrel)
-(Ea : ∀ d e : Q+, rounded_halfrel_close (d + e) (a d) (a e))
-(Eb : ∀ d e : Q+, rounded_halfrel_close (d + e) (b d) (b e)) (e d n e' : Q+),
-e = d + n + e'
-→ Requiv Q e' (x d) (y n)
+Definition Requiv_alt_lim_rat_pr@{}
+  := Requiv_alt_lim_rat_pr'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set Set Set Set Set
+    Set Set Set Set}.
+
+Lemma Requiv_alt_lim_lim_pr' : ∀ (x y : Approximation Q)
+  (a b : Q+ → rounded_halfrel)
+  (Ea : ∀ d e : Q+, rounded_halfrel_close (d + e) (a d) (a e))
+  (Eb : ∀ d e : Q+, rounded_halfrel_close (d + e) (b d) (b e)) (e d n e' : Q+),
+  e = d + n + e'
+  → Requiv Q e' (x d) (y n)
   → rounded_halfrel_close e' (a d) (b n)
-    → rounded_halfrel_close e (Requiv_alt_lim a Ea) (Requiv_alt_lim b Eb).
+  → rounded_halfrel_close e (Requiv_alt_lim a Ea) (Requiv_alt_lim b Eb).
 Proof.
 intros x y a b Ea Eb e d n e' He xi IH.
 red. apply (real_ind0 (fun u => forall n0, _)).
@@ -1309,7 +1384,13 @@ red. apply (real_ind0 (fun u => forall n0, _)).
     rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_rounded_halfrel : real Q -> rounded_halfrel.
+Definition Requiv_alt_lim_lim_pr@{}
+  := Requiv_alt_lim_lim_pr'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set Set Set Set Set
+    Set Set Set Set}.
+
+Definition Requiv_alt_rounded_halfrel@{} : real Q -> rounded_halfrel.
 Proof.
 apply (real_rec rounded_halfrel rounded_halfrel_close).
 apply (Build_Recursors rounded_halfrel rounded_halfrel_close
@@ -1324,40 +1405,40 @@ Defined.
 Definition Requiv_alt : Q+ -> real Q -> real Q -> Type
   := fun e x y => (Requiv_alt_rounded_halfrel x).1 y e.
 
-Definition Requiv_alt_rat_rat_def : forall e q r,
-  Requiv_alt e (rat q) (rat r) = close e q r.
+Definition Requiv_alt_rat_rat_def@{} : forall e q r,
+  paths@{Ularge} (Requiv_alt e (rat q) (rat r)) (close e q r).
 Proof.
-intros;reflexivity.
+intros;exact idpath.
 Defined.
 
-Definition Requiv_alt_rat_lim_def : forall e q y,
-  Requiv_alt e (rat q) (lim y) =
-  merely (exists d d', e = d + d' /\ Requiv_alt d' (rat q) (y d)).
+Definition Requiv_alt_rat_lim_def@{} : forall e q y,
+  paths@{Ularge} (Requiv_alt e (rat q) (lim y))
+  (merely (exists d d', e = d + d' /\ Requiv_alt d' (rat q) (y d))).
 Proof.
-intros;reflexivity.
+intros;exact idpath.
 Defined.
 
-Definition Requiv_alt_lim_rat_def : forall e x r,
-  Requiv_alt e (lim x) (rat r) =
-  merely (exists d d', e = d + d' /\ Requiv_alt d' (x d) (rat r)).
+Definition Requiv_alt_lim_rat_def@{} : forall e x r,
+  paths@{Ularge} (Requiv_alt e (lim x) (rat r))
+  (merely (exists d d', e = d + d' /\ Requiv_alt d' (x d) (rat r))).
 Proof.
-intros;reflexivity.
+intros;exact idpath.
 Defined.
 
-Definition Requiv_alt_lim_lim_def : forall e x y,
-  Requiv_alt e (lim x) (lim y) =
-  merely (exists d d' n, e = d + d' + n /\ Requiv_alt d' (x d) (y n)).
+Definition Requiv_alt_lim_lim_def@{} : forall e x y,
+  paths@{Ularge} (Requiv_alt e (lim x) (lim y))
+  (merely (exists d d' n, e = d + d' + n /\ Requiv_alt d' (x d) (y n))).
 Proof.
-intros;reflexivity.
+intros;exact idpath.
 Defined.
 
-Lemma Requiv_alt_round : forall e u v, Requiv_alt e u v <->
+Lemma Requiv_alt_round@{} : forall e u v, Requiv_alt e u v <->
   merely (exists d d', e = d + d' /\ Requiv_alt d u v).
 Proof.
 intros. apply ((Requiv_alt_rounded_halfrel u).2).
 Qed.
 
-Lemma Requiv_alt_Requiv : forall u v w n e, Requiv_alt n u v -> Requiv Q e v w ->
+Lemma Requiv_alt_Requiv@{} : forall u v w n e, Requiv_alt n u v -> Requiv Q e v w ->
   Requiv_alt (n+e) u w.
 Proof.
 intros ????? E1 E2.
@@ -1370,9 +1451,11 @@ Proof.
 intros ????? E1 E2.
 pose proof (fun x y => snd (Requiv_alt_rounded_halfrel x).2 _ _ y _ E1).
 (* do we need to prove Symmetric (Requiv_alt _)? *)
+(* We don't actually need this lemma
+   as we just rewrite Requiv_alt = Requiv in the previous one. *)
 Abort.
 
-Lemma Requiv_to_Requiv_alt : forall e u v, Requiv Q e u v -> Requiv_alt e u v.
+Lemma Requiv_to_Requiv_alt' : forall e u v, Requiv Q e u v -> Requiv_alt e u v.
 Proof.
 apply (equiv_rec0 _).
 - auto.
@@ -1384,7 +1467,11 @@ apply (equiv_rec0 _).
   rewrite He;apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma Requiv_alt_to_Requiv : forall e u v, Requiv_alt e u v -> Requiv Q e u v.
+Definition Requiv_to_Requiv_alt@{}
+  := Requiv_to_Requiv_alt'@{UQ UQ UQ Set Ularge
+    Ularge Ularge Set Set Set}.
+
+Lemma Requiv_alt_to_Requiv' : forall e u v, Requiv_alt e u v -> Requiv Q e u v.
 Proof.
 intros e u v;revert u v e.
 apply (real_ind0 (fun u => forall v e, _ -> _)).
@@ -1404,7 +1491,12 @@ apply (real_ind0 (fun u => forall v e, _ -> _)).
     rewrite He;apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma Requiv_alt_rw : Requiv_alt = Requiv Q.
+Definition Requiv_alt_to_Requiv@{}
+  := Requiv_alt_to_Requiv'@{UQ UQ UQ UQ Set
+    Ularge Ularge Ularge Set Set
+    Set}.
+
+Lemma Requiv_alt_rw' : Requiv_alt = Requiv Q.
 Proof.
 repeat (apply path_forall;intro);apply TruncType.path_iff_ishprop_uncurried.
 split.
@@ -1412,45 +1504,66 @@ split.
 - apply Requiv_to_Requiv_alt.
 Qed.
 
-Lemma Requiv_rat_rat_def : forall e q r, Requiv Q e (rat q) (rat r) = close e q r.
+Definition Requiv_alt_rw@{}
+  := Requiv_alt_rw'@{Ularge Ularge Ularge Ularge}.
+
+Lemma Requiv_rat_rat_def' : forall e q r, Requiv Q e (rat q) (rat r) = close e q r.
 Proof.
 rewrite <-Requiv_alt_rw;trivial.
 Qed.
 
-Lemma Requiv_rat_lim_def : forall e q y,
+Definition Requiv_rat_rat_def@{}
+  := Requiv_rat_rat_def'@{Ularge UQ Ularge UQ UQ}.
+
+Lemma Requiv_rat_lim_def' : forall e q y,
   Requiv Q e (rat q) (lim y) =
   merely (exists d d', e = d + d' /\ Requiv Q d' (rat q) (y d)).
 Proof.
 rewrite <-Requiv_alt_rw;trivial.
-Defined.
+Qed.
 
-Definition Requiv_lim_rat_def : forall e x r,
+Definition Requiv_rat_lim_def@{}
+  := Requiv_rat_lim_def'@{Ularge UQ Ularge UQ UQ}.
+
+Lemma Requiv_lim_rat_def' : forall e x r,
   Requiv Q e (lim x) (rat r) =
   merely (exists d d', e = d + d' /\ Requiv Q d' (x d) (rat r)).
 Proof.
 rewrite <-Requiv_alt_rw;trivial.
-Defined.
+Qed.
 
-Definition Requiv_lim_lim_def : forall e x y,
+Definition Requiv_lim_rat_def@{}
+  := Requiv_lim_rat_def'@{Ularge UQ Ularge UQ UQ}.
+
+Lemma Requiv_lim_lim_def' : forall e x y,
   Requiv Q e (lim x) (lim y) =
   merely (exists d d' n, e = d + d' + n /\ Requiv Q d' (x d) (y n)).
 Proof.
 rewrite <-Requiv_alt_rw;trivial.
-Defined.
+Qed.
 
-Lemma Requiv_rounded : forall {e u v}, Requiv Q e u v <->
+Definition Requiv_lim_lim_def@{}
+  := Requiv_lim_lim_def'@{Ularge UQ Ularge UQ UQ}.
+
+Lemma Requiv_rounded' : forall {e u v}, Requiv Q e u v <->
   merely (exists d d', e = d + d' /\ Requiv Q d u v).
 Proof.
 rewrite <-Requiv_alt_rw;exact Requiv_alt_round.
 Qed.
 
-Lemma Requiv_triangle : forall {u v w e d}, Requiv Q e u v -> Requiv Q d v w ->
+Definition Requiv_rounded@{} {e u v}
+  := @Requiv_rounded'@{UQ} e u v.
+
+Lemma Requiv_triangle' : forall {u v w e d}, Requiv Q e u v -> Requiv Q d v w ->
   Requiv Q (e+d) u w.
 Proof.
 intros. rewrite <-Requiv_alt_rw.
 apply Requiv_alt_Requiv with v;trivial.
 rewrite Requiv_alt_rw;trivial.
 Qed.
+
+Definition Requiv_triangle@{} {u v w e d}
+  := @Requiv_triangle'@{UQ UQ} u v w e d.
 
 End Requiv_alt.
 
