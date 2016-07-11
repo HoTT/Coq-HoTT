@@ -14,33 +14,36 @@ Require Import
   HoTTClasses.orders.dec_fields
   HoTTClasses.theory.rationals.
 
+Local Set Universe Minimization ToSet.
+
 Coercion trunctype_type : TruncType >-> Sortclass.
 
 Module Export Cauchy.
 
 Section VarSec.
 Universe UQ.
-Context (Q:Type@{UQ}) `{Rationals Q}.
+Context (Q:Type@{UQ}) `{Rationals@{UQ UQ UQ UQ UQ UQ UQ UQ UQ UQ} Q}.
 
-Record Qpos := mkQpos { pos : Q; is_pos : 0 < pos }.
+Record Qpos@{} : Type@{UQ} := mkQpos { pos : Q; is_pos : 0 < pos }.
 Notation "Q+" := Qpos.
 
-Instance : Cast Qpos Q := pos.
+Instance Qpos_Q@{} : Cast Qpos Q := pos.
+Arguments Qpos_Q /.
 
-Lemma Qpos_plus_pr : forall a b : Qpos, 0 < 'a + 'b.
+Lemma Qpos_plus_pr@{} : forall a b : Qpos, 0 < 'a + 'b.
 Proof.
 intros.
-apply semirings.pos_plus_compat;apply is_pos.
+apply semirings.pos_plus_compat@{Set UQ UQ Set Set};apply is_pos.
 Qed.
 
-Instance Qpos_plus : Plus Qpos := fun a b => mkQpos _ (Qpos_plus_pr a b).
+Instance Qpos_plus@{} : Plus Qpos := fun a b => mkQpos _ (Qpos_plus_pr a b).
 
-Private Inductive real : Type :=
+Private Inductive real@{} : Type@{UQ} :=
   | rat : Q -> real
   | lim' : forall (f : Qpos -> real),
     (forall d e : Qpos, equiv' (d+e) (f d) (f e)) -> real
 
-with equiv' : Qpos -> real -> real -> Type :=
+with equiv'@{} : Qpos -> real -> real -> Type@{UQ} :=
   | equiv_rat_rat' : forall (q r : Q) (e : Qpos),
       - (' e : Q) < q + (- r) < ' e ->
       equiv' e (rat q) (rat r)
@@ -58,26 +61,26 @@ with equiv' : Qpos -> real -> real -> Type :=
       equiv' e (lim' x Hx) (lim' y Hy)
 .
 
-Class Requiv e u v := requiv : equiv' e u v.
+Class Requiv@{} e u v := requiv : equiv' e u v.
 
-Axiom equiv_path : forall (u v : real) (u_eq_v : forall e, Requiv e u v), u = v.
-Axiom equiv_hprop : forall e u v, IsHProp (Requiv e u v).
+Axiom equiv_path@{} : forall (u v : real) (u_eq_v : forall e, Requiv e u v), u = v.
+Axiom equiv_hprop@{} : forall e u v, IsHProp (Requiv e u v).
 Global Existing Instance equiv_hprop.
 
-Record Approximation :=
+Record Approximation@{} :=
   { approximate :> Qpos -> real
   ; approx_equiv : forall d e, Requiv (d+e) (approximate d) (approximate e) }.
 Existing Instance approx_equiv.
 
-Definition lim (x : Approximation) : real :=
+Definition lim@{} (x : Approximation) : real :=
   lim' x (fun _ _ => requiv).
 
-Definition equiv_rat_rat : forall (q r : Q) (e : Qpos),
+Definition equiv_rat_rat@{} : forall (q r : Q) (e : Qpos),
   - (' e : Q) < q + (- r) < ' e ->
   Requiv e (rat q) (rat r)
   := equiv_rat_rat'.
 
-Definition equiv_rat_lim : forall q (y:Approximation) (e d d' : Qpos),
+Definition equiv_rat_lim@{} : forall q (y:Approximation) (e d d' : Qpos),
   e = d + d' ->
   Requiv d' (rat q) (y d) ->
   Requiv e (rat q) (lim y).
@@ -85,13 +88,13 @@ Proof.
 intros. eapply equiv_rat_lim';eauto.
 Defined.
 
-Definition equiv_lim_rat : forall (x:Approximation) r (e d d' : Qpos),
+Definition equiv_lim_rat@{} : forall (x:Approximation) r (e d d' : Qpos),
   e = d + d' ->
   Requiv d' (x d) (rat r) ->
   Requiv e (lim x) (rat r).
 Proof. intros;eapply equiv_lim_rat';eauto. Defined.
 
-Definition equiv_lim_lim : forall (x y : Approximation) (e d n e' : Qpos),
+Definition equiv_lim_lim@{} : forall (x y : Approximation) (e d n e' : Qpos),
   e = d + n + e' ->
   Requiv e' (x d) (y n) ->
   Requiv e (lim x) (lim y).
@@ -99,15 +102,15 @@ Proof.
 intros;eapply equiv_lim_lim';eauto.
 Defined.
 
-Record DApproximation (A : real -> Type)
-  (B : forall x y : real, A x -> A y -> forall e `{Requiv e x y}, Type)
+Record DApproximation@{UA UB} (A : real -> Type@{UA})
+  (B : forall x y : real, A x -> A y -> forall e `{Requiv e x y}, Type@{UB})
   (x : Approximation) :=
   { dapproximation :> forall e, A (x e)
   ; dapproximation_correct :
     forall d e, B (x d) (x e) (dapproximation d) (dapproximation e) (d+e) }.
 
-Record Inductors (A : real -> Type)
-  (B : forall x y : real, A x -> A y -> forall e `{Requiv e x y}, Type) :=
+Record Inductors@{UA UB} (A : real -> Type@{UA})
+  (B : forall x y : real, A x -> A y -> forall e `{Requiv e x y}, Type@{UB}) :=
   { ind_rat : forall q, A (rat q)
   ; ind_lim : forall (x:Approximation) (a : DApproximation A B x),
     A (lim x)
@@ -147,10 +150,11 @@ Arguments ind_lim_rat {_ _} _ _ _ _ _ _ _ _ _ _.
 Arguments ind_lim_lim {_ _} _ _ _ _ _ _ _ _ _ _ _ _.
 
 Section induction.
-Variable A : real -> Type.
-Variable B : forall x y : real, A x -> A y -> forall e `{Requiv e x y}, Type.
+Universe UA UB.
+Variable A : real -> Type@{UA}.
+Variable B : forall x y : real, A x -> A y -> forall e `{Requiv e x y}, Type@{UB}.
 
-Definition real_rect : Inductors A B -> forall x : real, A x :=
+Definition real_rect@{} : Inductors A B -> forall x : real, A x :=
   fun I x =>
   fix real_rect (x : real) {struct x} : Inductors A B -> A x :=
     match x return (Inductors A B -> A x) with
@@ -192,7 +196,7 @@ Definition real_rect : Inductors A B -> forall x : real, A x :=
     end
   for real_rect x I.
 
-Definition equiv_rect : forall (I : Inductors A B)
+Definition equiv_rect@{} : forall (I : Inductors A B)
   {x y : real} {e : Qpos} (xi : Requiv e x y),
   @B x y (real_rect I x) (real_rect I y) e xi :=
   fun I x y e xi =>
@@ -235,34 +239,34 @@ Definition equiv_rect : forall (I : Inductors A B)
     end
   for equiv_rect x y e xi I.
 
-Definition approx_rect (I : Inductors A B) (x : Approximation)
+Definition approx_rect@{} (I : Inductors A B) (x : Approximation)
   : DApproximation A B x
   := Build_DApproximation A B x (fun e => real_rect I (x e))
       (fun d e => equiv_rect I (approx_equiv x d e)).
 
 Variable I : Inductors A B.
 
-Definition real_rect_rat q : real_rect I (rat q) = ind_rat I q
+Definition real_rect_rat@{} q : real_rect I (rat q) = ind_rat I q
   := idpath.
 
-Definition real_rect_lim x : real_rect I (lim x) = ind_lim I x (approx_rect I x)
+Definition real_rect_lim@{} x : real_rect I (lim x) = ind_lim I x (approx_rect I x)
   := idpath.
 
-Definition equiv_rect_rat_rat q r e E : equiv_rect I (equiv_rat_rat q r e E)
+Definition equiv_rect_rat_rat@{} q r e E : equiv_rect I (equiv_rat_rat q r e E)
   = ind_rat_rat I q r e E
   := idpath.
 
-Definition equiv_rect_rat_lim q y e d d' He xi
+Definition equiv_rect_rat_lim@{} q y e d d' He xi
   : equiv_rect I (equiv_rat_lim q y e d d' He xi)
   = ind_rat_lim I q d d' e y (approx_rect I y) He xi (equiv_rect I xi)
   := idpath.
 
-Definition equiv_rect_lim_rat x r e d d' He xi
+Definition equiv_rect_lim_rat@{} x r e d d' He xi
   : equiv_rect I (equiv_lim_rat x r e d d' He xi)
   = ind_lim_rat I r d d' e x (approx_rect I x) He xi (equiv_rect I xi)
   := idpath.
 
-Definition equiv_rect_lim_lim x y e d n e' He xi
+Definition equiv_rect_lim_lim@{} x y e d n e' He xi
   : equiv_rect I (equiv_lim_lim x y e d n e' He xi)
   = ind_lim_lim I x y (approx_rect I x) (approx_rect I y)
                   e d n e' He xi (equiv_rect I xi)
@@ -279,16 +283,17 @@ Arguments equiv_path {Q _ _ _ _ _ _ _ _ _ _ _} u v {_}.
 Section contents.
 Context `{Funext} `{Universe.Univalence}.
 Universe UQ.
-Context (Q:Type@{UQ}) `{Rationals Q} `{!TrivialApart Q} `{DecidablePaths Q}.
+Context (Q:Type@{UQ}) `{Rationals@{UQ UQ UQ UQ UQ UQ UQ UQ UQ UQ} Q}
+  `{!TrivialApart Q} `{DecidablePaths Q}.
 
 Notation "Q+" := (Qpos Q).
 
-Instance : Cast (Qpos Q) Q := pos Q.
+Local Existing Instance Qpos_Q.
 
-Instance pos_is_pos : forall q : Qpos Q, PropHolds (0 < ' q)
+Instance pos_is_pos@{} : forall q : Qpos Q, PropHolds (0 < ' q)
   := is_pos Q.
 
-Lemma pos_eq : forall a b : Qpos Q, @paths Q (' a) (' b) -> a = b.
+Lemma pos_eq@{} : forall a b : Qpos Q, @paths Q (' a) (' b) -> a = b.
 Proof.
 intros [a Ea] [b Eb] E.
 change (a = b) in E.
@@ -297,18 +302,18 @@ Qed.
 
 Existing Instance Qpos_plus.
 
-Instance Qpos_one : One Q+.
+Instance Qpos_one@{} : One Q+.
 Proof.
-exists 1. solve_propholds.
+exists 1. apply lt_0_1@{UQ UQ UQ UQ UQ Set UQ Set}.
 Defined.
 
-Instance Qpos_mult : Mult Q+.
+Instance Qpos_mult@{} : Mult Q+.
 Proof.
 intros a b;exists (' a * ' b).
 solve_propholds.
 Defined.
 
-Instance qpos_plus_comm : Commutative (@plus Q+ _).
+Instance qpos_plus_comm@{} : Commutative (@plus Q+ _).
 Proof.
 hnf. intros.
 apply pos_eq. change (' x + ' y = ' y + ' x).
@@ -318,18 +323,22 @@ Qed.
 Let rat := rat Q.
 Let lim := lim Q.
 
-Definition real_rect0 (A : real Q -> Type) (val_rat : forall q, A (rat q))
+Definition real_rect0@{UA} (A : real Q -> Type@{UA})
+  (val_rat : forall q, A (rat q))
   (val_lim : forall (x : Approximation Q) (a : forall e, A (x e)), A (lim x))
   (val_respects : forall u v (h : forall e, Requiv Q e u v) (a : A u) (b : A v),
     equiv_path u v # a = b)
   : forall x, A x.
 Proof.
 apply (real_rect Q A (fun _ _ _ _ _ _ => Unit)).
-split;auto;try apply _.
-intros. apply val_lim. intros;apply a.
+split;auto.
+- intros. apply val_lim. intros;apply a.
+- intros _ _ _ _ _ _. apply trunc_succ.
+  (* ^ must be done by hand
+       otherwise it uses some instance that needs a universe > Set *)
 Defined.
 
-Definition real_ind0 (A : real Q -> Type) `{forall q, IsHProp (A q)}
+Definition real_ind0@{UA} (A : real Q -> Type@{UA}) `{forall q, IsHProp (A q)}
   (A_rat : forall q, A (rat q))
   (A_lim : forall (x : Approximation Q) (a : forall e, A (x e)), A (lim x))
   : forall x, A x.
@@ -338,25 +347,28 @@ apply real_rect0;auto.
 intros. apply path_ishprop.
 Qed.
 
-Instance pos_recip : DecRecip Q+.
+Instance pos_recip@{} : DecRecip Q+.
 Proof.
 intros e. exists (/ ' e).
+apply pos_dec_recip_compat@{UQ UQ UQ UQ UQ UQ UQ Set UQ UQ Set Set}.
 solve_propholds.
 Defined.
 
-Instance pos_of_nat : Cast nat Q+.
+Instance pos_of_nat@{} : Cast nat Q+.
 Proof.
 intros n. destruct n as [|k].
-- exists 1;solve_propholds.
+- exists 1;apply lt_0_1@{UQ UQ UQ UQ UQ Set UQ Set}.
 - exists (naturals_to_semiring nat Q (S k)).
   induction k as [|k Ik].
-  + change (0 < 1). solve_propholds.
+  + change (0 < 1). apply lt_0_1@{UQ UQ UQ UQ UQ Set UQ Set}.
   + change (0 < 1 + naturals_to_semiring nat Q (S k)).
     set (K := naturals_to_semiring nat Q (S k)) in *;clearbody K.
-    solve_propholds.
+    apply pos_plus_compat@{Set UQ UQ Set Set}.
+    apply lt_0_1@{UQ UQ UQ UQ UQ Set UQ Set}.
+    trivial.
 Defined.
 
-Lemma pos_recip_r : forall e : Q+, e / e = 1.
+Lemma pos_recip_r@{} : forall e : Q+, e / e = 1.
 Proof.
 intros;apply pos_eq.
 unfold dec_recip,cast,pos_recip;simpl.
@@ -364,12 +376,12 @@ change (' e / ' e = 1). apply dec_recip_inverse.
 apply lt_ne_flip. solve_propholds.
 Qed.
 
-Lemma pos_recip_r' : forall e : Q+, @paths Q (' e / ' e) 1.
+Lemma pos_recip_r'@{} : forall e : Q+, @paths Q (' e / ' e) 1.
 Proof.
 intros. change (' (e / e) = 1). rewrite pos_recip_r. reflexivity.
 Qed.
 
-Lemma pos_mult_1_r : forall e : Q+, e * 1 = e.
+Lemma pos_mult_1_r@{} : forall e : Q+, e * 1 = e.
 Proof.
 intros;apply pos_eq. apply mult_1_r.
 Qed.
