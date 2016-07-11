@@ -128,6 +128,31 @@ Section join_semilattice_order.
   intros. rewrite <-(idempotency (⊔) z).
   apply join_le_compat;trivial.
   Qed.
+
+  Section total_join.
+  Context `{!TotalRelation le}.
+
+  Lemma total_join_either `{!TotalRelation le} x y : join x y = x \/ join x y = y.
+  Proof.
+  destruct (total le x y) as [E|E].
+  - right. apply join_r,E.
+  - left. apply join_l,E.
+  Qed.
+
+  Definition max x y :=
+    match total le x y with
+    | inl _ => y
+    | inr _ => x
+    end.
+
+  Lemma total_join_max x y : join x y = max x y.
+  Proof.
+  unfold max;destruct (total le x y) as [E|E].
+  - apply join_r,E.
+  - apply join_l,E.
+  Qed.
+  End total_join.
+
 End join_semilattice_order.
 
 Section bounded_join_semilattice.
@@ -265,6 +290,31 @@ Section meet_semilattice_order.
   Proof.
   intros. rewrite <-(idempotency (⊓) z). apply meet_le_compat;trivial.
   Qed.
+
+  Section total_meet.
+  Context `{!TotalRelation le}.
+
+  Lemma total_meet_either x y : meet x y = x \/ meet x y = y.
+  Proof.
+  destruct (total le x y) as [E|E].
+  - left. apply meet_l,E.
+  - right. apply meet_r,E.
+  Qed.
+
+  Definition min x y :=
+    match total le x y with
+    | inr _ => y
+    | inl _ => x
+    end.
+
+  Lemma total_meet_min x y : meet x y = min x y.
+  Proof.
+  unfold min. destruct (total le x y) as [E|E].
+  - apply meet_l,E.
+  - apply meet_r,E.
+  Qed.
+  End total_meet.
+
 End meet_semilattice_order.
 
 Section lattice_order.

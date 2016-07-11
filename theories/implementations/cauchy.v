@@ -12,7 +12,8 @@ Require Import
   HoTTClasses.theory.integers
   HoTTClasses.theory.dec_fields
   HoTTClasses.orders.dec_fields
-  HoTTClasses.theory.rationals.
+  HoTTClasses.theory.rationals
+  HoTTClasses.orders.lattices.
 
 Local Set Universe Minimization ToSet.
 
@@ -284,7 +285,9 @@ Section contents.
 Context `{Funext} `{Universe.Univalence}.
 Universe UQ.
 Context (Q:Type@{UQ}) `{Rationals@{UQ UQ UQ UQ UQ UQ UQ UQ UQ UQ} Q}
-  `{!TrivialApart Q} `{DecidablePaths Q}.
+  `{!TrivialApart Q} `{DecidablePaths Q}
+  {Qmeet : Meet Q} {Qjoin : Join Q} `{!LatticeOrder Ale}
+  `{!TotalRelation (@le Q _)}.
 
 Notation "Q+" := (Qpos Q).
 
@@ -2260,5 +2263,59 @@ repeat split.
   { apply (lipschitz_continuous (L:=1)). }
   intros;apply (ap rat),plus_negate_r.
 Qed.
+
+Instance Qmeet_lipschitz_l : forall s : Q, Lipschitz (⊓ s) 1.
+Proof.
+Admitted.
+
+Instance Qmeet_lipschitz_r : forall s : Q, Lipschitz (s ⊓) 1.
+Proof.
+Admitted.
+
+Global Instance Rmeet@{} : Meet (real Q) := non_expanding_extend meet.
+
+Global Instance Rmeet_lipschitz_l@{} : forall s : real Q, Lipschitz (⊓ s) 1
+  := _.
+Global Instance Rmeet_lipschitz_r@{} : forall s : real Q, Lipschitz (s ⊓) 1
+  := _.
+
+Definition Rmeet_rat_rat@{} q r : meet (rat q) (rat r) = rat (meet q r)
+  := idpath.
+
+Instance Qjoin_lipschitz_l : forall s : Q, Lipschitz (⊔ s) 1.
+Proof. Admitted.
+Instance Qjoin_lipschitz_r : forall s : Q, Lipschitz (s ⊔) 1.
+Proof. Admitted.
+
+Global Instance Rjoin@{} : Join (real Q) := non_expanding_extend join.
+
+Global Instance Rjoin_lipschitz_l@{} : forall s : real Q, Lipschitz (⊔ s) 1
+  := _.
+Global Instance Rjoin_lipschitz_r@{} : forall s : real Q, Lipschitz (s ⊔) 1
+  := _.
+
+Definition Rjoin_rat_rat@{} q r : join (rat q) (rat r) = rat (join q r)
+  := idpath.
+
+Global Instance Rle@{} : Le (real Q) := fun x y => join x y = y.
+
+Global Instance Rlt@{} : Lt (real Q) := fun x y => exists q r,
+  x <= (rat q) /\ q < r /\ (rat r) <= y.
+
+Global Instance Rap@{} : Apart@{UQ UQ} (real Q) := fun x y => x < y \/ y < x.
+
+Instance R_po : PartialOrder Rle.
+Proof.
+repeat split.
+- apply _.
+- apply _.
+- hnf. change (forall x, join x x = x).
+  apply @unique_continuous_extension.
+  + apply (@lipschitz_continuous _ (1+1)). apply lipschitz_dup;apply _.
+  + apply _.
+  + intros;apply (ap rat),semilattice_idempotent,join_sl_order_join_sl.
+- hnf. unfold le,Rle.
+  intros x y z E1 E2. rewrite <-E2,<-E1. clear E1 E2;revert x.
+Abort.
 
 End contents.
