@@ -583,7 +583,7 @@ Definition real_rec_lim A B I x : real_rec A B I (lim x) =
 
 End mutual_recursion.
 
-Class Closeness (A : Type) := close : Q+ -> relation A.
+Class Closeness@{i} (A : Type@{i}) := close : Q+ -> relation@{i i} A.
 
 Instance Q_close@{} : Closeness Q := fun e q r => - ' e < q - r < ' e.
 Instance R_close@{} : Closeness (real Q) := Requiv Q.
@@ -1567,10 +1567,10 @@ Definition Requiv_triangle@{} {u v w e d}
 
 End Requiv_alt.
 
-Lemma two_fourth_is_one_half : @paths Q+ (2/4) (1/2).
+Lemma two_fourth_is_one_half@{} : @paths Q+ (2/4) (1/2).
 Proof. Admitted.
 
-Lemma equiv_through_approx : forall u (y : Approximation Q) e d,
+Lemma equiv_through_approx' : forall u (y : Approximation Q) e d,
   Requiv Q e u (y d) -> Requiv Q (e+d) u (lim y).
 Proof.
 apply (real_ind0 (fun u => forall y e d, _ -> _)).
@@ -1596,23 +1596,29 @@ apply (real_ind0 (fun u => forall y e d, _ -> _)).
   apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma equiv_lim : forall (x : Approximation Q) e d, Requiv Q (e+d) (x d) (lim x).
+Definition equiv_through_approx@{}
+  := equiv_through_approx'@{UQ Set Ularge Ularge Ularge
+    Set Set Set Set Set
+    Set Set}.
+
+Lemma equiv_lim@{} : forall (x : Approximation Q) e d,
+  Requiv Q (e+d) (x d) (lim x).
 Proof.
 intros. apply equiv_through_approx.
 apply Requiv_refl.
 Qed.
 
-Class Continuous (f : real Q -> real Q)
+Class Continuous@{} (f : real Q -> real Q)
   := continuous : forall u e, merely (exists d, forall v, Requiv Q d u v ->
     Requiv Q e (f u) (f v)).
 
 Arguments continuous f {_} _ _.
 
-Lemma Qpos_lt_min : forall a b : Q+, exists c ca cb, a = c + ca /\ b = c + cb.
+Lemma Qpos_lt_min@{} : forall a b : Q+, exists c ca cb, a = c + ca /\ b = c + cb.
 Proof.
 Admitted.
 
-Lemma unique_continuous_extension `{Continuous f} `{Continuous g}
+Lemma unique_continuous_extension' `{Continuous f} `{Continuous g}
   : (forall q, f (rat q) = g (rat q)) -> forall u, f u = g u.
 Proof.
 intros E.
@@ -1648,9 +1654,15 @@ apply (real_ind0 _).
   rewrite (pos_split2 e). trivial.
 Qed.
 
-Instance R0 : Zero (real Q) := rat 0.
+Definition unique_continuous_extension@{} `{Continuous f} `{Continuous g}
+  : (forall q, f (rat q) = g (rat q)) -> forall u, f u = g u
+  := unique_continuous_extension'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set}.
 
-Instance R1 : One (real Q) := rat 1.
+Instance R0@{} : Zero (real Q) := rat 0.
+
+Instance R1@{} : One (real Q) := rat 1.
 
 Class Lipschitz `{Closeness A} `{Closeness B} (f : A -> B) (L : Q+)
   := lipschitz : forall e x y, close e x y -> close (L * e) (f x) (f y).
@@ -1658,7 +1670,10 @@ Arguments lipschitz {A _ B _} f L {_ e x y} _.
 
 Instance id_lipschitz `{Closeness A} : Lipschitz (@id A) 1.
 Proof.
-intro;rewrite Qpos_mult_1_l;trivial.
+intro x.
+pattern (1 * x).
+apply transport with x;[|trivial].
+apply symmetry, Qpos_mult_1_l.
 Defined.
 
 Instance lipschitz_compose `{Closeness A} `{Closeness B} `{Closeness C}
@@ -1666,7 +1681,7 @@ Instance lipschitz_compose `{Closeness A} `{Closeness B} `{Closeness C}
   : Lipschitz (compose g f) (Lg * Lf).
 Proof.
 intros ??? He.
-unfold compose. apply Ef,Eg in He.
+unfold compose;apply Ef,Eg in He.
 pattern (Lg * Lf * e).
 eapply transport;[|exact He].
 apply Qpos_mult_assoc.
@@ -1682,7 +1697,7 @@ Section lipschitz_extend.
 Variables (f : Q -> real Q) (L : Q+).
 Context {Ef : Lipschitz f L}.
 
-Lemma lipschitz_extend_rat_lim :
+Lemma lipschitz_extend_rat_lim' :
   ∀ (q : Q) (d d' e : Q+) (y : Approximation Q) (b : Q+ → real Q)
   (Eb : ∀ d0 e0 : Q+, Requiv Q (L * (d0 + e0)) (b d0) (b e0)) Eequiv,
   e = d + d'
@@ -1702,7 +1717,11 @@ apply equiv_through_approx.
 simpl. rewrite (pos_unconjugate L d). apply IH.
 Qed.
 
-Lemma lipschitz_extend_lim_lim :
+Definition lipschitz_extend_rat_lim@{}
+  := lipschitz_extend_rat_lim'@{Set Ularge Ularge Ularge Set
+    Set Set}.
+
+Lemma lipschitz_extend_lim_lim' :
   ∀ (x y : Approximation Q) (a b : Q+ → real Q)
   (Ea : ∀ d e : Q+, Requiv Q (L * (d + e)) (a d) (a e))
   (Eb : ∀ d e : Q+, Requiv Q (L * (d + e)) (b d) (b e)) (e d n e' : Q+)
@@ -1726,7 +1745,11 @@ apply equiv_lim_lim with (L * d) (L * n) (L * e').
 + simpl. rewrite 2!pos_unconjugate. apply IH.
 Qed.
 
-Lemma lipschitz_extend_lim_pr :
+Definition lipschitz_extend_lim_lim@{}
+  := lipschitz_extend_lim_lim'@{Set Ularge Ularge Ularge Set
+    Set Set}.
+
+Lemma lipschitz_extend_lim_pr@{} :
   forall (a : Q+ → real Q)
   (Ea : ∀ d e : Q+, Requiv Q (L * (d + e)) (a d) (a e)),
   ∀ d e : Q+, Requiv Q (d + e) (a (d / L)) (a (e / L)).
@@ -1736,7 +1759,7 @@ apply symmetry, (pos_recip_through_plus d e L).
 apply Ea.
 Qed.
 
-Definition lipshitz_extend_recursor
+Definition lipshitz_extend_recursor@{}
   : Recursors (real Q) (fun e x y => Requiv Q (L * e) x y).
 Proof.
 esplit. Unshelve.
@@ -1756,20 +1779,20 @@ Focus 7.
 - simpl. intros ??????????;apply lipschitz_extend_lim_lim;trivial.
 Defined.
 
-Definition lipschitz_extend
+Definition lipschitz_extend@{}
   : real Q -> real Q
   := real_rec (real Q) (fun e x y => Requiv Q (L * e) x y)
     lipshitz_extend_recursor.
 
-Global Instance lipschitz_extend_lipschitz : Lipschitz lipschitz_extend L.
+Global Instance lipschitz_extend_lipschitz@{} : Lipschitz lipschitz_extend L.
 Proof.
 intros ???;apply (equiv_rec _ _ lipshitz_extend_recursor).
 Defined.
 
-Definition lipschitz_extend_rat q : lipschitz_extend (rat q) = f q
+Definition lipschitz_extend_rat@{} q : lipschitz_extend (rat q) = f q
   := idpath.
 
-Lemma lipschitz_extend_lim_approx (x : Approximation Q)
+Lemma lipschitz_extend_lim_approx@{} (x : Approximation Q)
   : ∀ d e : Q+, Requiv Q (d + e) (lipschitz_extend (x (d / L)))
                                  (lipschitz_extend (x (e / L))).
 Proof.
@@ -1783,7 +1806,7 @@ exact (lipschitz_extend_lim_pr
                        (approx_equiv Q x d e))).
 Defined.
 
-Definition lipschitz_extend_lim x
+Definition lipschitz_extend_lim@{} x
   : lipschitz_extend (lim x) =
     lim (Build_Approximation Q (fun e => lipschitz_extend (x (e / L)))
     (lipschitz_extend_lim_approx x))
@@ -1791,7 +1814,7 @@ Definition lipschitz_extend_lim x
 
 End lipschitz_extend.
 
-Instance lipschitz_continuous `{!Lipschitz f L} : Continuous f.
+Instance lipschitz_continuous@{} `{!Lipschitz f L} : Continuous f.
 Proof.
 red.
 intros u e;apply tr;exists (e / L).
@@ -1802,28 +1825,35 @@ rewrite Qpos_mult_assoc,pos_unconjugate in E. trivial.
 Qed.
 
 (* This seems like it can easily make resolution loop. *)
-Instance Lipschitz_mult_1_l `{Closeness A} `{Closeness B} (f : A -> B) L
-  : Lipschitz f (1 * L) -> Lipschitz f L | 50.
+Lemma Lipschitz_mult_1_l' `{Closeness A} `{Closeness B} (f : A -> B) L
+  : Lipschitz f (1 * L) -> Lipschitz f L.
 Proof.
 rewrite Qpos_mult_1_l. trivial.
 Qed.
 
-Lemma Qclose_neg : forall e x y, close e x y <-> close e (- x) (- y).
+Instance Lipschitz_mult_1_l@{i j} {A:Type@{i} } `{Closeness A}
+  {B:Type@{j} } `{Closeness B} (f : A -> B) L
+  : Lipschitz f (1 * L) -> Lipschitz f L | 50.
+Proof.
+exact (Lipschitz_mult_1_l'@{i j UQ} f L).
+Qed.
+
+Lemma Qclose_neg@{} : forall e x y, close e x y <-> close e (- x) (- y).
 Proof.
 Admitted.
 
-Instance Qneg_lipschitz : Lipschitz ((-) : Negate Q) 1.
+Instance Qneg_lipschitz@{} : Lipschitz ((-) : Negate Q) 1.
 Proof.
 intros e x y.
 rewrite Qpos_mult_1_l. apply Qclose_neg.
 Defined.
 
-Instance Rneg : Negate (real Q).
+Instance Rneg@{} : Negate (real Q).
 Proof.
 red. apply (lipschitz_extend (compose rat (-)) _).
 Defined.
 
-(* Test lemma *)
+(* Test lemma (the proof we actually use will be going through Group) *)
 Lemma neg_involutive : forall x : real Q, - - x = x.
 Proof.
 change (forall x, - - x = id x).
@@ -1833,13 +1863,19 @@ Unshelve. Fail idtac.
 (* ^ this will error if things change and we still have goals. *)
 Abort.
 
-Lemma lipschitz_1 {A B} f `{Lipschitz A B f 1} : forall e u v, close e u v ->
+Lemma lipschitz_1' {A B} f `{Lipschitz A B f 1} : forall e u v, close e u v ->
   close e (f u) (f v).
 Proof.
 intros e u v E;rewrite <-(Qpos_mult_1_l e). apply lipschitz;trivial.
 Qed.
 
-Lemma lim_same_distance : forall (x y : Approximation Q) e,
+Lemma lipschitz_1@{i j} {A:Type@{i} } {B:Type@{j} } f `{Lipschitz A B f 1}
+  : forall e u v, close e u v -> close e (f u) (f v).
+Proof.
+exact (lipschitz_1'@{i j UQ} f).
+Qed.
+
+Lemma lim_same_distance' : forall (x y : Approximation Q) e,
   (forall d n, Requiv Q (e+d) (x n) (y n)) ->
   forall d, Requiv Q (e+d) (lim x) (lim y).
 Proof.
@@ -1850,7 +1886,11 @@ path_via (e + 3 / 3 * d).
 - apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma lipschitz_extend_same_distance (f g : Q -> real Q) L
+Definition lim_same_distance@{}
+  := lim_same_distance'@{Set Ularge Ularge Ularge Set
+    Set Set}.
+
+Lemma lipschitz_extend_same_distance@{} (f g : Q -> real Q) L
   `{!Lipschitz f L} `{!Lipschitz g L} : forall e,
   (forall d q, close (e+d) (f q) (g q)) ->
   forall d u, close (e+d) (lipschitz_extend f L u) (lipschitz_extend g L u).
@@ -1864,13 +1904,13 @@ Qed.
 
 Section extend_binary.
 
-Definition non_expanding
+Definition non_expanding@{}
   := sigT (fun h => forall e u v, Requiv Q e u v -> Requiv Q e (h u) (h v)).
 
-Instance non_expanding_close : Closeness non_expanding
+Instance non_expanding_close@{} : Closeness non_expanding
   := fun e h k => forall u, close e (h.1 u) (k.1 u).
 
-Definition non_expanding_separated : forall h k : non_expanding,
+Definition non_expanding_separated@{} : forall h k : non_expanding,
   (forall e, close e h k) -> h = k.
 Proof.
 intros h k E. apply Sigma.path_sigma_hprop.
@@ -1882,7 +1922,7 @@ Variable (f : Q -> Q -> Q).
 Context {Hfl : forall s, Lipschitz (fun q => f q s) 1}
   {Hfr : forall q, Lipschitz (f q) 1}.
 
-Lemma non_expanding_approx_pr (a : Q+ → non_expanding)
+Lemma non_expanding_approx_pr@{} (a : Q+ → non_expanding)
   (Ea : ∀ d e : Q+, non_expanding_close (d + e) (a d) (a e))
   (v : real Q) (d e : Q+)
   : Requiv Q (d + e) ((a d).1 v) ((a e).1 v).
@@ -1891,7 +1931,7 @@ do 3 red in Ea.
 apply Ea.
 Qed.
 
-Lemma lim_is_non_expanding :
+Lemma lim_is_non_expanding' :
 forall (a : Q+ → non_expanding)
 (Ea : ∀ d e : Q+, non_expanding_close (d + e) (a d) (a e))
 (e : Q+) (u v : real Q),
@@ -1917,7 +1957,11 @@ apply equiv_lim_lim with (d'/2) (d'/2) d.
 - simpl. apply ((a _).2). trivial.
 Qed.
 
-Lemma rat_non_expanding_pr :
+Definition lim_is_non_expanding@{}
+  := lim_is_non_expanding'@{Set Ularge Ularge Ularge Set
+    Set Set}.
+
+Lemma rat_non_expanding_pr@{} :
 ∀ q (e : Q+) (u v : real Q),
 Requiv Q e u v
 → Requiv Q e (lipschitz_extend (rat ∘ f q) 1 u)
@@ -1926,7 +1970,7 @@ Proof.
 intro;apply @lipschitz_1,lipschitz_extend_lipschitz.
 Qed.
 
-Lemma non_expanding_rat_rat_pr :
+Lemma non_expanding_rat_rat_pr@{} :
 ∀ (q r : Q) (e : Q+),
 - ' e < q - r < ' e
 → non_expanding_close e
@@ -1943,7 +1987,7 @@ apply Qclose_rounded.
 apply tr;exists d,n;auto.
 Qed.
 
-Lemma non_expanding_rat_lim_pr :
+Lemma non_expanding_rat_lim_pr@{} :
 ∀ (q : Q) (d d' e : Q+) (y : Approximation Q) (b : Q+ → non_expanding)
 (Eb : ∀ d0 e0 : Q+, non_expanding_close (d0 + e0) (b d0) (b e0)),
 e = d + d'
@@ -1965,7 +2009,7 @@ rewrite He,qpos_plus_comm. apply equiv_through_approx.
 simpl. hnf in IH. apply IH.
 Qed.
 
-Lemma non_expanding_lim_rat_pr :
+Lemma non_expanding_lim_rat_pr@{} :
 ∀ (r : Q) (d d' e : Q+) (x : Approximation Q) (a : Q+ → non_expanding)
 (Ea : ∀ d0 e0 : Q+, non_expanding_close (d0 + e0) (a d0) (a e0)),
 e = d + d'
@@ -1987,7 +2031,7 @@ rewrite He,qpos_plus_comm;apply equiv_through_approx,equiv_symm.
 apply IH.
 Qed.
 
-Lemma non_expanding_lim_lim_pr :
+Lemma non_expanding_lim_lim_pr@{} :
 ∀ (x y : Approximation Q) (a b : Q+ → non_expanding)
 (Ea : ∀ d e : Q+, non_expanding_close (d + e) (a d) (a e))
 (Eb : ∀ d e : Q+, non_expanding_close (d + e) (b d) (b e)) (e d n e' : Q+),
@@ -2012,7 +2056,7 @@ intros x y a b Ea Eb e d n e' He xi IH u;simpl.
 eapply equiv_lim_lim;[|apply IH]. trivial.
 Qed.
 
-Definition non_expanding_recursor : Recursors non_expanding non_expanding_close.
+Definition non_expanding_recursor@{} : Recursors non_expanding non_expanding_close.
 Proof.
 simple refine (Build_Recursors non_expanding non_expanding_close
   _ _
@@ -2031,40 +2075,40 @@ simple refine (Build_Recursors non_expanding non_expanding_close
 - exact non_expanding_lim_lim_pr.
 Defined.
 
-Definition non_expanding_extend : real Q -> real Q -> real Q
+Definition non_expanding_extend@{} : real Q -> real Q -> real Q
   := fun u => (real_rec _ _ non_expanding_recursor u).1.
 
-Lemma non_expanding_extend_close_l {u v w e} : close e u v ->
+Lemma non_expanding_extend_close_l@{} {u v w e} : close e u v ->
   close e (non_expanding_extend u w) (non_expanding_extend v w).
 Proof.
 intros xi.
 apply (equiv_rec _ _ non_expanding_recursor _ _ _ xi).
 Qed.
 
-Lemma non_expanding_extend_close_r {u v w e} : close e v w ->
+Lemma non_expanding_extend_close_r@{} {u v w e} : close e v w ->
   close e (non_expanding_extend u v) (non_expanding_extend u w).
 Proof.
 apply ((real_rec _ _ non_expanding_recursor u).2).
 Qed.
 
-Global Instance non_expanding_lipschitz_l
+Global Instance non_expanding_lipschitz_l@{}
   : forall w, Lipschitz (fun u => non_expanding_extend u w) 1.
 Proof.
 red. intros ????;rewrite Qpos_mult_1_l. apply non_expanding_extend_close_l.
 Qed.
 
-Global Instance non_expanding_lipschitz_r
+Global Instance non_expanding_lipschitz_r@{}
   : forall u, Lipschitz (non_expanding_extend u) 1.
 Proof.
 intros ????;rewrite Qpos_mult_1_l;apply non_expanding_extend_close_r.
 Qed.
 
-Definition non_expanding_extend_rat q v :
+Definition non_expanding_extend_rat@{} q v :
   non_expanding_extend (rat q) v =
   lipschitz_extend (compose rat (f q)) 1 v
   := idpath.
 
-Definition non_expanding_extend_lim_pr (x : Approximation Q) v
+Definition non_expanding_extend_lim_pr@{} (x : Approximation Q) v
   : ∀ d e : Q+,
     Requiv Q (d + e) (non_expanding_extend (x d) v)
       (non_expanding_extend (x e) v)
@@ -2078,19 +2122,19 @@ Definition non_expanding_extend_lim_pr (x : Approximation Q) v
        non_expanding_recursor (x d) (x e) (d + e)
        (approx_equiv Q x d e)) v.
 
-Definition non_expanding_extend_lim x v :
+Definition non_expanding_extend_lim@{} x v :
   non_expanding_extend (lim x) v =
   lim (Build_Approximation Q
     (fun e => non_expanding_extend (x e) v) (non_expanding_extend_lim_pr x v))
   := idpath.
 
-Definition non_expanding_extend_rat_rat q r :
+Definition non_expanding_extend_rat_rat@{} q r :
   non_expanding_extend (rat q) (rat r) = rat (f q r)
   := idpath.
 
 End extend_binary.
 
-Instance Qplus_lipschitz_l : forall s : Q, Lipschitz (+ s) 1.
+Lemma Qplus_lipschitz_l' : forall s : Q, Lipschitz (+ s) 1.
 Proof.
 red. unfold close;simpl. intros s e q r E;rewrite Qpos_mult_1_l.
 assert (Hrw : q + s - (r + s) = q - r);[|rewrite Hrw;trivial].
@@ -2099,7 +2143,11 @@ rewrite negate_plus_distr. path_via (q - r + (s - s)).
 - rewrite plus_negate_r;apply plus_0_r.
 Qed.
 
-Instance Qplus_lipschitz_r : forall s : Q, Lipschitz (s +) 1.
+Instance Qplus_lipschitz_l@{} : forall s : Q, Lipschitz (+ s) 1
+  :=  Qplus_lipschitz_l'@{Set Ularge Ularge Ularge Set
+    Set Set}.
+
+Lemma Qplus_lipschitz_r' : forall s : Q, Lipschitz (s +) 1.
 Proof.
 red;unfold close;simpl. intros s e q r E;rewrite Qpos_mult_1_l.
 assert (Hrw : s + q - (s + r) = q - r);[|rewrite Hrw;trivial].
@@ -2108,15 +2156,19 @@ rewrite negate_plus_distr. path_via (q - r + (s - s)).
 - rewrite plus_negate_r;apply plus_0_r.
 Qed.
 
-Global Instance Rplus : Plus (real Q) := non_expanding_extend plus.
+Instance Qplus_lipschitz_r@{} : forall s : Q, Lipschitz (s +) 1
+  := Qplus_lipschitz_r'@{Set Ularge Ularge Ularge Set
+    Set Set}.
 
-Definition Rplus_rat_rat q r : rat q + rat r = rat (q + r)
+Global Instance Rplus@{} : Plus (real Q) := non_expanding_extend plus.
+
+Definition Rplus_rat_rat@{} q r : rat q + rat r = rat (q + r)
   := idpath.
 
-Global Instance Rplus_lipschitz_l : forall s : real Q, Lipschitz (+ s) 1 := _.
-Global Instance Rplus_lipschitz_r : forall s : real Q, Lipschitz (s +) 1 := _.
+Global Instance Rplus_lipschitz_l@{} : forall s : real Q, Lipschitz (+ s) 1 := _.
+Global Instance Rplus_lipschitz_r@{} : forall s : real Q, Lipschitz (s +) 1 := _.
 
-Lemma unique_continuous_binary_extension {f : real Q -> real Q -> real Q}
+Lemma unique_continuous_binary_extension@{} {f : real Q -> real Q -> real Q}
   `{forall x, Continuous (f x)} `{forall y, Continuous (fun x => f x y)}
   {g : real Q -> real Q -> real Q}
   `{forall x, Continuous (g x)} `{forall y, Continuous (fun x => g x y)}
@@ -2129,13 +2181,13 @@ intros r;revert x;apply unique_continuous_extension.
 trivial.
 Qed.
 
-Lemma Rplus_comm : Commutative (@plus _ Rplus).
+Lemma Rplus_comm@{} : Commutative (@plus _ Rplus).
 Proof.
 hnf. apply unique_continuous_binary_extension.
 intros q r;apply (ap rat),plus_comm.
 Qed.
 
-Lemma Rplus_assoc : Associative (@plus _ Rplus).
+Lemma Rplus_assoc@{} : Associative (@plus _ Rplus).
 Proof.
 hnf. intros x;apply @unique_continuous_binary_extension.
 { apply _. }
@@ -2149,13 +2201,13 @@ intros r s;revert x;apply @unique_continuous_extension.
 intros q;apply (ap rat),plus_assoc.
 Qed.
 
-Instance lipschitz_const : forall a L, Lipschitz (fun _ => a) L.
+Instance lipschitz_const@{} : forall (a:real Q) L, Lipschitz (fun _ => a) L.
 Proof.
 intros;hnf.
 intros e _ _ _. apply Requiv_refl.
 Qed.
 
-Instance lipschitz_dup (f : real Q -> real Q -> real Q) L1 L2
+Lemma lipschitz_dup' (f : real Q -> real Q -> real Q) L1 L2
   `{!forall x, Lipschitz (f x) L1} `{!forall y, Lipschitz (fun x => f x y) L2}
   : Lipschitz (fun x => f x x) (L1 + L2).
 Proof.
@@ -2168,7 +2220,13 @@ apply (Requiv_triangle (v:=f x y)).
 - apply (lipschitz (fun x => f x y) _ xi).
 Qed.
 
-Lemma Rplus_group : Group (real Q).
+Definition lipschitz_dup@{} (f : real Q -> real Q -> real Q) L1 L2
+  `{!forall x, Lipschitz (f x) L1} `{!forall y, Lipschitz (fun x => f x y) L2}
+  : Lipschitz (fun x => f x x) (L1 + L2)
+  := lipschitz_dup'@{Set Ularge Ularge Ularge Set
+    Set Set} f L1 L2.
+
+Lemma Rplus_group@{} : Group (real Q).
 Proof.
 repeat split.
 - apply _.
