@@ -287,7 +287,7 @@ Universe UQ.
 Context (Q:Type@{UQ}) `{Rationals@{UQ UQ UQ UQ UQ UQ UQ UQ UQ UQ} Q}
   `{!TrivialApart Q} `{DecidablePaths Q}
   {Qmeet : Meet Q} {Qjoin : Join Q} `{!LatticeOrder Ale}
-  `{!TotalRelation (@le Q _)}.
+  `{!TotalRelation (@le Q _)} `{!Abs Q}.
 
 Notation "Q+" := (Qpos Q).
 
@@ -2503,7 +2503,7 @@ Definition R_archimedean@{}
     Set Set Set Set Set
     Set Set Set Set Set}.
 
-Lemma Rle_close_rat : forall q r, r <= q -> forall v e, close e (rat r) v ->
+Lemma Rle_close_rat_rat' : forall q r, r <= q -> forall v e, close e (rat r) v ->
   v <= rat (q + ' e).
 Proof.
 intros q r E.
@@ -2533,7 +2533,11 @@ apply (real_ind0 (fun v => forall e, _ -> _)).
   * exact E3.
 Qed.
 
-Instance Rjoin_comm : Commutative (@join _ Rjoin).
+Definition Rle_close_rat_rat@{}
+  := Rle_close_rat_rat'@{UQ Ularge Set Set Set
+    Set}.
+
+Instance Rjoin_comm@{} : Commutative (@join _ Rjoin).
 Proof.
 hnf. apply unique_continuous_binary_extension.
 intros;apply (ap rat).
@@ -2542,7 +2546,7 @@ Qed.
 
 Local Existing Instance lattice_order_lattice.
 
-Instance R_lattice : LatticeOrder Rle.
+Lemma R_lattice' : LatticeOrder Rle.
 Proof.
 split.
 - apply @alt_Build_MeetSemiLatticeOrder;[
@@ -2596,16 +2600,170 @@ split.
 Unshelve. all:exact 1.
 Qed.
 
-Lemma Rle_close : forall q u, u <= rat q -> forall v e, close e u v ->
+Instance R_lattice@{} : LatticeOrder Rle
+  := R_lattice'@{Set Set Set Set Set
+    Set Set Set Set Set
+    Set Set Set Set Ularge
+    UQ Set Set Set Set
+    Set Set}.
+
+Lemma Rle_close_rat' : forall q u, u <= rat q -> forall v e, close e u v ->
   v <= rat (q + ' e).
 Proof.
 intros q u E v e xi.
 pose proof (non_expanding (join (rat q)) xi) as E1.
 hnf in E. rewrite Rjoin_comm in E1.
 rewrite E in E1.
-pose proof (Rle_close_rat q q (reflexivity q) _ _ E1) as E2.
+pose proof (Rle_close_rat_rat q q (reflexivity q) _ _ E1) as E2.
 transitivity (join (rat q) v);trivial.
 apply join_ub_r.
 Qed.
+
+Definition Rle_close_rat@{} := Rle_close_rat'@{Ularge}.
+
+Lemma Rlt_close_rat_plus' : forall u q, u < rat q ->
+  forall v e, close e u v -> v < rat (q + ' e).
+Proof.
+intros u q;apply (Trunc_ind (fun _ => forall v e, _ -> _)).
+intros [q' [r [E1 [E2 E3]]]] v e xi.
+hnf. apply tr. exists (q' + ' e),(r + ' e).
+split;[|split].
+- apply Rle_close_rat with u;trivial.
+- apply plus_lt_le_compat;[|reflexivity].
+  trivial.
+- apply (order_preserving rat).
+  apply plus_le_compat;[|reflexivity].
+  apply (order_reflecting rat);trivial.
+Qed.
+
+Definition Rlt_close_rat_plus@{}
+  := Rlt_close_rat_plus'@{Ularge Set Set Set Set
+    Set Set Set}.
+
+Lemma Rlt_close_exists' : forall u q, u < rat q ->
+  merely (exists e, forall v, close e u v -> v < rat q).
+Proof.
+intros u q;apply (Trunc_ind _);intros [q' [r [E1 [E2 E3]]]].
+transparent assert (rq : Q+).
+{ exists (r-q').
+  abstract (apply flip_pos_minus in E2; trivial).
+}
+apply tr;exists (rq / 2);intros v xi.
+pose proof (Rle_close_rat _ _ E1 _ _ xi) as E4.
+change (v <= rat (q' + (r - q') / 2)) in E4.
+apply tr;econstructor;exists r;repeat split;eauto.
+apply flip_pos_minus. rewrite negate_plus_distr.
+rewrite negate_mult_distr_l,<-negate_swap_l.
+assert (Hrw : r + (- q' + (- r + q') / 2) = (r - q') / 2).
+{ path_via (2 / 2 * r + (2 / 2 * (- q') + (- r + q') / 2)).
+  { rewrite dec_recip_inverse;[|solve_propholds].
+    rewrite !mult_1_l;trivial. }
+  path_via ((r - q' + (r - r) + (q' - q')) / 2).
+  { ring_tac.ring_with_nat. }
+  rewrite !plus_negate_r,!plus_0_r;trivial.
+}
+rewrite Hrw.
+apply pos_mult_compat;[|apply _].
+apply (snd (flip_pos_minus _ _)). trivial.
+Qed.
+
+Definition Rlt_close_exists@{}
+  := Rlt_close_exists'@{Set Set Set Set Set
+    Set Set Set Ularge Ularge
+    Ularge Set Set Set Set
+    Set Set Set Set Set
+    Set Set Set Set}.
+
+Instance Qabs_nonexpanding : NonExpanding (abs (A:=Q)).
+Proof.
+Admitted.
+
+Definition Rabs_val := lipschitz_extend (compose rat abs) 1.
+
+Global Instance Rabs_nonexpanding : NonExpanding Rabs_val := _.
+
+Lemma Rabs_of_nonneg : forall x, 0 <= x -> Rabs_val x = x.
+Proof.
+unfold le;simpl. intros x E;rewrite <-E.
+clear E;revert x;apply unique_continuous_extension.
+intros q;apply (ap rat).
+apply ((abs_sig _).2). apply join_ub_l.
+Qed.
+
+Lemma Rabs_of_nonpos : forall x, x <= 0 -> Rabs_val x = - x.
+Proof.
+intros x E.
+apply meet_l in E. rewrite <-E.
+clear E;revert x;apply unique_continuous_extension.
+intros q;apply (ap rat).
+apply ((abs_sig _).2). apply meet_lb_r.
+Qed.
+
+Instance Rabs : Abs (real Q).
+Proof.
+intros u. exists (Rabs_val u).
+split.
+- apply Rabs_of_nonneg.
+- apply Rabs_of_nonpos.
+Defined.
+
+Lemma Rabs_of_0 : abs (A:=real Q) 0 = 0.
+Proof.
+apply Rabs_of_nonneg;reflexivity.
+Qed.
+
+Lemma Rabs_nonneg : forall x : real Q, 0 <= abs x.
+Proof.
+unfold le;simpl. apply unique_continuous_extension.
+intros;apply (ap rat).
+apply join_sl_le_spec.
+unfold abs.
+destruct (total le 0 q) as [E|E];pose proof E as E';
+apply ((abs_sig q).2) in E';rewrite E'.
+- trivial.
+- apply flip_nonpos_negate;trivial.
+Qed.
+
+Lemma total_abs_either `{Abs A} `{!TotalRelation le}
+  : forall x : A, (0 <= x /\ abs x = x) \/ (x <= 0 /\ abs x = - x).
+Proof.
+intros x.
+destruct (total le 0 x) as [E|E].
+- left. split;trivial. apply ((abs_sig x).2);trivial.
+- right. split;trivial. apply ((abs_sig x).2);trivial.
+Qed.
+
+Lemma rat_lt_preserving : StrictlyOrderPreserving rat.
+Proof.
+hnf. intros x y E.
+hnf. apply tr;exists x,y;repeat split;auto.
+Qed.
+
+Lemma rat_lt_reflecting : StrictlyOrderReflecting rat.
+Proof.
+hnf. intros x y;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+apply (order_reflecting rat) in E1;apply (order_reflecting rat) in E3.
+apply le_lt_trans with q;trivial.
+apply lt_le_trans with r;trivial.
+Qed.
+(* 
+Lemma equiv_0_abs : forall e u, close e u 0 -> abs u < rat (' e).
+Proof.
+intros e u;revert u e;apply (real_ind0 (fun u => forall e, _ -> _)).
+- intros q e E.
+  do 2 red in E;rewrite Requiv_rat_rat_def in E.
+  hnf in E. rewrite negate_0,plus_0_r in E.
+  apply rat_lt_preserving.
+  destruct (total_abs_either q) as [[_ E']|[_ E']];rewrite E'.
+  + apply E.
+  + apply flip_lt_negate. rewrite involutive. apply E.
+- intros x IH e xi.
+  
+Qed.
+
+Lemma equiv_to_abs : forall e u v, close e u v -> abs (u - v) < rat (' e).
+Proof.
+
+Qed. *)
 
 End contents.
