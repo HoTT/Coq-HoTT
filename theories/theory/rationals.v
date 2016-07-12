@@ -30,13 +30,7 @@ Lemma F_field' : Field F.
 Proof. exact _. Qed.
 
 Global Instance F_field@{i} : Field F
-  := F_field'@{i Ularge Set Set Set Set Set
-Set Set Set Set Set Ularge Ularge Set
-Set Set Set Set Set Set Set
-Set Set Set Set Set Set Set
-Set Set Set Set Set Set Ularge
-Uhuge Set Set Set Set Set Set
-Set Set Set Set Set}.
+  := F_field'@{i Ularge Set Set}.
 
 Instance inject_nat : Cast nat F
   := compose (cast (NatPair.Z nat) F) (cast nat (NatPair.Z nat)).
@@ -87,16 +81,8 @@ Qed.
 
 Global Instance F_characteristic_0@{i} : FieldCharacteristic F 0
   := F_characteristic_0'@{i Ularge Set Set Set
-Set Set Set Set Set Set Ularge
-Ularge Set Set Set Set Set Set
-Set Set Set Set Set Set Set
-Set Set Set Set i i Set
-Set Set Set Set Set Set Set
-Set Set Set Set Set Set Set
-Set Set Set Set Set Set Set
-Set Ularge Ularge Set Set Ularge Uhuge
-Set Set Set Set Set Set Set
-Set Set}.
+    i i i Set Ularge
+    Ularge Set Set Set}.
 
 End Univ.
 End ExampleField.

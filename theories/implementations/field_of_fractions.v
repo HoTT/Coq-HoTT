@@ -12,49 +12,45 @@ Require Import
 Module Frac.
 
 Section contents.
+Universe UR.
+Context `{Funext} `{Univalence} (R:Type@{UR})
+  `{IntegralDomain R} `{DecidablePaths R}.
 
-Context `{Funext} `{Univalence} R `{IntegralDomain R} `{DecidablePaths R}.
-
-(* TODO why does making this Inductive not work? *)
-Record Frac : Type
-  := frac { num: R; den: R; den_ne_0: den ≠ 0 }.
+Record Frac@{} : Type
+  := frac { num: R; den: R; den_ne_0: PropHolds (den ≠ 0) }.
   (* We used to have [den] and [den_nonzero] bundled,
      which did work relatively nicely with Program, but the
      extra messyness in proofs etc turned out not to be worth it. *)
 
-Global Instance: IsHSet Frac.
+Lemma Frac_ishset' : IsHSet Frac.
 Proof.
 assert (E : sigT (fun n : R => sigT (fun d : R => ~ d = 0 )) <~> Frac).
 - issig frac num den den_ne_0.
 - apply (trunc_equiv' _ E).
 Qed.
 
-Instance: forall f, PropHolds (~ den f = 0) := den_ne_0.
+Global Instance Frac_ishset@{} : IsHSet Frac
+  := Frac_ishset'@{UR UR UR Ularge Ularge
+    UR Set}.
 
-Global Instance Frac_inject: Cast R Frac.
+Local Existing Instance den_ne_0.
+
+Global Instance Frac_inject@{} : Cast R Frac.
 Proof.
-intros x. apply (frac x 1).
-solve_propholds.
+intros x. apply (frac x 1 _).
 Defined.
 
-Global Instance Frac_0: Zero Frac := ('0 : Frac).
-Global Instance Frac_1: One Frac := ('1 : Frac).
+Global Instance Frac_0@{} : Zero Frac := ('0 : Frac).
+Global Instance Frac_1@{} : One Frac := ('1 : Frac).
 
-Lemma pl_correct : forall q r, ~ den q * den r = 0.
-Proof.
-intros.
-solve_propholds.
-Qed.
-
-Instance pl : Plus Frac.
+Instance pl@{} : Plus Frac.
 Proof.
 intros q r; refine (frac (num q * den r + num r * den q) (den q * den r) _).
-apply pl_correct.
 Defined.
 
-Definition equiv := λ x y, num x * den y = num y * den x.
+Definition equiv@{} := λ x y, num x * den y = num y * den x.
 
-Global Instance: Equivalence equiv.
+Global Instance equiv_equivalence@{} : Equivalence equiv.
 Proof.
 split.
 - intros x. hnf. reflexivity.
@@ -70,10 +66,10 @@ split.
     reflexivity.
 Qed.
 
-Global Instance equiv_dec : ∀ x y: Frac, Decision (equiv x y)
+Global Instance equiv_dec@{} : ∀ x y: Frac, Decision (equiv x y)
   := λ x y, decide_rel (=) (num x * den y) (num y * den x).
 
-Lemma pl_respect : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
+Lemma pl_respect@{} : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
   equiv (q1 + r1) (q2 + r2).
 Proof.
 unfold equiv;intros q1 q2 Eq r1 r2 Er.
@@ -87,18 +83,19 @@ rewrite (mult_comm (den q1)), <-(associativity (den r2)), (associativity (num r1
 rewrite Er.
 rewrite (mult_comm (den r1)), <-(associativity (num q2)), (associativity (den q1)).
 rewrite (mult_comm (den q1)), <-(associativity (den r2)), (associativity (num q2)).
-rewrite <-(associativity (num r2)), (associativity (den r1)), (mult_comm _ (den q2)).
+rewrite <-(associativity (num r2)), (associativity (den r1)),
+  (mult_comm _ (den q2)).
 rewrite (mult_comm (den r1)), (associativity (num r2)).
 apply symmetry;apply plus_mult_distr_r.
 Qed.
 
-Lemma pl_comm : forall q r, equiv (pl q r) (pl r q).
+Lemma pl_comm@{} : forall q r, equiv (pl q r) (pl r q).
 Proof.
 intros q r;unfold equiv;simpl.
 rewrite (mult_comm (den r)), plus_comm. reflexivity.
 Qed.
 
-Lemma pl_assoc : forall q r t, equiv (pl q (pl r t)) (pl (pl q r) t).
+Lemma pl_assoc@{} : forall q r t, equiv (pl q (pl r t)) (pl (pl q r) t).
 Proof.
 intros;unfold equiv;simpl.
 apply ap2;[|apply symmetry,associativity].
@@ -111,13 +108,12 @@ rewrite plus_assoc. apply ap2;[apply ap2|].
 - rewrite (mult_comm (den q));apply symmetry,associativity.
 Qed.
 
-Instance ml : Mult Frac.
+Instance ml@{} : Mult Frac.
 Proof.
 intros q r; refine (frac (num q * num r) (den q * den r) _).
-apply pl_correct.
 Defined.
 
-Lemma ml_respect : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
+Lemma ml_respect@{} : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
   equiv (q1 * r1) (q2 * r2).
 Proof.
 unfold equiv;intros q1 q2 Eq r1 r2 Er.
@@ -130,36 +126,35 @@ rewrite <-(simple_associativity (num r2)), <-(simple_associativity (num q2)).
 reflexivity.
 Qed.
 
-Instance neg: Negate Frac.
+Instance neg@{} : Negate Frac.
 Proof.
 intros q;refine (frac (- num q) (den q) _).
-solve_propholds.
 Defined.
 
-Lemma neg_respect : forall q r, equiv q r -> equiv (- q) (- r).
+Lemma neg_respect@{} : forall q r, equiv q r -> equiv (- q) (- r).
 Proof.
 unfold equiv;simpl;intros q r E.
 rewrite <-2!negate_mult_distr_l. rewrite E;reflexivity.
 Qed.
 
-Lemma nonzero_num x : ~ equiv x 0 ↔ num x ≠ 0.
+Lemma nonzero_num@{} x : ~ equiv x 0 ↔ num x ≠ 0.
 Proof.
 split; intros E F; apply E.
 - red. rewrite F. simpl. rewrite 2!mult_0_l. reflexivity.
 - red in F;simpl in F. rewrite mult_1_r, mult_0_l in F. trivial.
 Qed.
 
-Lemma pl_0_l x : equiv (0 + x) x.
+Lemma pl_0_l@{} x : equiv (0 + x) x.
 Proof.
 red;simpl. rewrite mult_1_r, mult_0_l, mult_1_l, plus_0_l. reflexivity.
 Qed.
 
-Lemma pl_0_r x : equiv (x + 0) x.
+Lemma pl_0_r@{} x : equiv (x + 0) x.
 Proof.
 red;simpl. rewrite 2!mult_1_r, mult_0_l, plus_0_r. reflexivity.
 Qed.
 
-Lemma pl_neg_l x : equiv (- x + x) 0.
+Lemma pl_neg_l@{} x : equiv (- x + x) 0.
 Proof.
 red;simpl.
 rewrite mult_1_r, mult_0_l.
@@ -168,20 +163,20 @@ rewrite plus_negate_l.
 apply mult_0_l.
 Qed.
 
-Lemma ml_assoc q r t : equiv (ml q (ml r t)) (ml (ml q r) t).
+Lemma ml_assoc@{} q r t : equiv (ml q (ml r t)) (ml (ml q r) t).
 Proof.
 red;simpl.
 rewrite (associativity (num q)), (associativity (den q)).
 reflexivity.
 Qed.
 
-Instance dec_rec : DecRecip Frac := fun x =>
+Instance dec_rec@{} : DecRecip Frac := fun x =>
   match decide_rel (=) (num x) 0 with
   | left _ => 0
   | right P => frac (den x) (num x) P
   end.
 
-Lemma dec_recip_respect : forall q r, equiv q r -> equiv (/ q) (/ r).
+Lemma dec_recip_respect@{} : forall q r, equiv q r -> equiv (/ q) (/ r).
 Proof.
 unfold equiv,dec_recip,dec_rec;intros q r E;simpl.
 destruct (decide_rel paths (num q) 0) as [E1|E1],
@@ -238,118 +233,124 @@ Module FracField.
 Section contents.
 (* NB: we need a separate IsHSet instance
    so we don't need to depend on everything to define F. *)
-Context `{Funext} `{Univalence} `{IsHSet R} `{IntegralDomain R}
+Universe UR.
+Context `{Funext} `{Univalence} {R:Type@{UR} } `{IsHSet R} `{IntegralDomain R}
   `{DecidablePaths R}.
 
-Instance: forall f, PropHolds (~ den f = 0) := den_ne_0.
+Local Existing Instance den_ne_0.
 
 (* Add Ring R: (stdlib_ring_theory R). *)
 
-Definition F := quotient equiv.
+Definition F@{} := quotient equiv.
 
-Global Instance class : Cast (Frac R) F := class_of _.
+Global Instance class@{} : Cast (Frac R) F := class_of _.
 
 (* injection from R *)
 
-Global Instance: Cast R F := compose class (Frac_inject _).
+Global Instance inject@{} : Cast R F := compose class (Frac_inject _).
 
-Definition path {x y} : equiv x y -> class x = class y := related_classes_eq _.
+Definition path@{} {x y} : equiv x y -> ' x = ' y := related_classes_eq _.
 
-Definition F_rect (P : F -> Type) {sP : forall x, IsHSet (P x)}
-  (dclass : forall x, P (class x))
+Definition F_rect@{i} (P : F -> Type@{i}) {sP : forall x, IsHSet (P x)}
+  (dclass : forall x : Frac R, P (' x))
   (dequiv : forall x y E, (path E) # (dclass x) = (dclass y))
   : forall q, P q
   := quotient_ind equiv P dclass dequiv.
 
 Definition F_compute P {sP} dclass dequiv x
- : @F_rect P sP dclass dequiv (class x) = dclass x := 1.
+ : @F_rect P sP dclass dequiv (' x) = dclass x := 1.
 
 Definition F_compute_path P {sP} dclass dequiv q r (E : equiv q r)
   : apD (@F_rect P sP dclass dequiv) (path E) = dequiv q r E
   := quotient_ind_compute_path _ _ _ _ _ _ _ _.
 
-Definition F_ind (P : F -> Type) {sP : forall x, IsHProp (P x)}
-  (dclass : forall x, P (class x)) : forall x, P x.
+Definition F_ind@{i} (P : F -> Type@{i}) {sP : forall x, IsHProp (P x)}
+  (dclass : forall x : Frac R, P (' x)) : forall x, P x.
 Proof.
-apply (F_rect P dclass).
+apply (@F_rect P (fun _ => trunc_hprop@{i i}) dclass).
 intros;apply path_ishprop.
 Qed.
 
-Definition F_ind2 (P : F -> F -> Type) {sP : forall x y, IsHProp (P x y)}
-  (dclass : forall x y, P (class x) (class y)) : forall x y, P x y.
+Definition F_ind2@{i j} (P : F -> F -> Type@{i}) {sP : forall x y, IsHProp (P x y)}
+  (dclass : forall x y : Frac R, P (' x) (' y)) : forall x y, P x y.
 Proof.
-apply (F_ind (fun x => forall y, _));intros x.
-apply (F_ind _);intros y.
-apply dclass.
+apply (@F_ind (fun x => forall y, _)).
+- intros;apply Forall.trunc_forall@{UR i j}.
+- intros x.
+  apply (F_ind _);intros y.
+  apply dclass.
 Qed.
 
-Definition F_ind3 (P : F -> F -> F -> Type) {sP : forall x y z, IsHProp (P x y z)}
-  (dclass : forall x y z, P (class x) (class y) (class z)) : forall x y z, P x y z.
+Definition F_ind3@{i j} (P : F -> F -> F -> Type@{i})
+  {sP : forall x y z, IsHProp (P x y z)}
+  (dclass : forall x y z : Frac R, P (' x) (' y) (' z))
+  : forall x y z, P x y z.
 Proof.
-apply (F_ind (fun x => forall y z, _));intros x.
-apply (F_ind2 _). auto.
+apply (@F_ind (fun x => forall y z, _)).
+- intros;apply Forall.trunc_forall@{UR j j}.
+- intros x.
+  apply (F_ind2@{i j} _). auto.
 Qed.
 
-Definition F_rec {T : Type} {sT : IsHSet T}
+Definition F_rec@{i} {T : Type@{i} } {sT : IsHSet T}
   : forall (dclass : Frac R -> T)
   (dequiv : forall x y, equiv x y -> dclass x = dclass y),
   F -> T
   := quotient_rec equiv.
 
 Definition F_rec_compute T sT dclass dequiv x
-  : @F_rec T sT dclass dequiv (class x) = dclass x
+  : @F_rec T sT dclass dequiv (' x) = dclass x
   := 1.
 
-Definition F_rec2 {T} {sT : IsHSet T}
+Definition F_rec2@{i j} {T:Type@{i} } {sT : IsHSet T}
   : forall (dclass : Frac R -> Frac R -> T)
   (dequiv : forall x1 x2, equiv x1 x2 -> forall y1 y2, equiv y1 y2 ->
     dclass x1 y1 = dclass x2 y2),
   F -> F -> T
-  := @quotient_rec2 _ _ _ _ _ (BuildhSet _).
+  := @quotient_rec2@{UR UR j i Set} _ _ _ _ _ (BuildhSet _).
 
 Definition F_rec2_compute {T sT} dclass dequiv x y
-  : @F_rec2 T sT dclass dequiv (class x) (class y) = dclass x y
+  : @F_rec2 T sT dclass dequiv (' x) (' y) = dclass x y
   := 1.
 
 (* Relations, operations and constants *)
 
-Global Instance z: Zero F := ('0 : F).
-Global Instance u: One F := ('1 : F).
+Global Instance F0@{} : Zero F := ('0 : F).
+Global Instance F1@{} : One F := ('1 : F).
 
-
-Global Instance pl : Plus F.
+Global Instance Fplus@{} : Plus F.
 Proof.
-refine (F_rec2 (fun x y => class (Frac.pl _ x y)) _).
+refine (F_rec2 (fun x y => ' (Frac.pl _ x y)) _).
 intros. apply path. apply Frac.pl_respect;trivial.
 Defined.
 
-Definition pl_compute q r : (class q) + (class r) = class (Frac.pl _ q r)
+Definition Fplus_compute@{} q r : (' q) + (' r) = ' (Frac.pl _ q r)
   := 1.
 
-Global Instance neg: Negate F.
+Global Instance Fneg@{} : Negate F.
 Proof.
-refine (F_rec (fun x => class (Frac.neg _ x)) _).
+refine (F_rec (fun x => ' (Frac.neg _ x)) _).
 intros;apply path; eapply Frac.neg_respect;try apply _. trivial.
 Defined.
 
-Definition neg_compute q : - (class q) = class (Frac.neg _ q) := 1.
+Definition Fneg_compute@{} q : - (' q) = ' (Frac.neg _ q) := 1.
 
-Global Instance ml : Mult F.
+Global Instance Fmult@{} : Mult F.
 Proof.
-refine (F_rec2 (fun x y => class (Frac.ml _ x y)) _).
+refine (F_rec2 (fun x y => ' (Frac.ml _ x y)) _).
 intros. apply path. apply Frac.ml_respect;trivial.
 Defined.
 
-Definition ml_compute q r : (class q) * (class r) = class (Frac.ml _ q r)
+Definition Fmult_compute@{} q r : (' q) * (' r) = ' (Frac.ml _ q r)
   := 1.
 
-Instance: Commutative (_:Plus F).
+Instance Fmult_comm@{} : Commutative Fplus.
 Proof.
 hnf. apply (F_ind2 _).
 intros;apply path, Frac.pl_comm.
 Qed.
 
-Global Instance: Ring F.
+Instance F_ring@{} : Ring F.
 Proof.
 repeat split;
 first [change sg_op with mult; change mon_unit with 1|
@@ -397,28 +398,28 @@ first [change sg_op with mult; change mon_unit with 1|
   rewrite (mult_comm (den a)). apply associativity.
 Qed.
 
-Global Instance dec_rec : DecRecip F.
+Global Instance Fdec_rec@{} : DecRecip F.
 Proof.
-refine (F_rec (fun x => class (Frac.dec_rec _ x)) _).
+refine (F_rec (fun x => ' (Frac.dec_rec _ x)) _).
 intros. apply path. apply Frac.dec_recip_respect;trivial.
 Defined.
 
-Lemma classes_eq_related : forall q r, class q = class r -> equiv q r.
+Lemma classes_eq_related@{} : forall q r, ' q = ' r -> equiv q r.
 Proof.
-apply classes_eq_related;apply _.
+apply classes_eq_related@{UR UR Ularge Ularge Uhuge};apply _.
 Qed.
 
-Lemma class_neq : forall q r, ~ equiv q r -> ~ class q = class r.
+Lemma class_neq@{} : forall q r, ~ equiv q r -> ~ ' q = ' r.
 Proof.
 intros q r E1 E2;apply E1;apply classes_eq_related, E2.
 Qed.
 
-Lemma classes_neq_related : forall q r, ~ class q = class r -> ~ equiv q r.
+Lemma classes_neq_related@{} : forall q r, ~ ' q = ' r -> ~ equiv q r.
 Proof.
 intros q r E1 E2;apply E1,path,E2.
 Qed.
 
-Lemma dec_recip_0 : / 0 = 0.
+Lemma dec_recip_0@{} : / 0 = 0.
 Proof.
 unfold dec_recip. simpl.
 unfold Frac.dec_rec;simpl.
@@ -427,14 +428,14 @@ destruct (decide_rel paths 0 0) as [_|E].
 - destruct E;reflexivity.
 Qed.
 
-Lemma dec_recip_nonzero_aux : forall q, ~ class q = 0 -> ~ num q = 0.
+Lemma dec_recip_nonzero_aux@{} : forall q, ~ ' q = 0 -> ~ num q = 0.
 Proof.
 intros q E;apply classes_neq_related in E.
 apply Frac.nonzero_num in E. trivial.
 Qed.
 
-Lemma dec_recip_nonzero : forall q (E : ~ class q = 0),
-  / (class q) = class (frac (den q) (num q) (dec_recip_nonzero_aux q E)).
+Lemma dec_recip_nonzero@{} : forall q (E : ~ ' q = 0),
+  / (' q) = ' (frac (den q) (num q) (dec_recip_nonzero_aux q E)).
 Proof.
 intros. apply path.
 red;simpl. unfold Frac.dec_rec.
@@ -443,7 +444,7 @@ destruct (decide_rel paths (num q) 0) as [E'|?];[destruct E;apply E'|].
 simpl. reflexivity.
 Qed.
 
-Global Instance F_field : DecField F.
+Global Instance F_field@{} : DecField F.
 Proof.
 split;try apply _.
 - red. apply class_neq.
@@ -456,7 +457,7 @@ split;try apply _.
   apply mult_comm.
 Qed.
 
-Lemma dec_class : forall q r, Decidable (class q = class r).
+Lemma dec_class@{} : forall q r, Decidable (class q = class r).
 Proof.
 intros q r.
 destruct (decide (equiv q r)) as [E|E].
@@ -465,14 +466,14 @@ destruct (decide (equiv q r)) as [E|E].
   apply E. apply (classes_eq_related _ _ E').
 Defined.
 
-Global Instance F_dec : DecidablePaths F.
+Global Instance F_dec@{} : DecidablePaths F.
 Proof.
 hnf. apply (F_ind2 _).
 apply dec_class.
 Qed.
 
-Lemma mult_num_den q :
-  class q = ('num q) / 'den q.
+Lemma mult_num_den@{} q :
+  ' q = (' num q) / ' den q.
 Proof.
 apply path. red. simpl.
 rewrite mult_1_l. unfold Frac.dec_rec.
@@ -481,8 +482,8 @@ simpl. destruct (decide_rel paths (den q) 0) as [E|E];simpl.
 - rewrite mult_1_r. reflexivity.
 Qed.
 
-Lemma recip_den_num q :
-  / class q = (' den q) / 'num q.
+Lemma recip_den_num@{} q :
+  / ' q = (' den q) / 'num q.
 Proof.
 apply path;red;simpl.
 unfold Frac.dec_rec;simpl.
@@ -492,7 +493,7 @@ destruct (decide_rel paths (num q) 0) as [E|E];simpl.
 Qed.
 
 (* A final word about inject *)
-Global Instance: SemiRingPreserving (_:Cast R F).
+Global Instance inject_sr_morphism@{} : SemiRingPreserving (cast R F).
 Proof.
 repeat (split; try apply _).
 - intros x y. apply path. change ((x + y) * (1 * 1) = (x * 1 + y * 1) * 1).
@@ -501,7 +502,7 @@ repeat (split; try apply _).
   rewrite !mult_1_r. reflexivity.
 Qed.
 
-Global Instance: Injective (_:Cast R F).
+Global Instance inject_injective@{} : Injective (cast R F).
 Proof.
 repeat (split; try apply _).
 intros x y E. apply classes_eq_related in E.
@@ -515,22 +516,23 @@ Arguments F R {_ _ _}.
 Module Lift.
 
 Section morphisms.
+Universe UR1 UR2.
 Context `{Funext} `{Univalence}.
-Context `{IntegralDomain R1} `{DecidablePaths R1}.
-Context `{IntegralDomain R2} `{DecidablePaths R2}.
+Context {R1:Type@{UR1} } `{IntegralDomain R1} `{DecidablePaths R1}.
+Context {R2:Type@{UR2} } `{IntegralDomain R2} `{DecidablePaths R2}.
 Context `(f : R1 → R2) `{!SemiRingPreserving f} `{!Injective f}.
 
-Definition lift : F R1 -> F R2.
+Definition lift@{} : F R1 -> F R2.
 Proof.
 apply (F_rec (fun x => class (Frac.lift f x))).
 intros;apply path,Frac.lift_respects;trivial.
 Defined.
 
-Global Instance: SemiRingPreserving lift.
+Global Instance lift_sr_morphism@{i} : SemiRingPreserving lift.
 Proof.
 (* This takes a few seconds. *)
 split;split;red.
-- apply (F_ind2 _).
+- apply (F_ind2@{UR1 UR2 i} _).
   intros;simpl.
   apply @path. (* very slow or doesn't terminate without the @ but fast with it *)
   red;simpl.
@@ -538,7 +540,7 @@ split;split;red.
   reflexivity.
 - simpl. apply path.
   red;simpl. rewrite (preserves_0 (f:=f)). rewrite 2!mult_0_l. reflexivity.
-- apply (F_ind2 _).
+- apply (F_ind2@{UR1 UR2 i} _).
   intros;simpl. apply @path.
   red;simpl.
   rewrite <-!(preserves_mult (f:=f)). reflexivity.
@@ -546,10 +548,10 @@ split;split;red.
   red;simpl. apply commutativity.
 Qed.
 
-Global Instance: Injective lift.
+Global Instance lift_injective@{i} : Injective lift.
 Proof.
 red.
-apply (F_ind2 (fun _ _ => _ -> _)).
+apply (F_ind2@{UR1 i i} (fun _ _ => _ -> _)).
 intros x y E.
 simpl in E.
 apply classes_eq_related in E. red in E;simpl in E.

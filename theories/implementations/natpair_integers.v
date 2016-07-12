@@ -21,9 +21,6 @@ Require Import
 
 Local Set Universe Minimization ToSet.
 
-Monomorphic Universe Ularge Uhuge.
-Monomorphic Constraint Ularge < Uhuge.
-
 Module NatPair.
 
 Module PairT.

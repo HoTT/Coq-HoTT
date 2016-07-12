@@ -138,7 +138,7 @@ Section default_apart.
       end = true.
   Typeclasses Opaque default_apart.
 
-  Global Instance default_apart_trivial : TrivialApart A (Aap:=default_apart).
+  Instance default_apart_trivial : TrivialApart A (Aap:=default_apart).
   Proof.
   split.
   - unfold apart,default_apart. apply _.

@@ -91,7 +91,7 @@ End strict_order.
 Section pseudo_order.
   Context `{PseudoOrder A}.
 
-  Instance: IsApart A := pseudo_order_apart.
+  Local Existing Instance pseudo_order_apart.
 
   Lemma apart_total_lt x y : x ≶ y → x < y ∨ y < x.
   Proof.
@@ -140,7 +140,7 @@ Section pseudo_order.
   auto using pseudo_order_lt_apart.
   Qed.
 
-  Global Instance: StrictOrder (_ : Lt A).
+  Global Instance pseudoorder_strictorder : StrictOrder (_ : Lt A).
   Proof.
   split.
   - apply _.
@@ -151,7 +151,7 @@ Section pseudo_order.
     destruct (pseudo_order_antisym y z); auto.
   Qed.
 
-  Global Instance: Transitive (complement (<)).
+  Global Instance nlt_trans : Transitive (complement (<)).
   Proof.
   intros x y z.
   intros E1 E2 E3.
@@ -159,7 +159,7 @@ Section pseudo_order.
   intros [?|?]; contradiction.
   Qed.
 
-  Global Instance: AntiSymmetric (complement (<)).
+  Global Instance nlt_antisymm : AntiSymmetric (complement (<)).
   Proof.
   intros x y H1 H2.
   apply tight_apart. intros nap. apply apart_iff_total_lt in nap.
@@ -184,7 +184,7 @@ End pseudo_order.
 Section full_partial_order.
   Context `{FullPartialOrder A}.
 
-  Instance: IsApart A := strict_po_apart.
+  Local Existing Instance strict_po_apart.
 
   (* Duplicate of strong_setoids.apart_ne. This is useful because a
     StrongSetoid is not defined as a substructure of a FullPartialOrder *)
@@ -193,7 +193,7 @@ Section full_partial_order.
   intros; apply _.
   Qed.
 
-  Global Instance: StrictOrder (<).
+  Global Instance fullpartialorder_strictorder : StrictOrder (<).
   Proof.
   split; try apply _.
   - apply strict_po_mere_lt.
@@ -331,7 +331,7 @@ Section full_pseudo_order.
   assumption.
   Qed.
 
-  Instance: PartialOrder (≤).
+  Instance fullpseudo_partial : PartialOrder (≤) | 10.
   Proof.
   repeat split.
   - apply _.

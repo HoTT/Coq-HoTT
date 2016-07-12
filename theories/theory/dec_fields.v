@@ -10,7 +10,7 @@ Context `{DecField F} `{∀ x y: F, Decision (x = y)}.
 
 (* Add Ring F : (stdlib_ring_theory F). *)
 
-Global Instance: ZeroProduct F.
+Global Instance decfield_zero_product : ZeroProduct F.
 Proof.
 intros x y E.
 destruct (decide (x = 0)) as [? | Ex];auto.
@@ -20,7 +20,7 @@ rewrite associativity, (commutativity y), E.
 apply mult_0_l.
 Qed.
 
-Global Instance: IntegralDomain F.
+Global Instance decfield_integral_domain : IntegralDomain F.
 Proof.
 split; try apply _.
 Qed.
@@ -185,9 +185,9 @@ Section is_field.
 
   Global Instance recip_dec_field: Recip F := λ x, / x.1.
 
-  Instance: IsApart F := dec_strong_setoid.
+  Local Existing Instance dec_strong_setoid.
 
-  Global Instance: Field F.
+  Global Instance decfield_field : Field F.
   Proof.
   split; try apply _.
   - apply (dec_strong_binary_morphism (+)).

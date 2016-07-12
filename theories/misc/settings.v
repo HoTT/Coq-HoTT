@@ -9,3 +9,6 @@ Global Generalizable Variables
   R1le R2le
   Alt Blt R1lt R2lt Vlt Zle Zlt
   SR.
+
+Monomorphic Universe Ularge Uhuge.
+Monomorphic Constraint Ularge < Uhuge.
