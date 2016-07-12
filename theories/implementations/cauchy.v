@@ -1724,6 +1724,18 @@ eapply transport;[|exact He].
 apply Qpos_mult_assoc.
 Qed.
 
+Instance continuous_compose g {Eg : Continuous g} f {Ef : Continuous f}
+  : Continuous (compose g f).
+Proof.
+intros u e.
+apply (merely_destruct (continuous g (f u) e)).
+intros [d E].
+apply (merely_destruct (continuous f u d)).
+intros [d' E'].
+apply tr;exists d';intros v xi.
+apply E,E',xi.
+Qed.
+
 Instance rat_nonexpanding : NonExpanding rat.
 Proof.
 intros e x y.
@@ -2207,6 +2219,20 @@ intros r;revert x;apply unique_continuous_extension.
 trivial.
 Qed.
 
+Lemma unique_continuous_ternary_extension@{} {f}
+  `{forall x y, Continuous (f x y)} `{forall x z, Continuous (fun y => f x y z)}
+  `{forall y z, Continuous (fun x => f x y z)}
+  {g}
+  `{forall x y, Continuous (g x y)} `{forall x z, Continuous (fun y => g x y z)}
+  `{forall y z, Continuous (fun x => g x y z)}
+  : (forall q r s, f (rat q) (rat r) (rat s) = g (rat q) (rat r) (rat s)) ->
+  forall u v w, f u v w = g u v w.
+Proof.
+intros E u;apply unique_continuous_binary_extension.
+intros q r;revert u;apply unique_continuous_extension.
+auto.
+Qed.
+
 Lemma Rplus_comm@{} : Commutative (@plus _ Rplus).
 Proof.
 hnf. apply unique_continuous_binary_extension.
@@ -2402,6 +2428,12 @@ hnf. intros q r E;unfold le,Rle in E.
 apply rat_injective in E. rewrite <-E;apply join_ub_l.
 Qed.
 
+Instance rat_le_preserve : OrderPreserving rat.
+Proof.
+hnf. intros q r E;hnf.
+apply (ap rat). apply join_r,E.
+Qed.
+
 Lemma Rlt_trans' : Transitive Rlt.
 Proof.
 intros a b c.
@@ -2425,7 +2457,7 @@ intros E1 E2.
 apply (irreflexivity lt x). transitivity y;trivial.
 Qed.
 
-Lemma R_archimedean : forall u v, u < v -> merely (exists q, u < rat q < v).
+Lemma R_archimedean' : forall u v, u < v -> merely (exists q, u < rat q < v).
 Proof.
 intros u v;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
 apply tr;exists ((q+r)/2).
@@ -2459,11 +2491,121 @@ split.
   + apply (snd (flip_pos_minus _ _) E2).
   + solve_propholds.
 Qed.
-(* 
+
+Definition R_archimedean@{}
+  := R_archimedean'@{Set Set Set Set Set
+    Set Set Set  Ularge  Ularge
+    Ularge Set Set Set Set
+    Set Set Set Set Set
+    Set Set Set Set Set
+    Set Set Set Set Set
+    Set Set Set Set Set
+    Set Set Set Set Set
+    Set Set Set Set Set}.
+
+Lemma Rle_close_rat : forall q r, r <= q -> forall v e, close e (rat r) v ->
+  v <= rat (q + ' e).
+Proof.
+intros q r E.
+apply (real_ind0 (fun v => forall e, _ -> _)).
++ intros s e E'.
+  red in E';simpl in E'. rewrite Requiv_rat_rat_def in E'.
+  hnf in E'. apply (order_preserving rat).
+  apply lt_le. rewrite plus_comm. apply flip_lt_minus_l.
+  apply le_lt_trans with (s - r).
+  * apply plus_le_compat;[reflexivity|].
+    apply (snd (flip_le_negate _ _)),E.
+  * apply flip_lt_negate. rewrite <-negate_swap_r. apply E'.
++ intros y IH e xi.
+  apply Requiv_rounded in xi.
+  revert xi;apply (Trunc_ind _);intros [d [d' [He xi]]].
+  hnf. unfold join,Rjoin. rewrite non_expanding_extend_lim.
+  change (non_expanding_extend join) with join.
+  assert (E1 : forall n n', d' = n + n' -> y n <= rat (q + ' e)).
+  { intros n n' Hd.
+    apply IH. rewrite He. apply @Requiv_triangle with (lim y);trivial.
+    apply equiv_symm. rewrite Hd,qpos_plus_comm. apply equiv_lim.
+  }
+  apply equiv_path. intros z.
+  destruct (Qpos_lt_min z d') as [a [ca [cb [E2 E3]]]].
+  eapply equiv_lim_rat;[|simpl;erewrite E1;[apply Requiv_refl|]].
+  * exact E2.
+  * exact E3.
+Qed.
+
+Instance Rjoin_comm : Commutative (@join _ Rjoin).
+Proof.
+hnf. apply unique_continuous_binary_extension.
+intros;apply (ap rat).
+apply join_sl_order_join_sl.
+Qed.
+
+Local Existing Instance lattice_order_lattice.
+
+Instance R_lattice : LatticeOrder Rle.
+Proof.
+split.
+- apply @alt_Build_MeetSemiLatticeOrder;[
+  repeat split;unfold sg_op,meet_is_sg_op;change Rmeet with meet
+  |apply _|].
+  + apply _.
+  + hnf.
+    apply @unique_continuous_ternary_extension;try apply _.
+    { change (forall x z, Continuous (compose (⊓ z) (x ⊓)));apply _. }
+    { change (forall y z, Continuous (compose (⊓ z) (⊓ y)));apply _. }
+    intros;apply (ap rat). apply associativity.
+  + hnf.
+    apply unique_continuous_binary_extension.
+    intros;apply (ap rat). apply commutativity.
+  + hnf. red.
+    apply @unique_continuous_extension;try apply _.
+    { eapply @lipschitz_continuous. apply lipschitz_dup;apply _. }
+    intros;apply (ap rat),idempotency,_.
+  + unfold le,Rle. intros x y;split;intros E.
+    * rewrite <-E.
+      clear E;revert x y;apply @unique_continuous_binary_extension;try apply _.
+      { intros;eapply @lipschitz_continuous.
+        apply (lipschitz_dup (fun x1 x2 => x1 ⊓ (x2 ⊔ y)));apply _. }
+      intros;apply (ap rat). apply (meet_join_absorption _).
+    * rewrite <-E.
+      clear E;revert x y;apply @unique_continuous_binary_extension;try apply _.
+      { intros;eapply @lipschitz_continuous.
+        apply (lipschitz_dup (fun v1 v2 => (x ⊓ v1) ⊔ v2));try apply _.
+        intro;apply @nonexpanding_lipschitz.
+        change (NonExpanding (compose (⊔ y) (x ⊓)));apply _.
+      }
+      { change (forall y, Continuous (compose (⊔ y) (⊓ y)));apply _. }
+      intros;apply (ap rat).
+      rewrite (commutativity (f:=join)),(commutativity (f:=meet)).
+      apply (join_meet_absorption _).
+- apply @alt_Build_JoinSemiLatticeOrder;[|apply _|reflexivity].
+  repeat split;unfold sg_op,join_is_sg_op;change Rjoin with join.
+  + apply _.
+  + hnf.
+    apply @unique_continuous_ternary_extension;try apply _.
+    { change (forall x z, Continuous (compose (⊔ z) (x ⊔)));apply _. }
+    { change (forall y z, Continuous (compose (⊔ z) (⊔ y)));apply _. }
+    intros;apply (ap rat). apply associativity.
+  + hnf.
+    apply unique_continuous_binary_extension.
+    intros;apply (ap rat). apply commutativity.
+  + hnf. red.
+    apply @unique_continuous_extension;try apply _.
+    { eapply @lipschitz_continuous. apply lipschitz_dup;apply _. }
+    intros;apply (ap rat),idempotency,_.
+Unshelve. all:exact 1.
+Qed.
+
 Lemma Rle_close : forall q u, u <= rat q -> forall v e, close e u v ->
   v <= rat (q + ' e).
 Proof.
-
+intros q u E v e xi.
+pose proof (non_expanding (join (rat q)) xi) as E1.
+hnf in E. rewrite Rjoin_comm in E1.
+rewrite E in E1.
+pose proof (Rle_close_rat q q (reflexivity q) _ _ E1) as E2.
+transitivity (join (rat q) v);trivial.
+apply join_ub_r.
 Qed.
- *)
+
 End contents.
