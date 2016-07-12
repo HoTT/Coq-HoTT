@@ -754,6 +754,9 @@ Proof.
 unfold rounded_halfrel_close. intros. apply _.
 Qed.
 
+Lemma Qclose_separating : forall q r : Q, (forall e, close e q r) -> q = r.
+Proof. Admitted.
+
 Lemma Qclose_rounded@{} : ∀ (q r : Q) e, close e q r ↔
   merely (∃ d d' : Q+, e = d + d' ∧ close d q r).
 Proof. Admitted.
@@ -2318,57 +2321,149 @@ Definition Rjoin_rat_rat@{} q r : join (rat q) (rat r) = rat (join q r)
   := idpath.
 
 Global Instance Rle@{} : Le (real Q) := fun x y => join x y = y.
+Arguments Rle _ _ /.
 
-Global Instance Rlt@{} : Lt (real Q) := fun x y => exists q r,
-  x <= (rat q) /\ q < r /\ (rat r) <= y.
+Global Instance Rlt@{} : Lt (real Q) := fun x y =>
+  merely (exists q r, x <= (rat q) /\ q < r /\ (rat r) <= y).
+Arguments Rlt _ _ /.
 
 Global Instance Rap@{} : Apart@{UQ UQ} (real Q) := fun x y => x < y \/ y < x.
+Arguments Rap _ _ /.
 
-Instance R_po@{} : PartialOrder Rle.
+Instance Rle_trans : Transitive Rle.
 Proof.
-repeat split.
-- apply _.
-- apply _.
-- hnf. change (forall x, join x x = x).
-  apply @unique_continuous_extension.
-  + apply (@lipschitz_continuous _ (1+1)). apply lipschitz_dup;apply _.
-  + apply _.
-  + intros;apply (ap rat),semilattice_idempotent,join_sl_order_join_sl.
-- hnf. unfold le,Rle.
-  intros x y z E1 E2. rewrite <-E2,<-E1. clear E1 E2;revert x.
-  apply @unique_continuous_extension.
-  { eapply @lipschitz_continuous.
-    eapply (@lipschitz_dup (fun u v => u ⊔ ((v ⊔ y) ⊔ z))).
-    { intros u. apply @nonexpanding_lipschitz.
-      change (NonExpanding (compose (u ⊔) (compose (⊔ z) (⊔ y)))).
-      apply _. }
-    { intros u. apply @nonexpanding_lipschitz.
-      apply _. }
-  }
-  { apply @nonexpanding_continuous.
-    change (NonExpanding (compose (⊔ z) (⊔ y)));apply _. }
-  intros q;revert y z.
-  apply @unique_continuous_binary_extension.
-  { intros x;apply @nonexpanding_continuous.
-    change (NonExpanding (compose ((rat q) ⊔) ((rat q ⊔ x) ⊔))).
+hnf. unfold le,Rle.
+intros x y z E1 E2. rewrite <-E2,<-E1. clear E1 E2;revert x.
+apply @unique_continuous_extension.
+{ eapply @lipschitz_continuous.
+  eapply (@lipschitz_dup (fun u v => u ⊔ ((v ⊔ y) ⊔ z))).
+  { intros u. apply @nonexpanding_lipschitz.
+    change (NonExpanding (compose (u ⊔) (compose (⊔ z) (⊔ y)))).
     apply _. }
-  { intros y;apply @nonexpanding_continuous.
-    change (NonExpanding (compose (rat q ⊔) (compose (⊔ y) (rat q ⊔))));apply _.
-  }
-  { intros x;apply @nonexpanding_continuous. apply _. }
-  { intros y;apply @nonexpanding_continuous.
-    change (NonExpanding (compose (⊔ y) (rat q ⊔)));apply _.
-  }
-  intros r s.
-  apply (ap rat).
-  apply join_r. apply join_le_compat_r,join_ub_l.
-- hnf. unfold le,Rle.
-  intros x y E1 E2.
-  path_via (x ⊔ y). path_via (y ⊔ x).
-  clear E1 E2;revert x y;apply unique_continuous_binary_extension.
-  intros q r;apply (ap rat).
-  pose proof join_sl_order_join_sl.
-  apply commutativity.
+  { intros u. apply @nonexpanding_lipschitz.
+    apply _. }
+}
+{ apply @nonexpanding_continuous.
+  change (NonExpanding (compose (⊔ z) (⊔ y)));apply _. }
+intros q;revert y z.
+apply @unique_continuous_binary_extension.
+{ intros x;apply @nonexpanding_continuous.
+  change (NonExpanding (compose ((rat q) ⊔) ((rat q ⊔ x) ⊔))).
+  apply _. }
+{ intros y;apply @nonexpanding_continuous.
+  change (NonExpanding (compose (rat q ⊔) (compose (⊔ y) (rat q ⊔))));apply _.
+}
+{ intros x;apply @nonexpanding_continuous. apply _. }
+{ intros y;apply @nonexpanding_continuous.
+  change (NonExpanding (compose (⊔ y) (rat q ⊔)));apply _.
+}
+intros r s.
+apply (ap rat).
+apply join_r. apply join_le_compat_r,join_ub_l.
 Qed.
 
+Instance Rle_refl : Reflexive Rle.
+Proof.
+change (forall x, join x x = x).
+apply @unique_continuous_extension.
++ apply (@lipschitz_continuous _ (1+1)). apply lipschitz_dup;apply _.
++ apply _.
++ intros;apply (ap rat),semilattice_idempotent,join_sl_order_join_sl.
+Qed.
+
+Lemma real_eq_equiv : forall u v : real Q, u = v -> forall e, close e u v.
+Proof.
+intros u v [] e;apply Requiv_refl.
+Qed.
+
+Lemma rat_injective' : Injective rat.
+Proof.
+intros q r E.
+apply Qclose_separating.
+intros e. rewrite <-Requiv_rat_rat_def.
+apply real_eq_equiv. trivial.
+Qed.
+
+Instance rat_injective@{} : Injective rat
+  := rat_injective'@{UQ}.
+
+Instance Rlt_irrefl@{} : Irreflexive Rlt.
+Proof.
+hnf. intros x;hnf;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+pose proof (transitivity E3 E1) as E4.
+hnf in E4. apply rat_injective in E4.
+revert E2;apply le_iff_not_lt_flip. rewrite <-E4.
+apply join_ub_l.
+Qed.
+
+Instance rat_le_reflect : OrderReflecting rat.
+Proof.
+hnf. intros q r E;unfold le,Rle in E.
+apply rat_injective in E. rewrite <-E;apply join_ub_l.
+Qed.
+
+Lemma Rlt_trans' : Transitive Rlt.
+Proof.
+intros a b c.
+unfold Rlt.
+apply (Trunc_ind (fun _ => _ -> _));intros [q1 [r1 [E1 [E2 E3]]]];
+apply (Trunc_ind _);intros [q2 [r2 [E4 [E5 E6]]]].
+apply tr. exists q1,r2. split;[|split];trivial.
+pose proof (rat_le_reflect _ _ (transitivity E3 E4)) as E7.
+apply lt_le_trans with r1;trivial.
+apply lt_le. apply le_lt_trans with q2;trivial.
+Qed.
+
+Instance  Rlt_trans@{} : Transitive Rlt
+  := Rlt_trans'@{Ularge}.
+
+Instance Rapart_ishprop : forall x y : real Q, IsHProp (apart x y).
+Proof.
+unfold apart;simpl. intros x y.
+apply Sum.ishprop_sum;try apply _.
+intros E1 E2.
+apply (irreflexivity lt x). transitivity y;trivial.
+Qed.
+
+Lemma R_archimedean : forall u v, u < v -> merely (exists q, u < rat q < v).
+Proof.
+intros u v;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+apply tr;exists ((q+r)/2).
+split.
+- apply tr. exists q, ((q+r)/2).
+  split;trivial. split;[|reflexivity].
+  apply flip_pos_minus.
+  assert (Hrw : (q + r) / 2 - q = (r - q) / 2).
+  { path_via ((q + r) / 2 - 2 / 2 * q).
+    { rewrite dec_recip_inverse,mult_1_l;trivial. solve_propholds. }
+    path_via ((r - q + (q - q)) / 2).
+    { rewrite negate_mult_distr_r. ring_tac.ring_with_nat. }
+    rewrite plus_negate_r,plus_0_r;trivial.
+  }
+  rewrite Hrw;clear Hrw.
+  apply pos_mult_compat.
+  + apply (snd (flip_pos_minus _ _) E2).
+  + solve_propholds.
+- apply tr. exists ((q+r)/2), r.
+  split;[reflexivity|split;trivial].
+  apply flip_pos_minus.
+  assert (Hrw : r - (q + r) / 2 = (r - q) / 2).
+  { path_via (2 / 2 * r - (q+ r) / 2).
+    { rewrite dec_recip_inverse,mult_1_l;trivial. solve_propholds. }
+    path_via ((r - q + (r - r)) / 2).
+    { rewrite negate_mult_distr_l,negate_plus_distr. ring_tac.ring_with_nat. }
+    rewrite plus_negate_r,plus_0_r;trivial.
+  }
+  rewrite Hrw;clear Hrw.
+  apply pos_mult_compat.
+  + apply (snd (flip_pos_minus _ _) E2).
+  + solve_propholds.
+Qed.
+(* 
+Lemma Rle_close : forall q u, u <= rat q -> forall v e, close e u v ->
+  v <= rat (q + ' e).
+Proof.
+
+Qed.
+ *)
 End contents.
