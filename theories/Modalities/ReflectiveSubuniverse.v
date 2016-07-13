@@ -2,7 +2,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import UnivalenceImpliesFunext EquivalenceVarieties Extensions Fibrations HProp.
 Require Import HoTT.Tactics.
-Require Import hit.Coeq.
+Require Import HIT.Coeq.
 Require Import Tactics.RewriteModuloAssociativity.
 
 Local Open Scope path_scope.

@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import Fibrations UnivalenceImpliesFunext EquivalenceVarieties Constant.
-Require Import hit.Truncations.
+Require Import HIT.Truncations.
 
 Local Open Scope path_scope.
 

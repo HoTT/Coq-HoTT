@@ -343,7 +343,7 @@ Section Localization.
 
 End Localization.
 
-(** We define a wrapper around [LocalGenerators].  See the comments in hit/Truncations for an explanation.  Unlike there, here we make the wrapper a [Record] rather than a [Definition], so that a projection has to be inserted to convert one to the other.  This forces us to write [Loc f] as a parameter to all reflective-subuniverse functions, which is really entirely reasonable; we only allowed ourselves to write [n] rather than [Tr n] in the case of truncations because things like connectedness are traditionally defined only for the truncation modality, so users may prefer not to have to think about the fact that there is a modality present. *)
+(** We define a wrapper around [LocalGenerators].  See the comments in HIT/Truncations for an explanation.  Unlike there, here we make the wrapper a [Record] rather than a [Definition], so that a projection has to be inserted to convert one to the other.  This forces us to write [Loc f] as a parameter to all reflective-subuniverse functions, which is really entirely reasonable; we only allowed ourselves to write [n] rather than [Tr n] in the case of truncations because things like connectedness are traditionally defined only for the truncation modality, so users may prefer not to have to think about the fact that there is a modality present. *)
 Record Localization_ReflectiveSubuniverse := Loc { unLoc : LocalGenerators }.
 
 Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.

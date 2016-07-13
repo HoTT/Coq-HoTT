@@ -3,7 +3,7 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import Fibrations Factorization.
-Require Import Modalities.Modality hit.Truncations hit.Connectedness.
+Require Import Modalities.Modality HIT.Truncations HIT.Connectedness.
 Import TrM.
 
 Local Open Scope path_scope.

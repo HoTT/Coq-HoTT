@@ -3,7 +3,7 @@
 (** * Theorems about trunctions *)
 
 Require Import HoTT.Basics.
-Require Import hit.Truncations HoTT.Types.Bool.
+Require Import HIT.Truncations HoTT.Types.Bool.
 
 (** ** We can construct an interval type as [Trunc -1 Bool] *)
 

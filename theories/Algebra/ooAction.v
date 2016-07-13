@@ -2,7 +2,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import UnivalenceImpliesFunext.
 Require Import Modalities.Modality.
-Require Import hit.Truncations hit.Connectedness.
+Require Import HIT.Truncations HIT.Connectedness.
 Import TrM.
 Require Import Algebra.ooGroup.
 

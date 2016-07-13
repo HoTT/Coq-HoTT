@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import Fibrations Factorization EquivalenceVarieties UnivalenceImpliesFunext HSet HProp DProp.
-Require Import hit.Truncations hit.quotient.
+Require Import HIT.Truncations HIT.quotient.
 Import TrM.
 Require Import Spaces.Nat.
 

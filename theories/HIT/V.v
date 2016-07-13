@@ -5,14 +5,14 @@
 Require Import HoTT.Basics.
 Require Import Types.Unit Types.Bool Types.Universe Types.Sigma Types.Arrow Types.Forall.
 Require Import HProp HSet UnivalenceImpliesFunext TruncType.
-Require Import hit.Truncations hit.quotient.
+Require Import HIT.Truncations HIT.quotient.
 Local Open Scope path_scope.
 
 
 
 (** ** Pushout with respect to a relation *)
 
-(** This could be implemented using the pushouts in /hit/Pushout.v, where [f] and [g] are [(fst o pr1)] and [(snd o pr1)], with domain {(a,b) : A * B & R a b}. However, these pushouts weren't implemented when I started this work, and doing it this way is closer to exercise 10.11 of the HoTT book *)
+(** This could be implemented using the pushouts in /HIT/Pushout.v, where [f] and [g] are [(fst o pr1)] and [(snd o pr1)], with domain {(a,b) : A * B & R a b}. However, these pushouts weren't implemented when I started this work, and doing it this way is closer to exercise 10.11 of the HoTT book *)
 
 Module Export RPushout.
 

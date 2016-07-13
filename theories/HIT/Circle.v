@@ -6,8 +6,8 @@ Require Import HoTT.Basics.
 Require Import Types.Paths Types.Forall Types.Arrow Types.Universe Types.Empty Types.Unit.
 Require Import HSet UnivalenceImpliesFunext.
 Require Import Spaces.Int.
-Require Import hit.Coeq.
-Require Import Modalities.Modality hit.Truncations hit.Connectedness.
+Require Import HIT.Coeq.
+Require Import Modalities.Modality HIT.Truncations HIT.Connectedness.
 Import TrM.
 Local Open Scope path_scope.
 
