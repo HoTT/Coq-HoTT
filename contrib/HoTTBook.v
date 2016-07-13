@@ -58,6 +58,7 @@
 *)
 
 Require Import HoTT.
+Require Import HoTT.HIT.IntervalImpliesFunext.
 Require HoTT.Categories.
 
 (* END OF PREAMBLE *)
@@ -94,7 +95,7 @@ Definition Book_2_1_7 := @HoTT.Basics.Overture.pType.
 (* ================================================== def:loopspace *)
 (** Definition 2.1.8 *)
 
-
+Definition Book_2_1_8 := @HoTT.Pointed.iterated_loops.
 
 (* ================================================== lem:map *)
 (** Lemma 2.2.1 *)
@@ -188,7 +189,8 @@ Definition Book_2_4_7 := @HoTT.Basics.Equivalences.equiv_idmap.
 (* ================================================== eg:concatequiv *)
 (** Example 2.4.8 *)
 
-
+Definition Book_2_4_8_i := @HoTT.Types.Paths.isequiv_concat_l.
+Definition Book_2_4_8_ii := @HoTT.Types.Paths.isequiv_concat_r.
 
 (* ================================================== thm:transportequiv *)
 (** Example 2.4.9 *)
@@ -199,7 +201,7 @@ Definition Book_2_4_9 := @HoTT.Basics.Equivalences.isequiv_transport.
 (** Lemma 2.4.12 *)
 
 Definition Book_2_4_12_item_i   := @HoTT.Basics.Equivalences.reflexive_equiv.
-(* missing? Definition Book_2_4_12_item_ii  :=  *)
+Definition Book_2_4_12_item_ii  := @HoTT.Basics.Equivalences.symmetric_equiv.
 Definition Book_2_4_12_item_iii := @HoTT.Basics.Equivalences.transitive_equiv.
 
 (* ================================================== thm:path-prod *)
@@ -245,8 +247,7 @@ Definition Book_2_9_3 := @HoTT.Basics.Overture.path_forall.
 (* ================================================== thm:dpath-arrow *)
 (** Lemma 2.9.6 *)
 
-(** non-dependent as special case of dependent *)
-Definition Book_2_9_6 := @HoTT.Types.Forall.dpath_forall.
+Definition Book_2_9_6 := @HoTT.Types.Arrow.dpath_arrow.
 
 (* ================================================== thm:dpath-forall *)
 (** Lemma 2.9.7 *)
@@ -304,7 +305,7 @@ Definition Book_2_12_5 := @HoTT.Types.Sum.equiv_path_sum.
 (* ================================================== thm:path-nat *)
 (** Theorem 2.13.1 *)
 
-(* Definition Book_2_13_1 := @HoTT.Types... *)
+Definition Book_2_13_1 := @HoTT.Spaces.Nat.equiv_path_nat.
 
 (* ================================================== thm:prod-ump *)
 (** Theorem 2.15.2 *)
@@ -320,42 +321,53 @@ Definition Book_2_15_5 := @HoTT.Types.Prod.isequiv_prod_coind.
 (* ================================================== thm:ttac *)
 (** Theorem 2.15.7 *)
 
-(* Definition Book_2_15_7 := @HoTT.... *)
+Definition Book_2_15_7 := @HoTT.Types.Sigma.isequiv_sigT_coind.
 
 (* ================================================== defn:set *)
 (** Definition 3.1.1 *)
 
+Definition Book_3_1_1 := @HoTT.Basics.Overture.IsTrunc 0.
 
+(* ================================================== (unnamed) *)
+(** Example 3.1.2 *)
+
+Definition Book_3_1_2 := @HoTT.Types.Unit.contr_unit.
+
+(* ================================================== (unnamed) *)
+(** Example 3.1.3 *)
+
+Definition Book_3_1_3 := @HoTT.Types.Empty.hprop_Empty.
 
 (* ================================================== thm:nat-set *)
 (** Example 3.1.4 *)
 
-
+Definition Book_3_1_4 := @HoTT.Spaces.Nat.hset_nat.
 
 (* ================================================== thm:isset-prod *)
 (** Example 3.1.5 *)
 
-
+Definition Book_3_1_5 := @HoTT.Types.Prod.trunc_prod.
 
 (* ================================================== thm:isset-forall *)
 (** Example 3.1.6 *)
 
-
+Definition Book_3_1_6 := @HoTT.Types.Forall.trunc_forall.
 
 (* ================================================== defn:1type *)
 (** Definition 3.1.7 *)
 
-
+Definition Book_3_1_7 := @HoTT.Basics.Overture.IsTrunc 1.
 
 (* ================================================== thm:isset-is1type *)
 (** Lemma 3.1.8 *)
 
+Definition Book_3_1_8 := @HoTT.Basics.Trunc.trunc_succ 0.
 
 
 (* ================================================== thm:type-is-not-a-set *)
 (** Example 3.1.9 *)
 
-
+Definition Book_3_1_9 := @HoTT.Types.Universe.not_hset_Type.
 
 (* ================================================== thm:not-dneg *)
 (** Theorem 3.2.2 *)
@@ -370,7 +382,7 @@ Definition Book_2_15_5 := @HoTT.Types.Prod.isequiv_prod_coind.
 (* ================================================== defn:isprop *)
 (** Definition 3.3.1 *)
 
-
+Definition Book_3_3_1 := @HoTT.Basics.Overture.IsTrunc -1.
 
 (* ================================================== thm:inhabprop-eqvunit *)
 (** Lemma 3.3.2 *)
@@ -385,22 +397,26 @@ Definition Book_3_3_3 := @HoTT.Basics.Trunc.equiv_iff_hprop.
 (* ================================================== thm:prop-set *)
 (** Lemma 3.3.4 *)
 
-
+Definition Book_3_3_4 := @HoTT.Basics.Trunc.trunc_succ -1.
 
 (* ================================================== thm:isprop-isset *)
 (** Lemma 3.3.5 *)
 
+Definition Book_3_3_5_i := @HoTT.HProp.hprop_trunc.
 
 
 (* ================================================== thm:isprop-isprop *)
 (** Lemma 3.3.5 *)
 
+Definition Book_3_3_5_ii := @HoTT.HProp.hprop_trunc.
 
 
 (* ================================================== defn:decidable-equality *)
 (** Definition 3.4.3 *)
 
-
+Definition Book_3_4_3_part_i   := @HoTT.Basics.Decidable.Decidable.
+(** Definition Book_3_4_3_part_ii  :=  *)
+Definition Book_3_4_3_part_iii := @HoTT.Basics.Decidable.DecidablePaths.
 
 (* ================================================== defn:setof *)
 (** Lemma 3.5 *)
@@ -410,7 +426,7 @@ Definition Book_3_3_3 := @HoTT.Basics.Trunc.equiv_iff_hprop.
 (* ================================================== thm:path-subset *)
 (** Lemma 3.5.1 *)
 
-
+Definition Book_3_5_1 := @HoTT.Types.Sigma.path_sigma_hprop.
 
 (* ================================================== thm:isprop-forall *)
 (** Example 3.6.2 *)
@@ -433,55 +449,67 @@ Definition Book_3_6_2 `{Funext} (A : Type) (B : A -> Type)
 
 
 
+(* ================================================== (unnamed) *)
+(** Lemma 3.9.1 *)
+
+Definition Book_3_9_1 := @HoTT.HIT.Truncations.TrM.RSU.isequiv_to_O_inO -1.
+
 (* ================================================== cor:UC *)
 (** Corollary 3.9.2 *)
 
-
+Definition Book_3_9_2 := @HoTT.HIT.unique_choice.unique_choice.
 
 (* ================================================== defn:contractible *)
 (** Definition 3.11.1 *)
 
-
+Definition Book_3_11_1 := @HoTT.Basics.Overture.IsTrunc -2.
 
 (* ================================================== thm:contr-unit *)
 (** Lemma 3.11.3 *)
 
-
+Definition Book_3_11_3 := @HoTT.Types.Unit.contr_unit.
 
 (* ================================================== thm:isprop-iscontr *)
 (** Lemma 3.11.4 *)
 
+Definition Book_3_11_4 := @HoTT.HProp.hprop_trunc.
 
 
 (* ================================================== thm:contr-contr *)
 (** Corollary 3.11.5 *)
 
+Definition Book_3_11_5 := @HoTT.HProp.contr_contr.
 
 
 (* ================================================== thm:contr-forall *)
 (** Lemma 3.11.6 *)
 
+Definition Book_3_11_6 := @HoTT.Types.Forall.trunc_forall.
 
 
 (* ================================================== thm:retract-contr *)
 (** Lemma 3.11.7 *)
 
-Definition Book_3_11_7 := @HoTT.Idempotents.contr_retracttype.
+Definition Book_3_11_7a := @HoTT.Idempotents.contr_retracttype.
+Definition Book_3_11_7 := @HoTT.HIT.Truncations.TrM.RSU.inO_to_O_retract -2.
 
 (* ================================================== thm:contr-paths *)
 (** Lemma 3.11.8 *)
 
-
+Definition Book_3_11_8 := @HoTT.Basics.Contractible.contr_basedpaths.
 
 (* ================================================== thm:omit-contr *)
 (** Lemma 3.11.9 *)
 
+Definition Book_3_11_9_part_i  := @HoTT.Types.Sigma.equiv_sigma_contr.
+Definition Book_3_11_9_part_ii := @HoTT.Types.Sigma.equiv_contr_sigma.
 
 
 (* ================================================== thm:prop-minusonetype *)
 (** Lemma 3.11.10 *)
 
-
+Definition Book_3_11_10_if     := @HoTT.Basics.Trunc.path_ishprop.
+Definition Book_3_11_10_onlyif := @HoTT.Basics.Trunc.hprop_allpath.
 
 (* ================================================== lem:qinv-autohtpy *)
 (** Lemma 4.1.1 *)
@@ -501,47 +529,51 @@ Definition Book_3_11_7 := @HoTT.Idempotents.contr_retracttype.
 (* ================================================== defn:ishae *)
 (** Definition 4.2.1 *)
 
-
+Definition Book_4_2_1 := @HoTT.Basics.Overture.IsEquiv.
 
 (* ================================================== lem:coh-equiv *)
 (** Lemma 4.2.2 *)
 
-
+Definition Book_4_2_2 := @HoTT.Basics.Equivalences.other_adj.
 
 (* ================================================== thm:equiv-iso-adj *)
 (** Theorem 4.2.3 *)
 
+Definition Book_4_2_3 := @HoTT.Basics.Equivalences.isequiv_adjointify.
 
 
 (* ================================================== defn:homotopy-fiber *)
 (** Definition 4.2.4 *)
 
-
+Definition Book_4_2_4 := @HoTT.Basics.Overture.hfiber.
 
 (* ================================================== lem:hfib *)
 (** Lemma 4.2.5 *)
 
+Definition Book_4_2_5 := @HoTT.Fibrations.equiv_path_hfiber.
 
 
 (* ================================================== thm:contr-hae *)
 (** Theorem 4.2.6 *)
 
-
+Definition Book_4_2_6 := @HoTT.EquivalenceVarieties.fcontr_isequiv.
 
 (* ================================================== defn:linv-rinv *)
 (** Definition 4.2.7 *)
 
-
+Definition Book_4_2_7 := @HoTT.Basics.Overture.Sect.
 
 (* ================================================== thm:equiv-compose-equiv *)
 (** Lemma 4.2.8 *)
 
-
+Definition Book_4_2_8_i  := @HoTT.Basics.Equivalences.isequiv_postcompose.
+Definition Book_4_2_8_ii := @HoTT.Basics.Equivalences.isequiv_precompose.
 
 (* ================================================== lem:inv-hprop *)
 (** Lemma 4.2.9 *)
 
-
+Definition Book_4_2_9_i  := @HoTT.EquivalenceVarieties.contr_sect_equiv.
+Definition Book_4_2_9_ii := @HoTT.EquivalenceVarieties.contr_retr_equiv.
 
 (* ================================================== defn:lcoh-rcoh *)
 (** Definition 4.2.10 *)
@@ -561,57 +593,65 @@ Definition Book_3_11_7 := @HoTT.Idempotents.contr_retracttype.
 (* ================================================== thm:hae-hprop *)
 (** Theorem 4.2.13 *)
 
-
+Definition Book_4_2_13 := @HoTT.Types.Equiv.hprop_isequiv.
 
 (* ================================================== defn:biinv *)
 (** Definition 4.3.1 *)
 
-
+Definition Book_4_3_1  := @HoTT.EquivalenceVarieties.BiInv.
 
 (* ================================================== thm:isprop-biinv *)
 (** Theorem 4.3.2 *)
 
+Definition Book_4_3_2  := @HoTT.EquivalenceVarieties.isprop_biinv.
 
 
 (* ================================================== thm:equiv-biinv-isequiv *)
 (** Corollary 4.3.3 *)
 
-
+Definition Book_4_3_3  := @HoTT.EquivalenceVarieties.equiv_biinv_isequiv.
 
 (* ================================================== defn:equivalence *)
 (** Definition 4.4.1 *)
 
-
+Definition Book_4_4_1 := @HoTT.Basics.Trunc.IsTruncMap -2.
 
 (* ================================================== thm:lequiv-contr-hae *)
 (** Theorem 4.4.3 *)
 
-
+Definition Book_4_4_3 := @HoTT.EquivalenceVarieties.isequiv_fcontr.
 
 (* ================================================== thm:contr-hprop *)
 (** Lemma 4.4.4 *)
 
-
+Definition Book_4_4_4 := @HoTT.HProp.hprop_trunc.
 
 (* ================================================== thm:equiv-contr-hae *)
 (** Theorem 4.4.5 *)
 
-
+Definition Book_4_3_5 := @HoTT.EquivalenceVarieties.equiv_fcontr_isequiv.
 
 (* ================================================== thm:equiv-inhabcod *)
 (** Corollary 4.4.6 *)
 
+Definition Book_4_3_6 := @HoTT.EquivalenceVarieties.isequiv_inhab_codomain.
 
+(* ================================================== (unnamed) *)
+(** Definition 4.6.1 *)
+
+Definition Book_4_6_1 := @HoTT.Basics.Trunc.IsTruncMap -1.
 
 (* ================================================== thm:mono-surj-equiv *)
 (** Theorem 4.6.3 *)
 
-
+Definition Book_4_6_3 := @HoTT.HIT.Truncations.TrM.isequiv_conn_ino_map.
 
 (* ================================================== thm:two-out-of-three *)
 (** Theorem 4.7.1 *)
 
-
+Definition Book_4_7_1_part_i   := @HoTT.Basics.Equivalences.isequiv_compose.
+Definition Book_4_7_1_part_ii  := @HoTT.Basics.Equivalences.cancelR_isequiv.
+Definition Book_4_7_1_part_iii := @HoTT.Basics.Equivalences.cancelL_isequiv.
 
 (* ================================================== defn:retract *)
 (** Definition 4.7.2 *)
@@ -631,47 +671,47 @@ Definition Book_3_11_7 := @HoTT.Idempotents.contr_retracttype.
 (* ================================================== defn:total-map *)
 (** Definition 4.7.5 *)
 
-
+Definition Book_4_7_5 := @HoTT.Types.Sigma.functor_sigma.
 
 (* ================================================== fibwise-fiber-total-fiber-equiv *)
 (** Theorem 4.7.6 *)
 
-
+Definition Book_4_7_6 := @HoTT.Fibrations.hfiber_functor_sigma.
 
 (* ================================================== thm:total-fiber-equiv *)
 (** Theorem 4.7.7 *)
 
-
+Definition Book_4_7_7 := @HoTT.Fibrations.isequiv_from_functor_sigma.
 
 (* ================================================== thm:fiber-of-a-fibration *)
 (** Lemma 4.8.1 *)
 
-
+Definition Book_4_8_1 := @HoTT.Fibrations.hfiber_fibration.
 
 (* ================================================== thm:total-space-of-the-fibers *)
 (** Lemma 4.8.2 *)
 
-
+Definition Book_4_8_2 := @HoTT.Fibrations.equiv_fibration_replacement.
 
 (* ================================================== thm:nobject-classifier-appetizer *)
 (** Theorem 4.8.3 *)
 
-
+Definition Book_4_8_3 := @HoTT.ObjectClassifier.FamequivPow.
 
 (* ================================================== thm:object-classifier *)
 (** Theorem 4.8.4 *)
 
-
+Definition Book_4_8_4 := @HoTT.ObjectClassifier.objclasspb_is_fibrantreplacement.
 
 (* ================================================== weakfunext *)
 (** Definition 4.9.1 *)
 
-
+Definition Book_4_9_1 := @HoTT.Basics.FunextVarieties.WeakFunext.
 
 (* ================================================== UA-eqv-hom-eqv *)
 (** Lemma 4.9.2 *)
 
-
+Definition Book_4_9_2 := @HoTT.UnivalenceImpliesFunext.univalence_isequiv_postcompose.
 
 (* ================================================== contrfamtotalpostcompequiv *)
 (** Corollary 4.9.3 *)
@@ -681,12 +721,12 @@ Definition Book_3_11_7 := @HoTT.Idempotents.contr_retracttype.
 (* ================================================== uatowfe *)
 (** Theorem 4.9.4 *)
 
-
+Definition Book_4_9_4 := @HoTT.UnivalenceImpliesFunext.Univalence_implies_WeakFunext.
 
 (* ================================================== wfetofe *)
 (** Theorem 4.9.5 *)
 
-
+Definition Book_4_9_5 := @HoTT.Basics.FunextVarieties.WeakFunext_implies_Funext.
 
 (* ================================================== thm:nat-uniq *)
 (** Theorem 5.1.1 *)
@@ -741,7 +781,8 @@ Definition Book_3_11_7 := @HoTT.Idempotents.contr_retracttype.
 (* ================================================== thm:equiv-induction *)
 (** Corollary 5.8.5 *)
 
-
+Definition Book_5_8_5 := @HoTT.Types.Universe.equiv_induction'.
+Definition Book_5_8_5_comp := @HoTT.Types.Universe.equiv_induction'_comp.
 
 (* ================================================== thm:htpy-induction *)
 (** Corollary 5.8.6 *)
@@ -751,7 +792,7 @@ Definition Book_3_11_7 := @HoTT.Idempotents.contr_retracttype.
 (* ================================================== thm:S1rec *)
 (** Lemma 6.2.5 *)
 
-
+Definition Book_6_2_5 := @HoTT.HIT.Circle.S1_rec.
 
 (* ================================================== thm:uniqueness-for-functions-on-S1 *)
 (** Lemma 6.2.8 *)
@@ -763,10 +804,16 @@ Definition Book_3_11_7 := @HoTT.Idempotents.contr_retracttype.
 
 
 
+(* ================================================== (unnamed) *)
+(** Lemma 6.3.1 *)
+
+Definition Book_6_3_1 := @HoTT.HIT.Interval.contr_interval.
+
+
 (* ================================================== thm:interval-funext *)
 (** Lemma 6.3.2 *)
 
-
+Definition Book_6_3_2 := @HoTT.HIT.IntervalImpliesFunext.funext_type_from_interval.
 
 (* ================================================== thm:loop-nontrivial *)
 (** Lemma 6.4.1 *)
@@ -816,12 +863,12 @@ Definition Book_6_5_4 := @HoTT.HIT.Suspension.loop_susp_adjoint.
 (* ================================================== thm:trunc0-ind *)
 (** Lemma 6.9.1 *)
 
-
+Definition Book_6_9_1 := @HoTT.HIT.Truncations.Trunc.Trunc_ind 0.
 
 (* ================================================== thm:trunc0-lump *)
 (** Lemma 6.9.2 *)
 
-
+Definition Book_6_9_2 := @HoTT.HIT.Truncations.TrM.isequiv_o_to_O.
 
 (* ================================================== thm:set-pushout *)
 (** Lemma 6.9.3 *)
@@ -831,12 +878,12 @@ Definition Book_6_5_4 := @HoTT.HIT.Suspension.loop_susp_adjoint.
 (* ================================================== thm:quotient-surjective *)
 (** Lemma 6.10.2 *)
 
-
+Definition Book_6_10_2 := @HoTT.HIT.quotient.quotient_surjective.
 
 (* ================================================== thm:quotient-ump *)
 (** Lemma 6.10.3 *)
 
-
+Definition Book_6_10_3 := @HoTT.HIT.quotient.quotient_ump.
 
 (* ================================================== def:VVquotient *)
 (** Definition 6.10.5 *)
@@ -876,12 +923,12 @@ Definition Book_6_5_4 := @HoTT.HIT.Suspension.loop_susp_adjoint.
 (* ================================================== thm:transport-is-given *)
 (** Lemma 6.12.1 *)
 
-
+Definition Book_6_12_1 := @HoTT.Types.Universe.transport_path_universe'.
 
 (* ================================================== thm:flattening *)
 (** Lemma 6.12.2 *)
 
-
+Definition Book_6_12_2 := @HoTT.HIT.Flattening.equiv_flattening.
 
 (* ================================================== thm:flattening-cp *)
 (** Lemma 6.12.3 *)
@@ -891,22 +938,25 @@ Definition Book_6_5_4 := @HoTT.HIT.Suspension.loop_susp_adjoint.
 (* ================================================== thm:flattening-rect *)
 (** Lemma 6.12.4 *)
 
+Definition Book_6_12_4 := @HoTT.HIT.Flattening.sWtil_ind.
 
 
 (* ================================================== thm:flattening-rectnd *)
 (** Lemma 6.12.5 *)
 
+Definition Book_6_12_5 := @HoTT.HIT.Flattening.sWtil_rec.
 
 
 (* ================================================== thm:ap-sigma-rect-path-pair *)
 (** Lemma 6.12.7 *)
 
+Definition Book_6_12_7 := @HoTT.Types.Sigma.ap_sigT_rec_path_sigma.
 
 
 (* ================================================== thm:flattening-rectnd-beta-ppt *)
 (** Lemma 6.12.8 *)
 
-
+Definition Book_6_12_8 := @HoTT.HIT.Flattening.sWtil_rec_beta_ppt.
 
 (* ================================================== eg:unnatural-hit *)
 (** Example 6.13.1 *)
