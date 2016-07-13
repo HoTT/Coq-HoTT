@@ -19,6 +19,130 @@ Local Set Universe Minimization ToSet.
 
 Coercion trunctype_type : TruncType >-> Sortclass.
 
+Class Closeness@{k i} (R:Type@{k}) (A : Type@{i}) := close : R -> relation@{i i} A.
+Arguments close {R A _} _ _ _.
+
+Class NonExpanding `{Closeness R A} `{Closeness R B} (f : A -> B)
+  := non_expanding : forall e x y, close e x y -> close e (f x) (f y).
+Arguments non_expanding {R A _ B _} f {_ e x y} _.
+
+Class Lipschitz `{Mult R} `{Closeness R A} `{Closeness R B} (f : A -> B) (L : R)
+  := lipschitz : forall e x y, close e x y -> close (L * e) (f x) (f y).
+Arguments lipschitz {R _ A _ B _} f L {_ e x y} _.
+
+Section closeness.
+Universe UR UA.
+Context {R:Type@{UR} }
+  `{Rmult : Mult R} {Rone :  One R} `{LeftIdentity R R Rmult Rone}
+  {A:Type@{UA} } `{Closeness R A}.
+
+Global Instance id_nonexpanding : NonExpanding (@id A).
+Proof.
+hnf;trivial.
+Qed.
+
+Universe UB.
+Context {B:Type@{UB} } `{Closeness R B} (f : A -> B).
+
+Global Instance nonexpanding_lipschitz `{!NonExpanding f}
+  : Lipschitz f 1.
+Proof.
+red. intro;rewrite left_identity;apply non_expanding,_.
+Qed.
+
+Lemma lipschitz_nonexpanding@{} `{!Lipschitz f 1} : NonExpanding f.
+Proof.
+red. intros e x y E;rewrite <-(left_identity e). apply (lipschitz f 1 E).
+Qed.
+
+Global Instance const_nonexpanding@{} `{forall e, Reflexive (close (A:=B) e)}
+  (b : B) : NonExpanding (fun _ : A => b).
+Proof.
+hnf. intros;reflexivity.
+Qed.
+
+End closeness.
+
+Section compositions.
+Universe UR UA.
+Context {R:Type@{UR} }
+  `{Rmult : Mult R} {Rone :  One R} `{LeftIdentity R R Rmult Rone}
+  {A:Type@{UA} } `{Closeness R A}.
+Universe UB.
+Context {B:Type@{UB} } `{Closeness R B}.
+Universe UC.
+Context {C:Type@{UC} } `{Closeness R C} (g : B -> C) (f : A -> B).
+
+Global Instance nonexpanding_compose@{}
+  {Eg : NonExpanding g} {Ef : NonExpanding f}
+  : NonExpanding (compose g f).
+Proof.
+hnf. intros e x y xi;exact (non_expanding g (non_expanding f xi)).
+Qed.
+
+Global Instance lipschitz_compose@{} `{!Associative Rmult}
+  Lg {Eg : Lipschitz g Lg} Lf {Ef : Lipschitz f Lf}
+  : Lipschitz (compose g f) (Lg * Lf).
+Proof.
+intros ??? He.
+unfold compose;apply Ef,Eg in He.
+pattern (Lg * Lf * e).
+eapply transport;[|exact He].
+apply associativity.
+Qed.
+
+Lemma lipschitz_compose_nonexpanding_r'
+  `{!Associative Rmult} `{!Commutative Rmult}
+  L {Eg : Lipschitz g L} {Ef : NonExpanding f}
+  : Lipschitz (compose g f) L.
+Proof.
+rewrite <-(left_identity L),commutativity. apply _.
+Qed.
+
+Global Instance lipschitz_compose_nonexpanding_r@{}
+  `{!Associative Rmult} `{!Commutative Rmult}
+  L {Eg : Lipschitz g L} {Ef : NonExpanding f}
+  : Lipschitz (compose g f) L
+  := lipschitz_compose_nonexpanding_r'@{Ularge Ularge} L.
+
+End compositions.
+
+Section interval.
+Universe UA UALE.
+Context {A:Type@{UA} } {Ale : Le@{UA UALE} A}.
+
+Definition Interval a b := sigT (fun x : A => a <= x /\ x <= b).
+
+Definition Interval_restrict {Ameet : Meet A} {Ajoin : Join A}
+  `{!LatticeOrder@{UA UALE} Ale}
+  (a b : A) (E : a <= b) : A -> Interval a b.
+Proof.
+intros x.
+exists (join a (meet x b)).
+split.
+- apply join_ub_l.
+- apply join_le@{UA UALE Set}.
+  + exact E.
+  + apply meet_lb_r.
+Defined.
+
+Universe UR.
+Context {R:Type@{UR} } `{Rmult : Mult R} {Rone :  One R}
+  `{LeftIdentity R R Rmult Rone}
+  `{Closeness R A}.
+
+Global Instance Interval_close (a b : A) : Closeness R (Interval a b)
+  := fun e x y => close e x.1 y.1.
+Arguments Interval_close _ _ _ _ _ /.
+
+Global Instance interval_project_nonexpanding (a b : A)
+  : NonExpanding (fun x : Interval a b => x.1).
+Proof.
+intros e x y xi;exact xi.
+Qed.
+
+End interval.
+
 Module Export Cauchy.
 
 Section VarSec.
@@ -504,7 +628,7 @@ Definition equiv_rec0@{i} (P : Q+ -> real Q -> real Q -> Type@{i})
   `{forall e u v, IsHProp (P e u v)}
   := equiv_rect0 (fun e u v _ => P e u v).
 
-Lemma equiv_symm@{} : forall e, Symmetric (Requiv Q e).
+Instance equiv_symm@{} : forall e, Symmetric (Requiv Q e).
 Proof.
 red. apply (equiv_rec0 _).
 - intros q r e He. apply equiv_rat_rat.
@@ -591,15 +715,13 @@ Definition real_rec_lim A B I x : real_rec A B I (lim x) =
 
 End mutual_recursion.
 
-Class Closeness@{i} (A : Type@{i}) := close : Q+ -> relation@{i i} A.
-
-Instance Q_close@{} : Closeness Q := fun e q r => - ' e < q - r < ' e.
-Instance R_close@{} : Closeness (real Q) := Requiv Q.
+Instance Q_close@{} : Closeness Q+ Q := fun e q r => - ' e < q - r < ' e.
+Instance R_close@{} : Closeness Q+ (real Q) := Requiv Q.
 
 Arguments Q_close /.
 Arguments R_close /.
 
-Instance Q_close_symm@{} : forall e, Symmetric (@close Q _ e).
+Instance Q_close_symm@{} : forall e, Symmetric (@close _ Q _ e).
 Proof.
 red;unfold close;simpl.
 intros e x y [E1 E2];split.
@@ -616,9 +738,9 @@ intros;apply pos_eq.
 apply mult_assoc.
 Qed.
 
-Lemma Qpos_mult_1_l@{} : forall e : Q+, 1 * e = e.
+Instance Qpos_mult_1_l@{} : LeftIdentity (@mult Q+ _) 1.
 Proof.
-intros;apply pos_eq;apply mult_1_l.
+hnf;intros;apply pos_eq;apply mult_1_l.
 Qed.
 
 Lemma pos_recip_through_plus' : forall a b c : Q+,
@@ -1675,61 +1797,7 @@ Instance R0@{} : Zero (real Q) := rat 0.
 
 Instance R1@{} : One (real Q) := rat 1.
 
-Class NonExpanding `{Closeness A} `{Closeness B} (f : A -> B)
-  := non_expanding : forall e x y, close e x y -> close e (f x) (f y).
-Arguments non_expanding {A _ B _} f {_ e x y} _.
-
-Class Lipschitz `{Closeness A} `{Closeness B} (f : A -> B) (L : Q+)
-  := lipschitz : forall e x y, close e x y -> close (L * e) (f x) (f y).
-Arguments lipschitz {A _ B _} f L {_ e x y} _.
-
-Instance nonexpanding_lipschitz `{NonExpanding A B f} : Lipschitz f 1.
-Proof.
-red. intro;rewrite Qpos_mult_1_l;apply non_expanding,_.
-Qed.
-
-Lemma lipschitz_nonexpanding' `{Lipschitz A B f 1} : NonExpanding f.
-Proof.
-red. intros e x y E;rewrite <-(Qpos_mult_1_l e);apply (lipschitz f 1 E).
-Qed.
-
-Lemma lipschitz_nonexpanding@{i j} {A:Type@{i} } {B:Type@{j} }
-  `{Lipschitz A B f 1}
-  : NonExpanding f.
-Proof.
-exact lipschitz_nonexpanding'@{i j UQ}.
-Qed.
-
-Instance id_nonexpanding `{Closeness A} : NonExpanding (@id A).
-Proof.
-hnf;trivial.
-Qed.
-
-Instance const_nonexpanding `{Closeness A} (b : real Q)
-  : NonExpanding (fun _ : A => b).
-Proof.
-hnf. intros;apply Requiv_refl.
-Qed.
-
-Instance nonexpanding_compose `{Closeness A} `{Closeness B} `{Closeness C}
-  (g : B -> C){Eg : NonExpanding g} (f : A -> B) {Ef : NonExpanding f}
-  : NonExpanding (compose g f).
-Proof.
-hnf. intros e x y xi;exact (non_expanding g (non_expanding f xi)).
-Qed.
-
-Instance lipschitz_compose `{Closeness A} `{Closeness B} `{Closeness C}
-  (g : B -> C) Lg {Eg : Lipschitz g Lg} (f : A -> B) Lf {Ef : Lipschitz f Lf}
-  : Lipschitz (compose g f) (Lg * Lf).
-Proof.
-intros ??? He.
-unfold compose;apply Ef,Eg in He.
-pattern (Lg * Lf * e).
-eapply transport;[|exact He].
-apply Qpos_mult_assoc.
-Qed.
-
-Instance continuous_compose g {Eg : Continuous g} f {Ef : Continuous f}
+Instance continuous_compose@{} g {Eg : Continuous g} f {Ef : Continuous f}
   : Continuous (compose g f).
 Proof.
 intros u e.
@@ -1871,7 +1939,7 @@ End lipschitz_extend.
 Instance lipschitz_extend_nonexpanding (f : Q -> (real Q)) `{!NonExpanding f}
   : NonExpanding (lipschitz_extend f 1).
 Proof.
-apply lipschitz_nonexpanding.
+apply (lipschitz_nonexpanding _).
 Qed.
 
 Instance lipschitz_continuous@{} `{!Lipschitz f L} : Continuous f.
@@ -1887,20 +1955,6 @@ Qed.
 Lemma nonexpanding_continuous@{} `{!NonExpanding f} : Continuous f.
 Proof.
 apply _.
-Qed.
-
-(* This seems like it can easily make resolution loop. *)
-Lemma Lipschitz_mult_1_l' `{Closeness A} `{Closeness B} (f : A -> B) L
-  : Lipschitz f (1 * L) -> Lipschitz f L.
-Proof.
-rewrite Qpos_mult_1_l. trivial.
-Qed.
-
-Lemma Lipschitz_mult_1_l@{i j} {A:Type@{i} } `{Closeness A}
-  {B:Type@{j} } `{Closeness B} (f : A -> B) L
-  : Lipschitz f (1 * L) -> Lipschitz f L.
-Proof.
-exact (Lipschitz_mult_1_l'@{i j UQ} f L).
 Qed.
 
 Lemma Qclose_neg@{} : forall e x y, close e x y <-> close e (- x) (- y).
@@ -1960,7 +2014,7 @@ Section extend_binary.
 Definition non_expandingT@{}
   := sigT (fun h : real Q -> real Q => NonExpanding h).
 
-Instance non_expanding_close@{} : Closeness non_expandingT
+Instance non_expanding_close@{} : Closeness Q+ non_expandingT
   := fun e h k => forall u, close e (h.1 u) (k.1 u).
 
 Definition non_expanding_separated@{} : forall h k : non_expandingT,
@@ -2368,10 +2422,10 @@ intros x y z E1 E2. rewrite <-E2,<-E1. clear E1 E2;revert x.
 apply @unique_continuous_extension.
 { eapply @lipschitz_continuous.
   eapply (@lipschitz_dup (fun u v => u ⊔ ((v ⊔ y) ⊔ z))).
-  { intros u. apply @nonexpanding_lipschitz.
+  { intros u. apply nonexpanding_lipschitz.
     change (NonExpanding (compose (u ⊔) (compose (⊔ z) (⊔ y)))).
     apply _. }
-  { intros u. apply @nonexpanding_lipschitz.
+  { intros u. apply nonexpanding_lipschitz.
     apply _. }
 }
 { apply @nonexpanding_continuous.
@@ -2579,7 +2633,7 @@ split.
       clear E;revert x y;apply @unique_continuous_binary_extension;try apply _.
       { intros;eapply @lipschitz_continuous.
         apply (lipschitz_dup (fun v1 v2 => (x ⊓ v1) ⊔ v2));try apply _.
-        intro;apply @nonexpanding_lipschitz.
+        intro;apply nonexpanding_lipschitz.
         change (NonExpanding (compose (⊔ y) (x ⊓)));apply _.
       }
       { change (forall y, Continuous (compose (⊔ y) (⊓ y)));apply _. }
@@ -2951,32 +3005,6 @@ Qed.
 
 Definition equiv_metric_rw@{} := equiv_metric_rw'@{Ularge Ularge Ularge}.
 
-Definition Interval `{Le A} a b := sigT (fun x : A => a <= x /\ x <= b).
-
-Global Instance Interval_close `{Closeness A} `{Le A} (a b : A)
-  : Closeness (Interval a b)
-  := fun e x y => close e x.1 y.1.
-Arguments Interval_close {A _ _} _ _ _ _ _ /.
-
-Global Instance interval_project_nonexpanding `{Closeness A} `{Le A} (a b : A)
-  : NonExpanding (fun x : Interval a b => x.1).
-Proof.
-intros e x y xi;exact xi.
-Qed.
-
-Definition Interval_restrict@{i j} {A:Type@{i} }
-  `{Closeness A} `{LatticeOrder@{i j} A}
-  (a b : A) (E : a <= b) : A -> Interval a b.
-Proof.
-intros x.
-exists (join a (meet x b)).
-split.
-- apply join_ub_l.
-- apply join_le@{i j Set}.
-  + exact E.
-  + apply meet_lb_r.
-Defined.
-
 Instance R_interval_restrict_nonexpanding@{}
   : forall (a b : real Q) E, NonExpanding (Interval_restrict a b E).
 Proof.
@@ -2993,14 +3021,6 @@ change (NonExpanding (fun z => join a (meet z b))).
 apply _.
 Qed.
 
-Instance lipschitz_compose_nonexpanding_r
-  `{Closeness A} `{Closeness B} `{Closeness C}
-  (g : B -> C) L {Eg : Lipschitz g L} (f : A -> B) {Ef : NonExpanding f}
-  : Lipschitz (compose g f) L.
-Proof.
-rewrite <-(Qpos_mult_1_l L),qpos_mult_comm. apply _.
-Qed.
-
 Definition lipschitz_extend_interval@{} (a b : Q) (E : a <= b)
   (f : Interval a b -> real Q) L
   `{!Lipschitz f L}
@@ -3011,7 +3031,7 @@ Instance lipschitz_extend_interval_nonexpanding@{} (a b : Q) (E : a <= b)
   (f : Interval a b -> real Q)
   `{!NonExpanding f}
   : NonExpanding (lipschitz_extend_interval a b E f 1)
-  := lipschitz_nonexpanding.
+  := lipschitz_nonexpanding _.
 
 Lemma Rplus_le_preserving' : forall z : real Q,
   OrderPreserving (z +).
@@ -3021,7 +3041,7 @@ rewrite <-E;clear E.
 revert z x y;apply @unique_continuous_ternary_extension;try apply _.
 { intros x z;eapply @lipschitz_continuous.
   apply (lipschitz_dup (fun y1 y2 => (x + y1) ⊔ (x + (y2 ⊔ z))));intros y;
-  apply @nonexpanding_lipschitz.
+  apply nonexpanding_lipschitz.
   { change (NonExpanding (compose ((x + y) ⊔) (compose (x +) (⊔ z)))).
     apply _. }
   { change (NonExpanding (compose (⊔ (x + (y ⊔ z))) (x +))).
@@ -3029,7 +3049,7 @@ revert z x y;apply @unique_continuous_ternary_extension;try apply _.
 }
 { intros;eapply @lipschitz_continuous.
   apply (lipschitz_dup (fun x1 x2 => (x1 + y) ⊔ (x2 + (y ⊔ z))));intros x;
-  apply @nonexpanding_lipschitz.
+  apply nonexpanding_lipschitz.
   { apply _. }
   { change (NonExpanding (compose (⊔ (x + (y ⊔ z))) (+ y))).
     apply _. }
