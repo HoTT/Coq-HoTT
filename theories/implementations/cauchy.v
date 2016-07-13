@@ -323,6 +323,11 @@ apply pos_eq. change (' x + ' y = ' y + ' x).
 apply plus_comm.
 Qed.
 
+Instance qpos_mult_comm@{} : Commutative (@mult Q+ _).
+Proof.
+hnf;intros;apply pos_eq,mult_comm.
+Qed.
+
 Let rat := rat Q.
 Let lim := lim Q.
 
@@ -2233,7 +2238,7 @@ intros q r;revert u;apply unique_continuous_extension.
 auto.
 Qed.
 
-Lemma Rplus_comm@{} : Commutative (@plus _ Rplus).
+Instance Rplus_comm@{} : Commutative (@plus _ Rplus).
 Proof.
 hnf. apply unique_continuous_binary_extension.
 intros q r;apply (ap rat),plus_comm.
@@ -2457,51 +2462,50 @@ intros E1 E2.
 apply (irreflexivity lt x). transitivity y;trivial.
 Qed.
 
-Lemma R_archimedean' : forall u v, u < v -> merely (exists q, u < rat q < v).
+Lemma Q_average_between : forall q r, q < r -> q < (q + r) / 2 < r.
+Proof.
+Admitted.
+
+Lemma R_le_lt_trans@{} : forall a b c : real Q, a <= b -> b < c -> a < c.
+Proof.
+intros a b c E1;apply (Trunc_ind _);intros [q [r [E2 [E3 E4]]]].
+apply tr;exists q,r;auto.
+Qed.
+
+Lemma R_lt_le_trans@{} : forall a b c : real Q, a < b -> b <= c -> a < c.
+Proof.
+intros a b c E0 E1;revert E0;apply (Trunc_ind _);intros [q [r [E2 [E3 E4]]]].
+apply tr;exists q,r;auto.
+Qed.
+
+Instance rat_lt_preserving@{} : StrictlyOrderPreserving rat.
+Proof.
+hnf. intros x y E.
+hnf. apply tr;exists x,y;repeat split;auto.
+Qed.
+
+Lemma rat_lt_reflecting' : StrictlyOrderReflecting rat.
+Proof.
+hnf. intros x y;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+apply (order_reflecting rat) in E1;apply (order_reflecting rat) in E3.
+apply le_lt_trans with q;trivial.
+apply lt_le_trans with r;trivial.
+Qed.
+
+Instance rat_lt_reflecting@{} : StrictlyOrderReflecting rat
+  := rat_lt_reflecting'@{Ularge}.
+
+
+Lemma R_archimedean@{} : forall u v, u < v -> merely (exists q, u < rat q < v).
 Proof.
 intros u v;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
 apply tr;exists ((q+r)/2).
 split.
-- apply tr. exists q, ((q+r)/2).
-  split;trivial. split;[|reflexivity].
-  apply flip_pos_minus.
-  assert (Hrw : (q + r) / 2 - q = (r - q) / 2).
-  { path_via ((q + r) / 2 - 2 / 2 * q).
-    { rewrite dec_recip_inverse,mult_1_l;trivial. solve_propholds. }
-    path_via ((r - q + (q - q)) / 2).
-    { rewrite negate_mult_distr_r. ring_tac.ring_with_nat. }
-    rewrite plus_negate_r,plus_0_r;trivial.
-  }
-  rewrite Hrw;clear Hrw.
-  apply pos_mult_compat.
-  + apply (snd (flip_pos_minus _ _) E2).
-  + solve_propholds.
-- apply tr. exists ((q+r)/2), r.
-  split;[reflexivity|split;trivial].
-  apply flip_pos_minus.
-  assert (Hrw : r - (q + r) / 2 = (r - q) / 2).
-  { path_via (2 / 2 * r - (q+ r) / 2).
-    { rewrite dec_recip_inverse,mult_1_l;trivial. solve_propholds. }
-    path_via ((r - q + (r - r)) / 2).
-    { rewrite negate_mult_distr_l,negate_plus_distr. ring_tac.ring_with_nat. }
-    rewrite plus_negate_r,plus_0_r;trivial.
-  }
-  rewrite Hrw;clear Hrw.
-  apply pos_mult_compat.
-  + apply (snd (flip_pos_minus _ _) E2).
-  + solve_propholds.
+- apply R_le_lt_trans with (rat q);trivial.
+  apply rat_lt_preserving. apply Q_average_between. exact E2.
+- apply R_lt_le_trans with (rat r);trivial.
+  apply rat_lt_preserving. apply Q_average_between. exact E2.
 Qed.
-
-Definition R_archimedean@{}
-  := R_archimedean'@{Set Set Set Set Set
-    Set Set Set  Ularge  Ularge
-    Ularge Set Set Set Set
-    Set Set Set Set Set
-    Set Set Set Set Set
-    Set Set Set Set Set
-    Set Set Set Set Set
-    Set Set Set Set Set
-    Set Set Set Set Set}.
 
 Lemma Rle_close_rat_rat' : forall q r, r <= q -> forall v e, close e (rat r) v ->
   v <= rat (q + ' e).
@@ -2754,23 +2758,6 @@ destruct (total le 0 x) as [E|E].
 - right. split;trivial. apply ((abs_sig x).2);trivial.
 Qed.
 
-Instance rat_lt_preserving@{} : StrictlyOrderPreserving rat.
-Proof.
-hnf. intros x y E.
-hnf. apply tr;exists x,y;repeat split;auto.
-Qed.
-
-Lemma rat_lt_reflecting' : StrictlyOrderReflecting rat.
-Proof.
-hnf. intros x y;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
-apply (order_reflecting rat) in E1;apply (order_reflecting rat) in E3.
-apply le_lt_trans with q;trivial.
-apply lt_le_trans with r;trivial.
-Qed.
-
-Instance rat_lt_reflecting@{} : StrictlyOrderReflecting rat
-  := rat_lt_reflecting'@{Ularge}.
-
 Lemma equiv_0_metric' : forall e u, close e u 0 -> abs u < rat (' e).
 Proof.
 intros e u;revert u e;apply (real_ind0 (fun u => forall e, _ -> _)).
@@ -2964,6 +2951,142 @@ Qed.
 
 Definition equiv_metric_rw@{} := equiv_metric_rw'@{Ularge Ularge Ularge}.
 
+Definition Interval `{Le A} a b := sigT (fun x : A => a <= x /\ x <= b).
 
+Global Instance Interval_close `{Closeness A} `{Le A} (a b : A)
+  : Closeness (Interval a b)
+  := fun e x y => close e x.1 y.1.
+Arguments Interval_close {A _ _} _ _ _ _ _ /.
+
+Global Instance interval_project_nonexpanding `{Closeness A} `{Le A} (a b : A)
+  : NonExpanding (fun x : Interval a b => x.1).
+Proof.
+intros e x y xi;exact xi.
+Qed.
+
+Definition Interval_restrict@{i j} {A:Type@{i} }
+  `{Closeness A} `{LatticeOrder@{i j} A}
+  (a b : A) (E : a <= b) : A -> Interval a b.
+Proof.
+intros x.
+exists (join a (meet x b)).
+split.
+- apply join_ub_l.
+- apply join_le@{i j Set}.
+  + exact E.
+  + apply meet_lb_r.
+Defined.
+
+Instance R_interval_restrict_nonexpanding@{}
+  : forall (a b : real Q) E, NonExpanding (Interval_restrict a b E).
+Proof.
+intros a b E.
+change (NonExpanding (fun z => join a (meet z b))).
+apply _.
+Qed.
+
+Instance Q_interval_restrict_nonexpanding@{}
+  : forall (a b : Q) E, NonExpanding (Interval_restrict a b E).
+Proof.
+intros a b E.
+change (NonExpanding (fun z => join a (meet z b))).
+apply _.
+Qed.
+
+Instance lipschitz_compose_nonexpanding_r
+  `{Closeness A} `{Closeness B} `{Closeness C}
+  (g : B -> C) L {Eg : Lipschitz g L} (f : A -> B) {Ef : NonExpanding f}
+  : Lipschitz (compose g f) L.
+Proof.
+rewrite <-(Qpos_mult_1_l L),qpos_mult_comm. apply _.
+Qed.
+
+Definition lipschitz_extend_interval@{} (a b : Q) (E : a <= b)
+  (f : Interval a b -> real Q) L
+  `{!Lipschitz f L}
+  : Interval (rat a) (rat b) -> real Q
+  := fun s => lipschitz_extend (compose f (Interval_restrict a b E)) L s.1.
+
+Instance lipschitz_extend_interval_nonexpanding@{} (a b : Q) (E : a <= b)
+  (f : Interval a b -> real Q)
+  `{!NonExpanding f}
+  : NonExpanding (lipschitz_extend_interval a b E f 1)
+  := lipschitz_nonexpanding.
+
+Lemma Rplus_le_preserving' : forall z : real Q,
+  OrderPreserving (z +).
+Proof.
+intros z. hnf. unfold le;simpl. intros x y E.
+rewrite <-E;clear E.
+revert z x y;apply @unique_continuous_ternary_extension;try apply _.
+{ intros x z;eapply @lipschitz_continuous.
+  apply (lipschitz_dup (fun y1 y2 => (x + y1) ⊔ (x + (y2 ⊔ z))));intros y;
+  apply @nonexpanding_lipschitz.
+  { change (NonExpanding (compose ((x + y) ⊔) (compose (x +) (⊔ z)))).
+    apply _. }
+  { change (NonExpanding (compose (⊔ (x + (y ⊔ z))) (x +))).
+    apply _. }
+}
+{ intros;eapply @lipschitz_continuous.
+  apply (lipschitz_dup (fun x1 x2 => (x1 + y) ⊔ (x2 + (y ⊔ z))));intros x;
+  apply @nonexpanding_lipschitz.
+  { apply _. }
+  { change (NonExpanding (compose (⊔ (x + (y ⊔ z))) (+ y))).
+    apply _. }
+}
+intros;apply (ap rat).
+apply join_r. apply (order_preserving (q +)).
+apply join_ub_l.
+Qed.
+
+Definition Rplus_le_preserving@{} := Rplus_le_preserving'@{Ularge Set}.
+
+Lemma Rplus_le_reflecting' : forall z : real Q,
+  OrderReflecting (z +).
+Proof.
+intros z;hnf;unfold le;simpl;intros x y E.
+assert (Hrw : y = z + y - z).
+{ rewrite (commutativity (f:=plus) z y),
+  <-(simple_associativity (f:=plus) y z (-z)).
+  rewrite right_inverse,right_identity. trivial.
+}
+path_via (z + y - z);clear Hrw.
+rewrite <-E. clear E.
+revert z x y;apply @unique_continuous_ternary_extension;try apply _.
+{ change (forall x y, Continuous (compose (+ (- x)) (compose ((x + y) ⊔) (x +)))).
+  apply _. }
+{ change (forall x z, Continuous (compose (+ (- x)) (compose (⊔ (x + z)) (x +)))).
+  apply _. }
+{ intros y z;eapply @lipschitz_continuous.
+  apply (lipschitz_dup (fun x1 x2 => (x1 + y) ⊔ (x1 + z) - x2)).
+  { apply _. }
+  { intros x0;apply (@lipschitz_dup (fun x1 x2 => (x1 + y) ⊔ (x2 + z) - x0) 1 1).
+    { change (forall x,
+      Lipschitz (compose (+ (- x0)) (compose ((x + y) ⊔) (+ z))) 1).
+      apply _. }
+    { change (forall y0,
+      Lipschitz (compose (+ (- x0)) (compose (⊔ (y0 + z)) (+ y))) 1).
+      apply _. }
+  }
+}
+intros;apply (ap rat).
+destruct (total le r s) as [E|E].
+- rewrite (join_r _ _ E).
+  rewrite (join_r _ _ (order_preserving (q +) _ _ E)).
+  rewrite (plus_comm q s),<-plus_assoc,plus_negate_r,plus_0_r;trivial.
+- rewrite (join_l _ _ E).
+  rewrite (join_l _ _ (order_preserving (q +) _ _ E)).
+  rewrite (plus_comm q r),<-plus_assoc,plus_negate_r,plus_0_r;trivial.
+Unshelve. exact 1.
+Qed.
+
+Definition Rplus_le_reflecting@{} := Rplus_le_reflecting'@{Ularge Set Set}.
+
+Instance Rplus_le_embedding@{} : forall z : real Q, OrderEmbedding (z +).
+Proof.
+intros;split.
+- apply Rplus_le_preserving.
+- apply Rplus_le_reflecting.
+Qed.
 
 End contents.
