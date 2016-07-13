@@ -68,7 +68,7 @@ STD_VFILES = \
 
 COQ_PROJECT_CONTENTS = $(shell cat $(srcdir)/_CoqProject)
 
-CATEGORY_VFILES = $(addprefix $(srcdir)/,$(filter theories/categories%.v, $(COQ_PROJECT_CONTENTS)))
+CATEGORY_VFILES = $(addprefix $(srcdir)/,$(filter theories/Categories%.v, $(COQ_PROJECT_CONTENTS)))
 CORE_VFILES = $(filter-out $(CATEGORY_VFILES),$(addprefix $(srcdir)/,$(filter theories/%.v, $(COQ_PROJECT_CONTENTS))))
 CONTRIB_VFILES = $(addprefix $(srcdir)/,$(filter contrib/%.v, $(COQ_PROJECT_CONTENTS)))
 

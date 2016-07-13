@@ -2,7 +2,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Pointed UnivalenceImpliesFunext.
 Require Import Modalities.Modality.
-Require Import hit.Truncations hit.Connectedness hit.quotient.
+Require Import HIT.Truncations HIT.Connectedness HIT.quotient.
 Import TrM.
 
 Local Open Scope path_scope.

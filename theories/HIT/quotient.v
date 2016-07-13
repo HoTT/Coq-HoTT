@@ -2,7 +2,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Universe Types.Arrow Types.Sigma.
 Require Import HSet HProp UnivalenceImpliesFunext TruncType.
-Require Import hit.epi hit.Truncations hit.Connectedness.
+Require Import HIT.epi HIT.Truncations HIT.Connectedness.
 
 Local Open Scope path_scope.
 

@@ -1,7 +1,7 @@
 (** * Category Theory *)
-(** To get all of the category theory library in scope with the proper qualified names, you should [Require Import categories.] or [Require Import HoTT.categories.] *)
+(** To get all of the category theory library in scope with the proper qualified names, you should [Require Import Categories.] or [Require Import HoTT.Categories.] *)
 
-(** First we give modules to all of the kinds of category theory constructions (corresponding to directories), so that we can refer to them as [Category.foo] or [Functor.foo] after [Require Import categories.] *)
+(** First we give modules to all of the kinds of category theory constructions (corresponding to directories), so that we can refer to them as [Category.foo] or [Functor.foo] after [Require Import Categories.] *)
 (** ** Categories *)
 Require Category.
 (** ** Functors *)
@@ -109,7 +109,7 @@ Include Structure.Core.
 Include FundamentalPreGroupoidCategory.
 Include HomotopyPreCategory.
 
-Require Export categories.Notations.
+Require Export Categories.Notations.
 
 (** Some checks that should pass, if all of the importing went correctly. *)
 (*Check PreCategory.

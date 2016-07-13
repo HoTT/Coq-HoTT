@@ -2,7 +2,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import TruncType HProp HSet.
 Require Import Spaces.Int.
-Require Import hit.Coeq hit.Circle hit.Flattening hit.Connectedness hit.Truncations.
+Require Import HIT.Coeq HIT.Circle HIT.Flattening HIT.Connectedness HIT.Truncations.
 Import TrM.
 
 Local Open Scope path_scope.

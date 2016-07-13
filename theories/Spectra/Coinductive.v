@@ -2,7 +2,7 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import Pointed UnivalenceImpliesFunext.
-Require Import hit.Truncations hit.Suspension.
+Require Import HIT.Truncations HIT.Suspension.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Local Open Scope pointed_scope.

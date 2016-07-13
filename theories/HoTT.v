@@ -26,22 +26,22 @@ Require Export NullHomotopy.
 Require Export Idempotents.
 Require Export Pullback.
 
-Require Export hit.Interval.
-Require Export hit.Truncations.
-Require Export hit.Connectedness.
-Require Export hit.Coeq.
-Require Export hit.Flattening.
-Require Export hit.Circle.
-Require Export hit.FreeIntQuotient.
-Require Export hit.Suspension.
-Require Export hit.Spheres.
-Require Export hit.Pushout.
-Require Export hit.epi.
-Require Export hit.unique_choice.
-Require Export hit.iso.
-Require Export hit.quotient.
-Require Export hit.V.
-Require Export hit.Join.
+Require Export HIT.Interval.
+Require Export HIT.Truncations.
+Require Export HIT.Connectedness.
+Require Export HIT.Coeq.
+Require Export HIT.Flattening.
+Require Export HIT.Circle.
+Require Export HIT.FreeIntQuotient.
+Require Export HIT.Suspension.
+Require Export HIT.Spheres.
+Require Export HIT.Pushout.
+Require Export HIT.epi.
+Require Export HIT.unique_choice.
+Require Export HIT.iso.
+Require Export HIT.quotient.
+Require Export HIT.V.
+Require Export HIT.Join.
 
 Require Export Modalities.ReflectiveSubuniverse.
 Require Export Modalities.Modality.
@@ -80,4 +80,4 @@ Require Export HoTT.Tactics.BinderApply.
 Require Export HoTT.Tactics.RewriteModuloAssociativity.
 Require Export HoTT.Tactics.EquivalenceInduction.
 
-(** We do _not_ export [UnivalenceAxiom], [FunextAxiom], [UnivalenceImpliesFunext], [hit.IntervalImpliesFunext], nor [hit.TruncImpliesFunext] from this file; thus importing it does not prevent you from tracking usage of [Univalence] and [Funext] theorem-by-theorem in the same way that the library does.  If you want any of those files, you should import them separately. *)
+(** We do _not_ export [UnivalenceAxiom], [FunextAxiom], [UnivalenceImpliesFunext], [HIT.IntervalImpliesFunext], nor [HIT.TruncImpliesFunext] from this file; thus importing it does not prevent you from tracking usage of [Univalence] and [Funext] theorem-by-theorem in the same way that the library does.  If you want any of those files, you should import them separately. *)

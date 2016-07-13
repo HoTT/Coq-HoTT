@@ -2,8 +2,8 @@
 Require Import HoTT.Basics.
 Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe Types.Unit Types.Sum.
 Require Import HSet TruncType.
-Require Export hit.Coeq.
-Require Import hit.Truncations.
+Require Export HIT.Coeq.
+Require Import HIT.Truncations.
 Local Open Scope path_scope.
 
 

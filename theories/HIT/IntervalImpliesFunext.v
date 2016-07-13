@@ -3,7 +3,7 @@
 (** * Theorems about the homotopical interval. *)
 
 Require Import HoTT.Basics.
-Require Import hit.Interval.
+Require Import HIT.Interval.
 
 (** ** From an interval type, we can prove function extensionality. *)
 

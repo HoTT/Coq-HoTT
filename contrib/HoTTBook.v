@@ -58,7 +58,7 @@
 *)
 
 Require Import HoTT.
-Require HoTT.categories.
+Require HoTT.Categories.
 
 (* END OF PREAMBLE *)
 (* ================================================== lem:opp *)
@@ -796,12 +796,12 @@ Definition Book_6_4_6 := @HoTT.Basics.PathGroupoids.apD02.
 (* ================================================== thm:suspbool *)
 (** Lemma 6.5.1 *)
 
-Definition Book_6_5_1 := @HoTT.hit.Spheres.isequiv_Sph1_to_S1.
+Definition Book_6_5_1 := @HoTT.HIT.Spheres.isequiv_Sph1_to_S1.
 
 (* ================================================== lem:susp-loop-adj *)
 (** Lemma 6.5.4 *)
 
-Definition Book_6_5_4 := @HoTT.hit.Suspension.loop_susp_adjoint.
+Definition Book_6_5_4 := @HoTT.HIT.Suspension.loop_susp_adjoint.
 
 (* ================================================== defn:cocone *)
 (** Definition 6.8.1 *)
@@ -1036,7 +1036,7 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 (* ================================================== thm:path-truncation *)
 (** Theorem 7.3.12 *)
 
-Definition Book_7_3_12 := @HoTT.hit.Truncations.equiv_path_Tr.
+Definition Book_7_3_12 := @HoTT.HIT.Truncations.equiv_path_Tr.
 
 
 (* ================================================== lem:truncation-le *)
@@ -1067,7 +1067,7 @@ Definition Book_7_3_12 := @HoTT.hit.Truncations.equiv_path_Tr.
 (* ================================================== cor:totrunc-is-connected *)
 (** Corollary 7.5.8 *)
 
-Definition Book_7_5_8 := @HoTT.hit.Truncations.TrM.conn_map_to_O.
+Definition Book_7_5_8 := @HoTT.HIT.Truncations.TrM.conn_map_to_O.
 
 
 (* ================================================== thm:nconn-to-ntype-const *)
@@ -1423,46 +1423,46 @@ Definition Book_7_5_8 := @HoTT.hit.Truncations.TrM.conn_map_to_O.
 (* ================================================== ct:precategory *)
 (** Definition 9.1.1 *)
 
-Definition Book_9_1_1 := @HoTT.categories.Category.Core.PreCategory.
+Definition Book_9_1_1 := @HoTT.Categories.Category.Core.PreCategory.
 
 (* ================================================== ct:isomorphism *)
 (** Definition 9.1.2 *)
 
-Definition Book_9_1_2 := @HoTT.categories.Category.Morphisms.Isomorphic.
+Definition Book_9_1_2 := @HoTT.Categories.Category.Morphisms.Isomorphic.
 
 (* ================================================== ct:isoprop *)
 (** Lemma 9.1.3 *)
 
-Definition Book_9_1_3 := @HoTT.categories.Category.Morphisms.trunc_isisomorphism.
+Definition Book_9_1_3 := @HoTT.Categories.Category.Morphisms.trunc_isisomorphism.
 
 (* ================================================== ct:idtoiso *)
 (** Lemma 9.1.4 *)
 
-Definition Book_9_1_4 := @HoTT.categories.Category.Morphisms.idtoiso.
+Definition Book_9_1_4 := @HoTT.Categories.Category.Morphisms.idtoiso.
 
 (* ================================================== ct:precatset *)
 (** Example 9.1.5 *)
 
-Definition Book_9_1_5 := @HoTT.categories.SetCategory.Core.set_cat.
+Definition Book_9_1_5 := @HoTT.Categories.SetCategory.Core.set_cat.
 
 (* ================================================== ct:category *)
 (** Definition 9.1.6 *)
 
-Definition Book_9_1_6 C := (HoTT.categories.Category.Univalent.IsCategory C).
+Definition Book_9_1_6 C := (HoTT.Categories.Category.Univalent.IsCategory C).
 
 (* ================================================== ct:eg:set *)
 (** Example 9.1.7 *)
 
 (** Once this is proven, we will have
 <<
-Definition Book_9_1_7 := @HoTT.categories.SetCategory.Morphisms.iscategory_set_cat.
+Definition Book_9_1_7 := @HoTT.Categories.SetCategory.Morphisms.iscategory_set_cat.
 >>
 *)
 
 (* ================================================== ct:obj-1type *)
 (** Lemma 9.1.8 *)
 
-Definition Book_9_1_8 := @HoTT.categories.Category.Univalent.trunc_category.
+Definition Book_9_1_8 := @HoTT.Categories.Category.Univalent.trunc_category.
 
 (* ================================================== ct:idtoiso-trans *)
 (** Lemma 9.1.9 *)
@@ -1477,9 +1477,9 @@ Definition Book_9_1_8 := @HoTT.categories.Category.Univalent.trunc_category.
 (* ================================================== ct:gaunt *)
 (** Example 9.1.15 *)
 
-Definition Book_9_1_15 A `{H : HoTT.categories.Category.Univalent.IsCategory A}
-: IsHSet (HoTT.categories.Category.Core.object A)
-  <-> (forall a b, IsHProp (@HoTT.categories.Category.Morphisms.Isomorphic A a b)).
+Definition Book_9_1_15 A `{H : HoTT.Categories.Category.Univalent.IsCategory A}
+: IsHSet (HoTT.Categories.Category.Core.object A)
+  <-> (forall a b, IsHProp (@HoTT.Categories.Category.Morphisms.Isomorphic A a b)).
 Proof.
   split.
   - intros H' a b.
@@ -1495,17 +1495,17 @@ Defined.
 (* ================================================== ct:discrete *)
 (** Example 9.1.16 *)
 
-Definition Book_9_1_16 := @HoTT.categories.GroupoidCategory.Core.groupoid_category.
+Definition Book_9_1_16 := @HoTT.Categories.GroupoidCategory.Core.groupoid_category.
 
 (* ================================================== ct:fundgpd *)
 (** Example 9.1.17 *)
 
-Definition Book_9_1_17 := @HoTT.categories.FundamentalPreGroupoidCategory.fundamental_pregroupoid_category.
+Definition Book_9_1_17 := @HoTT.Categories.FundamentalPreGroupoidCategory.fundamental_pregroupoid_category.
 
 (* ================================================== ct:hoprecat *)
 (** Example 9.1.18 *)
 
-Definition Book_9_1_18 := @HoTT.categories.HomotopyPreCategory.homotopy_precategory.
+Definition Book_9_1_18 := @HoTT.Categories.HomotopyPreCategory.homotopy_precategory.
 
 (* ================================================== ct:rel *)
 (** Example 9.1.19 *)
@@ -1515,52 +1515,52 @@ Definition Book_9_1_18 := @HoTT.categories.HomotopyPreCategory.homotopy_precateg
 (* ================================================== ct:functor *)
 (** Definition 9.2.1 *)
 
-Definition Book_9_2_1 := @HoTT.categories.Functor.Core.Functor.
+Definition Book_9_2_1 := @HoTT.Categories.Functor.Core.Functor.
 
 (* ================================================== ct:nattrans *)
 (** Definition 9.2.2 *)
 
-Definition Book_9_2_2 := @HoTT.categories.NaturalTransformation.Core.NaturalTransformation.
+Definition Book_9_2_2 := @HoTT.Categories.NaturalTransformation.Core.NaturalTransformation.
 
 (* ================================================== ct:functor-precat *)
 (** Definition 9.2.3 *)
 
-Definition Book_9_2_3 := @HoTT.categories.FunctorCategory.Core.functor_category.
+Definition Book_9_2_3 := @HoTT.Categories.FunctorCategory.Core.functor_category.
 
 (* ================================================== ct:natiso *)
 (** Lemma 9.2.4 *)
 
-Definition Book_9_2_4 := @HoTT.categories.FunctorCategory.Morphisms.isisomorphism_natural_transformation.
+Definition Book_9_2_4 := @HoTT.Categories.FunctorCategory.Morphisms.isisomorphism_natural_transformation.
 
 (* ================================================== ct:functor-cat *)
 (** Theorem 9.2.5 *)
 
 (** When this is done, it will be
 <<
-Definition Book_9_2_5 := @HoTT.categories.FunctorCategory.Morphisms.iscategory_functor_category.
+Definition Book_9_2_5 := @HoTT.Categories.FunctorCategory.Morphisms.iscategory_functor_category.
 >>
 *)
 
 (* ================================================== ct:functor-composition *)
 (** Definition 9.2.6 *)
 
-Definition Book_9_2_6 := @HoTT.categories.Functor.Composition.Core.compose.
+Definition Book_9_2_6 := @HoTT.Categories.Functor.Composition.Core.compose.
 
 (* ================================================== ct:whisker *)
 (** Definition 9.2.7 *)
 
-Definition Book_9_2_7_l := @HoTT.categories.NaturalTransformation.Composition.Core.whisker_l.
-Definition Book_9_2_7_r := @HoTT.categories.NaturalTransformation.Composition.Core.whisker_r.
+Definition Book_9_2_7_l := @HoTT.Categories.NaturalTransformation.Composition.Core.whisker_l.
+Definition Book_9_2_7_r := @HoTT.Categories.NaturalTransformation.Composition.Core.whisker_r.
 
 (* ================================================== ct:interchange *)
 (** Lemma 9.2.8 *)
 
-Definition Book_9_2_8 := @HoTT.categories.NaturalTransformation.Composition.Laws.exchange_whisker.
+Definition Book_9_2_8 := @HoTT.Categories.NaturalTransformation.Composition.Laws.exchange_whisker.
 
 (* ================================================== ct:functor-assoc *)
 (** Lemma 9.2.9 *)
 
-Definition Book_9_2_9 := @HoTT.categories.Functor.Composition.Laws.associativity.
+Definition Book_9_2_9 := @HoTT.Categories.Functor.Composition.Laws.associativity.
 
 (* ================================================== ct:pentagon *)
 (** Lemma 9.2.10 *)
@@ -1570,14 +1570,14 @@ Definition Book_9_2_9 := @HoTT.categories.Functor.Composition.Laws.associativity
 (* ================================================== ct:units *)
 (** Lemma 9.2.11 *)
 
-Definition Book_9_2_11_l := @HoTT.categories.Functor.Composition.Laws.left_identity.
-Definition Book_9_2_11_r := @HoTT.categories.Functor.Composition.Laws.right_identity.
-Definition Book_9_2_11 := @HoTT.categories.Functor.Composition.Laws.triangle.
+Definition Book_9_2_11_l := @HoTT.Categories.Functor.Composition.Laws.left_identity.
+Definition Book_9_2_11_r := @HoTT.Categories.Functor.Composition.Laws.right_identity.
+Definition Book_9_2_11 := @HoTT.Categories.Functor.Composition.Laws.triangle.
 
 (* ================================================== ct:adjoints *)
 (** Definition 9.3.1 *)
 
-Definition Book_9_3_1 := @HoTT.categories.Adjoint.UnitCounit.AdjunctionUnitCounit.
+Definition Book_9_3_1 := @HoTT.Categories.Adjoint.UnitCounit.AdjunctionUnitCounit.
 
 (* ================================================== ct:adjprop *)
 (** Lemma 9.3.2 *)
@@ -1592,9 +1592,9 @@ Definition Book_9_3_1 := @HoTT.categories.Adjoint.UnitCounit.AdjunctionUnitCouni
 (* ================================================== ct:adjointification *)
 (** Lemma 9.4.2 *)
 
-Definition Book_9_4_2a := @HoTT.categories.Functor.Attributes.IsFaithful.
-Definition Book_9_4_2b := @HoTT.categories.Functor.Attributes.IsFull.
-Definition Book_9_4_2c := @HoTT.categories.Functor.Attributes.IsFullyFaithful.
+Definition Book_9_4_2a := @HoTT.Categories.Functor.Attributes.IsFaithful.
+Definition Book_9_4_2b := @HoTT.Categories.Functor.Attributes.IsFull.
+Definition Book_9_4_2c := @HoTT.Categories.Functor.Attributes.IsFullyFaithful.
 
 (* ================================================== ct:full-faithful *)
 (** Definition 9.4.3 *)
@@ -1604,7 +1604,7 @@ Definition Book_9_4_2c := @HoTT.categories.Functor.Attributes.IsFullyFaithful.
 (* ================================================== ct:split-essentially-surjective *)
 (** Definition 9.4.4 *)
 
-Definition Book_9_4_4 := @HoTT.categories.Functor.Attributes.IsSplitEssentiallySurjective.
+Definition Book_9_4_4 := @HoTT.Categories.Functor.Attributes.IsSplitEssentiallySurjective.
 
 (* ================================================== ct:ffeso *)
 (** Lemma 9.4.5 *)
@@ -1614,8 +1614,8 @@ Definition Book_9_4_4 := @HoTT.categories.Functor.Attributes.IsSplitEssentiallyS
 (* ================================================== ct:essentially-surjective *)
 (** Definition 9.4.6 *)
 
-Definition Book_9_4_6_ess := @HoTT.categories.Functor.Attributes.IsEssentiallySurjective.
-Definition Book_9_4_6_weq := @HoTT.categories.Functor.Attributes.IsWeakEquivalence.
+Definition Book_9_4_6_ess := @HoTT.Categories.Functor.Attributes.IsEssentiallySurjective.
+Definition Book_9_4_6_weq := @HoTT.Categories.Functor.Attributes.IsWeakEquivalence.
 
 (* ================================================== ct:catweq *)
 (** Lemma 9.4.7 *)
@@ -1635,7 +1635,7 @@ Definition Book_9_4_6_weq := @HoTT.categories.Functor.Attributes.IsWeakEquivalen
 (* ================================================== ct:chaotic *)
 (** Example 9.4.13 *)
 
-Definition Book_9_4_13 := @HoTT.categories.IndiscreteCategory.Core.indiscrete_category.
+Definition Book_9_4_13 := @HoTT.Categories.IndiscreteCategory.Core.indiscrete_category.
 
 (* ================================================== ct:eqv-levelwise *)
 (** Lemma 9.4.14 *)
@@ -1655,28 +1655,28 @@ Definition Book_9_4_13 := @HoTT.categories.IndiscreteCategory.Core.indiscrete_ca
 (* ================================================== ct:opposite-category *)
 (** Definition 9.5.1 *)
 
-Definition Book_9_5_1 := @HoTT.categories.Category.Dual.opposite.
+Definition Book_9_5_1 := @HoTT.Categories.Category.Dual.opposite.
 
 (* ================================================== ct:prod-cat *)
 (** Definition 9.5.2 *)
 
-Definition Book_9_5_2 := @HoTT.categories.Category.Prod.prod.
+Definition Book_9_5_2 := @HoTT.Categories.Category.Prod.prod.
 
 (* ================================================== ct:functorexpadj *)
 (** Lemma 9.5.3 *)
 
 (** When we prove it, this should be mapped to the law, not the functor. *)
-Definition Book_9_5_3 := @HoTT.categories.ExponentialLaws.Law4.Functors.functor.
+Definition Book_9_5_3 := @HoTT.Categories.ExponentialLaws.Law4.Functors.functor.
 
 (* ================================================== ct:yoneda *)
 (** Theorem 9.5.4 *)
 
-Definition Book_9_5_4 := @HoTT.categories.Yoneda.yoneda_lemma.
+Definition Book_9_5_4 := @HoTT.Categories.Yoneda.yoneda_lemma.
 
 (* ================================================== ct:yoneda-embedding *)
 (** Corollary 9.5.6 *)
 
-Definition Book_9_5_6 := @HoTT.categories.Yoneda.yoneda_embedding.
+Definition Book_9_5_6 := @HoTT.Categories.Yoneda.yoneda_embedding.
 
 (* ================================================== ct:yoneda-mono *)
 (** Corollary 9.5.7 *)
@@ -1706,7 +1706,7 @@ Definition Book_9_5_6 := @HoTT.categories.Yoneda.yoneda_embedding.
 (* ================================================== ct:strict-category *)
 (** Definition 9.6.1 *)
 
-Definition Book_9_6_1 C := HoTT.categories.Category.Strict.IsStrictCategory C.
+Definition Book_9_6_1 C := HoTT.Categories.Category.Strict.IsStrictCategory C.
 
 (* ================================================== ct:mono-cat *)
 (** Example 9.6.2 *)
@@ -1756,12 +1756,12 @@ Definition Book_9_6_1 C := HoTT.categories.Category.Strict.IsStrictCategory C.
 (* ================================================== ct:sig *)
 (** Definition 9.8.1 *)
 
-Definition Book_9_8_1 := @HoTT.categories.Structure.Core.NotionOfStructure.
+Definition Book_9_8_1 := @HoTT.Categories.Structure.Core.NotionOfStructure.
 
 (* ================================================== thm:sip *)
 (** Theorem 9.8.2 *)
 
-Definition Book_9_8_2 := @HoTT.categories.Structure.IdentityPrinciple.structure_identity_principle.
+Definition Book_9_8_2 := @HoTT.Categories.Structure.IdentityPrinciple.structure_identity_principle.
 
 (* ================================================== ct:sip-functor-cat *)
 (** Example 9.8.3 *)
@@ -1821,9 +1821,9 @@ Definition Book_10_1_2lr := @HSet.ismono_isinj.
 (* ================================================== epis-surj *)
 (** Lemma 10.1.4 *)
 
-Definition Book_10_1_4_i_iii := @hit.epi.isepi_issurj.
-Definition Book_10_1_4_i_ii := @hit.epi.isepi'_contr_cone.
-Definition Book_10_1_4_iii_i := @hit.epi.issurj_isepi.
+Definition Book_10_1_4_i_iii := @HIT.epi.isepi_issurj.
+Definition Book_10_1_4_i_ii := @HIT.epi.isepi'_contr_cone.
+Definition Book_10_1_4_iii_i := @HIT.epi.issurj_isepi.
 
 (* ================================================== lem:images_are_coequalizers *)
 (** Theorem 10.1.5 *)
@@ -1842,12 +1842,12 @@ Definition Book_10_1_4_iii_i := @hit.epi.issurj_isepi.
 
 (* ================================================== lem:sets_exact *)
 (** Lemma 10.1.8 *)
-Definition Book_10_1_8 := @hit.quotient.sets_exact.
+Definition Book_10_1_8 := @HIT.quotient.sets_exact.
 
 
 (* ================================================== prop:kernels_are_effective *)
 (** Theorem 10.1.9 *)
-(* See: hit.unique_choice.unique_choice
+(* See: HIT.unique_choice.unique_choice
 theories.ObjectClassifier.PowisoPFam
 Apparently closure under Pi and Sigma are still missing ? *)
 
@@ -1955,40 +1955,40 @@ Apparently closure under Pi and Sigma are still missing ? *)
 (* ================================================== defn:V *)
 (** Definition 10.5.1 *)
 
-Definition Book_10_5_1 := @HoTT.hit.V.CumulativeHierarchy.V.
+Definition Book_10_5_1 := @HoTT.HIT.V.CumulativeHierarchy.V.
 
 (* ================================================== def:bisimulation *)
 (** Definition 10.5.4 *)
 
-Definition Book_10_5_4 := @HoTT.hit.V.bisimulation.
+Definition Book_10_5_4 := @HoTT.HIT.V.bisimulation.
 
 (* ================================================== lem:BisimEqualsId *)
 (** Lemma 10.5.5 *)
 
-Definition Book_10_5_5 := @HoTT.hit.V.bisimulation_equiv_id.
+Definition Book_10_5_5 := @HoTT.HIT.V.bisimulation_equiv_id.
 
 (* ================================================== lem:MonicSetPresent *)
 (** Lemma 10.5.6 *)
 
-Definition Book_10_5_6 := @HoTT.hit.V.monic_set_present.
+Definition Book_10_5_6 := @HoTT.HIT.V.monic_set_present.
 
 (* ================================================== def:TypeOfElements *)
 (** Definition 10.5.7 *)
 
-Definition Book_10_5_7 := @HoTT.hit.V.type_of_members.
+Definition Book_10_5_7 := @HoTT.HIT.V.type_of_members.
 
 (* ================================================== thm:VisCST *)
 (** Theorem 10.5.8 *)
 
-Definition Book_10_5_8_item_i := @HoTT.hit.V.extensionality.
-Definition Book_10_5_8_item_ii := @HoTT.hit.V.not_mem_Vempty.
-Definition Book_10_5_8_item_iii := @HoTT.hit.V.pairing.
-Definition Book_10_5_8_item_iv := @HoTT.hit.V.infinity.
-Definition Book_10_5_8_item_v := @HoTT.hit.V.union.
-Definition Book_10_5_8_item_vi := @HoTT.hit.V.function.
-Definition Book_10_5_8_item_vii := @HoTT.hit.V.mem_induction.
-Definition Book_10_5_8_item_viii := @HoTT.hit.V.replacement.
-Definition Book_10_5_8_item_ix := @HoTT.hit.V.separation.
+Definition Book_10_5_8_item_i := @HoTT.HIT.V.extensionality.
+Definition Book_10_5_8_item_ii := @HoTT.HIT.V.not_mem_Vempty.
+Definition Book_10_5_8_item_iii := @HoTT.HIT.V.pairing.
+Definition Book_10_5_8_item_iv := @HoTT.HIT.V.infinity.
+Definition Book_10_5_8_item_v := @HoTT.HIT.V.union.
+Definition Book_10_5_8_item_vi := @HoTT.HIT.V.function.
+Definition Book_10_5_8_item_vii := @HoTT.HIT.V.mem_induction.
+Definition Book_10_5_8_item_viii := @HoTT.HIT.V.replacement.
+Definition Book_10_5_8_item_ix := @HoTT.HIT.V.separation.
 
 (* ================================================== cor:Delta0sep *)
 (** Corollary 10.5.9 *)

@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import Idempotents.
-Require Import hit.Truncations Spaces.BAut Spaces.Cantor.
+Require Import HIT.Truncations Spaces.BAut Spaces.Cantor.
 
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
