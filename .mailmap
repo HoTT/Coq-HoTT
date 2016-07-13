@@ -2,19 +2,29 @@
 ## Cf for instance: git shortlog -nse. More details via: man git shortlog
 
 # having the same name <email> name <email> on a line will fix capitalization
-Andrej Bauer <Andrej.Bauer@andrej.com>                     Andrej Bauer <Andrej.Bauer@andrej.com>
 Andrej Bauer <Andrej.Bauer@andrej.com>                     Andrej Bauer <abauer@somf401.math.ias.edu>
 Andrej Bauer <Andrej.Bauer@andrej.com>                     andrejbauer <Andrej.Bauer@andrej.com>
+Andrej Bauer <Andrej.Bauer@andrej.com>                     Andrej Bauer <Andrej.Bauer@andrej.com>
 Andrej Bauer <Andrej.Bauer@andrej.com>                     Homotopy Type Theory <stupid.peasant@gmail.com>
 Assia Mahboubi <assia.mahboubi@inria.fr>                   amahboubi <assia.mahboubi@inria.fr>
 Bas Spitters <b.a.w.spitters@gmail.com>                    Bas Spitters <spitters@cs.ru.nl>
 Bas Spitters <b.a.w.spitters@gmail.com>                    spitters <b.a.w.spitters@gmail.com>
 Gaetan Gilbert <gaetan.gilbert@ens-lyon.fr>                Gaetan Gilbert <gaetan.gilbert@laposte.net>
+Georgy Dunaev <georgedunaev@gmail.com>                     georgedunaev <georgedunaev@gmail.com>
 Jason Gross <jgross@mit.edu>                               Jason Gross <jasongross9@gmail.com>
+Jérémy Ledent <jeremy.ledent@ens-lyon.fr>                  Jérémy <jeremy.ledent@ens-lyon.fr>
+Jesse C. McKeown <qnoodles@gmail.com>                      jcmckeown <jesse@sockwright>
+Jesse C. McKeown <qnoodles@gmail.com>                      jcmckeown <qnoodles@gmail.com>
+Kevin Quirin <kevin.quirin@gmail.com>                      KevinQuirin <kevin.quirin@gmail.com>
+Kevin Quirin <kevin.quirin@gmail.com>                      Kevin Quirin <kquiri13@dhcp-3-44.rech172-28.emn.fr>
+Kevin Quirin <kevin.quirin@gmail.com>                      Kevin Quirin <kquiri13@portinfo77.local>
 Kristina Sojakova <kristinas@cmu.edu>                      Kristina <kristina@ubuntu.(none)>
+Kristina Sojakova <kristinas@cmu.edu>                      U-KristinaSojakov\Kristina Sojakova <Kristina Sojakova@Kristina.(none)>
+Marc Bezem <bezem@ii.uib.no>                               marcbezem <bezem@ii.uib.no>
+Matěj Grabovský <mgrabovsky@users.noreply.github.com>      Matěj G. <mgrabovsky@users.noreply.github.com>
 Mike Shulman <viritrilbia@gmail.com>                       Mike Shulman <mshulman@ucsd.edu>
 Mike Shulman <viritrilbia@gmail.com>                       mikeshulman <viritrilbia@gmail.com>
+Peter LeFanu Lumsdaine <pedro@cantab.net>                  Peter LeFanu Lumsdaine <lumsdaine@lumsdaine.math.su.se>
 Peter LeFanu Lumsdaine <pedro@cantab.net>                  Peter LeFanu Lumsdaine <p.l.lumsdaine@gmail.com>
+Simon Boulier <simon.boulier@ens-rennes.fr>                SimonBoulier <simon.boulier@ens-rennes.fr>
 Steve Awodey <sawodey@gmail.com>                           Steve <sawodey@gmail.com>
-jcmckeown <qnoodles@gmail.com>                             jcmckeown <jesse@sockwright>
-
