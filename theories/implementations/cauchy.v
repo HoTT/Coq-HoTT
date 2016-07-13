@@ -2278,7 +2278,7 @@ Definition lipschitz_dup@{} (f : real Q -> real Q -> real Q) L1 L2
   := lipschitz_dup'@{Set Ularge Ularge Ularge Set
     Set Set} f L1 L2.
 
-Lemma Rplus_group@{} : Group (real Q).
+Instance Rplus_group@{} : Group (real Q).
 Proof.
 repeat split.
 - apply _.
@@ -2422,7 +2422,7 @@ revert E2;apply le_iff_not_lt_flip. rewrite <-E4.
 apply join_ub_l.
 Qed.
 
-Instance rat_le_reflect : OrderReflecting rat.
+Instance rat_le_reflecting : OrderReflecting rat.
 Proof.
 hnf. intros q r E;unfold le,Rle in E.
 apply rat_injective in E. rewrite <-E;apply join_ub_l.
@@ -2441,7 +2441,7 @@ unfold Rlt.
 apply (Trunc_ind (fun _ => _ -> _));intros [q1 [r1 [E1 [E2 E3]]]];
 apply (Trunc_ind _);intros [q2 [r2 [E4 [E5 E6]]]].
 apply tr. exists q1,r2. split;[|split];trivial.
-pose proof (rat_le_reflect _ _ (transitivity E3 E4)) as E7.
+pose proof (rat_le_reflecting _ _ (transitivity E3 E4)) as E7.
 apply lt_le_trans with r1;trivial.
 apply lt_le. apply le_lt_trans with q2;trivial.
 Qed.
@@ -2682,7 +2682,7 @@ Definition Rabs_val := lipschitz_extend (compose rat abs) 1.
 
 Global Instance Rabs_nonexpanding : NonExpanding Rabs_val := _.
 
-Lemma Rabs_of_nonneg : forall x, 0 <= x -> Rabs_val x = x.
+Lemma Rabs_of_nonneg' : forall x, 0 <= x -> Rabs_val x = x.
 Proof.
 unfold le;simpl. intros x E;rewrite <-E.
 clear E;revert x;apply unique_continuous_extension.
@@ -2690,7 +2690,7 @@ intros q;apply (ap rat).
 apply ((abs_sig _).2). apply join_ub_l.
 Qed.
 
-Lemma Rabs_of_nonpos : forall x, x <= 0 -> Rabs_val x = - x.
+Lemma Rabs_of_nonpos' : forall x, x <= 0 -> Rabs_val x = - x.
 Proof.
 intros x E.
 apply meet_l in E. rewrite <-E.
@@ -2703,13 +2703,28 @@ Instance Rabs : Abs (real Q).
 Proof.
 intros u. exists (Rabs_val u).
 split.
-- apply Rabs_of_nonneg.
-- apply Rabs_of_nonpos.
+- apply Rabs_of_nonneg'.
+- apply Rabs_of_nonpos'.
 Defined.
+
+Lemma Rabs_of_nonneg : forall x : real Q, 0 <= x -> abs x = x.
+Proof.
+intros x;apply ((abs_sig x).2).
+Qed.
+
+Lemma Rabs_of_nonpos : forall x : real Q, x <= 0 -> abs x = - x.
+Proof.
+intros x;apply ((abs_sig x).2).
+Qed.
 
 Lemma Rabs_of_0 : abs (A:=real Q) 0 = 0.
 Proof.
 apply Rabs_of_nonneg;reflexivity.
+Qed.
+
+Lemma Rabs_of_0' : forall x : real Q, x = 0 -> abs x = 0.
+Proof.
+intros x E;rewrite E;apply Rabs_of_0.
 Qed.
 
 Lemma Rabs_nonneg : forall x : real Q, 0 <= abs x.
@@ -2724,6 +2739,12 @@ apply ((abs_sig q).2) in E';rewrite E'.
 - apply flip_nonpos_negate;trivial.
 Qed.
 
+Instance Rabs_idempotent : UnaryIdempotent (abs (A:=real Q)).
+Proof.
+hnf. apply path_forall. intros x. unfold compose.
+apply Rabs_of_nonneg, Rabs_nonneg.
+Qed.
+
 Lemma total_abs_either `{Abs A} `{!TotalRelation le}
   : forall x : A, (0 <= x /\ abs x = x) \/ (x <= 0 /\ abs x = - x).
 Proof.
@@ -2733,21 +2754,24 @@ destruct (total le 0 x) as [E|E].
 - right. split;trivial. apply ((abs_sig x).2);trivial.
 Qed.
 
-Lemma rat_lt_preserving : StrictlyOrderPreserving rat.
+Instance rat_lt_preserving@{} : StrictlyOrderPreserving rat.
 Proof.
 hnf. intros x y E.
 hnf. apply tr;exists x,y;repeat split;auto.
 Qed.
 
-Lemma rat_lt_reflecting : StrictlyOrderReflecting rat.
+Lemma rat_lt_reflecting' : StrictlyOrderReflecting rat.
 Proof.
 hnf. intros x y;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
 apply (order_reflecting rat) in E1;apply (order_reflecting rat) in E3.
 apply le_lt_trans with q;trivial.
 apply lt_le_trans with r;trivial.
 Qed.
-(* 
-Lemma equiv_0_abs : forall e u, close e u 0 -> abs u < rat (' e).
+
+Instance rat_lt_reflecting@{} : StrictlyOrderReflecting rat
+  := rat_lt_reflecting'@{Ularge}.
+
+Lemma equiv_0_metric' : forall e u, close e u 0 -> abs u < rat (' e).
 Proof.
 intros e u;revert u e;apply (real_ind0 (fun u => forall e, _ -> _)).
 - intros q e E.
@@ -2758,12 +2782,188 @@ intros e u;revert u e;apply (real_ind0 (fun u => forall e, _ -> _)).
   + apply E.
   + apply flip_lt_negate. rewrite involutive. apply E.
 - intros x IH e xi.
-  
+  generalize (fst Requiv_rounded xi). apply (Trunc_ind _);intros [d [d' [He xi']]].
+  rewrite Requiv_lim_rat_def in xi'.
+  revert xi';apply (Trunc_ind _);intros [n [n' [Hd E1]]].
+  apply IH in E1.
+  rewrite He,Hd.
+  assert (Hrw : (' (n + n' + d')) = ' n' + ' (n + d'))
+  by ring_tac.ring_with_nat.
+  rewrite Hrw;clear Hrw.
+  apply (Rlt_close_rat_plus _ _ E1).
+  apply (non_expanding abs).
+  rewrite qpos_plus_comm. apply equiv_lim.
 Qed.
 
-Lemma equiv_to_abs : forall e u v, close e u v -> abs (u - v) < rat (' e).
-Proof.
+Definition equiv_0_metric@{}
+  := equiv_0_metric'@{UQ UQ Set Ularge Ularge
+    Ularge Set Set Set}.
 
-Qed. *)
+Lemma equiv_to_metric' : forall e u v, close e u v -> abs (u - v) < rat (' e).
+Proof.
+intros e u v xi.
+rewrite <-Rabs_idempotent.
+apply equiv_0_metric.
+rewrite <-(Rabs_of_0' (u - u));[|apply right_inverse].
+apply (non_expanding (fun w => abs (u - w))).
+apply equiv_symm,xi.
+Qed.
+
+Definition equiv_to_metric@{} := equiv_to_metric'@{Ularge Set}.
+
+Lemma Qclose_alt : forall e (q r : Q), close e q r <-> abs (q - r) < ' e.
+Proof. Admitted.
+
+Lemma metric_to_equiv_rat_lim' (q : Q)
+  (y : Approximation Q)
+  (IHy : ∀ e e0 : Q+, abs (rat q - y e) < rat (' e0) → close e0 (rat q) (y e))
+  (e : Q+)
+  (E1 : abs (rat q - lim y) < rat (' e))
+  : close e (rat q) (lim y).
+Proof.
+generalize (R_archimedean _ _ E1). apply (Trunc_ind _);intros [d [E2 E3]].
+apply rat_lt_reflecting in E3.
+pose proof (snd (flip_pos_minus _ _) E3) as E4.
+assert (Hd : 0 < d).
+{ revert E2;apply (Trunc_ind _).
+  intros [s [s' [F1 [F2 F3]]]].
+  apply rat_le_reflecting in F3.
+  apply lt_le_trans with s';trivial.
+  apply le_lt_trans with s;trivial.
+  apply rat_le_reflecting.
+  transitivity (abs (rat q - lim y));trivial.
+  apply Rabs_nonneg.
+}
+pose (D := mkQpos Q d Hd).
+pose (ED := mkQpos Q _ E4).
+assert (Hrw : e = D + (ED / 4 + ED / 4) + (ED / 4 + ED / 4)).
+{ path_via (D + ED).
+  { apply pos_eq;unfold D, ED.
+    change (' e = d + (' e - d)).
+    path_via ('e + (d - d));[|ring_tac.ring_with_nat].
+    rewrite plus_negate_r,plus_0_r;trivial.
+  }
+  path_via (D + 4 / 4 * ED).
+  { rewrite pos_recip_r,Qpos_mult_1_l;trivial. }
+  apply pos_eq;ring_tac.ring_with_nat.
+}
+rewrite Hrw.
+eapply Requiv_triangle;[|apply equiv_lim].
+apply IHy. apply (Rlt_close_rat_plus _ _ E2).
+apply (non_expanding (fun u => abs (rat q - u))).
+apply equiv_symm,equiv_lim.
+Qed.
+
+Definition metric_to_equiv_rat_lim@{}
+  := metric_to_equiv_rat_lim'@{Ularge Set Set Ularge Ularge
+    Ularge Set Set Set Set
+    Set Set Set}.
+
+Lemma Qabs_neg_flip' : forall a b : Q, abs (a - b) = abs (b - a).
+Proof.
+intros a b. unfold abs.
+destruct (total le 0 (a - b)) as [E|E].
+- rewrite (fst (abs_sig (a-b)).2 E).
+  rewrite (snd (abs_sig (b-a)).2).
+  + apply negate_swap_r.
+  + apply flip_nonpos_negate. rewrite <-negate_swap_r;trivial.
+- rewrite (snd (abs_sig (a-b)).2 E).
+  rewrite (fst (abs_sig (b-a)).2).
+  + Symmetry;apply negate_swap_r.
+  + apply flip_nonneg_negate. rewrite <-negate_swap_r;trivial.
+Qed.
+
+Definition Qabs_neg_flip@{} := Qabs_neg_flip'@{Ularge Set Set}.
+
+Lemma Rabs_neg_flip@{} : forall a b : real Q, abs (a - b) = abs (b - a).
+Proof.
+apply unique_continuous_binary_extension.
+intros q r;apply (ap rat).
+apply Qabs_neg_flip.
+Qed.
+
+Lemma metric_to_equiv_lim_lim' (x : Approximation Q)
+  (IHx : ∀ (e : Q+) (v : real Q) (e0 : Q+),
+        abs (x e - v) < rat (' e0) → close e0 (x e) v)
+  (y : Approximation Q)
+  (IHy : ∀ e e0 : Q+, abs (lim x - y e) < rat (' e0) → close e0 (lim x) (y e))
+  (e : Q+)
+  (E1 : abs (lim x - lim y) < rat (' e))
+  : close e (lim x) (lim y).
+Proof.
+generalize (R_archimedean _ _ E1). apply (Trunc_ind _);intros [d [E2 E3]].
+apply rat_lt_reflecting in E3.
+pose proof (snd (flip_pos_minus _ _) E3) as E4.
+assert (Hd : 0 < d).
+{ revert E2;apply (Trunc_ind _).
+  intros [s [s' [F1 [F2 F3]]]].
+  apply rat_le_reflecting in F3.
+  apply lt_le_trans with s';trivial.
+  apply le_lt_trans with s;trivial.
+  apply rat_le_reflecting.
+  transitivity (abs (lim x - lim y));trivial.
+  apply Rabs_nonneg.
+}
+pose (D := mkQpos Q d Hd).
+pose (ED := mkQpos Q _ E4).
+assert (Hrw : e = D + (ED / 4 + ED / 4) + (ED / 4 + ED / 4)).
+{ path_via (D + ED).
+  { apply pos_eq;unfold D, ED.
+    change (' e = d + (' e - d)).
+    path_via ('e + (d - d));[|ring_tac.ring_with_nat].
+    rewrite plus_negate_r,plus_0_r;trivial.
+  }
+  path_via (D + 4 / 4 * ED).
+  { rewrite pos_recip_r,Qpos_mult_1_l;trivial. }
+  apply pos_eq;ring_tac.ring_with_nat.
+}
+rewrite Hrw.
+eapply Requiv_triangle;[|apply equiv_lim].
+apply IHy. apply (Rlt_close_rat_plus _ _ E2).
+apply (non_expanding (fun u => abs (lim x - u))).
+apply equiv_symm,equiv_lim.
+Qed.
+
+Definition metric_to_equiv_lim_lim@{}
+  := metric_to_equiv_lim_lim'@{Ularge Set Set Ularge Ularge
+    Ularge Set Set Set Set
+    Set Set Set}.
+
+Lemma metric_to_equiv@{} : forall e u v, abs (u - v) < rat (' e) -> close e u v.
+Proof.
+intros e u v;revert u v e;apply (real_ind0 (fun u => forall v e, _ -> _));
+[intros q|intros x IHx];
+(apply (real_ind0 (fun v => forall e, _ -> _));[intros r|intros y IHy]);
+intros e E1.
+- apply equiv_rat_rat. apply Qclose_alt.
+  apply rat_lt_reflecting,E1.
+- apply metric_to_equiv_rat_lim;auto.
+- apply equiv_symm,metric_to_equiv_rat_lim.
+  + intros n n' E;apply equiv_symm,IHx.
+    rewrite Rabs_neg_flip. trivial.
+  + rewrite Rabs_neg_flip. trivial.
+- apply metric_to_equiv_lim_lim;auto.
+Qed.
+
+Lemma equiv_metric_applied_rw'
+  : forall e u v, Requiv Q e u v = (abs (u - v) < rat (' e)).
+Proof.
+intros. apply TruncType.path_iff_ishprop_uncurried.
+split.
+- apply equiv_to_metric.
+- apply metric_to_equiv.
+Qed.
+
+Definition equiv_metric_applied_rw@{} := equiv_metric_applied_rw'@{Ularge}.
+
+Lemma equiv_metric_rw' : Requiv Q = fun e u v => abs (u - v) < rat (' e).
+Proof.
+repeat (apply path_forall;intro).
+apply equiv_metric_applied_rw.
+Qed.
+
+Definition equiv_metric_rw@{} := equiv_metric_rw'@{Ularge Ularge Ularge}.
+
+
 
 End contents.
