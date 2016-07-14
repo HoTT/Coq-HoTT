@@ -22,6 +22,13 @@ Coercion trunctype_type : TruncType >-> Sortclass.
 Class Closeness@{k i} (R:Type@{k}) (A : Type@{i}) := close : R -> relation@{i i} A.
 Arguments close {R A _} _ _ _.
 
+Class Separated R A `{Closeness R A}
+  := separated : forall x y, (forall e, close e x y) -> x = y :> A.
+
+Class Triangular R `{Plus R} A `{Closeness R A}
+  := triangular : forall {u v w e d}, close e u v -> close d v w ->
+  close (e+d) u w.
+
 Class NonExpanding `{Closeness R A} `{Closeness R B} (f : A -> B)
   := non_expanding : forall e x y, close e x y -> close e (f x) (f y).
 Arguments non_expanding {R A _ B _} f {_ e x y} _.
@@ -29,6 +36,178 @@ Arguments non_expanding {R A _ B _} f {_ e x y} _.
 Class Lipschitz `{Mult R} `{Closeness R A} `{Closeness R B} (f : A -> B) (L : R)
   := lipschitz : forall e x y, close e x y -> close (L * e) (f x) (f y).
 Arguments lipschitz {R _ A _ B _} f L {_ e x y} _.
+
+Class Continuous `{Closeness R A} `{Closeness R B} (f : A -> B)
+  := continuous : forall u e, merely (exists d, forall v, close d u v ->
+    close e (f u) (f v)).
+Arguments continuous {R A _ B _} f {_} _ _.
+
+Module Qpos.
+
+Section VarSec.
+Context `{Funext} `{Universe.Univalence}.
+Universe UQ.
+Context (Q:Type@{UQ}) `{Rationals@{UQ UQ UQ UQ UQ UQ UQ UQ UQ UQ} Q}
+  `{!TrivialApart Q} `{DecidablePaths Q}
+  {Qmeet : Meet Q} {Qjoin : Join Q} `{!LatticeOrder Ale}
+  `{!TotalRelation (@le Q _)} `{!Abs Q}.
+
+Record Qpos@{} : Type@{UQ} := mkQpos { pos : Q; is_pos : 0 < pos }.
+Notation "Q+" := Qpos.
+
+Global Instance Qpos_Q@{} : Cast Qpos Q := pos.
+Arguments Qpos_Q /.
+
+Global Instance Q_close@{} : Closeness Q+ Q := fun e q r => - ' e < q - r < ' e.
+
+Lemma Qpos_plus_pr@{} : forall a b : Qpos, 0 < 'a + 'b.
+Proof.
+intros.
+apply semirings.pos_plus_compat@{Set UQ UQ Set Set};apply is_pos.
+Qed.
+
+Global Instance Qpos_plus@{} : Plus Qpos := fun a b => mkQpos _ (Qpos_plus_pr a b).
+
+Global Instance pos_is_pos@{} : forall q : Q+, PropHolds (0 < ' q)
+  := is_pos.
+
+Lemma pos_eq@{} : forall a b : Q+, @paths Q (' a) (' b) -> a = b.
+Proof.
+intros [a Ea] [b Eb] E.
+change (a = b) in E.
+destruct E;apply ap;apply path_ishprop.
+Qed.
+
+Global Instance Qpos_one@{} : One Q+.
+Proof.
+exists 1. apply lt_0_1@{UQ UQ UQ UQ UQ Set UQ Set}.
+Defined.
+
+Global Instance Qpos_mult@{} : Mult Q+.
+Proof.
+intros a b;exists (' a * ' b).
+solve_propholds.
+Defined.
+
+Global Instance qpos_plus_comm@{} : Commutative (@plus Q+ _).
+Proof.
+hnf. intros.
+apply pos_eq. change (' x + ' y = ' y + ' x).
+apply plus_comm.
+Qed.
+
+Global Instance qpos_mult_comm@{} : Commutative (@mult Q+ _).
+Proof.
+hnf;intros;apply pos_eq,mult_comm.
+Qed.
+
+Global Instance pos_recip@{} : DecRecip Q+.
+Proof.
+intros e. exists (/ ' e).
+apply pos_dec_recip_compat@{UQ UQ UQ UQ UQ UQ UQ Set UQ UQ Set Set}.
+solve_propholds.
+Defined.
+
+Global Instance pos_of_nat@{} : Cast nat Q+.
+Proof.
+intros n. destruct n as [|k].
+- exists 1;apply lt_0_1@{UQ UQ UQ UQ UQ Set UQ Set}.
+- exists (naturals_to_semiring nat Q (S k)).
+  induction k as [|k Ik].
+  + change (0 < 1). apply lt_0_1@{UQ UQ UQ UQ UQ Set UQ Set}.
+  + change (0 < 1 + naturals_to_semiring nat Q (S k)).
+    set (K := naturals_to_semiring nat Q (S k)) in *;clearbody K.
+    apply pos_plus_compat@{Set UQ UQ Set Set}.
+    apply lt_0_1@{UQ UQ UQ UQ UQ Set UQ Set}.
+    trivial.
+Defined.
+
+Lemma pos_recip_r@{} : forall e : Q+, e / e = 1.
+Proof.
+intros;apply pos_eq.
+unfold dec_recip,cast,pos_recip;simpl.
+change (' e / ' e = 1). apply dec_recip_inverse.
+apply lt_ne_flip. solve_propholds.
+Qed.
+
+Lemma pos_recip_r'@{} : forall e : Q+, @paths Q (' e / ' e) 1.
+Proof.
+intros. change (' (e / e) = 1). rewrite pos_recip_r. reflexivity.
+Qed.
+
+Lemma pos_mult_1_r@{} : forall e : Q+, e * 1 = e.
+Proof.
+intros;apply pos_eq. apply mult_1_r.
+Qed.
+
+Lemma pos_split2' : forall e : Q+, e = e / 2 + e / 2.
+Proof.
+intros.
+path_via (e * (2 / 2)).
+- rewrite pos_recip_r,pos_mult_1_r;reflexivity.
+- apply pos_eq. change (' e * (2 / 2) = ' e / 2 + ' e / 2).
+  ring_tac.ring_with_nat.
+Qed.
+
+Lemma pos_split2@{} : forall e : Q+, e = e / 2 + e / 2.
+Proof. exact pos_split2'@{Set Ularge Ularge Ularge Set Set Set}. Qed.
+
+Lemma pos_split3' : forall e : Q+, e = e / 3 + e / 3 + e / 3.
+Proof.
+intros.
+path_via (e * (3 / 3)).
+- rewrite pos_recip_r,pos_mult_1_r;reflexivity.
+- apply pos_eq. change (' e * (3 / 3) = ' e / 3 + ' e / 3 + ' e / 3).
+  ring_tac.ring_with_nat.
+Qed.
+
+Lemma pos_split3@{} : forall e : Q+, e = e / 3 + e / 3 + e / 3.
+Proof. exact pos_split3'@{Set Ularge Ularge Ularge Set Set Set}. Qed.
+
+Global Instance Qpos_mult_assoc@{} : Associative (@mult Q+ _).
+Proof.
+hnf.
+intros;apply pos_eq.
+apply mult_assoc.
+Qed.
+
+Global Instance Qpos_mult_1_l@{} : LeftIdentity (@mult Q+ _) 1.
+Proof.
+hnf;intros;apply pos_eq;apply mult_1_l.
+Qed.
+
+Lemma pos_recip_through_plus' : forall a b c : Q+,
+  a + b = c * (a / c + b / c).
+Proof.
+intros. path_via ((a + b) * (c / c)).
+- rewrite pos_recip_r;apply pos_eq,symmetry,mult_1_r.
+- apply pos_eq;ring_tac.ring_with_nat.
+Qed.
+
+Lemma pos_recip_through_plus@{} : forall a b c : Q+,
+  a + b = c * (a / c + b / c).
+Proof.
+exact pos_recip_through_plus'@{Set Ularge Ularge Ularge Set
+  Set Set}.
+Qed.
+
+Lemma pos_unconjugate' : forall a b : Q+, a * b / a = b.
+Proof.
+intros. path_via (a / a * b).
+- apply pos_eq;ring_tac.ring_with_nat.
+- rewrite pos_recip_r;apply Qpos_mult_1_l.
+Qed.
+
+Lemma pos_unconjugate@{} : forall a b : Q+, a * b / a = b.
+Proof.
+exact pos_unconjugate'@{Set Ularge Ularge Ularge Set
+  Set Set}.
+Qed.
+
+End VarSec.
+
+End Qpos.
+Import Qpos.
 
 Section closeness.
 Universe UR UA.
@@ -62,6 +241,40 @@ hnf. intros;reflexivity.
 Qed.
 
 End closeness.
+
+Section closeness_qpos.
+Context `{Funext} `{Universe.Univalence}.
+Universe UQ.
+Context (Q:Type@{UQ}) `{Rationals@{UQ UQ UQ UQ UQ UQ UQ UQ UQ UQ} Q}
+  `{!TrivialApart Q} `{DecidablePaths Q}
+  {Qmeet : Meet Q} {Qjoin : Join Q} `{!LatticeOrder Ale}
+  `{!TotalRelation (@le Q _)} `{!Abs Q}.
+Notation "Q+" := (Qpos.Qpos Q).
+Universe UA.
+Context {A:Type@{UA} } `{Closeness Q+ A}.
+Universe UB.
+Context {B:Type@{UB} } `{Closeness Q+ B} (f : A -> B).
+
+Lemma lipschitz_continuous@{i} (L:Q+) `{!Lipschitz f L}
+  : Continuous@{i UQ UA UB i} f.
+Proof.
+red.
+intros u e;apply tr;exists (e / L).
+intros v E.
+apply(lipschitz f L) in E.
+rewrite Qpos_mult_assoc,pos_unconjugate in E. trivial.
+Qed.
+Global Existing Instance lipschitz_continuous.
+
+Lemma nonexpanding_continuous' `{!NonExpanding f} : Continuous f.
+Proof.
+apply _.
+Qed.
+
+Definition nonexpanding_continuous@{i} `{!NonExpanding f} : Continuous f
+  := nonexpanding_continuous'@{i i}.
+
+End closeness_qpos.
 
 Section compositions.
 Universe UR UA.
@@ -104,6 +317,18 @@ Global Instance lipschitz_compose_nonexpanding_r@{}
   L {Eg : Lipschitz g L} {Ef : NonExpanding f}
   : Lipschitz (compose g f) L
   := lipschitz_compose_nonexpanding_r'@{Ularge Ularge} L.
+
+Global Instance continuous_compose@{} {Eg : Continuous g} {Ef : Continuous f}
+  : Continuous (compose g f).
+Proof.
+intros u e.
+apply (merely_destruct (continuous g (f u) e)).
+intros [d E].
+apply (merely_destruct (continuous f u d)).
+intros [d' E'].
+apply tr;exists d';intros v xi.
+apply E,E',xi.
+Qed.
 
 End compositions.
 
@@ -149,40 +374,26 @@ Section VarSec.
 Universe UQ.
 Context (Q:Type@{UQ}) `{Rationals@{UQ UQ UQ UQ UQ UQ UQ UQ UQ UQ} Q}.
 
-Record Qpos@{} : Type@{UQ} := mkQpos { pos : Q; is_pos : 0 < pos }.
-Notation "Q+" := Qpos.
-
-Global Instance Qpos_Q@{} : Cast Qpos Q := pos.
-Arguments Qpos_Q /.
-
-Global Instance Q_close@{} : Closeness Q+ Q := fun e q r => - ' e < q - r < ' e.
-
-Lemma Qpos_plus_pr@{} : forall a b : Qpos, 0 < 'a + 'b.
-Proof.
-intros.
-apply semirings.pos_plus_compat@{Set UQ UQ Set Set};apply is_pos.
-Qed.
-
-Instance Qpos_plus@{} : Plus Qpos := fun a b => mkQpos _ (Qpos_plus_pr a b).
+Notation "Q+" := (Qpos.Qpos Q).
 
 Private Inductive real@{} : Type@{UQ} :=
   | rat : Q -> real
-  | lim' : forall (f : Qpos -> real),
-    (forall d e : Qpos, close (d+e) (f d) (f e)) -> real
+  | lim' : forall (f : Q+ -> real),
+    (forall d e : Q+, close (d+e) (f d) (f e)) -> real
 
-with equiv@{} : Closeness@{UQ UQ} Qpos real :=
-  | equiv_rat_rat : forall (q r : Q) (e : Qpos),
+with equiv@{} : Closeness@{UQ UQ} Q+ real :=
+  | equiv_rat_rat : forall (q r : Q) (e : Q+),
       close e q r ->
       close e (rat q) (rat r)
-  | equiv_rat_lim' : forall q y Hy (e d d' : Qpos),
+  | equiv_rat_lim' : forall q y Hy (e d d' : Q+),
       e = d + d' ->
       close d' (rat q) (y d) ->
       close e (rat q) (lim' y Hy)
-  | equiv_lim'_rat : forall x Hx r (e d d' : Qpos),
+  | equiv_lim'_rat : forall x Hx r (e d d' : Q+),
       e = d + d' ->
       close d' (x d) (rat r) ->
       close e (lim' x Hx) (rat r)
-  | equiv_lim'_lim' : forall x Hx y Hy (e d n e' : Qpos),
+  | equiv_lim'_lim' : forall x Hx y Hy (e d n e' : Q+),
       e = d + n + e' ->
       close e' (x d) (y n) ->
       close e (lim' x Hx) (lim' y Hy)
@@ -190,19 +401,19 @@ with equiv@{} : Closeness@{UQ UQ} Qpos real :=
 
 Global Existing Instance equiv.
 
-Axiom equiv_path@{} : forall (u v : real)
-  (u_eq_v : forall e : Qpos, close e u v), u = v.
+Axiom equiv_path@{} : Separated Q+ real.
 Axiom equiv_hprop@{} : forall e (u v : real), IsHProp (close e u v).
+Global Existing Instance equiv_path.
 Global Existing Instance equiv_hprop.
 
 Record Approximation@{} :=
-  { approximate :> Qpos -> real
+  { approximate :> Q+ -> real
   ; approx_equiv : forall d e, close (d+e) (approximate d) (approximate e) }.
 
 Definition lim@{} (x : Approximation) : real :=
   lim' x (fun _ _ => approx_equiv _ _ _).
 
-Definition equiv_rat_lim@{} : forall q (y:Approximation) (e d d' : Qpos),
+Definition equiv_rat_lim@{} : forall q (y:Approximation) (e d d' : Q+),
   e = d + d' ->
   close d' (rat q) (y d) ->
   close e (rat q) (lim y).
@@ -210,7 +421,7 @@ Proof.
 intros. eapply equiv_rat_lim';eauto.
 Defined.
 
-Definition equiv_lim_rat@{} : forall (x:Approximation) r (e d d' : Qpos),
+Definition equiv_lim_rat@{} : forall (x:Approximation) r (e d d' : Q+),
   e = d + d' ->
   close d' (x d) (rat r) ->
   close e (lim x) (rat r).
@@ -218,7 +429,7 @@ Proof.
 intros;eapply equiv_lim'_rat;eauto.
 Defined.
 
-Definition equiv_lim_lim@{} : forall (x y : Approximation) (e d n e' : Qpos),
+Definition equiv_lim_lim@{} : forall (x y : Approximation) (e d n e' : Q+),
   e = d + n + e' ->
   close e' (x d) (y n) ->
   close e (lim x) (lim y).
@@ -291,7 +502,7 @@ Definition real_rect@{} : Inductors A B -> forall x : real, A x :=
       ind_lim I x a
     end
 
-  with equiv_rect (x y : real) (e : Qpos) (xi : close e x y) {struct xi}
+  with equiv_rect (x y : real) (e : Q+) (xi : close e x y) {struct xi}
     : forall I : Inductors A B, B x y (real_rect x I) (real_rect y I) e xi :=
     match xi in equiv e' x' y' return
       (forall I : Inductors A B,
@@ -322,7 +533,7 @@ Definition real_rect@{} : Inductors A B -> forall x : real, A x :=
   for real_rect x I.
 
 Definition equiv_rect@{} : forall (I : Inductors A B)
-  {x y : real} {e : Qpos} (xi : close e x y),
+  {x y : real} {e : Q+} (xi : close e x y),
   B x y (real_rect I x) (real_rect I y) e xi :=
   fun I x y e xi =>
   fix real_rect (x : real) {struct x} : Inductors A B -> A x :=
@@ -334,7 +545,7 @@ Definition equiv_rect@{} : forall (I : Inductors A B)
         (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
       ind_lim I x a
     end
-  with equiv_rect (x y : real) (e : Qpos) (xi : close e x y) {struct xi}
+  with equiv_rect (x y : real) (e : Q+) (xi : close e x y) {struct xi}
     : forall I : Inductors A B, @B x y (real_rect x I) (real_rect y I) e xi :=
     match xi in equiv e' x' y' return
       (forall I : Inductors A B,
@@ -403,7 +614,7 @@ End VarSec.
 
 End Cauchy.
 
-Arguments equiv_path {Q _ _ _ _ _ _ _ _ _ _ _} u v _.
+Arguments equiv_path {Q _ _ _ _ _ _ _ _ _ _ _} x y _.
 
 
 Section contents.
@@ -414,44 +625,8 @@ Context (Q:Type@{UQ}) `{Rationals@{UQ UQ UQ UQ UQ UQ UQ UQ UQ UQ} Q}
   {Qmeet : Meet Q} {Qjoin : Join Q} `{!LatticeOrder Ale}
   `{!TotalRelation (@le Q _)} `{!Abs Q}.
 
-Notation "Q+" := (Qpos Q).
+Notation "Q+" := (Qpos.Qpos Q).
 
-Local Existing Instance Qpos_Q.
-
-Instance pos_is_pos@{} : forall q : Qpos Q, PropHolds (0 < ' q)
-  := is_pos Q.
-
-Lemma pos_eq@{} : forall a b : Qpos Q, @paths Q (' a) (' b) -> a = b.
-Proof.
-intros [a Ea] [b Eb] E.
-change (a = b) in E.
-destruct E;apply ap;apply path_ishprop.
-Qed.
-
-Existing Instance Qpos_plus.
-
-Instance Qpos_one@{} : One Q+.
-Proof.
-exists 1. apply lt_0_1@{UQ UQ UQ UQ UQ Set UQ Set}.
-Defined.
-
-Instance Qpos_mult@{} : Mult Q+.
-Proof.
-intros a b;exists (' a * ' b).
-solve_propholds.
-Defined.
-
-Instance qpos_plus_comm@{} : Commutative (@plus Q+ _).
-Proof.
-hnf. intros.
-apply pos_eq. change (' x + ' y = ' y + ' x).
-apply plus_comm.
-Qed.
-
-Instance qpos_mult_comm@{} : Commutative (@mult Q+ _).
-Proof.
-hnf;intros;apply pos_eq,mult_comm.
-Qed.
 
 Notation rat := (rat Q).
 Notation lim := (lim Q).
@@ -480,76 +655,13 @@ apply real_rect0;auto.
 intros. apply path_ishprop.
 Qed.
 
-Instance pos_recip@{} : DecRecip Q+.
-Proof.
-intros e. exists (/ ' e).
-apply pos_dec_recip_compat@{UQ UQ UQ UQ UQ UQ UQ Set UQ UQ Set Set}.
-solve_propholds.
-Defined.
-
-Instance pos_of_nat@{} : Cast nat Q+.
-Proof.
-intros n. destruct n as [|k].
-- exists 1;apply lt_0_1@{UQ UQ UQ UQ UQ Set UQ Set}.
-- exists (naturals_to_semiring nat Q (S k)).
-  induction k as [|k Ik].
-  + change (0 < 1). apply lt_0_1@{UQ UQ UQ UQ UQ Set UQ Set}.
-  + change (0 < 1 + naturals_to_semiring nat Q (S k)).
-    set (K := naturals_to_semiring nat Q (S k)) in *;clearbody K.
-    apply pos_plus_compat@{Set UQ UQ Set Set}.
-    apply lt_0_1@{UQ UQ UQ UQ UQ Set UQ Set}.
-    trivial.
-Defined.
-
-Lemma pos_recip_r@{} : forall e : Q+, e / e = 1.
-Proof.
-intros;apply pos_eq.
-unfold dec_recip,cast,pos_recip;simpl.
-change (' e / ' e = 1). apply dec_recip_inverse.
-apply lt_ne_flip. solve_propholds.
-Qed.
-
-Lemma pos_recip_r'@{} : forall e : Q+, @paths Q (' e / ' e) 1.
-Proof.
-intros. change (' (e / e) = 1). rewrite pos_recip_r. reflexivity.
-Qed.
-
-Lemma pos_mult_1_r@{} : forall e : Q+, e * 1 = e.
-Proof.
-intros;apply pos_eq. apply mult_1_r.
-Qed.
-
-Lemma pos_split2' : forall e : Qpos Q, e = e / 2 + e / 2.
-Proof.
-intros.
-path_via (e * (2 / 2)).
-- rewrite pos_recip_r,pos_mult_1_r;reflexivity.
-- apply pos_eq. change (' e * (2 / 2) = ' e / 2 + ' e / 2).
-  ring_tac.ring_with_nat.
-Qed.
-
-Lemma pos_split2@{} : forall e : Qpos Q, e = e / 2 + e / 2.
-Proof. exact pos_split2'@{Set Ularge Ularge Ularge Set Set Set}. Qed.
-
-Lemma pos_split3' : forall e : Qpos Q, e = e / 3 + e / 3 + e / 3.
-Proof.
-intros.
-path_via (e * (3 / 3)).
-- rewrite pos_recip_r,pos_mult_1_r;reflexivity.
-- apply pos_eq. change (' e * (3 / 3) = ' e / 3 + ' e / 3 + ' e / 3).
-  ring_tac.ring_with_nat.
-Qed.
-
-Lemma pos_split3@{} : forall e : Qpos Q, e = e / 3 + e / 3 + e / 3.
-Proof. exact pos_split3'@{Set Ularge Ularge Ularge Set Set Set}. Qed.
-
 Instance Requiv_refl@{} : forall e, Reflexive (close (A:=real Q) e).
 Proof.
 red. intros e u;revert u e.
 apply (real_ind0 (fun u => forall e, _)).
 - intros. apply equiv_rat_rat. hnf. rewrite plus_negate_r.
-  split;[apply rings.flip_pos_negate|];apply is_pos.
-- intros. eapply equiv_lim_lim;[apply pos_split3|].
+  split;[apply rings.flip_pos_negate|];apply Qpos.is_pos.
+- intros. eapply equiv_lim_lim;[apply Qpos.pos_split3|].
   auto.
 Qed.
 
@@ -571,7 +683,7 @@ Lemma lim_cons' : forall x, lim (const_approx x) = x.
 Proof.
 apply (real_ind0 _).
 - intros. apply equiv_path.
-  intros. eapply equiv_lim_rat;[apply pos_split2|].
+  intros. eapply equiv_lim_rat;[apply Qpos.pos_split2|].
   simpl. reflexivity.
 - intros x Hx. apply equiv_path. intros.
   eapply equiv_lim_lim;[|
@@ -580,11 +692,11 @@ apply (real_ind0 _).
   + path_via (e / 5 + e / 5 + (e * 3 / 5)).
     path_via (e * (5 / 5)).
     * rewrite pos_recip_r,pos_mult_1_r;reflexivity.
-    * apply pos_eq.
+    * apply (pos_eq Q).
       change (' e * (5 / 5) = ' e / 5 + ' e / 5 + ' e * 3 / 5).
       ring_tac.ring_with_nat.
   + path_via (e / 5 + e / 5 + e / 5).
-    apply pos_eq.
+    apply (pos_eq Q).
     unfold cast,mult,Qpos_mult;simpl.
     unfold cast,dec_recip;simpl. ring_tac.ring_with_nat.
 Qed.
@@ -726,53 +838,13 @@ intros e x y [E1 E2];split.
   rewrite negate_swap_r,involutive. trivial.
 Qed.
 
-Instance Qpos_mult_assoc@{} : Associative (@mult Q+ _).
-Proof.
-hnf.
-intros;apply pos_eq.
-apply mult_assoc.
-Qed.
-
-Instance Qpos_mult_1_l@{} : LeftIdentity (@mult Q+ _) 1.
-Proof.
-hnf;intros;apply pos_eq;apply mult_1_l.
-Qed.
-
-Lemma pos_recip_through_plus' : forall a b c : Q+,
-  a + b = c * (a / c + b / c).
-Proof.
-intros. path_via ((a + b) * (c / c)).
-- rewrite pos_recip_r;apply pos_eq,symmetry,mult_1_r.
-- apply pos_eq;ring_tac.ring_with_nat.
-Qed.
-
-Lemma pos_recip_through_plus@{} : forall a b c : Q+,
-  a + b = c * (a / c + b / c).
-Proof.
-exact pos_recip_through_plus'@{Set Ularge Ularge Ularge Set
-  Set Set}.
-Qed.
-
-Lemma pos_unconjugate' : forall a b : Q+, a * b / a = b.
-Proof.
-intros. path_via (a / a * b).
-- apply pos_eq;ring_tac.ring_with_nat.
-- rewrite pos_recip_r;apply Qpos_mult_1_l.
-Qed.
-
-Lemma pos_unconjugate@{} : forall a b : Q+, a * b / a = b.
-Proof.
-exact pos_unconjugate'@{Set Ularge Ularge Ularge Set
-  Set Set}.
-Qed.
-
 Lemma separate_mult' : forall l u v, (forall e, close (l * e) u v) -> u = v.
 Proof.
 intros l x y E. apply equiv_path.
 intros. assert (Hrw : e = l * (e / l)).
 + path_via ((l / l) * e).
    * rewrite pos_recip_r. apply symmetry,Qpos_mult_1_l.
-   * apply pos_eq. ring_tac.ring_with_nat.
+   * apply (pos_eq Q). ring_tac.ring_with_nat.
 + rewrite Hrw;apply E.
 Qed.
 
@@ -818,14 +890,12 @@ exact Q_triangular_one'@{Set Set Set Set Ularge
   Set Set}.
 Qed.
 
-Lemma Q_triangular@{} : forall (q r : Q)
-(e : Q+) (Hqr : close e q r)
-(q0 : Q) (n : Q+),
-  (close n q q0 → close (e + n) r q0) ∧ (close n r q0 → close (e + n) q q0).
+Instance Q_triangular@{} : Triangular Q+ Q.
 Proof.
-split.
-- apply Q_triangular_one;trivial.
-- apply Q_triangular_one,symmetry;trivial.
+hnf. intros u v w e d E1 E2.
+apply Q_triangular_one with v.
+- Symmetry;trivial.
+- trivial.
 Qed.
 
 Section Requiv_alt.
@@ -876,7 +946,7 @@ Proof.
 unfold rounded_halfrel_close. intros. apply _.
 Qed.
 
-Lemma Qclose_separating : forall q r : Q, (forall e, close e q r) -> q = r.
+Instance Qclose_separating : Separated Q+ Q.
 Proof. Admitted.
 
 Lemma Qclose_rounded@{} : ∀ (q r : Q) e, close e q r ↔
@@ -904,12 +974,12 @@ split;apply (Trunc_ind _);intros [d [d' [He E]]].
   apply tr;do 2 econstructor;split;
   [|apply tr;do 2 econstructor;split;[reflexivity|exact E1]].
   path_via (d+n+n').
-  rewrite He,Hd'. apply pos_eq,plus_assoc.
+  rewrite He,Hd'. apply (pos_eq Q),plus_assoc.
 - revert E;apply (Trunc_ind _);intros [n [n' [Hd E]]].
   apply tr;do 2 econstructor;split;[|eapply Ea,E].
   path_via (d'/2 + (n + d'/2 + n')).
-  rewrite <-(pos_unconjugate 2 d') in He. rewrite He,Hd.
-  apply pos_eq;ring_tac.ring_with_nat.
+  rewrite <-(pos_unconjugate Q 2 d') in He. rewrite He,Hd.
+  apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition rat_lim_rounded_step@{}
@@ -960,10 +1030,9 @@ unfold Requiv_alt_rat_rat.
 red;simpl. intros q r1 r2 e Hr n.
 split.
 - intros E;apply symmetry.
-  apply symmetry in E;revert E;apply Q_triangular. trivial.
+  apply symmetry in E;revert E;apply Q_triangular_one. trivial.
 - intros E;apply symmetry.
-  apply symmetry in E;revert E;apply Q_triangular.
-  apply symmetry; trivial.
+  apply symmetry in E;revert E;apply Q_triangular. trivial.
 Qed.
 
 Lemma Requiv_alt_rat_rat_lim_pr' :
@@ -981,13 +1050,13 @@ split.
   pose proof (fst (IH _) E1) as E2.
   apply tr. exists d, (d' + e').
   split;trivial.
-  rewrite He. apply pos_eq;ring_tac.ring_with_nat.
+  rewrite He. apply (pos_eq Q);ring_tac.ring_with_nat.
 - apply (Trunc_ind _). intros [n [n' [He' E1]]].
   pose proof (fst (Eb _ d _) E1) as E2.
   apply IH in E2.
   rewrite He,He'.
   assert (Hrw : (d + d' + (n + n')) = (d' + (n + d + n')))
-  by (apply pos_eq;ring_tac.ring_with_nat).
+  by (apply (pos_eq Q);ring_tac.ring_with_nat).
   rewrite Hrw;trivial.
 Qed.
 
@@ -1012,13 +1081,13 @@ split.
   apply IH in E2.
   rewrite He,He'.
   assert (Hrw : (d + d' + (n + n')) = (d' + (n + d + n')))
-  by (apply pos_eq;ring_tac.ring_with_nat).
+  by (apply (pos_eq Q);ring_tac.ring_with_nat).
   rewrite Hrw;trivial.
 - intros E1.
   pose proof (snd (IH _) E1) as E2.
   apply tr. exists d, (d' + e').
   split;trivial.
-  rewrite He. apply pos_eq;ring_tac.ring_with_nat.
+  rewrite He. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_alt_rat_lim_rat_pr@{}
@@ -1044,14 +1113,14 @@ intros e';split;apply (Trunc_ind _).
   apply (fst (IH _)) in E2.
   exists n, (n' + (d0 + d + d0')).
   split;trivial.
-  rewrite He,He'. apply pos_eq; ring_tac.ring_with_nat.
+  rewrite He,He'. apply (pos_eq Q); ring_tac.ring_with_nat.
 - intros [d0 [d0' [He' E1]]].
   apply tr.
   pose proof (fst (Eb _ n _) E1) as E2.
   apply (snd (IH _)) in E2.
   exists d, (n' + (d0 + n + d0')).
   split;trivial.
-  rewrite He,He'. apply pos_eq; ring_tac.ring_with_nat.
+  rewrite He,He'. apply (pos_eq Q); ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_alt_rat_lim_lim_pr@{}
@@ -1077,12 +1146,12 @@ split;apply (Trunc_ind _);intros [d [d' [He E]]].
   apply tr;do 2 econstructor;split;
   [|apply tr;do 2 econstructor;split;[reflexivity|exact E1]].
   path_via (d+n+n').
-  rewrite He,Hd'. apply pos_eq,plus_assoc.
+  rewrite He,Hd'. apply (pos_eq Q),plus_assoc.
 - revert E;apply (Trunc_ind _);intros [n [n' [Hd E]]].
   apply tr;do 2 econstructor;split;[|eapply Ea,E].
   path_via (d'/2 + (n + d'/2 + n')).
-  rewrite <-(pos_unconjugate 2 d') in He. rewrite He,Hd.
-  apply pos_eq;ring_tac.ring_with_nat.
+  rewrite <-(pos_unconjugate Q 2 d') in He. rewrite He,Hd.
+  apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_alt_lim_rat_ok@{}
@@ -1120,7 +1189,7 @@ split;apply (Trunc_ind _).
   intros [d0 [d0' [Hd' E3]]].
   apply tr;exists (d+d0+n);exists d0';split;
   [|apply tr;econstructor;econstructor;econstructor;split;[reflexivity|exact E3]].
-  rewrite He,Hd'. apply pos_eq; ring_tac.ring_with_nat.
+  rewrite He,Hd'. apply (pos_eq Q); ring_tac.ring_with_nat.
 - intros [d [d' [He E2]]]. revert E2;apply (Trunc_ind _).
   intros [d0 [d0' [n [Hd E2]]]].
   pose proof (fun e u v n e0 xi => fst (snd (E1 e) u v n e0 xi)) as E3.
@@ -1131,7 +1200,7 @@ split;apply (Trunc_ind _).
   path_via (d0 + d0' + n + (2 / 2) * d').
   + rewrite pos_recip_r,Qpos_mult_1_l.
     trivial.
-  + apply pos_eq;ring_tac.ring_with_nat.
+  + apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_alt_lim_lim_ok@{} :=
@@ -1167,13 +1236,13 @@ intros n;split;apply (Trunc_ind _).
   pose proof (fst (snd (Requiv_alt_x_e_pr _) _ _ _ _ E2) E1) as E3.
   change (Cauchy.rat Q) with rat in E3.
   apply tr;exists d, (d'+e);split;[|exact E3].
-  rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
+  rewrite Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 - intros [d [d' [Hn E1]]].
   pose proof (equiv_rat_rat Q _ _ _ He) as E2.
   pose proof (snd (snd (Requiv_alt_x_e_pr _) _ _ _ _ E2) E1) as E3.
   change (Cauchy.rat Q) with rat in E3.
   apply tr;exists d, (d'+e);split;[|exact E3].
-  rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
+  rewrite Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_alt_lim_lim_rat_lim_rat_pr@{}
@@ -1199,7 +1268,7 @@ intros n;split;apply (Trunc_ind _).
 - intros [d0 [d0' [Hn E2]]].
   pose proof (fst (snd (Requiv_alt_x_e_pr _) _ _ _ _ xi) E2) as E3.
   apply tr;do 3 econstructor;split;[|exact E3].
-  rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+  rewrite He,Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 - intros [d0 [d0' [n0 [Hn E2]]]].
   pose proof (fun a b => snd (snd (Requiv_alt_x_e_pr a) _ _ b _ xi) ) as E3.
   pose proof (fun a b a' b' => snd (snd (Requiv_alt_x_e_pr a) _ _ b _
@@ -1207,7 +1276,7 @@ intros n;split;apply (Trunc_ind _).
   pose proof (fun a => E4 _ _ a _ E2) as E5. clear E4.
   pose proof (E3 _ _ (E5 _)) as E4. clear E3 E5.
   apply tr;do 2 econstructor;split;[|exact E4].
-  rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+  rewrite He,Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_alt_lim_lim_rat_lim_lim_pr@{}
@@ -1237,11 +1306,11 @@ intros n;split;apply (Trunc_ind _).
   pose proof (fun a => E4 _ _ _ a E2) as E5. clear E4.
   pose proof (E3 _ _ (E5 _)) as E4. clear E3 E5.
   apply tr;do 2 econstructor;split;[|exact E4].
-  rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+  rewrite He,Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 - intros [d0 [d0' [Hn E2]]].
   pose proof (snd (snd (Requiv_alt_x_e_pr _) _ _ _ _ xi) E2) as E3.
   apply tr;do 3 econstructor;split;[|exact E3].
-  rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+  rewrite He,Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_alt_lim_lim_lim_lim_rat_pr@{}
@@ -1272,13 +1341,13 @@ intros n0;split;apply (Trunc_ind _);intros [d0 [d' [n1 [Hn0 E1]]]].
     (approx_equiv Q x h i))) as E3.
   pose proof (E2 _ _ (E3 _ _ _ _ E1)) as E4.
   apply tr;do 3 econstructor;split;[|exact E4].
-  rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
+  rewrite He,Hn0. apply (pos_eq Q);ring_tac.ring_with_nat.
 - pose proof (fun f g => snd (snd (Requiv_alt_x_e_pr f) _ _ g _ xi)) as E2.
   pose proof (fun f g h i => snd (snd (Requiv_alt_x_e_pr f) _ _ g _
     (approx_equiv Q y h i))) as E3.
   pose proof (E2 _ _ (E3 _ _ _ _ E1)) as E4.
   apply tr;do 3 econstructor;split;[|exact E4].
-  rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
+  rewrite He,Hn0. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_alt_lim_lim_lim_lim_lim_pr@{}
@@ -1298,7 +1367,7 @@ pose proof (equiv_rec rounded_zeroary rounded_zeroary_close I) as R_pr.
 red in R_pr.
 change (real_rec rounded_zeroary rounded_zeroary_close I) with R in R_pr.
 intros u v n e xi.
-rewrite !(qpos_plus_comm n).
+rewrite !(qpos_plus_comm Q n).
 apply (R_pr u v e xi n).
 Qed.
 
@@ -1369,14 +1438,14 @@ Lemma Requiv_alt_rat_rat_pr' : ∀ (q r : Q) (e : Q+), - ' e < q - r < ' e →
 Proof.
 intros q r e Hqr.
 red. apply (real_ind0 (fun u => forall n, _)).
-- simpl. apply Q_triangular. trivial.
+- simpl. split; apply Q_triangular_one; trivial. Symmetry;trivial.
 - intros x Ex n.
   rewrite !Requiv_alt_rat_lim_compute.
   split;apply (Trunc_ind _);intros [d [d' [Hn E1]]].
   + apply Ex in E1. apply tr;do 2 econstructor;split;[|exact E1].
-    rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
+    rewrite Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
   + apply Ex in E1. apply tr;do 2 econstructor;split;[|exact E1].
-    rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
+    rewrite Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_alt_rat_rat_pr@{} :=
@@ -1399,17 +1468,17 @@ red. apply (real_ind0 (fun u => forall n, _)).
   simpl in E1. clear IH. split.
   + intros E2.
     apply E1 in E2. apply tr;do 2 econstructor;split;[|exact E2].
-    rewrite He;apply pos_eq;ring_tac.ring_with_nat.
+    rewrite He;apply (pos_eq Q);ring_tac.ring_with_nat.
   + apply (Trunc_ind _);intros [d0 [d0' [Hn E2]]].
     rewrite He.
     assert (Hrw : (d + d' + n) = d' + (d + n))
-    by (apply pos_eq;ring_tac.ring_with_nat);rewrite Hrw;clear Hrw.
+    by (apply (pos_eq Q);ring_tac.ring_with_nat);rewrite Hrw;clear Hrw.
     apply E1.
     rewrite Hn.
     red in Eb.
     pose proof (fst (Eb _ d _ _) E2) as E3.
     assert (Hrw : (d + (d0 + d0')) = (d0 + d + d0'))
-    by (apply pos_eq;ring_tac.ring_with_nat);rewrite Hrw;clear Hrw.
+    by (apply (pos_eq Q);ring_tac.ring_with_nat);rewrite Hrw;clear Hrw.
     trivial.
 - intros x Ex n.
   rewrite !Requiv_alt_rat_lim_compute,!Requiv_alt_lim_lim_compute.
@@ -1417,12 +1486,12 @@ red. apply (real_ind0 (fun u => forall n, _)).
   + intros [d0 [d0' [Hn E1]]].
     apply IH in E1.
     apply tr;do 3 econstructor;split;[|exact E1].
-    rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+    rewrite He,Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
   + intros [d0 [d0' [n0 [Hn E1]]]].
     red in Eb. pose proof (fst (Eb _ d _ _) E1) as E2.
     apply IH in E2.
     apply tr;do 2 econstructor;split;[|exact E2].
-    rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+    rewrite He,Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_alt_rat_lim_pr@{}
@@ -1449,13 +1518,13 @@ red. apply (real_ind0 (fun u => forall n, _)).
     simpl in E3.
     rewrite He,Hn.
     assert (Hrw : (d + d' + (d0 + d0')) = (d' + (d0 + d + d0')))
-    by (apply pos_eq;ring_tac.ring_with_nat);rewrite Hrw;clear Hrw.
+    by (apply (pos_eq Q);ring_tac.ring_with_nat);rewrite Hrw;clear Hrw.
     trivial.
   + intros E1.
     red in IH.
     pose proof (snd (IH (rat _) _) E1) as E2.
     apply tr;do 2 econstructor;split;[|exact E2].
-    rewrite He. apply pos_eq;ring_tac.ring_with_nat.
+    rewrite He. apply (pos_eq Q);ring_tac.ring_with_nat.
 - intros y Ey n.
   rewrite !Requiv_alt_rat_lim_compute,!Requiv_alt_lim_lim_compute.
   split;apply (Trunc_ind _).
@@ -1463,11 +1532,11 @@ red. apply (real_ind0 (fun u => forall n, _)).
     pose proof (fun x => fst (Ea _ x _ _) E1) as E2.
     pose proof (fst (IH _ _) (E2 _)) as E3.
     apply tr;do 2 econstructor;split;[|exact E3].
-    rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+    rewrite He,Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
   + intros [d0 [d0' [Hn E1]]].
     pose proof (snd (IH _ _) E1) as E2.
     apply tr;do 3 econstructor;split;[|exact E2].
-    rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
+    rewrite He,Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_alt_lim_rat_pr@{}
@@ -1493,23 +1562,23 @@ red. apply (real_ind0 (fun u => forall n0, _)).
     pose proof (fst (Ea _ d _ _) E1) as E2.
     apply IH in E2.
     apply tr;do 2 econstructor;split;[|exact E2].
-    rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
+    rewrite He,Hn0. apply (pos_eq Q);ring_tac.ring_with_nat.
   + intros [d0 [d' [Hn0 E1]]].
     pose proof (fst (Eb _ n _ _) E1) as E2.
     apply IH in E2.
     apply tr;do 2 econstructor;split;[|exact E2].
-    rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
+    rewrite He,Hn0. apply (pos_eq Q);ring_tac.ring_with_nat.
 - intros z Ez n0.
   simpl.
   split;apply (Trunc_ind _).
   + intros [d0 [d' [n1 [Hn0 E1]]]].
     pose proof (fst (IH _ _) (fst (Ea _ _ _ _) E1)) as E2.
     apply tr;do 3 econstructor;split;[|exact E2].
-    rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
+    rewrite He,Hn0. apply (pos_eq Q);ring_tac.ring_with_nat.
   + intros [d0 [d' [n1 [Hn0 E1]]]].
     pose proof (snd (IH _ _) (fst (Eb _ _ _ _) E1)) as E2.
     apply tr;do 3 econstructor;split;[|exact E2].
-    rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
+    rewrite He,Hn0. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_alt_lim_lim_pr@{}
@@ -1592,7 +1661,7 @@ apply (equiv_rec0 _).
 - intros;rewrite Requiv_alt_lim_rat_def;apply tr;eauto.
 - intros x y e d n e' He _ IH;rewrite Requiv_alt_lim_lim_def.
   apply tr;do 3 econstructor;split;[|exact IH].
-  rewrite He;apply pos_eq;ring_tac.ring_with_nat.
+  rewrite He;apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_to_Requiv_alt@{}
@@ -1616,7 +1685,7 @@ apply (real_ind0 (fun u => forall v e, _ -> _)).
   + intros y Ey e;rewrite Requiv_alt_lim_lim_def.
     apply (Trunc_ind _);intros [d [d' [n [He E1]]]].
     eapply equiv_lim_lim;[|eauto].
-    rewrite He;apply pos_eq;ring_tac.ring_with_nat.
+    rewrite He;apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition Requiv_alt_to_Requiv@{}
@@ -1682,16 +1751,17 @@ Qed.
 Definition Requiv_rounded@{} {e u v}
   := @Requiv_rounded'@{UQ} e u v.
 
-Lemma Requiv_triangle' : forall {u v w e d}, close e u v -> close d v w ->
-  close (e+d) u w.
+Lemma Requiv_triangle' : Triangular Q+ (real Q).
 Proof.
-intros. rewrite <-Requiv_alt_rw.
+hnf;intros. rewrite <-Requiv_alt_rw.
 apply Requiv_alt_Requiv with v;trivial.
 rewrite Requiv_alt_rw;trivial.
 Qed.
 
-Definition Requiv_triangle@{} {u v w e d}
-  := @Requiv_triangle'@{UQ UQ} u v w e d.
+Definition Requiv_triangle@{}
+  := Requiv_triangle'@{UQ UQ}.
+
+Global Existing Instance Requiv_triangle.
 
 End Requiv_alt.
 
@@ -1710,18 +1780,18 @@ apply (real_ind0 (fun u => forall y e d, _ -> _)).
   pose proof (fun e n => Ex n x e n (Requiv_refl _ _)) as E1.
   apply (merely_destruct (fst Requiv_rounded xi)).
   intros [d0 [d' [He E2]]].
-  pose proof (Requiv_triangle (E1 (d' / 2) (d' / 4)) E2) as E3.
+  pose proof (Requiv_triangle _ _ _ _ _ (E1 (d' / 2) (d' / 4)) E2) as E3.
   eapply equiv_lim_lim;[|exact E3].
   rewrite He.
   path_via (d0 + (4 / 4) * d' + d).
   { rewrite pos_recip_r,Qpos_mult_1_l. trivial. }
-  assert (Hrw : 4 / 4 = 2 / 4 + 1 / 2).
-  { rewrite two_fourth_is_one_half. rewrite pos_recip_r;path_via (2/ 2).
+  assert (Hrw : 4 / 4 = 2 / 4 + 1 / 2 :> Q+).
+  { rewrite two_fourth_is_one_half. rewrite pos_recip_r;path_via ((2/ 2) : Q+).
     { rewrite pos_recip_r;trivial. }
-    { apply pos_eq;ring_tac.ring_with_nat. }
+    { apply (pos_eq Q);ring_tac.ring_with_nat. }
   }
   rewrite Hrw.
-  apply pos_eq;ring_tac.ring_with_nat.
+  apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition equiv_through_approx@{}
@@ -1736,24 +1806,21 @@ intros. apply equiv_through_approx.
 apply Requiv_refl.
 Qed.
 
-Class Continuous@{} (f : real Q -> real Q)
-  := continuous : forall u e, merely (exists d, forall v, close d u v ->
-    close e (f u) (f v)).
-
-Arguments continuous f {_} _ _.
-
 Lemma Qpos_lt_min@{} : forall a b : Q+, exists c ca cb, a = c + ca /\ b = c + cb.
 Proof.
 Admitted.
 
-Lemma unique_continuous_extension' `{Continuous f} `{Continuous g}
+Lemma unique_continuous_extension' `{IsHSet A} `{Closeness Q+ A}
+  `{forall e, is_mere_relation A (close e)}
+  `{!Separated Q+ A} `{!Triangular Q+ A} `{!forall e, Symmetric (close (A:=A) e)}
+  `{!Continuous (A:=real Q) (B:=A) f} `{!Continuous (A:=real Q) (B:=A) g}
   : (forall q, f (rat q) = g (rat q)) -> forall u, f u = g u.
 Proof.
 intros E.
 apply (real_ind0 _).
 - exact E.
 - intros x IHx.
-  apply equiv_path.
+  apply separated.
   intros e.
   apply (merely_destruct (continuous f (lim x) (e/2))).
   intros [d Ed].
@@ -1766,7 +1833,7 @@ apply (real_ind0 _).
     path_via (nd/2 + n + nd/2).
     path_via (2 / 2 * nd + n).
     { rewrite pos_recip_r,Qpos_mult_1_l,qpos_plus_comm;trivial. }
-    apply pos_eq;ring_tac.ring_with_nat.
+    apply (pos_eq Q);ring_tac.ring_with_nat.
   }
   assert (Hx' : close d' (lim x) (x n)).
   { apply Requiv_rounded. apply tr;do 2 econstructor;split;[|
@@ -1774,35 +1841,28 @@ apply (real_ind0 _).
     path_via (nd'/2 + n + nd'/2).
     path_via (2 / 2 * nd' + n).
     { rewrite pos_recip_r,Qpos_mult_1_l,qpos_plus_comm;trivial. }
-    apply pos_eq;ring_tac.ring_with_nat.
+    apply (pos_eq Q);ring_tac.ring_with_nat.
   }
   apply Ed in Hx. apply Ed' in Hx'.
   rewrite IHx in Hx.
-  pose proof (Requiv_triangle Hx (equiv_symm _ _ _ Hx')) as E1.
-  rewrite (pos_split2 e). trivial.
+  pose proof (triangular Hx (symmetry _ _ Hx')) as E1.
+  rewrite (pos_split2 Q e). trivial.
 Qed.
 
-Definition unique_continuous_extension@{} `{Continuous f} `{Continuous g}
+Definition unique_continuous_extension@{i j k} {A:Type@{i} }
+  `{IsHSet A} `{Closeness Q+ A}
+  `{forall e, is_mere_relation A (close e)}
+  `{!Separated Q+ A} `{!Triangular Q+ A} `{!forall e, Symmetric (close (A:=A) e)}
+  f `{!Continuous (A:=real Q) (B:=A) f} g `{!Continuous (A:=real Q) (B:=A) g}
   : (forall q, f (rat q) = g (rat q)) -> forall u, f u = g u
-  := unique_continuous_extension'@{Set Ularge Ularge Ularge Set
+  := unique_continuous_extension'@{i j k k j
+    Set Ularge Ularge Ularge Set
     Set Set Set Set Set
-    Set}.
+    Set i}.
 
 Instance R0@{} : Zero (real Q) := rat 0.
 
 Instance R1@{} : One (real Q) := rat 1.
-
-Instance continuous_compose@{} g {Eg : Continuous g} f {Ef : Continuous f}
-  : Continuous (compose g f).
-Proof.
-intros u e.
-apply (merely_destruct (continuous g (f u) e)).
-intros [d E].
-apply (merely_destruct (continuous f u d)).
-intros [d' E'].
-apply tr;exists d';intros v xi.
-apply E,E',xi.
-Qed.
 
 Instance rat_nonexpanding : NonExpanding rat.
 Proof.
@@ -1828,10 +1888,10 @@ Lemma lipschitz_extend_rat_lim' :
 Proof.
 simpl. intros ???????? He xi IH.
 assert (Hrw : L * e = L * d' + L * d)
-by (rewrite He;apply pos_eq;ring_tac.ring_with_nat).
+by (rewrite He;apply (pos_eq Q);ring_tac.ring_with_nat).
 rewrite Hrw.
 apply equiv_through_approx.
-simpl. rewrite (pos_unconjugate L d). apply IH.
+simpl. rewrite (pos_unconjugate Q L d). apply IH.
 Qed.
 
 Definition lipschitz_extend_rat_lim@{}
@@ -1858,7 +1918,7 @@ Lemma lipschitz_extend_lim_lim' :
 Proof.
 intros ???????????? He xi IH;simpl.
 apply equiv_lim_lim with (L * d) (L * n) (L * e').
-+ rewrite He;apply pos_eq;ring_tac.ring_with_nat.
++ rewrite He;apply (pos_eq Q);ring_tac.ring_with_nat.
 + simpl. rewrite 2!pos_unconjugate. apply IH.
 Qed.
 
@@ -1872,7 +1932,7 @@ Lemma lipschitz_extend_lim_pr@{} :
   ∀ d e : Q+, close (d + e) (a (d / L)) (a (e / L)).
 Proof.
 intros. pattern (d+e);eapply transport.
-apply symmetry, (pos_recip_through_plus d e L).
+apply symmetry, (pos_recip_through_plus Q d e L).
 apply Ea.
 Qed.
 
@@ -1937,20 +1997,6 @@ Proof.
 apply (lipschitz_nonexpanding _).
 Qed.
 
-Instance lipschitz_continuous@{} `{!Lipschitz f L} : Continuous f.
-Proof.
-red.
-intros u e;apply tr;exists (e / L).
-intros v E.
-apply(lipschitz f L) in E.
-rewrite Qpos_mult_assoc,pos_unconjugate in E. trivial.
-Qed.
-
-Lemma nonexpanding_continuous@{} `{!NonExpanding f} : Continuous f.
-Proof.
-apply _.
-Qed.
-
 Lemma Qclose_neg@{} : forall e (x y : Q), close e x y <-> close e (- x) (- y).
 Proof.
 Admitted.
@@ -1966,10 +2012,15 @@ Proof.
 red. apply (lipschitz_extend (compose rat (-)) _).
 Defined.
 
+Instance Rneg_nonexpanding@{} : NonExpanding (@negate (real Q) _).
+Proof.
+apply _.
+Qed.
+
 Lemma Rneg_involutive@{} : forall x : real Q, - - x = x.
 Proof.
 change (forall x, - - x = id x).
-apply unique_continuous_extension.
+apply unique_continuous_extension;try apply _.
 intros;apply (ap rat). apply involutive.
 Qed.
 
@@ -1981,14 +2032,14 @@ intros x y e E d.
 apply equiv_lim_lim with (d/3) (d/3) (e + d/3);[|apply E].
 path_via (e + 3 / 3 * d).
 - rewrite pos_recip_r,Qpos_mult_1_l;trivial.
-- apply pos_eq;ring_tac.ring_with_nat.
+- apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
 Definition lim_same_distance@{}
   := lim_same_distance'@{Set Ularge Ularge Ularge Set
     Set Set}.
 
-Lemma lipschitz_extend_same_distance@{} (f g : Q -> real Q) L
+Lemma lipschitz_extend_same_distance@{} (f g : Q -> real Q) (L:Q+)
   `{!Lipschitz f L} `{!Lipschitz g L} : forall e,
   (forall d q, close (e+d) (f q) (g q)) ->
   forall d u, close (e+d) (lipschitz_extend f L u) (lipschitz_extend g L u).
@@ -2050,7 +2101,7 @@ apply equiv_lim_lim with (d'/2) (d'/2) d.
 - rewrite He.
   path_via (d + (2/2) * d').
   { rewrite pos_recip_r,Qpos_mult_1_l;trivial. }
-  apply pos_eq;ring_tac.ring_with_nat.
+  apply (pos_eq Q);ring_tac.ring_with_nat.
 - simpl. apply ((a _).2). trivial.
 Qed.
 
@@ -2263,8 +2314,8 @@ Lemma unique_continuous_binary_extension@{} {f : real Q -> real Q -> real Q}
   forall u v, f u v = g u v.
 Proof.
 intros E.
-intros x;apply unique_continuous_extension.
-intros r;revert x;apply unique_continuous_extension.
+intros x;apply unique_continuous_extension;try apply _.
+intros r;revert x;apply unique_continuous_extension;try apply _.
 trivial.
 Qed.
 
@@ -2278,7 +2329,7 @@ Lemma unique_continuous_ternary_extension@{} {f}
   forall u v w, f u v w = g u v w.
 Proof.
 intros E u;apply unique_continuous_binary_extension.
-intros q r;revert u;apply unique_continuous_extension.
+intros q r;revert u;apply unique_continuous_extension;try apply _.
 auto.
 Qed.
 
@@ -2296,32 +2347,31 @@ hnf. intros x;apply @unique_continuous_binary_extension.
 { apply _. }
 { change (forall y, Continuous (compose (+ y) (x +))).
   apply _. }
-intros r s;revert x;apply @unique_continuous_extension.
-{ apply _. }
+intros r s;revert x;apply unique_continuous_extension;try apply _.
 { change (Continuous (compose (+ rat s) (+ rat r))). apply _. }
 intros q;apply (ap rat),plus_assoc.
 Qed.
 
-Instance lipschitz_const@{} : forall (a:real Q) L, Lipschitz (fun _ => a) L.
+Instance lipschitz_const@{} : forall (a:real Q) (L:Q+), Lipschitz (fun _ => a) L.
 Proof.
 intros;hnf.
 intros e _ _ _. apply Requiv_refl.
 Qed.
 
-Lemma lipschitz_dup' (f : real Q -> real Q -> real Q) L1 L2
+Lemma lipschitz_dup' (f : real Q -> real Q -> real Q) (L1 L2 : Q+)
   `{!forall x, Lipschitz (f x) L1} `{!forall y, Lipschitz (fun x => f x y) L2}
   : Lipschitz (fun x => f x x) (L1 + L2).
 Proof.
 hnf. intros e x y xi.
 assert (Hrw : (L1 + L2) * e = L1 * e + L2 * e)
-by (apply pos_eq;ring_tac.ring_with_nat);
+by (apply (pos_eq Q);ring_tac.ring_with_nat);
 rewrite Hrw;clear Hrw.
-apply (Requiv_triangle (v:=f x y)).
+apply (Requiv_triangle _ (f x y)).
 - apply (lipschitz _ _ xi).
 - apply (lipschitz (fun x => f x y) _ xi).
 Qed.
 
-Definition lipschitz_dup@{} (f : real Q -> real Q -> real Q) L1 L2
+Definition lipschitz_dup@{} (f : real Q -> real Q -> real Q) (L1 L2 : Q+)
   `{!forall x, Lipschitz (f x) L1} `{!forall y, Lipschitz (fun x => f x y) L2}
   : Lipschitz (fun x => f x x) (L1 + L2)
   := lipschitz_dup'@{Set Ularge Ularge Ularge Set
@@ -2334,32 +2384,32 @@ repeat split.
 - exact Rplus_assoc.
 - hnf. change mon_unit with 0.
   change sg_op with plus.
-  apply unique_continuous_extension.
+  apply unique_continuous_extension;try apply _.
   intros;apply (ap rat);apply plus_0_l.
 - hnf. change mon_unit with 0.
   change sg_op with plus.
-  apply unique_continuous_extension.
+  apply unique_continuous_extension;try apply _.
   intros;apply (ap rat);apply plus_0_r.
 - hnf; change mon_unit with 0.
   change sg_op with plus.
-  apply @unique_continuous_extension.
-  { apply @lipschitz_continuous with (1+1).
+  apply unique_continuous_extension;try apply _.
+  { eapply lipschitz_continuous;try apply _.
     apply (@lipschitz_dup (fun a b => - a + b) 1 1).
     { apply _. }
-    { change (forall y, Lipschitz (compose (+ y) (-)) 1). apply _. } 
+    { change (forall y, Lipschitz (compose (+ y) (-)) (1:Q+)). apply _. } 
   }
-  { apply (lipschitz_continuous (L:=1)). }
   intros;apply (ap rat),plus_negate_l.
 - hnf; change mon_unit with 0.
   change sg_op with plus.
-  apply @unique_continuous_extension.
-  { apply @lipschitz_continuous with (1+1).
+  apply unique_continuous_extension.
+  { eapply lipschitz_continuous;try apply _.
     apply (@lipschitz_dup (fun a b => a - b) 1 1).
-    { change (forall x, Lipschitz (compose (x +) (-)) 1). apply _. }
+    { change (forall x, Lipschitz (compose (x +) (-)) (1:Q+)). apply _. }
     { apply _. } 
   }
-  { apply (lipschitz_continuous (L:=1)). }
+  { apply (lipschitz_continuous _ _ 1). }
   intros;apply (ap rat),plus_negate_r.
+Unshelve. exact 1.
 Qed.
 
 Instance Qmeet_nonexpanding_l : forall s : Q, NonExpanding (⊓ s).
@@ -2405,12 +2455,12 @@ Arguments Rlt _ _ /.
 Global Instance Rap@{} : Apart@{UQ UQ} (real Q) := fun x y => x < y \/ y < x.
 Arguments Rap _ _ /.
 
-Instance Rle_trans : Transitive Rle.
+Instance Rle_trans@{} : Transitive Rle.
 Proof.
 hnf. unfold le,Rle.
 intros x y z E1 E2. rewrite <-E2,<-E1. clear E1 E2;revert x.
-apply @unique_continuous_extension.
-{ eapply @lipschitz_continuous.
+apply unique_continuous_extension.
+{ eapply @lipschitz_continuous;try apply _.
   eapply (@lipschitz_dup (fun u v => u ⊔ ((v ⊔ y) ⊔ z))).
   { intros u. apply nonexpanding_lipschitz.
     change (NonExpanding (compose (u ⊔) (compose (⊔ z) (⊔ y)))).
@@ -2418,18 +2468,16 @@ apply @unique_continuous_extension.
   { intros u. apply nonexpanding_lipschitz.
     apply _. }
 }
-{ apply @nonexpanding_continuous.
+{ eapply @nonexpanding_continuous;try apply _.
   change (NonExpanding (compose (⊔ z) (⊔ y)));apply _. }
 intros q;revert y z.
 apply @unique_continuous_binary_extension.
-{ intros x;apply @nonexpanding_continuous.
-  change (NonExpanding (compose ((rat q) ⊔) ((rat q ⊔ x) ⊔))).
-  apply _. }
-{ intros y;apply @nonexpanding_continuous.
+{ intros x;eapply nonexpanding_continuous;try apply _. }
+{ intros y;eapply nonexpanding_continuous;try apply _.
   change (NonExpanding (compose (rat q ⊔) (compose (⊔ y) (rat q ⊔))));apply _.
 }
-{ intros x;apply @nonexpanding_continuous. apply _. }
-{ intros y;apply @nonexpanding_continuous.
+{ intros x;eapply nonexpanding_continuous;apply _. }
+{ intros y;eapply nonexpanding_continuous;try apply _.
   change (NonExpanding (compose (⊔ y) (rat q ⊔)));apply _.
 }
 intros r s.
@@ -2437,16 +2485,16 @@ apply (ap rat).
 apply join_r. apply join_le_compat_r,join_ub_l.
 Qed.
 
-Instance Rle_refl : Reflexive Rle.
+Instance Rle_refl@{} : Reflexive Rle.
 Proof.
 change (forall x, join x x = x).
-apply @unique_continuous_extension.
-+ apply (@lipschitz_continuous _ (1+1)). apply lipschitz_dup;apply _.
+apply unique_continuous_extension.
++ eapply lipschitz_continuous;try apply _. apply lipschitz_dup;apply _.
 + apply _.
 + intros;apply (ap rat),semilattice_idempotent,join_sl_order_join_sl.
 Qed.
 
-Lemma real_eq_equiv : forall u v : real Q, u = v -> forall e, close e u v.
+Lemma real_eq_equiv@{} : forall u v : real Q, u = v -> forall e, close e u v.
 Proof.
 intros u v [] e;apply Requiv_refl.
 Qed.
@@ -2533,6 +2581,16 @@ hnf. intros x y E.
 hnf. apply tr;exists x,y;repeat split;auto.
 Qed.
 
+Lemma R_lt_le' : forall a b : real Q, a < b -> a <= b.
+Proof.
+intros a b;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+transitivity (rat q);trivial.
+transitivity (rat r);trivial.
+apply rat_le_preserve. apply lt_le. trivial.
+Qed.
+
+Definition R_lt_le@{} := R_lt_le'@{Ularge}.
+
 Lemma rat_lt_reflecting' : StrictlyOrderReflecting rat.
 Proof.
 hnf. intros x y;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
@@ -2615,18 +2673,18 @@ split.
     apply unique_continuous_binary_extension.
     intros;apply (ap rat). apply commutativity.
   + hnf. red.
-    apply @unique_continuous_extension;try apply _.
-    { eapply @lipschitz_continuous. apply lipschitz_dup;apply _. }
+    apply unique_continuous_extension;try apply _.
+    { eapply @lipschitz_continuous;try apply _. apply lipschitz_dup;apply _. }
     intros;apply (ap rat),idempotency,_.
   + unfold le,Rle. intros x y;split;intros E.
     * rewrite <-E.
       clear E;revert x y;apply @unique_continuous_binary_extension;try apply _.
-      { intros;eapply @lipschitz_continuous.
+      { intros;eapply @lipschitz_continuous;try apply _.
         apply (lipschitz_dup (fun x1 x2 => x1 ⊓ (x2 ⊔ y)));apply _. }
       intros;apply (ap rat). apply (meet_join_absorption _).
     * rewrite <-E.
       clear E;revert x y;apply @unique_continuous_binary_extension;try apply _.
-      { intros;eapply @lipschitz_continuous.
+      { intros;eapply @lipschitz_continuous;try apply _.
         apply (lipschitz_dup (fun v1 v2 => (x ⊓ v1) ⊔ v2));try apply _.
         intro;apply nonexpanding_lipschitz.
         change (NonExpanding (compose (⊔ y) (x ⊓)));apply _.
@@ -2647,8 +2705,8 @@ split.
     apply unique_continuous_binary_extension.
     intros;apply (ap rat). apply commutativity.
   + hnf. red.
-    apply @unique_continuous_extension;try apply _.
-    { eapply @lipschitz_continuous. apply lipschitz_dup;apply _. }
+    apply unique_continuous_extension;try apply _.
+    { eapply @lipschitz_continuous;try apply _. apply lipschitz_dup;apply _. }
     intros;apply (ap rat),idempotency,_.
 Unshelve. all:exact 1.
 Qed.
@@ -2748,7 +2806,7 @@ Global Instance Rabs_nonexpanding : NonExpanding Rabs_val := _.
 Lemma Rabs_of_nonneg' : forall x, 0 <= x -> Rabs_val x = x.
 Proof.
 unfold le;simpl. intros x E;rewrite <-E.
-clear E;revert x;apply unique_continuous_extension.
+clear E;revert x;apply unique_continuous_extension;try apply _.
 intros q;apply (ap rat).
 apply ((abs_sig _).2). apply join_ub_l.
 Qed.
@@ -2757,7 +2815,7 @@ Lemma Rabs_of_nonpos' : forall x, x <= 0 -> Rabs_val x = - x.
 Proof.
 intros x E.
 apply meet_l in E. rewrite <-E.
-clear E;revert x;apply unique_continuous_extension.
+clear E;revert x;apply unique_continuous_extension;try apply _.
 intros q;apply (ap rat).
 apply ((abs_sig _).2). apply meet_lb_r.
 Qed.
@@ -2790,24 +2848,6 @@ Proof.
 intros x E;rewrite E;apply Rabs_of_0.
 Qed.
 
-Lemma Rabs_nonneg : forall x : real Q, 0 <= abs x.
-Proof.
-unfold le;simpl. apply unique_continuous_extension.
-intros;apply (ap rat).
-apply join_sl_le_spec.
-unfold abs.
-destruct (total le 0 q) as [E|E];pose proof E as E';
-apply ((abs_sig q).2) in E';rewrite E'.
-- trivial.
-- apply flip_nonpos_negate;trivial.
-Qed.
-
-Instance Rabs_idempotent : UnaryIdempotent (abs (A:=real Q)).
-Proof.
-hnf. apply path_forall. intros x. unfold compose.
-apply Rabs_of_nonneg, Rabs_nonneg.
-Qed.
-
 Lemma total_abs_either `{Abs A} `{!TotalRelation le}
   : forall x : A, (0 <= x /\ abs x = x) \/ (x <= 0 /\ abs x = - x).
 Proof.
@@ -2815,6 +2855,28 @@ intros x.
 destruct (total le 0 x) as [E|E].
 - left. split;trivial. apply ((abs_sig x).2);trivial.
 - right. split;trivial. apply ((abs_sig x).2);trivial.
+Qed.
+
+Lemma Qabs_nonneg' : forall q : Q, 0 <= abs q.
+Proof.
+intros q;destruct (total_abs_either q) as [E|E];destruct E as [E1 E2];rewrite E2.
+- trivial.
+- apply flip_nonneg_negate. rewrite involutive;trivial.
+Qed.
+
+Definition Qabs_nonneg@{} := Qabs_nonneg'@{Ularge Set}.
+
+Lemma Rabs_nonneg@{} : forall x : real Q, 0 <= abs x.
+Proof.
+unfold le;simpl. apply unique_continuous_extension;try apply _.
+intros;apply (ap rat).
+apply join_r. apply Qabs_nonneg.
+Qed.
+
+Instance Rabs_idempotent@{} : UnaryIdempotent (abs (A:=real Q)).
+Proof.
+hnf. apply path_forall. intros x. unfold compose.
+apply Rabs_of_nonneg, Rabs_nonneg.
 Qed.
 
 Lemma equiv_0_metric' : forall e u, close e u 0 -> abs u < rat (' e).
@@ -2845,7 +2907,7 @@ Definition equiv_0_metric@{}
   := equiv_0_metric'@{UQ UQ Set Ularge Ularge
     Ularge Set Set Set}.
 
-Lemma equiv_to_metric' : forall e u v, close e u v -> abs (u - v) < rat (' e).
+Lemma equiv_to_metric@{} : forall e u v, close e u v -> abs (u - v) < rat (' e).
 Proof.
 intros e u v xi.
 rewrite <-Rabs_idempotent.
@@ -2854,8 +2916,6 @@ rewrite <-(Rabs_of_0' (u - u));[|apply right_inverse].
 apply (non_expanding (fun w => abs (u - w))).
 apply equiv_symm,xi.
 Qed.
-
-Definition equiv_to_metric@{} := equiv_to_metric'@{Ularge Set}.
 
 Lemma Qclose_alt : forall e (q r : Q), close e q r <-> abs (q - r) < ' e.
 Proof. Admitted.
@@ -2884,14 +2944,14 @@ pose (D := mkQpos Q d Hd).
 pose (ED := mkQpos Q _ E4).
 assert (Hrw : e = D + (ED / 4 + ED / 4) + (ED / 4 + ED / 4)).
 { path_via (D + ED).
-  { apply pos_eq;unfold D, ED.
+  { apply (pos_eq Q);unfold D, ED.
     change (' e = d + (' e - d)).
     path_via ('e + (d - d));[|ring_tac.ring_with_nat].
     rewrite plus_negate_r,plus_0_r;trivial.
   }
   path_via (D + 4 / 4 * ED).
   { rewrite pos_recip_r,Qpos_mult_1_l;trivial. }
-  apply pos_eq;ring_tac.ring_with_nat.
+  apply (pos_eq Q);ring_tac.ring_with_nat.
 }
 rewrite Hrw.
 eapply Requiv_triangle;[|apply equiv_lim].
@@ -2901,7 +2961,7 @@ apply equiv_symm,equiv_lim.
 Qed.
 
 Definition metric_to_equiv_rat_lim@{}
-  := metric_to_equiv_rat_lim'@{Ularge Set Set Ularge Ularge
+  := metric_to_equiv_rat_lim'@{Ularge Set Ularge Ularge
     Ularge Set Set Set Set
     Set Set Set}.
 
@@ -2954,14 +3014,14 @@ pose (D := mkQpos Q d Hd).
 pose (ED := mkQpos Q _ E4).
 assert (Hrw : e = D + (ED / 4 + ED / 4) + (ED / 4 + ED / 4)).
 { path_via (D + ED).
-  { apply pos_eq;unfold D, ED.
+  { apply (pos_eq Q);unfold D, ED.
     change (' e = d + (' e - d)).
     path_via ('e + (d - d));[|ring_tac.ring_with_nat].
     rewrite plus_negate_r,plus_0_r;trivial.
   }
   path_via (D + 4 / 4 * ED).
   { rewrite pos_recip_r,Qpos_mult_1_l;trivial. }
-  apply pos_eq;ring_tac.ring_with_nat.
+  apply (pos_eq Q);ring_tac.ring_with_nat.
 }
 rewrite Hrw.
 eapply Requiv_triangle;[|apply equiv_lim].
@@ -2971,7 +3031,7 @@ apply equiv_symm,equiv_lim.
 Qed.
 
 Definition metric_to_equiv_lim_lim@{}
-  := metric_to_equiv_lim_lim'@{Ularge Set Set Ularge Ularge
+  := metric_to_equiv_lim_lim'@{Ularge Set Ularge Ularge
     Ularge Set Set Set Set
     Set Set Set}.
 
@@ -3027,7 +3087,7 @@ apply _.
 Qed.
 
 Definition lipschitz_extend_interval@{} (a b : Q) (E : a <= b)
-  (f : Interval a b -> real Q) L
+  (f : Interval a b -> real Q) (L:Q+)
   `{!Lipschitz f L}
   : Interval (rat a) (rat b) -> real Q
   := fun s => lipschitz_extend (compose f (Interval_restrict a b E)) L s.1.
@@ -3044,7 +3104,7 @@ Proof.
 intros z. hnf. unfold le;simpl. intros x y E.
 rewrite <-E;clear E.
 revert z x y;apply @unique_continuous_ternary_extension;try apply _.
-{ intros x z;eapply @lipschitz_continuous.
+{ intros x z;eapply @lipschitz_continuous;try apply _.
   apply (lipschitz_dup (fun y1 y2 => (x + y1) ⊔ (x + (y2 ⊔ z))));intros y;
   apply nonexpanding_lipschitz.
   { change (NonExpanding (compose ((x + y) ⊔) (compose (x +) (⊔ z)))).
@@ -3052,7 +3112,7 @@ revert z x y;apply @unique_continuous_ternary_extension;try apply _.
   { change (NonExpanding (compose (⊔ (x + (y ⊔ z))) (x +))).
     apply _. }
 }
-{ intros;eapply @lipschitz_continuous.
+{ intros;eapply @lipschitz_continuous;try apply _.
   apply (lipschitz_dup (fun x1 x2 => (x1 + y) ⊔ (x2 + (y ⊔ z))));intros x;
   apply nonexpanding_lipschitz.
   { apply _. }
@@ -3096,15 +3156,15 @@ revert z x y;apply @unique_continuous_ternary_extension;try apply _.
   apply _. }
 { change (forall x z, Continuous (compose (+ (- x)) (compose (⊔ (x + z)) (x +)))).
   apply _. }
-{ intros y z;eapply @lipschitz_continuous.
+{ intros y z;eapply @lipschitz_continuous;try apply _.
   apply (lipschitz_dup (fun x1 x2 => (x1 + y) ⊔ (x1 + z) - x2)).
   { apply _. }
   { intros x0;apply (@lipschitz_dup (fun x1 x2 => (x1 + y) ⊔ (x2 + z) - x0) 1 1).
     { change (forall x,
-      Lipschitz (compose (+ (- x0)) (compose ((x + y) ⊔) (+ z))) 1).
+      Lipschitz (compose (+ (- x0)) (compose ((x + y) ⊔) (+ z))) (1:Q+)).
       apply _. }
     { change (forall y0,
-      Lipschitz (compose (+ (- x0)) (compose (⊔ (y0 + z)) (+ y))) 1).
+      Lipschitz (compose (+ (- x0)) (compose (⊔ (y0 + z)) (+ y))) (1:Q+)).
       apply _. }
   }
 }
@@ -3134,7 +3194,7 @@ intros x y E.
 rewrite <-E.
 clear E;revert x y;apply @unique_continuous_binary_extension.
 { change (forall x, Continuous (compose (⊔ - x) (compose (-) (x ⊔))));apply _. }
-{ intros;eapply @lipschitz_continuous.
+{ intros;eapply @lipschitz_continuous;try apply _.
   apply (lipschitz_dup (fun x1 x2 => - (x1 ⊔ y) ⊔ - x2));intros x;
   apply nonexpanding_lipschitz.
   { change (NonExpanding (compose (- (x ⊔ y) ⊔) (-)));apply _. }
@@ -3235,6 +3295,248 @@ hnf. intros x y [E|E] z.
   intros [E1|E1];apply tr;[right|left];hnf;auto.
 Qed.
 
+Lemma Qabs_le_raw' : forall x : Q, x <= abs x.
+Proof.
+intros x;destruct (total_abs_either x) as [[E1 E2]|[E1 E2]].
+- rewrite E2;reflexivity.
+- transitivity (0:Q);trivial.
+  rewrite E2. apply flip_nonpos_negate. trivial.
+Qed.
 
+Definition Qabs_le_raw@{} := Qabs_le_raw'@{Ularge Set}.
+
+Lemma Qabs_neg' : forall x : Q, abs (- x) = abs x.
+Proof.
+intros x. destruct (total_abs_either x) as [[E1 E2]|[E1 E2]].
+- rewrite E2. path_via (- - x);[|rewrite involutive;trivial].
+  apply ((abs_sig (- x)).2). apply flip_nonneg_negate;trivial.
+- rewrite E2. apply ((abs_sig (- x)).2). apply flip_nonpos_negate;trivial.
+Qed.
+
+Definition Qabs_neg@{} := Qabs_neg'@{Ularge Set Set}.
+
+Lemma Qabs_le_neg_raw : forall x : Q, - x <= abs x.
+Proof.
+intros x. rewrite <-Qabs_neg. apply Qabs_le_raw.
+Qed.
+
+Lemma Q_abs_le_pr' : forall x y : Q, abs x <= y <-> - y <= x /\ x <= y.
+Proof.
+intros x y;split.
+- intros E. split.
+  + apply flip_le_negate. rewrite involutive. transitivity (abs x);trivial.
+    apply Qabs_le_neg_raw.
+  + transitivity (abs x);trivial.
+    apply Qabs_le_raw.
+- intros [E1 E2].
+  destruct (total_abs_either x) as [[E3 E4]|[E3 E4]];rewrite E4.
+  + trivial.
+  + apply flip_le_negate;rewrite involutive;trivial.
+Qed.
+
+Definition Q_abs_le_pr@{} := Q_abs_le_pr'@{Ularge Set Set}.
+
+Lemma Qabs_is_join' : forall q : Q, abs q = join (- q) q.
+Proof.
+intros q. symmetry.
+destruct (total_abs_either q) as [[E1 E2]|[E1 E2]];rewrite E2.
+- apply join_r. transitivity (0:Q);trivial.
+  apply flip_nonneg_negate;trivial.
+- apply join_l. transitivity (0:Q);trivial.
+  apply flip_nonpos_negate;trivial.
+Qed.
+
+Definition Qabs_is_join@{} := Qabs_is_join'@{Ularge Set Set}.
+
+Lemma Rabs_is_join@{} : forall x : real Q, abs x = join (- x) x.
+Proof.
+apply unique_continuous_extension.
+{ apply _. }
+{ eapply @lipschitz_continuous;try apply _.
+  apply (lipschitz_dup (fun u1 u2 => join (- u1) u2));
+  intros;apply nonexpanding_lipschitz.
+  { apply _. }
+  { change (NonExpanding (compose (⊔ y) (-)));apply _. }
+}
+intros;apply (ap rat),Qabs_is_join.
+Qed.
+
+Lemma Rabs_le_raw@{} : forall x : real Q, x <= abs x.
+Proof.
+intros x;rewrite Rabs_is_join. apply join_ub_r.
+Qed.
+
+Lemma Rabs_le_neg_raw@{} : forall x : real Q, - x <= abs x.
+Proof.
+intros x;rewrite Rabs_is_join. apply join_ub_l.
+Qed.
+
+Lemma Rabs_neg@{} : forall x : real Q, abs (- x) = abs x.
+Proof.
+intros;rewrite !Rabs_is_join,involutive. apply commutativity.
+Qed.
+
+Lemma Rabs_le_pr' : forall x y : real Q, abs x <= y <-> - y <= x /\ x <= y.
+Proof.
+intros x y.
+split.
+- intros E. split.
+  + apply Rneg_le_flip_equiv. rewrite involutive. transitivity (abs x);trivial.
+    apply Rabs_le_neg_raw.
+  + transitivity (abs x);trivial.
+    apply Rabs_le_raw.
+- intros [E1 E2].
+  rewrite Rabs_is_join. apply join_le.
+  + apply Rneg_le_flip_equiv;rewrite involutive;trivial.
+  + trivial.
+Qed.
+
+Definition Rabs_le_pr@{} := Rabs_le_pr'@{Set}.
+
+Lemma R_Q_bounded@{} : forall x : real Q, merely (exists q : Q, abs x <= rat q).
+Proof.
+apply (real_ind0 _).
+- intros q;apply tr;exists (abs q). reflexivity.
+- intros x IH.
+  generalize (IH 1).
+  apply (Trunc_ind _);intros [q E].
+  apply tr;exists (q + ' 2).
+  eapply Rle_close_rat;[apply E|].
+  apply (non_expanding abs).
+  apply equiv_lim.
+Qed.
+
+Lemma R_Qpos_bounded' : forall x : real Q,
+  merely (exists q : Q+, abs x <= rat (' q)).
+Proof.
+intros x;apply (merely_destruct (R_Q_bounded x));intros [q E].
+apply tr. simple refine (existT _ _ _).
+- exists (join q 1).
+  apply lt_le_trans with 1.
+  + solve_propholds.
+  + apply join_ub_r.
+- simpl. transitivity (rat q);trivial.
+  apply rat_le_preserve. apply join_ub_l.
+Qed.
+
+Definition R_Qpos_bounded@{} := R_Qpos_bounded'@{Ularge Set Set}.
+
+Definition Qbounded_square (a : Q) : Interval (- a) a -> Q :=
+  fun x => x.1 * x.1.
+
+Lemma Qabs_mult' : forall a b : Q, abs (a * b) = abs a * abs b.
+Proof.
+intros a b.
+destruct (total_abs_either a) as [Ea|Ea];destruct Ea as [Ea1 Ea2];rewrite Ea2;
+destruct (total_abs_either b) as [Eb|Eb];destruct Eb as [Eb1 Eb2];rewrite Eb2.
+- apply ((abs_sig (a*b)).2). apply nonneg_mult_compat;trivial.
+- rewrite <-negate_mult_distr_r.
+  apply ((abs_sig (a*b)).2). apply nonneg_nonpos_mult;trivial.
+- rewrite <-negate_mult_distr_l.
+  apply ((abs_sig (a*b)).2). apply nonpos_nonneg_mult;trivial.
+- rewrite negate_mult_negate. apply ((abs_sig (a*b)).2).
+  apply nonpos_mult;trivial.
+Qed.
+
+Definition Qabs_mult@{} := Qabs_mult'@{Ularge Set Set Set Set}.
+
+Lemma Qbounded_square_lipschitz'
+  : forall a : Q+, Lipschitz (Qbounded_square (' a)) (2 * a).
+Proof.
+intros a e [q Hq] [r Hr] xi.
+change (close e q r) in xi.
+unfold Qbounded_square;simpl.
+apply Qclose_alt in xi. apply Qclose_alt.
+assert (Hrw : q * q - r * r = (q + r) * (q - r)).
+{ path_via (q * q + - r * r + (q * r + q * - r));[|ring_tac.ring_with_nat].
+  rewrite negate_mult_distr_l,<-negate_mult_distr_r,plus_negate_r,plus_0_r.
+  trivial. }
+rewrite Hrw. clear Hrw.
+rewrite Qabs_mult. change (' (2 * a * e)) with (2 * ' a * ' e).
+apply pos_mult_le_lt_compat;[split| |split].
+- apply Qabs_nonneg.
+- assert (Hrw : 2 * ' a = ' a + ' a) by ring_tac.ring_with_nat.
+  rewrite Hrw;clear Hrw.
+  rewrite Qabs_is_join. destruct Hq,Hr. apply join_le.
+  + rewrite negate_plus_distr.
+    apply plus_le_compat;apply flip_le_negate;rewrite involutive;trivial.
+  + apply plus_le_compat;trivial.
+- change (0 < ' (2 * a)). solve_propholds.
+- apply Qabs_nonneg.
+- trivial.
+Qed.
+
+Definition Qbounded_square_lipschitz@{} :=
+  Qbounded_square_lipschitz'@{Set Ularge Ularge Ularge Set
+    Set Set Ularge Set Set
+    Set Set Set Set Set
+    Set Set Set Set Set
+    Set Set Set Set Set
+    Set}.
+Existing Instance Qbounded_square_lipschitz.
+
+Lemma Qpos_neg_le' : forall a : Q+, - ' a <= ' a.
+Proof.
+intros a;transitivity (0:Q).
+- apply flip_nonneg_negate. solve_propholds.
+- solve_propholds.
+Qed.
+
+Definition Qpos_neg_le@{} := Qpos_neg_le'@{Ularge Set}.
+
+Definition Rbounded_square@{} (a : Q+)
+  : Interval (- rat (' a)) (rat (' a)) -> real Q.
+Proof.
+exact (lipschitz_extend_interval (- ' a) (' a) (Qpos_neg_le _)
+  (compose rat (Qbounded_square (' a))) _).
+Defined.
+
+Instance Rbounded_square_lipschitz@{}
+  : forall a : Q+, Lipschitz (Rbounded_square a) (2*a).
+Proof.
+intros a.
+pose proof (_ : Lipschitz (Rbounded_square a) (_:Q+)) as E.
+rewrite Qpos_mult_1_l,qpos_mult_comm,Qpos_mult_1_l in E. exact E.
+Qed.
+
+Definition interval_back
+  : sigT (fun a : Q+ => Interval (- rat (' a)) (rat (' a))) -> real Q
+  := fun x => x.2.1.
+
+Lemma interval_proj_issurj@{}
+  : TrM.IsConnMap@{Uhuge Ularge UQ UQ Ularge} (trunc_S minus_two) interval_back.
+Proof.
+apply BuildIsSurjection. intros x.
+generalize (R_Qpos_bounded x). apply (Trunc_ind _);intros [q E].
+apply tr. simple refine (existT _ _ _).
+- exists q. exists x. apply Rabs_le_pr. exact E.
+- simpl. reflexivity.
+Defined.
+
+Definition RsquareT@{} x := sigT (fun x2 : real Q =>
+  forall y : ∃ a : Q+, Interval (- rat (' a)) (rat (' a)),
+  x = interval_back y -> x2 = Rbounded_square _ y.2).
+
+Instance RsquareT_ishprop@{} : forall x, IsHProp (RsquareT x).
+Proof.
+unfold RsquareT. intros x.
+apply Sigma.ishprop_sigma_disjoint.
+intros x1 x2 E1 E2.
+generalize (interval_proj_issurj x). intros [a _];revert a; apply (Trunc_ind _).
+intros [y E3].
+path_via (Rbounded_square y.1 y.2).
+Qed.
+
+Definition Rinterval_inject@{} : forall a b : Q, a <= b ->
+  Interval (- rat a) (rat a) -> Interval (- (rat b)) (rat b).
+Proof.
+intros a b E s.
+exists (s.1).
+split.
+- transitivity (- (rat a));[|apply s.2].
+  apply Rneg_le_flip,rat_le_preserve,E.
+- transitivity (rat a);[apply s.2|].
+  apply rat_le_preserve,E.
+Defined.
 
 End contents.

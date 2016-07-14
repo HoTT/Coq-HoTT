@@ -729,6 +729,16 @@ Section full_pseudo_semiring_order.
   apply gt_1_ge_1_mult_compat;trivial.
   Qed.
 
+  Lemma pos_mult_le_lt_compat : forall a b c d, 0 <= a /\ a <= b -> 0 < b ->
+    0 <= c /\ c < d ->
+    a * c < b * d.
+  Proof.
+  intros a b c d [E1 E2] E3 [E4 E5] .
+  apply le_lt_trans with (b * c).
+  - apply mult_le_compat;auto.
+  - apply (strictly_order_preserving (b *.)). trivial.
+  Qed.
+
   Context `{PropHolds (1 ≶ 0)}.
 
   Lemma not_le_1_0 : ¬1 ≤ 0.
