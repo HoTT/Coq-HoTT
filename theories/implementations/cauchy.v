@@ -3499,11 +3499,14 @@ pose proof (_ : Lipschitz (Rbounded_square a) (_:Q+)) as E.
 rewrite Qpos_mult_1_l,qpos_mult_comm,Qpos_mult_1_l in E. exact E.
 Qed.
 
+Definition Rfull_square (s : sigT (fun a => Interval (- (rat (' a))) (rat (' a))))
+  := Rbounded_square s.1 s.2.
+
 Definition interval_back
   : sigT (fun a : Q+ => Interval (- rat (' a)) (rat (' a))) -> real Q
   := fun x => x.2.1.
 
-Lemma interval_proj_issurj@{}
+Instance interval_proj_issurj@{}
   : TrM.IsConnMap@{Uhuge Ularge UQ UQ Ularge} (trunc_S minus_two) interval_back.
 Proof.
 apply BuildIsSurjection. intros x.
@@ -3512,20 +3515,6 @@ apply tr. simple refine (existT _ _ _).
 - exists q. exists x. apply Rabs_le_pr. exact E.
 - simpl. reflexivity.
 Defined.
-
-Definition RsquareT@{} x := sigT (fun x2 : real Q =>
-  forall y : ∃ a : Q+, Interval (- rat (' a)) (rat (' a)),
-  x = interval_back y -> x2 = Rbounded_square _ y.2).
-
-Instance RsquareT_ishprop@{} : forall x, IsHProp (RsquareT x).
-Proof.
-unfold RsquareT. intros x.
-apply Sigma.ishprop_sigma_disjoint.
-intros x1 x2 E1 E2.
-generalize (interval_proj_issurj x). intros [a _];revert a; apply (Trunc_ind _).
-intros [y E3].
-path_via (Rbounded_square y.1 y.2).
-Qed.
 
 Definition Rinterval_inject@{} : forall a b : Q, a <= b ->
   Interval (- rat a) (rat a) -> Interval (- (rat b)) (rat b).
@@ -3538,5 +3527,20 @@ split.
 - transitivity (rat a);[apply s.2|].
   apply rat_le_preserve,E.
 Defined.
+
+Lemma Rbounded_square_respects : ∀ x y, interval_back x = interval_back y →
+  Rbounded_square x.1 x.2 = Rbounded_square y.1 y.2.
+Proof. Admitted.
+
+Definition Rsquare@{} : real Q -> real Q
+  := jections.surjective_factor@{UQ UQ UQ Uhuge Ularge
+    Ularge UQ UQ Uhuge Ularge
+    UQ} Rfull_square interval_back Rbounded_square_respects.
+
+Lemma Rsquare_pr@{} : Rfull_square = compose Rsquare interval_back.
+Proof.
+apply jections.surjective_factor_pr.
+Qed.
+
 
 End contents.
