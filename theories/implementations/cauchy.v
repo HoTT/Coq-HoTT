@@ -1966,15 +1966,12 @@ Proof.
 red. apply (lipschitz_extend (compose rat (-)) _).
 Defined.
 
-(* Test lemma (the proof we actually use will be going through Group) *)
-Lemma neg_involutive : forall x : real Q, - - x = x.
+Lemma Rneg_involutive@{} : forall x : real Q, - - x = x.
 Proof.
 change (forall x, - - x = id x).
 apply unique_continuous_extension.
 intros;apply (ap rat). apply involutive.
-Unshelve. Fail idtac.
-(* ^ this will error if things change and we still have goals. *)
-Abort.
+Qed.
 
 Lemma lim_same_distance' : forall (x y : Approximation Q) e,
   (forall d n, close (e+d) (x n) (y n)) ->
@@ -2509,9 +2506,14 @@ intros E1 E2.
 apply (irreflexivity lt x). transitivity y;trivial.
 Qed.
 
-Lemma Q_average_between : forall q r, q < r -> q < (q + r) / 2 < r.
+Lemma Q_average_between@{} : forall q r : Q, q < r -> q < (q + r) / 2 < r.
 Proof.
 Admitted.
+
+Lemma Q_dense@{} : forall q r : Q, q < r -> exists s, q < s < r.
+Proof.
+intros q r E;econstructor;apply Q_average_between,E.
+Qed.
 
 Lemma R_le_lt_trans@{} : forall a b c : real Q, a <= b -> b < c -> a < c.
 Proof.
@@ -2691,7 +2693,7 @@ Definition Rlt_close_rat_plus@{}
   := Rlt_close_rat_plus'@{Ularge Set Set Set Set
     Set Set Set}.
 
-Lemma Rlt_close_exists' : forall u q, u < rat q ->
+Lemma Rlt_close_exists_aux' : forall u q, u < rat q ->
   merely (exists e, forall v, close e u v -> v < rat q).
 Proof.
 intros u q;apply (Trunc_ind _);intros [q' [r [E1 [E2 E3]]]].
@@ -2718,12 +2720,22 @@ apply pos_mult_compat;[|apply _].
 apply (snd (flip_pos_minus _ _)). trivial.
 Qed.
 
-Definition Rlt_close_exists@{}
-  := Rlt_close_exists'@{Set Set Set Set Set
+Definition Rlt_close_exists_aux@{}
+  := Rlt_close_exists_aux'@{Set Set Set Set Set
     Set Set Set Ularge Ularge
     Ularge Set Set Set Set
     Set Set Set Set Set
     Set Set Set Set}.
+
+Lemma Rlt_close_exists@{} : forall u v, u < v ->
+  merely (exists e, forall w, close e u w -> w < v).
+Proof.
+intros u v;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+generalize (Rlt_close_exists_aux u r
+  (R_le_lt_trans _ _ _ E1 (rat_lt_preserving _ _ E2))).
+apply (Trunc_ind _);intros [e E4];apply tr;exists e.
+intros w xi;apply R_lt_le_trans with (rat r);auto.
+Qed.
 
 Instance Qabs_nonexpanding : NonExpanding (abs (A:=Q)).
 Proof.
@@ -3053,6 +3065,20 @@ apply join_ub_l.
 Qed.
 
 Definition Rplus_le_preserving@{} := Rplus_le_preserving'@{Ularge Set}.
+Local Existing Instance Rplus_le_preserving.
+
+Lemma Rlt_close_plus@{} : forall u v, u < v ->
+  forall w e, close e u w -> w < v + rat (' e).
+Proof.
+intros u v E w e xi;revert E;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+apply R_lt_le_trans with (rat (r + ' e)).
+- apply Rlt_close_rat_plus with u;trivial.
+  apply R_le_lt_trans with (rat q);trivial.
+  apply rat_lt_preserving;trivial.
+- rewrite plus_comm. rewrite Rplus_comm.
+  change (rat (' e) + rat r <= rat (' e) + v).
+  apply (order_preserving (rat (' e) +)). trivial.
+Qed.
 
 Lemma Rplus_le_reflecting' : forall z : real Q,
   OrderReflecting (z +).
@@ -3101,5 +3127,114 @@ intros;split.
 - apply Rplus_le_preserving.
 - apply Rplus_le_reflecting.
 Qed.
+
+Lemma Rneg_le_flip' : forall x y : real Q, x <= y -> - y <= - x.
+Proof.
+intros x y E.
+rewrite <-E.
+clear E;revert x y;apply @unique_continuous_binary_extension.
+{ change (forall x, Continuous (compose (⊔ - x) (compose (-) (x ⊔))));apply _. }
+{ intros;eapply @lipschitz_continuous.
+  apply (lipschitz_dup (fun x1 x2 => - (x1 ⊔ y) ⊔ - x2));intros x;
+  apply nonexpanding_lipschitz.
+  { change (NonExpanding (compose (- (x ⊔ y) ⊔) (-)));apply _. }
+  { change (NonExpanding (compose (⊔ - x) (compose (-) (⊔ y))));apply _. }
+}
+{ apply _. }
+{ apply _. }
+intros q r;apply (ap rat).
+apply join_r. apply (snd (flip_le_negate _ _)). apply join_ub_l.
+Unshelve. exact 1.
+Qed.
+
+Definition Rneg_le_flip@{} := Rneg_le_flip'@{Ularge Set}.
+
+Lemma Rneg_le_flip_equiv@{} : forall x y : real Q, - y <= - x <-> x <= y.
+Proof.
+intros x y;split.
+- intros E. apply Rneg_le_flip in E. rewrite !involutive in E.
+  exact E.
+- apply Rneg_le_flip.
+Qed.
+
+Lemma Rneg_lt_flip@{} : forall x y : real Q, - y < - x <-> x < y.
+Proof.
+intros x y;split;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+- apply flip_lt_negate in E2.
+  apply Rneg_le_flip in E1;apply Rneg_le_flip in E3.
+  rewrite involutive in E1;rewrite involutive in E3.
+  apply tr;exists (-r),(-q). auto.
+- apply tr;exists (-r),(-q);repeat split.
+  + change (- y <= - (rat r)). apply (snd (Rneg_le_flip_equiv _ _)),E3.
+  + apply (snd (flip_lt_negate _ _)),E2.
+  + change (- rat q <= - x). apply (snd (Rneg_le_flip_equiv _ _)),E1.
+Qed.
+
+Definition Qpos_diff : forall q r : Q, q < r -> Q+.
+Proof.
+intros q r E;exists (r-q).
+apply (snd (flip_pos_minus _ _) E).
+Defined.
+
+Lemma Qpos_diff_pr' : forall q r E, r = q + ' (Qpos_diff q r E).
+Proof.
+intros q r E. change (r = q + (r - q)).
+path_via (r + (q - q));[|ring_tac.ring_with_nat].
+rewrite plus_negate_r,plus_0_r;trivial.
+Qed.
+
+Definition Qpos_diff_pr@{} := Qpos_diff_pr'@{Set Ularge Ularge Ularge Set
+  Set Set}.
+
+Lemma Rlt_cotrans_rat@{} : forall x q r, q < r -> hor (rat q < x) (x < rat r).
+Proof.
+apply (real_ind0 (fun x => forall q r, _ -> _)).
+- intros s q r E. generalize (cotransitive E s).
+  apply (Trunc_ind _);intros [E'|E'];apply tr;[left|right];
+  apply rat_lt_preserving,E'.
+- intros x IH q r E0.
+  destruct (Q_dense _ _ E0) as [q1 [E1 E2]].
+  destruct (Q_dense _ _ E2) as [r1 [E3 E4]].
+  clear E0 E2.
+  destruct (Qpos_lt_min (Qpos_diff _ _ E1) (Qpos_diff _ _ E4))
+    as [n [n1 [n2 [Hn1 Hn2]]]].
+  generalize (IH n _ _ E3);apply (Trunc_ind _).
+  intros [E5|E5];apply tr;[left|right].
+  + apply Rneg_lt_flip. change (- lim x < rat (- q)).
+    assert (Hrw : - q = - q1 + ' Qpos_diff q q1 E1).
+    { set (D := Qpos_diff q q1 E1).
+      rewrite (Qpos_diff_pr _ _ E1). unfold D;clear D.
+      rewrite negate_plus_distr. rewrite <-plus_assoc,plus_negate_l,plus_0_r.
+      trivial.
+    }
+    rewrite Hrw;clear Hrw.
+    apply Rlt_close_rat_plus with (- (x n)).
+    * apply (snd (Rneg_lt_flip _ _) E5).
+    * apply (non_expanding (-)).
+      rewrite Hn1. rewrite qpos_plus_comm. apply equiv_lim.
+  + rewrite (Qpos_diff_pr _ _ E4).
+    apply Rlt_close_rat_plus with (x n);trivial.
+    rewrite Hn2,qpos_plus_comm. apply equiv_lim.
+Qed.
+
+Instance Rlt_cotrans@{} : CoTransitive (@lt (real Q) _).
+Proof.
+hnf. intros x y E z;revert E;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+generalize (Rlt_cotrans_rat z q r E2);apply (Trunc_ind _).
+intros [E4|E4];apply tr;[left|right].
+- apply R_le_lt_trans with (rat q);trivial.
+- apply R_lt_le_trans with (rat r);trivial.
+Qed.
+
+Instance Rap_cotrans@{} : CoTransitive (@apart (real Q) _).
+Proof.
+hnf. intros x y [E|E] z.
+- apply (merely_destruct (cotransitive E z)).
+  intros [E1|E1];apply tr;[left|right];hnf;auto.
+- apply (merely_destruct (cotransitive E z)).
+  intros [E1|E1];apply tr;[right|left];hnf;auto.
+Qed.
+
+
 
 End contents.
