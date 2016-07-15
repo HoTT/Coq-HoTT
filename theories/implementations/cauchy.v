@@ -2531,7 +2531,7 @@ hnf. intros q r E;hnf.
 apply (ap rat). apply join_r,E.
 Qed.
 
-Lemma Rlt_trans' : Transitive Rlt.
+Instance Rlt_trans@{} : Transitive Rlt.
 Proof.
 intros a b c.
 unfold Rlt.
@@ -2542,9 +2542,6 @@ pose proof (rat_le_reflecting _ _ (transitivity E3 E4)) as E7.
 apply lt_le_trans with r1;trivial.
 apply lt_le. apply le_lt_trans with q2;trivial.
 Qed.
-
-Instance  Rlt_trans@{} : Transitive Rlt
-  := Rlt_trans'@{Ularge}.
 
 Instance Rapart_ishprop : forall x y : real Q, IsHProp (apart x y).
 Proof.
@@ -2581,7 +2578,7 @@ hnf. intros x y E.
 hnf. apply tr;exists x,y;repeat split;auto.
 Qed.
 
-Lemma R_lt_le' : forall a b : real Q, a < b -> a <= b.
+Lemma R_lt_le@{} : forall a b : real Q, a < b -> a <= b.
 Proof.
 intros a b;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
 transitivity (rat q);trivial.
@@ -2589,19 +2586,13 @@ transitivity (rat r);trivial.
 apply rat_le_preserve. apply lt_le. trivial.
 Qed.
 
-Definition R_lt_le@{} := R_lt_le'@{Ularge}.
-
-Lemma rat_lt_reflecting' : StrictlyOrderReflecting rat.
+Lemma rat_lt_reflecting@{} : StrictlyOrderReflecting rat.
 Proof.
 hnf. intros x y;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
 apply (order_reflecting rat) in E1;apply (order_reflecting rat) in E3.
 apply le_lt_trans with q;trivial.
 apply lt_le_trans with r;trivial.
 Qed.
-
-Instance rat_lt_reflecting@{} : StrictlyOrderReflecting rat
-  := rat_lt_reflecting'@{Ularge}.
-
 
 Lemma R_archimedean@{} : forall u v, u < v -> merely (exists q, u < rat q < v).
 Proof.
@@ -2645,8 +2636,7 @@ apply (real_ind0 (fun v => forall e, _ -> _)).
 Qed.
 
 Definition Rle_close_rat_rat@{}
-  := Rle_close_rat_rat'@{UQ Ularge Set Set Set
-    Set}.
+  := Rle_close_rat_rat'@{UQ Set Set Set Set}.
 
 Instance Rjoin_comm@{} : Commutative (@join _ Rjoin).
 Proof.
@@ -2718,7 +2708,7 @@ Instance R_lattice@{} : LatticeOrder Rle
     UQ Set Set Set Set
     Set Set}.
 
-Lemma Rle_close_rat' : forall q u, u <= rat q -> forall v e, close e u v ->
+Lemma Rle_close_rat@{} : forall q u, u <= rat q -> forall v e, close e u v ->
   v <= rat (q + ' e).
 Proof.
 intros q u E v e xi.
@@ -2729,8 +2719,6 @@ pose proof (Rle_close_rat_rat q q (reflexivity q) _ _ E1) as E2.
 transitivity (join (rat q) v);trivial.
 apply join_ub_r.
 Qed.
-
-Definition Rle_close_rat@{} := Rle_close_rat'@{Ularge}.
 
 Lemma Rlt_close_rat_plus' : forall u q, u < rat q ->
   forall v e, close e u v -> v < rat (q + ' e).
@@ -2748,8 +2736,8 @@ split;[|split].
 Qed.
 
 Definition Rlt_close_rat_plus@{}
-  := Rlt_close_rat_plus'@{Ularge Set Set Set Set
-    Set Set Set}.
+  := Rlt_close_rat_plus'@{Set Set Set Set Set
+    Set Set}.
 
 Lemma Rlt_close_exists_aux' : forall u q, u < rat q ->
   merely (exists e, forall v, close e u v -> v < rat q).
@@ -2864,7 +2852,7 @@ intros q;destruct (total_abs_either q) as [E|E];destruct E as [E1 E2];rewrite E2
 - apply flip_nonneg_negate. rewrite involutive;trivial.
 Qed.
 
-Definition Qabs_nonneg@{} := Qabs_nonneg'@{Ularge Set}.
+Definition Qabs_nonneg@{} := Qabs_nonneg'@{Set}.
 
 Lemma Rabs_nonneg@{} : forall x : real Q, 0 <= abs x.
 Proof.
@@ -2961,9 +2949,9 @@ apply equiv_symm,equiv_lim.
 Qed.
 
 Definition metric_to_equiv_rat_lim@{}
-  := metric_to_equiv_rat_lim'@{Ularge Set Ularge Ularge
-    Ularge Set Set Set Set
-    Set Set Set}.
+  := metric_to_equiv_rat_lim'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set}.
 
 Lemma Qabs_neg_flip' : forall a b : Q, abs (a - b) = abs (b - a).
 Proof.
@@ -2979,7 +2967,7 @@ destruct (total le 0 (a - b)) as [E|E].
   + apply flip_nonneg_negate. rewrite <-negate_swap_r;trivial.
 Qed.
 
-Definition Qabs_neg_flip@{} := Qabs_neg_flip'@{Ularge Set Set}.
+Definition Qabs_neg_flip@{} := Qabs_neg_flip'@{Set Set}.
 
 Lemma Rabs_neg_flip@{} : forall a b : real Q, abs (a - b) = abs (b - a).
 Proof.
@@ -3031,9 +3019,9 @@ apply equiv_symm,equiv_lim.
 Qed.
 
 Definition metric_to_equiv_lim_lim@{}
-  := metric_to_equiv_lim_lim'@{Ularge Set Ularge Ularge
-    Ularge Set Set Set Set
-    Set Set Set}.
+  := metric_to_equiv_lim_lim'@{Set Ularge Ularge Ularge Set
+    Set Set Set Set Set
+    Set}.
 
 Lemma metric_to_equiv@{} : forall e u v, abs (u - v) < rat (' e) -> close e u v.
 Proof.
@@ -3124,7 +3112,7 @@ apply join_r. apply (order_preserving (q +)).
 apply join_ub_l.
 Qed.
 
-Definition Rplus_le_preserving@{} := Rplus_le_preserving'@{Ularge Set}.
+Definition Rplus_le_preserving@{} := Rplus_le_preserving'@{Set}.
 Local Existing Instance Rplus_le_preserving.
 
 Lemma Rlt_close_plus@{} : forall u v, u < v ->
@@ -3179,7 +3167,7 @@ destruct (total le r s) as [E|E].
 Unshelve. exact 1.
 Qed.
 
-Definition Rplus_le_reflecting@{} := Rplus_le_reflecting'@{Ularge Set Set}.
+Definition Rplus_le_reflecting@{} := Rplus_le_reflecting'@{Set Set}.
 
 Instance Rplus_le_embedding@{} : forall z : real Q, OrderEmbedding (z +).
 Proof.
@@ -3207,7 +3195,7 @@ apply join_r. apply (snd (flip_le_negate _ _)). apply join_ub_l.
 Unshelve. exact 1.
 Qed.
 
-Definition Rneg_le_flip@{} := Rneg_le_flip'@{Ularge Set}.
+Definition Rneg_le_flip@{} := Rneg_le_flip'@{Set}.
 
 Lemma Rneg_le_flip_equiv@{} : forall x y : real Q, - y <= - x <-> x <= y.
 Proof.
@@ -3303,7 +3291,7 @@ intros x;destruct (total_abs_either x) as [[E1 E2]|[E1 E2]].
   rewrite E2. apply flip_nonpos_negate. trivial.
 Qed.
 
-Definition Qabs_le_raw@{} := Qabs_le_raw'@{Ularge Set}.
+Definition Qabs_le_raw@{} := Qabs_le_raw'@{Set}.
 
 Lemma Qabs_neg' : forall x : Q, abs (- x) = abs x.
 Proof.
@@ -3313,7 +3301,7 @@ intros x. destruct (total_abs_either x) as [[E1 E2]|[E1 E2]].
 - rewrite E2. apply ((abs_sig (- x)).2). apply flip_nonpos_negate;trivial.
 Qed.
 
-Definition Qabs_neg@{} := Qabs_neg'@{Ularge Set Set}.
+Definition Qabs_neg@{} := Qabs_neg'@{Set Set}.
 
 Lemma Qabs_le_neg_raw : forall x : Q, - x <= abs x.
 Proof.
@@ -3334,7 +3322,7 @@ intros x y;split.
   + apply flip_le_negate;rewrite involutive;trivial.
 Qed.
 
-Definition Q_abs_le_pr@{} := Q_abs_le_pr'@{Ularge Set Set}.
+Definition Q_abs_le_pr@{} := Q_abs_le_pr'@{Set Set}.
 
 Lemma Qabs_is_join' : forall q : Q, abs q = join (- q) q.
 Proof.
@@ -3346,7 +3334,7 @@ destruct (total_abs_either q) as [[E1 E2]|[E1 E2]];rewrite E2.
   apply flip_nonpos_negate;trivial.
 Qed.
 
-Definition Qabs_is_join@{} := Qabs_is_join'@{Ularge Set Set}.
+Definition Qabs_is_join@{} := Qabs_is_join'@{Set Set}.
 
 Lemma Rabs_is_join@{} : forall x : real Q, abs x = join (- x) x.
 Proof.
@@ -3393,33 +3381,35 @@ Qed.
 
 Definition Rabs_le_pr@{} := Rabs_le_pr'@{Set}.
 
-Lemma R_Q_bounded@{} : forall x : real Q, merely (exists q : Q, abs x <= rat q).
+Lemma abs_plus_1_lt' : forall q : Q, abs q < abs q + 1.
+Proof.
+intros. apply pos_plus_lt_compat_r. solve_propholds.
+Qed.
+Definition abs_plus_1_lt@{} := abs_plus_1_lt'@{Set Set Set}.
+
+Lemma abs_plus_1_pos@{} : forall q : Q, 0 < abs q + 1.
+Proof.
+intros. apply le_lt_trans with (abs q).
+- apply Qabs_nonneg.
+- apply abs_plus_1_lt.
+Qed.
+
+Lemma R_Qpos_bounded@{} : forall x : real Q,
+  merely (exists q : Q+, abs x <= rat (' q)).
 Proof.
 apply (real_ind0 _).
-- intros q;apply tr;exists (abs q). reflexivity.
+- intros q;apply tr. simple refine (existT _ _ _).
+  + exists (abs q + 1). apply abs_plus_1_pos.
+  + simpl. apply rat_le_preserve. change (abs q <= abs q + 1).
+    apply lt_le. apply abs_plus_1_lt.
 - intros x IH.
   generalize (IH 1).
   apply (Trunc_ind _);intros [q E].
-  apply tr;exists (q + ' 2).
+  apply tr;exists (q + 2).
   eapply Rle_close_rat;[apply E|].
   apply (non_expanding abs).
   apply equiv_lim.
 Qed.
-
-Lemma R_Qpos_bounded' : forall x : real Q,
-  merely (exists q : Q+, abs x <= rat (' q)).
-Proof.
-intros x;apply (merely_destruct (R_Q_bounded x));intros [q E].
-apply tr. simple refine (existT _ _ _).
-- exists (join q 1).
-  apply lt_le_trans with 1.
-  + solve_propholds.
-  + apply join_ub_r.
-- simpl. transitivity (rat q);trivial.
-  apply rat_le_preserve. apply join_ub_l.
-Qed.
-
-Definition R_Qpos_bounded@{} := R_Qpos_bounded'@{Ularge Set Set}.
 
 Definition Qbounded_square (a : Q) : Interval (- a) a -> Q :=
   fun x => x.1 * x.1.
@@ -3438,7 +3428,7 @@ destruct (total_abs_either b) as [Eb|Eb];destruct Eb as [Eb1 Eb2];rewrite Eb2.
   apply nonpos_mult;trivial.
 Qed.
 
-Definition Qabs_mult@{} := Qabs_mult'@{Ularge Set Set Set Set}.
+Definition Qabs_mult@{} := Qabs_mult'@{Set Set Set Set}.
 
 Lemma Qbounded_square_lipschitz'
   : forall a : Q+, Lipschitz (Qbounded_square (' a)) (2 * a).
@@ -3468,11 +3458,10 @@ Qed.
 
 Definition Qbounded_square_lipschitz@{} :=
   Qbounded_square_lipschitz'@{Set Ularge Ularge Ularge Set
-    Set Set Ularge Set Set
     Set Set Set Set Set
     Set Set Set Set Set
     Set Set Set Set Set
-    Set}.
+    Set Set Set Set Set}.
 Existing Instance Qbounded_square_lipschitz.
 
 Lemma Qpos_neg_le' : forall a : Q+, - ' a <= ' a.
@@ -3482,7 +3471,7 @@ intros a;transitivity (0:Q).
 - solve_propholds.
 Qed.
 
-Definition Qpos_neg_le@{} := Qpos_neg_le'@{Ularge Set}.
+Definition Qpos_neg_le@{} := Qpos_neg_le'@{Set}.
 
 Definition Rbounded_square@{} (a : Q+)
   : Interval (- rat (' a)) (rat (' a)) -> real Q.
@@ -3541,6 +3530,11 @@ Lemma Rsquare_pr@{} : Rfull_square = compose Rsquare interval_back.
 Proof.
 apply jections.surjective_factor_pr.
 Qed.
-
+(* 
+Definition Rsquare_rat q : Rsquare (rat q) = rat (q * q).
+Proof.
+unfold Rsquare,jections.surjective_factor,jections.surjective_factor_aux.
+simpl. unfold R_Qpos_bounded,R_Qpos_bounded'.
+Defined. *)
 
 End contents.

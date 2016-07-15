@@ -353,20 +353,16 @@ Section full_pseudo_order.
   Proof.
   split; try apply _.
   intros x y.
-  transitivity (~ lt y x /\ apart x y);[|
-  split;intros [? ?];split;trivial;apply le_iff_not_lt_flip;trivial].
   split.
   - intros E. split.
-    + apply lt_flip;assumption.
+    + apply not_lt_le_flip. apply lt_flip;assumption.
     + apply pseudo_order_lt_apart. assumption.
-  - intros [? E].
-    apply not_lt_apart_lt_flip.
-    + assumption.
-    + apply symmetry. assumption.
+  - intros [? E]. apply not_lt_apart_lt_flip;[|Symmetry;trivial].
+    apply le_iff_not_lt_flip. trivial.
   Qed.
 
   Global Instance fullpseudo_fullpartial@{i} : FullPartialOrder Ale Alt
-    := fullpseudo_fullpartial'@{i i i i}.
+    := fullpseudo_fullpartial'@{i i Set Set Set}.
 
   Global Instance le_stable : ∀ x y, Stable (x ≤ y).
   Proof.

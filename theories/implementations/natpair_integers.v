@@ -64,7 +64,7 @@ split.
 Qed.
 
 Global Instance equiv_isequiv : Equivalence equiv
-  := equiv_isequiv'@{Ularge Set}.
+  := equiv_isequiv'@{Set}.
 
 Instance pl : Plus (T N) := fun x y => C (pos x + pos y) (neg x + neg y).
 
@@ -174,7 +174,7 @@ Proof.
 intros. apply equiv_iff_hprop_uncurried.
 split;apply le_respects_aux@{Ularge Ularge Ularge Ularge Ularge
   Ularge Ularge Ularge Ularge Ularge
-  Ularge Ularge Ularge Ularge Ularge Ularge};
+  Ularge Ularge Ularge Ularge Ularge};
 trivial;apply symmetry;trivial.
 Qed.
 
@@ -574,7 +574,7 @@ Instance Z_partial_order@{} : PartialOrder Zle
     Ularge Ularge Ularge Ularge Ularge
     Ularge Ularge Ularge Ularge Ularge
     Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge}.
+    Ularge Ularge}.
 
 Lemma Zle_cast_embedding' : OrderEmbedding (cast N Z).
 Proof.
@@ -605,7 +605,7 @@ Instance Zle_plus_preserving_l@{} : ∀ z : Z, OrderPreserving ((+) z)
   := Zle_plus_preserving_l'@{
      Ularge Ularge Ularge Ularge Ularge
      Ularge Ularge Ularge Ularge Ularge
-     Ularge Ularge Ularge Ularge Ularge}.
+     Ularge Ularge Ularge Ularge}.
 
 Lemma Zmult_nonneg' : ∀ x y : Z, PropHolds (0 ≤ x) → PropHolds (0 ≤ y) →
   PropHolds (0 ≤ x * y).
@@ -627,7 +627,7 @@ Instance Zmult_nonneg@{} : ∀ x y : Z, PropHolds (0 ≤ x) → PropHolds (0 ≤
   := Zmult_nonneg'@{
     Ularge Ularge Ularge Ularge Ularge
     Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge}.
+    Ularge Ularge Ularge Ularge}.
 
 Global Instance Z_order@{} : SemiRingOrder Zle.
 Proof. pose proof Z_ring; apply rings.from_ring_order; apply _. Qed.
