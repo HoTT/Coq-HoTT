@@ -400,19 +400,19 @@ Notation "(?=)" := compare (only parsing) : mc_scope.
 Notation "( x ?=)" := (compare x) (only parsing) : mc_scope.
 Notation "(?= y )" := (fun x => x ?= y) (only parsing) : mc_scope.
 
-Class Eqb A := eqb : A -> A -> Bool.
+Class Eqb A := eqb : A -> A -> bool.
 Infix "=?" := eqb (at level 70, no associativity) : mc_scope.
 Notation "(=?)" := eqb (only parsing) : mc_scope.
 Notation "( x =?)" := (eqb x) (only parsing) : mc_scope.
 Notation "(=? y )" := (fun x => x =? y) (only parsing) : mc_scope.
 
-Class Ltb A := ltb : A -> A -> Bool.
+Class Ltb A := ltb : A -> A -> bool.
 Infix "<?" := ltb (at level 70, no associativity) : mc_scope.
 Notation "(<?)" := ltb (only parsing) : mc_scope.
 Notation "( x <?)" := (ltb x) (only parsing) : mc_scope.
 Notation "(<? y )" := (fun x => x <? y) (only parsing) : mc_scope.
 
-Class Leb A := leb : A -> A -> Bool.
+Class Leb A := leb : A -> A -> bool.
 Infix "<=?" := leb (at level 70, no associativity) : mc_scope.
 Notation "(<=?)" := leb (only parsing) : mc_scope.
 Notation "( x <=?)" := (leb x) (only parsing) : mc_scope.

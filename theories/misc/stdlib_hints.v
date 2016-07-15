@@ -71,6 +71,8 @@ apply Trunc_ind.
 - exact E.
 Qed.
 
+Definition bool := (HoTT.Types.Bool.Bool@{Ularge}).
+
 (* Unicode *)
 
 Reserved Notation "x ≤ y" (at level 70, no associativity).

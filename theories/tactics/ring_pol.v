@@ -10,10 +10,10 @@ Import Quoting.
 
 Section content.
 
-Universe UC Upol.
+Universe UC.
 Context {C : Type@{UC} } {V : Type0 }.
 
-Inductive Pol : Type@{Upol} :=
+Inductive Pol : Type@{UC} :=
   | Pconst (c : C)
   | PX (P : Pol) (v : V) (Q : Pol).
 
@@ -31,7 +31,7 @@ Context `{Trichotomy@{Set Set Set} V Vlt}.
      + forall w in P, w <= v
      + forall w in Q, w <  v *)
 
-Fixpoint Peqb P Q :=
+Fixpoint Peqb P Q : bool :=
   match P, Q with
   | Pconst c, Pconst d => c =? d
   | PX P1 v P2, PX Q1 w Q2 =>
@@ -39,7 +39,8 @@ Fixpoint Peqb P Q :=
   | _, _ => false
   end.
 
-Global Instance : Eqb Pol := Peqb.
+Global Instance Peqb_instance : Eqb Pol := Peqb.
+Arguments Peqb_instance _ _ /.
 
 Global Instance P0 : canonical_names.Zero Pol := Pconst 0.
 Global Instance P1 : canonical_names.One Pol := Pconst 1.
@@ -56,12 +57,12 @@ Fixpoint eval (vs : Vars V) (P : Pol) : R :=
     (eval vs P) * (vs v) + (eval vs Q)
   end.
 
-Lemma andb_true : forall a b, andb a b = true -> a = true /\ b = true.
+Lemma andb_true@{} : forall a b : bool, andb a b = true -> a = true /\ b = true.
 Proof.
 intros [|] [|];simpl;auto.
 Qed.
 
-Lemma eval_eqb : forall P Q : Pol, P =? Q = true ->
+Lemma eval_eqb' : forall P Q : Pol, P =? Q = true ->
   forall vs : Vars V, eval vs P = eval vs Q.
 Proof.
 induction P as [c|P1 IHP1 v P2 IHP2];destruct Q as [d|Q1 w Q2];intros E vs;
@@ -76,7 +77,9 @@ change eqb with Peqb in E;simpl in E.
   apply ap2;auto. apply ap2;auto.
 Qed.
 
-Lemma eval_0 : forall P, P =? 0 = true -> forall vs, eval vs P = 0.
+Definition eval_eqb@{} := eval_eqb'@{Ularge}.
+
+Lemma eval_0' : forall P, P =? 0 = true -> forall vs, eval vs P = 0.
 Proof.
 induction P;simpl;intros E vs.
 - change eqb with Peqb in E;simpl in E.
@@ -85,6 +88,8 @@ induction P;simpl;intros E vs.
 - change eqb with Peqb in E;simpl in E.
   destruct (false_ne_true E).
 Qed.
+
+Definition eval_0@{} := eval_0'@{Ularge}.
 
 Fixpoint addC c P :=
   match P with
@@ -118,7 +123,7 @@ Fixpoint addX' c v Q :=
 
 Definition addX c v Q := if c =? 0 then Q else addX' c v Q.
 
-Lemma eval_addX' vs : forall c v Q,
+Lemma eval_addX'@{} vs : forall c (v:V) Q,
   eval vs (addX' c v Q) = phi c * vs v + eval vs Q.
 Proof.
 induction Q as [d|Q1 IH1 w Q2 IH2].
@@ -136,7 +141,7 @@ induction Q as [d|Q1 IH1 w Q2 IH2].
   + simpl. reflexivity.
 Qed.
 
-Lemma eval_addX vs : forall c v Q,
+Lemma eval_addX vs : forall c (v:V) Q,
   eval vs (addX c v Q) = phi c * vs v + eval vs Q.
 Proof.
 intros. unfold addX.
@@ -147,9 +152,9 @@ destruct (c =? 0).
 - apply eval_addX'.
 Qed.
 
-Definition PXguard P v Q := if eqb@{UV UV} P 0 then Q else PX P v Q.
+Definition PXguard@{} P v Q := if eqb P 0 then Q else PX P v Q.
 
-Lemma eval_PXguard vs : forall P v Q,
+Lemma eval_PXguard vs : forall P (v:V) Q,
   eval vs (PXguard P v Q) = eval vs P * vs v + eval vs Q.
 Proof.
 intros. unfold PXguard.
@@ -198,7 +203,7 @@ Fixpoint add P Q :=
 
 Lemma eval_add_aux vs P addP
   (Eadd : forall Q, eval vs (addP Q) = eval vs P + eval vs Q)
-  : forall v Q, eval vs (add_aux addP P v Q) = eval vs P * vs v + eval vs Q.
+  : forall (v:V) Q, eval vs (add_aux addP P v Q) = eval vs P * vs v + eval vs Q.
 Proof.
 induction Q as [d|Q1 IH1 w Q2 IH2].
 - simpl. reflexivity.
@@ -215,13 +220,15 @@ induction Q as [d|Q1 IH1 w Q2 IH2].
   + simpl. reflexivity.
 Qed.
 
-Lemma eval_add vs : forall P Q, eval vs (add P Q) = eval vs P + eval vs Q.
+Lemma eval_add' vs : forall P Q, eval vs (add P Q) = eval vs P + eval vs Q.
 Proof.
 induction P as [c|P1 IH1 v P2 IH2];intros Q.
 - simpl. apply eval_addC.
 - simpl. rewrite eval_add_aux;auto.
   rewrite IH2. apply plus_assoc.
 Qed.
+
+Definition eval_add@{} := eval_add'@{Ularge}.
 
 Fixpoint mulX v P :=
   match P with
@@ -234,7 +241,7 @@ Fixpoint mulX v P :=
     end
   end.
 
-Lemma eval_mulX vs : forall v P, eval vs (mulX v P) = eval vs P * vs v.
+Lemma eval_mulX@{} vs : forall (v:V) (P:Pol), eval vs (mulX v P) = eval vs P * vs v.
 Proof.
 induction P as [c|P1 IH1 w P2 IH2].
 - simpl. rewrite eval_addX.
@@ -272,7 +279,7 @@ Fixpoint mul P Q :=
         (add (mulX w (mul P2 Q1)) (mul P2 Q2))
   end.
 
-Lemma eval_mul vs : forall P Q, eval vs (mul P Q) = eval vs P * eval vs Q.
+Lemma eval_mul' vs : forall P Q, eval vs (mul P Q) = eval vs P * eval vs Q.
 Proof.
 induction P as [c | P1 IHP1 v P2 IHP2];[apply eval_mulC|].
 destruct Q as [d | Q1 w Q2].
@@ -293,6 +300,8 @@ destruct Q as [d | Q1 w Q2].
   + auto.
 Qed.
 
+Definition eval_mul@{} := eval_mul'@{Ularge}.
+
 Fixpoint toPol (e: Expr V) :=
   match e with
   | Var v => PX 1 v 0
@@ -302,7 +311,8 @@ Fixpoint toPol (e: Expr V) :=
   | Mult a b => mul (toPol a) (toPol b)
   end.
 
-Lemma eval_toPol' vs : forall e, eval vs (toPol e) = Quoting.eval _ vs e.
+Lemma eval_toPol@{} vs : forall e : Expr V,
+  eval vs (toPol e) = Quoting.eval _ vs e.
 Proof.
 induction e as [v| | |a IHa b IHb|a IHa b IHb];simpl.
 - rewrite (preserves_1 (f:=phi)),(preserves_0 (f:=phi)),plus_0_r,mult_1_l.
@@ -312,13 +322,5 @@ induction e as [v| | |a IHa b IHb|a IHa b IHb];simpl.
 - rewrite eval_add,IHa,IHb. reflexivity.
 - rewrite eval_mul,IHa,IHb. reflexivity.
 Qed.
-
-Definition eval_toPol@{} := eval_toPol'@{Set Upol Upol Set Set Set Set
-Set Upol Set Set Set Set Set Set
-Set Set Set Set Set Set Set Set
-Upol Set Set Set Set Set Set Set
-Set Set Set Set Set Set Set Set
-Set Set Set Set Set Set Set Set
-Set Set Set Set Set Set Set}.
 
 End content.

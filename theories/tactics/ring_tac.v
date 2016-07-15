@@ -11,14 +11,10 @@ Require Import
   HoTTClasses.interfaces.naturals.
 
 Section content.
-Universe U.
-
 Context `{DecidablePaths C}.
 
 Context `(phi : C -> R) `{SemiRingPreserving C R phi}
   `{!SemiRing C} `{!SemiRing R}.
-
-Let Vars (V:Type@{U}) := (V -> R).
 
 Lemma normalize_eq `{Q : @Quoting.EqQuote R _ _ _ _ V l n m V' l'}
   `{Trichotomy V Vlt} `{Trichotomy V' Vlt'}

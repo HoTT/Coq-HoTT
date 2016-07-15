@@ -38,17 +38,19 @@ destruct P_dec as [p|np].
 - right; intros q. apply np;apply PiffQ;assumption.
 Defined.
 
-Definition bool_decide (P : Type) `{dec : !Decision P} : Bool
+Definition bool_decide@{i} (P : Type@{i}) `{dec : !Decision P} : bool
  := if dec then true else false.
 
-Lemma bool_decide_true `{dec : Decision P} : bool_decide P = true ↔ P.
+Lemma bool_decide_true@{i} {P:Type@{i} } `{dec : Decision P}
+  : iff@{Ularge i Ularge} (bool_decide P = true) P.
 Proof.
 unfold bool_decide. split; intro X; destruct dec as [p|np];auto.
 - apply false_ne_true in X. destruct X.
 - destruct (np X).
 Qed.
 
-Lemma bool_decide_false `{dec : !Decision P} : bool_decide P = false ↔ ¬P.
+Lemma bool_decide_false@{i} {P:Type@{i} } `{dec : !Decision P}
+  : iff@{Ularge i Ularge} (bool_decide P = false) (¬P).
 Proof.
 unfold bool_decide. split; intro X; destruct dec as [p|np]; auto.
 - apply true_ne_false in X. destruct X.
@@ -107,8 +109,8 @@ Qed.
 Instance decide_eqb `{DecidablePaths A} : Eqb A
   := fun a b => if decide_rel (=) a b then true else false.
 
-Lemma decide_eqb_ok `{DecidablePaths A} :
-  forall a b, a =? b = true <-> a = b.
+Lemma decide_eqb_ok@{i} {A:Type@{i} } `{DecidablePaths A} :
+  forall a b, iff@{Ularge i Ularge} (a =? b = true) (a = b).
 Proof.
 unfold eqb,decide_eqb.
 intros a b;destruct (decide_rel (=) a b) as [E1|E1];split;intros E2;auto.

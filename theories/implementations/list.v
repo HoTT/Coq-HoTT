@@ -1,6 +1,6 @@
 Require Import
   HoTTClasses.interfaces.abstract_algebra
-  HoTT.Types.Unit HoTT.Types.Prod HoTT.Types.Bool.
+  HoTT.Types.Unit HoTT.Types.Prod.
 
 Open Scope list_scope.
 

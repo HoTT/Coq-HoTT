@@ -140,7 +140,7 @@ Proof.
 intros;apply pos_eq. apply mult_1_r.
 Qed.
 
-Lemma pos_split2' : forall e : Q+, e = e / 2 + e / 2.
+Lemma pos_split2@{} : forall e : Q+, e = e / 2 + e / 2.
 Proof.
 intros.
 path_via (e * (2 / 2)).
@@ -149,10 +149,7 @@ path_via (e * (2 / 2)).
   ring_tac.ring_with_nat.
 Qed.
 
-Lemma pos_split2@{} : forall e : Q+, e = e / 2 + e / 2.
-Proof. exact pos_split2'@{Set Ularge Ularge Ularge Set Set Set}. Qed.
-
-Lemma pos_split3' : forall e : Q+, e = e / 3 + e / 3 + e / 3.
+Lemma pos_split3@{} : forall e : Q+, e = e / 3 + e / 3 + e / 3.
 Proof.
 intros.
 path_via (e * (3 / 3)).
@@ -160,9 +157,6 @@ path_via (e * (3 / 3)).
 - apply pos_eq. change (' e * (3 / 3) = ' e / 3 + ' e / 3 + ' e / 3).
   ring_tac.ring_with_nat.
 Qed.
-
-Lemma pos_split3@{} : forall e : Q+, e = e / 3 + e / 3 + e / 3.
-Proof. exact pos_split3'@{Set Ularge Ularge Ularge Set Set Set}. Qed.
 
 Global Instance Qpos_mult_assoc@{} : Associative (@mult Q+ _).
 Proof.
@@ -176,7 +170,7 @@ Proof.
 hnf;intros;apply pos_eq;apply mult_1_l.
 Qed.
 
-Lemma pos_recip_through_plus' : forall a b c : Q+,
+Lemma pos_recip_through_plus@{} : forall a b c : Q+,
   a + b = c * (a / c + b / c).
 Proof.
 intros. path_via ((a + b) * (c / c)).
@@ -184,24 +178,11 @@ intros. path_via ((a + b) * (c / c)).
 - apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma pos_recip_through_plus@{} : forall a b c : Q+,
-  a + b = c * (a / c + b / c).
-Proof.
-exact pos_recip_through_plus'@{Set Ularge Ularge Ularge Set
-  Set Set}.
-Qed.
-
-Lemma pos_unconjugate' : forall a b : Q+, a * b / a = b.
+Lemma pos_unconjugate@{} : forall a b : Q+, a * b / a = b.
 Proof.
 intros. path_via (a / a * b).
 - apply pos_eq;ring_tac.ring_with_nat.
 - rewrite pos_recip_r;apply Qpos_mult_1_l.
-Qed.
-
-Lemma pos_unconjugate@{} : forall a b : Q+, a * b / a = b.
-Proof.
-exact pos_unconjugate'@{Set Ularge Ularge Ularge Set
-  Set Set}.
 Qed.
 
 End VarSec.
@@ -706,7 +687,7 @@ intros x;exists (fun _ => x).
 intros;reflexivity.
 Defined.
 
-Lemma lim_cons' : forall x, lim (const_approx x) = x.
+Lemma lim_cons@{} : forall x, lim (const_approx x) = x.
 Proof.
 apply (real_ind0 _).
 - intros. apply equiv_path.
@@ -726,13 +707,6 @@ apply (real_ind0 _).
     apply (pos_eq Q).
     unfold cast,mult,Qpos_mult;simpl.
     unfold cast,dec_recip;simpl. ring_tac.ring_with_nat.
-Qed.
-
-Lemma lim_cons@{} : forall x, lim (const_approx x) = x.
-Proof.
-exact lim_cons'@{Set Ularge Ularge Ularge Set
-  Set Set Set Set Set
-  Set}.
 Qed.
 
 Lemma lim_epi@{i j k} : epi.isepi@{UQ UQ i j k} lim.
@@ -865,7 +839,7 @@ intros e x y [E1 E2];split.
   rewrite negate_swap_r,involutive. trivial.
 Qed.
 
-Lemma separate_mult' : forall l u v, (forall e, close (l * e) u v) -> u = v.
+Lemma separate_mult@{} : forall l u v, (forall e, close (l * e) u v) -> u = v.
 Proof.
 intros l x y E. apply equiv_path.
 intros. assert (Hrw : e = l * (e / l)).
@@ -875,13 +849,7 @@ intros. assert (Hrw : e = l * (e / l)).
 + rewrite Hrw;apply E.
 Qed.
 
-Lemma separate_mult@{} : forall l u v, (forall e, close (l * e) u v) -> u = v.
-Proof.
-exact separate_mult'@{Set Ularge Ularge Ularge Set
-  Set Set}.
-Qed.
-
-Lemma Q_triangular_one' : forall (q r : Q)
+Lemma Q_triangular_one@{} : forall (q r : Q)
 (e : Q+) (Hqr : close e q r)
 (q0 : Q) (n : Q+),
   (close n q q0 → close (e + n) r q0).
@@ -904,16 +872,6 @@ split.
   path_via (r - s + 0).
   { rewrite plus_0_r;trivial. }
   rewrite <-(plus_negate_r q). ring_tac.ring_with_nat.
-Qed.
-
-Lemma Q_triangular_one@{} : forall (q r : Q)
-(e : Q+) (Hqr : close e q r)
-(q0 : Q) (n : Q+),
-  (close n q q0 → close (e + n) r q0).
-Proof.
-exact Q_triangular_one'@{Set Ularge Ularge Ularge Set
-  Set Set Set Set Set
-  Set}.
 Qed.
 
 Instance Q_triangular@{} : Triangular Q+ Q.
@@ -985,7 +943,7 @@ exists (fun e => BuildhProp (close e q r)).
 simpl. apply Qclose_rounded.
 Defined.
 
-Lemma rat_lim_rounded_step' :
+Lemma rat_lim_rounded_step@{} :
   ∀ val_ind : Q+ → rounded_zeroary,
   (∀ d e : Q+, rounded_zeroary_close (d + e) (val_ind d) (val_ind e)) ->
   ∀ e : Q+,
@@ -1007,10 +965,6 @@ split;apply (Trunc_ind _);intros [d [d' [He E]]].
   rewrite <-(pos_unconjugate Q 2 d') in He. rewrite He,Hd.
   apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
-
-Definition rat_lim_rounded_step@{}
-  := rat_lim_rounded_step'@{Set Ularge Ularge Ularge Set
-    Set Set}.
 
 Definition Requiv_alt_rat_lim@{}
   : ∀ val_ind : Q+ → rounded_zeroary,
@@ -1061,7 +1015,7 @@ split.
   apply symmetry in E;revert E;apply Q_triangular. trivial.
 Qed.
 
-Lemma Requiv_alt_rat_rat_lim_pr' :
+Lemma Requiv_alt_rat_rat_lim_pr@{} :
 ∀ (q q0 : Q) (d d' e : Q+) (y : Approximation Q) (b : Q+ → rounded_zeroary)
 (Eb : ∀ d0 e0 : Q+, rounded_zeroary_close (d0 + e0) (b d0) (b e0)),
 e = d + d'
@@ -1086,12 +1040,7 @@ split.
   rewrite Hrw;trivial.
 Qed.
 
-Definition Requiv_alt_rat_rat_lim_pr@{}
-  := Requiv_alt_rat_rat_lim_pr'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set}.
-
-Lemma Requiv_alt_rat_lim_rat_pr' :
+Lemma Requiv_alt_rat_lim_rat_pr@{} :
 ∀ (q r : Q) (d d' e : Q+) (x : Approximation Q) (a : Q+ → rounded_zeroary)
 (Ea : ∀ d0 e0 : Q+, rounded_zeroary_close (d0 + e0) (a d0) (a e0)),
 e = d + d'
@@ -1116,12 +1065,7 @@ split.
   rewrite He. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_rat_lim_rat_pr@{}
-  := Requiv_alt_rat_lim_rat_pr'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set}.
-
-Lemma Requiv_alt_rat_lim_lim_pr' :
+Lemma Requiv_alt_rat_lim_lim_pr@{} :
 ∀ (x y : Approximation Q) (a b : Q+ → rounded_zeroary)
 (Ea : ∀ d e : Q+, rounded_zeroary_close (d + e) (a d) (a e))
 (Eb : ∀ d e : Q+, rounded_zeroary_close (d + e) (b d) (b e)) (e d n n' : Q+),
@@ -1149,12 +1093,7 @@ intros e';split;apply (Trunc_ind _).
   rewrite He,He'. apply (pos_eq Q); ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_rat_lim_lim_pr@{}
-  := Requiv_alt_rat_lim_lim_pr'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set}.
-
-Lemma Requiv_alt_lim_rat_ok' : forall (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Lemma Requiv_alt_lim_rat_ok@{} : forall (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (r : Q) (e : Q+),
@@ -1180,10 +1119,6 @@ split;apply (Trunc_ind _);intros [d [d' [He E]]].
   apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_lim_rat_ok@{}
-  := Requiv_alt_lim_rat_ok'@{Set Ularge Ularge Ularge Set
-    Set Set}.
-
 Definition Requiv_alt_lim_rat@{} : forall (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
@@ -1195,7 +1130,7 @@ red. exists (fun e => merely (exists d d' : Q+, e = d + d' /\
 apply Requiv_alt_lim_rat_ok;trivial.
 Defined.
 
-Lemma Requiv_alt_lim_lim_ok' (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Lemma Requiv_alt_lim_lim_ok@{} (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (y : Approximation Q)
@@ -1229,11 +1164,6 @@ split;apply (Trunc_ind _).
   + apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_lim_lim_ok@{} :=
-  Requiv_alt_lim_lim_ok'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set}.
-
 Definition Requiv_alt_lim_lim@{} (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
@@ -1245,7 +1175,7 @@ exists (fun e => merely (exists d d' n, e = d + d' + n /\
 apply Requiv_alt_lim_lim_ok. trivial.
 Defined.
 
-Lemma Requiv_alt_lim_lim_rat_lim_rat_pr' (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Lemma Requiv_alt_lim_lim_rat_lim_rat_pr@{} (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (q r : Q) (e : Q+)
@@ -1271,12 +1201,7 @@ intros n;split;apply (Trunc_ind _).
   rewrite Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_lim_lim_rat_lim_rat_pr@{}
-  := Requiv_alt_lim_lim_rat_lim_rat_pr'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set}.
-
-Lemma Requiv_alt_lim_lim_rat_lim_lim_pr' (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Lemma Requiv_alt_lim_lim_rat_lim_lim_pr@{} (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (q : Q) (d d' e : Q+) (y : Approximation Q) (b : Q+ → rounded_zeroary)
@@ -1305,12 +1230,7 @@ intros n;split;apply (Trunc_ind _).
   rewrite He,Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_lim_lim_rat_lim_lim_pr@{}
-  := Requiv_alt_lim_lim_rat_lim_lim_pr'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set}.
-
-Lemma Requiv_alt_lim_lim_lim_lim_rat_pr' (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Lemma Requiv_alt_lim_lim_lim_lim_rat_pr@{} (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (r : Q) (d d' e : Q+) (x : Approximation Q) (a : Q+ → rounded_zeroary)
@@ -1339,12 +1259,7 @@ intros n;split;apply (Trunc_ind _).
   rewrite He,Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_lim_lim_lim_lim_rat_pr@{}
-  := Requiv_alt_lim_lim_lim_lim_rat_pr'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set}.
-
-Lemma Requiv_alt_lim_lim_lim_lim_lim_pr' (Requiv_alt_x_e : Q+ → rounded_halfrel)
+Lemma Requiv_alt_lim_lim_lim_lim_lim_pr@{} (Requiv_alt_x_e : Q+ → rounded_halfrel)
 (IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
   (Requiv_alt_x_e d) (Requiv_alt_x_e e))
 (x y : Approximation Q) (a b : Q+ → rounded_zeroary)
@@ -1375,11 +1290,6 @@ intros n0;split;apply (Trunc_ind _);intros [d0 [d' [n1 [Hn0 E1]]]].
   apply tr;do 3 econstructor;split;[|exact E4].
   rewrite He,Hn0. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
-
-Definition Requiv_alt_lim_lim_lim_lim_lim_pr@{}
-  := Requiv_alt_lim_lim_lim_lim_lim_pr'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set}.
 
 Lemma rounded_zeroary_to_rounded_halfrel_second@{}
   (I : Recursors@{Ularge UQ} rounded_zeroary rounded_zeroary_close)
@@ -1459,7 +1369,7 @@ Proof.
 reflexivity.
 Defined.
 
-Lemma Requiv_alt_rat_rat_pr' : ∀ (q r : Q) (e : Q+), - ' e < q - r < ' e →
+Lemma Requiv_alt_rat_rat_pr@{} : ∀ (q r : Q) (e : Q+), - ' e < q - r < ' e →
   rounded_halfrel_close e (Requiv_alt_rat q) (Requiv_alt_rat r).
 Proof.
 intros q r e Hqr.
@@ -1474,12 +1384,7 @@ red. apply (real_ind0 (fun u => forall n, _)).
     rewrite Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_rat_rat_pr@{} :=
-  Requiv_alt_rat_rat_pr'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set}.
-
-Lemma Requiv_alt_rat_lim_pr' : ∀ (q : Q) (d d' e : Q+) (y : Approximation Q)
+Lemma Requiv_alt_rat_lim_pr@{} : ∀ (q : Q) (d d' e : Q+) (y : Approximation Q)
 (b : Q+ → rounded_halfrel)
 (Eb : ∀ d0 e0 : Q+, rounded_halfrel_close (d0 + e0) (b d0) (b e0)),
 e = d + d'
@@ -1520,14 +1425,7 @@ red. apply (real_ind0 (fun u => forall n, _)).
     rewrite He,Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_rat_lim_pr@{}
-  := Requiv_alt_rat_lim_pr'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set Set Set Set Set
-    Set Set Set Set Set
-    Set Set Set}.
-
-Lemma Requiv_alt_lim_rat_pr' : ∀ (r : Q) (d d' e : Q+) (x : Approximation Q)
+Lemma Requiv_alt_lim_rat_pr@{} : ∀ (r : Q) (d d' e : Q+) (x : Approximation Q)
 (a : Q+ → rounded_halfrel)
 (Ea : ∀ d0 e0 : Q+, rounded_halfrel_close (d0 + e0) (a d0) (a e0)),
 e = d + d'
@@ -1565,13 +1463,7 @@ red. apply (real_ind0 (fun u => forall n, _)).
     rewrite He,Hn. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
 
-Definition Requiv_alt_lim_rat_pr@{}
-  := Requiv_alt_lim_rat_pr'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set Set Set Set Set
-    Set Set Set Set}.
-
-Lemma Requiv_alt_lim_lim_pr' : ∀ (x y : Approximation Q)
+Lemma Requiv_alt_lim_lim_pr@{} : ∀ (x y : Approximation Q)
   (a b : Q+ → rounded_halfrel)
   (Ea : ∀ d e : Q+, rounded_halfrel_close (d + e) (a d) (a e))
   (Eb : ∀ d e : Q+, rounded_halfrel_close (d + e) (b d) (b e)) (e d n e' : Q+),
@@ -1606,12 +1498,6 @@ red. apply (real_ind0 (fun u => forall n0, _)).
     apply tr;do 3 econstructor;split;[|exact E2].
     rewrite He,Hn0. apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
-
-Definition Requiv_alt_lim_lim_pr@{}
-  := Requiv_alt_lim_lim_pr'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set Set Set Set Set
-    Set Set Set Set}.
 
 Definition Requiv_alt_rounded_halfrel@{} : real Q -> rounded_halfrel.
 Proof.
@@ -1691,8 +1577,7 @@ apply (equiv_rec0 _).
 Qed.
 
 Definition Requiv_to_Requiv_alt@{}
-  := Requiv_to_Requiv_alt'@{UQ UQ UQ Set Ularge
-    Ularge Ularge Set Set Set}.
+  := Requiv_to_Requiv_alt'@{UQ UQ UQ}.
 
 Lemma Requiv_alt_to_Requiv' : forall e u v, Requiv_alt e u v -> close e u v.
 Proof.
@@ -1715,9 +1600,7 @@ apply (real_ind0 (fun u => forall v e, _ -> _)).
 Qed.
 
 Definition Requiv_alt_to_Requiv@{}
-  := Requiv_alt_to_Requiv'@{UQ UQ UQ UQ Set
-    Ularge Ularge Ularge Set Set
-    Set}.
+  := Requiv_alt_to_Requiv'@{UQ UQ UQ UQ}.
 
 Lemma Requiv_alt_rw' : Requiv_alt = close.
 Proof.
@@ -1821,9 +1704,7 @@ apply (real_ind0 (fun u => forall y e d, _ -> _)).
 Qed.
 
 Definition equiv_through_approx@{}
-  := equiv_through_approx'@{UQ Set Ularge Ularge Ularge
-    Set Set Set Set Set
-    Set Set}.
+  := equiv_through_approx'@{UQ}.
 
 Lemma equiv_lim@{} : forall (x : Approximation Q) e d,
   close (e+d) (x d) (lim x).
@@ -1881,10 +1762,7 @@ Definition unique_continuous_extension@{i j k} {A:Type@{i} }
   `{!Separated Q+ A} `{!Triangular Q+ A} `{!forall e, Symmetric (close (A:=A) e)}
   f `{!Continuous (A:=real Q) (B:=A) f} g `{!Continuous (A:=real Q) (B:=A) g}
   : (forall q, f (rat q) = g (rat q)) -> forall u, f u = g u
-  := unique_continuous_extension'@{i j k k j
-    Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set i}.
+  := unique_continuous_extension'@{i j k k j i}.
 
 Instance R0@{} : Zero (real Q) := rat 0.
 
@@ -1900,7 +1778,7 @@ Section lipschitz_extend.
 Variables (f : Q -> real Q) (L : Q+).
 Context {Ef : Lipschitz f L}.
 
-Lemma lipschitz_extend_rat_lim' :
+Lemma lipschitz_extend_rat_lim@{} :
   ∀ (q : Q) (d d' e : Q+) (y : Approximation Q) (b : Q+ → real Q)
   (Eb : ∀ d0 e0 : Q+, close (L * (d0 + e0)) (b d0) (b e0)) Eequiv,
   e = d + d'
@@ -1920,11 +1798,7 @@ apply equiv_through_approx.
 simpl. rewrite (pos_unconjugate Q L d). apply IH.
 Qed.
 
-Definition lipschitz_extend_rat_lim@{}
-  := lipschitz_extend_rat_lim'@{Set Ularge Ularge Ularge Set
-    Set Set}.
-
-Lemma lipschitz_extend_lim_lim' :
+Lemma lipschitz_extend_lim_lim@{} :
   ∀ (x y : Approximation Q) (a b : Q+ → real Q)
   (Ea : ∀ d e : Q+, close (L * (d + e)) (a d) (a e))
   (Eb : ∀ d e : Q+, close (L * (d + e)) (b d) (b e)) (e d n e' : Q+)
@@ -1947,10 +1821,6 @@ apply equiv_lim_lim with (L * d) (L * n) (L * e').
 + rewrite He;apply (pos_eq Q);ring_tac.ring_with_nat.
 + simpl. rewrite 2!pos_unconjugate. apply IH.
 Qed.
-
-Definition lipschitz_extend_lim_lim@{}
-  := lipschitz_extend_lim_lim'@{Set Ularge Ularge Ularge Set
-    Set Set}.
 
 Lemma lipschitz_extend_lim_pr@{} :
   forall (a : Q+ → real Q)
@@ -2050,7 +1920,7 @@ apply unique_continuous_extension;try apply _.
 intros;apply (ap rat). apply involutive.
 Qed.
 
-Lemma lim_same_distance' : forall (x y : Approximation Q) e,
+Lemma lim_same_distance@{} : forall (x y : Approximation Q) e,
   (forall d n, close (e+d) (x n) (y n)) ->
   forall d, close (e+d) (lim x) (lim y).
 Proof.
@@ -2060,10 +1930,6 @@ path_via (e + 3 / 3 * d).
 - rewrite pos_recip_r,Qpos_mult_1_l;trivial.
 - apply (pos_eq Q);ring_tac.ring_with_nat.
 Qed.
-
-Definition lim_same_distance@{}
-  := lim_same_distance'@{Set Ularge Ularge Ularge Set
-    Set Set}.
 
 Lemma lipschitz_extend_same_distance@{} (f g : Q -> real Q) (L:Q+)
   `{!Lipschitz f L} `{!Lipschitz g L} : forall e,
@@ -2105,7 +1971,7 @@ Proof.
 apply Ea.
 Qed.
 
-Lemma lim_is_non_expanding' :
+Lemma lim_is_non_expanding@{} :
 forall (a : Q+ → non_expandingT)
 (Ea : ∀ d e : Q+, non_expanding_close (d + e) (a d) (a e))
 (e : Q+) (u v : real Q),
@@ -2130,10 +1996,6 @@ apply equiv_lim_lim with (d'/2) (d'/2) d.
   apply (pos_eq Q);ring_tac.ring_with_nat.
 - simpl. apply ((a _).2). trivial.
 Qed.
-
-Definition lim_is_non_expanding@{}
-  := lim_is_non_expanding'@{Set Ularge Ularge Ularge Set
-    Set Set}.
 
 Lemma rat_non_expanding_pr@{} :
 ∀ q (e : Q+) (u v : real Q),
@@ -2296,7 +2158,7 @@ Definition non_expanding_extend_rat_rat@{} q r :
 
 End extend_binary.
 
-Lemma Qplus_nonexpanding_l' : forall s : Q, NonExpanding (+ s).
+Instance Qplus_nonexpanding_l@{} : forall s : Q, NonExpanding (+ s).
 Proof.
 red. unfold close,Q_close;simpl. intros s e q r E.
 assert (Hrw : q + s - (r + s) = q - r);[|rewrite Hrw;trivial].
@@ -2305,11 +2167,7 @@ rewrite negate_plus_distr. path_via (q - r + (s - s)).
 - rewrite plus_negate_r;apply plus_0_r.
 Qed.
 
-Instance Qplus_nonexpanding_l@{} : forall s : Q, NonExpanding (+ s)
-  :=  Qplus_nonexpanding_l'@{Set Ularge Ularge Ularge Set
-    Set Set}.
-
-Lemma Qplus_nonexpanding_r' : forall s : Q, NonExpanding (s +).
+Instance Qplus_nonexpanding_r@{} : forall s : Q, NonExpanding (s +).
 Proof.
 red;unfold close,Q_close;simpl. intros s e q r E.
 assert (Hrw : s + q - (s + r) = q - r);[|rewrite Hrw;trivial].
@@ -2317,10 +2175,6 @@ rewrite negate_plus_distr. path_via (q - r + (s - s)).
 - ring_tac.ring_with_nat.
 - rewrite plus_negate_r;apply plus_0_r.
 Qed.
-
-Instance Qplus_nonexpanding_r@{} : forall s : Q, NonExpanding (s +)
-  := Qplus_nonexpanding_r'@{Set Ularge Ularge Ularge Set
-    Set Set}.
 
 Global Instance Rplus@{} : Plus (real Q) := non_expanding_extend plus.
 
@@ -2384,7 +2238,7 @@ intros;hnf.
 intros e _ _ _. apply Requiv_refl.
 Qed.
 
-Lemma lipschitz_dup' (f : real Q -> real Q -> real Q) (L1 L2 : Q+)
+Lemma lipschitz_dup@{} (f : real Q -> real Q -> real Q) (L1 L2 : Q+)
   `{!forall x, Lipschitz (f x) L1} `{!forall y, Lipschitz (fun x => f x y) L2}
   : Lipschitz (fun x => f x x) (L1 + L2).
 Proof.
@@ -2396,12 +2250,6 @@ apply (Requiv_triangle _ (f x y)).
 - apply (lipschitz _ _ xi).
 - apply (lipschitz (fun x => f x y) _ xi).
 Qed.
-
-Definition lipschitz_dup@{} (f : real Q -> real Q -> real Q) (L1 L2 : Q+)
-  `{!forall x, Lipschitz (f x) L1} `{!forall y, Lipschitz (fun x => f x y) L2}
-  : Lipschitz (fun x => f x x) (L1 + L2)
-  := lipschitz_dup'@{Set Ularge Ularge Ularge Set
-    Set Set} f L1 L2.
 
 Instance Rplus_group@{} : Group (real Q).
 Proof.
@@ -2757,7 +2605,7 @@ split;[|split].
   apply (order_reflecting rat);trivial.
 Qed.
 
-Lemma Rlt_close_exists_aux' : forall u q, u < rat q ->
+Lemma Rlt_close_exists_aux@{} : forall u q, u < rat q ->
   merely (exists e, forall v, close e u v -> v < rat q).
 Proof.
 intros u q;apply (Trunc_ind _);intros [q' [r [E1 [E2 E3]]]].
@@ -2783,10 +2631,6 @@ rewrite Hrw.
 apply pos_mult_compat;[|apply _].
 apply (snd (flip_pos_minus _ _)). trivial.
 Qed.
-
-Definition Rlt_close_exists_aux@{}
-  := Rlt_close_exists_aux'@{Set Ularge Ularge Ularge Set
-    Set Set}.
 
 Lemma Rlt_close_exists@{} : forall u v, u < v ->
   merely (exists e, forall w, close e u w -> w < v).
@@ -2831,7 +2675,7 @@ split.
 - apply Rabs_of_nonpos'.
 Defined.
 
-Lemma Rabs_of_nonneg : forall x : real Q, 0 <= x -> abs x = x.
+Lemma Rabs_of_nonneg@{} : forall x : real Q, 0 <= x -> abs x = x.
 Proof.
 intros x;apply ((abs_sig x).2).
 Qed.
@@ -2905,8 +2749,7 @@ intros e u;revert u e;apply (real_ind0 (fun u => forall e, _ -> _)).
 Qed.
 
 Definition equiv_0_metric@{}
-  := equiv_0_metric'@{UQ UQ Set Ularge Ularge
-    Ularge Set Set Set}.
+  := equiv_0_metric'@{UQ UQ}.
 
 Lemma equiv_to_metric@{} : forall e u v, close e u v -> abs (u - v) < rat (' e).
 Proof.
@@ -2921,7 +2764,7 @@ Qed.
 Lemma Qclose_alt : forall e (q r : Q), close e q r <-> abs (q - r) < ' e.
 Proof. Admitted.
 
-Lemma metric_to_equiv_rat_lim' (q : Q)
+Lemma metric_to_equiv_rat_lim@{} (q : Q)
   (y : Approximation Q)
   (IHy : ∀ e e0 : Q+, abs (rat q - y e) < rat (' e0) → close e0 (rat q) (y e))
   (e : Q+)
@@ -2961,11 +2804,6 @@ apply (non_expanding (fun u => abs (rat q - u))).
 apply equiv_symm,equiv_lim.
 Qed.
 
-Definition metric_to_equiv_rat_lim@{}
-  := metric_to_equiv_rat_lim'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set}.
-
 Lemma Qabs_neg_flip@{} : forall a b : Q, abs (a - b) = abs (b - a).
 Proof.
 intros a b. unfold abs.
@@ -2987,7 +2825,7 @@ intros q r;apply (ap rat).
 apply Qabs_neg_flip.
 Qed.
 
-Lemma metric_to_equiv_lim_lim' (x : Approximation Q)
+Lemma metric_to_equiv_lim_lim@{} (x : Approximation Q)
   (IHx : ∀ (e : Q+) (v : real Q) (e0 : Q+),
         abs (x e - v) < rat (' e0) → close e0 (x e) v)
   (y : Approximation Q)
@@ -3028,11 +2866,6 @@ apply IHy. apply (Rlt_close_rat_plus _ _ E2).
 apply (non_expanding (fun u => abs (lim x - u))).
 apply equiv_symm,equiv_lim.
 Qed.
-
-Definition metric_to_equiv_lim_lim@{}
-  := metric_to_equiv_lim_lim'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set}.
 
 Lemma metric_to_equiv@{} : forall e u v, abs (u - v) < rat (' e) -> close e u v.
 Proof.
@@ -3228,15 +3061,12 @@ intros q r E;exists (r-q).
 apply (snd (flip_pos_minus _ _) E).
 Defined.
 
-Lemma Qpos_diff_pr' : forall q r E, r = q + ' (Qpos_diff q r E).
+Lemma Qpos_diff_pr@{} : forall q r E, r = q + ' (Qpos_diff q r E).
 Proof.
 intros q r E. change (r = q + (r - q)).
 path_via (r + (q - q));[|ring_tac.ring_with_nat].
 rewrite plus_negate_r,plus_0_r;trivial.
 Qed.
-
-Definition Qpos_diff_pr@{} := Qpos_diff_pr'@{Set Ularge Ularge Ularge Set
-  Set Set}.
 
 Lemma Rlt_cotrans_rat@{} : forall x q r, q < r -> hor (rat q < x) (x < rat r).
 Proof.
@@ -3421,7 +3251,7 @@ destruct (total_abs_either b) as [Eb|Eb];destruct Eb as [Eb1 Eb2];rewrite Eb2.
   apply nonpos_mult;trivial.
 Qed.
 
-Lemma Qbounded_square_lipschitz'
+Lemma Qbounded_square_lipschitz@{}
   : forall a : Q+, Lipschitz (Qbounded_square (' a)) (2 * a).
 Proof.
 intros a e [q Hq] [r Hr] xi.
@@ -3446,11 +3276,6 @@ apply pos_mult_le_lt_compat;[split| |split].
 - apply Qabs_nonneg.
 - trivial.
 Qed.
-
-Definition Qbounded_square_lipschitz@{} :=
-  Qbounded_square_lipschitz'@{Set Ularge Ularge Ularge Set
-    Set Set Set Set Set
-    Set}.
 Existing Instance Qbounded_square_lipschitz.
 
 Lemma Qpos_neg_le@{} : forall a : Q+, - ' a <= ' a.

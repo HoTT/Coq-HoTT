@@ -152,7 +152,8 @@ Proof.
 intros;unfold Tapart;apply _.
 Qed.
 
-Lemma le_respects_aux : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
+Lemma le_respects_aux@{} : forall q1 q2, equiv q1 q2 ->
+  forall r1 r2, equiv r1 r2 ->
   Tle q1 r1 -> Tle q2 r2.
 Proof.
 unfold equiv,Tle;intros [pa na] [pb nb] Eq [pc nc] [pd nd] Er E;simpl in *.
@@ -165,17 +166,15 @@ rewrite Erw.
 apply (order_preserving _), E.
 Qed.
 
-Lemma le_respects : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
+Lemma le_respects@{} : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
   Tle q1 r1 <~> Tle q2 r2.
 Proof.
 intros. apply equiv_iff_hprop_uncurried.
-split;apply le_respects_aux@{Ularge Ularge Ularge Ularge Ularge
-  Ularge Ularge Ularge Ularge Ularge
-  Ularge};
+split;apply le_respects_aux;
 trivial;apply symmetry;trivial.
 Qed.
 
-Lemma lt_respects_aux : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
+Lemma lt_respects_aux@{} : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
   Tlt q1 r1 -> Tlt q2 r2.
 Proof.
 unfold equiv,Tlt;intros [pa na] [pb nb] Eq [pc nc] [pd nd] Er E;simpl in *.
@@ -188,17 +187,15 @@ rewrite Erw.
 apply (strictly_order_preserving _), E.
 Qed.
 
-Lemma lt_respects : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
+Lemma lt_respects@{} : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
   Tlt q1 r1 <~> Tlt q2 r2.
 Proof.
 intros. apply equiv_iff_hprop_uncurried.
-split;apply lt_respects_aux@{Ularge Ularge Ularge Ularge Ularge
-  Ularge Ularge Ularge Ularge Ularge
-  Ularge};
+split;apply lt_respects_aux;
 trivial;apply symmetry;trivial.
 Qed.
 
-Lemma apart_cotrans' : CoTransitive Tapart.
+Lemma apart_cotrans@{} : CoTransitive Tapart.
 Proof.
 hnf.
 unfold Tapart. intros q1 q2 Eq r.
@@ -219,11 +216,7 @@ intros [E|E];apply tr.
   rewrite Hrw;clear Hrw.
   trivial.
 Qed.
-
-Instance apart_cotrans : CoTransitive Tapart
-  := apart_cotrans'@{Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge}.
+Existing Instance apart_cotrans.
 
 Instance : Symmetric Tapart.
 Proof.
@@ -232,7 +225,7 @@ unfold Tapart.
 intros ??;apply symmetry.
 Qed.
 
-Lemma apart_respects_aux
+Lemma apart_respects_aux@{}
   : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
   Tapart q1 r1 -> Tapart q2 r2.
 Proof.
@@ -262,9 +255,7 @@ Lemma apart_respects : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
 Proof.
 intros ?? Eq ?? Er.
 apply equiv_iff_hprop_uncurried.
-split;apply apart_respects_aux@{Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge};
+split;apply apart_respects_aux;
 trivial;apply symmetry;trivial.
 Qed.
 
@@ -277,7 +268,7 @@ intros p.
 exact (naturals_to_semiring N B (pos p) - naturals_to_semiring N B (neg p)).
 Defined.
 
-Lemma to_ring_respects' : forall a b, equiv a b ->
+Lemma to_ring_respects@{} : forall a b, equiv a b ->
   to_ring a = to_ring b.
 Proof.
 unfold equiv;intros [pa na] [pb nb] E.
@@ -292,11 +283,6 @@ path_via (naturals_to_semiring N B pb + naturals_to_semiring N B na + 0);
 rewrite <-(plus_negate_r (naturals_to_semiring N B nb));ring_with_nat].
 rewrite <-2!preserves_plus. apply ap,E.
 Qed.
-
-Definition to_ring_respects@{} := to_ring_respects'@{
-  Ularge Ularge Ularge Ularge Ularge
-  Ularge Ularge Ularge Ularge Ularge
-  Ularge}.
 
 End to_ring.
 
@@ -441,7 +427,7 @@ Defined.
 Definition Z_negate_compute q : - (' q) = ' (PairT.opp _ q)
   := 1.
 
-Lemma Z_ring' : Ring Z.
+Lemma Z_ring@{} : Ring Z.
 Proof.
 repeat split;try apply _;
 first [change sg_op with mult; change mon_unit with 1|
@@ -481,18 +467,8 @@ first [change sg_op with mult; change mon_unit with 1|
   ring_with_nat.
 Qed.
 
-Lemma Z_ring@{} : Ring Z.
-Proof.
-exact Z_ring'@{
-  Ularge Ularge Ularge Ularge Ularge
-  Ularge Ularge Ularge Ularge Ularge
-  Ularge Ularge Ularge Ularge Ularge
-  Ularge Ularge Ularge Ularge Ularge
-  Ularge Ularge Ularge}.
-Qed.
-
 (* A final word about inject *)
-Lemma Z_of_N_morphism' : SemiRingPreserving (cast N Z).
+Lemma Z_of_N_morphism@{} : SemiRingPreserving (cast N Z).
 Proof.
 repeat (constructor; try apply _).
 - intros x y.
@@ -500,14 +476,7 @@ repeat (constructor; try apply _).
 - intros x y. apply Z_path. red;simpl.
   ring_with_nat.
 Qed.
-
-Global Instance Z_of_N_morphism@{} : SemiRingPreserving (cast N Z).
-Proof.
-exact Z_of_N_morphism'@{  
-  Ularge Ularge Ularge Ularge Ularge
-  Ularge Ularge Ularge Ularge Ularge
-  Ularge}.
-Qed.
+Global Existing Instance Z_of_N_morphism.
 
 Global Instance Z_of_N_injective@{} : Injective (cast N Z).
 Proof.
@@ -515,18 +484,11 @@ intros x y E. apply related_path in E.
 red in E. simpl in E. rewrite 2!plus_0_r in E. trivial.
 Qed.
 
-Lemma Npair_splits' : forall n m : N, ' (PairT.C n m) = ' n + - ' m.
+Lemma Npair_splits@{} : forall n m : N, ' (PairT.C n m) = ' n + - ' m.
 Proof.
 intros.
 apply Z_path;red;simpl.
 ring_with_nat.
-Qed.
-
-Lemma Npair_splits@{} : forall n m : N, ' (PairT.C n m) = ' n + - ' m.
-Proof.
-exact Npair_splits'@{
-  Ularge Ularge Ularge Ularge Ularge
-  Ularge Ularge}.
 Qed.
 
 Definition Zle_hProp@{} : Z -> Z -> TruncType@{UN} -1.
@@ -539,11 +501,9 @@ Defined.
 
 Global Instance Zle@{} : Le Z := fun x y => Zle_hProp x y.
 
-Lemma Zle_def' : forall a b : PairT.T N, ' a <= ' b = PairT.Tle@{UN UNalt} a b.
-Proof. reflexivity. Qed.
-
-(* Should we keep it polymorphic or set i := UN? *)
-Definition Zle_def@{i} := Zle_def'@{Uhuge i}.
+Lemma Zle_def@{} : forall a b : PairT.T N,
+  @paths@{Uhuge} Type@{UN} (' a <= ' b) (PairT.Tle@{UN UNalt} a b).
+Proof. intros; exact idpath. Qed.
 
 Lemma Z_partial_order' : PartialOrder Zle.
 Proof.
@@ -554,9 +514,11 @@ split;[apply _|apply _|split|].
   intros [pa na] [pb nb] [pc nc]. rewrite !Zle_def;unfold PairT.Tle;simpl.
   intros E1 E2.
   apply (order_reflecting (+ (nb + pb))).
-  assert (Hrw : pa + nc + (nb + pb) = (pa + nb) + (pb + nc)) by ring_with_nat.
+  assert (Hrw : pa + nc + (nb + pb) = (pa + nb) + (pb + nc))
+    by abstract ring_with_nat.
   rewrite Hrw;clear Hrw.
-  assert (Hrw : pc + na + (nb + pb) = (pb + na) + (pc + nb)) by ring_with_nat.
+  assert (Hrw : pc + na + (nb + pb) = (pb + na) + (pc + nb))
+    by abstract ring_with_nat.
   rewrite Hrw;clear Hrw.
   apply plus_le_compat;trivial.
 - hnf. apply (Z_ind2 (fun _ _ => _ -> _ -> _)).
@@ -565,12 +527,9 @@ split;[apply _|apply _|split|].
   apply (antisymmetry le);trivial.
 Qed.
 
+(* Where are these universes even coming from? *)
 Instance Z_partial_order@{} : PartialOrder Zle
-  := Z_partial_order'@{
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge}.
+  := Z_partial_order'@{Ularge Ularge Ularge Ularge Ularge}.
 
 Lemma Zle_cast_embedding' : OrderEmbedding (cast N Z).
 Proof.
@@ -598,10 +557,7 @@ apply (order_preserving _),E.
 Qed.
 
 Instance Zle_plus_preserving_l@{} : ∀ z : Z, OrderPreserving ((+) z)
-  := Zle_plus_preserving_l'@{
-     Ularge Ularge Ularge Ularge Ularge
-     Ularge Ularge Ularge Ularge Ularge
-     Ularge Ularge Ularge}.
+  := Zle_plus_preserving_l'@{Ularge Ularge}.
 
 Lemma Zmult_nonneg' : ∀ x y : Z, PropHolds (0 ≤ x) → PropHolds (0 ≤ y) →
   PropHolds (0 ≤ x * y).
@@ -620,9 +576,7 @@ Qed.
 
 Instance Zmult_nonneg@{} : ∀ x y : Z, PropHolds (0 ≤ x) → PropHolds (0 ≤ y) →
   PropHolds (0 ≤ x * y)
-  := Zmult_nonneg'@{
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge}.
+  := Zmult_nonneg'@{Ularge Ularge Ularge}.
 
 Global Instance Z_order@{} : SemiRingOrder Zle.
 Proof. pose proof Z_ring; apply rings.from_ring_order; apply _. Qed.
@@ -672,11 +626,7 @@ split.
 Qed.
 
 Instance Zlt_strict@{} : StrictOrder Zlt
-  := Zlt_strict'@{
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge}.
+  := Zlt_strict'@{Ularge Ularge Ularge Ularge Ularge}.
 
 Lemma plus_strict_order_preserving_l'
   : ∀ z : Z, StrictlyOrderPreserving ((+) z).
@@ -694,10 +644,7 @@ Qed.
 
 Instance Zplus_strict_order_preserving_l@{}
   : ∀ z : Z, StrictlyOrderPreserving ((+) z)
-  := plus_strict_order_preserving_l'@{
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge}.
+  := plus_strict_order_preserving_l'@{Ularge Ularge}.
 
 Lemma Zmult_pos' : ∀ x y : Z, PropHolds (0 < x) → PropHolds (0 < y) →
   PropHolds (0 < x * y).
@@ -716,9 +663,7 @@ Qed.
 
 Instance Zmult_pos@{} : ∀ x y : Z, PropHolds (0 < x) → PropHolds (0 < y) →
   PropHolds (0 < x * y)
-  := Zmult_pos'@{
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge}.
+  := Zmult_pos'@{Ularge Ularge Ularge}.
 
 Global Instance Z_strict_srorder : StrictSemiRingOrder Zlt.
 Proof. pose proof Z_ring; apply from_strict_ring_order; apply _. Qed.
@@ -802,11 +747,7 @@ split.
 Qed.
 
 Instance Z_is_apart@{} : IsApart Z
-  := Z_is_apart'@{
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
+  := Z_is_apart'@{Ularge Ularge Ularge Ularge Ularge
     Ularge}.
 
 Lemma Z_full_psorder' : FullPseudoOrder Zle Zlt.
@@ -848,9 +789,6 @@ Instance Z_full_psorder@{} : FullPseudoOrder Zle Zlt
   := Z_full_psorder'@{
     Ularge Ularge Ularge Ularge Ularge
     Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
     Ularge Ularge}.
 
 Lemma Zmult_strong_ext_l' : ∀ z : Z, StrongExtensionality (z *.).
@@ -875,9 +813,7 @@ Qed.
 
 Instance Zmult_strong_ext_l@{} : ∀ z : Z, StrongExtensionality (z *.)
   := Zmult_strong_ext_l'@{
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge}.
+    Ularge Ularge}.
 
 Instance Z_full_pseudo_srorder@{}
   : FullPseudoSemiRingOrder Zle Zlt.
@@ -937,10 +873,7 @@ split;split;red.
 Qed.
 
 Instance Z_to_ring_morphism@{} `{Ring B} : SemiRingPreserving (integers_to_ring Z B)
-  := Z_to_ring_morphism'@{
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge}.
+  := Z_to_ring_morphism'@{Ularge}.
 
 Lemma Z_to_ring_unique@{} `{Ring B} (h : Z -> B) `{!SemiRingPreserving h}
   : ∀ x : Z, integers_to_ring Z B x = h x.
@@ -1090,13 +1023,7 @@ Global Instance Z_abs@{} : IntAbs@{UN UN UN UN UN
   UN UN UN UN UN
   UN UN} Z N
   := Z_abs'@{Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Set Set Set
-    Ularge Ularge Ularge Set Set
-    Set Set Set Set Set
-    Set Set Set Set Set
-    Set Set Set Set Set
-    Set Set Set Set Set
-    Set}.
+    Ularge Ularge Ularge Ularge}.
 
 Notation n_to_z := (naturals_to_semiring N Z).
 

@@ -1,5 +1,7 @@
 Require Import HoTTClasses.interfaces.abstract_algebra.
 
+Local Set Universe Minimization ToSet.
+
 Lemma shiftl_spec_from_nat_pow `{SemiRing A} `{SemiRing B}
   {pw} `{!NatPowSpec A B pw} (sl : ShiftL A B) :
   (∀ x n, x ≪ n = x * 2 ** n) → ShiftLSpec A B sl.

@@ -1,4 +1,4 @@
-Require Import HoTT.Basics.Decidable HoTT.Types.Bool HoTT.hit.Truncations.
+Require Import HoTT.Basics.Decidable HoTT.hit.Truncations.
 Require Import
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.theory.jections.
