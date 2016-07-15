@@ -3,7 +3,22 @@ Require Import HoTTClasses.theory.rings
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.implementations.list.
 
-Import ListNotations.
+Class AlmostNegate A := almost_negate : A -> A.
+
+Class AlmostRing A {Aplus : Plus A} {Amult : Mult A}
+  {Azero : Zero A} {Aone : One A} {Anegate : AlmostNegate A} :=
+  { almost_ring_semiring : SemiRing A
+  ; almost_ring_neg_pr : forall x : A, almost_negate x = (almost_negate 1) * x }.
+
+Section almostring_mor.
+Context {A B : Type} {Aplus : Plus A} {Bplus : Plus B}
+  {Amult : Mult A} {Bmult : Mult B} {Azero : Zero A} {Bzero : Zero B}
+  {Aone : One A} {Bone : One B} {Aneg : AlmostNegate A} {Bneg : AlmostNegate B}.
+
+Class AlmostRingPreserving (f : A -> B) :=
+  { almostring_mor_sr_mor : SemiRingPreserving f
+  ; almostring_mor_neg : forall x, f (almost_negate x) = almost_negate (f x) }.
+End almostring_mor.
 
 Module Quoting.
 
@@ -13,6 +28,7 @@ Inductive Expr (V:Type0) :=
   | One
   | Plus (a b : Expr V)
   | Mult (a b : Expr V)
+  | Neg (a : Expr V)
 .
 
 Arguments Var [V] v.
@@ -20,10 +36,11 @@ Arguments Zero [V].
 Arguments One [V].
 Arguments Plus [V] a b.
 Arguments Mult [V] a b.
+Arguments Neg [V] a.
 
 Section contents.
 Universe U.
-Context (R:Type@{U}) `{SemiRing R}.
+Context (R:Type@{U}) `{AlmostRing R}.
 
 Notation Vars V := (V -> R).
 
@@ -34,6 +51,7 @@ Fixpoint eval {V:Type0} (vs : Vars V) (e : Expr V) : R :=
   | One => 1
   | Plus a b => eval vs a + eval vs b
   | Mult a b => eval vs a * eval vs b
+  | Neg a => almost_negate (eval vs a)
   end.
 
 Lemma eval_ext {V:Type0} (vs vs' : Vars V) :
@@ -84,6 +102,7 @@ Fixpoint expr_map {V W:Type0 } (f : V -> W) (e : Expr V) : Expr W :=
   | One => One
   | Plus a b => Plus (expr_map f a) (expr_map f b)
   | Mult a b => Mult (expr_map f a) (expr_map f b)
+  | Neg a => Neg (expr_map f a)
   end.
 
 Lemma eval_map {V W:Type0 } (f : V -> W) v e
@@ -166,6 +185,21 @@ Section Quote.
     : Quote v (n * m) (merge v' v'').
   Proof.
   econstructor. apply quote_mult_ok.
+  Defined.
+
+  Lemma quote_neg_ok@{} (V:Type0) (v : Vars V) n (V':Type0) (v' : Vars V')
+    `{!Quote v n v'}
+    : eval (merge v v') (Neg (quote n)) = almost_negate n.
+  Proof.
+  simpl. apply ap,eval_quote.
+  Qed.
+
+  Global Instance quote_neg (V:Type0) (v : Vars V) n (V':Type0) (v' : Vars V')
+    `{!Quote v n v'}
+    : Quote v (almost_negate n) v'.
+  Proof.
+  exists (Neg (quote n)).
+  apply quote_neg_ok.
   Defined.
 
   Global Instance quote_old_var (V:Type0) (v: Vars V) x {i: Lookup x v}

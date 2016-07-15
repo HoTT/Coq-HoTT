@@ -480,7 +480,7 @@ destruct (le_lt_dec c a) as [E2|E2].
 - left;trivial.
 Qed.
 
-Instance nat_full : FullPseudoSemiRingOrder nat_le nat_lt.
+Lemma nat_full' : FullPseudoSemiRingOrder nat_le nat_lt.
 Proof.
 split;[apply _|split|].
 - split;try apply _.
@@ -522,6 +522,9 @@ split;[apply _|split|].
     destruct (le_lt_dec a b);auto.
     destruct E;auto.
 Qed.
+
+Definition nat_full@{} := nat_full'@{Ularge Ularge N}.
+Local Existing Instance nat_full.
 
 Instance S_embedding : OrderEmbedding S.
 Proof.
@@ -600,11 +603,12 @@ Section for_another_semiring.
   Qed.
 End for_another_semiring.
 
-Global Instance nat_naturals : Naturals nat.
+Lemma nat_naturals@{i} : Naturals@{N N N N N N N i} nat.
 Proof.
 split;try apply _.
 intros;apply toR_unique, _.
 Qed.
+Global Existing Instance nat_naturals.
 
 Global Instance nat_cut_minus: CutMinus@{N} nat := Peano.minus.
 

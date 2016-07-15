@@ -336,7 +336,7 @@ Proof.
 pose proof (@trunc_hprop@{i i}) as trunc_hprop.
 apply (Z_rect@{i} P dclass).
 intros;apply path_ishprop@{i}.
-Qed.
+Defined.
 
 Definition Z_ind2 (P : Z -> Z -> Type) {sP : forall x y, IsHProp (P x y)}
   (dclass : forall x y : PairT.T N, P (' x) (' y)) : forall x y, P x y.
@@ -344,7 +344,7 @@ Proof.
 apply (Z_ind (fun x => forall y, _));intros x.
 apply (Z_ind _);intros y.
 apply dclass.
-Qed.
+Defined.
 
 Definition Z_ind3@{i j} (P : Z -> Z -> Z -> Type@{i})
   {sP : forall x y z : Z, IsHProp (P x y z)}
@@ -355,7 +355,7 @@ apply (@Z_ind (fun x => forall y z, _));intros x.
 2:apply (Z_ind2@{i j} _);auto.
 apply (@Forall.trunc_forall@{UN j j} _).
 intros. apply Forall.trunc_forall@{UN i j}.
-Qed.
+Defined.
 
 Definition Z_rec@{i} {T : Type@{i} } {sT : IsHSet T}
   : forall (dclass : PairT.T N -> T)
@@ -932,8 +932,7 @@ Definition Z_abs_def@{} : ∀ x : PairT.T N,
 Proof.
 intros [a b].
 destruct (nat_distance_sig a b) as [[z E]|[z E]].
-- pose proof (DecidablePaths_instance_0@{UN Ularge}).
-  destruct (decide (z = 0)) as [E'|_].
+- destruct (decide (z = 0)) as [E'|_].
   + left. exists 0. apply Z_abs_aux_0 with z;trivial.
   + right. exists z. apply Z_abs_aux_neg;trivial.
 - left. exists z. apply Z_abs_aux_pos;trivial.

@@ -211,7 +211,7 @@ Proof.
 intro E. destruct (zero_sum 1 x E). apply nat_nontrivial. trivial.
 Qed.
 
-Global Instance : DecidablePaths N.
+Global Instance slow_naturals_dec : DecidablePaths N.
 Proof.
 apply decidablepaths_equiv with nat (naturals_to_semiring nat N);apply _.
 Qed.

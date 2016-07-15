@@ -9,6 +9,8 @@ Require Import
 Import Quoting.
 
 Section content.
+Local Existing Instance almost_ring_semiring.
+Local Existing Instance almostring_mor_sr_mor.
 
 Universe UC.
 Context {C : Type@{UC} } {V : Type0 }.
@@ -19,7 +21,7 @@ Inductive Pol : Type@{UC} :=
 
 (* [C] is the scalar semiring: Z when working on rings,
    N on semirings, other sometimes. *)
-Context `{SemiRing C} `{DecidablePaths C}.
+Context `{AlmostRing C} `{DecidablePaths C}.
 
 (* [V] is the type of variables, ie we are defining polynomials [C[V]].
    It has a computable compare so we can normalise polynomials. *)
@@ -46,7 +48,8 @@ Global Instance P0 : canonical_names.Zero Pol := Pconst 0.
 Global Instance P1 : canonical_names.One Pol := Pconst 1.
 
 Universe UR.
-Context {R : Type@{UR} } `{SemiRing R} (phi : C -> R) `{!SemiRingPreserving phi}.
+Context {R : Type@{UR} } `{AlmostRing R}
+  (phi : C -> R) `{!AlmostRingPreserving phi}.
 
 Notation Vars V := (V -> R).
 
@@ -309,18 +312,21 @@ Fixpoint toPol (e: Expr V) :=
   | One => 1
   | Plus a b => add (toPol a) (toPol b)
   | Mult a b => mul (toPol a) (toPol b)
+  | Neg a => mulC (almost_negate 1) (toPol a)
   end.
 
 Lemma eval_toPol@{} vs : forall e : Expr V,
   eval vs (toPol e) = Quoting.eval _ vs e.
 Proof.
-induction e as [v| | |a IHa b IHb|a IHa b IHb];simpl.
+induction e as [v| | |a IHa b IHb|a IHa b IHb|a IHa];simpl.
 - rewrite (preserves_1 (f:=phi)),(preserves_0 (f:=phi)),plus_0_r,mult_1_l.
   reflexivity.
 - apply preserves_0.
 - apply preserves_1.
 - rewrite eval_add,IHa,IHb. reflexivity.
 - rewrite eval_mul,IHa,IHb. reflexivity.
+- rewrite eval_mulC. rewrite (almostring_mor_neg (f:=phi)),preserves_1.
+  rewrite <-almost_ring_neg_pr. apply ap,IHa.
 Qed.
 
 End content.

@@ -887,17 +887,15 @@ split.
   apply flip_lt_negate in E2.
   rewrite negate_swap_r,!involutive in E2.
   pose proof (plus_lt_compat _ _ _ _ E1' E2) as E.
-  assert (Hrw : s - r = q - r + (s - q));[|rewrite Hrw;trivial].
-  path_via (s - r + 0).
-  { rewrite plus_0_r;trivial. }
-  rewrite <-(plus_negate_r q). ring_tac.ring_with_nat.
+  assert (Hrw : s - r = q - r + (s - q))
+    by abstract ring_tac.ring_with_integers (NatPair.Z nat).
+  rewrite Hrw;trivial.
 - apply flip_lt_negate in E1.
   rewrite negate_swap_r,!involutive in E1.
   pose proof (plus_lt_compat _ _ _ _ E1 E2') as E.
-  assert (Hrw : r - s = r - q + (q - s));[|rewrite Hrw;trivial].
-  path_via (r - s + 0).
-  { rewrite plus_0_r;trivial. }
-  rewrite <-(plus_negate_r q). ring_tac.ring_with_nat.
+  assert (Hrw : r - s = r - q + (q - s))
+    by abstract ring_tac.ring_with_integers (NatPair.Z nat).
+  rewrite Hrw;trivial.
 Qed.
 
 Instance Q_triangular@{} : Triangular Q+ Q.
@@ -2179,19 +2177,17 @@ End extend_binary.
 Instance Qplus_nonexpanding_l@{} : forall s : Q, NonExpanding (+ s).
 Proof.
 red. unfold close,Q_close;simpl. intros s e q r E.
-assert (Hrw : q + s - (r + s) = q - r);[|rewrite Hrw;trivial].
-rewrite negate_plus_distr. path_via (q - r + (s - s)).
-- ring_tac.ring_with_nat.
-- rewrite plus_negate_r;apply plus_0_r.
+assert (Hrw : q + s - (r + s) = q - r)
+  by abstract ring_tac.ring_with_integers (NatPair.Z nat).
+rewrite Hrw;trivial.
 Qed.
 
 Instance Qplus_nonexpanding_r@{} : forall s : Q, NonExpanding (s +).
 Proof.
 red;unfold close,Q_close;simpl. intros s e q r E.
-assert (Hrw : s + q - (s + r) = q - r);[|rewrite Hrw;trivial].
-rewrite negate_plus_distr. path_via (q - r + (s - s)).
-- ring_tac.ring_with_nat.
-- rewrite plus_negate_r;apply plus_0_r.
+assert (Hrw : s + q - (s + r) = q - r)
+  by abstract ring_tac.ring_with_integers (NatPair.Z nat).
+rewrite Hrw;trivial.
 Qed.
 
 Global Instance Rplus@{} : Plus (real Q) := non_expanding_extend plus.
@@ -2639,9 +2635,7 @@ assert (Hrw : r + (- q' + (- r + q') / 2) = (r - q') / 2).
 { path_via (2 / 2 * r + (2 / 2 * (- q') + (- r + q') / 2)).
   { rewrite dec_recip_inverse;[|solve_propholds].
     rewrite !mult_1_l;trivial. }
-  path_via ((r - q' + (r - r) + (q' - q')) / 2).
-  { ring_tac.ring_with_nat. }
-  rewrite !plus_negate_r,!plus_0_r;trivial.
+  abstract ring_tac.ring_with_integers (NatPair.Z nat).
 }
 rewrite Hrw.
 apply pos_mult_compat;[|apply _].
@@ -2805,9 +2799,7 @@ pose (ED := mkQpos Q _ E4).
 assert (Hrw : e = D + (ED / 4 + ED / 4) + (ED / 4 + ED / 4)).
 { path_via (D + ED).
   { apply (pos_eq Q);unfold D, ED.
-    change (' e = d + (' e - d)).
-    path_via ('e + (d - d));[|ring_tac.ring_with_nat].
-    rewrite plus_negate_r,plus_0_r;trivial.
+    abstract ring_tac.ring_with_integers (NatPair.Z nat).
   }
   path_via (D + 4 / 4 * ED).
   { rewrite pos_recip_r,Qpos_mult_1_l;trivial. }
@@ -2868,9 +2860,7 @@ pose (ED := mkQpos Q _ E4).
 assert (Hrw : e = D + (ED / 4 + ED / 4) + (ED / 4 + ED / 4)).
 { path_via (D + ED).
   { apply (pos_eq Q);unfold D, ED.
-    change (' e = d + (' e - d)).
-    path_via ('e + (d - d));[|ring_tac.ring_with_nat].
-    rewrite plus_negate_r,plus_0_r;trivial.
+    abstract ring_tac.ring_with_integers (NatPair.Z nat).
   }
   path_via (D + 4 / 4 * ED).
   { rewrite pos_recip_r,Qpos_mult_1_l;trivial. }
@@ -3080,8 +3070,7 @@ Defined.
 Lemma Qpos_diff_pr@{} : forall q r E, r = q + ' (Qpos_diff q r E).
 Proof.
 intros q r E. change (r = q + (r - q)).
-path_via (r + (q - q));[|ring_tac.ring_with_nat].
-rewrite plus_negate_r,plus_0_r;trivial.
+abstract ring_tac.ring_with_integers (NatPair.Z nat).
 Qed.
 
 Lemma Rlt_cotrans_rat@{} : forall x q r, q < r -> hor (rat q < x) (x < rat r).
@@ -3273,10 +3262,8 @@ intros a e [q Hq] [r Hr] xi.
 change (close e q r) in xi.
 unfold Qbounded_square;simpl.
 apply Qclose_alt in xi. apply Qclose_alt.
-assert (Hrw : q * q - r * r = (q + r) * (q - r)).
-{ path_via (q * q + - r * r + (q * r + q * - r));[|ring_tac.ring_with_nat].
-  rewrite negate_mult_distr_l,<-negate_mult_distr_r,plus_negate_r,plus_0_r.
-  trivial. }
+assert (Hrw : q * q - r * r = (q + r) * (q - r))
+  by abstract ring_tac.ring_with_integers (NatPair.Z nat).
 rewrite Hrw. clear Hrw.
 rewrite Qabs_mult. change (' (2 * a * e)) with (2 * ' a * ' e).
 apply pos_mult_le_lt_compat;[split| |split].
@@ -3413,11 +3400,8 @@ rewrite !Rsquare_rat.
 change (rat ((q + r) * (q + r)) - rat (q * q) - rat (r * r)) with
   (rat ((q + r) * (q + r) - q * q - r * r)).
 rewrite lipschitz_extend_rat. unfold compose. apply ap.
-path_via ((2 * q * r + (q * q - q * q) + (r * r - r * r)) / 2).
-{ ring_tac.ring_with_nat. }
-rewrite !plus_negate_r,!plus_0_r.
 path_via (2 / 2 * q * r).
-{ ring_tac.ring_with_nat. }
+{ abstract ring_tac.ring_with_integers (NatPair.Z nat). }
 rewrite dec_recip_inverse;[|solve_propholds].
 rewrite mult_1_l;trivial.
 Qed.

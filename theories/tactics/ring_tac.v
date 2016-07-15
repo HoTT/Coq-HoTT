@@ -8,15 +8,16 @@ Require Import
   HoTTClasses.orders.sum
   HoTTClasses.misc.decision
   HoTTClasses.implementations.peano_naturals
-  HoTTClasses.interfaces.naturals.
+  HoTTClasses.interfaces.naturals
+  HoTTClasses.interfaces.integers.
 
 Section content.
 Context `{DecidablePaths C}.
 
-Context `(phi : C -> R) `{SemiRingPreserving C R phi}
-  `{!SemiRing C} `{!SemiRing R}.
+Context `(phi : C -> R) `{AlmostRingPreserving C R phi}
+  `{!AlmostRing C} `{!AlmostRing R}.
 
-Lemma normalize_eq `{Q : @Quoting.EqQuote R _ _ _ _ V l n m V' l'}
+Lemma normalize_eq `{Q : @Quoting.EqQuote R _ _ _ _ _ V l n m V' l'}
   `{Trichotomy V Vlt} `{Trichotomy V' Vlt'}
   : eval phi (Quoting.merge R l l')
   (toPol (Quoting.expr_map inl (Quoting.eqquote_l R)))
@@ -30,10 +31,10 @@ etransitivity;[|apply (eval_toPol _)].
 exact E.
 Qed.
 
-Lemma by_quoting `{Q : @Quoting.EqQuote R _ _ _ _ V l n m V' l'}
+Lemma by_quoting `{Q : @Quoting.EqQuote R _ _ _ _ _ V l n m V' l'}
   `{Trichotomy V Vlt} `{Trichotomy V' Vlt'}
-  : toPol (Quoting.expr_map inl (@Quoting.eqquote_l R _ _ _ _ _ _ _ _ _ _ Q))
-  =? toPol (@Quoting.eqquote_r R  _ _ _ _ _ _ _ _ _ _ Q) = true
+  : toPol (Quoting.expr_map inl (@Quoting.eqquote_l R _ _ _ _ _ _ _ _ _ _ _ Q))
+  =? toPol (@Quoting.eqquote_r R  _ _ _ _ _ _ _ _ _ _ _ Q) = true
   -> n = m.
 Proof.
 intros E.
@@ -59,14 +60,64 @@ Qed.
 
 End content.
 
-Arguments normalize_eq {C _ R} phi {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.
-Arguments by_quoting {C _ R} phi {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.
+Instance default_almostneg `{Zero A} : AlmostNegate A | 20
+  := fun _ => 0.
+Arguments default_almostneg _ _ _ /.
+
+Instance negate_almostneg `{Aneg : Negate A} : AlmostNegate A
+  := (-).
+Arguments negate_almostneg _ _ _ /.
+
+Instance semiring_almostring `{SemiRing A} : AlmostRing A | 10.
+Proof.
+split;try apply _.
+intros. unfold almost_negate;simpl.
+Symmetry;apply mult_0_l.
+Qed.
+
+Instance ring_almostring `{Ring A} : AlmostRing A.
+Proof.
+split;try apply _.
+intros. unfold almost_negate;simpl.
+apply negate_mult.
+Qed.
+
+Instance sr_mor_almostring_mor `{SemiRingPreserving A B f}
+  : AlmostRingPreserving f | 10.
+Proof.
+split;try apply _.
+unfold almost_negate;simpl. intros _. apply preserves_0.
+Qed.
+
+Section VarSec.
+Context `{Ring A} `{Ring B} {f : A -> B} `{!SemiRingPreserving f}.
+
+Global Instance ring_mor_almostring_mor : AlmostRingPreserving f.
+Proof.
+split;try apply _.
+unfold almost_negate;simpl. apply preserves_negate.
+Qed.
+
+End VarSec.
+
+Arguments normalize_eq {C _ R} phi
+  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.
+Arguments by_quoting {C _ R} phi
+  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.
 
 Ltac ring_with_nat :=
   match goal with
   |- @paths ?R _ _ =>
-    ((pose proof (_ : SemiRing R)) || fail "not a semiring");
+    ((pose proof (_ : SemiRing R)) || fail "target equality not on a semiring");
     apply (by_quoting (naturals_to_semiring nat R));
+    compute;reflexivity
+  end.
+
+Ltac ring_with_integers Z :=
+  match goal with
+  |- @paths ?R _ _ =>
+    ((pose proof (_ : Ring R)) || fail "target equality not on a ring");
+    apply (by_quoting (integers_to_ring Z R));
     compute;reflexivity
   end.
 
