@@ -103,7 +103,7 @@ Section join_semilattice_order.
   - rewrite <-E. apply join_ub_l.
   Qed.
 
-  Global Instance: ∀ z, OrderPreserving (z ⊔).
+  Global Instance join_le_preserving_l : ∀ z, OrderPreserving (z ⊔).
   Proof.
   red;intros.
   apply join_lub.
@@ -111,7 +111,7 @@ Section join_semilattice_order.
   - apply join_le_compat_l. trivial.
   Qed.
 
-  Global Instance: ∀ z, OrderPreserving (⊔ z).
+  Global Instance join_le_preserving_r : ∀ z, OrderPreserving (⊔ z).
   Proof.
   intros. apply maps.order_preserving_flip.
   Qed.

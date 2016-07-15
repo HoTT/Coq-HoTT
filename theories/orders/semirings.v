@@ -183,7 +183,7 @@ Hint Extern 7 (PropHolds (0 ≤ _ + _)) =>
   eapply @nonneg_plus_compat : typeclass_instances.
 
 Section strict_semiring_order.
-  Context `{SemiRing R} `{Apart R} `{!StrictSemiRingOrder Rlt}.
+  Context `{SemiRing R} `{!StrictSemiRingOrder Rlt}.
 (*   Add Ring Rs : (stdlib_semiring_theory R). *)
 
   Global Instance plus_lt_embed : ∀ (z : R), StrictOrderEmbedding (+z).

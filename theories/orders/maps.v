@@ -110,7 +110,7 @@ End full_pseudo_strictly_preserving.
 
 (* Some helper lemmas to easily transform order preserving instances. *)
 Section order_preserving_ops.
-  Context `{Le R} `{Lt R}.
+  Context `{Le R}.
 
   Lemma order_preserving_flip {op} `{!Commutative op} `{!OrderPreserving (op z)}
     : OrderPreserving (λ y, op y z).
@@ -120,31 +120,12 @@ Section order_preserving_ops.
   apply order_preserving;trivial.
   Qed.
 
-  Lemma strictly_order_preserving_flip {op} `{!Commutative op}
-    `{!StrictlyOrderPreserving (op z)}
-    : StrictlyOrderPreserving (λ y, op y z).
-  Proof.
-  intros x y E.
-  rewrite 2!(commutativity _ z).
-  apply strictly_order_preserving;trivial.
-  Qed.
-
   Lemma order_reflecting_flip {op} `{!Commutative op}
     `{!OrderReflecting (op z) }
     : OrderReflecting (λ y, op y z).
   Proof.
   intros x y E.
   apply (order_reflecting (op z)).
-  rewrite 2!(commutativity (f:=op) z).
-  trivial.
-  Qed.
-
-  Lemma strictly_order_reflecting_flip {op} `{!Commutative op}
-    `{!StrictlyOrderReflecting (op z) }
-    : StrictlyOrderReflecting (λ y, op y z).
-  Proof.
-  intros x y E.
-  apply (strictly_order_reflecting (op z)).
   rewrite 2!(commutativity (f:=op) z).
   trivial.
   Qed.
@@ -163,19 +144,7 @@ Section order_preserving_ops.
   apply E.
   Qed.
 
-  Lemma strictly_order_preserving_pos (op : R → R → R) `{!Zero R}
-    {E:∀ z, PropHolds (0 < z) → StrictlyOrderPreserving (op z)} z
-    : 0 < z → ∀ x y, x < y → op z x < op z y.
-  Proof.
-  apply E.
-  Qed.
-
-  Lemma strictly_order_preserving_flip_pos (op : R → R → R) `{!Zero R}
-    {E:∀ z, PropHolds (0 < z) → StrictlyOrderPreserving (λ y, op y z)} z
-    : 0 < z → ∀ x y, x < y → op x z < op y z.
-  Proof.
-  apply E.
-  Qed.
+  Context `{Lt R}.
 
   Lemma order_reflecting_pos (op : R → R → R) `{!Zero R}
     {E:∀ z, PropHolds (0 < z) → OrderReflecting (op z)} z
@@ -190,7 +159,46 @@ Section order_preserving_ops.
   Proof.
   apply E.
   Qed.
+
 End order_preserving_ops.
+
+Section strict_order_preserving_ops.
+  Context `{Lt R}.
+
+  Lemma strictly_order_preserving_flip {op} `{!Commutative op}
+    `{!StrictlyOrderPreserving (op z)}
+    : StrictlyOrderPreserving (λ y, op y z).
+  Proof.
+  intros x y E.
+  rewrite 2!(commutativity _ z).
+  apply strictly_order_preserving;trivial.
+  Qed.
+
+  Lemma strictly_order_reflecting_flip {op} `{!Commutative op}
+    `{!StrictlyOrderReflecting (op z) }
+    : StrictlyOrderReflecting (λ y, op y z).
+  Proof.
+  intros x y E.
+  apply (strictly_order_reflecting (op z)).
+  rewrite 2!(commutativity (f:=op) z).
+  trivial.
+  Qed.
+
+  Lemma strictly_order_preserving_pos (op : R → R → R) `{!Zero R}
+    {E:∀ z, PropHolds (0 < z) → StrictlyOrderPreserving (op z)} z
+    : 0 < z → ∀ x y, x < y → op z x < op z y.
+  Proof.
+  apply E.
+  Qed.
+
+  Lemma strictly_order_preserving_flip_pos (op : R → R → R) `{!Zero R}
+    {E:∀ z, PropHolds (0 < z) → StrictlyOrderPreserving (λ y, op y z)} z
+    : 0 < z → ∀ x y, x < y → op x z < op y z.
+  Proof.
+  apply E.
+  Qed.
+
+End strict_order_preserving_ops.
 
 Lemma projected_partial_order `{IsHSet A} {Ale : Le A}
   `{is_mere_relation A Ale} `{Ble : Le B}
