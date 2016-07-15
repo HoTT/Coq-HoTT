@@ -318,6 +318,20 @@ Global Instance lipschitz_compose_nonexpanding_r@{}
   : Lipschitz (compose g f) L
   := lipschitz_compose_nonexpanding_r'@{Ularge Ularge} L.
 
+Lemma lipschitz_compose_nonexpanding_l'
+  `{!Associative Rmult}
+  L {Eg : NonExpanding g} {Ef : Lipschitz f L}
+  : Lipschitz (compose g f) L.
+Proof.
+rewrite <-(left_identity L). apply _.
+Qed.
+
+Global Instance lipschitz_compose_nonexpanding_l@{}
+  `{!Associative Rmult}
+  L {Eg : NonExpanding g} {Ef : Lipschitz f L}
+  : Lipschitz (compose g f) L
+  := lipschitz_compose_nonexpanding_l'@{Ularge Ularge} L.
+
 Global Instance continuous_compose@{} {Eg : Continuous g} {Ef : Continuous f}
   : Continuous (compose g f).
 Proof.
@@ -338,9 +352,11 @@ Context {A:Type@{UA} } {Ale : Le@{UA UALE} A}.
 
 Definition Interval a b := sigT (fun x : A => a <= x /\ x <= b).
 
-Definition Interval_restrict {Ameet : Meet A} {Ajoin : Join A}
-  `{!LatticeOrder@{UA UALE} Ale}
-  (a b : A) (E : a <= b) : A -> Interval a b.
+Section interval_restrict.
+Context `{IsHSet A} {Ameet : Meet A} {Ajoin : Join A}
+  `{!LatticeOrder@{UA UALE} Ale}.
+
+Definition Interval_restrict (a b : A) (E : a <= b) : A -> Interval a b.
 Proof.
 intros x.
 exists (join a (meet x b)).
@@ -350,6 +366,17 @@ split.
   + exact E.
   + apply meet_lb_r.
 Defined.
+
+Lemma Interval_restrict_pr : forall a b E x (E': a <= x /\ x <= b),
+  Interval_restrict a b E x = existT _ x E'.
+Proof.
+intros a b E x E'.
+unfold Interval_restrict.
+apply Sigma.path_sigma_hprop.
+simpl. rewrite meet_l;[apply join_r|];apply E'.
+Qed.
+
+End interval_restrict.
 
 Universe UR.
 Context {R:Type@{UR} } `{Rmult : Mult R} {Rone :  One R}
@@ -653,7 +680,7 @@ Definition real_ind0@{UA} (A : real Q -> Type@{UA}) `{forall q, IsHProp (A q)}
 Proof.
 apply real_rect0;auto.
 intros. apply path_ishprop.
-Qed.
+Defined.
 
 Instance Requiv_refl@{} : forall e, Reflexive (close (A:=real Q) e).
 Proof.
@@ -3409,7 +3436,7 @@ apply (real_ind0 _).
   eapply Rle_close_rat;[apply E|].
   apply (non_expanding abs).
   apply equiv_lim.
-Qed.
+Defined.
 
 Definition Qbounded_square (a : Q) : Interval (- a) a -> Q :=
   fun x => x.1 * x.1.
@@ -3530,11 +3557,72 @@ Lemma Rsquare_pr@{} : Rfull_square = compose Rsquare interval_back.
 Proof.
 apply jections.surjective_factor_pr.
 Qed.
-(* 
-Definition Rsquare_rat q : Rsquare (rat q) = rat (q * q).
+
+Definition pos_of_Q : Q -> Q+
+  := fun q => {| pos := abs q + 1; is_pos := abs_plus_1_pos q |}.
+
+Lemma Q_abs_plus_1_bounds' : forall q : Q,
+  - ' (pos_of_Q q) ≤ q
+  ≤ ' (pos_of_Q q).
+Proof.
+intros. change (- (abs q + 1) ≤ q ≤ (abs q + 1)). split.
+- apply flip_le_negate. rewrite involutive.
+  transitivity (abs q).
+  + apply Qabs_le_neg_raw.
+  + apply nonneg_plus_le_compat_r. solve_propholds.
+- transitivity (abs q).
+  + apply Qabs_le_raw.
+  + apply nonneg_plus_le_compat_r. solve_propholds.
+Qed.
+
+Definition Q_abs_plus_1_bounds@{} := Q_abs_plus_1_bounds'@{Set Set Set Set Set
+  Set Set}.
+
+Lemma Rsquare_rat@{} q : Rsquare (rat q) = rat (q * q).
 Proof.
 unfold Rsquare,jections.surjective_factor,jections.surjective_factor_aux.
-simpl. unfold R_Qpos_bounded,R_Qpos_bounded'.
-Defined. *)
+simpl. unfold Rfull_square,Rbounded_square. simpl.
+unfold lipschitz_extend_interval. simpl.
+unfold compose. rewrite lipschitz_extend_rat.
+rewrite (Interval_restrict_pr _ _ _ _ (Q_abs_plus_1_bounds q)). reflexivity.
+Qed.
+
+Lemma Qmult_lipschitz' : forall q : Q, Lipschitz (q *.) (pos_of_Q q).
+Proof.
+intros q e x y xi.
+apply Qclose_alt.
+rewrite negate_mult_distr_r,<-plus_mult_distr_l,Qabs_mult.
+apply pos_mult_le_lt_compat;try split.
+- apply Qabs_nonneg.
+- rewrite Qabs_is_join. apply join_le.
+  + apply flip_le_negate;rewrite involutive; apply Q_abs_plus_1_bounds.
+  + apply Q_abs_plus_1_bounds.
+- solve_propholds.
+- apply Qabs_nonneg.
+- apply Qclose_alt,xi.
+Qed.
+
+Definition Qmult_lipschitz@{} := Qmult_lipschitz'@{Set Set Set Set Set
+  Set Set}.
+Existing Instance Qmult_lipschitz.
+
+Definition QRmult@{} : Q -> real Q -> real Q
+  := fun q => lipschitz_extend (compose rat (q *.)) (pos_of_Q q).
+
+Global Instance Rmult@{} : Mult (real Q)
+  := fun u v => QRmult (/ 2) (Rsquare (u + v) - Rsquare u - Rsquare v).
+
+(* What should this statement even be? *)
+Lemma Rmult_continuous : False.
+Proof. Abort.
+
+Lemma QRmult_mult : forall q x, QRmult q x = rat q * x.
+Proof.
+Abort.
+
+Lemma Rmult_rat_rat : forall q r, rat q * rat r = rat (q * r).
+Proof.
+Abort.
+
 
 End contents.
