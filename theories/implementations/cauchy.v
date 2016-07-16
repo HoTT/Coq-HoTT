@@ -185,9 +185,44 @@ rewrite E1 in E;(eapply le_iff_not_lt_flip;[exact E|]);
 solve_propholds.
 Defined.
 
+Lemma Q_sum_eq_join_meet@{} : forall a b c d : Q, a + b = c + d ->
+  a + b = join a c + meet b d.
+Proof.
+intros ???? E.
+destruct (total le a c) as [E1|E1].
+- rewrite (join_r _ _ E1). rewrite meet_r;trivial.
+  apply (order_preserving (+ b)) in E1.
+  rewrite E in E1. apply (order_reflecting (c +)). trivial.
+- rewrite (join_l _ _ E1).
+  rewrite meet_l;trivial.
+  apply (order_reflecting (a +)). rewrite E. apply (order_preserving (+ d)).
+  trivial.
+Qed.
+
+Lemma Qpos_sum_eq_join_meet@{} : forall a b c d : Q+, a + b = c + d ->
+  a + b = join a c + meet b d.
+Proof.
+intros ???? E.
+apply pos_eq;apply Q_sum_eq_join_meet.
+change (' a + ' b) with (' (a + b)). rewrite E;reflexivity.
+Qed.
+
 Lemma Qpos_lt_min@{} : forall a b : Q+, exists c ca cb, a = c + ca /\ b = c + cb.
 Proof.
 Admitted.
+
+Definition Qpos_diff : forall q r : Q, q < r -> Q+.
+Proof.
+intros q r E;exists (r-q).
+apply (snd (flip_pos_minus _ _) E).
+Defined.
+
+Lemma Qpos_diff_pr@{} : forall q r E, r = q + ' (Qpos_diff q r E).
+Proof.
+intros q r E. change (r = q + (r - q)).
+abstract ring_tac.ring_with_integers (NatPair.Z nat).
+Qed.
+
 
 End Qpos.
 Import Qpos.
@@ -197,7 +232,6 @@ Class Closeness@{i} (A : Type@{i}) := close : Q+ -> relation@{i i} A.
 Arguments close {A _} _ _ _.
 
 Global Instance Q_close@{} : Closeness Q := fun e q r => - ' e < q - r < ' e.
-
 
 Class Separated A `{Closeness A}
   := separated : forall x y, (forall e, close e x y) -> x = y :> A.
@@ -217,6 +251,79 @@ Proof.
 intros d d' u v xi;apply rounded.
 apply tr;exists d,d';auto.
 Qed.
+
+Lemma rounded_le' `{Rounded A} : forall e u v, close e u v ->
+  forall d, ' e <= ' d -> close d u v.
+Proof.
+intros e u v xi d E.
+apply le_equiv_lt in E. destruct E as [E|E].
+- apply pos_eq in E. rewrite <-E;trivial.
+- pose proof (pos_eq _ (_ + _) (Qpos_diff_pr _ _ E)) as E'.
+  rewrite E'. apply rounded_plus. trivial.
+Qed.
+
+Definition rounded_le@{i j} := @rounded_le'@{j i Ularge j}.
+Arguments rounded_le {A _ _} e u v _ d _.
+
+Section close_prod.
+Universe UA UB i.
+Context (A:Type@{UA}) (B:Type@{UB}) `{Closeness A} `{Closeness B}
+  `{forall e, is_mere_relation A (close e)}
+  `{forall e, is_mere_relation B (close e)}.
+
+Global Instance close_prod@{} : Closeness@{i} (A /\ B)
+  := fun e x y => close e (fst x) (fst y) /\ close e (snd x) (snd y).
+
+Global Instance close_prod_refl@{}
+  `{forall e, Reflexive (close (A:=A) e)}
+  `{forall e, Reflexive (close (A:=B) e)}
+  : forall e, Reflexive (close (A:=A /\ B) e).
+Proof.
+intros e;split;reflexivity.
+Qed.
+
+Global Instance close_prod_separated@{}
+  `{!Separated A}
+  `{!Separated B}
+  : Separated (A /\ B).
+Proof.
+intros x y E.
+apply Prod.path_prod;apply separated;intros;apply E.
+Qed.
+
+Global Instance close_prod_triangular@{}
+  `{!Triangular A}
+  `{!Triangular B}
+  : Triangular (A /\ B).
+Proof.
+intros u v w e d E1 E2;split;(eapply triangular;[apply E1|apply E2]).
+Qed.
+
+Lemma close_prod_rounded'
+  `{!Rounded A} 
+  `{!Rounded B}
+  : Rounded (A /\ B).
+Proof.
+intros e u v. split.
+- intros [E0 E0'];apply rounded in E0;apply rounded in E0'.
+  revert E0;apply (Trunc_ind _);intros [d1 [d1' [E1 E2]]].
+  revert E0';apply (Trunc_ind _);intros [d2 [d2' [E3 E4]]].
+  apply tr;exists (join d1 d2), (meet d1' d2');split.
+  + rewrite E1. apply Qpos_sum_eq_join_meet. rewrite <-E1;trivial.
+  + split.
+    * apply rounded_le with d1;trivial.
+      apply join_ub_l.
+    * apply rounded_le with d2;trivial.
+      apply join_ub_r.
+- apply (Trunc_ind _);intros [d [d' [E1 E2]]].
+  rewrite E1;split;apply rounded_plus,E2.
+Qed.
+
+Definition close_prod_rounded@{j} := @close_prod_rounded'@{j j j j j j}.
+Arguments close_prod_rounded {_ _} _ _ _.
+Global Existing Instance close_prod_rounded.
+
+End close_prod.
 
 Class NonExpanding `{Closeness A} `{Closeness B} (f : A -> B)
   := non_expanding : forall e x y, close e x y -> close e (f x) (f y).
@@ -3044,18 +3151,6 @@ intros x y;split;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
   + change (- y <= - (rat r)). apply (snd (Rneg_le_flip_equiv _ _)),E3.
   + apply (snd (flip_lt_negate _ _)),E2.
   + change (- rat q <= - x). apply (snd (Rneg_le_flip_equiv _ _)),E1.
-Qed.
-
-Definition Qpos_diff : forall q r : Q, q < r -> Q+.
-Proof.
-intros q r E;exists (r-q).
-apply (snd (flip_pos_minus _ _) E).
-Defined.
-
-Lemma Qpos_diff_pr@{} : forall q r E, r = q + ' (Qpos_diff q r E).
-Proof.
-intros q r E. change (r = q + (r - q)).
-abstract ring_tac.ring_with_integers (NatPair.Z nat).
 Qed.
 
 Lemma Rlt_cotrans_rat@{} : forall x q r, q < r -> hor (rat q < x) (x < rat r).
