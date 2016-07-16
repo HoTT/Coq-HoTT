@@ -167,6 +167,28 @@ intros. path_via (a / a * b).
 - rewrite pos_recip_r;apply Qpos_mult_1_l.
 Qed.
 
+Global Instance Qpos_meet@{} : Meet Q+.
+Proof.
+intros a b. exists (meet (' a) (' b)).
+apply not_le_lt_flip. intros E.
+destruct (total_meet_either (' a) (' b)) as [E1|E1];
+rewrite E1 in E;(eapply le_iff_not_lt_flip;[exact E|]);
+solve_propholds.
+Defined.
+
+Global Instance Qpos_join@{} : Join Q+.
+Proof.
+intros a b. exists (join (' a) (' b)).
+apply not_le_lt_flip. intros E.
+destruct (total_join_either (' a) (' b)) as [E1|E1];
+rewrite E1 in E;(eapply le_iff_not_lt_flip;[exact E|]);
+solve_propholds.
+Defined.
+
+Lemma Qpos_lt_min@{} : forall a b : Q+, exists c ca cb, a = c + ca /\ b = c + cb.
+Proof.
+Admitted.
+
 End Qpos.
 Import Qpos.
 
@@ -184,6 +206,18 @@ Class Triangular A `{Closeness A}
   := triangular : forall {u v w e d}, close e u v -> close d v w ->
   close (e+d) u w.
 
+Class Rounded@{i j} (A:Type@{i}) `{Closeness A}
+  := rounded : forall e u v, iff@{i j j} (close e u v)
+    (merely@{j} (sigT@{UQ j} (fun d => sigT@{UQ j} (fun d' =>
+      e = d + d' /\ close d u v)))).
+
+Lemma rounded_plus `{Rounded A} : forall d d' u v, close d u v ->
+  close (d+d') u v.
+Proof.
+intros d d' u v xi;apply rounded.
+apply tr;exists d,d';auto.
+Qed.
+
 Class NonExpanding `{Closeness A} `{Closeness B} (f : A -> B)
   := non_expanding : forall e x y, close e x y -> close e (f x) (f y).
 Arguments non_expanding {A _ B _} f {_ e x y} _.
@@ -199,14 +233,6 @@ Class Continuous@{UA UB}
     (fun d => forall v, close d u v ->
     close e (f u) (f v))).
 Arguments continuous {A _ B _} f {_} _ _.
-
-Class LocallyLipschitz@{UA UB}
-  {A:Type@{UA} } `{Closeness A}
-  {B:Type@{UB} } `{Closeness B} (f : A -> B)
-  := locally_lipschitz : forall c l, merely@{Ularge} (sigT@{UQ Ularge}
-    (fun L => forall e u v, close l c u -> close l c v -> close (L * e) u v ->
-      close e (f u) (f v))).
-Arguments locally_lipschitz {A _ B _} f {_} _ _.
 
 Class UniformlyContinuous@{UA UB}
   {A:Type@{UA} } `{Closeness A}
@@ -258,13 +284,6 @@ intros u e. generalize (uniformly_continuous f e). apply (Trunc_ind _).
 intros d;apply tr;exists d.1;apply d.2.
 Qed.
 Global Existing Instance uniformly_continuous_continuous.
-
-(* 
-Lemma locally_lipschitz_continuous@{}
-  `{!LocallyLipschitz@{UQ UA UB} (R:=Q+) f} : Continuous f.
-Proof.
-intros u e. generalize (locally_lipschitz f e u).
-Qed. *)
 
 Lemma lipschitz_uniformly_continuous@{} (L:Q+) `{!Lipschitz f L}
   : UniformlyContinuous@{UA UB} f.
@@ -1535,10 +1554,9 @@ Proof.
 intros;exact idpath.
 Defined.
 
-Lemma Requiv_alt_round@{} : forall e u v, Requiv_alt e u v <->
-  merely (exists d d', e = d + d' /\ Requiv_alt d u v).
+Lemma Requiv_alt_round@{} : @Rounded real Requiv_alt.
 Proof.
-intros. apply ((Requiv_alt_rounded_halfrel u).2).
+hnf. intros. apply ((Requiv_alt_rounded_halfrel u).2).
 Qed.
 
 Lemma Requiv_alt_Requiv@{} : forall u v w n e, Requiv_alt n u v -> close e v w ->
@@ -1645,14 +1663,14 @@ Qed.
 Definition Requiv_lim_lim_def@{}
   := Requiv_lim_lim_def'@{Ularge Ularge UQ UQ}.
 
-Lemma Requiv_rounded' : forall {e u v}, close e u v <->
-  merely (exists d d', e = d + d' /\ close d u v).
+Lemma Requiv_rounded' : Rounded real.
 Proof.
-rewrite <-Requiv_alt_rw;exact Requiv_alt_round.
+hnf. rewrite <-Requiv_alt_rw;exact Requiv_alt_round.
 Qed.
 
-Definition Requiv_rounded@{} {e u v}
-  := @Requiv_rounded'@{UQ} e u v.
+Definition Requiv_rounded@{}
+  := @Requiv_rounded'@{UQ}.
+Global Existing Instance Requiv_rounded.
 
 Lemma Requiv_triangle' : Triangular real.
 Proof.
@@ -1681,7 +1699,7 @@ apply (real_ind0 (fun u => forall y e d, _ -> _)).
   apply qpos_plus_comm.
 - intros x Ex y e d xi.
   pose proof (fun e n => Ex n x e n (Requiv_refl _ _)) as E1.
-  apply (merely_destruct (fst Requiv_rounded xi)).
+  apply (merely_destruct (fst (Requiv_rounded _ _ _) xi)).
   intros [d0 [d' [He E2]]].
   pose proof (Requiv_triangle _ _ _ _ _ (E1 (d' / 2) (d' / 4)) E2) as E3.
   eapply equiv_lim_lim;[|exact E3].
@@ -1706,10 +1724,6 @@ Proof.
 intros. apply equiv_through_approx.
 apply Requiv_refl.
 Qed.
-
-Lemma Qpos_lt_min@{} : forall a b : Q+, exists c ca cb, a = c + ca /\ b = c + cb.
-Proof.
-Admitted.
 
 Lemma unique_continuous_extension@{i} {A:Type@{i} } `{IsHSet A} `{Closeness A}
   `{forall e, is_mere_relation A (close e)}
@@ -1973,7 +1987,7 @@ close e u v
        approx_equiv := non_expanding_approx_pr a Ea v |}).
 Proof.
 intros a Ea e u v E1.
-generalize (fst Requiv_rounded E1).
+generalize (fst (Requiv_rounded _ _ _) E1).
 apply (Trunc_ind _);intros [d [d' [He E2]]].
 apply equiv_lim_lim with (d'/2) (d'/2) d.
 - rewrite He.
@@ -2715,7 +2729,8 @@ intros e u;revert u e;apply (real_ind0 (fun u => forall e, _ -> _)).
   + apply E.
   + apply flip_lt_negate. rewrite involutive. apply E.
 - intros x IH e xi.
-  generalize (fst Requiv_rounded xi). apply (Trunc_ind _);intros [d [d' [He xi']]].
+  generalize (fst (Requiv_rounded _ _ _) xi).
+  apply (Trunc_ind _);intros [d [d' [He xi']]].
   rewrite Requiv_lim_rat_def in xi'.
   revert xi';apply (Trunc_ind _);intros [n [n' [Hd E1]]].
   apply IH in E1.
@@ -3372,4 +3387,4 @@ rewrite dec_recip_inverse;[|solve_propholds].
 rewrite mult_1_l;trivial.
 Qed.
 
-End contents.
+
