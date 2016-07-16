@@ -34,6 +34,12 @@ Parameters (Q : Type@{UQ}) (Qap : Apart@{UQ UQ} Q)
   (Qle_total : TotalRelation (@le Q _))
   (Qabs : Abs Q).
 
+Definition BinaryDup@{i} {A : Type@{i} } : A -> A /\ A := fun x => (x, x).
+Definition uncurry {A B C} (f : A -> B -> C) : A /\ B -> C
+  := fun x => f (fst x) (snd x).
+Definition map2 {A B C D} (f : A -> C) (g : B -> D) : A /\ B -> C /\ D
+  := fun x => (f (fst x), g (snd x)).
+
 Module Qpos.
 
 Record Qpos@{} : Type@{UQ} := mkQpos { pos : Q; is_pos : 0 < pos }.
@@ -239,6 +245,7 @@ Class Separated A `{Closeness A}
 Class Triangular A `{Closeness A}
   := triangular : forall {u v w e d}, close e u v -> close d v w ->
   close (e+d) u w.
+Arguments triangular {A _ _} u v w e d _ _.
 
 Class Rounded@{i j} (A:Type@{i}) `{Closeness A}
   := rounded : forall e u v, iff@{i j j} (close e u v)
@@ -341,14 +348,6 @@ Class Continuous@{UA UB}
     close e (f u) (f v))).
 Arguments continuous {A _ B _} f {_} _ _.
 
-Class UniformlyContinuous@{UA UB}
-  {A:Type@{UA} } `{Closeness A}
-  {B:Type@{UB} } `{Closeness B} (f : A -> B)
-  := uniformly_continuous
-    : forall e, merely@{Ularge} (sigT@{UQ Ularge}
-    (fun d => forall u v, close d u v -> close e (f u) (f v))).
-Arguments uniformly_continuous {A _ B _} f {_} _.
-
 Section closeness.
 Universe UA.
 Context {A:Type@{UA} } `{Closeness A}.
@@ -356,6 +355,11 @@ Context {A:Type@{UA} } `{Closeness A}.
 Global Instance id_nonexpanding : NonExpanding (@id A).
 Proof.
 hnf;trivial.
+Qed.
+
+Global Instance BinaryDup_nonexpanding@{} : NonExpanding (@BinaryDup A).
+Proof.
+intros e x y E;split;exact E.
 Qed.
 
 Universe UB.
@@ -384,28 +388,16 @@ Proof.
 hnf. intros;reflexivity.
 Qed.
 
-Lemma uniformly_continuous_continuous@{}
-  `{!UniformlyContinuous@{UA UB} f} : Continuous f.
-Proof.
-intros u e. generalize (uniformly_continuous f e). apply (Trunc_ind _).
-intros d;apply tr;exists d.1;apply d.2.
-Qed.
-Global Existing Instance uniformly_continuous_continuous.
-
-Lemma lipschitz_uniformly_continuous@{} (L:Q+) `{!Lipschitz f L}
-  : UniformlyContinuous@{UA UB} f.
+Lemma lipschitz_continuous@{} (L:Q+) `{!Lipschitz f L}
+  : Continuous@{UA UB} f.
 Proof.
 red.
-intros e;apply tr;exists (e / L).
-intros u v E.
+intros u e;apply tr;exists (e / L).
+intros v E.
 apply(lipschitz f L) in E.
 rewrite Qpos_mult_assoc,pos_unconjugate in E. trivial.
 Qed.
-Global Existing Instance lipschitz_uniformly_continuous.
-
-Definition lipschitz_continuous@{} (L:Q+) `{!Lipschitz f L}
-  : Continuous@{UA UB} f
-  := _.
+Global Existing Instance lipschitz_continuous.
 
 Definition nonexpanding_continuous@{} `{!NonExpanding f}
   : Continuous@{UA UB} f
@@ -476,6 +468,94 @@ apply E,E',xi.
 Qed.
 
 End compositions.
+
+Section currying.
+Universe UA.
+Context {A:Type@{UA} } `{Closeness A}.
+Universe UB.
+Context {B:Type@{UB} } `{Closeness B}.
+Universe UC.
+Context {C:Type@{UC} } `{Closeness C} `{!Triangular C}.
+
+Global Instance uncurry_lipschitz (f : A -> B -> C) L1 L2
+  `{!forall x, Lipschitz (f x) L1}
+  `{!forall y, Lipschitz (fun x => f x y) L2}
+  : Lipschitz (uncurry f) (L1 + L2).
+Proof.
+intros e [u1 u2] [v1 v2] [xi1 xi2]. simpl in xi1,xi2.
+unfold uncurry;simpl.
+assert (Hrw : (L1 + L2) * e = L1 * e + L2 * e)
+by abstract (apply pos_eq;ring_tac.ring_with_nat);
+rewrite Hrw;clear Hrw.
+apply (triangular _ (f u1 v2)).
+- apply (lipschitz _ L1). trivial.
+- apply (lipschitz (fun u => f u v2) L2). trivial.
+Qed.
+End currying.
+
+Section map2.
+Universe UA.
+Context {A:Type@{UA} } `{Closeness A}.
+Universe UB.
+Context {B:Type@{UB} } `{Closeness B}.
+Universe UC.
+Context {C:Type@{UC} } `{Closeness C}.
+Universe UD.
+Context {D:Type@{UD} } `{Closeness D}.
+Variables (f : A -> C) (g : B -> D).
+
+Lemma map2_nonexpanding'
+  `{!NonExpanding f} `{!NonExpanding g}
+  : NonExpanding (map2 f g).
+Proof.
+intros e u v xi;split;simpl; apply (non_expanding _),xi.
+Qed.
+
+Definition map2_nonexpanding@{i} := @map2_nonexpanding'@{i i}.
+Arguments map2_nonexpanding {_ _} e x y xi.
+Global Existing Instance map2_nonexpanding.
+
+Lemma map2_lipschitz' `{!Rounded C} `{!Rounded D} Lf Lg
+  `{!Lipschitz f Lf} `{!Lipschitz g Lg}
+  : Lipschitz (map2 f g) (join Lf Lg).
+Proof.
+intros e u v xi. split;simpl.
+- apply rounded_le with (Lf * e).
+  + apply (lipschitz _ _),xi.
+  + apply (order_preserving (.* ' e)).
+    apply join_ub_l.
+- apply rounded_le with (Lg * e).
+  + apply (lipschitz _ _),xi.
+  + apply (order_preserving (.* ' e)).
+    apply join_ub_r.
+Qed.
+
+Definition map2_lipschitz@{i} := @map2_lipschitz'@{i i i i}.
+Arguments map2_lipschitz {_ _} Lf Lg {_ _} e x y xi.
+Global Existing Instance map2_lipschitz.
+
+Lemma map2_continuous' `{!Rounded A} `{!Rounded B}
+  `{!Continuous f} `{!Continuous g}
+  : Continuous (map2 f g).
+Proof.
+intros u e.
+apply (merely_destruct (continuous f (fst u) e));intros [d1 E1].
+apply (merely_destruct (continuous g (snd u) e));intros [d2 E2].
+apply tr;exists (meet d1 d2). intros v xi.
+split;simpl.
+- apply E1. apply rounded_le with (meet d1 d2).
+  + apply xi.
+  + apply meet_lb_l.
+- apply E2. apply rounded_le with (meet d1 d2).
+  + apply xi.
+  + apply meet_lb_r.
+Qed.
+
+Definition map2_continuous@{i} := @map2_continuous'@{i i i i}.
+Arguments map2_continuous {_ _ _ _} u e.
+Global Existing Instance map2_continuous.
+
+End map2.
 
 Section interval.
 Universe UA UALE.
@@ -1867,7 +1947,7 @@ apply (real_ind0 _).
   }
   apply Ed in Hx. apply Ed' in Hx'.
   rewrite IHx in Hx.
-  pose proof (triangular Hx (symmetry _ _ Hx')) as E1.
+  pose proof (triangular _ _ _ _ _ Hx (symmetry _ _ Hx')) as E1.
   rewrite (pos_split2 e). trivial.
 Qed.
 
@@ -2343,19 +2423,6 @@ intros;hnf.
 intros e _ _ _. apply Requiv_refl.
 Qed.
 
-Lemma lipschitz_dup@{} (f : real -> real -> real) (L1 L2 : Q+)
-  `{!forall x, Lipschitz (f x) L1} `{!forall y, Lipschitz (fun x => f x y) L2}
-  : Lipschitz (fun x => f x x) (L1 + L2).
-Proof.
-hnf. intros e x y xi.
-assert (Hrw : (L1 + L2) * e = L1 * e + L2 * e)
-by (apply pos_eq;ring_tac.ring_with_nat);
-rewrite Hrw;clear Hrw.
-apply (Requiv_triangle _ (f x y)).
-- apply (lipschitz _ _ xi).
-- apply (lipschitz (fun x => f x y) _ xi).
-Qed.
-
 Instance Rplus_group@{} : Group real.
 Proof.
 repeat split.
@@ -2372,20 +2439,15 @@ repeat split.
 - hnf; change mon_unit with 0.
   change sg_op with plus.
   eapply @unique_continuous_extension;try apply _.
-  { eapply lipschitz_continuous;try apply _.
-    apply (@lipschitz_dup (fun a b => - a + b) 1 1).
-    { apply _. }
-    { change (forall y, Lipschitz (compose (+ y) (-)) (1:Q+)). apply _. } 
+  { change (Continuous (compose (uncurry plus)
+     (compose (map2 negate id) BinaryDup))). apply _.
   }
   intros;apply (ap rat),plus_negate_l.
 - hnf; change mon_unit with 0.
   change sg_op with plus.
   eapply @unique_continuous_extension;try apply _.
-  { eapply lipschitz_continuous;try apply _.
-    apply (@lipschitz_dup (fun a b => a - b) 1 1).
-    { change (forall x, Lipschitz (compose (x +) (-)) (1:Q+)). apply _. }
-    { apply _. } 
-  }
+  { change (Continuous (compose (uncurry plus)
+     (compose (map2 id negate) BinaryDup)));apply _. }
   intros;apply (ap rat),plus_negate_r.
 Unshelve. all:exact 1.
 Qed.
@@ -2436,29 +2498,14 @@ Arguments Rap _ _ /.
 Instance Rle_trans@{} : Transitive Rle.
 Proof.
 hnf. unfold le,Rle.
-intros x y z E1 E2. rewrite <-E2,<-E1. clear E1 E2;revert x.
-eapply @unique_continuous_extension;try apply _.
-{ eapply @lipschitz_continuous;try apply _.
-  eapply (@lipschitz_dup (fun u v => u ⊔ ((v ⊔ y) ⊔ z))).
-  { intros u. apply nonexpanding_lipschitz.
-    change (NonExpanding (compose (u ⊔) (compose (⊔ z) (⊔ y)))).
-    apply _. }
-  { intros u. apply nonexpanding_lipschitz.
-    apply _. }
-}
-{ eapply @nonexpanding_continuous;try apply _.
-  change (NonExpanding (compose (⊔ z) (⊔ y)));apply _. }
-intros q;revert y z.
-apply @unique_continuous_binary_extension.
-{ intros x;eapply nonexpanding_continuous;try apply _. }
-{ intros y;eapply nonexpanding_continuous;try apply _.
-  change (NonExpanding (compose (rat q ⊔) (compose (⊔ y) (rat q ⊔))));apply _.
-}
-{ intros x;eapply nonexpanding_continuous;apply _. }
-{ intros y;eapply nonexpanding_continuous;try apply _.
-  change (NonExpanding (compose (⊔ y) (rat q ⊔)));apply _.
-}
-intros r s.
+intros x y z E1 E2. rewrite <-E2,<-E1. clear E1 E2;revert x y z.
+eapply @unique_continuous_ternary_extension;try apply _.
+{ change (forall x z, Continuous (compose (x ⊔) (compose (⊔ z) (x ⊔))));apply _. }
+{ change (forall y z, Continuous (compose (uncurry join)
+   (compose (map2 id (compose (⊔ z) (⊔ y))) BinaryDup)));apply _. }
+{ change (forall x z, Continuous (compose (⊔ z) (x ⊔)));apply _. }
+{ change (forall y z, Continuous (compose (⊔ z) (⊔ y)));apply _. }
+intros q r s.
 apply (ap rat).
 apply join_r. apply join_le_compat_r,join_ub_l.
 Qed.
@@ -2467,7 +2514,7 @@ Instance Rle_refl@{} : Reflexive Rle.
 Proof.
 change (forall x, join x x = x).
 eapply @unique_continuous_extension;try apply _.
-+ eapply lipschitz_continuous;try apply _. apply lipschitz_dup;apply _.
++ change (Continuous (compose (uncurry join) BinaryDup));apply _.
 + intros;apply (ap rat),semilattice_idempotent,join_sl_order_join_sl.
 Qed.
 
@@ -2641,21 +2688,18 @@ split.
     intros;apply (ap rat). apply commutativity.
   + hnf. red.
     eapply @unique_continuous_extension;try apply _.
-    { eapply @lipschitz_continuous;try apply _. apply lipschitz_dup;apply _. }
+    { change (Continuous (compose (uncurry meet) BinaryDup));apply _. }
     intros;apply (ap rat),idempotency,_.
   + unfold le,Rle. intros x y;split;intros E.
     * rewrite <-E.
       clear E;revert x y;apply @unique_continuous_binary_extension;try apply _.
-      { intros;eapply @lipschitz_continuous;try apply _.
-        apply (lipschitz_dup (fun x1 x2 => x1 ⊓ (x2 ⊔ y)));apply _. }
+      { change (forall y, Continuous (compose (uncurry meet)
+          (compose (map2 id (⊔ y)) BinaryDup)));apply _. }
       intros;apply (ap rat). apply (meet_join_absorption _).
     * rewrite <-E.
       clear E;revert x y;apply @unique_continuous_binary_extension;try apply _.
-      { intros;eapply @lipschitz_continuous;try apply _.
-        apply (lipschitz_dup (fun v1 v2 => (x ⊓ v1) ⊔ v2));try apply _.
-        intro;apply nonexpanding_lipschitz.
-        change (NonExpanding (compose (⊔ y) (x ⊓)));apply _.
-      }
+      { change (forall x, Continuous
+          (uncurry join ∘ (map2 (meet x) id) ∘ BinaryDup));apply _. }
       { change (forall y, Continuous (compose (⊔ y) (⊓ y)));apply _. }
       intros;apply (ap rat).
       rewrite (commutativity (f:=join)),(commutativity (f:=meet)).
@@ -2673,7 +2717,7 @@ split.
     intros;apply (ap rat). apply commutativity.
   + hnf. red.
     eapply @unique_continuous_extension;try apply _.
-    { eapply @lipschitz_continuous;try apply _. apply lipschitz_dup;apply _. }
+    { change (Continuous (uncurry join ∘ BinaryDup));apply _. }
     intros;apply (ap rat),idempotency,_.
 Unshelve. all:exact 1.
 Qed.
@@ -3034,21 +3078,10 @@ Proof.
 intros z. hnf. unfold le;simpl. intros x y E.
 rewrite <-E;clear E.
 revert z x y;apply @unique_continuous_ternary_extension;try apply _.
-{ intros x z;eapply @lipschitz_continuous;try apply _.
-  apply (lipschitz_dup (fun y1 y2 => (x + y1) ⊔ (x + (y2 ⊔ z))));intros y;
-  apply nonexpanding_lipschitz.
-  { change (NonExpanding (compose ((x + y) ⊔) (compose (x +) (⊔ z)))).
-    apply _. }
-  { change (NonExpanding (compose (⊔ (x + (y ⊔ z))) (x +))).
-    apply _. }
-}
-{ intros;eapply @lipschitz_continuous;try apply _.
-  apply (lipschitz_dup (fun x1 x2 => (x1 + y) ⊔ (x2 + (y ⊔ z))));intros x;
-  apply nonexpanding_lipschitz.
-  { apply _. }
-  { change (NonExpanding (compose (⊔ (x + (y ⊔ z))) (+ y))).
-    apply _. }
-}
+{ change (forall x z, Continuous
+    (uncurry join ∘ (map2 (x +) (compose (x +) (⊔ z))) ∘ BinaryDup));apply _. }
+{ change (forall y z, Continuous
+    (uncurry join ∘ (map2 (+ y) (+ (join y z))) ∘ BinaryDup));apply _. }
 intros;apply (ap rat).
 apply join_r. apply (order_preserving (q +)).
 apply join_ub_l.
@@ -3083,18 +3116,9 @@ revert z x y;apply @unique_continuous_ternary_extension;try apply _.
   apply _. }
 { change (forall x z, Continuous (compose (+ (- x)) (compose (⊔ (x + z)) (x +)))).
   apply _. }
-{ intros y z;eapply @lipschitz_continuous;try apply _.
-  apply (lipschitz_dup (fun x1 x2 => (x1 + y) ⊔ (x1 + z) - x2)).
-  { apply _. }
-  { intros x0;apply (@lipschitz_dup (fun x1 x2 => (x1 + y) ⊔ (x2 + z) - x0) 1 1).
-    { change (forall x,
-      Lipschitz (compose (+ (- x0)) (compose ((x + y) ⊔) (+ z))) (1:Q+)).
-      apply _. }
-    { change (forall y0,
-      Lipschitz (compose (+ (- x0)) (compose (⊔ (y0 + z)) (+ y))) (1:Q+)).
-      apply _. }
-  }
-}
+{ change (forall y z, Continuous (uncurry (+) ∘
+    (map2 (uncurry join ∘ (map2 (+ y) (+ z)) ∘ BinaryDup) negate) ∘ BinaryDup));
+  apply _. }
 intros;apply (ap rat).
 destruct (total le r s) as [E|E].
 - rewrite (join_r _ _ E).
@@ -3119,12 +3143,9 @@ intros x y E.
 rewrite <-E.
 clear E;revert x y;apply @unique_continuous_binary_extension.
 { change (forall x, Continuous (compose (⊔ - x) (compose (-) (x ⊔))));apply _. }
-{ intros;eapply @lipschitz_continuous;try apply _.
-  apply (lipschitz_dup (fun x1 x2 => - (x1 ⊔ y) ⊔ - x2));intros x;
-  apply nonexpanding_lipschitz.
-  { change (NonExpanding (compose (- (x ⊔ y) ⊔) (-)));apply _. }
-  { change (NonExpanding (compose (⊔ - x) (compose (-) (⊔ y))));apply _. }
-}
+{ change (forall y, Continuous (uncurry join ∘
+    (map2 ((-) ∘ (⊔ y)) negate) ∘ BinaryDup));
+  apply _. }
 { apply _. }
 { apply _. }
 intros q r;apply (ap rat).
@@ -3250,12 +3271,7 @@ Qed.
 Lemma Rabs_is_join@{} : forall x : real, abs x = join (- x) x.
 Proof.
 eapply @unique_continuous_extension;try apply _.
-{ eapply @lipschitz_continuous;try apply _.
-  apply (lipschitz_dup (fun u1 u2 => join (- u1) u2));
-  intros;apply nonexpanding_lipschitz.
-  { apply _. }
-  { change (NonExpanding (compose (⊔ y) (-)));apply _. }
-}
+{ change (Continuous (uncurry join ∘ (map2 (-) id) ∘ BinaryDup));apply _. }
 intros;apply (ap rat),Qabs_is_join.
 Qed.
 
