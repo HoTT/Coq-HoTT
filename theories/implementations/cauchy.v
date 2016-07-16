@@ -3481,12 +3481,16 @@ Qed.
 Definition QRmult@{} : Q -> real -> real
   := fun q => lipschitz_extend (compose rat (q *.)) (pos_of_Q q).
 
-Global Instance Rmult@{} : Mult real
+(* We want rat q * rat r to be convertible to rat (q * r)
+   so we do this tricky section. *)
+Section Rmult_def.
+
+Instance Rmult_pre@{} : Mult real
   := fun u v => QRmult (/ 2) (Rsquare (u + v) - Rsquare u - Rsquare v).
 
-Lemma Rmult_rat_rat@{} : forall q r, rat q * rat r = rat (q * r).
+Lemma Rmult_pre_rat_rat@{} : forall q r, rat q * rat r = rat (q * r).
 Proof.
-intros. unfold mult at 1. unfold Rmult,QRmult.
+intros. unfold mult at 1. unfold Rmult_pre,QRmult.
 change (rat q + rat r) with (rat (q + r)).
 rewrite !Rsquare_rat.
 change (rat ((q + r) * (q + r)) - rat (q * q) - rat (r * r)) with
@@ -3498,4 +3502,33 @@ rewrite dec_recip_inverse;[|solve_propholds].
 rewrite mult_1_l;trivial.
 Qed.
 
+Definition Rmult_valT@{} x y := sigT (fun z => z = x * y).
+
+Instance Rmult_valT_ishprop@{} : forall x y, IsHProp (Rmult_valT x y).
+Proof.
+intros;apply Sigma.ishprop_sigma_disjoint.
+intros. path_via (x*y).
+Qed.
+
+Definition Rmult_aux@{} : forall x y, Rmult_valT x y.
+Proof.
+apply (real_ind0 (fun x => forall y, _)).
+- intros q;apply (real_ind0 _).
+  + intros r. exists (rat (q * r)).
+    Symmetry;apply Rmult_pre_rat_rat.
+  + intros y _;exists (rat q * lim y). reflexivity.
+- intros x _ y;exists (lim x * y);reflexivity.
+Defined.
+
+Global Instance Rmult@{} : Mult real := fun x y => (Rmult_aux x y).1.
+End Rmult_def.
+
+Definition Rmult_rat_rat@{} q r : rat q * rat r = rat (q * r)
+  := idpath.
+
+Definition Rmult_def_pr@{} : mult = Rmult_pre.
+Proof.
+repeat (apply path_forall;intro).
+apply ((Rmult_aux _ _).2).
+Qed.
 
