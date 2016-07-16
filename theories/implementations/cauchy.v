@@ -3628,3 +3628,49 @@ intros. rewrite Rsquare_interval_proj. apply _.
 Qed.
 Local Existing Instance Rsquare_lipschitz.
 
+(* TODO *)
+Instance Rmult_continuous : Continuous (uncurry (@mult real _)).
+Proof.
+Admitted.
+
+Instance Rmult_continuous_l : forall x, Continuous (x *.).
+Proof.
+change (forall x, Continuous (uncurry mult ∘ (map2 (const x) id) ∘ BinaryDup)).
+apply _.
+Qed.
+
+Instance Rmult_continuous_r : forall y, Continuous (.* y).
+Proof.
+change (forall y, Continuous (uncurry mult ∘ (map2 id (const y)) ∘ BinaryDup)).
+apply _.
+Qed.
+
+Instance real_ring : Ring real.
+Proof.
+repeat (split;try apply _);
+unfold sg_op,mon_unit,mult_is_sg_op,one_is_mon_unit;
+change Rmult with mult;change R1 with one.
+- hnf. apply @unique_continuous_ternary_extension;try apply _.
+  + change (forall x z, Continuous ((.* z) ∘ (x *.))). apply _.
+  + change (forall y z, Continuous ((.* z) ∘ (.* y))). apply _.
+  + intros;apply (ap rat),associativity.
+- hnf. apply unique_continuous_extension.
+  intros;apply (ap rat),left_identity.
+- hnf. apply unique_continuous_extension.
+  intros;apply (ap rat),right_identity.
+- hnf. apply unique_continuous_binary_extension.
+  intros;apply (ap rat),commutativity.
+- hnf. apply @unique_continuous_ternary_extension;try apply _.
+  + change (forall x z, Continuous ((+ (x * z)) ∘ (x *.))). apply _.
+  + change (forall y z,
+      Continuous (uncurry plus ∘ (map2 (.* y) (.* z)) ∘ BinaryDup)). apply _.
+  + intros;apply (ap rat),distribute_l.
+Qed.
+
+
+
+
+
+
+
+
