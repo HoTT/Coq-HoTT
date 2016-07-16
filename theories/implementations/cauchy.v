@@ -343,6 +343,10 @@ Class Lipschitz `{Closeness A} `{Closeness B} (f : A -> B) (L : Q+)
   := lipschitz : forall e x y, close e x y -> close (L * e) (f x) (f y).
 Arguments lipschitz {A _ B _} f L {_ e x y} _.
 
+Class Uniform `{Closeness A} `{Closeness B} (f : A -> B) (mu : Q+ -> Q+)
+  := uniform : forall e x y, close (mu e) x y -> close e (f x) (f y).
+Arguments uniform {A _ B _} f mu {_} _ _ _ _.
+
 Class Continuous@{UA UB}
   {A:Type@{UA} } `{Closeness A}
   {B:Type@{UB} } `{Closeness B} (f : A -> B)
@@ -391,19 +395,26 @@ Proof.
 hnf. intros;reflexivity.
 Qed.
 
-Lemma lipschitz_continuous@{} (L:Q+) `{!Lipschitz f L}
-  : Continuous@{UA UB} f.
+Global Instance lipschitz_uniform@{} (L:Q+) `{!Lipschitz f L}
+  : Uniform f (fun e => e / L).
 Proof.
-red.
-intros u e;apply tr;exists (e / L).
-intros v E.
-apply(lipschitz f L) in E.
-rewrite Qpos_mult_assoc,pos_unconjugate in E. trivial.
+intros e u v xi.
+rewrite <-(pos_unconjugate L e),<-Qpos_mult_assoc.
+apply (lipschitz f L),xi.
 Qed.
-Global Existing Instance lipschitz_continuous.
 
-Definition nonexpanding_continuous@{} `{!NonExpanding f}
-  : Continuous@{UA UB} f
+Lemma uniform_continuous@{} mu `{!Uniform@{UA UB} f mu} : Continuous f.
+Proof.
+hnf.
+intros u e;apply tr;exists (mu e).
+apply (uniform f mu).
+Qed.
+Global Existing Instance uniform_continuous.
+
+Definition lipschitz_continuous@{} (L:Q+) `{!Lipschitz f L} : Continuous f
+  := _.
+
+Definition nonexpanding_continuous@{} `{!NonExpanding f} : Continuous f
   := _.
 
 End closeness.
@@ -458,6 +469,14 @@ Global Instance lipschitz_compose_nonexpanding_l@{}
   : Lipschitz (compose g f) L
   := lipschitz_compose_nonexpanding_l'@{Ularge} L.
 
+Lemma uniform_compose@{} mu {Eg : Uniform g mu} mu' {Ef : Uniform f mu'}
+  : Uniform (compose g f) (compose mu' mu).
+Proof.
+intros e u v xi. unfold compose.
+apply (uniform g _),(uniform f _),xi.
+Qed.
+Global Existing Instance uniform_compose.
+
 Global Instance continuous_compose@{} {Eg : Continuous g} {Ef : Continuous f}
   : Continuous (compose g f).
 Proof.
@@ -494,6 +513,27 @@ apply (triangular _ (f u1 v2)).
 - apply (lipschitz _ L1). trivial.
 - apply (lipschitz (fun u => f u v2) L2). trivial.
 Qed.
+
+Global Instance uncurry_uniform
+  `{!Rounded A} `{!Rounded B} (f : A -> B -> C) mu mu'
+  `{!forall x, Uniform (f x) mu}
+  `{!forall y, Uniform (fun x => f x y) mu'}
+  : Uniform (uncurry f) (fun e => meet (mu (e/2)) (mu' (e/2))).
+Proof.
+intros e [u1 u2] [v1 v2] [xi1 xi2].
+simpl in *.
+rewrite (pos_split2 e).
+apply (triangular _ (f u1 v2)).
+- apply (uniform (f u1) _).
+  eapply rounded_le.
+  + exact xi2.
+  + apply meet_lb_l.
+- apply (uniform (fun v => f v v2) _).
+  eapply rounded_le.
+  + exact xi1.
+  + apply meet_lb_r.
+Qed.
+
 End currying.
 
 Section map2.
@@ -566,6 +606,8 @@ Context {A:Type@{UA} } {Ale : Le@{UA UALE} A}.
 
 Definition Interval a b := sigT (fun x : A => a <= x /\ x <= b).
 
+Definition interval_proj a b : Interval a b -> A := pr1.
+
 Section interval_restrict.
 Context `{IsHSet A} {Ameet : Meet A} {Ajoin : Join A}
   `{!LatticeOrder@{UA UALE} Ale}.
@@ -595,14 +637,12 @@ End interval_restrict.
 Context `{Closeness A}.
 
 Global Instance Interval_close (a b : A) : Closeness (Interval a b)
-  := fun e x y => close e x.1 y.1.
+  := fun e x y => close e (interval_proj a b x) (interval_proj a b y).
 Arguments Interval_close _ _ _ _ _ /.
 
-Global Instance interval_project_nonexpanding (a b : A)
-  : NonExpanding (fun x : Interval a b => x.1).
-Proof.
-intros e x y xi;exact xi.
-Qed.
+Global Instance interval_proj_nonexpanding (a b : A)
+  : NonExpanding (interval_proj a b)
+  := fun _ _ _ xi => xi.
 
 End interval.
 
@@ -3321,20 +3361,22 @@ intros. apply le_lt_trans with (abs q).
 Qed.
 
 Lemma R_Qpos_bounded@{} : forall x : real,
-  merely (exists q : Q+, abs x <= rat (' q)).
+  merely (exists q : Q+, abs x < rat (' q)).
 Proof.
 apply (real_ind0 _).
 - intros q;apply tr. simple refine (existT _ _ _).
   + exists (abs q + 1). apply abs_plus_1_pos.
-  + simpl. apply rat_le_preserve. change (abs q <= abs q + 1).
-    apply lt_le. apply abs_plus_1_lt.
+  + simpl. apply rat_lt_preserving. change (abs q < abs q + 1).
+    apply abs_plus_1_lt.
 - intros x IH.
   generalize (IH 1).
   apply (Trunc_ind _);intros [q E].
   apply tr;exists (q + 2).
-  eapply Rle_close_rat;[apply E|].
-  apply (non_expanding abs).
-  apply equiv_lim.
+  change (abs (lim x) < rat (' q + ' 2)).
+  apply Rlt_close_rat_plus with (abs (x 1)).
+  + trivial.
+  + apply (non_expanding abs).
+    apply equiv_lim.
 Defined.
 
 Definition Qbounded_square (a : Q) : Interval (- a) a -> Q :=
@@ -3410,7 +3452,7 @@ Proof.
 apply BuildIsSurjection. intros x.
 generalize (R_Qpos_bounded x). apply (Trunc_ind _);intros [q E].
 apply tr. simple refine (existT _ _ _).
-- exists q. exists x. apply Rabs_le_pr. exact E.
+- exists q. exists x. apply Rabs_le_pr. apply R_lt_le. exact E.
 - simpl. reflexivity.
 Defined.
 
@@ -3536,4 +3578,53 @@ repeat (apply path_forall;intro).
 apply ((Rmult_aux _ _).2).
 Qed.
 
+Global Instance uniform_on_intervals_continuous@{} (f:real -> real)
+  (mu : Q+ -> Q+ -> Q+)
+  {Emu : forall a : Q+,
+    Uniform (f ∘ interval_proj (rat (- ' a)) (rat (' a))) (mu a)}
+  : Continuous f.
+Proof.
+intros u e.
+apply (merely_destruct (R_Qpos_bounded u)). intros [a Ea].
+hnf in Emu. unfold compose in Emu.
+apply (merely_destruct (R_archimedean _ _ Ea)). intros [q [Eq Eq']].
+apply rat_lt_reflecting in Eq'.
+apply tr;exists (meet (mu a e) (Qpos_diff _ _ Eq')).
+intros v xi.
+assert (xi1 : close (mu a e) u v).
+{ eapply rounded_le;[exact xi|].
+  apply meet_lb_l. }
+assert (xi2 : close (Qpos_diff q (' a) Eq') u v).
+{ eapply rounded_le;[exact xi|].
+  apply meet_lb_r. }
+assert (E1 :  rat (- ' a) <= u /\ u <= rat (' a)).
+{ change (rat (- ' a)) with (- (rat (' a))). apply Rabs_le_pr.
+  transitivity (rat q);apply R_lt_le;trivial.
+  apply rat_lt_preserving;trivial.
+}
+assert (E2 : rat (- ' a) <= v /\ v <= rat (' a)).
+{ change (rat (- ' a)) with (- (rat (' a))). apply Rabs_le_pr.
+  rewrite (Qpos_diff_pr _ _ Eq').
+  apply R_lt_le.
+  eapply Rlt_close_rat_plus;[exact Eq|].
+  apply (non_expanding abs),xi2.
+}
+exact (Emu _ _ (existT _ _ E1) (existT _ _ E2) xi1).
+Qed.
+
+Lemma Rsquare_interval_proj@{} : forall a,
+  (Rsquare ∘ interval_proj (rat (- ' a)) (rat (' a))) =
+  Rbounded_square a.
+Proof.
+intros. change (Rbounded_square a) with
+  (Rfull_square ∘ (fun s => existT _ a s)).
+rewrite Rsquare_pr. reflexivity.
+Qed.
+
+Lemma Rsquare_lipschitz@{} : forall a : Q+,
+  Lipschitz (Rsquare ∘ interval_proj (rat (- ' a)) (rat (' a))) (2 * a).
+Proof.
+intros. rewrite Rsquare_interval_proj. apply _.
+Qed.
+Local Existing Instance Rsquare_lipschitz.
 
