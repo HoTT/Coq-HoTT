@@ -239,6 +239,9 @@ Arguments close {A _} _ _ _.
 
 Global Instance Q_close@{} : Closeness Q := fun e q r => - ' e < q - r < ' e.
 
+Lemma Qclose_alt : forall e (q r : Q), close e q r <-> abs (q - r) < ' e.
+Proof. Admitted.
+
 Class Separated A `{Closeness A}
   := separated : forall x y, (forall e, close e x y) -> x = y :> A.
 
@@ -2080,9 +2083,29 @@ Proof.
 apply (lipschitz_nonexpanding _).
 Qed.
 
+Lemma total_abs_either `{Abs A} `{!TotalRelation le}
+  : forall x : A, (0 <= x /\ abs x = x) \/ (x <= 0 /\ abs x = - x).
+Proof.
+intros x.
+destruct (total le 0 x) as [E|E].
+- left. split;trivial. apply ((abs_sig x).2);trivial.
+- right. split;trivial. apply ((abs_sig x).2);trivial.
+Qed.
+
+Lemma Qabs_neg@{} : forall x : Q, abs (- x) = abs x.
+Proof.
+intros x. destruct (total_abs_either x) as [[E1 E2]|[E1 E2]].
+- rewrite E2. path_via (- - x);[|rewrite involutive;trivial].
+  apply ((abs_sig (- x)).2). apply flip_nonneg_negate;trivial.
+- rewrite E2. apply ((abs_sig (- x)).2). apply flip_nonpos_negate;trivial.
+Qed.
+
 Lemma Qclose_neg@{} : forall e (x y : Q), close e x y <-> close e (- x) (- y).
 Proof.
-Admitted.
+intros e x y;split;intros E;apply Qclose_alt in E;apply Qclose_alt.
+- rewrite <-(negate_plus_distr),Qabs_neg. trivial.
+- rewrite <-(negate_plus_distr),Qabs_neg in E. trivial.
+Qed.
 
 Instance Qneg_nonexpanding@{} : NonExpanding ((-) : Negate Q).
 Proof.
@@ -2470,9 +2493,9 @@ Global Instance Rmeet_lipschitz_r@{} : forall s : real, NonExpanding (s ⊓)
 Definition Rmeet_rat_rat@{} q r : meet (rat q) (rat r) = rat (meet q r)
   := idpath.
 
-Instance Qjoin_lipschitz_l : forall s : Q, NonExpanding (⊔ s).
+Instance Qjoin_nonexpanding_l : forall s : Q, NonExpanding (⊔ s).
 Proof. Admitted.
-Instance Qjoin_lipschitz_r : forall s : Q, NonExpanding (s ⊔).
+Instance Qjoin_nonexpanding_r : forall s : Q, NonExpanding (s ⊔).
 Proof. Admitted.
 
 Global Instance Rjoin@{} : Join real := non_expanding_extend join.
@@ -2840,15 +2863,6 @@ Proof.
 intros x E;rewrite E;apply Rabs_of_0.
 Qed.
 
-Lemma total_abs_either `{Abs A} `{!TotalRelation le}
-  : forall x : A, (0 <= x /\ abs x = x) \/ (x <= 0 /\ abs x = - x).
-Proof.
-intros x.
-destruct (total le 0 x) as [E|E].
-- left. split;trivial. apply ((abs_sig x).2);trivial.
-- right. split;trivial. apply ((abs_sig x).2);trivial.
-Qed.
-
 Lemma Qabs_nonneg@{} : forall q : Q, 0 <= abs q.
 Proof.
 intros q;destruct (total_abs_either q) as [E|E];destruct E as [E1 E2];rewrite E2.
@@ -2906,9 +2920,6 @@ rewrite <-(Rabs_of_0' (u - u));[|apply right_inverse].
 apply (non_expanding (fun w => abs (u - w))).
 apply equiv_symm,xi.
 Qed.
-
-Lemma Qclose_alt : forall e (q r : Q), close e q r <-> abs (q - r) < ' e.
-Proof. Admitted.
 
 Lemma metric_to_equiv_rat_lim@{} (q : Q)
   (y : Approximation)
@@ -3231,14 +3242,6 @@ intros x;destruct (total_abs_either x) as [[E1 E2]|[E1 E2]].
   rewrite E2. apply flip_nonpos_negate. trivial.
 Qed.
 
-Lemma Qabs_neg@{} : forall x : Q, abs (- x) = abs x.
-Proof.
-intros x. destruct (total_abs_either x) as [[E1 E2]|[E1 E2]].
-- rewrite E2. path_via (- - x);[|rewrite involutive;trivial].
-  apply ((abs_sig (- x)).2). apply flip_nonneg_negate;trivial.
-- rewrite E2. apply ((abs_sig (- x)).2). apply flip_nonpos_negate;trivial.
-Qed.
-
 Lemma Qabs_le_neg_raw : forall x : Q, - x <= abs x.
 Proof.
 intros x. rewrite <-Qabs_neg. apply Qabs_le_raw.
@@ -3425,7 +3428,8 @@ Defined.
 
 Lemma Rbounded_square_respects : ∀ x y, interval_back x = interval_back y →
   Rbounded_square x.1 x.2 = Rbounded_square y.1 y.2.
-Proof. Admitted.
+Proof.
+Admitted.
 
 Definition Rsquare@{} : real -> real
   := jections.surjective_factor@{UQ UQ UQ Uhuge Ularge
@@ -3531,4 +3535,5 @@ Proof.
 repeat (apply path_forall;intro).
 apply ((Rmult_aux _ _).2).
 Qed.
+
 
