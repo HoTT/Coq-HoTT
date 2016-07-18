@@ -18,6 +18,7 @@ Require Import
 Local Set Universe Minimization ToSet.
 
 Coercion trunctype_type : TruncType >-> Sortclass.
+Coercion equiv_fun : Equiv >-> Funclass.
 
 Parameter funext : Funext.
 Parameter univalence : Universe.Univalence.
@@ -535,6 +536,74 @@ apply (triangular _ (f u1 v2)).
 Qed.
 
 End currying.
+
+Section pair.
+Universe UA.
+Context {A:Type@{UA} } `{Closeness A} `{forall e, Reflexive (close (A:=A) e)}.
+Universe UB.
+Context {B:Type@{UB} } `{Closeness B} `{forall e, Reflexive (close (A:=B) e)}.
+
+Global Instance pair_nonexpanding_l : forall x, NonExpanding (@pair A B x).
+Proof.
+intros x e u v xi;split;simpl.
+- reflexivity.
+- exact xi.
+Qed.
+
+Global Instance pair_nonexpanding_r : forall y,
+  NonExpanding (fun x => @pair A B x y).
+Proof.
+intros x e u v xi;split;simpl.
+- exact xi.
+- reflexivity.
+Qed.
+
+Global Instance fst_nonexpanding : NonExpanding (@fst A B).
+Proof.
+intros e u v xi;apply xi.
+Qed.
+
+Global Instance snd_nonexpanding : NonExpanding (@snd A B).
+Proof.
+intros e u v xi;apply xi.
+Qed.
+
+End pair.
+
+Section prod_equiv.
+Universe UA.
+Context {A:Type@{UA} } `{Closeness A}.
+Universe UB.
+Context {B:Type@{UB} } `{Closeness B}.
+
+Global Instance equiv_prod_symm_nonexpanding
+  : NonExpanding (@Prod.equiv_prod_symm A B).
+Proof.
+intros e u v xi;split;apply xi.
+Qed.
+
+Global Instance equiv_prod_symm_inv_nonexpanding
+  : NonExpanding ((@Prod.equiv_prod_symm A B)^-1).
+Proof.
+intros e u v xi;split;apply xi.
+Qed.
+
+Universe UC.
+Context {C:Type@{UC} } `{Closeness C}.
+
+Global Instance equiv_prod_assoc_nonexpanding
+  : NonExpanding (@Prod.equiv_prod_assoc A B C).
+Proof.
+intros e u v xi;repeat split;apply xi.
+Qed.
+
+Global Instance equiv_prod_assoc_inc_nonexpanding
+  : NonExpanding ((@Prod.equiv_prod_assoc A B C)^-1).
+Proof.
+intros e u v xi;repeat split;apply xi.
+Qed.
+
+End prod_equiv.
 
 Section map2.
 Universe UA.
@@ -2434,50 +2503,65 @@ Global Instance Rplus_nonexpanding_l@{} : forall s : real, NonExpanding (+ s)
 Global Instance Rplus_nonexpanding_r@{} : forall s : real, NonExpanding (s +)
   := _.
 
-Lemma unique_continuous_binary_extension@{} {f : real -> real -> real}
-  `{forall x, Continuous (f x)} `{forall y, Continuous (fun x => f x y)}
-  {g : real -> real -> real}
-  `{forall x, Continuous (g x)} `{forall y, Continuous (fun x => g x y)}
+Lemma unique_continuous_binary_extension@{} (f : real -> real -> real)
+  `{!Continuous (uncurry f)}
+  (g : real -> real -> real)
+  `{!Continuous (uncurry g)}
   : (forall q r, f (rat q) (rat r) = g (rat q) (rat r)) ->
   forall u v, f u v = g u v.
 Proof.
 intros E.
-intros x;apply unique_continuous_extension;try apply _.
-intros r;revert x;apply unique_continuous_extension;try apply _.
+intros x;eapply @unique_continuous_extension;try apply _.
+{ change (Continuous (compose (uncurry f) (pair x))). apply _. }
+{ change (Continuous (compose (uncurry g) (pair x))). apply _. }
+intros r;revert x;eapply @unique_continuous_extension;try apply _.
+{ change (Continuous (compose (uncurry f) (fun x => (x, rat r)))). apply _. }
+{ change (Continuous (compose (uncurry g) (fun x => (x, rat r)))). apply _. }
 trivial.
 Qed.
 
-Lemma unique_continuous_ternary_extension@{} {f}
-  `{forall x y, Continuous (f x y)} `{forall x z, Continuous (fun y => f x y z)}
-  `{forall y z, Continuous (fun x => f x y z)}
-  {g}
-  `{forall x y, Continuous (g x y)} `{forall x z, Continuous (fun y => g x y z)}
-  `{forall y z, Continuous (fun x => g x y z)}
+Lemma unique_continuous_ternary_extension@{} (f : real -> real -> real -> real)
+  `{!Continuous (uncurry (uncurry f))}
+  (g : real -> real -> real -> real)
+  `{!Continuous (uncurry (uncurry g))}
   : (forall q r s, f (rat q) (rat r) (rat s) = g (rat q) (rat r) (rat s)) ->
   forall u v w, f u v w = g u v w.
 Proof.
 intros E u;apply unique_continuous_binary_extension.
-intros q r;revert u;apply unique_continuous_extension;try apply _.
+{ change (Continuous (compose (uncurry (uncurry f)) (map2 (pair u) id))).
+  apply _. }
+{ change (Continuous (compose (uncurry (uncurry g)) (map2 (pair u) id))).
+  apply _. }
+intros q r;revert u;eapply @unique_continuous_extension;try apply _.
+{ change (Continuous (compose (uncurry (uncurry f))
+    (compose (fun u => (u, rat r)) (fun u => (u, rat q))))).
+  apply _. }
+{ change (Continuous (compose (uncurry (uncurry g))
+    (compose (fun u => (u, rat r)) (fun u => (u, rat q))))).
+  apply _. }
 auto.
 Qed.
+
+Notation prod_symm := (Prod.equiv_prod_symm _ _).
+Notation prod_assoc := (Prod.equiv_prod_assoc _ _ _).
 
 Instance Rplus_comm@{} : Commutative (@plus _ Rplus).
 Proof.
 hnf. apply unique_continuous_binary_extension.
+{ apply _. }
+{ apply _. }
 intros q r;apply (ap rat),plus_comm.
 Qed.
 
 Lemma Rplus_assoc@{} : Associative (@plus _ Rplus).
 Proof.
-hnf. intros x;apply @unique_continuous_binary_extension.
-{ apply _. }
-{ apply _. }
-{ apply _. }
-{ change (forall y, Continuous (compose (+ y) (x +))).
+hnf. apply unique_continuous_ternary_extension.
+{ change (Continuous (uncurry plus ∘ map2 id (uncurry plus) ∘
+    ((Prod.equiv_prod_assoc _ _ _)^-1))).
   apply _. }
-intros r s;revert x;eapply @unique_continuous_extension;try apply _.
-{ change (Continuous (compose (+ rat s) (+ rat r))). apply _. }
-intros q;apply (ap rat),plus_assoc.
+{ change (Continuous (uncurry plus ∘ map2 (uncurry plus) id)).
+  apply _. }
+intros;apply (ap rat),plus_assoc.
 Qed.
 
 Instance lipschitz_const@{} : forall (a:real) (L:Q+), Lipschitz (fun _ => a) L.
@@ -2562,12 +2646,13 @@ Instance Rle_trans@{} : Transitive Rle.
 Proof.
 hnf. unfold le,Rle.
 intros x y z E1 E2. rewrite <-E2,<-E1. clear E1 E2;revert x y z.
-eapply @unique_continuous_ternary_extension;try apply _.
-{ change (forall x z, Continuous (compose (x ⊔) (compose (⊔ z) (x ⊔))));apply _. }
-{ change (forall y z, Continuous (compose (uncurry join)
-   (compose (map2 id (compose (⊔ z) (⊔ y))) BinaryDup)));apply _. }
-{ change (forall x z, Continuous (compose (⊔ z) (x ⊔)));apply _. }
-{ change (forall y z, Continuous (compose (⊔ z) (⊔ y)));apply _. }
+apply unique_continuous_ternary_extension.
+{ change (Continuous (uncurry join ∘
+    map2 id (uncurry join ∘ map2 (uncurry join) id ∘ prod_assoc)
+    ∘ prod_assoc^-1 ∘ map2 BinaryDup id ∘ (prod_assoc^-1))).
+  apply _. }
+{ change (Continuous (uncurry join ∘ map2 (uncurry join) id)).
+  apply _. }
 intros q r s.
 apply (ap rat).
 apply join_r. apply join_le_compat_r,join_ub_l.
@@ -2728,6 +2813,8 @@ Definition Rle_close_rat_rat@{}
 Instance Rjoin_comm@{} : Commutative (@join _ Rjoin).
 Proof.
 hnf. apply unique_continuous_binary_extension.
+{ apply _. }
+{ apply _. }
 intros;apply (ap rat).
 apply join_sl_order_join_sl.
 Qed.
@@ -2742,12 +2829,14 @@ split.
   |apply _|].
   + apply _.
   + hnf.
-    apply @unique_continuous_ternary_extension;try apply _.
-    { change (forall x z, Continuous (compose (⊓ z) (x ⊓)));apply _. }
-    { change (forall y z, Continuous (compose (⊓ z) (⊓ y)));apply _. }
+    apply unique_continuous_ternary_extension.
+    { change (Continuous (uncurry meet ∘ map2 id (uncurry meet) ∘ prod_assoc^-1)).
+      apply _. }
+    { change (Continuous (uncurry meet ∘ map2 (uncurry meet) id)).
+      apply _. }
     intros;apply (ap rat). apply associativity.
   + hnf.
-    apply unique_continuous_binary_extension.
+    apply unique_continuous_binary_extension;try apply _.
     intros;apply (ap rat). apply commutativity.
   + hnf. red.
     eapply @unique_continuous_extension;try apply _.
@@ -2755,15 +2844,18 @@ split.
     intros;apply (ap rat),idempotency,_.
   + unfold le,Rle. intros x y;split;intros E.
     * rewrite <-E.
-      clear E;revert x y;apply @unique_continuous_binary_extension;try apply _.
-      { change (forall y, Continuous (compose (uncurry meet)
-          (compose (map2 id (⊔ y)) BinaryDup)));apply _. }
+      clear E;revert x y;apply unique_continuous_binary_extension.
+      { change (Continuous (uncurry meet ∘ map2 id (uncurry join) ∘
+          prod_assoc^-1 ∘ map2 BinaryDup id)).
+        apply _. }
+      { apply _. }
       intros;apply (ap rat). apply (meet_join_absorption _).
     * rewrite <-E.
-      clear E;revert x y;apply @unique_continuous_binary_extension;try apply _.
-      { change (forall x, Continuous
-          (uncurry join ∘ (map2 (meet x) id) ∘ BinaryDup));apply _. }
-      { change (forall y, Continuous (compose (⊔ y) (⊓ y)));apply _. }
+      clear E;revert x y;apply unique_continuous_binary_extension.
+      { change (Continuous (uncurry join ∘ map2 (uncurry meet) id ∘
+          prod_assoc ∘ map2 id BinaryDup)).
+        apply _. }
+      { apply _. }
       intros;apply (ap rat).
       rewrite (commutativity (f:=join)),(commutativity (f:=meet)).
       apply (join_meet_absorption _).
@@ -2771,12 +2863,14 @@ split.
   repeat split;unfold sg_op,join_is_sg_op;change Rjoin with join.
   + apply _.
   + hnf.
-    apply @unique_continuous_ternary_extension;try apply _.
-    { change (forall x z, Continuous (compose (⊔ z) (x ⊔)));apply _. }
-    { change (forall y z, Continuous (compose (⊔ z) (⊔ y)));apply _. }
+    apply unique_continuous_ternary_extension.
+    { change (Continuous (uncurry join ∘ map2 id (uncurry join) ∘ prod_assoc^-1)).
+      apply _. }
+    { change (Continuous (uncurry join ∘ map2 (uncurry join) id)).
+      apply _. }
     intros;apply (ap rat). apply associativity.
   + hnf.
-    apply unique_continuous_binary_extension.
+    apply unique_continuous_binary_extension;try apply _.
     intros;apply (ap rat). apply commutativity.
   + hnf. red.
     eapply @unique_continuous_extension;try apply _.
@@ -3015,7 +3109,7 @@ Qed.
 
 Lemma Rabs_neg_flip@{} : forall a b : real, abs (a - b) = abs (b - a).
 Proof.
-apply unique_continuous_binary_extension.
+apply unique_continuous_binary_extension;try apply _.
 intros q r;apply (ap rat).
 apply Qabs_neg_flip.
 Qed.
@@ -3128,11 +3222,20 @@ Instance Rplus_le_preserving@{} : forall z : real,
 Proof.
 intros z. hnf. unfold le;simpl. intros x y E.
 rewrite <-E;clear E.
-revert z x y;apply @unique_continuous_ternary_extension;try apply _.
-{ change (forall x z, Continuous
-    (uncurry join ∘ (map2 (x +) (compose (x +) (⊔ z))) ∘ BinaryDup));apply _. }
-{ change (forall y z, Continuous
-    (uncurry join ∘ (map2 (+ y) (+ (join y z))) ∘ BinaryDup));apply _. }
+revert z x y;apply unique_continuous_ternary_extension.
+{ change (Continuous (uncurry join ∘
+    map2 (uncurry (+)) (uncurry (+) ∘ map2 id (uncurry join)) ∘
+    prod_assoc ∘
+    (* (u, (v, (u, (v, w)))) *)
+    map2 id (map2 id prod_symm ∘ prod_assoc^-1 ∘
+      prod_symm ∘ map2 id prod_assoc^-1) ∘
+    (* (u, (u, ((v,v),w))) *)
+    prod_assoc^-1 ∘ prod_assoc^-1 ∘
+    (* (((u,u),(v,v)),w) *)
+    map2 (map2 BinaryDup BinaryDup) id)).
+  apply _. }
+{ change (Continuous (uncurry (+) ∘ map2 id (uncurry join) ∘ prod_assoc^-1)).
+  apply _. }
 intros;apply (ap rat).
 apply join_r. apply (order_preserving (q +)).
 apply join_ub_l.
@@ -3162,13 +3265,15 @@ assert (Hrw : y = z + y - z).
 }
 path_via (z + y - z);clear Hrw.
 rewrite <-E. clear E.
-revert z x y;apply @unique_continuous_ternary_extension;try apply _.
-{ change (forall x y, Continuous (compose (+ (- x)) (compose ((x + y) ⊔) (x +)))).
+revert z x y;apply unique_continuous_ternary_extension.
+{ change (Continuous (uncurry join ∘ snd ∘ prod_assoc^-1)).
   apply _. }
-{ change (forall x z, Continuous (compose (+ (- x)) (compose (⊔ (x + z)) (x +)))).
-  apply _. }
-{ change (forall y z, Continuous (uncurry (+) ∘
-    (map2 (uncurry join ∘ (map2 (+ y) (+ z)) ∘ BinaryDup) negate) ∘ BinaryDup));
+{ change (Continuous
+    (uncurry (+) ∘ map2 (uncurry join ∘ map2 (uncurry (+)) (uncurry (+))) negate ∘
+        map2 (map2 id prod_symm ∘ prod_assoc^-1 ∘
+      map2 (prod_assoc ∘ prod_symm) id ∘ prod_symm ∘ prod_assoc^-1 ∘ prod_symm) id ∘
+    prod_symm ∘ prod_assoc^-1 ∘ prod_assoc^-1 ∘ prod_assoc^-1 ∘
+    map2 (map2 (map2 BinaryDup id ∘ BinaryDup) id) id)).
   apply _. }
 intros;apply (ap rat).
 destruct (total le r s) as [E|E].
@@ -3178,7 +3283,6 @@ destruct (total le r s) as [E|E].
 - rewrite (join_l _ _ E).
   rewrite (join_l _ _ (order_preserving (q +) _ _ E)).
   rewrite (plus_comm q r),<-plus_assoc,plus_negate_r,plus_0_r;trivial.
-Unshelve. exact 1.
 Qed.
 
 Instance Rplus_le_embedding@{} : forall z : real, OrderEmbedding (z +).
@@ -3192,16 +3296,13 @@ Lemma Rneg_le_flip@{} : forall x y : real, x <= y -> - y <= - x.
 Proof.
 intros x y E.
 rewrite <-E.
-clear E;revert x y;apply @unique_continuous_binary_extension.
-{ change (forall x, Continuous (compose (⊔ - x) (compose (-) (x ⊔))));apply _. }
-{ change (forall y, Continuous (uncurry join ∘
-    (map2 ((-) ∘ (⊔ y)) negate) ∘ BinaryDup));
+clear E;revert x y;apply unique_continuous_binary_extension.
+{ change (Continuous (uncurry join ∘ map2 (negate ∘ uncurry join) negate ∘
+    prod_symm ∘ prod_assoc^-1 ∘ map2 BinaryDup id)).
   apply _. }
-{ apply _. }
 { apply _. }
 intros q r;apply (ap rat).
 apply join_r. apply (snd (flip_le_negate _ _)). apply join_ub_l.
-Unshelve. exact 1.
 Qed.
 
 Lemma Rneg_le_flip_equiv@{} : forall x y : real, - y <= - x <-> x <= y.
@@ -3650,27 +3751,28 @@ Proof.
 repeat (split;try apply _);
 unfold sg_op,mon_unit,mult_is_sg_op,one_is_mon_unit;
 change Rmult with mult;change R1 with one.
-- hnf. apply @unique_continuous_ternary_extension;try apply _.
-  + change (forall x z, Continuous ((.* z) ∘ (x *.))). apply _.
-  + change (forall y z, Continuous ((.* z) ∘ (.* y))). apply _.
+- hnf. apply unique_continuous_ternary_extension.
+  + change (Continuous (uncurry mult ∘ map2 id (uncurry mult) ∘ prod_assoc^-1)).
+    (* Why does [apply _] not work here? *)
+    repeat apply continuous_compose; apply _.
+  + change (Continuous (uncurry mult ∘ map2 (uncurry mult) id)).
+    apply _.
   + intros;apply (ap rat),associativity.
 - hnf. apply unique_continuous_extension.
   intros;apply (ap rat),left_identity.
 - hnf. apply unique_continuous_extension.
   intros;apply (ap rat),right_identity.
 - hnf. apply unique_continuous_binary_extension.
-  intros;apply (ap rat),commutativity.
-- hnf. apply @unique_continuous_ternary_extension;try apply _.
-  + change (forall x z, Continuous ((+ (x * z)) ∘ (x *.))). apply _.
-  + change (forall y z,
-      Continuous (uncurry plus ∘ (map2 (.* y) (.* z)) ∘ BinaryDup)). apply _.
+  + apply _.
+  + change (Continuous (uncurry mult ∘ prod_symm)). apply _.
+  + intros;apply (ap rat),commutativity.
+- hnf. apply unique_continuous_ternary_extension.
+  + change (Continuous (uncurry mult ∘ map2 id (uncurry plus) ∘ prod_assoc^-1)).
+    apply _.
+  + change (Continuous (uncurry plus ∘ map2 (uncurry mult) (uncurry mult) ∘
+      map2 id prod_symm ∘ prod_assoc^-1 ∘ prod_symm ∘ map2 id prod_assoc ∘
+      prod_assoc^-1 ∘ map2 BinaryDup id ∘ prod_assoc^-1)).
+    repeat apply continuous_compose;apply _.
   + intros;apply (ap rat),distribute_l.
 Qed.
-
-
-
-
-
-
-
 
