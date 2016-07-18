@@ -3736,13 +3736,13 @@ Admitted.
 
 Instance Rmult_continuous_l : forall x, Continuous (x *.).
 Proof.
-change (forall x, Continuous (uncurry mult ∘ (map2 (const x) id) ∘ BinaryDup)).
+change (forall x, Continuous (uncurry mult ∘ (pair x))).
 apply _.
 Qed.
 
 Instance Rmult_continuous_r : forall y, Continuous (.* y).
 Proof.
-change (forall y, Continuous (uncurry mult ∘ (map2 id (const y)) ∘ BinaryDup)).
+change (forall y, Continuous (uncurry mult ∘ (fun x => pair x y))).
 apply _.
 Qed.
 
