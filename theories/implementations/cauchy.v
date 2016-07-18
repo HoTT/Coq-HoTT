@@ -256,6 +256,13 @@ Class Rounded@{i j} (A:Type@{i}) `{Closeness A}
     (merely@{j} (sigT@{UQ j} (fun d => sigT@{UQ j} (fun d' =>
       e = d + d' /\ close d u v)))).
 
+Class PreMetric@{i j} (A:Type@{i}) {Aclose : Closeness A} :=
+  { premetric_refl :> forall e, Reflexive (close (A:=A) e)
+  ; premetric_symm :> forall e, Symmetric (close (A:=A) e)
+  ; premetric_separated :> Separated A
+  ; premetric_triangular :> Triangular A
+  ; premetric_rounded :> Rounded@{i j} A }.
+
 Lemma rounded_plus `{Rounded A} : forall d d' u v, close d u v ->
   close (d+d') u v.
 Proof.
@@ -291,6 +298,14 @@ Global Instance close_prod_refl@{}
   : forall e, Reflexive (close (A:=A /\ B) e).
 Proof.
 intros e;split;reflexivity.
+Qed.
+
+Global Instance close_prod_symm@{}
+  `{forall e, Symmetric (close (A:=A) e)}
+  `{forall e, Symmetric (close (A:=B) e)}
+  : forall e, Symmetric (close (A:=A /\ B) e).
+Proof.
+intros e u v xi;split;Symmetry;apply xi.
 Qed.
 
 Global Instance close_prod_separated@{}
@@ -333,6 +348,13 @@ Qed.
 Definition close_prod_rounded@{j} := @close_prod_rounded'@{j j j j j j}.
 Arguments close_prod_rounded {_ _} _ _ _.
 Global Existing Instance close_prod_rounded.
+
+Lemma prod_premetric@{j} `{!PreMetric@{UA j} A} `{!PreMetric@{UB j} B}
+  : PreMetric@{i j} (A /\ B).
+Proof.
+split;try apply _.
+Qed.
+Global Existing Instance prod_premetric.
 
 End close_prod.
 
@@ -677,8 +699,7 @@ Definition Interval a b := sigT (fun x : A => a <= x /\ x <= b).
 
 Definition interval_proj a b : Interval a b -> A := pr1.
 
-Section interval_restrict.
-Context `{IsHSet A} {Ameet : Meet A} {Ajoin : Join A}
+Context {Ameet : Meet A} {Ajoin : Join A}
   `{!LatticeOrder@{UA UALE} Ale}.
 
 Definition Interval_restrict@{} (a b : A) (E : a <= b) : A -> Interval a b.
@@ -701,13 +722,32 @@ apply Sigma.path_sigma_hprop.
 simpl. rewrite meet_l;[apply join_r|];apply E'.
 Qed.
 
-End interval_restrict.
-
 Context `{Closeness A}.
 
 Global Instance Interval_close (a b : A) : Closeness (Interval a b)
   := fun e x y => close e (interval_proj a b x) (interval_proj a b y).
 Arguments Interval_close _ _ _ _ _ /.
+
+(* NB: for some reason this forces UALE <= UA *)
+Lemma Interval_premetric@{i} `{!PreMetric@{UA i} A} a b
+  : PreMetric@{UA i} (Interval a b).
+Proof.
+split.
+- intros e u. red;red. reflexivity.
+- intros e u v xi;red;red;Symmetry;apply xi.
+- intros u v E.
+  apply Sigma.path_sigma_hprop. apply separated,E.
+- intros u v w e d xi1 xi2.
+  red;red. apply (triangular _ (interval_proj a b v)).
+  + exact xi1.
+  + exact xi2.
+- intros e u v. split.
+  + intros xi. do 2 red in xi. apply (fst (rounded _ _ _)) in xi.
+    exact xi.
+  + intros E. unfold close,Interval_close in E. apply (snd (rounded _ _ _)) in E.
+    exact E.
+Qed.
+Global Existing Instance Interval_premetric.
 
 Global Instance interval_proj_nonexpanding (a b : A)
   : NonExpanding (interval_proj a b)
@@ -1244,17 +1284,16 @@ Proof.
 unfold rounded_halfrel_close. intros. apply _.
 Qed.
 
-Instance Qclose_separating : Separated Q.
+Global Instance Qclose_separating : Separated Q.
 Proof. Admitted.
 
-Lemma Qclose_rounded@{} : ∀ (q r : Q) e, close e q r ↔
-  merely (∃ d d' : Q+, e = d + d' ∧ close d q r).
+Global Instance Qclose_rounded@{} : Rounded Q.
 Proof. Admitted.
 
 Definition Requiv_alt_rat_rat@{} (q r : Q) : rounded_zeroary.
 Proof.
 exists (fun e => BuildhProp (close e q r)).
-simpl. apply Qclose_rounded.
+simpl. intros;apply Qclose_rounded.
 Defined.
 
 Lemma rat_lim_rounded_step@{} :
@@ -2073,6 +2112,36 @@ intros e x y.
 apply equiv_rat_rat.
 Qed.
 
+Global Instance R_premetric@{} : PreMetric real.
+Proof.
+split;apply _.
+Qed.
+
+Lemma total_abs_either `{Abs A} `{!TotalRelation le}
+  : forall x : A, (0 <= x /\ abs x = x) \/ (x <= 0 /\ abs x = - x).
+Proof.
+intros x.
+destruct (total le 0 x) as [E|E].
+- left. split;trivial. apply ((abs_sig x).2);trivial.
+- right. split;trivial. apply ((abs_sig x).2);trivial.
+Qed.
+
+Lemma Qabs_nonneg@{} : forall q : Q, 0 <= abs q.
+Proof.
+intros q;destruct (total_abs_either q) as [E|E];destruct E as [E1 E2];rewrite E2.
+- trivial.
+- apply flip_nonneg_negate. rewrite involutive;trivial.
+Qed.
+
+Global Instance Q_premetric@{} : PreMetric Q.
+Proof.
+split;try apply _.
+intros e u;apply Qclose_alt. rewrite plus_negate_r.
+unfold abs. rewrite (fst (abs_sig 0).2).
+- solve_propholds.
+- reflexivity.
+Qed.
+
 Section lipschitz_extend.
 Variables (f : Q -> real) (L : Q+).
 Context {Ef : Lipschitz f L}.
@@ -2190,15 +2259,6 @@ Instance lipschitz_extend_nonexpanding (f : Q -> real) `{!NonExpanding f}
   : NonExpanding (lipschitz_extend f 1).
 Proof.
 apply (lipschitz_nonexpanding _).
-Qed.
-
-Lemma total_abs_either `{Abs A} `{!TotalRelation le}
-  : forall x : A, (0 <= x /\ abs x = x) \/ (x <= 0 /\ abs x = - x).
-Proof.
-intros x.
-destruct (total le 0 x) as [E|E].
-- left. split;trivial. apply ((abs_sig x).2);trivial.
-- right. split;trivial. apply ((abs_sig x).2);trivial.
 Qed.
 
 Lemma Qabs_neg@{} : forall x : Q, abs (- x) = abs x.
@@ -2997,13 +3057,6 @@ Proof.
 intros x E;rewrite E;apply Rabs_of_0.
 Qed.
 
-Lemma Qabs_nonneg@{} : forall q : Q, 0 <= abs q.
-Proof.
-intros q;destruct (total_abs_either q) as [E|E];destruct E as [E1 E2];rewrite E2.
-- trivial.
-- apply flip_nonneg_negate. rewrite involutive;trivial.
-Qed.
-
 Lemma Rabs_nonneg@{} : forall x : real, 0 <= abs x.
 Proof.
 unfold le;simpl. apply unique_continuous_extension;try apply _.
@@ -3480,8 +3533,22 @@ apply (real_ind0 _).
     apply equiv_lim.
 Defined.
 
-Definition Qbounded_square (a : Q) : Interval (- a) a -> Q :=
-  fun x => x.1 * x.1.
+Definition pos_of_Q : Q -> Q+
+  := fun q => {| pos := abs q + 1; is_pos := abs_plus_1_pos q |}.
+
+Lemma Q_abs_plus_1_bounds@{} : forall q : Q,
+  - ' (pos_of_Q q) ≤ q
+  ≤ ' (pos_of_Q q).
+Proof.
+intros. change (- (abs q + 1) ≤ q ≤ (abs q + 1)). split.
+- apply flip_le_negate. rewrite involutive.
+  transitivity (abs q).
+  + apply Qabs_le_neg_raw.
+  + apply nonneg_plus_le_compat_r. solve_propholds.
+- transitivity (abs q).
+  + apply Qabs_le_raw.
+  + apply nonneg_plus_le_compat_r. solve_propholds.
+Qed.
 
 Lemma Qabs_mult@{} : forall a b : Q, abs (a * b) = abs a * abs b.
 Proof.
@@ -3497,30 +3564,23 @@ destruct (total_abs_either b) as [Eb|Eb];destruct Eb as [Eb1 Eb2];rewrite Eb2.
   apply nonpos_mult;trivial.
 Qed.
 
-Lemma Qbounded_square_lipschitz@{}
-  : forall a : Q+, Lipschitz (Qbounded_square (' a)) (2 * a).
+Instance Qmult_lipschitz@{} : forall q : Q, Lipschitz (q *.) (pos_of_Q q).
 Proof.
-intros a e [q Hq] [r Hr] xi.
-change (close e q r) in xi.
-unfold Qbounded_square;simpl.
-apply Qclose_alt in xi. apply Qclose_alt.
-assert (Hrw : q * q - r * r = (q + r) * (q - r))
-  by abstract ring_tac.ring_with_integers (NatPair.Z nat).
-rewrite Hrw. clear Hrw.
-rewrite Qabs_mult. change (' (2 * a * e)) with (2 * ' a * ' e).
-apply pos_mult_le_lt_compat;[split| |split].
+intros q e x y xi.
+apply Qclose_alt.
+rewrite negate_mult_distr_r,<-plus_mult_distr_l,Qabs_mult.
+apply pos_mult_le_lt_compat;try split.
 - apply Qabs_nonneg.
-- assert (Hrw : 2 * ' a = ' a + ' a) by ring_tac.ring_with_nat.
-  rewrite Hrw;clear Hrw.
-  rewrite Qabs_is_join. destruct Hq,Hr. apply join_le.
-  + rewrite negate_plus_distr.
-    apply plus_le_compat;apply flip_le_negate;rewrite involutive;trivial.
-  + apply plus_le_compat;trivial.
-- change (0 < ' (2 * a)). solve_propholds.
+- rewrite Qabs_is_join. apply join_le.
+  + apply flip_le_negate;rewrite involutive; apply Q_abs_plus_1_bounds.
+  + apply Q_abs_plus_1_bounds.
+- solve_propholds.
 - apply Qabs_nonneg.
-- trivial.
+- apply Qclose_alt,xi.
 Qed.
-Existing Instance Qbounded_square_lipschitz.
+
+Definition QRmult@{} : Q -> real -> real
+  := fun q => lipschitz_extend (compose rat (q *.)) (pos_of_Q q).
 
 Lemma Qpos_neg_le@{} : forall a : Q+, - ' a <= ' a.
 Proof.
@@ -3529,19 +3589,67 @@ intros a;transitivity (0:Q).
 - solve_propholds.
 Qed.
 
-Definition Rbounded_square@{} (a : Q+)
-  : Interval (- rat (' a)) (rat (' a)) -> real.
+Lemma QRmult_negate : forall q u, - QRmult q u = QRmult (- q) u.
 Proof.
-exact (lipschitz_extend_interval (- ' a) (' a) (Qpos_neg_le _)
-  (compose rat (Qbounded_square (' a))) _).
-Defined.
+intro;apply unique_continuous_extension.
+intros r;apply (ap rat). apply negate_mult_distr_l.
+Qed.
 
-Instance Rbounded_square_lipschitz@{}
-  : forall a : Q+, Lipschitz (Rbounded_square a) (2*a)
-  := _.
+Lemma QRmult_plus_distr : forall q r u, QRmult q u + QRmult r u = QRmult (q + r) u.
+Proof.
+intros q r;eapply @unique_continuous_extension;try apply _.
+{ change (Continuous (uncurry (+) ∘ map2 (QRmult q) (QRmult r) ∘ BinaryDup)).
+  apply _. }
+intros s;apply (ap rat). Symmetry;apply distribute_r.
+Qed.
 
-Definition Rfull_square (s : sigT (fun a => Interval (- (rat (' a))) (rat (' a))))
-  := Rbounded_square s.1 s.2.
+Lemma QRmult_lipschitz_interval_aux (a:Q+)
+  : forall x, abs x <= rat (' a) ->
+  forall q r : Q, abs (QRmult q x - QRmult r x) <= rat (abs (q - r) * ' a).
+Proof.
+intros x E q r. rewrite QRmult_negate,QRmult_plus_distr.
+change (rat (abs (q - r) * ' a)) with (QRmult (abs (q - r)) (rat (' a))).
+rewrite <-E. clear E.
+revert x;eapply @unique_continuous_extension;try apply _.
+- change (Continuous (uncurry join ∘
+    map2 (abs ∘ QRmult (q - r)) (QRmult (abs (q - r)) ∘ (⊔ rat (' a)) ∘ abs) ∘
+    BinaryDup)).
+  apply _.
+- change (Continuous (QRmult (abs (q - r)) ∘ (⊔ rat (' a)) ∘ abs)).
+  apply _.
+- intros s. apply (ap rat).
+  apply join_r.
+  rewrite Qabs_mult. apply mult_le_compat.
+  + apply Qabs_nonneg.
+  + apply Qabs_nonneg.
+  + reflexivity.
+  + apply join_ub_l.
+Qed.
+
+Instance Qbounded_lipschitz (a : Q+)
+  : forall v : Interval (- rat (' a)) (rat (' a)),
+    Lipschitz (λ q : Q, QRmult q (interval_proj _ _ v)) (a + 1).
+Proof.
+intros v e x y xi.
+apply Qclose_alt in xi. apply metric_to_equiv.
+apply R_le_lt_trans with (rat (' (a * e))).
+- etransitivity.
+  + apply (QRmult_lipschitz_interval_aux a).
+    apply (snd (Rabs_le_pr _ _)).
+    split;apply v.2.
+  + apply rat_le_preserve. rewrite qpos_mult_comm.
+    apply mult_le_compat;try solve_propholds.
+    * apply Qabs_nonneg.
+    * reflexivity.
+- apply rat_lt_preserving. rewrite 2!(qpos_mult_comm _ e).
+  apply pos_mult_le_lt_compat;try split;try solve_propholds.
+  + reflexivity.
+  + apply pos_plus_lt_compat_r. solve_propholds.
+Qed.
+
+Definition Rbounded_mult@{} (a : Q+)
+  : real -> Interval (- rat (' a)) (rat (' a)) -> real
+  := fun u v => lipschitz_extend (fun q => QRmult q (interval_proj _ _ v)) (a+1) u.
 
 Definition interval_back
   : sigT (fun a : Q+ => Interval (- rat (' a)) (rat (' a))) -> real
@@ -3569,117 +3677,53 @@ split.
   apply rat_le_preserve,E.
 Defined.
 
-Lemma Rbounded_square_respects : ∀ x y, interval_back x = interval_back y →
-  Rbounded_square x.1 x.2 = Rbounded_square y.1 y.2.
+Lemma Rbounded_mult_respects : ∀ z x y, interval_back x = interval_back y →
+  Rbounded_mult x.1 z x.2 = Rbounded_mult y.1 z y.2.
 Proof.
 Admitted.
 
-Definition Rsquare@{} : real -> real
-  := jections.surjective_factor@{UQ UQ UQ Uhuge Ularge
+Definition Rmult@{} : Mult real
+  := fun x => jections.surjective_factor@{UQ UQ UQ Uhuge Ularge
     Ularge UQ UQ Uhuge Ularge
-    UQ} Rfull_square interval_back Rbounded_square_respects.
+    UQ} _ interval_back (Rbounded_mult_respects x).
+Global Existing Instance Rmult.
 
-Lemma Rsquare_pr@{} : Rfull_square = compose Rsquare interval_back.
+Lemma Rmult_pr@{} x : (fun y => Rbounded_mult y.1 x y.2) =
+  compose (x *.) interval_back.
 Proof.
 apply jections.surjective_factor_pr.
 Qed.
 
-Definition pos_of_Q : Q -> Q+
-  := fun q => {| pos := abs q + 1; is_pos := abs_plus_1_pos q |}.
-
-Lemma Q_abs_plus_1_bounds@{} : forall q : Q,
-  - ' (pos_of_Q q) ≤ q
-  ≤ ' (pos_of_Q q).
-Proof.
-intros. change (- (abs q + 1) ≤ q ≤ (abs q + 1)). split.
-- apply flip_le_negate. rewrite involutive.
-  transitivity (abs q).
-  + apply Qabs_le_neg_raw.
-  + apply nonneg_plus_le_compat_r. solve_propholds.
-- transitivity (abs q).
-  + apply Qabs_le_raw.
-  + apply nonneg_plus_le_compat_r. solve_propholds.
-Qed.
-
-Lemma Rsquare_rat@{} q : Rsquare (rat q) = rat (q * q).
-Proof.
-unfold Rsquare,jections.surjective_factor,jections.surjective_factor_aux.
-simpl. unfold Rfull_square,Rbounded_square. simpl.
-unfold lipschitz_extend_interval. simpl.
-unfold compose. rewrite lipschitz_extend_rat.
-rewrite (Interval_restrict_pr _ _ _ _ (Q_abs_plus_1_bounds q)). reflexivity.
-Qed.
-
-Instance Qmult_lipschitz@{} : forall q : Q, Lipschitz (q *.) (pos_of_Q q).
-Proof.
-intros q e x y xi.
-apply Qclose_alt.
-rewrite negate_mult_distr_r,<-plus_mult_distr_l,Qabs_mult.
-apply pos_mult_le_lt_compat;try split.
-- apply Qabs_nonneg.
-- rewrite Qabs_is_join. apply join_le.
-  + apply flip_le_negate;rewrite involutive; apply Q_abs_plus_1_bounds.
-  + apply Q_abs_plus_1_bounds.
-- solve_propholds.
-- apply Qabs_nonneg.
-- apply Qclose_alt,xi.
-Qed.
-
-Definition QRmult@{} : Q -> real -> real
-  := fun q => lipschitz_extend (compose rat (q *.)) (pos_of_Q q).
-
-(* We want rat q * rat r to be convertible to rat (q * r)
-   so we do this tricky section. *)
-Section Rmult_def.
-
-Instance Rmult_pre@{} : Mult real
-  := fun u v => QRmult (/ 2) (Rsquare (u + v) - Rsquare u - Rsquare v).
-
-Lemma Rmult_pre_rat_rat@{} : forall q r, rat q * rat r = rat (q * r).
-Proof.
-intros. unfold mult at 1. unfold Rmult_pre,QRmult.
-change (rat q + rat r) with (rat (q + r)).
-rewrite !Rsquare_rat.
-change (rat ((q + r) * (q + r)) - rat (q * q) - rat (r * r)) with
-  (rat ((q + r) * (q + r) - q * q - r * r)).
-rewrite lipschitz_extend_rat. unfold compose. apply ap.
-path_via (2 / 2 * q * r).
-{ abstract ring_tac.ring_with_integers (NatPair.Z nat). }
-rewrite dec_recip_inverse;[|solve_propholds].
-rewrite mult_1_l;trivial.
-Qed.
-
-Definition Rmult_valT@{} x y := sigT (fun z => z = x * y).
-
-Instance Rmult_valT_ishprop@{} : forall x y, IsHProp (Rmult_valT x y).
-Proof.
-intros;apply Sigma.ishprop_sigma_disjoint.
-intros. path_via (x*y).
-Qed.
-
-Definition Rmult_aux@{} : forall x y, Rmult_valT x y.
-Proof.
-apply (real_ind0 (fun x => forall y, _)).
-- intros q;apply (real_ind0 _).
-  + intros r. exists (rat (q * r)).
-    Symmetry;apply Rmult_pre_rat_rat.
-  + intros y _;exists (rat q * lim y). reflexivity.
-- intros x _ y;exists (lim x * y);reflexivity.
-Defined.
-
-Global Instance Rmult@{} : Mult real := fun x y => (Rmult_aux x y).1.
-End Rmult_def.
-
-Definition Rmult_rat_rat@{} q r : rat q * rat r = rat (q * r)
+Definition Rmult_rat_rat@{} q r : (rat q) * (rat r) = rat (q * r)
   := idpath.
 
-Definition Rmult_def_pr@{} : mult = Rmult_pre.
+Lemma Rmult_interval_proj_applied : forall a x y,
+  x * interval_proj (rat (- ' a)) (rat (' a)) y =
+  Rbounded_mult a x y.
 Proof.
-repeat (apply path_forall;intro).
-apply ((Rmult_aux _ _).2).
+intros;change (Rbounded_mult a x) with
+  ((fun y : exists a, Interval (rat (- ' a)) (rat (' a)) =>
+    Rbounded_mult y.1 x y.2) ∘ (fun s => existT _ a s)).
+rewrite Rmult_pr. reflexivity.
 Qed.
 
-Global Instance uniform_on_intervals_continuous@{} (f:real -> real)
+Lemma Rmult_interval_proj : forall a y,
+  (fun x => x * interval_proj (rat (- ' a)) (rat (' a)) y) =
+  (fun x => Rbounded_mult a x y).
+Proof.
+intros. apply path_forall. intros x.
+apply Rmult_interval_proj_applied.
+Qed.
+
+Lemma Rmult_lipschitz_pre1 : forall a y,
+  Lipschitz (.* (interval_proj (rat (- ' a)) (rat (' a)) y)) (a+1).
+Proof.
+intros a y. rewrite Rmult_interval_proj. apply _.
+Qed.
+
+
+
+Global Instance uniform_on_intervals_continuous@{} `{Closeness A} (f:real -> A)
   (mu : Q+ -> Q+ -> Q+)
   {Emu : forall a : Q+,
     Uniform (f ∘ interval_proj (rat (- ' a)) (rat (' a))) (mu a)}
@@ -3713,23 +3757,6 @@ assert (E2 : rat (- ' a) <= v /\ v <= rat (' a)).
 exact (Emu _ _ (existT _ _ E1) (existT _ _ E2) xi1).
 Qed.
 
-Lemma Rsquare_interval_proj@{} : forall a,
-  (Rsquare ∘ interval_proj (rat (- ' a)) (rat (' a))) =
-  Rbounded_square a.
-Proof.
-intros. change (Rbounded_square a) with
-  (Rfull_square ∘ (fun s => existT _ a s)).
-rewrite Rsquare_pr. reflexivity.
-Qed.
-
-Lemma Rsquare_lipschitz@{} : forall a : Q+,
-  Lipschitz (Rsquare ∘ interval_proj (rat (- ' a)) (rat (' a))) (2 * a).
-Proof.
-intros. rewrite Rsquare_interval_proj. apply _.
-Qed.
-Local Existing Instance Rsquare_lipschitz.
-
-(* TODO *)
 Instance Rmult_continuous : Continuous (uncurry (@mult real _)).
 Proof.
 Admitted.
@@ -3737,13 +3764,13 @@ Admitted.
 Instance Rmult_continuous_l : forall x, Continuous (x *.).
 Proof.
 change (forall x, Continuous (uncurry mult ∘ (pair x))).
-apply _.
+intros;apply continuous_compose; apply _.
 Qed.
 
 Instance Rmult_continuous_r : forall y, Continuous (.* y).
 Proof.
 change (forall y, Continuous (uncurry mult ∘ (fun x => pair x y))).
-apply _.
+intros;apply continuous_compose; apply _.
 Qed.
 
 Instance real_ring : Ring real.
@@ -3757,7 +3784,8 @@ change Rmult with mult;change R1 with one.
     repeat apply continuous_compose; apply _.
   + change (Continuous (uncurry mult ∘ map2 (uncurry mult) id)).
     apply _.
-  + intros;apply (ap rat),associativity.
+  + intros. change (rat (q * (r * s)) = rat (q * r * s)). apply (ap rat).
+    apply associativity.
 - hnf. apply unique_continuous_extension.
   intros;apply (ap rat),left_identity.
 - hnf. apply unique_continuous_extension.
@@ -3773,6 +3801,7 @@ change Rmult with mult;change R1 with one.
       map2 id prod_symm ∘ prod_assoc^-1 ∘ prod_symm ∘ map2 id prod_assoc ∘
       prod_assoc^-1 ∘ map2 BinaryDup id ∘ prod_assoc^-1)).
     repeat apply continuous_compose;apply _.
-  + intros;apply (ap rat),distribute_l.
+  + intros;change (rat (q * (r + s)) = rat (q * r + q * s));
+    apply (ap rat),distribute_l.
 Qed.
 
