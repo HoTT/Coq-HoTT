@@ -2,3 +2,4 @@ _build/
 Makefile
 *.v.d
 coqopts
+html/
