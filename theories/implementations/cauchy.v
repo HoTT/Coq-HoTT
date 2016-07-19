@@ -3680,7 +3680,11 @@ Defined.
 Lemma Rbounded_mult_respects : ∀ z x y, interval_back x = interval_back y →
   Rbounded_mult x.1 z x.2 = Rbounded_mult y.1 z y.2.
 Proof.
-Admitted.
+intros z x y E.
+revert z. apply unique_continuous_extension.
+intros q. unfold Rbounded_mult.
+exact (ap _ E).
+Qed.
 
 Definition Rmult@{} : Mult real
   := fun x => jections.surjective_factor@{UQ UQ UQ Uhuge Ularge
@@ -3763,7 +3767,7 @@ assert (E2 : rat (- ' a) <= v /\ v <= rat (' a)).
 exact (Emu _ _ (existT _ _ E1) (existT _ _ E2) xi1).
 Qed.
 
-Instance Rmult_continuous_r : forall y, Continuous (.* y).
+Lemma Rmult_continuous_r' : forall y, Continuous (.* y).
 Proof.
 intros. red. apply (merely_destruct (R_Qpos_bounded y)).
 intros [a Eq]. apply R_lt_le in Eq. apply Rabs_le_pr in Eq.
@@ -3771,6 +3775,9 @@ change (Continuous (.* y)). eapply lipschitz_continuous.
 change (.* y) with (.* (interval_proj (rat (- ' a)) (rat (' a)) (existT _ y Eq))).
 apply Rmult_lipschitz_aux.
 Qed.
+
+Definition Rmult_continuous_r@{} := Rmult_continuous_r'@{Ularge Ularge}.
+Existing Instance Rmult_continuous_r.
 
 Lemma Rmult_rat_l q x : rat q * x = QRmult q x.
 Proof.
@@ -3805,7 +3812,7 @@ rewrite negate_mult_distr_r,<-plus_mult_distr_l.
 apply Qabs_mult.
 Qed.
 
-Lemma Rmult_le_compat_abs : forall a b c d : real, abs a <= abs c ->
+Lemma Rmult_le_compat_abs@{} : forall a b c d : real, abs a <= abs c ->
   abs b <= abs d ->
   abs a * abs b <= abs c * abs d.
 Proof.
@@ -3846,7 +3853,7 @@ apply join_r. apply mult_le_compat.
 - apply join_ub_l.
 Qed.
 
-Lemma R_archimedean_pos : forall u v, 0 <= u -> u < v ->
+Lemma R_archimedean_pos@{} : forall u v, 0 <= u -> u < v ->
   merely (exists q : Q+, u < rat (' q) < v).
 Proof.
 intros u v Eu E.
@@ -3856,7 +3863,7 @@ apply tr. simple refine (existT _ (mkQpos q _) _).
 - simpl. unfold cast;simpl. split;trivial.
 Qed.
 
-Lemma R_bounded_2 : forall u v,
+Lemma R_bounded_2@{} : forall u v,
   merely (exists d d' : Q+, abs u < rat (' d') /\ abs v < rat (' d')
   /\ ' d' < ' d).
 Proof.
@@ -3876,7 +3883,7 @@ repeat split.
   + reflexivity.
 Qed.
 
-Global Instance Rmult_continuous : Continuous (uncurry (@mult real _)).
+Lemma Rmult_continuous@{} : Continuous (uncurry (@mult real _)).
 Proof.
 intros [u1 v1] e.
 apply (merely_destruct (R_bounded_2 u1 v1));intros [d [d' [Ed1 [Ed2 Ed3]]]].
@@ -3930,6 +3937,7 @@ rewrite (pos_split2 e). apply (triangular _ (u2 * v1)).
       ** solve_propholds.
       ** reflexivity.
 Qed.
+Global Existing Instance Rmult_continuous.
 
 Instance Rmult_continuous_l : forall x, Continuous (x *.).
 Proof.
@@ -3937,7 +3945,7 @@ change (forall x, Continuous (uncurry mult ∘ (pair x))).
 intros;apply continuous_compose; apply _.
 Qed.
 
-Instance real_ring : Ring real.
+Instance real_ring@{} : Ring real.
 Proof.
 repeat (split;try apply _);
 unfold sg_op,mon_unit,mult_is_sg_op,one_is_mon_unit;
