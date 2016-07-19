@@ -3715,15 +3715,21 @@ intros. apply path_forall. intros x.
 apply Rmult_interval_proj_applied.
 Qed.
 
-Lemma Rmult_lipschitz_pre1 : forall a y,
+Lemma Rmult_lipschitz_aux : forall a y,
   Lipschitz (.* (interval_proj (rat (- ' a)) (rat (' a)) y)) (a+1).
 Proof.
 intros a y. rewrite Rmult_interval_proj. apply _.
 Qed.
 
+Lemma Rmult_lipschitz_aux_alt : forall a y, abs y <= rat (' a) ->
+  Lipschitz (.* y) (a+1).
+Proof.
+intros a y E. apply Rabs_le_pr in E.
+change y with (interval_proj (rat (- ' a)) (rat (' a)) (existT _ y E)).
+apply Rmult_lipschitz_aux.
+Qed.
 
-
-Global Instance uniform_on_intervals_continuous@{} `{Closeness A} (f:real -> A)
+Lemma uniform_on_intervals_continuous `{Closeness A} (f:real -> A)
   (mu : Q+ -> Q+ -> Q+)
   {Emu : forall a : Q+,
     Uniform (f ∘ interval_proj (rat (- ' a)) (rat (' a))) (mu a)}
@@ -3757,19 +3763,177 @@ assert (E2 : rat (- ' a) <= v /\ v <= rat (' a)).
 exact (Emu _ _ (existT _ _ E1) (existT _ _ E2) xi1).
 Qed.
 
-Instance Rmult_continuous : Continuous (uncurry (@mult real _)).
+Instance Rmult_continuous_r : forall y, Continuous (.* y).
 Proof.
-Admitted.
+intros. red. apply (merely_destruct (R_Qpos_bounded y)).
+intros [a Eq]. apply R_lt_le in Eq. apply Rabs_le_pr in Eq.
+change (Continuous (.* y)). eapply lipschitz_continuous.
+change (.* y) with (.* (interval_proj (rat (- ' a)) (rat (' a)) (existT _ y Eq))).
+apply Rmult_lipschitz_aux.
+Qed.
+
+Lemma Rmult_rat_l q x : rat q * x = QRmult q x.
+Proof.
+apply (merely_destruct (R_Qpos_bounded x)).
+intros [d Ed].
+apply R_lt_le in Ed. apply Rabs_le_pr in Ed.
+change (rat q * x) with
+  (rat q * interval_proj (rat (- ' d)) (rat (' d)) (existT _ x Ed)).
+rewrite Rmult_interval_proj_applied. reflexivity.
+Qed.
+
+Lemma Rmult_abs_l : forall a b c, abs (a * b - a * c) = abs a * abs (b - c).
+Proof.
+intros a b c;revert a. eapply @unique_continuous_extension.
+1-5: apply _.
+{ change (Continuous (abs ∘ uncurry plus ∘ map2 (.* b) (negate ∘ (.* c)) ∘
+    BinaryDup)).
+  repeat apply continuous_compose;apply _.
+}
+{ change (Continuous ((.* (abs (b - c))) ∘ abs)).
+  apply _. }
+intros q.
+change (abs (rat q)) with (rat (abs q)).
+rewrite !Rmult_rat_l.
+revert b c. apply unique_continuous_binary_extension.
+{ change (Continuous (abs ∘ uncurry plus ∘ map2 (QRmult q) (negate ∘ QRmult q))).
+  apply _. }
+{ change (Continuous (QRmult (abs q) ∘ abs ∘ uncurry plus ∘ map2 id negate)).
+  apply _. }
+intros r s. apply (ap rat).
+rewrite negate_mult_distr_r,<-plus_mult_distr_l.
+apply Qabs_mult.
+Qed.
+
+Lemma Rmult_le_compat_abs : forall a b c d : real, abs a <= abs c ->
+  abs b <= abs d ->
+  abs a * abs b <= abs c * abs d.
+Proof.
+intros ???? E1 E2;rewrite <-E1,<-E2. clear E1 E2.
+red;simpl.
+revert a c. apply unique_continuous_binary_extension.
+{ change (Continuous (uncurry join ∘ map2
+    ((.* abs b) ∘ abs ∘ fst)
+    ((.* (join (abs b) (abs d))) ∘ uncurry join ∘ map2 abs abs) ∘
+  BinaryDup)).
+  repeat apply continuous_compose. 1,3:apply _.
+  apply map2_continuous. 1,2:apply _.
+  { apply continuous_compose. 2:apply _.
+    apply continuous_compose;apply _. }
+  { apply continuous_compose;apply _. }
+}
+{ change (Continuous ((.* (join (abs b) (abs d))) ∘ uncurry join ∘ map2 abs abs)).
+  apply _. }
+intros q r.
+change (abs (rat q)) with (rat (abs q));
+change (abs (rat r)) with (rat (abs r)).
+change (rat (abs q) ⊔ rat (abs r)) with
+  (rat (abs q ⊔ abs r)).
+rewrite !Rmult_rat_l.
+revert b d. apply unique_continuous_binary_extension.
+{ change (Continuous (uncurry join ∘ map2
+    (QRmult (abs q) ∘ abs ∘ fst)
+    (QRmult (join (abs q) (abs r)) ∘ uncurry join ∘ map2 abs abs) ∘
+  BinaryDup)).
+  apply _. }
+{ change (Continuous (QRmult (join (abs q) (abs r)) ∘ uncurry join ∘ map2 abs abs)).
+  apply _. }
+intros s t. apply (ap rat).
+apply join_r. apply mult_le_compat.
+- apply Qabs_nonneg.
+- apply Qabs_nonneg.
+- apply join_ub_l.
+- apply join_ub_l.
+Qed.
+
+Lemma R_archimedean_pos : forall u v, 0 <= u -> u < v ->
+  merely (exists q : Q+, u < rat (' q) < v).
+Proof.
+intros u v Eu E.
+apply (merely_destruct (R_archimedean _ _ E)). intros [q [E1 E2]].
+apply tr. simple refine (existT _ (mkQpos q _) _).
+- apply rat_lt_reflecting. apply R_le_lt_trans with u;trivial.
+- simpl. unfold cast;simpl. split;trivial.
+Qed.
+
+Lemma R_bounded_2 : forall u v,
+  merely (exists d d' : Q+, abs u < rat (' d') /\ abs v < rat (' d')
+  /\ ' d' < ' d).
+Proof.
+intros.
+apply (merely_destruct (R_Qpos_bounded u)).
+intros [d Ed].
+apply (merely_destruct (R_Qpos_bounded v)).
+intros [n En].
+apply tr;exists (join d n + 1) ,(join d n).
+repeat split.
+- apply R_lt_le_trans with (rat (' d));trivial.
+  apply rat_le_preserve,join_ub_l.
+- apply R_lt_le_trans with (rat (' n));trivial.
+  apply rat_le_preserve,join_ub_r.
+- apply pos_plus_le_lt_compat_r.
+  + solve_propholds.
+  + reflexivity.
+Qed.
+
+Global Instance Rmult_continuous : Continuous (uncurry (@mult real _)).
+Proof.
+intros [u1 v1] e.
+apply (merely_destruct (R_bounded_2 u1 v1));intros [d [d' [Ed1 [Ed2 Ed3]]]].
+apply tr;exists (meet (Qpos_diff (' d') (' d) Ed3) (e / 2 / (d + 1)));
+intros [u2 v2] [xi1 xi2];unfold uncurry;simpl in *.
+rewrite (pos_split2 e). apply (triangular _ (u2 * v1)).
+- apply R_lt_le in Ed2.
+  pose proof (Rmult_lipschitz_aux_alt _ _ Ed2) as E1.
+  apply lipschitz_uniform in E1.
+  apply E1. eapply rounded_le;[exact xi1|].
+  etransitivity;[apply meet_lb_r|].
+  apply mult_le_compat;try solve_propholds.
+  + reflexivity.
+  + unfold cast;simpl. apply flip_le_dec_recip.
+    * solve_propholds.
+    * apply (order_preserving (+ 1)). apply lt_le;trivial.
+- apply metric_to_equiv. rewrite Rmult_abs_l.
+  apply R_le_lt_trans with (abs (rat (' d)) * abs (rat (' (e / 2 / (d + 1))))).
+  + apply Rmult_le_compat_abs.
+    * change (abs (rat (' d))) with (rat (abs (' d))).
+      unfold abs at 2. rewrite (fst (abs_sig (' _)).2);[|solve_propholds].
+      rewrite (Qpos_diff_pr _ _ Ed3).
+      eapply Rle_close_rat;[|apply (non_expanding abs (x:=u1))].
+      ** apply R_lt_le;trivial.
+      ** eapply rounded_le;[exact xi1|]. apply meet_lb_l. 
+    * change (abs (rat (' (e / 2 / (d + 1))))) with
+        (rat (abs (' (e / 2 / (d+1))))).
+      unfold abs at 2. rewrite (fst (abs_sig (' _)).2);[|solve_propholds].
+      apply equiv_to_metric in xi2.
+      etransitivity;[apply R_lt_le,xi2|].
+      apply rat_le_preserve,meet_lb_r.
+  + apply rat_lt_preserving.
+    rewrite <-Qabs_mult.
+    change (' d * ' (e / 2 / (d + 1))) with
+      (' (d * (e / 2 / (d + 1)))).
+    unfold abs;rewrite (fst (abs_sig (' _)).2);[|solve_propholds].
+    assert (Hrw : e / 2 = (e / 2) * 1)
+      by (apply pos_eq;ring_tac.ring_with_nat);
+    rewrite Hrw;clear Hrw.
+    assert (Hrw : d * (e / 2 * 1 / (d + 1)) = (e / 2) * (d / (d + 1)))
+      by (apply pos_eq;ring_tac.ring_with_nat);
+    rewrite Hrw;clear Hrw.
+    apply pos_mult_le_lt_compat;try split;try solve_propholds.
+    * reflexivity.
+    * apply (strictly_order_reflecting (.* (' (d + 1)))).
+      unfold cast;simpl.
+      rewrite mult_1_l.
+      rewrite <-mult_assoc, (mult_comm (/ _)),dec_recip_inverse,mult_1_r;
+      [|apply lt_ne_flip;solve_propholds].
+      apply pos_plus_le_lt_compat_r.
+      ** solve_propholds.
+      ** reflexivity.
+Qed.
 
 Instance Rmult_continuous_l : forall x, Continuous (x *.).
 Proof.
 change (forall x, Continuous (uncurry mult ∘ (pair x))).
-intros;apply continuous_compose; apply _.
-Qed.
-
-Instance Rmult_continuous_r : forall y, Continuous (.* y).
-Proof.
-change (forall y, Continuous (uncurry mult ∘ (fun x => pair x y))).
 intros;apply continuous_compose; apply _.
 Qed.
 
