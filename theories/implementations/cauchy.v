@@ -3254,34 +3254,6 @@ Qed.
 
 Definition equiv_metric_rw@{} := equiv_metric_rw'@{Ularge Ularge Ularge}.
 
-Instance R_interval_restrict_nonexpanding@{}
-  : forall (a b : real) E, NonExpanding (Interval_restrict a b E).
-Proof.
-intros a b E.
-change (NonExpanding (fun z => join a (meet z b))).
-apply _.
-Qed.
-
-Instance Q_interval_restrict_nonexpanding@{}
-  : forall (a b : Q) E, NonExpanding (Interval_restrict a b E).
-Proof.
-intros a b E.
-change (NonExpanding (fun z => join a (meet z b))).
-apply _.
-Qed.
-
-Definition lipschitz_extend_interval@{} (a b : Q) (E : a <= b)
-  (f : Interval a b -> real) (L:Q+)
-  `{!Lipschitz f L}
-  : Interval (rat a) (rat b) -> real
-  := fun s => lipschitz_extend (compose f (Interval_restrict a b E)) L s.1.
-
-Instance lipschitz_extend_interval_nonexpanding@{} (a b : Q) (E : a <= b)
-  (f : Interval a b -> real)
-  `{!NonExpanding f}
-  : NonExpanding (lipschitz_extend_interval a b E f 1)
-  := lipschitz_nonexpanding _.
-
 Instance Rplus_le_preserving@{} : forall z : real,
   OrderPreserving (z +).
 Proof.
@@ -4094,7 +4066,238 @@ apply R_lt_le_trans with (rat (' (e1 * e2))).
   apply mult_le_compat;trivial;apply rat_le_preserve;solve_propholds.
 Qed.
 
+Lemma Rjoin_plus_r : forall a b c, join a b + c = join (a+c) (b+c).
+Proof.
+apply unique_continuous_ternary_extension.
+- change (Continuous (uncurry plus ∘ map2 (uncurry join) id)).
+  apply _.
+- change (Continuous (uncurry join ∘ map2
+      (uncurry plus ∘ map2 fst id)
+      (uncurry plus ∘ map2 snd id) ∘
+    BinaryDup)).
+  apply _.
+- intros q r s. apply (ap rat).
+  destruct (total le q r) as [E|E].
+  + rewrite join_r;trivial.
+    rewrite join_r;trivial.
+    apply (order_preserving (+ s));trivial.
+  + rewrite join_l;trivial.
+    rewrite join_l;trivial.
+    apply (order_preserving (+ s));trivial.
+Qed.
+
+Lemma Rlt_join : forall a b c, a < c -> b < c ->
+  join a b < c.
+Proof.
+intros a b c E1 E2.
+apply (merely_destruct (Rlt_exists_pos_plus_le _ _ E1));intros [e1 E1'].
+apply (merely_destruct (Rlt_exists_pos_plus_le _ _ E2));intros [e2 E2'].
+destruct (Qpos_lt_min e1 e2) as [n [n1 [n2 [En1 En2]]]].
+apply R_lt_le_trans with (join a b + rat (' n));[apply Rlt_plus_pos|].
+rewrite Rjoin_plus_r. apply join_le.
+- etransitivity;[|exact E1'].
+  apply (order_preserving (a +)),rat_le_preserve. rewrite En1.
+  unfold cast at 2;simpl.
+  apply nonneg_plus_le_compat_r. solve_propholds.
+- etransitivity;[|exact E2'].
+  apply (order_preserving (b +)),rat_le_preserve. rewrite En2.
+  unfold cast at 2;simpl.
+  apply nonneg_plus_le_compat_r. solve_propholds.
+Qed.
+
+Lemma from_below_is_approx (x : real) :
+  ∀ d e : Q+, close (d + e) (x - rat (' d)) (x - rat (' e)).
+Proof.
+intros;apply metric_to_equiv.
+assert (Hrw : (x - rat (' d) - (x - rat (' e))) =
+  rat (' e) - rat (' d))
+  by ring_tac.ring_with_integers (NatPair.Z nat).
+rewrite Hrw;clear Hrw.
+change (rat (abs (' e - ' d)) < rat (' (d + e))).
+apply rat_lt_preserving.
+destruct (total le (' e) (' d)) as [E|E].
+- rewrite <-Qabs_neg, Qabs_of_nonneg
+    by (apply flip_nonpos_negate,(snd (flip_nonpos_minus _ _)),E).
+  rewrite <-negate_swap_r. apply (strictly_order_preserving ((' d) +)).
+  apply between_pos. solve_propholds.
+- rewrite Qabs_of_nonneg
+    by (apply (snd (flip_nonneg_minus _ _)),E).
+  rewrite plus_comm. apply (strictly_order_preserving (+ (' e))).
+  apply between_pos. solve_propholds.
+Qed.
+
+Definition from_below (x : real) : Approximation.
+Proof.
+exists (fun e => x - rat (' e)).
+apply from_below_is_approx.
+Defined.
+
+Lemma from_below_pr : forall x, lim (from_below x) = x.
+Proof.
+intros. apply equiv_path. intros.
+rewrite (pos_split2 e).
+eapply (triangular _);[rewrite (pos_split2 (e/2));Symmetry;apply equiv_lim|].
+simpl. apply metric_to_equiv.
+assert (Hrw : (x - rat (' (e / 2 / 2)) - x) = - (rat (' (e / 2 / 2))))
+  by ring_tac.ring_with_integers (NatPair.Z nat).
+rewrite Hrw;clear Hrw.
+rewrite Rabs_neg.
+apply rat_lt_preserving.
+rewrite Qabs_of_nonneg by solve_propholds.
+set (n := e / 2);clearbody n;clear e.
+set (k := n / 2);rewrite (pos_split2 n).
+fold k. clearbody k;clear n.
+apply pos_plus_lt_compat_r. solve_propholds.
+Qed.
+
+Definition lipschitz_approx (f : real -> real) L
+  `{!Lipschitz f L}
+  (x : Approximation)
+  : Approximation.
+Proof.
+exists (fun e => f (x (e / L))).
+intros.
+rewrite <-(pos_unconjugate L (d + e)),<-Qpos_mult_assoc.
+apply (lipschitz f L).
+assert (Hrw : ((d + e) / L) = d / L + e / L)
+  by (apply pos_eq,plus_mult_distr_r);
+rewrite Hrw;clear Hrw.
+apply approx_equiv.
+Defined.
+
+Lemma lipschitz_approx_lim (f:real -> real) L `{!Lipschitz f L} x
+  : f (lim x) = lim (lipschitz_approx f L x).
+Proof.
+apply equiv_path. intros.
+rewrite (pos_split2 e).
+eapply triangular;[|rewrite (pos_split2 (e/2));apply equiv_lim].
+simpl. set (N := e / 2 / 2 / L).
+rewrite <-(pos_unconjugate L (e / 2)),<-Qpos_mult_assoc.
+apply (lipschitz f L).
+Symmetry. rewrite (pos_split2 (e / 2 / L)).
+assert (Hrw : e / 2 / L / 2 = N)
+  by (unfold N;apply pos_eq;ring_tac.ring_with_nat).
+rewrite Hrw;clear Hrw.
+apply equiv_lim.
+Qed.
+
+Lemma approx_eq : forall x y : Approximation,
+  approximate x = approximate y -> x = y.
+Proof.
+intros [x Ex] [y Ey];simpl;intros E.
+destruct E. apply ap. apply path_ishprop.
+Qed.
+
+Lemma Rjoin_0_not_neg : forall x, (forall e : Q+, - rat (' e) < x) -> join 0 x = x.
+Proof.
+intros x E.
+rewrite <-(from_below_pr 0).
+rewrite (lipschitz_approx_lim (⊔ x) 1 (from_below 0)).
+path_via (lim (const_approx x));[|apply lim_cons].
+apply ap.
+apply approx_eq. apply path_forall;intros e.
+simpl. apply join_r.
+rewrite plus_0_l. apply R_lt_le;trivial.
+Qed.
+
 Lemma R_not_lt_le_flip : forall x y : real, ~ x < y -> y <= x.
 Proof.
+intros x y E.
+apply flip_nonneg_minus.
+apply Rjoin_0_not_neg.
+intros. apply flip_lt_minus_r.
+rewrite plus_comm.
+assert (E1 : y - rat (' e) < y).
+{ apply (strictly_order_reflecting (+ (rat (' e)))).
+  rewrite <-plus_assoc,plus_negate_l,plus_0_r. apply Rlt_plus_pos. }
+apply (merely_destruct (cotransitive E1 x));intros [E2|E2];trivial.
+destruct (E E2).
+Qed.
+
+Instance real_full_pseudo_order@{} : FullPseudoOrder Rle Rlt.
+Proof.
+(* Avoid splitting iffs *)
+repeat (split;try (revert x; fail 1);try apply _).
+- hnf. unfold apart;simpl. intros ??. apply Sum.equiv_sum_symm.
+- intros x y;split.
+  + intros E.
+    apply (antisymmetry le);apply R_not_lt_le_flip;intros E';apply E;hnf;auto.
+  + intros [] [E|E];apply (irreflexivity _ _ E).
+- apply lt_antisym.
+- intros x y;split;intros E;exact E.
+- intros x y;split.
+  + intros E1 E2. apply (irreflexivity lt x).
+    apply R_le_lt_trans with y;trivial.
+  + apply R_not_lt_le_flip.
+Qed.
+
+Global Instance real_isapart : IsApart real.
+Proof.
+apply pseudo_order_apart.
+Qed.
+
+Lemma Rmult_lt_apart : forall z x y, z * x < z * y -> apart x y.
+Proof.
+intros z x y. apply (Trunc_ind _).
+intros [q [r [E1 [E2 E3]]]].
 
 Abort.
+
+(*
+Global Instance real_full_pseudo_srorder : FullPseudoSemiRingOrder Rle Rlt.
+Proof.
+apply from_full_pseudo_ring_order;try apply _.
+apply @apartness.strong_binary_setoid_morphism_commutative;try apply _.
+intros z x y [E|E];apply Rmult_lt_apart in E;trivial;Symmetry;trivial.
+Qed.
+*)
+
+
+Definition Qpos_upper (e : Q+) := exists x : Q, ' e <= x.
+
+Definition Qpos_upper_inject e : Q -> Qpos_upper e.
+Proof.
+intros x. exists (join x (' e)). apply join_ub_r.
+Defined.
+
+Instance Qpos_upper_close e : Closeness (Qpos_upper e)
+  := fun n x y => close n x.1 y.1.
+Arguments Qpos_upper_close _ _ _ _ /.
+
+Instance Q_recip_lipschitz (e : Q+)
+  : Lipschitz ((/) ∘ pr1 ∘ (Qpos_upper_inject e)) (/ (e * e)).
+Proof.
+intros n q r xi.
+unfold compose;simpl. apply Qclose_alt.
+assert (PropHolds (0 < join q (' e))) as E
+  by (apply lt_le_trans with (' e);[solve_propholds|apply join_ub_r]).
+apply (strictly_order_reflecting ((join q (' e)) *.)).
+assert (PropHolds (0 < join r (' e))) as E'
+  by (apply lt_le_trans with (' e);[solve_propholds|apply join_ub_r]).
+apply (strictly_order_reflecting ((join r (' e)) *.)).
+set (X := join r (' e)) at 3.
+rewrite <-(Qabs_of_nonneg (join r _)) by solve_propholds.
+set (Y := join q (' e)) at 3.
+rewrite <-(Qabs_of_nonneg (join q _)) by solve_propholds.
+rewrite <-!Qabs_mult.
+rewrite !(plus_mult_distr_l (Aplus:=Qplus)).
+rewrite dec_recip_inverse by (apply irrefl_neq,symmetric_neq in E;trivial).
+rewrite mult_1_r.
+assert (Hrw :  (r ⊔ ' e) * ((q ⊔ ' e) * - / (r ⊔ ' e)) = - Y * (X / X))
+  by ring_tac.ring_with_integers (NatPair.Z nat).
+rewrite Hrw;clear Hrw.
+rewrite dec_recip_inverse by (apply irrefl_neq,symmetric_neq in E';trivial).
+rewrite mult_1_r. unfold X, Y.
+eapply lt_le_trans.
+- apply Qclose_alt. eapply (non_expanding (⊔ ' e)). Symmetry. apply xi.
+- transitivity (' (((e * e) / (e * e)) * n)).
+  + rewrite pos_recip_r,Qpos_mult_1_l;reflexivity.
+  + rewrite <-!Qpos_mult_assoc.
+    change (' (e * (e * (/ (e * e) * n)))) with (' e * (' e * ' (/ (e * e) * n))).
+    apply mult_le_compat;try solve_propholds;[apply join_ub_r|].
+    apply mult_le_compat;try solve_propholds;[apply join_ub_r|].
+    reflexivity.
+Qed.
+
+Definition Qpos_upper_recip (e:Q+) : real -> real
+  := lipschitz_extend (rat ∘ ((/) ∘ pr1 ∘ (Qpos_upper_inject e))) _.
