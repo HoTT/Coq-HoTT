@@ -25,7 +25,7 @@ Section from_ring_order.
 End from_ring_order.
 
 Section from_strict_ring_order.
-  Context `{Ring R} `{!StrictOrder Rle}
+  Context `{Ring R} `{!StrictOrder Rlt}
     (plus_spec : ∀ z, StrictlyOrderPreserving (z +))
     (mult_spec : ∀ x y, PropHolds (0 < x) → PropHolds (0 < y) →
       PropHolds (0 < x * y)).

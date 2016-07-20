@@ -154,6 +154,13 @@ intros;apply pos_eq.
 apply mult_assoc.
 Qed.
 
+Global Instance Qpos_plus_assoc@{} : Associative (@plus Q+ _).
+Proof.
+hnf.
+intros;apply pos_eq.
+apply plus_assoc.
+Qed.
+
 Global Instance Qpos_mult_1_l@{} : LeftIdentity (@mult Q+ _) 1.
 Proof.
 hnf;intros;apply pos_eq;apply mult_1_l.
@@ -2133,6 +2140,11 @@ intros q;destruct (total_abs_either q) as [E|E];destruct E as [E1 E2];rewrite E2
 - apply flip_nonneg_negate. rewrite involutive;trivial.
 Qed.
 
+Lemma Qabs_of_nonneg@{} : forall q : Q, 0 <= q -> abs q = q.
+Proof.
+intro;apply ((abs_sig _).2).
+Qed.
+
 Global Instance Q_premetric@{} : PreMetric Q.
 Proof.
 split;try apply _.
@@ -3977,3 +3989,112 @@ change Rmult with mult;change R1 with one.
     apply (ap rat),distribute_l.
 Qed.
 
+Lemma Rlt_exists_pos_plus_le@{} : forall x y : real, x < y ->
+  merely (exists e : Q+, x + rat (' e) <= y).
+Proof.
+intros x y;apply (Trunc_ind _). intros [q [r [E1 [E2 E3]]]].
+apply tr. exists (Qpos_diff _ _ E2).
+transitivity (rat r);trivial.
+set (d := Qpos_diff _ _ E2). rewrite (Qpos_diff_pr _ _ E2). unfold d;clear d.
+change (rat (q + ' Qpos_diff q r E2)) with (rat q + rat (' Qpos_diff q r E2)).
+rewrite 2!(plus_comm _ (rat (' _))).
+apply (order_preserving (_ +)). trivial.
+Qed.
+
+Lemma Rle_close@{} : forall e u v, close e u v ->
+  v <= u + rat (' e).
+Proof.
+intros e u v xi.
+apply (order_reflecting ((- u) +)).
+rewrite plus_assoc,plus_negate_l,plus_0_l.
+apply equiv_to_metric in xi.
+transitivity (abs (u - v));[|apply R_lt_le,xi].
+rewrite <-Rabs_neg. rewrite <-negate_swap_l. apply Rabs_le_raw.
+Qed.
+
+Lemma Rlt_plus_pos@{} : forall x (e : Q+), x < x + rat (' e).
+Proof.
+apply (real_ind0 (fun x => forall e, _)).
+- intros;apply rat_lt_preserving. apply pos_plus_lt_compat_r.
+  solve_propholds.
+- intros x IHx e.
+  pose proof (fun a b c => Rlt_close_plus _ _ (IHx _ b) _ _ (equiv_lim _ c a))
+    as E1.
+  pose proof (fun a b c => cotransitive (E1 a b c) (lim x + (rat (' e)))) as E2.
+  pose proof (fun a b => Rle_close _ _ _ (symmetry _ _ (equiv_lim x a b))) as E3.
+  (* in the second branch of cotransitive,
+     forall n : Q+, lim x + rat e < x a + a + n' <= lim x + 2a + n
+     where a = E2.a + E3.b
+     and n = E2.b + E2.c + E3.a *)
+  apply (merely_destruct (E2 (e/3) (e/3/3) (e/3/3))).
+  intros [E4|E4].
+  + trivial.
+  + pose proof (E3 (e/3/3) (e/3)) as E5.
+    rewrite <-plus_assoc in E4.
+    pose proof (Rplus_le_preserving
+      (rat (' (e / 3 / 3)) + rat (' (e / 3 / 3 + e / 3))) _ _ E5) as E6.
+    rewrite (plus_comm _ (x _)) in E6.
+    pose proof (R_lt_le_trans _ _ _ E4 E6) as E7.
+    set (d := e/3) in E7.
+    assert (Hrw : rat (' (e / 3 / 3)) + rat (' (e / 3 / 3 + e / 3)) +
+      (lim x + rat (' (e / 3 / 3 + e / 3)))
+      = lim x + rat (' (d + d + ((d/3 + d/3 + d/3))))).
+    { path_via (lim x + (rat (' (e / 3 / 3)) + rat (' (e / 3 / 3 + e / 3))
+        + rat (' (e / 3 / 3 + e / 3)))).
+      { abstract ring_tac.ring_with_nat. }
+      { apply ap. apply (ap rat).
+        unfold d;abstract ring_tac.ring_with_nat. }
+    }
+    rewrite Hrw in E7;clear Hrw.
+    unfold d in E7;rewrite <-!pos_split3 in E7.
+    destruct (irreflexivity lt _ E7).
+Qed.
+
+Instance Rplus_lt_preserving@{} : ∀ z : real, StrictlyOrderPreserving (z +).
+Proof.
+intros z x y E1. apply (merely_destruct (Rlt_exists_pos_plus_le _ _ E1)).
+intros [e E2].
+apply R_lt_le_trans with (z + x + rat (' e)).
+- apply Rlt_plus_pos.
+- rewrite <-plus_assoc. apply (order_preserving (z +)). trivial.
+Qed.
+
+Instance Rmult_nonneg_compat : ∀ x y : real, PropHolds (0 ≤ x) →
+  PropHolds (0 ≤ y) →
+  PropHolds (0 ≤ x * y).
+Proof.
+unfold PropHolds.
+intros x y E1 E2;rewrite <-E1,<-E2;clear E1 E2.
+revert x y;apply unique_continuous_binary_extension.
+- change (Continuous ((join 0) ∘ uncurry mult ∘ map2 (join 0) (join 0))).
+  repeat apply continuous_compose;apply _.
+- change (Continuous (uncurry mult ∘ (map2 (join 0) (join 0)))).
+  apply _.
+- intros. change (rat (0 ⊔ (0 ⊔ q) * (0 ⊔ r)) = rat ((0 ⊔ q) * (0 ⊔ r))).
+  apply ap. apply join_r.
+  apply nonneg_mult_compat;apply join_ub_l.
+Qed.
+
+Instance real_srorder : SemiRingOrder Rle.
+Proof.
+apply from_ring_order;apply _.
+Qed.
+
+Instance real_strict_srorder : StrictSemiRingOrder Rlt.
+Proof.
+eapply @from_strict_ring_order;try apply _;[split;apply _|].
+unfold PropHolds.
+intros x y E1 E2.
+apply (merely_destruct (Rlt_exists_pos_plus_le _ _ E1));intros [e1 E1'].
+apply (merely_destruct (Rlt_exists_pos_plus_le _ _ E2));intros [e2 E2'].
+apply R_lt_le_trans with (rat (' (e1 * e2))).
+- apply rat_lt_preserving;solve_propholds.
+- rewrite plus_0_l in E1';rewrite plus_0_l in E2'.
+  change (rat (' (e1 * e2))) with (rat (' e1) * rat (' e2)).
+  apply mult_le_compat;trivial;apply rat_le_preserve;solve_propholds.
+Qed.
+
+Lemma R_not_lt_le_flip : forall x y : real, ~ x < y -> y <= x.
+Proof.
+
+Abort.
