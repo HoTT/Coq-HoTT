@@ -4455,12 +4455,12 @@ intros [x [E|E]].
 - apply R_pos_recip;exists x;trivial.
 Defined.
 
-Lemma Rrecip_rat : forall q Eq, // (existT _ (rat q) Eq) = rat (/ q).
+Lemma Rrecip_rat@{} : forall q (Eq : apart (rat q) 0),
+  // (existT (fun y => apart y 0) (rat q) Eq) = rat (/ q).
 Proof.
 simpl;intros q [Eq|Eq];unfold recip;simpl.
 - change (- rat q) with (rat (- q)). rewrite R_pos_recip_rat.
   apply (ap rat).
-  rewrite dec_recip_negate,involutive. trivial.
+  rewrite dec_recip_negate@{UQ Ularge},involutive. trivial.
 - apply R_pos_recip_rat.
 Qed.
-
