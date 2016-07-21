@@ -4381,3 +4381,86 @@ Qed.
 
 Definition Qpos_upper_recip (e:Q+) : real -> real
   := lipschitz_extend (rat ∘ ((/) ∘ pr1 ∘ (Qpos_upper_inject e))) _.
+
+Definition pos_back : (exists e : Q+, exists x : real, rat (' e) <= x) ->
+  exists x : real, 0 < x.
+Proof.
+intros s;exists (s.2.1).
+apply R_lt_le_trans with (rat (' s.1)).
+- apply rat_lt_preserving;solve_propholds.
+- apply s.2.2.
+Defined.
+
+Lemma Qpos_upper_recip_respects : ∀ (x : ∃ (e : Q+) (x : real), rat (' e) ≤ x)
+  (y : ∃ (e : Q+) (x0 : real), rat (' e) ≤ x0),
+  pos_back x = pos_back y →
+  Qpos_upper_recip x.1 (x.2).1 = Qpos_upper_recip y.1 (y.2).1.
+Proof.
+intros [e1 [x Ex]] [e2 [y Ey]] E.
+apply (ap pr1) in E. simpl in E.
+simpl.
+destruct E.
+pose proof (join_le _ _ _ Ex Ey) as E;clear Ex Ey.
+rewrite <-E;clear E.
+revert x. apply unique_continuous_extension.
+intros q. unfold Qpos_upper_recip;simpl.
+apply (ap rat). unfold compose;simpl.
+apply ap.
+rewrite <-(simple_associativity (f:=join)),(commutativity (f:=join) q).
+rewrite (simple_associativity (f:=join)),(commutativity (f:=join) _ (' e1)).
+rewrite (simple_associativity (f:=join)),(idempotency _ _).
+set (LEFT := (' e1 ⊔ ' e2) ⊔ q) at 1.
+rewrite <-(simple_associativity (f:=join)),(commutativity (f:=join) q).
+rewrite (simple_associativity (f:=join)).
+rewrite <-(simple_associativity (f:=join) (' e1)),(idempotency join (' e2)).
+reflexivity.
+Qed.
+
+Instance pos_back_issurj : IsSurjection pos_back.
+Proof.
+apply BuildIsSurjection. intros s.
+generalize s.2. apply (Trunc_ind _).
+intros [q [r [E1 [E2 E3]]]].
+apply tr. simple refine (existT _ _ _).
++ simple refine (existT _ _ _).
+  * exists r. apply le_lt_trans with q;trivial. apply rat_le_reflecting;trivial.
+  * simpl. exists s.1. unfold cast;simpl. trivial.
++ simpl. unfold pos_back. simpl. apply Sigma.path_sigma_hprop. reflexivity.
+Defined.
+
+Definition R_pos_recip : (exists x : real, 0 < x) -> real.
+Proof.
+simple refine (jections.surjective_factor@{UQ UQ UQ Uhuge Ularge
+    Ularge UQ UQ Uhuge Ularge
+    UQ} _ pos_back _).
+- intros s. exact (Qpos_upper_recip s.1 s.2.1).
+- simpl. exact Qpos_upper_recip_respects.
+Defined.
+
+Lemma R_pos_recip_rat : forall q (Eq : 0 < rat q),
+  R_pos_recip (existT _ (rat q) Eq) = rat (/ q).
+Proof.
+intros q Eq. unfold R_pos_recip.
+unfold jections.surjective_factor,jections.surjective_factor_aux.
+revert Eq. apply (Trunc_ind _);intros [r [s [E1 [E2 E3]]]].
+simpl. apply (ap rat). unfold compose;simpl.
+apply ap. apply join_l.
+unfold cast;simpl. apply rat_le_reflecting;trivial.
+Qed.
+
+Instance Rrecip : Recip real.
+Proof.
+intros [x [E|E]].
+- apply negate,R_pos_recip;exists (- x). apply flip_neg_negate. trivial.
+- apply R_pos_recip;exists x;trivial.
+Defined.
+
+Lemma Rrecip_rat : forall q Eq, // (existT _ (rat q) Eq) = rat (/ q).
+Proof.
+simpl;intros q [Eq|Eq];unfold recip;simpl.
+- change (- rat q) with (rat (- q)). rewrite R_pos_recip_rat.
+  apply (ap rat).
+  rewrite dec_recip_negate,involutive. trivial.
+- apply R_pos_recip_rat.
+Qed.
+
