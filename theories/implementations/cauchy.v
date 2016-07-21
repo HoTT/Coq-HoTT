@@ -4318,21 +4318,6 @@ eapply R_lt_le_trans;[|apply Rabs_triangle_alt].
 apply apart_to_metric in E. trivial.
 Qed.
 
-(*
-Lemma Rmult_lt_apart : forall z x y, z * x < z * y -> apart x y.
-Proof.
-intros z x y. apply (Trunc_ind _).
-intros [q [r [E1 [E2 E3]]]].
-Admitted.
-
-Global Instance real_full_pseudo_srorder : FullPseudoSemiRingOrder Rle Rlt.
-Proof.
-apply from_full_pseudo_ring_order;try apply _.
-apply @apartness.strong_binary_setoid_morphism_commutative;try apply _.
-intros z x y [E|E];apply Rmult_lt_apart in E;trivial;Symmetry;trivial.
-Qed.
-*)
-
 Definition Qpos_upper (e : Q+) := exists x : Q, ' e <= x.
 
 Definition Qpos_upper_inject e : Q -> Qpos_upper e.
@@ -4549,3 +4534,23 @@ intros [x [E|E]];simpl.
 - apply R_pos_recip_inverse.
 Qed.
 
+(*
+Lemma Rmult_lt_apart : forall z x y, z * x < z * y -> apart x y.
+Proof.
+intros z x y. apply (Trunc_ind _).
+intros [q [r [E1 [E2 E3]]]].
+Admitted.
+
+Global Instance real_full_pseudo_srorder : FullPseudoSemiRingOrder Rle Rlt.
+Proof.
+apply from_full_pseudo_ring_order;try apply _.
+apply @apartness.strong_binary_setoid_morphism_commutative;try apply _.
+intros z x y [E|E];apply Rmult_lt_apart in E;trivial;Symmetry;trivial.
+Qed.
+
+Global Instance real_field : Field real.
+Proof.
+split;try apply _.
+apply R_recip_inverse.
+Qed.
+ *)
