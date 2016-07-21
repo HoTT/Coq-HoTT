@@ -4464,3 +4464,88 @@ simpl;intros q [Eq|Eq];unfold recip;simpl.
   rewrite dec_recip_negate@{UQ Ularge},involutive. trivial.
 - apply R_pos_recip_rat.
 Qed.
+
+Lemma Rneg_strong_ext : StrongExtensionality (negate (A:=real)).
+Proof.
+hnf. intros x y [E|E];[right|left];apply Rneg_lt_flip,E.
+Defined.
+
+Instance Rneg_strong_injective : StrongInjective (negate (A:=real)).
+Proof.
+split;try apply Rneg_strong_ext.
+intros x y [E|E];[right|left];apply Rneg_lt_flip;rewrite !involutive;trivial.
+Defined.
+
+Definition R_apartzero_neg : ApartZero real -> ApartZero real.
+Proof.
+intros x. exists (- x.1).
+destruct (x.2) as [E|E];[right|left].
+- apply flip_neg_negate;trivial.
+- apply flip_pos_negate;trivial.
+Defined.
+
+Lemma Rrecip_neg : forall x, - // x = // (R_apartzero_neg x).
+Proof.
+intros [x [E|E]];unfold recip;simpl.
+- apply involutive.
+- apply ap. apply ap. apply Sigma.path_sigma_hprop. simpl.
+  Symmetry;apply involutive.
+Qed.
+
+Lemma R_recip_upper_recip : forall x e, rat (' e) <= x ->
+  forall (E : apart x 0),
+  // (existT (fun y => apart y 0) x E)
+    = Qpos_upper_recip e x.
+Proof.
+intros x e E1 [E2|E2].
+- destruct (irreflexivity lt x).
+  transitivity 0;trivial. apply R_lt_le_trans with (rat (' e));trivial.
+  apply rat_lt_preserving;solve_propholds.
+- unfold recip;simpl. revert E2;apply (Trunc_ind _);intros [q [r [E2 [E3 E4]]]].
+  unfold R_pos_recip,jections.surjective_factor,jections.surjective_factor_aux.
+  simpl.
+  transparent assert (X : (exists (e : Q+) (x : real), rat (' e) ≤ x)).
+  { exists {| pos := r;
+      is_pos := le_lt_trans 0 q r (rat_le_reflecting 0 q E2) E3 |}, x.
+    unfold cast;simpl. trivial. }
+  apply (Qpos_upper_recip_respects X (existT _ _ (existT _ _ E1))).
+  unfold pos_back,X;simpl. apply Sigma.path_sigma_hprop. simpl. reflexivity.
+Qed.
+
+Instance real_nontrivial : PropHolds (apart (A:=real) 1 0).
+Proof.
+right. apply rat_lt_preserving;solve_propholds.
+Defined.
+
+Lemma R_pos_recip_inverse : forall x E, x // (existT _ x (inr E)) = 1 :> real.
+Proof.
+intros x E.
+apply (merely_destruct (Rlt_exists_pos_plus_le _ _ E)). intros [e E1].
+rewrite plus_0_l in E1.
+rewrite (R_recip_upper_recip _ _ E1).
+rewrite <-E1. clear E E1;revert x.
+eapply @unique_continuous_extension;try apply _.
+- change (Continuous (uncurry mult ∘
+    map2 (join (rat (' e))) (Qpos_upper_recip e ∘ (join (rat (' e)))) ∘
+  BinaryDup)).
+  apply _.
+- intros q. apply (ap rat).
+  unfold compose;simpl.
+  rewrite (commutativity (f:=join) _ (' e)),(simple_associativity (f:=join)).
+  rewrite (idempotency _ _).
+  apply dec_recip_inverse.
+  apply lt_ne_flip.
+  apply lt_le_trans with (' e).
+  + solve_propholds.
+  + apply join_ub_l.
+Unshelve. exact 1.
+Qed.
+
+Lemma R_recip_inverse@{} : forall x, x.1 // x = 1 :> real.
+Proof.
+intros [x [E|E]];simpl.
+- rewrite <-negate_mult_negate,Rrecip_neg. unfold R_apartzero_neg. simpl.
+  apply R_pos_recip_inverse.
+- apply R_pos_recip_inverse.
+Qed.
+
