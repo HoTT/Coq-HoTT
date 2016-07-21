@@ -4236,14 +4236,95 @@ Proof.
 apply pseudo_order_apart.
 Qed.
 
+Instance R_Qpos_abs_pr_hprop : forall (e:Q+) x,
+  IsHProp (rat (' e) <= x \/ rat (' e) <= - x).
+Proof.
+intros. apply Sum.ishprop_sum;try apply _.
+intros E1 E2.
+apply (irreflexivity lt x).
+transitivity 0.
+- apply Rneg_lt_flip. rewrite negate_0. apply R_lt_le_trans with (rat (' e)).
+  + apply rat_lt_preserving;solve_propholds.
+  + trivial.
+- apply R_lt_le_trans with (rat (' e)).
+  + apply rat_lt_preserving;solve_propholds.
+  + trivial.
+Qed.
+
+Lemma Rabs_triangle_alt : forall x y : real, abs (abs x - abs y) <= abs (x - y).
+Proof.
+intros x y.
+apply R_not_lt_le_flip.
+intros E. apply (merely_destruct (R_archimedean_pos _ _ (Rabs_nonneg _) E)).
+intros [e [E1 E2]].
+apply metric_to_equiv in E1. apply (non_expanding abs) in E1.
+apply equiv_to_metric in E1.
+apply (irreflexivity lt (rat (' e))).
+etransitivity;eauto.
+Qed.
+
+Lemma apart_to_metric : forall x y : real, apart x y -> 0 < abs (x - y).
+Proof.
+intros x y [E|E];apply flip_pos_minus in E.
+- rewrite <-Rabs_neg,<-negate_swap_r. rewrite Rabs_of_nonneg;trivial.
+  apply R_lt_le;trivial.
+- rewrite Rabs_of_nonneg;trivial.
+  apply R_lt_le;trivial.
+Qed.
+
+Lemma Rlt_join_either : forall a b c, a < join b c -> hor (a < b) (a < c).
+Proof.
+intros a b c;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+apply (merely_destruct (cotransitive (rat_lt_preserving _ _ E2) b)).
+intros [E4|E4].
+- apply tr;left;apply R_le_lt_trans with (rat q);trivial.
+- apply (merely_destruct (cotransitive (rat_lt_preserving _ _ E2) c)).
+  intros [E5|E5].
+  + apply tr;right;apply R_le_lt_trans with (rat q);trivial.
+  + pose proof (Rlt_join _ _ _ E4 E5) as E6.
+    destruct (irreflexivity lt (rat r)).
+    apply R_le_lt_trans with (join b c);trivial.
+Qed.
+
+Lemma Rlt_join_l : forall a b, a < join a b -> a < b.
+Proof.
+intros a b E;apply (merely_destruct (Rlt_join_either _ _ _ E));
+intros [E1|E1];trivial.
+destruct (irreflexivity lt _ E1).
+Qed.
+
+Lemma Rlt_join_r : forall a b, b < join a b -> b < a.
+Proof.
+intros a b E;apply (merely_destruct (Rlt_join_either _ _ _ E));
+intros [E1|E1];trivial.
+destruct (irreflexivity lt _ E1).
+Qed.
+
+Lemma metric_to_apart : forall x y : real, 0 < abs (x - y) ->
+  apart x y.
+Proof.
+intros x y E.
+rewrite Rabs_is_join in E. apply (merely_destruct (Rlt_join_either _ _ _ E)).
+intros [E1|E1].
+- rewrite <-negate_swap_r in E1. apply flip_pos_minus in E1. left;trivial.
+- apply flip_pos_minus in E1. right;trivial.
+Qed.
+
+Instance Rabs_strong_ext : StrongExtensionality (abs (A:=real)).
+Proof.
+intros x y E.
+apply metric_to_apart.
+eapply R_lt_le_trans;[|apply Rabs_triangle_alt].
+apply apart_to_metric in E. trivial.
+Qed.
+
+(*
 Lemma Rmult_lt_apart : forall z x y, z * x < z * y -> apart x y.
 Proof.
 intros z x y. apply (Trunc_ind _).
 intros [q [r [E1 [E2 E3]]]].
+Admitted.
 
-Abort.
-
-(*
 Global Instance real_full_pseudo_srorder : FullPseudoSemiRingOrder Rle Rlt.
 Proof.
 apply from_full_pseudo_ring_order;try apply _.
@@ -4251,7 +4332,6 @@ apply @apartness.strong_binary_setoid_morphism_commutative;try apply _.
 intros z x y [E|E];apply Rmult_lt_apart in E;trivial;Symmetry;trivial.
 Qed.
 *)
-
 
 Definition Qpos_upper (e : Q+) := exists x : Q, ' e <= x.
 
