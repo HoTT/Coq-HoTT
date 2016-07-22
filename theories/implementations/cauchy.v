@@ -2213,8 +2213,16 @@ Global Existing Instance Requiv_triangle.
 
 End Requiv_alt.
 
-Lemma two_fourth_is_one_half@{} : @paths Q+ (2/4) (1/2).
-Proof. Admitted.
+Lemma two_fourth_is_one_half@{} : 2/4 =  1/2 :> Q+.
+Proof.
+assert (Hrw : 4 = 2 * 2 :> Q) by ring_tac.ring_with_nat.
+apply pos_eq. repeat (unfold cast;simpl).
+rewrite Hrw;clear Hrw.
+rewrite dec_recip_distr.
+rewrite mult_assoc. rewrite dec_recip_inverse;[|solve_propholds].
+reflexivity.
+Unshelve. exact (fun _ => 1). (* <- wtf *)
+Qed.
 
 Lemma equiv_through_approx' : forall u (y : Approximation) e d,
   close e u (y d) -> close (e+d) u (lim y).
