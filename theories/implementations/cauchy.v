@@ -269,8 +269,107 @@ Arguments close {A _} _ _ _.
 
 Global Instance Q_close@{} : Closeness Q := fun e q r => - ' e < q - r < ' e.
 
+Lemma Qmeet_plus_l : forall a b c : Q, meet (a + b) (a + c) = a + meet b c.
+Proof.
+intros. destruct (total le b c) as [E|E].
+- rewrite (meet_l _ _ E). apply meet_l.
+  apply (order_preserving (a +)),E.
+- rewrite (meet_r _ _ E). apply meet_r.
+  apply (order_preserving (a +)),E.
+Qed.
+
+Lemma total_abs_either `{Abs A} `{!TotalRelation le}
+  : forall x : A, (0 <= x /\ abs x = x) \/ (x <= 0 /\ abs x = - x).
+Proof.
+intros x.
+destruct (total le 0 x) as [E|E].
+- left. split;trivial. apply ((abs_sig x).2);trivial.
+- right. split;trivial. apply ((abs_sig x).2);trivial.
+Qed.
+
+Lemma Qabs_nonneg@{} : forall q : Q, 0 <= abs q.
+Proof.
+intros q;destruct (total_abs_either q) as [E|E];destruct E as [E1 E2];rewrite E2.
+- trivial.
+- apply flip_nonneg_negate. rewrite involutive;trivial.
+Qed.
+
+Lemma Qabs_of_nonneg@{} : forall q : Q, 0 <= q -> abs q = q.
+Proof.
+intro;apply ((abs_sig _).2).
+Qed.
+
+Lemma Qabs_of_nonpos : forall q : Q, q <= 0 -> abs q = - q.
+Proof.
+intro;apply ((abs_sig _).2).
+Qed.
+
+Lemma Qabs_le_raw@{} : forall x : Q, x <= abs x.
+Proof.
+intros x;destruct (total_abs_either x) as [[E1 E2]|[E1 E2]].
+- rewrite E2;reflexivity.
+- transitivity (0:Q);trivial.
+  rewrite E2. apply flip_nonpos_negate. trivial.
+Qed.
+
+Lemma Qabs_neg@{} : forall x : Q, abs (- x) = abs x.
+Proof.
+intros x. destruct (total_abs_either x) as [[E1 E2]|[E1 E2]].
+- rewrite E2. path_via (- - x);[|rewrite involutive;trivial].
+  apply ((abs_sig (- x)).2). apply flip_nonneg_negate;trivial.
+- rewrite E2. apply ((abs_sig (- x)).2). apply flip_nonpos_negate;trivial.
+Qed.
+
+Lemma Qabs_le_neg_raw : forall x : Q, - x <= abs x.
+Proof.
+intros x. rewrite <-Qabs_neg. apply Qabs_le_raw.
+Qed.
+
+Lemma Q_abs_le_pr@{} : forall x y : Q, abs x <= y <-> - y <= x /\ x <= y.
+Proof.
+intros x y;split.
+- intros E. split.
+  + apply flip_le_negate. rewrite involutive. transitivity (abs x);trivial.
+    apply Qabs_le_neg_raw.
+  + transitivity (abs x);trivial.
+    apply Qabs_le_raw.
+- intros [E1 E2].
+  destruct (total_abs_either x) as [[E3 E4]|[E3 E4]];rewrite E4.
+  + trivial.
+  + apply flip_le_negate;rewrite involutive;trivial.
+Qed.
+
+Lemma Qabs_is_join@{} : forall q : Q, abs q = join (- q) q.
+Proof.
+intros q. symmetry.
+destruct (total_abs_either q) as [[E1 E2]|[E1 E2]];rewrite E2.
+- apply join_r. transitivity (0:Q);trivial.
+  apply flip_nonneg_negate;trivial.
+- apply join_l. transitivity (0:Q);trivial.
+  apply flip_nonpos_negate;trivial.
+Qed.
+
 Lemma Qclose_alt : forall e (q r : Q), close e q r <-> abs (q - r) < ' e.
-Proof. Admitted.
+Proof.
+intros e q r;split.
+- intros [E1 E2].
+  destruct (total le 0 (q - r)) as [E|E].
+  + rewrite (Qabs_of_nonneg _ E).
+    trivial.
+  + rewrite (Qabs_of_nonpos _ E).
+    apply flip_lt_negate. rewrite involutive. trivial.
+- intros E. split;[apply flip_lt_negate;rewrite involutive|];
+  apply le_lt_trans with (abs (q - r));trivial.
+  + apply Qabs_le_neg_raw.
+  + apply Qabs_le_raw.
+Qed.
+
+Lemma Qclose_neg@{} : forall e (x y : Q), close e x y <-> close e (- x) (- y).
+Proof.
+intros e x y;split;intros E;apply Qclose_alt in E;apply Qclose_alt.
+- rewrite <-(negate_plus_distr),Qabs_neg. trivial.
+- rewrite <-(negate_plus_distr),Qabs_neg in E. trivial.
+Qed.
 
 Class Separated A `{Closeness A}
   := separated : forall x y, (forall e, close e x y) -> x = y :> A.
@@ -2146,27 +2245,6 @@ Proof.
 split;apply _.
 Qed.
 
-Lemma total_abs_either `{Abs A} `{!TotalRelation le}
-  : forall x : A, (0 <= x /\ abs x = x) \/ (x <= 0 /\ abs x = - x).
-Proof.
-intros x.
-destruct (total le 0 x) as [E|E].
-- left. split;trivial. apply ((abs_sig x).2);trivial.
-- right. split;trivial. apply ((abs_sig x).2);trivial.
-Qed.
-
-Lemma Qabs_nonneg@{} : forall q : Q, 0 <= abs q.
-Proof.
-intros q;destruct (total_abs_either q) as [E|E];destruct E as [E1 E2];rewrite E2.
-- trivial.
-- apply flip_nonneg_negate. rewrite involutive;trivial.
-Qed.
-
-Lemma Qabs_of_nonneg@{} : forall q : Q, 0 <= q -> abs q = q.
-Proof.
-intro;apply ((abs_sig _).2).
-Qed.
-
 Global Instance Q_premetric@{} : PreMetric Q.
 Proof.
 split;try apply _.
@@ -2295,20 +2373,6 @@ Proof.
 apply (lipschitz_nonexpanding _).
 Qed.
 
-Lemma Qabs_neg@{} : forall x : Q, abs (- x) = abs x.
-Proof.
-intros x. destruct (total_abs_either x) as [[E1 E2]|[E1 E2]].
-- rewrite E2. path_via (- - x);[|rewrite involutive;trivial].
-  apply ((abs_sig (- x)).2). apply flip_nonneg_negate;trivial.
-- rewrite E2. apply ((abs_sig (- x)).2). apply flip_nonpos_negate;trivial.
-Qed.
-
-Lemma Qclose_neg@{} : forall e (x y : Q), close e x y <-> close e (- x) (- y).
-Proof.
-intros e x y;split;intros E;apply Qclose_alt in E;apply Qclose_alt.
-- rewrite <-(negate_plus_distr),Qabs_neg. trivial.
-- rewrite <-(negate_plus_distr),Qabs_neg in E. trivial.
-Qed.
 
 Instance Qneg_nonexpanding@{} : NonExpanding ((-) : Negate Q).
 Proof.
@@ -3432,43 +3496,6 @@ hnf. intros x y [E|E] z.
   intros [E1|E1];apply tr;[left|right];hnf;auto.
 - apply (merely_destruct (cotransitive E z)).
   intros [E1|E1];apply tr;[right|left];hnf;auto.
-Qed.
-
-Lemma Qabs_le_raw@{} : forall x : Q, x <= abs x.
-Proof.
-intros x;destruct (total_abs_either x) as [[E1 E2]|[E1 E2]].
-- rewrite E2;reflexivity.
-- transitivity (0:Q);trivial.
-  rewrite E2. apply flip_nonpos_negate. trivial.
-Qed.
-
-Lemma Qabs_le_neg_raw : forall x : Q, - x <= abs x.
-Proof.
-intros x. rewrite <-Qabs_neg. apply Qabs_le_raw.
-Qed.
-
-Lemma Q_abs_le_pr@{} : forall x y : Q, abs x <= y <-> - y <= x /\ x <= y.
-Proof.
-intros x y;split.
-- intros E. split.
-  + apply flip_le_negate. rewrite involutive. transitivity (abs x);trivial.
-    apply Qabs_le_neg_raw.
-  + transitivity (abs x);trivial.
-    apply Qabs_le_raw.
-- intros [E1 E2].
-  destruct (total_abs_either x) as [[E3 E4]|[E3 E4]];rewrite E4.
-  + trivial.
-  + apply flip_le_negate;rewrite involutive;trivial.
-Qed.
-
-Lemma Qabs_is_join@{} : forall q : Q, abs q = join (- q) q.
-Proof.
-intros q. symmetry.
-destruct (total_abs_either q) as [[E1 E2]|[E1 E2]];rewrite E2.
-- apply join_r. transitivity (0:Q);trivial.
-  apply flip_nonneg_negate;trivial.
-- apply join_l. transitivity (0:Q);trivial.
-  apply flip_nonpos_negate;trivial.
 Qed.
 
 Lemma Rabs_is_join@{} : forall x : real, abs x = join (- x) x.
