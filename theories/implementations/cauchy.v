@@ -221,9 +221,31 @@ apply pos_eq;apply Q_sum_eq_join_meet.
 change (' a + ' b) with (' (a + b)). rewrite E;reflexivity.
 Qed.
 
+Lemma Qpos_le_lt_min : forall a b : Q+, ' a <= ' b ->
+  exists c ca cb, a = c + ca /\ b = c + cb.
+Proof.
+intros a b E. exists (a/2),(a/2).
+simple refine (existT _ _ _);simpl.
+- exists (' (a / 2) + (' b - ' a)).
+  apply nonneg_plus_lt_compat_r.
+  + apply (snd (flip_nonneg_minus _ _)). trivial.
+  + solve_propholds.
+- split.
+  + apply pos_split2.
+  + apply pos_eq. unfold cast at 2;simpl.
+    unfold cast at 3;simpl.
+    set (a':=a/2);rewrite (pos_split2 a);unfold a';clear a'.
+    ring_tac.ring_with_integers (NatPair.Z nat).
+Qed.
+
 Lemma Qpos_lt_min@{} : forall a b : Q+, exists c ca cb, a = c + ca /\ b = c + cb.
 Proof.
-Admitted.
+intros.
+destruct (total le (' a) (' b)) as [E|E].
+- apply Qpos_le_lt_min;trivial.
+- apply Qpos_le_lt_min in E. destruct E as [c [cb [ca [E1 E2]]]].
+  exists c,ca,cb;auto.
+Qed.
 
 Definition Qpos_diff : forall q r : Q, q < r -> Q+.
 Proof.
@@ -4086,7 +4108,7 @@ apply unique_continuous_ternary_extension.
     apply (order_preserving (+ s));trivial.
 Qed.
 
-Lemma Rlt_join : forall a b c, a < c -> b < c ->
+Lemma Rlt_join : forall a b c : real, a < c -> b < c ->
   join a b < c.
 Proof.
 intros a b c E1 E2.
