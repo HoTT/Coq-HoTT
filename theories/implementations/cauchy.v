@@ -1412,11 +1412,72 @@ Proof.
 unfold rounded_halfrel_close. intros. apply _.
 Qed.
 
+Lemma Qclose_separating_not_lt : forall q r : Q, (forall e, close e q r) ->
+  ~ q < r.
+Proof.
+intros q r E1 E2.
+pose proof (E1 (Qpos_diff _ _ E2)) as E3. Symmetry in E3;apply Qclose_alt in E3.
+unfold cast in E3;simpl in E3.
+apply (irreflexivity lt (r - q)).
+apply le_lt_trans with (abs (r - q));trivial.
+apply Qabs_le_raw.
+Qed.
+
 Global Instance Qclose_separating : Separated Q.
-Proof. Admitted.
+Proof.
+hnf. intros q r E1.
+apply tight_apart. intros E2.
+apply apart_iff_total_lt in E2. destruct E2 as [E2|E2].
+- exact (Qclose_separating_not_lt _ _ E1 E2).
+- refine (Qclose_separating_not_lt _ _ _ E2).
+  intros;Symmetry;trivial.
+Qed.
+
+Lemma Q_average_between@{} : forall q r : Q, q < r -> q < (q + r) / 2 < r.
+Proof.
+intros q r E.
+split.
+- apply flip_pos_minus.
+  assert (Hrw : (q + r) / 2 - q = (r - q) / 2);[|rewrite Hrw;clear Hrw].
+  { path_via ((q + r) / 2 - 2 / 2 * q).
+    { rewrite dec_recip_inverse;[|solve_propholds].
+      rewrite mult_1_l;trivial.
+    }
+    ring_tac.ring_with_integers (NatPair.Z nat).
+  }
+  apply pos_mult_compat;[|apply _].
+  red. apply (snd (flip_pos_minus _ _)). trivial.
+- apply flip_pos_minus.
+  assert (Hrw : r - (q + r) / 2 = (r - q) / 2);[|rewrite Hrw;clear Hrw].
+  { path_via (2 / 2 * r - (q + r) / 2).
+    { rewrite dec_recip_inverse;[|solve_propholds].
+      rewrite mult_1_l;trivial.
+    }
+    ring_tac.ring_with_integers (NatPair.Z nat).
+  }
+  apply pos_mult_compat;[|apply _].
+  red. apply (snd (flip_pos_minus _ _)). trivial.
+Qed.
 
 Global Instance Qclose_rounded@{} : Rounded Q.
-Proof. Admitted.
+Proof.
+intros e q r;split.
+- intros E;apply Qclose_alt in E.
+  pose proof (Q_average_between _ _ E) as [E1 E2].
+  apply tr;simple refine (existT _ (mkQpos ((abs (q - r) + ' e) / 2) _) _).
+  { apply pos_mult_compat;[|solve_propholds].
+    red. apply pos_plus_le_lt_compat_r;[solve_propholds|apply Qabs_nonneg].
+  }
+  simpl. exists (Qpos_diff _ _ E2).
+  split.
+  + apply pos_eq. exact (Qpos_diff_pr _ _ E2).
+  + apply Qclose_alt. exact E1.
+- apply (Trunc_ind _). intros [d [d' [He xi]]].
+  apply Qclose_alt;rewrite He.
+  apply Qclose_alt in xi.
+  apply lt_le_trans with (' d);trivial.
+  apply nonneg_plus_le_compat_r. solve_propholds.
+Qed.
 
 Definition Requiv_alt_rat_rat@{} (q r : Q) : rounded_zeroary.
 Proof.
@@ -2880,10 +2941,6 @@ apply Sum.ishprop_sum;try apply _.
 intros E1 E2.
 apply (irreflexivity lt x). transitivity y;trivial.
 Qed.
-
-Lemma Q_average_between@{} : forall q r : Q, q < r -> q < (q + r) / 2 < r.
-Proof.
-Admitted.
 
 Lemma Q_dense@{} : forall q r : Q, q < r -> exists s, q < s < r.
 Proof.
