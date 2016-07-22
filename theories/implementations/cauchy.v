@@ -2826,13 +2826,77 @@ repeat split.
 Unshelve. all:exact 1.
 Qed.
 
+Lemma Q_triangle_le : forall q r : Q, abs (q + r) <= abs q + abs r.
+Proof.
+intros. rewrite (Qabs_is_join (q + r)).
+apply join_le.
+- rewrite negate_plus_distr.
+  apply plus_le_compat;apply Qabs_le_neg_raw.
+- apply plus_le_compat;apply Qabs_le_raw.
+Qed.
+
+Lemma Qabs_triangle_alt_aux : forall x y : Q, abs x - abs y <= abs (x - y).
+Proof.
+intros q r.
+apply (order_reflecting (+ (abs r))).
+assert (Hrw : abs q - abs r + abs r = abs q)
+  by ring_tac.ring_with_integers (NatPair.Z nat);
+rewrite Hrw;clear Hrw.
+etransitivity;[|apply Q_triangle_le].
+assert (Hrw : q - r + r = q)
+  by ring_tac.ring_with_integers (NatPair.Z nat);
+rewrite Hrw;clear Hrw.
+reflexivity.
+Qed.
+
+Lemma Qabs_triangle_alt : forall x y : Q, abs (abs x - abs y) <= abs (x - y).
+Proof.
+intros q r.
+rewrite (Qabs_is_join (abs q - abs r)).
+apply join_le.
+- rewrite <-(Qabs_neg (q - r)),<-!negate_swap_r.
+  apply Qabs_triangle_alt_aux.
+- apply Qabs_triangle_alt_aux.
+Qed.
+
+Instance Qabs_nonexpanding : NonExpanding (abs (A:=Q)).
+Proof.
+intros e q r xi.
+apply Qclose_alt in xi;apply Qclose_alt.
+apply le_lt_trans with (abs (q - r));trivial.
+apply Qabs_triangle_alt.
+Qed.
+
 Instance Qmeet_nonexpanding_l : forall s : Q, NonExpanding (⊓ s).
 Proof.
-Admitted.
+intros s e q r xi.
+apply Qclose_alt;apply Qclose_alt in xi.
+apply le_lt_trans with (abs (q - r));trivial. clear xi.
+destruct (total le q s) as [E1|E1], (total le r s) as [E2|E2];
+rewrite ?(meet_l _ _ E1), ?(meet_r _ _ E1), ?(meet_l _ _ E2), ?(meet_r _ _ E2).
+- reflexivity.
+- rewrite (Qabs_of_nonpos (q - r))
+  by (apply (snd (flip_nonpos_minus _ _)); transitivity s;trivial).
+  rewrite <-negate_swap_r.
+  rewrite (Qabs_of_nonpos _ (snd (flip_nonpos_minus _ _) E1)).
+  rewrite <-negate_swap_r.
+  apply (order_preserving (+ (- q))).
+  trivial.
+- rewrite (Qabs_of_nonneg (q - r))
+  by (apply (snd (flip_nonneg_minus _ _)); transitivity s;trivial).
+  rewrite (Qabs_of_nonneg _ (snd (flip_nonneg_minus _ _) E2)).
+  apply (order_preserving (+ (- r))). trivial.
+- rewrite plus_negate_r,Qabs_of_nonneg by reflexivity.
+  apply Qabs_nonneg.
+Qed.
 
 Instance Qmeet_nonexpanding_r : forall s : Q, NonExpanding (s ⊓).
 Proof.
-Admitted.
+intros s e q r xi.
+pose proof meet_sl_order_meet_sl.
+rewrite !(commutativity s).
+apply (non_expanding (fun x => meet x s)). trivial.
+Qed.
 
 Global Instance Rmeet@{} : Meet real := non_expanding_extend meet.
 
@@ -2845,9 +2909,36 @@ Definition Rmeet_rat_rat@{} q r : meet (rat q) (rat r) = rat (meet q r)
   := idpath.
 
 Instance Qjoin_nonexpanding_l : forall s : Q, NonExpanding (⊔ s).
-Proof. Admitted.
+Proof.
+intros s e q r xi.
+apply Qclose_alt;apply Qclose_alt in xi.
+apply le_lt_trans with (abs (q - r));trivial. clear xi.
+destruct (total le q s) as [E1|E1], (total le r s) as [E2|E2];
+rewrite ?(join_l _ _ E1), ?(join_r _ _ E1), ?(join_l _ _ E2), ?(join_r _ _ E2).
+- rewrite plus_negate_r,Qabs_of_nonneg by reflexivity.
+  apply Qabs_nonneg.
+- rewrite (Qabs_of_nonpos (q - r))
+  by (apply (snd (flip_nonpos_minus _ _)); transitivity s;trivial).
+  rewrite <-negate_swap_r.
+  rewrite (Qabs_of_nonpos _ (snd (flip_nonpos_minus _ _) E2)).
+  rewrite <-negate_swap_r.
+  apply (order_preserving (r +)).
+  apply (snd (flip_le_negate _ _)). trivial.
+- rewrite (Qabs_of_nonneg (q - r))
+  by (apply (snd (flip_nonneg_minus _ _)); transitivity s;trivial).
+  rewrite (Qabs_of_nonneg _ (snd (flip_nonneg_minus _ _) E1)).
+  apply (order_preserving (q +)).
+  apply (snd (flip_le_negate _ _)). trivial.
+- reflexivity.
+Qed.
+
 Instance Qjoin_nonexpanding_r : forall s : Q, NonExpanding (s ⊔).
-Proof. Admitted.
+Proof.
+intros s e q r xi.
+pose proof join_sl_order_join_sl.
+rewrite !(commutativity s).
+apply (non_expanding (fun x => join x s)). trivial.
+Qed.
 
 Global Instance Rjoin@{} : Join real := non_expanding_extend join.
 
@@ -3166,10 +3257,6 @@ generalize (Rlt_close_exists_aux u r
 apply (Trunc_ind _);intros [e E4];apply tr;exists e.
 intros w xi;apply R_lt_le_trans with (rat r);auto.
 Qed.
-
-Instance Qabs_nonexpanding : NonExpanding (abs (A:=Q)).
-Proof.
-Admitted.
 
 Definition Rabs_val := lipschitz_extend (compose rat abs) 1.
 
