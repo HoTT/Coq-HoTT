@@ -96,3 +96,13 @@ intros a b;destruct (trichotomy R a b) as [E1|[E1|E1]];split;auto.
 - intros E2;destruct (GT_EQ E2).
 - intros E2;rewrite E2 in E1. destruct (irreflexivity R _ E1).
 Qed.
+
+Lemma total_abs_either `{Abs A} `{!TotalRelation le}
+  : forall x : A, (0 <= x /\ abs x = x) \/ (x <= 0 /\ abs x = - x).
+Proof.
+intros x.
+destruct (total le 0 x) as [E|E].
+- left. split;trivial. apply ((abs_sig x).2);trivial.
+- right. split;trivial. apply ((abs_sig x).2);trivial.
+Qed.
+

@@ -11,7 +11,8 @@ Require Import
   HoTTClasses.theory.dec_fields
   HoTTClasses.orders.dec_fields
   HoTTClasses.orders.lattices
-  HoTTClasses.implementations.natpair_integers.
+  HoTTClasses.implementations.natpair_integers
+  HoTTClasses.theory.additional_operations.
 
 
 Local Set Universe Minimization ToSet.
@@ -253,6 +254,204 @@ Proof.
 intros q r E. change (r = q + (r - q)).
 abstract ring_tac.ring_with_integers (NatPair.Z nat).
 Qed.
+
+
+Lemma Qmeet_plus_l : forall a b c : Q, meet (a + b) (a + c) = a + meet b c.
+Proof.
+intros. destruct (total le b c) as [E|E].
+- rewrite (meet_l _ _ E). apply meet_l.
+  apply (order_preserving (a +)),E.
+- rewrite (meet_r _ _ E). apply meet_r.
+  apply (order_preserving (a +)),E.
+Qed.
+
+Lemma Qabs_nonneg@{} : forall q : Q, 0 <= abs q.
+Proof.
+intros q;destruct (total_abs_either q) as [E|E];destruct E as [E1 E2];rewrite E2.
+- trivial.
+- apply flip_nonneg_negate. rewrite involutive;trivial.
+Qed.
+
+Lemma Qabs_of_nonneg@{} : forall q : Q, 0 <= q -> abs q = q.
+Proof.
+intro;apply ((abs_sig _).2).
+Qed.
+
+Lemma Qabs_of_nonpos : forall q : Q, q <= 0 -> abs q = - q.
+Proof.
+intro;apply ((abs_sig _).2).
+Qed.
+
+Lemma Qabs_le_raw@{} : forall x : Q, x <= abs x.
+Proof.
+intros x;destruct (total_abs_either x) as [[E1 E2]|[E1 E2]].
+- rewrite E2;reflexivity.
+- transitivity (0:Q);trivial.
+  rewrite E2. apply flip_nonpos_negate. trivial.
+Qed.
+
+Lemma Qabs_neg@{} : forall x : Q, abs (- x) = abs x.
+Proof.
+intros x. destruct (total_abs_either x) as [[E1 E2]|[E1 E2]].
+- rewrite E2. path_via (- - x);[|rewrite involutive;trivial].
+  apply ((abs_sig (- x)).2). apply flip_nonneg_negate;trivial.
+- rewrite E2. apply ((abs_sig (- x)).2). apply flip_nonpos_negate;trivial.
+Qed.
+
+Lemma Qabs_le_neg_raw : forall x : Q, - x <= abs x.
+Proof.
+intros x. rewrite <-Qabs_neg. apply Qabs_le_raw.
+Qed.
+
+Lemma Q_abs_le_pr@{} : forall x y : Q, abs x <= y <-> - y <= x /\ x <= y.
+Proof.
+intros x y;split.
+- intros E. split.
+  + apply flip_le_negate. rewrite involutive. transitivity (abs x);trivial.
+    apply Qabs_le_neg_raw.
+  + transitivity (abs x);trivial.
+    apply Qabs_le_raw.
+- intros [E1 E2].
+  destruct (total_abs_either x) as [[E3 E4]|[E3 E4]];rewrite E4.
+  + trivial.
+  + apply flip_le_negate;rewrite involutive;trivial.
+Qed.
+
+Lemma Qabs_is_join@{} : forall q : Q, abs q = join (- q) q.
+Proof.
+intros q. symmetry.
+destruct (total_abs_either q) as [[E1 E2]|[E1 E2]];rewrite E2.
+- apply join_r. transitivity (0:Q);trivial.
+  apply flip_nonneg_negate;trivial.
+- apply join_l. transitivity (0:Q);trivial.
+  apply flip_nonpos_negate;trivial.
+Qed.
+
+Lemma Q_average_between@{} : forall q r : Q, q < r -> q < (q + r) / 2 < r.
+Proof.
+intros q r E.
+split.
+- apply flip_pos_minus.
+  assert (Hrw : (q + r) / 2 - q = (r - q) / 2);[|rewrite Hrw;clear Hrw].
+  { path_via ((q + r) / 2 - 2 / 2 * q).
+    { rewrite dec_recip_inverse;[|solve_propholds].
+      rewrite mult_1_l;trivial.
+    }
+    ring_tac.ring_with_integers (NatPair.Z nat).
+  }
+  apply pos_mult_compat;[|apply _].
+  red. apply (snd (flip_pos_minus _ _)). trivial.
+- apply flip_pos_minus.
+  assert (Hrw : r - (q + r) / 2 = (r - q) / 2);[|rewrite Hrw;clear Hrw].
+  { path_via (2 / 2 * r - (q + r) / 2).
+    { rewrite dec_recip_inverse;[|solve_propholds].
+      rewrite mult_1_l;trivial.
+    }
+    ring_tac.ring_with_integers (NatPair.Z nat).
+  }
+  apply pos_mult_compat;[|apply _].
+  red. apply (snd (flip_pos_minus _ _)). trivial.
+Qed.
+
+Lemma two_fourth_is_one_half@{} : 2/4 =  1/2 :> Q+.
+Proof.
+assert (Hrw : 4 = 2 * 2 :> Q) by ring_tac.ring_with_nat.
+apply pos_eq. repeat (unfold cast;simpl).
+rewrite Hrw;clear Hrw.
+rewrite dec_recip_distr.
+rewrite mult_assoc. rewrite dec_recip_inverse;[|solve_propholds].
+reflexivity.
+Unshelve. exact (fun _ => 1). (* <- wtf *)
+Qed.
+
+Lemma Q_triangle_le : forall q r : Q, abs (q + r) <= abs q + abs r.
+Proof.
+intros. rewrite (Qabs_is_join (q + r)).
+apply join_le.
+- rewrite negate_plus_distr.
+  apply plus_le_compat;apply Qabs_le_neg_raw.
+- apply plus_le_compat;apply Qabs_le_raw.
+Qed.
+
+Lemma Qabs_triangle_alt_aux : forall x y : Q, abs x - abs y <= abs (x - y).
+Proof.
+intros q r.
+apply (order_reflecting (+ (abs r))).
+assert (Hrw : abs q - abs r + abs r = abs q)
+  by ring_tac.ring_with_integers (NatPair.Z nat);
+rewrite Hrw;clear Hrw.
+etransitivity;[|apply Q_triangle_le].
+assert (Hrw : q - r + r = q)
+  by ring_tac.ring_with_integers (NatPair.Z nat);
+rewrite Hrw;clear Hrw.
+reflexivity.
+Qed.
+
+Lemma Qabs_triangle_alt : forall x y : Q, abs (abs x - abs y) <= abs (x - y).
+Proof.
+intros q r.
+rewrite (Qabs_is_join (abs q - abs r)).
+apply join_le.
+- rewrite <-(Qabs_neg (q - r)),<-!negate_swap_r.
+  apply Qabs_triangle_alt_aux.
+- apply Qabs_triangle_alt_aux.
+Qed.
+
+Lemma Q_dense@{} : forall q r : Q, q < r -> exists s, q < s < r.
+Proof.
+intros q r E;econstructor;apply Q_average_between,E.
+Qed.
+
+Lemma Qabs_neg_flip@{} : forall a b : Q, abs (a - b) = abs (b - a).
+Proof.
+intros a b.
+rewrite <-Qabs_neg. rewrite <-negate_swap_r. trivial.
+Qed.
+
+Definition pos_of_Q : Q -> Q+
+  := fun q => {| pos := abs q + 1;
+    is_pos := le_lt_trans _ _ _ (Qabs_nonneg q)
+                (fst (pos_plus_lt_compat_r _ _) lt_0_1) |}.
+
+Lemma Q_abs_plus_1_bounds@{} : forall q : Q,
+  - ' (pos_of_Q q) ≤ q
+  ≤ ' (pos_of_Q q).
+Proof.
+intros. change (- (abs q + 1) ≤ q ≤ (abs q + 1)). split.
+- apply flip_le_negate. rewrite involutive.
+  transitivity (abs q).
+  + apply Qabs_le_neg_raw.
+  + apply nonneg_plus_le_compat_r. solve_propholds.
+- transitivity (abs q).
+  + apply Qabs_le_raw.
+  + apply nonneg_plus_le_compat_r. solve_propholds.
+Qed.
+
+Lemma Qabs_mult@{} : forall a b : Q, abs (a * b) = abs a * abs b.
+Proof.
+intros a b.
+destruct (total_abs_either a) as [Ea|Ea];destruct Ea as [Ea1 Ea2];rewrite Ea2;
+destruct (total_abs_either b) as [Eb|Eb];destruct Eb as [Eb1 Eb2];rewrite Eb2.
+- apply ((abs_sig (a*b)).2). apply nonneg_mult_compat;trivial.
+- rewrite <-negate_mult_distr_r.
+  apply ((abs_sig (a*b)).2). apply nonneg_nonpos_mult;trivial.
+- rewrite <-negate_mult_distr_l.
+  apply ((abs_sig (a*b)).2). apply nonpos_nonneg_mult;trivial.
+- rewrite negate_mult_negate. apply ((abs_sig (a*b)).2).
+  apply nonpos_mult;trivial.
+Qed.
+
+Lemma Qpos_neg_le@{} : forall a : Q+, - ' a <= ' a.
+Proof.
+intros a;apply between_nonneg;solve_propholds.
+Qed.
+
+Definition Qpos_upper (e : Q+) := exists x : Q, ' e <= x.
+
+Definition Qpos_upper_inject e : Q -> Qpos_upper e.
+Proof.
+intros x. exists (join x (' e)). apply join_ub_r.
+Defined.
 
 End contents.
 
