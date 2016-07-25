@@ -234,7 +234,8 @@ simple refine (existT _ _ _);simpl.
     ring_tac.ring_with_integers (NatPair.Z nat).
 Qed.
 
-Lemma Qpos_lt_min@{} : forall a b : Q+, exists c ca cb, a = c + ca /\ b = c + cb.
+Lemma Qpos_lt_min@{} : forall a b : Q+, exists c ca cb : Q+,
+  a = c + ca /\ b = c + cb.
 Proof.
 intros.
 destruct (total le (' a) (' b)) as [E|E].

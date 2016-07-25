@@ -814,6 +814,31 @@ Qed.
 
 End rationals.
 
+Section cauchy.
+Universe UA.
+Context {A : Type@{UA} } `{Closeness A}.
+
+Record Approximation@{} :=
+  { approximate :> Q+ -> A
+  ; approx_equiv : forall d e, close (d+e) (approximate d) (approximate e) }.
+
+Definition IsLimit@{} (x : Approximation) (l : A) :=
+  forall e d : Q+, close (e+d) (x d) l.
+
+Context `{!PreMetric A}.
+
+Lemma limit_unique : forall x l1 l2, IsLimit x l1 -> IsLimit x l2 -> l1 = l2.
+Proof.
+intros x l1 l2 E1 E2.
+apply separated.
+intros e. rewrite (pos_split2 e),(pos_split2 (e/2)).
+apply triangular with (x (e / 2 / 2));[Symmetry;apply E1|apply E2].
+Qed.
+
+Class CauchyComplete := cauchy_complete : forall x, exists l, IsLimit x l.
+
+End cauchy.
+
 End contents.
 
 Arguments rounded_le {_ _ A _ _} e u v _ d _.
@@ -827,3 +852,6 @@ Arguments map2_lipschitz {_ _ A _ B _ C _ D _} f g {_ _} Lf Lg {_ _} e x y xi.
 Arguments map2_continuous {_ _ A _ B _ C _ D _} f g {_ _ _ _} u e.
 
 Arguments Interval_close {_ _ _} _ _ _ _ _ /.
+
+Arguments Approximation A {_}.
+Arguments CauchyComplete A {_}.
