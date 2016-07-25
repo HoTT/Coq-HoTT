@@ -21,19 +21,6 @@ Local Set Universe Minimization ToSet.
 Parameter funext : Funext.
 Parameter univalence : Universe.Univalence.
 
-Monomorphic Universe UQ.
-Parameters (Q : Type@{UQ}) (Qap : Apart@{UQ UQ} Q)
-  (Qplus : Plus Q) (Qmult : Mult Q)
-  (Qzero : Zero Q) (Qone : One Q) (Qneg : Negate Q) (Qrecip : DecRecip Q)
-  (Qle : Le@{UQ UQ} Q) (Qlt : Lt@{UQ UQ} Q)
-  (QtoField : RationalsToField@{UQ UQ UQ UQ} Q)
-  (Qrats : Rationals@{UQ UQ UQ UQ UQ UQ UQ UQ UQ UQ} Q)
-  (Qtrivialapart : TrivialApart Q) (Qdec : DecidablePaths Q)
-  (Qmeet : Meet Q) (Qjoin : Join Q) (Qlattice : LatticeOrder Qle)
-  (Qle_total : TotalRelation (@le Q _))
-  (Qabs : Abs Q).
-Notation "Q+" := (Qpos Q).
-
 Definition BinaryDup@{i} {A : Type@{i} } : A -> A /\ A := fun x => (x, x).
 Definition uncurry {A B C} (f : A -> B -> C) : A /\ B -> C
   := fun x => f (fst x) (snd x).
