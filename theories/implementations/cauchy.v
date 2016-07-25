@@ -450,16 +450,6 @@ Definition real_rec_lim A B I x : real_rec A B I (lim x) =
 
 End mutual_recursion.
 
-Instance Q_close_symm@{} : forall e, Symmetric (@close Q _ e).
-Proof.
-red;unfold close;simpl.
-intros e x y [E1 E2];split.
-- apply flip_lt_negate. rewrite <-negate_swap_r,involutive.
-  trivial.
-- apply flip_lt_negate.
-  rewrite negate_swap_r,involutive. trivial.
-Qed.
-
 Lemma separate_mult@{} : forall l (u v : real),
   (forall e, close (l * e) u v) -> u = v.
 Proof.
@@ -469,37 +459,6 @@ intros. assert (Hrw : e = l * (e / l)).
    * rewrite pos_recip_r. apply symmetry,Qpos_mult_1_l.
    * apply pos_eq. ring_tac.ring_with_nat.
 + rewrite Hrw;apply E.
-Qed.
-
-Lemma Q_triangular_one@{} : forall (q r : Q)
-(e : Q+) (Hqr : close e q r)
-(q0 : Q) (n : Q+),
-  (close n q q0 → close (e + n) r q0).
-Proof.
-unfold close;simpl.
-intros q r e [E1 E1'] s n [E2 E2'].
-split.
-- apply flip_lt_negate. rewrite negate_swap_r,!involutive.
-  apply flip_lt_negate in E2.
-  rewrite negate_swap_r,!involutive in E2.
-  pose proof (plus_lt_compat _ _ _ _ E1' E2) as E.
-  assert (Hrw : s - r = q - r + (s - q))
-    by abstract ring_tac.ring_with_integers (NatPair.Z nat).
-  rewrite Hrw;trivial.
-- apply flip_lt_negate in E1.
-  rewrite negate_swap_r,!involutive in E1.
-  pose proof (plus_lt_compat _ _ _ _ E1 E2') as E.
-  assert (Hrw : r - s = r - q + (q - s))
-    by abstract ring_tac.ring_with_integers (NatPair.Z nat).
-  rewrite Hrw;trivial.
-Qed.
-
-Instance Q_triangular@{} : Triangular Q.
-Proof.
-hnf. intros u v w e d E1 E2.
-apply Q_triangular_one with v.
-- Symmetry;trivial.
-- trivial.
 Qed.
 
 Section Requiv_alt.
@@ -548,47 +507,6 @@ Instance rounded_halfrel_close_hprop@{}
   : forall e u v, IsHProp (rounded_halfrel_close e u v).
 Proof.
 unfold rounded_halfrel_close. intros. apply _.
-Qed.
-
-Lemma Qclose_separating_not_lt : forall q r : Q, (forall e, close e q r) ->
-  ~ q < r.
-Proof.
-intros q r E1 E2.
-pose proof (E1 (Qpos_diff _ _ E2)) as E3. Symmetry in E3;apply Qclose_alt in E3.
-unfold cast in E3;simpl in E3.
-apply (irreflexivity lt (r - q)).
-apply le_lt_trans with (abs (r - q));trivial.
-apply Qabs_le_raw.
-Qed.
-
-Global Instance Qclose_separating : Separated Q.
-Proof.
-hnf. intros q r E1.
-apply tight_apart. intros E2.
-apply apart_iff_total_lt in E2. destruct E2 as [E2|E2].
-- exact (Qclose_separating_not_lt _ _ E1 E2).
-- refine (Qclose_separating_not_lt _ _ _ E2).
-  intros;Symmetry;trivial.
-Qed.
-
-Global Instance Qclose_rounded@{} : Rounded Q.
-Proof.
-intros e q r;split.
-- intros E;apply Qclose_alt in E.
-  pose proof (Q_average_between _ _ E) as [E1 E2].
-  apply tr;simple refine (existT _ (mkQpos ((abs (q - r) + ' e) / 2) _) _).
-  { apply pos_mult_compat;[|solve_propholds].
-    red. apply pos_plus_le_lt_compat_r;[solve_propholds|apply Qabs_nonneg].
-  }
-  simpl. exists (Qpos_diff _ _ E2).
-  split.
-  + apply pos_eq. exact (Qpos_diff_pr _ _ E2).
-  + apply Qclose_alt. exact E1.
-- apply (Trunc_ind _). intros [d [d' [He xi]]].
-  apply Qclose_alt;rewrite He.
-  apply Qclose_alt in xi.
-  apply lt_le_trans with (' d);trivial.
-  apply nonneg_plus_le_compat_r. solve_propholds.
 Qed.
 
 Definition Requiv_alt_rat_rat@{} (q r : Q) : rounded_zeroary.
@@ -1415,15 +1333,6 @@ Proof.
 split;apply _.
 Qed.
 
-Global Instance Q_premetric@{} : PreMetric Q.
-Proof.
-split;try apply _.
-intros e u;apply Qclose_alt. rewrite plus_negate_r.
-unfold abs. rewrite (fst (abs_sig 0).2).
-- solve_propholds.
-- reflexivity.
-Qed.
-
 Section lipschitz_extend.
 Variables (f : Q -> real) (L : Q+).
 Context {Ef : Lipschitz f L}.
@@ -1542,13 +1451,6 @@ Instance lipschitz_extend_nonexpanding (f : Q -> real) `{!NonExpanding f}
 Proof.
 apply (lipschitz_nonexpanding _).
 Qed.
-
-
-Instance Qneg_nonexpanding@{} : NonExpanding ((-) : Negate Q).
-Proof.
-intros e x y.
-apply Qclose_neg.
-Defined.
 
 Instance Rneg@{} : Negate real.
 Proof.
@@ -1805,22 +1707,6 @@ Definition non_expanding_extend_rat_rat@{} q r :
 
 End extend_binary.
 
-Instance Qplus_nonexpanding_l@{} : forall s : Q, NonExpanding (+ s).
-Proof.
-red. unfold close,Q_close;simpl. intros s e q r E.
-assert (Hrw : q + s - (r + s) = q - r)
-  by abstract ring_tac.ring_with_integers (NatPair.Z nat).
-rewrite Hrw;trivial.
-Qed.
-
-Instance Qplus_nonexpanding_r@{} : forall s : Q, NonExpanding (s +).
-Proof.
-red;unfold close,Q_close;simpl. intros s e q r E.
-assert (Hrw : s + q - (s + r) = q - r)
-  by abstract ring_tac.ring_with_integers (NatPair.Z nat).
-rewrite Hrw;trivial.
-Qed.
-
 Global Instance Rplus@{} : Plus real := non_expanding_extend plus.
 
 Definition Rplus_rat_rat@{} q r : rat q + rat r = rat (q + r)
@@ -1892,12 +1778,6 @@ hnf. apply unique_continuous_ternary_extension.
 intros;apply (ap rat),plus_assoc.
 Qed.
 
-Instance lipschitz_const@{} : forall (a:real) (L:Q+), Lipschitz (fun _ => a) L.
-Proof.
-intros;hnf.
-intros e _ _ _. apply Requiv_refl.
-Qed.
-
 Instance Rplus_group@{} : Group real.
 Proof.
 repeat split.
@@ -1927,45 +1807,6 @@ repeat split.
 Unshelve. all:exact 1.
 Qed.
 
-Instance Qabs_nonexpanding : NonExpanding (abs (A:=Q)).
-Proof.
-intros e q r xi.
-apply Qclose_alt in xi;apply Qclose_alt.
-apply le_lt_trans with (abs (q - r));trivial.
-apply Qabs_triangle_alt.
-Qed.
-
-Instance Qmeet_nonexpanding_l : forall s : Q, NonExpanding (⊓ s).
-Proof.
-intros s e q r xi.
-apply Qclose_alt;apply Qclose_alt in xi.
-apply le_lt_trans with (abs (q - r));trivial. clear xi.
-destruct (total le q s) as [E1|E1], (total le r s) as [E2|E2];
-rewrite ?(meet_l _ _ E1), ?(meet_r _ _ E1), ?(meet_l _ _ E2), ?(meet_r _ _ E2).
-- reflexivity.
-- rewrite (Qabs_of_nonpos (q - r))
-  by (apply (snd (flip_nonpos_minus _ _)); transitivity s;trivial).
-  rewrite <-negate_swap_r.
-  rewrite (Qabs_of_nonpos _ (snd (flip_nonpos_minus _ _) E1)).
-  rewrite <-negate_swap_r.
-  apply (order_preserving (+ (- q))).
-  trivial.
-- rewrite (Qabs_of_nonneg (q - r))
-  by (apply (snd (flip_nonneg_minus _ _)); transitivity s;trivial).
-  rewrite (Qabs_of_nonneg _ (snd (flip_nonneg_minus _ _) E2)).
-  apply (order_preserving (+ (- r))). trivial.
-- rewrite plus_negate_r,Qabs_of_nonneg by reflexivity.
-  apply Qabs_nonneg.
-Qed.
-
-Instance Qmeet_nonexpanding_r : forall s : Q, NonExpanding (s ⊓).
-Proof.
-intros s e q r xi.
-pose proof meet_sl_order_meet_sl.
-rewrite !(commutativity s).
-apply (non_expanding (fun x => meet x s)). trivial.
-Qed.
-
 Global Instance Rmeet@{} : Meet real := non_expanding_extend meet.
 
 Global Instance Rmeet_lipschitz_l@{} : forall s : real, NonExpanding (⊓ s)
@@ -1975,38 +1816,6 @@ Global Instance Rmeet_lipschitz_r@{} : forall s : real, NonExpanding (s ⊓)
 
 Definition Rmeet_rat_rat@{} q r : meet (rat q) (rat r) = rat (meet q r)
   := idpath.
-
-Instance Qjoin_nonexpanding_l : forall s : Q, NonExpanding (⊔ s).
-Proof.
-intros s e q r xi.
-apply Qclose_alt;apply Qclose_alt in xi.
-apply le_lt_trans with (abs (q - r));trivial. clear xi.
-destruct (total le q s) as [E1|E1], (total le r s) as [E2|E2];
-rewrite ?(join_l _ _ E1), ?(join_r _ _ E1), ?(join_l _ _ E2), ?(join_r _ _ E2).
-- rewrite plus_negate_r,Qabs_of_nonneg by reflexivity.
-  apply Qabs_nonneg.
-- rewrite (Qabs_of_nonpos (q - r))
-  by (apply (snd (flip_nonpos_minus _ _)); transitivity s;trivial).
-  rewrite <-negate_swap_r.
-  rewrite (Qabs_of_nonpos _ (snd (flip_nonpos_minus _ _) E2)).
-  rewrite <-negate_swap_r.
-  apply (order_preserving (r +)).
-  apply (snd (flip_le_negate _ _)). trivial.
-- rewrite (Qabs_of_nonneg (q - r))
-  by (apply (snd (flip_nonneg_minus _ _)); transitivity s;trivial).
-  rewrite (Qabs_of_nonneg _ (snd (flip_nonneg_minus _ _) E1)).
-  apply (order_preserving (q +)).
-  apply (snd (flip_le_negate _ _)). trivial.
-- reflexivity.
-Qed.
-
-Instance Qjoin_nonexpanding_r : forall s : Q, NonExpanding (s ⊔).
-Proof.
-intros s e q r xi.
-pose proof join_sl_order_join_sl.
-rewrite !(commutativity s).
-apply (non_expanding (fun x => join x s)). trivial.
-Qed.
 
 Global Instance Rjoin@{} : Join real := non_expanding_extend join.
 
@@ -2757,21 +2566,6 @@ apply (real_ind0 _).
     apply equiv_lim.
 Defined.
 
-Instance Qmult_lipschitz@{} : forall q : Q, Lipschitz (q *.) (pos_of_Q q).
-Proof.
-intros q e x y xi.
-apply Qclose_alt.
-rewrite negate_mult_distr_r,<-plus_mult_distr_l,Qabs_mult.
-apply pos_mult_le_lt_compat;try split.
-- apply Qabs_nonneg.
-- rewrite Qabs_is_join. apply join_le.
-  + apply flip_le_negate;rewrite involutive; apply Q_abs_plus_1_bounds.
-  + apply Q_abs_plus_1_bounds.
-- solve_propholds.
-- apply Qabs_nonneg.
-- apply Qclose_alt,xi.
-Qed.
-
 Definition QRmult@{} : Q -> real -> real
   := fun q => lipschitz_extend (compose rat (q *.)) (pos_of_Q q).
 
@@ -3502,45 +3296,6 @@ intros x y E.
 apply metric_to_apart.
 eapply R_lt_le_trans;[|apply Rabs_triangle_alt].
 apply apart_to_metric in E. trivial.
-Qed.
-
-Instance Qpos_upper_close e : Closeness (Qpos_upper e)
-  := fun n x y => close n x.1 y.1.
-Arguments Qpos_upper_close _ _ _ _ /.
-
-Instance Q_recip_lipschitz (e : Q+)
-  : Lipschitz ((/) ∘ pr1 ∘ (Qpos_upper_inject e)) (/ (e * e)).
-Proof.
-intros n q r xi.
-unfold compose;simpl. apply Qclose_alt.
-assert (PropHolds (0 < join q (' e))) as E
-  by (apply lt_le_trans with (' e);[solve_propholds|apply join_ub_r]).
-apply (strictly_order_reflecting ((join q (' e)) *.)).
-assert (PropHolds (0 < join r (' e))) as E'
-  by (apply lt_le_trans with (' e);[solve_propholds|apply join_ub_r]).
-apply (strictly_order_reflecting ((join r (' e)) *.)).
-set (X := join r (' e)) at 2 3.
-rewrite <-(Qabs_of_nonneg (join r _)) by solve_propholds.
-set (Y := join q (' e)) at 2 3.
-rewrite <-(Qabs_of_nonneg (join q _)) by solve_propholds.
-rewrite <-!Qabs_mult.
-rewrite !(plus_mult_distr_l (Aplus:=Qplus)).
-rewrite dec_recip_inverse by (apply irrefl_neq,symmetric_neq in E;trivial).
-rewrite mult_1_r.
-assert (Hrw :  (r ⊔ ' e) * ((q ⊔ ' e) * - / (r ⊔ ' e)) = - Y * (X / X))
-  by ring_tac.ring_with_integers (NatPair.Z nat).
-rewrite Hrw;clear Hrw.
-rewrite dec_recip_inverse by (apply irrefl_neq,symmetric_neq in E';trivial).
-rewrite mult_1_r. unfold X, Y.
-eapply lt_le_trans.
-- apply Qclose_alt. eapply (non_expanding (⊔ ' e)). Symmetry. apply xi.
-- transitivity (' (((e * e) / (e * e)) * n)).
-  + rewrite pos_recip_r,Qpos_mult_1_l;reflexivity.
-  + rewrite <-!Qpos_mult_assoc.
-    change (' (e * (e * (/ (e * e) * n)))) with (' e * (' e * ' (/ (e * e) * n))).
-    apply mult_le_compat;try solve_propholds;[apply join_ub_r|].
-    apply mult_le_compat;try solve_propholds;[apply join_ub_r|].
-    reflexivity.
 Qed.
 
 Definition Qpos_upper_recip (e:Q+) : real -> real
