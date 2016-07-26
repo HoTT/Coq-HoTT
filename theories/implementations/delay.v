@@ -1,6 +1,7 @@
 Require Import
   HoTT.Types.Universe
   HoTT.Basics.Decidable
+  HoTT.HSet
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.interfaces.orders.
 
@@ -39,7 +40,7 @@ Record Inductors :=
       (Ip : forall n, Q (f n) (f (S n)) (If n) (If (S n)) (p n)),
       P (sup f p)
   ; ind_refl : forall x u, Q x x u u (delay_refl x)
-  ; ind_bot_least : forall x u v, Q bot x u v (bot_least x)
+  ; ind_bot_least : forall x v, Q bot x ind_bot v (bot_least x)
   ; ind_sup_le_l : forall f p x E If Ip u, Q (sup f p) x (ind_sup f p If Ip) u E ->
     forall n, Q (f n) x (If n) u (sup_le_l f p x E n)
   ; ind_sup_le_r : forall f p x E If Ip u, (forall n, Q (f n) x (If n) u (E n)) ->
@@ -67,7 +68,7 @@ Definition delay_rect : Inductors -> forall x, P x :=
     with
     | delay_refl x => fun I => ind_refl I x (delay_rect x I)
     | bot_least x => fun I =>
-      ind_bot_least I x (ind_bot I) (delay_rect x I)
+      ind_bot_least I x (delay_rect x I)
     | sup_le_l f p x E n => fun I =>
       ind_sup_le_l I f p x E (fun n => delay_rect (f n) I)
         (fun n => delayLe_rect _ _ (p n) I)
@@ -100,7 +101,7 @@ Definition delayLe_rect : forall (I : Inductors) (x y : delay) (E : x <= y),
     with
     | delay_refl x => fun I => ind_refl I x (delay_rect x I)
     | bot_least x => fun I =>
-      ind_bot_least I x (ind_bot I) (delay_rect x I)
+      ind_bot_least I x (delay_rect x I)
     | sup_le_l f p x E n => fun I =>
       ind_sup_le_l I f p x E (fun n => delay_rect (f n) I)
         (fun n => delayLe_rect _ _ (p n) I)
@@ -120,4 +121,105 @@ End Induction.
 End VarSec.
 
 End Delay.
+
+Section basics.
+Context `{Funext} `{Univalence}.
+
+Variable A : Type.
+
+Section Recursion.
+
+Variables (T : Type) (Tle : T -> T -> Type).
+
+Record Recursors :=
+  { rec_eta : A -> T
+  ; rec_bot : T
+  ; rec_sup : forall (f : nat -> T) (p : forall n, Tle (f n) (f (S n))), T
+
+  ; rec_refl : forall x : T, Tle x x
+  ; rec_bot_least : forall x : T, Tle rec_bot x
+  ; rec_sup_le_l : forall s p x, Tle (rec_sup s p) x -> forall n, Tle (s n) x
+  ; rec_sup_le_r : forall s p x, (forall n, Tle (s n) x) -> Tle (rec_sup s p) x
+
+  ; rec_antisymm : AntiSymmetric Tle
+  ; rec_prop : is_mere_relation T Tle }.
+
+Definition recursors_inductors
+  : Recursors -> Inductors A (fun _ => T) (fun _ _ x y _ => Tle x y).
+Proof.
+intros R. simple refine (Build_Inductors A _ _
+  (rec_eta R) (rec_bot R) (fun _ _ => rec_sup R) _ _ _ _ _ _);simpl.
+- intros _;exact (rec_refl R).
+- intros _;exact (rec_bot_least R).
+- intros _ _ _ _. exact (rec_sup_le_l R).
+- intros _ _ _ _. exact (rec_sup_le_r R).
+- intros. rewrite PathGroupoids.transport_const. apply (rec_antisymm R);trivial.
+- intros _ _ ?? _;exact (rec_prop R _ _).
+Defined.
+
+Definition delay_rec : Recursors -> delay A -> T
+  := fun R => delay_rect _ _ _ (recursors_inductors R).
+
+Definition delayLe_rec : forall (R : Recursors) (x y : delay A) (E : x <= y),
+  delay_rec R x <= delay_rec R y
+  := fun R => delayLe_rect _ _ _ (recursors_inductors R).
+
+End Recursion.
+
+Definition delayLe_rect0 (P : forall x y : delay A, x <= y -> Type)
+  {sP : forall x y E, IsHProp (P x y E)}
+  (val_refl : forall x, P x x (delay_refl A x))
+  (val_bot_least : forall x, P _ _ (bot_least A x))
+  (val_sup_le_l : forall f p x E (Ip : forall n, P (f n) (f (S n)) (p n)),
+    P (sup A f p) x E -> forall n, P (f n) x (sup_le_l A f p x E n))
+  (val_sup_le_r : forall f p x E (Ip : forall n, P (f n) (f (S n)) (p n)),
+    (forall n, P (f n) x (E n)) -> P (sup A f p) x (sup_le_r A f p x E))
+  : forall x y E, P x y E.
+Proof.
+apply (delayLe_rect A (fun _ => Unit) (fun x y _ _ E => P x y E)).
+split;simpl;auto;simpl.
+intros. apply path_ishprop.
+Defined.
+
+Lemma delayLe_trans : Transitive (@le (delay A) _).
+Proof.
+hnf. intros x y z E;revert x y E z.
+apply (delayLe_rect0 (fun x y _ => forall z, _ -> _)).
+- auto.
+- intros;apply bot_least.
+- intros;eapply sup_le_l;eauto.
+- intros;apply sup_le_r;auto.
+Qed.
+
+Global Instance delay_set : IsHSet (delay A).
+Proof.
+apply (@HSet.isset_hrel_subpaths _ (fun x y => x <= y /\ y <= x)).
+- intros x;split;apply delay_refl.
+- apply _.
+- intros x y E;apply delay_antisymm;apply E.
+Qed.
+
+Global Instance delay_order : PartialOrder (@le (delay A) _).
+Proof.
+repeat (split;try apply _).
+- apply delay_refl.
+- apply delayLe_trans.
+Qed.
+
+Definition delay_ind0 (P : delay A -> Type) {sP : forall x, IsHProp (P x)}
+  (val_eta : forall x, P (eta A x))
+  (val_bot : P (bot A))
+  (val_sup : forall f p, (forall n, P (f n)) -> P (sup A f p))
+  : forall x, P x.
+Proof.
+apply (delay_rect A _ (fun _ _ _ _ _ => Unit)).
+split;simpl;auto.
+- intros;apply path_ishprop.
+- apply _.
+Defined.
+
+End basics.
+
+
+
 
