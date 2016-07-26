@@ -326,13 +326,18 @@ apply (real_ind0 _).
     unfold cast,dec_recip;simpl. ring_tac.ring_with_nat.
 Qed.
 
+Definition lim_issurj : IsSurjection lim.
+Proof.
+apply BuildIsSurjection.
+intros. apply tr. exists (const_approx b).
+apply lim_cons.
+Defined.
+
 Lemma lim_epi@{i j k} : epi.isepi@{UQ UQ i j k} lim.
 Proof.
 apply epi.issurj_isepi@{UQ UQ Uhuge Ularge i
   k Ularge j}.
-apply BuildIsSurjection.
-intros. apply tr. exists (const_approx b).
-apply lim_cons.
+exact lim_issurj.
 Qed.
 
 Definition equiv_rect0@{i} (P : forall e u v, close e u v -> Type@{i})
@@ -611,11 +616,11 @@ Qed.
 Lemma Requiv_alt_rat_lim_rat_pr@{} :
 ∀ (q r : Q) (d d' e : Q+) (x : Approximation real) (a : Q+ → rounded_zeroary)
 (Ea : ∀ d0 e0 : Q+, rounded_zeroary_close (d0 + e0) (a d0) (a e0)),
-e = d + d'
-→ close d' (x d) (rat r)
+  e = d + d'
+  → close d' (x d) (rat r)
   → rounded_zeroary_close d' (a d) ((λ r0 : Q, Requiv_alt_rat_rat q r0) r)
-    → rounded_zeroary_close e ((λ _ : Approximation real, Requiv_alt_rat_lim) x a Ea)
-        ((λ r0 : Q, Requiv_alt_rat_rat q r0) r).
+  → rounded_zeroary_close e ((λ _ : Approximation real, Requiv_alt_rat_lim) x a Ea)
+  ((λ r0 : Q, Requiv_alt_rat_rat q r0) r).
 Proof.
 unfold rounded_zeroary_close;simpl;intros q r d d' e x a Ea He xi IH e'.
 split.
