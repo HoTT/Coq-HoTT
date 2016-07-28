@@ -8,6 +8,15 @@ Require Import
 Coercion trunctype_type : TruncType >-> Sortclass.
 Coercion equiv_fun : Equiv >-> Funclass.
 
+Record IncreasingSequence A {Ale : Le A} :=
+  { seq : nat -> A
+  ; seq_increasing : forall n, seq n <= seq (S n) }.
+Coercion seq : IncreasingSequence >-> Funclass.
+
+Arguments Build_IncreasingSequence {A Ale} seq seq_increasing.
+Arguments seq {A Ale} _ _.
+Arguments seq_increasing {A Ale} _ _.
+
 Module Export Partial.
 
 Section VarSec.
@@ -17,19 +26,30 @@ Variable A : Type.
 Private Inductive partial : Type :=
   | eta : A -> partial
   | bot : Bottom partial
-  | sup : forall f : nat -> partial, (forall n, f n <= f (S n)) -> partial
+  | sup' : forall f : nat -> partial, (forall n, f n <= f (S n)) -> partial
 
 with partialLe : Le partial :=
   | partial_refl : Reflexive partialLe
   | bot_least : forall x, bot <= x
-  | sup_le_l : forall f p x, sup f p <= x -> forall n, f n <= x
-  | sup_le_r : forall f p x, (forall n, f n <= x) -> sup f p <= x
+  | sup'_le_l : forall f p x, sup' f p <= x -> forall n, f n <= x
+  | sup'_le_r : forall f p x, (forall n, f n <= x) -> sup' f p <= x
 .
 Axiom partial_antisymm : AntiSymmetric partialLe.
 Axiom partialLe_hprop : is_mere_relation partial partialLe.
 
 Global Existing Instance partialLe.
 Global Existing Instance partialLe_hprop.
+
+Definition sup : IncreasingSequence partial -> partial
+  := fun s => sup' s (seq_increasing s).
+
+Definition sup_le_l : forall (s : IncreasingSequence partial) x,
+  sup s <= x -> forall n, s n <= x
+  := fun s => sup'_le_l s (seq_increasing s).
+
+Definition sup_le_r : forall (s : IncreasingSequence partial) x,
+  (forall n, s n <= x) -> sup s <= x
+  := fun s => sup'_le_r s (seq_increasing s).
 
 Section Induction.
 
@@ -39,15 +59,15 @@ Variables (P : partial -> Type)
 Record Inductors :=
   { ind_eta : forall x, P (eta x)
   ; ind_bot : P bot
-  ; ind_sup : forall f p (If : forall n, P (f n))
-      (Ip : forall n, Q (f n) (f (S n)) (If n) (If (S n)) (p n)),
-      P (sup f p)
+  ; ind_sup : forall (s : IncreasingSequence partial) (If : forall n, P (s n))
+      (Ip : forall n, Q (s n) (s (S n)) (If n) (If (S n)) (seq_increasing s n)),
+      P (sup s)
   ; ind_refl : forall x u, Q x x u u (partial_refl x)
   ; ind_bot_least : forall x v, Q bot x ind_bot v (bot_least x)
-  ; ind_sup_le_l : forall f p x E If Ip u, Q (sup f p) x (ind_sup f p If Ip) u E ->
-    forall n, Q (f n) x (If n) u (sup_le_l f p x E n)
-  ; ind_sup_le_r : forall f p x E If Ip u, (forall n, Q (f n) x (If n) u (E n)) ->
-    Q (sup f p) x (ind_sup f p If Ip) u (sup_le_r f p x E)
+  ; ind_sup_le_l : forall f x E If Ip u, Q (sup f) x (ind_sup f If Ip) u E ->
+    forall n, Q (f n) x (If n) u (sup_le_l f x E n)
+  ; ind_sup_le_r : forall f x E If Ip u, (forall n, Q (seq f n) x (If n) u (E n)) ->
+    Q (sup f) x (ind_sup f If Ip) u (sup_le_r f x E)
 
   ; ind_antisymm : forall x y u v E1 E2, Q x y u v E1 -> Q y x v u E2 ->
     partial_antisymm x y E1 E2 # u = v
@@ -60,7 +80,8 @@ Definition partial_rect : Inductors -> forall x, P x :=
     match x return (Inductors -> P x) with
     | eta x => fun I => ind_eta I x
     | bot => fun I => ind_bot I
-    | sup f p => fun I => ind_sup I f p (fun n => partial_rect (f n) I)
+    | sup' f p => fun I => ind_sup I (Build_IncreasingSequence f p)
+        (fun n => partial_rect (f n) I)
         (fun n => partialLe_rect _ _ (p n) I)
     end
 
@@ -72,13 +93,15 @@ Definition partial_rect : Inductors -> forall x, P x :=
     | partial_refl x => fun I => ind_refl I x (partial_rect x I)
     | bot_least x => fun I =>
       ind_bot_least I x (partial_rect x I)
-    | sup_le_l f p x E n => fun I =>
-      ind_sup_le_l I f p x E (fun n => partial_rect (f n) I)
+    | sup'_le_l f p x E n => fun I =>
+      ind_sup_le_l I (Build_IncreasingSequence f p) x E
+        (fun n => partial_rect (f n) I)
         (fun n => partialLe_rect _ _ (p n) I)
         (partial_rect x I)
         (partialLe_rect _ _ E I) n
-    | sup_le_r f p x E => fun I =>
-      ind_sup_le_r I f p x E (fun n => partial_rect (f n) I)
+    | sup'_le_r f p x E => fun I =>
+      ind_sup_le_r I (Build_IncreasingSequence f p) x E
+        (fun n => partial_rect (f n) I)
         (fun n => partialLe_rect _ _ (p n) I)
         (partial_rect x I)
         (fun n => partialLe_rect _ _ (E n) I)
@@ -93,7 +116,8 @@ Definition partialLe_rect : forall (I : Inductors) (x y : partial) (E : x <= y),
     match x return (Inductors -> P x) with
     | eta x => fun I => ind_eta I x
     | bot => fun I => ind_bot I
-    | sup f p => fun I => ind_sup I f p (fun n => partial_rect (f n) I)
+    | sup' f p => fun I => ind_sup I (Build_IncreasingSequence f p)
+        (fun n => partial_rect (f n) I)
         (fun n => partialLe_rect _ _ (p n) I)
     end
 
@@ -105,13 +129,15 @@ Definition partialLe_rect : forall (I : Inductors) (x y : partial) (E : x <= y),
     | partial_refl x => fun I => ind_refl I x (partial_rect x I)
     | bot_least x => fun I =>
       ind_bot_least I x (partial_rect x I)
-    | sup_le_l f p x E n => fun I =>
-      ind_sup_le_l I f p x E (fun n => partial_rect (f n) I)
+    | sup'_le_l f p x E n => fun I =>
+      ind_sup_le_l I (Build_IncreasingSequence f p) x E
+        (fun n => partial_rect (f n) I)
         (fun n => partialLe_rect _ _ (p n) I)
         (partial_rect x I)
         (partialLe_rect _ _ E I) n
-    | sup_le_r f p x E => fun I =>
-      ind_sup_le_r I f p x E (fun n => partial_rect (f n) I)
+    | sup'_le_r f p x E => fun I =>
+      ind_sup_le_r I (Build_IncreasingSequence f p) x E
+        (fun n => partial_rect (f n) I)
         (fun n => partialLe_rect _ _ (p n) I)
         (partial_rect x I)
         (fun n => partialLe_rect _ _ (E n) I)
@@ -153,11 +179,11 @@ Definition recursors_inductors
   : Recursors -> Inductors A (fun _ => T) (fun _ _ x y _ => Tle x y).
 Proof.
 intros R. simple refine (Build_Inductors A _ _
-  (rec_eta R) (rec_bot R) (fun _ _ => rec_sup R) _ _ _ _ _ _);simpl.
+  (rec_eta R) (rec_bot R) (fun _ => rec_sup R) _ _ _ _ _ _);simpl.
 - intros _;exact (rec_refl R).
 - intros _;exact (rec_bot_least R).
-- intros _ _ _ _. exact (rec_sup_le_l R).
-- intros _ _ _ _. exact (rec_sup_le_r R).
+- intros _ _ _. exact (rec_sup_le_l R).
+- intros _ _ _. exact (rec_sup_le_r R).
 - intros. rewrite PathGroupoids.transport_const. apply (rec_antisymm R);trivial.
 - intros _ _ ?? _;exact (rec_prop R _ _).
 Defined.
@@ -175,10 +201,12 @@ Definition partialLe_rect0 (P : forall x y : partial A, x <= y -> Type)
   {sP : forall x y E, IsHProp (P x y E)}
   (val_refl : forall x, P x x (partial_refl A x))
   (val_bot_least : forall x, P _ _ (bot_least A x))
-  (val_sup_le_l : forall f p x E (Ip : forall n, P (f n) (f (S n)) (p n)),
-    P (sup A f p) x E -> forall n, P (f n) x (sup_le_l A f p x E n))
-  (val_sup_le_r : forall f p x E (Ip : forall n, P (f n) (f (S n)) (p n)),
-    (forall n, P (f n) x (E n)) -> P (sup A f p) x (sup_le_r A f p x E))
+  (val_sup_le_l : forall f x E
+    (Ip : forall n, P (seq f n) (f (S n)) (seq_increasing f n)),
+    P (sup A f) x E -> forall n, P (f n) x (sup_le_l A f x E n))
+  (val_sup_le_r : forall f x E
+    (Ip : forall n, P (seq f n) (f (S n)) (seq_increasing f n)),
+    (forall n, P (f n) x (E n)) -> P (sup A f) x (sup_le_r A f x E))
   : forall x y E, P x y E.
 Proof.
 apply (partialLe_rect A (fun _ => Unit) (fun x y _ _ E => P x y E)).
@@ -214,7 +242,7 @@ Qed.
 Definition partial_ind0 (P : partial A -> Type) {sP : forall x, IsHProp (P x)}
   (val_eta : forall x, P (eta A x))
   (val_bot : P (bot A))
-  (val_sup : forall f p, (forall n, P (f n)) -> P (sup A f p))
+  (val_sup : forall f, (forall n, P (seq f n)) -> P (sup A f))
   : forall x, P x.
 Proof.
 apply (partial_rect A _ (fun _ _ _ _ _ => Unit)).
@@ -227,9 +255,9 @@ Definition partialLe_ind0 (P : forall a b : partial A, a <= b -> Type)
   {sP : forall a b E, IsHProp (P a b E)}
   (val_refl : forall a, P a a (partial_refl A a))
   (val_bot_least : forall b, P (bot A) b (bot_least A b))
-  (val_sup_le_l : forall f p x E, P _ _ E -> forall n, P _ _ (sup_le_l A f p x E n))
-  (val_sup_le_r : forall f p x E, (forall n, P _ _ (E n)) ->
-    P _ _ (sup_le_r A f p x E))
+  (val_sup_le_l : forall f x E, P _ _ E -> forall n, P _ _ (sup_le_l A f x E n))
+  (val_sup_le_r : forall f x E, (forall n, P _ _ (E n)) ->
+    P _ _ (sup_le_r A f x E))
   : forall a b E, P a b E.
 Proof.
 apply (partialLe_rect A (fun _ => Unit) (fun a b _ _ E => P a b E)).
@@ -274,13 +302,13 @@ apply (partial_ind0 (fun a => forall b, _ -> _)).
 - intros a. apply (partial_ind0 (fun b => _ -> _)).
   + intros b;simpl. intros []. reflexivity.
   + simpl. intros [].
-  + intros f p E1.
-    change (merely (exists n, sim_le (eta A a) (f n)) -> eta A a <= sup A f p).
+  + intros f E1.
+    change (merely (exists n, sim_le (eta A a) (f n)) -> eta A a <= sup A f).
     apply (Trunc_ind _);intros [n E2].
     apply E1 in E2. transitivity (f n);trivial.
-    apply sup_le_l with p. reflexivity.
+    apply sup_le_l. reflexivity.
 - simpl. intros b _;apply bot_least.
-- intros f p IH b. change ((forall n, sim_le (f n) b) -> sup A f p <= b).
+- intros f IH b. change ((forall n, sim_le (f n) b) -> sup A f <= b).
   intros E. apply sup_le_r. intros n;apply IH;trivial.
 Qed.
 
@@ -289,15 +317,15 @@ Proof.
 exact (partialLe_rec _ _ sim_le_recursors).
 Qed.
 
-Lemma sim_le_sup : forall f p x n, sim_le x (f n) -> sim_le x (sup A f p).
+Lemma sim_le_sup : forall f x n, sim_le x (seq f n) -> sim_le x (sup A f).
 Proof.
-intros f p;apply (partial_ind0 (fun x => forall n, _ -> _)).
+intros f;apply (partial_ind0 (fun x => forall n, _ -> _)).
 - intros a n E. apply tr;exists n;apply E.
 - simpl. trivial.
-- intros g q IH n E.
-  change (forall m, sim_le (g m) (sup A f p)). intros m.
-  apply IH with n. apply le_sim_le_trans with (sup A g q).
-  + apply sup_le_l with q. reflexivity.
+- intros g IH n E.
+  change (forall m, sim_le (g m) (sup A f)). intros m.
+  apply IH with n. apply le_sim_le_trans with (sup A g).
+  + apply sup_le_l. reflexivity.
   + trivial.
 Qed.
 
@@ -306,7 +334,7 @@ Proof.
 apply (partial_ind0 _).
 - reflexivity.
 - simpl;trivial.
-- intros f p IH. change (forall n, sim_le (f n) (sup A f p)).
+- intros f IH. change (forall n, sim_le (f n) (sup A f)).
   intros n. apply sim_le_sup with n. trivial.
 Qed.
 
@@ -315,8 +343,8 @@ Proof.
 apply (partialLe_ind0 _).
 - apply sim_le_refl.
 - simpl. trivial.
-- intros f p x E IH;exact IH.
-- intros f p x E IH;exact IH.
+- intros f x E IH;exact IH.
+- intros f x E IH;exact IH.
 Qed.
 
 Lemma le_sim_rw : @le (partial A) _ = sim_le.
@@ -343,15 +371,15 @@ Proof.
 intros a b E. apply eta_le_eta. rewrite E;reflexivity.
 Qed.
 
-Lemma eta_le_sup : forall a f p, eta A a <= sup A f p ->
+Lemma eta_le_sup : forall a f, eta A a <= sup A f ->
   merely (exists n, eta A a <= f n).
 Proof.
-intros a f p. rewrite le_sim_rw. trivial.
+intros a f. rewrite le_sim_rw. trivial.
 Qed.
 
-Lemma sup_is_ub : forall f p n, f n <= sup A f p.
+Lemma sup_is_ub : forall f n, seq f n <= sup A f.
 Proof.
-intros f p n;apply sup_le_l with p. reflexivity.
+intros f n;apply sup_le_l. reflexivity.
 Qed.
 
 End basics.
@@ -365,11 +393,11 @@ intros f.
 simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
 - exact f.
 - exact (bot B).
-- intros s p. exact (sup B s p).
+- intros s p. exact (sup' B s p).
 - reflexivity.
 - apply bot_least.
-- simpl. apply sup_le_l.
-- simpl. apply sup_le_r.
+- simpl. apply sup'_le_l.
+- simpl. apply sup'_le_r.
 Defined.
 
 Definition bind {A B} : partial A -> (A -> partial B) -> partial B
@@ -385,26 +413,48 @@ Definition bind_eta_l {A B} : forall a f, bind (B:=B) (eta A a) f = f a
 Definition bind_bot_l {A B} : forall f, bind (bot A) f = bot B
   := fun _ => idpath.
 
-Definition bind_sup_l {A B} : forall f s p,
-  bind (sup A s p) f = sup B (fun n => bind (s n) f) (fun n => bind_le f _ _ (p n))
-  := fun _ _ _ => idpath.
+Definition bind_seq {A B} (f : A -> partial B) s :=
+  Build_IncreasingSequence (fun n => bind (seq s n) f)
+    (fun n => bind_le f _ _ (seq_increasing s n)).
 
-Lemma sup_extensionality {A} : forall f p g q, (forall n, f n = g n) ->
-  sup A f p = sup A g q.
+Definition bind_sup_l {A B} : forall f s,
+  bind (sup A s) f =
+  sup B (bind_seq f s).
 Proof.
-intros f p g q E.
+intros f s. change s with (Build_IncreasingSequence (seq s) (seq_increasing s)).
+exact idpath.
+Defined.
+
+Lemma sup_extensionality {A} : forall f g, (forall n, seq f n = seq g n) ->
+  sup A f = sup A g.
+Proof.
+intros f g E.
 apply (antisymmetry le).
 - apply sup_le_r. intros n. rewrite E. apply sup_is_ub.
 - apply sup_le_r. intros n. rewrite <-E. apply sup_is_ub.
 Qed.
 
+Lemma sup_extensionality_tail {A} : forall f g, (forall n, seq f (S n) = seq g n) ->
+  sup A f = sup A g.
+Proof.
+intros f g E.
+apply (antisymmetry le).
+- apply sup_le_r. intros n. transitivity (f (S n)).
+  + apply seq_increasing.
+  + rewrite E. apply sup_is_ub.
+- apply sup_le_r. intros n. transitivity (f (S n)).
+  + rewrite E. reflexivity.
+  + apply sup_is_ub.
+Qed.
+
 Definition bind_eta_r {A} : forall x, bind x (eta A) = x.
 Proof.
 apply (partial_ind0 _ _);try reflexivity.
-intros f p IH.
-change (bind (sup A f p) (eta A)) with
-  (sup A (λ n : nat, bind (f n) (eta A))
-    (λ n : nat, bind_le (eta A) (f n) (f (S n)) (p n))).
+intros f IH.
+change (bind (sup A f) (eta A)) with
+  (sup A (Build_IncreasingSequence
+    (λ n : nat, bind (f n) (eta A))
+    (λ n : nat, bind_le (eta A) (f n) (f (S n)) (seq_increasing f n)))).
 apply sup_extensionality. trivial.
 Defined.
 
@@ -414,15 +464,71 @@ Proof.
 intros x f g;revert x;apply (partial_ind0 _ _).
 - reflexivity.
 - reflexivity.
-- intros s p IH.
-  change (sup C (λ n, bind (bind (s n) f) g)
-  (λ n, bind_le g (bind (s n) f) (bind (s (S n)) f)
-     (bind_le f (s n) (s (S n)) (p n))) =
-  sup C (λ n, bind (s n) (λ a, bind (f a) g))
-    (λ n, bind_le (λ a, bind (f a) g) (s n) (s (S n)) (p n))).
+- intros s IH.
+  change (sup C (bind_seq g (bind_seq f s)) =
+    sup C (bind_seq (λ a : A, bind (f a) g) s)).
   apply sup_extensionality. apply IH.
 Defined.
 
 End monad.
+
+Section Fix.
+
+Record MonotoneTransformer A B :=
+  { transform : (A -> partial B) -> A -> partial B
+  ; transform_monotone : forall g1 g2, (forall x, g1 x <= g2 x) ->
+      forall x, transform g1 x <= transform g2 x }.
+
+Coercion transform : MonotoneTransformer >-> Funclass.
+
+Context `{IsHSet A} `{IsHSet B}.
+
+
+Variable f : MonotoneTransformer A B.
+
+Definition seq_transform : (A -> IncreasingSequence (partial B)) ->
+  A -> IncreasingSequence (partial B).
+Proof.
+intros s x. exists (fun n => f (fun y => s y n) x).
+intros n. apply transform_monotone. intros y. apply seq_increasing.
+Defined.
+
+Lemma repeat_increasing : forall n x,
+  repeat n f (fun _ => bot _) x <= repeat (S n) f (fun _ => bot _) x.
+Proof.
+induction n.
+- simpl;intros. apply bot_least.
+- simpl. apply transform_monotone. trivial.
+Defined.
+
+Definition Fix_sequence : A -> IncreasingSequence (partial B).
+Proof.
+intros x. exists (fun n => repeat n f (fun _ => bot _) x).
+intros;apply repeat_increasing.
+Defined.
+
+Definition Fix : A -> partial B := fun x => sup _ (Fix_sequence x).
+
+End Fix.
+
+Section Fix_pr.
+
+Record ContinuousTransformer A B :=
+  { cont_transform : MonotoneTransformer A B
+  ; transform_continuous : forall (s : A -> IncreasingSequence (partial B)) x,
+      cont_transform (compose (sup _) s) x =
+      sup _ (seq_transform cont_transform s x) }.
+Coercion cont_transform : ContinuousTransformer >-> MonotoneTransformer.
+
+Context `{IsHSet A} `{IsHSet B}.
+
+Lemma Fix_pr : forall f : ContinuousTransformer A B, Fix f = f (Fix f).
+Proof.
+intros f. unfold Fix. apply path_forall. intros x.
+rewrite transform_continuous. apply sup_extensionality_tail.
+intros n. reflexivity.
+Qed.
+
+End Fix_pr.
 
 End contents.
