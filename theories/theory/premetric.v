@@ -213,7 +213,7 @@ intros e _ _ _. reflexivity.
 Qed.
 
 Global Instance lipschitz_uniform@{} (L:Q+) `{!Lipschitz f L}
-  : Uniform f (fun e => e / L).
+  : Uniform f (fun e => e / L) | 5.
 Proof.
 intros e u v xi.
 rewrite <-(pos_unconjugate L e),<-Qpos_mult_assoc.
@@ -226,7 +226,7 @@ hnf.
 intros u e;apply tr;exists (mu e).
 apply (uniform f mu).
 Qed.
-Global Existing Instance uniform_continuous.
+Global Existing Instance uniform_continuous | 5.
 
 Definition lipschitz_continuous@{} (L:Q+) `{!Lipschitz f L} : Continuous f
   := _.
@@ -331,7 +331,7 @@ apply (triangular _ (f u1 v2)).
 - apply (lipschitz (fun u => f u v2) L2). trivial.
 Qed.
 
-Global Instance uncurry_uniform
+Lemma uncurry_uniform
   `{!Rounded A} `{!Rounded B} (f : A -> B -> C) mu mu'
   `{!forall x, Uniform (f x) mu}
   `{!forall y, Uniform (fun x => f x y) mu'}
