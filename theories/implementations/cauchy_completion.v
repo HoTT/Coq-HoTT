@@ -15,8 +15,7 @@ Require Import
   HoTTClasses.theory.rationals
   HoTTClasses.orders.lattices
   HoTTClasses.theory.additional_operations
-  HoTTClasses.theory.premetric
-  HoTTClasses.implementations.partiality.
+  HoTTClasses.theory.premetric.
 
 Local Set Universe Minimization ToSet.
 
@@ -1723,3 +1722,4 @@ Global Instance eta_injective@{} : Injective eta
   := eta_injective'@{UQ}.
 
 End generalities.
+
