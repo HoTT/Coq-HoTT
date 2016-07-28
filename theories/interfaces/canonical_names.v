@@ -417,3 +417,7 @@ Infix "<=?" := leb (at level 70, no associativity) : mc_scope.
 Notation "(<=?)" := leb (only parsing) : mc_scope.
 Notation "( x <=?)" := (leb x) (only parsing) : mc_scope.
 Notation "(<=? y )" := (fun x => x <=? y) (only parsing) : mc_scope.
+
+Class Return (M : Type -> Type) := ret : forall {A}, A -> M A.
+
+Class Bind (M : Type -> Type) := bind : forall {A B}, M A -> (A -> M B) -> M B.

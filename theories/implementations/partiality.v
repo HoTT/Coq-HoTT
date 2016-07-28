@@ -3,7 +3,8 @@ Require Import
   HoTT.Basics.Decidable
   HoTT.HSet
   HoTTClasses.interfaces.abstract_algebra
-  HoTTClasses.interfaces.orders.
+  HoTTClasses.interfaces.orders
+  HoTTClasses.interfaces.monad.
 
 Coercion trunctype_type : TruncType >-> Sortclass.
 Coercion equiv_fun : Equiv >-> Funclass.
@@ -386,7 +387,9 @@ End basics.
 
 Section monad.
 
-Definition bind_recursors {A B} : (A -> partial B) ->
+Global Instance partial_ret : Return partial := eta.
+
+Definition partial_bind_recursors {A B} : (A -> partial B) ->
   Recursors A (partial B) le.
 Proof.
 intros f.
@@ -400,26 +403,26 @@ simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
 - simpl. apply sup'_le_r.
 Defined.
 
-Definition bind {A B} : partial A -> (A -> partial B) -> partial B
-  := fun x f => partial_rec _ _ _ (bind_recursors f) x.
+Global Instance partial_bind : Bind partial
+  := fun A B x f => partial_rec _ _ _ (partial_bind_recursors f) x.
 
-Definition bind_le {A B} : forall (f : A -> partial B) a b, a <= b ->
+Definition partial_bind_le {A B} : forall (f : A -> partial B) a b, a <= b ->
   bind a f <= bind b f
-  := fun f a b E => partialLe_rec _ _ _ (bind_recursors f) a b E.
+  := fun f a b E => partialLe_rec _ _ _ (partial_bind_recursors f) a b E.
 
-Definition bind_eta_l {A B} : forall a f, bind (B:=B) (eta A a) f = f a
+Definition partial_bind_eta_l {A B} : forall a f, bind (B:=B) (eta A a) f = f a
   := fun _ _ => idpath.
 
-Definition bind_bot_l {A B} : forall f, bind (bot A) f = bot B
+Definition partial_bind_bot_l {A B} : forall f, bind (M:=partial) (bot A) f = bot B
   := fun _ => idpath.
 
-Definition bind_seq {A B} (f : A -> partial B) s :=
+Definition partial_bind_seq {A B} (f : A -> partial B) s :=
   Build_IncreasingSequence (fun n => bind (seq s n) f)
-    (fun n => bind_le f _ _ (seq_increasing s n)).
+    (fun n => partial_bind_le f _ _ (seq_increasing s n)).
 
-Definition bind_sup_l {A B} : forall f s,
+Definition partial_bind_sup_l {A B} : forall f s,
   bind (sup A s) f =
-  sup B (bind_seq f s).
+  sup B (partial_bind_seq f s).
 Proof.
 intros f s. change s with (Build_IncreasingSequence (seq s) (seq_increasing s)).
 exact idpath.
@@ -447,28 +450,37 @@ apply (antisymmetry le).
   + apply sup_is_ub.
 Qed.
 
-Definition bind_eta_r {A} : forall x, bind x (eta A) = x.
+Definition partial_bind_eta_r {A} : forall x, bind x (eta A) = x.
 Proof.
 apply (partial_ind0 _ _);try reflexivity.
 intros f IH.
 change (bind (sup A f) (eta A)) with
   (sup A (Build_IncreasingSequence
     (λ n : nat, bind (f n) (eta A))
-    (λ n : nat, bind_le (eta A) (f n) (f (S n)) (seq_increasing f n)))).
+    (λ n : nat, partial_bind_le (eta A) (f n) (f (S n)) (seq_increasing f n)))).
 apply sup_extensionality. trivial.
 Defined.
 
-Lemma bind_assoc {A B C} : forall x f g, bind (B:=C) (bind (A:=A) (B:=B) x f) g =
+Lemma partial_bind_assoc {A B C} : forall x f g,
+  bind (B:=C) (bind (A:=A) (B:=B) x f) g =
   bind x (fun a => bind (f a) g).
 Proof.
 intros x f g;revert x;apply (partial_ind0 _ _).
 - reflexivity.
 - reflexivity.
 - intros s IH.
-  change (sup C (bind_seq g (bind_seq f s)) =
-    sup C (bind_seq (λ a : A, bind (f a) g) s)).
+  change (sup C (partial_bind_seq g (partial_bind_seq f s)) =
+    sup C (partial_bind_seq (λ a : A, bind (f a) g) s)).
   apply sup_extensionality. apply IH.
 Defined.
+
+Global Instance partial_monad : Monad partial.
+Proof.
+split.
+- exact @partial_bind_eta_l.
+- exact @partial_bind_eta_r.
+- exact @partial_bind_assoc.
+Qed.
 
 End monad.
 
@@ -481,8 +493,7 @@ Record MonotoneTransformer A B :=
 
 Coercion transform : MonotoneTransformer >-> Funclass.
 
-Context `{IsHSet A} `{IsHSet B}.
-
+Context {A B : Type}.
 
 Variable f : MonotoneTransformer A B.
 
@@ -520,7 +531,7 @@ Record ContinuousTransformer A B :=
       sup _ (seq_transform cont_transform s x) }.
 Coercion cont_transform : ContinuousTransformer >-> MonotoneTransformer.
 
-Context `{IsHSet A} `{IsHSet B}.
+Context {A B : Type}.
 
 Lemma Fix_pr : forall f : ContinuousTransformer A B, Fix f = f (Fix f).
 Proof.
