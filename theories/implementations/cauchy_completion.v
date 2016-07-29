@@ -276,8 +276,7 @@ End Cauchy.
 
 Section generalities.
 Variable T : Type@{UQ}.
-Context {Tclose : Closeness T} {Tpremetric : PreMetric T}
-  {Tclose_hprop : forall e, is_mere_relation T (close e)}.
+Context {Tclose : Closeness T} {Tpremetric : PreMetric T}.
 
 Definition C_rect0@{UA} (A : C T -> Type@{UA})
   (val_eta : forall q, A (eta q))
@@ -1301,9 +1300,8 @@ red;red;intros. apply C_equiv_through_approx.
 apply equiv_refl.
 Qed.
 
-Lemma unique_continuous_extension@{i} {A:Type@{i} } `{IsHSet A} `{Closeness A}
-  `{forall e, is_mere_relation A (close e)}
-  `{!Separated A} `{!Triangular A} `{!forall e, Symmetric (close (A:=A) e)}
+Lemma unique_continuous_extension@{i j} {A:Type@{i} } `{IsHSet A} `{Closeness A}
+  `{!PreMetric@{i j} A}
   (f g : C T -> A)
   `{!Continuous f} `{!Continuous g}
   : (forall q, f (eta q) = g (eta q)) -> forall u, f u = g u.
