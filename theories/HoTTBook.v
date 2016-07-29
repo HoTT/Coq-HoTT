@@ -138,7 +138,7 @@ Definition Book_11_3_48_item_iii := @HoTTClasses.implementations.cauchy_reals.re
 (* ================================================== RC-initial-Cauchy-complete *)
 (** Theorem 11.3.50 *)
 
-Definition Book_11_3_50 := @HoTTClasses.implementations.cauchy_completion.C_cauchy_complete.
+Definition Book_11_3_50 := @HoTTClasses.implementations.cauchy_completion.equiv_lim.
 
 (* ================================================== lem:untruncated-linearity-reals-coincide *)
 (** Lemma 11.4.1 *)

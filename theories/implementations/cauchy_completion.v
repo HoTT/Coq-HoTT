@@ -58,8 +58,10 @@ Axiom equiv_hprop@{} : forall e (u v : C), IsHProp (close e u v).
 Global Existing Instance equiv_path.
 Global Existing Instance equiv_hprop.
 
-Definition lim@{} (x : Approximation C) : C :=
-  lim' x (fun _ _ => approx_equiv _ _ _).
+Definition Clim@{} : Lim C :=
+  fun x => lim' x (fun _ _ => approx_equiv _ _ _).
+Global Existing Instance Clim.
+Arguments Clim _ /.
 
 Definition equiv_eta_lim@{} : forall q (y:Approximation C) (e d d' : Q+),
   e = d + d' ->
@@ -262,7 +264,7 @@ End induction.
 End DefSec.
 
 Arguments eta {_ _} _.
-Arguments lim {_ _} _.
+Arguments Clim {_ _} _ /.
 Arguments ind_eta {_ _ _ _} _ _.
 Arguments ind_lim {_ _ _ _} _ _ _.
 Arguments ind_eta_eta {_ _ _ _} _ _ _ _ _.
@@ -351,14 +353,14 @@ apply (C_ind0 _).
     unfold cast,dec_recip;simpl. ring_tac.ring_with_nat.
 Qed.
 
-Definition lim_issurj : IsSurjection lim.
+Definition lim_issurj : IsSurjection (lim (A:=C T)).
 Proof.
 apply BuildIsSurjection.
 intros. apply tr. exists (const_approx b).
 apply lim_cons.
 Defined.
 
-Lemma lim_epi@{i j k} : epi.isepi@{UQ UQ i j k} lim.
+Lemma lim_epi@{i j k} : epi.isepi@{UQ UQ i j k} (lim (A:=C T)).
 Proof.
 apply epi.issurj_isepi@{UQ UQ Uhuge Ularge i
   k Ularge j}.
@@ -1226,7 +1228,7 @@ Qed.
 Definition equiv_lim_eta_def@{}
   := equiv_lim_eta_def'@{Ularge Ularge UQ UQ}.
 
-Lemma equiv_lim_lim_def' : forall e x y,
+Lemma equiv_lim_lim_def' : forall e (x y : Approximation (C T)),
   close e (lim x) (lim y) =
   merely (exists d d' n, e = d + d' + n /\ close d' (x d) (y n)).
 Proof.
@@ -1288,16 +1290,11 @@ Qed.
 Definition equiv_through_approx@{}
   := equiv_through_approx'@{UQ}.
 
-Lemma equiv_lim@{} : forall x, IsLimit x (lim x).
+Global Instance equiv_lim@{} : CauchyComplete (C T).
 Proof.
-red;intros. apply equiv_through_approx.
+red;red;intros. apply equiv_through_approx.
 apply equiv_refl.
 Qed.
-
-Global Instance C_cauchy_complete : CauchyComplete (C T).
-Proof.
-hnf. intros x;exists (lim x);apply equiv_lim.
-Defined.
 
 Lemma unique_continuous_extension@{i} {A:Type@{i} } `{IsHSet A} `{Closeness A}
   `{forall e, is_mere_relation A (close e)}

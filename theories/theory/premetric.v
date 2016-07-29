@@ -835,7 +835,10 @@ intros e. rewrite (pos_split2 e),(pos_split2 (e/2)).
 apply triangular with (x (e / 2 / 2));[Symmetry;apply E1|apply E2].
 Qed.
 
-Class CauchyComplete := cauchy_complete : forall x, exists l, IsLimit x l.
+Class Lim := lim : Approximation -> A.
+
+Class CauchyComplete {Alim : Lim}
+  := cauchy_complete : forall x, IsLimit x (lim x).
 
 End cauchy.
 
@@ -853,5 +856,8 @@ Arguments map2_continuous {_ _ A _ B _ C _ D _} f g {_ _ _ _} u e.
 
 Arguments Interval_close {_ _ _} _ _ _ _ _ /.
 
+Arguments Lim A {_}.
+Arguments lim {A _ _} _.
+
 Arguments Approximation A {_}.
-Arguments CauchyComplete A {_}.
+Arguments CauchyComplete A {_ _}.
