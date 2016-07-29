@@ -113,7 +113,7 @@ hnf. apply unique_continuous_ternary_extension.
   apply _. }
 { change (Continuous (uncurry plus ∘ map2 (uncurry plus) (@id real))).
   apply _. }
-intros;apply (ap rat),plus_assoc.
+intros;change (rat (q + (r + s)) = rat (q + r + s));apply (ap rat),plus_assoc.
 Qed.
 
 Instance Rplus_group@{} : Group real.
@@ -187,6 +187,7 @@ apply unique_continuous_ternary_extension.
 { change (Continuous (uncurry join ∘ map2 (uncurry join) (@id real))).
   apply _. }
 intros q r s.
+change (rat (q ⊔ ((q ⊔ r) ⊔ s)) = rat ((q ⊔ r) ⊔ s)).
 apply (ap rat).
 apply join_r. apply join_le_compat_r,join_ub_l.
 Qed.
@@ -343,7 +344,8 @@ split.
       apply _. }
     { change (Continuous (uncurry meet ∘ map2 (uncurry meet) (@id real))).
       apply _. }
-    intros;apply (ap rat). apply associativity.
+    intros;change (rat (q ⊓ (r ⊓ s)) = rat ((q ⊓ r) ⊓ s));apply (ap rat).
+    apply associativity.
   + hnf.
     apply unique_continuous_binary_extension;try apply _.
     intros;apply (ap rat). apply commutativity.
@@ -582,7 +584,7 @@ assert (Hrw : e = D + (ED / 4 + ED / 4) + (ED / 4 + ED / 4)).
   }
   path_via (D + 4 / 4 * ED).
   { rewrite pos_recip_r,Qpos_mult_1_l;trivial. }
-  apply pos_eq;ring_tac.ring_with_nat.
+  apply pos_eq;abstract ring_tac.ring_with_nat.
 }
 rewrite Hrw.
 eapply (equiv_triangle _);[|apply (equiv_lim _)].
@@ -594,7 +596,7 @@ Qed.
 Lemma Rabs_neg_flip@{} : forall a b : real, abs (a - b) = abs (b - a).
 Proof.
 apply (unique_continuous_binary_extension _);try apply _.
-intros q r;apply (ap rat).
+intros q r;change (rat (abs (q - r)) = rat (abs (r - q)));apply (ap rat).
 apply Qabs_neg_flip.
 Qed.
 
@@ -629,7 +631,7 @@ assert (Hrw : e = D + (ED / 4 + ED / 4) + (ED / 4 + ED / 4)).
   }
   path_via (D + 4 / 4 * ED).
   { rewrite pos_recip_r,Qpos_mult_1_l;trivial. }
-  apply pos_eq;ring_tac.ring_with_nat.
+  apply pos_eq;abstract ring_tac.ring_with_nat.
 }
 rewrite Hrw.
 eapply (equiv_triangle _);[|apply (equiv_lim _)].
@@ -693,7 +695,7 @@ revert z x y;apply unique_continuous_ternary_extension.
 { change (Continuous (uncurry (+) ∘ map2 (@id real) (uncurry join) ∘
     prod_assoc^-1)).
   apply _. }
-intros;apply (ap rat).
+intros;change (rat ((q + r) ⊔ (q + (r ⊔ s))) = rat (q + (r ⊔ s)));apply (ap rat).
 apply join_r. apply (order_preserving (q +)).
 apply join_ub_l.
 Qed.
@@ -732,7 +734,7 @@ revert z x y;apply unique_continuous_ternary_extension.
     prod_symm ∘ prod_assoc^-1 ∘ prod_assoc^-1 ∘ prod_assoc^-1 ∘
     map2 (map2 (map2 BinaryDup id ∘ BinaryDup) (@id real)) id)).
   apply _. }
-intros;apply (ap rat).
+intros;change (rat (r ⊔ s) = rat ((q + r) ⊔ (q + s) - q));apply (ap rat).
 destruct (total le r s) as [E|E].
 - rewrite (join_r _ _ E).
   rewrite (join_r _ _ (order_preserving (q +) _ _ E)).
@@ -758,7 +760,7 @@ clear E;revert x y;apply unique_continuous_binary_extension.
     prod_symm ∘ prod_assoc^-1 ∘ map2 BinaryDup (@id real))).
   apply _. }
 { apply _. }
-intros q r;apply (ap rat).
+intros q r;change (rat (- (q ⊔ r) ⊔ - q) = rat (- q));apply (ap rat).
 apply join_r. apply (snd (flip_le_negate _ _)). apply join_ub_l.
 Qed.
 
@@ -922,7 +924,10 @@ revert x;eapply @unique_continuous_extension;try apply _.
   apply _.
 - change (Continuous (QRmult (abs (q - r)) ∘ (⊔ rat (' a)) ∘ abs)).
   apply _.
-- intros s. apply (ap rat).
+- intros s.
+  change (rat (abs ((q - r) * s) ⊔ abs (q - r) * (abs s ⊔ ' a)) =
+    rat (abs (q - r) * (abs s ⊔ ' a))).
+  apply (ap rat).
   apply join_r.
   rewrite Qabs_mult. apply mult_le_compat.
   + apply Qabs_nonneg.
@@ -1112,7 +1117,8 @@ revert b c. apply unique_continuous_binary_extension.
   apply _. }
 { change (Continuous (QRmult (abs q) ∘ abs ∘ uncurry plus ∘ map2 id negate)).
   apply _. }
-intros r s. apply (ap rat).
+intros r s. change (rat (abs (q * r - q * s)) = rat (abs q * abs (r - s))).
+apply (ap rat).
 rewrite negate_mult_distr_r,<-plus_mult_distr_l.
 apply Qabs_mult.
 Qed.
@@ -1150,7 +1156,10 @@ revert b d. apply unique_continuous_binary_extension.
   apply _. }
 { change (Continuous (QRmult (join (abs q) (abs r)) ∘ uncurry join ∘ map2 abs abs)).
   apply _. }
-intros s t. apply (ap rat).
+intros s t.
+change (rat (abs q * abs s ⊔ (abs q ⊔ abs r) * (abs s ⊔ abs t)) =
+rat ((abs q ⊔ abs r) * (abs s ⊔ abs t))).
+apply (ap rat).
 apply join_r. apply mult_le_compat.
 - apply Qabs_nonneg.
 - apply Qabs_nonneg.
@@ -1400,7 +1409,7 @@ apply unique_continuous_ternary_extension.
       (uncurry plus ∘ map2 snd id) ∘
     BinaryDup)).
   apply _.
-- intros q r s. apply (ap rat).
+- intros q r s. change (rat (q ⊔ r + s) = rat ((q + s) ⊔ (r + s))). apply (ap rat).
   destruct (total le q r) as [E|E].
   + rewrite join_r;trivial.
     rewrite join_r;trivial.
@@ -1651,6 +1660,8 @@ pose proof (join_le _ _ _ Ex Ey) as E;clear Ex Ey.
 rewrite <-E;clear E.
 revert x. apply (unique_continuous_extension _ _ _).
 intros q. unfold Qpos_upper_recip;simpl.
+change (rat ((dec_recip ∘ pr1 ∘ Qpos_upper_inject e1) ((' e1 ⊔ ' e2) ⊔ q)) =
+rat ((dec_recip ∘ pr1 ∘ Qpos_upper_inject e2) ((' e1 ⊔ ' e2) ⊔ q))).
 apply (ap rat). unfold compose;simpl.
 apply ap.
 rewrite <-(simple_associativity (f:=join)),(commutativity (f:=join) q).
@@ -1771,12 +1782,16 @@ apply (merely_destruct (Rlt_exists_pos_plus_le _ _ E)). intros [e E1].
 rewrite plus_0_l in E1.
 rewrite (R_recip_upper_recip _ _ E1).
 rewrite <-E1. clear E E1;revert x.
-apply (unique_continuous_extension _);try apply _.
+apply (unique_continuous_extension _).
 - change (Continuous (uncurry mult ∘
     map2 (join (rat (' e))) (Qpos_upper_recip e ∘ (join (rat (' e)))) ∘
   BinaryDup)).
   apply _.
-- intros q. apply (ap rat).
+- apply _.
+- intros q.
+  change (rat ((' e ⊔ q) * (dec_recip ∘ pr1 ∘ Qpos_upper_inject e) (' e ⊔ q)) =
+    rat 1).
+  apply (ap rat).
   unfold compose;simpl.
   rewrite (commutativity (f:=join) _ (' e)),(simple_associativity (f:=join)).
   rewrite (idempotency _ _).
@@ -1832,7 +1847,8 @@ Proof.
 apply unique_continuous_binary_extension.
 - change (Continuous (abs ∘ uncurry (@mult real _)));apply _.
 - change (Continuous (uncurry (@mult real _) ∘ map2 abs abs));apply _.
-- intros;exact (ap rat (Qabs_mult q r)).
+- intros. change (rat (abs (q * r)) = rat (abs q * abs r)).
+  exact (ap rat (Qabs_mult q r)).
 Qed.
 
 Lemma Rmult_lt_apart : forall z x y, z * x < z * y -> apart x y.
