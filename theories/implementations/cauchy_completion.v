@@ -1266,7 +1266,7 @@ Proof.
 split;apply _.
 Qed.
 
-Lemma equiv_through_approx' : forall u (y : Approximation (C T)) e d,
+Lemma C_equiv_through_approx' : forall u (y : Approximation (C T)) e d,
   close e u (y d) -> close (e+d) u (lim y).
 Proof.
 apply (C_ind0 (fun u => forall y e d, _ -> _)).
@@ -1292,12 +1292,12 @@ apply (C_ind0 (fun u => forall y e d, _ -> _)).
   apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Definition equiv_through_approx@{}
-  := equiv_through_approx'@{UQ}.
+Definition C_equiv_through_approx@{}
+  := C_equiv_through_approx'@{UQ}.
 
 Global Instance equiv_lim@{} : CauchyComplete (C T).
 Proof.
-red;red;intros. apply equiv_through_approx.
+red;red;intros. apply C_equiv_through_approx.
 apply equiv_refl.
 Qed.
 

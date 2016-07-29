@@ -37,7 +37,8 @@ Class Rounded@{i j} (A:Type@{i}) `{Closeness A}
       e = d + d' /\ close d u v)))).
 
 Class PreMetric@{i j} (A:Type@{i}) {Aclose : Closeness A} :=
-  { premetric_refl :> forall e, Reflexive (close (A:=A) e)
+  { premetric_prop :> forall e, is_mere_relation A (close e)
+  ; premetric_refl :> forall e, Reflexive (close (A:=A) e)
   ; premetric_symm :> forall e, Symmetric (close (A:=A) e)
   ; premetric_separated :> Separated A
   ; premetric_triangular :> Triangular A
@@ -527,6 +528,7 @@ Lemma Interval_premetric@{i} `{!PreMetric@{UA i} A} a b
   : PreMetric@{UA i} (Interval a b).
 Proof.
 split.
+- unfold close;simpl. apply _.
 - intros e u. red;red. reflexivity.
 - intros e u v xi;red;red;Symmetry;apply xi.
 - intros u v E.
@@ -839,6 +841,26 @@ Class Lim := lim : Approximation -> A.
 
 Class CauchyComplete {Alim : Lim}
   := cauchy_complete : forall x, IsLimit x (lim x).
+
+Context {Alim : Lim} `{!CauchyComplete}.
+
+Lemma equiv_through_approx : forall u (y : Approximation) e d,
+  close e u (y d) -> close (e+d) u (lim y).
+Proof.
+intros u y e d xi.
+pose proof (cauchy_complete y) as E1;red in E1.
+apply (merely_destruct ((fst (rounded _ _ _) xi))).
+intros [d0 [d' [He E2]]].
+pose proof (triangular _ _ _ _ _ E2 (E1 (d' / 2) _)) as E3.
+eapply rounded_le;[exact E3|].
+rewrite He.
+clear u y e xi E1 He E2 E3.
+set (D2' := d' / 2);rewrite (pos_split2 d');unfold D2';clear D2'.
+apply flip_nonneg_minus.
+assert (Hrw : ' (d0 + (d' / 2 + d' / 2) + d) - ' (d0 + (d' / 2 + d))
+  = ' (d' / 2)) by ring_tac.ring_with_integers (NatPair.Z nat).
+rewrite Hrw;solve_propholds.
+Qed.
 
 End cauchy.
 
