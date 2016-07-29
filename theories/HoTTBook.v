@@ -85,7 +85,7 @@ Definition Book_11_3_32 := @HoTTClasses.implementations.cauchy_completion.equiv_
 (* ================================================== thm:RC-sim-lim *)
 (** Lemma 11.3.36 *)
 
-Definition Book_11_3_36 := @HoTTClasses.implementations.cauchy_completion.equiv_through_approx.
+Definition Book_11_3_36 := @HoTTClasses.implementations.cauchy_completion.C_equiv_through_approx.
 
 (* ================================================== thm:RC-sim-lim-term *)
 (** Lemma 11.3.37 *)

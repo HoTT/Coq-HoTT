@@ -1362,11 +1362,12 @@ Global Instance eta_injective@{} : Injective eta
   := eta_injective'@{UQ}.
 
 Section lipschitz_extend.
-Variables (f : T -> C T) (L : Q+).
+Context `{PreMetric A} {Alim : Lim A} `{!CauchyComplete A}.
+Variables (f : T -> A) (L : Q+).
 Context {Ef : Lipschitz f L}.
 
 Lemma lipschitz_extend_eta_lim@{} :
-  ∀ (q : T) (d d' e : Q+) (y : Approximation (C T)) (b : Q+ → C T)
+  ∀ (q : T) (d d' e : Q+) (y : Approximation (C T)) (b : Q+ → A)
   (Eb : ∀ d0 e0 : Q+, close (L * (d0 + e0)) (b d0) (b e0)) Eequiv,
   e = d + d'
   → close d' (eta q) (y d)
@@ -1386,7 +1387,7 @@ simpl. rewrite (pos_unconjugate L d). apply IH.
 Qed.
 
 Lemma lipschitz_extend_lim_lim@{} :
-  ∀ (x y : Approximation (C T)) (a b : Q+ → C T)
+  ∀ (x y : Approximation (C T)) (a b : Q+ → A)
   (Ea : ∀ d e : Q+, close (L * (d + e)) (a d) (a e))
   (Eb : ∀ d e : Q+, close (L * (d + e)) (b d) (b e)) (e d n e' : Q+)
   Eequiv1 Eequiv2,
@@ -1404,13 +1405,13 @@ Lemma lipschitz_extend_lim_lim@{} :
          approx_equiv := Eequiv2 |}).
 Proof.
 intros ???????????? He xi IH;simpl.
-apply equiv_lim_lim with (L * d) (L * n) (L * e').
+apply premetric.equiv_lim_lim with (L * d) (L * n) (L * e').
 + rewrite He;apply pos_eq;ring_tac.ring_with_nat.
 + simpl. rewrite 2!pos_unconjugate. apply IH.
 Qed.
 
 Lemma lipschitz_extend_lim_pr@{} :
-  forall (a : Q+ → C T)
+  forall (a : Q+ → A)
   (Ea : ∀ d e : Q+, close (L * (d + e)) (a d) (a e)),
   ∀ d e : Q+, close (d + e) (a (d / L)) (a (e / L)).
 Proof.
@@ -1419,10 +1420,10 @@ apply symmetry, (pos_recip_through_plus d e L).
 apply Ea.
 Qed.
 
-Lemma separate_mult@{} : forall l (u v : C T),
+Lemma separate_mult@{} : forall l (u v : A),
   (forall e, close (l * e) u v) -> u = v.
 Proof.
-intros l x y E. apply equiv_path.
+intros l x y E. apply separated.
 intros. assert (Hrw : e = l * (e / l)).
 + path_via ((l / l) * e).
    * rewrite pos_recip_r. apply symmetry,Qpos_mult_1_l.
@@ -1431,7 +1432,7 @@ intros. assert (Hrw : e = l * (e / l)).
 Qed.
 
 Definition lipshitz_extend_recursor@{}
-  : Recursors (C T) (fun e x y => close (L * e) x y).
+  : Recursors A (fun e x y => close (L * e) x y).
 Proof.
 simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _).
 - exact f.
@@ -1442,13 +1443,13 @@ simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _).
 - intros ???;apply Ef.
 - intros ????????;apply lipschitz_extend_eta_lim;trivial.
 - simpl;intros ??????? He xi IH.
-  apply equiv_symm in xi;apply equiv_symm in IH.
-  apply equiv_symm;revert He xi IH;apply lipschitz_extend_eta_lim;trivial.
+  Symmetry in xi;Symmetry in IH;Symmetry.
+  revert He xi IH;apply lipschitz_extend_eta_lim;trivial.
 - simpl. intros ??????????;apply lipschitz_extend_lim_lim;trivial.
 Defined.
 
 Definition lipschitz_extend@{}
-  : C T -> C T
+  : C T -> A
   := C_rec _ _ lipshitz_extend_recursor.
 
 Global Instance lipschitz_extend_lipschitz@{} : Lipschitz lipschitz_extend L.
@@ -1478,34 +1479,41 @@ Definition lipschitz_extend_lim@{} x
 
 End lipschitz_extend.
 
-Global Instance lipschitz_extend_nonexpanding (f : T -> C T) `{!NonExpanding f}
+Section lipschitz_extend_extra.
+Universe UA UAQ.
+Context {A:Type@{UA} } `{PreMetric@{UA UAQ} A}
+  {Alim : Lim@{UA UAQ} A} `{!CauchyComplete A}.
+
+Global Instance lipschitz_extend_nonexpanding (f : T -> A) `{!NonExpanding f}
   : NonExpanding (lipschitz_extend f 1).
 Proof.
 apply (lipschitz_nonexpanding _).
 Qed.
 
-Lemma lim_same_distance@{} : forall (x y : Approximation (C T)) e,
+Lemma lim_same_distance@{} : forall (x y : Approximation A) e,
   (forall d n, close (e+d) (x n) (y n)) ->
   forall d, close (e+d) (lim x) (lim y).
 Proof.
 intros x y e E d.
-apply equiv_lim_lim with (d/3) (d/3) (e + d/3);[|apply E].
+apply premetric.equiv_lim_lim with (d/3) (d/3) (e + d/3);[|apply E].
 path_via (e + 3 / 3 * d).
 - rewrite pos_recip_r,Qpos_mult_1_l;trivial.
 - apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma lipschitz_extend_same_distance@{} (f g : T -> C T) (L:Q+)
+Lemma lipschitz_extend_same_distance@{} (f g : T -> A) (L:Q+)
   `{!Lipschitz f L} `{!Lipschitz g L} : forall e,
   (forall d q, close (e+d) (f q) (g q)) ->
   forall d u, close (e+d) (lipschitz_extend f L u) (lipschitz_extend g L u).
 Proof.
-intros e E1 d u;revert u d;apply (C_ind0 (fun u => forall d, _)).
+intros e E1 d u;revert u d;apply (C_ind0@{UAQ} (fun u => forall d, _)).
 - intros q d;apply E1.
 - intros x Ex d. rewrite !lipschitz_extend_lim.
   apply lim_same_distance. simpl.
   clear d. intros;apply Ex.
 Qed.
+
+End lipschitz_extend_extra.
 
 Section extend_binary.
 
