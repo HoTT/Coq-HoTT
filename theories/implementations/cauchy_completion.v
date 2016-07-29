@@ -1245,7 +1245,6 @@ Qed.
 
 Definition equiv_rounded@{}
   := @equiv_rounded'@{UQ}.
-Global Existing Instance equiv_rounded.
 
 Lemma equiv_triangle' : Triangular (C T).
 Proof.
@@ -1257,9 +1256,15 @@ Qed.
 Definition equiv_triangle@{}
   := equiv_triangle'@{UQ UQ}.
 
-Global Existing Instance equiv_triangle.
-
 End equiv_alt.
+
+Existing Instance equiv_rounded.
+Existing Instance equiv_triangle.
+
+Global Instance C_premetric@{} : PreMetric (C T).
+Proof.
+split;apply _.
+Qed.
 
 Lemma equiv_through_approx' : forall u (y : Approximation (C T)) e d,
   close e u (y d) -> close (e+d) u (lim y).
@@ -1336,16 +1341,27 @@ apply (C_ind0 _).
   rewrite (pos_split2 e). trivial.
 Qed.
 
-Global Instance C_premetric@{} : PreMetric (C T).
-Proof.
-split;apply _.
-Qed.
-
 Global Instance eta_nonexpanding : NonExpanding eta.
 Proof.
 intros e x y.
 apply equiv_eta_eta.
 Qed.
+
+Lemma C_eq_equiv@{} : forall u v : C T, u = v -> forall e, close e u v.
+Proof.
+intros u v [] e;apply (equiv_refl _).
+Qed.
+
+Lemma eta_injective' : Injective eta.
+Proof.
+intros q r E.
+apply separated.
+intros e. rewrite <-equiv_eta_eta_def.
+apply C_eq_equiv. trivial.
+Qed.
+
+Global Instance eta_injective@{} : Injective eta
+  := eta_injective'@{UQ}.
 
 Section lipschitz_extend.
 Variables (f : T -> C T) (L : Q+).
@@ -1365,8 +1381,8 @@ Lemma lipschitz_extend_eta_lim@{} :
 Proof.
 simpl. intros ???????? He xi IH.
 assert (Hrw : L * e = L * d' + L * d)
-by (rewrite He;apply pos_eq;ring_tac.ring_with_nat).
-rewrite Hrw.
+  by (rewrite He;apply pos_eq;ring_tac.ring_with_nat);
+rewrite Hrw;clear Hrw.
 apply equiv_through_approx.
 simpl. rewrite (pos_unconjugate L d). apply IH.
 Qed.
@@ -1701,22 +1717,6 @@ Definition non_expanding_extend_eta_eta@{} q r :
   := idpath.
 
 End extend_binary.
-
-Lemma C_eq_equiv@{} : forall u v : C T, u = v -> forall e, close e u v.
-Proof.
-intros u v [] e;apply (equiv_refl _).
-Qed.
-
-Lemma eta_injective' : Injective eta.
-Proof.
-intros q r E.
-apply separated.
-intros e. rewrite <-equiv_eta_eta_def.
-apply C_eq_equiv. trivial.
-Qed.
-
-Global Instance eta_injective@{} : Injective eta
-  := eta_injective'@{UQ}.
 
 End generalities.
 
