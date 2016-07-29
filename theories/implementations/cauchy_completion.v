@@ -1724,5 +1724,46 @@ Definition non_expanding_extend_eta_eta@{} q r :
 
 End extend_binary.
 
+Section completion_of_complete.
+
+Context {Tlim : Lim T} `{!CauchyComplete T}.
+
+Definition completion_back@{} : C T -> T := lipschitz_extend id 1.
+
+Definition eta_back@{} : forall x, eta (completion_back x) = x
+  := unique_continuous_extension (compose eta completion_back) id
+    (fun _ => idpath).
+
+Definition back_eta@{} : forall x, completion_back (eta x) = x
+  := fun _ => idpath.
+
+Global Instance eta_isequiv : IsEquiv eta.
+Proof.
+simple refine (BuildIsEquiv _ _ _ _ _ _ _).
+- exact completion_back.
+- exact eta_back.
+- exact back_eta.
+- intros. apply path_ishprop.
+Defined.
+
+Definition eta_equiv : T <~> C T
+  := BuildEquiv _ _ eta _.
+
+Lemma C_of_complete' : C T = T :> Type@{UQ}.
+Proof.
+Symmetry;apply path_universe with eta. apply _.
+Defined.
+Definition C_of_complete@{i} := C_of_complete'@{i UQ UQ}.
+
+End completion_of_complete.
+
 End generalities.
 
+Section completion_idempotent.
+Variable T : Type@{UQ}.
+Context {Tclose : Closeness T} {Tpremetric : PreMetric T}.
+
+Definition C_idempotent@{i} : C (C T) = C T :> Type@{UQ}
+  := C_of_complete@{i} _.
+
+End completion_idempotent.
