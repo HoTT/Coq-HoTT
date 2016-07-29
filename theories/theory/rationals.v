@@ -273,6 +273,21 @@ intros q;destruct (total_abs_either q) as [E|E];destruct E as [E1 E2];rewrite E2
 - apply flip_nonneg_negate. rewrite involutive;trivial.
 Qed.
 
+Lemma Qabs_nonpos_0@{} : forall q : Q, abs q <= 0 -> q = 0.
+Proof.
+intros q E. pose proof (antisymmetry le _ _ E (Qabs_nonneg _)) as E1.
+destruct (total_abs_either q) as [[E2 E3]|[E2 E3]];rewrite E3 in E1.
+- trivial.
+- apply (injective (-)). rewrite negate_0. trivial.
+Qed.
+
+Lemma Qabs_0_or_pos : forall q : Q, q = 0 \/ 0 < abs q.
+Proof.
+intros q. destruct (le_or_lt (abs q) 0) as [E|E].
+- left. apply Qabs_nonpos_0. trivial.
+- right. trivial.
+Qed.
+
 Lemma Qabs_of_nonneg@{} : forall q : Q, 0 <= q -> abs q = q.
 Proof.
 intro;apply ((abs_sig _).2).

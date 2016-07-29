@@ -1860,3 +1860,27 @@ Proof.
 split;try apply _.
 apply R_recip_inverse.
 Qed.
+
+Definition Rplus_lim_val : Approximation real -> real -> Approximation real.
+Proof.
+intros x y. exists (fun e => x e + y).
+apply non_expanding_extend_lim_pr.
+Defined.
+
+Definition Rplus_lim_compute : forall x y, lim x + y = lim (Rplus_lim_val x y)
+  := fun _ _ => idpath.
+
+Definition Rabs_lim_val : Approximation real -> Approximation real.
+Proof.
+intros x. exists (fun e => abs (x e)).
+intros. apply (non_expanding _). apply approx_equiv.
+Defined.
+
+Definition Rabs_lim_compute@{} : forall x, abs (lim x) = lim (Rabs_lim_val x).
+Proof.
+intros. unfold abs;simpl;unfold Rabs_val;simpl.
+apply (ap lim);apply approx_eq, path_forall; intros e;
+change (abs (x (e / 1)) = abs (x e)). apply ap,ap.
+path_via (1 * e / 1);[|apply pos_unconjugate].
+rewrite Qpos_mult_1_l. trivial.
+Qed.
