@@ -862,6 +862,17 @@ assert (Hrw : ' (d0 + (d' / 2 + d' / 2) + d) - ' (d0 + (d' / 2 + d))
 rewrite Hrw;solve_propholds.
 Qed.
 
+Lemma equiv_lim_lim (x y : Approximation) (e d n e' : Q+)
+  : e = d + n + e' → close e' (x d) (y n) → close e (lim x) (lim y).
+Proof.
+intros He xi.
+rewrite He.
+assert (Hrw : d + n + e' = e' + d + n) by (apply pos_eq;ring_tac.ring_with_nat);
+rewrite Hrw;clear Hrw.
+apply equiv_through_approx.
+Symmetry. apply equiv_through_approx. Symmetry;trivial.
+Qed.
+
 End cauchy.
 
 End contents.
