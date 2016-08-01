@@ -154,6 +154,68 @@ Global Existing Instance prod_premetric.
 
 End close_prod.
 
+Section close_arrow.
+Context {A:Type} `{Bclose : Closeness B} `{!PreMetric B}.
+
+(* Using [forall x, close e (f x) (g x)] works for closed balls, not open ones. *)
+Global Instance close_arrow : Closeness (A -> B)
+  := fun e f g => merely (exists d d', e = d + d' /\ forall x, close d (f x) (g x)).
+
+Lemma close_arrow_apply : forall e (f g : A -> B), close e f g ->
+  forall x, close e (f x) (g x).
+Proof.
+intros e f g E x;revert E;apply (Trunc_ind _);intros [d [d' [E1 E2]]].
+rewrite E1;apply rounded_plus;trivial.
+Qed.
+
+Global Instance close_arrow_premetric : PreMetric (A -> B).
+Proof.
+split.
+- apply _.
+- intros e f;apply tr; exists (e/2), (e/2);split.
+  + apply pos_split2.
+  + intros x;reflexivity.
+- intros e f g;apply (Trunc_ind _);intros [d [d' [E1 E2]]].
+  apply tr;exists d, d';split;trivial.
+  intros x;Symmetry;trivial.
+- intros f g E. apply path_forall;intros x.
+  apply separated. intros e.
+  apply (merely_destruct (E e)). intros [d [d' [E1 E2]]].
+  rewrite E1. apply rounded_plus. trivial.
+- intros f g h e d E1 E2.
+  apply (merely_destruct E1);intros [d1 [d1' [E3 E4]]].
+  apply (merely_destruct E2);intros [d2 [d2' [E5 E6]]].
+  apply tr;exists (d1+d2),(d1'+d2'). split.
+  + rewrite E3,E5. abstract (apply pos_eq; ring_tac.ring_with_nat).
+  + intros x. apply triangular with (g x);trivial.
+- intros e f g. split.
+  + apply (Trunc_ind _). intros [d [d' [E1 E2]]].
+    apply tr;exists (d+d'/2),(d'/2). split.
+    * rewrite <-Qpos_plus_assoc,<-pos_split2. exact E1.
+    * apply tr. exists d, (d'/2);split;trivial.
+  + apply (Trunc_ind _);intros [d [d' [E1 E2]]].
+    apply tr;exists d,d';split;trivial.
+    apply close_arrow_apply. trivial.
+Qed.
+
+Context {Blim : Lim B}.
+
+Instance arrow_lim : Lim (A -> B).
+Proof.
+intros f x. apply lim. exists (fun e => f e x).
+intros. apply close_arrow_apply. apply approx_equiv.
+Defined.
+
+(* This isn't true.
+Context `{!CauchyComplete B}.
+Global Instance arrow_cauchy_complete : CauchyComplete (A -> B).
+Proof.
+intros f e d.
+Abort.
+*)
+
+End close_arrow.
+
 Class NonExpanding `{Closeness A} `{Closeness B} (f : A -> B)
   := non_expanding : forall e x y, close e x y -> close e (f x) (f y).
 Arguments non_expanding {A _ B _} f {_ e x y} _.
