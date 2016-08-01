@@ -1482,7 +1482,7 @@ End lipschitz_extend.
 Section lipschitz_extend_extra.
 Universe UA UAQ.
 Context {A:Type@{UA} } `{PreMetric@{UA UAQ} A}
-  {Alim : Lim@{UA UAQ} A} `{!CauchyComplete A}.
+  {Alim : Lim A} `{!CauchyComplete A}.
 
 Global Instance lipschitz_extend_nonexpanding (f : T -> A) `{!NonExpanding f}
   : NonExpanding (lipschitz_extend f 1).

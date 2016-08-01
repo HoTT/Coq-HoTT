@@ -17,8 +17,6 @@ Require Import
 
 Local Set Universe Minimization ToSet.
 
-Section contents.
-Context {funext : Funext} {univalence : Univalence}.
 
 Class Closeness@{i} (A : Type@{i}) := close : Q+ -> relation@{i i} A.
 
@@ -43,6 +41,22 @@ Class PreMetric@{i j} (A:Type@{i}) {Aclose : Closeness A} :=
   ; premetric_separated :> Separated A
   ; premetric_triangular :> Triangular A
   ; premetric_rounded :> Rounded@{i j} A }.
+
+Record Approximation@{i} (A:Type@{i}) {Aclose : Closeness A} :=
+  { approximate :> Q+ -> A
+  ; approx_equiv : forall d e, close (d+e) (approximate d) (approximate e) }.
+
+Definition IsLimit@{i} {A:Type@{i} } {Aclose : Closeness A}
+  (x : Approximation A) (l : A)
+  := forall e d : Q+, close (e+d) (x d) l.
+
+Class Lim@{i} (A:Type@{i}) {Aclose : Closeness A} := lim : Approximation A -> A.
+
+Class CauchyComplete@{i} (A:Type@{i}) {Aclose : Closeness A} {Alim : Lim A}
+  := cauchy_complete : forall x : Approximation A, IsLimit x (lim x).
+
+Section contents.
+Context {funext : Funext} {univalence : Univalence}.
 
 Lemma rounded_plus `{Rounded A} : forall d d' u v, close d u v ->
   close (d+d') u v.
@@ -818,15 +832,7 @@ End rationals.
 
 Section cauchy.
 Universe UA.
-Context {A : Type@{UA} } `{Closeness A}.
-
-Record Approximation@{} :=
-  { approximate :> Q+ -> A
-  ; approx_equiv : forall d e, close (d+e) (approximate d) (approximate e) }.
-
-Definition IsLimit@{} (x : Approximation) (l : A) :=
-  forall e d : Q+, close (e+d) (x d) l.
-
+Context {A : Type@{UA} } {Aclose : Closeness A}.
 Context `{!PreMetric A}.
 
 Lemma limit_unique : forall x l1 l2, IsLimit x l1 -> IsLimit x l2 -> l1 = l2.
@@ -837,14 +843,9 @@ intros e. rewrite (pos_split2 e),(pos_split2 (e/2)).
 apply triangular with (x (e / 2 / 2));[Symmetry;apply E1|apply E2].
 Qed.
 
-Class Lim := lim : Approximation -> A.
+Context {Alim : Lim A} `{!CauchyComplete A}.
 
-Class CauchyComplete {Alim : Lim}
-  := cauchy_complete : forall x, IsLimit x (lim x).
-
-Context {Alim : Lim} `{!CauchyComplete}.
-
-Lemma equiv_through_approx : forall u (y : Approximation) e d,
+Lemma equiv_through_approx : forall u (y : Approximation A) e d,
   close e u (y d) -> close (e+d) u (lim y).
 Proof.
 intros u y e d xi.
@@ -862,7 +863,7 @@ assert (Hrw : ' (d0 + (d' / 2 + d' / 2) + d) - ' (d0 + (d' / 2 + d))
 rewrite Hrw;solve_propholds.
 Qed.
 
-Lemma equiv_lim_lim (x y : Approximation) (e d n e' : Q+)
+Lemma equiv_lim_lim (x y : Approximation A) (e d n e' : Q+)
   : e = d + n + e' → close e' (x d) (y n) → close e (lim x) (lim y).
 Proof.
 intros He xi.
@@ -893,4 +894,8 @@ Arguments Lim A {_}.
 Arguments lim {A _ _} _.
 
 Arguments Approximation A {_}.
+Arguments Build_Approximation {A _} _ _.
+Arguments approximate {A _} _ _.
+Arguments approx_equiv {A _} _ _ _.
+
 Arguments CauchyComplete A {_ _}.
