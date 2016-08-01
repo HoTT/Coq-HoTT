@@ -152,6 +152,24 @@ split;try apply _.
 Qed.
 Global Existing Instance prod_premetric.
 
+Context {Alim : Lim A} {Blim : Lim B}.
+
+Global Instance prod_lim@{} : Lim (A /\ B).
+Proof.
+intros xy. split;apply lim;
+[exists (fun e => fst (xy e))|exists (fun e => snd (xy e))];intros;apply xy.
+Defined.
+
+Global Instance prod_cauchy_complete `{!CauchyComplete A} `{!CauchyComplete B}
+  : CauchyComplete (A /\ B).
+Proof.
+intros xy e d;split.
+- apply (cauchy_complete
+    {| approximate := λ e0 : Q+, fst (xy e0); approx_equiv := _ |}).
+- apply (cauchy_complete
+    {| approximate := λ e0 : Q+, snd (xy e0); approx_equiv := _ |}).
+Qed.
+
 End close_prod.
 
 Section close_arrow.

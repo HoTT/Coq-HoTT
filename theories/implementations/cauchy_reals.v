@@ -45,7 +45,8 @@ apply (unique_continuous_extension _);try apply _.
 intros;apply (ap rat). apply involutive.
 Qed.
 
-Global Instance Rplus@{} : Plus real := non_expanding_extend _ plus.
+Global Instance Rplus@{} : Plus real
+  := non_expanding_extend _ _ (fun q r => eta (q + r)).
 
 Definition Rplus_rat_rat@{} q r : rat q + rat r = rat (q + r)
   := idpath.
@@ -145,7 +146,8 @@ repeat split.
 Unshelve. all:exact 1.
 Qed.
 
-Global Instance Rmeet@{} : Meet real := non_expanding_extend _ meet.
+Global Instance Rmeet@{} : Meet real
+  := non_expanding_extend _ _ (fun q r => eta (meet q r)).
 
 Global Instance Rmeet_lipschitz_l@{} : forall s : real, NonExpanding (⊓ s)
   := _.
@@ -155,7 +157,8 @@ Global Instance Rmeet_lipschitz_r@{} : forall s : real, NonExpanding (s ⊓)
 Definition Rmeet_rat_rat@{} q r : meet (rat q) (rat r) = rat (meet q r)
   := idpath.
 
-Global Instance Rjoin@{} : Join real := non_expanding_extend _ join.
+Global Instance Rjoin@{} : Join real
+  := non_expanding_extend _ _ (fun q r => eta (join q r)).
 
 Global Instance Rjoin_lipschitz_l@{} : forall s : real, NonExpanding (⊔ s)
   := _.
@@ -303,7 +306,7 @@ apply (C_ind0 _ (fun v => forall e, _ -> _)).
   apply (equiv_rounded _) in xi.
   revert xi;apply (Trunc_ind _);intros [d [d' [He xi]]].
   hnf. unfold join,Rjoin. rewrite non_expanding_extend_lim.
-  change (non_expanding_extend _ join) with join.
+  change (non_expanding_extend _ _ (fun q r => eta (join q r))) with join.
   assert (E1 : forall n n', d' = n + n' -> y n <= rat (q + ' e)).
   { intros n n' Hd.
     apply IH. rewrite He. apply (equiv_triangle _) with (lim y);trivial.

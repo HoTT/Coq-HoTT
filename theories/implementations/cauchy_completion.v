@@ -1515,215 +1515,6 @@ Qed.
 
 End lipschitz_extend_extra.
 
-Section extend_binary.
-
-Definition non_expandingT@{}
-  := sigT (fun h : C T -> C T => NonExpanding h).
-
-Instance non_expanding_close@{} : Closeness non_expandingT
-  := fun e h k => forall u, close e (h.1 u) (k.1 u).
-
-Definition non_expanding_separated@{} : forall h k : non_expandingT,
-  (forall e, close e h k) -> h = k.
-Proof.
-intros h k E. unfold non_expandingT,NonExpanding. apply Sigma.path_sigma_hprop.
-apply path_forall;intros x. apply equiv_path;intro e.
-exact (E _ _).
-Qed.
-
-Variable (f : T -> T -> T).
-Context {Hfl : forall s, NonExpanding (fun q => f q s)}
-  {Hfr : forall q, NonExpanding (f q)}.
-
-Lemma non_expanding_approx_pr@{} (a : Q+ → non_expandingT)
-  (Ea : ∀ d e : Q+, non_expanding_close (d + e) (a d) (a e))
-  (v : C T) (d e : Q+)
-  : close (d + e) ((a d).1 v) ((a e).1 v).
-Proof.
-apply Ea.
-Qed.
-
-Lemma lim_is_non_expanding@{} :
-forall (a : Q+ → non_expandingT)
-(Ea : ∀ d e : Q+, non_expanding_close (d + e) (a d) (a e))
-(e : Q+) (u v : C T),
-close e u v
-→ close e
-    (lim
-       {|
-       approximate := λ e0 : Q+, (a (e0/2)).1 u;
-       approx_equiv := non_expanding_approx_pr a Ea u |})
-    (lim
-       {|
-       approximate := λ e0 : Q+, (a (e0/2)).1 v;
-       approx_equiv := non_expanding_approx_pr a Ea v |}).
-Proof.
-intros a Ea e u v E1.
-generalize (fst (equiv_rounded _ _ _) E1).
-apply (Trunc_ind _);intros [d [d' [He E2]]].
-apply equiv_lim_lim with (d'/2) (d'/2) d.
-- rewrite He.
-  path_via (d + (2/2) * d').
-  { rewrite pos_recip_r,Qpos_mult_1_l;trivial. }
-  apply pos_eq;ring_tac.ring_with_nat.
-- simpl. apply ((a _).2). trivial.
-Qed.
-
-Lemma eta_non_expanding_pr@{} :
-∀ q (e : Q+) (u v : C T),
-close e u v
-→ close e (lipschitz_extend (eta ∘ f q) 1 u)
-    (lipschitz_extend (eta ∘ f q) 1 v).
-Proof.
-intro;apply non_expanding. apply lipschitz_extend_nonexpanding.
-Qed.
-
-Lemma non_expanding_eta_eta_pr@{} :
-∀ (q r : T) (e : Q+),
-close e q r
-→ non_expanding_close e
-    (lipschitz_extend (eta ∘ f q) 1 ↾ eta_non_expanding_pr q)
-    (lipschitz_extend (eta ∘ f r) 1 ↾ eta_non_expanding_pr r).
-Proof.
-red. simpl. intros q r e He.
-apply rounded in He.
-apply (merely_destruct He);clear He;intros [d [d' [He E1]]].
-rewrite He. apply lipschitz_extend_same_distance.
-intros n s;apply (nonexpanding_compose eta (fun q => f q s)).
-apply rounded.
-apply tr;exists d,n;auto.
-Qed.
-
-Lemma non_expanding_eta_lim_pr@{} :
-∀ (q : T) (d d' e : Q+) (y : Approximation (C T)) (b : Q+ → non_expandingT)
-(Eb : ∀ d0 e0 : Q+, non_expanding_close (d0 + e0) (b d0) (b e0)),
-e = d + d'
-→ close d' (eta q) (y d)
-  → non_expanding_close d'
-      (lipschitz_extend (eta ∘ f q) 1 ↾ eta_non_expanding_pr q) (b d)
-    → non_expanding_close e
-        (lipschitz_extend (eta ∘ f q) 1 ↾ eta_non_expanding_pr q)
-        ((λ v,
-          lim
-            {| approximate := λ e0 : Q+, (b e0).1 v
-            ;  approx_equiv := non_expanding_approx_pr b Eb v |})
-         ↾ lim_is_non_expanding b Eb).
-Proof.
-intros q d d' e y b Eb He xi IH.
-hnf. intros u;simpl.
-rewrite He,qpos_plus_comm. apply equiv_through_approx.
-simpl. hnf in IH. apply IH.
-Qed.
-
-Lemma non_expanding_lim_eta_pr@{} :
-∀ (r : T) (d d' e : Q+) (x : Approximation (C T)) (a : Q+ → non_expandingT)
-(Ea : ∀ d0 e0 : Q+, non_expanding_close (d0 + e0) (a d0) (a e0)),
-e = d + d'
-→ close d' (x d) (eta r)
-  → non_expanding_close d' (a d)
-      (lipschitz_extend (eta ∘ f r) 1 ↾ eta_non_expanding_pr r)
-    → non_expanding_close e
-        ((λ v,
-          lim
-            {| approximate := λ e0 : Q+, (a e0).1 v
-            ;  approx_equiv := non_expanding_approx_pr a Ea v |})
-         ↾ lim_is_non_expanding a Ea)
-        (lipschitz_extend (eta ∘ f r) 1 ↾ eta_non_expanding_pr r).
-Proof.
-intros r d d' e x a Ea He xi IH u;simpl.
-apply equiv_symm.
-rewrite He,qpos_plus_comm;apply equiv_through_approx,equiv_symm.
-apply IH.
-Qed.
-
-Lemma non_expanding_lim_lim_pr@{} :
-∀ (x y : Approximation (C T)) (a b : Q+ → non_expandingT)
-(Ea : ∀ d e : Q+, non_expanding_close (d + e) (a d) (a e))
-(Eb : ∀ d e : Q+, non_expanding_close (d + e) (b d) (b e)) (e d n e' : Q+),
-e = d + n + e'
-→ close e' (x d) (y n)
-  → non_expanding_close e' (a d) (b n)
-    → non_expanding_close e
-        ((λ v,
-          lim
-            {| approximate := λ e0 : Q+, (a e0).1 v
-            ;  approx_equiv := non_expanding_approx_pr a Ea v |})
-         ↾ lim_is_non_expanding a Ea)
-        ((λ v,
-          lim
-            {| approximate := λ e0 : Q+, (b e0).1 v
-            ;  approx_equiv := non_expanding_approx_pr b Eb v |})
-         ↾ lim_is_non_expanding b Eb).
-Proof.
-intros x y a b Ea Eb e d n e' He xi IH u;simpl.
-eapply equiv_lim_lim;[|apply IH]. trivial.
-Qed.
-
-Definition non_expanding_recursor@{} : Recursors non_expandingT non_expanding_close.
-Proof.
-simple refine (Build_Recursors non_expandingT non_expanding_close
-  _ _
-  non_expanding_separated _
-  _ _ _ _).
-- intros q. exists (lipschitz_extend (compose eta (f q)) 1).
-  exact (eta_non_expanding_pr q).
-- intros x a Ea.
-  simple refine (exist _ _ _).
-  + intros v;apply lim. exists (fun e => (a e).1 v).
-    exact (non_expanding_approx_pr a Ea v).
-  + simpl. exact (lim_is_non_expanding a Ea).
-- exact non_expanding_eta_eta_pr. 
-- exact non_expanding_eta_lim_pr.
-- exact non_expanding_lim_eta_pr.
-- exact non_expanding_lim_lim_pr.
-Defined.
-
-Definition non_expanding_extend@{} : C T -> C T -> C T
-  := fun u => (C_rec _ _ non_expanding_recursor u).1.
-
-Global Instance non_expanding_extend_close_l@{}
-  : forall w, NonExpanding (fun u => non_expanding_extend u w).
-Proof.
-intros w e u v xi.
-apply (equiv_rec _ _ non_expanding_recursor _ _ _ xi).
-Qed.
-
-Global Instance non_expanding_extend_close_r@{}
-  : forall u, NonExpanding (non_expanding_extend u).
-Proof.
-intros u.
-apply ((C_rec _ _ non_expanding_recursor u).2).
-Qed.
-
-Definition non_expanding_extend_eta@{} q v :
-  non_expanding_extend (eta q) v =
-  lipschitz_extend (compose eta (f q)) 1 v
-  := idpath.
-
-Definition non_expanding_extend_lim_pr@{} (x : Approximation (C T)) v
-  : ∀ d e : Q+,
-    close (d + e) (non_expanding_extend (x d) v)
-      (non_expanding_extend (x e) v)
-  :=
-  non_expanding_approx_pr
-    (λ e : Q+,
-     C_rec _ _ non_expanding_recursor (x e))
-    (λ d e : Q+,
-     equiv_rec _ _ non_expanding_recursor (x d) (x e) (d + e)
-       (approx_equiv x d e)) v.
-
-Definition non_expanding_extend_lim@{} x v :
-  non_expanding_extend (lim x) v =
-  lim (Build_Approximation
-    (fun e => non_expanding_extend (x e) v) (non_expanding_extend_lim_pr x v))
-  := idpath.
-
-Definition non_expanding_extend_eta_eta@{} q r :
-  non_expanding_extend (eta q) (eta r) = eta (f q r)
-  := idpath.
-
-End extend_binary.
-
 Section completion_of_complete.
 
 Context {Tlim : Lim T} `{!CauchyComplete T}.
@@ -1759,6 +1550,221 @@ End completion_of_complete.
 
 End generalities.
 
+Section extend_binary.
+Variables A B : Type@{UQ}.
+Context {Aclose : Closeness A} {Bclose : Closeness B}
+  {Apremetric : PreMetric A} {premetric : PreMetric B}
+  {T:Type@{UQ} } `{Tclose : Closeness T} {Tpremetric : PreMetric T}
+  {Clim : Lim T} `{!CauchyComplete T}.
+
+Definition non_expandingT@{}
+  := sigT (fun h : C B -> T => NonExpanding h).
+
+Instance non_expanding_close@{} : Closeness non_expandingT
+  := fun e h k => forall u, close e (h.1 u) (k.1 u).
+
+Definition non_expanding_separated@{} : forall h k : non_expandingT,
+  (forall e, close e h k) -> h = k.
+Proof.
+intros h k E. unfold non_expandingT,NonExpanding. apply Sigma.path_sigma_hprop.
+apply path_forall;intros x. apply separated;intro e.
+exact (E _ _).
+Qed.
+
+Variable (f : A -> B -> T).
+Context {Hfl : forall s, NonExpanding (fun q => f q s)}
+  {Hfr : forall q, NonExpanding (f q)}.
+
+Lemma non_expanding_approx_pr@{} (a : Q+ → non_expandingT)
+  (Ea : ∀ d e : Q+, non_expanding_close (d + e) (a d) (a e))
+  v (d e : Q+)
+  : close (d + e) ((a d).1 v) ((a e).1 v).
+Proof.
+apply Ea.
+Qed.
+
+Lemma lim_is_non_expanding@{} :
+forall (a : Q+ → non_expandingT)
+(Ea : ∀ d e : Q+, non_expanding_close (d + e) (a d) (a e))
+(e : Q+) u v,
+close e u v
+→ close e
+    (lim
+       {|
+       approximate := λ e0 : Q+, (a (e0/2)).1 u;
+       approx_equiv := non_expanding_approx_pr a Ea u |})
+    (lim
+       {|
+       approximate := λ e0 : Q+, (a (e0/2)).1 v;
+       approx_equiv := non_expanding_approx_pr a Ea v |}).
+Proof.
+intros a Ea e u v E1.
+generalize (fst (rounded _ _ _) E1).
+apply (Trunc_ind _);intros [d [d' [He E2]]].
+apply premetric.equiv_lim_lim with (d'/2) (d'/2) d.
+- rewrite He.
+  path_via (d + (2/2) * d').
+  { rewrite pos_recip_r,Qpos_mult_1_l;trivial. }
+  apply pos_eq;ring_tac.ring_with_nat.
+- simpl. apply ((a _).2). trivial.
+Qed.
+
+Lemma eta_non_expanding_pr@{} :
+∀ q (e : Q+) u v,
+close e u v
+→ close e (lipschitz_extend _ (f q) 1 u)
+    (lipschitz_extend _ (f q) 1 v).
+Proof.
+intro;apply non_expanding. apply lipschitz_extend_nonexpanding.
+Qed.
+
+Lemma non_expanding_eta_eta_pr@{} :
+∀ q r (e : Q+),
+close e q r
+→ non_expanding_close e
+    (existT _ (lipschitz_extend _ (f q) 1) (eta_non_expanding_pr q))
+    (lipschitz_extend _ (f r) 1 ↾ eta_non_expanding_pr r).
+Proof.
+red. simpl. intros q r e He.
+apply rounded in He.
+apply (merely_destruct He);clear He;intros [d [d' [He E1]]].
+rewrite He. apply lipschitz_extend_same_distance.
+intros n s;apply (non_expanding (fun q => f q s)).
+apply rounded.
+apply tr;exists d,n;auto.
+Qed.
+
+Lemma non_expanding_eta_lim_pr@{} :
+∀ q (d d' e : Q+) (y : Approximation _) (b : Q+ → non_expandingT)
+(Eb : ∀ d0 e0 : Q+, non_expanding_close (d0 + e0) (b d0) (b e0)),
+e = d + d'
+→ close d' (eta q) (y d)
+  → non_expanding_close d'
+      (lipschitz_extend _ (f q) 1 ↾ eta_non_expanding_pr q) (b d)
+    → non_expanding_close e
+        (lipschitz_extend _ (f q) 1 ↾ eta_non_expanding_pr q)
+        ((λ v,
+          lim
+            {| approximate := λ e0 : Q+, (b e0).1 v
+            ;  approx_equiv := non_expanding_approx_pr b Eb v |})
+         ↾ lim_is_non_expanding b Eb).
+Proof.
+intros q d d' e y b Eb He xi IH.
+hnf. intros u;simpl.
+rewrite He,qpos_plus_comm. apply premetric.equiv_through_approx.
+simpl. hnf in IH. apply IH.
+Qed.
+
+Lemma non_expanding_lim_eta_pr@{} :
+∀ r (d d' e : Q+) (x : Approximation _) (a : Q+ → non_expandingT)
+(Ea : ∀ d0 e0 : Q+, non_expanding_close (d0 + e0) (a d0) (a e0)),
+e = d + d'
+→ close d' (x d) (eta r)
+  → non_expanding_close d' (a d)
+      (lipschitz_extend _ (f r) 1 ↾ eta_non_expanding_pr r)
+    → non_expanding_close e
+        ((λ v,
+          lim
+            {| approximate := λ e0 : Q+, (a e0).1 v
+            ;  approx_equiv := non_expanding_approx_pr a Ea v |})
+         ↾ lim_is_non_expanding a Ea)
+        (lipschitz_extend _ (f r) 1 ↾ eta_non_expanding_pr r).
+Proof.
+intros r d d' e x a Ea He xi IH u;simpl.
+Symmetry.
+rewrite He,qpos_plus_comm;apply premetric.equiv_through_approx,symmetry.
+apply IH.
+Qed.
+
+Lemma non_expanding_lim_lim_pr@{} :
+∀ (x y : Approximation (C A)) (a b : Q+ → non_expandingT)
+(Ea : ∀ d e : Q+, non_expanding_close (d + e) (a d) (a e))
+(Eb : ∀ d e : Q+, non_expanding_close (d + e) (b d) (b e)) (e d n e' : Q+),
+e = d + n + e'
+→ close e' (x d) (y n)
+  → non_expanding_close e' (a d) (b n)
+    → non_expanding_close e
+        ((λ v,
+          lim
+            {| approximate := λ e0 : Q+, (a e0).1 v
+            ;  approx_equiv := non_expanding_approx_pr a Ea v |})
+         ↾ lim_is_non_expanding a Ea)
+        ((λ v,
+          lim
+            {| approximate := λ e0 : Q+, (b e0).1 v
+            ;  approx_equiv := non_expanding_approx_pr b Eb v |})
+         ↾ lim_is_non_expanding b Eb).
+Proof.
+intros x y a b Ea Eb e d n e' He xi IH u;simpl.
+eapply premetric.equiv_lim_lim;[|apply IH]. trivial.
+Qed.
+
+Definition non_expanding_recursor@{}
+  : Recursors A non_expandingT non_expanding_close.
+Proof.
+simple refine (Build_Recursors _ non_expandingT non_expanding_close
+  _ _
+  non_expanding_separated _
+  _ _ _ _).
+- intros q. exists (lipschitz_extend _ (f q) 1).
+  exact (eta_non_expanding_pr q).
+- intros x a Ea.
+  simple refine (exist _ _ _).
+  + intros v;apply lim. exists (fun e => (a e).1 v).
+    exact (non_expanding_approx_pr a Ea v).
+  + simpl. exact (lim_is_non_expanding a Ea).
+- exact non_expanding_eta_eta_pr. 
+- exact non_expanding_eta_lim_pr.
+- exact non_expanding_lim_eta_pr.
+- exact non_expanding_lim_lim_pr.
+Defined.
+
+Definition non_expanding_extend@{} : C A -> C B -> T
+  := fun u => (C_rec _ _ _ non_expanding_recursor u).1.
+
+Global Instance non_expanding_extend_close_l@{}
+  : forall w, NonExpanding (fun u => non_expanding_extend u w).
+Proof.
+intros w e u v xi.
+apply (equiv_rec _ _ _ non_expanding_recursor _ _ _ xi).
+Qed.
+
+Global Instance non_expanding_extend_close_r@{}
+  : forall u, NonExpanding (non_expanding_extend u).
+Proof.
+intros u.
+apply ((C_rec _ _ _ non_expanding_recursor u).2).
+Qed.
+
+Definition non_expanding_extend_eta@{} q v :
+  non_expanding_extend (eta q) v =
+  lipschitz_extend _ (f q) 1 v
+  := idpath.
+
+Definition non_expanding_extend_lim_pr@{} (x : Approximation (C A)) v
+  : ∀ d e : Q+,
+    close (d + e) (non_expanding_extend (x d) v)
+      (non_expanding_extend (x e) v)
+  :=
+  non_expanding_approx_pr
+    (λ e : Q+,
+     C_rec _ _ _ non_expanding_recursor (x e))
+    (λ d e : Q+,
+     equiv_rec _ _ _ non_expanding_recursor (x d) (x e) (d + e)
+       (approx_equiv x d e)) v.
+
+Definition non_expanding_extend_lim@{} x v :
+  non_expanding_extend (lim x) v =
+  lim (Build_Approximation
+    (fun e => non_expanding_extend (x e) v) (non_expanding_extend_lim_pr x v))
+  := idpath.
+
+Definition non_expanding_extend_eta_eta@{} q r :
+  non_expanding_extend (eta q) (eta r) = f q r
+  := idpath.
+
+End extend_binary.
+
 Section completion_idempotent.
 Variable T : Type@{UQ}.
 Context {Tclose : Closeness T} {Tpremetric : PreMetric T}.
@@ -1767,3 +1773,50 @@ Definition C_idempotent@{i} : C (C T) = C T :> Type@{UQ}
   := C_of_complete@{i} _.
 
 End completion_idempotent.
+
+Section completion_prod.
+Variables (A B : Type@{UQ}).
+Context {Aclose : Closeness A} {Bclose : Closeness B}
+  `{!PreMetric A} `{!PreMetric B}.
+
+Definition completion_fst@{} : C (A /\ B) -> C A
+  := lipschitz_extend _ (eta ∘ fst) 1.
+
+Definition completion_snd@{} : C (A /\ B) -> C B
+  := lipschitz_extend _ (eta ∘ snd) 1.
+
+Definition completion_pair@{} : C (A /\ B) -> C A /\ C B
+  := fun s => (completion_fst s, completion_snd s).
+
+Definition pair_completion@{} : C A -> C B -> C (A /\ B)
+  := non_expanding_extend _ _ (fun x y => eta (pair x y)).
+
+Instance completion_pair_continuous@{} : Continuous completion_pair.
+Proof.
+change (Continuous (uncurry pair ∘ map2 completion_fst completion_snd ∘ BinaryDup)).
+apply _.
+Qed.
+
+Global Instance completion_pair_isequiv@{} : IsEquiv completion_pair.
+Proof.
+simple refine (BuildIsEquiv _ _ _ (uncurry pair_completion) _ _ _).
+- hnf. unfold uncurry. intros [a b];simpl;revert a.
+  apply (unique_continuous_extension _ _ _).
+  intros q. revert b. apply (unique_continuous_extension _ _ _).
+  intros r. reflexivity.
+- hnf. apply (unique_continuous_extension _ _ _).
+  intros q;reflexivity.
+- intros. apply path_ishprop.
+Defined.
+
+Definition completion_pair_equiv@{} : C (A /\ B) <~> (C A /\ C B)
+  := BuildEquiv _ _ completion_pair _.
+
+Lemma completion_prod_rw : C (A /\ B) = (C A /\ C B) :> Type@{UQ}.
+Proof.
+apply path_universe_uncurried. apply completion_pair_equiv.
+Defined.
+
+End completion_prod.
+
+
