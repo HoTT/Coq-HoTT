@@ -750,6 +750,36 @@ Section full_pseudo_semiring_order.
   Proof.
   apply lt_not_le_flip, lt_0_2.
   Qed.
+
+  Lemma repeat_nat_nonneg : forall n, 0 <= repeat n (plus 1) 0.
+  Proof.
+  induction n;simpl.
+  - reflexivity.
+  - apply nonneg_plus_compat.
+    + apply _.
+    + apply IHn.
+  Qed.
+
+  Lemma repeat_nat_pos : forall n, 0 < repeat (S n) (plus 1) 0.
+  Proof.
+  intros n. simpl.
+  apply pos_plus_le_lt_compat_l.
+  - solve_propholds.
+  - apply repeat_nat_nonneg.
+  Qed.
+
+  Local Existing Instance pseudo_order_apart.
+
+  Global Instance ordered_characteristic_0 : FieldCharacteristic R 0.
+  Proof.
+  hnf. intros [|n] _;split.
+  - intros E'. destruct (E' O). reflexivity.
+  - intros E';apply (irreflexivity _) in E';destruct E'.
+  - intros _;apply apart_iff_total_lt;right;apply repeat_nat_pos.
+  - intros _ m;simpl. intros E.
+    apply (ap (fun n => match n with | S _ => Unit | _ => Empty end)) in E;
+    simpl in E. rewrite <-E. trivial.
+  Qed.
 End full_pseudo_semiring_order.
 
 (* Due to bug #2528 *)
