@@ -56,6 +56,8 @@ Global Instance Rplus_nonexpanding_l@{} : forall s : real, NonExpanding (+ s)
 Global Instance Rplus_nonexpanding_r@{} : forall s : real, NonExpanding (s +)
   := fun _ => lipschitz_nonexpanding _.
 
+Typeclasses Opaque Rplus.
+
 Lemma unique_continuous_binary_extension@{} (f : real -> real -> real)
   `{!Continuous (uncurry f)}
   (g : real -> real -> real)
@@ -154,6 +156,8 @@ Global Instance Rmeet_lipschitz_l@{} : forall s : real, NonExpanding (⊓ s)
 Global Instance Rmeet_lipschitz_r@{} : forall s : real, NonExpanding (s ⊓)
   := fun _ => lipschitz_nonexpanding _.
 
+Typeclasses Opaque Rmeet.
+
 Definition Rmeet_rat_rat@{} q r : meet (rat q) (rat r) = rat (meet q r)
   := idpath.
 
@@ -164,6 +168,8 @@ Global Instance Rjoin_lipschitz_l@{} : forall s : real, NonExpanding (⊔ s)
   := fun _ => lipschitz_nonexpanding _.
 Global Instance Rjoin_lipschitz_r@{} : forall s : real, NonExpanding (s ⊔)
   := fun _ => lipschitz_nonexpanding _.
+
+Typeclasses Opaque Rjoin.
 
 Definition Rjoin_rat_rat@{} q r : join (rat q) (rat r) = rat (join q r)
   := idpath.
@@ -461,6 +467,7 @@ Qed.
 Definition Rabs_val := lipschitz_extend _ (compose rat abs) 1.
 
 Global Instance Rabs_nonexpanding : NonExpanding Rabs_val := _.
+Typeclasses Opaque Rabs_val.
 
 Lemma Rabs_of_nonneg' : forall x, 0 <= x -> Rabs_val x = x.
 Proof.
@@ -899,6 +906,10 @@ Defined.
 Definition QRmult@{} : Q -> real -> real
   := fun q => lipschitz_extend _ (compose rat (q *.)) (pos_of_Q q).
 
+Instance QRmult_lipschitz : forall q, Lipschitz (QRmult q) (pos_of_Q q)
+  := _.
+Typeclasses Opaque QRmult.
+
 Lemma QRmult_negate : forall q u, - QRmult q u = QRmult (- q) u.
 Proof.
 intro;apply (unique_continuous_extension _ _ _).
@@ -964,6 +975,11 @@ Definition Rbounded_mult@{} (a : Q+)
   : real -> Interval (- rat (' a)) (rat (' a)) -> real
   := fun u v => lipschitz_extend _
       (fun q => QRmult q (interval_proj _ _ v)) (a+1) u.
+
+Instance Rbounded_mult_lipschitz : forall a v,
+  Lipschitz (fun u => Rbounded_mult a u v) (a+1)
+  := _.
+Typeclasses Opaque Rbounded_mult.
 
 Definition interval_back
   : sigT (fun a : Q+ => Interval (- rat (' a)) (rat (' a))) -> real
@@ -1640,6 +1656,11 @@ Qed.
 
 Definition Qpos_upper_recip (e:Q+) : real -> real
   := lipschitz_extend _ (rat ∘ ((/) ∘ pr1 ∘ (Qpos_upper_inject e))) _.
+
+Instance Qpos_upper_recip_lipschitz : forall e,
+  Lipschitz (Qpos_upper_recip e) _
+  := _.
+Typeclasses Opaque Qpos_upper_recip.
 
 Definition pos_back : (exists e : Q+, exists x : real, rat (' e) <= x) ->
   exists x : real, 0 < x.
