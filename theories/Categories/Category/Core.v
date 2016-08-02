@@ -89,13 +89,13 @@ Local Notation "1" := (identity _) : morphism_scope.
 (** Define a convenience wrapper for building a precategory without
     specifying the redundant proofs. *)
 Definition Build_PreCategory
-           object morphism compose identity
+           object morphism identity compose
            associativity left_identity right_identity
   := @Build_PreCategory'
        object
        morphism
-       compose
        identity
+       compose
        associativity
        (fun _ _ _ _ _ _ _ => symmetry _ _ (associativity _ _ _ _ _ _ _))
        left_identity
