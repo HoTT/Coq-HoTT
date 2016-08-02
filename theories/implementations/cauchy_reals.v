@@ -46,15 +46,15 @@ intros;apply (ap rat). apply involutive.
 Qed.
 
 Global Instance Rplus@{} : Plus real
-  := non_expanding_extend _ _ (fun q r => eta (q + r)).
+  := lipschitz_extend_binary _ _ (fun q r => eta (q + r)) 1 1.
 
 Definition Rplus_rat_rat@{} q r : rat q + rat r = rat (q + r)
   := idpath.
 
 Global Instance Rplus_nonexpanding_l@{} : forall s : real, NonExpanding (+ s)
-  := _.
+  := fun _ => lipschitz_nonexpanding _.
 Global Instance Rplus_nonexpanding_r@{} : forall s : real, NonExpanding (s +)
-  := _.
+  := fun _ => lipschitz_nonexpanding _.
 
 Lemma unique_continuous_binary_extension@{} (f : real -> real -> real)
   `{!Continuous (uncurry f)}
@@ -147,23 +147,23 @@ Unshelve. all:exact 1.
 Qed.
 
 Global Instance Rmeet@{} : Meet real
-  := non_expanding_extend _ _ (fun q r => eta (meet q r)).
+  := lipschitz_extend_binary _ _ (fun q r => eta (meet q r)) 1 1.
 
 Global Instance Rmeet_lipschitz_l@{} : forall s : real, NonExpanding (⊓ s)
-  := _.
+  := fun _ => lipschitz_nonexpanding _.
 Global Instance Rmeet_lipschitz_r@{} : forall s : real, NonExpanding (s ⊓)
-  := _.
+  := fun _ => lipschitz_nonexpanding _.
 
 Definition Rmeet_rat_rat@{} q r : meet (rat q) (rat r) = rat (meet q r)
   := idpath.
 
 Global Instance Rjoin@{} : Join real
-  := non_expanding_extend _ _ (fun q r => eta (join q r)).
+  := lipschitz_extend_binary _ _ (fun q r => eta (join q r)) 1 1.
 
 Global Instance Rjoin_lipschitz_l@{} : forall s : real, NonExpanding (⊔ s)
-  := _.
+  := fun _ => lipschitz_nonexpanding _.
 Global Instance Rjoin_lipschitz_r@{} : forall s : real, NonExpanding (s ⊔)
-  := _.
+  := fun _ => lipschitz_nonexpanding _.
 
 Definition Rjoin_rat_rat@{} q r : join (rat q) (rat r) = rat (join q r)
   := idpath.
@@ -305,8 +305,8 @@ apply (C_ind0 _ (fun v => forall e, _ -> _)).
 + intros y IH e xi.
   apply (equiv_rounded _) in xi.
   revert xi;apply (Trunc_ind _);intros [d [d' [He xi]]].
-  hnf. unfold join,Rjoin. rewrite non_expanding_extend_lim.
-  change (non_expanding_extend _ _ (fun q r => eta (join q r))) with join.
+  hnf. unfold join,Rjoin. rewrite lipschitz_extend_binary_lim.
+  change (lipschitz_extend_binary _ _ (fun q r => eta (join q r)) 1 1) with join.
   assert (E1 : forall n n', d' = n + n' -> y n <= rat (q + ' e)).
   { intros n n' Hd.
     apply IH. rewrite He. apply (equiv_triangle _) with (lim y);trivial.
@@ -316,7 +316,7 @@ apply (C_ind0 _ (fun v => forall e, _ -> _)).
   destruct (Qpos_lt_min z d') as [a [ca [cb [E2 E3]]]].
   eapply (equiv_lim_eta _);[|simpl;erewrite E1;[apply (equiv_refl _)|]].
   * exact E2.
-  * exact E3.
+  * rewrite <-(Qpos_mult_1_l a),pos_unconjugate. exact E3.
 Qed.
 
 Definition Rle_close_rat_rat@{}
@@ -1789,7 +1789,7 @@ apply (unique_continuous_extension _).
 - change (Continuous (uncurry mult ∘
     map2 (join (rat (' e))) (Qpos_upper_recip e ∘ (join (rat (' e)))) ∘
   BinaryDup)).
-  apply _.
+  repeat apply continuous_compose;apply _.
 - apply _.
 - intros q.
   change (rat ((' e ⊔ q) * (dec_recip ∘ pr1 ∘ Qpos_upper_inject e) (' e ⊔ q)) =
@@ -1883,11 +1883,18 @@ Qed.
 Definition Rplus_lim_val : Approximation real -> real -> Approximation real.
 Proof.
 intros x y. exists (fun e => x e + y).
-apply non_expanding_extend_lim_pr.
+intros e d.
+apply (non_expanding (fun a => a + y)).
+apply approx_equiv.
 Defined.
 
-Definition Rplus_lim_compute : forall x y, lim x + y = lim (Rplus_lim_val x y)
-  := fun _ _ => idpath.
+Definition Rplus_lim_compute : forall x y, lim x + y = lim (Rplus_lim_val x y).
+Proof.
+intros x y. unfold plus,Rplus.
+rewrite lipschitz_extend_binary_lim. apply (ap lim).
+apply approx_eq,path_forall;intros e;simpl.
+rewrite Qpos_recip_1,Qpos_mult_1_r. reflexivity.
+Qed.
 
 Definition Rabs_lim_val : Approximation real -> Approximation real.
 Proof.

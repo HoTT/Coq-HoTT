@@ -100,7 +100,7 @@ Definition Book_11_3_39 := @HoTTClasses.implementations.cauchy_completion.unique
 (* ================================================== RC-binary-nonexpanding-extension *)
 (** Lemma 11.3.40 *)
 
-Definition Book_11_3_40 := @HoTTClasses.implementations.cauchy_completion.non_expanding_extend.
+Definition Book_11_3_40 := @HoTTClasses.implementations.cauchy_completion.lipschitz_extend_binary.
 
 (* ================================================== RC-archimedean *)
 (** Theorem 11.3.41 *)

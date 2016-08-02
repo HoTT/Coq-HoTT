@@ -190,6 +190,11 @@ intros. path_via (a / a * b).
 - rewrite pos_recip_r;apply Qpos_mult_1_l.
 Qed.
 
+Lemma Qpos_recip_1 : / 1 = 1 :> Q+.
+Proof.
+apply pos_eq. exact dec_recip_1.
+Qed.
+
 Lemma Qpos_plus_mult_distr_l : @LeftDistribute Q+ mult plus.
 Proof.
 hnf. intros;apply pos_eq,plus_mult_distr_l.
