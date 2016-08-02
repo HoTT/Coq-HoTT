@@ -1490,17 +1490,6 @@ Proof.
 apply (lipschitz_nonexpanding _).
 Qed.
 
-Lemma lim_same_distance@{} : forall (x y : Approximation A) e,
-  (forall d n, close (e+d) (x n) (y n)) ->
-  forall d, close (e+d) (lim x) (lim y).
-Proof.
-intros x y e E d.
-apply premetric.equiv_lim_lim with (d/3) (d/3) (e + d/3);[|apply E].
-path_via (e + 3 / 3 * d).
-- rewrite pos_recip_r,Qpos_mult_1_l;trivial.
-- apply pos_eq;ring_tac.ring_with_nat.
-Qed.
-
 Lemma lipschitz_extend_same_distance@{} (f g : T -> A) (L:Q+)
   `{!Lipschitz f L} `{!Lipschitz g L} : forall e,
   (forall d q, close (e+d) (f q) (g q)) ->

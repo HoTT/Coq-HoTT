@@ -63,6 +63,14 @@ change (a = b) in E.
 destruct E;apply ap;apply path_ishprop.
 Qed.
 
+Global Instance Qpos_isset : IsHSet Q+.
+Proof.
+apply (@HSet.isset_hrel_subpaths _ (fun e d => ' e = ' d)).
+- intros e; reflexivity.
+- apply _.
+- exact pos_eq.
+Qed.
+
 Global Instance Qpos_one@{} : One Q+.
 Proof.
 exists 1. apply lt_0_1.
@@ -162,6 +170,11 @@ Proof.
 hnf;intros;apply pos_eq;apply mult_1_l.
 Qed.
 
+Global Instance Qpos_mult_1_r@{} : RightIdentity (@mult Q+ _) 1.
+Proof.
+hnf;intros;apply pos_eq;apply mult_1_r.
+Qed.
+
 Lemma pos_recip_through_plus@{} : forall a b c : Q+,
   a + b = c * (a / c + b / c).
 Proof.
@@ -175,6 +188,11 @@ Proof.
 intros. path_via (a / a * b).
 - apply pos_eq;ring_tac.ring_with_nat.
 - rewrite pos_recip_r;apply Qpos_mult_1_l.
+Qed.
+
+Lemma Qpos_plus_mult_distr_l : @LeftDistribute Q+ mult plus.
+Proof.
+hnf. intros;apply pos_eq,plus_mult_distr_l.
 Qed.
 
 Global Instance Qpos_meet@{} : Meet Q+.
