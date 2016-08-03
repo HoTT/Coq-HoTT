@@ -266,6 +266,17 @@ unfold IsTop. intros f;induction n as [|n IHn];simpl;
   + rewrite <-Em. transitivity (f m);auto. apply join_ub_r.
 Qed.
 
+Lemma top_le_sup : forall (s : IncreasingSequence Sier),
+  IsTop (sup Unit s) <-> merely (exists n, s n).
+Proof.
+intros s;split.
+- intros E. apply (eta_le_sup _) in E.
+  exact E.
+- apply (Trunc_ind _);intros [n E].
+  red;transitivity (s n);trivial.
+  apply sup_is_ub.
+Qed.
+
 Lemma top_le_countable_sup : forall f, CountableSup f <->
   merely (exists n, f n).
 Proof.
@@ -326,14 +337,23 @@ repeat (split;try apply _).
         apply (order_preserving s). trivial. }
 Qed.
 
-Lemma top_le_countable_sup_meet : forall f g,
-  CountableSup (fun n => meet (f n) (g n)) ->
-  meet (CountableSup f) (CountableSup g).
+Lemma countable_sup_meet_distr_r : forall a f,
+  meet (CountableSup f) a = CountableSup (fun n => meet (f n) a).
 Proof.
-unfold IsTop. intros f g E. apply top_le_countable_sup in E.
-revert E;apply (Trunc_ind _);intros [n E].
-apply top_le_meet in E.
-apply top_le_meet;split;apply top_le_countable_sup,tr;exists n;apply E.
+intros a f.
+unfold CountableSup at 1. rewrite SierMeet_sup.
+apply sup_extensionality.
+induction n as [|n IHn];simpl.
+- reflexivity.
+- simpl in IHn. rewrite <-IHn.
+  apply meet_join_distr_r.
+Qed.
+
+Lemma countable_sup_meet_distr_l : forall a f,
+  meet a (CountableSup f) = CountableSup (fun n => meet a (f n)).
+Proof.
+intros. rewrite (commutativity (f:=meet)),countable_sup_meet_distr_r.
+apply ap,path_forall. intros n. apply commutativity.
 Qed.
 
 Section enumerable_sup.
@@ -359,7 +379,7 @@ intros f s E. apply countable_sup_least_ub.
 intros;apply E.
 Qed.
 
-Lemma top_le_enumerable_sub : forall f, EnumerableSup f <->
+Lemma top_le_enumerable_sup : forall f, EnumerableSup f <->
   merely (exists x, f x).
 Proof.
 intros f;split.
@@ -372,6 +392,40 @@ intros f;split.
   apply top_le_countable_sup. apply tr;exists a;apply E.
 Qed.
 
+Lemma enumerable_sup_meet_distr_l : forall a f,
+  meet a (EnumerableSup f) = EnumerableSup (fun n => meet a (f n)).
+Proof.
+intros. apply countable_sup_meet_distr_l.
+Qed.
+
+Lemma enumerable_sup_meet_distr_r : forall a f,
+  meet (EnumerableSup f) a = EnumerableSup (fun n => meet (f n) a).
+Proof.
+intros. apply countable_sup_meet_distr_r.
+Qed.
+
 End enumerable_sup.
+
+Lemma not_bot : ~ (@bottom Sier _).
+Proof.
+intros E.
+pose proof @trunc_contr@{Set Set} as trunc_contr.
+apply (not_eta_le_bot@{Set} _ tt). apply E.
+Qed.
+
+Definition DecSier (A : Type) `{Decidable A} : Sier
+  := match decide A with | inl _ => top | inr _ => bottom end.
+
+Lemma dec_sier_pr : forall A `{Decidable A},
+  A <-> DecSier A.
+Proof.
+unfold DecSier;intros A ?. split.
+- intros E. destruct (decide A) as [E'|E'].
+  + apply top_greatest.
+  + destruct (E' E).
+- destruct (decide A) as [E|E];intros E'.
+  + trivial.
+  + destruct (not_bot E').
+Qed.
 
 End contents.
