@@ -3,3 +3,4 @@ Makefile
 *.v.d
 coqopts
 html/
+timing/

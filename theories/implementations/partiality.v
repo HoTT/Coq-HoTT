@@ -4,7 +4,8 @@ Require Import
   HoTT.HSet
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.interfaces.orders
-  HoTTClasses.interfaces.monad.
+  HoTTClasses.interfaces.monad
+  HoTTClasses.implementations.peano_naturals.
 
 Local Set Universe Minimization ToSet.
 
@@ -20,18 +21,26 @@ Arguments Build_IncreasingSequence {A Ale} seq seq_increasing.
 Arguments seq {A Ale} _ _.
 Arguments seq_increasing {A Ale} _ _.
 
+Global Instance seq_increasing_le `{PartialOrder A} (s : IncreasingSequence A)
+  : OrderPreserving (seq s).
+Proof.
+hnf. intros a b E;induction E as [|b IH].
+- reflexivity.
+- transitivity (s b);trivial. apply seq_increasing.
+Qed.
+
 Module Export Partial.
 
 Section VarSec.
 Universe i.
 Variable A : Type@{i}.
 
-Private Inductive partial : Type@{i} :=
+Private Inductive partial@{} : Type@{i} :=
   | eta : A -> partial
   | bot : Bottom partial
   | sup' : forall f : nat -> partial, (forall n, f n <= f (S n)) -> partial
 
-with partialLe : Le partial :=
+with partialLe@{} : Le partial :=
   | partial_refl : Reflexive partialLe
   | bot_least : forall x, bot <= x
   | sup'_le_l : forall f p x, sup' f p <= x -> forall n, f n <= x
@@ -43,23 +52,23 @@ Axiom partialLe_hprop : is_mere_relation partial partialLe.
 Global Existing Instance partialLe.
 Global Existing Instance partialLe_hprop.
 
-Definition sup : IncreasingSequence partial -> partial
+Definition sup@{} : IncreasingSequence partial -> partial
   := fun s => sup' s (seq_increasing s).
 
-Definition sup_le_l : forall (s : IncreasingSequence partial) x,
+Definition sup_le_l@{} : forall (s : IncreasingSequence partial) x,
   sup s <= x -> forall n, s n <= x
   := fun s => sup'_le_l s (seq_increasing s).
 
-Definition sup_le_r : forall (s : IncreasingSequence partial) x,
+Definition sup_le_r@{} : forall (s : IncreasingSequence partial) x,
   (forall n, s n <= x) -> sup s <= x
   := fun s => sup'_le_r s (seq_increasing s).
 
 Section Induction.
+Universe UP UQ.
+Variables (P : partial -> Type@{UP})
+  (Q : forall x y (u : P x) (v : P y), x <= y -> Type@{UQ}).
 
-Variables (P : partial -> Type)
-  (Q : forall x y (u : P x) (v : P y), x <= y -> Type).
-
-Record Inductors :=
+Record Inductors@{} :=
   { ind_eta : forall x, P (eta x)
   ; ind_bot : P bot
   ; ind_sup : forall (s : IncreasingSequence partial) (If : forall n, P (s n))
@@ -77,7 +86,7 @@ Record Inductors :=
   ; ind_prop : forall x y u v E, IsHProp (Q x y u v E)
   }.
 
-Definition partial_rect : Inductors -> forall x, P x :=
+Definition partial_rect@{} : Inductors -> forall x, P x :=
   fun I x =>
   fix partial_rect (x : partial) {struct x} : Inductors -> P x :=
     match x return (Inductors -> P x) with
@@ -112,7 +121,7 @@ Definition partial_rect : Inductors -> forall x, P x :=
 
   for partial_rect x I.
 
-Definition partialLe_rect : forall (I : Inductors) (x y : partial) (E : x <= y),
+Definition partialLe_rect@{} : forall (I : Inductors) (x y : partial) (E : x <= y),
   Q x y (partial_rect I x) (partial_rect I y) E
   := fun I x y E =>
   fix partial_rect (x : partial) {struct x} : Inductors -> P x :=
@@ -154,20 +163,19 @@ End VarSec.
 
 End Partial.
 
-Unset Universe Minimization ToSet.
-
 Section contents.
 Context `{Funext} `{Univalence}.
 
 Section basics.
-Variable A : Type.
+Universe UA.
+Variable A : Type@{UA}.
 Context `{IsHSet A}.
 
 Section Recursion.
+Universe UT UTle.
+Variables (T : Type@{UT}) (Tle : T -> T -> Type@{UTle}).
 
-Variables (T : Type) (Tle : T -> T -> Type).
-
-Record Recursors :=
+Record Recursors@{} :=
   { rec_eta : A -> T
   ; rec_bot : T
   ; rec_sup : forall (f : nat -> T) (p : forall n, Tle (f n) (f (S n))), T
@@ -180,7 +188,7 @@ Record Recursors :=
   ; rec_antisymm : AntiSymmetric Tle
   ; rec_prop : is_mere_relation T Tle }.
 
-Definition recursors_inductors
+Definition recursors_inductors@{}
   : Recursors -> Inductors A (fun _ => T) (fun _ _ x y _ => Tle x y).
 Proof.
 intros R. simple refine (Build_Inductors A _ _
@@ -193,16 +201,26 @@ intros R. simple refine (Build_Inductors A _ _
 - intros _ _ ?? _;exact (rec_prop R _ _).
 Defined.
 
-Definition partial_rec : Recursors -> partial A -> T
+Definition partial_rec@{} : Recursors -> partial A -> T
   := fun R => partial_rect _ _ _ (recursors_inductors R).
 
-Definition partialLe_rec : forall (R : Recursors) (x y : partial A) (E : x <= y),
+Definition partialLe_rec@{} : forall (R : Recursors) (x y : partial A) (E : x <= y),
   Tle (partial_rec R x) (partial_rec R y)
   := fun R => partialLe_rect _ _ _ (recursors_inductors R).
 
+Definition partial_rec_eta (R : Recursors) (a : A)
+  : partial_rec R (eta A a) = rec_eta R a
+  := idpath.
+
+Definition partial_rec_sup (R : Recursors) (s : IncreasingSequence (partial A))
+  : partial_rec R (sup A s) =
+    rec_sup R (fun n => partial_rec R (s n))
+      (fun n => partialLe_rec R _ _ (seq_increasing s n))
+  := idpath.
+
 End Recursion.
 
-Definition partialLe_rect0 (P : forall x y : partial A, x <= y -> Type)
+Definition partialLe_rect0@{UP} (P : forall x y : partial A, x <= y -> Type@{UP})
   {sP : forall x y E, IsHProp (P x y E)}
   (val_refl : forall x, P x x (partial_refl A x))
   (val_bot_least : forall x, P _ _ (bot_least A x))
@@ -211,15 +229,17 @@ Definition partialLe_rect0 (P : forall x y : partial A, x <= y -> Type)
     P (sup A f) x E -> forall n, P (f n) x (sup_le_l A f x E n))
   (val_sup_le_r : forall f x E
     (Ip : forall n, P (seq f n) (f (S n)) (seq_increasing f n)),
-    (forall n, P (f n) x (E n)) -> P (sup A f) x (sup_le_r A f x E))
+    (forall n, P (f n) x (E n)) -> P (sup A f) x (sup_le_r@{UA} A f x E))
   : forall x y E, P x y E.
 Proof.
-apply (partialLe_rect A (fun _ => Unit) (fun x y _ _ E => P x y E)).
+apply (partialLe_rect@{UA Set UP} A (fun _ => Unit) (fun x y _ _ E => P x y E)).
 split;simpl;auto;simpl.
-intros. apply path_ishprop.
+intros.
+pose proof @trunc_contr@{Set Set} as trunc_contr. (* Universe trick *)
+apply path_ishprop.
 Defined.
 
-Lemma partialLe_trans : Transitive (@le (partial A) _).
+Lemma partialLe_trans@{} : Transitive (@le (partial@{UA} A) _).
 Proof.
 hnf. intros x y z E;revert x y E z.
 apply (partialLe_rect0 (fun x y _ => forall z, _ -> _)).
@@ -229,7 +249,7 @@ apply (partialLe_rect0 (fun x y _ => forall z, _ -> _)).
 - intros;apply sup_le_r;auto.
 Qed.
 
-Global Instance partial_set : IsHSet (partial A).
+Global Instance partial_set@{} : IsHSet (partial@{UA} A).
 Proof.
 apply (@HSet.isset_hrel_subpaths _ (fun x y => x <= y /\ y <= x)).
 - intros x;split;apply partial_refl.
@@ -237,26 +257,31 @@ apply (@HSet.isset_hrel_subpaths _ (fun x y => x <= y /\ y <= x)).
 - intros x y E;apply partial_antisymm;apply E.
 Qed.
 
-Global Instance partial_order : PartialOrder (@le (partial A) _).
+Global Instance partial_order@{} : PartialOrder (@le (partial A) _).
 Proof.
 repeat (split;try apply _).
 - apply partial_refl.
 - apply partialLe_trans.
 Qed.
 
-Definition partial_ind0 (P : partial A -> Type) {sP : forall x, IsHProp (P x)}
+Definition partial_ind0@{UP} (P : partial@{UA} A -> Type@{UP})
+  {sP : forall x, IsHProp (P x)}
   (val_eta : forall x, P (eta A x))
   (val_bot : P (bot A))
   (val_sup : forall f, (forall n, P (seq f n)) -> P (sup A f))
   : forall x, P x.
 Proof.
-apply (partial_rect A _ (fun _ _ _ _ _ => Unit)).
+apply (partial_rect@{UA UP Set} A _ (fun _ _ _ _ _ => Unit)).
 split;simpl;auto.
-- intros;apply path_ishprop.
-- apply _.
+- intros;
+  pose proof @trunc_contr@{Set Set} as trunc_contr. (* Universe trick *)
+  apply path_ishprop.
+- pose proof @trunc_contr@{Set Set} as trunc_contr. (* Universe trick *)
+  apply _.
 Defined.
 
-Definition partialLe_ind0 (P : forall a b : partial A, a <= b -> Type)
+Definition partialLe_ind0@{UP}
+  (P : forall a b : partial@{UA} A, a <= b -> Type@{UP})
   {sP : forall a b E, IsHProp (P a b E)}
   (val_refl : forall a, P a a (partial_refl A a))
   (val_bot_least : forall b, P (bot A) b (bot_least A b))
@@ -265,12 +290,15 @@ Definition partialLe_ind0 (P : forall a b : partial A, a <= b -> Type)
     P _ _ (sup_le_r A f x E))
   : forall a b E, P a b E.
 Proof.
-apply (partialLe_rect A (fun _ => Unit) (fun a b _ _ E => P a b E)).
+apply (partialLe_rect@{UA Set UP} A (fun _ => Unit) (fun a b _ _ E => P a b E)).
 split;simpl;auto.
-intros;apply path_ishprop.
+intros.
+pose proof @trunc_contr@{Set Set} as trunc_contr. (* Universe trick *)
+apply path_ishprop.
 Defined.
 
-Definition eta_le_recursors (a : A) : Recursors hProp (fun P Q => P -> Q).
+Definition eta_le_recursors' (a : A)
+  : Recursors@{Ularge Ularge} hProp (fun P Q => P -> Q).
 Proof.
 simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _ _);simpl.
 - intros b. exists (a = b). apply _.
@@ -283,12 +311,15 @@ simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _ _);simpl.
 - hnf. intros. apply TruncType.path_iff_hprop_uncurried. split;trivial.
 Defined.
 
-Definition sim_le_recursors
-  : Recursors (partial A -> hProp) (fun P Q => forall x, Q x -> P x).
+Definition eta_le_recursors := eta_le_recursors'@{Uhuge}.
+
+Definition sim_le_recursors'
+  : Recursors@{Uhuge Ularge} (partial@{UA} A -> hProp)
+    (fun P Q => forall x, Q x -> P x).
 Proof.
 simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _ _);simpl.
 - intros a. apply (partial_rec _ _ (eta_le_recursors a)).
-- intros _;exists Unit;apply _.
+- intros _;exists Unit. apply trunc_succ.
 - intros f p x. exists (forall n, f n x). apply _.
 - trivial.
 - simpl. trivial.
@@ -298,10 +329,12 @@ simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _ _);simpl.
   apply TruncType.path_iff_hprop_uncurried. split;auto.
 Defined.
 
-Definition sim_le : partial A -> partial A -> hProp
+Definition sim_le_recursors@{} := sim_le_recursors'@{Ularge Uhuge}.
+
+Definition sim_le@{} : partial A -> partial A -> hProp
   := partial_rec _ _ sim_le_recursors.
 
-Lemma sim_to_le : forall a b, sim_le a b -> a <= b.
+Lemma sim_to_le@{} : forall a b, sim_le a b -> a <= b.
 Proof.
 apply (partial_ind0 (fun a => forall b, _ -> _)).
 - intros a. apply (partial_ind0 (fun b => _ -> _)).
@@ -317,14 +350,14 @@ apply (partial_ind0 (fun a => forall b, _ -> _)).
   intros E. apply sup_le_r. intros n;apply IH;trivial.
 Qed.
 
-Lemma le_sim_le_trans : forall a b, a <= b -> forall c, sim_le b c -> sim_le a c.
+Lemma le_sim_le_trans@{} : forall a b, a <= b -> forall c, sim_le b c -> sim_le a c.
 Proof.
 exact (partialLe_rec _ _ sim_le_recursors).
 Qed.
 
-Lemma sim_le_sup : forall f x n, sim_le x (seq f n) -> sim_le x (sup A f).
+Lemma sim_le_sup@{} : forall f x n, sim_le x (seq f n) -> sim_le x (sup A f).
 Proof.
-intros f;apply (partial_ind0 (fun x => forall n, _ -> _)).
+intros f;apply (partial_ind0@{Ularge} (fun x => forall n, _ -> _)).
 - intros a n E. apply tr;exists n;apply E.
 - simpl. trivial.
 - intros g IH n E.
@@ -334,7 +367,7 @@ intros f;apply (partial_ind0 (fun x => forall n, _ -> _)).
   + trivial.
 Qed.
 
-Lemma sim_le_refl : forall a, sim_le a a.
+Lemma sim_le_refl@{} : forall a, sim_le a a.
 Proof.
 apply (partial_ind0 _).
 - reflexivity.
@@ -343,7 +376,7 @@ apply (partial_ind0 _).
   intros n. apply sim_le_sup with n. trivial.
 Qed.
 
-Lemma le_to_sim : forall a b, a <= b -> sim_le a b.
+Lemma le_to_sim@{} : forall a b, a <= b -> sim_le a b.
 Proof.
 apply (partialLe_ind0 _).
 - apply sim_le_refl.
@@ -361,28 +394,31 @@ apply TruncType.path_iff_hprop_uncurried. simpl. split.
 - apply sim_to_le.
 Qed.
 
-Lemma not_eta_le_bot : forall a, ~ eta A a <= bot A.
+Lemma not_eta_le_bot@{} : forall a, ~ eta@{UA} A a <= bot A.
 Proof.
-intros a. rewrite le_sim_rw. simpl. red;trivial.
+intros a E. apply le_to_sim in E;trivial.
 Qed.
 
-Lemma eta_le_eta : forall a b, eta A a <= eta A b -> a = b.
+Lemma eta_le_eta@{} : forall a b, eta@{UA} A a <= eta A b -> a = b.
 Proof.
-intros a b;rewrite le_sim_rw;trivial.
+intros a b;apply le_to_sim.
 Qed.
 
-Global Instance eta_injective : Injective (eta A).
+Global Instance eta_injective@{} : Injective (eta@{UA} A).
 Proof.
 intros a b E. apply eta_le_eta. rewrite E;reflexivity.
 Qed.
 
-Lemma eta_le_sup : forall a f, eta A a <= sup A f ->
-  merely (exists n, eta A a <= f n).
+Lemma eta_le_sup@{} : forall a f, eta A a <= sup A f ->
+  merely@{UA} (exists n, eta@{UA} A a <= f n).
 Proof.
-intros a f. rewrite le_sim_rw. trivial.
+intros a f E. apply le_to_sim in E.
+change (trunctype_type (merely (exists n, sim_le (eta A a) (f n)))) in E.
+revert E;apply (Trunc_ind _);intros [n E].
+apply tr;exists n;apply sim_to_le;trivial.
 Qed.
 
-Lemma sup_is_ub : forall f n, seq f n <= sup A f.
+Lemma sup_is_ub@{} : forall f n, seq f n <= sup@{UA} A f.
 Proof.
 intros f n;apply sup_le_l. reflexivity.
 Qed.
@@ -490,7 +526,7 @@ End monad.
 
 Section Fix.
 
-Record MonotoneTransformer A B :=
+Record MonotoneTransformer (A B : Type) :=
   { transform : (A -> partial B) -> A -> partial B
   ; transform_monotone : forall g1 g2, (forall x, g1 x <= g2 x) ->
       forall x, transform g1 x <= transform g2 x }.

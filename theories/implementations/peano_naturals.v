@@ -277,6 +277,14 @@ Proof.
 intros. apply le_S_S. apply zero_least.
 Qed.
 
+Lemma le_S_either : forall a b, a <= S b -> a <= b \/ a = S b.
+Proof.
+intros [|a] b.
+- intros;left;apply zero_least.
+- intros E. apply (snd (le_S_S _ _)) in E. destruct E as [|b E];auto.
+  left. apply le_S_S. trivial.
+Qed.
+
 Lemma le_lt_dec : forall a b : nat, a <= b \/ b < a.
 Proof.
 induction a as [|a IHa].
