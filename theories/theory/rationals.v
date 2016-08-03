@@ -506,6 +506,6 @@ Parameters (Q : Type@{UQ}) (Qap : Apart@{UQ UQ} Q)
   (Qtrivialapart : TrivialApart Q) (Qdec : DecidablePaths Q)
   (Qmeet : Meet Q) (Qjoin : Join Q) (Qlattice : LatticeOrder Qle)
   (Qle_total : TotalRelation (@le Q _))
-  (Qabs : Abs Q).
+  (Qabs : Abs Q) (Qenum : Enumerable Q).
 Notation "Q+" := (Qpos Q).
 

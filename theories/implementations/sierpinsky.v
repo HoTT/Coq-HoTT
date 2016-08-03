@@ -184,7 +184,7 @@ exists (joined_seq_aux f).
 intros;simpl. apply join_ub_l.
 Defined.
 
-Definition EnumerableSup (f : nat -> Sier) : Sier
+Definition CountableSup (f : nat -> Sier) : Sier
   := sup _ (joined_seq f).
 
 Lemma joined_seq_ub_n : forall f n, f n <= joined_seq f n.
@@ -194,11 +194,11 @@ intros f [|n].
 - simpl. apply join_ub_r.
 Qed.
 
-Lemma enumerable_sup_ub : forall f n, f n <= EnumerableSup f.
+Lemma countable_sup_ub : forall f n, f n <= CountableSup f.
 Proof.
 intros. transitivity (joined_seq f n).
 - apply joined_seq_ub_n.
-- unfold EnumerableSup. apply sup_is_ub.
+- unfold CountableSup. apply sup_is_ub.
 Qed.
 
 Lemma joined_seq_least_ub_n : forall f n x, (forall m, m <= n -> f m <= x) ->
@@ -212,8 +212,8 @@ intros f;induction n as [|n IHn];intros x E.
   + apply E. reflexivity.
 Qed.
 
-Lemma enumerable_sup_least_ub : forall f x, (forall n, f n <= x) ->
-  EnumerableSup f <= x.
+Lemma countable_sup_least_ub : forall f x, (forall n, f n <= x) ->
+  CountableSup f <= x.
 Proof.
 intros f x E. apply sup_le_r.
 intros n. apply joined_seq_least_ub_n. intros m _;apply E.
@@ -263,7 +263,7 @@ intros f;induction n as [|n IHn];simpl;
   + rewrite <-Em. transitivity (f m);auto. apply join_ub_r.
 Qed.
 
-Lemma top_le_enumerable_sup : forall f, top <= EnumerableSup f <->
+Lemma top_le_countable_sup : forall f, top <= CountableSup f <->
   merely (exists n, top <= f n).
 Proof.
 intros f;split.
@@ -272,7 +272,7 @@ intros f;split.
   apply top_le_joined_seq_n in E. revert E;apply (Trunc_ind _);intros [m [_ E]].
   apply tr;exists m;trivial.
 - apply (Trunc_ind _);intros [n E].
-  transitivity (f n);trivial. apply enumerable_sup_ub.
+  transitivity (f n);trivial. apply countable_sup_ub.
 Qed.
 
 Global Instance Sier_distributive_lattice : DistributiveLattice Sier.
@@ -323,14 +323,52 @@ repeat (split;try apply _).
         apply (order_preserving s). trivial. }
 Qed.
 
-Lemma top_le_enumerable_sup_meet : forall f g,
-  top <= EnumerableSup (fun n => meet (f n) (g n)) ->
-  top <= meet (EnumerableSup f) (EnumerableSup g).
+Lemma top_le_countable_sup_meet : forall f g,
+  top <= CountableSup (fun n => meet (f n) (g n)) ->
+  top <= meet (CountableSup f) (CountableSup g).
 Proof.
-intros f g E. apply top_le_enumerable_sup in E.
+intros f g E. apply top_le_countable_sup in E.
 revert E;apply (Trunc_ind _);intros [n E].
 apply top_le_meet in E.
-apply top_le_meet;split;apply top_le_enumerable_sup,tr;exists n;apply E.
+apply top_le_meet;split;apply top_le_countable_sup,tr;exists n;apply E.
 Qed.
+
+Section enumerable_sup.
+Variable A : Type.
+
+Context `{Enumerable A}.
+
+Definition EnumerableSup (f : A -> Sier)  : Sier
+  := CountableSup (f ∘ (enumerator A)).
+
+Lemma enumerable_sub_ub : forall f x, f x <= EnumerableSup f.
+Proof.
+intros f x.
+generalize (center _ (enumerator_issurj _ x)). apply (Trunc_ind _).
+intros [a []]. clear x. unfold EnumerableSup.
+apply (countable_sup_ub (compose _ _) a).
+Qed.
+
+Lemma enumerable_sub_least_ub : forall f s, (forall x, f x <= s) ->
+  EnumerableSup f <= s.
+Proof.
+intros f s E. apply countable_sup_least_ub.
+intros;apply E.
+Qed.
+
+Lemma top_le_enumerable_sub : forall f, top <= EnumerableSup f <->
+  merely (exists x, top <= f x).
+Proof.
+intros f;split.
+- intros E. apply top_le_countable_sup in E;revert E;
+  apply (Trunc_ind _);intros [n E].
+  apply tr;econstructor;apply E.
+- apply (Trunc_ind _);intros [x E].
+  generalize (center _ (enumerator_issurj _ x)). apply (Trunc_ind _).
+  intros [a Ea]. destruct Ea.
+  apply top_le_countable_sup. apply tr;exists a;apply E.
+Qed.
+
+End enumerable_sup.
 
 End contents.
