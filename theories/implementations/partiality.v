@@ -6,6 +6,8 @@ Require Import
   HoTTClasses.interfaces.orders
   HoTTClasses.interfaces.monad.
 
+Local Set Universe Minimization ToSet.
+
 Coercion trunctype_type : TruncType >-> Sortclass.
 Coercion equiv_fun : Equiv >-> Funclass.
 
@@ -21,10 +23,10 @@ Arguments seq_increasing {A Ale} _ _.
 Module Export Partial.
 
 Section VarSec.
+Universe i.
+Variable A : Type@{i}.
 
-Variable A : Type.
-
-Private Inductive partial : Type :=
+Private Inductive partial : Type@{i} :=
   | eta : A -> partial
   | bot : Bottom partial
   | sup' : forall f : nat -> partial, (forall n, f n <= f (S n)) -> partial
@@ -151,6 +153,8 @@ End Induction.
 End VarSec.
 
 End Partial.
+
+Unset Universe Minimization ToSet.
 
 Section contents.
 Context `{Funext} `{Univalence}.
