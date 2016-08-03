@@ -20,6 +20,9 @@ Global Instance SierBot : Bottom Sier := bot _.
 
 Global Instance SierTop : Top Sier := eta _ tt.
 
+Definition IsTop (s : Sier) : Type0 := top <= s.
+Coercion IsTop : Sier >-> Sortclass.
+
 Section contents.
 Context `{Funext} `{Univalence}.
 
@@ -219,18 +222,18 @@ intros f x E. apply sup_le_r.
 intros n. apply joined_seq_least_ub_n. intros m _;apply E.
 Defined.
 
-Lemma top_le_meet : forall a b, top <= meet a b <-> top <= a /\ top <= b.
+Lemma top_le_meet : forall a b : Sier, meet a b <-> a /\ b.
 Proof.
-intros a b;split.
+unfold IsTop. intros a b;split.
 - intros E;split;transitivity (meet a b);trivial.
   + apply meet_lb_l.
   + apply meet_lb_r.
 - intros [E1 E2]. apply meet_le;trivial.
 Qed.
 
-Lemma top_le_join : forall a b, top <= join a b <-> hor (top <= a) (top <= b).
+Lemma top_le_join : forall a b : Sier, join a b <-> hor a b.
 Proof.
-intros a b;split.
+unfold IsTop. intros a b;split.
 - revert a b;apply (partial_ind0 _ (fun a => forall b, _ -> _)).
   + intros [] ? E;apply tr;left;apply E.
   + intros b E;apply tr;right;apply E.
@@ -246,10 +249,10 @@ intros a b;split.
   + transitivity b;auto. apply join_ub_r.
 Qed.
 
-Lemma top_le_joined_seq_n : forall f n, top <= joined_seq f n <->
-  merely (exists m, m <= n /\ top <= f m).
+Lemma top_le_joined_seq_n : forall f n, joined_seq f n <->
+  merely (exists m, m <= n /\ f m).
 Proof.
-intros f;induction n as [|n IHn];simpl;
+unfold IsTop. intros f;induction n as [|n IHn];simpl;
 (split;[intros E|apply (Trunc_ind _);intros [m [Em E]]]).
 - apply tr;exists 0;split;trivial. reflexivity.
 - rewrite (antisymmetry le m 0 Em (zero_least m)) in E. trivial.
@@ -263,10 +266,10 @@ intros f;induction n as [|n IHn];simpl;
   + rewrite <-Em. transitivity (f m);auto. apply join_ub_r.
 Qed.
 
-Lemma top_le_countable_sup : forall f, top <= CountableSup f <->
-  merely (exists n, top <= f n).
+Lemma top_le_countable_sup : forall f, CountableSup f <->
+  merely (exists n, f n).
 Proof.
-intros f;split.
+unfold IsTop. intros f;split.
 - intros E. apply (eta_le_sup _) in E.
   revert E;apply (Trunc_ind _);intros [n E].
   apply top_le_joined_seq_n in E. revert E;apply (Trunc_ind _);intros [m [_ E]].
@@ -324,10 +327,10 @@ repeat (split;try apply _).
 Qed.
 
 Lemma top_le_countable_sup_meet : forall f g,
-  top <= CountableSup (fun n => meet (f n) (g n)) ->
-  top <= meet (CountableSup f) (CountableSup g).
+  CountableSup (fun n => meet (f n) (g n)) ->
+  meet (CountableSup f) (CountableSup g).
 Proof.
-intros f g E. apply top_le_countable_sup in E.
+unfold IsTop. intros f g E. apply top_le_countable_sup in E.
 revert E;apply (Trunc_ind _);intros [n E].
 apply top_le_meet in E.
 apply top_le_meet;split;apply top_le_countable_sup,tr;exists n;apply E.
@@ -356,8 +359,8 @@ intros f s E. apply countable_sup_least_ub.
 intros;apply E.
 Qed.
 
-Lemma top_le_enumerable_sub : forall f, top <= EnumerableSup f <->
-  merely (exists x, top <= f x).
+Lemma top_le_enumerable_sub : forall f, EnumerableSup f <->
+  merely (exists x, f x).
 Proof.
 intros f;split.
 - intros E. apply top_le_countable_sup in E;revert E;
