@@ -45,6 +45,16 @@ Proof.
   exact ((@contr {x : A & f x = f a} _ (a;1))..2).
 Defined.
 
+(** It follows that when proving a map is an equivalence, we may assume its codomain is inhabited. *)
+Definition isequiv_inhab_codomain
+           `(f : A -> B) (feq : B -> IsEquiv f)
+: IsEquiv f.
+Proof.
+  apply isequiv_fcontr.
+  intros b.
+  apply fcontr_isequiv, (feq b).
+Defined.
+
 (** Therefore, since both are hprops, they are equivalent by [equiv_iff_hprop].  However, we can also use this to *prove* that [IsEquiv] is an hprop.  We begin by showing that if [f] is an equivalence, then the type of sections of [f] and the type of retractions of [f] are both contractible. *)
 
 Definition contr_sect_equiv `(f : A -> B) `{IsEquiv A B f}
