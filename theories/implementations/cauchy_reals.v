@@ -6,7 +6,6 @@ Require Import
   HoTTClasses.interfaces.naturals
   HoTTClasses.interfaces.rationals
   HoTTClasses.interfaces.orders
-  HoTTClasses.implementations.field_of_fractions
   HoTTClasses.implementations.natpair_integers
   HoTTClasses.theory.rings
   HoTTClasses.theory.integers
@@ -16,7 +15,6 @@ Require Import
   HoTTClasses.orders.lattices
   HoTTClasses.theory.additional_operations
   HoTTClasses.theory.premetric
-  HoTTClasses.implementations.partiality
   HoTTClasses.implementations.cauchy_completion.
 
 Local Set Universe Minimization ToSet.

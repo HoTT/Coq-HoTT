@@ -6,7 +6,6 @@ Require Import
   HoTTClasses.interfaces.naturals
   HoTTClasses.interfaces.rationals
   HoTTClasses.interfaces.orders
-  HoTTClasses.implementations.field_of_fractions
   HoTTClasses.implementations.natpair_integers
   HoTTClasses.theory.rings
   HoTTClasses.theory.integers

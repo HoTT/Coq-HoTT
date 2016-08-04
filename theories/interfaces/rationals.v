@@ -2,7 +2,6 @@ Require Import HoTT.Types.Universe.
 Require Import
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.interfaces.orders
-  HoTTClasses.implementations.field_of_fractions
   HoTTClasses.theory.integers.
 
 (* Universes:

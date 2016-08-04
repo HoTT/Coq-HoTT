@@ -121,6 +121,14 @@ Ltac ring_with_integers Z :=
     compute;reflexivity
   end.
 
+Ltac ring_with_self :=
+  match goal with
+  |- @paths ?R _ _ =>
+    ((pose proof (_ : SemiRing R)) || fail "target equality not on a ring");
+    apply (by_quoting (@id R));
+    compute;reflexivity
+  end.
+
 Ltac ring_repl a b :=
   let Hrw := fresh "Hrw" in
   assert (Hrw : a = b);[ring_with_nat|rewrite Hrw;clear Hrw].
