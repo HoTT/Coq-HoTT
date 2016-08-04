@@ -28,14 +28,14 @@ Section iscut_def.
 Variables (lower upper : QPred).
 
 Class IsCut@{} : Type@{UQ} :=
-  { lower_inhab : merely@{UQ} (exists q, lower q)
-  ; upper_inhab : merely@{UQ} (exists q, upper q)
-  ; lower_rounded : forall q, iff@{Set UQ UQ} (lower q)
+  { iscut_lower_inhab : merely@{UQ} (exists q, lower q)
+  ; iscut_upper_inhab : merely@{UQ} (exists q, upper q)
+  ; iscut_lower_rounded : forall q, iff@{Set UQ UQ} (lower q)
     (merely (exists r, q < r /\ lower r))
-  ; upper_rounded : forall r, iff@{Set UQ UQ} (upper r)
+  ; iscut_upper_rounded : forall r, iff@{Set UQ UQ} (upper r)
     (merely (exists q, q < r /\ upper q))
-  ; cut_disjoint : forall q, lower q -> upper q -> Empty
-  ; cut_located : forall q r, q < r -> hor (lower q) (upper r) }.
+  ; iscut_cut_disjoint : forall q, lower q -> upper q -> Empty
+  ; iscut_cut_located : forall q r, q < r -> hor (lower q) (upper r) }.
 End iscut_def.
 
 Record Cut@{} :=
@@ -44,12 +44,19 @@ Record Cut@{} :=
   ; cut_iscut : IsCut lower upper }.
 Global Existing Instance cut_iscut.
 
+Definition lower_inhab (c : Cut) := iscut_lower_inhab (lower c) _.
+Definition upper_inhab (c : Cut) := iscut_upper_inhab (lower c) _.
+Definition lower_rounded (c : Cut) := iscut_lower_rounded (lower c) _.
+Definition upper_rounded (c : Cut) := iscut_upper_rounded (lower c) _.
+Definition cut_disjoint (c : Cut) := iscut_cut_disjoint (lower c) _.
+Definition cut_located (c : Cut) := iscut_cut_located (lower c) _.
+
 Lemma lower_le : forall a q r, lower a q -> r <= q -> lower a r.
 Proof.
 intros a q r E1 E2.
 destruct (le_or_lt q r) as [E3|E3].
 - destruct (antisymmetry le _ _ E2 E3);trivial.
-- apply (lower_rounded _ _). apply tr. exists q;auto.
+- apply lower_rounded. apply tr. exists q;auto.
 Qed.
 
 Lemma upper_le : forall a q r, upper a q -> q <= r -> upper a r.
@@ -57,13 +64,13 @@ Proof.
 intros a q r E1 E2.
 destruct (le_or_lt r q) as [E3|E3].
 - destruct (antisymmetry le _ _ E2 E3);trivial.
-- apply (upper_rounded _ _). apply tr. exists q;auto.
+- apply upper_rounded. apply tr. exists q;auto.
 Qed.
 
 Definition IsCut_conjunction l u : IsCut l u -> _
-  := fun c => (lower_inhab l u, upper_inhab l u,
-    lower_rounded l u, upper_rounded l u,
-    cut_disjoint l u, cut_located l u).
+  := fun c => (iscut_lower_inhab l u, iscut_upper_inhab l u,
+    iscut_lower_rounded l u, iscut_upper_rounded l u,
+    iscut_cut_disjoint l u, iscut_cut_located l u).
 
 Global Instance iscut_conj_isequiv {l u}
   : IsEquiv@{UQ UQ} (IsCut_conjunction@{UQ UQ} l u).
@@ -99,6 +106,22 @@ apply (@HSet.isset_hrel_subpaths _
 - intros a b E;apply cut_eq;apply E.
 Qed.
 
+Lemma cut_orders : forall (c : Cut) (q r : Q), lower c q -> upper c r -> q < r.
+Proof.
+intros c q r E1 E2.
+destruct (le_or_lt r q) as [E|E];trivial.
+destruct (cut_disjoint c q);trivial.
+apply upper_le with r;trivial.
+Qed.
+
+Lemma cut_bounds : forall (c : Cut) (e : Q+),
+  merely (exists q r, r - q < ' e /\ lower c q /\ upper c r).
+Proof.
+intros c e.
+generalize (lower_inhab c);apply (Trunc_ind _);intros [q Eq].
+generalize (upper_inhab c);apply (Trunc_ind _);intros [r Er].
+Abort.
+
 Instance pred_plus : Plus QPred.
 Proof.
 intros x y q.
@@ -129,23 +152,23 @@ Instance plus_iscut : forall a b : Cut,
   IsCut (lower a + lower b) (upper a + upper b).
 Proof.
 intros a b;split.
-- generalize (lower_inhab (lower a) _).
+- generalize (lower_inhab a).
   apply (Trunc_ind _);intros [r Er].
-  generalize (lower_inhab (lower b) _).
+  generalize (lower_inhab b).
   apply (Trunc_ind _);intros [s Es].
   apply tr;exists (r+s). apply pred_plus_pr.
   apply tr;exists r,s;auto.
-- generalize (upper_inhab (lower a) _).
+- generalize (upper_inhab a).
   apply (Trunc_ind _);intros [r Er].
-  generalize (upper_inhab (lower b) _).
+  generalize (upper_inhab b).
   apply (Trunc_ind _);intros [s Es].
   apply tr;exists (r+s). apply pred_plus_pr.
   apply tr;exists r,s;auto.
 - intros q;split.
   + intros E. apply pred_plus_pr in E.
     revert E;apply (Trunc_ind _);intros [r [s [E1 [E2 E3]]]].
-    apply (lower_rounded (lower a) _) in E1.
-    apply (lower_rounded (lower b) _) in E2.
+    apply (lower_rounded a) in E1.
+    apply (lower_rounded b) in E2.
     revert E1;apply (Trunc_ind _);intros [r' [E1 E1']];
     revert E2;apply (Trunc_ind _);intros [s' [E2 E2']].
     apply tr;exists (r' + s'). split.
@@ -164,8 +187,8 @@ intros a b;split.
 - intros r;split.
   + intros E. apply pred_plus_pr in E.
     revert E;apply (Trunc_ind _);intros [q [s [E1 [E2 E3]]]].
-    apply (upper_rounded (lower a) _) in E1.
-    apply (upper_rounded (lower b) _) in E2.
+    apply (upper_rounded a) in E1.
+    apply (upper_rounded b) in E2.
     revert E1;apply (Trunc_ind _);intros [r' [E1 E1']];
     revert E2;apply (Trunc_ind _);intros [s' [E2 E2']].
     apply tr;exists (r' + s'). split.
@@ -193,9 +216,9 @@ intros a b;split.
         assert (E6 : r1 + s1 < r2 + s2)
         by (apply plus_lt_le_compat;trivial).
         rewrite E2'' in E6. revert E6;apply (irreflexivity lt). }
-      apply (cut_disjoint (lower a) _ r2);trivial. apply lower_le with r1;trivial.
-    * apply (cut_disjoint (lower b) _ s1);trivial. apply upper_le with s2;trivial.
-  + apply (cut_disjoint (lower a) _ r2);trivial. apply lower_le with r1;trivial.
+      apply (cut_disjoint a r2);trivial. apply lower_le with r1;trivial.
+    * apply (cut_disjoint b s1);trivial. apply upper_le with s2;trivial.
+  + apply (cut_disjoint a r2);trivial. apply lower_le with r1;trivial.
 - intros q r E.
 Abort. (* further lemmas required *)
 
