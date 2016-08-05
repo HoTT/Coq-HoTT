@@ -1,6 +1,8 @@
 Require Import
   HoTT.Types.Universe
   HoTT.Basics.Decidable
+  HoTT.FunextAxiom
+  HoTT.UnivalenceAxiom
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.interfaces.integers
   HoTTClasses.interfaces.naturals
@@ -17,9 +19,6 @@ Require Import
   HoTTClasses.theory.premetric.
 
 Local Set Universe Minimization ToSet.
-
-Parameter funext : Funext.
-Parameter univalence : Universe.Univalence.
 
 Module Export Cauchy.
 

@@ -492,6 +492,22 @@ Proof.
 intros x. exists (join x (' e)). apply join_ub_r.
 Defined.
 
+Global Instance QLe_dec : forall q r : Q, Decidable (q <= r).
+Proof.
+intros q r;destruct (le_or_lt q r).
+- left;trivial.
+- right;intros ?. apply (irreflexivity lt q).
+  apply le_lt_trans with r;trivial.
+Qed.
+
+Global Instance QLt_dec : forall q r : Q, Decidable (q < r).
+Proof.
+intros q r;destruct (le_or_lt r q).
+- right;intros ?. apply (irreflexivity lt q).
+  apply lt_le_trans with r;trivial.
+- left;trivial.
+Qed.
+
 End contents.
 
 Arguments Qpos Q {_ _}.
@@ -508,4 +524,3 @@ Parameters (Q : Type@{UQ}) (Qap : Apart@{UQ UQ} Q)
   (Qle_total : TotalRelation (@le Q _))
   (Qabs : Abs Q) (Qenum : Enumerable Q).
 Notation "Q+" := (Qpos Q).
-

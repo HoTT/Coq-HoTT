@@ -364,7 +364,7 @@ Context `{Enumerable A}.
 Definition EnumerableSup (f : A -> Sier)  : Sier
   := CountableSup (f ∘ (enumerator A)).
 
-Lemma enumerable_sub_ub : forall f x, f x <= EnumerableSup f.
+Lemma enumerable_sup_ub : forall f x, f x <= EnumerableSup f.
 Proof.
 intros f x.
 generalize (center _ (enumerator_issurj _ x)). apply (Trunc_ind _).
@@ -372,7 +372,7 @@ intros [a []]. clear x. unfold EnumerableSup.
 apply (countable_sup_ub (compose _ _) a).
 Qed.
 
-Lemma enumerable_sub_least_ub : forall f s, (forall x, f x <= s) ->
+Lemma enumerable_sup_least_ub : forall f s, (forall x, f x <= s) ->
   EnumerableSup f <= s.
 Proof.
 intros f s E. apply countable_sup_least_ub.
@@ -416,16 +416,121 @@ Qed.
 Definition DecSier (A : Type) `{Decidable A} : Sier
   := match decide A with | inl _ => top | inr _ => bottom end.
 
+Lemma dec_sier_top `{Decidable A} : A -> DecSier A = top.
+Proof.
+intros E. unfold DecSier. destruct (decide A) as [?|E'];trivial.
+destruct (E' E).
+Qed.
+
+Lemma dec_sier_bot `{Decidable A} : ~ A -> DecSier A = bottom.
+Proof.
+intros E'. unfold DecSier. destruct (decide A) as [E|?];trivial.
+destruct (E' E).
+Qed.
+
 Lemma dec_sier_pr : forall A `{Decidable A},
   A <-> DecSier A.
 Proof.
-unfold DecSier;intros A ?. split.
-- intros E. destruct (decide A) as [E'|E'].
-  + apply top_greatest.
-  + destruct (E' E).
-- destruct (decide A) as [E|E];intros E'.
+intros A ?. split.
+- intros E. rewrite (dec_sier_top E). apply top_greatest.
+- unfold DecSier. destruct (decide A) as [E|E];intros E'.
   + trivial.
   + destruct (not_bot E').
+Qed.
+
+Lemma SierLe_imply : forall a b : Sier, a <= b -> a -> b.
+Proof.
+intros a b E E';red;transitivity a;trivial.
+Qed.
+
+Definition meet_top_l : forall a : Sier, meet top a = a
+  := fun _ => idpath.
+
+Lemma meet_top_r : forall a : Sier, meet a top = a.
+Proof.
+intros. etransitivity;[|apply meet_top_l]. apply commutativity.
+Qed.
+
+Definition meet_bot_l : forall a : Sier, meet bottom a = bottom
+  := fun _ => idpath.
+
+Lemma meet_bot_r : forall a : Sier, meet a bottom = bottom.
+Proof.
+intros. etransitivity;[|apply meet_bot_l]. apply commutativity.
+Qed.
+
+Definition join_top_l : forall a : Sier, join top a = top
+  := fun _ => idpath.
+
+Lemma join_top_r : forall a : Sier, join a top = top.
+Proof.
+intros. etransitivity;[|apply join_top_l]. apply commutativity.
+Qed.
+
+Definition join_bot_l : forall a : Sier, join bottom a = a
+  := fun _ => idpath.
+
+Lemma join_bot_r : forall a : Sier, join a bottom = a.
+Proof.
+intros. etransitivity;[|apply join_bot_l]. apply commutativity.
+Qed.
+
+Lemma dec_sier_meet_le A `{Decidable A}
+  : forall b c, meet (DecSier A) b <= c <-> (A -> b <= c).
+Proof.
+intros. split.
+- intros E Ea. rewrite (dec_sier_top Ea),meet_top_l in E. trivial.
+- intros E. destruct (decide A) as [Ea|Ea].
+  + rewrite (dec_sier_top Ea),meet_top_l. auto.
+  + rewrite (dec_sier_bot Ea),meet_bot_l. apply bot_least.
+Qed.
+
+Lemma top_le_eq : forall a : Sier, a -> a = top.
+Proof.
+intros a E. apply (antisymmetry le);trivial.
+apply top_greatest.
+Qed.
+
+Lemma bot_eq : forall a : Sier, a <= bottom -> a = bottom.
+Proof.
+intros a E. apply (antisymmetry le);trivial.
+apply bot_least.
+Qed.
+
+Lemma dec_sier_meet A `{Decidable A} B `{Decidable B}
+  : meet (DecSier A) (DecSier B) = DecSier (A /\ B).
+Proof.
+unfold DecSier at 1 2.
+destruct (decide A) as [E1|E1], (decide B) as [E2|E2];
+rewrite ?meet_top_l,?meet_bot_l;Symmetry;
+first [apply dec_sier_top | apply dec_sier_bot];auto;intros [E3 E4];auto.
+Qed.
+
+Lemma dec_sier_join A `{Decidable A} B `{Decidable B}
+  : join (DecSier A) (DecSier B) = DecSier (A \/ B).
+Proof.
+unfold DecSier at 1 2.
+destruct (decide A) as [E1|E1], (decide B) as [E2|E2];
+rewrite ?join_top_l,?join_bot_l;Symmetry;
+first [apply dec_sier_top | apply dec_sier_bot];auto;intros [E3|E3];auto.
+Qed.
+
+Lemma dec_sier_le_imply A `{Decidable A} : forall b : Sier,
+  (A -> b) -> DecSier A <= b.
+Proof.
+intros b E. unfold DecSier. destruct (decide A) as [E1|E1].
+- apply E. trivial.
+- apply bot_least.
+Qed.
+
+Lemma imply_le : forall a b : Sier, (a -> b) -> a <= b.
+Proof.
+apply (partial_ind0 _ (fun a => forall b, _ -> _)).
+- intros [] b E. apply E. apply top_greatest.
+- intros;apply bot_least.
+- intros s IH b E. apply sup_le_r. intros n.
+  apply IH. intros En. apply E.
+  apply top_le_sup. apply tr;exists n;trivial.
 Qed.
 
 End contents.
