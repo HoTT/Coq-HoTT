@@ -634,7 +634,7 @@ intros a;apply (antisymmetry le);red;simpl;intros q E.
   change (upper a (- - u)). rewrite involutive;trivial.
 Qed.
 
-Instance CutPlus_abgroup@{} : AbGroup Cut (Aop:=CutPlus) (Aunit:=0).
+Global Instance CutPlus_abgroup@{} : AbGroup Cut (Aop:=CutPlus) (Aunit:=0).
 Proof.
 repeat split;unfold sg_op,mon_unit;simpl.
 - apply _.
@@ -883,7 +883,7 @@ split.
   + intros E;destruct E;intros [E|E];revert E;apply (irreflexivity lt).
 Qed.
 
-Instance Cut_fullpseudoorder@{} : FullPseudoOrder CutLe CutLt.
+Global Instance Cut_fullpseudoorder@{} : FullPseudoOrder CutLe CutLt.
 Proof.
 repeat (split;try (revert x; fail 1);try apply _).
 - apply lt_antisym.
@@ -1201,6 +1201,35 @@ split.
   intros e. apply CutClose_symm;trivial.
 - exact Cut_triangular.
 - apply Cut_rounded.
+Qed.
+
+Global Instance CutPlus_nonexpanding_l : forall a : Cut, NonExpanding (a +).
+Proof.
+intros a e b c xi.
+unfold close in *;simpl in *.
+assert (Hrw : a + b - (a + c) = b - c);[|rewrite Hrw;trivial].
+rewrite (groups.negate_sg_op a c).
+unfold plus,sg_op.
+rewrite (CutPlus_comm (- c)), CutPlus_assoc.
+apply (ap (fun x => CutPlus x _)).
+rewrite CutPlus_comm, CutPlus_assoc,CutPlus_left_inverse.
+apply CutPlus_left_id.
+Qed.
+
+Global Instance CutPlus_nonexpanding_r : forall a : Cut, NonExpanding (+ a).
+Proof.
+intros a e b c xi.
+unfold close in *;simpl in *.
+unfold plus;rewrite !(CutPlus_comm _ a).
+apply CutPlus_nonexpanding_l. trivial.
+Qed.
+
+Global Instance CutNeg_nonexpanding : NonExpanding (@negate Cut _).
+Proof.
+intros e a b xi.
+red;simpl. pose proof (groups.negate_sg_op (- b) a) as Hrw.
+unfold sg_op,plus_is_sg_op,plus in *;rewrite <-Hrw.
+rewrite CutAbs_neg,CutPlus_comm. trivial.
 Qed.
 
 Definition lim_lower_cut (x : Approximation Cut) : QPred
