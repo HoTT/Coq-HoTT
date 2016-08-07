@@ -1004,6 +1004,16 @@ transitivity (c + b).
 - apply (strictly_order_preserving (c +));trivial.
 Qed.
 
+Lemma cut_flip_lt_negate : forall a b : Cut, - a < - b <-> b < a.
+Proof.
+assert (Eaux : forall a b : Cut, a < b -> - b < - a).
+- intros a b E. apply (strictly_order_reflecting (a +)).
+  rewrite right_inverse. rewrite (commutativity (f:=plus)).
+  apply (strictly_order_reflecting (b +)). rewrite simple_associativity.
+  rewrite right_inverse,left_identity,right_identity. trivial.
+- intros a b;split;intros E;apply Eaux in E;rewrite ?involutive in E;trivial.
+Qed.
+
 End redundant.
 
 Lemma CutAbs_of_nonneg_aux : forall a, 0 <= a -> join (- a) a = a.
@@ -1193,7 +1203,268 @@ split.
 - apply Cut_rounded.
 Qed.
 
+Definition lim_lower_cut (x : Approximation Cut) : QPred
+  := fun q => EnumerableSup Q+ (fun e => EnumerableSup Q+ (fun d =>
+    lower (x e) (q + 'e + ' d))).
 
+Definition lim_upper_cut (x : Approximation Cut) : QPred
+  := fun q => EnumerableSup Q+ (fun e => EnumerableSup Q+ (fun d =>
+    upper (x e) (q - ' e - ' d))).
+
+Lemma lim_lower_cut_pr : forall x q, lim_lower_cut x q <->
+  merely (exists e d : Q+, lower (x e) (q + ' e + ' d)).
+Proof.
+intros x q;split.
+- intros E. apply top_le_enumerable_sup in E;revert E;apply (Trunc_ind _);
+  intros [e E]. apply top_le_enumerable_sup in E;revert E;apply (Trunc_ind _);
+  intros [d E].
+  apply tr;exists e,d;trivial.
+- apply (Trunc_ind _);intros [e [d E]].
+  apply top_le_enumerable_sup;apply tr;exists e.
+  apply top_le_enumerable_sup;apply tr;exists d.
+  trivial.
+Qed.
+
+Lemma lim_upper_cut_pr : forall x q, lim_upper_cut x q <->
+  merely (exists e d : Q+, upper (x e) (q - ' e - ' d)).
+Proof.
+intros x q;split.
+- intros E. apply top_le_enumerable_sup in E;revert E;apply (Trunc_ind _);
+  intros [e E]. apply top_le_enumerable_sup in E;revert E;apply (Trunc_ind _);
+  intros [d E].
+  apply tr;exists e,d;trivial.
+- apply (Trunc_ind _);intros [e [d E]].
+  apply top_le_enumerable_sup;apply tr;exists e.
+  apply top_le_enumerable_sup;apply tr;exists d.
+  trivial.
+Qed.
+
+Lemma lim_iscut (x : Approximation Cut)
+  : IsCut (lim_lower_cut x) (lim_upper_cut x).
+Proof.
+split.
+- generalize (lower_inhab (x 1)).
+  apply (Trunc_ind _);intros [q E].
+  apply tr;exists (q - 1 - 1).
+  apply lim_lower_cut_pr. apply tr;exists (1:Q+),(1:Q+).
+  unfold cast;simpl.
+  assert (Hrw : q - 1 - 1 + 1 + 1 = q)
+  by abstract ring_tac.ring_with_integers (NatPair.Z nat);
+  rewrite Hrw;clear Hrw.
+  trivial.
+- generalize (upper_inhab (x 1)).
+  apply (Trunc_ind _);intros [q E].
+  apply tr;exists (q + 1 + 1).
+  apply lim_upper_cut_pr. apply tr;exists (1:Q+),(1:Q+).
+  unfold cast;simpl.
+  assert (Hrw : q + 1 + 1 - 1 - 1 = q)
+  by abstract ring_tac.ring_with_integers (NatPair.Z nat);
+  rewrite Hrw;clear Hrw.
+  trivial.
+- intros q;split.
+  + intros E;apply lim_lower_cut_pr in E;revert E;apply (Trunc_ind _);
+    intros [e [d E]].
+    apply lower_rounded in E;revert E;apply (Trunc_ind _);intros [r [Er E]].
+    apply tr;exists (r - ' e - ' d);split.
+    * apply flip_lt_minus_r,(snd (flip_lt_minus_r _ _ _)).
+      rewrite <-plus_assoc,(plus_comm (' d)),plus_assoc. trivial.
+    * apply lim_lower_cut_pr. apply tr;exists e,d.
+      assert (Hrw : r - ' e - ' d + ' e + ' d = r)
+      by abstract ring_tac.ring_with_integers (NatPair.Z nat);
+      rewrite Hrw;trivial.
+  + apply (Trunc_ind _);intros [r [Er E]];apply lim_lower_cut_pr in E;
+    revert E;apply (Trunc_ind _);intros [e [d E]].
+    apply lim_lower_cut_pr. apply tr;exists e,d.
+    apply lower_le with (r + ' e + ' d);trivial.
+    rewrite <-!plus_assoc. apply (order_preserving (+ _)).
+    apply lt_le;trivial.
+- intros q;split.
+  + intros E;apply lim_upper_cut_pr in E;revert E;apply (Trunc_ind _);
+    intros [e [d E]].
+    apply upper_rounded in E;revert E;apply (Trunc_ind _);intros [r [Er E]].
+    apply tr;exists (r + ' e + ' d);split.
+    * apply flip_lt_minus_r,flip_lt_minus_r.
+      rewrite <-plus_assoc,(plus_comm (- ' d)),plus_assoc. trivial.
+    * apply lim_upper_cut_pr. apply tr;exists e,d.
+      assert (Hrw : r + ' e + ' d - ' e - ' d = r)
+      by abstract ring_tac.ring_with_integers (NatPair.Z nat);
+      rewrite Hrw;trivial.
+  + apply (Trunc_ind _);intros [r [Er E]];apply lim_upper_cut_pr in E;
+    revert E;apply (Trunc_ind _);intros [e [d E]].
+    apply lim_upper_cut_pr. apply tr;exists e,d.
+    apply upper_le with (r - ' e - ' d);trivial.
+    rewrite <-!plus_assoc. apply (order_preserving (+ _)).
+    apply lt_le;trivial.
+- intros q E1 E2;apply lim_lower_cut_pr in E1;apply lim_upper_cut_pr in E2.
+  revert E1;apply (Trunc_ind _);intros [e1 [d1 E1]].
+  revert E2;apply (Trunc_ind _);intros [e2 [d2 E2]].
+  apply cut_lt_lower in E1. apply cut_lt_upper in E2.
+  pose proof (approx_equiv x e1 e2) as E3.
+  red in E3;simpl in E3. apply cut_flip_lt_negate in E2.
+  pose proof (cut_plus_lt_compat _ _ _ _ E1 E2) as E4.
+  pose proof (le_lt_trans _ _ _ (join_ub_r _ _) E3) as E5.
+  pose proof (transitivity E4 E5) as E6.
+  rewrite <-CutNeg_rat,<-CutPlus_rat in E6.
+  apply (strictly_order_reflecting (cast Q Cut)) in E6.
+  assert (Hrw : q + ' e1 + ' d1 - (q - ' e2 - ' d2) = ' (e1 + e2) + ' (d1 + d2))
+  by abstract ring_tac.ring_with_integers (NatPair.Z nat);
+  rewrite Hrw in E6;clear Hrw.
+  apply (irreflexivity lt (' (e1 + e2))).
+  etransitivity;eauto.
+  apply pos_plus_lt_compat_r;solve_propholds.
+- intros q r E.
+  assert (E1 : exists e : Q+, 5 * ' e < r - q).
+  { exists ((Qpos_diff _ _ E) / 6).
+    unfold cast;simpl.
+    rewrite mult_assoc,(mult_comm 5),<-mult_assoc.
+    rewrite <-(mult_1_r (r - q)).
+    pose proof (snd (flip_pos_minus _ _) E) as E'.
+    apply pos_mult_le_lt_compat;try split;
+    [solve_propholds|reflexivity|trivial|solve_propholds|].
+    apply (strictly_order_reflecting (.* (' 6))).
+    rewrite mult_1_l,<-mult_assoc,(mult_comm (' _)).
+    change (5 * (' (6 / 6)) < 6).
+    rewrite pos_recip_r,mult_1_r. apply pos_plus_lt_compat_l. solve_propholds.
+  }
+  destruct E1 as [e E1].
+  assert (E2 : q + ' e + ' e < r - ' e - ' e).
+  { apply flip_pos_minus. apply flip_pos_minus in E1.
+    assert (Hrw : r - ' e - ' e - (q + ' e + ' e) = (r - q - 5 * ' e) + ' e)
+    by abstract ring_tac.ring_with_integers (NatPair.Z nat);
+    rewrite Hrw;clear Hrw.
+    etransitivity;eauto. apply pos_plus_lt_compat_r. solve_propholds. }
+  generalize (cut_located (x e) _ _ E2). apply (Trunc_ind _);intros [E3|E3].
+  + apply tr,inl,lim_lower_cut_pr,tr. exists e,e. trivial.
+  + apply tr,inr,lim_upper_cut_pr,tr. exists e,e;trivial.
+Qed.
+
+Global Instance CutLim : Lim Cut
+  := fun x => Build_Cut _ _ (lim_iscut x).
+
+Global Instance Cut_cauchy_complete : CauchyComplete Cut.
+Proof.
+do 3 red;simpl. intros x d e.
+assert (E1 : ' d / 4 < ' d / 2).
+{ apply (strictly_order_preserving (_ *.)).
+  change (/ 2) with (cast Q+ Q (/ 2)).
+  rewrite <-(Qpos_mult_1_l (/ 2)),<-two_fourth_is_one_half.
+  unfold cast;simpl. rewrite <-(mult_1_l (/ 4)).
+  rewrite (mult_comm 1),(mult_comm (' 2)).
+  apply pos_mult_le_lt_compat;try split;try solve_propholds.
+  { reflexivity. }
+  { apply pos_plus_lt_compat_r;solve_propholds. }
+}
+pose proof (strictly_order_preserving (cast Q Cut) _ _
+  (snd (flip_lt_negate _ _) E1)) as E2.
+apply (strictly_order_preserving ((x e - (' ' e)) +)) in E2.
+apply Cut_archimedean in E2;revert E2;apply (Trunc_ind _);intros [q [E2 E3]].
+assert (Eq : ' q < lim x).
+{ apply cut_lt_lower. unfold lim;simpl. apply lim_lower_cut_pr.
+  apply tr;exists e,(d/4). apply cut_lt_lower.
+  apply (strictly_order_reflecting ((- ' (' e) + ' (- (' d / 4))) +)).
+  assert (Hrw : - ' (' e) + ' (- (' d / 4)) + x e =
+    x e - ' (' e) + ' (- (' d / 4)));[|rewrite Hrw;clear Hrw].
+  { rewrite (commutativity (f:=plus)). apply simple_associativity. }
+  assert (Hrw : - ' (' e) + ' (- (' d / 4)) + ' (q + ' e + ' (d / 4)) = ' q);
+  [|rewrite Hrw;trivial].
+  rewrite <-CutNeg_rat,<-!CutPlus_rat. apply ap.
+  abstract ring_tac.ring_with_integers (NatPair.Z nat).
+}
+pose proof (strictly_order_preserving (cast Q Cut) _ _ E1) as E4.
+apply (strictly_order_preserving ((x e + (' ' e)) +)) in E4.
+apply Cut_archimedean in E4;revert E4;apply (Trunc_ind _);intros [r [E4 E5]].
+assert (Er : lim x < ' r).
+{ apply cut_lt_upper. unfold lim;simpl. apply lim_upper_cut_pr.
+  apply tr;exists e,(d/4).
+  apply cut_lt_upper.
+  apply (strictly_order_reflecting ((' (' e) + ' ((' d / 4))) +)).
+  assert (Hrw : ' (' e) + ' (' d / 4) + x e = x e + ' (' e) + ' (' d / 4));
+  [|rewrite Hrw;clear Hrw].
+  { rewrite (commutativity (f:=plus)). apply simple_associativity. }
+  assert (Hrw : ' (' e) + ' (' d / 4) + ' (r - ' e - ' (d / 4)) = ' r);
+  [|rewrite Hrw;trivial].
+  rewrite <-!CutPlus_rat. apply ap.
+  abstract ring_tac.ring_with_integers (NatPair.Z nat).
+}
+pose proof (between_pos (' d / 2) prop_holds) as E6.
+apply (strictly_order_preserving (cast Q Cut)) in E6.
+apply (strictly_order_preserving ((x e) +)) in E6.
+generalize (cotransitive E6 (lim x)). apply (Trunc_ind _);intros [E7|E7].
+- apply CutLt_join.
+  + rewrite groups.negate_sg_op,involutive.
+    change (lim x & - x e) with (lim x - x e).
+    apply (strictly_order_reflecting ((x e) +)).
+    assert (Hrw : x e + (lim x - x e) = lim x);[|rewrite Hrw;clear Hrw].
+    { rewrite (commutativity (f:=plus) (x e)),<-simple_associativity.
+      rewrite left_inverse;apply right_identity. }
+    transitivity (' r);trivial.
+    etransitivity;[apply E5|].
+    rewrite <-(simple_associativity (f:=plus) (x e) (' (' e))).
+    apply (strictly_order_preserving (_ +)).
+    rewrite <-CutPlus_rat. apply (strictly_order_preserving (cast Q Cut)).
+    unfold cast at 3;simpl. rewrite (plus_comm (' d)).
+    set (D := ' d / 2);rewrite (pos_split2 d);unfold D;clear D.
+    rewrite plus_assoc.
+    apply pos_plus_lt_compat_r;solve_propholds.
+  + rewrite CutNeg_rat in E7.
+    apply (strictly_order_reflecting ((lim x - ( ' (' d / 2))) +)).
+    assert (Hrw : lim x - ' (' d / 2) + (x e - lim x) = x e - ' (' d / 2));
+    [|rewrite Hrw;clear Hrw].
+    { change (@plus Cut _) with CutPlus;
+      rewrite !(CutPlus_comm (x e)), CutPlus_assoc;
+      change CutPlus with (@plus Cut _).
+      apply (ap (+ (x e))).
+      change (@plus Cut _) with CutPlus;
+      rewrite CutPlus_comm,CutPlus_assoc,CutPlus_left_inverse;
+      change CutPlus with (@plus Cut _).
+      apply CutPlus_left_id. }
+    etransitivity;[apply E7|].
+    change (@plus Cut _) with CutPlus;rewrite <-CutPlus_assoc;
+    change CutPlus with (@plus Cut _).
+    set (L := lim x) at 2;rewrite <-(CutPlus_left_id (lim x)),CutPlus_comm;
+    unfold L;clear L;change CutPlus with (@plus Cut _).
+    apply (strictly_order_preserving (lim x +)).
+    rewrite <-CutNeg_rat,<-CutPlus_rat.
+    apply (strictly_order_preserving (cast Q Cut)).
+    set (D := 'd / 2);rewrite (pos_split2 d);unfold D;clear D.
+    assert (Hrw : - (' d / 2) + ' (d / 2 + d / 2 + e) = ' (d / 2 + e));
+    [|rewrite Hrw;solve_propholds].
+    abstract ring_tac.ring_with_integers (NatPair.Z nat).
+- apply CutLt_join.
+  + rewrite groups.negate_sg_op,involutive.
+    change (lim x & - x e) with (lim x - x e).
+    apply (strictly_order_reflecting (x e +)).
+    assert (Hrw : x e + (lim x - x e) = lim x);[|rewrite Hrw;clear Hrw].
+    { rewrite (commutativity (f:=plus) (x e)),<-simple_associativity.
+      rewrite left_inverse;apply right_identity. }
+    etransitivity;[apply E7|].
+    apply (strictly_order_preserving (_ +)).
+    apply (strictly_order_preserving (cast Q Cut)).
+    set (D := 'd / 2);rewrite (pos_split2 d);unfold D;clear D.
+    rewrite <-Qpos_plus_assoc.
+    apply pos_plus_lt_compat_r. solve_propholds.
+  + apply (strictly_order_reflecting (lim x +)).
+    assert (Hrw : lim x + (x e - lim x) = x e);[|rewrite Hrw;clear Hrw].
+    { rewrite (commutativity (f:=plus) (lim x)),<-simple_associativity.
+      rewrite left_inverse;apply right_identity. }
+    apply (strictly_order_reflecting ((- ' (' (d + e))) +)).
+    assert (Hrw : - ' (' (d + e)) + (lim x + ' (' (d + e))) = lim x);
+    [|rewrite Hrw;clear Hrw].
+    { change (@plus Cut _) with CutPlus;
+      rewrite CutPlus_comm,<-CutPlus_assoc,(CutPlus_comm _ (- _)),
+      CutPlus_left_inverse. apply right_identity. }
+    etransitivity;[|apply Eq].
+    etransitivity;[|apply E2].
+    change (@plus Cut _) with CutPlus;rewrite CutPlus_comm,<-CutPlus_assoc;
+    change CutPlus with (@plus Cut _).
+    apply (strictly_order_preserving (_ +)).
+    rewrite <-!CutNeg_rat,<-CutPlus_rat.
+    apply (strictly_order_preserving (cast Q Cut)).
+    apply flip_lt_negate;rewrite <-negate_swap_r,!involutive.
+    set (D := 'd / 2);rewrite (pos_split2 d);unfold D;clear D.
+    rewrite <-Qpos_plus_assoc,(qpos_plus_comm _ (_ + _)).
+    apply pos_plus_lt_compat_r. solve_propholds.
+Qed.
 
 End contents.
 

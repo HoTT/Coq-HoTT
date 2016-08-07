@@ -508,6 +508,37 @@ intros q r;destruct (le_or_lt r q).
 - left;trivial.
 Qed.
 
+Section enumerable.
+Context `{Enumerable Q}.
+
+Definition Qpos_enumerator : nat -> Q+.
+Proof.
+intros n.
+destruct (le_or_lt (enumerator Q n) 0) as [E|E].
+- exact 1.
+- exists (enumerator Q n);trivial.
+Defined.
+
+Lemma Qpos_is_enumerator :
+  TrM.IsConnMap@{Uhuge Ularge UQ UQ Ularge} (trunc_S minus_two) Qpos_enumerator.
+Proof.
+apply BuildIsSurjection.
+unfold hfiber.
+intros e;generalize (center _ (enumerator_issurj Q (' e))). apply (Trunc_ind _).
+intros [n E]. apply tr;exists n.
+unfold Qpos_enumerator. destruct (le_or_lt (enumerator Q n) 0) as [E1|E1].
+- destruct (irreflexivity lt 0). apply lt_le_trans with (enumerator Q n);trivial.
+  rewrite E;solve_propholds.
+- apply pos_eq,E.
+Qed.
+
+Global Instance Qpos_enumerable `{Enumerable Q} : Enumerable Q+.
+Proof.
+exists Qpos_enumerator. apply Qpos_is_enumerator.
+Qed.
+
+End enumerable.
+
 End contents.
 
 Arguments Qpos Q {_ _}.
