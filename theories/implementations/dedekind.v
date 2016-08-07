@@ -43,14 +43,14 @@ Record Cut@{} :=
   ; cut_iscut : IsCut lower upper }.
 Global Existing Instance cut_iscut.
 
-Definition lower_inhab (c : Cut) := iscut_lower_inhab (lower c) _.
-Definition upper_inhab (c : Cut) := iscut_upper_inhab (lower c) _.
-Definition lower_rounded (c : Cut) := iscut_lower_rounded (lower c) _.
-Definition upper_rounded (c : Cut) := iscut_upper_rounded (lower c) _.
-Definition cut_disjoint (c : Cut) := iscut_cut_disjoint (lower c) _.
-Definition cut_located (c : Cut) := iscut_cut_located (lower c) _.
+Definition lower_inhab@{} (c : Cut) := iscut_lower_inhab (lower c) _.
+Definition upper_inhab@{} (c : Cut) := iscut_upper_inhab (lower c) _.
+Definition lower_rounded@{} (c : Cut) := iscut_lower_rounded (lower c) _.
+Definition upper_rounded@{} (c : Cut) := iscut_upper_rounded (lower c) _.
+Definition cut_disjoint@{} (c : Cut) := iscut_cut_disjoint (lower c) _.
+Definition cut_located@{} (c : Cut) := iscut_cut_located (lower c) _.
 
-Lemma lower_le : forall a q r, lower a q -> r <= q -> lower a r.
+Lemma lower_le@{} : forall a q r, lower a q -> r <= q -> lower a r.
 Proof.
 intros a q r E1 E2.
 destruct (le_or_lt q r) as [E3|E3].
@@ -58,7 +58,7 @@ destruct (le_or_lt q r) as [E3|E3].
 - apply lower_rounded. apply tr. exists q;auto.
 Qed.
 
-Lemma upper_le : forall a q r, upper a q -> q <= r -> upper a r.
+Lemma upper_le@{} : forall a q r, upper a q -> q <= r -> upper a r.
 Proof.
 intros a q r E1 E2.
 destruct (le_or_lt r q) as [E3|E3].
@@ -73,7 +73,7 @@ Definition IsCut_conjunction l u : IsCut l u -> _
     iscut_lower_rounded l u, iscut_upper_rounded l u,
     iscut_cut_disjoint l u, iscut_cut_located l u).
 
-Global Instance iscut_conj_isequiv {l u}
+Global Instance iscut_conj_isequiv@{} {l u}
   : IsEquiv@{UQ UQ} (IsCut_conjunction@{UQ UQ} l u).
 Proof.
 simple refine (BuildIsEquiv _ _ _ _ _ _ _).
@@ -86,19 +86,19 @@ Defined.
 Section contents.
 Context `{Funext} `{Univalence}.
 
-Global Instance IsCut_hprop : forall l u, IsHProp (IsCut l u).
+Global Instance IsCut_hprop@{} : forall l u, IsHProp (IsCut l u).
 Proof.
 intros. apply (@trunc_equiv _ _ ((IsCut_conjunction l u)^-1) _ _ _).
 Qed.
 
-Lemma cut_eq0 : forall a b : Cut, lower a = lower b -> upper a = upper b ->
+Lemma cut_eq0@{} : forall a b : Cut, lower a = lower b -> upper a = upper b ->
   a = b.
 Proof.
 intros [la ua Ea] [lb ub Eb];simpl;intros E1 E2;destruct E1,E2;apply ap.
 apply path_ishprop.
 Qed.
 
-Instance cut_isset : IsHSet Cut.
+Instance cut_isset@{} : IsHSet Cut.
 Proof.
 apply (@HSet.isset_hrel_subpaths _
   (fun a b => lower a = lower b /\ upper a = upper b)).
@@ -107,7 +107,7 @@ apply (@HSet.isset_hrel_subpaths _
 - intros a b E;apply cut_eq0;apply E.
 Qed.
 
-Lemma cut_eq : forall a b : Cut, (forall q, lower a q <-> lower b q) ->
+Lemma cut_eq' : forall a b : Cut, (forall q, lower a q <-> lower b q) ->
   (forall r, upper a r <-> upper b r) ->
   a = b.
 Proof.
@@ -115,7 +115,9 @@ intros a b E1 E2;apply cut_eq0;apply path_forall;intros q;apply (antisymmetry le
 apply imply_le;(apply E1 || apply E2).
 Qed.
 
-Lemma cut_orders : forall (c : Cut) (q r : Q), lower c q -> upper c r -> q < r.
+Definition cut_eq@{} := cut_eq'@{Set Set Set Set}.
+
+Lemma cut_orders@{} : forall (c : Cut) (q r : Q), lower c q -> upper c r -> q < r.
 Proof.
 intros c q r E1 E2.
 destruct (le_or_lt r q) as [E|E];trivial.
@@ -123,19 +125,12 @@ destruct (cut_disjoint c q);trivial.
 apply upper_le with r;trivial.
 Qed.
 
-Lemma cut_bounds : forall (c : Cut) (e : Q+),
-  merely (exists q r, r - q < ' e /\ lower c q /\ upper c r).
-Proof.
-intros c e.
-generalize (lower_inhab c);apply (Trunc_ind _);intros [q Eq].
-generalize (upper_inhab c);apply (Trunc_ind _);intros [r Er].
-Abort.
-
-Global Instance CutLe : Le Cut
+Global Instance CutLe@{} : Le@{UQ UQ} Cut
   := fun a b => forall q, lower a q -> lower b q.
 Arguments CutLe _ _ /.
 
-Lemma CutLe_upper : forall a b : Cut, a <= b <-> (forall r, upper b r -> upper a r).
+Lemma CutLe_upper' : forall a b : Cut,
+  a <= b <-> (forall r, upper b r -> upper a r).
 Proof.
 unfold le;simpl;intros a b;split.
 - intros E r E1.
@@ -150,7 +145,9 @@ unfold le;simpl;intros a b;split.
   + apply E in E3. destruct (cut_disjoint _ _ E2 E3).
 Qed.
 
-Instance CutLe_partial_order : PartialOrder CutLe.
+Definition CutLe_upper@{} := CutLe_upper'@{UQ UQ}.
+
+Instance CutLe_partial_order@{} : PartialOrder CutLe.
 Proof.
 repeat split.
 - apply _.
@@ -162,15 +159,15 @@ repeat split.
   + intros;split;apply CutLe_upper;trivial.
 Qed.
 
-Global Instance CutLt : Lt Cut :=
+Global Instance CutLt@{} : Lt@{UQ UQ} Cut :=
   fun a b => merely (exists q, upper a q /\ lower b q).
 Arguments CutLt _ _ /.
 
-Global Instance CutApart : Apart Cut
+Global Instance CutApart@{} : Apart@{UQ UQ} Cut
   := fun a b => a < b \/ b < a.
 Arguments CutApart _ _ /.
 
-Instance CutLt_strict_order : StrictOrder CutLt.
+Instance CutLt_strict_order@{} : StrictOrder CutLt.
 Proof.
 repeat split.
 - apply _.
@@ -184,7 +181,7 @@ repeat split.
     apply lt_le;apply cut_orders with b;trivial.
 Qed.
 
-Instance QIsCut : forall q : Q,
+Lemma QIsCut@{} : forall q : Q,
   IsCut (fun r => DecSier (r < q)) (fun r => DecSier (q < r)).
 Proof.
 intros q;split.
@@ -214,20 +211,19 @@ intros q;split.
   apply dec_sier_pr;trivial.
 Qed.
 
-Global Instance QCut : Cast Q Cut
+Global Instance QCut@{} : Cast Q Cut
   := fun q => Build_Cut _ _ (QIsCut q).
 Arguments QCut _ /.
 
-Global Instance CutZero : Zero Cut := ' 0.
+Global Instance CutZero@{} : Zero Cut := ' 0.
 Arguments CutZero /.
-Global Instance CutOne : One Cut := ' 1.
+Global Instance CutOne@{} : One Cut := ' 1.
 Arguments CutOne /.
 
-Definition straddle (a : Cut) (q : Q) :=
-  merely (exists l u : Q, lower a l /\ upper a u /\ u - l < q).
+Definition straddle@{} (a : Cut) (q : Q) :=
+  merely@{UQ} (exists l u : Q, lower a l /\ upper a u /\ u - l < q).
 
-
-Lemma straddle_monotone (x : Cut) (q r : Q) (E : q < r) :
+Lemma straddle_monotone@{} (x : Cut) (q r : Q) (E : q < r) :
   straddle x q -> straddle x r.
 Proof.
 apply (Trunc_ind _);intros [l [u [E1 [E2 E3]]]].
@@ -235,8 +231,7 @@ apply tr;exists l,u. repeat split;trivial.
 transitivity q;trivial.
 Qed.
 
-
-Lemma trisect (a : Cut) (q : Q) :
+Lemma trisect@{} (a : Cut) (q : Q) :
   straddle a q -> straddle a ((2/3) * q).
 Proof.
 apply (Trunc_ind _);intros [l [u [E1 [E2 E3]]]].
@@ -279,7 +274,7 @@ assert (E4 : (2 * l + u) / 3 < (2 * u + l) / 3).
     trivial.
 Qed.
 
-Lemma trisect_pow : forall a q, straddle a q ->
+Lemma trisect_pow@{} : forall a q, straddle a q ->
   forall n, straddle a (repeat n ((2/3) *.) q).
 Proof.
 intros a q E. induction n as [|n IHn].
@@ -287,11 +282,11 @@ intros a q E. induction n as [|n IHn].
 - apply trisect in IHn;exact IHn.
 Qed.
 
-Lemma two_thirds_power_small : forall q r, 0 < q -> 0 < r ->
+Lemma two_thirds_power_small@{} : forall q r, 0 < q -> 0 < r ->
   exists n, repeat n ((2/3) *.) q < r.
 Proof. Admitted.
 
-Lemma straddle_pos : forall a q, 0 < q -> straddle a q.
+Lemma straddle_pos@{} : forall a q, 0 < q -> straddle a q.
 Proof.
 intros a q E.
 generalize (lower_inhab a);apply (Trunc_ind _);intros [l El].
@@ -311,7 +306,7 @@ apply pos_plus_lt_compat_r. solve_propholds.
 Qed.
 
 
-Instance pred_plus : Plus QPred.
+Instance pred_plus@{} : Plus QPred.
 Proof.
 intros x y q.
 apply (EnumerableSup Q). intros r. apply (EnumerableSup Q). intros s.
@@ -319,7 +314,7 @@ exact (meet (meet (x r) (y s)) (DecSier (q = r + s))).
 Defined.
 Arguments pred_plus _ _ / _.
 
-Lemma pred_plus_pr : forall a b : QPred,
+Lemma pred_plus_pr' : forall a b : QPred,
   forall q, (a + b) q <-> merely (exists r s, a r /\ b s /\ q = r + s).
 Proof.
 unfold plus at 1;simpl. intros a b q;split.
@@ -337,7 +332,20 @@ unfold plus at 1;simpl. intros a b q;split.
   apply dec_sier_pr;trivial.
 Qed.
 
-Lemma lower_pred_plus_pr : forall a b : Cut, forall q,
+Definition pred_plus_pr@{} := pred_plus_pr'@{UQ UQ UQ UQ UQ
+  Set Set Ularge Set Set
+  Set Uhuge Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set}.
+
+Lemma lower_pred_plus_pr' : forall a b : Cut, forall q,
   (lower a + lower b) q <->
   merely (exists r s, lower a r /\ lower b s /\ q < r + s).
 Proof.
@@ -357,7 +365,9 @@ intros a b q;split.
   + abstract ring_tac.ring_with_integers (NatPair.Z nat).
 Qed.
 
-Lemma upper_pred_plus_pr : forall a b : Cut, forall q,
+Definition lower_pred_plus_pr@{} := lower_pred_plus_pr'@{UQ UQ UQ UQ UQ}.
+
+Lemma upper_pred_plus_pr' : forall a b : Cut, forall q,
   (upper a + upper b) q <->
   merely (exists r s, upper a r /\ upper b s /\ r + s < q).
 Proof.
@@ -377,7 +387,9 @@ intros a b q;split.
   + abstract ring_tac.ring_with_integers (NatPair.Z nat).
 Qed.
 
-Lemma plus_iscut : forall a b : Cut,
+Definition upper_pred_plus_pr@{} := upper_pred_plus_pr'@{UQ UQ UQ UQ UQ}.
+
+Lemma plus_iscut@{} : forall a b : Cut,
   IsCut (lower a + lower b) (upper a + upper b).
 Proof.
 intros a b;split.
@@ -481,7 +493,7 @@ intros a b;split.
     * apply tr;right;apply upper_pred_plus_pr. apply tr. exists Ua,Ub. auto.
 Qed.
 
-Global Instance CutPlus : Plus Cut
+Global Instance CutPlus@{} : Plus Cut
   := fun a b => Build_Cut _ _ (plus_iscut a b).
 Arguments CutPlus _ _ /.
 
@@ -513,7 +525,7 @@ Proof.
 exact upper_pred_plus_pr.
 Qed.
 
-Lemma iscut_negate : forall a : Cut,
+Lemma iscut_negate@{} : forall a : Cut,
   IsCut (fun q => upper a (- q)) (fun q => lower a (- q)).
 Proof.
 intros a;split.
@@ -546,11 +558,11 @@ intros a;split.
   revert E;apply (Trunc_ind _);intros [E|E];apply tr;auto.
 Qed.
 
-Global Instance CutNeg : Negate Cut
+Global Instance CutNeg@{} : Negate Cut
   := fun a => Build_Cut _ _ (iscut_negate a).
 Arguments CutNeg _ /.
 
-Lemma CutPlus_comm : Commutative CutPlus.
+Lemma CutPlus_comm@{} : Commutative CutPlus.
 Proof.
 intros a b;apply cut_eq;simpl;intros q;split;intros E;
 apply pred_plus_pr in E;apply pred_plus_pr;
@@ -559,7 +571,7 @@ apply tr;exists s,r;repeat split;trivial;
 rewrite E3;apply commutativity.
 Qed.
 
-Lemma CutPlus_assoc : Associative CutPlus.
+Lemma CutPlus_assoc@{} : Associative CutPlus.
 Proof.
 intros a b c;apply (antisymmetry le);red;simpl;intros q E;
 apply pred_plus_pr in E;revert E;apply (Trunc_ind _);
@@ -571,7 +583,7 @@ intros [l [u [E2 [E4 E5]]]];rewrite E3,E5;
 trivial;apply pred_plus_pr;apply tr;eauto.
 Qed.
 
-Lemma CutPlus_left_id : LeftIdentity CutPlus 0.
+Lemma CutPlus_left_id@{} : LeftIdentity CutPlus 0.
 Proof.
 intros a;apply (antisymmetry le);red;simpl;intros q E.
 - apply pred_plus_pr in E;revert E;apply (Trunc_ind _);intros [r [s [E1 [E2 E3]]]].
@@ -586,7 +598,7 @@ intros a;apply (antisymmetry le);red;simpl;intros q E.
   + abstract ring_tac.ring_with_integers (NatPair.Z nat).
 Qed.
 
-Lemma CutPlus_left_inverse : LeftInverse CutPlus CutNeg 0.
+Lemma CutPlus_left_inverse@{} : LeftInverse CutPlus CutNeg 0.
 Proof.
 intros a;apply (antisymmetry le);red;simpl;intros q E.
 - apply dec_sier_pr;apply pred_plus_pr in E. revert E;apply (Trunc_ind _);
@@ -602,7 +614,7 @@ intros a;apply (antisymmetry le);red;simpl;intros q E.
   change (upper a (- - u)). rewrite involutive;trivial.
 Qed.
 
-Instance CutPlus_abgroup : AbGroup Cut (Aop:=CutPlus) (Aunit:=0).
+Instance CutPlus_abgroup@{} : AbGroup Cut (Aop:=CutPlus) (Aunit:=0).
 Proof.
 repeat split;unfold sg_op,mon_unit;simpl.
 - apply _.
@@ -614,7 +626,7 @@ repeat split;unfold sg_op,mon_unit;simpl.
 - apply CutPlus_comm.
 Qed.
 
-Lemma CutPlus_rat : forall q r : Q, ' q + ' r = ' (q + r) :> Cut.
+Lemma CutPlus_rat@{} : forall q r : Q, ' q + ' r = ' (q + r) :> Cut.
 Proof.
 intros;apply (antisymmetry le).
 - intros s E. simpl. apply dec_sier_pr.
@@ -642,34 +654,34 @@ intros;apply (antisymmetry le).
     abstract ring_tac.ring_with_integers (NatPair.Z nat).
 Qed.
 
-Lemma CutNeg_rat : forall q : Q, - ' q = ' (- q) :> Cut.
+Lemma CutNeg_rat@{} : forall q : Q, - ' q = ' (- q) :> Cut.
 Proof.
 intros;apply (antisymmetry le);intros r E;
 apply dec_sier_pr in E;apply dec_sier_pr;
 apply flip_lt_negate;rewrite involutive;trivial.
 Qed.
 
-Lemma CutLt_rat_preserving : StrictlyOrderPreserving (cast Q Cut).
+Lemma CutLt_rat_preserving@{} : StrictlyOrderPreserving (cast Q Cut).
 Proof.
 intros q r E. apply tr.
 econstructor;split;apply dec_sier_pr,Q_average_between;trivial.
 Qed.
 
-Lemma CutLt_rat_reflecting : StrictlyOrderReflecting (cast Q Cut).
+Lemma CutLt_rat_reflecting@{} : StrictlyOrderReflecting (cast Q Cut).
 Proof.
 intros q r;apply (Trunc_ind _);intros [s [E1 E2]].
 apply dec_sier_pr in E1;apply dec_sier_pr in E2.
 transitivity s;trivial.
 Qed.
 
-Global Instance CutLt_rat_embedding : StrictOrderEmbedding (cast Q Cut).
+Global Instance CutLt_rat_embedding@{} : StrictOrderEmbedding (cast Q Cut).
 Proof.
 split.
 - apply CutLt_rat_preserving.
 - apply CutLt_rat_reflecting.
 Qed.
 
-Lemma Cut_archimedean : forall a b : Cut, a < b ->
+Lemma Cut_archimedean@{} : forall a b : Cut, a < b ->
   merely (exists q : Q, a < ' q < b).
 Proof.
 intros a b;apply (Trunc_ind _);intros [q [E1 E2]].
@@ -679,7 +691,7 @@ apply tr;exists q.
 split;apply tr;[exists qa|exists qb];split;trivial;apply dec_sier_pr;trivial.
 Qed.
 
-Lemma CutJoin_iscut : forall a b : Cut,
+Lemma CutJoin_iscut' : forall a b : Cut,
   IsCut (fun q => join (lower a q) (lower b q))
     (fun q => meet (upper a q) (upper b q)).
 Proof.
@@ -724,11 +736,19 @@ intros a b;split.
     * apply tr,inr,top_le_meet;split;trivial.
 Qed.
 
-Global Instance CutJoin : Join Cut
+Definition CutJoin_iscut@{} := CutJoin_iscut'@{Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set}.
+
+Global Instance CutJoin@{} : Join Cut
   := fun a b => Build_Cut _ _ (CutJoin_iscut a b).
 Arguments CutJoin _ _ /.
 
-Lemma CutMeet_iscut : forall a b : Cut,
+Lemma CutMeet_iscut' : forall a b : Cut,
   IsCut (fun q => meet (lower a q) (lower b q))
     (fun q => join (upper a q) (upper b q)).
 Proof.
@@ -773,11 +793,19 @@ intros a b;split.
   + apply tr,inr,top_le_join,tr,inl,E1.
 Qed.
 
-Global Instance CutMeet : Meet Cut
+Definition CutMeet_iscut@{} := CutMeet_iscut'@{Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set Set Set Set
+  Set}.
+
+Global Instance CutMeet@{} : Meet Cut
   := fun a b => Build_Cut _ _ (CutMeet_iscut a b).
 Arguments CutMeet _ _ /.
 
-Global Instance cut_lattice_order : LatticeOrder CutLe.
+Lemma cut_lattice_order' : LatticeOrder CutLe.
 Proof.
 split;split;try apply _.
 - intros a b q;unfold meet;simpl;intros E;apply top_le_meet in E.
@@ -792,7 +820,12 @@ split;split;try apply _.
   revert E;apply (Trunc_ind _);intros [E|E];[apply E1|apply E2];apply E.
 Qed.
 
-Lemma cut_not_lt_le_flip : forall a b : Cut, ~ a < b -> b <= a.
+Definition cut_lattice_order@{} := cut_lattice_order'@{Set Set Set Set Set
+  Set Set Set Set Set
+  Set Set}.
+Global Existing Instance cut_lattice_order.
+
+Lemma cut_not_lt_le_flip@{} : forall a b : Cut, ~ a < b -> b <= a.
 Proof.
 intros a b E q E1.
 apply lower_rounded in E1;revert E1;apply (Trunc_ind _);intros [r [E1 E2]].
@@ -801,7 +834,7 @@ intros [E3|E3];trivial.
 destruct E. apply tr;exists r. split;trivial.
 Qed.
 
-Lemma CutLt_cotrans : CoTransitive (@lt Cut CutLt).
+Lemma CutLt_cotrans@{} : CoTransitive (@lt Cut CutLt).
 Proof.
 intros a b E c;revert E;apply (Trunc_ind _). intros [q [E1 E2]].
 apply lower_rounded in E2;revert E2;apply (Trunc_ind _);intros [s [Es E2]].
@@ -812,7 +845,7 @@ apply (Trunc_ind _);intros [E3|E3].
 - apply tr;right. apply tr;exists s;split;trivial.
 Qed.
 
-Instance Cut_isapart : IsApart Cut.
+Instance Cut_isapart@{} : IsApart Cut.
 Proof.
 split.
 - apply _.
@@ -827,7 +860,7 @@ split.
   + intros E;destruct E;intros [E|E];revert E;apply (irreflexivity lt).
 Qed.
 
-Instance Cut_fullpseudoorder : FullPseudoOrder CutLe CutLt.
+Instance Cut_fullpseudoorder@{} : FullPseudoOrder CutLe CutLt.
 Proof.
 repeat (split;try (revert x; fail 1);try apply _).
 - apply lt_antisym.
@@ -839,7 +872,7 @@ repeat (split;try (revert x; fail 1);try apply _).
   + apply cut_not_lt_le_flip.
 Qed.
 
-Lemma cut_plus_le_preserving : forall a : Cut, OrderPreserving (a +).
+Lemma cut_plus_le_preserving@{} : forall a : Cut, OrderPreserving (a +).
 Proof.
 intros a b c E q E1. apply lower_plus_eq_pr in E1.
 revert E1;apply (Trunc_ind _);intros [r [s [E1 [E2 E3]]]].
@@ -847,7 +880,7 @@ apply lower_plus_eq_pr. apply tr;exists r,s;repeat split;trivial.
 apply E. trivial.
 Qed.
 
-Lemma cut_plus_le_reflecting : forall a : Cut, OrderReflecting (a +).
+Lemma cut_plus_le_reflecting@{} : forall a : Cut, OrderReflecting (a +).
 Proof.
 intros a b c E.
 apply (cut_plus_le_preserving (- a)) in E.
@@ -856,14 +889,14 @@ rewrite !CutPlus_assoc,(CutPlus_left_inverse a),!CutPlus_left_id in E.
 trivial.
 Qed.
 
-Instance cut_plus_le_embedding : forall a : Cut, OrderEmbedding (a +).
+Instance cut_plus_le_embedding@{} : forall a : Cut, OrderEmbedding (a +).
 Proof.
 intros;split.
 - apply cut_plus_le_preserving.
 - apply cut_plus_le_reflecting.
 Qed.
 
-Lemma cut_lt_plus_pos : forall (a : Cut) (e : Q), 0 < e -> a < a + ' e.
+Lemma cut_lt_plus_pos@{} : forall (a : Cut) (e : Q), 0 < e -> a < a + ' e.
 Proof.
 intros a e E. generalize (straddle_pos a e E). apply (Trunc_ind _).
 intros [l [u [E1 [E2 E3]]]]. apply tr;exists u. split;trivial.
@@ -873,7 +906,7 @@ apply tr;exists l,(u - l). repeat split;trivial.
 - ring_tac.ring_with_integers (NatPair.Z nat).
 Qed.
 
-Lemma cut_lt_exists_pos_plus_le : forall x y : Cut, x < y ->
+Lemma cut_lt_exists_pos_plus_le@{} : forall x y : Cut, x < y ->
   merely (exists e : Q, 0 < e /\ x + ' e <= y).
 Proof.
 intros a b;apply (Trunc_ind _). intros [q [E1 E2]].
@@ -893,7 +926,7 @@ apply tr;exists (r - q). split.
   apply (snd (flip_nonneg_minus _ _)). apply lt_le,(cut_orders a);trivial.
 Qed.
 
-Lemma cut_plus_lt_preserving : forall a : Cut, StrictlyOrderPreserving (a +).
+Lemma cut_plus_lt_preserving@{} : forall a : Cut, StrictlyOrderPreserving (a +).
 Proof.
 intros a b c E.
 apply cut_lt_exists_pos_plus_le in E;revert E;apply (Trunc_ind _);
@@ -904,7 +937,7 @@ apply lt_le_trans with (a + b + ' e).
   apply (order_preserving (a +)). trivial.
 Qed.
 
-Lemma cut_lt_plus_reflecting : forall a : Cut, StrictlyOrderReflecting (a +).
+Lemma cut_lt_plus_reflecting@{} : forall a : Cut, StrictlyOrderReflecting (a +).
 Proof.
 intros a b c E.
 apply (cut_plus_lt_preserving (- a)) in E.
@@ -913,7 +946,7 @@ rewrite !CutPlus_assoc,(CutPlus_left_inverse a),!CutPlus_left_id in E.
 trivial.
 Qed.
 
-Instance cut_lt_plus_embedding : forall a : Cut, StrictOrderEmbedding (a +).
+Instance cut_lt_plus_embedding@{} : forall a : Cut, StrictOrderEmbedding (a +).
 Proof.
 intros;split.
 - apply cut_plus_lt_preserving.

@@ -428,8 +428,8 @@ intros E'. unfold DecSier. destruct (decide A) as [E|?];trivial.
 destruct (E' E).
 Qed.
 
-Lemma dec_sier_pr : forall A `{Decidable A},
-  A <-> DecSier A.
+Lemma dec_sier_pr@{i} : forall (A : Type@{i}) `{Decidable A},
+  iff@{i Set i} A (DecSier A).
 Proof.
 intros A ?. split.
 - intros E. rewrite (dec_sier_top E). apply top_greatest.
