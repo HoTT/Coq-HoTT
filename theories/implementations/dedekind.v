@@ -220,6 +220,26 @@ Arguments CutZero /.
 Global Instance CutOne@{} : One Cut := ' 1.
 Arguments CutOne /.
 
+Lemma cut_lt_lower : forall a q, ' q < a <-> lower a q.
+Proof.
+intros;split.
+- apply (Trunc_ind _);intros [r [E1 E2]].
+  apply lower_le with r;trivial. apply dec_sier_pr in E1. apply lt_le;trivial.
+- intros E;apply lower_rounded in E;revert E;apply (Trunc_ind _);intros [r [E1 E2]].
+  apply tr;exists r;split;trivial.
+  apply dec_sier_pr;trivial.
+Qed.
+
+Lemma cut_lt_upper : forall a q, a < ' q <-> upper a q.
+Proof.
+intros;split.
+- apply (Trunc_ind _);intros [r [E1 E2]].
+  apply upper_le with r;trivial. apply dec_sier_pr in E2. apply lt_le;trivial.
+- intros E;apply upper_rounded in E;revert E;apply (Trunc_ind _);intros [r [E1 E2]].
+  apply tr;exists r;split;trivial.
+  apply dec_sier_pr;trivial.
+Qed.
+
 Definition straddle@{} (a : Cut) (q : Q) :=
   merely@{UQ} (exists l u : Q, lower a l /\ upper a u /\ u - l < q).
 
@@ -626,14 +646,9 @@ repeat split;unfold sg_op,mon_unit;simpl.
 - apply CutPlus_comm.
 Qed.
 
-Lemma CutPlus_rat@{} : forall q r : Q, ' q + ' r = ' (q + r) :> Cut.
+Lemma CutPlus_rat@{} : forall q r : Q, ' (q + r) = ' q + ' r :> Cut.
 Proof.
 intros;apply (antisymmetry le).
-- intros s E. simpl. apply dec_sier_pr.
-  simpl in E. apply pred_plus_pr in E.
-  revert E;apply (Trunc_ind _);intros [r' [s' [E1 [E2 E3]]]].
-  apply dec_sier_pr in E1;apply dec_sier_pr in E2.
-  rewrite E3. apply plus_lt_compat;trivial.
 - intros s E. apply dec_sier_pr in E.
   change (IsTop ((lower (' q) + lower (' r)) s)). apply pred_plus_pr.
   apply tr. exists (q - (q + r - s) / 2), (r - (q + r - s) / 2).
@@ -652,9 +667,14 @@ intros;apply (antisymmetry le).
     rewrite dec_recip_inverse;[|apply lt_ne_flip;solve_propholds].
     rewrite mult_1_r;unfold QRS;clear QRS.
     abstract ring_tac.ring_with_integers (NatPair.Z nat).
+- intros s E. simpl. apply dec_sier_pr.
+  simpl in E. apply pred_plus_pr in E.
+  revert E;apply (Trunc_ind _);intros [r' [s' [E1 [E2 E3]]]].
+  apply dec_sier_pr in E1;apply dec_sier_pr in E2.
+  rewrite E3. apply plus_lt_compat;trivial.
 Qed.
 
-Lemma CutNeg_rat@{} : forall q : Q, - ' q = ' (- q) :> Cut.
+Lemma CutNeg_rat@{} : forall q : Q, ' (- q) = - ' q :> Cut.
 Proof.
 intros;apply (antisymmetry le);intros r E;
 apply dec_sier_pr in E;apply dec_sier_pr;
@@ -825,6 +845,9 @@ Definition cut_lattice_order@{} := cut_lattice_order'@{Set Set Set Set Set
   Set Set}.
 Global Existing Instance cut_lattice_order.
 
+Local Existing Instance join_sl_order_join_sl.
+Local Existing Instance meet_sl_order_meet_sl.
+
 Lemma cut_not_lt_le_flip@{} : forall a b : Cut, ~ a < b -> b <= a.
 Proof.
 intros a b E q E1.
@@ -870,6 +893,23 @@ repeat (split;try (revert x; fail 1);try apply _).
   + intros E1;red;apply (Trunc_ind _);intros [q [E2 E3]].
     apply E1 in E3. revert E3 E2;apply cut_disjoint.
   + apply cut_not_lt_le_flip.
+Qed.
+
+Lemma CutLe_rat_preserving@{} : OrderPreserving (cast Q Cut).
+Proof.
+apply full_pseudo_order_preserving.
+Qed.
+
+Lemma CutLe_rat_reflecting@{} : OrderReflecting (cast Q Cut).
+Proof.
+apply full_pseudo_order_reflecting.
+Qed.
+
+Instance CutLe_rat_embedding@{} : OrderEmbedding (cast Q Cut).
+Proof.
+split.
+- apply CutLe_rat_preserving.
+- apply CutLe_rat_reflecting.
 Qed.
 
 Lemma cut_plus_le_preserving@{} : forall a : Cut, OrderPreserving (a +).
@@ -953,33 +993,190 @@ intros;split.
 - apply cut_lt_plus_reflecting.
 Qed.
 
-(*
-Global Instance CutClose : Closeness Cut
-  := fun e a b => (a - b < ' ' e) /\ (b - a < ' ' e).
-Arguments CutClose _ _ _ /.
-
-Global Instance QCut_nonexpanding : NonExpanding (cast Q Cut).
+Section redundant.
+(* This section is redundant one we have ring structure
+   since then we can use lemmas from orders.rings etc *)
+Lemma cut_plus_lt_compat : forall a b c d : Cut, a < c -> b < d -> a + b < c + d.
 Proof.
-intros e q r [E1 E2].
-apply flip_lt_negate in E1;rewrite involutive,<-negate_swap_r in E1.
-split;rewrite CutNeg_rat,CutPlus_rat; apply CutLt_rat_preserving; trivial.
+intros a b c d E1 E2.
+transitivity (c + b).
+- rewrite 2!(commutativity _ b). apply (strictly_order_preserving (b +)). trivial.
+- apply (strictly_order_preserving (c +));trivial.
 Qed.
 
-Lemma cut_flip_pos_minus : forall a b : Cut, 0 < b - a ↔ a < b.
-Proof.
-Abort.
+End redundant.
 
-Lemma Cut_separated_aux : forall a b : Cut, (forall e, close e a b) -> a <= b.
+Lemma CutAbs_of_nonneg_aux : forall a, 0 <= a -> join (- a) a = a.
+Proof.
+intros a E.
+apply join_r.
+apply (order_reflecting (a +)).
+rewrite right_inverse.
+transitivity (a + 0).
+- rewrite right_identity. trivial.
+- apply (order_preserving (a +));trivial.
+Qed.
+
+Lemma CutAbs_of_nonpos_aux : forall a, a <= 0 -> join (- a) a = - a.
+Proof.
+intros a E;apply join_l.
+apply (order_reflecting (a +)).
+rewrite right_inverse.
+transitivity (a + 0).
+- apply (order_preserving (a +));trivial.
+- rewrite right_identity. trivial.
+Qed.
+
+Global Instance CutAbs : Abs Cut.
+Proof.
+intros a;exists (join (- a) a).
+split.
+- apply CutAbs_of_nonneg_aux.
+- apply CutAbs_of_nonpos_aux.
+Defined.
+Arguments CutAbs _ /.
+
+Lemma CutAbs_of_nonneg : forall a : Cut, 0 <= a -> abs a = a.
+Proof.
+intros a;apply ((CutAbs a).2).
+Qed.
+
+Lemma CutAbs_of_nonpos : forall a : Cut, a <= 0 -> abs a = - a.
+Proof.
+intros a;apply ((CutAbs a).2).
+Qed.
+
+Lemma CutAbs_is_join : forall a : Cut, abs a = join (- a) a.
+Proof. reflexivity. Defined.
+
+Lemma CutAbs_nonneg : forall a : Cut, 0 <= abs a.
+Proof.
+intros a q E. apply dec_sier_pr in E.
+apply (strictly_order_preserving (cast Q Cut)) in E.
+generalize (cotransitive E a). apply (Trunc_ind _);intros [E1|E1].
+- apply cut_lt_lower in E1.
+  unfold abs;simpl. apply top_le_join. apply tr;right;trivial.
+- generalize (cotransitive E (- a)). apply (Trunc_ind _);intros [E2|E2].
+  + apply cut_lt_lower in E2.
+    unfold abs;simpl. apply top_le_join. apply tr;left;trivial.
+  + pose proof (cut_plus_lt_compat _ _ _ _ E1 E2) as E3.
+    rewrite right_inverse,left_identity in E3. destruct (irreflexivity lt _ E3).
+Qed.
+
+Lemma CutAbs_rat : forall q : Q, ' (abs q) = abs (' q) :> Cut.
+Proof.
+intros q. Symmetry.
+destruct (total le 0 q) as [E|E].
+- rewrite (Qabs_of_nonneg q);trivial.
+  apply CutAbs_of_nonneg.
+  apply (order_preserving (cast Q Cut)). trivial.
+- rewrite (Qabs_of_nonpos q);trivial. rewrite CutNeg_rat.
+  apply CutAbs_of_nonpos.
+  apply (order_preserving (cast Q Cut)). trivial.
+Qed.
+
+Lemma CutAbs_neg : forall a : Cut, abs (- a) = abs a.
+Proof.
+intros;unfold abs;simpl. rewrite involutive. apply commutativity.
+Qed.
+
+Lemma CutLt_join : forall a b c : Cut, a < c -> b < c -> join a b < c.
+Proof.
+intros a b c E1 E2.
+revert E1;apply (Trunc_ind _);intros [q [E1 E1']].
+revert E2;apply (Trunc_ind _);intros [r [E2 E2']].
+apply tr;exists (join q r);split.
+- simpl. apply top_le_meet. split;eapply upper_le;eauto.
+  + apply join_ub_l.
+  + apply join_ub_r.
+- destruct (total le q r) as [E3|E3];
+  rewrite ?(join_l _ _ E3),?(join_r _ _ E3);trivial.
+Qed.
+
+Global Instance CutClose@{} : Closeness Cut
+  := fun e a b => abs (a - b) < ' ' e.
+Arguments CutClose _ _ _ /.
+
+Global Instance QCut_nonexpanding@{} : NonExpanding (cast Q Cut).
+Proof.
+intros e q r E.
+red;simpl. rewrite <-CutNeg_rat,<-CutPlus_rat,<-CutAbs_rat.
+apply (strictly_order_preserving _). apply Qclose_alt. trivial.
+Qed.
+
+Lemma Cut_separated_aux@{} : forall a b : Cut, (forall e, close e a b) -> a <= b.
 Proof.
 intros a b E. apply cut_not_lt_le_flip.
-red;apply (Trunc_ind _);intros [q [E1 E2]].
-
-
+intros E1;apply cut_lt_exists_pos_plus_le in E1;revert E1;apply (Trunc_ind _);
+intros [e [Ee E1]].
+pose proof (E (mkQpos e Ee)) as E2. red in E2;simpl in E2.
+unfold cast at 3 in E2;simpl in E2.
+apply (irreflexivity lt (' e)). apply le_lt_trans with (abs (a - b));trivial.
+transitivity (a - b);[|apply join_ub_r].
+apply (order_reflecting (b +)).
+assert (Hrw : b + (a - b) = a);[|rewrite Hrw;trivial].
+path_via (a - b + b);[apply commutativity|].
+path_via (a + (- b + b));[Symmetry;apply associativity|].
+path_via (a + 0);[apply ap,left_inverse|].
+apply right_identity.
 Qed.
 
 Lemma CutClose_symm : forall e, Symmetric (close (A:=Cut) e).
 Proof.
-intros e a b E. hnf. apply Prod.equiv_prod_symm. apply E.
+intros e a b E. red;simpl. rewrite <-CutAbs_neg.
+rewrite groups.negate_sg_op,involutive. trivial.
+Qed.
+
+Lemma Cut_triangular : Triangular Cut.
+Proof.
+intros a b c e d E1 E2.
+red;simpl. apply CutLt_join.
+- assert (Hrw : - (a - c) = (c - b) + (b - a)).
+  { (* TODO ring *)
+    rewrite groups.negate_sg_op,involutive.
+    rewrite <-(simple_associativity (f:=plus)),(simple_associativity (- b)).
+    rewrite left_inverse. rewrite (left_identity (op:=plus) (x:=0)). trivial.
+  }
+  rewrite Hrw;clear Hrw. unfold cast at 2;simpl.
+  rewrite (plus_comm (' e) (' d)). rewrite CutPlus_rat.
+  apply cut_plus_lt_compat.
+  + apply le_lt_trans with (abs (c - b));[apply join_ub_r|].
+    rewrite <-CutAbs_neg,groups.negate_sg_op,involutive.
+    apply E2.
+  + apply le_lt_trans with (abs (b - a));[apply join_ub_r|].
+    rewrite <-CutAbs_neg,groups.negate_sg_op,involutive.
+    apply E1.
+- assert (Hrw : a - c = (a - b) + (b - c)).
+  { (* TODO ring *)
+    rewrite <-(simple_associativity (f:=plus)),(simple_associativity (- b)).
+    rewrite left_inverse. rewrite (left_identity (op:=plus) (x:=0)). trivial.
+  }
+  rewrite Hrw;clear Hrw. unfold cast at 2;simpl. rewrite CutPlus_rat.
+   apply cut_plus_lt_compat;(eapply le_lt_trans;[|(apply E1 || apply E2)]);
+   apply join_ub_r.
+Qed.
+
+Lemma Cut_rounded : Rounded Cut.
+Proof.
+intros e u v;split.
+- intros E. red in E;simpl in E.
+  apply Cut_archimedean in E. revert E;apply (Trunc_ind _);intros [q [E1 E2]].
+  assert (E3 : 0 < q).
+  { apply (strictly_order_reflecting (cast Q Cut)).
+    apply le_lt_trans with (abs (u - v));trivial.
+    apply CutAbs_nonneg. }
+  apply (strictly_order_reflecting (cast Q Cut)) in E2.
+  apply tr;exists (mkQpos _ E3),(Qpos_diff _ _ E2).
+  split.
+  + apply pos_eq. unfold cast at 2;simpl.
+    unfold cast at 2 3;simpl.
+    abstract ring_tac.ring_with_integers (NatPair.Z nat).
+  + apply E1.
+- apply (Trunc_ind _);intros [d [d' [He E]]].
+  red;simpl. transitivity (' ' d).
+  + apply E.
+  + apply (strictly_order_preserving _). rewrite He;unfold cast at 2;simpl.
+    apply pos_plus_lt_compat_r. solve_propholds.
 Qed.
 
 Global Instance Cut_premetric : PreMetric Cut.
@@ -987,12 +1184,16 @@ Proof.
 split.
 - apply _.
 - intros e a;red;simpl. rewrite right_inverse.
-  split;apply CutLt_rat_preserving;solve_propholds.
+  rewrite CutAbs_of_nonneg;[|reflexivity].
+  apply (strictly_order_preserving (cast Q Cut)). solve_propholds.
 - apply CutClose_symm.
 - intros a b E. apply (antisymmetry le);apply Cut_separated_aux;trivial.
   intros e. apply CutClose_symm;trivial.
-- 
+- exact Cut_triangular.
+- apply Cut_rounded.
 Qed.
- *)
+
+
+
 End contents.
 

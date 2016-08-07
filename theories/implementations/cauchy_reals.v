@@ -2038,5 +2038,3 @@ Abort.
 
 End real_initial.
 
-
-
