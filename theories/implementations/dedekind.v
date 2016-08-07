@@ -337,7 +337,7 @@ unfold plus at 1;simpl. intros a b q;split.
   apply dec_sier_pr;trivial.
 Qed.
 
-Lemma lower_plus_pr : forall a b : Cut, forall q,
+Lemma lower_pred_plus_pr : forall a b : Cut, forall q,
   (lower a + lower b) q <->
   merely (exists r s, lower a r /\ lower b s /\ q < r + s).
 Proof.
@@ -357,7 +357,7 @@ intros a b q;split.
   + abstract ring_tac.ring_with_integers (NatPair.Z nat).
 Qed.
 
-Lemma upper_plus_pr : forall a b : Cut, forall q,
+Lemma upper_pred_plus_pr : forall a b : Cut, forall q,
   (upper a + upper b) q <->
   merely (exists r s, upper a r /\ upper b s /\ r + s < q).
 Proof.
@@ -457,12 +457,12 @@ intros a b;split.
   generalize (straddle_pos b _ E1);apply (Trunc_ind _);
   intros [Lb [Ub [Eb1 [Eb2 Eb3]]]].
   destruct (le_or_lt r (La + Lb)) as [E2|E2].
-  + apply tr;left. apply lower_plus_pr.
+  + apply tr;left. apply lower_pred_plus_pr.
     apply tr;exists La,Lb;repeat split;trivial.
     apply lt_le_trans with r;trivial.
   + destruct (le_or_lt r (Ua + Ub)) as [E3|E3].
     * { apply tr;left.
-      apply lower_plus_pr. apply tr;exists La,Lb;repeat split;trivial.
+      apply lower_pred_plus_pr. apply tr;exists La,Lb;repeat split;trivial.
       apply flip_lt_negate. rewrite negate_plus_distr.
       apply (strictly_order_reflecting (r +)).
       transitivity ((r - q) / 2 + (Ub - Lb)).
@@ -478,12 +478,40 @@ intros a b;split.
           rewrite dec_recip_inverse,mult_1_r;trivial.
           apply lt_ne_flip;solve_propholds. }
         apply (strictly_order_preserving (_ +)). trivial. }
-    * apply tr;right;apply upper_plus_pr. apply tr. exists Ua,Ub. auto.
+    * apply tr;right;apply upper_pred_plus_pr. apply tr. exists Ua,Ub. auto.
 Qed.
 
 Global Instance CutPlus : Plus Cut
   := fun a b => Build_Cut _ _ (plus_iscut a b).
 Arguments CutPlus _ _ /.
+
+Lemma lower_plus_eq_pr : forall a b : Cut, forall q,
+  lower (a + b) q <->
+  merely (exists r s, lower a r /\ lower b s /\ q = r + s).
+Proof.
+intros a b q;apply pred_plus_pr.
+Qed.
+
+Lemma upper_plus_eq_pr : forall a b : Cut, forall q,
+  upper (a + b) q <->
+  merely (exists r s, upper a r /\ upper b s /\ q = r + s).
+Proof.
+intros a b q;apply pred_plus_pr.
+Qed.
+
+Lemma lower_plus_lt_pr : forall a b : Cut, forall q,
+  lower (a + b) q <->
+  merely (exists r s, lower a r /\ lower b s /\ q < r + s).
+Proof.
+exact lower_pred_plus_pr.
+Qed.
+
+Lemma upper_plus_lt_pr : forall a b : Cut, forall q,
+  upper (a + b) q <->
+  merely (exists r s, upper a r /\ upper b s /\ r + s < q).
+Proof.
+exact upper_pred_plus_pr.
+Qed.
 
 Lemma iscut_negate : forall a : Cut,
   IsCut (fun q => upper a (- q)) (fun q => lower a (- q)).
@@ -569,7 +597,7 @@ intros a;apply (antisymmetry le);red;simpl;intros q E.
   generalize (straddle_pos a _ E). apply (Trunc_ind _).
   intros [l [u [E1 [E2 E3]]]].
   apply flip_lt_negate in E3;rewrite involutive,<-negate_swap_r,plus_comm in E3.
-  change ((lower (- a) + lower a) q). apply lower_plus_pr.
+  change ((lower (- a) + lower a) q). apply lower_pred_plus_pr.
   apply tr;exists (- u),l;repeat split;trivial.
   change (upper a (- - u)). rewrite involutive;trivial.
 Qed.
@@ -810,13 +838,70 @@ repeat (split;try (revert x; fail 1);try apply _).
     apply E1 in E3. revert E3 E2;apply cut_disjoint.
   + apply cut_not_lt_le_flip.
 Qed.
-(* 
+
+Lemma cut_plus_le_preserving : forall a : Cut, OrderPreserving (a +).
+Proof.
+intros a b c E q E1. apply lower_plus_eq_pr in E1.
+revert E1;apply (Trunc_ind _);intros [r [s [E1 [E2 E3]]]].
+apply lower_plus_eq_pr. apply tr;exists r,s;repeat split;trivial.
+apply E. trivial.
+Qed.
+
+Lemma cut_plus_le_reflecting : forall a : Cut, OrderReflecting (a +).
+Proof.
+intros a b c E.
+apply (cut_plus_le_preserving (- a)) in E.
+unfold plus in E.
+rewrite !CutPlus_assoc,(CutPlus_left_inverse a),!CutPlus_left_id in E.
+trivial.
+Qed.
+
+Instance cut_plus_le_embedding : forall a : Cut, OrderEmbedding (a +).
+Proof.
+intros;split.
+- apply cut_plus_le_preserving.
+- apply cut_plus_le_reflecting.
+Qed.
+
+Lemma cut_lt_plus_pos : forall (a : Cut) (e : Q), 0 < e -> a < a + ' e.
+Proof.
+intros a e E. generalize (straddle_pos a e E). apply (Trunc_ind _).
+intros [l [u [E1 [E2 E3]]]]. apply tr;exists u. split;trivial.
+apply lower_plus_eq_pr.
+apply tr;exists l,(u - l). repeat split;trivial.
+- apply dec_sier_pr. trivial.
+- ring_tac.ring_with_integers (NatPair.Z nat).
+Qed.
+
+Lemma cut_lt_exists_pos_plus_le : forall x y : Cut, x < y ->
+  merely (exists e : Q, 0 < e /\ x + ' e <= y).
+Proof.
+intros a b;apply (Trunc_ind _). intros [q [E1 E2]].
+apply lower_rounded in E2. revert E2;apply (Trunc_ind _);intros [r [E2 E3]].
+apply tr;exists (r - q). split.
+- apply flip_pos_minus in E2. trivial.
+- intros s E4. apply lower_plus_eq_pr in E4.
+  revert E4;apply (Trunc_ind _);intros [q' [r' [E4 [E5 E6]]]].
+  apply dec_sier_pr in E5. apply lower_le with r;trivial.
+  rewrite E6.
+  transitivity (q' + (r - q)).
+  { apply lt_le,(strictly_order_preserving (q' +)). trivial. }
+  assert (Hrw : q' + (r - q) = r - (q - q'))
+  by abstract ring_tac.ring_with_integers (NatPair.Z nat);
+  rewrite Hrw;clear Hrw.
+  apply flip_le_minus_l. apply nonneg_plus_le_compat_r.
+  apply (snd (flip_nonneg_minus _ _)). apply lt_le,(cut_orders a);trivial.
+Qed.
+
 Lemma cut_plus_lt_preserving : forall a : Cut, StrictlyOrderPreserving (a +).
 Proof.
-intros a b c;apply (Trunc_ind _);intros [q [E1 E2]].
-generalize (lower_inhab a). apply (Trunc_ind _);intros [l El].
-generalize (upper_inhab a). apply (Trunc_ind _);intros [u Eu].
-pose proof (cut_orders _ _ _ El Eu) as E3.
+intros a b c E.
+apply cut_lt_exists_pos_plus_le in E;revert E;apply (Trunc_ind _);
+intros [e [Ee E]].
+apply lt_le_trans with (a + b + ' e).
+- apply cut_lt_plus_pos. trivial.
+- rewrite <-(simple_associativity (f:=@plus Cut _)).
+  apply (order_preserving (a +)). trivial.
 Qed.
 
 Lemma cut_lt_plus_reflecting : forall a : Cut, StrictlyOrderReflecting (a +).
@@ -835,6 +920,7 @@ intros;split.
 - apply cut_lt_plus_reflecting.
 Qed.
 
+(*
 Global Instance CutClose : Closeness Cut
   := fun e a b => (a - b < ' ' e) /\ (b - a < ' ' e).
 Arguments CutClose _ _ _ /.
