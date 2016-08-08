@@ -536,26 +536,25 @@ Qed.
 
 Section interleave.
 
-Definition disjoint (a b : Sier) := forall c, c <= a -> c <= b -> c <= bottom.
+Definition disjoint (a b : Sier) := a -> b -> Empty.
 
 Lemma disjoint_top_l : forall b, disjoint top b -> b = bottom.
 Proof.
-intros b E. apply bot_eq. apply E.
-- apply top_greatest.
-- reflexivity.
+intros b E. apply bot_eq. apply imply_le.
+intros Eb. apply Empty_ind,E;trivial. apply top_greatest.
 Qed.
 
 Lemma disjoint_sup_l : forall s b, disjoint (sup _ s) b ->
   forall n, disjoint (s n) b.
 Proof.
-intros s b E n c E1 E2;apply E;trivial.
-transitivity (s n);trivial. apply sup_is_ub.
+intros s b E n E1 E2.
+apply E;trivial. apply top_le_sup. apply tr;eauto.
 Qed.
 
 Lemma disjoint_le_l : forall a b, disjoint a b -> forall a', a' <= a ->
   disjoint a' b.
 Proof.
-intros a b E a' Ea c E1 E2;apply E;trivial. transitivity a';trivial.
+intros a b E a' Ea E1 E2;apply E;trivial. red; transitivity a';trivial.
 Qed.
 
 Definition interleave_aux_seq (s : IncreasingSequence Sier)

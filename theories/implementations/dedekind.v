@@ -33,7 +33,7 @@ Class IsCut@{} : Type@{UQ} :=
     (merely (exists r, q < r /\ lower r))
   ; iscut_upper_rounded : forall r, iff@{Set UQ UQ} (upper r)
     (merely (exists q, q < r /\ upper q))
-  ; iscut_cut_disjoint : forall q, lower q -> upper q -> Empty
+  ; iscut_cut_disjoint : forall q, disjoint (lower q) (upper q)
   ; iscut_cut_located : forall q r, q < r -> hor (lower q) (upper r) }.
 End iscut_def.
 
@@ -1506,9 +1506,7 @@ Definition compare_cut_rat : Cut -> Q -> partial bool.
 Proof.
 intros a q.
 apply (interleave (lower a q) (upper a q)).
-hnf. intros c E1 E2. transitivity (meet (lower a q) (upper a q)).
-- apply meet_le;trivial.
-- apply lower_upper_meet_bot.
+hnf. apply cut_disjoint.
 Defined.
 
 Lemma compare_cut_rat_pr : forall a q b, compare_cut_rat a q = eta _ b <->
