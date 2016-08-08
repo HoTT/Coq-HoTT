@@ -366,6 +366,14 @@ destruct (total_abs_either q) as [[E1 E2]|[E1 E2]];rewrite E2.
   apply flip_nonpos_negate;trivial.
 Qed.
 
+Lemma Qlt_join : forall a b c : Q, a < c -> b < c ->
+  join a b < c.
+Proof.
+intros a b c E1 E2.
+destruct (total le a b) as [E3|E3];rewrite ?(join_r _ _ E3),?(join_l _ _ E3);
+trivial.
+Qed.
+
 Lemma Q_average_between@{} : forall q r : Q, q < r -> q < (q + r) / 2 < r.
 Proof.
 intros q r E.
@@ -390,6 +398,30 @@ split.
   }
   apply pos_mult_compat;[|apply _].
   red. apply (snd (flip_pos_minus _ _)). trivial.
+Qed.
+
+Lemma pos_gt_both : forall a b : Q, forall e, a < ' e -> b < ' e ->
+  exists d d', a < ' d /\ b < ' d /\ e = d + d'.
+Proof.
+assert (Haux : forall a b : Q, a <= b -> forall e, a < ' e -> b < ' e ->
+  exists d d', a < ' d /\ b < ' d /\ e = d + d').
+{ intros a b E e E1 E2.
+  pose proof (Q_average_between _ _ (Qlt_join _ 0 _ E2 prop_holds)) as [E3 E4].
+  exists (mkQpos _ (le_lt_trans _ _ _ (join_ub_r _ _) E3)).
+  unfold cast at 1 4;simpl.
+  exists (Qpos_diff _ _ E4).
+  repeat split.
+  - apply le_lt_trans with b;trivial.
+    apply le_lt_trans with (join b 0);trivial.
+    apply join_ub_l.
+  - apply le_lt_trans with (join b 0);trivial. apply join_ub_l.
+  - apply pos_eq. unfold cast at 2;simpl. unfold cast at 2;simpl.
+    unfold cast at 3;simpl.
+    abstract ring_tac.ring_with_integers (NatPair.Z nat).
+}
+intros a b e E1 E2. destruct (total le a b) as [E|E];auto.
+destruct (Haux _ _ E e) as [d [d' [E3 [E4 E5]]]];trivial.
+eauto.
 Qed.
 
 Lemma two_fourth_is_one_half@{} : 2/4 =  1/2 :> Q+.

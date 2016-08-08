@@ -1967,11 +1967,6 @@ intros [q [E1 E2]].
   apply (irreflexivity lt (x - y)). transitivity (rationals_to_field Q F q);trivial.
 Qed.
 
-Lemma pos_gt_both : forall a b : Q, forall e, a < ' e -> b < ' e ->
-  exists d d', a < ' d /\ b < ' d /\ e = d + d'.
-Proof.
-Admitted.
-
 Instance F_premetric : PreMetric F.
 Proof.
 split.
