@@ -423,14 +423,50 @@ Proof.
 intros f n;apply sup_le_l. reflexivity.
 Qed.
 
+Lemma eta_is_greatest : forall x a, eta A a <= x -> x = eta A a.
+Proof.
+apply (partial_ind0 (fun x => forall a, _ -> _)).
+- intros ?? E;apply ap. Symmetry. apply eta_le_eta. trivial.
+- intros a E. apply le_to_sim in E. destruct E.
+- intros s IH a E.
+  apply (antisymmetry le).
+  + apply sup_le_r. intros n.
+    apply eta_le_sup in E. revert E;apply (Trunc_ind _);intros [k E].
+    destruct (total le n k) as [E1|E1].
+    apply IH in E.
+    * transitivity (s k).
+      { apply (order_preserving _). trivial. }
+      { rewrite E;reflexivity. }
+    * rewrite (IH n a);[reflexivity|].
+      transitivity (s k);trivial.
+      apply (order_preserving _). trivial.
+  + trivial.
+Qed.
+
+Lemma eta_eq_sup_iff : forall a s, sup A s = eta A a <->
+  merely (exists n, s n = eta A a).
+Proof.
+intros a s;split.
+- intros E.
+  assert (E' : eta A a <= sup A s)
+  by (rewrite E;reflexivity).
+  generalize (eta_le_sup a s E').
+  apply (Trunc_ind _);intros [n En].
+  apply tr;exists n. apply (antisymmetry le).
+  + apply sup_le_l. rewrite E;reflexivity.
+  + trivial.
+- apply (Trunc_ind _);intros [n En].
+  apply eta_is_greatest. rewrite <-En. apply sup_is_ub.
+Qed.
+
 End basics.
 
 Section monad.
 
-Global Instance partial_ret : Return partial := eta.
+Global Instance partial_ret@{i} : Return partial@{i} := eta.
 
-Definition partial_bind_recursors {A B} : (A -> partial B) ->
-  Recursors A (partial B) le.
+Definition partial_bind_recursors@{i} {A B : Type@{i} } : (A -> partial@{i} B) ->
+  Recursors A (partial@{i} B) le.
 Proof.
 intros f.
 simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
