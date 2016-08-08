@@ -1495,5 +1495,47 @@ generalize (cotransitive E6 (lim x)). apply (Trunc_ind _);intros [E7|E7].
     apply pos_plus_lt_compat_r. solve_propholds.
 Qed.
 
+Lemma lower_upper_meet_bot : forall a q, meet (lower a q) (upper a q) <= bottom.
+Proof.
+intros a q. apply imply_le.
+intros E;apply top_le_meet in E;destruct E as [E1 E2].
+destruct (cut_disjoint _ _ E1 E2).
+Qed.
+
+Definition compare_cut_rat : Cut -> Q -> partial bool.
+Proof.
+intros a q.
+apply (interleave (lower a q) (upper a q)).
+hnf. intros c E1 E2. transitivity (meet (lower a q) (upper a q)).
+- apply meet_le;trivial.
+- apply lower_upper_meet_bot.
+Defined.
+
+Lemma compare_cut_rat_pr : forall a q b, compare_cut_rat a q = eta _ b <->
+  match b with
+  | true => ' q < a
+  | false => a < ' q
+  end.
+Proof.
+intros a q b.
+split.
+- intros E. apply interleave_pr in E.
+  destruct b.
+  + apply cut_lt_lower;trivial.
+  + apply cut_lt_upper;trivial.
+- intros E.
+  unfold compare_cut_rat.
+  destruct b;[apply cut_lt_lower in E|apply cut_lt_upper in E].
+  + apply (interleave_top_l _ _ _ E).
+  + apply (interleave_top_r _ _ _ E).
+Qed.
+
+Lemma compare_cut_rat_self : forall q, compare_cut_rat (' q) q = bot _.
+Proof.
+intros. unfold compare_cut_rat.
+apply interleave_bot;apply imply_le;intros E;apply dec_sier_pr in E;
+destruct (irreflexivity lt _ E).
+Qed.
+
 End contents.
 

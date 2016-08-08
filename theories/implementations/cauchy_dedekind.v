@@ -166,3 +166,29 @@ Lemma cauchy_isPos_pr : forall x, cauchy_isPos x <-> 0 < x.
 Proof.
 intros. apply cut_of_cauchy_lower_pr.
 Qed.
+
+Definition compare_cauchy_rat : real -> Q -> partial bool
+  := fun x q => compare_cut_rat (cut_of_cauchy x) q.
+
+Lemma compare_cauchy_rat_pr : forall a q b, compare_cauchy_rat a q = eta _ b <->
+  match b with
+  | true => rat q < a
+  | false => a < rat q
+  end.
+Proof.
+intros a q b.
+split.
+- intros E;apply compare_cut_rat_pr in E.
+  destruct b;apply (strictly_order_reflecting cut_of_cauchy);exact E.
+- intros E;apply compare_cut_rat_pr.
+  change (' q) with (cut_of_cauchy (rat q)).
+  destruct b;apply (strictly_order_preserving cut_of_cauchy);exact E.
+Qed.
+
+Lemma compare_cauchy_rat_self : forall q, compare_cauchy_rat (rat q) q = bot _.
+Proof.
+intros. apply compare_cut_rat_self.
+Qed.
+
+End cut_of_cauchy.
+

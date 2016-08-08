@@ -2,6 +2,7 @@ Require Import
   HoTT.Types.Universe
   HoTT.Basics.Decidable
   HoTT.HSet
+  HoTT.Basics.PathGroupoids
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.interfaces.orders
   HoTTClasses.orders.lattices
@@ -532,5 +533,198 @@ apply (partial_ind0 _ (fun a => forall b, _ -> _)).
   apply IH. intros En. apply E.
   apply top_le_sup. apply tr;exists n;trivial.
 Qed.
+
+Section interleave.
+
+Definition incompatible (a b : Sier) := forall c, c <= a -> c <= b -> c <= bottom.
+
+Lemma incompatible_top_l : forall b, incompatible top b -> b = bottom.
+Proof.
+intros b E. apply bot_eq. apply E.
+- apply top_greatest.
+- reflexivity.
+Qed.
+
+Lemma incompatible_sup_l : forall s b, incompatible (sup _ s) b ->
+  forall n, incompatible (s n) b.
+Proof.
+intros s b E n c E1 E2;apply E;trivial.
+transitivity (s n);trivial. apply sup_is_ub.
+Qed.
+
+Lemma incompatible_le_l : forall a b, incompatible a b -> forall a', a' <= a ->
+  incompatible a' b.
+Proof.
+intros a b E a' Ea c E1 E2;apply E;trivial. transitivity a';trivial.
+Qed.
+
+Definition interleave_aux_seq (s : IncreasingSequence Sier)
+  (Is : ∀ (n : nat) (b : Sier),
+       incompatible (s n) b -> partial bool)
+  (Isle : ∀ (n : nat) (b : Sier) (Ea : incompatible (s n) b)
+         (Ea' : incompatible (s (S n)) b), (Is n b Ea) ≤ (Is (S n) b Ea'))
+  (b : Sier)
+  (E : incompatible (sup Unit s) b)
+  : IncreasingSequence (partial bool).
+Proof.
+simple refine (Build_IncreasingSequence _ _).
+- intros n. apply (Is n b).
+  apply incompatible_sup_l;trivial.
+- simpl. auto.
+Defined.
+
+Definition interleave_inductors : Inductors Unit
+  (fun a => forall b, incompatible a b -> sigT (fun s : partial bool =>
+    partial_map (const true) a <= s /\ partial_map (const false) b <= s))
+  (fun a a' f g E => forall b Ea Ea', (f b Ea).1 <= (g b Ea').1).
+Proof.
+simple refine (Build_Inductors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
+- intros [] b E. exists (eta _ true).
+  split.
+  + reflexivity.
+  + rewrite (incompatible_top_l _ E). apply bot_least.
+- intros b _. exists (partial_map (const false) b).
+  split.
+  + apply bot_least.
+  + reflexivity.
+- intros s Is Isle b E.
+  simple refine (existT _ _ _);simpl;
+  [apply sup;apply (interleave_aux_seq s (fun n b E => (Is n b E).1) Isle b E)|].
+  simpl. split.
+  + unfold partial_map. rewrite partial_bind_sup_l. apply sup_le_r.
+    intros n;simpl.
+    change (partial_bind (s n) (eta Bool ∘ const true)) with
+      (partial_map (const true) (s n)).
+    etransitivity;[|apply (sup_is_ub _ _ n)].
+    simpl. auto.
+  + etransitivity;[|apply (sup_is_ub _ _ 0)].
+    simpl;auto.
+- intros a f b Ea Ea'.
+  assert (Hrw : Ea = Ea') by apply path_ishprop.
+  apply (ap (f b)) in Hrw. apply (ap pr1) in Hrw. rewrite Hrw;reflexivity.
+- simpl. intros x f b _ E.
+  auto.
+- simpl;intros s x Ex fs fs_increasing fb Eb n a Ea Ea'.
+  pose proof (fun b Ea Ea' => sup_le_l _ _ _ (Eb b Ea Ea')) as E.
+  simpl in E.
+  etransitivity;[|simple refine (E _ _ _ n);eapply incompatible_le_l;eauto].
+  set (Esup := incompatible_sup_l _ _ _ _).
+  assert (Hrw : Ea = Esup) by apply path_ishprop.
+  apply (ap (fs n a)),(ap pr1) in Hrw. rewrite <-Hrw;reflexivity.
+- simpl. intros s x Ex fs fs_incr fx IHs b ??.
+  apply sup_le_r. intros n;simpl.
+  auto.
+- simpl. intros x y fx fy Ex Ey.
+  destruct (antisymmetry le _ _ Ex Ey).
+  intros Efx Efy.
+  assert (Hrw : partial_antisymm Unit x x Ex Ey = idpath) by apply path_ishprop.
+  rewrite Hrw. simpl.
+  clear Hrw Ex Ey.
+  apply path_forall;intros b;apply path_forall;intros Eb;
+  apply Sigma.path_sigma_hprop.
+  apply (antisymmetry le);trivial.
+Defined.
+
+Definition interleave : forall a b : Sier, incompatible a b -> partial bool
+  := fun a b E => (partial_rect _ _ _ interleave_inductors a b E).1.
+
+Definition interleave_top_l_rw : forall b E, interleave top b E = eta _ true
+  := fun _ _ => idpath.
+
+Definition interleave_le : forall a a', a <= a' -> forall b E E',
+  interleave a b E <= interleave a' b E'
+  := partialLe_rect _ _ _ interleave_inductors.
+
+Definition interleave_sup_l : forall s b E, interleave (sup _ s) b E =
+  sup _ (Build_IncreasingSequence
+    (fun n => interleave (s n) b (incompatible_sup_l _ _ E _ ))
+    (fun n => interleave_le _ _ (seq_increasing _ _) _ _ _))
+  := fun _ _ _ => idpath.
+
+Lemma interleave_top_r_rw : forall a E, interleave a top E = eta _ false.
+Proof.
+apply (partial_ind0 _ (fun a => forall E, _)).
+- intros [] E. apply Empty_ind. apply incompatible_top_l in E.
+  apply (not_eta_le_bot@{Set} Unit tt).
+  unfold top,SierTop in E.
+  rewrite E;reflexivity.
+- intros E. reflexivity.
+- intros s Es E.
+  rewrite interleave_sup_l.
+  apply (snd (eta_eq_sup_iff bool _ (Build_IncreasingSequence _ _))).
+  apply tr;exists 0. simpl.
+  apply Es.
+Qed.
+
+Lemma interleave_top_l : forall (a b : Sier) E, a ->
+  interleave a b E = eta _ true.
+Proof.
+intros a b E Ea.
+apply top_le_eq in Ea.
+Symmetry in Ea. destruct Ea. reflexivity.
+Qed.
+
+Lemma interleave_top_r : forall(a b : Sier) E, b ->
+  interleave a b E = eta _ false.
+Proof.
+intros a b E Eb.
+apply top_le_eq in Eb.
+Symmetry in Eb. destruct Eb. apply interleave_top_r_rw.
+Qed.
+
+Definition interleave_bot_rw : forall E, interleave bottom bottom E = bot _
+  := fun _ => idpath.
+
+Lemma interleave_bot : forall a b E, a <= bottom -> b <= bottom ->
+  interleave a b E = bot _.
+Proof.
+intros a b E E1 E2.
+apply bot_eq in E1;apply bot_eq in E2.
+Symmetry in E1;Symmetry in E2. destruct E1,E2.
+reflexivity.
+Qed.
+
+Lemma interleave_le_const_l : forall a b E,
+  partial_map (const true) a <= interleave a b E.
+Proof.
+intros. apply ((partial_rect _ _ _ interleave_inductors a b E).2).
+Qed.
+
+Lemma interleave_le_const_r : forall a b E,
+  partial_map (const false) b <= interleave a b E.
+Proof.
+intros. apply ((partial_rect _ _ _ interleave_inductors a b E).2).
+Qed.
+
+Lemma interleave_pr : forall a b E v, interleave a b E = eta _ v ->
+  match v with true => a | false => b end.
+Proof.
+apply (partial_ind0 _ (fun a => forall b E v, _ -> _)).
+- intros [] b E v Ev.
+  apply (injective (eta _)) in Ev.
+  rewrite <-Ev;apply top_greatest.
+- intros b E v Ev.
+  change (partial_map (const false) b = eta _ v) in Ev.
+  clear E;revert b v Ev. apply (partial_ind0 _ (fun b => forall v, _ -> _)).
+  + intros [] v E. apply (injective (eta _)) in E.
+    rewrite <-E;apply top_greatest.
+  + intros v E. change (bot _ = eta _ v) in E.
+    apply Empty_ind,(not_eta_le_bot bool v). rewrite E;reflexivity.
+  + intros s IHs v E.
+    unfold partial_map in E;rewrite partial_bind_sup_l in E.
+    apply (eta_eq_sup_iff _) in E.
+    revert E;apply (Trunc_ind _);intros [n E].
+    simpl in E. apply IHs in E.
+    destruct v;trivial.
+    apply top_le_sup. apply tr;exists n;trivial.
+- intros s IHs b E v Ev.
+  rewrite interleave_sup_l in Ev.
+  apply (eta_eq_sup_iff _) in Ev. simpl in Ev.
+  revert Ev;apply (Trunc_ind _);intros [n Ev].
+  apply IHs in Ev. destruct v;trivial.
+  apply top_le_sup. apply tr;exists n;trivial.
+Qed.
+
+End interleave.
 
 End contents.

@@ -157,6 +157,11 @@ Definition partialLe_rect@{} : forall (I : Inductors) (x y : partial) (E : x <= 
 
   for partialLe_rect x y E I.
 
+Definition partial_rect_sup (I : Inductors) s : partial_rect I (sup s) =
+  ind_sup I s (fun n => partial_rect I (s n))
+    (fun n => partialLe_rect I _ _ _)
+  := idpath.
+
 End Induction.
 
 End VarSec.
@@ -423,7 +428,7 @@ Proof.
 intros f n;apply sup_le_l. reflexivity.
 Qed.
 
-Lemma eta_is_greatest : forall x a, eta A a <= x -> x = eta A a.
+Lemma eta_is_greatest : forall x a, eta@{UA} A a <= x -> x = eta A a.
 Proof.
 apply (partial_ind0 (fun x => forall a, _ -> _)).
 - intros ?? E;apply ap. Symmetry. apply eta_le_eta. trivial.
@@ -443,7 +448,7 @@ apply (partial_ind0 (fun x => forall a, _ -> _)).
   + trivial.
 Qed.
 
-Lemma eta_eq_sup_iff : forall a s, sup A s = eta A a <->
+Lemma eta_eq_sup_iff : forall a s, sup@{UA} A s = eta A a <->
   merely (exists n, s n = eta A a).
 Proof.
 intros a s;split.
@@ -465,8 +470,9 @@ Section monad.
 
 Global Instance partial_ret@{i} : Return partial@{i} := eta.
 
-Definition partial_bind_recursors@{i} {A B : Type@{i} } : (A -> partial@{i} B) ->
-  Recursors A (partial@{i} B) le.
+Definition partial_bind_recursors@{i j} {A:Type@{i} } {B : Type@{j} }
+  : (A -> partial@{j} B) ->
+  Recursors A (partial@{j} B) le.
 Proof.
 intros f.
 simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
@@ -479,25 +485,28 @@ simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
 - simpl. apply sup'_le_r.
 Defined.
 
-Global Instance partial_bind : Bind partial
-  := fun A B x f => partial_rec _ _ _ (partial_bind_recursors f) x.
+Definition partial_bind {A B : Type}
+  := fun x (f : A -> partial B) =>
+    partial_rec _ _ _ (partial_bind_recursors f) x.
 
-Definition partial_bind_le {A B} : forall (f : A -> partial B) a b, a <= b ->
-  bind a f <= bind b f
+Definition partial_bind_le {A B:Type} : forall (f : A -> partial B) a b, a <= b ->
+  partial_bind a f <= partial_bind b f
   := fun f a b E => partialLe_rec _ _ _ (partial_bind_recursors f) a b E.
 
-Definition partial_bind_eta_l {A B} : forall a f, bind (B:=B) (eta A a) f = f a
+Definition partial_bind_eta_l {A B:Type} : forall a f,
+  partial_bind (B:=B) (eta A a) f = f a
   := fun _ _ => idpath.
 
-Definition partial_bind_bot_l {A B} : forall f, bind (M:=partial) (bot A) f = bot B
+Definition partial_bind_bot_l {A B:Type} : forall f,
+  partial_bind (bot A) f = bot B
   := fun _ => idpath.
 
-Definition partial_bind_seq {A B} (f : A -> partial B) s :=
-  Build_IncreasingSequence (fun n => bind (seq s n) f)
+Definition partial_bind_seq {A B:Type} (f : A -> partial B) s :=
+  Build_IncreasingSequence (fun n => partial_bind (seq s n) f)
     (fun n => partial_bind_le f _ _ (seq_increasing s n)).
 
-Definition partial_bind_sup_l {A B} : forall f s,
-  bind (sup A s) f =
+Definition partial_bind_sup_l {A B:Type} : forall f s,
+  partial_bind (sup A s) f =
   sup B (partial_bind_seq f s).
 Proof.
 intros f s. change s with (Build_IncreasingSequence (seq s) (seq_increasing s)).
@@ -526,37 +535,33 @@ apply (antisymmetry le).
   + apply sup_is_ub.
 Qed.
 
-Definition partial_bind_eta_r {A} : forall x, bind x (eta A) = x.
+Definition partial_bind_eta_r {A:Type} : forall x, partial_bind x (eta A) = x.
 Proof.
 apply (partial_ind0 _ _);try reflexivity.
 intros f IH.
-change (bind (sup A f) (eta A)) with
+change (partial_bind (sup A f) (eta A)) with
   (sup A (Build_IncreasingSequence
     (λ n : nat, bind (f n) (eta A))
     (λ n : nat, partial_bind_le (eta A) (f n) (f (S n)) (seq_increasing f n)))).
 apply sup_extensionality. trivial.
 Defined.
 
-Lemma partial_bind_assoc {A B C} : forall x f g,
-  bind (B:=C) (bind (A:=A) (B:=B) x f) g =
-  bind x (fun a => bind (f a) g).
+Lemma partial_bind_assoc {A B C:Type} : forall x f g,
+  partial_bind (B:=C) (partial_bind (A:=A) (B:=B) x f) g =
+  partial_bind x (fun a => partial_bind (f a) g).
 Proof.
 intros x f g;revert x;apply (partial_ind0 _ _).
 - reflexivity.
 - reflexivity.
 - intros s IH.
   change (sup C (partial_bind_seq g (partial_bind_seq f s)) =
-    sup C (partial_bind_seq (λ a : A, bind (f a) g) s)).
+    sup C (partial_bind_seq (λ a : A, partial_bind (f a) g) s)).
   apply sup_extensionality. apply IH.
 Defined.
 
-Global Instance partial_monad : Monad partial.
-Proof.
-split.
-- exact @partial_bind_eta_l.
-- exact @partial_bind_eta_r.
-- exact @partial_bind_assoc.
-Qed.
+Definition partial_map@{i j} {A:Type@{i} } {B:Type@{j} }
+  (f : A -> B) : partial@{i} A -> partial@{j} B
+  := fun x => partial_bind x (eta _ ∘ f).
 
 End monad.
 

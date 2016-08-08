@@ -71,7 +71,8 @@ apply Trunc_ind.
 - exact E.
 Qed.
 
-Definition bool := (HoTT.Types.Bool.Bool@{Ularge}).
+Monomorphic Universe Ubool.
+Definition bool := (HoTT.Types.Bool.Bool@{Ubool}).
 
 (* Unicode *)
 
