@@ -140,7 +140,7 @@ Definition SierMeet_sup : forall s (y : Sier),
   meet (sup _ s) y = sup _ (SierMeet_seq_l s y)
   := fun _ _ => idpath.
 
-Instance SierMeet_is_meet : MeetSemiLatticeOrder SierLe.
+Lemma SierMeet_is_meet@{} : MeetSemiLatticeOrder SierLe.
 Proof.
 split.
 - apply _.
@@ -162,7 +162,8 @@ split.
   + intros y z E1 E2. apply E1.
   + intros s IH y z;revert z y.
     apply (partial_ind0 _ (fun z => forall y, _ -> _ -> _)).
-    * intros [] y E1 E2. apply (eta_le_sup _) in E1.
+    * intros [] y E1 E2. pose proof @trunc_contr@{Set Set} as trunc_contr.
+      apply (eta_le_sup _) in E1.
       revert E1;apply (Trunc_ind _);intros [n E1].
       transitivity (meet (s n) y);auto.
       exact (sup_is_ub _ (SierMeet_seq_l _ _) _).
@@ -171,6 +172,7 @@ split.
       apply sup_le_r. intros n.
       apply IH';(transitivity (sup _ s');[apply sup_is_ub|]);trivial.
 Qed.
+Existing Instance SierMeet_is_meet.
 
 Global Instance Sier_lattice_order : LatticeOrder SierLe := {}.
 Local Existing Instance join_sl_order_join_sl.
@@ -205,7 +207,7 @@ intros. transitivity (joined_seq f n).
 - unfold CountableSup. apply sup_is_ub.
 Qed.
 
-Lemma joined_seq_least_ub_n : forall f n x, (forall m, m <= n -> f m <= x) ->
+Lemma joined_seq_least_ub_n' : forall f n x, (forall m, m <= n -> f m <= x) ->
   joined_seq f n <= x.
 Proof.
 intros f;induction n as [|n IHn];intros x E.
@@ -216,12 +218,14 @@ intros f;induction n as [|n IHn];intros x E.
   + apply E. reflexivity.
 Qed.
 
+Definition joined_seq_least_ub_n@{} := joined_seq_least_ub_n'@{Set Ularge Set}.
+
 Lemma countable_sup_least_ub : forall f x, (forall n, f n <= x) ->
   CountableSup f <= x.
 Proof.
 intros f x E. apply sup_le_r.
 intros n. apply joined_seq_least_ub_n. intros m _;apply E.
-Defined.
+Qed.
 
 Lemma top_le_meet : forall a b : Sier, meet a b <-> a /\ b.
 Proof.
@@ -232,7 +236,7 @@ unfold IsTop. intros a b;split.
 - intros [E1 E2]. apply meet_le;trivial.
 Qed.
 
-Lemma top_le_join : forall a b : Sier, join a b <-> hor a b.
+Lemma top_le_join@{} : forall a b : Sier, join a b <-> hor a b.
 Proof.
 unfold IsTop. intros a b;split.
 - revert a b;apply (partial_ind0 _ (fun a => forall b, _ -> _)).
@@ -240,6 +244,7 @@ unfold IsTop. intros a b;split.
   + intros b E;apply tr;right;apply E.
   + intros s IH b E.
     change (top <= sup _ (SierJoin_seq_l s b)) in E.
+    pose proof @trunc_contr@{Set Set} as trunc_contr.
     apply (eta_le_sup _) in E. revert E. apply (Trunc_ind _).
     intros [n E]. simpl in E.
     apply IH in E. revert E;apply (Trunc_ind _).
@@ -250,7 +255,7 @@ unfold IsTop. intros a b;split.
   + transitivity b;auto. apply join_ub_r.
 Qed.
 
-Lemma top_le_joined_seq_n : forall f n, joined_seq f n <->
+Lemma top_le_joined_seq_n' : forall f n, joined_seq f n <->
   merely (exists m, m <= n /\ f m).
 Proof.
 unfold IsTop. intros f;induction n as [|n IHn];simpl;
@@ -267,6 +272,8 @@ unfold IsTop. intros f;induction n as [|n IHn];simpl;
   + rewrite <-Em. transitivity (f m);auto. apply join_ub_r.
 Qed.
 
+Definition top_le_joined_seq_n@{} := top_le_joined_seq_n'@{Set Ularge Set Set}.
+
 Lemma top_le_sup@{} : forall (s : IncreasingSequence Sier),
   IsTop (sup Unit s) <-> merely@{Set} (exists n, s n).
 Proof.
@@ -279,11 +286,12 @@ intros s;split.
   apply sup_is_ub.
 Qed.
 
-Lemma top_le_countable_sup : forall f, CountableSup f <->
+Lemma top_le_countable_sup@{} : forall f, CountableSup f <->
   merely (exists n, f n).
 Proof.
 unfold IsTop. intros f;split.
-- intros E. apply (eta_le_sup _) in E.
+- intros E. pose proof @trunc_contr@{Set Set} as trunc_contr;
+  apply (eta_le_sup _) in E.
   revert E;apply (Trunc_ind _);intros [n E].
   apply top_le_joined_seq_n in E. revert E;apply (Trunc_ind _);intros [m [_ E]].
   apply tr;exists m;trivial.
@@ -359,14 +367,15 @@ apply ap,path_forall. intros n. apply commutativity.
 Qed.
 
 Section enumerable_sup.
-Variable A : Type.
+Universe UA.
+Variable A : Type@{UA}.
 
 Context `{Enumerable A}.
 
-Definition EnumerableSup (f : A -> Sier)  : Sier
+Definition EnumerableSup@{} (f : A -> Sier)  : Sier
   := CountableSup (f ∘ (enumerator A)).
 
-Lemma enumerable_sup_ub : forall f x, f x <= EnumerableSup f.
+Lemma enumerable_sup_ub' : forall (f:A->Sier) (x:A), f x <= EnumerableSup f.
 Proof.
 intros f x.
 generalize (center _ (enumerator_issurj _ x)). apply (Trunc_ind _).
@@ -374,15 +383,17 @@ intros [a []]. clear x. unfold EnumerableSup.
 apply (countable_sup_ub (compose _ _) a).
 Qed.
 
-Lemma enumerable_sup_least_ub : forall f s, (forall x, f x <= s) ->
+Definition enumerable_sup_ub@{} := enumerable_sup_ub'@{Uhuge Ularge}.
+
+Lemma enumerable_sup_least_ub@{} : forall (f:A->Sier) s, (forall x, f x <= s) ->
   EnumerableSup f <= s.
 Proof.
 intros f s E. apply countable_sup_least_ub.
 intros;apply E.
 Qed.
 
-Lemma top_le_enumerable_sup : forall f, EnumerableSup f <->
-  merely (exists x, f x).
+Lemma top_le_enumerable_sup' : forall f, iff@{Set UA UA} (EnumerableSup f)
+  (merely (exists x, f x)).
 Proof.
 intros f;split.
 - intros E. apply top_le_countable_sup in E;revert E;
@@ -393,6 +404,8 @@ intros f;split.
   intros [a Ea]. destruct Ea.
   apply top_le_countable_sup. apply tr;exists a;apply E.
 Qed.
+
+Definition top_le_enumerable_sup@{} := top_le_enumerable_sup'@{Uhuge Ularge}.
 
 Lemma enumerable_sup_meet_distr_l : forall a f,
   meet a (EnumerableSup f) = EnumerableSup (fun n => meet a (f n)).
@@ -474,19 +487,21 @@ apply (partial_ind0 _ (fun a => forall b, _ -> _)).
   apply top_le_sup. apply tr;exists n;trivial.
 Qed.
 
-Class SemiDecide (A : Type) := semi_decide : Sier.
+Class SemiDecide@{i} (A : Type@{i}) := semi_decide : Sier.
 Arguments semi_decide A {_}.
 
 Class SemiDecidable@{i} (A : Type@{i}) `{SemiDecide A}
   := semi_decidable : iff@{Set i i} (semi_decide A) A.
 
-Global Instance decidable_semi_decide A `{Decidable A} : SemiDecide A.
+Global Instance decidable_semi_decide@{i} (A:Type@{i}) `{Decidable A}
+  : SemiDecide A.
 Proof.
 red. exact (if decide A then top else bottom).
 Defined.
 Arguments decidable_semi_decide _ {_} /.
 
-Global Instance decidable_semi_decidable (A:Type) `{Decidable A} : SemiDecidable A.
+Global Instance decidable_semi_decidable@{i} (A:Type@{i}) `{Decidable A}
+  : SemiDecidable@{i} A.
 Proof.
 red. unfold semi_decide;simpl. destruct (decide A) as [E|E];split;intros E'.
 - trivial.
@@ -508,8 +523,8 @@ intros E'. apply bot_eq,imply_le. intros E. apply semi_decidable in E.
 destruct (E' E).
 Qed.
 
-Lemma semi_decide_meet_le (A:Type@{i}) `{SemiDecidable@{i} A}
-  : forall b c, meet (semi_decide A) b <= c <-> (A -> b <= c).
+Lemma semi_decide_meet_le@{i} (A:Type@{i}) `{SemiDecidable@{i} A}
+  : forall b c, iff@{Set i i} (meet (semi_decide A) b <= c) (A -> b <= c).
 Proof.
 intros. split.
 - intros E Ea. rewrite (semidecidable_top Ea),meet_top_l in E. trivial.
@@ -519,14 +534,15 @@ intros. split.
   apply E;trivial.
 Qed.
 
-Global Instance semi_decide_conj A `{SemiDecide A} B `{SemiDecide B}
-  : SemiDecide (A /\ B)
+Global Instance semi_decide_conj@{i j k} (A:Type@{i}) `{SemiDecide A}
+  (B:Type@{j}) `{SemiDecide B}
+  : SemiDecide@{k} (A /\ B)
   := meet (semi_decide A) (semi_decide B).
 Arguments semi_decide_conj _ {_} _ {_} /.
 
-Global Instance semi_decidable_conj (A:Type) `{SemiDecidable A}
-  (B:Type) `{SemiDecidable B}
-  : SemiDecidable (A /\ B).
+Global Instance semi_decidable_conj@{i j k} (A:Type@{i}) `{SemiDecidable@{i} A}
+  (B:Type@{j}) `{SemiDecidable@{j} B}
+  : SemiDecidable@{k} (A /\ B).
 Proof.
 split.
 - intros E;apply top_le_meet in E;destruct E as [E1 E2];
@@ -534,15 +550,15 @@ split.
 - intros [E1 E2];apply top_le_meet;split;apply semi_decidable;trivial.
 Qed.
 
-Global Instance semi_decide_disj (A:Type) `{SemiDecide A}
-  (B:Type) `{SemiDecide B}
-  : SemiDecide (hor A B)
+Global Instance semi_decide_disj@{i j k} (A:Type@{i}) `{SemiDecide@{i} A}
+  (B:Type@{j}) `{SemiDecide@{j} B}
+  : SemiDecide@{k} (hor@{i j k} A B)
   := join (semi_decide A) (semi_decide B).
 Arguments semi_decide_disj _ {_} _ {_} /.
 
-Global Instance semi_decidable_disj (A:Type) `{SemiDecidable A}
-  (B:Type) `{SemiDecidable B}
-  : SemiDecidable (hor A B).
+Global Instance semi_decidable_disj@{i j k} (A:Type@{i}) `{SemiDecidable@{i} A}
+  (B:Type@{j}) `{SemiDecidable@{j} B}
+  : SemiDecidable@{k} (hor@{i j k} A B).
 Proof.
 split.
 - intros E;apply top_le_join in E;revert E;apply (Trunc_ind _);intros [E|E];
@@ -551,13 +567,33 @@ split.
   apply semi_decidable;trivial.
 Qed.
 
+Global Instance semi_decide_exists@{i j k} (A : Type@{i}) `{Enumerable@{i} A}
+  (B : A -> Type@{j}) `{forall x, SemiDecide@{j} (B x)}
+  : SemiDecide@{k} (merely@{k} (exists x, B x))
+  := EnumerableSup A (fun x => semi_decide (B x)).
+Arguments semi_decide_exists A {_} B {_} /.
+
+Global Instance semi_decidable_exists@{i j k} (A : Type@{i}) `{Enumerable@{i} A}
+  (B : A -> Type@{j}) `{!forall x, SemiDecide (B x)}
+  `{!forall x, SemiDecidable@{j} (B x)}
+  : SemiDecidable (merely@{k} (exists x, B x)).
+Proof.
+red;unfold semi_decide;simpl.
+split.
+- intros E;apply top_le_enumerable_sup in E.
+  revert E;apply (Trunc_ind _);intros [x E];apply tr;exists x;
+  apply semi_decidable,E.
+- apply (Trunc_ind _);intros [x E];apply top_le_enumerable_sup,tr;exists x.
+  apply (snd semi_decidable),E.
+Qed.
+
 Global Instance semi_decide_sier (a : Sier) : SemiDecide a
   := a.
 Arguments semi_decide_sier _ /.
 
 Global Instance semi_decidable_sier (a : Sier) : SemiDecidable a.
 Proof.
-red. reflexivity.
+red. split;trivial.
 Qed.
 
 Section interleave.
@@ -759,3 +795,4 @@ Arguments decidable_semi_decide _ {_} /.
 Arguments semi_decide_conj {_} _ {_} _ {_} /.
 Arguments semi_decide_disj {_} _ {_} _ {_} /.
 Arguments semi_decide_sier _ /.
+Arguments semi_decide_exists {_} A {_} B {_} /.

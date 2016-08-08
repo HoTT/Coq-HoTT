@@ -218,7 +218,7 @@ Arguments CutZero /.
 Global Instance CutOne@{} : One Cut := ' 1.
 Arguments CutOne /.
 
-Lemma cut_lt_lower : forall a q, ' q < a <-> lower a q.
+Lemma cut_lt_lower : forall a q, iff@{UQ Set UQ} (' q < a) (lower a q).
 Proof.
 intros;split.
 - apply (Trunc_ind _);intros [r [E1 E2]].
@@ -231,7 +231,7 @@ intros;split.
   apply (snd semi_decidable);trivial.
 Qed.
 
-Lemma cut_lt_upper : forall a q, a < ' q <-> upper a q.
+Lemma cut_lt_upper : forall a q, iff@{UQ Set UQ} (a < ' q) (upper a q).
 Proof.
 intros;split.
 - apply (Trunc_ind _);intros [r [E1 E2]].
@@ -329,44 +329,28 @@ apply pos_plus_lt_compat_r. solve_propholds.
 Qed.
 
 
-Instance pred_plus@{} : Plus QPred.
+Definition pred_plus@{} : Plus QPred.
 Proof.
 intros x y q.
-apply (EnumerableSup Q). intros r. apply (EnumerableSup Q). intros s.
-exact (meet (meet (x r) (y s)) (semi_decide (q = r + s))).
+exact (semi_decide@{UQ} (merely (exists r : Q, merely (exists s : Q,
+  x r /\ y s /\ q = r + s)))).
 Defined.
 Arguments pred_plus _ _ / _.
+Existing Instance pred_plus.
 
 Lemma pred_plus_pr' : forall a b : QPred,
   forall q, (a + b) q <-> merely (exists r s, a r /\ b s /\ q = r + s).
 Proof.
-unfold plus at 1;simpl. intros a b q;split.
-- intros E.
-  apply top_le_enumerable_sup in E;revert E;apply (Trunc_ind _);intros [r E].
-  apply top_le_enumerable_sup in E;revert E;apply (Trunc_ind _);intros [s E].
-  apply top_le_meet in E;destruct E as [E1 E3].
-  apply top_le_meet in E1;destruct E1 as [E1 E2].
-  apply semi_decidable in E3.
-  apply tr;exists r,s;auto.
+unfold plus,pred_plus at 1. intros a b q;split.
+- intros E. apply semi_decidable in E.
+  revert E;apply (Trunc_ind _);intros [r E];
+  revert E;apply (Trunc_ind _);intros [s E].
+  apply tr;eauto.
 - apply (Trunc_ind _);intros [r [s [E1 [E2 E3]]]].
-  apply top_le_enumerable_sup. apply tr;exists r.
-  apply top_le_enumerable_sup. apply tr;exists s.
-  repeat (apply top_le_meet;split);trivial.
-  apply semi_decidable in E3;trivial.
+  apply (snd semi_decidable),tr. exists r. apply tr. exists s;auto.
 Qed.
 
-Definition pred_plus_pr@{} := pred_plus_pr'@{UQ UQ UQ UQ UQ
-  Set Set Ularge Set Set
-  Set Uhuge Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set}.
+Definition pred_plus_pr@{} := pred_plus_pr'@{UQ UQ UQ UQ}.
 
 Lemma lower_pred_plus_pr' : forall a b : Cut, forall q,
   (lower a + lower b) q <->
@@ -717,9 +701,9 @@ split;apply tr;[exists qa|exists qb];split;trivial;apply (snd semi_decidable);
 trivial.
 Qed.
 
-Lemma CutJoin_iscut' : forall a b : Cut,
-  IsCut (fun q => join (lower a q) (lower b q))
-    (fun q => meet (upper a q) (upper b q)).
+Lemma CutJoin_iscut@{} : forall a b : Cut,
+  IsCut (fun q => semi_decide (hor (lower a q) (lower b q)))
+    (fun q => semi_decide ((upper a q) /\ (upper b q))).
 Proof.
 intros a b;split.
 - generalize (lower_inhab a);apply (Trunc_ind _);intros [q E].
@@ -762,21 +746,13 @@ intros a b;split.
     * apply tr,inr,top_le_meet;split;trivial.
 Qed.
 
-Definition CutJoin_iscut@{} := CutJoin_iscut'@{Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set}.
-
 Global Instance CutJoin@{} : Join Cut
   := fun a b => Build_Cut _ _ (CutJoin_iscut a b).
 Arguments CutJoin _ _ /.
 
-Lemma CutMeet_iscut' : forall a b : Cut,
-  IsCut (fun q => meet (lower a q) (lower b q))
-    (fun q => join (upper a q) (upper b q)).
+Lemma CutMeet_iscut@{} : forall a b : Cut,
+  IsCut (fun q => semi_decide ((lower a q) /\ (lower b q)))
+    (fun q => semi_decide (hor (upper a q) (upper b q))).
 Proof.
 intros a b;split.
 - generalize (lower_inhab a);apply (Trunc_ind _);intros [q E1].
@@ -819,19 +795,11 @@ intros a b;split.
   + apply tr,inr,top_le_join,tr,inl,E1.
 Qed.
 
-Definition CutMeet_iscut@{} := CutMeet_iscut'@{Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set Set Set Set
-  Set}.
-
 Global Instance CutMeet@{} : Meet Cut
   := fun a b => Build_Cut _ _ (CutMeet_iscut a b).
 Arguments CutMeet _ _ /.
 
-Lemma cut_lattice_order' : LatticeOrder CutLe.
+Lemma cut_lattice_order@{} : LatticeOrder CutLe.
 Proof.
 split;split;try apply _.
 - intros a b q;unfold meet;simpl;intros E;apply top_le_meet in E.
@@ -845,10 +813,6 @@ split;split;try apply _.
 - intros a b c E1 E2 q E;apply top_le_join in E.
   revert E;apply (Trunc_ind _);intros [E|E];[apply E1|apply E2];apply E.
 Qed.
-
-Definition cut_lattice_order@{} := cut_lattice_order'@{Set Set Set Set Set
-  Set Set Set Set Set
-  Set Set}.
 Global Existing Instance cut_lattice_order.
 
 Local Existing Instance join_sl_order_join_sl.
@@ -1238,16 +1202,16 @@ unfold sg_op,plus_is_sg_op,plus in *;rewrite <-Hrw.
 rewrite CutAbs_neg,CutPlus_comm. trivial.
 Qed.
 
-Definition lim_lower_cut (x : Approximation Cut) : QPred
-  := fun q => EnumerableSup Q+ (fun e => EnumerableSup Q+ (fun d =>
-    lower (x e) (q + 'e + ' d))).
+Definition lim_lower_cut@{} (x : Approximation Cut) : QPred
+  := fun q => semi_decide@{UQ} (merely (exists e : Q+,
+    merely (exists d : Q+, lower (x e) (q + 'e + ' d)))).
 
-Definition lim_upper_cut (x : Approximation Cut) : QPred
-  := fun q => EnumerableSup Q+ (fun e => EnumerableSup Q+ (fun d =>
-    upper (x e) (q - ' e - ' d))).
+Definition lim_upper_cut@{} (x : Approximation Cut) : QPred
+  := fun q => semi_decide@{UQ} (merely (exists e : Q+,
+    merely (exists d : Q+, upper (x e) (q - ' e - ' d)))).
 
-Lemma lim_lower_cut_pr : forall x q, lim_lower_cut x q <->
-  merely (exists e d : Q+, lower (x e) (q + ' e + ' d)).
+Lemma lim_lower_cut_pr@{} : forall x q, iff@{Set UQ UQ} (lim_lower_cut x q)
+  (merely@{UQ} (exists e d : Q+, lower (x e) (q + ' e + ' d))).
 Proof.
 intros x q;split.
 - intros E. apply top_le_enumerable_sup in E;revert E;apply (Trunc_ind _);
@@ -1260,8 +1224,8 @@ intros x q;split.
   trivial.
 Qed.
 
-Lemma lim_upper_cut_pr : forall x q, lim_upper_cut x q <->
-  merely (exists e d : Q+, upper (x e) (q - ' e - ' d)).
+Lemma lim_upper_cut_pr@{} : forall x q, iff@{Set UQ UQ} (lim_upper_cut x q)
+  (merely (exists e d : Q+, upper (x e) (q - ' e - ' d))).
 Proof.
 intros x q;split.
 - intros E. apply top_le_enumerable_sup in E;revert E;apply (Trunc_ind _);
@@ -1274,7 +1238,7 @@ intros x q;split.
   trivial.
 Qed.
 
-Lemma lim_iscut (x : Approximation Cut)
+Lemma lim_iscut@{} (x : Approximation Cut)
   : IsCut (lim_lower_cut x) (lim_upper_cut x).
 Proof.
 split.
@@ -1373,10 +1337,10 @@ split.
   + apply tr,inr,lim_upper_cut_pr,tr. exists e,e;trivial.
 Qed.
 
-Global Instance CutLim : Lim Cut
+Global Instance CutLim@{} : Lim Cut
   := fun x => Build_Cut _ _ (lim_iscut x).
 
-Global Instance Cut_cauchy_complete : CauchyComplete Cut.
+Global Instance Cut_cauchy_complete@{} : CauchyComplete Cut.
 Proof.
 do 3 red;simpl. intros x d e.
 assert (E1 : ' d / 4 < ' d / 2).
