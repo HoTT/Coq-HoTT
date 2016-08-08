@@ -107,15 +107,13 @@ apply (@HSet.isset_hrel_subpaths _
 - intros a b E;apply cut_eq0;apply E.
 Qed.
 
-Lemma cut_eq' : forall a b : Cut, (forall q, lower a q <-> lower b q) ->
+Lemma cut_eq@{} : forall a b : Cut, (forall q, lower a q <-> lower b q) ->
   (forall r, upper a r <-> upper b r) ->
   a = b.
 Proof.
 intros a b E1 E2;apply cut_eq0;apply path_forall;intros q;apply (antisymmetry le);
 apply imply_le;(apply E1 || apply E2).
 Qed.
-
-Definition cut_eq@{} := cut_eq'@{Set Set Set Set}.
 
 Lemma cut_orders@{} : forall (c : Cut) (q r : Q), lower c q -> upper c r -> q < r.
 Proof.
@@ -182,33 +180,33 @@ repeat split.
 Qed.
 
 Lemma QIsCut@{} : forall q : Q,
-  IsCut (fun r => DecSier (r < q)) (fun r => DecSier (q < r)).
+  IsCut (fun r => semi_decide (r < q)) (fun r => semi_decide (q < r)).
 Proof.
 intros q;split.
-- apply tr;exists (q - 1);apply dec_sier_pr.
+- apply tr;exists (q - 1). apply (snd semi_decidable).
   apply flip_lt_minus_l. apply pos_plus_lt_compat_r;solve_propholds.
-- apply tr;exists (q + 1);apply dec_sier_pr.
+- apply tr;exists (q + 1);apply (snd semi_decidable).
   apply pos_plus_lt_compat_r;solve_propholds.
 - intros r;split.
-  + intros E;apply dec_sier_pr in E.
-    apply tr;econstructor;split;[|apply dec_sier_pr];
+  + intros E;apply semi_decidable in E.
+    apply tr;econstructor;split;[|apply (snd semi_decidable)];
     apply Q_average_between;trivial.
   + apply (Trunc_ind _);intros [s [E1 E2]];
-    apply dec_sier_pr;apply dec_sier_pr in E2.
+    apply (snd semi_decidable);apply semi_decidable in E2.
     transitivity s;trivial.
 - intros r;split.
-  + intros E;apply dec_sier_pr in E.
-    apply tr;econstructor;split;[|apply dec_sier_pr];
+  + intros E;apply semi_decidable in E.
+    apply tr;econstructor;split;[|apply (snd semi_decidable)];
     apply Q_average_between;trivial.
   + apply (Trunc_ind _);intros [s [E1 E2]];
-    apply dec_sier_pr;apply dec_sier_pr in E2.
+    apply (snd semi_decidable);apply semi_decidable in E2.
     transitivity s;trivial.
-- intros r E1 E2;apply dec_sier_pr in E1;apply dec_sier_pr in E2.
+- intros r E1 E2;apply semi_decidable in E1;apply semi_decidable in E2.
   apply (lt_antisym r q);auto.
 - intros r s E1.
   generalize (cotransitive E1 q).
   apply (Trunc_ind _);intros [E2|E2];apply tr;[left|right];
-  apply dec_sier_pr;trivial.
+  apply (snd semi_decidable);trivial.
 Qed.
 
 Global Instance QCut@{} : Cast Q Cut
@@ -224,20 +222,25 @@ Lemma cut_lt_lower : forall a q, ' q < a <-> lower a q.
 Proof.
 intros;split.
 - apply (Trunc_ind _);intros [r [E1 E2]].
-  apply lower_le with r;trivial. apply dec_sier_pr in E1. apply lt_le;trivial.
+  apply lower_le with r;trivial. change (IsTop (semi_decide (q < r))) in E1.
+  apply semi_decidable in E1.
+  apply lt_le;trivial.
 - intros E;apply lower_rounded in E;revert E;apply (Trunc_ind _);intros [r [E1 E2]].
   apply tr;exists r;split;trivial.
-  apply dec_sier_pr;trivial.
+  change (semi_decide (q < r)).
+  apply (snd semi_decidable);trivial.
 Qed.
 
 Lemma cut_lt_upper : forall a q, a < ' q <-> upper a q.
 Proof.
 intros;split.
 - apply (Trunc_ind _);intros [r [E1 E2]].
-  apply upper_le with r;trivial. apply dec_sier_pr in E2. apply lt_le;trivial.
-- intros E;apply upper_rounded in E;revert E;apply (Trunc_ind _);intros [r [E1 E2]].
+  apply upper_le with r;trivial. change (IsTop (semi_decide (r < q))) in E2.
+  apply (fst semi_decidable) in E2. apply lt_le;trivial.
+- intros E;apply upper_rounded in E;revert E;apply (Trunc_ind _);
+  intros [r [E1 E2]].
   apply tr;exists r;split;trivial.
-  apply dec_sier_pr;trivial.
+  apply (snd semi_decidable);trivial.
 Qed.
 
 Definition straddle@{} (a : Cut) (q : Q) :=
@@ -330,7 +333,7 @@ Instance pred_plus@{} : Plus QPred.
 Proof.
 intros x y q.
 apply (EnumerableSup Q). intros r. apply (EnumerableSup Q). intros s.
-exact (meet (meet (x r) (y s)) (DecSier (q = r + s))).
+exact (meet (meet (x r) (y s)) (semi_decide (q = r + s))).
 Defined.
 Arguments pred_plus _ _ / _.
 
@@ -343,13 +346,13 @@ unfold plus at 1;simpl. intros a b q;split.
   apply top_le_enumerable_sup in E;revert E;apply (Trunc_ind _);intros [s E].
   apply top_le_meet in E;destruct E as [E1 E3].
   apply top_le_meet in E1;destruct E1 as [E1 E2].
-  apply dec_sier_pr in E3.
+  apply semi_decidable in E3.
   apply tr;exists r,s;auto.
 - apply (Trunc_ind _);intros [r [s [E1 [E2 E3]]]].
   apply top_le_enumerable_sup. apply tr;exists r.
   apply top_le_enumerable_sup. apply tr;exists s.
   repeat (apply top_le_meet;split);trivial.
-  apply dec_sier_pr;trivial.
+  apply semi_decidable in E3;trivial.
 Qed.
 
 Definition pred_plus_pr@{} := pred_plus_pr'@{UQ UQ UQ UQ UQ
@@ -607,13 +610,13 @@ Lemma CutPlus_left_id@{} : LeftIdentity CutPlus 0.
 Proof.
 intros a;apply (antisymmetry le);red;simpl;intros q E.
 - apply pred_plus_pr in E;revert E;apply (Trunc_ind _);intros [r [s [E1 [E2 E3]]]].
-  apply dec_sier_pr in E1. rewrite E3. apply lower_le with s;trivial.
+  apply semi_decidable in E1. rewrite E3. apply lower_le with s;trivial.
   set (S:=s) at 2;rewrite <-(plus_0_l S);unfold S;clear S.
   apply (order_preserving (+ _)). apply lt_le;trivial.
 - apply pred_plus_pr.
   apply lower_rounded in E;revert E;apply (Trunc_ind _);intros [s [E1 E2]].
   apply tr;exists (q - s),s;repeat split.
-  + apply dec_sier_pr. apply flip_neg_minus in E1. trivial.
+  + apply (snd semi_decidable). apply flip_neg_minus in E1. trivial.
   + trivial.
   + abstract ring_tac.ring_with_integers (NatPair.Z nat).
 Qed.
@@ -621,11 +624,11 @@ Qed.
 Lemma CutPlus_left_inverse@{} : LeftInverse CutPlus CutNeg 0.
 Proof.
 intros a;apply (antisymmetry le);red;simpl;intros q E.
-- apply dec_sier_pr;apply pred_plus_pr in E. revert E;apply (Trunc_ind _);
+- apply (snd semi_decidable);apply pred_plus_pr in E. revert E;apply (Trunc_ind _);
   intros [r [s [E1 [E2 E3]]]].
   rewrite E3. pose proof (cut_orders _ _ _ E2 E1) as E.
   apply flip_neg_minus in E. rewrite involutive,plus_comm in E;trivial.
-- apply dec_sier_pr in E. apply flip_neg_negate in E.
+- apply semi_decidable in E. apply flip_neg_negate in E.
   generalize (straddle_pos a _ E). apply (Trunc_ind _).
   intros [l [u [E1 [E2 E3]]]].
   apply flip_lt_negate in E3;rewrite involutive,<-negate_swap_r,plus_comm in E3.
@@ -649,15 +652,16 @@ Qed.
 Lemma CutPlus_rat@{} : forall q r : Q, ' (q + r) = ' q + ' r :> Cut.
 Proof.
 intros;apply (antisymmetry le).
-- intros s E. apply dec_sier_pr in E.
+- intros s E. change (IsTop (semi_decide (s < q + r))) in E.
+  apply (fst semi_decidable) in E.
   change (IsTop ((lower (' q) + lower (' r)) s)). apply pred_plus_pr.
   apply tr. exists (q - (q + r - s) / 2), (r - (q + r - s) / 2).
   repeat split.
-  + apply dec_sier_pr. apply flip_lt_minus_l.
+  + apply (snd semi_decidable). apply flip_lt_minus_l.
     apply pos_plus_lt_compat_r.
     apply pos_mult_compat;[|solve_propholds].
     red. apply flip_pos_minus in E. trivial.
-  + apply dec_sier_pr. apply flip_lt_minus_l.
+  + apply (snd semi_decidable). apply flip_lt_minus_l.
     apply pos_plus_lt_compat_r.
     apply pos_mult_compat;[|solve_propholds].
     red. apply flip_pos_minus in E. trivial.
@@ -667,30 +671,31 @@ intros;apply (antisymmetry le).
     rewrite dec_recip_inverse;[|apply lt_ne_flip;solve_propholds].
     rewrite mult_1_r;unfold QRS;clear QRS.
     abstract ring_tac.ring_with_integers (NatPair.Z nat).
-- intros s E. simpl. apply dec_sier_pr.
+- intros s E. simpl. apply (snd semi_decidable).
   simpl in E. apply pred_plus_pr in E.
   revert E;apply (Trunc_ind _);intros [r' [s' [E1 [E2 E3]]]].
-  apply dec_sier_pr in E1;apply dec_sier_pr in E2.
+  apply semi_decidable in E1;apply semi_decidable in E2.
   rewrite E3. apply plus_lt_compat;trivial.
 Qed.
 
 Lemma CutNeg_rat@{} : forall q : Q, ' (- q) = - ' q :> Cut.
 Proof.
 intros;apply (antisymmetry le);intros r E;
-apply dec_sier_pr in E;apply dec_sier_pr;
+apply (fst (@semi_decidable (_ < _) _ _)) in E;apply (snd semi_decidable);
 apply flip_lt_negate;rewrite involutive;trivial.
 Qed.
 
 Lemma CutLt_rat_preserving@{} : StrictlyOrderPreserving (cast Q Cut).
 Proof.
 intros q r E. apply tr.
-econstructor;split;apply dec_sier_pr,Q_average_between;trivial.
+econstructor;split;apply (snd semi_decidable),Q_average_between;trivial.
 Qed.
 
 Lemma CutLt_rat_reflecting@{} : StrictlyOrderReflecting (cast Q Cut).
 Proof.
 intros q r;apply (Trunc_ind _);intros [s [E1 E2]].
-apply dec_sier_pr in E1;apply dec_sier_pr in E2.
+apply (@semi_decidable (_ < _) _ _) in E1;
+apply (@semi_decidable (_ < _) _ _) in E2.
 transitivity s;trivial.
 Qed.
 
@@ -708,7 +713,8 @@ intros a b;apply (Trunc_ind _);intros [q [E1 E2]].
 apply upper_rounded in E1;revert E1;apply (Trunc_ind _);intros [qa [Ea1 Ea2]].
 apply lower_rounded in E2;revert E2;apply (Trunc_ind _);intros [qb [Eb1 Eb2]].
 apply tr;exists q.
-split;apply tr;[exists qa|exists qb];split;trivial;apply dec_sier_pr;trivial.
+split;apply tr;[exists qa|exists qb];split;trivial;apply (snd semi_decidable);
+trivial.
 Qed.
 
 Lemma CutJoin_iscut' : forall a b : Cut,
@@ -942,7 +948,7 @@ intros a e E. generalize (straddle_pos a e E). apply (Trunc_ind _).
 intros [l [u [E1 [E2 E3]]]]. apply tr;exists u. split;trivial.
 apply lower_plus_eq_pr.
 apply tr;exists l,(u - l). repeat split;trivial.
-- apply dec_sier_pr. trivial.
+- apply (snd semi_decidable). trivial.
 - ring_tac.ring_with_integers (NatPair.Z nat).
 Qed.
 
@@ -955,7 +961,7 @@ apply tr;exists (r - q). split.
 - apply flip_pos_minus in E2. trivial.
 - intros s E4. apply lower_plus_eq_pr in E4.
   revert E4;apply (Trunc_ind _);intros [q' [r' [E4 [E5 E6]]]].
-  apply dec_sier_pr in E5. apply lower_le with r;trivial.
+  apply (@semi_decidable (_ < _) _ _) in E5. apply lower_le with r;trivial.
   rewrite E6.
   transitivity (q' + (r - q)).
   { apply lt_le,(strictly_order_preserving (q' +)). trivial. }
@@ -1061,7 +1067,7 @@ Proof. reflexivity. Defined.
 
 Lemma CutAbs_nonneg : forall a : Cut, 0 <= abs a.
 Proof.
-intros a q E. apply dec_sier_pr in E.
+intros a q E. apply (@semi_decidable (_ < _) _ _) in E.
 apply (strictly_order_preserving (cast Q Cut)) in E.
 generalize (cotransitive E a). apply (Trunc_ind _);intros [E1|E1].
 - apply cut_lt_lower in E1.
@@ -1531,7 +1537,8 @@ Qed.
 Lemma compare_cut_rat_self : forall q, compare_cut_rat (' q) q = bot _.
 Proof.
 intros. unfold compare_cut_rat.
-apply interleave_bot;apply imply_le;intros E;apply dec_sier_pr in E;
+apply interleave_bot;apply imply_le;intros E;
+apply (@semi_decidable (_ < _) _ _) in E;
 destruct (irreflexivity lt _ E).
 Qed.
 

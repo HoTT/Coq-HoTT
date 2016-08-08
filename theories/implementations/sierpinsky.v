@@ -267,11 +267,12 @@ unfold IsTop. intros f;induction n as [|n IHn];simpl;
   + rewrite <-Em. transitivity (f m);auto. apply join_ub_r.
 Qed.
 
-Lemma top_le_sup : forall (s : IncreasingSequence Sier),
-  IsTop (sup Unit s) <-> merely (exists n, s n).
+Lemma top_le_sup@{} : forall (s : IncreasingSequence Sier),
+  IsTop (sup Unit s) <-> merely@{Set} (exists n, s n).
 Proof.
 intros s;split.
-- intros E. apply (eta_le_sup _) in E.
+- intros E. pose proof @trunc_contr@{Set Set} as trunc_contr.
+  apply (eta_le_sup _) in E.
   exact E.
 - apply (Trunc_ind _);intros [n E].
   red;transitivity (s n);trivial.
@@ -414,31 +415,6 @@ pose proof @trunc_contr@{Set Set} as trunc_contr.
 apply (not_eta_le_bot@{Set} _ tt). apply E.
 Qed.
 
-Definition DecSier (A : Type) `{Decidable A} : Sier
-  := match decide A with | inl _ => top | inr _ => bottom end.
-
-Lemma dec_sier_top `{Decidable A} : A -> DecSier A = top.
-Proof.
-intros E. unfold DecSier. destruct (decide A) as [?|E'];trivial.
-destruct (E' E).
-Qed.
-
-Lemma dec_sier_bot `{Decidable A} : ~ A -> DecSier A = bottom.
-Proof.
-intros E'. unfold DecSier. destruct (decide A) as [E|?];trivial.
-destruct (E' E).
-Qed.
-
-Lemma dec_sier_pr@{i} : forall (A : Type@{i}) `{Decidable A},
-  iff@{i Set i} A (DecSier A).
-Proof.
-intros A ?. split.
-- intros E. rewrite (dec_sier_top E). apply top_greatest.
-- unfold DecSier. destruct (decide A) as [E|E];intros E'.
-  + trivial.
-  + destruct (not_bot E').
-Qed.
-
 Lemma SierLe_imply : forall a b : Sier, a <= b -> a -> b.
 Proof.
 intros a b E E';red;transitivity a;trivial.
@@ -476,16 +452,6 @@ Proof.
 intros. etransitivity;[|apply join_bot_l]. apply commutativity.
 Qed.
 
-Lemma dec_sier_meet_le A `{Decidable A}
-  : forall b c, meet (DecSier A) b <= c <-> (A -> b <= c).
-Proof.
-intros. split.
-- intros E Ea. rewrite (dec_sier_top Ea),meet_top_l in E. trivial.
-- intros E. destruct (decide A) as [Ea|Ea].
-  + rewrite (dec_sier_top Ea),meet_top_l. auto.
-  + rewrite (dec_sier_bot Ea),meet_bot_l. apply bot_least.
-Qed.
-
 Lemma top_le_eq : forall a : Sier, a -> a = top.
 Proof.
 intros a E. apply (antisymmetry le);trivial.
@@ -498,32 +464,6 @@ intros a E. apply (antisymmetry le);trivial.
 apply bot_least.
 Qed.
 
-Lemma dec_sier_meet A `{Decidable A} B `{Decidable B}
-  : meet (DecSier A) (DecSier B) = DecSier (A /\ B).
-Proof.
-unfold DecSier at 1 2.
-destruct (decide A) as [E1|E1], (decide B) as [E2|E2];
-rewrite ?meet_top_l,?meet_bot_l;Symmetry;
-first [apply dec_sier_top | apply dec_sier_bot];auto;intros [E3 E4];auto.
-Qed.
-
-Lemma dec_sier_join A `{Decidable A} B `{Decidable B}
-  : join (DecSier A) (DecSier B) = DecSier (A \/ B).
-Proof.
-unfold DecSier at 1 2.
-destruct (decide A) as [E1|E1], (decide B) as [E2|E2];
-rewrite ?join_top_l,?join_bot_l;Symmetry;
-first [apply dec_sier_top | apply dec_sier_bot];auto;intros [E3|E3];auto.
-Qed.
-
-Lemma dec_sier_le_imply A `{Decidable A} : forall b : Sier,
-  (A -> b) -> DecSier A <= b.
-Proof.
-intros b E. unfold DecSier. destruct (decide A) as [E1|E1].
-- apply E. trivial.
-- apply bot_least.
-Qed.
-
 Lemma imply_le : forall a b : Sier, (a -> b) -> a <= b.
 Proof.
 apply (partial_ind0 _ (fun a => forall b, _ -> _)).
@@ -532,6 +472,92 @@ apply (partial_ind0 _ (fun a => forall b, _ -> _)).
 - intros s IH b E. apply sup_le_r. intros n.
   apply IH. intros En. apply E.
   apply top_le_sup. apply tr;exists n;trivial.
+Qed.
+
+Class SemiDecide (A : Type) := semi_decide : Sier.
+Arguments semi_decide A {_}.
+
+Class SemiDecidable@{i} (A : Type@{i}) `{SemiDecide A}
+  := semi_decidable : iff@{Set i i} (semi_decide A) A.
+
+Global Instance decidable_semi_decide A `{Decidable A} : SemiDecide A.
+Proof.
+red. exact (if decide A then top else bottom).
+Defined.
+Arguments decidable_semi_decide _ {_} /.
+
+Global Instance decidable_semi_decidable (A:Type) `{Decidable A} : SemiDecidable A.
+Proof.
+red. unfold semi_decide;simpl. destruct (decide A) as [E|E];split;intros E'.
+- trivial.
+- apply top_greatest.
+- apply not_bot in E'. destruct E'.
+- destruct (E E').
+Qed.
+
+Lemma semidecidable_top@{i} {A:Type@{i} } `{SemiDecidable@{i} A}
+  : A -> semi_decide A = top.
+Proof.
+intros E. apply top_le_eq. apply semi_decidable. trivial.
+Qed.
+
+Lemma semidecidable_bot@{i} {A:Type@{i} } `{SemiDecidable@{i} A}
+  : ~ A -> semi_decide A = bottom.
+Proof.
+intros E'. apply bot_eq,imply_le. intros E. apply semi_decidable in E.
+destruct (E' E).
+Qed.
+
+Lemma semi_decide_meet_le (A:Type@{i}) `{SemiDecidable@{i} A}
+  : forall b c, meet (semi_decide A) b <= c <-> (A -> b <= c).
+Proof.
+intros. split.
+- intros E Ea. rewrite (semidecidable_top Ea),meet_top_l in E. trivial.
+- intros E. apply imply_le;intros E'.
+  apply top_le_meet in E';destruct E' as [E1 E2].
+  apply semi_decidable in E1. apply SierLe_imply with b;trivial.
+  apply E;trivial.
+Qed.
+
+Global Instance semi_decide_conj A `{SemiDecide A} B `{SemiDecide B}
+  : SemiDecide (A /\ B)
+  := meet (semi_decide A) (semi_decide B).
+Arguments semi_decide_conj _ {_} _ {_} /.
+
+Global Instance semi_decidable_conj (A:Type) `{SemiDecidable A}
+  (B:Type) `{SemiDecidable B}
+  : SemiDecidable (A /\ B).
+Proof.
+split.
+- intros E;apply top_le_meet in E;destruct E as [E1 E2];
+  apply semi_decidable in E1;apply semi_decidable in E2;split;trivial.
+- intros [E1 E2];apply top_le_meet;split;apply semi_decidable;trivial.
+Qed.
+
+Global Instance semi_decide_disj (A:Type) `{SemiDecide A}
+  (B:Type) `{SemiDecide B}
+  : SemiDecide (hor A B)
+  := join (semi_decide A) (semi_decide B).
+Arguments semi_decide_disj _ {_} _ {_} /.
+
+Global Instance semi_decidable_disj (A:Type) `{SemiDecidable A}
+  (B:Type) `{SemiDecidable B}
+  : SemiDecidable (hor A B).
+Proof.
+split.
+- intros E;apply top_le_join in E;revert E;apply (Trunc_ind _);intros [E|E];
+  apply semi_decidable in E;apply tr;auto.
+- apply (Trunc_ind _);intros [E|E];apply top_le_join,tr;[left|right];
+  apply semi_decidable;trivial.
+Qed.
+
+Global Instance semi_decide_sier (a : Sier) : SemiDecide a
+  := a.
+Arguments semi_decide_sier _ /.
+
+Global Instance semi_decidable_sier (a : Sier) : SemiDecidable a.
+Proof.
+red. reflexivity.
 Qed.
 
 Section interleave.
@@ -727,3 +753,9 @@ Qed.
 End interleave.
 
 End contents.
+
+Arguments semi_decide A {_}.
+Arguments decidable_semi_decide _ {_} /.
+Arguments semi_decide_conj {_} _ {_} _ {_} /.
+Arguments semi_decide_disj {_} _ {_} _ {_} /.
+Arguments semi_decide_sier _ /.

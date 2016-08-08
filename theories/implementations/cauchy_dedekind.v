@@ -33,9 +33,10 @@ Lemma cut_of_cauchy_upper_pr : forall a q, upper (cut_of_cauchy a) q <-> a < rat
 Proof.
 apply (C_ind0 Q (fun a => forall q, upper (cut_of_cauchy a) q <-> a < rat q)).
 - intros q r;split.
-  + intros E;apply dec_sier_pr in E.
+  + intros E;apply (@semi_decidable (_ < _) _ _) in E.
     apply rat_lt_preserving. trivial.
-  + intros E;apply rat_lt_reflecting in E;apply dec_sier_pr;trivial.
+  + intros E;apply rat_lt_reflecting in E;
+    apply (snd semi_decidable);trivial.
 - intros x IHx q;split.
   + intros E. unfold cut_of_cauchy in E.
     rewrite lipschitz_extend_lim in E.
@@ -159,12 +160,14 @@ Proof.
 apply pseudo_order_embedding_inj.
 Qed.
 
-Definition cauchy_isPos : real -> Sier
-  := fun x => lower (cut_of_cauchy x) 0.
+Global Instance cauchy_lt_rat_semi_decide : forall x q, SemiDecide (rat q < x)
+  := fun x q => lower (cut_of_cauchy x) q.
+Arguments cauchy_lt_rat_semi_decide _ _ /.
 
-Lemma cauchy_isPos_pr : forall x, cauchy_isPos x <-> 0 < x.
+Global Instance cauchy_lt_rat_semi_decidable
+  : forall x q, SemiDecidable (rat q < x).
 Proof.
-intros. apply cut_of_cauchy_lower_pr.
+apply cut_of_cauchy_lower_pr.
 Qed.
 
 Definition compare_cauchy_rat : real -> Q -> partial bool
