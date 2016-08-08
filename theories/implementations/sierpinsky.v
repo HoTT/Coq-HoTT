@@ -536,45 +536,45 @@ Qed.
 
 Section interleave.
 
-Definition incompatible (a b : Sier) := forall c, c <= a -> c <= b -> c <= bottom.
+Definition disjoint (a b : Sier) := forall c, c <= a -> c <= b -> c <= bottom.
 
-Lemma incompatible_top_l : forall b, incompatible top b -> b = bottom.
+Lemma disjoint_top_l : forall b, disjoint top b -> b = bottom.
 Proof.
 intros b E. apply bot_eq. apply E.
 - apply top_greatest.
 - reflexivity.
 Qed.
 
-Lemma incompatible_sup_l : forall s b, incompatible (sup _ s) b ->
-  forall n, incompatible (s n) b.
+Lemma disjoint_sup_l : forall s b, disjoint (sup _ s) b ->
+  forall n, disjoint (s n) b.
 Proof.
 intros s b E n c E1 E2;apply E;trivial.
 transitivity (s n);trivial. apply sup_is_ub.
 Qed.
 
-Lemma incompatible_le_l : forall a b, incompatible a b -> forall a', a' <= a ->
-  incompatible a' b.
+Lemma disjoint_le_l : forall a b, disjoint a b -> forall a', a' <= a ->
+  disjoint a' b.
 Proof.
 intros a b E a' Ea c E1 E2;apply E;trivial. transitivity a';trivial.
 Qed.
 
 Definition interleave_aux_seq (s : IncreasingSequence Sier)
   (Is : ∀ (n : nat) (b : Sier),
-       incompatible (s n) b -> partial bool)
-  (Isle : ∀ (n : nat) (b : Sier) (Ea : incompatible (s n) b)
-         (Ea' : incompatible (s (S n)) b), (Is n b Ea) ≤ (Is (S n) b Ea'))
+       disjoint (s n) b -> partial bool)
+  (Isle : ∀ (n : nat) (b : Sier) (Ea : disjoint (s n) b)
+         (Ea' : disjoint (s (S n)) b), (Is n b Ea) ≤ (Is (S n) b Ea'))
   (b : Sier)
-  (E : incompatible (sup Unit s) b)
+  (E : disjoint (sup Unit s) b)
   : IncreasingSequence (partial bool).
 Proof.
 simple refine (Build_IncreasingSequence _ _).
 - intros n. apply (Is n b).
-  apply incompatible_sup_l;trivial.
+  apply disjoint_sup_l;trivial.
 - simpl. auto.
 Defined.
 
 Definition interleave_inductors : Inductors Unit
-  (fun a => forall b, incompatible a b -> sigT (fun s : partial bool =>
+  (fun a => forall b, disjoint a b -> sigT (fun s : partial bool =>
     partial_map (const true) a <= s /\ partial_map (const false) b <= s))
   (fun a a' f g E => forall b Ea Ea', (f b Ea).1 <= (g b Ea').1).
 Proof.
@@ -582,7 +582,7 @@ simple refine (Build_Inductors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
 - intros [] b E. exists (eta _ true).
   split.
   + reflexivity.
-  + rewrite (incompatible_top_l _ E). apply bot_least.
+  + rewrite (disjoint_top_l _ E). apply bot_least.
 - intros b _. exists (partial_map (const false) b).
   split.
   + apply bot_least.
@@ -607,8 +607,8 @@ simple refine (Build_Inductors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
 - simpl;intros s x Ex fs fs_increasing fb Eb n a Ea Ea'.
   pose proof (fun b Ea Ea' => sup_le_l _ _ _ (Eb b Ea Ea')) as E.
   simpl in E.
-  etransitivity;[|simple refine (E _ _ _ n);eapply incompatible_le_l;eauto].
-  set (Esup := incompatible_sup_l _ _ _ _).
+  etransitivity;[|simple refine (E _ _ _ n);eapply disjoint_le_l;eauto].
+  set (Esup := disjoint_sup_l _ _ _ _).
   assert (Hrw : Ea = Esup) by apply path_ishprop.
   apply (ap (fs n a)),(ap pr1) in Hrw. rewrite <-Hrw;reflexivity.
 - simpl. intros s x Ex fs fs_incr fx IHs b ??.
@@ -625,7 +625,7 @@ simple refine (Build_Inductors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
   apply (antisymmetry le);trivial.
 Defined.
 
-Definition interleave : forall a b : Sier, incompatible a b -> partial bool
+Definition interleave : forall a b : Sier, disjoint a b -> partial bool
   := fun a b E => (partial_rect _ _ _ interleave_inductors a b E).1.
 
 Definition interleave_top_l_rw : forall b E, interleave top b E = eta _ true
@@ -637,14 +637,14 @@ Definition interleave_le : forall a a', a <= a' -> forall b E E',
 
 Definition interleave_sup_l : forall s b E, interleave (sup _ s) b E =
   sup _ (Build_IncreasingSequence
-    (fun n => interleave (s n) b (incompatible_sup_l _ _ E _ ))
+    (fun n => interleave (s n) b (disjoint_sup_l _ _ E _ ))
     (fun n => interleave_le _ _ (seq_increasing _ _) _ _ _))
   := fun _ _ _ => idpath.
 
 Lemma interleave_top_r_rw : forall a E, interleave a top E = eta _ false.
 Proof.
 apply (partial_ind0 _ (fun a => forall E, _)).
-- intros [] E. apply Empty_ind. apply incompatible_top_l in E.
+- intros [] E. apply Empty_ind. apply disjoint_top_l in E.
   apply (not_eta_le_bot@{Set} Unit tt).
   unfold top,SierTop in E.
   rewrite E;reflexivity.

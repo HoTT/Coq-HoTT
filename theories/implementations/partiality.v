@@ -559,6 +559,7 @@ intros x f g;revert x;apply (partial_ind0 _ _).
   apply sup_extensionality. apply IH.
 Defined.
 
+(* map of the partiality monad. *)
 Definition partial_map@{i j} {A:Type@{i} } {B:Type@{j} }
   (f : A -> B) : partial@{i} A -> partial@{j} B
   := fun x => partial_bind x (eta _ ∘ f).
