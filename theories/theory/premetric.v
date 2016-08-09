@@ -227,19 +227,27 @@ Qed.
 
 Context {Blim : Lim B}.
 
-Instance arrow_lim : Lim (A -> B).
+Global Instance arrow_lim : Lim (A -> B).
 Proof.
 intros f x. apply lim. exists (fun e => f e x).
 intros. apply close_arrow_apply. apply approx_equiv.
 Defined.
+Arguments arrow_lim _ / _.
 
-(* This isn't true.
 Context `{!CauchyComplete B}.
 Global Instance arrow_cauchy_complete : CauchyComplete (A -> B).
 Proof.
 intros f e d.
-Abort.
-*)
+unfold lim;simpl.
+apply tr. exists (e/2 + d), (e/2). split.
++ abstract (set (e' := e/2);rewrite (pos_split2 e);unfold e';
+  apply pos_eq;ring_tac.ring_with_nat).
++ intros x.
+  set (S := {| approximate := λ e0 : Q+, (f e0) x
+            ;  approx_equiv := _ |}).
+  pose proof (cauchy_complete S) as E;red in E.
+  apply E.
+Qed.
 
 End close_arrow.
 
@@ -976,141 +984,25 @@ Qed.
 
 End cauchy.
 
-Section lipschitz_space.
-Context `{Funext}.
+Section lipschitz_lim.
+Context {A:Type} {Aclose : Closeness A} `{!PreMetric A}
+  `{Bclose : Closeness B} `{!PreMetric B} {Blim : Lim B}
+   `{!CauchyComplete B}.
 
-Record PreSpace :=
-  { prespace_type :> Type
-  ; prespace_close : Closeness prespace_type
-  ; prespace_premetric : PreMetric prespace_type }.
-Global Existing Instance prespace_close.
-Global Existing Instance prespace_premetric.
-
-Record LipschitzFun (A B : PreSpace) :=
-  { lipschitz_fun :> A -> B
-  ; lipschitz_coeff : Q+
-  ; lipschitz_pr : Lipschitz lipschitz_fun lipschitz_coeff }.
-Global Existing Instance lipschitz_pr.
-Arguments lipschitz_fun {_ _} _ _.
-Arguments lipschitz_coeff {_ _} _.
-
-Lemma lipschitz_fun_eq {A B} (f g : LipschitzFun A B) :
-  lipschitz_fun f = lipschitz_fun g ->
-  lipschitz_coeff f = lipschitz_coeff g ->
-  f = g.
+Global Instance lipschitz_lim_lipschitz (s : Approximation (A -> B)) L
+  `{!forall e, Lipschitz (s e) L} : Lipschitz (lim s) L.
 Proof.
-destruct f as [f L1 E1], g as [g L2 E2].
-simpl. intros E3 E4;destruct E3,E4.
-apply ap. unfold Lipschitz. apply path_ishprop.
-Qed.
-
-Definition lipschitz_fun_compose {A B C}
-  (g : LipschitzFun B C) (f : LipschitzFun A B) : LipschitzFun A C
-  := {| lipschitz_pr := lipschitz_compose g f _ _ |}.
-
-Definition lipschitz_cat : Category.PreCategory.
-Proof.
-apply (Category.Build_PreCategory LipschitzFun
-  (fun A => {| lipschitz_fun := @id A; lipschitz_coeff := 1%mc;
-    lipschitz_pr := _ |})
-  (@lipschitz_fun_compose)).
-- intros A B C D f g h.
-  apply lipschitz_fun_eq;simpl.
-  + reflexivity.
-  + Symmetry;apply Qpos_mult_assoc.
-- intros A B f;apply lipschitz_fun_eq;simpl.
-  + reflexivity.
-  + apply Qpos_mult_1_l.
-- intros A B f;apply lipschitz_fun_eq;simpl.
-  + reflexivity.
-  + apply Qpos_mult_1_r.
-- intros A B.
-  apply (@HSet.isset_hrel_subpaths _ (fun f g => 
-    lipschitz_fun f = lipschitz_fun g /\ lipschitz_coeff f = lipschitz_coeff g)).
-  + intros f;split;reflexivity.
-  + apply _.
-  + intros f g [E1 E2];revert f g E1 E2;exact lipschitz_fun_eq.
-Defined.
-
-Global Instance lipschitz_close A B : Closeness (LipschitzFun A B)
-  := fun e f g => close e (lipschitz_fun f) (lipschitz_fun g) /\
-    lipschitz_coeff f = lipschitz_coeff g.
-
-Global Instance lipschitz_premetric A B : PreMetric (LipschitzFun A B).
-Proof.
-split.
-- apply _.
-- intros e f;split;reflexivity.
-- intros e f g [E1 E2];split;Symmetry;trivial.
-- intros f g E;apply lipschitz_fun_eq.
-  + apply separated. intros e;apply E.
-  + apply (E 1).
-- intros f g h e d [E1 E1'] [E2 E2'];split.
-  + apply triangular with (g:_->_);trivial.
-  + path_via (lipschitz_coeff g).
-- intros e f g. split.
-  + intros [E1 E2]. apply rounded in E1.
-    revert E1;apply (Trunc_ind _);intros [d [d' [E1 E1']]].
-    apply tr;exists d,d';split;trivial;split;trivial.
-  + apply (Trunc_ind _);intros [d [d' [E1 [E2 E3]]]].
-    split;trivial. rewrite E1;apply rounded_plus;trivial.
-Qed.
-
-Section lipschitz_cauchycomplete.
-
-Context {A B : PreSpace} {Blim : Lim B} `{!CauchyComplete B}.
-
-Lemma lipschitz_lim_lipschitz : forall s : Approximation (LipschitzFun A B),
-  Lipschitz
-  (lim (Lim:=arrow_lim)
-     {| approximate := λ e : Q+, lipschitz_fun (s e)
-     ; approx_equiv := λ d e : Q+, fst (approx_equiv (LipschitzFun A B) s d e) |})
-  (lipschitz_coeff (s 1)).
-Proof.
-intros s e x y E.
-apply rounded in E. revert E;apply (Trunc_ind _);
-intros [d [d' [He E]]].
-rewrite He,Qpos_plus_mult_distr_l.
-apply lim_same_distance. simpl.
-intros d0 n.
+intros e x y xi.
+apply rounded in xi;revert xi;apply (Trunc_ind _);intros [d [d' [E xi]]].
+rewrite E,Qpos_plus_mult_distr_l.
+apply lim_same_distance.
+clear e d' E.
+intros d' n. simpl.
 apply rounded_plus.
-assert (E1 : Lipschitz (s n) (lipschitz_coeff (s 1))).
-{ assert (Hrw : lipschitz_coeff (s 1) = lipschitz_coeff (s n));
-  [|rewrite Hrw;apply _].
-  apply (approx_equiv _ s). }
-apply E1. trivial.
+apply (lipschitz (s n) L). trivial.
 Qed.
 
-Global Instance lipschitz_lim : Lim (LipschitzFun A B).
-Proof.
-intros s. simple refine (Build_LipschitzFun A B (lim _) _ _).
-2:apply arrow_lim.
-- exists (fun e => lipschitz_fun (s e)).
-  intros d e. apply (approx_equiv _ s).
-- exact (lipschitz_coeff (s 1)).
-- simpl. apply lipschitz_lim_lipschitz.
-Defined.
-Arguments lipschitz_lim _ /.
-
-Global Instance lipschitz_complete : CauchyComplete (LipschitzFun A B).
-Proof.
-intros s e d. split.
-- unfold lim;simpl. unfold lim,arrow_lim;simpl.
-  apply tr. exists (e/2 + d), (e/2). split.
-  + abstract (set (e' := e/2);rewrite (pos_split2 e);unfold e';
-    apply pos_eq;ring_tac.ring_with_nat).
-  + intros x.
-    set (S := {| approximate := λ e0 : Q+, (s e0) x
-              ;  approx_equiv := _ |}).
-    pose proof (cauchy_complete S) as E;red in E.
-    apply E.
-- unfold lim;simpl.
-  apply (approx_equiv _ s).
-Qed.
-
-End lipschitz_cauchycomplete.
-
-End lipschitz_space.
+End lipschitz_lim.
 
 End contents.
 
@@ -1135,3 +1027,5 @@ Arguments approximate {A _} _ _.
 Arguments approx_equiv {A _} _ _ _.
 
 Arguments CauchyComplete A {_ _}.
+
+Arguments arrow_lim {A B _ _ _} _ / _.

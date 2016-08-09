@@ -1389,7 +1389,8 @@ unfold PropHolds.
 intros x y E1 E2;rewrite <-E1,<-E2;clear E1 E2.
 revert x y;apply unique_continuous_binary_extension.
 - change (Continuous ((join 0) ∘ uncurry (@mult real _) ∘ map2 (join 0) (join 0))).
-  repeat apply continuous_compose;apply _.
+  apply continuous_compose;[|apply _]. apply continuous_compose;[apply _|].
+  apply _.
 - change (Continuous (uncurry (@mult real _) ∘ (map2 (join 0) (join 0)))).
   apply _.
 - intros. change (rat (0 ⊔ (0 ⊔ q) * (0 ⊔ r)) = rat ((0 ⊔ q) * (0 ⊔ r))).

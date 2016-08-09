@@ -1548,38 +1548,29 @@ Variable (f : A -> B -> T) (L1 L2 : Q+).
 Context `{!forall q, Lipschitz (f q) L1}
   `{!forall s, Lipschitz (fun q => f q s) L2}.
 
-Definition lipschitz_extend_binary_f_l1 : A ->
-  LipschitzFun {| prespace_type := (C B) |} {| prespace_type := T |}.
-Proof.
-intros q. exists (lipschitz_extend B (f q) L1) L1. apply _.
-Defined.
+Definition lipschitz_extend_binary_f_l1 : A -> C B -> T
+  := fun q => lipschitz_extend B (f q) L1.
 
 Instance lipschitz_extend_binary_f_l1_pr
   : Lipschitz lipschitz_extend_binary_f_l1 L2.
 Proof.
 intros e x y xi.
-split;simpl.
-- apply rounded in xi. revert xi;apply (Trunc_ind _).
-  intros [d [d' [He E]]].
-  apply tr;exists (L2*d),(L2*d');split.
-  + rewrite He; apply Qpos_plus_mult_distr_l.
-  + intros z. apply rounded in E;revert E;
-    apply (Trunc_ind _);intros [n [n' [Hd E]]].
-    rewrite Hd,Qpos_plus_mult_distr_l.
-    apply lipschitz_extend_same_distance. intros n0 q.
-    rewrite <-(pos_unconjugate L2 n0).
-    rewrite <-Qpos_mult_assoc,<-Qpos_plus_mult_distr_l.
-    apply (lipschitz (fun r => f r q) L2).
-    apply rounded_plus. trivial.
-- trivial.
+apply rounded in xi. revert xi;apply (Trunc_ind _).
+intros [d [d' [He E]]].
+apply tr;exists (L2*d),(L2*d');split.
++ rewrite He; apply Qpos_plus_mult_distr_l.
++ intros z. apply rounded in E;revert E;
+  apply (Trunc_ind _);intros [n [n' [Hd E]]].
+  rewrite Hd,Qpos_plus_mult_distr_l.
+  apply lipschitz_extend_same_distance. intros n0 q.
+  rewrite <-(pos_unconjugate L2 n0).
+  rewrite <-Qpos_mult_assoc,<-Qpos_plus_mult_distr_l.
+  apply (lipschitz (fun r => f r q) L2).
+  apply rounded_plus. trivial.
 Qed.
 
-Definition lipschitz_extend_binary_aux : C A ->
-  LipschitzFun {| prespace_type := (C B) |} {| prespace_type := T |}
-  := lipschitz_extend A lipschitz_extend_binary_f_l1 L2.
-
 Definition lipschitz_extend_binary@{} : C A -> C B -> T
-  := fun x y => lipschitz_extend_binary_aux x y.
+  := lipschitz_extend A lipschitz_extend_binary_f_l1 L2.
 
 Global Instance lipschitz_extend_binary_r@{}
   : forall w, Lipschitz (fun u => lipschitz_extend_binary u w) L2.
@@ -1587,26 +1578,18 @@ Proof.
 pose proof (lipschitz_extend_lipschitz A lipschitz_extend_binary_f_l1 L2) as E.
 intros w e u v xi.
 apply E in xi.
-destruct xi as [xi _].
 apply close_arrow_apply,xi.
-Qed.
-
-Lemma lipschitz_extend_binary_extend_coeff : forall u,
-  lipschitz_coeff _ _ (lipschitz_extend A lipschitz_extend_binary_f_l1 L2 u) = L1.
-Proof.
-apply (C_ind0 _ _).
-- reflexivity.
-- intros x IHx;apply IHx.
 Qed.
 
 Global Instance lipschitz_extend_binary_l@{}
   : forall u, Lipschitz (lipschitz_extend_binary u) L1.
 Proof.
-intros u e v w xi.
-unfold lipschitz_extend_binary,lipschitz_extend_binary_aux.
-pose proof (lipschitz_pr _ _
-  (lipschitz_extend A lipschitz_extend_binary_f_l1 L2 u) _ _ _ xi) as E.
-rewrite lipschitz_extend_binary_extend_coeff in E. apply E.
+unfold lipschitz_extend_binary.
+simple refine (C_ind0 A _ _ _);simpl.
+- unfold Lipschitz;apply _.
+- intros q. change (Lipschitz (lipschitz_extend_binary_f_l1 q) L1).
+  unfold lipschitz_extend_binary_f_l1. apply _.
+- intros s E. apply _.
 Qed.
 
 Definition lipschitz_extend_binary_eta@{} q v :
@@ -1621,9 +1604,7 @@ Definition lipschitz_extend_binary_lim_pr (x : Approximation (C A)) (v : C B)
     (lipschitz_extend_binary (x (d / L2)) v).
 Proof.
 apply close_arrow_apply.
-pose proof (lipschitz_extend_lim_approx A lipschitz_extend_binary_f_l1 L2 x e d)
-  as E.
-exact (fst E).
+exact (lipschitz_extend_lim_approx A lipschitz_extend_binary_f_l1 L2 x e d).
 Defined.
 
 Definition lipschitz_extend_binary_lim@{} (x : Approximation (C A)) v :
