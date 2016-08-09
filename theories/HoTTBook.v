@@ -3,7 +3,9 @@
 Require Import
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.interfaces.orders
-  HoTTClasses.implementations.cauchy_reals.
+  HoTTClasses.implementations.cauchy_reals
+  HoTTClasses.implementations.dedekind
+  HoTTClasses.implementations.cauchy_dedekind.
 
 (* END OF PREAMBLE *)
 (* ================================================== lem:opp *)
@@ -26,16 +28,63 @@ Definition Book_2_1_4_item_ii' := @HoTT.Basics.PathGroupoids.concat_pV.
 Definition Book_2_1_4_item_iii := @HoTT.Basics.PathGroupoids.inv_V.
 Definition Book_2_1_4_item_iv := @HoTT.Basics.PathGroupoids.concat_p_pp.
 
+(* ================================================== defn:dedekind-reals *)
+(** Definition 11.2.1 *)
+
+Definition Book_11_2_1 := @HoTTClasses.implementations.dedekind.Cut.
+
+(* ================================================== dedekind-in-cut-as-le *)
+(** Lemma 11.2.2 *)
+
+Definition Book_11_2_2_item_i := @HoTTClasses.implementations.dedekind.cut_lt_lower.
+Definition Book_11_2_2_item_ii := @HoTTClasses.implementations.dedekind.cut_lt_upper.
+
+(* ================================================== RD-inverse-apart-0 *)
+(** Theorem 11.2.4 *)
+
+
+
+(* ================================================== RD-archimedean *)
+(** Theorem 11.2.6 *)
+
+Definition Book_11_2_6 := @HoTTClasses.implementations.dedekind.Cut_archimedean.
+
 (* ================================================== ordered-field *)
 (** Definition 11.2.7 *)
 
 Definition Book_11_2_7 := @HoTTClasses.interfaces.abstract_algebra.Field.
 Definition Book_11_2_7' := @HoTTClasses.interfaces.orders.FullPseudoSemiRingOrder.
 
+(* ================================================== RD-archimedean-ordered-field *)
+(** Theorem 11.2.8 *)
+
+
+
 (* ================================================== defn:cauchy-approximation *)
 (** Definition 11.2.10 *)
 
 Definition Book_11_2_10 := @HoTTClasses.theory.premetric.Approximation.
+
+(* ================================================== RD-cauchy-complete *)
+(** Theorem 11.2.12 *)
+
+Definition Book_11_2_12 := @HoTTClasses.implementations.dedekind.Cut_cauchy_complete.
+
+
+(* ================================================== RD-final-field *)
+(** Theorem 11.2.14 *)
+
+
+
+(* ================================================== lem:cuts-preserve-admissibility *)
+(** Lemma 11.2.15 *)
+
+
+
+(* ================================================== RD-dedekind-complete *)
+(** Corollary 11.2.16 *)
+
+
 
 (* ================================================== defn:cauchy-reals *)
 (** Definition 11.3.2 *)
