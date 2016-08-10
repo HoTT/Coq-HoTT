@@ -28,25 +28,24 @@ Context {Tclose : Closeness T}.
 
 Private Inductive C@{} : Type@{UQ} :=
   | eta : T -> C
-  | lim' : forall (f : Q+ -> C),
-    (forall d e : Q+, close (d+e) (f d) (f e)) -> C
+  | Clim : Lim C
 
 with equiv@{} : Closeness@{UQ} C :=
   | equiv_eta_eta : forall (q r : T) (e : Q+),
       close e q r ->
       close e (eta q) (eta r)
-  | equiv_eta_lim' : forall q y Hy (e d d' : Q+),
+  | equiv_eta_lim' : forall q (y : Approximation C) (e d d' : Q+),
       e = d + d' ->
       close d' (eta q) (y d) ->
-      close e (eta q) (lim' y Hy)
-  | equiv_lim'_eta : forall x Hx r (e d d' : Q+),
+      close e (eta q) (Clim y)
+  | equiv_lim'_eta : forall (x : Approximation C) r (e d d' : Q+),
       e = d + d' ->
       close d' (x d) (eta r) ->
-      close e (lim' x Hx) (eta r)
-  | equiv_lim'_lim' : forall x Hx y Hy (e d n e' : Q+),
+      close e (Clim x) (eta r)
+  | equiv_lim'_lim' : forall (x y : Approximation C) (e d n e' : Q+),
       e = d + n + e' ->
       close e' (x d) (y n) ->
-      close e (lim' x Hx) (lim' y Hy)
+      close e (Clim x) (Clim y)
 .
 
 Global Existing Instance equiv | 5.
@@ -56,34 +55,25 @@ Axiom equiv_hprop@{} : forall e (u v : C), IsHProp (close e u v).
 Global Existing Instance equiv_path.
 Global Existing Instance equiv_hprop.
 
-Definition Clim@{} : Lim C :=
-  fun x => lim' x (fun _ _ => approx_equiv _ _ _).
 Global Existing Instance Clim.
-Arguments Clim _ /.
 
 Definition equiv_eta_lim@{} : forall q (y:Approximation C) (e d d' : Q+),
   e = d + d' ->
   close d' (eta q) (y d) ->
-  close e (eta q) (lim y).
-Proof.
-intros. eapply equiv_eta_lim';eauto.
-Defined.
+  close e (eta q) (lim y)
+  := equiv_eta_lim'.
 
 Definition equiv_lim_eta@{} : forall (x:Approximation C) r (e d d' : Q+),
   e = d + d' ->
   close d' (x d) (eta r) ->
-  close e (lim x) (eta r).
-Proof.
-intros;eapply equiv_lim'_eta;eauto.
-Defined.
+  close e (lim x) (eta r)
+  := equiv_lim'_eta.
 
 Definition equiv_lim_lim@{} : forall (x y : Approximation C) (e d n e' : Q+),
   e = d + n + e' ->
   close e' (x d) (y n) ->
-  close e (lim x) (lim y).
-Proof.
-intros;eapply equiv_lim'_lim';eauto.
-Defined.
+  close e (lim x) (lim y)
+  := equiv_lim'_lim'.
 
 Record DApproximation@{UA UB} (A : C -> Type@{UA})
   (B : forall x y : C, A x -> A y -> forall e, close e x y -> Type@{UB})
@@ -143,10 +133,9 @@ Definition C_rect@{} : Inductors A B -> forall x : C, A x :=
   fix C_rect (x : C) {struct x} : Inductors A B -> A x :=
     match x return (Inductors A B -> A x) with
     | eta q => fun I => ind_eta I q
-    | lim' f Hf => fun I =>
-      let x := Build_Approximation f Hf in
-      let a := Build_DApproximation A B x (fun e => C_rect (f e) I)
-        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+    | Clim x => fun I =>
+      let a := Build_DApproximation A B x (fun e => C_rect (x e) I)
+        (fun d e => equiv_rect (x d) (x e) _ (approx_equiv x d e) I) in
       ind_lim I x a
     end
 
@@ -156,26 +145,22 @@ Definition C_rect@{} : Inductors A B -> forall x : C, A x :=
       (forall I : Inductors A B,
         @B x' y' (C_rect x' I) (C_rect y' I) e' xi) with
     | equiv_eta_eta q r e H => fun I => ind_eta_eta I q r e H
-    | equiv_eta_lim' q f Hf e d d' He xi =>
+    | equiv_eta_lim' q y e d d' He xi =>
       fun I =>
-      let y := Build_Approximation f Hf in
-      let b := Build_DApproximation A B y (fun e => C_rect (f e) I)
-        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+      let b := Build_DApproximation A B y (fun e => C_rect (y e) I)
+        (fun d e => equiv_rect (y d) (y e) _ (approx_equiv y d e) I) in
       ind_eta_lim I q d d' e y b He xi (equiv_rect _ _ _ xi I)
-    | equiv_lim'_eta f Hf r e d d' He xi =>
+    | equiv_lim'_eta x r e d d' He xi =>
       fun I =>
-      let x := Build_Approximation f Hf in
-      let a := Build_DApproximation A B x (fun e => C_rect (f e) I)
-        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+      let a := Build_DApproximation A B x (fun e => C_rect (x e) I)
+        (fun d e => equiv_rect (x d) (x e) _ (approx_equiv x d e) I) in
       ind_lim_eta I r d d' e x a He xi (equiv_rect _ _ _ xi I)
-    | equiv_lim'_lim' f Hf g Hg e d n e' He xi =>
+    | equiv_lim'_lim' x y e d n e' He xi =>
       fun I =>
-      let x := Build_Approximation f Hf in
-      let a := Build_DApproximation A B x (fun e => C_rect (f e) I)
-        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
-      let y := Build_Approximation g Hg in
-      let b := Build_DApproximation A B y (fun e => C_rect (g e) I)
-        (fun d e => equiv_rect (g d) (g e) _ (Hg d e) I) in
+      let a := Build_DApproximation A B x (fun e => C_rect (x e) I)
+        (fun d e => equiv_rect (x d) (x e) _ (approx_equiv x d e) I) in
+      let b := Build_DApproximation A B y (fun e => C_rect (y e) I)
+        (fun d e => equiv_rect (y d) (y e) _ (approx_equiv y d e) I) in
       ind_lim_lim I x y a b e d n e' He xi (equiv_rect _ _ _ xi I)
     end
   for C_rect x I.
@@ -187,10 +172,9 @@ Definition equiv_rect@{} : forall (I : Inductors A B)
   fix C_rect (x : C) {struct x} : Inductors A B -> A x :=
     match x return (Inductors A B -> A x) with
     | eta q => fun I => ind_eta I q
-    | lim' f Hf => fun I =>
-      let x := Build_Approximation f Hf in
-      let a := Build_DApproximation A B x (fun e => C_rect (f e) I)
-        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+    | Clim x => fun I =>
+      let a := Build_DApproximation A B x (fun e => C_rect (x e) I)
+        (fun d e => equiv_rect (x d) (x e) _ (approx_equiv x d e) I) in
       ind_lim I x a
     end
 
@@ -200,26 +184,22 @@ Definition equiv_rect@{} : forall (I : Inductors A B)
       (forall I : Inductors A B,
         @B x' y' (C_rect x' I) (C_rect y' I) e' xi) with
     | equiv_eta_eta q r e H => fun I => ind_eta_eta I q r e H
-    | equiv_eta_lim' q f Hf e d d' He xi =>
+    | equiv_eta_lim' q y e d d' He xi =>
       fun I =>
-      let y := Build_Approximation f Hf in
-      let b := Build_DApproximation A B y (fun e => C_rect (f e) I)
-        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+      let b := Build_DApproximation A B y (fun e => C_rect (y e) I)
+        (fun d e => equiv_rect (y d) (y e) _ (approx_equiv y d e) I) in
       ind_eta_lim I q d d' e y b He xi (equiv_rect _ _ _ xi I)
-    | equiv_lim'_eta f Hf r e d d' He xi =>
+    | equiv_lim'_eta x r e d d' He xi =>
       fun I =>
-      let x := Build_Approximation f Hf in
-      let a := Build_DApproximation A B x (fun e => C_rect (f e) I)
-        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
+      let a := Build_DApproximation A B x (fun e => C_rect (x e) I)
+        (fun d e => equiv_rect (x d) (x e) _ (approx_equiv x d e) I) in
       ind_lim_eta I r d d' e x a He xi (equiv_rect _ _ _ xi I)
-    | equiv_lim'_lim' f Hf g Hg e d n e' He xi =>
+    | equiv_lim'_lim' x y e d n e' He xi =>
       fun I =>
-      let x := Build_Approximation f Hf in
-      let a := Build_DApproximation A B x (fun e => C_rect (f e) I)
-        (fun d e => equiv_rect (f d) (f e) _ (Hf d e) I) in
-      let y := Build_Approximation g Hg in
-      let b := Build_DApproximation A B y (fun e => C_rect (g e) I)
-        (fun d e => equiv_rect (g d) (g e) _ (Hg d e) I) in
+      let a := Build_DApproximation A B x (fun e => C_rect (x e) I)
+        (fun d e => equiv_rect (x d) (x e) _ (approx_equiv x d e) I) in
+      let b := Build_DApproximation A B y (fun e => C_rect (y e) I)
+        (fun d e => equiv_rect (y d) (y e) _ (approx_equiv y d e) I) in
       ind_lim_lim I x y a b e d n e' He xi (equiv_rect _ _ _ xi I)
     end
   for equiv_rect x y e xi I.
@@ -262,13 +242,16 @@ End induction.
 End DefSec.
 
 Arguments eta {_ _} _.
-Arguments Clim {_ _} _ /.
 Arguments ind_eta {_ _ _ _} _ _.
 Arguments ind_lim {_ _ _ _} _ _ _.
 Arguments ind_eta_eta {_ _ _ _} _ _ _ _ _.
 Arguments ind_eta_lim {_ _ _ _} _ _ _ _ _ _ _ _ _ _.
 Arguments ind_lim_eta {_ _ _ _} _ _ _ _ _ _ _ _ _ _.
 Arguments ind_lim_lim {_ _ _ _} _ _ _ _ _ _ _ _ _ _ _ _.
+
+(* These don't get refolded so simpl produces the huge fix expression. *)
+Arguments C_rect T {Tclose} A B I x : simpl never.
+Arguments equiv_rect T {Tclose} A B I {x y e} xi : simpl never.
 
 End Cauchy.
 
