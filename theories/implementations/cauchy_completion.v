@@ -1246,17 +1246,15 @@ Proof.
 split;apply _.
 Qed.
 
-Lemma C_equiv_through_approx' : forall u (y : Approximation (C T)) e d,
+Lemma C_equiv_through_approx@{} : forall u (y : Approximation (C T)) e d,
   close e u (y d) -> close (e+d) u (lim y).
 Proof.
 apply (C_ind0 (fun u => forall y e d, _ -> _)).
-- intros q y e d E.
-  rewrite equiv_eta_lim_def.
-  apply tr;do 2 econstructor;split;[|exact E].
-  apply qpos_plus_comm.
+- intros q y e d E. eapply equiv_eta_lim;[apply qpos_plus_comm|].
+  trivial.
 - intros x Ex y e d xi.
   pose proof (fun e n => Ex n x e n (equiv_refl _ _)) as E1.
-  apply (merely_destruct (fst (equiv_rounded _ _ _) xi)).
+  generalize (fst (equiv_rounded _ _ _) xi);apply (Trunc_ind _).
   intros [d0 [d' [He E2]]].
   pose proof (equiv_triangle _ _ _ _ _ (E1 (d' / 2) (d' / 4)) E2) as E3.
   eapply equiv_lim_lim;[|exact E3].
@@ -1272,16 +1270,13 @@ apply (C_ind0 (fun u => forall y e d, _ -> _)).
   apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Definition C_equiv_through_approx@{}
-  := C_equiv_through_approx'@{UQ}.
-
 Global Instance equiv_lim@{} : CauchyComplete (C T).
 Proof.
 red;red;intros. apply C_equiv_through_approx.
 apply equiv_refl.
 Qed.
 
-Lemma unique_continuous_extension@{i j} {A:Type@{i} } `{IsHSet A} `{Closeness A}
+Lemma unique_continuous_extension@{i j} {A:Type@{i} } `{Closeness A}
   `{!PreMetric@{i j} A}
   (f g : C T -> A)
   `{!Continuous f} `{!Continuous g}
@@ -1348,10 +1343,8 @@ Variables (f : T -> A) (L : Q+).
 Context {Ef : Lipschitz f L}.
 
 Lemma lipschitz_extend_eta_lim@{} :
-  ∀ (q : T) (d d' e : Q+) (y : Approximation (C T)) (b : Q+ → A)
-  (Eb : ∀ d0 e0 : Q+, close (L * (d0 + e0)) (b d0) (b e0)) Eequiv,
+  ∀ (q : T) (d d' e : Q+) (b : Q+ → A) Eequiv,
   e = d + d'
-  → close d' (eta q) (y d)
   → close (L * d') (f q) (b d)
   → close (L * e) (f q)
       (lim
@@ -1359,7 +1352,7 @@ Lemma lipschitz_extend_eta_lim@{} :
          approximate := λ e0 : Q+, b (e0 / L);
          approx_equiv := Eequiv |}).
 Proof.
-simpl. intros ???????? He xi IH.
+simpl. intros q d d' e b Eequiv He IH.
 assert (Hrw : L * e = L * d' + L * d)
   by (rewrite He;apply pos_eq;ring_tac.ring_with_nat);
 rewrite Hrw;clear Hrw.
@@ -1368,12 +1361,9 @@ simpl. rewrite (pos_unconjugate L d). apply IH.
 Qed.
 
 Lemma lipschitz_extend_lim_lim@{} :
-  ∀ (x y : Approximation (C T)) (a b : Q+ → A)
-  (Ea : ∀ d e : Q+, close (L * (d + e)) (a d) (a e))
-  (Eb : ∀ d e : Q+, close (L * (d + e)) (b d) (b e)) (e d n e' : Q+)
+  ∀ (a b : Q+ → A) (e d n e' : Q+)
   Eequiv1 Eequiv2,
   e = d + n + e'
-  → close e' (x d) (y n)
   → close (L * e') (a d) (b n)
   → close (L * e)
       (lim
@@ -1385,7 +1375,7 @@ Lemma lipschitz_extend_lim_lim@{} :
          approximate := λ e0 : Q+, b (e0 / L);
          approx_equiv := Eequiv2 |}).
 Proof.
-intros ???????????? He xi IH;simpl.
+simpl;intros a b e d n e' ?? He IH.
 apply premetric.equiv_lim_lim with (L * d) (L * n) (L * e').
 + rewrite He;apply pos_eq;ring_tac.ring_with_nat.
 + simpl. rewrite 2!pos_unconjugate. apply IH.
@@ -1415,18 +1405,18 @@ Qed.
 Definition lipshitz_extend_recursor@{}
   : Recursors A (fun e x y => close (L * e) x y).
 Proof.
-simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _).
+simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _);simpl.
 - exact f.
 - intros _ a Ea.
   apply lim. exists (fun e => a (e / L)).
   apply lipschitz_extend_lim_pr. trivial.
 - apply separate_mult.
 - intros ???;apply Ef.
-- intros ????????;apply lipschitz_extend_eta_lim;trivial.
-- simpl;intros ??????? He xi IH.
-  Symmetry in xi;Symmetry in IH;Symmetry.
-  revert He xi IH;apply lipschitz_extend_eta_lim;trivial.
-- simpl. intros ??????????;apply lipschitz_extend_lim_lim;trivial.
+- simpl. intros ???? _ ??? _;apply lipschitz_extend_eta_lim;trivial.
+- simpl;intros ???? _ ?? He _ IH.
+  Symmetry in IH;Symmetry.
+  revert He IH;apply lipschitz_extend_eta_lim;trivial.
+- simpl. intros _ _ ????????? _;apply lipschitz_extend_lim_lim;trivial.
 Defined.
 
 Definition lipschitz_extend@{}

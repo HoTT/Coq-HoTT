@@ -43,9 +43,10 @@ Class PreMetric@{i j} (A:Type@{i}) {Aclose : Closeness A} :=
   ; premetric_triangular :> Triangular A
   ; premetric_rounded :> Rounded@{i j} A }.
 
-Global Instance premetric_hset `{Funext} `{PreMetric A} : IsHSet A.
+Global Instance premetric_hset@{i j} `{Funext}
+  {A:Type@{i} } `{PreMetric@{i j} A} : IsHSet A.
 Proof.
-apply (@HSet.isset_hrel_subpaths _ (fun x y => forall e, close e x y)).
+apply (@HSet.isset_hrel_subpaths@{j i j} _ (fun x y => forall e, close e x y)).
 - intros x;reflexivity.
 - apply _.
 - apply separated.
@@ -940,13 +941,10 @@ intros e. rewrite (pos_split2 e),(pos_split2 (e/2)).
 apply triangular with (x (e / 2 / 2));[Symmetry;apply E1|apply E2].
 Qed.
 
-Context {Alim : Lim A} `{!CauchyComplete A}.
-
-Lemma equiv_through_approx : forall u (y : Approximation A) e d,
-  close e u (y d) -> close (e+d) u (lim y).
+Lemma equiv_through_approx0 : forall (y : Approximation A) ly, IsLimit y ly ->
+  forall u e d, close e u (y d) -> close (e+d) u ly.
 Proof.
-intros u y e d xi.
-pose proof (cauchy_complete y) as E1;red in E1.
+intros y ly E1 u e d xi.
 apply (merely_destruct ((fst (rounded _ _ _) xi))).
 intros [d0 [d' [He E2]]].
 pose proof (triangular _ _ _ _ _ E2 (E1 (d' / 2) _)) as E3.
@@ -958,6 +956,14 @@ apply flip_nonneg_minus.
 assert (Hrw : ' (d0 + (d' / 2 + d' / 2) + d) - ' (d0 + (d' / 2 + d))
   = ' (d' / 2)) by ring_tac.ring_with_integers (NatPair.Z nat).
 rewrite Hrw;solve_propholds.
+Qed.
+
+Context {Alim : Lim A} `{!CauchyComplete A}.
+
+Lemma equiv_through_approx : forall u (y : Approximation A) e d,
+  close e u (y d) -> close (e+d) u (lim y).
+Proof.
+intros u y;apply equiv_through_approx0. apply cauchy_complete.
 Qed.
 
 Lemma equiv_lim_lim (x y : Approximation A) (e d n e' : Q+)
