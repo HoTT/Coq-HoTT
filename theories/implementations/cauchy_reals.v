@@ -182,150 +182,6 @@ Arguments Rlt _ _ /.
 Global Instance Rap@{} : Apart@{UQ UQ} real := fun x y => x < y \/ y < x.
 Arguments Rap _ _ /.
 
-Instance Rle_trans@{} : Transitive Rle.
-Proof.
-hnf. unfold le,Rle.
-intros x y z E1 E2. rewrite <-E2,<-E1. clear E1 E2;revert x y z.
-apply unique_continuous_ternary_extension.
-{ change (Continuous (uncurry join ∘
-    map2 id (uncurry join ∘ map2 (uncurry join) (@id real) ∘ prod_assoc)
-    ∘ prod_assoc^-1 ∘ map2 BinaryDup id ∘ (prod_assoc^-1))).
-  apply _. }
-{ change (Continuous (uncurry join ∘ map2 (uncurry join) (@id real))).
-  apply _. }
-intros q r s.
-change (rat (q ⊔ ((q ⊔ r) ⊔ s)) = rat ((q ⊔ r) ⊔ s)).
-apply (ap rat).
-apply join_r. apply join_le_compat_r,join_ub_l.
-Qed.
-
-Instance Rle_refl@{} : Reflexive Rle.
-Proof.
-change (forall x, join x x = x).
-apply (unique_continuous_extension _);try apply _.
-+ change (Continuous (compose (uncurry join) (@BinaryDup real)));apply _.
-+ intros;apply (ap rat),semilattice_idempotent,join_sl_order_join_sl.
-Qed.
-
-Instance Rlt_irrefl@{} : Irreflexive Rlt.
-Proof.
-hnf. intros x;hnf;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
-pose proof (transitivity E3 E1) as E4.
-hnf in E4. apply (eta_injective _) in E4.
-revert E2;apply le_iff_not_lt_flip. rewrite <-E4.
-apply join_ub_l.
-Qed.
-
-Instance rat_le_reflecting : OrderReflecting rat.
-Proof.
-hnf. intros q r E;unfold le,Rle in E.
-apply (eta_injective _) in E. rewrite <-E;apply join_ub_l.
-Qed.
-
-Instance rat_le_preserve : OrderPreserving rat.
-Proof.
-hnf. intros q r E;hnf.
-apply (ap rat). apply join_r,E.
-Qed.
-
-Instance Rlt_trans@{} : Transitive Rlt.
-Proof.
-intros a b c.
-unfold Rlt.
-apply (Trunc_ind (fun _ => _ -> _));intros [q1 [r1 [E1 [E2 E3]]]];
-apply (Trunc_ind _);intros [q2 [r2 [E4 [E5 E6]]]].
-apply tr. exists q1,r2. split;[|split];trivial.
-pose proof (rat_le_reflecting _ _ (transitivity E3 E4)) as E7.
-apply lt_le_trans with r1;trivial.
-apply lt_le. apply le_lt_trans with q2;trivial.
-Qed.
-
-Instance Rapart_ishprop : forall x y : real, IsHProp (apart x y).
-Proof.
-unfold apart;simpl. intros x y.
-apply Sum.ishprop_sum;try apply _.
-intros E1 E2.
-apply (irreflexivity lt x). transitivity y;trivial.
-Qed.
-
-Lemma R_le_lt_trans@{} : forall a b c : real, a <= b -> b < c -> a < c.
-Proof.
-intros a b c E1;apply (Trunc_ind _);intros [q [r [E2 [E3 E4]]]].
-apply tr;exists q,r;auto.
-Qed.
-
-Lemma R_lt_le_trans@{} : forall a b c : real, a < b -> b <= c -> a < c.
-Proof.
-intros a b c E0 E1;revert E0;apply (Trunc_ind _);intros [q [r [E2 [E3 E4]]]].
-apply tr;exists q,r;auto.
-Qed.
-
-Instance rat_lt_preserving@{} : StrictlyOrderPreserving rat.
-Proof.
-hnf. intros x y E.
-hnf. apply tr;exists x,y;repeat split;auto.
-Qed.
-
-Lemma R_lt_le@{} : forall a b : real, a < b -> a <= b.
-Proof.
-intros a b;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
-transitivity (rat q);trivial.
-transitivity (rat r);trivial.
-apply rat_le_preserve. apply lt_le. trivial.
-Qed.
-
-Lemma rat_lt_reflecting@{} : StrictlyOrderReflecting rat.
-Proof.
-hnf. intros x y;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
-apply (order_reflecting rat) in E1;apply (order_reflecting rat) in E3.
-apply le_lt_trans with q;trivial.
-apply lt_le_trans with r;trivial.
-Qed.
-
-Lemma R_archimedean@{} : forall u v, u < v -> merely (exists q, u < rat q < v).
-Proof.
-intros u v;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
-apply tr;exists ((q+r)/2).
-split.
-- apply R_le_lt_trans with (rat q);trivial.
-  apply rat_lt_preserving. apply Q_average_between. exact E2.
-- apply R_lt_le_trans with (rat r);trivial.
-  apply rat_lt_preserving. apply Q_average_between. exact E2.
-Qed.
-
-Lemma Rle_close_rat_rat' : forall q r, r <= q -> forall v e, close e (rat r) v ->
-  v <= rat (q + ' e).
-Proof.
-intros q r E.
-apply (C_ind0 _ (fun v => forall e, _ -> _)).
-+ intros s e E'.
-  rewrite (equiv_eta_eta_def _) in E'.
-  hnf in E'. apply (order_preserving rat).
-  apply lt_le. rewrite plus_comm. apply flip_lt_minus_l.
-  apply le_lt_trans with (s - r).
-  * apply plus_le_compat;[reflexivity|].
-    apply (snd (flip_le_negate _ _)),E.
-  * apply flip_lt_negate. rewrite <-negate_swap_r. apply E'.
-+ intros y IH e xi.
-  apply (equiv_rounded _) in xi.
-  revert xi;apply (Trunc_ind _);intros [d [d' [He xi]]].
-  hnf. unfold join,Rjoin. rewrite lipschitz_extend_binary_lim.
-  change (lipschitz_extend_binary _ _ (fun q r => eta (join q r)) 1 1) with join.
-  assert (E1 : forall n n', d' = n + n' -> y n <= rat (q + ' e)).
-  { intros n n' Hd.
-    apply IH. rewrite He. apply (equiv_triangle _) with (lim y);trivial.
-    apply (equiv_symm _). rewrite Hd,qpos_plus_comm. apply (equiv_lim _).
-  }
-  apply equiv_path. intros z.
-  destruct (Qpos_lt_min z d') as [a [ca [cb [E2 E3]]]].
-  eapply (equiv_lim_eta _);[|simpl;erewrite E1;[apply (equiv_refl _)|]].
-  * exact E2.
-  * rewrite <-(Qpos_mult_1_l a),pos_unconjugate. exact E3.
-Qed.
-
-Definition Rle_close_rat_rat@{}
-  := Rle_close_rat_rat'@{UQ}.
-
 Instance Rjoin_comm@{} : Commutative (@join _ Rjoin).
 Proof.
 hnf. apply unique_continuous_binary_extension.
@@ -400,6 +256,176 @@ Qed.
 Instance R_lattice@{} : LatticeOrder Rle
   := R_lattice'@{Ularge UQ}.
 
+Lemma Rplus_le_preserving@{} : forall z : real,
+  OrderPreserving (z +).
+Proof.
+intros z. hnf. unfold le;simpl. intros x y E.
+rewrite <-E;clear E.
+revert z x y;apply unique_continuous_ternary_extension.
+{ change (Continuous (uncurry join ∘
+    map2 (uncurry (+)) (uncurry (+) ∘ map2 id (uncurry join)) ∘
+    prod_assoc ∘
+    (* (u, (v, (u, (v, w)))) *)
+    map2 id (map2 id prod_symm ∘ prod_assoc^-1 ∘
+      prod_symm ∘ map2 id prod_assoc^-1) ∘
+    (* (u, (u, ((v,v),w))) *)
+    prod_assoc^-1 ∘ prod_assoc^-1 ∘
+    (* (((u,u),(v,v)),w) *)
+    map2 (map2 BinaryDup BinaryDup) (@id real))).
+  apply _. }
+{ change (Continuous (uncurry (+) ∘ map2 (@id real) (uncurry join) ∘
+    prod_assoc^-1)).
+  apply _. }
+intros;change (rat ((q + r) ⊔ (q + (r ⊔ s))) = rat (q + (r ⊔ s)));apply (ap rat).
+apply join_r. apply (order_preserving (q +)).
+apply join_ub_l.
+Qed.
+
+Lemma Rplus_le_reflecting@{} : forall z : real,
+  OrderReflecting (z +).
+Proof.
+intros z x y E.
+apply (Rplus_le_preserving (- z)) in E.
+rewrite !(simple_associativity (f:=plus) (-z) z),!left_inverse,!left_identity in E.
+trivial.
+Qed.
+
+Instance Rplus_le_embedding@{} : forall z : real, OrderEmbedding (z +).
+Proof.
+intros;split.
+- apply Rplus_le_preserving.
+- apply Rplus_le_reflecting.
+Qed.
+
+Lemma rat_le_preserving : OrderPreserving rat.
+Proof.
+hnf. intros q r E;hnf.
+apply (ap rat). apply join_r,E.
+Qed.
+
+Lemma rat_le_reflecting : OrderReflecting rat.
+Proof.
+hnf. intros q r E;unfold le,Rle in E.
+apply (eta_injective _) in E. rewrite <-E;apply join_ub_l.
+Qed.
+
+Instance rat_le_embedding : OrderEmbedding rat.
+Proof.
+split.
+- apply rat_le_preserving.
+- apply rat_le_reflecting.
+Qed.
+
+Lemma rat_lt_preserving@{} : StrictlyOrderPreserving rat.
+Proof.
+hnf. intros x y E.
+hnf. apply tr;exists x,y;repeat split;auto.
+Qed.
+
+Lemma rat_lt_reflecting@{} : StrictlyOrderReflecting rat.
+Proof.
+hnf. intros x y;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+apply (order_reflecting rat) in E1;apply (order_reflecting rat) in E3.
+apply le_lt_trans with q;trivial.
+apply lt_le_trans with r;trivial.
+Qed.
+
+Instance rat_lt_embedding : StrictOrderEmbedding rat.
+Proof.
+split.
+- apply rat_lt_preserving.
+- apply rat_lt_reflecting.
+Qed.
+
+Instance Rlt_irrefl@{} : Irreflexive Rlt.
+Proof.
+hnf. intros x;hnf;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+pose proof (transitivity E3 E1) as E4.
+apply rat_le_reflecting in E4.
+revert E2;apply le_iff_not_lt_flip. trivial.
+Qed.
+
+Instance Rlt_trans@{} : Transitive Rlt.
+Proof.
+intros a b c.
+unfold Rlt.
+apply (Trunc_ind (fun _ => _ -> _));intros [q1 [r1 [E1 [E2 E3]]]];
+apply (Trunc_ind _);intros [q2 [r2 [E4 [E5 E6]]]].
+apply tr. exists q1,r2. split;[|split];trivial.
+pose proof (rat_le_reflecting _ _ (transitivity E3 E4)) as E7.
+apply lt_le_trans with r1;trivial.
+apply lt_le. apply le_lt_trans with q2;trivial.
+Qed.
+
+Instance Rapart_ishprop : forall x y : real, IsHProp (apart x y).
+Proof.
+unfold apart;simpl. intros x y.
+apply Sum.ishprop_sum;try apply _.
+intros E1 E2.
+apply (irreflexivity lt x). transitivity y;trivial.
+Qed.
+
+Lemma R_le_lt_trans@{} : forall a b c : real, a <= b -> b < c -> a < c.
+Proof.
+intros a b c E1;apply (Trunc_ind _);intros [q [r [E2 [E3 E4]]]].
+apply tr;exists q,r;auto.
+Qed.
+
+Lemma R_lt_le_trans@{} : forall a b c : real, a < b -> b <= c -> a < c.
+Proof.
+intros a b c E0 E1;revert E0;apply (Trunc_ind _);intros [q [r [E2 [E3 E4]]]].
+apply tr;exists q,r;auto.
+Qed.
+
+Lemma R_lt_le@{} : forall a b : real, a < b -> a <= b.
+Proof.
+intros a b;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+transitivity (rat q);trivial.
+transitivity (rat r);trivial.
+apply rat_le_preserving. apply lt_le. trivial.
+Qed.
+
+Lemma R_archimedean@{} : forall u v, u < v -> merely (exists q, u < rat q < v).
+Proof.
+intros u v;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
+apply tr;exists ((q+r)/2).
+split.
+- apply R_le_lt_trans with (rat q);trivial.
+  apply rat_lt_preserving. apply Q_average_between. exact E2.
+- apply R_lt_le_trans with (rat r);trivial.
+  apply rat_lt_preserving. apply Q_average_between. exact E2.
+Qed.
+
+Lemma Rle_close_rat_rat' : forall q v e, close e (rat q) v ->
+  v <= rat (q + ' e).
+Proof.
+intros q.
+apply (C_ind0 _ (fun v => forall e, _ -> _)).
++ intros s e E'.
+  rewrite (equiv_eta_eta_def _) in E'.
+  hnf in E'. apply (order_preserving rat).
+  rewrite plus_comm. apply flip_le_minus_l.
+  apply flip_le_negate. rewrite <-negate_swap_r. apply lt_le,E'.
++ intros y IH e xi.
+  apply (equiv_rounded _) in xi.
+  revert xi;apply (Trunc_ind _);intros [d [d' [He xi]]].
+  hnf. unfold join,Rjoin. rewrite lipschitz_extend_binary_lim.
+  change (lipschitz_extend_binary _ _ (fun q r => eta (join q r)) 1 1) with join.
+  assert (E1 : forall n n', d' = n + n' -> y n <= rat (q + ' e)).
+  { intros n n' Hd.
+    apply IH. rewrite He. apply (equiv_triangle _) with (lim y);trivial.
+    apply (equiv_symm _). rewrite Hd,qpos_plus_comm. apply (equiv_lim _).
+  }
+  apply equiv_path. intros z.
+  destruct (Qpos_lt_min z d') as [a [ca [cb [E2 E3]]]].
+  eapply (equiv_lim_eta _);[|simpl;erewrite E1;[apply (equiv_refl _)|]].
+  * exact E2.
+  * rewrite <-(Qpos_mult_1_l a),pos_unconjugate. exact E3.
+Qed.
+
+Definition Rle_close_rat_rat@{}
+  := Rle_close_rat_rat'@{UQ}.
+
 Lemma Rle_close_rat@{} : forall q u, u <= rat q -> forall v e, close e u v ->
   v <= rat (q + ' e).
 Proof.
@@ -407,7 +433,7 @@ intros q u E v e xi.
 pose proof (non_expanding (join (rat q)) xi) as E1.
 hnf in E. rewrite Rjoin_comm in E1.
 rewrite E in E1.
-pose proof (Rle_close_rat_rat q q (reflexivity q) _ _ E1) as E2.
+apply Rle_close_rat_rat in E1.
 transitivity (join (rat q) v);trivial.
 apply join_ub_r.
 Qed.
@@ -420,13 +446,14 @@ intros [q' [r [E1 [E2 E3]]]] v e xi.
 hnf. apply tr. exists (q' + ' e),(r + ' e).
 split;[|split].
 - apply Rle_close_rat with u;trivial.
-- apply plus_lt_le_compat;[|reflexivity].
+- apply (strictly_order_preserving (+ ' e)).
   trivial.
 - apply (order_preserving rat).
-  apply plus_le_compat;[|reflexivity].
+  apply (order_preserving (+ ' e)).
   apply (order_reflecting rat);trivial.
 Qed.
 
+(* TODO remove this lemma and the next? *)
 Lemma Rlt_close_exists_aux@{} : forall u q, u < rat q ->
   merely (exists e, forall v, close e u v -> v < rat q).
 Proof.
@@ -529,17 +556,14 @@ Lemma equiv_0_metric' : forall e u, close e u 0 -> abs u < rat (' e).
 Proof.
 intros e u;revert u e;apply (C_ind0 _ (fun u => forall e, _ -> _)).
 - intros q e E.
-  rewrite (equiv_eta_eta_def _) in E.
-  hnf in E. rewrite negate_0,plus_0_r in E.
-  apply rat_lt_preserving.
-  destruct (total_abs_either q) as [[_ E']|[_ E']];rewrite E'.
-  + apply E.
-  + apply flip_lt_negate. rewrite involutive. apply E.
+  rewrite (equiv_eta_eta_def _) in E. apply Qclose_alt in E.
+  rewrite negate_0,plus_0_r in E.
+  apply rat_lt_preserving. trivial.
 - intros x IH e xi.
-  generalize (fst (equiv_rounded _ _ _ _) xi).
-  apply (Trunc_ind _);intros [d [d' [He xi']]].
-  rewrite (equiv_lim_eta_def _) in xi'.
-  revert xi';apply (Trunc_ind _);intros [n [n' [Hd E1]]].
+  apply rounded in xi. revert xi.
+  apply (Trunc_ind _);intros [d [d' [He xi]]].
+  rewrite (equiv_lim_eta_def _) in xi.
+  revert xi;apply (Trunc_ind _);intros [n [n' [Hd E1]]].
   apply IH in E1.
   rewrite He,Hd.
   assert (Hrw : (' (n + n' + d')) = ' n' + ' (n + d'))
@@ -558,9 +582,8 @@ Proof.
 intros e u v xi.
 rewrite <-Rabs_idempotent.
 apply equiv_0_metric.
-rewrite <-(Rabs_of_0' (u - u));[|apply right_inverse].
-apply (non_expanding (fun w => abs (u - w))).
-apply (equiv_symm _),xi.
+rewrite <-(Rabs_of_0' (v - v));[|apply right_inverse].
+apply (non_expanding (fun w => abs (w - v))). trivial.
 Qed.
 
 Lemma metric_to_equiv_rat_lim@{} (q : Q)
@@ -683,31 +706,6 @@ Qed.
 
 Definition equiv_metric_rw@{} := equiv_metric_rw'@{Ularge Ularge Ularge}.
 
-Instance Rplus_le_preserving@{} : forall z : real,
-  OrderPreserving (z +).
-Proof.
-intros z. hnf. unfold le;simpl. intros x y E.
-rewrite <-E;clear E.
-revert z x y;apply unique_continuous_ternary_extension.
-{ change (Continuous (uncurry join ∘
-    map2 (uncurry (+)) (uncurry (+) ∘ map2 id (uncurry join)) ∘
-    prod_assoc ∘
-    (* (u, (v, (u, (v, w)))) *)
-    map2 id (map2 id prod_symm ∘ prod_assoc^-1 ∘
-      prod_symm ∘ map2 id prod_assoc^-1) ∘
-    (* (u, (u, ((v,v),w))) *)
-    prod_assoc^-1 ∘ prod_assoc^-1 ∘
-    (* (((u,u),(v,v)),w) *)
-    map2 (map2 BinaryDup BinaryDup) (@id real))).
-  apply _. }
-{ change (Continuous (uncurry (+) ∘ map2 (@id real) (uncurry join) ∘
-    prod_assoc^-1)).
-  apply _. }
-intros;change (rat ((q + r) ⊔ (q + (r ⊔ s))) = rat (q + (r ⊔ s)));apply (ap rat).
-apply join_r. apply (order_preserving (q +)).
-apply join_ub_l.
-Qed.
-
 Lemma Rlt_close_plus@{} : forall u v, u < v ->
   forall w e, close e u w -> w < v + rat (' e).
 Proof.
@@ -719,44 +717,6 @@ apply R_lt_le_trans with (rat (r + ' e)).
 - rewrite plus_comm. rewrite Rplus_comm.
   change (rat (' e) + rat r <= rat (' e) + v).
   apply (order_preserving (rat (' e) +)). trivial.
-Qed.
-
-Lemma Rplus_le_reflecting@{} : forall z : real,
-  OrderReflecting (z +).
-Proof.
-intros z;hnf;unfold le;simpl;intros x y E.
-assert (Hrw : y = z + y - z).
-{ rewrite (commutativity (f:=plus) z y),
-  <-(simple_associativity (f:=plus) y z (-z)).
-  rewrite right_inverse,right_identity. trivial.
-}
-path_via (z + y - z);clear Hrw.
-rewrite <-E. clear E.
-revert z x y;apply unique_continuous_ternary_extension.
-{ change (Continuous (uncurry join ∘ (@snd real (real /\ real)) ∘ prod_assoc^-1)).
-  apply _. }
-{ change (Continuous
-    (uncurry (+) ∘ map2 (uncurry join ∘ map2 (uncurry (+)) (uncurry (+))) negate ∘
-        map2 (map2 id prod_symm ∘ prod_assoc^-1 ∘
-      map2 (prod_assoc ∘ prod_symm) id ∘ prod_symm ∘ prod_assoc^-1 ∘ prod_symm) id ∘
-    prod_symm ∘ prod_assoc^-1 ∘ prod_assoc^-1 ∘ prod_assoc^-1 ∘
-    map2 (map2 (map2 BinaryDup id ∘ BinaryDup) (@id real)) id)).
-  apply _. }
-intros;change (rat (r ⊔ s) = rat ((q + r) ⊔ (q + s) - q));apply (ap rat).
-destruct (total le r s) as [E|E].
-- rewrite (join_r _ _ E).
-  rewrite (join_r _ _ (order_preserving (q +) _ _ E)).
-  rewrite (plus_comm q s),<-plus_assoc,plus_negate_r,plus_0_r;trivial.
-- rewrite (join_l _ _ E).
-  rewrite (join_l _ _ (order_preserving (q +) _ _ E)).
-  rewrite (plus_comm q r),<-plus_assoc,plus_negate_r,plus_0_r;trivial.
-Qed.
-
-Instance Rplus_le_embedding@{} : forall z : real, OrderEmbedding (z +).
-Proof.
-intros;split.
-- apply Rplus_le_preserving.
-- apply Rplus_le_reflecting.
 Qed.
 
 Lemma Rneg_le_flip@{} : forall x y : real, x <= y -> - y <= - x.
@@ -959,7 +919,7 @@ apply R_le_lt_trans with (rat (' (a * e))).
   + apply (QRmult_lipschitz_interval_aux a).
     apply (snd (Rabs_le_pr _ _)).
     split;apply v.2.
-  + apply rat_le_preserve. rewrite qpos_mult_comm.
+  + apply rat_le_preserving. rewrite qpos_mult_comm.
     apply mult_le_compat;try solve_propholds.
     * apply Qabs_nonneg.
     * reflexivity.
@@ -1000,9 +960,9 @@ intros a b E s.
 exists (s.1).
 split.
 - transitivity (- (rat a));[|apply s.2].
-  apply Rneg_le_flip,rat_le_preserve,E.
+  apply Rneg_le_flip,rat_le_preserving,E.
 - transitivity (rat a);[apply s.2|].
-  apply rat_le_preserve,E.
+  apply rat_le_preserving,E.
 Defined.
 
 Lemma Rbounded_mult_respects : ∀ z x y, interval_back x = interval_back y →
@@ -1206,9 +1166,9 @@ intros [n En].
 apply tr;exists (join d n + 1) ,(join d n).
 repeat split.
 - apply R_lt_le_trans with (rat (' d));trivial.
-  apply rat_le_preserve,join_ub_l.
+  apply rat_le_preserving,join_ub_l.
 - apply R_lt_le_trans with (rat (' n));trivial.
-  apply rat_le_preserve,join_ub_r.
+  apply rat_le_preserving,join_ub_r.
 - apply pos_plus_le_lt_compat_r.
   + solve_propholds.
   + reflexivity.
@@ -1245,7 +1205,7 @@ rewrite (pos_split2 e). apply (triangular _ (u2 * v1)).
       unfold abs at 2. rewrite (fst (abs_sig (' _)).2);[|solve_propholds].
       apply equiv_to_metric in xi2.
       etransitivity;[apply R_lt_le,xi2|].
-      apply rat_le_preserve,meet_lb_r.
+      apply rat_le_preserving,meet_lb_r.
   + apply rat_lt_preserving.
     rewrite <-Qabs_mult.
     change (' d * ' (e / 2 / (d + 1))) with
@@ -1414,7 +1374,7 @@ apply R_lt_le_trans with (rat (' (e1 * e2))).
 - apply rat_lt_preserving;solve_propholds.
 - rewrite plus_0_l in E1';rewrite plus_0_l in E2'.
   change (rat (' (e1 * e2))) with (rat (' e1) * rat (' e2)).
-  apply mult_le_compat;trivial;apply rat_le_preserve;solve_propholds.
+  apply mult_le_compat;trivial;apply rat_le_preserving;solve_propholds.
 Qed.
 
 Lemma Rjoin_plus_r : forall a b c : real, join a b + c = join (a+c) (b+c).
@@ -1447,11 +1407,11 @@ destruct (Qpos_lt_min e1 e2) as [n [n1 [n2 [En1 En2]]]].
 apply R_lt_le_trans with (join a b + rat (' n));[apply Rlt_plus_pos|].
 rewrite Rjoin_plus_r. apply join_le.
 - etransitivity;[|exact E1'].
-  apply (order_preserving (a +)),rat_le_preserve. rewrite En1.
+  apply (order_preserving (a +)),rat_le_preserving. rewrite En1.
   unfold cast at 2;simpl.
   apply nonneg_plus_le_compat_r. solve_propholds.
 - etransitivity;[|exact E2'].
-  apply (order_preserving (b +)),rat_le_preserve. rewrite En2.
+  apply (order_preserving (b +)),rat_le_preserving. rewrite En2.
   unfold cast at 2;simpl.
   apply nonneg_plus_le_compat_r. solve_propholds.
 Qed.

@@ -31,6 +31,7 @@ Private Inductive C@{} : Type@{UQ} :=
   | Clim : Lim C
 
 with equiv@{} : Closeness@{UQ} C :=
+  (* TODO NonExpanding eta ?? *)
   | equiv_eta_eta : forall (q r : T) (e : Q+),
       close e q r ->
       close e (eta q) (eta r)
@@ -1326,16 +1327,16 @@ Proof.
 intros u v [] e;apply (equiv_refl _).
 Qed.
 
-Lemma eta_injective' : Injective eta.
+Lemma eta_injective@{} : Injective eta.
 Proof.
 intros q r E.
 apply separated.
-intros e. rewrite <-equiv_eta_eta_def.
+intros e. change (equiv_alt e (eta q) (eta r)).
+apply equiv_to_equiv_alt.
 apply C_eq_equiv. trivial.
 Qed.
 
-Global Instance eta_injective@{} : Injective eta
-  := eta_injective'@{UQ}.
+Global Existing Instance eta_injective.
 
 Section lipschitz_extend.
 Context `{PreMetric A} {Alim : Lim A} `{!CauchyComplete A}.
@@ -1468,9 +1469,9 @@ Lemma lipschitz_extend_same_distance@{} (f g : T -> A) (L:Q+)
 Proof.
 intros e E1 d u;revert u d;apply (C_ind0@{UAQ} (fun u => forall d, _)).
 - intros q d;apply E1.
-- intros x Ex d. rewrite !lipschitz_extend_lim.
+- intros x Ex d. rewrite !lipschitz_extend_lim. revert d.
   apply lim_same_distance. simpl.
-  clear d. intros;apply Ex.
+  intros;apply Ex.
 Qed.
 
 End lipschitz_extend_extra.
@@ -1488,14 +1489,9 @@ Definition eta_back@{} : forall x, eta (completion_back x) = x
 Definition back_eta@{} : forall x, completion_back (eta x) = x
   := fun _ => idpath.
 
-Global Instance eta_isequiv : IsEquiv eta.
-Proof.
-simple refine (BuildIsEquiv _ _ _ _ _ _ _).
-- exact completion_back.
-- exact eta_back.
-- exact back_eta.
-- intros. apply path_ishprop.
-Defined.
+Global Instance eta_isequiv : IsEquiv eta
+  := BuildIsEquiv T _ eta completion_back eta_back back_eta
+    (fun _ => path_ishprop _ _).
 
 Definition eta_equiv : T <~> C T
   := BuildEquiv _ _ eta _.
@@ -1530,16 +1526,15 @@ Proof.
 intros e x y xi.
 apply rounded in xi. revert xi;apply (Trunc_ind _).
 intros [d [d' [He E]]].
-apply tr;exists (L2*d),(L2*d');split.
+apply tr. exists (L2*d),(L2*d');split.
 + rewrite He; apply Qpos_plus_mult_distr_l.
 + intros z. apply rounded in E;revert E;
   apply (Trunc_ind _);intros [n [n' [Hd E]]].
   rewrite Hd,Qpos_plus_mult_distr_l.
   apply lipschitz_extend_same_distance. intros n0 q.
-  rewrite <-(pos_unconjugate L2 n0).
-  rewrite <-Qpos_mult_assoc,<-Qpos_plus_mult_distr_l.
+  apply rounded_plus.
   apply (lipschitz (fun r => f r q) L2).
-  apply rounded_plus. trivial.
+  trivial.
 Qed.
 
 Definition lipschitz_extend_binary@{} : C A -> C B -> T
