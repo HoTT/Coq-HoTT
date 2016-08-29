@@ -2,7 +2,7 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp HSet.
-Require Import hit.Pushout.
+Require Import HIT.Pushout.
 Local Open Scope path_scope.
 
 (** * Joins *)

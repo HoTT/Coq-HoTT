@@ -6,8 +6,8 @@ Require Import HoTT.Basics.
 Require Import Types.Paths Types.Forall Types.Arrow Types.Universe Types.Empty Types.Unit.
 Require Import HSet UnivalenceImpliesFunext.
 Require Import Spaces.Int.
-Require Import hit.Coeq.
-Require Import Modalities.Modality hit.Truncations hit.Connectedness.
+Require Import HIT.Coeq.
+Require Import Modalities.Modality HIT.Truncations HIT.Connectedness.
 Import TrM.
 Local Open Scope path_scope.
 
@@ -18,7 +18,7 @@ Generalizable Variables X A B f g n.
 (** We define the circle as the coequalizer of two copies of the identity map of [Unit].  This is easily equivalent to the naive definition
 
 <<<
-Private Inductive S1 : Type1 :=
+Private Inductive S1 : Type0 :=
 | base : S1
 | loop : base = base.
 >>>

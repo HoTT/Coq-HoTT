@@ -103,12 +103,12 @@ They are currently in several groups:
   whenever possible.  Note that `make clean; make` will produce an
   error if there is a dependency loop (ordinary `make` may not).
 
-- `hit/*`: Files involving higher inductive types.  Each higher
+- `HIT/*`: Files involving higher inductive types.  Each higher
   inductive type is defined in a corresponding file (see conventions
   on defining HITs, below).  Since the definition of a HIT involves
   axioms added to the core theory, we isolate them in this directory.
   In particular, nothing in the root directory should depend on
-  anything in `hit/` (except, of course, for `HoTT` and `Tests`, below).
+  anything in `HIT/` (except, of course, for `HoTT` and `Tests`, below).
 
 - `Tactics, Tactics/*`: some more advanced tactics.
 
@@ -126,7 +126,7 @@ They are currently in several groups:
 - `FunextAxiom, UnivalenceAxiom`: You can import these files to assume
   the axioms globally (in the core, we track them with typeclasses).
   Two additional related files are `UnivalenceImpliesFunext` and
-  `hit/IntervalImpliesFunext`; see below.  None of these are exported
+  `HIT/IntervalImpliesFunext`; see below.  None of these are exported
   by `HoTT`.
 
 A dependency graph of all the files in the library can be found on the
@@ -138,7 +138,7 @@ master branch.
 
 ### Non-core files ###
 
-- `theories/categories/*`: The categories library, which is not
+- `theories/Categories/*`: The categories library, which is not
   considered part of the core (e.g. it uses unicode), but nevertheless
   lives in `theories/`.
 
@@ -481,7 +481,7 @@ variables, but that is not needed for univalence and funext.)
 ### Higher inductive types ###
 
 Every higher inductive type technically assumes some `Axioms`.  These
-axioms are asserted globally by the corresponding `hit/` file, since
+axioms are asserted globally by the corresponding `HIT/` file, since
 there's not much point to assuming a HIT without the axioms that make
 it work.
 
@@ -494,12 +494,12 @@ automatically and doesn't need to be assumed separately.  (This is
 usually good, to simplify your hypotheses, unless you are working in
 part of the core that `UnivalenceImpliesFunext` depends on.)
 
-Similarly, the file `hit/IntervalImpliesFunext` proves funext from the
-interval type assumed in `hit/Interval`, so if you import this file
+Similarly, the file `HIT/IntervalImpliesFunext` proves funext from the
+interval type assumed in `HIT/Interval`, so if you import this file
 then funext is always true automatically (just as if you'd imported
-`FunextAxiom`).  Of course, once you've imported `hit/Interval` it is
+`FunextAxiom`).  Of course, once you've imported `HIT/Interval` it is
 always possible to prove funext by hand, but by importing
-`hit/Interval` without `hit/IntervalImpliesFunext` you can still use
+`HIT/Interval` without `HIT/IntervalImpliesFunext` you can still use
 the interval in some places and track moral uses of funext elsewhere.
 
 ### Assuming axioms ###
@@ -527,7 +527,7 @@ something you generally need to worry about; see the comments in
 
 ## Higher Inductive Types ##
 
-At present, higher inductive types are restricted to the `hit/`
+At present, higher inductive types are restricted to the `HIT/`
 directory, and are all defined using [Dan Licata's "private inductive
 types" hack][hit-hack] which was [implemented in Coq](https://coq.inria.fr/files/coq5_submission_3.pdf) by Yves Bertot.
 This means the procedure for defining a HIT is:
@@ -563,7 +563,7 @@ This means the procedure for defining a HIT is:
 7. Usually, you will want to also define a non-dependent recursor and
    its computation rules as well.
 
-Look at some of the existing files in `hit/*` for examples.
+Look at some of the existing files in `HIT/*` for examples.
 
 [hit-hack]: http://homotopytypetheory.org/2011/04/23/running-circles-around-in-your-proof-assistant/
 
@@ -645,9 +645,8 @@ in `bar` appropriately.
 
 (It is possible to explicitly declare and name universes globally with
 the `Universe` command, but we are not using that in the HoTT
-library.  Note in particular that universes declared with `Universe`
-are _not_ generalized upon closing sections; they are permanently
-global wherever they are defined.)
+library.  Universes declared with `Universe` will be discharged on each 
+section definition independently.)
 
 Unfortunately it is not currently possible to declare the universe
 parameters of a definition; Coq simply decides after you make a
@@ -724,6 +723,13 @@ insert unnecessary calls to instances that introduce additional
 universes.  One solution is to alter the proofs of those instances as
 described above; another is to call the instance(s) you need
 explicitly, rather than relying on typeclass inference to find them.
+
+Sometimes binders without type annotations, like `forall n, foo n`
+where `foo : nat -> Type0`, will produce a fresh universe for
+the variable's type, eg `forall n : (? : Type@{fresh}), foo n`,
+which will remain in the definition as a phantom type:
+`fresh |= forall n : nat, foo n`. Annotating the binder will get rid of it.
+See also [bug #4868](https://coq.inria.fr/bugs/show_bug.cgi?id=4868).
 
 ### Lifting and lowering ###
 

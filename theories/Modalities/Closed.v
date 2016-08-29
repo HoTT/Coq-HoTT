@@ -3,7 +3,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp TruncType Extensions.
 Require Import Modality Accessible Nullification Lex Topological.
-Require Import hit.Pushout hit.Join.
+Require Import HIT.Pushout HIT.Join.
 
 Local Open Scope path_scope.
 
@@ -134,9 +134,9 @@ Module Accessible_ClosedModalities
 
   Definition acc_gen
     := fun (O : ClosedModalities.Modality@{u a}) =>
-         Build_NullGenerators@{a} (unCl O) (fun _ => Empty@{a}).
+         Build_NullGenerators@{a} (unCl O) (fun _ => Empty).
 
-  Definition inO_iff_isnull
+  Definition inO_iff_isnull@{u a i}
              (O : ClosedModalities.Modality@{u a}) (X : Type@{i})
   : iff@{i i i}
       (ClosedModalities.In@{u a i} O X)
@@ -145,7 +145,7 @@ Module Accessible_ClosedModalities
     split.
     - intros X_inO u.
       pose (X_inO u).
-      apply ooextendable_contr; exact _.
+      apply ooextendable_contr@{a a i i a}; exact _.
     - intros ext u.
       exists ((fst (ext u 1%nat) Empty_rec).1 tt); intros x.
       unfold const in ext.

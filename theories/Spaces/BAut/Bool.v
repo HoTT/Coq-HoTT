@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import Constant Factorization UnivalenceImpliesFunext.
-Require Import Modalities.Modality hit.Truncations hit.Connectedness.
+Require Import Modalities.Modality HIT.Truncations HIT.Connectedness.
 Import TrM.
 Require Import Spaces.BAut.
 

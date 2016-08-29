@@ -12,14 +12,14 @@ Module Export Core.
   (** We use [Empty] for [0] and [Unit] for [1] so that we get nice judgmental behavior.
       TODO: this should be unified with [Spaces.Finite.Fin].
    *)
-  Fixpoint CardinalityRepresentative (n : nat) : Type1 :=
+  Fixpoint CardinalityRepresentative (n : nat) : Type0 :=
     match n with
       | 0 => Empty
       | 1 => Unit
       | S n' => (CardinalityRepresentative n' + Unit)%type
     end.
 
-  Coercion CardinalityRepresentative : nat >-> Type1.
+  Coercion CardinalityRepresentative : nat >-> Sortclass.
 
   (** ** [Fin n] is an hSet *)
   Global Instance trunc_cardinality_representative (n : nat)

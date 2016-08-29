@@ -2,7 +2,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import UnivalenceImpliesFunext EquivalenceVarieties Extensions Fibrations HProp.
 Require Import HoTT.Tactics.
-Require Import hit.Coeq.
+Require Import HIT.Coeq.
 Require Import Tactics.RewriteModuloAssociativity.
 
 Local Open Scope path_scope.
@@ -742,7 +742,7 @@ Section Reflective_Subuniverse.
       simpl in *.
       specialize (H ({x:A & B x}) (fun x => B (h x)) _ g).
       destruct H as [f q].
-      apply inO_to_O_retract@{i j} with (mu := fun w => (h w; f w)).
+      apply inO_to_O_retract@{i} with (mu := fun w => (h w; f w)).
       intros [x1 x2].
       simple refine (path_sigma B _ _ _ _); simpl.
       - apply p.
@@ -822,7 +822,7 @@ Section Reflective_Subuniverse.
     Definition inO_paths@{i j} (S : Type@{i}) {S_inO : In@{Ou Oa i} O S} (x y : S)
     : In@{Ou Oa i} O (x=y).
     Proof.
-      simple refine (inO_to_O_retract@{i j} _ _ _); intro u.
+      simple refine (inO_to_O_retract@{i} _ _ _); intro u.
       - assert (p : (fun _ : O (x=y) => x) == (fun _=> y)).
         { refine (O_indpaths _ _ _); simpl.
           intro v; exact v. }

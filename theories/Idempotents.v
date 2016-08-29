@@ -1,10 +1,11 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations UnivalenceImpliesFunext EquivalenceVarieties.
-Require Import hit.Truncations.
+Require Import Fibrations UnivalenceImpliesFunext EquivalenceVarieties Constant.
+Require Import HIT.Truncations.
 
 Local Open Scope path_scope.
 
+Local Set Universe Minimization ToSet.
 
 (** * Idempotents and their splittings *)
 
@@ -247,6 +248,69 @@ Global Instance ispreidem_idmap (X : Type) : @IsPreIdempotent X idmap
 Definition preidem_idmap (X : Type) : PreIdempotent X.
 Proof.
   exists idmap; exact _.
+Defined.
+
+(** Any pre-idempotent on a set splits. *)
+Definition split_preidem_set (X : Type) `{IsHSet X} (f : PreIdempotent X)
+: Splitting f.
+Proof.
+  simple refine (Build_RetractOf X { x : X & f x = x }
+                                 (fun x => (f x ; isidem f x)) pr1 _ ; _).
+  - intros [x p]; simpl.
+    apply path_sigma with p; simpl.
+    apply path_ishprop.
+  - simpl. intros x; reflexivity.
+Defined.
+
+(** Any weakly constant pre-idempotent splits (Escardo) *)
+Definition split_preidem_wconst (X : Type) (f : PreIdempotent X)
+           `{WeaklyConstant _ _ f}
+: Splitting f.
+Proof.
+  simple refine (Build_RetractOf X (FixedBy f)
+                                 (fun x => (f x ; isidem f x)) pr1 _ ; _).
+  - intros x; apply path_ishprop.
+  - simpl. intros x; reflexivity.
+Defined.
+
+(** If [f] is pre-idempotent and [f x = x] is collapsible for all [x], then [f] splits (Escardo). *)
+Definition split_preidem_splitsupp (X : Type) (f : PreIdempotent X)
+           (ss : forall x, Collapsible (f x = x))
+: Splitting f.
+Proof.
+  simple refine (Build_RetractOf X { x : X & FixedBy (@collapse (f x = x) _) }
+                                 _ pr1 _ ; _).
+  - intros x; exists (f x); unfold FixedBy.
+    exists (collapse (isidem f x)).
+    apply wconst.
+  - intros [x [p q]]; simpl.
+    apply path_sigma with p.
+    apply path_ishprop.
+  - simpl. intros x; reflexivity.
+Defined.
+
+(** Moreover, in this case the section is an embedding. *)
+Definition isemb_split_preidem_splitsupp (X : Type) (f : PreIdempotent X)
+           (ss : forall x, Collapsible (f x = x))
+: IsEmbedding (retract_sect (split_preidem_splitsupp X f ss).1).
+Proof.
+  apply istruncmap_mapinO_tr; exact _.
+Defined.
+
+(** Conversely, if [f] splits with a section that is an embedding, then (it is pre-idempotent and) [f x = x] is collapsible for all [x] (Escardo). *)
+Definition splitsupp_split_isemb (X : Type) (f : X -> X) (S : Splitting f)
+           `{IsEmbedding (retract_sect S.1)}
+: forall x, Collapsible (f x = x).
+Proof.
+  intros x. destruct S as [[A r s H] K]; simpl in *.
+  assert (c1 : f x = x -> { a : A & s a = x }).
+  { intros p; exists (r x).
+    exact (K x @ p). }
+  assert (c2 : { a : A & s a = x } -> f x = x).
+  { intros [a q].
+    exact ((K x)^ @ ap (s o r) q^ @ ap s (H a) @ q). }
+  exists (c2 o c1).
+  apply wconst_through_hprop.
 Defined.
 
 (** *** Quasi-idempotents *)

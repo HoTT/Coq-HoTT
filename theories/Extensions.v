@@ -29,7 +29,7 @@ Section Extensions.
       - >= max(A,P).
     The following [Check] verifies that this is in fact the case. *)
   (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
-  Definition check_ExtensionAlong@{a b p m n} : True.
+  Definition check_ExtensionAlong@{a b p m n} : True@{Set}.
   Proof.
     Check ExtensionAlong@{a b p m n}.
   Abort.
@@ -97,7 +97,7 @@ Section Extensions.
            (n : nat) {A : Type@{i}} {B : Type@{j}}
            (f : A -> B) (C : B -> Type@{k}) : Type@{l}
     := match n with
-         | 0 => Unit@{l}
+         | 0 => Unit
          | S n => (forall (g : forall a, C (f a)),
                      ExtensionAlong@{i j k l l} f C g) *
                   forall (h k : forall b, C b),
@@ -109,7 +109,7 @@ Section Extensions.
       - size of C
       - size of result (>= A,B,C) *)
   (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
-  Definition check_ExtendableAlong@{a b c r} : True.
+  Definition check_ExtendableAlong@{a b c r} : True@{Set}.
   Proof.
     Check ExtendableAlong@{a b c r}.
   Abort.
@@ -129,7 +129,7 @@ Section Extensions.
       + intros h k; exact (IH _ (snd ext h k)).
   Defined.
   (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
-  Definition check_lift_extendablealong@{i j k l1 l2} : True.
+  Definition check_lift_extendablealong@{i j k l1 l2} : True@{Set}.
   Proof.
     Check lift_extendablealong@{i j k l1 l2}.
   Abort.
@@ -326,10 +326,10 @@ Section Extensions.
   Definition ooExtendableAlong@{i j k l}
              {A : Type@{i}} {B : Type@{j}}
              (f : A -> B) (C : B -> Type@{k}) : Type@{l}
-    := forall n, ExtendableAlong@{i j k l} n f C.
+    := forall n : nat, ExtendableAlong@{i j k l} n f C.
   (** Universe parameters are the same as for [ExtendableAlong]. *)
   (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
-  Definition check_ooExtendableAlong@{a b c r} : True.
+  Definition check_ooExtendableAlong@{a b c r} : True@{Set}.
   Proof.
     Check ooExtendableAlong@{a b c r}.
   Abort.
@@ -343,7 +343,7 @@ Section Extensions.
   : ooExtendableAlong@{i j k l1} f C -> ooExtendableAlong@{i j k l2} f C
     := fun ext n => lift_extendablealong n f C (ext n).
   (** We would like to say [Check], but because of bug #4517, https://coq.inria.fr/bugs/show_bug.cgi?id=4517, we can't. *)
-  Definition check_ooextendablealong@{i j k l1 l2} : True.
+  Definition check_ooextendablealong@{i j k l1 l2} : True@{Set}.
   Proof.
     Check lift_ooextendablealong@{i j k l1 l2}.
   Abort.

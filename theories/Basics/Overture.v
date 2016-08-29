@@ -19,6 +19,9 @@ Global Unset Refine Instance Mode.
 (** This command makes it so that you don't have to declare universes explicitly when mentioning them in the type.  (Without this command, if you want to say [Definition foo := Type@{i}.], you must instead say [Definition foo@{i} := Type@{i}.]. *)
 Global Unset Strict Universe Declaration.
 
+(** This command makes it so that when we say something like [IsHSet nat] we get [IsHSet@{i} nat] instead of [IsHSet@{Set} nat]. *)
+Global Unset Universe Minimization ToSet.
+
 Definition relation (A : Type) := A -> A -> Type.
 
 Class Reflexive {A} (R : relation A) :=
@@ -45,6 +48,15 @@ Arguments transitivity {A R _} / {_ _ _} _ _.
 (** Above, we have made [reflexivity], [symmetry], and [transitivity] reduce under [cbn]/[simpl] to their underlying instances.  This allows the tactics to build proof terms referencing, e.g., [concat].  We use [change] after the fact to make sure that we didn't [cbn] away the original form of the relation.
 
     If we want to remove the use of [cbn], we can play tricks with [Module Type]s and [Module]s to declare [inverse] directly as an instance of [Symmetric] without changing its type.  Then we can simply [unfold symmetry].  See the comments around the definition of [inverse]. *)
+
+(** Overwrite [reflexivity] so that we use our version of [Reflexive] rather than having the tactic look for it in the standard library.  We make use of the built-in reflexivity to handle, e.g., single-constructor inductives. *)
+Ltac reflexivity :=
+  Coq.Init.Notations.reflexivity
+  || (intros;
+      let R := match goal with |- ?R ?x ?y => constr:(R) end in
+      let pre_proof_term_head := constr:(@reflexivity _ R _) in
+      let proof_term_head := (eval cbn in pre_proof_term_head) in
+      apply (pre_proof_term_head : forall x, R x x)).
 
 (** Even if we weren't using [cbn], we would have to redefine symmetry, since the built-in Coq version is sometimes too smart for its own good, and will occasionally fail when it should not. *)
 Ltac symmetry :=
@@ -147,13 +159,18 @@ Notation compose := (fun g f x => g (f x)).
 Notation "g 'o' f" := (compose g%function f%function) (at level 40, left associativity) : function_scope.
 
 (** Composition of logical equivalences *)
-Definition iff_compose {A B C : Type} (g : B <-> C) (f : A <-> B)
-: A <-> C
-:= (fst g o fst f , snd f o snd g).
+Instance iff_compose : Transitive iff | 1
+  := fun A B C f g => (fst g o fst f , snd f o snd g).
+Arguments iff_compose {A B C} f g : rename.
 
 (** While we're at it, inverses of logical equivalences *)
-Definition iff_inverse {A B : Type} : (A <-> B) -> (B <-> A)
-  := fun f => (snd f , fst f).
+Instance iff_inverse : Symmetric iff | 1
+  := fun A B f => (snd f , fst f).
+Arguments iff_inverse {A B} f : rename.
+
+(** And reflexivity of them *)
+Instance iff_reflexive : Reflexive iff | 1
+  := fun A => (idmap , idmap).
 
 (** Dependent composition of functions. *)
 Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (f x).
@@ -589,7 +606,7 @@ Ltac path_via mid :=
   apply @concat with (y := mid); auto with path_hints.
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
-Inductive Empty : Type1 := .
+Inductive Empty : Type0 := .
 
 Scheme Empty_ind := Induction for Empty Sort Type.
 Scheme Empty_rec := Minimality for Empty Sort Type.
@@ -617,7 +634,7 @@ Class Asymmetric {A} (R : relation A) :=
   asymmetry : forall {x y}, R x y -> (complement R y x : Type).
 
 (** Likewise, we put [Unit] here, instead of in [Unit.v], because [Trunc] uses it. *)
-Inductive Unit : Type1 :=
+Inductive Unit : Type0 :=
     tt : Unit.
 
 Scheme Unit_ind := Induction for Unit Sort Type.

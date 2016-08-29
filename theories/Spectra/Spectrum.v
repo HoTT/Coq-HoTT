@@ -5,7 +5,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HoTT.Tactics.
 Require Import Pointed.
-Require Import hit.Truncations.
+Require Import HIT.Truncations.
 Import TrM.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.

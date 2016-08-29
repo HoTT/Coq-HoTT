@@ -66,25 +66,25 @@ theories/Modalities/Closed.v
 theories/Modalities/Fracture.v
 theories/Spaces/Int.v
 theories/Comodalities/CoreflectiveSubuniverse.v
-theories/hit/Circle.v
-theories/hit/Truncations.v
-theories/hit/TruncImpliesFunext.v
-theories/hit/Connectedness.v
-theories/hit/Coeq.v
-theories/hit/FreeIntQuotient.v
-theories/hit/Flattening.v
-theories/hit/Interval.v
-theories/hit/IntervalImpliesFunext.v
-theories/hit/Suspension.v
-theories/hit/Spheres.v
-theories/hit/TwoSphere.v
-theories/hit/epi.v
-theories/hit/unique_choice.v
-theories/hit/quotient.v
-theories/hit/iso.v
-theories/hit/Pushout.v
-theories/hit/Join.v
-theories/hit/V.v
+theories/HIT/Circle.v
+theories/HIT/Truncations.v
+theories/HIT/TruncImpliesFunext.v
+theories/HIT/Connectedness.v
+theories/HIT/Coeq.v
+theories/HIT/FreeIntQuotient.v
+theories/HIT/Flattening.v
+theories/HIT/Interval.v
+theories/HIT/IntervalImpliesFunext.v
+theories/HIT/Suspension.v
+theories/HIT/Spheres.v
+theories/HIT/TwoSphere.v
+theories/HIT/epi.v
+theories/HIT/unique_choice.v
+theories/HIT/quotient.v
+theories/HIT/iso.v
+theories/HIT/Pushout.v
+theories/HIT/Join.v
+theories/HIT/V.v
 theories/Spaces/Cantor.v
 theories/Spaces/BAut.v
 theories/Spaces/BAut/Cantor.v
@@ -102,243 +102,243 @@ theories/Utf8.v
 theories/HoTT.v
 theories/Tests.v
 
-theories/categories.v
+theories/Categories.v
 
-theories/categories/Category.v
-theories/categories/Functor.v
-theories/categories/NaturalTransformation.v
+theories/Categories/Category.v
+theories/Categories/Functor.v
+theories/Categories/NaturalTransformation.v
 
-theories/categories/Category/Core.v
-theories/categories/Functor/Core.v
-theories/categories/NaturalTransformation/Core.v
+theories/Categories/Category/Core.v
+theories/Categories/Functor/Core.v
+theories/Categories/NaturalTransformation/Core.v
 
-theories/categories/Category/Morphisms.v
-theories/categories/Category/Strict.v
-theories/categories/Category/Univalent.v
-theories/categories/Category/Objects.v
-theories/categories/Category/Dual.v
-theories/categories/Category/Paths.v
-theories/categories/Category/Prod.v
-theories/categories/Category/Pi.v
-theories/categories/Category/Sum.v
-theories/categories/Category/Sigma.v
-theories/categories/Category/Sigma/Core.v
+theories/Categories/Category/Morphisms.v
+theories/Categories/Category/Strict.v
+theories/Categories/Category/Univalent.v
+theories/Categories/Category/Objects.v
+theories/Categories/Category/Dual.v
+theories/Categories/Category/Paths.v
+theories/Categories/Category/Prod.v
+theories/Categories/Category/Pi.v
+theories/Categories/Category/Sum.v
+theories/Categories/Category/Sigma.v
+theories/Categories/Category/Sigma/Core.v
 
-theories/categories/Functor/Composition.v
-theories/categories/Functor/Composition/Core.v
-theories/categories/Functor/Identity.v
-theories/categories/Functor/Paths.v
+theories/Categories/Functor/Composition.v
+theories/Categories/Functor/Composition/Core.v
+theories/Categories/Functor/Identity.v
+theories/Categories/Functor/Paths.v
 
-theories/categories/Category/Sigma/OnMorphisms.v
-theories/categories/Category/Sigma/OnObjects.v
-theories/categories/Category/Sigma/Univalent.v
-theories/categories/Category/Subcategory.v
-theories/categories/Category/Subcategory/Full.v
-theories/categories/Category/Subcategory/Wide.v
-theories/categories/Category/Notations.v
-theories/categories/Category/Utf8.v
+theories/Categories/Category/Sigma/OnMorphisms.v
+theories/Categories/Category/Sigma/OnObjects.v
+theories/Categories/Category/Sigma/Univalent.v
+theories/Categories/Category/Subcategory.v
+theories/Categories/Category/Subcategory/Full.v
+theories/Categories/Category/Subcategory/Wide.v
+theories/Categories/Category/Notations.v
+theories/Categories/Category/Utf8.v
 
-theories/categories/Functor/Prod.v
-theories/categories/Functor/Dual.v
+theories/Categories/Functor/Prod.v
+theories/Categories/Functor/Dual.v
 
-theories/categories/SetCategory.v
-theories/categories/SetCategory/Core.v
-theories/categories/SetCategory/Morphisms.v
-theories/categories/SetCategory/Functors.v
-theories/categories/SetCategory/Functors/SetProp.v
+theories/Categories/SetCategory.v
+theories/Categories/SetCategory/Core.v
+theories/Categories/SetCategory/Morphisms.v
+theories/Categories/SetCategory/Functors.v
+theories/Categories/SetCategory/Functors/SetProp.v
 
-theories/categories/SimplicialSets.v
-theories/categories/SemiSimplicialSets.v
+theories/Categories/SimplicialSets.v
+theories/Categories/SemiSimplicialSets.v
 
-theories/categories/FundamentalPreGroupoidCategory.v
-theories/categories/HomotopyPreCategory.v
+theories/Categories/FundamentalPreGroupoidCategory.v
+theories/Categories/HomotopyPreCategory.v
 
-theories/categories/HomFunctor.v
-theories/categories/Functor/Attributes.v
+theories/Categories/HomFunctor.v
+theories/Categories/Functor/Attributes.v
 
-theories/categories/NaturalTransformation/Paths.v
-theories/categories/NaturalTransformation/Identity.v
-theories/categories/NaturalTransformation/Composition.v
-theories/categories/NaturalTransformation/Composition/Core.v
-theories/categories/NaturalTransformation/Composition/Laws.v
+theories/Categories/NaturalTransformation/Paths.v
+theories/Categories/NaturalTransformation/Identity.v
+theories/Categories/NaturalTransformation/Composition.v
+theories/Categories/NaturalTransformation/Composition/Core.v
+theories/Categories/NaturalTransformation/Composition/Laws.v
 
-theories/categories/FunctorCategory.v
-theories/categories/FunctorCategory/Core.v
+theories/Categories/FunctorCategory.v
+theories/Categories/FunctorCategory/Core.v
 
-theories/categories/NaturalTransformation/Composition/Functorial.v
+theories/Categories/NaturalTransformation/Composition/Functorial.v
 
-theories/categories/ExponentialLaws.v
-theories/categories/ExponentialLaws/Law0.v
-theories/categories/ExponentialLaws/Law1.v
-theories/categories/ExponentialLaws/Law1/Functors.v
-theories/categories/ExponentialLaws/Law1/Law.v
-theories/categories/ExponentialLaws/Law2.v
-theories/categories/ExponentialLaws/Law2/Functors.v
-theories/categories/ExponentialLaws/Law2/Law.v
-theories/categories/ExponentialLaws/Law3.v
-theories/categories/ExponentialLaws/Law3/Functors.v
-theories/categories/ExponentialLaws/Law3/Law.v
-theories/categories/ExponentialLaws/Law4.v
-theories/categories/ExponentialLaws/Law4/Functors.v
-theories/categories/ExponentialLaws/Law4/Law.v
-theories/categories/ExponentialLaws/Tactics.v
+theories/Categories/ExponentialLaws.v
+theories/Categories/ExponentialLaws/Law0.v
+theories/Categories/ExponentialLaws/Law1.v
+theories/Categories/ExponentialLaws/Law1/Functors.v
+theories/Categories/ExponentialLaws/Law1/Law.v
+theories/Categories/ExponentialLaws/Law2.v
+theories/Categories/ExponentialLaws/Law2/Functors.v
+theories/Categories/ExponentialLaws/Law2/Law.v
+theories/Categories/ExponentialLaws/Law3.v
+theories/Categories/ExponentialLaws/Law3/Functors.v
+theories/Categories/ExponentialLaws/Law3/Law.v
+theories/Categories/ExponentialLaws/Law4.v
+theories/Categories/ExponentialLaws/Law4/Functors.v
+theories/Categories/ExponentialLaws/Law4/Law.v
+theories/Categories/ExponentialLaws/Tactics.v
 
-theories/categories/Functor/Composition/Functorial.v
-theories/categories/Functor/Composition/Functorial/Core.v
-theories/categories/Functor/Composition/Functorial/Attributes.v
-theories/categories/Functor/Composition/Laws.v
+theories/Categories/Functor/Composition/Functorial.v
+theories/Categories/Functor/Composition/Functorial/Core.v
+theories/Categories/Functor/Composition/Functorial/Attributes.v
+theories/Categories/Functor/Composition/Laws.v
 
-theories/categories/Functor/Sum.v
-theories/categories/Functor/Pointwise.v
-theories/categories/Functor/Prod/Core.v
-theories/categories/Functor/Prod/Universal.v
+theories/Categories/Functor/Sum.v
+theories/Categories/Functor/Pointwise.v
+theories/Categories/Functor/Prod/Core.v
+theories/Categories/Functor/Prod/Universal.v
 
-theories/categories/GroupoidCategory.v
-theories/categories/GroupoidCategory/Core.v
-theories/categories/GroupoidCategory/Dual.v
+theories/Categories/GroupoidCategory.v
+theories/Categories/GroupoidCategory/Core.v
+theories/Categories/GroupoidCategory/Dual.v
 
-theories/categories/CategoryOfGroupoids.v
+theories/Categories/CategoryOfGroupoids.v
 
-theories/categories/DiscreteCategory.v
+theories/Categories/DiscreteCategory.v
 
-theories/categories/IndiscreteCategory.v
+theories/Categories/IndiscreteCategory.v
 
-theories/categories/NatCategory.v
-theories/categories/ChainCategory.v
+theories/Categories/NatCategory.v
+theories/Categories/ChainCategory.v
 
-theories/categories/InitialTerminalCategory.v
-theories/categories/InitialTerminalCategory/Core.v
-theories/categories/InitialTerminalCategory/Functors.v
-theories/categories/InitialTerminalCategory/NaturalTransformations.v
-theories/categories/InitialTerminalCategory/Pseudofunctors.v
-theories/categories/InitialTerminalCategory/Notations.v
+theories/Categories/InitialTerminalCategory.v
+theories/Categories/InitialTerminalCategory/Core.v
+theories/Categories/InitialTerminalCategory/Functors.v
+theories/Categories/InitialTerminalCategory/NaturalTransformations.v
+theories/Categories/InitialTerminalCategory/Pseudofunctors.v
+theories/Categories/InitialTerminalCategory/Notations.v
 
-theories/categories/NaturalTransformation/Prod.v
+theories/Categories/NaturalTransformation/Prod.v
 
-theories/categories/Functor/Prod/Functorial.v
-theories/categories/Functor/Pointwise/Core.v
-theories/categories/Functor/Pointwise/Properties.v
-theories/categories/Functor/Notations.v
-theories/categories/Functor/Utf8.v
+theories/Categories/Functor/Prod/Functorial.v
+theories/Categories/Functor/Pointwise/Core.v
+theories/Categories/Functor/Pointwise/Properties.v
+theories/Categories/Functor/Notations.v
+theories/Categories/Functor/Utf8.v
 
-theories/categories/NaturalTransformation/Dual.v
-theories/categories/NaturalTransformation/Sum.v
-theories/categories/NaturalTransformation/Pointwise.v
+theories/Categories/NaturalTransformation/Dual.v
+theories/Categories/NaturalTransformation/Sum.v
+theories/Categories/NaturalTransformation/Pointwise.v
 
-theories/categories/FunctorCategory/Dual.v
-theories/categories/FunctorCategory/Morphisms.v
+theories/Categories/FunctorCategory/Dual.v
+theories/Categories/FunctorCategory/Morphisms.v
 
-theories/categories/NaturalTransformation/Isomorphisms.v
-theories/categories/NaturalTransformation/Notations.v
-theories/categories/NaturalTransformation/Utf8.v
+theories/Categories/NaturalTransformation/Isomorphisms.v
+theories/Categories/NaturalTransformation/Notations.v
+theories/Categories/NaturalTransformation/Utf8.v
 
-theories/categories/Structure.v
-theories/categories/Structure/Core.v
-theories/categories/Structure/IdentityPrinciple.v
-theories/categories/Structure/Notations.v
-theories/categories/Structure/Utf8.v
+theories/Categories/Structure.v
+theories/Categories/Structure/Core.v
+theories/Categories/Structure/IdentityPrinciple.v
+theories/Categories/Structure/Notations.v
+theories/Categories/Structure/Utf8.v
 
-theories/categories/CategoryOfSections.v
-theories/categories/CategoryOfSections/Core.v
+theories/Categories/CategoryOfSections.v
+theories/Categories/CategoryOfSections/Core.v
 
-theories/categories/Profunctor/Core.v
-theories/categories/Profunctor/Identity.v
+theories/Categories/Profunctor/Core.v
+theories/Categories/Profunctor/Identity.v
 
-theories/categories/Comma.v
-theories/categories/Comma/Core.v
+theories/Categories/Comma.v
+theories/Categories/Comma/Core.v
 
-theories/categories/Adjoint.v
-theories/categories/Adjoint/UnitCounit.v
-theories/categories/Adjoint/Core.v
-theories/categories/Adjoint/Paths.v
-theories/categories/Adjoint/Identity.v
-theories/categories/Adjoint/Composition.v
-theories/categories/Adjoint/Composition/Core.v
-theories/categories/Adjoint/Composition/LawsTactic.v
-theories/categories/Adjoint/Composition/AssociativityLaw.v
-theories/categories/Adjoint/Composition/IdentityLaws.v
-theories/categories/Adjoint/Dual.v
-theories/categories/Adjoint/UnitCounitCoercions.v
-theories/categories/Adjoint/UniversalMorphisms.v
-theories/categories/Adjoint/UniversalMorphisms/Core.v
-theories/categories/Adjoint/Functorial.v
-theories/categories/Adjoint/Functorial/Core.v
-theories/categories/Adjoint/Functorial/Parts.v
-theories/categories/Adjoint/Functorial/Laws.v
-theories/categories/Adjoint/Hom.v
-theories/categories/Adjoint/HomCoercions.v
-theories/categories/Adjoint/Pointwise.v
-theories/categories/Adjoint/Notations.v
-theories/categories/Adjoint/Utf8.v
+theories/Categories/Adjoint.v
+theories/Categories/Adjoint/UnitCounit.v
+theories/Categories/Adjoint/Core.v
+theories/Categories/Adjoint/Paths.v
+theories/Categories/Adjoint/Identity.v
+theories/Categories/Adjoint/Composition.v
+theories/Categories/Adjoint/Composition/Core.v
+theories/Categories/Adjoint/Composition/LawsTactic.v
+theories/Categories/Adjoint/Composition/AssociativityLaw.v
+theories/Categories/Adjoint/Composition/IdentityLaws.v
+theories/Categories/Adjoint/Dual.v
+theories/Categories/Adjoint/UnitCounitCoercions.v
+theories/Categories/Adjoint/UniversalMorphisms.v
+theories/Categories/Adjoint/UniversalMorphisms/Core.v
+theories/Categories/Adjoint/Functorial.v
+theories/Categories/Adjoint/Functorial/Core.v
+theories/Categories/Adjoint/Functorial/Parts.v
+theories/Categories/Adjoint/Functorial/Laws.v
+theories/Categories/Adjoint/Hom.v
+theories/Categories/Adjoint/HomCoercions.v
+theories/Categories/Adjoint/Pointwise.v
+theories/Categories/Adjoint/Notations.v
+theories/Categories/Adjoint/Utf8.v
 
-theories/categories/Cat.v
-theories/categories/Cat/Core.v
+theories/Categories/Cat.v
+theories/Categories/Cat/Core.v
 
-theories/categories/DualFunctor.v
+theories/Categories/DualFunctor.v
 
-theories/categories/FunctorCategory/Functorial.v
-theories/categories/FunctorCategory/Notations.v
-theories/categories/FunctorCategory/Utf8.v
+theories/Categories/FunctorCategory/Functorial.v
+theories/Categories/FunctorCategory/Notations.v
+theories/Categories/FunctorCategory/Utf8.v
 
-theories/categories/ProductLaws.v
+theories/Categories/ProductLaws.v
 
-theories/categories/GroupoidCategory/Morphisms.v
+theories/Categories/GroupoidCategory/Morphisms.v
 
-theories/categories/Profunctor.v
-theories/categories/Profunctor/Representable.v
-theories/categories/Profunctor/Notations.v
-theories/categories/Profunctor/Utf8.v
+theories/Categories/Profunctor.v
+theories/Categories/Profunctor/Representable.v
+theories/Categories/Profunctor/Notations.v
+theories/Categories/Profunctor/Utf8.v
 
-theories/categories/Yoneda.v
+theories/Categories/Yoneda.v
 
-theories/categories/Cat/Morphisms.v
+theories/Categories/Cat/Morphisms.v
 
-theories/categories/Comma/Dual.v
-theories/categories/Comma/Projection.v
-theories/categories/Comma/InducedFunctors.v
-theories/categories/Comma/ProjectionFunctors.v
-theories/categories/Comma/Functorial.v
-theories/categories/Comma/Notations.v
-theories/categories/Comma/Utf8.v
+theories/Categories/Comma/Dual.v
+theories/Categories/Comma/Projection.v
+theories/Categories/Comma/InducedFunctors.v
+theories/Categories/Comma/ProjectionFunctors.v
+theories/Categories/Comma/Functorial.v
+theories/Categories/Comma/Notations.v
+theories/Categories/Comma/Utf8.v
 
-theories/categories/Pseudofunctor.v
-theories/categories/Pseudofunctor/Core.v
-theories/categories/Pseudofunctor/RewriteLaws.v
-theories/categories/Pseudofunctor/FromFunctor.v
-theories/categories/Pseudofunctor/Identity.v
+theories/Categories/Pseudofunctor.v
+theories/Categories/Pseudofunctor/Core.v
+theories/Categories/Pseudofunctor/RewriteLaws.v
+theories/Categories/Pseudofunctor/FromFunctor.v
+theories/Categories/Pseudofunctor/Identity.v
 
-theories/categories/PseudonaturalTransformation.v
-theories/categories/PseudonaturalTransformation/Core.v
+theories/Categories/PseudonaturalTransformation.v
+theories/Categories/PseudonaturalTransformation/Core.v
 
-theories/categories/LaxComma.v
-theories/categories/LaxComma/Core.v
-theories/categories/LaxComma/CoreParts.v
-theories/categories/LaxComma/CoreLaws.v
-theories/categories/LaxComma/Notations.v
-theories/categories/LaxComma/Utf8.v
+theories/Categories/LaxComma.v
+theories/Categories/LaxComma/Core.v
+theories/Categories/LaxComma/CoreParts.v
+theories/Categories/LaxComma/CoreLaws.v
+theories/Categories/LaxComma/Notations.v
+theories/Categories/LaxComma/Utf8.v
 
-theories/categories/Grothendieck.v
-theories/categories/Grothendieck/ToSet.v
-theories/categories/Grothendieck/ToSet/Core.v
-theories/categories/Grothendieck/ToSet/Morphisms.v
-theories/categories/Grothendieck/ToSet/Univalent.v
-theories/categories/Grothendieck/PseudofunctorToCat.v
-theories/categories/Grothendieck/ToCat.v
+theories/Categories/Grothendieck.v
+theories/Categories/Grothendieck/ToSet.v
+theories/Categories/Grothendieck/ToSet/Core.v
+theories/Categories/Grothendieck/ToSet/Morphisms.v
+theories/Categories/Grothendieck/ToSet/Univalent.v
+theories/Categories/Grothendieck/PseudofunctorToCat.v
+theories/Categories/Grothendieck/ToCat.v
 
-theories/categories/DependentProduct.v
+theories/Categories/DependentProduct.v
 
-theories/categories/UniversalProperties.v
+theories/Categories/UniversalProperties.v
 
-theories/categories/KanExtensions.v
-theories/categories/KanExtensions/Core.v
-theories/categories/KanExtensions/Functors.v
+theories/Categories/KanExtensions.v
+theories/Categories/KanExtensions/Core.v
+theories/Categories/KanExtensions/Functors.v
 
-theories/categories/Limits.v
-theories/categories/Limits/Core.v
-theories/categories/Limits/Functors.v
+theories/Categories/Limits.v
+theories/Categories/Limits/Core.v
+theories/Categories/Limits/Functors.v
 
-theories/categories/Notations.v
-theories/categories/Utf8.v
+theories/Categories/Notations.v
+theories/Categories/Utf8.v
 
 contrib/HoTTBook.v
 contrib/HoTTBookExercises.v

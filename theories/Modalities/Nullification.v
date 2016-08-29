@@ -13,7 +13,7 @@ Local Open Scope path_scope.
 (** The hypotheses of this lemma may look slightly odd (why are we bothering to talk about type families dependent over [Unit]?), but they seem to be the most convenient to make the induction go through.  *)
 
 Definition extendable_over_unit (n : nat)
-  (A : Type@{a}) (C : Unit@{a} -> Type@{i}) (D : forall u, C u -> Type@{j})
+  (A : Type@{a}) (C : Unit -> Type@{i}) (D : forall u, C u -> Type@{j})
   (ext : ExtendableAlong@{a a i k} n (@const A Unit tt) C)
   (ext' : forall (c : forall u, C u),
             ExtendableAlong@{a a j k} n (@const A Unit tt) (fun u => (D u (c u))))
@@ -33,9 +33,9 @@ Proof.
     exact (snd (ext' k) (fun u => g u # h' u) k').
 Defined.
 
-Definition ooextendable_over_unit
-  (A : Type) (C : Unit -> Type) (D : forall u, C u -> Type)
-  (ext : ooExtendableAlong (@const A Unit tt) C)
+Definition ooextendable_over_unit@{i j k l m}
+  (A : Type@{i}) (C : Unit -> Type@{j}) (D : forall u, C u -> Type@{k})
+  (ext : ooExtendableAlong@{l l j m} (@const@{l l} A Unit tt) C)
   (ext' : forall (c : forall u, C u),
             ooExtendableAlong (@const A Unit tt) (fun u => (D u (c u))))
 : ooExtendableAlong_Over (@const A Unit tt) C D ext
@@ -69,7 +69,7 @@ Module Nullification_Modalities <: Modalities.
   Definition inO_equiv_inO := @LocRSU.inO_equiv_inO@{u a i j k}.
   Definition hprop_inO := LocRSU.hprop_inO.
 
-  Definition O_ind_internal (O : Modality@{u a}) (A : Type@{i})
+  Definition O_ind_internal@{u a i j k} (O : Modality@{u a}) (A : Type@{i})
              (B : O_reflector@{u a i} O A -> Type@{j})
              (B_inO : forall oa : O_reflector@{u a i} O A, In@{u a j} O (B oa))
              (g : forall a : A, B (to@{u a i} O A a))
@@ -78,9 +78,9 @@ Module Nullification_Modalities <: Modalities.
     refine (Localize_ind@{a i j k}
              (null_to_local_generators@{a a} (unNul O)) A B g _); intros i.
     apply (ooextendable_over_unit@{a i j a k}); intros c.
-    refine (ooextendable_postcompose@{a a j j k j j j k j k}
+    refine (ooextendable_postcompose@{a a j j k j j j k j k k}
               (fun (_:Unit) => B (c tt)) _ _
-              (fun u => transport@{i j} B (ap c (path_unit tt u))) _).
+              (fun u => transport@{i j} B (ap c (path_unit@{a} tt u))) _).
     refine (ooextendable_islocal _ i).
     apply B_inO.
   Defined.

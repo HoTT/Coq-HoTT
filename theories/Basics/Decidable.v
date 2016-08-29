@@ -64,9 +64,19 @@ Definition decidablepaths_equiv' (A : Type) {B : Type} (f : A <~> B)
 
 (** ** Hedberg's theorem: any type with decidable equality is a set. *)
 
+(** A weakly constant function is one all of whose values are equal (in a specified way). *)
 Class WeaklyConstant {A B} (f : A -> B) :=
   wconst : forall x y, f x = f y.
 
+(** Any map that factors through an hprop is weakly constant. *)
+Definition wconst_through_hprop {A B P} `{IsHProp P}
+           (f : A -> P) (g : P -> B)
+: WeaklyConstant (g o f).
+Proof.
+  intros x y; apply (ap g), path_ishprop.
+Defined.
+
+(** A type is collapsible if it admits a weakly constant endomap. *)
 Class Collapsible (A : Type) :=
   { collapse : A -> A ;
     wconst_collapse : WeaklyConstant collapse

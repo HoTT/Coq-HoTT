@@ -4,7 +4,7 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp EquivalenceVarieties.
-Require Import hit.Connectedness hit.Suspension hit.Truncations.
+Require Import HIT.Connectedness HIT.Suspension HIT.Truncations.
 Import TrM.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.

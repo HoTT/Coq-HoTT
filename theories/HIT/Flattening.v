@@ -5,7 +5,7 @@
 Require Import HoTT.Basics UnivalenceImpliesFunext.
 Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe.
 Local Open Scope path_scope.
-Require Import HoTT.hit.Coeq.
+Require Import HoTT.HIT.Coeq.
 
 (** The base HIT [W] is just a homotopy coequalizer [Coeq]. *)
 

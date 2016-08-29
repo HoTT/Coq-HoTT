@@ -1,7 +1,7 @@
 Require Export Coq.Unicode.Utf8.
 Require Import HoTT.Basics HoTT.Types.Arrow HoTT.Types.Prod HoTT.Types.Sum.
 Require Import Modalities.Identity.
-Require Import hit.Circle hit.TwoSphere hit.Truncations hit.Suspension.
+Require Import HIT.Circle HIT.TwoSphere HIT.Truncations HIT.Suspension.
 
 Notation Type₀ := Type0.
 Notation pr₁ := pr1.
