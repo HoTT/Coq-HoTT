@@ -696,6 +696,29 @@ Tactic Notation "erapply" open_constr(term) := rapply term.
 (** [erapply' lem] is like [apply lem] (rather, [rapply' lem]), but it allows holes in [lem] *)
 Tactic Notation "erapply'" open_constr(term) := rapply' term.
 
+(** An alternative version using [simple refine] *)
+
+Ltac simple_rapply p :=
+  simple refine p ||
+  simple refine (p _) ||
+  simple refine (p _ _) ||
+  simple refine (p _ _ _) ||
+  simple refine (p _ _ _ _) ||
+  simple refine (p _ _ _ _ _) ||
+  simple refine (p _ _ _ _ _ _) ||
+  simple refine (p _ _ _ _ _ _ _) ||
+  simple refine (p _ _ _ _ _ _ _ _) ||
+  simple refine (p _ _ _ _ _ _ _ _ _) ||
+  simple refine (p _ _ _ _ _ _ _ _ _ _) ||
+  simple refine (p _ _ _ _ _ _ _ _ _ _ _) ||
+  simple refine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  simple refine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  simple refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  simple refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
+
+Tactic Notation "use" uconstr(p) := simple_rapply p.
+
+
 (** Ssreflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=
   trivial; intros; solve
