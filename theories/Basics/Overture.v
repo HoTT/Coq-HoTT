@@ -733,7 +733,7 @@ Ltac simple_rapply p :=
   simple refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
   simple refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
 
-Tactic Notation "use" uconstr(p) := simple_rapply p.
+Tactic Notation "use" open_constr(term) := simple_rapply term.
 
 
 (** Ssreflect tactics, adapted by Robbert Krebbers *)
