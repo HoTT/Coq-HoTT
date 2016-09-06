@@ -25,7 +25,12 @@ Require Export
   HoTTClasses.implementations.cauchy_reals.ring
   HoTTClasses.implementations.cauchy_reals.full_order
   HoTTClasses.implementations.cauchy_reals.full_ring
-  HoTTClasses.implementations.cauchy_reals.recip
-  HoTTClasses.implementations.cauchy_reals.field
-  HoTTClasses.implementations.cauchy_reals.initial.
+  HoTTClasses.implementations.cauchy_reals.recip.
 
+Local Set Universe Minimization ToSet.
+
+Global Instance real_field : Field real.
+Proof.
+split;try apply _.
+apply R_recip_inverse.
+Qed.

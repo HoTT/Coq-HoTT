@@ -154,23 +154,23 @@ Definition Book_11_3_40 := @HoTTClasses.implementations.cauchy_completion.lipsch
 (* ================================================== RC-archimedean *)
 (** Theorem 11.3.41 *)
 
-Definition Book_11_3_41 := @HoTTClasses.implementations.cauchy_reals.R_archimedean.
+Definition Book_11_3_41 := @HoTTClasses.implementations.cauchy_reals.base.R_archimedean.
 
 (* ================================================== thm:RC-le-grow *)
 (** Lemma 11.3.42 *)
 
-Definition Book_11_3_42 := @HoTTClasses.implementations.cauchy_reals.Rle_close_rat.
+Definition Book_11_3_42 := @HoTTClasses.implementations.cauchy_reals.order.Rle_close_rat.
 
 (* ================================================== thm:RC-lt-open *)
 (** Lemma 11.3.43 *)
 
-Definition Book_11_3_43_item_i := @HoTTClasses.implementations.cauchy_reals.Rlt_close_rat_plus.
-Definition Book_11_3_43_item_ii := @HoTTClasses.implementations.cauchy_reals.Rlt_close_exists_aux.
+Definition Book_11_3_43_item_i := @HoTTClasses.implementations.cauchy_reals.order.Rlt_close_rat_plus.
+Definition Book_11_3_43_item_ii := @HoTTClasses.implementations.cauchy_reals.order.Rlt_close_exists_aux.
 
 (* ================================================== RC-sim-eqv-le *)
 (** Theorem 11.3.44 *)
 
-Definition Book_11_3_44 := @HoTTClasses.implementations.cauchy_reals.equiv_metric_applied_rw.
+Definition Book_11_3_44 := @HoTTClasses.implementations.cauchy_reals.metric.equiv_metric_applied_rw.
 
 (* ================================================== RC-squaring *)
 (** Theorem 11.3.46 *)
@@ -180,14 +180,14 @@ Definition Book_11_3_44 := @HoTTClasses.implementations.cauchy_reals.equiv_metri
 (* ================================================== RC-archimedean-ordered-field *)
 (** Theorem 11.3.48 *)
 
-Definition Book_11_3_48_item_i := @HoTTClasses.implementations.cauchy_reals.R_archimedean.
-Definition Book_11_3_48_item_ii := @HoTTClasses.implementations.cauchy_reals.real_full_pseudo_srorder.
-Definition Book_11_3_48_item_iii := @HoTTClasses.implementations.cauchy_reals.real_field.
+Definition Book_11_3_48_item_i := @HoTTClasses.implementations.cauchy_reals.base.R_archimedean.
+Definition Book_11_3_48_item_ii := @HoTTClasses.implementations.cauchy_reals.full_ring.real_full_pseudo_srorder.
+Definition Book_11_3_48_item_iii := @HoTTClasses.implementations.cauchy_reals.field.real_field.
 
 (* ================================================== RC-initial-Cauchy-complete *)
 (** Theorem 11.3.50 *)
 
-Definition Book_11_3_50 := @HoTTClasses.implementations.cauchy_reals.real_embed.
+Definition Book_11_3_50 := @HoTTClasses.implementations.cauchy_reals.initial.real_embed.
 
 (* ================================================== lem:untruncated-linearity-reals-coincide *)
 (** Lemma 11.4.1 *)
