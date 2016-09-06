@@ -153,18 +153,6 @@ apply tr. simple refine (existT _ _ _).
 - simpl. reflexivity.
 Defined.
 
-Definition Rinterval_inject@{} : forall a b : Q, a <= b ->
-  Interval (- rat a) (rat a) -> Interval (- (rat b)) (rat b).
-Proof.
-intros a b E s.
-exists (s.1).
-split.
-- transitivity (- (rat a));[|apply s.2].
-  apply Rneg_le_flip,rat_le_preserving,E.
-- transitivity (rat a);[apply s.2|].
-  apply rat_le_preserving,E.
-Defined.
-
 Lemma Rbounded_mult_respects : ∀ z x y, interval_back x = interval_back y →
   Rbounded_mult x.1 z x.2 = Rbounded_mult y.1 z y.2.
 Proof.
