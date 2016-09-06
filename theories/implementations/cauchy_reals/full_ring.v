@@ -27,18 +27,6 @@ Require Export
 
 Local Set Universe Minimization ToSet.
 
-Lemma Rabs_triangle_alt : forall x y : real, abs (abs x - abs y) <= abs (x - y).
-Proof.
-intros x y.
-apply R_not_lt_le_flip.
-intros E. apply (merely_destruct (R_archimedean_pos _ _ (Rabs_nonneg _) E)).
-intros [e [E1 E2]].
-apply metric_to_equiv in E1. apply (non_expanding abs) in E1.
-apply equiv_to_metric in E1.
-apply (irreflexivity lt (rat (' e))).
-etransitivity;eauto.
-Qed.
-
 Lemma apart_to_metric : forall x y : real, apart x y -> 0 < abs (x - y).
 Proof.
 intros x y [E|E];apply flip_pos_minus in E.
@@ -84,6 +72,18 @@ rewrite Rabs_is_join in E. apply (merely_destruct (Rlt_join_either _ _ _ E)).
 intros [E1|E1].
 - rewrite <-negate_swap_r in E1. apply flip_pos_minus in E1. left;trivial.
 - apply flip_pos_minus in E1. right;trivial.
+Qed.
+
+Lemma Rabs_triangle_alt : forall x y : real, abs (abs x - abs y) <= abs (x - y).
+Proof.
+intros x y.
+apply R_not_lt_le_flip.
+intros E. apply (merely_destruct (R_archimedean_pos _ _ (Rabs_nonneg _) E)).
+intros [e [E1 E2]].
+apply metric_to_equiv in E1. apply (non_expanding abs) in E1.
+apply equiv_to_metric in E1.
+apply (irreflexivity lt (rat (' e))).
+etransitivity;eauto.
 Qed.
 
 Instance Rabs_strong_ext : StrongExtensionality (abs (A:=real)).
