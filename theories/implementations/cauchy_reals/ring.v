@@ -94,7 +94,7 @@ Proof.
 intros x E q r. rewrite QRmult_negate,QRmult_plus_distr.
 change (rat (abs (q - r) * ' a)) with (QRmult (abs (q - r)) (rat (' a))).
 rewrite <-E. clear E.
-revert x;eapply @unique_continuous_extension;try apply _.
+revert x;apply (unique_continuous_extension _).
 - change (Continuous (uncurry join ∘
     map2 (abs ∘ QRmult (q - r)) (QRmult (abs (q - r)) ∘ (⊔ rat (' a)) ∘ abs) ∘
     BinaryDup)).

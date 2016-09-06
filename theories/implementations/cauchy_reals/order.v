@@ -82,14 +82,13 @@ Qed.
 Lemma Rlt_close_plus@{} : forall u v, u < v ->
   forall w e, close e u w -> w < v + rat (' e).
 Proof.
-intros u v E w e xi;revert E;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
-apply R_lt_le_trans with (rat (r + ' e)).
+intros u v E w e xi;apply R_archimedean in E;revert E;apply (Trunc_ind _);
+intros [q [E1 E2]].
+apply R_lt_le_trans with (rat (q + ' e)).
 - apply Rlt_close_rat_plus with u;trivial.
-  apply R_le_lt_trans with (rat q);trivial.
-  apply rat_lt_preserving;trivial.
 - rewrite plus_comm. rewrite Rplus_comm.
-  change (rat (' e) + rat r <= rat (' e) + v).
-  apply (order_preserving (rat (' e) +)). trivial.
+  change (rat (' e) + rat q <= rat (' e) + v).
+  apply (order_preserving (rat (' e) +)),R_lt_le;trivial.
 Qed.
 
 Lemma Rlt_cotrans_rat@{} : forall x q r, q < r -> hor (rat q < x) (x < rat r).
