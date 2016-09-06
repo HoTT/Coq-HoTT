@@ -47,23 +47,19 @@ apply (C_ind0 _ _).
 Defined.
 
 Lemma R_bounded_2@{} : forall u v,
-  merely (exists d d' : Q+, abs u < rat (' d') /\ abs v < rat (' d')
-  /\ ' d' < ' d).
+  merely (exists d : Q+, abs u < rat (' d) /\ abs v < rat (' d)).
 Proof.
 intros.
 apply (merely_destruct (R_Qpos_bounded u)).
 intros [d Ed].
 apply (merely_destruct (R_Qpos_bounded v)).
 intros [n En].
-apply tr;exists (join d n + 1) ,(join d n).
+apply tr;exists (join d n).
 repeat split.
 - apply R_lt_le_trans with (rat (' d));trivial.
   apply rat_le_preserving,join_ub_l.
 - apply R_lt_le_trans with (rat (' n));trivial.
   apply rat_le_preserving,join_ub_r.
-- apply pos_plus_le_lt_compat_r.
-  + solve_propholds.
-  + reflexivity.
 Qed.
 
 Definition QRmult@{} : Q -> real -> real
@@ -301,8 +297,10 @@ Qed.
 Lemma Rmult_continuous@{} : Continuous (uncurry (@mult real _)).
 Proof.
 intros [u1 v1] e.
-apply (merely_destruct (R_bounded_2 u1 v1));intros [d [d' [Ed1 [Ed2 Ed3]]]].
-apply tr;exists (meet (Qpos_diff (' d') (' d) Ed3) (e / 2 / (d + 1)));
+apply (merely_destruct (R_bounded_2 u1 v1));intros [d [Ed1 Ed2]].
+pose (k := d + 1).
+(* assert (Ed3 : ' d < ' k). { apply pos_plus_lt_compat_r;solve_propholds. } *)
+apply tr;exists (meet 1 (e / 2 / (k + 1)));
 intros [u2 v2] [xi1 xi2];unfold uncurry;simpl in *.
 rewrite (pos_split2 e). apply (triangular _ (u2 * v1)).
 - apply R_lt_le in Ed2.
@@ -314,38 +312,38 @@ rewrite (pos_split2 e). apply (triangular _ (u2 * v1)).
   + reflexivity.
   + unfold cast;simpl. apply flip_le_dec_recip.
     * solve_propholds.
-    * transitivity (' d);[apply lt_le;trivial|].
-      apply plus_le_compat_r;[solve_propholds|reflexivity].
+    * change (' d <= ' d + 1 + 1). rewrite <-plus_assoc.
+      apply nonneg_plus_le_compat_r. solve_propholds.
 - apply metric_to_equiv. rewrite Rmult_abs_l.
-  apply R_le_lt_trans with (abs (rat (' d)) * abs (rat (' (e / 2 / (d + 1))))).
+  apply R_le_lt_trans with (abs (rat (' k)) * abs (rat (' (e / 2 / (k + 1))))).
   + apply Rmult_le_compat_abs.
-    * change (abs (rat (' d))) with (rat (abs (' d))).
+    * change (abs (rat (' k))) with (rat (abs (' k))).
       unfold abs at 2. rewrite (fst (abs_sig (' _)).2);[|solve_propholds].
-      rewrite (Qpos_diff_pr _ _ Ed3).
+      unfold k.
       eapply Rle_close_rat;[|apply (non_expanding abs (x:=u1))].
       ** apply R_lt_le;trivial.
       ** eapply rounded_le;[exact xi1|]. apply meet_lb_l. 
-    * change (abs (rat (' (e / 2 / (d + 1))))) with
-        (rat (abs (' (e / 2 / (d+1))))).
+    * change (abs (rat (' (e / 2 / (k + 1))))) with
+        (rat (abs (' (e / 2 / (k + 1))))).
       unfold abs at 2. rewrite (fst (abs_sig (' _)).2);[|solve_propholds].
       apply equiv_to_metric in xi2.
       etransitivity;[apply R_lt_le,xi2|].
       apply rat_le_preserving,meet_lb_r.
   + apply rat_lt_preserving.
     rewrite <-Qabs_mult.
-    change (' d * ' (e / 2 / (d + 1))) with
-      (' (d * (e / 2 / (d + 1)))).
+    change (' k * ' (e / 2 / (k + 1))) with
+      (' (k * (e / 2 / (k + 1)))).
     unfold abs;rewrite (fst (abs_sig (' _)).2);[|solve_propholds].
     assert (Hrw : e / 2 = (e / 2) * 1)
       by (apply pos_eq;ring_tac.ring_with_nat);
     rewrite Hrw;clear Hrw.
-    assert (Hrw : d * (e / 2 * 1 / (d + 1)) = (e / 2) * (d / (d + 1)))
+    assert (Hrw : k * (e / 2 * 1 / (k + 1)) = (e / 2) * (k / (k + 1)))
       by (apply pos_eq;ring_tac.ring_with_nat);
     rewrite Hrw;clear Hrw.
     apply pos_mult_le_lt_compat;try split;try solve_propholds.
     * reflexivity.
-    * apply (strictly_order_reflecting (.* (' (d + 1)))).
-      unfold cast;simpl.
+    * apply (strictly_order_reflecting (.* (' (k + 1)))).
+      unfold cast;simpl. unfold cast at 2;simpl.
       rewrite mult_1_l.
       rewrite <-mult_assoc, (mult_comm (/ _)),dec_recip_inverse,mult_1_r;
       [|apply lt_ne_flip;solve_propholds].
