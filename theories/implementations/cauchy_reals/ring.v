@@ -115,32 +115,27 @@ Qed.
 
 Instance Qbounded_lipschitz (a : Q+)
   : forall v : Interval (- rat (' a)) (rat (' a)),
-    Lipschitz (λ q : Q, QRmult q (interval_proj _ _ v)) (a + 1).
+    Lipschitz (λ q : Q, QRmult q (interval_proj _ _ v)) a.
 Proof.
 intros v e x y xi.
 apply Qclose_alt in xi. apply metric_to_equiv.
-apply R_le_lt_trans with (rat (' (a * e))).
-- etransitivity.
-  + apply (QRmult_lipschitz_interval_aux a).
-    apply (snd (Rabs_le_pr _ _)).
-    split;apply v.2.
-  + apply rat_le_preserving. rewrite qpos_mult_comm.
-    apply mult_le_compat;try solve_propholds.
-    * apply Qabs_nonneg.
-    * reflexivity.
-- apply rat_lt_preserving. rewrite 2!(qpos_mult_comm _ e).
+eapply R_le_lt_trans.
++ apply (QRmult_lipschitz_interval_aux a).
+  apply (snd (Rabs_le_pr _ _)).
+  split;apply v.2.
++ apply rat_lt_preserving. rewrite mult_comm.
   apply pos_mult_le_lt_compat;try split;try solve_propholds.
-  + reflexivity.
-  + apply pos_plus_lt_compat_r. solve_propholds.
+  * reflexivity.
+  * apply Qabs_nonneg.
 Qed.
 
 Definition Rbounded_mult@{} (a : Q+)
   : real -> Interval (- rat (' a)) (rat (' a)) -> real
   := fun u v => lipschitz_extend _
-      (fun q => QRmult q (interval_proj _ _ v)) (a+1) u.
+      (fun q => QRmult q (interval_proj _ _ v)) a u.
 
 Instance Rbounded_mult_lipschitz : forall a v,
-  Lipschitz (fun u => Rbounded_mult a u v) (a+1)
+  Lipschitz (fun u => Rbounded_mult a u v) a
   := _.
 Typeclasses Opaque Rbounded_mult.
 
@@ -213,13 +208,13 @@ apply Rmult_interval_proj_applied.
 Qed.
 
 Lemma Rmult_lipschitz_aux : forall a y,
-  Lipschitz (.* (interval_proj (rat (- ' a)) (rat (' a)) y)) (a+1).
+  Lipschitz (.* (interval_proj (rat (- ' a)) (rat (' a)) y)) a.
 Proof.
 intros a y. rewrite Rmult_interval_proj. apply _.
 Qed.
 
 Lemma Rmult_lipschitz_aux_alt : forall a y, abs y <= rat (' a) ->
-  Lipschitz (.* y) (a+1).
+  Lipschitz (.* y) a.
 Proof.
 intros a y E. apply Rabs_le_pr in E.
 change y with (interval_proj (rat (- ' a)) (rat (' a)) (existT _ y E)).
@@ -365,7 +360,8 @@ rewrite (pos_split2 e). apply (triangular _ (u2 * v1)).
   + reflexivity.
   + unfold cast;simpl. apply flip_le_dec_recip.
     * solve_propholds.
-    * apply (order_preserving (+ 1)). apply lt_le;trivial.
+    * transitivity (' d);[apply lt_le;trivial|].
+      apply plus_le_compat_r;[solve_propholds|reflexivity].
 - apply metric_to_equiv. rewrite Rmult_abs_l.
   apply R_le_lt_trans with (abs (rat (' d)) * abs (rat (' (e / 2 / (d + 1))))).
   + apply Rmult_le_compat_abs.
