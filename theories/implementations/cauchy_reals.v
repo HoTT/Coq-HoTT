@@ -27,5 +27,6 @@ Require Export
   HoTTClasses.implementations.cauchy_reals.full_ring
   HoTTClasses.implementations.cauchy_reals.recip
   HoTTClasses.implementations.cauchy_reals.field
+  HoTTClasses.implementations.cauchy_reals.uniform_on_intervals
   HoTTClasses.implementations.cauchy_reals.initial.
 
