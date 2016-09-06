@@ -165,7 +165,6 @@ Definition Book_11_3_42 := @HoTTClasses.implementations.cauchy_reals.order.Rle_c
 (** Lemma 11.3.43 *)
 
 Definition Book_11_3_43_item_i := @HoTTClasses.implementations.cauchy_reals.order.Rlt_close_rat_plus.
-Definition Book_11_3_43_item_ii := @HoTTClasses.implementations.cauchy_reals.order.Rlt_close_exists_aux.
 
 (* ================================================== RC-sim-eqv-le *)
 (** Theorem 11.3.44 *)

@@ -79,42 +79,6 @@ split;[|split].
   apply (order_reflecting rat);trivial.
 Qed.
 
-(* TODO remove this lemma and the next? *)
-Lemma Rlt_close_exists_aux@{} : forall u q, u < rat q ->
-  merely (exists e, forall v, close e u v -> v < rat q).
-Proof.
-intros u q;apply (Trunc_ind _);intros [q' [r [E1 [E2 E3]]]].
-transparent assert (rq : Q+).
-{ exists (r-q').
-  abstract (apply flip_pos_minus in E2; trivial).
-}
-apply tr;exists (rq / 2);intros v xi.
-pose proof (Rle_close_rat _ _ E1 _ _ xi) as E4.
-change (v <= rat (q' + (r - q') / 2)) in E4.
-apply tr;econstructor;exists r;repeat split;eauto.
-apply flip_pos_minus. rewrite negate_plus_distr.
-rewrite negate_mult_distr_l,<-negate_swap_l.
-assert (Hrw : r + (- q' + (- r + q') / 2) = (r - q') / 2).
-{ path_via (2 / 2 * r + (2 / 2 * (- q') + (- r + q') / 2)).
-  { rewrite dec_recip_inverse;[|solve_propholds].
-    rewrite !mult_1_l;trivial. }
-  abstract ring_tac.ring_with_integers (NatPair.Z nat).
-}
-rewrite Hrw.
-apply pos_mult_compat;[|apply _].
-apply (snd (flip_pos_minus _ _)). trivial.
-Qed.
-
-Lemma Rlt_close_exists@{} : forall u v, u < v ->
-  merely (exists e, forall w, close e u w -> w < v).
-Proof.
-intros u v;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
-generalize (Rlt_close_exists_aux u r
-  (R_le_lt_trans _ _ _ E1 (rat_lt_preserving _ _ E2))).
-apply (Trunc_ind _);intros [e E4];apply tr;exists e.
-intros w xi;apply R_lt_le_trans with (rat r);auto.
-Qed.
-
 Lemma Rlt_close_plus@{} : forall u v, u < v ->
   forall w e, close e u w -> w < v + rat (' e).
 Proof.
