@@ -95,12 +95,12 @@ Defined.
 Lemma R_pos_recip_rat : forall q (Eq : 0 < rat q),
   R_pos_recip (existT _ (rat q) Eq) = rat (/ q).
 Proof.
-intros q Eq. unfold R_pos_recip.
+intros q. apply (Trunc_ind _);intros [r [s [E1 [E2 E3]]]].
+unfold R_pos_recip.
 unfold jections.surjective_factor,jections.surjective_factor_aux.
-revert Eq. apply (Trunc_ind _);intros [r [s [E1 [E2 E3]]]].
-simpl. apply (ap rat). unfold compose;simpl.
+change ((rat ∘ (/)) (join q s) = (rat ∘ (/)) q).
 apply ap. apply join_l.
-unfold cast;simpl. apply rat_le_reflecting;trivial.
+apply rat_le_reflecting;trivial.
 Qed.
 
 Instance Rrecip : Recip real.

@@ -38,16 +38,12 @@ Qed.
 
 Lemma Rlt_join_either : forall a b c, a < join b c -> hor (a < b) (a < c).
 Proof.
-intros a b c;apply (Trunc_ind _);intros [q [r [E1 [E2 E3]]]].
-apply (merely_destruct (cotransitive (rat_lt_preserving _ _ E2) b)).
-intros [E4|E4].
-- apply tr;left;apply R_le_lt_trans with (rat q);trivial.
-- apply (merely_destruct (cotransitive (rat_lt_preserving _ _ E2) c)).
-  intros [E5|E5].
-  + apply tr;right;apply R_le_lt_trans with (rat q);trivial.
-  + pose proof (Rlt_join _ _ _ E4 E5) as E6.
-    destruct (irreflexivity lt (rat r)).
-    apply R_le_lt_trans with (join b c);trivial.
+intros a b c E.
+generalize (cotransitive E b);apply (Trunc_ind _);intros [E1|E1].
+- apply tr. auto.
+- generalize (cotransitive E c);apply (Trunc_ind _);intros [E2|E2].
+  + apply tr. auto.
+  + destruct (irreflexivity lt _ (Rlt_join _ _ _ E1 E2)).
 Qed.
 
 Lemma Rlt_join_l : forall a b, a < join a b -> a < b.
@@ -100,12 +96,9 @@ Lemma Rmult_pos_decompose_nonneg : forall x y, 0 <= x ->
 Proof.
 intros x y E1 E2.
 assert (E3 : merely (exists e : Q+, rat (' e) < x * y)).
-{ apply (merely_destruct (Rlt_exists_pos_plus_le _ _ E2)). intros [e E3].
-  apply tr;exists (e/2). apply R_lt_le_trans with (0 + rat (' e));trivial.
-  rewrite (plus_0_l (R:=real)).
-  apply rat_lt_preserving. set (n:=e/2). rewrite (pos_split2 e).
-  apply pos_plus_lt_compat_r. solve_propholds.
-}
+{ generalize (R_archimedean _ _ E2);apply (Trunc_ind _);intros [e [E3 E4]].
+  apply rat_lt_reflecting in E3.
+  apply tr. exists (mkQpos e E3). trivial. }
 revert E3;apply (Trunc_ind _);intros [e E3].
 apply (merely_destruct (R_Qpos_bounded x)). intros [n E4].
 apply R_lt_le_trans with (rat (' (e/n)));[apply rat_lt_preserving;solve_propholds|].
