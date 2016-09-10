@@ -9,10 +9,13 @@ Notable differences:
 # Build
 
 Dependencies:
-- HoTT must be present on your system, with `hoqc` and `hoqdep` in your `$PATH` or pointed to by `$HOQC` and `$HOQDEP` respectively.
+- Coq with inductive-inductive types https://github.com/mattam82/coq/tree/IR
+- HoTT branch https://github.com/SkySkimmer/HoTT/tree/with-IR must be present on your system, built with Coq with inductive-inductive types, with its `hoqc` and `hoqdep` in your `$PATH` or pointed to by `$HOQC` and `$HOQDEP` respectively.
 
-Run
+Then run
 
     $ ./configure
     $ make
+
+Use `./ide` to start hoqide with the right arguments, or look at its code to see what arguments are needed.
 
