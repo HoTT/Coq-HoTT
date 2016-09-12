@@ -38,30 +38,19 @@ Variable A : Type@{i}.
 Private Inductive partial@{} : Type@{i} :=
   | eta : A -> partial
   | bot : Bottom partial
-  | sup' : forall f : nat -> partial, (forall n, f n <= f (S n)) -> partial
+  | sup : IncreasingSequence partial -> partial
 
 with partialLe@{} : Le partial :=
   | partial_refl : Reflexive partialLe
   | bot_least : forall x, bot <= x
-  | sup'_le_l : forall f p x, sup' f p <= x -> forall n, f n <= x
-  | sup'_le_r : forall f p x, (forall n, f n <= x) -> sup' f p <= x
+  | sup_le_l : forall f x, sup f <= x -> forall n, f n <= x
+  | sup_le_r : forall f x, (forall n, seq f n <= x) -> sup f <= x
 .
 Axiom partial_antisymm : AntiSymmetric partialLe.
 Axiom partialLe_hprop : is_mere_relation partial partialLe.
 
 Global Existing Instance partialLe.
 Global Existing Instance partialLe_hprop.
-
-Definition sup@{} : IncreasingSequence partial -> partial
-  := fun s => sup' s (seq_increasing s).
-
-Definition sup_le_l@{} : forall (s : IncreasingSequence partial) x,
-  sup s <= x -> forall n, s n <= x
-  := fun s => sup'_le_l s (seq_increasing s).
-
-Definition sup_le_r@{} : forall (s : IncreasingSequence partial) x,
-  (forall n, s n <= x) -> sup s <= x
-  := fun s => sup'_le_r s (seq_increasing s).
 
 Section Induction.
 Universe UP UQ.
@@ -92,9 +81,9 @@ Definition partial_rect@{} : Inductors -> forall x, P x :=
     match x return (Inductors -> P x) with
     | eta x => fun I => ind_eta I x
     | bot => fun I => ind_bot I
-    | sup' f p => fun I => ind_sup I (Build_IncreasingSequence f p)
+    | sup f => fun I => ind_sup I f
         (fun n => partial_rect (f n) I)
-        (fun n => partialLe_rect _ _ (p n) I)
+        (fun n => partialLe_rect _ _ (seq_increasing f n) I)
     end
 
   with partialLe_rect (x y : partial) (E : x <= y) {struct E}
@@ -105,16 +94,16 @@ Definition partial_rect@{} : Inductors -> forall x, P x :=
     | partial_refl x => fun I => ind_refl I x (partial_rect x I)
     | bot_least x => fun I =>
       ind_bot_least I x (partial_rect x I)
-    | sup'_le_l f p x E n => fun I =>
-      ind_sup_le_l I (Build_IncreasingSequence f p) x E
+    | sup_le_l f x E n => fun I =>
+      ind_sup_le_l I f x E
         (fun n => partial_rect (f n) I)
-        (fun n => partialLe_rect _ _ (p n) I)
+        (fun n => partialLe_rect _ _ (seq_increasing f n) I)
         (partial_rect x I)
         (partialLe_rect _ _ E I) n
-    | sup'_le_r f p x E => fun I =>
-      ind_sup_le_r I (Build_IncreasingSequence f p) x E
+    | sup_le_r f x E => fun I =>
+      ind_sup_le_r I f x E
         (fun n => partial_rect (f n) I)
-        (fun n => partialLe_rect _ _ (p n) I)
+        (fun n => partialLe_rect _ _ (seq_increasing f n) I)
         (partial_rect x I)
         (fun n => partialLe_rect _ _ (E n) I)
     end
@@ -128,9 +117,9 @@ Definition partialLe_rect@{} : forall (I : Inductors) (x y : partial) (E : x <= 
     match x return (Inductors -> P x) with
     | eta x => fun I => ind_eta I x
     | bot => fun I => ind_bot I
-    | sup' f p => fun I => ind_sup I (Build_IncreasingSequence f p)
+    | sup f => fun I => ind_sup I f
         (fun n => partial_rect (f n) I)
-        (fun n => partialLe_rect _ _ (p n) I)
+        (fun n => partialLe_rect _ _ (seq_increasing f n) I)
     end
 
   with partialLe_rect (x y : partial) (E : x <= y) {struct E}
@@ -141,16 +130,16 @@ Definition partialLe_rect@{} : forall (I : Inductors) (x y : partial) (E : x <= 
     | partial_refl x => fun I => ind_refl I x (partial_rect x I)
     | bot_least x => fun I =>
       ind_bot_least I x (partial_rect x I)
-    | sup'_le_l f p x E n => fun I =>
-      ind_sup_le_l I (Build_IncreasingSequence f p) x E
+    | sup_le_l f x E n => fun I =>
+      ind_sup_le_l I f x E
         (fun n => partial_rect (f n) I)
-        (fun n => partialLe_rect _ _ (p n) I)
+        (fun n => partialLe_rect _ _ (seq_increasing f n) I)
         (partial_rect x I)
         (partialLe_rect _ _ E I) n
-    | sup'_le_r f p x E => fun I =>
-      ind_sup_le_r I (Build_IncreasingSequence f p) x E
+    | sup_le_r f x E => fun I =>
+      ind_sup_le_r I f x E
         (fun n => partial_rect (f n) I)
-        (fun n => partialLe_rect _ _ (p n) I)
+        (fun n => partialLe_rect _ _ (seq_increasing f n) I)
         (partial_rect x I)
         (fun n => partialLe_rect _ _ (E n) I)
     end
@@ -478,11 +467,11 @@ intros f.
 simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
 - exact f.
 - exact (bot B).
-- intros s p. exact (sup' B s p).
+- intros s p. exact (sup B (Build_IncreasingSequence s p)).
 - reflexivity.
 - apply bot_least.
-- simpl. apply sup'_le_l.
-- simpl. apply sup'_le_r.
+- simpl. intros s p; apply sup_le_l.
+- simpl. intros s p; exact (sup_le_r _ (Build_IncreasingSequence _ _)).
 Defined.
 
 Definition partial_bind {A B : Type}
