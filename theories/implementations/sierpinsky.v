@@ -144,17 +144,17 @@ Lemma SierMeet_is_meet@{} : MeetSemiLatticeOrder SierLe.
 Proof.
 split.
 - apply _.
-- apply (partial_ind0 _ (fun x => forall y, _)).
-  + intros [] y. apply top_greatest.
+- intros x y;revert x. apply (partial_ind0 _ _).
+  + intros []. apply top_greatest.
   + intros;apply bot_least.
-  + intros s IH y.
+  + intros s IH.
     change (sup Unit s ⊓ y) with (sup _ (SierMeet_seq_l s y)).
     apply sup_le_r. intros n. simpl.
     etransitivity;[apply IH|]. apply sup_is_ub.
-- apply (partial_ind0 _ (fun x => forall y, _)).
-  + intros; reflexivity.
+- intros x y;revert x. apply (partial_ind0 _ _).
+  + reflexivity.
   + apply bot_least.
-  + intros s IH y.
+  + intros s IH.
     change (sup Unit s ⊓ y) with (sup _ (SierMeet_seq_l s y)).
     apply sup_le_r. simpl. intros n;apply IH.
 - apply (partial_ind0 _ (fun x => forall y z, _ -> _ -> _)).
@@ -174,7 +174,61 @@ split.
 Qed.
 Existing Instance SierMeet_is_meet.
 
-Global Instance Sier_lattice_order : LatticeOrder SierLe := {}.
+Section distrib_lattice.
+
+Local Instance Sier_lattice_order : LatticeOrder SierLe := {}.
+Local Existing Instance join_sl_order_join_sl.
+Local Existing Instance meet_sl_order_meet_sl.
+
+Global Instance Sier_distributive_lattice : DistributiveLattice Sier.
+Proof.
+repeat (split;try apply _).
+- hnf. intros a b. apply (antisymmetry le).
+  + apply join_le.
+    * reflexivity.
+    * apply meet_lb_l.
+  + apply join_ub_l.
+- hnf. intros a b. apply (antisymmetry le).
+  + apply meet_lb_l.
+  + apply meet_le.
+    * reflexivity.
+    * apply join_ub_l.
+- hnf. intros a b c. apply (antisymmetry le).
+  + apply join_le; apply meet_le.
+    * apply join_ub_l.
+    * apply join_ub_l.
+    * transitivity b.
+      { apply meet_lb_l. }
+      { apply join_ub_r. }
+    * transitivity c.
+      { apply meet_lb_r. }
+      { apply join_ub_r. }
+  + revert a b c. apply (partial_ind0 _ (fun a => forall b c, _)).
+    * intros [] b c. reflexivity.
+    * reflexivity.
+    * intros s IH b c.
+      rewrite !SierJoin_sup,SierMeet_sup.
+      apply sup_le_r. intros n.
+      simpl. rewrite (commutativity (f:=meet)),SierMeet_sup;simpl.
+      apply sup_le_r;intros m.
+      simpl.
+      assert (E : exists k, n <= k /\ m <= k)
+      by (destruct (total le n m) as [E|E];eauto).
+      destruct E as [k [En Em]].
+      etransitivity;[|apply (sup_is_ub _ _ k)].
+      simpl. etransitivity;[|apply IH].
+      apply meet_le.
+      { etransitivity;[apply meet_lb_r|].
+        apply join_le;[|apply join_ub_r].
+        transitivity (s k);[|apply join_ub_l].
+        apply (order_preserving s). trivial. }
+      { etransitivity;[apply meet_lb_l|].
+        apply join_le;[|apply join_ub_r].
+        transitivity (s k);[|apply join_ub_l].
+        apply (order_preserving s). trivial. }
+Qed.
+
+End distrib_lattice.
 Local Existing Instance join_sl_order_join_sl.
 Local Existing Instance meet_sl_order_meet_sl.
 
@@ -299,60 +353,12 @@ unfold IsTop. intros f;split.
   transitivity (f n);trivial. apply countable_sup_ub.
 Qed.
 
-Global Instance Sier_distributive_lattice : DistributiveLattice Sier.
-Proof.
-repeat (split;try apply _).
-- hnf. intros a b. apply (antisymmetry le).
-  + apply join_le.
-    * reflexivity.
-    * apply meet_lb_l.
-  + apply join_ub_l.
-- hnf. intros a b. apply (antisymmetry le).
-  + apply meet_lb_l.
-  + apply meet_le.
-    * reflexivity.
-    * apply join_ub_l.
-- hnf. intros a b c. apply (antisymmetry le).
-  + apply join_le; apply meet_le.
-    * apply join_ub_l.
-    * apply join_ub_l.
-    * transitivity b.
-      { apply meet_lb_l. }
-      { apply join_ub_r. }
-    * transitivity c.
-      { apply meet_lb_r. }
-      { apply join_ub_r. }
-  + revert a b c. apply (partial_ind0 _ (fun a => forall b c, _)).
-    * intros [] b c. reflexivity.
-    * reflexivity.
-    * intros s IH b c.
-      rewrite !SierJoin_sup,SierMeet_sup.
-      apply sup_le_r. intros n.
-      simpl. rewrite (commutativity (f:=meet)),SierMeet_sup;simpl.
-      apply sup_le_r;intros m.
-      simpl.
-      assert (E : exists k, n <= k /\ m <= k)
-      by (destruct (total le n m) as [E|E];eauto).
-      destruct E as [k [En Em]].
-      etransitivity;[|apply (sup_is_ub _ _ k)].
-      simpl. etransitivity;[|apply IH].
-      apply meet_le.
-      { etransitivity;[apply meet_lb_r|].
-        apply join_le;[|apply join_ub_r].
-        transitivity (s k);[|apply join_ub_l].
-        apply (order_preserving s). trivial. }
-      { etransitivity;[apply meet_lb_l|].
-        apply join_le;[|apply join_ub_r].
-        transitivity (s k);[|apply join_ub_l].
-        apply (order_preserving s). trivial. }
-Qed.
-
 Lemma countable_sup_meet_distr_r : forall a f,
   meet (CountableSup f) a = CountableSup (fun n => meet (f n) a).
 Proof.
 intros a f.
 unfold CountableSup at 1. rewrite SierMeet_sup.
-apply sup_extensionality.
+apply sup_extensionality;simpl.
 induction n as [|n IHn];simpl.
 - reflexivity.
 - simpl in IHn. rewrite <-IHn.
@@ -484,7 +490,7 @@ apply (partial_ind0 _ (fun a => forall b, _ -> _)).
 - intros;apply bot_least.
 - intros s IH b E. apply sup_le_r. intros n.
   apply IH. intros En. apply E.
-  apply top_le_sup. apply tr;exists n;trivial.
+  red. transitivity (s n);trivial. apply sup_is_ub.
 Qed.
 
 Class SemiDecide@{i} (A : Type@{i}) := semi_decide : Sier.
@@ -666,7 +672,7 @@ simple refine (Build_Inductors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
 - simpl. intros x f b _ E.
   auto.
 - simpl;intros s x Ex fs fs_increasing fb Eb n a Ea Ea'.
-  pose proof (fun b Ea Ea' => sup_le_l _ _ _ (Eb b Ea Ea')) as E.
+  pose proof (fun b Ea Ea' => sup_le_l _ _ _ (Eb b Ea Ea')) as E;
   simpl in E.
   etransitivity;[|simple refine (E _ _ _ n);eapply disjoint_le_l;eauto].
   set (Esup := disjoint_sup_l _ _ _ _).
@@ -676,11 +682,8 @@ simple refine (Build_Inductors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
   apply sup_le_r. intros n;simpl.
   auto.
 - simpl. intros x y fx fy Ex Ey.
-  destruct (antisymmetry le _ _ Ex Ey).
+  destruct (partial_antisymm Unit x y Ex Ey);simpl;clear Ex Ey.
   intros Efx Efy.
-  assert (Hrw : partial_antisymm Unit x x Ex Ey = idpath) by apply path_ishprop.
-  rewrite Hrw. simpl.
-  clear Hrw Ex Ey.
   apply path_forall;intros b;apply path_forall;intros Eb;
   apply Sigma.path_sigma_hprop.
   apply (antisymmetry le);trivial.
@@ -705,10 +708,7 @@ Definition interleave_sup_l : forall s b E, interleave (sup _ s) b E =
 Lemma interleave_top_r_rw : forall a E, interleave a top E = eta _ false.
 Proof.
 apply (partial_ind0 _ (fun a => forall E, _)).
-- intros [] E. apply Empty_ind. apply disjoint_top_l in E.
-  apply (not_eta_le_bot@{Set} Unit tt).
-  unfold top,SierTop in E.
-  rewrite E;reflexivity.
+- intros [] E. apply Empty_ind. apply E;apply reflexivity.
 - intros E. reflexivity.
 - intros s Es E.
   rewrite interleave_sup_l.
