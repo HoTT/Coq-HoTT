@@ -964,7 +964,7 @@ intros;split.
 Qed.
 
 Section redundant.
-(* This section is redundant one we have ring structure
+(* This section is redundant once we have ring structure
    since then we can use lemmas from orders.rings etc *)
 Lemma cut_plus_lt_compat : forall a b c d : Cut, a < c -> b < d -> a + b < c + d.
 Proof.
