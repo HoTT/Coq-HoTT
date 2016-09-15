@@ -29,14 +29,17 @@ Definition cut_of_cauchy : Cast real Cut
 Definition cut_of_cauchy_rat : forall q : Q, cut_of_cauchy (rat q) = ' q
   := fun _ => idpath.
 
+Global Instance cut_of_cauchy_nonexpanding : NonExpanding cut_of_cauchy
+  := lipschitz_nonexpanding _.
+
 Lemma cut_of_cauchy_upper_pr : forall a q, upper (cut_of_cauchy a) q <-> a < rat q.
 Proof.
 apply (C_ind0 Q (fun a => forall q, upper (cut_of_cauchy a) q <-> a < rat q)).
 - intros q r;split.
-  + intros E;apply (@semi_decidable (_ < _) _ _) in E.
-    apply rat_lt_preserving. trivial.
-  + intros E;apply rat_lt_reflecting in E;
-    apply (snd semi_decidable);trivial.
+  + intros E.
+    apply rat_lt_preserving,semi_decidable. trivial.
+  + intros E;apply rat_lt_reflecting,semi_decidable in E;
+    trivial.
 - intros x IHx q;split.
   + intros E. unfold cut_of_cauchy in E.
     rewrite lipschitz_extend_lim in E.
@@ -69,9 +72,6 @@ apply (C_ind0 Q (fun a => forall q, upper (cut_of_cauchy a) q <-> a < rat q)).
     unfold e;clear e. repeat (unfold cast;simpl).
     abstract ring_tac.ring_with_integers (NatPair.Z nat).
 Qed.
-
-Global Instance cut_of_cauchy_nonexpanding : NonExpanding cut_of_cauchy
-  := lipschitz_nonexpanding _.
 
 Lemma cut_of_cauchy_preserves_plus : forall a b,
   cut_of_cauchy (a + b) = cut_of_cauchy a + cut_of_cauchy b.

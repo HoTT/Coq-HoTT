@@ -1140,7 +1140,7 @@ Lemma Cut_rounded : Rounded Cut.
 Proof.
 intros e u v;split.
 - intros E. red in E;simpl in E.
-  apply Cut_archimedean in E. revert E;apply (Trunc_ind _);intros [q [E1 E2]].
+  apply Cut_archimedean in E;revert E;apply (Trunc_ind _);intros [q [E1 E2]].
   assert (E3 : 0 < q).
   { apply (strictly_order_reflecting (cast Q Cut)).
     apply le_lt_trans with (abs (u - v));trivial.
