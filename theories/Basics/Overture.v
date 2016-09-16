@@ -713,27 +713,29 @@ Tactic Notation "erapply" open_constr(term) := rapply term.
 (** [erapply' lem] is like [apply lem] (rather, [rapply' lem]), but it allows holes in [lem] *)
 Tactic Notation "erapply'" open_constr(term) := rapply' term.
 
-(** An alternative version using [simple refine] *)
+(** A shorter name for [simple refine], useful for things like [isequiv_adjointify]. *)
+Tactic Notation "srefine" uconstr(term) := simple refine term.
 
-Ltac simple_rapply p :=
-  simple refine p ||
-  simple refine (p _) ||
-  simple refine (p _ _) ||
-  simple refine (p _ _ _) ||
-  simple refine (p _ _ _ _) ||
-  simple refine (p _ _ _ _ _) ||
-  simple refine (p _ _ _ _ _ _) ||
-  simple refine (p _ _ _ _ _ _ _) ||
-  simple refine (p _ _ _ _ _ _ _ _) ||
-  simple refine (p _ _ _ _ _ _ _ _ _) ||
-  simple refine (p _ _ _ _ _ _ _ _ _ _) ||
-  simple refine (p _ _ _ _ _ _ _ _ _ _ _) ||
-  simple refine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
-  simple refine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  simple refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  simple refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
+(** An alternative version of [rapply] using [simple refine]. *)
+Ltac srapply p :=
+  srefine p ||
+  srefine (p _) ||
+  srefine (p _ _) ||
+  srefine (p _ _ _) ||
+  srefine (p _ _ _ _) ||
+  srefine (p _ _ _ _ _) ||
+  srefine (p _ _ _ _ _ _) ||
+  srefine (p _ _ _ _ _ _ _) ||
+  srefine (p _ _ _ _ _ _ _ _) ||
+  srefine (p _ _ _ _ _ _ _ _ _) ||
+  srefine (p _ _ _ _ _ _ _ _ _ _) ||
+  srefine (p _ _ _ _ _ _ _ _ _ _ _) ||
+  srefine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  srefine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  srefine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  srefine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
 
-Tactic Notation "use" open_constr(term) := simple_rapply term.
+Tactic Notation "serapply" uconstr(term) := srapply term.
 
 
 (** Ssreflect tactics, adapted by Robbert Krebbers *)
