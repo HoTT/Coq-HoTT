@@ -232,7 +232,7 @@ Proof.
 intros a b c;revert a. apply (unique_continuous_extension _).
 { change (Continuous (abs ∘ uncurry plus ∘ map2 (.* b) (negate ∘ (.* c)) ∘
     (@BinaryDup real))).
-  repeat apply continuous_compose;apply _.
+  apply _.
 }
 { change (Continuous ((.* (abs (b - c))) ∘ abs)).
   apply _. }

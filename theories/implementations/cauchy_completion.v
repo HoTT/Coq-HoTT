@@ -130,80 +130,78 @@ Variable A : C -> Type@{UA}.
 Variable B : forall x y : C, A x -> A y -> forall e, close e x y -> Type@{UB}.
 
 Definition C_rect@{} : Inductors A B -> forall x : C, A x :=
-  fun I x =>
-  fix C_rect (x : C) {struct x} : Inductors A B -> A x :=
+  fix C_rect (I : Inductors A B) (x : C) {struct x} : A x :=
     match x return (Inductors A B -> A x) with
     | eta q => fun I => ind_eta I q
     | Clim x => fun I =>
-      let a := Build_DApproximation A B x (fun e => C_rect (x e) I)
-        (fun d e => equiv_rect (x d) (x e) _ (approx_equiv x d e) I) in
+      let a := Build_DApproximation A B x (fun e => C_rect I (x e))
+        (fun d e => equiv_rect I (x d) (x e) _ (approx_equiv x d e)) in
       ind_lim I x a
-    end
+    end I
 
-  with equiv_rect (x y : C) (e : Q+) (xi : close e x y) {struct xi}
-    : forall I : Inductors A B, B x y (C_rect x I) (C_rect y I) e xi :=
+  with equiv_rect (I : Inductors A B) (x y : C) (e : Q+) (xi : close e x y)
+    {struct xi} : B x y (C_rect I x) (C_rect I y) e xi :=
     match xi in equiv e' x' y' return
       (forall I : Inductors A B,
-        @B x' y' (C_rect x' I) (C_rect y' I) e' xi) with
+        @B x' y' (C_rect I x') (C_rect I y') e' xi) with
     | equiv_eta_eta q r e H => fun I => ind_eta_eta I q r e H
     | equiv_eta_lim' q y e d d' He xi =>
       fun I =>
-      let b := Build_DApproximation A B y (fun e => C_rect (y e) I)
-        (fun d e => equiv_rect (y d) (y e) _ (approx_equiv y d e) I) in
-      ind_eta_lim I q d d' e y b He xi (equiv_rect _ _ _ xi I)
+      let b := Build_DApproximation A B y (fun e => C_rect I (y e))
+        (fun d e => equiv_rect I (y d) (y e) _ (approx_equiv y d e)) in
+      ind_eta_lim I q d d' e y b He xi (equiv_rect I _ _ _ xi)
     | equiv_lim'_eta x r e d d' He xi =>
       fun I =>
-      let a := Build_DApproximation A B x (fun e => C_rect (x e) I)
-        (fun d e => equiv_rect (x d) (x e) _ (approx_equiv x d e) I) in
-      ind_lim_eta I r d d' e x a He xi (equiv_rect _ _ _ xi I)
+      let a := Build_DApproximation A B x (fun e => C_rect I (x e))
+        (fun d e => equiv_rect I (x d) (x e) _ (approx_equiv x d e)) in
+      ind_lim_eta I r d d' e x a He xi (equiv_rect I _ _ _ xi)
     | equiv_lim'_lim' x y e d n e' He xi =>
       fun I =>
-      let a := Build_DApproximation A B x (fun e => C_rect (x e) I)
-        (fun d e => equiv_rect (x d) (x e) _ (approx_equiv x d e) I) in
-      let b := Build_DApproximation A B y (fun e => C_rect (y e) I)
-        (fun d e => equiv_rect (y d) (y e) _ (approx_equiv y d e) I) in
-      ind_lim_lim I x y a b e d n e' He xi (equiv_rect _ _ _ xi I)
-    end
-  for C_rect x I.
+      let a := Build_DApproximation A B x (fun e => C_rect I (x e))
+        (fun d e => equiv_rect I (x d) (x e) _ (approx_equiv x d e)) in
+      let b := Build_DApproximation A B y (fun e => C_rect I (y e))
+        (fun d e => equiv_rect I (y d) (y e) _ (approx_equiv y d e)) in
+      ind_lim_lim I x y a b e d n e' He xi (equiv_rect I _ _ _ xi)
+    end I
+  for C_rect.
 
 Definition equiv_rect@{} : forall (I : Inductors A B)
   {x y : C} {e : Q+} (xi : close e x y),
   B x y (C_rect I x) (C_rect I y) e xi :=
-  fun I x y e xi =>
-  fix C_rect (x : C) {struct x} : Inductors A B -> A x :=
+  fix C_rect (I : Inductors A B) (x : C) {struct x} : A x :=
     match x return (Inductors A B -> A x) with
     | eta q => fun I => ind_eta I q
     | Clim x => fun I =>
-      let a := Build_DApproximation A B x (fun e => C_rect (x e) I)
-        (fun d e => equiv_rect (x d) (x e) _ (approx_equiv x d e) I) in
+      let a := Build_DApproximation A B x (fun e => C_rect I (x e))
+        (fun d e => equiv_rect I (x d) (x e) _ (approx_equiv x d e)) in
       ind_lim I x a
-    end
+    end I
 
-  with equiv_rect (x y : C) (e : Q+) (xi : close e x y) {struct xi}
-    : forall I : Inductors A B, B x y (C_rect x I) (C_rect y I) e xi :=
+  with equiv_rect (I : Inductors A B) (x y : C) (e : Q+) (xi : close e x y)
+    {struct xi} : B x y (C_rect I x) (C_rect I y) e xi :=
     match xi in equiv e' x' y' return
       (forall I : Inductors A B,
-        @B x' y' (C_rect x' I) (C_rect y' I) e' xi) with
+        @B x' y' (C_rect I x') (C_rect I y') e' xi) with
     | equiv_eta_eta q r e H => fun I => ind_eta_eta I q r e H
     | equiv_eta_lim' q y e d d' He xi =>
       fun I =>
-      let b := Build_DApproximation A B y (fun e => C_rect (y e) I)
-        (fun d e => equiv_rect (y d) (y e) _ (approx_equiv y d e) I) in
-      ind_eta_lim I q d d' e y b He xi (equiv_rect _ _ _ xi I)
+      let b := Build_DApproximation A B y (fun e => C_rect I (y e))
+        (fun d e => equiv_rect I (y d) (y e) _ (approx_equiv y d e)) in
+      ind_eta_lim I q d d' e y b He xi (equiv_rect I _ _ _ xi)
     | equiv_lim'_eta x r e d d' He xi =>
       fun I =>
-      let a := Build_DApproximation A B x (fun e => C_rect (x e) I)
-        (fun d e => equiv_rect (x d) (x e) _ (approx_equiv x d e) I) in
-      ind_lim_eta I r d d' e x a He xi (equiv_rect _ _ _ xi I)
+      let a := Build_DApproximation A B x (fun e => C_rect I (x e))
+        (fun d e => equiv_rect I (x d) (x e) _ (approx_equiv x d e)) in
+      ind_lim_eta I r d d' e x a He xi (equiv_rect I _ _ _ xi)
     | equiv_lim'_lim' x y e d n e' He xi =>
       fun I =>
-      let a := Build_DApproximation A B x (fun e => C_rect (x e) I)
-        (fun d e => equiv_rect (x d) (x e) _ (approx_equiv x d e) I) in
-      let b := Build_DApproximation A B y (fun e => C_rect (y e) I)
-        (fun d e => equiv_rect (y d) (y e) _ (approx_equiv y d e) I) in
-      ind_lim_lim I x y a b e d n e' He xi (equiv_rect _ _ _ xi I)
-    end
-  for equiv_rect x y e xi I.
+      let a := Build_DApproximation A B x (fun e => C_rect I (x e))
+        (fun d e => equiv_rect I (x d) (x e) _ (approx_equiv x d e)) in
+      let b := Build_DApproximation A B y (fun e => C_rect I (y e))
+        (fun d e => equiv_rect I (y d) (y e) _ (approx_equiv y d e)) in
+      ind_lim_lim I x y a b e d n e' He xi (equiv_rect I _ _ _ xi)
+    end I
+  for equiv_rect.
 
 Definition approx_rect@{} (I : Inductors A B) (x : Approximation C)
   : DApproximation A B x
