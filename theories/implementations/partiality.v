@@ -76,75 +76,74 @@ Record Inductors@{} :=
   }.
 
 Definition partial_rect@{} : Inductors -> forall x, P x :=
-  fun I x =>
-  fix partial_rect (x : partial) {struct x} : Inductors -> P x :=
+  fix partial_rect (I : Inductors) (x : partial) {struct x} : P x :=
     match x return (Inductors -> P x) with
     | eta x => fun I => ind_eta I x
     | bot => fun I => ind_bot I
     | sup f => fun I => ind_sup I f
-        (fun n => partial_rect (f n) I)
-        (fun n => partialLe_rect _ _ (seq_increasing f n) I)
-    end
+        (fun n => partial_rect I (f n))
+        (fun n => partialLe_rect I _ _ (seq_increasing f n))
+    end I
 
-  with partialLe_rect (x y : partial) (E : x <= y) {struct E}
-    : forall I : Inductors, Q x y (partial_rect x I) (partial_rect y I) E :=
+  with partialLe_rect (I : Inductors) (x y : partial) (E : x <= y) {struct E}
+    : Q x y (partial_rect I x) (partial_rect I y) E :=
     match E in partialLe x' y'
-    return (forall I : Inductors, Q x' y' (partial_rect x' I) (partial_rect y' I) E)
+    return (forall I : Inductors, Q x' y' (partial_rect I x') (partial_rect I y') E)
     with
-    | partial_refl x => fun I => ind_refl I x (partial_rect x I)
+    | partial_refl x => fun I => ind_refl I x (partial_rect I x)
     | bot_least x => fun I =>
-      ind_bot_least I x (partial_rect x I)
+      ind_bot_least I x (partial_rect I x)
     | sup_le_l f x E n => fun I =>
       ind_sup_le_l I f x E
-        (fun n => partial_rect (f n) I)
-        (fun n => partialLe_rect _ _ (seq_increasing f n) I)
-        (partial_rect x I)
-        (partialLe_rect _ _ E I) n
+        (fun n => partial_rect I (f n))
+        (fun n => partialLe_rect I _ _ (seq_increasing f n))
+        (partial_rect I x)
+        (partialLe_rect I _ _ E) n
     | sup_le_r f x E => fun I =>
       ind_sup_le_r I f x E
-        (fun n => partial_rect (f n) I)
-        (fun n => partialLe_rect _ _ (seq_increasing f n) I)
-        (partial_rect x I)
-        (fun n => partialLe_rect _ _ (E n) I)
-    end
+        (fun n => partial_rect I (f n))
+        (fun n => partialLe_rect I _ _ (seq_increasing f n))
+        (partial_rect I x)
+        (fun n => partialLe_rect I _ _ (E n))
+    end I
 
-  for partial_rect x I.
+  for partial_rect.
 
 Definition partialLe_rect@{} : forall (I : Inductors) (x y : partial) (E : x <= y),
   Q x y (partial_rect I x) (partial_rect I y) E
-  := fun I x y E =>
-  fix partial_rect (x : partial) {struct x} : Inductors -> P x :=
+  :=
+  fix partial_rect (I : Inductors) (x : partial) {struct x} : P x :=
     match x return (Inductors -> P x) with
     | eta x => fun I => ind_eta I x
     | bot => fun I => ind_bot I
     | sup f => fun I => ind_sup I f
-        (fun n => partial_rect (f n) I)
-        (fun n => partialLe_rect _ _ (seq_increasing f n) I)
-    end
+        (fun n => partial_rect I (f n))
+        (fun n => partialLe_rect I _ _ (seq_increasing f n))
+    end I
 
-  with partialLe_rect (x y : partial) (E : x <= y) {struct E}
-    : forall I : Inductors, Q x y (partial_rect x I) (partial_rect y I) E :=
+  with partialLe_rect (I : Inductors) (x y : partial) (E : x <= y) {struct E}
+    : Q x y (partial_rect I x) (partial_rect I y) E :=
     match E in partialLe x' y'
-    return (forall I : Inductors, Q x' y' (partial_rect x' I) (partial_rect y' I) E)
+    return (forall I : Inductors, Q x' y' (partial_rect I x') (partial_rect I y') E)
     with
-    | partial_refl x => fun I => ind_refl I x (partial_rect x I)
+    | partial_refl x => fun I => ind_refl I x (partial_rect I x)
     | bot_least x => fun I =>
-      ind_bot_least I x (partial_rect x I)
+      ind_bot_least I x (partial_rect I x)
     | sup_le_l f x E n => fun I =>
       ind_sup_le_l I f x E
-        (fun n => partial_rect (f n) I)
-        (fun n => partialLe_rect _ _ (seq_increasing f n) I)
-        (partial_rect x I)
-        (partialLe_rect _ _ E I) n
+        (fun n => partial_rect I (f n))
+        (fun n => partialLe_rect I _ _ (seq_increasing f n))
+        (partial_rect I x)
+        (partialLe_rect I _ _ E) n
     | sup_le_r f x E => fun I =>
       ind_sup_le_r I f x E
-        (fun n => partial_rect (f n) I)
-        (fun n => partialLe_rect _ _ (seq_increasing f n) I)
-        (partial_rect x I)
-        (fun n => partialLe_rect _ _ (E n) I)
-    end
+        (fun n => partial_rect I (f n))
+        (fun n => partialLe_rect I _ _ (seq_increasing f n))
+        (partial_rect I x)
+        (fun n => partialLe_rect I _ _ (E n))
+    end I
 
-  for partialLe_rect x y E I.
+  for partialLe_rect.
 
 Definition partial_rect_sup (I : Inductors) s : partial_rect I (sup s) =
   ind_sup I s (fun n => partial_rect I (s n))
