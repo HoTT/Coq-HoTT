@@ -947,15 +947,9 @@ Proof.
 intros y ly E1 u e d xi.
 apply (merely_destruct ((fst (rounded _ _ _) xi))).
 intros [d0 [d' [He E2]]].
-pose proof (triangular _ _ _ _ _ E2 (E1 (d' / 2) _)) as E3.
-eapply rounded_le;[exact E3|].
-rewrite He.
-clear u y e xi E1 He E2 E3.
-set (D2' := d' / 2);rewrite (pos_split2 d');unfold D2';clear D2'.
-apply flip_nonneg_minus.
-assert (Hrw : ' (d0 + (d' / 2 + d' / 2) + d) - ' (d0 + (d' / 2 + d))
-  = ' (d' / 2)) by ring_tac.ring_with_integers (NatPair.Z nat).
-rewrite Hrw;solve_propholds.
+pose proof (triangular _ _ _ _ _ E2 (E1 d' _)) as E3.
+assert (Hrw : e + d = d0 + (d' + d));[|rewrite Hrw;trivial].
+rewrite He. Symmetry. apply Qpos_plus_assoc.
 Qed.
 
 Context {Alim : Lim A} `{!CauchyComplete A}.
