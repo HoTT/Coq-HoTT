@@ -460,13 +460,12 @@ End mutual_recursion.
 
 Section equiv_alt.
 
-Definition rounded_halfrel@{} := sigT@{Ularge UQ}
+Definition balls@{} := sigT@{Ularge UQ}
   (fun half : C T -> Q+ -> TruncType@{UQ} -1 =>
   (forall u e, half u e <-> merely (exists d d', e = d + d' /\ half u d))
-  /\ (forall u v n e, close e u v ->
-    ((half u n -> half v (n+e)) /\ (half v n -> half u (n+e))))).
+  /\ (forall u v n e, close e u v -> half u n -> half v (n+e))).
 
-Definition rounded_halfrel_close@{} e (R1 R2 : rounded_halfrel)
+Definition balls_close@{} e (R1 R2 : balls)
   := forall u n, (R1.1 u n -> R2.1 u (e+n)) /\ (R2.1 u n -> R1.1 u (e+n)).
 
 Definition rounded_zeroary@{} := sigT@{Ularge UQ}
@@ -476,14 +475,14 @@ Definition rounded_zeroary@{} := sigT@{Ularge UQ}
 Definition rounded_zeroary_close@{} e (R1 R2 : rounded_zeroary)
   := forall n, (R1.1 n -> R2.1 (e+n)) /\ (R2.1 n -> R1.1 (e+n)).
 
-Lemma rounded_halfrel_separated' : forall u v,
-  (forall e, rounded_halfrel_close e u v) -> u = v.
+Lemma balls_separated' : forall u v,
+  (forall e, balls_close e u v) -> u = v.
 Proof.
 intros u v E.
 apply Sigma.path_sigma_hprop.
 apply path_forall. intro x. apply path_forall. intro e.
 apply TruncType.path_iff_hprop_uncurried.
-unfold rounded_halfrel_close in E.
+unfold balls_close in E.
 split;intros E'.
 + generalize (fst (fst u.2 _ _) E').
   apply (Trunc_ind _).
@@ -497,13 +496,13 @@ split;intros E'.
   trivial.
 Qed.
 
-Definition rounded_halfrel_separated@{}
-  := rounded_halfrel_separated'@{Ularge Ularge Ularge Uhuge}.
+Definition balls_separated@{}
+  := balls_separated'@{Ularge Ularge Ularge Uhuge}.
 
-Instance rounded_halfrel_close_hprop@{}
-  : forall e u v, IsHProp (rounded_halfrel_close e u v).
+Instance balls_close_hprop@{}
+  : forall e u v, IsHProp (balls_close e u v).
 Proof.
-unfold rounded_halfrel_close. intros. apply _.
+unfold balls_close. intros. apply _.
 Qed.
 
 Definition equiv_alt_eta_eta@{} (q r : T) : rounded_zeroary.
@@ -662,8 +661,8 @@ intros e';split;apply (Trunc_ind _).
   rewrite He,He'. apply pos_eq; ring_tac.ring_with_nat.
 Qed.
 
-Lemma equiv_alt_lim_eta_ok@{} : forall (equiv_alt_x_e : Q+ → rounded_halfrel)
-(IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
+Lemma equiv_alt_lim_eta_ok@{} : forall (equiv_alt_x_e : Q+ → balls)
+(IHx : ∀ d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 r (e : Q+),
 merely (∃ d d' : Q+, e = d + d' ∧ (equiv_alt_x_e d).1 (eta r) d')
@@ -688,8 +687,8 @@ split;apply (Trunc_ind _);intros [d [d' [He E]]].
   apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Definition equiv_alt_lim_eta@{} : forall (equiv_alt_x_e : Q+ → rounded_halfrel)
-(IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
+Definition equiv_alt_lim_eta@{} : forall (equiv_alt_x_e : Q+ → balls)
+(IHx : ∀ d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 (r : T), rounded_zeroary.
 Proof.
@@ -699,8 +698,8 @@ red. exists (fun e => merely (exists d d' : Q+, e = d + d' /\
 apply equiv_alt_lim_eta_ok;trivial.
 Defined.
 
-Lemma equiv_alt_lim_lim_ok@{} (equiv_alt_x_e : Q+ → rounded_halfrel)
-(IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
+Lemma equiv_alt_lim_lim_ok@{} (equiv_alt_x_e : Q+ → balls)
+(IHx : ∀ d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 (y : Approximation (C T))
 (e : Q+)
@@ -722,7 +721,7 @@ split;apply (Trunc_ind _).
   rewrite He,Hd'. apply pos_eq; ring_tac.ring_with_nat.
 - intros [d [d' [He E2]]]. revert E2;apply (Trunc_ind _).
   intros [d0 [d0' [n [Hd E2]]]].
-  pose proof (fun e u v n e0 xi => fst (snd (E1 e) u v n e0 xi)) as E3.
+  pose proof (fun e u v n e0 xi => snd (E1 e) u v n e0 xi) as E3.
   pose proof (fun a b c c' => E3 c _ _ c' _ (approx_equiv y a b)) as E4;clear E3.
   pose proof (fun a => E4 _ a _ _ E2) as E3. clear E4.
   rewrite Hd in He.
@@ -733,8 +732,8 @@ split;apply (Trunc_ind _).
   + apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Definition equiv_alt_lim_lim@{} (equiv_alt_x_e : Q+ → rounded_halfrel)
-(IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
+Definition equiv_alt_lim_lim@{} (equiv_alt_x_e : Q+ → balls)
+(IHx : ∀ d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 (y : Approximation (C T)) : rounded_zeroary.
 Proof.
@@ -744,8 +743,8 @@ exists (fun e => merely (exists d d' n, e = d + d' + n /\
 apply equiv_alt_lim_lim_ok. trivial.
 Defined.
 
-Lemma equiv_alt_lim_lim_eta_lim_eta_pr@{} (equiv_alt_x_e : Q+ → rounded_halfrel)
-(IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
+Lemma equiv_alt_lim_lim_eta_lim_eta_pr@{} (equiv_alt_x_e : Q+ → balls)
+(IHx : ∀ d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 (q r : T) (e : Q+)
 (He : close e q r)
@@ -758,18 +757,19 @@ simpl in equiv_alt_x_e_pr.
 intros n;split;apply (Trunc_ind _).
 - intros [d [d' [Hn E1]]].
   pose proof (equiv_eta_eta _ _ _ _ He) as E2.
-  pose proof (fst (snd (equiv_alt_x_e_pr _) _ _ _ _ E2) E1) as E3.
+  pose proof (snd (equiv_alt_x_e_pr _) _ _ _ _ E2 E1) as E3.
   apply tr;exists d, (d'+e);split;[|exact E3].
   rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
 - intros [d [d' [Hn E1]]].
   pose proof (equiv_eta_eta _ _ _ _ He) as E2.
-  pose proof (snd (snd (equiv_alt_x_e_pr _) _ _ _ _ E2) E1) as E3.
+  Symmetry in E2.
+  pose proof (snd (equiv_alt_x_e_pr _) _ _ _ _ E2 E1) as E3.
   apply tr;exists d, (d'+e);split;[|exact E3].
   rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma equiv_alt_lim_lim_eta_lim_lim_pr@{} (equiv_alt_x_e : Q+ → rounded_halfrel)
-(IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
+Lemma equiv_alt_lim_lim_eta_lim_lim_pr@{} (equiv_alt_x_e : Q+ → balls)
+(IHx : ∀ d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 (q : T) (d d' e : Q+) (y : Approximation (C T)) (b : Q+ → rounded_zeroary)
 (IHb : ∀ d0 e0 : Q+, rounded_zeroary_close (d0 + e0) (b d0) (b e0))
@@ -784,21 +784,21 @@ pose proof (fun e => (equiv_alt_x_e e).2) as equiv_alt_x_e_pr.
 simpl in equiv_alt_x_e_pr.
 intros n;split;apply (Trunc_ind _).
 - intros [d0 [d0' [Hn E2]]].
-  pose proof (fst (snd (equiv_alt_x_e_pr _) _ _ _ _ xi) E2) as E3.
+  pose proof (snd (equiv_alt_x_e_pr _) _ _ _ _ xi E2) as E3.
   apply tr;do 3 econstructor;split;[|exact E3].
   rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
 - intros [d0 [d0' [n0 [Hn E2]]]].
-  pose proof (fun a b => snd (snd (equiv_alt_x_e_pr a) _ _ b _ xi) ) as E3.
-  pose proof (fun a b a' b' => snd (snd (equiv_alt_x_e_pr a) _ _ b _
-    (approx_equiv y a' b'))) as E4.
+  pose proof (fun a b => snd (equiv_alt_x_e_pr a) _ _ b _ (symmetry _ _ xi)) as E3.
+  pose proof (fun a b a' b' => (snd (equiv_alt_x_e_pr a) _ _ b _
+    (symmetry _ _ (approx_equiv y a' b')))) as E4.
   pose proof (fun a => E4 _ _ a _ E2) as E5. clear E4.
   pose proof (E3 _ _ (E5 _)) as E4. clear E3 E5.
   apply tr;do 2 econstructor;split;[|exact E4].
   rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma equiv_alt_lim_lim_lim_lim_eta_pr@{} (equiv_alt_x_e : Q+ → rounded_halfrel)
-(IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
+Lemma equiv_alt_lim_lim_lim_lim_eta_pr@{} (equiv_alt_x_e : Q+ → balls)
+(IHx : ∀ d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 (r : T) (d d' e : Q+) (x : Approximation (C T)) (a : Q+ → rounded_zeroary)
 (IHa : ∀ d0 e0 : Q+, rounded_zeroary_close (d0 + e0) (a d0) (a e0))
@@ -813,21 +813,21 @@ pose proof (fun e => (equiv_alt_x_e e).2) as equiv_alt_x_e_pr.
 simpl in equiv_alt_x_e_pr.
 intros n;split;apply (Trunc_ind _).
 - intros [d0 [d0' [n0 [Hn E2]]]].
-  pose proof (fun a b => fst (snd (equiv_alt_x_e_pr a) _ _ b _ xi) ) as E3.
-  pose proof (fun a b a' b' => fst (snd (equiv_alt_x_e_pr a) _ _ b _
+  pose proof (fun a b => (snd (equiv_alt_x_e_pr a) _ _ b _ xi) ) as E3.
+  pose proof (fun a b a' b' => (snd (equiv_alt_x_e_pr a) _ _ b _
     (approx_equiv x a' b'))) as E4.
   pose proof (fun a => E4 _ _ _ a E2) as E5. clear E4.
   pose proof (E3 _ _ (E5 _)) as E4. clear E3 E5.
   apply tr;do 2 econstructor;split;[|exact E4].
   rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
 - intros [d0 [d0' [Hn E2]]].
-  pose proof (snd (snd (equiv_alt_x_e_pr _) _ _ _ _ xi) E2) as E3.
+  pose proof (snd (equiv_alt_x_e_pr _) _ _ _ _ (symmetry _ _ xi) E2) as E3.
   apply tr;do 3 econstructor;split;[|exact E3].
   rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma equiv_alt_lim_lim_lim_lim_lim_pr@{} (equiv_alt_x_e : Q+ → rounded_halfrel)
-(IHx : ∀ d e : Q+, rounded_halfrel_close (d + e)
+Lemma equiv_alt_lim_lim_lim_lim_lim_pr@{} (equiv_alt_x_e : Q+ → balls)
+(IHx : ∀ d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 (x y : Approximation (C T)) (a b : Q+ → rounded_zeroary)
 (IHa : ∀ d e : Q+, rounded_zeroary_close (d + e) (a d) (a e))
@@ -844,21 +844,22 @@ clear IH IHa IHb a b.
 pose proof (fun e => (equiv_alt_x_e e).2) as equiv_alt_x_e_pr.
 simpl in equiv_alt_x_e_pr.
 intros n0;split;apply (Trunc_ind _);intros [d0 [d' [n1 [Hn0 E1]]]].
-- pose proof (fun f g => fst (snd (equiv_alt_x_e_pr f) _ _ g _ xi)) as E2.
-  pose proof (fun f g h i => fst (snd (equiv_alt_x_e_pr f) _ _ g _
+- pose proof (fun f g => (snd (equiv_alt_x_e_pr f) _ _ g _ xi)) as E2.
+  pose proof (fun f g h i => (snd (equiv_alt_x_e_pr f) _ _ g _
     (approx_equiv x h i))) as E3.
   pose proof (E2 _ _ (E3 _ _ _ _ E1)) as E4.
   apply tr;do 3 econstructor;split;[|exact E4].
   rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
-- pose proof (fun f g => snd (snd (equiv_alt_x_e_pr f) _ _ g _ xi)) as E2.
-  pose proof (fun f g h i => snd (snd (equiv_alt_x_e_pr f) _ _ g _
-    (approx_equiv y h i))) as E3.
+- pose proof (fun f g => (snd (equiv_alt_x_e_pr f) _ _ g _ (symmetry _ _ xi)))
+    as E2.
+  pose proof (fun f g h i => (snd (equiv_alt_x_e_pr f) _ _ g _
+    (symmetry _ _ (approx_equiv y h i)))) as E3.
   pose proof (E2 _ _ (E3 _ _ _ _ E1)) as E4.
   apply tr;do 3 econstructor;split;[|exact E4].
   rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma rounded_zeroary_to_rounded_halfrel_second@{}
+Lemma rounded_zeroary_to_balls_second@{}
   (I : Recursors@{Ularge UQ} rounded_zeroary rounded_zeroary_close)
   (R := C_rec rounded_zeroary rounded_zeroary_close I
     : C T → rounded_zeroary)
@@ -874,15 +875,15 @@ rewrite !(qpos_plus_comm n).
 apply (R_pr u v e xi n).
 Qed.
 
-Definition rounded_zeroary_to_rounded_halfrel@{}
-  : Recursors@{Ularge UQ} rounded_zeroary rounded_zeroary_close -> rounded_halfrel.
+Definition rounded_zeroary_to_balls@{}
+  : Recursors@{Ularge UQ} rounded_zeroary rounded_zeroary_close -> balls.
 Proof.
 intros I.
 pose (R := C_rec rounded_zeroary rounded_zeroary_close I).
 exists (fun r => (R r).1).
 split.
 - exact (fun u => (R u).2).
-- apply rounded_zeroary_to_rounded_halfrel_second.
+- apply rounded_zeroary_to_balls_second.
 Defined.
 
 Instance rounded_zeroary_close_hprop@{} : forall e a b,
@@ -891,9 +892,9 @@ Proof.
 unfold rounded_zeroary_close;apply _.
 Qed.
 
-Definition equiv_alt_eta@{} : T -> rounded_halfrel.
+Definition equiv_alt_eta@{} : T -> balls.
 Proof.
-intros q. apply rounded_zeroary_to_rounded_halfrel.
+intros q. apply rounded_zeroary_to_balls.
 simple refine (Build_Recursors rounded_zeroary rounded_zeroary_close
   _ _ rounded_zeroary_separated rounded_zeroary_close_hprop _ _ _ _).
 - intros r. apply (equiv_alt_eta_eta q r).
@@ -911,13 +912,13 @@ Proof.
 reflexivity.
 Defined.
 
-Definition equiv_alt_lim@{} : forall (equiv_alt_x_e : Q+ -> rounded_halfrel),
-  (∀ d e : Q+, rounded_halfrel_close (d + e)
-    (equiv_alt_x_e d) (equiv_alt_x_e e)) -> rounded_halfrel.
+Definition equiv_alt_lim@{} : forall (equiv_alt_x_e : Q+ -> balls),
+  (∀ d e : Q+, balls_close (d + e)
+    (equiv_alt_x_e d) (equiv_alt_x_e e)) -> balls.
 Proof.
 intros equiv_alt_x_e IHx.
 (* forall e u n, Requiv_alt_x_e e u n means Requiv_alt n (x e) u *)
-apply rounded_zeroary_to_rounded_halfrel.
+apply rounded_zeroary_to_balls.
 simple refine (Build_Recursors rounded_zeroary rounded_zeroary_close
   _ _ rounded_zeroary_separated rounded_zeroary_close_hprop _ _ _ _).
 - exact (equiv_alt_lim_eta _ IHx).
@@ -928,7 +929,7 @@ simple refine (Build_Recursors rounded_zeroary rounded_zeroary_close
 - simpl. apply equiv_alt_lim_lim_lim_lim_lim_pr.
 Defined.
 
-Lemma equiv_alt_lim_lim_compute@{} : forall (a : Q+ -> rounded_halfrel) Ea x e,
+Lemma equiv_alt_lim_lim_compute@{} : forall (a : Q+ -> balls) Ea x e,
   paths@{Ularge} ((equiv_alt_lim a Ea).1 (lim x) e)
   (merely (exists d d' n, e = d + d' + n /\
     (a d).1 (x n) d')).
@@ -937,7 +938,7 @@ reflexivity.
 Defined.
 
 Lemma equiv_alt_eta_eta_pr@{} : ∀ (q r : T) (e : Q+), close e q r ->
-  rounded_halfrel_close e (equiv_alt_eta q) (equiv_alt_eta r).
+  balls_close e (equiv_alt_eta q) (equiv_alt_eta r).
 Proof.
 intros q r e Hqr.
 red. apply (C_ind0 (fun u => forall n, _)).
@@ -952,12 +953,12 @@ red. apply (C_ind0 (fun u => forall n, _)).
 Qed.
 
 Lemma equiv_alt_eta_lim_pr@{} : ∀ (q : T) (d d' e : Q+) (y : Approximation (C T))
-(b : Q+ → rounded_halfrel)
-(Eb : ∀ d0 e0 : Q+, rounded_halfrel_close (d0 + e0) (b d0) (b e0)),
+(b : Q+ → balls)
+(Eb : ∀ d0 e0 : Q+, balls_close (d0 + e0) (b d0) (b e0)),
 e = d + d'
 → close d' (eta q) (y d)
-  → rounded_halfrel_close d' (equiv_alt_eta q) (b d)
-    → rounded_halfrel_close e (equiv_alt_eta q) (equiv_alt_lim b Eb).
+  → balls_close d' (equiv_alt_eta q) (b d)
+    → balls_close e (equiv_alt_eta q) (equiv_alt_lim b Eb).
 Proof.
 intros q d d' e y b Eb He xi IH.
 red. apply (C_ind0 (fun u => forall n, _)).
@@ -993,12 +994,12 @@ red. apply (C_ind0 (fun u => forall n, _)).
 Qed.
 
 Lemma equiv_alt_lim_eta_pr@{} : ∀ (r : T) (d d' e : Q+) (x : Approximation (C T))
-(a : Q+ → rounded_halfrel)
-(Ea : ∀ d0 e0 : Q+, rounded_halfrel_close (d0 + e0) (a d0) (a e0)),
+(a : Q+ → balls)
+(Ea : ∀ d0 e0 : Q+, balls_close (d0 + e0) (a d0) (a e0)),
 e = d + d'
 → close d' (x d) (eta r)
-  → rounded_halfrel_close d' (a d) (equiv_alt_eta r)
-    → rounded_halfrel_close e (equiv_alt_lim a Ea) (equiv_alt_eta r).
+  → balls_close d' (a d) (equiv_alt_eta r)
+    → balls_close e (equiv_alt_lim a Ea) (equiv_alt_eta r).
 Proof.
 intros r d d' e x a Ea He xi IH.
 red. apply (C_ind0 (fun u => forall n, _)).
@@ -1031,13 +1032,13 @@ red. apply (C_ind0 (fun u => forall n, _)).
 Qed.
 
 Lemma equiv_alt_lim_lim_pr@{} : ∀ (x y : Approximation (C T))
-  (a b : Q+ → rounded_halfrel)
-  (Ea : ∀ d e : Q+, rounded_halfrel_close (d + e) (a d) (a e))
-  (Eb : ∀ d e : Q+, rounded_halfrel_close (d + e) (b d) (b e)) (e d n e' : Q+),
+  (a b : Q+ → balls)
+  (Ea : ∀ d e : Q+, balls_close (d + e) (a d) (a e))
+  (Eb : ∀ d e : Q+, balls_close (d + e) (b d) (b e)) (e d n e' : Q+),
   e = d + n + e'
   → close e' (x d) (y n)
-  → rounded_halfrel_close e' (a d) (b n)
-  → rounded_halfrel_close e (equiv_alt_lim a Ea) (equiv_alt_lim b Eb).
+  → balls_close e' (a d) (b n)
+  → balls_close e (equiv_alt_lim a Ea) (equiv_alt_lim b Eb).
 Proof.
 intros x y a b Ea Eb e d n e' He xi IH.
 red. apply (C_ind0 (fun u => forall n0, _)).
@@ -1066,12 +1067,12 @@ red. apply (C_ind0 (fun u => forall n0, _)).
     rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Definition equiv_alt_rounded_halfrel@{} : C T -> rounded_halfrel.
+Definition equiv_alt_balls@{} : C T -> balls.
 Proof.
-apply (C_rec rounded_halfrel rounded_halfrel_close).
-apply (Build_Recursors rounded_halfrel rounded_halfrel_close
+apply (C_rec balls balls_close).
+apply (Build_Recursors balls balls_close
   equiv_alt_eta (fun _ => equiv_alt_lim)
-  rounded_halfrel_separated rounded_halfrel_close_hprop).
+  balls_separated balls_close_hprop).
 - exact equiv_alt_eta_eta_pr.
 - exact equiv_alt_eta_lim_pr.
 - exact equiv_alt_lim_eta_pr.
@@ -1079,7 +1080,7 @@ apply (Build_Recursors rounded_halfrel rounded_halfrel_close
 Defined.
 
 Definition equiv_alt : Q+ -> C T -> C T -> Type
-  := fun e x y => (equiv_alt_rounded_halfrel x).1 y e.
+  := fun e x y => (equiv_alt_balls x).1 y e.
 
 Definition equiv_alt_eta_eta_def@{} : forall e q r,
   paths@{Ularge} (equiv_alt e (eta q) (eta r)) (close e q r).
@@ -1110,21 +1111,21 @@ Defined.
 
 Lemma equiv_alt_round@{} : @Rounded (C T) equiv_alt.
 Proof.
-hnf. intros. apply ((equiv_alt_rounded_halfrel u).2).
+hnf. intros. apply ((equiv_alt_balls u).2).
 Qed.
 
 Lemma equiv_alt_equiv@{} : forall u v w n e, equiv_alt n u v -> close e v w ->
   equiv_alt (n+e) u w.
 Proof.
 intros ????? E1 E2.
-apply (snd (equiv_alt_rounded_halfrel u).2 _ _ _ _ E2). trivial.
+apply (snd (equiv_alt_balls u).2 _ _ _ _ E2). trivial.
 Qed.
 
 Lemma equiv_equiv_alt : forall u v w n e, close n u v -> equiv_alt e v w ->
   equiv_alt (n+e) u w.
 Proof.
 intros ????? E1 E2.
-pose proof (fun x y => snd (equiv_alt_rounded_halfrel x).2 _ _ y _ E1).
+pose proof (fun x y => snd (equiv_alt_balls x).2 _ _ y _ E1).
 (* do we need to prove Symmetric (Requiv_alt _)? *)
 (* We don't actually need this lemma
    as we just rewrite Requiv_alt = Requiv in the previous one. *)
