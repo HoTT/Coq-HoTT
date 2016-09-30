@@ -592,8 +592,9 @@ e = d + d'
     → upper_cut_close e ((λ r, equiv_alt_eta_eta q r) q0)
         ((λ _ : Approximation (C T), equiv_alt_eta_lim) y b Eb).
 Proof.
-unfold upper_cut_close;simpl. intros q q' d d' e y b Eb He xi IH e'.
-split.
+simpl;intros q r d d' e y b Eb He _ IH.
+unfold equiv_alt_eta_eta in IH;simpl in IH.
+intros e';split.
 - intros E1.
   pose proof (fst (IH _) E1) as E2.
   apply tr. exists d, (d' + e').
@@ -601,7 +602,7 @@ split.
   rewrite He. apply pos_eq;ring_tac.ring_with_nat.
 - apply (Trunc_ind _). intros [n [n' [He' E1]]].
   pose proof (fst (Eb _ d _) E1) as E2.
-  apply IH in E2.
+  apply IH in E2. simpl in E2.
   rewrite He,He'.
   assert (Hrw : (d + d' + (n + n')) = (d' + (n + d + n')))
   by (apply pos_eq;ring_tac.ring_with_nat).
