@@ -468,11 +468,11 @@ Definition balls@{} := sigT@{Ularge UQ}
 Definition balls_close@{} e (R1 R2 : balls)
   := forall u n, (R1.1 u n -> R2.1 u (e+n)) /\ (R2.1 u n -> R1.1 u (e+n)).
 
-Definition rounded_zeroary@{} := sigT@{Ularge UQ}
+Definition upper_cut@{} := sigT@{Ularge UQ}
   (fun R : Q+ -> TruncType@{UQ} -1 =>
     forall e, R e <-> merely (exists d d', e = d + d' /\ R d)).
 
-Definition rounded_zeroary_close@{} e (R1 R2 : rounded_zeroary)
+Definition upper_cut_close@{} e (R1 R2 : upper_cut)
   := forall n, (R1.1 n -> R2.1 (e+n)) /\ (R2.1 n -> R1.1 (e+n)).
 
 Lemma balls_separated' : forall u v,
@@ -505,21 +505,21 @@ Proof.
 unfold balls_close. intros. apply _.
 Qed.
 
-Definition equiv_alt_eta_eta@{} (q r : T) : rounded_zeroary.
+Definition equiv_alt_eta_eta@{} (q r : T) : upper_cut.
 Proof.
 exists (fun e => BuildhProp (close e q r)).
 simpl. intro. apply rounded.
 Defined.
 
 Lemma eta_lim_rounded_step@{} :
-  ∀ val_ind : Q+ → rounded_zeroary,
-  (∀ d e : Q+, rounded_zeroary_close (d + e) (val_ind d) (val_ind e)) ->
+  ∀ val_ind : Q+ → upper_cut,
+  (∀ d e : Q+, upper_cut_close (d + e) (val_ind d) (val_ind e)) ->
   ∀ e : Q+,
   merely (∃ d d' : Q+, e = d + d' ∧ (val_ind d).1 d')
   <-> merely (∃ d d' : Q+,
      e = d + d' ∧ merely (∃ d0 d'0 : Q+, d = d0 + d'0 ∧ (val_ind d0).1 d'0)).
 Proof.
-unfold rounded_zeroary_close. intros a Ea e.
+unfold upper_cut_close. intros a Ea e.
 split;apply (Trunc_ind _);intros [d [d' [He E]]].
 - generalize (fst ((a _).2 _) E);apply (Trunc_ind _).
   intros [n [n' [Hd' E1]]].
@@ -535,20 +535,20 @@ split;apply (Trunc_ind _);intros [d [d' [He E]]].
 Qed.
 
 Definition equiv_alt_eta_lim@{}
-  : ∀ val_ind : Q+ → rounded_zeroary,
-  (∀ d e : Q+, rounded_zeroary_close (d + e) (val_ind d) (val_ind e)) →
-  rounded_zeroary.
+  : ∀ val_ind : Q+ → upper_cut,
+  (∀ d e : Q+, upper_cut_close (d + e) (val_ind d) (val_ind e)) →
+  upper_cut.
 Proof.
 intros val_ind IH.
 exists (fun e => merely (exists d d', e = d + d' /\ (val_ind d).1 d')).
 apply eta_lim_rounded_step. trivial.
 Defined.
 
-Lemma rounded_zeroary_separated' : ∀ x y : rounded_zeroary,
-  (∀ e : Q+, rounded_zeroary_close e x y) → x = y.
+Lemma upper_cut_separated' : ∀ x y : upper_cut,
+  (∀ e : Q+, upper_cut_close e x y) → x = y.
 Proof.
 intros x y E.
-unfold rounded_zeroary,rounded_zeroary_close in *;
+unfold upper_cut,upper_cut_close in *;
 apply Sigma.path_sigma_hprop.
 apply path_forall;intros e.
 apply TruncType.path_iff_hprop_uncurried.
@@ -565,13 +565,13 @@ split;intros E'.
   apply (snd (E _ _)). trivial.
 Qed.
 
-Definition rounded_zeroary_separated@{}
-  := rounded_zeroary_separated'@{Ularge Ularge Uhuge}.
+Definition upper_cut_separated@{}
+  := upper_cut_separated'@{Ularge Ularge Uhuge}.
 
 Lemma equiv_alt_eta_eta_eta_pr@{} :
 ∀ q q0 r (e : Q+),
 close e q0 r
-→ rounded_zeroary_close e ((λ r0, equiv_alt_eta_eta q r0) q0)
+→ upper_cut_close e ((λ r0, equiv_alt_eta_eta q r0) q0)
     ((λ r0, equiv_alt_eta_eta q r0) r).
 Proof.
 unfold equiv_alt_eta_eta.
@@ -584,15 +584,15 @@ split.
 Qed.
 
 Lemma equiv_alt_eta_eta_lim_pr@{} :
-∀ q q0 (d d' e : Q+) (y : Approximation (C T)) (b : Q+ → rounded_zeroary)
-(Eb : ∀ d0 e0 : Q+, rounded_zeroary_close (d0 + e0) (b d0) (b e0)),
+∀ q q0 (d d' e : Q+) (y : Approximation (C T)) (b : Q+ → upper_cut)
+(Eb : ∀ d0 e0 : Q+, upper_cut_close (d0 + e0) (b d0) (b e0)),
 e = d + d'
 → close d' (eta q0) (y d)
-  → rounded_zeroary_close d' ((λ r, equiv_alt_eta_eta q r) q0) (b d)
-    → rounded_zeroary_close e ((λ r, equiv_alt_eta_eta q r) q0)
+  → upper_cut_close d' ((λ r, equiv_alt_eta_eta q r) q0) (b d)
+    → upper_cut_close e ((λ r, equiv_alt_eta_eta q r) q0)
         ((λ _ : Approximation (C T), equiv_alt_eta_lim) y b Eb).
 Proof.
-unfold rounded_zeroary_close;simpl. intros q q' d d' e y b Eb He xi IH e'.
+unfold upper_cut_close;simpl. intros q q' d d' e y b Eb He xi IH e'.
 split.
 - intros E1.
   pose proof (fst (IH _) E1) as E2.
@@ -609,15 +609,15 @@ split.
 Qed.
 
 Lemma equiv_alt_eta_lim_eta_pr@{} :
-∀ q r (d d' e : Q+) (x : Approximation (C T)) (a : Q+ → rounded_zeroary)
-(Ea : ∀ d0 e0 : Q+, rounded_zeroary_close (d0 + e0) (a d0) (a e0)),
+∀ q r (d d' e : Q+) (x : Approximation (C T)) (a : Q+ → upper_cut)
+(Ea : ∀ d0 e0 : Q+, upper_cut_close (d0 + e0) (a d0) (a e0)),
   e = d + d'
   → close d' (x d) (eta r)
-  → rounded_zeroary_close d' (a d) ((λ r0, equiv_alt_eta_eta q r0) r)
-  → rounded_zeroary_close e ((λ _ : Approximation (C T), equiv_alt_eta_lim) x a Ea)
+  → upper_cut_close d' (a d) ((λ r0, equiv_alt_eta_eta q r0) r)
+  → upper_cut_close e ((λ _ : Approximation (C T), equiv_alt_eta_lim) x a Ea)
   ((λ r0, equiv_alt_eta_eta q r0) r).
 Proof.
-unfold rounded_zeroary_close;simpl;intros q r d d' e x a Ea He xi IH e'.
+unfold upper_cut_close;simpl;intros q r d d' e x a Ea He xi IH e'.
 split.
 - apply (Trunc_ind _). intros [n [n' [He' E1]]].
   pose proof (fst (Ea _ d _) E1) as E2.
@@ -634,16 +634,16 @@ split.
 Qed.
 
 Lemma equiv_alt_eta_lim_lim_pr@{} :
-∀ (x y : Approximation (C T)) (a b : Q+ → rounded_zeroary)
-(Ea : ∀ d e : Q+, rounded_zeroary_close (d + e) (a d) (a e))
-(Eb : ∀ d e : Q+, rounded_zeroary_close (d + e) (b d) (b e)) (e d n n' : Q+),
+∀ (x y : Approximation (C T)) (a b : Q+ → upper_cut)
+(Ea : ∀ d e : Q+, upper_cut_close (d + e) (a d) (a e))
+(Eb : ∀ d e : Q+, upper_cut_close (d + e) (b d) (b e)) (e d n n' : Q+),
 e = d + n + n'
 → close n' (x d) (y n)
-  → rounded_zeroary_close n' (a d) (b n)
-    → rounded_zeroary_close e ((λ _, equiv_alt_eta_lim) x a Ea)
+  → upper_cut_close n' (a d) (b n)
+    → upper_cut_close e ((λ _, equiv_alt_eta_lim) x a Ea)
         ((λ _, equiv_alt_eta_lim) y b Eb).
 Proof.
-unfold rounded_zeroary_close;simpl;intros x y a b Ea Eb e d n n' He xi IH.
+unfold upper_cut_close;simpl;intros x y a b Ea Eb e d n n' He xi IH.
 intros e';split;apply (Trunc_ind _).
 - intros [d0 [d0' [He' E1]]].
   apply tr.
@@ -690,7 +690,7 @@ Qed.
 Definition equiv_alt_lim_eta@{} : forall (equiv_alt_x_e : Q+ → balls)
 (IHx : ∀ d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
-(r : T), rounded_zeroary.
+(r : T), upper_cut.
 Proof.
 intros ???.
 red. exists (fun e => merely (exists d d' : Q+, e = d + d' /\
@@ -735,7 +735,7 @@ Qed.
 Definition equiv_alt_lim_lim@{} (equiv_alt_x_e : Q+ → balls)
 (IHx : ∀ d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
-(y : Approximation (C T)) : rounded_zeroary.
+(y : Approximation (C T)) : upper_cut.
 Proof.
 red.
 exists (fun e => merely (exists d d' n, e = d + d' + n /\
@@ -748,7 +748,7 @@ Lemma equiv_alt_lim_lim_eta_lim_eta_pr@{} (equiv_alt_x_e : Q+ → balls)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 (q r : T) (e : Q+)
 (He : close e q r)
-  : rounded_zeroary_close e (equiv_alt_lim_eta equiv_alt_x_e IHx q)
+  : upper_cut_close e (equiv_alt_lim_eta equiv_alt_x_e IHx q)
     (equiv_alt_lim_eta equiv_alt_x_e IHx r).
 Proof.
 red. unfold equiv_alt_lim_eta;simpl. red in IHx.
@@ -771,15 +771,15 @@ Qed.
 Lemma equiv_alt_lim_lim_eta_lim_lim_pr@{} (equiv_alt_x_e : Q+ → balls)
 (IHx : ∀ d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
-(q : T) (d d' e : Q+) (y : Approximation (C T)) (b : Q+ → rounded_zeroary)
-(IHb : ∀ d0 e0 : Q+, rounded_zeroary_close (d0 + e0) (b d0) (b e0))
+(q : T) (d d' e : Q+) (y : Approximation (C T)) (b : Q+ → upper_cut)
+(IHb : ∀ d0 e0 : Q+, upper_cut_close (d0 + e0) (b d0) (b e0))
 (He : e = d + d')
 (xi : close d' (eta q) (y d))
-  : rounded_zeroary_close d' (equiv_alt_lim_eta equiv_alt_x_e IHx q) (b d) ->
-    rounded_zeroary_close e (equiv_alt_lim_eta equiv_alt_x_e IHx q)
+  : upper_cut_close d' (equiv_alt_lim_eta equiv_alt_x_e IHx q) (b d) ->
+    upper_cut_close e (equiv_alt_lim_eta equiv_alt_x_e IHx q)
               (equiv_alt_lim_lim equiv_alt_x_e IHx y).
 Proof.
-unfold rounded_zeroary_close,equiv_alt_lim_eta,equiv_alt_lim_lim;simpl;intros E1.
+unfold upper_cut_close,equiv_alt_lim_eta,equiv_alt_lim_lim;simpl;intros E1.
 pose proof (fun e => (equiv_alt_x_e e).2) as equiv_alt_x_e_pr.
 simpl in equiv_alt_x_e_pr.
 intros n;split;apply (Trunc_ind _).
@@ -800,15 +800,15 @@ Qed.
 Lemma equiv_alt_lim_lim_lim_lim_eta_pr@{} (equiv_alt_x_e : Q+ → balls)
 (IHx : ∀ d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
-(r : T) (d d' e : Q+) (x : Approximation (C T)) (a : Q+ → rounded_zeroary)
-(IHa : ∀ d0 e0 : Q+, rounded_zeroary_close (d0 + e0) (a d0) (a e0))
+(r : T) (d d' e : Q+) (x : Approximation (C T)) (a : Q+ → upper_cut)
+(IHa : ∀ d0 e0 : Q+, upper_cut_close (d0 + e0) (a d0) (a e0))
 (He : e = d + d')
 (xi : close d' (x d) (eta r))
-  : rounded_zeroary_close d' (a d) (equiv_alt_lim_eta equiv_alt_x_e IHx r) ->
-    rounded_zeroary_close e (equiv_alt_lim_lim equiv_alt_x_e IHx x)
+  : upper_cut_close d' (a d) (equiv_alt_lim_eta equiv_alt_x_e IHx r) ->
+    upper_cut_close e (equiv_alt_lim_lim equiv_alt_x_e IHx x)
               (equiv_alt_lim_eta equiv_alt_x_e IHx r).
 Proof.
-unfold rounded_zeroary_close,equiv_alt_lim_eta,equiv_alt_lim_lim;simpl;intros E1.
+unfold upper_cut_close,equiv_alt_lim_eta,equiv_alt_lim_lim;simpl;intros E1.
 pose proof (fun e => (equiv_alt_x_e e).2) as equiv_alt_x_e_pr.
 simpl in equiv_alt_x_e_pr.
 intros n;split;apply (Trunc_ind _).
@@ -829,14 +829,14 @@ Qed.
 Lemma equiv_alt_lim_lim_lim_lim_lim_pr@{} (equiv_alt_x_e : Q+ → balls)
 (IHx : ∀ d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
-(x y : Approximation (C T)) (a b : Q+ → rounded_zeroary)
-(IHa : ∀ d e : Q+, rounded_zeroary_close (d + e) (a d) (a e))
-(IHb : ∀ d e : Q+, rounded_zeroary_close (d + e) (b d) (b e))
+(x y : Approximation (C T)) (a b : Q+ → upper_cut)
+(IHa : ∀ d e : Q+, upper_cut_close (d + e) (a d) (a e))
+(IHb : ∀ d e : Q+, upper_cut_close (d + e) (b d) (b e))
 (e d n e' : Q+)
 (He : e = d + n + e')
 (xi : close e' (x d) (y n))
-(IH : rounded_zeroary_close e' (a d) (b n))
-  : rounded_zeroary_close e (equiv_alt_lim_lim equiv_alt_x_e IHx x)
+(IH : upper_cut_close e' (a d) (b n))
+  : upper_cut_close e (equiv_alt_lim_lim equiv_alt_x_e IHx x)
               (equiv_alt_lim_lim equiv_alt_x_e IHx y).
 Proof.
 red in IH. red. unfold equiv_alt_lim_lim;simpl.
@@ -859,44 +859,44 @@ intros n0;split;apply (Trunc_ind _);intros [d0 [d' [n1 [Hn0 E1]]]].
   rewrite He,Hn0. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma rounded_zeroary_to_balls_second@{}
-  (I : Recursors@{Ularge UQ} rounded_zeroary rounded_zeroary_close)
-  (R := C_rec rounded_zeroary rounded_zeroary_close I
-    : C T → rounded_zeroary)
+Lemma upper_cut_to_balls_second@{}
+  (I : Recursors@{Ularge UQ} upper_cut upper_cut_close)
+  (R := C_rec upper_cut upper_cut_close I
+    : C T → upper_cut)
   : forall (u v : C T) (n e : Q+),
     close e u v
     → ((R u).1 n → (R v).1 (n + e)) ∧ ((R v).1 n → (R u).1 (n + e)).
 Proof.
-pose proof (equiv_rec rounded_zeroary rounded_zeroary_close I) as R_pr.
+pose proof (equiv_rec upper_cut upper_cut_close I) as R_pr.
 red in R_pr.
-change (C_rec rounded_zeroary rounded_zeroary_close I) with R in R_pr.
+change (C_rec upper_cut upper_cut_close I) with R in R_pr.
 intros u v n e xi.
 rewrite !(qpos_plus_comm n).
 apply (R_pr u v e xi n).
 Qed.
 
-Definition rounded_zeroary_to_balls@{}
-  : Recursors@{Ularge UQ} rounded_zeroary rounded_zeroary_close -> balls.
+Definition upper_cut_to_balls@{}
+  : Recursors@{Ularge UQ} upper_cut upper_cut_close -> balls.
 Proof.
 intros I.
-pose (R := C_rec rounded_zeroary rounded_zeroary_close I).
+pose (R := C_rec upper_cut upper_cut_close I).
 exists (fun r => (R r).1).
 split.
 - exact (fun u => (R u).2).
-- apply rounded_zeroary_to_balls_second.
+- apply upper_cut_to_balls_second.
 Defined.
 
-Instance rounded_zeroary_close_hprop@{} : forall e a b,
-  IsHProp (rounded_zeroary_close e a b).
+Instance upper_cut_close_hprop@{} : forall e a b,
+  IsHProp (upper_cut_close e a b).
 Proof.
-unfold rounded_zeroary_close;apply _.
+unfold upper_cut_close;apply _.
 Qed.
 
 Definition equiv_alt_eta@{} : T -> balls.
 Proof.
-intros q. apply rounded_zeroary_to_balls.
-simple refine (Build_Recursors rounded_zeroary rounded_zeroary_close
-  _ _ rounded_zeroary_separated rounded_zeroary_close_hprop _ _ _ _).
+intros q. apply upper_cut_to_balls.
+simple refine (Build_Recursors upper_cut upper_cut_close
+  _ _ upper_cut_separated upper_cut_close_hprop _ _ _ _).
 - intros r. apply (equiv_alt_eta_eta q r).
 - intros _. apply equiv_alt_eta_lim.
 - exact (equiv_alt_eta_eta_eta_pr q).
@@ -918,9 +918,9 @@ Definition equiv_alt_lim@{} : forall (equiv_alt_x_e : Q+ -> balls),
 Proof.
 intros equiv_alt_x_e IHx.
 (* forall e u n, Requiv_alt_x_e e u n means Requiv_alt n (x e) u *)
-apply rounded_zeroary_to_balls.
-simple refine (Build_Recursors rounded_zeroary rounded_zeroary_close
-  _ _ rounded_zeroary_separated rounded_zeroary_close_hprop _ _ _ _).
+apply upper_cut_to_balls.
+simple refine (Build_Recursors upper_cut upper_cut_close
+  _ _ upper_cut_separated upper_cut_close_hprop _ _ _ _).
 - exact (equiv_alt_lim_eta _ IHx).
 - intros y _ _;exact (equiv_alt_lim_lim equiv_alt_x_e IHx y).
 - apply equiv_alt_lim_lim_eta_lim_eta_pr.
