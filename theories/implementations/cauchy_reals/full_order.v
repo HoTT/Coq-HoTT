@@ -225,13 +225,6 @@ rewrite Hrw;clear Hrw.
 apply (equiv_lim _).
 Qed.
 
-Lemma approx_eq : forall x y : Approximation real,
-  approximate x = approximate y -> x = y.
-Proof.
-intros [x Ex] [y Ey];simpl;intros E.
-destruct E. apply ap. apply path_ishprop.
-Qed.
-
 Lemma Rjoin_0_not_neg : forall x, (forall e : Q+, - rat (' e) < x) -> join 0 x = x.
 Proof.
 intros x E.

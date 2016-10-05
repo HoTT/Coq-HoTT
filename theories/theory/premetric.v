@@ -56,6 +56,15 @@ Record Approximation@{i} (A:Type@{i}) {Aclose : Closeness A} :=
   { approximate :> Q+ -> A
   ; approx_equiv : forall d e, close (d+e) (approximate d) (approximate e) }.
 
+Lemma approx_eq `{Funext} `{Closeness A} `{forall e x y, IsHProp (close e x y)}
+  : forall x y : Approximation A,
+  approximate _ x = approximate _ y -> x = y.
+Proof.
+intros [x Ex] [y Ey];simpl;intros E.
+destruct E. apply ap. apply path_ishprop.
+Qed.
+
+
 Definition IsLimit@{i} {A:Type@{i} } {Aclose : Closeness A}
   (x : Approximation A) (l : A)
   := forall e d : Q+, close (e+d) (x d) l.
