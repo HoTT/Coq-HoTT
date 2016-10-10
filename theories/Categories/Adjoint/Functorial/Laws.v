@@ -38,7 +38,7 @@ Section laws.
     match goal with
       | _ => reflexivity
       | _ => progress rewrite ?identity_of, ?Category.Core.left_identity, ?Category.Core.right_identity
-      | _ => try_various_ways ltac:f_ap
+      | _ => try_various_ways ltac:(f_ap)
       | [ |- context[components_of ?T ?x] ]
         => try_various_ways ltac:(simpl rewrite <- (commutes T))
       | [ |- context[unit ?A] ]

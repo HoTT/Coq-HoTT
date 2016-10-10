@@ -263,7 +263,7 @@ Proof.
   intros i.
   (** We have to fiddle with the max universes to get this to work, since [ooextendable_postcompose] requires the max universe in both cases to be the same, whereas we don't want to assume that the hypothesis and conclusion are related in any way. *)
   apply lift_ooextendablealong@{a a j k j'}.
-  refine (ooextendable_postcompose@{a a i j k k k k k k k k}
+  refine (ooextendable_postcompose@{a a i j k k k k k k}
             _ _ (f i) (fun _ => g) _).
   apply lift_ooextendablealong@{a a i i' k}.
   apply Xloc.
@@ -386,7 +386,7 @@ Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.
              {Q : Type@{j}} {Q_inO : In@{u a j} O Q}
   : ooExtendableAlong@{i i j k} (to O P) (fun _ => Q).
   Proof.
-    apply ext_localize_ind@{a i j i k i k}; intros ?.
+    apply ext_localize_ind@{a i j i k}; intros ?.
     apply ooextendable_over_const.
     apply Q_inO.
   Defined.

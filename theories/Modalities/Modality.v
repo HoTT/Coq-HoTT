@@ -94,7 +94,7 @@ Module Modalities_to_ReflectiveSubuniverses
 
   Definition ReflectiveSubuniverse := Modality.
 
-  Definition O_reflector := O_reflector.
+  Definition O_reflector@{u a i} := O_reflector@{u a i}.
   (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3807 *)
   Definition In@{u a i} : forall (O : ReflectiveSubuniverse@{u a}),
                    Type2le@{i a} -> Type2le@{i a}
@@ -102,7 +102,7 @@ Module Modalities_to_ReflectiveSubuniverses
   Definition O_inO@{u a i} : forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
                                In@{u a i} O (O_reflector@{u a i} O T)
     := O_inO@{u a i}.
-  Definition to := to.
+  Definition to@{u a i} := to@{u a i}.
   Definition inO_equiv_inO@{u a i j k} :
       forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}) (U : Type@{j})
              (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
@@ -147,11 +147,11 @@ Module ReflectiveSubuniverses_to_Modalities
 
   Definition Modality := ReflectiveSubuniverse.
 
-  Definition O_reflector := O_reflector.
+  Definition O_reflector@{u a i} := O_reflector@{u a i}.
   (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3807 *)
   Definition In@{u a i} := In@{u a i}.
   Definition O_inO@{u a i} := @O_inO@{u a i}.
-  Definition to := to.
+  Definition to@{u a i} := to@{u a i}.
   Definition inO_equiv_inO@{u a i j k} := @inO_equiv_inO@{u a i j k}.
   Definition hprop_inO@{u a i} := hprop_inO@{u a i}.
 
@@ -160,7 +160,7 @@ Module ReflectiveSubuniverses_to_Modalities
              (A : Type@{i}) (B : O_reflector@{u a i} O A -> Type@{j})
              (B_inO : forall oa, In@{u a j} O (B oa))
   : (forall a, B (to O A a)) -> forall a, B a
-  := fun g => pr1 ((O_ind_from_inO_sigma@{u a i j j j k k} O (inO_sigma O))
+  := fun g => pr1 ((O_ind_from_inO_sigma@{u a i j j k k} O (inO_sigma O))
                      A B B_inO g).
 
   Definition O_ind_beta_internal@{u a i j k} (O : Modality@{u a})
@@ -168,7 +168,7 @@ Module ReflectiveSubuniverses_to_Modalities
              (B_inO : forall oa, In@{u a j} O (B oa))
              (f : forall a : A, B (to O A a)) (a:A)
   : O_ind_internal O A B B_inO f (to O A a) = f a
-  := pr2 ((O_ind_from_inO_sigma@{u a i j j j k k} O (inO_sigma O))
+  := pr2 ((O_ind_from_inO_sigma@{u a i j j k k} O (inO_sigma O))
                      A B B_inO f) a.
 
   Definition minO_paths@{u a i} (O : Modality@{u a})
@@ -525,7 +525,7 @@ Section ConnectedTypes.
       exists (fun _ : Unit => (isconnected_elim@{i j j k i} C f).1); intros a.
       symmetry; apply ((isconnected_elim@{i j j k i} C f).2).
     - intros h k.
-      refine (extendable_postcompose'@{i i j j j j l l l l l l} n _ _ _ _ (IHn (h tt = k tt) (inO_paths@{Ou Oa j m} _ _ _ _))).
+      refine (extendable_postcompose'@{i i j j j j l l l l} n _ _ _ _ (IHn (h tt = k tt) (inO_paths@{Ou Oa j m} _ _ _ _))).
       intros []; apply equiv_idmap.
   Defined.
 

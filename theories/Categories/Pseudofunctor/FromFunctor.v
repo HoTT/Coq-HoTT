@@ -47,7 +47,7 @@ Section of_functor.
     unfold natural_transformation_of_natural_isomorphism;
     rewrite ?idtoiso_whisker_r, ?idtoiso_whisker_l;
     repeat (
-        let C := match goal with |- @paths (@NaturalTransformation ?C ?D ?F ?G) _ _ => constr:(C -> D)%category end in
+        let C := match goal with |- @paths (@NaturalTransformation ?C ?D ?F ?G) _ _ => constr:((C -> D)%category) end in
         first [ eapply (@iso_moveL_pV C)
               | eapply (@iso_moveL_Vp C)
               | eapply (@iso_moveL_pM C)
