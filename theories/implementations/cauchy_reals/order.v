@@ -67,16 +67,13 @@ Qed.
 Lemma Rlt_close_rat_plus@{} : forall u q, u < rat q ->
   forall v e, close e u v -> v < rat (q + ' e).
 Proof.
-intros u q;apply (Trunc_ind (fun _ => forall v e, _ -> _)).
-intros [q' [r [E1 [E2 E3]]]] v e xi.
-hnf. apply tr. exists (q' + ' e),(r + ' e).
-split;[|split].
-- apply Rle_close_rat with u;trivial.
-- apply (strictly_order_preserving (+ ' e)).
-  trivial.
-- apply (order_preserving rat).
-  apply (order_preserving (+ ' e)).
-  apply (order_reflecting rat);trivial.
+intros u q E;apply R_archimedean in E;revert E;
+apply (Trunc_ind (fun _ => forall v e, _ -> _)).
+intros [r [E1 E2]] v e xi.
+apply R_lt_le in E1. pose proof (Rle_close_rat _ _ E1 _ _ xi) as E3.
+apply R_le_lt_trans with (rat (r + ' e));trivial.
+apply rat_lt_preserving. apply rat_lt_reflecting in E2.
+apply (strictly_order_preserving (+ (' e))). trivial.
 Qed.
 
 Lemma Rlt_close_plus@{} : forall u v, u < v ->
