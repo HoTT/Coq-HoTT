@@ -642,30 +642,19 @@ Defined.
 
 Definition interleave_inductors : Inductors Unit
   (fun a => forall b, disjoint a b -> sigT (fun s : partial bool =>
-    partial_map (const true) a <= s /\ partial_map (const false) b <= s))
+    partial_map (const false) b <= s))
   (fun a a' f g E => forall b Ea Ea', (f b Ea).1 <= (g b Ea').1).
 Proof.
 simple refine (Build_Inductors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
 - intros [] b E. exists (eta _ true).
-  split.
-  + reflexivity.
-  + rewrite (disjoint_top_l _ E). apply bot_least.
+  rewrite (disjoint_top_l _ E). apply bot_least.
 - intros b _. exists (partial_map (const false) b).
-  split.
-  + apply bot_least.
-  + reflexivity.
+  reflexivity.
 - intros s Is Isle b E.
   simple refine (existT _ _ _);simpl;
   [apply sup;apply (interleave_aux_seq s (fun n b E => (Is n b E).1) Isle b E)|].
-  simpl. split.
-  + unfold partial_map. rewrite partial_bind_sup_l. apply sup_le_r.
-    intros n;simpl.
-    change (partial_bind (s n) (eta Bool ∘ const true)) with
-      (partial_map (const true) (s n)).
-    etransitivity;[|apply (sup_is_ub _ _ n)].
-    simpl. auto.
-  + etransitivity;[|apply (sup_is_ub _ _ 0)].
-    simpl;auto.
+  etransitivity;[|apply (sup_is_ub _ _ 0)].
+  simpl;auto.
 - intros a f b Ea Ea'.
   assert (Hrw : Ea = Ea') by apply path_ishprop.
   apply (ap (f b)) in Hrw. apply (ap pr1) in Hrw. rewrite Hrw;reflexivity.
@@ -743,12 +732,6 @@ intros a b E E1 E2.
 apply bot_eq in E1;apply bot_eq in E2.
 Symmetry in E1;Symmetry in E2. destruct E1,E2.
 reflexivity.
-Qed.
-
-Lemma interleave_le_const_l : forall a b E,
-  partial_map (const true) a <= interleave a b E.
-Proof.
-intros. apply ((partial_rect _ _ _ interleave_inductors a b E).2).
 Qed.
 
 Lemma interleave_le_const_r : forall a b E,
