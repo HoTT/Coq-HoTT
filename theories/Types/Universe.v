@@ -2,7 +2,7 @@
 (** * Theorems about the universe, including the Univalence Axiom. *)
 
 Require Import HoTT.Basics.
-Require Import Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Equiv.
+Require Import Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Equiv Types.Bool.
 
 Local Open Scope path_scope.
 
@@ -465,5 +465,16 @@ Global Instance istrunc_paths_Type `{Funext}
 Proof.
   refine (trunc_equiv _ path_universe_uncurried).
 Defined.
+
+(** We can also say easily that the universe is not a set. *)
+Definition not_hset_Type `{Univalence} : ~ (IsHSet Type).
+Proof.
+  intro HT.
+  apply true_ne_false.
+  pose (r := path_ishprop (path_universe equiv_negb) 1).
+  refine (_ @ (ap (fun q => transport idmap q false) r)).
+  symmetry; apply transport_path_universe.
+Defined.
+  
 
 End Univalence.
