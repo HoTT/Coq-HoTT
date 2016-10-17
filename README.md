@@ -13,7 +13,7 @@ It draws many ideas from Vladimir Voevodsky's
 [Foundations](https://github.com/vladimirias/Foundations) library (which has since been
 incorporated into the [UniMath](https://github.com/UniMath/UniMath) library) and also
 cross-pollinates with the [HoTT-Agda](https://github.com/HoTT/HoTT-Agda) library.
-Recently, there is also the [Lean](https://github.com/leanprover/lean/blob/master/hott/hott.md) library and the [cubical](https://github.com/mortberg/cubicaltt) type checker.
+Recently, there are also the [Lean](https://github.com/leanprover/lean/blob/master/hott/hott.md) library and the [cubical](https://github.com/mortberg/cubicaltt) type checker.
 
 More information about this libary can be found in:
 * _The HoTT Library: A formalization of homotopy type theory in Coq_, 
