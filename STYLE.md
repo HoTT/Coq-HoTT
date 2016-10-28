@@ -50,7 +50,7 @@
     - [Simpl nomatch](#simpl-nomatch)
     - [Available tactics](#available-tactics)
   - [Contributing to the library](#contributing-to-the-library)
-    - [Fork & Pull](#fork-&-pull)
+    - [Fork & Pull](#fork--pull)
     - [Two pairs of eyes](#two-pairs-of-eyes)
     - [Commit messages](#commit-messages)
     - [Creating new files](#creating-new-files)
