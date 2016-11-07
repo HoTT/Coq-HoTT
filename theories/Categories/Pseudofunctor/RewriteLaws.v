@@ -39,7 +39,7 @@ Section lemmas.
                              o (@morphism_isomorphic _ _ _ (Category.Morphisms.idtoiso (p2 -> p1) (ap f0 (Category.Core.associativity C w x y z f g h))))))))%natural_transformation.
   Proof.
     simpl in *.
-    let C := match goal with |- @paths (@NaturalTransformation ?C ?D ?F ?G) _ _ => constr:(C -> D)%category end in
+    let C := match goal with |- @paths (@NaturalTransformation ?C ?D ?F ?G) _ _ => constr:((C -> D)%category) end in
     apply (@iso_moveL_Vp C);
       apply (@iso_moveL_Mp C _ _ _ _ _ _ (iso_whisker_l _ _ _ _ _ _ _)).
     path_natural_transformation.
