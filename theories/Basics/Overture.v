@@ -2,6 +2,9 @@
 
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
 
+(** ** Compat with 8.5 patterns  *)
+Global Unset Bracketing Last Introduction Pattern.
+
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
