@@ -22,6 +22,9 @@ Global Unset Strict Universe Declaration.
 (** This command makes it so that when we say something like [IsHSet nat] we get [IsHSet@{i} nat] instead of [IsHSet@{Set} nat]. *)
 Global Unset Universe Minimization ToSet.
 
+(** Change in introduction patterns not adding an implicit [] *)
+Global Unset Bracketing Last Introduction Pattern.
+
 Definition relation (A : Type) := A -> A -> Type.
 
 Class Reflexive {A} (R : relation A) :=
