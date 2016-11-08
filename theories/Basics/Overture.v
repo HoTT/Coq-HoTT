@@ -2,7 +2,7 @@
 
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
 
-(** ** Compat with 8.5 patterns  *)
+(** Change in introduction patterns not adding an implicit [] *)
 Global Unset Bracketing Last Introduction Pattern.
 
 (** ** Type classes *)
