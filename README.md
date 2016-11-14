@@ -26,6 +26,8 @@ Notable differences:
 
 - In the HoTT/ folder:
 
+	- `./autogen.sh` (if using archives it will note that it isn't in a git repo, this is normal)
+
 	- `./configure COQBIN=/path/to/coq-IR/bin` (note the `/bin` at the end)
 
 	- `make`
