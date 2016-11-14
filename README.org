@@ -1,0 +1,37 @@
+* HoTT Classes
+
+Based on [Math Classes](https://math-classes.github.io/) but for [HoTT](https://github.com/hott/hott).
+
+Notable differences:
+- less stuff
+- no setoids (HoTT has quotient types)
+
+* Build
+
+Dependencies:
+- Coq with inductive-inductive types https://github.com/mattam82/coq/tree/IR
+- HoTT branch https://github.com/SkySkimmer/HoTT/tree/with-IR must be present on your system, built with Coq with inductive-inductive types, with its `hoqc` and `hoqdep` in your `$PATH` or pointed to by `$HOQC` and `$HOQDEP` respectively.
+
+Then run
+
+    $ ./configure
+    $ make
+
+Use `./ide` to start hoqide with the right arguments, or look at its code to see what arguments are needed.
+
+
+* No git install
+** get archives from [[https://github.com/mattam82/coq/archive/IR.zip][coq-IR.zip]] [[https://github.com/SkySkimmer/HoTT/archive/with-IR.zip][HoTT.zip]] and [[https://github.com/SkySkimmer/HoTTClasses/archive/CPP2017.zip][HoTTClasses.zip]]
+** extract them in some folder, and rename coq-IR/ folder to HoTT/coq-HoTT/ (or use the proper path for COQBIN when compiling HoTT)
+** in coq-HoTT/ (which you just renamed from coq-IR/):
+*** ./configure -local
+*** make coqlight coqide
+    You can use just [make] but then you will compile the whole Coq library for no reason. The coqlight target still builds part of the library but it's not as bad.
+** in HoTT/
+*** ./configure COQBIN=$(pwd)"/coq-HoTT/bin"
+*** make
+** in HoTTClasses/
+*** export HOQC=hoqc and export HOQDEP=hoqdep, where hoqc and hoqdep are the ones from the just compiled HoTT/. Alternatively add HoTT/ to your $PATH.
+*** ./configure
+*** make
+*** ./ide only works if HoTT/ is in your $PATH, use [HoTT/hoqide -R theories HoTTClasses] otherwise
