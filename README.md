@@ -28,24 +28,24 @@ Use `./ide` to start hoqide with the right arguments, or look at its code to see
 
 - In the coq-IR/ folder:
 
--- `./configure -local`
+    - `./configure -local`
 
--- `make coqlight coqide`
+	- `make coqlight coqide`
 
-   You can use just `make` but then you will compile the whole Coq library for no reason. The `coqlight` target still builds part of the library but it's not as bad.
+	You can use just `make` but then you will compile the whole Coq library for no reason. The `coqlight` target still builds part of the library but it's not as bad.
 
 - In the HoTT/ folder:
 
--- `./configure COQBIN=/path/to/coq-IR/bin` (note the `/bin` at the end)
+	- `./configure COQBIN=/path/to/coq-IR/bin` (note the `/bin` at the end)
 
--- `make`
+	- `make`
 
 - In HoTTClasses/
 
--- Add HoTT/ to your `$PATH`. Alternatively, `export HOQC=hoqc` and `export HOQDEP=hoqdep`, where `hoqc` and `hoqdep` are the ones from the just compiled HoTT/.
+	- Add HoTT/ to your `$PATH`. Alternatively, `export HOQC=hoqc` and `export HOQDEP=hoqdep`, where `hoqc` and `hoqdep` are the ones from the just compiled HoTT/.
 
--- `./configure`
+	- `./configure`
 
--- `make`
+	- `make`
 
--- The `./ide` script only works if HoTT/ is in your `$PATH`, use `/path/to/HoTT/hoqide -R theories HoTTClasses` otherwise.
+	- The `./ide` script only works if HoTT/ is in your `$PATH`, use `/path/to/HoTT/hoqide -R theories HoTTClasses` otherwise.
