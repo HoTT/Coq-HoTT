@@ -8,23 +8,13 @@ Notable differences:
 
 # Build
 
-Dependencies:
-- Dependencies of Coq trunk. Coq's `configure` should warn you if some are missing.
-- Coq with inductive-inductive types https://github.com/mattam82/coq/tree/IR
-- HoTT branch https://github.com/SkySkimmer/HoTT/tree/with-IR must be present on your system, built with Coq with inductive-inductive types, with its `hoqc` and `hoqdep` in your `$PATH` or pointed to by `$HOQC` and `$HOQDEP` respectively.
-
-Then run
-
-    $ ./configure
-    $ make
-
-Use `./ide` to start hoqide with the right arguments, or look at its code to see what arguments are needed.
-
-
-# Install from archives
 - Dependencies: same as Coq trunk. Coq's `configure` should warn you if some are missing.
-- Get the archives: https://github.com/mattam82/coq/archive/IR.zip https://github.com/SkySkimmer/HoTT/archive/with-IR.zip and https://github.com/SkySkimmer/HoTTClasses/archive/master.zip
-- Extract them. In this guide the resulting folders are called respectively `coq-IR/`, `HoTT/` and `HoTTClasses/`.
+
+- Get: [Coq with inductive-inductive types](https://github.com/mattam82/coq/tree/IR), [HoTT modified to compile with Coq-IR](https://github.com/SkySkimmer/HoTT/tree/with-IR) and HoTTClasses (this repository).
+
+	- ZIP archives: https://github.com/mattam82/coq/archive/IR.zip https://github.com/SkySkimmer/HoTT/archive/with-IR.zip and https://github.com/SkySkimmer/HoTTClasses/archive/master.zip
+
+- In this guide the resulting folders are called respectively `coq-IR/`, `HoTT/` and `HoTTClasses/`.
 
 - In the coq-IR/ folder:
 
@@ -42,7 +32,7 @@ Use `./ide` to start hoqide with the right arguments, or look at its code to see
 
 - In HoTTClasses/
 
-	- Add HoTT/ to your `$PATH`. Alternatively, `export HOQC=hoqc` and `export HOQDEP=hoqdep`, where `hoqc` and `hoqdep` are the ones from the just compiled HoTT/.
+	- Add HoTT/ to your `$PATH`. Alternatively, `export HOQC=/path/to/HoTT/hoqc` and `export HOQDEP=/path/to/HoTT/hoqdep`.
 
 	- `./configure`
 
