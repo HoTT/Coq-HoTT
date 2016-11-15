@@ -340,3 +340,21 @@ Section CoeqInd2.
   Qed.
 
 End CoeqInd2.
+
+(** ** Symmetry *)
+
+Definition Coeq_sym_map {B A} (f g : B -> A) : Coeq f g -> Coeq g f :=
+  Coeq_rec (Coeq g f) coeq (fun b : B => (cp b)^).
+
+Lemma sect_Coeq_sym_map {B A} {f g : B -> A} : Sect (Coeq_sym_map g f) (Coeq_sym_map f g).
+Proof.
+  unfold Sect. srapply @Coeq_ind.
+  - reflexivity.
+  - intro b.
+    abstract (rewrite transport_paths_FFlr, Coeq_rec_beta_cp, ap_V, Coeq_rec_beta_cp; hott_simpl).
+Defined.
+
+Lemma Coeq_sym {B A} {f g : B -> A} : @Coeq B A f g <~> Coeq g f.
+Proof.
+  exact (equiv_adjointify (Coeq_sym_map f g) (Coeq_sym_map g f) sect_Coeq_sym_map sect_Coeq_sym_map).
+Defined.
