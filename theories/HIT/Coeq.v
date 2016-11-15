@@ -349,9 +349,9 @@ Definition Coeq_sym_map {B A} (f g : B -> A) : Coeq f g -> Coeq g f :=
 Lemma sect_Coeq_sym_map {B A} {f g : B -> A} : Sect (Coeq_sym_map g f) (Coeq_sym_map f g).
 Proof.
   unfold Sect. srapply @Coeq_ind.
-  - simpl. auto.
-  - intro b. simpl.
-    rewrite transport_paths_FFlr, Coeq_rec_beta_cp, ap_V, Coeq_rec_beta_cp; hott_simpl.
+  - reflexivity.
+  - intro b.
+    abstract (rewrite transport_paths_FFlr, Coeq_rec_beta_cp, ap_V, Coeq_rec_beta_cp; hott_simpl).
 Defined.
 
 Lemma Coeq_sym {B A} {f g : B -> A} : @Coeq B A f g <~> Coeq g f.
