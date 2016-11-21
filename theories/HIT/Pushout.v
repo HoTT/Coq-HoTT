@@ -73,6 +73,49 @@ Proof.
   refine (pushout_ind_beta_pp (fun _ => P) _ _ _).
 Defined.
 
+(** ** Symmetry *)
+
+Definition pushout_sym_map {A B C f g} : pushout f g -> pushout g f :=
+  pushout_rec (pushout g f) (push o (equiv_sum_symm B C)) (fun a : A => (pp a)^).
+
+Lemma sect_pushout_sym_map {A B C f g} : Sect (@pushout_sym_map A C B g f) (@pushout_sym_map A B C f g).
+Proof.
+  unfold Sect. srapply @pushout_ind.
+  - intros [ | ]. all:reflexivity.
+  - intro a.
+    abstract (rewrite transport_paths_FFlr, pushout_rec_beta_pp, ap_V, pushout_rec_beta_pp; hott_simpl).
+Defined.
+
+Lemma pushout_sym {A B C} {f : A -> B} {g : A -> C} : pushout f g <~> pushout g f.
+Proof.
+  exact (equiv_adjointify pushout_sym_map pushout_sym_map sect_pushout_sym_map sect_pushout_sym_map).
+Defined.
+
+(** ** Equivalences *)
+
+(** Pushouts preserve equivalences. *)
+
+Lemma equiv_pushout {A B C f g A' B' C' f' g'}
+  (eA : A <~> A') (eB : B <~> B') (eC : C <~> C')
+  (p : eB o f == f' o eA) (q : eC o g == g' o eA)
+  : pushout f g <~> pushout f' g'.
+Proof.
+  refine (equiv_functor_coeq' eA (equiv_functor_sum' eB eC) _ _).
+  all:unfold pointwise_paths.
+  all:intro; simpl; apply ap.
+  + apply p.
+  + apply q.
+Defined.
+
+Definition equiv_pushout_pp {A B C f g A' B' C' f' g'}
+  {eA : A <~> A'} {eB : B <~> B'} {eC : C <~> C'}
+  {p : eB o f == f' o eA} {q : eC o g == g' o eA}
+  : forall a : A, ap (equiv_pushout eA eB eC p q) (pp a)
+    = ap push (ap inl (p a)) @ pp (eA a) @ ap push (ap inr (q a))^.
+Proof.
+  apply @functor_coeq_beta_cp.
+Defined.
+
 (** ** Cones of hsets *)
 
 Section SetCone.
