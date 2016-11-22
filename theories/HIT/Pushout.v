@@ -86,10 +86,8 @@ Proof.
     abstract (rewrite transport_paths_FFlr, pushout_rec_beta_pp, ap_V, pushout_rec_beta_pp; hott_simpl).
 Defined.
 
-Lemma pushout_sym {A B C} {f : A -> B} {g : A -> C} : pushout f g <~> pushout g f.
-Proof.
-  exact (equiv_adjointify pushout_sym_map pushout_sym_map sect_pushout_sym_map sect_pushout_sym_map).
-Defined.
+Definition pushout_sym {A B C} {f : A -> B} {g : A -> C} : pushout f g <~> pushout g f :=
+equiv_adjointify pushout_sym_map pushout_sym_map sect_pushout_sym_map sect_pushout_sym_map.
 
 (** ** Equivalences *)
 
@@ -107,7 +105,7 @@ Proof.
   + apply q.
 Defined.
 
-Definition equiv_pushout_pp {A B C f g A' B' C' f' g'}
+Lemma equiv_pushout_pp {A B C f g A' B' C' f' g'}
   {eA : A <~> A'} {eB : B <~> B'} {eC : C <~> C'}
   {p : eB o f == f' o eA} {q : eC o g == g' o eA}
   : forall a : A, ap (equiv_pushout eA eB eC p q) (pp a)
