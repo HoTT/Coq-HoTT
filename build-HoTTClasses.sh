@@ -1,8 +1,7 @@
 #!/bin/bash
 
 sudo apt-get build-dep coq coqide || exit 1
-sudo apt-get install liblablgtksourceview2-ocaml-dev || exit 1 # for coqide
-sudo apt-get install autoconf || exit 1
+sudo apt-get install liblablgtksourceview2-ocaml-dev autoconf unzip wget || exit 1
 
 wget -nc "https://github.com/mattam82/coq/archive/IR.zip" || exit 1
 
