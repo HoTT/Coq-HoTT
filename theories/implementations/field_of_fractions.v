@@ -1,4 +1,4 @@
-Require Import HoTT.hit.quotient
+Require Import HoTT.HIT.quotient
   HoTT.Basics.PathGroupoids
   HoTT.Types.Universe
   HoTT.Basics.Trunc
