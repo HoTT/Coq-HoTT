@@ -2,7 +2,7 @@ Require Import
   HoTT.Types.Arrow
   HoTT.Types.Universe
   HoTT.Basics.Trunc
-  HoTT.hit.Truncations.
+  HoTT.HIT.Truncations.
 Require Import
   HoTTClasses.interfaces.abstract_algebra.
 

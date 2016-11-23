@@ -41,3 +41,8 @@ Notable differences:
 	- `make`
 
 	- The `./ide` script only works if HoTT/ is in your `$PATH`, use `/path/to/HoTT/hoqide -R theories HoTTClasses` otherwise.
+
+# Install from archives
+Run the build-HoTTClasses.sh script with `bash` in some directory. It will use `sudo apt-get` to install dependencies of Coq and autoconf for HoTT, download archives for Coq, HoTT and HoTTClasses and build everything.
+You can also read it to see what needs to be done.
+
