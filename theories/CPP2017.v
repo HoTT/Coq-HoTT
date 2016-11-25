@@ -1,10 +1,13 @@
 (**
   "Formalising Real Numbers in Homotopy Type Theory"
-  Gaëtan Gilbert, submitted to CPP 2017 *)
+  Gaëtan Gilbert, submitted to CPP 2017.
 
-(** This file links the results of the paper with their formalizations
-    in the HoTTClasses library. You can lookup definitions and theorems by their
-    number in the paper. *)
+  This file links the results of the paper with their formalizations
+  in the HoTTClasses library. You can lookup definitions and theorems by their
+  number in the paper.
+
+  This is specifically for the arXiv version at https://arxiv.org/abs/1610.05072
+  Other versions may have different sections and theorems. *)
 
 Require Import
   HoTTClasses.interfaces.abstract_algebra
