@@ -47,3 +47,7 @@ guidelines and further information, see the file `STYLE.md`.
 The library is released under the permissive BSD 2-clause license, see the file
 `LICENSE.txt` for further information. In brief, this means you can do whatever you like
 with it, as long as you preserve the Copyright messages. And of course, no warranty!
+
+## Wiki
+
+More information can be found in the [Wiki](https://github.com/HoTT/HoTT/wiki).
