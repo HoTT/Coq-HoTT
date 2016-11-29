@@ -346,10 +346,10 @@ Ltac equiv_induction p :=
   generalize dependent p;
   let p' := fresh in
   intro p';
-    let y := match type of p' with ?x <~> ?y => constr:y end in
+    let y := match type of p' with ?x <~> ?y => constr:(y) end in
     move p' at top;
       generalize dependent y;
-      let P := match goal with |- forall y p, @?P y p => constr:P end in
+      let P := match goal with |- forall y p, @?P y p => constr:(P) end in
       (* We use [(fun x => x) _] to block automatic typeclass resolution in the hole for the equivalence respectful proof. *)
       refine ((fun g H B e => (@respects_equivalenceL _ P H).1 B e g) _ (_ : (fun x => x) _));
         [ intros | repeat step_respects_equiv ].
