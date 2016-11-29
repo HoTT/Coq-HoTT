@@ -2,6 +2,9 @@
 
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
 
+(** ** Compat with 8.5 patterns  *)
+Global Unset Bracketing Last Introduction Pattern.
+
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
@@ -520,7 +523,11 @@ Global Instance istrunc_paths (A : Type) n `{H : IsTrunc n.+1 A} (x y : A)
 : IsTrunc n (x = y)
   := H x y. (* but do fold [IsTrunc] *)
 
-Hint Extern 0 => progress change IsTrunc_internal with IsTrunc in * : typeclass_instances. (* Also fold [IsTrunc_internal] *)
+Existing Class IsTrunc_internal.
+
+Hint Extern 0 (IsTrunc_internal _ _) => progress change IsTrunc_internal with IsTrunc in * : typeclass_instances. (* Also fold [IsTrunc_internal] *)
+
+Hint Extern 0 (IsTrunc _ _) => progress change IsTrunc_internal with IsTrunc in * : typeclass_instances. (* Also fold [IsTrunc_internal] *)
 
 (** Picking up the [forall x y, IsTrunc n (x = y)] instances in the hypotheses is much tricker.  We could do something evil where we declare an empty typeclass like [IsTruncSimplification] and use the typeclass as a proxy for allowing typeclass machinery to factor nested [forall]s into the [IsTrunc] via backward reasoning on the type of the hypothesis... but, that's rather complicated, so we instead explicitly list out a few common cases.  It should be clear how to extend the pattern. *)
 Hint Extern 10 =>
