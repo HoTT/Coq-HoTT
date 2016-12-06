@@ -17,7 +17,7 @@ Recently, there are also the [Lean](https://github.com/leanprover/lean/blob/mast
 
 More information about this libary can be found in:
 * _The HoTT Library: A formalization of homotopy type theory in Coq_, 
-Andrej Bauer, Jason Gross, Peter LeFanu Lumsdaine, Mike Shulman, Matthieu Sozeau, Bas Spitters, 2016 [arxiv](https://arxiv.org/abs/1610.04591)
+Andrej Bauer, Jason Gross, Peter LeFanu Lumsdaine, Mike Shulman, Matthieu Sozeau, Bas Spitters, 2016 [arxiv](https://arxiv.org/abs/1610.04591) [CPP17](http://cpp2017.mpi-sws.org/)
 
 ## INSTALLATION
 
