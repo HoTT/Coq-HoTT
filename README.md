@@ -15,9 +15,11 @@ incorporated into the [UniMath](https://github.com/UniMath/UniMath) library) and
 cross-pollinates with the [HoTT-Agda](https://github.com/HoTT/HoTT-Agda) library.
 Recently, there are also the [Lean](https://github.com/leanprover/lean/blob/master/hott/hott.md) library and the [cubical](https://github.com/mortberg/cubicaltt) type checker.
 
-More information about this libary can be found in:
+An overview of the library is given in the article:
 * _The HoTT Library: A formalization of homotopy type theory in Coq_, 
-Andrej Bauer, Jason Gross, Peter LeFanu Lumsdaine, Mike Shulman, Matthieu Sozeau, Bas Spitters, 2016 [arxiv](https://arxiv.org/abs/1610.04591) [CPP17](http://cpp2017.mpi-sws.org/)
+Andrej Bauer, Jason Gross, Peter LeFanu Lumsdaine, Mike Shulman, Matthieu Sozeau, Bas Spitters, 2016, [arxiv:1610.04591](https://arxiv.org/abs/1610.04591), to appear in Proc. [Certified Proofs and Programs 2017](http://cpp2017.mpi-sws.org/).
+
+Detailed library documentation can be found in the [wiki](https://github.com/HoTT/HoTT/wiki), including coqdoc and Proviola-generated indexes, timing data, and more.
 
 ## INSTALLATION
 
@@ -47,7 +49,3 @@ guidelines and further information, see the file `STYLE.md`.
 The library is released under the permissive BSD 2-clause license, see the file
 `LICENSE.txt` for further information. In brief, this means you can do whatever you like
 with it, as long as you preserve the Copyright messages. And of course, no warranty!
-
-## Wiki
-
-More information can be found in the [Wiki](https://github.com/HoTT/HoTT/wiki).
