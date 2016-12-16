@@ -78,8 +78,7 @@ Module Nullification_Modalities <: Modalities.
     refine (Localize_ind@{a i j k}
              (null_to_local_generators@{a a} (unNul O)) A B g _); intros i.
     apply (ooextendable_over_unit@{a i j a k}); intros c.
-    refine (ooextendable_postcompose@{a a j j k k k k k k}
-                                    (* MS: Can be dropped *)
+    refine (ooextendable_postcompose
               (fun (_:Unit) => B (c tt)) _ _
               (fun u => transport@{i j} B (ap c (path_unit@{a} tt u))) _).
     refine (ooextendable_islocal _ i).
