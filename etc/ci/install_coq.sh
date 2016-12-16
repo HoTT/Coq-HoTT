@@ -39,10 +39,12 @@ then
 fi
 echo '$ ./configure '"$@"
 ./configure "$@"
-echo '$ make coqlight'
-make coqlight READABLE_ML4=1
-echo '$ sudo make install-coqlight install-devfiles'
-sudo make install-coqlight install-devfiles
+echo '$ make states READABLE_ML4=1 tools'
+make states tools READABLE_ML4=1
+echo '$ sudo make install-binaries + rsync plugins theories'
+touch bin/coqtop.byte bin/coqchk stm/{proof,tac,query}workertop.cma
+sudo make install-binaries
+sudo rsync -a plugins theories /usr/local/lib/coq/
 popd
 
 popd 1>/dev/null
