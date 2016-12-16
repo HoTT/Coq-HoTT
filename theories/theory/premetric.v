@@ -1,4 +1,4 @@
-Require HoTT.categories.Category.
+Require HoTT.Categories.Category.
 Require Import
   HoTT.Types.Universe
   HoTT.Basics.Decidable
