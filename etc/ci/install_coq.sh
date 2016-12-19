@@ -40,7 +40,7 @@ fi
 echo '$ ./configure '"$@"
 ./configure "$@"
 echo '$ make coqlight'
-make coqlight
+make coqlight READABLE_ML4=1
 echo '$ sudo make install-coqlight install-devfiles'
 sudo make install-coqlight install-devfiles
 popd
