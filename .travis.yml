@@ -1,6 +1,8 @@
 language: python
 # python, for proviola
 
+dist: trusty
+
 python:
  - "2.7"
 
