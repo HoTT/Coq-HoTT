@@ -75,7 +75,7 @@ Section UniversalMorphism.
                  (UniversalProperty
                   : forall (A' : D) (p' : morphism C X (U A')),
                       Contr { m : morphism D A A'
-                            | morphism_of U m o p = p' })
+                            | U _1 m o p = p' })
       : IsInitialMorphism Ap.
       Proof.
         intro x.
@@ -98,9 +98,9 @@ Section UniversalMorphism.
                  (m : forall (A' : D) (p' : morphism C X (U A')),
                         morphism D A A')
                  (H : forall (A' : D) (p' : morphism C X (U A')),
-                        morphism_of U (m A' p') o p = p')
+                        U _1 (m A' p') o p = p')
                  (H' : forall (A' : D) (p' : morphism C X (U A')) m',
-                         morphism_of U m' o p = p'
+                         U _1 m' o p = p'
                          -> m A' p' = m')
       : IsInitialMorphism Ap
         := Build_IsInitialMorphism
@@ -125,9 +125,9 @@ Section UniversalMorphism.
                        | let Ap := CommaCategory.Build_object !X U tt A p in
                          forall (A' : D) (p' : morphism C X (U A')),
                            { m : morphism D A A'
-                           | { H : morphism_of U m o p = p'
+                           | { H : U _1 m o p = p'
                              | forall m',
-                                 morphism_of U m' o p = p'
+                                 U _1 m' o p = p'
                                  -> m = m' }}}})
         := @Build_IsInitialMorphism_curried
              (univ.1)
@@ -178,9 +178,9 @@ Section UniversalMorphism.
                     | let Ap := CommaCategory.Build_object !X U tt A p in
                       forall (A' : D) (p' : morphism C X (U A')),
                         { m : morphism D A A'
-                        | { H : morphism_of U m o p = p'
+                        | { H : U _1 m o p = p'
                           | forall m',
-                              morphism_of U m' o p = p'
+                              U _1 m' o p = p'
                               -> m = m' }}}}),
           IsInitialMorphism (CommaCategory.Build_object !X U tt univ.1 univ.2.1)
         := @make_uncurried
@@ -209,7 +209,7 @@ Section UniversalMorphism.
       Definition IsInitialMorphism_property_morphism_property
                  (M : IsInitialMorphism Ap)
                  (Y : D) (f : morphism C X (U Y))
-      : (morphism_of U (IsInitialMorphism_property_morphism M Y f))
+      : (U _1 (IsInitialMorphism_property_morphism M Y f))
           o IsInitialMorphism_morphism M = f
         := concat
              (CommaCategory.p
@@ -219,7 +219,7 @@ Section UniversalMorphism.
                  (M : IsInitialMorphism Ap)
                  (Y : D) (f : morphism C X (U Y))
                  m'
-                 (H : morphism_of U m' o IsInitialMorphism_morphism M = f)
+                 (H : U _1 m' o IsInitialMorphism_morphism M = f)
       : IsInitialMorphism_property_morphism M Y f = m'
         := ap
              (@CommaCategory.h _ _ _ _ _ _ _)
@@ -232,7 +232,7 @@ Section UniversalMorphism.
                  (M : IsInitialMorphism Ap)
                  (Y : D) (f : morphism C X (U Y))
       : Contr { m : morphism D (IsInitialMorphism_object M) Y
-              | morphism_of U m o IsInitialMorphism_morphism M = f }
+              | U _1 m o IsInitialMorphism_morphism M = f }
         := {| center := (IsInitialMorphism_property_morphism M Y f;
                          IsInitialMorphism_property_morphism_property M Y f);
               contr m' := path_sigma
@@ -306,7 +306,7 @@ Section UniversalMorphism.
           (UniversalProperty
            : forall (A' : D) (p' : morphism C (U A') X),
                Contr { m : morphism D A' A
-                     | p o morphism_of U m = p' }),
+                     | p o U _1 m = p' }),
           IsTerminalMorphism Ap
         := @Build_IsInitialMorphism
              (C^op)
@@ -322,9 +322,9 @@ Section UniversalMorphism.
           (m : forall (A' : D) (p' : morphism C (U A') X),
                  morphism D A' A)
           (H : forall (A' : D) (p' : morphism C (U A') X),
-                 p o morphism_of U (m A' p') = p')
+                 p o U _1 (m A' p') = p')
           (H' : forall (A' : D) (p' : morphism C (U A') X) m',
-                  p o morphism_of U m' = p'
+                  p o U _1 m' = p'
                   -> m A' p' = m'),
           IsTerminalMorphism Ap
         := @Build_IsInitialMorphism_curried
@@ -340,9 +340,9 @@ Section UniversalMorphism.
                     | let Ap := CommaCategory.Build_object U !X A tt p in
                       forall (A' : D) (p' : morphism C (U A') X),
                         { m : morphism D A' A
-                        | { H : p o morphism_of U m = p'
+                        | { H : p o U _1 m = p'
                           | forall m',
-                              p o morphism_of U m' = p'
+                              p o U _1 m' = p'
                               -> m = m' }}}}),
           IsTerminalMorphism (CommaCategory.Build_object U !X univ.1 tt univ.2.1)
         := @Build_IsInitialMorphism_uncurried
@@ -365,7 +365,7 @@ Section UniversalMorphism.
       Definition IsTerminalMorphism_property
       : forall (Y : D) (f : morphism C (U Y) X),
           Contr { m : morphism D Y IsTerminalMorphism_object
-                | IsTerminalMorphism_morphism o morphism_of U m = f }
+                | IsTerminalMorphism_morphism o U _1 m = f }
         := @IsInitialMorphism_property C^op D^op X U^op (op_object Ap) M.
       Definition IsTerminalMorphism_property_morphism
       : forall (Y : D) (f : morphism C (U Y) X),
@@ -375,14 +375,14 @@ Section UniversalMorphism.
       Definition IsTerminalMorphism_property_morphism_property
       : forall (Y : D) (f : morphism C (U Y) X),
           IsTerminalMorphism_morphism
-            o (morphism_of U (IsTerminalMorphism_property_morphism Y f))
+            o (U _1 (IsTerminalMorphism_property_morphism Y f))
           = f
         := @IsInitialMorphism_property_morphism_property
              C^op D^op X U^op (op_object Ap) M.
       Definition IsTerminalMorphism_property_morphism_unique
       : forall (Y : D) (f : morphism C (U Y) X)
                m'
-               (H : IsTerminalMorphism_morphism o morphism_of U m' = f),
+               (H : IsTerminalMorphism_morphism o U _1 m' = f),
           IsTerminalMorphism_property_morphism Y f = m'
         := @IsInitialMorphism_property_morphism_unique
              C^op D^op X U^op (op_object Ap) M.

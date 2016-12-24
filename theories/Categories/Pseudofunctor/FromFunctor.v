@@ -148,7 +148,7 @@ intros.
     := Build_Pseudofunctor
          C
          (fun x => pr1 (F x))
-         (fun s d m => morphism_of F m)
+         (fun s d m => F _1 m)
          (fun s d d' m0 m1 => Category.Morphisms.idtoiso (_ -> _) (composition_of F _ _ _ m1 m0))
          (fun x => Category.Morphisms.idtoiso (_ -> _) (identity_of F x))
          (fun w x y z _ _ _ => pseudofunctor_of_functor__composition_of (F w).2 (F z).2 (F y).2 (F x).2)

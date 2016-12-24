@@ -31,14 +31,14 @@ Section identity.
                                       (identity (F c))).
 
     Definition generalized_identity_commutes s d (m : morphism C s d)
-    : CO d o morphism_of F m = morphism_of G m o CO s.
+    : CO d o F _1 m = G _1 m o CO s.
     Proof.
       case HM. case HO.
       exact (left_identity _ _ _ _ @ (right_identity _ _ _ _)^).
     Defined.
 
     Definition generalized_identity_commutes_sym s d (m : morphism C s d)
-    : morphism_of G m o CO s = CO d o morphism_of F m.
+    : G _1 m o CO s = CO d o F _1 m.
     Proof.
       case HM. case HO.
       exact (right_identity _ _ _ _ @ (left_identity _ _ _ _)^).

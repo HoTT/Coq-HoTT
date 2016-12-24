@@ -264,12 +264,12 @@ Section Adjunction.
         : forall Y : C, (*ε (F Y) ∘ F ₁ (η Y) = identity (F Y);*)
             Category.Core.compose (C := D) (s := F Y) (d := F (G (F Y))) (d' := F Y)
                                   (counit (F Y))
-                                  (morphism_of F (s := Y) (d := G (F Y)) (unit Y))
+                                  (F _1 (unit Y : morphism _ Y (G (F Y))))
             = 1;
         unit_counit_equation_2
         : forall X : D, (* G ₁ (ε X) ∘ η (G X) = identity (G X) *)
             Category.Core.compose (C := C) (s := G X) (d := G (F (G X))) (d' := G X)
-                                  (morphism_of G (s := F (G X)) (d := X) (counit X))
+                                  (G _1 (counit X : morphism _ (F (G X)) X))
                                   (unit (G X))
             = 1
       }.

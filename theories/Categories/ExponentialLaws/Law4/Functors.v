@@ -99,11 +99,7 @@ Section law4.
         refine (Build_Functor
                   C2 D
                   (fun c2 => F (c1, c2))
-                  (fun s2 d2 m2 => morphism_of
-                                     F
-                                     (s := (c1, s2))
-                                     (d := (c1, d2))
-                                     (identity c1, m2))
+                  (fun s2 d2 m2 => F _1 ((identity c1, m2) : morphism (_ * _) (c1, s2) (c1, d2)))
                   _
                   _);
           abstract do_exponential4_inverse.
@@ -118,11 +114,7 @@ Section law4.
         refine (Build_NaturalTransformation
                   (inverse_object_of_object_of s)
                   (inverse_object_of_object_of d)
-                  (fun c => morphism_of
-                              F
-                              (s := (s, c))
-                              (d := (d, c))
-                              (m, identity c))
+                  (fun c => F _1 ((m, identity c) : morphism (_ * _) (s, c) (d, c)))
                   _);
         abstract do_exponential4_inverse.
       Defined.

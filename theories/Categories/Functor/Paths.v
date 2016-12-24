@@ -111,7 +111,7 @@ Section path_functor.
                           (path_forall _ _ HO)
                           (morphism_of F)
                           s d m
-                = morphism_of G m)
+                = G _1 m)
   : F = G.
   Proof.
     refine (path_functor F G (path_forall _ _ HO) _).

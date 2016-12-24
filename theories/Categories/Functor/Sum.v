@@ -47,11 +47,11 @@ Section sum.
               (fun s d
                => match s, d with
                     | type_inl cs, type_inl cd
-                      => morphism_of F (s := cs) (d := cd)
+                      => fun m : morphism _ cs cd => F _1 m
                     | type_inr c's, type_inr c'd
-                      => morphism_of F' (s := c's) (d := c'd)
+                      => fun m : morphism _ c's c'd => F' _1 m
                     | _, _ => fun m => match m with end
-                  end)
+                  end%morphism)
               _
               _);
     abstract (

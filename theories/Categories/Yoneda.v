@@ -193,7 +193,7 @@ Section coyoneda_lemma.
     let G0 := match goal with |- NaturalTransformation ?F ?G => constr:(G) end in
     refine (Build_NaturalTransformation
               F0 G0
-              (fun a' : A => (fun f : morphism A a a' => morphism_of F f Fa))
+              (fun a' : A => (fun f : morphism A a a' => F _1 f Fa))
               _
            ).
     simpl.
