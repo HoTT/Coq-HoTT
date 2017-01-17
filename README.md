@@ -34,15 +34,22 @@ Notable differences:
 
 - In HoTTClasses/
 
-	- Add HoTT/ to your `$PATH`. Alternatively, `export HOQC=/path/to/HoTT/hoqc` and `export HOQDEP=/path/to/HoTT/hoqdep`.
+	- Add HoTT/ to your `$PATH`. Alternatively, `export HOQDIR=/path/to/HoTT/`.
 
 	- `./configure`
 
 	- `make`
 
-	- The `./ide` script only works if HoTT/ is in your `$PATH`, use `/path/to/HoTT/hoqide -R theories HoTTClasses` otherwise.
-
 # Install from archives
 Run the build-HoTTClasses.sh script with `bash` in some directory. It will use `sudo apt-get` to install dependencies of Coq and autoconf for HoTT, download archives for Coq, HoTT and HoTTClasses and build everything.
 You can also read it to see what needs to be done.
 
+# Using IDEs
+
+## Coqide
+
+The `./ide` script only works if HoTT/ is in your `$PATH`, use `/path/to/HoTT/hoqide -R theories HoTTClasses` otherwise.
+
+## Proof General
+
+[Proof General](https://github.com/ProofGeneral/PG/) understands the `_CoqProject` produced by `./configure`. `./configure` also sets up `.dir-locals.el` so that PG calls the right hoqtop program.

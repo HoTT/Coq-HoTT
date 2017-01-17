@@ -1,28 +1,32 @@
 #!/bin/sh
 
-OPTFILE="coqopts"
+OPTFILE="_CoqProject"
 
-if [ -z "${HOQC}" ];
+if [ "$#" -ne 0 ];
 then
-  if which hoqc > /dev/null;
-  then HOQC="hoqc"
-  else
-    >&2 echo "HOQC not set and hoqc not in path"
-    exit 1
-  fi
+    >&2 echo "$0 does not understand arguments.
+Use environment variables instead: hoqc, hoqtop and hoqdep should be in your PATH or in HOQDIR.";
+    exit 1;
 fi
 
-if [ -z "${HOQDEP}" ];
-then
-  if which hoqdep > /dev/null;
-  then HOQDEP="hoqdep"
-  else
-    >&2 echo "HOQDEP not set and hoqdep not in path"
-    exit 1
-  fi
+if [ -z "${HOQDIR}" ]
+then if which hoqc > /dev/null && which hoqtop > /dev/null && which hoqdep > /dev/null;
+     then
+         HOQC=$(which hoqc);
+         HOQTOP=$(which hoqtop);
+         HOQDEP=$(which hoqdep);
+     else
+         >&2 echo "HOQDIR not set and hoqc, hoqtop or hoqdep not in path"
+         exit 1
+     fi
+else
+    # if HOQDIR is set do not check that it's full
+    HOQC="$HOQDIR/hoqc";
+    HOQTOP="$HOQDIR/hoqtop";
+    HOQDEP="$HOQDIR/hoqdep";
 fi
 
-cp coqopts.in "$OPTFILE"
+cp "$OPTFILE.in" "$OPTFILE"
 
 echo "COQC = $HOQC" >> "$OPTFILE"
 echo "COQDEP = $HOQDEP" >> "$OPTFILE"
@@ -31,3 +35,4 @@ find . -name '*.v' >> "$OPTFILE"
 
 coq_makefile -f "$OPTFILE" -o Makefile
 
+echo "((coq-mode . ((coq-prog-name . \"$HOQTOP\"))))" > .dir-locals.el

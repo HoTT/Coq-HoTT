@@ -1,6 +1,7 @@
 _build/
 Makefile
 *.v.d
-coqopts
+_CoqProject
 html/
 timing/
+.dir-locals.el
