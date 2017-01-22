@@ -6,6 +6,10 @@ Notable differences:
 - less stuff
 - no setoids (HoTT has quotient types)
 
+# Publications
+
+See SCIENCE.md
+
 # Build
 
 - Dependencies: same as Coq trunk. Coq's `configure` should warn you if some are missing.
