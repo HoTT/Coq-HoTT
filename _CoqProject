@@ -102,6 +102,18 @@ theories/Utf8.v
 theories/HoTT.v
 theories/Tests.v
 
+theories/HIT/Colimits/CommutativeSquares.v
+theories/HIT/Colimits/Diagram.v
+theories/HIT/Colimits/Colimit.v
+theories/HIT/Colimits/Colimit_Prod.v
+theories/HIT/Colimits/Colimit_Sigma.v
+theories/HIT/Colimits/Coequalizer.v
+theories/HIT/Colimits/Pushout.v
+theories/HIT/Colimits/MappingTelescope.v
+theories/HIT/Colimits/Flattening.v
+theories/HIT/Colimits.v
+
+
 theories/Categories.v
 
 theories/Categories/Category.v
