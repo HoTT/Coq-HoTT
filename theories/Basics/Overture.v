@@ -775,6 +775,22 @@ Ltac by_extensionality x :=
     simpl; auto with path_hints
   end.
 
+
+Tactic Notation "funext" simple_intropattern(a)
+  := apply path_forall; intros a.
+Tactic Notation "funext" simple_intropattern(a)  simple_intropattern(b)
+  := funext a; funext b.
+Tactic Notation "funext" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c)
+  := funext a; funext b; funext c.
+Tactic Notation "funext" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d)
+  := funext a; funext b; funext c; funext d.
+Tactic Notation "funext" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d) simple_intropattern(e)
+  := funext a; funext b; funext c; funext d; funext e.
+Tactic Notation "funext" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d) simple_intropattern(e) simple_intropattern(f)
+  := funext a; funext b; funext c; funext d; funext e; funext f.
+
+
+
 (** [not tac] is equivalent to [fail tac "succeeds"] if [tac] succeeds, and is equivalent to [idtac] if [tac] fails *)
 Tactic Notation "not" tactic3(tac) :=
   (tryif tac then fail 0 tac "succeeds" else idtac); (* error if the tactic solved all goals *) [].
