@@ -396,23 +396,59 @@ Proof.
   destruct p. apply isequiv_concat_r.
 Defined.
 
+
+Definition moveR_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
+           (p : x = y) (u : P x) (v : P y) (q : transport P p u = v)
+  : moveR_transport_p P p u v (moveL_transport_V P p u v q) = q.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+Definition moveL_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
+           (p : x = y) (u : P x) (v : P y) (q : u = transport P p^ v)
+  : moveL_transport_V P p u v (moveR_transport_p P p u v q) = q.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
 Global Instance isequiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : IsEquiv (moveR_transport_p P p u v).
 Proof.
-  destruct p. apply isequiv_idmap.
+  serapply isequiv_adjointify.
+  apply moveL_transport_V.
+  intro q; apply moveR_moveL_transport_V.
+  intro q; apply moveL_moveR_transport_p.
 Defined.
-
+           
 Definition equiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : u = transport P p^ v <~> transport P p u = v
 := BuildEquiv _ _ (moveR_transport_p P p u v) _.
 
+
+Definition moveR_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
+           (p : y = x) (u : P x) (v : P y) (q : transport P p^ u = v)
+  : moveR_transport_V P p u v (moveL_transport_p P p u v q) = q.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+Definition moveL_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
+           (p : y = x) (u : P x) (v : P y) (q : u = transport P p v)
+  : moveL_transport_p P p u v (moveR_transport_V P p u v q) = q.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
 Global Instance isequiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : IsEquiv (moveR_transport_V P p u v).
 Proof.
-  destruct p. apply isequiv_idmap.
+  serapply isequiv_adjointify.
+  apply moveL_transport_p.
+  intro q; apply moveR_moveL_transport_p.
+  intro q; apply moveL_moveR_transport_V.
 Defined.
 
 Definition equiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
@@ -424,7 +460,10 @@ Global Instance isequiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : IsEquiv (moveL_transport_V P p u v).
 Proof.
-  destruct p. apply isequiv_idmap.
+  serapply isequiv_adjointify.
+  apply moveR_transport_p.
+  intro q; apply moveL_moveR_transport_p.
+  intro q; apply moveR_moveL_transport_V.
 Defined.
 
 Definition equiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
@@ -432,17 +471,22 @@ Definition equiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
 : transport P p u = v <~> u = transport P p^ v
 := BuildEquiv _ _ (moveL_transport_V P p u v) _.
 
+
 Global Instance isequiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : IsEquiv (moveL_transport_p P p u v).
 Proof.
-  destruct p. apply isequiv_idmap.
+  serapply isequiv_adjointify.
+  apply moveR_transport_V.
+  intro q; apply moveL_moveR_transport_V.
+  intro q; apply moveR_moveL_transport_p.
 Defined.
 
 Definition equiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : transport P p^ u = v <~> u = transport P p v
 := BuildEquiv _ _ (moveL_transport_p P p u v) _.
+
 
 Global Instance isequiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
 : IsEquiv (@moveR_equiv_M A B f _ x y).

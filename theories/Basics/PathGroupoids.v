@@ -329,6 +329,36 @@ Proof.
   exact idmap.
 Defined.
 
+(* We have some coherences between those proofs. *)
+Definition moveR_transport_p_V {A : Type} (P : A -> Type) {x y : A}
+           (p : x = y) (u : P x) (v : P y) (q : u = p^ # v)
+  : (moveR_transport_p P p u v q)^ = moveL_transport_p P p v u q^.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+Definition moveR_transport_V_V {A : Type} (P : A -> Type) {x y : A}
+           (p : y = x) (u : P x) (v : P y) (q : u = p # v)
+  : (moveR_transport_V P p u v q)^ = moveL_transport_V P p v u q^.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+Definition moveL_transport_V_V {A : Type} (P : A -> Type) {x y : A}
+           (p : x = y) (u : P x) (v : P y) (q : p # u = v)
+  : (moveL_transport_V P p u v q)^ = moveR_transport_V P p v u q^.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+Definition moveL_transport_p_V {A : Type} (P : A -> Type) {x y : A}
+           (p : y = x) (u : P x) (v : P y) (q : p^ # u = v)
+  : (moveL_transport_p P p u v q)^ = moveR_transport_p P p v u q^.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+
 (** *** Functoriality of functions *)
 
 (** Here we prove that functions behave like functors between groupoids, and that [ap] itself is functorial. *)
@@ -629,13 +659,41 @@ Proof.
   destruct p, q, r.  simpl.  exact 1.
 Defined.
 
-(* Here is another coherence lemma for transport. *)
+(* Here are other coherence lemmas for transport. *)
 Definition transport_pVp {A} (P : A -> Type) {x y:A} (p:x=y) (z:P x)
   : transport_pV P p (transport P p z)
   = ap (transport P p) (transport_Vp P p z).
 Proof.
   destruct p; reflexivity.
 Defined.
+
+Definition transport_VpV {A} (P : A -> Type) {x y : A} (p : x = y) (z : P y)
+  : transport_Vp P p (transport P p^ z)
+    = ap (transport P p^) (transport_pV P p z).
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+Definition ap_transport_transport_pV {A} (P : A -> Type) {x y : A}
+           (p : x = y) (u : P x) (v : P y) (e : transport P p u = v)
+  : ap (transport P p) (moveL_transport_V P p u v e)
+       @ transport_pV P p v = e.
+Proof.
+    by destruct e, p.
+Defined.
+
+Definition moveL_transport_V_1 {A} (P : A -> Type) {x y : A}
+           (p : x = y) (u : P x)
+  : moveL_transport_V P p u (p # u) 1 = (transport_Vp P p u)^.
+    (* moveL_transport_V P p (transport P p^ v) (transport P p (transport P p^ v)) 1 *)
+    (* = ap (transport P p^) (transport_pV P p v)^. *)
+Proof.
+  (* pose (u := p^ # v).  *)
+  (* assert (moveL_transport_V P p u (p # u) 1 = (transport_Vp P p u)^). *)
+  destruct p; reflexivity.
+  (* subst u. rewrite X. *)
+Defined.
+
 
 (** ** [ap11] *)
 
@@ -759,6 +817,21 @@ Defined.
 Definition transport_pV_ap {X} (P : X -> Type) (f : forall x, P x)
       {x1 x2 : X} (p : x1 = x2)
 : ap (transport P p) (apD f p^) @ apD f p = transport_pV P p (f x2).
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+Definition apD_pp {A} {P : A -> Type} (f : forall x, P x)
+           {x y z : A} (p : x = y) (q : y = z)
+  : apD f (p @ q)
+    = transport_pp P p q (f x) @ ap (transport P q) (apD f p) @ apD f q.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+
+Definition apD_V {A} {P : A -> Type} (f : forall x, P x)
+           {x y : A} (p : x = y)
+  : apD f p^ = moveR_transport_V _ _ _ _ (apD f p)^.
 Proof.
   destruct p; reflexivity.
 Defined.
