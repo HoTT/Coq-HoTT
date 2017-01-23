@@ -92,8 +92,8 @@ Section SigmaDiag.
       simpl. apply (diagram_map_comm (m x.1)).
   Defined.
 
-  Definition sigma_diag_functor_equiv (m: forall y, (D1 y) ≃ (D2 y))
-  : (sigma_diag D1) ≃ (sigma_diag D2).
+  Definition sigma_diag_functor_equiv (m: forall y, (D1 y) ~d~ (D2 y))
+  : (sigma_diag D1) ~d~ (sigma_diag D2).
     simple refine (Build_diagram_equiv (sigma_diag_functor m) _).
     intros i. simple refine isequiv_functor_sigma. intros y; apply m.
   Defined.

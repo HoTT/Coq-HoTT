@@ -25,7 +25,7 @@ Definition equiv_sequence (D1 D2: sequence)
            (Hn: forall n (e: (D1 n) <~> (D2 n)),
                {e' : (D1 n.+1) <~> (D2 n.+1)
                      & (D2 _f 1) o e == e' o (D1 _f 1)})
-  : D1 ≃ D2.
+  : D1 ~d~ D2.
 Proof.
   simple refine (Build_diagram_equiv (Build_diagram_map _ _) _).
   - intros n. apply equiv_fun. induction n. apply H0. exact (Hn n IHn).1.
