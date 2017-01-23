@@ -282,6 +282,32 @@ Proof.
   destruct p. reflexivity.
 Defined.
 
+
+(** Applying a two variable function to a [path_sigma]. *)
+
+Definition ap_path_sigma {A B} (P : A -> Type) (F : forall a : A, P a -> B)
+           {x x' : A} {y : P x} {y' : P x'} (p : x = x') (q : p # y = y')
+  : ap (fun w => F w.1 w.2) (path_sigma' P p q)
+    = ap _ (moveL_transport_V _ p _ _ q)
+         @ (transport_arrow_toconst _ _ _)^ @ ap10 (apD F p) y'.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+(* Remark: this is also equals to: *)
+(*     = ap10 (apD F p^)^ y @ transport_arrow_toconst _ _ _ *)
+(*                          @ ap (F x') (transport2 _ (inv_V p) y @ q). *)
+
+
+
+(** And we can simplify when the first equality is [1]. *)
+Lemma ap_path_sigma_1p {A B : Type} {P : A -> Type} (F : forall a, P a -> B)
+      (a : A) {x y : P a} (p : x = y)
+  : ap (fun w => F w.1 w.2) (path_sigma' P 1 p) = ap (fun z => F a z) p.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
+
 (** Applying a function constructed with [sigT_ind] to a [path_sigma] can be computed.  Technically this computation should probably go by way of a 2-variable [ap], and should be done in the dependently typed case. *)
 
 Definition ap_sigT_rec_path_sigma {A : Type} (P : A -> Type) {Q : Type}

@@ -66,6 +66,18 @@ Proof.
     apply concat2; symmetry; apply eta_path_forall.
 Defined.
 
+
+Definition path_forall_V `{P : A -> Type} (f g : forall x, P x)
+           (p : f == g)
+  : path_forall _ _ (fun x => (p x)^) = (path_forall _ _ p)^.
+Proof.
+  transitivity (path_forall _ _ (fun x => (apD10 (path_forall _ _ p) x)^)).
+  f_ap. symmetry. apply (@ap _ _ (fun h x => (h x)^)). apply eisretr.
+  transitivity (path_forall _ _ (apD10 (path_forall _ _ p)^)).
+  apply ap, inverse. apply path_forall; intros x. apply apD10_V.
+  apply eissect.
+Defined.
+
 (** ** Transport *)
 
 (** The concrete description of transport in sigmas and pis is rather trickier than in the other types. In particular, these cannot be described just in terms of transport in simpler types; they require the full Id-elim rule by way of "dependent transport" [transportD].
@@ -102,6 +114,19 @@ Proof.
 Defined.
 
 (** ** Maps on paths *)
+
+(** The action of maps given by application. *)
+Definition ap_apply_lD {A} {B : A -> Type} {f g : forall x, B x} (p : f = g) (z : A)
+  : ap (fun f => f z) p = apD10 p z
+:= 1.
+
+Definition ap_apply_lD2 {A} {B : A -> Type} { C : forall x, B x -> Type}
+           {f g : forall x y, C x y} (p : f = g) (z1 : A) (z2 : B z1)
+  : ap (fun f => f z1 z2) p = apD10 (apD10 p z1) z2.
+Proof.
+    by path_induction.
+Defined.
+
 
 (** The action of maps given by lambda. *)
 Definition ap_lambdaD {A B : Type} {C : B -> Type} {x y : A} (p : x = y) (M : forall a b, C b) :
