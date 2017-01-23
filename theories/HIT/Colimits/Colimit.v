@@ -209,7 +209,7 @@ Section FunctorialityCocone.
   Defined.
 
   (* compose with equivalences *)
-  Definition precompose_cocone_equiv {D1 D2: diagram G} (m: D1 ≃ D2) (X: Type)
+  Definition precompose_cocone_equiv {D1 D2: diagram G} (m: D1 ~d~ D2) (X: Type)
     : IsEquiv (precompose_cocone (X:=X) m).
     simple refine (isequiv_adjointify
                      _ (precompose_cocone (diagram_equiv_inv m)) _ _).
@@ -232,7 +232,7 @@ Section FunctorialityCocone.
   Defined.
 
   (* universality preserved by equivalences *)
-  Definition precompose_equiv_universality {D1 D2: diagram G} (m: D1 ≃ D2)
+  Definition precompose_equiv_universality {D1 D2: diagram G} (m: D1 ~d~ D2)
              `(C: cocone D2 X)
     : is_universal C -> is_universal (precompose_cocone (X:=X) m C).
     unfold is_universal.
@@ -251,7 +251,7 @@ Section FunctorialityCocone.
   Defined.
 
   Definition precompose_equiv_is_colimit {D1 D2: diagram G}
-             (m: D1 ≃ D2) {Q: Type}
+             (m: D1 ~d~ D2) {Q: Type}
     : is_colimit D2 Q -> is_colimit D1 Q.
     intros HQ. simple refine (Build_is_colimit (precompose_cocone m HQ) _).
     apply precompose_equiv_universality. apply HQ.
@@ -287,7 +287,7 @@ Section FunctorialityColimit.
   Defined.
 
   (** Here we prove than two equivalent diagrams have equivalent colimits. *)
-  Context {D1 D2: diagram G} (m: D1 ≃ D2)
+  Context {D1 D2: diagram G} (m: D1 ~d~ D2)
           `(HQ1: is_colimit D1 Q1) `(HQ2: is_colimit D2 Q2).
   
   Definition functoriality_colimit_eissect

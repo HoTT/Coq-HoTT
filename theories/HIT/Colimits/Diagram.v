@@ -163,4 +163,4 @@ Section Diagram.
   Defined.
 End Diagram.
 
-Notation "D1 ≃ D2" := (diagram_equiv D1 D2) (at level 10).
+Notation "D1 ~d~ D2" := (diagram_equiv D1 D2) (at level 65).
