@@ -27,9 +27,7 @@ then
     exit 1
 fi
 
-echo '$ git submodule sync'
 git submodule sync
-echo '$ git submodule update --init --recursive'
 git submodule update --init --recursive
 
 pushd coq-HoTT
@@ -37,10 +35,15 @@ if [ ! -z "$FORCE_COQ_VERSION" ]
 then
     git checkout "$FORCE_COQ_VERSION" || exit $?
 fi
-echo '$ ./configure '"$@"
+NJOBS=1
+[ -e .opam ] || opam init -j ${NJOBS} --compiler=system -n -y
+eval $(opam config env)
+opam config var root
+opam install -j ${NJOBS} -y camlp5 ocamlfind
+opam list
 ./configure "$@"
-echo '$ make states tools coqlight plugins grammar/compat5.cmo grammar/grammar.cma READABLE_ML4=1'
-make states tools coqlight plugins grammar/compat5.cmo grammar/grammar.cma READABLE_ML4=1
+echo '$ make states tools coqlight plugins grammar/compat5.cmo grammar/grammar.cma'
+make states tools coqlight plugins grammar/compat5.cmo grammar/grammar.cma
 echo '$ sudo make install-binaries + rsync plugins theories'
 touch bin/coqtop.byte bin/coqchk stm/{proof,tac,query}workertop.cma
 sudo make install-binaries install-devfiles
