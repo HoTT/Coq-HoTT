@@ -2,17 +2,27 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Colimits.Diagram Colimits.Colimit Colimits.Pushout.
 Local Open Scope path_scope.
 
+(** * Flattening lemma *)
+
+(** This file provide a proof of the flattening lemma for colimits. This lemma describes the type [sig E'] when [E' : colimit D -> Type] is a type family defined by recusrion on a colimit. *)
+(** The flattening lemma in the case of W-types is presented in section 6.12 of the HoTT book. *)
+(** A good intuition is given by the pushout's case (see above). *)
+
 Section Flattening.
+  (** ** Equifibered diagrams *)
+
   Context `{fs : Funext} {G : graph} (D : diagram G).
 
   (** We define here the graph ∫D, also denoted G·D *)
+
   Definition integral : graph.
     simple refine (Build_graph _ _).
     - exact {i : G & D i}.
-    - intros i j. exact {g : G i.1 j.1 & diagram1 D g i.2 = j.2}.
+    - intros i j. exact {g : G i.1 j.1 & D _f g i.2 = j.2}.
   Defined.
 
   (** Then, a dependent diagram E over D is just a diagram over ∫D. *)
+
   Definition dep_diagram := diagram integral.
 
   Context (E : dep_diagram).
@@ -21,6 +31,7 @@ Section Flattening.
       := @diagram1 _ E (i; x) (j; D _f g x) (g; 1).
 
   (** Given a dependent diagram, we can recover a diagram over G by considering the Σ types. *)
+
   Definition sigma_diagram : diagram G.
     simple refine (Build_diagram _ _ _).
     - intro i. exact {x : D i & E (i; x)}.
@@ -28,10 +39,14 @@ Section Flattening.
       exists (D _f g x.1). exact (E_f g x.1 x.2).
   Defined.
 
+  (** A dependent diagram is said equifibered if all its fibers are equivalences. *)
+
   Definition equifibered := forall i j (g : G i j) (x : D i), IsEquiv (E_f g x).
 
   Context (H : equifibered) `{Univalence}.
-  
+
+  (** Now, given an equifibered diagram and using univalence, one can define a type family [E' : colimit D -> Type] by recusrion on the colimit. *)
+
   Definition E' : colimit D -> Type.
     apply colimit_rec. simple refine (Build_cocone _ _).
     exact (fun i x => E (i; x)).
@@ -39,7 +54,8 @@ Section Flattening.
     apply H.
   Defined.
 
-  
+  (** ** Helper lemmas *)
+
   Definition transport_E' {i j : G} (g : G i j)  (x : D i) (y : E (i; x))
     : transport E' (colimp i j g x) (E_f g x y) = y.
   Proof.
@@ -68,7 +84,10 @@ Section Flattening.
     apply ap_transport_transport_pV.
   Defined.
 
-  
+  (** ** Main result *)
+
+  (** We define the cocone over the sigma diagram to [sig E']. *)
+
   Definition cocone_E' : cocone sigma_diagram (sig E').
   Proof.
     simple refine (Build_cocone _ _); cbn.
@@ -76,6 +95,8 @@ Section Flattening.
     + intros i j g x; cbn. simple refine (path_sigma' _ _ _).
       apply colimp. apply transport_E'.
   Defined.
+
+  (** And we directly prove than it is universal. *)
 
   Local Opaque path_sigma ap11.
 
@@ -124,7 +145,7 @@ Section Flattening.
           subst C2; cbn. rewrite transport_paths_FlFr.
           rewrite concat_p1. apply moveR_Vp. rewrite concat_p1.
           rewrite ap_path_sigma. cbn.
-          rewrite colimit_ind_beta_colimp. rewrite ap10_path_forall. 
+          rewrite colimit_ind_beta_colimp. rewrite ap10_path_forall.
           hott_simpl.
           rewrite ap11_is_ap10_ap01. cbn. rewrite concat_1p.
           rewrite (ap_compose (fun y => (colim j ((D _f g) x); y)) f). cbn.
@@ -177,6 +198,8 @@ Section Flattening.
         rewrite X; hott_simpl.
   Defined.
 
+  (** The flattening lemma follow by colimit unicity. *)
+
   Definition flattening_lemma : colimit sigma_diagram <~> sig E'.
   Proof.
     serapply colimit_unicity.
@@ -187,11 +210,13 @@ Section Flattening.
 End Flattening.
 
 
+(** * Pushout case *)
 
-    
+(** We instanciate the flattening lemma in the case of the pushout. *)
+
 Section POCase.
   Context `{Univalence} {A B C} {f: A -> B} {g: A -> C}.
-  
+
   Context (A0 : A -> Type) (B0 : B -> Type) (C0 : C -> Type)
           (f0 : forall x, A0 x <~> B0 (f x)) (g0 : forall x, A0 x <~> C0 (g x)).
 
@@ -219,11 +244,11 @@ Section POCase.
   Proof.
     assert (PO (functor_sigma f f0) (functor_sigma g g0)
             = colimit (sigma_diagram (span f g) E)). {
-    unfold PO; apply ap.
-    serapply path_diagram; cbn.
-    - intros [|[]]; cbn. all: reflexivity.
-    - intros [] [] [] x; destruct b; cbn in *.
-      all: reflexivity. }
+      unfold PO; apply ap.
+      serapply path_diagram; cbn.
+      - intros [|[]]; cbn. all: reflexivity.
+      - intros [] [] [] x; destruct b; cbn in *.
+        all: reflexivity. }
     rewrite X; clear X.
     transitivity (exists x, E' (span f g) E HE x).
     apply flattening_lemma.

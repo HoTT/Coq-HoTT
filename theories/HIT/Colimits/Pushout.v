@@ -2,11 +2,14 @@ Require Import HoTT.Basics HoTT.Types HIT.Pushout.
 Require Import Colimits.Diagram Colimits.Colimit.
 Local Open Scope path_scope.
 
+(** * Pushout as a colimit *)
 
-(* We use [PO] for the pushout defined as a colimit, *)
-(* and [pushout] for the pushout defined as a coequalizer. *)
-(* We show that they are equivalent. *)
+(** In this file, we define [PO] the pushout of two maps as the colimit of a particuliar diagram, and then show that it is equivalent to [pushout] the primitive pushout defined as an HIT. *)
 
+
+(** ** [PO] *)
+
+(** The shape of a pushout diagram. *)
 
 Definition PO_graph : graph.
 Proof.
@@ -17,7 +20,9 @@ Defined.
 
 Section PO.
   Context {A B C : Type}.
-  
+
+  (** The pushout diagram of two maps is called a span. *)
+
   Definition span (f : A -> B) (g : A -> C) : diagram PO_graph.
   Proof.
     simple refine (Build_diagram _ _ _).
@@ -63,7 +68,7 @@ Section PO.
     := colimp (D:=span f g) (inl tt) (inr true) tt a
           @ (colimp (D:=span f g) (inl tt) (inr false) tt a)^.
 
-  (* The eliminators PO_ind, PO_rec, ... can be proven. *)
+  (** The eliminators [PO_ind], [PO_rec], ... can be proven. *)
   Definition PO_ind (P : PO f g -> Type) (l' : forall b, P (pol b))
              (r' : forall c, P (por c))
              (pp' : forall a, popp a # l' (f a) = r' (g a))
@@ -109,7 +114,7 @@ Section PO.
     rewrite moveR_transport_p_V. rewrite moveR_moveL_transport_p.
     subst q. rewrite inv_pp. hott_simpl.
   Defined.
-                       
+
   Definition PO_rec (P: Type) (l': B -> P) (r': C -> P)
              (pp': l' o f == r' o g)
     : PO f g -> P
@@ -129,8 +134,8 @@ Section PO.
     refine (X @@ _). refine (_ @ inverse2 X0).
     exact (ap_V _ _).
   Defined.
-  
-  
+
+
   (** A nice property: the pushout of an equivalence is an equivalence. *)
   Definition PO_of_equiv (Hf : IsEquiv f)
     : IsEquiv por.
@@ -150,11 +155,8 @@ Section PO.
 End PO.
 
 
-  (* ******************** *)
-  (* ***** pushout ****** *)
-  (* ******************** *)
-  (* We show here that the pushout defined as a colimit *)
-  (* is equivalent to the pushout defined as a primitive HIT. *)
+(** ** Equivalence with [pushout] *)
+
 Section is_PO_pushout.
   Import HIT.Pushout.
   Context `{Funext} {A B C : Type} {f : A -> B} {g : A -> C}.
@@ -164,7 +166,7 @@ Section is_PO_pushout.
     unshelve econstructor.
     - serapply Build_span_cocone.
       exact (push o inl). exact (push o inr). exact pp.
-    - intro Y; serapply isequiv_adjointify. 
+    - intro Y; serapply isequiv_adjointify.
       + intro Co. serapply pushout_rec.
         serapply sum_rect; cbn.
         exact (pol' Co). exact (por' Co). exact (popp' Co).
@@ -175,7 +177,7 @@ Section is_PO_pushout.
         * intros [[]|[]] [[]|[]] [] x; simpl.
           2: reflexivity.
           refine (_ @ (concat_1p _)^).
-          rewrite pushout_rec_beta_pp. 
+          rewrite pushout_rec_beta_pp.
           unfold popp'. cbn. hott_simpl.
       + intro h. apply path_forall.
         serapply pushout_ind; cbn.
@@ -193,5 +195,5 @@ Section is_PO_pushout.
     3: eapply is_PO_pushout.
     eapply is_colimit_colimit.
   Defined.
-    
+
 End is_PO_pushout.

@@ -775,7 +775,8 @@ Ltac by_extensionality x :=
     simpl; auto with path_hints
   end.
 
-
+(** [funext] apply functional extensionality ([path_forall]) to the goal and the introduce the arguments in the context. *)
+(** For instance, if you have to prove [f = g] where [f] and [g] take two arguments, you can use [funext x y], and the goal become [f x y = g x y]. *)
 Tactic Notation "funext" simple_intropattern(a)
   := apply path_forall; intros a.
 Tactic Notation "funext" simple_intropattern(a)  simple_intropattern(b)

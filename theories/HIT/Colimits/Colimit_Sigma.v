@@ -1,8 +1,14 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Colimits.Diagram Colimits.Colimit.
 
+(** * Colimit of the dependent sum of a family of diagrams *)
+
+(** Given a family diagram [D(y)], and a colimit [Q(y)] of each diagram, one can consider the diagram of the sigmas of the types of the [D(y)]s. Then, a colimit of such a diagram is the sigma of the [Q(y)]s. *)
+
 Section ColimitSigma.
   Context `{Funext} {G: graph} {Y: Type} (D: Y -> diagram G).
+
+  (** The diagram of the sigmas. *)
 
   Definition sigma_diag : diagram G.
   Proof.
@@ -11,15 +17,19 @@ Section ColimitSigma.
     simpl; intros i j g x. exact (x.1; D x.1 _f g x.2).
   Defined.
 
+  (** The embedding, for a particular [y], of [D(y)] in the sigma diagram. *)
+
   Definition sigma_diag_map (y: Y) : diagram_map (D y) sigma_diag.
   Proof.
     simple refine (Build_diagram_map _ _).
     intros i x. exists y. exact x.
     intros i j g x; simpl. reflexivity.
   Defined.
-  
+
   Context {Q: Y -> Type}.
-  
+
+  (** The sigma of a family of cocones. *)
+
   Definition sigma_cocone (C: forall y: Y, cocone (D y) (Q y))
   : cocone sigma_diag (sig Q).
   Proof.
@@ -29,19 +39,21 @@ Section ColimitSigma.
     simple refine (path_sigma' _ _ _). reflexivity.
     simpl. apply qq.
   Defined.
-  
+
+  (** The main result: [sig Q] is a colimit of the diagram of sigma types. *)
+
   Lemma is_colimit_sigma (HQ: forall y: Y, is_colimit (D y) (Q y))
   : is_colimit sigma_diag (sig Q).
   Proof.
-    set (ΣC := sigma_cocone (fun y => HQ y)).
-    simple refine (Build_is_colimit ΣC _).
+    set (SigmaC := sigma_cocone (fun y => HQ y)).
+    simple refine (Build_is_colimit SigmaC _).
     intros X. serapply isequiv_adjointify.
     - intros CX x.
       simple refine (postcompose_cocone_inv (HQ x.1) _ x.2).
       simple refine (precompose_cocone _ CX). apply sigma_diag_map.
     - intro CX.
       set (CXy := fun y => precompose_cocone (sigma_diag_map y) CX).
-      change (postcompose_cocone ΣC
+      change (postcompose_cocone SigmaC
                  (fun x => postcompose_cocone_inv (HQ x.1) (CXy x.1) x.2) = CX).
       simple refine (path_cocone _ _).
       + simpl. intros i x; simpl.
@@ -59,7 +71,7 @@ Section ColimitSigma.
           apply apD10 in py2; specialize (py2 j); simpl in py2.
           rewrite (path_forall _ _(transport_forall_constant _ _)) in py2.
           apply apD10 in py2; specialize (py2 g); simpl in py2.
-          rewrite (path_forall _ _(transport_forall_constant _ _)) in py2. 
+          rewrite (path_forall _ _(transport_forall_constant _ _)) in py2.
           apply apD10 in py2; specialize (py2 x); simpl in py2.
           rewrite transport_paths_FlFr in py2.
           rewrite concat_1p in py2. rewrite concat_pp_p in py2.
@@ -82,6 +94,8 @@ Section ColimitSigma.
   Defined.
 End ColimitSigma.
 
+
+(** ** Sigma diagrams and diagram maps / equivalences *)
 
 Section SigmaDiag.
   Context {G: graph} {Y: Type} (D1 D2: Y -> diagram G).

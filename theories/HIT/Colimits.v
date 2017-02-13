@@ -1,6 +1,6 @@
-(** This file export all the files of the Colimits repository. *)
-(** An informal presentation of the basics can be found at: *)
-(** https://homotopytypetheory.org/2016/01/08/colimits-in-hott/#part1 *)
+(** This file export all files of the Colimits repository. *)
+(** An informal presentation of the basics can be found at:
+    https://homotopytypetheory.org/2016/01/08/colimits-in-hott/#part1 *)
 
 Require Export Colimits.CommutativeSquares.
 Require Export Colimits.Diagram.

@@ -2,12 +2,23 @@ Require Import HoTT.Basics HoTT.Types HoTT.Tactics.
 Require Import Colimits.CommutativeSquares.
 Local Open Scope path_scope.
 
+(** This file contains the definition of graphs, diagrams, diagram maps and equivalences of diagrams. *)
+
+
+(** * Graphs *)
+
+(** A [graph] is a type [graph0] of points together with a type [graph1] of arrows between each points. *)
+
 Record graph :=
   { graph0 : Type;
     graph1 : graph0 -> graph0 -> Type }.
 
 Coercion graph0 : graph >-> Sortclass.
 Coercion graph1 : graph >-> Funclass.
+
+(** * Diagrams *)
+
+(** A diagram over a graph [G] associates a type to each point of the graph and a function to each arrow. *)
 
 Record diagram (G : graph) :=
   { diagram0 : G -> Type;
@@ -22,8 +33,8 @@ Notation "D '_f' g" := (diagram1 D g).
 Section Diagram.
   Context `{Funext} {G: graph}.
 
-  (** Definition of path_diagram *)
-  
+  (** [path_diagram] says when two diagrams are equals (up to funext). *)
+
   Definition path_diagram_naive (D1 D2: diagram G)
              (P := fun D' => forall i j, G i j -> (D' i -> D' j))
              (eq0 : diagram0 D1 = diagram0 D2)
@@ -35,7 +46,6 @@ Section Diagram.
       | idpath => 1
       end
     end.
-
 
   Definition path_diagram (D1 D2: diagram G)
              (eq1 : forall i, D1 i = D2 i)
@@ -57,18 +67,21 @@ Section Diagram.
     - f_ap. exact (transport_pV idmap _ x).
   Defined.
 
+  (** * Diagram map *)
 
-  (** Definition of maps between diagram. *)
+  (** A map between two diagrams is a family of maps between the types of the diagrams making commuting the squares formed with the arrows. *)
 
   Record diagram_map (D1 D2 : diagram G) :=
     { diagram_map_obj :> forall i, D1 i -> D2 i;
       diagram_map_comm: forall i j (g: G i j) x,
           D2 _f g (diagram_map_obj i x) = diagram_map_obj j (D1 _f g x) }.
-  
+
   Global Arguments diagram_map_obj [D1 D2] m i x : rename.
   Global Arguments diagram_map_comm  [D1 D2] m [i j] f x : rename.
   Global Arguments Build_diagram_map [D1 D2] _ _.
-  
+
+  (** [path_diagram_map] says when two maps are equals (up to funext). *)
+
   Definition path_diagram_map {D1 D2: diagram G}
              {m1 m2: diagram_map D1 D2}
              (h_obj: forall i, m1 i == m2 i)
@@ -99,6 +112,8 @@ Section Diagram.
     destruct HH. reflexivity.
   Defined.
 
+  (** ** Identity and composition for diagram maps. *)
+
   Definition diagram_idmap (D : diagram G) : diagram_map D D
     := Build_diagram_map (fun _ => idmap) (fun _ _ _ _ => 1).
 
@@ -110,6 +125,10 @@ Section Diagram.
     exact (comm_square_comp (diagram_map_comm m2 f) (diagram_map_comm m1 f)).
   Defined.
 
+  (** * Diagram equivalences *)
+
+  (** An equivalence of diagram is a diagram map whose functions are equivalences. *)
+
   Record diagram_equiv (D1 D2: diagram G) :=
     { diag_equiv_map :> diagram_map D1 D2;
       diag_equiv_isequiv : forall i, IsEquiv (diag_equiv_map i) }.
@@ -117,7 +136,9 @@ Section Diagram.
   Global Arguments diag_equiv_map [D1 D2] e : rename.
   Global Arguments diag_equiv_isequiv [D1 D2] e i : rename.
   Global Arguments Build_diagram_equiv [D1 D2] m H : rename.
-  
+
+  (** Inverse, section and retraction of equivalences of diagrams. *)
+
   Lemma diagram_equiv_inv {D1 D2 : diagram G} (w : diagram_equiv D1 D2)
     : diagram_map D2 D1.
   Proof.
@@ -154,6 +175,8 @@ Section Diagram.
     apply (comm_square_inverse_is_sect (we i) (we j) _ x).
   Defined.
 
+  (** The equivalence of diagram is an equivalence relation. *)
+  (** Those instances allows to use the tactics reflexivity, symmetry and transitivity. *)
   Global Instance reflexive_diagram_equiv : Reflexive diagram_equiv | 1
     := fun D => Build_diagram_equiv (diagram_idmap D) _.
 

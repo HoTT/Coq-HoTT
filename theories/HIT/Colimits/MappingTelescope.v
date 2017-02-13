@@ -2,6 +2,9 @@ Require Import HoTT.Basics HoTT.Types.Bool HoTT.Types.Paths.
 Require Import Colimits.Diagram Colimits.Colimit.
 Local Open Scope path.
 
+(** * Mapping telescope *)
+
+(** A mapping telescope, or a sequence, is an infinite sequence of types [X(n)] with an arrow from [X(n)] to [X(n+1)]. *)
 
 Definition mappingtelescope_graph : graph.
 Proof.
@@ -21,6 +24,7 @@ Proof.
   exact X. intros i j p; destruct p. apply f.
 Defined.
 
+(** A useful lemma to show than two sequences are equivalent. *)
 
 Definition equiv_sequence (D1 D2: sequence)
            (H0: (D1 0) <~> (D2 0))

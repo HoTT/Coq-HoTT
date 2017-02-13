@@ -2,9 +2,18 @@ Require Import HoTT.Basics HoTT.Types HoTT.HIT.Coeq.
 Require Import Colimits.Diagram Colimits.Colimit.
 Generalizable All Variables.
 
+(** * Coequalizer as a colimit *)
+
+(** In this file, we define [Coequalizer] the coequalizer of two maps as the colimit of a particuliar diagram, and then show that it is equivalent to [Coeq] the primitive coequalizer defined as an HIT. *)
+
+
+(** ** [Coequalizer] *)
+
 Section Coequalizer.
   Context `{fs: Funext}.
-  
+
+  (** The shape of a coequalizer diagram. *)
+
   Definition coequalizer_graph : graph.
   Proof.
     simple refine (Build_graph _ _).
@@ -14,7 +23,9 @@ Section Coequalizer.
 
 
   Context {B A : Type}.
-  
+
+  (** The coequalizer diagram of two maps. *)
+
   Definition coequalizer_diag (f g : B -> A) : diagram coequalizer_graph.
   Proof.
     simple refine (Build_diagram _ _ _).
@@ -34,17 +45,13 @@ Section Coequalizer.
 
   Definition is_coequalizer (f g : B -> A)
     := is_colimit (coequalizer_diag f g).
+
   Definition Coequalizer (f g : B -> A)
     := colimit (coequalizer_diag f g).
 
 
+  (** ** Equivalence with [Coeq] *)
 
-  (* ***************** *)
-  (* ***** Coeq ****** *)
-  (* ***************** *)
-  (* We show here that the coequalizer defined as a colimit *)
-  (* is equivalent to the coequalizer defined as a primitive HIT. *)
-  
   Context {f g : B -> A}.
 
   Definition Coeq_cocone : cocone (coequalizer_diag f g) (Coeq f g).
