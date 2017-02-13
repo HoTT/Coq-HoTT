@@ -19,7 +19,7 @@ Arguments diagram0 [G] D i : rename.
 Arguments diagram1 [G] D [i j] g x : rename.
 
 Coercion diagram0 : diagram >-> Funclass.
-Notation "D '_f' g" := (diagram1 D g) (at level 10).
+Notation "D '_f' g" := (diagram1 D g).
 
 Section Diagram.
   Context {G: graph}.
@@ -163,4 +163,4 @@ Section Diagram.
   Defined.
 End Diagram.
 
-Notation "D1 ~d~ D2" := (diagram_equiv D1 D2) (at level 65).
+Notation "D1 ~d~ D2" := (diagram_equiv D1 D2).
