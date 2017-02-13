@@ -1,5 +1,5 @@
 Require Import HoTT.Basics HoTT.Types.
-Require Import Colimits.Diagram Colimits.Colimit.
+Require Import Colimits.Diagram Colimits.Colimit Colimits.Pushout.
 Local Open Scope path_scope.
 
 Section Flattening.
@@ -190,8 +190,6 @@ End Flattening.
 
     
 Section POCase.
-  Require Import Colimits.Pushout.
-          
   Context `{Univalence} {A B C} {f: A -> B} {g: A -> C}.
   
   Context (A0 : A -> Type) (B0 : B -> Type) (C0 : C -> Type)
