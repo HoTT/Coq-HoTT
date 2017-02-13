@@ -420,7 +420,7 @@ Proof.
   intro q; apply moveR_moveL_transport_V.
   intro q; apply moveL_moveR_transport_p.
 Defined.
-           
+
 Definition equiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : u = transport P p^ v <~> transport P p u = v
@@ -471,7 +471,6 @@ Definition equiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
 : transport P p u = v <~> u = transport P p^ v
 := BuildEquiv _ _ (moveL_transport_V P p u v) _.
 
-
 Global Instance isequiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : IsEquiv (moveL_transport_p P p u v).
@@ -486,7 +485,6 @@ Definition equiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : transport P p^ u = v <~> u = transport P p v
 := BuildEquiv _ _ (moveL_transport_p P p u v) _.
-
 
 Global Instance isequiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
 : IsEquiv (@moveR_equiv_M A B f _ x y).

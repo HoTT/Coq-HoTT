@@ -293,7 +293,7 @@ Definition ap_path_sigma {A B} (P : A -> Type) (F : forall a : A, P a -> B)
 Proof.
   destruct p, q; reflexivity.
 Defined.
-(* Remark: this is also equals to: *)
+(* Remark: this is also equal to: *)
 (*     = ap10 (apD F p^)^ y @ transport_arrow_toconst _ _ _ *)
 (*                          @ ap (F x') (transport2 _ (inv_V p) y @ q). *)
 
