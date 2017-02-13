@@ -5,12 +5,14 @@ Section ColimitSigma.
   Context `{Funext} {G: graph} {Y: Type} (D: Y -> diagram G).
 
   Definition sigma_diag : diagram G.
+  Proof.
     simple refine (Build_diagram _ _ _).
     exact (fun i => {y: Y & D y i}).
     simpl; intros i j g x. exact (x.1; D x.1 _f g x.2).
   Defined.
 
   Definition sigma_diag_map (y: Y) : diagram_map (D y) sigma_diag.
+  Proof.
     simple refine (Build_diagram_map _ _).
     intros i x. exists y. exact x.
     intros i j g x; simpl. reflexivity.
@@ -20,6 +22,7 @@ Section ColimitSigma.
   
   Definition sigma_cocone (C: forall y: Y, cocone (D y) (Q y))
   : cocone sigma_diag (sig Q).
+  Proof.
     simple refine (Build_cocone _ _).
     simpl; intros i x. exact (x.1; q (C x.1) i x.2).
     simpl; intros i j g x.
@@ -29,6 +32,7 @@ Section ColimitSigma.
   
   Lemma is_colimit_sigma (HQ: forall y: Y, is_colimit (D y) (Q y))
   : is_colimit sigma_diag (sig Q).
+  Proof.
     set (ΣC := sigma_cocone (fun y => HQ y)).
     simple refine (Build_is_colimit ΣC _).
     intros X. serapply isequiv_adjointify.
@@ -84,6 +88,7 @@ Section SigmaDiag.
 
   Definition sigma_diag_functor (m: forall y, diagram_map (D1 y) (D2 y))
   : diagram_map (sigma_diag D1) (sigma_diag D2).
+  Proof.
     simple refine (Build_diagram_map _ _).
     - intros i. simple refine (functor_sigma idmap _). intros y; apply m.
     - intros i j g x; simpl in *. simple refine (path_sigma' _ 1 _).
@@ -92,6 +97,7 @@ Section SigmaDiag.
 
   Definition sigma_diag_functor_equiv (m: forall y, (D1 y) ~d~ (D2 y))
   : (sigma_diag D1) ~d~ (sigma_diag D2).
+  Proof.
     simple refine (Build_diagram_equiv (sigma_diag_functor m) _).
     intros i. simple refine isequiv_functor_sigma. intros y; apply m.
   Defined.

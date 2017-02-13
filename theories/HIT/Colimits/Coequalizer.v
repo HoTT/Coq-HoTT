@@ -6,6 +6,7 @@ Section Coequalizer.
   Context `{fs: Funext}.
   
   Definition coequalizer_graph : graph.
+  Proof.
     simple refine (Build_graph _ _).
     - exact Bool.
     - intros i j; exact (if i then if j then Empty else Bool else Empty).
@@ -15,6 +16,7 @@ Section Coequalizer.
   Context {B A : Type}.
   
   Definition coequalizer_diag (f g : B -> A) : diagram coequalizer_graph.
+  Proof.
     simple refine (Build_diagram _ _ _).
     - intro x; destruct x.
       exact B. exact A.
@@ -46,6 +48,7 @@ Section Coequalizer.
   Context {f g : B -> A}.
 
   Definition Coeq_cocone : cocone (coequalizer_diag f g) (Coeq f g).
+  Proof.
     simple refine (Build_cocone _ _).
     - intros i x; destruct i; simpl in *.
       exact (coeq (g x)). exact (coeq x).

@@ -37,6 +37,7 @@ Section Cocone.
              (eq1 : forall i,  C1 i == C2 i)
              (eq2 : forall i j g x, qq C1 i j g x @ eq1 i x = eq1 j (D _f g x) @ qq C2 i j g x)
     : C1 = C2.
+  Proof.
     destruct C1 as [q pp_q], C2 as [r pp_r].
     refine (path_cocone_naive (path_forall _ _ (fun i => path_forall _ _ (eq1 i))) _). simpl.
     funext i j f x.
@@ -50,6 +51,7 @@ Section Cocone.
 
   Definition postcompose_cocone (C: cocone D X) {Y: Type}
     : (X -> Y) -> cocone D Y.
+  Proof.
     intros f.
     simple refine (Build_cocone _ _).
     - intros i. exact (f o (C i)).
@@ -105,6 +107,7 @@ Module Export colimit_HIT.
 
   Definition colimit_rec {G: graph} {D: diagram G} (P: Type) (C: cocone D P)
     : colimit D -> P.
+  Proof.
     simple refine (colimit_ind _ _ _).
     - exact C.
     - intros i j g x.
@@ -114,6 +117,7 @@ Module Export colimit_HIT.
   Definition colimit_rec_beta_pp {G: graph} {D: diagram G} (P: Type) (C: cocone D P)
              (i j: G) (g: G i j) (x: D i)
     : ap (colimit_rec P C) (pp i j g x) = qq C i j g x.
+  Proof.
     unfold colimit_rec, colimit_ind.
     eapply (cancelL (transport_const (pp i j g x) _)).
     simple refine ((apD_const (colimit_ind (fun _ => P) C _) (pp i j g x))^ @ _).
@@ -125,6 +129,7 @@ Module Export colimit_HIT.
   
   Lemma is_universal_colimit `{Funext} {G: graph} (D: diagram G)
     : is_universal (cocone_colimit D).
+  Proof.
     intro Y; simpl.
     simple refine (isequiv_adjointify _ (colimit_rec Y) _ _).
     - intros C. simple refine (path_cocone _ _).
@@ -153,6 +158,7 @@ Section FunctorialityCocone.
   (* postcompose *)
   Definition postcompose_cocone_identity {D: diagram G} `(C: cocone D X)
     : postcompose_cocone C idmap = C.
+  Proof.
     simple refine (path_cocone _ _).
     intros i x; reflexivity.
     intros i j g x; simpl; hott_simpl.
@@ -162,6 +168,7 @@ Section FunctorialityCocone.
              `(f: X -> Y) `(g: Y -> Z) (C: cocone D X)
     : postcompose_cocone C (g o f)
       = postcompose_cocone (postcompose_cocone C f) g.
+  Proof.
     simple refine (path_cocone _ _).
     intros i x; reflexivity.
     intros i j h x; simpl; hott_simpl. apply ap_compose.
@@ -171,6 +178,7 @@ Section FunctorialityCocone.
   Definition precompose_cocone {D1 D2: diagram G}
              (m: diagram_map D1 D2) {X: Type}
     : (cocone D2 X) -> (cocone D1 X).
+  Proof.
     intros C. simple refine (Build_cocone _ _).
     intros i x. exact (C i (m i x)).
     intros i j g x; simpl.
@@ -187,6 +195,7 @@ Section FunctorialityCocone.
              (m2: diagram_map D2 D3) (m1: diagram_map D1 D2) (X: Type)
     : (precompose_cocone (X:=X) m1) o (precompose_cocone m2)
       == precompose_cocone (diagram_comp m2 m1).
+  Proof.
     intro C; simpl.
     simple refine (path_cocone _ _).
     intros i x. reflexivity.
@@ -200,6 +209,7 @@ Section FunctorialityCocone.
              (m: diagram_map D1 D2) `(f: X -> Y) (C: cocone D2 X)
     : postcompose_cocone (precompose_cocone m C) f
       = precompose_cocone m (postcompose_cocone C f).
+  Proof.
     simple refine (path_cocone _ _).
     - intros i x; reflexivity.
     - intros i j g x; simpl; hott_simpl.
@@ -210,6 +220,7 @@ Section FunctorialityCocone.
   (* compose with equivalences *)
   Definition precompose_cocone_equiv {D1 D2: diagram G} (m: D1 ~d~ D2) (X: Type)
     : IsEquiv (precompose_cocone (X:=X) m).
+  Proof.
     simple refine (isequiv_adjointify
                      _ (precompose_cocone (diagram_equiv_inv m)) _ _).
     - intros C. etransitivity. apply precompose_cocone_comp.
@@ -220,6 +231,7 @@ Section FunctorialityCocone.
 
   Definition postcompose_cocone_equiv {D: diagram G} `(f: X <~> Y)
     : IsEquiv (fun C: cocone D X => postcompose_cocone C f).
+  Proof.
     serapply isequiv_adjointify.
     - exact (fun C => postcompose_cocone C f^-1).
     - intros C. etransitivity. symmetry. apply postcompose_cocone_comp.
@@ -234,6 +246,7 @@ Section FunctorialityCocone.
   Definition precompose_equiv_universality {D1 D2: diagram G} (m: D1 ~d~ D2)
              `(C: cocone D2 X)
     : is_universal C -> is_universal (precompose_cocone (X:=X) m C).
+  Proof.
     unfold is_universal.
     intros H Y.
     rewrite (path_forall _ _ (fun f => precompose_postcompose_cocone m f C)).
@@ -243,6 +256,7 @@ Section FunctorialityCocone.
   Definition postcompose_equiv_universality {D: diagram G} `(f: X <~> Y)
              `(C: cocone D X)
     : is_universal C -> is_universal (postcompose_cocone C f).
+  Proof.
     unfold is_universal.
     intros H Z.
     rewrite <- (path_forall _ _ (fun g => postcompose_cocone_comp f g C)).
@@ -252,12 +266,14 @@ Section FunctorialityCocone.
   Definition precompose_equiv_is_colimit {D1 D2: diagram G}
              (m: D1 ~d~ D2) {Q: Type}
     : is_colimit D2 Q -> is_colimit D1 Q.
+  Proof.
     intros HQ. simple refine (Build_is_colimit (precompose_cocone m HQ) _).
     apply precompose_equiv_universality. apply HQ.
   Defined.
 
   Definition postcompose_equiv_is_colimit {D: diagram G} `(f: Q <~> Q')
     : is_colimit D Q -> is_colimit D Q'.
+  Proof.
     intros HQ. simple refine (Build_is_colimit (postcompose_cocone HQ f) _).
     apply postcompose_equiv_universality. apply HQ.
   Defined.
@@ -278,6 +294,7 @@ Section FunctorialityColimit.
              `(HQ1: is_colimit D1 Q1) `(HQ2: is_colimit D2 Q2)
     : forall i, (q HQ2 i) o (m i)
            == (functoriality_colimit m HQ1 HQ2) o (q HQ1 i).
+  Proof.
     intros i x.
     change (precompose_cocone m HQ2 i x =
             postcompose_cocone HQ1
@@ -292,6 +309,7 @@ Section FunctorialityColimit.
   Definition functoriality_colimit_eissect
     : Sect (functoriality_colimit (diagram_equiv_inv m) HQ2 HQ1)
            (functoriality_colimit m HQ1 HQ2).
+  Proof.
     unfold functoriality_colimit.  apply ap10.
     simple refine (equiv_inj (postcompose_cocone HQ2) _). apply HQ2.
     etransitivity. 2:symmetry; apply postcompose_cocone_identity.
@@ -305,6 +323,7 @@ Section FunctorialityColimit.
   Definition functoriality_colimit_eisretr
     : Sect (functoriality_colimit m HQ1 HQ2)
            (functoriality_colimit (diagram_equiv_inv m) HQ2 HQ1).
+  Proof.
     unfold functoriality_colimit.  apply ap10.
     simple refine (equiv_inj (postcompose_cocone HQ1) _). apply HQ1.
     etransitivity. 2:symmetry; apply postcompose_cocone_identity.
@@ -331,6 +350,7 @@ End FunctorialityColimit.
 Theorem colimit_unicity `{Funext} {G: graph} {D: diagram G} {Q1 Q2: Type}
         (HQ1: is_colimit D Q1) (HQ2: is_colimit D Q2)
   : Q1 <~> Q2.
+Proof.
   simple refine (functoriality_colimit_equiv _ HQ1 HQ2).
   simple refine (Build_diagram_equiv (diagram_idmap D) _).
 Defined.
@@ -340,5 +360,6 @@ Definition transport_colimit `(D: Y -> diagram G)
            `(HQ: forall y, is_colimit (D y) (Q y))
            `(p: x = y :> Y) (i: G) (u: D x i)
   : transport Q p (HQ x i u) = HQ y i (transport (fun y => D y i) p u).
+Proof.
   destruct p; reflexivity.
 Defined.
