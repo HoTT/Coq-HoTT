@@ -150,13 +150,13 @@ Section Diagram.
     apply (comm_square_inverse_is_sect (we i) (we j) _ x).
   Defined.
 
-  Instance reflexive_diagram_equiv : Reflexive diagram_equiv
+  Global Instance reflexive_diagram_equiv : Reflexive diagram_equiv | 1
     := fun D => Build_diagram_equiv (diagram_idmap D) _.
 
-  Instance symmetric_diagram_equiv : Symmetric diagram_equiv
+  Global Instance symmetric_diagram_equiv : Symmetric diagram_equiv | 1
     := fun D1 D2 m => Build_diagram_equiv (diagram_equiv_inv m) _.
 
-  Instance transitive_diagram_equiv : Transitive diagram_equiv.
+  Global Instance transitive_diagram_equiv : Transitive diagram_equiv | 1.
   simple refine (fun D1 D2 D3 m1 m2 =>
                    Build_diagram_equiv (diagram_comp m2 m1) _).
   simpl. intros i; apply isequiv_compose'. apply m1. apply m2.
