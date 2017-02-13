@@ -2,8 +2,6 @@ Require Import HoTT.Basics HoTT.Types HoTT.Tactics.
 Require Import Colimits.CommutativeSquares.
 Local Open Scope path_scope.
 
-Context `{Funext}.
-
 Record graph :=
   { graph0 : Type;
     graph1 : graph0 -> graph0 -> Type }.
@@ -22,7 +20,7 @@ Coercion diagram0 : diagram >-> Funclass.
 Notation "D '_f' g" := (diagram1 D g).
 
 Section Diagram.
-  Context {G: graph}.
+  Context `{Funext} {G: graph}.
 
   (** Definition of path_diagram *)
   

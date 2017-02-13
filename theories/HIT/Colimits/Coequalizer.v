@@ -2,16 +2,16 @@ Require Import HoTT.Basics HoTT.Types HoTT.HIT.Coeq.
 Require Import Colimits.Diagram Colimits.Colimit.
 Generalizable All Variables.
 
-Context `{Funext}.
-  
-Definition coequalizer_graph : graph.
-  simple refine (Build_graph _ _).
-  - exact Bool.
-  - intros i j; exact (if i then if j then Empty else Bool else Empty).
-Defined.
-
-
 Section Coequalizer.
+  Context `{fs: Funext}.
+  
+  Definition coequalizer_graph : graph.
+    simple refine (Build_graph _ _).
+    - exact Bool.
+    - intros i j; exact (if i then if j then Empty else Bool else Empty).
+  Defined.
+
+
   Context {B A : Type}.
   
   Definition coequalizer_diag (f g : B -> A) : diagram coequalizer_graph.

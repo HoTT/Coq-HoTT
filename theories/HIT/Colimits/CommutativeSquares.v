@@ -1,6 +1,5 @@
 Require Import HoTT.Basics.
 
-Section Comm_Squares.
 
 (* Commutative squares compose. *)
 Lemma comm_square_comp
@@ -90,5 +89,3 @@ Proof.
     (eisretr wB) (ap f' (eisretr wA a)) ).
   apply ap. apply ap_idmap.
 Defined.
-
-End Comm_Squares.

@@ -2,10 +2,8 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Colimits.Diagram Colimits.Colimit.
 Local Open Scope path_scope.
 
-Context `{Funext}.
-                                                                  
 Section Flattening.
-  Context {G : graph} (D : diagram G).
+  Context `{fs : Funext} {G : graph} (D : diagram G).
 
   (** We define here the graph ∫D, also denoted G·D *)
   Definition integral : graph.

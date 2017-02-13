@@ -2,7 +2,7 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Colimits.Diagram Colimits.Colimit Colimits.Colimit_Sigma.
 
 Section ColimitProd.
-  Context {G: graph} (D: diagram G) (A: Type).
+  Context `{Funext} {G: graph} (D: diagram G) (A: Type).
 
   Definition prod_diag : diagram G.
     simple refine (Build_diagram _ _ _).

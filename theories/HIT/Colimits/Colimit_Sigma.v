@@ -1,10 +1,8 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Colimits.Diagram Colimits.Colimit.
 
-Context `{Funext}.
-
 Section ColimitSigma.
-  Context {G: graph} {Y: Type} (D: Y -> diagram G).
+  Context `{Funext} {G: graph} {Y: Type} (D: Y -> diagram G).
 
   Definition sigma_diag : diagram G.
     simple refine (Build_diagram _ _ _).
