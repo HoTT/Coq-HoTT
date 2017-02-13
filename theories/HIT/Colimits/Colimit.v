@@ -88,22 +88,22 @@ Module Export colimit_HIT.
 
   Arguments colim {G D} i x.
   
-  Axiom pp : forall {G: graph} {D: diagram G} (i j: G) (f : G i j) (x: D i),
+  Axiom colimp : forall {G: graph} {D: diagram G} (i j: G) (f : G i j) (x: D i),
       colim j (D _f f x) = colim i x.
 
   Definition colimit_ind {G: graph} {D: diagram G} (P: colimit D -> Type)
              (q : forall i x, P (colim i x))
-             (pp_q : forall (i j: G) (g: G i j) (x: D i), (@pp G D i j g x) # (q j (D _f g x)) = q i x)
+             (pp_q : forall (i j: G) (g: G i j) (x: D i), (@colimp G D i j g x) # (q j (D _f g x)) = q i x)
     : forall w, P w
     := fun w => match w with colim i a => fun _ => q _ a end pp_q.
 
-  Axiom colimit_ind_beta_pp
+  Axiom colimit_ind_beta_colimp
     : forall {G: graph} {D: diagram G} (P: colimit D -> Type)
              (q : forall i x, P (colim i x))
              (pp_q : forall (i j: G) (g: G i j) (x: D i),
-                 @pp G D i j g x # q _ (D _f g x) = q _ x)
+                 @colimp G D i j g x # q _ (D _f g x) = q _ x)
              (i j: G) (g: G i j) (x: D i),
-      apD (colimit_ind P q pp_q) (pp i j g x) = pp_q i j g x.
+      apD (colimit_ind P q pp_q) (colimp i j g x) = pp_q i j g x.
 
   Definition colimit_rec {G: graph} {D: diagram G} (P: Type) (C: cocone D P)
     : colimit D -> P.
@@ -111,21 +111,21 @@ Module Export colimit_HIT.
     simple refine (colimit_ind _ _ _).
     - exact C.
     - intros i j g x.
-      exact ((transport_const (pp i j g x) (q _ _ (D _f g x))) @ (qq _ i j g x)).
+      exact ((transport_const (colimp i j g x) (q _ _ (D _f g x))) @ (qq _ i j g x)).
   Defined.
   
-  Definition colimit_rec_beta_pp {G: graph} {D: diagram G} (P: Type) (C: cocone D P)
+  Definition colimit_rec_beta_colimp {G: graph} {D: diagram G} (P: Type) (C: cocone D P)
              (i j: G) (g: G i j) (x: D i)
-    : ap (colimit_rec P C) (pp i j g x) = qq C i j g x.
+    : ap (colimit_rec P C) (colimp i j g x) = qq C i j g x.
   Proof.
     unfold colimit_rec, colimit_ind.
-    eapply (cancelL (transport_const (pp i j g x) _)).
-    simple refine ((apD_const (colimit_ind (fun _ => P) C _) (pp i j g x))^ @ _).
-    simple refine (colimit_ind_beta_pp (fun _ => P) C _ i j g x).
+    eapply (cancelL (transport_const (colimp i j g x) _)).
+    simple refine ((apD_const (colimit_ind (fun _ => P) C _) (colimp i j g x))^ @ _).
+    simple refine (colimit_ind_beta_colimp (fun _ => P) C _ i j g x).
   Defined.
 
   Definition cocone_colimit {G: graph} (D: diagram G) : cocone D (colimit D)
-    := Build_cocone colim pp.
+    := Build_cocone colim colimp.
   
   Lemma is_universal_colimit `{Funext} {G: graph} (D: diagram G)
     : is_universal (cocone_colimit D).
@@ -135,13 +135,13 @@ Module Export colimit_HIT.
     - intros C. simple refine (path_cocone _ _).
       intros i x. reflexivity.
       intros i j f x. simpl. hott_simpl.
-      apply colimit_rec_beta_pp.
+      apply colimit_rec_beta_colimp.
     - intro f. apply path_forall.
       simple refine (colimit_ind  _ _ _).
       intros i x. reflexivity.
       intros i j g x. simpl.
       rewrite transport_paths_FlFr.
-      rewrite colimit_rec_beta_pp. hott_simpl.
+      rewrite colimit_rec_beta_colimp. hott_simpl.
   Defined.
 
   Definition is_colimit_colimit `{Funext} {G: graph} (D: diagram G) : is_colimit D (colimit D)
