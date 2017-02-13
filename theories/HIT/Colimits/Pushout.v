@@ -9,6 +9,7 @@ Local Open Scope path_scope.
 
 
 Definition PO_graph : graph.
+Proof.
   simple refine (Build_graph _ _).
   - exact (Unit + Bool).
   - intros [i|i] [j|j]. exact Empty. exact Unit. exact Empty. exact Empty.
@@ -18,6 +19,7 @@ Section PO.
   Context {A B C : Type}.
   
   Definition span (f : A -> B) (g : A -> C) : diagram PO_graph.
+  Proof.
     simple refine (Build_diagram _ _ _).
     - intros [i|i]. exact A. exact (if i then B else C).
     - intros [i|i] [j|j] u; cbn; try contradiction.
@@ -28,6 +30,7 @@ Section PO.
              (inl' : B -> Z) (inr' : C -> Z)
              (pp' : inl' o f == inr' o g)
     : cocone (span f g) Z.
+  Proof.
     unshelve econstructor.
     - intros []; cbn. intros _. exact (inr' o g).
       intros []. exact inl'. exact inr'.
@@ -65,6 +68,7 @@ Section PO.
              (r' : forall c, P (por c))
              (pp' : forall a, popp a # l' (f a) = r' (g a))
     : forall w, P w.
+  Proof.
     simple refine (colimit_ind P _ _).
     - intros []; cbn.
       intros [] x.
@@ -82,6 +86,7 @@ Section PO.
              (r' : forall c, P (por c))
              (pp' : forall a, popp a # l' (f a) = r' (g a))
     : forall x, apD (PO_ind P l' r' pp') (popp x) = pp' x.
+  Proof.
     intro x. etransitivity. eapply apD_pp.
     assert (apD (PO_ind P l' r' pp')
                 (@pp _ (span f g) (inl tt) (inr true) tt x) = 1). {
@@ -113,6 +118,7 @@ Section PO.
   Definition PO_rec_beta_pp (P: Type) (l': B -> P) (r': C -> P)
              (pp': l' o f == r' o g)
     : forall x, ap (PO_rec P l' r' pp') (popp x) = pp' x.
+  Proof.
     intro x.
     pose proof (colimit_rec_beta_pp P (Build_span_cocone l' r' pp')
                                     (inl tt) (inr true) tt x).
@@ -128,6 +134,7 @@ Section PO.
   (** A nice property: the pushout of an equivalence is an equivalence. *)
   Definition PO_of_equiv (Hf : IsEquiv f)
     : IsEquiv por.
+  Proof.
     serapply isequiv_adjointify.
     serapply PO_rec. exact (g o f^-1). exact idmap.
     intro x. apply ap. apply eissect.
@@ -153,6 +160,7 @@ Section is_PO_pushout.
   Context `{Funext} {A B C : Type} {f : A -> B} {g : A -> C}.
 
   Definition is_PO_pushout : is_PO f g (pushout f g).
+  Proof.
     unshelve econstructor.
     - serapply Build_span_cocone.
       exact (push o inl). exact (push o inr). exact pp.

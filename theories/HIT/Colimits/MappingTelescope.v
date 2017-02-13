@@ -4,6 +4,7 @@ Local Open Scope path.
 
 
 Definition mappingtelescope_graph : graph.
+Proof.
   simple refine (Build_graph _ _).
   - exact nat.
   - intros n m; exact (S n = m).
@@ -15,6 +16,7 @@ Definition sequence := diagram mappingtelescope_graph.
 
 Definition Build_sequence (X : nat -> Type) (f : forall n, X n -> X n.+1)
   : sequence.
+Proof.
   unshelve econstructor.
   exact X. intros i j p; destruct p. apply f.
 Defined.

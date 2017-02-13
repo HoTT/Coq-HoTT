@@ -5,6 +5,7 @@ Section ColimitProd.
   Context `{Funext} {G: graph} (D: diagram G) (A: Type).
 
   Definition prod_diag : diagram G.
+  Proof.
     simple refine (Build_diagram _ _ _).
     exact (fun i => A * (D i)).
     simpl; intros i j f x. exact (fst x, D _f f (snd x)).
@@ -12,6 +13,7 @@ Section ColimitProd.
 
   Definition diagram_map_prod_sigma
     : diagram_map (sigma_diag (fun _ : A => D)) prod_diag.
+  Proof.
     simple refine (Build_diagram_map _ _).
     exact (fun i x => (x.1, x.2)).
     reflexivity.
@@ -19,6 +21,7 @@ Section ColimitProd.
  
   Lemma is_colimit_prod {Q: Type} (HQ: is_colimit D Q)
   : is_colimit prod_diag (A * Q).
+  Proof.
     simple refine (postcompose_equiv_is_colimit (Q := sig (fun _ : A => Q)) _ _).
     apply equiv_sigma_prod0.
     simple refine (precompose_equiv_is_colimit

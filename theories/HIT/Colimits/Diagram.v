@@ -43,6 +43,7 @@ Section Diagram.
                  transport idmap (eq1 j) (D1 _f g x)
                  = D2 _f g (transport idmap (eq1 i) x))
     : D1 = D2.
+  Proof.
     serapply path_diagram_naive.
     funext i. apply eq1.
     funext i j g x.
@@ -75,6 +76,7 @@ Section Diagram.
                  diagram_map_comm m1 g x @ h_obj j (D1 _f g x) =
                  ap (D2 _f g) (h_obj i x) @ diagram_map_comm m2 g x)
     : m1 = m2.
+  Proof.
     destruct m1 as [m1_obj m1_comm].
     destruct m2 as [m2_obj m2_comm].
     simpl in *. revert h_obj h_comm.
@@ -102,6 +104,7 @@ Section Diagram.
 
   Definition diagram_comp {D1 D2 D3 : diagram G} (m2 : diagram_map D2 D3)
              (m1 : diagram_map D1 D2) : diagram_map D1 D3.
+  Proof.
     apply (Build_diagram_map (fun i => m2 i o m1 i)).
     intros i j f.
     exact (comm_square_comp (diagram_map_comm m2 f) (diagram_map_comm m1 f)).
@@ -117,6 +120,7 @@ Section Diagram.
   
   Lemma diagram_equiv_inv {D1 D2 : diagram G} (w : diagram_equiv D1 D2)
     : diagram_map D2 D1.
+  Proof.
     apply (Build_diagram_map
              (fun i => (BuildEquiv _ _ _ (diag_equiv_isequiv w i))^-1)).
     intros i j f.
@@ -129,6 +133,7 @@ Section Diagram.
   Lemma diagram_inv_is_section {D1 D2 : diagram G}
         (w : diagram_equiv D1 D2)
     : diagram_comp w (diagram_equiv_inv w) = diagram_idmap D2.
+  Proof.
     destruct w as [[w_obj w_comm] is_eq_w]. simpl in *.
     set (we i := BuildEquiv _ _ _ (is_eq_w i)).
     simple refine (path_diagram_map _ _).
@@ -140,6 +145,7 @@ Section Diagram.
   Lemma diagram_inv_is_retraction {D1 D2 : diagram G}
         (w : diagram_equiv D1 D2)
     : diagram_comp (diagram_equiv_inv w) w = diagram_idmap D1.
+  Proof.
     destruct w as [[w_obj w_comm] is_eq_w]. simpl in *.
     set (we i := BuildEquiv _ _ _ (is_eq_w i)).
     simple refine (path_diagram_map _ _).
@@ -155,6 +161,7 @@ Section Diagram.
     := fun D1 D2 m => Build_diagram_equiv (diagram_equiv_inv m) _.
 
   Global Instance transitive_diagram_equiv : Transitive diagram_equiv | 1.
+  Proof.
   simple refine (fun D1 D2 D3 m1 m2 =>
                    Build_diagram_equiv (diagram_comp m2 m1) _).
   simpl. intros i; apply isequiv_compose'. apply m1. apply m2.
