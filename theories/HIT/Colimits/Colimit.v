@@ -3,6 +3,11 @@ Require Import Colimits.Diagram.
 Local Open Scope path_scope.
 Generalizable All Variables.
 
+(** This file contains the definition of cocone and colimits, and functoriality results on colimits. *)
+
+(** * Cocones *)
+
+(** A cocone over a diagram [D] to a type [X] is a family of maps from the types of [D] to [X] making the triangles formed with the arrows of [D] commuting. *)
 
 Record cocone {G: graph} (D: diagram G) (X: Type) :=
   {q : forall i, D i -> X;
@@ -15,11 +20,11 @@ Arguments qq {G D X} C i j g x : rename.
 Coercion q : cocone >-> Funclass.
 
 
-(** *** Definition of colimits *** *)
-
 Section Cocone.
   Context `{Funext} {G: graph} {D: diagram G} {X:Type}.
-  
+
+  (** [path_cocone] says when two cocones are equals (up to funext). *)
+
   Definition path_cocone_naive {C1 C2: cocone D X}
              (P := fun q' => forall {i j:G} (g: G i j) (x: D i), q' j (D _f g x)
                                                          = q' i x)
@@ -33,7 +38,7 @@ Section Cocone.
       end
     end.
 
-  Definition path_cocone {C1 C2: cocone D X}  
+  Definition path_cocone {C1 C2: cocone D X}
              (eq1 : forall i,  C1 i == C2 i)
              (eq2 : forall i j g x, qq C1 i j g x @ eq1 i x = eq1 j (D _f g x) @ qq C2 i j g x)
     : C1 = C2.
@@ -49,6 +54,8 @@ Section Cocone.
     rewrite !eisretr. apply eq2.
   Defined.
 
+  (** Given a cocone [C] to [X] and a map from [X] to [Y], one can postcompose each map of [C] to get a cocone to [Y]. *)
+
   Definition postcompose_cocone (C: cocone D X) {Y: Type}
     : (X -> Y) -> cocone D Y.
   Proof.
@@ -58,12 +65,21 @@ Section Cocone.
     - intros i j g x. exact (ap f (qq _ i j g x)).
   Defined.
 
-  (** Definition of the universality of a cocone. *)
+  (** ** Universality of a cocone. *)
+
+  (** A colimit will be the extremity of an universal cocone. *)
+
+  (** A cocone [C] over [D] to [X] is said universal when for all [Y] the map [postcompose_cocone] is an equivalence. In particular, given another cocone [C'] over [D] to [X'] the inverse of the map allows to recover a map [h] : [X] -> [X'] such that [C'] is [C] postcomposed with [h]. The fact that [postcompose_cocone] is an equivalence is an elegant way of stating the usual "unique existence" of category theory. *)
+
   Definition is_universal (C: cocone D X)
     := forall (Y: Type), IsEquiv (@postcompose_cocone C Y).
-  
+
 End Cocone.
 
+
+(** * Colimits *)
+
+(** A colimit is the extremity of a cocone. *)
 
 Record is_colimit `(D: diagram G) (Q: Type) :=
   {is_colimit_C :> cocone D Q;
@@ -72,22 +88,27 @@ Record is_colimit `(D: diagram G) (Q: Type) :=
 Arguments Build_is_colimit {G D Q} C H : rename.
 Arguments is_colimit_C {G D Q} C : rename.
 Arguments is_colimit_H {G D Q} H X : rename.
-  
+
+(** [postcompose_cocone_inv] is defined for convenience: it is only the inverse of [postcompose_cocone]. It allows to recover the map [h] from a cocone [C']. *)
+
 Definition postcompose_cocone_inv `{D: diagram G} `(H: is_colimit D Q)
-           `(C: cocone D X) : Q -> X
-  := @equiv_inv _ _ _ (is_colimit_H H X) C.
+           `(C': cocone D X) : Q -> X
+  := @equiv_inv _ _ _ (is_colimit_H H X) C'.
 
 
 
-(** *** Existence of colimits *** *)
-(** The existence is given by an HIT. *)
+(** * Existence of colimits *)
 
-Module Export colimit_HIT.
+(** Whatever the diagram considered, there exists a colimit of it. The existence is given by the HIT [colimit]. *)
+
+(** ** Definition of the HIT *)
+
+Module Export ColimitHIT.
   Private Inductive colimit {G: graph} (D: diagram G) : Type:=
   | colim : forall i, D i -> colimit D.
 
   Arguments colim {G D} i x.
-  
+
   Axiom colimp : forall {G: graph} {D: diagram G} (i j: G) (f : G i j) (x: D i),
       colim j (D _f f x) = colim i x.
 
@@ -113,7 +134,7 @@ Module Export colimit_HIT.
     - intros i j g x.
       exact ((transport_const (colimp i j g x) (q _ _ (D _f g x))) @ (qq _ i j g x)).
   Defined.
-  
+
   Definition colimit_rec_beta_colimp {G: graph} {D: diagram G} (P: Type) (C: cocone D P)
              (i j: G) (g: G i j) (x: D i)
     : ap (colimit_rec P C) (colimp i j g x) = qq C i j g x.
@@ -123,39 +144,45 @@ Module Export colimit_HIT.
     simple refine ((apD_const (colimit_ind (fun _ => P) C _) (colimp i j g x))^ @ _).
     simple refine (colimit_ind_beta_colimp (fun _ => P) C _ i j g x).
   Defined.
+End ColimitHIT.
 
-  Definition cocone_colimit {G: graph} (D: diagram G) : cocone D (colimit D)
-    := Build_cocone colim colimp.
-  
-  Lemma is_universal_colimit `{Funext} {G: graph} (D: diagram G)
-    : is_universal (cocone_colimit D).
-  Proof.
-    intro Y; simpl.
-    simple refine (isequiv_adjointify _ (colimit_rec Y) _ _).
-    - intros C. simple refine (path_cocone _ _).
-      intros i x. reflexivity.
-      intros i j f x. simpl. hott_simpl.
-      apply colimit_rec_beta_colimp.
-    - intro f. apply path_forall.
-      simple refine (colimit_ind  _ _ _).
-      intros i x. reflexivity.
-      intros i j g x. simpl.
-      rewrite transport_paths_FlFr.
-      rewrite colimit_rec_beta_colimp. hott_simpl.
-  Defined.
+(** And we can now show that the HIT is actually a colimit. *)
 
-  Definition is_colimit_colimit `{Funext} {G: graph} (D: diagram G) : is_colimit D (colimit D)
-    := Build_is_colimit _ (is_universal_colimit D).
-End colimit_HIT.
+Definition cocone_colimit {G: graph} (D: diagram G) : cocone D (colimit D)
+  := Build_cocone colim colimp.
+
+Lemma is_universal_colimit `{Funext} {G: graph} (D: diagram G)
+  : is_universal (cocone_colimit D).
+Proof.
+  intro Y; simpl.
+  simple refine (isequiv_adjointify _ (colimit_rec Y) _ _).
+  - intros C. simple refine (path_cocone _ _).
+    intros i x. reflexivity.
+    intros i j f x. simpl. hott_simpl.
+    apply colimit_rec_beta_colimp.
+  - intro f. apply path_forall.
+    simple refine (colimit_ind  _ _ _).
+    intros i x. reflexivity.
+    intros i j g x. simpl.
+    rewrite transport_paths_FlFr.
+    rewrite colimit_rec_beta_colimp. hott_simpl.
+Defined.
+
+Definition is_colimit_colimit `{Funext} {G: graph} (D: diagram G) : is_colimit D (colimit D)
+  := Build_is_colimit _ (is_universal_colimit D).
 
 
+(** * Functoriality of colimits *)
 
-(** *** Functoriality of colimits *** *)
+(** We now prove several functoriality results, first on cocone and then on colimits. *)
 
 Section FunctorialityCocone.
   Context `{fs: Funext} {G: graph}.
 
-  (* postcompose *)
+  (** ** Postcomposition for cocones *)
+
+  (** Identity and associativity for the postcomposition of a cocone with a map. *)
+
   Definition postcompose_cocone_identity {D: diagram G} `(C: cocone D X)
     : postcompose_cocone C idmap = C.
   Proof.
@@ -174,7 +201,10 @@ Section FunctorialityCocone.
     intros i j h x; simpl; hott_simpl. apply ap_compose.
   Defined.
 
-  (* precompose *)
+  (** ** Precomposition for cocones *)
+
+  (** Given a cocone over [D2] and a diagram map [m] : [D1] => [D2], one can precompose each map of the cocone by the corresponding one of [m] to get a cocone over [D1]. *)
+
   Definition precompose_cocone {D1 D2: diagram G}
              (m: diagram_map D1 D2) {X: Type}
     : (cocone D2 X) -> (cocone D1 X).
@@ -184,6 +214,8 @@ Section FunctorialityCocone.
     intros i j g x; simpl.
     etransitivity. apply ap. symmetry. apply diagram_map_comm. apply qq.
   Defined.
+
+  (** Identity and associativity for the precomposition of a cocone with a diagram map. *)
 
   Definition precompose_cocone_identity (D: diagram G) (X: Type)
     : precompose_cocone (X:=X) (diagram_idmap D) == idmap.
@@ -204,7 +236,8 @@ Section FunctorialityCocone.
     rewrite inv_pp. rewrite ap_pp. rewrite ap_compose. by rewrite ap_V.
   Defined.
 
-  (* precompose and postcompose *)
+  (** Associativity of a precomposition and a postcomposition. *)
+
   Definition precompose_postcompose_cocone {D1 D2: diagram G}
              (m: diagram_map D1 D2) `(f: X -> Y) (C: cocone D2 X)
     : postcompose_cocone (precompose_cocone m C) f
@@ -217,7 +250,8 @@ Section FunctorialityCocone.
       symmetry. apply ap_compose.
   Defined.
 
-  (* compose with equivalences *)
+  (** The precomposition with a diagram equivalence is an equivalence. *)
+
   Definition precompose_cocone_equiv {D1 D2: diagram G} (m: D1 ~d~ D2) (X: Type)
     : IsEquiv (precompose_cocone (X:=X) m).
   Proof.
@@ -228,6 +262,8 @@ Section FunctorialityCocone.
     - intros C. etransitivity. apply precompose_cocone_comp.
       rewrite diagram_inv_is_section. apply precompose_cocone_identity.
   Defined.
+
+  (** The postcomposition with an equivalence is an equivalence. *)
 
   Definition postcompose_cocone_equiv {D: diagram G} `(f: X <~> Y)
     : IsEquiv (fun C: cocone D X => postcompose_cocone C f).
@@ -242,7 +278,10 @@ Section FunctorialityCocone.
       funext x; apply eissect.
   Defined.
 
-  (* universality preserved by equivalences *)
+  (** ** Universality preservation *)
+
+  (** Universality of a cocone is preserved by composition with a (diagram) equivalence. *)
+
   Definition precompose_equiv_universality {D1 D2: diagram G} (m: D1 ~d~ D2)
              `(C: cocone D2 X)
     : is_universal C -> is_universal (precompose_cocone (X:=X) m C).
@@ -263,6 +302,8 @@ Section FunctorialityCocone.
     simple refine isequiv_compose.
   Defined.
 
+  (** Colimits are preserved by composition with a (diagram) equivalence. *)
+
   Definition precompose_equiv_is_colimit {D1 D2: diagram G}
              (m: D1 ~d~ D2) {Q: Type}
     : is_colimit D2 Q -> is_colimit D1 Q.
@@ -280,37 +321,43 @@ Section FunctorialityCocone.
 End FunctorialityCocone.
 
 
+(** * Functoriality of colimits *)
+
 Section FunctorialityColimit.
   Context `{fs: Funext} {G: graph}.
-  
+
+  (** A diagram map [m] : [D1] => [D2] induces a map between any two colimits of [D1] and [D2]. *)
+
   Definition functoriality_colimit {D1 D2: diagram G}
              (m: diagram_map D1 D2)
              `(HQ1: is_colimit D1 Q1) `(HQ2: is_colimit D2 Q2)
     : Q1 -> Q2
     := postcompose_cocone_inv HQ1 (precompose_cocone m HQ2).
 
+  (** And this map commutes with diagram map. *)
+
   Definition functoriality_colimit_commute {D1 D2: diagram G}
              (m: diagram_map D1 D2)
              `(HQ1: is_colimit D1 Q1) `(HQ2: is_colimit D2 Q2)
-    : forall i, (q HQ2 i) o (m i)
-           == (functoriality_colimit m HQ1 HQ2) o (q HQ1 i).
+    : precompose_cocone m HQ2
+      = postcompose_cocone HQ1 (functoriality_colimit m HQ1 HQ2).
   Proof.
-    intros i x.
-    change (precompose_cocone m HQ2 i x =
-            postcompose_cocone HQ1
-              (postcompose_cocone_inv HQ1 (precompose_cocone m HQ2)) i x). 
-    f_ap. exact (eisretr (postcompose_cocone HQ1) _)^.
+    unfold functoriality_colimit.
+    exact (eisretr (postcompose_cocone HQ1) _)^.
   Defined.
 
-  (** Here we prove than two equivalent diagrams have equivalent colimits. *)
+  (** ** Colimits of equivalent diagrams *)
+
+  (** Now we have than two equivalent diagrams have equivalent colimits. *)
+
   Context {D1 D2: diagram G} (m: D1 ~d~ D2)
           `(HQ1: is_colimit D1 Q1) `(HQ2: is_colimit D2 Q2).
-  
+
   Definition functoriality_colimit_eissect
     : Sect (functoriality_colimit (diagram_equiv_inv m) HQ2 HQ1)
            (functoriality_colimit m HQ1 HQ2).
   Proof.
-    unfold functoriality_colimit.  apply ap10.
+    unfold functoriality_colimit. apply ap10.
     simple refine (equiv_inj (postcompose_cocone HQ2) _). apply HQ2.
     etransitivity. 2:symmetry; apply postcompose_cocone_identity.
     etransitivity. apply postcompose_cocone_comp.
@@ -345,7 +392,9 @@ Section FunctorialityColimit.
 End FunctorialityColimit.
 
 
-(** *** Unicity of colimits *** *)
+(** * Unicity of colimits *)
+
+(** A particuliar case of the functoriality result is that all colimits of a diagram are equivalent (and hence equal in presence of univalence). *)
 
 Theorem colimit_unicity `{Funext} {G: graph} {D: diagram G} {Q1 Q2: Type}
         (HQ1: is_colimit D Q1) (HQ2: is_colimit D Q2)
@@ -353,13 +402,4 @@ Theorem colimit_unicity `{Funext} {G: graph} {D: diagram G} {Q1 Q2: Type}
 Proof.
   simple refine (functoriality_colimit_equiv _ HQ1 HQ2).
   simple refine (Build_diagram_equiv (diagram_idmap D) _).
-Defined.
-
-
-Definition transport_colimit `(D: Y -> diagram G)
-           `(HQ: forall y, is_colimit (D y) (Q y))
-           `(p: x = y :> Y) (i: G) (u: D x i)
-  : transport Q p (HQ x i u) = HQ y i (transport (fun y => D y i) p u).
-Proof.
-  destruct p; reflexivity.
 Defined.

@@ -1,7 +1,8 @@
 Require Import HoTT.Basics.
 
+(** * Comutative squares *)
 
-(* Commutative squares compose. *)
+(** Commutative squares compose. *)
 Lemma comm_square_comp
   {A B} {f:A->B} {A' B'} {f':A'->B'} {A'' B''} {f'':A''->B''}
   {h' : A' -> A''} {g' : B' -> B''} (comm' : f'' o h' == g' o f')
@@ -12,9 +13,8 @@ Proof.
   apply ap, comm.
 Defined.
 
-(* We show that given any commutative square from [f] to [f'] whose verticals
-[wA, wB] are equivalences, the equiv_inv square from [f'] to [f] with verticals
-[wA ^-1, wB ^-1] also commutes. *)
+(** Given any commutative square from [f] to [f'] whose verticals
+[wA, wB] are equivalences, the equiv_inv square from [f'] to [f] with verticals [wA ^-1, wB ^-1] also commutes. *)
 Lemma comm_square_inverse
   {A B : Type} {f : A -> B}
   {A' B' : Type} {f' : A' -> B'}
@@ -25,11 +25,11 @@ Proof.
   intros a'.
   path_via (wB ^-1 (wB (f (wA ^-1 a')))).
     apply inverse, eissect.
-  apply ap, (concat (wf _)^). 
+  apply ap, (concat (wf _)^).
   apply ap, eisretr.
 Defined.
 
-(* Up to naturality, the result of [comm_square_inverse] really is a
+(** Up to naturality, the result of [comm_square_inverse] really is a
 retraction (aka left inverse); *)
 Lemma comm_square_inverse_is_sect
   {A B : Type} {f : A -> B}
@@ -43,9 +43,9 @@ Proof.
   intros a; simpl. unfold comm_square_inverse, comm_square_comp; simpl.
   repeat apply (concat (concat_pp_p _ _ _)). apply moveR_Vp.
   transitivity (ap (wB ^-1 o wB) (ap f (eissect wA a)) @ eissect wB (f a)).
-    Focus 2. apply (concat (concat_Ap (eissect wB) _)). apply ap, ap_idmap.
+  2: apply (concat (concat_Ap (eissect wB) _)). 2: apply ap, ap_idmap.
   apply (concat (concat_p_pp _ _ _)), whiskerR.
-  apply (concat (ap_pp (wB ^-1) _ _)^), (concatR (ap_compose wB _ _)^). 
+  apply (concat (ap_pp (wB ^-1) _ _)^), (concatR (ap_compose wB _ _)^).
   apply ap, (concat (concat_pp_p _ _ _)), moveR_Vp.
   path_via (ap (f' o wA) (eissect wA a) @ wf a).
     apply whiskerR.  apply (concatR (ap_compose wA f' _)^).
@@ -54,7 +54,7 @@ Proof.
   apply whiskerL, (ap_compose f wB).
 Defined.
 
-(* and similarly, [comm_square_inverse] is a section (aka right equiv_inv). *)
+(** and similarly, [comm_square_inverse] is a section (aka right equiv_inv). *)
 Lemma comm_square_inverse_is_retr
   {A B : Type} {f : A -> B}
   {A' B' : Type} {f' : A' -> B'}
