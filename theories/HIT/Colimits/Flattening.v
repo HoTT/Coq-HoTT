@@ -41,26 +41,26 @@ Section Flattening.
 
   
   Definition transport_E' {i j : G} (g : G i j)  (x : D i) (y : E (i; x))
-    : transport E' (pp i j g x) (E_f g x y) = y.
+    : transport E' (colimp i j g x) (E_f g x y) = y.
   Proof.
     simple refine (transport_idmap_ap _ _ _ _ _ _ @ _).
     simple refine (transport2 idmap _ _ @ _).
-    2: apply colimit_rec_beta_pp.
+    2: apply colimit_rec_beta_colimp.
     cbn. simple refine (moveR_transport_V idmap _ _ _ _).
     symmetry; apply transport_path_universe.
   Defined.
 
   Definition transport_E'_V {i j : G} (g : G i j)  (x : D i) (y : E (i; x))
-    : transport E' (pp i j g x)^ y = E_f g x y.
+    : transport E' (colimp i j g x)^ y = E_f g x y.
   Proof.
-    simple refine (moveR_transport_V E' (pp i j g x) y _ _). symmetry.
+    simple refine (moveR_transport_V E' (colimp i j g x) y _ _). symmetry.
     apply transport_E'.
   Defined.
 
   Definition transport_E'_V_E' {i j : G} (g : G i j)  (x : D i) (y : E (i; x))
     : transport_E' g x y
-      = ap (transport E' (pp i j g x)) (transport_E'_V g x y)^
-        @ transport_pV E' (pp i j g x) y.
+      = ap (transport E' (colimp i j g x)) (transport_E'_V g x y)^
+        @ transport_pV E' (colimp i j g x) y.
   Proof.
     unfold transport_E'_V.
     rewrite moveR_transport_V_V.
@@ -74,7 +74,7 @@ Section Flattening.
     simple refine (Build_cocone _ _); cbn.
     + intros i w. exists (colim i w.1); cbn. exact w.2.
     + intros i j g x; cbn. simple refine (path_sigma' _ _ _).
-      apply pp. apply transport_E'.
+      apply colimp. apply transport_E'.
   Defined.
 
   Local Opaque path_sigma ap11.
@@ -94,7 +94,7 @@ Section Flattening.
       + intros i x; reflexivity.
       + intros i j g [x y].
         rewrite concat_1p, concat_p1. cbn. rewrite ap_path_sigma.
-        cbn. rewrite colimit_ind_beta_pp. rewrite ap10_path_forall.
+        cbn. rewrite colimit_ind_beta_colimp. rewrite ap10_path_forall.
         hott_simpl.
         refine (_ @ concat_1p _). refine (_ @@ 1).
         match goal with
@@ -124,7 +124,7 @@ Section Flattening.
           subst C2; cbn. rewrite transport_paths_FlFr.
           rewrite concat_p1. apply moveR_Vp. rewrite concat_p1.
           rewrite ap_path_sigma. cbn.
-          rewrite colimit_ind_beta_pp. rewrite ap10_path_forall. 
+          rewrite colimit_ind_beta_colimp. rewrite ap10_path_forall. 
           hott_simpl.
           rewrite ap11_is_ap10_ap01. cbn. rewrite concat_1p.
           rewrite (ap_compose (fun y => (colim j ((D _f g) x); y)) f). cbn.
@@ -134,8 +134,8 @@ Section Flattening.
           match goal with
           | |- _ = (ap ?ff ?pp1 @ ?pp2) @ ?pp3 => set (p1 := pp1)
           end.
-          assert (p1 = ap (transport E' (pp i j g x)^)
-                          (transport_pV E' (pp i j g x) y)^). {
+          assert (p1 = ap (transport E' (colimp i j g x)^)
+                          (transport_pV E' (colimp i j g x) y)^). {
             subst p1; clear.
             etransitivity. serapply moveL_transport_V_1.
             etransitivity. serapply inverse2. 2: serapply transport_VpV.
@@ -150,9 +150,9 @@ Section Flattening.
           end. cbn in *.
           assert (p1 = path_sigma' E' 1 (transport_Vp _ _ _)). {
             subst p1. rewrite <- ap_existT.
-            rewrite (ap_compose (transport E' (pp i j g x)^)
+            rewrite (ap_compose (transport E' (colimp i j g x)^)
                                 (fun v => (colim j ((D _f g) x); v))).
-            f_ap. set (pp i j g x). clear.
+            f_ap. set (colimp i j g x). clear.
             symmetry. apply transport_VpV. }
           rewrite X; clear p1 X.
           assert (p2 = path_sigma' E' 1 (transport_E'_V _ _ _))
@@ -162,12 +162,12 @@ Section Flattening.
           rewrite concat_p1. rewrite concat_pp_p.
           refine (1 @@ _).
           apply moveL_Mp. rewrite <- ap_V. rewrite <- ap_pp.
-          simple refine (_ @ _). refine (ap (transport E' (pp i j g x)) _).
+          simple refine (_ @ _). refine (ap (transport E' (colimp i j g x)) _).
           refine ((transport_E'_V _ _ _)^ @ _).
           refine (ap _ (transport_pV _ _ _)).
           f_ap. refine (1 @@ _).
           apply transport_VpV.
-          set (transport E' (pp i j g x) (transport E' (pp i j g x)^ y)).
+          set (transport E' (colimp i j g x) (transport E' (colimp i j g x)^ y)).
           rewrite ap_pp. rewrite <- ap_compose.
           refine (_ @ (transport_E'_V_E' _ _ _)^).
           refine (1 @@ _). subst e.

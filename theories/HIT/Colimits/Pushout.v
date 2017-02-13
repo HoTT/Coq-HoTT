@@ -60,8 +60,8 @@ Section PO.
   Definition por : C -> PO f g := colim (D:=span f g) (inr false).
 
   Definition popp (a : A) : pol (f a) = por (g a)
-    := pp (D:=span f g) (inl tt) (inr true) tt a
-          @ (pp (D:=span f g) (inl tt) (inr false) tt a)^.
+    := colimp (D:=span f g) (inl tt) (inr true) tt a
+          @ (colimp (D:=span f g) (inl tt) (inr false) tt a)^.
 
   (* The eliminators PO_ind, PO_rec, ... can be proven. *)
   Definition PO_ind (P : PO f g -> Type) (l' : forall b, P (pol b))
@@ -72,7 +72,7 @@ Section PO.
     simple refine (colimit_ind P _ _).
     - intros []; cbn.
       intros [] x.
-      exact (@pp _ (span f g) (inl tt) (inr true) tt x # l' (f x)).
+      exact (@colimp _ (span f g) (inl tt) (inr true) tt x # l' (f x)).
       intros []; cbn. exact l'. exact r'.
     - intros [] [] []; cbn.
       destruct u, b; cbn. reflexivity.
@@ -89,18 +89,18 @@ Section PO.
   Proof.
     intro x. etransitivity. eapply apD_pp.
     assert (apD (PO_ind P l' r' pp')
-                (@pp _ (span f g) (inl tt) (inr true) tt x) = 1). {
+                (@colimp _ (span f g) (inl tt) (inr true) tt x) = 1). {
       unfold PO_ind.
       match goal with
       | |- apD (colimit_ind P ?qq1 ?qq2) _ = _ =>
-        exact (colimit_ind_beta_pp P qq1 qq2 (inl tt) (inr true) tt x)
+        exact (colimit_ind_beta_colimp P qq1 qq2 (inl tt) (inr true) tt x)
       end. }
     rewrite X. clear X. cbn. rewrite concat_p1.
     rewrite apD_V. unfold PO_ind.
     match goal with
     | |- _ @ moveR_transport_V
           _ _ _ _ (apD (colimit_ind P ?qq1 ?qq2) _)^ = _ =>
-        rewrite (colimit_ind_beta_pp P qq1 qq2 (inl tt) (inr false) tt x); cbn
+        rewrite (colimit_ind_beta_colimp P qq1 qq2 (inl tt) (inr false) tt x); cbn
     end.
     match goal with
     | |- ?pp @ moveR_transport_V P _ _ _ (moveR_transport_p P _ _ _ ?qq)^ = _
@@ -120,9 +120,9 @@ Section PO.
     : forall x, ap (PO_rec P l' r' pp') (popp x) = pp' x.
   Proof.
     intro x.
-    pose proof (colimit_rec_beta_pp P (Build_span_cocone l' r' pp')
+    pose proof (colimit_rec_beta_colimp P (Build_span_cocone l' r' pp')
                                     (inl tt) (inr true) tt x).
-    pose proof (colimit_rec_beta_pp P (Build_span_cocone l' r' pp')
+    pose proof (colimit_rec_beta_colimp P (Build_span_cocone l' r' pp')
                                     (inl tt) (inr false) tt x).
     unfold popp; cbn in *.
     refine (ap_pp _ _ _ @ _). refine (_ @ concat_p1 _).
