@@ -198,7 +198,7 @@ Section Flattening.
         rewrite X; hott_simpl.
   Defined.
 
-  (** The flattening lemma follow by colimit unicity. *)
+  (** The flattening lemma follows by colimit unicity. *)
 
   Definition flattening_lemma : colimit sigma_diagram <~> sig E'.
   Proof.
