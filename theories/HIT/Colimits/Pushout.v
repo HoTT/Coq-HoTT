@@ -2,7 +2,6 @@ Require Import HoTT.Basics HoTT.Types.Bool HoTT.Types.Paths.
 Require Import Colimits.Diagram Colimits.Colimit.
 Local Open Scope path_scope.
 
-Context `{Funext}.
 
 (* We use [PO] for the pushout defined as a colimit, *)
 (* and [pushout] for the pushout defined as a coequalizer. *)
@@ -151,7 +150,7 @@ End PO.
   (* is equivalent to the pushout defined as a primitive HIT. *)
 Section is_PO_pushout.
   Require Import Types.Sum HIT.Pushout.
-  Context {A B C : Type} {f : A -> B} {g : A -> C}.
+  Context `{Funext} {A B C : Type} {f : A -> B} {g : A -> C}.
 
   Definition is_PO_pushout : is_PO f g (pushout f g).
     unshelve econstructor.

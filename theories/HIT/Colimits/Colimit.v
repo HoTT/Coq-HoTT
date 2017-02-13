@@ -3,7 +3,6 @@ Require Import Colimits.Diagram.
 Local Open Scope path_scope.
 Generalizable All Variables.
 
-Context `{Funext}.
 
 Record cocone {G: graph} (D: diagram G) (X: Type) :=
   {q : forall i, D i -> X;
@@ -19,7 +18,7 @@ Coercion q : cocone >-> Funclass.
 (** *** Definition of colimits *** *)
 
 Section Cocone.
-  Context {G: graph} {D: diagram G} {X:Type}.
+  Context `{Funext} {G: graph} {D: diagram G} {X:Type}.
   
   Definition path_cocone_naive {C1 C2: cocone D X}
              (P := fun q' => forall {i j:G} (g: G i j) (x: D i), q' j (D _f g x)
@@ -124,7 +123,7 @@ Module Export colimit_HIT.
   Definition cocone_colimit {G: graph} (D: diagram G) : cocone D (colimit D)
     := Build_cocone colim pp.
   
-  Lemma is_universal_colimit {G: graph} (D: diagram G)
+  Lemma is_universal_colimit `{Funext} {G: graph} (D: diagram G)
     : is_universal (cocone_colimit D).
     intro Y; simpl.
     simple refine (isequiv_adjointify _ (colimit_rec Y) _ _).
@@ -140,7 +139,7 @@ Module Export colimit_HIT.
       rewrite colimit_rec_beta_pp. hott_simpl.
   Defined.
 
-  Definition is_colimit_colimit {G: graph} (D: diagram G) : is_colimit D (colimit D)
+  Definition is_colimit_colimit `{Funext} {G: graph} (D: diagram G) : is_colimit D (colimit D)
     := Build_is_colimit _ (is_universal_colimit D).
 End colimit_HIT.
 
@@ -149,7 +148,7 @@ End colimit_HIT.
 (** *** Functoriality of colimits *** *)
 
 Section FunctorialityCocone.
-  Context {G: graph}.
+  Context `{fs: Funext} {G: graph}.
 
   (* postcompose *)
   Definition postcompose_cocone_identity {D: diagram G} `(C: cocone D X)
@@ -266,7 +265,7 @@ End FunctorialityCocone.
 
 
 Section FunctorialityColimit.
-  Context {G: graph}.
+  Context `{fs: Funext} {G: graph}.
   
   Definition functoriality_colimit {D1 D2: diagram G}
              (m: diagram_map D1 D2)
@@ -329,13 +328,12 @@ End FunctorialityColimit.
 
 (** *** Unicity of colimits *** *)
 
-Theorem colimit_unicity {G: graph} {D: diagram G} {Q1 Q2: Type}
+Theorem colimit_unicity `{Funext} {G: graph} {D: diagram G} {Q1 Q2: Type}
         (HQ1: is_colimit D Q1) (HQ2: is_colimit D Q2)
   : Q1 <~> Q2.
   simple refine (functoriality_colimit_equiv _ HQ1 HQ2).
   simple refine (Build_diagram_equiv (diagram_idmap D) _).
 Defined.
-
 
 
 Definition transport_colimit `(D: Y -> diagram G)
