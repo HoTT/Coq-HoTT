@@ -252,7 +252,6 @@ Module Book_Loop_Susp_Adjunction.
       reflexivity.
     - cbn.
       Fail reflexivity.
-      (** ...but this goal is pretty intractable. *)
   Abort.
 >>
    *)
