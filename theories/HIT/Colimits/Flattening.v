@@ -220,13 +220,13 @@ Section POCase.
   Context (A0 : A -> Type) (B0 : B -> Type) (C0 : C -> Type)
           (f0 : forall x, A0 x <~> B0 (f x)) (g0 : forall x, A0 x <~> C0 (g x)).
 
-  Let P : PO f g -> Type.
+  Definition P : PO f g -> Type.
     simple refine (PO_rec Type B0 C0 _).
     cbn; intro x. eapply path_universe_uncurried.
     etransitivity. symmetry. apply f0. apply g0.
   Defined.
 
-  Let E : dep_diagram (span f g).
+  Definition E : dep_diagram (span f g).
     simple refine (Build_diagram _ _ _); cbn.
       intros [[] x]; revert x. exact A0. destruct b; assumption.
       intros [[] x] [[] y] []; cbn; intros [].
@@ -234,7 +234,7 @@ Section POCase.
       exact (fun y => p # (g0 x y)).
   Defined.
 
-  Let HE : equifibered _ E.
+  Definition HE : equifibered _ E.
     intros [] [] [] x; cbn. destruct b; cbn in *.
     apply (f0 x). apply (g0 x).
   Defined.
