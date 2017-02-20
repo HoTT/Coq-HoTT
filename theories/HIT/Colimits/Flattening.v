@@ -49,7 +49,7 @@ Section Flattening.
 
   (** Now, given an equifibered diagram and using univalence, one can define a type family [E' : colimit D -> Type] by recusrion on the colimit. *)
 
-  Definition E' : colimit D -> Type.
+  Local Definition E' : colimit D -> Type.
   Proof.
     apply colimit_rec. simple refine (Build_cocone _ _).
     exact (fun i x => E (i; x)).
@@ -223,14 +223,14 @@ Section POCase.
   Context (A0 : A -> Type) (B0 : B -> Type) (C0 : C -> Type)
           (f0 : forall x, A0 x <~> B0 (f x)) (g0 : forall x, A0 x <~> C0 (g x)).
 
-  Definition P : PO f g -> Type.
+  Definition POCase_P : PO f g -> Type.
   Proof.
     simple refine (PO_rec Type B0 C0 _).
     cbn; intro x. eapply path_universe_uncurried.
     etransitivity. symmetry. apply f0. apply g0.
   Defined.
 
-  Definition E : dep_diagram (span f g).
+  Definition POCase_E : dep_diagram (span f g).
   Proof.
     simple refine (Build_diagram _ _ _); cbn.
       intros [[] x]; revert x. exact A0. destruct b; assumption.
@@ -239,29 +239,29 @@ Section POCase.
       exact (fun y => p # (g0 x y)).
   Defined.
 
-  Definition HE : equifibered _ E.
+  Definition POCase_HE : equifibered _ POCase_E.
   Proof.
     intros [] [] [] x; cbn. destruct b; cbn in *.
     apply (f0 x). apply (g0 x).
   Defined.
 
   Definition PO_flattening
-    : PO (functor_sigma f f0) (functor_sigma g g0) <~> exists x, P x.
+    : PO (functor_sigma f f0) (functor_sigma g g0) <~> exists x, POCase_P x.
   Proof.
     assert (PO (functor_sigma f f0) (functor_sigma g g0)
-            = colimit (sigma_diagram (span f g) E)). {
+            = colimit (sigma_diagram (span f g) POCase_E)). {
       unfold PO; apply ap.
       serapply path_diagram; cbn.
       - intros [|[]]; cbn. all: reflexivity.
       - intros [] [] [] x; destruct b; cbn in *.
         all: reflexivity. }
     rewrite X; clear X.
-    transitivity (exists x, E' (span f g) E HE x).
+    transitivity (exists x, E' (span f g) POCase_E POCase_HE x).
     apply flattening_lemma.
     apply equiv_functor_sigma_id.
     intro x.
-    assert (E' (span f g) E HE x = P x). {
-      unfold E', P, PO_rec.
+    assert (E' (span f g) POCase_E POCase_HE x = POCase_P x). {
+      unfold E', POCase_P, PO_rec.
       f_ap. serapply path_cocone.
       - intros [[]|[]] y; cbn.
         apply path_universe_uncurried. apply g0.
