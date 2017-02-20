@@ -16,6 +16,7 @@ Section Flattening.
   (** We define here the graph ∫D, also denoted G·D *)
 
   Definition integral : graph.
+  Proof.
     simple refine (Build_graph _ _).
     - exact {i : G & D i}.
     - intros i j. exact {g : G i.1 j.1 & D _f g i.2 = j.2}.
@@ -33,6 +34,7 @@ Section Flattening.
   (** Given a dependent diagram, we can recover a diagram over G by considering the Σ types. *)
 
   Definition sigma_diagram : diagram G.
+  Proof.
     simple refine (Build_diagram _ _ _).
     - intro i. exact {x : D i & E (i; x)}.
     - intros i j g x. simpl in *.
@@ -48,6 +50,7 @@ Section Flattening.
   (** Now, given an equifibered diagram and using univalence, one can define a type family [E' : colimit D -> Type] by recusrion on the colimit. *)
 
   Definition E' : colimit D -> Type.
+  Proof.
     apply colimit_rec. simple refine (Build_cocone _ _).
     exact (fun i x => E (i; x)).
     intros i j g x; cbn. symmetry. eapply path_universe.
@@ -221,12 +224,14 @@ Section POCase.
           (f0 : forall x, A0 x <~> B0 (f x)) (g0 : forall x, A0 x <~> C0 (g x)).
 
   Definition P : PO f g -> Type.
+  Proof.
     simple refine (PO_rec Type B0 C0 _).
     cbn; intro x. eapply path_universe_uncurried.
     etransitivity. symmetry. apply f0. apply g0.
   Defined.
 
   Definition E : dep_diagram (span f g).
+  Proof.
     simple refine (Build_diagram _ _ _); cbn.
       intros [[] x]; revert x. exact A0. destruct b; assumption.
       intros [[] x] [[] y] []; cbn; intros [].
@@ -235,6 +240,7 @@ Section POCase.
   Defined.
 
   Definition HE : equifibered _ E.
+  Proof.
     intros [] [] [] x; cbn. destruct b; cbn in *.
     apply (f0 x). apply (g0 x).
   Defined.
