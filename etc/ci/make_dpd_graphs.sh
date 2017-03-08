@@ -11,7 +11,7 @@ cd "$ROOT_DIR"
 PS4='$ '
 set -x
 
-cd etc/dpdgraph-0.4alpha
+cd etc/coq-dpdgraph
 make
 
 

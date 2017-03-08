@@ -30,7 +30,7 @@ EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 export MESSAGE="Autoupdate documentation with dpdgraphs"
 
 echo '$ make svg-file-dep-graphs svg-aggregate-dep-graphs'
-make etc/dpdgraph-0.4alpha/coqthmdep || exit $?
+make etc/coq-dpdgraph/coqthmdep || exit $?
 make svg-file-dep-graphs -k || exit $?
 # `dot` hates file-dep-graphs/hott-all.dot, because it's too big, and
 # makes `dot` spin for over a dozen minutes.  So disable it for now.

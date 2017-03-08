@@ -299,39 +299,41 @@ proviola-xml: $(ALL_XMLFILES)
 proviola-all: proviola proviola-xml
 
 # dpdgraphs
-etc/dpdgraph-0.4alpha/coqthmdep: etc/dpdgraph-0.4alpha/searchdepend.ml4 etc/dpdgraph-0.4alpha/graphdepend.ml4
+COQTHMDEP=etc/coq-dpdgraph/coqthmdep
+HOQTHMDEP=etc/hoqthmdep
+$(COQTHMDEP): etc/coq-dpdgraph/searchdepend.ml4 etc/coq-dpdgraph/graphdepend.ml4
 	$(VECHO) MAKE DPDGRAPH
-	$(Q) cd etc/dpdgraph-0.4alpha && $(MAKE)
+	$(Q) cd etc/coq-dpdgraph && $(MAKE)
 
 %.svg: %.dot
 	$(VECHO) DOT $< -o $@
 	$(Q) if [ -s "$<" ]; then dot -Tsvg "$<" -o "$@"; else (echo "" > "$@"; touch "$@"); fi # don't do anything if zero size
 
-file-dep-graphs/%.dot: file-dep-graphs/%.dpd etc/dpdgraph-0.4alpha/coqthmdep
+file-dep-graphs/%.dot: file-dep-graphs/%.dpd $(COQTHMDEP)
 	$(VECHO) DPD2DOT $< -o $@
-	$(Q) if [ -s "$<" ]; then etc/dpdgraph-0.4alpha/dpd2dot $< -graphname $(subst -,_,$(subst .,_,$*)) -o $@ >/dev/null; else (echo "" > "$@"; touch "$@"); fi
+	$(Q) if [ -s "$<" ]; then etc/coq-dpdgraph/dpd2dot $< -graphname $(subst -,_,$(subst .,_,$*)) -o $@ >/dev/null; else (echo "" > "$@"; touch "$@"); fi
 
-$(MAIN_DPDFILES): file-dep-graphs/HoTT.%.dpd : theories/$$(subst .,/,$$*).vo etc/dpdgraph-0.4alpha/coqthmdep
+$(MAIN_DPDFILES): file-dep-graphs/HoTT.%.dpd : theories/$$(subst .,/,$$*).vo $(COQTHMDEP)
 	@ $(mkdir_p) $(dir $@)
 	$(VECHO) HOQTHMDEP HoTT.$* > $@
-	$(Q) (echo "Require HoTT.$*."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph HoTT.$*.') | etc/dpdgraph-0.4alpha/hoqthmdep 2>/dev/null >/dev/null
+	$(Q) (echo "Require HoTT.$*."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph HoTT.$*.') | $(HOQTHMDEP) 2>/dev/null >/dev/null
 
-$(STD_DPDFILES): file-dep-graphs/Coq.%.dpd : coq/theories/$$(subst .,/,$$*).vo etc/dpdgraph-0.4alpha/coqthmdep
+$(STD_DPDFILES): file-dep-graphs/Coq.%.dpd : coq/theories/$$(subst .,/,$$*).vo $(COQTHMDEP)
 	@ $(mkdir_p) $(dir $@)
 	$(VECHO) HOQTHMDEP Coq.$* > $@
-	$(Q) (echo "Require Coq.$*."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph Coq.$*.') | etc/dpdgraph-0.4alpha/hoqthmdep 2>/dev/null >/dev/null
+	$(Q) (echo "Require Coq.$*."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph Coq.$*.') | $(HOQTHMDEP) 2>/dev/null >/dev/null
 
-file-dep-graphs/hott-lib.dpd: etc/dpdgraph-0.4alpha/coqthmdep $(CORE_VOFILES)
+file-dep-graphs/hott-lib.dpd: $(COQTHMDEP) $(CORE_VOFILES)
 	@ $(mkdir_p) $(dir $@)
 	$(VECHO) HOQTHMDEP HoTTLib
         HOTT_LIB_FILES=$(subst /,.,$(patsubst $(srcdir)/theories/%.v,HoTT.%,$(CORE_VFILES)))
-	$(Q) (echo "Require $(HOTT_LIB_FILES)."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_LIB_FILES).') | etc/dpdgraph-0.4alpha/hoqthmdep 2>/dev/null >/dev/null
+	$(Q) (echo "Require $(HOTT_LIB_FILES)."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_LIB_FILES).') | $(HOQTHMDEP) 2>/dev/null >/dev/null
 
-#file-dep-graphs/hott-all.dpd: etc/dpdgraph-0.4alpha/coqthmdep $(CORE_VOFILES) $(CATEGORY_VOFILES)
+#file-dep-graphs/hott-all.dpd: $(COQTHMDEP) $(CORE_VOFILES) $(CATEGORY_VOFILES)
 #	@ $(mkdir_p) $(dir $@)
 #	$(VECHO) HOQTHMDEP HoTT
 #        HOTT_ALL_FILES=$(subst /,.,$(patsubst $(srcdir)/theories/%.v,HoTT.%,$(CORE_VFILES) $(CATEGORY_VFILES)))
-#	$(Q) (echo "Require $(HOTT_ALL_FILES)."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_ALL_FILES).') | etc/dpdgraph-0.4alpha/hoqthmdep 2>/dev/null >/dev/null
+#	$(Q) (echo "Require $(HOTT_ALL_FILES)."; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_ALL_FILES).') | $(HOQTHMDEP) 2>/dev/null >/dev/null
 
 file-dep-graphs/index.html: Makefile _CoqProject
 	@ $(mkdir_p) $(dir $@)
@@ -375,7 +377,7 @@ $(STD_DEPFILES) : %.d : %.v
 	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
 
 clean-dpdgraph::
-	(cd etc/dpdgraph-0.4alpha && $(MAKE) clean)
+	(cd etc/coq-dpdgraph && $(MAKE) clean)
 
 # We separate things to work around `make: execvp: /bin/bash: Argument list too long`
 clean::
