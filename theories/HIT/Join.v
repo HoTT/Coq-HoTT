@@ -2,7 +2,7 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp HSet.
-Require Import HIT.Pushout.
+Require Import HIT.Pushout HIT.Truncations.
 Local Open Scope path_scope.
 
 (** * Joins *)
@@ -31,6 +31,37 @@ Section Join.
       rewrite <- ap_compose; unfold joinpp.
       rewrite ap_const, concat_p1.
       reflexivity.
+  Defined.
+
+  (** Join is symmetric *)
+  Definition join_sym A B : join A B <~> join B A.
+  Proof.  
+    unfold join; refine (pushout_sym oE _).
+    refine (equiv_pushout (equiv_prod_symm A B) 1 1 _ _);
+      intros [a b]; reflexivity.
+  Defined.
+
+  (** The join of hprops is an hprop *)
+  Global Instance ishprop_join `{Funext} A B `{IsHProp A} `{IsHProp B} : IsHProp (join A B).
+  Proof.
+    apply hprop_inhabited_contr.
+    unfold join.
+    refine (pushout_rec _ _ (fun _ => path_ishprop _ _)).
+    intros [a|b].
+    - apply contr_join.  
+      exact (contr_inhabited_hprop A a).
+    - refine (trunc_equiv (join B A) (join_sym B A)).
+      apply contr_join.
+      exact (contr_inhabited_hprop B b).
+  Defined.
+
+  (** And coincides with their disjunction *)
+  Definition join_equiv_or `{Funext} A B `{IsHProp A} `{IsHProp B} 
+    : join A B <~> hor A B.
+  Proof.
+    apply equiv_iff_hprop.
+    - refine (pushout_rec _ tr (fun _ => path_ishprop _ _)).
+    - apply Trunc_rec, push.
   Defined.
 
 End Join.
