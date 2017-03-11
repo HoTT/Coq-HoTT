@@ -292,7 +292,6 @@ Definition contr_equiv' A {B} `(f : A <~> B) `{Contr A}
   := contr_equiv A f.
 
 (** Any two contractible types are equivalent. *)
-(* TODO: the name [equiv_contr_contr] is not great in conjunction with the existing, unrelated [contr_equiv_contr].  Consider alternative names? *)
 Lemma equiv_contr_contr {A B : Type} `{Contr A} `{Contr B}
   : (A <~> B).
 Proof.
