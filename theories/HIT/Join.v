@@ -56,7 +56,7 @@ Section Join.
   Defined.
 
   (** And coincides with their disjunction *)
-  Definition join_equiv_or `{Funext} A B `{IsHProp A} `{IsHProp B} 
+  Definition equiv_join_hor `{Funext} A B `{IsHProp A} `{IsHProp B} 
     : join A B <~> hor A B.
   Proof.
     apply equiv_iff_hprop.
