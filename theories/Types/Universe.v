@@ -32,7 +32,8 @@ Proof.
 Defined.
 
 (** See the note by [Funext] in Overture.v *)
-Class Univalence.
+Monomorphic Axiom Univalence : Type0.
+Existing Class Univalence.
 Axiom isequiv_equiv_path : forall `{Univalence} (A B : Type), IsEquiv (equiv_path A B).
 
 Section Univalence.
