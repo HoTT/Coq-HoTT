@@ -575,8 +575,8 @@ Notation is_mere_relation A R := (forall (x y : A), IsHProp (R x y)).
     As [Funext] is never actually used productively, we toss it in [Type0] and make it [Monomorphic] so it doesn't add more universes.
 
     * That's not technically true; it might be possible to get non-parametric universe polymorphism using [Module]s and ([Module]) Functors; we can use functors to quantify over a [Module Type] which requires a polymorphic proof of a given hypothesis, and then use that hypothesis polymorphically in any theorem we prove in our new [Module] Functor.  But that is far beyond the scope of this file. *)
-Monomorphic Axiom dummy_funext_type : Type0.
-Monomorphic Class Funext := { dummy_funext_value : dummy_funext_type }.
+Monomorphic Axiom Funext : Type0.
+Existing Class Funext.
 Axiom isequiv_apD10 : forall `{Funext} (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
 Global Existing Instance isequiv_apD10.
 
