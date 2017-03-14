@@ -112,9 +112,10 @@ Defined.
 (** ** Natural number ordering *)
 
 Definition leq m n := ((m - n) =n 0).
+Definition lt m n := leq (m.+1) n.
 
 Notation "m <= n" := (leq m n) : nat_scope.
-Notation "m < n" := (m.+1 <= n) : nat_scope.
+Notation "m < n" := (lt m n) : nat_scope.
 Notation "m >= n" := (n <= m) (only parsing) : nat_scope.
 Notation "m > n" := (n < m) (only parsing) : nat_scope.
 
