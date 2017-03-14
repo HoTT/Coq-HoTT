@@ -25,7 +25,9 @@ Require Export DProp.
 Require Export NullHomotopy.
 Require Export Idempotents.
 Require Export Pullback.
-Require Export PropResizing.
+
+Require Export PropResizing.PropResizing.
+(* Don't export the rest of [PropResizing] *)
 
 Require Export HIT.Interval.
 Require Export HIT.Truncations.

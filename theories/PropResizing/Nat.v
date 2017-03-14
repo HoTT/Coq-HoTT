@@ -1,54 +1,12 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-(** * Propositional resizing *)
+(** * Defining the natural numbers from univalence and propresizing. *)
 
 Require Import HoTT.Basics HoTT.Types UnivalenceImpliesFunext HProp.
+Require Import PropResizing.PropResizing PropResizing.Truncations.
 Local Open Scope path_scope.
 
-(** See the note by [Funext] in Overture.v regarding classes for axioms *)
-Class PropResizing.
-Axiom resize_hprop : forall `{PropResizing} (A : Type@{i}) `{IsHProp A}, Type@{j}.
-Axiom equiv_resize_hprop : forall `{PropResizing} (A : Type@{i}) `{IsHProp A},
-    A <~> resize_hprop A.
-
-Global Instance ishprop_resize_hprop
-       `{PropResizing} (A : Type) `{IsHProp A}
-  : IsHProp (resize_hprop A)
-  := trunc_equiv A (equiv_resize_hprop A).
-
-(** ** Impredicative propositional truncation. *)
-
-(** We put it in a module so that it doesn't conflict with the HIT one
-if that is also assumed. *)
-Module Impredicative_Merely.
-Section AssumePropResizing.
-  Context `{PropResizing}.
-
-  Definition merely (A : Type@{i}) : Type@{i}
-    := forall P:Type@{j}, IsHProp P -> (A -> P) -> P.
-
-  Definition trm {A} : A -> merely A
-    := fun a P HP f => f a.
-
-  Global Instance ishprop_merely `{Funext} (A : Type) : IsHProp (merely A).
-  Proof.
-    exact _.
-  Defined.
-
-  Definition merely_rec {A : Type@{i}} {P : Type@{j}} `{IsHProp P} (f : A -> P)
-    : merely A -> P
-    := fun ma => (equiv_resize_hprop P)^-1
-                 (ma (resize_hprop P) _ (equiv_resize_hprop P o f)).
-
-  Definition functor_merely `{Funext} {A B : Type} (f : A -> B)
-    : merely A -> merely B.
-  Proof.
-    srefine (merely_rec (trm o f)).
-  Defined.
-
-End AssumePropResizing.
-End Impredicative_Merely.
-
-(** ** The natural numbers *)
+(* Be careful about [Import]ing this file!  Usually you want
+to use the standard [Nat] instead. *)
 
 (** Using propositional resizing and univalence, we can construct the
 natural numbers rather than defining them as an inductive type.  In
@@ -56,10 +14,8 @@ concrete practice there is no reason we would want to do this, but
 semantically it means that an elementary (oo,1)-topos (unlike an
 elementary 1-topos) automatically has a natural numbers object. *)
 
-Module UAPRNat.
 Section AssumeStuff.
   Context {UA:Univalence} {PR:PropResizing}.
-  Import Impredicative_Merely.
 
   Definition Graph := { V : Type & { E : V -> V -> Type & forall x y, IsHProp (E x y) } }.
   Definition vert : Graph -> Type := pr1.
@@ -358,4 +314,3 @@ Section AssumeStuff.
   Defined.
 
 End AssumeStuff.
-End UAPRNat.

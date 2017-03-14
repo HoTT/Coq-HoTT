@@ -52,7 +52,9 @@ theories/Idempotents.v
 theories/Pullback.v
 theories/Factorization.v
 theories/Constant.v
-theories/PropResizing.v
+theories/PropResizing/PropResizing.v
+theories/PropResizing/Truncations.v
+theories/PropResizing/Nat.v
 theories/Modalities/ReflectiveSubuniverse.v
 theories/Modalities/Modality.v
 theories/Modalities/Accessible.v
