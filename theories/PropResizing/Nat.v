@@ -953,11 +953,11 @@ Section AssumeStuff.
       srefine (path_sigma' _ 1 _).
       abstract (rewrite transport_1;
       apply path_prod;
-      [ cbn;
+      [ cbn [partial_Nrec_restr nrec_partials fst pr2 pr1];
         rewrite ap_compose;
         rewrite ap_pr1_path_sigma_hprop;
         apply concat_1p
-      | cbn;
+      | cbn [partial_Nrec_restr nrec_partials pr1 pr2 snd];
         apply path_forall; intros mh;
         rewrite ap_compose;
         rewrite ap_pr1_path_sigma_hprop;
