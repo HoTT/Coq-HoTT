@@ -832,7 +832,9 @@ Section AssumeStuff.
               intros [L|L].
               * reflexivity.
               * case (N_lt_irref _ L).
-            + apply ap. cbn.
+            + apply ap.
+              cbv [eisretr equiv_adjointify equiv_compose equiv_compose' equiv_fun equiv_functor_prod equiv_functor_prod' equiv_functor_prod_l equiv_functor_sigma equiv_functor_sigma' equiv_functor_sigma_id equiv_functor_sum equiv_functor_sum' equiv_functor_sum_r equiv_idmap equiv_iff_hprop equiv_iff_hprop_uncurried equiv_inv equiv_inverse equiv_isequiv equiv_N_segment equiv_N_segment_lt_succ equiv_N_segment_succ equiv_N_segment_succ_maps equiv_precompose' equiv_sum_ind equiv_unit_rec inverse isequiv_adjointify isequiv_functor_sigma isequiv_idmap transport];
+                cbn [fst snd pr1 pr2 functor_sigma].
               match goal with
               | [ |- context[match ?L with | inl _ => inr tt | inr Hs => inl (?k; Hs) end] ] => generalize L
               end.
