@@ -636,12 +636,12 @@ Section AssumeStuff.
     : { m : N & m <= n } <~> {m : N & m < n} + Unit.
   Proof.
     srefine (equiv_adjointify _ _ _ _).
-    - intros [m H].
-      destruct (N_le_eq_or_lt m n H) as [H0|Hs].
+    - intros mH.
+      destruct (N_le_eq_or_lt mH.1 n mH.2) as [H0|Hs].
       + exact (inr tt).
-      + exact (inl (m;Hs)).
-    - intros [[m H]|[]].
-      + exact (m; N_lt_le m n H).
+      + exact (inl (mH.1;Hs)).
+    - intros [mH|?].
+      + exact (mH.1; N_lt_le mH.1 n mH.2).
       + exists n; reflexivity.
     - abstract (intros [[m H]|[]]; cbn;
       [ generalize (N_le_eq_or_lt m n (N_lt_le m n H));
