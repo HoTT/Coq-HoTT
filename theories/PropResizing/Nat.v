@@ -257,7 +257,7 @@ Section AssumeStuff.
     intros p; apply pr1_path in p; refine (graph_zero_neq_succ p).
   Qed.
 
-  (** This tweak is sometimes necessary to avoid universe inconsistency.  
+  (** This tweak is sometimes necessary to avoid universe inconsistency.
   It's how the impredicativity of propositional resizing enters. *)
   Definition resize_nrec (n : Graph) (nrec : in_N n)
     : in_N n.
@@ -371,7 +371,7 @@ Section AssumeStuff.
     intros [[]|x] [[]|y]; reflexivity.
   Qed.
 
-  Definition graph_add_succ (A B : Graph) 
+  Definition graph_add_succ (A B : Graph)
     : graph_add A (graph_succ B) = graph_succ (graph_add A B).
   Proof.
     apply equiv_path_graph.
@@ -690,7 +690,7 @@ Section AssumeStuff.
 
   Definition succ_seg (n : N)
     : { m : N & m < n } -> { m : N & m <= n }
-    := fun mh => 
+    := fun mh =>
          let (m,H) := mh in
          (succ m; fst (N_lt_iff_succ_le m n) H).
 
@@ -708,7 +708,7 @@ Section AssumeStuff.
 
     (** The type of partially defined recursive functions "up to [n]". *)
     Local Definition partial_Nrec (n : N) : Type
-      := { f : { m : N & m <= n} -> X & 
+      := { f : { m : N & m <= n} -> X &
            (f (zero_seg n) = x0) *
            forall (mh : {m:N & m < n}),
              f (succ_seg n mh) = xs (f ((equiv_N_segment n)^-1 (inl mh))) }.
@@ -742,7 +742,7 @@ Section AssumeStuff.
               transitivity ((ap g 1)^ @ H).
               - apply whiskerR, ap, ap.
                 apply path_ishprop.
-              - apply concat_1p. }              
+              - apply concat_1p. }
         + intros [f H].
           exists (fun mh => Empty_rec (N_lt_zero mh.1 mh.2)).
           intros g.
@@ -815,7 +815,7 @@ Section AssumeStuff.
               * rewrite equiv_seg_succ.
                 apply ap, path_sigma_hprop; reflexivity.
             + apply ap. cbn.
-              match goal with 
+              match goal with
               | [ |- context[match ?L with | inl _ => inr tt | inr Hs => inl (?k; Hs) end] ] => generalize L
               end.
               intros [L|L].
@@ -825,14 +825,14 @@ Section AssumeStuff.
           - refine ((equiv_contr_forall _)^-1 oE _).
             apply equiv_concat_lr.
             + cbn.
-              match goal with 
+              match goal with
               | [ |- context[match ?L with | inl _ => inr tt | inr Hs => inl (?k; Hs) end] ] => generalize L
               end.
               intros [L|L].
               * reflexivity.
               * destruct (N_lt_irref _ L).
             + apply ap. cbn.
-              match goal with 
+              match goal with
               | [ |- context[match ?L with | inl _ => inr tt | inr Hs => inl (?k; Hs) end] ] => generalize L
               end.
               intros [L|L].
@@ -922,14 +922,14 @@ Section AssumeStuff.
     Definition N_rec : N -> X := N_rec' (center partials).
     Definition N_rec_beta_zero : N_rec zero = x0
       := N_rec_beta_zero' (center partials).
-    Definition N_rec_beta_succ (n : N) 
+    Definition N_rec_beta_succ (n : N)
       : N_rec (succ n) = xs (N_rec n)
       := N_rec_beta_succ' (center partials) n.
 
     (** Here is the type of totally defined recursive functions that
     we want to prove to be contractible. *)
     Definition NRec : Type
-      := { f : N -> X & 
+      := { f : N -> X &
            (f zero = x0) *
            forall m:N, f (succ m) = xs (f m) }.
 
@@ -939,7 +939,7 @@ Section AssumeStuff.
       exists (fun mh => f.1 mh.1).
       split.
       - exact (fst f.2).
-      - intros mh.  
+      - intros mh.
         exact (snd f.2 mh.1).
     Defined.
 
@@ -974,7 +974,7 @@ Section AssumeStuff.
       exists (N_rec' pf).
       exact (N_rec_beta_zero' pf, N_rec_beta_succ' pf).
     Defined.
-    
+
     Local Definition nrec_partials_sect (f : NRec)
       : partials_nrec (nrec_partials f) = f.
     Proof.
@@ -990,7 +990,7 @@ Section AssumeStuff.
         unfold N_rec_beta_succ'.
         apply path_forall; intros n.
         cbn.
-        rewrite ap_compose. 
+        rewrite ap_compose.
         rewrite ap_pr1_path_sigma_hprop.
         rewrite ap_1, concat_1p.
         rewrite (ap_compose pr1 f).
