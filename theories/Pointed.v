@@ -260,8 +260,7 @@ Global Instance istrunc_loops_functor {n : trunc_index}
 Proof.
   intros p. unfold hfiber; simpl.
   refine (trunc_equiv' _ (equiv_functor_sigma' 1 (fun q => equiv_moveR_Vp _ _ _))); simpl.
-  refine (trunc_equiv' _ (equiv_functor_sigma' 1 (fun q => equiv_moveR_pM _ _ _))); simpl.
-  refine (trunc_equiv' _ (hfiber_ap _)^-1).
+  refine (trunc_equiv' _ (equiv_functor_sigma' 1 (fun q => equiv_moveR_pM _ _ _))).
 Defined.
 
 (** And likewise the connectedness.  *)

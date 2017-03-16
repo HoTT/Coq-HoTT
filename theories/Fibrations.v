@@ -223,7 +223,7 @@ Proof.
 Defined.
 
 (** IsTruncMap n.+1 f <-> IsTruncMap n (ap f) *)
-Definition istruncmap_ap {A B} n (f:A -> B) `{!IsTruncMap n.+1 f}
+Global Instance istruncmap_ap {A B} n (f:A -> B) `{!IsTruncMap n.+1 f}
   : forall x y, IsTruncMap n (@ap _ _ f x y)
   := fun x x' y =>
        trunc_equiv' _ (hfiber_ap y)^-1.
@@ -240,10 +240,10 @@ Definition istruncmap_ap_equiv `{Funext} {A B} n (f:A -> B)
   : IsTruncMap n.+1 f <~> (forall x y, IsTruncMap n (@ap _ _ f x y))
   := equiv_iff_hprop (@istruncmap_ap _ _ n f) (@istruncmap_from_ap _ _ n f).
 
-Definition isequiv_ap_isembedding {A B} (f : A -> B) `{!IsEmbedding f}
+Global Instance isequiv_ap_isembedding {A B} (f : A -> B) `{!IsEmbedding f}
   : forall x y, IsEquiv (@ap _ _ f x y).
 Proof.
-  intros x y. apply isequiv_fcontr,istruncmap_ap,_.
+  intros x y. apply isequiv_fcontr,_.
 Defined.
 
 Definition isembedding_isequiv_ap {A B} (f : A -> B) `{!forall x y, IsEquiv (@ap _ _ f x y)}
