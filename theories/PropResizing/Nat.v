@@ -949,6 +949,7 @@ Section AssumeStuff.
     Local Definition nrec_partials_succ (n : N) (f : NRec)
       : partial_Nrec_restr n (nrec_partials f (succ n)) = nrec_partials f n.
     Proof.
+      change (?x = ?y) with ((x.1; x.2) = (y.1; y.2)).
       srefine (path_sigma' _ 1 _).
       abstract (rewrite transport_1;
       apply path_prod;
