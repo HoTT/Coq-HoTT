@@ -236,7 +236,7 @@ Proof.
     exact (trunc_equiv' _ (hfiber_ap p)).
 Defined.
 
-Definition istruncmap_ap_equiv `{Funext} {A B} n (f:A -> B)
+Definition equiv_istruncmap_ap `{Funext} {A B} n (f:A -> B)
   : IsTruncMap n.+1 f <~> (forall x y, IsTruncMap n (@ap _ _ f x y))
   := equiv_iff_hprop (@istruncmap_ap _ _ n f) (@istruncmap_from_ap _ _ n f).
 
@@ -252,7 +252,7 @@ Proof.
   apply istruncmap_from_ap. intros x y;red;apply fcontr_isequiv,_.
 Defined.
 
-Definition isequiv_ap_isembedding_equiv `{Funext} {A B} (f : A -> B)
+Definition equiv_isequiv_ap_isembedding `{Funext} {A B} (f : A -> B)
   : IsEmbedding f <~> (forall x y, IsEquiv (@ap _ _ f x y)).
 Proof.
   exact (equiv_iff_hprop (@isequiv_ap_isembedding _ _ f) (@isembedding_isequiv_ap _ _ f)).
