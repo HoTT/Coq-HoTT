@@ -57,7 +57,7 @@ Module Notnot_Easy_Modalities <: EasyModalities.
   : IsEquiv@{i i} (to@{u a i} O (z = z')).
   Proof.
     pose (unNotnot O).
-    pose proof (hprop_Empty@{i});pose proof (@trunc_hprop@{i a}).
+    pose proof (hprop_Empty@{i});pose proof (@trunc_hprop@{i}).
     refine (isequiv_iff_hprop _ _).
     intros; apply path_ishprop.
   Defined.
