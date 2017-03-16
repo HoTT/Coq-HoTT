@@ -830,7 +830,7 @@ Section AssumeStuff.
               end.
               intros [L|L].
               * reflexivity.
-              * destruct (N_lt_irref _ L).
+              * case (N_lt_irref _ L).
             + apply ap. cbn.
               match goal with
               | [ |- context[match ?L with | inl _ => inr tt | inr Hs => inl (?k; Hs) end] ] => generalize L
