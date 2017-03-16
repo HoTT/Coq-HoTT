@@ -198,8 +198,8 @@ Section AssumeStuff.
     apply trunc_forall.
   Qed.
 
-  Definition N@{v e hp u p up}
-    := @sig@{u up} Graph@{v e hp u} in_N@{v e hp u p}.
+  Definition N@{s u p}
+    := @sig@{u p} Graph@{s s s u} in_N@{s s s u u}.
 
   Definition path_N (n m : N) : n.1 = m.1 -> n = m
     := path_sigma_hprop n m.
