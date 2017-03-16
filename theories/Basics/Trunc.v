@@ -172,8 +172,8 @@ Defined.
 Definition equiv_iff_hprop_uncurried `{IsHProp A} `{IsHProp B}
   : (A <-> B) -> (A <~> B).
 Proof.
-  intros [f g].
-  apply (equiv_adjointify f g);
+  intro fg.
+  apply (equiv_adjointify (fst fg) (snd fg));
     intros ?; apply path_ishprop.
 Defined.
 
