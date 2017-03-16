@@ -987,9 +987,8 @@ Section AssumeStuff.
         rewrite ap_compose.
         rewrite ap_pr1_path_sigma_hprop.
         apply concat_1p.
-      - cbn.
+      - apply path_forall; intros n.
         unfold N_rec_beta_succ'.
-        apply path_forall; intros n.
         cbn.
         rewrite ap_compose.
         rewrite ap_pr1_path_sigma_hprop.
@@ -998,12 +997,13 @@ Section AssumeStuff.
         rewrite ap_pr1_path_sigma_hprop.
         rewrite ap_1, concat_1p.
         refine (_ @ (concat_p1 _)); apply whiskerL.
+        set (refl_seg_n := refl_seg n).
         (** Here is where we use [nrec_partials_succ]: the [path_contr] equal to it, which allows us to identify [ap pr1] of the latter.  (Note that [ap pr1] of a [path_contr] can be nontrivial even when the endpoints happen to coincide judgmentally, for instance (x;p) and (x;1) in {y:X & y = x}, so there really is something to prove here.) *)
-        transitivity (ap xs (ap10 (ap pr1 (nrec_partials_succ n (f;(f0,fs)))) (refl_seg n))).
+        transitivity (ap xs (ap10 (ap pr1 (nrec_partials_succ n (f;(f0,fs)))) refl_seg_n)).
         + apply ap.
           assert (p : path_contr _ _ =  nrec_partials_succ n (f; (f0, fs))).
           { apply path_contr. }
-          exact (ap (fun h => ap10 (ap pr1 h) (refl_seg n)) p).
+          exact (ap (fun h => ap10 (ap pr1 h) refl_seg_n) p).
         + unfold nrec_partials_succ.
           unfold path_sigma'.
           rewrite ap_pr1_path_sigma.
