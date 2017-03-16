@@ -814,7 +814,9 @@ Section AssumeStuff.
               * apply ap. apply path_sigma_hprop. reflexivity.
               * rewrite equiv_seg_succ.
                 apply ap, path_sigma_hprop; reflexivity.
-            + apply ap. cbn.
+            + apply ap.
+              cbv [equiv_fun equiv_inv equiv_isequiv equiv_inverse equiv_adjointify isequiv_adjointify equiv_compose' equiv_compose equiv_precompose' equiv_functor_sigma_id equiv_N_segment_succ equiv_sum_ind equiv_functor_prod_l equiv_functor_sum_r equiv_functor_sigma' equiv_functor_sum equiv_functor_sum' equiv_functor_sigma equiv_functor_prod equiv_functor_prod' equiv_idmap isequiv_idmap equiv_unit_rec isequiv_functor_sigma equiv_iff_hprop equiv_iff_hprop_uncurried eisretr inverse transport succ_seg equiv_N_segment_succ_maps equiv_N_segment_lt_succ equiv_N_segment];
+                cbn.
               match goal with
               | [ |- context[match ?L with | inl _ => inr tt | inr Hs => inl (?k; Hs) end] ] => generalize L
               end.
