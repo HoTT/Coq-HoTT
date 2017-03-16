@@ -836,7 +836,7 @@ Section AssumeStuff.
               | [ |- context[match ?L with | inl _ => inr tt | inr Hs => inl (?k; Hs) end] ] => generalize L
               end.
               intros [L|L].
-              * destruct (N_neq_succ n L).
+              * case (N_neq_succ n L).
               * cbn.
                 apply ap, path_sigma_hprop. reflexivity. } }
       { refine (equiv_sigma_prod _ oE _).
