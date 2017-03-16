@@ -233,11 +233,9 @@ Definition istruncmap_from_ap {A B} n (f:A -> B)
   : (forall x y, IsTruncMap n (@ap _ _ f x y)) ->
     IsTruncMap n.+1 f.
 Proof.
-  intros E y a b;
-    change (IsTrunc n (a = b)).
-  destruct a as [a p], b as [b q].
-  destruct q.
-  exact (trunc_equiv' _ (hfiber_ap p)).
+  intros E y [a p] [b q];
+    destruct q;
+    exact (trunc_equiv' _ (hfiber_ap p)).
 Defined.
 
 Lemma isequiv_ap_isembedding {A B} (f : A -> B) : IsEmbedding f -> forall x y, IsEquiv (@ap _ _ f x y).
