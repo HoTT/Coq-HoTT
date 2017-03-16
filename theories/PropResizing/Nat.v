@@ -992,7 +992,9 @@ Section AssumeStuff.
         apply concat_1p.
       - apply path_forall; intros n.
         unfold N_rec_beta_succ'.
-        cbn.
+        cbn [fst snd pr1 pr2];
+          cbv [equiv_fun equiv_inverse equiv_inv equiv_isequiv equiv_compose' equiv_compose isequiv_compose equiv_functor_sum_r equiv_functor_sigma_id equiv_functor_sigma' equiv_functor_sigma equiv_functor_sum' equiv_functor_sum equiv_adjointify isequiv_adjointify isequiv_functor_sum isequiv_idmap equiv_idmap isequiv_functor_sigma equiv_iff_hprop_uncurried functor_sum functor_sigma equiv_N_segment equiv_N_segment_succ inverse transport eisretr];
+          cbn [fst snd pr1 pr2 refl_seg].
         rewrite ap_compose.
         rewrite ap_pr1_path_sigma_hprop.
         rewrite ap_1, concat_1p.
