@@ -238,12 +238,22 @@ Proof.
     exact (trunc_equiv' _ (hfiber_ap p)).
 Defined.
 
-Lemma isequiv_ap_isembedding {A B} (f : A -> B) : IsEmbedding f -> forall x y, IsEquiv (@ap _ _ f x y).
+Definition istruncmap_ap_equiv `{Funext} {A B} n (f:A -> B)
+  : IsTruncMap n.+1 f <~> (forall x y, IsTruncMap n (@ap _ _ f x y))
+  := equiv_iff_hprop (istruncmap_ap n f) (istruncmap_from_ap n f).
+
+Definition isequiv_ap_isembedding {A B} (f : A -> B) : IsEmbedding f -> forall x y, IsEquiv (@ap _ _ f x y).
 Proof.
   intros E x y. apply isequiv_fcontr,istruncmap_ap,E.
-Qed.
+Defined.
 
-Lemma isembedding_isequiv_ap {A B} (f : A -> B) : (forall x y, IsEquiv (@ap _ _ f x y)) -> IsEmbedding f.
+Definition isembedding_isequiv_ap {A B} (f : A -> B) : (forall x y, IsEquiv (@ap _ _ f x y)) -> IsEmbedding f.
 Proof.
   intros E. apply istruncmap_from_ap. intros x y;red;apply fcontr_isequiv,E.
-Qed.
+Defined.
+
+Definition isequiv_ap_isembedding_equiv `{Funext} {A B} (f : A -> B)
+  : IsEmbedding f <~> (forall x y, IsEquiv (@ap _ _ f x y)).
+Proof.
+  exact (equiv_iff_hprop (isequiv_ap_isembedding f) (isembedding_isequiv_ap f)).
+Defined.
