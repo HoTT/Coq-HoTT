@@ -643,23 +643,23 @@ Section AssumeStuff.
     - intros [[m H]|[]].
       + exact (m; N_lt_le m n H).
       + exists n; reflexivity.
-    - intros [[m H]|[]]; cbn.
-      + generalize (N_le_eq_or_lt m n (N_lt_le m n H)).
-        intros [H0|Hs]; cbn.
-        * apply Empty_rec.
-          rewrite H0 in H; exact (N_lt_irref n H).
-        * apply ap, ap, path_ishprop.
-      + generalize (N_le_eq_or_lt n n (reflexive_N_le n)).
-        intros [H0|Hs].
-        * reflexivity.
-        * apply Empty_rec.
-          exact (N_lt_irref n Hs).
-    - intros [m H]; cbn.
-      generalize (N_le_eq_or_lt m n H).
-      intros [H0|Hs]; cbn.
-      + apply path_sigma_hprop.
-        symmetry; assumption.
-      + apply ap, path_ishprop.
+    - abstract (intros [[m H]|[]]; cbn;
+      [ generalize (N_le_eq_or_lt m n (N_lt_le m n H));
+        intros [H0|Hs]; cbn;
+        [ apply Empty_rec;
+          rewrite H0 in H; exact (N_lt_irref n H)
+        | apply ap, ap, path_ishprop ]
+      | generalize (N_le_eq_or_lt n n (reflexive_N_le n));
+        intros [H0|Hs];
+        [ reflexivity
+        | apply Empty_rec;
+          exact (N_lt_irref n Hs) ]]).
+    - abstract (intros [m H]; cbn;
+      generalize (N_le_eq_or_lt m n H);
+      intros [H0|Hs]; cbn;
+      [ apply path_sigma_hprop;
+        symmetry; assumption
+      | apply ap, path_ishprop ]).
   Defined.
 
   Definition equiv_N_segment_succ (n : N)
@@ -950,22 +950,22 @@ Section AssumeStuff.
       : partial_Nrec_restr n (nrec_partials f (succ n)) = nrec_partials f n.
     Proof.
       srefine (path_sigma' _ 1 _).
-      rewrite transport_1.
-      apply path_prod.
-      - cbn.
-        rewrite ap_compose.
-        rewrite ap_pr1_path_sigma_hprop.
-        apply concat_1p.
-      - cbn.
-        apply path_forall; intros mh.
-        rewrite ap_compose.
-        rewrite ap_pr1_path_sigma_hprop.
-        rewrite ap_1, concat_1p.
-        refine (_ @ concat_p1 _); apply whiskerL.
-        refine (_ @ ap_1 _ xs); apply ap.
-        rewrite ap_compose.
-        rewrite ap_pr1_path_sigma_hprop.
-        reflexivity.
+      abstract (rewrite transport_1;
+      apply path_prod;
+      [ cbn;
+        rewrite ap_compose;
+        rewrite ap_pr1_path_sigma_hprop;
+        apply concat_1p
+      | cbn;
+        apply path_forall; intros mh;
+        rewrite ap_compose;
+        rewrite ap_pr1_path_sigma_hprop;
+        rewrite ap_1, concat_1p;
+        refine (_ @ concat_p1 _); apply whiskerL;
+        refine (_ @ ap_1 _ xs); apply ap;
+        rewrite ap_compose;
+        rewrite ap_pr1_path_sigma_hprop;
+        reflexivity ]).
     Defined.
 
     Local Definition partials_nrec : partials -> NRec.
@@ -1007,7 +1007,7 @@ Section AssumeStuff.
           unfold path_sigma'.
           rewrite ap_pr1_path_sigma.
           reflexivity.
-    Defined.
+    Qed.
 
     (** And we're done! *)
     Global Instance contr_NRec : Contr NRec.
