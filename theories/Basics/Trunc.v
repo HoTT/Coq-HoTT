@@ -16,7 +16,7 @@ Fixpoint trunc_index_add (m n : trunc_index) : trunc_index
 
 Notation "m -2+ n" := (trunc_index_add m n) (at level 50, left associativity) : trunc_scope.
 
-Fixpoint trunc_index_leq (m n : trunc_index) : Type
+Fixpoint trunc_index_leq (m n : trunc_index) : Type0
   := match m, n with
        | -2, _ => Unit
        | m'.+1, -2 => Empty

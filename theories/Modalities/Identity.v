@@ -44,7 +44,7 @@ Module Identity_Modalities <: Modalities.
   Definition hprop_inO@{u a i}
   : Funext -> forall (O : Modality@{u a}) (T : Type@{i}),
                 IsHProp (In@{u a i} O T)
-    := fun _ O T => trunc_contr@{i a}.
+    := fun _ O T => trunc_contr@{i}.
 
   Definition O_ind_internal
   : forall (O : Modality@{u a})

@@ -145,7 +145,7 @@ Module Accessible_ClosedModalities
     split.
     - intros X_inO u.
       pose (X_inO u).
-      apply ooextendable_contr@{a a i i a}; exact _.
+      apply ooextendable_contr@{a a i i}; exact _.
     - intros ext u.
       exists ((fst (ext u 1%nat) Empty_rec).1 tt); intros x.
       unfold const in ext.
