@@ -18,7 +18,16 @@ Section AssumeStuff.
   Context {UA:Univalence} {PR:PropResizing}.
 
   (** The basic idea is that since the universe is closed under coproducts, it is already "infinite", so we can find the "smallest infininte set" N inside it.  To get rid of the automorphisms in the universe coming from univalence and make N a set, instead of the universe of types we consider graphs (we could use posets or many other things too; in fact the graphs we are interested in will be posets). *)
+
+  (** Here is the readable definition of [Graph]:
+
+  > Definition Graph := { V : Type & { E : V -> V -> Type & forall x y, IsHProp@{hp} (E x y) }}.
+
+  However, to enable performance speedups by controlling universes, we write out its universe parameters explicitly, making it less readable: *)
+
   Definition Graph@{v e hp u} := @sig@{u u} Type@{v} (fun V => @sig@{u u} (V -> V -> Type@{e}) (fun E => forall x y, IsHProp@{hp} (E x y))).
+
+  (** We also write out its constructors and fields explicitly to control their universes. *)
   Definition Build_Graph@{v e hp u} (vert : Type@{v}) (edge : vert -> vert -> Type@{e})
              (ishprop_edge : forall x y, IsHProp@{hp} (edge x y))
     : Graph@{v e hp u}
@@ -30,6 +39,7 @@ Section AssumeStuff.
   Definition edge@{v e hp u} (A : Graph@{v e hp u}) : vert A -> vert A -> Type@{e} := pr1 (pr2 A).
   Instance ishprop_edge@{v e hp u} (A : Graph@{v e hp u}) (x y : vert A) : IsHProp@{hp} (edge A x y)
     := pr2 (pr2 A) x y.
+  (** We will need universe annotations in a few more places, but not many. *)
 
   Definition equiv_path_graph (A B : Graph)
     : { f : vert A <~> vert B &
