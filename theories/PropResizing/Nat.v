@@ -215,22 +215,22 @@ Section AssumeStuff.
     apply trunc_forall.
   Qed.
 
-  Instance ishprop_in_N@{v u p} : forall n, IsHProp (in_N n)
-    := ishprop_in_N0@{large v u p large large large large large}.
+  Instance ishprop_in_N@{v u p sp} : forall n, IsHProp (in_N n)
+    := ishprop_in_N0@{sp v u p sp sp sp sp sp}.
 
-  Definition N@{s u p}
+  Definition N@{s u p} : Type@{p}
     := @sig@{u p} Graph@{s u} in_N@{s u u}.
 
-  Definition path_N (n m : N) : n.1 = m.1 -> n = m
-    := path_sigma_hprop n m.
+  Definition path_N@{s u p sp} (n m : N@{s u p}) : n.1 = m.1 -> n = m
+    := path_sigma_hprop@{u p sp} n m.
 
-  Definition zero : N.
+  Definition zero@{s u p} : N@{s u p}.
   Proof.
     exists graph_zero.
     intros P PH P0 Ps; exact P0.
   Defined.
 
-  Definition succ : N -> N.
+  Definition succ@{s u p} : N@{s u p} -> N.
   Proof.
     intros [n nrec].
     exists (graph_succ n).
@@ -239,7 +239,7 @@ Section AssumeStuff.
   Defined.
 
   (** First Peano axiom: successor is injective *)
-  Definition succ_inj (n m : N) (p : succ n = succ m) : n = m.
+  Definition succ_inj@{s u p} (n m : N@{s u p}) (p : succ n = succ m) : n = m.
   Proof.
     apply path_N.
     apply ((graph_succ_path_equiv n.1 m.1)^-1).
@@ -248,7 +248,7 @@ Section AssumeStuff.
 
   (** A slightly more general version of the theorem that N is a set,
   which will be useful later. *)
-  Instance ishprop_path_N (n : N) (A : Graph) : IsHProp (n.1 = A).
+  Instance ishprop_path_N@{s u p} (n : N@{s u p}) (A : Graph) : IsHProp (n.1 = A).
   Proof.
     destruct n as [n nrec]; cbn.
     apply hprop_inhabited_contr; intros [].
@@ -266,14 +266,14 @@ Section AssumeStuff.
       refine (contr_equiv (B = B) (graph_succ_path_equiv B B)).
   Qed.
 
-  Instance ishset_N : IsHSet N.
+  Instance ishset_N@{s u p} : IsHSet N@{s u p}.
   Proof.
     intros n m.
     change (IsHProp (n = m)).
     refine (trunc_equiv (n.1 = m.1) (equiv_path_sigma_hprop n m)).
   Qed.
 
-  Definition graph_zero_neq_succ {A : Graph}
+  Definition graph_zero_neq_succ@{v u} {A : Graph@{v u}}
     : graph_zero <> graph_succ A.
   Proof.
     intros p.
@@ -282,15 +282,15 @@ Section AssumeStuff.
   Qed.
 
   (** Second Peano axiom: zero is not a successor *)
-  Definition zero_neq_succ (n : N) : zero <> succ n.
+  Definition zero_neq_succ@{s u p} (n : N@{s u p}) : zero <> succ n.
   Proof.
     intros p; apply pr1_path in p; refine (graph_zero_neq_succ p).
   Qed.
 
   (** This tweak is sometimes necessary to avoid universe inconsistency.
   It's how the impredicativity of propositional resizing enters. *)
-  Definition resize_nrec (n : Graph) (nrec : in_N n)
-    : in_N n.
+  Definition resize_nrec@{v u p p'} (n : Graph) (nrec : in_N@{v u p} n)
+    : in_N@{v u p'} n.
   Proof.
     intros P' PH' P0' Ps'.
     srefine ((equiv_resize_hprop (P' n))^-1
@@ -302,12 +302,23 @@ Section AssumeStuff.
                                 (Ps' A ((equiv_resize_hprop (P' A))^-1 P'A))).
   Qed.
 
-  Definition N_zero_or_succ (n : N)
+  Local Instance ishprop_N_zero_or_succ@{s u p} : forall n : N@{s u p},
+      IsHProp ((n = zero) + { m : N & n = succ m }).
+  Proof.
+    intros n. apply ishprop_sum.
+    - exact _.
+    - apply ishprop_sigma_disjoint. intros x y ex ey.
+      apply succ_inj;path_via n.
+    - intros e0 [m es].
+      apply zero_neq_succ with m. path_via n.
+  Qed.
+
+  Definition merely_N_zero_or_succ (n : N@{s u p})
     : merely ((n = zero) + { m : N & n = succ m }).
   Proof.
     apply (functor_merely
-           (functor_sum (path_N _ _)
-                       (functor_sigma (Q := fun m:N => n = succ m) idmap (fun m => path_N _ (succ m))))).
+             (functor_sum (path_N _ _)
+                          (functor_sigma (Q := fun m:N => n = succ m) idmap (fun m => path_N _ (succ m))))).
     destruct n as [n nrec]; cbn.
     srefine (resize_nrec n nrec
              (fun n => merely ((n = graph_zero) +
@@ -322,11 +333,19 @@ Section AssumeStuff.
         reflexivity.
   Qed.
 
+  Lemma N_zero_or_succ@{s u p} n : (n = zero) + {m : N@{s u p} & n = succ m}.
+  Proof.
+    apply (merely_rec idmap
+                      (merely_N_zero_or_succ@{s u p p u
+                                                p p u p p
+                                                p p p p p
+                                                p p} n)).
+  Qed.
+
   Definition pred_in_N (n : Graph) (snrec : in_N (graph_succ n))
     : in_N n.
   Proof.
-    refine (merely_rec _ (N_zero_or_succ (graph_succ n ; snrec))).
-    intros [H0|[m Hs]].
+    destruct (N_zero_or_succ (graph_succ n ; snrec)) as [H0|[m Hs]].
     - apply pr1_path in H0; cbn in H0.
       destruct (graph_zero_neq_succ H0^).
     - apply pr1_path in Hs.
@@ -600,7 +619,7 @@ Section AssumeStuff.
       symmetry in K; apply zero_neq_succ in K; assumption. }
     unfold N_le in H.
     revert H; apply merely_rec; intros [k K].
-    generalize (N_zero_or_succ k); apply merely_rec; intros [k0|[l L]].
+    destruct (N_zero_or_succ k) as [k0|[l L]].
     - rewrite k0 in K.
       rewrite (N_add_zero_l n) in K.
       exact (inl K).
