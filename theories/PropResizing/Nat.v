@@ -436,10 +436,8 @@ Section AssumeStuff.
     intros [[x|x]|x] [[y|y]|y]; reflexivity.
   Qed.
 
-  Definition graph_one : Graph.
-  Proof.
-    refine (Unit;(fun _ _ => Unit;_)); exact _.
-  Defined.
+  Definition graph_one@{v u} : Graph@{v u}
+    := Build_Graph Unit (fun _ _ : Unit => Unit) _.
 
   Definition graph_add_one_succ (A : Graph)
     : graph_add A graph_one = graph_succ A.
@@ -455,7 +453,7 @@ Section AssumeStuff.
     apply graph_add_zero_l.
   Qed.
 
-  Definition one : N.
+  Definition one@{s u p} : N@{s u p}.
   Proof.
     exists graph_one.
     intros P PH P0 Ps.
@@ -544,24 +542,30 @@ Section AssumeStuff.
   Qed.
 
   (** Now we define inequality in terms of addition. *)
-  Definition N_le (n m : N) : Type
-    := merely { k : N & k + n = m }.
+  Definition N_le@{s u p} (n m : N@{s u p}) : Type@{p}
+    := { k : N & k + n = m }.
 
   Notation "n <= m" := (N_le n m).
 
+  Local Instance ishprop_N_le n m : IsHProp (n <= m).
+  Proof.
+    apply ishprop_sigma_disjoint.
+    intros x y e1 e2.
+    apply N_add_cancel_r with n. path_via m.
+  Qed.
+
   Definition N_zero_le (n : N) : zero <= n.
   Proof.
-    apply trm; exists n.
+    exists n.
     apply N_add_zero_r.
   Qed.
 
   Definition N_le_zero (n : N) (H : n <= zero) : n = zero.
   Proof.
-    unfold N_le in H.
-    revert H; apply merely_rec; intros [k H].
+    destruct H as [k H].
     apply pr1_path in H.
     apply ((equiv_path_graph _ _)^-1), pr1 in H.
-    assert (f := (fun x => H (inr x)) : (vert n.1) -> Empty).
+    pose proof ((fun x => H (inr x)) : (vert n.1) -> Empty) as f.
     apply path_N, equiv_path_graph.
     srefine ((BuildEquiv _ _ f _);_); cbn.
     intros x y; destruct (f x).
@@ -578,19 +582,30 @@ Section AssumeStuff.
   Instance reflexive_N_le : Reflexive N_le.
   Proof.
     intros n.
-    apply trm; exists zero.
+    exists zero.
     apply N_add_zero_l.
   Qed.
 
-  Definition N_lt (n m : N) : Type
-    := merely { k : N & (succ k) + n = m }.
+  Definition N_lt@{s u p} (n m : N@{s u p}) : Type@{p}
+    := { k : N & (succ k) + n = m }.
 
   Notation "n < m" := (N_lt n m).
 
+  Lemma ishprop_N_lt0 n m : IsHProp (n < m).
+  Proof.
+    apply ishprop_sigma_disjoint.
+    intros x y e1 e2.
+    apply N_add_cancel_r with (succ n).
+    rewrite !N_add_succ, <-!N_add_succ_l.
+    path_via m.
+  Qed.
+
+  Local Instance ishprop_N_lt@{s u p} : forall n m, IsHProp (n < m)
+    := ishprop_N_lt0@{s u p p u s}.
+
   Definition N_lt_zero (n : N) : ~(n < zero).
   Proof.
-    unfold N_lt; intros H; revert H.
-    apply merely_rec; intros [k H].
+    unfold N_lt; intros [k H].
     apply pr1_path, (equiv_path_graph _ _)^-1, pr1 in H.
     exact (H (inl (inr tt))).
   Qed.
@@ -599,11 +614,8 @@ Section AssumeStuff.
   Proof.
     revert n; apply N_propind; try exact _.
     - apply N_lt_zero.
-    - intros n H K.
-      unfold N_lt in H, K.
-      revert K; apply merely_rec; intros [k K].
-      apply H, trm.
-      exists k.
+    - intros n H [k K].
+      apply H; exists k.
       rewrite N_add_succ in K.
       apply succ_inj; assumption.
   Qed.
@@ -613,19 +625,16 @@ Section AssumeStuff.
   Proof.
     assert (HP : IsHProp ((n = m) + (n < m))).
     { apply ishprop_sum; try exact _.
-      intros [].
-      apply merely_rec; intros [l K].
+      intros [] [l K].
       apply N_add_cancel_zero_r in K.
       symmetry in K; apply zero_neq_succ in K; assumption. }
-    unfold N_le in H.
-    revert H; apply merely_rec; intros [k K].
+    destruct H as [k K].
     destruct (N_zero_or_succ k) as [k0|[l L]].
     - rewrite k0 in K.
       rewrite (N_add_zero_l n) in K.
       exact (inl K).
     - rewrite L in K.
-      apply inr, trm.
-      exact (l;K).
+      exact (inr (l;K)).
   Qed.
 
   Definition N_succ_nlt (n : N) : ~(succ n < n).
@@ -634,8 +643,7 @@ Section AssumeStuff.
     - apply N_lt_zero.
     - intros n H L.
       apply H; clear H.
-      unfold N_lt in *.
-      revert L; apply functor_merely; intros [k H].
+      destruct L as [k H].
       exists k.
       rewrite N_add_succ in H.
       exact (succ_inj _ _ H).
@@ -643,15 +651,14 @@ Section AssumeStuff.
 
   Definition N_lt_succ (n : N) : n < succ n.
   Proof.
-    unfold N_lt.
-    apply trm; exists zero.
+    exists zero.
     rewrite N_add_succ_l.
     apply ap, N_add_zero_l.
   Qed.
 
   Definition N_succ_lt (n m : N) (H : n < m) : succ n < succ m.
   Proof.
-    revert H; apply functor_merely; intros [k H].
+    destruct H as [k H].
     exists k.
     rewrite N_add_succ.
     apply ap; assumption.
@@ -659,14 +666,14 @@ Section AssumeStuff.
 
   Definition N_lt_le (n m : N) (H : n < m) : n <= m.
   Proof.
-    revert H; apply functor_merely; intros [k K].
+    destruct H as [k K].
     exact (succ k; K).
   Qed.
 
   Definition N_lt_iff_succ_le (n m : N) :
     (n < m) <-> (succ n <= m).
   Proof.
-    split; apply functor_merely; intros [k H]; exists k.
+    split; intros [k H]; exists k.
     - rewrite N_add_succ, <- N_add_succ_l.
       assumption.
     - rewrite N_add_succ_l, <- N_add_succ.
@@ -675,7 +682,7 @@ Section AssumeStuff.
 
   Definition N_lt_succ_iff_le (n m : N) : (n < succ m) <-> (n <= m).
   Proof.
-    split; apply functor_merely; intros [k H]; exists k.
+    split; intros [k H]; exists k.
     - rewrite N_add_succ_l in H.
       exact (succ_inj _ _ H).
     - rewrite N_add_succ_l; apply ap, H.
