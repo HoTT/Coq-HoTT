@@ -253,11 +253,10 @@ Section AssumeStuff.
 
   (** A slightly more general version of the theorem that N is a set,
   which will be useful later. *)
-  Instance ishprop_path_N@{} (n : N) (A : Graph) : IsHProp (n.1 = A).
+  Lemma ishprop_path_graph_in_N@{} (A B : Graph) (Arec : in_N A) : IsHProp (A = B).
   Proof.
-    destruct n as [n nrec]; cbn.
     apply hprop_inhabited_contr; intros [].
-    apply nrec; try exact _.
+    apply Arec; try exact _.
     - apply contr_inhabited_hprop; try exact 1.
       apply hprop_allpath.
       equiv_intro (equiv_path_graph graph_zero graph_zero) fe.
@@ -267,8 +266,13 @@ Section AssumeStuff.
       apply equiv_ap; try exact _.
       apply path_sigma_hprop, path_equiv@{s s s u}, path_arrow.
       intros [].
-    - intros B BC.
+    - clear B;intros B BC.
       refine (contr_equiv (B = B) (graph_succ_path_equiv B B)).
+  Qed.
+
+  Instance ishprop_path_N@{} (n : N) (A : Graph) : IsHProp (n.1 = A).
+  Proof.
+    apply ishprop_path_graph_in_N, pr2.
   Qed.
 
   Instance ishset_N@{} : IsHSet N.
@@ -307,6 +311,21 @@ Section AssumeStuff.
                                 (Ps' A ((equiv_resize_hprop (P' A))^-1 P'A))).
   Qed.
 
+  Local Instance ishprop_graph_zero_or_succ@{} : forall n : Graph,
+      IsHProp ((n = graph_zero) + { m : N & n = graph_succ m.1 }).
+  Proof.
+    intros n. apply ishprop_sum@{p u p}.
+    - apply (@trunc_equiv' _ _ (equiv_path_inverse _ _)),ishprop_path_graph_in_N.
+      exact zero.2.
+    - apply @ishprop_sigma_disjoint.
+      + intros m;apply (@trunc_equiv' _ _ (equiv_path_inverse _ _)).
+        apply ishprop_path_graph_in_N. exact ((succ m).2).
+      + intros x y ex ey.
+        apply succ_inj, path_N. path_via n.
+    - intros e0 [m es].
+      apply zero_neq_succ with m, path_N. path_via n.
+  Qed.
+
   Local Instance ishprop_N_zero_or_succ@{} : forall n : N,
       IsHProp ((n = zero) + { m : N & n = succ m }).
   Proof.
@@ -318,33 +337,23 @@ Section AssumeStuff.
       apply zero_neq_succ with m. path_via n.
   Qed.
 
-  Definition merely_N_zero_or_succ (n : N)
-    : merely ((n = zero) + { m : N & n = succ m }).
+  Definition N_zero_or_succ@{} (n : N)
+    : (n = zero) + { m : N & n = succ m }.
   Proof.
-    apply (functor_merely
-             (functor_sum (path_N _ _)
-                          (functor_sigma (Q := fun m:N => n = succ m) idmap (fun m => path_N _ (succ m))))).
+    apply (functor_sum (path_N _ _)
+                       (functor_sigma (Q := fun m:N => n = succ m) idmap (fun m => path_N _ (succ m)))).
     destruct n as [n nrec]; cbn.
     srefine (resize_nrec n nrec
-             (fun n => merely ((n = graph_zero) +
-                       {m : N & n = graph_succ m.1})) _ _ _); cbn.
-    - apply trm, inl; reflexivity.
-    - intros A; apply functor_merely; intros [A0|[m As]]; apply inr.
+             (fun n => (n = graph_zero) +
+                    {m : N & n = graph_succ m.1}) _ _ _); cbn.
+    - apply inl; reflexivity.
+    - intros A [A0|[m As]]; apply inr.
       + exists zero.
         rewrite A0.
         reflexivity.
       + exists (succ m).
         rewrite As.
         reflexivity.
-  Qed.
-
-  Lemma N_zero_or_succ@{} n : (n = zero) + {m : N & n = succ m}.
-  Proof.
-    Set Printing Universes. About merely_N_zero_or_succ.
-    apply (merely_rec idmap
-                      (merely_N_zero_or_succ@{p u p p u
-                                                p p p p p
-                                                p p p p} n)).
   Qed.
 
   Definition pred_in_N (n : Graph) (snrec : in_N (graph_succ n))
