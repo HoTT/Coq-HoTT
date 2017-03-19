@@ -221,19 +221,21 @@ Section AssumeStuff.
   Instance ishprop_in_N@{p sp} : forall n, IsHProp (in_N n)
     := ishprop_in_N0@{sp p sp sp sp sp sp}.
 
-  Definition N@{p} : Type@{p}
+  (* [p] : universe of [N], morally [u+1] i.e. [s+2]. *)
+  Universe p.
+  Definition N@{} : Type@{p}
     := @sig@{u p} Graph in_N@{u}.
 
-  Definition path_N@{p sp} (n m : N@{p}) : n.1 = m.1 -> n = m
-    := path_sigma_hprop@{u p sp} n m.
+  Definition path_N@{} (n m : N) : n.1 = m.1 -> n = m
+    := path_sigma_hprop@{u p p} n m.
 
-  Definition zero@{p} : N@{p}.
+  Definition zero@{} : N.
   Proof.
     exists graph_zero.
     intros P PH P0 Ps; exact P0.
   Defined.
 
-  Definition succ@{p} : N@{p} -> N.
+  Definition succ@{} : N -> N.
   Proof.
     intros [n nrec].
     exists (graph_succ n).
@@ -242,7 +244,7 @@ Section AssumeStuff.
   Defined.
 
   (** First Peano axiom: successor is injective *)
-  Definition succ_inj@{p} (n m : N@{p}) (p : succ n = succ m) : n = m.
+  Definition succ_inj@{} (n m : N) (p : succ n = succ m) : n = m.
   Proof.
     apply path_N.
     apply ((graph_succ_path_equiv n.1 m.1)^-1).
@@ -251,7 +253,7 @@ Section AssumeStuff.
 
   (** A slightly more general version of the theorem that N is a set,
   which will be useful later. *)
-  Instance ishprop_path_N@{p} (n : N@{p}) (A : Graph) : IsHProp (n.1 = A).
+  Instance ishprop_path_N@{} (n : N) (A : Graph) : IsHProp (n.1 = A).
   Proof.
     destruct n as [n nrec]; cbn.
     apply hprop_inhabited_contr; intros [].
@@ -269,7 +271,7 @@ Section AssumeStuff.
       refine (contr_equiv (B = B) (graph_succ_path_equiv B B)).
   Qed.
 
-  Instance ishset_N@{p} : IsHSet N@{p}.
+  Instance ishset_N@{} : IsHSet N.
   Proof.
     intros n m.
     change (IsHProp (n = m)).
@@ -285,15 +287,15 @@ Section AssumeStuff.
   Qed.
 
   (** Second Peano axiom: zero is not a successor *)
-  Definition zero_neq_succ@{p} (n : N@{p}) : zero <> succ n.
+  Definition zero_neq_succ@{} (n : N) : zero <> succ n.
   Proof.
     intros p; apply pr1_path in p; refine (graph_zero_neq_succ p).
   Qed.
 
   (** This tweak is sometimes necessary to avoid universe inconsistency.
   It's how the impredicativity of propositional resizing enters. *)
-  Definition resize_nrec@{p p'} (n : Graph) (nrec : in_N@{p} n)
-    : in_N@{p'} n.
+  Definition resize_nrec@{p0 p1} (n : Graph) (nrec : in_N@{p0} n)
+    : in_N@{p1} n.
   Proof.
     intros P' PH' P0' Ps'.
     srefine ((equiv_resize_hprop (P' n))^-1
@@ -305,7 +307,7 @@ Section AssumeStuff.
                                 (Ps' A ((equiv_resize_hprop (P' A))^-1 P'A))).
   Qed.
 
-  Local Instance ishprop_N_zero_or_succ@{p} : forall n : N@{p},
+  Local Instance ishprop_N_zero_or_succ@{} : forall n : N,
       IsHProp ((n = zero) + { m : N & n = succ m }).
   Proof.
     intros n. apply ishprop_sum.
@@ -336,13 +338,13 @@ Section AssumeStuff.
         reflexivity.
   Qed.
 
-  Lemma N_zero_or_succ@{p} n : (n = zero) + {m : N@{p} & n = succ m}.
+  Lemma N_zero_or_succ@{} n : (n = zero) + {m : N & n = succ m}.
   Proof.
+    Set Printing Universes. About merely_N_zero_or_succ.
     apply (merely_rec idmap
-                      (merely_N_zero_or_succ@{p p u p p
-                                                u p p p p
+                      (merely_N_zero_or_succ@{p u p p u
                                                 p p p p p
-                                                p} n)).
+                                                p p p p} n)).
   Qed.
 
   Definition pred_in_N (n : Graph) (snrec : in_N (graph_succ n))
@@ -464,7 +466,7 @@ Section AssumeStuff.
     apply Ps, P0.
   Defined.
 
-  Definition N_add@{p} (n m : N) : N@{p}.
+  Definition N_add@{} (n m : N) : N.
   Proof.
     exists (graph_add n.1 m.1).
     intros P PH P0 Ps.
@@ -545,7 +547,7 @@ Section AssumeStuff.
   Qed.
 
   (** Now we define inequality in terms of addition. *)
-  Definition N_le@{p} (n m : N@{p}) : Type@{p}
+  Definition N_le@{} (n m : N) : Type@{p}
     := { k : N & k + n = m }.
 
   Notation "n <= m" := (N_le n m).
@@ -589,7 +591,7 @@ Section AssumeStuff.
     apply N_add_zero_l.
   Qed.
 
-  Definition N_lt@{p} (n m : N@{p}) : Type@{p}
+  Definition N_lt@{} (n m : N) : Type@{p}
     := { k : N & (succ k) + n = m }.
 
   Notation "n < m" := (N_lt n m).
@@ -603,8 +605,8 @@ Section AssumeStuff.
     path_via m.
   Qed.
 
-  Local Instance ishprop_N_lt@{p} : forall n m, IsHProp (n < m)
-    := ishprop_N_lt0@{p p p p u}.
+  Local Instance ishprop_N_lt@{} : forall n m, IsHProp (n < m)
+    := ishprop_N_lt0@{p p p u}.
 
   Definition N_lt_zero (n : N) : ~(n < zero).
   Proof.
