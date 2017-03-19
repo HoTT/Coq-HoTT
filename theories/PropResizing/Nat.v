@@ -356,7 +356,7 @@ Section AssumeStuff.
         reflexivity.
   Qed.
 
-  Definition pred_in_N (n : Graph) (snrec : in_N (graph_succ n))
+  Definition pred_in_N@{} (n : Graph) (snrec : in_N (graph_succ n))
     : in_N n.
   Proof.
     destruct (N_zero_or_succ (graph_succ n ; snrec)) as [H0|[m Hs]].
@@ -364,18 +364,18 @@ Section AssumeStuff.
       destruct (graph_zero_neq_succ H0^).
     - apply pr1_path in Hs.
       apply graph_unsucc_path in Hs.
-      apply (transport in_N Hs^).
+      apply (transport@{u p} in_N Hs^).
       exact m.2.
   Qed.
 
   (** Final Peano axiom: induction *)
-  Definition N_propind (P : N -> Type) `{forall n, IsHProp (P n)}
+  Definition N_propind0 (P : N -> Type) `{forall n, IsHProp (P n)}
              (P0 : P zero) (Ps : forall n, P n -> P (succ n))
     : forall n, P n.
   Proof.
     intros [n nrec].
     pose (Q := fun m:Graph => forall (mrec : in_N m), P (m;mrec)).
-    refine (resize_nrec n nrec Q _ _ _ nrec).
+    refine (resize_nrec n nrec Q _ _ _ nrec);clear n nrec.
     - intros A; apply trunc_forall.
     - intros zrec.
       refine (transport P _ P0).
@@ -387,10 +387,18 @@ Section AssumeStuff.
       apply path_N; reflexivity.
   Qed.
 
+  (* Sometimes we just need a bigger fish. *)
+  Universe large.
+  Definition N_propind@{P}  (P : N -> Type@{P}) `{forall n, IsHProp (P n)}
+             (P0 : P zero) (Ps : forall n, P n -> P (succ n))
+    : forall n, P n
+    := N_propind0@{P large large large} P P0 Ps.
+
   (** A first application *)
-  Definition N_neq_succ (n : N) : n <> succ n.
+  Definition N_neq_succ@{} (n : N) : n <> succ n.
   Proof.
-    revert n; apply N_propind; try exact _.
+    revert n; apply N_propind@{p}.
+    - intros n;exact trunc_arrow@{p p p}.
     - apply zero_neq_succ.
     - intros n H e.
       apply H.
@@ -407,7 +415,7 @@ Section AssumeStuff.
   Normally addition is defined *using* recursion, but here we can
   "cheat" because we know how to add graphs, and then prove that it
   satisfies the recursive equations for addition. *)
-  Definition graph_add (A B : Graph) : Graph.
+  Definition graph_add0 (A B : Graph) : Graph.
   Proof.
     exists (vert A + vert B).
     exists (fun ab ab' =>
@@ -419,55 +427,59 @@ Section AssumeStuff.
               end).
     intros [a|b] [a'|b']; exact _.
   Defined.
+  (* These are just on the return Type@{foo} clauses of the above match and destructs. *)
+  Definition graph_add@{} := Eval unfold graph_add0 in graph_add0@{s s s}.
 
-  Definition graph_add_zero_r (A : Graph) : graph_add A graph_zero = A.
+  Definition graph_add_zero_r@{} (A : Graph) : graph_add A graph_zero = A.
   Proof.
     apply equiv_path_graph.
     exists (sum_empty_r (vert A)).
-    intros [x|[]] [y|[]]; reflexivity.
+    intros [x|[]] [y|[]].
+    apply iff_reflexive@{u s}.
   Qed.
 
-  Definition graph_add_zero_l (A : Graph) : graph_add graph_zero A = A.
+  Definition graph_add_zero_l@{} (A : Graph) : graph_add graph_zero A = A.
   Proof.
     apply equiv_path_graph.
     exists (sum_empty_l (vert A)).
-    intros [[]|x] [[]|y]; reflexivity.
+    intros [[]|x] [[]|y].
+    apply iff_reflexive@{u s}.
   Qed.
 
-  Definition graph_add_succ (A B : Graph)
+  Definition graph_add_succ@{} (A B : Graph)
     : graph_add A (graph_succ B) = graph_succ (graph_add A B).
   Proof.
     apply equiv_path_graph.
     exists (equiv_inverse (equiv_sum_assoc (vert A) (vert B) Unit)).
-    intros [x|[x|[]]] [y|[y|[]]]; reflexivity.
+    intros [x|[x|[]]] [y|[y|[]]];apply iff_reflexive@{u s}.
   Qed.
 
-  Definition graph_add_assoc (A B C : Graph)
+  Definition graph_add_assoc@{} (A B C : Graph)
     : graph_add (graph_add A B) C = graph_add A (graph_add B C).
   Proof.
     apply equiv_path_graph.
     exists (equiv_sum_assoc _ _ _).
-    intros [[x|x]|x] [[y|y]|y]; reflexivity.
+    intros [[x|x]|x] [[y|y]|y]; apply iff_reflexive@{u s}.
   Qed.
 
   Definition graph_one@{} : Graph
     := Build_Graph Unit (fun _ _ : Unit => Unit) _.
 
-  Definition graph_add_one_succ (A : Graph)
+  Definition graph_add_one_succ@{} (A : Graph)
     : graph_add A graph_one = graph_succ A.
   Proof.
     apply equiv_path_graph.
     exists equiv_idmap.
-    intros [x|[]] [y|[]]; reflexivity.
+    intros [x|[]] [y|[]]; apply iff_reflexive@{u s}.
   Qed.
 
-  Definition graph_succ_zero : graph_succ graph_zero = graph_one.
+  Definition graph_succ_zero@{} : graph_succ graph_zero = graph_one.
   Proof.
     rewrite <- graph_add_one_succ.
     apply graph_add_zero_l.
   Qed.
 
-  Definition one : N.
+  Definition one@{} : N.
   Proof.
     exists graph_one.
     intros P PH P0 Ps.
@@ -481,36 +493,36 @@ Section AssumeStuff.
     intros P PH P0 Ps.
     apply m.2.
     - intros; apply PH.
-    - apply (transport P (graph_add_zero_r@{u s} n.1)^).
+    - apply (transport P (graph_add_zero_r n.1)^).
       exact (n.2 P PH P0 Ps).
     - intros A PA.
-      apply (transport P (graph_add_succ@{u s s s s s s s s s} n.1 A)^).
+      apply (transport P (graph_add_succ n.1 A)^).
       apply Ps, PA.
   Defined.
 
   Notation "n + m" := (N_add n m).
 
-  Definition N_add_zero_l (n : N) : zero + n = n.
+  Definition N_add_zero_l@{} (n : N) : zero + n = n.
   Proof.
     apply path_N, graph_add_zero_l.
   Qed.
 
-  Definition N_add_zero_r (n : N) : n + zero = n.
+  Definition N_add_zero_r@{} (n : N) : n + zero = n.
   Proof.
     apply path_N, graph_add_zero_r.
   Qed.
 
-  Definition N_add_succ (n m : N) : n + succ m = succ (n + m).
+  Definition N_add_succ@{} (n m : N) : n + succ m = succ (n + m).
   Proof.
     apply path_N, graph_add_succ.
   Qed.
 
-  Definition N_add_assoc (n m k : N) : (n + m) + k = n + (m + k).
+  Definition N_add_assoc@{} (n m k : N) : (n + m) + k = n + (m + k).
   Proof.
     apply path_N, graph_add_assoc.
   Qed.
 
-  Definition N_add_cancel_r (n m k : N) (H : n + k = m + k)
+  Definition N_add_cancel_r@{} (n m k : N) (H : n + k = m + k)
     : n = m.
   Proof.
     revert k H.
@@ -522,7 +534,7 @@ Section AssumeStuff.
       exact (succ_inj _ _ H2).
   Qed.
 
-  Definition N_add_cancel_zero_r (n k : N) (H : k + n = n)
+  Definition N_add_cancel_zero_r@{} (n k : N) (H : k + n = n)
     : k = zero.
   Proof.
     refine (N_add_cancel_r k zero n _).
@@ -530,13 +542,13 @@ Section AssumeStuff.
     apply path_N, graph_add_zero_l.
   Qed.
 
-  Definition N_add_one_r (n : N) : n + one = succ n.
+  Definition N_add_one_r@{} (n : N) : n + one = succ n.
   Proof.
     apply path_N; cbn.
     apply graph_add_one_succ.
   Qed.
 
-  Definition N_add_one_l (n : N) : one + n = succ n.
+  Definition N_add_one_l@{} (n : N) : one + n = succ n.
   Proof.
     revert n; refine (N_propind (fun m => one + m = succ m) _ _).
     - rewrite N_add_zero_r.
@@ -547,7 +559,7 @@ Section AssumeStuff.
       apply ap, H.
   Qed.
 
-  Definition N_add_succ_l (n m : N) : succ n + m = succ (n + m).
+  Definition N_add_succ_l@{} (n m : N) : succ n + m = succ (n + m).
   Proof.
     rewrite <- (N_add_one_r n).
     rewrite N_add_assoc.
@@ -561,20 +573,20 @@ Section AssumeStuff.
 
   Notation "n <= m" := (N_le n m).
 
-  Local Instance ishprop_N_le n m : IsHProp (n <= m).
+  Local Instance ishprop_N_le@{} n m : IsHProp (n <= m).
   Proof.
     apply ishprop_sigma_disjoint.
     intros x y e1 e2.
     apply N_add_cancel_r with n. path_via m.
   Qed.
 
-  Definition N_zero_le (n : N) : zero <= n.
+  Definition N_zero_le@{} (n : N) : zero <= n.
   Proof.
     exists n.
     apply N_add_zero_r.
   Qed.
 
-  Definition N_le_zero (n : N) (H : n <= zero) : n = zero.
+  Definition N_le_zero@{} (n : N) (H : n <= zero) : n = zero.
   Proof.
     destruct H as [k H].
     apply pr1_path in H.
@@ -585,7 +597,7 @@ Section AssumeStuff.
     intros x y; destruct (f x).
   Qed.
 
-  Instance contr_le_zero : Contr {n:N & n <= zero}.
+  Instance contr_le_zero@{} : Contr {n:N & n <= zero}.
   Proof.
     exists (existT (fun n => n <= zero) zero (N_zero_le zero)).
     intros [n H].
@@ -593,7 +605,7 @@ Section AssumeStuff.
     exact (N_le_zero n H)^.
   Qed.
 
-  Instance reflexive_N_le : Reflexive N_le.
+  Instance reflexive_N_le@{} : Reflexive N_le.
   Proof.
     intros n.
     exists zero.
@@ -605,7 +617,7 @@ Section AssumeStuff.
 
   Notation "n < m" := (N_lt n m).
 
-  Lemma ishprop_N_lt0 n m : IsHProp (n < m).
+  Lemma ishprop_N_lt@{} n m : IsHProp (n < m).
   Proof.
     apply ishprop_sigma_disjoint.
     intros x y e1 e2.
@@ -613,20 +625,19 @@ Section AssumeStuff.
     rewrite !N_add_succ, <-!N_add_succ_l.
     path_via m.
   Qed.
+  Local Existing Instance ishprop_N_lt.
 
-  Local Instance ishprop_N_lt@{} : forall n m, IsHProp (n < m)
-    := ishprop_N_lt0@{p p p u}.
-
-  Definition N_lt_zero (n : N) : ~(n < zero).
+  Definition N_lt_zero@{} (n : N) : ~(n < zero).
   Proof.
     unfold N_lt; intros [k H].
     apply pr1_path, (equiv_path_graph _ _)^-1, pr1 in H.
     exact (H (inl (inr tt))).
   Qed.
 
-  Definition N_lt_irref (n : N) : ~(n < n).
+  Definition N_lt_irref@{} (n : N) : ~(n < n).
   Proof.
-    revert n; apply N_propind; try exact _.
+    revert n; apply N_propind@{p}.
+    - intros n;exact trunc_arrow@{p p p}.
     - apply N_lt_zero.
     - intros n H [k K].
       apply H; exists k.
@@ -634,7 +645,7 @@ Section AssumeStuff.
       apply succ_inj; assumption.
   Qed.
 
-  Definition N_le_eq_or_lt (n m : N) (H : n <= m)
+  Definition N_le_eq_or_lt@{} (n m : N) (H : n <= m)
     : (n = m) + (n < m).
   Proof.
     assert (HP : IsHProp ((n = m) + (n < m))).
@@ -651,9 +662,10 @@ Section AssumeStuff.
       exact (inr (l;K)).
   Qed.
 
-  Definition N_succ_nlt (n : N) : ~(succ n < n).
+  Definition N_succ_nlt@{} (n : N) : ~(succ n < n).
   Proof.
-    revert n; apply N_propind; try exact _.
+    revert n; apply N_propind@{p}.
+    - intros n;exact trunc_arrow@{p p p}.
     - apply N_lt_zero.
     - intros n H L.
       apply H; clear H.
@@ -663,14 +675,14 @@ Section AssumeStuff.
       exact (succ_inj _ _ H).
   Qed.
 
-  Definition N_lt_succ (n : N) : n < succ n.
+  Definition N_lt_succ@{} (n : N) : n < succ n.
   Proof.
     exists zero.
     rewrite N_add_succ_l.
     apply ap, N_add_zero_l.
   Qed.
 
-  Definition N_succ_lt (n m : N) (H : n < m) : succ n < succ m.
+  Definition N_succ_lt@{} (n m : N) (H : n < m) : succ n < succ m.
   Proof.
     destruct H as [k H].
     exists k.
@@ -678,13 +690,13 @@ Section AssumeStuff.
     apply ap; assumption.
   Qed.
 
-  Definition N_lt_le (n m : N) (H : n < m) : n <= m.
+  Definition N_lt_le@{} (n m : N) (H : n < m) : n <= m.
   Proof.
     destruct H as [k K].
     exact (succ k; K).
   Qed.
 
-  Definition N_lt_iff_succ_le (n m : N) :
+  Definition N_lt_iff_succ_le@{} (n m : N) :
     (n < m) <-> (succ n <= m).
   Proof.
     split; intros [k H]; exists k.
@@ -694,7 +706,7 @@ Section AssumeStuff.
       assumption.
   Qed.
 
-  Definition N_lt_succ_iff_le (n m : N) : (n < succ m) <-> (n <= m).
+  Definition N_lt_succ_iff_le@{} (n m : N) : (n < succ m) <-> (n <= m).
   Proof.
     split; intros [k H]; exists k.
     - rewrite N_add_succ_l in H.
@@ -702,8 +714,8 @@ Section AssumeStuff.
     - rewrite N_add_succ_l; apply ap, H.
   Qed.
 
-  Definition equiv_N_segment (n : N)
-    : { m : N & m <= n } <~> {m : N & m < n} + Unit.
+  Definition equiv_N_segment@{} (n : N)
+    : { m : N & m <= n } <~> (sum@{p p} {m : N & m < n} Unit).
   Proof.
     srefine (equiv_adjointify _ _ _ _).
     - intros mH.
@@ -732,7 +744,7 @@ Section AssumeStuff.
       | apply ap, path_ishprop ]).
   Defined.
 
-  Definition equiv_N_segment_succ (n : N)
+  Definition equiv_N_segment_succ@{} (n : N)
     : { m : N & m <= succ n } <~> {m : N & m <= n} + Unit.
   Proof.
     refine (_ oE equiv_N_segment (succ n)).
@@ -742,29 +754,29 @@ Section AssumeStuff.
   Defined.
 
   (** A fancy name for [1] so that we can [rewrite] with it later. *)
-  Definition equiv_N_segment_succ_inv_inl (n : N) (mh : {m:N & m <= n})
+  Definition equiv_N_segment_succ_inv_inl@{} (n : N) (mh : {m:N & m <= n})
     : ((equiv_N_segment_succ n)^-1 (inl mh)).1 = mh.1.
   Proof.
     reflexivity.
   Qed.
 
-  Definition equiv_N_segment_lt_succ (n : N)
+  Definition equiv_N_segment_lt_succ@{} (n : N)
     : { m : N & m < succ n } <~> {m : N & m <= n}.
   Proof.
     apply equiv_functor_sigma_id.
     intros; apply equiv_iff_hprop; apply N_lt_succ_iff_le.
   Defined.
 
-  Definition zero_seg (n : N) : { m : N & m <= n }
+  Definition zero_seg@{} (n : N) : { m : N & m <= n }
     := (zero ; N_zero_le n).
 
-  Definition succ_seg (n : N)
+  Definition succ_seg@{} (n : N)
     : { m : N & m < n } -> { m : N & m <= n }
     := fun mh =>
          let (m,H) := mh in
          (succ m; fst (N_lt_iff_succ_le m n) H).
 
-  Definition refl_seg (n : N) : {m : N & m <= n}.
+  Definition refl_seg@{} (n : N) : {m : N & m <= n}.
   Proof.
     exists n.
     reflexivity.
@@ -774,19 +786,23 @@ Section AssumeStuff.
   Section NRec.
     (** Here is the type we will recurse into.  Importantly, it
     doesn't have to be a set! *)
-    Context (X : Type) (x0 : X) (xs : X -> X).
+    (* [nr] is the universe of [partial_Nrec], morally [max(p,x)].
+       Note that it shouldn't be [large], see constraints on [contr_partial_Nrec_zero]. *)
+    Universe x nr.
+    Context (X : Type@{x}) (x0 : X) (xs : X -> X).
 
     (** The type of partially defined recursive functions "up to [n]". *)
-    Local Definition partial_Nrec (n : N) : Type
-      := { f : { m : N & m <= n} -> X &
-           (f (zero_seg n) = x0) *
-           forall (mh : {m:N & m < n}),
-             f (succ_seg n mh) = xs (f ((equiv_N_segment n)^-1 (inl mh))) }.
+    Local Definition partial_Nrec@{} (n : N) : Type@{nr}
+      := sig@{nr nr}
+            (fun f : ({ m : N & m <= n} -> X) =>
+               prod@{x nr} (f (zero_seg n) = x0)
+                   (forall (mh : {m:N & m < n}),
+                       f (succ_seg n mh) = xs (f ((equiv_N_segment n)^-1 (inl mh))))).
 
     (** The crucial point that makes it work for arbitrary [X] is to
     prove in one big induction that these types are always
     contractible.  Here is the base case. *)
-    Local Instance contr_partial_Nrec_zero : Contr (partial_Nrec zero).
+    Lemma contr_partial_Nrec_zero@{} : Contr (partial_Nrec zero).
     Proof.
       unfold partial_Nrec.
       srefine (trunc_equiv' {f0 : {f : {m : N & m <= zero} -> X &
@@ -798,7 +814,7 @@ Section AssumeStuff.
       - refine (_ oE equiv_inverse (equiv_sigma_assoc _ _)).
         apply equiv_functor_sigma_id; intros f.
         cbn; apply equiv_sigma_prod0.
-      - refine (@trunc_sigma _ _ _ _ _).
+      - refine (@trunc_sigma@{nr nr large nr} _ _ _ _ _).
         + srefine (BuildContr _ _ _).
           * exists (fun _ => x0); reflexivity.
           * intros [g H].
@@ -819,18 +835,20 @@ Section AssumeStuff.
           apply path_forall; intros m.
           destruct (N_lt_zero m.1 m.2).
     Qed.
+    Local Existing Instance contr_partial_Nrec_zero.
 
-    Local Definition equiv_N_segment_succ_maps (n : N)
-      : ({ m : N & m <= n} -> X) * X <~> ({ m : N & m <= succ n} -> X).
+    Local Definition equiv_N_segment_succ_maps@{} (n : N)
+      : Equiv@{nr nr} (({ m : N & m <= n} -> X) * X) ({ m : N & m <= succ n} -> X).
     Proof.
-      refine (_ oE @equiv_sum_ind _ {m:N&m<=n} Unit (fun _ => X) oE _).
+      refine (_ oE @equiv_sum_ind@{x nr nr nr nr p p p}
+                _ {m:N&m<=n} Unit (fun _ => X) oE _).
       - apply equiv_precompose'.
         apply equiv_N_segment_succ.
       - apply equiv_functor_prod_l.
-        apply equiv_unit_rec.
+        apply equiv_unit_rec@{x nr Set}.
     Defined.
 
-    Local Definition equiv_seg_succ (n m : N) (H : m < succ n)
+    Local Definition equiv_seg_succ@{} (n m : N) (H : m < succ n)
                (f : { m : N & m <= n} -> X) (xsn : X)
       : equiv_N_segment_succ_maps n (f,xsn) (m ; N_lt_le m _ H) = f (existT (fun m=>m<=n) m (fst (N_lt_succ_iff_le m _) H)).
     Proof.
@@ -845,7 +863,7 @@ Section AssumeStuff.
     Qed.
 
     (** And here, essentially, is the inductive step. *)
-    Local Definition partial_Nrec_succ (n : N)
+    Local Definition partial_Nrec_succ0 (n : N)
       : partial_Nrec n <~> partial_Nrec (succ n).
     Proof.
       unfold partial_Nrec.
@@ -924,8 +942,11 @@ Section AssumeStuff.
         refine (equiv_sigma_symm _ oE _).
         exact ((equiv_sigma_contr _)^-1%equiv). }
     Defined.
+    Local Definition partial_Nrec_succ@{}
+      := Eval unfold partial_Nrec_succ0 in partial_Nrec_succ0@{nr nr nr nr nr
+                                                                  nr nr nr nr}.
 
-    Local Instance contr_partial_Nrec (n : N) : Contr (partial_Nrec n).
+    Local Instance contr_partial_Nrec@{} (n : N) : Contr (partial_Nrec n).
     Proof.
       revert n; apply N_propind; try exact _.
       intros n H.
@@ -933,7 +954,7 @@ Section AssumeStuff.
     Qed.
 
     (** This will be useful later. *)
-    Local Definition partial_Nrec_restr (n : N)
+    Local Definition partial_Nrec_restr@{} (n : N)
       : partial_Nrec (succ n) -> partial_Nrec n.
     Proof.
       intros f.
@@ -958,25 +979,25 @@ Section AssumeStuff.
     Instead, we will show that it is a retract of the product of all
     the types of partial attempts, which is contractible since each of
     them is.  *)
-    Local Definition partials := forall n, partial_Nrec n.
-    Local Instance contr_partials : Contr partials := _.
+    Local Definition partials@{} := forall n, partial_Nrec n.
+    Local Instance contr_partials@{} : Contr partials := trunc_forall@{p nr nr}.
 
     (** From a family of partial attempts, we get a totally defined
     recursive function. *)
     Section Partials.
       Context (pf : partials).
 
-      Local Definition N_rec' : N -> X
+      Local Definition N_rec'@{} : N -> X
         := fun n => (pf n).1 (refl_seg n).
 
-      Definition N_rec_beta_zero' : N_rec' zero = x0.
+      Definition N_rec_beta_zero'@{} : N_rec' zero = x0.
       Proof.
         refine (_ @ fst (pf zero).2).
         unfold N_rec'.
         apply ap, path_sigma_hprop; reflexivity.
       Defined.
 
-      Definition N_rec_beta_succ' (n : N)
+      Definition N_rec_beta_succ'@{} (n : N)
         : N_rec' (succ n) = xs (N_rec' n).
       Proof.
         unfold N_rec'.
@@ -987,28 +1008,28 @@ Section AssumeStuff.
           transitivity ((partial_Nrec_restr n (pf (succ n))).1 (refl_seg n)).
           + refine (ap (pf (succ n)).1 _).
             apply path_sigma_hprop; reflexivity.
-          + apply ap10.
+          + apply ap10@{p x nr}.
             apply ap, path_contr.
       Defined.
 
     End Partials.
 
     (** Applying this to the "canonical" partial attempts, we get "the recursor". *)
-    Definition N_rec : N -> X := N_rec' (center partials).
-    Definition N_rec_beta_zero : N_rec zero = x0
+    Definition N_rec@{} : N -> X := N_rec' (center partials).
+    Definition N_rec_beta_zero@{} : N_rec zero = x0
       := N_rec_beta_zero' (center partials).
-    Definition N_rec_beta_succ (n : N)
+    Definition N_rec_beta_succ@{} (n : N)
       : N_rec (succ n) = xs (N_rec n)
       := N_rec_beta_succ' (center partials) n.
 
     (** Here is the type of totally defined recursive functions that
     we want to prove to be contractible. *)
-    Definition NRec : Type
-      := { f : N -> X &
-           (f zero = x0) *
-           forall m:N, f (succ m) = xs (f m) }.
+    Definition NRec : Type@{nr}
+      := sig@{nr nr} (fun f : N -> X =>
+                        prod@{x nr} (f zero = x0)
+                            (forall m:N, f (succ m) = xs (f m))).
 
-    Local Definition nrec_partials : NRec -> partials.
+    Local Definition nrec_partials@{} : NRec -> partials.
     Proof.
       intros f n.
       exists (fun mh => f.1 mh.1).
@@ -1021,7 +1042,7 @@ Section AssumeStuff.
     (** This is a weird lemma.  We could prove it by [path_contr], but
     we give an explicit proof instead using [path_sigma], so that
     later on we know what happens when [pr1_path] is applied to it. *)
-    Local Definition nrec_partials_succ (n : N) (f : NRec)
+    Local Definition nrec_partials_succ@{} (n : N) (f : NRec)
       : partial_Nrec_restr n (nrec_partials f (succ n)) = nrec_partials f n.
     Proof.
       change (?x = ?y) with ((x.1; x.2) = (y.1; y.2)).
@@ -1044,20 +1065,20 @@ Section AssumeStuff.
         reflexivity ]).
     Defined.
 
-    Local Definition partials_nrec : partials -> NRec.
+    Local Definition partials_nrec@{} : partials -> NRec.
     Proof.
       intros pf.
       exists (N_rec' pf).
       exact (N_rec_beta_zero' pf, N_rec_beta_succ' pf).
     Defined.
 
-    Local Definition nrec_partials_sect (f : NRec)
+    Local Definition nrec_partials_sect@{} (f : NRec)
       : partials_nrec (nrec_partials f) = f.
     Proof.
       destruct f as [f [f0 fs]].
       unfold partials_nrec, nrec_partials. cbn.
       unfold N_rec', N_rec_beta_zero'; cbn.
-      apply ap, path_prod.
+      apply ap@{nr nr}, path_prod.
       - cbn.
         rewrite ap_compose.
         rewrite ap_pr1_path_sigma_hprop.
@@ -1088,7 +1109,7 @@ Section AssumeStuff.
     Qed.
 
     (** And we're done! *)
-    Global Instance contr_NRec : Contr NRec.
+    Global Instance contr_NRec@{} : Contr NRec.
     Proof.
       refine (trunc_equiv partials partials_nrec).
       refine (isequiv_adjointify _ nrec_partials nrec_partials_sect _).
