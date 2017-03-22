@@ -23,10 +23,10 @@ Section AssumeStuff.
 
   > Definition Graph := { V : Type & { E : V -> V -> Type & forall x y, IsHProp@{hp} (E x y) }}.
 
-  However, to enable performance speedups by controlling universes, we write out its universe parameters explicitly, making it less readable: *)
+  However, to enable performance speedups by controlling universes, we write out its universe parameters explicitly, making it less readable.  Moreover, since here we will eventually only be interested in those graphs that represent natural numbers, it does no harm to fix these universes at the outset throughout the entire development. *)
 
-  (* [s] : universe of the vertex and edge types
-     [u] : universe of the graph type, morally [s+1] *)
+  (** [s] : universe of the vertex and edge types
+      [u] : universe of the graph type, morally [s+1] *)
   Universes s u.
 
   Definition Graph@{} := @sig@{u u} Type@{s} (fun V => @sig@{u u} (V -> V -> Type@{s}) (fun E => forall x y, IsHProp (E x y))).
@@ -221,7 +221,7 @@ Section AssumeStuff.
   Instance ishprop_in_N@{p sp} : forall n, IsHProp (in_N n)
     := ishprop_in_N0@{sp p sp sp sp sp sp}.
 
-  (* [p] : universe of [N], morally [u+1] i.e. [s+2]. *)
+  (** [p] : universe of [N], morally [u+1] i.e. [s+2]. *)
   Universe p.
   Definition N@{} : Type@{p}
     := @sig@{u p} Graph in_N@{u}.
@@ -387,8 +387,11 @@ Section AssumeStuff.
       apply path_N; reflexivity.
   Qed.
 
-  (* Sometimes we just need a bigger fish. *)
+  (** Sometimes we just need a bigger fish. *)
   Universe large.
+
+  (** Importantly, however, the universe of the motive [P] is not
+      constrained but can be arbitrary. *)
   Definition N_propind@{P}  (P : N -> Type@{P}) `{forall n, IsHProp (P n)}
              (P0 : P zero) (Ps : forall n, P n -> P (succ n))
     : forall n, P n
@@ -427,7 +430,7 @@ Section AssumeStuff.
               end).
     intros [a|b] [a'|b']; exact _.
   Defined.
-  (* These are just on the return Type@{foo} clauses of the above match and destructs. *)
+  (** These are just on the return Type@{foo} clauses of the above match and destructs. *)
   Definition graph_add@{} := Eval unfold graph_add0 in graph_add0@{s s s}.
 
   Definition graph_add_zero_r@{} (A : Graph) : graph_add A graph_zero = A.
@@ -786,8 +789,8 @@ Section AssumeStuff.
   Section NRec.
     (** Here is the type we will recurse into.  Importantly, it
     doesn't have to be a set! *)
-    (* [nr] is the universe of [partial_Nrec], morally [max(p,x)].
-       Note that it shouldn't be [large], see constraints on [contr_partial_Nrec_zero]. *)
+    (** [nr] is the universe of [partial_Nrec], morally [max(p,x)].
+        Note that it shouldn't be [large], see constraints on [contr_partial_Nrec_zero]. *)
     Universe x nr.
     Context (X : Type@{x}) (x0 : X) (xs : X -> X).
 
