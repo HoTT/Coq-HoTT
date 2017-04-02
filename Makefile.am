@@ -301,9 +301,17 @@ proviola-all: proviola proviola-xml
 # dpdgraphs
 COQTHMDEP=etc/coq-dpdgraph/coqthmdep
 HOQTHMDEP=etc/hoqthmdep
-$(COQTHMDEP): etc/coq-dpdgraph/searchdepend.ml4 etc/coq-dpdgraph/graphdepend.ml4
+$(COQTHMDEP): etc/coq-dpdgraph/searchdepend.ml4 etc/coq-dpdgraph/graphdepend.ml4 etc/coq-dpdgraph/Makefile
 	$(VECHO) MAKE DPDGRAPH
 	$(Q) cd etc/coq-dpdgraph && $(MAKE)
+
+etc/coq-dpdgraph/Makefile: etc/coq-dpdgraph/Makefile.in etc/coq-dpdgraph/configure
+	$(VECHO) "CD DPDGRAPH && ./configure"
+	$(Q) cd etc/coq-dpdgraph && ./configure
+
+etc/coq-dpdgraph/configure: etc/coq-dpdgraph/configure.in
+	$(VECHO) "CD DPDGRAPH && AUTORECONF"
+	$(Q) cd etc/coq-dpdgraph && autoreconf -fvi
 
 %.svg: %.dot
 	$(VECHO) DOT $< -o $@
