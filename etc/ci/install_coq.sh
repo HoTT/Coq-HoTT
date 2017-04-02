@@ -40,10 +40,10 @@ fi
 echo '$ ./configure '"$@"
 ./configure "$@"
 echo '$ make states READABLE_ML4=1 tools'
-make states tools READABLE_ML4=1
+make states tools grammar/compat5.cmo grammar/grammar.cma READABLE_ML4=1
 echo '$ sudo make install-binaries + rsync plugins theories'
 touch bin/coqtop.byte bin/coqchk stm/{proof,tac,query}workertop.cma
-sudo make install-binaries
+sudo make install-binaries install-devfiles
 sudo rsync -a plugins theories /usr/local/lib/coq/
 popd
 
