@@ -31,8 +31,8 @@ env:
 matrix:
   fast_finish: true
   allow_failures:
-    - env: UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS="yes" BUILD_COQ="yes"  UPDATE_OPAM=""       FORCE_COQ_VERSION=""
     - env: UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ=""     UPDATE_OPAM=""       FORCE_COQ_VERSION=""
+    - env: UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""       FORCE_COQ_VERSION="v8.6"
     - env: UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM=""       FORCE_COQ_VERSION="trunk"
 
 
