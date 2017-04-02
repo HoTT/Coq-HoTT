@@ -221,3 +221,39 @@ Proof.
   refine (contr_equiv' _ (hfiber_functor_sigma_idmap P Q g a v)).
   by apply fcontr_isequiv.
 Defined.
+
+(** IsTruncMap n.+1 f <-> IsTruncMap n (ap f) *)
+Global Instance istruncmap_ap {A B} n (f:A -> B) `{!IsTruncMap n.+1 f}
+  : forall x y, IsTruncMap n (@ap _ _ f x y)
+  := fun x x' y =>
+       trunc_equiv' _ (hfiber_ap y)^-1.
+
+Definition istruncmap_from_ap {A B} n (f:A -> B) `{!forall x y, IsTruncMap n (@ap _ _ f x y)}
+  : IsTruncMap n.+1 f.
+Proof.
+  intros y [a p] [b q];
+    destruct q;
+    exact (trunc_equiv' _ (hfiber_ap p)).
+Defined.
+
+Definition equiv_istruncmap_ap `{Funext} {A B} n (f:A -> B)
+  : IsTruncMap n.+1 f <~> (forall x y, IsTruncMap n (@ap _ _ f x y))
+  := equiv_iff_hprop (@istruncmap_ap _ _ n f) (@istruncmap_from_ap _ _ n f).
+
+Global Instance isequiv_ap_isembedding {A B} (f : A -> B) `{!IsEmbedding f}
+  : forall x y, IsEquiv (@ap _ _ f x y).
+Proof.
+  intros x y. apply isequiv_fcontr,_.
+Defined.
+
+Definition isembedding_isequiv_ap {A B} (f : A -> B) `{!forall x y, IsEquiv (@ap _ _ f x y)}
+  : IsEmbedding f.
+Proof.
+  apply istruncmap_from_ap. intros x y;red;apply fcontr_isequiv,_.
+Defined.
+
+Definition equiv_isequiv_ap_isembedding `{Funext} {A B} (f : A -> B)
+  : IsEmbedding f <~> (forall x y, IsEquiv (@ap _ _ f x y)).
+Proof.
+  exact (equiv_iff_hprop (@isequiv_ap_isembedding _ _ f) (@isembedding_isequiv_ap _ _ f)).
+Defined.
