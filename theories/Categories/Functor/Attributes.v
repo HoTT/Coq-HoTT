@@ -22,8 +22,7 @@ Section full_faithful.
     refine (Build_NaturalTransformation
               (hom_functor C)
               (hom_functor D o (F^op, F))
-              (fun sd : object (C^op * C) =>
-                 morphism_of F (s := _) (d := _))
+              (fun (sd : object (C^op * C)) m => (F _1 m)%morphism)
               _
            ).
     abstract (

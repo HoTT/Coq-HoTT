@@ -104,10 +104,10 @@ Section Grothendieck.
                      | try_associativity_quick (f_ap; []) ];
         match goal with
           | _ => reflexivity
-          | [ |- context[morphism_of ?F ?m o components_of ?T ?x] ]
+          | [ |- context[?F _1 ?m o components_of ?T ?x] ]
             => simpl rewrite <- (commutes T _ _ m);
               try reflexivity
-          | [ |- context[components_of ?T ?x o morphism_of ?F ?m] ]
+          | [ |- context[components_of ?T ?x o ?F _1 ?m] ]
             => simpl rewrite (commutes T _ _ m);
               try reflexivity
         end.

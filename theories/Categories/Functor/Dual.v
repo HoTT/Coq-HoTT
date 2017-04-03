@@ -14,7 +14,7 @@ Local Open Scope category_scope.
 Definition opposite C D (F : Functor C D) : Functor C^op D^op
   := Build_Functor (C^op) (D^op)
                    (object_of F)
-                   (fun s d => morphism_of F (s := d) (d := s))
+                   (fun s d (m : morphism C^op s d) => (F _1 m)%morphism)
                    (fun d' d s m1 m2 => composition_of F s d d' m2 m1)
                    (identity_of F).
 

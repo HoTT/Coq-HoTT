@@ -447,16 +447,16 @@ Section iso_lemmas.
   (** *** [idtoiso] respects application of functors on morphisms and objects *)
   Lemma idtoiso_functor (C D : PreCategory) (s d : C) (m : s = d)
         (F : Functor C D)
-  : morphism_of F (idtoiso _ m) = idtoiso _ (ap (object_of F) m).
+  : F _1 (idtoiso _ m) = idtoiso _ (ap (object_of F) m).
   Proof.
     path_induction; simpl; apply identity_of.
   Defined.
 
   (** *** Functors preserve isomorphisms *)
   Global Instance iso_functor C D (F : Functor C D) `(@IsIsomorphism C s d m)
-  : IsIsomorphism (morphism_of F m).
+  : IsIsomorphism (F _1 m).
   Proof.
-    refine ({| morphism_inverse := morphism_of F m^-1 |}).
+    refine ({| morphism_inverse := F _1 m^-1 |}).
     abstract (rewrite <- composition_of, ?left_inverse, ?right_inverse, identity_of; reflexivity).
     abstract (rewrite <- composition_of, ?left_inverse, ?right_inverse, identity_of; reflexivity).
   Defined.

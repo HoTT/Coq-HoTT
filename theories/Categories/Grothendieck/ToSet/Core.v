@@ -48,7 +48,7 @@ Section Grothendieck.
 
   Local Notation morphism s d :=
     { f : morphism C s.(c) d.(c)
-    | morphism_of F f s.(x) = d.(x) }.
+    | F _1 f s.(x) = d.(x) }.
 
   Definition compose_H s d d'
              (m1 : morphism d d')

@@ -61,7 +61,7 @@ Section composition.
     Local Notation CO c := (T' c o T c).
 
     Definition compose_commutes s d (m : morphism C s d)
-    : CO d o morphism_of F m = morphism_of F'' m o CO s
+    : CO d o F _1 m = F'' _1 m o CO s
       := (associativity _ _ _ _ _ _ _ _)
            @ ap (fun x => _ o x) (commutes T _ _ m)
            @ (associativity_sym _ _ _ _ _ _ _ _)
@@ -70,7 +70,7 @@ Section composition.
 
     (** We define the symmetrized version separately so that we can get more unification in the functor [(C → D)ᵒᵖ → (Cᵒᵖ → Dᵒᵖ)] *)
     Definition compose_commutes_sym s d (m : morphism C s d)
-    : morphism_of F'' m o CO s = CO d o morphism_of F m
+    : F'' _1 m o CO s = CO d o F _1 m
       := (associativity_sym _ _ _ _ _ _ _ _)
            @ ap (fun x => x o _) (commutes_sym T' _ _ m)
            @ (associativity _ _ _ _ _ _ _ _)
@@ -97,7 +97,7 @@ Section composition.
       Variables G G' : Functor C D.
       Variable T : NaturalTransformation G G'.
 
-      Local Notation CO c := (morphism_of F (T c)).
+      Local Notation CO c := (F _1 (T c)).
 
       Definition whisker_l_commutes s d (m : morphism C s d)
       : F _1 (T d) o (F o G) _1 m = (F o G') _1 m o F _1 (T s)

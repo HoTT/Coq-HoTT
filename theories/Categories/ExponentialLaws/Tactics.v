@@ -50,15 +50,15 @@ Ltac exp_laws_handle_transport' :=
     | _ => progress rewrite ?transport_forall_constant, ?path_forall_2_beta, ?transport_const, ?transport_path_prod
     | [ |- context [path_functor_uncurried ?F ?G (?x; ?y)] ] (* https://coq.inria.fr/bugs/show_bug.cgi?id=3768 *)
       => rewrite (@path_functor_uncurried_fst _ _ _ F G x y)
-    | [ |- context[transport (fun y => ?f (@object_of ?C ?D y ?x))] ]
+    | [ |- context[transport (fun y : Functor ?C ?D => ?f (y _0 ?x)%object)] ]
       => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x)) (@object_of C D))
-    | [ |- context[transport (fun y => ?f (@object_of ?C ?D y ?x) ?z)] ]
+    | [ |- context[transport (fun y : Functor ?C ?D => ?f (y _0 ?x)%object ?z)] ]
       => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x) z) (@object_of C D))
-    | [ |- context[transport (fun y => ?f (@object_of ?C ?D y ?x) ?z)] ]
+    | [ |- context[transport (fun y : Functor ?C ?D => ?f (y _0 ?x)%object ?z)] ]
       => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x) z) (@object_of C D))
-    | [ |- context[transport (fun y => ?f (?g (@object_of ?C ?D y ?x)))] ]
+    | [ |- context[transport (fun y : Functor ?C ?D => ?f (?g (y _0 ?x)%object))] ]
       => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (y' x))) (@object_of C D))
-    | [ |- context[transport (fun y => ?f (?g (@object_of ?C ?D y ?x)) ?z)] ]
+    | [ |- context[transport (fun y : Functor ?C ?D => ?f (?g (y _0 ?x)%object) ?z)] ]
       => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (y' x)) z) (@object_of C D))
     | _ => progress transport_path_forall_hammer
     | [ |- context[components_of (transport ?P ?p ?z)] ]
