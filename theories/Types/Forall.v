@@ -7,7 +7,7 @@ Require Import Types.Paths.
 Local Open Scope path_scope.
 
 
-Generalizable Variables A B f g e n.
+Generalizable Variables A B C f g e n.
 
 Section AssumeFunext.
 Context `{Funext}.
@@ -185,6 +185,14 @@ Proof.
   - symmetry.  apply path_forall_1.
 Defined.
 
+Definition functor_forall_compose
+           `{P : A -> Type} `{Q : B -> Type} `{R : C -> Type}
+           (f0 : B -> A) (f1 : forall b:B, P (f0 b) -> Q b)
+           (g0 : C -> B) (g1 : forall c:C, Q (g0 c) -> R c)
+           (k : forall a, P a)
+  : functor_forall g0 g1 (functor_forall f0 f1 k) == functor_forall (f0 o g0) (fun c => g1 c o f1 (g0 c)) k
+  := fun a => 1.
+
 (** ** Equivalences *)
 
 Global Instance isequiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
@@ -228,6 +236,42 @@ Definition equiv_functor_forall_id `{P : A -> Type} `{Q : A -> Type}
   (g : forall a, P a <~> Q a)
   : (forall a, P a) <~> (forall a, Q a)
   := equiv_functor_forall (equiv_idmap A) g.
+
+(** There is another way to make forall functorial that acts on on equivalences only. *)
+
+Definition equiv_functor_forall_covariant
+           `{P : A -> Type} `{Q : B -> Type}
+           (f : A <~> B) (g : forall a, P a <~> Q (f a))
+  : (forall a, P a) <~> (forall b, Q b).
+Proof.
+  refine (equiv_adjointify
+           (fun (k:forall a, P a) b => eisretr f b # (g (f^-1 b) (k (f^-1 b))))
+           (fun h a => (g a)^-1 (h (f a)))
+           _ _).
+  - intros h; apply path_forall; intros b.
+    refine (_ @ apD h (eisretr f b)).
+    apply ap, eisretr.
+  - intros k; apply path_forall; intros a.
+    refine (_ @ apD k (eissect f a)).
+    apply moveR_equiv_V.
+    refine (_ @ (ap_transport (eissect f a) g (k (f^-1 (f a))))^).
+    refine (_ @ (transport_compose Q f (eissect f a) _)^).
+    refine (ap (fun p => transport Q p _) (eisadj f a)).
+Defined.
+
+Definition equiv_functor_forall_covariant_compose
+           `{P : A -> Type} `{Q : B -> Type} `{R : C -> Type}
+           (f0 : A <~> B) (f1 : forall a, P a <~> Q (f0 a))
+           (g0 : B <~> C) (g1 : forall b, Q b <~> R (g0 b))
+           (h : forall a, P a) (c : C)
+  : equiv_functor_forall_covariant g0 g1 (equiv_functor_forall_covariant f0 f1 h) c
+    = equiv_functor_forall_covariant (g0 oE f0) (fun a => g1 (f0 a) oE f1 a) h c.
+Proof.
+  cbn.
+  rewrite (ap_transport _ g1 _).
+  rewrite (transport_compose R g0 _ _).
+  symmetry; apply transport_pp.
+Qed.
 
 (** ** Truncatedness: any dependent product of n-types is an n-type *)
 
