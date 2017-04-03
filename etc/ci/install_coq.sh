@@ -27,7 +27,9 @@ then
     exit 1
 fi
 
+echo '$ git submodule sync'
 git submodule sync
+echo '$ git submodule update --init --recursive'
 git submodule update --init --recursive
 
 pushd coq-HoTT
@@ -41,6 +43,7 @@ eval $(opam config env)
 opam config var root
 opam install -j ${NJOBS} -y camlp5 ocamlfind
 opam list
+echo '$ ./configure '"$@"
 ./configure "$@"
 echo '$ make states tools coqlight plugins grammar/compat5.cmo grammar/grammar.cma'
 make states tools coqlight plugins grammar/compat5.cmo grammar/grammar.cma

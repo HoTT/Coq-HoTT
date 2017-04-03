@@ -39,6 +39,7 @@ branches:
    - master-with-autoreconf-files
 
 env:
+
  matrix:
    - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC=""     UPDATE_AUTOGEN=""     UPDATE_DEP_GRAPHS="yes" BUILD_COQ="yes"  UPDATE_OPAM=""       FORCE_COQ_VERSION=""
    - UPDATE_HTML=""       WITH_AUTORECONF="yes"  UPDATE_QUICK_DOC="yes"  UPDATE_AUTOGEN="yes"  UPDATE_DEP_GRAPHS=""    BUILD_COQ="yes"  UPDATE_OPAM="yes"       FORCE_COQ_VERSION=""
