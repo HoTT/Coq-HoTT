@@ -1158,7 +1158,7 @@ Definition Book_7_5_8 := @HoTT.HIT.Truncations.TrM.conn_map_to_O.
 (* ================================================== thm:modal-mono *)
 (** Lemma 7.6.2 *)
 
-
+Definition Book_7_6_2 := @HoTT.Fibrations.equiv_istruncmap_ap.
 
 (* ================================================== defn:modal-image *)
 (** Definition 7.6.3 *)
