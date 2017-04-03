@@ -48,7 +48,7 @@ before_script:
 # `make-pretty-timed` is not an indication that the build succeeded.
 # We also use `make strict-test` at the beginning so that we error
 # quickly if someone commited .v files but neglected to mention them.
-script: "./autogen.sh && ./configure && if [ -z \"$UPDATE_QUICK_DOC\" ]; then make strict-test && ./etc/coq-scripts/timing/make-pretty-timed.sh V=1 -j2 && make && ./etc/ci/test-install-target.sh && ./etc/coq-scripts/timing/cat-timing-files.sh && cat ./time-of-build-pretty.log && echo; fi && ./etc/ci/after_success.sh"
+script: "./autogen.sh && ./configure && if [ -z \"$UPDATE_QUICK_DOC\" ]; then make strict-test && ./etc/coq-scripts/timing/make-pretty-timed.sh V=1 -j2 && make && ./etc/ci/test-install-target.sh && cat ./time-of-build-pretty.log && echo; fi && ./etc/ci/after_success.sh"
 
 
 after_success:
