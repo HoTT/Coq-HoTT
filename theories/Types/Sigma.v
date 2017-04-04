@@ -159,6 +159,12 @@ Definition pr1_path_sigma `{P : A -> Type} {u v : sigT P}
 : (path_sigma _ _ _ p q)..1 = p
   := pr1_path_sigma_uncurried (p; q).
 
+(* Writing it the other way can help [rewrite]. *)
+Definition ap_pr1_path_sigma {A:Type} {P : A -> Type} {u v : sigT P}
+           (p : u.1 = v.1) (q : p # u.2 = v.2)
+  : ap pr1 (path_sigma _ _ _ p q) = p
+  := pr1_path_sigma p q.
+
 Definition pr2_path_sigma `{P : A -> Type} {u v : sigT P}
            (p : u.1 = v.1) (q : p # u.2 = v.2)
 : (path_sigma _ _ _ p q)..2

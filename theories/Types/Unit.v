@@ -63,6 +63,10 @@ Global Instance isequiv_unit_rec `{Funext} (A : Type)
 : IsEquiv (@Unit_ind (fun _ => A)) | 0
   := isequiv_unit_ind (fun _ => A).
 
+Definition equiv_unit_rec `{Funext} (A : Type)
+  : A <~> (Unit -> A)
+  := (BuildEquiv _ _ (@Unit_ind (fun _ => A)) _).
+
 (* For various reasons, it is typically more convenient to define functions out of the unit as constant maps, rather than [Unit_ind]. *)
 Notation unit_name x := (fun (_ : Unit) => x).
 

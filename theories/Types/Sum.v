@@ -170,16 +170,16 @@ Definition transport_sum {A : Type} {P Q : A -> Type} {a a' : A} (p : a = a')
 
 (** ** Detecting the summands *)
 
-Definition is_inl_and {A B} (P : A -> Type) : A + B -> Type
+Definition is_inl_and {A B} (P : A -> Type@{p}) : A + B -> Type@{p}
   := fun x => match x with inl a => P a | inr _ => Empty end.
 
-Definition is_inr_and {A B} (P : B -> Type) : A + B -> Type
+Definition is_inr_and {A B} (P : B -> Type@{p}) : A + B -> Type@{p}
   := fun x => match x with inl _ => Empty | inr b => P b end.
 
-Definition is_inl {A B} : A + B -> Type
+Definition is_inl {A B} : A + B -> Type0
   := is_inl_and (fun _ => Unit).
 
-Definition is_inr {A B} : A + B -> Type
+Definition is_inr {A B} : A + B -> Type0
   := is_inr_and (fun _ => Unit).
 
 Global Instance ishprop_is_inl {A B} (x : A + B)

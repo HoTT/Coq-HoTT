@@ -142,6 +142,11 @@ Proof.
       by apply path_ishprop.
 Defined.
 
+Definition equiv_equiv_iff_hprop
+       `{Funext} (A B : Type) `{IsHProp A} `{IsHProp B}
+  : (A <-> B) <~> (A <~> B)
+  := BuildEquiv _ _ (@equiv_iff_hprop_uncurried A _ B _) _.
+
 (** ** Inhabited and uninhabited hprops *)
 
 (** If an hprop is inhabited, then it is equivalent to [Unit]. *)
