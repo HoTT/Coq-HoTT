@@ -827,7 +827,7 @@ Section Reflective_Subuniverse.
         { refine (O_indpaths _ _ _); simpl.
           intro v; exact v. }
         exact (p u).
-      - hnf.
+      - simpl.
         rewrite O_indpaths_beta; reflexivity.
     Qed.
     Global Existing Instance inO_paths.
