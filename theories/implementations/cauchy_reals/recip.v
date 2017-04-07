@@ -86,8 +86,7 @@ Defined.
 Definition R_pos_recip : (exists x : real, 0 < x) -> real.
 Proof.
 simple refine (jections.surjective_factor@{UQ UQ UQ Uhuge Ularge
-    Ularge UQ UQ Uhuge Ularge
-    UQ} _ pos_back _).
+    Ularge UQ UQ Uhuge Ularge} _ pos_back _).
 - intros s. exact (Qpos_upper_recip s.1 s.2.1).
 - simpl. exact Qpos_upper_recip_respects.
 Defined.
@@ -144,7 +143,7 @@ Proof.
 intros [x [E|E]];unfold recip;simpl.
 - apply involutive.
 - apply ap. apply ap. apply Sigma.path_sigma_hprop. simpl.
-  Symmetry;apply involutive.
+  symmetry;apply involutive.
 Qed.
 
 Lemma R_recip_upper_recip : forall x e, rat (' e) <= x ->

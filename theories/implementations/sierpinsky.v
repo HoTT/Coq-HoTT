@@ -711,7 +711,7 @@ Lemma interleave_top_l : forall (a b : Sier) E, a ->
 Proof.
 intros a b E Ea.
 apply top_le_eq in Ea.
-Symmetry in Ea. destruct Ea. reflexivity.
+symmetry in Ea. destruct Ea. reflexivity.
 Qed.
 
 Lemma interleave_top_r : forall(a b : Sier) E, b ->
@@ -719,7 +719,7 @@ Lemma interleave_top_r : forall(a b : Sier) E, b ->
 Proof.
 intros a b E Eb.
 apply top_le_eq in Eb.
-Symmetry in Eb. destruct Eb. apply interleave_top_r_rw.
+symmetry in Eb. destruct Eb. apply interleave_top_r_rw.
 Qed.
 
 Definition interleave_bot_rw : forall E, interleave bottom bottom E = bot _
@@ -730,7 +730,7 @@ Lemma interleave_bot : forall a b E, a <= bottom -> b <= bottom ->
 Proof.
 intros a b E E1 E2.
 apply bot_eq in E1;apply bot_eq in E2.
-Symmetry in E1;Symmetry in E2. destruct E1,E2.
+symmetry in E1;symmetry in E2. destruct E1,E2.
 reflexivity.
 Qed.
 

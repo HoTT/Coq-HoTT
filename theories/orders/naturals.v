@@ -35,7 +35,7 @@ Proof. apply le_not_lt_flip, nat_nonneg. Qed.
 Lemma nat_0_or_pos x : x = 0 ∨ 0 < x.
 Proof.
 destruct (trichotomy (<) 0 x) as [?|[?|?]]; auto.
-- left;Symmetry;trivial.
+- left;symmetry;trivial.
 - destruct (nat_not_neg x). trivial.
 Qed.
 

@@ -14,9 +14,9 @@ See SCIENCE.md
 
 - Dependencies: same as Coq trunk. Coq's `configure` should warn you if some are missing.
 
-- Get: [Coq with inductive-inductive types](https://github.com/mattam82/coq/tree/IR), [HoTT modified to compile with Coq-IR](https://github.com/SkySkimmer/HoTT/tree/with-IR) and HoTTClasses (this repository).
+- Get: [Coq with inductive-inductive types](https://github.com/mattam82/coq/tree/IR), [HoTT modified to compile with Coq trunk](https://github.com/ejgallego/HoTT/tree/mz-8.7) and HoTTClasses (this repository).
 
-	- ZIP archives: https://github.com/mattam82/coq/archive/IR.zip https://github.com/SkySkimmer/HoTT/archive/with-IR.zip and https://github.com/SkySkimmer/HoTTClasses/archive/master.zip
+	- ZIP archives: https://github.com/mattam82/coq/archive/IR.zip https://github.com/ejgallego/HoTT/archive/mz-8.7.zip and https://github.com/SkySkimmer/HoTTClasses/archive/master.zip
 
 - In this guide the resulting folders are called respectively `coq-IR/`, `HoTT/` and `HoTTClasses/`.
 

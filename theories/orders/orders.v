@@ -357,7 +357,7 @@ Section full_pseudo_order.
   - intros E. split.
     + apply not_lt_le_flip. apply lt_flip;assumption.
     + apply pseudo_order_lt_apart. assumption.
-  - intros [? E]. apply not_lt_apart_lt_flip;[|Symmetry;trivial].
+  - intros [? E]. apply not_lt_apart_lt_flip;[|symmetry;trivial].
     apply le_iff_not_lt_flip. trivial.
   Qed.
 

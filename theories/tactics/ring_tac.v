@@ -26,7 +26,7 @@ Lemma normalize_eq `{Q : @Quoting.EqQuote R _ _ _ _ _ V l n m V' l'}
 Proof.
 intros E.
 eapply Quoting.eval_eqquote.
-etransitivity;[Symmetry;apply (eval_toPol _)|].
+etransitivity;[symmetry;apply (eval_toPol _)|].
 etransitivity;[|apply (eval_toPol _)].
 exact E.
 Qed.
@@ -72,7 +72,7 @@ Instance semiring_almostring `{SemiRing A} : AlmostRing A | 10.
 Proof.
 split;try apply _.
 intros. unfold almost_negate;simpl.
-Symmetry;apply mult_0_l.
+symmetry;apply mult_0_l.
 Qed.
 
 Instance ring_almostring `{Ring A} : AlmostRing A.

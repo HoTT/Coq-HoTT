@@ -374,7 +374,7 @@ Definition equiv_rec0@{i} (P : Q+ -> C T -> C T -> Type@{i})
 Instance equiv_symm@{} : forall e, Symmetric (close (A:=C T) e).
 Proof.
 red. apply (equiv_rec0 _).
-- intros q r e He. apply equiv_eta_eta. Symmetry;trivial.
+- intros q r e He. apply equiv_eta_eta. symmetry;trivial.
 - intros q y e d d' He _ xi.
   apply equiv_lim_eta with d d';trivial.
 - intros x r e d d' He _ xi.
@@ -497,7 +497,7 @@ split;intros E'.
 Qed.
 
 Definition balls_separated@{}
-  := balls_separated'@{Ularge Ularge Ularge Uhuge}.
+  := balls_separated'@{Ularge Uhuge}.
 
 Instance balls_close_hprop@{}
   : forall e u v, IsHProp (balls_close e u v).
@@ -566,7 +566,7 @@ split;intros E'.
 Qed.
 
 Definition upper_cut_separated@{}
-  := upper_cut_separated'@{Ularge Ularge Uhuge}.
+  := upper_cut_separated'@{Ularge Uhuge}.
 
 Lemma equiv_alt_eta_eta_eta_pr@{} :
 ∀ q q0 r (e : Q+),
@@ -578,7 +578,7 @@ unfold equiv_alt_eta_eta.
 red;simpl. intros q r1 r2 e Hr n.
 split.
 - intros E;apply symmetry.
-  apply symmetry in E;revert E;apply triangular. Symmetry; trivial.
+  apply symmetry in E;revert E;apply triangular. symmetry; trivial.
 - intros E;apply symmetry.
   apply symmetry in E;revert E;apply triangular. trivial.
 Qed.
@@ -763,7 +763,7 @@ intros n;split;apply (Trunc_ind _).
   rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
 - intros [d [d' [Hn E1]]].
   pose proof (equiv_eta_eta _ _ _ _ He) as E2.
-  Symmetry in E2.
+  apply symmetry in E2.
   pose proof (snd (equiv_alt_x_e_pr _) _ _ _ _ E2 E1) as E3.
   apply tr;exists d, (d'+e);split;[|exact E3].
   rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
@@ -943,7 +943,7 @@ Lemma equiv_alt_eta_eta_pr@{} : ∀ (q r : T) (e : Q+), close e q r ->
 Proof.
 intros q r e Hqr.
 red. apply (C_ind0 (fun u => forall n, _)).
-- simpl. split; apply triangular; trivial. Symmetry;trivial.
+- simpl. split; apply triangular; trivial. symmetry;trivial.
 - intros x Ex n.
   rewrite !equiv_alt_eta_lim_compute.
   split;apply (Trunc_ind _);intros [d [d' [Hn E1]]].
@@ -1179,7 +1179,7 @@ split.
 Qed.
 
 Definition equiv_alt_rw@{}
-  := equiv_alt_rw'@{Ularge Ularge Ularge Ularge}.
+  := equiv_alt_rw'@{Ularge}.
 
 Lemma equiv_eta_eta_def' : forall e q r, close e (eta q) (eta r) = close e q r.
 Proof.
@@ -1187,7 +1187,7 @@ rewrite <-equiv_alt_rw;trivial.
 Qed.
 
 Definition equiv_eta_eta_def@{}
-  := equiv_eta_eta_def'@{Ularge Ularge UQ UQ}.
+  := equiv_eta_eta_def'@{Ularge UQ UQ}.
 
 Lemma equiv_eta_lim_def' : forall e q y,
   close e (eta q) (lim y) =
@@ -1197,7 +1197,7 @@ rewrite <-equiv_alt_rw;trivial.
 Qed.
 
 Definition equiv_eta_lim_def@{}
-  := equiv_eta_lim_def'@{Ularge Ularge UQ UQ}.
+  := equiv_eta_lim_def'@{Ularge UQ UQ}.
 
 Lemma equiv_lim_eta_def' : forall e x r,
   close e (lim x) (eta r) =
@@ -1207,7 +1207,7 @@ rewrite <-equiv_alt_rw;trivial.
 Qed.
 
 Definition equiv_lim_eta_def@{}
-  := equiv_lim_eta_def'@{Ularge Ularge UQ UQ}.
+  := equiv_lim_eta_def'@{Ularge UQ UQ}.
 
 Lemma equiv_lim_lim_def' : forall e (x y : Approximation (C T)),
   close e (lim x) (lim y) =
@@ -1217,7 +1217,7 @@ rewrite <-equiv_alt_rw;trivial.
 Qed.
 
 Definition equiv_lim_lim_def@{}
-  := equiv_lim_lim_def'@{Ularge Ularge UQ UQ}.
+  := equiv_lim_lim_def'@{Ularge UQ UQ}.
 
 Lemma equiv_rounded' : Rounded (C T).
 Proof.
@@ -1415,7 +1415,7 @@ simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _);simpl.
 - intros ???;apply Ef.
 - simpl. intros ???? _ ??? _;apply lipschitz_extend_eta_lim;trivial.
 - simpl;intros ???? _ ?? He _ IH.
-  Symmetry in IH;Symmetry.
+  apply symmetry in IH;symmetry.
   revert He IH;apply lipschitz_extend_eta_lim;trivial.
 - simpl. intros _ _ ????????? _;apply lipschitz_extend_lim_lim;trivial.
 Defined.
@@ -1498,7 +1498,7 @@ Definition eta_equiv : T <~> C T
 
 Lemma C_of_complete' : C T = T :> Type@{UQ}.
 Proof.
-Symmetry;apply path_universe with eta. apply _.
+symmetry;apply path_universe with eta. apply _.
 Defined.
 Definition C_of_complete@{i} := C_of_complete'@{i UQ UQ}.
 

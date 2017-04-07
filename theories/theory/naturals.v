@@ -14,7 +14,7 @@ Lemma to_semiring_unique `{Naturals N} `{SemiRing SR} (f: N → SR)
   `{!SemiRingPreserving f} x
   : f x = naturals_to_semiring N SR x.
 Proof.
-Symmetry. apply naturals_initial.
+symmetry. apply naturals_initial.
 Qed.
 
 Lemma to_semiring_unique_alt `{Naturals N} `{SemiRing SR} (f g: N → SR)
@@ -80,7 +80,7 @@ Section retract_is_nat.
     Lemma same_morphism x : (naturals_to_semiring N R ∘ f⁻¹) x = h x.
     Proof.
     transitivity ((h ∘ (f ∘ f⁻¹)) x).
-    - Symmetry. apply (to_semiring_unique (h ∘ f)).
+    - symmetry. apply (to_semiring_unique (h ∘ f)).
     - unfold compose. rewrite jections.surjective_applied;trivial.
     Qed.
   End for_another_semirings.

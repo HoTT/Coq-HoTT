@@ -123,7 +123,7 @@ Lemma opp_respects : forall q1 q2, equiv q1 q2 -> equiv (opp q1) (opp q2).
 Proof.
 unfold equiv;simpl.
 intros q1 q2 E.
-rewrite !(plus_comm (neg _)). Symmetry. apply E.
+rewrite !(plus_comm (neg _)). symmetry. apply E.
 Qed.
 
 Definition Tle : Le (T N)
@@ -788,8 +788,7 @@ Qed.
 Instance Z_full_psorder@{} : FullPseudoOrder Zle Zlt
   := Z_full_psorder'@{
     Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge}.
+    Ularge Ularge Ularge Ularge Ularge}.
 
 Lemma Zmult_strong_ext_l' : ∀ z : Z, StrongExtensionality (z *.).
 Proof.
@@ -974,13 +973,13 @@ destruct (nat_distance_sig pa pb) as [[z1 E1] | [z1 E1]];simpl.
       rewrite E4,plus_0_r in E3;rewrite <-E1,<-E3 in E.
       apply (left_cancellation plus (pa+na)).
       rewrite (plus_comm pa na),plus_0_r,<-plus_assoc.
-      rewrite (plus_comm na pa). Symmetry;trivial.
+      rewrite (plus_comm na pa). symmetry;trivial.
     * apply ap. apply Sigma.path_sigma_hprop.
       simpl. rewrite PathGroupoids.transport_const.
       rewrite <-E1,<-E3 in E.
       apply (left_cancellation plus (pa + na)).
       rewrite <-(plus_assoc pa na z2),(plus_comm pa na),<-plus_assoc.
-      Symmetry;trivial.
+      symmetry;trivial.
     * destruct E2.
       rewrite <-E1,<-E3 in E.
       assert (Erw : nb + z2 + (pa + z1) = (pa + nb) + (z2 + z1))

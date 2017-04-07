@@ -44,7 +44,7 @@ Qed.
 
 Lemma bijective_applied `(f : A → B) `{!Inverse f} `{!Bijective f} x: f⁻¹ (f x) = x.
 Proof.
-  Symmetry. apply (bijective_cancel_left f). reflexivity.
+  symmetry. apply (bijective_cancel_left f). reflexivity.
 Qed.
 
 Lemma bijective `{Funext} `(f : A → B) `{!Inverse f} `{!Bijective f} : f⁻¹ ∘ f = id.
@@ -179,7 +179,7 @@ Definition surjective_factor_aux : forall x, surjective_factor_auxT x.
 Proof.
 intros x. generalize (center _ (Esurj x)). apply (Trunc_ind _).
 intros z. exists (f z.1).
-apply tr. exists z.1;split;trivial. Symmetry;trivial.
+apply tr. exists z.1;split;trivial. symmetry;trivial.
 Defined.
 
 Definition surjective_factor : B -> C :=
@@ -196,7 +196,7 @@ set (Y := (center
 generalize Y. clear Y.
 apply (Trunc_ind _).
 intros Y. simpl.
-apply Eg. Symmetry;apply Y.2.
+apply Eg. symmetry;apply Y.2.
 Qed.
 
 End surjective_factor.

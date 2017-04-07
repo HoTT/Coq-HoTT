@@ -120,7 +120,7 @@ Global Instance close_prod_symm@{}
   `{forall e, Symmetric (close (A:=B) e)}
   : forall e, Symmetric (close (A:=A /\ B) e).
 Proof.
-intros e u v xi;split;Symmetry;apply xi.
+intros e u v xi;split;symmetry;apply xi.
 Qed.
 
 Global Instance close_prod_separated@{}
@@ -160,7 +160,7 @@ intros e u v. split.
   rewrite E1;split;apply rounded_plus,E2.
 Qed.
 
-Definition close_prod_rounded@{j} := @close_prod_rounded'@{j j j j j j}.
+Definition close_prod_rounded@{j} := @close_prod_rounded'@{j j j j j}.
 Arguments close_prod_rounded {_ _} _ _ _.
 Global Existing Instance close_prod_rounded.
 
@@ -214,7 +214,7 @@ split.
   + intros x;reflexivity.
 - intros e f g;apply (Trunc_ind _);intros [d [d' [E1 E2]]].
   apply tr;exists d, d';split;trivial.
-  intros x;Symmetry;trivial.
+  intros x;symmetry;trivial.
 - intros f g E. apply path_forall;intros x.
   apply separated. intros e.
   apply (merely_destruct (E e)). intros [d [d' [E1 E2]]].
@@ -651,7 +651,7 @@ Proof.
 split.
 - unfold close;simpl. apply _.
 - intros e u. red;red. reflexivity.
-- intros e u v xi;red;red;Symmetry;apply xi.
+- intros e u v xi;red;red;symmetry;apply xi.
 - intros u v E.
   apply Sigma.path_sigma_hprop. apply separated,E.
 - intros u v w e d xi1 xi2.
@@ -733,7 +733,7 @@ Instance Q_triangular@{} : Triangular Q.
 Proof.
 hnf. intros u v w e d E1 E2.
 apply Q_triangular_one with v.
-- Symmetry;trivial.
+- symmetry;trivial.
 - trivial.
 Qed.
 
@@ -741,7 +741,8 @@ Lemma Qclose_separating_not_lt : forall q r : Q, (forall e, close e q r) ->
   ~ q < r.
 Proof.
 intros q r E1 E2.
-pose proof (E1 (Qpos_diff _ _ E2)) as E3. Symmetry in E3;apply Qclose_alt in E3.
+pose proof (E1 (Qpos_diff _ _ E2)) as E3.
+apply symmetry in E3;apply Qclose_alt in E3.
 unfold cast in E3;simpl in E3.
 apply (irreflexivity lt (r - q)).
 apply le_lt_trans with (abs (r - q));trivial.
@@ -755,7 +756,7 @@ apply tight_apart. intros E2.
 apply apart_iff_total_lt in E2. destruct E2 as [E2|E2].
 - exact (Qclose_separating_not_lt _ _ E1 E2).
 - refine (Qclose_separating_not_lt _ _ _ E2).
-  intros;Symmetry;trivial.
+  intros;symmetry;trivial.
 Qed.
 
 Instance Qclose_rounded@{} : Rounded Q.
@@ -925,7 +926,7 @@ rewrite Hrw;clear Hrw.
 rewrite dec_recip_inverse by (apply irrefl_neq,symmetric_neq in E';trivial).
 rewrite mult_1_r. unfold X, Y.
 eapply lt_le_trans.
-- apply Qclose_alt. eapply (non_expanding (⊔ ' e)). Symmetry. apply xi.
+- apply Qclose_alt. eapply (non_expanding (⊔ ' e)). symmetry. apply xi.
 - transitivity (' (((e * e) / (e * e)) * n)).
   + rewrite pos_recip_r,Qpos_mult_1_l;reflexivity.
   + rewrite <-!Qpos_mult_assoc.
@@ -947,7 +948,7 @@ Proof.
 intros x l1 l2 E1 E2.
 apply separated.
 intros e. rewrite (pos_split2 e),(pos_split2 (e/2)).
-apply triangular with (x (e / 2 / 2));[Symmetry;apply E1|apply E2].
+apply triangular with (x (e / 2 / 2));[symmetry;apply E1|apply E2].
 Qed.
 
 Lemma equiv_through_approx0 : forall (y : Approximation A) ly, IsLimit y ly ->
@@ -958,7 +959,7 @@ apply (merely_destruct ((fst (rounded _ _ _) xi))).
 intros [d0 [d' [He E2]]].
 pose proof (triangular _ _ _ _ _ E2 (E1 d' _)) as E3.
 assert (Hrw : e + d = d0 + (d' + d));[|rewrite Hrw;trivial].
-rewrite He. Symmetry. apply Qpos_plus_assoc.
+rewrite He. symmetry. apply Qpos_plus_assoc.
 Qed.
 
 Context {Alim : Lim A} `{!CauchyComplete A}.
@@ -977,7 +978,7 @@ rewrite He.
 assert (Hrw : d + n + e' = e' + d + n) by (apply pos_eq;ring_tac.ring_with_nat);
 rewrite Hrw;clear Hrw.
 apply equiv_through_approx.
-Symmetry. apply equiv_through_approx. Symmetry;trivial.
+symmetry. apply equiv_through_approx. symmetry;trivial.
 Qed.
 
 Lemma lim_same_distance@{} : forall (x y : Approximation A) e,

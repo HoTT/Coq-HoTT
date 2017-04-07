@@ -140,7 +140,7 @@ induction Q as [d|Q1 IH1 w Q2 IH2].
     apply plus_comm.
   + simpl. rewrite eval_addC.
     rewrite plus_mult_distr_r.
-    Symmetry;apply plus_assoc.
+    symmetry;apply plus_assoc.
   + simpl. reflexivity.
 Qed.
 
@@ -219,7 +219,7 @@ induction Q as [d|Q1 IH1 w Q2 IH2].
     reflexivity.
   + rewrite eval_PXguard. rewrite Eadd.
     rewrite plus_mult_distr_r.
-    Symmetry;apply plus_assoc.
+    symmetry;apply plus_assoc.
   + simpl. reflexivity.
 Qed.
 
@@ -299,7 +299,7 @@ destruct Q as [d | Q1 w Q2].
     rewrite (mult_comm (vs v)). apply mult_assoc.
   + rewrite <-mult_assoc,(mult_comm (vs v)),mult_assoc.
     rewrite IHP1;reflexivity.
-  + Symmetry;apply mult_assoc.
+  + symmetry;apply mult_assoc.
   + auto.
 Qed.
 

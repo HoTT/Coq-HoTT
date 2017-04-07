@@ -419,7 +419,7 @@ Qed.
 Lemma eta_is_greatest : forall x a, eta@{UA} A a <= x -> x = eta A a.
 Proof.
 apply (partial_ind0 (fun x => forall a, _ -> _)).
-- intros ?? E;apply ap. Symmetry. apply eta_le_eta. trivial.
+- intros ?? E;apply ap. symmetry. apply eta_le_eta. trivial.
 - intros a E. apply le_to_sim in E. destruct E.
 - intros s IH a E.
   apply (antisymmetry le).

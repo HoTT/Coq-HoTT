@@ -74,7 +74,7 @@ Definition IsCut_conjunction l u : IsCut l u -> _
     iscut_cut_disjoint l u, iscut_cut_located l u).
 
 Global Instance iscut_conj_isequiv@{} {l u}
-  : IsEquiv@{UQ UQ} (IsCut_conjunction@{UQ UQ} l u).
+  : IsEquiv@{UQ UQ} (IsCut_conjunction@{UQ} l u).
 Proof.
 simple refine (BuildIsEquiv _ _ _ _ _ _ _).
 - intros E;split;apply E.
@@ -143,7 +143,7 @@ unfold le;simpl;intros a b;split.
   + apply E in E3. destruct (cut_disjoint _ _ E2 E3).
 Qed.
 
-Definition CutLe_upper@{} := CutLe_upper'@{UQ UQ}.
+Definition CutLe_upper@{} := CutLe_upper'@{UQ}.
 
 Instance CutLe_partial_order@{} : PartialOrder CutLe.
 Proof.
@@ -339,7 +339,7 @@ Arguments pred_plus _ _ / _.
 Existing Instance pred_plus.
 
 Lemma pred_plus_pr' : forall a b : QPred,
-  forall q, (a + b) q <-> merely (exists r s, a r /\ b s /\ q = r + s).
+  forall q, (a + b)%mc q <-> merely (exists r s, a r /\ b s /\ q = r + s).
 Proof.
 unfold plus,pred_plus at 1. intros a b q;split.
 - intros E. apply semi_decidable in E.
@@ -350,10 +350,10 @@ unfold plus,pred_plus at 1. intros a b q;split.
   apply (snd semi_decidable),tr. exists r. apply tr. exists s;auto.
 Qed.
 
-Definition pred_plus_pr@{} := pred_plus_pr'@{UQ UQ UQ UQ}.
+Definition pred_plus_pr@{} := pred_plus_pr'@{UQ}.
 
 Lemma lower_pred_plus_pr' : forall a b : Cut, forall q,
-  (lower a + lower b) q <->
+  (lower a + lower b)%mc q <->
   merely (exists r s, lower a r /\ lower b s /\ q < r + s).
 Proof.
 intros a b q;split.
@@ -375,7 +375,7 @@ Qed.
 Definition lower_pred_plus_pr@{} := lower_pred_plus_pr'@{UQ UQ UQ UQ UQ}.
 
 Lemma upper_pred_plus_pr' : forall a b : Cut, forall q,
-  (upper a + upper b) q <->
+  (upper a + upper b)%mc q <->
   merely (exists r s, upper a r /\ upper b s /\ r + s < q).
 Proof.
 intros a b q;split.
@@ -616,7 +616,7 @@ intros a;apply (antisymmetry le);red;simpl;intros q E.
   generalize (straddle_pos a _ E). apply (Trunc_ind _).
   intros [l [u [E1 [E2 E3]]]].
   apply flip_lt_negate in E3;rewrite involutive,<-negate_swap_r,plus_comm in E3.
-  change ((lower (- a) + lower a) q). apply lower_pred_plus_pr.
+  change ((lower (- a) + lower a)%mc q). apply lower_pred_plus_pr.
   apply tr;exists (- u),l;repeat split;trivial.
   change (upper a (- - u)). rewrite involutive;trivial.
 Qed.
@@ -1045,7 +1045,7 @@ Qed.
 
 Lemma CutAbs_rat : forall q : Q, ' (abs q) = abs (' q) :> Cut.
 Proof.
-intros q. Symmetry.
+intros q. symmetry.
 destruct (total le 0 q) as [E|E].
 - rewrite (Qabs_of_nonneg q);trivial.
   apply CutAbs_of_nonneg.
@@ -1096,7 +1096,7 @@ transitivity (a - b);[|apply join_ub_r].
 apply (order_reflecting (b +)).
 assert (Hrw : b + (a - b) = a);[|rewrite Hrw;trivial].
 path_via (a - b + b);[apply commutativity|].
-path_via (a + (- b + b));[Symmetry;apply associativity|].
+path_via (a + (- b + b));[symmetry;apply associativity|].
 path_via (a + 0);[apply ap,left_inverse|].
 apply right_identity.
 Qed.

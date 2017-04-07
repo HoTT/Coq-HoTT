@@ -180,7 +180,7 @@ Lemma from_below_pr : forall x, lim (from_below x) = x.
 Proof.
 intros. apply equiv_path. intros.
 rewrite (pos_split2 e).
-eapply (triangular _);[rewrite (pos_split2 (e/2));Symmetry;apply (equiv_lim _)|].
+eapply (triangular _);[rewrite (pos_split2 (e/2));symmetry;apply (equiv_lim _)|].
 simpl. apply metric_to_equiv.
 assert (Hrw : (x - rat (' (e / 2 / 2)) - x) = - (rat (' (e / 2 / 2))))
   by ring_tac.ring_with_integers (NatPair.Z nat).
@@ -218,7 +218,7 @@ eapply triangular;[|rewrite (pos_split2 (e/2));apply (equiv_lim _)].
 simpl. set (N := e / 2 / 2 / L).
 rewrite <-(pos_unconjugate L (e / 2)),<-Qpos_mult_assoc.
 apply (lipschitz f L).
-Symmetry. rewrite (pos_split2 (e / 2 / L)).
+symmetry. rewrite (pos_split2 (e / 2 / L)).
 assert (Hrw : e / 2 / L / 2 = N)
   by (unfold N;apply pos_eq;ring_tac.ring_with_nat).
 rewrite Hrw;clear Hrw.

@@ -80,7 +80,7 @@ Proof.
 intros q r;apply (unique_continuous_extension _);try apply _.
 { change (Continuous (uncurry (+) ∘ map2 (QRmult q) (QRmult r) ∘ BinaryDup)).
   apply _. }
-intros s;apply (ap rat). Symmetry;apply distribute_r.
+intros s;apply (ap rat). symmetry;apply distribute_r.
 Qed.
 
 Lemma QRmult_lipschitz_interval_aux (a:Q+)
@@ -160,8 +160,7 @@ Qed.
 
 Definition Rmult@{} : Mult real
   := fun x => jections.surjective_factor@{UQ UQ UQ Uhuge Ularge
-    Ularge UQ UQ Uhuge Ularge
-    UQ} _ interval_back (Rbounded_mult_respects x).
+    Ularge UQ UQ Uhuge Ularge} _ interval_back (Rbounded_mult_respects x).
 Global Existing Instance Rmult.
 
 Lemma Rmult_pr@{} x : (fun y => Rbounded_mult y.1 x y.2) =
@@ -205,7 +204,7 @@ change y with (interval_proj (rat (- ' a)) (rat (' a)) (existT _ y E)).
 apply Rmult_lipschitz_aux.
 Qed.
 
-Lemma Rmult_continuous_r' : forall y : real, Continuous (.* y).
+Instance Rmult_continuous_r@{} : forall y : real, Continuous (.* y).
 Proof.
 intros. red. apply (merely_destruct (R_Qpos_bounded y)).
 intros [a Eq]. apply R_lt_le in Eq. apply Rabs_le_pr in Eq.
@@ -213,9 +212,6 @@ change (Continuous (.* y)). eapply lipschitz_continuous.
 change (.* y) with (.* (interval_proj (rat (- ' a)) (rat (' a)) (existT _ y Eq))).
 apply Rmult_lipschitz_aux.
 Qed.
-
-Definition Rmult_continuous_r@{} := Rmult_continuous_r'@{Ularge Ularge}.
-Existing Instance Rmult_continuous_r.
 
 Lemma Rmult_rat_l q x : rat q * x = QRmult q x.
 Proof.

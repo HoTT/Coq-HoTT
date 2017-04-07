@@ -190,14 +190,14 @@ Proof nat_rect P.
 
 Lemma plus_eq_zero : forall a b : nat, a + b =N= 0 -> a =N= 0 /\ b =N= 0.
 Proof.
-intros [|];[intros [|];auto|].
+intros [|a];[intros [|b];auto|].
 - intros E. destruct (S_neq_0 _ E).
 - intros ? E. destruct (S_neq_0 _ E).
 Qed.
 
 Lemma mult_eq_zero : forall a b : nat, a * b =N= 0 -> a =N= 0 \/ b =N= 0.
 Proof.
-intros [|] [|];auto.
+intros [|a] [|b];auto.
 - intros _;right;reflexivity.
 - simpl_nat.
   intros E.
@@ -567,7 +567,7 @@ Section for_another_semiring.
   Let f_S : forall x, toR (S x) = 1 + toR x.
   Proof.
   intros [|x].
-  - Symmetry;apply plus_0_r.
+  - symmetry;apply plus_0_r.
   - reflexivity.
   Qed.
 
@@ -654,7 +654,7 @@ Global Instance nat_cut_minus_spec : CutMinusSpec@{N N} nat nat_cut_minus.
 Proof.
 split.
 - intros x y E. rewrite add_comm.
-  Symmetry.
+  symmetry.
   apply (le_plus_minus _ _ E).
 - apply minus_ge.
 Qed.

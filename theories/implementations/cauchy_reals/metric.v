@@ -169,4 +169,4 @@ repeat (apply path_forall;intro).
 apply equiv_metric_applied_rw.
 Qed.
 
-Definition equiv_metric_rw@{} := equiv_metric_rw'@{Ularge Ularge Ularge}.
+Definition equiv_metric_rw@{} := equiv_metric_rw'.

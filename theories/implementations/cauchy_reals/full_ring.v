@@ -130,7 +130,7 @@ Qed.
 Lemma Rmult_lt_apart : forall z x y, z * x < z * y -> apart x y.
 Proof.
 intros z x y E.
-Symmetry.
+symmetry.
 apply metric_to_apart.
 apply Rmult_pos_decompose_nonneg with (abs z);[apply Rabs_nonneg|].
 rewrite <-Rabs_mult.
@@ -144,5 +144,5 @@ Global Instance real_full_pseudo_srorder : FullPseudoSemiRingOrder Rle Rlt.
 Proof.
 apply from_full_pseudo_ring_order;try apply _.
 apply @apartness.strong_binary_setoid_morphism_commutative;try apply _.
-intros z x y [E|E];apply Rmult_lt_apart in E;trivial;Symmetry;trivial.
+intros z x y [E|E];apply Rmult_lt_apart in E;trivial;symmetry;trivial.
 Qed.

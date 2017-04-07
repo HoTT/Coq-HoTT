@@ -47,7 +47,7 @@ Lemma nat_int_to_semiring : forall x : R, ∃ z, x = naturals_to_semiring N R z 
 Proof.
 apply biinduction.
 - exists 0.
-  left. Symmetry. apply preserves_0.
+  left. symmetry. apply preserves_0.
 - intros. split;intros E.
   + destruct E as [z [E|E]].
     * exists (1+z).

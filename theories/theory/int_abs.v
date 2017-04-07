@@ -22,13 +22,13 @@ unfold int_abs.
 destruct (int_abs_sig Z N (IntAbs:=a) z) as [[n1 E1]|[n1 E1]];
 destruct (int_abs_sig Z N (IntAbs:=b) z) as [[n2 E2]|[n2 E2]].
 - apply (injective (naturals_to_semiring N Z)). path_via z.
-- assert (E : n1 + n2 = 0);[|path_via 0;[|Symmetry];
+- assert (E : n1 + n2 = 0);[|path_via 0;[|symmetry];
   apply (naturals.zero_sum _ _ E)].
   apply (injective (naturals_to_semiring N Z)).
   rewrite preserves_0,preserves_plus.
   rewrite E1,E2.
   apply plus_negate_r.
-- assert (E : n1 + n2 = 0);[|path_via 0;[|Symmetry];
+- assert (E : n1 + n2 = 0);[|path_via 0;[|symmetry];
   apply (naturals.zero_sum _ _ E)].
   apply (injective (naturals_to_semiring N Z)).
   rewrite preserves_0,preserves_plus.
@@ -69,7 +69,7 @@ Lemma int_abs_negate_nat n :
   int_abs Z N (-f n) = n.
 Proof.
 apply (injective f). destruct (int_abs_spec (-f n)) as [[? E]|[? E]].
-- Symmetry. apply naturals.negate_to_ring. apply symmetry; trivial.
+- symmetry. apply naturals.negate_to_ring. apply symmetry; trivial.
 - rewrite involutive in E. trivial.
 Qed.
 
@@ -143,7 +143,7 @@ destruct (int_abs_spec x) as [[? Ex]|[? Ex]],
   + apply negate_mult_distr_l.
   + apply nonpos_nonneg_mult;trivial.
 - rewrite int_abs_nonneg.
-  + Symmetry;apply negate_mult_negate.
+  + symmetry;apply negate_mult_negate.
   + apply nonpos_mult;trivial.
 Qed.
 End contents.
