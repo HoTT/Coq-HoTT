@@ -361,6 +361,68 @@ Tactic Notation "simpl" "rewrite"      "?" open_constr(term) "in" "*" "|-" := si
 Tactic Notation "simpl" "rewrite" "->" "?" open_constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => rewrite -> ?H in * |- ) term.
 Tactic Notation "simpl" "rewrite" "<-" "?" open_constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => rewrite <- ?H in * |- ) term.
 
+Tactic Notation "simpl" "erewrite"      open_constr(term) := simpl_do_clear ltac:(fun H => erewrite    H) term.
+Tactic Notation "simpl" "erewrite" "->" open_constr(term) := simpl_do_clear ltac:(fun H => erewrite -> H) term.
+Tactic Notation "simpl" "erewrite" "<-" open_constr(term) := simpl_do_clear ltac:(fun H => erewrite <- H) term.
+
+Tactic Notation "simpl" "erewrite"      open_constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => erewrite    H in hyp) term.
+Tactic Notation "simpl" "erewrite" "->" open_constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => erewrite -> H in hyp) term.
+Tactic Notation "simpl" "erewrite" "<-" open_constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => erewrite <- H in hyp) term.
+
+Tactic Notation "simpl" "erewrite"      open_constr(term) "in" "*" := simpl_do_clear ltac:(fun H => erewrite    H in * ) term.
+Tactic Notation "simpl" "erewrite" "->" open_constr(term) "in" "*" := simpl_do_clear ltac:(fun H => erewrite -> H in * ) term.
+Tactic Notation "simpl" "erewrite" "<-" open_constr(term) "in" "*" := simpl_do_clear ltac:(fun H => erewrite <- H in * ) term.
+
+Tactic Notation "simpl" "erewrite"      open_constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => erewrite    H in hyp |- * ) term.
+Tactic Notation "simpl" "erewrite" "->" open_constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => erewrite -> H in hyp |- * ) term.
+Tactic Notation "simpl" "erewrite" "<-" open_constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => erewrite <- H in hyp |- * ) term.
+
+Tactic Notation "simpl" "erewrite"      open_constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => erewrite    H in * |- ) term.
+Tactic Notation "simpl" "erewrite" "->" open_constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => erewrite -> H in * |- ) term.
+Tactic Notation "simpl" "erewrite" "<-" open_constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => erewrite <- H in * |- ) term.
+
+
+Tactic Notation "simpl" "erewrite"      "!" open_constr(term) := simpl_do_clear ltac:(fun H => erewrite    !H) term.
+Tactic Notation "simpl" "erewrite" "->" "!" open_constr(term) := simpl_do_clear ltac:(fun H => erewrite -> !H) term.
+Tactic Notation "simpl" "erewrite" "<-" "!" open_constr(term) := simpl_do_clear ltac:(fun H => erewrite <- !H) term.
+
+Tactic Notation "simpl" "erewrite"      "!" open_constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => erewrite    !H in hyp) term.
+Tactic Notation "simpl" "erewrite" "->" "!" open_constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => erewrite -> !H in hyp) term.
+Tactic Notation "simpl" "erewrite" "<-" "!" open_constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => erewrite <- !H in hyp) term.
+
+Tactic Notation "simpl" "erewrite"      "!" open_constr(term) "in" "*" := simpl_do_clear ltac:(fun H => erewrite    !H in * ) term.
+Tactic Notation "simpl" "erewrite" "->" "!" open_constr(term) "in" "*" := simpl_do_clear ltac:(fun H => erewrite -> !H in * ) term.
+Tactic Notation "simpl" "erewrite" "<-" "!" open_constr(term) "in" "*" := simpl_do_clear ltac:(fun H => erewrite <- !H in * ) term.
+
+Tactic Notation "simpl" "erewrite"      "!" open_constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => erewrite    !H in hyp |- * ) term.
+Tactic Notation "simpl" "erewrite" "->" "!" open_constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => erewrite -> !H in hyp |- * ) term.
+Tactic Notation "simpl" "erewrite" "<-" "!" open_constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => erewrite <- !H in hyp |- * ) term.
+
+Tactic Notation "simpl" "erewrite"      "!" open_constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => erewrite    !H in * |- ) term.
+Tactic Notation "simpl" "erewrite" "->" "!" open_constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => erewrite -> !H in * |- ) term.
+Tactic Notation "simpl" "erewrite" "<-" "!" open_constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => erewrite <- !H in * |- ) term.
+
+
+Tactic Notation "simpl" "erewrite"      "?" open_constr(term) := simpl_do_clear ltac:(fun H => erewrite    ?H) term.
+Tactic Notation "simpl" "erewrite" "->" "?" open_constr(term) := simpl_do_clear ltac:(fun H => erewrite -> ?H) term.
+Tactic Notation "simpl" "erewrite" "<-" "?" open_constr(term) := simpl_do_clear ltac:(fun H => erewrite <- ?H) term.
+
+Tactic Notation "simpl" "erewrite"      "?" open_constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => erewrite    ?H in hyp) term.
+Tactic Notation "simpl" "erewrite" "->" "?" open_constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => erewrite -> ?H in hyp) term.
+Tactic Notation "simpl" "erewrite" "<-" "?" open_constr(term) "in" hyp(hyp) := simpl_do_clear ltac:(fun H => erewrite <- ?H in hyp) term.
+
+Tactic Notation "simpl" "erewrite"      "?" open_constr(term) "in" "*" := simpl_do_clear ltac:(fun H => erewrite    ?H in * ) term.
+Tactic Notation "simpl" "erewrite" "->" "?" open_constr(term) "in" "*" := simpl_do_clear ltac:(fun H => erewrite -> ?H in * ) term.
+Tactic Notation "simpl" "erewrite" "<-" "?" open_constr(term) "in" "*" := simpl_do_clear ltac:(fun H => erewrite <- ?H in * ) term.
+
+Tactic Notation "simpl" "erewrite"      "?" open_constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => erewrite    ?H in hyp |- * ) term.
+Tactic Notation "simpl" "erewrite" "->" "?" open_constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => erewrite -> ?H in hyp |- * ) term.
+Tactic Notation "simpl" "erewrite" "<-" "?" open_constr(term) "in" hyp(hyp) "|-" "*" := simpl_do_clear ltac:(fun H => erewrite <- ?H in hyp |- * ) term.
+
+Tactic Notation "simpl" "erewrite"      "?" open_constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => erewrite    ?H in * |- ) term.
+Tactic Notation "simpl" "erewrite" "->" "?" open_constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => erewrite -> ?H in * |- ) term.
+Tactic Notation "simpl" "erewrite" "<-" "?" open_constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => erewrite <- ?H in * |- ) term.
+
 (** find the head of the given expression *)
 Ltac head expr :=
   match expr with
