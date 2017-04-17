@@ -31,7 +31,7 @@ Inductive False : Type :=.
 (** [not A], written [~A], is the negation of [A] *)
 Definition not (A:Type) : Type := A -> False.
 
-Notation "~ x" := (not x) : type_scope.
+(* Notation "~ x" := (not x) : type_scope. *)
 
 Hint Unfold not: core.
 

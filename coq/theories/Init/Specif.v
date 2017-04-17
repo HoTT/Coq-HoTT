@@ -169,7 +169,7 @@ Definition except := False_rec. (* for compatibility with previous versions *)
 
 Arguments except [P] _.
 
-Theorem absurd_set : forall (A:Prop) (C:Set), A -> ~ A -> C.
+Theorem absurd_set : forall (A:Prop) (C:Set), A -> not A -> C.
 Proof.
   intros A C h1 h2.
   apply False_rec.

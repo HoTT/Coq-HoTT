@@ -91,7 +91,6 @@ Scheme nat_rec := Induction for nat Sort Set.
 Delimit Scope nat_scope with nat.
 Bind Scope nat_scope with nat.
 Arguments S _%nat.
-Arguments S _.
 
 Open Scope nat_scope. (* Originally in Peano.v *)
 
@@ -125,7 +124,7 @@ Delimit Scope identity_scope with identity.
 Notation "x = y :> A" := (@identity A x y)%identity : identity_scope.
 
 Notation "x = y" := (x = y :>_)%identity : identity_scope.
-Notation "x <> y  :> T" := (~ x = y :>T)%identity : identity_scope.
+Notation "x <> y  :> T" := (not (x = y :> T))%identity : identity_scope.
 Notation "x <> y" := (x <> y :>_)%identity : identity_scope.
 
 Local Open Scope identity_scope.
