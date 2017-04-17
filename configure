@@ -2,11 +2,9 @@
 
 OPTFILE="_CoqProject"
 
-if [ "$#" -ne 0 ];
-then
-    >&2 echo "$0 does not understand arguments.
-Use environment variables instead: hoqc, hoqtop and hoqdep should be in your PATH or in HOQDIR.";
-    exit 1;
+USE_IR=true
+if [ "${1}" = "NO_IR" ]
+then USE_IR=false
 fi
 
 if [ -z "${HOQDIR}" ]
@@ -31,7 +29,15 @@ cp "$OPTFILE.in" "$OPTFILE"
 echo "COQC = $HOQC" >> "$OPTFILE"
 echo "COQDEP = $HOQDEP" >> "$OPTFILE"
 
-find . -name '*.v' >> "$OPTFILE"
+#non IR find
+#HoTTBook and CPP depend on IR
+find . -not \( -path './theories/IR' -prune \) -not -name CPP2017.v -not -name HoTTBook.v -name '*.v' -print >> "$OPTFILE"
+if $USE_IR
+then
+    find ./theories/IR/ -name '*.v' >> "$OPTFILE"
+    echo ./theories/CPP2017.v >> "$OPTFILE"
+    echo ./theories/HoTTBook.v >> "$OPTFILE"
+fi
 
 coq_makefile -f "$OPTFILE" -o Makefile
 
