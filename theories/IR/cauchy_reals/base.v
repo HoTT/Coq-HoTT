@@ -15,7 +15,7 @@ Require Import
   HoTTClasses.orders.lattices
   HoTTClasses.theory.additional_operations
   HoTTClasses.theory.premetric
-  HoTTClasses.implementations.cauchy_completion.
+  HoTTClasses.IR.cauchy_completion.
 
 Local Set Universe Minimization ToSet.
 

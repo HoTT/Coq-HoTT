@@ -15,10 +15,10 @@ Require Import
   HoTTClasses.orders.lattices
   HoTTClasses.theory.additional_operations
   HoTTClasses.theory.premetric
-  HoTTClasses.implementations.cauchy_completion
-  HoTTClasses.implementations.partiality
-  HoTTClasses.implementations.sierpinsky
-  HoTTClasses.implementations.cauchy_reals.
+  HoTTClasses.IR.cauchy_completion
+  HoTTClasses.IR.partiality
+  HoTTClasses.IR.sierpinsky
+  HoTTClasses.IR.cauchy_reals.
 
 Section compare_cauchy_rat.
 

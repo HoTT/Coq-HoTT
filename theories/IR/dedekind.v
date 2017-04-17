@@ -16,8 +16,8 @@ Require Import
   HoTTClasses.orders.lattices
   HoTTClasses.theory.additional_operations
   HoTTClasses.theory.premetric
-  HoTTClasses.implementations.partiality
-  HoTTClasses.implementations.sierpinsky.
+  HoTTClasses.IR.partiality
+  HoTTClasses.IR.sierpinsky.
 
 Local Set Universe Minimization ToSet.
 

@@ -3,9 +3,9 @@
 Require Import
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.interfaces.orders
-  HoTTClasses.implementations.cauchy_reals
-  HoTTClasses.implementations.dedekind
-  HoTTClasses.implementations.cauchy_dedekind.
+  HoTTClasses.IR.cauchy_reals
+  HoTTClasses.IR.dedekind
+  HoTTClasses.IR.cauchy_dedekind.
 
 (* END OF PREAMBLE *)
 (* ================================================== lem:opp *)
@@ -31,13 +31,13 @@ Definition Book_2_1_4_item_iv := @HoTT.Basics.PathGroupoids.concat_p_pp.
 (* ================================================== defn:dedekind-reals *)
 (** Definition 11.2.1 *)
 
-Definition Book_11_2_1 := @HoTTClasses.implementations.dedekind.Cut.
+Definition Book_11_2_1 := @HoTTClasses.IR.dedekind.Cut.
 
 (* ================================================== dedekind-in-cut-as-le *)
 (** Lemma 11.2.2 *)
 
-Definition Book_11_2_2_item_i := @HoTTClasses.implementations.dedekind.cut_lt_lower.
-Definition Book_11_2_2_item_ii := @HoTTClasses.implementations.dedekind.cut_lt_upper.
+Definition Book_11_2_2_item_i := @HoTTClasses.IR.dedekind.cut_lt_lower.
+Definition Book_11_2_2_item_ii := @HoTTClasses.IR.dedekind.cut_lt_upper.
 
 (* ================================================== RD-inverse-apart-0 *)
 (** Theorem 11.2.4 *)
@@ -47,7 +47,7 @@ Definition Book_11_2_2_item_ii := @HoTTClasses.implementations.dedekind.cut_lt_u
 (* ================================================== RD-archimedean *)
 (** Theorem 11.2.6 *)
 
-Definition Book_11_2_6 := @HoTTClasses.implementations.dedekind.Cut_archimedean.
+Definition Book_11_2_6 := @HoTTClasses.IR.dedekind.Cut_archimedean.
 
 (* ================================================== ordered-field *)
 (** Definition 11.2.7 *)
@@ -68,7 +68,7 @@ Definition Book_11_2_10 := @HoTTClasses.theory.premetric.Approximation.
 (* ================================================== RD-cauchy-complete *)
 (** Theorem 11.2.12 *)
 
-Definition Book_11_2_12 := @HoTTClasses.implementations.dedekind.Cut_cauchy_complete.
+Definition Book_11_2_12 := @HoTTClasses.IR.dedekind.Cut_cauchy_complete.
 
 
 (* ================================================== RD-final-field *)
@@ -89,17 +89,17 @@ Definition Book_11_2_12 := @HoTTClasses.implementations.dedekind.Cut_cauchy_comp
 (* ================================================== defn:cauchy-reals *)
 (** Definition 11.3.2 *)
 
-Definition Book_11_3_2 := @HoTTClasses.implementations.cauchy_completion.Cauchy.C.
+Definition Book_11_3_2 := @HoTTClasses.IR.cauchy_completion.Cauchy.C.
 
 (* ================================================== thm:Cauchy-reals-are-a-set *)
 (** Theorem 11.3.9 *)
 
-Definition Book_11_3_9 := @HoTTClasses.implementations.cauchy_completion.C_isset.
+Definition Book_11_3_9 := @HoTTClasses.IR.cauchy_completion.C_isset.
 
 (* ================================================== RC-lim-onto *)
 (** Lemma 11.3.10 *)
 
-Definition Book_11_3_10 := @HoTTClasses.implementations.cauchy_completion.lim_issurj.
+Definition Book_11_3_10 := @HoTTClasses.IR.cauchy_completion.lim_issurj.
 
 (* ================================================== RC-lim-factor *)
 (** Lemma 11.3.11 *)
@@ -109,7 +109,7 @@ Definition Book_11_3_10 := @HoTTClasses.implementations.cauchy_completion.lim_is
 (* ================================================== thm:RCsim-symmetric *)
 (** Lemma 11.3.12 *)
 
-Definition Book_11_3_12 := @HoTTClasses.implementations.cauchy_completion.equiv_symm.
+Definition Book_11_3_12 := @HoTTClasses.IR.cauchy_completion.equiv_symm.
 
 (* ================================================== defn:lipschitz *)
 (** Definition 11.3.14 *)
@@ -119,57 +119,57 @@ Definition Book_11_3_14 := @HoTTClasses.theory.premetric.Lipschitz.
 (* ================================================== RC-extend-Q-Lipschitz *)
 (** Lemma 11.3.15 *)
 
-Definition Book_11_3_15 := @HoTTClasses.implementations.cauchy_completion.lipschitz_extend.
+Definition Book_11_3_15 := @HoTTClasses.IR.cauchy_completion.lipschitz_extend.
 
 (* ================================================== defn:RC-approx *)
 (** Theorem 11.3.16 *)
 
-Definition Book_11_3_16 := @HoTTClasses.implementations.cauchy_completion.equiv_alt.
+Definition Book_11_3_16 := @HoTTClasses.IR.cauchy_completion.equiv_alt.
 
 (* ================================================== thm:RC-sim-characterization *)
 (** Theorem 11.3.32 *)
 
-Definition Book_11_3_32 := @HoTTClasses.implementations.cauchy_completion.equiv_alt_rw.
+Definition Book_11_3_32 := @HoTTClasses.IR.cauchy_completion.equiv_alt_rw.
 
 (* ================================================== thm:RC-sim-lim *)
 (** Lemma 11.3.36 *)
 
-Definition Book_11_3_36 := @HoTTClasses.implementations.cauchy_completion.C_equiv_through_approx.
+Definition Book_11_3_36 := @HoTTClasses.IR.cauchy_completion.C_equiv_through_approx.
 
 (* ================================================== thm:RC-sim-lim-term *)
 (** Lemma 11.3.37 *)
 
-Definition Book_11_3_37 := @HoTTClasses.implementations.cauchy_completion.equiv_lim.
+Definition Book_11_3_37 := @HoTTClasses.IR.cauchy_completion.equiv_lim.
 
 (* ================================================== RC-continuous-eq *)
 (** Lemma 11.3.39 *)
 
-Definition Book_11_3_39 := @HoTTClasses.implementations.cauchy_completion.unique_continuous_extension.
+Definition Book_11_3_39 := @HoTTClasses.IR.cauchy_completion.unique_continuous_extension.
 
 (* ================================================== RC-binary-nonexpanding-extension *)
 (** Lemma 11.3.40 *)
 
-Definition Book_11_3_40 := @HoTTClasses.implementations.cauchy_completion.lipschitz_extend_binary.
+Definition Book_11_3_40 := @HoTTClasses.IR.cauchy_completion.lipschitz_extend_binary.
 
 (* ================================================== RC-archimedean *)
 (** Theorem 11.3.41 *)
 
-Definition Book_11_3_41 := @HoTTClasses.implementations.cauchy_reals.base.R_archimedean.
+Definition Book_11_3_41 := @HoTTClasses.IR.cauchy_reals.base.R_archimedean.
 
 (* ================================================== thm:RC-le-grow *)
 (** Lemma 11.3.42 *)
 
-Definition Book_11_3_42 := @HoTTClasses.implementations.cauchy_reals.order.Rle_close_rat.
+Definition Book_11_3_42 := @HoTTClasses.IR.cauchy_reals.order.Rle_close_rat.
 
 (* ================================================== thm:RC-lt-open *)
 (** Lemma 11.3.43 *)
 
-Definition Book_11_3_43_item_i := @HoTTClasses.implementations.cauchy_reals.order.Rlt_close_rat_plus.
+Definition Book_11_3_43_item_i := @HoTTClasses.IR.cauchy_reals.order.Rlt_close_rat_plus.
 
 (* ================================================== RC-sim-eqv-le *)
 (** Theorem 11.3.44 *)
 
-Definition Book_11_3_44 := @HoTTClasses.implementations.cauchy_reals.metric.equiv_metric_applied_rw.
+Definition Book_11_3_44 := @HoTTClasses.IR.cauchy_reals.metric.equiv_metric_applied_rw.
 
 (* ================================================== RC-squaring *)
 (** Theorem 11.3.46 *)
@@ -179,14 +179,14 @@ Definition Book_11_3_44 := @HoTTClasses.implementations.cauchy_reals.metric.equi
 (* ================================================== RC-archimedean-ordered-field *)
 (** Theorem 11.3.48 *)
 
-Definition Book_11_3_48_item_i := @HoTTClasses.implementations.cauchy_reals.base.R_archimedean.
-Definition Book_11_3_48_item_ii := @HoTTClasses.implementations.cauchy_reals.full_ring.real_full_pseudo_srorder.
-Definition Book_11_3_48_item_iii := @HoTTClasses.implementations.cauchy_reals.field.real_field.
+Definition Book_11_3_48_item_i := @HoTTClasses.IR.cauchy_reals.base.R_archimedean.
+Definition Book_11_3_48_item_ii := @HoTTClasses.IR.cauchy_reals.full_ring.real_full_pseudo_srorder.
+Definition Book_11_3_48_item_iii := @HoTTClasses.IR.cauchy_reals.field.real_field.
 
 (* ================================================== RC-initial-Cauchy-complete *)
 (** Theorem 11.3.50 *)
 
-Definition Book_11_3_50 := @HoTTClasses.implementations.cauchy_reals.initial.real_embed.
+Definition Book_11_3_50 := @HoTTClasses.IR.cauchy_reals.initial.real_embed.
 
 (* ================================================== lem:untruncated-linearity-reals-coincide *)
 (** Lemma 11.4.1 *)

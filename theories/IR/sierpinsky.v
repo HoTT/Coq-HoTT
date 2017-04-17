@@ -7,7 +7,7 @@ Require Import
   HoTTClasses.interfaces.orders
   HoTTClasses.orders.lattices
   HoTTClasses.theory.lattices
-  HoTTClasses.implementations.partiality
+  HoTTClasses.IR.partiality
   HoTTClasses.implementations.peano_naturals.
 
 Local Set Universe Minimization ToSet.
