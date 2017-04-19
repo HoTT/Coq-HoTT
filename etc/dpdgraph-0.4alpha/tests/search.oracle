@@ -1,5 +1,0 @@
-Welcome to Coq 8.3pl4 (April 2012)
-[cons(36) nil(2) perm_swap(1) perm_skip(3) list(15) Permutation(7)
-list_ind(2) app_nil_end(2) app_comm_cons(1) app(35) Permutation_trans(3)
-Permutation_sym(3) Permutation_refl(2) eq_ind_r(1) eq_ind(2)
-]

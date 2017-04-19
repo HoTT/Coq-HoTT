@@ -3,5 +3,9 @@
 PS4='$ '
 set -x
 
-#sudo apt-get update -qq
-sudo apt-get install -q libocamlgraph-ocaml-dev libgraphviz4 graphviz
+NJOBS=1
+[ -e .opam ] || opam init -j ${NJOBS} --compiler=system -n -y
+eval $(opam config env)
+opam config var root
+opam install -j ${NJOBS} -y camlp5 ocamlfind ocamlgraph
+opam list

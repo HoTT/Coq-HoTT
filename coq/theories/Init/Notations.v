@@ -79,9 +79,8 @@ Delimit Scope type_scope with type.
 Delimit Scope function_scope with function.
 Delimit Scope core_scope with core.
 
-(* 8.6 only :S *)
-(* Bind Scope type_scope with Sortclass. *)
-(* Bind Scope function_scope with Funclass. *)
+Bind Scope type_scope with Sortclass.
+Bind Scope function_scope with Funclass.
 
 Open Scope core_scope.
 Open Scope function_scope.
@@ -91,8 +90,7 @@ Open Scope type_scope.
 
 Declare ML Module "coretactics".
 Declare ML Module "extratactics".
-Declare ML Module "eauto".
+Declare ML Module "g_auto".
 Declare ML Module "g_class".
 Declare ML Module "g_eqdecide".
 Declare ML Module "g_rewrite".
-Declare ML Module "tauto".

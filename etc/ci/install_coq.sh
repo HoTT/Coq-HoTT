@@ -37,12 +37,20 @@ if [ ! -z "$FORCE_COQ_VERSION" ]
 then
     git checkout "$FORCE_COQ_VERSION" || exit $?
 fi
+NJOBS=1
+[ -e .opam ] || opam init -j ${NJOBS} --compiler=system -n -y
+eval $(opam config env)
+opam config var root
+opam install -j ${NJOBS} -y camlp5 ocamlfind
+opam list
 echo '$ ./configure '"$@"
 ./configure "$@"
-echo '$ make coqlight'
-make coqlight READABLE_ML4=1
-echo '$ sudo make install-coqlight install-devfiles'
-sudo make install-coqlight install-devfiles
+echo '$ make states tools coqlight plugins grammar/compat5.cmo grammar/grammar.cma'
+make states tools coqlight plugins grammar/compat5.cmo grammar/grammar.cma
+echo '$ sudo make install-binaries + rsync plugins theories'
+touch bin/coqtop.byte bin/coqchk stm/{proof,tac,query}workertop.cma
+sudo make install-binaries install-devfiles
+sudo rsync -a plugins theories /usr/local/lib/coq/
 popd
 
 popd 1>/dev/null

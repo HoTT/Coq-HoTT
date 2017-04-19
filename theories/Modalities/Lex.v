@@ -212,15 +212,14 @@ Module Lex_Reflective_Subuniverses
     { intros x; subst g; apply O_rec_beta. }
     apply inO_isequiv_to_O@{u a k k}.
     apply isequiv_fcontr; intros x.
-    refine (contr_equiv' _ (hfiber_hfiber_compose_map@{k k i k k k k k k} _ g x)).
+    refine (contr_equiv' _ (hfiber_hfiber_compose_map@{k k i k k k k k} _ g x)).
     apply fcontr_isequiv.
     unfold hfiber_compose_map.
     transparent assert (h : (Equiv@{k k} (hfiber@{k i} (@pr1 A B) (g x))
                                          (hfiber@{k i} g (g x)))).
     { refine (_ oE equiv_to_O@{u a k k} O _).
       - refine (_ oE BuildEquiv _ _
-                  (O_functor_hfiber@{u a k i k k i k k (* <- this k is irrelevant *) k k k k}
-                                   O (@pr1 A B) (g x)) _).
+                  (O_functor_hfiber O (@pr1 A B) (g x)) _).
         unfold hfiber.
         refine (equiv_functor_sigma' 1 _). intros y; cbn.
         refine (_ oE (equiv_moveR_equiv_V _ _)).
@@ -231,7 +230,7 @@ Module Lex_Reflective_Subuniverses
         refine (_ @ (O_rec_beta _ _)^).
         apply ap, O_rec_beta.
       - refine (inO_equiv_inO@{u (*dwim1*) a (*dwim2*) j (*dwim3*) k (* <- dwim4 *) k} _
-                 (hfiber_fibration@{i j k k} (g x) B)). }
+                 (hfiber_fibration@{i j k} (g x) B)). }
     refine (isequiv_homotopic (h oE equiv_hfiber_homotopic _ _ p (g x)) _).
     intros [[a b] q]; cbn. clear h.
     unfold O_functor_hfiber.

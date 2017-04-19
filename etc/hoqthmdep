@@ -26,7 +26,7 @@ function readlink_f() {
     echo "$RESULT"
 }
 
-mythmdepdir="$(dirname "$(readlink_f "${BASH_SOURCE[0]}")")"
+mythmdepdir="$(dirname "$(readlink_f "${BASH_SOURCE[0]}")")/coq-dpdgraph"
 if [ ! -f "$mythmdepdir/../../hoq-config" ]
 then
   echo "Could not find hoq-config. Did you run ./configure?"
@@ -41,4 +41,4 @@ fi
 # or using more evil (but portable) 'eval', do
 # $ eval 'exec "$COQTOP" '"$COQ_ARGS"' "$@"'
 # Instead, we duplicate code, because it's simpler.
-exec "$mythmdepdir/coqthmdep" -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -Q "$HOTTCONTRIB" "" -indices-matter "$@"
+exec "$COQTOP" -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -Q "$HOTTCONTRIB" "" -Q "$mythmdepdir" "" -I "$mythmdepdir" -indices-matter "$@"

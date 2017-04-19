@@ -1,6 +1,0 @@
--extra coqthmdep "searchdepend.cmx graphdepend.cmx" "$(COQMKTOP) $(COQMKTOPFLAGS) -opt -o coqthmdep searchdepend.cmx graphdepend.cmx"
-COQMKTOP = coqmktop
-COQDEP = ocamldep
-COQMKTOPFLAGS = -thread
-searchdepend.ml4
-graphdepend.ml4

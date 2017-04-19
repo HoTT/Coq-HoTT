@@ -62,12 +62,12 @@ Module Nullification_Modalities <: Modalities.
 
   Module LocRSUTh := ReflectiveSubuniverses_Theory LocRSU.
 
-  Definition O_reflector := LocRSU.O_reflector.
-  Definition In := LocRSU.In.
-  Definition O_inO := @LocRSU.O_inO.
-  Definition to := LocRSU.to.
+  Definition O_reflector@{u a i} := LocRSU.O_reflector@{u a i}.
+  Definition In@{u a i} := LocRSU.In@{u a i}.
+  Definition O_inO@{u a i} := @LocRSU.O_inO@{u a i}.
+  Definition to@{u a i} := LocRSU.to@{u a i}.
   Definition inO_equiv_inO := @LocRSU.inO_equiv_inO@{u a i j k}.
-  Definition hprop_inO := LocRSU.hprop_inO.
+  Definition hprop_inO@{u a i} := LocRSU.hprop_inO@{u a i}.
 
   Definition O_ind_internal@{u a i j k} (O : Modality@{u a}) (A : Type@{i})
              (B : O_reflector@{u a i} O A -> Type@{j})
@@ -78,7 +78,7 @@ Module Nullification_Modalities <: Modalities.
     refine (Localize_ind@{a i j k}
              (null_to_local_generators@{a a} (unNul O)) A B g _); intros i.
     apply (ooextendable_over_unit@{a i j a k}); intros c.
-    refine (ooextendable_postcompose@{a a j j k j j j k j k k}
+    refine (ooextendable_postcompose
               (fun (_:Unit) => B (c tt)) _ _
               (fun u => transport@{i j} B (ap c (path_unit@{a} tt u))) _).
     refine (ooextendable_islocal _ i).
