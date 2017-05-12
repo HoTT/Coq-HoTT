@@ -30,7 +30,7 @@ assert (E : sigT (fun n : R => sigT (fun d : R => ~ d = 0 )) <~> Frac).
 Qed.
 
 Global Instance Frac_ishset@{} : IsHSet Frac
-  := Frac_ishset'@{UR Ularge Set Set}.
+  := Frac_ishset'@{UR Ularge Set}.
 
 Local Existing Instance den_ne_0.
 
@@ -266,7 +266,7 @@ Definition F_compute_path P {sP} dclass dequiv q r (E : equiv q r)
 Definition F_ind@{i} (P : F -> Type@{i}) {sP : forall x, IsHProp (P x)}
   (dclass : forall x : Frac R, P (' x)) : forall x, P x.
 Proof.
-apply (@F_rect P (fun _ => trunc_hprop@{i i}) dclass).
+apply (@F_rect P (fun _ => trunc_hprop) dclass).
 intros;apply path_ishprop.
 Qed.
 
@@ -306,7 +306,7 @@ Definition F_rec2@{i j} {T:Type@{i} } {sT : IsHSet T}
   (dequiv : forall x1 x2, equiv x1 x2 -> forall y1 y2, equiv y1 y2 ->
     dclass x1 y1 = dclass x2 y2),
   F -> F -> T
-  := @quotient_rec2@{UR UR j i Set} _ _ _ _ _ (BuildhSet _).
+  := @quotient_rec2@{UR UR j i} _ _ _ _ _ (BuildhSet _).
 
 Definition F_rec2_compute {T sT} dclass dequiv x y
   : @F_rec2 T sT dclass dequiv (' x) (' y) = dclass x y

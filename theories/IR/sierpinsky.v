@@ -162,7 +162,7 @@ split.
   + intros y z E1 E2. apply E1.
   + intros s IH y z;revert z y.
     apply (partial_ind0 _ (fun z => forall y, _ -> _ -> _)).
-    * intros [] y E1 E2. pose proof @trunc_contr@{Set Set} as trunc_contr.
+    * intros [] y E1 E2.
       apply (eta_le_sup _) in E1.
       revert E1;apply (Trunc_ind _);intros [n E1].
       transitivity (meet (s n) y);auto.
@@ -298,7 +298,6 @@ unfold IsTop. intros a b;split.
   + intros b E;apply tr;right;apply E.
   + intros s IH b E.
     change (top <= sup _ (SierJoin_seq_l s b)) in E.
-    pose proof @trunc_contr@{Set Set} as trunc_contr.
     apply (eta_le_sup _) in E. revert E. apply (Trunc_ind _).
     intros [n E]. simpl in E.
     apply IH in E. revert E;apply (Trunc_ind _).
@@ -332,7 +331,7 @@ Lemma top_le_sup@{} : forall (s : IncreasingSequence Sier),
   IsTop (sup Unit s) <-> merely@{Set} (exists n, s n).
 Proof.
 intros s;split.
-- intros E. pose proof @trunc_contr@{Set Set} as trunc_contr.
+- intros E.
   apply (eta_le_sup _) in E.
   exact E.
 - apply (Trunc_ind _);intros [n E].
@@ -344,7 +343,7 @@ Lemma top_le_countable_sup@{} : forall f, CountableSup f <->
   merely (exists n, f n).
 Proof.
 unfold IsTop. intros f;split.
-- intros E. pose proof @trunc_contr@{Set Set} as trunc_contr;
+- intros E.
   apply (eta_le_sup _) in E.
   revert E;apply (Trunc_ind _);intros [n E].
   apply top_le_joined_seq_n in E. revert E;apply (Trunc_ind _);intros [m [_ E]].
@@ -430,7 +429,6 @@ End enumerable_sup.
 Lemma not_bot : ~ (@bottom Sier _).
 Proof.
 intros E.
-pose proof @trunc_contr@{Set Set} as trunc_contr.
 apply (not_eta_le_bot@{Set} _ tt). apply E.
 Qed.
 

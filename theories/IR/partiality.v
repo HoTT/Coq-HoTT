@@ -228,7 +228,6 @@ Proof.
 apply (partialLe_rect@{UA Set UP} A (fun _ => Unit) (fun x y _ _ E => P x y E)).
 split;simpl;auto;simpl.
 intros.
-pose proof @trunc_contr@{Set Set} as trunc_contr. (* Universe trick *)
 apply path_ishprop.
 Defined.
 
@@ -267,10 +266,8 @@ Proof.
 apply (partial_rect@{UA UP Set} A _ (fun _ _ _ _ _ => Unit)).
 split;simpl;auto.
 - intros;
-  pose proof @trunc_contr@{Set Set} as trunc_contr. (* Universe trick *)
   apply path_ishprop.
-- pose proof @trunc_contr@{Set Set} as trunc_contr. (* Universe trick *)
-  apply _.
+- apply _.
 Defined.
 
 Definition partialLe_ind0@{UP}
@@ -286,7 +283,6 @@ Proof.
 apply (partialLe_rect@{UA Set UP} A (fun _ => Unit) (fun a b _ _ E => P a b E)).
 split;simpl;auto.
 intros.
-pose proof @trunc_contr@{Set Set} as trunc_contr. (* Universe trick *)
 apply path_ishprop.
 Defined.
 

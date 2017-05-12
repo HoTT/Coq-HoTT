@@ -333,7 +333,6 @@ Definition Z_compute_path P {sP} dclass dequiv q r (E : PairT.equiv q r)
 Definition Z_ind@{i} (P : Z -> Type@{i}) {sP : forall x : Z, IsHProp (P x)}
   (dclass : forall x : PairT.T N, P (cast (PairT.T N) Z x)) : forall x : Z, P x.
 Proof.
-pose proof (@trunc_hprop@{i i}) as trunc_hprop.
 apply (Z_rect@{i} P dclass).
 intros;apply path_ishprop@{i}.
 Defined.
@@ -372,7 +371,7 @@ Definition Z_rec2@{i j} {T:Type@{i} } {sT : IsHSet T}
   (dequiv : forall x1 x2, PairT.equiv x1 x2 -> forall y1 y2, PairT.equiv y1 y2 ->
     dclass x1 y1 = dclass x2 y2),
   Z -> Z -> T
-  := @quotient_rec2@{UN UN j i Set} _ _ _ _ _ (BuildhSet _).
+  := @quotient_rec2@{UN UN j i} _ _ _ _ _ (BuildhSet _).
 
 Definition Z_rec2_compute {T sT} dclass dequiv x y
   : @Z_rec2 T sT dclass dequiv (' x) (' y) = dclass x y
@@ -1021,7 +1020,7 @@ Global Instance Z_abs@{} : IntAbs@{UN UN UN UN UN
   UN UN UN UN UN
   UN UN} Z N
   := Z_abs'@{Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge Ularge Ularge}.
+    Ularge Ularge}.
 
 Notation n_to_z := (naturals_to_semiring N Z).
 
