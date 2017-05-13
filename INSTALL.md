@@ -4,7 +4,7 @@ However, the latter cannot be used by people using git to contribute to the libr
 Opam support on windows is experimental.
 [1]: https://github.com/HoTT/HoTT/issues/694
 
-We are compatible with [Coq 8.5pl1](https://coq.inria.fr/distrib/V8.5pl1/files/), so binary packages can be used. Paths still need to be set manually.
+We are compatible with [Coq 8.6](https://coq.inria.fr/distrib/V8.6/files/), so binary packages can be used. Paths still need to be set manually.
 
 
 # QUICK INSTALLATION INSTRUCTIONS
@@ -181,7 +181,7 @@ The HoTT library requires a custom version of Coq with three modifications: the
 command-line option `-indices-matter`, universe polymorphism, and private types.
 The first one changes the interpretation of equality to one that conforms to the
 homotopy-theoretic interpretation; the second one is needed to avoid certain
-universe inconsistency errors (which are not really there, but Coq 8.4 cannot see
+universe inconsistency errors (which are not really there, but Coq 8.6 cannot see
 that); and the third one is a modification which allows us to implement a poor
 man's version of higher-inductive types.
 
