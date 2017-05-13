@@ -61,7 +61,6 @@ matrix:
   allow_failures:
     - env: VALIDATE="yes"
     - env: FORCE_COQ_VERSION="v8.6"  BUILD_COQ="yes" WITH_AUTORECONF="yes"
-    - env: FORCE_COQ_VERSION="trunk" BUILD_COQ="yes" WITH_AUTORECONF="yes"
 
 
 
