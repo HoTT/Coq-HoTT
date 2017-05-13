@@ -137,28 +137,6 @@ https://github.com/HoTT/HoTT.
 
 # DETAILED INSTALLATION INSTRUCTIONS
 
-## PREPREREQUISITES
-
-To use the HoTT library you must first compile a custom version of Coq, and to
-do that you need to satisfy the prerequisites for compiling Coq. At a minimum
-you need:
-
-* OCaml version 3.11.2 or later (available at http://caml.inria.fr/)
-* Camlp5 (version <= 4.08, or 5.* transitional)
-* GNU Make version 3.81 or later
-
-To get these:
-
-* Linux: check your package manager. On Debian or any distribution
-  with `apt-get` you can run the script `./etc/ci/install_coq_deps.sh`
-  which installs the dependencies automatically.
-
-* OSX: we recommend that you install the Opam package manager for Ocaml
-  (http://opam.ocamlpro.com/).
-
-* MS Windows: we we wish you good luck.
-
-
 ## INSTALLATION OF HoTT
 
 Clone the HoTT repository with
@@ -192,7 +170,7 @@ To configure the HoTT library:
 
    in the HoTT directory.
 
-2. If you installed the Coq somewhere special or configured it
+2. If you installed Coq somewhere special or configured it
    with `-local`, you should tell `./configure` where to find the custom
    Coq:
 
