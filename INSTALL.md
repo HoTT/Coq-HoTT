@@ -185,15 +185,14 @@ homotopy-theoretic interpretation.
 
 To configure the HoTT library:
 
-1. If you installed the custom Coq as your default version of Coq,
-   which means that it it can be fond in PATH, run
+1. If Coq can be fond in PATH, run
 
        ./autogen.sh
        ./configure
 
    in the HoTT directory.
 
-2. If you installed the custom Coq somewhere special or configured it
+2. If you installed the Coq somewhere special or configured it
    with `-local`, you should tell `./configure` where to find the custom
    Coq:
 
