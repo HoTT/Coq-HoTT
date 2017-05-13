@@ -171,8 +171,7 @@ To configure the HoTT library:
    in the HoTT directory.
 
 2. If you installed Coq somewhere special or configured it
-   with `-local`, you should tell `./configure` where to find the custom
-   Coq:
+   with `-local`, you should tell `./configure` where to find Coq:
 
        ./autogen.sh
        ./configure COQBIN=<directory-containing-coq-executables>
