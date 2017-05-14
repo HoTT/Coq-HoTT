@@ -163,7 +163,7 @@ homotopy-theoretic interpretation.
 
 To configure the HoTT library:
 
-1. If Coq can be fond in PATH, run
+1. If Coq can be found in PATH, run
 
        ./autogen.sh
        ./configure
