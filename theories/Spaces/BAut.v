@@ -99,7 +99,7 @@ Proof.
   (** Now we peel away a bunch of contractible types. *)
   refine (equiv_sigT_coind _ _ oE _).
   refine (equiv_functor_sigma'
-           (P := fun k => forall Z p q, k (Z;p) = k (Z;q))
+           (P := fun k : forall xy, P xy.1 => forall Z p q, k (Z;p) = k (Z;q))
            (equiv_sigT_ind
               (fun Zp => P Zp.1))^-1 (fun k => equiv_idmap _) oE _).
   refine (equiv_functor_sigma'
