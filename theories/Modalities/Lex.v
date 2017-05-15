@@ -13,7 +13,7 @@ Local Open Scope path_scope.
 
 (** A lex modality is one that preserves finite limits, or equivalently pullbacks.  It turns out that a more basic and useful way to say this is that all path-spaces of connected types are connected.  Note how different this is from the behavior of, say, truncation modalities!
 
-  This is a "large" definition, and we don't know of any small one that's equivalent to it (see <http://mathoverflow.net/questions/185980/a-small-definition-of-sub-%E2%88%9E-1-topoi>.  However, so far we never need to apply it "at multiple universes at once".  Thus, rather than making it a module type, we can make it a typeclass and rely on ordinary universe polymorphism. *)
+  This is a "large" definition, and we don't know of any small one that's equivalent to it (see <https://mathoverflow.net/questions/185980/a-small-definition-of-sub-∞-1-topoi>.  However, so far we never need to apply it "at multiple universes at once".  Thus, rather than making it a module type, we can make it a typeclass and rely on ordinary universe polymorphism. *)
 
 Module Lex_Modalities_Theory (Os : Modalities).
 
