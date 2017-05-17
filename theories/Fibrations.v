@@ -136,7 +136,7 @@ Defined.
 
 Section UnstableOctahedral.
 
-  Context {A B C} (f : A -> B) (g : B -> C).
+  Context (n:trunc_index) {A B C} (f : A -> B) (g : B -> C).
 
   Definition hfiber_compose_map (b : B)
   : hfiber (g o f) (g b) -> hfiber g (g b)
@@ -173,7 +173,25 @@ Section UnstableOctahedral.
     exact (equiv_contr_sigma (fun (w:{b:B & f a = b}) => g w.1 = c)).
   Defined.
 
+  Global Instance istruncmap_compose `{!IsTruncMap n g} `{!IsTruncMap n f}
+    : IsTruncMap n (g o f).
+  Proof.
+    intros c.
+    exact (trunc_equiv _ (hfiber_compose c)^-1).
+  Defined.
+
 End UnstableOctahedral.
+
+
+(** ** Fibers of constant functions *)
+Definition hfiber_constant A {B} (y y' : B)
+  : hfiber (fun _ : A => y) y' <~> A * (y = y')
+  := equiv_sigma_prod0 A (y = y').
+
+Global Instance istruncmap_constant n {A B} `{!IsTrunc n A}
+       (y : B) `{!forall y', IsTrunc n (y = y')}
+  : IsTruncMap n (fun _ : A => y)
+  := fun y' => _.
 
 (** ** Fibers of [functor_sigma] *)
 
@@ -200,6 +218,15 @@ Proof.
   apply equiv_moveL_transport_V.
 Defined.
 
+Global Instance istruncmap_functor_sigma n {A B P Q}
+       (f : A -> B) (g : forall a, P a -> Q (f a))
+       {Hf : IsTruncMap n f} {Hg : forall a, IsTruncMap n (g a)}
+  : IsTruncMap n (functor_sigma f g).
+Proof.
+  intros [a b].
+  exact (trunc_equiv _ (hfiber_functor_sigma _ _ _ _ _ _)^-1).
+Defined.
+
 (** Theorem 4.7.6 *)
 Definition hfiber_functor_sigma_idmap {A} (P Q : A -> Type)
            (g : forall a, P a -> Q a)
@@ -212,17 +239,52 @@ Proof.
            (fun (w:hfiber idmap b) => hfiber (g w.1) (transport Q (w.2)^ v))).
 Defined.
 
+Definition istruncmap_from_functor_sigma n {A P Q}
+           (g : forall a : A, P a -> Q a)
+           `{!IsTruncMap n (functor_sigma idmap g)}
+  : forall a, IsTruncMap n (g a).
+Proof.
+  intros a v.
+  exact (trunc_equiv' _ (hfiber_functor_sigma_idmap _ _ _ _ _)).
+Defined.
+
 Definition isequiv_from_functor_sigma {A} (P Q : A -> Type)
            (g : forall a, P a -> Q a)
            `{IsEquiv _ _ (functor_sigma idmap g)}
 : forall (a : A), IsEquiv (g a).
 Proof.
-  intros a; apply isequiv_fcontr; intros v.
-  refine (contr_equiv' _ (hfiber_functor_sigma_idmap P Q g a v)).
-  by apply fcontr_isequiv.
+  intros a; apply isequiv_fcontr.
+  apply istruncmap_from_functor_sigma.
+  red; by apply fcontr_isequiv.
 Defined.
 
-(** IsTruncMap n.+1 f <-> IsTruncMap n (ap f) *)
+(** ** Fibers of [functor_prod] *)
+Definition hfiber_functor_prod {A B C D}
+           (f : A -> B) (g : C -> D) y
+  : hfiber (Prod.functor_prod f g) y <~> (hfiber f (fst y) * hfiber g (snd y)).
+Proof.
+  unfold Prod.functor_prod.
+  srefine (equiv_adjointify _ _ _ _).
+  - exact (fun x => ((fst x.1; ap fst x.2), (snd x.1; ap snd x.2))).
+  - refine (fun xs => (((fst xs).1, (snd xs).1); _)).
+    apply Prod.path_prod;simpl.
+    + exact (fst xs).2.
+    + exact (snd xs).2.
+  - destruct y as [y1 y2]; intros [[x1 p1] [x2 p2]].
+    simpl in *. destruct p1,p2. reflexivity.
+  - intros [[x1 x2] p]. destruct p;cbn. reflexivity.
+Defined.
+
+Global Instance istruncmap_functor_prod n {A B C D}
+       (f : A -> B) (g : C -> D)
+       `{!IsTruncMap n f} `{!IsTruncMap n g}
+  : IsTruncMap n (Prod.functor_prod f g).
+Proof.
+  intros y.
+  exact (trunc_equiv _ (hfiber_functor_prod _ _ _)^-1).
+Defined.
+
+(** ** [IsTruncMap n.+1 f <-> IsTruncMap n (ap f)] *)
 Global Instance istruncmap_ap {A B} n (f:A -> B) `{!IsTruncMap n.+1 f}
   : forall x y, IsTruncMap n (@ap _ _ f x y)
   := fun x x' y =>
