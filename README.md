@@ -12,6 +12,8 @@ See SCIENCE.md
 
 # Build
 
+You can follow what travis does, or:
+
 - Dependencies: same as Coq trunk. Coq's `configure` should warn you if some are missing.
 
 - Get: [Coq with inductive-inductive types](https://github.com/mattam82/coq/tree/IR), [HoTT modified to compile with Coq trunk](https://github.com/ejgallego/HoTT/tree/mz-8.7) and HoTTClasses (this repository).
@@ -43,10 +45,6 @@ See SCIENCE.md
 	- `./configure`
 
 	- `make`
-
-# Install from archives
-Run the build-HoTTClasses.sh script with `bash` in some directory. It will use `sudo apt-get` to install dependencies of Coq and autoconf for HoTT, download archives for Coq, HoTT and HoTTClasses and build everything.
-You can also read it to see what needs to be done.
 
 # Using IDEs
 
