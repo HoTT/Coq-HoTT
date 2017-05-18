@@ -17,6 +17,8 @@ function get_latest {
 
 set -x
 
+echo -en 'travis_fold:start:cache.check\\r'
+
 COQ_URL="https://github.com/mattam82/coq.git"
 COQ_BRANCH="IR"
 HOTT_URL="https://github.com/SkySkimmer/HoTT.git"
@@ -45,6 +47,8 @@ then
     then rm -rf HoTT
     fi
 fi
+
+echo -en 'travis_fold:end:cache.check\\r'
 
 if [ ! "(" -d coq ")" ]
 then
