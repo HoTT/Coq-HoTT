@@ -12,7 +12,7 @@
 # don't deal with historical artefacts
 
 function get_latest {
-    git ls-remote "$1" "refs/heads/$2" | awk '{print $1}';
+    git ls-remote --exit-code "$1" "refs/heads/$2" | awk '{print $1}';
 }
 
 set -x
@@ -59,7 +59,6 @@ then
     pushd coq
     ./configure -local || exit 1
     make -j 2 tools coqbinaries pluginsopt states || exit 1
-    export PATH="$(pwd)/bin:$PATH" #for coq_makefile for HoTTClasses, note that stable coq's coq_makefile works fine if you have it installed
     popd
 
     echo -en 'travis_fold:end:coq.build\\r'
@@ -82,7 +81,6 @@ then
 
     ./configure COQBIN="$(pwd)/../coq/bin/" || exit 1
     make -j 2 || exit 1
-    export PATH="$(pwd):$PATH"
     popd
 
     echo -en 'travis_fold:end:HoTT.build\\r'
