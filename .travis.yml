@@ -1,0 +1,45 @@
+dist: trusty
+sudo: required
+
+language: c
+
+addons:
+  apt:
+    sources:
+    - avsm
+    packages:
+    - opam
+    - aspcud
+    - autoconf
+    - unzip
+    - wget
+
+cache:
+  apt: true
+  directories:
+  - $HOME/.opam
+#  - coq-IR
+#  - HoTT-mz-8.7
+
+before_cache:
+  - rm -rf $HOME/.opam/log/
+
+env:
+  global:
+  - NJOBS=2
+  # system is == 4.02.3
+  - COMPILER="system"
+  - CAMLP5_VER="6.14"
+
+install:
+- opam init -j ${NJOBS} --compiler=${COMPILER} -n -y
+- eval $(opam config env)
+- opam config list
+- opam install -j ${NJOBS} -y camlp5.${CAMLP5_VER} ocamlfind ${EXTRA_OPAM}
+- opam list
+
+- ./build-dependencies.sh
+
+script:
+- export PATH="$(pwd)/coq-IR/bin/:$(pwd)/HoTT-mz-8.7/:$PATH"_
+- ./build-HoTTClasses.sh

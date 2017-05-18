@@ -1,32 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-sudo apt-get build-dep coq coqide || exit 1
-sudo apt-get install liblablgtksourceview2-ocaml-dev autoconf unzip wget || exit 1
+set -x
 
-wget -nc "https://github.com/mattam82/coq/archive/IR.zip" || exit 1
-
-wget -nc "https://github.com/ejgallego/HoTT/archive/mz-8.7.zip" || exit 1
-
-wget -nc "https://github.com/SkySkimmer/HoTTClasses/archive/master.zip" || exit 1
-
-unzip -u IR.zip || exit 1
-unzip -u mz-8.7.zip || exit 1
-unzip -u master.zip || exit 1
-
-cd coq-IR || exit 1
-./configure -local || exit 1
-make -j 2 coqlight coqide || exit 1
-export PATH=$(pwd)"/bin:$PATH" || exit 1 #for coq_makefile for HoTTClasses, note that stable coq's coq_makefile works fine if you have it installed
-
-cd ../HoTT-mz-8.7 || exit 1
-./autogen.sh || exit 1
-./configure COQBIN=$(pwd)"/../coq-IR/bin" || exit 1
-make -j 2 || exit 1
-export PATH=$(pwd)":$PATH" || exit 1
-
-cd ../HoTTClasses-master || exit 1
 ./configure || exit 1
-make -j 2 || exit 1
-
-
-
+make -j 2
