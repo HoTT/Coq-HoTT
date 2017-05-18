@@ -31,7 +31,7 @@ echo "COQDEP = $HOQDEP" >> "$OPTFILE"
 
 #non IR find
 #HoTTBook and CPP depend on IR
-find . -not \( -path './theories/IR' -prune \) -not -name CPP2017.v -not -name HoTTBook.v -name '*.v' -print >> "$OPTFILE"
+find ./theories -not \( -path './theories/IR' -prune \) -not -name CPP2017.v -not -name HoTTBook.v -name '*.v' -print >> "$OPTFILE"
 if $USE_IR
 then
     find ./theories/IR/ -name '*.v' >> "$OPTFILE"
