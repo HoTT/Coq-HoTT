@@ -13,13 +13,14 @@ addons:
     - autoconf
     - unzip
     - wget
+    - git
 
 cache:
   apt: true
   directories:
   - $HOME/.opam
-#  - coq-IR
-#  - HoTT-mz-8.7
+  - coq
+  - HoTT
 
 before_cache:
   - rm -rf $HOME/.opam/log/
@@ -41,5 +42,5 @@ install:
 - ./build-dependencies.sh
 
 script:
-- export PATH="$(pwd)/coq-IR/bin/:$(pwd)/HoTT-mz-8.7/:$PATH"_
+- export PATH="$(pwd)/coq/bin/:$(pwd)/HoTT/:$PATH"
 - ./build-HoTTClasses.sh
