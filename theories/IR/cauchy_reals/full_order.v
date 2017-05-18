@@ -241,7 +241,9 @@ Proof.
 intros x y E.
 apply flip_nonneg_minus.
 apply Rjoin_0_not_neg.
-intros. apply flip_lt_minus_r.
+intros.
+(* work around some anomaly Not_found (when we just apply flip_lt_minus_r) *)
+apply (snd (flip_lt_minus_r _ _ _)).
 rewrite plus_comm.
 assert (E1 : y - rat (' e) < y).
 { apply (strictly_order_reflecting (+ (rat (' e)))).

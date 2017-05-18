@@ -286,7 +286,9 @@ Lemma Rplus_le_reflecting@{} : forall z : real,
 Proof.
 intros z x y E.
 apply (Rplus_le_preserving (- z)) in E.
-rewrite !(simple_associativity (f:=plus) (-z) z),!left_inverse,!left_identity in E.
+(* work around some anomaly Not_found *)
+pose proof (simple_associativity (f:=plus) (-z) z) as Hrw.
+rewrite !Hrw,!left_inverse,!left_identity in E.
 trivial.
 Qed.
 

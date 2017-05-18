@@ -94,8 +94,9 @@ Qed.
 Lemma cut_of_cauchy_preserves_neg : forall a,
   cut_of_cauchy (- a) = - cut_of_cauchy a.
 Proof.
-apply (@groups.preserves_negate real plus 0 negate _ Cut plus 0 negate _).
-split.
+(* workaround anomaly when we apply same without the last 2 underscores *)
+refine (@groups.preserves_negate real plus 0 negate _ Cut plus 0 negate _ _ _)
+;[exact _|exact _|split].
 - hnf. exact cut_of_cauchy_preserves_plus.
 - hnf. reflexivity.
 Qed.
