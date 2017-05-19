@@ -13,6 +13,7 @@ then if which hoqc > /dev/null && which hoqtop > /dev/null && which hoqdep > /de
          HOQC=$(which hoqc);
          HOQTOP=$(which hoqtop);
          HOQDEP=$(which hoqdep);
+         echo 'hoq* executables from PATH'
      else
          >&2 echo "HOQDIR not set and hoqc, hoqtop or hoqdep not in path"
          exit 1
@@ -22,7 +23,21 @@ else
     HOQC="$HOQDIR/hoqc";
     HOQTOP="$HOQDIR/hoqtop";
     HOQDEP="$HOQDIR/hoqdep";
+    echo 'hoq* scripts from HOQDIR:' "$HOQDIR"
 fi
+
+if [ -z "${COQMAKEFILE}" ];
+then if which coq_makefile
+     then
+         COQMAKEFILE=$(which coq_makefile)
+         echo "coq_makefile from PATH"
+     else
+         >&2 echo "coq_makefile not found and COQMAKEFILE not set"
+         exit 1
+     fi
+else echo "coq_makefile from COQMAKEFILE"
+fi
+
 
 cp "$OPTFILE.in" "$OPTFILE"
 
@@ -37,8 +52,12 @@ then
     find ./theories/IR/ -name '*.v' >> "$OPTFILE"
     echo ./theories/CPP2017.v >> "$OPTFILE"
     echo ./theories/HoTTBook.v >> "$OPTFILE"
+    echo "Compiling files in theories/IR"
+else echo "Not compiling files in theories/IR"
 fi
 
-coq_makefile -f "$OPTFILE" -o Makefile
+"$COQMAKEFILE" -f "$OPTFILE" -o Makefile || exit 1
 
 echo "((coq-mode . ((coq-prog-name . \"$HOQTOP\"))))" > .dir-locals.el
+
+echo "$0 success!"
