@@ -19,10 +19,32 @@ set -x
 
 echo -en 'travis_fold:start:cache.check\\r'
 
-COQ_URL="https://github.com/mattam82/coq.git"
-COQ_BRANCH="IR"
-HOTT_URL="https://github.com/SkySkimmer/HoTT.git"
-HOTT_BRANCH="mz-8.7"
+#NB: always use SkySkimmer/HoTT because I can have PRs not yet merged
+#in HoTT/HoTT and ejgallego/HoTT
+case "$TARGET" in
+    "IR")
+        COQ_URL="https://github.com/mattam82/coq.git"
+        COQ_BRANCH="IR"
+        HOTT_URL="https://github.com/SkySkimmer/HoTT.git"
+        HOTT_BRANCH="mz-8.7"
+        ;;
+    "trunk")
+        COQ_URL="https://github.com/coq/coq.git"
+        COQ_BRANCH="trunk"
+        HOTT_URL="https://github.com/SkySkimmer/HoTT.git"
+        HOTT_BRANCH="mz-8.7"
+        ;;
+    "8.6")
+        COQ_URL="https://github.com/coq/coq.git"
+        COQ_BRANCH="v8.6"
+        HOTT_URL="https://github.com/SkySkimmer/HoTT.git"
+        HOTT_BRANCH="master"
+        ;;
+    *)
+        >&2 echo "Unknown target $TARGET"
+        exit 1
+        ;;
+esac
 
 if [ -d coq ];
 then
