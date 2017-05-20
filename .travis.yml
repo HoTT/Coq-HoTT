@@ -9,11 +9,6 @@ addons:
     - avsm
     packages:
     - opam
-    - aspcud
-    - autoconf
-    - unzip
-    - wget
-    - git
 
 cache:
   apt: true
@@ -45,6 +40,4 @@ install:
 
 - ./build-dependencies.sh
 
-script:
-- export PATH="$(pwd)/coq/bin/:$(pwd)/HoTT/:$PATH"
-- ./build-HoTTClasses.sh
+script: ./build-HoTTClasses.sh

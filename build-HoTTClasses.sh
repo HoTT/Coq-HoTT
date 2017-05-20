@@ -6,10 +6,10 @@ echo -en 'travis_fold:start:main\\r'
 
 case "$TARGET" in
     "IR")
-        USE_IR="YES_IR"
+        USE_IR=""
         ;;
     "trunk" | "8.6")
-        USE_IR="NO_IR"
+        USE_IR="--no-ir"
         ;;
     *)
         >&2 echo "Unknown target $TARGET"
@@ -17,7 +17,7 @@ case "$TARGET" in
         ;;
 esac
 
-./configure "$USE_IR" || exit 1
+./configure --hoqdir HoTT --coqbin coq/bin $USE_IR || exit 1
 make -j 2
 
 echo -en 'travis_fold:end:main\\r'
