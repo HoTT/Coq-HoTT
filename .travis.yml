@@ -32,9 +32,9 @@ env:
   - COMPILER="system"
   - CAMLP5_VER="6.14"
   matrix:
-    - TARGET="IR" CACHE_NAME="IR"
-    - TARGET="trunk" CACHE_NAME="trunk"
-    - TARGET="8.6" CACHE_NAME="8.6"
+    - TARGET="IR"
+    - TARGET="trunk"
+    - TARGET="8.6"
 
 install:
 - opam init -j ${NJOBS} --compiler=${COMPILER} -n -y
