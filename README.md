@@ -12,39 +12,26 @@ See SCIENCE.md
 
 # Build
 
-You can follow what travis does, or:
+You can follow what travis does ([.travis.yml](.travis.yml), [build-dependencies.sh](build-dependencies.sh) and [build-HoTTClasses.sh](build-HoTTClasses.sh)), or:
 
-- Dependencies: same as Coq trunk. Coq's `configure` should warn you if some are missing.
+- Install dependencies:
 
-- Get: [Coq with inductive-inductive types](https://github.com/mattam82/coq/tree/IR), [HoTT modified to compile with Coq trunk](https://github.com/ejgallego/HoTT/tree/mz-8.7) and HoTTClasses (this repository).
+    - [Coq with inductive-inductive types](https://github.com/mattam82/coq/tree/IR) including its depencies (some Ocaml libraries)
+    - [HoTT modified to compile with Coq trunk](https://github.com/SkySkimmer/HoTT/tree/mz-8.7)
 
-	- ZIP archives: https://github.com/mattam82/coq/archive/IR.zip https://github.com/ejgallego/HoTT/archive/mz-8.7.zip and https://github.com/SkySkimmer/HoTTClasses/archive/master.zip
+- In this guide they are installed respectively in directories `coq/` and `HoTT/`.
 
-- In this guide the resulting folders are called respectively `coq-IR/`, `HoTT/` and `HoTTClasses/`.
+- `./configure --hoqdir HoTT/ --coqbin coq/bin/`
 
-- In the coq-IR/ folder:
+- `make`
 
-    - `./configure -local`
+# Build with unmodified dependencies
 
-	- `make coqlight coqide`
+It is possible to build some of HoTTClasses with Coq 8.6 and HoTT
+master. Only the files in [theories/IR](theories/IR) and the summaries
+at the root of [theories](theories) will be skipped.
 
-	You can use just `make` but then you will compile the whole Coq library for no reason. The `coqlight` target still builds part of the library but it's not as bad.
-
-- In the HoTT/ folder:
-
-	- `./autogen.sh` (if using archives it will note that it isn't in a git repo, this is normal)
-
-	- `./configure COQBIN=/path/to/coq-IR/bin` (note the `/bin` at the end)
-
-	- `make`
-
-- In HoTTClasses/
-
-	- Add HoTT/ to your `$PATH`. Alternatively, `export HOQDIR=/path/to/HoTT/`.
-
-	- `./configure`
-
-	- `make`
+You will need to pass an additional `--no-ir` to HoTTClasses's configure script.
 
 # Using IDEs
 
