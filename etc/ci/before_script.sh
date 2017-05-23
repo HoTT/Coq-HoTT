@@ -13,9 +13,9 @@ then
 fi
 # (un)install autoreconf
 if [ ! -z "$WITH_AUTORECONF" ]; then
-    sudo apt-get install -q dh-autoreconf
+    sudo apt-get install -q autoconf
 else
-    sudo apt-get remove -q dh-autoreconf
+    sudo apt-get remove -q autoconf
 fi
 # install coq
 if [ ! -z "$UPDATE_QUICK_DOC" ]; then
