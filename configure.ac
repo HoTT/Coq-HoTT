@@ -102,11 +102,40 @@ AS_IF([test "x$make_coqide" = "xno"],
               COQIDEVERSION="$COQVERSION"
               AC_SUBST([COQIDEVERSION])
               AS_IF([test "x$COQIDEVERSION" != "x$COQVERSION"],
-                    [AC_MSG_ERROR([Version mismatch between coqtop $COQVERSION and coqc $COQIDEVERSION])])
+                    [AC_MSG_ERROR([Version mismatch between coqtop $COQVERSION and coqide $COQIDEVERSION])])
              ])
       ])
 
 AM_CONDITIONAL(make_hoqide, [test "$make_coqide" = "yes"])
+
+# Checking for coqchk, which can be optional
+make_coqchk="no"
+AC_ARG_WITH([coqchk],
+            [AS_HELP_STRING([--without-coqchk], [disable support for coqchk])],
+            [],
+            [make_coqchk="yes"])
+
+AS_IF([test "x$make_coqchk" = "xno"],
+      [AC_MSG_NOTICE([Will not make hoqchk])],
+      [AC_ARG_VAR([COQCHK], [the absolute path of the coqchk executable])
+       AS_IF([test "x$COQCHK" != "x"],
+             [AC_MSG_CHECKING([for coqchk])
+              AC_MSG_RESULT([(preset) $COQCHK])
+              AC_SUBST([COQCHK])],
+             [AC_PATH_PROG([COQCHK],[coqchk],[no],[$COQBIN_PATH])])
+       AS_IF([test "x$COQCHK" = "xno"],
+             [AC_MSG_NOTICE([Could not find coqchk, will not make hoqchk])
+              make_coqchk="no"],
+             [AC_MSG_CHECKING([coqchk version])
+             COQCHKVERSION=`"$COQCHK" -v | sed -n -e 's|^.*version \(@<:@^ @:>@*\) .*$|\1|p'`
+             AC_MSG_RESULT([$COQCHKVERSION])
+             AC_SUBST([COQCHKVERSION])
+             AS_IF([test "x$COQCHKVERSION" != "x$COQVERSION"],
+                   [AC_MSG_ERROR([Version mismatch between coqtop $COQVERSION and coqchk $COQCHKVERSION])])
+            ])
+      ])
+
+AM_CONDITIONAL(make_hoqchk, [test "$make_coqchk" = "yes"])
 
 # checking for coqdep
 AC_ARG_VAR([COQDEP], [the absolute path of the coqdep executable])
