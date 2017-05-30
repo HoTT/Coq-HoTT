@@ -9,7 +9,7 @@ pushd "$DIR" 1>/dev/null
 
 if [ -z "$BUILD_COQ" ]
 then
-    sudo add-apt-repository -y ppa:ezyang/coq-git
+    sudo add-apt-repository -y ppa:jgross-h/many-coq-versions
 fi
 # (un)install autoreconf
 if [ ! -z "$WITH_AUTORECONF" ]; then
