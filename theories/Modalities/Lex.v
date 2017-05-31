@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import EquivalenceVarieties Fibrations Extensions Pullback NullHomotopy.
+Require Import EquivalenceVarieties Fibrations Extensions Pullback NullHomotopy Factorization.
 Require Import Modality Accessible.
 Require Import HoTT.Tactics.
 
@@ -26,7 +26,7 @@ Module Lex_Modalities_Theory (Os : Modalities).
 
   Global Existing Instance isconnected_paths.
 
-  (** The following numbered lemmas are all actually equivalent characterizations of lex-ness. *)
+  (** The following numbered lemmas are all actually equivalent characterizations of lex-ness.  We prove this for some of them, but we don't make the reverse implications Instances; usually [isconnected_paths] is the easier way to prove lexness. *)
 
   (** 1. Every map between connected types is a connected map. *)
   Global Instance conn_map_lex {O : Modality} `{Lex O}
@@ -35,6 +35,18 @@ Module Lex_Modalities_Theory (Os : Modalities).
   : IsConnMap O f.
   Proof.
     intros b; refine (isconnected_sigma O).
+  Defined.
+
+  Definition lex_from_conn_map_lex {O : Modality}
+             (H : forall A B (f : A -> B),
+                         (IsConnected O A) -> (IsConnected O B) ->
+                         IsConnMap O f)
+    : Lex O.
+  Proof.
+    intros A x y AC.
+    refine (isconnected_equiv' O (hfiber (unit_name x) y) _ _).
+    unfold hfiber.
+    refine (equiv_contr_sigma (fun _ => x = y)).
   Defined.
 
   (** 2. Connected maps are left- as well as right-cancellable. *)
@@ -151,9 +163,33 @@ Module Lex_Modalities_Theory (Os : Modalities).
       refine (isconnected_equiv O _ (hfiber_ap p)^-1 _).
   Defined.
 
-  (** We will not prove that any of these lemmas are equivalent characterizations of lex-ness, because they are all fairly obvious and we don't yet know of any use for them; [isconnected_paths] is usually strictly easier to prove than they are. *)
+  (** 8. Any modal map between connected types is an equivalence. *)
+  Global Instance isequiv_ismodal_isconnected_types
+         {O : Modality} `{Lex O} {A B} {f : A -> B}
+         `{IsConnected O A} `{IsConnected O B} `{MapIn O _ _ f}
+    : IsEquiv f.
+  Proof.
+    apply (isequiv_conn_ino_map O); exact _.
+  Defined.
 
-  (** Another useful lemma, which is probably not equivalent to lex-ness: any commutative square with connected maps in one direction and modal ones in the other must necessarily be a pullback. *)
+  Definition lex_from_isequiv_ismodal_isconnected_types
+             {O : Modality}
+             (H : forall A B (f : A -> B),
+                         (IsConnected O A) -> (IsConnected O B) -> 
+                         (MapIn O f) -> IsEquiv f)
+    : Lex O.
+  Proof.
+    apply lex_from_conn_map_lex.
+    intros A B f AC BC.
+    apply (conn_map_homotopic O _ _ (fact_factors (image O f))).
+    apply conn_map_compose; [ exact _ | ].
+    apply conn_map_isequiv.
+    apply H; [ | exact _ | exact _ ].
+    apply isconnected_conn_map_to_unit.
+    apply (cancelR_conn_map O (factor1 (image O f)) (const tt)).
+  Defined.
+
+  (** 9. Any commutative square with connected maps in one direction and modal ones in the other must necessarily be a pullback. *)
   Definition ispullback_connmap_mapino_commsq (O : Modality) `{Lex O} {A B C D}
              {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
              `{IsConnMap O _ _ f} `{IsConnMap O _ _ g}
@@ -165,6 +201,29 @@ Module Lex_Modalities_Theory (Os : Modalities).
     - refine (cancelL_conn_map O (pullback_corec p) (k^* g) _ _).
     - refine (cancelL_mapinO O _ (equiv_pullback_symm k g) _ _).
       refine (cancelL_mapinO O _ (g^* k) _ _).
+  Defined.
+
+  Definition lex_from_ispullback_connmap_mapino_commsq (O : Modality)
+             (H : forall {A B C D}
+                         (f : A -> B) (g : C -> D) (h : A -> C) (k : B -> D),
+                 (IsConnMap O f) -> (IsConnMap O g) ->
+                 (MapIn O h) -> (MapIn O k) ->
+                 forall (p : k o f == g o h), IsPullback p)
+    : Lex O.
+  Proof.
+    apply lex_from_isequiv_ismodal_isconnected_types.
+    intros A B f AC BC fM.
+    specialize (H A Unit B Unit (const tt) (const tt) f idmap _ _ _ _
+               (fun _ => 1)).
+    unfold IsPullback, pullback_corec in H.
+    refine (@isequiv_compose _ _ _ H _ (fun x => x.2.1) _).
+    unfold Pullback.
+    refine (@isequiv_compose _ {b:Unit & B}
+                             (functor_sigma idmap (fun a => pr1))
+                             _ _ pr2 _).
+    refine (@isequiv_compose _ _ (equiv_sigma_prod0 Unit B)
+                             _ _ snd _).
+    apply (equiv_isequiv (prod_unit_l B)).
   Defined.
 
   (** Lex modalities preserve [n]-types for all [n].  This is definitely not equivalent to lex-ness, since it is true for the truncation modalities that are not lex.  But it is also not true of all modalities; e.g. the shape modality in a cohesive topos can take 0-types to [oo]-types. *)
