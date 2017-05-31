@@ -504,6 +504,13 @@ Section ConnectedTypes.
     exact ((nB a).2 b @ nA.2 a).
   Defined.
 
+  (** Contractible types are connected. *)
+  Global Instance isconnected_contr {A : Type} `{Contr A}
+    : IsConnected O A.
+  Proof.
+    apply contr_O_contr; exact _.
+  Defined.    
+
   (** A type which is both connected and truncated is contractible. *)
   Definition contr_trunc_conn {A : Type} `{In O A} `{IsConnected O A}
   : Contr A.
