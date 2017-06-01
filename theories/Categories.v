@@ -74,6 +74,7 @@ Require FundamentalPreGroupoidCategory.
 Require HomotopyPreCategory.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
+Local Set Warnings Append "-notation-overridden".
 Include Category.Core.
 Include Category.Strict.
 Include Category.Univalent.

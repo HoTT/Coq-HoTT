@@ -1,6 +1,8 @@
 (** * Unicode notations for categories *)
 Require Import Category.Core Category.Morphisms Category.Dual Category.Prod Category.Sum Category.Pi.
+Local Set Warnings Append "-notation-overridden".
 Require Export Category.Notations.
+Local Set Warnings Append "notation-overridden".
 
 Infix "∘" := compose (at level 40, left associativity) : morphism_scope.
 Notation "m ⁻¹" := (morphism_inverse m) (at level 3, format "m '⁻¹'") : morphism_scope.

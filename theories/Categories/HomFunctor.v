@@ -2,7 +2,7 @@
 Require Import Category.Core Functor.Core SetCategory.Core Category.Dual Functor.Composition.Core.
 Require Category.Prod Functor.Prod.Core.
 Import Category.Prod.CategoryProdNotations Functor.Prod.Core.FunctorProdCoreNotations.
-Require Import Basics.Overture Basics.Trunc HSet TruncType.
+Require Import Basics.Trunc HSet TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

@@ -344,15 +344,16 @@ Global Arguments CC_Functor' / .
 Global Arguments cc_functor_from_terminal' / .
 Global Arguments cc_identity_functor' / .
 
+Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Module Export CommaCoreNotations.
   (** We really want to use infix [↓] for comma categories, but that's unicode.  Infix [,] might also be reasonable, but I can't seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [/] of [↓]. *)
   (** Set some notations for printing *)
-  Notation "C / a" := (@slice_category_over C a) : category_scope.
+  Notation "C / a" := (@slice_category_over C a) (only printing) : category_scope.
   Notation "a \ C" := (@coslice_category_over C a) (at level 40, left associativity) : category_scope.
-  Notation "a / C" := (@coslice_category_over C a) : category_scope.
-  Notation "x / F" := (coslice_category x F) : category_scope.
-  Notation "F / x" := (slice_category x F) : category_scope.
-  Notation "S / T" := (comma_category S T) : category_scope.
+  Notation "a / C" := (@coslice_category_over C a) (only printing) : category_scope.
+  Notation "x / F" := (coslice_category x F) (only printing) : category_scope.
+  Notation "F / x" := (slice_category x F) (only printing) : category_scope.
+  Notation "S / T" := (comma_category S T) (only printing) : category_scope.
   (** Set the notation for parsing; coercions will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)
   Notation "S / T" := (comma_category (S : CC_Functor' _ _)
                                       (T : CC_Functor' _ _)) : category_scope.

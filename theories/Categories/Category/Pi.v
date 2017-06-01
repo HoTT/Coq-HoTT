@@ -49,6 +49,7 @@ Proof.
   typeclasses eauto.
 Qed.
 
+Local Set Warnings Append "-notation-overridden".
 Module Export CategoryPiNotations.
   Notation "'forall'  x .. y , P" := (forall x, .. (forall y, P) ..)
                                        (at level 200, x binder, y binder, right associativity).
