@@ -45,7 +45,7 @@ Bind Scope functor_scope with Functor.
 
 Create HintDb functor discriminated.
 
-Arguments Functor C D.
+Arguments Functor C D : assert.
 Arguments object_of {C%category D%category} F%functor c%object : rename, simpl nomatch.
 Arguments morphism_of [C%category] [D%category] F%functor [s%object d%object] m%morphism : rename, simpl nomatch.
 

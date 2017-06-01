@@ -76,7 +76,7 @@ Fixpoint fin_transpose_last_with (n : nat) (k : Fin n.+1)
 : Fin n.+1 <~> Fin n.+1.
 Proof.
   destruct k as [k|].
-  - destruct n as [|n IH].
+  - destruct n as [|n].
     + elim k.
     + destruct k as [k|].
       * refine ((fin_transpose_last_two n)

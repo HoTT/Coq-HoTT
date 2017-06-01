@@ -6,6 +6,7 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
+Local Unset Primitive Projections. (* suppress a warning about [IsTerminalCategory] *)
 
 Notation initial_category := (nat_category 0) (only parsing).
 Notation terminal_category := (nat_category 1) (only parsing).

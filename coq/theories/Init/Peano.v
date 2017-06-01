@@ -167,10 +167,9 @@ where "n - m" := (minus n m) : nat_scope.
     can be found in files Le and Lt *)
 
 Inductive le (n:nat) : nat -> Type :=
-  | le_n : n <= n
-  | le_S : forall m:nat, n <= m -> n <= S m
-
-where "n <= m" := (le n m) : nat_scope.
+  | le_n : le n n
+  | le_S : forall m:nat, le n m -> le n (S m).
+Local Notation "n <= m" := (le n m) : nat_scope.
 
 Hint Constructors le: core.
 (*i equivalent to : "Hints Resolve le_n le_S : core." i*)
@@ -178,22 +177,22 @@ Hint Constructors le: core.
 Definition lt (n m:nat) := S n <= m.
 Hint Unfold lt: core.
 
-Infix "<" := lt : nat_scope.
+Local Infix "<" := lt : nat_scope.
 
 Definition ge (n m:nat) := m <= n.
 Hint Unfold ge: core.
 
-Infix ">=" := ge : nat_scope.
+Local Infix ">=" := ge : nat_scope.
 
 Definition gt (n m:nat) := m < n.
 Hint Unfold gt: core.
 
-Infix ">" := gt : nat_scope.
+Local Infix ">" := gt : nat_scope.
 
-Notation "x <= y <= z" := (x <= y /\ y <= z) : nat_scope.
-Notation "x <= y < z" := (x <= y /\ y < z) : nat_scope.
-Notation "x < y < z" := (x < y /\ y < z) : nat_scope.
-Notation "x < y <= z" := (x < y /\ y <= z) : nat_scope.
+Local Notation "x <= y <= z" := (x <= y /\ y <= z) : nat_scope.
+Local Notation "x <= y < z" := (x <= y /\ y < z) : nat_scope.
+Local Notation "x < y < z" := (x < y /\ y < z) : nat_scope.
+Local Notation "x < y <= z" := (x < y /\ y <= z) : nat_scope.
 
 Theorem le_pred : forall n m, n <= m -> pred n <= pred m.
 Proof.
