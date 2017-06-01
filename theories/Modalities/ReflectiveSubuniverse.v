@@ -5,6 +5,7 @@ Require Import HoTT.Tactics.
 Require Import HIT.Coeq.
 Require Import Tactics.RewriteModuloAssociativity.
 
+Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
 

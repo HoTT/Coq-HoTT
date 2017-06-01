@@ -1,6 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 
+Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
 

@@ -7,6 +7,7 @@ Require Import HoTT.Tactics.
 Require Import Pointed.
 Require Import HIT.Truncations.
 Import TrM.
+Local Open Scope nat_scope.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Local Open Scope pointed_scope.

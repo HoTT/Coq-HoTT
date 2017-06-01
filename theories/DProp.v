@@ -147,8 +147,7 @@ Infix "&&" := dhand : dhprop_scope.
 Infix "||" := dor : dprop_scope.
 Infix "||" := dhor : dhprop_scope.
 Infix "->" := dimpl : dprop_scope.
-Notation "!! P" := (dneg P) (at level 75, right associativity)
-                   : dprop_scope.
+Notation "!! P" := (dneg P) : dprop_scope.
 
 Delimit Scope dprop_scope with dprop.
 Bind Scope dprop_scope with DProp.

@@ -71,7 +71,7 @@ Fixpoint code_nat (m n : nat) {struct m} : DHProp :=
     | _, _ => False
   end.
 
-Infix "=n" := code_nat (at level 70, no associativity) : nat_scope.
+Infix "=n" := code_nat : nat_scope.
 
 Fixpoint idcode_nat {n} : (n =n n) :=
   match n as n return (n =n n) with

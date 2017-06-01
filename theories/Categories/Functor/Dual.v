@@ -18,7 +18,7 @@ Definition opposite C D (F : Functor C D) : Functor C^op D^op
                    (fun d' d s m1 m2 => composition_of F s d d' m2 m1)
                    (identity_of F).
 
-Local Notation "F ^op" := (opposite F) (at level 3, format "F ^op") : functor_scope.
+Local Notation "F ^op" := (opposite F) : functor_scope.
 
 Local Open Scope functor_scope.
 
@@ -27,5 +27,5 @@ Definition opposite_involutive C D (F : Functor C D) : (F^op)^op = F
   := idpath.
 
 Module Export FunctorDualNotations.
-  Notation "F ^op" := (opposite F) (at level 3, format "F ^op") : functor_scope.
+  Notation "F ^op" := (opposite F) : functor_scope.
 End FunctorDualNotations.

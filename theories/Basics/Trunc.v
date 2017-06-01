@@ -7,14 +7,15 @@ Local Open Scope path_scope.
 Generalizable Variables A B m n f.
 
 (** ** Arithmetic on truncation-levels. *)
-
+Open Scope trunc_scope.
+Check -2.
 Fixpoint trunc_index_add (m n : trunc_index) : trunc_index
   := match m with
        | -2 => n
        | m'.+1 => (trunc_index_add m' n).+1
      end.
 
-Notation "m -2+ n" := (trunc_index_add m n) (at level 50, left associativity) : trunc_scope.
+Notation "m -2+ n" := (trunc_index_add m n) : trunc_scope.
 
 Fixpoint trunc_index_leq (m n : trunc_index) : Type0
   := match m, n with
@@ -23,7 +24,7 @@ Fixpoint trunc_index_leq (m n : trunc_index) : Type0
        | m'.+1, n'.+1 => trunc_index_leq m' n'
      end.
 
-Notation "m <= n" := (trunc_index_leq m n) (at level 70, no associativity) : trunc_scope.
+Notation "m <= n" := (trunc_index_leq m n) : trunc_scope.
 
 Fixpoint trunc_index_inc (n : nat) (k : trunc_index) : trunc_index
   := match n with O => k | S m => (trunc_index_inc m k).+1 end.
@@ -116,7 +117,7 @@ Arguments istrunc_trunctype_type [_] _.
 Coercion trunctype_type : TruncType >-> Sortclass.
 Global Existing Instance istrunc_trunctype_type.
 
-Notation "n -Type" := (TruncType n) (at level 1) : type_scope.
+Notation "n -Type" := (TruncType n) : type_scope.
 Notation hProp := (-1)-Type.
 Notation hSet := 0-Type.
 

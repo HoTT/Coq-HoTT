@@ -33,12 +33,8 @@ Section pi.
   Defined.
 End pi.
 
-Local Notation "'forall'  x .. y , P" := (forall x, .. (forall y, P) ..)
-  (at level 200, x binder, y binder, right associativity).
-Local Notation "'forall'  x .. y , P" := (forall x, .. (forall y, P) ..)
-  (at level 200, x binder, y binder, right associativity) : type_scope.
-Local Notation "'forall'  x .. y , P" := (pi (fun x => .. (pi (fun y => P)) .. ))
-  (at level 200, x binder, y binder, right associativity) : category_scope.
+Local Notation "'forall'  x .. y , P" := (forall x, .. (forall y, P) ..) : type_scope.
+Local Notation "'forall'  x .. y , P" := (pi (fun x => .. (pi (fun y => P)) .. )) : category_scope.
 
 (** ** The product of strict categories is strict *)
 Global Instance isstrict_category_pi
@@ -51,10 +47,6 @@ Qed.
 
 Local Set Warnings Append "-notation-overridden".
 Module Export CategoryPiNotations.
-  Notation "'forall'  x .. y , P" := (forall x, .. (forall y, P) ..)
-                                       (at level 200, x binder, y binder, right associativity).
-  Notation "'forall'  x .. y , P" := (forall x, .. (forall y, P) ..)
-                                       (at level 200, x binder, y binder, right associativity) : type_scope.
-  Notation "'forall'  x .. y , P" := (pi (fun x => .. (pi (fun y => P)) .. ))
-                                       (at level 200, x binder, y binder, right associativity) : category_scope.
+  Notation "'forall'  x .. y , P" := (forall x, .. (forall y, P) ..)%type : type_scope.
+  Notation "'forall'  x .. y , P" := (pi (fun x => .. (pi (fun y => P)) .. )) : category_scope.
 End CategoryPiNotations.

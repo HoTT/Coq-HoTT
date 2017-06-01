@@ -24,7 +24,7 @@ Definition opposite (C : PreCategory) : PreCategory
        (@identity_identity C)
        _.
 
-Local Notation "C ^op" := (opposite C) (at level 3, format "C '^op'") : category_scope.
+Local Notation "C ^op" := (opposite C) : category_scope.
 
 (** ** [ᵒᵖ] is judgmentally involutive *)
 Definition opposite_involutive C : (C^op)^op = C := idpath.
@@ -45,5 +45,5 @@ Section DualObjects.
 End DualObjects.
 
 Module Export CategoryDualNotations.
-  Notation "C ^op" := (opposite C) (at level 3, format "C '^op'") : category_scope.
+  Notation "C ^op" := (opposite C) : category_scope.
 End CategoryDualNotations.

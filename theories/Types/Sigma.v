@@ -105,14 +105,14 @@ Definition pr1_path `{P : A -> Type} {u v : sigT P} (p : u = v)
     ap pr1 p.
 (* match p with idpath => 1 end. *)
 
-Notation "p ..1" := (pr1_path p) (at level 3) : fibration_scope.
+Notation "p ..1" := (pr1_path p) : fibration_scope.
 
 Definition pr2_path `{P : A -> Type} {u v : sigT P} (p : u = v)
 : p..1 # u.2 = v.2
   := (transport_compose P pr1 p u.2)^
      @ (@apD {x:A & P x} _ pr2 _ _ p).
 
-Notation "p ..2" := (pr2_path p) (at level 3) : fibration_scope.
+Notation "p ..2" := (pr2_path p) : fibration_scope.
 
 (** Now we show how these things compute. *)
 

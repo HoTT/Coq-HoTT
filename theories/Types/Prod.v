@@ -240,7 +240,7 @@ Proof.
   exact _.
 Defined.
 
-Notation "f *E g" := (equiv_functor_prod' f g) (at level 40, no associativity) : equiv_scope.
+Notation "f *E g" := (equiv_functor_prod' f g) : equiv_scope.
 
 Definition equiv_functor_prod_l {A B B' : Type} (g : B <~> B')
   : A * B <~> A * B'

@@ -927,13 +927,13 @@ Definition concat2 {A} {x y z : A} {p p' : x = y} {q q' : y = z} (h : p = p') (h
   : p @ q = p' @ q'
 := match h, h' with idpath, idpath => 1 end.
 
-Notation "p @@ q" := (concat2 p q)%path (at level 20) : path_scope.
+Notation "p @@ q" := (concat2 p q)%path : path_scope.
 
 Arguments concat2 : simpl nomatch.
 
-Lemma concat2_ap_ap {A B : Type} {x' y' z' : B} 
+Lemma concat2_ap_ap {A B : Type} {x' y' z' : B}
            (f : A -> (x' = y')) (g : A -> (y' = z'))
-           {x y : A} (p : x = y) 
+           {x y : A} (p : x = y)
 : (ap f p) @@ (ap g p) = ap (fun u => f u @ g u) p.
 Proof.
     by path_induction.
@@ -1044,17 +1044,17 @@ Definition concat2_1p {A : Type} {x y : A} {p q : x = y} (h : p = q) :
   :=
   match h with idpath => 1 end.
 
-Definition cancel2L {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z} 
+Definition cancel2L {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z}
            (g : p = p') (h k : q = q')
 : (g @@ h = g @@ k) -> (h = k).
 Proof.
   intro r. induction g, p, q.
-  refine ((whiskerL_1p h)^ @ _). refine (_ @ (whiskerL_1p k)). 
+  refine ((whiskerL_1p h)^ @ _). refine (_ @ (whiskerL_1p k)).
   refine (whiskerR _ _). refine (whiskerL _ _).
   apply r.
 Defined.
 
-Definition cancel2R {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z} 
+Definition cancel2R {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z}
            (g h : p = p') (k : q = q')
 : (g @@ k = h @@ k) -> (g = h).
 Proof.
@@ -1193,7 +1193,7 @@ Definition apD02 {A : Type} {B : A -> Type} {x y : A} {p q : x = y}
   := match r with idpath => (concat_1p _)^ end.
 
 Definition apD02_const {A B : Type} (f : A -> B) {x y : A} {p q : x = y} (r : p = q)
-: apD02 f r = (apD_const f p) 
+: apD02 f r = (apD_const f p)
               @ (transport2_const r (f x) @@ ap02 f r)
               @ (concat_p_pp _ _ _)^
               @ (whiskerL (transport2 _ r (f x)) (apD_const f q)^)

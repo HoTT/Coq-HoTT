@@ -5,6 +5,7 @@ Require Functor.Identity.
 Require Import Category.Strict.
 Require Import Types.Record Types.Paths Types.Sigma Trunc HoTT.Tactics HProp.
 Import Functor.Identity.FunctorIdentityNotations.
+Require Import Basics.Notations.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -349,7 +350,7 @@ Module Export CommaCoreNotations.
   (** We really want to use infix [↓] for comma categories, but that's unicode.  Infix [,] might also be reasonable, but I can't seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [/] of [↓]. *)
   (** Set some notations for printing *)
   Notation "C / a" := (@slice_category_over C a) (only printing) : category_scope.
-  Notation "a \ C" := (@coslice_category_over C a) (at level 40, left associativity) : category_scope.
+  Notation "a \ C" := (@coslice_category_over C a) : category_scope.
   Notation "a / C" := (@coslice_category_over C a) (only printing) : category_scope.
   Notation "x / F" := (coslice_category x F) (only printing) : category_scope.
   Notation "F / x" := (slice_category x F) (only printing) : category_scope.

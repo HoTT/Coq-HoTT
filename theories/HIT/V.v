@@ -2,10 +2,11 @@
 
 (** * The cumulative hierarchy [V]. *)
 
-Require Import HoTT.Basics.
+Require Import HoTT.Basics HoTT.Basics.Notations HoTT.Basics.Utf8.
 Require Import Types.Unit Types.Bool Types.Universe Types.Sigma Types.Arrow Types.Forall.
 Require Import HProp HSet UnivalenceImpliesFunext TruncType.
 Require Import HIT.Truncations HIT.quotient.
+Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
 
@@ -258,8 +259,7 @@ Proof.
     intros [a p']. exists a. transitivity (g b); auto with path_hints.
 Defined.
 
-Notation "x ∈ v" := (mem x v)
-  (at level 30) : set_scope.
+Notation "x ∈ v" := (mem x v) : set_scope.
 Open Scope set_scope.
 
 (** ** Subset relation *)
@@ -267,8 +267,7 @@ Open Scope set_scope.
 Definition subset (x : V) (y : V) : hProp
 := BuildhProp (forall z : V, z ∈ x -> z ∈ y).
 
-Notation "x ⊆ y" := (subset x y)
-  (at level 30) : set_scope.
+Notation "x ⊆ y" := (subset x y) : set_scope.
 
 
 (** ** Bisimulation relation *)
@@ -326,8 +325,7 @@ Proof.
       intros [a p]. exists a. exact ((ap10 p^ (h c)) # H3).
 Defined.
 
-Notation "u ~~ v" := (bisimulation u v)
-  (at level 30) : set_scope.
+Notation "u ~~ v" := (bisimulation u v) : set_scope.
 
 Global Instance reflexive_bisimulation : Reflexive bisimulation.
 Proof.
@@ -456,8 +454,7 @@ Defined.
 
 Definition type_of_members (u : V) : Type := pr1 (monic_set_present u).
 
-Notation "[ u ]" := (type_of_members u)
-  (at level 20) : set_scope.
+Notation "[ u ]" := (type_of_members u) : set_scope.
 
 Definition func_of_members {u : V} : [u] -> V := pr1 (pr2 (monic_set_present u)) : [u] -> V.
 
@@ -565,8 +562,7 @@ Defined.
 (** The ordered pair (u,v) *)
 Definition V_pair_ord (u : V) (v : V) : V := V_pair (V_singleton u) (V_pair u v).
 
-Notation " [ u , v ] " := (V_pair_ord u v)
-  (at level 20) : set_scope.
+Notation " [ u , v ] " := (V_pair_ord u v) : set_scope.
 
 Lemma path_pair_ord {a b c d : V} : [a, b] = [c, d] <-> (a = c) * (b = d).
 Proof.
@@ -608,11 +604,10 @@ Defined.
 Definition V_cart_prod (a : V) (b : V) : V
 := set (fun x : [a] * [b] => [func_of_members (fst x), func_of_members (snd x)]).
 
-Notation " a × b " := (V_cart_prod a b)
-  (at level 25) : set_scope.
+Notation " a × b " := (V_cart_prod a b) : set_scope.
 
 (** f is a function with domain a and codomain b *)
-Definition V_is_func (a : V) (b : V) (f : V) := f ⊆ a × b
+Definition V_is_func (a : V) (b : V) (f : V) := f ⊆ (a × b)
  * (forall x, x ∈ a -> hexists (fun y => y ∈ b * [x,y] ∈ f))
  * (forall x y y', [x,y] ∈ f * [x,y'] ∈ f -> y = y').
 

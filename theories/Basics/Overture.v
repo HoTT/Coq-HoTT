@@ -1,6 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
 (** * Basic definitions of homotopy type theory, particularly the groupoid structure of identity types. *)
+(** Import the file of reserved notations so we maintain consistent level notations throughout the library *)
+Require Export Basics.Notations.
 
 (** Change in introduction patterns not adding an implicit [] *)
 Global Unset Bracketing Last Introduction Pattern.
@@ -147,9 +149,9 @@ Bind Scope fibration_scope with sigT.
 Notation pr1 := projT1.
 Notation pr2 := projT2.
 
-(** The following notation is very convenient, although it unfortunately clashes with Proof General's "electric period".  We add [format] specifiers so that it will display without an extra space, as [x.1] rather than as [x .1]. *)
-Notation "x .1" := (pr1 x) (at level 3, format "x '.1'") : fibration_scope.
-Notation "x .2" := (pr2 x) (at level 3, format "x '.2'") : fibration_scope.
+(** The following notation is very convenient, although it unfortunately clashes with Proof General's "electric period".  We have added [format] specifiers in Notations.v so that it will display without an extra space, as [x.1] rather than as [x .1]. *)
+Notation "x .1" := (pr1 x) : fibration_scope.
+Notation "x .2" := (pr2 x) : fibration_scope.
 
 (** Composition of functions. *)
 
@@ -159,7 +161,7 @@ Notation compose := (fun g f x => g (f x)).
 
 (** We allow writing [(f o g)%function] to force [function_scope] over, e.g., [morphism_scope]. *)
 
-Notation "g 'o' f" := (compose g%function f%function) (at level 40, left associativity) : function_scope.
+Notation "g 'o' f" := (compose g%function f%function) : function_scope.
 
 (** Composition of logical equivalences *)
 Instance iff_compose : Transitive iff | 1
@@ -182,7 +184,7 @@ Global Arguments composeD {A B C}%type_scope (g f)%function_scope x.
 
 Hint Unfold composeD.
 
-Notation "g 'oD' f" := (composeD g f) (at level 40, left associativity) : function_scope.
+Notation "g 'oD' f" := (composeD g f) : function_scope.
 
 (** ** The groupoid structure of identity types. *)
 
@@ -280,15 +282,14 @@ Notation "1" := idpath : path_scope.
 
 (** The composition of two paths. *)
 (** We put [p] and [q] in [path_scope] explcitly.  This is a partial work-around for https://coq.inria.fr/bugs/show_bug.cgi?id=3990, which is that implicitly bound scopes don't nest well. *)
-Notation "p @ q" := (concat p%path q%path) (at level 20) : path_scope.
+Notation "p @ q" := (concat p%path q%path) : path_scope.
 
 (** The inverse of a path. *)
 (** See above about explicitly placing [p] in [path_scope]. *)
-Notation "p ^" := (inverse p%path) (at level 3, format "p '^'") : path_scope.
+Notation "p ^" := (inverse p%path) : path_scope.
 
-(** An alternative notation which puts each path on its own line.  Useful as a temporary device during proofs of equalities between very long composites; to turn it on inside a section, say [Open Scope long_path_scope]. *)
-Notation "p @' q" := (concat p q) (at level 21, left associativity,
-  format "'[v' p '/' '@''  q ']'") : long_path_scope.
+(** An alternative notation which puts each path on its own line, via the [format] specification in Notations.v.  Useful as a temporary device during proofs of equalities between very long composites; to turn it on inside a section, say [Open Scope long_path_scope]. *)
+Notation "p @' q" := (concat p q) : long_path_scope.
 
 
 (** An important instance of [paths_ind] is that given any dependent type, one can _transport_ elements of instances of the type along equalities in the base.
@@ -302,7 +303,7 @@ Arguments transport {A}%type_scope P%function_scope {x y} p%path_scope u : simpl
 
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression.*)
 
-Notation "p # x" := (transport _ p x) (right associativity, at level 65, only parsing) : path_scope.
+Notation "p # x" := (transport _ p x) (only parsing) : path_scope.
 
 (** Having defined transport, we can use it to talk about what a homotopy theorist might see as "paths in a fibration over paths in the base"; and what a type theorist might see as "heterogeneous eqality in a dependent type".
 
@@ -330,7 +331,7 @@ Global Arguments pointwise_paths {A}%type_scope {P} (f g)%function_scope.
 
 Hint Unfold pointwise_paths : typeclass_instances.
 
-Notation "f == g" := (pointwise_paths f g) (at level 70, no associativity) : type_scope.
+Notation "f == g" := (pointwise_paths f g) : type_scope.
 
 Definition apD10 {A} {B:A->Type} {f g : forall x, B x} (h:f=g)
   : f == g
@@ -418,11 +419,11 @@ Arguments equiv_isequiv {A B} _.
 
 Bind Scope equiv_scope with Equiv.
 
-Notation "A <~> B" := (Equiv A B) (at level 85) : type_scope.
+Notation "A <~> B" := (Equiv A B) : type_scope.
 
 (** A notation for the inverse of an equivalence.  We can apply this to a function as long as there is a typeclass instance asserting it to be an equivalence.  We can also apply it to an element of [A <~> B], since there is an implicit coercion to [A -> B] and also an existing instance of [IsEquiv]. *)
 
-Notation "f ^-1" := (@equiv_inv _ _ f _) (at level 3, format "f '^-1'") : function_scope.
+Notation "f ^-1" := (@equiv_inv _ _ f _) : function_scope.
 
 (** ** Applying paths between equivalences like functions *)
 
@@ -477,16 +478,16 @@ Arguments trunc_S _%trunc_scope.
 
 (** Include the basic numerals, so we don't need to go through the coercion from [nat], and so that we get the right binding with [trunc_scope]. *)
 (** Note that putting the negative numbers at level 0 allows us to override the [- _] notation for negative numbers. *)
-Notation "n .+1" := (trunc_S n) (at level 2, left associativity, format "n .+1") : trunc_scope.
-Notation "n .+1" := (S n) (at level 2, left associativity, format "n .+1") : nat_scope.
-Notation "n .+2" := (n.+1.+1)%trunc (at level 2, left associativity, format "n .+2") : trunc_scope.
-Notation "n .+2" := (n.+1.+1)%nat (at level 2, left associativity, format "n .+2") : nat_scope.
-Notation "n .+3" := (n.+1.+2)%trunc (at level 2, left associativity, format "n .+3") : trunc_scope.
-Notation "n .+3" := (n.+1.+2)%nat (at level 2, left associativity, format "n .+3") : nat_scope.
-Notation "n .+4" := (n.+1.+3)%trunc (at level 2, left associativity, format "n .+4") : trunc_scope.
-Notation "n .+4" := (n.+1.+3)%nat (at level 2, left associativity, format "n .+4") : nat_scope.
-Notation "n .+5" := (n.+1.+4)%trunc (at level 2, left associativity, format "n .+5") : trunc_scope.
-Notation "n .+5" := (n.+1.+4)%nat (at level 2, left associativity, format "n .+5") : nat_scope.
+Notation "n .+1" := (trunc_S n) : trunc_scope.
+Notation "n .+1" := (S n) : nat_scope.
+Notation "n .+2" := (n.+1.+1)%trunc : trunc_scope.
+Notation "n .+2" := (n.+1.+1)%nat   : nat_scope.
+Notation "n .+3" := (n.+1.+2)%trunc : trunc_scope.
+Notation "n .+3" := (n.+1.+2)%nat   : nat_scope.
+Notation "n .+4" := (n.+1.+3)%trunc : trunc_scope.
+Notation "n .+4" := (n.+1.+3)%nat   : nat_scope.
+Notation "n .+5" := (n.+1.+4)%trunc : trunc_scope.
+Notation "n .+5" := (n.+1.+4)%nat   : nat_scope.
 Local Open Scope trunc_scope.
 Notation "-2" := minus_two (at level 0) : trunc_scope.
 Notation "-1" := (-2.+1) (at level 0) : trunc_scope.
@@ -621,10 +622,10 @@ Definition Empty_rect := Empty_ind.
 
 Definition not (A:Type) : Type := A -> Empty.
 Notation "~ x" := (not x) : type_scope.
+Notation "~~ x" := (~ ~x) : type_scope.
 Hint Unfold not: core.
-Notation "x <> y  :>  T" := (not (x = y :> T))
-(at level 70, y at next level, no associativity) : type_scope.
-Notation "x <> y" := (x <> y :> _) (at level 70, no associativity) : type_scope.
+Notation "x <> y  :>  T" := (not (x = y :> T)) : type_scope.
+Notation "x <> y" := (x <> y :> _) : type_scope.
 
 Definition symmetric_neq {A} {x y : A} : x <> y -> y <> x
   := fun np p => np (p^).

@@ -5,6 +5,7 @@ Require Import HProp TruncType Extensions.
 Require Import Modality Accessible Nullification Lex Topological.
 Require Import HIT.Pushout HIT.Join.
 
+Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
 
