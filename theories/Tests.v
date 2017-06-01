@@ -52,7 +52,9 @@ Module Issue754_1.
                 end
     end.
 
+  Local Set Warnings Append "-notation-overridden".
   Notation "x =n y" := (code_nat x y) : nat_scope.
+  Local Set Warnings Append "notation-overridden".
   Bind Scope nat_scope with nat.
   Axiom equiv_path_nat :
     forall n m : nat,

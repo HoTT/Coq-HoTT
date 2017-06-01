@@ -174,6 +174,7 @@ End lax_arrow_category.
 Arguments lax_arrow_category {_} P {_}.
 Arguments oplax_arrow_category {_} P {_}.
 
+Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Module Export LaxCommaCoreNotations.
   (** We play some games to get nice notations for lax comma categories. *)
   Section tc_notation_boiler_plate.
@@ -253,17 +254,17 @@ Module Export LaxCommaCoreNotations.
   (** Set some notations for printing *)
   Notation "'CAT' // a" := (@lax_slice_category_over _ _ _ a _) (at level 40, left associativity) : category_scope.
   Notation "a // 'CAT'" := (@lax_coslice_category_over _ _ _ a _) (at level 40, left associativity) : category_scope.
-  Notation "x // F" := (lax_coslice_category x F) (at level 40, left associativity) : category_scope.
-  Notation "F // x" := (lax_slice_category x F) : category_scope.
-  Notation "S // T" := (lax_comma_category S T) : category_scope.
+  Notation "x // F" := (lax_coslice_category x F) (at level 40, left associativity, only printing) : category_scope.
+  Notation "F // x" := (lax_slice_category x F) (only printing) : category_scope.
+  Notation "S // T" := (lax_comma_category S T) (only printing) : category_scope.
   (** Set the notation for parsing; typeclasses will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)
   Notation "S // T" := (get_LCC S T) : category_scope.
 
   Notation "'CAT' \\ a" := (@oplax_slice_category_over _ _ _ a _) (at level 40, left associativity) : category_scope.
   Notation "a \\ 'CAT'" := (@oplax_coslice_category_over _ _ _ a _) (at level 40, left associativity) : category_scope.
-  Notation "x \\ F" := (oplax_coslice_category x F) (at level 40, left associativity) : category_scope.
-  Notation "F \\ x" := (oplax_slice_category x F) : category_scope.
-  Notation "S \\ T" := (oplax_comma_category S T) : category_scope.
+  Notation "x \\ F" := (oplax_coslice_category x F) (at level 40, left associativity, only printing) : category_scope.
+  Notation "F \\ x" := (oplax_slice_category x F) (only printing) : category_scope.
+  Notation "S \\ T" := (oplax_comma_category S T) (only printing) : category_scope.
   (** Set the notation for parsing; typeclasses will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)
   Notation "S \\ T" := (get_OLCC S T) : category_scope.
 End LaxCommaCoreNotations.

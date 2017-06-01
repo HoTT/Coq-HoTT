@@ -4,7 +4,10 @@ Require Import Functor.Composition.Core.
 Require Import ExponentialLaws.Law1.Functors FunctorCategory.Core.
 Require Import UniversalProperties KanExtensions.Core InitialTerminalCategory.Core NatCategory.
 Require Import Functor.Paths NaturalTransformation.Paths.
-Require Import Comma.Core.
+Require Comma.Core.
+Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
+Import Comma.Core.
+Local Set Warnings Append "notation-overridden".
 Require Import Equivalences.
 
 Set Universe Polymorphism.

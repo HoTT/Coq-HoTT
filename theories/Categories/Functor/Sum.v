@@ -82,7 +82,7 @@ Section swap_functor.
     exists (path_forall _ _ swap_involutive_helper).
     repeat (apply (@path_forall _); intro).
     repeat match goal with
-               | [ |- context[transport (fun x => forall y, @?C x y) ?p ?f ?x] ]
+               | [ |- context[transport (fun x' => forall y, @?C x' y) ?p ?f ?x] ]
                  => simpl rewrite (@transport_forall_constant _ _ C _ _ p f x)
            end.
     transport_path_forall_hammer.

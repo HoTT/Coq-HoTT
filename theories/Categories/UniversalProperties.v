@@ -3,7 +3,10 @@ Require Import Category.Core Functor.Core.
 Require Import Category.Dual Functor.Dual.
 Require Import Category.Objects Category.Morphisms.
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
-Require Import Comma.Core.
+Require Comma.Core.
+Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
+Import Comma.Core.
+Local Set Warnings Append "notation-overridden".
 Require Import Types.Unit Trunc Types.Sigma HProp HoTT.Tactics Equivalences.
 
 Set Universe Polymorphism.

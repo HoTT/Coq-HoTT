@@ -1,13 +1,14 @@
 (** * Unicode notations for comma categories *)
+Local Set Warnings Append "-notation-overridden".
 Require Import Comma.Core.
 Require Export Comma.Notations.
 
 (** Set some notations for printing *)
-Notation "C ↓ a" := (@slice_category_over C a) (at level 70, no associativity) : category_scope.
-Notation "a ↓ C" := (@coslice_category_over C a) : category_scope.
-Notation "x ↓ F" := (coslice_category x F) : category_scope.
-Notation "F ↓ x" := (slice_category x F) : category_scope.
-Notation "S ↓ T" := (comma_category S T) : category_scope.
+Notation "C ↓ a" := (@slice_category_over C a) (at level 70, no associativity, only printing) : category_scope.
+Notation "a ↓ C" := (@coslice_category_over C a) (only printing) : category_scope.
+Notation "x ↓ F" := (coslice_category x F) (only printing) : category_scope.
+Notation "F ↓ x" := (slice_category x F) (only printing) : category_scope.
+Notation "S ↓ T" := (comma_category S T) (only printing) : category_scope.
 (** Set the notation for parsing; coercions will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)
 Notation "S ↓ T" := (comma_category (S : CC_Functor' _ _)
                                     (T : CC_Functor' _ _)) : category_scope.

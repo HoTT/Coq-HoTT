@@ -104,6 +104,7 @@ Section induced.
   Defined.
 End induced.
 
+Local Set Warnings Append "-notation-overridden".
 Module Export FunctorProdCoreNotations.
   Infix "*" := prod : functor_scope.
   Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : functor_scope.

@@ -6,7 +6,10 @@ Require Import InitialTerminalCategory.
 Require Import Functor.Paths.
 Require Functor.Identity NaturalTransformation.Identity.
 Require Import Category.Strict.
-Require Import Comma.Core.
+Require Comma.Core.
+Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
+Import Comma.Core.
+Local Set Warnings Append "notation-overridden".
 Import Functor.Identity.FunctorIdentityNotations NaturalTransformation.Identity.NaturalTransformationIdentityNotations.
 Require Import Types.Record Trunc HoTT.Tactics PathGroupoids Types.Forall.
 

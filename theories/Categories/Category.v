@@ -26,6 +26,7 @@ Require Category.Sum.
 (** ** Categories (univalent or saturated) *)
 Require Category.Univalent.
 
+Local Set Warnings Append "-notation-overridden".
 Include Category.Core.
 Include Category.Dual.
 Include Category.Morphisms.

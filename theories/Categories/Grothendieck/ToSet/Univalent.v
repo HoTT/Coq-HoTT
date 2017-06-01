@@ -4,8 +4,8 @@ Require Import Category.Univalent.
 Require Import Category.Morphisms.
 Require Import SetCategory.Core.
 Require Import Grothendieck.ToSet.Core Grothendieck.ToSet.Morphisms.
-From HoTT.Basics Require Import Equivalences Trunc.
-From HoTT.Types Require Import Universe Paths Sigma.
+Require Import HoTT.Basics.Equivalences HoTT.Basics.Trunc.
+Require Import HoTT.Types.Universe HoTT.Types.Paths HoTT.Types.Sigma.
 Require Import HoTT.UnivalenceImpliesFunext.
 
 Set Universe Polymorphism.
