@@ -12,12 +12,8 @@ then
     sudo add-apt-repository -y ppa:jgross-h/many-coq-versions
     sudo apt-get update
 fi
-# (un)install autoreconf
-if [ ! -z "$WITH_AUTORECONF" ]; then
-    sudo apt-get install -q dh-autoreconf
-else
-    sudo apt-get remove -q dh-autoreconf
-fi
+# install autoreconf
+sudo apt-get install -q autoconf
 # install coq
 if [ ! -z "$UPDATE_QUICK_DOC" ]; then
     ./install_coq_dot_deps.sh
