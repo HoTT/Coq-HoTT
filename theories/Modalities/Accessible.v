@@ -6,6 +6,7 @@ Require Import HoTT.Basics HoTT.Types HoTT.Tactics.
 Require Import Extensions NullHomotopy EquivalenceVarieties.
 Require Import ReflectiveSubuniverse Modality.
 
+Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
 

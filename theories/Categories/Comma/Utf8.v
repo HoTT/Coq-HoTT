@@ -2,9 +2,10 @@
 Local Set Warnings Append "-notation-overridden".
 Require Import Comma.Core.
 Require Export Comma.Notations.
+Require Import Basics.Utf8.
 
 (** Set some notations for printing *)
-Notation "C ↓ a" := (@slice_category_over C a) (at level 70, no associativity, only printing) : category_scope.
+Notation "C ↓ a" := (@slice_category_over C a) (only printing) : category_scope.
 Notation "a ↓ C" := (@coslice_category_over C a) (only printing) : category_scope.
 Notation "x ↓ F" := (coslice_category x F) (only printing) : category_scope.
 Notation "F ↓ x" := (slice_category x F) (only printing) : category_scope.

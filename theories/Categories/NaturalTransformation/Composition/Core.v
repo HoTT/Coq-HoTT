@@ -152,6 +152,6 @@ End composition.
 
 Module Export NaturalTransformationCompositionCoreNotations.
   Infix "o" := compose : natural_transformation_scope.
-  Infix "oL" := whisker_l (at level 40, left associativity) : natural_transformation_scope.
-  Infix "oR" := whisker_r (at level 40, left associativity) : natural_transformation_scope.
+  Infix "oL" := whisker_l : natural_transformation_scope.
+  Infix "oR" := whisker_r : natural_transformation_scope.
 End NaturalTransformationCompositionCoreNotations.

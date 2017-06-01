@@ -90,7 +90,7 @@ Definition pullback_along' {A B C} (g : C -> A) (f : B -> A)
 
 Arguments pullback_along' / .
 
-Notation "g ^*'" := (pullback_along' g) (at level 20) : function_scope.
+Notation "g ^*'" := (pullback_along' g) : function_scope.
 
 Definition hfiber_pullback_along' {A B C} (g : C -> A) (f : B -> A) (c:C)
 : hfiber (g ^*' f) c <~> hfiber f (g c).

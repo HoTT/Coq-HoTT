@@ -1,4 +1,5 @@
 (** * Notations for categories *)
+Require Import Basics.Notations.
 Require Export Category.Notations.
 Require Export Functor.Notations.
 Require Export NaturalTransformation.Notations.

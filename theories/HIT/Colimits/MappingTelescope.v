@@ -1,5 +1,6 @@
 Require Import HoTT.Basics HoTT.Types.Bool HoTT.Types.Paths.
 Require Import Colimits.Diagram Colimits.Colimit.
+Local Open Scope nat_scope.
 Local Open Scope path.
 
 (** * Mapping telescope *)

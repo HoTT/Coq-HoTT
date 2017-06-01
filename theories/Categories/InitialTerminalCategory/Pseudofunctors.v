@@ -61,8 +61,8 @@ Definition from_1 `{Funext} c : Pseudofunctor 1
 Definition from_0 `{Funext} : Pseudofunctor 0
   := Eval simpl in from_initial.
 
-Local Notation "! x" := (@from_terminal _ terminal_category _ _ _ x) (at level 3, format "'!' x") : pseudofunctor_scope.
+Local Notation "! x" := (@from_terminal _ terminal_category _ _ _ x) : pseudofunctor_scope.
 
 Module Export InitialTerminalCategoryPseudofunctorsNotations.
-  Notation "! x" := (@from_terminal _ terminal_category _ _ _ x) (at level 3, format "'!' x") : pseudofunctor_scope.
+  Notation "! x" := (@from_terminal _ terminal_category _ _ _ x) : pseudofunctor_scope.
 End InitialTerminalCategoryPseudofunctorsNotations.

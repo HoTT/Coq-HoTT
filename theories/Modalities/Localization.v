@@ -5,6 +5,7 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Extensions EquivalenceVarieties.
 Require Import ReflectiveSubuniverse Accessible.
 
+Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
 (** Suppose given a family of maps [f : forall (i:I), S i -> T i].  A type [X] is said to be [f]-local if for all [i:I], the map [(T i -> X) -> (S i -> X)] given by precomposition with [f i] is an equivalence.  Our goal is to show that the [f]-local types form a reflective subuniverse, with a reflector constructed by localization.  That is, morally we want to say

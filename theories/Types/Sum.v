@@ -484,7 +484,7 @@ Definition equiv_functor_sum' {A A' B B' : Type} (f : A <~> A') (g : B <~> B')
 : A + B <~> A' + B'
   := equiv_functor_sum (f := f) (g := g).
 
-Notation "f +E g" := (equiv_functor_sum' f g) (at level 50, left associativity) : equiv_scope.
+Notation "f +E g" := (equiv_functor_sum' f g) : equiv_scope.
 
 Definition equiv_functor_sum_l {A B B' : Type} (g : B <~> B')
 : A + B <~> A + B'

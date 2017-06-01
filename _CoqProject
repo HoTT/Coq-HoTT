@@ -3,6 +3,7 @@
 COQC = hoqc
 
 theories/Basics/Notations.v
+theories/Basics/Utf8.v
 theories/Basics/Overture.v
 theories/Basics/UniverseLevel.v
 theories/Basics/PathGroupoids.v

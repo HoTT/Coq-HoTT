@@ -20,7 +20,7 @@ Class IsIsomorphism {C : PreCategory} {s d} (m : morphism C s d) :=
 
 Arguments morphism_inverse {C s d} m {_}.
 
-Local Notation "m ^-1" := (morphism_inverse m) (at level 3, format "m '^-1'") : morphism_scope.
+Local Notation "m ^-1" := (morphism_inverse m) : morphism_scope.
 
 Hint Resolve left_inverse right_inverse : category morphism.
 Hint Rewrite @left_inverse @right_inverse : category.
@@ -36,7 +36,7 @@ Class Isomorphic {C : PreCategory} s d :=
 Coercion morphism_isomorphic : Isomorphic >-> morphism.
 Coercion isisomorphism_isomorphic : Isomorphic >-> IsIsomorphism.
 
-Local Infix "<~=~>" := Isomorphic (at level 70, no associativity) : category_scope.
+Local Infix "<~=~>" := Isomorphic : category_scope.
 
 Global Existing Instance isisomorphism_isomorphic.
 
@@ -262,10 +262,8 @@ Record Monomorphism {C} x y :=
 
 Global Existing Instances Epimorphism_IsEpimorphism Monomorphism_IsMonomorphism.
 
-Local Notation "x ->> y" := (Epimorphism x y)
-                              (at level 99, right associativity, y at level 200).
-Local Notation "x (-> y" := (Monomorphism x y)
-                              (at level 99, right associativity, y at level 200).
+Local Notation "x ->> y" := (Epimorphism x y).
+Local Notation "x (-> y" := (Monomorphism x y).
 
 Class IsSectionOf C x y (s : morphism C x y) (r : morphism C y x)
   := is_sect_morphism : r o s = identity _.
@@ -665,12 +663,10 @@ Section associativity_composition.
 End associativity_composition.
 
 Module Export CategoryMorphismsNotations.
-  Notation "m ^-1" := (morphism_inverse m) (at level 3, format "m '^-1'") : morphism_scope.
+  Notation "m ^-1" := (morphism_inverse m) : morphism_scope.
 
-  Infix "<~=~>" := Isomorphic (at level 70, no associativity) : category_scope.
+  Infix "<~=~>" := Isomorphic : category_scope.
 
-  Notation "x ->> y" := (Epimorphism x y)
-                          (at level 99, right associativity, y at level 200).
-  Notation "x (-> y" := (Monomorphism x y)
-                          (at level 99, right associativity, y at level 200).
+  Notation "x ->> y" := (Epimorphism x y).
+  Notation "x (-> y" := (Monomorphism x y).
 End CategoryMorphismsNotations.

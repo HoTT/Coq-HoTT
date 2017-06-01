@@ -25,7 +25,7 @@ Definition opposite
        (unit_counit_equation_2 A)
        (unit_counit_equation_1 A).
 
-Local Notation "A ^op" := (opposite A) (at level 3, format "A '^op'") : adjunction_scope.
+Local Notation "A ^op" := (opposite A) : adjunction_scope.
 
 Local Open Scope adjunction_scope.
 
@@ -35,5 +35,5 @@ Definition opposite_involutive C D (F : Functor C D) (G : Functor D C) (A : F -|
   := idpath.
 
 Module Export AdjointDualNotations.
-  Notation "A ^op" := (opposite A) (at level 3, format "A '^op'") : adjunction_scope.
+  Notation "A ^op" := (opposite A) : adjunction_scope.
 End AdjointDualNotations.

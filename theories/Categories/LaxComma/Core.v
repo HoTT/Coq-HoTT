@@ -14,6 +14,9 @@ Require Import NaturalTransformation.Composition.Laws.
 Require Import FunctorCategory.Morphisms.
 Require LaxComma.CoreLaws.
 Require Import Types.Record Trunc HoTT.Tactics Types.Paths Types.Sigma.
+Local Set Warnings Append "-notation-overridden".
+Require Import Basics.Notations.
+Local Set Warnings Append "notation-overridden".
 
 Import Functor.Identity.FunctorIdentityNotations.
 Import Pseudofunctor.Identity.PseudofunctorIdentityNotations.
@@ -252,17 +255,17 @@ Module Export LaxCommaCoreNotations.
 
   (** We really want to use infix [⇓] and [⇑] for lax comma categories, but that's unicode.  Infix [,] might also be reasonable, but I can't seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [//] of [⇓] and [\\] for [⇑]. *)
   (** Set some notations for printing *)
-  Notation "'CAT' // a" := (@lax_slice_category_over _ _ _ a _) (at level 40, left associativity) : category_scope.
-  Notation "a // 'CAT'" := (@lax_coslice_category_over _ _ _ a _) (at level 40, left associativity) : category_scope.
-  Notation "x // F" := (lax_coslice_category x F) (at level 40, left associativity, only printing) : category_scope.
+  Notation "'CAT' // a" := (@lax_slice_category_over _ _ _ a _) : category_scope.
+  Notation "a // 'CAT'" := (@lax_coslice_category_over _ _ _ a _) : category_scope.
+  Notation "x // F" := (lax_coslice_category x F) (only printing) : category_scope.
   Notation "F // x" := (lax_slice_category x F) (only printing) : category_scope.
   Notation "S // T" := (lax_comma_category S T) (only printing) : category_scope.
   (** Set the notation for parsing; typeclasses will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)
   Notation "S // T" := (get_LCC S T) : category_scope.
 
-  Notation "'CAT' \\ a" := (@oplax_slice_category_over _ _ _ a _) (at level 40, left associativity) : category_scope.
-  Notation "a \\ 'CAT'" := (@oplax_coslice_category_over _ _ _ a _) (at level 40, left associativity) : category_scope.
-  Notation "x \\ F" := (oplax_coslice_category x F) (at level 40, left associativity, only printing) : category_scope.
+  Notation "'CAT' \\ a" := (@oplax_slice_category_over _ _ _ a _) : category_scope.
+  Notation "a \\ 'CAT'" := (@oplax_coslice_category_over _ _ _ a _) : category_scope.
+  Notation "x \\ F" := (oplax_coslice_category x F) (only printing) : category_scope.
   Notation "F \\ x" := (oplax_slice_category x F) (only printing) : category_scope.
   Notation "S \\ T" := (oplax_comma_category S T) (only printing) : category_scope.
   (** Set the notation for parsing; typeclasses will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)

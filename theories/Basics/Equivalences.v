@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Equivalences *)
 
-Require Import Overture PathGroupoids.
+Require Import Overture PathGroupoids Basics.Notations.
 Local Open Scope path_scope.
 
 (** We now give many ways to construct equivalences.  In each case, we define an instance of the typeclass [IsEquiv] named [isequiv_X], followed by an element of the record type [Equiv] named [equiv_X].
@@ -59,7 +59,7 @@ Definition equiv_compose' {A B C : Type} (g : B <~> C) (f : A <~> B)
   := equiv_compose g f.
 
 (** We put [g] and [f] in [equiv_scope] explcitly.  This is a partial work-around for https://coq.inria.fr/bugs/show_bug.cgi?id=3990, which is that implicitly bound scopes don't nest well. *)
-Notation "g 'oE' f" := (equiv_compose' g%equiv f%equiv) (at level 40, left associativity) : equiv_scope.
+Notation "g 'oE' f" := (equiv_compose' g%equiv f%equiv) : equiv_scope.
 
 (* The TypeClass [Transitive] has a different order of parameters than [equiv_compose].  Thus in declaring the instance we have to switch the order of arguments. *)
 Global Instance transitive_equiv : Transitive Equiv | 0 :=
@@ -149,7 +149,7 @@ Proof.
   apply isequiv_inverse.
 Defined.
 
-Notation "e ^-1" := (@equiv_inverse _ _ e) (at level 3, format "e '^-1'") : equiv_scope.
+Notation "e ^-1" := (@equiv_inverse _ _ e) : equiv_scope.
 
 Global Instance symmetric_equiv : Symmetric Equiv | 0 := @equiv_inverse.
 

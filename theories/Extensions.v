@@ -6,6 +6,7 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import HProp EquivalenceVarieties.
 Require Import HoTT.Tactics.
 
+Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
 (** Given [C : B -> Type] and [f : A -> B], an extension of [g : forall a, C (f a)] along [f] is a section [h : forall b, C b] such that [h (f a) = g a] for all [a:A].  This is equivalently the existence of fillers for commutative squares, restricted to the case where the bottom of the square is the identity; type-theoretically, this approach is sometimes more convenient.  In this file we study the type of such extensions.  One of its crucial properties is that a path between extensions is equivalently an extension in a fibration of paths.

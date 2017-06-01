@@ -1,5 +1,5 @@
 (** * Definition of a [PreCategory] *)
-Require Export Overture.
+Require Export Overture Basics.Notations.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -83,7 +83,7 @@ Arguments compose {!C%category} / {s d d'}%object (m1 m2)%morphism : rename.
 Local Infix "o" := compose : morphism_scope.
 (** Perhaps we should consider making this notation more global. *)
 (** Perhaps we should pre-reserve all of the notations. *)
-Local Notation "x --> y" := (morphism _ x y) (at level 99, right associativity, y at level 200) : type_scope.
+Local Notation "x --> y" := (morphism _ x y) : type_scope.
 Local Notation "1" := (identity _) : morphism_scope.
 
 (** Define a convenience wrapper for building a precategory without
@@ -145,8 +145,8 @@ Module Export CategoryCoreNotations.
   Infix "o" := compose : morphism_scope.
   (** Perhaps we should consider making this notation more global. *)
   (** Perhaps we should pre-reserve all of the notations. *)
-  Local Notation "x --> y" := (@morphism _ x y) (at level 99, right associativity, y at level 200) : type_scope.
-  Local Notation "x --> y" := (morphism _ x y) (at level 99, right associativity, y at level 200) : type_scope.
+  Local Notation "x --> y" := (@morphism _ x y) : type_scope.
+  Local Notation "x --> y" := (morphism _ x y) : type_scope.
   Notation "1" := (identity _) : morphism_scope.
 End CategoryCoreNotations.
 

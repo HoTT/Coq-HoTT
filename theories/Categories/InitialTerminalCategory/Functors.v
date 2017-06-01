@@ -53,7 +53,7 @@ Definition from_1 C c : Functor 1 C
 Definition from_0 C : Functor 0 C
   := Eval simpl in from_initial C.
 
-Local Notation "! x" := (@from_terminal _ terminal_category _ _ _ x) (at level 3, format "'!' x") : functor_scope.
+Local Notation "! x" := (@from_terminal _ terminal_category _ _ _ x) : functor_scope.
 
 (** *** Uniqueness principles about initial and terminal categories and functors *)
 Section unique.
@@ -108,5 +108,5 @@ Section unique.
 End unique.
 
 Module Export InitialTerminalCategoryFunctorsNotations.
-  Notation "! x" := (@from_terminal _ terminal_category _ _ _ x) (at level 3, format "'!' x") : functor_scope.
+  Notation "! x" := (@from_terminal _ terminal_category _ _ _ x) : functor_scope.
 End InitialTerminalCategoryFunctorsNotations.

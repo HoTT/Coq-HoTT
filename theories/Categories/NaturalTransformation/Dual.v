@@ -21,7 +21,7 @@ Definition opposite
                                   (fun s d => commutes_sym T d s)
                                   (fun s d => commutes T d s).
 
-Local Notation "T ^op" := (opposite T) (at level 3, format "T ^op") : natural_transformation_scope.
+Local Notation "T ^op" := (opposite T) : natural_transformation_scope.
 
 (** ** [ᵒᵖ] is judgmentally involutive *)
 Local Open Scope natural_transformation_scope.
@@ -31,5 +31,5 @@ Definition opposite_involutive C D (F G : Functor C D) (T : NaturalTransformatio
   := idpath.
 
 Module Export NaturalTransformationDualNotations.
-  Notation "T ^op" := (opposite T) (at level 3, format "T ^op") : natural_transformation_scope.
+  Notation "T ^op" := (opposite T) : natural_transformation_scope.
 End NaturalTransformationDualNotations.

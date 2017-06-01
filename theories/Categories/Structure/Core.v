@@ -1,6 +1,7 @@
 (** * Notions of Structure *)
 Require Import Category.Core.
 Require Import HProp HSet Types.Sigma Types.Record Trunc.
+Require Import Basics.Notations.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -112,7 +113,7 @@ Hint Resolve is_structure_homomorphism_identity is_structure_homomorphism_compos
 
 *)
 
-Local Notation "a <=_{ x } b" := (is_structure_homomorphism _ x x (identity x) a b) (at level 70, no associativity) : long_structure_scope.
+Local Notation "a <=_{ x } b" := (is_structure_homomorphism _ x x (identity x) a b) : long_structure_scope.
 Local Notation "a <= b" := (a <=_{ _ } b)%long_structure : structure_scope.
 
 (** By (iii) and (iv), this is a preorder with [P x] its type of objects. *)
@@ -248,6 +249,6 @@ Section precategory.
 End precategory.
 
 Module Export StructureCoreNotations.
-  Notation "a <=_{ x } b" := (is_structure_homomorphism _ x x (identity x) a b) (at level 70, no associativity) : long_structure_scope.
+  Notation "a <=_{ x } b" := (is_structure_homomorphism _ x x (identity x) a b) : long_structure_scope.
   Notation "a <= b" := (a <=_{ _ } b)%long_structure : structure_scope.
 End StructureCoreNotations.

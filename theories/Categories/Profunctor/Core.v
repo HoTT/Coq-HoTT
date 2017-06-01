@@ -1,5 +1,8 @@
 (** * Profunctors *)
 Require Import Category.Core Functor.Core Category.Prod Category.Dual Functor.Prod.Core SetCategory.Core.
+Local Set Warnings Append "-notation-overridden".
+Require Import Basics.Notations.
+Local Set Warnings Append "notation-overridden".
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -33,7 +36,5 @@ End profunctor.
 Bind Scope profunctor_scope with Profunctor.
 
 Module Export ProfunctorCoreNotations.
-  Notation "x -|-> y" := (Profunctor x y)
-                           (at level 99, right associativity, y at level 200)
-                         : type_scope.
+  Notation "x -|-> y" := (Profunctor x y) : type_scope.
 End ProfunctorCoreNotations.

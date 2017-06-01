@@ -73,7 +73,7 @@ Record pMap (A B : pType) :=
 Arguments point_eq {A B} f : rename.
 Coercion pointed_fun : pMap >-> Funclass.
 
-Infix "->*" := pMap (at level 99) : pointed_scope.
+Infix "->*" := pMap : pointed_scope.
 Local Open Scope pointed_scope.
 
 Definition pmap_idmap (A : pType): A ->* A
@@ -85,7 +85,7 @@ Definition pmap_compose {A B C : pType}
   := Build_pMap A C (g o f)
                 (ap g (point_eq f) @ point_eq g).
 
-Infix "o*" := pmap_compose (at level 40) : pointed_scope.
+Infix "o*" := pmap_compose : pointed_scope.
 
 (** Another option would be
 <<
@@ -107,7 +107,7 @@ Arguments pointed_htpy {A B f g} p x.
 
 Coercion pointed_htpy : pHomotopy >-> pointwise_paths.
 
-Infix "==*" := pHomotopy (at level 70, no associativity) : pointed_scope.
+Infix "==*" := pHomotopy : pointed_scope.
 
 (** The following tactic often allows us to "pretend" that pointed maps and homotopies preserve basepoints strictly.  We have carefully defined [pMap] and [pHomotopy] so that when destructed, their second components are paths with right endpoints free, to which we can apply Paulin-Morhing path-induction. *)
 Ltac pointed_reduce :=
@@ -211,7 +211,7 @@ Proof.
   - apply concat_p1.
 Qed.
 
-Infix "@*" := phomotopy_compose (at level 30) : pointed_scope.
+Infix "@*" := phomotopy_compose : pointed_scope.
 
 Definition phomotopy_inverse {A B : pType} {f g : A ->* B}
 : (f ==* g) -> (g ==* f).
@@ -302,7 +302,7 @@ Record pEquiv (A B : pType) :=
     pointed_isequiv : IsEquiv pointed_equiv_fun
   }.
 
-Infix "<~>*" := pEquiv (at level 85) : pointed_scope.
+Infix "<~>*" := pEquiv : pointed_scope.
 
 Coercion pointed_equiv_fun : pEquiv >-> pMap.
 Global Existing Instance pointed_isequiv.

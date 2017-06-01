@@ -3,6 +3,7 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Fibrations UnivalenceImpliesFunext EquivalenceVarieties Constant.
 Require Import HIT.Truncations.
 
+Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
 Local Set Universe Minimization ToSet.

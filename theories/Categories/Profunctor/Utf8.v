@@ -1,7 +1,6 @@
 (** * Unicode notations for profunctors *)
 Require Import Profunctor.Core.
 Require Export Profunctor.Notations.
+Require Import Basics.Utf8.
 
-Notation "x ⇸ y" := (Profunctor x y)
-                      (at level 99, right associativity, y at level 200)
-                    : type_scope.
+Notation "x ⇸ y" := (Profunctor x y) : type_scope.

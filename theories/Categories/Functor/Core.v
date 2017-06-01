@@ -54,9 +54,9 @@ Arguments identity_of [C D] F _ : rename.
 
 Module Export FunctorCoreNotations.
   (** Perhaps we should consider making this more global? *)
-  Local Notation "C --> D" := (Functor C D) (at level 99, right associativity) : type_scope.
-  Notation "F '_0' x" := (object_of F x) (at level 10, no associativity, only parsing) : object_scope.
-  Notation "F '_1' m" := (morphism_of F m) (at level 10, no associativity) : morphism_scope.
+  Local Notation "C --> D" := (Functor C D) : type_scope.
+  Notation "F '_0' x" := (object_of F x) : object_scope.
+  Notation "F '_1' m" := (morphism_of F m) : morphism_scope.
 End FunctorCoreNotations.
 
 Hint Resolve @composition_of @identity_of : category functor.

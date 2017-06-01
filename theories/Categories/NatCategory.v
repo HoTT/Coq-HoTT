@@ -6,6 +6,7 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
+Local Open Scope nat_scope.
 
 Module Export Core.
   (** ** [Fin n] types, or [CardinalityRepresentative] *)

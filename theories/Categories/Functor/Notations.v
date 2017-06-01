@@ -1,4 +1,5 @@
 (** * Notations for functors *)
+Require Import Basics.Notations.
 Require Functor.Composition.
 Require Functor.Core.
 Require Functor.Dual.
