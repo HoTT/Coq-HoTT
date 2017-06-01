@@ -1098,8 +1098,7 @@ Section Addition.
       refine (Conway_theorem0_ii_r _ _ _ _ _ (inl r)) ).
   Defined.
 
-  (** Oddly, without the universe annotations here, Coq turns all these [No]s into [No@{Set}}. *)
-  Definition plus (x y : No@{i}) : No@{i}
+  Definition plus (x y : No) : No
     := (plus_outer.1 x).1 y.
 
   Infix "+" := plus : surreal_scope.
