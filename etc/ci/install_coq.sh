@@ -8,7 +8,7 @@ if [ -z "$BUILD_COQ" ]
 then
     #echo | sudo add-apt-repository ppa:ezyang/coq-git
     #sudo apt-get update -qq
-    sudo apt-get install -q coq-8.6 libcoq-8.6-ocaml-dev
+    sudo apt-get install -q coq libcoq-ocaml-dev
     exit 0
 fi
 
