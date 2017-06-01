@@ -5,6 +5,7 @@
 # toplevel instead.
 prefix="@prefix@"
 export COQC="@COQC@"
+export COQCHK="@COQCHK@"
 export COQDEP="@COQDEP@"
 export COQDOC="@COQDOC@"
 export COQIDE="@COQIDE@"

@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# This is a wrapper around coqc which tricks Coq into using the HoTT
+# standard library and enables the HoTT-specific options.
+
+function readlink_f() {
+    # readlink -f doesn't work on Mac OS.  So we roll our own readlink
+    # -f, from
+    # http://stackoverflow.com/questions/1055671/how-can-i-get-the-behavior-of-gnus-readlink-f-on-a-mac
+    TARGET_FILE="$1"
+
+    cd "$(dirname "$TARGET_FILE")"
+    TARGET_FILE=`basename "$TARGET_FILE"`
+
+    # Iterate down a (possible) chain of symlinks
+    while [ -L "$TARGET_FILE" ]
+    do
+	TARGET_FILE=`readlink "$TARGET_FILE"`
+	cd "$(dirname "$TARGET_FILE")"
+	TARGET_FILE=`basename "$TARGET_FILE"`
+    done
+
+    # Compute the canonicalized name by finding the physical path
+    # for the directory we're in and appending the target file.
+    PHYS_DIR=`pwd -P`
+    RESULT="$PHYS_DIR/$TARGET_FILE"
+    echo "$RESULT"
+}
+
+mydir="$(dirname "$(readlink_f "${BASH_SOURCE[0]}")")"
+if [ ! -f "$mydir/hoq-config" ]
+then
+  echo "Could not find hoq-config. Did you run ./configure?"
+  exit 1
+fi
+
+. "$mydir/hoq-config"
+if [ "x$COQCHK" = "xno" ]
+then
+  echo "Fatal error: coqchk with -indices-matter was not found during configuration."
+  exit 1
+fi
+
+# We could stick the arguments in hoq-config in COQ_ARGS, and then,
+# using (non-portable) bash arrays, do
+# $ exec "$COQC" "${COQ_ARGS[@]}" "$@"
+# or using more evil (but portable) 'eval', do
+# $ eval 'exec "$COQC" '"$COQ_ARGS"' "$@"'
+# Instead, we duplicate code, because it's simpler.
+exec "$COQCHK" -coqlib "$COQLIB" -R "$HOTTLIB" HoTT -R "$HOTTCONTRIB" "" "$@"

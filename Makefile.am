@@ -7,6 +7,9 @@ endif
 if make_hoqtopbyte
   bin_SCRIPTS += hoqtop.byte
 endif
+if make_hoqchk
+  bin_SCRIPTS += hoqchk
+endif
 
 hottdir=$(datarootdir)/hott
 EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
@@ -16,6 +19,9 @@ SRCCOQLIB=$(srcdir)/coq
 
 # Extra standard library replacements to install
 STDLIB_EXTRA_DIST = $(shell find -P $(addprefix "$(SRCCOQLIB)/",$(STDLIB_REPLACEMENT_DIRS)) -type f)
+
+# Flags for hoqchk
+HOQCHKFLAGS=-silent -o
 
 # support the TIMED variable like coq_makefile
 TIMED=
@@ -142,6 +148,7 @@ nobase_hott_DATA = \
 
 # The Coq compiler, adapted to HoTT
 HOQC=$(srcdir)/hoqc
+HOQCHK=$(srcdir)/hoqchk
 
 # Which extra files should be cleaned
 EXTRA_CLEANFILES = html-done.timestamp HoTT.deps HoTTCore.deps file-dep-graphs/hott-all.dot file-dep-graphs/hott-all.dpd file-dep-graphs/hott-all.svg file-dep-graphs/hott-lib.dot file-dep-graphs/hott-lib.dpd file-dep-graphs/hott-lib.svg
@@ -154,7 +161,7 @@ all-am: Makefile $(SCRIPTS) $(DATA) _CoqProject
 
 .SECONDEXPANSION:
 
-.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom quick vi2vo checkproofs
+.PHONY: stdlib hottlib hott-core hott-categories contrib clean html proviola timing-html clean-local install-data-local proviola-all proviola-xml svg-file-dep-graphs svg-aggregate-dep-graphs svg-dep-graphs clean-dpdgraph strict strict-test strict-no-axiom quick vi2vo checkproofs validate
 
 # targets that we don't need to run coqdep for
 FAST_TARGETS = clean clean-local clean-dpdgraph TAGS
@@ -182,6 +189,10 @@ vi2vo:
 checkproofs:
 	$(VECHO) HOQC -schedule-vi-checking
 	$(Q) $(TIMER) $(HOQC) -schedule-vi-checking $(J) $(MAIN_VOFILES:%.vo=%.vi)
+
+validate: $(ALL_VOFILES)
+	$(VECHO) HOQCHK
+	$(Q) $(TIMER) $(HOQCHK) $(HOQCHKFLAGS) $(notdir $(^:.vo=))
 
 $(STD_VOFILES) : %.vo : %.v coq-HoTT
 	$(VECHO) COQTOP $*
