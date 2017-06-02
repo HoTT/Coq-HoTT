@@ -227,11 +227,11 @@ strict: strict-test strict-no-axiom hottlib hott-core hott-categories contrib
 # A rule for compiling the HoTT libary files
 $(MAIN_VFILES:.v=.vo) : %.vo : %.v $(STD_VOFILES) coq-HoTT
 	$(VECHO) HOQC $*
-	$(Q) $(TIMER) ./etc/pipe_out.sh "$*.timing" $(HOQC) -time $<
+	$(Q) $(TIMER) ./etc/pipe_out.sh "$*.timing" $(HOQC) -q -time $<
 
 $(MAIN_VFILES:.v=.vi) : %.vi : %.v $(STD_VOFILES) coq-HoTT
 	$(VECHO) HOQC -quick $*
-	$(Q) $(TIMER) ./etc/pipe_out.sh "$*.timing" $(HOQC) -quick -time $<
+	$(Q) $(TIMER) ./etc/pipe_out.sh "$*.timing" $(HOQC) -q -quick -time $<
 
 # The deps file, for graphs
 HoTT.deps: $(ALL_VFILES)
