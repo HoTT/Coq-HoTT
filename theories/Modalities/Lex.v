@@ -226,6 +226,44 @@ Module Lex_Modalities_Theory (Os : Modalities).
     apply (equiv_isequiv (prod_unit_l B)).
   Defined.
 
+  (** 10. Families of modal types indexed by connected types are constant. *)
+  Definition modal_over_connected_isconst_lex (O : Modality) `{Lex O}
+             (A : Type) `{IsConnected O A} (P : A -> Type) `{forall x, In O (P x)}
+    : {Q : Type & In O Q * forall x, P x <~> Q}.
+  Proof.
+    exists (O {x:A & P x}); split; [ exact _ | intros x].
+    refine (BuildEquiv _ _ (fun p => to O _ (x ; p)) _).
+    refine (isequiv_conn_map_ino O _).
+    revert x.
+    apply conn_map_fiber.
+    refine (cancelL_conn_map O _ (fun z:{x:A & O {x : A & P x}} => z.2) _ _).
+    intros z.
+    refine (isconnected_equiv' O A _ _).
+    unfold hfiber.
+    refine (equiv_adjointify (fun x => ((x ; z) ; 1))
+                             (fun y => y.1.1) _ _). 
+    - intros [[x y] []]; reflexivity.
+    - intros x; reflexivity.
+  Defined.
+
+  (** And conversely. *)
+  Definition lex_from_modal_over_connected_isconst (O : Modality)
+             (H : forall (A : Type) (P : A -> Type),
+                 (IsConnected O A) -> (forall x, In O (P x)) ->
+                 {Q : Type & In O Q * forall x, P x <~> Q})
+    : Lex O.
+  Proof.
+    intros A x y ?.
+    apply isconnected_from_elim_to_O.
+    (** By assumption, [fun y => O (x = y) : A -> Type_ O] is constant.  Thus, [to O (x=x) 1] can be transported around to make it contractible everywhere. *)
+    specialize (H A (fun z => O (x = z)) _ _).
+    destruct H as [Q [? H]].
+    unfold NullHomotopy.
+    exists ((H y)^-1 ((H x) (to O _ 1))).
+    intros [].
+    symmetry; apply eissect.
+  Defined.
+
   (** Lex modalities preserve [n]-types for all [n].  This is definitely not equivalent to lex-ness, since it is true for the truncation modalities that are not lex.  But it is also not true of all modalities; e.g. the shape modality in a cohesive topos can take 0-types to [oo]-types. *)
   Global Instance istrunc_O_lex `{Funext} {O : Modality} `{Lex O}
          {n} {A} `{IsTrunc n A}
@@ -347,26 +385,12 @@ Module Accessible_Lex_Modalities_Theory
     apply (snd (inO_iff_isnull O _)); intros i n; simpl in *.
     destruct n; [ exact tt | split ].
     - intros P.
-      (** Here is the core of the proof: we must show that any family of modal types indexed by a (generating) connected type is equivalent to a constant family.  We take the constant family to be constant at the reflection of the sum of our given family [P]. *)
-      simple refine (fun u => (O (sigT P) ; _) ; _); cbn beta.
-      1:exact _.
-      intros x; symmetry; apply path_TypeO; simpl.
-      refine (path_universe (fun p => to O _ (x ; p))).
-      revert x; apply isequiv_from_functor_sigma.
-      refine (@isequiv_compose _ _
-                (pullback_corec ((fun w:sigT P => 1)
-                                 : const tt o to O (sigT P) == const tt o pr1))
-                _ _ (fun w => (w.2.1 ; w.1)) _).
-      (** And here is the core of why it works: the useful lemma above about detecting pullback squares. *)
-      + refine (ispullback_connmap_mapino_commsq O
-                 ((fun w:sigT P => 1)
-                  : const tt o to O (sigT P) == const tt o pr1)).
-        (** All the necessary hypotheses are found by typeclass magic! *)
-      + refine (@isequiv_compose _ _
-                  (equiv_compose
-                    (equiv_prod_symm (O (sigT P)) (acc_gen O i))
-                    (equiv_pullback_unit_prod (O (sigT P)) (acc_gen O i)))
-                  _ _ (equiv_sigma_prod0 _ _)^-1 _).
+      (* The case [n=0] is basically just one of the above characterizations of lex-ness. *)
+      destruct (modal_over_connected_isconst_lex O (acc_gen O i) P)
+        as [Q [QinO f]].
+      exists (fun _ => (Q ; QinO)).
+      intros x; symmetry; apply path_TypeO. 
+      refine (path_universe (f x)).
     - intros A B.
       (** The case [n>0] is actually quite easy, using univalence and the fact that modal types are closed under [Equiv]. *)
       refine (extendable_postcompose' n _ _ _
@@ -378,18 +402,17 @@ Module Accessible_Lex_Modalities_Theory
       (** Typeclass magic! *)
   Defined.
 
-  (** [inO_typeO] is also an equivalent characterization of lex-ness for a modality.  We will prove this, because it is less obvious, and also more useful. *)
+  (** [inO_typeO] is also an equivalent characterization of lex-ness for a modality, by the converse of the characterization of lex-ness we used above. *)
   Definition lex_inO_typeO (O : Modality) `{In O (Type_ O)}
   : Lex O.
   Proof.
-    intros A x y ?.
-    apply isconnected_from_elim_to_O.
-    (** The idea is that if [A] is connected and [Type_ O] is modal, then [fun y => O (x = y) : A -> Type_ O] is constant.  Thus, [to O (x=x) 1] can be transported around to make it contractible everywhere. *)
-    pose (e := isconnected_elim O (Type_ O)
-                 (fun y' => (O (x = y') ; O_inO _))).
-    exists (transport idmap (e.2 x @ (e.2 y)^)..1 (to O (x=x) 1)).
-    intros [].
-    exact ((transport2 idmap (ap (ap pr1) (concat_pV (e.2 x))) _)^).
+    apply lex_from_modal_over_connected_isconst.
+    intros A P ? PO.
+    destruct (isconnected_elim O (Type_ O) (fun x => (P x ; PO x)))
+      as [Q f].
+    exists Q; split; [ exact _ | intros x ].
+    apply equiv_path. 
+    exact (ap pr1 (f x)).
   Defined.
 
 End Accessible_Lex_Modalities_Theory.
