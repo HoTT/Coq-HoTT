@@ -994,11 +994,8 @@ Section ConnectedMaps.
   (** As a consequence, connected maps between modal types are equivalences. *)
   Definition isequiv_conn_map_ino {A B : Type} (f : A -> B)
          `{In O A} `{In O B} `{IsConnMap O _ _ f}
-    : IsEquiv f.
-  Proof.
-    refine (isequiv_commsq' f (O_functor O f) (to O A) (to O B)
-                            (to_O_natural O f)).
-  Defined.
+    : IsEquiv f
+    := isequiv_commsq' f (O_functor O f) (to O A) (to O B) (to_O_natural O f).
 
 End ConnectedMaps.
 

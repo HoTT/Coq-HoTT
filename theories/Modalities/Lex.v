@@ -385,7 +385,7 @@ Module Accessible_Lex_Modalities_Theory
     apply (snd (inO_iff_isnull O _)); intros i n; simpl in *.
     destruct n; [ exact tt | split ].
     - intros P.
-      (* The case [n=0] is basically just one of the above characterizations of lex-ness. *)
+      (** The case [n=0] is basically just one of the above characterizations of lex-ness. *)
       destruct (modal_over_connected_isconst_lex O (acc_gen O i) P)
         as [Q [QinO f]].
       exists (fun _ => (Q ; QinO)).
