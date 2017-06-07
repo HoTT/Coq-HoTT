@@ -130,6 +130,7 @@ Module Accessible_Nullification
 
 End Accessible_Nullification.
 
+Module Import AccNulM := Accessible_Modalities_Theory Nullification_Modalities Accessible_Nullification.
 
 (** And accessible modalities can be nudged into nullifications. *)
 

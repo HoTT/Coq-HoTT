@@ -426,6 +426,35 @@ Section OIndEquiv.
 
 End OIndEquiv.
 
+(** Two modalities are the same if they have the same modal types. *)
+Class OeqO (O1 O2 : Modality)
+  := inO_OeqO : forall A, In O1 A <-> In O2 A.
+
+Global Instance reflexive_OeqO : Reflexive OeqO.
+Proof.
+  intros O A; reflexivity.
+Defined.
+
+Global Instance symmetric_OeqO : Symmetric OeqO.
+Proof.
+  intros O1 O2 O12 A.
+  specialize (O12 A).
+  symmetry; assumption.
+Defined.
+
+Global Instance transitive_OeqO : Transitive OeqO.
+Proof.
+  intros O1 O2 O3 O12 O23 A; split.
+  - intros A1.
+    apply (@inO_OeqO O2 O3 O23).
+    apply (@inO_OeqO O1 O2 O12).
+    exact A1.
+  - intros A3.
+    apply (@inO_OeqO O1 O2 O12).
+    apply (@inO_OeqO O2 O3 O23).
+    exact A3.
+Defined.
+
 (** ** Modally connected types *)
 
 (** Connectedness of a type, relative to a modality, can be defined in two equivalent ways: quantifying over all maps into modal types, or by considering just the universal case, the modal reflection of the type itself.  The former requires only core Coq, but blows up the size (universe level) of [IsConnected], since it quantifies over types; moreover, it is not even quite correct since (at least with a polymorphic modality) it should really be quantified over all universes.  Thus, we use the latter, although in most examples it requires HITs to define the modal reflection.
@@ -552,6 +581,16 @@ Section ConnectedTypes.
   Defined.
 
 End ConnectedTypes.
+
+(** Two equivalent modalities have the same connected types. *)
+Global Instance isconnected_OeqO {O1 O2 : Modality} `{OeqO O1 O2}
+       (A : Type) `{IsConnected O1 A}
+  : IsConnected O2 A.
+Proof.
+  apply isconnected_from_elim.
+  intros C C2 f.
+  apply (isconnected_elim O1); apply inO_OeqO; exact _.
+Defined.
 
 (** ** Modally truncated maps *)
 

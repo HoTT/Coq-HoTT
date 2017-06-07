@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Equivalences *)
 
-Require Import Overture PathGroupoids Basics.Notations.
+Require Import Basics.Overture Basics.PathGroupoids Basics.Notations Basics.Contractible.
 Local Open Scope path_scope.
 
 (** We now give many ways to construct equivalences.  In each case, we define an instance of the typeclass [IsEquiv] named [isequiv_X], followed by an element of the record type [Equiv] named [equiv_X].
@@ -292,6 +292,14 @@ Definition contr_equiv' A {B} `(f : A <~> B) `{Contr A}
   := contr_equiv A f.
 
 (** Any two contractible types are equivalent. *)
+Global Instance isequiv_contr_contr {A B : Type}
+       `{Contr A} `{Contr B} (f : A -> B)
+  : IsEquiv f
+  := BuildIsEquiv _ _ f (fun _ => (center A))
+                  (fun x => path_contr _ _)
+                  (fun x => path_contr _ _)
+                  (fun x => path_contr _ _).
+
 Lemma equiv_contr_contr {A B : Type} `{Contr A} `{Contr B}
   : (A <~> B).
 Proof.
