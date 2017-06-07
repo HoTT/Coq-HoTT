@@ -5,7 +5,6 @@ Require Functor.Identity.
 Require Import Category.Strict.
 Require Import Types.Record Types.Paths Types.Sigma Trunc HoTT.Tactics HProp.
 Import Functor.Identity.FunctorIdentityNotations.
-Require Import Basics.Notations.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
