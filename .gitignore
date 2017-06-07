@@ -1,5 +1,6 @@
 _build/
 Makefile
+Makefile.conf
 *.v.d
 _CoqProject
 html/
