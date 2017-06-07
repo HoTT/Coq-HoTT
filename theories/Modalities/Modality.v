@@ -430,19 +430,19 @@ End OIndEquiv.
 Class OeqO (O1 O2 : Modality)
   := inO_OeqO : forall A, In O1 A <-> In O2 A.
 
-Global Instance reflexive_OeqO : Reflexive OeqO.
+Global Instance reflexive_OeqO : Reflexive OeqO | 10.
 Proof.
   intros O A; reflexivity.
 Defined.
 
-Global Instance symmetric_OeqO : Symmetric OeqO.
+Global Instance symmetric_OeqO : Symmetric OeqO | 10.
 Proof.
   intros O1 O2 O12 A.
   specialize (O12 A).
   symmetry; assumption.
 Defined.
 
-Global Instance transitive_OeqO : Transitive OeqO.
+Global Instance transitive_OeqO : Transitive OeqO | 10.
 Proof.
   intros O1 O2 O3 O12 O23 A; split.
   - intros A1.
