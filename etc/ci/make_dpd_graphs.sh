@@ -11,7 +11,10 @@ cd "$ROOT_DIR"
 PS4='$ '
 set -x
 
+[ -e ~/.opam ] && eval $(opam config env)
 cd etc/coq-dpdgraph
+autoconf
+./configure
 make
 
 
