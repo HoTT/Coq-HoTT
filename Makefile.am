@@ -314,13 +314,13 @@ COQTHMDEP=etc/coq-dpdgraph/coqthmdep
 HOQTHMDEP=etc/hoqthmdep
 $(COQTHMDEP): etc/coq-dpdgraph/searchdepend.ml4 etc/coq-dpdgraph/graphdepend.ml4 etc/coq-dpdgraph/Makefile
 	$(VECHO) MAKE DPDGRAPH
-	$(Q) cd etc/coq-dpdgraph && $(MAKE) OCAMLFLAGS='-w +a -warn-error -g -dtypes $$(INCLUDES) -c'
+	$(Q) cd etc/coq-dpdgraph && $(MAKE)
 
 etc/coq-dpdgraph/Makefile: etc/coq-dpdgraph/Makefile.in etc/coq-dpdgraph/configure
 	$(VECHO) "CD DPDGRAPH && ./configure"
 	$(Q) cd etc/coq-dpdgraph && ./configure
 
-etc/coq-dpdgraph/configure: etc/coq-dpdgraph/configure.in
+etc/coq-dpdgraph/configure: etc/coq-dpdgraph/configure.ac
 	$(VECHO) "CD DPDGRAPH && AUTORECONF"
 	$(Q) cd etc/coq-dpdgraph && autoreconf -fvi
 
