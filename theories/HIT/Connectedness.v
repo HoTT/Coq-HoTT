@@ -94,6 +94,15 @@ Proof.
   refine (isconnected_elim n.+1 C f).
 Defined.
 
+(** By induction, an [n.+1]-connected type is also [-1]-connected. *)
+Definition merely_isconnected n A `{IsConnected n.+1 A}
+  : merely A.
+Proof.
+  induction n as [|n IHn].
+  - apply center; assumption.
+  - apply IHn, isconnected_pred; assumption.
+Defined.
+
 (** ** Connectedness of path spaces *)
 
 Global Instance isconnected_paths `{Univalence} {n A}
