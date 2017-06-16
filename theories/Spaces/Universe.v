@@ -98,6 +98,25 @@ Definition equiv_swap_empty_unit `{Univalence} `{ExcludedMiddle}
   : Type <~> Type
   := equiv_swap_rigid Empty Unit (fun e => e^-1 tt).
 
+(** In this case we get an untruncated witness of the swapping. *)
+
+Definition equiv_swap_rigid_swaps `{Univalence} `{ExcludedMiddle}
+           (A B : Type) `{IsRigid A} `{IsRigid B} (ne : ~(A <~> B))
+  : equiv_swap_rigid A B ne A = B.
+Proof.
+  unfold equiv_swap_rigid, equiv_swap_types.
+  apply moveR_equiv_V.
+  rewrite (equiv_decidable_sum_l
+             (fun X => merely (X=A)) A (tr 1)).
+  assert (ne' : ~ merely (B=A))
+    by (intros p; strip_truncations; exact (ne (equiv_path A B p^))).
+  rewrite (equiv_decidable_sum_r
+             (fun X => merely (X=A)) B ne').
+  cbn.
+  apply ap, path_sigma_hprop; cbn.
+  exact ((path_contr (center (BAut B)) (point (BAut B)))..1).
+Defined.
+
 (** We can also swap the products of two rigid types with another type [X], under a connectedness/truncatedness assumption. *)
 
 Definition equiv_swap_prod_rigid  `{Univalence} `{ExcludedMiddle}
