@@ -158,6 +158,58 @@ Proof.
                  (fun x => equiv_path_sum (inr x) (inr b))) _).
 Defined.
 
+(** ** Decomposition *)
+
+(** Conversely, a decidable predicate decomposes a type as a sum. *)
+
+Section DecidableSum.
+  Context `{Funext} {A : Type} (P : A -> Type)
+          `{forall a, IsHProp (P a)} `{forall a, Decidable (P a)}.
+
+  Definition equiv_decidable_sum
+    : A <~> {x:A & P x} + {x:A & ~(P x)}.
+  Proof.
+    transparent assert (f : (A -> {x:A & P x} + {x:A & ~(P x)})).
+    { intros x.
+      destruct (dec (P x)) as [p|np].
+      - exact (inl (x;p)).
+      - exact (inr (x;np)). }
+    refine (BuildEquiv _ _ f _).
+    refine (isequiv_adjointify
+              _ (fun z => match z with
+                          | inl (x;p) => x
+                          | inr (x;np) => x
+                          end) _ _).
+    - intros [[x p]|[x np]]; unfold f;
+        destruct (dec (P x)) as [p'|np'].
+      + apply ap, ap, path_ishprop.
+      + elim (np' p).
+      + elim (np p').
+      + apply ap, ap, path_ishprop.
+    - intros x; unfold f.
+      destruct (dec (P x)); cbn; reflexivity.
+  Defined.
+
+  Definition equiv_decidable_sum_l (a : A) (p : P a)
+    : equiv_decidable_sum a = inl (a;p).
+  Proof.
+    unfold equiv_decidable_sum; cbn.
+    destruct (dec (P a)) as [p'|np'].
+    - apply ap, path_sigma_hprop; reflexivity.
+    - elim (np' p).
+  Defined.
+
+  Definition equiv_decidable_sum_r (a : A) (np : ~ (P a))
+    : equiv_decidable_sum a = inr (a;np).
+  Proof.
+    unfold equiv_decidable_sum; cbn.
+    destruct (dec (P a)) as [p'|np'].
+    - elim (np p').
+    - apply ap, path_sigma_hprop; reflexivity.
+  Defined.
+
+End DecidableSum.
+
 (** ** Transport *)
 
 Definition transport_sum {A : Type} {P Q : A -> Type} {a a' : A} (p : a = a')
