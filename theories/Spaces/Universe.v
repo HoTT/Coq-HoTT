@@ -13,6 +13,8 @@ Local Open Scope path_scope.
 
 (** ** Automorphisms of the universe *)
 
+(** See "Parametricity, automorphisms of the universe, and excluded middle" by Booij, Escardo, Lumsdaine, Shulman. *)
+
 (** If two inequivalent types have equivalent automorphism oo-groups, then assuming LEM we can swap them and leave the rest of the universe untouched. *)
 Section SwapTypes.
   (** Amusingly, this does not actually require univalence!  But of course, to verify [BAut A <~> BAut B] in any particular example does require univalence. *)
@@ -109,4 +111,90 @@ Proof.
   transitivity (BAut X).
   - symmetry; exact (baut_prod_rigid_equiv X A n).
   - exact (baut_prod_rigid_equiv X B n).
+Defined.
+
+(** Conversely, from some nontrivial automorphisms of the universe we can deduce nonconstructive consequences. *)
+
+Definition lem_from_aut_type_unit_empty `{Univalence}
+           (f : Type <~> Type) (eu : f Unit = Empty)
+  : LEM_type.
+Proof.
+  apply DNE_to_LEM, DNE_from_allneg; intros P ?.
+  exists (f P); split.
+  - intros p.
+    assert (Contr P) by (apply contr_inhabited_hprop; assumption).
+    assert (q : Unit = P)
+      by (apply path_universe_uncurried, equiv_contr_contr).
+    destruct q.
+    rewrite eu.
+    auto.
+  - intros nfp.
+    assert (q : f P = Empty)
+      by (apply path_universe_uncurried, equiv_to_empty, nfp).
+    rewrite <- eu in q.
+    apply ((ap f)^-1) in q.
+    rewrite q; exact tt.
+Defined.
+
+Lemma equiv_hprop_idprod `{Univalence}
+      (A : Type) (P : Type) (a : merely A) `{IsHProp P}
+  : P <-> (P * A = A).
+Proof.
+  split.
+  - intros p; apply path_universe with snd.
+    apply isequiv_adjointify with (fun a => (p,a)).
+    + intros x; reflexivity.
+    + intros [p' x].
+      apply path_prod; [ apply path_ishprop | reflexivity ].
+  - intros q.
+    strip_truncations.
+    apply equiv_path in q.
+    exact (fst (q^-1 a)).
+Defined.
+
+Definition lem_from_aut_type_inhabited_empty `{Univalence}
+           (f : Type <~> Type)
+           (A : Type) (a : merely A) (eu : f A = Empty)
+  : LEM_type.
+Proof.
+  apply DNE_to_LEM, DNE_from_allneg; intros P ?.
+  exists (f (P * A)); split.
+  - intros p.
+    assert (q := fst (equiv_hprop_idprod A P a) p).
+    apply (ap f) in q.
+    rewrite eu in q.
+    rewrite q; auto.
+  - intros q.
+    apply equiv_to_empty in q.
+    apply path_universe_uncurried in q.
+    rewrite <- eu in q.
+    apply ((ap f)^-1) in q.
+    exact (snd (equiv_hprop_idprod A P a) q).
+Defined.
+
+(** If you can derive a constructive taboo from an automorphism of the universe such that [g X <> X], then you get [X]-many beers. *)
+
+Definition zero_beers `{Univalence}
+           (g : Type <~> Type) (ge : g Empty <> Empty)
+  : ~~LEM_type.
+Proof.
+  pose (f := equiv_inverse g).
+  intros nlem.
+  apply ge.
+  apply path_universe_uncurried, equiv_to_empty; intros gz.
+  apply nlem.
+  apply (lem_from_aut_type_inhabited_empty f (g Empty) (tr gz)).
+  unfold f; apply eissect.
+Defined.
+
+Definition lem_beers `{Univalence}
+           (g : Type <~> Type) (ge : g LEM_type <> LEM_type)
+  : ~~LEM_type.
+Proof.
+  intros nlem.
+  pose (nlem' := equiv_to_empty nlem).
+  apply path_universe_uncurried in nlem'.
+  rewrite nlem' in ge.
+  apply (zero_beers g) in ge.
+  exact (ge nlem).
 Defined.

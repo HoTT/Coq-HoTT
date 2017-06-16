@@ -38,6 +38,9 @@ Proof.
   exact (Empty_rec (f t)).
 Defined.
 
+Definition equiv_to_empty {T : Type} (f : T -> Empty) : T <~> Empty
+  := BuildEquiv T Empty f _.
+
 (** ** Paths *)
 
 (** We could probably prove some theorems about non-existing paths in
