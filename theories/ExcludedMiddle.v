@@ -7,7 +7,7 @@ Existing Class ExcludedMiddle.
 
 Axiom LEM : forall `{ExcludedMiddle} (P : Type), IsHProp P -> P + ~P.
 
-Definition LEM_type := forall (P : Type), IsHProp P -> P + ~P.
+Definition ExcludedMiddle_type := forall (P : Type), IsHProp P -> P + ~P.
 
 (** ** LEM means that all propositions are decidable *)
 
@@ -16,9 +16,9 @@ Global Instance decidable_lem `{ExcludedMiddle} (P : Type) `{IsHProp P} : Decida
 
 (** ** Double-negation elimination *)
 
-Definition DNE := forall P, IsHProp P -> ~~P -> P.
+Definition DNE_type := forall P, IsHProp P -> ~~P -> P.
 
-Definition LEM_to_DNE : ExcludedMiddle -> DNE.
+Definition LEM_to_DNE : ExcludedMiddle -> DNE_type.
 Proof.
   intros lem P hp nnp.
   case (LEM P _).
@@ -28,7 +28,7 @@ Defined.
 
 (** This direction requires Funext. *)
 Definition DNE_to_LEM `{Funext} : 
-  DNE -> LEM_type.
+  DNE_type -> ExcludedMiddle_type.
 Proof.
   intros dn P hp.
   refine (dn (P + ~P) _ _).
@@ -46,7 +46,7 @@ Proof.
 Defined.
 
 (** DNE is equivalent to "every proposition is a negation". *)
-Definition allneg_from_DNE (H : DNE) (P : Type) `{IsHProp P}
+Definition allneg_from_DNE (H : DNE_type) (P : Type) `{IsHProp P}
   : {Q : Type & P <-> ~Q}.
 Proof.
   exists (~P); split.
@@ -55,7 +55,7 @@ Proof.
 Defined.
 
 Definition DNE_from_allneg (H : forall P, IsHProp P -> {Q : Type & P <-> ~Q})
-  : DNE.
+  : DNE_type.
 Proof.
   intros P ? nnp.
   destruct (H P _) as [Q e].
