@@ -191,7 +191,7 @@ Proof.
     exact (snd (equiv_hprop_idprod A P a) q).
 Defined.
 
-(** If you can derive a constructive taboo from an automorphism of the universe such that [g X <> X], then you get [X]-many beers. *)
+(** If you can derive a constructive taboo from an automorphism of the universe such that [g X <> X], then you get [X]-many beers; see <https://groups.google.com/d/msg/homotopytypetheory/8CV0S2DuOI8/blCo7x-B7aoJ>. *)
 
 Definition zero_beers `{Univalence}
            (g : Type <~> Type) (ge : g Empty <> Empty)
