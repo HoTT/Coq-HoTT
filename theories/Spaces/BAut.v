@@ -78,6 +78,30 @@ Proof.
   destruct p; exact _.
 Defined.
 
+(** ** Operations on [BAut] *)
+
+(** Multiplying by a fixed type *)
+
+Definition baut_prod_r (X A : Type)
+  : BAut X -> BAut (X * A)
+  := fun Z:BAut X =>
+       (Z * A ; Trunc_functor -1 (ap (fun W => W * A)) (pr2 Z))
+       : BAut (X * A).
+
+Definition ap_baut_prod_r `{Univalence} (X A : Type)
+           {Z W : BAut X} (e : Z <~> W)
+  : ap (baut_prod_r X A) (path_baut Z W e)
+    = path_baut (baut_prod_r X A Z) (baut_prod_r X A W) (equiv_functor_prod_r e).
+Proof.
+  cbn.
+  apply moveL_equiv_M; cbn; unfold pr1_path.
+  rewrite <- (ap_compose (baut_prod_r X A) pr1 (path_sigma_hprop Z W _)).
+  rewrite <- ((ap_compose pr1 (fun Z => Z * A) (path_sigma_hprop Z W _))^).
+  rewrite ap_pr1_path_sigma_hprop.
+  apply moveL_equiv_M; cbn.
+  apply ap_prod_r_path_universe.
+Qed.
+
 (** ** Centers *)
 
 (** The following lemma says that to define a section of a family [P] of hsets over [BAut X], it is equivalent to define an element of [P X] which is fixed by all automorphisms of [X]. *)

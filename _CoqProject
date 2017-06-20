@@ -53,6 +53,7 @@ theories/Idempotents.v
 theories/Pullback.v
 theories/Factorization.v
 theories/Constant.v
+theories/ExcludedMiddle.v
 theories/PropResizing/PropResizing.v
 theories/PropResizing/Truncations.v
 theories/PropResizing/Nat.v
@@ -95,7 +96,9 @@ theories/Spaces/BAut/Cantor.v
 theories/Spaces/Finite.v
 theories/Spaces/BAut/Bool.v
 theories/Spaces/BAut/Bool/IncoherentIdempotent.v
+theories/Spaces/BAut/Rigid.v
 theories/Spaces/No.v
+theories/Spaces/Universe.v
 theories/Algebra/ooGroup.v
 theories/Algebra/Aut.v
 theories/Algebra/ooAction.v

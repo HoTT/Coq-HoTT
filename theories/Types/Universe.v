@@ -2,7 +2,7 @@
 (** * Theorems about the universe, including the Univalence Axiom. *)
 
 Require Import HoTT.Basics.
-Require Import Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Equiv Types.Bool.
+Require Import Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Equiv Types.Bool Types.Prod.
 
 Local Open Scope path_scope.
 
@@ -132,6 +132,8 @@ Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}
   : path_universe (f^-1) = (path_universe f)^
   := path_universe_V_uncurried (BuildEquiv A B f _).
 
+(** ** Path operations vs Type operations *)
+
 (** [ap (Equiv A)] behaves like postcomposition. *)
 Definition ap_equiv_path_universe `{Funext} A {B C} (f : B <~> C)
 : equiv_path (A <~> B) (A <~> C) (ap (Equiv A) (path_universe f))
@@ -143,6 +145,28 @@ Proof.
   apply path_equiv, path_forall; intros g.
   apply path_equiv, path_forall; intros a.
   reflexivity.
+Defined.
+
+(** [ap (prod A)] behaves like [equiv_functor_prod_l]. *)
+Definition ap_prod_l_path_universe `{Funext} A {B C} (f : B <~> C)
+  : equiv_path (A * B) (A * C) (ap (prod A) (path_universe f))
+    = equiv_functor_prod_l f.
+Proof.
+  revert f. equiv_intro (equiv_path B C) f.
+  rewrite (eissect (equiv_path B C) f : path_universe (equiv_path B C f) = f).
+  destruct f.
+  apply path_equiv, path_arrow; intros x; reflexivity.
+Defined.
+
+(** [ap (fun Z => Z * A)] behaves like [equiv_functor_prod_r]. *)
+Definition ap_prod_r_path_universe `{Funext} A {B C} (f : B <~> C)
+  : equiv_path (B * A) (C * A) (ap (fun Z => Z * A) (path_universe f))
+    = equiv_functor_prod_r f.
+Proof.
+  revert f. equiv_intro (equiv_path B C) f.
+  rewrite (eissect (equiv_path B C) f : path_universe (equiv_path B C f) = f).
+  destruct f.
+  apply path_equiv, path_arrow; intros x; reflexivity.
 Defined.
 
 (** ** Transport *)

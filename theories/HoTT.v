@@ -25,6 +25,7 @@ Require Export DProp.
 Require Export NullHomotopy.
 Require Export Idempotents.
 Require Export Pullback.
+Require Export ExcludedMiddle.
 
 Require Export PropResizing.PropResizing.
 (* Don't export the rest of [PropResizing] *)
@@ -69,7 +70,9 @@ Require Export Spaces.BAut.Cantor.
 Require Export Spaces.Finite.
 Require Export Spaces.BAut.Bool.
 Require Export Spaces.BAut.Bool.IncoherentIdempotent.
+Require Export Spaces.BAut.Rigid.
 Require Export Spaces.No.
+Require Export Spaces.Universe.
 
 Require Export Algebra.ooGroup.
 Require Export Algebra.Aut.
