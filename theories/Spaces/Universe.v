@@ -136,7 +136,7 @@ Defined.
 
 Definition lem_from_aut_type_unit_empty `{Univalence}
            (f : Type <~> Type) (eu : f Unit = Empty)
-  : LEM_type.
+  : ExcludedMiddle_type.
 Proof.
   apply DNE_to_LEM, DNE_from_allneg; intros P ?.
   exists (f P); split.
@@ -174,7 +174,7 @@ Defined.
 Definition lem_from_aut_type_inhabited_empty `{Univalence}
            (f : Type <~> Type)
            (A : Type) (a : merely A) (eu : f A = Empty)
-  : LEM_type.
+  : ExcludedMiddle_type.
 Proof.
   apply DNE_to_LEM, DNE_from_allneg; intros P ?.
   exists (f (P * A)); split.
@@ -195,7 +195,7 @@ Defined.
 
 Definition zero_beers `{Univalence}
            (g : Type <~> Type) (ge : g Empty <> Empty)
-  : ~~LEM_type.
+  : ~~ExcludedMiddle_type.
 Proof.
   pose (f := equiv_inverse g).
   intros nlem.
@@ -207,8 +207,8 @@ Proof.
 Defined.
 
 Definition lem_beers `{Univalence}
-           (g : Type <~> Type) (ge : g LEM_type <> LEM_type)
-  : ~~LEM_type.
+           (g : Type <~> Type) (ge : g ExcludedMiddle_type <> ExcludedMiddle_type)
+  : ~~ExcludedMiddle_type.
 Proof.
   intros nlem.
   pose (nlem' := equiv_to_empty nlem).
