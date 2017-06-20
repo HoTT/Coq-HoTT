@@ -158,7 +158,7 @@ Proof.
   apply path_equiv, path_arrow; intros x; reflexivity.
 Defined.
 
-(** [ap (fun Z => Z * A)] behaves like [equiv_functor_prod_l]. *)
+(** [ap (fun Z => Z * A)] behaves like [equiv_functor_prod_r]. *)
 Definition ap_prod_r_path_universe `{Funext} A {B C} (f : B <~> C)
   : equiv_path (B * A) (C * A) (ap (fun Z => Z * A) (path_universe f))
     = equiv_functor_prod_r f.
