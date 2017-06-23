@@ -43,7 +43,7 @@ Proof.
 hnf. apply (nat_rect@{N} (fun a => forall b c, _));[|intros a IH];
 intros b c.
 + reflexivity.
-+ change ((a + (b + c)).+1 = (a + b + c).+1).
++ change (S (a + (b + c)) = S (a + b + c)).
   apply ap,IH.
 Qed.
 
@@ -128,13 +128,13 @@ Qed.
 Global Instance S_neq_0 x : PropHolds (~ S x =N= 0).
 Proof.
 intros E.
-change ((fun a => match a with S _ => True | 0 => False end) 0).
+change ((fun a => match a with S _ => True | 0%nat => False end) 0).
 eapply transport.
 - exact E.
 - split.
 Qed.
 
-Definition pred x := match x with | 0 => 0 | S k => k end.
+Definition pred x := match x with | 0%nat => 0 | S k => k end.
 
 Global Instance S_inj : Injective@{N N} S
   := { injective := fun a b E => ap pred E }.

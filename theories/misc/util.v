@@ -156,6 +156,6 @@ Qed.
 
 Fixpoint repeat {A:Type} (n:nat) (f : A -> A) (x : A) : A :=
   match n with
-  | 0 => x
+  | 0%nat => x
   | S k => f (repeat k f x)
   end.

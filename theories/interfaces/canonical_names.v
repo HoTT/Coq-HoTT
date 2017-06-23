@@ -144,9 +144,9 @@ Notation "/ x" := (dec_recip x) : mc_scope.
 Notation "(/)" := dec_recip (only parsing) : mc_scope.
 Notation "x / y" := (x * /y) : mc_scope.
 
-Notation "// x" := (recip x) (at level 35, right associativity) : mc_scope.
+Notation "// x" := (recip x) (at level 40, no associativity) : mc_scope.
 Notation "(//)" := recip (only parsing) : mc_scope.
-Notation "x // y" := (x * //y) (at level 35, right associativity) : mc_scope.
+Notation "x // y" := (x * //y) (at level 40, left associativity) : mc_scope.
 
 Notation "⊤" := top : mc_scope.
 Notation "⊥" := bottom : mc_scope.
@@ -360,10 +360,10 @@ Class Biinduction R `{Zero R} `{One R} `{Plus R} : Type
 (** Additional operations **)
 
 Class Pow A B := pow : A → B → A.
-Infix "**" := pow (at level 30, right associativity) : mc_scope.
-Notation "(.**.)" := pow (only parsing) : mc_scope.
-Notation "( x **.)" := (pow x) (only parsing) : mc_scope.
-Notation "(.** n )" := (λ x, x ^ n) (only parsing) : mc_scope.
+Infix "^^" := pow (at level 30, no associativity) : mc_scope.
+Notation "(.^^.)" := pow (only parsing) : mc_scope.
+Notation "( x ^^.)" := (pow x) (only parsing) : mc_scope.
+Notation "(.^^ n )" := (λ x, x ^^ n) (only parsing) : mc_scope.
 
 Class ShiftL A B := shiftl: A → B → A.
 Infix "≪" := shiftl (at level 33, left associativity) : mc_scope.

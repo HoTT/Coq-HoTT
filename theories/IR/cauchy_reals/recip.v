@@ -138,7 +138,7 @@ destruct (x.2) as [E|E];[right|left].
 - apply flip_pos_negate;trivial.
 Defined.
 
-Lemma Rrecip_neg : forall x, - // x = // (R_apartzero_neg x).
+Lemma Rrecip_neg : forall x, - (// x) = // (R_apartzero_neg x).
 Proof.
 intros [x [E|E]];unfold recip;simpl.
 - apply involutive.

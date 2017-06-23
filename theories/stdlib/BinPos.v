@@ -678,12 +678,12 @@ Qed.
 
 (** ** Properties of power *)
 
-Lemma pow_1_r p : p ** 1 = p.
+Lemma pow_1_r p : p ^^ 1 = p.
 Proof.
 unfold pow,Ppow. simpl. apply right_identity.
 Qed.
 
-Lemma pow_succ_r p q : p ** (succ q) = p * p ** q.
+Lemma pow_succ_r p q : p ^^ (succ q) = p * p ^^ q.
 Proof.
 unfold pow,Ppow. rewrite iter_succ.
 reflexivity.

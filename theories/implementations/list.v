@@ -7,7 +7,7 @@ Open Scope list_scope.
 (** Standard notations for lists. 
 In a special module to avoid conflicts. *)
 Module ListNotations.
-Notation " [ ] " := nil (format "[ ]") : list_scope.
+Notation " [] " := nil : list_scope.
 Notation " [ x ] " := (cons x nil) : list_scope.
 Notation " [ x ; y ; .. ; z ] " :=  (cons x (cons y .. (cons z nil) ..))
   : list_scope.

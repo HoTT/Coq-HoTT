@@ -282,16 +282,16 @@ Section extras.
 
 Class NatPowSpec A B (pw : Pow A B)
   `{One A} `{Mult A} `{Zero B} `{One B} `{Plus B} := {
-  nat_pow_0 : ∀ x, x ** 0 = 1 ;
-  nat_pow_S : ∀ x n, x ** (1 + n) = x * x ** n
+  nat_pow_0 : ∀ x, x ^^ 0 = 1 ;
+  nat_pow_S : ∀ x n, x ^^ (1 + n) = x * x ^^ n
 }.
 
 Class IntPowSpec A B (pow : Pow A B)
                  `{Zero A} `{One A} `{Mult A}
                  `{Zero B} `{One B} `{Plus B} :=
-{ int_pow_0 : ∀ x, x ** 0 = 1
-; int_pow_base_0 : ∀ (n : B), n ≠ 0 → 0 ** n = 0
-; int_pow_S : ∀ x n, x ≠ 0 → x ** (1 + n) = x * x ** n }.
+{ int_pow_0 : ∀ x, x ^^ 0 = 1
+; int_pow_base_0 : ∀ (n : B), n ≠ 0 → 0 ^^ n = 0
+; int_pow_S : ∀ x n, x ≠ 0 → x ^^ (1 + n) = x * x ^^ n }.
 
 Class ShiftLSpec A B (sl : ShiftL A B)
   `{One A} `{Plus A} `{Mult A}
