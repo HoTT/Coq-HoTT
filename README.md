@@ -17,7 +17,7 @@ You can follow what travis does ([.travis.yml](.travis.yml), [build-dependencies
 - Install dependencies:
 
     - [Coq with inductive-inductive types](https://github.com/mattam82/coq/tree/IR) including its depencies (some Ocaml libraries)
-    - [HoTT modified to compile with Coq trunk](https://github.com/SkySkimmer/HoTT/tree/mz-8.7)
+    - [HoTT modified to compile with Coq IR](https://github.com/SkySkimmer/HoTT/tree/mz-8.7)
 
 - In this guide they are installed respectively in directories `coq/` and `HoTT/`.
 
@@ -31,7 +31,9 @@ It is possible to build some of HoTTClasses with Coq 8.6 and HoTT
 master. Only the files in [theories/IR](theories/IR) and the summaries
 at the root of [theories](theories) will be skipped.
 
-You will need to pass an additional `--no-ir` to HoTTClasses's configure script.
+It is also possible to build with Coq trunk and [a modified HoTT](https://github.com/SkySkimmer/HoTT/tree/coq-trunk).
+
+In both cases you will need to pass an additional `--no-ir` to HoTTClasses's configure script.
 
 # Using IDEs
 
