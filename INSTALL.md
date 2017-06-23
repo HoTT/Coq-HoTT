@@ -204,7 +204,7 @@ By default the files will be installed in `/usr/local/bin` and
 `/usr/local/share/hott`.  You can change the location by using
 standard `configure` parameters when you run it.  For example
 
-    ./configure --bindir=$HOME/bin --datadir-$HOME/stuff
+    ./configure --bindir=$HOME/bin --datadir=$HOME/stuff
 
 will install `hoqtop` and `hoqc` in the `bin` subdirectory of your
 home directory and the HoTT library in `stuff/hott` subdirectory of
