@@ -37,7 +37,7 @@ case "$TARGET" in
     "8.6")
         COQ_URL="https://github.com/coq/coq.git"
         COQ_BRANCH="v8.6"
-        HOTT_URL="https://github.com/SkySkimmer/HoTT.git"
+        HOTT_URL="https://github.com/HoTT/HoTT.git"
         HOTT_BRANCH="master"
         ;;
     *)
