@@ -492,7 +492,7 @@ Proof.
 Defined.
 
 (** We can also say easily that the universe is not a set. *)
-Definition not_hset_Type `{Univalence} : ~ (IsHSet Type).
+Definition not_hset_Type : ~ (IsHSet Type).
 Proof.
   intro HT.
   apply true_ne_false.
@@ -500,6 +500,5 @@ Proof.
   refine (_ @ (ap (fun q => transport idmap q false) r)).
   symmetry; apply transport_path_universe.
 Defined.
-  
 
 End Univalence.
