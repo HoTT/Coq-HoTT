@@ -644,7 +644,7 @@ Definition Book_4_6_1 := @HoTT.Basics.Trunc.IsTruncMap -1.
 (* ================================================== thm:mono-surj-equiv *)
 (** Theorem 4.6.3 *)
 
-Definition Book_4_6_3 := @HoTT.HIT.Truncations.TrM.isequiv_conn_ino_map.
+Definition Book_4_6_3 := @HoTT.HIT.Truncations.TrM.RSU.isequiv_conn_ino_map.
 
 (* ================================================== thm:two-out-of-three *)
 (** Theorem 4.7.1 *)

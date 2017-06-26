@@ -342,55 +342,6 @@ Definition O_ind_beta {O : Modality@{u a}}
 : @O_ind O A B B_inO f (to O A a) = f a
 := O_ind_beta_internal O A B B_inO f a.
 
-(** Corollary 7.7.8, part 2 *)
-Global Instance inO_sigma {O : Modality} (A:Type) (B:A -> Type)
-       `{In O A} `{forall a, In O (B a)}
-: In O {x:A & B x}.
-Proof.
-  generalize dependent A.
-  refine (inO_sigma_from_O_ind _ _).
-  intros A B ? g.
-  exists (O_ind B g).
-  apply O_ind_beta.
-Defined.
-
-(** This has useful consequences like closure under [Equiv]. *)
-Global Instance inO_equiv `{Funext} {O : Modality} (A B : Type)
-       `{In O A} `{In O B}
-: In O (A <~> B).
-Proof.
-  refine (inO_equiv_inO _ (issig_equiv A B)).
-  refine (inO_sigma _ _).
-  intros f; refine (inO_equiv_inO _ (issig_isequiv f)).
-Defined.
-
-(** Theorem 7.3.9: The reflector [O] can be discarded inside a reflected sum. *)
-Definition equiv_O_sigma_O {O : Modality} {A} (P : A -> Type)
-: O {x:A & O (P x)} <~> O {x:A & P x}.
-Proof.
-  simple refine (equiv_adjointify _ _ _ _).
-  - apply O_rec; intros [a op]; revert op.
-    apply O_rec; intros p.
-    exact (to O _ (a;p)).
-  - apply O_rec; intros [a p].
-    exact (to O _ (a ; to O _ p)).
-  - unfold Sect; apply O_ind; try exact _.
-    intros [a p]; simpl.
-    abstract (repeat rewrite O_rec_beta; reflexivity).
-  - unfold Sect; apply O_ind; try exact _.
-    intros [a op]; revert op; apply O_ind; try exact _; intros p; simpl.
-    abstract (repeat rewrite O_rec_beta; reflexivity).
-Defined.
-
-(** Corollary 7.3.10 *)
-Corollary equiv_sigma_inO_O {O : Modality} {A} `{In O A} (P : A -> Type)
-: {x:A & O (P x)} <~> O {x:A & P x}.
-Proof.
-  transitivity (O {x:A & O (P x)}).
-  - apply equiv_to_O; exact _.
-  - apply equiv_O_sigma_O.
-Defined.
-
 (** ** The induction principle [O_ind], like most induction principles, is an equivalence. *)
 Section OIndEquiv.
   Context {fs : Funext} (O : Modality).
@@ -455,133 +406,6 @@ Proof.
     exact A3.
 Defined.
 
-(** ** Modally connected types *)
-
-(** Connectedness of a type, relative to a modality, can be defined in two equivalent ways: quantifying over all maps into modal types, or by considering just the universal case, the modal reflection of the type itself.  The former requires only core Coq, but blows up the size (universe level) of [IsConnected], since it quantifies over types; moreover, it is not even quite correct since (at least with a polymorphic modality) it should really be quantified over all universes.  Thus, we use the latter, although in most examples it requires HITs to define the modal reflection.
-
-Question: is there a definition of connectedness (say, for n-types) that neither blows up the universe level, nor requires HIT's? *)
-
-(** We give annotations to reduce the number of universe parameters. *)
-Class IsConnected (O : Modality@{u a}) (A : Type@{i})
-  (** Since [Contr] is a [Notation], we can't annotate it for universes (see https://coq.inria.fr/bugs/show_bug.cgi?id=3825); thus we write [IsTrunc -2] explicitly instead. *)
-  := isconnected_contr_O : IsTrunc@{i} -2 (O A).
-Check IsConnected@{u a i}.
-
-Global Existing Instance isconnected_contr_O.
-
-Section ConnectedTypes.
-  Universes Ou Oa.
-  Context (O : Modality@{Ou Oa}).
-
-  (** Being connected is an hprop *)
-  Global Instance ishprop_isconnected `{Funext} A
-  : IsHProp (IsConnected O A).
-  Proof.
-    unfold IsConnected; exact _.
-  Defined.
-
-  (** Anything equivalent to a connected type is connected. *)
-  Definition isconnected_equiv (A : Type) {B : Type} (f : A -> B) `{IsEquiv _ _ f}
-  : IsConnected O A -> IsConnected O B.
-  Proof.
-    intros ?; refine (contr_equiv (O A) (O_functor O f)).
-  Defined.
-
-  Definition isconnected_equiv' (A : Type) {B : Type} (f : A <~> B)
-  : IsConnected O A -> IsConnected O B
-    := isconnected_equiv A f.
-
-  (** Connectedness of a type [A] can equivalently be characterized by the fact that any map to an [O]-type [C] is nullhomotopic.  Here is one direction of that equivalence. *)
-  Definition isconnected_elim {A : Type} `{IsConnected O A} (C : Type) `{In O C} (f : A -> C)
-  : NullHomotopy f.
-  Proof.
-    set (ff := @O_rec O _ _ _ f).
-    exists (ff (center _)).
-    intros a. symmetry.
-    refine (ap ff (contr (to O _ a)) @ _).
-    apply O_rec_beta.
-  Defined.
-
-  (** For the other direction of the equivalence, it's sufficient to consider the case when [C] is [O A]. *)
-  Definition isconnected_from_elim_to_O {A : Type}
-  : NullHomotopy (to O A) -> IsConnected O A.
-  Proof.
-    intros nh.
-    exists (nh .1).
-    apply O_ind; try exact _.
-    intros; symmetry; apply (nh .2).
-  Defined.
-
-  (** Now the general case follows. *)
-  Definition isconnected_from_elim {A : Type}
-  : (forall (C : Type) `{In O C} (f : A -> C), NullHomotopy f)
-    -> IsConnected O A.
-  Proof.
-    intros H.
-    exact (isconnected_from_elim_to_O (H (O A) _ (to O A))).
-  Defined.
-
-  (** Connected types are closed under sigmas. *)
-  Global Instance isconnected_sigma {A : Type} {B : A -> Type}
-             `{IsConnected O A} `{forall a, IsConnected O (B a)}
-  : IsConnected O {a:A & B a}.
-  Proof.
-    apply isconnected_from_elim; intros C ? f.
-    pose (nB := fun a => @isconnected_elim (B a) _ C _ (fun b => f (a;b))).
-    pose (nA := isconnected_elim C (fun a => (nB a).1)).
-    exists (nA.1); intros [a b].
-    exact ((nB a).2 b @ nA.2 a).
-  Defined.
-
-  (** Contractible types are connected. *)
-  Global Instance isconnected_contr {A : Type} `{Contr A}
-    : IsConnected O A.
-  Proof.
-    apply contr_O_contr; exact _.
-  Defined.    
-
-  (** A type which is both connected and truncated is contractible. *)
-  Definition contr_trunc_conn {A : Type} `{In O A} `{IsConnected O A}
-  : Contr A.
-  Proof.
-    apply (contr_equiv _ (to O A)^-1).
-  Defined.
-
-  (** Here's another way of stating the universal property for mapping out of connected types into modal ones. *)
-  Definition extendable_const_isconnected_inO@{i j k l m} (n : nat)
-             (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3811 *)
-             (A : Type@{i}) {conn_A : IsConnected@{Ou Oa i} O A}
-             (C : Type@{j}) `{In@{Ou Oa j} O C}
-  : ExtendableAlong@{i i j j} n (@const@{i i} A Unit tt) (fun _ => C).
-  Proof.
-    generalize dependent C;
-      simple_induction n n IHn; intros C ?;
-      [ exact tt | split ].
-    - intros f.
-      exists (fun _ : Unit => (isconnected_elim@{i j j k i} C f).1); intros a.
-      symmetry; apply ((isconnected_elim@{i j j k i} C f).2).
-    - intros h k.
-      refine (extendable_postcompose'@{i i j j j j l l l l} n _ _ _ _ (IHn (h tt = k tt) (inO_paths@{Ou Oa j m} _ _ _ _))).
-      intros []; apply equiv_idmap.
-  Defined.
-
-  Definition ooextendable_const_isconnected_inO@{i j k}
-             (A : Type@{i}) `{IsConnected@{Ou Oa i} O A}
-             (C : Type@{j}) `{In@{Ou Oa j} O C}
-  : ooExtendableAlong (@const A Unit tt) (fun _ => C)
-    := fun n => extendable_const_isconnected_inO@{i j k k j} n A C.
-
-  Definition isequiv_const_isconnected_inO `{Funext}
-             {A : Type} `{IsConnected O A} (C : Type) `{In O C}
-  : IsEquiv (@const A C).
-  Proof.
-    refine (@isequiv_compose _ _ (fun c u => c) _ _ _
-              (isequiv_ooextendable (fun _ => C) (@const A Unit tt)
-                                    (ooextendable_const_isconnected_inO A C))).
-  Defined.
-
-End ConnectedTypes.
-
 (** Two equivalent modalities have the same connected types. *)
 Global Instance isconnected_OeqO {O1 O2 : Modality} `{OeqO O1 O2}
        (A : Type) `{IsConnected O1 A}
@@ -592,54 +416,41 @@ Proof.
   apply (isconnected_elim O1); apply inO_OeqO; exact _.
 Defined.
 
-(** ** Modally truncated maps *)
+(** We prove some useful consequences of [O_ind] that enhance the behavior of reflective subuniverses. *)
+Section Enhancements.
+  Context {O : Modality}.
 
-(** A map is "in [O]" if each of its fibers is. *)
-
-Class MapIn (O : Modality@{u a}) {A : Type@{i}} {B : Type@{j}} (f : A -> B)
-  := inO_hfiber_ino_map : forall (b:B), In@{u a k} O (hfiber f b).
-Check MapIn@{u a i j k}.        (** k >= max(i,j) *)
-
-Global Existing Instance inO_hfiber_ino_map.
-
-Section ModalMaps.
-  Context (O : Modality).
-
-  (** Any equivalence is modal *)
-  Global Instance mapinO_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
-  : MapIn O f.
+  (** Corollary 7.5.8: The unit maps [to O A] are connected. *)
+  Global Instance conn_map_to_O (A : Type) : IsConnMap O (to O A).
   Proof.
-    intros b.
-    pose (fcontr_isequiv f _ b).
-    exact _.
+    apply conn_map_from_extension_elim; intros P ? d.
+    exists (O_ind P d); intros a.
+    apply O_ind_beta.
   Defined.
 
-  (** Any map between modal types is modal. *)
-  Global Instance mapinO_between_inO {A B : Type} (f : A -> B)
-             `{In O A} `{In O B}
-  : MapIn O f.
+  (** Corollary 7.7.8, part 2 *)
+  Global Instance inO_sigma (A:Type) (B:A -> Type)
+         `{In O A} `{forall a, In O (B a)}
+  : In O {x:A & B x}.
   Proof.
-    intros b; exact _.
+    generalize dependent A.
+    refine (inO_sigma_from_O_ind _ _).
+    intros A B ? g.
+    exists (O_ind B g).
+    apply O_ind_beta.
   Defined.
 
-  (** Anything homotopic to a modal map is modal. *)
-  Definition mapinO_homotopic {A B : Type} (f : A -> B) {g : A -> B}
-             (p : f == g) `{MapIn O _ _ f}
-  : MapIn O g.
+  (** This has useful consequences like closure under [Equiv]. *)
+  Global Instance inO_equiv `{Funext} (A B : Type)
+         `{In O A} `{In O B}
+  : In O (A <~> B).
   Proof.
-    intros b.
-    refine (inO_equiv_inO (hfiber f b)
-                          (equiv_hfiber_homotopic f g p b)).
+    refine (inO_equiv_inO _ (issig_equiv A B)).
+    refine (inO_sigma _ _).
+    intros f; refine (inO_equiv_inO _ (issig_isequiv f)).
   Defined.
 
-  (** Being modal is an hprop *)
-  Global Instance ishprop_mapinO `{Funext} {A B : Type} (f : A -> B)
-  : IsHProp (MapIn O f).
-  Proof.
-    apply trunc_forall.
-  Defined.
-
-  (** The composite of modal maps is modal *)
+  (** And that the composite of modal maps is modal *)
   Global Instance mapinO_compose {A B C : Type} (f : A -> B) (g : B -> C)
          `{MapIn O _ _ f} `{MapIn O _ _ g}
   : MapIn O (g o f).
@@ -648,395 +459,16 @@ Section ModalMaps.
     refine (inO_equiv_inO _ (hfiber_compose f g c)^-1).
   Defined.
 
-  (** The projection from the sum of a family of modal types is modal. *)
-  Global Instance mapinO_pr1 {A : Type} (P : A -> Type)
-         `{forall a, In O (P a)}
-  : MapIn O (@pr1 A P).
+  (** Corollary 7.3.10.  (Theorem 7.3.9 is true for any reflective subuniverse.) *)
+  Corollary equiv_sigma_inO_O {A} `{In O A} (P : A -> Type)
+  : {x:A & O (P x)} <~> O {x:A & P x}.
   Proof.
-    intros a.
-    exact (inO_equiv_inO (P a) (hfiber_fibration a P)).
+    transitivity (O {x:A & O (P x)}).
+    - apply equiv_to_O; exact _.
+    - apply equiv_O_sigma_O.
   Defined.
 
-  (** A slightly specialized result: if [Empty] is modal, then a map with decidable hprop fibers (such as [inl] or [inr]) is modal. *)
-  Global Instance mapinO_hfiber_decidable_hprop {A B : Type} (f : A -> B)
-         `{In O Empty}
-         `{forall b, IsHProp (hfiber f b)}
-         `{forall b, Decidable (hfiber f b)}
-  : MapIn O f.
-  Proof.
-    intros b.
-    destruct (equiv_decidable_hprop (hfiber f b)) as [e|e].
-    - exact (inO_equiv_inO Unit e^-1).
-    - exact (inO_equiv_inO Empty e^-1).
-  Defined.
-
-  (** Modal maps cancel on the left *)
-  Definition cancelL_mapinO {A B C : Type} (f : A -> B) (g : B -> C)
-  : MapIn O g -> MapIn O (g o f) -> MapIn O f.
-  Proof.
-    intros ? ? b.
-    refine (inO_equiv_inO _ (hfiber_hfiber_compose_map f g b)).
-  Defined.
-
-  (** The pullback of a modal map is modal *)
-  Global Instance mapinO_pullback {A B C}
-         (f : B -> A) (g : C -> A) `{MapIn O _ _ g}
-  : MapIn O (f^* g).
-  Proof.
-    intros b.
-    refine (inO_equiv_inO _ (hfiber_pullback_along f g b)^-1).
-  Defined.
-
-  Global Instance mapinO_pullback' {A B C}
-         (g : C -> A) (f : B -> A) `{MapIn O _ _ f}
-  : MapIn O (g^*' f).
-  Proof.
-    intros c.
-    refine (inO_equiv_inO _ (hfiber_pullback_along' g f c)^-1).
-  Defined.
-
-  (** [functor_sum] preserves modal maps. *)
-  Global Instance mapinO_functor_sum {A A' B B'}
-         (f : A -> A') (g : B -> B') `{MapIn O _ _ f} `{MapIn O _ _ g}
-  : MapIn O (functor_sum f g).
-  Proof.
-    intros [a|b].
-    - refine (inO_equiv_inO _ (hfiber_functor_sum_l f g a)^-1).
-    - refine (inO_equiv_inO _ (hfiber_functor_sum_r f g b)^-1).
-  Defined.
-
-  (** So does [unfunctor_sum], if both summands are preserved.  These can't be [Instance]s since they require [Ha] and [Hb] to be supplied. *)
-  Definition mapinO_unfunctor_sum_l {A A' B B'}
-         (h : A + B -> A' + B')
-         (Ha : forall a:A, is_inl (h (inl a)))
-         (Hb : forall b:B, is_inr (h (inr b)))
-         `{MapIn O _ _ h}
-  : MapIn O (unfunctor_sum_l h Ha).
-  Proof.
-    intros a.
-    refine (inO_equiv_inO _ (hfiber_unfunctor_sum_l h Ha Hb a)^-1).
-  Defined.
-
-  Definition mapinO_unfunctor_sum_r {A A' B B'}
-         (h : A + B -> A' + B')
-         (Ha : forall a:A, is_inl (h (inl a)))
-         (Hb : forall b:B, is_inr (h (inr b)))
-         `{MapIn O _ _ h}
-  : MapIn O (unfunctor_sum_r h Hb).
-  Proof.
-    intros b.
-    refine (inO_equiv_inO _ (hfiber_unfunctor_sum_r h Ha Hb b)^-1).
-  Defined.
-
-End ModalMaps.
-
-(** ** Modally connected maps *)
-
-(** Connectedness of a map can again be defined in two equivalent ways: by connectedness of its fibers (as types), or by the lifting property/elimination principle against truncated types.  We use the former; the equivalence with the latter is given below in [conn_map_elim], [conn_map_comp], and [conn_map_from_extension_elim]. *)
-
-Class IsConnMap (O : Modality@{u a})
-      {A : Type@{i}} {B : Type@{j}} (f : A -> B)
-  := isconnected_hfiber_conn_map
-     (** The extra universe [k] is >= max(i,j). *)
-     : forall b:B, IsConnected@{u a k} O (hfiber@{i j} f b).
-Check IsConnMap@{u a i j k}.
-
-Global Existing Instance isconnected_hfiber_conn_map.
-
-Section ConnectedMaps.
-  Context `{Univalence} `{Funext}.
-  Context (O : Modality).
-
-  (** Any equivalence is connected *)
-  Global Instance conn_map_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
-  : IsConnMap O f.
-  Proof.
-    intros b.
-    pose (fcontr_isequiv f _ b).
-    unfold IsConnected; exact _.
-  Defined.
-
-  (** Anything homotopic to a connected map is connected. *)
-  Definition conn_map_homotopic {A B : Type} (f g : A -> B) (h : f == g)
-  : IsConnMap O f -> IsConnMap O g.
-  Proof.
-    intros ? b.
-    exact (isconnected_equiv O (hfiber f b)
-                             (equiv_hfiber_homotopic f g h b) _).
-  Defined.
-
-  (** The pullback of a connected map is connected *)
-  Global Instance conn_map_pullback {A B C}
-         (f : B -> A) (g : C -> A) `{IsConnMap O _ _ g}
-  : IsConnMap O (f^* g).
-  Proof.
-    intros b.
-    refine (isconnected_equiv _ _ (hfiber_pullback_along f g b)^-1 _).
-  Defined.
-
-  Global Instance conn_map_pullback' {A B C}
-         (g : C -> A) (f : B -> A) `{IsConnMap O _ _ f}
-  : IsConnMap O (g^*' f).
-  Proof.
-    intros c.
-    refine (isconnected_equiv _ _ (hfiber_pullback_along' g f c)^-1 _).
-  Defined.
-
-  (** The projection from a family of connected types is connected. *)
-  Global Instance conn_map_pr1 {A : Type} {B : A -> Type}
-         `{forall a, IsConnected O (B a)}
-  : IsConnMap O (@pr1 A B).
-  Proof.
-    intros a.
-    refine (isconnected_equiv O (B a) (hfiber_fibration a B) _).
-  Defined.
-
-  (** Being connected is an hprop *)
-  Global Instance ishprop_isconnmap `{Funext} {A B : Type} (f : A -> B)
-  : IsHProp (IsConnMap O f).
-  Proof.
-    apply trunc_forall.
-  Defined.
-
-  (** n-connected maps are orthogonal to n-truncated maps (i.e. familes of n-truncated types). *)
-  Section ConnMapElim.
-    Context {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
-            (P : B -> Type) {HP : forall b:B, In O (P b)}
-            (d : forall a:A, P (f a)).
-
-    Let fibermap (b : B) : hfiber f b -> P b
-      := fun x => transport P x.2 (d x.1).
-
-    Let g (b : B) : {c : P b & forall a, fibermap b a = c}
-      := isconnected_elim O (P b) (fibermap b).
-
-    Definition conn_map_elim (b : B) : P b
-      := (g b).1.
-
-    Definition conn_map_comp (a : A) : conn_map_elim (f a) = d a.
-    Proof.
-      unfold conn_map_elim.
-      change (d a) with (fibermap (f a) (a;1)).
-      symmetry. apply ((g (f a)).2).
-    Defined.
-
-  End ConnMapElim.
-
-  (** A map which is both connected and modal is an equivalence. *)
-  Definition isequiv_conn_ino_map {A B : Type} (f : A -> B)
-             `{IsConnMap O _ _ f} `{MapIn O _ _ f}
-  : IsEquiv f.
-  Proof.
-    apply isequiv_fcontr. intros b.
-    apply (contr_trunc_conn O).
-  Defined.
-
-  (** We can re-express this in terms of extensions. *)
-  Lemma extension_conn_map_elim
-        {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
-        (P : B -> Type) `{forall b:B, In O (P b)}
-        (d : forall a:A, P (f a))
-  : ExtensionAlong f P d.
-  Proof.
-    exists (conn_map_elim f P d).
-    apply conn_map_comp.
-  Defined.
-
-  Definition extendable_conn_map_inO (n : nat)
-             {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
-             (P : B -> Type) `{forall b:B, In O (P b)}
-  : ExtendableAlong n f P.
-  Proof.
-    generalize dependent P.
-    simple_induction n n IHn; intros P ?; [ exact tt | split ].
-    - intros d; apply extension_conn_map_elim; exact _.
-    - intros h k; apply IHn; exact _.
-  Defined.
-
-  Definition ooextendable_conn_map_inO
-             {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
-             (P : B -> Type) `{forall b:B, In O (P b)}
-  : ooExtendableAlong f P
-    := fun n => extendable_conn_map_inO n f P.
-
-  Lemma allpath_extension_conn_map
-        {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
-        (P : B -> Type) `{forall b:B, In O (P b)}
-        (d : forall a:A, P (f a))
-        (e e' : ExtensionAlong f P d)
-  : e = e'.
-  Proof.
-    apply path_extension.
-    refine (extension_conn_map_elim _ _ _).
-  Defined.
-
-  (** It follows that [conn_map_elim] is actually an equivalence. *)
-  Theorem isequiv_o_conn_map
-          {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
-          (P : B -> Type) `{forall b:B, In O (P b)}
-  : IsEquiv (fun (g : forall b:B, P b) => g oD f).
-  Proof.
-    apply isequiv_fcontr; intros d.
-    apply contr_inhabited_hprop.
-    - refine (@trunc_equiv' {g : forall b, P b & g oD f == d} _ _ _ _).
-      { refine (equiv_functor_sigma' (equiv_idmap _) _); intros g.
-        apply equiv_path_forall. }
-      apply hprop_allpath. intros g h.
-      exact (allpath_extension_conn_map f P d g h).
-    - exists (conn_map_elim f P d).
-      apply path_forall; intros x; apply conn_map_comp.
-  Defined.
-
-  (** Conversely, if a map satisfies this elimination principle (expressed via extensions), then it is connected.  This completes the proof of Lemma 7.5.7 from the book. *)
-  Lemma conn_map_from_extension_elim {A B : Type} (f : A -> B)
-  : (forall (P : B -> Type) {P_inO : forall b:B, In O (P b)}
-            (d : forall a:A, P (f a)),
-       ExtensionAlong f P d)
-    -> IsConnMap O f.
-  Proof.
-    intros Hf b. apply isconnected_from_elim_to_O.
-    assert (e := Hf (fun b => O (hfiber f b)) _ (fun a => to O _ (a;1))).
-    exists (e.1 b).
-    intros [a p]. destruct p.
-    symmetry; apply (e.2).
-  Defined.
-
-  (** Corollary 7.5.8: It follows that the unit maps [to O A] are connected. *)
-  Global Instance conn_map_to_O (A : Type) : IsConnMap O (to O A).
-  Proof.
-    apply conn_map_from_extension_elim; intros P ? d.
-    exists (O_ind P d); intros a.
-    apply O_ind_beta.
-  Defined.
-
-  (** Lemma 7.5.6: Connected maps compose and cancel on the right. *)
-  Global Instance conn_map_compose {A B C : Type} (f : A -> B) (g : B -> C)
-         `{IsConnMap O _ _ f} `{IsConnMap O _ _ g}
-  : IsConnMap O (g o f).
-  Proof.
-    apply conn_map_from_extension_elim; intros P ? d.
-    exists (conn_map_elim g P (conn_map_elim f (P o g) d)); intros a.
-    exact (conn_map_comp g P _ _ @ conn_map_comp f (P o g) d a).
-  Defined.
-
-  Definition cancelR_conn_map {A B C : Type} (f : A -> B) (g : B -> C)
-         `{IsConnMap O _ _ f} `{IsConnMap O _ _ (g o f)}
-  :  IsConnMap O g.
-  Proof.
-    apply conn_map_from_extension_elim; intros P ? d.
-    exists (conn_map_elim (g o f) P (d oD f)); intros b.
-    pattern b; refine (conn_map_elim f _ _ b); intros a.
-    exact (conn_map_comp (g o f) P (d oD f) a).
-  Defined.
-
-  (* Lemma 7.5.10: A map to a type in [O] exhibits its codomain as the [O]-reflection of its domain if (and only if) it is [O]-connected. *)
-  Definition isequiv_O_rec_conn_map {A B : Type} `{In O B}
-             (f : A -> B) `{IsConnMap O _ _ f}
-  : IsEquiv (O_rec f).
-  Proof.
-    apply isequiv_conn_ino_map.
-    - refine (cancelR_conn_map (to O A) (O_rec f)).
-      refine (conn_map_homotopic f _ _ _).
-      intros a; symmetry; apply O_rec_beta.
-    - apply mapinO_between_inO; exact _.
-  Defined.
-
-  (** The constant map to [Unit] is connected just when its domain is. *)
-  Definition isconnected_conn_map_to_unit {A : Type}
-             `{IsConnMap O _ _ (@const A Unit tt)}
-  : IsConnected O A.
-  Proof.
-    refine (isconnected_equiv O (hfiber (@const A Unit tt) tt)
-              (equiv_sigma_contr (fun a:A => const tt a = tt)) _).
-  Defined.
-
-  Hint Immediate isconnected_conn_map_to_unit : typeclass_instances.
-
-  Global Instance conn_map_to_unit_isconnected {A : Type}
-         `{IsConnected O A}
-  : IsConnMap O (@const A Unit tt).
-  Proof.
-    intros u.
-    refine (isconnected_equiv O A
-              (equiv_sigma_contr (fun a:A => const tt a = u))^-1 _).
-  Defined.
-
-  (** Lemma 7.5.12 *)
-  Section ConnMapFunctorSigma.
-
-    Context {A B : Type} {P : A -> Type} {Q : B -> Type}
-            (f : A -> B) (g : forall a, P a -> Q (f a))
-            `{forall a, IsConnMap O (g a)}.
-
-    Definition equiv_O_hfiber_functor_sigma (b:B) (v:Q b)
-    : O (hfiber (functor_sigma f g) (b;v)) <~> O (hfiber f b).
-    Proof.
-      equiv_via (O {w : hfiber f b & hfiber (g w.1) ((w.2)^ # v)}).
-      { apply equiv_O_functor, hfiber_functor_sigma. }
-      equiv_via (O {w : hfiber f b & O (hfiber (g w.1) ((w.2)^ # v))}).
-      { symmetry; apply equiv_O_sigma_O. }
-      apply equiv_O_functor.
-      apply equiv_sigma_contr; intros [a p]; simpl; exact _.
-    Defined.
-
-    Global Instance conn_map_functor_sigma `{IsConnMap O _ _ f}
-    : IsConnMap O (functor_sigma f g).
-    Proof.
-      intros [b v].
-      refine (contr_equiv' _ (equiv_O_hfiber_functor_sigma b v)^-1).
-    Defined.
-
-    Definition conn_map_base_inhabited (inh : forall b, Q b)
-               `{IsConnMap O _ _ (functor_sigma f g)}
-    : IsConnMap O f.
-    Proof.
-      intros b.
-      refine (contr_equiv _ (equiv_O_hfiber_functor_sigma b (inh b))).
-    Defined.
-
-  End ConnMapFunctorSigma.
-
-  (** Lemma 7.5.13.  The "if" direction is a special case of [conn_map_functor_sigma], so we prove only the "only if" direction. *)
-  Definition conn_map_fiber
-             {A : Type} {P Q : A -> Type} (f : forall a, P a -> Q a)
-             `{IsConnMap O _ _ (functor_sigma idmap f)}
-  : forall a, IsConnMap O (f a).
-  Proof.
-    intros a q.
-    refine (isconnected_equiv' O (hfiber (functor_sigma idmap f) (a;q)) _ _).
-    exact (hfiber_functor_sigma_idmap P Q f a q).
-  Defined.
-
-  (** Lemma 7.5.14: Connected maps are inverted by [O]. *)
-  Global Instance O_inverts_conn_map {A B : Type} (f : A -> B)
-         `{IsConnMap O _ _ f}
-  : IsEquiv (O_functor O f).
-  Proof.
-    simple refine (isequiv_adjointify _ _ _ _).
-    - apply O_rec; intros y.
-      exact (O_functor O pr1 (center (O (hfiber f y)))).
-    - unfold Sect; apply O_ind; try exact _; intros b.
-      refine (ap (O_functor O f) (O_rec_beta _ b) @ _).
-      refine ((O_functor_compose _ _ _ _)^ @ _).
-      set (x := (center (O (hfiber f b)))).
-      clearbody x; revert x; apply O_ind; try exact _; intros [a p].
-      refine (O_rec_beta (to O B o (f o pr1)) (a;p) @ _).
-      exact (ap (to O B) p).
-    - unfold Sect; apply O_ind; try exact _; intros a.
-      refine (ap (O_rec _) (to_O_natural O f a) @ _).
-      refine (O_rec_beta _ _ @ _).
-      transitivity (O_functor O pr1 (to O (hfiber f (f a)) (a;1))).
-      + apply ap, contr.
-      + refine (to_O_natural _ _ _).
-  Defined.
-
-  (** As a consequence, connected maps between modal types are equivalences. *)
-  Definition isequiv_conn_map_ino {A B : Type} (f : A -> B)
-         `{In O A} `{In O B} `{IsConnMap O _ _ f}
-    : IsEquiv f
-    := isequiv_commsq' f (O_functor O f) (to O A) (to O B) (to_O_natural O f).
-
-End ConnectedMaps.
+End Enhancements.
 
 (** ** The modal factorization system *)
 

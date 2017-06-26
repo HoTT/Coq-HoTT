@@ -315,19 +315,17 @@ Module Lex_Reflective_Subuniverses
     transparent assert (h : (Equiv@{k k} (hfiber@{k i} (@pr1 A B) (g x))
                                          (hfiber@{k i} g (g x)))).
     { refine (_ oE equiv_to_O@{u a k k} O _).
-      - refine (_ oE BuildEquiv _ _
-                  (O_functor_hfiber O (@pr1 A B) (g x)) _).
-        unfold hfiber.
-        refine (equiv_functor_sigma' 1 _). intros y; cbn.
-        refine (_ oE (equiv_moveR_equiv_V _ _)).
-        apply equiv_concat_l.
-        apply moveL_equiv_V.
-        unfold g, O_functor.
-        revert y; apply O_indpaths@{u a k i i k k}; intros [a q]; cbn.
-        refine (_ @ (O_rec_beta _ _)^).
-        apply ap, O_rec_beta.
-      - refine (inO_equiv_inO@{u (*dwim1*) a (*dwim2*) j (*dwim3*) k (* <- dwim4 *) k} _
-                 (hfiber_fibration@{i j k} (g x) B)). }
+      refine (_ oE BuildEquiv _ _
+                (O_functor_hfiber O (@pr1 A B) (g x)) _).
+      unfold hfiber.
+      refine (equiv_functor_sigma' 1 _). intros y; cbn.
+      refine (_ oE (equiv_moveR_equiv_V _ _)).
+      apply equiv_concat_l.
+      apply moveL_equiv_V.
+      unfold g, O_functor.
+      revert y; apply O_indpaths@{u a k i i k k}; intros [a q]; cbn.
+      refine (_ @ (O_rec_beta _ _)^).
+      apply ap, O_rec_beta. }
     refine (isequiv_homotopic (h oE equiv_hfiber_homotopic _ _ p (g x)) _).
     intros [[a b] q]; cbn. clear h.
     unfold O_functor_hfiber.
@@ -374,8 +372,8 @@ Module Accessible_Lex_Modalities_Theory
   We can also do this once and for all by defining [Instance]s translating automatically between the two typeclasses, although unfortunately we probably can't declare such instances in both directions at once for fear of infinite loops.  Fortunately, there is not a lot in [Acc_Theory], so this direction seems likely to be the most useful. *)
 
   Global Instance isconnected_acc_to_lex {O : Modality} {A : Type}
-         {H : Acc_Theory.Os_Theory.IsConnected O A}
-            : Lex_Theory.Os_Theory.IsConnected O A
+         {H : Acc_Theory.Os_Theory.RSU.IsConnected O A}
+            : Lex_Theory.Os_Theory.RSU.IsConnected O A
          := H.
 
   (** Probably the most important thing about an accessible lex modality is that the universe of modal types is again modal.  Here by "the universe" we mean a universe large enough to contain the generating family; this is why we need accessibility. *)

@@ -257,10 +257,10 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
     Definition inO_iff_isnull@{u a i} (O : Modality@{u a}) (X : Type@{i})
     : iff@{i i i} (In@{u a i} O X) (IsNull@{a i} (acc_gen O) X).
     Proof.
-      pose proof (@conn_map_to_O@{u a a a a}).
+      pose proof (@conn_map_to_O@{u a a a}).
       split.
       - intros X_inO [ [i x] | [i x] ];
-          exact (ooextendable_const_isconnected_inO@{u a a i i} O _ _).
+          exact (ooextendable_const_isconnected_inO@{u a u a a i i} O _ _).
           (* MS: annotation can be dropped *)
       - intros Xnull.
         apply (snd (inO_iff_islocal O X)); intros i.
