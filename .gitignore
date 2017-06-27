@@ -1,8 +1,17 @@
 _build/
 Makefile
 Makefile.conf
+*.vo
+*.vo.aux
+*.glob
 *.v.d
+*.native
+*.ml4.d
+*.mli.d
+*.mllib.d
+*.timing
 _CoqProject
 html/
 timing/
 .dir-locals.el
+TAGS
