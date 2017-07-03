@@ -145,34 +145,5 @@ destruct P_dec as [p|np].
   + right. intros [p|q];auto.
 Qed.
 
-Instance is_Some_dec `(x : option A) : Decision (is_Some x).
-Proof.
-destruct x;simpl;red;auto.
-Qed.
-
-Instance is_None_dec `(x : option A) : Decision (is_None x).
-Proof.
-destruct x;simpl;red;auto.
-Qed.
-
-Instance option_eq_dec `(A_dec : forall x y : A, Decision (x = y))
-     : forall x y : option A, Decision (x = y).
-Proof.
-intros [x|] [y|].
-- destruct (decide (x = y)) as [e|n].
-  + left.
-    apply ap. assumption.
-  + right.
-    intros H. apply n.
-    apply (ap (fun opt => match opt with None => x | Some z => z end)) in  H.
-    simpl in H. assumption.
-- right.
-  intros H. apply symmetry in H.
-  apply None_ne_Some in H. assumption.
-- right;intros H.
-  apply None_ne_Some in H. assumption.
-- left;reflexivity.
-Qed.
-
 Instance Unit_dec: Decision Unit := inl tt.
 Instance Empty_dec: Decision Empty := inr id.
