@@ -512,12 +512,12 @@ simpl. intro. apply rounded.
 Defined.
 
 Lemma eta_lim_rounded_step@{} :
-  ∀ val_ind : Q+ → upper_cut,
-  (∀ d e : Q+, upper_cut_close (d + e) (val_ind d) (val_ind e)) ->
-  ∀ e : Q+,
-  merely (∃ d d' : Q+, e = d + d' ∧ (val_ind d).1 d')
-  <-> merely (∃ d d' : Q+,
-     e = d + d' ∧ merely (∃ d0 d'0 : Q+, d = d0 + d'0 ∧ (val_ind d0).1 d'0)).
+  forall val_ind : Q+ -> upper_cut,
+  (forall d e : Q+, upper_cut_close (d + e) (val_ind d) (val_ind e)) ->
+  forall e : Q+,
+  merely (exists d d' : Q+, e = d + d' /\ (val_ind d).1 d')
+  <-> merely (exists d d' : Q+,
+     e = d + d' /\ merely (exists d0 d'0 : Q+, d = d0 + d'0 /\ (val_ind d0).1 d'0)).
 Proof.
 unfold upper_cut_close. intros a Ea e.
 split;apply (Trunc_ind _);intros [d [d' [He E]]].
@@ -535,8 +535,8 @@ split;apply (Trunc_ind _);intros [d [d' [He E]]].
 Qed.
 
 Definition equiv_alt_eta_lim@{}
-  : ∀ val_ind : Q+ → upper_cut,
-  (∀ d e : Q+, upper_cut_close (d + e) (val_ind d) (val_ind e)) →
+  : forall val_ind : Q+ -> upper_cut,
+  (forall d e : Q+, upper_cut_close (d + e) (val_ind d) (val_ind e)) ->
   upper_cut.
 Proof.
 intros val_ind IH.
@@ -544,8 +544,8 @@ exists (fun e => merely (exists d d', e = d + d' /\ (val_ind d).1 d')).
 apply eta_lim_rounded_step. trivial.
 Defined.
 
-Lemma upper_cut_separated' : ∀ x y : upper_cut,
-  (∀ e : Q+, upper_cut_close e x y) → x = y.
+Lemma upper_cut_separated' : forall x y : upper_cut,
+  (forall e : Q+, upper_cut_close e x y) -> x = y.
 Proof.
 intros x y E.
 unfold upper_cut,upper_cut_close in *;
@@ -569,9 +569,9 @@ Definition upper_cut_separated@{}
   := upper_cut_separated'@{Ularge Uhuge}.
 
 Lemma equiv_alt_eta_eta_eta_pr@{} :
-∀ q q0 r (e : Q+),
+forall q q0 r (e : Q+),
 close e q0 r
-→ upper_cut_close e ((λ r0, equiv_alt_eta_eta q r0) q0)
+-> upper_cut_close e ((λ r0, equiv_alt_eta_eta q r0) q0)
     ((λ r0, equiv_alt_eta_eta q r0) r).
 Proof.
 unfold equiv_alt_eta_eta.
@@ -584,12 +584,12 @@ split.
 Qed.
 
 Lemma equiv_alt_eta_eta_lim_pr@{} :
-∀ q q0 (d d' e : Q+) (y : Approximation (C T)) (b : Q+ → upper_cut)
-(Eb : ∀ d0 e0 : Q+, upper_cut_close (d0 + e0) (b d0) (b e0)),
+forall q q0 (d d' e : Q+) (y : Approximation (C T)) (b : Q+ -> upper_cut)
+(Eb : forall d0 e0 : Q+, upper_cut_close (d0 + e0) (b d0) (b e0)),
 e = d + d'
-→ close d' (eta q0) (y d)
-  → upper_cut_close d' ((λ r, equiv_alt_eta_eta q r) q0) (b d)
-    → upper_cut_close e ((λ r, equiv_alt_eta_eta q r) q0)
+-> close d' (eta q0) (y d)
+  -> upper_cut_close d' ((λ r, equiv_alt_eta_eta q r) q0) (b d)
+    -> upper_cut_close e ((λ r, equiv_alt_eta_eta q r) q0)
         ((λ _ : Approximation (C T), equiv_alt_eta_lim) y b Eb).
 Proof.
 simpl;intros q r d d' e y b Eb He _ IH.
@@ -610,12 +610,12 @@ intros e';split.
 Qed.
 
 Lemma equiv_alt_eta_lim_eta_pr@{} :
-∀ q r (d d' e : Q+) (x : Approximation (C T)) (a : Q+ → upper_cut)
-(Ea : ∀ d0 e0 : Q+, upper_cut_close (d0 + e0) (a d0) (a e0)),
+forall q r (d d' e : Q+) (x : Approximation (C T)) (a : Q+ -> upper_cut)
+(Ea : forall d0 e0 : Q+, upper_cut_close (d0 + e0) (a d0) (a e0)),
   e = d + d'
-  → close d' (x d) (eta r)
-  → upper_cut_close d' (a d) ((λ r0, equiv_alt_eta_eta q r0) r)
-  → upper_cut_close e ((λ _ : Approximation (C T), equiv_alt_eta_lim) x a Ea)
+  -> close d' (x d) (eta r)
+  -> upper_cut_close d' (a d) ((λ r0, equiv_alt_eta_eta q r0) r)
+  -> upper_cut_close e ((λ _ : Approximation (C T), equiv_alt_eta_lim) x a Ea)
   ((λ r0, equiv_alt_eta_eta q r0) r).
 Proof.
 unfold upper_cut_close;simpl;intros q r d d' e x a Ea He xi IH e'.
@@ -635,13 +635,13 @@ split.
 Qed.
 
 Lemma equiv_alt_eta_lim_lim_pr@{} :
-∀ (x y : Approximation (C T)) (a b : Q+ → upper_cut)
-(Ea : ∀ d e : Q+, upper_cut_close (d + e) (a d) (a e))
-(Eb : ∀ d e : Q+, upper_cut_close (d + e) (b d) (b e)) (e d n n' : Q+),
+forall (x y : Approximation (C T)) (a b : Q+ -> upper_cut)
+(Ea : forall d e : Q+, upper_cut_close (d + e) (a d) (a e))
+(Eb : forall d e : Q+, upper_cut_close (d + e) (b d) (b e)) (e d n n' : Q+),
 e = d + n + n'
-→ close n' (x d) (y n)
-  → upper_cut_close n' (a d) (b n)
-    → upper_cut_close e ((λ _, equiv_alt_eta_lim) x a Ea)
+-> close n' (x d) (y n)
+  -> upper_cut_close n' (a d) (b n)
+    -> upper_cut_close e ((λ _, equiv_alt_eta_lim) x a Ea)
         ((λ _, equiv_alt_eta_lim) y b Eb).
 Proof.
 unfold upper_cut_close;simpl;intros x y a b Ea Eb e d n n' He xi IH.
@@ -662,16 +662,16 @@ intros e';split;apply (Trunc_ind _).
   rewrite He,He'. apply pos_eq; ring_tac.ring_with_nat.
 Qed.
 
-Lemma equiv_alt_lim_eta_ok@{} : forall (equiv_alt_x_e : Q+ → balls)
-(IHx : ∀ d e : Q+, balls_close (d + e)
+Lemma equiv_alt_lim_eta_ok@{} : forall (equiv_alt_x_e : Q+ -> balls)
+(IHx : forall d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 r (e : Q+),
-merely (∃ d d' : Q+, e = d + d' ∧ (equiv_alt_x_e d).1 (eta r) d')
-↔ merely
-    (∃ d d' : Q+,
+merely (exists d d' : Q+, e = d + d' /\ (equiv_alt_x_e d).1 (eta r) d')
+<-> merely
+    (exists d d' : Q+,
      e = d + d'
-     ∧ merely
-         (∃ d0 d'0 : Q+, d = d0 + d'0 ∧ (equiv_alt_x_e d0).1 (eta r) d'0)).
+     /\ merely
+         (exists d0 d'0 : Q+, d = d0 + d'0 /\ (equiv_alt_x_e d0).1 (eta r) d'0)).
 Proof.
 intros a Ea r e.
 split;apply (Trunc_ind _);intros [d [d' [He E]]].
@@ -688,8 +688,8 @@ split;apply (Trunc_ind _);intros [d [d' [He E]]].
   apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Definition equiv_alt_lim_eta@{} : forall (equiv_alt_x_e : Q+ → balls)
-(IHx : ∀ d e : Q+, balls_close (d + e)
+Definition equiv_alt_lim_eta@{} : forall (equiv_alt_x_e : Q+ -> balls)
+(IHx : forall d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 (r : T), upper_cut.
 Proof.
@@ -699,17 +699,17 @@ red. exists (fun e => merely (exists d d' : Q+, e = d + d' /\
 apply equiv_alt_lim_eta_ok;trivial.
 Defined.
 
-Lemma equiv_alt_lim_lim_ok@{} (equiv_alt_x_e : Q+ → balls)
-(IHx : ∀ d e : Q+, balls_close (d + e)
+Lemma equiv_alt_lim_lim_ok@{} (equiv_alt_x_e : Q+ -> balls)
+(IHx : forall d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 (y : Approximation (C T))
 (e : Q+)
-  : merely (∃ d d' n : Q+, e = d + d' + n ∧ (equiv_alt_x_e d).1 (y n) d')
-    ↔ merely
-    (∃ d d' : Q+,
+  : merely (exists d d' n : Q+, e = d + d' + n /\ (equiv_alt_x_e d).1 (y n) d')
+    <-> merely
+    (exists d d' : Q+,
      e = d + d'
-     ∧ merely
-         (∃ d0 d'0 n : Q+, d = d0 + d'0 + n ∧ (equiv_alt_x_e d0).1 (y n) d'0)).
+     /\ merely
+         (exists d0 d'0 n : Q+, d = d0 + d'0 + n /\ (equiv_alt_x_e d0).1 (y n) d'0)).
 Proof.
 pose proof (fun e => (equiv_alt_x_e e).2) as E1.
 red in IHx. simpl in E1.
@@ -733,8 +733,8 @@ split;apply (Trunc_ind _).
   + apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Definition equiv_alt_lim_lim@{} (equiv_alt_x_e : Q+ → balls)
-(IHx : ∀ d e : Q+, balls_close (d + e)
+Definition equiv_alt_lim_lim@{} (equiv_alt_x_e : Q+ -> balls)
+(IHx : forall d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 (y : Approximation (C T)) : upper_cut.
 Proof.
@@ -744,8 +744,8 @@ exists (fun e => merely (exists d d' n, e = d + d' + n /\
 apply equiv_alt_lim_lim_ok. trivial.
 Defined.
 
-Lemma equiv_alt_lim_lim_eta_lim_eta_pr@{} (equiv_alt_x_e : Q+ → balls)
-(IHx : ∀ d e : Q+, balls_close (d + e)
+Lemma equiv_alt_lim_lim_eta_lim_eta_pr@{} (equiv_alt_x_e : Q+ -> balls)
+(IHx : forall d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
 (q r : T) (e : Q+)
 (He : close e q r)
@@ -769,11 +769,11 @@ intros n;split;apply (Trunc_ind _).
   rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma equiv_alt_lim_lim_eta_lim_lim_pr@{} (equiv_alt_x_e : Q+ → balls)
-(IHx : ∀ d e : Q+, balls_close (d + e)
+Lemma equiv_alt_lim_lim_eta_lim_lim_pr@{} (equiv_alt_x_e : Q+ -> balls)
+(IHx : forall d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
-(q : T) (d d' e : Q+) (y : Approximation (C T)) (b : Q+ → upper_cut)
-(IHb : ∀ d0 e0 : Q+, upper_cut_close (d0 + e0) (b d0) (b e0))
+(q : T) (d d' e : Q+) (y : Approximation (C T)) (b : Q+ -> upper_cut)
+(IHb : forall d0 e0 : Q+, upper_cut_close (d0 + e0) (b d0) (b e0))
 (He : e = d + d')
 (xi : close d' (eta q) (y d))
   : upper_cut_close d' (equiv_alt_lim_eta equiv_alt_x_e IHx q) (b d) ->
@@ -798,11 +798,11 @@ intros n;split;apply (Trunc_ind _).
   rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma equiv_alt_lim_lim_lim_lim_eta_pr@{} (equiv_alt_x_e : Q+ → balls)
-(IHx : ∀ d e : Q+, balls_close (d + e)
+Lemma equiv_alt_lim_lim_lim_lim_eta_pr@{} (equiv_alt_x_e : Q+ -> balls)
+(IHx : forall d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
-(r : T) (d d' e : Q+) (x : Approximation (C T)) (a : Q+ → upper_cut)
-(IHa : ∀ d0 e0 : Q+, upper_cut_close (d0 + e0) (a d0) (a e0))
+(r : T) (d d' e : Q+) (x : Approximation (C T)) (a : Q+ -> upper_cut)
+(IHa : forall d0 e0 : Q+, upper_cut_close (d0 + e0) (a d0) (a e0))
 (He : e = d + d')
 (xi : close d' (x d) (eta r))
   : upper_cut_close d' (a d) (equiv_alt_lim_eta equiv_alt_x_e IHx r) ->
@@ -827,12 +827,12 @@ intros n;split;apply (Trunc_ind _).
   rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma equiv_alt_lim_lim_lim_lim_lim_pr@{} (equiv_alt_x_e : Q+ → balls)
-(IHx : ∀ d e : Q+, balls_close (d + e)
+Lemma equiv_alt_lim_lim_lim_lim_lim_pr@{} (equiv_alt_x_e : Q+ -> balls)
+(IHx : forall d e : Q+, balls_close (d + e)
   (equiv_alt_x_e d) (equiv_alt_x_e e))
-(x y : Approximation (C T)) (a b : Q+ → upper_cut)
-(IHa : ∀ d e : Q+, upper_cut_close (d + e) (a d) (a e))
-(IHb : ∀ d e : Q+, upper_cut_close (d + e) (b d) (b e))
+(x y : Approximation (C T)) (a b : Q+ -> upper_cut)
+(IHa : forall d e : Q+, upper_cut_close (d + e) (a d) (a e))
+(IHb : forall d e : Q+, upper_cut_close (d + e) (b d) (b e))
 (e d n e' : Q+)
 (He : e = d + n + e')
 (xi : close e' (x d) (y n))
@@ -863,10 +863,10 @@ Qed.
 Lemma upper_cut_to_balls_second@{}
   (I : Recursors@{Ularge UQ} upper_cut upper_cut_close)
   (R := C_rec upper_cut upper_cut_close I
-    : C T → upper_cut)
+    : C T -> upper_cut)
   : forall (u v : C T) (n e : Q+),
     close e u v
-    → ((R u).1 n → (R v).1 (n + e)) ∧ ((R v).1 n → (R u).1 (n + e)).
+    -> ((R u).1 n -> (R v).1 (n + e)) /\ ((R v).1 n -> (R u).1 (n + e)).
 Proof.
 pose proof (equiv_rec upper_cut upper_cut_close I) as R_pr.
 red in R_pr.
@@ -914,7 +914,7 @@ reflexivity.
 Defined.
 
 Definition equiv_alt_lim@{} : forall (equiv_alt_x_e : Q+ -> balls),
-  (∀ d e : Q+, balls_close (d + e)
+  (forall d e : Q+, balls_close (d + e)
     (equiv_alt_x_e d) (equiv_alt_x_e e)) -> balls.
 Proof.
 intros equiv_alt_x_e IHx.
@@ -938,7 +938,7 @@ Proof.
 reflexivity.
 Defined.
 
-Lemma equiv_alt_eta_eta_pr@{} : ∀ (q r : T) (e : Q+), close e q r ->
+Lemma equiv_alt_eta_eta_pr@{} : forall (q r : T) (e : Q+), close e q r ->
   balls_close e (equiv_alt_eta q) (equiv_alt_eta r).
 Proof.
 intros q r e Hqr.
@@ -953,13 +953,13 @@ red. apply (C_ind0 (fun u => forall n, _)).
     rewrite Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma equiv_alt_eta_lim_pr@{} : ∀ (q : T) (d d' e : Q+) (y : Approximation (C T))
-(b : Q+ → balls)
-(Eb : ∀ d0 e0 : Q+, balls_close (d0 + e0) (b d0) (b e0)),
+Lemma equiv_alt_eta_lim_pr@{} : forall (q : T) (d d' e : Q+) (y : Approximation (C T))
+(b : Q+ -> balls)
+(Eb : forall d0 e0 : Q+, balls_close (d0 + e0) (b d0) (b e0)),
 e = d + d'
-→ close d' (eta q) (y d)
-  → balls_close d' (equiv_alt_eta q) (b d)
-    → balls_close e (equiv_alt_eta q) (equiv_alt_lim b Eb).
+-> close d' (eta q) (y d)
+  -> balls_close d' (equiv_alt_eta q) (b d)
+    -> balls_close e (equiv_alt_eta q) (equiv_alt_lim b Eb).
 Proof.
 intros q d d' e y b Eb He xi IH.
 red. apply (C_ind0 (fun u => forall n, _)).
@@ -994,13 +994,13 @@ red. apply (C_ind0 (fun u => forall n, _)).
     rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma equiv_alt_lim_eta_pr@{} : ∀ (r : T) (d d' e : Q+) (x : Approximation (C T))
-(a : Q+ → balls)
-(Ea : ∀ d0 e0 : Q+, balls_close (d0 + e0) (a d0) (a e0)),
+Lemma equiv_alt_lim_eta_pr@{} : forall (r : T) (d d' e : Q+) (x : Approximation (C T))
+(a : Q+ -> balls)
+(Ea : forall d0 e0 : Q+, balls_close (d0 + e0) (a d0) (a e0)),
 e = d + d'
-→ close d' (x d) (eta r)
-  → balls_close d' (a d) (equiv_alt_eta r)
-    → balls_close e (equiv_alt_lim a Ea) (equiv_alt_eta r).
+-> close d' (x d) (eta r)
+  -> balls_close d' (a d) (equiv_alt_eta r)
+    -> balls_close e (equiv_alt_lim a Ea) (equiv_alt_eta r).
 Proof.
 intros r d d' e x a Ea He xi IH.
 red. apply (C_ind0 (fun u => forall n, _)).
@@ -1032,14 +1032,14 @@ red. apply (C_ind0 (fun u => forall n, _)).
     rewrite He,Hn. apply pos_eq;ring_tac.ring_with_nat.
 Qed.
 
-Lemma equiv_alt_lim_lim_pr@{} : ∀ (x y : Approximation (C T))
-  (a b : Q+ → balls)
-  (Ea : ∀ d e : Q+, balls_close (d + e) (a d) (a e))
-  (Eb : ∀ d e : Q+, balls_close (d + e) (b d) (b e)) (e d n e' : Q+),
+Lemma equiv_alt_lim_lim_pr@{} : forall (x y : Approximation (C T))
+  (a b : Q+ -> balls)
+  (Ea : forall d e : Q+, balls_close (d + e) (a d) (a e))
+  (Eb : forall d e : Q+, balls_close (d + e) (b d) (b e)) (e d n e' : Q+),
   e = d + n + e'
-  → close e' (x d) (y n)
-  → balls_close e' (a d) (b n)
-  → balls_close e (equiv_alt_lim a Ea) (equiv_alt_lim b Eb).
+  -> close e' (x d) (y n)
+  -> balls_close e' (a d) (b n)
+  -> balls_close e (equiv_alt_lim a Ea) (equiv_alt_lim b Eb).
 Proof.
 intros x y a b Ea Eb e d n e' He xi IH.
 red. apply (C_ind0 (fun u => forall n0, _)).
@@ -1344,10 +1344,10 @@ Variables (f : T -> A) (L : Q+).
 Context {Ef : Lipschitz f L}.
 
 Lemma lipschitz_extend_eta_lim@{} :
-  ∀ (q : T) (d d' e : Q+) (b : Q+ → A) Eequiv,
+  forall (q : T) (d d' e : Q+) (b : Q+ -> A) Eequiv,
   e = d + d'
-  → close (L * d') (f q) (b d)
-  → close (L * e) (f q)
+  -> close (L * d') (f q) (b d)
+  -> close (L * e) (f q)
       (lim
          {|
          approximate := λ e0 : Q+, b (e0 / L);
@@ -1362,11 +1362,11 @@ simpl. rewrite (pos_unconjugate L d). apply IH.
 Qed.
 
 Lemma lipschitz_extend_lim_lim@{} :
-  ∀ (a b : Q+ → A) (e d n e' : Q+)
+  forall (a b : Q+ -> A) (e d n e' : Q+)
   Eequiv1 Eequiv2,
   e = d + n + e'
-  → close (L * e') (a d) (b n)
-  → close (L * e)
+  -> close (L * e') (a d) (b n)
+  -> close (L * e)
       (lim
          {|
          approximate := λ e0 : Q+, a (e0 / L);
@@ -1383,9 +1383,9 @@ apply premetric.equiv_lim_lim with (L * d) (L * n) (L * e').
 Qed.
 
 Lemma lipschitz_extend_lim_pr@{} :
-  forall (a : Q+ → A)
-  (Ea : ∀ d e : Q+, close (L * (d + e)) (a d) (a e)),
-  ∀ d e : Q+, close (d + e) (a (d / L)) (a (e / L)).
+  forall (a : Q+ -> A)
+  (Ea : forall d e : Q+, close (L * (d + e)) (a d) (a e)),
+  forall d e : Q+, close (d + e) (a (d / L)) (a (e / L)).
 Proof.
 intros. pattern (d+e);eapply transport.
 apply symmetry, (pos_recip_through_plus d e L).
@@ -1433,7 +1433,7 @@ Definition lipschitz_extend_eta@{} q : lipschitz_extend (eta q) = f q
   := idpath.
 
 Lemma lipschitz_extend_lim_approx@{} (x : Approximation (C T))
-  : ∀ d e : Q+, close (d + e) (lipschitz_extend (x (d / L)))
+  : forall d e : Q+, close (d + e) (lipschitz_extend (x (d / L)))
                                  (lipschitz_extend (x (e / L))).
 Proof.
 exact (lipschitz_extend_lim_pr

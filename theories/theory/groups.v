@@ -31,7 +31,7 @@ apply (transport _ (left_inverse mon_unit)).
 rewrite right_identity. reflexivity.
 Qed.
 
-Global Instance: ∀ z : G, LeftCancellation (&) z.
+Global Instance: forall z : G, LeftCancellation (&) z.
 Proof.
   intros z x y E.
   rewrite <-(left_identity x).
@@ -42,7 +42,7 @@ Proof.
   reflexivity.
 Qed.
 
-Global Instance: ∀ z : G, RightCancellation (&) z.
+Global Instance: forall z : G, RightCancellation (&) z.
 Proof.
   intros z x y E.
   rewrite <-(right_identity x).
@@ -81,7 +81,7 @@ End abgroup_props.
 
 Section groupmor_props.
 
-  Context `{Group A} `{Group B} {f : A → B} `{!MonoidPreserving f}.
+  Context `{Group A} `{Group B} {f : A -> B} `{!MonoidPreserving f}.
 
   Lemma preserves_negate x : f (-x) = -f x.
   Proof.
@@ -95,8 +95,8 @@ End groupmor_props.
 
 Section from_another_sg.
   Context `{SemiGroup A} `{IsHSet B}
-   `{Bop : SgOp B} (f : B → A) `{!Injective f}
-   (op_correct : ∀ x y, f (x & y) = f x & f y).
+   `{Bop : SgOp B} (f : B -> A) `{!Injective f}
+   (op_correct : forall x y, f (x & y) = f x & f y).
 
   Lemma projected_sg: SemiGroup B.
   Proof.
@@ -110,8 +110,8 @@ End from_another_sg.
 Section from_another_com.
 
   Context `{SgOp A} `{!Commutative (A:=A) sg_op} {B}
-   `{Bop : SgOp B} (f : B → A) `{!Injective f}
-   (op_correct : ∀ x y, f (x & y) = f x & f y).
+   `{Bop : SgOp B} (f : B -> A) `{!Injective f}
+   (op_correct : forall x y, f (x & y) = f x & f y).
 
   Lemma projected_comm : Commutative (A:=B) sg_op.
   Proof.
@@ -125,8 +125,8 @@ End from_another_com.
 
 Section from_another_com_sg.
   Context `{CommutativeSemiGroup A} `{IsHSet B}
-   `{Bop : SgOp B} (f : B → A) `{!Injective f}
-   (op_correct : ∀ x y, f (x & y) = f x & f y).
+   `{Bop : SgOp B} (f : B -> A) `{!Injective f}
+   (op_correct : forall x y, f (x & y) = f x & f y).
 
   Lemma projected_com_sg: CommutativeSemiGroup B.
   Proof.
@@ -138,8 +138,8 @@ End from_another_com_sg.
 
 Section from_another_monoid.
   Context `{Monoid A} `{IsHSet B}
-   `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B → A) `{!Injective f}
-   (op_correct : ∀ x y, f (x & y) = f x & f y) (unit_correct : f mon_unit = mon_unit).
+   `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B -> A) `{!Injective f}
+   (op_correct : forall x y, f (x & y) = f x & f y) (unit_correct : f mon_unit = mon_unit).
 
   Lemma projected_monoid: Monoid B.
   Proof.
@@ -156,8 +156,8 @@ End from_another_monoid.
 
 Section from_another_com_monoid.
   Context `{CommutativeMonoid A} `{IsHSet B}
-   `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B → A) `{!Injective f}
-   (op_correct : ∀ x y, f (x & y) = f x & f y)
+   `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B -> A) `{!Injective f}
+   (op_correct : forall x y, f (x & y) = f x & f y)
    (unit_correct : f mon_unit = mon_unit).
 
   Lemma projected_com_monoid: CommutativeMonoid B.
@@ -171,10 +171,10 @@ End from_another_com_monoid.
 Section from_another_group.
   Context `{Group A} `{IsHSet B}
    `{Bop : SgOp B} `{Bunit : MonUnit B} `{Bnegate : Negate B}
-   (f : B → A) `{!Injective f}
-   (op_correct : ∀ x y, f (x & y) = f x & f y)
+   (f : B -> A) `{!Injective f}
+   (op_correct : forall x y, f (x & y) = f x & f y)
    (unit_correct : f mon_unit = mon_unit)
-   (negate_correct : ∀ x, f (-x) = -f x).
+   (negate_correct : forall x, f (-x) = -f x).
 
   Lemma projected_group: Group B.
   Proof.
@@ -192,10 +192,10 @@ End from_another_group.
 Section from_another_ab_group.
   Context `{AbGroup A} `{IsHSet B}
    `{Bop : SgOp B} `{Bunit : MonUnit B} `{Bnegate : Negate B}
-   (f : B → A) `{!Injective f}
-   (op_correct : ∀ x y, f (x & y) = f x & f y)
+   (f : B -> A) `{!Injective f}
+   (op_correct : forall x y, f (x & y) = f x & f y)
    (unit_correct : f mon_unit = mon_unit)
-   (negate_correct : ∀ x, f (-x) = -f x).
+   (negate_correct : forall x, f (-x) = -f x).
 
   Lemma projected_ab_group: AbGroup B.
   Proof.
@@ -242,7 +242,7 @@ Section compose_mor.
   Qed.
 
   Instance invert_sg_morphism:
-    ∀ `{!Inverse f}, Bijective f → SemiGroupPreserving f →
+    forall `{!Inverse f}, Bijective f -> SemiGroupPreserving f ->
       SemiGroupPreserving (f⁻¹).
   Proof.
   red;intros.
@@ -254,7 +254,7 @@ Section compose_mor.
   Qed.
 
   Instance invert_monoid_morphism :
-    ∀ `{!Inverse f}, Bijective f → MonoidPreserving f → MonoidPreserving (f⁻¹).
+    forall `{!Inverse f}, Bijective f -> MonoidPreserving f -> MonoidPreserving (f⁻¹).
   Proof.
   intros;split.
   - apply _.

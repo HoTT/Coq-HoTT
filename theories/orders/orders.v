@@ -10,7 +10,7 @@ Proof.
 intros ?? E e;rewrite e in E. apply (irreflexivity _ _ E).
 Qed.
 
-Lemma le_flip `{Le A} `{!TotalRelation (≤)} x y : ¬y ≤ x → x ≤ y.
+Lemma le_flip `{Le A} `{!TotalRelation (≤)} x y : ~y ≤ x -> x ≤ y.
 Proof.
 intros nle.
 destruct (total _ x y) as [?|le];auto.
@@ -20,21 +20,21 @@ Qed.
 Section partial_order.
   Context `{PartialOrder A}.
 
-  Lemma eq_le x y : x = y → x ≤ y.
+  Lemma eq_le x y : x = y -> x ≤ y.
   Proof.
   intros E.
   rewrite E.
   apply reflexivity.
   Qed.
 
-  Lemma eq_le_flip x y : x = y → y ≤ x.
+  Lemma eq_le_flip x y : x = y -> y ≤ x.
   Proof.
   intros E.
   rewrite E.
   apply reflexivity.
   Qed.
 
-  Lemma not_le_ne x y : ¬x ≤ y → x ≠ y.
+  Lemma not_le_ne x y : ~x ≤ y -> x <> y.
   Proof.
   intros E1 E2.
   apply E1.
@@ -42,7 +42,7 @@ Section partial_order.
   apply reflexivity.
   Qed.
 
-  Lemma eq_iff_le x y : x = y ↔ x ≤ y ∧ y ≤ x.
+  Lemma eq_iff_le x y : x = y <-> x ≤ y /\ y ≤ x.
   Proof.
   split; intros E.
   - rewrite E. split;apply reflexivity.
@@ -53,34 +53,34 @@ End partial_order.
 Section strict_order.
   Context `{StrictOrder A}.
 
-  Lemma lt_flip x y : x < y → ¬y < x.
+  Lemma lt_flip x y : x < y -> ~y < x.
   Proof.
   intros E1 E2.
   apply (irreflexivity (<) x).
   transitivity y;assumption.
   Qed.
 
-  Lemma lt_antisym x y : ¬(x < y < x).
+  Lemma lt_antisym x y : ~(x < y < x).
   Proof.
   intros [E1 E2].
   destruct (lt_flip x y);assumption.
   Qed.
 
-  Lemma lt_ne x y : x < y → x ≠ y.
+  Lemma lt_ne x y : x < y -> x <> y.
   Proof.
   intros E1 E2.
   rewrite E2 in E1.
   apply (irreflexivity (<) y). assumption.
   Qed.
 
-  Lemma lt_ne_flip x y : x < y → y ≠ x.
+  Lemma lt_ne_flip x y : x < y -> y <> x.
   Proof.
   intro.
   apply not_symmetry, lt_ne.
   assumption.
   Qed.
 
-  Lemma eq_not_lt x y : x = y → ¬x < y.
+  Lemma eq_not_lt x y : x = y -> ~x < y.
   Proof.
   intros E.
   rewrite E.
@@ -93,28 +93,28 @@ Section pseudo_order.
 
   Local Existing Instance pseudo_order_apart.
 
-  Lemma apart_total_lt x y : x ≶ y → x < y ∨ y < x.
+  Lemma apart_total_lt x y : x ≶ y -> x < y \/ y < x.
   Proof.
   intros.
   apply apart_iff_total_lt.
   assumption.
   Qed.
 
-  Lemma pseudo_order_lt_apart x y : x < y → x ≶ y.
+  Lemma pseudo_order_lt_apart x y : x < y -> x ≶ y.
   Proof.
   intros.
   apply apart_iff_total_lt.
   auto.
   Qed.
 
-  Lemma pseudo_order_lt_apart_flip x y : x < y → y ≶ x.
+  Lemma pseudo_order_lt_apart_flip x y : x < y -> y ≶ x.
   Proof.
   intros.
   apply apart_iff_total_lt.
   auto.
   Qed.
 
-  Lemma not_lt_apart_lt_flip x y : ¬x < y → x ≶ y → y < x.
+  Lemma not_lt_apart_lt_flip x y : ~x < y -> x ≶ y -> y < x.
   Proof.
   intros nlt neq. apply apart_iff_total_lt in neq.
   destruct neq.
@@ -123,7 +123,7 @@ Section pseudo_order.
   Qed.
 
   Lemma pseudo_order_cotrans_twice x₁ y₁ x₂ y₂
-    : x₁ < y₁ → merely (x₂ < y₂ ∨ x₁ < x₂ ∨ y₂ < y₁).
+    : x₁ < y₁ -> merely (x₂ < y₂ \/ x₁ < x₂ \/ y₂ < y₁).
   Proof.
   intros E1.
   apply (merely_destruct (cotransitive E1 x₂));intros [?|E2];
@@ -131,8 +131,8 @@ Section pseudo_order.
   apply (merely_destruct (cotransitive E2 y₂));intros [?|?];apply tr;auto.
   Qed.
 
-  Lemma pseudo_order_lt_ext x₁ y₁ x₂ y₂ : x₁ < y₁ →
-    merely (x₂ < y₂ ∨ x₁ ≶ x₂ ∨ y₂ ≶ y₁).
+  Lemma pseudo_order_lt_ext x₁ y₁ x₂ y₂ : x₁ < y₁ ->
+    merely (x₂ < y₂ \/ x₁ ≶ x₂ \/ y₂ ≶ y₁).
   Proof.
   intros E.
   apply (merely_destruct (pseudo_order_cotrans_twice x₁ y₁ x₂ y₂ E));
@@ -166,7 +166,7 @@ Section pseudo_order.
   destruct nap;auto.
   Qed.
 
-  Lemma ne_total_lt `{!TrivialApart A} x y : x ≠ y → x < y ∨ y < x.
+  Lemma ne_total_lt `{!TrivialApart A} x y : x <> y -> x < y \/ y < x.
   Proof.
   intros neq;apply trivial_apart in neq.
   apply apart_total_lt. assumption.
@@ -188,7 +188,7 @@ Section full_partial_order.
 
   (* Duplicate of strong_setoids.apart_ne. This is useful because a
     StrongSetoid is not defined as a substructure of a FullPartialOrder *)
-  Instance strict_po_apart_ne x y : PropHolds (x ≶ y) → PropHolds (x ≠ y).
+  Instance strict_po_apart_ne x y : PropHolds (x ≶ y) -> PropHolds (x <> y).
   Proof.
   intros; apply _.
   Qed.
@@ -203,34 +203,34 @@ Section full_partial_order.
     assumption.
   Qed.
 
-  Lemma lt_le x y : PropHolds (x < y) → PropHolds (x ≤ y).
+  Lemma lt_le x y : PropHolds (x < y) -> PropHolds (x ≤ y).
   Proof.
   intro.
   apply lt_iff_le_apart.
   assumption.
   Qed.
 
-  Lemma not_le_not_lt x y : ¬x ≤ y → ¬x < y.
+  Lemma not_le_not_lt x y : ~x ≤ y -> ~x < y.
   Proof.
   intros E1 E2.
   apply E1. apply lt_le. assumption.
   Qed.
 
-  Lemma lt_apart x y : x < y → x ≶ y.
+  Lemma lt_apart x y : x < y -> x ≶ y.
   Proof.
   intro.
   apply lt_iff_le_apart.
   assumption.
   Qed.
 
-  Lemma lt_apart_flip x y : x < y → y ≶ x.
+  Lemma lt_apart_flip x y : x < y -> y ≶ x.
   Proof.
   intro.
   apply symmetry, lt_iff_le_apart.
   assumption.
   Qed.
 
-  Lemma le_not_lt_flip x y : y ≤ x → ¬x < y.
+  Lemma le_not_lt_flip x y : y ≤ x -> ~x < y.
   Proof.
   intros E1 E2;apply lt_iff_le_apart in E2.
   destruct E2 as [E2a E2b].
@@ -238,13 +238,13 @@ Section full_partial_order.
   apply (antisymmetry (≤));assumption.
   Qed.
 
-  Lemma lt_not_le_flip x y : y < x → ¬x ≤ y.
+  Lemma lt_not_le_flip x y : y < x -> ~x ≤ y.
   Proof.
   intros E1 E2.
   apply (le_not_lt_flip y x);assumption.
   Qed.
 
-  Lemma lt_le_trans x y z : x < y → y ≤ z → x < z.
+  Lemma lt_le_trans x y z : x < y -> y ≤ z -> x < z.
   Proof.
   intros E1 E2.
   apply lt_iff_le_apart. apply lt_iff_le_apart in E1.
@@ -256,7 +256,7 @@ Section full_partial_order.
     transitivity y;apply lt_iff_le_apart; auto.
   Qed.
 
-  Lemma le_lt_trans x y z : x ≤ y → y < z → x < z.
+  Lemma le_lt_trans x y z : x ≤ y -> y < z -> x < z.
   Proof.
   intros E2 E1.
   apply lt_iff_le_apart. apply lt_iff_le_apart in E1.
@@ -268,15 +268,15 @@ Section full_partial_order.
     transitivity y; apply lt_iff_le_apart; auto.
   Qed.
 
-  Lemma lt_iff_le_ne `{!TrivialApart A} x y : x < y ↔ x ≤ y ∧ x ≠ y.
+  Lemma lt_iff_le_ne `{!TrivialApart A} x y : x < y <-> x ≤ y /\ x <> y.
   Proof.
    transitivity (x <= y /\ apart x y).
    apply lt_iff_le_apart.
    split;intros [E1 E2];split;trivial;apply trivial_apart;trivial.
    Qed.
 
-  Lemma le_equiv_lt `{!TrivialApart A} `{∀ x y : A, Decision (x = y)} x y
-    : x ≤ y → x = y ∨ x < y.
+  Lemma le_equiv_lt `{!TrivialApart A} `{forall x y : A, Decision (x = y)} x y
+    : x ≤ y -> x = y \/ x < y.
   Proof.
   intros.
   destruct (decide (x = y)); try auto.
@@ -284,7 +284,7 @@ Section full_partial_order.
   apply lt_iff_le_ne; auto.
   Qed.
 
-  Instance dec_from_lt_dec `{!TrivialApart A} `{∀ x y, Decision (x ≤ y)}
+  Instance dec_from_lt_dec `{!TrivialApart A} `{forall x y, Decision (x ≤ y)}
     : DecidablePaths A.
   Proof.
   intros x y.
@@ -299,8 +299,8 @@ Section full_partial_order.
     apply reflexivity.
   Defined.
 
-  Definition lt_dec_slow `{!TrivialApart A} `{∀ x y, Decision (x ≤ y)} :
-    ∀ x y, Decision (x < y).
+  Definition lt_dec_slow `{!TrivialApart A} `{forall x y, Decision (x ≤ y)} :
+    forall x y, Decision (x < y).
   Proof.
   intros x y.
   destruct (decide (x ≤ y));
@@ -312,7 +312,7 @@ Section full_partial_order.
 End full_partial_order.
 
 (* Due to bug #2528 *)
-Hint Extern 5 (PropHolds (_ ≠ _)) =>
+Hint Extern 5 (PropHolds (_ <> _)) =>
   eapply @strict_po_apart_ne :  typeclass_instances.
 Hint Extern 10 (PropHolds (_ ≤ _)) =>
   eapply @lt_le : typeclass_instances.
@@ -324,7 +324,7 @@ Section full_pseudo_order.
 
   Local Existing Instance pseudo_order_apart.
 
-  Lemma not_lt_le_flip x y : ¬y < x → x ≤ y.
+  Lemma not_lt_le_flip x y : ~y < x -> x ≤ y.
   Proof.
   intros.
   apply le_iff_not_lt_flip.
@@ -364,7 +364,7 @@ Section full_pseudo_order.
   Global Instance fullpseudo_fullpartial@{i} : FullPartialOrder Ale Alt
     := fullpseudo_fullpartial'@{i i Set Set Set}.
 
-  Global Instance le_stable : ∀ x y, Stable (x ≤ y).
+  Global Instance le_stable : forall x y, Stable (x ≤ y).
   Proof.
   intros x y. unfold Stable, DN.
   intros dn. apply le_iff_not_lt_flip.
@@ -372,7 +372,7 @@ Section full_pseudo_order.
   intros E';apply le_iff_not_lt_flip in E';auto.
   Qed.
 
-  Lemma le_or_lt `{!TrivialApart A} `{DecidablePaths A} x y : x ≤ y ∨ y < x.
+  Lemma le_or_lt `{!TrivialApart A} `{DecidablePaths A} x y : x ≤ y \/ y < x.
   Proof.
   destruct (trichotomy (<) x y) as [|[|]]; try auto.
   - left. apply lt_le;trivial.
@@ -390,7 +390,7 @@ Section full_pseudo_order.
   Qed.
 
   Lemma not_le_lt_flip `{!TrivialApart A} `{DecidablePaths A} x y
-    : ¬y ≤ x → x < y.
+    : ~y ≤ x -> x < y.
   Proof.
   intros.
   destruct (le_or_lt y x); auto.
@@ -399,8 +399,8 @@ Section full_pseudo_order.
 
   Existing Instance dec_from_lt_dec.
 
-  Definition lt_dec `{!TrivialApart A} `{∀ x y, Decision (x ≤ y)}
-    : ∀ x y, Decision (x < y).
+  Definition lt_dec `{!TrivialApart A} `{forall x y, Decision (x ≤ y)}
+    : forall x y, Decision (x < y).
   Proof.
   intros.
   destruct (decide_rel (<=) y x).
@@ -413,12 +413,12 @@ Hint Extern 8 (Decision (_ < _)) => eapply @lt_dec : typeclass_instances.
 (*
 The following instances would be tempting, but turn out to be a bad idea.
 
-Hint Extern 10 (PropHolds (_ ≠ _)) => eapply @le_ne : typeclass_instances.
-Hint Extern 10 (PropHolds (_ ≠ _)) => eapply @le_ne_flip : typeclass_instances.
+Hint Extern 10 (PropHolds (_ <> _)) => eapply @le_ne : typeclass_instances.
+Hint Extern 10 (PropHolds (_ <> _)) => eapply @le_ne_flip : typeclass_instances.
 
 It will then loop like:
 
-semirings.lt_0_1 → lt_ne_flip → ...
+semirings.lt_0_1 -> lt_ne_flip -> ...
 *)
 
 Section dec_strict_setoid_order.
@@ -447,10 +447,10 @@ End dec_strict_setoid_order.
 Section dec_partial_order.
   Context `{PartialOrder A} `{DecidablePaths A}.
 
-  Definition dec_lt: Lt A := λ x y, x ≤ y ∧ x ≠ y.
+  Definition dec_lt: Lt A := λ x y, x ≤ y /\ x <> y.
 
   Context `{Alt : Lt A} `{is_mere_relation A lt}
-    (lt_correct : ∀ x y, x < y ↔ x ≤ y ∧ x ≠ y).
+    (lt_correct : forall x y, x < y <-> x ≤ y /\ x <> y).
 
   Instance dec_order: StrictOrder (<).
   Proof.

@@ -6,7 +6,7 @@ Require Export
   HoTTClasses.theory.rings.
 
 Section contents.
-Context `{DecField F} `{∀ x y: F, Decision (x = y)}.
+Context `{DecField F} `{forall x y: F, Decision (x = y)}.
 
 (* Add Ring F : (stdlib_ring_theory F). *)
 
@@ -38,7 +38,7 @@ destruct (decide (x = 0)) as [Ex|Ex].
 - rewrite Ex, left_absorb, dec_recip_0. apply symmetry,mult_0_l.
 - destruct (decide (y = 0)) as [Ey|Ey].
   + rewrite Ey, dec_recip_0, !mult_0_r. apply dec_recip_0.
-  + assert (x * y ≠ 0) as Exy by (apply mult_ne_0;trivial).
+  + assert (x * y <> 0) as Exy by (apply mult_ne_0;trivial).
     apply (left_cancellation_ne_0 (.*.) (x * y)); trivial.
     transitivity (x / x * (y / y)).
     * rewrite !dec_recip_inverse by assumption. rewrite mult_1_l;apply reflexivity.
@@ -49,7 +49,7 @@ destruct (decide (x = 0)) as [Ex|Ex].
       rewrite dec_recip_inverse by assumption. reflexivity.
 Qed.
 
-Lemma dec_recip_zero x : / x = 0 ↔ x = 0.
+Lemma dec_recip_zero x : / x = 0 <-> x = 0.
 Proof.
 split; intros E.
 - apply stable. intros Ex.
@@ -59,20 +59,20 @@ split; intros E.
 - rewrite E. apply dec_recip_0.
 Qed.
 
-Lemma dec_recip_ne_0_iff x : / x ≠ 0 ↔ x ≠ 0.
+Lemma dec_recip_ne_0_iff x : / x <> 0 <-> x <> 0.
 Proof.
 split; intros E1 E2; destruct E1; apply dec_recip_zero;trivial.
 do 2 apply (snd (dec_recip_zero _)). trivial.
 Qed.
 
-Instance dec_recip_ne_0 x : PropHolds (x ≠ 0) → PropHolds (/x ≠ 0).
+Instance dec_recip_ne_0 x : PropHolds (x <> 0) -> PropHolds (/x <> 0).
 Proof.
 intro.
 apply (snd (dec_recip_ne_0_iff _)).
 trivial.
 Qed.
 
-Lemma equal_by_one_quotient (x y : F) : x / y = 1 → x = y.
+Lemma equal_by_one_quotient (x y : F) : x / y = 1 -> x = y.
 Proof.
 intro Exy.
 destruct (decide (y = 0)) as [Ey|Ey].
@@ -110,8 +110,8 @@ intros x. destruct (decide (x = 0)) as [Ex|Ex].
     * apply dec_recip_ne_0. trivial.
 Qed.
 
-Lemma equal_dec_quotients (a b c d : F) : b ≠ 0 → d ≠ 0 →
-  (a * d = c * b ↔ a / b = c / d).
+Lemma equal_dec_quotients (a b c d : F) : b <> 0 -> d <> 0 ->
+  (a * d = c * b <-> a / b = c / d).
 Proof.
 split; intro E.
 - apply (right_cancellation_ne_0 (.*.) b);trivial.
@@ -135,7 +135,7 @@ split; intro E.
 Qed.
 
 Lemma dec_quotients (a c b d : F)
-  : b ≠ 0 → d ≠ 0 → a / b + c / d = (a * d + c * b) / (b * d).
+  : b <> 0 -> d <> 0 -> a / b + c / d = (a * d + c * b) / (b * d).
 Proof.
 intros A B.
 assert (a / b = (a * d) / (b * d)) as E1.
@@ -175,7 +175,7 @@ Qed.
 End contents.
 
 (* Due to bug #2528 *)
-Hint Extern 7 (PropHolds (/ _ ≠ 0)) =>
+Hint Extern 7 (PropHolds (/ _ <> 0)) =>
   eapply @dec_recip_ne_0 : typeclass_instances.
 
 (* Given a decidable field we can easily construct a constructive field. *)
@@ -248,7 +248,7 @@ Section morphisms.
   Context  `{DecField F} `{TrivialApart F} `{Decidable.DecidablePaths F}.
 
   Global Instance dec_field_to_domain_inj `{IntegralDomain R}
-    `{!SemiRingPreserving (f : F → R)} : Injective f.
+    `{!SemiRingPreserving (f : F -> R)} : Injective f.
   Proof.
   apply injective_preserves_0.
   intros x Efx.
@@ -260,8 +260,8 @@ Section morphisms.
   apply left_absorb.
   Qed.
 
-  Lemma preserves_dec_recip `{DecField F2} `{∀ x y: F2, Decision (x = y)}
-    `{!SemiRingPreserving (f : F → F2)} x : f (/ x) = / f x.
+  Lemma preserves_dec_recip `{DecField F2} `{forall x y: F2, Decision (x = y)}
+    `{!SemiRingPreserving (f : F -> F2)} x : f (/ x) = / f x.
   Proof.
   case (decide (x = 0)) as [E | E].
   - rewrite E, dec_recip_0, preserves_0, dec_recip_0. reflexivity.
@@ -274,10 +274,10 @@ Section morphisms.
       * trivial.
   Qed.
 
-  Lemma dec_recip_to_recip `{Field F2} `{!SemiRingStrongPreserving (f : F → F2)}
+  Lemma dec_recip_to_recip `{Field F2} `{!SemiRingStrongPreserving (f : F -> F2)}
     x Pfx : f (/ x) = // (f x)↾Pfx.
   Proof.
-  assert (x ≠ 0).
+  assert (x <> 0).
   - intros Ex.
     destruct (apart_ne (f x) 0 Pfx).
     rewrite Ex, (preserves_0 (f:=f)). reflexivity.

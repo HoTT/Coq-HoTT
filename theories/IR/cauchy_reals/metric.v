@@ -60,7 +60,7 @@ Qed.
 
 Lemma metric_to_equiv_rat_lim@{} (q : Q)
   (y : Approximation real)
-  (IHy : ∀ e e0 : Q+, abs (rat q - y e) < rat (' e0) → close e0 (rat q) (y e))
+  (IHy : forall e e0 : Q+, abs (rat q - y e) < rat (' e0) -> close e0 (rat q) (y e))
   (e : Q+)
   (E1 : abs (rat q - lim y) < rat (' e))
   : close e (rat q) (lim y).
@@ -97,10 +97,10 @@ apply (equiv_symm _),(equiv_lim _).
 Qed.
 
 Lemma metric_to_equiv_lim_lim@{} (x : Approximation real)
-  (IHx : ∀ (e : Q+) (v : real) (e0 : Q+),
-        abs (x e - v) < rat (' e0) → close e0 (x e) v)
+  (IHx : forall (e : Q+) (v : real) (e0 : Q+),
+        abs (x e - v) < rat (' e0) -> close e0 (x e) v)
   (y : Approximation real)
-  (IHy : ∀ e e0 : Q+, abs (lim x - y e) < rat (' e0) → close e0 (lim x) (y e))
+  (IHy : forall e e0 : Q+, abs (lim x - y e) < rat (' e0) -> close e0 (lim x) (y e))
   (e : Q+)
   (E1 : abs (lim x - lim y) < rat (' e))
   : close e (lim x) (lim y).

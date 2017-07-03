@@ -87,7 +87,7 @@ apply (C_ind0 _ (fun x => forall e, _)).
     destruct (irreflexivity lt _ E7).
 Qed.
 
-Instance Rplus_lt_preserving@{} : ∀ z : real, StrictlyOrderPreserving (z +).
+Instance Rplus_lt_preserving@{} : forall z : real, StrictlyOrderPreserving (z +).
 Proof.
 intros z x y E1. apply (merely_destruct (Rlt_exists_pos_plus_le _ _ E1)).
 intros [e E2].
@@ -150,7 +150,7 @@ rewrite Rjoin_plus_r. apply join_le.
 Qed.
 
 Lemma from_below_is_approx (x : real) :
-  ∀ d e : Q+, close (d + e) (x - rat (' d)) (x - rat (' e)).
+  forall d e : Q+, close (d + e) (x - rat (' d)) (x - rat (' e)).
 Proof.
 intros;apply metric_to_equiv.
 assert (Hrw : (x - rat (' d) - (x - rat (' e))) =

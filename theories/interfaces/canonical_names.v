@@ -8,9 +8,9 @@ Notation "(=)" := paths (only parsing) : mc_scope.
 Notation "( x =)" := (paths x) (only parsing) : mc_scope.
 Notation "(= x )" := (λ y, paths y x) (only parsing) : mc_scope.
 
-Notation "(≠)" := (λ x y, ¬x = y) (only parsing) : mc_scope.
-Notation "( x ≠)" := (λ y, x ≠ y) (only parsing) : mc_scope.
-Notation "(≠ x )" := (λ y, y ≠ x) (only parsing) : mc_scope.
+Notation "(<>)" := (λ x y, ~x = y) (only parsing) : mc_scope.
+Notation "( x <>)" := (λ y, x <> y) (only parsing) : mc_scope.
+Notation "(<> x )" := (λ y, y <> x) (only parsing) : mc_scope.
 
 Delimit Scope mc_scope with mc. 
 Global Open Scope mc_scope.
@@ -21,44 +21,44 @@ Notation "(≶)" := apart (only parsing) : mc_scope.
 Notation "( x ≶)" := (apart x) (only parsing) : mc_scope.
 Notation "(≶ x )" := (λ y, apart y x) (only parsing) : mc_scope.
 
-(* Even for setoids with decidable equality x ≠ y does not imply x ≶ y.
+(* Even for setoids with decidable equality x <> y does not imply x ≶ y.
 Therefore we introduce the following class. *)
 Class TrivialApart A {Aap : Apart A} :=
   { trivial_apart_prop :> is_mere_relation A apart
-  ; trivial_apart : ∀ x y, x ≶ y <-> x ≠ y }.
+  ; trivial_apart : forall x y, x ≶ y <-> x <> y }.
 
 Notation "x ↾ p" := (exist _ x p) (at level 20) : mc_scope.
 
-Definition sig_apart `{Apart A} (P: A → Type) : Apart (sig P) := λ x y, x.1 ≶ y.1.
+Definition sig_apart `{Apart A} (P: A -> Type) : Apart (sig P) := λ x y, x.1 ≶ y.1.
 Hint Extern 10 (Apart (sig _)) => apply @sig_apart : typeclass_instances.
 
-Class Cast A B := cast: A → B.
+Class Cast A B := cast: A -> B.
 Arguments cast _ _ {Cast} _.
 Notation "' x" := (cast _ _ x) (at level 20) : mc_scope.
 Typeclasses Transparent Cast.
 
 (* Other canonically named relations/operations/constants: *)
-Class SgOp A := sg_op: A → A → A.
+Class SgOp A := sg_op: A -> A -> A.
 Class MonUnit A := mon_unit: A.
-Class Plus A := plus: A → A → A.
-Class Mult A := mult: A → A → A.
+Class Plus A := plus: A -> A -> A.
+Class Mult A := mult: A -> A -> A.
 Class One A := one: A.
 Class Zero A := zero: A.
-Class Negate A := negate: A → A.
-Class DecRecip A := dec_recip: A → A.
+Class Negate A := negate: A -> A.
+Class DecRecip A := dec_recip: A -> A.
 Definition ApartZero R `{Zero R} `{Apart R} := sig (≶ zero).
-Class Recip A `{Apart A} `{Zero A} := recip: ApartZero A → A.
+Class Recip A `{Apart A} `{Zero A} := recip: ApartZero A -> A.
 Typeclasses Transparent SgOp MonUnit Plus Mult Zero One Negate.
 
-Class Meet A := meet: A → A → A.
-Class Join A := join: A → A → A.
+Class Meet A := meet: A -> A -> A.
+Class Join A := join: A -> A -> A.
 Class Top A := top: A.
 Class Bottom A := bottom: A.
 Typeclasses Transparent Meet Join Top Bottom.
 
-Class Contains A B := contains: A → B → Type.
-Class Singleton A B := singleton: A → B.
-Class Difference A := difference : A → A → A.
+Class Contains A B := contains: A -> B -> Type.
+Class Singleton A B := singleton: A -> B.
+Class Difference A := difference : A -> A -> A.
 Typeclasses Transparent Contains Singleton Difference.
 
 Class Le A := le: relation A.
@@ -161,10 +161,10 @@ Notation "(<)" := lt (only parsing) : mc_scope.
 Notation "( x <)" := (lt x) (only parsing) : mc_scope.
 Notation "(< x )" := (λ y, y < x) (only parsing) : mc_scope.
 
-Notation "x ≤ y ≤ z" := (x ≤ y ∧ y ≤ z) (at level 70, y at next level) : mc_scope.
-Notation "x ≤ y < z" := (x ≤ y ∧ y < z) (at level 70, y at next level) : mc_scope.
-Notation "x < y < z" := (x < y ∧ y < z) (at level 70, y at next level) : mc_scope.
-Notation "x < y ≤ z" := (x < y ∧ y ≤ z) (at level 70, y at next level) : mc_scope.
+Notation "x ≤ y ≤ z" := (x ≤ y /\ y ≤ z) (at level 70, y at next level) : mc_scope.
+Notation "x ≤ y < z" := (x ≤ y /\ y < z) (at level 70, y at next level) : mc_scope.
+Notation "x < y < z" := (x < y /\ y < z) (at level 70, y at next level) : mc_scope.
+Notation "x < y ≤ z" := (x < y /\ y ≤ z) (at level 70, y at next level) : mc_scope.
 
 Infix "∖" := difference (at level 35) : mc_scope.
 Notation "(∖)" := difference (only parsing) : mc_scope.
@@ -176,7 +176,7 @@ Notation "(∈)" := contains (only parsing) : mc_scope.
 Notation "( x ∈)" := (contains x) (only parsing) : mc_scope.
 Notation "(∈ X )" := (λ x, x ∈ X) (only parsing) : mc_scope.
 
-Notation "x ∉ y" := (¬x ∈ y) (at level 70, no associativity) : mc_scope.
+Notation "x ∉ y" := (~x ∈ y) (at level 70, no associativity) : mc_scope.
 Notation "(∉)" := (λ x X, x ∉ X) : mc_scope.
 Notation "( x ∉)" := (λ X, x ∉ X) (only parsing) : mc_scope.
 Notation "(∉ X )" := (λ x, x ∉ X) (only parsing) : mc_scope.
@@ -195,19 +195,19 @@ Hint Extern 4 (?x ≤ ?z) => auto_trans.
 Hint Extern 4 (?x < ?z) => auto_trans.
 
 Class Abs A `{Le A} `{Zero A} `{Negate A}
-  := abs_sig: ∀ (x : A), { y : A | (0 ≤ x → y = x) ∧ (x ≤ 0 → y = -x)}.
+  := abs_sig: forall (x : A), { y : A | (0 ≤ x -> y = x) /\ (x ≤ 0 -> y = -x)}.
 Definition abs `{Abs A} := λ x : A, (abs_sig x).1.
 
 (* Common properties: *)
-Class Inverse `(A → B) : Type := inverse: B → A.
+Class Inverse `(A -> B) : Type := inverse: B -> A.
 Arguments inverse {A B} _ {Inverse} _.
 Typeclasses Transparent Inverse.
 Notation "f ⁻¹" := (inverse f) (at level 30) : mc_scope.
 
-Class Idempotent `(f: A → A → A) (x : A) : Type := idempotency: f x x = x.
+Class Idempotent `(f: A -> A -> A) (x : A) : Type := idempotency: f x x = x.
 Arguments idempotency {A} _ _ {Idempotent}.
 
-Class UnaryIdempotent {A} (f: A → A) : Type := 
+Class UnaryIdempotent {A} (f: A -> A) : Type :=
   unary_idempotent :> Idempotent compose f.
 
 Lemma unary_idempotency `{UnaryIdempotent A f} x : f (f x) = f x.
@@ -218,54 +218,54 @@ change (compose f f = f).
 apply idempotency. apply _.
 Qed.
 
-Class BinaryIdempotent `(op: A → A → A) : Type
-  := binary_idempotent :> ∀ x, Idempotent op x.
+Class BinaryIdempotent `(op: A -> A -> A) : Type
+  := binary_idempotent :> forall x, Idempotent op x.
 
-Class LeftIdentity {A B} (op : A → B → B) (x : A): Type
-  := left_identity: ∀ y, op x y = y.
-Class RightIdentity {A B} (op : A → B → A) (y : B): Type
-  := right_identity: ∀ x, op x y = x.
+Class LeftIdentity {A B} (op : A -> B -> B) (x : A): Type
+  := left_identity: forall y, op x y = y.
+Class RightIdentity {A B} (op : A -> B -> A) (y : B): Type
+  := right_identity: forall x, op x y = x.
 
-Class Absorption {A B C} (op1: A → C → A) (op2: A → B → C) : Type
-  := absorption: ∀ x y, op1 x (op2 x y) = x.
+Class Absorption {A B C} (op1: A -> C -> A) (op2: A -> B -> C) : Type
+  := absorption: forall x y, op1 x (op2 x y) = x.
 
-Class LeftAbsorb {A B} (op : A → B → A) (x : A): Type
-  := left_absorb: ∀ y, op x y = x.
-Class RightAbsorb {A B} (op : A → B → B) (y : B): Type
-  := right_absorb: ∀ x, op x y = y.
+Class LeftAbsorb {A B} (op : A -> B -> A) (x : A): Type
+  := left_absorb: forall y, op x y = x.
+Class RightAbsorb {A B} (op : A -> B -> B) (y : B): Type
+  := right_absorb: forall x, op x y = y.
 
-Class LeftInverse {A} {B} {C} (op : A → B → C) (inv : B → A) (unit : C)
-  := left_inverse: ∀ x, op (inv x) x = unit.
-Class RightInverse {A} {B} {C} (op : A → B → C) (inv : A → B) (unit : C)
-  := right_inverse: ∀ x, op x (inv x) = unit.
+Class LeftInverse {A} {B} {C} (op : A -> B -> C) (inv : B -> A) (unit : C)
+  := left_inverse: forall x, op (inv x) x = unit.
+Class RightInverse {A} {B} {C} (op : A -> B -> C) (inv : A -> B) (unit : C)
+  := right_inverse: forall x, op x (inv x) = unit.
 
-Class Commutative {B A} (f : A → A → B) : Type
-  := commutativity: ∀ x y, f x y = f y x.
+Class Commutative {B A} (f : A -> A -> B) : Type
+  := commutativity: forall x y, f x y = f y x.
 
 Class HeteroAssociative {A B C AB BC ABC}
-  (fA_BC: A → BC → ABC) (fBC: B → C → BC)
-  (fAB_C: AB → C → ABC) (fAB : A → B → AB): Type
-  := associativity : ∀ x y z, fA_BC x (fBC y z) = fAB_C (fAB x y) z.
+  (fA_BC: A -> BC -> ABC) (fBC: B -> C -> BC)
+  (fAB_C: AB -> C -> ABC) (fAB : A -> B -> AB): Type
+  := associativity : forall x y z, fA_BC x (fBC y z) = fAB_C (fAB x y) z.
 Class Associative {A} (f : A -> A -> A)
   := simple_associativity :> HeteroAssociative f f f f.
 
-Class Involutive {A} (f : A → A) := involutive: ∀ x, f (f x) = x.
+Class Involutive {A} (f : A -> A) := involutive: forall x, f (f x) = x.
 
-Class TotalRelation `(R : relation A) : Type := total : ∀ x y : A, R x y ∨ R y x.
+Class TotalRelation `(R : relation A) : Type := total : forall x y : A, R x y \/ R y x.
 Arguments total {A} _ {TotalRelation} _ _.
 
 Class Trichotomy `(R : relation A)
-  := trichotomy : ∀ x y : A, R x y ∨ x = y ∨ R y x.
+  := trichotomy : forall x y : A, R x y \/ x = y \/ R y x.
 Arguments trichotomy {A} R {Trichotomy} _ _.
 
 Arguments irreflexivity {A} _ {Irreflexive} _ _.
 
 Class CoTransitive `(R : relation A) : Type := cotransitive
-  : ∀ x y, R x y → ∀ z, hor (R x z) (R z y).
+  : forall x y, R x y -> forall z, hor (R x z) (R z y).
 Arguments cotransitive {A R CoTransitive x y} _ _.
 
 Class AntiSymmetric `(R : relation A) : Type
-  := antisymmetry: ∀ x y, R x y → R y x → x = y.
+  := antisymmetry: forall x y, R x y -> R y x -> x = y.
 Arguments antisymmetry {A} _ {AntiSymmetric} _ _ _ _.
 
 Class Equivalence `(R : relation A) : Type :=
@@ -275,45 +275,45 @@ Class Equivalence `(R : relation A) : Type :=
 
 
 Class LeftHeteroDistribute {A B C}
-  (f : A → B → C) (g_r : B → B → B) (g : C → C → C) : Type
-  := distribute_l : ∀ a b c, f a (g_r b c) = g (f a b) (f a c).
+  (f : A -> B -> C) (g_r : B -> B -> B) (g : C -> C -> C) : Type
+  := distribute_l : forall a b c, f a (g_r b c) = g (f a b) (f a c).
 Class RightHeteroDistribute {A B C}
-  (f : A → B → C) (g_l : A → A → A) (g : C → C → C) : Type
-  := distribute_r: ∀ a b c, f (g_l a b) c = g (f a c) (f b c).
-Class LeftDistribute {A} (f g: A → A → A)
+  (f : A -> B -> C) (g_l : A -> A -> A) (g : C -> C -> C) : Type
+  := distribute_r: forall a b c, f (g_l a b) c = g (f a c) (f b c).
+Class LeftDistribute {A} (f g: A -> A -> A)
   := simple_distribute_l :> LeftHeteroDistribute f g g.
-Class RightDistribute {A} (f g: A → A → A)
+Class RightDistribute {A} (f g: A -> A -> A)
   := simple_distribute_r :> RightHeteroDistribute f g g.
 
-Class HeteroSymmetric {A} {T : A → A → Type}
-  (R : ∀ {x y}, T x y → T y x → Type) : Type
-  := hetero_symmetric `(a : T x y) (b : T y x) : R a b → R b a.
+Class HeteroSymmetric {A} {T : A -> A -> Type}
+  (R : forall {x y}, T x y -> T y x -> Type) : Type
+  := hetero_symmetric `(a : T x y) (b : T y x) : R a b -> R b a.
 
 (* Although cancellation is the same as being injective, we want a proper
   name to refer to this commonly used property. *)
 Section cancellation.
-  Context `(op : A → A → A) (z : A).
+  Context `(op : A -> A -> A) (z : A).
 
-  Class LeftCancellation := left_cancellation : ∀ x y, op z x = op z y → x = y.
-  Class RightCancellation := right_cancellation : ∀ x y, op x z = op y z → x = y.
+  Class LeftCancellation := left_cancellation : forall x y, op z x = op z y -> x = y.
+  Class RightCancellation := right_cancellation : forall x y, op x z = op y z -> x = y.
 
   Context {Aap : Apart A}.
 
   Class StrongLeftCancellation := strong_left_cancellation
-    : ∀ x y, x ≶ y → op z x ≶ op z y.
+    : forall x y, x ≶ y -> op z x ≶ op z y.
   Class StrongRightCancellation := strong_right_cancellation
-    : ∀ x y, x ≶ y → op x z ≶ op y z.
+    : forall x y, x ≶ y -> op x z ≶ op y z.
 End cancellation.
 
 (* Common names for properties that hold in N, Z, Q, ... *)
 Class ZeroProduct A `{!Mult A} `{!Zero A} : Type
-  := zero_product : ∀ x y, x * y = 0 → x = 0 ∨ y = 0.
+  := zero_product : forall x y, x * y = 0 -> x = 0 \/ y = 0.
 
 Class ZeroDivisor {R} `{Zero R} `{Mult R} (x : R) : Type
-  := zero_divisor : x ≠ 0 ∧ ∃ y, y ≠ 0 ∧ x * y = 0.
+  := zero_divisor : x <> 0 /\ exists y, y <> 0 /\ x * y = 0.
 
 Class NoZeroDivisors R `{Zero R} `{Mult R} : Type
-  := no_zero_divisors x : ¬ZeroDivisor x.
+  := no_zero_divisors x : ~ZeroDivisor x.
 
 Instance zero_product_no_zero_divisors `{ZeroProduct A}
   : NoZeroDivisors A.
@@ -322,34 +322,34 @@ intros x [? [? [? E]]].
 destruct (zero_product _ _ E); auto.
 Qed.
 
-Class RingUnit `{Mult R} `{One R} (x : R) : Type := ring_unit : ∃ y, x * y = 1.
+Class RingUnit `{Mult R} `{One R} (x : R) : Type := ring_unit : exists y, x * y = 1.
 
 (* A common induction principle for both the naturals and integers *)
 Class Biinduction R `{Zero R} `{One R} `{Plus R} : Type
-  := biinduction (P : R → Type)
-  : P 0 → (∀ n, P n ↔ P (1 + n)) → ∀ n, P n.
+  := biinduction (P : R -> Type)
+  : P 0 -> (forall n, P n <-> P (1 + n)) -> forall n, P n.
 
 
 (** Additional operations **)
 
-Class Pow A B := pow : A → B → A.
+Class Pow A B := pow : A -> B -> A.
 Infix "^^" := pow (at level 30, no associativity) : mc_scope.
 Notation "(.^^.)" := pow (only parsing) : mc_scope.
 Notation "( x ^^.)" := (pow x) (only parsing) : mc_scope.
 Notation "(.^^ n )" := (λ x, x ^^ n) (only parsing) : mc_scope.
 
-Class ShiftL A B := shiftl: A → B → A.
+Class ShiftL A B := shiftl: A -> B -> A.
 Infix "≪" := shiftl (at level 33, left associativity) : mc_scope.
 Notation "(≪)" := shiftl (only parsing) : mc_scope.
 Notation "( x ≪)" := (shiftl x) (only parsing) : mc_scope.
 Notation "(≪ n )" := (λ x, x ≪ n) (only parsing) : mc_scope.
 
-Class ShiftR A B := shiftr: A → B → A.
+Class ShiftR A B := shiftr: A -> B -> A.
 Infix "≫" := shiftr (at level 33, left associativity) : mc_scope.
 Notation "(≫)" := shiftr (only parsing) : mc_scope.
 
-Class DivEuclid A := div_euclid : A → A → A.
-Class ModEuclid A := mod_euclid : A → A → A.
+Class DivEuclid A := div_euclid : A -> A -> A.
+Class ModEuclid A := mod_euclid : A -> A -> A.
 Infix "`div`" := div_euclid (at level 35) : mc_scope.
 Notation "(`div`)" := div_euclid (only parsing) : mc_scope.
 Notation "( x `div`)" := (div_euclid x) (only parsing) : mc_scope.
@@ -359,7 +359,7 @@ Notation "(`mod` )" := mod_euclid (only parsing) : mc_scope.
 Notation "( x `mod`)" := (mod_euclid x) (only parsing) : mc_scope.
 Notation "(`mod` y )" := (λ x, x `mod` y) (only parsing) : mc_scope.
 
-Class CutMinus A := cut_minus : A → A → A.
+Class CutMinus A := cut_minus : A -> A -> A.
 Infix "∸" := cut_minus (at level 50, left associativity) : mc_scope.
 Notation "(∸)" := cut_minus (only parsing) : mc_scope.
 Notation "( x ∸)" := (cut_minus x) (only parsing) : mc_scope.

@@ -23,7 +23,7 @@ the rationals or the reals), any morphism to it is an order embedding.
 Lemma to_semiring_nonneg `{FullPseudoSemiRingOrder N}
   `{!NaturalsToSemiRing N} `{!Naturals N} `{FullPseudoSemiRingOrder R}
   `{!SemiRing R}
-  `{!SemiRingPreserving (f : N → R)} n : 0 ≤ f n.
+  `{!SemiRingPreserving (f : N -> R)} n : 0 ≤ f n.
 Proof.
 revert n. apply naturals.induction.
 - rewrite (preserves_0 (f:=f)).
@@ -42,7 +42,7 @@ Context `{Naturals N} `{Apart N} `{Le N} `{Lt N} `{!FullPseudoSemiRingOrder le l
 
 (* Add Ring R : (stdlib_semiring_theory R). *)
 
-Lemma nat_int_to_semiring : forall x : R, ∃ z, x = naturals_to_semiring N R z ∨
+Lemma nat_int_to_semiring : forall x : R, exists z, x = naturals_to_semiring N R z \/
   (x + naturals_to_semiring N R z)%mc = 0.
 Proof.
 apply biinduction.
@@ -77,7 +77,7 @@ apply biinduction.
       rewrite plus_assoc,(plus_comm n);reflexivity.
 Qed.
 
-Lemma nat_int_nonneg_decompose x : 0 ≤ x → ∃ z, x = naturals_to_semiring N R z.
+Lemma nat_int_nonneg_decompose x : 0 ≤ x -> exists z, x = naturals_to_semiring N R z.
 Proof.
 destruct (nat_int_to_semiring x) as [z [Ez1 | Ez2]].
 - exists z. trivial.
@@ -87,7 +87,7 @@ destruct (nat_int_to_semiring x) as [z [Ez1 | Ez2]].
   apply to_semiring_nonneg.
 Qed.
 
-Lemma nat_int_le_plus x y : x ≤ y ↔ ∃ z, y = x + naturals_to_semiring N R z.
+Lemma nat_int_le_plus x y : x ≤ y <-> exists z, y = x + naturals_to_semiring N R z.
 Proof.
 split.
 - intros E. destruct (decompose_le E) as [z [Ez1 Ez2]].
@@ -97,7 +97,7 @@ split.
   apply nonneg_plus_le_compat_r, to_semiring_nonneg.
 Qed.
 
-Lemma nat_int_lt_plus x y : x < y ↔ ∃ z, y = x + 1 + naturals_to_semiring N R z.
+Lemma nat_int_lt_plus x y : x < y <-> exists z, y = x + 1 + naturals_to_semiring N R z.
 Proof.
 split.
 - intros E.
@@ -114,39 +114,39 @@ split.
   + apply pos_plus_lt_compat_r; solve_propholds.
 Qed.
 
-Lemma lt_iff_plus_1_le x y : x < y ↔ x + 1 ≤ y.
+Lemma lt_iff_plus_1_le x y : x < y <-> x + 1 ≤ y.
 Proof.
 etransitivity.
 - apply nat_int_lt_plus.
 - apply symmetry,nat_int_le_plus.
 Qed.
 
-Lemma lt_iff_S_le x y : x < y ↔ 1 + x ≤ y.
+Lemma lt_iff_S_le x y : x < y <-> 1 + x ≤ y.
 Proof.
 rewrite plus_comm. apply lt_iff_plus_1_le.
 Qed.
 
-Lemma pos_ge_1 x : 0 < x ↔ 1 ≤ x.
+Lemma pos_ge_1 x : 0 < x <-> 1 ≤ x.
 Proof.
 split; intros E.
 - rewrite <-(plus_0_l 1). apply lt_iff_plus_1_le. trivial.
 - apply lt_le_trans with 1; [solve_propholds | trivial].
 Qed.
 
-Lemma le_iff_lt_plus_1 x y : x ≤ y ↔ x < y + 1.
+Lemma le_iff_lt_plus_1 x y : x ≤ y <-> x < y + 1.
 Proof.
 split; intros E.
 - apply lt_iff_plus_1_le. apply (order_preserving (+1)). trivial.
 - apply (order_reflecting (+1)), lt_iff_plus_1_le. trivial.
 Qed.
 
-Lemma le_iff_lt_S x y : x ≤ y ↔ x < 1 + y.
+Lemma le_iff_lt_S x y : x ≤ y <-> x < 1 + y.
 Proof. rewrite plus_comm. apply le_iff_lt_plus_1. Qed.
 
 Section another_semiring.
   Context `{FullPseudoSemiRingOrder R2} `{!SemiRing R2}
     `{PropHolds ((1 : R2) ≶ 0)}
-    `{!SemiRingPreserving (f : R → R2)}.
+    `{!SemiRingPreserving (f : R -> R2)}.
 
   Instance: OrderPreserving f.
   Proof.

@@ -17,7 +17,7 @@ Context `{Funext} `{Univalence} (R:Type@{UR})
   `{IntegralDomain R} `{DecidablePaths R}.
 
 Record Frac@{} : Type
-  := frac { num: R; den: R; den_ne_0: PropHolds (den ≠ 0) }.
+  := frac { num: R; den: R; den_ne_0: PropHolds (den <> 0) }.
   (* We used to have [den] and [den_nonzero] bundled,
      which did work relatively nicely with Program, but the
      extra messyness in proofs etc turned out not to be worth it. *)
@@ -65,7 +65,7 @@ split.
     reflexivity.
 Qed.
 
-Global Instance equiv_dec@{} : ∀ x y: Frac, Decision (equiv x y)
+Global Instance equiv_dec@{} : forall x y: Frac, Decision (equiv x y)
   := λ x y, decide_rel (=) (num x * den y) (num y * den x).
 
 Lemma pl_respect@{} : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
@@ -136,7 +136,7 @@ unfold equiv;simpl;intros q r E.
 rewrite <-2!negate_mult_distr_l. rewrite E;reflexivity.
 Qed.
 
-Lemma nonzero_num@{} x : ~ equiv x 0 ↔ num x ≠ 0.
+Lemma nonzero_num@{} x : ~ equiv x 0 <-> num x <> 0.
 Proof.
 split; intros E F; apply E.
 - red. rewrite F. simpl. rewrite 2!mult_0_l. reflexivity.
@@ -206,7 +206,7 @@ Arguments equiv {R _ _} _ _.
 Section morphisms.
 Context `{IntegralDomain R1} `{DecidablePaths R1}.
 Context `{IntegralDomain R2} `{DecidablePaths R2}.
-Context `(f : R1 → R2) `{!SemiRingPreserving f} `{!Injective f}.
+Context `(f : R1 -> R2) `{!SemiRingPreserving f} `{!Injective f}.
 
 Definition lift (x : Frac R1) : Frac R2.
 Proof.
@@ -519,7 +519,7 @@ Universe UR1 UR2.
 Context `{Funext} `{Univalence}.
 Context {R1:Type@{UR1} } `{IntegralDomain R1} `{DecidablePaths R1}.
 Context {R2:Type@{UR2} } `{IntegralDomain R2} `{DecidablePaths R2}.
-Context `(f : R1 → R2) `{!SemiRingPreserving f} `{!Injective f}.
+Context `(f : R1 -> R2) `{!SemiRingPreserving f} `{!Injective f}.
 
 Definition lift@{} : F R1 -> F R2.
 Proof.

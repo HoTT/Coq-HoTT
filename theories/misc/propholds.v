@@ -3,9 +3,9 @@ Require Import
 
 (*
   The following class is nice to parametrize instances by additional properties, for example:
-  [∀ z, PropHolds (z ≠ 0) → LeftCancellation op z]
+  [forall z, PropHolds (z <> 0) -> LeftCancellation op z]
   This tool is very powerful as we can combine it with instances as:
-  [∀ x y, PropHolds (x ≠ 0) → PropHolds (y ≠ 0) → PropHolds (x * y ≠ 0)]
+  [forall x y, PropHolds (x <> 0) -> PropHolds (y <> 0) -> PropHolds (x * y <> 0)]
   Of course, one should be very careful not to make too many instances as that could
   easily lead to a blow-up of the search space (or worse, cycles).
 *)

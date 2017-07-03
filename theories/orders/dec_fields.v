@@ -13,7 +13,7 @@ Context `{DecField F} `{Apart F} `{!TrivialApart F}
   `{!FullPseudoSemiRingOrder Fle Flt} `{DecidablePaths F}.
 (* Add Ring F : (stdlib_ring_theory F). *)
 
-Instance pos_dec_recip_compat x : PropHolds (0 < x) → PropHolds (0 < /x).
+Instance pos_dec_recip_compat x : PropHolds (0 < x) -> PropHolds (0 < /x).
 Proof.
 intros E.
 apply (strictly_order_reflecting (x *.)).
@@ -21,7 +21,7 @@ rewrite dec_recip_inverse by (apply orders.lt_ne_flip;trivial).
 rewrite mult_0_r. solve_propholds.
 Qed.
 
-Instance nonneg_dec_recip_compat x : PropHolds (0 ≤ x) → PropHolds (0 ≤ /x).
+Instance nonneg_dec_recip_compat x : PropHolds (0 ≤ x) -> PropHolds (0 ≤ /x).
 Proof.
 intros E. red.
 destruct (decide (x = 0)) as [E2 | E2].
@@ -31,7 +31,7 @@ destruct (decide (x = 0)) as [E2 | E2].
   apply symmetric_neq;trivial.
 Qed.
 
-Lemma neg_dec_recip_compat x : x < 0 → /x < 0.
+Lemma neg_dec_recip_compat x : x < 0 -> /x < 0.
 Proof.
 intros. apply flip_neg_negate.
 rewrite dec_recip_negate.
@@ -39,7 +39,7 @@ apply pos_dec_recip_compat.
 apply flip_neg_negate. trivial.
 Qed.
 
-Lemma nonpos_dec_recip_compat x : x ≤ 0 → /x ≤ 0.
+Lemma nonpos_dec_recip_compat x : x ≤ 0 -> /x ≤ 0.
 Proof.
 intros. apply flip_nonpos_negate.
 rewrite dec_recip_negate.
@@ -47,7 +47,7 @@ apply nonneg_dec_recip_compat.
 apply flip_nonpos_negate;trivial.
 Qed.
 
-Lemma flip_le_dec_recip x y : 0 < y → y ≤ x  → /x ≤ /y.
+Lemma flip_le_dec_recip x y : 0 < y -> y ≤ x  -> /x ≤ /y.
 Proof.
 intros E1 E2.
 apply (order_reflecting_pos (.*.) x).
@@ -61,7 +61,7 @@ apply (order_reflecting_pos (.*.) x).
     apply lt_le_trans with y;trivial.
 Qed.
 
-Lemma flip_le_dec_recip_l x y : 0 < y → /y ≤ x  → /x ≤ y.
+Lemma flip_le_dec_recip_l x y : 0 < y -> /y ≤ x  -> /x ≤ y.
 Proof.
 intros E1 E2.
 rewrite <-(dec_recip_involutive y).
@@ -69,14 +69,14 @@ apply flip_le_dec_recip;trivial.
 apply pos_dec_recip_compat;trivial.
 Qed.
 
-Lemma flip_le_dec_recip_r x y : 0 < y → y ≤ /x  → x ≤ /y.
+Lemma flip_le_dec_recip_r x y : 0 < y -> y ≤ /x  -> x ≤ /y.
 Proof.
 intros E1 E2.
 rewrite <-(dec_recip_involutive x).
 apply flip_le_dec_recip;trivial.
 Qed.
 
-Lemma flip_lt_dec_recip x y : 0 < y → y < x  → /x < /y.
+Lemma flip_lt_dec_recip x y : 0 < y -> y < x  -> /x < /y.
 Proof.
 intros E1 E2.
 assert (0 < x) by (transitivity y;trivial).
@@ -89,7 +89,7 @@ rewrite dec_recip_inverse.
 - apply lt_ne_flip;trivial.
 Qed.
 
-Lemma flip_lt_dec_recip_l x y : 0 < y → /y < x  → /x < y.
+Lemma flip_lt_dec_recip_l x y : 0 < y -> /y < x  -> /x < y.
 Proof.
 intros E1 E2.
 rewrite <-(dec_recip_involutive y).
@@ -97,7 +97,7 @@ apply flip_lt_dec_recip; trivial.
 apply pos_dec_recip_compat. trivial.
 Qed.
 
-Lemma flip_lt_dec_recip_r x y : 0 < y → y < /x  → x < /y.
+Lemma flip_lt_dec_recip_r x y : 0 < y -> y < /x  -> x < /y.
 Proof.
 intros E1 E2.
 rewrite <-(dec_recip_involutive x).

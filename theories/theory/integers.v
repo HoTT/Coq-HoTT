@@ -14,14 +14,14 @@ Require Export
  HoTTClasses.interfaces.integers.
 
 
-Lemma to_ring_unique `{Integers Z} `{Ring R} (f: Z → R)
+Lemma to_ring_unique `{Integers Z} `{Ring R} (f: Z -> R)
   {h: SemiRingPreserving f} x
   : f x = integers_to_ring Z R x.
 Proof.
 symmetry. apply integers_initial.
 Qed.
 
-Lemma to_ring_unique_alt `{Integers Z} `{Ring R} (f g: Z → R)
+Lemma to_ring_unique_alt `{Integers Z} `{Ring R} (f g: Z -> R)
   `{!SemiRingPreserving f} `{!SemiRingPreserving g} x :
   f x = g x.
 Proof.
@@ -35,22 +35,22 @@ change (compose (integers_to_ring Z2 Z) (integers_to_ring Z Z2) x = id x).
 apply to_ring_unique_alt;apply _.
 Qed.
 
-Lemma morphisms_involutive `{Integers Z} `{Ring R} (f: R → Z) (g: Z → R)
+Lemma morphisms_involutive `{Integers Z} `{Ring R} (f: R -> Z) (g: Z -> R)
   `{!SemiRingPreserving f} `{!SemiRingPreserving g} x : f (g x) = x.
 Proof (to_ring_unique_alt (f ∘ g) id _).
 
 Lemma to_ring_twice `{Integers Z} `{Ring R1} `{Ring R2}
-  (f : R1 → R2) (g : Z → R1) (h : Z → R2)
+  (f : R1 -> R2) (g : Z -> R1) (h : Z -> R2)
   `{!SemiRingPreserving f} `{!SemiRingPreserving g} `{!SemiRingPreserving h} x
   : f (g x) = h x.
 Proof (to_ring_unique_alt (f ∘ g) h _).
 
-Lemma to_ring_self `{Integers Z} (f : Z → Z) `{!SemiRingPreserving f} x : f x = x.
+Lemma to_ring_self `{Integers Z} (f : Z -> Z) `{!SemiRingPreserving f} x : f x = x.
 Proof (to_ring_unique_alt f id _).
 
 (* A ring morphism from integers to another ring is injective
    if there's an injection in the other direction: *)
-Lemma to_ring_injective `{Integers Z} `{Ring R} (f: R → Z) (g: Z → R)
+Lemma to_ring_injective `{Integers Z} `{Ring R} (f: R -> Z) (g: Z -> R)
   `{!SemiRingPreserving f} `{!SemiRingPreserving g}
   : Injective g.
 Proof.
@@ -61,13 +61,13 @@ apply ap,E.
 Qed.
 
 Instance integers_to_integers_injective `{Integers Z} `{Integers Z2}
-  (f: Z → Z2) `{!SemiRingPreserving f}
+  (f: Z -> Z2) `{!SemiRingPreserving f}
   : Injective f.
 Proof (to_ring_injective (integers_to_ring Z2 Z) _).
 
 Instance naturals_to_integers_injective `{Funext} `{Univalence}
   `{Integers@{i i i i i i i i} Z} `{Naturals@{i i i i i i i i} N}
-  (f: N → Z) `{!SemiRingPreserving f}
+  (f: N -> Z) `{!SemiRingPreserving f}
   : Injective f.
 Proof.
 intros x y E.
@@ -81,7 +81,7 @@ Section retract_is_int.
   Context `{Funext} `{Univalence}.
   Context `{Integers Z} `{Ring Z2}
     {Z2ap : Apart Z2} {Z2le Z2lt} `{!FullPseudoSemiRingOrder (A:=Z2) Z2le Z2lt}.
-  Context (f : Z → Z2) `{!Inverse f} `{!Surjective f} `{!SemiRingPreserving f}
+  Context (f : Z -> Z2) `{!Inverse f} `{!Surjective f} `{!SemiRingPreserving f}
     `{!SemiRingPreserving (f⁻¹)}.
 
   (* If we make this an instance, then instance resolution will often loop *)
@@ -92,7 +92,7 @@ Section retract_is_int.
     Context `{Ring R}.
 
     Instance: SemiRingPreserving (integers_to_ring Z R ∘ f⁻¹) := {}.
-    Context (h :  Z2 → R) `{!SemiRingPreserving h}.
+    Context (h :  Z2 -> R) `{!SemiRingPreserving h}.
 
     Lemma same_morphism x : (integers_to_ring Z R ∘ f⁻¹) x = h x.
     Proof.
@@ -155,7 +155,7 @@ as [[n E]|[n E]];[left|right];exists n.
   apply (naturals.to_semiring_twice _ _ _).
 Qed.
 
-Instance int_nontrivial : PropHolds ((1:Z) ≠0).
+Instance int_nontrivial : PropHolds ((1:Z) <>0).
 Proof.
 intros E.
 apply (rings.is_ne_0 (1:nat)).

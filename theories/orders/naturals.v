@@ -21,7 +21,7 @@ Context `{Naturals N} `{!TrivialApart N}.
 Instance nat_nonneg x : PropHolds (0 ≤ x).
 Proof. apply (to_semiring_nonneg (f:=id)). Qed.
 
-Lemma nat_le_plus {x y: N}: x ≤ y ↔ ∃ z, y = x + z.
+Lemma nat_le_plus {x y: N}: x ≤ y <-> exists z, y = x + z.
 Proof.
 split; intros E.
 - destruct (decompose_le E) as [z [Ez1 Ez2]]. exists z. trivial.
@@ -29,23 +29,23 @@ split; intros E.
   apply compose_le with z; [solve_propholds | trivial].
 Qed.
 
-Lemma nat_not_neg x : ¬x < 0.
+Lemma nat_not_neg x : ~x < 0.
 Proof. apply le_not_lt_flip, nat_nonneg. Qed.
 
-Lemma nat_0_or_pos x : x = 0 ∨ 0 < x.
+Lemma nat_0_or_pos x : x = 0 \/ 0 < x.
 Proof.
 destruct (trichotomy (<) 0 x) as [?|[?|?]]; auto.
 - left;symmetry;trivial.
 - destruct (nat_not_neg x). trivial.
 Qed.
 
-Lemma nat_0_or_ge_1 x : x = 0 ∨ 1 ≤ x.
+Lemma nat_0_or_ge_1 x : x = 0 \/ 1 ≤ x.
 Proof.
 destruct (nat_0_or_pos x);auto.
 right;apply pos_ge_1. trivial.
 Qed.
 
-Lemma nat_ne_0_pos x : x ≠ 0 ↔ 0 < x.
+Lemma nat_ne_0_pos x : x <> 0 <-> 0 < x.
 Proof.
 split.
 - destruct (nat_0_or_pos x); auto.
@@ -53,20 +53,20 @@ split.
 - intros E1 E2. rewrite E2 in E1. destruct (irreflexivity (<) 0). trivial.
 Qed.
 
-Lemma nat_ne_0_ge_1 x : x ≠ 0 ↔ 1 ≤ x.
+Lemma nat_ne_0_ge_1 x : x <> 0 <-> 1 ≤ x.
 Proof.
 etransitivity.
 - apply nat_ne_0_pos.
 - apply pos_ge_1.
 Qed.
 
-Global Instance: ∀ (z : N), PropHolds (z ≠ 0) → OrderReflecting (z *.).
+Global Instance: forall (z : N), PropHolds (z <> 0) -> OrderReflecting (z *.).
 Proof.
 intros z ?. red. apply (order_reflecting_pos (.*.) z).
 apply nat_ne_0_pos. trivial.
 Qed.
 
-Global Instance slow_nat_le_dec: ∀ x y: N, Decision (x ≤ y) | 10.
+Global Instance slow_nat_le_dec: forall x y: N, Decision (x ≤ y) | 10.
 Proof.
 intros x y.
 destruct (nat_le_dec (naturals_to_semiring _ nat x) (naturals_to_semiring _ nat y))
@@ -79,7 +79,7 @@ Qed.
 
 Section another_ring.
   Context `{Ring R} `{Apart R} `{!FullPseudoSemiRingOrder (A:=R) Rle Rlt}
-    `{!SemiRingPreserving (f : N → R)}.
+    `{!SemiRingPreserving (f : N -> R)}.
 
   Lemma negate_to_ring_nonpos n : -f n ≤ 0.
   Proof. apply flip_nonneg_negate. apply to_semiring_nonneg. Qed.

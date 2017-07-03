@@ -30,7 +30,7 @@ Class IsApart A {Aap : Apart A} : Type :=
   ; apart_mere :> is_mere_relation _ apart
   ; apart_symmetric :> Symmetric (≶)
   ; apart_cotrans :> CoTransitive (≶)
-  ; tight_apart : ∀ x y, ¬x ≶ y ↔ x = y }.
+  ; tight_apart : forall x y, ~x ≶ y <-> x = y }.
 
 Instance apart_irrefl `{IsApart A} : Irreflexive (≶).
 Proof.
@@ -43,9 +43,9 @@ Qed.
 Arguments tight_apart {A Aap IsApart} _ _.
 
 Section setoid_morphisms.
-  Context {A B} {Aap : Apart A} {Bap : Apart B} (f : A → B).
+  Context {A B} {Aap : Apart A} {Bap : Apart B} (f : A -> B).
 
-  Class StrongExtensionality := strong_extensionality : ∀ x y, f x ≶ f y → x ≶ y.
+  Class StrongExtensionality := strong_extensionality : forall x y, f x ≶ f y -> x ≶ y.
 End setoid_morphisms.
 
 (* HOTT TODO check if this is ok/useful *)
@@ -53,10 +53,10 @@ Hint Extern 4 (?f _ = ?f _) => eapply (ap f).
 
 Section setoid_binary_morphisms.
   Context {A B C} {Aap: Apart A} 
-    {Bap : Apart B} {Cap : Apart C} (f : A → B → C).
+    {Bap : Apart B} {Cap : Apart C} (f : A -> B -> C).
 
   Class StrongBinaryExtensionality := strong_binary_extensionality
-    : ∀ x₁ y₁ x₂ y₂, f x₁ y₁ ≶ f x₂ y₂ → hor (x₁ ≶ x₂) (y₁ ≶ y₂).
+    : forall x₁ y₁ x₂ y₂, f x₁ y₁ ≶ f x₂ y₂ -> hor (x₁ ≶ x₂) (y₁ ≶ y₂).
 End setoid_binary_morphisms.
 
 (*
@@ -133,16 +133,16 @@ Section upper_classes.
     ; field_plus_ext :> StrongBinaryExtensionality (+)
     ; field_mult_ext :> StrongBinaryExtensionality (.*.)
     ; field_nontrivial : PropHolds (1 ≶ 0)
-    ; recip_inverse : ∀ x, x.1 // x = 1 }.
+    ; recip_inverse : forall x, x.1 // x = 1 }.
 
   (* We let /0 = 0 so properties as Injective (/),
     f (/x) = / (f x), / /x = x, /x * /y = /(x * y) 
     hold without any additional assumptions *)
   Class DecField {Adec_recip : DecRecip A} :=
     { decfield_ring :> Ring
-    ; decfield_nontrivial : PropHolds (1 ≠ 0)
+    ; decfield_nontrivial : PropHolds (1 <> 0)
     ; dec_recip_0 : /0 = 0
-    ; dec_recip_inverse : ∀ x, x ≠ 0 → x / x = 1 }.
+    ; dec_recip_inverse : forall x, x <> 0 -> x / x = 1 }.
 
   Class FieldCharacteristic@{j} {Aap : Apart@{i j} A} (k : nat) : Type@{j}
     := field_characteristic : forall n : nat, Peano.lt 0 n ->
@@ -152,11 +152,11 @@ Section upper_classes.
 End upper_classes.
 
 (* Due to bug #2528 *)
-Hint Extern 4 (PropHolds (1 ≠ 0)) =>
+Hint Extern 4 (PropHolds (1 <> 0)) =>
   eapply @intdom_nontrivial : typeclass_instances.
 Hint Extern 5 (PropHolds (1 ≶ 0)) =>
   eapply @field_nontrivial : typeclass_instances.
-Hint Extern 5 (PropHolds (1 ≠ 0)) =>
+Hint Extern 5 (PropHolds (1 <> 0)) =>
   eapply @decfield_nontrivial : typeclass_instances.
 
 (* 
@@ -200,13 +200,13 @@ Section morphism_classes.
   Context {A B : Type} {Aop : SgOp A} {Bop : SgOp B}
     {Aunit : MonUnit A} {Bunit : MonUnit B}.
 
-  Class SemiGroupPreserving (f : A → B) :=
-    preserves_sg_op : ∀ x y, f (x & y) = f x & f y.
+  Class SemiGroupPreserving (f : A -> B) :=
+    preserves_sg_op : forall x y, f (x & y) = f x & f y.
 
   Class UnitPreserving (f : A -> B) :=
     preserves_mon_unit : f mon_unit = mon_unit.
 
-  Class MonoidPreserving (f : A → B) :=
+  Class MonoidPreserving (f : A -> B) :=
     { monmor_sgmor :> SemiGroupPreserving f
     ; monmor_unitmor :> UnitPreserving f }.
   End sgmorphism_classes.
@@ -232,27 +232,27 @@ Section morphism_classes.
   Context {A B : Type} {Ajoin : Join A} {Bjoin : Join B}
     {Ameet : Meet A} {Bmeet : Meet B}.
 
-  Class JoinPreserving (f : A → B) :=
+  Class JoinPreserving (f : A -> B) :=
     join_slmor_sgmor :> @SemiGroupPreserving A B join_is_sg_op join_is_sg_op f.
 
-  Class MeetPreserving (f : A → B) :=
+  Class MeetPreserving (f : A -> B) :=
     meet_slmor_sgmor :> @SemiGroupPreserving A B meet_is_sg_op meet_is_sg_op f.
 
   Context {Abottom : Bottom A} {Bbottom : Bottom B}.
-  Class BoundedJoinPreserving (f : A → B) := bounded_join_slmor_monmor
+  Class BoundedJoinPreserving (f : A -> B) := bounded_join_slmor_monmor
       :> @MonoidPreserving A B join_is_sg_op join_is_sg_op
          bottom_is_mon_unit bottom_is_mon_unit f.
 
-  Class LatticePreserving (f : A → B) :=
+  Class LatticePreserving (f : A -> B) :=
     { latticemor_join_mor :> JoinPreserving f
     ; latticemor_meet_mor :> MeetPreserving f }.
   End latticemorphism_classes.
 End morphism_classes.
 
 Section jections.
-  Context {A B} (f : A → B).
+  Context {A B} (f : A -> B).
 
-  Class Injective := injective : ∀ x y, f x = f y → x = y.
+  Class Injective := injective : forall x y, f x = f y -> x = y.
 
   Context `{inv : !Inverse f}.
 
@@ -266,7 +266,7 @@ End jections.
 Section strong_injective.
   Context {A B} {Aap : Apart A} {Bap : Apart B} (f : A -> B) .
   Class StrongInjective :=
-    { strong_injective : ∀ x y, x ≶ y → f x ≶ f y
+    { strong_injective : forall x y, x ≶ y -> f x ≶ f y
     ; strong_injective_mor : StrongExtensionality f }.
 End strong_injective.
 
@@ -274,43 +274,43 @@ Section extras.
 
 Class NatPowSpec A B (pw : Pow A B)
   `{One A} `{Mult A} `{Zero B} `{One B} `{Plus B} := {
-  nat_pow_0 : ∀ x, x ^^ 0 = 1 ;
-  nat_pow_S : ∀ x n, x ^^ (1 + n) = x * x ^^ n
+  nat_pow_0 : forall x, x ^^ 0 = 1 ;
+  nat_pow_S : forall x n, x ^^ (1 + n) = x * x ^^ n
 }.
 
 Class IntPowSpec A B (pow : Pow A B)
                  `{Zero A} `{One A} `{Mult A}
                  `{Zero B} `{One B} `{Plus B} :=
-{ int_pow_0 : ∀ x, x ^^ 0 = 1
-; int_pow_base_0 : ∀ (n : B), n ≠ 0 → 0 ^^ n = 0
-; int_pow_S : ∀ x n, x ≠ 0 → x ^^ (1 + n) = x * x ^^ n }.
+{ int_pow_0 : forall x, x ^^ 0 = 1
+; int_pow_base_0 : forall (n : B), n <> 0 -> 0 ^^ n = 0
+; int_pow_S : forall x n, x <> 0 -> x ^^ (1 + n) = x * x ^^ n }.
 
 Class ShiftLSpec A B (sl : ShiftL A B)
   `{One A} `{Plus A} `{Mult A}
   `{Zero B} `{One B} `{Plus B} := {
   shiftl_0 :> RightIdentity (≪) 0 ;
-  shiftl_S : ∀ x n, x ≪ (1 + n) = 2 * x ≪ n
+  shiftl_S : forall x n, x ≪ (1 + n) = 2 * x ≪ n
 }.
 
 Class ShiftRSpec A B (sl : ShiftR A B)
   `{One A} `{Plus A} `{Mult A}
   `{Zero B} `{One B} `{Plus B} := {
   shiftr_0 :> RightIdentity (≫) 0 ;
-  shiftr_S : ∀ x n, x ≫ n = (2 * x ≫ (1 + n))%mc ∨
+  shiftr_S : forall x n, x ≫ n = (2 * x ≫ (1 + n))%mc \/
                     x ≫ n = (2 * x ≫ (1 + n) + 1)%mc
 }.
 
 Class EuclidSpec A (d : DivEuclid A) (m : ModEuclid A)
   `{Le A} `{Lt A} `{Zero A} `{Plus A} `{Mult A} := {
-  div_mod : ∀ x y, y ≠ 0 → x = y * x `div` y + x `mod` y ;
-  mod_rem : ∀ x y, y ≠ 0 → 0 ≤ x `mod` y < y ∨ y < x `mod` y ≤ 0 ;
-  div_0 : ∀ x, x `div` 0 = 0 ;
-  mod_0 : ∀ x, x `mod` 0 = 0
+  div_mod : forall x y, y <> 0 -> x = y * x `div` y + x `mod` y ;
+  mod_rem : forall x y, y <> 0 -> 0 ≤ x `mod` y < y \/ y < x `mod` y ≤ 0 ;
+  div_0 : forall x, x `div` 0 = 0 ;
+  mod_0 : forall x, x `mod` 0 = 0
 }.
 
 Class CutMinusSpec A (cm : CutMinus A) `{Zero A} `{Plus A} `{Le A} := {
-  cut_minus_le : ∀ x y, y ≤ x → x ∸ y + y = x ;
-  cut_minus_0 : ∀ x y, x ≤ y → x ∸ y = 0
+  cut_minus_le : forall x y, y ≤ x -> x ∸ y + y = x ;
+  cut_minus_0 : forall x y, x ≤ y -> x ∸ y = 0
 }.
 
 End extras.

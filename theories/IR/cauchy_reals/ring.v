@@ -149,7 +149,7 @@ apply tr. simple refine (existT _ _ _).
 - simpl. reflexivity.
 Defined.
 
-Lemma Rbounded_mult_respects : ∀ z x y, interval_back x = interval_back y →
+Lemma Rbounded_mult_respects : forall z x y, interval_back x = interval_back y ->
   Rbounded_mult x.1 z x.2 = Rbounded_mult y.1 z y.2.
 Proof.
 intros z x y E.
@@ -390,8 +390,8 @@ change Rmult with mult;change R1 with one.
     apply (ap rat),distribute_l.
 Qed.
 
-Instance Rmult_nonneg_compat : ∀ x y : real, PropHolds (0 ≤ x) →
-  PropHolds (0 ≤ y) →
+Instance Rmult_nonneg_compat : forall x y : real, PropHolds (0 ≤ x) ->
+  PropHolds (0 ≤ y) ->
   PropHolds (0 ≤ x * y).
 Proof.
 unfold PropHolds.

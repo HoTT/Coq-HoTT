@@ -39,10 +39,10 @@ Qed.
 
 Context `{!IntAbs Z N}.
 
-Context `{!SemiRingPreserving (f : N → Z)}.
+Context `{!SemiRingPreserving (f : N -> Z)}.
 
 Lemma int_abs_spec x :
-  (0 ≤ x ∧ f (int_abs Z N x) = x) \/ (x ≤ 0 ∧ f (int_abs Z N x) = -x).
+  (0 ≤ x /\ f (int_abs Z N x) = x) \/ (x ≤ 0 /\ f (int_abs Z N x) = -x).
 Proof.
 unfold int_abs. destruct (int_abs_sig Z N x) as [[n E]|[n E]].
 - left. rewrite <-E. split.
@@ -82,7 +82,7 @@ destruct (int_abs_spec x) as [[_ E]|[_ E]].
 - rewrite <-E. apply int_abs_nat.
 Qed.
 
-Lemma int_abs_0_alt x : int_abs Z N x = 0 ↔ x = 0.
+Lemma int_abs_0_alt x : int_abs Z N x = 0 <-> x = 0.
 Proof.
 split; intros E1.
 - destruct (int_abs_spec x) as [[_ E2]|[_ E2]];[|apply flip_negate_0];
@@ -90,7 +90,7 @@ split; intros E1.
 - rewrite E1, <-(preserves_0 (f:=f)). apply int_abs_nat.
 Qed.
 
-Lemma int_abs_ne_0 x : int_abs Z N x ≠ 0 ↔ x ≠ 0.
+Lemma int_abs_ne_0 x : int_abs Z N x <> 0 <-> x <> 0.
 Proof.
 destruct (int_abs_0_alt x).
 split;intros E1 E2;auto.
@@ -100,7 +100,7 @@ Lemma int_abs_0 : int_abs Z N 0 = 0.
 Proof. apply int_abs_0_alt;trivial. Qed.
 
 Lemma int_abs_nonneg x :
-  0 ≤ x → f (int_abs Z N x) = x.
+  0 ≤ x -> f (int_abs Z N x) = x.
 Proof.
 intros E1. destruct (int_abs_spec x) as [[n E2]|[n E2]];trivial.
 assert (Hrw : x = 0).
@@ -109,7 +109,7 @@ assert (Hrw : x = 0).
 Qed.
 
 Lemma int_abs_nonpos x :
-  x ≤ 0 → f (int_abs Z N x) = -x.
+  x ≤ 0 -> f (int_abs Z N x) = -x.
 Proof.
 intros E. rewrite <-int_abs_negate, int_abs_nonneg; auto.
 apply flip_nonpos_negate. trivial.
@@ -122,7 +122,7 @@ apply int_abs_nonneg; solve_propholds.
 Qed.
 
 Lemma int_abs_nonneg_plus x y :
-  0 ≤ x → 0 ≤ y → int_abs Z N (x + y) = int_abs Z N x + int_abs Z N y.
+  0 ≤ x -> 0 ≤ y -> int_abs Z N (x + y) = int_abs Z N x + int_abs Z N y.
 Proof.
 intros. apply (injective f).
 rewrite (preserves_plus (f:=f)), !int_abs_nonneg;auto.

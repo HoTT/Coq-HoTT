@@ -9,7 +9,7 @@ Require Import
 Section strictly_order_preserving.
   Context `{FullPartialOrder A} `{FullPartialOrder B}.
 
-  Global Instance strictly_order_preserving_inj  `{!OrderPreserving (f : A → B)}
+  Global Instance strictly_order_preserving_inj  `{!OrderPreserving (f : A -> B)}
     `{!StrongInjective f} :
     StrictlyOrderPreserving f | 20.
   Proof.
@@ -20,7 +20,7 @@ Section strictly_order_preserving.
   - apply (strong_injective f);trivial.
   Qed.
 
-  Global Instance strictly_order_reflecting_mor `{!OrderReflecting (f : A → B)}
+  Global Instance strictly_order_reflecting_mor `{!OrderReflecting (f : A -> B)}
     `{!StrongExtensionality f} :
     StrictlyOrderReflecting f | 20.
   Proof.
@@ -41,7 +41,7 @@ Section strictly_order_preserving_dec.
   Local Existing Instance strict_po_apart.
 
   Global Instance dec_strictly_order_preserving_inj
-    `{!OrderPreserving (f : A → B)}
+    `{!OrderPreserving (f : A -> B)}
     `{!Injective f} :
     StrictlyOrderPreserving f | 19.
   Proof.
@@ -50,7 +50,7 @@ Section strictly_order_preserving_dec.
   Qed.
 
   Global Instance dec_strictly_order_reflecting_mor
-    `{!OrderReflecting (f : A → B)}
+    `{!OrderReflecting (f : A -> B)}
     : StrictlyOrderReflecting f | 19.
   Proof.
   pose proof (dec_strong_morphism f). apply _.
@@ -62,7 +62,7 @@ Section pseudo_injective.
 
   Local Existing Instance pseudo_order_apart.
 
-  Instance pseudo_order_embedding_ext `{!StrictOrderEmbedding (f : A → B)} :
+  Instance pseudo_order_embedding_ext `{!StrictOrderEmbedding (f : A -> B)} :
     StrongExtensionality f.
   Proof.
   intros x y E.
@@ -70,7 +70,7 @@ Section pseudo_injective.
   destruct E; [left | right]; apply (strictly_order_reflecting f);trivial.
   Qed.
 
-  Lemma pseudo_order_embedding_inj `{!StrictOrderEmbedding (f : A → B)} :
+  Lemma pseudo_order_embedding_inj `{!StrictOrderEmbedding (f : A -> B)} :
     StrongInjective f.
   Proof.
   split;try apply _.
@@ -87,7 +87,7 @@ Section full_pseudo_strictly_preserving.
 
   Local Existing Instance pseudo_order_apart.
 
-  Lemma full_pseudo_order_preserving `{!StrictlyOrderReflecting (f : A → B)}
+  Lemma full_pseudo_order_preserving `{!StrictlyOrderReflecting (f : A -> B)}
     : OrderPreserving f.
   Proof.
   intros x y E1.
@@ -97,7 +97,7 @@ Section full_pseudo_strictly_preserving.
   trivial.
   Qed.
 
-  Lemma full_pseudo_order_reflecting `{!StrictlyOrderPreserving (f : A → B)}
+  Lemma full_pseudo_order_reflecting `{!StrictlyOrderPreserving (f : A -> B)}
     : OrderReflecting f.
   Proof.
   intros x y E1.
@@ -130,32 +130,32 @@ Section order_preserving_ops.
   trivial.
   Qed.
 
-  Lemma order_preserving_nonneg (op : R → R → R) `{!Zero R}
-    `{∀ z, PropHolds (0 ≤ z) → OrderPreserving (op z)} z
-    : 0 ≤ z → ∀ x y, x ≤ y → op z x ≤ op z y.
+  Lemma order_preserving_nonneg (op : R -> R -> R) `{!Zero R}
+    `{forall z, PropHolds (0 ≤ z) -> OrderPreserving (op z)} z
+    : 0 ≤ z -> forall x y, x ≤ y -> op z x ≤ op z y.
   Proof.
   auto.
   Qed.
 
-  Lemma order_preserving_flip_nonneg (op : R → R → R) `{!Zero R}
-    {E:∀ z, PropHolds (0 ≤ z) → OrderPreserving (λ y, op y z)} z
-    : 0 ≤ z → ∀ x y, x ≤ y → op x z ≤ op y z.
+  Lemma order_preserving_flip_nonneg (op : R -> R -> R) `{!Zero R}
+    {E:forall z, PropHolds (0 ≤ z) -> OrderPreserving (λ y, op y z)} z
+    : 0 ≤ z -> forall x y, x ≤ y -> op x z ≤ op y z.
   Proof.
   apply E.
   Qed.
 
   Context `{Lt R}.
 
-  Lemma order_reflecting_pos (op : R → R → R) `{!Zero R}
-    {E:∀ z, PropHolds (0 < z) → OrderReflecting (op z)} z
-    : 0 < z → ∀ x y, op z x ≤ op z y → x ≤ y.
+  Lemma order_reflecting_pos (op : R -> R -> R) `{!Zero R}
+    {E:forall z, PropHolds (0 < z) -> OrderReflecting (op z)} z
+    : 0 < z -> forall x y, op z x ≤ op z y -> x ≤ y.
   Proof.
   apply E.
   Qed.
 
-  Lemma order_reflecting_flip_pos (op : R → R → R) `{!Zero R}
-    {E:∀ z, PropHolds (0 < z) → OrderReflecting (λ y, op y z)} z
-    : 0 < z → ∀ x y, op x z ≤ op y z → x ≤ y.
+  Lemma order_reflecting_flip_pos (op : R -> R -> R) `{!Zero R}
+    {E:forall z, PropHolds (0 < z) -> OrderReflecting (λ y, op y z)} z
+    : 0 < z -> forall x y, op x z ≤ op y z -> x ≤ y.
   Proof.
   apply E.
   Qed.
@@ -184,16 +184,16 @@ Section strict_order_preserving_ops.
   trivial.
   Qed.
 
-  Lemma strictly_order_preserving_pos (op : R → R → R) `{!Zero R}
-    {E:∀ z, PropHolds (0 < z) → StrictlyOrderPreserving (op z)} z
-    : 0 < z → ∀ x y, x < y → op z x < op z y.
+  Lemma strictly_order_preserving_pos (op : R -> R -> R) `{!Zero R}
+    {E:forall z, PropHolds (0 < z) -> StrictlyOrderPreserving (op z)} z
+    : 0 < z -> forall x y, x < y -> op z x < op z y.
   Proof.
   apply E.
   Qed.
 
-  Lemma strictly_order_preserving_flip_pos (op : R → R → R) `{!Zero R}
-    {E:∀ z, PropHolds (0 < z) → StrictlyOrderPreserving (λ y, op y z)} z
-    : 0 < z → ∀ x y, x < y → op x z < op y z.
+  Lemma strictly_order_preserving_flip_pos (op : R -> R -> R) `{!Zero R}
+    {E:forall z, PropHolds (0 < z) -> StrictlyOrderPreserving (λ y, op y z)} z
+    : 0 < z -> forall x y, x < y -> op x z < op y z.
   Proof.
   apply E.
   Qed.
@@ -202,8 +202,8 @@ End strict_order_preserving_ops.
 
 Lemma projected_partial_order `{IsHSet A} {Ale : Le A}
   `{is_mere_relation A Ale} `{Ble : Le B}
-  (f : A → B) `{!Injective f} `{!PartialOrder Ble}
-  : (∀ x y, x ≤ y ↔ f x ≤ f y) → PartialOrder Ale.
+  (f : A -> B) `{!Injective f} `{!PartialOrder Ble}
+  : (forall x y, x ≤ y <-> f x ≤ f y) -> PartialOrder Ale.
 Proof.
 intros P. repeat split.
 - apply _.
@@ -216,16 +216,16 @@ intros P. repeat split.
 Qed.
 
 Lemma projected_total_order `{Ale : Le A} `{Ble : Le B}
-  (f : A → B) `{!TotalRelation Ble}
-  : (∀ x y, x ≤ y ↔ f x ≤ f y) → TotalRelation Ale.
+  (f : A -> B) `{!TotalRelation Ble}
+  : (forall x y, x ≤ y <-> f x ≤ f y) -> TotalRelation Ale.
 Proof.
 intros P x y.
 destruct (total (≤) (f x) (f y)); [left | right]; apply P;trivial.
 Qed.
 
 Lemma projected_strict_order `{Alt : Lt A} `{is_mere_relation A lt} `{Blt : Lt B}
-  (f : A → B) `{!StrictOrder Blt}
-  : (∀ x y, x < y ↔ f x < f y) → StrictOrder Alt.
+  (f : A -> B) `{!StrictOrder Blt}
+  : (forall x y, x < y <-> f x < f y) -> StrictOrder Alt.
 Proof.
 intros P. split.
 - apply _.
@@ -235,8 +235,8 @@ Qed.
 
 Lemma projected_pseudo_order `{IsApart A} `{Alt : Lt A} `{is_mere_relation A lt}
   `{Apart B} `{Blt : Lt B}
-  (f : A → B) `{!StrongInjective f} `{!PseudoOrder Blt}
-  : (∀ x y, x < y ↔ f x < f y) → PseudoOrder Alt.
+  (f : A -> B) `{!StrongInjective f} `{!PseudoOrder Blt}
+  : (forall x y, x < y <-> f x < f y) -> PseudoOrder Alt.
 Proof.
 pose proof (strong_injective_mor f).
 intros P. split; try apply _.
@@ -257,8 +257,8 @@ Qed.
 Lemma projected_full_pseudo_order `{IsApart A} `{Ale : Le A} `{Alt : Lt A}
   `{is_mere_relation A le} `{is_mere_relation A lt}
   `{Apart B} `{Ble : Le B} `{Blt : Lt B}
-  (f : A → B) `{!StrongInjective f} `{!FullPseudoOrder Ble Blt}
-  : (∀ x y, x ≤ y ↔ f x ≤ f y) → (∀ x y, x < y ↔ f x < f y) →
+  (f : A -> B) `{!StrongInjective f} `{!FullPseudoOrder Ble Blt}
+  : (forall x y, x ≤ y <-> f x ≤ f y) -> (forall x y, x < y <-> f x < f y) ->
     FullPseudoOrder Ale Alt.
 Proof.
 intros P1 P2. split.
@@ -281,10 +281,10 @@ red;trivial.
 Qed.
 
 Section composition.
-  Context {A B C} `{Le A} `{Le B} `{Le C} (f : A → B) (g : B → C).
+  Context {A B C} `{Le A} `{Le B} `{Le C} (f : A -> B) (g : B -> C).
 
   Instance compose_order_preserving:
-    OrderPreserving f → OrderPreserving g → OrderPreserving (g ∘ f).
+    OrderPreserving f -> OrderPreserving g -> OrderPreserving (g ∘ f).
   Proof.
   red;intros. unfold compose.
   do 2 apply (order_preserving _).
@@ -292,7 +292,7 @@ Section composition.
   Qed.
 
   Instance compose_order_reflecting:
-    OrderReflecting f → OrderReflecting g → OrderReflecting (g ∘ f).
+    OrderReflecting f -> OrderReflecting g -> OrderReflecting (g ∘ f).
   Proof.
   intros ?? x y E. unfold compose in E.
   do 2 apply (order_reflecting _) in E.
@@ -300,7 +300,7 @@ Section composition.
   Qed.
 
   Instance compose_order_embedding:
-    OrderEmbedding f → OrderEmbedding g → OrderEmbedding (g ∘ f) := {}.
+    OrderEmbedding f -> OrderEmbedding g -> OrderEmbedding (g ∘ f) := {}.
 End composition.
 
 Hint Extern 4 (OrderPreserving (_ ∘ _)) =>

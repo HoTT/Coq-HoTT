@@ -4,8 +4,8 @@ Require
 Require Import
   HoTTClasses.interfaces.abstract_algebra.
 
-Definition is_ne_0 `(x : R) `{Zero R} `{p : PropHolds (x ≠ 0)}
-  : x ≠ 0 := p.
+Definition is_ne_0 `(x : R) `{Zero R} `{p : PropHolds (x <> 0)}
+  : x <> 0 := p.
 Definition is_nonneg `(x : R) `{Le R} `{Zero R} `{p : PropHolds (0 ≤ x)}
   : 0 ≤ x := p.
 Definition is_pos `(x : R) `{Lt R} `{Zero R} `{p : PropHolds (0 < x)}
@@ -18,18 +18,18 @@ Qed.
 *)
 
 (* We cannot apply [left_cancellation (.*.) z] directly in case we have
-  no [PropHolds (0 ≠ z)] instance in the context. *)
+  no [PropHolds (0 <> z)] instance in the context. *)
 Section cancellation.
-  Context `(op : A → A → A) `{!Zero A}.
+  Context `(op : A -> A -> A) `{!Zero A}.
 
   Lemma left_cancellation_ne_0
-    `{∀ z, PropHolds (z ≠ 0) → LeftCancellation op z} z
-    : z ≠ 0 → LeftCancellation op z.
+    `{forall z, PropHolds (z <> 0) -> LeftCancellation op z} z
+    : z <> 0 -> LeftCancellation op z.
   Proof. auto. Qed.
 
   Lemma right_cancellation_ne_0
-    `{∀ z, PropHolds (z ≠ 0) → RightCancellation op z} z
-    : z ≠ 0 → RightCancellation op z.
+    `{forall z, PropHolds (z <> 0) -> RightCancellation op z} z
+    : z <> 0 -> RightCancellation op z.
   Proof. auto. Qed.
 
   Lemma right_cancel_from_left `{!Commutative op} `{!LeftCancellation op z}
@@ -43,7 +43,7 @@ Section cancellation.
 End cancellation.
 
 Section strong_cancellation.
-  Context `{IsApart A} (op : A → A → A).
+  Context `{IsApart A} (op : A -> A -> A).
 
   Lemma strong_right_cancel_from_left `{!Commutative op} 
     `{!StrongLeftCancellation op z}
@@ -76,7 +76,7 @@ Section semiring_props.
 (*   Add Ring SR : (stdlib_semiring_theory R). *)
 
   Instance mult_ne_0 `{!NoZeroDivisors R} x y
-    : PropHolds (x ≠ 0) → PropHolds (y ≠ 0) → PropHolds (x * y ≠ 0).
+    : PropHolds (x <> 0) -> PropHolds (y <> 0) -> PropHolds (x * y <> 0).
   Proof.
   intros Ex Ey Exy.
   unfold PropHolds in *.
@@ -117,7 +117,7 @@ Section semiring_props.
   apply _.
   Qed.
 
-  Global Instance: ∀ r : R, @MonoidPreserving R R (+) (+) 0 0 (r *.).
+  Global Instance: forall r : R, @MonoidPreserving R R (+) (+) 0 0 (r *.).
   Proof.
   repeat (constructor; try apply _).
   - red. apply distribute_l.
@@ -126,7 +126,7 @@ Section semiring_props.
 End semiring_props.
 
 (* Due to bug #2528 *)
-Hint Extern 3 (PropHolds (_ * _ ≠ 0)) => eapply @mult_ne_0 : typeclass_instances.
+Hint Extern 3 (PropHolds (_ * _ <> 0)) => eapply @mult_ne_0 : typeclass_instances.
 
 Section semiringmor_props.
   Context `{SemiRingPreserving A B f}.
@@ -135,11 +135,11 @@ Section semiringmor_props.
   Proof (preserves_mon_unit (f:=f)).
   Lemma preserves_1: f 1 = 1.
   Proof (preserves_mon_unit (f:=f)).
-  Lemma preserves_mult: ∀ x y, f (x * y) = f x * f y.
+  Lemma preserves_mult: forall x y, f (x * y) = f x * f y.
   Proof.
   intros. apply preserves_sg_op.
   Qed.
-  Lemma preserves_plus: ∀ x y, f (x + y) = f x + f y.
+  Lemma preserves_plus: forall x y, f (x + y) = f x + f y.
   Proof.
   intros. apply preserves_sg_op.
   Qed.
@@ -162,13 +162,13 @@ Section semiringmor_props.
   Qed.
 
   Context `{!Injective f}.
-  Instance injective_ne_0 x : PropHolds (x ≠ 0) → PropHolds (f x ≠ 0).
+  Instance injective_ne_0 x : PropHolds (x <> 0) -> PropHolds (f x <> 0).
   Proof.
   intros. rewrite <-preserves_0. apply (jections.injective_ne f).
   assumption.
   Qed.
 
-  Lemma injective_ne_1 x : x ≠ 1 → f x ≠ 1.
+  Lemma injective_ne_1 x : x <> 1 -> f x <> 1.
   Proof.
   intros. rewrite <-preserves_1.
   apply (jections.injective_ne f).
@@ -177,7 +177,7 @@ Section semiringmor_props.
 End semiringmor_props.
 
 (* Due to bug #2528 *)
-Hint Extern 12 (PropHolds (_ _ ≠ 0)) =>
+Hint Extern 12 (PropHolds (_ _ <> 0)) =>
   eapply @injective_ne_0 : typeclass_instances.
 
 (* Lemma stdlib_ring_theory R `{Ring R} :
@@ -272,7 +272,7 @@ Section ring_props.
   intro x; rewrite negate_0; apply plus_0_r.
   Qed.
 
-  Lemma equal_by_zero_sum x y : x - y = 0 ↔ x = y.
+  Lemma equal_by_zero_sum x y : x - y = 0 <-> x = y.
   Proof.
   split; intros E.
   - rewrite <- (plus_0_l y). rewrite <- E.
@@ -282,14 +282,14 @@ Section ring_props.
   - rewrite E. apply right_inverse.
   Qed.
 
-  Lemma flip_negate x y : -x = y ↔ x = -y.
+  Lemma flip_negate x y : -x = y <-> x = -y.
   Proof.
   split; intros E.
   - rewrite <-E, involutive. trivial.
   - rewrite E, involutive. trivial.
   Qed.
 
-  Lemma flip_negate_0 x : -x = 0 ↔ x = 0.
+  Lemma flip_negate_0 x : -x = 0 <-> x = 0.
   Proof.
   etransitivity.
   - apply flip_negate.
@@ -297,13 +297,13 @@ Section ring_props.
     apply reflexivity.
   Qed.
 
-  Lemma flip_negate_ne_0 x : -x ≠ 0 ↔ x ≠ 0.
+  Lemma flip_negate_ne_0 x : -x <> 0 <-> x <> 0.
   Proof.
   split; intros E ?; apply E; apply flip_negate_0;trivial.
   path_via x. apply involutive.
   Qed.
 
-  Lemma negate_zero_prod_l x y : -x * y = 0 ↔ x * y = 0.
+  Lemma negate_zero_prod_l x y : -x * y = 0 <-> x * y = 0.
   Proof.
   split; intros E.
   - apply (injective (-)). rewrite negate_mult_distr_l, negate_0. trivial.
@@ -312,13 +312,13 @@ Section ring_props.
     trivial.
   Qed.
 
-  Lemma negate_zero_prod_r x y : x * -y = 0 ↔ x * y = 0.
+  Lemma negate_zero_prod_r x y : x * -y = 0 <-> x * y = 0.
   Proof.
   rewrite (commutativity (f:=(.*.)) x (-y)), (commutativity (f:=(.*.)) x y).
   apply negate_zero_prod_l.
   Qed.
 
-  Lemma unit_no_zero_divisor (x : R) {unit : RingUnit x}: ¬ZeroDivisor x.
+  Lemma unit_no_zero_divisor (x : R) {unit : RingUnit x}: ~ZeroDivisor x.
   Proof.
   destruct unit as [y x_y_unit].
   intros [_ [z [z_nonzero xz_zero]]].
@@ -328,9 +328,9 @@ Section ring_props.
   apply mult_0_l.
   Qed.
 
-  Context `{!NoZeroDivisors R} `{∀ x y:R, Stable (x = y)}.
+  Context `{!NoZeroDivisors R} `{forall x y:R, Stable (x = y)}.
 
-  Global Instance mult_left_cancel:  ∀ z, PropHolds (z ≠ 0) →
+  Global Instance mult_left_cancel:  forall z, PropHolds (z <> 0) ->
     LeftCancellation (.*.) z.
   Proof.
   intros z z_nonzero x y E.
@@ -343,7 +343,7 @@ Section ring_props.
     apply mult_0_r.
   Qed.
 
-  Global Instance mult_right_cancel: ∀ z, PropHolds (z ≠ 0) →
+  Global Instance mult_right_cancel: forall z, PropHolds (z <> 0) ->
     RightCancellation (.*.) z.
   Proof.
   intros ? ?.
@@ -378,7 +378,7 @@ Hint Extern 6 (PropHolds (1 ≶ 0)) =>
   eapply @intdom_nontrivial_apart : typeclass_instances.
 
 Section ringmor_props.
-  Context `{Ring A} `{Ring B} `{!SemiRingPreserving (f : A → B)}.
+  Context `{Ring A} `{Ring B} `{!SemiRingPreserving (f : A -> B)}.
 
   Definition preserves_negate x : f (-x) = -f x := groups.preserves_negate x.
   (* alias for convenience *)
@@ -389,7 +389,7 @@ Section ringmor_props.
   apply preserves_plus.
   Qed.
 
-  Lemma injective_preserves_0 : (∀ x, f x = 0 → x = 0) → Injective f.
+  Lemma injective_preserves_0 : (forall x, f x = 0 -> x = 0) -> Injective f.
   Proof.
   intros E1 x y E.
   apply equal_by_zero_sum.
@@ -402,10 +402,10 @@ End ringmor_props.
 Section from_another_ring.
   Context `{Ring A} `{IsHSet B}
    `{Bplus : Plus B} `{Zero B} `{Bmult : Mult B} `{One B} `{Bnegate : Negate B}
-    (f : B → A) `{!Injective f}
-    (plus_correct : ∀ x y, f (x + y) = f x + f y) (zero_correct : f 0 = 0)
-    (mult_correct : ∀ x y, f (x * y) = f x * f y) (one_correct : f 1 = 1)
-    (negate_correct : ∀ x, f (-x) = -f x).
+    (f : B -> A) `{!Injective f}
+    (plus_correct : forall x y, f (x + y) = f x + f y) (zero_correct : f 0 = 0)
+    (mult_correct : forall x y, f (x * y) = f x * f y) (one_correct : f 1 = 1)
+    (negate_correct : forall x, f (-x) = -f x).
 
   Lemma projected_ring: Ring B.
   Proof.
@@ -459,16 +459,16 @@ Section morphism_composition.
   Context `{Mult A} `{Plus A} `{One A} `{Zero A}
     `{Mult B} `{Plus B} `{One B} `{Zero B}
     `{Mult C} `{Plus C} `{One C} `{Zero C}
-    (f : A → B) (g : B → C).
+    (f : A -> B) (g : B -> C).
 
   Instance compose_sr_morphism:
-    SemiRingPreserving f → SemiRingPreserving g → SemiRingPreserving (g ∘ f).
+    SemiRingPreserving f -> SemiRingPreserving g -> SemiRingPreserving (g ∘ f).
   Proof.
   split; apply _.
   Qed.
 
   Instance invert_sr_morphism:
-    ∀ `{!Inverse f}, Bijective f → SemiRingPreserving f → SemiRingPreserving (f⁻¹).
+    forall `{!Inverse f}, Bijective f -> SemiRingPreserving f -> SemiRingPreserving (f⁻¹).
   Proof.
   split; apply _.
   Qed.

@@ -184,8 +184,8 @@ Qed.
 Lemma S_nat_1_plus x : S x =N= 1 + x.
 Proof. reflexivity. Qed.
 
-Lemma nat_induction (P : nat → Type) :
-  P 0 → (∀ n, P n → P (1 + n)) → ∀ n, P n.
+Lemma nat_induction (P : nat -> Type) :
+  P 0 -> (forall n, P n -> P (1 + n)) -> forall n, P n.
 Proof nat_rect P.
 
 Lemma plus_eq_zero : forall a b : nat, a + b =N= 0 -> a =N= 0 /\ b =N= 0.
@@ -219,7 +219,7 @@ red. intros a;induction a as [|a IHa];simpl_nat;intros b c E.
 Qed.
 
 Instance nat_mult_cancel_l
-  : ∀ z : nat, PropHolds (~ z =N= 0) → LeftCancellation@{N} (.*.) z.
+  : forall z : nat, PropHolds (~ z =N= 0) -> LeftCancellation@{N} (.*.) z.
 Proof.
 unfold PropHolds. unfold LeftCancellation.
 intros a Ea b c E;revert b c a Ea E.
@@ -633,7 +633,7 @@ intros a b;revert a;induction b as [|b IH].
     rewrite add_S_r,<-add_S_l;apply IH.
 Qed.
 
-Lemma le_plus_minus : forall n m : nat, n <= m → m =N= (n + (cut_minus m  n)).
+Lemma le_plus_minus : forall n m : nat, n <= m -> m =N= (n + (cut_minus m  n)).
 Proof.
 intros n m E. apply le_exists in E.
 destruct E as [k E];rewrite E.

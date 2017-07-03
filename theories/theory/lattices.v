@@ -113,8 +113,8 @@ End lower_bounded_lattice.
 
 Section from_another_sl.
   Context `{SemiLattice A} `{IsHSet B}
-   `{Bop : SgOp B} (f : B → A) `{!Injective f}
-   (op_correct : ∀ x y, f (x & y) = f x & f y).
+   `{Bop : SgOp B} (f : B -> A) `{!Injective f}
+   (op_correct : forall x y, f (x & y) = f x & f y).
 
   Lemma projected_sl: SemiLattice B.
   Proof.
@@ -127,8 +127,8 @@ End from_another_sl.
 
 Section from_another_bounded_sl.
   Context `{BoundedSemiLattice A} `{IsHSet B}
-   `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B → A) `{!Injective f}
-   (op_correct : ∀ x y, f (x & y) = f x & f y)
+   `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B -> A) `{!Injective f}
+   (op_correct : forall x y, f (x & y) = f x & f y)
    (unit_correct : f mon_unit = mon_unit).
 
   Lemma projected_bounded_sl: BoundedSemiLattice B.
@@ -158,58 +158,58 @@ Section morphism_composition.
   Context `{Join A} `{Meet A} `{Bottom A}
     `{Join B} `{Meet B} `{Bottom B}
     `{Join C} `{Meet C} `{Bottom C}
-    (f : A → B) (g : B → C).
+    (f : A -> B) (g : B -> C).
 
   Instance compose_join_sl_morphism:
-    JoinPreserving f → JoinPreserving g →
+    JoinPreserving f -> JoinPreserving g ->
     JoinPreserving (g ∘ f).
   Proof.
   red; apply _.
   Qed.
 
   Instance compose_meet_sl_morphism:
-    MeetPreserving f → MeetPreserving g →
+    MeetPreserving f -> MeetPreserving g ->
     MeetPreserving (g ∘ f).
   Proof.
   red;apply _.
   Qed.
 
   Instance compose_bounded_join_sl_morphism:
-    BoundedJoinPreserving f → BoundedJoinPreserving g →
+    BoundedJoinPreserving f -> BoundedJoinPreserving g ->
     BoundedJoinPreserving (g ∘ f).
   Proof.
   red; apply _.
   Qed.
 
   Instance compose_lattice_morphism:
-    LatticePreserving f → LatticePreserving g → LatticePreserving (g ∘ f).
+    LatticePreserving f -> LatticePreserving g -> LatticePreserving (g ∘ f).
   Proof.
   split; apply _.
   Qed.
 
   Instance invert_join_sl_morphism:
-    ∀ `{!Inverse f}, Bijective f → JoinPreserving f →
+    forall `{!Inverse f}, Bijective f -> JoinPreserving f ->
     JoinPreserving (f⁻¹).
   Proof.
   red; apply _.
   Qed.
 
   Instance invert_meet_sl_morphism:
-    ∀ `{!Inverse f}, Bijective f → MeetPreserving f →
+    forall `{!Inverse f}, Bijective f -> MeetPreserving f ->
     MeetPreserving (f⁻¹).
   Proof.
   red; apply _.
   Qed.
 
   Instance invert_bounded_join_sl_morphism:
-    ∀ `{!Inverse f}, Bijective f → BoundedJoinPreserving f →
+    forall `{!Inverse f}, Bijective f -> BoundedJoinPreserving f ->
     BoundedJoinPreserving (f⁻¹).
   Proof.
   red; apply _.
   Qed.
 
   Instance invert_lattice_morphism:
-    ∀ `{!Inverse f}, Bijective f → LatticePreserving f → LatticePreserving (f⁻¹).
+    forall `{!Inverse f}, Bijective f -> LatticePreserving f -> LatticePreserving (f⁻¹).
   Proof.
   split; apply _.
   Qed.

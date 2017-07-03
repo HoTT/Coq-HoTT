@@ -120,12 +120,12 @@ Section Quote.
   Global Arguments quote {V l} n {V' r _}.
   Global Arguments eval_quote {V l} n {V' r _}.
 
-  Definition sum_assoc {A B C}: (A\/B)\/C → A\/(B\/C).
+  Definition sum_assoc {A B C}: (A\/B)\/C -> A\/(B\/C).
   Proof.
   intros [[?|?]|?];auto.
   Defined.
 
-  Definition sum_aux {A B C}: (A\/B) → A\/(B\/C).
+  Definition sum_aux {A B C}: (A\/B) -> A\/(B\/C).
   Proof.
   intros [?|?];auto.
   Defined.
@@ -218,10 +218,10 @@ Section Quote.
 
 End Quote.
 
-Definition quote': ∀ x {V':Type0 } {v: Vars V'} {d: Quote noVars x v}, Expr _
+Definition quote': forall x {V':Type0 } {v: Vars V'} {d: Quote noVars x v}, Expr _
   := @quote _ _.
 
-Definition eval_quote': ∀ x {V':Type0} {v: Vars V'} {d: Quote noVars x v},
+Definition eval_quote': forall x {V':Type0} {v: Vars V'} {d: Quote noVars x v},
   eval (merge noVars v) (quote x) = x
   := @eval_quote _ _.
 
@@ -271,7 +271,7 @@ Lemma quote_equality {V:Type0} {v: Vars V}
   {V':Type0} {v': Vars V'} (l r: R)
   `{!Quote noVars l v} `{!Quote v r v'}
   : let heap := (merge v v') in
-  eval heap (expr_map sum_forget (quote l)) = eval heap (quote r) → l = r.
+  eval heap (expr_map sum_forget (quote l)) = eval heap (quote r) -> l = r.
 Proof.
 intros ? E.
 rewrite <-(eval_quote l),<-(eval_quote r).

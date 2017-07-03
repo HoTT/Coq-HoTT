@@ -68,42 +68,42 @@ Section join_semilattice_order.
     + apply join_ub_l.
   Qed.
 
-  Lemma join_le_compat_r x y z : z ≤ x → z ≤ x ⊔ y.
+  Lemma join_le_compat_r x y z : z ≤ x -> z ≤ x ⊔ y.
   Proof.
   intros E. transitivity x.
   - trivial.
   - apply join_ub_l.
   Qed.
 
-  Lemma join_le_compat_l x y z : z ≤ y → z ≤ x ⊔ y.
+  Lemma join_le_compat_l x y z : z ≤ y -> z ≤ x ⊔ y.
   Proof.
   intros E. rewrite (commutativity (f:=join)).
   apply join_le_compat_r.
   trivial.
   Qed.
 
-  Lemma join_l x y : y ≤ x → x ⊔ y = x.
+  Lemma join_l x y : y ≤ x -> x ⊔ y = x.
   Proof.
   intros E. apply (antisymmetry (≤)).
   - apply join_lub;trivial. apply reflexivity.
   - apply join_ub_l.
   Qed.
 
-  Lemma join_r x y : x ≤ y → x ⊔ y = y.
+  Lemma join_r x y : x ≤ y -> x ⊔ y = y.
   Proof.
   intros E. rewrite (commutativity (f:=join)).
   apply join_l.
   trivial.
   Qed.
 
-  Lemma join_sl_le_spec x y : x ≤ y ↔ x ⊔ y = y.
+  Lemma join_sl_le_spec x y : x ≤ y <-> x ⊔ y = y.
   Proof.
   split; intros E.
   - apply join_r. trivial.
   - rewrite <-E. apply join_ub_l.
   Qed.
 
-  Global Instance join_le_preserving_l : ∀ z, OrderPreserving (z ⊔).
+  Global Instance join_le_preserving_l : forall z, OrderPreserving (z ⊔).
   Proof.
   red;intros.
   apply join_lub.
@@ -111,19 +111,19 @@ Section join_semilattice_order.
   - apply join_le_compat_l. trivial.
   Qed.
 
-  Global Instance join_le_preserving_r : ∀ z, OrderPreserving (⊔ z).
+  Global Instance join_le_preserving_r : forall z, OrderPreserving (⊔ z).
   Proof.
   intros. apply maps.order_preserving_flip.
   Qed.
 
-  Lemma join_le_compat x₁ x₂ y₁ y₂ : x₁ ≤ x₂ → y₁ ≤ y₂ → x₁ ⊔ y₁ ≤ x₂ ⊔ y₂.
+  Lemma join_le_compat x₁ x₂ y₁ y₂ : x₁ ≤ x₂ -> y₁ ≤ y₂ -> x₁ ⊔ y₁ ≤ x₂ ⊔ y₂.
   Proof.
   intros E1 E2. transitivity (x₁ ⊔ y₂).
   - apply (order_preserving (x₁ ⊔)). trivial.
   - apply (order_preserving (⊔ y₂));trivial.
   Qed.
 
-  Lemma join_le x y z : x ≤ z → y ≤ z → x ⊔ y ≤ z.
+  Lemma join_le x y z : x ≤ z -> y ≤ z -> x ⊔ y ≤ z.
   Proof.
   intros. rewrite <-(idempotency (⊔) z).
   apply join_le_compat;trivial.
@@ -165,7 +165,7 @@ Section bounded_join_semilattice.
   reflexivity.
   Qed.
 
-  Lemma below_bottom x : x ≤ ⊥ → x = ⊥.
+  Lemma below_bottom x : x ≤ ⊥ -> x = ⊥.
   Proof.
   intros E.
   apply join_sl_le_spec in E. rewrite right_identity in E.
@@ -232,41 +232,41 @@ Section meet_semilattice_order.
     + apply meet_glb;apply reflexivity.
   Qed.
 
-  Lemma meet_le_compat_r x y z : x ≤ z → x ⊓ y ≤ z.
+  Lemma meet_le_compat_r x y z : x ≤ z -> x ⊓ y ≤ z.
   Proof.
   intros E. transitivity x.
   - apply meet_lb_l.
   - trivial.
   Qed.
 
-  Lemma meet_le_compat_l x y z : y ≤ z → x ⊓ y ≤ z.
+  Lemma meet_le_compat_l x y z : y ≤ z -> x ⊓ y ≤ z.
   Proof.
   intros E. rewrite (commutativity (f:=meet)).
   apply meet_le_compat_r.
   trivial.
   Qed.
 
-  Lemma meet_l x y : x ≤ y → x ⊓ y = x.
+  Lemma meet_l x y : x ≤ y -> x ⊓ y = x.
   Proof.
   intros E. apply (antisymmetry (≤)).
   - apply meet_lb_l.
   - apply meet_glb; trivial. apply reflexivity.
   Qed.
 
-  Lemma meet_r x y : y ≤ x → x ⊓ y = y.
+  Lemma meet_r x y : y ≤ x -> x ⊓ y = y.
   Proof.
   intros E. rewrite (commutativity (f:=meet)). apply meet_l.
   trivial.
   Qed.
 
-  Lemma meet_sl_le_spec x y : x ≤ y ↔ x ⊓ y = x.
+  Lemma meet_sl_le_spec x y : x ≤ y <-> x ⊓ y = x.
   Proof.
   split; intros E.
   - apply meet_l;trivial.
   - rewrite <-E. apply meet_lb_r.
   Qed.
 
-  Global Instance: ∀ z, OrderPreserving (z ⊓).
+  Global Instance: forall z, OrderPreserving (z ⊓).
   Proof.
   red;intros.
   apply meet_glb.
@@ -274,19 +274,19 @@ Section meet_semilattice_order.
   - apply  meet_le_compat_l. trivial.
   Qed.
 
-  Global Instance: ∀ z, OrderPreserving (⊓ z).
+  Global Instance: forall z, OrderPreserving (⊓ z).
   Proof.
   intros. apply maps.order_preserving_flip.
   Qed.
 
-  Lemma meet_le_compat x₁ x₂ y₁ y₂ : x₁ ≤ x₂ → y₁ ≤ y₂ → x₁ ⊓ y₁ ≤ x₂ ⊓ y₂.
+  Lemma meet_le_compat x₁ x₂ y₁ y₂ : x₁ ≤ x₂ -> y₁ ≤ y₂ -> x₁ ⊓ y₁ ≤ x₂ ⊓ y₂.
   Proof.
   intros E1 E2. transitivity (x₁ ⊓ y₂).
   - apply (order_preserving (x₁ ⊓)). trivial.
   - apply (order_preserving (⊓ y₂)). trivial.
   Qed.
 
-  Lemma meet_le x y z : z ≤ x → z ≤ y → z ≤ x ⊓ y.
+  Lemma meet_le x y z : z ≤ x -> z ≤ y -> z ≤ x ⊓ y.
   Proof.
   intros. rewrite <-(idempotency (⊓) z). apply meet_le_compat;trivial.
   Qed.
@@ -376,7 +376,7 @@ Definition default_join_sl_le `{JoinSemiLattice L} : Le L :=  λ x y, x ⊔ y = 
 
 Section join_sl_order_alt.
   Context `{JoinSemiLattice L} `{Le L} `{is_mere_relation L le}
-    (le_correct : ∀ x y, x ≤ y ↔ x ⊔ y = y).
+    (le_correct : forall x y, x ≤ y <-> x ⊔ y = y).
 
   Lemma alt_Build_JoinSemiLatticeOrder : JoinSemiLatticeOrder (≤).
   Proof.
@@ -410,7 +410,7 @@ Definition default_meet_sl_le `{MeetSemiLattice L} : Le L :=  λ x y, x ⊓ y = 
 
 Section meet_sl_order_alt.
   Context `{MeetSemiLattice L} `{Le L} `{is_mere_relation L le}
-    (le_correct : ∀ x y, x ≤ y ↔ x ⊓ y = x).
+    (le_correct : forall x y, x ≤ y <-> x ⊓ y = x).
 
   Lemma alt_Build_MeetSemiLatticeOrder : MeetSemiLatticeOrder (≤).
   Proof.
@@ -440,7 +440,7 @@ Section meet_sl_order_alt.
 End meet_sl_order_alt.
 
 Section join_order_preserving.
-  Context `{JoinSemiLatticeOrder L} `{JoinSemiLatticeOrder K} (f : L → K)
+  Context `{JoinSemiLatticeOrder L} `{JoinSemiLatticeOrder K} (f : L -> K)
     `{!JoinPreserving f}.
 
   Lemma join_sl_mor_preserving: OrderPreserving f.
@@ -461,7 +461,7 @@ Section join_order_preserving.
 End join_order_preserving.
 
 Section meet_order_preserving.
-  Context `{MeetSemiLatticeOrder L} `{MeetSemiLatticeOrder K} (f : L → K)
+  Context `{MeetSemiLatticeOrder L} `{MeetSemiLatticeOrder K} (f : L -> K)
     `{!MeetPreserving f}.
 
   Lemma meet_sl_mor_preserving: OrderPreserving f.
@@ -484,7 +484,7 @@ End meet_order_preserving.
 Section order_preserving_join_sl_mor.
   Context `{JoinSemiLatticeOrder L} `{JoinSemiLatticeOrder K}
     `{!TotalOrder (_ : Le L)} `{!TotalOrder (_ : Le K)}
-    `{!OrderPreserving (f : L → K)}.
+    `{!OrderPreserving (f : L -> K)}.
 
   Lemma order_preserving_join_sl_mor: JoinPreserving f.
   Proof.
@@ -500,7 +500,7 @@ End order_preserving_join_sl_mor.
 Section order_preserving_meet_sl_mor.
   Context `{MeetSemiLatticeOrder L} `{MeetSemiLatticeOrder K}
     `{!TotalOrder (_ : Le L)} `{!TotalOrder (_ : Le K)}
-    `{!OrderPreserving (f : L → K)}.
+    `{!OrderPreserving (f : L -> K)}.
 
   Lemma order_preserving_meet_sl_mor: SemiGroupPreserving f.
   Proof.

@@ -15,7 +15,7 @@ Proof.
 rewrite <-(recip_inverse (x↾Px)). trivial.
 Qed.
 
-Lemma recip_proper_alt x y Px Py : x = y → // x↾Px = // y↾Py.
+Lemma recip_proper_alt x y Px Py : x = y -> // x↾Px = // y↾Py.
 Proof.
 intro E. apply ap.
 apply Sigma.path_sigma with E.
@@ -27,7 +27,7 @@ Proof.
 apply recip_proper_alt. reflexivity.
 Qed.
 
-Lemma apart_0_proper {x y} : x ≶ 0 → x = y → y ≶ 0.
+Lemma apart_0_proper {x y} : x ≶ 0 -> x = y -> y ≶ 0.
 Proof.
 intros ? E. rewrite <-E. trivial.
 Qed.
@@ -62,7 +62,7 @@ repeat (split; try apply _); intros x y E.
   rewrite mult_1_l,mult_1_r. apply symmetry;trivial.
 Qed.
 
-Global Instance: ∀ z, StrongLeftCancellation (+) z.
+Global Instance: forall z, StrongLeftCancellation (+) z.
 Proof.
 intros z x y E. apply (strong_extensionality (+ -z)).
 do 2 rewrite (commutativity (f:=plus) z _),
@@ -70,12 +70,12 @@ do 2 rewrite (commutativity (f:=plus) z _),
 trivial.
 Qed.
 
-Global Instance: ∀ z, StrongRightCancellation (+) z.
+Global Instance: forall z, StrongRightCancellation (+) z.
 Proof.
 intros. apply (strong_right_cancel_from_left (+)).
 Qed.
 
-Global Instance: ∀ z, PropHolds (z ≶ 0) → StrongLeftCancellation (.*.) z.
+Global Instance: forall z, PropHolds (z ≶ 0) -> StrongLeftCancellation (.*.) z.
 Proof.
 intros z Ez x y E. red in Ez.
 rewrite !(commutativity z).
@@ -84,25 +84,25 @@ rewrite <-!simple_associativity, !reciperse_alt.
 rewrite !mult_1_r;trivial.
 Qed.
 
-Global Instance: ∀ z, PropHolds (z ≶ 0) → StrongRightCancellation (.*.) z.
+Global Instance: forall z, PropHolds (z ≶ 0) -> StrongRightCancellation (.*.) z.
 Proof.
 intros. apply (strong_right_cancel_from_left (.*.)).
 Qed.
 
-Lemma mult_apart_zero_l x y : x * y ≶ 0 → x ≶ 0.
+Lemma mult_apart_zero_l x y : x * y ≶ 0 -> x ≶ 0.
 Proof.
 intros. apply (strong_extensionality (.* y)).
 rewrite mult_0_l. trivial.
 Qed.
 
-Lemma mult_apart_zero_r x y : x * y ≶ 0 → y ≶ 0.
+Lemma mult_apart_zero_r x y : x * y ≶ 0 -> y ≶ 0.
 Proof.
 intros. apply (strong_extensionality (x *.)).
 rewrite mult_0_r. trivial.
 Qed.
 
 Instance mult_apart_zero x y :
-  PropHolds (x ≶ 0) → PropHolds (y ≶ 0) → PropHolds (x * y ≶ 0).
+  PropHolds (x ≶ 0) -> PropHolds (y ≶ 0) -> PropHolds (x * y ≶ 0).
 Proof.
 intros Ex Ey.
 apply (strong_extensionality (.* // y↾(Ey : (≶0) y))).
@@ -124,7 +124,7 @@ Qed.
 
 Global Instance: IntegralDomain F := {}.
 
-Global Instance apart_0_sig_apart_0: ∀ (x : F ₀), PropHolds (x.1 ≶ 0).
+Global Instance apart_0_sig_apart_0: forall (x : F ₀), PropHolds (x.1 ≶ 0).
 Proof.
 intros [??];trivial.
 Qed.
@@ -136,17 +136,17 @@ apply mult_apart_zero_r with (x.1).
 rewrite recip_inverse. solve_propholds.
 Qed.
 
-Lemma field_div_0_l x y : x = 0 → x // y = 0.
+Lemma field_div_0_l x y : x = 0 -> x // y = 0.
 Proof.
 intros E. rewrite E. apply left_absorb.
 Qed.
 
-Lemma field_div_diag x y : x = y.1 → x // y = 1.
+Lemma field_div_diag x y : x = y.1 -> x // y = 1.
 Proof.
 intros E. rewrite E. apply recip_inverse.
 Qed.
 
-Lemma equal_quotients (a c: F) b d : a * d.1 = c * b.1 ↔ a // b = c // d.
+Lemma equal_quotients (a c: F) b d : a * d.1 = c * b.1 <-> a // b = c // d.
 Proof.
 split; intro E.
 - rewrite <-(mult_1_l (a // b)),
@@ -199,11 +199,11 @@ Hint Extern 8 (PropHolds (_ * _ ≶ 0)) =>
   eapply @mult_apart_zero : typeclass_instances.
 
 Section morphisms.
-  Context `{Field F1} `{Field F2} `{!SemiRingStrongPreserving (f : F1 → F2)}.
+  Context `{Field F1} `{Field F2} `{!SemiRingStrongPreserving (f : F1 -> F2)}.
 
 (*   Add Ring F1 : (stdlib_ring_theory F1). *)
 
-  Lemma strong_injective_preserves_0 : (∀ x, x ≶ 0 → f x ≶ 0) → StrongInjective f.
+  Lemma strong_injective_preserves_0 : (forall x, x ≶ 0 -> f x ≶ 0) -> StrongInjective f.
   Proof.
   intros E1. split; try apply _. intros x y E2.
   apply (strong_extensionality (+ -f y)).

@@ -708,7 +708,7 @@ Qed.
 Lemma Q_triangular_one@{} : forall (q r : Q)
 (e : Q+) (Hqr : close e q r)
 (q0 : Q) (n : Q+),
-  (close n q q0 → close (e + n) r q0).
+  (close n q q0 -> close (e + n) r q0).
 Proof.
 unfold close;simpl.
 intros q r e [E1 E1'] s n [E2 E2'].
@@ -970,7 +970,7 @@ intros u y;apply equiv_through_approx0. apply cauchy_complete.
 Qed.
 
 Lemma equiv_lim_lim (x y : Approximation A) (e d n e' : Q+)
-  : e = d + n + e' → close e' (x d) (y n) → close e (lim x) (lim y).
+  : e = d + n + e' -> close e' (x d) (y n) -> close e (lim x) (lim y).
 Proof.
 intros He xi.
 rewrite He.

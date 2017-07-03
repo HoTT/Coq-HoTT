@@ -10,14 +10,14 @@ Require Import
 Require Export
   HoTTClasses.interfaces.naturals.
 
-Lemma to_semiring_unique `{Naturals N} `{SemiRing SR} (f: N → SR)
+Lemma to_semiring_unique `{Naturals N} `{SemiRing SR} (f: N -> SR)
   `{!SemiRingPreserving f} x
   : f x = naturals_to_semiring N SR x.
 Proof.
 symmetry. apply naturals_initial.
 Qed.
 
-Lemma to_semiring_unique_alt `{Naturals N} `{SemiRing SR} (f g: N → SR)
+Lemma to_semiring_unique_alt `{Naturals N} `{SemiRing SR} (f g: N -> SR)
   `{!SemiRingPreserving f} `{!SemiRingPreserving g} x
   : f x = g x.
 Proof.
@@ -31,22 +31,22 @@ change (compose (naturals_to_semiring N2 N) (naturals_to_semiring N N2) x = id x
 apply to_semiring_unique_alt;apply _.
 Qed.
 
-Lemma morphisms_involutive `{Naturals N} `{SemiRing R} (f : R → N) (g : N → R)
+Lemma morphisms_involutive `{Naturals N} `{SemiRing R} (f : R -> N) (g : N -> R)
   `{!SemiRingPreserving f} `{!SemiRingPreserving g} x : f (g x) = x.
 Proof (to_semiring_unique_alt (f ∘ g) id _).
 
 Lemma to_semiring_twice `{Naturals N} `{SemiRing R1} `{SemiRing R2}
-  (f : R1 → R2) (g : N → R1) (h : N → R2)
+  (f : R1 -> R2) (g : N -> R1) (h : N -> R2)
   `{!SemiRingPreserving f} `{!SemiRingPreserving g} `{!SemiRingPreserving h} x
   : f (g x) = h x.
 Proof (to_semiring_unique_alt (f ∘ g) h _).
 
-Lemma to_semiring_self `{Naturals N} (f : N → N) `{!SemiRingPreserving f} x
+Lemma to_semiring_self `{Naturals N} (f : N -> N) `{!SemiRingPreserving f} x
   : f x = x.
 Proof (to_semiring_unique_alt f id _).
 
 Lemma to_semiring_injective `{Naturals N} `{SemiRing A}
-   (f: A → N) (g: N → A) `{!SemiRingPreserving f} `{!SemiRingPreserving g}
+   (f: A -> N) (g: N -> A) `{!SemiRingPreserving f} `{!SemiRingPreserving g}
    : Injective g.
 Proof.
 intros x y E.
@@ -55,7 +55,7 @@ rewrite <-(to_semiring_twice f g id x), <-(to_semiring_twice f g id y).
 apply ap,E.
 Qed.
 
-Instance naturals_to_naturals_injective `{Naturals N} `{Naturals N2} (f: N → N2)
+Instance naturals_to_naturals_injective `{Naturals N} `{Naturals N2} (f: N -> N2)
   `{!SemiRingPreserving f}
   : Injective f | 15.
 Proof (to_semiring_injective (naturals_to_semiring N2 N) _).
@@ -63,7 +63,7 @@ Proof (to_semiring_injective (naturals_to_semiring N2 N) _).
 Section retract_is_nat.
   Context `{Naturals N} `{SemiRing SR}
     {SRap : Apart SR} {SRle SRlt} `{!FullPseudoSemiRingOrder (A:=SR) SRle SRlt}.
-  Context (f : N → SR) `{inv_f : !Inverse f} `{!Surjective f}
+  Context (f : N -> SR) `{inv_f : !Inverse f} `{!Surjective f}
     `{!SemiRingPreserving f} `{!SemiRingPreserving (f⁻¹)}.
 
   (* If we make this an instance, instance resolution will loop *)
@@ -75,7 +75,7 @@ Section retract_is_nat.
 
     Instance: SemiRingPreserving (naturals_to_semiring N R ∘ f⁻¹) := {}.
 
-    Context (h :  SR → R) `{!SemiRingPreserving h}.
+    Context (h :  SR -> R) `{!SemiRingPreserving h}.
 
     Lemma same_morphism x : (naturals_to_semiring N R ∘ f⁻¹) x = h x.
     Proof.
@@ -122,8 +122,8 @@ Qed.
 Section borrowed_from_nat.
 
   Lemma induction
-    : forall (P: N → Type),
-    P 0 → (∀ n, P n → P (1 + n)) → ∀ n, P n.
+    : forall (P: N -> Type),
+    P 0 -> (forall n, P n -> P (1 + n)) -> forall n, P n.
   Proof.
   pose (Q := fun s : SemiRings.Operations =>
     forall P : s -> Type, P 0 -> (forall n, P n -> P (1 + n)) -> forall n, P n).
@@ -148,27 +148,27 @@ Section borrowed_from_nat.
   apply ES.
   Qed.
 
-  Global Instance nat_plus_cancel_l : ∀ z : N, LeftCancellation (+) z.
+  Global Instance nat_plus_cancel_l : forall z : N, LeftCancellation (+) z.
   Proof.
   refine (from_nat_stmt@{i U}
     nat (fun s => forall z : s, LeftCancellation plus z) _).
   simpl. apply nat_plus_cancel_l@{U i}.
   Qed.
 
-  Global Instance: ∀ z : N, RightCancellation (+) z.
+  Global Instance: forall z : N, RightCancellation (+) z.
   Proof. intro. apply (right_cancel_from_left (+)). Qed.
 
-  Global Instance: ∀ z : N, PropHolds (z ≠ 0) → LeftCancellation (.*.) z.
+  Global Instance: forall z : N, PropHolds (z <> 0) -> LeftCancellation (.*.) z.
   Proof.
   refine (from_nat_stmt nat (fun s =>
     forall z : s, PropHolds (~ z = 0) -> LeftCancellation mult z) _).
   simpl. apply nat_mult_cancel_l.
   Qed.
 
-  Global Instance: ∀ z : N, PropHolds (z ≠ 0) → RightCancellation (.*.) z.
+  Global Instance: forall z : N, PropHolds (z <> 0) -> RightCancellation (.*.) z.
   Proof. intros ? ?. apply (right_cancel_from_left (.*.)). Qed.
 
-  Instance nat_nontrivial: PropHolds ((1:N) ≠ 0).
+  Instance nat_nontrivial: PropHolds ((1:N) <> 0).
   Proof.
   refine (from_nat_stmt nat (fun s => PropHolds (~ (1:s) = 0)) _).
   apply _.
@@ -178,17 +178,17 @@ Section borrowed_from_nat.
     PropHolds ((1:N) ≶ 0).
   Proof. apply apartness.ne_apart. solve_propholds. Qed.
 
-  Lemma zero_sum : forall (x y : N), x + y = 0 → x = 0 ∧ y = 0.
+  Lemma zero_sum : forall (x y : N), x + y = 0 -> x = 0 /\ y = 0.
   Proof.
   refine (from_nat_stmt nat
     (fun s => forall x y : s, x + y = 0 -> x = 0 /\ y = 0) _).
   simpl. apply plus_eq_zero.
   Qed.
 
-  Lemma one_sum : forall (x y : N), x + y = 1 → (x = 1 ∧ y = 0) ∨ (x = 0 ∧ y = 1).
+  Lemma one_sum : forall (x y : N), x + y = 1 -> (x = 1 /\ y = 0) \/ (x = 0 /\ y = 1).
   Proof.
   refine (from_nat_stmt nat (fun s =>
-    forall (x y : s), x + y = 1 → (x = 1 ∧ y = 0) ∨ (x = 0 ∧ y = 1)) _).
+    forall (x y : s), x + y = 1 -> (x = 1 /\ y = 0) \/ (x = 0 /\ y = 1)) _).
   simpl.
   intros [|x] [|y];auto.
   - intros E. rewrite add_S_l,add_0_r in E.
@@ -206,7 +206,7 @@ Section borrowed_from_nat.
   Qed.
 End borrowed_from_nat.
 
-Lemma nat_1_plus_ne_0 x : 1 + x ≠ 0.
+Lemma nat_1_plus_ne_0 x : 1 + x <> 0.
 Proof.
 intro E. destruct (zero_sum 1 x E). apply nat_nontrivial. trivial.
 Qed.
@@ -217,10 +217,10 @@ apply decidablepaths_equiv with nat (naturals_to_semiring nat N);apply _.
 Qed.
 
 Section with_a_ring.
-  Context `{Ring R} `{!SemiRingPreserving (f : N → R)} `{!Injective f}.
+  Context `{Ring R} `{!SemiRingPreserving (f : N -> R)} `{!Injective f}.
 
   Lemma to_ring_zero_sum x y :
-    -f x = f y → x = 0 ∧ y = 0.
+    -f x = f y -> x = 0 /\ y = 0.
   Proof.
   intros E. apply zero_sum, (injective f).
   rewrite rings.preserves_0, rings.preserves_plus, <-E.
@@ -228,7 +228,7 @@ Section with_a_ring.
   Qed.
 
   Lemma negate_to_ring x y :
-    -f x = f y → f x = f y.
+    -f x = f y -> f x = f y.
   Proof.
   intros E. destruct (to_ring_zero_sum x y E) as [E2 E3].
   rewrite E2, E3. reflexivity.
@@ -237,7 +237,7 @@ End with_a_ring.
 End contents.
 
 (* Due to bug #2528 *)
-Hint Extern 6 (PropHolds (1 ≠ 0)) =>
+Hint Extern 6 (PropHolds (1 <> 0)) =>
   eapply @nat_nontrivial : typeclass_instances.
 Hint Extern 6 (PropHolds (1 ≶ 0)) =>
   eapply @nat_nontrivial_apart : typeclass_instances.

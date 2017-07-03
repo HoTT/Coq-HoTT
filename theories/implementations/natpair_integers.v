@@ -542,7 +542,7 @@ Qed.
 Global Instance Zle_cast_embedding@{} : OrderEmbedding (cast N Z)
   := Zle_cast_embedding'@{Ularge Ularge}.
 
-Lemma Zle_plus_preserving_l' : ∀ z : Z, OrderPreserving ((+) z).
+Lemma Zle_plus_preserving_l' : forall z : Z, OrderPreserving ((+) z).
 Proof.
 red.
 apply (Z_ind3 (fun _ _ _ => _ -> _)).
@@ -555,10 +555,10 @@ rewrite Hrw;clear Hrw.
 apply (order_preserving _),E.
 Qed.
 
-Instance Zle_plus_preserving_l@{} : ∀ z : Z, OrderPreserving ((+) z)
+Instance Zle_plus_preserving_l@{} : forall z : Z, OrderPreserving ((+) z)
   := Zle_plus_preserving_l'@{Ularge Ularge}.
 
-Lemma Zmult_nonneg' : ∀ x y : Z, PropHolds (0 ≤ x) → PropHolds (0 ≤ y) →
+Lemma Zmult_nonneg' : forall x y : Z, PropHolds (0 ≤ x) -> PropHolds (0 ≤ y) ->
   PropHolds (0 ≤ x * y).
 Proof.
 unfold PropHolds.
@@ -573,7 +573,7 @@ apply compose_le with (a * b).
 - ring_with_nat.
 Qed.
 
-Instance Zmult_nonneg@{} : ∀ x y : Z, PropHolds (0 ≤ x) → PropHolds (0 ≤ y) →
+Instance Zmult_nonneg@{} : forall x y : Z, PropHolds (0 ≤ x) -> PropHolds (0 ≤ y) ->
   PropHolds (0 ≤ x * y)
   := Zmult_nonneg'@{Ularge Ularge Ularge}.
 
@@ -628,7 +628,7 @@ Instance Zlt_strict@{} : StrictOrder Zlt
   := Zlt_strict'@{Ularge Ularge Ularge Ularge Ularge}.
 
 Lemma plus_strict_order_preserving_l'
-  : ∀ z : Z, StrictlyOrderPreserving ((+) z).
+  : forall z : Z, StrictlyOrderPreserving ((+) z).
 Proof.
 red; apply (Z_ind3 (fun _ _ _ => _ -> _)).
 intros [pa na] [pb nb] [pc nc].
@@ -642,10 +642,10 @@ apply (strictly_order_preserving _),E.
 Qed.
 
 Instance Zplus_strict_order_preserving_l@{}
-  : ∀ z : Z, StrictlyOrderPreserving ((+) z)
+  : forall z : Z, StrictlyOrderPreserving ((+) z)
   := plus_strict_order_preserving_l'@{Ularge Ularge}.
 
-Lemma Zmult_pos' : ∀ x y : Z, PropHolds (0 < x) → PropHolds (0 < y) →
+Lemma Zmult_pos' : forall x y : Z, PropHolds (0 < x) -> PropHolds (0 < y) ->
   PropHolds (0 < x * y).
 Proof.
 unfold PropHolds.
@@ -660,7 +660,7 @@ apply compose_lt with (a * b).
 - ring_with_nat.
 Qed.
 
-Instance Zmult_pos@{} : ∀ x y : Z, PropHolds (0 < x) → PropHolds (0 < y) →
+Instance Zmult_pos@{} : forall x y : Z, PropHolds (0 < x) -> PropHolds (0 < y) ->
   PropHolds (0 < x * y)
   := Zmult_pos'@{Ularge Ularge Ularge}.
 
@@ -789,7 +789,7 @@ Instance Z_full_psorder@{} : FullPseudoOrder Zle Zlt
     Ularge Ularge Ularge Ularge Ularge
     Ularge Ularge Ularge Ularge Ularge}.
 
-Lemma Zmult_strong_ext_l' : ∀ z : Z, StrongExtensionality (z *.).
+Lemma Zmult_strong_ext_l' : forall z : Z, StrongExtensionality (z *.).
 Proof.
 red;apply (Z_ind3 (fun _ _ _ => _ -> _)).
 intros [zp zn] [xp xn] [yp yn];rewrite !Zapart_def;unfold PairT.Tapart;simpl.
@@ -809,7 +809,7 @@ refine (merely_destruct (strong_binary_extensionality (+)
     trivial.
 Qed.
 
-Instance Zmult_strong_ext_l@{} : ∀ z : Z, StrongExtensionality (z *.)
+Instance Zmult_strong_ext_l@{} : forall z : Z, StrongExtensionality (z *.)
   := Zmult_strong_ext_l'@{
     Ularge Ularge}.
 
@@ -874,7 +874,7 @@ Instance Z_to_ring_morphism@{} `{Ring B} : SemiRingPreserving (integers_to_ring 
   := Z_to_ring_morphism'@{Ularge}.
 
 Lemma Z_to_ring_unique@{} `{Ring B} (h : Z -> B) `{!SemiRingPreserving h}
-  : ∀ x : Z, integers_to_ring Z B x = h x.
+  : forall x : Z, integers_to_ring Z B x = h x.
 Proof.
 pose proof Z_ring.
 apply (Z_ind _).
@@ -924,9 +924,9 @@ Qed.
 (* We use decidability of equality on N
    to make sure we always go left when the inputs are equal.
    Otherwise we would have to truncate IntAbs. *)
-Definition Z_abs_def@{} : ∀ x : PairT.T N,
-  (∃ n : N, naturals_to_semiring N Z n = ' x)
-  ∨ (∃ n : N, naturals_to_semiring N Z n = - ' x).
+Definition Z_abs_def@{} : forall x : PairT.T N,
+  (exists n : N, naturals_to_semiring N Z n = ' x)
+  \/ (exists n : N, naturals_to_semiring N Z n = - ' x).
 Proof.
 intros [a b].
 destruct (nat_distance_sig a b) as [[z E]|[z E]].
@@ -936,11 +936,11 @@ destruct (nat_distance_sig a b) as [[z E]|[z E]].
 - left. exists z. apply Z_abs_aux_pos;trivial.
 Defined.
 
-Lemma Z_abs_respects' : ∀ (x y : PairT.T N) (E : PairT.equiv x y),
+Lemma Z_abs_respects' : forall (x y : PairT.T N) (E : PairT.equiv x y),
   transport
     (λ q : Z,
-     (∃ n : N, naturals_to_semiring N Z n = q)
-     ∨ (∃ n : N, naturals_to_semiring N Z n = - q)) (Z_path E) (Z_abs_def x)
+     (exists n : N, naturals_to_semiring N Z n = q)
+     \/ (exists n : N, naturals_to_semiring N Z n = - q)) (Z_path E) (Z_abs_def x)
   = Z_abs_def y.
 Proof.
 intros [pa pb] [na nb] E.
@@ -1025,7 +1025,7 @@ Global Instance Z_abs@{} : IntAbs@{UN UN UN UN UN
 Notation n_to_z := (naturals_to_semiring N Z).
 
 Definition zero_product_aux a b :
-  n_to_z a * n_to_z b = 0 → n_to_z a = 0 ∨ n_to_z b = 0.
+  n_to_z a * n_to_z b = 0 -> n_to_z a = 0 \/ n_to_z b = 0.
 Proof.
 rewrite <-rings.preserves_mult.
 rewrite <-!(naturals.to_semiring_unique (cast N Z)).

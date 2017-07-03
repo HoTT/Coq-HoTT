@@ -22,9 +22,9 @@ Context `{Integers Z} `{!TrivialApart Z}.
 (* Add Ring nat : (rings.stdlib_semiring_theory nat). *)
 
 Lemma induction
-  (P: Z → Type):
-  P 0 → (∀ n, 0 ≤ n → P n → P (1 + n)) → (∀ n, n ≤ 0 → P n → P (n - 1)) →
-  ∀ n, P n.
+  (P: Z -> Type):
+  P 0 -> (forall n, 0 ≤ n -> P n -> P (1 + n)) -> (forall n, n ≤ 0 -> P n -> P (n - 1)) ->
+  forall n, P n.
 Proof.
 intros P0 Psuc1 Psuc2 n.
 destruct (int_abs_sig Z nat n) as [[a A]|[a A]].
@@ -48,8 +48,8 @@ destruct (int_abs_sig Z nat n) as [[a A]|[a A]].
 Qed.
 
 Lemma induction_nonneg
-  (P: Z → Type):
-  P 0 → (∀ n, 0 ≤ n → P n → P (1 + n)) → ∀ n, 0 ≤ n → P n.
+  (P: Z -> Type):
+  P 0 -> (forall n, 0 ≤ n -> P n -> P (1 + n)) -> forall n, 0 ≤ n -> P n.
 Proof.
 intros P0 PS. refine (induction _ _ _ _); auto.
 intros n E1 ? E2.
@@ -74,7 +74,7 @@ intros P P0 Psuc. apply induction; trivial.
   trivial.
 Qed.
 
-Global Instance slow_int_le_dec : ∀ x y: Z, Decision (x ≤ y) | 10.
+Global Instance slow_int_le_dec : forall x y: Z, Decision (x ≤ y) | 10.
 Proof.
 intros x y.
 (* otherwise Z_le gets defined using peano.nat_ring

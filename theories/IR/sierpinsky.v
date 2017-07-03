@@ -624,9 +624,9 @@ intros a b E a' Ea E1 E2;apply E;trivial. red; transitivity a';trivial.
 Qed.
 
 Definition interleave_aux_seq (s : IncreasingSequence Sier)
-  (Is : ∀ (n : nat) (b : Sier),
+  (Is : forall (n : nat) (b : Sier),
        disjoint (s n) b -> partial bool)
-  (Isle : ∀ (n : nat) (b : Sier) (Ea : disjoint (s n) b)
+  (Isle : forall (n : nat) (b : Sier) (Ea : disjoint (s n) b)
          (Ea' : disjoint (s (S n)) b), (Is n b Ea) ≤ (Is (S n) b Ea'))
   (b : Sier)
   (E : disjoint (sup Unit s) b)

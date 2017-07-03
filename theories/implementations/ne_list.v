@@ -6,7 +6,7 @@ Require Export HoTT.Basics.Overture.
 Section contents.
   Context {T: Type}.
 
-  Inductive L: Type := one: T → L | cons: T → L → L.
+  Inductive L: Type := one: T -> L | cons: T -> L -> L.
 
   Fixpoint app (a b: L) {struct a}: L :=
     match a with
@@ -14,13 +14,13 @@ Section contents.
     | cons x y => cons x (app y b)
     end.
 
-  Fixpoint foldr {R} (i: T → R) (f: T → R → R) (a: L): R :=
+  Fixpoint foldr {R} (i: T -> R) (f: T -> R -> R) (a: L): R :=
     match a with
     | one x => i x
     | cons x y => f x (foldr i f y)
     end.
 
-  Fixpoint foldr1 (f: T → T → T) (a: L): T :=
+  Fixpoint foldr1 (f: T -> T -> T) (a: L): T :=
     match a with
     | one x => x
     | cons x y => f x (foldr1 f y)
@@ -52,7 +52,7 @@ Section contents.
     rewrite IHl...
   Qed.  
 
-  Definition last: L → T := foldr1 (fun x y => y).
+  Definition last: L -> T := foldr1 (fun x y => y).
 
   Fixpoint replicate_Sn (x: T) (n: nat): L :=
     match n with
@@ -66,13 +66,13 @@ Section contents.
     | _, _ => one (head l)
     end.
 
-  Lemma two_level_rect (P: L → Type)
-    (Pone: ∀ x, P (one x))
-    (Ptwo: ∀ x y, P (cons x (one y)))
-    (Pmore: ∀ x y z, P z → (∀ y', P (cons y' z)) → P (cons x (cons y z))):
-      ∀ l, P l.
+  Lemma two_level_rect (P: L -> Type)
+    (Pone: forall x, P (one x))
+    (Ptwo: forall x y, P (cons x (one y)))
+    (Pmore: forall x y z, P z -> (forall y', P (cons y' z)) -> P (cons x (cons y z))):
+      forall l, P l.
   Proof with auto.
-   cut (∀ l, P l * ∀ x, P (cons x l)).
+   cut (forall l, P l * forall x, P (cons x l)).
     intros. apply X.
    destruct l...
    revert t.
@@ -101,7 +101,7 @@ Section contents.
   Proof. firstorder. Qed.
 
   Lemma Permutation_ne_tl_length (x y: L):
-    Permutation x y → length (tl x) = length (tl y).
+    Permutation x y -> length (tl x) = length (tl y).
   Proof.
    intro H.
    apply eq_add_S.
@@ -120,7 +120,7 @@ Fixpoint tails {A} (l: L A): L (L A) :=
   end.
 (* 
 Lemma tails_are_shorter {A} (y x: L A):
-  In x (tails y) →
+  In x (tails y) ->
   length x <= length y.
 Proof with auto.
  induction y; simpl.
@@ -128,16 +128,16 @@ Proof with auto.
  intros [[] | C]...
 Qed.
  *)
-Fixpoint map {A B} (f: A → B) (l: L A): L B :=
+Fixpoint map {A B} (f: A -> B) (l: L A): L B :=
   match l with
   | one x => one (f x)
   | cons h t => cons (f h) (map f t)
   end.
 
-(* Lemma list_map {A B} (f: A → B) (l: L A): to_list (map f l) = List.map f (to_list l).
+(* Lemma list_map {A B} (f: A -> B) (l: L A): to_list (map f l) = List.map f (to_list l).
 Proof. induction l. reflexivity. simpl. congruence. Qed.
  *)
-(* Global Instance: forall {A B} (f: A → B), Proper (Permutation ==> Permutation) (map f).
+(* Global Instance: forall {A B} (f: A -> B), Proper (Permutation ==> Permutation) (map f).
 Proof with auto.
  intros ????? E.
  unfold Permutation.

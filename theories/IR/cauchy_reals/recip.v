@@ -44,9 +44,9 @@ apply R_lt_le_trans with (rat (' s.1)).
 - apply s.2.2.
 Defined.
 
-Lemma Qpos_upper_recip_respects : ∀ (x : ∃ (e : Q+) (x : real), rat (' e) ≤ x)
-  (y : ∃ (e : Q+) (x0 : real), rat (' e) ≤ x0),
-  pos_back x = pos_back y →
+Lemma Qpos_upper_recip_respects : forall (x : exists (e : Q+) (x : real), rat (' e) ≤ x)
+  (y : exists (e : Q+) (x0 : real), rat (' e) ≤ x0),
+  pos_back x = pos_back y ->
   Qpos_upper_recip x.1 (x.2).1 = Qpos_upper_recip y.1 (y.2).1.
 Proof.
 intros [e1 [x Ex]] [e2 [y Ey]] E.

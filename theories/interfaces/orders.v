@@ -31,22 +31,22 @@ Class TotalOrder `(Ale : Le A) :=
 We define a variant of the order theoretic definition of meet and join
 semilattices. Notice that we include a meet operation instead of the
 more common:
-  ∀ x y, ∃ m, m ≤ x ∧ m ≤ y ∧ ∀ z, z ≤ x → z ≤ y → m ≤ z
+  forall x y, exists m, m ≤ x /\ m ≤ y /\ forall z, z ≤ x -> z ≤ y -> m ≤ z
 Our definition is both stronger and more convenient than the above.
 This is needed to prove equavalence with the algebraic definition. We
 do this in orders.lattices.
 *)
 Class MeetSemiLatticeOrder `(Ale : Le A) `{Meet A} :=
   { meet_sl_order :> PartialOrder (≤)
-  ; meet_lb_l : ∀ x y, x ⊓ y ≤ x
-  ; meet_lb_r : ∀ x y, x ⊓ y ≤ y
-  ; meet_glb : ∀ x y z, z ≤ x → z ≤ y → z ≤ x ⊓ y }.
+  ; meet_lb_l : forall x y, x ⊓ y ≤ x
+  ; meet_lb_r : forall x y, x ⊓ y ≤ y
+  ; meet_glb : forall x y z, z ≤ x -> z ≤ y -> z ≤ x ⊓ y }.
 
 Class JoinSemiLatticeOrder `(Ale : Le A) `{Join A} :=
   { join_sl_order :> PartialOrder (≤)
-  ; join_ub_l : ∀ x y, x ≤ x ⊔ y
-  ; join_ub_r : ∀ x y, y ≤ x ⊔ y
-  ; join_lub : ∀ x y z, x ≤ z → y ≤ z → x ⊔ y ≤ z }.
+  ; join_ub_l : forall x y, x ≤ x ⊔ y
+  ; join_ub_r : forall x y, y ≤ x ⊔ y
+  ; join_lub : forall x y z, x ≤ z -> y ≤ z -> x ⊔ y ≤ z }.
 
 Class LatticeOrder `(Ale : Le A) `{Meet A} `{Join A} :=
   { lattice_order_meet :> MeetSemiLatticeOrder (≤)
@@ -62,9 +62,9 @@ Class StrictOrder `(Alt : Lt A) :=
 Class PseudoOrder `{Aap : Apart A} (Alt : Lt A) :=
   { pseudo_order_apart : IsApart A
   ; pseudo_order_mere_lt :> is_mere_relation A lt
-  ; pseudo_order_antisym : ∀ x y, ¬(x < y ∧ y < x)
+  ; pseudo_order_antisym : forall x y, ~(x < y /\ y < x)
   ; pseudo_order_cotrans :> CoTransitive (<)
-  ; apart_iff_total_lt : ∀ x y, x ≶ y ↔ x < y ∨ y < x }.
+  ; apart_iff_total_lt : forall x y, x ≶ y <-> x < y \/ y < x }.
 
 (* A partial order (≤) with a corresponding (<). We will prove that (<) is in fact
   a StrictOrder *)
@@ -73,21 +73,21 @@ Class FullPartialOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
   ; strict_po_mere_lt : is_mere_relation A lt
   ; strict_po_po :> PartialOrder (≤)
   ; strict_po_trans :> Transitive (<)
-  ; lt_iff_le_apart : ∀ x y, x < y ↔ x ≤ y ∧ x ≶ y }.
+  ; lt_iff_le_apart : forall x y, x < y <-> x ≤ y /\ x ≶ y }.
 
 (* A pseudo order (<) with a corresponding (≤). We will prove that (≤) is in fact
   a PartialOrder. *)
 Class FullPseudoOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
   { fullpseudo_le_hprop :> is_mere_relation A Ale
   ; full_pseudo_order_pseudo :> PseudoOrder Alt
-  ; le_iff_not_lt_flip : ∀ x y, x ≤ y ↔ ¬y < x }.
+  ; le_iff_not_lt_flip : forall x y, x ≤ y <-> ~y < x }.
 
 Section order_maps.
-  Context {A B : Type} {Ale: Le A} {Ble: Le B}(f : A → B).
+  Context {A B : Type} {Ale: Le A} {Ble: Le B}(f : A -> B).
 
-  Class OrderPreserving := order_preserving : forall x y, (x ≤ y → f x ≤ f y).
+  Class OrderPreserving := order_preserving : forall x y, (x ≤ y -> f x ≤ f y).
 
-  Class OrderReflecting := order_reflecting : forall x y, (f x ≤ f y → x ≤ y).
+  Class OrderReflecting := order_reflecting : forall x y, (f x ≤ f y -> x ≤ y).
 
   Class OrderEmbedding :=
     { order_embedding_preserving :> OrderPreserving
@@ -99,13 +99,13 @@ Section order_maps.
 End order_maps.
 
 Section srorder_maps.
-  Context {A B : Type} {Alt: Lt A} {Blt: Lt B} (f : A → B).
+  Context {A B : Type} {Alt: Lt A} {Blt: Lt B} (f : A -> B).
 
   Class StrictlyOrderPreserving := strictly_order_preserving
-    : forall x y, (x < y → f x < f y).
+    : forall x y, (x < y -> f x < f y).
 
   Class StrictlyOrderReflecting := strictly_order_reflecting
-    : forall x y, (f x < f y → x < y).
+    : forall x y, (f x < f y -> x < y).
 
   Class StrictOrderEmbedding :=
     { strict_order_embedding_preserving :> StrictlyOrderPreserving
@@ -125,33 +125,33 @@ Davorin Lešnik's PhD thesis.
 Class SemiRingOrder `{Plus A} `{Mult A}
     `{Zero A} `{One A} (Ale : Le A) :=
   { srorder_po :> PartialOrder Ale
-  ; srorder_partial_minus : ∀ x y, x ≤ y → ∃ z, y = x + z
-  ; srorder_plus :> ∀ z, OrderEmbedding (z +)
-  ; nonneg_mult_compat : ∀ x y, PropHolds (0 ≤ x) → PropHolds (0 ≤ y) →
+  ; srorder_partial_minus : forall x y, x ≤ y -> exists z, y = x + z
+  ; srorder_plus :> forall z, OrderEmbedding (z +)
+  ; nonneg_mult_compat : forall x y, PropHolds (0 ≤ x) -> PropHolds (0 ≤ y) ->
                                 PropHolds (0 ≤ x * y) }.
 
 Class StrictSemiRingOrder `{Plus A} `{Mult A}
     `{Zero A} `{One A} (Alt : Lt A) :=
   { strict_srorder_so :> StrictOrder Alt
-  ; strict_srorder_partial_minus : ∀ x y, x < y → ∃ z, y = x + z
-  ; strict_srorder_plus :> ∀ z, StrictOrderEmbedding (z +)
-  ; pos_mult_compat : ∀ x y, PropHolds (0 < x) → PropHolds (0 < y) →
+  ; strict_srorder_partial_minus : forall x y, x < y -> exists z, y = x + z
+  ; strict_srorder_plus :> forall z, StrictOrderEmbedding (z +)
+  ; pos_mult_compat : forall x y, PropHolds (0 < x) -> PropHolds (0 < y) ->
                              PropHolds (0 < x * y) }.
 
 Class PseudoSemiRingOrder `{Apart A} `{Plus A}
     `{Mult A} `{Zero A} `{One A} (Alt : Lt A) :=
   { pseudo_srorder_strict :> PseudoOrder Alt
-  ; pseudo_srorder_partial_minus : ∀ x y, ¬y < x → ∃ z, y = x + z
-  ; pseudo_srorder_plus :> ∀ z, StrictOrderEmbedding (z +)
+  ; pseudo_srorder_partial_minus : forall x y, ~y < x -> exists z, y = x + z
+  ; pseudo_srorder_plus :> forall z, StrictOrderEmbedding (z +)
   ; pseudo_srorder_mult_ext :> StrongBinaryExtensionality (.*.)
-  ; pseudo_srorder_pos_mult_compat : ∀ x y, PropHolds (0 < x) → PropHolds (0 < y) →
+  ; pseudo_srorder_pos_mult_compat : forall x y, PropHolds (0 < x) -> PropHolds (0 < y) ->
                                             PropHolds (0 < x * y) }.
 
 Class FullPseudoSemiRingOrder `{Apart A} `{Plus A}
     `{Mult A} `{Zero A} `{One A} (Ale : Le A) (Alt : Lt A) :=
   { full_pseudo_srorder_le_hprop :> is_mere_relation A Ale
   ; full_pseudo_srorder_pso :> PseudoSemiRingOrder Alt
-  ; full_pseudo_srorder_le_iff_not_lt_flip : ∀ x y, x ≤ y ↔ ¬y < x }.
+  ; full_pseudo_srorder_le_iff_not_lt_flip : forall x y, x ≤ y <-> ~y < x }.
 
 (* Due to bug #2528 *)
 Hint Extern 7 (PropHolds (0 < _ * _)) =>
@@ -164,8 +164,8 @@ Alternatively, we could have defined the standard notion of a RingOrder:
 
 Class RingOrder `{Equiv A} `{Plus A} `{Mult A} `{Zero A} (Ale : Le A) :=
   { ringorder_po :> PartialOrder Ale
-  ; ringorder_plus :> ∀ z, OrderPreserving (z +)
-  ; ringorder_mult : ∀ x y, 0 ≤ x → 0 ≤ y → 0 ≤ x * y }.
+  ; ringorder_plus :> forall z, OrderPreserving (z +)
+  ; ringorder_mult : forall x y, 0 ≤ x -> 0 ≤ y -> 0 ≤ x * y }.
 
 Unfortunately, this notion is too weak when we consider semirings (e.g. the
 naturals). Moreover, in case of rings, we prove that this notion is equivalent
@@ -179,6 +179,6 @@ Class FullPseudoRingOrder `{Apart A} `{Plus A}
     `{Mult A} `{Zero A} (Ale : Le A) (Alt : Lt A) :=
   { pseudo_ringorder_spo :> FullPseudoOrder Ale Alt
   ; pseudo_ringorder_mult_ext :> StrongSetoid_BinaryMorphism (.*.)
-  ; pseudo_ringorder_plus :> ∀ z, StrictlyOrderPreserving (z +)
-  ; pseudo_ringorder_mult : ∀ x y, 0 < x → 0 < y → 0 < x * y }.
+  ; pseudo_ringorder_plus :> forall z, StrictlyOrderPreserving (z +)
+  ; pseudo_ringorder_mult : forall x y, 0 < x -> 0 < y -> 0 < x * y }.
 *)

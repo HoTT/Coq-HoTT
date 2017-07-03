@@ -36,7 +36,7 @@ End contents.
 (* An existing instance of [CutMinus]
    allows to create an instance of [NatDistance] *)
 Instance natdistance_cut_minus `{Naturals N} `{!TrivialApart N}
-   {cm} `{!CutMinusSpec N cm} `{∀ x y, Decision (x ≤ y)} : NatDistance N.
+   {cm} `{!CutMinusSpec N cm} `{forall x y, Decision (x ≤ y)} : NatDistance N.
 Proof.
 red. intros. destruct (decide_rel (<=) x y) as [E|E].
 - left. exists (y ∸ x).
