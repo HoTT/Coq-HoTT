@@ -34,7 +34,8 @@ Qed.
 Global Instance: ∀ z : G, LeftCancellation (&) z.
 Proof.
   intros z x y E.
-  transport (left_identity x);transport (left_inverse z).
+  rewrite <-(left_identity x).
+  rewrite <-(left_inverse (unit:=mon_unit) z).
   rewrite <-simple_associativity.
   rewrite E.
   rewrite simple_associativity, (left_inverse z), left_identity.
@@ -55,7 +56,7 @@ Qed.
 Lemma negate_sg_op x y : - (x & y) = -y & -x.
 Proof.
 rewrite <-(left_identity (-y & -x)).
-transport (left_inverse (x & y)).
+rewrite <-(left_inverse (unit:=mon_unit) (x & y)).
 rewrite <-(associativity (_:G)).
 rewrite <-(associativity (_:G)).
 rewrite (associativity y).

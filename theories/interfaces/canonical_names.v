@@ -15,10 +15,6 @@ Notation "(≠ x )" := (λ y, y ≠ x) (only parsing) : mc_scope.
 Delimit Scope mc_scope with mc. 
 Global Open Scope mc_scope.
 
-Hint Extern 2 (?x = ?x) => reflexivity.
-Hint Extern 2 (?x = ?y) => auto_symm.
-Hint Extern 2 (?x = ?y) => auto_trans.
-
 Class Apart A := apart: relation A.
 Infix "≶" := apart (at level 70, no associativity) : mc_scope.
 Notation "(≶)" := apart (only parsing) : mc_scope.
@@ -189,11 +185,10 @@ Notation "{{ x }}" := (singleton x) : mc_scope.
 Notation "{{ x ; y ; .. ; z }}" := (join .. (join (singleton x) (singleton y))
                                          .. (singleton z)) : mc_scope.
 
-(* Haskell style! *)
-Notation "(→)" := (λ x y, x → y) : mc_scope.
-Notation "t $ r" := (t r)
-  (at level 65, right associativity, only parsing) : mc_scope.
-Notation "(∘)" := compose (only parsing) : mc_scope.
+(** It is likely that ≤ and < are transitive (and ≤ reflexive) so inform [auto] of this. *)
+Ltac auto_trans := match goal with
+                    [ H: ?R ?x ?y, I: ?R ?y ?z |- ?R ?x ?z] => apply (transitivity H I)
+                  end.
 
 Hint Extern 2 (?x ≤ ?y) => reflexivity.
 Hint Extern 4 (?x ≤ ?z) => auto_trans.

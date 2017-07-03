@@ -12,7 +12,7 @@ Proof.
 intros P dec dn.
 destruct dec as [p|n].
 - assumption.
-- apply False_rect. auto.
+- apply Empty_rect. auto.
 Qed.
 
 Ltac case_decide := match goal with
@@ -174,5 +174,5 @@ intros [x|] [y|].
 - left;reflexivity.
 Qed.
 
-Instance True_dec: Decision True := left tt.
-Instance False_dec: Decision False := right id.
+Instance Unit_dec: Decision Unit := inl tt.
+Instance Empty_dec: Decision Empty := inr id.

@@ -652,12 +652,12 @@ simple refine (Build_Inductors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
   simple refine (existT _ _ _);simpl;
   [apply sup;apply (interleave_aux_seq s (fun n b E => (Is n b E).1) Isle b E)|].
   etransitivity;[|apply (sup_is_ub _ _ 0)].
-  simpl;auto.
+  simpl. apply Is.
 - intros a f b Ea Ea'.
   assert (Hrw : Ea = Ea') by apply path_ishprop.
   apply (ap (f b)) in Hrw. apply (ap pr1) in Hrw. rewrite Hrw;reflexivity.
 - simpl. intros x f b _ E.
-  auto.
+  apply f.
 - simpl;intros s x Ex fs fs_increasing fb Eb n a Ea Ea'.
   pose proof (fun b Ea Ea' => sup_le_l _ _ _ (Eb b Ea Ea')) as E;
   simpl in E.

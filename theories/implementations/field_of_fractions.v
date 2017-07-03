@@ -171,8 +171,8 @@ Qed.
 
 Instance dec_rec@{} : DecRecip Frac := fun x =>
   match decide_rel (=) (num x) 0 with
-  | left _ => 0
-  | right P => frac (den x) (num x) P
+  | inl _ => 0
+  | inr P => frac (den x) (num x) P
   end.
 
 Lemma dec_recip_respect@{} : forall q r, equiv q r -> equiv (/ q) (/ r).

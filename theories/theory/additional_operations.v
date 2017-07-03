@@ -30,14 +30,14 @@ Lemma LT_EQ : ~ LT = EQ.
 Proof.
 intros E.
 change ((fun r => match r with LT => Unit | _ => Empty end) EQ).
-transport E. split.
+rewrite <-E. split.
 Qed.
 
 Lemma LT_GT : ~ LT = GT.
 Proof.
 intros E.
 change ((fun r => match r with LT => Unit | _ => Empty end) GT).
-transport E. split.
+rewrite <-E. split.
 Qed.
 
 Lemma EQ_LT : ~ EQ = LT.
@@ -49,7 +49,7 @@ Lemma EQ_GT : ~ EQ = GT.
 Proof.
 intros E.
 change ((fun r => match r with EQ => Unit | _ => Empty end) GT).
-transport E. split.
+rewrite <-E. split.
 Qed.
 
 Lemma GT_EQ : ~ GT = EQ.

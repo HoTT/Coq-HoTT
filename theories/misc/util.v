@@ -35,7 +35,7 @@ Definition uncurry {A B C} (f: A → B → C) (p: A * B): C := f (fst p) (snd p)
 
 Definition is_sole {T} (P: T → Type) (x: T) : Type := P x ∧ ∀ y, P y → y = x.
 
-Definition DN (T: Type): Type := (T → False) → False.
+Definition DN (T: Type): Type := (T → Empty) → Empty.
 Class Stable P := stable: DN P → P.
 (* TODO: include useful things from corn/logic/Stability.v
    and move to separate file *)
@@ -46,7 +46,7 @@ Section obvious.
   Context (A B C: Type).
 
   Global Instance: Obvious (A → A) := id.
-  Global Instance: Obvious (False → A) := Empty_rect _.
+  Global Instance: Obvious (Empty → A) := Empty_rect _.
   Global Instance: Obvious (A → A + B)%type := inl.
   Global Instance: Obvious (A → B + A)%type := inr.
   Global Instance obvious_sum_src `{Obvious (A → C)} `{Obvious (B → C)}
@@ -77,12 +77,12 @@ Qed.
    so that the existing [symmetry] will work for them.
    However, this most likely breaks other things. *)
 
-Lemma iff_true : forall P, P -> True <-> P.
+Lemma iff_unit : forall P, P -> Unit <-> P.
 Proof.
 intros P p;split;auto.
 Defined.
 
-Lemma iff_false : forall P, ¬ P -> False <-> P.
+Lemma iff_empty : forall P, ¬ P -> Empty <-> P.
 Proof.
 intros P n;split.
 - apply obvious.
@@ -108,8 +108,8 @@ Qed.
 (* Isn't this in the stdlib? *)
 Definition is_Some `(x : option A) :=
   match x with
-  | None => False
-  | Some _ => True
+  | None => Empty
+  | Some _ => Unit
   end.
 
 Lemma is_Some_def `(x : option A) :
@@ -117,8 +117,8 @@ Lemma is_Some_def `(x : option A) :
 Proof.
 unfold is_Some.
 destruct x.
-- apply iff_true. exists a;reflexivity.
-- apply iff_false. intros [y H].
+- apply iff_unit. exists a;reflexivity.
+- apply iff_empty. intros [y H].
   change (@is_Some A None).
   apply transport with (Some y).
   + symmetry. assumption.
@@ -127,21 +127,21 @@ Qed.
 
 Definition is_None `(x : option A) :=
   match x with
-  | None => True
-  | Some _ => False
+  | None => Unit
+  | Some _ => Empty
   end.
 
 Lemma is_None_def `(x : option A) :
   is_None x ↔ x = None.
 Proof.
 unfold is_None. destruct x as [a|].
-- apply iff_false.
+- apply iff_empty.
   intros H.
   change (is_None (Some a)).
   apply transport with None.
   + symmetry;assumption.
   + simpl;auto.
-- apply iff_true. reflexivity.
+- apply iff_unit. reflexivity.
 Qed.
 
 Lemma None_ne_Some `(x : A) :

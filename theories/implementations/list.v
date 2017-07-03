@@ -66,7 +66,7 @@ Qed.
 
 Fixpoint for_all {A} (P : A -> Type) l : Type :=
   match l with
-  | [] => True
+  | [] => Unit
   | x :: l => P x /\ for_all P l
   end.
 

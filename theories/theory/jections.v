@@ -179,7 +179,7 @@ Definition surjective_factor_aux : forall x, surjective_factor_auxT x.
 Proof.
 intros x. generalize (center _ (Esurj x)). apply (Trunc_ind _).
 intros z. exists (f z.1).
-apply tr. exists z.1;split;trivial. symmetry;trivial.
+apply tr. exists z.1;split;trivial. symmetry;exact z.2.
 Defined.
 
 Definition surjective_factor : B -> C :=

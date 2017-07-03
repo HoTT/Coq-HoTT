@@ -128,7 +128,7 @@ Qed.
 Global Instance S_neq_0 x : PropHolds (~ S x =N= 0).
 Proof.
 intros E.
-change ((fun a => match a with S _ => True | 0%nat => False end) 0).
+change ((fun a => match a with S _ => Unit | 0%nat => Empty end) 0).
 eapply transport.
 - exact E.
 - split.
