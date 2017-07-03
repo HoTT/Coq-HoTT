@@ -5,28 +5,6 @@ Require Import HoTT.Basics HoTT.Types HoTT.HIT.Truncations HoTT.Factorization.
 
 
 
-(* Auxiliary lemma, should be but in another place? *)
-
-(** If f' is an embedding, the type of morphisms *)
-(** from f to f' is a mere proposition.          *)
-(**         f                                    *)
-(**   A ---------> B                             *)
-(**                ^                             *)
-(**                |                             *)
-(**                | f'                          *)
-(**                |                             *)
-(**                A'                            *)
-
-Instance emb_hom_hprop {Fs: Funext} {A A' B} (f : A -> B) (f' : A' -> B)
-           (Hf' : IsEmbedding f')
-  : IsHProp {g : A -> A' & f' o g == f}.
-Proof.
-  eapply trunc_equiv'. symmetry.
-  refine (equiv_sigT_coind (fun _ => A') (fun x y => f' y = f x)). cbn.
-  eapply trunc_forall.
-Defined.
-
-
 (** The image of a function f if { b : B & merely (hfiber f)}.
     It is defined in the file HIT.Truncations, and before in Modalities.Modality
     (for all truncation modalities). We only give here shorter names. *)
@@ -72,7 +50,7 @@ Section ImageUP.
   Definition image_UP'
     := forall I' (q' : A -> I') (i' : I' -> B) (Hi' : IsEmbedding i')
          (Q' : i' o q' == f), exists g, i' o g == i.
-  
+
   Definition image_UP_UP' {Fs: Funext}
     : image_UP <-> image_UP'.
   Proof.
@@ -80,7 +58,9 @@ Section ImageUP.
     - intros H I' q' i' Hi' Q'.
       apply (H I' i' Hi').
       exact (q'; Q').
-    - intros H I' i' Hi'. eapply isequiv_iff_hprop.
+    - intros H I' i' Hi'. serapply isequiv_iff_hprop.
+      eapply TrM.RSU.inO_map_morphisms; eauto.
+      eapply TrM.RSU.inO_map_morphisms; eauto.
       intros [q' Q']. apply (H _ _ _ Hi' Q').
   Defined.
 
@@ -104,7 +84,7 @@ Section ImageUP.
       exact (fun w => (w.1 ; w.2 @ e)).
     - intros I' q' i' Hi' Q'.
       eapply contr_inhabited_hprop.
-      typeclasses eauto.       
+      eapply TrM.RSU.inO_map_morphisms; eauto.
       eapply (equiv_sigT_coind (fun _ => I') (fun x y => i' y = i x))^-1.
       intro x. eapply Trunc_rec. 2: exact (@center _ (H x)).
       intro w. refine (q' w.1; Q' w.1 @ (Q w.1)^ @ ap i w.2).

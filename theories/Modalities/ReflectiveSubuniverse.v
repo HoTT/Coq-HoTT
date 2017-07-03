@@ -1406,6 +1406,27 @@ Section ModalMaps.
     refine (inO_equiv_inO _ (hfiber_unfunctor_sum_r h Ha Hb b)^-1).
   Defined.
 
+
+  (** If f' is O truncated, the type of morphisms  *)
+  (** from f to f' is O truncated.                 *)
+  (**         f                                    *)
+  (**   A ---------> B                             *)
+  (**                ^                             *)
+  (**                |                             *)
+  (**                | f'                          *)
+  (**                |                             *)
+  (**                A'                            *)
+
+  Instance inO_map_morphisms {Fs: Funext} {A A' B} (f : A -> B) (f' : A' -> B)
+           (Hf' : MapIn O f')
+    : In O {g : A -> A' & f' o g == f}.
+  Proof.
+    eapply inO_equiv_inO.
+    2: refine (equiv_isequiv _); symmetry.
+    2: refine (equiv_sigT_coind (fun _ => A') (fun x y => f' y = f x)).
+    cbn. typeclasses eauto.
+  Defined.
+
 End ModalMaps.
 
 (** ** Modally connected maps *)

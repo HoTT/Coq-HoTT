@@ -53,6 +53,7 @@ theories/Idempotents.v
 theories/Pullback.v
 theories/Factorization.v
 theories/Constant.v
+theories/Image.v
 theories/ExcludedMiddle.v
 theories/PropResizing/PropResizing.v
 theories/PropResizing/Truncations.v
