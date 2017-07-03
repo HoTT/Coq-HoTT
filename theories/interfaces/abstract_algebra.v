@@ -2,8 +2,7 @@ Require Coq.Init.Peano.
 Require Export
   HoTTClasses.interfaces.canonical_names
   HoTTClasses.misc.util
-  HoTTClasses.misc.decision
-  HoTTClasses.misc.propholds.
+  HoTTClasses.misc.decision.
 
 (* 
 For various structures we omit declaration of substructures. For example, if we 

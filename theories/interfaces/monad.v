@@ -1,8 +1,5 @@
 Require Export
-  HoTTClasses.interfaces.canonical_names
-  HoTTClasses.misc.util
-  HoTTClasses.misc.decision
-  HoTTClasses.misc.propholds.
+  HoTTClasses.interfaces.canonical_names.
 
 Class Monad (M : Type -> Type) {Mret : Return M} {Mbind : Bind M} :=
   { monad_ret_bind : forall {A B} a (f : A -> M B), bind (ret a) f = f a
