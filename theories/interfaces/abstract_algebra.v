@@ -194,14 +194,6 @@ Section lattice.
     ; join_meet_distr_l :> LeftDistribute (⊔) (⊓) }.
 End lattice.
 
-Class Category O `{!Arrows O} `{!CatId O} `{!CatComp O} :=
-  { comp_assoc :> ArrowsAssociative O
-  ; id_l :> ∀ x y, LeftIdentity (comp x y y) cat_id
-  ; id_r :> ∀ x y, RightIdentity (comp x x y) cat_id }.
-
-(* todo: use my comp everywhere *)
-Arguments comp_assoc {O arrows CatId CatComp Category w x y z} _ _ _ : rename.
-
 Section morphism_classes.
 
   Section sgmorphism_classes.

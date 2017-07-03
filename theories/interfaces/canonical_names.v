@@ -74,17 +74,6 @@ Definition Pos R `{Zero R} `{Lt R} := sig (lt zero).
 Definition NonPos R `{Zero R} `{Le R} := sig (λ y, le y zero).
 Inductive PosInf (R : Type) : Type := finite (x : R) | infinite.
 
-Class Arrows (O: Type): Type := Arrow: O → O → Type.
-Typeclasses Transparent Arrows. (* Ideally this should be removed *)
-
-Infix "⟶" := Arrow (at level 90, right associativity) : mc_scope.
-Class CatId O `{Arrows O} := cat_id: ∀ x, x ⟶ x.
-Class CatComp O `{Arrows O} := comp: ∀ x y z, (y ⟶ z) → (x ⟶ y) → (x ⟶ z).
-Class RalgebraAction A B := ralgebra_action: A → B → B.
-
-Arguments cat_id {O arrows CatId x} : rename.
-Arguments comp {O arrow CatComp} _ _ _ _ _ : rename.
-
 Instance plus_is_sg_op `{f : Plus A} : SgOp A := f.
 Instance mult_is_sg_op `{f : Mult A} : SgOp A := f.
 Instance one_is_mon_unit `{c : One A} : MonUnit A := c.
@@ -200,15 +189,6 @@ Notation "{{ x }}" := (singleton x) : mc_scope.
 Notation "{{ x ; y ; .. ; z }}" := (join .. (join (singleton x) (singleton y))
                                          .. (singleton z)) : mc_scope.
 
-Infix "◎" := (comp _ _ _) (at level 40, left associativity) : mc_scope.
-  (* Taking over ∘ is just a little too zealous at this point. With our current
-   approach, it would require changing all (nondependent) function types A → B
-   with A ⟶ B to make them use the canonical name for arrows, which is
-   a tad extreme. *) (* HOTT TODO check if this still applies *)
-Notation "(◎)" := (comp _ _ _) (only parsing) : mc_scope.
-Notation "( f ◎)" := (comp _ _ _ f) (only parsing) : mc_scope.
-Notation "(◎ f )" := (λ g, comp _ _ _ g f) (only parsing) : mc_scope.
-
 (* Haskell style! *)
 Notation "(→)" := (λ x y, x → y) : mc_scope.
 Notation "t $ r" := (t r)
@@ -273,8 +253,6 @@ Class HeteroAssociative {A B C AB BC ABC}
   := associativity : ∀ x y z, fA_BC x (fBC y z) = fAB_C (fAB x y) z.
 Class Associative {A} (f : A -> A -> A)
   := simple_associativity :> HeteroAssociative f f f f.
-Notation ArrowsAssociative C
-  := (∀ {w x y z: C}, HeteroAssociative (◎) (comp z _ _ ) (◎) (comp y x w)).
 
 Class Involutive {A} (f : A → A) := involutive: ∀ x, f (f x) = x.
 
