@@ -10,6 +10,9 @@ Require Import
 Require Export
   HoTTClasses.interfaces.naturals.
 
+(* This grabs a coercion. *)
+Import SemiRings.
+
 Lemma to_semiring_unique `{Naturals N} `{SemiRing SR} (f: N -> SR)
   `{!SemiRingPreserving f} x
   : f x = naturals_to_semiring N SR x.

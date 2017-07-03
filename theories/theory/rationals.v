@@ -17,9 +17,6 @@ Require Import
 
 Local Set Universe Minimization ToSet.
 
-Coercion trunctype_type : TruncType >-> Sortclass.
-Coercion equiv_fun : Equiv >-> Funclass.
-
 Section contents.
 Context `{Funext} `{Univalence}.
 Universe UQ.

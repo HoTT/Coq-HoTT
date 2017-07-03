@@ -9,9 +9,6 @@ Require Import
 
 Local Set Universe Minimization ToSet.
 
-Coercion trunctype_type : TruncType >-> Sortclass.
-Coercion equiv_fun : Equiv >-> Funclass.
-
 Record IncreasingSequence A {Ale : Le A} :=
   { seq : nat -> A
   ; seq_increasing : forall n, seq n <= seq (S n) }.
