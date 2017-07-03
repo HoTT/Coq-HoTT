@@ -372,7 +372,7 @@ Section lattice_order.
   Qed.
 End lattice_order.
 
-Definition default_join_sl_le `{JoinSemiLattice L} : Le L :=  λ x y, x ⊔ y = y.
+Definition default_join_sl_le `{JoinSemiLattice L} : Le L :=  fun x y => x ⊔ y = y.
 
 Section join_sl_order_alt.
   Context `{JoinSemiLattice L} `{Le L} `{is_mere_relation L le}
@@ -406,7 +406,7 @@ Section join_sl_order_alt.
   Qed.
 End join_sl_order_alt.
 
-Definition default_meet_sl_le `{MeetSemiLattice L} : Le L :=  λ x y, x ⊓ y = x.
+Definition default_meet_sl_le `{MeetSemiLattice L} : Le L :=  fun x y => x ⊓ y = x.
 
 Section meet_sl_order_alt.
   Context `{MeetSemiLattice L} `{Le L} `{is_mere_relation L le}

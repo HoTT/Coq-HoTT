@@ -111,7 +111,7 @@ Qed.
 
 Instance Qbounded_lipschitz (a : Q+)
   : forall v : Interval (- rat (' a)) (rat (' a)),
-    Lipschitz (λ q : Q, QRmult q (interval_proj _ _ v)) a.
+    Lipschitz (fun q : Q => QRmult q (interval_proj _ _ v)) a.
 Proof.
 intros v e x y xi.
 apply Qclose_alt in xi. apply metric_to_equiv.

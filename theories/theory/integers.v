@@ -85,7 +85,7 @@ Section retract_is_int.
     `{!SemiRingPreserving (f⁻¹)}.
 
   (* If we make this an instance, then instance resolution will often loop *)
-  Definition retract_is_int_to_ring : IntegersToRing Z2 := λ Z2 _ _ _ _ _ _,
+  Definition retract_is_int_to_ring : IntegersToRing Z2 := fun Z2 _ _ _ _ _ _ =>
     integers_to_ring Z Z2 ∘ f⁻¹.
 
   Section for_another_ring.

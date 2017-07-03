@@ -6,11 +6,11 @@ Definition id {A : Type} (a : A) := a.
 
 Notation "(=)" := paths (only parsing) : mc_scope.
 Notation "( x =)" := (paths x) (only parsing) : mc_scope.
-Notation "(= x )" := (λ y, paths y x) (only parsing) : mc_scope.
+Notation "(= x )" := (fun y => paths y x) (only parsing) : mc_scope.
 
-Notation "(<>)" := (λ x y, ~x = y) (only parsing) : mc_scope.
-Notation "( x <>)" := (λ y, x <> y) (only parsing) : mc_scope.
-Notation "(<> x )" := (λ y, y <> x) (only parsing) : mc_scope.
+Notation "(<>)" := (fun x y => ~x = y) (only parsing) : mc_scope.
+Notation "( x <>)" := (fun y => x <> y) (only parsing) : mc_scope.
+Notation "(<> x )" := (fun y => y <> x) (only parsing) : mc_scope.
 
 Delimit Scope mc_scope with mc. 
 Global Open Scope mc_scope.
@@ -19,7 +19,7 @@ Class Apart A := apart: relation A.
 Infix "≶" := apart (at level 70, no associativity) : mc_scope.
 Notation "(≶)" := apart (only parsing) : mc_scope.
 Notation "( x ≶)" := (apart x) (only parsing) : mc_scope.
-Notation "(≶ x )" := (λ y, apart y x) (only parsing) : mc_scope.
+Notation "(≶ x )" := (fun y => apart y x) (only parsing) : mc_scope.
 
 (* Even for setoids with decidable equality x <> y does not imply x ≶ y.
 Therefore we introduce the following class. *)
@@ -29,7 +29,7 @@ Class TrivialApart A {Aap : Apart A} :=
 
 Notation "x ↾ p" := (exist _ x p) (at level 20) : mc_scope.
 
-Definition sig_apart `{Apart A} (P: A -> Type) : Apart (sig P) := λ x y, x.1 ≶ y.1.
+Definition sig_apart `{Apart A} (P: A -> Type) : Apart (sig P) := fun x y => x.1 ≶ y.1.
 Hint Extern 10 (Apart (sig _)) => apply @sig_apart : typeclass_instances.
 
 Class Cast A B := cast: A -> B.
@@ -67,7 +67,7 @@ Typeclasses Transparent Le Lt.
 
 Definition NonNeg R `{Zero R} `{Le R} := sig (le zero).
 Definition Pos R `{Zero R} `{Lt R} := sig (lt zero).
-Definition NonPos R `{Zero R} `{Le R} := sig (λ y, le y zero).
+Definition NonPos R `{Zero R} `{Le R} := sig (fun y => le y zero).
 Inductive PosInf (R : Type) : Type := finite (x : R) | infinite.
 
 Instance plus_is_sg_op `{f : Plus A} : SgOp A := f.
@@ -95,19 +95,19 @@ Notation "R ∞" := (PosInf R) (at level 20, no associativity) : mc_scope.
 Infix "&" := sg_op (at level 50, left associativity) : mc_scope.
 Notation "(&)" := sg_op (only parsing) : mc_scope.
 Notation "( x &)" := (sg_op x) (only parsing) : mc_scope.
-Notation "(& x )" := (λ y, y & x) (only parsing) : mc_scope.
+Notation "(& x )" := (fun y => y & x) (only parsing) : mc_scope.
 
 Infix "+" := plus : mc_scope.
 Notation "(+)" := plus (only parsing) : mc_scope.
 Notation "( x +)" := (plus x) (only parsing) : mc_scope.
-Notation "(+ x )" := (λ y, y + x) (only parsing) : mc_scope.
+Notation "(+ x )" := (fun y => y + x) (only parsing) : mc_scope.
 
 Infix "*" := mult : mc_scope.
 (* We don't add "( * )", "( * x )" and "( x * )" notations
    because they conflict with comments. *)
 Notation "( x *.)" := (mult x) (only parsing) : mc_scope.
 Notation "(.*.)" := mult (only parsing) : mc_scope.
-Notation "(.* x )" := (λ y, y * x) (only parsing) : mc_scope.
+Notation "(.* x )" := (fun y => y * x) (only parsing) : mc_scope.
 
 Notation "- x" := (negate x) : mc_scope.
 Notation "(-)" := negate (only parsing) : mc_scope.
@@ -139,27 +139,27 @@ Notation "⊥" := bottom : mc_scope.
 Infix "⊓" := meet (at level 50, no associativity) : mc_scope.
 Notation "(⊓)" := meet (only parsing) : mc_scope.
 Notation "( X ⊓)" := (meet X) (only parsing) : mc_scope.
-Notation "(⊓ X )" := (λ Y, Y ⊓ X) (only parsing) : mc_scope.
+Notation "(⊓ X )" := (fun Y => Y ⊓ X) (only parsing) : mc_scope.
 
 Infix "⊔" := join (at level 50, no associativity) : mc_scope.
 Notation "(⊔)" := join (only parsing) : mc_scope.
 Notation "( X ⊔)" := (join X) (only parsing) : mc_scope.
-Notation "(⊔ X )" := (λ Y, Y ⊔ X) (only parsing) : mc_scope.
+Notation "(⊔ X )" := (fun Y => Y ⊔ X) (only parsing) : mc_scope.
 
 Infix "≤" := le (at level 70, no associativity) : mc_scope.
 Notation "(≤)" := le (only parsing) : mc_scope.
 Notation "( x ≤)" := (le x) (only parsing) : mc_scope.
-Notation "(≤ x )" := (λ y, y ≤ x) (only parsing) : mc_scope.
+Notation "(≤ x )" := (fun y => y ≤ x) (only parsing) : mc_scope.
 
 Infix "<=" := le (only parsing) : mc_scope.
 Notation "(<=)" := le (only parsing) : mc_scope.
 Notation "( x <=)" := (le x) (only parsing) : mc_scope.
-Notation "(<= x )" := (λ y, y ≤ x) (only parsing) : mc_scope.
+Notation "(<= x )" := (fun y => y ≤ x) (only parsing) : mc_scope.
 
 Infix "<" := lt : mc_scope.
 Notation "(<)" := lt (only parsing) : mc_scope.
 Notation "( x <)" := (lt x) (only parsing) : mc_scope.
-Notation "(< x )" := (λ y, y < x) (only parsing) : mc_scope.
+Notation "(< x )" := (fun y => y < x) (only parsing) : mc_scope.
 
 Notation "x ≤ y ≤ z" := (x ≤ y /\ y ≤ z) (at level 70, y at next level) : mc_scope.
 Notation "x ≤ y < z" := (x ≤ y /\ y < z) (at level 70, y at next level) : mc_scope.
@@ -169,17 +169,17 @@ Notation "x < y ≤ z" := (x < y /\ y ≤ z) (at level 70, y at next level) : mc
 Infix "∖" := difference (at level 35) : mc_scope.
 Notation "(∖)" := difference (only parsing) : mc_scope.
 Notation "( X ∖)" := (difference X) (only parsing) : mc_scope.
-Notation "(∖ X )" := (λ Y, Y ∖ X) (only parsing) : mc_scope.
+Notation "(∖ X )" := (fun Y => Y ∖ X) (only parsing) : mc_scope.
 
 Infix "∈" := contains (at level 70, no associativity) : mc_scope.
 Notation "(∈)" := contains (only parsing) : mc_scope.
 Notation "( x ∈)" := (contains x) (only parsing) : mc_scope.
-Notation "(∈ X )" := (λ x, x ∈ X) (only parsing) : mc_scope.
+Notation "(∈ X )" := (fun x => x ∈ X) (only parsing) : mc_scope.
 
 Notation "x ∉ y" := (~x ∈ y) (at level 70, no associativity) : mc_scope.
-Notation "(∉)" := (λ x X, x ∉ X) : mc_scope.
-Notation "( x ∉)" := (λ X, x ∉ X) (only parsing) : mc_scope.
-Notation "(∉ X )" := (λ x, x ∉ X) (only parsing) : mc_scope.
+Notation "(∉)" := (fun x X => x ∉ X) : mc_scope.
+Notation "( x ∉)" := (fun X => x ∉ X) (only parsing) : mc_scope.
+Notation "(∉ X )" := (fun x => x ∉ X) (only parsing) : mc_scope.
 
 Notation "{{ x }}" := (singleton x) : mc_scope.
 Notation "{{ x ; y ; .. ; z }}" := (join .. (join (singleton x) (singleton y))
@@ -196,7 +196,7 @@ Hint Extern 4 (?x < ?z) => auto_trans.
 
 Class Abs A `{Le A} `{Zero A} `{Negate A}
   := abs_sig: forall (x : A), { y : A | (0 ≤ x -> y = x) /\ (x ≤ 0 -> y = -x)}.
-Definition abs `{Abs A} := λ x : A, (abs_sig x).1.
+Definition abs `{Abs A} := fun x : A => (abs_sig x).1.
 
 (* Common properties: *)
 Class Inverse `(A -> B) : Type := inverse: B -> A.
@@ -336,13 +336,13 @@ Class Pow A B := pow : A -> B -> A.
 Infix "^^" := pow (at level 30, no associativity) : mc_scope.
 Notation "(.^^.)" := pow (only parsing) : mc_scope.
 Notation "( x ^^.)" := (pow x) (only parsing) : mc_scope.
-Notation "(.^^ n )" := (λ x, x ^^ n) (only parsing) : mc_scope.
+Notation "(.^^ n )" := (fun x => x ^^ n) (only parsing) : mc_scope.
 
 Class ShiftL A B := shiftl: A -> B -> A.
 Infix "≪" := shiftl (at level 33, left associativity) : mc_scope.
 Notation "(≪)" := shiftl (only parsing) : mc_scope.
 Notation "( x ≪)" := (shiftl x) (only parsing) : mc_scope.
-Notation "(≪ n )" := (λ x, x ≪ n) (only parsing) : mc_scope.
+Notation "(≪ n )" := (fun x => x ≪ n) (only parsing) : mc_scope.
 
 Class ShiftR A B := shiftr: A -> B -> A.
 Infix "≫" := shiftr (at level 33, left associativity) : mc_scope.
@@ -353,17 +353,17 @@ Class ModEuclid A := mod_euclid : A -> A -> A.
 Infix "`div`" := div_euclid (at level 35) : mc_scope.
 Notation "(`div`)" := div_euclid (only parsing) : mc_scope.
 Notation "( x `div`)" := (div_euclid x) (only parsing) : mc_scope.
-Notation "(`div` y )" := (λ x, x `div` y) (only parsing) : mc_scope.
+Notation "(`div` y )" := (fun x => x `div` y) (only parsing) : mc_scope.
 Infix "`mod`" := mod_euclid (at level 40) : mc_scope.
 Notation "(`mod` )" := mod_euclid (only parsing) : mc_scope.
 Notation "( x `mod`)" := (mod_euclid x) (only parsing) : mc_scope.
-Notation "(`mod` y )" := (λ x, x `mod` y) (only parsing) : mc_scope.
+Notation "(`mod` y )" := (fun x => x `mod` y) (only parsing) : mc_scope.
 
 Class CutMinus A := cut_minus : A -> A -> A.
 Infix "∸" := cut_minus (at level 50, left associativity) : mc_scope.
 Notation "(∸)" := cut_minus (only parsing) : mc_scope.
 Notation "( x ∸)" := (cut_minus x) (only parsing) : mc_scope.
-Notation "(∸ y )" := (λ x, x ∸ y) (only parsing) : mc_scope.
+Notation "(∸ y )" := (fun x => x ∸ y) (only parsing) : mc_scope.
 
 Inductive comparison : Set := LT | EQ | GT.
 

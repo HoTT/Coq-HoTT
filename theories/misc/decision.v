@@ -65,7 +65,7 @@ Qed.
   As we see, the dead code [f x] and [f y] is actually evaluated,
   which is of course an utter waste.
   Therefore we introduce decide_rel and bool_decide_rel.
-     bool_decide_rel (=) x y -> bool_decide_rel (λ a b, f a = f b) x y -> ...
+     bool_decide_rel (=) x y -> bool_decide_rel (fun a b => f a = f b) x y -> ...
   Now the definition of equality remains under a lambda and
   our problem does not occur anymore!
 *)
@@ -77,7 +77,7 @@ Definition decide_rel `(R : A -> B -> Type)
 
 Definition bool_decide_rel `(R : relation A)
   {dec : forall x y, Decision (R x y)} : A -> A -> Bool
-  := λ x y, if dec x y then true else false.
+  := fun x y => if dec x y then true else false.
 
 Lemma bool_decide_rel_true `(R : relation A)
   {dec : forall x y, Decision (R x y)} :

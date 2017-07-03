@@ -21,9 +21,6 @@ Definition bool := (HoTT.Types.Bool.Bool@{Ubool}).
 Reserved Notation "x ≤ y" (at level 70, no associativity).
 Reserved Notation "x ≥ y" (at level 70, no associativity).
 
-Notation "'λ'  x .. y , t" := (fun x => .. (fun y => t) ..)
-  (at level 200, x binder, y binder, right associativity).
-
 Definition compose {A B C : Type} (g : B -> C) (f : A -> B) : A -> C := compose g f.
 
 Notation " g ∘ f " := (compose g f)

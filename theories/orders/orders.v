@@ -447,7 +447,7 @@ End dec_strict_setoid_order.
 Section dec_partial_order.
   Context `{PartialOrder A} `{DecidablePaths A}.
 
-  Definition dec_lt: Lt A := λ x y, x ≤ y /\ x <> y.
+  Definition dec_lt: Lt A := fun x y => x ≤ y /\ x <> y.
 
   Context `{Alt : Lt A} `{is_mere_relation A lt}
     (lt_correct : forall x y, x < y <-> x ≤ y /\ x <> y).

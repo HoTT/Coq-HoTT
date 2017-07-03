@@ -47,7 +47,7 @@ Proof.
 intros q r; refine (frac (num q * den r + num r * den q) (den q * den r) _).
 Defined.
 
-Definition equiv@{} := λ x y, num x * den y = num y * den x.
+Definition equiv@{} := fun x y => num x * den y = num y * den x.
 
 Global Instance equiv_equivalence@{} : Equivalence equiv.
 Proof.
@@ -66,7 +66,7 @@ split.
 Qed.
 
 Global Instance equiv_dec@{} : forall x y: Frac, Decision (equiv x y)
-  := λ x y, decide_rel (=) (num x * den y) (num y * den x).
+  := fun x y => decide_rel (=) (num x * den y) (num y * den x).
 
 Lemma pl_respect@{} : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
   equiv (q1 + r1) (q2 + r2).

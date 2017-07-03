@@ -181,7 +181,7 @@ Hint Extern 12 (PropHolds (_ _ <> 0)) =>
   eapply @injective_ne_0 : typeclass_instances.
 
 (* Lemma stdlib_ring_theory R `{Ring R} :
-  Ring_theory.ring_theory 0 1 (+) (.*.) (λ x y, x - y) (-) (=).
+  Ring_theory.ring_theory 0 1 (+) (.*.) (fun x y => x - y) (-) (=).
 Proof.
 Qed.
 *)
@@ -267,7 +267,7 @@ Section ring_props.
   Lemma negate_0: -0 = 0.
   Proof groups.negate_mon_unit.
 
-  Global Instance minus_0_r: RightIdentity (λ x y, x - y) 0.
+  Global Instance minus_0_r: RightIdentity (fun x y => x - y) 0.
   Proof.
   intro x; rewrite negate_0; apply plus_0_r.
   Qed.

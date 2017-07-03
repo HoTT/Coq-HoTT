@@ -525,8 +525,8 @@ apply (partial_ind0 _ _);try reflexivity.
 intros f IH.
 change (partial_bind (sup A f) (eta A)) with
   (sup A (Build_IncreasingSequence
-    (λ n : nat, bind (f n) (eta A))
-    (λ n : nat, partial_bind_le (eta A) (f n) (f (S n)) (seq_increasing f n)))).
+    (fun n : nat => bind (f n) (eta A))
+    (fun n : nat => partial_bind_le (eta A) (f n) (f (S n)) (seq_increasing f n)))).
 apply sup_extensionality. trivial.
 Defined.
 
@@ -539,7 +539,7 @@ intros x f g;revert x;apply (partial_ind0 _ _).
 - reflexivity.
 - intros s IH.
   change (sup C (partial_bind_seq g (partial_bind_seq f s)) =
-    sup C (partial_bind_seq (λ a : A, partial_bind (f a) g) s)).
+    sup C (partial_bind_seq (fun a : A => partial_bind (f a) g) s)).
   apply sup_extensionality. apply IH.
 Defined.
 

@@ -571,8 +571,8 @@ Definition upper_cut_separated@{}
 Lemma equiv_alt_eta_eta_eta_pr@{} :
 forall q q0 r (e : Q+),
 close e q0 r
--> upper_cut_close e ((λ r0, equiv_alt_eta_eta q r0) q0)
-    ((λ r0, equiv_alt_eta_eta q r0) r).
+-> upper_cut_close e ((fun r0 => equiv_alt_eta_eta q r0) q0)
+    ((fun r0 => equiv_alt_eta_eta q r0) r).
 Proof.
 unfold equiv_alt_eta_eta.
 red;simpl. intros q r1 r2 e Hr n.
@@ -588,9 +588,9 @@ forall q q0 (d d' e : Q+) (y : Approximation (C T)) (b : Q+ -> upper_cut)
 (Eb : forall d0 e0 : Q+, upper_cut_close (d0 + e0) (b d0) (b e0)),
 e = d + d'
 -> close d' (eta q0) (y d)
-  -> upper_cut_close d' ((λ r, equiv_alt_eta_eta q r) q0) (b d)
-    -> upper_cut_close e ((λ r, equiv_alt_eta_eta q r) q0)
-        ((λ _ : Approximation (C T), equiv_alt_eta_lim) y b Eb).
+  -> upper_cut_close d' ((fun r => equiv_alt_eta_eta q r) q0) (b d)
+    -> upper_cut_close e ((fun r => equiv_alt_eta_eta q r) q0)
+        ((fun _ : Approximation (C T) => equiv_alt_eta_lim) y b Eb).
 Proof.
 simpl;intros q r d d' e y b Eb He _ IH.
 unfold equiv_alt_eta_eta in IH;simpl in IH.
@@ -614,9 +614,9 @@ forall q r (d d' e : Q+) (x : Approximation (C T)) (a : Q+ -> upper_cut)
 (Ea : forall d0 e0 : Q+, upper_cut_close (d0 + e0) (a d0) (a e0)),
   e = d + d'
   -> close d' (x d) (eta r)
-  -> upper_cut_close d' (a d) ((λ r0, equiv_alt_eta_eta q r0) r)
-  -> upper_cut_close e ((λ _ : Approximation (C T), equiv_alt_eta_lim) x a Ea)
-  ((λ r0, equiv_alt_eta_eta q r0) r).
+  -> upper_cut_close d' (a d) ((fun r0 => equiv_alt_eta_eta q r0) r)
+  -> upper_cut_close e ((fun _ : Approximation (C T) => equiv_alt_eta_lim) x a Ea)
+  ((fun r0 => equiv_alt_eta_eta q r0) r).
 Proof.
 unfold upper_cut_close;simpl;intros q r d d' e x a Ea He xi IH e'.
 split.
@@ -641,8 +641,8 @@ forall (x y : Approximation (C T)) (a b : Q+ -> upper_cut)
 e = d + n + n'
 -> close n' (x d) (y n)
   -> upper_cut_close n' (a d) (b n)
-    -> upper_cut_close e ((λ _, equiv_alt_eta_lim) x a Ea)
-        ((λ _, equiv_alt_eta_lim) y b Eb).
+    -> upper_cut_close e ((fun _ => equiv_alt_eta_lim) x a Ea)
+        ((fun _ => equiv_alt_eta_lim) y b Eb).
 Proof.
 unfold upper_cut_close;simpl;intros x y a b Ea Eb e d n n' He xi IH.
 intros e';split;apply (Trunc_ind _).
@@ -1350,7 +1350,7 @@ Lemma lipschitz_extend_eta_lim@{} :
   -> close (L * e) (f q)
       (lim
          {|
-         approximate := λ e0 : Q+, b (e0 / L);
+         approximate := fun e0 : Q+ => b (e0 / L);
          approx_equiv := Eequiv |}).
 Proof.
 simpl. intros q d d' e b Eequiv He IH.
@@ -1369,11 +1369,11 @@ Lemma lipschitz_extend_lim_lim@{} :
   -> close (L * e)
       (lim
          {|
-         approximate := λ e0 : Q+, a (e0 / L);
+         approximate := fun e0 : Q+ => a (e0 / L);
          approx_equiv := Eequiv1 |})
       (lim
          {|
-         approximate := λ e0 : Q+, b (e0 / L);
+         approximate := fun e0 : Q+ => b (e0 / L);
          approx_equiv := Eequiv2 |}).
 Proof.
 simpl;intros a b e d n e' ?? He IH.
@@ -1437,8 +1437,8 @@ Lemma lipschitz_extend_lim_approx@{} (x : Approximation (C T))
                                  (lipschitz_extend (x (e / L))).
 Proof.
 exact (lipschitz_extend_lim_pr
-                    (λ e, lipschitz_extend (x e))
-                    (λ d e, equiv_rec _ _
+                    (fun e => lipschitz_extend (x e))
+                    (fun d e => equiv_rec _ _
                        lipshitz_extend_recursor (x d) (x e) (d + e)
                        (approx_equiv x d e))).
 Defined.
@@ -1577,7 +1577,7 @@ Defined.
 
 Definition lipschitz_extend_binary_lim@{} (x : Approximation (C A)) v :
   lipschitz_extend_binary (lim x) v =
-  lim {| approximate := λ e : Q+,
+  lim {| approximate := fun e : Q+ =>
           lipschitz_extend_binary (x (e / L2)) v
       ;  approx_equiv := lipschitz_extend_binary_lim_pr x v |}
   := idpath.

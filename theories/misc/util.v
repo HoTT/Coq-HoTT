@@ -11,7 +11,7 @@ Section pointwise_dependent_relation.
   Context A (B: A -> Type) (R: forall a, relation (B a)).
 
   Definition pointwise_dependent_relation: relation (forall a, B a) :=
-    λ f f', forall a, R _ (f a) (f' a).
+    fun f f' => forall a, R _ (f a) (f' a).
 
   Global Instance pdr_equiv {_:forall a, Equivalence (R a)}
     : Equivalence pointwise_dependent_relation.

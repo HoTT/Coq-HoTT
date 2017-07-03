@@ -49,7 +49,7 @@ simple refine (Build_Recursors _ _ _ _ _ _ _ _ _ _ _ _);simpl.
     exact IH.
   + transitivity ((f O).1).
     * apply ((f O).2).
-    * exact (sup_is_ub _ {| seq := λ n : nat, (f n).1; seq_increasing := IH |} O).
+    * exact (sup_is_ub _ {| seq := fun n : nat => (f n).1; seq_increasing := IH |} O).
 - intros;reflexivity.
 - simpl. apply pr2.
 - simpl. intros s p x. apply sup_le_l.

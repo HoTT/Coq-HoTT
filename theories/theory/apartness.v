@@ -89,7 +89,7 @@ Section morphisms.
 
   Global Instance strong_setoid_morphism_unary_2
     `{!StrongBinaryExtensionality (f : A -> B -> C)} :
-    forall z, StrongExtensionality (λ x, f x z).
+    forall z, StrongExtensionality (fun x => f x z).
   Proof.
   intros z x y E.
   apply (merely_destruct (strong_binary_extensionality f x z y z E)).
@@ -102,13 +102,13 @@ Section morphisms.
     instance in order to avoid loops. *)
   Lemma strong_binary_setoid_morphism_both_coordinates
     `{!IsApart A} `{!IsApart B} `{!IsApart C} {f : A -> B -> C}
-    `{forall z, StrongExtensionality (f z)} `{forall z, StrongExtensionality (λ x, f x z)}
+    `{forall z, StrongExtensionality (f z)} `{forall z, StrongExtensionality (fun x => f x z)}
      : StrongBinaryExtensionality f.
   Proof.
   intros x₁ y₁ x₂ y₂ E.
   apply (merely_destruct (cotransitive E (f x₂ y₁))).
   intros [?|?];apply tr.
-  - left. apply (strong_extensionality (λ x, f x y₁));trivial.
+  - left. apply (strong_extensionality (fun x => f x y₁));trivial.
   - right. apply (strong_extensionality (f x₂));trivial.
   Qed.
 

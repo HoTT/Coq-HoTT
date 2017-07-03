@@ -938,7 +938,7 @@ Defined.
 
 Lemma Z_abs_respects' : forall (x y : PairT.T N) (E : PairT.equiv x y),
   transport
-    (λ q : Z,
+    (fun q : Z =>
      (exists n : N, naturals_to_semiring N Z n = q)
      \/ (exists n : N, naturals_to_semiring N Z n = - q)) (Z_path E) (Z_abs_def x)
   = Z_abs_def y.

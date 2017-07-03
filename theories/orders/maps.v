@@ -113,7 +113,7 @@ Section order_preserving_ops.
   Context `{Le R}.
 
   Lemma order_preserving_flip {op} `{!Commutative op} `{!OrderPreserving (op z)}
-    : OrderPreserving (λ y, op y z).
+    : OrderPreserving (fun y => op y z).
   Proof.
   intros x y E.
   rewrite 2!(commutativity _ z).
@@ -122,7 +122,7 @@ Section order_preserving_ops.
 
   Lemma order_reflecting_flip {op} `{!Commutative op}
     `{!OrderReflecting (op z) }
-    : OrderReflecting (λ y, op y z).
+    : OrderReflecting (fun y => op y z).
   Proof.
   intros x y E.
   apply (order_reflecting (op z)).
@@ -138,7 +138,7 @@ Section order_preserving_ops.
   Qed.
 
   Lemma order_preserving_flip_nonneg (op : R -> R -> R) `{!Zero R}
-    {E:forall z, PropHolds (0 ≤ z) -> OrderPreserving (λ y, op y z)} z
+    {E:forall z, PropHolds (0 ≤ z) -> OrderPreserving (fun y => op y z)} z
     : 0 ≤ z -> forall x y, x ≤ y -> op x z ≤ op y z.
   Proof.
   apply E.
@@ -154,7 +154,7 @@ Section order_preserving_ops.
   Qed.
 
   Lemma order_reflecting_flip_pos (op : R -> R -> R) `{!Zero R}
-    {E:forall z, PropHolds (0 < z) -> OrderReflecting (λ y, op y z)} z
+    {E:forall z, PropHolds (0 < z) -> OrderReflecting (fun y => op y z)} z
     : 0 < z -> forall x y, op x z ≤ op y z -> x ≤ y.
   Proof.
   apply E.
@@ -167,7 +167,7 @@ Section strict_order_preserving_ops.
 
   Lemma strictly_order_preserving_flip {op} `{!Commutative op}
     `{!StrictlyOrderPreserving (op z)}
-    : StrictlyOrderPreserving (λ y, op y z).
+    : StrictlyOrderPreserving (fun y => op y z).
   Proof.
   intros x y E.
   rewrite 2!(commutativity _ z).
@@ -176,7 +176,7 @@ Section strict_order_preserving_ops.
 
   Lemma strictly_order_reflecting_flip {op} `{!Commutative op}
     `{!StrictlyOrderReflecting (op z) }
-    : StrictlyOrderReflecting (λ y, op y z).
+    : StrictlyOrderReflecting (fun y => op y z).
   Proof.
   intros x y E.
   apply (strictly_order_reflecting (op z)).
@@ -192,7 +192,7 @@ Section strict_order_preserving_ops.
   Qed.
 
   Lemma strictly_order_preserving_flip_pos (op : R -> R -> R) `{!Zero R}
-    {E:forall z, PropHolds (0 < z) -> StrictlyOrderPreserving (λ y, op y z)} z
+    {E:forall z, PropHolds (0 < z) -> StrictlyOrderPreserving (fun y => op y z)} z
     : 0 < z -> forall x y, x < y -> op x z < op y z.
   Proof.
   apply E.

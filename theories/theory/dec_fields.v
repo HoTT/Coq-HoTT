@@ -183,7 +183,7 @@ Section is_field.
   Context `{DecField F} `{Apart F} `{!TrivialApart F}
     `{Decidable.DecidablePaths F}.
 
-  Global Instance recip_dec_field: Recip F := λ x, / x.1.
+  Global Instance recip_dec_field: Recip F := fun x => / x.1.
 
   Local Existing Instance dec_strong_setoid.
 
@@ -206,8 +206,8 @@ Section is_field.
 End is_field.
 
 (* Definition stdlib_field_theory F `{DecField F} :
-  Field_theory.field_theory 0 1 (+) (.*.) (λ x y, x - y)
-    (-) (λ x y, x / y) (/) (=).
+  Field_theory.field_theory 0 1 (+) (.*.) (fun x y => x - y)
+    (-) (fun x y => x / y) (/) (=).
 Proof with auto.
   intros.
   constructor.

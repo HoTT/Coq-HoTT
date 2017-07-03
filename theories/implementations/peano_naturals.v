@@ -547,7 +547,7 @@ split;apply _.
 Qed.
 
 Global Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
-  λ _ _ _ _ _ _, fix f (n: nat) := match n with 0%nat => 0 | 1%nat => 1 |
+  fun _ _ _ _ _ _ => fix f (n: nat) := match n with 0%nat => 0 | 1%nat => 1 |
    S n' => 1 + f n' end.
 
 Section for_another_semiring.

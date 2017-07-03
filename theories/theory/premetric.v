@@ -183,9 +183,9 @@ Global Instance prod_cauchy_complete `{!CauchyComplete A} `{!CauchyComplete B}
 Proof.
 intros xy e d;split.
 - apply (cauchy_complete
-    {| approximate := λ e0 : Q+, fst (xy e0); approx_equiv := _ |}).
+    {| approximate := fun e0 : Q+ => fst (xy e0); approx_equiv := _ |}).
 - apply (cauchy_complete
-    {| approximate := λ e0 : Q+, snd (xy e0); approx_equiv := _ |}).
+    {| approximate := fun e0 : Q+ => snd (xy e0); approx_equiv := _ |}).
 Qed.
 
 End close_prod.
@@ -252,7 +252,7 @@ apply tr. exists (e/2 + d), (e/2). split.
 + abstract (set (e' := e/2);rewrite (pos_split2 e);unfold e';
   apply pos_eq;ring_tac.ring_with_nat).
 + intros x.
-  set (S := {| approximate := λ e0 : Q+, (f e0) x
+  set (S := {| approximate := fun e0 : Q+ => (f e0) x
             ;  approx_equiv := _ |}).
   pose proof (cauchy_complete S) as E;red in E.
   apply E.

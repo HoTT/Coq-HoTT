@@ -68,7 +68,7 @@ Section retract_is_nat.
 
   (* If we make this an instance, instance resolution will loop *)
   Definition retract_is_nat_to_sr : NaturalsToSemiRing SR
-    := λ R _ _ _ _ _, naturals_to_semiring N R ∘ f⁻¹.
+    := fun R _ _ _ _ _ => naturals_to_semiring N R ∘ f⁻¹.
 
   Section for_another_semirings.
     Context `{SemiRing R}.
