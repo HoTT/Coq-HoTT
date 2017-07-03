@@ -1,6 +1,5 @@
 Require Export HoTTClasses.misc.settings.
 Require Export HoTT.Basics.Overture HoTT.Basics.Trunc HoTT.HIT.Truncations.
-Require Import Coq.Unicode.Utf8.
 
 Hint Unfold Reflexive Symmetric Transitive.
 Hint Constructors PreOrder.
