@@ -60,11 +60,6 @@ Class Top A := top: A.
 Class Bottom A := bottom: A.
 Typeclasses Transparent Meet Join Top Bottom.
 
-Class Contains A B := contains: A -> B -> Type.
-Class Singleton A B := singleton: A -> B.
-Class Difference A := difference : A -> A -> A.
-Typeclasses Transparent Contains Singleton Difference.
-
 Class Le A := le: relation A.
 Class Lt A := lt: relation A.
 Typeclasses Transparent Le Lt.
@@ -72,7 +67,6 @@ Typeclasses Transparent Le Lt.
 Definition NonNeg R `{Zero R} `{Le R} := sig (le zero).
 Definition Pos R `{Zero R} `{Lt R} := sig (lt zero).
 Definition NonPos R `{Zero R} `{Le R} := sig (fun y => le y zero).
-Inductive PosInf (R : Type) : Type := finite (x : R) | infinite.
 
 Instance plus_is_sg_op `{f : Plus A} : SgOp A := f.
 Instance mult_is_sg_op `{f : Mult A} : SgOp A := f.
@@ -82,20 +76,12 @@ Instance meet_is_sg_op `{f : Meet A} : SgOp A := f.
 Instance join_is_sg_op `{f : Join A} : SgOp A := f.
 Instance top_is_mon_unit `{s : Top A} : MonUnit A := s.
 Instance bottom_is_mon_unit `{s : Bottom A} : MonUnit A := s.
-Instance singleton_is_cast `{s : Singleton A B} : Cast A B := s.
 
 Hint Extern 4 (Apart (ApartZero _)) => apply @sig_apart : typeclass_instances.
 Hint Extern 4 (Apart (NonNeg _)) => apply @sig_apart : typeclass_instances.
 Hint Extern 4 (Apart (Pos _)) => apply @sig_apart : typeclass_instances.
-Hint Extern 4 (Apart (PosInf _)) => apply @sig_apart : typeclass_instances.
 
 (* Notations: *)
-Notation "R ₀" := (ApartZero R) (at level 20, no associativity) : mc_scope.
-Notation "R ⁺" := (NonNeg R) (at level 20, no associativity) : mc_scope.
-Notation "R ₊" := (Pos R) (at level 20, no associativity) : mc_scope.
-Notation "R ⁻" := (NonPos R) (at level 20, no associativity) : mc_scope.
-Notation "R ∞" := (PosInf R) (at level 20, no associativity) : mc_scope.
-
 Infix "&" := sg_op (at level 50, left associativity) : mc_scope.
 Notation "(&)" := sg_op (only parsing) : mc_scope.
 Notation "( x &)" := (sg_op x) (only parsing) : mc_scope.
@@ -169,25 +155,6 @@ Notation "x ≤ y ≤ z" := (x ≤ y /\ y ≤ z) (at level 70, y at next level) 
 Notation "x ≤ y < z" := (x ≤ y /\ y < z) (at level 70, y at next level) : mc_scope.
 Notation "x < y < z" := (x < y /\ y < z) (at level 70, y at next level) : mc_scope.
 Notation "x < y ≤ z" := (x < y /\ y ≤ z) (at level 70, y at next level) : mc_scope.
-
-Infix "∖" := difference (at level 35) : mc_scope.
-Notation "(∖)" := difference (only parsing) : mc_scope.
-Notation "( X ∖)" := (difference X) (only parsing) : mc_scope.
-Notation "(∖ X )" := (fun Y => Y ∖ X) (only parsing) : mc_scope.
-
-Infix "∈" := contains (at level 70, no associativity) : mc_scope.
-Notation "(∈)" := contains (only parsing) : mc_scope.
-Notation "( x ∈)" := (contains x) (only parsing) : mc_scope.
-Notation "(∈ X )" := (fun x => x ∈ X) (only parsing) : mc_scope.
-
-Notation "x ∉ y" := (~x ∈ y) (at level 70, no associativity) : mc_scope.
-Notation "(∉)" := (fun x X => x ∉ X) : mc_scope.
-Notation "( x ∉)" := (fun X => x ∉ X) (only parsing) : mc_scope.
-Notation "(∉ X )" := (fun x => x ∉ X) (only parsing) : mc_scope.
-
-Notation "{{ x }}" := (singleton x) : mc_scope.
-Notation "{{ x ; y ; .. ; z }}" := (join .. (join (singleton x) (singleton y))
-                                         .. (singleton z)) : mc_scope.
 
 (** It is likely that ≤ and < are transitive (and ≤ reflexive) so inform [auto] of this. *)
 Ltac auto_trans := match goal with

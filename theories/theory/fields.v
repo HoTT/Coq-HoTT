@@ -124,7 +124,7 @@ Qed.
 
 Global Instance: IntegralDomain F := {}.
 
-Global Instance apart_0_sig_apart_0: forall (x : F ₀), PropHolds (x.1 ≶ 0).
+Global Instance apart_0_sig_apart_0: forall (x : ApartZero F), PropHolds (x.1 ≶ 0).
 Proof.
 intros [??];trivial.
 Qed.
