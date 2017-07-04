@@ -179,13 +179,13 @@ Class Idempotent `(f: A -> A -> A) (x : A) : Type := idempotency: f x x = x.
 Arguments idempotency {A} _ _ {Idempotent}.
 
 Class UnaryIdempotent {A} (f: A -> A) : Type :=
-  unary_idempotent :> Idempotent compose f.
+  unary_idempotent :> Idempotent Compose f.
 
 Lemma unary_idempotency `{UnaryIdempotent A f} x : f (f x) = f x.
 Proof.
-change (f (f x)) with (compose f f x).
+change (f (f x)) with (Compose f f x).
 apply (ap (fun g => g x)).
-change (compose f f = f).
+change (Compose f f = f).
 apply idempotency. apply _.
 Qed.
 

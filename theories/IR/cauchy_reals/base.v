@@ -28,7 +28,7 @@ Instance R1@{} : One real := rat 1.
 
 Instance Rneg@{} : Negate real.
 Proof.
-red. apply (lipschitz_extend _ (compose rat (-)) _).
+red. apply (lipschitz_extend _ (Compose rat (-)) _).
 Defined.
 
 Instance Rneg_nonexpanding@{} : NonExpanding (@negate real _).
@@ -65,11 +65,11 @@ Lemma unique_continuous_binary_extension@{} (f : real -> real -> real)
 Proof.
 intros E.
 intros x;apply (unique_continuous_extension _).
-{ change (Continuous (compose (uncurry f) (pair x))). apply _. }
-{ change (Continuous (compose (uncurry g) (pair x))). apply _. }
+{ change (Continuous (Compose (uncurry f) (pair x))). apply _. }
+{ change (Continuous (Compose (uncurry g) (pair x))). apply _. }
 intros r;revert x;apply (unique_continuous_extension _).
-{ change (Continuous (compose (uncurry f) (fun x => (x, rat r)))). apply _. }
-{ change (Continuous (compose (uncurry g) (fun x => (x, rat r)))). apply _. }
+{ change (Continuous (Compose (uncurry f) (fun x => (x, rat r)))). apply _. }
+{ change (Continuous (Compose (uncurry g) (fun x => (x, rat r)))). apply _. }
 trivial.
 Qed.
 
@@ -81,16 +81,16 @@ Lemma unique_continuous_ternary_extension@{} (f : real -> real -> real -> real)
   forall u v w, f u v w = g u v w.
 Proof.
 intros E u;apply unique_continuous_binary_extension.
-{ change (Continuous (compose (uncurry (uncurry f)) (map2 (pair u) id))).
+{ change (Continuous (Compose (uncurry (uncurry f)) (map2 (pair u) id))).
   apply _. }
-{ change (Continuous (compose (uncurry (uncurry g)) (map2 (pair u) id))).
+{ change (Continuous (Compose (uncurry (uncurry g)) (map2 (pair u) id))).
   apply _. }
 intros q r;revert u;apply (unique_continuous_extension _).
-{ change (Continuous (compose (uncurry (uncurry f))
-    (compose (fun u => (u, rat r)) (fun u => (u, rat q))))).
+{ change (Continuous (Compose (uncurry (uncurry f))
+    (Compose (fun u => (u, rat r)) (fun u => (u, rat q))))).
   apply _. }
-{ change (Continuous (compose (uncurry (uncurry g))
-    (compose (fun u => (u, rat r)) (fun u => (u, rat q))))).
+{ change (Continuous (Compose (uncurry (uncurry g))
+    (Compose (fun u => (u, rat r)) (fun u => (u, rat q))))).
   apply _. }
 auto.
 Qed.
@@ -133,15 +133,15 @@ repeat split.
 - hnf; change mon_unit with 0.
   change sg_op with plus.
   apply (unique_continuous_extension _);try apply _.
-  { change (Continuous (compose (uncurry plus)
-     (compose (map2 negate (@id real)) BinaryDup))). apply _.
+  { change (Continuous (Compose (uncurry plus)
+     (Compose (map2 negate (@id real)) BinaryDup))). apply _.
   }
   intros;apply (ap rat),plus_negate_l.
 - hnf; change mon_unit with 0.
   change sg_op with plus.
   apply (unique_continuous_extension _);try apply _.
-  { change (Continuous (compose (uncurry plus)
-     (compose (map2 (@id real) negate) BinaryDup)));apply _. }
+  { change (Continuous (Compose (uncurry plus)
+     (Compose (map2 (@id real) negate) BinaryDup)));apply _. }
   intros;apply (ap rat),plus_negate_r.
 Unshelve. all:exact 1.
 Qed.
@@ -214,7 +214,7 @@ split.
     intros;apply (ap rat). apply commutativity.
   + hnf. red.
     apply (unique_continuous_extension _);try apply _.
-    { change (Continuous (compose (uncurry meet) (@BinaryDup real)));apply _. }
+    { change (Continuous (Compose (uncurry meet) (@BinaryDup real)));apply _. }
     intros;apply (ap rat),idempotency,_.
   + unfold le,Rle. intros x y;split;intros E.
     * rewrite <-E.

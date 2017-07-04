@@ -246,7 +246,7 @@ Global Instance class@{} : Cast (Frac R) F := class_of _.
 
 (* injection from R *)
 
-Global Instance inject@{} : Cast R F := compose class (Frac_inject _).
+Global Instance inject@{} : Cast R F := Compose class (Frac_inject _).
 
 Definition path@{} {x y} : equiv x y -> ' x = ' y := related_classes_eq _.
 

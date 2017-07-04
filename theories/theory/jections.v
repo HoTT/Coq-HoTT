@@ -46,7 +46,7 @@ Definition surjective_factor : B -> C :=
 Lemma surjective_factor_pr : f = compose surjective_factor g.
 Proof.
 apply path_forall. intros x.
-unfold surjective_factor,surjective_factor_aux,compose. simpl.
+unfold surjective_factor,surjective_factor_aux,Compose. simpl.
 set (Y := (center
            (TrM.Os_ReflectiveSubuniverses.O_reflector
               (modality_to_reflective_subuniverse (trunc_S minus_two))

@@ -309,7 +309,7 @@ Definition Z@{} : Type@{UN} := @quotient _ PairT.equiv@{UN UNalt} _.
 
 Global Instance Z_of_pair : Cast (PairT.T N) Z := class_of _.
 
-Global Instance Z_of_N : Cast N Z := compose Z_of_pair (PairT.inject@{UN UNalt} _).
+Global Instance Z_of_N : Cast N Z := Compose Z_of_pair (PairT.inject@{UN UNalt} _).
 
 Definition Z_path {x y} : PairT.equiv x y -> Z_of_pair x = Z_of_pair y
   := related_classes_eq _.
@@ -881,9 +881,9 @@ apply (Z_ind _).
 intros [pa na];unfold integers_to_ring;simpl.
 rewrite Npair_splits.
 rewrite (preserves_plus (f:=h)),(preserves_negate (f:=h)).
-change (h (' pa)) with (compose h (cast N Z) pa).
-change (h (' na)) with (compose h (cast N Z) na).
-rewrite 2!(naturals_initial (h:=compose h (cast N Z))).
+change (h (' pa)) with (Compose h (cast N Z) pa).
+change (h (' na)) with (Compose h (cast N Z) na).
+rewrite 2!(naturals_initial (h:=Compose h (cast N Z))).
 trivial.
 Qed.
 

@@ -34,7 +34,7 @@ Lemma uniform_on_intervals_continuous `{Closeness A} (f:real -> A)
 Proof.
 intros u e.
 apply (merely_destruct (R_Qpos_bounded u)). intros [a Ea].
-hnf in Emu. unfold compose in Emu.
+hnf in Emu. unfold Compose in Emu.
 apply (merely_destruct (R_archimedean _ _ Ea)). intros [q [Eq Eq']].
 apply rat_lt_reflecting in Eq'.
 apply tr;exists (meet (mu a e) (Qpos_diff _ _ Eq')).

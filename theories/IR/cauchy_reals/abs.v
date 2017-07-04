@@ -22,7 +22,7 @@ Require Export
 
 Local Set Universe Minimization ToSet.
 
-Definition Rabs_val := lipschitz_extend _ (compose rat abs) 1.
+Definition Rabs_val := lipschitz_extend _ (Compose rat abs) 1.
 
 Global Instance Rabs_nonexpanding : NonExpanding Rabs_val := _.
 Typeclasses Opaque Rabs_val.
@@ -81,7 +81,7 @@ Qed.
 
 Instance Rabs_idempotent@{} : UnaryIdempotent (abs (A:=real)).
 Proof.
-hnf. apply path_forall. intros x. unfold compose.
+hnf. apply path_forall. intros x. unfold Compose.
 apply Rabs_of_nonneg, Rabs_nonneg.
 Qed.
 

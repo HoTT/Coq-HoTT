@@ -30,7 +30,7 @@ Qed.
 Lemma to_semiring_involutive N `{Naturals N} N2 `{Naturals N2} x :
   naturals_to_semiring N2 N (naturals_to_semiring N N2 x) = x.
 Proof.
-change (compose (naturals_to_semiring N2 N) (naturals_to_semiring N N2) x = id x).
+change (Compose (naturals_to_semiring N2 N) (naturals_to_semiring N N2) x = id x).
 apply to_semiring_unique_alt;apply _.
 Qed.
 
@@ -84,7 +84,7 @@ Section retract_is_nat.
     Proof.
     transitivity ((h ∘ (f ∘ f^-1)) x).
     - symmetry. apply (to_semiring_unique (h ∘ f)).
-    - unfold compose. apply ap, eisretr.
+    - unfold Compose. apply ap, eisretr.
     Qed.
   End for_another_semirings.
 

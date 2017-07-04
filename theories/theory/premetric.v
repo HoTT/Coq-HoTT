@@ -367,17 +367,17 @@ Context {C:Type@{UC} } `{Closeness C} (g : B -> C) (f : A -> B).
 
 Global Instance nonexpanding_compose@{}
   {Eg : NonExpanding g} {Ef : NonExpanding f}
-  : NonExpanding (compose g f).
+  : NonExpanding (Compose g f).
 Proof.
 hnf. intros e x y xi;exact (non_expanding g (non_expanding f xi)).
 Qed.
 
 Global Instance lipschitz_compose@{}
   Lg {Eg : Lipschitz g Lg} Lf {Ef : Lipschitz f Lf}
-  : Lipschitz (compose g f) (Lg * Lf).
+  : Lipschitz (Compose g f) (Lg * Lf).
 Proof.
 intros ??? He.
-unfold compose;apply Ef,Eg in He.
+unfold Compose;apply Ef,Eg in He.
 pattern (Lg * Lf * e).
 eapply transport;[|exact He].
 apply associativity.
@@ -385,38 +385,38 @@ Qed.
 
 Lemma lipschitz_compose_nonexpanding_r'
   L {Eg : Lipschitz g L} {Ef : NonExpanding f}
-  : Lipschitz (compose g f) L.
+  : Lipschitz (Compose g f) L.
 Proof.
 rewrite <-(left_identity L),commutativity. apply _.
 Qed.
 
 Global Instance lipschitz_compose_nonexpanding_r@{}
   L {Eg : Lipschitz g L} {Ef : NonExpanding f}
-  : Lipschitz (compose g f) L
+  : Lipschitz (Compose g f) L
   := lipschitz_compose_nonexpanding_r'@{Ularge} L.
 
 Lemma lipschitz_compose_nonexpanding_l'
   L {Eg : NonExpanding g} {Ef : Lipschitz f L}
-  : Lipschitz (compose g f) L.
+  : Lipschitz (Compose g f) L.
 Proof.
 rewrite <-(left_identity L). apply _.
 Qed.
 
 Global Instance lipschitz_compose_nonexpanding_l@{}
   L {Eg : NonExpanding g} {Ef : Lipschitz f L}
-  : Lipschitz (compose g f) L
+  : Lipschitz (Compose g f) L
   := lipschitz_compose_nonexpanding_l'@{Ularge} L.
 
 Lemma uniform_compose@{} mu {Eg : Uniform g mu} mu' {Ef : Uniform f mu'}
-  : Uniform (compose g f) (compose mu' mu).
+  : Uniform (Compose g f) (Compose mu' mu).
 Proof.
-intros e u v xi. unfold compose.
+intros e u v xi. unfold Compose.
 apply (uniform g _),(uniform f _),xi.
 Qed.
 Global Existing Instance uniform_compose.
 
 Global Instance continuous_compose@{} {Eg : Continuous g} {Ef : Continuous f}
-  : Continuous (compose g f).
+  : Continuous (Compose g f).
 Proof.
 intros u e.
 apply (merely_destruct (continuous g (f u) e)).
@@ -904,7 +904,7 @@ Global Instance Q_recip_lipschitz (e : Q+)
   : Lipschitz ((/) ∘ pr1 ∘ (Qpos_upper_inject e)) (/ (e * e)).
 Proof.
 intros n q r xi.
-unfold compose;simpl. apply Qclose_alt.
+unfold Compose;simpl. apply Qclose_alt.
 assert (PropHolds (0 < join q (' e))) as E
   by (apply lt_le_trans with (' e);[solve_propholds|apply join_ub_r]).
 apply (strictly_order_reflecting ((join q (' e)) *.)).

@@ -227,7 +227,7 @@ Section compose_mor.
     SemiGroupPreserving (g ∘ f).
   Proof.
   red;intros.
-  unfold compose.
+  unfold Compose.
   rewrite (preserves_sg_op x y).
   apply preserves_sg_op.
   Qed.
@@ -237,7 +237,7 @@ Section compose_mor.
   Proof.
   intros;split.
   - apply _.
-  - red;unfold compose.
+  - red;unfold Compose.
     etransitivity;[|apply preserves_mon_unit].
     apply ap,preserves_mon_unit.
   Qed.

@@ -59,7 +59,7 @@ revert x. apply (unique_continuous_extension _ _ _).
 intros q. unfold Qpos_upper_recip;simpl.
 change (rat ((dec_recip ∘ pr1 ∘ Qpos_upper_inject e1) ((' e1 ⊔ ' e2) ⊔ q)) =
 rat ((dec_recip ∘ pr1 ∘ Qpos_upper_inject e2) ((' e1 ⊔ ' e2) ⊔ q))).
-apply (ap rat). unfold compose;simpl.
+apply (ap rat). unfold Compose;simpl.
 apply ap.
 rewrite <-(simple_associativity (f:=join)),(commutativity (f:=join) q).
 rewrite (simple_associativity (f:=join)),(commutativity (f:=join) _ (' e1)).
@@ -188,7 +188,7 @@ apply (unique_continuous_extension _).
   change (rat ((' e ⊔ q) * (dec_recip ∘ pr1 ∘ Qpos_upper_inject e) (' e ⊔ q)) =
     rat 1).
   apply (ap rat).
-  unfold compose;simpl.
+  unfold Compose;simpl.
   rewrite (commutativity (f:=join) _ (' e)),(simple_associativity (f:=join)).
   rewrite (idempotency _ _).
   apply dec_recip_inverse.

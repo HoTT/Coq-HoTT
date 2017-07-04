@@ -590,7 +590,7 @@ Section Fix_pr.
 Record ContinuousTransformer A B :=
   { cont_transform : MonotoneTransformer A B
   ; transform_continuous : forall (s : A -> IncreasingSequence (partial B)) x,
-      cont_transform (compose (sup _) s) x =
+      cont_transform (Compose (sup _) s) x =
       sup _ (seq_transform cont_transform s x) }.
 Coercion cont_transform : ContinuousTransformer >-> MonotoneTransformer.
 

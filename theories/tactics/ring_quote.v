@@ -106,7 +106,7 @@ Fixpoint expr_map {V W:Type0 } (f : V -> W) (e : Expr V) : Expr W :=
   end.
 
 Lemma eval_map {V W:Type0 } (f : V -> W) v e
-  : eval v (expr_map f e) = eval (compose@{Set Set U} v f) e.
+  : eval v (expr_map f e) = eval (Compose@{Set Set U} v f) e.
 Proof.
 induction e;simpl;try reflexivity;apply ap2;auto.
 Qed.

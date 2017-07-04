@@ -385,7 +385,7 @@ Proof.
 intros f x.
 generalize (center _ (enumerator_issurj _ x)). apply (Trunc_ind _).
 intros [a []]. clear x. unfold EnumerableSup.
-apply (countable_sup_ub (compose _ _) a).
+apply (countable_sup_ub (Compose _ _) a).
 Qed.
 
 Definition enumerable_sup_ub@{} := enumerable_sup_ub'@{Uhuge Ularge}.

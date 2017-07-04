@@ -31,7 +31,7 @@ Qed.
 Lemma to_ring_involutive Z `{Integers Z} Z2 `{Integers Z2} x :
   integers_to_ring Z2 Z (integers_to_ring Z Z2 x) = x.
 Proof.
-change (compose (integers_to_ring Z2 Z) (integers_to_ring Z Z2) x = id x).
+change (Compose (integers_to_ring Z2 Z) (integers_to_ring Z Z2) x = id x).
 apply to_ring_unique_alt;apply _.
 Qed.
 
@@ -98,7 +98,7 @@ Section retract_is_int.
     Proof.
     transitivity ((h ∘ (f ∘ f^-1)) x).
     - symmetry. apply (to_ring_unique (h ∘ f)).
-    - unfold compose. apply ap.
+    - unfold Compose. apply ap.
       apply eisretr.
     Qed.
   End for_another_ring.

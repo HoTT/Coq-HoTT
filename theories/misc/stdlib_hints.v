@@ -20,11 +20,11 @@ Definition bool := (HoTT.Types.Bool.Bool@{Ubool}).
 
 Reserved Notation "x ≤ y" (at level 70, no associativity).
 
-Definition compose {A B C : Type} (g : B -> C) (f : A -> B) : A -> C := compose g f.
+Definition Compose {A B C : Type} (g : B -> C) (f : A -> B) : A -> C := compose g f.
 
-Notation " g ∘ f " := (compose g f)
+Notation " g ∘ f " := (Compose g f)
   (at level 40, left associativity).
-Notation "(∘)" := compose (only parsing) : mc_scope.
+Notation "(∘)" := Compose (only parsing) : mc_scope.
 
 (*
    For a lemma like [compose_bijective] we don't declare it has an instance otherwise we end up looping

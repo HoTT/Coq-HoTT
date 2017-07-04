@@ -286,7 +286,7 @@ Section composition.
   Instance compose_order_preserving:
     OrderPreserving f -> OrderPreserving g -> OrderPreserving (g ∘ f).
   Proof.
-  red;intros. unfold compose.
+  red;intros. unfold Compose.
   do 2 apply (order_preserving _).
   trivial.
   Qed.
@@ -294,7 +294,7 @@ Section composition.
   Instance compose_order_reflecting:
     OrderReflecting f -> OrderReflecting g -> OrderReflecting (g ∘ f).
   Proof.
-  intros ?? x y E. unfold compose in E.
+  intros ?? x y E. unfold Compose in E.
   do 2 apply (order_reflecting _) in E.
   trivial.
   Qed.

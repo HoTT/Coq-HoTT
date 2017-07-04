@@ -63,7 +63,7 @@ repeat split.
 Qed.
 
 Definition QRmult@{} : Q -> real -> real
-  := fun q => lipschitz_extend _ (compose rat (q *.)) (pos_of_Q q).
+  := fun q => lipschitz_extend _ (Compose rat (q *.)) (pos_of_Q q).
 
 Instance QRmult_lipschitz : forall q, Lipschitz (QRmult q) (pos_of_Q q)
   := _.
@@ -164,7 +164,7 @@ Definition Rmult@{} : Mult real
 Global Existing Instance Rmult.
 
 Lemma Rmult_pr@{} x : (fun y => Rbounded_mult y.1 x y.2) =
-  compose (x *.) interval_back.
+  Compose (x *.) interval_back.
 Proof.
 apply jections.surjective_factor_pr.
 Qed.

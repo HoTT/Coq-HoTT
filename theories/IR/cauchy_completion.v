@@ -1483,7 +1483,7 @@ Context {Tlim : Lim T} `{!CauchyComplete T}.
 Definition completion_back@{} : C T -> T := lipschitz_extend id 1.
 
 Definition eta_back@{} : forall x, eta (completion_back x) = x
-  := unique_continuous_extension (compose eta completion_back) id
+  := unique_continuous_extension (Compose eta completion_back) id
     (fun _ => idpath).
 
 Definition back_eta@{} : forall x, completion_back (eta x) = x
