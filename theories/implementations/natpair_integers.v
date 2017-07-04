@@ -381,7 +381,7 @@ Lemma dec_Z_of_pair `{DecidablePaths N} : forall q r : PairT.T N,
   Decidable (' q = ' r).
 Proof.
 intros q r.
-destruct (decide (PairT.equiv q r)) as [E|E].
+destruct (dec (PairT.equiv q r)) as [E|E].
 - left. apply Z_path,E.
 - right. intros E'.
   apply E. apply (related_path E').
@@ -930,7 +930,7 @@ Definition Z_abs_def@{} : forall x : PairT.T N,
 Proof.
 intros [a b].
 destruct (nat_distance_sig a b) as [[z E]|[z E]].
-- destruct (decide (z = 0)) as [E'|_].
+- destruct (dec (z = 0)) as [E'|_].
   + left. exists 0. apply Z_abs_aux_0 with z;trivial.
   + right. exists z. apply Z_abs_aux_neg;trivial.
 - left. exists z. apply Z_abs_aux_pos;trivial.
@@ -947,10 +947,10 @@ intros [pa pb] [na nb] E.
 red in E; simpl in E.
 unfold Z_abs_def.
 destruct (nat_distance_sig pa pb) as [[z1 E1] | [z1 E1]];simpl.
-- destruct (decide (z1 = 0)) as [E2 | E2].
+- destruct (dec (z1 = 0)) as [E2 | E2].
   + rewrite Sum.transport_sum. rewrite Sigma.transport_sigma.
     destruct (nat_distance_sig na nb) as [[z2 E3] | [z2 E3]];
-    [destruct (decide (z2 = 0)) as [E4 | E4]|];simpl.
+    [destruct (dec (z2 = 0)) as [E4 | E4]|];simpl.
     * apply ap.
       apply Sigma.path_sigma_hprop;simpl.
       apply PathGroupoids.transport_const.
@@ -967,7 +967,7 @@ destruct (nat_distance_sig pa pb) as [[z1 E1] | [z1 E1]];simpl.
       ring_with_nat.
   + rewrite Sum.transport_sum,Sigma.transport_sigma.
     destruct (nat_distance_sig na nb) as [[z2 E3] | [z2 E3]];
-    [destruct (decide (z2 = 0)) as [E4 | E4]|];simpl.
+    [destruct (dec (z2 = 0)) as [E4 | E4]|];simpl.
     * destruct E2.
       rewrite E4,plus_0_r in E3;rewrite <-E1,<-E3 in E.
       apply (left_cancellation plus (pa+na)).
@@ -988,7 +988,7 @@ destruct (nat_distance_sig pa pb) as [[z1 E1] | [z1 E1]];simpl.
       apply E.
 - rewrite Sum.transport_sum,Sigma.transport_sigma. simpl.
   destruct (nat_distance_sig na nb) as [[z2 E3] | [z2 E3]];
-  [destruct (decide (z2 = 0)) as [E4 | E4]|];simpl.
+  [destruct (dec (z2 = 0)) as [E4 | E4]|];simpl.
   + apply ap. apply Sigma.path_sigma_hprop. simpl.
     rewrite PathGroupoids.transport_const.
     rewrite <-E1,<-E3,E4,plus_0_r in E.

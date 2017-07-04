@@ -65,7 +65,7 @@ split.
     reflexivity.
 Qed.
 
-Global Instance equiv_dec@{} : forall x y: Frac, Decision (equiv x y)
+Global Instance equiv_dec@{} : forall x y: Frac, Decidable (equiv x y)
   := fun x y => decide_rel (=) (num x * den y) (num y * den x).
 
 Lemma pl_respect@{} : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
@@ -459,7 +459,7 @@ Qed.
 Lemma dec_class@{} : forall q r, Decidable (class q = class r).
 Proof.
 intros q r.
-destruct (decide (equiv q r)) as [E|E].
+destruct (dec (equiv q r)) as [E|E].
 - left. apply path,E.
 - right. intros E'.
   apply E. apply (classes_eq_related _ _ E').

@@ -132,7 +132,7 @@ Section default_apart.
 
   Instance default_apart : Apart A | 20
     := fun x y =>
-      match decide (x = y) with
+      match dec (x = y) with
       | inl _ => false
       | inr _ => true
       end = true.
@@ -143,10 +143,10 @@ Section default_apart.
   split.
   - unfold apart,default_apart. apply _.
   - intros x y;unfold apart,default_apart;split.
-    + intros E. destruct (decide (x=y)).
+    + intros E. destruct (dec (x=y)).
       * destruct (false_ne_true E).
       * trivial.
-    + intros E;destruct (decide (x=y)) as [e|_].
+    + intros E;destruct (dec (x=y)) as [e|_].
       * destruct (E e).
       * split.
   Qed.
@@ -175,13 +175,13 @@ Section dec_setoid.
     intros e;apply ne,symmetry,e.
   - hnf. intros x y ne z.
     apply trivial_apart in ne.
-    destruct (decide (x=z)) as [e|ne'];[destruct (decide (z=y)) as [e'|ne']|].
+    destruct (dec (x=z)) as [e|ne'];[destruct (dec (z=y)) as [e'|ne']|].
     + destruct ne. path_via z.
     + apply tr;right. apply trivial_apart. assumption.
     + apply tr;left.  apply trivial_apart. assumption.
   - intros x y;split.
     + intros nap.
-      destruct (decide (x=y));auto.
+      destruct (dec (x=y));auto.
       destruct nap. apply trivial_apart;trivial.
     + intros e.
       intros nap. apply trivial_apart in nap. auto.

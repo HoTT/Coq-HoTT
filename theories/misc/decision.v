@@ -4,7 +4,7 @@ Require Export
   HoTTClasses.misc.util.
 
 (* HoTT compat *)
-Instance decide_stable : forall P, Decision P -> Stable P.
+Instance decide_stable : forall P, Decidable P -> Stable P.
 Proof.
 intros P dec dn.
 destruct dec as [p|n].
@@ -13,32 +13,32 @@ destruct dec as [p|n].
 Qed.
 
 Ltac case_decide := match goal with
-  | H : context [@decide ?P ?dec] |- _ => case (@decide P dec) in *
-  | |- context [@decide ?P ?dec] => case (@decide P dec) in *
+  | H : context [@dec ?P ?dec] |- _ => case (@dec P dec) in *
+  | |- context [@dec ?P ?dec] => case (@dec P dec) in *
   end.
 
 Ltac solve_trivial_decision :=
   match goal with
-  | [ |- Decision (?P) ] => apply _
-  | [ |- ?P + (~?P) ] => change (Decision P); apply _
+  | [ |- Decidable (?P) ] => apply _
+  | [ |- ?P + (~?P) ] => change (Decidable P); apply _
   end.
 
 Ltac solve_decision :=
   first [solve_trivial_decision
-    | unfold Decision; decide equality; solve_trivial_decision].
+    | unfold Decidable; decide equality; solve_trivial_decision].
 
-Instance decision_proper (P Q : Type) (PiffQ : P <-> Q) (P_dec : Decision P)
-  : Decision Q.
+Instance decision_proper (P Q : Type) (PiffQ : P <-> Q) (P_dec : Decidable P)
+  : Decidable Q.
 Proof.
 destruct P_dec as [p|np].
 - left; apply PiffQ;assumption.
 - right; intros q. apply np;apply PiffQ;assumption.
 Defined.
 
-Definition bool_decide@{i} (P : Type@{i}) `{dec : !Decision P} : bool
+Definition bool_decide@{i} (P : Type@{i}) `{dec : !Decidable P} : bool
  := if dec then true else false.
 
-Lemma bool_decide_true@{i} {P:Type@{i} } `{dec : Decision P}
+Lemma bool_decide_true@{i} {P:Type@{i} } `{dec : Decidable P}
   : iff@{Ularge i Ularge} (bool_decide P = true) P.
 Proof.
 unfold bool_decide. split; intro X; destruct dec as [p|np];auto.
@@ -46,7 +46,7 @@ unfold bool_decide. split; intro X; destruct dec as [p|np];auto.
 - destruct (np X).
 Qed.
 
-Lemma bool_decide_false@{i} {P:Type@{i} } `{dec : !Decision P}
+Lemma bool_decide_false@{i} {P:Type@{i} } `{dec : !Decidable P}
   : iff@{Ularge i Ularge} (bool_decide P = false) (~P).
 Proof.
 unfold bool_decide. split; intro X; destruct dec as [p|np]; auto.
@@ -68,16 +68,16 @@ Qed.
 *)
 
 Definition decide_rel `(R : A -> B -> Type)
-  {dec : forall x y, Decision (R x y)} (x : A) (y : B)
-  : Decision (R x y)
+  {dec : forall x y, Decidable (R x y)} (x : A) (y : B)
+  : Decidable (R x y)
   := dec x y.
 
 Definition bool_decide_rel `(R : relation A)
-  {dec : forall x y, Decision (R x y)} : A -> A -> Bool
+  {dec : forall x y, Decidable (R x y)} : A -> A -> Bool
   := fun x y => if dec x y then true else false.
 
 Lemma bool_decide_rel_true `(R : relation A)
-  {dec : forall x y, Decision (R x y)} :
+  {dec : forall x y, Decidable (R x y)} :
   forall x y, bool_decide_rel R x y = true <-> R x y.
 Proof.
 unfold bool_decide_rel. split; intro X; destruct dec as [p|np];auto.
@@ -85,7 +85,7 @@ unfold bool_decide_rel. split; intro X; destruct dec as [p|np];auto.
 - destruct (np X).
 Qed.
 
-Lemma bool_decide_rel_false `(R : relation A)`{dec : forall x y, Decision (R x y)}
+Lemma bool_decide_rel_false `(R : relation A)`{dec : forall x y, Decidable (R x y)}
   : forall x y, bool_decide_rel R x y = false <-> ~R x y.
 Proof.
 unfold bool_decide_rel. split; intro X; destruct dec as [p|np];auto.
@@ -94,7 +94,7 @@ unfold bool_decide_rel. split; intro X; destruct dec as [p|np];auto.
 Qed.
 
 Definition decision_from_bool_decide {P b} (prf : b = true <-> P) :
-  Decision P.
+  Decidable P.
 Proof.
 destruct b.
 - left;apply prf;auto.
@@ -116,9 +116,9 @@ intros a b;destruct (decide_rel paths a b) as [E1|E1];split;intros E2;auto.
 - destruct (E1 E2).
 Qed.
 
-Instance prod_eq_dec `(A_dec : forall x y : A, Decision (x = y))
-     `(B_dec : forall x y : B, Decision (x = y))
-     : forall x y : (A * B)%type, Decision (x = y).
+Instance prod_eq_dec `(A_dec : forall x y : A, Decidable (x = y))
+     `(B_dec : forall x y : B, Decidable (x = y))
+     : forall x y : (A * B)%type, Decidable (x = y).
 Proof.
 intros [x1 x2] [y1 y2].
 destruct (A_dec x1 y1) as [?|na].
@@ -134,7 +134,7 @@ destruct (A_dec x1 y1) as [?|na].
 Qed.
 
 
-Instance or_dec `(P_dec : Decision P) `(Q_dec : Decision Q) : Decision (P \/ Q).
+Instance or_dec `(P_dec : Decidable P) `(Q_dec : Decidable Q) : Decidable (P \/ Q).
 Proof.
 destruct P_dec as [p|np].
 - left;left;assumption.
@@ -143,5 +143,5 @@ destruct P_dec as [p|np].
   + right. intros [p|q];auto.
 Qed.
 
-Instance Unit_dec: Decision Unit := inl tt.
-Instance Empty_dec: Decision Empty := inr idmap.
+Instance Unit_dec: Decidable Unit := inl tt.
+Instance Empty_dec: Decidable Empty := inr idmap.

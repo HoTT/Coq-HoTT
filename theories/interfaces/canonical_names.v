@@ -1,4 +1,4 @@
-Require Export HoTT.Basics.Overture HoTT.Types.Bool.
+Require Export HoTT.Basics.Overture HoTT.Types.Bool HoTT.Basics.Decidable.
 Require Import HoTT.HIT.Truncations.
 Require Export
   HoTTClasses.misc.settings

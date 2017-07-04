@@ -453,7 +453,7 @@ rewrite (add_assoc k1), (add_comm k1), <-(add_assoc k2).
 apply natpaths_symm,E2.
 Qed.
 
-Global Instance nat_le_dec: forall x y : nat, Decision (x ≤ y).
+Global Instance nat_le_dec: forall x y : nat, Decidable (x ≤ y).
 Proof.
 intros a b. destruct (le_lt_dec a b).
 - left;trivial.
@@ -513,7 +513,7 @@ split;[apply _|split|].
     rewrite E;apply le_plus.
 - intros ???? E.
   apply trivial_apart in E.
-  destruct (decide (apart x₁ x₂)) as [?|ex];apply tr;auto.
+  destruct (dec (apart x₁ x₂)) as [?|ex];apply tr;auto.
   right. apply tight_apart in ex.
   apply trivial_apart. intros ey.
   apply E. apply ap2;trivial.

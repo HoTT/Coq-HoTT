@@ -500,14 +500,14 @@ Class SemiDecidable@{i} (A : Type@{i}) `{SemiDecide A}
 Global Instance decidable_semi_decide@{i} (A:Type@{i}) `{Decidable A}
   : SemiDecide A.
 Proof.
-red. exact (if decide A then top else bottom).
+red. exact (if dec A then top else bottom).
 Defined.
 Arguments decidable_semi_decide _ {_} /.
 
 Global Instance decidable_semi_decidable@{i} (A:Type@{i}) `{Decidable A}
   : SemiDecidable@{i} A.
 Proof.
-red. unfold semi_decide;simpl. destruct (decide A) as [E|E];split;intros E'.
+red. unfold semi_decide;simpl. destruct (dec A) as [E|E];split;intros E'.
 - trivial.
 - apply top_greatest.
 - apply not_bot in E'. destruct E'.

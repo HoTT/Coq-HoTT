@@ -6,14 +6,14 @@ Require Export
   HoTTClasses.theory.rings.
 
 Section contents.
-Context `{DecField F} `{forall x y: F, Decision (x = y)}.
+Context `{DecField F} `{forall x y: F, Decidable (x = y)}.
 
 (* Add Ring F : (stdlib_ring_theory F). *)
 
 Global Instance decfield_zero_product : ZeroProduct F.
 Proof.
 intros x y E.
-destruct (decide (x = 0)) as [? | Ex];auto.
+destruct (dec (x = 0)) as [? | Ex];auto.
 right.
 rewrite <-(mult_1_r y), <-(dec_recip_inverse x) by assumption.
 rewrite associativity, (commutativity y), E.
@@ -34,9 +34,9 @@ Qed.
 
 Lemma dec_recip_distr (x y: F): / (x * y) = / x * / y.
 Proof.
-destruct (decide (x = 0)) as [Ex|Ex].
+destruct (dec (x = 0)) as [Ex|Ex].
 - rewrite Ex, left_absorb, dec_recip_0. apply symmetry,mult_0_l.
-- destruct (decide (y = 0)) as [Ey|Ey].
+- destruct (dec (y = 0)) as [Ey|Ey].
   + rewrite Ey, dec_recip_0, !mult_0_r. apply dec_recip_0.
   + assert (x * y <> 0) as Exy by (apply mult_ne_0;trivial).
     apply (left_cancellation_ne_0 (.*.) (x * y)); trivial.
@@ -75,7 +75,7 @@ Qed.
 Lemma equal_by_one_quotient (x y : F) : x / y = 1 -> x = y.
 Proof.
 intro Exy.
-destruct (decide (y = 0)) as [Ey|Ey].
+destruct (dec (y = 0)) as [Ey|Ey].
 - destruct (is_ne_0 1).
   rewrite <- Exy, Ey, dec_recip_0. apply mult_0_r.
 - apply (right_cancellation_ne_0 (.*.) (/y)).
@@ -87,7 +87,7 @@ Global Instance dec_recip_inj: Injective (/).
 Proof.
 repeat (split; try apply _).
 intros x y E.
-destruct (decide (y = 0)) as [Ey|Ey].
+destruct (dec (y = 0)) as [Ey|Ey].
 - rewrite Ey in *. rewrite dec_recip_0 in E.
   apply dec_recip_zero. trivial.
 - apply (right_cancellation_ne_0 (.*.) (/y)).
@@ -100,7 +100,7 @@ Qed.
 
 Global Instance dec_recip_involutive: Involutive (/).
 Proof.
-intros x. destruct (decide (x = 0)) as [Ex|Ex].
+intros x. destruct (dec (x = 0)) as [Ex|Ex].
 - rewrite Ex, !dec_recip_0. trivial.
 - apply (right_cancellation_ne_0 (.*.) (/x)).
   + apply dec_recip_ne_0. trivial.
@@ -164,7 +164,7 @@ Qed.
 
 Lemma dec_recip_negate x : -(/ x) = / (-x).
 Proof.
-destruct (decide (x = 0)) as [Ex|Ex].
+destruct (dec (x = 0)) as [Ex|Ex].
 - rewrite Ex, negate_0, dec_recip_0, negate_0. reflexivity.
 - apply (left_cancellation_ne_0 (.*.) (-x)).
   + apply (snd (flip_negate_ne_0 _)). trivial.
@@ -260,10 +260,10 @@ Section morphisms.
   apply left_absorb.
   Qed.
 
-  Lemma preserves_dec_recip `{DecField F2} `{forall x y: F2, Decision (x = y)}
+  Lemma preserves_dec_recip `{DecField F2} `{forall x y: F2, Decidable (x = y)}
     `{!SemiRingPreserving (f : F -> F2)} x : f (/ x) = / f x.
   Proof.
-  case (decide (x = 0)) as [E | E].
+  case (dec (x = 0)) as [E | E].
   - rewrite E, dec_recip_0, preserves_0, dec_recip_0. reflexivity.
   - intros.
     apply (left_cancellation_ne_0 (.*.) (f x)).

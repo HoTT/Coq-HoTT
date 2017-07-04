@@ -176,7 +176,7 @@ Section pseudo_order.
     : Trichotomy (<).
   Proof.
   intros x y.
-  destruct (decide (x = y)) as [?|?]; try auto.
+  destruct (dec (x = y)) as [?|?]; try auto.
   destruct (ne_total_lt x y); auto.
   Qed.
 End pseudo_order.
@@ -275,16 +275,16 @@ Section full_partial_order.
    split;intros [E1 E2];split;trivial;apply trivial_apart;trivial.
    Qed.
 
-  Lemma le_equiv_lt `{!TrivialApart A} `{forall x y : A, Decision (x = y)} x y
+  Lemma le_equiv_lt `{!TrivialApart A} `{forall x y : A, Decidable (x = y)} x y
     : x ≤ y -> x = y \/ x < y.
   Proof.
   intros.
-  destruct (decide (x = y)); try auto.
+  destruct (dec (x = y)); try auto.
   right.
   apply lt_iff_le_ne; auto.
   Qed.
 
-  Instance dec_from_lt_dec `{!TrivialApart A} `{forall x y, Decision (x ≤ y)}
+  Instance dec_from_lt_dec `{!TrivialApart A} `{forall x y, Decidable (x ≤ y)}
     : DecidablePaths A.
   Proof.
   intros x y.
@@ -299,12 +299,12 @@ Section full_partial_order.
     apply reflexivity.
   Defined.
 
-  Definition lt_dec_slow `{!TrivialApart A} `{forall x y, Decision (x ≤ y)} :
-    forall x y, Decision (x < y).
+  Definition lt_dec_slow `{!TrivialApart A} `{forall x y, Decidable (x ≤ y)} :
+    forall x y, Decidable (x < y).
   Proof.
   intros x y.
-  destruct (decide (x ≤ y));
-  [destruct (decide (x = y))|].
+  destruct (dec (x ≤ y));
+  [destruct (dec (x = y))|].
   - right. apply eq_not_lt. assumption.
   - left. apply lt_iff_le_ne. auto.
   - right. apply not_le_not_lt. assumption.
@@ -316,7 +316,7 @@ Hint Extern 5 (PropHolds (_ <> _)) =>
   eapply @strict_po_apart_ne :  typeclass_instances.
 Hint Extern 10 (PropHolds (_ ≤ _)) =>
   eapply @lt_le : typeclass_instances.
-Hint Extern 20 (Decision (_ < _)) =>
+Hint Extern 20 (Decidable (_ < _)) =>
   eapply @lt_dec_slow : typeclass_instances.
 
 Section full_pseudo_order.
@@ -399,8 +399,8 @@ Section full_pseudo_order.
 
   Existing Instance dec_from_lt_dec.
 
-  Definition lt_dec `{!TrivialApart A} `{forall x y, Decision (x ≤ y)}
-    : forall x y, Decision (x < y).
+  Definition lt_dec `{!TrivialApart A} `{forall x y, Decidable (x ≤ y)}
+    : forall x y, Decidable (x < y).
   Proof.
   intros.
   destruct (decide_rel (<=) y x).
@@ -409,7 +409,7 @@ Section full_pseudo_order.
   Defined.
 End full_pseudo_order.
 
-Hint Extern 8 (Decision (_ < _)) => eapply @lt_dec : typeclass_instances.
+Hint Extern 8 (Decidable (_ < _)) => eapply @lt_dec : typeclass_instances.
 (*
 The following instances would be tempting, but turn out to be a bad idea.
 
@@ -486,7 +486,7 @@ Section dec_partial_order.
   Instance: Trichotomy (<).
   Proof.
   intros x y.
-  destruct (decide (x = y)); try auto.
+  destruct (dec (x = y)); try auto.
   destruct (total (≤) x y);[left|right;right];
   apply lt_correct;auto.
   split;auto.
@@ -504,7 +504,7 @@ Section dec_partial_order.
     apply (antisymmetry (≤));assumption.
   - intros E1.
     destruct (total (≤) x y); trivial.
-    destruct (decide (x = y)) as [E2|E2].
+    destruct (dec (x = y)) as [E2|E2].
     + rewrite E2. apply reflexivity.
     + destruct E1. apply lt_correct;split;auto.
       apply symmetric_neq;assumption.

@@ -66,7 +66,7 @@ intros z ?. red. apply (order_reflecting_pos (.*.) z).
 apply nat_ne_0_pos. trivial.
 Qed.
 
-Global Instance slow_nat_le_dec: forall x y: N, Decision (x ≤ y) | 10.
+Global Instance slow_nat_le_dec: forall x y: N, Decidable (x ≤ y) | 10.
 Proof.
 intros x y.
 destruct (nat_le_dec (naturals_to_semiring _ nat x) (naturals_to_semiring _ nat y))

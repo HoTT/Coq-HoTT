@@ -74,13 +74,13 @@ intros P P0 Psuc. apply induction; trivial.
   trivial.
 Qed.
 
-Global Instance slow_int_le_dec : forall x y: Z, Decision (x ≤ y) | 10.
+Global Instance slow_int_le_dec : forall x y: Z, Decidable (x ≤ y) | 10.
 Proof.
 intros x y.
 (* otherwise Z_le gets defined using peano.nat_ring
    but we only know order_reflecting when using naturals.nat_ring *)
 pose (naturals_ring) as E0.
-destruct (decide (integers_to_ring _ (NatPair.Z nat) x ≤
+destruct (dec (integers_to_ring _ (NatPair.Z nat) x ≤
     integers_to_ring _ (NatPair.Z nat) y)) as [E|E].
 - left. apply (order_reflecting _) in E. trivial.
 - right. intro;apply E;apply (order_preserving _);trivial.

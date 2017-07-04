@@ -24,7 +24,7 @@ Qed.
 Instance nonneg_dec_recip_compat x : PropHolds (0 ≤ x) -> PropHolds (0 ≤ /x).
 Proof.
 intros E. red.
-destruct (decide (x = 0)) as [E2 | E2].
+destruct (dec (x = 0)) as [E2 | E2].
 - rewrite E2, dec_recip_0. rewrite E2 in E;trivial.
 - apply lt_le. apply pos_dec_recip_compat.
   apply lt_iff_le_ne. split;trivial.

@@ -4,9 +4,6 @@ Require Export HoTTClasses.misc.settings.
 
 Hint Resolve tt : core.
 
-Notation Decision := Decidable (only parsing).
-Notation decide := dec.
-
 Lemma merely_destruct {A} {P : Type} {sP : IsHProp P}
   (x : merely A) : (A -> P) -> P.
 Proof.
