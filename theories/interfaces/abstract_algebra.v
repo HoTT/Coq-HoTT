@@ -261,42 +261,6 @@ End strong_injective.
 
 Section extras.
 
-Class NatPowSpec A B (pw : Pow A B)
-  `{One A} `{Mult A} `{Zero B} `{One B} `{Plus B} := {
-  nat_pow_0 : forall x, x ^^ 0 = 1 ;
-  nat_pow_S : forall x n, x ^^ (1 + n) = x * x ^^ n
-}.
-
-Class IntPowSpec A B (pow : Pow A B)
-                 `{Zero A} `{One A} `{Mult A}
-                 `{Zero B} `{One B} `{Plus B} :=
-{ int_pow_0 : forall x, x ^^ 0 = 1
-; int_pow_base_0 : forall (n : B), n <> 0 -> 0 ^^ n = 0
-; int_pow_S : forall x n, x <> 0 -> x ^^ (1 + n) = x * x ^^ n }.
-
-Class ShiftLSpec A B (sl : ShiftL A B)
-  `{One A} `{Plus A} `{Mult A}
-  `{Zero B} `{One B} `{Plus B} := {
-  shiftl_0 :> RightIdentity (≪) 0 ;
-  shiftl_S : forall x n, x ≪ (1 + n) = 2 * x ≪ n
-}.
-
-Class ShiftRSpec A B (sl : ShiftR A B)
-  `{One A} `{Plus A} `{Mult A}
-  `{Zero B} `{One B} `{Plus B} := {
-  shiftr_0 :> RightIdentity (≫) 0 ;
-  shiftr_S : forall x n, x ≫ n = (2 * x ≫ (1 + n))%mc \/
-                    x ≫ n = (2 * x ≫ (1 + n) + 1)%mc
-}.
-
-Class EuclidSpec A (d : DivEuclid A) (m : ModEuclid A)
-  `{Le A} `{Lt A} `{Zero A} `{Plus A} `{Mult A} := {
-  div_mod : forall x y, y <> 0 -> x = y * x `div` y + x `mod` y ;
-  mod_rem : forall x y, y <> 0 -> 0 ≤ x `mod` y < y \/ y < x `mod` y ≤ 0 ;
-  div_0 : forall x, x `div` 0 = 0 ;
-  mod_0 : forall x, x `mod` 0 = 0
-}.
-
 Class CutMinusSpec A (cm : CutMinus A) `{Zero A} `{Plus A} `{Le A} := {
   cut_minus_le : forall x y, y ≤ x -> x ∸ y + y = x ;
   cut_minus_0 : forall x y, x ≤ y -> x ∸ y = 0

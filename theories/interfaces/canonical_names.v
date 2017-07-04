@@ -326,8 +326,6 @@ intros x [? [? [? E]]].
 destruct (zero_product _ _ E); auto.
 Qed.
 
-Class RingUnit `{Mult R} `{One R} (x : R) : Type := ring_unit : exists y, x * y = 1.
-
 (* A common induction principle for both the naturals and integers *)
 Class Biinduction R `{Zero R} `{One R} `{Plus R} : Type
   := biinduction (P : R -> Type)
@@ -335,34 +333,6 @@ Class Biinduction R `{Zero R} `{One R} `{Plus R} : Type
 
 
 (** Additional operations **)
-
-Class Pow A B := pow : A -> B -> A.
-Infix "^^" := pow (at level 30, no associativity) : mc_scope.
-Notation "(.^^.)" := pow (only parsing) : mc_scope.
-Notation "( x ^^.)" := (pow x) (only parsing) : mc_scope.
-Notation "(.^^ n )" := (fun x => x ^^ n) (only parsing) : mc_scope.
-
-Class ShiftL A B := shiftl: A -> B -> A.
-Infix "≪" := shiftl (at level 33, left associativity) : mc_scope.
-Notation "(≪)" := shiftl (only parsing) : mc_scope.
-Notation "( x ≪)" := (shiftl x) (only parsing) : mc_scope.
-Notation "(≪ n )" := (fun x => x ≪ n) (only parsing) : mc_scope.
-
-Class ShiftR A B := shiftr: A -> B -> A.
-Infix "≫" := shiftr (at level 33, left associativity) : mc_scope.
-Notation "(≫)" := shiftr (only parsing) : mc_scope.
-
-Class DivEuclid A := div_euclid : A -> A -> A.
-Class ModEuclid A := mod_euclid : A -> A -> A.
-Infix "`div`" := div_euclid (at level 35) : mc_scope.
-Notation "(`div`)" := div_euclid (only parsing) : mc_scope.
-Notation "( x `div`)" := (div_euclid x) (only parsing) : mc_scope.
-Notation "(`div` y )" := (fun x => x `div` y) (only parsing) : mc_scope.
-Infix "`mod`" := mod_euclid (at level 40) : mc_scope.
-Notation "(`mod` )" := mod_euclid (only parsing) : mc_scope.
-Notation "( x `mod`)" := (mod_euclid x) (only parsing) : mc_scope.
-Notation "(`mod` y )" := (fun x => x `mod` y) (only parsing) : mc_scope.
-
 Class CutMinus A := cut_minus : A -> A -> A.
 Infix "∸" := cut_minus (at level 50, left associativity) : mc_scope.
 Notation "(∸)" := cut_minus (only parsing) : mc_scope.

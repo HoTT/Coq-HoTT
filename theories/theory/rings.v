@@ -318,16 +318,6 @@ Section ring_props.
   apply negate_zero_prod_l.
   Qed.
 
-  Lemma unit_no_zero_divisor (x : R) {unit : RingUnit x}: ~ZeroDivisor x.
-  Proof.
-  destruct unit as [y x_y_unit].
-  intros [_ [z [z_nonzero xz_zero]]].
-  apply z_nonzero.
-  rewrite <-(mult_1_l z), <-x_y_unit, <-simple_associativity,
-    (commutativity (f:=mult) y), simple_associativity, xz_zero.
-  apply mult_0_l.
-  Qed.
-
   Context `{!NoZeroDivisors R} `{forall x y:R, Stable (x = y)}.
 
   Global Instance mult_left_cancel:  forall z, PropHolds (z <> 0) ->
