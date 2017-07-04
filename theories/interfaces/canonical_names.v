@@ -1,6 +1,6 @@
-Require Export HoTTClasses.misc.settings HoTTClasses.misc.stdlib_hints.
-Require Export HoTT.Basics.Overture HoTT.Types.Bool HoTTClasses.misc.stdlib_hints.
+Require Export HoTT.Basics.Overture HoTT.Types.Bool.
 Require Export HoTT.HIT.Truncations.
+Require Export HoTTClasses.misc.settings HoTTClasses.misc.stdlib_hints.
 
 Definition id {A : Type} (a : A) := a.
 
