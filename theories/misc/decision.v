@@ -1,12 +1,9 @@
 Require Import HoTT.Types.Bool HoTT.Types.Prod HoTT.Basics.Decidable.
 Require Import
-  HoTTClasses.interfaces.canonical_names
+  HoTTClasses.misc.stdlib_hints
   HoTTClasses.misc.util.
 
 (* HoTT compat *)
-Notation Decision := Decidable (only parsing).
-Notation decide := dec.
-
 Instance decide_stable : forall P, Decision P -> Stable P.
 Proof.
 intros P dec dn.
@@ -106,14 +103,15 @@ destruct b.
   destruct p.
 Qed.
 
+Class Eqb A := eqb : A -> A -> bool.
 Instance decide_eqb `{DecidablePaths A} : Eqb A
-  := fun a b => if decide_rel (=) a b then true else false.
+  := fun a b => if decide_rel paths a b then true else false.
 
 Lemma decide_eqb_ok@{i} {A:Type@{i} } `{DecidablePaths A} :
-  forall a b, iff@{Ularge i Ularge} (a =? b = true) (a = b).
+  forall a b, iff@{Ularge i Ularge} (eqb a b = true) (a = b).
 Proof.
 unfold eqb,decide_eqb.
-intros a b;destruct (decide_rel (=) a b) as [E1|E1];split;intros E2;auto.
+intros a b;destruct (decide_rel paths a b) as [E1|E1];split;intros E2;auto.
 - destruct (false_ne_true E2).
 - destruct (E1 E2).
 Qed.
@@ -146,4 +144,4 @@ destruct P_dec as [p|np].
 Qed.
 
 Instance Unit_dec: Decision Unit := inl tt.
-Instance Empty_dec: Decision Empty := inr id.
+Instance Empty_dec: Decision Empty := inr idmap.

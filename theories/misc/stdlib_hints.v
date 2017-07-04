@@ -1,8 +1,11 @@
-Require Export HoTTClasses.misc.settings.
 Require Export HoTT.Basics.Overture HoTT.Basics.Trunc HoTT.HIT.Truncations.
+Require Import HoTT.Basics.Decidable.
+Require Export HoTTClasses.misc.settings.
 
-(* HoTT compat *)
 Hint Resolve tt : core.
+
+Notation Decision := Decidable (only parsing).
+Notation decide := dec.
 
 Lemma merely_destruct {A} {P : Type} {sP : IsHProp P}
   (x : merely A) : (A -> P) -> P.

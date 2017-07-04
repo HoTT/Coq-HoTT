@@ -1,5 +1,5 @@
 Require Import
-  HoTTClasses.interfaces.canonical_names.
+  HoTTClasses.misc.stdlib_hints.
 
 Definition ap2 `(f : A -> B -> C) {x1 x2 y1 y2}:
   x1 = x2 -> y1 = y2 -> f x1 y1 = f x2 y2.

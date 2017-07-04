@@ -1,6 +1,10 @@
 Require Export HoTT.Basics.Overture HoTT.Types.Bool.
 Require Export HoTT.HIT.Truncations.
-Require Export HoTTClasses.misc.settings HoTTClasses.misc.stdlib_hints.
+Require Export
+  HoTTClasses.misc.settings
+  HoTTClasses.misc.stdlib_hints
+  HoTTClasses.misc.decision
+  HoTTClasses.misc.util.
 
 Definition id {A : Type} (a : A) := a.
 
@@ -373,7 +377,6 @@ Notation "(?=)" := compare (only parsing) : mc_scope.
 Notation "( x ?=)" := (compare x) (only parsing) : mc_scope.
 Notation "(?= y )" := (fun x => x ?= y) (only parsing) : mc_scope.
 
-Class Eqb A := eqb : A -> A -> bool.
 Infix "=?" := eqb (at level 70, no associativity) : mc_scope.
 Notation "(=?)" := eqb (only parsing) : mc_scope.
 Notation "( x =?)" := (eqb x) (only parsing) : mc_scope.
