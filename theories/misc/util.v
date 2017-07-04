@@ -1,4 +1,4 @@
-Require Import
+Require Export
   HoTTClasses.misc.stdlib_hints.
 
 Definition ap2 `(f : A -> B -> C) {x1 x2 y1 y2}:

@@ -1,5 +1,5 @@
 Require Import HoTT.Types.Bool HoTT.Types.Prod HoTT.Basics.Decidable.
-Require Import
+Require Export
   HoTTClasses.misc.stdlib_hints
   HoTTClasses.misc.util.
 
