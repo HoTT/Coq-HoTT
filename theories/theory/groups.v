@@ -1,4 +1,5 @@
-Require Import HoTTClasses.interfaces.abstract_algebra.
+Require Import
+  HoTTClasses.interfaces.abstract_algebra.
 
 Section group_props.
 Context `{Group G}.
@@ -242,25 +243,23 @@ Section compose_mor.
   Qed.
 
   Instance invert_sg_morphism:
-    forall `{!Inverse f}, Bijective f -> SemiGroupPreserving f ->
-      SemiGroupPreserving (f⁻¹).
+    forall `{!IsEquiv f}, SemiGroupPreserving f ->
+      SemiGroupPreserving (f^-1).
   Proof.
   red;intros.
-  apply (injective f).
+  apply (Paths.equiv_inj f).
   rewrite (preserves_sg_op (f:=f)).
-  change ((f ∘ inverse f) (x & y) = (f ∘ inverse f) x & (f ∘ inverse f) y).
-  rewrite (surjective f).
+  rewrite !eisretr.
   reflexivity.
   Qed.
 
   Instance invert_monoid_morphism :
-    forall `{!Inverse f}, Bijective f -> MonoidPreserving f -> MonoidPreserving (f⁻¹).
+    forall `{!IsEquiv f}, MonoidPreserving f -> MonoidPreserving (f^-1).
   Proof.
   intros;split.
   - apply _.
-  - apply (injective f).
-    change (compose f (inverse f) mon_unit = f mon_unit).
-    rewrite (surjective f).
+  - apply (Paths.equiv_inj f).
+    rewrite eisretr.
     rewrite (preserves_mon_unit (f:=f)). reflexivity.
   Qed.
 
@@ -271,7 +270,7 @@ Hint Extern 4 (SemiGroupPreserving (_ ∘ _)) =>
 Hint Extern 4 (MonoidPreserving (_ ∘ _)) =>
   class_apply @compose_monoid_morphism : typeclass_instances.
 
-Hint Extern 4 (SemiGroupPreserving (_⁻¹)) =>
+Hint Extern 4 (SemiGroupPreserving (_^-1)) =>
   class_apply @invert_sg_morphism : typeclass_instances.
-Hint Extern 4 (MonoidPreserving (_⁻¹)) =>
+Hint Extern 4 (MonoidPreserving (_^-1)) =>
   class_apply @invert_monoid_morphism : typeclass_instances.

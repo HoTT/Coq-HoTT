@@ -81,24 +81,25 @@ Section retract_is_int.
   Context `{Funext} `{Univalence}.
   Context `{Integers Z} `{Ring Z2}
     {Z2ap : Apart Z2} {Z2le Z2lt} `{!FullPseudoSemiRingOrder (A:=Z2) Z2le Z2lt}.
-  Context (f : Z -> Z2) `{!Inverse f} `{!Surjective f} `{!SemiRingPreserving f}
-    `{!SemiRingPreserving (f⁻¹)}.
+  Context (f : Z -> Z2) `{!IsEquiv f} `{!SemiRingPreserving f}
+    `{!SemiRingPreserving (f^-1)}.
 
   (* If we make this an instance, then instance resolution will often loop *)
   Definition retract_is_int_to_ring : IntegersToRing Z2 := fun Z2 _ _ _ _ _ _ =>
-    integers_to_ring Z Z2 ∘ f⁻¹.
+    integers_to_ring Z Z2 ∘ f^-1.
 
   Section for_another_ring.
     Context `{Ring R}.
 
-    Instance: SemiRingPreserving (integers_to_ring Z R ∘ f⁻¹) := {}.
+    Instance: SemiRingPreserving (integers_to_ring Z R ∘ f^-1) := {}.
     Context (h :  Z2 -> R) `{!SemiRingPreserving h}.
 
-    Lemma same_morphism x : (integers_to_ring Z R ∘ f⁻¹) x = h x.
+    Lemma same_morphism x : (integers_to_ring Z R ∘ f^-1) x = h x.
     Proof.
-    transitivity ((h ∘ (f ∘ f⁻¹)) x).
+    transitivity ((h ∘ (f ∘ f^-1)) x).
     - symmetry. apply (to_ring_unique (h ∘ f)).
-    - unfold compose. rewrite jections.surjective_applied;trivial.
+    - unfold compose. apply ap.
+      apply eisretr.
     Qed.
   End for_another_ring.
 

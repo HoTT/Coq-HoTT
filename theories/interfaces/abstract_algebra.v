@@ -250,14 +250,6 @@ Section jections.
   Context {A B} (f : A -> B).
 
   Class Injective := injective : forall x y, f x = f y -> x = y.
-
-  Context `{inv : !Inverse f}.
-
-  Class Surjective := surjective : f ∘ (f ⁻¹) = id (* a.k.a. "split-epi" *).
-
-  Class Bijective :=
-    { bijective_injective :> Injective
-    ; bijective_surjective :> Surjective }.
 End jections.
 
 Section strong_injective.

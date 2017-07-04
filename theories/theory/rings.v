@@ -468,7 +468,7 @@ Section morphism_composition.
   Qed.
 
   Instance invert_sr_morphism:
-    forall `{!Inverse f}, Bijective f -> SemiRingPreserving f -> SemiRingPreserving (f⁻¹).
+    forall `{!IsEquiv f}, SemiRingPreserving f -> SemiRingPreserving (f^-1).
   Proof.
   split; apply _.
   Qed.
@@ -476,5 +476,5 @@ End morphism_composition.
 
 Hint Extern 4 (SemiRingPreserving (_ ∘ _)) =>
   class_apply @compose_sr_morphism : typeclass_instances.
-Hint Extern 4 (SemiRingPreserving (_⁻¹)) =>
+Hint Extern 4 (SemiRingPreserving (_^-1)) =>
   class_apply @invert_sr_morphism : typeclass_instances.

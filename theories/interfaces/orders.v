@@ -92,10 +92,6 @@ Section order_maps.
   Class OrderEmbedding :=
     { order_embedding_preserving :> OrderPreserving
     ; order_embedding_reflecting :> OrderReflecting }.
-
-  Class OrderIsomorphism `{!Inverse f} :=
-    { order_iso_embedding :> OrderEmbedding
-    ; order_iso_surjective :> Surjective f }.
 End order_maps.
 
 Section srorder_maps.

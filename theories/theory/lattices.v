@@ -188,28 +188,28 @@ Section morphism_composition.
   Qed.
 
   Instance invert_join_sl_morphism:
-    forall `{!Inverse f}, Bijective f -> JoinPreserving f ->
-    JoinPreserving (f⁻¹).
+    forall `{!IsEquiv f}, JoinPreserving f ->
+    JoinPreserving (f^-1).
   Proof.
   red; apply _.
   Qed.
 
   Instance invert_meet_sl_morphism:
-    forall `{!Inverse f}, Bijective f -> MeetPreserving f ->
-    MeetPreserving (f⁻¹).
+    forall `{!IsEquiv f}, MeetPreserving f ->
+    MeetPreserving (f^-1).
   Proof.
   red; apply _.
   Qed.
 
   Instance invert_bounded_join_sl_morphism:
-    forall `{!Inverse f}, Bijective f -> BoundedJoinPreserving f ->
-    BoundedJoinPreserving (f⁻¹).
+    forall `{!IsEquiv f}, BoundedJoinPreserving f ->
+    BoundedJoinPreserving (f^-1).
   Proof.
   red; apply _.
   Qed.
 
   Instance invert_lattice_morphism:
-    forall `{!Inverse f}, Bijective f -> LatticePreserving f -> LatticePreserving (f⁻¹).
+    forall `{!IsEquiv f}, LatticePreserving f -> LatticePreserving (f^-1).
   Proof.
   split; apply _.
   Qed.
@@ -223,11 +223,11 @@ Hint Extern 4 (BoundedJoinPreserving (_ ∘ _)) =>
   class_apply @compose_bounded_join_sl_morphism : typeclass_instances.
 Hint Extern 4 (LatticePreserving (_ ∘ _)) =>
   class_apply @compose_lattice_morphism : typeclass_instances.
-Hint Extern 4 (JoinPreserving (_⁻¹)) =>
+Hint Extern 4 (JoinPreserving (_^-1)) =>
   class_apply @invert_join_sl_morphism : typeclass_instances.
-Hint Extern 4 (MeetPreserving (_⁻¹)) =>
+Hint Extern 4 (MeetPreserving (_^-1)) =>
   class_apply @invert_meet_sl_morphism : typeclass_instances.
-Hint Extern 4 (BoundedJoinPreserving (_⁻¹)) =>
+Hint Extern 4 (BoundedJoinPreserving (_^-1)) =>
   class_apply @invert_bounded_join_sl_morphism : typeclass_instances.
-Hint Extern 4 (LatticePreserving (_⁻¹)) =>
+Hint Extern 4 (LatticePreserving (_^-1)) =>
   class_apply @invert_lattice_morphism : typeclass_instances.

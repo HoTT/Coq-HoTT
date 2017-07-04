@@ -66,25 +66,25 @@ Proof (to_semiring_injective (naturals_to_semiring N2 N) _).
 Section retract_is_nat.
   Context `{Naturals N} `{SemiRing SR}
     {SRap : Apart SR} {SRle SRlt} `{!FullPseudoSemiRingOrder (A:=SR) SRle SRlt}.
-  Context (f : N -> SR) `{inv_f : !Inverse f} `{!Surjective f}
-    `{!SemiRingPreserving f} `{!SemiRingPreserving (f⁻¹)}.
+  Context (f : N -> SR) `{!IsEquiv f}
+    `{!SemiRingPreserving f} `{!SemiRingPreserving (f^-1)}.
 
   (* If we make this an instance, instance resolution will loop *)
   Definition retract_is_nat_to_sr : NaturalsToSemiRing SR
-    := fun R _ _ _ _ _ => naturals_to_semiring N R ∘ f⁻¹.
+    := fun R _ _ _ _ _ => naturals_to_semiring N R ∘ f^-1.
 
   Section for_another_semirings.
     Context `{SemiRing R}.
 
-    Instance: SemiRingPreserving (naturals_to_semiring N R ∘ f⁻¹) := {}.
+    Instance: SemiRingPreserving (naturals_to_semiring N R ∘ f^-1) := {}.
 
     Context (h :  SR -> R) `{!SemiRingPreserving h}.
 
-    Lemma same_morphism x : (naturals_to_semiring N R ∘ f⁻¹) x = h x.
+    Lemma same_morphism x : (naturals_to_semiring N R ∘ f^-1) x = h x.
     Proof.
-    transitivity ((h ∘ (f ∘ f⁻¹)) x).
+    transitivity ((h ∘ (f ∘ f^-1)) x).
     - symmetry. apply (to_semiring_unique (h ∘ f)).
-    - unfold compose. rewrite jections.surjective_applied;trivial.
+    - unfold compose. apply ap, eisretr.
     Qed.
   End for_another_semirings.
 
