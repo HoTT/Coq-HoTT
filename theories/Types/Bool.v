@@ -8,7 +8,7 @@ Local Open Scope path_scope.
 
 (* coq calls it "bool", we call it "Bool" *)
 Local Unset Elimination Schemes.
-Inductive Bool : Type1 :=
+Inductive Bool : Type0 :=
   | true : Bool
   | false : Bool.
 Scheme Bool_ind := Induction for Bool Sort Type.
@@ -49,7 +49,7 @@ Global Instance trunc_if n A B `{IsTrunc n A, IsTrunc n B} (b : Bool)
 
 Section BoolDecidable.
   Definition false_ne_true : ~false = true
-    := fun H => match H in (_ = y) return (if y then Empty else Bool) with
+    := fun H => match H in (_ = y) return (if y return Set then Empty else Bool) with
                   | 1%path => true
                 end.
 
