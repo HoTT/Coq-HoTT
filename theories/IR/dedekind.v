@@ -298,7 +298,7 @@ assert (E4 : (2 * l + u) / 3 < (2 * u + l) / 3).
 Qed.
 
 Lemma trisect_pow@{} : forall a q, straddle a q ->
-  forall n, straddle a (repeat n ((2/3) *.) q).
+  forall n, straddle a (Peano.nat_iter n ((2/3) *.) q).
 Proof.
 intros a q E. induction n as [|n IHn].
 - exact E.
@@ -306,7 +306,7 @@ intros a q E. induction n as [|n IHn].
 Qed.
 
 Lemma two_thirds_power_small@{} : forall q r, 0 < q -> 0 < r ->
-  exists n, repeat n ((2/3) *.) q < r.
+  exists n, Peano.nat_iter n ((2/3) *.) q < r.
 Proof. Admitted.
 
 Lemma straddle_pos@{} : forall a q, 0 < q -> straddle a q.

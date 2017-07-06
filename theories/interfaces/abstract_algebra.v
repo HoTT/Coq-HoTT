@@ -144,7 +144,7 @@ Section upper_classes.
   Class FieldCharacteristic@{j} {Aap : Apart@{i j} A} (k : nat) : Type@{j}
     := field_characteristic : forall n : nat, Peano.lt 0 n ->
       iff@{j j j} (forall m : nat, not@{j j} (paths@{Set} n (Peano.mult k m)))
-        (@apart A Aap (util.repeat n (1 +) 0) 0).
+        (@apart A Aap (Peano.nat_iter n (1 +) 0) 0).
 
 End upper_classes.
 

@@ -76,7 +76,7 @@ Section strict_order.
   Lemma lt_ne_flip x y : x < y -> y <> x.
   Proof.
   intro.
-  apply not_symmetry, lt_ne.
+  apply symmetric_neq, lt_ne.
   assumption.
   Qed.
 
@@ -366,7 +366,7 @@ Section full_pseudo_order.
 
   Global Instance le_stable : forall x y, Stable (x ≤ y).
   Proof.
-  intros x y. unfold Stable, DN.
+  intros x y. unfold Stable.
   intros dn. apply le_iff_not_lt_flip.
   intros E. apply dn.
   intros E';apply le_iff_not_lt_flip in E';auto.

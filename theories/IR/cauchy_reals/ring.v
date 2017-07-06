@@ -140,7 +140,7 @@ Definition interval_back
   := fun x => x.2.1.
 
 Instance interval_proj_issurj@{}
-  : TrM.IsConnMap@{Uhuge Ularge UQ UQ Ularge} (trunc_S minus_two) interval_back.
+  : TrM.RSU.IsConnMap@{Uhuge Ularge UQ UQ Ularge} (trunc_S minus_two) interval_back.
 Proof.
 apply BuildIsSurjection. intros x.
 generalize (R_Qpos_bounded x). apply (Trunc_ind _);intros [q E].

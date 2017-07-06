@@ -751,7 +751,7 @@ Section full_pseudo_semiring_order.
   apply lt_not_le_flip, lt_0_2.
   Qed.
 
-  Lemma repeat_nat_nonneg : forall n, 0 <= repeat n (plus 1) 0.
+  Lemma repeat_nat_nonneg : forall n, 0 <= Peano.nat_iter n (plus 1) 0.
   Proof.
   induction n;simpl.
   - reflexivity.
@@ -760,7 +760,7 @@ Section full_pseudo_semiring_order.
     + apply IHn.
   Qed.
 
-  Lemma repeat_nat_pos : forall n, 0 < repeat (S n) (plus 1) 0.
+  Lemma repeat_nat_pos : forall n, 0 < Peano.nat_iter (S n) (plus 1) 0.
   Proof.
   intros n. simpl.
   apply pos_plus_le_lt_compat_l.
@@ -814,8 +814,8 @@ Section dec_semiring_order.
     apply lt_correct in E1;apply lt_correct in E2;apply lt_correct.
     destruct E1 as [E1a E1b], E2 as [E2a E2b]. split.
     + apply nonneg_mult_compat;trivial.
-    + apply not_symmetry.
-      apply mult_ne_0; apply not_symmetry;trivial.
+    + apply symmetric_neq.
+      apply mult_ne_0; apply symmetric_neq;trivial.
   Qed.
 
   Instance dec_full_pseudo_srorder: FullPseudoSemiRingOrder (≤) (<).

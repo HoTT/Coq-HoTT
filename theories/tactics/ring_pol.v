@@ -3,8 +3,7 @@ Require Import
   HoTTClasses.interfaces.abstract_algebra
   HoTTClasses.theory.additional_operations
   HoTTClasses.tactics.ring_quote
-  HoTTClasses.theory.rings
-  HoTTClasses.misc.decision.
+  HoTTClasses.theory.rings.
 
 Import Quoting.
 

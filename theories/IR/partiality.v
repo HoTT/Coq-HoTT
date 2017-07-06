@@ -568,7 +568,7 @@ intros n. apply transform_monotone. intros y. apply seq_increasing.
 Defined.
 
 Lemma repeat_increasing : forall n x,
-  repeat n f (fun _ => bot _) x <= repeat (S n) f (fun _ => bot _) x.
+  Peano.nat_iter n f (fun _ => bot _) x <= Peano.nat_iter (S n) f (fun _ => bot _) x.
 Proof.
 induction n.
 - simpl;intros. apply bot_least.
@@ -577,7 +577,7 @@ Defined.
 
 Definition Fix_sequence : A -> IncreasingSequence (partial B).
 Proof.
-intros x. exists (fun n => repeat n f (fun _ => bot _) x).
+intros x. exists (fun n => Peano.nat_iter n f (fun _ => bot _) x).
 intros;apply repeat_increasing.
 Defined.
 

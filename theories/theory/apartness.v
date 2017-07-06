@@ -15,7 +15,7 @@ Qed.
 
 Global Instance: forall x y : A, Stable (x = y).
 Proof.
-  intros x y. unfold Stable, DN.
+  intros x y. unfold Stable.
   intros dn. apply tight_apart.
   intros ap. apply dn.
   apply apart_ne. assumption.

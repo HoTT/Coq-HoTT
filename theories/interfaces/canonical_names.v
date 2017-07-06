@@ -1,10 +1,36 @@
-Require Export HoTT.Basics.Overture HoTT.Types.Bool HoTT.Basics.Decidable.
-Require Import HoTT.HIT.Truncations.
-Require Export
-  HoTTClasses.misc.settings
-  HoTTClasses.misc.stdlib_hints
-  HoTTClasses.misc.decision
-  HoTTClasses.misc.util.
+Require Export HoTT.Basics.Overture HoTT.Types.Bool HoTT.Basics.Decidable HoTT.Basics.Trunc HoTT.HIT.Truncations.
+
+Delimit Scope mc_scope with mc.
+Global Open Scope mc_scope.
+
+(* 'o' is used for the compose notation. *)
+Global Generalizable Variables
+  A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+  a b c d e f g h i j k l m n p q r s t u v w x y z
+  Fa Ga
+  Fle Flt Nle Nlt Rle Rlt
+  R1le R2le
+  Alt Blt R1lt R2lt Vlt Zle Zlt
+  SR.
+
+Monomorphic Universe Ularge Uhuge.
+Monomorphic Constraint Ularge < Uhuge.
+
+Lemma merely_destruct {A} {P : Type} {sP : IsHProp P}
+  (x : merely A) : (A -> P) -> P.
+Proof.
+intros E;revert x.
+apply Trunc_ind.
+- apply _.
+- exact E.
+Qed.
+
+Monomorphic Universe Ubool.
+Definition bool := (HoTT.Types.Bool.Bool@{Ubool}).
+
+Notation " g ∘ f " := (Compose g f)%mc
+  (at level 40, left associativity).
+Notation "(∘)" := Compose (only parsing) : mc_scope.
 
 Definition id {A : Type} (a : A) := a.
 
@@ -15,9 +41,6 @@ Notation "(= x )" := (fun y => paths y x) (only parsing) : mc_scope.
 Notation "(<>)" := (fun x y => ~x = y) (only parsing) : mc_scope.
 Notation "( x <>)" := (fun y => x <> y) (only parsing) : mc_scope.
 Notation "(<> x )" := (fun y => y <> x) (only parsing) : mc_scope.
-
-Delimit Scope mc_scope with mc. 
-Global Open Scope mc_scope.
 
 Class Apart A := apart: relation A.
 Infix "≶" := apart (at level 70, no associativity) : mc_scope.
@@ -314,6 +337,7 @@ Notation "(?=)" := compare (only parsing) : mc_scope.
 Notation "( x ?=)" := (compare x) (only parsing) : mc_scope.
 Notation "(?= y )" := (fun x => x ?= y) (only parsing) : mc_scope.
 
+Class Eqb A := eqb : A -> A -> bool.
 Infix "=?" := eqb (at level 70, no associativity) : mc_scope.
 Notation "(=?)" := eqb (only parsing) : mc_scope.
 Notation "( x =?)" := (eqb x) (only parsing) : mc_scope.
@@ -338,7 +362,7 @@ Class Bind (M : Type -> Type) := bind : forall {A B}, M A -> (A -> M B) -> M B.
 Class Enumerable@{i} (A : Type@{i}) :=
   { enumerator : nat -> A
   ; enumerator_issurj :>
-    TrM.IsConnMap@{Uhuge Ularge i i Ularge} (trunc_S minus_two) enumerator }.
+    TrM.RSU.IsConnMap@{Uhuge Ularge i i Ularge} (trunc_S minus_two) enumerator }.
 Arguments enumerator A {_} _.
 Arguments enumerator_issurj A {_} _.
 

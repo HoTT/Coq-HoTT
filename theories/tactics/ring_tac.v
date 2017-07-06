@@ -6,7 +6,6 @@ Require Import
   HoTTClasses.tactics.ring_pol
   HoTTClasses.theory.rings
   HoTTClasses.orders.sum
-  HoTTClasses.misc.decision
   HoTTClasses.implementations.peano_naturals
   HoTTClasses.interfaces.naturals
   HoTTClasses.interfaces.integers.

@@ -549,7 +549,7 @@ destruct (le_or_lt (enumerator Q n) 0) as [E|E].
 Defined.
 
 Lemma Qpos_is_enumerator :
-  TrM.IsConnMap@{Uhuge Ularge UQ UQ Ularge} (trunc_S minus_two) Qpos_enumerator.
+  TrM.RSU.IsConnMap@{Uhuge Ularge UQ UQ Ularge} (trunc_S minus_two) Qpos_enumerator.
 Proof.
 apply BuildIsSurjection.
 unfold hfiber.
