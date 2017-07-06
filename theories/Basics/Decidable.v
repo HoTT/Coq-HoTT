@@ -16,6 +16,32 @@ Class DecidablePaths (A : Type) :=
   dec_paths : forall (x y : A), Decidable (x = y).
 Global Existing Instance dec_paths.
 
+Class Stable P := stable : ~~P -> P.
+
+Global Instance stable_decidable P `{!Decidable P} : Stable P.
+Proof.
+  intros dn;destruct (dec P) as [p|n].
+  - assumption.
+  - apply Empty_rect,dn,n.
+Qed.
+
+(**
+  Because [vm_compute] evaluates terms in [PROP] eagerly
+  and does not remove dead code we
+  need the decide_rel hack. Suppose we have [(x = y) =def  (f x = f y)], now:
+     bool_decide (x = y) -> bool_decide (f x = f y) -> ...
+  As we see, the dead code [f x] and [f y] is actually evaluated,
+  which is of course an utter waste.
+  Therefore we introduce decide_rel and bool_decide_rel.
+     bool_decide_rel (=) x y -> bool_decide_rel (fun a b => f a = f b) x y -> ...
+  Now the definition of equality remains under a lambda and
+  our problem does not occur anymore!
+*)
+Definition decide_rel {A B} (R : A -> B -> Type)
+  {dec : forall x y, Decidable (R x y)} (x : A) (y : B)
+  : Decidable (R x y)
+  := dec x y.
+
 (** ** Decidable hprops *)
 
 (** Contractible types are decidable. *)

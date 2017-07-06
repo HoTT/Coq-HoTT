@@ -27,6 +27,9 @@ Global Unset Strict Universe Declaration.
 (** This command makes it so that when we say something like [IsHSet nat] we get [IsHSet@{i} nat] instead of [IsHSet@{Set} nat]. *)
 Global Unset Universe Minimization ToSet.
 
+(** Apply using the same opacity information as typeclass proof search. *)
+Ltac class_apply c := autoapply c using typeclass_instances.
+
 Definition relation (A : Type) := A -> A -> Type.
 
 Class Reflexive {A} (R : relation A) :=
@@ -153,6 +156,8 @@ Notation pr2 := projT2.
 Notation "x .1" := (pr1 x) : fibration_scope.
 Notation "x .2" := (pr2 x) : fibration_scope.
 
+Definition uncurry {A B C} (f: A -> B -> C) (p: A * B): C := f (fst p) (snd p).
+
 (** Composition of functions. *)
 
 Notation compose := (fun g f x => g (f x)).
@@ -162,6 +167,9 @@ Notation compose := (fun g f x => g (f x)).
 (** We allow writing [(f o g)%function] to force [function_scope] over, e.g., [morphism_scope]. *)
 
 Notation "g 'o' f" := (compose g%function f%function) : function_scope.
+
+(** This definition helps guide typeclass inference. *)
+Definition Compose {A B C : Type} (g : B -> C) (f : A -> B) : A -> C := compose g f.
 
 (** Composition of logical equivalences *)
 Instance iff_compose : Transitive iff | 1
@@ -353,6 +361,12 @@ Proof.
 Defined.
 
 Global Arguments ap11 {A B}%type_scope {f g}%function_scope h%path_scope {x y} p%path_scope.
+
+Definition ap2 {A B C} (f : A -> B -> C) {x1 x2 y1 y2}:
+  x1 = x2 -> y1 = y2 -> f x1 y1 = f x2 y2.
+Proof.
+intros H1 H2;destruct H1,H2;reflexivity.
+Defined.
 
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments ap {A B} f {x y} p : simpl nomatch.
@@ -648,6 +662,9 @@ Inductive Unit : Type0 :=
 Scheme Unit_ind := Induction for Unit Sort Type.
 Scheme Unit_rec := Minimality for Unit Sort Type.
 Definition Unit_rect := Unit_ind.
+
+(** A [Unit] goal should be resolved by [auto] and [trivial]. *)
+Hint Resolve tt : core.
 
 (** *** Pointed types *)
 
