@@ -1,0 +1,5 @@
+# Library name
+-R theories HoTTClasses
+
+# Stuff from configure
+
