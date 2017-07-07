@@ -82,7 +82,7 @@ CONTRIB_VFILES = $(addprefix $(srcdir)/,$(filter contrib/%.v, $(COQ_PROJECT_CONT
 VO=vo
 CORE_VOFILES=$(CORE_VFILES:.v=.$(VO))
 CORE_GLOBFILES=$(CORE_VFILES:.v=.glob)
-CORE_DEPFILES=$(CORE_VFILES:.v=.d)
+CORE_DEPFILES=$(CORE_VFILES:.v=.v.d)
 CORE_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CORE_VFILES:.v=.html)))
 CORE_TIMING_HTMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/timing-html/%,$(CORE_HTMLFILES))
 CORE_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/file-dep-graphs/HoTT.%,$(subst /,.,$(CORE_VFILES:.v=.dpd)))
@@ -90,7 +90,7 @@ CORE_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/file-dep-gr
 # The list of files that comprise the category theory in the HoTT library
 CATEGORY_VOFILES=$(CATEGORY_VFILES:.v=.$(VO))
 CATEGORY_GLOBFILES=$(CATEGORY_VFILES:.v=.glob)
-CATEGORY_DEPFILES=$(CATEGORY_VFILES:.v=.d)
+CATEGORY_DEPFILES=$(CATEGORY_VFILES:.v=.v.d)
 CATEGORY_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/html/HoTT.%,$(subst /,.,$(CATEGORY_VFILES:.v=.html)))
 CATEGORY_TIMING_HTMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/timing-html/%,$(CATEGORY_HTMLFILES))
 CATEGORY_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/file-dep-graphs/HoTT.%,$(subst /,.,$(CATEGORY_VFILES:.v=.dpd)))
@@ -98,7 +98,7 @@ CATEGORY_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).theories.%,$(srcdir)/file-de
 # The list of files from contrib
 CONTRIB_VOFILES=$(CONTRIB_VFILES:.v=.$(VO))
 CONTRIB_GLOBFILES=$(CONTRIB_VFILES:.v=.glob)
-CONTRIB_DEPFILES=$(CONTRIB_VFILES:.v=.d)
+CONTRIB_DEPFILES=$(CONTRIB_VFILES:.v=.v.d)
 CONTRIB_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).contrib.%,$(srcdir)/html/%,$(subst /,.,$(CONTRIB_VFILES:.v=.html)))
 CONTRIB_TIMING_HTMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/timing-html/%,$(CONTRIB_HTMLFILES))
 
@@ -112,7 +112,7 @@ UNBUILT_VFILES = $(filter-out $(ALL_BUILT_HOTT_VFILES),$(ALL_HOTT_VFILES))
 # standard library
 STD_VOFILES=$(STD_VFILES:.v=.vo)
 STD_GLOBFILES=$(STD_VFILES:.v=.glob)
-STD_DEPFILES=$(STD_VFILES:.v=.d)
+STD_DEPFILES=$(STD_VFILES:.v=.v.d)
 STD_HTMLFILES=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/html/Coq.%,$(subst /,.,$(STD_VFILES:.v=.html)))
 STD_TIMING_HTMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/timing-html/%,$(STD_HTMLFILES))
 STD_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/file-dep-graphs/Coq.%,$(subst /,.,$(STD_VFILES:.v=.dpd)))
@@ -121,7 +121,7 @@ STD_DPDFILES=$(patsubst $(subst /,.,$(srcdir)).coq.theories.%,$(srcdir)/file-dep
 MAIN_VFILES = $(CORE_VFILES) $(CATEGORY_VFILES) $(CONTRIB_VFILES)
 MAIN_VOFILES = $(MAIN_VFILES:.v=.$(VO))
 MAIN_GLOBFILES = $(MAIN_VFILES:.v=.glob)
-MAIN_DEPFILES = $(MAIN_VFILES:.v=.d)
+MAIN_DEPFILES = $(MAIN_VFILES:.v=.v.d)
 MAIN_HTMLFILES = $(CORE_HTMLFILES) $(CATEGORY_HTMLFILES) $(CONTRIB_HTMLFILES)
 MAIN_TIMING_HTMLFILES = $(CORE_TIMING_HTMLFILES) $(CATEGORY_TIMING_HTMLFILES) $(CONTRIB_TIMING_HTMLFILES)
 MAIN_DPDFILES = $(CORE_DPDFILES) $(CATEGORY_DPDFILES)
@@ -387,11 +387,11 @@ TAGS : $(TAGS_FILES)
 	$^
 
 # Dependency files
-$(MAIN_DEPFILES) : %.d : %.v
+$(MAIN_DEPFILES) : %.v.d : %.v
 	$(VECHO) COQDEP $<
 	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(srcdir)/theories" HoTT -Q "$(srcdir)/contrib" "" -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
 
-$(STD_DEPFILES) : %.d : %.v
+$(STD_DEPFILES) : %.v.d : %.v
 	$(VECHO) COQDEP $<
 	$(Q) "$(COQDEP)" -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq $< | sed s'#\\#/#g' >$@
 
