@@ -53,7 +53,6 @@ coq/ide
 *.a
 *.cmxa
 # generated dependency files:
-*.d
 TAGS
 # ignore compiled python files
 *.pyc
