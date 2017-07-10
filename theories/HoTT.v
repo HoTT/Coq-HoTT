@@ -71,7 +71,9 @@ Require Export Spaces.Finite.
 Require Export Spaces.BAut.Bool.
 Require Export Spaces.BAut.Bool.IncoherentIdempotent.
 Require Export Spaces.BAut.Rigid.
-Require Export Spaces.No.
+Require Export Spaces.No.No.
+Require Export Spaces.No.Negation.
+Require Export Spaces.No.Addition.
 Require Export Spaces.Universe.
 
 Require Export Algebra.ooGroup.

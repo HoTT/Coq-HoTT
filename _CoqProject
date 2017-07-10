@@ -97,7 +97,9 @@ theories/Spaces/Finite.v
 theories/Spaces/BAut/Bool.v
 theories/Spaces/BAut/Bool/IncoherentIdempotent.v
 theories/Spaces/BAut/Rigid.v
-theories/Spaces/No.v
+theories/Spaces/No/No.v
+theories/Spaces/No/Negation.v
+theories/Spaces/No/Addition.v
 theories/Spaces/Universe.v
 theories/Algebra/ooGroup.v
 theories/Algebra/Aut.v
