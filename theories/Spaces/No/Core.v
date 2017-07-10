@@ -325,9 +325,6 @@ Finally, for conceptual isolation, and so as not to depend on the particular imp
 
 End Surreals.
 
-Definition MaxSort : OptionSort := fun _ _ => Unit.
-Definition MaxNo : Type := GenNo MaxSort.
-
 Section OptionSort.
 Context {S : OptionSort@{i}}.
 Let No := GenNo S.
@@ -364,6 +361,8 @@ Proof.
   intros; try apply path_ishprop; try exact tt.
   apply dcut; assumption.
 Defined.
+
+(** See also [repeat_No_ind_hprop], below *)
 
 (** *** The non-dependent recursion principle *)
 
@@ -558,6 +557,16 @@ Definition path_No_easy' `{Funext}
   := path_No_easy xL xL' xR xR' xLeq xReq xcut _.
 
 End OptionSort.
+
+(** When we want to do induction on several variables at once, we have to be careful to do them in the right order.  This tactic does that, by calling itself recursively (although it doesn't choose useful names for all the hypotheses it introduces).  We have to define this here outside of all sections so that it will be visible globally. *)
+Ltac repeat_No_ind_hprop :=
+  try match goal with
+      | [ x : GenNo ?S |- _ ] =>
+        revert x;
+        repeat_No_ind_hprop;
+        refine (No_ind_hprop _ _);
+        intros ? ? ? ? ? ? ? ?
+      end.
 
 (** ** Encode-decode to characterize [<] and [<=] recursively (Theorem 11.6.7). *)
 
@@ -946,3 +955,79 @@ Section NoCodes.
     := @lt_lt_trans.
 
 End NoCodes.
+
+(** ** Changing option sorts *)
+
+(** There is of course a "maximal" option sort, which defines "the" surreal numbers as in the book. *)
+
+Definition MaxSort : OptionSort := fun _ _ => Unit.
+Definition MaxNo : Type := GenNo MaxSort.
+Instance insort_maxsort {L R : Type} : InSort MaxSort L R := tt.
+
+(** Furthermore, every other kind of surreal number *embeds* into the maximal ones.  So the other kinds of surreal numbers are really just subsets of the usual set of surreal numbers; but I don't know of a good way to define them except as their own HIITs. *)
+
+Section RaiseSort.
+  Context `{Univalence} `{S : OptionSort}.
+
+  Definition No_raise : GenNo S -> MaxNo.
+  Proof.
+    simple refine (No_rec MaxNo le lt _ _ _ _ _).
+    - intros L R ? xL xR xcut fxL fxR fxcut.
+      exact {{ fxL | fxR // fxcut }}.
+    - apply path_No.
+    - intros; apply le_lr; assumption.
+    - intros; apply lt_l with l; assumption.
+    - intros; apply lt_r with r; assumption.
+  Defined.
+
+  (** See discussion at [plus_inner_cut] in [Addition.v]. *)
+  Definition raise_sort_cut
+             {L R : Type} {s : InSort S L R}
+             (xL : L -> GenNo S) (xR : R -> GenNo S)
+             (xcut : forall l r, xL l < xR r)
+    : { rxcut : forall l r, No_raise (xL l) < No_raise (xR r) &
+        No_raise {{ xL | xR // xcut }} = 
+        {{ (fun l => No_raise (xL l)) | (fun r => No_raise (xR r)) // rxcut }} }.
+  Proof.
+    eexists.
+    reflexivity.
+  Qed.
+
+  Definition No_raise_reflects_ltle (x y : GenNo S)
+    : ((No_raise x <= No_raise y) -> (x <= y)) *
+      ((No_raise x <  No_raise y) -> (x <  y)).
+  Proof.
+    repeat_No_ind_hprop.
+    destruct (raise_sort_cut xL xR xcut) as [rxcut p]; rewrite p.
+    destruct (raise_sort_cut xL0 xR0 xcut0) as [rxcut0 q]; rewrite q.
+    split; intros sh.
+    - apply No_encode_le in sh; rewrite le'_cut in sh.
+      apply le_lr.
+      + intros l.
+        apply IHL, No_decode_lt.
+        rewrite q; exact (fst sh l).
+      + intros r.
+        apply IHR0, No_decode_lt.
+        rewrite p; exact (snd sh r).
+    - apply No_encode_lt in sh; rewrite lt'_cut in sh.
+      strip_truncations.
+      destruct sh as [[l sh]|[r sh]].
+      + apply lt_l with l.
+        apply IHL0, No_decode_le.
+        rewrite p; exact sh.
+      + apply lt_r with r.
+        apply IHR, No_decode_le.
+        rewrite q; exact sh.
+  Qed.
+
+  Global Instance isemb_No_raise : IsEmbedding No_raise.
+  Proof.
+    apply isembedding_isinj_hset.
+    intros x y e; apply path_No.
+    - refine (fst (No_raise_reflects_ltle x y) _).
+      rewrite e; apply reflexive_le.
+    - refine (fst (No_raise_reflects_ltle y x) _).
+      rewrite e; apply reflexive_le.
+  Qed.
+
+End RaiseSort.
