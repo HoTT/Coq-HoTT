@@ -2284,6 +2284,7 @@ Definition Book_10_5_8_item_ix := @HoTT.HIT.V.separation.
 (** Definition 11.6.1 *)
 
 Definition Book_11_6_1 := @HoTT.Spaces.No.Core.Surreals.No.
+Definition Book_11_6_1 := @HoTT.Spaces.No.Core.MaxNo.
 
 (* ================================================== thm:NO-simplicity *)
 (** Theorem 11.6.2 *)
