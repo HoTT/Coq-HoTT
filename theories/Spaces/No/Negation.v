@@ -49,4 +49,17 @@ Section HasNegation.
       apply le_lr; apply Empty_ind.
   Qed.
 
+  (** More useful is the following rewriting lemma. *)
+  Definition negate_cut
+             {L R : Type@{i} } {Sx : InSort@{i} S L R}
+             (xL : L -> No@{i}) (xR : R -> No@{i})
+             (xcut : forall (l : L) (r : R), xL l < xR r)
+    : { nxcut : forall r l, negate (xR r) < negate (xL l) &
+        negate {{ xL | xR // xcut }} =
+        {{ (fun r => negate (xR r)) | (fun l => negate (xL l)) // nxcut }} }.
+  Proof.
+    eexists.
+    reflexivity.
+  Defined.
+
 End HasNegation.

@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import HoTT.Spaces.No.Core.
+Require Import HoTT.Spaces.No.Core HoTT.Spaces.No.Negation.
 
 Local Open Scope path_scope.
 Local Open Scope surreal_scope.
@@ -276,5 +276,143 @@ Section Addition.
          (fun r => plus_outer.1 (xR r))
          (fun l r => snd plus_outer.2 (xL l) (xR r) (xcut l r))
          yL yR ycut.
+
+  (** Because the conclusion of [plus_cut] is a sigma-type whose second component is the real equality we want to rewrite along, in order to rewrite along it we have to first destruct it.  This tactic takes care of that for us. *)
+  Ltac do_plus_cut :=
+    repeat match goal with
+    | [ |- context ctx [ {{ ?xL | ?xR // ?xcut }} + {{ ?yL | ?yR // ?ycut }} ] ] =>
+      let xycut := fresh "cut" in
+      let p := fresh "p" in
+      destruct (plus_cut xL xR xcut yL yR ycut) as [xycut p];
+        rewrite p; clear p
+    end.
+
+  (** Conway proves the basic properties of arithmetic using "one-line proofs".  We can't quite do them in one line of Ltac, but the following tactic does help a lot.  Note that it is specific to addition.  It requires the caller to specify the equivalences along which to identify the indexing types for the options, as well as a rewriting tactic for evaluating those equivalences on constructors.  Unfortunately, it doesn't usually manage to finish the whole proof, since in general it can't guess how to use the inductive hypotheses.  It's usually fairly easy to finish all the cases it leaves over, but we do generally have to refer by name to the inductive hypotheses that were automatically named by [intros] here.  I haven't thought of a good solution to that. *)
+  Tactic Notation "one_line_proof" uconstr(eL) uconstr(eR) tactic(rew) :=
+    unfold No in *;
+    repeat_No_ind_hprop;
+    do_plus_cut;
+    refine (path_No_easy _ _ _ _ eL eR _ _ _ _);
+    intros;
+    repeat match goal with
+           | [ H : (?A + ?B)%type |- _ ] => destruct H
+           end;
+    rew;
+    repeat cbn [sum_ind];
+    try reflexivity.
+
+  (** Now we need a bunch of lemmas for computing the action of sum equivalences on [inl] and [inr]. *)
+
+  Definition equiv_sum_symm_inl (A B : Type) (a : A)
+    : equiv_sum_symm A B (inl a) = inr a
+    := 1.
+  Definition equiv_sum_symm_inr (A B : Type) (b : B)
+    : equiv_sum_symm A B (inr b) = inl b
+    := 1.
+  Definition equiv_sum_assoc_inl_inl (A B C : Type) (a : A)
+    : equiv_sum_assoc A B C (inl (inl a)) = inl a
+    := 1.
+  Definition equiv_sum_assoc_inl_inr (A B C : Type) (b : B)
+    : equiv_sum_assoc A B C (inl (inr b)) = inr (inl b)
+    := 1.
+  Definition equiv_sum_assoc_inr (A B C : Type) (c : C)
+    : equiv_sum_assoc A B C (inr c) = inr (inr c)
+    := 1.
+  Definition equiv_idmap_eval (A : Type) (a : A)
+    : equiv_idmap A a = a
+    := 1.
+  Definition sum_empty_r_inl (A : Type) (a : A)
+    : sum_empty_r A (inl a) = a
+    := 1. 
+  Definition sum_empty_l_inr (A : Type) (a : A)
+    : sum_empty_l A (inr a) = a
+    := 1. 
+
+  (** At last we are ready to prove that the surreal numbers are a commutative monoid under addition. *)
+
+  Theorem plus_comm (x y : No) : x + y = y + x.
+  Proof.
+    one_line_proof (equiv_sum_symm _ _) (equiv_sum_symm _ _)
+                   (rewrite ?equiv_sum_symm_inl, ?equiv_sum_symm_inr).
+    - apply IHL.
+    - apply IHL0.
+    - apply IHR.
+    - apply IHR0.
+  Defined.
+
+  Theorem plus_assoc (x y z : No) : (x + y) + z = x + (y + z).
+  Proof.
+    one_line_proof (equiv_sum_assoc _ _ _) (equiv_sum_assoc _ _ _)
+                   (rewrite ?equiv_sum_assoc_inl_inl,
+                    ?equiv_sum_assoc_inl_inr,
+                    ?equiv_sum_assoc_inr).
+    - rewrite IHL; apply ap.
+      do_plus_cut.
+      one_line_proof 1%equiv 1%equiv (rewrite ?equiv_idmap_eval).
+    - apply IHL0.
+    - rewrite <- IHL1.
+      apply (ap (fun x => x + xL1 _)).
+      do_plus_cut.
+      one_line_proof 1%equiv 1%equiv (rewrite ?equiv_idmap_eval).
+    - rewrite IHR; apply ap.
+      do_plus_cut.
+      one_line_proof 1%equiv 1%equiv (rewrite ?equiv_idmap_eval).
+    - apply IHR0.
+    - rewrite <- IHR1.
+      apply (ap (fun x => x + xR1 _)).
+      do_plus_cut.
+      one_line_proof 1%equiv 1%equiv (rewrite ?equiv_idmap_eval).
+  Defined.
+
+  Theorem plus_zero (x : No) : x + zero = x.
+  Proof.
+    unfold zero.
+    one_line_proof (sum_empty_r _) (sum_empty_r _) (rewrite ?sum_empty_r_inl).
+    - apply IHL.
+    - elim e.
+    - apply IHR.
+    - elim e.
+  Defined.
+
+  Theorem zero_plus (x : No) : zero + x = x.
+  Proof.
+    unfold zero.
+    one_line_proof (sum_empty_l _) (sum_empty_l _) (rewrite ?sum_empty_l_inr).
+    - elim e.
+    - apply IHL.
+    - elim e.
+    - apply IHR.
+  Defined.
+
+  (** If we also have negation, we can prove that it gives additive inverses, so that we have an abelian group. *)
+  Context `{HasNegation S}.
+
+  Definition plus_negate (x : No) : x + negate x = zero.
+  Proof.
+    unfold No in *;
+    repeat_No_ind_hprop;
+    destruct (negate_cut xL xR xcut) as [nxcut p];
+    rewrite p; clear p;
+    do_plus_cut.
+    apply path_No.
+    - apply le_lr; [ intros [l|r]; cbn [sum_ind] | intros [] ].
+      + unfold zero in IHL; rewrite <- (IHL l); clear IHL.
+        apply plus_lt_r.
+        refine (lt_ropt _ _ _ l).
+      + unfold zero in IHR; rewrite <- (IHR r); clear IHR.
+        apply plus_lt_l.
+        refine (lt_ropt _ _ _ r).
+    - apply le_lr; [ intros [] | intros [r|l] ]; cbn [sum_ind].
+      + unfold zero in IHR; rewrite <- (IHR r); clear IHR.
+        apply plus_lt_r.
+        refine (lt_lopt _ _ _ r).
+      + unfold zero in IHL; rewrite <- (IHL l); clear IHL.
+        apply plus_lt_l.
+        refine (lt_lopt _ _ _ l).
+  Defined.
+
+  Definition sub (x y : No) : No := x + (negate y).
+
+  Infix "-" := sub : surreal_scope.
 
 End Addition.
