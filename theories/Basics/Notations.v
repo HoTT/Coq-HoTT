@@ -77,4 +77,4 @@ Reserved Notation "x -|-> y" (at level 99, right associativity, y at level 200).
 Reserved Notation "x --> y" (at level 99, right associativity, y at level 200).
 Reserved Notation "x (-> y" (at level 99, right associativity, y at level 200).
 Reserved Notation "x <> y  :>  T" (at level 70, y at next level, no associativity).
-Reserved Notation "Z ** W" (at level 40, no associativity).
+Reserved Notation "Z ** W" (at level 30, right associativity).
