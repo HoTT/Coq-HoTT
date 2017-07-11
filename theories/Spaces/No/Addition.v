@@ -88,12 +88,11 @@ Section Addition.
                yL_lt_z x_plus_yL_lt_z y_lt_zR x_plus_y_lt_zR;
         cbn in *;
         apply le_lr; [ intros [l|l] | intros [r|r] ]; cbn;
-        [ refine (le_lt_trans _
-                    (fst (xL_plus l).2 _ {{ zL | zR // zcut}} _) _);
+        [ refine (le_lt_trans (fst (xL_plus l).2 _ {{ zL | zR // zcut}} _) _);
           [ by (apply le_lr; assumption)
           | refine (Conway_theorem0_ii_l _ _ _ (inl l)) ]
         | exact (x_plus_yL_lt_z l)
-        | refine (lt_le_trans _ _
+        | refine (lt_le_trans _
                     (fst (xR_plus r).2 {{ yL | yR // ycut}} _ _));
           [ refine (Conway_theorem0_ii_r _ _ _ (inl r))
           | by (apply le_lr; assumption) ]
@@ -178,14 +177,14 @@ Section Addition.
         rewrite q in xL_lt_y_plus;
         exact xL_lt_y_plus
       | (** x + z^L < y + z *)
-        refine (le_lt_trans _ (x_le_y_plus_zL l) _);
+        refine (le_lt_trans (x_le_y_plus_zL l) _);
         refine (Conway_theorem0_ii_l _ _ _ (inr l))
       | (** x + z < y^R + z *)
         specialize (x_lt_yR_plus r {{ zL | zR // zcut }});
         rewrite p in x_lt_yR_plus;
         exact x_lt_yR_plus
       | (** x + z < y + z^R *)
-        refine (lt_le_trans _ _ (x_le_y_plus_zR r));
+        refine (lt_le_trans _ (x_le_y_plus_zR r));
         refine (Conway_theorem0_ii_r _ _ _ (inr r)) ]).
     - abstract (
       intros L R ? xL xR xcut xL_plus xR_plus xL_lt_xR_plus
@@ -198,7 +197,7 @@ Section Addition.
                                zL zR zcut) as [xzcut p]; rewrite p;
       destruct (plus_inner_cut yL_plus yR_plus yL_lt_yR_plus
                                zL zR zcut) as [yzcut q];rewrite q;
-      refine (le_lt_trans _ (x_le_yL_plus {{ zL | zR // zcut }}) _);
+      refine (le_lt_trans (x_le_yL_plus {{ zL | zR // zcut }}) _);
       refine (Conway_theorem0_ii_l _ _ _ (inl l)) ).
     - abstract (
       intros L R ? xL xR xcut xL_plus xR_plus xL_lt_xR_plus
@@ -211,7 +210,7 @@ Section Addition.
                                zL zR zcut) as [xzcut p]; rewrite p;
       destruct (plus_inner_cut yL_plus yR_plus yL_lt_yR_plus
                                zL zR zcut) as [yzcut q];rewrite q;
-      refine (lt_le_trans _ _ (xR_le_y_plus {{ zL | zR // zcut }}));
+      refine (lt_le_trans _ (xR_le_y_plus {{ zL | zR // zcut }}));
       refine (Conway_theorem0_ii_r _ _ _ (inl r)) ).
   Defined.
 

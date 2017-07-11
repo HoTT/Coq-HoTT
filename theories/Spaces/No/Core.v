@@ -572,7 +572,7 @@ Ltac repeat_No_ind_hprop :=
 
 Section NoCodes.
   Context `{Univalence}.
-  Context (S : OptionSort@{i}).
+  Context {S : OptionSort@{i}}.
   Let No := GenNo S.
 
   Let A := {le'_x : No -> hProp &
@@ -981,7 +981,7 @@ Section RaiseSort.
   Defined.
 
   (** See discussion at [plus_inner_cut] in [Addition.v]. *)
-  Definition raise_sort_cut
+  Definition No_raise_cut
              {L R : Type} {s : InSort S L R}
              (xL : L -> GenNo S) (xR : R -> GenNo S)
              (xcut : forall l r, xL l < xR r)
@@ -993,13 +993,21 @@ Section RaiseSort.
     reflexivity.
   Qed.
 
-  Definition No_raise_reflects_ltle (x y : GenNo S)
+  Definition No_raise_le (x y : GenNo S)
+    : (x <= y) -> (No_raise x <= No_raise y)
+    := No_rec_le _ _ _ _ _ _ _ _ x y.
+
+  Definition No_raise_lt (x y : GenNo S)
+    : (x < y) -> (No_raise x < No_raise y)
+    := No_rec_lt _ _ _ _ _ _ _ _ x y.
+
+  Definition No_raise_reflects_lelt (x y : GenNo S)
     : ((No_raise x <= No_raise y) -> (x <= y)) *
       ((No_raise x <  No_raise y) -> (x <  y)).
   Proof.
     repeat_No_ind_hprop.
-    destruct (raise_sort_cut xL xR xcut) as [rxcut p]; rewrite p.
-    destruct (raise_sort_cut xL0 xR0 xcut0) as [rxcut0 q]; rewrite q.
+    destruct (No_raise_cut xL xR xcut) as [rxcut p]; rewrite p.
+    destruct (No_raise_cut xL0 xR0 xcut0) as [rxcut0 q]; rewrite q.
     split; intros sh.
     - apply No_encode_le in sh; rewrite le'_cut in sh.
       apply le_lr.
@@ -1020,14 +1028,107 @@ Section RaiseSort.
         rewrite q; exact sh.
   Qed.
 
+  Definition No_raise_reflects_le (x y : GenNo S)
+    : (No_raise x <= No_raise y) -> (x <= y)
+    := fst (No_raise_reflects_lelt x y).
+
+  Definition No_raise_reflects_lt (x y : GenNo S)
+    : (No_raise x <  No_raise y) -> (x <  y)
+    := snd (No_raise_reflects_lelt x y).
+
   Global Instance isemb_No_raise : IsEmbedding No_raise.
   Proof.
     apply isembedding_isinj_hset.
     intros x y e; apply path_No.
-    - refine (fst (No_raise_reflects_ltle x y) _).
+    - refine (No_raise_reflects_le x y _).
       rewrite e; apply reflexive_le.
-    - refine (fst (No_raise_reflects_ltle y x) _).
+    - refine (No_raise_reflects_le y x _).
       rewrite e; apply reflexive_le.
   Qed.
 
 End RaiseSort.
+
+(** ** Decidable options *)
+
+(** A particularly interesting option sort restricts [L] and [R] to be decidable, i.e. either inhabited or empty. *)
+Definition DecSort : OptionSort
+  := fun L R => Decidable L * Decidable R.
+Definition DecNo : Type := GenNo DecSort.
+
+Instance insort_decsort {L R : Type}
+         {dl : Decidable L} {dr : Decidable R}
+  : InSort DecSort L R
+  := (dl , dr).
+
+(** Perhaps surprisingly, this is not a restriction at all!  Any surreal number can be presented by a cut in which all the option sorts are hereditarily decidable.  The basic idea is that we can always add a "sufficiently large" right option and a "sufficiently small" left option in order to make both families of options inhabited without changing the value of the cut, but the details are a bit tricky. *)
+Global Instance isequiv_DecNo_raise `{Univalence}
+  : IsEquiv (@No_raise DecSort).
+Proof.
+  apply isequiv_surj_emb; try exact _.
+  apply BuildIsSurjection; intros x.
+  apply tr.
+  revert x; refine (No_ind_hprop _ _).
+  intros L R s xL xR xcut IHL IHR.
+  pose (uLR := Unit + (L + R)).
+  assert (Decidable uLR) by exact (inl (inl tt)).
+  pose (xLR := sum_ind _ (fun _ => zero) (sum_ind (fun _ => DecNo) (fun l => (IHL l).1) (fun r => (IHR r).1)) : uLR -> DecNo).
+  pose (z := {{ xLR | Empty_rec // fun l => Empty_ind (fun r => xLR l < Empty_rec r) }}).
+  pose (z' := {{ fun _:Unit => z | Empty_rec // fun _ => Empty_ind (fun r => z < Empty_rec r) }}).
+  pose (y := {{ Empty_rec | xLR // Empty_ind (fun l => forall r, Empty_rec l < xLR r) }}).
+  pose (y' := {{ Empty_rec | (fun _:Unit => y) // Empty_ind (fun l => forall r, Empty_rec l < y) }} ).
+  pose (L' := Unit + L).
+  assert (Decidable L') by exact (inl (inl tt)).
+  pose (wL := sum_ind _ (fun _ => y') (fun l => (IHL l).1) : L' -> DecNo).
+  pose (R' := Unit + R).
+  assert (Decidable R') by exact (inl (inl tt)).
+  pose (wR := sum_ind _ (fun _ => z') (fun r => (IHR r).1) : R' -> DecNo).
+  assert (wcut : forall l r, wL l < wR r).
+  { intros [[]|l] [[]|r]; cbn.
+    - transitivity y.
+      { refine (Conway_theorem0_ii_r _ _ _ tt). }
+      transitivity z.
+      { apply lt_l with (inl tt); cbn.
+        apply le_lr; intros []. }
+      { refine (Conway_theorem0_ii_l _ _ _ tt). }
+    - transitivity y.
+      { refine (Conway_theorem0_ii_r _ _ _ tt). }
+      { refine (Conway_theorem0_ii_r _ _ _ (inr (inr r))). }
+    - transitivity z.
+      { refine (Conway_theorem0_ii_l _ _ _ (inr (inl l))). }
+      { refine (Conway_theorem0_ii_l _ _ _ tt). }
+    - apply No_raise_reflects_lt.
+      rewrite (IHL l).2, (IHR r).2.
+      apply xcut. }
+  exists ({{ wL | wR // wcut }}).
+  destruct (No_raise_cut wL wR wcut) as [rwcut p].
+  rewrite p; clear p.
+  apply path_No; apply le_lr.
+  - intros [[]|l].
+    + apply (lt_le_trans (y := No_raise y)).
+      * apply No_raise_lt.
+        refine (Conway_theorem0_ii_r _ _ _ tt).
+      * apply le_lr; [ intros [] | intros r ].
+        rewrite <- (IHR r).2.
+        refine (Conway_theorem0_ii_r _ _ _ (inr (inr r))).
+    + rewrite (IHL l).2.
+      refine (Conway_theorem0_ii_l _ _ _ l).
+  - intros r.
+    rewrite <- (IHR r).2.
+    refine (Conway_theorem0_ii_r _ _ _ (inr r)).
+  - intros l.
+    rewrite <- (IHL l).2.
+    refine (Conway_theorem0_ii_l _ _ _ (inr l)).
+  - intros [[]|r].
+    + apply (le_lt_trans (y := No_raise z)).
+      * apply le_lr; [ intros l | intros [] ].
+        rewrite <- (IHL l).2.
+        refine (Conway_theorem0_ii_l _ _ _ (inr (inl l))).
+      * apply No_raise_lt.
+        refine (Conway_theorem0_ii_l _ _ _ tt).
+    + rewrite (IHR r).2.
+      refine (Conway_theorem0_ii_r _ _ _ r).
+Defined.
+
+Definition equiv_DecNo_raise `{Univalence}
+  : DecNo <~> MaxNo
+  := BuildEquiv _ _ No_raise _.
