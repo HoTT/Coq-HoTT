@@ -8,12 +8,12 @@ Local Open Scope surreal_scope.
 (** * Negation of surreal numbers *)
 
 (** Negation requires the option sorts to be symmetric. *)
-Class SymmetricOptions (S : OptionSort) 
+Class HasNegation (S : OptionSort) 
   := symmetric_options : forall L R, InSort S L R -> InSort S R L.
 Existing Instance symmetric_options.
 
-Section SymmetricOptions.
-  Context {S : OptionSort} `{SymmetricOptions S}.
+Section HasNegation.
+  Context {S : OptionSort} `{HasNegation S}.
   Let No := GenNo S.
 
   Definition negate : No -> No.
@@ -41,4 +41,4 @@ Section SymmetricOptions.
       apply le_lr; apply Empty_ind.
   Qed.
 
-End SymmetricOptions.
+End HasNegation.
