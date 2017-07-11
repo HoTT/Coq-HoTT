@@ -961,7 +961,7 @@ End NoCodes.
 (** There is of course a "maximal" option sort, which defines "the" surreal numbers as in the book. *)
 
 Definition MaxSort : OptionSort := fun _ _ => Unit.
-Definition MaxNo : Type := GenNo MaxSort.
+Definition No : Type := GenNo MaxSort.
 Instance insort_maxsort {L R : Type} : InSort MaxSort L R := tt.
 
 (** Furthermore, every other kind of surreal number *embeds* into the maximal ones.  So the other kinds of surreal numbers are really just subsets of the usual set of surreal numbers; but I don't know of a good way to define them except as their own HIITs. *)
@@ -969,9 +969,9 @@ Instance insort_maxsort {L R : Type} : InSort MaxSort L R := tt.
 Section RaiseSort.
   Context `{Univalence} `{S : OptionSort}.
 
-  Definition No_raise : GenNo S -> MaxNo.
+  Definition No_raise : GenNo S -> No.
   Proof.
-    simple refine (No_rec MaxNo le lt _ _ _ _ _).
+    simple refine (No_rec No le lt _ _ _ _ _).
     - intros L R ? xL xR xcut fxL fxR fxcut.
       exact {{ fxL | fxR // fxcut }}.
     - apply path_No.
@@ -1130,5 +1130,5 @@ Proof.
 Defined.
 
 Definition equiv_DecNo_raise `{Univalence}
-  : DecNo <~> MaxNo
+  : DecNo <~> No
   := BuildEquiv _ _ No_raise _.
