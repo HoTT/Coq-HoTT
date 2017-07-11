@@ -461,6 +461,7 @@ End NoRec.
 
 (** ** Conway's Theorem 0 *)
 
+(** First we prove that *if* a left option of [y] is [<=] itself, then it is [< y]. *)
 Lemma Conway_theorem0_lemma1 `{Funext} (x : No@{i}) (xle : x <= x)
       {L' R' : Type@{i}} {s' : InSort@{i} S L' R'}
       (yL : L' -> No@{i}) (yR : R' -> No@{i})
@@ -473,6 +474,7 @@ Proof.
   exact (transport (fun z => {{ xL | xR // xcut}} <= z) p xle).
 Defined.
 
+(** And dually *)
 Lemma Conway_theorem0_lemma2 `{Funext} (x : No@{i}) (xle : x <= x)
       {L' R' : Type@{i}} {s' : InSort@{i} S L' R'}
       (yL : L' -> No@{i}) (yR : R' -> No@{i})
@@ -485,7 +487,8 @@ Proof.
   exact (transport (fun z => z <= {{ xL | xR // xcut}}) p xle).
 Defined.
 
-Theorem Conway_theorem0_i `{Funext} (x : No)
+(** Theorem 0 Part (i) *)
+Theorem le_reflexive `{Funext} (x : No)
 : x <= x.
 Proof.
   revert x; refine (No_ind_hprop _ _); intros.
@@ -495,9 +498,10 @@ Proof.
 Defined.
 
 Instance reflexive_le `{Funext} : Reflexive le
-  := Conway_theorem0_i.
+  := le_reflexive.
 
-Theorem Conway_theorem0_ii_l `{Funext}
+(** Theorem 0 Part (ii), left half *)
+Theorem lt_lopt `{Funext}
         {L R : Type@{i}} {s : InSort@{i} S L R}
         (xL : L -> No@{i}) (xR : R -> No@{i})
         (xcut : forall (l:L) (r:R), (xL l) < (xR r))
@@ -505,10 +509,11 @@ Theorem Conway_theorem0_ii_l `{Funext}
 : xL l < {{ xL | xR // xcut }}.
 Proof.
   refine (Conway_theorem0_lemma1 (xL l) _ _ _ _ _ 1).
-  apply Conway_theorem0_i.
+  apply le_reflexive.
 Defined.
 
-Theorem Conway_theorem0_ii_r `{Funext}
+(** Theorem 0 Part (ii), right half *)
+Theorem lt_ropt `{Funext}
         {L R : Type@{i}} {s : InSort@{i} S L R}
         (xL : L -> No@{i}) (xR : R -> No@{i})
         (xcut : forall (l:L) (r:R), (xL l) < (xR r))
@@ -516,13 +521,13 @@ Theorem Conway_theorem0_ii_r `{Funext}
 : {{ xL | xR // xcut }} < xR r.
 Proof.
   refine (Conway_theorem0_lemma2 (xR r) _ _ _ _ _ 1).
-  apply Conway_theorem0_i.
+  apply le_reflexive.
 Defined.
 
 Global Instance isset_No `{Funext} : IsHSet No.
 Proof.
   refine (@isset_hrel_subpaths No (fun (x y:No) => (x <= y) * (y <= x)) _ _ _).
-  - intros x; split; apply Conway_theorem0_i.
+  - intros x; split; apply le_reflexive.
   - intros x y [xley ylex]; apply path_No; assumption.
 Defined.
 
@@ -539,8 +544,8 @@ Definition path_No_easy `{Funext}
 Proof.
   apply path_No; apply le_lr; intros;
   [ rewrite xLeq | rewrite <- xReq | rewrite <- xLeq | rewrite xReq ];
-  try apply Conway_theorem0_ii_l;
-  try apply Conway_theorem0_ii_r.
+  try apply lt_lopt;
+  try apply lt_ropt.
 Qed.
 
 Definition path_No_easy' `{Funext}
@@ -624,13 +629,13 @@ Section NoCodes.
               [ refine (snd (fst (xL_let l).2.2) (yL l') y _ _);
                 [ refine (fst (fst (fst (xL_let l).2.2)) (yL l') _);
                   exact (snd (fst (x_let_yL l').2) l h)
-                | by (apply Conway_theorem0_ii_l; exact _) ]
+                | by (apply lt_lopt; exact _) ]
               | exact (y_lt_le l' r' h)
               | exact (x_lt_le l r y h)
               | refine (snd (x_let_yR r').2 r _);
                 refine (fst (fst (fst (xR_let r).2.2)) _ _);
                 refine (snd (fst (xR_let r).2.2) y (yR r') h _);
-                apply Conway_theorem0_ii_r; exact _ ]
+                apply lt_ropt; exact _ ]
             | intros l [h k]; apply h
             | intros r h; apply tr, inr; exact (r;h) ] ).
       - abstract (
@@ -1085,17 +1090,17 @@ Proof.
   assert (wcut : forall l r, wL l < wR r).
   { intros [[]|l] [[]|r]; cbn.
     - transitivity y.
-      { refine (Conway_theorem0_ii_r _ _ _ tt). }
+      { refine (lt_ropt _ _ _ tt). }
       transitivity z.
       { apply lt_l with (inl tt); cbn.
         apply le_lr; intros []. }
-      { refine (Conway_theorem0_ii_l _ _ _ tt). }
+      { refine (lt_lopt _ _ _ tt). }
     - transitivity y.
-      { refine (Conway_theorem0_ii_r _ _ _ tt). }
-      { refine (Conway_theorem0_ii_r _ _ _ (inr (inr r))). }
+      { refine (lt_ropt _ _ _ tt). }
+      { refine (lt_ropt _ _ _ (inr (inr r))). }
     - transitivity z.
-      { refine (Conway_theorem0_ii_l _ _ _ (inr (inl l))). }
-      { refine (Conway_theorem0_ii_l _ _ _ tt). }
+      { refine (lt_lopt _ _ _ (inr (inl l))). }
+      { refine (lt_lopt _ _ _ tt). }
     - apply No_raise_reflects_lt.
       rewrite (IHL l).2, (IHR r).2.
       apply xcut. }
@@ -1106,27 +1111,27 @@ Proof.
   - intros [[]|l].
     + apply (lt_le_trans (y := No_raise y)).
       * apply No_raise_lt.
-        refine (Conway_theorem0_ii_r _ _ _ tt).
+        refine (lt_ropt _ _ _ tt).
       * apply le_lr; [ intros [] | intros r ].
         rewrite <- (IHR r).2.
-        refine (Conway_theorem0_ii_r _ _ _ (inr (inr r))).
+        refine (lt_ropt _ _ _ (inr (inr r))).
     + rewrite (IHL l).2.
-      refine (Conway_theorem0_ii_l _ _ _ l).
+      refine (lt_lopt _ _ _ l).
   - intros r.
     rewrite <- (IHR r).2.
-    refine (Conway_theorem0_ii_r _ _ _ (inr r)).
+    refine (lt_ropt _ _ _ (inr r)).
   - intros l.
     rewrite <- (IHL l).2.
-    refine (Conway_theorem0_ii_l _ _ _ (inr l)).
+    refine (lt_lopt _ _ _ (inr l)).
   - intros [[]|r].
     + apply (le_lt_trans (y := No_raise z)).
       * apply le_lr; [ intros l | intros [] ].
         rewrite <- (IHL l).2.
-        refine (Conway_theorem0_ii_l _ _ _ (inr (inl l))).
+        refine (lt_lopt _ _ _ (inr (inl l))).
       * apply No_raise_lt.
-        refine (Conway_theorem0_ii_l _ _ _ tt).
+        refine (lt_lopt _ _ _ tt).
     + rewrite (IHR r).2.
-      refine (Conway_theorem0_ii_r _ _ _ r).
+      refine (lt_ropt _ _ _ r).
 Defined.
 
 Definition equiv_DecNo_raise `{Univalence}

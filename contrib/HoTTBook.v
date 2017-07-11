@@ -2293,9 +2293,9 @@ Definition Book_11_6_1 := @HoTT.Spaces.No.Core.No.
 (* ================================================== thm:NO-refl-opt *)
 (** Theorem 11.6.4 *)
 
-Definition Book_11_6_4_i := @HoTT.Spaces.No.Core.Conway_theorem0_i.
-Definition Book_11_6_4_ii_l := @HoTT.Spaces.No.Core.Conway_theorem0_ii_l.
-Definition Book_11_6_4_ii_r := @HoTT.Spaces.No.Core.Conway_theorem0_ii_r.
+Definition Book_11_6_4_i := @HoTT.Spaces.No.Core.le_reflexive.
+Definition Book_11_6_4_ii_l := @HoTT.Spaces.No.Core.lt_lopt.
+Definition Book_11_6_4_ii_r := @HoTT.Spaces.No.Core.lt_ropt.
 
 (* ================================================== thm:NO-set *)
 (** Corollary 11.6.5 *)
