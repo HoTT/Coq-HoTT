@@ -1053,6 +1053,13 @@ Section RaiseSort.
 
 End RaiseSort.
 
+(** ** Ordinals *)
+
+(** The type of "plump ordinals" can be identified with surreal numbers that hereditarily have no right options. *)
+Definition OrdSort : OptionSort := fun L R => ~R.
+Definition POrd := GenNo OrdSort.
+Instance insort_ordsort {L : Type} : InSort OrdSort L Empty := idmap.
+
 (** ** Decidable options *)
 
 (** A particularly interesting option sort restricts [L] and [R] to be decidable, i.e. either inhabited or empty. *)
