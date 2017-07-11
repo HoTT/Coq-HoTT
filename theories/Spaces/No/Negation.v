@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import HoTT.Spaces.No.No.
+Require Import HoTT.Spaces.No.Core.
 
 Local Open Scope path_scope.
 Local Open Scope surreal_scope.
