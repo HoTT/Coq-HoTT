@@ -331,15 +331,22 @@ Let No := GenNo S.
 
 (** ** A few surreal numbers *)
 
+Definition rempty_cut {L : Type} {xL : L -> No}
+  : forall (l:L) (r:Empty), xL l < Empty_rec r
+  := fun l => Empty_ind _.
+
+Definition lempty_cut {R : Type} {xR : R -> No}
+  : forall (l:Empty) (r:R), Empty_rec l < xR r
+  := Empty_ind _.
+
 Definition zero `{InSort S Empty Empty} : No
-  := {{ Empty_rec | Empty_rec //
-        Empty_ind (fun x => forall y, Empty_rec x < Empty_rec y ) }}.
+  := {{ Empty_rec | Empty_rec // lempty_cut }}.
 
 Definition one `{InSort S Empty Empty} `{InSort S Unit Empty} : No
-  := {{ (fun _:Unit => zero) | Empty_rec // fun x => Empty_ind _ }}.
+  := {{ unit_name zero | Empty_rec // rempty_cut }}.
 
 Definition minusone `{InSort S Empty Empty} `{InSort S Empty Unit} : No
-  := {{ Empty_rec | (fun _:Unit => zero) // Empty_ind _ }}.
+  := {{ Empty_rec | unit_name zero // lempty_cut }}.
 
 (** ** More induction principles *)
 
@@ -967,7 +974,11 @@ End NoCodes.
 
 Definition MaxSort : OptionSort := fun _ _ => Unit.
 Definition No : Type := GenNo MaxSort.
-Instance insort_maxsort {L R : Type} : InSort MaxSort L R := tt.
+
+(** This instance should be the one found by default, so that cuts live in [No] unless otherwise specified.  Thus, all other global instances of [InSort] should be declared with higher priority. *)
+Global Instance insort_maxsort {L R : Type}
+  : InSort MaxSort L R | 0
+  := tt.
 
 (** Furthermore, every other kind of surreal number *embeds* into the maximal ones.  So the other kinds of surreal numbers are really just subsets of the usual set of surreal numbers; but I don't know of a good way to define them except as their own HIITs. *)
 
@@ -1058,7 +1069,9 @@ End RaiseSort.
 (** The type of "plump ordinals" can be identified with surreal numbers that hereditarily have no right options. *)
 Definition OrdSort : OptionSort := fun L R => ~R.
 Definition POrd := GenNo OrdSort.
-Instance insort_ordsort {L : Type} : InSort OrdSort L Empty := idmap.
+Global Instance insort_ordsort {L : Type}
+  : InSort OrdSort L Empty | 100
+  := idmap.
 
 (** ** Decidable options *)
 
@@ -1067,9 +1080,9 @@ Definition DecSort : OptionSort
   := fun L R => Decidable L * Decidable R.
 Definition DecNo : Type := GenNo DecSort.
 
-Instance insort_decsort {L R : Type}
+Global Instance insort_decsort {L R : Type}
          {dl : Decidable L} {dr : Decidable R}
-  : InSort DecSort L R
+  : InSort DecSort L R | 100
   := (dl , dr).
 
 (** Perhaps surprisingly, this is not a restriction at all!  Any surreal number can be presented by a cut in which all the option sorts are hereditarily decidable.  The basic idea is that we can always add a "sufficiently large" right option and a "sufficiently small" left option in order to make both families of options inhabited without changing the value of the cut, but the details are a bit tricky. *)
@@ -1084,10 +1097,10 @@ Proof.
   pose (uLR := Unit + (L + R)).
   assert (Decidable uLR) by exact (inl (inl tt)).
   pose (xLR := sum_ind _ (fun _ => zero) (sum_ind (fun _ => DecNo) (fun l => (IHL l).1) (fun r => (IHR r).1)) : uLR -> DecNo).
-  pose (z := {{ xLR | Empty_rec // fun l => Empty_ind (fun r => xLR l < Empty_rec r) }}).
-  pose (z' := {{ fun _:Unit => z | Empty_rec // fun _ => Empty_ind (fun r => z < Empty_rec r) }}).
-  pose (y := {{ Empty_rec | xLR // Empty_ind (fun l => forall r, Empty_rec l < xLR r) }}).
-  pose (y' := {{ Empty_rec | (fun _:Unit => y) // Empty_ind (fun l => forall r, Empty_rec l < y) }} ).
+  pose (z := {{ xLR | Empty_rec // rempty_cut }}).
+  pose (z' := {{ unit_name z | Empty_rec // rempty_cut }}).
+  pose (y := {{ Empty_rec | xLR // lempty_cut }}).
+  pose (y' := {{ Empty_rec | unit_name y // lempty_cut }} ).
   pose (L' := Unit + L).
   assert (Decidable L') by exact (inl (inl tt)).
   pose (wL := sum_ind _ (fun _ => y') (fun l => (IHL l).1) : L' -> DecNo).
@@ -1144,3 +1157,5 @@ Defined.
 Definition equiv_DecNo_raise `{Univalence}
   : DecNo <~> No
   := BuildEquiv _ _ No_raise _.
+
+(** Note that this does not extend to other sorts.  For instance, it is *not* true that any plump ordinal is equal to a cut whose types of left and right options are respectively hereditarily decidable and hereditarily empty.  In particular, when making the type of left options inhabited, we have to use surreals whose type of right options is also inhabited.  For instance, [{{ fun _:P => zero | Empty_rec // rempty_cut }}], for a proposition [P], is a plump ordinal, but to make its left options inhabited we have to use a negative surreal, which is not itself a plump ordinal.  *)
