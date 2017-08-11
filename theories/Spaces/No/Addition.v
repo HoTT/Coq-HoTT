@@ -271,7 +271,7 @@ Section Addition.
     let Sz := sum_options L R L' R' _ _ in 
     { zcut : forall (l:L'') (r:R''), zL l < zR r &
       x + y = @No_cut _ _ _ Sz zL zR zcut }
-    := plus_inner_cut
+    := plus_inner_cut (Sx := Sx)
          (fun l => plus_outer.1 (xL l))
          (fun r => plus_outer.1 (xR r))
          (fun l r => snd plus_outer.2 (xL l) (xR r) (xcut l r))

@@ -1037,7 +1037,7 @@ Section RaiseSort.
       strip_truncations.
       destruct sh as [[l sh]|[r sh]].
       + apply lt_l with l.
-        apply IHL0, No_decode_le.
+        apply IHL0, (@No_decode_le _).
         rewrite p; exact sh.
       + apply lt_r with r.
         apply IHR, No_decode_le.
