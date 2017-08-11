@@ -7,12 +7,39 @@ Local Open Scope surreal_scope.
 
 (** * Addition of surreal numbers *)
 
+(** Addition requires the option sorts to be closed under finite sums. *)
+Class HasAddition (S : OptionSort) := 
+  { empty_options : InSort S Empty Empty
+    ; sum_options : forall L R L' R',
+        InSort S L R -> InSort S L' R' -> InSort S (L + L') (R + R')
+  }.
+Existing Instance empty_options.
+Existing Instance sum_options.
+
+Global Instance hasaddition_maxsort : HasAddition MaxSort
+  := { empty_options := tt ;
+       sum_options := fun _ _ _ _ _ _ => tt }.
+  
+Global Instance hasaddition_ordsort : HasAddition OrdSort
+  := { empty_options := idmap ;
+       sum_options := fun _ _ _ _ f g => sum_ind _ f g }.
+
+Global Instance hasaddition_decsort : HasAddition DecSort.
+Proof.
+  constructor.
+  - apply insort_decsort.
+  - intros L R L' R' [? ?] [? ?]; split; exact _.
+Qed.
+
 Section Addition.
   Context `{Univalence}.
+  Context {S : OptionSort@{i}} `{HasAddition S}.
+  Let No := GenNo S.
 
   Section Inner.
 
-    Context {L R : Type@{i} } (xL : L -> No@{i}) (xR : R -> No@{i})
+    Context {L R : Type@{i} } {Sx : InSort@{i} S L R}
+            (xL : L -> No@{i}) (xR : R -> No@{i})
             (xcut : forall (l : L) (r : R), xL l < xR r).
 
     Let A := {g : No@{i} -> No@{i} &
@@ -38,7 +65,7 @@ Section Addition.
                 (fun _ _ _ z w => z.1 <= w.1)
                 (fun _ _ _ z w => z.1 < w.1)
                 _ _ _ _ _).
-      - intros L' R' yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR.
+      - intros L' R' ? yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR.
         pose (L'' := L + L').  pose (R'' := R + R').
         pose (zL := sum_ind (fun _ => No)
                             (fun l => (xL_plus l).1 {{ yL | yR // ycut }})
@@ -53,55 +80,56 @@ Section Addition.
           intros [l|l] [r|r]; cbn;
           [ apply xL_lt_xR_plus
           | transitivity ((xL_plus l).1 (yR r));
-            [ apply (snd (xL_plus l).2), Conway_theorem0_ii_r
+            [ apply (snd (xL_plus l).2), lt_ropt; exact _
             | exact (fst (x_plus_yR r).2 l) ]
           | transitivity ((xR_plus r).1 (yL l));
             [ exact (snd (x_plus_yL l).2 r)
-            | apply (snd (xR_plus r).2), Conway_theorem0_ii_l ]
+            | apply (snd (xR_plus r).2), lt_lopt; exact _ ]
           | apply x_plus_yL_lt_yR ]). }
+        assert (InSort S L'' R'') by (apply sum_options; exact _).
         exists ({{ zL | zR // zcut }}); split.
         + intros l.
-          refine (Conway_theorem0_ii_l _ _ zL zR zcut (inl l)).
+          refine (lt_lopt zL zR zcut (inl l)).
         + intros r.
-          refine (Conway_theorem0_ii_r _ _ zL zR zcut (inl r)).
+          refine (lt_ropt zL zR zcut (inl r)).
       - abstract (
         intros x y [a ?] [b ?] p q r s;
         rewrite transport_sigma; cbn in *;
         apply path_sigma_hprop, path_No; cbn;
         rewrite transport_const; assumption).
       - abstract (
-        intros L' R' yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR
-               L'' R'' zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
+        intros L' R' ? yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR
+               L'' R'' ? zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
                yL_lt_z x_plus_yL_lt_z y_lt_zR x_plus_y_lt_zR;
         cbn in *;
         apply le_lr; [ intros [l|l] | intros [r|r] ]; cbn;
-        [ refine (le_lt_trans
-                    (fst (xL_plus l).2 _ {{ zL | zR // zcut}} _) _);
+        [ refine (le_lt_trans (fst (xL_plus l).2 _ {{ zL | zR // zcut}} _) _);
           [ by (apply le_lr; assumption)
-          | refine (Conway_theorem0_ii_l _ _ _ _ _ (inl l)) ]
+          | refine (lt_lopt _ _ _ (inl l)) ]
         | exact (x_plus_yL_lt_z l)
         | refine (lt_le_trans _
                     (fst (xR_plus r).2 {{ yL | yR // ycut}} _ _));
-          [ refine (Conway_theorem0_ii_r _ _ _ _ _ (inl r))
+          [ refine (lt_ropt _ _ _ (inl r))
           | by (apply le_lr; assumption) ]
         | exact (x_plus_y_lt_zR r) ] ).
       - abstract (
-        intros L' R' yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR
-               L'' R'' zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
+        intros L' R' ? yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR
+               L'' R'' ? zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
                l y_le_zL x_plus_y_le_zL; cbn;
         apply lt_l with (inr l);
         apply x_plus_y_le_zL ).
       - abstract (
-        intros L' R' yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR
-               L'' R'' zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
+        intros L' R' ? yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR
+               L'' R'' ? zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
                r yR_le_z x_plus_yR_le_z; cbn;
         apply lt_r with (inr r);
         apply x_plus_yR_le_z).
     Defined.
 
-    (** We now prove a computation law for [inner_cut].  It holds definitionally, so we would like to prove it with just [:= 1] and then rewrite along it later, as we did above.  However, there is a subtlety in that the output should be a surreal defined by a cut, which in particular includes a proof of cut-ness, and that proof is rather long, so we would not like to see it in the type of this lemma.  Thus, instead we assert only that there *exists* some proof of cut-ness and an equality. *)
+    (** We now prove a computation law for [plus_inner].  It holds definitionally, so we would like to prove it with just [:= 1] and then rewrite along it later, as we did above.  However, there is a subtlety in that the output should be a surreal defined by a cut, which in particular includes a proof of cut-ness, and that proof is rather long, so we would not like to see it in the type of this lemma.  Thus, instead we assert only that there *exists* some proof of cut-ness and an equality. *)
     Definition plus_inner_cut
-               {L' R' : Type@{i} } (yL : L' -> No@{i}) (yR : R' -> No@{i})
+               {L' R' : Type@{i} } {Sy : InSort@{i} S L' R'}
+               (yL : L' -> No@{i}) (yR : R' -> No@{i})
                (ycut : forall (l : L') (r : R'), yL l < yR r)
     : let L'' := L + L' in
       let R'' := R + R' in
@@ -113,8 +141,9 @@ Section Addition.
                         (fun r => (xR_plus r).1 {{ yL | yR // ycut }})
                         (fun r => (plus_inner.1 (yR r)).1)
                 : R'' -> No in
+      let Sz := sum_options L R L' R' _ _ in 
       { zcut : forall (l:L'') (r:R''), zL l < zR r &
-        (plus_inner.1 {{ yL | yR // ycut }}).1 = {{ zL | zR // zcut }} }.
+        (plus_inner.1 {{ yL | yR // ycut }}).1 = (@No_cut _ _ _ Sz zL zR zcut) }.
     Proof.
       (** Now we tell Coq that we want the equality to be definitional, and let it figure out what the proof of cut-ness has to be. *)
       eexists.
@@ -137,7 +166,7 @@ Section Addition.
                 (forall x y, x <  y -> g x <  g y) }
               (fun g h => forall x, g.1 x <= h.1 x)
               (fun g h => forall x, g.1 x <  h.1 x)
-              (fun L R xL xR xcut xL_plus xR_plus xL_lt_xR_plus =>
+              (fun L R Sx xL xR xcut xL_plus xR_plus xL_lt_xR_plus =>
                  let g := plus_inner xL_plus xR_plus xL_lt_xR_plus in
                  ((fun y => (g.1 y).1) ; (g.2)))
                _ _ _ _).
@@ -147,12 +176,12 @@ Section Addition.
       apply path_arrow; intros x;
       apply path_No; [ apply p | apply q ] ).
     - abstract (
-      intros L R xL xR xcut xL_plus xR_plus xL_lt_xR_plus
-           L' R' yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
+      intros L R ? xL xR xcut xL_plus xR_plus xL_lt_xR_plus
+           L' R' ? yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
       intros xL_lt_y xL_lt_y_plus x_lt_yR x_lt_yR_plus z;
       lazy beta zeta in *; cbn [pr1] in *;
       pattern z; refine (No_ind_hprop _ _ z);
-      intros L'' R'' zL zR zcut x_le_y_plus_zL x_le_y_plus_zR;
+      intros L'' R'' ? zL zR zcut x_le_y_plus_zL x_le_y_plus_zR;
       destruct (plus_inner_cut xL_plus xR_plus xL_lt_xR_plus
                                zL zR zcut) as [xzcut p]; rewrite p;
       destruct (plus_inner_cut yL_plus yR_plus yL_lt_yR_plus
@@ -164,40 +193,40 @@ Section Addition.
         exact xL_lt_y_plus
       | (** x + z^L < y + z *)
         refine (le_lt_trans (x_le_y_plus_zL l) _);
-        refine (Conway_theorem0_ii_l _ _ _ _ _ (inr l))
+        refine (lt_lopt _ _ _ (inr l))
       | (** x + z < y^R + z *)
         specialize (x_lt_yR_plus r {{ zL | zR // zcut }});
         rewrite p in x_lt_yR_plus;
         exact x_lt_yR_plus
       | (** x + z < y + z^R *)
         refine (lt_le_trans _ (x_le_y_plus_zR r));
-        refine (Conway_theorem0_ii_r _ _ _ _ _ (inr r)) ]).
+        refine (lt_ropt _ _ _ (inr r)) ]).
     - abstract (
-      intros L R xL xR xcut xL_plus xR_plus xL_lt_xR_plus
-             L' R' yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
+      intros L R ? xL xR xcut xL_plus xR_plus xL_lt_xR_plus
+             L' R' ? yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
       intros l x_le_yL x_le_yL_plus z;
       lazy beta zeta in *; cbn [pr1] in *;
       pattern z; refine (No_ind_hprop _ _ z);
-      intros L'' R'' zL zR zcut x_le_y_plus_zL x_le_y_plus_zR;
+      intros L'' R'' ? zL zR zcut x_le_y_plus_zL x_le_y_plus_zR;
       destruct (plus_inner_cut xL_plus xR_plus xL_lt_xR_plus
                                zL zR zcut) as [xzcut p]; rewrite p;
       destruct (plus_inner_cut yL_plus yR_plus yL_lt_yR_plus
                                zL zR zcut) as [yzcut q];rewrite q;
       refine (le_lt_trans (x_le_yL_plus {{ zL | zR // zcut }}) _);
-      refine (Conway_theorem0_ii_l _ _ _ _ _ (inl l)) ).
+      refine (lt_lopt _ _ _ (inl l)) ).
     - abstract (
-      intros L R xL xR xcut xL_plus xR_plus xL_lt_xR_plus
-             L' R' yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
+      intros L R ? xL xR xcut xL_plus xR_plus xL_lt_xR_plus
+             L' R' ? yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
       intros r xR_le_y xR_le_y_plus z;
       lazy beta zeta in *; cbn [pr1] in *;
       pattern z; refine (No_ind_hprop _ _ z);
-      intros L'' R'' zL zR zcut x_le_y_plus_zL x_le_y_plus_zR;
+      intros L'' R'' ? zL zR zcut x_le_y_plus_zL x_le_y_plus_zR;
       destruct (plus_inner_cut xL_plus xR_plus xL_lt_xR_plus
                                zL zR zcut) as [xzcut p]; rewrite p;
       destruct (plus_inner_cut yL_plus yR_plus yL_lt_yR_plus
                                zL zR zcut) as [yzcut q];rewrite q;
       refine (lt_le_trans _ (xR_le_y_plus {{ zL | zR // zcut }}));
-      refine (Conway_theorem0_ii_r _ _ _ _ _ (inl r)) ).
+      refine (lt_ropt _ _ _ (inl r)) ).
   Defined.
 
   Definition plus (x y : No) : No
@@ -223,9 +252,11 @@ Section Addition.
 
   (** See the remarks above [plus_inner_cut] to explain the type of this lemma. *)
   Definition plus_cut
-             {L R : Type@{i} } (xL : L -> No@{i}) (xR : R -> No@{i})
+             {L R : Type@{i} } {Sx : InSort@{i} S L R}
+             (xL : L -> No@{i}) (xR : R -> No@{i})
              (xcut : forall (l : L) (r : R), xL l < xR r)
-             {L' R' : Type@{i} } (yL : L' -> No@{i}) (yR : R' -> No@{i})
+             {L' R' : Type@{i} } {Sy : InSort@{i} S L' R'}
+             (yL : L' -> No@{i}) (yR : R' -> No@{i})
              (ycut : forall (l : L') (r : R'), yL l < yR r)
   : let L'' := (L + L')%type in
     let R'' := (R + R')%type in
@@ -237,9 +268,10 @@ Section Addition.
     let zR := sum_ind (fun _ => No)
                       (fun r => (xR r) + y) (fun r => x + (yR r))
               : R'' -> No in
+    let Sz := sum_options L R L' R' _ _ in 
     { zcut : forall (l:L'') (r:R''), zL l < zR r &
-      x + y = {{ zL | zR // zcut }} }
-    := plus_inner_cut
+      x + y = @No_cut _ _ _ Sz zL zR zcut }
+    := plus_inner_cut (Sx := Sx)
          (fun l => plus_outer.1 (xL l))
          (fun r => plus_outer.1 (xR r))
          (fun l r => snd plus_outer.2 (xL l) (xR r) (xcut l r))
