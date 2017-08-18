@@ -32,6 +32,7 @@ theories/Fibrations.v
 theories/Conjugation.v
 theories/HProp.v
 theories/EquivalenceVarieties.v
+theories/UnivalenceVarieties.v
 theories/Extensions.v
 theories/HSet.v
 theories/UnivalenceImpliesFunext.v
