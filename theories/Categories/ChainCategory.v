@@ -81,7 +81,7 @@ Module Export Univalent.
   Proof.
     intros s d.
     refine (isequiv_iff_hprop _ _).
-    { refine (trunc_equiv' _ (issig_isomorphic _ _ _)). }
+    { refine (trunc_equiv' _ (issig_isomorphic _ _ _)); simpl; refine _. }
     { intro m; apply leq_antisym; apply m. }
   Defined.
 
