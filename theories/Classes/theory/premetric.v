@@ -13,7 +13,8 @@ Require Import
   HoTT.Classes.orders.dec_fields
   HoTT.Classes.theory.rationals
   HoTT.Classes.orders.lattices
-  HoTT.Classes.theory.additional_operations.
+  HoTT.Classes.theory.additional_operations
+  HoTT.Classes.implementations.assume_rationals.
 
 Local Set Universe Minimization ToSet.
 
