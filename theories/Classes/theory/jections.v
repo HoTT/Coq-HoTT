@@ -1,8 +1,7 @@
 Require Import
   HoTT.Types.Arrow
   HoTT.Types.Universe
-  HoTT.Basics.Trunc
-  HoTT.HIT.Truncations.
+  HoTT.Basics.Trunc.
 Require Import
   HoTT.Classes.interfaces.abstract_algebra.
 
@@ -19,42 +18,28 @@ Context `{Funext}.
 Context `{IsHSet C} `(f : A -> C) `(g : A -> B) {Esurj : IsSurjection g}.
 Variable (Eg : forall x y, g x = g y -> f x = f y).
 
-Definition is_img (x : B) (y : C) := merely (exists z : A, x = g z /\ y = f z).
-
-Definition surjective_factor_auxT x := sigT (fun y => is_img x y).
-
-Instance surjective_factor_aux_ishprop
-  : forall x, IsHProp (surjective_factor_auxT x).
+Lemma ishprop_surjective_factor_aux : forall b, IsHProp (exists c : C, forall a, g a = b -> f a = c).
 Proof.
-intros. apply Sigma.ishprop_sigma_disjoint.
-unfold is_img;intros y1 y2 E1;apply (Trunc_ind _);intros [z2 [E3 E4]].
-revert E1;apply (Trunc_ind _);intros [z1 [E1 E2]].
-path_via (f z1);path_via (f z2).
-apply Eg. path_via x.
+  intros. apply Sigma.ishprop_sigma_disjoint.
+  intros c1 c2 E1 E2.
+  generalize (center _ (Esurj b));apply (Trunc_ind _).
+  intros [a p];destruct p.
+  path_via (f a).
 Qed.
 
-Definition surjective_factor_aux : forall x, surjective_factor_auxT x.
-Proof.
-intros x. generalize (center _ (Esurj x)). apply (Trunc_ind _).
-intros z. exists (f z.1).
-apply tr. exists z.1;split;trivial. symmetry;exact z.2.
-Defined.
+Definition surjective_factor_aux :=
+  @TrM.RSU.conn_map_elim
+    _ _ _ _ Esurj (fun b => exists c : C, forall a, g a = b -> f a = c)
+    ishprop_surjective_factor_aux
+    (fun a => exist (fun c => forall a, _ -> _ = c) (f a) (fun a' => Eg a' a)).
 
-Definition surjective_factor : B -> C :=
-  fun x => (surjective_factor_aux x).1.
+Definition surjective_factor : B -> C
+  := fun b => (surjective_factor_aux b).1.
 
-Lemma surjective_factor_pr : f = compose surjective_factor g.
+Lemma surjective_factor_pr : f == compose surjective_factor g.
 Proof.
-apply path_forall. intros x.
-unfold surjective_factor,surjective_factor_aux,Compose. simpl.
-set (Y := (center
-           (TrM.Os_ReflectiveSubuniverses.O_reflector
-              (modality_to_reflective_subuniverse (trunc_S minus_two))
-              (hfiber g (g x))))).
-generalize Y. clear Y.
-apply (Trunc_ind _).
-intros Y. simpl.
-apply Eg. symmetry;apply Y.2.
+  intros a.
+  apply (surjective_factor_aux (g a)).2. trivial.
 Qed.
 
 End surjective_factor.
