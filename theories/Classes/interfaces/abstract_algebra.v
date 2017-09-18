@@ -250,6 +250,14 @@ Section jections.
   Context {A B} (f : A -> B).
 
   Class Injective := injective : forall x y, f x = f y -> x = y.
+
+  Lemma injective_ne `{!Injective} x y :
+    x <> y -> f x <> f y.
+  Proof.
+    intros E1 E2. apply E1.
+    apply injective.
+    assumption.
+  Qed.
 End jections.
 
 Section strong_injective.

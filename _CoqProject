@@ -85,6 +85,7 @@ theories/HIT/Spheres.v
 theories/HIT/TwoSphere.v
 theories/HIT/epi.v
 theories/HIT/unique_choice.v
+theories/HIT/surjective_factor.v
 theories/HIT/quotient.v
 theories/HIT/iso.v
 theories/HIT/Pushout.v
@@ -369,7 +370,6 @@ theories/Classes/theory/additional_operations.v
 theories/Classes/theory/apartness.v
 theories/Classes/theory/dec_fields.v
 theories/Classes/theory/lattices.v
-theories/Classes/theory/jections.v
 theories/Classes/theory/naturals.v
 theories/Classes/theory/nat_distance.v
 theories/Classes/theory/groups.v

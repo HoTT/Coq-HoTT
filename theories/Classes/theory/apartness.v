@@ -1,7 +1,5 @@
 Require Import HoTT.Basics.Decidable HoTT.HIT.Truncations.
-Require Import
-  HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.theory.jections.
+Require Import HoTT.Classes.interfaces.abstract_algebra.
 
 Section contents.
 Context `{IsApart A}.
