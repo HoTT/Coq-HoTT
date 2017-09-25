@@ -60,6 +60,11 @@
 Require Import HoTT.
 Require Import HoTT.HIT.IntervalImpliesFunext.
 Require HoTT.Categories.
+From HoTT.Classes Require
+  interfaces.abstract_algebra
+  interfaces.orders
+  theory.premetric.
+
 
 (* END OF PREAMBLE *)
 (* ================================================== lem:opp *)
@@ -2078,7 +2083,8 @@ Definition Book_10_5_8_item_ix := @HoTT.HIT.V.separation.
 (* ================================================== ordered-field *)
 (** Definition 11.2.7 *)
 
-
+Definition Book_11_2_7 := @HoTT.Classes.interfaces.abstract_algebra.Field.
+Definition Book_11_2_7' := @HoTT.Classes.interfaces.orders.FullPseudoSemiRingOrder.
 
 (* ================================================== RD-archimedean-ordered-field *)
 (** Theorem 11.2.8 *)
@@ -2088,7 +2094,7 @@ Definition Book_10_5_8_item_ix := @HoTT.HIT.V.separation.
 (* ================================================== defn:cauchy-approximation *)
 (** Definition 11.2.10 *)
 
-
+Definition Book_11_2_10 := @HoTT.Classes.theory.premetric.Approximation.
 
 (* ================================================== RD-cauchy-complete *)
 (** Theorem 11.2.12 *)
@@ -2138,7 +2144,7 @@ Definition Book_10_5_8_item_ix := @HoTT.HIT.V.separation.
 (* ================================================== defn:lipschitz *)
 (** Definition 11.3.14 *)
 
-
+Definition Book_11_3_14 := @HoTT.Classes.theory.premetric.Lipschitz.
 
 (* ================================================== RC-extend-Q-Lipschitz *)
 (** Lemma 11.3.15 *)
