@@ -34,4 +34,10 @@ Section AssumePropResizing.
     srefine (merely_rec (trm o f)).
   Defined.
 
+(* show what is gained by propositional resizing *)
+  Local Definition typeofid (A: Type) := A -> A.
+   
+  Local Definition functor_merely_equalargs `{Funext} {A : Type} (f : typeofid A)
+    : typeofid(merely A) := functor_merely f.
+
 End AssumePropResizing.
