@@ -47,24 +47,10 @@ Section AssumePropResizing.
 
 End AssumePropResizing.
 
-(* Here, we show what goes wrong without propositional resizing. We do not use what we imported with Require Import PropResizing.PropResizing. *)
-
-(* a more explicit definition of being a prop *)
-Local Definition IsHProp_expl (A : Type@{i}) : Type@{i} :=
-  forall x y : A, Contr_internal (x = y).
-
-Local Definition ishprop_expl_merely `{Funext} (A : Type@{i})
-  : IsHProp_expl@{i} (merely@{i j} A).
-Proof.
-  exact (@trunc_forall H Type (fun P : Type => IsHProp_expl P -> (A -> P) -> P)
-  (-1)
-  (fun P : Type =>
-   @trunc_forall H (IsHProp_expl P) (fun _ : IsHProp_expl P => (A -> P) -> P)
-     (-1) (fun p : IsHProp_expl P => @trunc_arrow H (A -> P) P (-1) p))).
-Defined.
+(* Here, we show what goes wrong without propositional resizing. *)
 
 (* the naive definition *)
-Local Definition merely_rec_naive {A : Type@{i}} {P : Type@{j}} {p:IsHProp_expl@{j} P} (f : A -> P)
+Local Definition merely_rec_naive {A : Type@{i}} {P : Type@{j}} {p:IsHProp@{j} P} (f : A -> P)
   : merely@{i j} A -> P
   := fun ma => ma P p f.
 
@@ -73,19 +59,17 @@ Local Definition functor_merely_weak `{Funext} {A B : Type@{k}} (f : A -> B)
   : merely@{j k} A -> merely@{k l} B. (* evidently, this requires k<j and l<k *)
 Proof.
   srefine (merely_rec_naive (trm o f)).
-  apply ishprop_expl_merely.
 Defined.
 
-(* impossible due to universe inconsistency:
-Local Definition functor_merely_weak_sameargs `{Funext} {A : Type} (f : typeofid A)
+(* impossible due to universe inconsistency: *)
+Fail Local Definition functor_merely_weak_sameargs `{Funext} {A : Type} (f : typeofid A)
   : typeofid(merely A) := functor_merely_weak f.
-The following much weaker definition is possible:
-*)
 
+(* The following much weaker definition is possible: *)
 Local Definition functor_merely_weak_sameargs_weak `{Funext} {A : Type} (f : typeofid A)
   : merely A -> merely A := functor_merely_weak f.
 
-(* a more informative version using universe levels *)
+(* a more general (but still weak) and more informative version using universe levels *)
 Local Definition functor_merely_weak_sameuniv_weak `{Funext} {A B: Type@{i}} (f : A -> B)
   : merely@{j k} A -> merely@{k l} B:= functor_merely_weak f.
 (* requires i <= j & l < k < j *)
