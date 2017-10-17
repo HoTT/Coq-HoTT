@@ -66,23 +66,32 @@ Section ImageUP.
 
 (**  And the universal property is equivalent to the fact that the left map of
      the factorization is a surjection. *)
+
+  (* We are forced to define the first direction separatly due to a subtle universe problem *)
+  Lemma image_caract1 {Fs: Funext}
+    : image_UP -> IsSurjection q.
+  Proof.
+    intro H; apply image_UP_UP' in H.
+    apply BuildIsSurjection.
+    specialize (H (Im q) (Im_q q) (i o Im_i q)).
+    destruct H as [X1 X2]. typeclasses eauto.
+    exact (fun x => ap i (Im_Q q x) @ Q x).
+    intro x.
+    assert (e : Im_i q (X1 x) = x). {
+      eapply (@equiv_inv _ _ _
+                         (Fibrations.isequiv_ap_isembedding i _ _)).
+      exact (X2 x). }
+    eapply Trunc_functor. 2: exact (X1 x).2.
+    exact (fun w => (w.1 ; w.2 @ e)).
+  Defined.
+
   Definition image_caract {Fs: Funext}
     : image_UP <-> IsSurjection q.
   Proof.
-    etransitivity. apply image_UP_UP'.
     split; intro H.
-    - apply BuildIsSurjection.
-      specialize (H (Im q) (Im_q q) (i o Im_i q)).
-      destruct H as [X1 X2]. typeclasses eauto.
-      exact (fun x => ap i (Im_Q q x) @ Q x).
-      intro x.
-      assert (e : Im_i q (X1 x) = x). {
-        eapply (@equiv_inv _ _ _
-                           (Fibrations.isequiv_ap_isembedding i _ _)).
-        exact (X2 x). }
-      eapply Trunc_functor. 2: exact (X1 x).2.
-      exact (fun w => (w.1 ; w.2 @ e)).
-    - intros I' q' i' Hi' Q'.
+    - by apply image_caract1.
+    - apply image_UP_UP'.
+      intros I' q' i' Hi' Q'.
       eapply contr_inhabited_hprop.
       eapply TrM.RSU.inO_map_morphisms; eauto.
       eapply (equiv_sigT_coind (fun _ => I') (fun x y => i' y = i x))^-1.
@@ -91,23 +100,22 @@ Section ImageUP.
   Defined.
 
   (** Given a type satisfying the universal property, we can thus recover a
-      factorization. *)
+      factorization Surjection-Embedding. *)
+  (* IsSurjection = TrM.RSU.IsConnMap (-1) *)
+  (* IsEmbedding  = TrM.RSU.MapIn (-1) *)
   Definition image_UP_Factorization {Fs: Funext} (H : image_UP)
     : Factorization (@TrM.RSU.IsConnMap (-1)) (@TrM.RSU.MapIn (-1)) f.
   Proof.
     refine (Build_Factorization (f:=f) I q i Q _ Hi).
-    admit.
-    (* exact (fst image_caract H). *)
-  Admitted.
-
+    by apply image_caract1.
+  Defined.
 
   (** And reusing the work on factorization systems, we have image unicity. *)
   Definition image_unicity {Fs: Funext} (H : image_UP)
     : I <~> himage f.
   Proof.
     pose (PF := path_factor (TrM.O_factsys (-1)) f).
-    admit.
-    (* exact (path_intermediate (PF (image_UP_Factorization H) (himage f))). *)
-  Admitted.
+    exact (path_intermediate (PF (image_UP_Factorization H) (himage f))).
+  Defined.
 
 End ImageUP.
