@@ -500,6 +500,9 @@ Defined.
 
 Global Instance Zle@{} : Le Z := fun x y => Zle_hProp x y.
 
+Global Instance ishprop_Zle : is_mere_relation _ Zle.
+Proof. unfold Zle;exact _. Qed.
+
 Lemma Zle_def@{} : forall a b : PairT.T N,
   @paths@{Uhuge} Type@{UN} (' a <= ' b) (PairT.Tle@{UN UNalt} a b).
 Proof. intros; exact idpath. Qed.
@@ -599,6 +602,9 @@ Defined.
 
 Global Instance Zlt@{} : Lt Z := fun x y => Zlt_hProp x y.
 
+Global Instance ishprop_Zlt : is_mere_relation _ Zlt.
+Proof. unfold Zlt;exact _. Qed.
+
 Lemma Zlt_def' : forall a b, ' a < ' b = PairT.Tlt a b.
 Proof. reflexivity. Qed.
 
@@ -691,12 +697,15 @@ Global Instance Zapart@{} : Apart Z := fun x y => Zapart_hProp x y.
 Lemma Zapart_def' : forall a b, apart (' a) (' b) = PairT.Tapart a b.
 Proof. reflexivity. Qed.
 
+Global Instance ishprop_Zapart : is_mere_relation _ Zapart.
+Proof. unfold Zapart;exact _. Qed.
+
 Definition Zapart_def@{i} := Zapart_def'@{Uhuge i}.
 
 Lemma Z_trivial_apart' `{!TrivialApart N}
   : TrivialApart Z.
 Proof.
-split;try apply _.
+split;[exact _|idtac].
 apply (Z_ind2 _).
 intros [pa na] [pb nb];rewrite Zapart_def;unfold PairT.Tapart;simpl.
 split;intros E1.
