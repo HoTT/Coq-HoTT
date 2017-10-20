@@ -9,7 +9,7 @@ pushd "$DIR" 1>/dev/null
 
 if [ -z "$BUILD_COQ" ]
 then
-    sudo add-apt-repository -y ppa:jgross-h/coq-trunk-daily
+    sudo add-apt-repository -y ppa:jgross-h/coq-master-daily
     sudo apt-get update
 fi
 # (un)install autoreconf
