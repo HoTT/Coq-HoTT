@@ -223,7 +223,51 @@ Definition Book_1_10 := ack.
 (* ================================================== ex:basics:concat *)
 (** Exercise 2.1 *)
 
+(* Book_2_1_concatenation1 is equivalent to the proof given in the text *)
+Definition Book_2_1_concatenation1 :
+    forall {A : Type} {x y z : A}, x = y -> y = z -> x = z.
+  intros A x y z x_eq_y y_eq_z.
+  induction x_eq_y.
+  induction y_eq_z.
+  reflexivity.
+Defined.
 
+Definition Book_2_1_concatenation2 :
+    forall {A : Type} {x y z : A}, x = y -> y = z -> x = z.
+  intros A x y z x_eq_y y_eq_z.
+  induction x_eq_y.
+  exact y_eq_z.
+Defined.
+
+Definition Book_2_1_concatenation3 :
+    forall {A : Type} {x y z : A}, x = y -> y = z -> x = z.
+  intros A x y z x_eq_y y_eq_z.
+  induction y_eq_z.
+  exact x_eq_y.
+Defined.
+
+Local Notation "p ⬛1 q" := (Book_2_1_concatenation1 p q) (at level 10).
+Local Notation "p ⬛2 q" := (Book_2_1_concatenation2 p q) (at level 10).
+Local Notation "p ⬛3 q" := (Book_2_1_concatenation3 p q) (at level 10).
+
+Section Book_2_1_Proofs_Are_Equal.
+  Context {A : Type} {x y z : A}.
+  Variable (p : x = y) (q : y = z).
+  Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation2 : p ⬛1 q = p ⬛2 q.
+    induction p, q.
+    reflexivity.
+  Defined.
+
+  Definition Book_2_1_concatenation2_eq_Book_2_1_concatenation3 : p ⬛2 q =  p ⬛3 q.
+    induction p, q.
+    reflexivity.
+  Defined.
+
+  Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation3 : p ⬛1 q = p ⬛3 q.
+    induction p, q.
+    reflexivity.
+  Defined.
+End Book_2_1_Proofs_Are_Equal.
 
 (* ================================================== ex:eq-proofs-commute *)
 (** Exercise 2.2 *)
