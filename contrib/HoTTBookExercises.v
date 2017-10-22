@@ -143,7 +143,31 @@ End Book_1_3_sig.
 (* ================================================== ex:nat-semiring *)
 (** Exercise 1.8 *)
 
+Fixpoint rec_nat' (C : Type) c0 cs (n : nat) : C :=
+  match n with
+    0 => c0
+  | S m => cs m (rec_nat' C c0 cs m)
+  end.
 
+Definition add : nat -> nat -> nat :=
+  rec_nat' (nat -> nat) (fun m => m) (fun n g m => (S (g m))).
+
+Definition mult : nat -> nat -> nat  :=
+  rec_nat' (nat -> nat) (fun m => 0) (fun n g m => add m (g m)).
+
+Definition exp' : nat -> nat -> nat  :=
+  rec_nat' (nat -> nat) (fun m => (S 0)) (fun n g m => mult m (g m)).
+
+Definition flip {A B C : Type} (f : A -> B -> C) : (B -> A -> C) :=
+  fun b a => f a b.
+
+Definition exp := flip exp'.
+
+Example add_example: add 32 17 = 49. reflexivity. Defined.
+Example mult_example: mult 20 5 = 100. reflexivity. Defined.
+Example exp_example: exp 2 10 = 1024. reflexivity. Defined.
+
+(* To do: proof that these form a semiring *)
 
 (* ================================================== ex:fin *)
 (** Exercise 1.9 *)
