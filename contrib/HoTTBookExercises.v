@@ -272,7 +272,14 @@ End Book_2_1_Proofs_Are_Equal.
 (* ================================================== ex:eq-proofs-commute *)
 (** Exercise 2.2 *)
 
-
+Definition Book_2_2 :
+  forall {A : Type} {x y z : A} (p : x = y) (q : y = z), 
+    (Book_2_1_concatenation1_eq_Book_2_1_concatenation2 p q) ⬛1
+    (Book_2_1_concatenation2_eq_Book_2_1_concatenation3 p q) =
+    (Book_2_1_concatenation1_eq_Book_2_1_concatenation3 p q).
+  induction p, q.
+  reflexivity.
+Defined.
 
 (* ================================================== ex:fourth-concat *)
 (** Exercise 2.3 *)
