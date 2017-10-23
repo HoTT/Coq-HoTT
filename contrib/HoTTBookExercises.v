@@ -324,8 +324,7 @@ Definition Book_eq_2_3_7 {A B : Type} {x y : A} (p : x = y) (f : A -> B)
 
    [isequiv_adjointify] is one way to prove two functions form an equivalence,
    specifically one proves that they are (category-theoretic) sections of one
-   another, that is, each is a right inverse for the other.
- *)
+   another, that is, each is a right inverse for the other. *)
 Definition Equivalence_Book_eq_2_3_6_and_Book_eq_2_3_6
            {A B : Type} {x y : A} (p : x = y) (f : A -> B)
     : IsEquiv (Book_eq_2_3_6 p f).
@@ -337,11 +336,29 @@ Definition Equivalence_Book_eq_2_3_6_and_Book_eq_2_3_6
     reflexivity.
 Defined.
 
-
 (* ================================================== ex:equiv-concat *)
 (** Exercise 2.6 *)
 
+Definition concat_left {A : Type} {x y : A} (z : A) (p : x = y)
+    : (y = z) -> (x = z) :=
+  fun q => p @ q.
 
+Definition concat_right {A : Type} {x y : A} (z : A) (p : x = y)
+    : (x = z) -> (y = z) :=
+  fun q => (inverse p) @ q.
+
+(* Again, by induction on p, it suffices to assume that x ≡ y and p ≡ refl, so
+   the above equations concatenate identity paths, which are units under 
+   concatenation. *)
+Definition Book_2_6 {A : Type} {x y z : A} (p : x = y)
+  : IsEquiv (concat_left z p).
+  apply (isequiv_adjointify (concat_left z p) (concat_right z p));
+    induction p;
+    unfold Sect, concat_right, concat_left;
+    intros y;
+    do 2 (rewrite concat_1p);
+    reflexivity.
+Defined.
 
 (* ================================================== ex:ap-sigma *)
 (** Exercise 2.7 *)
