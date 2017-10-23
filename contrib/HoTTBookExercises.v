@@ -284,7 +284,19 @@ Defined.
 (* ================================================== ex:fourth-concat *)
 (** Exercise 2.3 *)
 
+(* Since we have x_eq_y : x = y we can transport y_eq_z : y = z along
+   x_eq_y⁻¹ : y = x in the type family λw.(w = z) to obtain a term
+   of type x = z. *)
+Definition Book_2_1_concatenation4 
+    {A : Type} {x y z : A} : x = y -> y = z -> x = z :=
+  fun x_eq_y y_eq_z => transport (fun w => w = z) (inverse x_eq_y) y_eq_z.
 
+Local Notation "p ⬛4 q" := (Book_2_1_concatenation4 p q) (at level 10).
+Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation4 :
+    forall {A : Type} {x y z : A} (p : x = y) (q : y = z), (p ⬛1 q = p ⬛4 q).
+  induction p, q.
+  reflexivity.
+Defined.
 
 (* ================================================== ex:npaths *)
 (** Exercise 2.4 *)
