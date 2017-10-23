@@ -9,7 +9,7 @@ pushd "$DIR" 1>/dev/null
 
 if [ -z "$BUILD_COQ" ]
 then
-    sudo add-apt-repository -y ppa:jgross-h/many-coq-versions
+    sudo add-apt-repository -y ppa:jgross-h/coq-master-daily
     sudo apt-get update
 fi
 # (un)install autoreconf
@@ -30,7 +30,7 @@ fi
 if [ ! -z "$UPDATE_DEP_GRAPHS" ]; then
     ./install_dep_graphs_deps.sh
 fi
-./install_coq.sh -prefix /usr/local -debug
+./install_coq.sh -prefix /usr/local
 if [ ! -z "$UPDATE_DEP_GRAPHS" ]; then
     ./make_dpd_graphs.sh
 fi

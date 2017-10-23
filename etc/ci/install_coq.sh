@@ -8,7 +8,7 @@ if [ -z "$BUILD_COQ" ]
 then
     #echo | sudo add-apt-repository ppa:ezyang/coq-git
     #sudo apt-get update -qq
-    sudo apt-get install -q coq-8.6 libcoq-8.6-ocaml-dev
+    sudo apt-get install -q coq libcoq-ocaml-dev
     exit 0
 fi
 
@@ -45,8 +45,8 @@ opam install -j ${NJOBS} -y camlp5 ocamlfind
 opam list
 echo '$ ./configure '"$@"
 ./configure "$@"
-echo '$ make states tools coqlight plugins grammar/compat5.cmo grammar/grammar.cma'
-make states tools coqlight plugins grammar/compat5.cmo grammar/grammar.cma
+echo '$ make states tools coqlight plugins grammar/grammar.cma'
+make states tools coqlight plugins grammar/grammar.cma
 echo '$ sudo make install-binaries + rsync plugins theories'
 touch bin/coqtop.byte bin/coqchk stm/{proof,tac,query}workertop.cma
 sudo make install-binaries install-devfiles
