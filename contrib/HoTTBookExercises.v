@@ -306,6 +306,36 @@ Defined.
 (* ================================================== ex:ap-to-apd-equiv-apd-to-ap *)
 (** Exercise 2.5 *)
 
+(* Note that "@" is notation for concatentation and ^ is for inversion *)
+
+Definition Book_eq_2_3_6 {A B : Type} {x y : A} (p : x = y) (f : A -> B)
+  : (f x = f y) -> (transport (fun _ => B) p (f x) = f y) :=
+  fun fx_eq_fy =>
+    (HoTT.Basics.PathGroupoids.transport_const p (f x)) @ fx_eq_fy.
+
+Definition Book_eq_2_3_7 {A B : Type} {x y : A} (p : x = y) (f : A -> B)
+  : (transport (fun _ => B) p (f x) = f y) -> f x = f y :=
+  fun fx_eq_fy =>
+    (HoTT.Basics.PathGroupoids.transport_const p (f x))^ @ fx_eq_fy.
+
+(* By induction on p, it suffices to assume that x ≡ y and p ≡ refl, so
+   the above equations concatenate identity paths, which are units under 
+   concatenation.
+
+   [isequiv_adjointify] is one way to prove two functions form an equivalence,
+   specifically one proves that they are (category-theoretic) sections of one
+   another, that is, each is a right inverse for the other.
+ *)
+Definition Equivalence_Book_eq_2_3_6_and_Book_eq_2_3_6
+           {A B : Type} {x y : A} (p : x = y) (f : A -> B)
+    : IsEquiv (Book_eq_2_3_6 p f).
+  apply (isequiv_adjointify (Book_eq_2_3_6 p f) (Book_eq_2_3_7 p f));
+    unfold Book_eq_2_3_6, Book_eq_2_3_7, transport_const, Sect;
+    induction p;
+    intros y;
+    do 2 (rewrite concat_1p);
+    reflexivity.
+Defined.
 
 
 (* ================================================== ex:equiv-concat *)
