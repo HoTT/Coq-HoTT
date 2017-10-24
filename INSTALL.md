@@ -4,7 +4,7 @@ However, the latter cannot be used by people using git to contribute to the libr
 Opam support on windows is experimental.
 [1]: https://github.com/HoTT/HoTT/issues/694
 
-We are compatible with [Coq 8.6](https://coq.inria.fr/distrib/V8.6/files/), so binary packages can be used. Paths still need to be set manually.
+We are compatible with [Coq 8.7](https://github.com/coq/coq/releases/tag/V8.7.0), so binary packages can be used. Paths still need to be set manually.
 
 
 # QUICK INSTALLATION INSTRUCTIONS
