@@ -60,7 +60,7 @@ Ltac issig3 build pr1 pr2 pr3 :=
                     (BuildIsEquiv
                        A B
                        (fun u => build u.1 u.2.1 u.2.2)
-                       (fun v => (pr1 v; (pr2 v; pr3 v)))
+                       (fun v => (pr1 v; pr2 v; pr3 v))
                        (fun v => let (v1, v2, v3) as v' return (build (pr1 v') (pr2 v') (pr3 v') = v') := v in 1)
                        eta2_sigma
                        (fun _ => 1))).
@@ -77,7 +77,7 @@ Ltac issig4 build pr1 pr2 pr3 pr4 :=
                     (BuildIsEquiv
                        A B
                        (fun u => build u.1 u.2.1 u.2.2.1 u.2.2.2)
-                       (fun v => (pr1 v; (pr2 v; (pr3 v; pr4 v))))
+                       (fun v => (pr1 v; pr2 v; pr3 v; pr4 v))
                        (fun v => let (v1, v2, v3, v4) as v' return (build (pr1 v') (pr2 v') (pr3 v') (pr4 v') = v') := v in 1)
                        eta3_sigma
                        (fun _ => 1))).
@@ -94,7 +94,7 @@ Ltac issig5 build pr1 pr2 pr3 pr4 pr5 :=
                     (BuildIsEquiv
                        A B
                        (fun u => build u.1 u.2.1 u.2.2.1 u.2.2.2.1 u.2.2.2.2)
-                       (fun v => (pr1 v; (pr2 v; (pr3 v; (pr4 v ; pr5 v)))))
+                       (fun v => (pr1 v; pr2 v; pr3 v; pr4 v ; pr5 v))
                        (fun v => let (v1, v2, v3, v4, v5) as v' return (build (pr1 v') (pr2 v') (pr3 v') (pr4 v') (pr5 v') = v') := v in 1)
                        (fun u => 1)
                        (fun _ => 1))).
@@ -110,7 +110,7 @@ Ltac issig6 build pr1 pr2 pr3 pr4 pr5 pr6 :=
                     (BuildIsEquiv
                        A B
                        (fun u => build u.1 u.2.1 u.2.2.1 u.2.2.2.1 u.2.2.2.2.1 u.2.2.2.2.2)
-                       (fun v => (pr1 v; (pr2 v; (pr3 v; (pr4 v ; (pr5 v ; pr6 v))))))
+                       (fun v => (pr1 v; pr2 v; pr3 v; pr4 v ; pr5 v ; pr6 v))
                        (fun v => let (v1, v2, v3, v4, v5, v6) as v' return (build (pr1 v') (pr2 v') (pr3 v') (pr4 v') (pr5 v') (pr6 v') = v') := v in 1)
                        (fun u => 1)
                        (fun _ => 1))).

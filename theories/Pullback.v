@@ -26,7 +26,7 @@ Definition pullback_corec {A B C D}
            {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
            (p : k o f == g o h)
 : A -> Pullback k g
-:= fun a => (f a ; (h a ; p a)).
+:= fun a => (f a ; h a ; p a).
 
 (** Symmetry of the pullback *)
 Definition equiv_pullback_symm {A B C} (f : B -> A) (g : C -> A)
@@ -44,7 +44,7 @@ Definition equiv_pullback_unit_prod (A B : Type)
 Proof.
   simple refine (equiv_adjointify _ _ _ _).
   - intros [a [b _]]; exact (a , b).
-  - intros [a b]; exact (a ; (b ; 1)).
+  - intros [a b]; exact (a ; b ; 1).
   - intros [a b]; exact 1.
   - intros [a [b p]]; simpl.
     apply (path_sigma' _ 1); simpl.
