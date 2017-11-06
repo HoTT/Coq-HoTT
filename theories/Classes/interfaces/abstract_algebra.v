@@ -170,7 +170,7 @@ Arguments dec_recip_inverse
 Arguments dec_recip_0 {A Aplus Amult Azero Aone Anegate Adec_recip DecField}.
 
 Section lattice.
-  Context A {Ajoin: Join A} {Ameet: Meet A} {Abottom : Bottom A}.
+  Context A {Ajoin: Join A} {Ameet: Meet A} {Abottom : Bottom A} {Atop : Top A}.
 
   Class JoinSemiLattice := 
     join_semilattice :> @SemiLattice A join_is_sg_op.
@@ -179,12 +179,21 @@ Section lattice.
       join_is_sg_op bottom_is_mon_unit.
   Class MeetSemiLattice := 
     meet_semilattice :> @SemiLattice A meet_is_sg_op.
+  Class BoundedMeetSemiLattice :=
+    bounded_meet_semilattice :> @BoundedSemiLattice A
+      meet_is_sg_op top_is_mon_unit.
 
   Class Lattice := 
     { lattice_join :> JoinSemiLattice
     ; lattice_meet :> MeetSemiLattice
     ; join_meet_absorption :> Absorption (⊔) (⊓) 
     ; meet_join_absorption :> Absorption (⊓) (⊔)}.
+
+  Class BoundedLattice :=
+    { boundedlattice_join :> BoundedJoinSemiLattice
+    ; boundedlattice_meet :> BoundedMeetSemiLattice
+    ; boundedjoin_meet_absorption :> Absorption (⊔) (⊓)
+    ; boundedmeet_join_absorption :> Absorption (⊓) (⊔)}.
 
   Class DistributiveLattice := 
     { distr_lattice_lattice :> Lattice

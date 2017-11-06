@@ -12,6 +12,16 @@ Proof.
 repeat (split; try apply _).
 Qed.
 
+Instance bounded_meet_sl_is_meet_sl `{BoundedMeetSemiLattice L} : MeetSemiLattice L.
+Proof.
+repeat (split; try apply _).
+Qed.
+
+Instance bounded_lattice_is_lattice `{BoundedLattice L} : Lattice L.
+Proof.
+repeat split; apply _.
+Qed.
+
 Instance bounded_sl_mor_is_sl_mor `{H : BoundedJoinPreserving A B f}
   : JoinPreserving f.
 Proof.
