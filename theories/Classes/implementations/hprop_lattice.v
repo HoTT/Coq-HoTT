@@ -5,8 +5,6 @@ Require Import
 
 (** Demonstrate the [hProp] is a (bounded) lattice w.r.t. the logical
 operations. This requires Univalence. *)
-(* We use this notation because [hor] can accept arguments of type [Type], which leads to minor confusion in the instances below *)
-Notation lor := (hor : hProp -> hProp -> hProp).
 Instance join_hor : Join hProp := hor.
 Definition hand (X Y : hProp) : hProp := BuildhProp (X * Y).
 Instance meet_hprop : Meet hProp := hand.
@@ -15,6 +13,9 @@ Instance top_hprop : Top hProp := Unit_hp.
 
 Section contents.
   Context `{Univalence}.
+
+  (* We use this notation because [hor] can accept arguments of type [Type], which leads to minor confusion in the instances below *)
+  Notation lor := (hor : hProp -> hProp -> hProp).
 
   (* This tactic attempts to destruct a truncated sum (disjunction) *)
   Local Ltac hor_intros :=

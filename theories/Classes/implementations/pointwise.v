@@ -4,12 +4,13 @@ Require Import
 (** If [B] is a (bounded) lattice, then so is [A -> B], pointwise.
     This relies on functional extensionality. *)
 Section contents.
+  Context `{Funext}.
+
   Context {A B : Type}.
   Context `{BJoin : Join B}.
   Context `{BMeet : Meet B}.
   Context `{BBottom : Bottom B}.
   Context `{BTop : Top B}.
-  Context `{Funext}.
 
   Global Instance bot_fun : Bottom (A -> B)
     := fun _ => ⊥.
@@ -34,7 +35,7 @@ Section contents.
     reduce_fun;
     eauto 10 with lattice_hints typeclass_instances.
 
-  Global Instance lattice_fun `{@Lattice B BJoin BMeet} : Lattice (A -> B).
+  Global Instance lattice_fun `{!Lattice B} : Lattice (A -> B).
   Proof.
     repeat split; try apply _; try_solve_fun.
     * apply binary_idempotent.
@@ -42,7 +43,7 @@ Section contents.
   Defined.
 
   Instance boundedjoinsemilattice_fun
-   `{@BoundedJoinSemiLattice B BJoin BBottom} :
+   `{!BoundedJoinSemiLattice B} :
     BoundedJoinSemiLattice (A -> B).
   Proof.
     repeat split; try apply _; try_solve_fun.
@@ -53,7 +54,7 @@ Section contents.
   Defined.
 
   Instance boundedmeetsemilattice_fun
-   `{@BoundedMeetSemiLattice B BMeet BTop} :
+   `{!BoundedMeetSemiLattice B} :
     BoundedMeetSemiLattice (A -> B).
   Proof.
     repeat split; try apply _; reduce_fun.
@@ -65,7 +66,7 @@ Section contents.
   Defined.
 
   Global Instance boundedlattice_fun
-   `{@BoundedLattice B BJoin BMeet BBottom BTop} : BoundedLattice (A -> B).
+   `{!BoundedLattice B} : BoundedLattice (A -> B).
   Proof.
     repeat split; try apply _; reduce_fun; apply absorption.
   Defined.
