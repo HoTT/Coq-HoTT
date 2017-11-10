@@ -373,17 +373,62 @@ Defined.
 (* ================================================== ex:coprod-ump *)
 (** Exercise 2.9 *)
 
+(* To extract a function on either summand, compose with the injections *)
+Definition coprod_ump1 {A B X} : (A + B -> X) -> (A -> X) * (B -> X) :=
+  fun f => (f o inl, f o inr).
 
+(* To create a function on the direct sum from functions on the summands, work
+   by cases *)
+Check prod_rect.
+Definition coprod_ump2 {A B X} : (A -> X) * (B -> X) -> (A + B -> X) :=
+  prod_rect (fun _ => A + B -> X) (fun f g => sum_rect (fun _ => X) f g).
+
+Definition Book_2_9 {A B X} `{Funext} : (A -> X) * (B -> X) <~> (A + B -> X).
+  apply (equiv_adjointify coprod_ump2 coprod_ump1).
+  - intros f.
+    apply path_forall.
+    intros [a | b]; reflexivity.
+  - intros [f g].
+    reflexivity.
+Defined.
 
 (* ================================================== ex:sigma-assoc *)
 (** Exercise 2.10 *)
 
+Section TwoTen.
+  Context `{A : Type} {B : A -> Type} {C : (exists a : A, B a) -> Type}.
 
+  Local Definition f210 : (exists a : A, (exists b : B a, (C (a; b)))) ->
+                          (exists (p : exists a : A, B a), (C p)) :=
+    fun pairpair =>
+      match pairpair with (a; pp) =>
+        match pp with (b; c) => ((a; b); c) end
+      end.
+
+  Local Definition g210 : (exists (p : exists a : A, B a), (C p)) ->
+                          (exists a : A, (exists b : B a, (C (a; b)))).
+    intros pairpair.
+    induction pairpair as [pair c].
+    induction pair as [a b].
+    exact (a; (b; c)).
+  Defined.
+
+  Definition Book_2_10 : (exists a : A, (exists b : B a, (C (a; b)))) <~>
+                         (exists (p : exists a : A, B a), (C p)).
+    apply (equiv_adjointify f210 g210); compute; reflexivity.
+  Defined.
+End TwoTen.
 
 (* ================================================== ex:pullback *)
 (** Exercise 2.11 *)
 
-
+(* This library actually defines pullbacks *)
+Definition Book_2_11 {A B C : Type} (f : A -> C) (g : B -> C)
+  : IsPullback (pullback_commsq f g).
+  apply (isequiv_adjointify (pullback_corec (pullback_commsq f g))
+                            (pullback_corec (pullback_commsq f g)));
+    unfold Sect; reflexivity.
+Defined.
 
 (* ================================================== ex:pullback-pasting *)
 (** Exercise 2.12 *)
