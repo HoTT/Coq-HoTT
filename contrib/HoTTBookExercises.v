@@ -155,13 +155,10 @@ Definition add : nat -> nat -> nat :=
 Definition mult : nat -> nat -> nat  :=
   rec_nat' (nat -> nat) (fun m => 0) (fun n g m => add m (g m)).
 
-Definition exp' : nat -> nat -> nat  :=
-  rec_nat' (nat -> nat) (fun m => (S 0)) (fun n g m => mult m (g m)).
-
-Definition flip {A B C : Type} (f : A -> B -> C) : (B -> A -> C) :=
-  fun b a => f a b.
-
-Definition exp := flip exp'.
+(* rec_nat' gives back a function with the wrong argument order, so we flip the
+   order of the arguments p and q *)
+Definition exp : nat -> nat -> nat  :=
+  fun p q => (rec_nat' (nat -> nat) (fun m => (S 0)) (fun n g m => mult m (g m))) q p.
 
 Example add_example: add 32 17 = 49. reflexivity. Defined.
 Example mult_example: mult 20 5 = 100. reflexivity. Defined.
@@ -246,24 +243,24 @@ Definition Book_2_1_concatenation3 :
   exact x_eq_y.
 Defined.
 
-Local Notation "p ⬛1 q" := (Book_2_1_concatenation1 p q) (at level 10).
-Local Notation "p ⬛2 q" := (Book_2_1_concatenation2 p q) (at level 10).
-Local Notation "p ⬛3 q" := (Book_2_1_concatenation3 p q) (at level 10).
+Local Notation "p *1 q" := (Book_2_1_concatenation1 p q) (at level 10).
+Local Notation "p *2 q" := (Book_2_1_concatenation2 p q) (at level 10).
+Local Notation "p *3 q" := (Book_2_1_concatenation3 p q) (at level 10).
 
 Section Book_2_1_Proofs_Are_Equal.
   Context {A : Type} {x y z : A}.
   Variable (p : x = y) (q : y = z).
-  Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation2 : p ⬛1 q = p ⬛2 q.
+  Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation2 : p *1 q = p *2 q.
     induction p, q.
     reflexivity.
   Defined.
 
-  Definition Book_2_1_concatenation2_eq_Book_2_1_concatenation3 : p ⬛2 q =  p ⬛3 q.
+  Definition Book_2_1_concatenation2_eq_Book_2_1_concatenation3 : p *2 q =  p *3 q.
     induction p, q.
     reflexivity.
   Defined.
 
-  Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation3 : p ⬛1 q = p ⬛3 q.
+  Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation3 : p *1 q = p *3 q.
     induction p, q.
     reflexivity.
   Defined.
@@ -274,7 +271,7 @@ End Book_2_1_Proofs_Are_Equal.
 
 Definition Book_2_2 :
   forall {A : Type} {x y z : A} (p : x = y) (q : y = z), 
-    (Book_2_1_concatenation1_eq_Book_2_1_concatenation2 p q) ⬛1
+    (Book_2_1_concatenation1_eq_Book_2_1_concatenation2 p q) *1
     (Book_2_1_concatenation2_eq_Book_2_1_concatenation3 p q) =
     (Book_2_1_concatenation1_eq_Book_2_1_concatenation3 p q).
   induction p, q.
@@ -291,9 +288,9 @@ Definition Book_2_1_concatenation4
     {A : Type} {x y z : A} : x = y -> y = z -> x = z :=
   fun x_eq_y y_eq_z => transport (fun w => w = z) (inverse x_eq_y) y_eq_z.
 
-Local Notation "p ⬛4 q" := (Book_2_1_concatenation4 p q) (at level 10).
+Local Notation "p *4 q" := (Book_2_1_concatenation4 p q) (at level 10).
 Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation4 :
-    forall {A : Type} {x y z : A} (p : x = y) (q : y = z), (p ⬛1 q = p ⬛4 q).
+    forall {A : Type} {x y z : A} (p : x = y) (q : y = z), (p *1 q = p *4 q).
   induction p, q.
   reflexivity.
 Defined.
@@ -339,6 +336,10 @@ Defined.
 (* ================================================== ex:equiv-concat *)
 (** Exercise 2.6 *)
 
+(* This exercise is solved in the library as
+   HoTT.Types.Paths.isequiv_concat_l
+ *)
+
 Definition concat_left {A : Type} {x y : A} (z : A) (p : x = y)
     : (y = z) -> (x = z) :=
   fun q => p @ q.
@@ -373,6 +374,9 @@ Defined.
 (* ================================================== ex:coprod-ump *)
 (** Exercise 2.9 *)
 
+(* This exercise is solved in the library as
+   HoTT.Types.Sum.equiv_sum_ind
+ *)
 (* To extract a function on either summand, compose with the injections *)
 Definition coprod_ump1 {A B X} : (A + B -> X) -> (A -> X) * (B -> X) :=
   fun f => (f o inl, f o inr).
@@ -394,6 +398,10 @@ Defined.
 
 (* ================================================== ex:sigma-assoc *)
 (** Exercise 2.10 *)
+
+(* This exercise is solved in the library as
+   HoTT.Types.Sigma.equiv_sigma_assoc
+ *)
 
 Section TwoTen.
   Context `{A : Type} {B : A -> Type} {C : (exists a : A, B a) -> Type}.
@@ -422,13 +430,64 @@ End TwoTen.
 (* ================================================== ex:pullback *)
 (** Exercise 2.11 *)
 
-(* This library actually defines pullbacks *)
-Definition Book_2_11 {A B C : Type} (f : A -> C) (g : B -> C)
-  : IsPullback (pullback_commsq f g).
-  apply (isequiv_adjointify (pullback_corec (pullback_commsq f g))
-                            (pullback_corec (pullback_commsq f g)));
-    unfold Sect; reflexivity.
-Defined.
+(* The library defines pullbacks as the construction given in Equation 2.15.11,
+   we reuse that definition ("Pullback") here.
+ *)
+
+Section TwoEleven.
+  Context {A B C X : Type} {f : A -> C} {g : B -> C}.
+  Let P := Pullback f g.
+  Context `{Funext}.
+
+  (* An explicit definition of the map we have to prove is an equivalence *)
+  Definition induced_map211 (j : X -> P)
+    : Pullback (fun f' : X -> A => f o f') (fun g' : X -> B => g o g') :=
+    ( pr1 o j
+    (* The second function can't be done in a "compositional style" because Coq
+       can't unify the types properly without more context. *)
+    ; (fun x : X => pr1 (pr2 (j x))
+    ; path_forall _ _ (fun x => ((j x).2).2)
+    )).
+
+  Definition induced_map_inv211
+    : (Pullback (fun f' : X -> A => f o f') (fun g' : X -> B => g o g')) -> (X -> P)
+    := fun PB x => (PB.1 x
+                ; ((pr1 PB.2) x
+                ; ap (fun f => f x) (pr2 PB.2))).
+
+  Definition is_equiv : 
+    (X -> P) <~> Pullback (fun f' : X -> A => f o f') (fun g' : X -> B => g o g').
+    apply (equiv_adjointify induced_map211 induced_map_inv211);
+      unfold Sect.
+    {
+      intros x.
+      induction x as [x' x''].
+
+      (* The first two are judgementally equal *)
+      do 2 (apply @HoTT.Types.Sigma.equiv_path_sigma;
+            refine (1; _)).
+      simpl. (* unfold transport _ 1 *)
+
+      (* I think the facts in 2.9 should complete the proof. *)
+      admit.
+    }
+    {
+      intros j.
+      apply path_forall.
+      intros x.
+
+      (* The first two are judgementally equal *)
+      do 2 (apply @HoTT.Types.Sigma.equiv_path_sigma;
+            refine (1; _)).
+      simpl. (* unfold transport _ 1 *)
+      
+      (* TODO: complete this proof *)
+      admit.
+    }
+  Abort.
+
+End TwoEleven.
+
 
 (* ================================================== ex:pullback-pasting *)
 (** Exercise 2.12 *)
