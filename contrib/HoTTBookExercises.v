@@ -430,63 +430,6 @@ End TwoTen.
 (* ================================================== ex:pullback *)
 (** Exercise 2.11 *)
 
-(* The library defines pullbacks as the construction given in Equation 2.15.11,
-   we reuse that definition ("Pullback") here.
- *)
-
-Section TwoEleven.
-  Context {A B C X : Type} {f : A -> C} {g : B -> C}.
-  Let P := Pullback f g.
-  Context `{Funext}.
-
-  (* An explicit definition of the map we have to prove is an equivalence *)
-  Definition induced_map211 (j : X -> P)
-    : Pullback (fun f' : X -> A => f o f') (fun g' : X -> B => g o g') :=
-    ( pr1 o j
-    (* The second function can't be done in a "compositional style" because Coq
-       can't unify the types properly without more context. *)
-    ; (fun x : X => pr1 (pr2 (j x))
-    ; path_forall _ _ (fun x => ((j x).2).2)
-    )).
-
-  Definition induced_map_inv211
-    : (Pullback (fun f' : X -> A => f o f') (fun g' : X -> B => g o g')) -> (X -> P)
-    := fun PB x => (PB.1 x
-                ; ((pr1 PB.2) x
-                ; ap (fun f => f x) (pr2 PB.2))).
-
-  Definition is_equiv : 
-    (X -> P) <~> Pullback (fun f' : X -> A => f o f') (fun g' : X -> B => g o g').
-    apply (equiv_adjointify induced_map211 induced_map_inv211);
-      unfold Sect.
-    {
-      intros x.
-      induction x as [x' x''].
-
-      (* The first two are judgementally equal *)
-      do 2 (apply @HoTT.Types.Sigma.equiv_path_sigma;
-            refine (1; _)).
-      simpl. (* unfold transport _ 1 *)
-
-      (* I think the facts in 2.9 should complete the proof. *)
-      admit.
-    }
-    {
-      intros j.
-      apply path_forall.
-      intros x.
-
-      (* The first two are judgementally equal *)
-      do 2 (apply @HoTT.Types.Sigma.equiv_path_sigma;
-            refine (1; _)).
-      simpl. (* unfold transport _ 1 *)
-      
-      (* TODO: complete this proof *)
-      admit.
-    }
-  Abort.
-
-End TwoEleven.
 
 
 (* ================================================== ex:pullback-pasting *)
