@@ -143,7 +143,28 @@ End Book_1_3_sig.
 (* ================================================== ex:nat-semiring *)
 (** Exercise 1.8 *)
 
+Fixpoint rec_nat' (C : Type) c0 cs (n : nat) : C :=
+  match n with
+    0 => c0
+  | S m => cs m (rec_nat' C c0 cs m)
+  end.
 
+Definition add : nat -> nat -> nat :=
+  rec_nat' (nat -> nat) (fun m => m) (fun n g m => (S (g m))).
+
+Definition mult : nat -> nat -> nat  :=
+  rec_nat' (nat -> nat) (fun m => 0) (fun n g m => add m (g m)).
+
+(* rec_nat' gives back a function with the wrong argument order, so we flip the
+   order of the arguments p and q *)
+Definition exp : nat -> nat -> nat  :=
+  fun p q => (rec_nat' (nat -> nat) (fun m => (S 0)) (fun n g m => mult m (g m))) q p.
+
+Example add_example: add 32 17 = 49. reflexivity. Defined.
+Example mult_example: mult 20 5 = 100. reflexivity. Defined.
+Example exp_example: exp 2 10 = 1024. reflexivity. Defined.
+
+(* To do: proof that these form a semiring *)
 
 (* ================================================== ex:fin *)
 (** Exercise 1.9 *)
@@ -199,17 +220,80 @@ Definition Book_1_10 := ack.
 (* ================================================== ex:basics:concat *)
 (** Exercise 2.1 *)
 
+(* Book_2_1_concatenation1 is equivalent to the proof given in the text *)
+Definition Book_2_1_concatenation1 :
+    forall {A : Type} {x y z : A}, x = y -> y = z -> x = z.
+  intros A x y z x_eq_y y_eq_z.
+  induction x_eq_y.
+  induction y_eq_z.
+  reflexivity.
+Defined.
 
+Definition Book_2_1_concatenation2 :
+    forall {A : Type} {x y z : A}, x = y -> y = z -> x = z.
+  intros A x y z x_eq_y y_eq_z.
+  induction x_eq_y.
+  exact y_eq_z.
+Defined.
+
+Definition Book_2_1_concatenation3 :
+    forall {A : Type} {x y z : A}, x = y -> y = z -> x = z.
+  intros A x y z x_eq_y y_eq_z.
+  induction y_eq_z.
+  exact x_eq_y.
+Defined.
+
+Local Notation "p *1 q" := (Book_2_1_concatenation1 p q) (at level 10).
+Local Notation "p *2 q" := (Book_2_1_concatenation2 p q) (at level 10).
+Local Notation "p *3 q" := (Book_2_1_concatenation3 p q) (at level 10).
+
+Section Book_2_1_Proofs_Are_Equal.
+  Context {A : Type} {x y z : A}.
+  Variable (p : x = y) (q : y = z).
+  Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation2 : p *1 q = p *2 q.
+    induction p, q.
+    reflexivity.
+  Defined.
+
+  Definition Book_2_1_concatenation2_eq_Book_2_1_concatenation3 : p *2 q =  p *3 q.
+    induction p, q.
+    reflexivity.
+  Defined.
+
+  Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation3 : p *1 q = p *3 q.
+    induction p, q.
+    reflexivity.
+  Defined.
+End Book_2_1_Proofs_Are_Equal.
 
 (* ================================================== ex:eq-proofs-commute *)
 (** Exercise 2.2 *)
 
-
+Definition Book_2_2 :
+  forall {A : Type} {x y z : A} (p : x = y) (q : y = z), 
+    (Book_2_1_concatenation1_eq_Book_2_1_concatenation2 p q) *1
+    (Book_2_1_concatenation2_eq_Book_2_1_concatenation3 p q) =
+    (Book_2_1_concatenation1_eq_Book_2_1_concatenation3 p q).
+  induction p, q.
+  reflexivity.
+Defined.
 
 (* ================================================== ex:fourth-concat *)
 (** Exercise 2.3 *)
 
+(* Since we have x_eq_y : x = y we can transport y_eq_z : y = z along
+   x_eq_y⁻¹ : y = x in the type family λw.(w = z) to obtain a term
+   of type x = z. *)
+Definition Book_2_1_concatenation4 
+    {A : Type} {x y z : A} : x = y -> y = z -> x = z :=
+  fun x_eq_y y_eq_z => transport (fun w => w = z) (inverse x_eq_y) y_eq_z.
 
+Local Notation "p *4 q" := (Book_2_1_concatenation4 p q) (at level 10).
+Definition Book_2_1_concatenation1_eq_Book_2_1_concatenation4 :
+    forall {A : Type} {x y z : A} (p : x = y) (q : y = z), (p *1 q = p *4 q).
+  induction p, q.
+  reflexivity.
+Defined.
 
 (* ================================================== ex:npaths *)
 (** Exercise 2.4 *)
@@ -219,12 +303,63 @@ Definition Book_1_10 := ack.
 (* ================================================== ex:ap-to-apd-equiv-apd-to-ap *)
 (** Exercise 2.5 *)
 
+(* Note that "@" is notation for concatentation and ^ is for inversion *)
 
+Definition Book_eq_2_3_6 {A B : Type} {x y : A} (p : x = y) (f : A -> B)
+  : (f x = f y) -> (transport (fun _ => B) p (f x) = f y) :=
+  fun fx_eq_fy =>
+    (HoTT.Basics.PathGroupoids.transport_const p (f x)) @ fx_eq_fy.
+
+Definition Book_eq_2_3_7 {A B : Type} {x y : A} (p : x = y) (f : A -> B)
+  : (transport (fun _ => B) p (f x) = f y) -> f x = f y :=
+  fun fx_eq_fy =>
+    (HoTT.Basics.PathGroupoids.transport_const p (f x))^ @ fx_eq_fy.
+
+(* By induction on p, it suffices to assume that x ≡ y and p ≡ refl, so
+   the above equations concatenate identity paths, which are units under 
+   concatenation.
+
+   [isequiv_adjointify] is one way to prove two functions form an equivalence,
+   specifically one proves that they are (category-theoretic) sections of one
+   another, that is, each is a right inverse for the other. *)
+Definition Equivalence_Book_eq_2_3_6_and_Book_eq_2_3_6
+           {A B : Type} {x y : A} (p : x = y) (f : A -> B)
+    : IsEquiv (Book_eq_2_3_6 p f).
+  apply (isequiv_adjointify (Book_eq_2_3_6 p f) (Book_eq_2_3_7 p f));
+    unfold Book_eq_2_3_6, Book_eq_2_3_7, transport_const, Sect;
+    induction p;
+    intros y;
+    do 2 (rewrite concat_1p);
+    reflexivity.
+Defined.
 
 (* ================================================== ex:equiv-concat *)
 (** Exercise 2.6 *)
 
+(* This exercise is solved in the library as
+   HoTT.Types.Paths.isequiv_concat_l
+ *)
 
+Definition concat_left {A : Type} {x y : A} (z : A) (p : x = y)
+    : (y = z) -> (x = z) :=
+  fun q => p @ q.
+
+Definition concat_right {A : Type} {x y : A} (z : A) (p : x = y)
+    : (x = z) -> (y = z) :=
+  fun q => (inverse p) @ q.
+
+(* Again, by induction on p, it suffices to assume that x ≡ y and p ≡ refl, so
+   the above equations concatenate identity paths, which are units under 
+   concatenation. *)
+Definition Book_2_6 {A : Type} {x y z : A} (p : x = y)
+  : IsEquiv (concat_left z p).
+  apply (isequiv_adjointify (concat_left z p) (concat_right z p));
+    induction p;
+    unfold Sect, concat_right, concat_left;
+    intros y;
+    do 2 (rewrite concat_1p);
+    reflexivity.
+Defined.
 
 (* ================================================== ex:ap-sigma *)
 (** Exercise 2.7 *)
@@ -239,12 +374,58 @@ Definition Book_1_10 := ack.
 (* ================================================== ex:coprod-ump *)
 (** Exercise 2.9 *)
 
+(* This exercise is solved in the library as
+   HoTT.Types.Sum.equiv_sum_ind
+ *)
+(* To extract a function on either summand, compose with the injections *)
+Definition coprod_ump1 {A B X} : (A + B -> X) -> (A -> X) * (B -> X) :=
+  fun f => (f o inl, f o inr).
 
+(* To create a function on the direct sum from functions on the summands, work
+   by cases *)
+Check prod_rect.
+Definition coprod_ump2 {A B X} : (A -> X) * (B -> X) -> (A + B -> X) :=
+  prod_rect (fun _ => A + B -> X) (fun f g => sum_rect (fun _ => X) f g).
+
+Definition Book_2_9 {A B X} `{Funext} : (A -> X) * (B -> X) <~> (A + B -> X).
+  apply (equiv_adjointify coprod_ump2 coprod_ump1).
+  - intros f.
+    apply path_forall.
+    intros [a | b]; reflexivity.
+  - intros [f g].
+    reflexivity.
+Defined.
 
 (* ================================================== ex:sigma-assoc *)
 (** Exercise 2.10 *)
 
+(* This exercise is solved in the library as
+   HoTT.Types.Sigma.equiv_sigma_assoc
+ *)
 
+Section TwoTen.
+  Context `{A : Type} {B : A -> Type} {C : (exists a : A, B a) -> Type}.
+
+  Local Definition f210 : (exists a : A, (exists b : B a, (C (a; b)))) ->
+                          (exists (p : exists a : A, B a), (C p)) :=
+    fun pairpair =>
+      match pairpair with (a; pp) =>
+        match pp with (b; c) => ((a; b); c) end
+      end.
+
+  Local Definition g210 : (exists (p : exists a : A, B a), (C p)) ->
+                          (exists a : A, (exists b : B a, (C (a; b)))).
+    intros pairpair.
+    induction pairpair as [pair c].
+    induction pair as [a b].
+    exact (a; (b; c)).
+  Defined.
+
+  Definition Book_2_10 : (exists a : A, (exists b : B a, (C (a; b)))) <~>
+                         (exists (p : exists a : A, B a), (C p)).
+    apply (equiv_adjointify f210 g210); compute; reflexivity.
+  Defined.
+End TwoTen.
 
 (* ================================================== ex:pullback *)
 (** Exercise 2.11 *)
