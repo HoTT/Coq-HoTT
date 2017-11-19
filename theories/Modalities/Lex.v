@@ -289,6 +289,7 @@ Module Type Preserves_Fibers (Os : ReflectiveSubuniverses).
   Parameter isequiv_O_functor_hfiber :
      forall (O : ReflectiveSubuniverse) {A B} (f : A -> B) (b : B),
        IsEquiv (O_functor_hfiber O f b).
+  Existing Instance isequiv_O_functor_hfiber.
 
 End Preserves_Fibers.
 
