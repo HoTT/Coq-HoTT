@@ -44,7 +44,7 @@ Section comma.
 
   Definition comma_category_projection_functor_object_of
              (ST : object ((A -> C)^op * (B -> C)))
-  : Cat / !((A * B; PAB) : Cat).
+  : Cat / !(((A * B)%category; PAB) : Cat).
   Proof.
     exists (Datatypes.fst ST / Datatypes.snd ST; P_comma _ _) (center _).
     exact (comma_category_projection (Datatypes.fst ST) (Datatypes.snd ST)).
@@ -52,7 +52,7 @@ Section comma.
 
   Definition comma_category_projection_functor_morphism_of
              s d (m : morphism ((A -> C)^op * (B -> C)) s d)
-  : morphism (Cat / !((A * B; PAB) : Cat))
+  : morphism (Cat / !(((A * B)%category; PAB) : Cat))
              (comma_category_projection_functor_object_of s)
              (comma_category_projection_functor_object_of d).
   Proof.
@@ -120,9 +120,9 @@ Section comma.
 
   Definition comma_category_projection_functor
   : Functor ((A -> C)^op * (B -> C))
-            (Cat / !((A * B; PAB) : Cat))
+            (Cat / !(((A * B)%category; PAB) : Cat))
     := Build_Functor ((A -> C)^op * (B -> C))
-                     (Cat / !((A * B; PAB) : Cat))
+                     (Cat / !(((A * B)%category; PAB) : Cat))
                      comma_category_projection_functor_object_of
                      comma_category_projection_functor_morphism_of
                      comma_category_projection_functor_composition_of
