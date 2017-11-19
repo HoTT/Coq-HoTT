@@ -350,6 +350,6 @@ Module Export CommaCoreNotations.
   Notation "F / x" := (slice_category x F) (only printing) : category_scope.
   Notation "S / T" := (comma_category S T) (only printing) : category_scope.
   (** Set the notation for parsing; coercions will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)
-  Notation "S / T" := (comma_category (S : CC_Functor' _ _)
-                                      (T : CC_Functor' _ _)) : category_scope.
+  Notation "S / T" := (comma_category (S%functor : CC_Functor' _ _)
+                                      (T%functor : CC_Functor' _ _)) : category_scope.
 End CommaCoreNotations.
