@@ -752,7 +752,7 @@ Section RetractOfRetracts.
   Defined.
 
   (** We have a similar result for splittings of a fixed map [f].  *)
-  Definition splitting_retractof_isqidem (f : X -> X)
+  Definition splitting_retractof_isqidem0 (f : X -> X)
   : RetractOf { I : IsPreIdempotent f & IsQuasiIdempotent f }.
   Proof.
     simple refine (@equiv_retractof'
@@ -776,6 +776,14 @@ Section RetractOfRetracts.
         intros R; simpl.
       apply equiv_ap10.
   Defined.
+
+  (* A phantom universe is introduced at some point, and causes
+     incompatibilities since it is pruned by Coq >= 8.8 (see
+     Coq/Coq#1033). *)
+  Definition splitting_retractof_isqidem@{a b}
+    := Eval unfold splitting_retractof_isqidem0 in
+        ltac:(first [exact splitting_retractof_isqidem0@{a b}|
+                     exact splitting_retractof_isqidem0@{a a b}]).
 
   (** And also for splittings of a fixed map that also induce a given witness of pre-idempotency. *)
   Definition Splitting_PreIdempotent (f : PreIdempotent X)
@@ -875,10 +883,10 @@ Section CoherentIdempotents.
 
   (** For instance, here is the standard coherent idempotent structure on the identity map. *)
   Global Instance isidem_idmap (X : Type@{i})
-  : @IsIdempotent@{i i j j} X idmap
+  : @IsIdempotent@{i i j} X idmap
     := Build_IsIdempotent idmap (splitting_idmap X).
 
-  Definition idem_idmap (X : Type@{i}) : Idempotent@{i i j j} X
+  Definition idem_idmap (X : Type@{i}) : Idempotent@{i i j} X
   := (idmap ; isidem_idmap X).
 
   (** Note that [Idempotent X], unlike [RetractOf X], lives in the same universe as [X], even if we demand that it contain the identity. *)

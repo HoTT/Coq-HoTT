@@ -531,7 +531,9 @@ split;[apply _|split|].
     destruct E;auto.
 Qed.
 
-Definition nat_full@{} := nat_full'@{Ularge Ularge N}.
+(* Coq pre 8.8 produces phantom universes, see GitHub Coq/Coq#1033. *)
+Definition nat_full@{} := ltac:(first[exact nat_full'@{Ularge Ularge}|
+                                      exact nat_full'@{Ularge Ularge N}]).
 Local Existing Instance nat_full.
 
 Instance S_embedding : OrderEmbedding S.
