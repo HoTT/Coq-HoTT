@@ -18,3 +18,7 @@ Parameters (Q : Type@{UQ}) (Qap : Apart@{UQ UQ} Q)
 (* I don't even want to know why this is necessary. *)
 Parameter Qenum : Enumerable Q.
 Notation "Q+" := (Qpos Q).
+
+Existing Instances Qap Qplus Qmult Qzero Qone Qneg Qrecip
+         Qle Qlt QtoField Qrats Qtrivialapart Qmeet
+         Qle_total Qabs Qenum.

@@ -80,6 +80,7 @@ Axiom setext : forall {A B : Type} (R : A -> B -> hProp)
 set (h o (inL R)) = set (h o (inR R)).
 
 Axiom is0trunc_V : IsTrunc 0 V.
+Existing Instance is0trunc_V.
 
 Fixpoint V_ind (P : V -> Type)
   (H_0trunc : forall v : V, IsTrunc 0 (P v))

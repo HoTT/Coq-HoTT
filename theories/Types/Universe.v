@@ -35,6 +35,7 @@ Defined.
 Monomorphic Axiom Univalence : Type0.
 Existing Class Univalence.
 Axiom isequiv_equiv_path : forall `{Univalence} (A B : Type), IsEquiv (equiv_path A B).
+Global Existing Instance isequiv_equiv_path.
 
 Section Univalence.
 Context `{Univalence}.
