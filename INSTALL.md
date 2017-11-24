@@ -83,9 +83,11 @@ minimal fuss, you should try your luck by following these instructions:
 
    The library can be loaded into a Coq session with `Require Import HoTT.`
 
-5. If you use ProofGeneral (PG), do not forget to change the name of the Coq
+5. If you use ProofGeneral (PG) for browsing existing theories, it should just
+   work. But in case you want to create theories outside the `HoTT/theories`
+   directory, do not forget to change the name of the Coq
    program called by PG. For instance you can edit the name of the executable
-   called by PG by typing `M-x customize-variable`, then `proof-prog-name` which
+   called by PG by typing `M-x customize-variable`, then `coq-prog-name` which
    displays a customization utility. Another option is to type `M-x
    customize-variable`, then `proof-prog-name-ask`, to click on the `Toogle`
    button in front of `Proof Prog Name Ask` and to save this for future sessions.
