@@ -37,14 +37,14 @@ Arguments eta_sigma / .
 
 Definition eta2_sigma `{P : forall (a : A) (b : B a), Type}
            (u : sigT (fun a => sigT (P a)))
-  : (u.1; (u.2.1; u.2.2)) = u
+  : (u.1; u.2.1; u.2.2) = u
   := 1.
 
 Arguments eta2_sigma / .
 
 Definition eta3_sigma `{P : forall (a : A) (b : B a) (c : C a b), Type}
            (u : sigT (fun a => sigT (fun b => sigT (P a b))))
-  : (u.1; (u.2.1; (u.2.2.1; u.2.2.2))) = u
+  : (u.1; u.2.1; u.2.2.1; u.2.2.2) = u
   := 1.
 
 Arguments eta3_sigma / .
@@ -383,7 +383,7 @@ Definition transport_sigma_' {A : Type} {B C : A -> Type}
            {x1 x2 : A} (p : x1 = x2)
            (yzw : { y : B x1 & { z : C x1 & D x1 y z } })
 : transport (fun x => { y : B x & { z : C x & D x y z } }) p yzw
-  = (p # yzw.1 ; (p # yzw.2.1 ; transportD2 _ _ _ p yzw.1 yzw.2.1 yzw.2.2)).
+  = (p # yzw.1 ; p # yzw.2.1 ; transportD2 _ _ _ p yzw.1 yzw.2.1 yzw.2.2).
 Proof.
   destruct p. reflexivity.
 Defined.
