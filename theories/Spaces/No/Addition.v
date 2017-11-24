@@ -8,7 +8,7 @@ Local Open Scope surreal_scope.
 (** * Addition of surreal numbers *)
 
 (** Addition requires the option sorts to be closed under finite sums. *)
-Class HasAddition (S : OptionSort) := 
+Class HasAddition (S : OptionSort) :=
   { empty_options : InSort S Empty Empty
     ; sum_options : forall L R L' R',
         InSort S L R -> InSort S L' R' -> InSort S (L + L') (R + R')
@@ -19,7 +19,7 @@ Existing Instance sum_options.
 Global Instance hasaddition_maxsort : HasAddition MaxSort
   := { empty_options := tt ;
        sum_options := fun _ _ _ _ _ _ => tt }.
-  
+
 Global Instance hasaddition_ordsort : HasAddition OrdSort
   := { empty_options := idmap ;
        sum_options := fun _ _ _ _ f g => sum_ind _ f g }.
@@ -141,7 +141,7 @@ Section Addition.
                         (fun r => (xR_plus r).1 {{ yL | yR // ycut }})
                         (fun r => (plus_inner.1 (yR r)).1)
                 : R'' -> No in
-      let Sz := sum_options L R L' R' _ _ in 
+      let Sz := sum_options L R L' R' _ _ in
       { zcut : forall (l:L'') (r:R''), zL l < zR r &
         (plus_inner.1 {{ yL | yR // ycut }}).1 = (@No_cut _ _ _ Sz zL zR zcut) }.
     Proof.
@@ -268,7 +268,7 @@ Section Addition.
     let zR := sum_ind (fun _ => No)
                       (fun r => (xR r) + y) (fun r => x + (yR r))
               : R'' -> No in
-    let Sz := sum_options L R L' R' _ _ in 
+    let Sz := sum_options L R L' R' _ _ in
     { zcut : forall (l:L'') (r:R''), zL l < zR r &
       x + y = @No_cut _ _ _ Sz zL zR zcut }
     := plus_inner_cut (Sx := Sx)
@@ -288,7 +288,9 @@ Section Addition.
     end.
 
   (** Conway proves the basic properties of arithmetic using "one-line proofs".  We can't quite do them in one line of Ltac, but the following tactic does help a lot.  Note that it is specific to addition.  It requires the caller to specify the equivalences along which to identify the indexing types for the options, as well as a rewriting tactic for evaluating those equivalences on constructors.  Unfortunately, it doesn't usually manage to finish the whole proof, since in general it can't guess how to use the inductive hypotheses.  It's usually fairly easy to finish all the cases it leaves over, but we do generally have to refer by name to the inductive hypotheses that were automatically named by [intros] here.  I haven't thought of a good solution to that. *)
-  Tactic Notation "one_line_proof" uconstr(eL) uconstr(eR) tactic(rew) :=
+  Local Opaque No_cut plus. (* required to make [rewrite] fail quickly *)
+  Local Unset Keyed Unification. (* shaves another second or two off of [rewrite] *)
+  Tactic Notation "one_line_proof" uconstr(eL) uconstr(eR) :=
     unfold No in *;
     repeat_No_ind_hprop;
     do_plus_cut;
@@ -297,91 +299,56 @@ Section Addition.
     repeat match goal with
            | [ H : (?A + ?B)%type |- _ ] => destruct H
            end;
-    rew;
+    repeat match goal with
+           | [ |- context[@equiv_fun ?A ?B ?e ?v] ]
+             => (* first check that we picked up either [eL] or [eR]; we can't use [unify] because it doesn't infer holes, and we can't Ltac-match on [eL] / [eR] because apparently matching on uconstr doesn't work when there are holes in the uconstr *)
+             first [ let unif := constr:(idpath : e = eL) in idtac
+                   | let unif := constr:(idpath : e = eR) in idtac ];
+             (* assume that the term reduces to a constructor; use [hnf] to get that constructor *)
+             let ef := constr:(@equiv_fun A B e v) in
+             let ef' := (eval hnf in ef) in
+             progress change ef with ef'
+           end;
     repeat cbn [sum_ind];
-    try reflexivity.
-
-  (** Now we need a bunch of lemmas for computing the action of sum equivalences on [inl] and [inr]. *)
-
-  Definition equiv_sum_symm_inl (A B : Type) (a : A)
-    : equiv_sum_symm A B (inl a) = inr a
-    := 1.
-  Definition equiv_sum_symm_inr (A B : Type) (b : B)
-    : equiv_sum_symm A B (inr b) = inl b
-    := 1.
-  Definition equiv_sum_assoc_inl_inl (A B C : Type) (a : A)
-    : equiv_sum_assoc A B C (inl (inl a)) = inl a
-    := 1.
-  Definition equiv_sum_assoc_inl_inr (A B C : Type) (b : B)
-    : equiv_sum_assoc A B C (inl (inr b)) = inr (inl b)
-    := 1.
-  Definition equiv_sum_assoc_inr (A B C : Type) (c : C)
-    : equiv_sum_assoc A B C (inr c) = inr (inr c)
-    := 1.
-  Definition equiv_idmap_eval (A : Type) (a : A)
-    : equiv_idmap A a = a
-    := 1.
-  Definition sum_empty_r_inl (A : Type) (a : A)
-    : sum_empty_r A (inl a) = a
-    := 1. 
-  Definition sum_empty_l_inr (A : Type) (a : A)
-    : sum_empty_l A (inr a) = a
-    := 1. 
+    (* rewrite with induction hypotheses from [repeat_No_ind_hprop] and [do_plus_cut] *)
+    repeat match goal with
+           | [ |- ?x = ?x ] => reflexivity
+           | [ |- ?a + _ = ?a + _ ] => apply ap
+           | [ |- _ + ?a = _ + ?a ] => apply (ap (fun x => x + a))
+           | [ e : Empty |- _ ] => elim e
+           | [ IH : (forall lr, _ + _ = _) |- _ ]
+             => rewrite IH; clear IH
+           | [ IH : (forall lr, _ + _ = _ + _) |- _ ]
+             => first [ rewrite IH | rewrite <- IH ]; clear IH
+           | [ IH : (forall lr (y : GenNo _), _ + _ = _ + _) |- _ ]
+             => first [ rewrite IH | rewrite <- IH ]; clear IH
+           | [ IH : (forall lr (y z : GenNo _), _ + _ = _ + _) |- _ ]
+             => first [ rewrite IH | rewrite <- IH ]; clear IH
+           end.
 
   (** At last we are ready to prove that the surreal numbers are a commutative monoid under addition. *)
 
   Theorem plus_comm (x y : No) : x + y = y + x.
   Proof.
-    one_line_proof (equiv_sum_symm _ _) (equiv_sum_symm _ _)
-                   (rewrite ?equiv_sum_symm_inl, ?equiv_sum_symm_inr).
-    - apply IHL.
-    - apply IHL0.
-    - apply IHR.
-    - apply IHR0.
+    one_line_proof (equiv_sum_symm _ _) (equiv_sum_symm _ _).
   Defined.
 
   Theorem plus_assoc (x y z : No) : (x + y) + z = x + (y + z).
   Proof.
-    one_line_proof (equiv_sum_assoc _ _ _) (equiv_sum_assoc _ _ _)
-                   (rewrite ?equiv_sum_assoc_inl_inl,
-                    ?equiv_sum_assoc_inl_inr,
-                    ?equiv_sum_assoc_inr).
-    - rewrite IHL; apply ap.
-      do_plus_cut.
-      one_line_proof 1%equiv 1%equiv (rewrite ?equiv_idmap_eval).
-    - apply IHL0.
-    - rewrite <- IHL1.
-      apply (ap (fun x => x + xL1 _)).
-      do_plus_cut.
-      one_line_proof 1%equiv 1%equiv (rewrite ?equiv_idmap_eval).
-    - rewrite IHR; apply ap.
-      do_plus_cut.
-      one_line_proof 1%equiv 1%equiv (rewrite ?equiv_idmap_eval).
-    - apply IHR0.
-    - rewrite <- IHR1.
-      apply (ap (fun x => x + xR1 _)).
-      do_plus_cut.
-      one_line_proof 1%equiv 1%equiv (rewrite ?equiv_idmap_eval).
+    one_line_proof (equiv_sum_assoc _ _ _) (equiv_sum_assoc _ _ _);
+      one_line_proof 1%equiv 1%equiv.
   Defined.
 
   Theorem plus_zero (x : No) : x + zero = x.
   Proof.
     unfold zero.
-    one_line_proof (sum_empty_r _) (sum_empty_r _) (rewrite ?sum_empty_r_inl).
-    - apply IHL.
-    - elim e.
-    - apply IHR.
-    - elim e.
+    one_line_proof (sum_empty_r _) (sum_empty_r _).
   Defined.
 
   Theorem zero_plus (x : No) : zero + x = x.
   Proof.
     unfold zero.
-    one_line_proof (sum_empty_l _) (sum_empty_l _) (rewrite ?sum_empty_l_inr).
-    - elim e.
-    - apply IHL.
-    - elim e.
-    - apply IHR.
+    one_line_proof (sum_empty_l _) (sum_empty_l _).
   Defined.
 
   (** If we also have negation, we can prove that it gives additive inverses, so that we have an abelian group. *)
