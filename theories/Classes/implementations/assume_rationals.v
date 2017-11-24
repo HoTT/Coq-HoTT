@@ -20,5 +20,5 @@ Parameter Qenum : Enumerable Q.
 Notation "Q+" := (Qpos Q).
 
 Existing Instances Qap Qplus Qmult Qzero Qone Qneg Qrecip
-         Qle Qlt QtoField Qrats Qtrivialapart Qmeet
-         Qle_total Qabs Qenum.
+         Qle Qlt QtoField Qrats Qtrivialapart Qdec
+         Qmeet Qjoin Qlattice Qle_total Qabs Qenum.
