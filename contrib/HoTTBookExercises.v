@@ -298,18 +298,17 @@ Defined.
 (* ================================================== ex:npaths *)
 (** Exercise 2.4 *)
 
-Definition npath : nat -> Type -> Type
+Definition Book_2_4_npath : nat -> Type -> Type
   := nat_ind (fun (n : nat) => Type -> Type)
              (* 0-dimensional paths are elements *)
              (fun A => A)
              (* (n+1)-dimensional paths are paths between n-dimimensional paths *)
              (fun n f A => (exists a1 a2 : (f A), a1 = a2)).
-Print npath.
 
 (* This is the intuition behind definition of nboundary:
    As we've defined them, every (n+1)-path is a path between two n-paths. *)
 Lemma npath_as_sig : forall {n : nat} {A : Type},
-                     (npath (S n) A) = (exists (p1 p2 : npath n A), p1 = p2).
+    (Book_2_4_npath (S n) A) = (exists (p1 p2 : Book_2_4_npath n A), p1 = p2).
   reflexivity.
 Defined.
 
@@ -317,14 +316,15 @@ Defined.
    Try uncommenting the following lines: *)
 (*
 Context {A : Type}.
-Eval compute in (npath 0 A). (* = A : Type *)
-Eval compute in (npath 1 A). (* = {a1 : A & {a2 : A & a1 = a2}} : Type *)
-Eval compute in (npath 2 A). (* and so on... *)
+Eval compute in (Book_2_4_npath 0 A). (* = A : Type *)
+Eval compute in (Book_2_4_npath 1 A). (* = {a1 : A & {a2 : A & a1 = a2}} : Type *)
+Eval compute in (Book_2_4_npath 2 A). (* and so on... *)
 *)
 
 (* Given an (n+1)-path, we simply project to a pair of n-paths. *)
-Definition nboundary
-  : forall {n : nat} {A : Type}, npath (S n) A -> (npath n A * npath n A)
+Definition Book_2_4_nboundary
+  : forall {n : nat} {A : Type}, Book_2_4_npath (S n) A ->
+                          (Book_2_4_npath n A * Book_2_4_npath n A)
   := fun n A p => (pr1 p, pr1 (pr2 p)).
 
 (* ================================================== ex:ap-to-apd-equiv-apd-to-ap *)
