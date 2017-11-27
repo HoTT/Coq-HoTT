@@ -422,7 +422,7 @@ Section AssumeStuff.
   Proof.
     exists (vert A + vert B).
     exists (fun ab ab' =>
-              match ab, ab' with
+              match ab, ab' return Type@{s} with
               | inl a, inl a' => edge A a a'
               | inl a, inr b => Unit
               | inr b, inl a => Empty
@@ -430,8 +430,10 @@ Section AssumeStuff.
               end).
     intros [a|b] [a'|b']; exact _.
   Defined.
-  (** These are just on the return Type@{foo} clauses of the above match and destructs. *)
-  Definition graph_add@{} := Eval unfold graph_add0 in graph_add0@{s s s}.
+
+  (* Coq pre 8.8 produces phantom universes, see GitHub Coq/Coq#1033. *)
+  Definition graph_add@{} : Graph -> Graph -> Graph
+    := Eval unfold graph_add0 in ltac:(first [exact graph_add0|exact graph_add0@{s s}]).
 
   Definition graph_add_zero_r@{} (A : Graph) : graph_add A graph_zero = A.
   Proof.

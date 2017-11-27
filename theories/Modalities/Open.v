@@ -126,7 +126,9 @@ Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
   Proof.
     pose (funext_Op O); split.
     - intros X_inO u.
-      apply (equiv_inverse (equiv_ooextendable_isequiv@{a a i i i i i i i i i i i} _ _)).
+      (* Coq pre 8.8 produces phantom universes, see GitHub Coq/Coq#1033. *)
+      first [apply (equiv_inverse (equiv_ooextendable_isequiv@{a a i i i i i i i i i} _ _))|
+             apply (equiv_inverse (equiv_ooextendable_isequiv@{a a i i i i i i i i i i i} _ _))].
       refine (cancelR_isequiv (fun x (u:Unit) => x)).
       apply X_inO.
     - intros ext; specialize (ext tt).
@@ -138,8 +140,11 @@ Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
   (* Phantom universes (ie not appearing in the term) are produced by some un-annotated functions and foralls.
      For instance if we explicitate [(B:=(Unit -> _))] in the [isequiv_compose] use above only one extra is produced.
      I can't figure out where the last extra is coming from so we have to manually identify it with [i].
-     Since we have to do this manual identification step we might as well use it for the universe from [B] too. *)
-  Definition inO_iff_isnull@{u a i} := inO_iff_isnull'@{u a i i i}.
+     Since we have to do this manual identification step we might as well use it for the universe from [B] too.
+
+   Phantom universes are pruned by Coq >=8.8 (see Coq/Coq#1033). *)
+  Definition inO_iff_isnull@{u a i}
+    := Eval unfold inO_iff_isnull' in ltac:(first [exact inO_iff_isnull'@{u a i i i}|exact inO_iff_isnull'@{u a i}]).
 
 End Accessible_OpenModalities.
 
