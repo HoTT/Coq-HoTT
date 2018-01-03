@@ -267,7 +267,7 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
         refine (cancelL_ooextendable@{a a a i i i i i i}
                   (fun _ => X) (Acc.acc_gen O i)
                   (to O (lgen_codomain (Acc.acc_gen O) i)) _ _).
-        + apply ooextendable_isnull_fibers@{a a i i a a i a a a}; intros x.
+        + apply ooextendable_isnull_fibers@{a a i i a a i a a i}; intros x.
           exact (Xnull (inr (i;x))).
         + refine (ooextendable_homotopic _
                    (O_functor O (Acc.acc_gen O i)
@@ -275,7 +275,7 @@ Module Accessible_Modalities_from_ReflectiveSubuniverses
           1:apply to_O_natural.
           apply ooextendable_compose@{a a a i i i i}.
           * apply ooextendable_equiv, O_inverts_generators.
-          * apply ooextendable_isnull_fibers@{a a i i a a i a a a}; intros x.
+          * apply ooextendable_isnull_fibers@{a a i i a a i a a i}; intros x.
             exact (Xnull (inl (i;x))).
     Defined.
 

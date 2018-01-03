@@ -95,7 +95,8 @@ apply le_equiv_lt in E. destruct E as [E|E].
   rewrite E'. apply rounded_plus. trivial.
 Qed.
 
-Definition rounded_le@{i j} := @rounded_le'@{j i Ularge j}.
+(* Coq pre 8.8 produces phantom universes, see coq/coq#6483 **)
+Definition rounded_le@{i j} := ltac:(first [exact @rounded_le'@{j i Ularge}|exact @rounded_le'@{j i Ularge j}]).
 Arguments rounded_le {A _ _} e u v _ d _.
 
 Section close_prod.
@@ -160,7 +161,8 @@ intros e u v. split.
   rewrite E1;split;apply rounded_plus,E2.
 Qed.
 
-Definition close_prod_rounded@{j} := @close_prod_rounded'@{j j j j j}.
+(* Coq pre 8.8 produces phantom universes, see coq/coq#6483 **)
+Definition close_prod_rounded@{j} := ltac:(first [exact @close_prod_rounded'@{j j j j j}|exact @close_prod_rounded'@{j j}]).
 Arguments close_prod_rounded {_ _} _ _ _.
 Global Existing Instance close_prod_rounded.
 
@@ -580,7 +582,8 @@ intros e u v xi. split;simpl.
     apply join_ub_r.
 Qed.
 
-Definition map2_lipschitz@{i} := @map2_lipschitz'@{i i i i}.
+(* Coq pre 8.8 produces phantom universes, see coq/coq#6483 **)
+Definition map2_lipschitz@{i} := ltac:(first [exact @map2_lipschitz'@{i i i}|exact @map2_lipschitz'@{i i i i}]).
 Arguments map2_lipschitz {_ _} Lf Lg {_ _} e x y xi.
 Global Existing Instance map2_lipschitz.
 
@@ -601,7 +604,8 @@ split;simpl.
   + apply meet_lb_r.
 Qed.
 
-Definition map2_continuous@{i} := @map2_continuous'@{i i i i}.
+(* Coq pre 8.8 produces phantom universes, see coq/coq#6483 **)
+Definition map2_continuous@{i} := ltac:(first [exact @map2_continuous'@{i i i}|exact @map2_continuous'@{i i i i}]).
 Arguments map2_continuous {_ _ _ _} u e.
 Global Existing Instance map2_continuous.
 
