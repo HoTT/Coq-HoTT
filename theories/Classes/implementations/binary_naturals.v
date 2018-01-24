@@ -4,7 +4,8 @@ Require Import
         HoTT.Basics.Decidable
         HoTT.Basics.Equivalences
         HoTT.Types.Sum
-        HoTT.Types.Paths.
+        HoTT.Types.Paths
+        HoTT.Tactics.
 Require Import
         HoTT.Classes.interfaces.abstract_algebra
         HoTT.Classes.interfaces.naturals
@@ -65,7 +66,6 @@ Proof.
   - exact zero.
   - exact (Succ IHn).
 Defined.
-
 
 (* Eval vm_compute in (binary ( (Double (Double (Double (Double (Double (Double (Double (Double (Double (Double (Double (Double (Double (S (S (S 0%nat)))))))))))))))))). *)
 
@@ -311,7 +311,7 @@ Proof.
     rewrite (commutativity n (m * n + n)).
     rewrite (associativity (m * n) _ _).
     now rewrite (associativity (m * n) (m * n) n).
-Defined.
+Qed.
 
 Definition binarymult (m n : nat) : binary m * binary n = binary (m * n).
 Proof.
@@ -383,7 +383,7 @@ Proof.
   1, 2, 3, 7: repeat rewrite <- unaryplus.
   4, 5, 6, 7: repeat rewrite <- unarymult.
   4: rewrite <- unaryplus.
-  all: try apply nat_semiring.
+  all: apply nat_semiring.
 Qed.
 
 Local Instance binary_preserving : SemiRingPreserving binary.
@@ -495,10 +495,8 @@ Section for_another_semiring.
       + rewrite f_suc. rewrite IHn.
         assert (L : (toR_fromnat ∘ binary^-1) (binary n.+1) + 1 = toR_fromnat ((binary^-1 (binary n.+1)).+1)%nat).
         {
-          unfold Compose.
-          rewrite (commutativity _ 1).
-          rewrite binarysucc.
-          rewrite unarysucc.
+          simpl rewrite (commutativity _ 1).
+          simpl rewrite unarysucc.
           reflexivity.
         }
         rewrite L; clear L.
