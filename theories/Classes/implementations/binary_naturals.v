@@ -59,14 +59,6 @@ Definition Double1 (n : nat) : nat := S (Double n).
 
 Definition Double2 (n : nat) : nat := S (S (Double n)).
 
-Definition unary (n : binnat) : nat.
-Proof.
-  induction n.
-  - exact O.
-  - exact (Double1 IHn).
-  - exact (Double2 IHn).
-Defined.
-
 Definition binary (n : nat) : binnat.
 Proof.
   induction n.
@@ -77,78 +69,90 @@ Defined.
 
 (* Eval vm_compute in (binary ( (Double (Double (Double (Double (Double (Double (Double (Double (Double (Double (Double (Double (Double (S (S (S 0%nat)))))))))))))))))). *)
 
-Definition succunary (n : binnat) : unary (Succ n) = S (unary n).
-Proof.
-  induction n.
-  - reflexivity.
-  - reflexivity.
-  - simpl. now rewrite IHn.
-Qed.
+Section binary_equiv.
 
-Definition unarybinary (n : nat) : unary (binary n) = n.
-Proof.
-  induction n.
-  - reflexivity.
-  - simpl. rewrite succunary. now rewrite IHn.
-Qed.
+  Let unary' (n : binnat) : nat.
+  Proof.
+    induction n.
+    - exact O.
+    - exact (Double1 IHn).
+    - exact (Double2 IHn).
+  Defined.
 
-Definition double1binary (n : nat) : binary (Double1 n) = double1 (binary n).
-Proof.
-  induction n.
-  - reflexivity.
-  - assert (H : binary (Double1 n.+1) = Succ (Succ (binary (Double n).+1))) by reflexivity;
-      rewrite H; clear H; fold (Double1 n).
-    now rewrite IHn.
-Qed.
+  Let succunary (n : binnat) : unary' (Succ n) = S (unary' n).
+  Proof.
+    induction n.
+    - reflexivity.
+    - reflexivity.
+    - simpl. now rewrite IHn.
+  Qed.
 
-Definition double2binary (n : nat) : binary (Double2 n) = double2 (binary n).
-Proof.
-  induction n.
-  - reflexivity.
-  - assert (H : binary (Double2 n.+1) = Succ (Succ (binary (Double n).+2))) by reflexivity;
-      rewrite H; clear H; fold (Double2 n).
-    now rewrite IHn.
-Qed.
+  Let unarybinary (n : nat) : unary' (binary n) = n.
+  Proof.
+    induction n.
+    - reflexivity.
+    - simpl. rewrite succunary. now rewrite IHn.
+  Qed.
 
-Definition binaryunary (n : binnat) : binary (unary n) = n.
-Proof.
-  induction n.
-  - reflexivity.
-  - simpl unary.
-    rewrite double1binary. now rewrite IHn.
-  - simpl unary.
-    rewrite double2binary. now rewrite IHn.
-Qed.
+  Definition double1binary (n : nat) : binary (Double1 n) = double1 (binary n).
+  Proof.
+    induction n.
+    - reflexivity.
+    - assert (H : binary (Double1 n.+1) = Succ (Succ (binary (Double n).+1))) by reflexivity;
+        rewrite H; clear H; fold (Double1 n).
+      now rewrite IHn.
+  Qed.
 
-Global Instance isequiv_binary : IsEquiv binary.
-Proof.
-  apply isequiv_adjointify with unary.
-  - intros n; apply binaryunary.
-  - intros n; apply unarybinary.
-Defined.
+  Definition double2binary (n : nat) : binary (Double2 n) = double2 (binary n).
+  Proof.
+    induction n.
+    - reflexivity.
+    - assert (H : binary (Double2 n.+1) = Succ (Succ (binary (Double n).+2))) by reflexivity;
+        rewrite H; clear H; fold (Double2 n).
+      now rewrite IHn.
+  Qed.
 
-Definition equiv_binary : nat <~> binnat := BuildEquiv _ _  binary isequiv_binary.
+  Let binaryunary (n : binnat) : binary (unary' n) = n.
+  Proof.
+    induction n.
+    - reflexivity.
+    - simpl unary'.
+      rewrite double1binary. now rewrite IHn.
+    - simpl unary'.
+      rewrite double2binary. now rewrite IHn.
+  Qed.
 
-Definition equiv_unary : binnat <~> nat := BuildEquiv binnat nat unary (isequiv_inverse equiv_binary).
+  Global Instance isequiv_binary : IsEquiv binary.
+  Proof.
+    apply isequiv_adjointify with unary'.
+    - exact binaryunary.
+    - exact unarybinary.
+  Defined.
+
+  Definition equiv_binary : nat <~> binnat := BuildEquiv _ _  binary isequiv_binary.
+
+End binary_equiv.
+
+
+(* Definition equiv_unary : binnat <~> nat := BuildEquiv binnat nat unary' (isequiv_inverse equiv_binary). *)
+
+Notation equiv_unary  := equiv_binary ^-1.
+Notation unary := equiv_unary.
 
 Global Instance isequiv_unary : IsEquiv unary.
 Proof.
-  apply equiv_unary.
+  apply _.
 Defined.
 
 Definition double1unary (n : binnat) : unary (double1 n) = Double1 (unary n).
 Proof.
   rewrite <- (eisretr equiv_binary n), <- double1binary, (eisretr equiv_binary n).
-  enough (binary = equiv_binary) as ->; [> | reflexivity];
-  enough (unary = equiv_binary ^-1) as ->; [> | reflexivity].
   now rewrite (eissect equiv_binary _).
 Qed.
 
 Definition double2unary (n : binnat) : unary (double2 n) = Double2 (unary n).
 Proof.
   rewrite <- (eisretr equiv_binary n), <- double2binary, (eisretr equiv_binary n).
-  enough (binary = equiv_binary) as ->; [> | reflexivity];
-  enough (unary = equiv_binary ^-1) as ->; [> | reflexivity].
   now rewrite (eissect equiv_binary _).
 Qed.
 
@@ -198,8 +202,7 @@ Proof.
   refine (equiv_ind binary _ _).
   intros n.
   rewrite <- binarysucc.
-  enough (binary = equiv_unary ^-1) as ->; [> | reflexivity].
-  rewrite (eisretr unary (n+1)), (eisretr unary n).
+  rewrite eissect, eissect.
   reflexivity.
 Qed.
 
@@ -233,9 +236,7 @@ Proof.
   rewrite <- (eissect (equiv_unary) m), <- (eissect (equiv_unary) n).
   rewrite binaryplus.
   rewrite (eissect (equiv_unary) m), (eissect (equiv_unary) n).
-  enough (binary = equiv_unary ^-1) as ->; [> | reflexivity];
-  enough (unary = equiv_unary) as ->; [> | reflexivity].
-  apply ((eisretr (equiv_unary) (equiv_unary m + equiv_unary n)) ^).
+  apply ((eissect binary (equiv_unary m + equiv_unary n)) ^).
 Qed.
 
 Definition equiv_ind3 `{IsEquiv A B f} (P : B -> B -> B -> Type)
@@ -324,9 +325,7 @@ Proof.
   rewrite <- (eissect (equiv_unary) m), <- (eissect (equiv_unary) n).
   rewrite binarymult.
   rewrite (eissect (equiv_unary) m), (eissect (equiv_unary) n).
-  enough (binary = equiv_unary ^-1) as ->; [> | reflexivity];
-  enough (unary = equiv_unary) as ->; [> | reflexivity].
-  apply ((eisretr (equiv_unary) (equiv_unary m + equiv_unary n)) ^).
+  apply ((eissect binary (equiv_unary m + equiv_unary n)) ^).
 Qed.
 
 Local Instance binnat_mult_assoc : Associative binnat_mult.
@@ -384,7 +383,7 @@ Proof.
   1, 2, 3, 7: repeat rewrite <- unaryplus.
   4, 5, 6, 7: repeat rewrite <- unarymult.
   4: rewrite <- unaryplus.
-  all: apply nat_semiring.
+  all: try apply nat_semiring.
 Qed.
 
 Local Instance binary_preserving : SemiRingPreserving binary.
@@ -395,28 +394,6 @@ Proof.
 Qed.
 
 Global Instance binnat_le : Le binnat := fun m n => unary m <= unary n.
-(* Proof. *)
-(*   intros m; induction m. *)
-(*   - (* m' = 0 *) *)
-(*     intros ?. exact True. *)
-(*   - (* m' = 2m + 1 *) *)
-(*     intros n; induction n. *)
-(*     + (* n' = 0 *) *)
-(*       exact False. *)
-(*     + (* n' = 2n + 1 *) *)
-(*       exact (IHm n). *)
-(*     + (* n' = 2n + 2 *) *)
-(*       (* 2m+1 <= 2n+2 iff 2m <= 2n+1 iff 2m < 2n+1 iff m<n *) *)
-(*       exact (IHm n). *)
-(*   - (* m' = 2m + 2 *) *)
-(*     intros n; induction n. *)
-(*     + (* n' = 0 *) *)
-(*       exact False. *)
-(*     + (* n' = 2n + 1 *) *)
-(*       (* 2m+2 <= 2n+1 iff 2m+3 <= 2n+2 iff 2m+3 < 2n+2 m+1 <= n *) *)
-(*       admit. *)
-(*     + (* n' = 2n + 2 *) *)
-(*       exact (IHm n). *)
 Global Instance binnat_lt : Lt binnat := fun m n => unary m < unary n.
 Global Instance binnat_apart : Apart binnat := fun m n => unary m ≶ unary n.
 Local Instance binnart_apart_symmetric : IsApart binnat.
@@ -541,30 +518,22 @@ Section for_another_semiring.
     refine (equiv_ind binary (fun m => toR m = toR_vianat m) _ m).
     intros n. induction n as [|n IHn].
     - reflexivity.
-    - simpl. rewrite f_suc. unfold toR_vianat, toR_fromnat. rewrite unarysucc. simpl.
-      rewrite (eisretr
-
-
-    induction m as [|m IHm].
-    - reflexivity.
-    - induction m as [|m' IHm'].
-      + compute.
-        assert (L : Amult (Aplus Aone Aone) Azero = Azero) by refine (mult_0_r _).
-        rewrite L.
-        refine (plus_0_l _).
-      + simpl in *.
-      remember (binary m) as w eqn:p.
-      destruct w; simpl.
-      + induction m; compute.
-        * admit. (* enough (Amult (Aplus Aone Aone) Azero = Azero) as ->; [> | apply _]. *)
-        *
-      + destruct m. simpl in p.
-      inversion_clear m.
-    - induction m; rewrite double1unary; unfold toRnat, nat_naturals_to_semiring; simpl.
-      unfold Double1.
-      rewrite (monmor_sgmor (Double (unary m)) 1).
-      assert (toRnat (Double1 (unary m)) = toRnat (2 * (unary m) + 1)) by reflexivity.
-  Admitted.
+    - induction n as [|n _].
+      + compute. fold plus. fold mult. rewrite mult_0_r. apply plus_0_l.
+      + rewrite f_suc. rewrite IHn.
+        assert (L : (toR_fromnat ∘ binary^-1) (binary n.+1) + 1 = toR_fromnat ((binary^-1 (binary n.+1)).+1)%nat).
+        {
+          unfold Compose.
+          rewrite (commutativity _ 1).
+          rewrite binarysucc.
+          rewrite unarysucc.
+          reflexivity.
+        }
+        rewrite L; clear L.
+        rewrite <- unarysucc.
+        rewrite <- binarysucc.
+        reflexivity.
+  Qed.
 
   Let f_preserves_0: toR 0 =  0.
   Proof. reflexivity. Qed.
@@ -605,8 +574,7 @@ Section for_another_semiring.
     rewrite f_nat; unfold toR_vianat.
     assert (L : unary (binary n) = n).
     {
-      enough (binary = equiv_unary ^-1) as ->; [> | reflexivity];
-        apply (eisretr unary n).
+      apply (eissect binary n).
     }
     rewrite L; clear L.
     refine (toR_unique (h ∘ binary) n).
@@ -614,3 +582,10 @@ Section for_another_semiring.
 End for_another_semiring.
 
 Lemma binnat_naturals : Naturals binnat.
+Proof.
+  split.
+  - apply binnat_semiring.
+  - apply binnat_full.
+  - intros. apply binnat_to_sr_morphism.
+  - intros. by apply binnat_toR_unique.
+Qed.
