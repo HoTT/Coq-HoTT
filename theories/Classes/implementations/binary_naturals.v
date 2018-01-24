@@ -87,9 +87,9 @@ Section binary_equiv.
     - simpl. now rewrite IHn.
   Qed.
 
-  Let unarybinary (n : nat) : unary' (binary n) = n.
+  Let unarybinary : Sect binary unary'.
   Proof.
-    induction n.
+    intros n; induction n.
     - reflexivity.
     - simpl. rewrite succunary. now rewrite IHn.
   Qed.
@@ -112,9 +112,9 @@ Section binary_equiv.
       now rewrite IHn.
   Qed.
 
-  Let binaryunary (n : binnat) : binary (unary' n) = n.
+  Let binaryunary : Sect unary' binary.
   Proof.
-    induction n.
+    intros n; induction n.
     - reflexivity.
     - simpl unary'.
       rewrite double1binary. now rewrite IHn.
@@ -122,7 +122,7 @@ Section binary_equiv.
       rewrite double2binary. now rewrite IHn.
   Qed.
 
-  Global Instance isequiv_binary : IsEquiv binary.
+  Global Instance isequiv_binary : IsEquiv@{N N} binary.
   Proof.
     apply isequiv_adjointify with unary'.
     - exact binaryunary.
@@ -139,21 +139,21 @@ End binary_equiv.
 Notation equiv_unary  := equiv_binary ^-1.
 Notation unary := equiv_unary.
 
-Global Instance isequiv_unary : IsEquiv unary.
+Global Instance isequiv_unary : IsEquiv@{N N} unary.
 Proof.
   apply _.
 Defined.
 
 Definition double1unary (n : binnat) : unary (double1 n) = Double1 (unary n).
 Proof.
-  rewrite <- (eisretr equiv_binary n), <- double1binary, (eisretr equiv_binary n).
-  now rewrite (eissect equiv_binary _).
+  rewrite <- (eisretr binary n), <- double1binary, (eisretr binary n).
+  now rewrite (eissect binary _).
 Qed.
 
 Definition double2unary (n : binnat) : unary (double2 n) = Double2 (unary n).
 Proof.
-  rewrite <- (eisretr equiv_binary n), <- double2binary, (eisretr equiv_binary n).
-  now rewrite (eissect equiv_binary _).
+  rewrite <- (eisretr binary n), <- double2binary, (eisretr binary n).
+  now rewrite (eissect binary _).
 Qed.
 
 Global Instance binnat_0 : Zero binnat := zero.
@@ -233,10 +233,10 @@ Qed.
 
 Definition unaryplus (m n : binnat) : unary m + unary n = unary (m + n).
 Proof.
-  rewrite <- (eissect (equiv_unary) m), <- (eissect (equiv_unary) n).
+  rewrite <- (eisretr binary m), <- (eisretr binary n).
   rewrite binaryplus.
-  rewrite (eissect (equiv_unary) m), (eissect (equiv_unary) n).
-  apply ((eissect binary (equiv_unary m + equiv_unary n)) ^).
+  rewrite (eisretr binary m), (eisretr binary n).
+  apply ((eissect binary (unary m + unary n)) ^).
 Qed.
 
 Definition equiv_ind3 `{IsEquiv A B f} (P : B -> B -> B -> Type)
@@ -322,10 +322,10 @@ Qed.
 
 Definition unarymult (m n : binnat) : unary m * unary n = unary (m * n).
 Proof.
-  rewrite <- (eissect (equiv_unary) m), <- (eissect (equiv_unary) n).
+  rewrite <- (eisretr binary m), <- (eisretr binary n).
   rewrite binarymult.
-  rewrite (eissect (equiv_unary) m), (eissect (equiv_unary) n).
-  apply ((eissect binary (equiv_unary m + equiv_unary n)) ^).
+  rewrite (eisretr binary m), (eisretr binary n).
+  apply ((eissect binary (unary m + unary n)) ^).
 Qed.
 
 Local Instance binnat_mult_assoc : Associative binnat_mult.
@@ -379,7 +379,7 @@ Global Instance binnat_semiring : SemiRing binnat.
 Proof.
   hnf. split; try split; try split; try split; hnf; intros.
   1, 5: exact (binnat_set x y).
-  all: refine (@equiv_inj _ _ unary isequiv_unary _ _ _).
+  all: apply (equiv_inj unary).
   1, 2, 3, 7: repeat rewrite <- unaryplus.
   4, 5, 6, 7: repeat rewrite <- unarymult.
   4: rewrite <- unaryplus.
@@ -420,15 +420,15 @@ Proof.
         -- split; intros E.
            ++ assert (X : unary m = unary n).
               ** now apply tight_apart.
-              ** apply (((equiv_ap equiv_unary m n) ^-1) X).
+              ** apply (((equiv_ap unary m n) ^-1) X).
            ++ rewrite E. now apply nat_full'.
       * intros E k. now apply nat_full'.
     + intros E.
       assert (H : exists w, (unary n) = (unary m) + w) by now apply nat_full'.
       destruct H as [w L].
       exists (binary w).
-      rewrite <- (eisretr equiv_unary w), unaryplus in L.
-      now apply (equiv_inj equiv_unary).
+      rewrite <- (eisretr unary w), unaryplus in L.
+      now apply (equiv_inj unary).
     + intros m. split; intros k l E; unfold lt, binnat_lt in *.
       * rewrite <- unaryplus, <- unaryplus. now apply nat_full'.
       * rewrite <- unaryplus, <- unaryplus in E.
@@ -457,40 +457,12 @@ Definition nat_to_semiring_helper : NaturalsToSemiRing nat :=
 
 Section for_another_semiring.
   Universe U.
-  Context {R:Type } `{SemiRing R}.
+  Context {R:Type@{U} } `{SemiRing R}.
 
   Notation toR := (naturals_to_semiring binnat R).
   Notation toR_fromnat := (naturals_to_semiring nat R).
   Notation toR_vianat := (toR_fromnat ∘ unary).
 
-  (* Definition f_nat_is_helper (m : nat) : toRnat m = toRnat_helper m. *)
-  (* Proof. *)
-  (* Admitted. *)
-    (* induction m. *)
-    (* - reflexivity. *)
-    (* - induction m. *)
-    (*   + unfold toRnat, toRnat_helper; simpl. *)
-    (*       by rewrite (plus_0_r 1). *)
-    (*   + assert (L : toRnat (m +2) = toRnat (m + 1) + 1). *)
-    (*     { *)
-    (*       rewrite (commutativity m 2). *)
-    (*       change (toRnat (2 + m) = 2 + toRnat m). *)
-
-    (*       unfold toRnat; simpl. *)
-    (*     } *)
-    (*     unfold toRnat, toRnat_helper in *; simpl. *)
-    (*     rewrite IHm. *)
-
-  (* Let f_nat (m : binnat) : toR m = toRnat_helper (unary m). *)
-  (* Proof. *)
-  (*   induction m as [|m IHm|m IHm]. *)
-  (*   - reflexivity. *)
-  (*   - rewrite double1unary. unfold toR. simpl. *)
-  (*     unfold toRnat, Double1. simpl. *)
-
-
-
-  (* Let f_suc (m : binnat) : toR (m+1) = (toR m)+1. *)
   Definition f_suc (m : binnat) : toR (Succ m) = (toR m)+1.
   Proof.
     induction m.
