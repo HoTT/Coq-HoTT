@@ -17,40 +17,12 @@ Require Import
 
 (* TODO move to the right file *)
 
-Definition equiv_ind2 `{IsEquiv A B f} (P : B -> B -> Type)
-  : (forall x y :A, P (f x) (f y)) -> forall u v :B, P u v.
-Proof.
-  intros g.
-  equiv_intro f x.
-  equiv_intro f y.
-  exact (g x y).
-Defined.
-
-Arguments equiv_ind2 {A B} f {_} P _ _.
-
-Ltac equiv_intro2 E x y :=
-  match goal with
-    | |- forall u v, @?Q u v =>
-      refine (equiv_ind2 E Q _); intros x y
-  end.
-
-Definition equiv_ind3 `{IsEquiv A B f} (P : B -> B -> B -> Type)
-  : (forall x y z :A, P (f x) (f y) (f z)) -> forall u v w :B, P u v w.
-Proof.
-  intros g.
-  equiv_intro f x.
-  equiv_intro f y.
-  equiv_intro f z.
-  exact (g x y z).
-Defined.
-
-Arguments equiv_ind3 {A B} f {_} P _ _.
-
-Ltac equiv_intro3 E x y z :=
-  match goal with
-    | |- forall u v w, @?Q u v w =>
-      refine (equiv_ind3 E Q _); intros x y z
-  end.
+Tactic Notation "equiv_intros" constr(E) ident(x)
+  := equiv_intro E x.
+Tactic Notation "equiv_intros" constr(E) ident(x) ident(y)
+  := equiv_intro E x; equiv_intro E y.
+Tactic Notation "equiv_intros" constr(E) ident(x) ident(y) ident(z)
+  := equiv_intro E x; equiv_intro E y; equiv_intro E z.
 
 
 Section basics.
@@ -195,7 +167,7 @@ Section semiring_laws.
 
   Definition unarysucc : forall m, unary (Succ m) = S (unary m).
   Proof.
-    equiv_intro binary n.
+    equiv_intros binary n.
     rewrite <- binarysucc.
     rewrite eissect, eissect.
     reflexivity.
@@ -224,7 +196,7 @@ Section semiring_laws.
 
   Local Instance binnat_add_assoc : Associative binnat_plus.
   Proof.
-    hnf; equiv_intro3 binary x y z.
+    hnf; equiv_intros binary x y z.
     change binnat_plus with plus.
     rewrite binaryplus, binaryplus, binaryplus, binaryplus.
     apply ap.
@@ -233,7 +205,7 @@ Section semiring_laws.
 
   Local Instance binnat_add_comm : Commutative binnat_plus.
   Proof.
-    hnf; equiv_intro2 binary x y.
+    hnf; equiv_intros binary x y.
     change binnat_plus with plus.
     rewrite binaryplus, binaryplus.
     apply ap.
@@ -276,7 +248,7 @@ Section semiring_laws.
 
   Local Instance binnat_mult_assoc : Associative binnat_mult.
   Proof.
-    hnf; equiv_intro3 binary x y z.
+    hnf; equiv_intros binary x y z.
     change binnat_mult with mult.
     rewrite binarymult, binarymult, binarymult, binarymult.
     apply ap.
@@ -285,7 +257,7 @@ Section semiring_laws.
 
   Local Instance binnat_mult_comm : Commutative binnat_mult.
   Proof.
-    hnf; equiv_intro2 binary x y.
+    hnf; equiv_intros binary x y.
     change binnat_mult with mult.
     rewrite binarymult, binarymult.
     apply ap.
@@ -294,7 +266,7 @@ Section semiring_laws.
 
   Local Instance binnat_distr_l : LeftDistribute binnat_mult binnat_plus.
   Proof.
-    hnf; equiv_intro3 binary x y z.
+    hnf; equiv_intros binary x y z.
     change binnat_plus with plus.
     change binnat_mult with mult.
     rewrite binaryplus, binarymult, binarymult, binarymult, binaryplus.
@@ -304,7 +276,7 @@ Section semiring_laws.
 
   Local Instance binnat_distr_r : RightDistribute binnat_mult binnat_plus.
   Proof.
-    hnf; equiv_intro3 binary x y z.
+    hnf; equiv_intros binary x y z.
     change binnat_plus with plus.
     change binnat_mult with mult.
     rewrite binaryplus, binarymult, binarymult, binarymult, binaryplus.
