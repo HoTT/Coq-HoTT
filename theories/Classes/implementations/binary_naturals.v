@@ -52,6 +52,7 @@ Ltac equiv_intro3 E x y z :=
       refine (equiv_ind3 E Q _); intros x y z
   end.
 
+
 Section basics.
 
   (* This definition of binary naturals is due to Martín Escardó and
@@ -110,7 +111,7 @@ Section binary_equiv.
     induction n.
     - reflexivity.
     - reflexivity.
-    - simpl. by rewrite IHn.
+    - simpl. rewrite IHn. reflexivity.
   Qed.
 
   Let unarybinary : Sect binary unary'.
@@ -350,9 +351,9 @@ Section naturals.
     - apply _.
     - intros x y. apply nat_full.
     - intros x y. apply nat_full.
-    - intros x y z w. by apply nat_full.
+    - intros x y z w. apply nat_full. assumption.
     - intros m n. split.
-      + intros E. apply (equiv_inj unary). by apply nat_full.
+      + intros E. apply (equiv_inj unary). apply nat_full. assumption.
       + intros p. apply nat_full. exact (ap unary p).
   Qed.
 
@@ -368,23 +369,23 @@ Section naturals.
           -- split; intros E.
              ++ assert (X : unary m = unary n) by by apply tight_apart.
                 apply (((equiv_ap unary m n) ^-1) X).
-             ++ rewrite E. by apply nat_full.
-        * intros E k. by apply nat_full.
+             ++ rewrite E. apply nat_full. reflexivity.
+        * intros E k. apply nat_full. exact E.
       + intros E.
         assert (H : exists w, (unary n) = (unary m) + w) by by apply nat_full.
         destruct H as [w L].
         exists (binary w).
         rewrite <- (eisretr unary w), unaryplus in L.
-        by apply (equiv_inj unary).
+        apply (equiv_inj unary). exact L.
       + intros m. split; intros k l E; unfold lt, binnat_lt in *.
-        * rewrite <- unaryplus, <- unaryplus. by apply nat_full.
+        * rewrite <- unaryplus, <- unaryplus. apply nat_full. exact E.
         * rewrite <- unaryplus, <- unaryplus in E.
-          by apply (strictly_order_reflecting (plus (unary m))).
+          apply (strictly_order_reflecting (plus (unary m))). exact E.
       + intros k l E. apply nat_full.
         unfold apart, binnat_apart in E.
-        by rewrite <- unarymult, <- unarymult in E.
-      + intros E F. unfold lt, binnat_lt. rewrite <- unarymult.
-        by apply nat_full.
+        rewrite <- (unarymult m n), <- (unarymult k l) in E. exact E.
+      + intros E F. unfold lt, binnat_lt. rewrite <- (unarymult m n).
+        apply nat_full; assumption.
     - intros m n. apply nat_full.
   Qed.
 
@@ -508,7 +509,7 @@ Section naturals.
     - exact binnat_semiring.
     - exact binnat_full.
     - intros. apply binnat_to_sr_morphism.
-    - intros. by apply binnat_toR_unique.
+    - intros. apply binnat_toR_unique. assumption.
   Qed.
 
 End naturals.
