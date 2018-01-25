@@ -15,6 +15,9 @@ Require Import
         HoTT.Classes.orders.semirings
         HoTT.Classes.theory.apartness.
 
+(* This definition of binary naturals was inspired by Martín Escardó
+and Cory Knapp *)
+
 Inductive binnat : Type :=
 | zero    :           binnat  (* zero *)
 | double1 : binnat -> binnat  (* 2n+1 *)
