@@ -19,13 +19,24 @@ Proof.
   intros f; apply path_forall; intros x; elim x.
 Defined.
 
+Lemma Empty_rec {T : Type} (falso: Empty) : T.
+Proof. case falso. Defined.
+
+Global Instance isequiv_empty_rec `{Funext} (A : Type)
+: IsEquiv (fun (_ : Unit) => @Empty_rec A) | 0
+  := isequiv_adjointify _
+  (fun _ => tt)
+  (fun f => path_forall _ _ (fun x => Empty_rec x))
+  (fun x => match x with tt => idpath end).
+
+Definition equiv_empty_rec `{Funext} (A : Type)
+  : Unit <~> (Empty -> A)
+  := (BuildEquiv _ _ (fun (_ : Unit) => @Empty_rec A) _).
+
 (** ** Behavior with respect to truncation *)
 
 Global Instance hprop_Empty : IsHProp Empty.
 Proof. intro x. destruct x. Defined.
-
-Lemma Empty_rec {T : Type} (falso: Empty) : T.
-Proof. case falso. Defined.
 
 Global Instance all_to_empty_isequiv (T : Type) (f : T -> Empty) : IsEquiv f.
 Proof.
