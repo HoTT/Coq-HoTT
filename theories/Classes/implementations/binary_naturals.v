@@ -46,7 +46,7 @@ Section basics.
     match n with
     | bzero      => bzero
     | double1 n' => double2 (double n')
-    | double2 n' => Succ (Succ (double2 (double n')))
+    | double2 n' => double2 (Succ (double n'))
     end.
 
   (* Perhaps Double, Double1 and Double2 should be defined algebraically instead... *)
@@ -117,7 +117,7 @@ Section binary_equiv.
     - rewrite double2binary. apply ap. exact IHn.
   Qed.
 
-  Global Instance isequiv_binary : IsEquiv@{N N} binary := isequiv_adjointify binary unary' binaryunary unarybinary.
+  Global Instance isequiv_binary : IsEquiv binary := isequiv_adjointify binary unary' binaryunary unarybinary.
 
   Definition equiv_binary : nat <~> binnat := BuildEquiv _ _  binary isequiv_binary.
 
@@ -133,7 +133,7 @@ Section semiring_struct.
 
   Local Fixpoint binnat_plus' (m n : binnat) : binnat :=
     match m, n with
-    | bzero       , n'        => n'
+    | bzero      , n'         => n'
     | double1 m' , bzero      => double1 m'
     (* compute m + n as 2m'+1 + 2n'+1 = 2(m'+n') + 2 *)
     | double1 m' , double1 n' => double2 (binnat_plus' m' n')
@@ -162,7 +162,7 @@ Section semiring_laws.
 
   Definition binarysucc (n : nat) : binary n.+1 = Succ (binary n).
   Proof.
-    auto.
+    reflexivity.
   Qed.
 
   Definition unarysucc : forall m, unary (Succ m) = S (unary m).
@@ -175,12 +175,12 @@ Section semiring_laws.
 
   Definition binnatplussucc : forall (m n : binnat), (Succ m) + n = Succ (m + n).
   Proof.
-    induction m; induction n; auto; simpl; rewrite <- IHm; done.
+    induction m; induction n; try reflexivity; simpl; rewrite <- IHm; done.
   Qed.
 
   Definition binaryplus (m n : nat) : binary m + binary n = binary (m + n).
   Proof.
-    induction m; induction n; auto.
+    induction m; induction n; try reflexivity.
     - simpl. rewrite binnatplussucc. apply ap. done.
     - simpl. rewrite <- IHm. rewrite binnatplussucc. done.
   Qed.
@@ -234,7 +234,7 @@ Section semiring_laws.
 
   Definition binarymult (m n : nat) : binary m * binary n = binary (m * n).
   Proof.
-    induction m; induction n; auto; rewrite binnatmultsucc, IHm, binaryplus; done.
+    induction m; induction n; try reflexivity; rewrite binnatmultsucc, IHm, binaryplus; done.
   Qed.
 
   Definition unarymult (m n : binnat) : unary m * unary n = unary (m * n).
@@ -377,7 +377,7 @@ Section naturals.
 
   Section for_another_semiring.
     Universe U.
-    Context {R:Type@{U} } `{SemiRing R}.
+    Context {R:Type} `{SemiRing R}.
 
     Notation toR := (naturals_to_semiring binnat R).
     Notation toR_fromnat := (naturals_to_semiring nat R).
@@ -553,16 +553,290 @@ Section decidable.
 
 End decidable.
 
-(* TODO:
+Section other_laws.
 
-- Instance nat_plus_cancel_l : forall z:nat, LeftCancellation@{N} plus z.
-- Instance nat_mult_cancel_l
-  : forall z : nat, PropHolds (~ z =N= 0) -> LeftCancellation@{N} (.*.) z.
-- Local Instance nat_le_total : TotalRelation@{N N} (_:Le nat).
-- Local Instance nat_lt_irrefl : Irreflexive@{N N} (_:Lt nat).
-- Instance nat_trichotomy : Trichotomy@{N N i} (lt:Lt nat).
-- Global Instance nat_cut_minus: CutMinus@{N} nat := Peano.minus.
-- Global Instance nat_cut_minus_spec : CutMinusSpec@{N N} nat nat_cut_minus.
+Instance binnat_plus_cancel_l (z:binnat) : LeftCancellation plus z.
+Proof.
+  intros x y p.
+  apply (equiv_inj unary).
+  apply (ap unary) in p.
+  rewrite <- unaryplus, <- unaryplus in p.
+  exact (left_cancellation _ _ _ _ p).
+Qed.
+
+Instance binnat_mult_cancel_l (z : binnat): PropHolds (z <> 0) -> LeftCancellation (.*.) z.
+Proof.
+  intros E. hnf in E.
+  assert (H : unary z <> unary 0).
+  {
+    intros q.
+    apply (equiv_inj unary) in q.
+    exact (E q).
+  }
+  intros x y p.
+  apply (ap unary) in p.
+  rewrite <- unarymult, <- unarymult in p.
+  exact (equiv_inj unary (nat_mult_cancel_l (unary z) H _ _ p)).
+Qed.
+
+Local Instance binnat_le_total : TotalRelation (_:Le binnat).
+Proof.
+  intros x y. apply nat_le_total.
+Qed.
+Local Instance binnat_lt_irrefl : Irreflexive (_:Lt binnat).
+Proof.
+  intros x. apply nat_lt_irrefl.
+Qed.
+
+End other_laws.
+
+Section trichotomy.
+
+  (* TODO this is an inefficient implementation. Instead, write this
+  without going via the unary naturals. *)
+  Instance binnat_trichotomy : Trichotomy (lt:Lt binnat).
+  Proof.
+    intros x y.
+    pose (T := nat_trichotomy (unary x) (unary y)).
+    destruct T as [l|[c|r]].
+    - left; assumption.
+    - right; left. apply (equiv_inj unary); assumption.
+    - right; right; assumption.
+  Defined.
+
+End trichotomy.
+
+Section minus.
+
+  Local Fixpoint Pred (m : binnat) : binnat :=
+    match m with
+    | bzero      => bzero
+    | double1 m' => double m'
+    | double2 m' => double1 m'
+    end.
+
+  Let succ_double (m : binnat) : Succ (double m) = double1 m.
+  Proof.
+    induction m.
+    - reflexivity.
+    - change (double1 (Succ (double m)) = double1 (double1 m)).
+      rewrite IHm; reflexivity.
+    - change (double1 (Succ (Succ (double m))) = double1 (double2 m)).
+      rewrite IHm; reflexivity.
+  Qed.
+
+  Let double_succ (m : binnat) : double (Succ m) = double2 m.
+  Proof.
+    induction m.
+    - reflexivity.
+    - change (double2 (Succ (double m)) = double2 (double1 m)).
+      rewrite succ_double; reflexivity.
+    - change (double2 (double (Succ m)) = double2 (double2 m)).
+      rewrite IHm; reflexivity.
+  Qed.
+
+  Let pred_succ (m : binnat) : Pred (Succ m) = m.
+  Proof.
+    induction m; try reflexivity.
+    - exact (double_succ m).
+  Qed.
+
+  Let double_pred (m : binnat) : double (Pred m) = Pred (Pred (double m)).
+  Proof.
+    induction m; try reflexivity.
+    - exact (double_succ (double m))^.
+  Qed.
+
+  Let pred_double2 (m : binnat) : Pred (double2 m) = double1 m.
+  Proof.
+    induction m; reflexivity.
+  Qed.
+
+  Let pred_double1 (m : binnat) : Pred (double1 m) = double m.
+  Proof.
+    induction m; reflexivity.
+  Qed.
+
+  (*     2*(m-1)+1 = 2*m - 1 *)
+
+  Local Fixpoint binnat_cut_minus' (m n : binnat) : binnat :=
+    match m, n with
+    | bzero      , n'         => bzero
+    | m'         , bzero      => m'
+    (* compute m - n as 2m'+1 - 2n'+1 = 2(m'-n') *)
+    | double1 m' , double1 n' => double (binnat_cut_minus' m' n')
+    (* compute m - n as 2m'+1 - 2n'+2 = 2(m'-n') - 1 = Pred (double (m' - n')) *)
+    | double1 m' , double2 n' => Pred (double (binnat_cut_minus' m' n'))
+    (* compute m - n as 2m'+2 - 2n'+1 *)
+    | double2 m' , double1 n' => Pred (double (binnat_cut_minus' (Succ m') n'))
+    (* compute m - n as 2m'+2 - 2n'+2 = 2(m'-n') = double (m' - n') *)
+    | double2 m' , double2 n' => double (binnat_cut_minus' m' n')
+    end.
+
+  Global Instance binnat_cut_minus: CutMinus binnat := binnat_cut_minus'.
+
+  Let binnat_minus_zero (m : binnat) : m ∸ bzero = m.
+  Proof.
+    induction m; reflexivity.
+  Qed.
+
+  Let binnat_zero_minus (m : binnat) : bzero ∸ m = bzero.
+  Proof.
+    induction m; reflexivity.
+  Qed.
+
+  Let pred_succ_minus (m n : binnat) : Pred (Succ m ∸ n) = m ∸ n.
+  Proof.
+    revert n; induction m; intros n; induction n; try reflexivity.
+    - change (Pred (double (bzero ∸ n)) = bzero).
+      rewrite binnat_zero_minus; reflexivity.
+    - change (Pred (Pred (double (bzero ∸ n))) = bzero ∸ double2 n).
+      rewrite binnat_zero_minus, binnat_zero_minus; reflexivity.
+    - change (Pred (Pred (double (Succ m ∸ n))) = double (m ∸ n)).
+      rewrite <- double_pred.
+      apply ap.
+      exact (IHm n).
+    - change (double (Succ m) = double2 m ∸ bzero).
+      rewrite binnat_minus_zero.
+      exact (double_succ m).
+    - change (Pred (Pred (double (Succ m ∸ n))) = double (m ∸ n)).
+      rewrite <- double_pred.
+      apply ap.
+      exact (IHm n).
+  Qed.
+
+  Let double_cases (m : binnat) : (bzero = double m) + hfiber double2 (double m).
+  Proof.
+    induction m.
+    - left; reflexivity.
+    - right; exists (double m); reflexivity.
+    - right; exists (Succ (double m)); reflexivity.
+  Defined.
+
+  (* Let double_minus (m n : binnat) : double (m ∸ n) = double m ∸ double n. *)
+  (* Proof. *)
+  (*   assert (Hm := double_cases m). *)
+  (*   assert (Hn := double_cases n). *)
+  (*   assert (Hmn := double_cases (m ∸ n)). *)
+  (*   unfold hfiber in Hm, Hn, Hmn. *)
+  (*   destruct Hm as [p|[x p]], Hn as [q|[y q]], Hmn as [r|[z r]]. *)
+  (*   all: try rewrite <- p, <- q, <- r. *)
+  (*   all: try reflexivity. *)
+  (*   1: compute. *)
 
 
- *)
+  (* Let minus_pred (m n : binnat) : Pred (m ∸ n) = m ∸ Succ n. *)
+  (* Proof. *)
+  (*   revert n; induction m; intros n; induction n; try reflexivity. *)
+  (*   - change (double1 m ∸ Succ bzero) with (double (m ∸ bzero)). *)
+  (*     rewrite binnat_minus_zero, binnat_minus_zero. rewrite pred_double1. *)
+  (*     reflexivity. *)
+  (*   - change (Pred (Pred (double (m ∸ n))) = double (m ∸ Succ n)). *)
+  (*     rewrite <- double_pred. *)
+  (*     rewrite (IHm n). *)
+  (*     reflexivity. *)
+  (*   - rewrite binnat_minus_zero. *)
+  (*     change (Pred (double2 m) = Pred (double (Succ m ∸ bzero))). *)
+  (*     rewrite binnat_minus_zero. *)
+  (*     rewrite double_succ. *)
+  (*     reflexivity. *)
+  (*   - change (Pred (Pred (double (Succ m ∸ n))) = double (m ∸ n)). *)
+  (*     rewrite <- double_pred. *)
+  (*     rewrite pred_succ_minus. *)
+  (*     reflexivity. *)
+  (*   - change (Pred (double (m ∸ n)) = Pred (double (Succ m ∸ Succ n))). *)
+  (*     (* double (succ m - succ n) = double (succ m) - double (succ n) *) *)
+  (*     (* double2 m - double2 n *) *)
+  (*     (* double (m - n) *) *)
+
+
+
+  (* False: e.g. 1 - 0 != 0 - 0 *)
+  (* Let binnat_minus_pred_succ (m n : binnat) : (Succ m) ∸ n = m ∸ (Pred n). *)
+
+
+  (* Let binnat_minus_succ_pred (m n : binnat) : m ∸ (Succ n) = Pred (m ∸ n). *)
+  (* Proof. *)
+  (*   revert n; induction m; intros n; induction n; try reflexivity. *)
+  (*   - change (double (m ∸ bzero) = double m). *)
+  (*     rewrite (binnat_minus_zero m). reflexivity. *)
+  (*   - change (double (m ∸ Succ n) = Pred (Pred (double (m ∸ n)))). *)
+  (*     rewrite IHm. *)
+  (*     exact (double_pred _). *)
+  (*   - change (Pred (double (Succ m ∸ bzero)) = double1 m). *)
+  (*     rewrite binnat_minus_zero, double_succ, pred_double2; reflexivity. *)
+  (*   - change (double (m ∸ n) = Pred (Pred (double (Succ m ∸ n)))). *)
+  (*     rewrite <- double_pred. rewrite pred_succ_minus; reflexivity. *)
+  (*   - change (Pred (double (Succ m ∸ Succ n)) = Pred (double (m ∸ n))). *)
+  (*     (* rewrite <- (pred_succ_minus m n). *) *)
+  (*     (* rewrite double_pred. *) *)
+
+  (*     rewrite <- (pred_succ (double (Succ m ∸ Succ n))). *)
+  (*     rewrite succ_double. *)
+
+
+      (* rewrite double_pred. *)
+      (* rewrite double_succ. *)
+      (* simpl. *)
+      (* rewrite (IHm *)
+
+
+
+  (* Let binnat_minus_succ (m n : nat) : Succ (binary m) ∸ Succ (binary n) = binary m ∸ binary n. *)
+  (* Proof. *)
+  (*   revert n; induction m as [|m IHm]; intros n; induction n as [|n IHn]. *)
+  (*   - reflexivity. *)
+  (*   - simpl in *. compute. admit. *)
+  (*   - compute. *)
+
+  Let binnat_minus_succ (m n : binnat) : Succ m ∸ Succ n = m ∸ n.
+  Proof.
+    revert n; induction m; intros n; induction n; try reflexivity.
+    - change (Pred (double (bzero ∸ n)) = bzero ∸ double1 n).
+      rewrite binnat_zero_minus, binnat_zero_minus. reflexivity.
+    - change (double (bzero ∸ (Succ n)) = bzero ∸ double2 n).
+      rewrite binnat_zero_minus, binnat_zero_minus. reflexivity.
+    - change (Pred (double (Succ m ∸ bzero)) = double1 m ∸ bzero).
+      rewrite binnat_minus_zero, binnat_minus_zero.
+      rewrite double_succ, pred_double2. reflexivity.
+    - change (Pred (double (Succ m ∸ Succ n)) = Pred (double (m ∸ n))).
+      rewrite IHm. reflexivity.
+    - change (double (Succ m ∸ bzero) = double2 m ∸ bzero).
+      rewrite binnat_minus_zero, binnat_minus_zero, double_succ.
+      reflexivity.
+    - change (double (Succ m ∸ Succ n) = double (m ∸ n)).
+      rewrite IHm. reflexivity.
+  Qed.
+
+  Let binaryminus (x y : nat) : binary x ∸ binary y = binary (x ∸ y).
+  Proof.
+    revert y; induction x; intros y; induction y; try reflexivity.
+    - apply binnat_zero_minus.
+    - apply binnat_minus_zero.
+    - simpl in *. rewrite binnat_minus_succ.
+      rewrite IHx. reflexivity.
+  Qed.
+
+  Let unaryminus (m n : binnat) : unary m ∸ unary n = unary (m ∸ n).
+  Proof.
+    etransitivity (unary (binary (_^-1 m ∸ _^-1 n))).
+    - apply ((eissect binary (unary m ∸ unary n)) ^).
+    - rewrite <- binaryminus.
+      rewrite (eisretr binary m), (eisretr binary n).
+      reflexivity.
+  Qed.
+
+  Global Instance binnat_cut_minus_spec : CutMinusSpec binnat binnat_cut_minus.
+  Proof.
+    split.
+    - intros m n E. apply (equiv_inj unary).
+      rewrite <- unaryplus, <- unaryminus.
+      apply nat_cut_minus_spec.
+      assumption.
+    - intros m n E. apply (equiv_inj unary).
+      rewrite <- unaryminus.
+      apply nat_cut_minus_spec.
+      assumption.
+  Qed.
+
+End minus.
