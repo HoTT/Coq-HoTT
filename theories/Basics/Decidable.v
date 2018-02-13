@@ -12,6 +12,21 @@ Class Decidable (A : Type) :=
   dec : A + (~ A).
 Arguments dec A {_}.
 
+(** The [decide_type] and [decide] tactic allow to automatically prove
+decidable claims using previously written decision procedures that
+compute. *)
+Ltac decide_type A :=
+  let K := (eval hnf in (dec A)) in
+  match K with
+  | inl ?Z => exact Z
+  | inr ?Z => exact Z
+  end.
+
+Ltac decide :=
+  match goal with
+  | [|- ?A] => decide_type A
+  end.
+
 Class DecidablePaths (A : Type) :=
   dec_paths : forall (x y : A), Decidable (x = y).
 Global Existing Instance dec_paths.

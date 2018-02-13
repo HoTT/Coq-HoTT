@@ -202,7 +202,7 @@ intros [|a] [|b];auto.
 - simpl_nat.
   intros E.
   destruct (S_neq_0 _ E).
-Qed.
+Defined.
 
 Instance nat_zero_divisors : NoZeroDivisors nat.
 Proof.
@@ -283,7 +283,7 @@ intros [|a] b.
 - intros;left;apply zero_least.
 - intros E. apply (snd (le_S_S _ _)) in E. destruct E as [|b E];auto.
   left. apply le_S_S. trivial.
-Qed.
+Defined.
 
 Lemma le_lt_dec : forall a b : nat, a <= b \/ b < a.
 Proof.
@@ -294,7 +294,7 @@ induction a as [|a IHa].
   + destruct (IHa b).
     * left. apply le_S_S;trivial.
     * right. apply le_S_S. trivial.
-Qed.
+Defined.
 
 Lemma not_lt_0 : forall a, ~ a < 0.
 Proof.
@@ -458,7 +458,7 @@ Proof.
 intros a b. destruct (le_lt_dec a b).
 - left;trivial.
 - right. apply nat_lt_not_le. trivial.
-Qed.
+Defined.
 
 Lemma S_gt_0 : forall a, 0 < S a.
 Proof.
@@ -486,7 +486,7 @@ intros a b E1 c.
 destruct (le_lt_dec c a) as [E2|E2].
 - right. apply nat_le_lt_trans with a;trivial.
 - left;trivial.
-Qed.
+Defined.
 
 Lemma nat_full' : FullPseudoSemiRingOrder nat_le nat_lt.
 Proof.
@@ -599,7 +599,7 @@ Section for_another_semiring.
     : SemiRingPreserving (naturals_to_semiring nat R).
   Proof.
   repeat (split;try apply _);trivial.
-  Qed.
+  Defined.
 
   Lemma toR_unique (h : nat -> R) `{!SemiRingPreserving h} x :
     naturals_to_semiring nat R x = h x.
