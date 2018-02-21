@@ -333,12 +333,12 @@ Definition Book_2_15_7 := @HoTT.Types.Sigma.isequiv_sigT_coind.
 
 Definition Book_3_1_1 := @HoTT.Basics.Overture.IsTrunc 0.
 
-(* ================================================== (unnamed) *)
+(* ================================================== eg:isset-unit *)
 (** Example 3.1.2 *)
 
 Definition Book_3_1_2 := @HoTT.Types.Unit.contr_unit.
 
-(* ================================================== (unnamed) *)
+(* ================================================== eg:isset-empty *)
 (** Example 3.1.3 *)
 
 Definition Book_3_1_3 := @HoTT.Types.Empty.hprop_Empty.
@@ -367,7 +367,6 @@ Definition Book_3_1_7 := @HoTT.Basics.Overture.IsTrunc 1.
 (** Lemma 3.1.8 *)
 
 Definition Book_3_1_8 := @HoTT.Basics.Trunc.trunc_succ 0.
-
 
 (* ================================================== thm:type-is-not-a-set *)
 (** Example 3.1.9 *)
@@ -409,12 +408,10 @@ Definition Book_3_3_4 := @HoTT.Basics.Trunc.trunc_succ -1.
 
 Definition Book_3_3_5_i := @HoTT.HProp.hprop_trunc.
 
-
 (* ================================================== thm:isprop-isprop *)
 (** Lemma 3.3.5 *)
 
 Definition Book_3_3_5_ii := @HoTT.HProp.hprop_trunc.
-
 
 (* ================================================== defn:decidable-equality *)
 (** Definition 3.4.3 *)
@@ -454,7 +451,7 @@ Definition Book_3_6_2 `{Funext} (A : Type) (B : A -> Type)
 
 
 
-(* ================================================== (unnamed) *)
+(* ================================================== thm:prop-equiv-trunc *)
 (** Lemma 3.9.1 *)
 
 Definition Book_3_9_1 := @HoTT.HIT.Truncations.TrM.RSU.isequiv_to_O_inO -1.
@@ -479,18 +476,15 @@ Definition Book_3_11_3 := @HoTT.Types.Unit.contr_unit.
 
 Definition Book_3_11_4 := @HoTT.HProp.hprop_trunc.
 
-
 (* ================================================== thm:contr-contr *)
 (** Corollary 3.11.5 *)
 
 Definition Book_3_11_5 := @HoTT.HProp.contr_contr.
 
-
 (* ================================================== thm:contr-forall *)
 (** Lemma 3.11.6 *)
 
 Definition Book_3_11_6 := @HoTT.Types.Forall.trunc_forall.
-
 
 (* ================================================== thm:retract-contr *)
 (** Lemma 3.11.7 *)
@@ -508,7 +502,6 @@ Definition Book_3_11_8 := @HoTT.Basics.Contractible.contr_basedpaths.
 
 Definition Book_3_11_9_part_i  := @HoTT.Types.Sigma.equiv_sigma_contr.
 Definition Book_3_11_9_part_ii := @HoTT.Types.Sigma.equiv_contr_sigma.
-
 
 (* ================================================== thm:prop-minusonetype *)
 (** Lemma 3.11.10 *)
@@ -546,7 +539,6 @@ Definition Book_4_2_2 := @HoTT.Basics.Equivalences.other_adj.
 
 Definition Book_4_2_3 := @HoTT.Basics.Equivalences.isequiv_adjointify.
 
-
 (* ================================================== defn:homotopy-fiber *)
 (** Definition 4.2.4 *)
 
@@ -556,7 +548,6 @@ Definition Book_4_2_4 := @HoTT.Basics.Overture.hfiber.
 (** Lemma 4.2.5 *)
 
 Definition Book_4_2_5 := @HoTT.Fibrations.equiv_path_hfiber.
-
 
 (* ================================================== thm:contr-hae *)
 (** Theorem 4.2.6 *)
@@ -610,7 +601,6 @@ Definition Book_4_3_1  := @HoTT.EquivalenceVarieties.BiInv.
 
 Definition Book_4_3_2  := @HoTT.EquivalenceVarieties.isprop_biinv.
 
-
 (* ================================================== thm:equiv-biinv-isequiv *)
 (** Corollary 4.3.3 *)
 
@@ -634,14 +624,14 @@ Definition Book_4_4_4 := @HoTT.HProp.hprop_trunc.
 (* ================================================== thm:equiv-contr-hae *)
 (** Theorem 4.4.5 *)
 
-Definition Book_4_3_5 := @HoTT.EquivalenceVarieties.equiv_fcontr_isequiv.
+Definition Book_4_4_5 := @HoTT.EquivalenceVarieties.equiv_fcontr_isequiv.
 
 (* ================================================== thm:equiv-inhabcod *)
 (** Corollary 4.4.6 *)
 
-Definition Book_4_3_6 := @HoTT.EquivalenceVarieties.isequiv_inhab_codomain.
+Definition Book_4_4_6 := @HoTT.EquivalenceVarieties.isequiv_inhab_codomain.
 
-(* ================================================== (unnamed) *)
+(* ================================================== defn:surj-emb *)
 (** Definition 4.6.1 *)
 
 Definition Book_4_6_1 := @HoTT.Basics.Trunc.IsTruncMap -1.
@@ -809,11 +799,10 @@ Definition Book_6_2_5 := @HoTT.HIT.Circle.S1_rec.
 
 
 
-(* ================================================== (unnamed) *)
+(* ================================================== thm:contr-interval *)
 (** Lemma 6.3.1 *)
 
 Definition Book_6_3_1 := @HoTT.HIT.Interval.contr_interval.
-
 
 (* ================================================== thm:interval-funext *)
 (** Lemma 6.3.2 *)
@@ -945,18 +934,15 @@ Definition Book_6_12_2 := @HoTT.HIT.Flattening.equiv_flattening.
 
 Definition Book_6_12_4 := @HoTT.HIT.Flattening.sWtil_ind.
 
-
 (* ================================================== thm:flattening-rectnd *)
 (** Lemma 6.12.5 *)
 
 Definition Book_6_12_5 := @HoTT.HIT.Flattening.sWtil_rec.
 
-
 (* ================================================== thm:ap-sigma-rect-path-pair *)
 (** Lemma 6.12.7 *)
 
 Definition Book_6_12_7 := @HoTT.Types.Sigma.ap_sigT_rec_path_sigma.
-
 
 (* ================================================== thm:flattening-rectnd-beta-ppt *)
 (** Lemma 6.12.8 *)
@@ -1093,7 +1079,6 @@ Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
 
 Definition Book_7_3_12 := @HoTT.HIT.Truncations.equiv_path_Tr.
 
-
 (* ================================================== lem:truncation-le *)
 (** Lemma 7.3.15 *)
 
@@ -1123,7 +1108,6 @@ Definition Book_7_3_12 := @HoTT.HIT.Truncations.equiv_path_Tr.
 (** Corollary 7.5.8 *)
 
 Definition Book_7_5_8 := @HoTT.HIT.Truncations.TrM.conn_map_to_O.
-
 
 (* ================================================== thm:nconn-to-ntype-const *)
 (** Corollary 7.5.9 *)
@@ -1292,6 +1276,11 @@ Definition Book_7_6_2 := @HoTT.Fibrations.equiv_istruncmap_ap.
 
 (* ================================================== def:pointedmap *)
 (** Definition 8.4.1 *)
+
+
+
+(* ================================================== def:loopfunctor *)
+(** Definition 8.4.2 *)
 
 
 
@@ -1865,8 +1854,12 @@ Definition Book_9_8_2 := @HoTT.Categories.Structure.IdentityPrinciple.structure_
 
 (* ================================================== thm:mono *)
 (** Lemma 10.1.1 *)
+
 (** The third notion in the book is called embedding. No complete equivalence yet, but see:*)
 Definition Book_10_1_1_iii := @HSet.isinj_embedding.
+
+(* ================================================== thm:inj-mono *)
+(** Lemma 10.1.2 *)
 
 Definition Book_10_1_2rl := @HSet.isinj_ismono.
 Definition Book_10_1_2lr := @HSet.ismono_isinj.
@@ -1897,15 +1890,15 @@ Definition Book_10_1_4_iii_i := @HIT.epi.issurj_isepi.
 
 (* ================================================== lem:sets_exact *)
 (** Lemma 10.1.8 *)
-Definition Book_10_1_8 := @HIT.quotient.sets_exact.
 
+Definition Book_10_1_8 := @HIT.quotient.sets_exact.
 
 (* ================================================== prop:kernels_are_effective *)
 (** Theorem 10.1.9 *)
+
 (* See: HIT.unique_choice.unique_choice
 theories.ObjectClassifier.PowisoPFam
 Apparently closure under Pi and Sigma are still missing ? *)
-
 
 (* ================================================== thm:settopos *)
 (** Theorem 10.1.12 *)
@@ -2121,6 +2114,11 @@ Definition Book_11_2_10 := @HoTT.Classes.theory.premetric.Approximation.
 
 
 
+(* ================================================== lem:close-reflexive *)
+(** Lemma 11.3.8 *)
+
+
+
 (* ================================================== thm:Cauchy-reals-are-a-set *)
 (** Theorem 11.3.9 *)
 
@@ -2308,19 +2306,16 @@ Definition Book_11_6_4_ii_r := @HoTT.Spaces.No.Core.lt_ropt.
 
 Definition Book_11_6_5 := @HoTT.Spaces.No.Core.isset_No.
 
-
 (* ================================================== defn:No-codes *)
 (** Theorem 11.6.7 *)
 
 Definition Book_11_6_7 := @HoTT.Spaces.No.Core.No_codes_package.
-
 
 (* ================================================== thm:NO-encode-decode *)
 (** Theorem 11.6.16 *)
 
 Definition Book_11_6_16_i := @HoTT.Spaces.No.Core.No_encode_le_lt.
 Definition Book_11_6_16_ii := @HoTT.Spaces.No.Core.No_decode_le_lt.
-
 
 (* ================================================== thm:NO-unstrict-transitive *)
 (** Corollary 11.6.17 *)
@@ -2334,3 +2329,4 @@ Definition Book_11_6_17_iv := @HoTT.Spaces.No.Core.lt_le_trans.
 (** Example 11.6.18 *)
 
 Definition Book_11_6_18 := @HoTT.Spaces.No.Addition.plus.
+
