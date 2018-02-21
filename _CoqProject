@@ -104,6 +104,7 @@ theories/Spaces/No/Core.v
 theories/Spaces/No/Negation.v
 theories/Spaces/No/Addition.v
 theories/Spaces/Universe.v
+theories/Spaces/Card.v
 theories/Algebra/ooGroup.v
 theories/Algebra/Aut.v
 theories/Algebra/ooAction.v
