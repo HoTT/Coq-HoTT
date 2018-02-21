@@ -192,7 +192,7 @@ checkproofs:
 
 validate: $(ALL_VOFILES)
 	$(VECHO) HOQCHK
-	$(Q) $(TIMER) $(HOQCHK) $(HOQCHKFLAGS) $(notdir $(^:.vo=))
+	$(Q) $(TIMER) $(HOQCHK) $(HOQCHKFLAGS) $^
 
 $(STD_VOFILES) : %.vo : %.v coq-HoTT
 	$(VECHO) COQTOP $*
