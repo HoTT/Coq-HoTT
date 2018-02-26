@@ -15,16 +15,6 @@ Require Import
         HoTT.Classes.orders.semirings
         HoTT.Classes.theory.apartness.
 
-(* TODO move to the right file *)
-
-Tactic Notation "equiv_intros" constr(E) ident(x)
-  := equiv_intro E x.
-Tactic Notation "equiv_intros" constr(E) ident(x) ident(y)
-  := equiv_intro E x; equiv_intro E y.
-Tactic Notation "equiv_intros" constr(E) ident(x) ident(y) ident(z)
-  := equiv_intro E x; equiv_intro E y; equiv_intro E z.
-
-
 Section basics.
 
   (* This definition of binary naturals is due to Martín Escardó and
