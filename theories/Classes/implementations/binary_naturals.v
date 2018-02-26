@@ -49,8 +49,6 @@ Section basics.
     | double2 n' => double2 (Succ (double n'))
     end.
 
-  (* Perhaps Double, Double1 and Double2 should be defined algebraically instead... *)
-
   Fixpoint Double (n : nat) : nat :=
     match n with
     | O    => O
@@ -117,9 +115,11 @@ Section binary_equiv.
     - rewrite double2binary. apply ap. exact IHn.
   Qed.
 
-  Global Instance isequiv_binary : IsEquiv binary := isequiv_adjointify binary unary' binaryunary unarybinary.
+  Global Instance isequiv_binary : IsEquiv binary :=
+    isequiv_adjointify binary unary' binaryunary unarybinary.
 
-  Definition equiv_binary : nat <~> binnat := BuildEquiv _ _  binary isequiv_binary.
+  Definition equiv_binary : nat <~> binnat :=
+    BuildEquiv _ _  binary isequiv_binary.
 
 End binary_equiv.
 
@@ -422,7 +422,8 @@ Section naturals.
         + change ((1 + 1) * 0 + 1 = 1).
           rewrite mult_0_r. apply plus_0_l.
         + rewrite f_suc. rewrite IHn.
-          assert (L : (toR_fromnat ∘ binary^-1) (binary n.+1) + 1 = toR_fromnat ((binary^-1 (binary n.+1)).+1)%nat).
+          assert (L : (toR_fromnat ∘ binary^-1) (binary n.+1) + 1
+                      = toR_fromnat ((binary^-1 (binary n.+1)).+1)%nat).
           {
             simpl rewrite (plus_comm _ 1).
             simpl rewrite unarysucc.
@@ -712,82 +713,6 @@ Section minus.
     - right; exists (double m); reflexivity.
     - right; exists (Succ (double m)); reflexivity.
   Defined.
-
-  (* Let double_minus (m n : binnat) : double (m ∸ n) = double m ∸ double n. *)
-  (* Proof. *)
-  (*   assert (Hm := double_cases m). *)
-  (*   assert (Hn := double_cases n). *)
-  (*   assert (Hmn := double_cases (m ∸ n)). *)
-  (*   unfold hfiber in Hm, Hn, Hmn. *)
-  (*   destruct Hm as [p|[x p]], Hn as [q|[y q]], Hmn as [r|[z r]]. *)
-  (*   all: try rewrite <- p, <- q, <- r. *)
-  (*   all: try reflexivity. *)
-  (*   1: compute. *)
-
-
-  (* Let minus_pred (m n : binnat) : Pred (m ∸ n) = m ∸ Succ n. *)
-  (* Proof. *)
-  (*   revert n; induction m; intros n; induction n; try reflexivity. *)
-  (*   - change (double1 m ∸ Succ bzero) with (double (m ∸ bzero)). *)
-  (*     rewrite binnat_minus_zero, binnat_minus_zero. rewrite pred_double1. *)
-  (*     reflexivity. *)
-  (*   - change (Pred (Pred (double (m ∸ n))) = double (m ∸ Succ n)). *)
-  (*     rewrite <- double_pred. *)
-  (*     rewrite (IHm n). *)
-  (*     reflexivity. *)
-  (*   - rewrite binnat_minus_zero. *)
-  (*     change (Pred (double2 m) = Pred (double (Succ m ∸ bzero))). *)
-  (*     rewrite binnat_minus_zero. *)
-  (*     rewrite double_succ. *)
-  (*     reflexivity. *)
-  (*   - change (Pred (Pred (double (Succ m ∸ n))) = double (m ∸ n)). *)
-  (*     rewrite <- double_pred. *)
-  (*     rewrite pred_succ_minus. *)
-  (*     reflexivity. *)
-  (*   - change (Pred (double (m ∸ n)) = Pred (double (Succ m ∸ Succ n))). *)
-  (*     (* double (succ m - succ n) = double (succ m) - double (succ n) *) *)
-  (*     (* double2 m - double2 n *) *)
-  (*     (* double (m - n) *) *)
-
-
-
-  (* False: e.g. 1 - 0 != 0 - 0 *)
-  (* Let binnat_minus_pred_succ (m n : binnat) : (Succ m) ∸ n = m ∸ (Pred n). *)
-
-
-  (* Let binnat_minus_succ_pred (m n : binnat) : m ∸ (Succ n) = Pred (m ∸ n). *)
-  (* Proof. *)
-  (*   revert n; induction m; intros n; induction n; try reflexivity. *)
-  (*   - change (double (m ∸ bzero) = double m). *)
-  (*     rewrite (binnat_minus_zero m). reflexivity. *)
-  (*   - change (double (m ∸ Succ n) = Pred (Pred (double (m ∸ n)))). *)
-  (*     rewrite IHm. *)
-  (*     exact (double_pred _). *)
-  (*   - change (Pred (double (Succ m ∸ bzero)) = double1 m). *)
-  (*     rewrite binnat_minus_zero, double_succ, pred_double2; reflexivity. *)
-  (*   - change (double (m ∸ n) = Pred (Pred (double (Succ m ∸ n)))). *)
-  (*     rewrite <- double_pred. rewrite pred_succ_minus; reflexivity. *)
-  (*   - change (Pred (double (Succ m ∸ Succ n)) = Pred (double (m ∸ n))). *)
-  (*     (* rewrite <- (pred_succ_minus m n). *) *)
-  (*     (* rewrite double_pred. *) *)
-
-  (*     rewrite <- (pred_succ (double (Succ m ∸ Succ n))). *)
-  (*     rewrite succ_double. *)
-
-
-      (* rewrite double_pred. *)
-      (* rewrite double_succ. *)
-      (* simpl. *)
-      (* rewrite (IHm *)
-
-
-
-  (* Let binnat_minus_succ (m n : nat) : Succ (binary m) ∸ Succ (binary n) = binary m ∸ binary n. *)
-  (* Proof. *)
-  (*   revert n; induction m as [|m IHm]; intros n; induction n as [|n IHn]. *)
-  (*   - reflexivity. *)
-  (*   - simpl in *. compute. admit. *)
-  (*   - compute. *)
 
   Let binnat_minus_succ (m n : binnat) : Succ m ∸ Succ n = m ∸ n.
   Proof.
