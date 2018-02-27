@@ -118,8 +118,8 @@ Qed.
 
 (** Standard associated names *)
 
-Notation plus_0_r_reverse := plus_n_O (compat "8.2").
-Notation plus_succ_r_reverse := plus_n_Sm (compat "8.2").
+Notation plus_0_r_reverse := plus_n_O (only parsing).
+Notation plus_succ_r_reverse := plus_n_Sm (only parsing).
 
 (** Multiplication *)
 
@@ -149,8 +149,8 @@ Hint Resolve mult_n_Sm: core.
 
 (** Standard associated names *)
 
-Notation mult_0_r_reverse := mult_n_O (compat "8.2").
-Notation mult_succ_r_reverse := mult_n_Sm (compat "8.2").
+Notation mult_0_r_reverse := mult_n_O (only parsing).
+Notation mult_succ_r_reverse := mult_n_Sm (only parsing).
 
 (** Truncated subtraction: [m-n] is [0] if [n>=m] *)
 
