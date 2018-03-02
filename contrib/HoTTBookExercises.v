@@ -1145,10 +1145,6 @@ Section Book_6_9.
 
   Definition AllExistsOther(X : Type) := forall x:X, { y:X | y <> x }.
 
-  Lemma isHPropAllExOth `{Funext} (X: Type) : IsHProp(Contr (AllExistsOther X)).
-  Proof. apply (hprop_trunc -2).
-  Defined.
-
   Definition centerAllExOthBool : AllExistsOther Bool := 
     fun (b:Bool) => (negb b ; not_fixed_negb b).
 
@@ -1165,7 +1161,7 @@ Section Book_6_9.
   Definition solution_6_9 `{Funext} : forall X, X -> X.
   Proof.
     intro X.
-    elim (@LEM (Contr (AllExistsOther X)) (isHPropAllExOth X)); intro.
+    elim (@LEM (Contr (AllExistsOther X)) _); intro.
     - exact (fun x:X => (center (AllExistsOther X) x).1).
     - exact (fun x:X => x).
   Defined.
@@ -1175,7 +1171,7 @@ Section Book_6_9.
     intro Bad. pose proof ((happly Bad) true) as Ugly.
     assert ((solution_6_9 Bool true) = false) as Good.
     unfold solution_6_9.
-    destruct (LEM (Contr (AllExistsOther Bool))(isHPropAllExOth Bool)) as [[f C]|C];simpl.
+    destruct (LEM (Contr (AllExistsOther Bool)) _) as [[f C]|C];simpl.
     - elim (centralAllExOthBool f). reflexivity.
     - elim (C contrAllExOthBool).
     - apply false_ne_true. rewrite (inverse Good). assumption.
