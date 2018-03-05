@@ -428,6 +428,15 @@ Ltac equiv_intro E x :=
       refine (equiv_ind E Q _); intros x
   end.
 
+(** The same, but for several variables. *)
+
+Tactic Notation "equiv_intros" constr(E) ident(x)
+  := equiv_intro E x.
+Tactic Notation "equiv_intros" constr(E) ident(x) ident(y)
+  := equiv_intro E x; equiv_intro E y.
+Tactic Notation "equiv_intros" constr(E) ident(x) ident(y) ident(z)
+  := equiv_intro E x; equiv_intro E y; equiv_intro E z.
+
 (** [equiv_composeR'], a flipped version of [equiv_compose'], is (like [concatR]) most often useful partially applied, to give the “first half” of an equivalence one is constructing and leave the rest as a subgoal. One could similarly define [equiv_composeR] as a flip of [equiv_compose], but it doesn’t seem so useful since it doesn’t leave the remaining equivalence as a subgoal. *)
 Definition equiv_composeR' {A B C} (f : A <~> B) (g : B <~> C)
   := equiv_compose' g f.
