@@ -190,7 +190,9 @@ for label in sorted(entries.keys(),
         content = content[content.index('\n')+1:]
         # Update Book_X_Y_Z
         book = "_".join(map(str,entry['number']))
-        content = re.sub('Definition Book_[0-9_]*[0-9]', 'Definition Book_{0}'.format(book), content)
+        # content = re.sub('Book_[0-9_]*[0-9]', 'Book_{0}'.format(book), content) 
+        # content = re.sub('Definition Book_[0-9_]*[0-9]', 'Definition Book_{0}'.format(book), content)
+        # previous two removed since they break Exercise 2.2 and 2.3
         # It is a common error to write things like Lemma_X_Y_Z instead of Book_X_Y_Z,
         # so we warn about those.
         suspect_names = "|".join(['Axiom',
