@@ -11,6 +11,4 @@ do
     n=$[$n+1]
     sleep 10
 done
-cabal install graphviz-2999.18.0.2 text || \
-    (cabal install graphviz-2999.18.0.2 &&
-            cabal install text) || exit $?
+cabal install graphviz-2999.19.0.0 text
