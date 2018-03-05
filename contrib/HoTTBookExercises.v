@@ -875,24 +875,31 @@ End Book_4_5.
 
 Section Book_4_6_i.
   Section OneUniverse.
+  Definition is_qinv {A B : Type} (f : A -> B) 
+    := { g : B -> A & (Sect g f * Sect f g)%type }.
   Definition qinv (A B : Type)
-    := { f : A -> B & { g : B -> A & (Sect g f * Sect f g)%type } }.
+    := { f : A -> B & is_qinv f }.
   Definition qinv_id A : qinv A A
     := (fun x => x; (fun x => x ; (fun x => 1, fun x => 1))).
   Definition qinv_path A B : (A = B) -> qinv A B
     := fun p => match p with 1 => qinv_id _ end.
   Definition QInv_Univalence_type := forall (A B : Type@{i}),
-      IsEquiv (qinv_path A B).
-  Definition equiv_qinv_path (ua: QInv_Univalence_type) (A B : Type)
+      is_qinv (qinv_path A B).
+  Definition isequiv_qinv {A B} {f : A -> B} 
+    : is_qinv f -> IsEquiv f.
+  Proof.
+    intros [g [s r]].
+    exact (isequiv_adjointify f g s r).
+  Defined.
+  Definition equiv_qinv_path (qua: QInv_Univalence_type) (A B : Type)
     : (A = B) <~> qinv A B
-    := BuildEquiv _ _ (qinv_path A B) (ua A B).
+    := BuildEquiv _ _ (qinv_path A B) (isequiv_qinv (qua A B)).
 
-  Definition qinv_equiv {A B} (f : A <~> B) : qinv A B
-    := (equiv_fun f ; (f^-1 ; (eisretr f , eissect f))).
-  Definition qinv_isequiv {A B} (f : A -> B) `{IsEquiv _ _ f} : qinv A B
+  Definition qinv_isequiv {A B} (f : A -> B) `{IsEquiv _ _ f}
+    : qinv A B
     := (f ; (f^-1 ; (eisretr f , eissect f))).
 
-  Context `{ua : QInv_Univalence_type}.
+  Context `{qua : QInv_Univalence_type}.
 
   Theorem qinv_univalence_isequiv_postcompose {A B : Type} {w : A -> B}
           `{H0 : IsEquiv A B w} C : IsEquiv (fun (g:C->A) => w o g).
@@ -908,12 +915,12 @@ Section Book_4_6_i.
     first [ change ((fun x => w'.1 ( w'.2.1 (g x))) = g)
           | change ((fun x => w'.2.1 ( w'.1 (g x))) = g) ];
     clearbody w'; clear H0 w;
-    rewrite <- (@eisretr _ _ (@qinv_path A B) (ua A B) w');
-    generalize ((@equiv_inv _ _ (qinv_path A B) (ua A B)) w');
+    rewrite <- (@eisretr _ _ (@qinv_path A B) (isequiv_qinv (qua A B)) w');
+    generalize ((@equiv_inv _ _ (qinv_path A B) (isequiv_qinv (qua A B))) w');
     intro p; clear w'; destruct p; reflexivity.
   Defined.
 
-  (* Now the rest is literally copied from UnivalenceImpliesFunext. *)
+  (** Now the rest is basically copied from UnivalenceImpliesFunext, with name changes so as to use the current assumption of qinv-univalence rather than a global assumption of ordinary univalence. *)
 
   Local Instance isequiv_src_compose A B
   : @IsEquiv (A -> {xy : B * B & fst xy = snd xy})
@@ -964,7 +971,7 @@ Section Book_4_6_i.
   End OneUniverse.
   Section TwoUniverses.
 
-  Context `{ua1 : QInv_Univalence_type, ua2 : QInv_Univalence_type}.
+  Context `{qua1 : QInv_Univalence_type, qua2 : QInv_Univalence_type}.
   (** Now we use this to prove weak funext, which as we know implies (with dependent eta) also the strong dependent funext. *)
 
   Theorem QInv_Univalence_implies_WeakFunext : WeakFunext.
@@ -973,15 +980,15 @@ Section Book_4_6_i.
     (** We are going to replace [P] with something simpler. *)
     pose (U := (fun (_ : A) => Unit)).
     assert (p : P = U).
-    - apply (@QInv_Univalence_implies_FunextNondep ua2).
+    - apply (@QInv_Univalence_implies_FunextNondep qua2).
       intro x.
-      apply (@equiv_inv _ _ _ (ua1 _ _)).
-      exact (qinv_equiv (@equiv_contr_unit (P x) _)).
+      apply (@equiv_inv _ _ _ (isequiv_qinv (qua1 _ _))).
+      exact (qinv_isequiv (@equiv_contr_unit (P x) _)).
     - rewrite p.
       unfold U; simpl.
       exists (fun _ => tt).
       intro f.
-      apply (@QInv_Univalence_implies_FunextNondep ua2).
+      apply (@QInv_Univalence_implies_FunextNondep qua2).
       intro x.
       destruct (@contr Unit _ (f x)).
       reflexivity.
@@ -989,8 +996,8 @@ Section Book_4_6_i.
   End TwoUniverses.
 
   Definition QInv_Univalence_type_implies_Funext_type
-             `{ua1 : QInv_Univalence_type, ua2 : QInv_Univalence_type} : Funext_type
-  := WeakFunext_implies_Funext (@QInv_Univalence_implies_WeakFunext ua1 ua2).
+             `{qua1 : QInv_Univalence_type, qua2 : QInv_Univalence_type} : Funext_type
+  := WeakFunext_implies_Funext (@QInv_Univalence_implies_WeakFunext qua1 qua2).
 
 End Book_4_6_i.
 
@@ -1009,10 +1016,12 @@ Section EquivFunctorFunextType.
         `{IsEquiv B A f} `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
     : IsEquiv (functor_forall f g) | 1000.
   Proof.
-    simple refine (isequiv_adjointify (functor_forall f g)
-                                      (functor_forall (f^-1)
-                                                      (fun (x:A) (y:Q (f^-1 x)) => eisretr f x # (g (f^-1 x))^-1 y
-                                      )) _ _);
+    simple refine (isequiv_adjointify
+                     (functor_forall f g)
+                     (functor_forall
+                        (f^-1)
+                        (fun (x:A) (y:Q (f^-1 x)) => eisretr f x # (g (f^-1 x))^-1 y
+                     )) _ _);
       intros h.
     - abstract (
           apply ft_path_forall; intros b; unfold functor_forall;
@@ -1045,12 +1054,12 @@ Section EquivFunctorFunextType.
 
 End EquivFunctorFunextType.
 
-(* Using the Kraus-Sattler space of loops rather than the version in the book, since it is simpler and avoids use of propositional truncation. *)
+(** Using the Kraus-Sattler space of loops rather than the version in the book, since it is simpler and avoids use of propositional truncation. *)
 Definition Book_4_6_ii
-           (ua1 ua2 ua3 : QInv_Univalence_type)
+           (qua1 qua2 qua3 : QInv_Univalence_type)
   : ~ IsHProp (forall A : { X : Type & X = X }, A = A).
 Proof.
-  pose (fa := @QInv_Univalence_type_implies_Funext_type ua2 ua3).
+  pose (fa := @QInv_Univalence_type_implies_Funext_type qua2 qua3).
   intros H.
   pose (K := forall (X:Type) (p:X=X), { q : X=X & p @ q = q @ p }).
   assert (e : K <~> forall A : { X : Type & X = X }, A = A).
@@ -1068,32 +1077,32 @@ Proof.
   { intros X p; rewrite concat_p1, concat_1p; reflexivity. }
   pose (alpha := (fun X p => (idpath X ; u X p)) : K).
   pose (beta := (fun X p => (p ; 1)) : K).
-  pose (ua1 Bool Bool).
+  pose (isequiv_qinv (qua1 Bool Bool)).
   assert (r := pr1_path (apD10 (apD10 (path_ishprop alpha beta) Bool)
-                     ((qinv_path Bool Bool)^-1 (qinv_equiv equiv_negb)))).
-  unfold alpha, beta in r; clear alpha beta; cbn in r.
+                     ((qinv_path Bool Bool)^-1 (qinv_isequiv equiv_negb)))).
+  unfold alpha, beta in r; clear alpha beta.
   apply (ap (qinv_path Bool Bool)) in r.
   rewrite eisretr in r.
   apply pr1_path in r; cbn in r.
   exact (true_ne_false (ap10 r true)).
 Defined.
 
-Definition allqinv_coherent (ua : QInv_Univalence_type)
+Definition allqinv_coherent (qua : QInv_Univalence_type)
            (A B : Type) (f : qinv A B)
   : (fun x => ap f.2.1 (fst f.2.2 x)) = (fun x => snd f.2.2 (f.2.1 x)).
 Proof.
   revert f. 
-  equiv_intro (equiv_qinv_path ua A B) p.
+  equiv_intro (equiv_qinv_path qua A B) p.
   destruct p; cbn; reflexivity.
 Defined.
 
-Definition Book_4_6_iii (ua1 ua2 ua3 : QInv_Univalence_type) : Empty.
+Definition Book_4_6_iii (qua1 qua2 qua3 : QInv_Univalence_type) : Empty.
 Proof.
-  apply (Book_4_6_ii ua1 ua2 ua3).
+  apply (Book_4_6_ii qua1 qua2 qua3).
   refine (trunc_succ).
   exists (fun A => 1); intros u.
   set (B := {X : Type & X = X}) in *.
-  exact (allqinv_coherent ua2 B B (idmap ; (idmap ; (fun A:B => 1 , u)))).
+  exact (allqinv_coherent qua2 B B (idmap ; (idmap ; (fun A:B => 1 , u)))).
 Defined.
 
 
