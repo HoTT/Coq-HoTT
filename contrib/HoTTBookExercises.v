@@ -1140,6 +1140,43 @@ Section Book_6_9.
         | [ H : false = true |- _ ] => exact (match false_ne_true H with end)
       end.
   Qed.
+
+(** Simpler solution not using univalence **)
+
+  Definition AllExistsOther(X : Type) := forall x:X, { y:X | y <> x }.
+
+  Definition centerAllExOthBool : AllExistsOther Bool := 
+    fun (b:Bool) => (negb b ; not_fixed_negb b).
+
+  Lemma centralAllExOthBool `{Funext} (f: AllExistsOther Bool) : centerAllExOthBool = f.
+  Proof. apply path_forall. intro b. pose proof (inverse (negb_ne (f b).2)) as fst.
+  unfold centerAllExOthBool.
+  apply (@path_sigma _ _ (negb b; not_fixed_negb b) (f b) fst); simpl.
+  apply equiv_hprop_allpath. apply trunc_forall.
+  Defined.
+
+  Definition contrAllExOthBool `{Funext} : Contr (AllExistsOther Bool) :=
+  (BuildContr _ centerAllExOthBool centralAllExOthBool).
+
+  Definition solution_6_9 `{Funext} : forall X, X -> X.
+  Proof.
+    intro X.
+    elim (@LEM (Contr (AllExistsOther X)) _); intro.
+    - exact (fun x:X => (center (AllExistsOther X) x).1).
+    - exact (fun x:X => x).
+  Defined.
+
+  Lemma not_id_on_Bool `{Funext} : solution_6_9 Bool <> idmap.
+  Proof.
+    intro Bad. pose proof ((happly Bad) true) as Ugly.
+    assert ((solution_6_9 Bool true) = false) as Good.
+    unfold solution_6_9.
+    destruct (LEM (Contr (AllExistsOther Bool)) _) as [[f C]|C];simpl.
+    - elim (centralAllExOthBool f). reflexivity.
+    - elim (C contrAllExOthBool).
+    - apply false_ne_true. rewrite (inverse Good). assumption.
+  Defined.
+
 End Book_6_9.
 
 (* ================================================== ex:funext-from-interval *)
