@@ -203,7 +203,6 @@ Proof.
     (functor_forall (f^-1)
       (fun (x:A) (y:Q (f^-1 x)) => eisretr f x # (g (f^-1 x))^-1 y
       )) _ _);
-  try assumption; (* https://coq.inria.fr/bugs/show_bug.cgi?id=3848 *)
   intros h.
   - abstract (
         apply path_forall; intros b; unfold functor_forall;
