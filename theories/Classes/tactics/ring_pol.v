@@ -6,6 +6,7 @@ Require Import
   HoTT.Classes.theory.rings.
 
 Import Quoting.
+Local Set Universe Minimization ToSet.
 
 Section content.
 Local Existing Instance almost_ring_semiring.
@@ -32,7 +33,7 @@ Context `{Trichotomy@{Set Set Set} V Vlt}.
      + forall w in P, w <= v
      + forall w in Q, w <  v *)
 
-Fixpoint Peqb P Q : bool :=
+Fixpoint Peqb P Q : Bool :=
   match P, Q with
   | Pconst c, Pconst d => c =? d
   | PX P1 v P2, PX Q1 w Q2 =>
@@ -59,7 +60,7 @@ Fixpoint eval (vs : Vars V) (P : Pol) : R :=
     (eval vs P) * (vs v) + (eval vs Q)
   end.
 
-Lemma andb_true@{} : forall a b : bool, andb a b = true -> a = true /\ b = true.
+Lemma andb_true : forall a b : Bool, andb a b = true -> a = true /\ b = true.
 Proof.
 intros [|] [|];simpl;auto.
 Qed.

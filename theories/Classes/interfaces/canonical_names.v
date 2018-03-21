@@ -25,9 +25,6 @@ apply Trunc_ind.
 - exact E.
 Qed.
 
-Monomorphic Universe Ubool.
-Definition bool := (HoTT.Types.Bool.Bool@{Ubool}).
-
 Notation " g ∘ f " := (Compose g f)%mc
   (at level 40, left associativity).
 Notation "(∘)" := Compose (only parsing) : mc_scope.
@@ -337,19 +334,19 @@ Notation "(?=)" := compare (only parsing) : mc_scope.
 Notation "( x ?=)" := (compare x) (only parsing) : mc_scope.
 Notation "(?= y )" := (fun x => x ?= y) (only parsing) : mc_scope.
 
-Class Eqb A := eqb : A -> A -> bool.
+Class Eqb A := eqb : A -> A -> Bool.
 Infix "=?" := eqb (at level 70, no associativity) : mc_scope.
 Notation "(=?)" := eqb (only parsing) : mc_scope.
 Notation "( x =?)" := (eqb x) (only parsing) : mc_scope.
 Notation "(=? y )" := (fun x => x =? y) (only parsing) : mc_scope.
 
-Class Ltb A := ltb : A -> A -> bool.
+Class Ltb A := ltb : A -> A -> Bool.
 Infix "<?" := ltb (at level 70, no associativity) : mc_scope.
 Notation "(<?)" := ltb (only parsing) : mc_scope.
 Notation "( x <?)" := (ltb x) (only parsing) : mc_scope.
 Notation "(<? y )" := (fun x => x <? y) (only parsing) : mc_scope.
 
-Class Leb A := leb : A -> A -> bool.
+Class Leb A := leb : A -> A -> Bool.
 Infix "<=?" := leb (at level 70, no associativity) : mc_scope.
 Notation "(<=?)" := leb (only parsing) : mc_scope.
 Notation "( x <=?)" := (leb x) (only parsing) : mc_scope.
