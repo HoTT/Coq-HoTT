@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import HoTT.Spaces.No.Core.
+Require Import HoTT.Spaces.No.Core HoTT.Spaces.No.Negation.
 
 Local Open Scope path_scope.
 Local Open Scope surreal_scope.
@@ -8,7 +8,7 @@ Local Open Scope surreal_scope.
 (** * Addition of surreal numbers *)
 
 (** Addition requires the option sorts to be closed under finite sums. *)
-Class HasAddition (S : OptionSort) := 
+Class HasAddition (S : OptionSort) :=
   { empty_options : InSort S Empty Empty
     ; sum_options : forall L R L' R',
         InSort S L R -> InSort S L' R' -> InSort S (L + L') (R + R')
@@ -19,7 +19,7 @@ Existing Instance sum_options.
 Global Instance hasaddition_maxsort : HasAddition MaxSort
   := { empty_options := tt ;
        sum_options := fun _ _ _ _ _ _ => tt }.
-  
+
 Global Instance hasaddition_ordsort : HasAddition OrdSort
   := { empty_options := idmap ;
        sum_options := fun _ _ _ _ f g => sum_ind _ f g }.
@@ -141,7 +141,7 @@ Section Addition.
                         (fun r => (xR_plus r).1 {{ yL | yR // ycut }})
                         (fun r => (plus_inner.1 (yR r)).1)
                 : R'' -> No in
-      let Sz := sum_options L R L' R' _ _ in 
+      let Sz := sum_options L R L' R' _ _ in
       { zcut : forall (l:L'') (r:R''), zL l < zR r &
         (plus_inner.1 {{ yL | yR // ycut }}).1 = (@No_cut _ _ _ Sz zL zR zcut) }.
     Proof.
@@ -268,7 +268,7 @@ Section Addition.
     let zR := sum_ind (fun _ => No)
                       (fun r => (xR r) + y) (fun r => x + (yR r))
               : R'' -> No in
-    let Sz := sum_options L R L' R' _ _ in 
+    let Sz := sum_options L R L' R' _ _ in
     { zcut : forall (l:L'') (r:R''), zL l < zR r &
       x + y = @No_cut _ _ _ Sz zL zR zcut }
     := plus_inner_cut (Sx := Sx)
@@ -276,5 +276,110 @@ Section Addition.
          (fun r => plus_outer.1 (xR r))
          (fun l r => snd plus_outer.2 (xL l) (xR r) (xcut l r))
          yL yR ycut.
+
+  (** Because the conclusion of [plus_cut] is a sigma-type whose second component is the real equality we want to rewrite along, in order to rewrite along it we have to first destruct it.  This tactic takes care of that for us. *)
+  Ltac do_plus_cut :=
+    repeat match goal with
+    | [ |- context ctx [ {{ ?xL | ?xR // ?xcut }} + {{ ?yL | ?yR // ?ycut }} ] ] =>
+      let xycut := fresh "cut" in
+      let p := fresh "p" in
+      destruct (plus_cut xL xR xcut yL yR ycut) as [xycut p];
+        rewrite p; clear p
+    end.
+
+  (** Conway proves the basic properties of arithmetic using "one-line proofs".  We can't quite do them in one line of Ltac, but the following tactic does help a lot.  Note that it is specific to addition.  It requires the caller to specify the equivalences along which to identify the indexing types for the options, as well as a rewriting tactic for evaluating those equivalences on constructors.  Unfortunately, it doesn't usually manage to finish the whole proof, since in general it can't guess how to use the inductive hypotheses.  It's usually fairly easy to finish all the cases it leaves over, but we do generally have to refer by name to the inductive hypotheses that were automatically named by [intros] here.  I haven't thought of a good solution to that. *)
+  Local Opaque No_cut plus. (* required to make [rewrite] fail quickly *)
+  Local Unset Keyed Unification. (* shaves another second or two off of [rewrite] *)
+  Tactic Notation "one_line_proof" uconstr(eL) uconstr(eR) :=
+    unfold No in *;
+    repeat_No_ind_hprop;
+    do_plus_cut;
+    refine (path_No_easy _ _ _ _ eL eR _ _ _ _);
+    intros;
+    repeat match goal with
+           | [ H : (?A + ?B)%type |- _ ] => destruct H
+           end;
+    repeat match goal with
+           | [ |- context[@equiv_fun ?A ?B ?e ?v] ]
+             => (* first check that we picked up either [eL] or [eR]; we can't use [unify] because it doesn't infer holes, and we can't Ltac-match on [eL] / [eR] because apparently matching on uconstr doesn't work when there are holes in the uconstr *)
+             first [ let unif := constr:(idpath : e = eL) in idtac
+                   | let unif := constr:(idpath : e = eR) in idtac ];
+             (* assume that the term reduces to a constructor; use [hnf] to get that constructor *)
+             let ef := constr:(@equiv_fun A B e v) in
+             let ef' := (eval hnf in ef) in
+             progress change ef with ef'
+           end;
+    repeat cbn [sum_ind];
+    (* rewrite with induction hypotheses from [repeat_No_ind_hprop] and [do_plus_cut] *)
+    repeat match goal with
+           | [ |- ?x = ?x ] => reflexivity
+           | [ |- ?a + _ = ?a + _ ] => apply ap
+           | [ |- _ + ?a = _ + ?a ] => apply (ap (fun x => x + a))
+           | [ e : Empty |- _ ] => elim e
+           | [ IH : (forall lr, _ + _ = _) |- _ ]
+             => rewrite IH; clear IH
+           | [ IH : (forall lr, _ + _ = _ + _) |- _ ]
+             => first [ rewrite IH | rewrite <- IH ]; clear IH
+           | [ IH : (forall lr (y : GenNo _), _ + _ = _ + _) |- _ ]
+             => first [ rewrite IH | rewrite <- IH ]; clear IH
+           | [ IH : (forall lr (y z : GenNo _), _ + _ = _ + _) |- _ ]
+             => first [ rewrite IH | rewrite <- IH ]; clear IH
+           end.
+
+  (** At last we are ready to prove that the surreal numbers are a commutative monoid under addition. *)
+
+  Theorem plus_comm (x y : No) : x + y = y + x.
+  Proof.
+    one_line_proof (equiv_sum_symm _ _) (equiv_sum_symm _ _).
+  Defined.
+
+  Theorem plus_assoc (x y z : No) : (x + y) + z = x + (y + z).
+  Proof.
+    one_line_proof (equiv_sum_assoc _ _ _) (equiv_sum_assoc _ _ _);
+      one_line_proof 1%equiv 1%equiv.
+  Defined.
+
+  Theorem plus_zero (x : No) : x + zero = x.
+  Proof.
+    unfold zero.
+    one_line_proof (sum_empty_r _) (sum_empty_r _).
+  Defined.
+
+  Theorem zero_plus (x : No) : zero + x = x.
+  Proof.
+    unfold zero.
+    one_line_proof (sum_empty_l _) (sum_empty_l _).
+  Defined.
+
+  (** If we also have negation, we can prove that it gives additive inverses, so that we have an abelian group. *)
+  Context `{HasNegation S}.
+
+  Definition plus_negate (x : No) : x + negate x = zero.
+  Proof.
+    unfold No in *;
+    repeat_No_ind_hprop;
+    destruct (negate_cut xL xR xcut) as [nxcut p];
+    rewrite p; clear p;
+    do_plus_cut.
+    apply path_No.
+    - apply le_lr; [ intros [l|r]; cbn [sum_ind] | intros [] ].
+      + unfold zero in IHL; rewrite <- (IHL l); clear IHL.
+        apply plus_lt_r.
+        refine (lt_ropt _ _ _ l).
+      + unfold zero in IHR; rewrite <- (IHR r); clear IHR.
+        apply plus_lt_l.
+        refine (lt_ropt _ _ _ r).
+    - apply le_lr; [ intros [] | intros [r|l] ]; cbn [sum_ind].
+      + unfold zero in IHR; rewrite <- (IHR r); clear IHR.
+        apply plus_lt_r.
+        refine (lt_lopt _ _ _ r).
+      + unfold zero in IHL; rewrite <- (IHL l); clear IHL.
+        apply plus_lt_l.
+        refine (lt_lopt _ _ _ l).
+  Defined.
+
+  Definition sub (x y : No) : No := x + (negate y).
+
+  Infix "-" := sub : surreal_scope.
 
 End Addition.

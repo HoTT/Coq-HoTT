@@ -539,18 +539,27 @@ Proof.
 Defined.
 
 
-(** ** The proofs of cut-ness don't impact equality of surreals *)
+(** ** "One-line proofs" *)
+
+(** In particular, the proofs of cut-ness don't impact equality of surreals.  However, in practice we generally need more than this: we need to be able to modify the indexing types along equivalences. *)
+
 Definition path_No_easy `{Funext}
            {L R : Type} {s : InSort S L R}
-           (xL xL' : L -> No) (xR xR' : R -> No)
-           (xLeq : forall l, xL l = xL' l)
-           (xReq : forall r, xR r = xR' r)
+           (xL : L -> No) (xR : R -> No)
+           {L' R' : Type} {s' : InSort S L' R'}
+           (xL' : L' -> No) (xR' : R' -> No)
+           (eL : L <~> L') (eR : R <~> R')
+           (xLeq : forall l, xL l = xL' (eL l))
+           (xReq : forall r, xR r = xR' (eR r))
            (xcut : forall (l:L) (r:R), (xL l) < (xR r))
-           (xcut' : forall (l:L) (r:R), (xL' l) < (xR' r))
+           (xcut' : forall (l:L') (r:R'), (xL' l) < (xR' r))
 : {{ xL | xR // xcut }} = {{ xL' | xR' // xcut' }}.
 Proof.
-  apply path_No; apply le_lr; intros;
-  [ rewrite xLeq | rewrite <- xReq | rewrite <- xLeq | rewrite xReq ];
+  apply path_No; apply le_lr;
+  [ intros l; rewrite xLeq
+  | intros r; rewrite <- (eisretr eR r), <- xReq
+  | intros l; rewrite <- (eisretr eL l), <- xLeq
+  | intros r; rewrite xReq ];
   try apply lt_lopt;
   try apply lt_ropt.
 Qed.
@@ -566,7 +575,7 @@ Definition path_No_easy' `{Funext}
        (fun l r => transport (fun xy => fst xy < snd xy)
                              (path_prod' (xLeq l) (xReq r))
                              (xcut l r)) }}
-  := path_No_easy xL xL' xR xR' xLeq xReq xcut _.
+  := path_No_easy xL xR xL' xR' 1 1 xLeq xReq xcut _.
 
 End OptionSort.
 
