@@ -1,4 +1,4 @@
-Require Import HoTT.Basics Types.Universe Types.Paths Types.Unit.
+Require Import HoTT.Basics Types.Universe Types.Paths Types.Unit FunextVarieties.
 
 Generalizable All Variables.
 

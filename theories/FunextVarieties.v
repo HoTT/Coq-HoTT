@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Varieties of function extensionality *)
 
-Require Import Overture PathGroupoids Contractible Equivalences UniverseLevel.
+Require Import HoTT.Basics HoTT.Types EquivalenceVarieties.
 Local Open Scope path_scope.
 
 (** In the Overture, we defined function extensionality to be the assertion that the map [apD10] is an equivalence.   We now prove that this follows from a couple of weaker-looking forms of function extensionality.  We do require eta conversion, which Coq 8.4+ has judgmentally.
@@ -12,6 +12,12 @@ Local Open Scope path_scope.
 
 Definition NaiveFunext :=
   forall (A : Type) (P : A -> Type) (f g : forall x, P x),
+    (forall x, f x = g x) -> (f = g).
+
+(** Naive non-dependent funext is the same, but only for non-dependent functions.  *)
+
+Definition NaiveNondepFunext :=
+  forall (A B : Type) (f g : A -> B),
     (forall x, f x = g x) -> (f = g).
 
 (** Weak funext says that a product of contractible types is contractible. *)
@@ -25,7 +31,7 @@ Definition Funext_type :=
   forall (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
 
 (** The obvious implications are
-   Funext -> NaiveFunext -> WeakFunext
+   Funext -> NaiveFunext -> WeakFunext and NaiveFunext -> NaiveNondepFunext.
    *)
 
 Definition Funext_implies_NaiveFunext : Funext_type -> NaiveFunext.
@@ -43,7 +49,14 @@ Proof.
   apply contr.
 Defined.
 
-(** The less obvious direction is that WeakFunext implies Funext (and hence all three are logically equivalent).  The point is that under weak funext, the space of "pointwise homotopies" has the same universal property as the space of paths. *)
+Definition NaiveFunext_implies_NaiveNondepFunext : NaiveFunext -> NaiveNondepFunext
+  := fun nf A B f g => nf A (fun _ => B) f g.
+
+(** The non-obvious directions are that WeakFunext implies Funext and that NaiveNondepFunext implies WeakFunext (and hence all four are logically equivalent). *)
+
+(** ** Weak funext implies Funext *)
+
+(** To show that WeakFunext implies Funext, the point is that under weak funext, the space of "pointwise homotopies" has the same universal property as the space of paths. *)
 
 Section Homotopies.
 
@@ -105,7 +118,35 @@ Defined.
 Definition NaiveFunext_implies_Funext : NaiveFunext -> Funext_type
   := WeakFunext_implies_Funext o NaiveFunext_implies_WeakFunext.
 
+(** ** Naive non-dependent funext implies weak funext  *)
+
+(** First we show that naive non-dependent funext suffices to show that postcomposition with an equivalence is an equivalence. *)
+Definition equiv_postcompose_from_NaiveNondepFunext
+           (nf : NaiveNondepFunext) {A B C : Type} (f : B <~> C)
+  : (A -> B) <~> (A -> C)
+  := BuildEquiv
+       _ _ (fun (g:A->B) => f o g)
+       (isequiv_adjointify
+          (fun (g:A->B) => f o g)
+          (fun h => f^-1 o h)
+          (fun h => nf _ _ _ _ (fun x => eisretr f (h x)))
+          (fun g => nf _ _ _ _ (fun y => eissect f (g y)))).
+
+(** Now, if each [P x] is contractible, the projection [pr1 : {x:X & P x} -> X] is an equivalence (this requires no funext).  Thus, postcomposition with it is also an equivalence, and hence the fiber of postcomposition over [idmap X] is contractible.  But this fiber is "the type of sections of [pr1]" and hence equivalent to [forall x:X, P x].  The latter equivalence requires full funext to prove, but without any funext we can show that [forall x:X, P x] is a *retract* of the type of sections, hence also contractible. *)
+Theorem NaiveNondepFunext_implies_WeakFunext
+  : NaiveNondepFunext -> WeakFunext.
+Proof.
+  intros nf X P H.
+  pose (T := (hfiber (equiv_postcompose_from_NaiveNondepFunext nf (equiv_pr1 P)) idmap)).
+  assert (X1 : Contr T).
+  { apply fcontr_isequiv; exact _. }
+  exact (@contr_retract T _ _
+           (fun fp x => transport P (ap10 fp.2 x) (fp.1 x).2)
+           (fun f => ((fun x => (x ; f x)) ; 1)) (fun f => 1)).
+Defined.
+
 (** ** Functional extensionality is downward closed *)
+
 (** If universe [U_i] is functionally extensional, then so are universes [U_j] for [j ≤ i]. *)
 Lemma Funext_downward_closed `{H : Funext_type} : Funext_type.
 Proof.
