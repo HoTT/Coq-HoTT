@@ -159,7 +159,7 @@ Definition equiv_path_prod {A B : Type} (z z' : A * B)
 
 (** Path algebra *)
 
-(** Composition.  This and the next lemma are displayed equations in section 2.6 of the book, but they have no numbers so we can't put them into [HoTTBook.v]. *)
+(** Composition.  The next three lemma are displayed equations in section 2.6 of the book, but they have no numbers so we can't put them into [HoTTBook.v]. *)
 Definition path_prod_pp {A B : Type} (z z' z'' : A * B)
            (p : fst z = fst z') (p' : fst z' = fst z'')
            (q : snd z = snd z') (q' : snd z' = snd z'')
@@ -181,6 +181,16 @@ Definition path_prod_pp_p  {A B : Type} (u v z w : A * B)
     @ whiskerL (path_prod u v p p') (path_prod_pp v z w q r q' r').
 Proof.
   destruct u, v, z, w; simpl in *; destruct p, p', q, q', r, r'.
+  reflexivity.
+Defined.
+
+(** Inversion *)
+Definition path_prod_V {A B : Type} (u v: A * B)
+           (p : fst u = fst v)
+           (q : snd u = snd v)
+  : path_prod v u p^ q^ = (path_prod u v p q)^.
+Proof.
+  destruct u, v; simpl in *; destruct p, q.
   reflexivity.
 Defined.
 
