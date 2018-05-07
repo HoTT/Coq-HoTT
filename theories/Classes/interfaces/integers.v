@@ -25,13 +25,13 @@ Section specializable.
 
   Definition int_abs `{ia : IntAbs} (x : Z) : N :=
     match int_abs_sig x with
-    | inl (n↾_) => n
-    | inr (n↾_) => n
+    | inl (n;_) => n
+    | inr (n;_) => n
     end.
 
   Definition int_to_nat `{Zero N} `{ia : IntAbs} (x : Z) : N :=
     match int_abs_sig x with
-    | inl (n↾_) => n
-    | inr (n↾_) => 0
+    | inl (n;_) => n
+    | inr (n;_) => 0
     end.
 End specializable.
