@@ -196,7 +196,7 @@ Section is_field.
     apply trivial_apart. trivial.
   Qed.
 
-  Lemma dec_recip_correct (x : F) Px : / x = // x↾Px.
+  Lemma dec_recip_correct (x : F) Px : / x = // (x;Px).
   Proof.
   apply (left_cancellation_ne_0 (.*.) x).
   - apply trivial_apart. trivial.
@@ -275,7 +275,7 @@ Section morphisms.
   Qed.
 
   Lemma dec_recip_to_recip `{Field F2} `{!SemiRingStrongPreserving (f : F -> F2)}
-    x Pfx : f (/ x) = // (f x)↾Pfx.
+    x Pfx : f (/ x) = // (f x;Pfx).
   Proof.
   assert (x <> 0).
   - intros Ex.

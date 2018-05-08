@@ -22,6 +22,6 @@ Class NatDistance N `{Plus N}
                                    { z : N | (y + z = x)%mc }.
 Definition nat_distance `{nd : NatDistance N} (x y : N) :=
   match nat_distance_sig x y with
-  | inl (n↾_) => n
-  | inr (n↾_) => n
+  | inl (n;_) => n
+  | inr (n;_) => n
   end.

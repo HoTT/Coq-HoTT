@@ -51,8 +51,6 @@ Class TrivialApart A {Aap : Apart A} :=
   { trivial_apart_prop :> is_mere_relation A apart
   ; trivial_apart : forall x y, x ≶ y <-> x <> y }.
 
-Notation "x ↾ p" := (exist _ x p) (at level 20) : mc_scope.
-
 Definition sig_apart `{Apart A} (P: A -> Type) : Apart (sig P) := fun x y => x.1 ≶ y.1.
 Hint Extern 10 (Apart (sig _)) => apply @sig_apart : typeclass_instances.
 

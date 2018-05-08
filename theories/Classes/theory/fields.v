@@ -10,19 +10,19 @@ Context `{Field F}.
 
 (* Add Ring F : (stdlib_ring_theory F). *)
 
-Lemma reciperse_alt (x : F) Px : x // x↾Px = 1.
+Lemma reciperse_alt (x : F) Px : x // (x;Px) = 1.
 Proof.
-rewrite <-(recip_inverse (x↾Px)). trivial.
+rewrite <-(recip_inverse (x;Px)). trivial.
 Qed.
 
-Lemma recip_proper_alt x y Px Py : x = y -> // x↾Px = // y↾Py.
+Lemma recip_proper_alt x y Px Py : x = y -> // (x;Px) = // (y;Py).
 Proof.
 intro E. apply ap.
 apply Sigma.path_sigma with E.
 apply path_ishprop.
 Qed.
 
-Lemma recip_irrelevant x Px1 Px2 : // x↾Px1 = // x↾Px2.
+Lemma recip_irrelevant x Px1 Px2 : // (x;Px1) = // (x;Px2).
 Proof.
 apply recip_proper_alt. reflexivity.
 Qed.
@@ -79,7 +79,7 @@ Global Instance: forall z, PropHolds (z ≶ 0) -> StrongLeftCancellation (.*.) z
 Proof.
 intros z Ez x y E. red in Ez.
 rewrite !(commutativity z).
-apply (strong_extensionality (.* // z↾(Ez : (≶0) z))).
+apply (strong_extensionality (.* // (z;(Ez : (≶0) z)))).
 rewrite <-!simple_associativity, !reciperse_alt.
 rewrite !mult_1_r;trivial.
 Qed.
@@ -105,7 +105,7 @@ Instance mult_apart_zero x y :
   PropHolds (x ≶ 0) -> PropHolds (y ≶ 0) -> PropHolds (x * y ≶ 0).
 Proof.
 intros Ex Ey.
-apply (strong_extensionality (.* // y↾(Ey : (≶0) y))).
+apply (strong_extensionality (.* // (y;(Ey : (≶0) y)))).
 rewrite <-simple_associativity, reciperse_alt, mult_1_r, mult_0_l.
 trivial.
 Qed.
@@ -177,11 +177,11 @@ split; intro E.
 Qed.
 
 Lemma recip_distr_alt (x y : F) Px Py Pxy :
-  // (x * y)↾Pxy = // x↾Px * // y↾Py.
+  // (x * y ; Pxy) = // (x;Px) * // (y;Py).
 Proof.
 apply (left_cancellation_ne_0 (.*.) (x * y)).
 - apply apart_ne;trivial.
-- transitivity ((x // x↾Px) *  (y // y↾Py)).
+- transitivity ((x // (x;Px)) *  (y // (y;Py))).
   + rewrite 3!reciperse_alt,mult_1_r. reflexivity.
   + rewrite <-simple_associativity,<-simple_associativity.
     apply ap.
@@ -227,7 +227,7 @@ Section morphisms.
   solve_propholds.
   Qed.
 
-  Lemma preserves_recip x Px Pfx : f (// x↾Px) = // (f x)↾Pfx.
+  Lemma preserves_recip x Px Pfx : f (// (x;Px)) = // (f x;Pfx).
   Proof.
   apply (left_cancellation_ne_0 (.*.) (f x)).
   - apply apart_ne;trivial.
