@@ -103,6 +103,18 @@ Proof.
   intros x; reflexivity.
 Defined.
 
+Definition path_universe_compose_uncurried `{Funext} {A B C : Type}
+           (f : A <~> B) (g : B <~> C)
+: path_universe_uncurried (equiv_compose g f)
+= path_universe_uncurried f @ path_universe_uncurried g.
+Proof.
+  revert f. equiv_intro (equiv_path A B) f.
+  revert g. equiv_intro (equiv_path B C) g.
+  refine ((ap path_universe_uncurried (equiv_path_pp f g))^ @ _).
+  refine (eta_path_universe (f @ g) @ _).
+  apply concat2; symmetry; apply eta_path_universe.
+Defined.
+
 Definition path_universe_compose `{Funext} {A B C : Type}
            (f : A <~> B) (g : B <~> C)
 : path_universe (g o f) = path_universe f @ path_universe g.

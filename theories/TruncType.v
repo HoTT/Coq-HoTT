@@ -56,6 +56,41 @@ Proof.
   exact _.
 Defined.
 
+(** [path_trunctype] is functorial *)
+Definition path_trunctype_1 {n : trunc_index} {A : TruncType n}
+: path_trunctype (equiv_idmap A) = idpath.
+Proof.
+  unfold path_trunctype; simpl.
+  rewrite (eta_path_universe_uncurried 1).
+  rewrite path_sigma_hprop_1.
+  reflexivity.
+Qed.
+
+Definition path_trunctype_V {n : trunc_index} {A B : TruncType n}
+           (f : A <~> B)
+  : path_trunctype f^-1 = (path_trunctype f)^.
+Proof.
+  unfold path_trunctype; simpl.
+  rewrite path_universe_V_uncurried.
+  rewrite (path_sigma_hprop_V (path_universe_uncurried f)).
+  refine (concat_p1 _ @ concat_1p _ @ _).
+  refine (_ @ (ap inverse (concat_1p _))^ @ (ap inverse (concat_p1 _))^).
+  refine (ap_V _ _).
+Qed.
+
+Definition path_trunctype_pp {n : trunc_index} {A B C : TruncType n}
+           (f : A <~> B) (g : B <~> C)
+  : path_trunctype (g oE f) = path_trunctype f @ path_trunctype g.
+Proof.
+  unfold path_trunctype; simpl.
+  rewrite path_universe_compose_uncurried.
+  rewrite (path_sigma_hprop_pp _ _ _ (istrunc_trunctype_type B)).
+  refine (concat_p1 _ @ concat_1p _ @ _).
+  refine (_ @ (ap _ (concat_1p _))^ @ (ap _ (concat_p1 _))^).
+  refine (_ @ (ap (fun z => z @ _) (concat_1p _))^ @ (ap (fun z => z @ _) (concat_p1 _))^).
+  refine (ap_pp _ _ _).
+Qed.
+
 Definition path_hset {A B} := @path_trunctype 0 A B.
 Definition path_hprop {A B} := @path_trunctype -1 A B.
 
