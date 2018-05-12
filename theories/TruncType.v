@@ -64,7 +64,7 @@ Proof.
   rewrite (eta_path_universe_uncurried 1).
   rewrite path_sigma_hprop_1.
   reflexivity.
-Defined.
+Qed.
 
 Definition path_trunctype_V {n : trunc_index} {A B : TruncType n}
            (f : A <~> B)
@@ -76,7 +76,7 @@ Proof.
   refine (concat_p1 _ @ concat_1p _ @ _).
   refine (_ @ (ap inverse (concat_1p _))^ @ (ap inverse (concat_p1 _))^).
   refine (ap_V _ _).
-Defined.
+Qed.
 
 Definition path_trunctype_pp {n : trunc_index} {A B C : TruncType n}
            (f : A <~> B) (g : B <~> C)
@@ -89,7 +89,7 @@ Proof.
   refine (_ @ (ap _ (concat_1p _))^ @ (ap _ (concat_p1 _))^).
   refine (_ @ (ap (fun z => z @ _) (concat_1p _))^ @ (ap (fun z => z @ _) (concat_p1 _))^).
   refine (ap_pp _ _ _).
-Defined.
+Qed.
 
 Definition path_hset {A B} := @path_trunctype 0 A B.
 Definition path_hprop {A B} := @path_trunctype -1 A B.

@@ -670,7 +670,7 @@ Proof.
   destruct p; simpl.
   rewrite (path_ishprop x y).
   refine (path_sigma_hprop_1 _ @ (ap inverse (path_sigma_hprop_1 _))^).
-Defined.
+Qed.
 
 Definition path_sigma_hprop_pp
            {A : Type}
@@ -688,7 +688,7 @@ Proof.
   rewrite (path_ishprop z x).
   refine (_ @ (ap (fun z => z @ _) (path_sigma_hprop_1 _))^).
   apply (concat_1p _)^.
-Defined.
+Qed.
 
 (** The inverse of [path_sigma_hprop] has its own name, so we give special names to the section and retraction homotopies to help [rewrite] out. *)
 Definition path_sigma_hprop_ap_pr1 {A : Type} {P : A -> Type}
