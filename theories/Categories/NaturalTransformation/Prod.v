@@ -29,6 +29,19 @@ End prod.
 
 Local Infix "*" := prod : natural_transformation_scope.
 
+Definition pair
+           {C₁ D₁ C₂ D₂ : PreCategory}
+           {F₁ F₂ : Functor C₁ C₂}
+           {G₁ G₂ : Functor D₁ D₂}
+           (af : NaturalTransformation F₁ F₂)
+           (ag : NaturalTransformation G₁ G₂)
+  : NaturalTransformation (F₁,G₁) (F₂,G₂).
+Proof.
+  simple refine (Build_NaturalTransformation _ _ _ _).
+  - exact (fun X => (af (fst X),ag (snd X))).
+  - exact (fun X Y f => path_prod' (commutes af _ _ _) (commutes ag _ _ _)).
+Defined.
+
 (** ** Natural transformations between partially applied functors *)
 Section induced.
   Variables C D E : PreCategory.

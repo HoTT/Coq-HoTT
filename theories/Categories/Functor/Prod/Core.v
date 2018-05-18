@@ -104,6 +104,10 @@ Section induced.
   Defined.
 End induced.
 
+Definition assoc_prod (C D E : PreCategory)
+  : Functor ((C * D) * E) (C * (D * E))
+  := fst o fst * (snd o fst * snd).
+
 Local Set Warnings Append "-notation-overridden".
 Module Export FunctorProdCoreNotations.
   Infix "*" := prod : functor_scope.

@@ -8,6 +8,8 @@ Require Functor.Core.
 Require Functor.Composition.Core.
 (** ** Duals *)
 Require Functor.Dual.
+(** ** Duals *)
+Require Functor.Constant.
 (** ** Identity *)
 Require Functor.Identity.
 (** ** Classification of path space *)
@@ -23,6 +25,7 @@ Require Functor.Pointwise.Core.
 
 Include Functor.Composition.Core.
 Include Functor.Core.
+Include Functor.Constant.
 Include Functor.Dual.
 Include Functor.Identity.
 Include Functor.Paths.

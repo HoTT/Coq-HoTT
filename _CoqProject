@@ -151,6 +151,7 @@ theories/Categories/Category/Sigma/Core.v
 
 theories/Categories/Functor/Composition.v
 theories/Categories/Functor/Composition/Core.v
+theories/Categories/Functor/Constant.v
 theories/Categories/Functor/Identity.v
 theories/Categories/Functor/Paths.v
 
