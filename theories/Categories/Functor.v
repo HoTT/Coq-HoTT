@@ -8,7 +8,7 @@ Require Functor.Core.
 Require Functor.Composition.Core.
 (** ** Duals *)
 Require Functor.Dual.
-(** ** Duals *)
+(** ** Constant functor *)
 Require Functor.Constant.
 (** ** Identity *)
 Require Functor.Identity.
