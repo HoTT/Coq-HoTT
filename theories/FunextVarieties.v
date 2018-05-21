@@ -8,40 +8,47 @@ Local Open Scope path_scope.
 
    This proof is originally due to Voevodsky; it has since been simplified by Peter Lumsdaine and Michael Shulman. *)
 
-(** Naive funext is the simple assertion that pointwise equal functions are equal. *)
+(** Naive funext is the simple assertion that pointwise equal functions are equal.  The domain and codomain could live in different universes; the third universe argument is essentially the max of [i] and [j] (and similarly for all subsequent axioms). *)
 
 Definition NaiveFunext :=
-  forall (A : Type) (P : A -> Type) (f g : forall x, P x),
+  forall (A : Type@{i}) (P : A -> Type@{j}) (f g : forall x, P x),
     (forall x, f x = g x) -> (f = g).
+Check NaiveFunext@{i j max}.
 
 (** Naive non-dependent funext is the same, but only for non-dependent functions.  *)
 
 Definition NaiveNondepFunext :=
   forall (A B : Type) (f g : A -> B),
     (forall x, f x = g x) -> (f = g).
+Check NaiveNondepFunext@{i j max}.
 
 (** Weak funext says that a product of contractible types is contractible. *)
 
 Definition WeakFunext :=
   forall (A : Type) (P : A -> Type),
     (forall x, Contr (P x)) -> Contr (forall x, P x).
+Check WeakFunext@{i j max}.
 
 (** We define a variant of [Funext] which does not invoke an axiom. *)
 Definition Funext_type :=
   forall (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
+Check Funext_type@{i j max}.
 
 (** The obvious implications are
    Funext -> NaiveFunext -> WeakFunext and NaiveFunext -> NaiveNondepFunext.
+   None of these do anything fiddly with the universes either.
    *)
 
-Definition Funext_implies_NaiveFunext : Funext_type -> NaiveFunext.
+Definition Funext_implies_NaiveFunext@{i j max}
+  : Funext_type@{i j max} -> NaiveFunext@{i j max}.
 Proof.
   intros fe A P f g h.
   unfold Funext_type in *.
   exact ((@apD10 A P f g)^-1 h).
 Defined.
 
-Definition NaiveFunext_implies_WeakFunext : NaiveFunext -> WeakFunext.
+Definition NaiveFunext_implies_WeakFunext@{i j max}
+  : NaiveFunext@{i j max} -> WeakFunext@{i j max}.
 Proof.
   intros nf A P Pc.
   exists (fun x => center (P x)).
@@ -49,7 +56,8 @@ Proof.
   apply contr.
 Defined.
 
-Definition NaiveFunext_implies_NaiveNondepFunext : NaiveFunext -> NaiveNondepFunext
+Definition NaiveFunext_implies_NaiveNondepFunext@{i j max}
+  : NaiveFunext@{i j max} -> NaiveNondepFunext@{i j max}
   := fun nf A B f g => nf A (fun _ => B) f g.
 
 (** The non-obvious directions are that WeakFunext implies Funext and that NaiveNondepFunext implies WeakFunext (and hence all four are logically equivalent). *)
@@ -102,8 +110,9 @@ Section Homotopies.
 
 End Homotopies.
 
-(** Now the proof is fairly easy; we can just use the same induction principle on both sides. *)
-Theorem WeakFunext_implies_Funext : WeakFunext -> Funext_type.
+(** Now the proof is fairly easy; we can just use the same induction principle on both sides.  This proof also preserves all the universes. *)
+Theorem WeakFunext_implies_Funext@{i j max}
+  : WeakFunext@{i j max} -> Funext_type@{i j max}.
 Proof.
   intros wf; hnf; intros A B f g.
   refine (isequiv_adjointify (@apD10 A B f g)
@@ -144,6 +153,12 @@ Proof.
            (fun fp x => transport P (ap10 fp.2 x) (fp.1 x).2)
            (fun f => ((fun x => (x ; f x)) ; 1)) (fun f => 1)).
 Defined.
+
+(** Therefore, naive nondependent funext also implies full funext.  Interestingly, this requires the universe of the assumption codomain to be not just that of the conclusion codomain, but the max of that universe with the domain universe (which is unchanged). *)
+Definition NaiveNondepFunext_implies_Funext@{i j max}
+  : NaiveNondepFunext@{i max max} -> Funext_type@{i j max}
+  := WeakFunext_implies_Funext o NaiveNondepFunext_implies_WeakFunext.
+
 
 (** ** Functional extensionality is downward closed *)
 

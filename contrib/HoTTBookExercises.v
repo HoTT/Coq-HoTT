@@ -874,7 +874,7 @@ End Book_4_5.
 (** Exercise 4.6 *)
 
 Section Book_4_6_i.
-  Section OneUniverse.
+
   Definition is_qinv {A B : Type} (f : A -> B) 
     := { g : B -> A & (Sect g f * Sect f g)%type }.
   Definition qinv (A B : Type)
@@ -968,36 +968,8 @@ Section Book_4_6_i.
     reflexivity.
   Defined.
 
-  End OneUniverse.
-  Section TwoUniverses.
-
-  Context `{qua1 : QInv_Univalence_type, qua2 : QInv_Univalence_type}.
-  (** Now we use this to prove weak funext, which as we know implies (with dependent eta) also the strong dependent funext. *)
-
-  Theorem QInv_Univalence_implies_WeakFunext : WeakFunext.
-  Proof.
-    intros A P allcontr.
-    (** We are going to replace [P] with something simpler. *)
-    pose (U := (fun (_ : A) => Unit)).
-    assert (p : P = U).
-    - apply (@QInv_Univalence_implies_FunextNondep qua2).
-      intro x.
-      apply (@equiv_inv _ _ _ (isequiv_qinv (qua1 _ _))).
-      exact (qinv_isequiv (@equiv_contr_unit (P x) _)).
-    - rewrite p.
-      unfold U; simpl.
-      exists (fun _ => tt).
-      intro f.
-      apply (@QInv_Univalence_implies_FunextNondep qua2).
-      intro x.
-      destruct (@contr Unit _ (f x)).
-      reflexivity.
-  Qed.
-  End TwoUniverses.
-
-  Definition QInv_Univalence_type_implies_Funext_type
-             `{qua1 : QInv_Univalence_type, qua2 : QInv_Univalence_type} : Funext_type
-  := WeakFunext_implies_Funext (@QInv_Univalence_implies_WeakFunext qua1 qua2).
+  Definition QInv_Univalence_implies_Funext_type : Funext_type
+    := NaiveNondepFunext_implies_Funext QInv_Univalence_implies_FunextNondep.
 
 End Book_4_6_i.
 
@@ -1056,10 +1028,10 @@ End EquivFunctorFunextType.
 
 (** Using the Kraus-Sattler space of loops rather than the version in the book, since it is simpler and avoids use of propositional truncation. *)
 Definition Book_4_6_ii
-           (qua1 qua2 qua3 : QInv_Univalence_type)
+           (qua1 qua2 : QInv_Univalence_type)
   : ~ IsHProp (forall A : { X : Type & X = X }, A = A).
 Proof.
-  pose (fa := @QInv_Univalence_type_implies_Funext_type qua2 qua3).
+  pose (fa := @QInv_Univalence_implies_Funext_type qua2).
   intros H.
   pose (K := forall (X:Type) (p:X=X), { q : X=X & p @ q = q @ p }).
   assert (e : K <~> forall A : { X : Type & X = X }, A = A).
@@ -1096,9 +1068,9 @@ Proof.
   destruct p; cbn; reflexivity.
 Defined.
 
-Definition Book_4_6_iii (qua1 qua2 qua3 : QInv_Univalence_type) : Empty.
+Definition Book_4_6_iii (qua1 qua2 : QInv_Univalence_type) : Empty.
 Proof.
-  apply (Book_4_6_ii qua1 qua2 qua3).
+  apply (Book_4_6_ii qua1 qua2).
   refine (trunc_succ).
   exists (fun A => 1); intros u.
   set (B := {X : Type & X = X}) in *.
