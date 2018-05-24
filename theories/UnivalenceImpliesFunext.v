@@ -1,13 +1,16 @@
-Require Import HoTT.Basics Types.Universe Types.Paths Types.Unit.
+Require Import HoTT.Basics Types.Universe Types.Paths Types.Unit FunextVarieties.
 
 Generalizable All Variables.
 
 (** * Univalence Implies Functional Extensionality *)
 
 (** Here we prove that univalence implies function extensionality. *)
-
+Set Printing Universes.
 (** We define an axiom-free variant of [Univalence] *)
-Definition Univalence_type := forall (A B : Type), IsEquiv (equiv_path A B).
+Definition Univalence_type := forall (A B : Type@{i}), IsEquiv (equiv_path A B).
+
+(** Univalence is a property of a single universe; its statement lives in a higher universe *)
+Check Univalence_type@{i iplusone} : Type@{iplusone}.
 
 Section UnivalenceImpliesFunext.
   Context `{ua : Univalence_type}.
@@ -72,10 +75,9 @@ Section UnivalenceImpliesFunext.
         reflexivity.
   Defined.
 
-  Theorem Univalence_implies_FunextNondep (A B : Type)
-  : forall f g : A -> B, f == g -> f = g.
+  Theorem Univalence_implies_FunextNondep : NaiveNondepFunext.
   Proof.
-    intros f g p.
+    intros A B f g p.
     (** Consider the following maps. *)
     pose (d := fun x : A => existT (fun xy => fst xy = snd xy) (f x, f x) (idpath (f x))).
     pose (e := fun x : A => existT (fun xy => fst xy = snd xy) (f x, g x) (p x)).
@@ -88,36 +90,23 @@ Section UnivalenceImpliesFunext.
     apply H'.
     reflexivity.
   Defined.
+
 End UnivalenceImpliesFunext.
 
-Section UnivalenceImpliesWeakFunext.
-  Context `{ua1 : Univalence_type, ua2 : Univalence_type}.
-  (** Now we use this to prove weak funext, which as we know implies (with dependent eta) also the strong dependent funext. *)
+(** Note that only the codomain universe of [NaiveNondepFunext] is required to be univalent. *)
+Check @Univalence_implies_FunextNondep@{j jplusone i max j max}
+  : Univalence_type@{j jplusone} -> NaiveNondepFunext@{i j max}.
 
-  Theorem Univalence_implies_WeakFunext : WeakFunext.
-  Proof.
-    intros A P allcontr.
-    (** We are going to replace [P] with something simpler. *)
-    pose (U := (fun (_ : A) => Unit)).
-    assert (p : P = U).
-    - apply (@Univalence_implies_FunextNondep ua2).
-      intro x.
-      apply (@equiv_inv _ _ _ (ua1 _ _)).
-      apply equiv_contr_unit.
-    - (** Now this is much easier. *)
-      rewrite p.
-      unfold U; simpl.
-      exists (fun _ => tt).
-      intro f.
-      apply (@Univalence_implies_FunextNondep ua2).
-      intro x.
-      destruct (@contr Unit _ (f x)).
-      reflexivity.
-  Qed.
-End UnivalenceImpliesWeakFunext.
+(** Now we use this to prove strong dependent funext.  Again only the codomain universe must be univalent, but the domain universe must be no larger than it is.  Thus practically speaking this means that a univalent universe satisfies funext only for functions between two types in that same universe. *)
 
-Definition Univalence_type_implies_Funext_type `{ua1 : Univalence_type, ua2 : Univalence_type} : Funext_type
-  := WeakFunext_implies_Funext (@Univalence_implies_WeakFunext ua1 ua2).
+Definition Univalence_implies_WeakFunext : Univalence_type -> WeakFunext
+  := NaiveNondepFunext_implies_WeakFunext o @Univalence_implies_FunextNondep.
+
+Definition Univalence_type_implies_Funext_type
+           `{ua : Univalence_type@{j jplusone} }
+  : Funext_type@{i j j}
+  := NaiveNondepFunext_implies_Funext
+       (@Univalence_implies_FunextNondep ua).
 
 (** As justified by the above proof, we may assume [Univalence -> Funext]. *)
 Global Instance Univalence_implies_Funext `{Univalence} : Funext.

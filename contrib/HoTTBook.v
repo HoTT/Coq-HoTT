@@ -701,7 +701,7 @@ Definition Book_4_8_4 := @HoTT.ObjectClassifier.objclasspb_is_fibrantreplacement
 (* ================================================== weakfunext *)
 (** Definition 4.9.1 *)
 
-Definition Book_4_9_1 := @HoTT.Basics.FunextVarieties.WeakFunext.
+Definition Book_4_9_1 := @HoTT.FunextVarieties.WeakFunext.
 
 (* ================================================== UA-eqv-hom-eqv *)
 (** Lemma 4.9.2 *)
@@ -721,7 +721,7 @@ Definition Book_4_9_4 := @HoTT.UnivalenceImpliesFunext.Univalence_implies_WeakFu
 (* ================================================== wfetofe *)
 (** Theorem 4.9.5 *)
 
-Definition Book_4_9_5 := @HoTT.Basics.FunextVarieties.WeakFunext_implies_Funext.
+Definition Book_4_9_5 := @HoTT.FunextVarieties.WeakFunext_implies_Funext.
 
 (* ================================================== thm:nat-uniq *)
 (** Theorem 5.1.1 *)

@@ -13,6 +13,7 @@ Require Export HProp.
 Require Export HSet.
 Require Export EquivGroupoids.
 Require Export EquivalenceVarieties.
+Require Export FunextVarieties.
 Require Export UnivalenceVarieties.
 Require Export Extensions.
 Require Export Misc.

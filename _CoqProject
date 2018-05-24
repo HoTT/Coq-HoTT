@@ -11,7 +11,6 @@ theories/Basics/Contractible.v
 theories/Basics/Equivalences.v
 theories/Basics/Trunc.v
 theories/Basics/Decidable.v
-theories/Basics/FunextVarieties.v
 theories/Basics.v
 theories/Types/Paths.v
 theories/Types/Unit.v
@@ -32,6 +31,7 @@ theories/Fibrations.v
 theories/Conjugation.v
 theories/HProp.v
 theories/EquivalenceVarieties.v
+theories/FunextVarieties.v
 theories/UnivalenceVarieties.v
 theories/Extensions.v
 theories/HSet.v

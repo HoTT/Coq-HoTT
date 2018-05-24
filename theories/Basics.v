@@ -6,4 +6,3 @@ Require Export Basics.Contractible.
 Require Export Basics.Equivalences.
 Require Export Basics.Trunc.
 Require Export Basics.Decidable.
-Require Export Basics.FunextVarieties.

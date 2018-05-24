@@ -1,41 +1,54 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Varieties of function extensionality *)
 
-Require Import Overture PathGroupoids Contractible Equivalences UniverseLevel.
+Require Import HoTT.Basics HoTT.Types EquivalenceVarieties.
 Local Open Scope path_scope.
 
 (** In the Overture, we defined function extensionality to be the assertion that the map [apD10] is an equivalence.   We now prove that this follows from a couple of weaker-looking forms of function extensionality.  We do require eta conversion, which Coq 8.4+ has judgmentally.
 
    This proof is originally due to Voevodsky; it has since been simplified by Peter Lumsdaine and Michael Shulman. *)
 
-(** Naive funext is the simple assertion that pointwise equal functions are equal. *)
+(** Naive funext is the simple assertion that pointwise equal functions are equal.  The domain and codomain could live in different universes; the third universe argument is essentially the max of [i] and [j] (and similarly for all subsequent axioms). *)
 
 Definition NaiveFunext :=
-  forall (A : Type) (P : A -> Type) (f g : forall x, P x),
+  forall (A : Type@{i}) (P : A -> Type@{j}) (f g : forall x, P x),
     (forall x, f x = g x) -> (f = g).
+Check NaiveFunext@{i j max}.
+
+(** Naive non-dependent funext is the same, but only for non-dependent functions.  *)
+
+Definition NaiveNondepFunext :=
+  forall (A B : Type) (f g : A -> B),
+    (forall x, f x = g x) -> (f = g).
+Check NaiveNondepFunext@{i j max}.
 
 (** Weak funext says that a product of contractible types is contractible. *)
 
 Definition WeakFunext :=
   forall (A : Type) (P : A -> Type),
     (forall x, Contr (P x)) -> Contr (forall x, P x).
+Check WeakFunext@{i j max}.
 
 (** We define a variant of [Funext] which does not invoke an axiom. *)
 Definition Funext_type :=
   forall (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
+Check Funext_type@{i j max}.
 
 (** The obvious implications are
-   Funext -> NaiveFunext -> WeakFunext
+   Funext -> NaiveFunext -> WeakFunext and NaiveFunext -> NaiveNondepFunext.
+   None of these do anything fiddly with the universes either.
    *)
 
-Definition Funext_implies_NaiveFunext : Funext_type -> NaiveFunext.
+Definition Funext_implies_NaiveFunext@{i j max}
+  : Funext_type@{i j max} -> NaiveFunext@{i j max}.
 Proof.
   intros fe A P f g h.
   unfold Funext_type in *.
   exact ((@apD10 A P f g)^-1 h).
 Defined.
 
-Definition NaiveFunext_implies_WeakFunext : NaiveFunext -> WeakFunext.
+Definition NaiveFunext_implies_WeakFunext@{i j max}
+  : NaiveFunext@{i j max} -> WeakFunext@{i j max}.
 Proof.
   intros nf A P Pc.
   exists (fun x => center (P x)).
@@ -43,7 +56,15 @@ Proof.
   apply contr.
 Defined.
 
-(** The less obvious direction is that WeakFunext implies Funext (and hence all three are logically equivalent).  The point is that under weak funext, the space of "pointwise homotopies" has the same universal property as the space of paths. *)
+Definition NaiveFunext_implies_NaiveNondepFunext@{i j max}
+  : NaiveFunext@{i j max} -> NaiveNondepFunext@{i j max}
+  := fun nf A B f g => nf A (fun _ => B) f g.
+
+(** The non-obvious directions are that WeakFunext implies Funext and that NaiveNondepFunext implies WeakFunext (and hence all four are logically equivalent). *)
+
+(** ** Weak funext implies Funext *)
+
+(** To show that WeakFunext implies Funext, the point is that under weak funext, the space of "pointwise homotopies" has the same universal property as the space of paths. *)
 
 Section Homotopies.
 
@@ -89,8 +110,9 @@ Section Homotopies.
 
 End Homotopies.
 
-(** Now the proof is fairly easy; we can just use the same induction principle on both sides. *)
-Theorem WeakFunext_implies_Funext : WeakFunext -> Funext_type.
+(** Now the proof is fairly easy; we can just use the same induction principle on both sides.  This proof also preserves all the universes. *)
+Theorem WeakFunext_implies_Funext@{i j max}
+  : WeakFunext@{i j max} -> Funext_type@{i j max}.
 Proof.
   intros wf; hnf; intros A B f g.
   refine (isequiv_adjointify (@apD10 A B f g)
@@ -105,7 +127,41 @@ Defined.
 Definition NaiveFunext_implies_Funext : NaiveFunext -> Funext_type
   := WeakFunext_implies_Funext o NaiveFunext_implies_WeakFunext.
 
+(** ** Naive non-dependent funext implies weak funext  *)
+
+(** First we show that naive non-dependent funext suffices to show that postcomposition with an equivalence is an equivalence. *)
+Definition equiv_postcompose_from_NaiveNondepFunext
+           (nf : NaiveNondepFunext) {A B C : Type} (f : B <~> C)
+  : (A -> B) <~> (A -> C)
+  := BuildEquiv
+       _ _ (fun (g:A->B) => f o g)
+       (isequiv_adjointify
+          (fun (g:A->B) => f o g)
+          (fun h => f^-1 o h)
+          (fun h => nf _ _ _ _ (fun x => eisretr f (h x)))
+          (fun g => nf _ _ _ _ (fun y => eissect f (g y)))).
+
+(** Now, if each [P x] is contractible, the projection [pr1 : {x:X & P x} -> X] is an equivalence (this requires no funext).  Thus, postcomposition with it is also an equivalence, and hence the fiber of postcomposition over [idmap X] is contractible.  But this fiber is "the type of sections of [pr1]" and hence equivalent to [forall x:X, P x].  The latter equivalence requires full funext to prove, but without any funext we can show that [forall x:X, P x] is a *retract* of the type of sections, hence also contractible. *)
+Theorem NaiveNondepFunext_implies_WeakFunext
+  : NaiveNondepFunext -> WeakFunext.
+Proof.
+  intros nf X P H.
+  pose (T := (hfiber (equiv_postcompose_from_NaiveNondepFunext nf (equiv_pr1 P)) idmap)).
+  assert (X1 : Contr T).
+  { apply fcontr_isequiv; exact _. }
+  exact (@contr_retract T _ _
+           (fun fp x => transport P (ap10 fp.2 x) (fp.1 x).2)
+           (fun f => ((fun x => (x ; f x)) ; 1)) (fun f => 1)).
+Defined.
+
+(** Therefore, naive nondependent funext also implies full funext.  Interestingly, this requires the universe of the assumption codomain to be not just that of the conclusion codomain, but the max of that universe with the domain universe (which is unchanged). *)
+Definition NaiveNondepFunext_implies_Funext@{i j max}
+  : NaiveNondepFunext@{i max max} -> Funext_type@{i j max}
+  := WeakFunext_implies_Funext o NaiveNondepFunext_implies_WeakFunext.
+
+
 (** ** Functional extensionality is downward closed *)
+
 (** If universe [U_i] is functionally extensional, then so are universes [U_j] for [j ≤ i]. *)
 Lemma Funext_downward_closed `{H : Funext_type} : Funext_type.
 Proof.
