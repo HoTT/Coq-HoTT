@@ -27,26 +27,29 @@ Definition pushout {A B C : Type} (f : A -> B) (g : A -> C) : Type
   := Coeq (inl o f) (inr o g).
 
 Definition push {A B C : Type} {f : A -> B} {g : A -> C}
+ : B+C -> pushout f g
   := @coeq _ _ (inl o f) (inr o g).
 
-Definition pushl {A B C} {f : A -> B} {g : A -> C} (a : A) : pushout f g := push (inl (f a)).
-Definition pushr {A B C} {f : A -> B} {g : A -> C} (a : A) : pushout f g := push (inr (g a)).
+Definition pushl {A B C} {f : A -> B} {g : A -> C} (b : B) : pushout f g := push (inl b).
+Definition pushr {A B C} {f : A -> B} {g : A -> C} (c : C) : pushout f g := push (inr c).
 
-Definition pp {A B C : Type} {f : A -> B} {g : A -> C} (a : A) : pushl a = pushr a
+Definition pp {A B C : Type} {f : A -> B} {g : A -> C} (a : A) : pushl (f a) = pushr (g a)
   := @cp A (B+C) (inl o f) (inr o g) a.
 
 Definition pushout_ind {A B C} (f : A -> B) (g : A -> C) (P : pushout f g -> Type)
-  (push' : forall a : B + C, P (push a))
-  (pp' : forall a : A, (pp a) # (push' (inl (f a))) = push' (inr (g a)))
-  : forall w, P w
-  := Coeq_ind P push' pp'.
+  (pushb : forall b : B, P (pushl b))
+  (pushc : forall c : C, P (pushr c))
+  (pp' : forall a : A, (pp a) # (pushb (f a)) = pushc (g a))
+  : forall (w : pushout f g), P w
+  := Coeq_ind P (fun bc => match bc with inl b => pushb b | inr c => pushc c end) pp'.
 
 Definition pushout_ind_beta_pp {A B C f g}
            (P : @pushout A B C f g -> Type)
-           (push' : forall a : B + C, P (push a))
-           (pp' : forall a : A, (pp a) # (push' (inl (f a))) = push' (inr (g a))) (a : A)
-: apD (pushout_ind f g P push' pp') (pp a) = pp' a
-  := Coeq_ind_beta_cp P push' pp' a.
+           (pushb : forall b : B, P (push (inl b)))
+           (pushc : forall c : C, P (push (inr c)))
+           (pp' : forall a : A, (pp a) # (pushb (f a)) = pushc (g a)) (a : A)
+: apD (pushout_ind f g P pushb pushc pp') (pp a) = pp' a
+  := Coeq_ind_beta_cp P (fun bc => match bc with inl b => pushb b | inr c => pushc c end) pp' a.
 
 (** But we want to allow the user to forget that we've defined pushouts in terms of coequalizers. *)
 Arguments pushout : simpl never.
@@ -56,32 +59,36 @@ Arguments pushout_ind : simpl never.
 Arguments pushout_ind_beta_pp : simpl never.
 
 Definition pushout_rec {A B C} {f : A -> B} {g : A -> C} (P : Type)
-  (push' : B + C -> P)
-  (pp' : forall a : A, push' (inl (f a)) = push' (inr (g a)))
+  (pushb : B -> P)
+  (pushc : C -> P)
+  (pp' : forall a : A, pushb (f a) = pushc (g a))
   : @pushout A B C f g -> P
-  := pushout_ind f g (fun _ => P) push' (fun a => transport_const _ _ @ pp' a).
+  := pushout_ind f g (fun _ => P) pushb pushc (fun a => transport_const _ _ @ pp' a).
 
 Definition pushout_rec_beta_pp {A B C f g} (P : Type)
-  (push' : B + C -> P)
-  (pp' : forall a : A, push' (inl (f a)) = push' (inr (g a)))
+  (pushb : B -> P)
+  (pushc : C -> P)
+  (pp' : forall a : A, pushb (f a) = pushc (g a))
   (a : A)
-  : ap (pushout_rec P push' pp') (pp a) = pp' a.
+  : ap (pushout_rec P pushb pushc pp') (pp a) = pp' a.
 Proof.
   unfold pushout_rec.
   eapply (cancelL (transport_const (pp a) _)).
-  refine ((apD_const (@pushout_ind A B C f g (fun _ => P) push' _) (pp a))^ @ _).
-  refine (pushout_ind_beta_pp (fun _ => P) _ _ _).
+  refine ((apD_const (@pushout_ind A B C f g (fun _ => P) pushb pushc _) (pp a))^ @ _).
+  refine (pushout_ind_beta_pp (fun _ => P) _ _ _ _).
 Defined.
 
 (** ** Symmetry *)
 
-Definition pushout_sym_map {A B C f g} : pushout f g -> pushout g f :=
-  pushout_rec (pushout g f) (push o (equiv_sum_symm B C)) (fun a : A => (pp a)^).
+Definition pushout_sym_map {A B C} {f : A -> B} {g : A -> C}
+  : pushout f g -> pushout g f
+  := pushout_rec (pushout g f) pushr pushl (fun a : A => (pp a)^).
 
 Lemma sect_pushout_sym_map {A B C f g} : Sect (@pushout_sym_map A C B g f) (@pushout_sym_map A B C f g).
 Proof.
   unfold Sect. srapply @pushout_ind.
-  - intros [ | ]. all:reflexivity.
+  - intros; reflexivity.
+  - intros; reflexivity.
   - intro a.
     abstract (rewrite transport_paths_FFlr, pushout_rec_beta_pp, ap_V, pushout_rec_beta_pp; hott_simpl).
 Defined.
