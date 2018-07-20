@@ -13,7 +13,6 @@
 Set Implicit Arguments.
 
 Require Import Logic.
-Declare ML Module "nat_syntax_plugin".
 
 Global Set Universe Polymorphism.
 Global Set Asymmetric Patterns.
