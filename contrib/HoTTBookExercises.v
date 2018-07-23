@@ -776,7 +776,7 @@ End Book_3_14.
 (* ================================================== ex:decidable-choice *)
 (** Exercise 3.19 *)
 
-
+Definition Book_3_19 := @HoTT.BoundedSearch.minimal_n.
 
 (* ================================================== ex:omit-contr2 *)
 (** Exercise 3.20 *)

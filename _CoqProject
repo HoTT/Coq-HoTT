@@ -26,6 +26,7 @@ theories/Types/Wtype.v
 theories/Types/Equiv.v
 theories/Types/Universe.v
 theories/Types.v
+theories/BoundedSearch.v
 theories/EquivGroupoids.v
 theories/Fibrations.v
 theories/Conjugation.v

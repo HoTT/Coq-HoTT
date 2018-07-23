@@ -136,6 +136,12 @@ Fixpoint subnn {n} : n - n =n 0 :=
 Global Instance leq_refl : Reflexive leq
   := @subnn.
 
+Fixpoint leqnSn {n} : n <= S n :=
+  match n as n return n <= S n with
+  | 0 => tt
+  | n'.+1 => @leqnSn n'
+  end.
+
 Fixpoint leq_transd {x y z} : (x <= y -> y <= z -> x <= z)%dprop :=
   match x as x, y as y, z as z return (x <= y -> y <= z -> x <= z)%dprop with
     | 0, 0, 0 => dprop_istrue
@@ -170,4 +176,18 @@ Proof.
   induction n as [|n IH]; simpl.
   - auto.
   - apply IH.
+Defined.
+
+Definition leq1Sn {n} : 1 <= n.+1 := tt.
+
+Fixpoint leqdichot {m} {n} : ((m <= n) + (m > n))%type.
+Proof.
+  induction m, n.
+  - left; reflexivity.
+  - left; apply leq0n.
+  - right; unfold lt; apply leq1Sn.
+  - assert ((m <= n) + (n < m)) as X by apply leqdichot.
+    induction X as [leqmn|ltnm].
+    + left; assumption.
+    + right; assumption.
 Defined.
