@@ -86,7 +86,7 @@ intros a b;destruct (trichotomy R a b) as [E1|[E1|E1]];split;auto.
 Qed.
 
 Lemma total_abs_either `{Abs A} `{!TotalRelation le}
-  : forall x : A, (0 <= x /\ abs x = x) \/ (x <= 0 /\ abs x = - x).
+  : forall x : A, (0 <= x /\ abs x = x) |_| (x <= 0 /\ abs x = - x).
 Proof.
 intros x.
 destruct (total le 0 x) as [E|E].

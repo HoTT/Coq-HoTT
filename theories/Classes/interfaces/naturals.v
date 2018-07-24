@@ -18,7 +18,7 @@ Class Naturals A {Aap:Apart A} {Aplus Amult Azero Aone Ale Alt}
 
 (* Specializable operations: *)
 Class NatDistance N `{Plus N}
-  := nat_distance_sig : forall x y : N, { z : N | (x + z = y)%mc } \/
+  := nat_distance_sig : forall x y : N, { z : N | (x + z = y)%mc } |_|
                                    { z : N | (y + z = x)%mc }.
 Definition nat_distance `{nd : NatDistance N} (x y : N) :=
   match nat_distance_sig x y with

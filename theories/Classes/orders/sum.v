@@ -21,7 +21,7 @@ Section contents.
 
 Context `{Alt : Lt@{Set Set} A} `{Blt : Lt@{Set Set} B}.
 
-Global Instance sum_lt : Lt@{Set Set} (A \/ B) | 2
+Global Instance sum_lt : Lt@{Set Set} (A |_| B) | 2
   := fun s1 s2 =>
   match s1, s2 with
   | inl a1, inl a2 => a1 < a2

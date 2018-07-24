@@ -32,14 +32,14 @@ Qed.
 Lemma nat_not_neg x : ~x < 0.
 Proof. apply le_not_lt_flip, nat_nonneg. Qed.
 
-Lemma nat_0_or_pos x : x = 0 \/ 0 < x.
+Lemma nat_0_or_pos x : x = 0 |_| 0 < x.
 Proof.
 destruct (trichotomy (<) 0 x) as [?|[?|?]]; auto.
 - left;symmetry;trivial.
 - destruct (nat_not_neg x). trivial.
 Qed.
 
-Lemma nat_0_or_ge_1 x : x = 0 \/ 1 ≤ x.
+Lemma nat_0_or_ge_1 x : x = 0 |_| 1 ≤ x.
 Proof.
 destruct (nat_0_or_pos x);auto.
 right;apply pos_ge_1. trivial.

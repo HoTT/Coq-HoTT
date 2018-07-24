@@ -221,6 +221,8 @@ Definition hexists {X} (P : X -> Type) : hProp := merely (sigT P).
 
 Definition hor (P Q : Type) : hProp := merely (P + Q).
 
+Notation "A \/ B" := (hor A B) : type_scope.
+
 Definition himage {X Y} (f : X -> Y) := image -1 f.
 
 Definition contr_inhab_prop {A} `{IsHProp A} (ma : merely A) : Contr A.

@@ -947,7 +947,7 @@ Qed.
    Otherwise we would have to truncate IntAbs. *)
 Definition Z_abs_def@{} : forall x : PairT.T N,
   (exists n : N, naturals_to_semiring N Z n = ' x)
-  \/ (exists n : N, naturals_to_semiring N Z n = - ' x).
+  |_| (exists n : N, naturals_to_semiring N Z n = - ' x).
 Proof.
 intros [a b].
 destruct (nat_distance_sig a b) as [[z E]|[z E]].
@@ -961,7 +961,7 @@ Lemma Z_abs_respects' : forall (x y : PairT.T N) (E : PairT.equiv x y),
   transport
     (fun q : Z =>
      (exists n : N, naturals_to_semiring N Z n = q)
-     \/ (exists n : N, naturals_to_semiring N Z n = - q)) (Z_path E) (Z_abs_def x)
+     |_| (exists n : N, naturals_to_semiring N Z n = - q)) (Z_path E) (Z_abs_def x)
   = Z_abs_def y.
 Proof.
 intros [pa pb] [na nb] E.
@@ -1046,7 +1046,7 @@ Global Instance Z_abs@{} : IntAbs@{UN UN UN UN UN
 Notation n_to_z := (naturals_to_semiring N Z).
 
 Definition zero_product_aux a b :
-  n_to_z a * n_to_z b = 0 -> n_to_z a = 0 \/ n_to_z b = 0.
+  n_to_z a * n_to_z b = 0 -> n_to_z a = 0 |_| n_to_z b = 0.
 Proof.
 rewrite <-rings.preserves_mult.
 rewrite <-!(naturals.to_semiring_unique (cast N Z)).

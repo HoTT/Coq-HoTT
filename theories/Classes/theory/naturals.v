@@ -137,10 +137,10 @@ Section borrowed_from_nat.
   exact nat_induction.
   Qed.
 
-  Lemma case : forall x : N, x = 0 \/ exists y : N, (x = 1 + y)%mc.
+  Lemma case : forall x : N, x = 0 |_| exists y : N, (x = 1 + y)%mc.
   Proof.
   refine (from_nat_stmt nat
-    (fun s => forall x : s, x = 0 \/ exists y : s, (x = 1 + y)%mc) _).
+    (fun s => forall x : s, x = 0 |_| exists y : s, (x = 1 + y)%mc) _).
   simpl. intros [|x];eauto.
   Qed.
 
@@ -188,10 +188,10 @@ Section borrowed_from_nat.
   simpl. apply plus_eq_zero.
   Qed.
 
-  Lemma one_sum : forall (x y : N), x + y = 1 -> (x = 1 /\ y = 0) \/ (x = 0 /\ y = 1).
+  Lemma one_sum : forall (x y : N), x + y = 1 -> (x = 1 /\ y = 0) |_| (x = 0 /\ y = 1).
   Proof.
   refine (from_nat_stmt nat (fun s =>
-    forall (x y : s), x + y = 1 -> (x = 1 /\ y = 0) \/ (x = 0 /\ y = 1)) _).
+    forall (x y : s), x + y = 1 -> (x = 1 /\ y = 0) |_| (x = 0 /\ y = 1)) _).
   simpl.
   intros [|x] [|y];auto.
   - intros E. rewrite add_S_l,add_0_r in E.

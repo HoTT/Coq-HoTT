@@ -64,7 +64,7 @@ Class PseudoOrder `{Aap : Apart A} (Alt : Lt A) :=
   ; pseudo_order_mere_lt :> is_mere_relation A lt
   ; pseudo_order_antisym : forall x y, ~(x < y /\ y < x)
   ; pseudo_order_cotrans :> CoTransitive (<)
-  ; apart_iff_total_lt : forall x y, x ≶ y <-> x < y \/ y < x }.
+  ; apart_iff_total_lt : forall x y, x ≶ y <-> x < y |_| y < x }.
 
 (* A partial order (≤) with a corresponding (<). We will prove that (<) is in fact
   a StrictOrder *)
