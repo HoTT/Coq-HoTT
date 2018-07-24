@@ -50,6 +50,7 @@ Notation "∥ A ∥₋₁" := (Trunc -1 A).
 Notation "| a |₋₁" := (@tr -1 _ a) : trunc_scope.
 
 Notation "x ∨ y" := (hor x y) : type_scope.
+Notation "x ⊔ y" := (sum x y) : type_scope.
 
 Notation "∥ A ∥₀" := (Trunc 0 A).
 Notation "| a |₀" := (@tr 0 _ a) : trunc_scope.
