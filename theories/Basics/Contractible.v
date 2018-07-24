@@ -92,3 +92,9 @@ Defined.
 (** If the domain is contractible, the function is propositionally constant. *)
 Definition contr_dom_equiv {A B} (f : A -> B) `{Contr A} : forall x y : A, f x = f y
   := fun x y => ap f ((contr x)^ @ contr y).
+
+(** Any retract of a contractible type is contractible *)
+Definition contr_retract {X Y : Type} `{Contr X} 
+           (r : X -> Y) (s : Y -> X) (h : forall y, r (s y) = y)
+  : Contr Y
+  := BuildContr _ (r (center X)) (fun y => (ap r (contr _)) @ h _).

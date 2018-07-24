@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations UnivalenceImpliesFunext EquivalenceVarieties Constant.
+Require Import Fibrations FunextVarieties UnivalenceImpliesFunext EquivalenceVarieties Constant.
 Require Import HIT.Truncations.
 
 Local Open Scope nat_scope.
@@ -81,18 +81,8 @@ Proof.
 Defined.
 
 (** Retraction preserves contractibility **)
-Definition contr_retracttype {X : Type} (R : RetractOf X ) (contra : Contr X) : Contr (retract_type R ).
-Proof.
- simple refine (BuildContr _ _ _).
- - refine (retract_retr _ _).
-   exact (center X).
- - intro y.
-   simple refine (concat _ _).
-   + exact (retract_retr R (retract_sect R y)).
-   + refine (ap (retract_retr R) _).
-     * exact (contr _).
-   + exact (retract_issect R _).
-Defined.
+Definition contr_retracttype {X : Type} (R : RetractOf X ) (contra : Contr X) : Contr (retract_type R )
+  := contr_retract (retract_retr R) (retract_sect R) (retract_issect R).
 
 (** Like any record type, [RetractOf X] is equivalent to a nested sigma-type.  We use a product at one place in the middle, rather than a sigma, to simplify the next proof. *)
 Definition issig_retractof (X : Type)

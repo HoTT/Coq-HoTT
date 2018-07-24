@@ -13,6 +13,7 @@ Require Export HProp.
 Require Export HSet.
 Require Export EquivGroupoids.
 Require Export EquivalenceVarieties.
+Require Export FunextVarieties.
 Require Export UnivalenceVarieties.
 Require Export Extensions.
 Require Export Misc.
@@ -27,6 +28,7 @@ Require Export NullHomotopy.
 Require Export Idempotents.
 Require Export Pullback.
 Require Export ExcludedMiddle.
+Require Export BoundedSearch.
 
 Require Export PropResizing.PropResizing.
 (* Don't export the rest of [PropResizing] *)

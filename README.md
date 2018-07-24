@@ -34,8 +34,8 @@ It is probably better to use [Proof General](http://proofgeneral.inf.ed.ac.uk) a
 without asking, you should probably customize set the variable `proof-prog-name-ask` to
 `nil` (in Emacs type `C-h v proof-prog-name-ask RET` to see what this is about).
 
-At the moment there is no `hoqide` equivalent of `coqide`, but getting one is high on our
-to-do list.
+There is also a script called `hoqide` that runs Coq's built-in GUI `coqide`
+with `hoqtop` as the underlying `coqtop`.
 
 ## CONTRIBUTING
 

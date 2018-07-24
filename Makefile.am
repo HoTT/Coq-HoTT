@@ -132,7 +132,7 @@ ALL_GLOBFILES=$(STD_GLOBFILES) $(MAIN_GLOBFILES)
 ALL_DEPFILES=$(STD_DEPFILES) $(MAIN_DEPFILES)
 ALL_HTMLFILES=$(STD_HTMLFILES) $(MAIN_HTMLFILES)
 ALL_TIMING_HTMLFILES=$(STD_TIMING_HTMLFILES) $(MAIN_TIMING_HTMLFILES)
-ALL_TIMINGFILES=$(ALL_VFILES:.v=.timing)
+ALL_TIMINGFILES=$(ALL_VFILES:.v=.v.timing)
 ALL_XMLFILES=$(patsubst $(srcdir)/html/%,$(srcdir)/proviola-xml/%,$(ALL_HTMLFILES:.html=.xml))
 ALL_PROVIOLA_HTMLFILES=$(patsubst $(srcdir)/proviola-xml/%,$(srcdir)/proviola-html/%,$(ALL_XMLFILES:.xml=.html))
 ALL_DPDFILES=$(MAIN_DPDFILES) # $(STD_DPDFILES)
@@ -196,7 +196,7 @@ validate: $(ALL_VOFILES)
 
 $(STD_VOFILES) : %.vo : %.v coq-HoTT
 	$(VECHO) COQTOP $*
-	$(Q) $(TIMER) etc/pipe_out.sh "$*.timing" "$(COQTOP)" -time -indices-matter -boot -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq -compile "$<"
+	$(Q) $(TIMER) etc/pipe_out.sh "$<.timing" "$(COQTOP)" -time -indices-matter -boot -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq -compile "$<"
 
 
 # The HoTT library as a single target
@@ -227,11 +227,11 @@ strict: strict-test strict-no-axiom hottlib hott-core hott-categories contrib
 # A rule for compiling the HoTT libary files
 $(MAIN_VFILES:.v=.vo) : %.vo : %.v $(STD_VOFILES) coq-HoTT
 	$(VECHO) HOQC $*
-	$(Q) $(TIMER) ./etc/pipe_out.sh "$*.timing" $(HOQC) -q -time $<
+	$(Q) $(TIMER) ./etc/pipe_out.sh "$<.timing" $(HOQC) -q -time $<
 
 $(MAIN_VFILES:.v=.vi) : %.vi : %.v $(STD_VOFILES) coq-HoTT
 	$(VECHO) HOQC -quick $*
-	$(Q) $(TIMER) ./etc/pipe_out.sh "$*.timing" $(HOQC) -q -quick -time $<
+	$(Q) $(TIMER) ./etc/pipe_out.sh "$<.timing" $(HOQC) -q -quick -time $<
 
 # The deps file, for graphs
 HoTT.deps: $(ALL_VFILES)
@@ -266,17 +266,17 @@ $(ALL_HTMLFILES) html/index.html html/coqdoc.css html/toc.html : html-done.times
 $(CORE_TIMING_HTMLFILES) $(CATEGORY_TIMING_HTMLFILES): timing-html/HoTT.%.html : theories/$$(subst .,/,$$*).vo etc/time2html
 	@ $(mkdir_p) $(dir $@)
 	$(VECHO) TIME2HTML HoTT.$* > $@
-	$(Q) etc/time2html "$(<:.vo=.timing)" "$(<:.vo=.v)" > $@
+	$(Q) etc/time2html "$(<:.vo=.v.timing)" "$(<:.vo=.v)" > $@
 
 $(CONTRIB_TIMING_HTMLFILES): timing-html/%.html : contrib/$$(subst .,/,$$*).vo etc/time2html
 	@ $(mkdir_p) $(dir $@)
 	$(VECHO) TIME2HTML $* > $@
-	$(Q) etc/time2html "$(<:.vo=.timing)" "$(<:.vo=.v)" > $@
+	$(Q) etc/time2html "$(<:.vo=.v.timing)" "$(<:.vo=.v)" > $@
 
 $(STD_TIMING_HTMLFILES): timing-html/Coq.%.html : coq/theories/$$(subst .,/,$$*).vo etc/time2html
 	@ $(mkdir_p) $(dir $@)
 	$(VECHO) TIME2HTML Coq.$* > $@
-	$(Q) etc/time2html "$(<:.vo=.timing)" "$(<:.vo=.v)" > $@
+	$(Q) etc/time2html "$(<:.vo=.v.timing)" "$(<:.vo=.v)" > $@
 
 
 
