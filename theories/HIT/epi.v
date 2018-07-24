@@ -59,14 +59,14 @@ Section cones.
                                  | inl a' => (I0 a')^
                                  | inr tt => idpath
                                end)) as I0f.
-    refine (pushout_ind _ _ _ I0f _).
+    refine (pushout_ind _ _ _ (fun a' => I0f (inl a')) (fun u => (I0f (inr u))) _).
 
     simpl. subst alpha1. intros.
     unfold setcone_point.
     subst I0. simpl.
     pose (X..2) as p. simpl in p.
     rewrite (transport_precompose f _ _ X..1) in p.
-    assert (H':=concat (ap (fun x => ap10 x a) p) (ap10_ap_postcompose tr (path_arrow pushl pushr pp) _)).
+    assert (H':=concat (ap (fun x => ap10 x a) p) (ap10_ap_postcompose tr (path_arrow (pushl o f) (pushr o const tt) pp) _)).
     rewrite ap10_path_arrow in H'.
     clear p.
     (** Apparently [pose; clearbody] is only ~.8 seconds, while [pose proof] is ~4 seconds? *)
@@ -118,13 +118,7 @@ Section isepi_issurj.
   Proof.
     pose (fib y := hexists (fun x : X => f x = y)).
     apply (fun f => @Trunc_rec _ _ hProp _ f c).
-    refine (pushout_rec hProp
-                           (fun x : Y + Unit =>
-                              match x with
-                                | inl y => fib y
-                                | inr x => Unit_hp
-                              end)
-                           (fun x => _)).
+    refine (pushout_rec hProp fib (fun _ => Unit_hp) (fun x => _)).
     (** Prove that the truncated sigma is equivalent to Unit *)
     pose (contr_inhabited_hprop (fib (f x)) (tr (x; idpath))) as i.
     apply path_hprop. simpl. simpl in i.
