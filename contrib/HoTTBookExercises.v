@@ -656,7 +656,79 @@ Defined.
 (* ================================================== ex:not-brck-A-impl-A *)
 (** Exercise 3.11 *)
 
+(** This theorem extracts the main idea leading to the contradiction constructed
+    in the proof of Theorem 3.2.2, that univalence implies that all functions are
+    natural with respect to equivalences.
 
+    The terms are complicated, but it pretty much follows the proof in the book,
+    step by step.
+ *)
+Lemma univalence_func_natural_equiv `{Univalence}
+  : forall (C : Type -> Type) (all_contr : forall A, Contr (C A -> C A))
+      (g : forall A, C A -> A) {A : Type}  (e : A <~> A),
+    e o (g A) = (g A).
+Proof.
+  intros C all_contr g A e.
+  apply path_forall.
+
+  intros x.
+  pose (p := path_universe_uncurried e).
+
+  (* The propositional computation rule for univalence of section 2.10 *)
+  refine (concat (happly (transport_idmap_path_universe_uncurried e)^ (g A x)) _).
+
+  (** To obtain the situation of 2.9.4, we rewrite x using
+
+      <<<
+        x = transport (fun A : Type => C A) p^ x
+      >>>
+
+      This equality holds because [(C A) -> (C A)] is contractible, so
+
+      <<<
+        transport (fun A : Type => C A) p^ = idmap
+      >>>
+
+      In both Theorem 3.2.2 and the following result, the hypothesis
+      [Contr ((C A) -> (C A))] will follow from the contractibility of [(C A)].
+   *)
+  refine (concat (ap _ (ap _ (happly (@path_contr _ (all_contr A)
+                                                  idmap (transport _ p^)) x))) _).
+
+  (* Equation 2.9.4 is called transport_arrow in the library. *)
+  refine (concat (@transport_arrow _ (fun A => C A) idmap _ _ p (g A) x)^ _).
+
+  exact (happly (apD g p) x).
+Defined.
+
+(** For this proof, we closely follow the proof of Theorem 3.2.2
+    from the text, replacing ¬¬A → A by ∥A∥ → A. *)
+Lemma Book_3_11 `{Univalence} : ~ (forall A, Trunc (-1) A -> A).
+  (* The proof is by contradiction. We'll assume we have such a
+     function, and obtain an element of 0. *)
+  intros g.
+
+  assert (end_contr : forall A, Contr (Trunc (-1) A -> Trunc (-1) A)).
+  {
+    intros A.
+    apply Book_3_4_solution_1.
+    apply Trunc_is_trunc.
+  }
+
+  (** There are no fixpoints of the fix-point free autoequivalence of 2 (called
+      negb). We will derive a contradiction by showing there must be such a fixpoint
+      by naturality of g.
+
+      We parametrize over b to emphasize that this proof depends only on the fact
+      that Bool is inhabited, not on any specific value (we use "true" below).
+   *)
+  pose
+    (contr b :=
+        (not_fixed_negb (g Bool b))
+        (happly (univalence_func_natural_equiv _ end_contr g equiv_negb) b)).
+
+  contradiction (contr (tr true)).
+Defined.
 
 (* ================================================== ex:lem-impl-simple-ac *)
 (** Exercise 3.12 *)
