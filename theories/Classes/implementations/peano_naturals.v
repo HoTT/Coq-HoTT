@@ -195,7 +195,7 @@ intros [|a];[intros [|b];auto|].
 - intros ? E. destruct (S_neq_0 _ E).
 Qed.
 
-Lemma mult_eq_zero : forall a b : nat, a * b =N= 0 -> a =N= 0 \/ b =N= 0.
+Lemma mult_eq_zero : forall a b : nat, a * b =N= 0 -> a =N= 0 |_| b =N= 0.
 Proof.
 intros [|a] [|b];auto.
 - intros _;right;reflexivity.
@@ -277,7 +277,7 @@ Proof.
 intros. apply le_S_S. apply zero_least.
 Qed.
 
-Lemma le_S_either : forall a b, a <= S b -> a <= b \/ a = S b.
+Lemma le_S_either : forall a b, a <= S b -> a <= b |_| a = S b.
 Proof.
 intros [|a] b.
 - intros;left;apply zero_least.
@@ -285,7 +285,7 @@ intros [|a] b.
   left. apply le_S_S. trivial.
 Defined.
 
-Lemma le_lt_dec : forall a b : nat, a <= b \/ b < a.
+Lemma le_lt_dec : forall a b : nat, a <= b |_| b < a.
 Proof.
 induction a as [|a IHa].
 - intros;left;apply zero_least.
@@ -411,7 +411,7 @@ intros a b. destruct (le_lt_dec a b) as [[|]|E];auto.
 - left. apply le_S_S. trivial.
 Qed.
 
-Global Instance nat_apart : Apart@{N N} nat := fun n m => n < m \/ m < n.
+Global Instance nat_apart : Apart@{N N} nat := fun n m => n < m |_| m < n.
 
 Instance nat_apart_mere : is_mere_relation nat nat_apart.
 Proof.
@@ -480,7 +480,7 @@ destruct E1 as [k1 E1],E2 as [k2 E2];rewrite E2,E1.
 rewrite add_S_r,add_assoc. apply le_S_S,le_plus.
 Qed.
 
-Lemma lt_strong_cotrans : forall a b : nat, a < b -> forall c, a < c \/ c < b.
+Lemma lt_strong_cotrans : forall a b : nat, a < b -> forall c, a < c |_| c < b.
 Proof.
 intros a b E1 c.
 destruct (le_lt_dec c a) as [E2|E2].

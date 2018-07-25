@@ -240,11 +240,11 @@ Class Associative {A} (f : A -> A -> A)
 
 Class Involutive {A} (f : A -> A) := involutive: forall x, f (f x) = x.
 
-Class TotalRelation `(R : relation A) : Type := total : forall x y : A, R x y \/ R y x.
+Class TotalRelation `(R : relation A) : Type := total : forall x y : A, R x y |_| R y x.
 Arguments total {A} _ {TotalRelation} _ _.
 
 Class Trichotomy `(R : relation A)
-  := trichotomy : forall x y : A, R x y \/ x = y \/ R y x.
+  := trichotomy : forall x y : A, R x y |_| x = y |_| R y x.
 Arguments trichotomy {A} R {Trichotomy} _ _.
 
 Arguments irreflexivity {A} _ {Irreflexive} _ _.
@@ -296,7 +296,7 @@ End cancellation.
 
 (* Common names for properties that hold in N, Z, Q, ... *)
 Class ZeroProduct A `{!Mult A} `{!Zero A} : Type
-  := zero_product : forall x y, x * y = 0 -> x = 0 \/ y = 0.
+  := zero_product : forall x y, x * y = 0 -> x = 0 |_| y = 0.
 
 Class ZeroDivisor {R} `{Zero R} `{Mult R} (x : R) : Type
   := zero_divisor : x <> 0 /\ exists y, y <> 0 /\ x * y = 0.

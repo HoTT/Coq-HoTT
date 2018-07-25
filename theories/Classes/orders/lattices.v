@@ -132,7 +132,7 @@ Section join_semilattice_order.
   Section total_join.
   Context `{!TotalRelation le}.
 
-  Lemma total_join_either `{!TotalRelation le} x y : join x y = x \/ join x y = y.
+  Lemma total_join_either `{!TotalRelation le} x y : join x y = x |_| join x y = y.
   Proof.
   destruct (total le x y) as [E|E].
   - right. apply join_r,E.
@@ -294,7 +294,7 @@ Section meet_semilattice_order.
   Section total_meet.
   Context `{!TotalRelation le}.
 
-  Lemma total_meet_either x y : meet x y = x \/ meet x y = y.
+  Lemma total_meet_either x y : meet x y = x |_| meet x y = y.
   Proof.
   destruct (total le x y) as [E|E].
   - left. apply meet_l,E.

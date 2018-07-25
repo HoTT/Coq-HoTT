@@ -114,18 +114,18 @@ Qed.
 Section Quote.
 
   Class Quote {V:Type0 } (l: Vars V) (n: R) {V':Type0 } (r: Vars V') :=
-    { quote : Expr (V \/ V')
-    ; eval_quote : @eval (V \/ V') (merge l r) quote = n }.
+    { quote : Expr (V |_| V')
+    ; eval_quote : @eval (V |_| V') (merge l r) quote = n }.
 
   Global Arguments quote {V l} n {V' r _}.
   Global Arguments eval_quote {V l} n {V' r _}.
 
-  Definition sum_assoc {A B C}: (A\/B)\/C -> A\/(B\/C).
+  Definition sum_assoc {A B C}: (A |_| B) |_| C -> A |_| (B |_| C).
   Proof.
   intros [[?|?]|?];auto.
   Defined.
 
-  Definition sum_aux {A B C}: (A\/B) -> A\/(B\/C).
+  Definition sum_aux {A B C}: (A |_| B) -> A |_| (B |_| C).
   Proof.
   intros [?|?];auto.
   Defined.
@@ -227,7 +227,7 @@ Definition eval_quote': forall x {V':Type0} {v: Vars V'} {d: Quote noVars x v},
 
 Class EqQuote {V:Type0 } (l: Vars V) (n m: R) {V':Type0 } (r: Vars V') :=
     { eqquote_l : Expr V
-    ; eqquote_r : Expr (V \/ V')
+    ; eqquote_r : Expr (V |_| V')
     ; eval_eqquote : eval (merge l r) (expr_map inl eqquote_l)
                    = eval (merge l r) eqquote_r -> n = m }.
 
@@ -262,7 +262,7 @@ etransitivity;[etransitivity;[|exact E]|].
   apply eval_ext. intros [[?|?]|?];reflexivity.
 Defined.
 
-Definition sum_forget {A B} : Empty \/ A -> A \/ B.
+Definition sum_forget {A B} : Empty |_| A -> A |_| B.
 Proof.
 intros [[]|?];auto.
 Defined.

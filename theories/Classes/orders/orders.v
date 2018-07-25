@@ -93,7 +93,7 @@ Section pseudo_order.
 
   Local Existing Instance pseudo_order_apart.
 
-  Lemma apart_total_lt x y : x ≶ y -> x < y \/ y < x.
+  Lemma apart_total_lt x y : x ≶ y -> x < y |_| y < x.
   Proof.
   intros.
   apply apart_iff_total_lt.
@@ -123,7 +123,7 @@ Section pseudo_order.
   Qed.
 
   Lemma pseudo_order_cotrans_twice x₁ y₁ x₂ y₂
-    : x₁ < y₁ -> merely (x₂ < y₂ \/ x₁ < x₂ \/ y₂ < y₁).
+    : x₁ < y₁ -> merely (x₂ < y₂ |_| x₁ < x₂ |_| y₂ < y₁).
   Proof.
   intros E1.
   apply (merely_destruct (cotransitive E1 x₂));intros [?|E2];
@@ -132,7 +132,7 @@ Section pseudo_order.
   Qed.
 
   Lemma pseudo_order_lt_ext x₁ y₁ x₂ y₂ : x₁ < y₁ ->
-    merely (x₂ < y₂ \/ x₁ ≶ x₂ \/ y₂ ≶ y₁).
+    merely (x₂ < y₂ |_| x₁ ≶ x₂ |_| y₂ ≶ y₁).
   Proof.
   intros E.
   apply (merely_destruct (pseudo_order_cotrans_twice x₁ y₁ x₂ y₂ E));
@@ -166,7 +166,7 @@ Section pseudo_order.
   destruct nap;auto.
   Qed.
 
-  Lemma ne_total_lt `{!TrivialApart A} x y : x <> y -> x < y \/ y < x.
+  Lemma ne_total_lt `{!TrivialApart A} x y : x <> y -> x < y |_| y < x.
   Proof.
   intros neq;apply trivial_apart in neq.
   apply apart_total_lt. assumption.
@@ -276,7 +276,7 @@ Section full_partial_order.
    Qed.
 
   Lemma le_equiv_lt `{!TrivialApart A} `{forall x y : A, Decidable (x = y)} x y
-    : x ≤ y -> x = y \/ x < y.
+    : x ≤ y -> x = y |_| x < y.
   Proof.
   intros.
   destruct (dec (x = y)); try auto.
@@ -372,7 +372,7 @@ Section full_pseudo_order.
   intros E';apply le_iff_not_lt_flip in E';auto.
   Qed.
 
-  Lemma le_or_lt `{!TrivialApart A} `{DecidablePaths A} x y : x ≤ y \/ y < x.
+  Lemma le_or_lt `{!TrivialApart A} `{DecidablePaths A} x y : x ≤ y |_| y < x.
   Proof.
   destruct (trichotomy (<) x y) as [|[|]]; try auto.
   - left. apply lt_le;trivial.

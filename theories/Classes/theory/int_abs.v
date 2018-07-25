@@ -42,7 +42,7 @@ Context `{!IntAbs Z N}.
 Context `{!SemiRingPreserving (f : N -> Z)}.
 
 Lemma int_abs_spec x :
-  (0 ≤ x /\ f (int_abs Z N x) = x) \/ (x ≤ 0 /\ f (int_abs Z N x) = -x).
+  (0 ≤ x /\ f (int_abs Z N x) = x) |_| (x ≤ 0 /\ f (int_abs Z N x) = -x).
 Proof.
 unfold int_abs. destruct (int_abs_sig Z N x) as [[n E]|[n E]].
 - left. rewrite <-E. split.
@@ -54,7 +54,7 @@ unfold int_abs. destruct (int_abs_sig Z N x) as [[n E]|[n E]].
 Qed.
 
 Lemma int_abs_sig_alt x :
-  (sig (fun n : N => f n = x)) \/ (sig (fun n : N => f n = - x)).
+  (sig (fun n : N => f n = x)) |_| (sig (fun n : N => f n = - x)).
 Proof. destruct (int_abs_spec x) as [[??]|[??]]; eauto. Qed.
 
 Lemma int_abs_nat n :

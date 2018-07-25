@@ -301,7 +301,7 @@ destruct (total_abs_either q) as [[E2 E3]|[E2 E3]];rewrite E3 in E1.
 - apply (injective (-)). rewrite negate_0. trivial.
 Qed.
 
-Lemma Qabs_0_or_pos : forall q : Q, q = 0 \/ 0 < abs q.
+Lemma Qabs_0_or_pos : forall q : Q, q = 0 |_| 0 < abs q.
 Proof.
 intros q. destruct (le_or_lt (abs q) 0) as [E|E].
 - left. apply Qabs_nonpos_0. trivial.

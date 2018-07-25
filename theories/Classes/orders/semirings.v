@@ -372,7 +372,7 @@ Section pseudo_semiring_order.
   intros. apply (strong_right_cancel_from_left (+)).
   Qed.
 
-  Lemma neg_mult_decompose x y : x * y < 0 -> (x < 0 /\ 0 < y) \/ (0 < x /\ y < 0).
+  Lemma neg_mult_decompose x y : x * y < 0 -> (x < 0 /\ 0 < y) |_| (0 < x /\ y < 0).
   Proof.
   intros.
   assert (0 ≶ x) as Ex;[|assert (apart 0 y) as Ey].
@@ -390,7 +390,7 @@ Section pseudo_semiring_order.
       apply neg_mult;trivial.
   Qed.
 
-  Lemma pos_mult_decompose x y : 0 < x * y -> (0 < x /\ 0 < y) \/ (x < 0 /\ y < 0).
+  Lemma pos_mult_decompose x y : 0 < x * y -> (0 < x /\ 0 < y) |_| (x < 0 /\ y < 0).
   Proof.
   intros.
   assert (0 ≶ x /\ apart 0 y) as [Ex Ey];[split|].
