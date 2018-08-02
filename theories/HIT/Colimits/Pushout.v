@@ -168,7 +168,6 @@ Section is_PO_pushout.
       exact (push o inl). exact (push o inr). exact pp.
     - intro Y; serapply isequiv_adjointify.
       + intro Co. serapply pushout_rec.
-        serapply sum_rect; cbn.
         exact (pol' Co). exact (por' Co). exact (popp' Co).
       + intros [Co Co']. serapply path_cocone; cbn.
         * intros [[]|[]] x; simpl.
@@ -181,7 +180,8 @@ Section is_PO_pushout.
           unfold popp'. cbn. hott_simpl.
       + intro h. apply path_forall.
         serapply pushout_ind; cbn.
-        * intros [b|c]; reflexivity.
+        * intros b; reflexivity.
+        * intros c; reflexivity.
         * intro a; cbn.
           rewrite transport_paths_FlFr. rewrite concat_p1.
           rewrite pushout_rec_beta_pp. eapply moveR_Vp.

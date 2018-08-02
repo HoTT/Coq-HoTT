@@ -18,17 +18,14 @@ Section Join.
   (** Joining with a contractible type produces a contractible type *)
   Global Instance contr_join A B `{Contr A} : Contr (join A B).
   Proof.
-    exists (push (inl (center A))).
-    intros y; simple refine (pushout_ind _ _ _ _ _ y).
-    - intros [a | b].
-      * apply ap, ap, contr.
-      * exact (pp (center A , b)).
-    - intros [a b]. cbn.
-      refine (_ @ apD (fun a' => joinpp A B (a',b)) (contr a)^).
-      rewrite transport_paths_r, transport_paths_FlFr.
+    exists (pushl (center A)).
+    intros y; simple refine (pushout_ind _ _ _ _ _ _ y).
+    - intros a; apply ap, contr.
+    - intros b; exact (pp (center A , b)).
+    - intros [a b]; cbn.
+      refine ( _ @ apD (fun a' => joinpp A B (a',b)) (contr a)^).
+      rewrite transport_paths_r, transport_paths_FlFr; cbn.
       rewrite ap_V, inv_V, concat_pp_p.
-      unfold pushl, pushr; simpl.
-      rewrite <- ap_compose; unfold joinpp.
       rewrite ap_const, concat_p1.
       reflexivity.
   Defined.
@@ -46,11 +43,10 @@ Section Join.
   Proof.
     apply hprop_inhabited_contr.
     unfold join.
-    refine (pushout_rec _ _ (fun _ => path_ishprop _ _)).
-    intros [a|b].
-    - apply contr_join.  
+    refine (pushout_rec _ _ _ (fun _ => path_ishprop _ _)).
+    - intros a; apply contr_join.  
       exact (contr_inhabited_hprop A a).
-    - refine (trunc_equiv (join B A) (join_sym B A)).
+    - intros b; refine (trunc_equiv (join B A) (join_sym B A)).
       apply contr_join.
       exact (contr_inhabited_hprop B b).
   Defined.
@@ -60,7 +56,7 @@ Section Join.
     : join A B <~> hor A B.
   Proof.
     apply equiv_iff_hprop.
-    - refine (pushout_rec _ tr (fun _ => path_ishprop _ _)).
+    - refine (pushout_rec _ (fun a => tr (inl a)) (fun b => tr (inr b)) (fun _ => path_ishprop _ _)).
     - apply Trunc_rec, push.
   Defined.
 
