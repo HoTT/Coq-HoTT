@@ -114,9 +114,9 @@ Proof.
   apply hprop_allpath.
   intros [x1 p1] [x2 p2].
   apply path_sigma with (s x1 x2 (p1 @ p2^)).
-  rewrite transport_paths_Fl; cbn.
-  rewrite (H x1 x2 (p1 @ p2^)).
-  rewrite inv_pp, inv_V. apply concat_pV_p.
+  abstract (rewrite transport_paths_Fl; cbn;
+            rewrite (H x1 x2 (p1 @ p2^));
+            rewrite inv_pp, inv_V; apply concat_pV_p).
 Defined.
 
 (** ** Alternate characterizations of contractibility. *)
