@@ -2,7 +2,7 @@
 
 After installing Coq via opam [1]. One can install our version of Coq by:
 ```
-   opam install coq-hott
+   opam install coq.8.8.0
 ```
 
 However, one still needs to install the library via git to contribute.

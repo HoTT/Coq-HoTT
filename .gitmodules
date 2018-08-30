@@ -1,11 +1,11 @@
 [submodule "coq-HoTT"]
 	path = coq-HoTT
 	url = https://github.com/coq/coq.git
-	branch = master
+	branch = v8.8
 [submodule "etc/coq-scripts"]
 	path = etc/coq-scripts
 	url = https://github.com/JasonGross/coq-scripts.git
 [submodule "etc/coq-dpdgraph"]
 	path = etc/coq-dpdgraph
 	url = https://github.com/Karmaki/coq-dpdgraph.git
-	branch = coq-trunk
+	branch = coq-v8.8
