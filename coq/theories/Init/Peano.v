@@ -27,8 +27,10 @@ Require Import Notations.
 Require Import Datatypes.
 Local Open Scope identity_scope.
 Require Import Logic_Type.
+Require Coq.Init.Nat.
 
 Open Scope nat_scope.
+Local Notation "0" := O.
 
 Definition eq_S := f_equal S.
 

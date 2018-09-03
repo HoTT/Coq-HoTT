@@ -508,19 +508,44 @@ Notation "n .+4" := (n.+1.+3)%nat   : nat_scope.
 Notation "n .+5" := (n.+1.+4)%trunc : trunc_scope.
 Notation "n .+5" := (n.+1.+4)%nat   : nat_scope.
 Local Open Scope trunc_scope.
-Notation "-2" := minus_two (at level 0) : trunc_scope.
-Notation "-1" := (-2.+1) (at level 0) : trunc_scope.
-Notation "0" := (-1.+1) : trunc_scope.
-Notation "1" := (0.+1) : trunc_scope.
-Notation "2" := (1.+1) : trunc_scope.
-
 Fixpoint nat_to_trunc_index (n : nat) : trunc_index
   := match n with
-       | 0%nat => 0
+       | 0%nat => minus_two.+2
        | S n' => (nat_to_trunc_index n').+1
      end.
 
 Coercion nat_to_trunc_index : nat >-> trunc_index.
+
+Definition int_to_trunc_index (v : Decimal.int) : option trunc_index
+  := match v with
+     | Decimal.Pos d => Some (nat_to_trunc_index (Nat.of_uint d))
+     | Decimal.Neg d => match Nat.of_uint d with
+                        | 2%nat => Some minus_two
+                        | 1%nat => Some (minus_two.+1)
+                        | 0%nat => Some (minus_two.+2)
+                        | _ => None
+                        end
+     end.
+
+Fixpoint trunc_index_to_little_uint n acc :=
+  match n with
+  | minus_two => acc
+  | minus_two.+1 => acc
+  | minus_two.+2 => acc
+  | trunc_S n => trunc_index_to_little_uint n (Decimal.Little.succ acc)
+  end.
+
+Definition trunc_index_to_int n :=
+  match n with
+  | minus_two => Decimal.Neg (Nat.to_uint 2)
+  | minus_two.+1 => Decimal.Neg (Nat.to_uint 1)
+  | n => Decimal.Pos (Decimal.rev (trunc_index_to_little_uint n Decimal.zero))
+  end.
+
+Numeral Notation trunc_index int_to_trunc_index trunc_index_to_int : trunc_scope (warning after 5000).
+(** We declare [-2] and [-1] as notations so that they bind tighter than application, so we can write [IsTrunc -1] rather than [IsTrunc (-1)]. *)
+Notation "-2" := (- 2) : trunc_scope.
+Notation "-1" := (- 1) : trunc_scope.
 
 Fixpoint IsTrunc_internal (n : trunc_index) (A : Type) : Type :=
   match n with

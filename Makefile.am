@@ -66,6 +66,8 @@ STD_VFILES = \
 	$(SRCCOQLIB)/theories/Init/Peano.v \
 	$(SRCCOQLIB)/theories/Init/Tactics.v \
 	$(SRCCOQLIB)/theories/Init/Specif.v \
+	$(SRCCOQLIB)/theories/Init/Decimal.v \
+	$(SRCCOQLIB)/theories/Init/Nat.v \
 	$(SRCCOQLIB)/theories/Init/Prelude.v \
 	$(SRCCOQLIB)/theories/Bool/Bool.v \
 	$(SRCCOQLIB)/theories/Unicode/Utf8_core.v \

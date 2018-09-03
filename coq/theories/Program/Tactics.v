@@ -40,7 +40,7 @@ Ltac show_hyps :=
 
 Ltac do_nat n tac :=
   match n with
-    | 0 => idtac
+    | O => idtac
     | S ?n' => tac ; do_nat n' tac
   end.
 
@@ -65,12 +65,12 @@ Ltac destruct_pairs := repeat (destruct_one_pair).
 
 Ltac destruct_one_ex :=
   let tac H := let ph := fresh "H" in (destruct H as [H ph]) in
-  let tac2 H := let ph := fresh "H" in let ph' := fresh "H" in 
-    (destruct H as [H ph ph']) 
+  let tac2 H := let ph := fresh "H" in let ph' := fresh "H" in
+    (destruct H as [H ph ph'])
   in
   let tacT H := let ph := fresh "X" in (destruct H as [H ph]) in
-  let tacT2 H := let ph := fresh "X" in let ph' := fresh "X" in 
-    (destruct H as [H ph ph']) 
+  let tacT2 H := let ph := fresh "X" in let ph' := fresh "X" in
+    (destruct H as [H ph ph'])
   in
     match goal with
       (* | [H : (ex _) |- _] => tac H *)
@@ -144,7 +144,7 @@ Ltac clear_dups := repeat clear_dup.
 
 (** Try to clear everything except some hyp *)
 
-Ltac clear_except hyp := 
+Ltac clear_except hyp :=
   repeat match goal with [ H : _ |- _ ] =>
            match H with
              | hyp => fail 1
