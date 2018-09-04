@@ -54,15 +54,6 @@ env:
 # encrypted version of deploy key for pushing
     - secure: "Cm2e4Tvpm+sPTGXZV1ztSA81+PXjYCKOm0rqsfPVZprHSpucP6wbn+6HYJxbrbsI6UIE90/MhEpYScQLVR4OfpOKEQCTdWFMBi0uwhYRygeizdApY4pn/yHR6+pqSm7g5ZF5qOFVUDi48gimVeCgs7hoEEb1Ka8ucaI7Oo0q0f8="
 
-
-matrix:
-  fast_finish: true
-  allow_failures:
-    - env: VALIDATE="yes"
-
-
-
-
 before_script:
  - uname -a
  - ./etc/ci/before_script.sh
