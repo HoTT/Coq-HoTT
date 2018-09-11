@@ -98,7 +98,6 @@ Section bounded_search.
 
   Local Definition prop_n_to_min_n : min_n_Type.
   Proof.
-    SearchAbout (merely).
     refine (Trunc_rec _ P_inhab).
     - exact ishpropmin_n.
     - induction 1 as [n Pn]. exact (n_to_min_n n Pn).
