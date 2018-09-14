@@ -103,6 +103,22 @@ Proof.
     reflexivity.
 Defined.
 
+(** ** A map is an embedding as soon as its ap's have sections. *)
+
+Definition isembedding_sect_ap {X Y} (f : X -> Y)
+           (s : forall x1 x2, (f x1 = f x2) -> (x1 = x2))
+           (H : forall x1 x2, Sect (s x1 x2) (@ap X Y f x1 x2))
+  : IsEmbedding f.
+Proof.
+  intros y.
+  apply hprop_allpath.
+  intros [x1 p1] [x2 p2].
+  apply path_sigma with (s x1 x2 (p1 @ p2^)).
+  abstract (rewrite transport_paths_Fl; cbn;
+            rewrite (H x1 x2 (p1 @ p2^));
+            rewrite inv_pp, inv_V; apply concat_pV_p).
+Defined.
+
 (** ** Alternate characterizations of contractibility. *)
 
 Theorem equiv_contr_inhabited_hprop `{Funext} {A}
