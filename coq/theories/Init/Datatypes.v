@@ -30,6 +30,8 @@ Scheme option_rect := Induction for option Sort Type.
 
 Arguments None [A].
 
+Register option as core.option.type.
+
 (** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
 
 Inductive sum (A B : Type) : Type :=
