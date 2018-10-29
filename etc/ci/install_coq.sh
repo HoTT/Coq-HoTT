@@ -37,12 +37,6 @@ if [ ! -z "$FORCE_COQ_VERSION" ]
 then
     git checkout "$FORCE_COQ_VERSION" || exit $?
 fi
-NJOBS=1
-[ -e .opam ] || opam init -j ${NJOBS} --compiler=system -n -y
-eval $(opam config env)
-opam config var root
-opam install -j ${NJOBS} -y camlp5 ocamlfind
-opam list
 echo '$ ./configure '"$@"
 ./configure "$@"
 echo '$ make states tools coqlight plugins grammar/grammar.cma'
