@@ -16,15 +16,15 @@ else
 fi
 # install coq
 if [ ! -z "$UPDATE_QUICK_DOC" ]; then
-    ./install_coq_dot_deps.sh
-    ./install_doctoc.sh
+    ./install_coq_dot_deps.sh || exit $?
+    ./install_doctoc.sh || exit $?
 fi
 if [ ! -z "$UPDATE_HTML" ]; then
-    ./install_proviola.sh
+    ./install_proviola.sh || exit $?
 fi
-./install_coq.sh -prefix /usr/local
+./install_coq.sh -prefix /usr/local || exit $?
 if [ ! -z "$UPDATE_DEP_GRAPHS" ]; then
-    ./make_dpd_graphs.sh
+    ./make_dpd_graphs.sh || exit $?
 fi
 
 popd 1>/dev/null

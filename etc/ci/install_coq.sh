@@ -8,7 +8,7 @@ if [ -z "$BUILD_COQ" ]
 then
     #echo | sudo add-apt-repository ppa:ezyang/coq-git
     #sudo apt-get update -qq
-    sudo apt-get install -q coq libcoq-ocaml-dev
+    sudo apt-get install -q coq libcoq-ocaml-dev || exit $?
     exit 0
 fi
 
@@ -38,9 +38,9 @@ then
     git checkout "$FORCE_COQ_VERSION" || exit $?
 fi
 echo '$ ./configure '"$@"
-./configure "$@"
+./configure "$@" || exit $?
 echo '$ make states tools coqlight plugins grammar/grammar.cma'
-make states tools coqlight plugins grammar/grammar.cma
+make states tools coqlight plugins grammar/grammar.cma || exit $?
 echo '$ sudo make install-binaries + rsync plugins theories'
 touch bin/coqtop.byte bin/coqchk stm/{proof,tac,query}workertop.cma
 sudo make install-binaries install-devfiles
