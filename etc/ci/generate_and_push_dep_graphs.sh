@@ -29,11 +29,6 @@ EXTRA_ARGS="$("$DIR"/check_should_dry_run.sh "$@")"
 
 export MESSAGE="Autoupdate documentation with dpdgraphs"
 
-echo '$ eval $(opam config env)'
-eval $(opam config env)
-echo '$ opam config var root'
-opam config var root
-
 echo '$ make svg-file-dep-graphs svg-aggregate-dep-graphs'
 make etc/coq-dpdgraph/coqthmdep || exit $?
 make svg-file-dep-graphs -k || exit $?

@@ -8,7 +8,7 @@ if [ -z "$BUILD_COQ" ]
 then
     #echo | sudo add-apt-repository ppa:ezyang/coq-git
     #sudo apt-get update -qq
-    sudo apt-get install -q coq libcoq-ocaml-dev
+    sudo apt-get install -q coq libcoq-ocaml-dev || exit $?
     exit 0
 fi
 
@@ -37,16 +37,10 @@ if [ ! -z "$FORCE_COQ_VERSION" ]
 then
     git checkout "$FORCE_COQ_VERSION" || exit $?
 fi
-NJOBS=1
-[ -e .opam ] || opam init -j ${NJOBS} --compiler=system -n -y
-eval $(opam config env)
-opam config var root
-opam install -j ${NJOBS} -y camlp5 ocamlfind
-opam list
 echo '$ ./configure '"$@"
-./configure "$@"
+./configure "$@" || exit $?
 echo '$ make states tools coqlight plugins grammar/grammar.cma'
-make states tools coqlight plugins grammar/grammar.cma
+make states tools coqlight plugins grammar/grammar.cma || exit $?
 echo '$ sudo make install-binaries + rsync plugins theories'
 touch bin/coqtop.byte bin/coqchk stm/{proof,tac,query}workertop.cma
 sudo make install-binaries install-devfiles
