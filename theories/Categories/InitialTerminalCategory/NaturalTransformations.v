@@ -43,7 +43,7 @@ Section NaturalTransformations.
     := trunc_from_initial F G.
 
   Definition to_terminal
-             `{@IsTerminalCategory one H0 H1} (F G : Functor C one)
+             `{@IsTerminalCategory one H1 H2} (F G : Functor C one)
   : NaturalTransformation F G
     := Build_NaturalTransformation
          F G
@@ -52,7 +52,7 @@ Section NaturalTransformations.
 
   Global Instance trunc_to_terminal
          `{Funext}
-         `{@IsTerminalCategory one H0 H1} (F G : Functor C one)
+         `{@IsTerminalCategory one H1 H2} (F G : Functor C one)
   : Contr (NaturalTransformation F G).
   Proof.
     refine (BuildContr _ (to_terminal F G) _).
