@@ -30,7 +30,8 @@ assert (E : sigT (fun n : R => sigT (fun d : R => ~ d = 0 )) <~> Frac).
 Qed.
 
 Global Instance Frac_ishset@{} : IsHSet Frac
-  := Frac_ishset'@{UR Ularge Set}.
+  := ltac:(first [exact Frac_ishset'@{UR Ularge Set}|
+                  exact Frac_ishset'@{}]).
 
 Local Existing Instance den_ne_0.
 

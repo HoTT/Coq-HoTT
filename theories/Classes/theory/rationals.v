@@ -563,7 +563,9 @@ Qed.
 
 Global Instance Qpos_enumerable `{Enumerable Q} : Enumerable Q+.
 Proof.
-exists Qpos_enumerator. apply Qpos_is_enumerator@{Uhuge Ularge}.
+  exists Qpos_enumerator.
+  first [exact Qpos_is_enumerator@{Uhuge Ularge}|
+         exact Qpos_is_enumerator@{}].
 Qed.
 
 End enumerable.

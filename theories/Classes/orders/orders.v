@@ -362,7 +362,8 @@ Section full_pseudo_order.
   Qed.
 
   Global Instance fullpseudo_fullpartial@{i} : FullPartialOrder Ale Alt
-    := fullpseudo_fullpartial'@{i i Set Set Set}.
+    := ltac:(first [exact fullpseudo_fullpartial'@{i i Set Set Set}|
+                    exact fullpseudo_fullpartial'@{i i}]).
 
   Global Instance le_stable : forall x y, Stable (x ≤ y).
   Proof.
