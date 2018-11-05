@@ -80,7 +80,8 @@ change eqb with Peqb in E;simpl in E.
   apply ap2;auto. apply ap2;auto.
 Qed.
 
-Definition eval_eqb@{} := eval_eqb'@{Ularge}.
+Definition eval_eqb@{} := ltac:(first [exact eval_eqb'@{Ularge}|
+                                       exact eval_eqb']).
 
 Lemma eval_0' : forall P, P =? 0 = true -> forall vs, eval vs P = 0.
 Proof.
@@ -92,7 +93,8 @@ induction P;simpl;intros E vs.
   destruct (false_ne_true E).
 Qed.
 
-Definition eval_0@{} := eval_0'@{Ularge}.
+Definition eval_0@{} := ltac:(first [exact eval_0'@{Ularge}|
+                                     exact eval_0']).
 
 Fixpoint addC c P :=
   match P with
@@ -231,7 +233,8 @@ induction P as [c|P1 IH1 v P2 IH2];intros Q.
   rewrite IH2. apply plus_assoc.
 Qed.
 
-Definition eval_add@{} := eval_add'@{Ularge}.
+Definition eval_add@{} := ltac:(first [exact eval_add'@{Ularge}|
+                                       exact eval_add'@{}]).
 
 Fixpoint mulX v P :=
   match P with
@@ -303,7 +306,7 @@ destruct Q as [d | Q1 w Q2].
   + auto.
 Qed.
 
-Definition eval_mul@{} := eval_mul'@{Ularge}.
+Definition eval_mul@{} := ltac:(first [exact eval_mul'@{Ularge}|exact eval_mul'@{}]).
 
 Fixpoint toPol (e: Expr V) :=
   match e with
