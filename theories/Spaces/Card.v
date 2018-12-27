@@ -4,6 +4,8 @@ Require Import HoTT.Basics HoTT.Types HoTT.HSet HoTT.TruncType.
 Require Import HoTT.Classes.interfaces.abstract_algebra.
 Require Import HoTT.HIT.Truncations.
 
+Require Import ExcludedMiddle.
+
 (** ** Definitions and operations *)
 
 Definition Card := Trunc 0 hSet.
@@ -33,6 +35,9 @@ Proof.
   refine (hexists (fun (i : a -> b) => isinj i)).
 Defined.
 
+Definition lt_card `{Univalence} (a : Card) (b : Card) : Type :=
+  BuildhProp (leq_card a b * BuildhProp (a <> b)).
+
 (** ** Properties *)
 Section contents.
   Context `{Univalence}.
@@ -42,6 +47,8 @@ Section contents.
   Global Instance zero_card : Zero Card := tr (BuildhSet Empty).
   Global Instance one_card : One Card := tr (BuildhSet Unit).
   Global Instance le_card : Le Card := leq_card.
+
+  Definition two_card : Card := tr (BuildhSet Bool).
 
   (* Reduce an algebraic equation to an equivalence *)
   Local Ltac reduce :=
@@ -115,6 +122,22 @@ Section contents.
   Lemma exp_card_mult_mult (a b c : Card) :
     exp_card c (a * b) = (exp_card c a) * (exp_card c b).
   Proof. reduce. symmetry. apply equiv_prod_coind. Defined.
+
+(* Cantor's theorem *)
+  Lemma card_lt_exp_two_card `{ExcludedMiddle} (a : Card) :
+    lt_card a (exp_card a two_card).
+  Proof.
+    strip_truncations; split; simpl.
+    + srapply (@tr -1); srefine (_ ; _).
+      - intros x y. destruct a as [a is_a].
+        remember (LEM (x = y) _) as cases eqn:p.
+        refine (match cases with
+                  | inl _ => true
+                  | inr _ => false end).
+      - simpl. intros x y. intro.
+        admit.
+    + intro.
+  Admitted.
 
   (** *** Properties of ≤ *)
   Instance reflexive_card : Reflexive leq_card.

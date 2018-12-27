@@ -414,3 +414,6 @@ theories/Classes/tests/ring_tac.v
 contrib/HoTTBook.v
 contrib/HoTTBookExercises.v
 contrib/Freudenthal.v
+
+contrib/Powers.v
+contrib/SmallCategory.v
