@@ -35,8 +35,8 @@ Proof.
   refine (hexists (fun (i : a -> b) => isinj i)).
 Defined.
 
-Definition lt_card `{Univalence} (a : Card) (b : Card) : Type :=
-  BuildhProp (leq_card a b * BuildhProp (a <> b)).
+Definition lt_card `{Univalence} (a : Card) (b : Card) : hProp :=
+  BuildhProp ((leq_card a b) * (a <> b)).
 
 (** ** Properties *)
 Section contents.
@@ -123,7 +123,24 @@ Section contents.
     exp_card c (a * b) = (exp_card c a) * (exp_card c b).
   Proof. reduce. symmetry. apply equiv_prod_coind. Defined.
 
-(* Cantor's theorem *)
+  (* Cantor's theorem *)
+  Lemma card_ne_exp_two_card (a : Card) :
+    a <> (exp_card a two_card).
+  Proof.
+    unfold Card in *; strip_truncations; cbn.
+    intros e.
+    apply ((equiv_path_Tr (A := hSet) a (BuildhSet (a -> Bool)))^-1) in e.
+    strip_truncations.
+    apply ((equiv_path_trunctype a (BuildhSet (a -> Bool)))^-1) in e.
+    destruct a as [A Aset]; cbn in *.
+    pose (f := (fun a:A => negb (e a a))).
+    pose (a0 := e^-1 f).
+    pose (b := f a0).
+    assert (bb : negb (e (e^-1 f) a0) = b) by reflexivity.
+    rewrite eisretr in bb. fold b in bb.
+    exact (not_fixed_negb b bb).
+  Defined.
+
   Lemma card_lt_exp_two_card `{ExcludedMiddle} (a : Card) :
     lt_card a (exp_card a two_card).
   Proof.
@@ -134,10 +151,17 @@ Section contents.
         refine (match cases with
                   | inl _ => true
                   | inr _ => false end).
-      - simpl. intros x y. intro.
-        admit.
-    + intro.
-  Admitted.
+      - simpl. intros x y.
+        intros e; apply ap10 in e; specialize (e x); cbn in e.
+        set (cases1 := LEM (x = x) _) in *.
+        set (cases2 := LEM (y = x) _) in *.
+        destruct cases1 as [p1|q1], cases2 as [p2|q2].
+        * symmetry; assumption.
+        * elim (true_ne_false e).
+        * elim (false_ne_true e).
+        * elim (q1 idpath).
+    + apply cand_ne_exp_two_card.
+  Defined.
 
   (** *** Properties of ≤ *)
   Instance reflexive_card : Reflexive leq_card.
