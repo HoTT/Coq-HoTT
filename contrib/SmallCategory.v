@@ -4,7 +4,7 @@ Require Import Functor.
 Require Import Limits.Core.
 Require Import Spaces.Card.
 Require Import HIT.Truncations.
-
+Require Import ExcludedMiddle.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -65,6 +65,7 @@ Record ThinCat := {
 Section freyd.
 
 Context `{Univalence}.
+Context `{ExcludedMiddle}.
 
 (**
   Prop 3.7.3 Category theory in context, Riehl
@@ -83,9 +84,9 @@ Context `{Univalence}.
  
  **)
 
-Proposition Freyd_preorder_limit (k : Card) (C : kSmallCategory k) 
-  {h : HaskLimits k C} 
-  : IsThin C.
+Proposition Freyd_preorder_limit 
+  (k : Card) (C : kSmallCategory k) {h : HaskLimits k C} : 
+    IsThin C.
 Proof.
   remember (CatCard C) as l eqn:p.
   intros X Y f g; srapply (BuildContr).

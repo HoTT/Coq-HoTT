@@ -132,7 +132,7 @@ Section contents.
     apply ((equiv_path_Tr (A := hSet) a (BuildhSet (a -> Bool)))^-1) in e.
     strip_truncations.
     apply ((equiv_path_trunctype a (BuildhSet (a -> Bool)))^-1) in e.
-    destruct a as [A Aset]; cbn in *.
+    destruct a as [A ?]. cbn in e.
     pose (f := (fun a:A => negb (e a a))).
     pose (a0 := e^-1 f).
     pose (b := f a0).
@@ -147,15 +147,12 @@ Section contents.
     strip_truncations; split; simpl.
     + serapply (tr ( _ ; _ )).
       - intros x y.
-        set (cases:= LEM (x = y) _).
-        destruct cases as [p|q].
+        destruct (LEM (x = y) _).
         * refine true.
         * refine false.
-      - intros x y.
-        intros e; apply ap10 in e; specialize (e x); cbn in e.
-        set (cases1 := LEM (x = x) _) in *.
-        set (cases2 := LEM (y = x) _) in *.
-        destruct cases1 as [p1|q1], cases2 as [p2|q2].
+      - intros x y e.
+        apply ap10 in e; specialize (e x); cbn in e.
+        destruct (LEM (x = x) _) as [?|q1], (LEM (y = x) _).
         * symmetry; assumption.
         * elim (true_ne_false e).
         * elim (false_ne_true e).

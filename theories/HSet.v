@@ -197,3 +197,23 @@ Proof.
 Qed.
 
 End Lawvere.
+
+Section Cantor.
+  Context {A B : hSet}.
+
+  Lemma negb_not_fixed : not (fixed negb).
+  Proof.
+    intro.
+    destruct X as [x p].
+    revert p. 
+    apply (not_fixed_negb x).
+  Qed.
+
+  Corollary cantor (f : A -> (A -> Bool)) :  not (issur f).
+  Proof.
+    intro X.
+    pose ((@Lawvere _ _ f X negb)) as bar.
+    apply (negb_not_fixed bar).
+  Qed.
+
+End Cantor.
