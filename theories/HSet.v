@@ -3,7 +3,7 @@
 
 Require Import HoTT.Basics.
 Require Import Types.Paths Types.Sigma Types.Empty Types.Record Types.Unit Types.Arrow HProp.
-
+Require Import Types.Bool.
 
 Local Open Scope path_scope.
 
@@ -161,3 +161,39 @@ Proof.
     * apply ap. apply H'.
     * by rewrite eissect.
 Qed.
+
+Section Lawvere.
+
+(* I should probably use ISSurjective from HIT/Truncations.v *)
+Definition issur {X Y} (f : X -> Y)
+  := forall y : Y, exists x : X,
+        f x = y.
+
+(* fixed points of a function *)
+Definition fixed {X} (f : X -> X) := exists x, f x = x.
+
+Context {A B : Type}.
+
+(** 
+    Lawveres theorem 
+
+    If there is an onto map e : A -> B^A then every f : B -> B has 
+    a fixed point.
+**)
+(*TODO: RENAME
+
+  Do rewriting at end properly.
+*)
+Theorem Lawvere (e : A -> (A -> B)) {sur : issur e} 
+  : forall (f : B -> B), fixed f.
+Proof.
+  intro.
+  set (s := fun x => f (e x x)).
+  unfold issur in sur.
+  destruct (sur s) as [y p].
+  refine (e y y; _).
+  set (foo := f (e y y)).
+  rewrite p; reflexivity.
+Qed.
+
+End Lawvere.
