@@ -145,13 +145,13 @@ Section contents.
     lt_card a (exp_card a two_card).
   Proof.
     strip_truncations; split; simpl.
-    + srapply (@tr -1); srefine (_ ; _).
-      - intros x y. destruct a as [a is_a].
-        remember (LEM (x = y) _) as cases eqn:p.
-        refine (match cases with
-                  | inl _ => true
-                  | inr _ => false end).
-      - simpl. intros x y.
+    + serapply (tr ( _ ; _ )).
+      - intros x y.
+        set (cases:= LEM (x = y) _).
+        destruct cases as [p|q].
+        * refine true.
+        * refine false.
+      - intros x y.
         intros e; apply ap10 in e; specialize (e x); cbn in e.
         set (cases1 := LEM (x = x) _) in *.
         set (cases2 := LEM (y = x) _) in *.
@@ -160,7 +160,7 @@ Section contents.
         * elim (true_ne_false e).
         * elim (false_ne_true e).
         * elim (q1 idpath).
-    + apply cand_ne_exp_two_card.
+    + apply card_ne_exp_two_card.
   Defined.
 
   (** *** Properties of ≤ *)
