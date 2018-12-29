@@ -2,8 +2,9 @@
 (** * H-Sets *)
 
 Require Import HoTT.Basics.
-Require Import Types.Paths Types.Sigma Types.Empty Types.Record Types.Unit Types.Arrow HProp.
-Require Import Types.Bool.
+Require Import Types.Paths Types.Sigma Types.Unit Types.Arrow.
+Require Import Types.Empty Types.Record Types.Bool.
+Require Import HProp.
 
 Local Open Scope path_scope.
 
@@ -111,6 +112,10 @@ Definition isinj {X Y} (f : X -> Y)
   := forall x0 x1 : X,
        f x0 = f x1 -> x0 = x1.
 
+Definition issur {X Y} (f : X -> Y)
+  := forall y : Y, exists x : X,
+        f x = y.
+
 Lemma isinj_embedding {A B : Type} (m : A -> B) : IsEmbedding m -> isinj m.
 Proof.
   intros ise x y p.
@@ -161,59 +166,3 @@ Proof.
     * apply ap. apply H'.
     * by rewrite eissect.
 Qed.
-
-Section Lawvere.
-
-(* I should probably use ISSurjective from HIT/Truncations.v *)
-Definition issur {X Y} (f : X -> Y)
-  := forall y : Y, exists x : X,
-        f x = y.
-
-(* fixed points of a function *)
-Definition fixed {X} (f : X -> X) := exists x, f x = x.
-
-Context {A B : Type}.
-
-(** 
-    Lawveres theorem 
-
-    If there is an onto map e : A -> B^A then every f : B -> B has 
-    a fixed point.
-**)
-(*TODO: RENAME
-
-  Do rewriting at end properly.
-*)
-Theorem Lawvere (e : A -> (A -> B)) {sur : issur e} 
-  : forall (f : B -> B), fixed f.
-Proof.
-  intro.
-  set (s := fun x => f (e x x)).
-  unfold issur in sur.
-  destruct (sur s) as [y p].
-  refine (e y y; _).
-  set (foo := f (e y y)).
-  rewrite p; reflexivity.
-Qed.
-
-End Lawvere.
-
-Section Cantor.
-  Context {A B : hSet}.
-
-  Lemma negb_not_fixed : not (fixed negb).
-  Proof.
-    intro.
-    destruct X as [x p].
-    revert p. 
-    apply (not_fixed_negb x).
-  Qed.
-
-  Corollary cantor (f : A -> (A -> Bool)) :  not (issur f).
-  Proof.
-    intro X.
-    pose ((@Lawvere _ _ f X negb)) as bar.
-    apply (negb_not_fixed bar).
-  Qed.
-
-End Cantor.
