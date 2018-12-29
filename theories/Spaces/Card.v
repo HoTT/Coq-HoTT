@@ -1,8 +1,11 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** Representation of cardinals, see Chapter 10 of the HoTT book. *)
-Require Import HoTT.Basics HoTT.Types HoTT.HSet HoTT.TruncType.
+Require Import HoTT.Basics HoTT.HSet HoTT.TruncType.
+Require Import HoTT.Types.
 Require Import HoTT.Classes.interfaces.abstract_algebra.
 Require Import HoTT.HIT.Truncations.
+Require Import Spaces.Finite.
+Require Import Types.Sigma.
 
 Require Import ExcludedMiddle.
 
@@ -38,17 +41,41 @@ Defined.
 Definition lt_card `{Univalence} (a : Card) (b : Card) : hProp :=
   BuildhProp ((leq_card a b) * (a <> b)).
 
+(** Cardinals **)
+
+Section Cardinals.
+  Context `{Univalence}.
+
+  Definition zero : Card := tr (BuildhSet Empty).
+  Definition one  : Card := tr (BuildhSet Unit).
+  Definition two  : Card := tr (BuildhSet Bool).
+
+  Definition nat_card (n : nat) : Card := tr (BuildhSet (Fin n)).
+
+  Definition aleph_0 : Card := tr (BuildhSet nat).
+
+  (** TODO: 
+    Perhaps include "sucessor" cardinals aleph_n upto some assumptions.
+
+    This would allow us to define aleph_w as the infinite union over N
+
+    This is a nice cardinal to have because it's an example of one that isn't
+    regular.
+  **)
+
+
+End Cardinals.
+
+
 (** ** Properties *)
 Section contents.
   Context `{Univalence}.
 
   Global Instance plus_card : Plus Card := sum_card.
   Global Instance mult_card : Mult Card := prod_card.
-  Global Instance zero_card : Zero Card := tr (BuildhSet Empty).
-  Global Instance one_card : One Card := tr (BuildhSet Unit).
-  Global Instance le_card : Le Card := leq_card.
-
-  Definition two_card : Card := tr (BuildhSet Bool).
+  Global Instance zero_card : Zero Card := zero.
+  Global Instance one_card  : One Card  := one.
+  Global Instance le_card   : Le Card   := leq_card.
 
   (* Reduce an algebraic equation to an equivalence *)
   Local Ltac reduce :=
@@ -125,7 +152,7 @@ Section contents.
 
   (* Cantor's theorem *)
   Lemma card_ne_exp_two_card (a : Card) :
-    a <> (exp_card a two_card).
+    a <> (exp_card a two).
   Proof.
     unfold Card in *; strip_truncations; cbn.
     intros e.
@@ -142,7 +169,7 @@ Section contents.
   Defined.
 
   Lemma card_lt_exp_two_card `{ExcludedMiddle} (a : Card) :
-    lt_card a (exp_card a two_card).
+    lt_card a (exp_card a two).
   Proof.
     strip_truncations; split; simpl.
     + serapply (tr ( _ ; _ )).
@@ -181,4 +208,59 @@ Section contents.
   Global Instance preorder_card : PreOrder le_card.
   Proof. split; apply _. Defined.
 
+  Section Regular.
+
+    (** Definition of regular cardinals (from nlab)
+
+    An infinite cardinal κ\kappa is a regular cardinal if it 
+    satisfies the following equivalent properties:
+
+     1. no set (in a material set theory) of cardinality κ\kappa 
+      is the union of fewer than κ\kappa sets of cardinality 
+      less than κ\kappa.
+
+     2. no set (in a structural set theory) of cardinality κ\kappa 
+      is the disjoint union of fewer than κ\kappa sets of 
+      cardinality less than κ\kappa.
+
+     3. given a function P→XP \to X (regarded as a family 
+      of sets {P x} x∈X\{P_x\}_{x\in X}) such that 
+      |X|<κ{|X|} \lt \kappa and |P x|<κ{|P_x|} \lt \kappa for 
+      all x∈Xx \in X, then |P|<κ{|P|} \lt \kappa.
+
+     4. the category Set <κ\Set_{\lt\kappa} of sets of 
+      cardinality <κ\lt\kappa has all colimits 
+      (or just all coproducts) of size <κ\lt\kappa.
+
+     5. the cofinality of κ\kappa is equal to κ\kappa.
+
+    A cardinal that is not regular is called singular.
+
+
+    We are not working in a material set theory so we can't choose 1.
+    Definitions 2, 3, 4 seem the most likely. I (Ali) am not familar
+    with 5 and 4 relies on categorical machinary which I see no reason
+    to have to use.
+
+    Definition 3 essentially says for every X, for every family 
+    of sets P : X -> Set_U such that X and the fibers of P have 
+    cardinality less than k, then the total space (set) has cardinality
+    less then k. I don't know if this is an easy thing to prove in practice
+    but seems like the kind of thing HoTT is good at.
+
+    Definition 2 would require defining disjoint unions. And I am sure
+    it is basically the same thing as 3.
+
+**)
+
+  Notation "| X | < k" := (lt_card (tr X) k) (at level 20).
+  Notation "| X | < k" := (lt_card (tr (BuildhSet X)) k) (at level 20).
+
+  Context {X : hSet}.
+  Context {P : X -> hSet}.
+
+  Definition regular (k : Card) `{|X| <  k} `{forall x, |P x| < k} :=
+        |exists (x:X), P x| < k.
+
+  End Regular.
 End contents.

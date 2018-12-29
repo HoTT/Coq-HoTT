@@ -24,7 +24,7 @@ Definition CatCard (C : StrictCategory) : Card :=
 (* A k-small category is a small category with object set 
    cardinality less than k *)
 Definition IsSmall (k : Card) (C : StrictCategory): hProp :=
-  leq_card (CatCard C) k.
+  lt_card (CatCard C) k.
 
 Record kSmallCategory (k : Card) := {
   C :> StrictCategory;
