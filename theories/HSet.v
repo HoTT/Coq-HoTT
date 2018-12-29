@@ -112,10 +112,6 @@ Definition isinj {X Y} (f : X -> Y)
   := forall x0 x1 : X,
        f x0 = f x1 -> x0 = x1.
 
-Definition issur {X Y} (f : X -> Y)
-  := forall y : Y, exists x : X,
-        f x = y.
-
 Lemma isinj_embedding {A B : Type} (m : A -> B) : IsEmbedding m -> isinj m.
 Proof.
   intros ise x y p.
