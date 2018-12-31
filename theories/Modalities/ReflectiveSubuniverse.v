@@ -1622,6 +1622,15 @@ Section ConnectedMaps.
               (equiv_sigma_contr (fun a:A => const tt a = u))^-1 _).
   Defined.
 
+  Global Instance conn_map_from_unit_isconnected {A : Type} (a : A)
+          `{IsConnected O A}
+  : IsConnMap O (@const Unit A a).
+  Proof.
+    intro x.
+    serapply (isconnected_equiv _ _ 
+      (@equiv_path_hfiber _ A () ) _). 
+  Admitted.
+
   (* Lemma 7.5.10: A map to a type in [O] exhibits its codomain as the [O]-reflection of its domain if it is [O]-connected.  (The converse is true if and only if [O] is a modality.) *)
   Definition isequiv_O_rec_conn_map {A B : Type} `{In O B}
              (f : A -> B) `{IsConnMap O _ _ f}
