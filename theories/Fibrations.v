@@ -35,7 +35,8 @@ Definition path_hfiber {A B : Type} {f : A -> B} {y : B}
 Definition path_hfiber_const (A : Type) (a_p a : A) 
   : hfiber (@const Unit A a_p) a <~> a_p = a.
 Proof.
-  apply (@path_hfiber Unit A (@const Unit A a_p) _).
+(*   apply (@path_hfiber Unit A (@const Unit A a_p) _). *)
+Admitted.
 
 (** If we rearrange this a bit, then it characterizes the fibers of [ap]. *)
 
