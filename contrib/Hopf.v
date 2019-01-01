@@ -1,15 +1,33 @@
 Require Import Basics.
+
 Require Import Types.Universe.
 Require Import Types.Sigma.
+Require Import Types.Equiv.
+Require Import Types.Bool.
+Require Import Types.Paths.
+
 Require Import HIT.Circle.
 Require Import HIT.Pushout.
+Require Import HIT.Truncations.
 Require Import HIT.Flattening.
+Require Import HIT.Suspension.
+Require Import HIT.Join.
+Require Import HIT.Spheres.
 
+Require Import UnivalenceAxiom.
+Require Import UnivalenceImpliesFunext.
+
+Import TrM.
+
+Set Universe Polymorphism.
+Set Implicit Arguments.
+Generalizable All Variables.
+Set Asymmetric Patterns.
+
+
+Notation ua := path_universe_uncurried.
 
 Section FibrationOverPushout.
-  Context `{Univalence}.
-
-  Notation ua := path_universe_uncurried.
 
   Context {X Y Z : Type}.
 
@@ -27,8 +45,8 @@ Section FibrationOverPushout.
     srapply (pushout_ind j k).
     + refine E_Y.
     + refine E_Z.
-    + intro x; compute; induction (cp x).
-      refine (ua (e_X x)).
+    + intro x; destruct (pp x); simpl.
+      apply (ua (e_X x)).
   Defined.
 
   Let E_Y_total := {y : Y & E_Y y}.
@@ -77,21 +95,37 @@ Section HSpace.
   Context `{Funext}.
 
 
-  Record HSpace := {
-    space :> Type;
-    base : space;
+  Class IsHSpace (space : Type) := {
+    id : space;
     mu : space -> space -> space;
-    left_id : forall a, mu base a = a;
-    right_id : forall a, mu a base = a
+    left_id : forall a, mu id a = a;
+    right_id : forall a, mu a id = a
   }.
 
-  Require Import Types.Equiv.
-  Require Import HIT.Truncations.
-  Import TrM.
-  
-
-  Context (A : HSpace).
+  Context {A : Type}.
+  Context `{IsHSpace A}.
   Context `{IsConnected 0 A}.
+
+  Lemma mu_l_equiv' : forall (a : A), IsEquiv (mu a).
+  Proof.
+    erapply (conn_map_elim -1 _ _).
+  Admitted.
+
+  Lemma mu_r_equiv' : forall (a : A), IsEquiv (fun x => mu x a).
+  Proof.
+    apply (conn_map_elim -1 _ _).
+(*     isconnected_equiv *)
+  Admitted.
+
+  Lemma mu_l_equiv : forall (a : A), A <~> A.
+  Proof.
+    intro; apply (BuildEquiv _ _ _ (mu_l_equiv' a)).
+  Qed.
+
+  Lemma mu_r_equiv : forall (a : A), A <~> A.
+  Proof.
+    intro; apply (BuildEquiv _ _ _ (mu_r_equiv' a)).
+  Qed.
 
 (*
 
@@ -125,29 +159,170 @@ end
 
 *)
 
-
-
-
-  Lemma mu_l_equiv : forall (a : A), IsEquiv (A.(mu) a).
-  Proof.
-    erapply (conn_map_elim -1 _ _).
-  Admitted.
-
-  Lemma mu_r_equiv : forall (a : A), IsEquiv (fun x => mu _ x a).
-  Proof.
-    apply (conn_map_elim -1 _ _).
-(*     isconnected_equiv *)
-  Admitted.
-
 End HSpace.
 
 
+Section Suspension.
+  Context {X : Type}.
+  Let to_unit (x : X) : Unit := tt.
 
+  (** The suspension ΣX can be written as a pushout: 1 ⊔_A 1 **)
+  Lemma susp_equiv_pushout : Susp X <~> pushout to_unit to_unit.
+  Proof.
+    serapply (equiv_adjointify).
+    + serapply (Susp_ind). 
+       apply (pushl tt).
+       apply (pushr tt).
+       intro x; destruct (merid x); apply (pp x).
+    + serapply (pushout_ind to_unit to_unit).
+       intro; apply North.
+       intro; apply South.
+       intro; destruct (pp a); apply (merid a).
+    + srapply (pushout_ind to_unit to_unit).
+       intro b; destruct b; reflexivity.
+       intro c; destruct c; reflexivity.
+       admit.
+    + serapply (Susp_ind).
+       reflexivity.
+       reflexivity.
+       admit.
+  Admitted.
+End Suspension.
 
+Section HopfConstruction.
 
+  Context {X : Type}.
+  Context `{IsHSpace X}.
+  Context `{IsConnected 0 X}.
 
+  (** Hopf construction **)
+  Definition susp_fibration : Susp X -> Type.
+  Proof.
+    rewrite (ua (susp_equiv_pushout)).
+    serapply (@fibration_pushout _ _ _ _ _).
+      apply (fun _ => X).
+      apply (fun _ => X).
+      intro x; refine (mu_l_equiv x).
+  Defined.
 
+  (** Fiber of hopf construction **)
+  Lemma susp_fibration_fiber : forall x, susp_fibration x <~> X.
+  Proof.
+    intro x.
+    serapply (equiv_adjointify).
+    + admit.
+  Admitted.
 
-(** Hopf fibrations **)
+  (** Total space of hopf construction **)
+  Lemma susp_fibration_total : {x : Susp X & susp_fibration x} <~> join X X.
+  Proof.
+    serapply (equiv_adjointify).
+  Admitted.
+
+End HopfConstruction.
+
+(** Now in order to get the hopf fibrations we "simply" need to give
+    a H-space structure to various spheres:
+
+    Real: A = S0                Easy to do without lemmas. (Junior Hopf)
+      S0 --> S0 * S0 --> S1     However note that S0 isn't connected.
+      S0 --> S1 --> S1          So it doesn't follow from lemmas anyway.
+
+    Complex: A = S1             See HoTT book. (Hopf fibration)
+      S1 --> S1 * S1 --> S2
+      S1 --> S3 --> S2
+
+    Quaternionic: A = S3        See https://arxiv.org/abs/1610.01134 for
+      S3 --> S3 * S3 --> S4     a description.
+      S3 --> S7 --> S4
+
+    Octonionic: A = S7          ????
+      S7 --> S7 * S7 --> S8
+      S7 --> S15 --> S8 
+**)
+
+(***
+      Hopf fibrations 
+ ***)
+
 
 (* Real hopf fibration *)
+
+Section RealHopf.
+
+  (** Since S0 isn't connected the junior hopf fibration,
+      doesn't follow from our lemmas. However it is easy
+      enough to define by induction on the circle.
+
+      Notice how it twists.
+   **)
+
+  Definition junior_hopf_fibration : S1 -> Type. 
+  Proof.
+    srapply (S1_ind).
+    + refine Bool.
+    + destruct loop. refine (ua (equiv_negb)).
+  Qed.
+
+End RealHopf.
+
+Section ComplexHopf.
+
+  Definition h : forall (x : S1), x = x.
+  Proof.
+    srapply (S1_ind).
+    + apply loop.
+    + set (x := transport_paths_lr loop loop).
+      hott_simpl.
+  Qed.
+
+  Global Instance S1_IsHSpace : IsHSpace S1.
+  Proof.
+    srapply Build_IsHSpace.
+    + apply base.
+    + srapply S1_ind.
+      * refine idmap.
+      * destruct loop; refine (path_forall _ _ h).
+    + reflexivity.
+    + srapply (S1_ind).
+      * reflexivity.
+      * admit.
+  Admitted.
+
+  Global Instance Sphere_1_IsHSpace : IsHSpace (Sphere 1).
+  Proof.
+    rewrite (ua (BuildEquiv _ _ Sph1_to_S1 _)).
+    apply S1_IsHSpace.
+  Qed.
+
+
+  (** Need connected spheres **)
+  Definition hopf_fibration : Sphere 2 -> Type.
+  Proof.
+    refine (susp_fibration).
+  Admitted.
+
+End ComplexHopf.
+
+Section QuaternionicHopf.
+
+  (**
+
+    In https://arxiv.org/abs/1610.01134 the authors conjecture that
+    there is H-space structure on S3 and give a description of it.
+
+    But 'tis only a conjecture...
+
+  **)
+
+
+  Global Instance S3_IsHSpace : IsHSpace S3.
+  Admitted.
+
+
+End QuaternionicHopf.
+
+
+
+
+
