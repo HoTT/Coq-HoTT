@@ -358,7 +358,6 @@ Section ComplexHopf.
   (** Need connected spheres **)
   Definition hopf_fibration : Sphere 2 -> Type.
   Proof.
-    refine (susp_fibration).
   Admitted.
 
 End ComplexHopf.
