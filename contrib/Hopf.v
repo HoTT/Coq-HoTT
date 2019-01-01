@@ -86,14 +86,49 @@ Section FibrationOverPushout.
     + unfold E_push_total.
       unfold pushout.
       unfold fibration_pushout.
-(*       srapply (equiv_inverse (@equiv_flattening _ B A f g C e_X)). *)
+      apply (equiv_inverse).
+      (*serapply (@equiv_flattening).
+      refine (@equiv_flattening _ B A f g C e_X).*)
+      admit.
   Admitted.
 
 End FibrationOverPushout.
 
+Section ConnLemma. 
+
+  Lemma hfiber_const_equiv (A : Type) (ab a : A) : 
+    hfiber (@const Unit _ ab) a <~> ab = a.
+  Proof.
+    compute.
+    serapply (equiv_adjointify).
+    + intro; destruct X as [_ x]; apply x.
+    + intro p; apply (tt; p).
+    + compute; reflexivity.
+    + intro; destruct x; destruct proj1_sig.
+      reflexivity.
+  Qed.
+
+(* Small lemma about connectivity of constant map 
+   should probably be in ReflectiveSubuniverse.v 
+   but this isn't a lemma about a single universe. *)
+
+Global Instance conn_map_from_unit_isconnected {A : Type} (b : A)
+          `{IsConnected n.+1 A}
+  : IsConnMap n (@const Unit A b).
+  Proof.
+    intro a.
+    apply (isconnected_equiv' n _ (hfiber_const_equiv b a)^-1).
+    apply (contr_equiv' ((Tr n) (b = a))).
+    + reflexivity.
+    + apply (contr_trunc_conn n).
+  Qed.
+
+End ConnLemma.
+
+
+
 Section HSpace.
   Context `{Funext}.
-
 
   Class IsHSpace (space : Type) := {
     id : space;
@@ -106,10 +141,19 @@ Section HSpace.
   Context `{IsHSpace A}.
   Context `{IsConnected 0 A}.
 
+  
+
+
   Lemma mu_l_equiv' : forall (a : A), IsEquiv (mu a).
   Proof.
-    erapply (conn_map_elim -1 _ _).
-  Admitted.
+    intro.
+
+(*     srapply (isequiv_adjointify (mu a)).   *)
+(*     serapply (@conn_map_elim -1 _ _ _ _). *)
+  Admitted. 
+(*
+apply is_conn_fun.elim -1 (is_conn_fun_from_unit -1 A 1)
+(λa, trunctype.mk' -1 (is_equiv (λx, a * x))) *)
 
   Lemma mu_r_equiv' : forall (a : A), IsEquiv (fun x => mu x a).
   Proof.
