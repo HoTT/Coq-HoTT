@@ -170,21 +170,23 @@ Section Suspension.
   Lemma susp_equiv_pushout : Susp X <~> pushout to_unit to_unit.
   Proof.
     serapply (equiv_adjointify).
-    + serapply (Susp_ind). 
-       apply (pushl tt).
-       apply (pushr tt).
-       intro x; destruct (merid x); apply (pp x).
-    + serapply (pushout_ind to_unit to_unit).
-       intro; apply North.
-       intro; apply South.
-       intro; destruct (pp a); apply (merid a).
-    + srapply (pushout_ind to_unit to_unit).
-       intro b; destruct b; reflexivity.
-       intro c; destruct c; reflexivity.
-       admit.
     + serapply (Susp_ind).
-       reflexivity.
-       reflexivity.
+      * apply (pushl tt).
+      * apply (pushr tt).
+      * intro x; destruct (merid x); apply (pp x).
+    + serapply (pushout_ind to_unit to_unit).
+      * intro; apply North.
+      * intro; apply South.
+      * intro; destruct (pp a); apply (merid a).
+    + srapply (pushout_ind to_unit to_unit).
+      * intro b; destruct b; reflexivity.
+      * intro c; destruct c; reflexivity.
+      * intro. simpl.
+        admit.
+    + serapply (Susp_ind).
+      * reflexivity.
+      * reflexivity.
+      * intro x. simpl. compute. hott_simpl.
        admit.
   Admitted.
 End Suspension.
@@ -233,8 +235,8 @@ End HopfConstruction.
       S1 --> S3 --> S2
 
     Quaternionic: A = S3        See https://arxiv.org/abs/1610.01134 for
-      S3 --> S3 * S3 --> S4     a description.
-      S3 --> S7 --> S4
+      S3 --> S3 * S3 --> S4     a description. A formalisation in lean
+      S3 --> S7 --> S4          exists!
 
     Octonionic: A = S7          ????
       S7 --> S7 * S7 --> S8
@@ -272,9 +274,11 @@ Section ComplexHopf.
   Proof.
     srapply (S1_ind).
     + apply loop.
-    + set (x := transport_paths_lr loop loop).
-      hott_simpl.
-  Qed.
+    + rewrite (transport_paths_lr loop loop).
+      rewrite (concat_Vp).
+      rewrite (concat_1p).
+      reflexivity.
+  Defined.
 
   Global Instance S1_IsHSpace : IsHSpace S1.
   Proof.
@@ -286,7 +290,18 @@ Section ComplexHopf.
     + reflexivity.
     + srapply (S1_ind).
       * reflexivity.
-      * admit.
+      * rewrite (@moveL_transport_V _ _ _ _ loop idpath idpath).
+        - simpl. admit.
+        - admit. 
+        
+        (* destruct (paths base). rewrite transport_1.
+      
+      rewrite (concat_Vp).
+    
+    
+     srapply (S1_ind).
+      * reflexivity.
+      * simpl. admit. *)
   Admitted.
 
   Global Instance Sphere_1_IsHSpace : IsHSpace (Sphere 1).
@@ -311,7 +326,8 @@ Section QuaternionicHopf.
     In https://arxiv.org/abs/1610.01134 the authors conjecture that
     there is H-space structure on S3 and give a description of it.
 
-    But 'tis only a conjecture...
+    In https://github.com/leanprover/lean2/blob/master/hott/homotopy/quaternionic_hopf.hlean we have a formalisation in lean. I am therefore
+    inclined to believe that this can be done.
 
   **)
 
