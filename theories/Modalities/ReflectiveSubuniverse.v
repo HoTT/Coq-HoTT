@@ -1627,8 +1627,8 @@ Section ConnectedMaps.
   : IsConnMap O (@const Unit A a).
   Proof.
     intro x.
-    serapply (isconnected_equiv _ _ 
-      (@equiv_path_hfiber _ A () ) _). 
+    (*serapply (isconnected_equiv _ _ 
+      (@equiv_path_hfiber _ A () ) _). *)
   Admitted.
 
   (* Lemma 7.5.10: A map to a type in [O] exhibits its codomain as the [O]-reflection of its domain if it is [O]-connected.  (The converse is true if and only if [O] is a modality.) *)
