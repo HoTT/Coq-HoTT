@@ -42,4 +42,19 @@ Definition PowerFunctor : Functor C C :=
    o limit_functor has_limits 
    o diagonal_functor' C I_cat.
 
+Local Open Scope functor_scope.
+
+Theorem foo (x y : C) 
+  : (morphism _ x (PowerFunctor y)) <~> forall (i : I), (morphism _ x y).
+Proof.
+  serapply (equiv_adjointify).
+  + intro h. simpl in h.
+Admitted.
+
+
 End powers.
+
+
+
+
+

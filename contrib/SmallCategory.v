@@ -1,71 +1,79 @@
-Require Import HoTT.Basics HoTT.Types.
-Require Import Category.Core Category.Strict.
-Require Import Functor.
+Require Import Basics.Overture.
+Require Import Basics.Trunc.
+
+Require Import Types.Universe.
+Require Import ExcludedMiddle.
+
+Require Import Category.Core.
+Require Import Category.Strict.
+Require Import Functor.Core.
 Require Import Limits.Core.
+
 Require Import Spaces.Card.
 Require Import HIT.Truncations.
-Require Import ExcludedMiddle.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+
 Section Small_Category.
 
-Context `{Univalence}.
+  Context `{Univalence}.
 
-(* A small category is a strict category *)
+  (* A small category is a strict category *)
+  Context (C : PreCategory).
+  Context `{IsStrictCategory C}.
 
-(* Cardinality of a small category *)
-Definition CatCard (C : StrictCategory) : Card := 
-  tr (BuildhSet (exists (X Y : C), C.(morphism) X Y)).
+  (* Cardinality of a small category *)
+  Definition CatCard : Card := tr (BuildhSet {X:C & {Y:C & morphism _ X Y }}).
 
-(* A k-small category is a small category with object set 
-   cardinality less than k *)
-Definition IsSmall (k : Card) (C : StrictCategory): hProp :=
-  lt_card (CatCard C) k.
+  Context (k : Card).
 
-Record kSmallCategory (k : Card) := {
-  C :> StrictCategory;
-  k_small : IsSmall k C
-}.
+  (* A k-small category is a small category with object set 
+     cardinality less than k *)
+  Definition IskSmall : hProp := lt_card CatCard k.
 
-Context {C : PreCategory}.
-Context {strc : IsStrictCategory C}.
+  (* Type of k-small Categories *)
+  Record kSmallCategory := {
+    k_small_cat :> StrictCategory;
+    k_small : IskSmall
+  }.
 
-Definition DiagramIskSmall {D : PreCategory} (k : Card) (F : Functor C D) : hProp
- := IsSmall k (Build_StrictCategory C strc).
+  (* A diagram is k-small if its indexing category is *)
+  Definition Diagram_IskSmall {D : PreCategory} (F : Functor C D) 
+    : hProp := IskSmall.
 
-Record kSmallDiagram (k : Card) (D : PreCategory) := {
-  F :> Functor C D;
-  isks : DiagramIskSmall k F
-}.
+  (* Type of k-small C-diagrams in a category D *)
+  Record kSmallDiagram (D : PreCategory) := {
+    F :> Functor C D;
+    isks : Diagram_IskSmall F
+  }.
 
-(** k-Completeness **)
-Definition HaskLimits (k : Card) (D : PreCategory) := 
-  forall (F : kSmallDiagram k D), exists L, @IsLimit _ D C F L.
+  (* k-Completeness - D has all limits over k-small diagrams *)
+  Definition kComplete (D : PreCategory) := 
+    forall (F : kSmallDiagram D), exists L, @IsLimit _ _ _ F L.
 
-(** k-Cocompleteness **)
-Definition HaskColimits (k : Card) (D : PreCategory) :=
-  forall (F : kSmallDiagram k D), exists L, @IsColimit _ D C F L.
+  (* k-Cocompleteness - D has all colimits under k-small diagrams *)
+  Definition kCoComplete (D : PreCategory) :=
+    forall (F : kSmallDiagram D), exists L, @IsColimit _ _ _ F L.
 
 End Small_Category.
 
-Definition IsThin (C : PreCategory) :=
-  forall (x y : C), IsHProp(C.(morphism) x y).
+(* A category is thin if its morphism type is a hprop *)
+Definition IsThinCat (C : PreCategory) :=
+  forall (x y : C), IsHProp (morphism _ x y).
 
+(* Type of thin categories *)
 Record ThinCat := {
-  thin_cat :> StrictCategory;
-  thin : IsThin thin_cat;
+  thin_cat :> PreCategory;
+  thin : IsThinCat thin_cat;
 }.
 
-
-
-Section freyd.
-
-Context `{Univalence}.
-Context `{ExcludedMiddle}.
+Section Freyd.
+  Context `{Univalence}.
+  Context `{ExcludedMiddle}.
 
 (**
   Prop 3.7.3 Category theory in context, Riehl
@@ -84,13 +92,29 @@ Context `{ExcludedMiddle}.
  
  **)
 
-Proposition Freyd_preorder_limit 
-  (k : Card) (C : kSmallCategory k) {h : HaskLimits k C} : 
-    IsThin C.
-Proof.
-  remember (CatCard C) as l eqn:p.
-  intros X Y f g; srapply (BuildContr).
-  + pose (ab := (f <> g)).
-Admitted.
 
-End freyd.
+  Context (C : PreCategory).
+  Context `{IsStrictCategory C}.
+
+  Context (k : Card).
+  Context `{IskSmall C k}.
+  Context {h : kComplete _ k C}.
+
+  Lemma exp_card_leq {a b : Card} (e : leq_card a b) (c : Card) :
+    leq_card (exp_card a c) (exp_card b c).
+  Proof. Admitted.
+
+
+  Theorem Freyd : IsThinCat C.
+  Proof.
+    set (l := CatCard C).
+    intros x y f g.
+    srapply (BuildContr).
+    + destruct (LEM (f = g)).
+      * admit.
+      * apply p.
+      * set (s := exp_card_leq (@bool_leq_at_least_two _ _ f g n) l).
+        admit.
+  Admitted.
+
+End Freyd.

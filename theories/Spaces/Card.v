@@ -1,12 +1,13 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** Representation of cardinals, see Chapter 10 of the HoTT book. *)
-Require Import HoTT.Basics HoTT.HSet HoTT.TruncType.
-Require Import HoTT.Types.
-Require Import HoTT.Classes.interfaces.abstract_algebra.
-Require Import HoTT.HIT.Truncations.
+Require Import Basics.
+Require Import HSet.
+Require Import TruncType.
+Require Import Types.
+Require Import Classes.interfaces.abstract_algebra.
+Require Import HIT.Truncations.
 Require Import Spaces.Finite.
 Require Import Types.Sigma.
-
 Require Import ExcludedMiddle.
 
 (** ** Definitions and operations *)
@@ -44,8 +45,6 @@ Definition lt_card `{Univalence} (a : Card) (b : Card) : hProp :=
 (** Cardinals **)
 
 Section Cardinals.
-  Context `{Univalence}.
-
   Definition zero : Card := tr (BuildhSet Empty).
   Definition one  : Card := tr (BuildhSet Unit).
   Definition two  : Card := tr (BuildhSet Bool).
@@ -208,6 +207,25 @@ Section contents.
   Global Instance preorder_card : PreOrder le_card.
   Proof. split; apply _. Defined.
 
+  (* If we can give two elements of a set we can assure it has a 
+     cardinality less than or equal to the cardinaity of Bool.
+
+     Another way of phrasing this is if there exists an injection
+     i : Bool -> X, this can be generalised to any finite set. *)
+  Lemma bool_leq_at_least_two {X : hSet} (x y : X) `{x <> y} 
+    : leq_card two (tr X).
+  Proof.
+    simpl; apply tr; srefine (_;_).
+    refine (fun b => if b then x else y).
+    simpl; unfold isinj; intros a b p.
+      destruct a, b.
+      reflexivity.
+      apply H0 in p; elim p.
+      apply symmetry in p; apply H0 in p; elim p.
+      reflexivity.
+  Defined.
+
+
   Section Regular.
 
     (** Definition of regular cardinals (from nlab)
@@ -253,11 +271,13 @@ Section contents.
 
 **)
 
-  Notation "| X | < k" := (lt_card (tr X) k) (at level 20).
-  Notation "| X | < k" := (lt_card (tr (BuildhSet X)) k) (at level 20).
+  Notation "| X | < k" := (lt_card (tr X) k) (at level 20) : card_scope.
+  Notation "| X | < k" := (lt_card (tr (BuildhSet X)) k) (at level 20) : card_scope.
 
   Context {X : hSet}.
   Context {P : X -> hSet}.
+
+  Local Open Scope card_scope.
 
   Definition regular (k : Card) `{|X| <  k} `{forall x, |P x| < k} :=
         |exists (x:X), P x| < k.
