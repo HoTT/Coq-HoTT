@@ -59,7 +59,7 @@ Section FibrationOverPushout.
   Lemma E_X_total_equiv_E_X_total' : E_X_total <~> E_X_total'.
   Proof.
     apply (@equiv_functor_sigma _ _ _ _ idmap _ e_X _).
-  Qed.
+  Defined.
 
   Let j_x_id : E_X_total -> E_Y_total 
     := @functor_sigma _ (E_Y o j) _ _ j (fun a => idmap).
@@ -106,26 +106,24 @@ Section ConnLemma.
     + compute; reflexivity.
     + intro; destruct x; destruct proj1_sig.
       reflexivity.
-  Qed.
+  Defined.
 
 (* Small lemma about connectivity of constant map 
    should probably be in ReflectiveSubuniverse.v 
    but this isn't a lemma about a single universe. *)
 
-Global Instance conn_map_from_unit_isconnected {A : Type} (b : A)
+  Lemma conn_map_from_unit_isconnected {A : Type} (b : A)
           `{IsConnected n.+1 A}
   : IsConnMap n (@const Unit A b).
   Proof.
     intro a.
-    apply (isconnected_equiv' n _ (hfiber_const_equiv b a)^-1).
-    apply (contr_equiv' ((Tr n) (b = a))).
+    apply (isconnected_equiv' n _ (hfiber_const_equiv b a)^-1). 
+    apply (contr_equiv' ((Trunc n) (b = a))).
     + reflexivity.
     + apply (contr_trunc_conn n).
-  Qed.
+  Defined.
 
 End ConnLemma.
-
-
 
 Section HSpace.
   Context `{Funext}.
@@ -141,35 +139,35 @@ Section HSpace.
   Context `{IsHSpace A}.
   Context `{IsConnected 0 A}.
 
-  
-
-
   Lemma mu_l_equiv' : forall (a : A), IsEquiv (mu a).
   Proof.
     intro.
+  Admitted.
 
-(*     srapply (isequiv_adjointify (mu a)).   *)
-(*     serapply (@conn_map_elim -1 _ _ _ _). *)
-  Admitted. 
+    (* srefine (@conn_map_elim -1 _ _ _ (conn_map_from_unit_isconnected -1 id) (fun a => IsEquiv (mu a))).
+
+     srefine (@conn_map_elim -1 _ _ _ _ _ _).
+     intro. refine (IsEquiv (mu x)).
+     + srefine (fun x => Tr -1 (IsEquiv (fun y => mu x y))).
+  Admitted.  *)
 (*
 apply is_conn_fun.elim -1 (is_conn_fun_from_unit -1 A 1)
 (λa, trunctype.mk' -1 (is_equiv (λx, a * x))) *)
 
   Lemma mu_r_equiv' : forall (a : A), IsEquiv (fun x => mu x a).
   Proof.
-    apply (conn_map_elim -1 _ _).
-(*     isconnected_equiv *)
+    serapply (conn_map_elim -1).
   Admitted.
 
   Lemma mu_l_equiv : forall (a : A), A <~> A.
   Proof.
     intro; apply (BuildEquiv _ _ _ (mu_l_equiv' a)).
-  Qed.
+  Defined.
 
   Lemma mu_r_equiv : forall (a : A), A <~> A.
   Proof.
     intro; apply (BuildEquiv _ _ _ (mu_r_equiv' a)).
-  Qed.
+  Defined.
 
 (*
 
@@ -214,23 +212,22 @@ Section Suspension.
   Lemma susp_equiv_pushout : Susp X <~> pushout to_unit to_unit.
   Proof.
     serapply (equiv_adjointify).
-    + serapply (Susp_ind).
-      * apply (pushl tt).
-      * apply (pushr tt).
-      * intro x; destruct (merid x); apply (pp x).
-    + serapply (pushout_ind to_unit to_unit).
-      * intro; apply North.
-      * intro; apply South.
-      * intro; destruct (pp a); apply (merid a).
-    + srapply (pushout_ind to_unit to_unit).
-      * intro b; destruct b; reflexivity.
-      * intro c; destruct c; reflexivity.
-      * intro. simpl.
-        admit.
-    + serapply (Susp_ind).
-      * reflexivity.
-      * reflexivity.
-      * intro x. simpl. compute. hott_simpl.
+    serapply (Susp_ind).
+      apply (pushl tt).
+      apply (pushr tt).
+      intro x; destruct (merid x); apply (pp x).
+    serapply (pushout_ind to_unit to_unit).
+      apply (fun _ => North).
+      apply (fun _ => South).
+      intro a; destruct (pp a); apply (merid a).
+    srapply (pushout_ind to_unit to_unit).
+      intro b; destruct b; reflexivity.
+      intro c; destruct c; reflexivity.
+      admit.
+    serapply (Susp_ind).
+      reflexivity.
+      reflexivity.
+      intro x. simpl. compute. hott_simpl.
        admit.
   Admitted.
 End Suspension.
@@ -256,7 +253,7 @@ Section HopfConstruction.
   Proof.
     intro x.
     serapply (equiv_adjointify).
-    + admit.
+    +
   Admitted.
 
   (** Total space of hopf construction **)
@@ -308,7 +305,7 @@ Section RealHopf.
     srapply (S1_ind).
     + refine Bool.
     + destruct loop. refine (ua (equiv_negb)).
-  Qed.
+  Defined.
 
 End RealHopf.
 
@@ -328,16 +325,19 @@ Section ComplexHopf.
   Proof.
     srapply Build_IsHSpace.
     + apply base.
-    + srapply S1_ind.
+    + srapply (S1_ind).
       * refine idmap.
       * destruct loop; refine (path_forall _ _ h).
     + reflexivity.
     + srapply (S1_ind).
-      * reflexivity.
-      * rewrite (@moveL_transport_V _ _ _ _ loop idpath idpath).
-        - simpl. admit.
-        - admit. 
-        
+      * reflexivity. 
+      * simpl. rewrite (@moveL_transport_p _ _ _ _ loop idpath idpath).
+        - simpl.
+          set (t := transport (paths base) loop^ idpath).
+          admit.
+        - compute.
+          
+
         (* destruct (paths base). rewrite transport_1.
       
       rewrite (concat_Vp).
@@ -352,7 +352,7 @@ Section ComplexHopf.
   Proof.
     rewrite (ua (BuildEquiv _ _ Sph1_to_S1 _)).
     apply S1_IsHSpace.
-  Qed.
+  Defined.
 
 
   (** Need connected spheres **)
