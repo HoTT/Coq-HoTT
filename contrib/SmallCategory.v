@@ -126,7 +126,7 @@ Section Freyd.
     intros x y f g.
     srapply (BuildContr).
     + destruct (LEM (f = g)).
-      * admit.
+      * compute; apply ((C.(trunc_morphism) x y) f g). 
       * apply p.
       * set (s := exp_card_leq (@bool_leq_at_least_two _ _ f g n) l).
         admit.
