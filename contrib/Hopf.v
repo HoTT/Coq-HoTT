@@ -5,6 +5,7 @@ Require Import Types.Sigma.
 Require Import Types.Equiv.
 Require Import Types.Bool.
 Require Import Types.Paths.
+Require Import Types.Arrow.
 
 Require Import HIT.Circle.
 Require Import HIT.Pushout.
@@ -77,6 +78,7 @@ Section FibrationOverPushout.
       | inr z => E_Z z
     end.
 
+  (* Needs flattening lemma *)
   Lemma fibration_pushout_equiv_pushout_fibrations :
     E_push_total <~> pushout j_x_id k_x_id'.
   Proof.
@@ -150,7 +152,7 @@ Section HSpace.
      intro. refine (IsEquiv (mu x)).
      + srefine (fun x => Tr -1 (IsEquiv (fun y => mu x y))).
   Admitted.  *)
-(*
+(* Lean:
 apply is_conn_fun.elim -1 (is_conn_fun_from_unit -1 A 1)
 (λa, trunctype.mk' -1 (is_equiv (λx, a * x))) *)
 
@@ -325,39 +327,34 @@ Section ComplexHopf.
   Proof.
     srapply Build_IsHSpace.
     + apply base.
-    + srapply (S1_ind).
+    + srapply (S1_rec).
       * refine idmap.
-      * destruct loop; refine (path_forall _ _ h).
+      * refine (path_forall _ _ h).
     + reflexivity.
     + srapply (S1_ind).
       * reflexivity. 
-      * simpl. rewrite (@moveL_transport_p _ _ _ _ loop idpath idpath).
-        - simpl.
-          set (t := transport (paths base) loop^ idpath).
-          admit.
-        - compute.
-          
-
-        (* destruct (paths base). rewrite transport_1.
-      
-      rewrite (concat_Vp).
-    
-    
-     srapply (S1_ind).
-      * reflexivity.
-      * simpl. admit. *)
-  Admitted.
+      * rewrite transport_paths_FlFr.
+        rewrite ap_idmap.
+        rewrite_moveR_Mp_p.
+        rewrite ap_apply_Fl.
+        rewrite S1_rec_beta_loop.
+        rewrite ap10_path_forall.
+        rewrite concat_1p.
+        rewrite concat_p1.
+        rewrite inv_V.
+        reflexivity.
+  Defined.
 
   Global Instance Sphere_1_IsHSpace : IsHSpace (Sphere 1).
   Proof.
-    rewrite (ua (BuildEquiv _ _ Sph1_to_S1 _)).
+    rewrite  (ua (BuildEquiv _ _ _ isequiv_Sph1_to_S1)).
     apply S1_IsHSpace.
   Defined.
-
 
   (** Need connected spheres **)
   Definition hopf_fibration : Sphere 2 -> Type.
   Proof.
+    refine susp_fibration.
   Admitted.
 
 End ComplexHopf.
