@@ -1,4 +1,7 @@
-Require Import Basics.
+Require Import Basics.Overture.
+Require Import Basics.PathGroupoids.
+Require Import Basics.Equivalences.
+Require Import Basics.Trunc.
 
 Require Import Types.Universe.
 Require Import Types.Sigma.
@@ -15,6 +18,9 @@ Require Import HIT.Suspension.
 Require Import HIT.Join.
 Require Import HIT.Spheres.
 
+Require Import Modalities.ReflectiveSubuniverse.
+
+Require Import NullHomotopy.
 Require Import UnivalenceAxiom.
 Require Import UnivalenceImpliesFunext.
 
@@ -208,29 +214,23 @@ End HSpace.
 
 Section Suspension.
   Context {X : Type}.
-  Let to_unit (x : X) : Unit := tt.
 
-  (** The suspension ΣX can be written as a pushout: 1 ⊔_A 1 **)
-  Lemma susp_equiv_pushout : Susp X <~> pushout to_unit to_unit.
+  (** The suspension ΣX can be written as a pushout: 1 ⊔_X 1 **)
+  Lemma susp_equiv_pushout : Susp X <~> pushout (@const X _ tt) (const tt).
   Proof.
     serapply (equiv_adjointify).
-    serapply (Susp_ind).
-      apply (pushl tt).
-      apply (pushr tt).
-      intro x; destruct (merid x); apply (pp x).
-    serapply (pushout_ind to_unit to_unit).
-      apply (fun _ => North).
-      apply (fun _ => South).
-      intro a; destruct (pp a); apply (merid a).
-    srapply (pushout_ind to_unit to_unit).
-      intro b; destruct b; reflexivity.
-      intro c; destruct c; reflexivity.
-      admit.
-    serapply (Susp_ind).
-      reflexivity.
-      reflexivity.
-      intro x. simpl. compute. hott_simpl.
-       admit.
+      + refine (Susp_rec (pushl tt) (pushr tt) pp).
+      + refine (pushout_rec _ (const North) (const South) merid).
+      + unfold Sect.
+        srapply (pushout_ind (@const X _ tt) (const tt)).
+        * intro b; destruct b; reflexivity.
+        * intro c; destruct c; reflexivity.
+        * intro a. simpl.
+          rewrite transport_paths_FlFr.
+          rewrite_moveR_Mp_p.
+          hott_simpl.
+          admit.
+      + admit.
   Admitted.
 End Suspension.
 
@@ -255,13 +255,34 @@ Section HopfConstruction.
   Proof.
     intro x.
     serapply (equiv_adjointify).
-    +
+    + intro.
   Admitted.
 
   (** Total space of hopf construction **)
   Lemma susp_fibration_total : {x : Susp X & susp_fibration x} <~> join X X.
   Proof.
     serapply (equiv_adjointify).
+    + intro x. destruct x as [x fib].
+      rewrite (ua (susp_fibration_fiber x)) in fib.
+      apply (pushl fib).
+    + serapply (pushout_ind).
+      * intro; srefine (North;_); simpl.
+        rewrite (ua (susp_fibration_fiber _)). 
+        refine b.
+      * intro; srefine (South;_); simpl.
+        rewrite (ua (susp_fibration_fiber _)). 
+        refine c.
+      * simpl.
+      
+        refine (North; _).
+    
+    intro x. destruct x as [x fib].
+      rewrite (ua (susp_fibration_fiber x)) in fib.
+      apply (pushr fib).
+      revert fib; revert SX.
+      serapply (Susp_ind).
+      * simpl. intro. apply susp_fibration_fiber.
+      
   Admitted.
 
 End HopfConstruction.
@@ -351,11 +372,22 @@ Section ComplexHopf.
     apply S1_IsHSpace.
   Defined.
 
-  (** Need connected spheres **)
+  (* This may be a useful lemma to have *)
+  Lemma Susp_Sphere {n} : Susp (Sphere n.+1) = Sphere n.+2.
+  Proof.
+    induction n.
+    reflexivity.
+    reflexivity.
+  Defined.
+
+  (** Need connected sphere lemma to make this proof shorter **)
   Definition hopf_fibration : Sphere 2 -> Type.
   Proof.
-    refine susp_fibration.
-  Admitted.
+    serapply susp_fibration.
+    rewrite (@Susp_Sphere -1).
+    rewrite (ua (BuildEquiv _ _ _ isequiv_Sph1_to_S1)).
+    apply isconnected_S1.
+  Defined.
 
 End ComplexHopf.
 
@@ -372,8 +404,8 @@ Section QuaternionicHopf.
   **)
 
 
-  Global Instance S3_IsHSpace : IsHSpace S3.
-  Admitted.
+  (* Global Instance S3_IsHSpace : IsHSpace S3.
+  Admitted. *)
 
 
 End QuaternionicHopf.
