@@ -1,16 +1,22 @@
 Require Import Basics.Overture.
 Require Import Basics.Trunc.
+Require Import Basics.PathGroupoids.
 
 Require Import Types.Universe.
+Require Import Types.Paths.
+Require Import Types.Sigma.
+
 Require Import ExcludedMiddle.
+Require Import Spaces.Card.
+Require Import HIT.Truncations.
+Require Import HSet.
 
 Require Import Category.Core.
 Require Import Category.Strict.
 Require Import Functor.Core.
 Require Import Limits.Core.
 
-Require Import Spaces.Card.
-Require Import HIT.Truncations.
+Import TrM.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -71,6 +77,20 @@ Record ThinCat := {
   thin : IsThinCat thin_cat;
 }.
 
+Lemma exp_card_leq `{Univalence} {a b : Card} (e : leq_card a b) (c : Card) :
+    leq_card (exp_card c a) (exp_card c b).
+  Proof.
+    revert e; strip_truncations.
+    intro; strip_truncations.
+    apply tr; simpl in *.
+    induction e as [e_i e_isinj].
+    srefine (_; _); simpl.
+    + refine (fun f => e_i o f).
+    + unfold isinj in e_isinj.
+      intros f g. intro.
+      simpl. unfold isinj.
+    Admitted.
+    
 Section Freyd.
   Context `{Univalence}.
   Context `{ExcludedMiddle}.
@@ -99,11 +119,6 @@ Section Freyd.
   Context (k : Card).
   Context `{IskSmall C k}.
   Context {h : kComplete _ k C}.
-
-  Lemma exp_card_leq {a b : Card} (e : leq_card a b) (c : Card) :
-    leq_card (exp_card a c) (exp_card b c).
-  Proof. Admitted.
-
 
   Theorem Freyd : IsThinCat C.
   Proof.
