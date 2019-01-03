@@ -149,6 +149,18 @@ Section contents.
     exp_card c (a * b) = (exp_card c a) * (exp_card c b).
   Proof. reduce. symmetry. apply equiv_prod_coind. Defined.
 
+  Lemma exp_card_leq `{Univalence} {a b : Card} (e : leq_card a b) (c : Card) 
+    : leq_card (exp_card c a) (exp_card c b).
+  Proof.
+    revert e; strip_truncations.
+    intro; strip_truncations; apply tr.
+    induction e as [e_i e_isinj].
+    srefine (fun f => e_i o f; _).
+    intros f g h; apply path_forall.
+    intro x; apply e_isinj.
+    apply (ap10 h).
+  Defined.
+
   (* Cantor's theorem *)
   Lemma card_ne_exp_two_card (a : Card) :
     a <> (exp_card a two).

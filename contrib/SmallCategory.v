@@ -77,18 +77,6 @@ Record ThinCat := {
   thin : IsThinCat thin_cat;
 }.
 
-Lemma exp_card_leq `{Univalence} {a b : Card} (e : leq_card a b) (c : Card) 
-  : leq_card (exp_card c a) (exp_card c b).
-  Proof.
-    revert e; strip_truncations.
-    intro; strip_truncations; apply tr.
-    induction e as [e_i e_isinj].
-    srefine (fun f => e_i o f; _).
-    intros f g h; apply path_forall.
-    intro x; apply e_isinj.
-    apply (ap10 h).
-  Defined.
-
 Section Freyd.
   Context `{Univalence}.
   Context `{ExcludedMiddle}.
