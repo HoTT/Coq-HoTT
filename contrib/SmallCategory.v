@@ -25,15 +25,20 @@ Set Asymmetric Patterns.
 
 
 Section Small_Category.
-
   Context `{Univalence}.
 
   (* A small category is a strict category *)
   Context (C : PreCategory).
   Context `{IsStrictCategory C}.
 
+  (* Type of morphisms of a category *)
+  Definition Morphisms := { X : C & { Y : C & morphism _ X Y } }.
+
+  (* Set of morphisms of a strict category *)
+  Definition MorphismSet := BuildhSet Morphisms.
+
   (* Cardinality of a small category *)
-  Definition CatCard : Card := tr (BuildhSet {X:C & {Y:C & morphism _ X Y }}).
+  Definition CatCard : Card := tr MorphismSet.
 
   Context (k : Card).
 
@@ -77,10 +82,6 @@ Record ThinCat := {
   thin : IsThinCat thin_cat;
 }.
 
-Section Freyd.
-  Context `{Univalence}.
-  Context `{ExcludedMiddle}.
-
 (**
   Prop 3.7.3 Category theory in context, Riehl
 
@@ -95,18 +96,19 @@ Section Freyd.
   by l. However this is absurd since by Cantor's theorem 2^l > l = |Mor C|.
   And C(X,Y^l) is a subset of Mor C. Considering copowers gives a dual 
   construction for the second part.
- 
+
  **)
 
+Section FreydTheorem.
+  Context `{Univalence}.
+  Context `{ExcludedMiddle}.
 
   Context (C : PreCategory).
   Context `{IsStrictCategory C}.
-
   Context (k : Card).
   Context `{IskSmall C k}.
-  Context {h : kComplete _ k C}.
 
-  Theorem Freyd : IsThinCat C.
+  Theorem Freyd {h : kComplete _ k C} : IsThinCat C.
   Proof.
     set (l := CatCard C).
     intros x y f g.
@@ -114,8 +116,23 @@ Section Freyd.
     + destruct (LEM (f = g)).
       * compute; apply ((C.(trunc_morphism) x y) f g). 
       * apply p.
-      * set (s := exp_card_leq (@bool_leq_at_least_two _ _ f g n) l).
-        admit.
+      * admit.
+    + intro. destruct y0. compute.
   Admitted.
 
-End Freyd.
+  Theorem CoFreyd {h : kCoComplete _ k C} : IsThinCat C.
+  Proof.
+    set (l := CatCard C).
+    intros x y f g.
+    srapply (BuildContr).
+    + destruct (LEM (f = g)).
+      * compute; apply ((C.(trunc_morphism) x y) f g). 
+      * apply p.
+      * admit.
+    + intro. destruct y0. compute.
+  Admitted.
+
+End FreydTheorem.
+
+(* set (s := exp_card_leq (@bool_leq_at_least_two _ _ f g n) l). *)
+
