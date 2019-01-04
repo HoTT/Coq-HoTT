@@ -50,7 +50,7 @@ Section Powers.
   Admitted.
 
 
-End powers.
+End Powers.
 
 
 
