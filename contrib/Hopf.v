@@ -9,6 +9,7 @@ Require Import Types.Equiv.
 Require Import Types.Bool.
 Require Import Types.Paths.
 Require Import Types.Arrow.
+Require Import Types.Sum.
 
 Require Import HIT.Circle.
 Require Import HIT.Pushout.
@@ -49,11 +50,10 @@ Section FibrationOverPushout.
   (* Lemma 8.5.3 of HoTT book *)
   Lemma fibration_pushout : pushout j k -> Type.
   Proof.
-    srapply (pushout_ind j k).
+    srapply (@pushout_rec _ _ _ j k).
     + refine E_Y.
     + refine E_Z.
-    + intro x; destruct (pp x); simpl.
-      apply (ua (e_X x)).
+    + intro x; apply (ua (e_X x)).
   Defined.
 
   Let E_Y_total := {y : Y & E_Y y}.
@@ -84,20 +84,33 @@ Section FibrationOverPushout.
       | inr z => E_Z z
     end.
 
+
   (* Needs flattening lemma *)
   Lemma fibration_pushout_equiv_pushout_fibrations :
     E_push_total <~> pushout j_x_id k_x_id'.
   Proof.
-    srapply (@equiv_compose').
-    + apply (Wtil A B f g C e_X).
-    + admit.
-    + unfold E_push_total.
-      unfold pushout.
-      unfold fibration_pushout.
-      apply (equiv_inverse).
-      (*serapply (@equiv_flattening).
-      refine (@equiv_flattening _ B A f g C e_X).*)
+    srapply @equiv_compose'.
+    apply (Wtil A B f g C e_X).
+    serapply equiv_adjointify.
+    + serapply Wtil_rec.
+      * intros. induction a.
+        - apply (pushl (a ; x)).
+        - apply (pushr (b ; x)).
+      * intros; apply (@pp _ _ _ j_x_id k_x_id' (b;y)).
+    + serapply pushout_rec.
+      * intro x; destruct x as [y y']; apply (cct (inl y) y').
+      * intro x; destruct x as [z z']; apply (cct (inr z) z').
+      * intros. destruct a as [x x']. simpl.
+        serapply (@ppt _ _ _ _ _ _ x x').
+    + serapply pushout_ind.
+      reflexivity. reflexivity.
       admit.
+    + serapply Wtil_ind.
+      * destruct a. reflexivity. reflexivity.
+      * intros. simpl.
+        admit.
+    + apply (equiv_inverse).
+      erapply (equiv_flattening).
   Admitted.
 
 End FibrationOverPushout.
@@ -152,16 +165,6 @@ Section HSpace.
     intro.
   Admitted.
 
-    (* srefine (@conn_map_elim -1 _ _ _ (conn_map_from_unit_isconnected -1 id) (fun a => IsEquiv (mu a))).
-
-     srefine (@conn_map_elim -1 _ _ _ _ _ _).
-     intro. refine (IsEquiv (mu x)).
-     + srefine (fun x => Tr -1 (IsEquiv (fun y => mu x y))).
-  Admitted.  *)
-(* Lean:
-apply is_conn_fun.elim -1 (is_conn_fun_from_unit -1 A 1)
-(λa, trunctype.mk' -1 (is_equiv (λx, a * x))) *)
-
   Lemma mu_r_equiv' : forall (a : A), IsEquiv (fun x => mu x a).
   Proof.
     serapply (conn_map_elim -1).
@@ -177,40 +180,7 @@ apply is_conn_fun.elim -1 (is_conn_fun_from_unit -1 A 1)
     intro; apply (BuildEquiv _ _ _ (mu_r_equiv' a)).
   Defined.
 
-(*
-
-Lean code
-
-definition fiber_const_equiv [constructor] (A : Type) (a₀ : A) (a : A)
-    : fiber (λz : unit, a₀) a ≃ a₀ = a :=
-  calc
-    fiber (λz : unit, a₀) a
-      ≃ Σz : unit, a₀ = a : fiber.sigma_char
-... ≃ a₀ = a : sigma_unit_left
-
-definition is_equiv_mul_left [instance] : Π(a : A), is_equiv (λx, a * x) :=
-  begin
-    apply is_conn_fun.elim -1 (is_conn_fun_from_unit -1 A 1)
-                           (λa, trunctype.mk' -1 (is_equiv (λx, a * x))),
-    intro z, change is_equiv (λx : A, 1 * x), refine is_equiv.homotopy_closed id _ _,
-    intro x, apply inverse, apply one_mul
-end
-
-protected definition elim : (Πa : A, P (h a)) → (Πb : B, P b) :=
-@is_equiv.inv _ _ (λs a, s (h a)) rec
-
-definition is_conn_fun_from_unit (a₀ : A) [H : is_conn n .+1 A]
-      : is_conn_fun n (const unit a₀) :=
-    begin
-      intro a,
-      apply is_conn_equiv_closed n (equiv.symm (fiber_const_equiv A a₀ a)),
-      apply is_contr_equiv_closed (tr_eq_tr_equiv n a₀ a) _,
-end
-
-*)
-
 End HSpace.
-
 
 Section Suspension.
   Context {X : Type}.
@@ -225,12 +195,16 @@ Section Suspension.
         srapply (pushout_ind (@const X _ tt) (const tt)).
         * intro b; destruct b; reflexivity.
         * intro c; destruct c; reflexivity.
-        * intro a. simpl.
-          rewrite transport_paths_FlFr.
-          rewrite_moveR_Mp_p.
-          hott_simpl.
+        * intro a. simpl. transport_to_ap.
           admit.
-      + admit.
+      + unfold Sect.
+        serapply Susp_ind.
+        * reflexivity.
+        * reflexivity.
+        * intro. transport_to_ap.
+          rewrite <- pushout_rec_beta_pp.
+          simpl.
+          admit.
   Admitted.
 End Suspension.
 
@@ -273,17 +247,14 @@ Section HopfConstruction.
         rewrite (ua (susp_fibration_fiber _)). 
         refine c.
       * simpl.
-      
-        refine (North; _).
+  Admitted.
     
-    intro x. destruct x as [x fib].
+    (* intro x. destruct x as [x fib].
       rewrite (ua (susp_fibration_fiber x)) in fib.
       apply (pushr fib).
       revert fib; revert SX.
       serapply (Susp_ind).
-      * simpl. intro. apply susp_fibration_fiber.
-      
-  Admitted.
+      * simpl. intro. apply susp_fibration_fiber. *)
 
 End HopfConstruction.
 
