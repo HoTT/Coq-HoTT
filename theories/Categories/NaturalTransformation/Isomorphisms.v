@@ -113,6 +113,9 @@ Section composition.
     path_natural_transformation; path_induction; simpl; auto with functor.
   Defined.
 End composition.
+Arguments isisomorphism_compose {H C D F' F''} T' {F} T {H0 H1}.
+Arguments iso_whisker_l {H} C D E F G G' T {H0}.
+Arguments iso_whisker_r {H} C D E F F' T G {H0}.
 
 (** ** Equalities induced by isomorphisms of objects *)
 Section object_isomorphisms.
