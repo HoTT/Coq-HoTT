@@ -258,7 +258,7 @@ End equiv_transfer.
 Section equiv.
   Global Instance equiv_respects_equivalenceL `{Funext} {A} {P Q : forall B, (A <~> B) -> Type}
          `{HP : RespectsEquivalenceL A P}
-         `{HP : RespectsEquivalenceL A Q}
+         `{HQ : RespectsEquivalenceL A Q}
   : RespectsEquivalenceL A (fun B e => P B e <~> Q B e).
   Proof.
     simple refine (fun B e => _; fun _ => _).
@@ -269,7 +269,7 @@ Section equiv.
 
   Global Instance equiv_respects_equivalenceR `{Funext} {A} {P Q : forall B, (B <~> A) -> Type}
          `{HP : RespectsEquivalenceR A P}
-         `{HP : RespectsEquivalenceR A Q}
+         `{HQ : RespectsEquivalenceR A Q}
   : RespectsEquivalenceR A (fun B e => P B e <~> Q B e).
   Proof.
     simple refine (fun B e => _; fun _ => _).

@@ -98,7 +98,7 @@ Section unique.
     := fun P x => initial_category_ind P (F x).
 
   Global Instance trunc_terminal_category
-         `{@IsTerminalCategory one H0 H1}
+         `{@IsTerminalCategory one H1 H2}
   : Contr (Functor C one).
   Proof.
     refine (BuildContr _ (to_terminal C) _).

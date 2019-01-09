@@ -639,7 +639,8 @@ split.
 Qed.
 
 Instance Zlt_strict@{} : StrictOrder Zlt
-  := Zlt_strict'@{Ularge Ularge Ularge Ularge Ularge}.
+  := ltac:(first [exact Zlt_strict'@{Ularge Ularge Ularge Ularge Ularge}|
+                  exact Zlt_strict'@{}]).
 
 Lemma plus_strict_order_preserving_l'
   : forall z : Z, StrictlyOrderPreserving ((+) z).
@@ -657,7 +658,8 @@ Qed.
 
 Instance Zplus_strict_order_preserving_l@{}
   : forall z : Z, StrictlyOrderPreserving ((+) z)
-  := plus_strict_order_preserving_l'@{Ularge Ularge}.
+  := ltac:(first [exact plus_strict_order_preserving_l'@{Ularge Ularge}|
+                  exact plus_strict_order_preserving_l'@{}]).
 
 Lemma Zmult_pos' : forall x y : Z, PropHolds (0 < x) -> PropHolds (0 < y) ->
   PropHolds (0 < x * y).
@@ -676,7 +678,8 @@ Qed.
 
 Instance Zmult_pos@{} : forall x y : Z, PropHolds (0 < x) -> PropHolds (0 < y) ->
   PropHolds (0 < x * y)
-  := Zmult_pos'@{Ularge Ularge Ularge}.
+  := ltac:(first [exact Zmult_pos'@{Ularge Ularge Ularge}|
+                  exact Zmult_pos'@{}]).
 
 Global Instance Z_strict_srorder : StrictSemiRingOrder Zlt.
 Proof. pose proof Z_ring; apply from_strict_ring_order; apply _. Qed.
@@ -728,7 +731,8 @@ Qed.
 
 Global Instance Z_trivial_apart@{} `{!TrivialApart N}
   : TrivialApart Z
-  := Z_trivial_apart'@{Ularge}.
+  := ltac:(first [exact Z_trivial_apart'@{Ularge}|
+                  exact Z_trivial_apart'@{}]).
 
 Lemma Z_is_apart' : IsApart Z.
 Proof.
@@ -765,8 +769,9 @@ split.
 Qed.
 
 Instance Z_is_apart@{} : IsApart Z
-  := Z_is_apart'@{Ularge Ularge Ularge Ularge Ularge
-    Ularge}.
+  := ltac:(first [exact Z_is_apart'@{Ularge Ularge Ularge Ularge Ularge
+                                     Ularge}|
+                  exact Z_is_apart'@{}]).
 
 Lemma Z_full_psorder' : FullPseudoOrder Zle Zlt.
 Proof.
@@ -808,7 +813,8 @@ Instance Z_full_psorder@{} : FullPseudoOrder Zle Zlt
   := ltac:(first [exact Z_full_psorder'@{Ularge Ularge Ularge Ularge Ularge
                                                 Ularge Ularge Ularge Ularge}|
                   exact Z_full_psorder'@{Ularge Ularge Ularge Ularge Ularge
-                                         Ularge Ularge Ularge Ularge Ularge}]).
+                                         Ularge Ularge Ularge Ularge Ularge}|
+                  exact Z_full_psorder'@{}]).
 
 Lemma Zmult_strong_ext_l' : forall z : Z, StrongExtensionality (z *.).
 Proof.
@@ -831,14 +837,15 @@ refine (merely_destruct (strong_binary_extensionality (+)
 Qed.
 
 Instance Zmult_strong_ext_l@{} : forall z : Z, StrongExtensionality (z *.)
-  := Zmult_strong_ext_l'@{
-    Ularge Ularge}.
+  := ltac:(first [exact Zmult_strong_ext_l'@{Ularge Ularge}|
+                  exact Zmult_strong_ext_l'@{}]).
 
 Instance Z_full_pseudo_srorder@{}
   : FullPseudoSemiRingOrder Zle Zlt.
 Proof.
 pose proof Z_ring.
-apply from_full_pseudo_ring_order@{UN UN UN UN UN UN UN Ularge}; try apply _.
+first [apply from_full_pseudo_ring_order@{UN UN UN UN UN UN UN Ularge}|
+       apply from_full_pseudo_ring_order]; try apply _.
 apply apartness.strong_binary_setoid_morphism_commutative.
 Qed.
 
@@ -892,7 +899,8 @@ split;split;red.
 Qed.
 
 Instance Z_to_ring_morphism@{} `{Ring B} : SemiRingPreserving (integers_to_ring Z B)
-  := Z_to_ring_morphism'@{Ularge}.
+  := ltac:(first [exact Z_to_ring_morphism'@{Ularge}|
+                  exact Z_to_ring_morphism'@{}]).
 
 Lemma Z_to_ring_unique@{} `{Ring B} (h : Z -> B) `{!SemiRingPreserving h}
   : forall x : Z, integers_to_ring Z B x = h x.
@@ -1040,8 +1048,10 @@ Global Instance Z_abs@{} : IntAbs@{UN UN UN UN UN
   UN UN UN UN UN
   UN UN UN UN UN
   UN UN} Z N
-  := Z_abs'@{Ularge Ularge Ularge Ularge Ularge
-    Ularge Ularge}.
+  := ltac:(first [exact Z_abs'@{Ularge Ularge Ularge Ularge Ularge
+                                Ularge Ularge}|
+                  exact Z_abs'@{Ularge Ularge Ularge Ularge Ularge
+                                Ularge}]).
 
 Notation n_to_z := (naturals_to_semiring N Z).
 
@@ -1095,7 +1105,8 @@ destruct (int_abs_sig Z N x) as [[a Ea]|[a Ea]],
 Qed.
 
 Global Instance Z_zero_product@{} : ZeroProduct Z
-  := Z_zero_product'@{Ularge Ularge}.
+  := ltac:(first [exact Z_zero_product'@{Ularge Ularge}|
+                  exact Z_zero_product'@{}]).
 
 End contents.
 

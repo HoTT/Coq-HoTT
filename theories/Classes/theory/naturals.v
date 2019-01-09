@@ -155,7 +155,7 @@ Section borrowed_from_nat.
   Proof.
   refine (from_nat_stmt@{i U}
     nat (fun s => forall z : s, LeftCancellation plus z) _).
-  simpl. apply nat_plus_cancel_l@{U i}.
+  simpl. first [exact nat_plus_cancel_l@{U i}|exact nat_plus_cancel_l@{U}].
   Qed.
 
   Global Instance: forall z : N, RightCancellation (+) z.

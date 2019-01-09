@@ -96,7 +96,9 @@ apply le_equiv_lt in E. destruct E as [E|E].
 Qed.
 
 (* Coq pre 8.8 produces phantom universes, see coq/coq#6483 **)
-Definition rounded_le@{i j} := ltac:(first [exact @rounded_le'@{j i Ularge}|exact @rounded_le'@{j i Ularge j}]).
+Definition rounded_le@{i j} := ltac:(first [exact @rounded_le'@{j i Ularge}|
+                                            exact @rounded_le'@{j i Ularge j}|
+                                            exact @rounded_le'@{i j}]).
 Arguments rounded_le {A _ _} e u v _ d _.
 
 Section close_prod.
@@ -162,7 +164,9 @@ intros e u v. split.
 Qed.
 
 (* Coq pre 8.8 produces phantom universes, see coq/coq#6483 **)
-Definition close_prod_rounded@{j} := ltac:(first [exact @close_prod_rounded'@{j j j j j}|exact @close_prod_rounded'@{j j}]).
+Definition close_prod_rounded@{j} := ltac:(first [exact @close_prod_rounded'@{j j j j j}|
+                                                  exact @close_prod_rounded'@{j j}|
+                                                  exact @close_prod_rounded'@{j j j}]).
 Arguments close_prod_rounded {_ _} _ _ _.
 Global Existing Instance close_prod_rounded.
 
@@ -314,7 +318,8 @@ Qed.
 
 Definition nonexpanding_lipschitz@{} `{!NonExpanding f}
   : Lipschitz f 1
-  := nonexpanding_lipschitz'@{Ularge}.
+  := ltac:(first [exact nonexpanding_lipschitz'@{Ularge}|
+                  exact nonexpanding_lipschitz'@{}]).
 Global Existing Instance nonexpanding_lipschitz.
 
 
@@ -396,7 +401,8 @@ Qed.
 Global Instance lipschitz_compose_nonexpanding_r@{}
   L {Eg : Lipschitz g L} {Ef : NonExpanding f}
   : Lipschitz (Compose g f) L
-  := lipschitz_compose_nonexpanding_r'@{Ularge} L.
+  := ltac:(first [exact (lipschitz_compose_nonexpanding_r'@{Ularge} L)|
+                  exact (lipschitz_compose_nonexpanding_r'@{} L)]).
 
 Lemma lipschitz_compose_nonexpanding_l'
   L {Eg : NonExpanding g} {Ef : Lipschitz f L}
@@ -408,7 +414,8 @@ Qed.
 Global Instance lipschitz_compose_nonexpanding_l@{}
   L {Eg : NonExpanding g} {Ef : Lipschitz f L}
   : Lipschitz (Compose g f) L
-  := lipschitz_compose_nonexpanding_l'@{Ularge} L.
+  := ltac:(first [exact (lipschitz_compose_nonexpanding_l'@{Ularge} L)|
+                  exact (lipschitz_compose_nonexpanding_l'@{} L)]).
 
 Lemma uniform_compose@{} mu {Eg : Uniform g mu} mu' {Ef : Uniform f mu'}
   : Uniform (Compose g f) (Compose mu' mu).
