@@ -135,3 +135,22 @@ Proof.
   destruct pi0, pi1; cbn in *.
   destruct s, p0i; reflexivity.
 Defined.
+
+Definition DSquare {A : Type}
+  (B : A -> Type)
+  {a00 a01 a10 a11 : A}
+  {p0i : a00 = a01} {pi1 : a01 = a11} 
+  {pi0 : a00 = a10} {p1i : a10 = a11}
+  (s : Square p0i p1i pi0 pi1)
+  {b00 : B a00} {b01 : B a01} 
+  {b10 : B a10} {b11 : B a11}
+  (q0i : dpath _ p0i b00 b01)
+  (qi1 : dpath _ pi1 b01 b11)
+  (qi0 : dpath _ pi0 b00 b10)
+  (q1i : dpath _ p1i b10 b11)
+  : Type.
+Proof.
+  destruct p0i, p1i, pi0. cbn in *.
+  destruct pi1.
+  exact (Square q0i q1i qi0 qi1).
+Defined.
