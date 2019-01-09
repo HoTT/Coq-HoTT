@@ -150,7 +150,6 @@ Definition DSquare {A : Type}
   (q1i : dpath _ p1i b10 b11)
   : Type.
 Proof.
-  destruct p0i, p1i, pi0. cbn in *.
-  destruct pi1.
+  destruct pi0, pi1, s, p0i.
   exact (Square q0i q1i qi0 qi1).
 Defined.
