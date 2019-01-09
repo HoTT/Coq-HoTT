@@ -139,8 +139,8 @@ Defined.
 Definition DSquare {A : Type}
   (B : A -> Type)
   {a00 a01 a10 a11 : A}
-  {p0i : a00 = a01} {pi1 : a01 = a11} 
-  {pi0 : a00 = a10} {p1i : a10 = a11}
+  {p0i : a00 = a01} {p1i : a10 = a11} 
+  {pi0 : a00 = a10} {pi1 : a01 = a11}
   (s : Square p0i p1i pi0 pi1)
   {b00 : B a00} {b01 : B a01} 
   {b10 : B a10} {b11 : B a11}
