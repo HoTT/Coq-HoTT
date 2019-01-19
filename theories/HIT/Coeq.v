@@ -10,7 +10,7 @@ Local Open Scope path_scope.
 
 Module Export Coeq.
 
-  Private Inductive Coeq {B A : Type} (f g : B -> A) : Type :=
+  Private Inductive Coeq {B A : Type@{i}} (f g : B -> A) : Type@{i} :=
   | coeq : A -> Coeq f g.
 
   Arguments coeq {B A f g} a.
