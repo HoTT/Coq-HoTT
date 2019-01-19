@@ -525,7 +525,7 @@ something you generally need to worry about; see the comments in
 `Basics/Overture` for more information.
 
 However, one situation in which this matters is when proving an
-implication between axioms.  Because `Univalence` and `Funext' are
+implication between axioms.  Because `Univalence` and `Funext` are
 dummy types, we cannot actually prove that `Univalence -> Funext`.
 Instead we define placeholders with names like `Funext_type` and
 `Univalence_type` that have the actual type that the axiom would have
