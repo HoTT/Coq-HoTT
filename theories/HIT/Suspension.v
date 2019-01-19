@@ -64,7 +64,7 @@ Proof.
   serapply pushout_ind_beta_pp.
 Defined.
 
-(** But we want to allow the user to forget that we've defined the circle in that way. *)
+(** We want to allow the user to forget that we've defined suspension in this way. *)
 Arguments Susp : simpl never.
 Arguments North : simpl never.
 Arguments South : simpl never.
