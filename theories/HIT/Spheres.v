@@ -167,10 +167,9 @@ Proof.
   intro x.
   refine ((Susp_rec_eta_homot (S2_to_Sph2 o Sph2_to_S2) x) @ _). symmetry.
   generalize dependent x.
-  
   refine (Susp_ind _ 1 (merid North)^ _).
   intro x.
-  refine ((transport_paths_FlFr _ _) @ _).
+  refine ((transport_paths_FlFr (f := fun y => y) _ _) @ _).
   rewrite_moveR_Vp_p. refine ((concat_1p _) @ _).
   refine (_ @ (ap (fun w => w @ _) (ap_idmap _)^)).
   refine ((Susp_rec_beta_merid _) @ _).
