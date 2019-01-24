@@ -2,14 +2,14 @@
 
 After installing Coq via opam [1]. One can install our version of Coq by:
 ```
-   opam install coq.8.8.0
+   opam install coq.dev
 ```
 
 However, one still needs to install the library via git to contribute.
 Opam support on windows is experimental.
 [1]: https://coq.inria.fr/opam/www/using.html
 
-We will be compatible with [Coq 8.9](https://github.com/coq/coq/releases/tag/V8.9.0), so binary packages can be used once it is released.  Until then, the development version of Coq must be installed. Either way, paths still need to be set manually.
+We will be compatible with [Coq 8.10](https://github.com/coq/coq/releases/tag/V8.10.0), so binary packages can be used once it is released.  Until then, the development version of Coq must be installed. Either way, paths still need to be set manually.
 
 
 # QUICK INSTALLATION INSTRUCTIONS
@@ -62,10 +62,10 @@ minimal fuss, you should try your luck by following these instructions:
    On linux this can be found with `nproc` or `lscpu`.
    On OSX Apple menu -> About this Mac -> System Report, then look for "number of cores"
 
-   If you are using Debian/Ubuntu, and don't mind having HoTT/coq
+   If you are using Debian/Ubuntu, and don't mind having coq master
    as your only version of Coq, you can install it using apt-get:
 
-        sudo add-apt-repository ppa:ezyang/coq-hott-git
+        sudo add-apt-repository ppa:jgross-h/coq-master-daily
         sudo apt-get update
         sudo apt-get install coq
 

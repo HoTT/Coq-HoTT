@@ -220,6 +220,7 @@ First we define the function that will be the equivalence. *)
     exact (path_universe equiv_bool_aut_bool).
   Defined.
 
+  Declare Scope baut_bool_scope.
   Notation "Z ** W" := (baut_bool_pairing Z W) : baut_bool_scope.
   Local Open Scope baut_bool_scope.
 

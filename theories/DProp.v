@@ -142,6 +142,13 @@ Definition dneg (b : DProp) : DProp
 Definition dimpl (b1 b2 : DProp) : DProp
   := Build_DProp (b1 -> b2) _ _.
 
+Declare Scope dprop_scope.
+Delimit Scope dprop_scope with dprop.
+Bind Scope dprop_scope with DProp.
+Declare Scope dhprop_scope.
+Delimit Scope dhprop_scope with dhprop.
+Bind Scope dhprop_scope with DHProp.
+
 Infix "&&" := dand : dprop_scope.
 Infix "&&" := dhand : dhprop_scope.
 Infix "||" := dor : dprop_scope.
@@ -149,10 +156,6 @@ Infix "||" := dhor : dhprop_scope.
 Infix "->" := dimpl : dprop_scope.
 Notation "!! P" := (dneg P) : dprop_scope.
 
-Delimit Scope dprop_scope with dprop.
-Bind Scope dprop_scope with DProp.
-Delimit Scope dhprop_scope with dhprop.
-Bind Scope dhprop_scope with DHProp.
 Local Open Scope dprop_scope.
 
 (** ** Computation *)

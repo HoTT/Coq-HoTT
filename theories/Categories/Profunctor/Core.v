@@ -9,6 +9,7 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+Declare Scope profunctor_scope.
 Delimit Scope profunctor_scope with profunctor.
 
 Section profunctor.

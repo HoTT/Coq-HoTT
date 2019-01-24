@@ -197,8 +197,8 @@ validate: $(ALL_VOFILES)
 	$(Q) $(TIMER) $(HOQCHK) $(HOQCHKFLAGS) $^
 
 $(STD_VOFILES) : %.vo : %.v coq-HoTT
-	$(VECHO) COQTOP $*
-	$(Q) $(TIMER) etc/pipe_out.sh "$<.timing" "$(COQTOP)" -time -indices-matter -boot -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq -compile "$<"
+	$(VECHO) COQC $*
+	$(Q) $(TIMER) etc/pipe_out.sh "$<.timing" "$(COQC)" -time -indices-matter -boot -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq "$<"
 
 
 # The HoTT library as a single target
@@ -314,7 +314,7 @@ proviola-all: proviola proviola-xml
 # dpdgraphs
 COQTHMDEP=etc/coq-dpdgraph/coqthmdep
 HOQTHMDEP=etc/hoqthmdep
-$(COQTHMDEP): etc/coq-dpdgraph/searchdepend.ml4 etc/coq-dpdgraph/graphdepend.ml4 etc/coq-dpdgraph/Makefile
+$(COQTHMDEP): etc/coq-dpdgraph/searchdepend.mlg etc/coq-dpdgraph/graphdepend.mlg etc/coq-dpdgraph/Makefile
 	$(VECHO) MAKE DPDGRAPH
 	$(Q) cd etc/coq-dpdgraph && $(MAKE)
 

@@ -30,6 +30,8 @@ Scheme option_rect := Induction for option Sort Type.
 
 Arguments None [A].
 
+Register option as core.option.type.
+
 (** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)
 
 Inductive sum (A B : Type) : Type :=
@@ -87,6 +89,7 @@ Scheme nat_rect := Induction for nat Sort Type.
 (* It would be nice not to need this, but the tactic [induction] requires it when the target is in [Set], and the above definition of [nat] puts it in [Set]. *)
 Scheme nat_rec := Induction for nat Sort Set.
 
+Declare Scope nat_scope.
 Delimit Scope nat_scope with nat.
 Bind Scope nat_scope with nat.
 Arguments S _%nat.
@@ -118,6 +121,7 @@ Definition ID := forall A : Type, A -> A.
 Definition id : ID := fun A x => x.
 *)
 
+Declare Scope identity_scope.
 Delimit Scope identity_scope with identity.
 
 Notation "x = y :> A" := (@identity A x y)%identity : identity_scope.
@@ -141,6 +145,7 @@ Inductive list (A : Type) : Type :=
 Scheme list_rect := Induction for list Sort Type.
 
 Arguments nil [A].
+Declare Scope list_scope.
 Infix "::" := cons (at level 60, right associativity) : list_scope.
 Delimit Scope list_scope with list.
 Bind Scope list_scope with list.

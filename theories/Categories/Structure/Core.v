@@ -12,6 +12,8 @@ Local Open Scope morphism_scope.
 
 (** * Structures *)
 
+Declare Scope structure_scope.
+Declare Scope long_structure_scope.
 Delimit Scope structure_scope with structure.
 Delimit Scope long_structure_scope with long_structure.
 Local Open Scope structure_scope.
