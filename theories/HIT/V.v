@@ -260,6 +260,7 @@ Proof.
     intros [a p']. exists a. transitivity (g b); auto with path_hints.
 Defined.
 
+Declare Scope set_scope.
 Notation "x ∈ v" := (mem x v) : set_scope.
 Open Scope set_scope.
 

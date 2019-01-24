@@ -6,6 +6,7 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+Declare Scope natural_transformation_scope.
 Delimit Scope natural_transformation_scope with natural_transformation.
 
 Local Open Scope morphism_scope.

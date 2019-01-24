@@ -276,6 +276,7 @@ Section Adjunction.
   End unit_counit.
 End Adjunction.
 
+Declare Scope adjunction_scope.
 Delimit Scope adjunction_scope with adjunction.
 
 Bind Scope adjunction_scope with AdjunctionUnit.

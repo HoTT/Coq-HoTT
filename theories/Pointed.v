@@ -73,6 +73,7 @@ Record pMap (A B : pType) :=
 Arguments point_eq {A B} f : rename.
 Coercion pointed_fun : pMap >-> Funclass.
 
+Declare Scope pointed_scope.
 Infix "->*" := pMap : pointed_scope.
 Local Open Scope pointed_scope.
 
