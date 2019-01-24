@@ -201,7 +201,7 @@ AC_MSG_NOTICE([Creating symbolic links into Coq standard library])
 # We also add successful directories to STDLIB_REPLACEMENT_DIRS, so
 # that the Makefile can manipulate them
 STDLIB_REPLACEMENT_DIRS=""
-for stdlibdir in dev kernel library plugins stm toploop ide ; do
+for stdlibdir in dev kernel library plugins stm toplevel ide ; do
     AS_IF([test -h "$srcdir/coq/$stdlibdir"], [rm -f "$srcdir/coq/$stdlibdir"],
           [test -d "$srcdir/coq/$stdlibdir"], [rm -rf "$srcdir/coq/$stdlibdir"])
     AS_IF([test -d "$COQLIB/$stdlibdir"],
@@ -217,8 +217,8 @@ AS_IF([test "$coqtop_out" = 0],
       [AC_MSG_RESULT([yes])],
       [AC_MSG_RESULT([no])
        AC_MSG_NOTICE([Falling back on making physical copies of the stdlib])
-       rm -f "$srcdir/coq/dev" "$srcdir/coq/kernel" "$srcdir/coq/library" "$srcdir/coq/plugins" "$srcdir/coq/stm" "$srcdir/coq/toploop" "$srcdir/coq/ide"
-       cp -R "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$COQLIB/stm" "$COQLIB/toploop" "$srcdir/coq"
+       rm -f "$srcdir/coq/dev" "$srcdir/coq/kernel" "$srcdir/coq/library" "$srcdir/coq/plugins" "$srcdir/coq/stm" "$srcdir/coq/toplevel" "$srcdir/coq/ide"
+       cp -R "$COQLIB/dev" "$COQLIB/kernel" "$COQLIB/library" "$COQLIB/plugins" "$COQLIB/stm" "$COQLIB/toplevel" "$srcdir/coq"
        AS_IF([test -d "$COQLIB/ide"],
              [cp -R "$COQLIB/ide" "$srcdir/coq"])])
 

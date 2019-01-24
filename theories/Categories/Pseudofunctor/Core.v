@@ -191,6 +191,7 @@ Section pseudofunctor.
     }.
 End pseudofunctor.
 
+Declare Scope pseudofunctor_scope.
 Delimit Scope pseudofunctor_scope with pseudofunctor.
 Bind Scope pseudofunctor_scope with Pseudofunctor.
 

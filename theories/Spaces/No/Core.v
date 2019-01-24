@@ -11,6 +11,7 @@ Local Open Scope path_scope.
 
 (** Based on section 11.6 of the HoTT Book. *)
 
+Declare Scope surreal_scope.
 Delimit Scope surreal_scope with No.
 Local Open Scope surreal_scope.
 
@@ -1011,7 +1012,7 @@ Section RaiseSort.
              (xL : L -> GenNo S) (xR : R -> GenNo S)
              (xcut : forall l r, xL l < xR r)
     : { rxcut : forall l r, No_raise (xL l) < No_raise (xR r) &
-        No_raise {{ xL | xR // xcut }} = 
+        No_raise {{ xL | xR // xcut }} =
         {{ (fun l => No_raise (xL l)) | (fun r => No_raise (xR r)) // rxcut }} }.
   Proof.
     eexists.

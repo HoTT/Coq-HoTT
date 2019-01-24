@@ -39,8 +39,8 @@ then
 fi
 echo '$ ./configure '"$@"
 ./configure "$@" || exit $?
-echo '$ make states tools coqlight plugins grammar/grammar.cma'
-make states tools coqlight plugins grammar/grammar.cma || exit $?
+echo '$ make states tools coqlight plugins'
+make states tools coqlight plugins || exit $?
 echo '$ sudo make install-binaries + rsync plugins theories'
 touch bin/coqtop.byte bin/coqchk stm/{proof,tac,query}workertop.cma
 sudo make install-binaries install-devfiles

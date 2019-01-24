@@ -6,6 +6,7 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+Declare Scope functor_scope.
 Delimit Scope functor_scope with functor.
 
 Local Open Scope morphism_scope.

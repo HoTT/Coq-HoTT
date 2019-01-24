@@ -125,6 +125,13 @@ Identity Coercion unfold_Type3le : Type3le >-> Sortclass.
 Notation idmap := (fun x => x).
 
 (** We define various scopes and open them in the order we expect to use them. *)
+Declare Scope equiv_scope.
+Declare Scope function_scope.
+Declare Scope path_scope.
+Declare Scope fibration_scope.
+Declare Scope trunc_scope.
+Declare Scope long_path_scope.
+
 Delimit Scope equiv_scope with equiv.
 Delimit Scope function_scope with function.
 Delimit Scope path_scope with path.

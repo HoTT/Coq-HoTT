@@ -17,6 +17,7 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+Declare Scope pseudonatural_transformation_scope.
 Delimit Scope pseudonatural_transformation_scope with pseudonatural_transformation.
 
 Local Open Scope natural_transformation_scope.

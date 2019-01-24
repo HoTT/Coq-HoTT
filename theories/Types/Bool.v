@@ -16,6 +16,8 @@ Scheme Bool_rec := Minimality for Bool Sort Type.
 
 Add Printing If Bool.
 
+Declare Scope bool_scope.
+
 Delimit Scope bool_scope with Bool.
 
 Bind Scope bool_scope with Bool.

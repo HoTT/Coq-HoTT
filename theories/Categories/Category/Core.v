@@ -6,6 +6,10 @@ Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
 
+Declare Scope morphism_scope.
+Declare Scope category_scope.
+Declare Scope object_scope.
+
 Delimit Scope morphism_scope with morphism.
 Delimit Scope category_scope with category.
 Delimit Scope object_scope with object.
