@@ -31,10 +31,10 @@ Global Instance trunc_initial_category_mor `{IsInitialCategory C} x y
 
 (** ** Default intitial ([0]) and terminal ([1]) precategories. *)
 Global Instance is_initial_category_0 : IsInitialCategory 0 := (fun T => @Empty_ind (fun _ => T)).
-Global Instance: IsTerminalCategory 1 | 0.
+Global Instance: IsTerminalCategory 1 | 0 := {}.
 Global Instance: Contr (object 1) | 0 := _.
 Global Instance: Contr (morphism 1 x y) | 0 := fun x y => _.
-Global Instance default_terminal C {H H1} : @IsTerminalCategory C H H1 | 10.
+Global Instance default_terminal C {H H1} : @IsTerminalCategory C H H1 | 10 := {}.
 
 Arguments initial_category_ind / .
 Arguments is_initial_category_0 / .
