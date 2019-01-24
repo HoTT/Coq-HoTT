@@ -52,7 +52,7 @@ env:
    - UPDATE_HTML="yes"       WITH_AUTORECONF="yes"
    - VALIDATE="yes"
    - FORCE_COQ_VERSION=""       BUILD_COQ="yes" WITH_AUTORECONF="yes"
-   - FORCE_COQ_VERSION="master" BUILD_COQ="yes" WITH_AUTORECONF="yes"
+   - FORCE_COQ_VERSION="v8.9"   BUILD_COQ="yes" WITH_AUTORECONF="yes"
 
  global:
 # encrypted version of deploy key for pushing
