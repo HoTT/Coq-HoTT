@@ -68,7 +68,7 @@ Section law1'.
 
   Variable C : PreCategory.
 
-  Global Instance: IsTerminalCategory (C -> 1).
+  Global Instance: IsTerminalCategory (C -> 1) := {}.
 
   (** ** [1ˣ → 1] *)
   Definition functor' : Functor (C -> 1) 1

@@ -28,7 +28,7 @@ Section law0.
   Variable C : PreCategory.
 
   Global Instance IsTerminalCategory_functors_from_initial
-  : IsTerminalCategory (0 -> C).
+  : IsTerminalCategory (0 -> C) := {}.
 
   (** There is only one functor to the terminal category [1]. *)
   Definition functor : Functor (0 -> C) 1
