@@ -180,9 +180,9 @@ Ltac auto_trans := match goal with
                     [ H: ?R ?x ?y, I: ?R ?y ?z |- ?R ?x ?z] => apply (transitivity H I)
                   end.
 
-Hint Extern 2 (?x ≤ ?y) => reflexivity.
-Hint Extern 4 (?x ≤ ?z) => auto_trans.
-Hint Extern 4 (?x < ?z) => auto_trans.
+Hint Extern 2 (?x ≤ ?y) => reflexivity : core.
+Hint Extern 4 (?x ≤ ?z) => auto_trans : core.
+Hint Extern 4 (?x < ?z) => auto_trans : core.
 
 Class Abs A `{Le A} `{Zero A} `{Negate A}
   := abs_sig: forall (x : A), { y : A | (0 ≤ x -> y = x) /\ (x ≤ 0 -> y = -x)}.

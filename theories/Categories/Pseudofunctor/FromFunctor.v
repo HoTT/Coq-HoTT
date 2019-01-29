@@ -31,7 +31,7 @@ Section of_functor.
   : P A -> P B -> pf1 = pf2
     := fun PA PB => @path_ishprop _ (@HP A B PA PB F1 F2) _ _.
 
-  Local Hint Extern 0 (P ?x.1) => exact x.2.
+  Local Hint Extern 0 (P ?x.1) => exact x.2 : core.
 
   Local Tactic Notation "transitivity_idtoiso" open_constr(hyp) :=
     lazymatch goal with

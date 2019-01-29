@@ -4,9 +4,6 @@
 (** Import the file of reserved notations so we maintain consistent level notations throughout the library *)
 Require Export Basics.Notations.
 
-(** Change in introduction patterns not adding an implicit [] *)
-Global Unset Bracketing Last Introduction Pattern.
-
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
@@ -202,7 +199,7 @@ Definition composeD {A B C} (g : forall b, C b) (f : A -> B) := fun x : A => g (
 
 Global Arguments composeD {A B C}%type_scope (g f)%function_scope x.
 
-Hint Unfold composeD.
+Hint Unfold composeD : core.
 
 Notation "g 'oD' f" := (composeD g f) : function_scope.
 
@@ -594,7 +591,7 @@ progress match goal with
              => change (forall (a : A) (b : B a) (c : C a b), IsTrunc n.+1 (T a b c)) in H; cbv beta in H
            | [ H : forall (a : ?A) (b : @?B a) (c : @?C a b) (d : @?D a b c) (x y : @?T a b c d), IsTrunc ?n (x = y) |- _ ]
              => change (forall (a : A) (b : B a) (c : C a b) (d : D a b c), IsTrunc n.+1 (T a b c d)) in H; cbv beta in H
-         end.
+         end : core.
 
 Notation Contr := (IsTrunc -2).
 Notation IsHProp := (IsTrunc -1).
