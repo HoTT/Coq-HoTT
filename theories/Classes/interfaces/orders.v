@@ -108,8 +108,8 @@ Section srorder_maps.
     ; strict_order_embedding_reflecting :> StrictlyOrderReflecting }.
 End srorder_maps.
 
-Hint Extern 4 (?f _ ≤ ?f _) => apply (order_preserving f).
-Hint Extern 4 (?f _ < ?f _) => apply (strictly_order_preserving f).
+Hint Extern 4 (?f _ ≤ ?f _) => apply (order_preserving f) : core.
+Hint Extern 4 (?f _ < ?f _) => apply (strictly_order_preserving f) : core.
 
 (*
 We define various classes to describe the order on the lower part of the

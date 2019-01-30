@@ -46,7 +46,7 @@ Section setoid_morphisms.
 End setoid_morphisms.
 
 (* HOTT TODO check if this is ok/useful *)
-Hint Extern 4 (?f _ = ?f _) => eapply (ap f).
+Hint Extern 4 (?f _ = ?f _) => eapply (ap f) : core.
 
 Section setoid_binary_morphisms.
   Context {A B C} {Aap: Apart A} 
