@@ -4,6 +4,9 @@
 (** Import the file of reserved notations so we maintain consistent level notations throughout the library *)
 Require Export Basics.Notations.
 
+(** Change in introduction patterns not adding an implicit [] *)
+Global Unset Bracketing Last Introduction Pattern.
+
 (** ** Type classes *)
 
 (** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don't know what that means, ignore it. *)
