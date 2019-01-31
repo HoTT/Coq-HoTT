@@ -36,11 +36,18 @@ Section PO.
              (pp' : inl' o f == inr' o g)
     : cocone (span f g) Z.
   Proof.
-    unshelve econstructor.
-    - intros []; cbn. intros _. exact (inr' o g).
-      intros []. exact inl'. exact inr'.
-    - intros [] [] []; cbn. destruct b.
-      exact pp'. reflexivity.
+    serapply Build_cocone.
+    intro i.
+    destruct i.
+    exact (inr' o g).
+    destruct b.
+    exact inl'.
+    exact inr'.
+    intros i j g0.
+    destruct i, j, g0.
+    destruct u, b.
+    exact pp'.
+    reflexivity.
   Defined.
 
   Definition pol' {f : A -> B} {g : A -> C} {Z} (Co : cocone (span f g) Z)
@@ -74,12 +81,17 @@ Section PO.
              (pp' : forall a, popp a # l' (f a) = r' (g a))
     : forall w, P w.
   Proof.
-    simple refine (colimit_ind P _ _).
-    - intros []; cbn.
-      intros [] x.
-      exact (@colimp _ (span f g) (inl tt) (inr true) tt x # l' (f x)).
-      intros []; cbn. exact l'. exact r'.
-    - intros [] [] []; cbn.
+    serapply colimit_ind.
+    + intro i; destruct i.
+      * destruct u.
+        intro.
+        serapply (colimp _ _ _ _ # l' _).
+        exact tt.
+      * intro.
+        destruct b.
+        exact (l' x).
+        exact (r' x).
+    + intros [] [] []; cbn.
       destruct u, b; cbn. reflexivity.
       unfold popp in pp'.
       intro a. apply moveR_transport_p.
