@@ -120,7 +120,7 @@ Module Topological_Lex.
                                | inr (a ; (b1, b2)) => (b1 = b2)
                                end : Type)).
     assert (Dtrunc : forall c:C, IsTrunc n.+1 (D c)).
-    { intros [a | [a b1 b2]]; [ cbn | exact _ ].
+    { intros [a | [a [b1 b2]]]; [ cbn | exact _ ].
       (* Because [trunc_hprop] can't be used as an idmap... *)
       destruct n; exact _. }
     assert (OeqD : OeqO O (Nul D)).

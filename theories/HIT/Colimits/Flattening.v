@@ -238,20 +238,19 @@ Section POCase.
   Definition POCase_E : dep_diagram (span f g).
   Proof.
     simple refine (Build_diagram _ _ _); cbn.
-    - intros [[] x]; revert x.
+    - intros [[] x]; revert x. 
       + exact A0.
       + destruct b; assumption.
-    - intros [[] x] [[] y] []; cbn; intros [].
-      destruct b; intro p.
+    - intros [[[]|[]] x] [[[]|[]] y]; cbn; intros [[] p].
       + exact (fun y => p # (f0 x y)).
       + exact (fun y => p # (g0 x y)).
   Defined.
 
   Definition POCase_HE : equifibered _ POCase_E.
   Proof.
-    intros [] [] [] x; cbn. destruct b; cbn in *.
-    - apply (f0 x).
-    - apply (g0 x).
+    intros [[]|[]] [[]|[]] [] x; compute.
+    - exact (equiv_isequiv (f0 x)).
+    - exact (equiv_isequiv (g0 x)).
   Defined.
 
   Definition PO_flattening
@@ -262,7 +261,7 @@ Section POCase.
       unfold PO; apply ap.
       serapply path_diagram; cbn.
       - intros [|[]]; cbn. all: reflexivity.
-      - intros [] [] [] x; destruct b; cbn in *.
+      - intros [[]|[]] [[]|[]] [] x; cbn in *.
         all: reflexivity. }
     rewrite X; clear X.
     transitivity (exists x, E' (span f g) POCase_E POCase_HE x).
@@ -273,13 +272,14 @@ Section POCase.
         unfold E', POCase_P, PO_rec.
         f_ap. serapply path_cocone.
         - intros [[]|[]] y; cbn.
-          1:{ apply path_universe_uncurried. apply g0. }
+          1: apply path_universe_uncurried; apply g0.
           all: reflexivity.
-        - intros [] [] []; cbn.
-          destruct b, u; intro y; simpl; hott_simpl.
-          unfold path_universe.
-          rewrite <- path_universe_V_uncurried.
-          refine (path_universe_compose (f0 y)^-1 (g0 y))^. }
+        - intros [[]|[]] [[]|[]] []; cbn.
+          + intro y; simpl; hott_simpl.
+            unfold path_universe.
+            rewrite <- path_universe_V_uncurried.
+            refine (path_universe_compose (f0 y)^-1 (g0 y))^. 
+          + intros; apply concat_Vp. }
       rewrite X. reflexivity.
   Defined.
 

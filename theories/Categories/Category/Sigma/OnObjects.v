@@ -66,7 +66,9 @@ Section sigT_obj.
     /\ sigT_functor_obj_inv o sigT_functor_obj = 1.
   Proof.
     split; path_functor; trivial.
-    repeat (intros [] || intro || apply path_forall).
+    apply path_forall; intros [].
+    apply path_forall; intros [].
+    apply path_forall; intros [? []].
     reflexivity.
   Qed.
 

@@ -114,7 +114,7 @@ Proof.
                _
                (fun c => idpath)
                _)).
-  - repeat (intros [] || intro); reflexivity.
+  - intros [? [? []]]; reflexivity.
   - reflexivity.
 Defined.
 
@@ -128,7 +128,7 @@ Proof.
                _
                (fun Px => idpath)
                _)).
-  - repeat (intros [] || intro); reflexivity.
+  - intros [[] []]; reflexivity.
   - reflexivity.
 Defined.
 
