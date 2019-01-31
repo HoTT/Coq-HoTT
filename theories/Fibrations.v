@@ -104,32 +104,28 @@ Defined.
 
 (** ** Replacing a map with a fibration *)
 
-Definition equiv_fibration_replacement  {B C} (f:C ->B):
-  C <~> {y:B & hfiber f y}.
-Proof.
-  simple refine (BuildEquiv _ _ _ (BuildIsEquiv
-               C {y:B & {x:C & f x = y}}
-               (fun c => (f c; (c; idpath)))
-               (fun c => c.2.1)
-               _
-               (fun c => idpath)
-               _)).
-  - repeat (intros [] || intro); reflexivity.
-  - reflexivity.
+Definition equiv_fibration_replacement  {B C} (f : C -> B)
+  : C <~> {y : B & hfiber f y}.
+Proof. 
+  serapply equiv_adjointify.
+  exact (fun c => (f c; (c; 1))).
+  exact (fun c => c.2.1).
+  intro x; destruct x as [b a], a as [a1 a2], a2.
+  reflexivity.
+  intro; reflexivity.
 Defined.
 
-Definition hfiber_fibration {X} (x : X) (P:X->Type):
-    P x <~> @hfiber (sigT P) X pr1 x.
+Definition hfiber_fibration {X} (x : X) (P : X -> Type)
+  : P x <~> @hfiber (sigT P) X pr1 x.
 Proof.
-  simple refine (BuildEquiv _ _ _ (BuildIsEquiv
-               (P x) { z : sigT P & z.1 = x }
-               (fun Px => ((x; Px); idpath))
-               (fun Px => transport P Px.2 Px.1.2)
-               _
-               (fun Px => idpath)
-               _)).
-  - repeat (intros [] || intro); reflexivity.
-  - reflexivity.
+  serapply equiv_adjointify.
+  exact (fun y => ((x ; y) ; 1)).
+  exact (fun y => y.2 # y.1.2).
+  intro.
+  destruct x0 as [x1 x2], x1, x2.
+  reflexivity.
+  intro.
+  reflexivity.
 Defined.
 
 (** ** Exercise 4.4: The unstable octahedral axiom. *)
