@@ -5,7 +5,7 @@ Local Open Scope path_scope.
 Section Functorish.
 Context `{Univalence}.
 (* We do not need composition to be preserved. *)
-Global Class Functorish (F : Type -> Type) := {
+Class Functorish (F : Type -> Type) := {
   fmap {A B} (f : A -> B) : F A -> F B ;
   fmap_idmap (A:Type) : fmap (idmap : A -> A) = idmap
 }.
