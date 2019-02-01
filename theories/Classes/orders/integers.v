@@ -61,8 +61,9 @@ apply (antisymmetry (≤)).
 - transitivity (n - 1);trivial.
   apply (order_reflecting (1 +)).
   rewrite plus_comm,<-plus_assoc,plus_negate_l,plus_0_r.
-  transitivity 0. trivial.
-  apply le_0_2.
+  transitivity 0.
+  + trivial.
+  + apply le_0_2.
 Qed.
 
 Global Instance: Biinduction Z.

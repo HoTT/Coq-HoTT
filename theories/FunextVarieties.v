@@ -117,9 +117,9 @@ Proof.
   intros wf; hnf; intros A B f g.
   refine (isequiv_adjointify (@apD10 A B f g)
     (htpy_ind wf f (fun g' _ => f = g') idpath g) _ _).
-  revert g; refine (htpy_ind wf _ _ _).
+  - revert g; refine (htpy_ind wf _ _ _).
     refine (ap _ (htpy_ind_beta wf _ _ _)).
-  intros h; destruct h.
+  - intros h; destruct h.
     refine (htpy_ind_beta wf _ _ _).
 Defined.
 

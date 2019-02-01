@@ -455,8 +455,8 @@ Section iso_lemmas.
   : IsIsomorphism (F _1 m).
   Proof.
     refine ({| morphism_inverse := F _1 m^-1 |}).
-    abstract (rewrite <- composition_of, ?left_inverse, ?right_inverse, identity_of; reflexivity).
-    abstract (rewrite <- composition_of, ?left_inverse, ?right_inverse, identity_of; reflexivity).
+    - abstract (rewrite <- composition_of, ?left_inverse, ?right_inverse, identity_of; reflexivity).
+    - abstract (rewrite <- composition_of, ?left_inverse, ?right_inverse, identity_of; reflexivity).
   Defined.
 End iso_lemmas.
 

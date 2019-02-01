@@ -192,16 +192,16 @@ Proof.
     (sWtil_rec _ cct ppt)
     _ _).
   (** The two homotopies are completely symmetrical, using the *dependent* eliminators, but only the computation rules for the non-dependent ones. *)
-  refine (sWtil_ind _ (fun a x => 1) _). intros b y.
-  apply dpath_path_FFlr.
-  rewrite concat_1p, concat_p1.
-  rewrite sWtil_rec_beta_ppt.
-  by symmetry; apply (@Wtil_rec_beta_ppt A B f g C D).
-  refine (Wtil_ind _ (fun a x => 1) _). intros b y.
-  apply dpath_path_FFlr.
-  rewrite concat_1p, concat_p1.
-  rewrite Wtil_rec_beta_ppt.
-  by symmetry; apply sWtil_rec_beta_ppt.
+  - refine (sWtil_ind _ (fun a x => 1) _). intros b y.
+    apply dpath_path_FFlr.
+    rewrite concat_1p, concat_p1.
+    rewrite sWtil_rec_beta_ppt.
+      by symmetry; apply (@Wtil_rec_beta_ppt A B f g C D).
+  - refine (Wtil_ind _ (fun a x => 1) _). intros b y.
+    apply dpath_path_FFlr.
+    rewrite concat_1p, concat_p1.
+    rewrite Wtil_rec_beta_ppt.
+      by symmetry; apply sWtil_rec_beta_ppt.
 Defined.
 
 End AssumeAxioms.

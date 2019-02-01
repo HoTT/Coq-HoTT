@@ -61,10 +61,11 @@ Defined.
 Lemma objclasspb_is_fibrantreplacement (P:A-> Type): (sigT P) <~> (Pullback P (@pr1 _ (fun u :Type => u))).
 Proof.
 exists (help_objclasspb_is_fibrantreplacement P).
-apply isequiv_biinv. split; exists (help_objclasspb_is_fibrantreplacement2 P); intros [a p]. apply idpath.
-destruct p as [[T t] p].
-refine (path_sigma' _ (idpath a) _).
-simpl in p. by path_induction.
+apply isequiv_biinv. split; exists (help_objclasspb_is_fibrantreplacement2 P); intros [a p].
+- apply idpath.
+- destruct p as [[T t] p].
+  refine (path_sigma' _ (idpath a) _).
+  simpl in p. by path_induction.
 Qed.
 
 End FamPow.
@@ -108,9 +109,9 @@ apply (equiv_adjointify pow2Pfam Pfam2pow).
   refine (@eisretr _ _ (FamequivPow A) _ (B;f)).
 + intro P. apply path_forall. intro a.
  assert (f2p A (p2f A (pr1 o P)) a = (pr1 (P a))).
-  set (p:=@eissect _ _ (FamequivPow A) _).
+- set (p:=@eissect _ _ (FamequivPow A) _).
   apply (ap10 (p (pr1 o P)) a).
-by apply path_sigma_hprop.
+- by apply path_sigma_hprop.
 Defined.
 End Subobjectclassifier.
 

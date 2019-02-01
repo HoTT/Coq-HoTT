@@ -13,8 +13,8 @@ Section ColimitSigma.
   Definition sigma_diag : diagram G.
   Proof.
     simple refine (Build_diagram _ _ _).
-    exact (fun i => {y: Y & D y i}).
-    simpl; intros i j g x. exact (x.1; D x.1 _f g x.2).
+    - exact (fun i => {y: Y & D y i}).
+    - simpl; intros i j g x. exact (x.1; D x.1 _f g x.2).
   Defined.
 
   (** The embedding, for a particular [y], of [D(y)] in the sigma diagram. *)
@@ -22,8 +22,8 @@ Section ColimitSigma.
   Definition sigma_diag_map (y: Y) : diagram_map (D y) sigma_diag.
   Proof.
     simple refine (Build_diagram_map _ _).
-    intros i x. exists y. exact x.
-    intros i j g x; simpl. reflexivity.
+    - intros i x. exists y. exact x.
+    - intros i j g x; simpl. reflexivity.
   Defined.
 
   Context {Q: Y -> Type}.
@@ -34,10 +34,11 @@ Section ColimitSigma.
   : cocone sigma_diag (sig Q).
   Proof.
     simple refine (Build_cocone _ _).
-    simpl; intros i x. exact (x.1; q (C x.1) i x.2).
-    simpl; intros i j g x.
-    simple refine (path_sigma' _ _ _). reflexivity.
-    simpl. apply qq.
+    - simpl; intros i x. exact (x.1; q (C x.1) i x.2).
+    - simpl; intros i j g x.
+      simple refine (path_sigma' _ _ _).
+      + reflexivity.
+      + simpl. apply qq.
   Defined.
 
   (** The main result: [sig Q] is a colimit of the diagram of sigma types. *)
@@ -79,18 +80,20 @@ Section ColimitSigma.
         rewrite (ap_path_sigma_1p (fun x01 x02 => postcompose_cocone_inv
                                                  (HQ x01) (CXy x01) x02)).
         (* Set Printing Coercions. (* to understand what happens *)   *)
-        subst py1. etransitivity. etransitivity. 2:exact py2.
-        apply ap. rewrite (ap_compose q (fun x0 => x0 i x)).
-        rewrite (ap_apply_lD2 _ i x). reflexivity.
-        apply ap10. apply ap.
-        rewrite (ap_compose q (fun x0 => x0 j _)).
-        rewrite (ap_apply_lD2 _ j _). reflexivity.
+        subst py1. etransitivity.
+        * etransitivity. 2:exact py2.
+          apply ap. rewrite (ap_compose q (fun x0 => x0 i x)).
+          rewrite (ap_apply_lD2 _ i x). reflexivity.
+        * apply ap10. apply ap.
+          rewrite (ap_compose q (fun x0 => x0 j _)).
+          rewrite (ap_apply_lD2 _ j _). reflexivity.
     - intros f. apply path_forall; intros [y x]; simpl.
       rewrite <- precompose_postcompose_cocone.
       simple refine (apD10 (g := fun x => f (y; x)) _ x).
       simple refine (equiv_moveR_equiv_V _ _ _).
-      simple refine (path_cocone _ _). intros i x'; reflexivity.
-      intros i j g x'; simpl. hott_simpl. exact (ap_compose _ _ _)^.
+      simple refine (path_cocone _ _).
+      + intros i x'; reflexivity.
+      + intros i j g x'; simpl. hott_simpl. exact (ap_compose _ _ _)^.
   Defined.
 End ColimitSigma.
 

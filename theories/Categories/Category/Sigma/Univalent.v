@@ -247,8 +247,8 @@ Section on_both.
     simple refine (_; _).
     { exists (e : morphism _ _ _).1.
       exists (e^-1%morphism).1.
-      exact (@left_inverse _ _ _ e e)..1.
-      exact (@right_inverse _ _ _ e e)..1. }
+      - exact (@left_inverse _ _ _ e e)..1.
+      - exact (@right_inverse _ _ _ e e)..1. }
     { exists (e : morphism _ _ _).2.
       exists (e^-1%morphism).2; cbn.
       exists (((@left_inverse _ _ _ e e))..2).
@@ -287,7 +287,7 @@ Section on_both.
       (iso_A'_code (iso_A'_decode x)).2 = x.2.
   Proof.
     simple refine (path_sigma _ _ _ _ _); cycle 1.
-    simple refine (path_sigma _ _ _ _ (path_ishprop _ _)).
+    1:simple refine (path_sigma _ _ _ _ (path_ishprop _ _)).
     all:repeat match goal with
                  | [ |- (transport ?P ?p ?z).1 = _ ] => rewrite (@ap_transport _ P _ _ _ p (fun _ x => x.1))
                  | [ |- (transport ?P ?p ?z).2.1 = _ ] => rewrite (@ap_transport _ P _ _ _ p (fun _ x => x.2.1))
@@ -347,8 +347,8 @@ Section on_both.
       simpl Overture.pr1.
       intro p; destruct p.
       eapply @isequiv_compose.
-      exact _.
-      eapply @isequiv_inverse. }
+      - exact _.
+      - eapply @isequiv_inverse. }
     { intro p; apply path_isomorphic; destruct p.
       reflexivity. }
   Defined.

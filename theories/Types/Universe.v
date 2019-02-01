@@ -137,8 +137,8 @@ Proof.
   transitivity (p^).
     2: exact (inverse2 (eisretr (equiv_path_universe A B) p)^).
   transitivity (path_universe_uncurried (equiv_path B A p^)).
-    by refine (ap _ (equiv_path_V A B p)^).
-  by refine (eissect (equiv_path B A) p^).
+  - by refine (ap _ (equiv_path_V A B p)^).
+  - by refine (eissect (equiv_path B A) p^).
 Defined.
 
 Definition path_universe_V `{Funext} `(f : A -> B) `{IsEquiv A B f}

@@ -43,11 +43,11 @@ Lemma istrunc_extension_along_conn {m n : trunc_index}
 Proof.
   revert P HP d. induction m as [ | m' IH]; intros P HP d; simpl in *.
   (* m = –2 *)
-  exists (extension_conn_map_elim n f P d).
-  intros y. apply (allpath_extension_conn_map n); assumption.
-  (* m = S m' *)
-  intros e e'. refine (trunc_equiv _ (path_extension e e')).
-  (* magically infers: paths in extensions = extensions into paths,
+  - exists (extension_conn_map_elim n f P d).
+    intros y. apply (allpath_extension_conn_map n); assumption.
+    (* m = S m' *)
+  - intros e e'. refine (trunc_equiv _ (path_extension e e')).
+(* magically infers: paths in extensions = extensions into paths,
                        which by induction is m'-truncated. *)
 Defined.
 
@@ -187,23 +187,23 @@ Proof.
     ExtensionAlong (unit_name a0)
       (fun a => ExtensionAlong (unit_name b0) (P a) (unit_name (f_b0 a)))
       (unit_name (f_a0 ; (unit_name f_a0b0)))).
-    apply (extension_conn_map_elim m).
-      apply (conn_point_incl a0).
-    intros a.
-    apply (istrunc_extension_along_conn (n := n)).
-      apply (conn_point_incl b0).
-    apply HP.
-  destruct goal_as_extension as [f_eb name_ea_eab].
-  assert (ea_eab := name_ea_eab tt); clear name_ea_eab.
-  exists (fun a => pr1 (f_eb a)).
-  exists (fun b => apD10 (ea_eab ..1) b).
-  exists (fun a => pr2 (f_eb a) tt).
-(* The last component is essentially (g' ..2), wrapped in a bit of path-algebra. *)
-  apply moveL_Mp.
-  apply (concatR (apD10 (ea_eab ..2) tt)).
-  set (ea := ea_eab ..1). generalize ea; simpl. clear ea_eab ea. intros.
-  rewrite transport_arrow. rewrite transport_const. rewrite transport_paths_Fl.
-  exact 1%path.
+  - apply (extension_conn_map_elim m).
+    + apply (conn_point_incl a0).
+    + intros a.
+      apply (istrunc_extension_along_conn (n := n)).
+      * apply (conn_point_incl b0).
+      * apply HP.
+  - destruct goal_as_extension as [f_eb name_ea_eab].
+    assert (ea_eab := name_ea_eab tt); clear name_ea_eab.
+    exists (fun a => pr1 (f_eb a)).
+    exists (fun b => apD10 (ea_eab ..1) b).
+    exists (fun a => pr2 (f_eb a) tt).
+    (* The last component is essentially (g' ..2), wrapped in a bit of path-algebra. *)
+    apply moveL_Mp.
+    apply (concatR (apD10 (ea_eab ..2) tt)).
+    set (ea := ea_eab ..1). generalize ea; simpl. clear ea_eab ea. intros.
+    rewrite transport_arrow. rewrite transport_const. rewrite transport_paths_Fl.
+    exact 1%path.
 Qed.
 
 (** It is easier to apply the above result with its components separated. *)

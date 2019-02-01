@@ -72,10 +72,10 @@ Definition path_forall_V `{P : A -> Type} (f g : forall x, P x)
   : path_forall _ _ (fun x => (p x)^) = (path_forall _ _ p)^.
 Proof.
   transitivity (path_forall _ _ (fun x => (apD10 (path_forall _ _ p) x)^)).
-  f_ap. symmetry. apply (@ap _ _ (fun h x => (h x)^)). apply eisretr.
-  transitivity (path_forall _ _ (apD10 (path_forall _ _ p)^)).
-  apply ap, inverse. apply path_forall; intros x. apply apD10_V.
-  apply eissect.
+  - f_ap. symmetry. apply (@ap _ _ (fun h x => (h x)^)). apply eisretr.
+  - transitivity (path_forall _ _ (apD10 (path_forall _ _ p)^)).
+    + apply ap, inverse. apply path_forall; intros x. apply apD10_V.
+    + apply eissect.
 Defined.
 
 (** ** Transport *)

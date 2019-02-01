@@ -208,8 +208,8 @@ Instance isequiv_path_sigma_contra `{P : A -> Type} {u v : sigT P}
   : IsEquiv (path_sigma_uncurried_contra P u v) | 0.
   apply (isequiv_adjointify (path_sigma_uncurried_contra P u v)
         (fun r => match r with idpath => (1; 1) end)).
-    by intro r; induction r; destruct u as [u1 u2]; reflexivity.
-  destruct u, v; intros [p q].
+- by intro r; induction r; destruct u as [u1 u2]; reflexivity.
+- destruct u, v; intros [p q].
   simpl in *.
   destruct p; simpl in q.
   destruct q; reflexivity.

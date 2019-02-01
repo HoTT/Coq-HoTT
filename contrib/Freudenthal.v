@@ -110,19 +110,21 @@ Proof.
   revert x.
   apply (@conn_map_elim _ _ _ (unit_name x0) _
     (fun x => IsEquiv (FST_Codes_cross x q))).
-    intros x; generalize dependent n. intros [ | n'] imposs.
-      destruct (imposs 1).
-      intros ?. apply (@trunc_leq -1). exact tt. apply hprop_isequiv.
-  intros []. unfold FST_Codes_cross.
-  refine (isequiv_homotopic (FST_Codes_cross_x0 q) _).
-  { unfold FST_Codes_cross_x0.
-    apply isequiv_Trunc_functor, @isequiv_functor_sigma. refine _.
-    intros a. apply isequiv_cancelR. }
-  { hnf. apply Trunc_ind. intros ?; apply trunc_succ.
-    intros [x r]; simpl.
-    unfold functor_sigma; simpl.
-    symmetry.
-    exact (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r). }
+  - intros x; generalize dependent n. intros [ | n'] imposs.
+    + destruct (imposs 1).
+    + intros ?. apply (@trunc_leq -1);[exact tt | apply hprop_isequiv].
+  - intros []. unfold FST_Codes_cross.
+    refine (isequiv_homotopic (FST_Codes_cross_x0 q) _).
+    { unfold FST_Codes_cross_x0.
+      apply isequiv_Trunc_functor, @isequiv_functor_sigma.
+      - exact _.
+      - intros a. apply isequiv_cancelR. }
+    { hnf. apply Trunc_ind.
+      - intros ?; apply trunc_succ.
+      - intros [x r]; simpl.
+        unfold functor_sigma; simpl.
+        symmetry.
+        exact (ap10 (wedge_incl_comp1 x0 x0 _ _ _ _ x) r). }
 Defined.
 
 Definition FST_Codes
@@ -144,10 +146,10 @@ Definition FST_Codes_center (y : Susp X) (p : No = y)
   : FST_Codes y p.
 Proof.
   assert (goal' : FST_Codes y (transport _ p 1)).
-    apply transportD. simpl; unfold FST_Codes_No.
+  - apply transportD. simpl; unfold FST_Codes_No.
     apply tr. exists x0; unfold mer'. apply concat_pV.
-  refine (transport _ _ goal'). refine (transport_paths_r _ _ @ _).
-  apply concat_1p.
+  - refine (transport _ _ goal'). refine (transport_paths_r _ _ @ _).
+    apply concat_1p.
 Defined.
 
 (** TODO: move the following few lemmas. *)
@@ -185,10 +187,10 @@ Definition FST_Codes_transportD_concrete (x1 : X) (p : No = No)
   : FST_Codes No p -> FST_Codes So (transport (paths No) (mer x1) p).
 Proof.
   intro rr. assert (goal' : FST_Codes So (p @ mer x1)).
-    apply (FST_Codes_cross x1).
+  - apply (FST_Codes_cross x1).
     refine (transport FST_Codes_No _ rr). symmetry; apply concat_pp_V.
-  refine (transport FST_Codes_So _ goal').
-  apply inverse, transport_paths_r.
+  - refine (transport FST_Codes_So _ goal').
+    apply inverse, transport_paths_r.
 Defined.
 
 Definition FST_Codes_transportD (x1 : X) (p : No = No) (rr : FST_Codes No p)
@@ -218,8 +220,9 @@ Abort.
 Definition FST_Codes_contr_No (p : No = No) (rr : FST_Codes No p)
   : (rr = FST_Codes_center No p).
 Proof.
-  revert rr. apply Trunc_ind. intros ?; apply trunc_succ.
-  intros [x1 r]. destruct r. unfold FST_Codes_center. simpl.
+  revert rr. apply Trunc_ind.
+  - intros ?; apply trunc_succ.
+  - intros [x1 r]. destruct r. unfold FST_Codes_center. simpl.
   (*transitivity (tr
     (transport (fun p => hfiber mer' p) (transport_paths_r p 1 @ concat_1p p)
     (transportD (paths No))))

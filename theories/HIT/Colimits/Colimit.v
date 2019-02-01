@@ -157,15 +157,15 @@ Proof.
   intro Y; simpl.
   simple refine (isequiv_adjointify _ (colimit_rec Y) _ _).
   - intros C. simple refine (path_cocone _ _).
-    intros i x. reflexivity.
-    intros i j f x. simpl. hott_simpl.
-    apply colimit_rec_beta_colimp.
+    + intros i x. reflexivity.
+    + intros i j f x. simpl. hott_simpl.
+      apply colimit_rec_beta_colimp.
   - intro f. apply path_forall.
     simple refine (colimit_ind  _ _ _).
-    intros i x. reflexivity.
-    intros i j g x. simpl.
-    rewrite transport_paths_FlFr.
-    rewrite colimit_rec_beta_colimp. hott_simpl.
+    + intros i x. reflexivity.
+    + intros i j g x. simpl.
+      rewrite transport_paths_FlFr.
+      rewrite colimit_rec_beta_colimp. hott_simpl.
 Defined.
 
 Definition is_colimit_colimit `{Funext} {G: graph} (D: diagram G) : is_colimit D (colimit D)
@@ -187,8 +187,8 @@ Section FunctorialityCocone.
     : postcompose_cocone C idmap = C.
   Proof.
     simple refine (path_cocone _ _).
-    intros i x; reflexivity.
-    intros i j g x; simpl; hott_simpl.
+    - intros i x; reflexivity.
+    - intros i j g x; simpl; hott_simpl.
   Defined.
 
   Definition postcompose_cocone_comp {D: diagram G}
@@ -197,8 +197,8 @@ Section FunctorialityCocone.
       = postcompose_cocone (postcompose_cocone C f) g.
   Proof.
     simple refine (path_cocone _ _).
-    intros i x; reflexivity.
-    intros i j h x; simpl; hott_simpl. apply ap_compose.
+    - intros i x; reflexivity.
+    - intros i j h x; simpl; hott_simpl. apply ap_compose.
   Defined.
 
   (** ** Precomposition for cocones *)
@@ -210,9 +210,11 @@ Section FunctorialityCocone.
     : (cocone D2 X) -> (cocone D1 X).
   Proof.
     intros C. simple refine (Build_cocone _ _).
-    intros i x. exact (C i (m i x)).
-    intros i j g x; simpl.
-    etransitivity. apply ap. symmetry. apply diagram_map_comm. apply qq.
+    - intros i x. exact (C i (m i x)).
+    - intros i j g x; simpl.
+      etransitivity.
+      + apply ap. symmetry. apply diagram_map_comm.
+      + apply qq.
   Defined.
 
   (** Identity and associativity for the precomposition of a cocone with a diagram map. *)
@@ -220,7 +222,8 @@ Section FunctorialityCocone.
   Definition precompose_cocone_identity (D: diagram G) (X: Type)
     : precompose_cocone (X:=X) (diagram_idmap D) == idmap.
     intros C; simpl. simple refine (path_cocone _ _).
-    intros i x. reflexivity. intros; simpl. hott_simpl.
+    - intros i x. reflexivity.
+    - intros; simpl. hott_simpl.
   Defined.
 
   Definition precompose_cocone_comp {D1 D2 D3: diagram G}
@@ -230,10 +233,10 @@ Section FunctorialityCocone.
   Proof.
     intro C; simpl.
     simple refine (path_cocone _ _).
-    intros i x. reflexivity.
-    intros i j g x. simpl. hott_simpl.
-    apply ap10. apply ap. unfold CommutativeSquares.comm_square_comp.
-    rewrite inv_pp. rewrite ap_pp. rewrite ap_compose. by rewrite ap_V.
+    - intros i x. reflexivity.
+    - intros i j g x. simpl. hott_simpl.
+      apply ap10. apply ap. unfold CommutativeSquares.comm_square_comp.
+      rewrite inv_pp. rewrite ap_pp. rewrite ap_compose. by rewrite ap_V.
   Defined.
 
   (** Associativity of a precomposition and a postcomposition. *)
@@ -246,8 +249,10 @@ Section FunctorialityCocone.
     simple refine (path_cocone _ _).
     - intros i x; reflexivity.
     - intros i j g x; simpl; hott_simpl.
-      etransitivity. apply ap_pp. apply ap10. apply ap.
-      symmetry. apply ap_compose.
+      etransitivity.
+      + apply ap_pp.
+      + apply ap10. apply ap.
+        symmetry. apply ap_compose.
   Defined.
 
   (** The precomposition with a diagram equivalence is an equivalence. *)
@@ -257,10 +262,12 @@ Section FunctorialityCocone.
   Proof.
     simple refine (isequiv_adjointify
                      _ (precompose_cocone (diagram_equiv_inv m)) _ _).
-    - intros C. etransitivity. apply precompose_cocone_comp.
-      rewrite diagram_inv_is_retraction. apply precompose_cocone_identity.
-    - intros C. etransitivity. apply precompose_cocone_comp.
-      rewrite diagram_inv_is_section. apply precompose_cocone_identity.
+    - intros C. etransitivity.
+      + apply precompose_cocone_comp.
+      + rewrite diagram_inv_is_retraction. apply precompose_cocone_identity.
+    - intros C. etransitivity.
+      + apply precompose_cocone_comp.
+      + rewrite diagram_inv_is_section. apply precompose_cocone_identity.
   Defined.
 
   (** The postcomposition with an equivalence is an equivalence. *)
@@ -270,12 +277,14 @@ Section FunctorialityCocone.
   Proof.
     serapply isequiv_adjointify.
     - exact (fun C => postcompose_cocone C f^-1).
-    - intros C. etransitivity. symmetry. apply postcompose_cocone_comp.
-      etransitivity. 2:apply postcompose_cocone_identity. apply ap.
-      funext x; apply eisretr.
-    - intros C. etransitivity. symmetry. apply postcompose_cocone_comp.
-      etransitivity. 2:apply postcompose_cocone_identity. apply ap.
-      funext x; apply eissect.
+    - intros C. etransitivity.
+      + symmetry. apply postcompose_cocone_comp.
+      + etransitivity. 2:apply postcompose_cocone_identity. apply ap.
+        funext x; apply eisretr.
+    - intros C. etransitivity.
+      + symmetry. apply postcompose_cocone_comp.
+      + etransitivity. 2:apply postcompose_cocone_identity. apply ap.
+        funext x; apply eissect.
   Defined.
 
   (** ** Universality preservation *)
@@ -358,13 +367,15 @@ Section FunctorialityColimit.
            (functoriality_colimit m HQ1 HQ2).
   Proof.
     unfold functoriality_colimit. apply ap10.
-    simple refine (equiv_inj (postcompose_cocone HQ2) _). apply HQ2.
-    etransitivity. 2:symmetry; apply postcompose_cocone_identity.
-    etransitivity. apply postcompose_cocone_comp.
-    unfold postcompose_cocone_inv. rewrite eisretr.
-    rewrite precompose_postcompose_cocone. rewrite eisretr.
-    rewrite precompose_cocone_comp. rewrite diagram_inv_is_section.
-    apply precompose_cocone_identity.
+    simple refine (equiv_inj (postcompose_cocone HQ2) _).
+    - apply HQ2.
+    - etransitivity. 2:symmetry; apply postcompose_cocone_identity.
+      etransitivity.
+      + apply postcompose_cocone_comp.
+      + unfold postcompose_cocone_inv. rewrite eisretr.
+        rewrite precompose_postcompose_cocone. rewrite eisretr.
+        rewrite precompose_cocone_comp. rewrite diagram_inv_is_section.
+        apply precompose_cocone_identity.
   Defined.
 
   Definition functoriality_colimit_eisretr
@@ -372,13 +383,15 @@ Section FunctorialityColimit.
            (functoriality_colimit (diagram_equiv_inv m) HQ2 HQ1).
   Proof.
     unfold functoriality_colimit.  apply ap10.
-    simple refine (equiv_inj (postcompose_cocone HQ1) _). apply HQ1.
-    etransitivity. 2:symmetry; apply postcompose_cocone_identity.
-    etransitivity. apply postcompose_cocone_comp.
-    unfold postcompose_cocone_inv. rewrite eisretr.
-    rewrite precompose_postcompose_cocone. rewrite eisretr.
-    rewrite precompose_cocone_comp. rewrite diagram_inv_is_retraction.
-    apply precompose_cocone_identity.
+    simple refine (equiv_inj (postcompose_cocone HQ1) _).
+    - apply HQ1.
+    - etransitivity. 2:symmetry; apply postcompose_cocone_identity.
+      etransitivity.
+      + apply postcompose_cocone_comp.
+      + unfold postcompose_cocone_inv. rewrite eisretr.
+        rewrite precompose_postcompose_cocone. rewrite eisretr.
+        rewrite precompose_cocone_comp. rewrite diagram_inv_is_retraction.
+        apply precompose_cocone_identity.
   Defined.
 
   Definition functoriality_colimit_isequiv

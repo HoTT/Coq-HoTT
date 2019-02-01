@@ -63,11 +63,11 @@ Definition contr_sect_equiv `(f : A -> B) `{IsEquiv A B f}
 Proof.
   (* First we turn homotopies into paths. *)
   refine (contr_equiv' { g : B -> A & f o g = idmap } _).
-  symmetry.
-  refine (equiv_functor_sigma' 1 _); intros g.
-  exact (equiv_path_forall (f o g) idmap).
-  (* Now this is just the fiber over [idmap] of postcomposition with [f], and the latter is an equivalence since [f] is. *)
-  apply fcontr_isequiv; exact _.
+  - symmetry.
+    refine (equiv_functor_sigma' 1 _); intros g.
+    exact (equiv_path_forall (f o g) idmap).
+    (* Now this is just the fiber over [idmap] of postcomposition with [f], and the latter is an equivalence since [f] is. *)
+  - apply fcontr_isequiv; exact _.
 Defined.
 
 Definition contr_retr_equiv `(f : A -> B) `{IsEquiv A B f}
@@ -75,10 +75,10 @@ Definition contr_retr_equiv `(f : A -> B) `{IsEquiv A B f}
 Proof.
   (* This proof is just like the previous one. *)
   refine (contr_equiv' { g : B -> A & g o f = idmap } _).
-  symmetry.
-  refine (equiv_functor_sigma' 1 _); intros g.
-  exact (equiv_path_forall (g o f) idmap).
-  apply fcontr_isequiv; exact _.
+  - symmetry.
+    refine (equiv_functor_sigma' 1 _); intros g.
+    exact (equiv_path_forall (g o f) idmap).
+  - apply fcontr_isequiv; exact _.
 Defined.
 
 (** Using this, we can prove that [IsEquiv f] is an h-proposition.  We make this a [Local Definition] since we already have a [Global Instance] of it available in [types/Equiv].  *)
@@ -102,20 +102,20 @@ Proof.
     (forall x, (existT (fun a => f a = f x) x 1) = (g (f x); r (f x)))
     _^-1).
   (* The proof of this equivalence is basically just rearranging quantifiers and paths. *)
-  refine (_ oE (equiv_sigT_coind (fun x => g (f x) = x)
-      (fun x p => r (f x) = ap f p))).
-  refine (equiv_functor_forall' 1 _); intros a; simpl.
-  refine (equiv_path_inverse _ _ oE _).
-  refine ((equiv_path_sigma (fun x => f x = f a)
-    (g (f a) ; r (f a)) (a ; 1%path)) oE _); simpl.
-  refine (equiv_functor_sigma' 1 _); intros p; simpl.
-  rewrite (transport_compose (fun y => y = f a) f), transport_paths_l.
-  refine (equiv_moveR_Vp _ _ _ oE _).
-  by rewrite concat_p1; apply equiv_idmap.
-  (* Finally, this is a space of paths in a fiber of [f]. *)
-  refine (@contr_forall _ _ _ _); intros a.
-  refine (@contr_paths_contr _ _ _ _).
-  by refine (fcontr_isequiv f _ _).
+  - refine (_ oE (equiv_sigT_coind (fun x => g (f x) = x)
+                                   (fun x p => r (f x) = ap f p))).
+    refine (equiv_functor_forall' 1 _); intros a; simpl.
+    refine (equiv_path_inverse _ _ oE _).
+    refine ((equiv_path_sigma (fun x => f x = f a)
+                              (g (f a) ; r (f a)) (a ; 1%path)) oE _); simpl.
+    refine (equiv_functor_sigma' 1 _); intros p; simpl.
+    rewrite (transport_compose (fun y => y = f a) f), transport_paths_l.
+    refine (equiv_moveR_Vp _ _ _ oE _).
+      by rewrite concat_p1; apply equiv_idmap.
+      (* Finally, this is a space of paths in a fiber of [f]. *)
+  - refine (@contr_forall _ _ _ _); intros a.
+    refine (@contr_paths_contr _ _ _ _).
+      by refine (fcontr_isequiv f _ _).
 Qed.
 
 (** Now since [IsEquiv f] and the assertion that its fibers are contractible are both HProps, logical equivalence implies equivalence. *)
@@ -124,8 +124,8 @@ Definition equiv_fcontr_isequiv `(f : A -> B)
   : (forall b:B, Contr {a : A & f a = b}) <~> IsEquiv f.
 Proof.
   apply equiv_iff_hprop.
-  by apply isequiv_fcontr.
-  by apply fcontr_isequiv.
+  - by apply isequiv_fcontr.
+  - by apply fcontr_isequiv.
 Defined.
 
 (** Alternatively, we could also construct this equivalence directly, and derive the fact that [IsEquiv f] is an HProp from that.  *)
@@ -209,18 +209,18 @@ Proof.
   intros bif; pose (fe := isequiv_biinv f bif).
   apply @contr_prod.
   (* For this, we've done all the work already. *)
-  by apply contr_retr_equiv.
-  by apply contr_sect_equiv.
+  - by apply contr_retr_equiv.
+  - by apply contr_sect_equiv.
 Defined.
 
 Definition equiv_biinv_isequiv `(f : A -> B)
   : BiInv f <~> IsEquiv f.
 Proof.
   apply equiv_iff_hprop.
-  by apply isequiv_biinv.
-  intros ?.  split.
-  by exists (f^-1); apply eissect.
-  by exists (f^-1); apply eisretr.
+  - by apply isequiv_biinv.
+  - intros ?.  split.
+    + by exists (f^-1); apply eissect.
+    + by exists (f^-1); apply eisretr.
 Defined.
 
 (** ** n-Path-split maps.
