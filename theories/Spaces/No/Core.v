@@ -249,7 +249,7 @@ Module Export Surreals.
 However, it turns out that in defining [No_cut] we already need to know that it preserves inequalities.  Since this is eventually an axiom anyway, we could just assert it with [admit] in the proof.  However, if we did this then the [admit] would not be *judgmentally* equal to the axiom [No_ind_lt] that we assert afterwards.  Instead, we make use of the fact that [admit] is essentially by definition [match proof_admitted with end] for a global axiom [proof_admitted : Empty], so that if we use the same [admit] both inside the definition of [No_ind] and in asserting [No_ind_lt] as an axiom, they will be the same term judgmentally.
 
 Finally, for conceptual isolation, and so as not to depend on the particular implementation of [admit], we introduce here local copies of [Empty] and [proof_admitted]. *)
-    Local Inductive No_Empty_for_admitted := .
+    Inductive No_Empty_for_admitted := .
     Axiom No_Empty_admitted : No_Empty_for_admitted.
 
     (** Technically, we induct over the inductive predicate witnessing Numberhood of games.  We prove the "induction step" separately to improve performance, possibly by preventing bare [fix]s from appearing upon simplification. *)
