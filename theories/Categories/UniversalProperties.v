@@ -85,13 +85,13 @@ Section UniversalMorphism.
         specialize (UniversalProperty (CommaCategory.b x) (CommaCategory.f x)).
         (** We want to preserve the computation rules for the morphisms, even though they're unique up to unique isomorphism. *)
         eapply trunc_equiv'.
-        apply CommaCategory.issig_morphism.
-        apply contr_inhabited_hprop.
-        - abstract univ_hprop_t UniversalProperty.
-        - (exists tt).
-          (exists (@center _ UniversalProperty).1).
-          abstract (progress rewrite ?right_identity, ?left_identity;
-                    exact (@center _ UniversalProperty).2).
+        - apply CommaCategory.issig_morphism.
+        - apply contr_inhabited_hprop.
+          + abstract univ_hprop_t UniversalProperty.
+          + (exists tt).
+            (exists (@center _ UniversalProperty).1).
+            abstract (progress rewrite ?right_identity, ?left_identity;
+                      exact (@center _ UniversalProperty).2).
       Defined.
 
       Definition Build_IsInitialMorphism_curried

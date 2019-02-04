@@ -262,8 +262,8 @@ First we define the function that will be the equivalence. *)
       destruct (path_baut_bool_inhab Z z).
       (** It might be tempting to just say [e^-1 (equiv_idmap _)] here, but for the rest of the proof to work, we actually need to choose between [idmap] and [negb] based on whether [z] and [w] are equal or not. *)
       destruct (dec (z=w)).
-      exact (e^-1 (equiv_idmap _)).
-      exact (e^-1 equiv_negb).
+      * exact (e^-1 (equiv_idmap _)).
+      * exact (e^-1 equiv_negb).
     + intros w.
       destruct (path_baut_bool_inhab W w).
       destruct (path_baut_bool_inhab Z z).

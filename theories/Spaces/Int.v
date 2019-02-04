@@ -46,27 +46,27 @@ Definition neg_neq_pos {z w : Pos} : ~ (neg z = pos w)
 Global Instance decpaths_int : DecidablePaths Int.
 Proof.
   intros [n | | n] [m | | m].
-  revert m; induction n as [|n IHn]; intros m; induction m as [|m IHm].
-  exact (inl 1).
-  exact (inr (fun p => one_neq_succ_pos _ (neg_injective p))).
-  exact (inr (fun p => one_neq_succ_pos _ (symmetry _ _ (neg_injective p)))).
-  destruct (IHn m) as [p | np].
-  exact (inl (ap neg (ap succ_pos (neg_injective p)))).
-  exact (inr (fun p => np (ap neg (succ_pos_injective (neg_injective p))))).
-  exact (inr neg_neq_zero).
-  exact (inr neg_neq_pos).
-  exact (inr (neg_neq_zero o symmetry _ _)).
-  exact (inl 1).
-  exact (inr (pos_neq_zero o symmetry _ _)).
-  exact (inr (neg_neq_pos o symmetry _ _)).
-  exact (inr pos_neq_zero).
-  revert m; induction n as [|n IHn]; intros m; induction m as [|m IHm].
-  exact (inl 1).
-  exact (inr (fun p => one_neq_succ_pos _ (pos_injective p))).
-  exact (inr (fun p => one_neq_succ_pos _ (symmetry _ _ (pos_injective p)))).
-  destruct (IHn m) as [p | np].
-  exact (inl (ap pos (ap succ_pos (pos_injective p)))).
-  exact (inr (fun p => np (ap pos (succ_pos_injective (pos_injective p))))).
+  - revert m; induction n as [|n IHn]; intros m; induction m as [|m IHm].
+    + exact (inl 1).
+    + exact (inr (fun p => one_neq_succ_pos _ (neg_injective p))).
+    + exact (inr (fun p => one_neq_succ_pos _ (symmetry _ _ (neg_injective p)))).
+    + destruct (IHn m) as [p | np].
+      * exact (inl (ap neg (ap succ_pos (neg_injective p)))).
+      * exact (inr (fun p => np (ap neg (succ_pos_injective (neg_injective p))))).
+  - exact (inr neg_neq_zero).
+  - exact (inr neg_neq_pos).
+  - exact (inr (neg_neq_zero o symmetry _ _)).
+  - exact (inl 1).
+  - exact (inr (pos_neq_zero o symmetry _ _)).
+  - exact (inr (neg_neq_pos o symmetry _ _)).
+  - exact (inr pos_neq_zero).
+  - revert m; induction n as [|n IHn]; intros m; induction m as [|m IHm].
+    + exact (inl 1).
+    + exact (inr (fun p => one_neq_succ_pos _ (pos_injective p))).
+    + exact (inr (fun p => one_neq_succ_pos _ (symmetry _ _ (pos_injective p)))).
+    + destruct (IHn m) as [p | np].
+      * exact (inl (ap pos (ap succ_pos (pos_injective p)))).
+      * exact (inr (fun p => np (ap pos (succ_pos_injective (pos_injective p))))).
 Defined.
 
 Global Instance hset_int : IsHSet Int | 0.
@@ -95,8 +95,8 @@ Definition pred_int (z : Int) : Int
 Global Instance isequiv_succ_int : IsEquiv succ_int | 0.
 Proof.
   refine (isequiv_adjointify succ_int pred_int _ _).
-  intros [[|n] | | [|n]]; reflexivity.
-  intros [[|n] | | [|n]]; reflexivity.
+  - intros [[|n] | | [|n]]; reflexivity.
+  - intros [[|n] | | [|n]]; reflexivity.
 Defined.
 
 (** ** Iteration of equivalences *)

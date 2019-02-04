@@ -271,9 +271,9 @@ Section full_partial_order.
   Lemma lt_iff_le_ne `{!TrivialApart A} x y : x < y <-> x ≤ y /\ x <> y.
   Proof.
    transitivity (x <= y /\ apart x y).
-   apply lt_iff_le_apart.
-   split;intros [E1 E2];split;trivial;apply trivial_apart;trivial.
-   Qed.
+   - apply lt_iff_le_apart.
+   - split;intros [E1 E2];split;trivial;apply trivial_apart;trivial.
+  Qed.
 
   Lemma le_equiv_lt `{!TrivialApart A} `{forall x y : A, Decidable (x = y)} x y
     : x ≤ y -> x = y |_| x < y.

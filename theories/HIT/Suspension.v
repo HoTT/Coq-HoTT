@@ -51,9 +51,9 @@ Definition Susp_ind {X : Type} (P : Susp X -> Type)
   : forall (y : Susp X), P y.
 Proof.
   serapply pushout_ind.
-  exact (Unit_ind H_N).
-  exact (Unit_ind H_S).
-  exact (H_merid).
+  - exact (Unit_ind H_N).
+  - exact (Unit_ind H_S).
+  - exact (H_merid).
 Defined.
 
 Definition Susp_ind_beta_merid {X : Type}
@@ -89,8 +89,8 @@ Definition Susp_rec_beta_merid {X Y : Type}
 Proof.
   apply (cancelL (transport_const (merid x) H_N)).
   transitivity (apD (Susp_rec H_N H_S H_merid) (merid x)).
-  symmetry; refine (apD_const (Susp_rec H_N H_S H_merid) _).
-  refine (Susp_ind_beta_merid (fun _ : Susp X => Y) _ _ _ _).
+  - symmetry; refine (apD_const (Susp_rec H_N H_S H_merid) _).
+  - refine (Susp_ind_beta_merid (fun _ : Susp X => Y) _ _ _ _).
 Defined.
 
 (** ** Eta-rule. *)
@@ -170,9 +170,9 @@ Proof.
   exists (n.2 North @ (n.2 South)^).
   intro x. apply moveL_pV.
   transitivity (ap (Susp_rec H_N H_S f) (merid x) @ n.2 South).
-  apply whiskerR, inverse, Susp_rec_beta_merid.
-  refine (concat_Ap n.2 (merid x) @ _).
-  apply (concatR (concat_p1 _)), whiskerL. apply ap_const.
+  - apply whiskerR, inverse, Susp_rec_beta_merid.
+  - refine (concat_Ap n.2 (merid x) @ _).
+    apply (concatR (concat_p1 _)), whiskerL. apply ap_const.
 Defined.
 
 (** ** Pointedness of [Susp] and path spaces thereof *)

@@ -55,16 +55,16 @@ Section Diagram.
     : D1 = D2.
   Proof.
     serapply path_diagram_naive.
-    funext i. apply eq1.
-    funext i j g x.
-    rewrite !transport_forall_constant.
-    rewrite transport_arrow.
-    transport_path_forall_hammer.
-    refine (_ @ eq2 i j g (transport idmap (eq1 i)^ x) @ _).
-    - f_ap. f_ap. f_ap.
-      rewrite <- path_forall_V. funext y.
-      transport_path_forall_hammer. reflexivity.
-    - f_ap. exact (transport_pV idmap _ x).
+    - funext i. apply eq1.
+    - funext i j g x.
+      rewrite !transport_forall_constant.
+      rewrite transport_arrow.
+      transport_path_forall_hammer.
+      refine (_ @ eq2 i j g (transport idmap (eq1 i)^ x) @ _).
+      + f_ap. f_ap. f_ap.
+        rewrite <- path_forall_V. funext y.
+        transport_path_forall_hammer. reflexivity.
+      + f_ap. exact (transport_pV idmap _ x).
   Defined.
 
   (** * Diagram map *)
@@ -158,9 +158,10 @@ Section Diagram.
     destruct w as [[w_obj w_comm] is_eq_w]. simpl in *.
     set (we i := BuildEquiv _ _ _ (is_eq_w i)).
     simple refine (path_diagram_map _ _).
-    exact (fun i => eisretr (we i)). simpl.
-    intros i j f x. apply (concatR (concat_p1 _)^).
-    apply (comm_square_inverse_is_retr (we i) (we j) _ x).
+    - exact (fun i => eisretr (we i)).
+    - simpl.
+      intros i j f x. apply (concatR (concat_p1 _)^).
+      apply (comm_square_inverse_is_retr (we i) (we j) _ x).
   Defined.
 
   Lemma diagram_inv_is_retraction {D1 D2 : diagram G}
@@ -170,9 +171,10 @@ Section Diagram.
     destruct w as [[w_obj w_comm] is_eq_w]. simpl in *.
     set (we i := BuildEquiv _ _ _ (is_eq_w i)).
     simple refine (path_diagram_map _ _).
-    exact (fun i => eissect (we i)). simpl.
-    intros i j f x. apply (concatR (concat_p1 _)^).
-    apply (comm_square_inverse_is_sect (we i) (we j) _ x).
+    - exact (fun i => eissect (we i)).
+    - simpl.
+      intros i j f x. apply (concatR (concat_p1 _)^).
+      apply (comm_square_inverse_is_sect (we i) (we j) _ x).
   Defined.
 
   (** The equivalence of diagram is an equivalence relation. *)
@@ -187,7 +189,7 @@ Section Diagram.
   Proof.
   simple refine (fun D1 D2 D3 m1 m2 =>
                    Build_diagram_equiv (diagram_comp m2 m1) _).
-  simpl. intros i; apply isequiv_compose'. apply m1. apply m2.
+  simpl. intros i; apply isequiv_compose';[apply m1 | apply m2].
   Defined.
 End Diagram.
 

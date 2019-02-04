@@ -32,10 +32,10 @@ Definition DNE_to_LEM `{Funext} :
 Proof.
   intros dn P hp.
   refine (dn (P + ~P) _ _).
-  apply ishprop_sum.
-  - exact _.
-  - exact _.
-  - intros p np; exact (np p).
+  - apply ishprop_sum.
+    + exact _.
+    + exact _.
+    + intros p np; exact (np p).
   - intros nlem.
     apply nlem.
     apply inr.

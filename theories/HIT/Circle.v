@@ -107,11 +107,11 @@ Proof.
   refine (transport_paths_r loop _ @ _).
   rewrite transport_S1_code_loopV.
   destruct z as [[|n] | | [|n]]; simpl.
-  by apply concat_pV_p.
-  by apply concat_pV_p.
-  by apply concat_Vp.
-  by apply concat_1p.
-  reflexivity.
+  - by apply concat_pV_p.
+  - by apply concat_pV_p.
+  - by apply concat_Vp.
+  - by apply concat_1p.
+  - reflexivity.
 Defined.
 
 (* The nontrivial part of the proof that decode and encode are equivalences is showing that decoding followed by encoding is the identity on the fibers over [base]. *)
@@ -120,20 +120,20 @@ Definition S1_encode_loopexp (z:Int)
   : S1_encode base (loopexp loop z) = z.
 Proof.
   destruct z as [n | | n]; unfold S1_encode.
-  induction n; simpl in *.
-  refine (moveR_transport_V _ loop _ _ _).
-  by symmetry; apply transport_S1_code_loop.
-  rewrite transport_pp.
-  refine (moveR_transport_V _ loop _ _ _).
-  refine (_ @ (transport_S1_code_loop _)^).
-  assumption.
-  reflexivity.
-  induction n; simpl in *.
-  by apply transport_S1_code_loop.
-  rewrite transport_pp.
-  refine (moveR_transport_p _ loop _ _ _).
-  refine (_ @ (transport_S1_code_loopV _)^).
-  assumption.
+  - induction n; simpl in *.
+    + refine (moveR_transport_V _ loop _ _ _).
+        by symmetry; apply transport_S1_code_loop.
+    + rewrite transport_pp.
+      refine (moveR_transport_V _ loop _ _ _).
+      refine (_ @ (transport_S1_code_loop _)^).
+      assumption.
+  - reflexivity.
+  - induction n; simpl in *.
+    + by apply transport_S1_code_loop.
+    + rewrite transport_pp.
+      refine (moveR_transport_p _ loop _ _ _).
+      refine (_ @ (transport_S1_code_loopV _)^).
+      assumption.
 Defined.
 
 (* Now we put it together. *)
@@ -142,12 +142,12 @@ Definition S1_encode_isequiv (x:S1) : IsEquiv (S1_encode x).
 Proof.
   refine (isequiv_adjointify (S1_encode x) (S1_decode x) _ _).
   (* Here we induct on [x:S1].  We just did the case when [x] is [base]. *)
-  refine (S1_ind (fun x => Sect (S1_decode x) (S1_encode x))
-    S1_encode_loopexp _ _).
-  (* What remains is easy since [Int] is known to be a set. *)
-  by apply path_forall; intros z; apply set_path2.
+  - refine (S1_ind (fun x => Sect (S1_decode x) (S1_encode x))
+                   S1_encode_loopexp _ _).
+    (* What remains is easy since [Int] is known to be a set. *)
+    by apply path_forall; intros z; apply set_path2.
   (* The other side is trivial by path induction. *)
-  intros []; reflexivity.
+  - intros []; reflexivity.
 Defined.
 
 Definition equiv_loopS1_int : (base = base) <~> Int

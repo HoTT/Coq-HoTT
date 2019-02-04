@@ -37,8 +37,8 @@ Section Grothendieck.
                              @ (identity_of F _))
                           : (F _1 (m.1 : morphism _ _ _)^-1) o F _1 m.1 = idmap) s.(x)));
         apply path_sigma_hprop.
-      exact left_inverse.
-      exact right_inverse. }
+      - exact left_inverse.
+      - exact right_inverse. }
     { intro x; apply path_sigma_hprop; apply path_isomorphic.
       reflexivity. }
     { intro x; apply path_isomorphic; reflexivity. }

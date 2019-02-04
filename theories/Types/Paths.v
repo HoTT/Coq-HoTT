@@ -416,9 +416,9 @@ Global Instance isequiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
 : IsEquiv (moveR_transport_p P p u v).
 Proof.
   serapply isequiv_adjointify.
-  apply moveL_transport_V.
-  intro q; apply moveR_moveL_transport_V.
-  intro q; apply moveL_moveR_transport_p.
+  - apply moveL_transport_V.
+  - intro q; apply moveR_moveL_transport_V.
+  - intro q; apply moveL_moveR_transport_p.
 Defined.
 
 Definition equiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
@@ -446,9 +446,9 @@ Global Instance isequiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
 : IsEquiv (moveR_transport_V P p u v).
 Proof.
   serapply isequiv_adjointify.
-  apply moveL_transport_p.
-  intro q; apply moveR_moveL_transport_p.
-  intro q; apply moveL_moveR_transport_V.
+  - apply moveL_transport_p.
+  - intro q; apply moveR_moveL_transport_p.
+  - intro q; apply moveL_moveR_transport_V.
 Defined.
 
 Definition equiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
@@ -461,9 +461,9 @@ Global Instance isequiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
 : IsEquiv (moveL_transport_V P p u v).
 Proof.
   serapply isequiv_adjointify.
-  apply moveR_transport_p.
-  intro q; apply moveL_moveR_transport_p.
-  intro q; apply moveR_moveL_transport_V.
+  - apply moveR_transport_p.
+  - intro q; apply moveL_moveR_transport_p.
+  - intro q; apply moveR_moveL_transport_V.
 Defined.
 
 Definition equiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
@@ -476,9 +476,9 @@ Global Instance isequiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
 : IsEquiv (moveL_transport_p P p u v).
 Proof.
   serapply isequiv_adjointify.
-  apply moveR_transport_V.
-  intro q; apply moveL_moveR_transport_V.
-  intro q; apply moveR_moveL_transport_p.
+  - apply moveR_transport_V.
+  - intro q; apply moveL_moveR_transport_V.
+  - intro q; apply moveR_moveL_transport_p.
 Defined.
 
 Definition equiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
@@ -564,8 +564,8 @@ Definition dpath_path_lr {A : Type} {x1 x2 : A}
 Proof.
   destruct p; simpl.
   transitivity (q @ 1 = r).
-  exact (equiv_concat_r (concat_1p r) (q @ 1)).
-  exact (equiv_concat_l (concat_p1 q)^ r).
+  - exact (equiv_concat_r (concat_1p r) (q @ 1)).
+  - exact (equiv_concat_l (concat_p1 q)^ r).
 Defined.
 
 Definition dpath_path_Fl {A B : Type} {f : A -> B} {x1 x2 : A} {y : B}
@@ -596,8 +596,8 @@ Definition dpath_path_FlFr {A B : Type} {f g : A -> B} {x1 x2 : A}
 Proof.
   destruct p; simpl.
   transitivity (q @ 1 = r).
-  exact (equiv_concat_r (concat_1p r) (q @ 1)).
-  exact (equiv_concat_l (concat_p1 q)^ r).
+  - exact (equiv_concat_r (concat_1p r) (q @ 1)).
+  - exact (equiv_concat_l (concat_p1 q)^ r).
 Defined.
 
 Definition dpath_path_FFlr {A B : Type} {f : A -> B} {g : B -> A}
@@ -608,8 +608,8 @@ Definition dpath_path_FFlr {A B : Type} {f : A -> B} {g : B -> A}
 Proof.
   destruct p; simpl.
   transitivity (q @ 1 = r).
-  exact (equiv_concat_r (concat_1p r) (q @ 1)).
-  exact (equiv_concat_l (concat_p1 q)^ r).
+  - exact (equiv_concat_r (concat_1p r) (q @ 1)).
+  - exact (equiv_concat_l (concat_p1 q)^ r).
 Defined.
 
 Definition dpath_path_lFFr {A B : Type} {f : A -> B} {g : B -> A}
@@ -620,8 +620,8 @@ Definition dpath_path_lFFr {A B : Type} {f : A -> B} {g : B -> A}
 Proof.
   destruct p; simpl.
   transitivity (q @ 1 = r).
-  exact (equiv_concat_r (concat_1p r) (q @ 1)).
-  exact (equiv_concat_l (concat_p1 q)^ r).
+  - exact (equiv_concat_r (concat_1p r) (q @ 1)).
+  - exact (equiv_concat_l (concat_p1 q)^ r).
 Defined.
 
 Definition dpath_paths2 {A : Type} {x y : A}
