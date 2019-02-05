@@ -37,8 +37,8 @@ Defined.
 Global Instance isequiv_Sph0_to_Bool : IsEquiv (Sph0_to_Bool) | 0.
 Proof.
   apply isequiv_adjointify with Bool_to_Sph0.
-  intros [ | ]; exact 1.
-  unfold Sect. refine (Susp_ind _ 1 1 _). intros [].
+  - intros [ | ]; exact 1.
+  - unfold Sect. refine (Susp_ind _ 1 1 _). intros [].
 Defined.
 
 (** *** [Sphere 1] *)
@@ -56,23 +56,23 @@ Defined.
 Global Instance isequiv_Sph1_to_S1 : IsEquiv (Sph1_to_S1) | 0.
 Proof.
   apply isequiv_adjointify with S1_to_Sph1.
-    refine (S1_ind _ 1 _).
+  - refine (S1_ind _ 1 _).
     refine ((transport_paths_FFlr _ _) @ _).
     unfold S1_to_Sph1; rewrite S1_rec_beta_loop.
     rewrite ap_pp, ap_V.
     unfold Sph1_to_S1. simpl. rewrite 2 Susp_rec_beta_merid. simpl.
     hott_simpl.
-  refine (Susp_ind (fun x => S1_to_Sph1 (Sph1_to_S1 x) = x)
-    1 (merid South) _); intros x.
-  refine ((transport_paths_FFlr _ _) @ _).
-  unfold Sph1_to_S1; rewrite (Susp_rec_beta_merid x).
-  revert x. change (Susp Empty) with (Sphere 0).
-  apply (equiv_ind (Sph0_to_Bool ^-1)); intros x.
-  case x; simpl.
+  - refine (Susp_ind (fun x => S1_to_Sph1 (Sph1_to_S1 x) = x)
+                     1 (merid South) _); intros x.
+    refine ((transport_paths_FFlr _ _) @ _).
+    unfold Sph1_to_S1; rewrite (Susp_rec_beta_merid x).
+    revert x. change (Susp Empty) with (Sphere 0).
+    apply (equiv_ind (Sph0_to_Bool ^-1)); intros x.
+    case x; simpl.
     2: apply concat_1p.
-  unfold S1_to_Sph1; rewrite S1_rec_beta_loop.
-  refine (whiskerR (concat_p1 _) _ @ _).
-  apply moveR_Vp. hott_simpl.
+    unfold S1_to_Sph1; rewrite S1_rec_beta_loop.
+    refine (whiskerR (concat_p1 _) _ @ _).
+    apply moveR_Vp. hott_simpl.
 Defined.
 
 
@@ -207,8 +207,8 @@ Defined.
 Global Instance isequiv_Sph2_to_S2 : IsEquiv (Sph2_to_S2) | 0.
 Proof.
   apply isequiv_adjointify with S2_to_Sph2.
-  apply issect_S2_to_Sph2.
-  apply issect_Sph2_to_S2.
+  - apply issect_S2_to_Sph2.
+  - apply issect_Sph2_to_S2.
 Defined.
         
 
@@ -233,10 +233,10 @@ Fixpoint trunc_allnullhomot {n : trunc_index} {X : Type}
 : IsTrunc n.+1 X.
 Proof.
   destruct n as [ | n'].
-  (* n = -2 *) apply hprop_allpath.
+  - (* n = -2 *) apply hprop_allpath.
     intros x0 x1. set (f := (fun b => if (Sph0_to_Bool b) then x0 else x1)).
     set (n := HX f). exact (n.2 North @ (n.2 South)^).
-  (* n ≥ -1 *) intros x0 x1.
+  - (* n ≥ -1 *) intros x0 x1.
     apply (trunc_allnullhomot n').
     intro f. apply nullhomot_paths_from_susp, HX.
 Defined.

@@ -32,8 +32,9 @@ Theorem equiv_hset_axiomK {A} : IsHSet A <~> axiomK A.
 Proof.
   apply (equiv_adjointify (@axiomK_hset A) (@hset_axiomK A)).
   - intros K. by_extensionality x. by_extensionality x'.
-    cut (Contr (x=x)). intro. eapply path_contr.
-    exists 1. intros. symmetry; apply K.
+    cut (Contr (x=x)).
+    + intro. eapply path_contr.
+    + exists 1. intros. symmetry; apply K.
   - intro K. by_extensionality x. by_extensionality x'.
     eapply path_ishprop.
 Defined.

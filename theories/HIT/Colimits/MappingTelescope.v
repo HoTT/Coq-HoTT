@@ -22,7 +22,8 @@ Definition Build_sequence (X : nat -> Type) (f : forall n, X n -> X n.+1)
   : sequence.
 Proof.
   unshelve econstructor.
-  exact X. intros i j p; destruct p. apply f.
+  - exact X.
+  - intros i j p; destruct p. apply f.
 Defined.
 
 (** A useful lemma to show than two sequences are equivalent. *)
@@ -35,8 +36,13 @@ Definition equiv_sequence (D1 D2: sequence)
   : D1 ~d~ D2.
 Proof.
   simple refine (Build_diagram_equiv (Build_diagram_map _ _) _).
-  - intros n. apply equiv_fun. induction n. apply H0. exact (Hn n IHn).1.
-  - intros n m q; destruct q. induction n; simpl. exact (Hn 0 H0).2.
-    simple refine (Hn n.+1 _).2.
-  - intros n; simpl. induction n; simpl. apply H0. apply (Hn n _ ).1.
+  - intros n. apply equiv_fun. induction n.
+    + apply H0.
+    + exact (Hn n IHn).1.
+  - intros n m q; destruct q. induction n; simpl.
+    + exact (Hn 0 H0).2.
+    + simple refine (Hn n.+1 _).2.
+  - intros n; simpl. induction n; simpl.
+    + apply H0.
+    + apply (Hn n _ ).1.
 Defined.

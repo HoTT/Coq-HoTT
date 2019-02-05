@@ -52,9 +52,9 @@ Section Flattening.
   Local Definition E' : colimit D -> Type.
   Proof.
     apply colimit_rec. simple refine (Build_cocone _ _).
-    exact (fun i x => E (i; x)).
-    intros i j g x; cbn. symmetry. eapply path_universe.
-    apply H.
+    - exact (fun i x => E (i; x)).
+    - intros i j g x; cbn. symmetry. eapply path_universe.
+      apply H.
   Defined.
 
   (** ** Helper lemmas *)
@@ -94,9 +94,10 @@ Section Flattening.
   Definition cocone_E' : cocone sigma_diagram (sig E').
   Proof.
     simple refine (Build_cocone _ _); cbn.
-    + intros i w. exists (colim i w.1); cbn. exact w.2.
-    + intros i j g x; cbn. simple refine (path_sigma' _ _ _).
-      apply colimp. apply transport_E'.
+    - intros i w. exists (colim i w.1); cbn. exact w.2.
+    - intros i j g x; cbn. simple refine (path_sigma' _ _ _).
+      + apply colimp.
+      + apply transport_E'.
   Defined.
 
   (** And we directly prove than it is universal. *)
@@ -109,11 +110,11 @@ Section Flattening.
     - intros [q qq]. cbn in *.
       intros [x y]; revert x y.
       simple refine (colimit_ind _ _ _); cbn.
-      intros i x y; exact (q i (x; y)).
-      intros i j g x; cbn. funext y.
-      refine (transport_arrow_toconst _ _ _ @ _).
-      refine (_ @ qq i j g (x; y)). cbn. f_ap.
-      refine (path_sigma' _ 1 _); cbn. apply transport_E'_V.
+      + intros i x y; exact (q i (x; y)).
+      + intros i j g x; cbn. funext y.
+        refine (transport_arrow_toconst _ _ _ @ _).
+        refine (_ @ qq i j g (x; y)). cbn. f_ap.
+        refine (path_sigma' _ 1 _); cbn. apply transport_E'_V.
     - intros [q qq]. simple refine (path_cocone _ _).
       + intros i x; reflexivity.
       + intros i j g [x y].
@@ -161,8 +162,9 @@ Section Flattening.
           assert (p1 = ap (transport E' (colimp i j g x)^)
                           (transport_pV E' (colimp i j g x) y)^). {
             subst p1; clear.
-            etransitivity. serapply moveL_transport_V_1.
-            etransitivity. serapply inverse2. 2: serapply transport_VpV.
+            etransitivity.
+            { serapply moveL_transport_V_1. }
+            etransitivity. { serapply inverse2. 2: serapply transport_VpV. }
             symmetry; apply ap_V. }
           rewrite X. clear X p1.
           rewrite <- ap_compose. cbn.
@@ -186,18 +188,19 @@ Section Flattening.
           rewrite concat_p1. rewrite concat_pp_p.
           refine (1 @@ _).
           apply moveL_Mp. rewrite <- ap_V. rewrite <- ap_pp.
-          simple refine (_ @ _). refine (ap (transport E' (colimp i j g x)) _).
-          refine ((transport_E'_V _ _ _)^ @ _).
-          refine (ap _ (transport_pV _ _ _)).
-          f_ap. refine (1 @@ _).
-          apply transport_VpV.
-          set (transport E' (colimp i j g x) (transport E' (colimp i j g x)^ y)).
-          rewrite ap_pp. rewrite <- ap_compose.
-          refine (_ @ (transport_E'_V_E' _ _ _)^).
-          refine (1 @@ _). subst e.
-          refine (_ @ (transport_pVp _ _ _)^).
-          rewrite ap_compose. f_ap. symmetry.
-          apply transport_VpV. }
+          simple refine (_ @ _).
+          - refine (ap (transport E' (colimp i j g x)) _).
+            refine ((transport_E'_V _ _ _)^ @ _).
+            refine (ap _ (transport_pV _ _ _)).
+          - f_ap. refine (1 @@ _).
+            apply transport_VpV.
+          - set (transport E' (colimp i j g x) (transport E' (colimp i j g x)^ y)).
+            rewrite ap_pp. rewrite <- ap_compose.
+            refine (_ @ (transport_E'_V_E' _ _ _)^).
+            refine (1 @@ _). subst e.
+            refine (_ @ (transport_pVp _ _ _)^).
+            rewrite ap_compose. f_ap. symmetry.
+            apply transport_VpV. }
         rewrite X; hott_simpl.
   Defined.
 
@@ -227,25 +230,28 @@ Section POCase.
   Proof.
     simple refine (PO_rec Type B0 C0 _).
     cbn; intro x. eapply path_universe_uncurried.
-    etransitivity. symmetry. apply f0. apply g0.
+    etransitivity.
+    - symmetry. apply f0.
+    - apply g0.
   Defined.
 
   Definition POCase_E : dep_diagram (span f g).
   Proof.
-    simple refine (Build_diagram _ _ _).
-      intros [[] x]; revert x.
-      exact A0.
-      destruct b; assumption.
-      intros [[] x] [[] ?] [[] p].
-      destruct b.
-      exact (fun y => p # (f0 x y)).
-      exact (fun y => p # (g0 x y)).
+    simple refine (Build_diagram _ _ _); cbn.
+    - intros [[] x]; revert x.
+      + exact A0.
+      + destruct b; assumption.
+    - intros [[] x] [[] y] []; cbn; intros [].
+      destruct b; intro p.
+      + exact (fun y => p # (f0 x y)).
+      + exact (fun y => p # (g0 x y)).
   Defined.
 
   Definition POCase_HE : equifibered _ POCase_E.
   Proof.
     intros [] [] [] x; cbn. destruct b; cbn in *.
-    apply (f0 x). apply (g0 x).
+    - apply (f0 x).
+    - apply (g0 x).
   Defined.
 
   Definition PO_flattening
@@ -260,21 +266,21 @@ Section POCase.
         all: reflexivity. }
     rewrite X; clear X.
     transitivity (exists x, E' (span f g) POCase_E POCase_HE x).
-    apply flattening_lemma.
-    apply equiv_functor_sigma_id.
-    intro x.
-    assert (E' (span f g) POCase_E POCase_HE x = POCase_P x). {
-      unfold E', POCase_P, PO_rec.
-      f_ap. serapply path_cocone.
-      - intros [[]|[]] y; cbn.
-        apply path_universe_uncurried. apply g0.
-        all: reflexivity.
-      - intros [] [] []; cbn.
-        destruct b, u; intro y; simpl; hott_simpl.
-        unfold path_universe.
-        rewrite <- path_universe_V_uncurried.
-        refine (path_universe_compose (f0 y)^-1 (g0 y))^. }
-    rewrite X. reflexivity.
+    - apply flattening_lemma.
+    - apply equiv_functor_sigma_id.
+      intro x.
+      assert (E' (span f g) POCase_E POCase_HE x = POCase_P x). {
+        unfold E', POCase_P, PO_rec.
+        f_ap. serapply path_cocone.
+        - intros [[]|[]] y; cbn.
+          1:{ apply path_universe_uncurried. apply g0. }
+          all: reflexivity.
+        - intros [] [] []; cbn.
+          destruct b, u; intro y; simpl; hott_simpl.
+          unfold path_universe.
+          rewrite <- path_universe_V_uncurried.
+          refine (path_universe_compose (f0 y)^-1 (g0 y))^. }
+      rewrite X. reflexivity.
   Defined.
 
 End POCase.

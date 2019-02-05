@@ -27,23 +27,26 @@ Lemma ap_to_conjp {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y : A
   ap g q = conjp p (ap f q).
 Proof.
   destruct q.  unfold conjp.  simpl.
-  transitivity ((p x)^ @ p x). symmetry; apply concat_Vp.
-  apply whiskerR.  symmetry; apply concat_p1.
+  transitivity ((p x)^ @ p x).
+  - symmetry; apply concat_Vp.
+  - apply whiskerR.  symmetry; apply concat_p1.
 Qed.
 
 Lemma conjp_ap {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} (q : x = y) :
   conjp p (ap f q) = q.
 Proof.
   destruct q.  unfold conjp.  simpl.
-  transitivity ((p x)^ @ p x). apply whiskerR.  apply concat_p1.
-  apply concat_Vp.
+  transitivity ((p x)^ @ p x).
+  - apply whiskerR.  apply concat_p1.
+  - apply concat_Vp.
 Qed.
 
 Lemma ap1_to_conjp {A : Type} {f : A -> A} (p : forall x, idmap x = f x) {x y : A} (q : x = y) :
   ap f q = conjp p q.
 Proof.
   transitivity (conjp p (ap idmap q)).
-  apply ap_to_conjp.  apply ap; apply ap_idmap.
+  - apply ap_to_conjp.
+  - apply ap; apply ap_idmap.
 Defined.
 
 (* TEMPORARILY COMMENTED OUT.

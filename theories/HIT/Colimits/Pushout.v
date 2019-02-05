@@ -15,7 +15,9 @@ Definition PO_graph : graph.
 Proof.
   simple refine (Build_graph _ _).
   - exact (Unit + Bool).
-  - intros [i|i] [j|j]. exact Empty. exact Unit. exact Empty. exact Empty.
+  - intros [i|i] [j|j].
+    2: exact Unit.
+    all: exact Empty.
 Defined.
 
 Section PO.
@@ -26,9 +28,13 @@ Section PO.
   Definition span (f : A -> B) (g : A -> C) : diagram PO_graph.
   Proof.
     simple refine (Build_diagram _ _ _).
-    - intros [i|i]. exact A. exact (if i then B else C).
+    - intros [i|i].
+      + exact A.
+      + exact (if i then B else C).
     - intros [i|i] [j|j] u; cbn; try contradiction.
-      destruct j. exact f. exact g.
+      destruct j.
+      + exact f.
+      + exact g.
   Defined.
 
   Definition Build_span_cocone {f : A -> B} {g : A -> C} {Z : Type}
@@ -36,18 +42,15 @@ Section PO.
              (pp' : inl' o f == inr' o g)
     : cocone (span f g) Z.
   Proof.
-    serapply Build_cocone.
-    intro i.
-    destruct i.
-    exact (inr' o g).
-    destruct b.
-    exact inl'.
-    exact inr'.
-    intros i j g0.
-    destruct i, j, g0.
-    destruct u, b.
-    exact pp'.
-    reflexivity.
+    unshelve econstructor.
+    - intros []; cbn.
+      + intros _. exact (inr' o g).
+      + intros [].
+        * exact inl'.
+        * exact inr'.
+    - intros [] [] []; cbn. destruct b.
+      + exact pp'.
+      + reflexivity.
   Defined.
 
   Definition pol' {f : A -> B} {g : A -> C} {Z} (Co : cocone (span f g) Z)
@@ -81,22 +84,18 @@ Section PO.
              (pp' : forall a, popp a # l' (f a) = r' (g a))
     : forall w, P w.
   Proof.
-    serapply colimit_ind.
-    + intro i; destruct i.
-      * destruct u.
-        intro.
-        serapply (colimp _ _ _ _ # l' _).
-        exact tt.
-      * intro.
-        destruct b.
-        exact (l' x).
-        exact (r' x).
-    + intros [] [] []; cbn.
-      destruct u, b; cbn. reflexivity.
-      unfold popp in pp'.
-      intro a. apply moveR_transport_p.
-      etransitivity; [|apply transport_pp].
-      symmetry; apply pp'.
+    simple refine (colimit_ind P _ _).
+    - intros []; cbn.
+      + intros [] x.
+        exact (@colimp _ (span f g) (inl tt) (inr true) tt x # l' (f x)).
+      + intros []; cbn;[exact l' | exact r'].
+    - intros [] [] []; cbn.
+      destruct u, b; cbn.
+      + reflexivity.
+      + unfold popp in pp'.
+        intro a. apply moveR_transport_p.
+        etransitivity; [|apply transport_pp].
+        symmetry; apply pp'.
   Defined.
 
   Definition PO_ind_beta_pp (P : PO f g -> Type) (l' : forall b, P (pol b))
@@ -104,27 +103,28 @@ Section PO.
              (pp' : forall a, popp a # l' (f a) = r' (g a))
     : forall x, apD (PO_ind P l' r' pp') (popp x) = pp' x.
   Proof.
-    intro x. etransitivity. eapply apD_pp.
-    assert (apD (PO_ind P l' r' pp')
-                (@colimp _ (span f g) (inl tt) (inr true) tt x) = 1). {
-      unfold PO_ind.
+    intro x. etransitivity.
+    - eapply apD_pp.
+    - assert (apD (PO_ind P l' r' pp')
+                  (@colimp _ (span f g) (inl tt) (inr true) tt x) = 1). {
+        unfold PO_ind.
+        match goal with
+        | |- apD (colimit_ind P ?qq1 ?qq2) _ = _ =>
+          exact (colimit_ind_beta_colimp P qq1 qq2 (inl tt) (inr true) tt x)
+        end. }
+      rewrite X. clear X. cbn. rewrite concat_p1.
+      rewrite apD_V. unfold PO_ind.
       match goal with
-      | |- apD (colimit_ind P ?qq1 ?qq2) _ = _ =>
-        exact (colimit_ind_beta_colimp P qq1 qq2 (inl tt) (inr true) tt x)
-      end. }
-    rewrite X. clear X. cbn. rewrite concat_p1.
-    rewrite apD_V. unfold PO_ind.
-    match goal with
-    | |- _ @ moveR_transport_V
-          _ _ _ _ (apD (colimit_ind P ?qq1 ?qq2) _)^ = _ =>
+      | |- _ @ moveR_transport_V
+            _ _ _ _ (apD (colimit_ind P ?qq1 ?qq2) _)^ = _ =>
         rewrite (colimit_ind_beta_colimp P qq1 qq2 (inl tt) (inr false) tt x); cbn
-    end.
-    match goal with
-    | |- ?pp @ moveR_transport_V P _ _ _ (moveR_transport_p P _ _ _ ?qq)^ = _
-      => set (q := qq); set (p := pp) in *
-    end.
-    rewrite moveR_transport_p_V. rewrite moveR_moveL_transport_p.
-    subst q. rewrite inv_pp. hott_simpl.
+      end.
+      match goal with
+      | |- ?pp @ moveR_transport_V P _ _ _ (moveR_transport_p P _ _ _ ?qq)^ = _
+        => set (q := qq); set (p := pp) in *
+      end.
+      rewrite moveR_transport_p_V. rewrite moveR_moveL_transport_p.
+      subst q. rewrite inv_pp. hott_simpl.
   Defined.
 
   Definition PO_rec (P: Type) (l': B -> P) (r': C -> P)
@@ -153,16 +153,19 @@ Section PO.
     : IsEquiv por.
   Proof.
     serapply isequiv_adjointify.
-    serapply PO_rec. exact (g o f^-1). exact idmap.
-    intro x. apply ap. apply eissect.
-    serapply PO_ind; cbn.
-    intro. refine ((popp _)^ @ _). apply ap.
-    apply eisretr. reflexivity.
-    intro a; cbn. rewrite transport_paths_FlFr, ap_idmap.
-    rewrite ap_compose. rewrite PO_rec_beta_pp.
-    rewrite eisadj. destruct (eissect f a). cbn.
-    rewrite concat_1p, concat_p1. apply concat_Vp.
-    intro; reflexivity.
+    - serapply PO_rec.
+      + exact (g o f^-1).
+      + exact idmap.
+      + intro x. apply ap. apply eissect.
+    - serapply PO_ind; cbn.
+      + intro. refine ((popp _)^ @ _). apply ap.
+        apply eisretr.
+      + reflexivity.
+      + intro a; cbn. rewrite transport_paths_FlFr, ap_idmap.
+        rewrite ap_compose. rewrite PO_rec_beta_pp.
+        rewrite eisadj. destruct (eissect f a). cbn.
+        rewrite concat_1p, concat_p1. apply concat_Vp.
+    - intro; reflexivity.
   Defined.
 End PO.
 
@@ -177,13 +180,17 @@ Section is_PO_pushout.
   Proof.
     unshelve econstructor.
     - serapply Build_span_cocone.
-      exact (push o inl). exact (push o inr). exact pp.
+      + exact (push o inl).
+      + exact (push o inr).
+      + exact pp.
     - intro Y; serapply isequiv_adjointify.
       + intro Co. serapply pushout_rec.
-        exact (pol' Co). exact (por' Co). exact (popp' Co).
+        * exact (pol' Co).
+        * exact (por' Co).
+        * exact (popp' Co).
       + intros [Co Co']. serapply path_cocone; cbn.
         * intros [[]|[]] x; simpl.
-          apply (Co' (inl tt) (inr false) tt).
+          { apply (Co' (inl tt) (inr false) tt). }
           all: reflexivity.
         * intros [[]|[]] [[]|[]] [] x; simpl.
           2: reflexivity.

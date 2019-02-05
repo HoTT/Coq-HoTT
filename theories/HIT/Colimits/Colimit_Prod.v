@@ -13,8 +13,8 @@ Section ColimitProd.
   Definition prod_diag : diagram G.
   Proof.
     simple refine (Build_diagram _ _ _).
-    exact (fun i => A * (D i)).
-    simpl; intros i j f x. exact (fst x, D _f f (snd x)).
+    - exact (fun i => A * (D i)).
+    - simpl; intros i j f x. exact (fst x, D _f f (snd x)).
   Defined.
 
   Definition diagram_equiv_prod_sigma
@@ -22,8 +22,8 @@ Section ColimitProd.
   Proof.
     unshelve econstructor.
     - serapply Build_diagram_map; cbn.
-      intro i; apply equiv_sigma_prod0.
-      reflexivity.
+      + intro i; apply equiv_sigma_prod0.
+      + reflexivity.
     - intro i; cbn.
       apply equiv_sigma_prod0.
   Defined.
@@ -32,9 +32,9 @@ Section ColimitProd.
   : is_colimit prod_diag (A * Q).
   Proof.
     eapply postcompose_equiv_is_colimit.
-    apply equiv_sigma_prod0.
-    eapply precompose_equiv_is_colimit.
-    symmetry; apply diagram_equiv_prod_sigma.
-    by apply is_colimit_sigma.
+    - apply equiv_sigma_prod0.
+    - eapply precompose_equiv_is_colimit.
+      + symmetry; apply diagram_equiv_prod_sigma.
+      + by apply is_colimit_sigma.
   Defined.
 End ColimitProd.

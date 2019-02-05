@@ -5,7 +5,7 @@ Local Open Scope path_scope.
 Section Functorish.
 Context `{Univalence}.
 (* We do not need composition to be preserved. *)
-Global Class Functorish (F : Type -> Type) := {
+Class Functorish (F : Type -> Type) := {
   fmap {A B} (f : A -> B) : F A -> F B ;
   fmap_idmap (A:Type) : fmap (idmap : A -> A) = idmap
 }.
@@ -31,9 +31,9 @@ Proof.
     (fun A' e => fmap F e = equiv_path _ _ (ap F (path_universe e)))
     _ _ (BuildEquiv _ _ f _)).
   transitivity (idmap : F A -> F A).
-    apply fmap_idmap.
-  change (equiv_idmap A) with (equiv_path A A 1).
-  rewrite (@eta_path_universe _ A A 1). exact 1.
+  - apply fmap_idmap.
+  - change (equiv_idmap A) with (equiv_path A A 1).
+    rewrite (@eta_path_universe _ A A 1). exact 1.
 Defined.
 
 End Functorish.

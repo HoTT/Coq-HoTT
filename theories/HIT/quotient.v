@@ -126,16 +126,17 @@ Section Equiv.
   Proof.
     intros x y H'.
     pattern (R x y).
-    eapply transport. apply in_class_pr.
-    pattern (class_of R x). apply (transport _ (H'^)).
-    apply Hrefl.
+    eapply transport.
+    - apply in_class_pr.
+    - pattern (class_of R x). apply (transport _ (H'^)).
+      apply Hrefl.
   Defined.
 
   (** Thm 10.1.8 *)
   Theorem sets_exact : forall x y, (class_of R x = class_of R y) <~> R x y.
     intros ??. apply equiv_iff_hprop.
-    apply classes_eq_related.
-    apply related_classes_eq.
+    - apply classes_eq_related.
+    - apply related_classes_eq.
   Defined.
 
   Definition quotient_rec {B : Type} {sB : IsHSet B}
@@ -204,8 +205,8 @@ Section Equiv.
                                                    (sigT (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
   Proof.
     refine (equiv_adjointify (quotient_ump' B) (quotient_ump'' B) _ _).
-    intros [f Hf].
-    - by apply equiv_path_sigma_hprop.
+    - intros [f Hf].
+      by apply equiv_path_sigma_hprop.
     - intros f.
       apply path_forall.
       red. apply quotient_ind_prop';[apply _|reflexivity].
@@ -303,20 +304,22 @@ Section Kernel.
       - apply transport_const.
       - exact ((is_ker x y) ^-1 H). }
     exists m.
-    split. split. split.
+    split;[split;[split|]|].
     - assumption.
     - apply quotient_surjective.
     - intro u.
       apply hprop_allpath.
       assert (H : forall (x y : C) (p : m x = u) (p' : m y = u), x = y).
-      { simple refine (quotient_ind R _ _ _). intro a.
-        simple refine (quotient_ind R _ _ _). intros a' p p'; fold e in p, p'.
-        + apply related_classes_eq.
-          refine (is_ker a a' _).
-          change (m (e a) = m (e a')).
-          exact (p @ p'^).
-        + intros; apply path_ishprop.
-        + intros; apply path_ishprop. }
+      { simple refine (quotient_ind R _ _ _).
+        - intro a.
+          simple refine (quotient_ind R _ _ _).
+          + intros a' p p'; fold e in p, p'.
+            * apply related_classes_eq.
+              refine (is_ker a a' _).
+              change (m (e a) = m (e a')).
+              exact (p @ p'^).
+          + intros; apply path_ishprop.
+        - intros; apply path_ishprop. }
       intros [x p] [y p'].
       apply path_sigma_hprop; simpl.
       exact (H x y p p').

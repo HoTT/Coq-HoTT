@@ -24,6 +24,9 @@ Global Unset Strict Universe Declaration.
 (** This command makes it so that when we say something like [IsHSet nat] we get [IsHSet@{i} nat] instead of [IsHSet@{Set} nat]. *)
 Global Unset Universe Minimization ToSet.
 
+(** Force to use bullets in proofs. *)
+Global Set Default Goal Selector "!".
+
 (** Apply using the same opacity information as typeclass proof search. *)
 Ltac class_apply c := autoapply c using typeclass_instances.
 

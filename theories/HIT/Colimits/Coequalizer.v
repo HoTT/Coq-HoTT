@@ -29,9 +29,8 @@ Section Coequalizer.
   Definition coequalizer_diag (f g : B -> A) : diagram coequalizer_graph.
   Proof.
     simple refine (Build_diagram _ _ _).
-    - intro x; destruct x.
-      exact B. exact A.
-    - intros i j; destruct i, j; intro H; destruct H. exact f. exact g.
+    - intro x; destruct x;[exact B | exact A].
+    - intros i j; destruct i, j; intro H; destruct H;[exact f | exact g].
   Defined.
 
   Definition Build_coequalizer_cocone {f g : B -> A}
@@ -39,8 +38,8 @@ Section Coequalizer.
     : cocone (coequalizer_diag f g) Q.
   Proof.
     simple refine (Build_cocone _ _).
-    - destruct i; cbn. exact (q o f). exact q.
-    - destruct i, j, g0; cbn. reflexivity. exact Hq.
+    - destruct i; cbn;[exact (q o f) | exact q].
+    - destruct i, j, g0; cbn;[reflexivity | exact Hq].
   Defined.
 
   Definition is_coequalizer (f g : B -> A)
@@ -58,9 +57,11 @@ Section Coequalizer.
   Proof.
     simple refine (Build_cocone _ _).
     - intros i x; destruct i; simpl in *.
-      exact (coeq (g x)). exact (coeq x).
+      + exact (coeq (g x)).
+      + exact (coeq x).
     - intros i j phi x; destruct i, j, phi; simpl.
-      exact (cp x). reflexivity.
+      + exact (cp x).
+      + reflexivity.
   Defined.
 
   Lemma is_coequalizer_Coeq : is_colimit (coequalizer_diag f g) (Coeq f g).
@@ -68,13 +69,15 @@ Section Coequalizer.
     simple refine (Build_is_colimit Coeq_cocone _).
     intros X.
     simple refine (isequiv_adjointify _ _ _ _).
-    - intros C. simple refine (Coeq_rec _ _ _). exact (q C false).
-      intros b. etransitivity.
-      exact (qq C true false true b).
-      exact (qq C true false false b)^.
+    - intros C. simple refine (Coeq_rec _ _ _).
+      + exact (q C false).
+      + intros b. etransitivity.
+        * exact (qq C true false true b).
+        * exact (qq C true false false b)^.
     - intros C. simple refine (path_cocone _ _).
       + intros i x; destruct i; simpl.
-        exact (qq C true false false x). reflexivity.
+        * exact (qq C true false false x).
+        * reflexivity.
       + intros i j phi x; destruct i, j, phi; simpl.
         * hott_simpl.
           match goal with
