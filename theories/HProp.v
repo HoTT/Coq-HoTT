@@ -125,21 +125,24 @@ Theorem equiv_contr_inhabited_hprop `{Funext} {A}
   : Contr A <~> A * IsHProp A.
 Proof.
   assert (f : Contr A -> A * IsHProp A).
-    intro P. split. exact (@center _ P). apply @trunc_succ. exact P.
-  assert (g : A * IsHProp A -> Contr A).
-    intros [a P]. apply (@contr_inhabited_hprop _ P a).
-  refine (@equiv_iff_hprop _ _ _ _ f g).
-  apply hprop_inhabited_contr; intro p.
-  apply @contr_prod.
-  exact (g p). apply (@contr_inhabited_hprop _ _ (snd p)).
+  - intro P. split.
+    + exact (@center _ P).
+    + apply @trunc_succ. exact P.
+  - assert (g : A * IsHProp A -> Contr A).
+    + intros [a P]. apply (@contr_inhabited_hprop _ P a).
+    + refine (@equiv_iff_hprop _ _ _ _ f g).
+      apply hprop_inhabited_contr; intro p.
+      apply @contr_prod.
+      * exact (g p).
+      * apply (@contr_inhabited_hprop _ _ (snd p)).
 Defined.
 
 Theorem equiv_contr_inhabited_allpath `{Funext} {A}
   : Contr A <~> A * forall (x y : A), x = y.
 Proof.
   transitivity (A * IsHProp A).
-  apply equiv_contr_inhabited_hprop.
-  exact (1 *E equiv_hprop_allpath _).
+  - apply equiv_contr_inhabited_hprop.
+  - exact (1 *E equiv_hprop_allpath _).
 Defined.
 
 (** ** Logical equivalence of hprops *)
@@ -170,8 +173,8 @@ Lemma if_hprop_then_equiv_Unit (hprop : Type) `{IsHProp hprop} :  hprop -> hprop
 Proof.
   intro p.
   apply equiv_iff_hprop.
-  exact (fun _ => tt).
-  exact (fun _ => p).
+  - exact (fun _ => tt).
+  - exact (fun _ => p).
 Defined.
 
 (** If an hprop is not inhabited, then it is equivalent to [Empty]. *)

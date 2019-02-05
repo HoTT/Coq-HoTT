@@ -24,9 +24,9 @@ Lemma comm_square_inverse
 Proof.
   intros a'.
   path_via (wB ^-1 (wB (f (wA ^-1 a')))).
-    apply inverse, eissect.
-  apply ap, (concat (wf _)^).
-  apply ap, eisretr.
+  - apply inverse, eissect.
+  - apply ap, (concat (wf _)^).
+    apply ap, eisretr.
 Defined.
 
 (** Up to naturality, the result of [comm_square_inverse] really is a
@@ -48,10 +48,10 @@ Proof.
   apply (concat (ap_pp (wB ^-1) _ _)^), (concatR (ap_compose wB _ _)^).
   apply ap, (concat (concat_pp_p _ _ _)), moveR_Vp.
   path_via (ap (f' o wA) (eissect wA a) @ wf a).
-    apply whiskerR.  apply (concatR (ap_compose wA f' _)^).
+  - apply whiskerR.  apply (concatR (ap_compose wA f' _)^).
     apply ap, eisadj.
-  apply (concat (concat_Ap wf _)).
-  apply whiskerL, (ap_compose f wB).
+  - apply (concat (concat_Ap wf _)).
+    apply whiskerL, (ap_compose f wB).
 Defined.
 
 (** and similarly, [comm_square_inverse] is a section (aka right equiv_inv). *)
@@ -70,22 +70,22 @@ Proof.
   set (p := (ap wB (ap (wB ^-1) (ap f' (eisretr wA a)))
             @ eisretr wB (f' a))).
   path_via ((eisretr wB _)^ @ p).
-  apply whiskerR.
+  - apply whiskerR.
     apply moveR_pM.
     path_via ((eisretr wB (f' (wA (wA ^-1 a))))^ @
-       ap (wB o wB ^-1) (wf ((wA ^-1) a))).
-      rewrite ap_V. rewrite <- eisadj.
+      ap (wB o wB ^-1) (wf ((wA ^-1) a))).
+    + rewrite ap_V. rewrite <- eisadj.
       transitivity (ap idmap (wf ((wA ^-1) a))
-        @ (eisretr wB (wB (f ((wA ^-1) a))))^).
-      apply whiskerR. apply inverse. apply ap_idmap.
-      apply (concat_Ap
-         (fun b' => (eisretr wB b')^) (wf ((wA ^-1) a)) ).
-    apply ap. rewrite ap_compose. rewrite !ap_V.
-    apply inverse. apply inv_V.
-  apply moveR_Vp. subst p. rewrite <- ap_compose.
-  path_via (eisretr wB (f' (wA ((wA ^-1) a)))
-            @ ap idmap (ap f' (eisretr wA a))).
-  apply (concat_Ap
-    (eisretr wB) (ap f' (eisretr wA a)) ).
-  apply ap. apply ap_idmap.
+                       @ (eisretr wB (wB (f ((wA ^-1) a))))^).
+      * apply whiskerR. apply inverse. apply ap_idmap.
+      * apply (concat_Ap
+                 (fun b' => (eisretr wB b')^) (wf ((wA ^-1) a)) ).
+    + apply ap. rewrite ap_compose. rewrite !ap_V.
+      apply inverse. apply inv_V.
+  - apply moveR_Vp. subst p. rewrite <- ap_compose.
+    path_via (eisretr wB (f' (wA ((wA ^-1) a)))
+                      @ ap idmap (ap f' (eisretr wA a))).
+    + apply (concat_Ap
+               (eisretr wB) (ap f' (eisretr wA a)) ).
+    + apply ap. apply ap_idmap.
 Defined.

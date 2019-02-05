@@ -8,9 +8,9 @@ Global Instance negate_involutive: Involutive (-).
 Proof.
 intros x.
 path_via (mon_unit & x).
-path_via ((- - x & - x) & x).
-path_via (- - x & (- x & x)).
-path_via (- - x & mon_unit).
+1:path_via ((- - x & - x) & x).
+1:path_via (- - x & (- x & x)).
+1:path_via (- - x & mon_unit).
 - apply symmetry. apply right_identity.
 - apply ap. apply symmetry. apply left_inverse.
 - apply associativity.
@@ -74,8 +74,8 @@ Section abgroup_props.
 Lemma negate_sg_op_distr `{AbGroup G} x y : -(x & y) = -x & -y.
 Proof.
 path_via (-y & -x).
-apply negate_sg_op.
-apply commutativity.
+- apply negate_sg_op.
+- apply commutativity.
 Qed.
 
 End abgroup_props.

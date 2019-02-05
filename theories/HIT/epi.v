@@ -80,13 +80,15 @@ Section cones.
 End cones.
 
 Lemma issurj_isepi {X Y} (f:X->Y): IsSurjection f -> isepi f.
+Proof.
 intros sur ? ? ? ep. apply path_forall. intro y.
 specialize (sur y). pose (center (merely (hfiber f y))).
 apply (Trunc_rec (n:=-1) (A:=(sigT (fun x : X => f x = y))));
   try assumption.
- intros [x p]. set (p0:=apD10 ep x).
- transitivity (g (f x)). by apply ap.
- transitivity (h (f x));auto with path_hints. by apply ap.
+intros [x p]. set (p0:=apD10 ep x).
+transitivity (g (f x)).
+- by apply ap.
+- transitivity (h (f x));auto with path_hints. by apply ap.
 Qed.
 
 (** Old-style proof using polymorphic Omega. Needs resizing for the isepi proof to live in the

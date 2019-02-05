@@ -520,11 +520,12 @@ Proof.
   intros retr_f_g isHSet_A.
   apply @hset_axiomK. unfold axiomK.
   intros x p.
-  assert (ap g p = 1) as g_p_is_1. apply (axiomK_hset isHSet_A).
-  assert (1 = (retr_f_g x) ^ @ (ap f (ap g p)) @ (retr_f_g x)) as rhs_is_1.
-  rewrite g_p_is_1. simpl. rewrite concat_p1. rewrite concat_Vp. exact 1.
-  rewrite (rhs_is_1).
-  apply (retr_f_g_path_in_B f g retr_f_g).
+  assert (ap g p = 1) as g_p_is_1.
+  - apply (axiomK_hset isHSet_A).
+  - assert (1 = (retr_f_g x) ^ @ (ap f (ap g p)) @ (retr_f_g x)) as rhs_is_1.
+    + rewrite g_p_is_1. simpl. rewrite concat_p1. rewrite concat_Vp. exact 1.
+    + rewrite (rhs_is_1).
+      apply (retr_f_g_path_in_B f g retr_f_g).
 Defined.
 
 Lemma Book_3_1_solution_3 {A B} : A <~> B -> IsHSet A -> IsHSet B.
@@ -546,12 +547,12 @@ Lemma Book_3_2_solution_2 (A B : Type) : IsHSet A -> IsHSet B -> IsHSet (A+B).
 Proof.
   intros isHSet_A isHSet_B.
   apply @hset_axiomK. unfold axiomK. intros x p. destruct x.
-  rewrite (inverse (eisretr_path_sum p)).
-  rewrite (axiomK_hset isHSet_A a (path_sum_inv p)).
-  simpl; exact idpath.
-  rewrite (inverse (eisretr_path_sum p)).
-  rewrite (axiomK_hset isHSet_B b (path_sum_inv p)).
-  simpl; exact idpath.
+  - rewrite (inverse (eisretr_path_sum p)).
+    rewrite (axiomK_hset isHSet_A a (path_sum_inv p)).
+    simpl; exact idpath.
+  - rewrite (inverse (eisretr_path_sum p)).
+    rewrite (axiomK_hset isHSet_B b (path_sum_inv p)).
+    simpl; exact idpath.
 Defined.
 
 (* ================================================== ex:isset-sigma *)
@@ -577,12 +578,12 @@ Defined.
 Lemma Book_3_4_solution_1 `{Funext} (A : Type) : IsHProp A <-> Contr (A -> A).
 Proof.
   split.
-  intro isHProp_A.
-  exists idmap.
-  apply path_ishprop. (* automagically, from IsHProp A *)
-  intro contr_AA.
-  apply hprop_allpath; intros a1 a2.
-  exact (ap10 (path_contr (fun x:A => a1) (fun x:A => a2)) a1).
+  - intro isHProp_A.
+    exists idmap.
+    apply path_ishprop. (* automagically, from IsHProp A *)
+  - intro contr_AA.
+    apply hprop_allpath; intros a1 a2.
+    exact (ap10 (path_contr (fun x:A => a1) (fun x:A => a2)) a1).
 Defined.
 
 (* ================================================== ex:prop-inhabcontr *)
@@ -598,7 +599,8 @@ Proof.
   intro isHProp_A.
   apply hprop_allpath. intros x y.
   destruct x as [a1|n1]; destruct y as [a2|n2]; apply path_sum; try apply path_ishprop.
-  exact (n2 a1). exact (n1 a2).
+  - exact (n2 a1).
+  - exact (n1 a2).
 Defined.
 
 (* ================================================== ex:disjoint-or *)
@@ -610,7 +612,8 @@ Proof.
   intros isHProp_A isProp_B nab.
   apply hprop_allpath. intros x y.
   destruct x as [a1|b1]; destruct y as [a2|b2]; apply path_sum; try apply path_ishprop.
-  exact (nab (a1,b2)). exact (nab (a2,b1)).
+  - exact (nab (a1,b2)).
+  - exact (nab (a2,b1)).
 Defined.
 
 (* ================================================== ex:brck-qinv *)
@@ -1445,10 +1448,10 @@ Section Book_6_9.
   Proof.
     intro Bad. pose proof ((happly Bad) true) as Ugly.
     assert ((solution_6_9 Bool true) = false) as Good.
-    unfold solution_6_9.
-    destruct (LEM (Contr (AllExistsOther Bool)) _) as [[f C]|C];simpl.
-    - elim (centralAllExOthBool f). reflexivity.
-    - elim (C contrAllExOthBool).
+    - unfold solution_6_9.
+      destruct (LEM (Contr (AllExistsOther Bool)) _) as [[f C]|C];simpl.
+      + elim (centralAllExOthBool f). reflexivity.
+      + elim (C contrAllExOthBool).
     - apply false_ne_true. rewrite (inverse Good). assumption.
   Defined.
 

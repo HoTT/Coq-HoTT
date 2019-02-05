@@ -108,8 +108,8 @@ intros n. destruct n as [|k].
   + change (0 < 1 + naturals_to_semiring nat Q (S k)).
     set (K := naturals_to_semiring nat Q (S k)) in *;clearbody K.
     apply pos_plus_compat.
-    apply lt_0_1.
-    trivial.
+    * apply lt_0_1.
+    * trivial.
 Defined.
 
 Lemma pos_recip_r@{} : forall e : Q+, e / e = 1.
