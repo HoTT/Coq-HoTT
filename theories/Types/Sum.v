@@ -969,14 +969,13 @@ Definition sum_of_sigT A B (x : { b : Bool & if b then A else B })
 Global Instance isequiv_sigT_of_sum A B : IsEquiv (@sigT_of_sum A B) | 0.
 Proof.
   serapply (isequiv_adjointify (sigT_of_sum A B) (sum_of_sigT A B)).
-  compute.
-  serapply sig_ind.
-  serapply Bool_ind.
-  intro; reflexivity.
-  intro; reflexivity.
-  serapply sum_ind.
-  reflexivity.
-  reflexivity.
+  + serapply sig_ind.
+    serapply Bool_ind.
+    - intro; reflexivity.
+    - intro; reflexivity.
+  + serapply sum_ind.
+    - reflexivity.
+    - reflexivity.
 Defined.
 
 Global Instance isequiv_sum_of_sigT A B : IsEquiv (sum_of_sigT A B)

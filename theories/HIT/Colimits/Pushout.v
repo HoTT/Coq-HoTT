@@ -44,11 +44,12 @@ Section PO.
   Proof.
     unshelve econstructor.
     - intros []; cbn.
-      + intros _. exact (inr' o g).
-      + intros [].
+      + exact (inr' o g).
+      + destruct b.
         * exact inl'.
         * exact inr'.
-    - intros [] [] []; cbn. destruct b.
+    - intros [] [] [].
+     destruct b.
       + exact pp'.
       + reflexivity.
   Defined.
@@ -86,9 +87,12 @@ Section PO.
   Proof.
     simple refine (colimit_ind P _ _).
     - intros []; cbn.
-      + intros [] x.
+      + destruct u.
+        intro x.
         exact (@colimp _ (span f g) (inl tt) (inr true) tt x # l' (f x)).
-      + intros []; cbn;[exact l' | exact r'].
+      + destruct b; cbn.
+        * exact l'.
+        * exact r'.
     - intros [] [] []; cbn.
       destruct u, b; cbn.
       + reflexivity.

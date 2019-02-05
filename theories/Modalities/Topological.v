@@ -120,13 +120,11 @@ Module Topological_Lex.
                                | inr (a ; (b1, b2)) => (b1 = b2)
                                end : Type)).
     assert (Dtrunc : forall c:C, IsTrunc n.+1 (D c)).
-    { intro a; destruct a.
-      destruct n.
-      intros x y.
-      exact _.
-      intros x y.
-      exact _.
-      exact _. }
+    { intros [a|a].
+      + destruct n.
+        * exact _.
+        * exact _.
+      + exact _. }
     assert (OeqD : OeqO O (Nul D)).
     { intros X; split.
       - intros X_inO c.

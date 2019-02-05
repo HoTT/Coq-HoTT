@@ -237,12 +237,12 @@ Section POCase.
 
   Definition POCase_E : dep_diagram (span f g).
   Proof.
-    simple refine (Build_diagram _ _ _); cbn.
+     simple refine (Build_diagram _ _ _); cbn.
     - intros [[] x]; revert x.
       + exact A0.
       + destruct b; assumption.
-    - intros [[] x] [[] y] []; cbn; intros [].
-      destruct b; intro p.
+    - intros [[] x] [[] y] [[] p].
+      destruct b.
       + exact (fun y => p # (f0 x y)).
       + exact (fun y => p # (g0 x y)).
   Defined.

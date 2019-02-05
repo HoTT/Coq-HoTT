@@ -55,8 +55,8 @@ Definition equiv_hfiber_homotopic {A B : Type}
   : hfiber f b <~> hfiber g b.
 Proof.
   serapply equiv_adjointify.
-  exact (fun x => (x.1; (h x.1)^ @ x.2)).
-  exact (fun gx => (gx.1 ; (h gx.1) @ gx.2)).
+  + exact (fun x => (x.1; (h x.1)^ @ x.2)).
+  + exact (fun gx => (gx.1 ; (h gx.1) @ gx.2)).
   + intros [a p]; cbn.
     apply ap, concat_V_pp.
   + intros [a p]; cbn.
@@ -71,8 +71,8 @@ Definition functor_hfiber {A B C D}
   : hfiber f b -> hfiber g (k b).
 Proof.
   serapply functor_sigma.
-  exact h.
-  exact (fun a e => (p a)^ @ ap k e).
+  + exact h.
+  + exact (fun a e => (p a)^ @ ap k e).
 Defined.
 
 (** ** The 3x3 lemma *)
@@ -110,23 +110,23 @@ Definition equiv_fibration_replacement {B C} (f : C -> B)
   : C <~> {y : B & hfiber f y}.
 Proof.
   serapply equiv_adjointify.
-  exact (fun c => (f c; (c; 1))).
-  exact (fun c => c.2.1).
-  intro x; destruct x as [b a], a as [a1 a2], a2.
-  reflexivity.
-  intro; reflexivity.
+  + exact (fun c => (f c; (c; 1))).
+  + exact (fun c => c.2.1).
+  + intro x; destruct x as [b a], a as [a1 a2], a2.
+    reflexivity.
+  + intro; reflexivity.
 Defined.
 
 Definition hfiber_fibration {X} (x : X) (P : X -> Type)
   : P x <~> @hfiber (sigT P) X pr1 x.
 Proof.
   serapply equiv_adjointify.
-  exact (fun y => ((x ; y) ; 1)).
-  exact (fun y => y.2 # y.1.2).
-  intros [[] []].
-  reflexivity.
-  intro.
-  reflexivity.
+  + exact (fun y => ((x ; y) ; 1)).
+  + exact (fun y => y.2 # y.1.2).
+  + intros [[] []].
+    reflexivity.
+  + intro.
+    reflexivity.
 Defined.
 
 (** ** Exercise 4.4: The unstable octahedral axiom. *)
@@ -149,12 +149,12 @@ Section UnstableOctahedral.
     refine (_ oE (equiv_sigma_assoc _ _)^-1).
     refine (equiv_functor_sigma' 1 _); intros a; simpl.
     serapply equiv_compose'.
-    serapply {p : g (f a) = g b & _}.
-    exact {q : f a = b & transport (fun y => g y = g b) q p = 1}.
-    - refine (_ oE equiv_sigma_symm _).
+    + serapply {p : g (f a) = g b & _}.
+      exact {q : f a = b & transport (fun y => g y = g b) q p = 1}.
+    + refine (_ oE equiv_sigma_symm _).
       apply equiv_sigma_contr; intros p.
       destruct p; simpl; exact _.
-    - refine (equiv_functor_sigma' 1
+    + refine (equiv_functor_sigma' 1
                 (fun p => (equiv_path_sigma _ _ _)^-1)).
   Defined.
 
