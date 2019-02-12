@@ -51,7 +51,7 @@ Definition mer' := (fun x => mer x @ (mer x0)^).
 
 (** The eventual theorem we want is: *)
 Global Instance Freudenthal
-  : IsConnMap (n -2+ n) (mer').
+  : IsConnMap (n +2+ n) (mer').
 Proof.
   intros p. unfold IsConnected.
 (** We are not ready to prove this yet.  For the remainder of the section, we will generalize this goal a bit, and prove some auxiliary lemmas; then we will return to the theorem. *)
@@ -59,11 +59,11 @@ Abort.
 
 (** The goal we require for the FST is: *)
 Definition FST_Codes_No (p : No = No)
-  := (Trunc (n -2+ n) (hfiber mer' p)).
+  := (Trunc (n +2+ n) (hfiber mer' p)).
 
 (** To prove it, we generalise it over [Susp X], by [Susp_ind].  This requires three components, which we construct (the main parts of) as lemmas in advance. *)
 Definition FST_Codes_So (q : No = So)
-  := (Trunc (n -2+ n) (hfiber mer q)).
+  := (Trunc (n +2+ n) (hfiber mer q)).
 
 (* TODO: move! *)
 Definition hfiber_pair {A B} {f: A -> B} {b} (a:A) (p:f a = b) : hfiber f b
@@ -77,7 +77,7 @@ Proof.
   intros [x2 p]. revert x1 x2 p.
   refine (@wedge_incl_elim_uncurried _ n n X x0 _ X x0 _
     (fun x1 x2 => (mer x2 @ (mer x0) ^ = q @ (mer x1) ^)
-                    -> Trunc (n -2+ n) (hfiber mer q)) _ _).
+                    -> Trunc (n +2+ n) (hfiber mer q)) _ _).
   refine (pr1 (@isconnected_elim n.+1 X _ _ _ _)).
   { apply @trunc_sigma; try typeclasses eauto.
     { apply @trunc_forall; try typeclasses eauto; intro.
@@ -230,7 +230,7 @@ simpl in *.*)
 Admitted.
 
 Global Instance Freudenthal
-  : IsConnMap (n -2+ n) (@merid X).
+  : IsConnMap (n +2+ n) (@merid X).
 Proof.
   intros p; apply isconnected_from_elim; intros C ? f.
 Admitted.

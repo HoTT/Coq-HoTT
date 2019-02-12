@@ -37,7 +37,7 @@ Section Extensions.
 This lemma is most useful via corollaries like the wedge-inclusion, the wiggly wedge, and their n-ary generalizations. *)
 Lemma istrunc_extension_along_conn {m n : trunc_index}
   {A B : Type} (f : A -> B) `{IsConnMap n _ _ f}
-  (P : B -> Type) {HP : forall b:B, IsTrunc (m -2+ n) (P b)}
+  (P : B -> Type) {HP : forall b:B, IsTrunc (m +2+ n) (P b)}
   (d : forall a:A, P (f a))
 : IsTrunc m (ExtensionAlong f P d).
 Proof.
@@ -172,7 +172,7 @@ Context `{Univalence}
   {m n : trunc_index}
   {A : Type} (a0 : A) `{IsConnected m.+1 A}
   {B : Type} (b0 : B) `{IsConnected n.+1 B}
-  (P : A -> B -> Type) {HP : forall a b, IsTrunc (m -2+ n) (P a b)}
+  (P : A -> B -> Type) {HP : forall a b, IsTrunc (m +2+ n) (P a b)}
   (f_a0 : forall b:B, P a0 b)
   (f_b0 : forall a:A, P a b0)
   (f_a0b0 : f_a0 b0 = f_b0 a0).
@@ -226,7 +226,7 @@ Definition wedge_incl_elim_uncurried `{Univalence}
   {m n : trunc_index}
   {A : Type} (a0 : A) `{IsConnected m.+1 A}
   {B : Type} (b0 : B) `{IsConnected n.+1 B}
-  (P : A -> B -> Type) {HP : forall a b, IsTrunc (m -2+ n) (P a b)}
+  (P : A -> B -> Type) {HP : forall a b, IsTrunc (m +2+ n) (P a b)}
   (fs : {f_a0 : forall b:B, P a0 b
         & { f_b0 : forall a:A, P a b0
         & f_a0 b0 = f_b0 a0 }})
