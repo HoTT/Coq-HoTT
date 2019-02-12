@@ -42,7 +42,7 @@ Reserved Notation "g 'oE' f" (at level 40, left associativity).
 Reserved Notation "g o*E f" (at level 40, left associativity).
 Reserved Notation "g 'o' f" (at level 40, left associativity).
 Reserved Notation "m ^-1" (at level 3, format "m '^-1'").
-Reserved Notation "m -2+ n" (at level 50, left associativity).
+Reserved Notation "m +2+ n" (at level 50, left associativity).
 Reserved Notation "m <= n" (at level 70, no associativity).
 Reserved Notation "n .+1" (at level 2, left associativity, format "n .+1").
 Reserved Notation "n .+2" (at level 2, left associativity, format "n .+2").

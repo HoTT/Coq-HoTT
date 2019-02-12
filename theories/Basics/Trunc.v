@@ -15,7 +15,7 @@ Fixpoint trunc_index_add (m n : trunc_index) : trunc_index
        | m'.+1 => (trunc_index_add m' n).+1
      end.
 
-Notation "m -2+ n" := (trunc_index_add m n) : trunc_scope.
+Notation "m +2+ n" := (trunc_index_add m n) : trunc_scope.
 
 Fixpoint trunc_index_leq (m n : trunc_index) : Type0
   := match m, n with
