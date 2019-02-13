@@ -46,7 +46,6 @@ Section HomotopyGroups.
   Proof.
     refine (tr _).
     destruct n, gt.
-    rewrite iterated_loops_unfold.
     exact idpath.
   Defined.
 

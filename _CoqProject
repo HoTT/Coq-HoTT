@@ -411,6 +411,8 @@ theories/Classes/interfaces/orders.v
 theories/Classes/interfaces/integers.v
 theories/Classes/tests/ring_tac.v
 
+theories/Homotopy/HomotopyGroup.v
+
 contrib/HoTTBook.v
 contrib/HoTTBookExercises.v
 contrib/Freudenthal.v
