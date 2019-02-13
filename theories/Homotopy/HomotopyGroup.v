@@ -11,7 +11,7 @@ Section HomotopyGroups.
 
   Context
    `{Univalence}
-    {n : nat}
+    (n : nat)
     (X : pType).
 
   Definition Pi := Tr 0 (iterated_loops n X).
