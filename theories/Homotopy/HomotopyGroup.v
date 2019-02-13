@@ -108,7 +108,7 @@ Section HomotopyGroups.
     apply concat_pV.
   Defined.
 
- Global Instance pi_is_Group : @Group Pi PiOp PiUnit PiInverse.
+  Global Instance pi_is_Group : @Group Pi PiOp PiUnit PiInverse.
   Proof.
     repeat split.
     - exact _.
