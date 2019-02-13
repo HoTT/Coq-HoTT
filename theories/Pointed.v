@@ -46,7 +46,7 @@ Fixpoint iterated_loops (n : nat) (A : Type) `{H : IsPointed A}
          {struct n} : pType
   := match n with
        | O => Build_pType A (@point A H)
-       | S p => iterated_loops p (point A = point A)
+       | S p => loops (iterated_loops p A)
      end.
 
 (** The loop space decreases the truncation level by one.  We don't bother making this an instance because it is automatically found by typeclass search, but we record it here in case anyone is looking for it. *)
