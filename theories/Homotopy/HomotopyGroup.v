@@ -108,22 +108,15 @@ Section HomotopyGroups.
     apply concat_pV.
   Defined.
 
-  (* Why is this so slow? *)
-  Global Instance pi_is_Group : @Group Pi PiOp PiUnit PiInverse.
+ Global Instance pi_is_Group : @Group Pi PiOp PiUnit PiInverse.
   Proof.
-    serapply Build_Group.
-    + serapply Build_Monoid.
-      * serapply Build_SemiGroup.
-        unfold Associative, HeteroAssociative.
-        apply PiOp_assoc.
-      * unfold LeftIdentity.
-        apply PiOp_leftId.
-      * unfold RightIdentity.
-        apply PiOp_rightId.
-    + unfold LeftInverse.
-      apply PiOp_leftInv.
-    + unfold RightInverse.
-      apply PiOp_rightInv.
-  Defined.
+    repeat split.
+    - exact _.
+    - exact PiOp_assoc.
+    - exact PiOp_leftId.
+    - exact PiOp_rightId.
+    - exact PiOp_leftInv.
+    - exact PiOp_rightInv.
+  Qed.
 
 End  HomotopyGroups.
