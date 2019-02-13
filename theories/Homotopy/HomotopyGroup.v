@@ -12,7 +12,8 @@ Section HomotopyGroups.
   Context
    `{Univalence}
     (n : nat)
-    (X : pType).
+    (X : Type)
+   `{IsPointed X}.
 
   Definition Pi := Tr 0 (iterated_loops n X).
 
