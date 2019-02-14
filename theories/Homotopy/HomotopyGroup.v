@@ -10,7 +10,6 @@ Require Import DProp.
 Section HomotopyGroups.
 
   Context
-   `{Univalence}
     (n : nat)
     (X : Type)
    `{IsPointed X}.
@@ -34,11 +33,8 @@ Section HomotopyGroups.
   Proof.
     intros x y z.
     strip_truncations.
-    unfold PiOp.
-    simpl.
-    serapply equiv_path_Tr.
-    refine (tr _).
-    simpl.
+    unfold PiOp; cbn.
+    apply ap.
     destruct n, gt.
     refine ((concat_pp_p _ _ _)^).
   Defined.
@@ -54,10 +50,8 @@ Section HomotopyGroups.
   Proof.
     intro x.
     strip_truncations.
-    unfold PiOp.
-    simpl.
-    serapply equiv_path_Tr.
-    refine (tr _).
+    unfold PiOp; cbn.
+    apply ap.
     destruct n, gt.
     apply concat_1p.
   Defined.
@@ -66,10 +60,8 @@ Section HomotopyGroups.
   Proof.
     intro x.
     strip_truncations.
-    unfold PiOp.
-    simpl.
-    serapply equiv_path_Tr.
-    refine (tr _).
+    unfold PiOp; cbn.
+    apply ap.
     destruct n, gt.
     apply concat_p1.
   Defined.
@@ -87,11 +79,8 @@ Section HomotopyGroups.
   Proof.
     intro x.
     strip_truncations.
-    unfold PiOp.
-    simpl.
-    serapply equiv_path_Tr.
-    simpl.
-    refine (tr _).
+    unfold PiOp; cbn.
+    apply ap.
     destruct n, gt.
     apply concat_Vp.
   Defined.
@@ -100,11 +89,8 @@ Section HomotopyGroups.
   Proof.
     intro x.
     strip_truncations.
-    unfold PiOp.
-    simpl.
-    serapply equiv_path_Tr.
-    simpl.
-    refine (tr _).
+    unfold PiOp; cbn.
+    apply ap.
     destruct n, gt.
     apply concat_pV.
   Defined.
