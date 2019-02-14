@@ -104,6 +104,6 @@ Section HomotopyGroups.
     - exact PiOp_rightId.
     - exact PiOp_leftInv.
     - exact PiOp_rightInv.
-  Qed.
+  Defined.
 
 End  HomotopyGroups.
