@@ -39,7 +39,7 @@ Global Instance ispointed_loops A (a : A)
   := idpath.
 
 (** We can build an iterated loop space *)
-Definition loops (A : pType) : pType :=
+Definition loops (A : Type) `{IsPointed A} : pType :=
   Build_pType (point A = point A) idpath.
 
 Fixpoint iterated_loops (n : nat) (A : Type) `{H : IsPointed A}
