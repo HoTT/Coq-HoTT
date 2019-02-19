@@ -20,7 +20,7 @@ Section HomotopyGroups.
   Context `{gt : 0 < n}.
 
   (* We explicitly give the operation here *)
-  Definition PiOp : Pi -> Pi -> Pi.
+  Global Instance PiOp : SgOp Pi.
   Proof.
     intros a b.
     strip_truncations.
@@ -29,14 +29,14 @@ Section HomotopyGroups.
     exact (concat a b).
   Defined.
 
-  Definition PiOp_assoc : forall x y z, PiOp x (PiOp y z) = PiOp (PiOp x y) z.
+  Global Instance PiOp_assoc : Associative PiOp.
   Proof.
     intros x y z.
     strip_truncations.
     unfold PiOp; cbn.
     apply ap.
     destruct n, gt.
-    refine ((concat_pp_p _ _ _)^).
+    refine (concat_pp_p _ _ _)^.
   Defined.
 
   Definition PiUnit : Pi.
@@ -46,7 +46,7 @@ Section HomotopyGroups.
     exact idpath.
   Defined.
 
-  Definition PiOp_leftId : forall x, PiOp PiUnit x = x.
+  Global Instance PiOp_leftId : LeftIdentity PiOp PiUnit.
   Proof.
     intro x.
     strip_truncations.
@@ -56,7 +56,7 @@ Section HomotopyGroups.
     apply concat_1p.
   Defined.
 
-  Definition PiOp_rightId : forall x, PiOp x PiUnit = x.
+  Global Instance PiOp_rightId : RightIdentity PiOp PiUnit.
   Proof.
     intro x.
     strip_truncations.
@@ -75,7 +75,7 @@ Section HomotopyGroups.
     exact a^.
   Defined.
 
-  Definition PiOp_leftInv : forall x, PiOp (PiInverse x) x = PiUnit.
+  Global Instance PiOp_leftInv : LeftInverse PiOp PiInverse PiUnit.
   Proof.
     intro x.
     strip_truncations.
@@ -85,7 +85,7 @@ Section HomotopyGroups.
     apply concat_Vp.
   Defined.
 
-  Definition PiOp_rightInv : forall x, PiOp x (PiInverse x) = PiUnit.
+  Global Instance PiOp_rightInv : RightInverse PiOp PiInverse PiUnit.
   Proof.
     intro x.
     strip_truncations.
@@ -97,13 +97,7 @@ Section HomotopyGroups.
 
   Global Instance pi_is_Group : @Group Pi PiOp PiUnit PiInverse.
   Proof.
-    repeat split.
-    - exact _.
-    - exact PiOp_assoc.
-    - exact PiOp_leftId.
-    - exact PiOp_rightId.
-    - exact PiOp_leftInv.
-    - exact PiOp_rightInv.
+    repeat split; exact _.
   Defined.
 
 End  HomotopyGroups.
