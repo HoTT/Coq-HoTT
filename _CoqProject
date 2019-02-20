@@ -402,6 +402,8 @@ theories/Classes/implementations/list.v
 theories/Classes/implementations/bool.v
 theories/Classes/implementations/hprop_lattice.v
 theories/Classes/implementations/pointwise.v
+theories/Classes/implementations/family_prod.v
+theories/Classes/implementations/ne_list.v
 theories/Classes/interfaces/monad.v
 theories/Classes/interfaces/abstract_algebra.v
 theories/Classes/interfaces/naturals.v
