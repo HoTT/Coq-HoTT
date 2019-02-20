@@ -846,7 +846,7 @@ Proof.
 pose proof Z_ring.
 first [apply from_full_pseudo_ring_order@{UN UN UN UN UN UN UN Ularge}|
        apply from_full_pseudo_ring_order]; try apply _.
-apply apartness.strong_binary_setoid_morphism_commutative.
+srapply apartness.strong_binary_setoid_morphism_commutative.
 Qed.
 
 Goal FullPseudoSemiRingOrder Zle Zlt.

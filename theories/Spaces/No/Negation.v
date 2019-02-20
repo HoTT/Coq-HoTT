@@ -39,13 +39,13 @@ Section HasNegation.
   Context `{InSort S Empty Empty} `{InSort S Unit Empty}.
   Goal negate one = minusone.
   Proof.
-    apply path_No; apply le_lr; intros.
+    apply path_No; rel_hnf; apply le_lr; intros.
     (** Since [le_lr] only proves inequality of cuts, this would not work if [negate] didn't compute to a cut when applied to a cut. *)
     - elim l.
     - apply lt_r with r.
-      apply le_lr; apply Empty_ind.
+      rel_hnf; apply le_lr; apply Empty_ind.
     - elim l.
-    - apply lt_r with r.
+    - rel_hnf; apply lt_r with r.
       apply le_lr; apply Empty_ind.
   Qed.
 
@@ -58,7 +58,7 @@ Section HasNegation.
         negate {{ xL | xR // xcut }} =
         {{ (fun r => negate (xR r)) | (fun l => negate (xL l)) // nxcut }} }.
   Proof.
-    eexists.
+    eexists. rel_hnf.
     reflexivity.
   Defined.
 

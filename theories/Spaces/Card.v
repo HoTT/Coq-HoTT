@@ -93,10 +93,20 @@ Section contents.
 
   (** *** Properties of exponentiation *)
   Lemma exp_zero_card (a : Card) : exp_card 0 a = 1.
-  Proof. simpl_ops. reduce. symmetry. apply equiv_empty_rec. Defined.
+  Proof.
+    revert a. apply Trunc_ind;[exact _|].
+    intros a. simpl. unfold one_card,one.
+    f_ap. apply path_hset.
+    symmetry; apply equiv_empty_rec.
+  Defined.
 
   Lemma exp_card_one (a : Card) : exp_card a 1 = 1.
-  Proof. simpl_ops. reduce. symmetry. apply equiv_unit_coind. Defined.
+  Proof.
+    revert a. refine (Trunc_ind _ _).
+    intros a;simpl. unfold one,one_card.
+    f_ap. apply path_hset.
+    symmetry. apply equiv_unit_coind.
+  Defined.
 
   Lemma exp_one_card (a : Card) : exp_card 1 a = a.
   Proof. reduce. symmetry. apply equiv_unit_rec. Defined.

@@ -1016,7 +1016,8 @@ Section RaiseSort.
         {{ (fun l => No_raise (xL l)) | (fun r => No_raise (xR r)) // rxcut }} }.
   Proof.
     eexists.
-    reflexivity.
+    rel_hnf. (* required to avoid exposing the private inductive *)
+    exact idpath.
   Qed.
 
   Definition No_raise_le (x y : GenNo S)
@@ -1142,7 +1143,7 @@ Proof.
     + apply (lt_le_trans (y := No_raise y)).
       * apply No_raise_lt.
         refine (lt_ropt _ _ _ tt).
-      * apply le_lr; [ intros [] | intros r ].
+      * rel_hnf. apply le_lr; [ intros [] | intros r ].
         rewrite <- (IHR r).2.
         refine (lt_ropt _ _ _ (inr (inr r))).
     + rewrite (IHL l).2.
@@ -1155,7 +1156,7 @@ Proof.
     refine (lt_lopt _ _ _ (inr l)).
   - intros [[]|r].
     + apply (le_lt_trans (y := No_raise z)).
-      * apply le_lr; [ intros l | intros [] ].
+      * rel_hnf. apply le_lr; [ intros l | intros [] ].
         rewrite <- (IHL l).2.
         refine (lt_lopt _ _ _ (inr (inl l))).
       * apply No_raise_lt.
