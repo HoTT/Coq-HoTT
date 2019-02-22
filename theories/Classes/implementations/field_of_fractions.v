@@ -50,7 +50,7 @@ Defined.
 
 Definition equiv@{} := fun x y => num x * den y = num y * den x.
 
-Global Instance equiv_equivalence@{} : Equivalence equiv.
+Global Instance equiv_equiv_rel@{} : EquivRel equiv.
 Proof.
 split.
 - intros x. hnf. reflexivity.

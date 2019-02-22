@@ -45,7 +45,7 @@ Global Instance inject : Cast N (T N) := fun x => C x 0.
 
 Definition equiv := fun x y => pos x + neg y = pos y + neg x.
 
-Global Instance equiv_isequiv@{} : Equivalence equiv.
+Global Instance equiv_is_equiv_rel@{} : EquivRel equiv.
 Proof.
 split.
 - hnf. reflexivity.

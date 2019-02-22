@@ -1,5 +1,7 @@
 Require Export HoTT.Basics.Overture HoTT.Types.Bool HoTT.Basics.Decidable HoTT.Basics.Trunc HoTT.HIT.Truncations.
 
+Require Import HoTT.Types.Sigma HoTT.Types.Forall HoTT.Types.Record.
+
 Declare Scope mc_scope.
 Delimit Scope mc_scope with mc.
 Global Open Scope mc_scope.
@@ -258,11 +260,37 @@ Class AntiSymmetric `(R : relation A) : Type
   := antisymmetry: forall x y, R x y -> R y x -> x = y.
 Arguments antisymmetry {A} _ {AntiSymmetric} _ _ _ _.
 
-Class Equivalence `(R : relation A) : Type :=
-  { Equivalence_Reflexive :> Reflexive R ;
-    Equivalence_Symmetric :> Symmetric R ;
-    Equivalence_Transitive :> Transitive R }.
+Class EquivRel `(R : relation A) : Type := BuildEquivRel
+  { EquivRel_Reflexive :> Reflexive R ;
+    EquivRel_Symmetric :> Symmetric R ;
+    EquivRel_Transitive :> Transitive R }.
 
+Definition SigEquivRel {A:Type} (R : relation A) : Type :=
+  {_ : Reflexive R | { _ : Symmetric R | Transitive R}}.
+
+Global Instance trunc_sig_equiv_rel `{Funext} {A : Type}
+  (R : relation A) {n} `{!forall (x y : A), IsTrunc n (R x y)}
+  :  IsTrunc n (SigEquivRel R).
+Proof.
+  apply @trunc_sigma.
+  - apply trunc_forall.
+  - intros. apply @trunc_sigma; intros; apply trunc_forall.
+Defined.
+
+Lemma issig_equiv_rel {A:Type} (R : relation A)
+  : SigEquivRel R <~> EquivRel R.
+Proof.
+  unfold SigEquivRel.
+  issig (@BuildEquivRel A R) (@EquivRel_Reflexive A R)
+          (@EquivRel_Symmetric A R) (@EquivRel_Transitive A R).
+Defined.
+
+Global Instance trunc_equiv_rel `{Funext} {A : Type}
+  (R : relation A) {n} `{!forall (x y : A), IsTrunc n (R x y)}
+  : IsTrunc n (EquivRel R).
+Proof.
+  exact (trunc_equiv (SigEquivRel R) (issig_equiv_rel R)).
+Qed.
 
 Class LeftHeteroDistribute {A B C}
   (f : A -> B -> C) (g_r : B -> B -> B) (g : C -> C -> C) : Type

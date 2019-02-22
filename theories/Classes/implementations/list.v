@@ -116,3 +116,24 @@ intros l;induction l as [|x l IHl];simpl.
 - intros [Hx Hl].
   apply IHl in Hl. apply _.
 Qed.
+
+(* Copy pasted from the Coq library. *)
+Definition tl {A} (l:list A) : list A :=
+  match l with
+    | [] => nil
+    | a :: m => m
+  end.
+
+(* Modified copy from the Coq library. *)
+(** The "In list" predicate *)
+Fixpoint InList {A} (a:A) (l:list A) : Type0 :=
+  match l with
+    | [] => False
+    | b :: m => b = a |_| InList a m
+  end.
+
+Fixpoint fold_right {A} {B} (f : B -> A -> A) (x : A) (l : list B) : A :=
+  match l with
+    | nil => x
+    | cons b t => f b (fold_right f x t)
+  end.
