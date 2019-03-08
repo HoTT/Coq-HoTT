@@ -184,6 +184,13 @@ Global Existing Instance trunc_carriers_algebra.
 
 Notation IsHSetAlgebra := (IsTruncAlgebra 0).
 
+Global Instance trunc_algebra_succ {σ : Signature} (A : Algebra σ)
+  {n} `{!IsTruncAlgebra n A}
+  : IsTruncAlgebra n.+1 A | 1000.
+Proof.
+  intro; exact _.
+Qed.
+
 Module algebra_notations.
 
 (** Given [A : Algebra σ] and function symbol [u : Symbol σ], we use
