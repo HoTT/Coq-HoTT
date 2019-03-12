@@ -221,8 +221,12 @@ Arguments paths_ind [A] a P f y p.
 Scheme paths_rec := Minimality for paths Sort Type.
 Arguments paths_rec [A] a P f y p.
 
+Register idpath as core.identity.refl.
+
 (* See comment above about the tactic [induction]. *)
 Definition paths_rect := paths_ind.
+
+Register paths_rect as core.identity.ind.
 
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
@@ -233,6 +237,8 @@ Proof. rewrite <- H. exact X. Defined.
 
 Lemma paths_rew_r A a y P (X : P y) (H : a = y :> A) : P a.
 Proof. rewrite -> H. exact X. Defined.
+
+Register paths as core.identity.type.
 
 Global Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 Arguments reflexive_paths / .
@@ -257,11 +263,17 @@ Local Open Scope path_scope.
 Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
   := match p with idpath => idpath end.
 
+Register inverse as core.identity.sym.
+
 (** Declaring this as [simpl nomatch] prevents the tactic [simpl] from expanding it out into [match] statements.  We only want [inverse] to simplify when applied to an identity path. *)
 Arguments inverse {A x y} p : simpl nomatch.
 
 Global Instance symmetric_paths {A} : Symmetric (@paths A) | 0 := @inverse A.
 Arguments symmetric_paths / .
+
+(** This allows [rewrite] to both in left-to-right and right-to left directions. *)
+Definition paths_rect_r (A : Type) (x : A) (P : A -> Type) (p : P x) (y : A) (e : paths y x) : P y :=
+  paths_rect A x (fun y e => P y) p y (inverse e).
 
 (** If we wanted to not have the constant [symmetric_paths] floating around, and wanted to resolve [inverse] directly, instead, we could play this trick, discovered by Georges Gonthier to fool Coq's restriction on [Identity Coercion]s:
 
@@ -294,6 +306,7 @@ Arguments concat {A x y z} p q : simpl nomatch.
 Global Instance transitive_paths {A} : Transitive (@paths A) | 0 := @concat A.
 Arguments transitive_paths / .
 
+Register concat as core.identity.trans.
 
 (** Note that you can use the Coq tactics [reflexivity], [transitivity], [etransitivity], and [symmetry] when working with paths; we've redefined them above to use typeclasses and to unfold the instances so you get proof terms with [concat] and [inverse]. *)
 
@@ -337,6 +350,8 @@ Definition ap {A B:Type} (f:A -> B) {x y:A} (p:x = y) : f x = f y
   := match p with idpath => idpath end.
 
 Global Arguments ap {A B}%type_scope f%function_scope {x y} p%path_scope.
+
+Register ap as core.identity.congr.
 
 (** We introduce the convention that [apKN] denotes the application of a K-path between
    functions to an N-path between elements, where a 0-path is simply a function or an
