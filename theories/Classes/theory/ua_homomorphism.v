@@ -63,29 +63,6 @@ Section is_homomorphism.
   Qed.
 End is_homomorphism.
 
-(** A family of functions [f : ∀ s, A s → B s] is an isomorphism if it is
-    a homomorphism, and for each [s : Sort σ], [f s] is an equivalence. *)
-
-Class IsIsomorphism {σ : Signature} {A B : Algebra σ}
-  (f : ∀ s, A s → B s) `{!IsHomomorphism f}
-  := isequiv_isomorphism : ∀ (s : Sort σ), IsEquiv (f s).
-
-Global Existing Instance isequiv_isomorphism.
-
-Definition equiv_isomorphism {σ : Signature} {A B : Algebra σ}
-  (f : ∀ s, A s → B s) `{IsIsomorphism σ A B f}
-  : ∀ (s : Sort σ), A s <~> B s.
-Proof.
-  intro s. rapply (BuildEquiv _ _ (f s)).
-Defined.
-
-Global Instance hprop_is_isomorphism `{Funext} {σ : Signature}
-  {A B : Algebra σ} (f : ∀ s, A s → B s) `{!IsHomomorphism f}
-  : IsHProp (IsIsomorphism f).
-Proof.
-  apply trunc_forall.
-Qed.
-
 Record Homomorphism {σ} {A B : Algebra σ} : Type := BuildHomomorphism
   { def_hom : ∀ (s : Sort σ), A s → B s
   ; is_homomorphism_hom : IsHomomorphism def_hom }.
@@ -155,6 +132,34 @@ Defined.
     [α] and [β] are uncurried algebra operations in [A] and [B]
     respectively.
 *)
+
+(** A family of functions [f : ∀ s, A s → B s] is an isomorphism if it is
+    a homomorphism, and for each [s : Sort σ], [f s] is an equivalence. *)
+
+(* We make [IsHomomorphism] an argument here, rather than a field, so
+   having both [f : Homomorphism A B] and [X : IsIsomorphism f] in
+   context does not result in having two proofs of [IsHomomorphism f]
+   in context. *)
+
+Class IsIsomorphism {σ : Signature} {A B : Algebra σ}
+  (f : ∀ s, A s → B s) `{!IsHomomorphism f}
+  := isequiv_isomorphism : ∀ (s : Sort σ), IsEquiv (f s).
+
+Global Existing Instance isequiv_isomorphism.
+
+Definition equiv_isomorphism {σ : Signature} {A B : Algebra σ}
+  (f : ∀ s, A s → B s) `{IsIsomorphism σ A B f}
+  : ∀ (s : Sort σ), A s <~> B s.
+Proof.
+  intro s. rapply (BuildEquiv _ _ (f s)).
+Defined.
+
+Global Instance hprop_is_isomorphism `{Funext} {σ : Signature}
+  {A B : Algebra σ} (f : ∀ s, A s → B s) `{!IsHomomorphism f}
+  : IsHProp (IsIsomorphism f).
+Proof.
+  apply trunc_forall.
+Qed.
 
 Section homomorphism_ap_operation.
   Context {σ : Signature} {A B : Algebra σ}.

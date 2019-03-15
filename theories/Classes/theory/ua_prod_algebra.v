@@ -170,7 +170,7 @@ Module prod_algebra_notations.
 
   Global Notation "A × B" := (BinProdAlgebra A B)
                              (at level 40, left associativity)
-                             : type_scope.
+                             : Algebra_scope.
 
 End prod_algebra_notations.
 
