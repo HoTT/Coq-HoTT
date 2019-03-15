@@ -414,6 +414,7 @@ theories/Classes/theory/rationals.v
 theories/Classes/theory/integers.v
 theories/Classes/theory/ua_homomorphism.v
 theories/Classes/theory/ua_prod_algebra.v
+theories/Classes/theory/ua_subalgebra.v
 theories/Classes/tests/ring_tac.v
 
 theories/Homotopy/HomotopyGroup.v
