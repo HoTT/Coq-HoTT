@@ -13,6 +13,8 @@ Inductive Bool : Type0 :=
   | false : Bool.
 Scheme Bool_ind := Induction for Bool Sort Type.
 Scheme Bool_rec := Minimality for Bool Sort Type.
+(* For compatibility with Coq's [induction] *)
+Definition Bool_rect := Bool_ind.
 
 Add Printing If Bool.
 
