@@ -496,7 +496,7 @@ Section Reflective_Subuniverse.
     Defined.
 
     (** Thus, [T] is in a subuniverse as soon as [to O T] admits a retraction. *)
-    Definition inO_to_O_retract (T:Type) (mu : O T -> T)
+    Definition inO_to_O_retract@{i | Oa <= i} (T:Type@{i}) (mu : O T -> T)
     : Sect (to O T) mu -> In O T.
     Proof.
       unfold Sect; intros H.
@@ -1256,8 +1256,8 @@ Section ConnectedTypes.
       simple_induction n n IHn; intros C ?;
       [ exact tt | split ].
     - intros f.
-      exists (fun _ : Unit => (isconnected_elim@{i j j k i} C f).1); intros a.
-      symmetry; apply ((isconnected_elim@{i j j k i} C f).2).
+      exists (fun _ : Unit => (isconnected_elim@{i j k j j i} C f).1); intros a.
+      symmetry; apply ((isconnected_elim@{i j k j j i} C f).2).
     - intros h k.
       refine (extendable_postcompose'@{i i j j j j l l l l} n _ _ _ _ (IHn (h tt = k tt) (inO_paths@{Ou Oa j m} _ _ _ _))).
       intros []; apply equiv_idmap.

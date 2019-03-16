@@ -159,7 +159,7 @@ Section AssumeStuff.
                               f Ha Hb.
 
     Definition graph_unsucc_equiv_edge@{} (x y : vert A)
-      : edge A x y <-> edge B (graph_unsucc_equiv_vert x) (graph_unsucc_equiv_vert y).
+      : iff@{s s s} (edge A x y) (edge B (graph_unsucc_equiv_vert x) (graph_unsucc_equiv_vert y)).
     Proof.
       pose (h := e (inl x) (inl y)).
       rewrite <- (unfunctor_sum_l_beta f Ha x) in h.
