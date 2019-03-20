@@ -399,6 +399,7 @@ theories/Classes/interfaces/canonical_names.v
 theories/Classes/interfaces/orders.v
 theories/Classes/interfaces/integers.v
 theories/Classes/interfaces/ua_algebra.v
+theories/Classes/interfaces/ua_congruence.v
 theories/Classes/theory/premetric.v
 theories/Classes/theory/int_abs.v
 theories/Classes/theory/rings.v
@@ -415,6 +416,7 @@ theories/Classes/theory/integers.v
 theories/Classes/theory/ua_homomorphism.v
 theories/Classes/theory/ua_prod_algebra.v
 theories/Classes/theory/ua_subalgebra.v
+theories/Classes/theory/ua_quotient_algebra.v
 theories/Classes/tests/ring_tac.v
 
 theories/Homotopy/HomotopyGroup.v
