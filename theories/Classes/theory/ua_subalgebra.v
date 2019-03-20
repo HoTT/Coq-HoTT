@@ -62,7 +62,7 @@ Section subalgebra.
     {σ : Signature} (A : Algebra σ)
     (P : ∀ s, A s → hProp) `{!IsClosedUnderOps A P}.
 
-  (** The subalgebra carriers is the family of subsets defined by [P]. *)
+(** The subalgebra carriers is the family of subtypes defined by [P]. *)
 
   Definition carriers_subalgebra : Carriers σ
     := λ (s : Sort σ), {x | P s x}.
@@ -143,27 +143,6 @@ Section hom_inc_subalgebra.
     - intro x. reflexivity.
     - intro x. by apply path_sigma_hprop.
   Qed.
-
-  Lemma path_ap_operation_inc_subalgebra_closed_under_op
-    {w : SymbolType σ} (a : FamilyProd (A&P) (dom_symboltype w))
-    (α : Operation A w) (C : ClosedUnderOp A P α)
-    : ap_operation α (map_family_prod hom_inc_subalgebra a)
-      = hom_inc_subalgebra (cod_symboltype w)
-          (ap_operation (op_subalgebra A P α C) a).
-  Proof.
-    induction w.
-    - reflexivity.
-    - apply IHw.
-  Defined.
-
-  Lemma path_ap_operation_inc_subalgebra (u : Symbol σ)
-    (a : FamilyProd (A&P) (dom_symboltype (σ u)))
-    : ap_operation (u^^A) (map_family_prod hom_inc_subalgebra a)
-      = hom_inc_subalgebra (cod_symboltype (σ u))
-          (ap_operation (u ^^ A&P) a).
-  Proof.
-    apply path_ap_operation_inc_subalgebra_closed_under_op.
-  Defined.
 End hom_inc_subalgebra.
 
 (** The next section provides paths between subalgebras. These paths
@@ -172,23 +151,17 @@ End hom_inc_subalgebra.
 
 Section path_subalgebra.
   Context
-    `{Univalence} {σ : Signature} (A : Algebra σ)
+    {σ : Signature} (A : Algebra σ)
     (P : ∀ s, A s → hProp) {CP : IsClosedUnderOps A P}
     (Q : ∀ s, A s → hProp) {CQ : IsClosedUnderOps A Q}.
 
-  Lemma path_subalgebra_closed_under_ops (p : P = Q) (q : p#CP = CQ)
+  Lemma path_subalgebra `{Funext} (p : P = Q) : A&P = A&Q.
+  Proof.
+    by destruct p, (path_ishprop CP CQ).
+  Defined.
+
+  Lemma path_subalgebra_iff `{Univalence} (R : ∀ s x, P s x <-> Q s x)
     : A&P = A&Q.
-  Proof.
-    by path_induction.
-  Defined.
-
-  Lemma path_subalgebra (p : P = Q) : A&P = A&Q.
-  Proof.
-    apply (path_subalgebra_closed_under_ops p).
-    apply path_ishprop.
-  Defined.
-
-  Lemma path_subalgebra_iff (R : ∀ s x, P s x <-> Q s x) : A&P = A&Q.
   Proof.
     apply path_subalgebra.
     funext s x.
