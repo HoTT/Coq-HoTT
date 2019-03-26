@@ -32,3 +32,7 @@ Ltac easy :=
   (use_hyps; do_ccl) || fail "Cannot solve this goal".
 
 Tactic Notation "now" tactic(t) := t; easy.
+
+Create HintDb rewrite discriminated.
+Hint Variables Opaque : rewrite.
+Create HintDb typeclass_instances discriminated.
