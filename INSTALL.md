@@ -30,6 +30,7 @@ minimal fuss, you should try your luck by following these instructions:
      (http://opam.ocamlpro.com/) and go from there.
 
          brew install opam
+         opam init
          brew update; brew upgrade objective-caml
 
    * MS Windows: we recommend that you install the 32-bit version of
