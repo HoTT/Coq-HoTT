@@ -1,17 +1,3 @@
-# INSTALLATION via OPAM
-
-After installing Coq via opam [1]. One can install our version of Coq by:
-```
-   opam install coq.dev
-```
-
-However, one still needs to install the library via git to contribute.
-Opam support on windows is experimental.
-[1]: https://coq.inria.fr/opam/www/using.html
-
-We will be compatible with [Coq 8.10](https://github.com/coq/coq/releases/tag/V8.10.0), so binary packages can be used once it is released.  Until then, the development version of Coq must be installed. Either way, paths still need to be set manually.
-
-
 # QUICK INSTALLATION INSTRUCTIONS
 
 If you are not a Coq expert and just want to get the HoTT library to work with
