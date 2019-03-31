@@ -31,7 +31,12 @@ minimal fuss, you should try your luck by following these instructions:
 
          brew install opam
          opam init
+     
+     After that, you'll need to install a number of packages through brew
+     and opam
+     
          brew update; brew upgrade objective-caml
+         opam install ocamlfind num
 
    * MS Windows: we recommend that you install the 32-bit version of
      cygwin (installer at http://www.cygwin.com/setup-x86.exe) and,
