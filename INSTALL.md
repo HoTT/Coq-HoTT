@@ -27,16 +27,21 @@ minimal fuss, you should try your luck by following these instructions:
      which installs the dependencies automatically.
 
    * OSX: we recommend that you install the Opam package manager for Ocaml
-     (http://opam.ocamlpro.com/) and go from there.
+     (http://opam.ocamlpro.com/).
 
          brew install opam
          opam init
      
-     After that, you'll need to install a number of packages through brew
-     and opam
+     After that, you'll need to install a number of packages through `brew`
+     and `opam`
      
-         brew update; brew upgrade objective-caml
+         brew update
+         brew install objective-caml pkgconfig automake autoconf
+         brew install libffi libxml2
+         brew install lablgtk gtksourceview
          opam install ocamlfind num
+         export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig:/usr/local/opt/libxml2/lib/pkgconfig:/usr/local/opt/gtksourceview/lib/pkgconfig"
+         opam install conf-gtksourceview lablgtk
 
    * MS Windows: we recommend that you install the 32-bit version of
      cygwin (installer at http://www.cygwin.com/setup-x86.exe) and,
