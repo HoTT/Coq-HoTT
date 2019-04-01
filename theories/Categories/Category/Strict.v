@@ -16,8 +16,8 @@ Notation IsStrictCategory C := (IsHSet (object C)).
 
 Record StrictCategory :=
   {
-    precategory_strict :> PreCategory;
-    isstrict_StrictCategory :> IsStrictCategory precategory_strict
+    category_strict :> Category;
+    isstrict_StrictCategory :> IsStrictCategory category_strict
   }.
 
 Global Existing Instance isstrict_StrictCategory.

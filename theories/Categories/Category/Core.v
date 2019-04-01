@@ -1,4 +1,4 @@
-(** * Definition of a [PreCategory] *)
+(** * Definition of a [Category] *)
 Require Export Overture Basics.Notations.
 
 Set Universe Polymorphism.
@@ -15,6 +15,9 @@ Delimit Scope category_scope with category.
 Delimit Scope object_scope with object.
 
 Local Open Scope morphism_scope.
+
+(** We will adopt the convention category - univalent category
+    rather than precategory - category used in the HoTT book *)
 
 (** Quoting the HoTT Book: *)
 (** Definition 9.1.1. A precategory [A] consists of the following.
@@ -42,29 +45,23 @@ Local Open Scope morphism_scope.
     paths [p], we ask for the symmetrized version of the associativity
     law, so we can swap them when we take the dual. *)
 
-Record PreCategory :=
-  Build_PreCategory' {
+Record Category :=
+  Build_Category' {
       object :> Type;
       morphism : object -> object -> Type;
 
       identity : forall x, morphism x x;
       compose : forall s d d',
-                  morphism d d'
-                  -> morphism s d
-                  -> morphism s d'
-                              where "f 'o' g" := (compose f g);
+        morphism d d' -> morphism s d -> morphism s d'
+          where "f 'o' g" := (compose f g);
 
       associativity : forall x1 x2 x3 x4
-                             (m1 : morphism x1 x2)
-                             (m2 : morphism x2 x3)
-                             (m3 : morphism x3 x4),
-                        (m3 o m2) o m1 = m3 o (m2 o m1);
+        (m1 : morphism x1 x2) (m2 : morphism x2 x3) (m3 : morphism x3 x4),
+          (m3 o m2) o m1 = m3 o (m2 o m1);
       (** Ask for the symmetrized version of [associativity], so that [(Cᵒᵖ)ᵒᵖ] and [C] are equal without [Funext] *)
       associativity_sym : forall x1 x2 x3 x4
-                                 (m1 : morphism x1 x2)
-                                 (m2 : morphism x2 x3)
-                                 (m3 : morphism x3 x4),
-                            m3 o (m2 o m1) = (m3 o m2) o m1;
+        (m1 : morphism x1 x2) (m2 : morphism x2 x3) (m3 : morphism x3 x4),
+          m3 o (m2 o m1) = (m3 o m2) o m1;
 
       left_identity : forall a b (f : morphism a b), identity b o f = f;
       right_identity : forall a b (f : morphism a b), f o identity a = f;
@@ -74,7 +71,7 @@ Record PreCategory :=
       trunc_morphism : forall s d, IsHSet (morphism s d)
     }.
 
-Bind Scope category_scope with PreCategory.
+Bind Scope category_scope with Category.
 Bind Scope object_scope with object.
 Bind Scope morphism_scope with morphism.
 
@@ -90,12 +87,12 @@ Local Infix "o" := compose : morphism_scope.
 Local Notation "x --> y" := (morphism _ x y) : type_scope.
 Local Notation "1" := (identity _) : morphism_scope.
 
-(** Define a convenience wrapper for building a precategory without
+(** Define a convenience wrapper for building a category without
     specifying the redundant proofs. *)
-Definition Build_PreCategory
+Definition Build_Category
            object morphism identity compose
            associativity left_identity right_identity
-  := @Build_PreCategory'
+  := @Build_Category'
        object
        morphism
        identity
@@ -119,7 +116,7 @@ Hint Rewrite @left_identity @right_identity : morphism.
 
 (** ** Simple laws about the identity morphism *)
 Section identity_unique.
-  Variable C : PreCategory.
+  Variable C : Category.
 
   (** The identity morphism is unique. *)
   Lemma identity_unique (id0 id1 : forall x, morphism C x x)

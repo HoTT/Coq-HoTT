@@ -8,7 +8,7 @@ Set Asymmetric Patterns.
 
 (** ** Definition of [+] for categories *)
 Section internals.
-  Variables C D : PreCategory.
+  Variables C D : Category.
 
   Definition sum_morphism (s d : C + D) : Type
     := match s, d with
@@ -40,9 +40,9 @@ Section internals.
   Global Arguments sum_compose [_ _ _] _ _ / .
 End internals.
 
-Definition sum (C D : PreCategory) : PreCategory.
+Definition sum (C D : Category) : Category.
 Proof.
-  refine (@Build_PreCategory
+  refine (@Build_Category
             (C + D)%type
             (sum_morphism C D)
             (sum_identity C D)

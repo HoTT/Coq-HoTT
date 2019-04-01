@@ -14,10 +14,10 @@ Local Open Scope morphism_scope.
 Section pi.
   Context `{Funext}.
   Variable A : Type.
-  Variable P : A -> PreCategory.
+  Variable P : A -> Category.
 
-  Definition pi : PreCategory.
-    refine (@Build_PreCategory
+  Definition pi : Category.
+    refine (@Build_Category
               (forall a : A, P a)
               (fun s d => forall a : A, morphism (P a) (s a) (d a))
               (fun x => fun a => identity (x a))

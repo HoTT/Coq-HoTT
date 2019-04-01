@@ -12,7 +12,7 @@ Delimit Scope functor_scope with functor.
 Local Open Scope morphism_scope.
 
 Section Functor.
-  Variables C D : PreCategory.
+  Variables C D : Category.
 
   (** Quoting from the lecture notes for MIT's 18.705, Commutative Algebra:
 
@@ -31,14 +31,12 @@ Section Functor.
   Record Functor :=
     {
       object_of :> C -> D;
-      morphism_of : forall s d, morphism C s d
-                                -> morphism D (object_of s) (object_of d);
-      composition_of : forall s d d'
-                              (m1 : morphism C s d) (m2: morphism C d d'),
-                         morphism_of _ _ (m2 o m1)
-                         = (morphism_of _ _ m2) o (morphism_of _ _ m1);
-      identity_of : forall x, morphism_of _ _ (identity x)
-                              = identity (object_of x)
+      morphism_of : forall s d,
+        morphism C s d -> morphism D (object_of s) (object_of d);
+      composition_of : forall s d d' (m1 : morphism C s d) (m2: morphism C d d'),
+        morphism_of _ _ (m2 o m1) = (morphism_of _ _ m2) o (morphism_of _ _ m1);
+      identity_of : forall x,
+        morphism_of _ _ (identity x) = identity (object_of x)
     }.
 End Functor.
 

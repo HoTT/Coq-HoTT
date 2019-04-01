@@ -12,7 +12,7 @@ Local Notation sigT_type := sigT.
 (** We can generalize the notion of [sigT] to categories.  This is, essentially, a type-theoretic perspecitive on the Grothendieck construction. *)
 
 Section sigT_obj_mor.
-  Variable A : PreCategory.
+  Variable A : Category.
   Variable Pobj : A -> Type.
 
   Local Notation obj := (sigT Pobj).
@@ -44,9 +44,9 @@ Section sigT_obj_mor.
       compose f (identity a) = f.
 
   (** ** Definition of a [sigT]-precategory *)
-  Definition sigT : PreCategory.
+  Definition sigT : Category.
   Proof.
-    refine (@Build_PreCategory
+    refine (@Build_Category
               obj
               (fun s d => mor s d)
               (fun x => identity x)
@@ -72,7 +72,7 @@ Arguments pr1 {A Pobj Pmor HPmor Pidentity Pcompose P_associativity P_left_ident
 
 (** ** Variant of [sigT]-precategory when we are taking a subset of morphisms *)
 Section sigT_obj_mor_hProp.
-  Variable A : PreCategory.
+  Variable A : Category.
   Variable Pobj : A -> Type.
 
   Local Notation obj := (sigT_type Pobj).
@@ -126,7 +126,7 @@ Section sigT_obj_mor_hProp.
   Defined.
 
   (** *** Definition of [sig]-precategory *)
-  Definition sig : PreCategory
+  Definition sig : Category
     := Eval cbv delta [P_associativity P_left_identity P_right_identity]
       in @sigT A Pobj Pmor _ Pidentity Pcompose P_associativity P_left_identity P_right_identity.
 

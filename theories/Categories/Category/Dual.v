@@ -11,8 +11,8 @@ Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 
 (** ** Definition of [Cᵒᵖ] *)
-Definition opposite (C : PreCategory) : PreCategory
-  := @Build_PreCategory'
+Definition opposite (C : Category) : Category
+  := @Build_Category'
        C
        (fun s d => morphism C d s)
        (identity (C := C))

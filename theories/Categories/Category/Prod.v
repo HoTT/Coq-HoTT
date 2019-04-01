@@ -12,10 +12,10 @@ Local Open Scope morphism_scope.
 
 (** ** Definition of [*] for categories *)
 Section prod.
-  Variables C D : PreCategory.
+  Variables C D : Category.
 
-  Definition prod : PreCategory.
-    refine (@Build_PreCategory
+  Definition prod : Category.
+    refine (@Build_Category
               (C * D)%type
               (fun s d => (morphism C (fst s) (fst d)
                            * morphism D (snd s) (snd d))%type)
