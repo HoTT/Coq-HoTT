@@ -18,14 +18,14 @@ Section sub_pre_cat.
       anything, because it's probably the case that [IsHSet (Functor C
       C) → IsStrictCategory C]. *)
 
-  Variable P : PreCategory -> Type.
+  Variable P : Category -> Type.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
   (** There is a precategory of precategories which satisfy the proposition P *)
 
-  Definition sub_pre_cat : PreCategory
-    := @Build_PreCategory
-         { C : PreCategory | P C }
+  Definition sub_pre_cat : Category
+    := @Build_Category
+         { C : Category | P C }
          (fun C D => Functor C.1 D.1)
          (fun C => identity C.1)
          (fun _ _ _ F G => F o G)
@@ -37,7 +37,7 @@ End sub_pre_cat.
 
 Arguments sub_pre_cat {_} P {_}, {_} P _.
 
-Definition strict_cat `{Funext} : PreCategory
+Definition strict_cat `{Funext} : Category
   := sub_pre_cat (fun C => IsStrictCategory C).
 
 (*Definition Cat `{Funext} : PreCategory.
@@ -48,7 +48,7 @@ Definition strict_cat `{Funext} : PreCategory
 Section objects.
   Context `{Funext}.
 
-  Variable P : PreCategory -> Type.
+  Variable P : Category -> Type.
   Context `{forall C, IsHProp (P C)}.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 

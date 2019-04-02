@@ -18,12 +18,12 @@ Local Open Scope morphism_scope.
 Local Open Scope functor_scope.
 
 Section sigT_obj.
-  Variable A : Category.
+  Variable A : PreCategory.
   Variable Pobj : A -> Type.
 
   (** ** Definition of [sigT_obj]-precategory *)
-  Definition sigT_obj : Category
-    := @Build_Category
+  Definition sigT_obj : PreCategory
+    := @Build_PreCategory
          (sigT_type Pobj)
          (fun s d => morphism A (pr1_type s) (pr1_type d))
          (fun x => @identity A (pr1_type x))
@@ -42,7 +42,7 @@ Section sigT_obj.
          (fun _ _ _ _ _ => idpath)
          (fun _ => idpath).
 
-  Definition sigT_obj_as_sigT : Category
+  Definition sigT_obj_as_sigT : PreCategory
     := @sig A Pobj (fun _ _ _ => Unit) _ (fun _ => tt) (fun _ _ _ _ _ _ _ => tt).
 
   Definition sigT_functor_obj : Functor sigT_obj_as_sigT sigT_obj

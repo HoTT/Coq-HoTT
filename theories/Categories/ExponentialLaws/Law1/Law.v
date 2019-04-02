@@ -18,7 +18,7 @@ Section law1.
   Local Notation "0" := zero : category_scope.
   Local Notation "1" := one : category_scope.
 
-  Variable C : PreCategory.
+  Variable C : Category.
 
   Definition helper (c : Functor 1 C)
   : Functors.from_terminal C (c (center _)) = c.

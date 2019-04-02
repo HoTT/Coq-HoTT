@@ -23,7 +23,7 @@ Local Open Scope natural_transformation_scope.
 Section identity.
   Context `{Funext}.
 
-  Variable P : PreCategory -> Type.
+  Variable P : Category -> Type.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
   Local Notation cat := (@sub_pre_cat _ P HF).
@@ -41,7 +41,7 @@ Section identity.
       ).
 
   Lemma identity_associativity
-        (w x y z : PreCategory) (f : Functor w x)
+        (w x y z : Category) (f : Functor w x)
         (g : Functor x y) (h : Functor y z)
   : associator_1 h g f o (1 oR f o 1) =
     h oL 1 o (1 o @morphism_isomorphic _ _ _ (idtoiso (w -> z) (ap idmap (Functor.Composition.Laws.associativity f g h)))).
@@ -50,7 +50,7 @@ Section identity.
   Defined.
 
   Lemma identity_left_identity
-        (x y : PreCategory) (f : Functor x y)
+        (x y : Category) (f : Functor x y)
   : 1 oR f o 1 =
     (left_identity_natural_transformation_2 f)
       o @morphism_isomorphic _ _ _ (idtoiso (x -> y) (ap idmap (Functor.Composition.Laws.left_identity f))).
@@ -59,7 +59,7 @@ Section identity.
   Defined.
 
   Lemma identity_right_identity
-        (x y : PreCategory) (f : Functor x y)
+        (x y : Category) (f : Functor x y)
   : f oL 1 o 1 =
     (right_identity_natural_transformation_2 f)
       o @morphism_isomorphic _ _ _ (idtoiso (x -> y) (ap idmap (Functor.Composition.Laws.right_identity f))).

@@ -18,7 +18,7 @@ Set Asymmetric Patterns.
 Section pseudofunctors.
   (** ** Constant functor from any terminal category *)
   Definition from_terminal `{Funext} `{@IsTerminalCategory one Hone Hone'}
-             (c : PreCategory)
+             (c : Category)
   : Pseudofunctor one.
   Proof.
     refine (Build_Pseudofunctor

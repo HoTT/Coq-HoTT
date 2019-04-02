@@ -25,7 +25,7 @@ Module Export Core.
         [Γ -> Δ], which we will use to make simplicial sets without
         having to worry about "degneracies". *)
 
-    Definition semisimplex_category : PreCategory
+    Definition semisimplex_category : Category
       := wide simplex_category
               (@IsMonomorphism _)
               _ _ _.
@@ -33,7 +33,7 @@ Module Export Core.
     Definition semisimplicial_inclusion_functor : semisimplex_category -> simplex_category
       := pr1_mor.
 
-    Definition semisimplicial_category (C : PreCategory) : PreCategory
+    Definition semisimplicial_category (C : Category) : Category
       := semisimplex_category^op -> C.
 
     Definition semisimplicial_set := semisimplicial_category set_cat.

@@ -23,7 +23,7 @@ Local Open Scope category_scope.
 (** ** Morphisms in [(A → C)ᵒᵖ × (B → C)] from [(s₀, s₁)] to [(d₀, d₁)] induce functors [(s₀ / s₁) → (d₀ / d₁)] *)
 Section comma_category_induced_functor.
   Context `{Funext}.
-  Variables A B C : PreCategory.
+  Variables A B C : Category.
 
   Definition comma_category_induced_functor_object_of s d
              (m : morphism ((A -> C)^op * (B -> C)) s d)
@@ -107,10 +107,10 @@ End comma_category_induced_functor.
 (** ** Morphisms in [C] from [a] to [a'] induce functors [(C / a) → (C / a')] *)
 Section slice_category_induced_functor.
   Context `{Funext}.
-  Variable C : PreCategory.
+  Variable C : Category.
 
   Section slice_coslice.
-    Variable D : PreCategory.
+    Variable D : Category.
 
     (** TODO(JasonGross): See if this can be recast as an exponential law functor about how [1 → Cat] is isomorphic to [Cat], or something *)
     Definition slice_category_induced_functor_nt s d (m : morphism D s d)
@@ -168,7 +168,7 @@ End slice_category_induced_functor.
 (** ** Functors [A → A'] functors [(cat / A) → (cat / A')] *)
 Section cat_over_induced_functor.
   Context `{Funext}.
-  Variable P : PreCategory -> Type.
+  Variable P : Category -> Type.
   Context `{H0 : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
   Local Notation cat := (@sub_pre_cat _ P H0).

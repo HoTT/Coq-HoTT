@@ -12,7 +12,7 @@ Require NaturalTransformation.
 Require FunctorCategory.
 (** ** Groupoids *)
 Require GroupoidCategory.
-(** ** Precategory of Groupoids *)
+(** ** Category of Groupoids *)
 Require CategoryOfGroupoids.
 (** ** Discrete Categories *)
 Require DiscreteCategory.
@@ -68,10 +68,10 @@ Require DependentProduct.
 Require Yoneda.
 (** ** The Structure Identity Principle *)
 Require Structure.
-(** ** Fundamental Pregroupoids *)
-Require FundamentalPreGroupoidCategory.
-(** ** Homotopy PreCategory *)
-Require HomotopyPreCategory.
+(** ** Fundamental groupoids *)
+Require FundamentalGroupoid.
+(** ** Homotopy Category *)
+Require HomotopyCategory.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Local Set Warnings Append "-notation-overridden".
@@ -107,8 +107,8 @@ Include CategoryOfSections.Core.
 Include DependentProduct.
 Include Yoneda.
 Include Structure.Core.
-Include FundamentalPreGroupoidCategory.
-Include HomotopyPreCategory.
+Include FundamentalGroupoid.
+Include HomotopyCategory.
 
 Require Export Categories.Notations.
 

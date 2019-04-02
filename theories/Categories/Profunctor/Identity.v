@@ -13,7 +13,7 @@ Section identity.
 
       In particular the identity profunctor [Id : C ⇸ C] is represented by the identity functor and hence is given by the hom-functor [C(−,−) : Cᵒᵖ × C → Set]. *)
 
-  Definition identity `{Funext} (C : PreCategory) : C -|-> C
+  Definition identity `{Funext} (C : Category) : C -|-> C
     := hom_functor C.
 End identity.
 

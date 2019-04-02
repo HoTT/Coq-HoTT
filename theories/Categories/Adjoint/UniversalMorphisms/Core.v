@@ -20,7 +20,7 @@ Local Open Scope morphism_scope.
 Section adjunction_universal.
   (** ** [F ⊣ G] gives an initial object of [(Y / G)] for all [Y : C] *)
   Section initial.
-    Variables C D : PreCategory.
+    Variables C D : Category.
     Variable F : Functor C D.
     Variable G : Functor D C.
     Variable A : F -| G.
@@ -50,7 +50,7 @@ Section adjunction_universal.
 
   (** ** [F ⊣ G] gives a terminal object of [(F / X)] for all [X : D] *)
   Section terminal.
-    Variables C D : PreCategory.
+    Variables C D : Category.
     Variable F : Functor C D.
     Variable G : Functor D C.
     Variable A : F -| G.
@@ -75,7 +75,7 @@ End adjunction_universal.
 Section adjunction_from_universal.
   (** ** an initial object of [(Y / G)] for all [Y : C] gives a left adjoint to [G] *)
   Section initial.
-    Variables C D : PreCategory.
+    Variables C D : Category.
 
     Variable G : Functor D C.
     Context `(HM : forall Y, @IsInitialMorphism _ _ Y G (M Y)).
@@ -136,7 +136,7 @@ Section adjunction_from_universal.
 
   (** ** a terminal object of [(F / X)] for all [X : D] gives a right adjoint to [F] *)
   Section terminal.
-    Variables C D : PreCategory.
+    Variables C D : Category.
 
     Variable F : Functor C D.
     Context `(HM : forall X, @IsTerminalMorphism _ _ F X (M X)).

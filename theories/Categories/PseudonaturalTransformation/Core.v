@@ -67,16 +67,16 @@ Module PseudonaturalTransformationParts.
   Section PseudonaturalTransformation.
     Context `{Funext}.
 
-    Variable X : PreCategory.
+    Variable X : Category.
 
     Variables F G : Pseudofunctor X.
 
 
-    Definition A : PreCategory
+    Definition A : Category
       := (forall x : X, F x -> G x)%category.
-    Definition B : PreCategory
+    Definition B : Category
       := (forall x y (m : morphism X x y), F x -> G y)%category.
-    Definition C : PreCategory
+    Definition C : Category
       := (forall x y z (m1 : morphism X y z) (m2 : morphism X x y), F x -> G z)%category.
 
     Definition a_part := Eval simpl in object A.
@@ -197,7 +197,7 @@ Print PseudonaturalTransformationParts.b_id_part.
 Print PseudonaturalTransformationParts.c_part.
 >> *)
 
-Record PseudonaturalTransformation `{Funext} (X : PreCategory)
+Record PseudonaturalTransformation `{Funext} (X : Category)
        (F G : Pseudofunctor X) :=
   { p_components_of
       :> forall a : X, Functor (F a) (G a);

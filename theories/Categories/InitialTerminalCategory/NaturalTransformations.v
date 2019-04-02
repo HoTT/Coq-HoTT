@@ -9,7 +9,7 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Section NaturalTransformations.
-  Variable C : PreCategory.
+  Variable C : Category.
 
   Definition from_initial
              `{@IsInitialCategory zero} (F G : Functor zero C)

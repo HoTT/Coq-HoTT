@@ -14,7 +14,7 @@ Local Open Scope morphism_scope.
 
 Section Grothendieck.
   Context `{Funext}.
-  Context {C : PreCategory}
+  Context {C : Category}
           {F : Functor C set_cat}.
 
   Definition isequiv_sigma_category_isomorphism {s d : category F}

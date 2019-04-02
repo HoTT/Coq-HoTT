@@ -16,7 +16,7 @@ Local Open Scope functor_scope.
 (** ** [(C₁ × C₂ → D) ≅ (C₁ → (C₂ → D))] *)
 Section Law4.
   Context `{Funext}.
-  Variables C1 C2 D : PreCategory.
+  Variables C1 C2 D : Category.
 
   Lemma helper1 c
   : functor C1 C2 D (inverse C1 C2 D c) = c.

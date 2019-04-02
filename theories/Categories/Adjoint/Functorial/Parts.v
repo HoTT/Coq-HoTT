@@ -18,9 +18,9 @@ Section left.
   (** ** action on morphisms of the construction of a left adjoint to [G] *)
   (** *** functoriality on [C], [D], and [G] *)
   Section also_categories.
-    Variables C C' : PreCategory.
+    Variables C C' : Category.
     Variable CF : Functor C C'.
-    Variables D D' : PreCategory.
+    Variables D D' : Category.
     Variable DF : Functor D D'.
 
     Variable G : Functor D C.
@@ -48,7 +48,7 @@ Section left.
 
   (** *** functoriality in [G] *)
   Section only_functor.
-    Variables C D : PreCategory.
+    Variables C D : Category.
 
     Variable G : Functor D C.
     Variable F : Functor C D.

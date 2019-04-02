@@ -14,7 +14,7 @@ Local Open Scope morphism_scope.
 (** ** Definition of [hom : Cᵒᵖ × C → Set] as a functor *)
 Section hom_functor.
   Context `{Funext}.
-  Variable C : PreCategory.
+  Variable C : Category.
 
   Local Notation obj_of c'c :=
     (BuildhSet
@@ -46,7 +46,7 @@ End hom_functor.
 
 Section covariant_contravariant.
   Context `{Funext}.
-  Variable C : PreCategory.
+  Variable C : Category.
 
   Local Open Scope functor_scope.
 

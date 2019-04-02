@@ -27,11 +27,11 @@ Local Open Scope natural_transformation_scope.
 Section AdjointPointwise.
   Context `{Funext}.
 
-  Variables C D : PreCategory.
+  Variables C D : Category.
 
   (** ** [F ⊣ G] → [E^F ⊣ E^G] *)
   Section l.
-    Variable E : PreCategory.
+    Variable E : Category.
 
     Variable F : Functor C D.
     Variable G : Functor D C.
@@ -114,7 +114,7 @@ Section AdjointPointwise.
 
     Variable A : F -| G.
 
-    Variable E : PreCategory.
+    Variable E : Category.
 
     Definition unit_r
     : NaturalTransformation (identity (C -> E))

@@ -6,7 +6,7 @@
 
 (*  IMPORTANT NOTE FOR THE HoTT DEVELOPERS:
 
-    This files is processed automagically by the etc/Book.py script. The
+(*     This files is processed automagically by the etc/Book.py script. The *)
     script parses the file according to the markers present in it (the
     comment lines with many = signs followed by a LaTeX label). It
     reorders the entries according to entry number X.Y.Z and inserts
@@ -1467,7 +1467,7 @@ Definition Book_7_6_2 := @HoTT.Fibrations.equiv_istruncmap_ap.
 (* ================================================== ct:precategory *)
 (** Definition 9.1.1 *)
 
-Definition Book_9_1_1 := @HoTT.Categories.Category.Core.PreCategory.
+Definition Book_9_1_1 := @HoTT.Categories.Category.Core.Category.
 
 (* ================================================== ct:isomorphism *)
 (** Definition 9.1.2 *)
@@ -1492,7 +1492,7 @@ Definition Book_9_1_5 := @HoTT.Categories.SetCategory.Core.set_cat.
 (* ================================================== ct:category *)
 (** Definition 9.1.6 *)
 
-Definition Book_9_1_6 C := (HoTT.Categories.Category.Univalent.IsCategory C).
+Definition Book_9_1_6 C := (HoTT.Categories.Category.Univalent.IsUnivalentCategory C).
 
 (* ================================================== ct:eg:set *)
 (** Example 9.1.7 *)
@@ -1521,7 +1521,7 @@ Definition Book_9_1_8 := @HoTT.Categories.Category.Univalent.trunc_category.
 (* ================================================== ct:gaunt *)
 (** Example 9.1.15 *)
 
-Definition Book_9_1_15 A `{H : HoTT.Categories.Category.Univalent.IsCategory A}
+Definition Book_9_1_15 A `{H : HoTT.Categories.Category.Univalent.IsUnivalentCategory A}
 : IsHSet (HoTT.Categories.Category.Core.object A)
   <-> (forall a b, IsHProp (@HoTT.Categories.Category.Morphisms.Isomorphic A a b)).
 Proof.
@@ -1544,12 +1544,12 @@ Definition Book_9_1_16 := @HoTT.Categories.GroupoidCategory.Core.groupoid_catego
 (* ================================================== ct:fundgpd *)
 (** Example 9.1.17 *)
 
-Definition Book_9_1_17 := @HoTT.Categories.FundamentalPreGroupoidCategory.fundamental_pregroupoid_category.
+Definition Book_9_1_17 := @HoTT.Categories.FundamentalGroupoid.fundamental_groupoid.
 
 (* ================================================== ct:hoprecat *)
 (** Example 9.1.18 *)
 
-Definition Book_9_1_18 := @HoTT.Categories.HomotopyPreCategory.homotopy_precategory.
+Definition Book_9_1_18 := @HoTT.Categories.HomotopyCategory.homotopy_precategory.
 
 (* ================================================== ct:rel *)
 (** Example 9.1.19 *)

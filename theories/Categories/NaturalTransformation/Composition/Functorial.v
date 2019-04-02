@@ -11,7 +11,7 @@ Local Open Scope functor_scope.
 
 Section functorial_composition.
   Context `{Funext}.
-  Variables C D E : PreCategory.
+  Variables C D E : Category.
 
   Local Open Scope natural_transformation_scope.
 

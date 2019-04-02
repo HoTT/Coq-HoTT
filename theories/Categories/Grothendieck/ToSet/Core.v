@@ -32,7 +32,7 @@ Section Grothendieck.
      x2)] is the set of morphisms [f : c1 → c2] in [C] such that
      [F₁ f x1 = x2].  *)
 
-  Variable C : PreCategory.
+  Variable C : Category.
   Variable F : Functor C set_cat.
 
   Record Pair :=
@@ -90,9 +90,9 @@ Section Grothendieck.
   Global Arguments compose _ _ _ _ _ / .
 
   (** ** Category of elements *)
-  Definition category : PreCategory.
+  Definition category : Category.
   Proof.
-    refine (@Build_PreCategory
+    refine (@Build_Category
               Pair
               (fun s d => morphism s d)
               identity

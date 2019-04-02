@@ -15,10 +15,9 @@ Local Notation pair_type := pair.
 Local Open Scope morphism_scope.
 Local Open Scope functor_scope.
 
-(** ** First and second projections from a product precategory *)
+(** ** First and second projections from a product category *)
 Section proj.
-  Context {C : PreCategory}.
-  Context {D : PreCategory}.
+  Context {C D : Category}.
 
   Definition fst : Functor (C * D) C
     := Build_Functor (C * D) C
@@ -37,7 +36,7 @@ End proj.
 
 (** ** Product of two functors from the same domain *)
 Section prod.
-  Variables C D D' : PreCategory.
+  Variables C D D' : Category.
 
   Definition prod (F : Functor C D) (F' : Functor C D')
   : Functor C (D * D')
@@ -54,7 +53,7 @@ Local Infix "*" := prod : functor_scope.
 
 (** ** Pairing of two functors *)
 Section pair.
-  Variables C D C' D' : PreCategory.
+  Variables C D C' D' : Category.
   Variable F : Functor C D.
   Variable F' : Functor C' D'.
 
@@ -68,7 +67,7 @@ Local Notation "( x , y , .. , z )" := (pair .. (pair x y) .. z) : functor_scope
 
 (** ** Partially applied functors out of a product precategory *)
 Section induced.
-  Variables C D E : PreCategory.
+  Variables C D E : Category.
 
   Variable F : Functor (C * D) E.
 

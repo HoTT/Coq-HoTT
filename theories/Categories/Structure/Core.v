@@ -64,7 +64,7 @@ Local Open Scope structure_scope.
 (** Note: We rearrange some parameters to [H] to ease Coq's
     unification engine and typeclass machinery. *)
 
-Record NotionOfStructure (X : PreCategory) :=
+Record NotionOfStructure (X : Category) :=
   {
     structure :> X -> Type;
     is_structure_homomorphism : forall x y
@@ -155,7 +155,7 @@ Proof.
   - intros ? ? [? ?]; apply antisymmetry_structure; assumption.
 Defined.
 
-(** *** Precategory of structures *)
+(** *** category of structures *)
 (** We now define, for any notion of structure [(P, H)], a
     _precategory of [(P, H)]-structures_,
 
@@ -171,12 +171,12 @@ Defined.
     The composition and identities are inherited from [X]; conditions
     (iii) and (iv) ensure that these lift to [A]. *)
 
-Module PreCategoryOfStructures.
+Module CategoryOfStructures.
 
-  Section precategory.
+  Section category.
     (** We use [Records] because they are faster than sigma types. *)
 
-    Variable X : PreCategory.
+    Variable X : Category.
     Variable P : NotionOfStructure X.
 
     Local Notation object := { x : X | P x }.
@@ -214,18 +214,18 @@ Module PreCategoryOfStructures.
       intros ? ? [? ?] [? ?] H; simpl in *; path_induction; apply ap.
       apply path_ishprop.
     Defined.
-  End precategory.
+  End category.
 
   (*Global Arguments path_object {X P xa yb} H _.*)
   Global Arguments path_morphism {X P xa yb fh gi} H.
-End PreCategoryOfStructures.
+End CategoryOfStructures.
 
-Section precategory.
-  Import PreCategoryOfStructures.
+Section category.
+  Import CategoryOfStructures.
 
-  Definition precategory_of_structures X (P : NotionOfStructure X) : PreCategory.
+  Definition category_of_structures X (P : NotionOfStructure X) : Category.
   Proof.
-    refine (@Build_PreCategory
+    refine (@Build_Category
               _
               (@morphism _ P)
               (fun xa => {| f := identity xa.1;
@@ -247,7 +247,7 @@ Section precategory.
               | apply path_morphism; exact (right_identity _ _ _ _) ]
       ).
   Defined.
-End precategory.
+End category.
 
 Module Export StructureCoreNotations.
   Notation "a <=_{ x } b" := (is_structure_homomorphism _ x x (identity x) a b) : long_structure_scope.

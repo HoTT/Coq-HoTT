@@ -18,8 +18,8 @@ Local Open Scope morphism_scope.
 Section Grothendieck.
   Context `{Univalence}.
 
-  Variable C : PreCategory.
-  Context `{IsCategory C}.
+  Variable C : Category.
+  Context `{IsUnivalentCategory C}.
   Variable F : Functor C set_cat.
 
   Definition category_isotoid_helper {s d} (a : c s = c d)
@@ -46,7 +46,7 @@ Section Grothendieck.
     { exact category_isotoid_helper. }
   Defined.
 
-  Global Instance preservation : IsCategory (category F).
+  Global Instance preservation : IsUnivalentCategory (category F).
   Proof.
     intros s d.
     refine (@isequiv_homotopic _ _ category_isotoid (idtoiso (category F) (x:=s) (y:=d)) _ _).

@@ -146,7 +146,7 @@ End equiv_iso_prop_cat.
 
 Local Close Scope morphism_scope.
 Global Instance iscategory_set_cat `{Univalence}
-: IsCategory set_cat.
+: IsUnivalentCategory set_cat.
 Proof.
   intros C D.
   eapply @isequiv_homotopic; [ | intro; apply path_idtoequiv_idtoiso ].
@@ -155,7 +155,7 @@ Proof.
 Defined.
 
 Global Instance iscategory_prop_cat `{Univalence}
-: IsCategory prop_cat.
+: IsUnivalentCategory prop_cat.
 Proof.
   intros C D.
   eapply @isequiv_homotopic; [ | intro; apply path_idtoequiv_idtoiso_prop ].

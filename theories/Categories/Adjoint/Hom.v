@@ -22,7 +22,7 @@ Local Open Scope natural_transformation_scope.
 
 Section Adjunction.
   Context `{Funext}.
-  Variables C D : PreCategory.
+  Variables C D : Category.
   Variable F : Functor C D.
   Variable G : Functor D C.
 

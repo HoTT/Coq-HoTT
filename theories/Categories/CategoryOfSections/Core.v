@@ -17,7 +17,7 @@ Local Open Scope functor_scope.
 Section FunctorSectionCategory.
   Context `{Funext}.
 
-  Variables C D : PreCategory.
+  Variables C D : Category.
   Variable R : Functor C D.
 
   (** There is a category [Sect(R)] of sections of [R]. *)
@@ -44,9 +44,9 @@ Section FunctorSectionCategory.
   Local Open Scope natural_transformation_scope.
 
   (** ** Definition of category of sections of a functor *)
-  Definition category_of_sections : PreCategory.
+  Definition category_of_sections : Category.
   Proof.
-    refine (@Build_PreCategory
+    refine (@Build_Category
               SectionOfFunctor
               (fun F G => NaturalTransformation F G)
               (fun F => 1)

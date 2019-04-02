@@ -25,7 +25,7 @@ Section law0.
   Local Notation "0" := zero : category_scope.
   Local Notation "1" := one : category_scope.
 
-  Variable C : PreCategory.
+  Variable C : Category.
 
   Global Instance IsTerminalCategory_functors_from_initial
   : IsTerminalCategory (0 -> C) := {}.
@@ -53,7 +53,7 @@ Section law0'.
   Local Notation "0" := zero : category_scope.
   Local Notation "1" := one : category_scope.
 
-  Variable C : PreCategory.
+  Variable C : Category.
   Variable c : C.
 
   Local Instance IsInitialCategory_functors_to_initial_from_inhabited

@@ -28,7 +28,7 @@ Section profunctor.
       Note that the convention that a profunctor is a functor [Dᵒᵖ * C -> Set] is not universal; some authors reverse C and D and/or put the “op” on the other one. See the discussion below. *)
 
   Context `{Funext}.
-  Variables C D : PreCategory.
+  Variables C D : Category.
 
   (** We capitalize [Profunctor] just like we capitalize [Functor]. *)
   Definition Profunctor := Functor (D^op * C) set_cat.

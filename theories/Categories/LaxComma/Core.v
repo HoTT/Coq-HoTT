@@ -61,8 +61,8 @@ Local Open Scope category_scope.
 Definition lax_comma_category `{Funext} A B
            (S : Pseudofunctor A) (T : Pseudofunctor B)
            `{forall a b, IsHSet (Functor (S a) (T b))}
-: PreCategory
-  := @Build_PreCategory
+: Category
+  := @Build_Category
        (@object _ _ _ S T)
        (@morphism _ _ _ S T)
        (@identity _ _ _ S T)
@@ -75,7 +75,7 @@ Definition lax_comma_category `{Funext} A B
 Definition oplax_comma_category `{Funext} A B
            (S : Pseudofunctor A) (T : Pseudofunctor B)
            `{forall a b, IsHSet (Functor (S a) (T b))}
-: PreCategory
+: Category
   := (lax_comma_category S T)^op.
 
 Global Instance isstrict_lax_comma_category `{Funext} A B
@@ -118,16 +118,16 @@ Global Instance isstrict_oplax_comma_category `{fs : Funext} A B S T HA HB H
 (** ** Definition of Lax (Co)Slice Category *)
 Section lax_slice_category.
   Context `{Funext}.
-  Variables A a : PreCategory.
+  Variables A a : Category.
   Variable S : Pseudofunctor A.
   Context `{forall a0, IsHSet (Functor (S a0) a)}.
   Context `{forall a0, IsHSet (Functor a (S a0))}.
 
-  Definition lax_slice_category : PreCategory := lax_comma_category S !a.
-  Definition lax_coslice_category : PreCategory := lax_comma_category !a S.
+  Definition lax_slice_category : Category := lax_comma_category S !a.
+  Definition lax_coslice_category : Category := lax_comma_category !a S.
 
-  Definition oplax_slice_category : PreCategory := oplax_comma_category S !a.
-  Definition oplax_coslice_category : PreCategory := oplax_comma_category !a S.
+  Definition oplax_slice_category : Category := oplax_comma_category S !a.
+  Definition oplax_coslice_category : Category := oplax_comma_category !a S.
 
 (** [x ↓ F] is a coslice category; [F ↓ x] is a slice category; [x ↓ F] deals with morphisms [x -> F y]; [F ↓ x] has morphisms [F y -> x] *)
 End lax_slice_category.
@@ -141,19 +141,19 @@ Arguments oplax_coslice_category {_} [A] a S {_}.
 Section lax_slice_category_over.
   Context `{Funext}.
 
-  Variable P : PreCategory -> Type.
+  Variable P : Category -> Type.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
   Local Notation cat := (@sub_pre_cat _ P HF).
 
-  Variable a : PreCategory.
+  Variable a : Category.
   Context `{forall a0 : cat, IsHSet (Functor a0.1 a)}.
   Context `{forall a0 : cat, IsHSet (Functor a a0.1)}.
 
-  Definition lax_slice_category_over : PreCategory := @lax_slice_category _ cat a (Pseudofunctor.Identity.identity P) _.
-  Definition lax_coslice_category_over : PreCategory := @lax_coslice_category _ cat a (Pseudofunctor.Identity.identity P) _.
-  Definition oplax_slice_category_over : PreCategory := @oplax_slice_category _ cat a (Pseudofunctor.Identity.identity P) _.
-  Definition oplax_coslice_category_over : PreCategory := @oplax_coslice_category _ cat a (Pseudofunctor.Identity.identity P) _.
+  Definition lax_slice_category_over : Category := @lax_slice_category _ cat a (Pseudofunctor.Identity.identity P) _.
+  Definition lax_coslice_category_over : Category := @lax_coslice_category _ cat a (Pseudofunctor.Identity.identity P) _.
+  Definition oplax_slice_category_over : Category := @oplax_slice_category _ cat a (Pseudofunctor.Identity.identity P) _.
+  Definition oplax_coslice_category_over : Category := @oplax_coslice_category _ cat a (Pseudofunctor.Identity.identity P) _.
 End lax_slice_category_over.
 
 Arguments lax_slice_category_over {_} P {HF} a {_}.
@@ -165,13 +165,13 @@ Arguments oplax_coslice_category_over {_} P {HF} a {_}.
 Section lax_arrow_category.
   Context `{Funext}.
 
-  Variable P : PreCategory -> Type.
+  Variable P : Category -> Type.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
   Local Notation cat := (@sub_pre_cat _ P HF).
 
-  Definition lax_arrow_category : PreCategory := @lax_comma_category _ cat cat (Pseudofunctor.Identity.identity P) (Pseudofunctor.Identity.identity P) (fun C D => HF C.2 D.2).
-  Definition oplax_arrow_category : PreCategory := @oplax_comma_category _ cat cat (Pseudofunctor.Identity.identity P) (Pseudofunctor.Identity.identity P) (fun C D => HF C.2 D.2).
+  Definition lax_arrow_category : Category := @lax_comma_category _ cat cat (Pseudofunctor.Identity.identity P) (Pseudofunctor.Identity.identity P) (fun C D => HF C.2 D.2).
+  Definition oplax_arrow_category : Category := @oplax_comma_category _ cat cat (Pseudofunctor.Identity.identity P) (Pseudofunctor.Identity.identity P) (fun C D => HF C.2 D.2).
 End lax_arrow_category.
 
 Arguments lax_arrow_category {_} P {_}.

@@ -17,7 +17,7 @@ Local Open Scope morphism_scope.
 Section Grothendieck.
   Context `{Funext}.
 
-  Variable C : PreCategory.
+  Variable C : Category.
   Variable F : Pseudofunctor C.
 
   Record Pair :=
@@ -183,8 +183,8 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
   Lemma pseudofunctor_to_cat_assoc_helper
   : forall {x x0 : C} {x2 : Category.Core.morphism C x x0} {x1 : C}
            {x5 : Category.Core.morphism C x0 x1} {x4 : C} {x7 : Category.Core.morphism C x1 x4}
-           {p p0 : PreCategory} {f : Category.Core.morphism C x x4 -> Functor p0 p}
-           {p1 p2 : PreCategory} {f0 : Functor p2 p} {f1 : Functor p1 p2}
+           {p p0 : Category} {f : Category.Core.morphism C x x4 -> Functor p0 p}
+           {p1 p2 : Category} {f0 : Functor p2 p} {f1 : Functor p1 p2}
            {f2 : Functor p0 p2} {f3 : Functor p0 p1} {f4 : Functor p1 p}
            {x16 : Category.Core.morphism (_ -> _) (f (x7 o x5 o x2)) (f4 o f3)%functor}
            {x15 : Category.Core.morphism (_ -> _) f2 (f1 o f3)%functor} {H2 : IsIsomorphism x15}
@@ -209,7 +209,7 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
   Qed.
 
   Lemma pseudofunctor_to_cat_left_identity_helper
-  : forall {x1 x2 : C} {f : Category.Core.morphism C x2 x1} {p p0 : PreCategory}
+  : forall {x1 x2 : C} {f : Category.Core.morphism C x2 x1} {p p0 : Category}
            {f0 : Category.Core.morphism C x2 x1 -> Functor p0 p} {f1 : Functor p p}
            {x0 : Category.Core.morphism (_ -> _) (f0 (1 o f)) (f1 o f0 f)%functor}
            {x : Category.Core.morphism (_ -> _) f1 1%functor}
@@ -229,7 +229,7 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
   Qed.
 
   Lemma pseudofunctor_to_cat_right_identity_helper
-  : forall {x1 x2 : C} {f : Category.Core.morphism C x2 x1} {p p0 : PreCategory}
+  : forall {x1 x2 : C} {f : Category.Core.morphism C x2 x1} {p p0 : Category}
            {f0 : Category.Core.morphism C x2 x1 -> Functor p0 p} {f1 : Functor p0 p0}
            {x0 : Category.Core.morphism (_ -> _) (f0 (f o 1)) (f0 f o f1)%functor}
            {H0' : IsIsomorphism x0}
@@ -249,9 +249,9 @@ intros a b c d [f f'] [g g'] [h h']; simpl.
   Qed.
 
   (** ** Category of elements *)
-  Definition category : PreCategory.
+  Definition category : Category.
   Proof.
-    refine (@Build_PreCategory
+    refine (@Build_Category
               Pair
               (fun s d => morphism s d)
               identity

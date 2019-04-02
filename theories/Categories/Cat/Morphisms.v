@@ -14,13 +14,13 @@ Local Open Scope morphism_scope.
 Section iso_lemmas.
   Context `{Funext}.
 
-  Variable C : PreCategory.
+  Variable C : Category.
 
   Variables s d : C.
   Variables m1 m2 : morphism C s d.
   Variable p : m1 = m2.
 
-  Variables Fs Fd : PreCategory.
+  Variables Fs Fd : Category.
   Variable Fm : morphism C s d -> Functor Fs Fd.
 
   Lemma transport_Fc_to_idtoiso

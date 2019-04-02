@@ -18,8 +18,8 @@ Module Export Core.
       so that the dual of an indiscrete category is convertible with
       the indiscrete category. *)
 
-    Definition indiscrete_category : PreCategory
-      := @Build_PreCategory' X
+    Definition indiscrete_category : Category
+      := @Build_Category' X
                              (fun _ _ => Unit)
                              (fun _ => tt)
                              (fun _ _ _ _ _ => tt)
@@ -38,7 +38,7 @@ Module Export Core.
 
   (** *** Indiscrete categories are (saturated/univalent) categories *)
   Global Instance iscategory_indiscrete_category `{H : IsHProp X}
-  : IsCategory (indiscrete_category X).
+  : IsUnivalentCategory (indiscrete_category X).
   Proof.
     intros.
 
@@ -59,7 +59,7 @@ End Core.
 Module Functors.
   Section to.
     Variable X : Type.
-    Variable C : PreCategory.
+    Variable C : Category.
     Variable objOf : C -> X.
 
     Definition to : Functor C (indiscrete_category X)

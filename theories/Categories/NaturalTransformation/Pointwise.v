@@ -25,7 +25,7 @@ Local Open Scope natural_transformation_scope.
 Section pointwise.
   Context `{Funext}.
 
-  Variables C D C' D' : PreCategory.
+  Variables C D C' D' : Category.
 
   Local Ltac t :=
     path_natural_transformation; simpl;

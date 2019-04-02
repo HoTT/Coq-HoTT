@@ -24,11 +24,11 @@ Local Open Scope function_scope.
 
 (** ** Lift saturation to sigma on objects whenever the property is an hProp *)
 Section onobjects.
-  Variable A : PreCategory.
+  Variable A : Category.
   Variable Pobj : A -> Type.
 
-  Global Instance iscategory_sigT_obj `{forall a, IsHProp (Pobj a), A_cat : IsCategory A}
-  : IsCategory (sigT_obj A Pobj).
+  Global Instance isunicategory_sigT_obj `{forall a, IsHProp (Pobj a), A_cat : IsUnivalentCategory A}
+  : IsUnivalentCategory (sigT_obj A Pobj).
   Proof.
     intros s d.
     refine (isequiv_homotopic
@@ -45,7 +45,7 @@ End onobjects.
 
 (** ** Lift saturation to sigma on objects whenever the property is automatically and uniquely true of isomorphisms *)
 Section onmorphisms.
-  Variable A : PreCategory.
+  Variable A : Category.
   Variable Pmor : forall s d, morphism A s d -> Type.
 
   Local Notation mor s d := { m : _ | Pmor s d m }%type.
@@ -79,7 +79,7 @@ Section onmorphisms.
       isomorphisms. *)
   Context `{forall s d m, IsIsomorphism m -> Contr (Pmor s d m)}.
 
-  Definition iscategory_sigT_mor_helper {s d}
+  Definition isunicategory_sigT_mor_helper {s d}
   : @Isomorphic A' s d -> @Isomorphic A s d.
   Proof.
     refine ((issig_full_isomorphic A _ _) o _ o (issig_full_isomorphic A' _ _)^-1).
@@ -94,8 +94,8 @@ Section onmorphisms.
                        (fun _ => pr1_path)))).
   Defined.
 
-  Local Instance isequiv_iscategory_sigT_mor_helper s d
-  : IsEquiv (@iscategory_sigT_mor_helper s d).
+  Local Instance isequiv_isunicategory_sigT_mor_helper s d
+  : IsEquiv (@isunicategory_sigT_mor_helper s d).
   Proof.
     simple refine (isequiv_adjointify _ _ _ _).
     { intro e.
@@ -110,39 +110,39 @@ Section onmorphisms.
       exact (path_sigma' _ 1 (contr _)). }
   Defined.
 
-  Global Instance iscategory_sigT_mor `{A_cat : IsCategory A}
-  : IsCategory A'.
+  Global Instance isunicategory_sigT_mor `{A_cat : IsUnivalentCategory A}
+  : IsUnivalentCategory A'.
   Proof.
     intros s d.
     refine (isequiv_homotopic
-              (iscategory_sigT_mor_helper^-1 o @idtoiso _ _ _)
+              (isunicategory_sigT_mor_helper^-1 o @idtoiso _ _ _)
               _).
     intro x; apply path_isomorphic; cbn.
     destruct x; refine (path_sigma' _ 1 (contr _)).
   Defined.
 
-  Definition iscategory_from_sigT_mor `{A'_cat : IsCategory A'}
-  : IsCategory A.
+  Definition isunicategory_from_sigT_mor `{A'_cat : IsUnivalentCategory A'}
+  : IsUnivalentCategory A.
   Proof.
     intros s d.
     refine (isequiv_homotopic
-              (iscategory_sigT_mor_helper
+              (isunicategory_sigT_mor_helper
                  o (@idtoiso A' _ _))
               _).
     intro x; apply path_isomorphic; cbn.
     destruct x; reflexivity.
   Defined.
 
-  Global Instance isequiv_iscategory_sigT_mor `{Funext}
-  : IsEquiv (@iscategory_sigT_mor).
+  Global Instance isequiv_isunicategory_sigT_mor `{Funext}
+  : IsEquiv (@isunicategory_sigT_mor).
   Proof.
-    refine (isequiv_iff_hprop _ (@iscategory_from_sigT_mor)).
+    refine (isequiv_iff_hprop _ (@isunicategory_from_sigT_mor)).
   Defined.
 End onmorphisms.
 
 (** ** Lift saturation to sigma on both objects and morphisms *)
 Section on_both.
-  Variable A : PreCategory.
+  Variable A : Category.
   Variable Pobj : A -> Type.
 
   Local Notation obj := { x : _ | Pobj x }%type (only parsing).
@@ -326,8 +326,8 @@ Section on_both.
 
   Local Arguments Pmor_iso_T : simpl never.
 
-  Global Instance iscategory_sigT `{A_cat : IsCategory A}
-  : IsCategory A'.
+  Global Instance isunicategory_sigT `{A_cat : IsUnivalentCategory A}
+  : IsUnivalentCategory A'.
   Proof.
     intros s d.
     simple refine (isequiv_homotopic

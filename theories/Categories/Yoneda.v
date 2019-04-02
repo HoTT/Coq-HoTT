@@ -98,7 +98,7 @@ Section coyoneda_lemma.
   Section functor.
     Context `{Funext}.
 
-    Variable A : PreCategory.
+    Variable A : Category.
     (** Let [F] be an arbitrary functor from [A] to [Set]. Then Yoneda's
       lemma says that: *)
     (*Variable F : Functor A (@set_cat fs).*)
@@ -135,7 +135,7 @@ Section coyoneda_lemma.
   Section nt.
     Context `{Funext}.
 
-    Variable A : PreCategory.
+    Variable A : Category.
 
     Definition coyoneda_natural_transformation_helper F
     : morphism (_ -> _) (coyoneda_functor A F) F.
@@ -244,7 +244,7 @@ Section yoneda_lemma.
   Section functor.
     Context `{Funext}.
 
-    Variable A : PreCategory.
+    Variable A : Category.
     (** Let [F] be an arbitrary functor from [A] to [Set]. Then Yoneda's
       lemma says that: *)
     (*Variable F : Functor A (@set_cat fs).*)
@@ -278,7 +278,7 @@ Section yoneda_lemma.
 
   Context `{Funext}.
 
-  Variable A : PreCategory.
+  Variable A : Category.
 
   Definition yoneda_natural_transformation
   : morphism (_ -> _)
@@ -336,7 +336,7 @@ End yoneda_lemma.
 Section FullyFaithful.
   Context `{Funext}.
 
-  Definition coyoneda_embedding (A : PreCategory) : IsFullyFaithful (coyoneda A).
+  Definition coyoneda_embedding (A : Category) : IsFullyFaithful (coyoneda A).
   Proof.
     intros a b.
     pose proof (@isisomorphism_inverse
@@ -365,7 +365,7 @@ Section FullyFaithful.
       + exact H1'.
   Qed.
 
-  Definition yoneda_embedding (A : PreCategory) : IsFullyFaithful (yoneda A).
+  Definition yoneda_embedding (A : Category) : IsFullyFaithful (yoneda A).
   Proof.
     intros a b.
     pose proof (@coyoneda_embedding A^op a b) as CYE.

@@ -11,7 +11,7 @@ Local Open Scope category_scope.
 Local Open Scope morphism_scope.
 
 (** ** Natural Isomorphisms - isomorphisms in a functor category *)
-Definition NaturalIsomorphism `{Funext} (C D : PreCategory) F G :=
+Definition NaturalIsomorphism `{Funext} (C D : Category) F G :=
   @Isomorphic (C -> D) F G.
 
 Arguments NaturalIsomorphism {_} [C D] F G / .
@@ -76,7 +76,7 @@ Hint Immediate isisomorphism_natural_transformation : typeclass_instances.
 (** ** Variant of [idtoiso] for natural transformations *)
 Section idtoiso.
   Context `{Funext}.
-  Variables C D : PreCategory.
+  Variables C D : Category.
 
   Definition idtoiso_natural_transformation
              (F G : object (C -> D))

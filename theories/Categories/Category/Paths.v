@@ -1,4 +1,4 @@
-(** * Classification of path spaces of precategories *)
+(** * Classification of path spaces of categories *)
 Require Import Category.Core.
 Require Import HoTT.Basics.Equivalences HoTT.Basics.PathGroupoids HoTT.Basics.Trunc.
 Require Import HoTT.Types.Sigma HoTT.Types.Record HoTT.Types.Arrow HoTT.Types.Forall HoTT.Types.Paths.
@@ -22,7 +22,7 @@ Section path_category.
       convenient for use, but more annoying for proofs).  We add two
       primes to denote the even less convenient version, which
       requires an identity equality proof. *)
-  Local Notation path_precategory''_T C D
+  Local Notation path_category''_T C D
     := { Hobj : object C = object D
        | { Hmor : transport (fun obj => obj -> obj -> Type)
                             Hobj
@@ -45,7 +45,7 @@ Section path_category.
                                     (@identity C))
               = @identity D }}.
 
-  Local Notation path_precategory'_T C D
+  Local Notation path_category'_T C D
     := { Hobj : object C = object D
        | { Hmor : transport (fun obj => obj -> obj -> Type)
                             Hobj
@@ -60,9 +60,9 @@ Section path_category.
                                  (@compose C))
            = @compose D }}.
 
-  (** ** Classify sufficient conditions to prove precategories equal *)
-  Lemma path_precategory_uncurried__identity_helper `{Funext} (C D : PreCategory)
-        (Heq : path_precategory'_T C D)
+  (** ** Classify sufficient conditions to prove categories equal *)
+  Lemma path_category_uncurried__identity_helper `{Funext} (C D : Category)
+        (Heq : path_category'_T C D)
   : transport _
               Heq.2.1
               (transportD (fun obj => obj -> obj -> Type)
@@ -80,9 +80,9 @@ Section path_category.
     auto.
   Qed.
 
-  Definition path_precategory''_T__of__path_precategory'_T `{Funext} C D
-  : path_precategory'_T C D -> path_precategory''_T C D
-    := fun H => (H.1; (H.2.1; (H.2.2, path_precategory_uncurried__identity_helper C D H))).
+  Definition path_category''_T__of__path_category'_T `{Funext} C D
+  : path_category'_T C D -> path_category''_T C D
+    := fun H => (H.1; (H.2.1; (H.2.2, path_category_uncurried__identity_helper C D H))).
 
   Lemma eta2_sigma_helper A B P Q `{forall a b, IsHProp (Q a b)}
         (x : { a : A & { b : B a & P a b /\ Q a b }})
@@ -93,16 +93,16 @@ Section path_category.
     repeat f_ap; apply path_ishprop.
   Defined.
 
-  Global Instance isequiv__path_precategory''_T__of__path_precategory'_T `{fs : Funext} C D
-  : IsEquiv (@path_precategory''_T__of__path_precategory'_T fs C D)
+  Global Instance isequiv__path_category''_T__of__path_category'_T `{fs : Funext} C D
+  : IsEquiv (@path_category''_T__of__path_category'_T fs C D)
     := isequiv_adjointify
-         (@path_precategory''_T__of__path_precategory'_T fs C D)
+         (@path_category''_T__of__path_category'_T fs C D)
          (fun H => (H.1; (H.2.1; fst H.2.2)))
          (fun x => eta2_sigma_helper _ _ _ x _)
          eta2_sigma.
 
-  Definition path_precategory_uncurried' `{fs : Funext} (C D : PreCategory)
-  : path_precategory''_T C D -> C = D.
+  Definition path_category_uncurried' `{fs : Funext} (C D : Category)
+  : path_category''_T C D -> C = D.
   Proof.
     intros [? [? [? ?]]].
     destruct C, D; cbn in *.
@@ -112,25 +112,25 @@ Section path_category.
   Defined.
 
   (** *** Said proof respects [object] *)
-  Lemma path_precategory_uncurried'_fst `{Funext} C D HO HM HC HI
-  : ap object (@path_precategory_uncurried' _ C D (HO; (HM; (HC, HI)))) = HO.
+  Lemma path_category_uncurried'_fst `{Funext} C D HO HM HC HI
+  : ap object (@path_category_uncurried' _ C D (HO; (HM; (HC, HI)))) = HO.
   Proof.
     destruct C, D; cbn in *.
     path_induction_hammer.
   Qed.
 
   (** *** Said proof respects [idpath] *)
-  Lemma path_precategory_uncurried'_idpath `{Funext} C
-  : @path_precategory_uncurried' _ C C (idpath; (idpath; (idpath, idpath))) = idpath.
+  Lemma path_category_uncurried'_idpath `{Funext} C
+  : @path_category_uncurried' _ C C (idpath; (idpath; (idpath, idpath))) = idpath.
   Proof.
     destruct C; cbn in *.
     rewrite !(contr idpath).
     reflexivity.
   Qed.
 
-  (** ** Equality of precategorys gives rise to an inhabitant of the path-classifying-type *)
-  Definition path_precategory_uncurried'_inv (C D : PreCategory)
-  : C = D -> path_precategory''_T C D.
+  (** ** Equality of categorys gives rise to an inhabitant of the path-classifying-type *)
+  Definition path_category_uncurried'_inv (C D : Category)
+  : C = D -> path_category''_T C D.
   Proof.
     intro H'.
     exists (ap object H').
@@ -162,10 +162,10 @@ Section path_category.
                      (@identity C))).
   Defined.
 
-  (** ** Classify equality of precategorys up to equivalence *)
-  Lemma equiv_path_precategory_uncurried'__eissect `{Funext} (C D : PreCategory)
-  : forall x : path_precategory''_T C D,
-      path_precategory_uncurried'_inv (path_precategory_uncurried' C D x) = x.
+  (** ** Classify equality of categorys up to equivalence *)
+  Lemma equiv_path_category_uncurried'__eissect `{Funext} (C D : Category)
+  : forall x : path_category''_T C D,
+      path_category_uncurried'_inv (path_category_uncurried' C D x) = x.
   Proof.
     destruct C, D; cbn in *.
     intros [H0' [H1' [H2' H3']]].
@@ -174,30 +174,30 @@ Section path_category.
     repeat (edestruct (center (_ = _)); try reflexivity).
   Qed.
 
-  Lemma equiv_path_precategory_uncurried' `{Funext} (C D : PreCategory)
-  : path_precategory''_T C D <~> C = D.
+  Lemma equiv_path_category_uncurried' `{Funext} (C D : Category)
+  : path_category''_T C D <~> C = D.
   Proof.
-    apply (equiv_adjointify (@path_precategory_uncurried' _ C D)
-                            (@path_precategory_uncurried'_inv C D)).
+    apply (equiv_adjointify (@path_category_uncurried' _ C D)
+                            (@path_category_uncurried'_inv C D)).
     - hnf.
       intros [].
-      apply path_precategory_uncurried'_idpath.
+      apply path_category_uncurried'_idpath.
     - hnf.
-      apply equiv_path_precategory_uncurried'__eissect.
+      apply equiv_path_category_uncurried'__eissect.
   Defined.
 
-  Definition equiv_path_precategory_uncurried `{Funext} (C D : PreCategory)
-  : path_precategory'_T C D <~> C = D
-    := ((equiv_path_precategory_uncurried' C D)
+  Definition equiv_path_category_uncurried `{Funext} (C D : Category)
+  : path_category'_T C D <~> C = D
+    := ((equiv_path_category_uncurried' C D)
           oE (BuildEquiv
                 _ _ _
-                (isequiv__path_precategory''_T__of__path_precategory'_T C D))).
+                (isequiv__path_category''_T__of__path_category'_T C D))).
 
-  Definition path_precategory_uncurried `{Funext} C D : _ -> _
-    := equiv_path_precategory_uncurried C D.
+  Definition path_category_uncurried `{Funext} C D : _ -> _
+    := equiv_path_category_uncurried C D.
 
   (** ** Curried version of path classifying lemma *)
-  Lemma path_precategory' `{fs : Funext} (C D : PreCategory)
+  Lemma path_category' `{fs : Funext} (C D : Category)
   : forall (Hobj : object C = object D)
            (Hmor : transport (fun obj => obj -> obj -> Type)
                              Hobj
@@ -214,12 +214,12 @@ Section path_category.
       -> C = D.
   Proof.
     intros.
-    apply path_precategory_uncurried.
+    apply path_category_uncurried.
     repeat esplit; eassumption.
   Defined.
 
   (** ** Curried version of path classifying lemma, using [forall] in place of equality of functions *)
-  Lemma path_precategory `{fs : Funext} (C D : PreCategory)
+  Lemma path_category `{fs : Funext} (C D : Category)
   : forall (Hobj : object C = object D)
            (Hmor : forall s d,
                      morphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d)
@@ -244,7 +244,7 @@ Section path_category.
                       @ (transport_const _ _)
                       @ Hmor s d)))
       as Hmor'.
-    eapply (path_precategory' C D Hobj Hmor').
+    eapply (path_category' C D Hobj Hmor').
     repeat (apply path_forall; intro).
     refine (_ @ Hcomp _ _ _ _ _); clear Hcomp.
     subst Hmor'.
@@ -271,11 +271,11 @@ Section path_category.
   Defined.
 End path_category.
 
-(** ** Tactic for proving equality of precategories *)
+(** ** Tactic for proving equality of categories *)
 (** We move the funext inference outside the loop. *)
 Ltac path_category :=
   idtac;
-  let lem := constr:(@path_precategory _) in
+  let lem := constr:(@path_category _) in
   repeat match goal with
            | _ => intro
            | _ => reflexivity

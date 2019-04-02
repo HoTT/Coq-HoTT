@@ -11,7 +11,7 @@ Local Open Scope category_scope.
 
 Section full_faithful.
   Context `{Funext}.
-  Variables C D : PreCategory.
+  Variables C D : Category.
   Variable F : Functor C D.
 
   (** ** Natural transformation [hom_C(─, ─) → hom_D(Fᵒᵖ(─), F(─))] *)

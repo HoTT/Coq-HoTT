@@ -19,8 +19,8 @@ Section groupoid_category.
     := fun f => f : morphism _ _ _.
 
   (** ** All groupoids are categories *)
-  Global Instance iscategory_groupoid_category
-  : IsCategory (groupoid_category X).
+  Global Instance isunicategory_groupoid_category
+  : IsUnivalentCategory (groupoid_category X).
   Proof.
     repeat intro.
     apply (isequiv_adjointify (@idtoiso (groupoid_category X) _ _)

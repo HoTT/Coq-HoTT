@@ -17,7 +17,7 @@ Section opposite.
   Context `{Funext}.
 
   (** ** Functors [(C → D) ↔ (Cᵒᵖ → Dᵒᵖ)ᵒᵖ] *)
-  Definition opposite_functor (C D : PreCategory) : Functor (C -> D) (C^op -> D^op)^op
+  Definition opposite_functor (C D : Category) : Functor (C -> D) (C^op -> D^op)^op
     := Build_Functor
          (C -> D) ((C^op -> D^op)^op)
          (fun F => F^op)%functor

@@ -15,7 +15,7 @@ Local Open Scope category_scope.
 Section opposite.
   Context `{Funext}.
 
-  Variable P : PreCategory -> Type.
+  Variable P : Category -> Type.
   Context `{forall C, IsHProp (P C)}.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
@@ -71,7 +71,7 @@ Section opposite.
     subst_body.
     destruct_head @sigT.
     destruct_head @Functor.
-    destruct_head @PreCategory.
+    destruct_head @Category.
     reflexivity.
   Qed.
 End opposite.

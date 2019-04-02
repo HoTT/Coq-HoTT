@@ -22,7 +22,7 @@ Local Open Scope category_scope.
 (** ** The diagonal or "constant diagram" functor Δ *)
 Section diagonal_functor.
   Context `{Funext}.
-  Variables C D : PreCategory.
+  Variables C D : Category.
 
   (**
      Quoting Dwyer and Spalinski:
@@ -65,7 +65,7 @@ Arguments diagonal_functor : simpl never.
 
 Section diagonal_functor_lemmas.
   Context `{Funext}.
-  Variables C D D' : PreCategory.
+  Variables C D D' : Category.
 
   Lemma compose_diagonal_functor x (F : Functor D' D)
   : diagonal_functor C D x o F = diagonal_functor _ _ x.
@@ -91,7 +91,7 @@ Hint Rewrite @compose_diagonal_functor : category.
 
 Section Limit.
   Context `{Funext}.
-  Variables C D : PreCategory.
+  Variables C D : Category.
   Variable F : Functor D C.
 
   (** ** Definition of Limit *)

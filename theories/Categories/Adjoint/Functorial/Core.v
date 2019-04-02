@@ -23,7 +23,7 @@ Section left.
       on the categories. *)
   Section nondep.
     Context `{Funext}.
-    Variables C D : PreCategory.
+    Variables C D : Category.
 
     Definition left_functor_nondep
     : Functor (sigT_obj (D -> C) (fun G => { F : Functor C D & F -| G }))
@@ -44,7 +44,7 @@ Section right.
       on the categories. *)
   Section nondep.
     Context `{Funext}.
-    Variables C D : PreCategory.
+    Variables C D : Category.
 
     (** TODO: Is there a nice way to write this functor as a
               composition of the above with some dualization functors?

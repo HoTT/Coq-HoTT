@@ -16,7 +16,7 @@ Section law1.
   Local Notation "0" := zero : category_scope.
   Local Notation "1" := one : category_scope.
 
-  Variable C : PreCategory.
+  Variable C : Category.
 
   (** ** [C¹ → C] *)
   Definition functor : Functor (1 -> C) C
@@ -66,7 +66,7 @@ Section law1'.
   Local Notation "0" := zero : category_scope.
   Local Notation "1" := one : category_scope.
 
-  Variable C : PreCategory.
+  Variable C : Category.
 
   Global Instance: IsTerminalCategory (C -> 1) := {}.
 

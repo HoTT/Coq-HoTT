@@ -17,7 +17,7 @@ Local Notation pair_type := Coq.Init.Datatypes.pair.
 Section functorial.
   Context `{Funext}.
 
-  Variables C D D' : PreCategory.
+  Variables C D D' : Category.
 
   Definition functor_morphism_of
              s d

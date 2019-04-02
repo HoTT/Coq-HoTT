@@ -58,7 +58,7 @@ Section laws.
 
     Section identity_of.
       Context `{Funext}.
-      Variables C D : PreCategory.
+      Variables C D : Category.
 
       Variable G : Functor D C.
       Variable F : Functor C D.
@@ -77,10 +77,10 @@ Section laws.
 
     Section composition_of_dep.
       Context `{Funext}.
-      Variables C C' C'' : PreCategory.
+      Variables C C' C'' : Category.
       Variable CF : Functor C C'.
       Variable CF' : Functor C' C''.
-      Variables D D' D'' : PreCategory.
+      Variables D D' D'' : Category.
       Variable DF : Functor D D'.
       Variable DF' : Functor D' D''.
 
@@ -117,7 +117,7 @@ Section laws.
 
     Section composition_of.
       Context `{Funext}.
-      Variables C D : PreCategory.
+      Variables C D : Category.
 
       Variable G : Functor D C.
       Variable F : Functor C D.
@@ -144,7 +144,7 @@ Section laws.
   Section right.
     Section identity_of.
       Context `{Funext}.
-      Variables C D : PreCategory.
+      Variables C D : Category.
 
       Variable F : Functor C D.
       Variable G : Functor D C.
@@ -165,10 +165,10 @@ Section laws.
 
     Section composition_of_dep.
       Context `{Funext}.
-      Variables C C' C'' : PreCategory.
+      Variables C C' C'' : Category.
       Variable CF : Functor C C'.
       Variable CF' : Functor C' C''.
-      Variables D D' D'' : PreCategory.
+      Variables D D' D'' : Category.
       Variable DF : Functor D D'.
       Variable DF' : Functor D' D''.
 
@@ -209,7 +209,7 @@ Section laws.
 
     Section composition_of.
       Context `{Funext}.
-      Variables C D : PreCategory.
+      Variables C D : Category.
 
       Variable F : Functor C D.
       Variable G : Functor D C.

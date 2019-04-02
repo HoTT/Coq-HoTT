@@ -10,7 +10,7 @@ Set Asymmetric Patterns.
 Section set_coercions_definitions.
   Context `{Funext}.
 
-  Variable C : PreCategory.
+  Variable C : Category.
 
   Definition to_prop := Functor C prop_cat.
   Definition to_set := Functor C set_cat.
@@ -27,7 +27,7 @@ Identity Coercion from_set_id : from_set >-> Functor.
 Section set_coercions.
   Context `{Funext}.
 
-  Variable C : PreCategory.
+  Variable C : Category.
 
   (** ** Functors to [prop_cat] give rise to functors to [set_cat] *)
   Definition to_prop2set (F : to_prop C) : to_set C :=

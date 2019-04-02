@@ -14,17 +14,17 @@ Local Open Scope morphism_scope.
 Section Grothendieck.
   Context `{Funext}.
 
-  Variable P : PreCategory -> Type.
+  Variable P : Category -> Type.
   (*Context `{forall C, IsHProp (P C)}.*)
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
   Local Notation cat := (@sub_pre_cat _ P HF).
 
-  Variable C : PreCategory.
+  Variable C : Category.
   Variable F : Functor C cat.
 
   (** ** Category of elements *)
-  Definition category : PreCategory
+  Definition category : Category
     := category (F : FunctorToCat).
 
   (** ** First projection functor *)

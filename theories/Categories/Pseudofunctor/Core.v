@@ -19,7 +19,7 @@ Section pseudofunctor.
   Local Open Scope natural_transformation_scope.
   Context `{Funext}.
 
-  Variable C : PreCategory.
+  Variable C : Category.
 
   (** Quoting from nCatLab (http://ncatlab.org/nlab/show/pseudofunctor):
 
@@ -159,7 +159,7 @@ Section pseudofunctor.
 
   Record Pseudofunctor :=
     {
-      p_object_of :> C -> PreCategory;
+      p_object_of :> C -> Category;
       p_morphism_of : forall s d, morphism C s d
                                   -> Functor (p_object_of s) (p_object_of d);
       p_composition_of : forall s d d'

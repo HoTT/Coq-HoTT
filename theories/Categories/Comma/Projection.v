@@ -19,7 +19,7 @@ Local Open Scope category_scope.
 
 (** ** First projection [(S / T) → A × B] (for [S : A → C ← B : T]) *)
 Section comma_category.
-  Variables A B C : PreCategory.
+  Variables A B C : Category.
   Variable S : Functor A C.
   Variable T : Functor B C.
 
@@ -34,7 +34,7 @@ End comma_category.
 
 (** ** First projections [(S / a) → A] and [(a / S) → A] *)
 Section slice_category.
-  Variable A : PreCategory.
+  Variable A : Category.
 
   Local Arguments Functor.Composition.Core.compose / .
   Local Arguments Functor.Composition.Core.compose_composition_of / .
@@ -53,7 +53,7 @@ Section slice_category.
     := Eval simpl in snd o comma_category_projection _ 1.
 
   Section slice_coslice.
-    Variable C : PreCategory.
+    Variable C : Category.
     Variable a : C.
     Variable S : Functor A C.
 

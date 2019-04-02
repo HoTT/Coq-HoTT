@@ -13,7 +13,7 @@ Local Notation type_inr := inr.
 
 (** ** Injections [inl : C → C + D] and [inr : D → C + D] *)
 Section sum_functors.
-  Variables C D : PreCategory.
+  Variables C D : Category.
 
   Definition inl : Functor C (C + D)
     := Build_Functor C (C + D)
@@ -32,7 +32,7 @@ End sum_functors.
 
 (** ** Coproduct of functors [F + F' : C + C' → D] *)
 Section sum.
-  Variables C C' D : PreCategory.
+  Variables C C' D : Category.
 
   Definition sum (F : Functor C D) (F' : Functor C' D)
   : Functor (C + C') D.

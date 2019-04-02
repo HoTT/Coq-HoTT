@@ -20,7 +20,7 @@ Local Open Scope morphism_scope.
 (** Every functor to Cat is a pseudofunctor *)
 Section of_functor.
   Context `{Funext}.
-  Variable C : PreCategory.
+  Variable C : Category.
   Context `{HP : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
   Local Notation cat := (@sub_pre_cat _ P HP).
@@ -92,7 +92,7 @@ intros.
 >> *)
 
   Lemma pseudofunctor_of_functor__composition_of
-        {x0 x1 x2 x : PreCategory}
+        {x0 x1 x2 x : Category}
         {x7 x11 : Functor x0 x1}
         {x12 : x7 = x11}
         {x6 : Functor x0 x2} {x9 : Functor x2 x1}
@@ -115,7 +115,7 @@ intros.
   Qed.
 
   Lemma pseudofunctor_of_functor__left_identity_of
-        {x0 x : PreCategory}
+        {x0 x : Category}
         {x2 : Functor x x} {x3 : x2 = 1%functor}
         {x4 x5 : Functor x0 x} {x6 : x4 = x5} {x7 : x4 = (x2 o x5)%functor}
         (H0' : P x0) (H' : P x)
@@ -130,7 +130,7 @@ intros.
   Qed.
 
   Lemma pseudofunctor_of_functor__right_identity_of
-        {x0 x : PreCategory}
+        {x0 x : Category}
         {x4 : Functor x0 x0} {x5 : x4 = 1%functor}
         {x2 x3 : Functor x0 x} {x6 : x2 = x3} {x7 : x2 = (x3 o x4)%functor}
         (H0' : P x0) (H' : P x)

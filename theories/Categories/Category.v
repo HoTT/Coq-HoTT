@@ -3,25 +3,25 @@
 (** Since there are only notations in [Category.Notations], we can just export those. *)
 Require Export Category.Notations.
 
-(** ** Definition of precategories *)
+(** ** Definition of categories *)
 Require Category.Core.
-(** ** Opposite precategories *)
+(** ** Opposite categories *)
 Require Category.Dual.
-(** ** Morphisms in precategories *)
+(** ** Morphisms in categories *)
 Require Category.Morphisms.
 (** ** Classification of path space *)
 Require Category.Paths.
 (** ** Universal objects *)
 Require Category.Objects.
-(** ** Product precategories *)
+(** ** Product categories *)
 Require Category.Prod.
-(** ** Dependent product precategories *)
+(** ** Dependent product categories *)
 Require Category.Pi.
-(** ** ∑-precategories *)
+(** ** ∑-categories *)
 Require Category.Sigma.
 (** ** Strict categories *)
 Require Category.Strict.
-(** ** Coproduct precategories *)
+(** ** Coproduct categories *)
 Require Category.Sum.
 (** ** Categories (univalent or saturated) *)
 Require Category.Univalent.

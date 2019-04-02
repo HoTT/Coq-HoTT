@@ -51,7 +51,7 @@ Local Open Scope category_scope.
 (** ** Comma category [(S / T)] *)
 Module Import CommaCategory.
   Section comma_category_parts.
-    Variables A B C : PreCategory.
+    Variables A B C : Category.
     Variable S : Functor A C.
     Variable T : Functor B C.
 
@@ -258,9 +258,9 @@ Local Ltac path_comma_t :=
   auto with morphism.
 
 Definition comma_category A B C (S : Functor A C) (T : Functor B C)
-: PreCategory.
+: Category.
 Proof.
-  refine (@Build_PreCategory
+  refine (@Build_Category
             (@object _ _ _ S T)
             (@morphism _ _ _ S T)
             (@identity _ _ _ S T)
@@ -309,7 +309,7 @@ Hint Constructors morphism object : category.
 
 (** ** (co)slice category [(a / F)], [(F / a)] *)
 Section slice_category.
-  Variables A C : PreCategory.
+  Variables A C : Category.
   Variable a : C.
   Variable S : Functor A C.
 
@@ -321,7 +321,7 @@ End slice_category.
 
 (** ** (co)slice category over [(a / C)], [(C / a)] *)
 Section slice_category_over.
-  Variable C : PreCategory.
+  Variable C : Category.
   Variable a : C.
 
   Definition slice_category_over := slice_category a (Functor.Identity.identity C).
@@ -330,15 +330,15 @@ End slice_category_over.
 
 (** ** category of arrows *)
 Section arrow_category.
-  Variable C : PreCategory.
+  Variable C : Category.
 
   Definition arrow_category := comma_category (Functor.Identity.identity C) (Functor.Identity.identity C).
 End arrow_category.
 
-Definition CC_Functor' (C : PreCategory) (D : PreCategory) := Functor C D.
-Coercion cc_functor_from_terminal' (C : PreCategory) (x : C) : CC_Functor' _ C
+Definition CC_Functor' (C : Category) (D : Category) := Functor C D.
+Coercion cc_functor_from_terminal' (C : Category) (x : C) : CC_Functor' _ C
   := (!x)%functor.
-Coercion cc_identity_functor' (C : PreCategory) : CC_Functor' C C
+Coercion cc_identity_functor' (C : Category) : CC_Functor' C C
   := 1%functor.
 Global Arguments CC_Functor' / .
 Global Arguments cc_functor_from_terminal' / .

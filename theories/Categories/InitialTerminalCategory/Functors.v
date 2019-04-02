@@ -9,7 +9,7 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Section functors.
-  Variable C : PreCategory.
+  Variable C : Category.
 
   (** *** Functor to any terminal category *)
   Definition to_terminal `{@IsTerminalCategory one Hone Hone'}
@@ -69,7 +69,7 @@ Section unique.
     apply (initial_category_ind _ x).
   Defined.
 
-  Variable C : PreCategory.
+  Variable C : Category.
 
   Global Instance trunc_initial_category
          `{@IsInitialCategory zero}

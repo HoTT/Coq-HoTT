@@ -19,7 +19,7 @@ Local Open Scope functor_scope.
 Section universal.
   Context `{Funext}.
 
-  Variables A B C : PreCategory.
+  Variables A B C : Category.
 
   Local Open Scope functor_scope.
 

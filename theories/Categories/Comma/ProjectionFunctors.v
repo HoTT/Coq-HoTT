@@ -27,12 +27,12 @@ Local Open Scope category_scope.
 Section comma.
   Context `{Funext}.
 
-  Variable P : PreCategory -> Type.
+  Variable P : Category -> Type.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
   Local Notation Cat := (@sub_pre_cat _ P HF).
 
-  Variables A B C : PreCategory.
+  Variables A B C : Category.
 
   Hypothesis PAB : P (A * B).
   Hypothesis P_comma : forall (S : Functor A C) (T : Functor B C),
@@ -130,12 +130,12 @@ End comma.
 Section slice_category_projection_functor.
   Context `{Funext}.
 
-  Variable P : PreCategory -> Type.
+  Variable P : Category -> Type.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
   Local Notation Cat := (@sub_pre_cat _ P HF).
 
-  Variables C D : PreCategory.
+  Variables C D : Category.
 
   Hypothesis P1C : P (1 * C).
   Hypothesis PC1 : P (C * 1).

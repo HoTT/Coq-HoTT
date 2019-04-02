@@ -13,8 +13,8 @@ Local Open Scope functor_scope.
 
 Section dependent_product.
   Context `{Funext}.
-  Variable C : PreCategory.
-  Variable P : PreCategory -> Type.
+  Variable C : Category.
+  Variable P : Category -> Type.
   (*Context `{forall C, IsHProp (P C)}.*)
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
@@ -41,7 +41,7 @@ Section dependent_product.
       There is a canonical functor [π : Gr F → X]. Sections of this
       functor are functors [s : X → Gr F] such that [s ∘ π = id]. *)
 
-  Definition dependent_product : PreCategory
+  Definition dependent_product : Category
     := category_of_sections (Grothendieck.ToCat.pr1 F).
 End dependent_product.
 

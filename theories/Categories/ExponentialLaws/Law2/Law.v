@@ -17,7 +17,7 @@ Local Open Scope functor_scope.
 (** ** [yⁿ⁺ᵐ ≅ yⁿ × yᵐ] *)
 Section Law2.
   Context `{Funext}.
-  Variables D C1 C2 : PreCategory.
+  Variables D C1 C2 : Category.
 
 
 

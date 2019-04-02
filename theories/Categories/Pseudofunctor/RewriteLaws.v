@@ -21,12 +21,12 @@ Section lemmas.
   Local Open Scope natural_transformation_scope.
   Context `{Funext}.
 
-  Variable C : PreCategory.
+  Variable C : Category.
   Variable F : Pseudofunctor C.
 
   Lemma p_composition_of_coherent_for_rewrite_helper w x y z
         (f : morphism C w x) (g : morphism C x y) (h : morphism C y z)
-        (p p0 p1 p2 : PreCategory) (f0 : morphism C w z -> Functor p2 p1)
+        (p p0 p1 p2 : Category) (f0 : morphism C w z -> Functor p2 p1)
         (f1 : Functor p0 p1) (f2 : Functor p2 p) (f3 : Functor p p0)
         (f4 : Functor p2 p0) `(@IsIsomorphism (_ -> _) f4 (f3 o f2)%functor n)
         `(@IsIsomorphism (_ -> _) (f0 (h o (g o f))%morphism) (f1 o f4)%functor n0)

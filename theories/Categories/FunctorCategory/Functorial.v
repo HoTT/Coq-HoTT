@@ -12,7 +12,7 @@ Local Open Scope category_scope.
 Section functor.
   Context `{Funext}.
 
-  Variable P : PreCategory -> Type.
+  Variable P : Category -> Type.
   Context `{forall C, IsHProp (P C)}.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 

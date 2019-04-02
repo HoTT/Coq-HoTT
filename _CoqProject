@@ -176,8 +176,8 @@ theories/Categories/SetCategory/Functors/SetProp.v
 theories/Categories/SimplicialSets.v
 theories/Categories/SemiSimplicialSets.v
 
-theories/Categories/FundamentalPreGroupoidCategory.v
-theories/Categories/HomotopyPreCategory.v
+theories/Categories/FundamentalGroupoid.v
+theories/Categories/HomotopyCategory.v
 
 theories/Categories/HomFunctor.v
 theories/Categories/Functor/Attributes.v

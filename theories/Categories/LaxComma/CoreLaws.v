@@ -51,7 +51,7 @@ Module Import LaxCommaCategory.
   Include LaxComma.CoreParts.LaxCommaCategoryParts.
   Section lax_comma_category_parts.
     Context `{Funext}.
-    Variables A B : PreCategory.
+    Variables A B : Category.
 
     Variable S : Pseudofunctor A.
     Variable T : Pseudofunctor B.
@@ -155,9 +155,9 @@ Module Import LaxCommaCategory.
 >> *)
 
     Lemma associativity_helper
-          {x x0 : PreCategory} {x1 : Functor x0 x}
-          {x2 x3 : PreCategory} {x4 : Functor x3 x2} {x5 x6 : PreCategory}
-          {x7 : Functor x6 x5} {x8 x9 : PreCategory} {x10 : Functor x9 x8}
+          {x x0 : Category} {x1 : Functor x0 x}
+          {x2 x3 : Category} {x4 : Functor x3 x2} {x5 x6 : Category}
+          {x7 : Functor x6 x5} {x8 x9 : Category} {x10 : Functor x9 x8}
           {x11 : Functor x9 x6} {x12 : Functor x9 x3} {x13 : Functor x0 x6}
           {x14 : Functor x9 x6} {x15 : Functor x8 x5} {x16 : Functor x x5}
           {x17 : Functor x9 x0} {x18 : Functor x8 x}
@@ -273,8 +273,8 @@ Lemma left_identity (s d : object) (m : morphism s d)
 >> *)
 
     Lemma left_identity_helper
-          {x x0 : PreCategory} {x1 : Functor x0 x}
-          {x2 x3 : PreCategory} {x4 : Functor x3 x2} {x5 x6 : Functor x3 x0}
+          {x x0 : Category} {x1 : Functor x0 x}
+          {x2 x3 : Category} {x4 : Functor x3 x2} {x5 x6 : Functor x3 x0}
           {x7 : Functor x2 x} {x8 : NaturalTransformation (x7 o x4) (x1 o x6)}
           {x9 : Functor x2 x} {x10 : Functor x0 x0} {x11 : Functor x x}
           {x12 : @Isomorphic (_ -> _) x11 1%functor} {x13 : @Isomorphic (_ -> _) x10 1%functor}
@@ -368,8 +368,8 @@ Lemma left_identity (s d : object) (m : morphism s d)
 >> *)
 
     Lemma right_identity_helper
-          {x x0 : PreCategory} {x1 : Functor x0 x}
-          {x2 x3 : PreCategory} {x4 : Functor x3 x2} {x5 x6 : Functor x3 x0}
+          {x x0 : Category} {x1 : Functor x0 x}
+          {x2 x3 : Category} {x4 : Functor x3 x2} {x5 x6 : Functor x3 x0}
           {x7 : Functor x2 x} {x8 : NaturalTransformation (x7 o x4) (x1 o x6)}
           {x9 : Functor x2 x} {x10 : Functor x3 x3} {x11 : Functor x2 x2}
           {x12 : @Isomorphic (_ -> _) x11 1%functor} {x13 : @Isomorphic (_ -> _) x10 1%functor}

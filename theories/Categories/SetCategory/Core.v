@@ -8,7 +8,7 @@ Generalizable All Variables.
 Set Asymmetric Patterns.
 
 Notation cat_of obj :=
-  (@Build_PreCategory obj
+  (@Build_Category obj
                       (fun x y => x -> y)
                       (fun _ x => x)
                       (fun _ _ _ f g => f o g)%core
@@ -20,8 +20,8 @@ Notation cat_of obj :=
 (** There is a category [Set], where the objects are sets and the
     morphisms are set morphisms *)
 
-Definition prop_cat `{Funext} : PreCategory := cat_of hProp.
-Definition set_cat `{Funext} : PreCategory := cat_of hSet.
+Definition prop_cat `{Funext} : Category := cat_of hProp.
+Definition set_cat `{Funext} : Category := cat_of hSet.
 
 (** ** [Prop] is a strict category *)
 Global Instance isstrict_prop_cat `{Univalence}

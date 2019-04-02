@@ -16,7 +16,7 @@ Local Open Scope functor_scope.
 (** ** [(y × z)ⁿ ≅ yⁿ × zⁿ] *)
 Section Law3.
   Context `{Funext}.
-  Variables C1 C2 D : PreCategory.
+  Variables C1 C2 D : Category.
 
   Lemma helper (c : Functor D C1 * Functor D C2)
   : ((fst o (Datatypes.fst c * Datatypes.snd c))%functor,

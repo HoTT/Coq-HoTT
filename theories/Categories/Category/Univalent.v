@@ -1,4 +1,4 @@
-(** * Definition of a univalent/saturated precategory, or just "category" *)
+(** * Definition of a univalent/saturated precategory *)
 Require Import Category.Core Category.Morphisms.
 Require Import HoTT.Tactics Trunc.
 
@@ -9,15 +9,16 @@ Set Asymmetric Patterns.
 
 Local Open Scope morphism_scope.
 
-(** A category is a precategory for which [idtoiso] is an equivalence. *)
+(** A univalent category is a category for which [idtoiso] is an equivalence. *)
 
-Notation IsCategory C := (forall s d : object C, IsEquiv (@idtoiso C s d)).
+Notation IsUnivalentCategory C
+  := (forall s d : object C, IsEquiv (@idtoiso C s d)).
 
 Notation isotoid C s d := (@equiv_inv _ _ (@idtoiso C s d) _).
 
-(** *** The objects of a category are a 1-type *)
+(** *** The objects of a univalent category are a 1-type *)
 
-Global Instance trunc_category `{IsCategory C} : IsTrunc 1 C | 10000.
+Global Instance trunc_category `{IsUnivalentCategory C} : IsTrunc 1 C | 10000.
 Proof.
   intros ? ?.
   eapply trunc_equiv';
@@ -28,10 +29,10 @@ Proof.
   typeclasses eauto.
 Qed.
 
-Record Category :=
+Record UnivalentCategory :=
   {
-    precategory_of_category :> PreCategory;
-    iscategory_precategory_of_category :> IsCategory precategory_of_category
+    unicat :> Category;
+    isunivalentcat_unicat :> IsUnivalentCategory unicat
   }.
 
-Global Existing Instance iscategory_precategory_of_category.
+Global Existing Instance isunivalentcat_unicat.

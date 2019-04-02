@@ -12,11 +12,11 @@ Set Asymmetric Patterns.
 Section functor_category.
   Context `{Funext}.
 
-  Variables C D : PreCategory.
+  Variables C D : Category.
 
   (** There is a category Fun(C, D) of functors from [C] to [D]. *)
-  Definition functor_category : PreCategory
-    := @Build_PreCategory (Functor C D)
+  Definition functor_category : Category
+    := @Build_Category (Functor C D)
                           (@NaturalTransformation C D)
                           (@identity C D)
                           (@compose C D)

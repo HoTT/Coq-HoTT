@@ -48,7 +48,7 @@ Local Open Scope category_scope.
 Module Import LaxCommaCategoryParts.
   Section lax_comma_category_parts.
     Context `{Funext}.
-    Variables A B : PreCategory.
+    Variables A B : Category.
 
     Variable S : Pseudofunctor A.
     Variable T : Pseudofunctor B.

@@ -29,10 +29,10 @@ Module Export Core.
         example, [nat -> nat -> Type] with [PreCategory -> PreCategory
         -> Type] by silently inserting [chain]. *)
 
-    Local Coercion chain : nat >-> PreCategory.
+    Local Coercion chain : nat >-> Category.
 
     Definition simplex_category
-      := @Build_PreCategory
+      := @Build_Category
            nat
            Functor
            identity
@@ -42,7 +42,7 @@ Module Export Core.
            right_identity
            _.
 
-    Definition simplicial_category (C : PreCategory) : PreCategory
+    Definition simplicial_category (C : Category) : Category
       := simplex_category^op -> C.
 
     Definition simplicial_set := simplicial_category set_cat.

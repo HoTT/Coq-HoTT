@@ -14,13 +14,13 @@ Local Open Scope functor_scope.
 Section groupoid_cat.
   Context `{Funext}.
 
-  Let P : PreCategory -> Type
+  Let P : Category -> Type
     := fun C => IsGroupoid C /\ IsStrictCategory C.
   Let HF : forall C D, P C -> P D -> IsHSet (Functor C D)
     := fun C D HC HD => @trunc_functor _ C D _ (snd HD) _.
 
-  (** There is a full precategory of [cat] which is the strict groupoid precategories *)
+  (** There is a full category of [cat] which is the strict groupoid categories *)
 
-  Definition groupoid_cat : PreCategory
+  Definition groupoid_cat : Category
     := @sub_pre_cat _ P HF.
 End groupoid_cat.

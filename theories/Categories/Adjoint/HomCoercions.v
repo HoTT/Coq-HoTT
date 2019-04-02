@@ -25,7 +25,7 @@ Local Open Scope natural_transformation_scope.
 (** ** unit+UMP from hom-set adjunction *)
 Section AdjunctionEquivalences.
   Context `{Funext}.
-  Variables C D : PreCategory.
+  Variables C D : Category.
   Variable F : Functor C D.
   Variable G : Functor D C.
 
@@ -148,7 +148,7 @@ End AdjunctionEquivalences.
 
 Section isequiv.
   (** We want to be able to use this without needing [Funext].  So, first, we prove that the types of hom-sets are equivalent. *)
-  Variables C D : PreCategory.
+  Variables C D : Category.
   Variable F : Functor C D.
   Variable G : Functor D C.
 
@@ -181,7 +181,7 @@ End isequiv.
 (** ** hom-set adjunction from unit+ump adjunction *)
 Section AdjunctionEquivalences'.
   Context `{Funext}.
-  Variables C D : PreCategory.
+  Variables C D : Category.
   Variable F : Functor C D.
   Variable G : Functor D C.
 

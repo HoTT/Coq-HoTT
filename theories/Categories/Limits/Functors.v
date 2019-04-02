@@ -18,7 +18,7 @@ Local Open Scope category_scope.
 
 Section functors.
   Context `{Funext}.
-  Variables C D : PreCategory.
+  Variables C D : Category.
 
   (** ** Colimit functor, which is left adjoint to Δ *)
   Section colimit.

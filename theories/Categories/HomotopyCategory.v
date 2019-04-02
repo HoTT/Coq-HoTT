@@ -1,4 +1,4 @@
-(** * Homotopy PreCategory of Types *)
+(** * Homotopy Category of Types *)
 Require Import Category.Core Category.Morphisms.
 Require Import HIT.Truncations HSet.
 
@@ -19,7 +19,7 @@ Local Open Scope category_scope.
     Z)]. We call this the homotopy precategory of types. *)
 
 (** We don't want access to all of the internals of this category at top level. *)
-Module HomotopyPreCategoryInternals.
+Module HomotopyCategoryInternals.
   Section homotopy_precategory.
     Local Notation object := Type (only parsing).
     Local Notation morphism s d := (Trunc 0 (s -> d)) (only parsing).
@@ -39,16 +39,16 @@ Module HomotopyPreCategoryInternals.
     Global Arguments compose [s d d'] m m' / .
     Global Arguments identity x / .
   End homotopy_precategory.
-End HomotopyPreCategoryInternals.
+End HomotopyCategoryInternals.
 
-(** ** The Homotopy PreCategory of Types *)
-Definition homotopy_precategory : PreCategory.
+(** ** The Homotopy Category of Types *)
+Definition homotopy_precategory : Category.
 Proof.
-  refine (@Build_PreCategory
+  refine (@Build_Category
             Type
             _
-            (@HomotopyPreCategoryInternals.identity)
-            (@HomotopyPreCategoryInternals.compose)
+            (@HomotopyCategoryInternals.identity)
+            (@HomotopyCategoryInternals.compose)
             _
             _
             _

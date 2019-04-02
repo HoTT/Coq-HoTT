@@ -26,8 +26,8 @@ Set Asymmetric Patterns.
 
 Module Export Core.
   (** *** [[ω]], the linear order on ℕ *)
-  Definition omega : PreCategory
-    := @Build_PreCategory
+  Definition omega : Category
+    := @Build_Category
          nat
          leq
          leq_refl
@@ -41,7 +41,7 @@ Module Export Core.
   (** Using [n + 1] elements allows us to agree with the common
       definition of an [n]-simplex, where a 0-simplex is a point, and
       a 1-simplex has two end-points, etc. *)
-  Definition chain (n : nat) : PreCategory
+  Definition chain (n : nat) : Category
     := { m : omega | m <= n }%category.
 
   (** TODO: Possibly generalize this to arbitrary sets with arbitrary
@@ -77,7 +77,7 @@ Module Export Strict.
 End Strict.
 
 Module Export Univalent.
-  Global Instance iscategory_omega : IsCategory omega.
+  Global Instance isunicategory_omega : IsUnivalentCategory omega.
   Proof.
     intros s d.
     refine (isequiv_iff_hprop _ _).
@@ -85,7 +85,7 @@ Module Export Univalent.
     { intro m; apply leq_antisym; apply m. }
   Defined.
 
-  Definition iscategory_chain {n} : IsCategory [n].
+  Definition iscategory_chain {n} : IsUnivalentCategory [n].
   Proof.
     exact _.
   Defined.

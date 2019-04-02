@@ -1,4 +1,4 @@
-(** * Fundamental Pregroupoids *)
+(** * Fundamental Groupoids *)
 Require Import Category.Core Category.Morphisms.
 Require Import HIT.Truncations PathGroupoids.
 
@@ -20,7 +20,7 @@ Local Open Scope category_scope.
     (x = z)]. We call this the fundamental pregroupoid of [X]. *)
 
 (** We don't want access to all of the internals of a groupoid category at top level. *)
-Module FundamentalPreGroupoidCategoryInternals.
+Module FundamentalGroupoidCategoryInternals.
   Section fundamental_pregroupoid_category.
     Variable X : Type.
 
@@ -42,16 +42,16 @@ Module FundamentalPreGroupoidCategoryInternals.
     Global Arguments compose [s d d'] m m' / .
     Global Arguments identity x / .
   End fundamental_pregroupoid_category.
-End FundamentalPreGroupoidCategoryInternals.
+End FundamentalGroupoidCategoryInternals.
 
 (** ** Categorification of the fundamental pregroupoid of a type *)
-Definition fundamental_pregroupoid_category (X : Type) : PreCategory.
+Definition fundamental_groupoid (X : Type) : Category.
 Proof.
-  refine (@Build_PreCategory
+  refine (@Build_Category
             X
             _
-            (@FundamentalPreGroupoidCategoryInternals.identity X)
-            (@FundamentalPreGroupoidCategoryInternals.compose X)
+            (@FundamentalGroupoidCategoryInternals.identity X)
+            (@FundamentalGroupoidCategoryInternals.compose X)
             _
             _
             _

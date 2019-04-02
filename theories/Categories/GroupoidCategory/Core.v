@@ -10,10 +10,10 @@ Set Asymmetric Patterns.
 
 Local Open Scope category_scope.
 
-(** A groupoid is a precategory where every morphism is an isomorphism.  Since 1-types are 1-groupoids, we can construct the category corresponding to the 1-groupoid of a 1-type. *)
+(** A groupoid is a category where every morphism is an isomorphism.  Since 1-types are 1-groupoids, we can construct the category corresponding to the 1-groupoid of a 1-type. *)
 
 (** ** Definition of what it means to be a groupoid *)
-Class IsGroupoid (C : PreCategory)
+Class IsGroupoid (C : Category)
   := isgroupoid : forall s d (m : morphism C s d),
                     IsIsomorphism m.
 
@@ -41,9 +41,9 @@ Module GroupoidCategoryInternals.
 End GroupoidCategoryInternals.
 
 (** ** Categorification of the groupoid of a 1-type *)
-Definition groupoid_category X `{IsTrunc 1 X} : PreCategory.
+Definition groupoid_category X `{IsTrunc 1 X} : Category.
 Proof.
-  refine (@Build_PreCategory X
+  refine (@Build_Category X
                              (@paths X)
                              (@GroupoidCategoryInternals.identity X)
                              (@GroupoidCategoryInternals.compose X)

@@ -11,9 +11,7 @@ Set Asymmetric Patterns.
 
 (** ** Product of natural transformations *)
 Section prod.
-  Context {A : PreCategory}.
-  Context {B : PreCategory}.
-  Context {C : PreCategory}.
+  Context {A B C : Category}.
   Variables F F' : Functor A B.
   Variables G G' : Functor A C.
   Variable T : NaturalTransformation F F'.
@@ -31,7 +29,7 @@ Local Infix "*" := prod : natural_transformation_scope.
 
 (** ** Natural transformations between partially applied functors *)
 Section induced.
-  Variables C D E : PreCategory.
+  Variables C D E : Category.
 
   Variable F : Functor (C * D) E.
 

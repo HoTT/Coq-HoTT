@@ -40,7 +40,7 @@ Module Export Core.
       | S (S n') => discrete_category (S (S n'))
     end.
 
-  Coercion nat_category : nat >-> PreCategory.
+  Coercion nat_category : nat >-> Category.
 
   Module Export NatCategoryCoreNotations.
     Notation "1" := (nat_category 1) : category_scope.

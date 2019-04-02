@@ -41,7 +41,7 @@ Section parts.
 
   (** ** respects identity *)
   Section identity_of.
-    Variables C D : PreCategory.
+    Variables C D : Category.
 
     Lemma identity_of_helper_helper (x : Functor C D)
     : 1 o x o 1 = x.
@@ -74,7 +74,7 @@ Section parts.
 
   (** ** respects composition *)
   Section composition_of.
-    Variables C D C' D' C'' D'' : PreCategory.
+    Variables C D C' D' C'' D'' : Category.
 
     Variable F' : Functor C' C''.
     Variable G : Functor D D'.

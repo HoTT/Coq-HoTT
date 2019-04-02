@@ -70,7 +70,7 @@ Section Adjunction.
      with. *)
 
   Section unit.
-    Variables C D : PreCategory.
+    Variables C D : Category.
     Variable F : Functor C D.
     Variable G : Functor D C.
 
@@ -123,7 +123,7 @@ Section Adjunction.
     - The statement (o) is the UMP of the counit [U].
     *)
   Section counit.
-    Variables C D : PreCategory.
+    Variables C D : Category.
     Variable F : Functor C D.
     Variable G : Functor D C.
 
@@ -138,7 +138,7 @@ Section Adjunction.
       so that we can use it to make coercions easier. *)
 
   Section unit_counit_op.
-    Variables C D : PreCategory.
+    Variables C D : Category.
     Variable F : Functor C D.
     Variable G : Functor D C.
 
@@ -244,7 +244,7 @@ Section Adjunction.
       looks like the insertion of the identity 1 into a monoid.  *)
 
   Section unit_counit.
-    Variables C D : PreCategory.
+    Variables C D : Category.
     Variable F : Functor C D.
     Variable G : Functor D C.
 

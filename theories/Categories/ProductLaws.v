@@ -18,7 +18,7 @@ Local Notation pair_type := Coq.Init.Datatypes.pair.
 
 (** ** Swap functor [C × D → D × C] *)
 Module Swap.
-  Definition functor (C D : PreCategory)
+  Definition functor (C D : Category)
   : Functor (C * D) (D * C)
     := Build_Functor (C * D) (D * C)
                      (fun cd => (snd_type cd, fst_type cd)%core)
@@ -26,7 +26,7 @@ Module Swap.
                      (fun _ _ _ _ _ => idpath)
                      (fun _ => idpath).
 
-  Definition law (C D : PreCategory)
+  Definition law (C D : Category)
   : functor C D o functor D C = 1
     := idpath.
 End Swap.
@@ -34,7 +34,7 @@ End Swap.
 (** ** [A * (B * C) ≅ (A * B) * C] *)
 Module Associativity.
   Section associativity.
-    Variables A B C : PreCategory.
+    Variables A B C : Category.
 
     Definition functor : Functor (A * (B * C)) ((A * B) * C)
       := (fst * (fst o snd)) * (snd o snd).
@@ -55,7 +55,7 @@ Module Law0.
     Context `{IsInitialCategory zero}.
     Local Notation "0" := zero : category_scope.
 
-    Variable C : PreCategory.
+    Variable C : Category.
 
     Global Instance is_initial_category__product
     : IsInitialCategory (C * 0)
@@ -90,7 +90,7 @@ Module Law1.
     Context `{Funext}.
     Context `{IsTerminalCategory one}.
     Local Notation "1" := one : category_scope.
-    Variable C : PreCategory.
+    Variable C : Category.
 
     Definition functor : Functor (C * 1) C
       := fst.
