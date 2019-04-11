@@ -9,25 +9,22 @@ However, one still needs to install the library via git to contribute.
 Opam support on windows is experimental.
 [1]: https://coq.inria.fr/opam/www/using.html
 
-We are compatible with [Coq 8.10](https://github.com/coq/coq/releases/tag/V8.10.0), so binary packages can be used.  Paths still need to be set manually.
+We are compatible with [Coq 8.10](https://github.com/coq/coq/releases/tag/V8.10.0),
+so binary packages can be used.  Paths still need to be set manually.
 
 
-# QUICK INSTALLATION INSTRUCTIONS
-
-If you are not a Coq expert and just want to get the HoTT library to work with
-minimal fuss, you should try your luck by following these instructions:
+# GENERAL INSTALLATION INSTRUCTIONS
 
 1. Make sure you have all the prerequisites for compiling Coq. These are
    `OCaml`, `camlp5`, `git`, and `make`. If you want to build the HoTT
    version of the graphical user interface `coqide` you also need the
-   `lablgtk2` and `lablgtksourceview2` libraries. To get these:
+   `lablgtk2` and `lablgtksourceview2` libraries.  To get these:
 
-   * Linux: check your package manager. On Debian or any distribution
-     with `apt-get` you can run the script `./etc/install_coq_deps.sh`
-     which installs the dependencies automatically.
-
-   * OSX: we recommend that you install the Opam package manager for Ocaml
-     (http://opam.ocamlpro.com/).
+   * Linux and OSX: Git and make can be installed through your package
+     manager.  On Debian or any distribution with `apt-get` you can
+     run the script `./etc/install_coq_deps.sh` in the HoTT directory
+     (see step 2) which installs some dependencies automatically.
+		 On OSX you can use the brew package manager:
 
          brew install opam
          opam init
@@ -36,14 +33,28 @@ minimal fuss, you should try your luck by following these instructions:
      and `opam`
 
          brew update
-         brew install objective-caml pkgconfig automake autoconf
+         brew install pkgconfig automake autoconf
          brew install libffi libxml2
          brew install lablgtk gtksourceview
-         opam install ocamlfind num
          export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig:/usr/local/opt/libxml2/lib/pkgconfig:/usr/local/opt/gtksourceview/lib/pkgconfig"
+
+		 However, for installing OCaml and its utilities we highly
+     recommend using the Opam package manager for Ocaml
+     (https://opam.ocaml.org/doc/Install.html).  Use opam2, and then
+     install a recent version of Ocaml with
+     
+         opam init
+         eval `opam env`
+         opam switch create 4.06.1
+         eval `opam env`
+         opam install ocamlfind num
          opam install conf-gtksourceview lablgtk
 
-   * MS Windows: we recommend that you install the 32-bit version of
+   * MS Windows: [Note that these instructions have not been updated
+     for a while, they may be out of date.  If you have trouble,
+     please open an issue on the repository github tracker.]
+
+	 	 We recommend that you install the 32-bit version of
      cygwin (installer at http://www.cygwin.com/setup-x86.exe) and,
      in the setup process install all of the packages mentioning
      `ocaml`, as well as `make` and `git` and `dos2unix`.  (The 64-bit
@@ -57,22 +68,34 @@ minimal fuss, you should try your luck by following these instructions:
          /usr/bin/find . -name '*.sh' | xargs dos2unix
 
      If you wish to build CoqIDE/hoqide on Windows, we wish you good luck.
+
 2. Get the HoTT library (skip this step if you already have it):
 
         git clone https://github.com/HoTT/HoTT.git
         cd HoTT
 
-3. From the HoTT directory run the following commands:
+   Even better, if you would like to contribute to HoTT, first fork the repository
+   on github.com and then use your own fork. This way you will be able to make pull
+   requests.
+
+   If you do not want to deal with `git` at all, you may download an archive of HoTT
+   at https://github.com/HoTT/HoTT/archive/master.zip and unpack that. We do not
+   recommend this option because the HoTT library is under heavy development and
+   you want to be able to easily track changes. Additionally, downloading the
+   archive requires a working version of the `autoreconf` utility.
+
+3. Install Coq.  The recommended option is to install a local/custom
+   version of Coq in a subdirectory of the HoTT directory, which can be
+   done by running from the HoTT directory:
 
         etc/install_coq.sh
-        ./autogen.sh
-        ./configure COQBIN="`pwd`/coq-HoTT/bin"
-        make
 
-   It may take a while to compile the custom Coq. To speed this up, use `make -jn`, where n is the number of cores you have on your machine.
-   On linux this can be found with `nproc` or `lscpu`.
-   On OSX Apple menu -> About this Mac -> System Report, then look for "number of cores"
+   Compiling Coq may take a while.
+   To speed it up, use `make -jn`, where n is the number of cores you have on your machine.
+   On Linux this can be found with `nproc` or `lscpu`.
+   On OSX Apple menu -> About this Mac -> System Report, then look for "number of cores".
 
+	 Alternatively, you can install Coq using a package manager or opam.
    If you are using Debian/Ubuntu, and don't mind having coq master
    as your only version of Coq, you can install it using apt-get:
 
@@ -90,27 +113,65 @@ minimal fuss, you should try your luck by following these instructions:
 
        brew remove objective-caml; brew install objective-caml
 
-4. You can now use the HoTT library in place by running `./hoqtop` and
-   `./hoqc`. You can also use `./hoqide` which is the version of coqide
-   running the hoqtop toplevel if you have compiled it successfully.  If you
-   want the commands `hoqtop`, `hoqc`, `hoqide` available system-wide, run:
+4. Configure and build the HoTT Library.  If you installed the local
+   version of Coq, then from the HoTT directory run the following
+   commands:
 
-        make install
+        ./autogen.sh
+        ./configure COQBIN="`pwd`/coq-HoTT/bin"
+        make
 
-   The library can be loaded into a Coq session with `Require Import HoTT.`
+	 If instead you installed a version of Coq that is available on your
+	 PATH, you can omit the COQBIN argument to `configure`.  If you
+	 installed a version of Coq that is not available on your PATH, then
+	 you need to supply the *absolute* path name (starting with /) of
+	 the `bin` directory which contains `coqtop`, `coqc`, etc.
 
-5. If you use ProofGeneral (PG) for browsing existing theories, it should just
-   work. But in case you want to create theories outside the `HoTT/theories`
-   directory, do not forget to change the name of the Coq
-   program called by PG. For instance you can edit the name of the executable
-   called by PG by typing `M-x customize-variable`, then `coq-prog-name` which
-   displays a customization utility. Another option is to type `M-x
-   customize-variable`, then `proof-prog-name-ask`, to click on the `Toogle`
-   button in front of `Proof Prog Name Ask` and to save this for future sessions.
-   This will prompt PG to ask you for the name of the Coq toplevel to be used
-   each time you start evaluating a file.
+5. Because it is a bit tricky to run Coq with a custom standard
+   library, we provide scripts `hoqtop` and `hoqc` that do this for
+   you, so you can run
 
-6. To use the Emacs tags facility with the `*.v` files here, run the command
+       ./hoqtop
+
+   directly from the HoTT directory to start using the library.  You
+   can load the library from your Coq files with
+
+       Require Import HoTT.
+
+   There is also a `hoqc` for compiling files, and `hoqide` which is
+   the version of coqide running the hoqtop toplevel if you have
+   compiled it successfully.
+
+	 You may prefer to install `hoqtop`, `hoqc` and the library files
+   globally, in which case you can type
+
+       sudo make install
+
+   By default the files will be installed in `/usr/local/bin` and
+   `/usr/local/share/hott`.  You can change the location by using
+   standard `configure` parameters when you run it.  For example
+
+       ./configure --bindir=$HOME/bin --datadir=$HOME/stuff
+
+   will install `hoqtop` and `hoqc` in the `bin` subdirectory of your
+   home directory and the HoTT library in `stuff/hott` subdirectory of
+   your home directory.
+
+6. If you use ProofGeneral (PG) for browsing existing theories, it
+   should just work. But in case you want to create theories outside
+   the `HoTT/theories` directory, do not forget to change the name of
+   the Coq program called by PG. For instance you can edit the name of
+   the executable called by PG by typing `M-x customize-variable`,
+   then `coq-prog-name` or `proof-prog-name` which displays a
+   customization utility.
+
+   Another option is `M-x customize-variable` then
+   `proof-prog-name-ask`, then click on the `Toggle` button in front
+   of `Proof Prog Name Ask` and to save this for future sessions.
+   This will prompt PG to ask you for the name of the Coq toplevel to
+   be used each time you start evaluating a file.
+
+7. To use the Emacs tags facility with the `*.v` files here, run the command
 
         make TAGS
 
@@ -122,7 +183,7 @@ minimal fuss, you should try your luck by following these instructions:
    throughout the code for locations matching a given regular
    expression.)
 
-7. To prevent Emacs from prompting you about risky local variables
+8. To prevent Emacs from prompting you about risky local variables
    every time you open a `*.v` file, you can inform it that the
    variables we use are safe.  In newer versions of Emacs, you can do
    this by simply pressing `!` at the prompt.  In older versions of
@@ -138,7 +199,7 @@ minimal fuss, you should try your luck by following these instructions:
           (make-local-variable 'coq-prog-name)
           (setq coq-prog-name (expand-file-name "../hoqtop")))
 
-8. To update the library to the most current version, run `git pull`.
+9. To update the library to the most current version, run `git pull`.
    You will then have to recompile it with `make`.
 
    If you have problems, you can try running `make clean` first, which
@@ -151,89 +212,3 @@ minimal fuss, you should try your luck by following these instructions:
 
 In case of any problems, feel free to contact us by opening an issue at
 https://github.com/HoTT/HoTT.
-
-
-# DETAILED INSTALLATION INSTRUCTIONS
-
-## INSTALLATION OF HoTT
-
-Clone the HoTT repository with
-
-    git clone https://github.com/HoTT/HoTT.git
-
-Even better, if you would like to contribute to HoTT, first fork the repository
-on github.com and then use your own fork. This way you will be able to make pull
-requests.
-
-If you do not want to deal with `git` at all, you may download an archive of HoTT
-at https://github.com/HoTT/HoTT/archive/master.zip and unpack that. We do not
-recommend this option because the HoTT library is under heavy development and
-you want to be able to easily track changes. Additionally, downloading the
-archive requires a working version of the `autoreconf` utility.
-
-### PREREQUISITES
-
-The HoTT library requires the command-line option `-indices-matter`. This
-changes the interpretation of equality to one that conforms to the
-homotopy-theoretic interpretation.
-
-### Configuration of the HoTT library
-
-To configure the HoTT library:
-
-1. If Coq can be found in PATH, run
-
-       ./autogen.sh
-       ./configure
-
-   in the HoTT directory.
-
-2. If you installed Coq somewhere special or configured it
-   with `-local`, you should tell `./configure` where to find Coq:
-
-       ./autogen.sh
-       ./configure COQBIN=<directory-containing-coq-executables>
-
-   where you should specify the *absolute* path name (starting with /)
-   of the directory which contains `coqtop`, `coqc`, etc.
-
-To compile the HoTT library type
-
-    make
-
-Because it is a bit tricky to run Coq with a custom standard library,
-we provided scripts `hoqtop` and `hoqc` that do this for you, so you
-can run
-
-    ./hoqtop
-
-directly from the HoTT directory to start using the library. Load it
-with
-
-    Require Import HoTT.
-
-There is also `hoqc` for compiling files. You may prefer to install
-`hoqtop`, `hoqc` and the library files globally, in which case you
-type
-
-    sudo make install
-
-By default the files will be installed in `/usr/local/bin` and
-`/usr/local/share/hott`.  You can change the location by using
-standard `configure` parameters when you run it.  For example
-
-    ./configure --bindir=$HOME/bin --datadir=$HOME/stuff
-
-will install `hoqtop` and `hoqc` in the `bin` subdirectory of your
-home directory and the HoTT library in `stuff/hott` subdirectory of
-your home directory.
-
-If you are using ProofGeneral (PG), do not forget to change the name
-of the Coq program called by PG. For instance you can edit the name of
-the executable called by PG by typing 'M-x customize-variable', then
-'proof-prog-name' which displays a customization utility. An other
-option is to type 'M-x customize-variable', then
-'proof-prog-name-ask', to click on the 'Toogle' button in front of
-Proof Prog Name Ask and to save this for future sessions. This will
-prompt PG to ask you for the name of the coq toplevel to be used each
-time you start evaluating a file.
