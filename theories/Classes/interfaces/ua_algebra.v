@@ -2,18 +2,19 @@
 
 Require Export
   Coq.Unicode.Utf8
+  HoTT.Basics.Overture
+  HoTT.Basics.Trunc
   HoTT.Classes.implementations.ne_list
   HoTT.Classes.implementations.family_prod.
 
 Require Import
-  HoTT.Basics.Overture
+  HoTT.Basics.Equivalences
   HoTT.Types.Record
   HoTT.Types.Sigma
   HoTT.Types.Arrow
   HoTT.Types.Forall
   HoTT.Types.Universe
   HoTT.HSet
-  HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.implementations.list.
 
 Import ne_list.notations.
@@ -165,16 +166,13 @@ Arguments BuildAlgebra {σ} carriers operations.
     family of carriers. *)
 Global Coercion carriers : Algebra >-> Funclass.
 
-(** To find a path between two algebras [A B : Algebra σ] it suffices
-    to find a path between the carriers and the operations. *)
+Definition SigAlgebra (σ : Signature) : Type
+  := {c : Carriers σ | ∀ (u : Symbol σ), Operation c (σ u) }.
 
-Lemma path_algebra {σ : Signature} (A B : Algebra σ)
-  (p : carriers A = carriers B)
-  (q : transport (λ X, ∀ u, Operation X (σ u)) p (operations A)
-       = operations B)
-  : A = B.
+Lemma issig_algebra (σ : Signature) : SigAlgebra σ <~> Algebra σ.
 Proof.
-  destruct A,B. simpl in *. by path_induction.
+  unfold SigAlgebra.
+  issig (@BuildAlgebra σ) (@carriers σ) (@operations σ).
 Defined.
 
 Class IsTruncAlgebra (n : trunc_index) {σ : Signature} (A : Algebra σ)
@@ -184,12 +182,67 @@ Global Existing Instance trunc_carriers_algebra.
 
 Notation IsHSetAlgebra := (IsTruncAlgebra 0).
 
+Global Instance hprop_is_trunc_algebra `{Funext} (n : trunc_index)
+  {σ : Signature} (A : Algebra σ)
+  : IsHProp (IsTruncAlgebra n A).
+Proof.
+  apply trunc_forall.
+Qed.
+
 Global Instance trunc_algebra_succ {σ : Signature} (A : Algebra σ)
   {n} `{!IsTruncAlgebra n A}
   : IsTruncAlgebra n.+1 A | 1000.
 Proof.
   intro; exact _.
 Qed.
+
+(** To find a path between two algebras [A B : Algebra σ] it suffices
+    to find paths between the carriers and the operations. *)
+
+Lemma path_algebra {σ : Signature} (A B : Algebra σ)
+  (p : carriers A = carriers B)
+  (q : transport (λ X, ∀ u, Operation X (σ u)) p (operations A)
+       = operations B)
+  : A = B.
+Proof.
+  destruct A,B. cbn in *. by path_induction.
+Defined.
+
+Lemma path_ap_carriers_path_algebra {σ} (A B : Algebra σ)
+  (p : carriers A = carriers B)
+  (q : transport (λ X, ∀ u, Operation X (σ u)) p (operations A)
+       = operations B)
+  : ap carriers (path_algebra A B p q) = p.
+Proof.
+  destruct A as [A a], B as [B b]. cbn in *. by destruct p,q.
+Defined.
+
+(** Suppose [p],[q] are paths in [Algebra σ]. To show that [p = q] it
+    suffices to find a path [r] between the paths corresponding to
+    [p] and [q] in [SigAlgebra σ]. *)
+
+Lemma path_path_algebra {σ : Signature} {A B : Algebra σ} (p q : A = B)
+  (r : ap (issig_algebra σ)^-1 p = ap (issig_algebra σ)^-1 q)
+  : p = q.
+Proof.
+  set (e := (Paths.equiv_ap (issig_algebra σ)^-1 A B)).
+  by apply (@equiv_inv _ _ (ap e) (Equivalences.isequiv_ap _ _)).
+Defined.
+
+(** If [p q : A = B] and [IsHSetAlgebra B].
+    Then [ap carriers p = ap carriers q] implies [p = q]. *)
+
+Lemma path_path_hset_algebra `{Funext} {σ : Signature}
+  {A B : Algebra σ} `{IsHSetAlgebra B}
+  (p q : A = B) (r : ap carriers p = ap carriers q)
+  : p = q.
+Proof.
+  apply path_path_algebra.
+  unshelve eapply path_path_sigma.
+  - transitivity (ap carriers p); [by destruct p |].
+    transitivity (ap carriers q); [exact r | by destruct q].
+  - apply hprop_allpath. apply set_path2.
+Defined.
 
 Module algebra_notations.
 

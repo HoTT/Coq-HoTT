@@ -3,8 +3,8 @@ Require Import
   HoTT.HProp
   HoTT.Types.Universe
   HoTT.Types.Forall
-  HoTT.Classes.interfaces.ua_algebra
-  HoTT.Classes.interfaces.abstract_algebra.
+  HoTT.Classes.interfaces.canonical_names
+  HoTT.Classes.interfaces.ua_algebra.
 
 Import algebra_notations ne_list.notations.
 

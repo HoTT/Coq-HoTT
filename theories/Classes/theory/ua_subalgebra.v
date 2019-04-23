@@ -2,13 +2,9 @@ Require Import
   HoTT.Basics.Equivalences
   HoTT.TruncType
   HoTT.HProp
-  HoTT.HSet
   HoTT.Types.Universe
   HoTT.Types.Sigma
-  HoTT.Types.Record
   HoTT.Types.Forall
-  HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.interfaces.ua_algebra
   HoTT.Classes.theory.ua_homomorphism.
 
 Import algebra_notations ne_list.notations.
@@ -42,7 +38,7 @@ Section closed_under_op.
     {w : SymbolType σ} (α : Operation A w)
     : IsHProp (ClosedUnderOp α).
   Proof.
-    induction w; simpl; exact _.
+    induction w; cbn; exact _.
   Qed.
 
   Class IsClosedUnderOps : Type

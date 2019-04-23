@@ -1,12 +1,12 @@
+Require Export HoTT.Classes.interfaces.ua_congruence.
+
 Require Import
   HoTT.Basics.Equivalences
   HoTT.Types.Sigma
   HoTT.Types.Universe
   HoTT.HIT.quotient
+  HoTT.HIT.Truncations
   HoTT.Classes.implementations.list
-  HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.interfaces.ua_algebra
-  HoTT.Classes.interfaces.ua_congruence
   HoTT.Classes.theory.ua_homomorphism.
 
 Import algebra_notations ne_list.notations.
@@ -210,17 +210,15 @@ Section hom_quotient.
       : OpPreserving def_hom_quotient α g.
   Proof.
     unfold ComputeOpQuotient in G.
-    induction w; simpl in *.
-    - rewrite (G tt). reflexivity.
+    induction w; cbn in *.
+    - by destruct (G tt)^.
     - intro x. apply IHw. intro a. apply (G (x,a)).
   Defined.
 
   Global Instance is_homomorphism_quotient `{Funext}
     : IsHomomorphism def_hom_quotient.
   Proof.
-    intro u.
-    simpl.
-    apply oppreserving_quotient, compute_op_quotient.
+    intro u. apply oppreserving_quotient, compute_op_quotient.
   Defined.
 
   Definition hom_quotient : Homomorphism A (A/Φ)
@@ -261,7 +259,7 @@ Section ump_quotient_algebra.
       : OpPreserving def_hom_quotient_algebra_mapout g β.
     Proof.
       unfold ComputeOpQuotient in G.
-      induction w; simpl in *.
+      induction w; cbn in *.
       - destruct (G tt)^. apply P.
       - refine (quotient_ind_prop (Φ t) _ _). intro x.
         apply (IHw (g (class_of (Φ t) x)) (α x) (β (f t x))).

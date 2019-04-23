@@ -399,6 +399,7 @@ theories/Classes/interfaces/canonical_names.v
 theories/Classes/interfaces/orders.v
 theories/Classes/interfaces/integers.v
 theories/Classes/interfaces/ua_algebra.v
+theories/Classes/interfaces/ua_setalgebra.v
 theories/Classes/interfaces/ua_congruence.v
 theories/Classes/theory/premetric.v
 theories/Classes/theory/int_abs.v

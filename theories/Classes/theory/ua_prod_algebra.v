@@ -1,10 +1,9 @@
 Require Import
   HoTT.Basics.Equivalences
+  HoTT.Types.Bool
   HoTT.Types.Forall
   HoTT.Types.Sigma
   HoTT.Types.Prod
-  HoTT.Classes.interfaces.ua_algebra
-  HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.theory.ua_homomorphism.
 
 Import algebra_notations ne_list.notations.

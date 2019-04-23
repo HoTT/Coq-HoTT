@@ -63,7 +63,7 @@ Section with_type.
   Proof with auto.
     induction l...
     destruct l...
-    simpl in *.
+    cbn in *.
     rewrite IHl...
   Qed. 
 
@@ -121,7 +121,7 @@ Lemma tails_are_shorter {T} (y x: ne_list T):
   InList x (to_list (tails y)) →
   le (length (to_list x)) (length (to_list y)).
 Proof with auto.
- induction y; simpl.
+ induction y; cbn.
  - intros [[] | C].
    + constructor.
    + elim C.
@@ -139,7 +139,7 @@ Lemma list_map {A B} (f: A → B) (l: ne_list A)
 Proof.
   induction l.
   - reflexivity.
-  - simpl. rewrite <- IHl. reflexivity.
+  - cbn. rewrite <- IHl. reflexivity.
 Qed.
 
 Fixpoint inits {A} (l: ne_list A): ne_list (ne_list A) :=
