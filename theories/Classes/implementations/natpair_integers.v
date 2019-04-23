@@ -492,7 +492,7 @@ Qed.
 
 Definition Zle_hProp@{} : Z -> Z -> TruncType@{UN} -1.
 Proof.
-apply (@Z_rec2@{Ularge Ularge} _ (@istrunc_trunctype@{Ularge Uhuge UN} _ _)
+apply (@Z_rec2@{Ularge Ularge} _ (@istrunc_trunctype@{UN Ularge Uhuge} _ _)
   (fun q r => BuildhProp (PairT.Tle q r))).
 intros. apply path_hprop@{UN Ularge Uhuge}. simpl.
 apply (PairT.le_respects _);trivial.
@@ -601,7 +601,7 @@ Qed.
 
 Definition Zlt_hProp@{} : Z -> Z -> TruncType@{UN} -1.
 Proof.
-apply (@Z_rec2@{Ularge Ularge} _ (@istrunc_trunctype@{Ularge Uhuge UN} _ _)
+apply (@Z_rec2@{Ularge Ularge} _ (@istrunc_trunctype@{UN Ularge Uhuge} _ _)
   (fun q r => BuildhProp (PairT.Tlt q r))).
 intros. apply path_hprop@{UN Ularge Uhuge}. simpl.
 apply (PairT.lt_respects _);trivial.
@@ -697,7 +697,7 @@ Local Existing Instance pseudo_order_apart.
 
 Definition Zapart_hProp@{} : Z -> Z -> TruncType@{UN} -1.
 Proof.
-apply (@Z_rec2@{Ularge Ularge} _ (@istrunc_trunctype@{Ularge Uhuge UN} _ _)
+apply (@Z_rec2@{Ularge Ularge} _ (@istrunc_trunctype@{UN Ularge Uhuge} _ _)
   (fun q r => BuildhProp (PairT.Tapart q r))).
 intros. apply path_hprop@{UN Ularge Uhuge}. simpl.
 apply (PairT.apart_respects _);trivial.

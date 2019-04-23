@@ -214,7 +214,7 @@ Notation "g 'oD' f" := (composeD g f) : function_scope.
 (** The results in this file are used everywhere else, so we need to be extra careful about how we define and prove things.  We prefer hand-written terms, or at least tactics that allow us to retain clear control over the proof-term produced. *)
 
 (** We define our own identity type, rather than using the one in the Coq standard library, so as to have more control over transitivity, symmetry and inverse.  It seems impossible to change these for the standard eq/identity type (or its Type-valued version) because it breaks various other standard things.  Merely changing notations also doesn't seem to quite work. *)
-Inductive paths {A : Type} (a : A) : A -> Type :=
+Cumulative Inductive paths {A : Type} (a : A) : A -> Type :=
   idpath : paths a a.
 
 Arguments idpath {A a} , [A] a.

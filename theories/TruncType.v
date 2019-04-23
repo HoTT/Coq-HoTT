@@ -94,11 +94,11 @@ Qed.
 Definition path_hset {A B} := @path_trunctype 0 A B.
 Definition path_hprop {A B} := @path_trunctype -1 A B.
 
-Global Instance istrunc_trunctype {n : trunc_index}
-  : IsTrunc n.+1 (TruncType n) | 0.
+Global Instance istrunc_trunctype@{i j k | i < j, j < k} {n : trunc_index}
+  : IsTrunc@{j} n.+1 (TruncType@{i} n) | 0.
 Proof.
   intros A B.
-  refine (trunc_equiv _ (equiv_path_trunctype A B)).
+  refine (trunc_equiv _ (equiv_path_trunctype@{i j k} A B)).
   case n as [ | n'].
   - apply contr_equiv_contr_contr. (* The reason is different in this case. *)
   - apply istrunc_equiv.
