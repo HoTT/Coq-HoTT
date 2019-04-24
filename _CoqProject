@@ -26,6 +26,10 @@ theories/Types/Wtype.v
 theories/Types/Equiv.v
 theories/Types/Universe.v
 theories/Types.v
+theories/Cubical/DPath.v
+theories/Cubical/Square.v
+theories/Cubical/Cube.v
+theories/Cubical.v
 theories/BoundedSearch.v
 theories/EquivGroupoids.v
 theories/Fibrations.v

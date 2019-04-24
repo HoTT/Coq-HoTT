@@ -7,6 +7,8 @@ Require Export HoTT.Basics.
 
 Require Export HoTT.Types.
 
+Require Export HoTT.Cubical.
+
 Require Export Fibrations.
 Require Export Conjugation.
 Require Export HProp.
