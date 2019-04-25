@@ -43,11 +43,7 @@ Section PO.
     : cocone (span f g) Z.
   Proof.
     unshelve econstructor.
-    - intros []; cbn.
-      + intros _. exact (inr' o g).
-      + intros [].
-        * exact inl'.
-        * exact inr'.
+    - intros [|[]]; [ exact (inr' o g) | exact inl' | exact inr' ].
     - intros [] [] []; cbn. destruct b.
       + exact pp'.
       + reflexivity.
@@ -85,10 +81,10 @@ Section PO.
     : forall w, P w.
   Proof.
     simple refine (colimit_ind P _ _).
-    - intros []; cbn.
-      + intros [] x.
-        exact (@colimp _ (span f g) (inl tt) (inr true) tt x # l' (f x)).
-      + intros []; cbn;[exact l' | exact r'].
+    - intros [[]|[]] x; cbn.
+      + exact (@colimp _ (span f g) (inl tt) (inr true) tt x # l' (f x)).
+      + exact (l' x).
+      + exact (r' x).
     - intros [] [] []; cbn.
       destruct u, b; cbn.
       + reflexivity.

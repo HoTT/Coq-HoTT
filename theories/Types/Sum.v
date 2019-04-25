@@ -969,8 +969,9 @@ Definition sum_of_sigT A B (x : { b : Bool & if b then A else B })
 Global Instance isequiv_sigT_of_sum A B : IsEquiv (@sigT_of_sum A B) | 0.
 Proof.
   apply (isequiv_adjointify (@sigT_of_sum A B)
-                            (@sum_of_sigT A B));
-  repeat (intros [] || intro); exact idpath.
+                            (@sum_of_sigT A B)).
+  - intros [[] ?]; exact idpath.
+  - intros []; exact idpath.
 Defined.
 
 Global Instance isequiv_sum_of_sigT A B : IsEquiv (sum_of_sigT A B)
