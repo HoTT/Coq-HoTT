@@ -91,6 +91,14 @@ Section subalgebra.
 
   Definition Subalgebra : Algebra σ
     := BuildAlgebra carriers_subalgebra ops_subalgebra.
+
+  Global Instance trunc_subalgebra {n : trunc_index} `{!IsTruncAlgebra n.+1 A}
+    : IsTruncAlgebra n.+1 Subalgebra.
+  Proof.
+    intro s. apply @trunc_sigma.
+    - exact _.
+    - intro. induction n; exact _.
+  Qed.
 End subalgebra.
 
 Module subalgebra_notations.

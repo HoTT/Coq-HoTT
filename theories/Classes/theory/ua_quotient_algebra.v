@@ -4,6 +4,7 @@ Require Import
   HoTT.Basics.Equivalences
   HoTT.Types.Sigma
   HoTT.Types.Universe
+  HoTT.HSet
   HoTT.HIT.quotient
   HoTT.HIT.Truncations
   HoTT.Classes.implementations.list
@@ -230,6 +231,21 @@ Section hom_quotient.
     intro s. apply quotient_surjective.
   Qed.
 End hom_quotient.
+
+(** If [Φ s x y] implies [x = y], then homomorphism [hom_quotient Φ]
+    is an isomorphism. *)
+
+Global Instance is_isomorphism_quotient `{Univalence}
+  {σ : Signature} {A : Algebra σ} (Φ : ∀ s, relation (A s))
+  `{!IsCongruence A Φ} (P : ∀ s x y, Φ s x y → x = y)
+  : IsIsomorphism (hom_quotient Φ).
+Proof.
+  intro s.
+  apply isequiv_surj_emb; [exact _ |].
+  apply isembedding_isinj_hset.
+  intros x y p.
+  by apply P, (classes_eq_related (Φ s)).
+Qed.
 
 (** This section develops the universal mapping property
     [ump_quotient_algebra] of the quotient algebra. *)
