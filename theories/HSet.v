@@ -120,8 +120,7 @@ Proof.
   exact (ap pr1 q).
 Defined.
 
-Lemma isembedding_isinj_hset {A B : Type} `{IsHSet A} `{IsHSet B}
-      (m : A -> B)
+Lemma isembedding_isinj_hset {A B : Type} `{IsHSet B} (m : A -> B)
 : isinj m -> IsEmbedding m.
 Proof.
   intros isi b.
