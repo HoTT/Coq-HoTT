@@ -198,7 +198,7 @@ validate: $(ALL_VOFILES)
 
 $(STD_VOFILES) : %.vo : %.v coq-HoTT
 	$(VECHO) COQC $*
-	$(Q) $(TIMER) etc/pipe_out.sh "$<.timing" "$(COQC)" -time -indices-matter -boot -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq "$<"
+	$(Q) $(TIMER) etc/pipe_out.sh "$<.timing" "$(COQC)" -time -indices-matter -nois -coqlib "$(SRCCOQLIB)" -R "$(SRCCOQLIB)/theories" Coq "$<"
 
 
 # The HoTT library as a single target
