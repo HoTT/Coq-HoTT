@@ -2,8 +2,12 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Modality Accessible Nullification.
 
-Local Open Scope path_scope.
+Local Unset Elimination Schemes.
 
+(* Disable automatic generation of elimination schemes to avoid
+   generation of induction/recursion principles to [Prop]/[Set]. *)
+
+Local Open Scope path_scope.
 
 (** * The identity modality *)
 
@@ -11,6 +15,10 @@ Local Open Scope path_scope.
 
 Inductive Identity_Modality : Type1
   := purely : Identity_Modality.
+
+Scheme Identity_Modality_ind := Induction for Identity_Modality Sort Type.
+Scheme Identity_Modality_rec := Minimality for Identity_Modality Sort Type.
+Definition Identity_Modality_rect := Identity_Modality_ind.
 
 Module Identity_Modalities <: Modalities.
 

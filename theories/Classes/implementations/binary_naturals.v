@@ -15,6 +15,11 @@ Require Import
         HoTT.Classes.orders.semirings
         HoTT.Classes.theory.apartness.
 
+(* Disable automatic generation of elimination schemes to avoid
+   generation of induction/recursion principles to [Prop]/[Set]. *)
+
+Local Unset Elimination Schemes.
+
 Section basics.
 
   (* This definition of binary naturals is due to Martín Escardó and
@@ -24,6 +29,10 @@ Section basics.
   | bzero   :           binnat  (* zero *)
   | double1 : binnat -> binnat  (* 2n+1 *)
   | double2 : binnat -> binnat. (* 2n+2 *)
+
+  Scheme binnat_ind := Induction for binnat Sort Type.
+  Scheme binnat_rec := Minimality for binnat Sort Type.
+  Definition binnat_rect := binnat_ind.
 
   Fixpoint Succ (n : binnat) : binnat :=
     match n with

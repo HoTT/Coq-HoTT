@@ -5,6 +5,11 @@
 Require Import HoTT.Basics HoTT.Types.Universe.
 Require Import HSet.
 
+(* Disable automatic generation of elimination schemes to avoid
+   generation of induction/recursion principles to [Prop]/[Set]. *)
+
+Local Unset Elimination Schemes.
+
 Local Open Scope path_scope.
 
 (* ** Positive Numbers *)
@@ -12,6 +17,10 @@ Local Open Scope path_scope.
 Inductive Pos : Type0 :=
 | one : Pos
 | succ_pos : Pos -> Pos.
+
+Scheme Pos_ind := Induction for Pos Sort Type.
+Scheme Pos_rec := Minimality for Pos Sort Type.
+Definition Pos_rect := Pos_ind.
 
 Definition one_neq_succ_pos (z : Pos) : ~ (one = succ_pos z)
   := fun p => transport (fun s => match s with one => Unit | succ_pos t => Empty end) p tt.
@@ -25,6 +34,10 @@ Inductive Int : Type0 :=
 | neg : Pos -> Int
 | zero : Int
 | pos : Pos -> Int.
+
+Scheme Int_ind := Induction for Int Sort Type.
+Scheme Int_rec := Minimality for Int Sort Type.
+Definition Int_rect := Int_ind.
 
 Definition neg_injective {z w : Pos} (p : neg z = neg w) : z = w
   := transport (fun s => z = (match s with neg a => a | zero => w | pos a => w end)) p (idpath z).

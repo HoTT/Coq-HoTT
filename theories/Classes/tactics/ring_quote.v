@@ -3,6 +3,11 @@ Require Import HoTT.Classes.theory.rings
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.implementations.list.
 
+(* Disable automatic generation of elimination schemes to avoid
+   generation of induction/recursion principles to [Prop]/[Set]. *)
+
+Local Unset Elimination Schemes.
+
 Class AlmostNegate A := almost_negate : A -> A.
 
 Class AlmostRing A {Aplus : Plus A} {Amult : Mult A}
@@ -37,6 +42,15 @@ Arguments One [V].
 Arguments Plus [V] a b.
 Arguments Mult [V] a b.
 Arguments Neg [V] a.
+
+Scheme Expr_ind := Induction for Expr Sort Type.
+Arguments Expr_ind [V].
+
+Scheme Expr_rec := Minimality for Expr Sort Type.
+Arguments Expr_rec [V].
+
+Definition Expr_rect := Expr_ind.
+Arguments Expr_rect [V].
 
 Section contents.
 Universe U.

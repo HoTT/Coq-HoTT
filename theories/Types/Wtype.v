@@ -5,6 +5,11 @@ Require Import HoTT.Basics.
 Require Import Types.Forall Types.Sigma Types.Paths Types.Unit.
 Local Open Scope path_scope.
 
+(* Disable automatic generation of elimination schemes to avoid
+   generation of induction/recursion principles to [Prop]/[Set]. *)
+
+Local Unset Elimination Schemes.
+
 Generalizable Variables X A B C f g n.
 
 (** Primitive projections do not work for recursive records; see bug #4648 - https://coq.inria.fr/bugs/show_bug.cgi?id=4648. *)
@@ -15,6 +20,15 @@ Local Set Primitive Projections.
 
 Arguments w_label {A B} _.
 Arguments w_arg {A B} _ _.
+
+Scheme W_ind := Induction for W Sort Type.
+Arguments W_ind [A B].
+
+Scheme W_rec := Minimality for W Sort Type.
+Arguments W_rec [A B].
+
+Definition W_rect := W_ind.
+Arguments W_rect [A B].
 
 (** ** Paths *)
 

@@ -1,5 +1,10 @@
 Require Import HoTT.
 
+(* Disable automatic generation of elimination schemes to avoid
+   generation of induction/recursion principles to [Prop]/[Set]. *)
+
+Local Unset Elimination Schemes.
+
 Fail Check Type0 : Type0.
 Check Susp nat : Type0.
 Fail Check Susp Type0 : Type0.

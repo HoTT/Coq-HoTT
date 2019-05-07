@@ -5,6 +5,11 @@ Require Import
   HoTT.Classes.tactics.ring_quote
   HoTT.Classes.theory.rings.
 
+(* Disable automatic generation of elimination schemes to avoid
+   generation of induction/recursion principles to [Prop]/[Set]. *)
+
+Local Unset Elimination Schemes.
+
 Import Quoting.
 Local Set Universe Minimization ToSet.
 
@@ -18,6 +23,10 @@ Context {C : Type@{UC} } {V : Type0 }.
 Inductive Pol : Type@{UC} :=
   | Pconst (c : C)
   | PX (P : Pol) (v : V) (Q : Pol).
+
+Scheme Pol_ind := Induction for Pol Sort Type.
+Scheme Pol_rec := Minimality for Pol Sort Type.
+Definition Pol_rect := Pol_ind.
 
 (* [C] is the scalar semiring: Z when working on rings,
    N on semirings, other sometimes. *)

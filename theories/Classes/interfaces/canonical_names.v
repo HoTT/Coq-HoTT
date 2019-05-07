@@ -2,6 +2,11 @@ Require Export HoTT.Basics.Overture HoTT.Types.Bool HoTT.Basics.Decidable HoTT.B
 
 Require Import HoTT.Types.Sigma HoTT.Types.Forall HoTT.Types.Record.
 
+(* Disable automatic generation of elimination schemes to avoid
+   generation of induction/recursion principles to [Prop]/[Set]. *)
+
+Local Unset Elimination Schemes.
+
 Declare Scope mc_scope.
 Delimit Scope mc_scope with mc.
 Global Open Scope mc_scope.
@@ -353,7 +358,11 @@ Notation "(∸)" := cut_minus (only parsing) : mc_scope.
 Notation "( x ∸)" := (cut_minus x) (only parsing) : mc_scope.
 Notation "(∸ y )" := (fun x => x ∸ y) (only parsing) : mc_scope.
 
-Inductive comparison : Set := LT | EQ | GT.
+Inductive comparison : Type0 := LT | EQ | GT.
+
+Scheme comparison_ind := Induction for comparison Sort Type.
+Scheme comparison_rec := Minimality for comparison Sort Type.
+Definition comparison_rect := comparison_ind.
 
 Class Compare A := compare : A -> A -> comparison.
 Infix "?=" := compare (at level 70, no associativity) : mc_scope.
