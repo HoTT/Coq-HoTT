@@ -285,5 +285,6 @@ Bind Scope adjunction_scope with AdjunctionUnitCounit.
 
 Arguments unit [C D]%category [F G]%functor _%adjunction / .
 Arguments counit [C D]%category [F G]%functor _%adjunction / .
+Arguments AdjunctionUnitCounit [C D]%category (F G)%functor.
 Arguments unit_counit_equation_1 [C D]%category [F G]%functor _%adjunction _%object.
 Arguments unit_counit_equation_2 [C D]%category [F G]%functor _%adjunction _%object.
