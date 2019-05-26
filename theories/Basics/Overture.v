@@ -27,6 +27,9 @@ Global Unset Universe Minimization ToSet.
 (** Force to use bullets in proofs. *)
 Global Set Default Goal Selector "!".
 
+(** Currently Coq doesn't print equivalences correctly (8.6). This fixes that. See https://github.com/HoTT/HoTT/issues/1000 *)
+Global Set Printing Primitive Projection Parameters.
+
 (** Apply using the same opacity information as typeclass proof search. *)
 Ltac class_apply c := autoapply c using typeclass_instances.
 
