@@ -10,7 +10,7 @@ Require Import
 Import algebra_notations ne_list.notations.
 
 Section closed_under_op.
-  Context {σ} (A : Algebra σ) (P : ∀ (s : Sort σ), A s → hProp).
+  Context `{Funext} {σ} (A : Algebra σ) (P : ∀ s, A s → Type).
 
   (** Let [α : A s1 → A s2 → ... → A sn → A t] be an algebra
       operation. Then [P] satisfies [ClosedUnderOp α] iff
@@ -34,29 +34,54 @@ Section closed_under_op.
                     ∀ (x : A s), P s x → ClosedUnderOp (α x)
     end.
 
-  Global Instance hprop_closed_under_op `{Funext}
+  Global Instance trunc_closed_under_op {n} `{∀ s x, IsTrunc n (P s x)}
     {w : SymbolType σ} (α : Operation A w)
-    : IsHProp (ClosedUnderOp α).
+    : IsTrunc n (ClosedUnderOp α).
   Proof.
     induction w; cbn; exact _.
   Qed.
 
-  Class IsClosedUnderOps : Type
-    := closed_under_ops : ∀ (u : Symbol σ), ClosedUnderOp (u^^A).
+  Definition IsClosedUnderOps : Type
+    := ∀ (u : Symbol σ), ClosedUnderOp (u^^A).
 
-  Global Instance hprop_is_closed_under_ops `{Funext}
-    : IsHProp IsClosedUnderOps.
+  Global Instance trunc_is_closed_under_ops
+    {n} `{∀ s x, IsTrunc n (P s x)}
+    : IsTrunc n IsClosedUnderOps.
   Proof.
     apply trunc_forall.
   Qed.
 End closed_under_op.
+
+(** [P : ∀ s, A s → Type] is a subalgebra predicate if it is closed
+    under operations [IsClosedUnderOps A P] and [P s x] is an h-prop. *)
+
+Section subalgebra_predicate.
+  Context  {σ} (A : Algebra σ) (P : ∀ s, A s → Type).
+
+  Class IsSubalgebraPredicate
+    := BuildIsSubalgebraPredicate
+    { hprop_subalgebra_predicate : ∀ s x, IsHProp (P s x);
+      is_closed_under_ops_subalgebra_predicate : IsClosedUnderOps A P }.
+
+  Global Instance hprop_is_subalgebra_predicate `{Funext}
+    : IsHProp IsSubalgebraPredicate.
+  Proof.
+    apply hprop_allpath.
+    intros [x1 x2] [y1 y2].
+    by destruct (path_ishprop x1 y1), (path_ishprop x2 y2).
+  Defined.
+End subalgebra_predicate.
+
+Global Arguments BuildIsSubalgebraPredicate {σ A P hprop_subalgebra_predicate}.
+
+Global Existing Instance hprop_subalgebra_predicate.
 
 (** The next section defines subalgebra. *)
 
 Section subalgebra.
   Context
     {σ : Signature} (A : Algebra σ)
-    (P : ∀ s, A s → hProp) `{!IsClosedUnderOps A P}.
+    (P : ∀ s, A s → Type) `{!IsSubalgebraPredicate A P}.
 
 (** The subalgebra carriers is the family of subtypes defined by [P]. *)
 
@@ -87,14 +112,16 @@ Section subalgebra.
 
   Definition ops_subalgebra (u : Symbol σ)
     : Operation carriers_subalgebra (σ u)
-    := op_subalgebra (u^^A) (closed_under_ops A P u).
+    := op_subalgebra (u^^A) (is_closed_under_ops_subalgebra_predicate A P u).
 
   Definition Subalgebra : Algebra σ
     := BuildAlgebra carriers_subalgebra ops_subalgebra.
 
-  Global Instance trunc_subalgebra {n : trunc_index} `{!IsTruncAlgebra n.+1 A}
+  Global Instance trunc_subalgebra {n : trunc_index}
+    `{!IsTruncAlgebra n.+1 A}
     : IsTruncAlgebra n.+1 Subalgebra.
   Proof.
+    pose proof (hprop_subalgebra_predicate A P).
     intro s. apply @trunc_sigma.
     - exact _.
     - intro. induction n; exact _.
@@ -115,7 +142,7 @@ Import subalgebra_notations.
 Section hom_inc_subalgebra.
   Context
     {σ : Signature} (A : Algebra σ)
-    (P : ∀ s, A s → hProp) `{!IsClosedUnderOps A P}.
+    (P : ∀ s, A s → Type) `{!IsSubalgebraPredicate A P}.
 
   Definition def_inc_subalgebra (s : Sort σ) : (A&P) s → A s
     := pr1.
@@ -139,7 +166,7 @@ Section hom_inc_subalgebra.
     := BuildHomomorphism def_inc_subalgebra.
 
   Lemma is_isomorphism_inc_improper_subalgebra
-    `{!IsHSetAlgebra A} (improper : ∀ s (x : A s), P s x)
+    (improper : ∀ s (x : A s), P s x)
     : IsIsomorphism hom_inc_subalgebra.
   Proof.
     intro s.
@@ -156,8 +183,8 @@ End hom_inc_subalgebra.
 Section path_subalgebra.
   Context
     {σ : Signature} (A : Algebra σ)
-    (P : ∀ s, A s → hProp) {CP : IsClosedUnderOps A P}
-    (Q : ∀ s, A s → hProp) {CQ : IsClosedUnderOps A Q}.
+    (P : ∀ s, A s → Type) {CP : IsSubalgebraPredicate A P}
+    (Q : ∀ s, A s → Type) {CQ : IsSubalgebraPredicate A Q}.
 
   Lemma path_subalgebra `{Funext} (p : P = Q) : A&P = A&Q.
   Proof.
@@ -169,7 +196,7 @@ Section path_subalgebra.
   Proof.
     apply path_subalgebra.
     funext s x.
-    apply equiv_path_trunctype.
+    apply (@path_universe _ _ _ (fst (R s x))).
     apply (equiv_equiv_iff_hprop _ _ (R s x)).
   Defined.
 End path_subalgebra.

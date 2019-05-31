@@ -91,12 +91,12 @@ Section ump_prod_algebra.
     : Homomorphism C (A i)
     := hom_compose (hom_proj_prod_algebra I A i) f.
 
-  Definition def_prod_algebra_mapin (f : ∀ i, Homomorphism C (A i))
+  Definition def_prod_algebra_mapin (f : ∀ (i:I) s, C s → A i s)
     : ∀ (s : Sort σ) , C s → ProdAlgebra I A s
     := λ (s : Sort σ) (x : C s) (i : I), f i s x.
 
   Lemma oppreserving_prod_algebra_mapin {w : SymbolType σ}
-    (f : ∀ (i:I), Homomorphism C (A i))
+    (f : ∀ (i:I) s, C s → A i s)
     (α : ∀ (i:I), Operation (A i) w) (β : Operation C w)
     (P : ∀ (i:I), OpPreserving (f i) β (α i))
     : OpPreserving (def_prod_algebra_mapin f) β
