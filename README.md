@@ -19,6 +19,8 @@ More information about this libary can be found in:
 * _The HoTT Library: A formalization of homotopy type theory in Coq_, 
 Andrej Bauer, Jason Gross, Peter LeFanu Lumsdaine, Mike Shulman, Matthieu Sozeau, Bas Spitters, 2016 [arxiv](https://arxiv.org/abs/1610.04591) [CPP17](http://cpp2017.mpi-sws.org/)
 
+Other publications related to the library can be found [here](https://github.com/HoTT/HoTT/wiki/Publications-based-on-the-HoTT-library).
+
 ## INSTALLATION
 
 Installation details are explained in the file `INSTALL.md`. 
