@@ -91,11 +91,15 @@ Section in_image_hom.
       by destruct p.
   Qed.
 
-  Global Instance is_closed_under_ops_in_image_hom
+  Lemma is_closed_under_ops_in_image_hom
     : IsClosedUnderOps B in_image_hom.
   Proof.
     intro u. eapply closed_under_op_in_image_hom, hom.
   Qed.
+
+  Global Instance is_subalgebra_predicate_in_image_hom
+    : IsSubalgebraPredicate B in_image_hom
+    := BuildIsSubalgebraPredicate is_closed_under_ops_in_image_hom.
 End in_image_hom.
 
 (** The folowing section proves the first isomorphism theorem,
@@ -212,7 +216,7 @@ Section first_isomorphism_surjection.
   Global Instance is_isomorphism_inc_first_isomorphism_surjection
     : IsIsomorphism (hom_inc_subalgebra B (in_image_hom f)).
   Proof.
-    apply is_isomorphism_inc_improper_subalgebra; [exact _ | apply S].
+    apply is_isomorphism_inc_improper_subalgebra. apply S.
   Qed.
 
 (** The homomorphism [hom_first_isomorphism_surjection] is the
@@ -234,3 +238,36 @@ Section first_isomorphism_surjection.
     exact (id_isomorphic isomorphic_first_isomorphism_surjection).
   Qed.
 End first_isomorphism_surjection.
+
+(** The next section specializes the first isomorphism theorem to the
+    case where the homomorphism is injective. It proves that an
+    injective homomorphism is an isomorphism between its domain
+    and its image. *)
+
+Section first_isomorphism_inj.
+  Context
+    `{Univalence} {σ} {A B : Algebra σ} `{IsHSetAlgebra B}
+    (f : ∀ s, A s → B s) `{!IsHomomorphism f} (inj : ∀ s, isinj (f s)).
+
+  Global Instance is_isomorphism_quotient_first_isomorphism_inj
+    : IsIsomorphism (hom_quotient (cong_ker f)).
+  Proof.
+    apply is_isomorphism_quotient. intros s x y p. apply inj, p.
+  Qed.
+
+(** The homomorphism [hom_first_isomorphism_inj] is the
+    composition of two isomorphisms, so it is an isomorphism. *)
+
+  Definition hom_first_isomorphism_inj
+    : Homomorphism A (B & in_image_hom f)
+    := hom_compose
+          (hom_first_isomorphism f)
+          (hom_quotient (cong_ker f)).
+
+  Definition isomorphic_first_isomorphism_inj : A ≅ B & in_image_hom f
+    := BuildIsomorphic hom_first_isomorphism_inj.
+
+  Definition id_first_isomorphism_inj : A = B & in_image_hom f
+    := id_isomorphic isomorphic_first_isomorphism_inj.
+
+End first_isomorphism_inj.
