@@ -126,15 +126,13 @@ Module Accessible_OpenModalities <: Accessible_Modalities OpenModalities.
   Proof.
     pose (funext_Op O); split.
     - intros X_inO u.
-      (* Coq pre 8.8 produces phantom universes, see GitHub Coq/Coq#1033. *)
-      first [apply (equiv_inverse (equiv_ooextendable_isequiv@{a a i i i i i i i i i} _ _))|
-             apply (equiv_inverse (equiv_ooextendable_isequiv@{a a i i i i i i i i i i i} _ _))].
+      apply (equiv_inverse (equiv_ooextendable_isequiv@{a a i i i  i i i i i  i i i i} _ _)).
       refine (cancelR_isequiv (fun x (u:Unit) => x)).
       apply X_inO.
     - intros ext; specialize (ext tt).
       refine (isequiv_compose (f := (fun x => unit_name x))
                               (g := (fun h => h o (@const (unOp O) Unit tt)))).
-      refine (isequiv_ooextendable@{a a i i i i i i} (fun _ => X) (@const@{i a} (unOp O) Unit tt) ext).
+      refine (isequiv_ooextendable@{a a i i i  i i i i i  i} (fun _ => X) (@const@{i a} (unOp O) Unit tt) ext).
   Defined.
 
   (* Phantom universes (ie not appearing in the term) are produced by some un-annotated functions and foralls.

@@ -45,9 +45,9 @@ Proof.
   - exact ((BuildEquiv _ _ (@ap _ _ (@trunctype_type n) A B) _)^-1)%equiv.
 Defined.
 
-Definition path_trunctype {n : trunc_index} {A B : TruncType n}
+Definition path_trunctype@{a b c} {n : trunc_index} {A B : TruncType n}
   : A <~> B -> (A = B :> TruncType n)
-:= equiv_path_trunctype A B.
+:= equiv_path_trunctype@{a b c} A B.
 
 Global Instance isequiv_path_trunctype
        {n : trunc_index} {A B : TruncType n}

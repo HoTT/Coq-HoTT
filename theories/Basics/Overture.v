@@ -421,7 +421,7 @@ Definition Sect {A B : Type} (s : A -> B) (r : B -> A) :=
 Global Arguments Sect {A B}%type_scope (s r)%function_scope.
 
 (** A typeclass that includes the data making [f] into an adjoint equivalence. *)
-Class IsEquiv {A B : Type} (f : A -> B) := BuildIsEquiv {
+Cumulative Class IsEquiv {A B : Type} (f : A -> B) := BuildIsEquiv {
   equiv_inv : B -> A ;
   eisretr : Sect equiv_inv f;
   eissect : Sect f equiv_inv;
@@ -434,7 +434,7 @@ Arguments eisadj {A B}%type_scope f%function_scope {_} _.
 Arguments IsEquiv {A B}%type_scope f%function_scope.
 
 (** A record that includes all the data of an adjoint equivalence. *)
-Record Equiv A B := BuildEquiv {
+Cumulative Record Equiv A B := BuildEquiv {
   equiv_fun : A -> B ;
   equiv_isequiv : IsEquiv equiv_fun
 }.
