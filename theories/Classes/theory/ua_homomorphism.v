@@ -126,19 +126,6 @@ Proof.
   apply (path_homomorphism f g p). apply path_ishprop.
 Defined.
 
-(** Let [f : ∀ s, A s → B s] be a homomorphism. The following
-    section proves that [f] is "OpPreserving" with respect to
-    uncurried algebra operations in the sense that
-
-    <<
-      f t (α (x1,x2,...,xn,tt)) = β (f s1 x1,f s2 x1,...,f sn xn,tt)
-    >>
-
-    for all [(x1,x2,...,xn,tt) : FamilyProd A [s1;s2;...;sn]], where
-    [α] and [β] are uncurried algebra operations in [A] and [B]
-    respectively.
-*)
-
 (** A family of functions [f : ∀ s, A s → B s] is an isomorphism if it is
     a homomorphism, and for each [s : Sort σ], [f s] is an equivalence. *)
 
@@ -166,6 +153,19 @@ Global Instance hprop_is_isomorphism `{Funext} {σ : Signature}
 Proof.
   apply trunc_forall.
 Qed.
+
+(** Let [f : ∀ s, A s → B s] be a homomorphism. The following
+    section proves that [f] is "OpPreserving" with respect to
+    uncurried algebra operations in the sense that
+
+    <<
+      f t (α (x1,x2,...,xn,tt)) = β (f s1 x1,f s2 x1,...,f sn xn,tt)
+    >>
+
+    for all [(x1,x2,...,xn,tt) : FamilyProd A [s1;s2;...;sn]], where
+    [α] and [β] are uncurried algebra operations in [A] and [B]
+    respectively.
+*)
 
 Section homomorphism_ap_operation.
   Context {σ : Signature} {A B : Algebra σ}.
