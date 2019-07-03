@@ -25,9 +25,9 @@ Section Grothendieck.
 
   (** ** Category of elements *)
   Definition category : PreCategory
-    := category (F : FunctorToCat).
+    := category (pseudofunctor_of_functor_to_cat F).
 
   (** ** First projection functor *)
   Definition pr1 : Functor category C
-    := pr1 (F : FunctorToCat).
+    := pr1 (pseudofunctor_of_functor_to_cat F).
 End Grothendieck.

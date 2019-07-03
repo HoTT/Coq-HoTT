@@ -53,6 +53,3 @@ Section set_coercions.
                                                         m')
                      (fun x => identity_of F (BuildhSet x)).
 End set_coercions.
-
-Coercion to_prop2set : to_prop >-> to_set.
-Coercion from_set2prop : from_set >-> from_prop.

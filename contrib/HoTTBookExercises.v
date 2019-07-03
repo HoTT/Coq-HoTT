@@ -325,7 +325,7 @@ Eval compute in (Book_2_4_npath 2 A). (* and so on... *)
 Definition Book_2_4_nboundary
   : forall {n : nat} {A : Type}, Book_2_4_npath (S n) A ->
                           (Book_2_4_npath n A * Book_2_4_npath n A)
-  := fun n A p => (pr1 p, pr1 (pr2 p)).
+  := fun {n} {A} p => (pr1 p, pr1 (pr2 p)).
 
 (* ================================================== ex:ap-to-apd-equiv-apd-to-ap *)
 (** Exercise 2.5 *)

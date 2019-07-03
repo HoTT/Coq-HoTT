@@ -161,5 +161,3 @@ Definition FunctorToCat `{Funext} {C} `{HP : forall C D, P C -> P D -> IsHSet (F
 Identity Coercion functor_to_cat_id : FunctorToCat >-> Functor.
 Definition pseudofunctor_of_functor_to_cat `(F : @FunctorToCat H C P HP)
   := @pseudofunctor_of_functor _ C P HP F.
-
-Coercion pseudofunctor_of_functor_to_cat : FunctorToCat >-> Pseudofunctor.

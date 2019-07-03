@@ -15,9 +15,6 @@ Local Unset Elimination Schemes.
 (** This command changes Coq's subterm selection to always use full conversion after finding a subterm whose head/key matches the key of the term we're looking for.  This applies to [rewrite] and higher-order unification in [apply]/[elim]/[destruct].  Again, if you don't know what that means, ignore it. *)
 Global Set Keyed Unification.
 
-(** This command makes it so that when defining an [Instance], if you give a term explicitly with [:=], then Coq must be able to fill in all the holes in that term.  This is the same as the behavior of [Definition].  (Without this command, if Coq is unable to fill in all the holes in a term given to an [Instance], it silently drops into interactive proof mode.  This is a source of hard-to-find bugs, and you can always obtain equivalent behavior by beginning an interactive proof with [refine].) *)
-Global Unset Refine Instance Mode.
-
 (** This command makes it so that you don't have to declare universes explicitly when mentioning them in the type.  (Without this command, if you want to say [Definition foo := Type@{i}.], you must instead say [Definition foo@{i} := Type@{i}.]. *)
 Global Unset Strict Universe Declaration.
 
@@ -31,7 +28,7 @@ Global Set Default Goal Selector "!".
 Global Set Printing Primitive Projection Parameters.
 
 (** Apply using the same opacity information as typeclass proof search. *)
-Ltac class_apply c := autoapply c using typeclass_instances.
+Ltac class_apply c := autoapply c with typeclass_instances.
 
 Definition relation (A : Type) := A -> A -> Type.
 

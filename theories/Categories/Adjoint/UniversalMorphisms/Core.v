@@ -120,7 +120,7 @@ Section adjunction_from_universal.
     Definition adjunction__of__initial_morphism
     : functor__of__initial_morphism -| G.
     Proof.
-      refine (_ : AdjunctionUnit functor__of__initial_morphism G).
+      refine (adjunction_unit_counit__of__adjunction_unit _).
       eexists (Build_NaturalTransformation
                 1
                 (G o functor__of__initial_morphism)

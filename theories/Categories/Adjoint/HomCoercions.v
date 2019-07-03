@@ -219,8 +219,6 @@ Section AdjunctionEquivalences'.
   Defined.
 End AdjunctionEquivalences'.
 
-Coercion adjunction_unit__of__adjunction_hom : AdjunctionHom >-> AdjunctionUnit.
-
 Definition AdjunctionUnitWithFunext `{Funext} C D F G := @AdjunctionUnit C D F G.
 Definition AdjunctionCounitWithFunext `{Funext} C D F G := @AdjunctionCounit C D F G.
 Definition AdjunctionUnitCounitWithFunext `{Funext} C D F G := @AdjunctionUnitCounit C D F G.
@@ -235,15 +233,8 @@ Definition adjunction_hom__of__adjunction_unit_Funext `{Funext} C D F G
 Definition AdjunctionHomOfAdjunctionCounit_Funext `{Funext} C D F G
            (A : AdjunctionCounitWithFunext _ _)
 : AdjunctionHom _ _
-  := @adjunction_hom__of__adjunction_unit _ C D F G A.
+  := @adjunction_hom__of__adjunction_unit _ C D F G (adjunction_unit_counit__of__adjunction_counit A).
 Definition adjunction_hom__of__adjunction_unitCounit_Funext `{Funext} C D F G
            (A : AdjunctionUnitCounitWithFunext _ _)
 : AdjunctionHom _ _
   := @adjunction_hom__of__adjunction_unit _ C D F G A.
-
-Coercion adjunction_hom__of__adjunction_unit_Funext
-: AdjunctionUnitWithFunext >-> AdjunctionHom.
-Coercion AdjunctionHomOfAdjunctionCounit_Funext
-: AdjunctionCounitWithFunext >-> AdjunctionHom.
-Coercion adjunction_hom__of__adjunction_unitCounit_Funext
-: AdjunctionUnitCounitWithFunext >-> AdjunctionHom.

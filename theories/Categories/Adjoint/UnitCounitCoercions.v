@@ -180,8 +180,3 @@ Coercion adjunction_unit__of__adjunction_unit_counit
 : AdjunctionUnitCounit >-> AdjunctionUnit.
 Coercion adjunction_counit__of__adjunction_unit_counit
 : AdjunctionUnitCounit >-> AdjunctionCounit.
-
-Coercion adjunction_unit_counit__of__adjunction_unit
-: AdjunctionUnit >-> AdjunctionUnitCounit.
-Coercion adjunction_unit_counit__of__adjunction_counit
-: AdjunctionCounit >-> AdjunctionUnitCounit.

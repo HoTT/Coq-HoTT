@@ -31,12 +31,12 @@ Inductive Expr (V:Type0) :=
   | Neg (a : Expr V)
 .
 
-Arguments Var [V] v.
-Arguments Zero [V].
-Arguments One [V].
-Arguments Plus [V] a b.
-Arguments Mult [V] a b.
-Arguments Neg [V] a.
+Arguments Var {V} v.
+Arguments Zero {V}.
+Arguments One {V}.
+Arguments Plus {V} a b.
+Arguments Mult {V} a b.
+Arguments Neg {V} a.
 
 Section contents.
 Universe U.

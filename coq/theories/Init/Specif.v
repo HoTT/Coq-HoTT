@@ -160,10 +160,11 @@ End Dependent_choice_lemmas.
      It is implemented using the option type. *)
 
 Definition Exc := option.
-Definition value := Some.
+Definition value := @Some.
 Definition error := @None.
 
-Arguments error [A].
+Arguments value {A} a.
+Arguments error {A}.
 
 Definition except := False_rec. (* for compatibility with previous versions *)
 

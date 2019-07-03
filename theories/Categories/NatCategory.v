@@ -40,10 +40,17 @@ Module Export Core.
       | S (S n') => discrete_category (S (S n'))
     end.
 
-  Coercion nat_category : nat >-> PreCategory.
-
   Module Export NatCategoryCoreNotations.
+    Notation "0" := (nat_category 0) : category_scope.
     Notation "1" := (nat_category 1) : category_scope.
+    Notation "2" := (nat_category 2) : category_scope.
+    Notation "3" := (nat_category 3) : category_scope.
+    Notation "4" := (nat_category 4) : category_scope.
+    Notation "5" := (nat_category 5) : category_scope.
+    Notation "6" := (nat_category 6) : category_scope.
+    Notation "7" := (nat_category 7) : category_scope.
+    Notation "8" := (nat_category 8) : category_scope.
+    Notation "9" := (nat_category 9) : category_scope.
   End NatCategoryCoreNotations.
 
   Typeclasses Transparent nat_category.

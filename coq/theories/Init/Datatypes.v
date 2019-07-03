@@ -28,7 +28,8 @@ Inductive option (A : Type) : Type :=
 
 Scheme option_rect := Induction for option Sort Type.
 
-Arguments None [A].
+Arguments Some {A} a.
+Arguments None {A}.
 
 Register option as core.option.type.
 
@@ -144,7 +145,7 @@ Inductive list (A : Type) : Type :=
 
 Scheme list_rect := Induction for list Sort Type.
 
-Arguments nil [A].
+Arguments nil {A}.
 Declare Scope list_scope.
 Infix "::" := cons (at level 60, right associativity) : list_scope.
 Delimit Scope list_scope with list.
