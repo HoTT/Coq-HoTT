@@ -415,7 +415,7 @@ Arguments apD {A%type_scope B} f%function_scope {x y} p%path_scope : simpl nomat
 Definition Sect {A B : Type} (s : A -> B) (r : B -> A) :=
   forall x : A, r (s x) = x.
 
-Global Arguments Sect {A B}%type_scope (s r)%function_scope.
+Global Arguments Sect {A B}%type_scope / (s r)%function_scope.
 
 (** A typeclass that includes the data making [f] into an adjoint equivalence. *)
 Cumulative Class IsEquiv {A B : Type} (f : A -> B) := BuildIsEquiv {
