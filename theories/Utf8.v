@@ -43,23 +43,23 @@ Notation "'S¹'" := S1.
 Notation "'S²'" := S2.
 
 Notation "∥ A ∥₋₂" := (Trunc -2 A).
-Notation "| a |₋₂" := (@tr -2 _ a) : trunc_scope.
+Notation "❘ a ❘₋₂" := (@tr -2 _ a) : trunc_scope.
 
 Notation "∥ A ∥" := (Trunc -1 A) (only parsing).
 Notation "∥ A ∥₋₁" := (Trunc -1 A).
-Notation "| a |₋₁" := (@tr -1 _ a) : trunc_scope.
+Notation "❘ a ❘₋₁" := (@tr -1 _ a) : trunc_scope.
 
 Notation "x ∨ y" := (hor x y) : type_scope.
 Notation "x ⊔ y" := (sum x y) : type_scope.
 
 Notation "∥ A ∥₀" := (Trunc 0 A).
-Notation "| a |₀" := (@tr 0 _ a) : trunc_scope.
+Notation "❘ a ❘₀" := (@tr 0 _ a) : trunc_scope.
 
 Notation "∥ A ∥₁" := (Trunc 1 A).
-Notation "| a |₁" := (@tr 1 _ a) : trunc_scope.
+Notation "❘ a ❘₁" := (@tr 1 _ a) : trunc_scope.
 
 Notation "∥ A ∥₂" := (Trunc 2 A).
-Notation "| a |₂" := (@tr 2 _ a) : trunc_scope.
+Notation "❘ a ❘₂" := (@tr 2 _ a) : trunc_scope.
 
 Notation "∞" := purely.
 
