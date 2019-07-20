@@ -8,6 +8,8 @@ Require Import HSet UnivalenceImpliesFunext.
 Require Import Spaces.Int.
 Require Import HIT.Coeq.
 Require Import Modalities.Modality HIT.Truncations HIT.Connectedness.
+Require Import Cubical.DPath.
+
 Import TrM.
 Local Open Scope path_scope.
 
@@ -196,3 +198,17 @@ Proof.
 Qed.
 
 End AssumeUnivalence.
+
+(* An induction principle for S1 that produces a DPath *)
+Definition S1_ind_dp (P : S1 -> Type) (b : P base)
+  (bl : DPath P loop b b) (x : S1) : P x
+  := S1_ind P b (dp_path_transport^-1 bl) x.
+
+Definition S1_ind_dp_beta_loop (P : S1 -> Type) (b : P base)
+  (bl : DPath P loop b b) : dp_apD (S1_ind_dp P b bl) loop = bl.
+Proof.
+  apply dp_apD_path_transport.
+  exact (S1_ind_beta_loop _ _ _).
+Defined.
+
+
