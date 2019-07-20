@@ -44,7 +44,9 @@ theories/Cubical.v
 
 theories/Cubical/DPath.v
 theories/Cubical/Square.v
+theories/Cubical/DSquare.v
 theories/Cubical/Cube.v
+theories/Cubical/DCube.v
 
 #
 #   Spaces
@@ -65,6 +67,7 @@ theories/Spaces/No/Negation.v
 theories/Spaces/No/Addition.v
 theories/Spaces/Universe.v
 theories/Spaces/Card.v
+theories/Spaces/Torus.v
 
 #
 #   Tactics
@@ -174,9 +177,9 @@ theories/Tests.v
 #   Contrib  
 #
 
-#contrib/HoTTBook.v
-#contrib/HoTTBookExercises.v
-#contrib/Freudenthal.v
+contrib/HoTTBook.v
+contrib/HoTTBookExercises.v
+contrib/Freudenthal.v
 
 
 #
@@ -184,7 +187,7 @@ theories/Tests.v
 #
 
 theories/Homotopy/HomotopyGroup.v
-theories/Homotopy/Pi1S1.v
+theories/Homotopy/TorusEquivCircles.v
 
 #
 #   Spectra
@@ -205,6 +208,7 @@ theories/Algebra/ooAction.v
 #   Categories
 #
 
+theories/Homotopy/Pi1S1.v
 theories/Categories.v
 
 theories/Categories/Category.v
@@ -505,4 +509,3 @@ theories/Classes/theory/ua_second_isomorphism.v
 theories/Classes/theory/ua_third_isomorphism.v
 theories/Classes/categories/ua_category.v
 theories/Classes/tests/ring_tac.v
-
