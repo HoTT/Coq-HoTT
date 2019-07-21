@@ -9,14 +9,41 @@ Local Unset Elimination Schemes.
 
 (* Homogeneous squares *)
 
+(* 
+        x00 ----pi0---- x01
+         |               |
+         |               |
+        p0i     ==>     p1i
+         |               |
+         |               |
+        x01-----pi1-----x11
+ *)
+
+(* Contents:
+
+  * Definition of Square 
+  * Degnerate Squares as paths between paths
+  * Flipping squares horizontally and vertically
+  * Square transpose
+  * Square inverse
+  * Square rotations
+  * Edge rewriting
+  * Concatenation
+  * Kan fillers
+  * natural squares from ap
+
+*)
+
+
 (* Definition of Square *)
 (* Square left right up down *)
-Cumulative Inductive Square {A} : forall {a00 a10 a01 a11 : A},
+Cumulative Inductive Square {A} : forall a00 {a10 a01 a11 : A},
   a00 = a10 -> a01 = a11 -> a00 = a01 -> a10 = a11 -> Type
   := sq_id : forall {x : A},
-    Square (a00 := x) 1 1 1 1.
+    Square x 1 1 1 1.
 
-Arguments sq_id {A x}. 
+Arguments sq_id {A x}.
+Arguments Square {A _ _ _ _}.
 Notation "1" := sq_id : square_scope.
 
 (* It seems coq has difficulty actually using these, but destruct seems
