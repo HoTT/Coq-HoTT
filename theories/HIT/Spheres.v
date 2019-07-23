@@ -6,6 +6,7 @@ Require Import HoTT.Basics.
 Require Import Types.Sigma Types.Forall Types.Paths Types.Bool.
 Require Import HProp NullHomotopy.
 Require Import HIT.Suspension HIT.Circle HIT.TwoSphere.
+Require Import Pointed.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 
@@ -20,6 +21,13 @@ Fixpoint Sphere (n : trunc_index)
        | -1 => Empty
        | n'.+1 => Susp (Sphere n')
      end.
+
+(** ** Pointed sphere for non-negative dimensions *)
+Definition psphere (n : nat) : pType.
+Proof.
+  srefine (Build_pType (Sphere n) _).
+  repeat (destruct n; try exact North).
+Defined.
 
 (** ** Explicit equivalences in low dimensions  *)
 

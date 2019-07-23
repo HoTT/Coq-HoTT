@@ -38,16 +38,27 @@ Global Instance ispointed_loops A (a : A)
 : IsPointed (a = a)
   := idpath.
 
-(** We can build an iterated loop space *)
-Definition loops (A : Type) `{IsPointed A} : pType :=
-  Build_pType (point A = point A) idpath.
+Definition loops (A : pType) : pType
+  := Build_pType (point A = point A) _.
 
-Fixpoint iterated_loops (n : nat) (A : Type) `{H : IsPointed A}
+Fixpoint iterated_loops (n : nat) (A : pType)
          {struct n} : pType
   := match n with
-       | O => Build_pType A (@point A H)
+       | O => A
        | S p => loops (iterated_loops p A)
      end.
+
+(* Inner unfolding for iterated loops *)
+Lemma unfold_iterated_loops (n : nat) (X : pType)
+  : iterated_loops n.+1 X = iterated_loops n (loops X).
+Proof.
+  induction n.
+  1: reflexivity.
+  change (iterated_loops n.+2 X)
+    with (loops (iterated_loops n.+1 X)).
+  destruct IHn^.
+  reflexivity.
+Defined.
 
 (** The loop space decreases the truncation level by one.  We don't bother making this an instance because it is automatically found by typeclass search, but we record it here in case anyone is looking for it. *)
 Definition istrunc_loops {n} (A : pType) `{IsTrunc n.+1 A}
@@ -74,7 +85,9 @@ Arguments point_eq {A B} f : rename.
 Coercion pointed_fun : pMap >-> Funclass.
 
 Declare Scope pointed_scope.
+
 Infix "->*" := pMap : pointed_scope.
+
 Local Open Scope pointed_scope.
 
 Definition pmap_idmap (A : pType): A ->* A
@@ -110,6 +123,14 @@ Coercion pointed_htpy : pHomotopy >-> pointwise_paths.
 
 Infix "==*" := pHomotopy : pointed_scope.
 
+Global Instance phomotopy_reflexive {A B} : Reflexive (@pHomotopy A B).
+Proof.
+  intro.
+  serapply Build_pHomotopy.
+  + intro. reflexivity.
+  + apply concat_1p.
+Defined.
+
 (** The following tactic often allows us to "pretend" that pointed maps and homotopies preserve basepoints strictly.  We have carefully defined [pMap] and [pHomotopy] so that when destructed, their second components are paths with right endpoints free, to which we can apply Paulin-Morhing path-induction. *)
 Ltac pointed_reduce :=
   unfold pointed_fun, pointed_htpy; cbn;
@@ -132,6 +153,22 @@ Proof.
             (fun p => (point_eq f)^ @ (ap f p @ point_eq f)) _).
   apply moveR_Vp; simpl.
   refine (concat_1p _ @ (concat_p1 _)^).
+Defined.
+
+Fixpoint iterated_loops_functor {A B : pType} (n : nat) 
+  : (A ->* B) -> (iterated_loops n A) ->* (iterated_loops n B).
+Proof.
+  destruct n.
+  + exact idmap.
+  + refine (loops_functor o _).
+    apply iterated_loops_functor.
+Defined.
+
+Lemma loops_functor_pp {X Y : pType} (f : pMap X Y) : forall x y,
+  loops_functor f (x @ y) = loops_functor f x @ loops_functor f y.
+Proof.
+  intros x y; cbn.
+  by destruct (point_eq f), x, y.
 Defined.
 
 Definition loops_2functor {A B : pType} {f g : A ->* B} (p : f ==* g)
@@ -214,6 +251,9 @@ Qed.
 
 Infix "@*" := phomotopy_compose : pointed_scope.
 
+Global Instance phomotopy_transitive {A B} : Transitive (@pHomotopy A B)
+  := @phomotopy_compose A B.
+
 Definition phomotopy_inverse {A B : pType} {f g : A ->* B}
 : (f ==* g) -> (g ==* f).
 Proof.
@@ -222,6 +262,10 @@ Proof.
   - intros x; exact ((p x)^).
   - apply concat_Vp.
 Qed.
+
+Global Instance phomotopy_symmetric {A B} : Symmetric (@pHomotopy A B)
+  := @phomotopy_inverse A B.
+
 
 Notation "p ^*" := (phomotopy_inverse p) : pointed_scope.
 
@@ -314,6 +358,14 @@ Definition pointed_equiv_equiv {A B} (f : A <~>* B)
 
 Coercion pointed_equiv_equiv : pEquiv >-> Equiv.
 
+Definition pequiv_pmap_idmap {A} : A <~>* A
+  := Build_pEquiv _ _ (pmap_idmap _) _.
+
+Global Instance pequiv_reflexive : Reflexive pEquiv.
+Proof.
+  intro; apply pequiv_pmap_idmap.
+Defined.
+
 Definition pequiv_inverse {A B} (f : A <~>* B)
 : B <~>* A.
 Proof.
@@ -323,10 +375,22 @@ Proof.
   apply moveR_equiv_V; symmetry; apply point_eq.
 Defined.
 
+(* Notation "f ^-1" := (pequiv_inverse f). *)
+
+Global Instance pequiv_symmetric : Symmetric pEquiv.
+Proof.
+  intros ? ?; apply pequiv_inverse.
+Defined.
+
 Definition pequiv_compose {A B C : pType}
            (f : A <~>* B) (g : B <~>* C)
 : A <~>* C
   := (Build_pEquiv A C (g o* f) isequiv_compose).
+
+Global Instance pequiv_transitive : Transitive pEquiv.
+Proof.
+  intros ? ? ?; apply pequiv_compose.
+Defined.
 
 Notation "g o*E f" := (pequiv_compose f g) : pointed_scope.
 
@@ -404,6 +468,48 @@ Definition path_ptype `{Univalence} {A B : pType}
 : (A <~>* B) -> (A = B :> pType)
   := equiv_path_ptype A B.
 
+Definition pSect {A B : pType} (s : A ->* B) (r : B ->* A)
+  := r o* s ==* pmap_idmap _.
+
+Arguments pSect _ _ / _ _.
+
+Definition peissect {A B : pType} (f : A <~>* B) : pSect f (pequiv_inverse f).
+Proof.
+  pointed_reduce.
+  srefine (Build_pHomotopy _ _).
+  1: apply (eissect f).
+  pointed_reduce.
+  unfold moveR_equiv_V.
+  rewrite ap_V, concat_p_pp, concat_pV.
+  apply inverse, concat_1p.
+Qed.
+
+Definition peisretr {A B : pType} (f : A <~>* B) : pSect (pequiv_inverse f) f.
+Proof.
+  pointed_reduce.
+  srefine (Build_pHomotopy _ _).
+  1: apply (eisretr f).
+  pointed_reduce.
+  unfold moveR_equiv_V.
+  rewrite ap_pp.
+  generalize (point_eq f).
+  intro p.
+  cbn in p.
+  destruct p.
+  hott_simpl.
+  apply eisadj.
+Qed.
+
+Definition pequiv_adjointify {A B : pType} (f : A ->* B) (f' : B ->* A)
+  (r : pSect f' f) (s : pSect f f') : A <~>* B.
+Proof.
+  serapply Build_pEquiv.
+  1: assumption.
+  serapply (isequiv_adjointify f f').
+  1: apply r.
+  apply s.
+Defined.
+
 (** ** Loop spaces *)
 
 (** Loop inversion is a pointed equivalence *)
@@ -411,6 +517,27 @@ Definition loops_inv (A : pType) : loops A <~>* loops A.
 Proof.
   refine (Build_pEquiv _ _ (Build_pMap (loops A) (loops A) inverse 1)
                        (isequiv_path_inverse _ _)).
+Defined.
+
+Definition phomotopy_ap `{Funext} {A B C D: pType} (f g : A ->* B)
+  (h : (A ->* B) -> (C ->* D))
+  : f ==* g -> h f ==* h g.
+Proof.
+  intro p.
+  by destruct (path_pmap p).
+Defined.
+
+Definition loops_functor_equiv `{Funext} (A B : pType)
+  : A <~>* B -> loops A <~>* loops B.
+Proof.
+  intro f.
+  serapply pequiv_adjointify.
+  1: apply loops_functor, f.
+  1: apply loops_functor, (pequiv_inverse f).
+  1,2: refine ((loops_functor_compose _ _)^* @* _ @* loops_functor_idmap _).
+  1,2: apply phomotopy_ap.
+  1: apply peisretr.
+  apply peissect.
 Defined.
 
 (** ** Pointed fibers *)
@@ -468,6 +595,28 @@ Proof.
     clearbody s; clear r; destruct s; reflexivity.
   - reflexivity.
 Qed.
+
+Notation "X * Y" := (Build_pType (X * Y) ispointed_prod) : pointed_scope.
+
+Lemma loops_prod `{Univalence} (X Y : pType)
+  : loops (X * Y) <~>* loops X * loops Y.
+Proof.
+  serapply Build_pEquiv.
+  + serapply Build_pMap.
+    - intro p. cbn.
+      by apply (equiv_path_prod (point X, point Y) (point X, point Y))^-1%equiv.
+    - reflexivity.
+  + exact _.
+Defined.
+
+Lemma iterated_loops_prod `{Univalence} (X Y : pType) {n}
+  : iterated_loops n (X * Y) <~>* (iterated_loops n X) * (iterated_loops n Y).
+Proof.
+  induction n.
+  + reflexivity.
+  + refine (pequiv_compose _ (loops_prod _ _)).
+    by apply loops_functor_equiv.
+Defined.
 
 (** ** Truncations *)
 
