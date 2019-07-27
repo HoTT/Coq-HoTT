@@ -172,7 +172,7 @@ AS_IF([test "x$COQMAKEFILE" = "xno"],
       [AC_MSG_ERROR([Could not find coq_makefile])])
 
 
-hottdir="$datarootdir/hott"
+hottdir="$datadir/hott"
 AC_SUBST([hottdir])
 
 AC_CHECK_PROGS(ETAGS,etags,[: skipping etags])

@@ -11,7 +11,7 @@ if make_hoqchk
   bin_SCRIPTS += hoqchk
 endif
 
-hottdir=$(datarootdir)/hott
+hottdir=$(datadir)/hott
 EXTRA_DIST = coq theories etc LICENSE.txt CREDITS.txt INSTALL.txt README.markdown
 
 # The path to the Coq library in $(srcdir)
