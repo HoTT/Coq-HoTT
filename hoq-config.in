@@ -4,7 +4,6 @@
 # options.  One day we might figure out how to create an honest Coq
 # toplevel instead.
 prefix="@prefix@"
-datarootdir="@datarootdir@"
 export COQC="@COQC@"
 export COQCHK="@COQCHK@"
 export COQDEP="@COQDEP@"

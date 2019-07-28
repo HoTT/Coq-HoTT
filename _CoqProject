@@ -2,6 +2,10 @@
 -Q contrib ""
 COQC = hoqc
 
+#
+#   Basics
+#
+
 theories/Basics/Notations.v
 theories/Basics/Utf8.v
 theories/Basics/Overture.v
@@ -12,6 +16,11 @@ theories/Basics/Equivalences.v
 theories/Basics/Trunc.v
 theories/Basics/Decidable.v
 theories/Basics.v
+
+#
+#   Types
+#
+
 theories/Types/Paths.v
 theories/Types/Unit.v
 theories/Types/Forall.v
@@ -26,43 +35,62 @@ theories/Types/Wtype.v
 theories/Types/Equiv.v
 theories/Types/Universe.v
 theories/Types.v
+
+#
+#   Cubical
+#
+
+theories/Cubical.v
+
 theories/Cubical/DPath.v
 theories/Cubical/Square.v
+theories/Cubical/DSquare.v
 theories/Cubical/Cube.v
-theories/Cubical.v
-theories/BoundedSearch.v
-theories/EquivGroupoids.v
-theories/Fibrations.v
-theories/Conjugation.v
-theories/HProp.v
-theories/EquivalenceVarieties.v
-theories/FunextVarieties.v
-theories/UnivalenceVarieties.v
-theories/Extensions.v
-theories/HSet.v
-theories/UnivalenceImpliesFunext.v
+theories/Cubical/DCube.v
+
+#
+#   Spaces
+#
+
 theories/Spaces/Nat.v
+theories/Spaces/Int.v
+theories/Spaces/Cantor.v
+theories/Spaces/BAut.v
+theories/Spaces/BAut/Cantor.v
+theories/Spaces/Finite.v
+theories/Spaces/BAut/Bool.v
+theories/Spaces/BAut/Bool/IncoherentIdempotent.v
+theories/Spaces/BAut/Rigid.v
+theories/Spaces/No.v
+theories/Spaces/No/Core.v
+theories/Spaces/No/Negation.v
+theories/Spaces/No/Addition.v
+theories/Spaces/Universe.v
+theories/Spaces/Card.v
+theories/Spaces/Torus.v
+
+#
+#   Tactics
+#
+
 theories/Tactics.v
 theories/Tactics/RewriteModuloAssociativity.v
 theories/Tactics/EquivalenceInduction.v
 theories/Tactics/EvalIn.v
 theories/Tactics/BinderApply.v
-theories/TruncType.v
-theories/Pointed.v
-theories/DProp.v
-theories/Functorish.v
-theories/FunextAxiom.v
-theories/UnivalenceAxiom.v
-theories/ObjectClassifier.v
-theories/NullHomotopy.v
-theories/Idempotents.v
-theories/Pullback.v
-theories/Factorization.v
-theories/Constant.v
-theories/ExcludedMiddle.v
+
+#
+#   PropResizing
+#
+
 theories/PropResizing/PropResizing.v
 theories/PropResizing/Truncations.v
 theories/PropResizing/Nat.v
+
+#
+#   Modalities
+#
+
 theories/Modalities/ReflectiveSubuniverse.v
 theories/Modalities/Modality.v
 theories/Modalities/Accessible.v
@@ -75,8 +103,12 @@ theories/Modalities/Nullification.v
 theories/Modalities/Open.v
 theories/Modalities/Closed.v
 theories/Modalities/Fracture.v
-theories/Spaces/Int.v
 theories/Comodalities/CoreflectiveSubuniverse.v
+
+#
+#   HIT
+#
+
 theories/HIT/Circle.v
 theories/HIT/Truncations.v
 theories/HIT/TruncImpliesFunext.v
@@ -97,29 +129,6 @@ theories/HIT/iso.v
 theories/HIT/Pushout.v
 theories/HIT/Join.v
 theories/HIT/V.v
-theories/Spaces/Cantor.v
-theories/Spaces/BAut.v
-theories/Spaces/BAut/Cantor.v
-theories/Spaces/Finite.v
-theories/Spaces/BAut/Bool.v
-theories/Spaces/BAut/Bool/IncoherentIdempotent.v
-theories/Spaces/BAut/Rigid.v
-theories/Spaces/No.v
-theories/Spaces/No/Core.v
-theories/Spaces/No/Negation.v
-theories/Spaces/No/Addition.v
-theories/Spaces/Universe.v
-theories/Spaces/Card.v
-theories/Algebra/ooGroup.v
-theories/Algebra/Aut.v
-theories/Algebra/ooAction.v
-theories/Spectra/Spectrum.v
-theories/Spectra/Coinductive.v
-theories/Misc.v
-theories/Utf8.v
-theories/HoTT.v
-theories/Tests.v
-
 theories/HIT/Colimits/CommutativeSquares.v
 theories/HIT/Colimits/Diagram.v
 theories/HIT/Colimits/Colimit.v
@@ -131,6 +140,73 @@ theories/HIT/Colimits/MappingTelescope.v
 theories/HIT/Colimits/Flattening.v
 theories/HIT/Colimits.v
 
+#
+#   Other
+#
+
+theories/BoundedSearch.v
+theories/EquivGroupoids.v
+theories/Fibrations.v
+theories/Conjugation.v
+theories/HProp.v
+theories/EquivalenceVarieties.v
+theories/FunextVarieties.v
+theories/UnivalenceVarieties.v
+theories/Extensions.v
+theories/HSet.v
+theories/UnivalenceImpliesFunext.v
+theories/TruncType.v
+theories/Pointed.v
+theories/DProp.v
+theories/Functorish.v
+theories/FunextAxiom.v
+theories/UnivalenceAxiom.v
+theories/ObjectClassifier.v
+theories/NullHomotopy.v
+theories/Idempotents.v
+theories/Pullback.v
+theories/Factorization.v
+theories/Constant.v
+theories/ExcludedMiddle.v
+theories/Misc.v
+theories/Utf8.v
+theories/HoTT.v
+theories/Tests.v
+
+#
+#   Contrib  
+#
+
+#contrib/HoTTBook.v
+#contrib/HoTTBookExercises.v
+#contrib/Freudenthal.v
+
+
+#
+#   Homotopy
+#
+
+theories/Homotopy/HomotopyGroup.v
+theories/Homotopy/TorusEquivCircles.v
+
+#
+#   Spectra
+#
+
+theories/Spectra/Spectrum.v
+theories/Spectra/Coinductive.v
+
+#
+#   Algebra
+#
+
+theories/Algebra/ooGroup.v
+theories/Algebra/Aut.v
+theories/Algebra/ooAction.v
+
+#
+#   Categories
+#
 
 theories/Categories.v
 
@@ -370,6 +446,10 @@ theories/Categories/Limits/Functors.v
 theories/Categories/Notations.v
 theories/Categories/Utf8.v
 
+#
+#   mathclasses
+#
+
 theories/Classes/tactics/ring_tac.v
 theories/Classes/tactics/ring_quote.v
 theories/Classes/tactics/ring_pol.v
@@ -428,9 +508,3 @@ theories/Classes/theory/ua_second_isomorphism.v
 theories/Classes/theory/ua_third_isomorphism.v
 theories/Classes/categories/ua_category.v
 theories/Classes/tests/ring_tac.v
-
-theories/Homotopy/HomotopyGroup.v
-
-contrib/HoTTBook.v
-contrib/HoTTBookExercises.v
-contrib/Freudenthal.v
