@@ -35,6 +35,10 @@ Require Export BoundedSearch.
 Require Export PropResizing.PropResizing.
 (* Don't export the rest of [PropResizing] *)
 
+Require Export Homotopy.Suspension.
+Require Export Homotopy.HomotopyGroup.
+Require Export Homotopy.Pi1S1.
+
 Require Export HIT.Interval.
 Require Export HIT.Truncations.
 Require Export HIT.Connectedness.
@@ -42,7 +46,6 @@ Require Export HIT.Coeq.
 Require Export HIT.Flattening.
 Require Export HIT.Circle.
 Require Export HIT.FreeIntQuotient.
-Require Export HIT.Suspension.
 Require Export HIT.Spheres.
 Require Export HIT.Pushout.
 Require Export HIT.epi.

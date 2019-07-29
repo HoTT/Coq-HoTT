@@ -2,11 +2,15 @@
 
 (** * The spheres, in all dimensions. *)
 
-Require Import HoTT.Basics.
-Require Import Types.Sigma Types.Forall Types.Paths Types.Bool.
-Require Import HProp NullHomotopy.
-Require Import HIT.Suspension HIT.Circle HIT.TwoSphere.
+Require Import Basics.
+Require Import Types.
+Require Import HProp.
+Require Import NullHomotopy.
 Require Import Pointed.
+Require Import Homotopy.Suspension.
+Require Import HIT.Circle.
+Require Import HIT.TwoSphere.
+
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
 
@@ -34,7 +38,7 @@ Defined.
 (** *** [Sphere 0] *)
 Definition Sph0_to_Bool : (Sphere 0) -> Bool.
 Proof.
-  simpl. apply (Susp_rec true false). intros [].
+  by erapply (Susp_rec true false).
 Defined.
 
 Definition Bool_to_Sph0 : Bool -> (Sphere 0).
@@ -45,8 +49,8 @@ Defined.
 Global Instance isequiv_Sph0_to_Bool : IsEquiv (Sph0_to_Bool) | 0.
 Proof.
   apply isequiv_adjointify with Bool_to_Sph0.
-  - intros [ | ]; exact 1.
-  - unfold Sect. refine (Susp_ind _ 1 1 _). intros [].
+  - by intros [ | ].
+  - by refine (Susp_ind _ 1 1 _).
 Defined.
 
 (** *** [Sphere 1] *)
@@ -58,7 +62,8 @@ Defined.
 
 Definition S1_to_Sph1 : S1 -> (Sphere 1).
 Proof.
-  apply (S1_rec _ North). exact (merid North @ (merid South)^).
+  apply (S1_rec _ North).
+  exact (merid North @ (merid South)^).
 Defined.
 
 Global Instance isequiv_Sph1_to_S1 : IsEquiv (Sph1_to_S1) | 0.
@@ -66,23 +71,27 @@ Proof.
   apply isequiv_adjointify with S1_to_Sph1.
   - refine (S1_ind _ 1 _).
     refine ((transport_paths_FFlr _ _) @ _).
-    unfold S1_to_Sph1; rewrite S1_rec_beta_loop.
-    rewrite ap_pp, ap_V.
-    unfold Sph1_to_S1. simpl. rewrite 2 Susp_rec_beta_merid. simpl.
-    hott_simpl.
-  - refine (Susp_ind (fun x => S1_to_Sph1 (Sph1_to_S1 x) = x)
-                     1 (merid South) _); intros x.
-    refine ((transport_paths_FFlr _ _) @ _).
-    unfold Sph1_to_S1; rewrite (Susp_rec_beta_merid x).
-    revert x. change (Susp Empty) with (Sphere 0).
+    refine (whiskerR (concat_p1 _) loop @ _).
+    apply moveR_Vp.
+    refine (_ @ (concat_p1 _)^).
+    symmetry.
+    refine (ap _ (S1_rec_beta_loop _ _ _) @ _).
+    refine (ap_pp _ _ _ @ _).
+    refine (whiskerR (Susp_rec_beta_merid _) _ @ _).
+    refine (whiskerL _ (ap_V _ _ @ inverse2 (Susp_rec_beta_merid _)) @ _).
+    apply concat_p1.
+  - serapply (Susp_ind _ 1 (merid South)); cbn.
+    intro x.
+    refine (transport_paths_FFlr _ _ @ _).
+    rewrite Susp_rec_beta_merid.
+    revert x; change (Susp Empty) with (Sphere 0).
     apply (equiv_ind (Sph0_to_Bool ^-1)); intros x.
     case x; simpl.
     2: apply concat_1p.
-    unfold S1_to_Sph1; rewrite S1_rec_beta_loop.
-    refine (whiskerR (concat_p1 _) _ @ _).
-    apply moveR_Vp. hott_simpl.
+    rewrite S1_rec_beta_loop.
+    rewrite inv_pp.
+    hott_simpl.
 Defined.
-
 
 (** *** [Sphere 2] *)
 Definition Sph2_to_S2 : (Sphere 2) -> S2.
@@ -147,7 +156,7 @@ Proof.
                       (fun x => ap Sph2_to_S2 (merid x @ (merid North)^))
                       (fun x => Susp_rec 1 1 
                                 (Susp_rec surf 1 
-                                (Empty_rec (surf = 1))) x 
+                                (@Empty_rec (surf = 1))) x 
                                 @ 1)
                       (fun x => ap_pp Sph2_to_S2 (merid x) (merid North)^ 
                                 @ ((1 @@ ap_V Sph2_to_S2 (merid North)) 
@@ -158,7 +167,7 @@ Proof.
   { refine (_ @ (ap_pp_concat_pV _ _)).
     refine (ap (fun w => _ @ (_ @ w)) (concat_pV_inverse2 _ _ _)). }
   refine ((concat2_ap_ap (Susp_rec 1 1 (Susp_rec surf 1 
-                                         (Empty_rec (surf = 1)))) 
+                                         (@Empty_rec (surf = 1)))) 
                          (fun _ => 1) 
                          (merid North @ (merid South)^))^ @ _).
   refine ((ap (fun w => _ @@ w) (ap_const _ _)) @ _).
@@ -184,7 +193,7 @@ Proof.
   path_via (ap S2_to_Sph2 (ap Sph2_to_S2 (merid x))).
   { apply (ap_compose Sph2_to_S2 S2_to_Sph2 (merid x)). }
   path_via (ap S2_to_Sph2 
-               (Susp_rec 1 1 (Susp_rec surf 1 (Empty_rec (surf = 1))) x)). 
+               (Susp_rec 1 1 (Susp_rec surf 1 (@Empty_rec (surf = 1))) x)). 
   { repeat f_ap. apply Susp_rec_beta_merid. }
   symmetry. generalize dependent x. 
 
@@ -197,7 +206,7 @@ Proof.
     refine ((ap (transport _ _) (ap_pp _ (merid x) (merid South)^)^) @ _).
     refine (_ @ (ap_compose (Susp_rec 1 1 
                               (Susp_rec surf 1 
-                                (Empty_rec (surf = 1)))) 
+                                (@Empty_rec (surf = 1)))) 
                             (ap S2_to_Sph2) (merid x))^).
     refine (_ @ (ap (ap02 S2_to_Sph2) (Susp_rec_beta_merid _)^)).
     symmetry. generalize dependent x.

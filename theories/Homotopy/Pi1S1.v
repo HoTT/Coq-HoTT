@@ -1,13 +1,12 @@
-Require Import
-  HoTT.Basics
-  HoTT.Pointed
-  HoTT.Spaces.Int
-  HoTT.Homotopy.HomotopyGroup
-  HoTT.HIT.Circle
-  HoTT.HIT.Truncations
-  HoTT.HIT.Spheres
-  HoTT.HIT.Suspension
-  HoTT.UnivalenceAxiom.
+Require Import Basics.
+Require Import Pointed.
+Require Import Spaces.Int.
+Require Import Homotopy.HomotopyGroup.
+Require Import Homotopy.Suspension.
+Require Import HIT.Circle.
+Require Import HIT.Truncations.
+Require Import HIT.Spheres.
+Require Import UnivalenceAxiom.
 
 (*
   Calculation of Pi 1 S1

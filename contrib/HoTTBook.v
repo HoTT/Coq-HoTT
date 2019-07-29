@@ -100,7 +100,7 @@ Definition Book_2_1_7 := @HoTT.Basics.Overture.pType.
 (* ================================================== def:loopspace *)
 (** Definition 2.1.8 *)
 
-Definition Book_2_1_8 := @HoTT.Pointed.iterated_loops.
+Definition Book_2_1_8 := @HoTT.Pointed.Loops.iterated_loops.
 
 (* ================================================== lem:map *)
 (** Lemma 2.2.1 *)
@@ -842,7 +842,7 @@ Definition Book_6_5_1 := @HoTT.HIT.Spheres.isequiv_Sph1_to_S1.
 (* ================================================== lem:susp-loop-adj *)
 (** Lemma 6.5.4 *)
 
-Definition Book_6_5_4 := @HoTT.HIT.Suspension.loop_susp_adjoint.
+Definition Book_6_5_4 := @HoTT.Pointed.pSusp.loop_susp_adjoint.
 
 (* ================================================== defn:cocone *)
 (** Definition 6.8.1 *)
