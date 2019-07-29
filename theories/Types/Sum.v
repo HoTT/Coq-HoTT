@@ -816,9 +816,16 @@ Proof.
                 oE ((equiv_sum_assoc _ _ _) +E 1)
                 oE (equiv_sum_assoc _ _ _)^-1).
   destruct (equiv_unfunctor_sum k'
-             (fun x => match x with | inl x => x.2 | inr x => x.2 end)
-             (fun x => match x with | inl x => x.2 | inr x => x.2 end))
-    as [s t]; clear k k'.
+       (fun x : decompose_l (h o inl) + decompose_l (h o inr) =>
+        match x as x0 return (is_inl (k' (inl x0))) with
+        | inl x0 => x0.2
+        | inr x0 => x0.2
+        end)
+       (fun x : decompose_r (h o inl) + decompose_r (h o inr) =>
+        match x as x0 return (is_inr (k' (inr x0))) with
+        | inl x0 => x0.2
+        | inr x0 => x0.2
+        end)) as [s t]; clear k k'.
   refine (t oE (_ +E 1) oE g^-1).
   destruct (equiv_indecomposable_sum s^-1) as [[p q]|[p q]];
   destruct (equiv_indecomposable_sum f^-1) as [[u v]|[u v]].
