@@ -6,8 +6,11 @@ Require Import HoTT.Basics.
 Require Import Types.Sigma Types.Forall Types.Paths Types.Bool.
 Require Import HProp NullHomotopy.
 Require Import HIT.Suspension HIT.Circle HIT.TwoSphere.
+Require Import Pointed.
+
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
+Local Open Scope pointed_scope.
 
 Generalizable Variables X A B f g n.
 
@@ -20,6 +23,13 @@ Fixpoint Sphere (n : trunc_index)
        | -1 => Empty
        | n'.+1 => Susp (Sphere n')
      end.
+
+(** ** Pointed sphere for non-negative dimensions *)
+Definition psphere (n : nat) : pType.
+Proof.
+  srefine (Build_pType (Sphere n) _).
+  repeat (destruct n; try exact North).
+Defined.
 
 (** ** Explicit equivalences in low dimensions  *)
 
@@ -75,6 +85,14 @@ Proof.
     apply moveR_Vp. hott_simpl.
 Defined.
 
+Lemma pequiv_pSph1_to_S1 : psphere 1 <~>* Build_pType S1 Circle.base.
+Proof.
+  serapply Build_pEquiv.
+  1: serapply Build_pMap.
+  1: serapply Sph1_to_S1.
+  1: reflexivity.
+  exact _.
+Defined.
 
 (** *** [Sphere 2] *)
 Definition Sph2_to_S2 : (Sphere 2) -> S2.

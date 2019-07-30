@@ -430,6 +430,7 @@ theories/Classes/categories/ua_category.v
 theories/Classes/tests/ring_tac.v
 
 theories/Homotopy/HomotopyGroup.v
+theories/Homotopy/Pi1S1.v
 
 contrib/HoTTBook.v
 contrib/HoTTBookExercises.v

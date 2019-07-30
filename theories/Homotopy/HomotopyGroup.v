@@ -4,100 +4,136 @@ Require Import HIT.Truncations.
 Require Import Pointed.
 Require Import abstract_algebra.
 Require Import Spaces.Nat.
-Require Import DProp.
+Require Import UnivalenceAxiom.
+
+Import TrM.
+
 (* In this file we define homotopy groups *)
 
-Section HomotopyGroups.
+Definition Pi n (X : pType) := Tr 0 (iterated_loops n X).
+
+Section PiGroup.
 
   Context
     (n : nat)
-    (X : Type)
-   `{IsPointed X}.
+    (X : pType).
 
-  Definition Pi := Tr 0 (iterated_loops n X).
-
-  (* We only have a group structure when 0 < n *)
-  Context `{gt : 0 < n}.
+  Global Instance PiUnit : MonUnit (Pi n.+1 X).
+  Proof.
+    by apply tr.
+  Defined.
 
   (* We explicitly give the operation here *)
-  Global Instance PiOp : SgOp Pi.
+  Global Instance PiOp : SgOp (Pi n.+1 X).
   Proof.
-    intros a b.
-    strip_truncations.
-    refine (tr _).
-    destruct n, gt.
-    exact (concat a b).
+    intros a b; strip_truncations.
+    exact (tr (a @ b)).
   Defined.
 
   Global Instance PiOp_assoc : Associative PiOp.
   Proof.
-    intros x y z.
-    strip_truncations.
-    unfold PiOp; cbn.
-    apply ap.
-    destruct n, gt.
-    refine (concat_pp_p _ _ _)^.
-  Defined.
-
-  Definition PiUnit : Pi.
-  Proof.
-    refine (tr _).
-    destruct n, gt.
-    exact idpath.
+    intros x y z; strip_truncations; cbn.
+    apply ap, concat_p_pp.
   Defined.
 
   Global Instance PiOp_leftId : LeftIdentity PiOp PiUnit.
   Proof.
-    intro x.
-    strip_truncations.
-    unfold PiOp; cbn.
-    apply ap.
-    destruct n, gt.
-    apply concat_1p.
+    intro x; strip_truncations; cbn.
+    apply ap, concat_1p.
   Defined.
 
   Global Instance PiOp_rightId : RightIdentity PiOp PiUnit.
   Proof.
-    intro x.
-    strip_truncations.
-    unfold PiOp; cbn.
-    apply ap.
-    destruct n, gt.
-    apply concat_p1.
+    intro x; strip_truncations; cbn.
+    apply ap, concat_p1.
   Defined.
 
-  Definition PiInverse : Pi -> Pi.
+  Global Instance PiInverse : Negate (Pi n.+1 X).
   Proof.
-    intro a.
-    strip_truncations.
-    refine (tr _).
-    destruct n, gt.
-    exact a^.
+    intro; strip_truncations.
+    by apply tr, Overture.inverse.
   Defined.
 
   Global Instance PiOp_leftInv : LeftInverse PiOp PiInverse PiUnit.
   Proof.
-    intro x.
-    strip_truncations.
-    unfold PiOp; cbn.
-    apply ap.
-    destruct n, gt.
-    apply concat_Vp.
+    intro x; strip_truncations; cbn.
+    apply ap, concat_Vp.
   Defined.
 
   Global Instance PiOp_rightInv : RightInverse PiOp PiInverse PiUnit.
   Proof.
-    intro x.
-    strip_truncations.
-    unfold PiOp; cbn.
-    apply ap.
-    destruct n, gt.
-    apply concat_pV.
+    intro x; strip_truncations; cbn.
+    apply ap, concat_pV.
   Defined.
 
-  Global Instance pi_is_Group : @Group Pi PiOp PiUnit PiInverse.
+  Global Instance pi_is_Group : Group (Pi n.+1 X).
   Proof.
     repeat split; exact _.
   Defined.
 
-End  HomotopyGroups.
+End  PiGroup.
+
+Global Instance piop_commutative n X : Commutative (PiOp n.+1 X).
+Proof.
+  intros x y; strip_truncations; cbn.
+  apply ap, eckmann_hilton.
+Defined.
+
+Global Instance pi_is_AbGroup n X : AbGroup (Pi n.+2 X).
+Proof.
+  serapply Build_AbGroup.
+Defined.
+
+(* TODO:
+    1. Move to Pointed.v *)
+Lemma loops_functor_pp {X Y : pType} (f : pMap X Y) : forall x y,
+  loops_functor f (x @ y) = loops_functor f x @ loops_functor f y.
+Proof.
+  intros x y; cbn.
+  by destruct (point_eq f), x, y.
+Defined.
+
+Section PiFunctor.
+
+  Local Open Scope pointed_scope.
+
+  Context
+    {n : nat}
+    {X Y : pType}
+    (f : X ->* Y).
+
+  Definition functor_pi : Pi n.+1 X -> Pi n.+1 Y.
+  Proof.
+    serapply Trunc_functor.
+    serapply iterated_loops_functor.
+    exact f.
+  Defined.
+
+  Global Instance functor_pi_homomorphism : MonoidPreserving functor_pi.
+  Proof.
+    apply Build_MonoidPreserving.
+    + intros x y.
+      strip_truncations.
+      apply equiv_path_Tr, tr, loops_functor_pp.
+    + apply equiv_path_Tr, tr; cbn.
+      destruct n; hott_simpl.
+  Defined.
+
+End PiFunctor.
+
+Local Open Scope pointed_scope.
+
+(* Homotopy groups of product space *)
+Lemma Pi_prod (X Y : pType) {n}
+  : Pi n (X * Y) <~> Pi n X * Pi n Y.
+Proof.
+  unfold Pi.
+  apply (equiv_compose' (equiv_O_prod_cmp _ _ _)).
+  apply Trunc_functor_equiv.
+  by refine (pequiv_compose _ (iterated_loops_prod _ _)).
+Qed.
+
+
+
+
+
