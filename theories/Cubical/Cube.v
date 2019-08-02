@@ -25,21 +25,6 @@ x011   |               |          x011----pi11----x111   |
       x010----pi10----x110              x010----pi10----x110
  *)
 
-(* Contents:
-
-  * Definition of Cube
-  * Cube reflexivity
-  * Cube face rewriting
-  * Cubes from paths between squares
-  * Cubes from squres
-  * Cube flipping
-  * Kan fillers
-  * Cube concatenation
-  * natural cubes from ap
-
-*)
-
-
 (* Homogeneous cubes *)
 (* Cube left right top bottom front back *)
 Cumulative Inductive Cube {A}
@@ -111,12 +96,14 @@ Proof.
   1,2: by intros [].
   destruct sii0, sii1.
   cbn.
-  rewrite (eisretr sq_G1 si0i)^,
-    (eisretr sq_1G s0ii)^,
-    (eisretr sq_1G s1ii)^.
-  intro X.
-  by destruct (sq_G1^-1 si0i), (sq_1G^-1 s0ii),
-    (sq_1G^-1 s1ii), X, p00i.
+  rewrite <- (eisretr sq_G1 si0i).
+  rewrite <- (eisretr sq_1G s0ii).
+  rewrite <- (eisretr sq_1G s1ii).
+  intro x; destruct x.
+  destruct (@equiv_inv _ _ sq_G1 _ si0i).
+  destruct (@equiv_inv _ _ sq_1G _ s0ii).
+  destruct (@equiv_inv _ _ sq_1G _ s1ii).
+  by destruct p00i.
 Defined.
 
 Arguments cu_path {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
