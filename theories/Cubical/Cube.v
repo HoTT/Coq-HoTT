@@ -24,6 +24,19 @@ x011   |               |          x011----pi11----x111   |
      \ |               |               \               \ |  
       x010----pi10----x110              x010----pi10----x110
  *)
+ 
+(* Contents:
+  * Definition of Cube
+  * Cube reflexivity
+  * Cube face rewriting
+  * Cubes from paths between squares
+  * Cubes from squres
+  * Cube flipping
+  * Kan fillers
+  * Cube concatenation
+  * natural cubes from ap
+*)
+
 
 (* Homogeneous cubes *)
 (* Cube left right top bottom front back *)
