@@ -187,6 +187,7 @@ contrib/Freudenthal.v
 #
 
 theories/Homotopy/HomotopyGroup.v
+theories/Homotopy/Pi1S1.v
 theories/Homotopy/TorusEquivCircles.v
 
 #
@@ -208,7 +209,6 @@ theories/Algebra/ooAction.v
 #   Categories
 #
 
-theories/Homotopy/Pi1S1.v
 theories/Categories.v
 
 theories/Categories/Category.v
