@@ -84,15 +84,6 @@ Proof.
   serapply Build_AbGroup.
 Defined.
 
-(* TODO:
-    1. Move to Pointed.v *)
-Lemma loops_functor_pp {X Y : pType} (f : pMap X Y) : forall x y,
-  loops_functor f (x @ y) = loops_functor f x @ loops_functor f y.
-Proof.
-  intros x y; cbn.
-  by destruct (point_eq f), x, y.
-Defined.
-
 Section PiFunctor.
 
   Local Open Scope pointed_scope.

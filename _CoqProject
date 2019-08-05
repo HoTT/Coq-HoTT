@@ -6,6 +6,8 @@ COQC = hoqc
 #   Basics
 #
 
+theories/Basics.v
+
 theories/Basics/Notations.v
 theories/Basics/Utf8.v
 theories/Basics/Overture.v
@@ -15,11 +17,12 @@ theories/Basics/Contractible.v
 theories/Basics/Equivalences.v
 theories/Basics/Trunc.v
 theories/Basics/Decidable.v
-theories/Basics.v
 
 #
 #   Types
 #
+
+theories/Types.v
 
 theories/Types/Paths.v
 theories/Types/Unit.v
@@ -34,7 +37,6 @@ theories/Types/Sum.v
 theories/Types/Wtype.v
 theories/Types/Equiv.v
 theories/Types/Universe.v
-theories/Types.v
 
 #
 #   Cubical
@@ -55,18 +57,21 @@ theories/Cubical/DCube.v
 theories/Spaces/Nat.v
 theories/Spaces/Int.v
 theories/Spaces/Cantor.v
+theories/Spaces/Finite.v
+theories/Spaces/Universe.v
+theories/Spaces/Card.v
+
 theories/Spaces/BAut.v
 theories/Spaces/BAut/Cantor.v
-theories/Spaces/Finite.v
 theories/Spaces/BAut/Bool.v
 theories/Spaces/BAut/Bool/IncoherentIdempotent.v
 theories/Spaces/BAut/Rigid.v
+
 theories/Spaces/No.v
 theories/Spaces/No/Core.v
 theories/Spaces/No/Negation.v
 theories/Spaces/No/Addition.v
-theories/Spaces/Universe.v
-theories/Spaces/Card.v
+
 theories/Spaces/Torus/Torus.v
 theories/Spaces/Torus/TorusEquivCircles.v
 theories/Spaces/Torus/TorusHomotopy.v
@@ -76,6 +81,7 @@ theories/Spaces/Torus/TorusHomotopy.v
 #
 
 theories/Tactics.v
+
 theories/Tactics/RewriteModuloAssociativity.v
 theories/Tactics/EquivalenceInduction.v
 theories/Tactics/EvalIn.v
@@ -105,12 +111,14 @@ theories/Modalities/Nullification.v
 theories/Modalities/Open.v
 theories/Modalities/Closed.v
 theories/Modalities/Fracture.v
+
 theories/Comodalities/CoreflectiveSubuniverse.v
 
 #
 #   HIT
 #
 
+theories/HIT/Suspension.v
 theories/HIT/Circle.v
 theories/HIT/Truncations.v
 theories/HIT/TruncImpliesFunext.v
@@ -120,7 +128,6 @@ theories/HIT/FreeIntQuotient.v
 theories/HIT/Flattening.v
 theories/HIT/Interval.v
 theories/HIT/IntervalImpliesFunext.v
-theories/HIT/Suspension.v
 theories/HIT/Spheres.v
 theories/HIT/TwoSphere.v
 theories/HIT/epi.v
@@ -132,6 +139,8 @@ theories/HIT/Pushout.v
 theories/HIT/SetCone.v
 theories/HIT/Join.v
 theories/HIT/V.v
+
+theories/HIT/Colimits.v
 theories/HIT/Colimits/CommutativeSquares.v
 theories/HIT/Colimits/Diagram.v
 theories/HIT/Colimits/Colimit.v
@@ -141,7 +150,6 @@ theories/HIT/Colimits/Coequalizer.v
 theories/HIT/Colimits/Pushout.v
 theories/HIT/Colimits/MappingTelescope.v
 theories/HIT/Colimits/Flattening.v
-theories/HIT/Colimits.v
 
 #
 #   Other
@@ -159,7 +167,6 @@ theories/Extensions.v
 theories/HSet.v
 theories/UnivalenceImpliesFunext.v
 theories/TruncType.v
-theories/Pointed.v
 theories/DProp.v
 theories/Functorish.v
 theories/FunextAxiom.v
@@ -184,20 +191,36 @@ contrib/HoTTBook.v
 contrib/HoTTBookExercises.v
 contrib/Freudenthal.v
 
-
 #
 #   Homotopy
 #
 
 theories/Homotopy/HomotopyGroup.v
 theories/Homotopy/Pi1S1.v
+theories/Homotopy/Smash.v
+theories/Homotopy/Wedge.v
+
+#
+#   Pointed
+#
+
+theories/Pointed.v
+
+theories/Pointed/Core.v
+theories/Pointed/Loops.v
+theories/Pointed/pMap.v
+theories/Pointed/pFiber.v
+theories/Pointed/pEquiv.v
+theories/Pointed/pTrunc.v
+theories/Pointed/pHomotopy.v
+theories/Pointed/pSusp.v
 
 #
 #   Spectra
 #
 
 theories/Spectra/Spectrum.v
-theories/Spectra/Coinductive.v
+theories/Spectra/Coinductive.v  
 
 #
 #   Algebra

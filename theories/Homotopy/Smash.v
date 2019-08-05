@@ -1,5 +1,5 @@
 Require Import Basics.
-Require Import Pointed.
+Require Import Pointed.Core.
 Require Import Types.
 Require Import HIT.Pushout.
 

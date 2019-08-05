@@ -6,7 +6,9 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import HoTT.Tactics.
 Require Import Pointed.
 Require Import HIT.Truncations.
+
 Import TrM.
+
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
@@ -35,10 +37,12 @@ Existing Instance to_is_spectrum.
 
 (** ** Truncations of spectra *)
 
-Definition strunc `{Univalence} (k : trunc_index) (E : Spectrum) : Spectrum.
-Proof.
-  simple refine (Build_Spectrum (Build_Prespectrum (fun n => pTr (trunc_index_inc n k) (E n)) _) _).
-  - intros n.
-    exact ((ptr_loops _ (E n.+1)) o*E (pTr_pequiv _ (equiv_glue E n))).
-  - intros n. unfold glue. exact _.
-Defined.
+Definition strunc `{Univalence} (k : trunc_index) (E : Spectrum) : Spectrum
+  := Build_Spectrum
+      (Build_Prespectrum (fun n : nat => pTr (trunc_index_inc n k) (E n))
+        (fun n : nat => ptr_loops (trunc_index_inc n k) (E n.+1)
+          o*E ptr_pequiv (trunc_index_inc n k) (equiv_glue E n)))
+      (fun n : nat => pointed_isequiv (pTr (trunc_index_inc n k) (E n))
+        (loops (pTr (trunc_index_inc n k).+1 (E n.+1)))
+        (ptr_loops (trunc_index_inc n k) (E n.+1)
+          o*E ptr_pequiv (trunc_index_inc n k) (equiv_glue E n))).

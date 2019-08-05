@@ -1,8 +1,11 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
-Require Import HoTT.Basics HoTT.Types.
-Require Import Pointed UnivalenceImpliesFunext.
+Require Import Basics.
+Require Import Types.
+Require Import Pointed.
+Require Import UnivalenceImpliesFunext.
 Require Import HIT.Truncations HIT.Suspension.
+
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.
 Local Open Scope pointed_scope.

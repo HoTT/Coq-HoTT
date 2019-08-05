@@ -1,8 +1,11 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-Require Import HoTT.Basics HoTT.Types.
-Require Import Pointed UnivalenceImpliesFunext.
-Require Import Modalities.Modality.
-Require Import HIT.Truncations HIT.Connectedness HIT.quotient.
+Require Import Basics.
+Require Import Types.
+Require Import Pointed.
+Require Import HIT.Truncations.
+Require Import HIT.Connectedness.
+Require Import HIT.quotient.
+
 Import TrM.
 
 Local Open Scope path_scope.
@@ -138,11 +141,11 @@ Proof.
 Qed.
 
 Definition grouphom_idmap (G : ooGroup) : ooGroupHom G G
-  := pmap_idmap (B G).
+  := pmap_idmap.
 
 Definition group_loops_functor_idmap {X : pType}
 : grouphom_idmap (group_loops X)
-  == group_loops_functor (pmap_idmap X).
+  == group_loops_functor pmap_idmap.
 Proof.
   intros g.
   unfold grouphom_fun, grouphom_idmap.
