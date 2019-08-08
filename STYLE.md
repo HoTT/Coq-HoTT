@@ -1215,7 +1215,14 @@ are also perfectly acceptable.
 There are scripts in `etc/timing` to track (compile-time) performance
 changes in the library.  When you make large changes, you may want to
 include performance information in your commit message (recommended,
-but certainly not required!).  To do this, use the following work-flow
+but certainly not required!).
+
+**Note:** Make sure you have gnu time installed. Many terminals have
+their own `time` command but this will not work. To install time
+run `sudo apt install time`. You will also need to rerun the
+`./configure` script so that it detects the newly installed time.
+
+To run the timing scripts, use the following work-flow
 from the root of the repository after you have made your edits.  To
 make use of these scripts, you must first run `git submodule update
 --init --recursive`.
