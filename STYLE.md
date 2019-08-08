@@ -1211,6 +1211,7 @@ it; but for newcomers to git, rebasing can be intimidating, so merges
 are also perfectly acceptable.
 
 ### Timing scripts ###
+
 There are scripts in `etc/timing` to track (compile-time) performance
 changes in the library.  When you make large changes, you may want to
 include performance information in your commit message (recommended,
