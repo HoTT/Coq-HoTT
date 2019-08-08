@@ -2,7 +2,7 @@ Require Import Basics.
 Require Import Cubical.
 Require Import Types.
 Require Import HIT.Circle.
-Require Import Spaces.Torus.
+Require Import Torus.
 
 (* In this file we:
     - Prove that the Torus is equivalent to the product of two circles
