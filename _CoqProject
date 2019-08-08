@@ -69,6 +69,7 @@ theories/Spaces/Universe.v
 theories/Spaces/Card.v
 theories/Spaces/Torus/Torus.v
 theories/Spaces/Torus/TorusEquivCircles.v
+theories/Spaces/Torus/TorusHomotopy.v
 
 #
 #   Tactics

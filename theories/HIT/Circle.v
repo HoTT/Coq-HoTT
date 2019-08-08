@@ -66,6 +66,8 @@ Defined.
 
 (* ** The loop space of the circle is the Integers. *)
 
+Global Instance ispointed_S1 : IsPointed S1 := base.
+
 (** We use encode-decode. *)
 
 Section AssumeUnivalence.
