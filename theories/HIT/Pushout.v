@@ -425,8 +425,8 @@ End PushoutAssoc.
 
 (** ** Pushouts of equvialences are equivalences *)
 
-Definition isequiv_pushout_isequiv {A B C} (f : A -> B) (g : A -> C)
-           `{IsEquiv _ _ f} : IsEquiv (pushr' f g).
+Global Instance isequiv_pushout_isequiv {A B C} (f : A -> B) (g : A -> C)
+       `{IsEquiv _ _ f} : IsEquiv (pushr' f g).
 Proof.
   srefine (isequiv_adjointify _ _ _ _).
   - srefine (pushout_rec C (g o f^-1) idmap _).
@@ -444,5 +444,28 @@ Proof.
       rewrite pushout_rec_beta_pp, eisadj, ap_idmap, concat_p1;
       rewrite <- ap_compose, <- (ap_compose g (pushr' f g));
       exact (concat_Ap (pp' f g) (eissect f a)) ).
+  - intros c; reflexivity.
+Defined.
+
+Global Instance isequiv_pushout_isequiv' {A B C} (f : A -> B) (g : A -> C)
+       `{IsEquiv _ _ g} : IsEquiv (pushl' f g).
+Proof.
+  srefine (isequiv_adjointify _ _ _ _).
+  - srefine (pushout_rec B idmap (f o g^-1) _).
+    intros a; cbn. symmetry; apply ap, eissect.
+  - srefine (pushout_ind _ _ _ _); cbn.
+    + intros b; reflexivity.
+    + intros c; change (pushl' f g (f (g^-1 c)) = pushr c).
+      transitivity (pushr' f g (g (g^-1 c))).
+      * apply pp.
+      * apply ap, eisretr.
+    + intros a.
+      abstract (
+      rewrite transport_paths_FlFr, ap_compose, !concat_pp_p;
+      apply moveR_Vp;
+      rewrite pushout_rec_beta_pp, eisadj, ap_idmap, concat_1p, ap_V;
+      apply moveL_Vp;
+      rewrite <- !ap_compose;
+      exact (concat_Ap (pp' f g) (eissect g a)) ).
   - intros c; reflexivity.
 Defined.
