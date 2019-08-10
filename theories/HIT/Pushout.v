@@ -261,6 +261,169 @@ Section EquivSigmaPushout.
 
 End EquivSigmaPushout.
 
+(** ** Pushouts are associative *)
+
+Section PushoutAssoc.
+
+  Context {A1 A2 B C D : Type}
+          (f1 : A1 -> B) (g1 : A1 -> C) (f2 : A2 -> C) (g2 : A2 -> D).
+
+  Definition pushout_assoc_left := pushout (pushr' f1 g1 o f2) g2.
+  Let pushll : B -> pushout_assoc_left
+    := pushl' (pushr' f1 g1 o f2) g2 o pushl' f1 g1.
+  Let pushlm : C -> pushout_assoc_left
+    := pushl' (pushr' f1 g1 o f2) g2 o pushr' f1 g1.
+  Let pushlr : D -> pushout_assoc_left
+    := pushr' (pushr' f1 g1 o f2) g2.
+  Let ppll : forall a1, pushll (f1 a1) = pushlm (g1 a1)
+    := fun a1 => ap (pushl' (pushr' f1 g1 o f2) g2) (pp' f1 g1 a1).
+  Let pplr : forall a2, pushlm (f2 a2) = pushlr (g2 a2)
+    := fun a2 => pp' (pushr' f1 g1 o f2) g2 a2.
+
+  Definition pushout_assoc_left_ind
+             (P : pushout_assoc_left -> Type)
+             (pushb : forall b, P (pushll b))
+             (pushc : forall c, P (pushlm c))
+             (pushd : forall d, P (pushlr d))
+             (pusha1 : forall a1, (ppll a1) # pushb (f1 a1) = pushc (g1 a1))
+             (pusha2 : forall a2, (pplr a2) # pushc (f2 a2) = pushd (g2 a2))
+    : forall x, P x.
+  Proof.
+    srefine (pushout_ind _ _ pushd _).
+    - srefine (pushout_ind _ pushb pushc _).
+      intros a1.
+      exact (transport_compose P pushl _ _ @ pusha1 a1).
+    - exact pusha2.
+  Defined.
+
+  Section Pushout_Assoc_Left_Rec.
+
+    Context (P : Type)
+            (pushb : B -> P)
+            (pushc : C -> P)
+            (pushd : D -> P)
+            (pusha1 : forall a1, pushb (f1 a1) = pushc (g1 a1))
+            (pusha2 : forall a2, pushc (f2 a2) = pushd (g2 a2)).
+
+    Definition pushout_assoc_left_rec
+      : pushout_assoc_left -> P.
+    Proof.
+      srefine (pushout_rec _ _ pushd _).
+      - srefine (pushout_rec _ pushb pushc pusha1).
+      - exact pusha2.
+    Defined.
+
+    Definition pushout_assoc_left_rec_beta_ppll a1
+      : ap pushout_assoc_left_rec (ppll a1) = pusha1 a1.
+    Proof.
+      unfold ppll.
+      rewrite <- (ap_compose (pushl' (pushr' f1 g1 o f2) g2)
+                             pushout_assoc_left_rec).
+      change (ap (pushout_rec P pushb pushc pusha1) (pp' f1 g1 a1) = pusha1 a1).
+      apply pushout_rec_beta_pp.
+    Defined.
+
+    Definition pushout_assoc_left_rec_beta_pplr a2
+      : ap pushout_assoc_left_rec (pplr a2) = pusha2 a2.
+    Proof.
+      unfold pushout_assoc_left_rec, pplr.
+      apply (pushout_rec_beta_pp (f := pushr' f1 g1 o f2) (g := g2)).
+    Defined.
+
+  End Pushout_Assoc_Left_Rec.
+
+  Definition pushout_assoc_right := pushout f1 (pushl' f2 g2 o g1).
+  Let pushrl : B -> pushout_assoc_right
+    := pushl' f1 (pushl' f2 g2 o g1).
+  Let pushrm : C -> pushout_assoc_right
+    := pushr' f1 (pushl' f2 g2 o g1) o pushl' f2 g2.
+  Let pushrr : D -> pushout_assoc_right
+    := pushr' f1 (pushl' f2 g2 o g1) o pushr' f2 g2.
+  Let pprl : forall a1, pushrl (f1 a1) = pushrm (g1 a1)
+    := fun a1 => pp' f1 (pushl' f2 g2 o g1) a1.
+  Let pprr : forall a2, pushrm (f2 a2) = pushrr (g2 a2)
+    := fun a2 => ap (pushr' f1 (pushl' f2 g2 o g1)) (pp' f2 g2 a2).
+
+  Definition pushout_assoc_right_ind
+             (P : pushout_assoc_right -> Type)
+             (pushb : forall b, P (pushrl b))
+             (pushc : forall c, P (pushrm c))
+             (pushd : forall d, P (pushrr d))
+             (pusha1 : forall a1, (pprl a1) # pushb (f1 a1) = pushc (g1 a1))
+             (pusha2 : forall a2, (pprr a2) # pushc (f2 a2) = pushd (g2 a2))
+    : forall x, P x.
+  Proof.
+    srefine (pushout_ind _ pushb _ _).
+    - srefine (pushout_ind _ pushc pushd _).
+      intros a2.
+      exact (transport_compose P pushr _ _ @ pusha2 a2).
+    - exact pusha1.
+  Defined.
+
+  Section Pushout_Assoc_Right_Rec.
+
+    Context (P : Type)
+            (pushb : B -> P)
+            (pushc : C -> P)
+            (pushd : D -> P)
+            (pusha1 : forall a1, pushb (f1 a1) = pushc (g1 a1))
+            (pusha2 : forall a2, pushc (f2 a2) = pushd (g2 a2)).
+
+    Definition pushout_assoc_right_rec
+      : pushout_assoc_right -> P.
+    Proof.
+      srefine (pushout_rec _ pushb _ _).
+      - srefine (pushout_rec _ pushc pushd pusha2).
+      - exact pusha1.
+    Defined.
+
+    Definition pushout_assoc_right_rec_beta_pprl a1
+      : ap pushout_assoc_right_rec (pprl a1) = pusha1 a1.
+    Proof.
+      unfold pushout_assoc_right_rec, pprl.
+      apply (pushout_rec_beta_pp (f := f1) (g := pushl' f2 g2 o g1)).
+    Defined.
+
+    Definition pushout_assoc_right_rec_beta_pprr a2
+      : ap pushout_assoc_right_rec (pprr a2) = pusha2 a2.
+    Proof.
+      unfold pprr.
+      rewrite <- (ap_compose (pushr' f1 (pushl' f2 g2 o g1))
+                             pushout_assoc_right_rec).
+      change (ap (pushout_rec P pushc pushd pusha2) (pp' f2 g2 a2) = pusha2 a2).
+      apply pushout_rec_beta_pp.
+    Defined.
+
+  End Pushout_Assoc_Right_Rec.
+
+  Definition equiv_pushout_assoc
+    : pushout (pushr' f1 g1 o f2) g2 <~> pushout f1 (pushl' f2 g2 o g1).
+  Proof.
+    srefine (equiv_adjointify _ _ _ _).
+    - exact (pushout_assoc_left_rec _ pushrl pushrm pushrr pprl pprr).
+    - exact (pushout_assoc_right_rec _ pushll pushlm pushlr ppll pplr).
+    - abstract (
+      srefine (pushout_assoc_right_ind
+                 _ (fun _ => 1) (fun _ => 1) (fun _ => 1) _ _);
+        intros; rewrite transport_paths_FlFr, ap_compose;
+      [ rewrite pushout_assoc_right_rec_beta_pprl,
+        pushout_assoc_left_rec_beta_ppll
+      | rewrite pushout_assoc_right_rec_beta_pprr,
+        pushout_assoc_left_rec_beta_pplr ];
+      rewrite concat_p1, ap_idmap; apply concat_Vp ).
+    - abstract (
+      srefine (pushout_assoc_left_ind
+                 _ (fun _ => 1) (fun _ => 1) (fun _ => 1) _ _);
+        intros; rewrite transport_paths_FlFr, ap_compose;
+      [ rewrite pushout_assoc_left_rec_beta_ppll,
+        pushout_assoc_right_rec_beta_pprl
+      | rewrite pushout_assoc_left_rec_beta_pplr,
+        pushout_assoc_right_rec_beta_pprr ];
+      rewrite concat_p1, ap_idmap; apply concat_Vp ).
+  Defined.
+
+End PushoutAssoc.
+
 (** ** Cones of hsets *)
 
 Section SetCone.
