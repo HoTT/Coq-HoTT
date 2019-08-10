@@ -45,6 +45,7 @@ Require Export HIT.FreeIntQuotient.
 Require Export HIT.Suspension.
 Require Export HIT.Spheres.
 Require Export HIT.Pushout.
+Require Export HIT.SetCone.
 Require Export HIT.epi.
 Require Export HIT.unique_choice.
 Require Export HIT.iso.

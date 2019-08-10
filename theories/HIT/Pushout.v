@@ -3,7 +3,6 @@ Require Import HoTT.Basics.
 Require Import HoTT.Types.
 Require Import HSet TruncType.
 Require Export HIT.Coeq.
-Require Import HIT.Truncations.
 Local Open Scope path_scope.
 
 
@@ -447,15 +446,3 @@ Proof.
       exact (concat_Ap (pp' f g) (eissect f a)) ).
   - intros c; reflexivity.
 Defined.
-
-(** ** Cones of hsets *)
-
-Section SetCone.
-  Context {A B : hSet} (f : A -> B).
-
-  Definition setcone := Trunc 0 (pushout f (const tt)).
-
-  Global Instance istrunc_setcone : IsHSet setcone := _.
-
-  Definition setcone_point : setcone := tr (push (inr tt)).
-End SetCone.
