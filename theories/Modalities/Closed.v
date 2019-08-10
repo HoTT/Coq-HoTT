@@ -27,7 +27,7 @@ Section ClosedModalTypes.
         + intros [u a]. simpl.
           pose (uac u). apply contr.
       * intros z. pattern z.
-        simple refine (pushout_ind fst snd _ _ _ _ z).
+        simple refine (pushout_ind _ _ _ _ z).
         + intros u.
           pose (contr_inhabited_hprop U u).
           apply path_contr.
@@ -93,7 +93,7 @@ Module ClosedModalities <: Modalities.
     (forall a, B (to@{u a i} O A a)) -> forall a, B a.
   Proof.
     simpl; intros f z.
-    simple refine (pushout_ind@{i a i j i} _ _ B _ _ _ z).
+    simple refine (pushout_ind@{i a i j i} B _ _ _ z).
     - intros u; apply center, B_inO, u.
     - intros a; apply f.
     - intros [u a].

@@ -36,7 +36,7 @@ Definition pushr {A B C} {f : A -> B} {g : A -> C} (c : C) : pushout f g := push
 Definition pp {A B C : Type} {f : A -> B} {g : A -> C} (a : A) : pushl (f a) = pushr (g a)
   := @cp A (B+C) (inl o f) (inr o g) a.
 
-Definition pushout_ind {A B C} (f : A -> B) (g : A -> C) (P : pushout f g -> Type)
+Definition pushout_ind {A B C} {f : A -> B} {g : A -> C} (P : pushout f g -> Type)
   (pushb : forall b : B, P (pushl b))
   (pushc : forall c : C, P (pushr c))
   (pp' : forall a : A, (pp a) # (pushb (f a)) = pushc (g a))
@@ -48,7 +48,7 @@ Definition pushout_ind_beta_pp {A B C f g}
            (pushb : forall b : B, P (push (inl b)))
            (pushc : forall c : C, P (push (inr c)))
            (pp' : forall a : A, (pp a) # (pushb (f a)) = pushc (g a)) (a : A)
-: apD (pushout_ind f g P pushb pushc pp') (pp a) = pp' a
+: apD (pushout_ind P pushb pushc pp') (pp a) = pp' a
   := Coeq_ind_beta_cp P (fun bc => match bc with inl b => pushb b | inr c => pushc c end) pp' a.
 
 (** But we want to allow the user to forget that we've defined pushouts in terms of coequalizers. *)
@@ -63,7 +63,7 @@ Definition pushout_rec {A B C} {f : A -> B} {g : A -> C} (P : Type)
   (pushc : C -> P)
   (pp' : forall a : A, pushb (f a) = pushc (g a))
   : @pushout A B C f g -> P
-  := pushout_ind f g (fun _ => P) pushb pushc (fun a => transport_const _ _ @ pp' a).
+  := pushout_ind (fun _ => P) pushb pushc (fun a => transport_const _ _ @ pp' a).
 
 Definition pushout_rec_beta_pp {A B C f g} (P : Type)
   (pushb : B -> P)
@@ -120,6 +120,87 @@ Lemma equiv_pushout_pp {A B C f g A' B' C' f' g'}
 Proof.
   apply @functor_coeq_beta_cp.
 Defined.
+
+(** ** Sigmas *)
+
+(** Pushouts commute with sigmas *)
+
+Section EquivSigmaPushout.
+  
+  Context {X : Type}
+          (A : X -> Type) (B : X -> Type) (C : X -> Type)
+          (f : forall x, A x -> B x) (g : forall x, A x -> C x).
+
+  Let esp1 : { x : X & pushout (f x) (g x) }
+             -> pushout (functor_sigma idmap f) (functor_sigma idmap g).
+  Proof.
+    intros [x p].
+    srefine (pushout_rec _ _ _ _ p).
+    + intros b. exact (pushl (x;b)).
+    + intros c. exact (pushr (x;c)).
+    + intros a; cbn. exact (pp (x;a)).
+  Defined.
+
+  Let esp1_beta_pp (x : X) (a : A x)
+    : ap esp1 (path_sigma' (fun x => pushout (f x) (g x)) 1 (pp a))
+      = pp (x;a).
+  Proof.
+    rewrite (ap_path_sigma (fun x => pushout (f x) (g x))
+                           (fun x a => esp1 (x;a)) 1 (pp a)); cbn.
+    rewrite !concat_p1.
+    unfold esp1; rewrite pushout_rec_beta_pp.
+    reflexivity.
+  Qed.
+
+  Let esp2 : pushout (functor_sigma idmap f) (functor_sigma idmap g)
+             -> { x : X & pushout (f x) (g x) }.
+  Proof.
+    srefine (pushout_rec _ _ _ _).
+    + exact (functor_sigma idmap (fun x => @pushl _ _ _ (f x) (g x))).
+    + exact (functor_sigma idmap (fun x => @pushr _ _ _ (f x) (g x))).
+    + intros [x a]; unfold functor_sigma; cbn.
+      srefine (path_sigma' _ 1 _); cbn.
+      apply pp.
+  Defined.
+
+  Let esp2_beta_pp (x : X) (a : A x)
+    : ap esp2 (pp (x;a)) = path_sigma' (fun x:X => pushout (f x) (g x)) 1 (pp a).
+  Proof.
+    unfold esp2.
+    rewrite pushout_rec_beta_pp.
+    reflexivity.
+  Qed.
+
+  Definition equiv_sigma_pushout
+    : { x : X & pushout (f x) (g x) }
+        <~> pushout (functor_sigma idmap f) (functor_sigma idmap g).
+  Proof.
+    srefine (equiv_adjointify esp1 esp2 _ _).
+    - srefine (pushout_ind _ _ _ _); cbn.
+      + reflexivity.
+      + reflexivity.
+      + intros [x a].
+        rewrite transport_paths_FlFr.
+        rewrite ap_idmap, concat_p1.
+        apply moveR_Vp. rewrite concat_p1.
+        rewrite ap_compose.
+        rewrite esp2_beta_pp, esp1_beta_pp.
+        reflexivity.
+    - intros [x a]; revert a.
+      srefine (pushout_ind _ _ _ _); cbn.
+      + reflexivity.
+      + reflexivity.
+      + intros a.
+        rewrite transport_paths_FlFr.
+        rewrite concat_p1; apply moveR_Vp; rewrite concat_p1.
+        rewrite (ap_compose (exist _ x) (esp2 o esp1)).
+        rewrite (ap_compose esp1 esp2).
+        rewrite (ap_existT (fun x => pushout (f x) (g x)) x _ _ (pp a)).
+        rewrite esp1_beta_pp, esp2_beta_pp.
+        reflexivity.
+  Defined.
+
+End EquivSigmaPushout.
 
 (** ** Cones of hsets *)
 

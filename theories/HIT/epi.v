@@ -59,7 +59,7 @@ Section cones.
                                  | inl a' => (I0 a')^
                                  | inr tt => idpath
                                end)) as I0f.
-    refine (pushout_ind _ _ _ (fun a' => I0f (inl a')) (fun u => (I0f (inr u))) _).
+    refine (pushout_ind _ (fun a' => I0f (inl a')) (fun u => (I0f (inr u))) _).
 
     simpl. subst alpha1. intros.
     unfold setcone_point.
