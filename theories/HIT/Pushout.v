@@ -91,6 +91,52 @@ Proof.
   refine (pushout_ind_beta_pp (fun _ => P) _ _ _ _).
 Defined.
 
+(** ** Universal property *)
+
+Definition pushout_unrec {A B C P} (f : A -> B) (g : A -> C)
+           (h : pushout f g -> P)
+  : {psh : (B -> P) * (C -> P) &
+           forall a, fst psh (f a) = snd psh (g a)}.
+Proof.
+  exists (h o pushl , h o pushr).
+  intros a; cbn.
+  exact (ap h (pp a)).
+Defined.
+
+Definition isequiv_pushout_rec `{Funext} {A B C} (f : A -> B) (g : A -> C) P
+  : IsEquiv (fun p : {psh : (B -> P) * (C -> P) &
+                            forall a, fst psh (f a) = snd psh (g a) }
+             => pushout_rec P (fst p.1) (snd p.1) p.2).
+Proof.
+  srefine (isequiv_adjointify _ (pushout_unrec f g) _ _).
+  - intros h.
+    apply path_arrow; intros x.
+    srefine (pushout_ind (fun x => pushout_rec P (fst (pushout_unrec f g h).1) (snd (pushout_unrec f g h).1) (pushout_unrec f g h).2 x = h x) _ _ _ x).
+    + intros b; reflexivity.
+    + intros c; reflexivity.
+    + intros a; cbn.
+      abstract (rewrite transport_paths_FlFr, pushout_rec_beta_pp;
+                rewrite concat_p1; apply concat_Vp).
+  - intros [[pushb pushc] pusha]; unfold pushout_unrec; cbn.
+    srefine (path_sigma' _ _ _).
+    + srefine (path_prod' _ _); reflexivity.
+    + apply path_forall; intros a.
+      abstract (rewrite transport_forall_constant, pushout_rec_beta_pp;
+                reflexivity).
+Defined.
+
+Definition equiv_pushout_rec `{Funext} {A B C} (f : A -> B) (g : A -> C) P
+  : {psh : (B -> P) * (C -> P) &
+           forall a, fst psh (f a) = snd psh (g a) }
+      <~> (pushout f g -> P)
+  := BuildEquiv _ _ _ (isequiv_pushout_rec f g P).
+
+Definition equiv_pushout_unrec `{Funext} {A B C} (f : A -> B) (g : A -> C) P
+  : (pushout f g -> P)
+      <~> {psh : (B -> P) * (C -> P) &
+                 forall a, fst psh (f a) = snd psh (g a) }
+  := equiv_inverse (equiv_pushout_rec f g P).
+
 (** ** Symmetry *)
 
 Definition pushout_sym_map {A B C} {f : A -> B} {g : A -> C}
