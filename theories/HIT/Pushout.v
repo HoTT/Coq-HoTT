@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics.
-Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe Types.Unit Types.Sum.
+Require Import HoTT.Types.
 Require Import HSet TruncType.
 Require Export HIT.Coeq.
 Require Import HIT.Truncations.
@@ -36,20 +36,33 @@ Definition pushr {A B C} {f : A -> B} {g : A -> C} (c : C) : pushout f g := push
 Definition pp {A B C : Type} {f : A -> B} {g : A -> C} (a : A) : pushl (f a) = pushr (g a)
   := @cp A (B+C) (inl o f) (inr o g) a.
 
-Definition pushout_ind {A B C} {f : A -> B} {g : A -> C} (P : pushout f g -> Type)
-  (pushb : forall b : B, P (pushl b))
-  (pushc : forall c : C, P (pushr c))
-  (pp' : forall a : A, (pp a) # (pushb (f a)) = pushc (g a))
-  : forall (w : pushout f g), P w
-  := Coeq_ind P (fun bc => match bc with inl b => pushb b | inr c => pushc c end) pp'.
+(* Some versions with explicit parameters. *)
+Definition pushl' {A B C} (f : A -> B) (g : A -> C) (b : B) : pushout f g := pushl b.
+Definition pushr' {A B C} (f : A -> B) (g : A -> C) (c : C) : pushout f g := pushr c.
+Definition pp' {A B C : Type} (f : A -> B) (g : A -> C) (a : A) : pushl (f a) = pushr (g a)
+  := pp a.
 
-Definition pushout_ind_beta_pp {A B C f g}
-           (P : @pushout A B C f g -> Type)
-           (pushb : forall b : B, P (push (inl b)))
-           (pushc : forall c : C, P (push (inr c)))
-           (pp' : forall a : A, (pp a) # (pushb (f a)) = pushc (g a)) (a : A)
-: apD (pushout_ind P pushb pushc pp') (pp a) = pp' a
-  := Coeq_ind_beta_cp P (fun bc => match bc with inl b => pushb b | inr c => pushc c end) pp' a.
+Section PushoutInd.
+
+  Context {A B C : Type} {f : A -> B} {g : A -> C} (P : pushout f g -> Type)
+          (pushb : forall b : B, P (pushl b))
+          (pushc : forall c : C, P (pushr c))
+          (pusha : forall a : A, (pp a) # (pushb (f a)) = pushc (g a)).
+
+  Definition pushout_ind
+    : forall (w : pushout f g), P w
+    := Coeq_ind P (fun bc => match bc with inl b => pushb b | inr c => pushc c end) pusha.
+
+  Definition pushout_ind_beta_pushl (b:B) : pushout_ind (pushl b) = pushb b
+    := 1.
+  Definition pushout_ind_beta_pushr (c:C) : pushout_ind (pushr c) = pushc c
+    := 1.
+
+  Definition pushout_ind_beta_pp (a:A)
+    : apD pushout_ind (pp a) = pusha a
+    := Coeq_ind_beta_cp P (fun bc => match bc with inl b => pushb b | inr c => pushc c end) pusha a.
+
+End PushoutInd.
 
 (** But we want to allow the user to forget that we've defined pushouts in terms of coequalizers. *)
 Arguments pushout : simpl never.
@@ -61,16 +74,16 @@ Arguments pushout_ind_beta_pp : simpl never.
 Definition pushout_rec {A B C} {f : A -> B} {g : A -> C} (P : Type)
   (pushb : B -> P)
   (pushc : C -> P)
-  (pp' : forall a : A, pushb (f a) = pushc (g a))
+  (pusha : forall a : A, pushb (f a) = pushc (g a))
   : @pushout A B C f g -> P
-  := pushout_ind (fun _ => P) pushb pushc (fun a => transport_const _ _ @ pp' a).
+  := pushout_ind (fun _ => P) pushb pushc (fun a => transport_const _ _ @ pusha a).
 
 Definition pushout_rec_beta_pp {A B C f g} (P : Type)
   (pushb : B -> P)
   (pushc : C -> P)
-  (pp' : forall a : A, pushb (f a) = pushc (g a))
+  (pusha : forall a : A, pushb (f a) = pushc (g a))
   (a : A)
-  : ap (pushout_rec P pushb pushc pp') (pp a) = pp' a.
+  : ap (pushout_rec P pushb pushc pusha) (pp a) = pusha a.
 Proof.
   unfold pushout_rec.
   eapply (cancelL (transport_const (pp a) _)).
