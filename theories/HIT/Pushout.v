@@ -424,6 +424,30 @@ Section PushoutAssoc.
 
 End PushoutAssoc.
 
+(** ** Pushouts of equvialences are equivalences *)
+
+Definition isequiv_pushout_isequiv {A B C} (f : A -> B) (g : A -> C)
+           `{IsEquiv _ _ f} : IsEquiv (pushr' f g).
+Proof.
+  srefine (isequiv_adjointify _ _ _ _).
+  - srefine (pushout_rec C (g o f^-1) idmap _).
+    intros a; cbn; apply ap, eissect.
+  - srefine (pushout_ind _ _ _ _); cbn.
+    + intros b; change (pushr' f g (g (f^-1 b)) = pushl b).
+      transitivity (pushl' f g (f (f^-1 b))).
+      * symmetry; apply pp.
+      * apply ap, eisretr.
+    + intros c; reflexivity.
+    + intros a.
+      abstract (
+      rewrite transport_paths_FlFr, ap_compose, !concat_pp_p;
+      apply moveR_Vp; apply moveR_Vp;
+      rewrite pushout_rec_beta_pp, eisadj, ap_idmap, concat_p1;
+      rewrite <- ap_compose, <- (ap_compose g (pushr' f g));
+      exact (concat_Ap (pp' f g) (eissect f a)) ).
+  - intros c; reflexivity.
+Defined.
+
 (** ** Cones of hsets *)
 
 Section SetCone.
