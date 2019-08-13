@@ -174,9 +174,9 @@ theories/Tests.v
 #   Contrib  
 #
 
-#contrib/HoTTBook.v
-#contrib/HoTTBookExercises.v
-#contrib/Freudenthal.v
+contrib/HoTTBook.v
+contrib/HoTTBookExercises.v
+contrib/Freudenthal.v
 
 
 #
