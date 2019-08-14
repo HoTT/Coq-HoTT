@@ -124,6 +124,7 @@ theories/HIT/surjective_factor.v
 theories/HIT/quotient.v
 theories/HIT/iso.v
 theories/HIT/Pushout.v
+theories/HIT/SetCone.v
 theories/HIT/Join.v
 theories/HIT/V.v
 theories/HIT/Colimits/CommutativeSquares.v

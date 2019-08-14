@@ -2,7 +2,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import UnivalenceImpliesFunext EquivalenceVarieties Extensions HProp Fibrations NullHomotopy Pullback.
 Require Import HoTT.Tactics.
-Require Import HIT.Coeq.
+Require Import HIT.Coeq HIT.Pushout.
 Require Import Tactics.RewriteModuloAssociativity.
 
 Local Open Scope nat_scope.
@@ -1016,6 +1016,32 @@ Section Reflective_Subuniverse.
         := BuildEquiv _ _ O_coeq_cmp _.
 
     End OCoeq.
+
+    (** ** Pushouts *)
+
+    Section OPushout.
+      Context {A B C : Type} (f : A -> B) (g : A -> C).
+
+      Definition equiv_O_pushout
+        : O (pushout f g) <~> O (pushout (O_functor f) (O_functor g)).
+      Proof.
+        unfold pushout.
+        refine (_ oE equiv_O_coeq (inl o f) (inr o g)).
+        refine ((equiv_O_coeq _ _)^-1 oE _).
+        apply equiv_O_functor.
+        srefine (@equiv_functor_coeq'
+                   _ _ (O_functor (inl o f)) (O_functor (inr o g))
+                   _ _ (O_functor (inl o O_functor f))
+                   (O_functor (inr o O_functor g)) _ _ _ _).
+        - apply equiv_to_O; exact _.
+        - apply equiv_O_sum.
+        - srefine (O_indpaths _ _ _); intros a; cbn.
+          abstract (rewrite !to_O_natural, O_rec_beta; reflexivity).
+        - srefine (O_indpaths _ _ _); intros a; cbn.
+          abstract (rewrite !to_O_natural, O_rec_beta; reflexivity).
+      Defined.
+
+    End OPushout.
 
   End Types.
 
