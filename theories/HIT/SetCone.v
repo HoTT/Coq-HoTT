@@ -5,7 +5,7 @@ Require Import HSet TruncType.
 Require Import HIT.Pushout.
 Require Import HIT.Truncations.
 
-(** ** Cones of hsets *)
+(** * Cones of hsets *)
 
 Section SetCone.
   Context {A B : hSet} (f : A -> B).
