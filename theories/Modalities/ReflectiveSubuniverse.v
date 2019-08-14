@@ -1017,7 +1017,7 @@ Section Reflective_Subuniverse.
 
     End OCoeq.
 
-    (* ** Pushouts *)
+    (** ** Pushouts *)
 
     Section OPushout.
       Context {A B C : Type} (f : A -> B) (g : A -> C).
