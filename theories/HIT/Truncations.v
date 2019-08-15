@@ -116,6 +116,9 @@ Export TrM.RSU.Coercions.
 (** Here is the additional coercion promised above. *)
 Coercion Truncation_Modality_to_Modality := idmap : Truncation_Modality -> Modality.
 
+(** Sometimes we also need an explicit definition of the truncation reflective subuniverses. *)
+Module Truncation_RSUs := Modalities_to_ReflectiveSubuniverses Truncation_Modalities.
+
 Section TruncationModality.
   Context (n : trunc_index).
 

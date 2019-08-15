@@ -446,6 +446,11 @@ Section Reflective_Subuniverse.
     : O A <~> O B
     := BuildEquiv _ _ (O_functor f) _.
 
+    (** This is sometimes useful to have a separate name for, to facilitate rewriting along it. *)
+    Definition to_O_equiv_natural {A B} (f : A <~> B)
+    : (equiv_O_functor f) o (to O A) == (to O B) o f
+    := to_O_natural f.
+
     (** This corresponds to [ap O] on the universe. *)
     Definition ap_O_path_universe' `{Univalence}
                {A B : Type} (f : A <~> B)
@@ -1015,6 +1020,20 @@ Section Reflective_Subuniverse.
       : O (Coeq f g) <~> O (Coeq (O_functor f) (O_functor g))
         := BuildEquiv _ _ O_coeq_cmp _.
 
+      Definition equiv_O_coeq_to_O (a : A)
+        : equiv_O_coeq (to O (Coeq f g) (coeq a))
+          = to O (Coeq (O_functor f) (O_functor g)) (coeq (to O A a)).
+      Proof.
+        refine (to_O_natural _ _).
+      Defined.
+
+      Definition inverse_equiv_O_coeq_to_O (a : A)
+        : equiv_O_coeq^-1 (to O (Coeq (O_functor f) (O_functor g)) (coeq (to O A a)))
+          = to O (Coeq f g) (coeq a).
+      Proof.
+        apply moveR_equiv_V; symmetry; apply equiv_O_coeq_to_O.
+      Defined.
+
     End OCoeq.
 
     (** ** Pushouts *)
@@ -1040,6 +1059,50 @@ Section Reflective_Subuniverse.
         - srefine (O_indpaths _ _ _); intros a; cbn.
           abstract (rewrite !to_O_natural, O_rec_beta; reflexivity).
       Defined.
+
+      Definition equiv_O_pushout_to_O_pushl (b : B)
+        : equiv_O_pushout (to O (pushout f g) (pushl b))
+          = to O (pushout (O_functor f) (O_functor g)) (pushl (to O B b)).
+      Proof.
+        cbn.
+        unfold O_coeq_cmp, O_coeq_cmp_inverse, pushout, pushl, push.
+        rewrite to_O_natural.
+        rewrite to_O_natural.
+        rewrite O_rec_beta.
+        cbn.
+        rewrite O_rec_beta.
+        rewrite to_O_natural.
+        reflexivity.
+      Qed.
+
+      Definition equiv_O_pushout_to_O_pushr (c : C)
+        : equiv_O_pushout (to O (pushout f g) (pushr c))
+          = to O (pushout (O_functor f) (O_functor g)) (pushr (to O C c)).
+      Proof.
+        cbn.
+        unfold O_coeq_cmp, O_coeq_cmp_inverse, pushout, pushr, push.
+        rewrite to_O_natural.
+        rewrite to_O_natural.
+        rewrite O_rec_beta.
+        cbn.
+        rewrite O_rec_beta.
+        rewrite to_O_natural.
+        reflexivity.
+      Qed.
+
+      Definition inverse_equiv_O_pushout_to_O_pushl (b : B)
+        : equiv_O_pushout^-1 (to O (pushout (O_functor f) (O_functor g)) (pushl (to O B b)))
+          = to O (pushout f g) (pushl b).
+      Proof.
+        apply moveR_equiv_V; symmetry; apply equiv_O_pushout_to_O_pushl.
+      Qed.
+
+      Definition inverse_equiv_O_pushout_to_O_pushr (c : C)
+        : equiv_O_pushout^-1 (to O (pushout (O_functor f) (O_functor g)) (pushr (to O C c)))
+          = to O (pushout f g) (pushr c).
+      Proof.
+        apply moveR_equiv_V; symmetry; apply equiv_O_pushout_to_O_pushr.
+      Qed.
 
     End OPushout.
 
@@ -1627,6 +1690,22 @@ Section ConnectedMaps.
     pattern b; refine (conn_map_elim f _ _ b); intros a.
     exact (conn_map_comp (g o f) P (d oD f) a).
   Defined.
+
+  (** Connected maps also cancel with equivalences on the other side. *)
+  Definition cancelR_isequiv_conn_map {A B C : Type} (f : A -> B) (g : B -> C)
+         `{IsEquiv _ _ g} `{IsConnMap O _ _ (g o f)}
+    : IsConnMap O f.
+  Proof.
+    intros b.
+    srefine (isconnected_equiv' O (hfiber (g o f) (g b)) _ _).
+    exact (equiv_inverse (equiv_functor_sigma'
+                            equiv_idmap (fun a => equiv_ap g (f a) b))).
+  Defined.
+
+  Definition cancelR_equiv_conn_map {A B C : Type} (f : A -> B) (g : B <~> C)
+         `{IsConnMap O _ _ (g o f)}
+    : IsConnMap O f
+    := cancelR_isequiv_conn_map f g.
 
   (** The constant map to [Unit] is connected just when its domain is. *)
   Definition isconnected_conn_map_to_unit {A : Type}

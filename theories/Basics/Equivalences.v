@@ -65,6 +65,11 @@ Notation "g 'oE' f" := (equiv_compose' g%equiv f%equiv) : equiv_scope.
 Global Instance transitive_equiv : Transitive Equiv | 0 :=
   fun _ _ _ f g => equiv_compose g f.
 
+(** This is sometimes useful to have a name for, so we can rewrite along it. *)
+Definition apply_equiv_compose {A B C} (f : A <~> B) (g : B <~> C) (a : A)
+  : (g oE f) a = g (f a)
+  := 1.
+
 
 (** Anything homotopic to an equivalence is an equivalence. *)
 Section IsEquivHomotopic.

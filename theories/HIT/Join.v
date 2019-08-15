@@ -1,9 +1,10 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp HSet.
-Require Import HIT.Pushout HIT.Truncations.
+Require Import HProp HSet NullHomotopy Extensions.
+Require Import HIT.Pushout HIT.Truncations HIT.Connectedness.
 Local Open Scope path_scope.
+Import TrM.
 
 (** * Joins *)
 
@@ -13,7 +14,7 @@ Section Join.
   Definition join (A : Type@{i}) (B : Type@{j})
     := pushout@{k i j k k} (@fst A B) (@snd A B).
 
-  Definition joinpp A B := @pp (A*B) A B fst snd.
+  Definition joinpp {A B} a b := @pp (A*B) A B fst snd (a,b).
 
   (** Joining with a contractible type produces a contractible type *)
   Global Instance contr_join A B `{Contr A} : Contr (join A B).
@@ -23,7 +24,7 @@ Section Join.
     - intros a; apply ap, contr.
     - intros b; exact (pp (center A , b)).
     - intros [a b]; cbn.
-      refine ( _ @ apD (fun a' => joinpp A B (a',b)) (contr a)^).
+      refine ( _ @ apD (fun a' => joinpp a' b) (contr a)^).
       rewrite transport_paths_r, transport_paths_FlFr; cbn.
       rewrite ap_V, inv_V, concat_pp_p.
       rewrite ap_const, concat_p1.
@@ -58,6 +59,40 @@ Section Join.
     apply equiv_iff_hprop.
     - refine (pushout_rec _ (fun a => tr (inl a)) (fun b => tr (inr b)) (fun _ => path_ishprop _ _)).
     - apply Trunc_rec, push.
+  Defined.
+
+  (** Joins add connectivity *)
+  Global Instance isconnected_join `{Univalence} {m n : trunc_index}
+         (A B : Type) `{IsConnected m A} `{IsConnected n B}
+    : IsConnected (m +2+ n) (join A B).
+  Proof.
+    apply isconnected_from_elim; intros C ? k.
+    pose proof (istrunc_extension_along_conn
+                  (fun b:B => tt) (fun _ => C) (k o pushr)).
+    unfold ExtensionAlong in *.
+    transparent assert (f : (A -> {s : Unit -> C &
+                                   forall x, s tt = k (pushr x)})).
+    { intros a; exists (fun _ => k (pushl a)); intros b.
+      exact (ap k (joinpp a b)). }
+    assert (h := isconnected_elim
+                   m {s : Unit -> C & forall x : B, s tt = k (pushr x)} f).
+    unfold NullHomotopy in *; destruct h as [[c g] h].
+    exists (c tt).
+    srefine (pushout_ind _ _ _ _).
+    - intros a; cbn. exact (ap10 (h a)..1 tt).
+    - intros b; cbn. exact ((g b)^).
+    - intros [a b].
+      rewrite transport_paths_FlFr, ap_const, concat_p1; cbn.
+      subst f; set (ha := h a); clearbody ha; clear h;
+      assert (ha2 := ha..2); set (ha1 := ha..1) in *;
+      clearbody ha1; clear ha; cbn in *.
+      rewrite <- (inv_V (ap10 ha1 tt)).
+      rewrite <- inv_pp.
+      apply inverse2.
+      refine (_ @ apD10 ha2 b); clear ha2.
+      rewrite transport_forall_constant, transport_paths_FlFr.
+      rewrite ap_const, concat_p1.
+      reflexivity.
   Defined.
 
 End Join.
