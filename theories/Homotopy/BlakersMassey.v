@@ -593,7 +593,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
                  (code_beta_glue x0 y1 q01 (glue q01))).
       unfold codeglue.
       (** Now we evaluate [codeglue] step by step using our lemmas. *)
-      do 6 rewrite apply_equiv_compose.
+      do 6 change_apply_equiv_compose.
       rewrite codeglue1_pushl, codeglue2_pushl, codeglue3_pushl,
       codeglue4_pushl, codeglue5_pushl, codeglue6_pushl, codeglue7_to_O.
       rewrite <- (ap_transport (concat_1p (glue q01))
