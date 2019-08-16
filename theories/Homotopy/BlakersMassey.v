@@ -639,7 +639,7 @@ End GenBlakersMassey.
 Import TrM.
 Module Import BlakersMassey := GenBlakersMassey Truncation_RSUs.
 
-Definition blakers_massey `{Univalence} (m n : trunc_index)
+Global Instance blakers_massey `{Univalence} (m n : trunc_index)
            {X Y : Type} (Q : X -> Y -> Type)
            `{forall y, IsConnected m.+1 { x : X & Q x y } }
            `{forall x, IsConnected n.+1 { y : Y & Q x y } }
@@ -654,7 +654,7 @@ Defined.
 
 (** ** The Freudenthal Suspension Theorem *)
 
-Definition freudenthal `{Univalence} (n : trunc_index)
+Global Instance freudenthal `{Univalence} (n : trunc_index)
            (X : Type) `{IsConnected n.+1 X}
   : IsConnMap (n +2+ n) (@merid X).
 Proof.
