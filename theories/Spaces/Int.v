@@ -26,6 +26,8 @@ Inductive Int : Type0 :=
 | zero : Int
 | pos : Pos -> Int.
 
+Global Instance ispointed_Int : IsPointed Int := zero.
+
 Definition neg_injective {z w : Pos} (p : neg z = neg w) : z = w
   := transport (fun s => z = (match s with neg a => a | zero => w | pos a => w end)) p (idpath z).
 

@@ -44,7 +44,9 @@ theories/Cubical.v
 
 theories/Cubical/DPath.v
 theories/Cubical/Square.v
+theories/Cubical/DSquare.v
 theories/Cubical/Cube.v
+theories/Cubical/DCube.v
 
 #
 #   Spaces
@@ -65,6 +67,9 @@ theories/Spaces/No/Negation.v
 theories/Spaces/No/Addition.v
 theories/Spaces/Universe.v
 theories/Spaces/Card.v
+theories/Spaces/Torus/Torus.v
+theories/Spaces/Torus/TorusEquivCircles.v
+theories/Spaces/Torus/TorusHomotopy.v
 
 #
 #   Tactics
@@ -506,4 +511,3 @@ theories/Classes/theory/ua_second_isomorphism.v
 theories/Classes/theory/ua_third_isomorphism.v
 theories/Classes/categories/ua_category.v
 theories/Classes/tests/ring_tac.v
-
