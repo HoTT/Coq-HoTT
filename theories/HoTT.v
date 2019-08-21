@@ -90,6 +90,7 @@ Require Export Algebra.ooAction.
 Require Export Homotopy.HomotopyGroup.
 Require Export Homotopy.Pi1S1.
 Require Export Homotopy.BlakersMassey.
+Require Export Homotopy.Freudenthal.
 
 Require Export Spectra.Spectrum.
 

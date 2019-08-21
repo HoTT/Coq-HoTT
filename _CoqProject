@@ -201,6 +201,7 @@ theories/Homotopy/Pi1S1.v
 theories/Homotopy/Smash.v
 theories/Homotopy/Wedge.v
 theories/Homotopy/BlakersMassey.v
+theories/Homotopy/Freudenthal.v
 
 #
 #   Pointed
