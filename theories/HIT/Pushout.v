@@ -173,22 +173,6 @@ Section EquivPushout.
     + apply q.
   Defined.
 
-  Definition equiv_pushout_pushl (b : B)
-    : equiv_pushout (pushl b) = pushl (eB b)
-    := 1.
-
-  Definition equiv_pushout_pushr (c : C)
-    : equiv_pushout (pushr c) = pushr (eC c)
-    := 1.
-
-  Definition inverse_equiv_pushout_pushl (b : B')
-    : equiv_pushout^-1 (pushl b) = pushl (eB^-1 b)
-    := 1.
-
-  Definition inverse_equiv_pushout_pushr (c : C')
-    : equiv_pushout^-1 (pushr c) = pushr (eC^-1 c)
-    := 1.
-
   Lemma equiv_pushout_pp (a : A)
     : ap equiv_pushout (pp a)
       = ap pushl (p a) @ pp (eA a) @ ap pushr (q a)^.
