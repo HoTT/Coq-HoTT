@@ -143,16 +143,6 @@ Global Instance isconnected_loops_functor `{Univalence} {n : trunc_index}
         (equiv_functor_sigma' 1 (fun q => equiv_moveR_pM _ _ _))
         (isconnected_equiv' n _ (hfiber_ap _)^-1 (isconnected_paths _ _))).
 
-(** And likewise the connectedness.  *)
-(* Note: We give the definition explicitly since it was slow before. *)
-Global Instance isconnected_loops_functor `{Univalence} {n : trunc_index}
-  (A B : pType) (f : A ->* B) `{IsConnMap n.+1 _ _ f}
-  : IsConnMap n (loops_functor f) := fun (p : loops B) =>
-    isconnected_equiv' n _ (equiv_functor_sigma' 1
-    (fun q => equiv_moveR_Vp _ p _)) (isconnected_equiv' n _
-    (equiv_functor_sigma' 1 (fun q => equiv_moveR_pM _ _ _))
-    (isconnected_equiv' n _ (hfiber_ap _)^-1 (isconnected_paths _ _))).
-
 (** It follows that loop spaces "commute with images". *)
 Definition equiv_loops_image `{Univalence} n {A B : pType} (f : A ->* B)
   : loops (Build_pType (image n.+1 f) (factor1 (image n.+1 f) (point A)))
