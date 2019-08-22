@@ -75,7 +75,6 @@ Proof.
   destruct p; exact _.
 Defined.
 
-(* TODO: Where do we need this? *)
 (* dp_apD of a non-dependent map is just a constant DPath *)
 Definition dp_apD_const {A B} (f : A -> B) {a0 a1 : A}
   (p : a0 = a1) : dp_apD f p = dp_const (ap f p).
@@ -105,6 +104,21 @@ Defined.
 
 (* TODO: Is level correct? *)
 Notation "x '^D'" := (dp_inverse x) (at level 20) : dpath_scope.
+
+(* dp_apD distributes over concatenation *)
+Definition dp_apD_pp (A : Type) (P : A -> Type) (f : forall a, P a)
+  {a0 a1 a2 : A} (p : a0 = a1) (q : a1 = a2)
+  : dp_apD f (p @ q) = (dp_apD f p) @D (dp_apD f q).
+Proof.
+  by destruct p, q.
+Defined.
+
+(* dp_apD respects inverses *)
+Definition dp_apD_V (A : Type) (P : A -> Type) (f : forall a, P a)
+  {a0 a1 : A} (p : a0 = a1) : dp_apD f p^ = (dp_apD f p)^D.
+Proof.
+  by destruct p.
+Defined.
 
 Section DGroupoid.
 
