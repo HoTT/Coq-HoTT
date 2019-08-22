@@ -9,6 +9,36 @@ Local Open Scope path_scope.
 
 Generalizable Variables X A B f g n.
 
+(* ** Definition of suspension. *)
+(* 
+Module Export Suspension.
+
+(** We ensure that [Susp X] does not live in a lower universe than [X] *)
+Private Inductive Susp (X : Type@{i}) : Type@{i} :=
+  | North : Susp X
+  | South : Susp X.
+
+Global Arguments North {X}.
+Global Arguments South {X}.
+
+Axiom merid : forall (X : Type) (x : X), North = South :> Susp X.
+Global Arguments merid {X} x.
+
+Definition Susp_ind {X : Type} (P : Susp X -> Type)
+  (H_N : P North) (H_S : P South)
+  (H_merid : forall x:X, (merid x) # H_N = H_S)
+: forall (y:Susp X), P y
+:= fun y => (match y return (_ -> P y)
+     with North => (fun _ => H_N) | South => (fun _ => H_S) end) H_merid.
+
+Axiom Susp_ind_beta_merid : forall {X : Type} (P : Susp X -> Type)
+  (H_N : P North) (H_S : P South)
+  (H_merid : forall x:X, (merid x) # H_N = H_S)
+  (x:X),
+apD (Susp_ind P H_N H_S H_merid) (merid x) = H_merid x.
+
+End Suspension. *)
+
 (* ** Definition of suspension *)
 
 Definition Susp (X : Type) := pushout (@const X _ tt) (const tt).
@@ -35,8 +65,7 @@ Proof.
   serapply pushout_ind_beta_pp.
 Defined.
 
-(** We want to allow the user to forget that we've defined suspension
-    in this way. *)
+(** We want to allow the user to forget that we've defined suspension in this way. *)
 Arguments Susp : simpl never.
 Arguments North : simpl never.
 Arguments South : simpl never.
