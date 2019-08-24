@@ -1818,6 +1818,14 @@ Section ConnectedMaps.
     : IsEquiv f
     := isequiv_commsq' f (O_functor O f) (to O A) (to O B) (to_O_natural O f).
 
+  (** Connected maps are preserved by O_functor *)
+  Global Instance conn_map_O_functor {A B} (f : A -> B) `{IsConnMap O _ _ f}
+    : IsConnMap O (O_functor O f).
+  Proof.
+    unfold O_functor.
+    erapply conn_map_compose.
+  Defined.
+
 End ConnectedMaps.
 
 
