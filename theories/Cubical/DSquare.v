@@ -114,3 +114,23 @@ Proof.
   destruct p.
   by apply sq_1G.
 Defined.
+
+(* TODO: Clean up and prove equivalence *)
+Definition ds_G1 {A} (P : A -> Type) {a00 a10 }
+  {px0 px1 : a00 = a10} {p : px0 = px1} {b00 b10}
+  (qx0 : DPath P px0 b00 b10) (qx1 : DPath P px1 b00 b10)
+  : DPath (fun x => DPath P x b00 b10) p qx0 qx1
+      ->  DSquare P (sq_G1 p) qx0 qx1 1 1.
+Proof.
+  destruct p.
+  cbn.
+  intro m.
+  destruct m.
+  apply ds_refl_h.
+Defined.
+
+
+
+
+
+
