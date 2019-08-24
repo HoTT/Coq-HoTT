@@ -103,6 +103,16 @@ Proof.
   - apply IHn, isconnected_pred; assumption.
 Defined.
 
+Definition isconnected_pred_trunc_index_add n m A `{H : IsConnected (n +2+ m) A}
+  : IsConnected m A.
+Proof.
+  induction n.
+  1: assumption.
+  apply IHn.
+  apply isconnected_pred.
+  assumption.
+Defined.
+
 (** ** Connectedness of path spaces *)
 
 Global Instance isconnected_paths `{Univalence} {n A}
@@ -158,6 +168,14 @@ Proof.
   - intros nx.
     apply (Trunc_rec (n := -1) nx).
     exact (center (merely X)).
+Defined.
+
+(* Truncation preserves connectedness. Note that this is for different levels. *)
+Global Instance isconnected_trunc {X : Type} n m `{IsConnected n X}
+  : IsConnected n (Tr m X).
+Proof.
+  unfold IsConnected.
+  serapply (contr_equiv' _ (Trunc_swap n m X)^-1).
 Defined.
 
 Section Wedge_Incl_Conn.
