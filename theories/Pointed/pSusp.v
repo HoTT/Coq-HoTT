@@ -4,7 +4,12 @@ Require Import Pointed.Core.
 Require Import Pointed.Loops.
 Require Import Pointed.pMap.
 Require Import Pointed.pHomotopy.
+Require Import Pointed.pTrunc.
+Require Import Pointed.pEquiv.
 Require Import HIT.Suspension.
+Require Import HIT.Truncations.
+Require Import Homotopy.Freudenthal.
+Import TrM.
 
 Generalizable Variables X A B f g n.
 
@@ -57,6 +62,18 @@ Proof.
       concat_p1, concat_Vp. }
   reflexivity.
 Qed.
+
+Definition pequiv_psusp_functor `{Funext} {X Y : pType} (f : X <~>* Y)
+  : psusp X <~>* psusp Y.
+Proof.
+  serapply pequiv_adjointify.
+  1: apply psusp_functor, f.
+  1: apply psusp_functor, f^-1*.
+  1,2: refine ((psusp_functor_compose _ _)^* @* _ @* psusp_functor_idmap).
+  1,2: apply phomotopy_ap.
+  1: apply peisretr.
+  apply peissect.
+Defined.
 
 (** ** Loop-Suspension Adjunction *)
 
@@ -139,6 +156,23 @@ End Book_Loop_Susp_Adjunction.
 Definition loop_susp_unit (X : pType) : X ->* loops (psusp X)
   := Build_pMap X (loops (psusp X))
       (fun x => merid x @ (merid (point X))^) (concat_pV _).
+
+(** By Freudenthal, we have that this map is 2n-connected for a n-connected X *)
+Instance conn_map_loop_susp_unit `{Univalence} (X : pType) `{IsConnected n.+1 X}
+  : IsConnMap (n +2+ n) (fun x => merid x @ (merid (point X))^).
+Proof.
+  refine (conn_map_compose _ _ (equiv_concat_r (merid (point _))^ _)).
+Defined.
+
+(** We also have this corollary *)
+Lemma pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected n.+1 X}
+  : pTr (n +2+ n) X <~>* pTr (n +2+ n) (loops (psusp X)).
+Proof.
+  serapply (Build_pEquiv _ _ _ (isequiv_conn_map_ino (n +2+ n) _)).
+  { apply ptr_functor.
+    apply loop_susp_unit. }
+  exact _.
+Defined.
 
 Definition loop_susp_unit_natural {X Y : pType} (f : X ->* Y)
   : loop_susp_unit Y o* f
