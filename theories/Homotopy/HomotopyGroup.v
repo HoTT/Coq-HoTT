@@ -99,7 +99,8 @@ Section PiFunctor.
     exact f.
   Defined.
 
-  Global Instance functor_pi_homomorphism : MonoidPreserving functor_pi.
+  Global Instance functor_pi_homomorphism `{Univalence}
+    : MonoidPreserving functor_pi.
   Proof.
     apply Build_MonoidPreserving.
     + intros x y.
@@ -114,7 +115,7 @@ End PiFunctor.
 Local Open Scope pointed_scope.
 
 (* Homotopy groups of product space *)
-Lemma Pi_prod (X Y : pType) {n}
+Lemma Pi_prod `{Univalence} (X Y : pType) {n}
   : Pi n (X * Y) <~> Pi n X * Pi n Y.
 Proof.
   unfold Pi.
@@ -122,8 +123,5 @@ Proof.
   apply Trunc_functor_equiv.
   by refine (pequiv_compose _ (iterated_loops_prod _ _)).
 Qed.
-
-
-
 
 
