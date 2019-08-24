@@ -202,6 +202,7 @@ theories/Homotopy/Smash.v
 theories/Homotopy/Wedge.v
 theories/Homotopy/BlakersMassey.v
 theories/Homotopy/Freudenthal.v
+theories/Homotopy/HSpace.v
 theories/Homotopy/ClassifyingSpace.v
 
 #

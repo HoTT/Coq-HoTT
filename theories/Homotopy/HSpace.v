@@ -1,22 +1,26 @@
 Require Import Basics.
 Require Import Types.
+Require Import Pointed.
 Require Import HIT.Truncations.
 Require Import HIT.Connectedness.
 Import TrM.
+
+Local Open Scope pointed_scope.
 
 Section HSpace.
 
   Context `{Univalence}.
 
-  Class HSpace (space : Type) := {
-    id : space;
+  Local Notation id := (point _).
+
+  Class HSpace (space : pType) := {
     mu : space -> space -> space;
     left_id : forall a, mu id a = a;
     right_id : forall a, mu a id = a
   }.
 
   Context 
-    {A : Type}
+    {A : pType}
    `{HSpace A}
    `{IsConnected 0 A}. (* Can we weaken this to ||X||_0 is a group? *)
 
@@ -46,21 +50,25 @@ Section HSpace.
 
 End HSpace.
 
-Global Instance hspace_isequiv {A B} (e : A -> B)
+Definition id {X} `{HSpace X} := (point X).
+
+Global Instance hspace_isequiv {A B : pType} (e : A ->* B)
   `{eq : IsEquiv _ _ e} `{hs : HSpace A} : HSpace B.
 Proof.
-  destruct hs as [id mu l r].
+  destruct hs as [mu l r].
   serapply Build_HSpace.
-  1: exact (e id).
   { intros a b.
     apply e.
     exact (mu (e^-1 a) (e^-1 b)). }
   1,2: intro; cbv; destruct eq as [e' p q _].
-  1,2: (rewrite q,l || rewrite q,r).
+  1,2: pointed_reduce.
+  1,2: rewrite q.
+  1: rewrite l.
+  2: rewrite r.
   1,2: apply p.
 Defined.
 
-Global Instance hspace_equiv {A B} (e : A <~> B) `{HSpace A} : HSpace B.
+Global Instance hspace_pequiv {A B} (e : A <~>* B) `{HSpace A} : HSpace B.
 Proof.
   apply (hspace_isequiv e).
 Defined.
