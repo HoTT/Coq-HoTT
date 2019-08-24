@@ -34,3 +34,13 @@ Defined.
 Definition ptr_loops_eq `{Univalence} (n : trunc_index) (A : pType)
   : pTr n (loops A) = loops (pTr n.+1 A) :> pType
   := path_ptype (ptr_loops n A).
+
+Definition pequiv_ptr_functor {X Y : pType} n
+  : X <~>* Y -> pTr n X <~>* pTr n Y.
+Proof.
+  intro e.
+  serapply Build_pEquiv.
+  { apply ptr_functor, e. }
+  exact _.
+Defined.
+

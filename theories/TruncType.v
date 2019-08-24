@@ -91,6 +91,17 @@ Proof.
   refine (ap_pp _ _ _).
 Qed.
 
+Definition ap_trunctype {n : trunc_index} {A B : TruncType n} {f : A <~> B}
+  : ap trunctype_type (path_trunctype f) = path_universe_uncurried f.
+Proof.
+  destruct A, B.
+  cbn in *.
+  cbn; destruct (path_universe_uncurried f).
+  rewrite concat_1p, concat_p1.
+  rewrite <- 2 ap_compose.
+  apply ap_const.
+Qed.
+
 Definition path_hset {A B} := @path_trunctype 0 A B.
 Definition path_hprop {A B} := @path_trunctype -1 A B.
 

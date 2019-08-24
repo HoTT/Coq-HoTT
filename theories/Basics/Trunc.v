@@ -17,6 +17,23 @@ Fixpoint trunc_index_add (m n : trunc_index) : trunc_index
 
 Notation "m +2+ n" := (trunc_index_add m n) : trunc_scope.
 
+Definition trunc_index_add_minus_two m : m +2+ -2 = m.
+Proof.
+  induction m.
+  1: reflexivity.
+  cbn; apply ap.
+  assumption.
+Defined.
+
+Definition trunc_index_add_succ m n : m +2+ n.+1 = (m +2+ n).+1.
+Proof.
+  revert m.
+  induction n; induction m.
+  1,3: reflexivity.
+  all: cbn; apply ap.
+  all: assumption.
+Defined.
+
 Fixpoint trunc_index_leq (m n : trunc_index) : Type0
   := match m, n with
        | -2, _ => Unit
@@ -28,6 +45,100 @@ Notation "m <= n" := (trunc_index_leq m n) : trunc_scope.
 
 Fixpoint trunc_index_inc (n : nat) (k : trunc_index) : trunc_index
   := match n with O => k | S m => (trunc_index_inc m k).+1 end.
+
+Definition trunc_index_pred : trunc_index -> trunc_index.
+Proof.
+  intros [|m].
+  1: exact -2.
+  exact m.
+Defined.
+
+(* TODO: Add to Notations.v *)
+Notation "n '.-1'" := (trunc_index_pred n) (at level 10) : trunc_scope.
+Notation "n '.-2'" := (n.-1.-1) (at level 10) : trunc_scope.
+
+Definition trunc_index_leq_minus_two {n} : n <= -2 -> n = -2.
+Proof.
+  destruct n.
+  1: reflexivity.
+  contradiction.
+Defined.
+
+Fixpoint trunc_index_leq_succ n m : n <= m -> n <= m.+1.
+Proof.
+  destruct n.
+  { apply idmap. }
+  intro p.
+  destruct m.
+  { destruct p. }
+  exact (trunc_index_leq_succ n m p).
+Defined.
+
+Fixpoint trunc_index_leq_refl' a : a <= a.
+Proof.
+  destruct a.
+  1: exact tt.
+  exact (trunc_index_leq_refl' a).
+Defined.
+
+Global Instance trunc_index_leq_refl : Reflexive trunc_index_leq
+  := trunc_index_leq_refl'.
+
+Fixpoint trunc_index_leq_concat {a b c} {struct c} : a <= b -> b <= c -> a <= c.
+Proof.
+  intros p q.
+  destruct a, b, c.
+  all: try (exact tt || assumption).
+  { revert p; intros []. }
+  exact (@trunc_index_leq_concat a b c p q).
+Defined.
+
+Global Instance trunc_index_leq_transitive : Transitive trunc_index_leq.
+Proof.
+  intros a b c p q.
+  apply (trunc_index_leq_concat p q).
+Defined.
+
+Fixpoint trunc_index_min (n m : trunc_index) : trunc_index.
+Proof.
+  destruct n.
+  1: exact -2.
+  destruct m.
+  1: exact -2.
+  exact (trunc_index_min n m).+1.
+Defined.
+
+Definition trunc_index_min_minus_two n : trunc_index_min n -2 = -2.
+Proof.
+  destruct n; reflexivity.
+Defined.
+
+Definition trunc_index_min_leq_left (n m : trunc_index)
+  : trunc_index_min n m <= n.
+Proof.
+  destruct n.
+  1: reflexivity.
+Admitted.
+
+Definition trunc_index_min_leq_right (n m : trunc_index)
+  : trunc_index_min n m <= m.
+Proof.
+Admitted.
+
+Definition trunc_index_min_swap n m
+  : trunc_index_min n m = trunc_index_min m n.
+Proof.
+  revert m.
+  induction n.
+  { intro.
+    symmetry.
+    apply trunc_index_min_minus_two. }
+  induction m.
+  1: reflexivity.
+  cbn.
+  apply ap.
+  apply IHn.
+Defined.
 
 (** ** Truncatedness proper. *)
 
@@ -50,6 +161,15 @@ Proof.
   induction n.
   + exact -2.
   + exact IHn.+1.
+Defined.
+
+Lemma nat_to_trunc_index_2_eq n
+  : nat_to_trunc_index_2 n.+2 = nat_to_trunc_index n.
+Proof.
+  induction n.
+  1: reflexivity.
+  cbn; apply ap.
+  assumption.
 Defined.
 
 (** This could be an [Instance] (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like [m <= n], so it would only ever be used trivially.  *)

@@ -2,7 +2,7 @@
 
 (** * Truncations of types, in all dimensions. *)
 
-Require Import HoTT.Basics Types.Sigma Types.Universe TruncType HProp.
+Require Import HoTT.Basics Types TruncType HProp.
 Require Import Modalities.Modality Modalities.Identity.
 Local Open Scope path_scope.
 
@@ -302,5 +302,78 @@ Proof.
     intros c; simpl in *.
     strip_truncations. destruct c. reflexivity.
 Defined.
+
+Definition trunc_index_min_path n m
+  : (trunc_index_min n m = n) + (trunc_index_min n m = m).
+Proof.
+  revert m.
+  induction n.
+  1: by intro; apply inl.
+  induction m.
+  1: by apply inr.
+  cbn.
+  erapply functor_sum.
+  1,2: exact (ap trunc_S).
+  apply IHn.
+Defined.
+
+(* TODO: Shorter proof? *)
+Definition Trunc_min n m X : Tr n (Tr m X) <~> Tr (trunc_index_min n m) X.
+Proof.
+  serapply equiv_adjointify.
+  { serapply Trunc_rec.
+    { serapply trunc_leq.
+      apply trunc_index_min_leq_left. }
+    serapply Trunc_rec.
+    { serapply trunc_leq.
+      apply trunc_index_min_leq_right. }
+    apply to. }
+  { serapply Trunc_rec.
+    { destruct (trunc_index_min_path n m).
+      1: destruct p^; exact _.
+      serapply (inO_equiv_inO _ tr).
+      { set (trunc_index_min n m).
+        destruct p.
+        exact _. }
+      destruct p.
+      serapply isequiv_tr.
+      serapply trunc_leq.
+      apply trunc_index_min_leq_left. }
+    intro x.
+    apply tr, tr, x. }
+  1: by serapply Trunc_ind.
+  serapply Trunc_ind.
+  serapply Trunc_ind.
+  2: reflexivity.
+  destruct (trunc_index_min_path n m).
+  { intro.
+    serapply trunc_leq.
+    destruct p.
+    apply trunc_index_min_leq_right. }
+  intro.
+  apply istrunc_paths.
+  pose m as t.
+  change (IsTrunc m.+1 (Tr n (Tr t X))).
+  serapply trunc_succ.
+  rewrite <- p.
+  unfold t; clear t.
+  serapply (inO_equiv_inO _ tr).
+  { set (trunc_index_min n m).
+    destruct p.
+    exact _. }
+  destruct p.
+  serapply isequiv_tr.
+  serapply trunc_leq.
+  apply trunc_index_min_leq_left.
+Defined.
+
+Definition Trunc_swap n m X : Tr n (Tr m X) <~> Tr m (Tr n X).
+Proof.
+  refine (_ oE equiv_transport (fun x => Tr x _) _ _ _ oE Trunc_min n m _).
+  2: apply trunc_index_min_swap.
+  symmetry.
+  apply Trunc_min.
+Defined.
+
 
 (** If you are looking for a theorem about truncation, you may want to read the note "Finding Theorems" in "STYLE.md". *)
