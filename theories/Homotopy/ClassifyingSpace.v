@@ -346,7 +346,7 @@ Proof.
   refine (concat_pp_p _ _ _ @ _).
   apply moveR_Vp.
   refine (concat_1p _ @ 1 @ (concat_p1 _)^).
-Qed.
+Defined.
 
 Definition bg_mul_right_id `{Funext} `{AbGroup G}
   : forall a : B G, bg_mul a (point (B G)) = a.
@@ -363,4 +363,11 @@ Proof.
   1: apply bg_mul.
   1: apply bg_mul_left_id.
   apply bg_mul_right_id.
+Defined.
+
+Global Instance coh_hspace_BG `{Funext} `{AbGroup G}
+  : Coherent_HSpace (B G).
+Proof.
+  serapply Build_Coherent_HSpace.
+  reflexivity.
 Defined.

@@ -1,5 +1,6 @@
 Require Import Basics.
 Require Import Types.
+Require Import Cubical.DPath.
 Require Import Pointed.Core.
 Require Import Pointed.Loops.
 Require Import Pointed.pMap.
@@ -8,7 +9,10 @@ Require Import Pointed.pTrunc.
 Require Import Pointed.pEquiv.
 Require Import HIT.Suspension.
 Require Import HIT.Truncations.
+Require Import HIT.Connectedness.
 Require Import Homotopy.Freudenthal.
+Require Import Homotopy.HSpace.
+Require Import TruncType.
 Import TrM.
 
 Generalizable Variables X A B f g n.
@@ -157,23 +161,6 @@ Definition loop_susp_unit (X : pType) : X ->* loops (psusp X)
   := Build_pMap X (loops (psusp X))
       (fun x => merid x @ (merid (point X))^) (concat_pV _).
 
-(** By Freudenthal, we have that this map is 2n-connected for a n-connected X *)
-Instance conn_map_loop_susp_unit `{Univalence} (X : pType) `{IsConnected n.+1 X}
-  : IsConnMap (n +2+ n) (fun x => merid x @ (merid (point X))^).
-Proof.
-  refine (conn_map_compose _ _ (equiv_concat_r (merid (point _))^ _)).
-Defined.
-
-(** We also have this corollary *)
-Lemma pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected n.+1 X}
-  : pTr (n +2+ n) X <~>* pTr (n +2+ n) (loops (psusp X)).
-Proof.
-  serapply (Build_pEquiv _ _ _ (isequiv_conn_map_ino (n +2+ n) _)).
-  { apply ptr_functor.
-    apply loop_susp_unit. }
-  exact _.
-Defined.
-
 Definition loop_susp_unit_natural {X Y : pType} (f : X ->* Y)
   : loop_susp_unit Y o* f
   ==* loops_functor (psusp_functor f) o* loop_susp_unit X.
@@ -311,3 +298,196 @@ Proof.
   apply pmap_postwhisker.
   refine (psusp_functor_compose f g).
 Defined.
+
+(** ** Freudenthal type lemmas *)
+
+(** By Freudenthal, we have that this map is 2n-connected for a n-connected X *)
+Instance conn_map_loop_susp_unit `{Univalence} (X : pType) `{IsConnected n.+1 X}
+  : IsConnMap (n +2+ n) (fun x => merid x @ (merid (point X))^).
+Proof.
+  refine (conn_map_compose _ _ (equiv_concat_r (merid (point _))^ _)).
+Defined.
+
+(** We also have this corollary *)
+Lemma pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected n.+1 X}
+  : pTr (n +2+ n) X <~>* pTr (n +2+ n) (loops (psusp X)).
+Proof.
+  serapply (Build_pEquiv _ _ _ (isequiv_conn_map_ino (n +2+ n) _)).
+  { apply ptr_functor.
+    apply loop_susp_unit. }
+  exact _.
+Defined.
+
+(** However when X is 0-connected we see that Freudenthal doesn't let us characterise the loop space of a suspension. For this we need some extra assumptions about our space X.
+
+Suppose X is a 0-connected, 1-truncated coherent HSpace, then
+
+  pTr 1 (loops (psusp X)) <~>* X. *)
+
+Section LicataFinsterLemma.
+
+  Context `{Univalence} (X : pType)
+    `{IsConnected 0 X} `{IsTrunc 1 X} `{Coherent_HSpace X}.
+
+  (** This encode-decode style proof is detailed in Eilenberg-MacLane Spaces in Homotopy Type Theory by Dan Licata and Eric Finster *)
+
+  Local Definition P : Susp X -> Type
+    := fun x => Tr 1 (North = x).
+
+  Local Definition codes : Susp X -> 1 -Type.
+  Proof.
+    serapply Susp_rec.
+    1: refine (BuildTruncType _ X).
+    1: refine (BuildTruncType _ X).
+    intro x.
+    apply path_trunctype.
+    apply (mu_l_equiv' x).
+  Defined.
+
+  Local Definition transport_codes_merid x y
+    : transport codes (merid x) y = mu x y.
+  Proof.
+    unfold codes.
+    rewrite transport_idmap_ap.
+    rewrite ap_compose.
+    rewrite Susp_rec_beta_merid.
+    rewrite ap_trunctype.
+    by rewrite transport_path_universe_uncurried.
+  Defined.
+
+  Local Definition transport_codes_merid_V x
+    : transport codes (merid id)^ x = x.
+  Proof.
+    unfold codes.
+    rewrite transport_idmap_ap.
+    rewrite ap_V.
+    rewrite ap_compose.
+    rewrite Susp_rec_beta_merid.
+    rewrite ap_trunctype.
+    rewrite transport_path_universe_V_uncurried.
+    apply moveR_equiv_V.
+    symmetry.
+    apply left_id.
+  Defined.
+
+  Local Definition encode : forall x, P x -> codes x.
+  Proof.
+    intro x.
+    serapply Trunc_rec.
+    intro p.
+    exact (transport codes p id).
+  Defined.
+
+  Local Definition decode' : X -> Tr 1 (@North X = North).
+  Proof.
+    intro x.
+    exact (tr (merid x @ (merid id)^)).
+  Defined.
+
+  Local Definition transport_decode' x y
+    : transport P (merid x) (decode' y)
+    = tr (merid y @ (merid id)^ @ merid x).
+  Proof.
+    unfold P.
+    unfold decode'.
+    rewrite transport_compose.
+    generalize (merid x).
+    generalize (merid y @ (merid id)^).
+    intros p [].
+    cbn; apply ap.
+    symmetry.
+    apply concat_p1.
+  Defined.
+
+  Local Definition encode_North_decode' x : encode North (decode' x) = x.
+  Proof.
+    cbn.
+    rewrite transport_idmap_ap.
+    rewrite ap_compose.
+    rewrite ap_pp.
+    rewrite ap_V.
+    rewrite 2 Susp_rec_beta_merid.
+    rewrite <- path_trunctype_V.
+    rewrite <- path_trunctype_pp.
+    rewrite ap_trunctype.
+    rewrite transport_path_universe_uncurried.
+    apply moveR_equiv_V.
+    refine (right_id _ @ (left_id _)^).
+  Defined.
+
+  Local Definition merid_mu (x y : X)
+    : tr (n:=1) (merid (mu x y)) = tr (merid y @ (merid id)^ @ merid x).
+  Proof.
+    set (Q := fun a b => tr (n:=1) (merid (mu a b))
+      = tr (merid b @ (merid id)^ @ merid a)).
+    serapply (@wedge_incl_elim_uncurried _ -1 -1 _ id _ _ id _ Q _ _ x y).
+    { intros a b.
+      cbn; unfold Q.
+      apply istrunc_paths.
+      exact _. }
+    unfold Q.
+    srefine (_;_;_).
+    { intro b.
+      apply ap.
+      symmetry.
+      refine (concat_pp_p _ _ _ @ _).
+      refine (ap _ (concat_Vp _) @ _).
+      refine (concat_p1 _ @ _).
+      apply ap.
+      exact (left_id b)^. }
+    { intro a.
+      apply ap.
+      symmetry.
+      refine (ap (fun x => concat x (merid a)) (concat_pV _) @ _).
+      refine (concat_1p _ @ _).
+      apply ap.
+      exact (right_id a)^. }
+    simpl.
+    apply ap, ap.
+    destruct hspace_coh.
+    destruct (left_id id).
+    set (p := merid (mu (point X) id)).
+    hott_simpl.
+    by destruct p.
+  Defined.
+
+  Local Definition decode : forall x, codes x -> P x.
+  Proof.
+    serapply Susp_ind; cbn.
+    1: apply decode'.
+    { intro x.
+      apply tr, merid, x. }
+    intro x.
+    serapply dp_path_transport^-1.
+    apply dp_arrow.
+    simpl; intro y.
+    apply dp_path_transport.
+    rewrite transport_codes_merid.
+    rewrite transport_decode'.
+    symmetry.
+    apply merid_mu.
+  Defined.
+
+  Local Definition decode_encode : forall x (p : P x),
+    decode x (encode x p) = p.
+  Proof.
+    intro x.
+    serapply Trunc_ind.
+    intro p.
+    destruct p; cbv.
+    apply ap, concat_pV.
+  Defined.
+
+  (* We could call this pequiv_ptr_loop_psusp but since we already used that for the Freudenthal case, it seems appropriate to name licata_finster for this one case *)
+  Lemma licata_finster : pTr 1 (loops (psusp X)) <~>* X.
+  Proof.
+    serapply Build_pEquiv'.
+    { serapply equiv_adjointify.
+      1: exact (encode North).
+      1: exact decode'.
+      1: intro; apply encode_North_decode'.
+      intro; apply decode_encode. }
+    reflexivity.
+  Defined.
+
+End LicataFinsterLemma.
