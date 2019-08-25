@@ -94,6 +94,30 @@ Local Open Scope dpath_scope.
     apply eissect.
   Qed.
 
+  (* Sometimes we want to induct into a set which means we can ignore the bloop_pp arguments. Since this is a routine argument, we turn it into a special case of our induction principle. *)
+  Definition ClassifyingSpace_ind_hset (X : Type) `{Group X}
+    (P : ClassifyingSpace X -> Type) `{IsTrunc 0 (P (bbase X))}
+    (bbase' : P (bbase X))
+    (bloop' : forall x, DPath P (bloop x) bbase' bbase') x : P x.
+  Proof.
+    refine (ClassifyingSpace_ind _ P bbase' bloop' _ x).
+    intros.
+    apply ds_G1.
+    apply dp_path_transport.
+    serapply path_ishprop.
+    apply (inO_equiv_inO _ dp_path_transport).
+  Defined.
+
+  Definition ClassifyingSpace_rec_hset (X : Type) `{Group X}
+    (P : Type) `{IsTrunc 0 P} (bbase' : P) (bloop' : X -> bbase' = bbase')
+    (bloop_pp' : forall x y : X, bloop' (x & y) = bloop' x @ bloop' y)
+    : ClassifyingSpace X -> P.
+  Proof.
+    serapply (ClassifyingSpace_rec _ P bbase' bloop' _).
+    intros.
+    apply path_ishprop.
+  Defined.
+
 End ClassifyingSpace.
 
 Global Instance ispointed_BG `{Group G} : IsPointed (ClassifyingSpace G).
@@ -193,7 +217,7 @@ Section EncodeDecode.
 
   Local Definition decode `{Group G} : forall (z : B G), codes z -> bbase G = z.
   Proof.
-    serapply ClassifyingSpace_ind.
+    serapply ClassifyingSpace_ind_hset.
     + exact bloop.
     + intro x.
       apply dp_arrow.
@@ -202,13 +226,6 @@ Section EncodeDecode.
       refine ((bloop_pp _ _)^ @ _).
       symmetry.
       apply ap, codes_transport.
-    + intros x y.
-      simpl.
-      apply ds_G1.
-      apply dp_path_transport.
-      serapply path_ishprop.
-      rewrite <- (path_universe dp_path_transport).
-      exact _.
   Defined.
 
   Local Lemma decode_encode `{Group} : forall z p, decode z (encode z p) = p.
@@ -241,93 +258,109 @@ Section EncodeDecode.
 
 End EncodeDecode.
 
-Global Instance isconnected_BG `{Univalence} `{Group G}
+Global Instance isconnected_BG `{Group G}
   : IsConnected 0 (B G).
 Proof.
   serapply BuildContr.
   { exact (tr (bbase G)). }
   serapply Trunc_ind.
-  serapply ClassifyingSpace_ind; cbn.
+  serapply ClassifyingSpace_ind_hset; cbn.
   + reflexivity.
   + intro x.
     apply dp_paths_FlFr.
     apply path_ishprop.
-  + intros.
-    apply ds_G1.
-    apply dp_path_transport.
-    serapply path_ishprop.
-    rewrite <- (path_universe dp_path_transport).
-    exact _.
 Defined.
 
-Definition bg_mul `{Univalence} `{AbGroup G} : B G -> B G -> B G.
+Definition bg_mul `{Funext} `{AbGroup G} : B G -> B G -> B G.
 Proof.
   serapply ClassifyingSpace_rec.
-  1: apply idmap.
+  1: exact idmap.
   { intro x.
     apply path_forall.
-    serapply ClassifyingSpace_ind.
+    serapply ClassifyingSpace_ind_hset.
     1: exact (bloop x).
-    { intro y.
-      cbn.
-      apply dp_paths_lr.
-      refine (concat_pp_p _ _ _ @ _).
-      apply moveR_Vp.
-      refine ((bloop_pp _ _)^ @ _ @ bloop_pp _ _).
-      apply ap.
-      apply commutativity. }
-    intros.
-    simpl.
-    apply ds_G1.
-    apply dp_path_transport.
-    serapply path_ishprop.
-    rewrite <- (path_universe dp_path_transport).
-    exact _. }
+    cbn; intro y.
+    apply dp_paths_lr.
+    refine (concat_pp_p _ _ _ @ _).
+    apply moveR_Vp.
+    refine ((bloop_pp _ _)^ @ _ @ bloop_pp _ _).
+    apply ap, commutativity. }
   intros x y.
-  simpl.
   rewrite <- path_forall_pp.
-  apply ap.
-  apply path_forall.
-  serapply ClassifyingSpace_ind.
-  1: apply bloop_pp.
-  { intro z.
-    simpl.
-    serapply dp_paths_FlFr_D.
-    serapply path_ishprop. }
-  intros.
   simpl.
-  apply ds_G1.
-  apply dp_path_transport.
+  apply ap, path_forall.
+  serapply ClassifyingSpace_ind_hset.
+  1: apply bloop_pp.
+  intro z.
+  serapply dp_paths_FlFr_D.
   serapply path_ishprop.
-  rewrite <- (path_universe dp_path_transport).
-  exact _.
 Defined.
 
-Global Instance hspace_BG `{Univalence} `{AbGroup G} : HSpace (B G).
+Definition bg_mul_beta `{Funext} `{AbGroup G} x
+  : ap (fun x0 => bg_mul x0 (bbase G)) (bloop x) = bloop x.
+Proof.
+  rewrite ap_apply_Fl.
+  rewrite ClassifyingSpace_rec_beta_bloop.
+  by rewrite eisretr.
+Defined.
+
+Definition bg_mul_symm `{Funext} `{AbGroup G} x y
+  : bg_mul x y = bg_mul y x.
+Proof.
+  revert x y.
+  serapply ClassifyingSpace_ind_hset.
+  { serapply ClassifyingSpace_ind_hset.
+    1: reflexivity.
+    intro x.
+    cbn.
+    apply dp_paths_FlFr.
+    rewrite ap_idmap.
+    rewrite concat_p1.
+    apply moveR_Vp.
+    rewrite concat_p1.
+    apply bg_mul_beta. }
+  intro.
+  apply dp_forall_domain.
+  intro y.
+  apply dp_paths_FlFr.
+  revert y.
+  serapply ClassifyingSpace_ind_hset.
+  { cbn.
+    rewrite concat_p1.
+    rewrite ap_idmap.
+    apply moveR_Vp.
+    symmetry.
+    rewrite concat_p1.
+    apply bg_mul_beta. }
+  intro y.
+  apply dp_paths_FlFr_D.
+  apply path_ishprop.
+Defined.
+
+Definition bg_mul_left_id `{Funext} `{AbGroup G}
+  : forall a : B G, bg_mul (point (B G)) a = a.
+Proof.
+  serapply ClassifyingSpace_ind_hset.
+  1: reflexivity.
+  intro. cbn. apply dp_paths_lr.
+  refine (concat_pp_p _ _ _ @ _).
+  apply moveR_Vp.
+  refine (concat_1p _ @ 1 @ (concat_p1 _)^).
+Qed.
+
+Definition bg_mul_right_id `{Funext} `{AbGroup G}
+  : forall a : B G, bg_mul a (point (B G)) = a.
+Proof.
+  intro.
+  rewrite bg_mul_symm.
+  apply bg_mul_left_id.
+Defined.
+
+Global Instance hspace_BG `{Funext} `{AbGroup G}
+  : HSpace (B G).
 Proof.
   serapply Build_HSpace.
   1: apply bg_mul.
-  { serapply ClassifyingSpace_ind.
-    { reflexivity. }
-    { intro. cbn. apply dp_paths_lr.
-      refine (concat_pp_p _ _ _ @ _).
-      apply moveR_Vp.
-      refine (concat_1p _ @ 1 @ (concat_p1 _)^). }
-    intros.
-    simpl.
-    apply ds_G1.
-    apply dp_path_transport.
-    serapply path_ishprop.
-    rewrite <- (path_universe dp_path_transport).
-    exact _. }
-  { serapply ClassifyingSpace_ind.
-    1: reflexivity.
-    { intro; cbn.
-      apply dp_paths_FlFr.
-      rewrite concat_p1.
-      apply moveR_Vp.
-      rewrite ap_idmap, concat_p1.
-      unfold bg_mul.
-      rewrite ClassifyingSpace_rec.
-Admitted.
-
+  1: apply bg_mul_left_id.
+  apply bg_mul_right_id.
+Defined.
