@@ -44,6 +44,14 @@ Proof.
   - apply IH, H.
 Qed.
 
+(* Nat to trunc index offset by 2 *)
+Definition nat_to_trunc_index_2 (n : nat) : trunc_index.
+Proof.
+  induction n.
+  + exact -2.
+  + exact IHn.+1.
+Defined.
+
 (** This could be an [Instance] (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like [m <= n], so it would only ever be used trivially.  *)
 Definition trunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A} : IsTrunc n A.
 Proof.

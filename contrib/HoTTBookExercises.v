@@ -518,7 +518,7 @@ Lemma retr_f_g_isHSet_A_so_B {A B} (f : A -> B)  (g : B -> A)
       : Sect g f -> IsHSet A -> IsHSet B.
 Proof.
   intros retr_f_g isHSet_A.
-  apply @hset_axiomK. unfold axiomK.
+  serapply hset_axiomK. unfold axiomK.
   intros x p.
   assert (ap g p = 1) as g_p_is_1.
   - apply (axiomK_hset isHSet_A).
@@ -546,7 +546,7 @@ Definition Book_3_2_solution_1 := @HoTT.Types.Sum.hset_sum.
 Lemma Book_3_2_solution_2 (A B : Type) : IsHSet A -> IsHSet B -> IsHSet (A+B).
 Proof.
   intros isHSet_A isHSet_B.
-  apply @hset_axiomK. unfold axiomK. intros x p. destruct x.
+  serapply hset_axiomK. unfold axiomK. intros x p. destruct x.
   - rewrite (inverse (eisretr_path_sum p)).
     rewrite (axiomK_hset isHSet_A a (path_sum_inv p)).
     simpl; exact idpath.
@@ -567,7 +567,7 @@ Lemma Book_3_3_solution_2 (A : Type) (B : A -> Type) :
   IsHSet A -> (forall x:A, IsHSet (B x)) -> IsHSet { x:A | B x}.
 Proof.
   intros isHSet_A allBx_HSet.
-  apply @hset_axiomK. intros x xx.
+  serapply hset_axiomK. intros x xx.
   pose (path_path_sigma B x x xx 1) as useful.
   apply (useful (axiomK_hset _ _ _) (set_path2 _ _)).
 Defined.

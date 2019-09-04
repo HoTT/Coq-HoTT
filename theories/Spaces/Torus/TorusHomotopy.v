@@ -39,7 +39,7 @@ Theorem loops_torus `{Univalence} : loops T <~>* Int * Int.
 Proof.
   srefine (_ o*E _).
   1: exact (loops (S1 * S1)).
-  1: apply loops_functor_equiv.
+  1: apply pequiv_loops_functor.
   { serapply Build_pEquiv.
     1: serapply Build_pMap.
     1: exact equiv_torus_prod_S1.

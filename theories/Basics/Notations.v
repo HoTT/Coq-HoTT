@@ -29,6 +29,7 @@ Reserved Notation "D '_f' g" (at level 10).
 Reserved Notation "F '_0' x" (at level 10, no associativity).
 Reserved Notation "F '_0' x" (at level 10, no associativity, only parsing).
 Reserved Notation "f ^-1" (at level 3, format "f '^-1'").
+Reserved Notation "f ^-1*" (at level 3, format "f '^-1*'").
 Reserved Notation "F '_1' m" (at level 10, no associativity).
 Reserved Notation "f ^*" (at level 20).
 Reserved Notation "f *E g" (at level 40, no associativity).

@@ -6,11 +6,11 @@ Require Import HoTT.Basics.
 Require Import Types.Sigma Types.Forall Types.Paths Types.Bool.
 Require Import HProp NullHomotopy.
 Require Import HIT.Suspension HIT.Circle HIT.TwoSphere.
-Require Import Pointed.
+Require Import Pointed.pSusp Pointed.Core.
 
+Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
 Local Open Scope path_scope.
-Local Open Scope pointed_scope.
 
 Generalizable Variables X A B f g n.
 
@@ -25,11 +25,11 @@ Fixpoint Sphere (n : trunc_index)
      end.
 
 (** ** Pointed sphere for non-negative dimensions *)
-Definition psphere (n : nat) : pType.
-Proof.
-  srefine (Build_pType (Sphere n) _).
-  repeat (destruct n; try exact North).
-Defined.
+Fixpoint psphere (n : nat) : pType
+  := match n with
+      | O => Build_pType (Susp Empty) North
+      | S n' => psusp (psphere n')
+     end.
 
 (** ** Explicit equivalences in low dimensions  *)
 
@@ -85,7 +85,7 @@ Proof.
     apply moveR_Vp. hott_simpl.
 Defined.
 
-Lemma pequiv_pSph1_to_S1 : psphere 1 <~>* Build_pType S1 Circle.base.
+Lemma pequiv_pSph1_to_S1 : psphere 1 <~>* (Build_pType S1 Circle.base).
 Proof.
   serapply Build_pEquiv.
   1: serapply Build_pMap.
@@ -203,7 +203,7 @@ Proof.
     apply (ap (fun w => merid w @ (merid North)^) (merid South)^).
   - intro x.
     refine ((transport_paths_FlFr (merid x) (concat_pV (merid North))) @ _).
-    rewrite_moveR_Vp_p. symmetry. apply (dpath_path_lr _ _ _)^-1.
+    rewrite_moveR_Vp_p. symmetry. refine ((dpath_path_lr _ _ _)^-1 _).
     refine ((ap (transport _ _) (ap_pp _ (merid x) (merid South)^)^) @ _).
     refine (_ @ (ap_compose (Susp_rec 1 1 
                               (Susp_rec surf 1 
