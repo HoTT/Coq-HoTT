@@ -158,26 +158,33 @@ equiv_adjointify pushout_sym_map pushout_sym_map sect_pushout_sym_map sect_pusho
 
 (** Pushouts preserve equivalences. *)
 
-Lemma equiv_pushout {A B C f g A' B' C' f' g'}
-  (eA : A <~> A') (eB : B <~> B') (eC : C <~> C')
-  (p : eB o f == f' o eA) (q : eC o g == g' o eA)
-  : pushout f g <~> pushout f' g'.
-Proof.
-  refine (equiv_functor_coeq' eA (equiv_functor_sum' eB eC) _ _).
-  all:unfold pointwise_paths.
-  all:intro; simpl; apply ap.
-  + apply p.
-  + apply q.
-Defined.
+Section EquivPushout.
+  Context {A B C f g A' B' C' f' g'}
+          (eA : A <~> A') (eB : B <~> B') (eC : C <~> C')
+          (p : eB o f == f' o eA) (q : eC o g == g' o eA).
 
-Lemma equiv_pushout_pp {A B C f g A' B' C' f' g'}
-  {eA : A <~> A'} {eB : B <~> B'} {eC : C <~> C'}
-  {p : eB o f == f' o eA} {q : eC o g == g' o eA}
-  : forall a : A, ap (equiv_pushout eA eB eC p q) (pp a)
-    = ap push (ap inl (p a)) @ pp (eA a) @ ap push (ap inr (q a))^.
-Proof.
-  apply @functor_coeq_beta_cp.
-Defined.
+  Lemma equiv_pushout
+    : pushout f g <~> pushout f' g'.
+  Proof.
+    refine (equiv_functor_coeq' eA (equiv_functor_sum' eB eC) _ _).
+    all:unfold pointwise_paths.
+    all:intro; simpl; apply ap.
+    + apply p.
+    + apply q.
+  Defined.
+
+  Lemma equiv_pushout_pp (a : A)
+    : ap equiv_pushout (pp a)
+      = ap pushl (p a) @ pp (eA a) @ ap pushr (q a)^.
+  Proof.
+    refine (functor_coeq_beta_cp _ _ _ _ a @ _).
+    refine (_ @@ 1 @@ _).
+    - symmetry; refine (ap_compose inl coeq _).
+    - refine (ap (ap coeq) (ap_V _ _)^ @ _).
+      symmetry; refine (ap_compose inr coeq _).
+  Defined.
+
+End EquivPushout.
 
 (** ** Sigmas *)
 
