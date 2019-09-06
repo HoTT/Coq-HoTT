@@ -1,5 +1,10 @@
-Require Import HoTT.Basics HoTT.Types.
-Require Import Colimits.Diagram Colimits.Colimit Colimits.Colimit_Sigma.
+Require Import Basics.
+Require Import Types.
+Require Import Diagrams.Graph.
+Require Import Diagrams.Diagram.
+Require Import Colimits.Colimit.
+Require Import Colimits.Colimit_Sigma.
+Require Import Diagrams.Graph.
 
 (** * Colimit of product by a constant type *)
 
@@ -8,33 +13,36 @@ Require Import Colimits.Diagram Colimits.Colimit Colimits.Colimit_Sigma.
 (** This is the constant case of the file [Colimit_Sigma] and we reuse its results. *)
 
 Section ColimitProd.
-  Context `{Funext} {G: graph} (D: diagram G) (A: Type).
 
-  Definition prod_diag : diagram G.
+  Context `{Funext} {G : Graph} (D : Diagram G) (A : Type).
+
+  Definition prod_diagram : Diagram G.
   Proof.
-    simple refine (Build_diagram _ _ _).
+    serapply Build_Diagram.
     - exact (fun i => A * (D i)).
-    - simpl; intros i j f x. exact (fst x, D _f f (snd x)).
+    - simpl; intros i j f x.
+      exact (fst x, D _f f (snd x)).
   Defined.
 
   Definition diagram_equiv_prod_sigma
-    : sigma_diag (fun _ : A => D) ~d~ prod_diag.
+    : sigma_diagram (fun _ : A => D) ~d~ prod_diagram.
   Proof.
     unshelve econstructor.
-    - serapply Build_diagram_map; cbn.
+    - serapply Build_DiagramMap; cbn.
       + intro i; apply equiv_sigma_prod0.
       + reflexivity.
     - intro i; cbn.
       apply equiv_sigma_prod0.
   Defined.
 
-  Lemma is_colimit_prod {Q: Type} (HQ: is_colimit D Q)
-  : is_colimit prod_diag (A * Q).
+  Lemma iscolimit_prod {Q : Type} (HQ : IsColimit D Q)
+  : IsColimit prod_diagram (A * Q).
   Proof.
-    eapply postcompose_equiv_is_colimit.
+    eapply iscolimit_postcompose_equiv.
     - apply equiv_sigma_prod0.
-    - eapply precompose_equiv_is_colimit.
+    - eapply iscolimit_precompose_equiv.
       + symmetry; apply diagram_equiv_prod_sigma.
-      + by apply is_colimit_sigma.
+      + by apply iscolimit_sigma.
   Defined.
+
 End ColimitProd.

@@ -77,25 +77,6 @@ theories/Spaces/Torus/TorusEquivCircles.v
 theories/Spaces/Torus/TorusHomotopy.v
 
 #
-#   Tactics
-#
-
-theories/Tactics.v
-
-theories/Tactics/RewriteModuloAssociativity.v
-theories/Tactics/EquivalenceInduction.v
-theories/Tactics/EvalIn.v
-theories/Tactics/BinderApply.v
-
-#
-#   PropResizing
-#
-
-theories/PropResizing/PropResizing.v
-theories/PropResizing/Truncations.v
-theories/PropResizing/Nat.v
-
-#
 #   Modalities
 #
 
@@ -141,16 +122,31 @@ theories/HIT/SetCone.v
 theories/HIT/Join.v
 theories/HIT/V.v
 
-theories/HIT/Colimits.v
-theories/HIT/Colimits/CommutativeSquares.v
-theories/HIT/Colimits/Diagram.v
-theories/HIT/Colimits/Colimit.v
-theories/HIT/Colimits/Colimit_Prod.v
-theories/HIT/Colimits/Colimit_Sigma.v
-theories/HIT/Colimits/Coequalizer.v
-theories/HIT/Colimits/Pushout.v
-theories/HIT/Colimits/MappingTelescope.v
-theories/HIT/Colimits/Flattening.v
+
+#
+#   Colimits
+#
+
+theories/Colimits/Colimit.v
+theories/Colimits/Colimit_Sigma.v
+theories/Colimits/Colimit_Prod.v
+theories/Colimits/Colimit_Pushout.v
+theories/Colimits/Colimit_Coequalizer.v
+theories/Colimits/Colimit_Flattening.v
+theories/Colimits/Colimit_Pushout_Flattening.v
+
+#
+#   Diagrams
+#
+
+theories/Diagrams/CommutativeSquares.v
+theories/Diagrams/Graph.v
+theories/Diagrams/Diagram.v
+theories/Diagrams/Cocone.v
+theories/Diagrams/MappingTelescope.v
+theories/Diagrams/Span.v
+theories/Diagrams/CoeqDiagram.v
+theories/Diagrams/DDiagram.v
 
 #
 #   Other
@@ -232,6 +228,24 @@ theories/Spectra/Coinductive.v
 theories/Algebra/ooGroup.v
 theories/Algebra/Aut.v
 theories/Algebra/ooAction.v
+
+#
+#   Tactics
+#
+
+theories/Tactics.v
+theories/Tactics/RewriteModuloAssociativity.v
+theories/Tactics/EquivalenceInduction.v
+theories/Tactics/EvalIn.v
+theories/Tactics/BinderApply.v
+
+#
+#   PropResizing
+#
+
+theories/PropResizing/PropResizing.v
+theories/PropResizing/Truncations.v
+theories/PropResizing/Nat.v
 
 #
 #   Categories

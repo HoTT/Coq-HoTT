@@ -1,0 +1,20 @@
+Require Import Basics.
+Require Import Types.
+Require Import Diagrams.Graph.
+Require Import Diagrams.Diagram.
+
+
+(** We define here the Graph ∫D, also denoted G·D *)
+
+Definition integral {G : Graph} (D : Diagram G) : Graph.
+Proof.
+  serapply Build_Graph.
+  + exact {i : G & D i}.
+  + intros i j.
+    exact {g : G i.1 j.1 & D _f g i.2 = j.2}.
+Defined.
+
+(** Then, a dependent diagram E over D is just a diagram over ∫D. *)
+
+Definition dep_diagram {G : Graph} (D : Diagram G)
+  := Diagram (integral D).

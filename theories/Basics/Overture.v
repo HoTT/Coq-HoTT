@@ -353,16 +353,40 @@ Global Arguments ap {A B}%type_scope f%function_scope {x y} p%path_scope.
 
 Register ap as core.identity.congr.
 
-(** We introduce the convention that [apKN] denotes the application of a K-path between
-   functions to an N-path between elements, where a 0-path is simply a function or an
-   element. Thus, [ap] is a shorthand for [ap01]. *)
+(** We introduce the convention that [apKN] denotes the application of a K-path between functions to an N-path between elements, where a 0-path is simply a function or an element. Thus, [ap] is a shorthand for [ap01]. *)
 
 Notation ap01 := ap (only parsing).
 
-Definition pointwise_paths {A} {P:A->Type} (f g:forall x:A, P x)
-  := forall x:A, f x = g x.
+Definition pointwise_paths A (P : A -> Type) (f g : forall x, P x)
+  := forall x, f x = g x.
+
+Definition pointwise_paths_concat {A} {P : A -> Type} {f g h : forall x, P x}
+  : pointwise_paths A P f g -> pointwise_paths A P g h
+    -> pointwise_paths A P f h := fun p q x => p x @ q x.
+
+Global Instance reflexive_pointwise_paths A P
+  : Reflexive (pointwise_paths A P).
+Proof.
+  intros ? ?; reflexivity.
+Defined.
+
+Global Instance transitive_pointwise_paths A P
+  : Transitive (pointwise_paths A P).
+Proof.
+  intros f g h.
+  apply pointwise_paths_concat.
+Defined.
+
+Global Instance symmetric_pointwise_paths A P
+  : Symmetric (pointwise_paths A P).
+Proof.
+  intros ? ? p ?; symmetry; apply p.
+Defined.
 
 Global Arguments pointwise_paths {A}%type_scope {P} (f g)%function_scope.
+Global Arguments reflexive_pointwise_paths /.
+Global Arguments transitive_pointwise_paths /.
+Global Arguments symmetric_pointwise_paths /.
 
 Hint Unfold pointwise_paths : typeclass_instances.
 
