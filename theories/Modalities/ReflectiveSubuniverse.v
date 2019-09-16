@@ -726,7 +726,7 @@ Section Reflective_Subuniverse.
       apply isequiv_precompose; exact _.
     Defined.
 
-    Definition equiv_O_prod_cmp {fs : Funext} (A B : Type)
+    Definition equiv_O_prod_cmp (A B : Type)
     : O (A * B) <~> (O A * O B)
     := BuildEquiv _ _ (O_prod_cmp A B) _.
 

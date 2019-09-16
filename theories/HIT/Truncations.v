@@ -265,6 +265,16 @@ Ltac strip_truncations :=
 
 (** ** Path-spaces of truncations *)
 
+(** This direction doesn't require univalence. *)
+Definition path_Tr {n A} (x y : A)
+: Tr n (x = y) -> (tr x = tr y :> Tr n.+1 A).
+Proof.
+  intros e.
+  strip_truncations.
+  exact (ap tr e).
+Defined.
+
+(** But the full characterization does. *)
 Definition equiv_path_Tr `{Univalence} {n A} (x y : A)
 : Tr n (x = y) <~> (tr x = tr y :> Tr n.+1 A).
 Proof.

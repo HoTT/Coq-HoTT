@@ -75,6 +75,11 @@ Defined.
 Definition path_ptype `{Univalence} {A B : pType} : (A <~>* B) -> A = B
   := equiv_path_ptype A B.
 
+Definition pequiv_path {A B : pType} : (A = B) -> (A <~>* B).
+Proof.
+  intros p; destruct p; exact pequiv_pmap_idmap.
+Defined.
+
 (* A pointed version of Sect (sometimes useful for proofs
    of some equivalences) *)
 Definition pSect {A B : pType} (s : A ->* B) (r : B ->* A)
