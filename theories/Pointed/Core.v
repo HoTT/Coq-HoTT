@@ -93,7 +93,7 @@ Coercion pfam_pr1 : pFam >-> Funclass.
 
 (* IsTrunc for a pointed type family *)
 Class IsTrunc_pFam n {A} (X : pFam A)
-  := Trunc_pFam_is_trunc : forall x, IsTrunc n (X.1 x).
+  := trunc_pfam_is_trunc : forall x, IsTrunc n (X.1 x).
 
 (* Pointed sigma *)
 Definition psigma {A : pType} (P : pFam A) : pType.

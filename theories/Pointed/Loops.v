@@ -208,7 +208,7 @@ Proof.
   reflexivity.
 Defined.
 
-(* Iterated loops products preserve products *)
+(* Iterated loops of products are products of iterated loops *)
 Lemma iterated_loops_prod (X Y : pType) {n}
   : iterated_loops n (X * Y) <~>* (iterated_loops n X) * (iterated_loops n Y).
 Proof.
@@ -278,8 +278,7 @@ Defined.
 (* We declare this local notation to make it easier to write pointed types *)
 Local Notation "( X , x )" := (Build_pType X x).
 
-(* We can convert between families of loops in a type and
-   loops in Type at that type *)
+(* We can convert between families of loops in a type and loops in Type at that type. *)
 Definition loops_type `{Univalence} (A : Type)
   : loops (Type,A) <~>* (A <~> A, equiv_idmap).
 Proof.
