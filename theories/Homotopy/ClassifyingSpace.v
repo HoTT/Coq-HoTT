@@ -3,6 +3,7 @@ Require Import Types.
 Require Import Pointed.
 Require Import Cubical.
 Require Import Classes.interfaces.abstract_algebra.
+Require Import Algebra.Group.
 Require Import TruncType.
 Require Import HIT.Truncations.
 Require Import HSpace.
