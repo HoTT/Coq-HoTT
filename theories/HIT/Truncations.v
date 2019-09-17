@@ -303,30 +303,18 @@ Proof.
     strip_truncations. destruct c. reflexivity.
 Defined.
 
-Definition trunc_index_min_path n m
-  : (trunc_index_min n m = n) + (trunc_index_min n m = m).
-Proof.
-  revert m.
-  induction n.
-  1: by intro; apply inl.
-  induction m.
-  1: by apply inr.
-  cbn.
-  erapply functor_sum.
-  1,2: exact (ap trunc_S).
-  apply IHn.
-Defined.
-
 (* TODO: Shorter proof? *)
 Definition Trunc_min n m X : Tr n (Tr m X) <~> Tr (trunc_index_min n m) X.
 Proof.
   serapply equiv_adjointify.
   { serapply Trunc_rec.
-    { serapply trunc_leq.
-      apply trunc_index_min_leq_left. }
+    { erapply trunc_leq.
+      1: apply trunc_index_min_leq_left.
+      exact _. }
     serapply Trunc_rec.
     { serapply trunc_leq.
-      apply trunc_index_min_leq_right. }
+      2: apply trunc_index_min_leq_right.
+      exact _. }
     apply to. }
   { serapply Trunc_rec.
     { destruct (trunc_index_min_path n m).
@@ -338,7 +326,8 @@ Proof.
       destruct p.
       serapply isequiv_tr.
       serapply trunc_leq.
-      apply trunc_index_min_leq_left. }
+      2: apply trunc_index_min_leq_left.
+      exact _. }
     intro x.
     apply tr, tr, x. }
   1: by serapply Trunc_ind.
@@ -347,9 +336,11 @@ Proof.
   2: reflexivity.
   destruct (trunc_index_min_path n m).
   { intro.
-    serapply trunc_leq.
+    simpl.
     destruct p.
-    apply trunc_index_min_leq_right. }
+    serapply trunc_leq.
+    2: apply (trunc_index_min_leq_right n m).
+    exact _. }
   intro.
   apply istrunc_paths.
   pose m as t.
@@ -364,7 +355,8 @@ Proof.
   destruct p.
   serapply isequiv_tr.
   serapply trunc_leq.
-  apply trunc_index_min_leq_left.
+  2: apply trunc_index_min_leq_left.
+  exact _.
 Defined.
 
 Definition Trunc_swap n m X : Tr n (Tr m X) <~> Tr m (Tr n X).

@@ -41,7 +41,11 @@ Fixpoint trunc_index_leq (m n : trunc_index) : Type0
        | m'.+1, n'.+1 => trunc_index_leq m' n'
      end.
 
+Existing Class trunc_index_leq.
+
 Notation "m <= n" := (trunc_index_leq m n) : trunc_scope.
+
+Global Instance minus_two_leq_minus_two : -2 <= -2 := tt.
 
 Fixpoint trunc_index_inc (n : nat) (k : trunc_index) : trunc_index
   := match n with O => k | S m => (trunc_index_inc m k).+1 end.
@@ -53,9 +57,8 @@ Proof.
   exact m.
 Defined.
 
-(* TODO: Add to Notations.v *)
-Notation "n '.-1'" := (trunc_index_pred n) (at level 10) : trunc_scope.
-Notation "n '.-2'" := (n.-1.-1) (at level 10) : trunc_scope.
+Notation "n '.-1'" := (trunc_index_pred n) : trunc_scope.
+Notation "n '.-2'" := (n.-1.-1) : trunc_scope.
 
 Definition trunc_index_leq_minus_two {n} : n <= -2 -> n = -2.
 Proof.
@@ -76,13 +79,13 @@ Defined.
 
 Fixpoint trunc_index_leq_refl' a : a <= a.
 Proof.
-  destruct a.
-  1: exact tt.
-  exact (trunc_index_leq_refl' a).
+  by (destruct a; cbn).
 Defined.
 
-Global Instance trunc_index_leq_refl : Reflexive trunc_index_leq
-  := trunc_index_leq_refl'.
+Global Instance trunc_index_leq_refl : Reflexive trunc_index_leq.
+Proof.
+  intro; apply trunc_index_leq_refl'.
+Defined.
 
 Fixpoint trunc_index_leq_concat {a b c} {struct c} : a <= b -> b <= c -> a <= c.
 Proof.
@@ -113,18 +116,6 @@ Proof.
   destruct n; reflexivity.
 Defined.
 
-Definition trunc_index_min_leq_left (n m : trunc_index)
-  : trunc_index_min n m <= n.
-Proof.
-  destruct n.
-  1: reflexivity.
-Admitted.
-
-Definition trunc_index_min_leq_right (n m : trunc_index)
-  : trunc_index_min n m <= m.
-Proof.
-Admitted.
-
 Definition trunc_index_min_swap n m
   : trunc_index_min n m = trunc_index_min m n.
 Proof.
@@ -138,6 +129,40 @@ Proof.
   cbn.
   apply ap.
   apply IHn.
+Defined.
+
+Definition trunc_index_min_path n m
+  : (trunc_index_min n m = n) + (trunc_index_min n m = m).
+Proof.
+  revert m.
+  induction n.
+  1: by intro; apply inl.
+  induction m.
+  1: by apply inr.
+  destruct (IHn m).
+  1: apply inl.
+  2: apply inr.
+  all: cbn; by apply ap.
+Defined.
+
+Definition trunc_index_min_leq_left (n m : trunc_index)
+  : trunc_index_min n m <= n.
+Proof.
+  revert n m.
+  refine (trunc_index_ind _ _ _); [ | intros n IHn ].
+  all: refine (trunc_index_ind _ _ _); [ | intros m IHm ].
+  all: try exact tt.
+  exact (IHn m).
+Defined.
+
+Definition trunc_index_min_leq_right (n m : trunc_index)
+  : trunc_index_min n m <= m.
+Proof.
+  revert n m.
+  refine (trunc_index_ind _ _ _); [ | intros n IHn ].
+  all: refine (trunc_index_ind _ _ _); [ | intros m IHm ].
+  all: try exact tt.
+  exact (IHn m).
 Defined.
 
 (** ** Truncatedness proper. *)

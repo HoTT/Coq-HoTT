@@ -1,7 +1,7 @@
 Require Import Basics.
 Require Import Types.
 Require Import Pointed.
-Require Import abstract_algebra.
+Require Import Classes.interfaces.abstract_algebra.
 Require Import HIT.Truncations.
 Require Import HIT.Suspension.
 Require Import HIT.Connectedness.

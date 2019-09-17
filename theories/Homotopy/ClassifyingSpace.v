@@ -2,7 +2,7 @@ Require Import Basics.
 Require Import Types.
 Require Import Pointed.
 Require Import Cubical.
-Require Import abstract_algebra.
+Require Import Classes.interfaces.abstract_algebra.
 Require Import TruncType.
 Require Import HIT.Truncations.
 Require Import HSpace.
@@ -126,40 +126,6 @@ Proof.
 Defined.
 
 Definition B (G : Type) `{Group G} := Build_pType (ClassifyingSpace G) _.
-
-(* TODO: Move to "Group" file? *)
-Lemma left_mult_equiv `{Group G} : G -> G <~> G.
-Proof.
-  intro x.
-  serapply equiv_adjointify.
-  + intro y; exact (x & y).
-  + intro y; exact (Anegate x & y).
-  + intro y.
-    rewrite associativity.
-    rewrite right_inverse.
-    apply left_identity.
-  + intro y.
-    rewrite associativity.
-    rewrite (left_inverse x).
-    apply left_identity.
-Defined.
-
-(* TODO: move to Group *)
-Lemma right_mult_equiv `{Group G} : G -> G <~> G.
-Proof.
-  intro x.
-  serapply equiv_adjointify.
-  + intro y; exact (y & x).
-  + intro y; exact (y & Anegate x).
-  + intro y.
-    rewrite <- (associativity y _ x).
-    rewrite (left_inverse x).
-    apply right_identity.
-  + intro y.
-    rewrite <- (associativity y x).
-    rewrite right_inverse.
-    apply right_identity.
-Defined.
 
 Definition bloop_id `{Group G} : bloop mon_unit = idpath.
 Proof.

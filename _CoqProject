@@ -235,6 +235,7 @@ theories/Spectra/Coinductive.v
 theories/Algebra/ooGroup.v
 theories/Algebra/Aut.v
 theories/Algebra/ooAction.v
+theories/Algebra/Group.v
 
 #
 #   Categories
