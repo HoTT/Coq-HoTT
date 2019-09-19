@@ -145,7 +145,7 @@ theories/Diagrams/Diagram.v
 theories/Diagrams/Cocone.v
 theories/Diagrams/Sequence.v
 theories/Diagrams/Span.v
-theories/Diagrams/CoeqDiagram.v
+theories/Diagrams/ParallelPair.v
 theories/Diagrams/DDiagram.v
 
 #

@@ -2,7 +2,7 @@ Require Import Basics.
 Require Import Types.
 Require Import Diagrams.Graph.
 Require Import Diagrams.Diagram.
-Require Import Diagrams.CoeqDiagram.
+Require Import Diagrams.ParallelPair.
 Require Import Diagrams.Cocone.
 Require Import Colimits.Colimit.
 Require Import HIT.Coeq.
@@ -18,49 +18,19 @@ Generalizable All Variables.
 
 Section Coequalizer.
 
-  Context `{Funext}.
-
-  (** The shape of a coequalizer diagram. *)
-
-  Definition coequalizer_graph : Graph.
-  Proof.
-    serapply (Build_Graph Bool).
-    intros i j.
-    exact (if i then if j then Empty else Bool else Empty).
-  Defined.
-
-  Context {B A : Type}.
-
-  (** The coequalizer diagram of two maps. *)
-
-  Definition coequalizer_diagram (f g : B -> A)
-    : Diagram coequalizer_graph.
-  Proof.
-    serapply Build_Diagram.
-    1: intros []; [exact B | exact A].
-    intros [] [] []; [exact f | exact g].
-  Defined.
-
-  Definition Build_coequalizer_cocone {f g : B -> A}
-    `(q: A -> Q) (Hq: q o g == q o f)
-    : Cocone (coequalizer_diagram f g) Q.
-  Proof.
-    serapply Build_Cocone.
-    1: intros []; [exact (q o f) | exact q].
-    intros [] [] []; [reflexivity | exact Hq].
-  Defined.
+  Context {A B : Type}.
 
   Definition IsCoequalizer (f g : B -> A)
-    := IsColimit (coequalizer_diagram f g).
+    := IsColimit (parallel_pair f g).
 
   Definition Coequalizer (f g : B -> A)
-    := Colimit (coequalizer_diagram f g).
+    := Colimit (parallel_pair f g).
 
   (** ** Equivalence with [Coeq] *)
 
   Context {f g : B -> A}.
 
-  Definition cocone_Coeq : Cocone (coequalizer_diagram f g) (Coeq f g).
+  Definition cocone_Coeq : Cocone (parallel_pair f g) (Coeq f g).
   Proof.
     serapply Build_Cocone.
     + intros []; [exact (coeq o g)| exact coeq].
@@ -68,7 +38,8 @@ Section Coequalizer.
       [ exact (cp x) | reflexivity ].
   Defined.
 
-  Lemma iscoequalizer_Coeq : IsColimit (coequalizer_diagram f g) (Coeq f g).
+  Lemma iscoequalizer_Coeq `{Funext}
+    : IsColimit (parallel_pair f g) (Coeq f g).
   Proof.
     serapply (Build_IsColimit cocone_Coeq).
     serapply Build_UniversalCocone.
@@ -106,7 +77,7 @@ Section Coequalizer.
         hott_simpl.
   Defined.
 
-  Definition equiv_Coeq_Coequalizer
+  Definition equiv_Coeq_Coequalizer `{Funext}
     : Coeq f g <~> Coequalizer f g.
   Proof.
     serapply colimit_unicity.
