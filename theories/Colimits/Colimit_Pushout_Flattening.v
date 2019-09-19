@@ -11,7 +11,7 @@ Require Import Colimits.Colimit_Flattening.
 
 (** * Pushout case *)
 
-(** We instanciate the flattening lemma in the case of the pushout. *)
+(** We show the flattening lemma in the case of the pushout. *)
 
 Section POCase.
   Context `{Univalence} {A B C} {f: A -> B} {g: A -> C}.
