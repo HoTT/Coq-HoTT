@@ -11,7 +11,7 @@ Local Open Scope path_scope.
 
 (** * Pushout as a colimit *)
 
-(** In this file, we define [PO] the pushout of two maps as the colimit of a particuliar diagram, and then show that it is equivalent to [pushout] the primitive pushout defined as an HIT. *)
+(** In this file, we define [PO] the pushout of two maps as the colimit of a particular diagram, and then show that it is equivalent to [pushout] the primitive pushout defined as an HIT. *)
 
 
 (** ** [PO] *)
