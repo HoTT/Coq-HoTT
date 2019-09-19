@@ -1,11 +1,12 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 
+Require Import Basics Types.
+Require Import TruncType HProp.
+Require Import Modalities.Modality Modalities.Identity.
+
 (** * Truncations of types, in all dimensions. *)
 
-Require Import HoTT.Basics Types TruncType HProp.
-Require Import Modalities.Modality Modalities.Identity.
 Local Open Scope path_scope.
-
 Generalizable Variables A X n.
 
 (** ** Definition. *)
@@ -123,62 +124,63 @@ Section TruncationModality.
   Context (n : trunc_index).
 
   Definition trunc_iff_isequiv_truncation (A : Type)
-  : IsTrunc n A <-> IsEquiv (@tr n A)
-  := inO_iff_isequiv_to_O n A.
+    : IsTrunc n A <-> IsEquiv (@tr n A)
+    := inO_iff_isequiv_to_O n A.
 
   Global Instance isequiv_tr A `{IsTrunc n A} : IsEquiv (@tr n A)
-  := fst (trunc_iff_isequiv_truncation A) _.
+    := fst (trunc_iff_isequiv_truncation A) _.
 
   Definition equiv_tr (A : Type) `{IsTrunc n A}
-  : A <~> Tr n A
-  := BuildEquiv _ _ (@tr n A) _.
+    : A <~> Tr n A
+    := BuildEquiv _ _ (@tr n A) _.
 
   Definition untrunc_istrunc {A : Type} `{IsTrunc n A}
-  : Tr n A -> A
-  := (@tr n A)^-1.
+    : Tr n A -> A
+    := (@tr n A)^-1.
 
   (** ** Functoriality *)
 
   Definition Trunc_functor {X Y : Type} (f : X -> Y)
-  : Tr n X -> Tr n Y
-  := O_functor n f.
+    : Tr n X -> Tr n Y
+    := O_functor n f.
 
-  Global Instance Trunc_functor_isequiv {X Y : Type} (f : X -> Y) `{IsEquiv _ _ f}
-  : IsEquiv (Trunc_functor f)
+  Global Instance Trunc_functor_isequiv {X Y : Type}
+    (f : X -> Y) `{IsEquiv _ _ f}
+    : IsEquiv (Trunc_functor f)
     := isequiv_O_functor n f.
 
   Definition Trunc_functor_equiv {X Y : Type} (f : X <~> Y)
-  : Tr n X <~> Tr n Y
+    : Tr n X <~> Tr n Y
     := equiv_O_functor n f.
 
   Definition Trunc_functor_compose {X Y Z} (f : X -> Y) (g : Y -> Z)
-  : Trunc_functor (g o f) == Trunc_functor g o Trunc_functor f
-  := O_functor_compose n f g.
+    : Trunc_functor (g o f) == Trunc_functor g o Trunc_functor f
+    := O_functor_compose n f g.
 
   Definition Trunc_functor_idmap (X : Type)
-  : @Trunc_functor X X idmap == idmap
-  := O_functor_idmap n X.
+    : @Trunc_functor X X idmap == idmap
+    := O_functor_idmap n X.
 
   Definition isequiv_Trunc_functor {X Y} (f : X -> Y) `{IsEquiv _ _ f}
-  : IsEquiv (Trunc_functor f)
-  := isequiv_O_functor n f.
+    : IsEquiv (Trunc_functor f)
+    := isequiv_O_functor n f.
 
   Definition equiv_Trunc_prod_cmp `{Funext} {X Y}
-  : Tr n (X * Y) <~> Tr n X * Tr n Y
-  := equiv_O_prod_cmp n X Y.
+    : Tr n (X * Y) <~> Tr n X * Tr n Y
+    := equiv_O_prod_cmp n X Y.
 
 End TruncationModality.
 
 (** We have to teach Coq to translate back and forth between [IsTrunc n] and [In (Tr n)]. *)
 Global Instance inO_tr_istrunc {n : trunc_index} (A : Type) `{IsTrunc n A}
-: In (Tr n) A.
+  : In (Tr n) A.
 Proof.
   assumption.
 Defined.
 
 (** Having both of these as [Instance]s would cause infinite loops. *)
 Definition istrunc_inO_tr {n : trunc_index} (A : Type) `{In (Tr n) A}
-: IsTrunc n A.
+  : IsTrunc n A.
 Proof.
   assumption.
 Defined.
@@ -190,15 +192,15 @@ Hint Immediate istrunc_inO_tr : typeclass_instances.
 
 (** We do the same for [IsTruncMap n] and [MapIn (Tr n)]. *)
 Global Instance mapinO_tr_istruncmap {n : trunc_index} {A B : Type}
-       (f : A -> B) `{IsTruncMap n A B f}
-: MapIn (Tr n) f.
+  (f : A -> B) `{IsTruncMap n A B f}
+  : MapIn (Tr n) f.
 Proof.
   assumption.
 Defined.
 
 Definition istruncmap_mapinO_tr {n : trunc_index} {A B : Type}
-           (f : A -> B) `{MapIn (Tr n) _ _ f}
-: IsTruncMap n f.
+  (f : A -> B) `{MapIn (Tr n) _ _ f}
+  : IsTruncMap n f.
 Proof.
   assumption.
 Defined.
@@ -237,16 +239,16 @@ Defined.
 (** Surjections are the (-1)-connected maps, but they can be characterized more simply since an inhabited hprop is automatically contractible. *)
 Notation IsSurjection := (IsConnMap -1).
 
-Definition BuildIsSurjection {A B} (f : A -> B) :
-  (forall b, merely (hfiber f b)) -> IsSurjection f.
+Definition BuildIsSurjection {A B} (f : A -> B)
+  : (forall b, merely (hfiber f b)) -> IsSurjection f.
 Proof.
   intros H b; refine (contr_inhabited_hprop _ _).
   apply H.
 Defined.
 
 Definition isequiv_surj_emb {A B} (f : A -> B)
-           `{IsSurjection f} `{IsEmbedding f}
-: IsEquiv f.
+  `{IsSurjection f} `{IsEmbedding f}
+  : IsEquiv f.
 Proof.
   apply (@isequiv_conn_ino_map -1); assumption.
 Defined.
@@ -276,7 +278,7 @@ Defined.
 
 (** But the full characterization does. *)
 Definition equiv_path_Tr `{Univalence} {n A} (x y : A)
-: Tr n (x = y) <~> (tr x = tr y :> Tr n.+1 A).
+  : Tr n (x = y) <~> (tr x = tr y :> Tr n.+1 A).
 Proof.
   (** Encode-decode *)
   transparent assert (code : (Tr n.+1 A -> Tr n.+1 A -> TruncType n)).
@@ -303,60 +305,37 @@ Proof.
     strip_truncations. destruct c. reflexivity.
 Defined.
 
-(* TODO: Shorter proof? *)
 Definition Trunc_min n m X : Tr n (Tr m X) <~> Tr (trunc_index_min n m) X.
 Proof.
-  serapply equiv_adjointify.
-  { serapply Trunc_rec.
-    { erapply trunc_leq.
-      1: apply trunc_index_min_leq_left.
-      exact _. }
-    serapply Trunc_rec.
-    { serapply trunc_leq.
-      2: apply trunc_index_min_leq_right.
-      exact _. }
-    apply to. }
-  { serapply Trunc_rec.
-    { destruct (trunc_index_min_path n m).
-      1: destruct p^; exact _.
-      serapply (inO_equiv_inO _ tr).
-      { set (trunc_index_min n m).
-        destruct p.
-        exact _. }
-      destruct p.
-      serapply isequiv_tr.
-      serapply trunc_leq.
-      2: apply trunc_index_min_leq_left.
-      exact _. }
-    intro x.
-    apply tr, tr, x. }
-  1: by serapply Trunc_ind.
-  serapply Trunc_ind.
-  serapply Trunc_ind.
-  2: reflexivity.
-  destruct (trunc_index_min_path n m).
-  { intro.
-    simpl.
-    destruct p.
+  destruct (trunc_index_min_path n m) as [p|q].
+  + assert (l := trunc_index_min_leq_right n m).
+    destruct p^; clear p.
+    symmetry.
+    serapply equiv_adjointify.
+    { serapply Trunc_rec.
+      exact (fun x => tr (tr x)). }
+    { serapply Trunc_rec.
+      serapply Trunc_rec.
+      1: serapply trunc_leq.
+      exact tr. }
+    { serapply Trunc_ind.
+      simpl.
+      serapply (Trunc_ind (n:=m)).
+      2: reflexivity.
+      intro.
+      apply istrunc_paths.
+      serapply (trunc_leq (m:=n)).
+      by apply trunc_index_leq_succ'. }
+    serapply Trunc_ind; reflexivity.
+  + set (min := trunc_index_min n m).
+    refine (paths_ind _
+      (fun m _ => Tr n (Tr m X) <~> Tr min X) _ m q).
+    unfold min; clear min.
+    symmetry.
+    serapply equiv_tr.
     serapply trunc_leq.
-    2: apply (trunc_index_min_leq_right n m).
-    exact _. }
-  intro.
-  apply istrunc_paths.
-  pose m as t.
-  change (IsTrunc m.+1 (Tr n (Tr t X))).
-  serapply trunc_succ.
-  rewrite <- p.
-  unfold t; clear t.
-  serapply (inO_equiv_inO _ tr).
-  { set (trunc_index_min n m).
-    destruct p.
-    exact _. }
-  destruct p.
-  serapply isequiv_tr.
-  serapply trunc_leq.
-  2: apply trunc_index_min_leq_left.
-  exact _.
+    3: exact _.
+    apply trunc_index_min_leq_left.
 Defined.
 
 Definition Trunc_swap n m X : Tr n (Tr m X) <~> Tr m (Tr n X).
@@ -366,6 +345,5 @@ Proof.
   symmetry.
   apply Trunc_min.
 Defined.
-
 
 (** If you are looking for a theorem about truncation, you may want to read the note "Finding Theorems" in "STYLE.md". *)
