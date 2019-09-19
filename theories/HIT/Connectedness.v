@@ -103,7 +103,7 @@ Proof.
   - apply IHn, isconnected_pred; assumption.
 Defined.
 
-Definition isconnected_pred_trunc_index_add n m A `{H : IsConnected (n +2+ m) A}
+Definition isconnected_pred_add n m A `{H : IsConnected (n +2+ m) A}
   : IsConnected m A.
 Proof.
   induction n.

@@ -45,7 +45,7 @@ Section EilenbergMacLane.
       serapply (isequiv_conn_map_ino n.+2 _).
       apply conn_map_O_functor.
       intro x.
-      serapply (isconnected_pred_trunc_index_add (n.-2)).
+      serapply (isconnected_pred_add n.-2).
       rewrite 2 trunc_index_add_succ.
       (* This has to be done by induction since n.-2.+2 only cancels when n >= 0 i.e. a nat *)
       assert (p : (n .-2 +2+ n).+2 = (n +2+ n)).
