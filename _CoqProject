@@ -143,7 +143,7 @@ theories/Diagrams/CommutativeSquares.v
 theories/Diagrams/Graph.v
 theories/Diagrams/Diagram.v
 theories/Diagrams/Cocone.v
-theories/Diagrams/MappingTelescope.v
+theories/Diagrams/Sequence.v
 theories/Diagrams/Span.v
 theories/Diagrams/CoeqDiagram.v
 theories/Diagrams/DDiagram.v

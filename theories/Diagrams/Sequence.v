@@ -6,20 +6,22 @@ Require Import Diagrams.Diagram.
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
-(** * Mapping telescope *)
+(** * Sequence *)
 
-(** A mapping telescope, or a sequence, is an infinite sequence of types [X(n)] with an arrow from [X(n)] to [X(n+1)]. *)
+(** A Sequence is a sequence of maps from [X(n)] to [X(n+1)]. *)
 
-Definition telescope : Graph.
+Definition sequence_graph : Graph.
 Proof.
   serapply (Build_Graph nat).
   intros n m; exact (S n = m).
 Defined.
 
-Definition MappingTelescope := Diagram telescope.
+Definition Sequence := Diagram sequence_graph.
 
-Definition Build_MappingTelescope (X : nat -> Type)
-  (f : forall n, X n -> X n.+1) : MappingTelescope.
+Definition Build_Sequence
+  (X : nat -> Type)
+  (f : forall n, X n -> X n.+1)
+  : Sequence.
 Proof.
   serapply Build_Diagram.
   1: exact X.
@@ -28,9 +30,9 @@ Proof.
   apply f.
 Defined.
 
-(** A useful lemma to show than two mapping telescopes are equivalent. *)
+(** A useful lemma to show than two sequences are equivalent. *)
 
-Definition equiv_mappingtelescope (D1 D2 : MappingTelescope)
+Definition equiv_sequence (D1 D2 : Sequence)
   (H0 : (D1 0) <~> (D2 0))
   (Hn: forall n (e: (D1 n) <~> (D2 n)),
     {e' : (D1 n.+1) <~> (D2 n.+1) & (D2 _f 1) o e == e' o (D1 _f 1)})
