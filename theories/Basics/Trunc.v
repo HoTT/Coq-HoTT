@@ -45,10 +45,18 @@ Existing Class trunc_index_leq.
 
 Notation "m <= n" := (trunc_index_leq m n) : trunc_scope.
 
-Global Instance minus_two_leq_minus_two : -2 <= -2 := tt.
+Global Instance trunc_index_leq_minus_two_n n : -2 <= n := tt.
+
+Global Instance trunc_index_leq_succ n : n <= n.+1.
+Proof.
+  by induction n as [|n IHn] using trunc_index_ind.
+Defined.
 
 Fixpoint trunc_index_inc (n : nat) (k : trunc_index) : trunc_index
-  := match n with O => k | S m => (trunc_index_inc m k).+1 end.
+  := match n with
+      | O => k
+      | S m => (trunc_index_inc m k).+1
+    end.
 
 Definition trunc_index_pred : trunc_index -> trunc_index.
 Proof.
@@ -67,39 +75,37 @@ Proof.
   contradiction.
 Defined.
 
-Fixpoint trunc_index_leq_succ n m : n <= m -> n <= m.+1.
+Definition trunc_index_leq_succ' n m : n <= m -> n <= m.+1.
 Proof.
-  destruct n.
-  { apply idmap. }
-  intro p.
-  destruct m.
-  { destruct p. }
-  exact (trunc_index_leq_succ n m p).
-Defined.
-
-Fixpoint trunc_index_leq_refl' a : a <= a.
-Proof.
-  by (destruct a; cbn).
+  revert m.
+  induction n as [|n IHn] using trunc_index_ind.
+  1: exact _.
+  intros m p; cbn.
+  induction m as [|m IHm] using trunc_index_ind.
+  1: destruct p.
+  apply IHn, p.
 Defined.
 
 Global Instance trunc_index_leq_refl : Reflexive trunc_index_leq.
 Proof.
-  intro; apply trunc_index_leq_refl'.
-Defined.
-
-Fixpoint trunc_index_leq_concat {a b c} {struct c} : a <= b -> b <= c -> a <= c.
-Proof.
-  intros p q.
-  destruct a, b, c.
-  all: try (exact tt || assumption).
-  { revert p; intros []. }
-  exact (@trunc_index_leq_concat a b c p q).
+  intro n.
+  by induction n as [|n IHn] using trunc_index_ind.
 Defined.
 
 Global Instance trunc_index_leq_transitive : Transitive trunc_index_leq.
 Proof.
   intros a b c p q.
-  apply (trunc_index_leq_concat p q).
+  revert b a c p q.
+  induction b as [|b IHb] using trunc_index_ind.
+  { intros a c p.
+    by destruct (trunc_index_leq_minus_two p). }
+  induction a as [|a IHa] using trunc_index_ind;
+  induction c as [|c IHc] using trunc_index_ind.
+  all: intros.
+  1,2: exact tt.
+  1: contradiction.
+  cbn in p, q; cbn.
+  by apply IHb.
 Defined.
 
 Fixpoint trunc_index_min (n m : trunc_index) : trunc_index.
@@ -113,7 +119,7 @@ Defined.
 
 Definition trunc_index_min_minus_two n : trunc_index_min n -2 = -2.
 Proof.
-  destruct n; reflexivity.
+  by destruct n.
 Defined.
 
 Definition trunc_index_min_swap n m
@@ -126,9 +132,7 @@ Proof.
     apply trunc_index_min_minus_two. }
   induction m.
   1: reflexivity.
-  cbn.
-  apply ap.
-  apply IHn.
+  cbn; apply ap, IHn.
 Defined.
 
 Definition trunc_index_min_path n m
@@ -142,7 +146,7 @@ Proof.
   destruct (IHn m).
   1: apply inl.
   2: apply inr.
-  all: cbn; by apply ap.
+  1,2: cbn; by apply ap.
 Defined.
 
 Definition trunc_index_min_leq_left (n m : trunc_index)
