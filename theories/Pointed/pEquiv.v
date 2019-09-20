@@ -60,6 +60,11 @@ Proof.
   intro; cbn; apply equiv_sigma_symm0.
 Defined.
 
+(* Sometimes we wish to construct a pEquiv from an equiv and a proof that it is pointed *)
+Definition Build_pEquiv' {A B : pType} (f : A <~> B)
+  (p : f (point A) = point B)
+  : A <~>* B := Build_pEquiv _ _ (Build_pMap _ _ f p) _.
+
 (* Under univalence, pointed equivalences are equivalent to paths *)
 Definition equiv_path_ptype `{Univalence} (A B : pType) : A <~>* B <~> A = B.
 Proof.
@@ -75,8 +80,13 @@ Defined.
 Definition path_ptype `{Univalence} {A B : pType} : (A <~>* B) -> A = B
   := equiv_path_ptype A B.
 
-(* A pointed version of Sect (sometimes useful for proofs
-   of some equivalences) *)
+Definition pequiv_path {A B : pType} : (A = B) -> (A <~>* B).
+Proof.
+  intros p; apply (ap issig_ptype^-1) in p.
+  srefine (Build_pEquiv' (equiv_path A B p..1) p..2).
+Defined.
+
+(* A pointed version of Sect (sometimes useful for proofs of some equivalences) *)
 Definition pSect {A B : pType} (s : A ->* B) (r : B ->* A)
   := r o* s ==* pmap_idmap.
 
@@ -103,12 +113,6 @@ Proof.
   hott_simpl.
   apply eisadj.
 Qed.
-
-(* Sometimes we wish to construct a pEquiv from an equiv and a proof
-  that it is pointed *)
-Definition Build_pEquiv' {A B : pType} (f : A <~> B)
-  (p : f (point A) = point B)
-  : A <~>* B := Build_pEquiv _ _ (Build_pMap _ _ f p) _.
 
 (* A version of equiv_adjointify for pointed equivalences
   where all data is pointed. There is a lot of unecessery data here

@@ -88,24 +88,23 @@ Coercion pointed_equiv_equiv {A B} (f : A <~>* B)
 
 (* Pointed type family *)
 Definition pFam (A : pType) := {P : A -> Type & P (point A)}.
+Definition pfam_pr1 {A : pType} (P : pFam A) : A -> Type := pr1 P.
+Coercion pfam_pr1 : pFam >-> Funclass.
 
 (* IsTrunc for a pointed type family *)
-Definition IsTrunc_pFam n {A} (X : pFam A) := forall x, IsTrunc n (X.1 x).
+Class IsTrunc_pFam n {A} (X : pFam A)
+  := trunc_pfam_is_trunc : forall x, IsTrunc n (X.1 x).
 
 (* Pointed sigma *)
-Definition psigma : {A : pType & pFam A} -> pType.
+Definition psigma {A : pType} (P : pFam A) : pType.
 Proof.
-  intros [[A a] [P p]].
   exists {x : A & P x}.
-  exact (a; p).
+  exact (point A; P.2).
 Defined.
 
 (* Pointed pi types, note that the domain is not pointed *)
-Definition pforall : {A : Type & A -> pType} -> pType.
-Proof.
-  intros [A F].
-  exact (Build_pType (forall (a : A), pointed_type (F a)) (ispointed_type o F)).
-Defined.
+Definition pforall {A : Type} (F : A -> pType) : pType
+  := Build_pType (forall (a : A), pointed_type (F a)) (ispointed_type o F).
 
 (** The following tactic often allows us to "pretend" that pointed maps and homotopies preserve basepoints strictly.  We have carefully defined [pMap] and [pHomotopy] so that when destructed, their second components are paths with right endpoints free, to which we can apply Paulin-Morhing path-induction. *)
 Ltac pointed_reduce :=

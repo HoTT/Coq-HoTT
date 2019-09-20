@@ -40,6 +40,10 @@ Proof.
   by refine (ap loops IHn @ _).
 Defined.
 
+Definition unfold_iterated_loops' (n : nat) (X : pType)
+  : iterated_loops n.+1 X <~>* iterated_loops n (loops X)
+  := pequiv_path (unfold_iterated_loops n X).
+
 (** The loop space decreases the truncation level by one.  We don't bother making this an instance because it is automatically found by typeclass search, but we record it here in case anyone is looking for it. *)
 Definition istrunc_loops {n} (A : pType) `{IsTrunc n.+1 A}
   : IsTrunc n (loops A) := _.
@@ -80,17 +84,6 @@ Proof.
   by pointed_reduce.
 Defined.
 
-(* Iterated loops functor respects composition *)
-Lemma iterated_loops_functor_compose `{Univalence} n A B C (f : B ->* C)
-  (g : A ->* B) : iterated_loops_functor n (f o* g)
-  ==* (iterated_loops_functor n f) o* (iterated_loops_functor n g).
-Proof.
-  induction n; cbn.
-  1: reflexivity.
-  destruct (path_pmap IHn)^.
-  apply loops_functor_compose.
-Defined.
-
 (* Loops functor respects identity *)
 Definition loops_functor_idmap (A : pType)
   : loops_functor (@pmap_idmap A) ==* pmap_idmap.
@@ -109,6 +102,7 @@ Proof.
   apply ap_pp.
 Defined.
 
+(* Loops functor preserves pointed homotopies *)
 Definition loops_2functor {A B : pType} {f g : A ->* B} (p : f ==* g)
   : (loops_functor f) ==* (loops_functor g).
 Proof.
@@ -118,6 +112,17 @@ Proof.
     refine (_ @ (concat_p1 _)^ @ (concat_1p _)^).
     apply moveR_Vp, concat_Ap. }
   hott_simpl.
+Defined.
+
+(* Iterated loops functor respects composition *)
+Lemma iterated_loops_functor_compose n A B C (f : B ->* C)
+  (g : A ->* B) : iterated_loops_functor n (f o* g)
+  ==* (iterated_loops_functor n f) o* (iterated_loops_functor n g).
+Proof.
+  induction n; cbn.
+  1: reflexivity.
+  refine (_ @* (loops_functor_compose _ _)).
+  apply loops_2functor, IHn.
 Defined.
 
 (** The loop space functor decreases the truncation level by one.  *)
@@ -173,7 +178,7 @@ Proof.
 Defined.
 
 (* Loops functor preserves equivalences *)
-Definition pequiv_loops_functor `{Funext} {A B : pType}
+Definition pequiv_loops_functor {A B : pType}
   : A <~>* B -> loops A <~>* loops B.
 Proof.
   intro f.
@@ -181,12 +186,12 @@ Proof.
   1: apply loops_functor, f.
   1: apply loops_functor, (pequiv_inverse f).
   1,2: refine ((loops_functor_compose _ _)^* @* _ @* loops_functor_idmap _).
-  1,2: apply phomotopy_ap.
+  1,2: apply loops_2functor.
   1: apply peisretr.
   apply peissect.
 Defined.
 
-Lemma pequiv_iterated_loops_functor `{Funext} {A B n} : A <~>* B
+Lemma pequiv_iterated_loops_functor {A B n} : A <~>* B
   -> iterated_loops n A <~>* iterated_loops n B.
 Proof.
   intros f.
@@ -203,8 +208,8 @@ Proof.
   reflexivity.
 Defined.
 
-(* Iterated loops products preserve products *)
-Lemma iterated_loops_prod `{Univalence} (X Y : pType) {n}
+(* Iterated loops of products are products of iterated loops *)
+Lemma iterated_loops_prod (X Y : pType) {n}
   : iterated_loops n (X * Y) <~>* (iterated_loops n X) * (iterated_loops n Y).
 Proof.
   induction n.
@@ -214,107 +219,85 @@ Proof.
 Defined.
 
 (* A dependent form of loops *)
-Definition loopsD A : pFam A -> pFam (loops A)
+Definition loopsD {A} : pFam A -> pFam (loops A)
   := fun Pp => (fun q => transport Pp.1 q Pp.2 = Pp.2; 1).
 
-(* Loops for pointed type families *)
-Definition pfam_loops : {A : pType & pFam A} -> {A : pType & pFam A}
-  := functor_sigma loops loopsD.
+Global Instance istrunc_pfam_loopsD {n} {A} (P : pFam A)
+       {H :IsTrunc_pFam n.+1 P}
+  : IsTrunc_pFam n (loopsD P).
+Proof.
+  intros a. pose (H (point A)). exact _.
+Defined.
 
 (* psigma and loops 'commute' *)
-Lemma loops_psigma_commute `{Univalence}
-  : loops o psigma == psigma o pfam_loops.
+Lemma loops_psigma_commute (A : pType) (P : pFam A)
+  : loops (psigma P) <~>* psigma (loopsD P).
 Proof.
-  intros x.
-  apply path_ptype.
   srefine (Build_pEquiv _ _ (Build_pMap _ _ (_ : Equiv _ _) _) _).
   1: exact (equiv_path_sigma _ _ _)^-1%equiv.
   reflexivity.
 Defined.
 
 (* pforall and loops 'commute' *)
-Lemma loops_pforall_commute `{Univalence} (A : Type) (F : A -> pType)
-  : loops (pforall (A; F)) = pforall (A; loops o F).
+Lemma loops_pforall_commute `{Funext} (A : Type) (F : A -> pType)
+  : loops (pforall F) <~>* pforall (loops o F).
 Proof.
-  apply path_ptype.
   srefine (Build_pEquiv _ _ (Build_pMap _ _ (_ : Equiv _ _) _) _).
   1: apply equiv_apD10.
   reflexivity.
 Defined.
 
 (* pforall and iterated loops commute *)
-Lemma iterated_loops_pforall_commute `{Univalence} (A : Type) (F : A -> pType) (n : nat)
-  : iterated_loops n (pforall (A; F)) = pforall (A; iterated_loops n o F).
+Lemma iterated_loops_pforall_commute `{Funext} (A : Type) (F : A -> pType) (n : nat)
+  : iterated_loops n (pforall F) <~>* pforall (iterated_loops n o F).
 Proof.
-  induction n; cbn.
+  induction n.
   1: reflexivity.
-  refine (ap loops IHn @ _).
-  apply loops_pforall_commute.
+  refine (loops_pforall_commute _ _ o*E _).
+  apply pequiv_loops_functor, IHn.
 Defined.
 
 (* Loops neutralise sigmas when truncated *)
-Lemma loops_psigma_trunc `{Univalence} (n : nat) : forall (Aa : pType)
+Lemma loops_psigma_trunc (n : nat) : forall (Aa : pType)
   (Pp : pFam Aa) (istrunc_Pp : IsTrunc_pFam (nat_to_trunc_index_2 n) Pp),
-  iterated_loops n (psigma (Aa; Pp))
-  = iterated_loops n Aa.
+  iterated_loops n (psigma Pp)
+  <~>* iterated_loops n Aa.
 Proof.
   induction n.
   { intros A P p.
-    serapply path_ptype.
     srefine (Build_pEquiv _ _ (Build_pMap _ _ (_ : Equiv _ _) _) _).
     1: refine (@equiv_sigma_contr _ _ p).
     reflexivity. }
   intros A P p.
-  refine (unfold_iterated_loops _ _ @ _).
-  refine (ap _ (loops_psigma_commute _) @ _).
-  refine (IHn _ _ _ @ (unfold_iterated_loops _ _)^).
-  intro; refine (@istrunc_paths _ _ (p (point A)) _ _).
+  refine (pequiv_inverse (unfold_iterated_loops' _ _) o*E _ o*E unfold_iterated_loops' _ _).
+  refine (IHn _ _ _ o*E _).
+  apply pequiv_iterated_loops_functor.
+  apply loops_psigma_commute.
 Defined.
 
 (* We declare this local notation to make it easier to write pointed types *)
 Local Notation "( X , x )" := (Build_pType X x).
 
-(* Here are some path lemmas we will need *)
-Local Lemma path_ptype_path_equiv `{Univalence} (A : Type)
-  : (A = A, 1) = (A <~> A, 1%equiv).
+(* We can convert between families of loops in a type and loops in Type at that type. *)
+Definition loops_type `{Univalence} (A : Type)
+  : loops (Type,A) <~>* (A <~> A, equiv_idmap).
 Proof.
-  apply path_ptype.
-  refine (Build_pEquiv _ _ (Build_pMap (A = A, 1)
-    (A <~> A, 1%equiv) (equiv_path A A) 1) _).
-  exact (isequiv_equiv_path A A).
+  apply issig_pequiv.
+  exists (equiv_equiv_path A A).
+  reflexivity.
 Defined.
-
-Local Lemma path_ptype_issig_equiv `{Univalence} (A : Type)
-  : (A <~> A, 1%equiv) = Build_pType
-    {f : A -> A & IsEquiv f} (idmap; isequiv_idmap A).
-Proof.
-  symmetry.
-  apply path_ptype.
-  refine (Build_pEquiv _ _ (Build_pMap
-    ({f : A -> A & IsEquiv f}, (idmap; isequiv_idmap A))
-    (A <~> A, 1%equiv) (issig_equiv _ _) 1) _).
-Defined.
-
-(* We can convert between families of loops in a type and
-   loops in Type at that type *)
+  
 Lemma local_global_looping `{Univalence} (A : Type) (n : nat)
   : iterated_loops n.+2 (Type, A)
-  = pforall (A; fun a => iterated_loops n.+1 (A, a)).
+  <~>* pforall (fun a => iterated_loops n.+1 (A, a)).
 Proof.
-  refine (unfold_iterated_loops _ _ @ _).
-  change (loops (Type, A)) with (A = A, 1).
-  refine (ap _ (path_ptype_path_equiv A) @ _).
-  refine (ap _ (path_ptype_issig_equiv A) @ _).
-  change ({f : A -> A & IsEquiv f}, (idmap; isequiv_idmap A)) with
-    (psigma ((A -> A, idmap); (IsEquiv; isequiv_idmap A))).
-  refine (loops_psigma_trunc n.+1 (A -> A, idmap)
-    (IsEquiv; isequiv_idmap A) _ @ _).
-  { intros x.
-    induction n.
-    1: apply hprop_isequiv.
-    apply trunc_succ. }
-  change (A -> A, idmap) with (pforall (A; fun a => (A, a))).
-  apply (iterated_loops_pforall_commute _ _ n.+1).
+  induction n.
+  { refine (_ o*E pequiv_loops_functor (loops_type A)).
+    apply issig_pequiv.
+    exists (equiv_inverse (equiv_path_arrow 1%equiv 1%equiv)
+            oE equiv_inverse (equiv_path_equiv 1%equiv 1%equiv)).
+    reflexivity. }
+  exact (loops_pforall_commute _ _ o*E pequiv_loops_functor IHn).
 Defined.
 
 (* 7.2.7 *)

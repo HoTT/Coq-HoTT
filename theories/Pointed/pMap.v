@@ -53,13 +53,3 @@ Proof.
   - intros ?; reflexivity.
   - reflexivity.
 Qed.
-
-(* A kind of ap for pHomotopies *)
-Definition phomotopy_ap `{Funext} {A B C D : pType} {f g : A ->* B}
-  (h : (A ->* B) -> C ->* D) : f ==* g -> h f ==* h g.
-Proof.
-  intro p.
-  destruct (path_pmap p).
-  reflexivity.
-Defined.
-

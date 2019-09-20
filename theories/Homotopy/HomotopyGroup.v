@@ -4,7 +4,6 @@ Require Import HIT.Truncations.
 Require Import Pointed.
 Require Import abstract_algebra.
 Require Import Spaces.Nat.
-Require Import UnivalenceAxiom.
 
 Import TrM.
 
@@ -105,8 +104,8 @@ Section PiFunctor.
     apply Build_MonoidPreserving.
     + intros x y.
       strip_truncations.
-      apply equiv_path_Tr, tr, loops_functor_pp.
-    + apply equiv_path_Tr, tr; cbn.
+      apply path_Tr, tr, loops_functor_pp.
+    + apply path_Tr, tr; cbn.
       destruct n; hott_simpl.
   Defined.
 
