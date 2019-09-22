@@ -90,7 +90,7 @@ Global Instance unicocone_colimit `{Funext} {G : Graph} (D : Diagram G)
   : UniversalCocone (cocone_colimit D).
 Proof.
   serapply Build_UniversalCocone; intro Y.
-  simple refine (isequiv_adjointify _ (Colimit_rec Y) _ _).
+  serapply (isequiv_adjointify _ (Colimit_rec Y) _ _).
   - intros C.
     serapply path_cocone.
     1: reflexivity.
@@ -125,7 +125,7 @@ Section FunctorialityColimit.
   Proof.
     intros HQ.
     serapply (Build_IsColimit (cocone_precompose m HQ) _).
-    apply precompose_equiv_universality, HQ.
+    apply cocone_precompose_equiv_universality, HQ.
   Defined.
 
   Definition iscolimit_postcompose_equiv {D: Diagram G} `(f: Q <~> Q')
@@ -133,7 +133,7 @@ Section FunctorialityColimit.
   Proof.
     intros HQ.
     serapply (Build_IsColimit (cocone_postcompose HQ f) _).
-    apply postcompose_equiv_universality, HQ.
+    apply cocone_postcompose_equiv_universality, HQ.
   Defined.
 
   (** A diagram map [m] : [D1] => [D2] induces a map between any two colimits of [D1] and [D2]. *)
@@ -192,8 +192,8 @@ Section FunctorialityColimit.
 
   Global Instance isequiv_functoriality_colimit
     : IsEquiv (functoriality_colimit m HQ1 HQ2)
-    := isequiv_adjointify _ _ functoriality_colimit_eissect
-                          functoriality_colimit_eisretr.
+    := isequiv_adjointify _ _
+      functoriality_colimit_eissect functoriality_colimit_eisretr.
 
   Definition functoriality_colimit_equiv : Q1 <~> Q2
     := BuildEquiv _ _ _ isequiv_functoriality_colimit.
@@ -211,3 +211,46 @@ Proof.
   serapply functoriality_colimit_equiv.
   serapply (Build_diagram_equiv (diagram_idmap D)).
 Defined.
+
+(** * Colimits are right adjoint to constant diagram *)
+
+Theorem colimit_right_adjoint `{Funext} {G : Graph} {D : Diagram G} {C : Type}
+  : (Colimit D -> C) <~> DiagramMap D (diagram_const C).
+Proof.
+  serapply equiv_adjointify.
+  { intro f.
+    serapply Build_DiagramMap.
+    { intros i x.
+      apply f, (colim i x). }
+    intros i j g x.
+    cbn; apply ap.
+    symmetry.
+    apply colimp. }
+  { intros [f p].
+    serapply Colimit_rec.
+    serapply Build_Cocone.
+    1: apply f.
+    intros i j g x.
+    symmetry.
+    apply p. }
+  { intros [f p].
+    serapply path_DiagramMap.
+    1: reflexivity.
+    intros i j g x; cbn.
+    rewrite ap_V.
+    rewrite Colimit_rec_beta_colimp.
+    hott_simpl. }
+  { intro f.
+    apply path_forall.
+    serapply Colimit_ind.
+    1: reflexivity.
+    intros i j g x; cbn.
+    rewrite transport_paths_FlFr.
+    rewrite Colimit_rec_beta_colimp.
+    rewrite inv_V, ap_V, concat_p1.
+    apply concat_Vp. }
+Defined.
+
+
+
+

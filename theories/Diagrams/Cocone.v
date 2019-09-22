@@ -234,7 +234,7 @@ Section FunctorialityCocone.
 
   (** Universality of a cocone is preserved by composition with a (diagram) equivalence. *)
 
-  Global Instance precompose_equiv_universality {D1 D2 : Diagram G}
+  Global Instance cocone_precompose_equiv_universality {D1 D2 : Diagram G}
     (m: D1 ~d~ D2) {X} (C : Cocone D2 X) (_ : UniversalCocone C)
     : UniversalCocone (cocone_precompose (X:=X) m C).
   Proof.
@@ -243,7 +243,7 @@ Section FunctorialityCocone.
     serapply isequiv_compose.
   Defined.
 
-  Global Instance postcompose_equiv_universality {D: Diagram G} `(f: X <~> Y)
+  Global Instance cocone_postcompose_equiv_universality {D: Diagram G} `(f: X <~> Y)
     (C : Cocone D X) (_ : UniversalCocone C)
     : UniversalCocone (cocone_postcompose C f).
   Proof.

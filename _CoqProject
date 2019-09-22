@@ -119,6 +119,13 @@ theories/HIT/SetCone.v
 theories/HIT/V.v
 
 #
+#   Limits
+#
+
+theories/Limits/Limit.v
+theories/Limits/Equalizer.v
+
+#
 #   Colimits
 #
 
@@ -137,14 +144,16 @@ theories/Colimits/Colimit_Pushout_Flattening.v
 #   Diagrams
 #
 
-theories/Diagrams/CommutativeSquares.v
 theories/Diagrams/Graph.v
 theories/Diagrams/Diagram.v
+theories/Diagrams/Cone.v
 theories/Diagrams/Cocone.v
+theories/Diagrams/DDiagram.v
+
+theories/Diagrams/CommutativeSquares.v
 theories/Diagrams/Sequence.v
 theories/Diagrams/Span.v
 theories/Diagrams/ParallelPair.v
-theories/Diagrams/DDiagram.v
 
 #
 #   Other
