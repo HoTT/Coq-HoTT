@@ -67,14 +67,31 @@ Proof.
   reflexivity.
 Qed.
 
-Definition pequiv_psusp_functor `{Funext} {X Y : pType} (f : X <~>* Y)
+Definition psusp_2functor {X Y} {f g : X ->* Y} (p : f ==* g)
+  : psusp_functor f ==* psusp_functor g.
+Proof.
+  pointed_reduce.
+  serapply Build_pHomotopy.
+  { simpl.
+    serapply Susp_ind.
+    1,2: reflexivity.
+    intro x; cbn.
+    rewrite transport_paths_FlFr.
+    rewrite concat_p1.
+    rewrite 2 Susp_rec_beta_merid.
+    destruct (p x).
+    apply concat_Vp. }
+  reflexivity.
+Defined.
+
+Definition pequiv_psusp_functor {X Y : pType} (f : X <~>* Y)
   : psusp X <~>* psusp Y.
 Proof.
   serapply pequiv_adjointify.
   1: apply psusp_functor, f.
   1: apply psusp_functor, f^-1*.
   1,2: refine ((psusp_functor_compose _ _)^* @* _ @* psusp_functor_idmap).
-  1,2: apply phomotopy_ap.
+  1,2: apply psusp_2functor.
   1: apply peisretr.
   apply peissect.
 Defined.
