@@ -1,15 +1,28 @@
-Require Import HoTT.Basics.
+Require Import Basics.
 
 (** * Comutative squares *)
 
-(** Commutative squares compose. *)
-Lemma comm_square_comp
-  {A B} {f:A->B} {A' B'} {f':A'->B'} {A'' B''} {f'':A''->B''}
-  {h' : A' -> A''} {g' : B' -> B''} (comm' : f'' o h' == g' o f')
-  {h : A -> A'} {g : B -> B'} (comm : f' o h == g o f)
-: f'' o (h' o h) == (g' o g) o f.
+(** Commutative squares compose.
+
+      A --f--> B
+      |    //  |
+      h  comm  g
+      |  //    |
+      V //     V
+      C --f'-> D
+      |    //  |
+      h' comm' g'
+      |  //    |
+      V //     V
+      E --f''> F
+*)
+Lemma comm_square_comp {A B C D E F}
+  {f : A -> B} {f': C -> D} {h : A -> C} {g : B -> D} (comm : f' o h == g o f)
+  {f'': E -> F} {h' : C -> E} {g' : D -> F} (comm' : f'' o h' == g' o f')
+  : f'' o (h' o h) == (g' o g) o f.
 Proof.
-  intros x. path_via (g' (f' (h x))).
+  intros x.
+  path_via (g' (f' (h x))).
   apply ap, comm.
 Defined.
 
@@ -35,12 +48,11 @@ Lemma comm_square_inverse_is_sect
   {A B : Type} {f : A -> B}
   {A' B' : Type} {f' : A' -> B'}
   (wA : A <~> A') (wB : B <~> B')
-  (wf : f' o wA == wB o f)
-: (fun a:A => (comm_square_comp (comm_square_inverse wf) wf a)
-             @ eissect wB (f a))
-   == fun a:A => (ap f (eissect wA a)).
+  (wf : f' o wA == wB o f) (a : A)
+  : comm_square_comp wf (comm_square_inverse wf) a @ eissect wB (f a)
+   = ap f (eissect wA a).
 Proof.
-  intros a; simpl. unfold comm_square_inverse, comm_square_comp; simpl.
+  unfold comm_square_inverse, comm_square_comp; simpl.
   repeat apply (concat (concat_pp_p _ _ _)). apply moveR_Vp.
   transitivity (ap (wB ^-1 o wB) (ap f (eissect wA a)) @ eissect wB (f a)).
   2: apply (concat (concat_Ap (eissect wB) _)). 2: apply ap, ap_idmap.
@@ -59,13 +71,13 @@ Lemma comm_square_inverse_is_retr
   {A B : Type} {f : A -> B}
   {A' B' : Type} {f' : A' -> B'}
   (wA : A <~> A') (wB : B <~> B')
-  (wf : f' o wA == wB o f)
-: (fun a:A' => (comm_square_comp wf (comm_square_inverse wf) a)
-             @ eisretr wB (f' a))
-   == fun a:A' => (ap f' (eisretr wA a)).
+  (wf : f' o wA == wB o f) (a : A')
+  : comm_square_comp (comm_square_inverse wf) wf a @ eisretr wB (f' a)
+  = ap f' (eisretr wA a).
 Proof.
-  intros a; simpl. unfold comm_square_inverse, comm_square_comp; simpl.
-  rewrite !ap_pp. rewrite <- !concat_pp_p.
+  unfold comm_square_inverse, comm_square_comp; simpl.
+  rewrite !ap_pp.
+  rewrite <- !concat_pp_p.
   rewrite concat_pp_p.
   set (p := (ap wB (ap (wB ^-1) (ap f' (eisretr wA a)))
             @ eisretr wB (f' a))).
@@ -74,18 +86,18 @@ Proof.
     apply moveR_pM.
     path_via ((eisretr wB (f' (wA (wA ^-1 a))))^ @
       ap (wB o wB ^-1) (wf ((wA ^-1) a))).
-    + rewrite ap_V. rewrite <- eisadj.
+    + rewrite ap_V, <- eisadj.
       transitivity (ap idmap (wf ((wA ^-1) a))
                        @ (eisretr wB (wB (f ((wA ^-1) a))))^).
-      * apply whiskerR. apply inverse. apply ap_idmap.
-      * apply (concat_Ap
-                 (fun b' => (eisretr wB b')^) (wf ((wA ^-1) a)) ).
-    + apply ap. rewrite ap_compose. rewrite !ap_V.
-      apply inverse. apply inv_V.
-  - apply moveR_Vp. subst p. rewrite <- ap_compose.
-    path_via (eisretr wB (f' (wA ((wA ^-1) a)))
-                      @ ap idmap (ap f' (eisretr wA a))).
-    + apply (concat_Ap
-               (eisretr wB) (ap f' (eisretr wA a)) ).
-    + apply ap. apply ap_idmap.
+      * apply whiskerR, inverse, ap_idmap.
+      * apply (concat_Ap (fun b' => (eisretr wB b')^) _).
+    + apply ap.
+      rewrite ap_compose, !ap_V.
+      apply inverse, inv_V.
+  - apply moveR_Vp.
+    subst p.
+    rewrite <- ap_compose.
+    path_via (eisretr wB _ @ ap idmap (ap f' (eisretr wA a))).
+    + apply (concat_Ap (eisretr wB) _).
+    + apply ap, ap_idmap.
 Defined.
