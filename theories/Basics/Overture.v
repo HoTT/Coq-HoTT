@@ -151,12 +151,8 @@ Open Scope core_scope.
 Definition const {A B} (b : B) := fun x : A => b.
 
 (** We define notation for dependent pairs because it is too annoying to write and see [existT P x y] all the time.  However, we put it in its own scope, because sometimes it is necessary to give the particular dependent type, so we'd like to be able to turn off this notation selectively. *)
-(* We define notations for nested pairs as we can't define a recursive notations; see https://github.com/coq/coq/issues/6032 (should be solved in Coq 8.8). *)
 Notation "( x ; y )" := (existT _ x y) : fibration_scope.
-Notation "( x ; y ; z )" := (x ; ( y ; z)) : fibration_scope.
-Notation "( x ; y ; z ; t )" := (x ; ( y ; (z ; t))) : fibration_scope.
-Notation "( x ; y ; z ; t ; u )" := (x ; ( y ; (z ; (t ; u)))) : fibration_scope.
-Notation "( x ; y ; z ; t ; u ; v )" := (x ; ( y ; (z ; (t ; (u ; v))))) : fibration_scope.
+Notation "( x ; .. ; y ; z )" := (existT _ x .. (existT _ y z) ..) : fibration_scope.
 (** We bind [fibration_scope] with [sigT] so that we are automatically in [fibration_scope] when we are passing an argument of type [sigT]. *)
 Bind Scope fibration_scope with sigT.
 
