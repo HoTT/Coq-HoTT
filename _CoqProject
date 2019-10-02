@@ -150,6 +150,7 @@ theories/Diagrams/Cone.v
 theories/Diagrams/Cocone.v
 theories/Diagrams/DDiagram.v
 
+theories/Diagrams/ConstantDiagram.v
 theories/Diagrams/CommutativeSquares.v
 theories/Diagrams/Sequence.v
 theories/Diagrams/Span.v

@@ -3,6 +3,7 @@ Require Import Types.
 Require Import Diagrams.Diagram.
 Require Import Diagrams.Graph.
 Require Import Diagrams.Cocone.
+Require Import Diagrams.ConstantDiagram.
 
 Local Open Scope path_scope.
 Generalizable All Variables.
@@ -80,6 +81,36 @@ Module Export Colimit.
   Defined.
 
 End Colimit.
+
+(** Colimit_rec is an equivalence *)
+
+Global Instance isequiv_colimit_rec `{Funext} {G : Graph}
+  {D : Diagram G} (P : Type) : IsEquiv (Colimit_rec (D:=D) P).
+Proof.
+  serapply isequiv_adjointify.
+  { intro f.
+    serapply Build_Cocone.
+    1: intros i g; apply f, (colim i g).
+    intros i j g x.
+    apply ap, colimp. }
+  { intro.
+    apply path_forall.
+    serapply Colimit_ind.
+    1: reflexivity.
+    intros ????; cbn.
+    rewrite transport_paths_FlFr.
+    rewrite Colimit_rec_beta_colimp.
+    hott_simpl. }
+  { intros [].
+    serapply path_cocone.
+    1: reflexivity.
+    intros ????; cbn.
+    rewrite Colimit_rec_beta_colimp.
+    hott_simpl. }
+Defined.
+
+Definition equiv_colimit_rec `{Funext} {G : Graph} {D : Diagram G} (P : Type)
+  : Cocone D P <~> (Colimit D -> P) := BuildEquiv _ _ _ (isequiv_colimit_rec P).
 
 (** And we can now show that the HIT is actually a colimit. *)
 
@@ -212,45 +243,13 @@ Proof.
   serapply (Build_diagram_equiv (diagram_idmap D)).
 Defined.
 
-(** * Colimits are right adjoint to constant diagram *)
+(** * Colimits are left adjoint to constant diagram *)
 
-Theorem colimit_right_adjoint `{Funext} {G : Graph} {D : Diagram G} {C : Type}
+Theorem colimit_adjoint `{Funext} {G : Graph} {D : Diagram G} {C : Type}
   : (Colimit D -> C) <~> DiagramMap D (diagram_const C).
 Proof.
-  serapply equiv_adjointify.
-  { intro f.
-    serapply Build_DiagramMap.
-    { intros i x.
-      apply f, (colim i x). }
-    intros i j g x.
-    cbn; apply ap.
-    symmetry.
-    apply colimp. }
-  { intros [f p].
-    serapply Colimit_rec.
-    serapply Build_Cocone.
-    1: apply f.
-    intros i j g x.
-    symmetry.
-    apply p. }
-  { intros [f p].
-    serapply path_DiagramMap.
-    1: reflexivity.
-    intros i j g x; cbn.
-    rewrite ap_V.
-    rewrite Colimit_rec_beta_colimp.
-    hott_simpl. }
-  { intro f.
-    apply path_forall.
-    serapply Colimit_ind.
-    1: reflexivity.
-    intros i j g x; cbn.
-    rewrite transport_paths_FlFr.
-    rewrite Colimit_rec_beta_colimp.
-    rewrite inv_V, ap_V, concat_p1.
-    apply concat_Vp. }
+  symmetry.
+  refine (equiv_colimit_rec C oE _).
+  apply equiv_diagram_const_cocone.
 Defined.
-
-
-
 

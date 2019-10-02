@@ -3,6 +3,7 @@ Require Import Types.
 Require Import Diagrams.Diagram.
 Require Import Diagrams.Graph.
 Require Import Diagrams.Cone.
+Require Import Diagrams.ConstantDiagram.
 
 Local Open Scope path_scope.
 Generalizable All Variables.
@@ -167,9 +168,9 @@ Proof.
   serapply (Build_diagram_equiv (diagram_idmap D)).
 Defined.
 
-(** * Limits are left adjoint to constant diagram *)
+(** * Limits are right adjoint to constant diagram *)
 
-Theorem limit_left_adjoint `{Funext} {G : Graph} {D : Diagram G} {C : Type}
+Theorem limit_adjoint `{Funext} {G : Graph} {D : Diagram G} {C : Type}
   : (C -> Limit D) <~> DiagramMap (diagram_const C) D.
 Proof.
   serapply equiv_adjointify.
@@ -187,11 +188,4 @@ Proof.
     apply p. }
   1,2: intro; reflexivity.
 Defined.
-
-
-
-
-
-
-
 
