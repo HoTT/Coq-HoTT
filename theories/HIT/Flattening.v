@@ -84,9 +84,9 @@ Let sWtil := { w:W' & P w }.
 Let scct (a:A) (x:C a) : sWtil := (existT P (coeq a) x).
 
 Let sppt (b:B) (y:C (f b)) : scct (f b) y = scct (g b) (D b y)
-  := path_sigma' P (cp b)
-       (transport_path_universe' P (cp b) (D b)
-         (Coeq_rec_beta_cp Type C (fun b0 => path_universe (D b0)) b) y).
+  := path_sigma' P (cglue b)
+       (transport_path_universe' P (cglue b) (D b)
+         (Coeq_rec_beta_cglue Type C (fun b0 => path_universe (D b0)) b) y).
 
 (** Here is the dependent eliminator *)
 Definition sWtil_ind (Q : sWtil -> Type)
@@ -98,11 +98,11 @@ Proof.
   refine (Coeq_ind (fun w => forall x:P w, Q (w;x))
     (fun a x => scct' a x) _).
   intros b.
-  apply (dpath_forall P (fun a b => Q (a;b)) _ _ (cp b)
+  apply (dpath_forall P (fun a b => Q (a;b)) _ _ (cglue b)
     (scct' (f b)) (scct' (g b))).
   intros y.
-  set (q := transport_path_universe' P (cp b) (D b)
-    (Coeq_rec_beta_cp Type C (fun b0 : B => path_universe (D b0)) b) y).
+  set (q := transport_path_universe' P (cglue b) (D b)
+    (Coeq_rec_beta_cglue Type C (fun b0 : B => path_universe (D b0)) b) y).
   rewrite transportD_is_transport.
   refine (_ @ apD (scct' (g b)) q^).
   refine (moveL_transport_V (fun x => Q (scct (g b) x)) q _ _ _).
@@ -159,8 +159,8 @@ Proof.
   intros y.
   refine (transport_const _ _ @ _).
   refine (sppt' b _ @ ap _ _).
-  refine ((transport_path_universe' P (cp b) (D b) _ _)^).
-  exact (Coeq_rec_beta_cp _ _ _ _).
+  refine ((transport_path_universe' P (cglue b) (D b) _ _)^).
+  exact (Coeq_rec_beta_cglue _ _ _ _).
 Defined.
 
 Open Scope long_path_scope.
@@ -172,9 +172,9 @@ Definition sWtil_rec_beta_ppt (Q : Type)
   : ap (sWtil_rec Q scct' sppt') (sppt b y) = sppt' b y.
 Proof.
   unfold sWtil_rec, sppt.
-  refine (@ap_sigT_rec_path_sigma W' P Q _ _ (cp b) _ _ _ _ @ _); simpl.
-  rewrite (@Coeq_ind_beta_cp B A f g).
-  rewrite (ap10_dpath_arrow P (fun _ => Q) (cp b) _ _ _ y).
+  refine (@ap_sigT_rec_path_sigma W' P Q _ _ (cglue b) _ _ _ _ @ _); simpl.
+  rewrite (@Coeq_ind_beta_cglue B A f g).
+  rewrite (ap10_dpath_arrow P (fun _ => Q) (cglue b) _ _ _ y).
   repeat rewrite concat_p_pp.
   (** Now everything cancels! *)
   rewrite ap_V, concat_pV_p, concat_pV_p, concat_pV_p, concat_Vp.

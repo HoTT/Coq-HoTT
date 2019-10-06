@@ -36,7 +36,7 @@ Definition pushr {A B C} {f : A -> B} {g : A -> C} (c : C)
 
 Definition pglue {A B C : Type} {f : A -> B} {g : A -> C} (a : A)
   : pushl (f a) = pushr (g a)
-  := @cp A (B+C) (inl o f) (inr o g) a.
+  := @cglue A (B+C) (inl o f) (inr o g) a.
 
 (* Some versions with explicit parameters. *)
 Definition pushl' {A B C} (f : A -> B) (g : A -> C) (b : B) : pushout f g := pushl b.
@@ -62,7 +62,7 @@ Section PushoutInd.
 
   Definition pushout_ind_beta_pglue (a:A)
     : apD pushout_ind (pglue a) = pusha a
-    := Coeq_ind_beta_cp P (fun bc => match bc with inl b => pushb b | inr c => pushc c end) pusha a.
+    := Coeq_ind_beta_cglue P (fun bc => match bc with inl b => pushb b | inr c => pushc c end) pusha a.
 
 End PushoutInd.
 
@@ -180,7 +180,7 @@ Section EquivPushout.
     : ap equiv_pushout (pglue a)
       = ap pushl (p a) @ pglue (eA a) @ ap pushr (q a)^.
   Proof.
-    refine (functor_coeq_beta_cp _ _ _ _ a @ _).
+    refine (functor_coeq_beta_cglue _ _ _ _ a @ _).
     refine (_ @@ 1 @@ _).
     - symmetry; refine (ap_compose inl coeq _).
     - refine (ap (ap coeq) (ap_V _ _)^ @ _).

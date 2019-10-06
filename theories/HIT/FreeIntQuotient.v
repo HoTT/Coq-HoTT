@@ -36,7 +36,7 @@ Section FreeIntAction.
     - unshelve erapply equiv_adjointify.
       + simple refine (Wtil_rec _ _ _).
         * intros u r; exact (coeq r).
-        * intros u r; cbn. exact ((cp r)^).
+        * intros u r; cbn. exact ((cglue r)^).
       + simple refine (Coeq_rec _ _ _).
         * exact (cct tt).
         * intros r; exact ((ppt tt r)^).
@@ -44,14 +44,14 @@ Section FreeIntAction.
         rewrite transport_paths_FlFr, concat_p1, ap_idmap.
         apply moveR_Vp; rewrite concat_p1.
         rewrite ap_compose.
-        rewrite (Coeq_rec_beta_cp
+        rewrite (Coeq_rec_beta_cglue
                    (Wtil Unit Unit idmap idmap (unit_name R) (unit_name f))
                    (cct tt) (fun r => (ppt tt r)^) b).
         rewrite ap_V; symmetry.
         refine (inverse2
                   (Wtil_rec_beta_ppt
                      RmodZ (unit_name (fun r => coeq r))
-                     (unit_name (fun r => (cp r)^)) tt b) @ inv_V _).
+                     (unit_name (fun r => (cglue r)^)) tt b) @ inv_V _).
       + simple refine (Wtil_ind _ _ _); cbn.
         { intros [] ?; reflexivity. }
         intros [] r; cbn.
@@ -60,9 +60,9 @@ Section FreeIntAction.
         rewrite ap_compose.
         refine (_ @ ap (ap _) (Wtil_rec_beta_ppt
                    RmodZ (unit_name (fun r => coeq r))
-                   (unit_name (fun r => (cp r)^)) tt r)^).
+                   (unit_name (fun r => (cglue r)^)) tt r)^).
         rewrite ap_V.
-        rewrite (Coeq_rec_beta_cp
+        rewrite (Coeq_rec_beta_cglue
                    (Wtil Unit Unit idmap idmap (unit_name R) (unit_name f))
                    (cct tt) (fun r0 : R => (ppt tt r0)^) r).
         symmetry; apply inv_V.
@@ -73,7 +73,7 @@ Section FreeIntAction.
       apply moveR_Vp; rewrite concat_p1.
       rewrite S1_rec_beta_loop.
       unfold loop.
-      exact (Coeq_rec_beta_cp _ _ _ _).
+      exact (Coeq_rec_beta_cglue _ _ _ _).
     - intros xu yv.
       refine (trunc_equiv' (n := -1) _ (equiv_path_sigma _ xu yv)).
       destruct xu as [x u], yv as [y v]; cbn.

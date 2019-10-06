@@ -15,36 +15,36 @@ Module Export Coeq.
 
   Arguments coeq {B A f g} a.
 
-  Axiom cp : forall {B A f g} (b:B), @coeq B A f g (f b) = coeq (g b).
+  Axiom cglue : forall {B A f g} (b:B), @coeq B A f g (f b) = coeq (g b).
 
   Definition Coeq_ind {B A f g} (P : @Coeq B A f g -> Type)
              (coeq' : forall a, P (coeq a))
-             (cp' : forall b, (cp b) # (coeq' (f b)) = coeq' (g b))
+             (cglue' : forall b, (cglue b) # (coeq' (f b)) = coeq' (g b))
   : forall w, P w
-    := fun w => match w with coeq a => fun _ => coeq' a end cp'.
+    := fun w => match w with coeq a => fun _ => coeq' a end cglue'.
 
-  Axiom Coeq_ind_beta_cp
+  Axiom Coeq_ind_beta_cglue
   : forall {B A f g} (P : @Coeq B A f g -> Type)
            (coeq' : forall a, P (coeq a))
-           (cp' : forall b, (cp b) # (coeq' (f b)) = coeq' (g b)) (b:B),
-      apD (Coeq_ind P coeq' cp') (cp b) = cp' b.
+           (cglue' : forall b, (cglue b) # (coeq' (f b)) = coeq' (g b)) (b:B),
+      apD (Coeq_ind P coeq' cglue') (cglue b) = cglue' b.
 
 End Coeq.
 
 Definition Coeq_rec {B A f g} (P : Type) (coeq' : A -> P)
-  (cp' : forall b, coeq' (f b) = coeq' (g b))
+  (cglue' : forall b, coeq' (f b) = coeq' (g b))
   : @Coeq B A f g -> P
-  := Coeq_ind (fun _ => P) coeq' (fun b => transport_const _ _ @ cp' b).
+  := Coeq_ind (fun _ => P) coeq' (fun b => transport_const _ _ @ cglue' b).
 
-Definition Coeq_rec_beta_cp {B A f g} (P : Type) (coeq' : A -> P)
-  (cp' : forall b:B, coeq' (f b) = coeq' (g b)) (b:B)
-  : ap (Coeq_rec P coeq' cp') (cp b) = cp' b.
+Definition Coeq_rec_beta_cglue {B A f g} (P : Type) (coeq' : A -> P)
+  (cglue' : forall b:B, coeq' (f b) = coeq' (g b)) (b:B)
+  : ap (Coeq_rec P coeq' cglue') (cglue b) = cglue' b.
 Proof.
   unfold Coeq_rec.
   (** Use [eapply] rather than [refine] so that we don't get evars as goals, and don't have to shelve any goals with [shelve_unifiable]. *)
-  eapply (cancelL (transport_const (cp b) _)).
-  refine ((apD_const (@Coeq_ind B A f g (fun _ => P) coeq' _) (cp b))^ @ _).
-  refine (Coeq_ind_beta_cp (fun _ => P) _ _ _).
+  eapply (cancelL (transport_const (cglue b) _)).
+  refine ((apD_const (@Coeq_ind B A f g (fun _ => P) coeq' _) (cglue b))^ @ _).
+  refine (Coeq_ind_beta_cglue (fun _ => P) _ _ _).
 Defined.
 
 (** ** Functoriality *)
@@ -56,16 +56,16 @@ Definition functor_coeq {B A f g B' A' f' g'}
 Proof.
   refine (Coeq_rec _ (coeq o k) _); intros b.
   refine (ap coeq (p b) @ _ @ ap coeq (q b)^).
-  apply cp.
+  apply cglue.
 Defined.
 
-Definition functor_coeq_beta_cp {B A f g B' A' f' g'}
+Definition functor_coeq_beta_cglue {B A f g B' A' f' g'}
            (h : B -> B') (k : A -> A')
            (p : k o f == f' o h) (q : k o g == g' o h)
            (b : B)
-: ap (functor_coeq h k p q) (cp b)
-  = ap coeq (p b) @ cp (h b) @ ap coeq (q b)^
-:= (Coeq_rec_beta_cp _ _ _ b).
+: ap (functor_coeq h k p q) (cglue b)
+  = ap coeq (p b) @ cglue (h b) @ ap coeq (q b)^
+:= (Coeq_rec_beta_cglue _ _ _ b).
 
 Definition functor_coeq_compose {B A f g B' A' f' g' B'' A'' f'' g''}
            (h : B -> B') (k : A -> A')
@@ -81,7 +81,7 @@ Proof.
   rewrite transport_paths_FlFr.
   rewrite concat_p1; apply moveR_Vp; rewrite concat_p1.
   rewrite ap_compose.
-  rewrite !functor_coeq_beta_cp, !ap_pp, functor_coeq_beta_cp.
+  rewrite !functor_coeq_beta_cglue, !ap_pp, functor_coeq_beta_cglue.
   rewrite <- !ap_compose. cbn.
   rewrite !ap_V, ap_pp, inv_pp, <- ap_compose, !concat_p_pp.
   reflexivity.
@@ -98,9 +98,9 @@ Definition functor_coeq_homotopy {B A f g B' A' f' g'}
 : functor_coeq h k p q == functor_coeq h' k' p' q'.
 Proof.
   refine (Coeq_ind _ (fun a => ap coeq (s a)) _); cbn; intros b.
-  refine (transport_paths_FlFr (cp b) _ @ _).
+  refine (transport_paths_FlFr (cglue b) _ @ _).
   rewrite concat_pp_p; apply moveR_Vp.
-  rewrite !functor_coeq_beta_cp.
+  rewrite !functor_coeq_beta_cglue.
   Open Scope long_path_scope.
   rewrite !concat_p_pp.
   rewrite <- (ap_pp (@coeq _ _ f' g') (s (f b)) (p' b)).
@@ -109,7 +109,7 @@ Proof.
   rewrite !concat_pp_p, <- (ap_pp (@coeq _ _ f' g') (s (g b)) (q' b)).
   rewrite v, ap_pp, ap_V, concat_V_pp.
   rewrite <- !ap_compose.
-  exact (concat_Ap (@cp _ _ f' g') (r b)).
+  exact (concat_Ap (@cglue _ _ f' g') (r b)).
   Close Scope long_path_scope.
 Qed.
 
@@ -124,11 +124,11 @@ Definition functor_coeq_sect {B A f g B' A' f' g'}
 : Sect (functor_coeq h k p q) (functor_coeq h' k' p' q').
 Proof.
   refine (Coeq_ind _ (fun a => ap coeq (s a)) _); cbn; intros b.
-  refine (transport_paths_FFlr (cp b) _ @ _).
+  refine (transport_paths_FFlr (cglue b) _ @ _).
   rewrite concat_pp_p; apply moveR_Vp.
-  rewrite functor_coeq_beta_cp, !ap_pp.
+  rewrite functor_coeq_beta_cglue, !ap_pp.
   rewrite <- !ap_compose; cbn.
-  rewrite functor_coeq_beta_cp.
+  rewrite functor_coeq_beta_cglue.
   Open Scope long_path_scope.
   rewrite !concat_p_pp.
   rewrite <- u, !ap_pp, !(ap_compose k' coeq).
@@ -137,7 +137,7 @@ Proof.
   rewrite <- v.
   rewrite !ap_pp, !ap_V, !concat_p_pp, !concat_pV_p.
   rewrite <- !ap_compose.
-  exact (concat_Ap cp (r b)).
+  exact (concat_Ap cglue (r b)).
   Close Scope long_path_scope.
 Qed.
 
@@ -219,10 +219,10 @@ Section CoeqRec2.
   Context `{Funext}
           {B A : Type} {f g : B -> A} {B' A' : Type} {f' g' : B' -> A'}
           (P : Type) (coeq' : A -> A' -> P)
-          (cpl : forall b a', coeq' (f b) a' = coeq' (g b) a')
-          (cpr : forall a b', coeq' a (f' b') = coeq' a (g' b'))
-          (cplr : forall b b', cpl b (f' b') @ cpr (g b) b'
-                               = cpr (f b) b' @ cpl b (g' b')).
+          (cgluel : forall b a', coeq' (f b) a' = coeq' (g b) a')
+          (cgluer : forall a b', coeq' a (f' b') = coeq' a (g' b'))
+          (cgluelr : forall b b', cgluel b (f' b') @ cgluer (g b) b'
+                               = cgluer (f b) b' @ cgluel b (g' b')).
 
   Definition Coeq_rec2
   : Coeq f g -> Coeq f' g' -> P.
@@ -233,45 +233,45 @@ Section CoeqRec2.
       + intros a'.
         exact (coeq' a a').
       + intros b'; cbn.
-        apply cpr.
+        apply cgluer.
     - intros b.
       apply path_arrow; intros a.
       revert a; simple refine (Coeq_ind _ _ _).
       + intros a'. cbn.
-        apply cpl.
+        apply cgluel.
       + intros b'; cbn.
-        refine (transport_paths_FlFr (cp b') (cpl b (f' b')) @ _).
+        refine (transport_paths_FlFr (cglue b') (cgluel b (f' b')) @ _).
         refine (concat_pp_p _ _ _ @ _).
         apply moveR_Vp.
-        refine (_ @ cplr b b' @ _).
+        refine (_ @ cgluelr b b' @ _).
         * apply whiskerL.
-          apply Coeq_rec_beta_cp.
+          apply Coeq_rec_beta_cglue.
         * apply whiskerR.
-          symmetry; apply Coeq_rec_beta_cp.
+          symmetry; apply Coeq_rec_beta_cglue.
   Defined.
 
   Definition Coeq_rec2_beta (a : A) (a' : A')
   : Coeq_rec2 (coeq a) (coeq a') = coeq' a a'
     := 1.
 
-  Definition Coeq_rec2_beta_cpl (a : A) (b' : B')
-  : ap (Coeq_rec2 (coeq a)) (cp b') = cpr a b'.
+  Definition Coeq_rec2_beta_cgluel (a : A) (b' : B')
+  : ap (Coeq_rec2 (coeq a)) (cglue b') = cgluer a b'.
   Proof.
-    apply Coeq_rec_beta_cp.
+    apply Coeq_rec_beta_cglue.
   Defined.
 
-  Definition Coeq_rec2_beta_cpr (b : B) (a' : A')
-  : ap (fun x => Coeq_rec2 x (coeq a')) (cp b) = cpl b a'.
+  Definition Coeq_rec2_beta_cgluer (b : B) (a' : A')
+  : ap (fun x => Coeq_rec2 x (coeq a')) (cglue b) = cgluel b a'.
   Proof.
-    transitivity (ap10 (ap Coeq_rec2 (cp b)) (coeq a')).
+    transitivity (ap10 (ap Coeq_rec2 (cglue b)) (coeq a')).
     - refine (ap_compose Coeq_rec2 (fun h => h (coeq a')) _ @ _).
       apply ap_apply_l.
-    - unfold Coeq_rec2; rewrite Coeq_rec_beta_cp.
+    - unfold Coeq_rec2; rewrite Coeq_rec_beta_cglue.
       rewrite ap10_path_arrow.
       reflexivity.
   Defined.
 
-  (** TODO: [Coeq_rec2_beta_cplr] *)
+  (** TODO: [Coeq_rec2_beta_cgluelr] *)
 
 End CoeqRec2.
 
@@ -282,20 +282,20 @@ Section CoeqInd2.
           {B A : Type} {f g : B -> A} {B' A' : Type} {f' g' : B' -> A'}
           (P : Coeq f g -> Coeq f' g' -> Type)
           (coeq' : forall a a', P (coeq a) (coeq a'))
-          (cpl : forall b a',
-                   transport (fun x => P x (coeq a')) (cp b)
+          (cgluel : forall b a',
+                   transport (fun x => P x (coeq a')) (cglue b)
                              (coeq' (f b) a') = coeq' (g b) a')
-          (cpr : forall a b',
-                   transport (fun y => P (coeq a) y) (cp b')
+          (cgluer : forall a b',
+                   transport (fun y => P (coeq a) y) (cglue b')
                              (coeq' a (f' b')) = coeq' a (g' b'))
           (** Perhaps this should really be written using [concatD]. *)
-          (cplr : forall b b',
-                  ap (transport (P (coeq (g b))) (cp b')) (cpl b (f' b'))
-                  @ cpr (g b) b'
-                  = transport_transport P (cp b) (cp b') (coeq' (f b) (f' b'))
-                  @ ap (transport (fun x => P x (coeq (g' b'))) (cp b))
-                       (cpr (f b) b')
-                  @ cpl b (g' b')).
+          (cgluelr : forall b b',
+                  ap (transport (P (coeq (g b))) (cglue b')) (cgluel b (f' b'))
+                  @ cgluer (g b) b'
+                  = transport_transport P (cglue b) (cglue b') (coeq' (f b) (f' b'))
+                  @ ap (transport (fun x => P x (coeq (g' b'))) (cglue b))
+                       (cgluer (f b) b')
+                  @ cgluel b (g' b')).
 
   Definition Coeq_ind2
   : forall x y, P x y.
@@ -306,16 +306,16 @@ Section CoeqInd2.
       + intros a'.
         exact (coeq' a a').
       + intros b'; cbn.
-        apply cpr.
+        apply cgluer.
     - intros b.
       apply path_forall; intros a.
       revert a; simple refine (Coeq_ind _ _ _).
       + intros a'. cbn.
         refine (transport_forall_constant _ _ _ @ _).
-        apply cpl.
+        apply cgluel.
       + intros b'; cbn.
-        refine (transport_paths_FlFr_D (cp b') _ @ _).
-        rewrite Coeq_ind_beta_cp.
+        refine (transport_paths_FlFr_D (cglue b') _ @ _).
+        rewrite Coeq_ind_beta_cglue.
         (** Now begins the long haul. *)
         Open Scope long_path_scope.
         rewrite ap_pp.
@@ -323,19 +323,19 @@ Section CoeqInd2.
         (** Our first order of business is to get rid of the [Coeq_ind]s, which only occur in the following incarnation. *)
         set (G := (Coeq_ind (P (coeq (f b)))
                             (fun a' : A' => coeq' (f b) a')
-                            (fun b'0 : B' => cpr (f b) b'0))).
+                            (fun b'0 : B' => cgluer (f b) b'0))).
         (** Let's reduce the [apD (loop # G)] first. *)
-        rewrite (apD_transport_forall_constant P (cp b) G (cp b')); simpl.
+        rewrite (apD_transport_forall_constant P (cglue b) G (cglue b')); simpl.
         rewrite !inv_pp, !inv_V.
         (** Now we can cancel a [transport_forall_constant]. *)
         rewrite !concat_pp_p; apply whiskerL.
         (** And a path-inverse pair.  This removes all the [transport_forall_constant]s. *)
         rewrite !concat_p_pp, concat_pV_p.
         (** Now we can beta-reduce the last remaining [G]. *)
-        subst G; rewrite Coeq_ind_beta_cp; simpl.
+        subst G; rewrite Coeq_ind_beta_cglue; simpl.
         (** Now we just have to rearrange it a bit. *)
         rewrite !concat_pp_p; do 2 apply moveR_Vp; rewrite !concat_p_pp.
-        apply cplr.
+        apply cgluelr.
         Close Scope long_path_scope.
   Qed.
 
@@ -344,14 +344,14 @@ End CoeqInd2.
 (** ** Symmetry *)
 
 Definition Coeq_sym_map {B A} (f g : B -> A) : Coeq f g -> Coeq g f :=
-  Coeq_rec (Coeq g f) coeq (fun b : B => (cp b)^).
+  Coeq_rec (Coeq g f) coeq (fun b : B => (cglue b)^).
 
 Lemma sect_Coeq_sym_map {B A} {f g : B -> A} : Sect (Coeq_sym_map g f) (Coeq_sym_map f g).
 Proof.
   unfold Sect. srapply @Coeq_ind.
   - reflexivity.
   - intro b.
-    abstract (rewrite transport_paths_FFlr, Coeq_rec_beta_cp, ap_V, Coeq_rec_beta_cp; hott_simpl).
+    abstract (rewrite transport_paths_FFlr, Coeq_rec_beta_cglue, ap_V, Coeq_rec_beta_cglue; hott_simpl).
 Defined.
 
 Lemma Coeq_sym {B A} {f g : B -> A} : @Coeq B A f g <~> Coeq g f.
