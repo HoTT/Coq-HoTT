@@ -51,7 +51,7 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
       (isconnected_cogap :
          forall (x1 x3 : X) (y2 y4 : Y)
                 (q12 : Q x1 y2) (q32 : Q x3 y2) (q34 : Q x3 y4),
-           IsConnected O (join ((x1;q12) = (x3;q32) :> {x:X & Q x y2})
+           IsConnected O (Join ((x1;q12) = (x3;q32) :> {x:X & Q x y2})
                                ((y2;q32) = (y4;q34) :> {y:Y & Q x3 y}))).
 
     Let P := SPushout Q.
@@ -151,7 +151,7 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
 
         Definition codeleft2plus :=
           {yqqu : codeleft2 &
-                  join ((x0; yqqu.2.1) = (x1; yqqu.2.2.1)
+                  Join ((x0; yqqu.2.1) = (x1; yqqu.2.2.1)
                                            :> {x:X & Q x yqqu.1})
                        ((yqqu.1; yqqu.2.2.1) = (y1; q11)
                                            :> {y:Y & Q x1 y})}.
@@ -294,7 +294,7 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
         Proof.
           refine ((equiv_O_functor O (equiv_sigma_contr
                   (fun yqqu : codeleft2 =>
-                     O (join ((x0; yqqu.2.1) = (x1; yqqu.2.2.1))
+                     O (Join ((x0; yqqu.2.1) = (x1; yqqu.2.2.1))
                              ((yqqu.1 ; yqqu.2.2.1) = (y1; q11)))))) oE _).
           refine ((equiv_O_sigma_O O _)^-1 oE _).
           apply equiv_O_functor.

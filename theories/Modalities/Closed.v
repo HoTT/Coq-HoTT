@@ -16,7 +16,7 @@ Section ClosedModalTypes.
   Context (U : hProp).
 
   Definition equiv_inO_closed (A : Type)
-  : (U -> Contr A) <-> IsEquiv (fun a:A => push (inr a) : join U A).
+  : (U -> Contr A) <-> IsEquiv (fun a:A => push (inr a) : Join U A).
   Proof.
     split.
     - intros uac.
@@ -36,7 +36,7 @@ Section ClosedModalTypes.
           apply path_contr.
       * intros a. reflexivity.
     - intros ? u.
-      refine (contr_equiv (join U A) (fun a:A => push (inr a))^-1).
+      refine (contr_equiv (Join U A) (fun a:A => push (inr a))^-1).
       pose (contr_inhabited_hprop U u).
       exact _.
   Defined.
@@ -51,7 +51,7 @@ Module ClosedModalities <: Modalities.
   Definition Modality : Type@{u} := Closed_Modality@{a}.
 
   Definition O_reflector : Modality@{u a} -> Type@{i} -> Type@{i}
-    := fun O X => join@{a i i} (unCl O) X.
+    := fun O X => Join@{a i i} (unCl O) X.
 
   Definition In : Modality@{u a} -> Type@{i} -> Type@{i}
     := fun O X => unCl O -> Contr X.
