@@ -186,7 +186,6 @@ theories/Tests.v
 
 contrib/HoTTBook.v
 contrib/HoTTBookExercises.v
-contrib/Freudenthal.v
 
 #
 #   Homotopy
