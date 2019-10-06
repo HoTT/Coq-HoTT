@@ -14,7 +14,7 @@ Section Join.
   Definition join (A : Type@{i}) (B : Type@{j})
     := pushout@{k i j k k} (@fst A B) (@snd A B).
 
-  Definition joinpp {A B} a b := @pglue (A*B) A B fst snd (a,b).
+  Definition jglue {A B} a b := @pglue (A*B) A B fst snd (a,b).
 
   (** Joining with a contractible type produces a contractible type *)
   Global Instance contr_join A B `{Contr A} : Contr (join A B).
@@ -24,7 +24,7 @@ Section Join.
     - intros a; apply ap, contr.
     - intros b; exact (pglue (center A , b)).
     - intros [a b]; cbn.
-      refine ( _ @ apD (fun a' => joinpp a' b) (contr a)^).
+      refine ( _ @ apD (fun a' => jglue a' b) (contr a)^).
       rewrite transport_paths_r, transport_paths_FlFr; cbn.
       rewrite ap_V, inv_V, concat_pp_p.
       rewrite ap_const, concat_p1.
@@ -73,7 +73,7 @@ Section Join.
     transparent assert (f : (A -> {s : Unit -> C &
                                    forall x, s tt = k (pushr x)})).
     { intros a; exists (fun _ => k (pushl a)); intros b.
-      exact (ap k (joinpp a b)). }
+      exact (ap k (jglue a b)). }
     assert (h := isconnected_elim
                    m {s : Unit -> C & forall x : B, s tt = k (pushr x)} f).
     unfold NullHomotopy in *; destruct h as [[c g] h].
