@@ -1,7 +1,12 @@
-Require Import HoTT.Basics HoTT.Types.
-Require Import HoTT.Colimits.Pushout HoTT.HIT.SpanPushout HoTT.HIT.Join.
-Require Import HoTT.HIT.Truncations HoTT.HIT.Connectedness HIT.Suspension.
-Require Import BlakersMassey.
+Require Import Basics.
+Require Import Types.
+Require Import Colimits.Pushout.
+Require Import HIT.SpanPushout.
+Require Import HIT.Join.
+Require Import HIT.Truncations.
+Require Import HIT.Connectedness.
+Require Import Homotopy.Suspension.
+Require Import Homotopy.BlakersMassey.
 
 Import TrM.
 

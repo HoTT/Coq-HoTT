@@ -5,7 +5,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Sigma Types.Forall Types.Paths Types.Bool.
 Require Import HProp NullHomotopy.
-Require Import HIT.Suspension HIT.Circle HIT.TwoSphere.
+Require Import Homotopy.Suspension HIT.Circle HIT.TwoSphere.
 Require Import Pointed.pSusp Pointed.Core.
 
 Local Open Scope pointed_scope.

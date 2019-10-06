@@ -99,7 +99,6 @@ theories/Comodalities/CoreflectiveSubuniverse.v
 #   HIT
 #
 
-theories/HIT/Suspension.v
 theories/HIT/Circle.v
 theories/HIT/Truncations.v
 theories/HIT/TruncImpliesFunext.v
@@ -195,6 +194,7 @@ contrib/Freudenthal.v
 
 theories/Homotopy/HomotopyGroup.v
 theories/Homotopy/Pi1S1.v
+theories/Homotopy/Suspension.v
 theories/Homotopy/Smash.v
 theories/Homotopy/Wedge.v
 theories/Homotopy/BlakersMassey.v

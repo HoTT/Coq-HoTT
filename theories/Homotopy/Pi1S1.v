@@ -1,17 +1,14 @@
-Require Import
-  HoTT.Basics
-  HoTT.Pointed
-  HoTT.Spaces.Int
-  HoTT.Homotopy.HomotopyGroup
-  HoTT.HIT.Circle
-  HoTT.HIT.Truncations
-  HoTT.HIT.Spheres
-  HoTT.HIT.Suspension
-  HoTT.UnivalenceAxiom.
+Require Import HoTT.Basics.
+Require Import HoTT.Pointed.
+Require Import HoTT.Spaces.Int.
+Require Import HoTT.Homotopy.HomotopyGroup.
+Require Import HoTT.Homotopy.Suspension.
+Require Import HoTT.HIT.Circle.
+Require Import HoTT.HIT.Truncations.
+Require Import HoTT.HIT.Spheres.
+Require Import HoTT.UnivalenceAxiom.
 
-(*
-  Calculation of Pi 1 S1
-*)
+(* Calculation of Pi 1 S1 *)
 
 Section Pi1S1.
   Local Notation "( A , a )" := (Build_pType A a).

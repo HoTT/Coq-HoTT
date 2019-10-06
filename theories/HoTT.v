@@ -37,7 +37,6 @@ Require Export PropResizing.PropResizing.
 
 Require Export Homotopy.HomotopyGroup.
 
-Require Export HIT.Suspension.
 Require Export HIT.Interval.
 Require Export HIT.Truncations.
 Require Export HIT.Connectedness.
@@ -99,6 +98,7 @@ Require Export Homotopy.HomotopyGroup.
 Require Export Homotopy.Pi1S1.
 Require Export Homotopy.BlakersMassey.
 Require Export Homotopy.Freudenthal.
+Require Export Homotopy.Suspension.
 Require Export Homotopy.Smash.
 Require Export Homotopy.Wedge.
 

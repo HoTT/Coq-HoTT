@@ -4,7 +4,7 @@ Require Import Pointed.Core.
 Require Import Pointed.Loops.
 Require Import Pointed.pMap.
 Require Import Pointed.pHomotopy.
-Require Import HIT.Suspension.
+Require Import Homotopy.Suspension.
 
 Generalizable Variables X A B f g n.
 
