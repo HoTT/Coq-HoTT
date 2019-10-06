@@ -8,14 +8,14 @@ Local Open Scope pointed_scope.
 
 Definition Wedge (X Y : pType) : pType
   := Build_pType
-    (pushout (fun _ : Unit => point X) (fun _ => point Y))
+    (Pushout (fun _ : Unit => point X) (fun _ => point Y))
     (pushl (point X)).
 
 Notation "X \/ Y" := (Wedge X Y) : pointed_scope.
 
-Definition wedge_path {X Y : pType}
+Definition wglue {X Y : pType}
   : pushl (point X) = (pushr (point Y) : X \/ Y) := pglue tt.
 
 Definition wedge_incl {X Y : pType} : X \/ Y -> X * Y :=
-  pushout_rec _ (fun x => (x, point Y)) (fun y => (point X, y)) 
+ Pushout_rec _ (fun x => (x, point Y)) (fun y => (point X, y)) 
   (fun _ : Unit => idpath).

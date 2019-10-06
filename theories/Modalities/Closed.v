@@ -21,13 +21,13 @@ Section ClosedModalTypes.
     split.
     - intros uac.
       simple refine (isequiv_adjointify _ _ _ _).
-      * simple refine (pushout_rec A _ _ _).
+      * simple refine (Pushout_rec A _ _ _).
         + intros u; pose (uac u); exact (center A).
         + intros a; assumption.
         + intros [u a]. simpl.
           pose (uac u). apply contr.
       * intros z. pattern z.
-        simple refine (pushout_ind _ _ _ _ z).
+        simple refine (Pushout_ind _ _ _ _ z).
         + intros u.
           pose (contr_inhabited_hprop U u).
           apply path_contr.
@@ -93,7 +93,7 @@ Module ClosedModalities <: Modalities.
     (forall a, B (to@{u a i} O A a)) -> forall a, B a.
   Proof.
     simpl; intros f z.
-    simple refine (pushout_ind@{i a i j i} B _ _ _ z).
+    simple refine (Pushout_ind@{i a i j i} B _ _ _ z).
     - intros u; apply center, B_inO, u.
     - intros a; apply f.
     - intros [u a].

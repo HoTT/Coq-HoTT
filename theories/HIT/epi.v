@@ -59,7 +59,7 @@ Section cones.
                                  | inl a' => (I0 a')^
                                  | inr tt => idpath
                                end)) as I0f.
-    refine (pushout_ind _ (fun a' => I0f (inl a')) (fun u => (I0f (inr u))) _).
+    refine (Pushout_ind _ (fun a' => I0f (inl a')) (fun u => (I0f (inr u))) _).
 
     simpl. subst alpha1. intros.
     unfold setcone_point.
@@ -120,7 +120,7 @@ Section isepi_issurj.
   Proof.
     pose (fib y := hexists (fun x : X => f x = y)).
     apply (fun f => @Trunc_rec _ _ hProp _ f c).
-    refine (pushout_rec hProp fib (fun _ => Unit_hp) (fun x => _)).
+    refine (Pushout_rec hProp fib (fun _ => Unit_hp) (fun x => _)).
     (** Prove that the truncated sigma is equivalent to Unit *)
     pose (contr_inhabited_hprop (fib (f x)) (tr (x; idpath))) as i.
     apply path_hprop. simpl. simpl in i.

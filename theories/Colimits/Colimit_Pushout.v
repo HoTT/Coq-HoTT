@@ -162,7 +162,7 @@ Section is_PO_pushout.
 
   Context `{Funext} {A B C : Type} {f : A -> B} {g : A -> C}.
 
-  Definition is_PO_pushout : is_PO f g (pushout f g).
+  Definition is_PO_pushout : is_PO f g (Pushout f g).
   Proof.
     serapply Build_IsColimit.
     - serapply Build_span_cocone.
@@ -172,7 +172,7 @@ Section is_PO_pushout.
     - serapply Build_UniversalCocone.
       intro Y; serapply isequiv_adjointify.
       + intro Co.
-        serapply pushout_rec.
+        serapply Pushout_rec.
         * exact (pol' Co).
         * exact (por' Co).
         * exact (popp' Co).
@@ -184,21 +184,21 @@ Section is_PO_pushout.
         * intros [[]|[]] [[]|[]] [] x; simpl.
           2: reflexivity.
           refine (_ @ (concat_1p _)^).
-          rewrite pushout_rec_beta_pglue.
+          rewrite Pushout_rec_beta_pglue.
           hott_simpl.
       + intro h.
         apply path_forall.
-        serapply pushout_ind; cbn.
+        serapply Pushout_ind; cbn.
         1,2: reflexivity.
         intro a; cbn.
         rewrite transport_paths_FlFr, concat_p1.
-        rewrite pushout_rec_beta_pglue.
+        rewrite Pushout_rec_beta_pglue.
         eapply moveR_Vp.
         unfold popp'.
         by rewrite 2 concat_p1.
   Defined.
 
-  Definition equiv_pushout_PO : pushout f g <~> PO f g.
+  Definition equiv_pushout_PO : Pushout f g <~> PO f g.
   Proof.
     serapply colimit_unicity.
     3: eapply is_PO_pushout.

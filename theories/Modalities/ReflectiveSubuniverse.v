@@ -1042,9 +1042,9 @@ Section Reflective_Subuniverse.
       Context {A B C : Type} (f : A -> B) (g : A -> C).
 
       Definition equiv_O_pushout
-        : O (pushout f g) <~> O (pushout (O_functor f) (O_functor g)).
+        : O (Pushout f g) <~> O (Pushout (O_functor f) (O_functor g)).
       Proof.
-        unfold pushout.
+        unfold Pushout.
         refine (_ oE equiv_O_coeq (inl o f) (inr o g)).
         refine ((equiv_O_coeq _ _)^-1 oE _).
         apply equiv_O_functor.
@@ -1061,11 +1061,11 @@ Section Reflective_Subuniverse.
       Defined.
 
       Definition equiv_O_pushout_to_O_pushl (b : B)
-        : equiv_O_pushout (to O (pushout f g) (pushl b))
-          = to O (pushout (O_functor f) (O_functor g)) (pushl (to O B b)).
+        : equiv_O_pushout (to O (Pushout f g) (pushl b))
+          = to O (Pushout (O_functor f) (O_functor g)) (pushl (to O B b)).
       Proof.
         cbn.
-        unfold O_coeq_cmp, O_coeq_cmp_inverse, pushout, pushl, push.
+        unfold O_coeq_cmp, O_coeq_cmp_inverse, Pushout, pushl, push.
         rewrite to_O_natural.
         rewrite to_O_natural.
         rewrite O_rec_beta.
@@ -1076,11 +1076,11 @@ Section Reflective_Subuniverse.
       Qed.
 
       Definition equiv_O_pushout_to_O_pushr (c : C)
-        : equiv_O_pushout (to O (pushout f g) (pushr c))
-          = to O (pushout (O_functor f) (O_functor g)) (pushr (to O C c)).
+        : equiv_O_pushout (to O (Pushout f g) (pushr c))
+          = to O (Pushout (O_functor f) (O_functor g)) (pushr (to O C c)).
       Proof.
         cbn.
-        unfold O_coeq_cmp, O_coeq_cmp_inverse, pushout, pushr, push.
+        unfold O_coeq_cmp, O_coeq_cmp_inverse, Pushout, pushr, push.
         rewrite to_O_natural.
         rewrite to_O_natural.
         rewrite O_rec_beta.
@@ -1091,15 +1091,15 @@ Section Reflective_Subuniverse.
       Qed.
 
       Definition inverse_equiv_O_pushout_to_O_pushl (b : B)
-        : equiv_O_pushout^-1 (to O (pushout (O_functor f) (O_functor g)) (pushl (to O B b)))
-          = to O (pushout f g) (pushl b).
+        : equiv_O_pushout^-1 (to O (Pushout (O_functor f) (O_functor g)) (pushl (to O B b)))
+          = to O (Pushout f g) (pushl b).
       Proof.
         apply moveR_equiv_V; symmetry; apply equiv_O_pushout_to_O_pushl.
       Qed.
 
       Definition inverse_equiv_O_pushout_to_O_pushr (c : C)
-        : equiv_O_pushout^-1 (to O (pushout (O_functor f) (O_functor g)) (pushr (to O C c)))
-          = to O (pushout f g) (pushr c).
+        : equiv_O_pushout^-1 (to O (Pushout (O_functor f) (O_functor g)) (pushr (to O C c)))
+          = to O (Pushout f g) (pushr c).
       Proof.
         apply moveR_equiv_V; symmetry; apply equiv_O_pushout_to_O_pushr.
       Qed.

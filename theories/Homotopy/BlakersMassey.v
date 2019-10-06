@@ -54,10 +54,10 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
            IsConnected O (join ((x1;q12) = (x3;q32) :> {x:X & Q x y2})
                                ((y2;q32) = (y4;q34) :> {y:Y & Q x3 y}))).
 
-    Let P := spushout Q.
+    Let P := SPushout Q.
     Local Notation left := (spushl Q).
     Local Notation right := (spushr Q).
-    Local Notation glue := (sglue Q).
+    Local Notation glue := (spglue Q).
 
     (** Here's a lemma that's a sort of "singleton contractibility" equivalence, but expressed in a particularly strange way.  As we'll see, this form of the lemma comes up naturally *twice* in the proof, and proving it once here to use in both places is crucial so that the two uses can be identified later on. *)
 
@@ -140,7 +140,7 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
       Defined.
 
       Definition codeleft : Type
-        := O (pushout codeleft01 codeleft02).
+        := O (Pushout codeleft01 codeleft02).
 
       (** *** Codes for glue *)
 
@@ -192,7 +192,7 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
 
         (** This proof is long, but most of it is just rearranging Sigma-types and paths in Sigma-types. *)
         Definition equiv_Ocodeleft2plus
-          : pushout Ocodeleft2ab Ocodeleft2ac <~> codeleft2plus.
+          : Pushout Ocodeleft2ab Ocodeleft2ac <~> codeleft2plus.
         Proof.
           refine ((equiv_sigma_pushout _ _ _ _ _)^-1 oE _).
           srefine (equiv_pushout _ _ _ _ _).
@@ -290,7 +290,7 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
 
         (** Now we combine this equivalence with the insertion of our connected type. *)
         Definition equiv_Ocodeleft2
-          : O (pushout Ocodeleft2ab Ocodeleft2ac) <~> O codeleft2.
+          : O (Pushout Ocodeleft2ab Ocodeleft2ac) <~> O codeleft2.
         Proof.
           refine ((equiv_O_functor O (equiv_sigma_contr
                   (fun yqqu : codeleft2 =>
@@ -319,7 +319,7 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
         Defined.
 
         Definition Ocodeleft02 (c : codeleft0)
-          : pushout Ocodeleft2ab Ocodeleft2ac
+          : Pushout Ocodeleft2ab Ocodeleft2ac
           := pushl' Ocodeleft2ab Ocodeleft2ac (Ocodeleft02b c).
 
         Definition Ocodeleft02plus_02b (c : codeleft0)
@@ -372,7 +372,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
         (** Now we're finally ready to prove the glue equivalence.  Since later on we'll have to compute its action on inputs from [codeleft1], we decompose it into seven steps, each of which with a corresponding computation lemma.  (These lemmas seem to be much easier to prove step-by-step than all at once if we proved the whole equivalence in a big shebang.) *)
 
         Definition codeglue1
-          : codeleft <~> O (pushout (O_functor O codeleft01)
+          : codeleft <~> O (Pushout (O_functor O codeleft01)
                                     (O_functor O codeleft02))
         := equiv_O_pushout O _ _.
 
@@ -382,8 +382,8 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
           := equiv_O_pushout_to_O_pushl _ _ _ _.
 
         Definition codeglue2
-          : O (pushout (O_functor O codeleft01) (O_functor O codeleft02))
-        <~> O (pushout (O_functor O codeleft01) (O_functor O Ocodeleft02)).
+          : O (Pushout (O_functor O codeleft01) (O_functor O codeleft02))
+        <~> O (Pushout (O_functor O codeleft01) (O_functor O Ocodeleft02)).
         Proof.
           srefine (equiv_O_functor O
                     (equiv_inverse
@@ -401,8 +401,8 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
           := to_O_equiv_natural _ _ _.
 
         Definition codeglue3
-          : O (pushout (O_functor O codeleft01) (O_functor O Ocodeleft02))
-              <~> O (pushout codeleft01 Ocodeleft02)
+          : O (Pushout (O_functor O codeleft01) (O_functor O Ocodeleft02))
+              <~> O (Pushout codeleft01 Ocodeleft02)
           := equiv_inverse (equiv_O_pushout O _ _).
 
         Definition codeglue3_pushl (s : x0 = x1) (v : ap left s = r)
@@ -411,8 +411,8 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
           := inverse_equiv_O_pushout_to_O_pushl _ _ _ _.
 
         Definition codeglue4
-          : O (pushout codeleft01 Ocodeleft02)
-            <~> O (pushout
+          : O (Pushout codeleft01 Ocodeleft02)
+            <~> O (Pushout
                      (fun x : Ocodeleft2a =>
                         pushr' codeleft01 Ocodeleft02b (Ocodeleft2ab x))
                      Ocodeleft2ac)
@@ -424,11 +424,11 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
           := to_O_equiv_natural _ _ _.
 
         Definition codeglue5
-          : O (pushout
+          : O (Pushout
                  (fun x : Ocodeleft2a =>
                     pushr' codeleft01 Ocodeleft02b (Ocodeleft2ab x))
                  Ocodeleft2ac)
-        <~> O (pushout Ocodeleft2a1 Ocodeleft2ac).
+        <~> O (Pushout Ocodeleft2a1 Ocodeleft2ac).
         Proof.
           srefine (equiv_O_functor O
                      (equiv_inverse
@@ -448,7 +448,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
         := to_O_equiv_natural _ _ _.
 
         Definition codeglue6
-          : O (pushout Ocodeleft2a1 Ocodeleft2ac) <~> O Ocodeleft2c
+          : O (Pushout Ocodeleft2a1 Ocodeleft2ac) <~> O Ocodeleft2c
           := equiv_O_functor
                O (equiv_inverse
                     (BuildEquiv _ _ (pushr' Ocodeleft2a1 Ocodeleft2ac) _)).
@@ -496,7 +496,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
     (** The equivalence [codeglue] requires a bit of massaging to put it into the form needed by the actual definition of [code] from pushout-induction and univalence. *)
 
     Definition ap_code_glue (x1 : X) (y1 : Y) (q11 : Q x1 y1)
-      : transport (fun p : spushout Q => left x0 = p -> Type)
+      : transport (fun p : SPushout Q => left x0 = p -> Type)
                   (glue q11) codeleft
         = coderight.
     Proof.
@@ -512,7 +512,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
     (** Here's the final definition of [code]. *)
 
     Definition code (p : P) (r : left x0 = p) : Type
-        := spushout_ind Q (fun p => left x0 = p -> Type)
+        := SPushout_ind Q (fun p => left x0 = p -> Type)
                         (@codeleft x0) (@coderight x0)
                         ap_code_glue p r.
 
@@ -526,7 +526,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
                             (concat_pV_p r (glue q11))
             oE (codeglue (r @ (glue q11)^) q11)
             oE equiv_transport codeleft
-                 (transport (fun y : spushout Q => left x0 = y) (glue q11)^ r)
+                 (transport (fun y : SPushout Q => left x0 = y) (glue q11)^ r)
                  (r @ (glue q11)^) (transport_paths_r (glue q11)^ r)).
     Proof.
       refine (ap (fun h => ap10 h r)
@@ -626,7 +626,7 @@ Global Instance blakers_massey `{Univalence} (m n : trunc_index)
            `{forall y, IsConnected m.+1 { x : X & Q x y } }
            `{forall x, IsConnected n.+1 { y : Y & Q x y } }
            (x : X) (y : Y)
-  : IsConnMap (m +2+ n) (@sglue X Y Q x y).
+  : IsConnMap (m +2+ n) (@spglue X Y Q x y).
 Proof.
   intros r.
   srefine (contr_code_inhab Q (m +2+ n) _ x

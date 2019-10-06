@@ -10,7 +10,7 @@ Require Import HIT.Truncations.
 Section SetCone.
   Context {A B : hSet} (f : A -> B).
 
-  Definition setcone := Trunc 0 (pushout f (const tt)).
+  Definition setcone := Trunc 0 (Pushout f (const tt)).
 
   Global Instance istrunc_setcone : IsHSet setcone := _.
 

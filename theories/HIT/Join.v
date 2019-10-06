@@ -12,7 +12,7 @@ Import TrM.
 Section Join.
 
   Definition join (A : Type@{i}) (B : Type@{j})
-    := pushout@{k i j k k} (@fst A B) (@snd A B).
+    := Pushout@{k i j k k} (@fst A B) (@snd A B).
 
   Definition jglue {A B} a b := @pglue (A*B) A B fst snd (a,b).
 
@@ -20,7 +20,7 @@ Section Join.
   Global Instance contr_join A B `{Contr A} : Contr (join A B).
   Proof.
     exists (pushl (center A)).
-    intros y; simple refine (pushout_ind _ _ _ _ y).
+    intros y; simple refine (Pushout_ind _ _ _ _ y).
     - intros a; apply ap, contr.
     - intros b; exact (pglue (center A , b)).
     - intros [a b]; cbn.
@@ -44,7 +44,7 @@ Section Join.
   Proof.
     apply hprop_inhabited_contr.
     unfold join.
-    refine (pushout_rec _ _ _ (fun _ => path_ishprop _ _)).
+    refine (Pushout_rec _ _ _ (fun _ => path_ishprop _ _)).
     - intros a; apply contr_join.  
       exact (contr_inhabited_hprop A a).
     - intros b; refine (trunc_equiv (join B A) (join_sym B A)).
@@ -57,7 +57,7 @@ Section Join.
     : join A B <~> hor A B.
   Proof.
     apply equiv_iff_hprop.
-    - refine (pushout_rec _ (fun a => tr (inl a)) (fun b => tr (inr b)) (fun _ => path_ishprop _ _)).
+    - refine (Pushout_rec _ (fun a => tr (inl a)) (fun b => tr (inr b)) (fun _ => path_ishprop _ _)).
     - apply Trunc_rec, push.
   Defined.
 
@@ -78,7 +78,7 @@ Section Join.
                    m {s : Unit -> C & forall x : B, s tt = k (pushr x)} f).
     unfold NullHomotopy in *; destruct h as [[c g] h].
     exists (c tt).
-    srefine (pushout_ind _ _ _ _).
+    srefine (Pushout_ind _ _ _ _).
     - intros a; cbn. exact (ap10 (h a)..1 tt).
     - intros b; cbn. exact ((g b)^).
     - intros [a b].

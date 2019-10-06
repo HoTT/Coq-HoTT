@@ -17,7 +17,7 @@ Proof.
   pose (f := equiv_pushout (equiv_contr_sigma (fun _ : Unit * Unit => X))^-1
                            (equiv_idmap Unit) (equiv_idmap Unit)
                            (fun x : X => idpath) (fun x : X => idpath)
-        : Susp X <~> spushout (fun (u v:Unit) => X)).
+        : Susp X <~> SPushout (fun (u v:Unit) => X)).
   srefine (@cancelR_equiv_conn_map (n +2+ n) _ _ _ _
              (equiv_ap' f North South)
              (@conn_map_homotopic _ _ _ _ _ _
