@@ -437,7 +437,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
           - exact (BuildEquiv _ _ (pushl' codeleft01 Ocodeleft02b) _).
           - intros x.
             refine (ap _ (Ocodeleft2a1_through_2b0 x) @ _).
-            refine (pp' codeleft01 Ocodeleft02b _ @ _).
+            refine (pglue' codeleft01 Ocodeleft02b _ @ _).
             apply ap, eisretr.
           - intros x; reflexivity.
         Defined.

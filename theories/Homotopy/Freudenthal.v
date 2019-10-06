@@ -23,7 +23,7 @@ Proof.
              (@conn_map_homotopic _ _ _ _ _ _
                (blakers_massey n n (fun (u v:Unit) => X) tt tt))).
   intros x.
-  refine (_ @ (equiv_pushout_pp
+  refine (_ @ (equiv_pushout_pglue
                  (equiv_contr_sigma (fun _ : Unit * Unit => X))^-1
                  (equiv_idmap Unit) (equiv_idmap Unit)
                  (fun x : X => idpath) (fun x : X => idpath) x)^).

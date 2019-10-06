@@ -168,7 +168,7 @@ Section is_PO_pushout.
     - serapply Build_span_cocone.
       + exact (push o inl).
       + exact (push o inr).
-      + exact pp.
+      + exact pglue.
     - serapply Build_UniversalCocone.
       intro Y; serapply isequiv_adjointify.
       + intro Co.
@@ -184,7 +184,7 @@ Section is_PO_pushout.
         * intros [[]|[]] [[]|[]] [] x; simpl.
           2: reflexivity.
           refine (_ @ (concat_1p _)^).
-          rewrite pushout_rec_beta_pp.
+          rewrite pushout_rec_beta_pglue.
           hott_simpl.
       + intro h.
         apply path_forall.
@@ -192,7 +192,7 @@ Section is_PO_pushout.
         1,2: reflexivity.
         intro a; cbn.
         rewrite transport_paths_FlFr, concat_p1.
-        rewrite pushout_rec_beta_pp.
+        rewrite pushout_rec_beta_pglue.
         eapply moveR_Vp.
         unfold popp'.
         by rewrite 2 concat_p1.

@@ -14,7 +14,7 @@ Section Join.
   Definition join (A : Type@{i}) (B : Type@{j})
     := pushout@{k i j k k} (@fst A B) (@snd A B).
 
-  Definition joinpp {A B} a b := @pp (A*B) A B fst snd (a,b).
+  Definition joinpp {A B} a b := @pglue (A*B) A B fst snd (a,b).
 
   (** Joining with a contractible type produces a contractible type *)
   Global Instance contr_join A B `{Contr A} : Contr (join A B).
@@ -22,7 +22,7 @@ Section Join.
     exists (pushl (center A)).
     intros y; simple refine (pushout_ind _ _ _ _ y).
     - intros a; apply ap, contr.
-    - intros b; exact (pp (center A , b)).
+    - intros b; exact (pglue (center A , b)).
     - intros [a b]; cbn.
       refine ( _ @ apD (fun a' => joinpp a' b) (contr a)^).
       rewrite transport_paths_r, transport_paths_FlFr; cbn.

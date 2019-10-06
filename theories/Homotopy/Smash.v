@@ -32,10 +32,10 @@ Section Smash.
   Notation pt := (point _).
 
   Definition gluel (x : X) : sm x pt = auxl
-    := pp (f:=sum_to_prod X Y) (g:=sum_to_bool X Y) (inl x).
+    := pglue (f:=sum_to_prod X Y) (g:=sum_to_bool X Y) (inl x).
 
   Definition gluer (y : Y) : sm pt y = auxr
-    := pp (f:=sum_to_prod X Y) (g:=sum_to_bool X Y) (inr y).
+    := pglue (f:=sum_to_prod X Y) (g:=sum_to_bool X Y) (inr y).
 
   Definition gluel' (x x' : X) : sm x pt = sm x' pt
     := gluel x @ (gluel x')^.
@@ -96,7 +96,7 @@ Section Smash.
     : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel a) = Pgl a.
   Proof.
     apply dp_apD_path_transport.
-    refine (pushout_ind_beta_pp P _ _ _ (inl a) @ _).
+    refine (pushout_ind_beta_pglue P _ _ _ (inl a) @ _).
     unfold sum_ind.
     by apply ap.
   Qed.
@@ -108,7 +108,7 @@ Section Smash.
     : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer b) = Pgr b.
   Proof.
     apply dp_apD_path_transport.
-    refine (pushout_ind_beta_pp P _ _ _ (inr b) @ _).
+    refine (pushout_ind_beta_pglue P _ _ _ (inr b) @ _).
     unfold sum_ind.
     by apply ap.
   Qed.

@@ -10,7 +10,7 @@ Section SpanPushout.
   Definition spushl : X -> spushout := pushl.
   Definition spushr : Y -> spushout := pushr.
   Definition sglue {x:X} {y:Y} : Q x y -> spushl x = spushr y
-    := fun q => pp ((x,y) ; q).
+    := fun q => pglue ((x,y) ; q).
 
   Definition spushout_rec (R : Type)
              (spushl' : X -> R) (spushr' : Y -> R)
@@ -43,6 +43,6 @@ Section SpanPushout.
                  transport R (sglue q) (spushl' x) = (spushr' y))
              (x:X) (y:Y) (q:Q x y)
     : apD (spushout_ind R spushl' spushr' sglue') (sglue q) = sglue'  x y q
-    := pushout_ind_beta_pp _ _ _ _ ((x,y);q).
+    := pushout_ind_beta_pglue _ _ _ _ ((x,y);q).
 
 End SpanPushout.

@@ -14,7 +14,7 @@ Definition Wedge (X Y : pType) : pType
 Notation "X \/ Y" := (Wedge X Y) : pointed_scope.
 
 Definition wedge_path {X Y : pType}
-  : pushl (point X) = (pushr (point Y) : X \/ Y) := pp tt.
+  : pushl (point X) = (pushr (point Y) : X \/ Y) := pglue tt.
 
 Definition wedge_incl {X Y : pType} : X \/ Y -> X * Y :=
   pushout_rec _ (fun x => (x, point Y)) (fun y => (point X, y)) 
