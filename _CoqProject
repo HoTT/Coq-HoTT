@@ -115,17 +115,15 @@ theories/HIT/unique_choice.v
 theories/HIT/surjective_factor.v
 theories/HIT/quotient.v
 theories/HIT/iso.v
-theories/HIT/SpanPushout.v
 theories/HIT/SetCone.v
-theories/HIT/Join.v
 theories/HIT/V.v
-
 
 #
 #   Colimits
 #
 
 theories/Colimits/Pushout.v
+theories/Colimits/SpanPushout.v
 
 theories/Colimits/Colimit.v
 theories/Colimits/Colimit_Sigma.v
@@ -193,9 +191,12 @@ contrib/HoTTBookExercises.v
 
 theories/Homotopy/HomotopyGroup.v
 theories/Homotopy/Pi1S1.v
+
 theories/Homotopy/Suspension.v
 theories/Homotopy/Smash.v
 theories/Homotopy/Wedge.v
+theories/Homotopy/Join.v
+
 theories/Homotopy/BlakersMassey.v
 theories/Homotopy/Freudenthal.v
 

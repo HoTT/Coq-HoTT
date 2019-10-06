@@ -1,7 +1,11 @@
-Require Import HoTT.Basics HoTT.Types.
-Require Import HoTT.Colimits.Pushout HoTT.HIT.SpanPushout HoTT.HIT.Join.
-Require Import HoTT.Modalities.ReflectiveSubuniverse.
-Require Import HoTT.HIT.Truncations HoTT.HIT.Connectedness.
+Require Import Basics.
+Require Import Types.
+Require Import Colimits.Pushout.
+Require Import Colimits.SpanPushout.
+Require Import Homotopy.Join.
+Require Import Modalities.ReflectiveSubuniverse.
+Require Import HIT.Truncations.
+Require Import HIT.Connectedness.
 Require Import NullHomotopy Extensions.
 
 (** * The Generalized Blakers-Massey Theorem *)

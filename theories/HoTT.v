@@ -45,16 +45,15 @@ Require Export HIT.Flattening.
 Require Export HIT.Circle.
 Require Export HIT.FreeIntQuotient.
 Require Export HIT.Spheres.
-Require Export HIT.SpanPushout.
 Require Export HIT.SetCone.
 Require Export HIT.epi.
 Require Export HIT.unique_choice.
 Require Export HIT.iso.
 Require Export HIT.quotient.
 Require Export HIT.V.
-Require Export HIT.Join.
 
 Require Export Colimits.Pushout.
+Require Export Colimits.SpanPushout.
 Require Export Colimits.Colimit.
 Require Export Colimits.Colimit_Pushout.
 Require Export Colimits.Colimit_Coequalizer.
@@ -101,6 +100,7 @@ Require Export Homotopy.Freudenthal.
 Require Export Homotopy.Suspension.
 Require Export Homotopy.Smash.
 Require Export Homotopy.Wedge.
+Require Export Homotopy.Join.
 
 Require Export Spectra.Spectrum.
 
