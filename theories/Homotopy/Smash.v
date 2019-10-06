@@ -1,7 +1,7 @@
 Require Import Basics.
 Require Import Pointed.Core.
 Require Import Types.
-Require Import HIT.Pushout.
+Require Import Colimits.Pushout.
 Require Import Cubical.
 
 Local Open Scope pointed_scope.

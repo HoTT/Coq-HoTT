@@ -3,7 +3,7 @@
 (** * The suspension of a type *)
 
 Require Import Basics Types.
-Require Import HIT.Pushout.
+Require Import Colimits.Pushout.
 Require Import NullHomotopy.
 Local Open Scope path_scope.
 

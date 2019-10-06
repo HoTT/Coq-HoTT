@@ -5,7 +5,7 @@ Require Import Diagrams.Cocone.
 Require Import Colimits.Colimit.
 
 (* We require this now, but will import later. *)
-Require HIT.Pushout.
+Require Colimits.Pushout.
 
 Local Open Scope path_scope.
 
@@ -158,7 +158,7 @@ End PO.
 
 Section is_PO_pushout.
 
-  Import HIT.Pushout.
+  Import Colimits.Pushout.
 
   Context `{Funext} {A B C : Type} {f : A -> B} {g : A -> C}.
 

@@ -2,7 +2,7 @@
 Require Import HoTT.Basics.
 Require Import HoTT.Types.
 Require Import HSet TruncType.
-Require Import HIT.Pushout.
+Require Import Colimits.Pushout.
 Require Import HIT.Truncations.
 
 (** * Cones of hsets *)

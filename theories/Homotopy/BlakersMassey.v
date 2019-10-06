@@ -1,5 +1,5 @@
 Require Import HoTT.Basics HoTT.Types.
-Require Import HoTT.HIT.Pushout HoTT.HIT.SpanPushout HoTT.HIT.Join.
+Require Import HoTT.Colimits.Pushout HoTT.HIT.SpanPushout HoTT.HIT.Join.
 Require Import HoTT.Modalities.ReflectiveSubuniverse.
 Require Import HoTT.HIT.Truncations HoTT.HIT.Connectedness.
 Require Import NullHomotopy Extensions.

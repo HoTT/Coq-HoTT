@@ -1,6 +1,6 @@
 Require Import Basics.
 Require Import Pointed.Core.
-Require Import HIT.Pushout.
+Require Import Colimits.Pushout.
 
 (* Here we define the Wedge sum of two pointed types *)
 

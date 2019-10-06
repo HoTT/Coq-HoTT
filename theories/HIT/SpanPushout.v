@@ -1,4 +1,4 @@
-Require Import HoTT.Basics HoTT.Types HoTT.HIT.Pushout.
+Require Import HoTT.Basics HoTT.Types HoTT.Colimits.Pushout.
 
 (** * Pushouts of "dependent spans". *)
 

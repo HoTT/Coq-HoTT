@@ -116,7 +116,6 @@ theories/HIT/unique_choice.v
 theories/HIT/surjective_factor.v
 theories/HIT/quotient.v
 theories/HIT/iso.v
-theories/HIT/Pushout.v
 theories/HIT/SpanPushout.v
 theories/HIT/SetCone.v
 theories/HIT/Join.v
@@ -126,6 +125,8 @@ theories/HIT/V.v
 #
 #   Colimits
 #
+
+theories/Colimits/Pushout.v
 
 theories/Colimits/Colimit.v
 theories/Colimits/Colimit_Sigma.v
