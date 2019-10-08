@@ -2,7 +2,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import UnivalenceImpliesFunext EquivalenceVarieties Extensions HProp Fibrations NullHomotopy Pullback.
 Require Import HoTT.Tactics.
-Require Import HIT.Coeq HIT.Pushout.
+Require Import HIT.Coeq Colimits.Pushout.
 Require Import Tactics.RewriteModuloAssociativity.
 
 Local Open Scope nat_scope.
@@ -925,7 +925,7 @@ Section Reflective_Subuniverse.
           refine ((O_functor_compose f coeq b)^ @ _).
           refine (_ @ (O_functor_compose g coeq b)).
           apply O_functor_homotopy.
-          intros z; apply cp.
+          intros z; apply cglue.
       Defined.
 
       Local Definition O_coeq_cmp_eisretr
@@ -950,7 +950,7 @@ Section Reflective_Subuniverse.
           Open Scope long_path_scope.
           rewrite !ap_V, !inv_V, !concat_p_pp.
           rewrite (ap_compose _ (O_functor coeq_to)).
-          rewrite Coeq_rec_beta_cp.
+          rewrite Coeq_rec_beta_cglue.
           rewrite !ap_pp, !concat_p_pp.
           unfold O_functor_homotopy; rewrite O_indpaths_beta.
           rewrite !ap_pp, !concat_p_pp.
@@ -973,12 +973,12 @@ Section Reflective_Subuniverse.
                         (fun x => coeq (f x)) coeq_to b).
           rewrite <- ap_compose.
           rewrite !concat_pp_p; apply whiskerL, moveR_Mp; rewrite !concat_p_pp.
-          rewrite <- (concat_Ap (fun x => (to_O_natural coeq_to x)^) (cp b)).
+          rewrite <- (concat_Ap (fun x => (to_O_natural coeq_to x)^) (cglue b)).
           rewrite !concat_pp_p; apply moveL_Mp; rewrite !concat_p_pp.
           rewrite ap_V, <- !inv_pp, @to_O_natural_compose.
           rewrite concat_p_Vp, concat_Vp, concat_1p.
           rewrite (ap_compose coeq_to (to O (Coeq (O_functor f) (O_functor g)))).
-          subst coeq_to; rewrite functor_coeq_beta_cp.
+          subst coeq_to; rewrite functor_coeq_beta_cglue.
           rewrite !ap_pp, <- !ap_compose, !inv_pp, !concat_p_pp, !ap_V, !inv_V.
           rewrite concat_pp_V, concat_pV_p; reflexivity.
           Close Scope long_path_scope.
@@ -995,9 +995,9 @@ Section Reflective_Subuniverse.
           apply to_O_natural.
         - intros b; cbn.
           rewrite transport_paths_FlFr, ap_compose.
-          rewrite functor_coeq_beta_cp.
+          rewrite functor_coeq_beta_cglue.
           rewrite !ap_pp, <- !ap_compose; cbn.
-          rewrite Coeq_rec_beta_cp.
+          rewrite Coeq_rec_beta_cglue.
           Open Scope long_path_scope.
           rewrite !inv_pp, !concat_p_pp, !ap_V, !inv_V.
           apply moveR_pM; rewrite !concat_pp_p.
@@ -1042,9 +1042,9 @@ Section Reflective_Subuniverse.
       Context {A B C : Type} (f : A -> B) (g : A -> C).
 
       Definition equiv_O_pushout
-        : O (pushout f g) <~> O (pushout (O_functor f) (O_functor g)).
+        : O (Pushout f g) <~> O (Pushout (O_functor f) (O_functor g)).
       Proof.
-        unfold pushout.
+        unfold Pushout.
         refine (_ oE equiv_O_coeq (inl o f) (inr o g)).
         refine ((equiv_O_coeq _ _)^-1 oE _).
         apply equiv_O_functor.
@@ -1061,11 +1061,11 @@ Section Reflective_Subuniverse.
       Defined.
 
       Definition equiv_O_pushout_to_O_pushl (b : B)
-        : equiv_O_pushout (to O (pushout f g) (pushl b))
-          = to O (pushout (O_functor f) (O_functor g)) (pushl (to O B b)).
+        : equiv_O_pushout (to O (Pushout f g) (pushl b))
+          = to O (Pushout (O_functor f) (O_functor g)) (pushl (to O B b)).
       Proof.
         cbn.
-        unfold O_coeq_cmp, O_coeq_cmp_inverse, pushout, pushl, push.
+        unfold O_coeq_cmp, O_coeq_cmp_inverse, Pushout, pushl, push.
         rewrite to_O_natural.
         rewrite to_O_natural.
         rewrite O_rec_beta.
@@ -1076,11 +1076,11 @@ Section Reflective_Subuniverse.
       Qed.
 
       Definition equiv_O_pushout_to_O_pushr (c : C)
-        : equiv_O_pushout (to O (pushout f g) (pushr c))
-          = to O (pushout (O_functor f) (O_functor g)) (pushr (to O C c)).
+        : equiv_O_pushout (to O (Pushout f g) (pushr c))
+          = to O (Pushout (O_functor f) (O_functor g)) (pushr (to O C c)).
       Proof.
         cbn.
-        unfold O_coeq_cmp, O_coeq_cmp_inverse, pushout, pushr, push.
+        unfold O_coeq_cmp, O_coeq_cmp_inverse, Pushout, pushr, push.
         rewrite to_O_natural.
         rewrite to_O_natural.
         rewrite O_rec_beta.
@@ -1091,15 +1091,15 @@ Section Reflective_Subuniverse.
       Qed.
 
       Definition inverse_equiv_O_pushout_to_O_pushl (b : B)
-        : equiv_O_pushout^-1 (to O (pushout (O_functor f) (O_functor g)) (pushl (to O B b)))
-          = to O (pushout f g) (pushl b).
+        : equiv_O_pushout^-1 (to O (Pushout (O_functor f) (O_functor g)) (pushl (to O B b)))
+          = to O (Pushout f g) (pushl b).
       Proof.
         apply moveR_equiv_V; symmetry; apply equiv_O_pushout_to_O_pushl.
       Qed.
 
       Definition inverse_equiv_O_pushout_to_O_pushr (c : C)
-        : equiv_O_pushout^-1 (to O (pushout (O_functor f) (O_functor g)) (pushr (to O C c)))
-          = to O (pushout f g) (pushr c).
+        : equiv_O_pushout^-1 (to O (Pushout (O_functor f) (O_functor g)) (pushr (to O C c)))
+          = to O (Pushout f g) (pushr c).
       Proof.
         apply moveR_equiv_V; symmetry; apply equiv_O_pushout_to_O_pushr.
       Qed.

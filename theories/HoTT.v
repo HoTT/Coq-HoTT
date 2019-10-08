@@ -37,7 +37,6 @@ Require Export PropResizing.PropResizing.
 
 Require Export Homotopy.HomotopyGroup.
 
-Require Export HIT.Suspension.
 Require Export HIT.Interval.
 Require Export HIT.Truncations.
 Require Export HIT.Connectedness.
@@ -46,15 +45,22 @@ Require Export HIT.Flattening.
 Require Export HIT.Circle.
 Require Export HIT.FreeIntQuotient.
 Require Export HIT.Spheres.
-Require Export HIT.Pushout.
-Require Export HIT.SpanPushout.
 Require Export HIT.SetCone.
 Require Export HIT.epi.
 Require Export HIT.unique_choice.
 Require Export HIT.iso.
 Require Export HIT.quotient.
 Require Export HIT.V.
-Require Export HIT.Join.
+
+Require Export Colimits.Pushout.
+Require Export Colimits.SpanPushout.
+Require Export Colimits.Colimit.
+Require Export Colimits.Colimit_Pushout.
+Require Export Colimits.Colimit_Coequalizer.
+Require Export Colimits.Colimit_Flattening.
+Require Export Colimits.Colimit_Prod.
+Require Export Colimits.Colimit_Pushout_Flattening.
+Require Export Colimits.Colimit_Sigma.
 
 Require Export Modalities.ReflectiveSubuniverse.
 Require Export Modalities.Modality.
@@ -91,6 +97,10 @@ Require Export Homotopy.HomotopyGroup.
 Require Export Homotopy.Pi1S1.
 Require Export Homotopy.BlakersMassey.
 Require Export Homotopy.Freudenthal.
+Require Export Homotopy.Suspension.
+Require Export Homotopy.Smash.
+Require Export Homotopy.Wedge.
+Require Export Homotopy.Join.
 
 Require Export Spectra.Spectrum.
 

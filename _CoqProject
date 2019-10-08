@@ -99,7 +99,6 @@ theories/Comodalities/CoreflectiveSubuniverse.v
 #   HIT
 #
 
-theories/HIT/Suspension.v
 theories/HIT/Circle.v
 theories/HIT/Truncations.v
 theories/HIT/TruncImpliesFunext.v
@@ -116,16 +115,15 @@ theories/HIT/unique_choice.v
 theories/HIT/surjective_factor.v
 theories/HIT/quotient.v
 theories/HIT/iso.v
-theories/HIT/Pushout.v
-theories/HIT/SpanPushout.v
 theories/HIT/SetCone.v
-theories/HIT/Join.v
 theories/HIT/V.v
-
 
 #
 #   Colimits
 #
+
+theories/Colimits/Pushout.v
+theories/Colimits/SpanPushout.v
 
 theories/Colimits/Colimit.v
 theories/Colimits/Colimit_Sigma.v
@@ -186,7 +184,6 @@ theories/Tests.v
 
 contrib/HoTTBook.v
 contrib/HoTTBookExercises.v
-contrib/Freudenthal.v
 
 #
 #   Homotopy
@@ -194,8 +191,12 @@ contrib/Freudenthal.v
 
 theories/Homotopy/HomotopyGroup.v
 theories/Homotopy/Pi1S1.v
+
+theories/Homotopy/Suspension.v
 theories/Homotopy/Smash.v
 theories/Homotopy/Wedge.v
+theories/Homotopy/Join.v
+
 theories/Homotopy/BlakersMassey.v
 theories/Homotopy/Freudenthal.v
 

@@ -1,7 +1,12 @@
-Require Import HoTT.Basics HoTT.Types.
-Require Import HoTT.HIT.Pushout HoTT.HIT.SpanPushout HoTT.HIT.Join.
-Require Import HoTT.HIT.Truncations HoTT.HIT.Connectedness HIT.Suspension.
-Require Import BlakersMassey.
+Require Import Basics.
+Require Import Types.
+Require Import Colimits.Pushout.
+Require Import Colimits.SpanPushout.
+Require Import HIT.Truncations.
+Require Import HIT.Connectedness.
+Require Import Homotopy.Join.
+Require Import Homotopy.Suspension.
+Require Import Homotopy.BlakersMassey.
 
 Import TrM.
 
@@ -17,13 +22,13 @@ Proof.
   pose (f := equiv_pushout (equiv_contr_sigma (fun _ : Unit * Unit => X))^-1
                            (equiv_idmap Unit) (equiv_idmap Unit)
                            (fun x : X => idpath) (fun x : X => idpath)
-        : Susp X <~> spushout (fun (u v:Unit) => X)).
+        : Susp X <~> SPushout (fun (u v:Unit) => X)).
   srefine (@cancelR_equiv_conn_map (n +2+ n) _ _ _ _
              (equiv_ap' f North South)
              (@conn_map_homotopic _ _ _ _ _ _
                (blakers_massey n n (fun (u v:Unit) => X) tt tt))).
   intros x.
-  refine (_ @ (equiv_pushout_pp
+  refine (_ @ (equiv_pushout_pglue
                  (equiv_contr_sigma (fun _ : Unit * Unit => X))^-1
                  (equiv_idmap Unit) (equiv_idmap Unit)
                  (fun x : X => idpath) (fun x : X => idpath) x)^).

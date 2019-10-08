@@ -4,7 +4,7 @@ Require Import Basics.
 Require Import Types.
 Require Import Pointed.
 Require Import UnivalenceImpliesFunext.
-Require Import HIT.Truncations HIT.Suspension.
+Require Import HIT.Truncations Homotopy.Suspension.
 
 Local Open Scope path_scope.
 Local Open Scope equiv_scope.

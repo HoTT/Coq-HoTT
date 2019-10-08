@@ -3,7 +3,7 @@
 (** * The suspension of a type *)
 
 Require Import Basics Types.
-Require Import HIT.Pushout.
+Require Import Colimits.Pushout.
 Require Import NullHomotopy.
 Local Open Scope path_scope.
 
@@ -41,17 +41,17 @@ End Suspension. *)
 
 (* ** Definition of suspension *)
 
-Definition Susp (X : Type) := pushout (@const X _ tt) (const tt).
+Definition Susp (X : Type) := Pushout (@const X _ tt) (const tt).
 Definition North {X} : Susp X := pushl tt.
 Definition South {X} : Susp X := pushr tt.
-Definition merid {X} (x : X) : North = South := pp x.
+Definition merid {X} (x : X) : North = South := pglue x.
 
 Definition Susp_ind {X : Type} (P : Susp X -> Type)
   (H_N : P North) (H_S : P South)
   (H_merid : forall x:X, (merid x) # H_N = H_S)
   : forall (y : Susp X), P y.
 Proof.
-  serapply pushout_ind.
+  serapply Pushout_ind.
   - exact (Unit_ind H_N).
   - exact (Unit_ind H_S).
   - exact (H_merid).
@@ -62,7 +62,7 @@ Definition Susp_ind_beta_merid {X : Type}
   (H_merid : forall x:X, (merid x) # H_N = H_S) (x : X)
   : apD (Susp_ind P H_N H_S H_merid) (merid x) = H_merid x.
 Proof.
-  serapply pushout_ind_beta_pp.
+  serapply Pushout_ind_beta_pglue.
 Defined.
 
 (** We want to allow the user to forget that we've defined suspension in this way. *)

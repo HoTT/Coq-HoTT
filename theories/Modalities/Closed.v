@@ -3,7 +3,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp TruncType Extensions.
 Require Import Modality Accessible Nullification Lex Topological.
-Require Import HIT.Pushout HIT.Join.
+Require Import Colimits.Pushout Homotopy.Join.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
@@ -16,18 +16,18 @@ Section ClosedModalTypes.
   Context (U : hProp).
 
   Definition equiv_inO_closed (A : Type)
-  : (U -> Contr A) <-> IsEquiv (fun a:A => push (inr a) : join U A).
+  : (U -> Contr A) <-> IsEquiv (fun a:A => push (inr a) : Join U A).
   Proof.
     split.
     - intros uac.
       simple refine (isequiv_adjointify _ _ _ _).
-      * simple refine (pushout_rec A _ _ _).
+      * simple refine (Pushout_rec A _ _ _).
         + intros u; pose (uac u); exact (center A).
         + intros a; assumption.
         + intros [u a]. simpl.
           pose (uac u). apply contr.
       * intros z. pattern z.
-        simple refine (pushout_ind _ _ _ _ z).
+        simple refine (Pushout_ind _ _ _ _ z).
         + intros u.
           pose (contr_inhabited_hprop U u).
           apply path_contr.
@@ -36,7 +36,7 @@ Section ClosedModalTypes.
           apply path_contr.
       * intros a. reflexivity.
     - intros ? u.
-      refine (contr_equiv (join U A) (fun a:A => push (inr a))^-1).
+      refine (contr_equiv (Join U A) (fun a:A => push (inr a))^-1).
       pose (contr_inhabited_hprop U u).
       exact _.
   Defined.
@@ -51,7 +51,7 @@ Module ClosedModalities <: Modalities.
   Definition Modality : Type@{u} := Closed_Modality@{a}.
 
   Definition O_reflector : Modality@{u a} -> Type@{i} -> Type@{i}
-    := fun O X => join@{a i i} (unCl O) X.
+    := fun O X => Join@{a i i} (unCl O) X.
 
   Definition In : Modality@{u a} -> Type@{i} -> Type@{i}
     := fun O X => unCl O -> Contr X.
@@ -93,7 +93,7 @@ Module ClosedModalities <: Modalities.
     (forall a, B (to@{u a i} O A a)) -> forall a, B a.
   Proof.
     simpl; intros f z.
-    simple refine (pushout_ind@{i a i j i} B _ _ _ z).
+    simple refine (Pushout_ind@{i a i j i} B _ _ _ z).
     - intros u; apply center, B_inO, u.
     - intros a; apply f.
     - intros [u a].

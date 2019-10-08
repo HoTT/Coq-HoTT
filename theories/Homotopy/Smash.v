@@ -1,7 +1,7 @@
 Require Import Basics.
 Require Import Pointed.Core.
 Require Import Types.
-Require Import HIT.Pushout.
+Require Import Colimits.Pushout.
 Require Import Cubical.
 
 Local Open Scope pointed_scope.
@@ -16,7 +16,7 @@ Definition sum_to_bool X Y : X + Y -> Bool
   := sum_ind _ (fun _ => false) (fun _ => true).
 
 Definition Smash (X Y : pType) : pType
-  := Build_pType (pushout (sum_to_prod X Y) (sum_to_bool X Y))
+  := Build_pType (Pushout (sum_to_prod X Y) (sum_to_bool X Y))
       (pushl (point X, point Y)).
 
 Section Smash.
@@ -32,10 +32,10 @@ Section Smash.
   Notation pt := (point _).
 
   Definition gluel (x : X) : sm x pt = auxl
-    := pp (f:=sum_to_prod X Y) (g:=sum_to_bool X Y) (inl x).
+    := pglue (f:=sum_to_prod X Y) (g:=sum_to_bool X Y) (inl x).
 
   Definition gluer (y : Y) : sm pt y = auxr
-    := pp (f:=sum_to_prod X Y) (g:=sum_to_bool X Y) (inr y).
+    := pglue (f:=sum_to_prod X Y) (g:=sum_to_bool X Y) (inr y).
 
   Definition gluel' (x x' : X) : sm x pt = sm x' pt
     := gluel x @ (gluel x')^.
@@ -80,7 +80,7 @@ Section Smash.
     (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr)
     : forall x : Smash X Y, P x.
   Proof.
-    serapply pushout_ind.
+    serapply Pushout_ind.
     + intros [a b].
       apply Psm.
     + apply (Bool_ind _ Pr Pl).
@@ -96,7 +96,7 @@ Section Smash.
     : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel a) = Pgl a.
   Proof.
     apply dp_apD_path_transport.
-    refine (pushout_ind_beta_pp P _ _ _ (inl a) @ _).
+    refine (Pushout_ind_beta_pglue P _ _ _ (inl a) @ _).
     unfold sum_ind.
     by apply ap.
   Qed.
@@ -108,7 +108,7 @@ Section Smash.
     : dp_apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer b) = Pgr b.
   Proof.
     apply dp_apD_path_transport.
-    refine (pushout_ind_beta_pp P _ _ _ (inr b) @ _).
+    refine (Pushout_ind_beta_pglue P _ _ _ (inr b) @ _).
     unfold sum_ind.
     by apply ap.
   Qed.

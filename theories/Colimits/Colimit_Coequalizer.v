@@ -35,7 +35,7 @@ Section Coequalizer.
     serapply Build_Cocone.
     + intros []; [exact (coeq o g)| exact coeq].
     + intros i j phi x; destruct i, j, phi; simpl;
-      [ exact (cp x) | reflexivity ].
+      [ exact (cglue x) | reflexivity ].
   Defined.
 
   Lemma iscoequalizer_Coeq `{Funext}
@@ -61,7 +61,7 @@ Section Coequalizer.
         * hott_simpl.
           match goal with
           | [|- ap (Coeq_rec ?a ?b ?c) _ @ _ = _ ]
-            => rewrite (Coeq_rec_beta_cp a b c)
+            => rewrite (Coeq_rec_beta_cglue a b c)
           end.
           hott_simpl.
         * reflexivity.
@@ -73,7 +73,7 @@ Section Coequalizer.
       + reflexivity.
       + intros b; simpl.
         rewrite transport_paths_FlFr.
-        rewrite Coeq_rec_beta_cp.
+        rewrite Coeq_rec_beta_cglue.
         hott_simpl.
   Defined.
 

@@ -29,7 +29,7 @@ but it allows us to apply the flattening lemma directly rather than having to pa
 
 Definition S1 := @Coeq Unit Unit idmap idmap.
 Definition base : S1 := coeq tt.
-Definition loop : base = base := cp tt.
+Definition loop : base = base := cglue tt.
 
 Definition S1_ind (P : S1 -> Type) (b : P base) (l : loop # b = b)
   : forall (x:S1), P x.
@@ -41,7 +41,7 @@ Defined.
 Definition S1_ind_beta_loop
            (P : S1 -> Type) (b : P base) (l : loop # b = b)
 : apD (S1_ind P b l) loop = l
-  := Coeq_ind_beta_cp P _ _ tt.
+  := Coeq_ind_beta_cglue P _ _ tt.
 
 (** But we want to allow the user to forget that we've defined the circle in that way. *)
 Arguments S1 : simpl never.

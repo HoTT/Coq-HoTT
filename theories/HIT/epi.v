@@ -1,7 +1,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Universe Types.Unit Types.Forall Types.Arrow Types.Sigma Types.Paths.
 Require Import HProp HSet TruncType UnivalenceImpliesFunext.
-Require Import HIT.Pushout HIT.Truncations HIT.SetCone HIT.Connectedness.
+Require Import Colimits.Pushout HIT.Truncations HIT.SetCone HIT.Connectedness.
 
 Local Open Scope path_scope.
 
@@ -39,7 +39,7 @@ Section cones.
   Proof.
     intros hepi.
     exists (setcone_point _).
-    pose (alpha1 := @pp A B Unit f (const tt)).
+    pose (alpha1 := @pglue A B Unit f (const tt)).
     pose (tot:= { h : B -> setcone f & tr o push o inl o f = h o f }).
     transparent assert (l : tot).
     { simple refine (tr o _ o inl; _).
@@ -59,14 +59,14 @@ Section cones.
                                  | inl a' => (I0 a')^
                                  | inr tt => idpath
                                end)) as I0f.
-    refine (pushout_ind _ (fun a' => I0f (inl a')) (fun u => (I0f (inr u))) _).
+    refine (Pushout_ind _ (fun a' => I0f (inl a')) (fun u => (I0f (inr u))) _).
 
     simpl. subst alpha1. intros.
     unfold setcone_point.
     subst I0. simpl.
     pose (X..2) as p. simpl in p.
     rewrite (transport_precompose f _ _ X..1) in p.
-    assert (H':=concat (ap (fun x => ap10 x a) p) (ap10_ap_postcompose tr (path_arrow (pushl o f) (pushr o const tt) pp) _)).
+    assert (H':=concat (ap (fun x => ap10 x a) p) (ap10_ap_postcompose tr (path_arrow (pushl o f) (pushr o const tt) pglue) _)).
     rewrite ap10_path_arrow in H'.
     clear p.
     (** Apparently [pose; clearbody] is only ~.8 seconds, while [pose proof] is ~4 seconds? *)
@@ -120,7 +120,7 @@ Section isepi_issurj.
   Proof.
     pose (fib y := hexists (fun x : X => f x = y)).
     apply (fun f => @Trunc_rec _ _ hProp _ f c).
-    refine (pushout_rec hProp fib (fun _ => Unit_hp) (fun x => _)).
+    refine (Pushout_rec hProp fib (fun _ => Unit_hp) (fun x => _)).
     (** Prove that the truncated sigma is equivalent to Unit *)
     pose (contr_inhabited_hprop (fib (f x)) (tr (x; idpath))) as i.
     apply path_hprop. simpl. simpl in i.
