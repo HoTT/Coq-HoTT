@@ -38,7 +38,6 @@ Require Export PropResizing.PropResizing.
 Require Export Homotopy.HomotopyGroup.
 
 Require Export HIT.Interval.
-Require Export HIT.Truncations.
 Require Export HIT.Connectedness.
 Require Export HIT.Coeq.
 Require Export HIT.Flattening.
@@ -76,6 +75,9 @@ Require Export Modalities.Closed.
 Require Export Modalities.Fracture.
 
 Require Export Comodalities.CoreflectiveSubuniverse.
+
+Require Export Truncations.Core.
+Require Export Truncations.
 
 Require Export Spaces.Nat.
 Require Export Spaces.Int.

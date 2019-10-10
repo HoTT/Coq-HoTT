@@ -1,6 +1,6 @@
 Require Import Basics.
 Require Import Types.
-Require Import HIT.Truncations.
+Require Import HoTT.Truncations.
 Require Import Pointed.
 Require Import abstract_algebra.
 Require Import Spaces.Nat.

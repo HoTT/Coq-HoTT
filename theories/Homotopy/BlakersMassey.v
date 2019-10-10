@@ -4,7 +4,7 @@ Require Import Colimits.Pushout.
 Require Import Colimits.SpanPushout.
 Require Import Homotopy.Join.
 Require Import Modalities.ReflectiveSubuniverse.
-Require Import HIT.Truncations.
+Require Import HoTT.Truncations.
 Require Import HIT.Connectedness.
 Require Import NullHomotopy Extensions.
 

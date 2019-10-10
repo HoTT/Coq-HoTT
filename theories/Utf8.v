@@ -2,7 +2,7 @@ Require Export Coq.Unicode.Utf8.
 Require Export HoTT.Basics.Utf8.
 Require Import HoTT.Basics HoTT.Types.Arrow HoTT.Types.Prod HoTT.Types.Sum.
 Require Import Modalities.Identity.
-Require Import HIT.Circle HIT.TwoSphere HIT.Truncations Homotopy.Suspension.
+Require Import HIT.Circle HIT.TwoSphere HoTT.Truncations Homotopy.Suspension.
 
 Notation Type₀ := Type0.
 Notation pr₁ := pr1.

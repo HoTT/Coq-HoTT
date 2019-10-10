@@ -5,7 +5,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HoTT.Tactics.
 Require Import Pointed.
-Require Import HIT.Truncations.
+Require Import HoTT.Truncations.
 
 Import TrM.
 

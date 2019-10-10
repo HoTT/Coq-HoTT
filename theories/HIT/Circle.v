@@ -7,7 +7,7 @@ Require Import Types.Paths Types.Forall Types.Arrow Types.Universe Types.Empty T
 Require Import HSet UnivalenceImpliesFunext.
 Require Import Spaces.Int.
 Require Import HIT.Coeq.
-Require Import Modalities.Modality HIT.Truncations HIT.Connectedness.
+Require Import Modalities.Modality HoTT.Truncations HIT.Connectedness.
 Require Import Cubical.DPath.
 
 Import TrM.

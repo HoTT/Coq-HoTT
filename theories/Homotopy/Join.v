@@ -2,7 +2,7 @@
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import HProp HSet NullHomotopy Extensions.
-Require Import Colimits.Pushout HIT.Truncations HIT.Connectedness.
+Require Import Colimits.Pushout HoTT.Truncations HIT.Connectedness.
 Local Open Scope path_scope.
 Import TrM.
 

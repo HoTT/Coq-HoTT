@@ -4,7 +4,7 @@ Require Import HoTT.Spaces.Int.
 Require Import HoTT.Homotopy.HomotopyGroup.
 Require Import HoTT.Homotopy.Suspension.
 Require Import HoTT.HIT.Circle.
-Require Import HoTT.HIT.Truncations.
+Require Import HoTT.Truncations.
 Require Import HoTT.HIT.Spheres.
 Require Import HoTT.UnivalenceAxiom.
 

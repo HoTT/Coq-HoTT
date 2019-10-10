@@ -4,7 +4,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import TruncType UnivalenceImpliesFunext HProp EquivalenceVarieties Extensions Factorization.
 Require Export Modality.        (* [Export] since the actual definitions of connectednes appear there, in the generality of a modality. *)
-Require Import HIT.Truncations.
+Require Import HoTT.Truncations.
 Import TrM.
 
 Local Open Scope path_scope.

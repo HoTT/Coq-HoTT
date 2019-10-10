@@ -1,4 +1,4 @@
-Require Import HoTT.Basics.Decidable HoTT.HIT.Truncations.
+Require Import HoTT.Basics.Decidable HoTT.Truncations.
 Require Import HoTT.Classes.interfaces.abstract_algebra.
 
 Section contents.

@@ -2,7 +2,7 @@ Require Import Basics.
 Require Import Types.
 Require Import Colimits.Pushout.
 Require Import Colimits.SpanPushout.
-Require Import HIT.Truncations.
+Require Import HoTT.Truncations.
 Require Import HIT.Connectedness.
 Require Import Homotopy.Join.
 Require Import Homotopy.Suspension.

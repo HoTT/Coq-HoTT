@@ -3,7 +3,7 @@ Require Import Types.
 Require Import Pointed.
 Require Import Spaces.Int.
 Require Import HIT.Circle.
-Require Import HIT.Truncations.
+Require Import HoTT.Truncations.
 Require Import HIT.Connectedness.
 Require Import Homotopy.HomotopyGroup.
 Import TrM.

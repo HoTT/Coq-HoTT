@@ -3,7 +3,7 @@ Require Import Types.
 Require Import HSet.
 Require Import Fibrations.
 Require Import Factorization.
-Require Import HIT.Truncations.
+Require Import HoTT.Truncations.
 Require Import HIT.Connectedness.
 Require Import Pointed.Core.
 Require Import Pointed.pMap.

@@ -3,7 +3,7 @@ Require Import Types.
 Require Import Pointed.Core.
 Require Import Pointed.pEquiv.
 Require Import Pointed.Loops.
-Require Import HIT.Truncations.
+Require Import HoTT.Truncations.
 Import TrM.
 
 Local Open Scope pointed_scope.
