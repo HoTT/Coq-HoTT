@@ -4,7 +4,6 @@ Require Import Pointed.
 Require Import Spaces.Int.
 Require Import HIT.Circle.
 Require Import HoTT.Truncations.
-Require Import HIT.Connectedness.
 Require Import Homotopy.HomotopyGroup.
 Import TrM.
 

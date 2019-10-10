@@ -38,7 +38,6 @@ Require Export PropResizing.PropResizing.
 Require Export Homotopy.HomotopyGroup.
 
 Require Export HIT.Interval.
-Require Export HIT.Connectedness.
 Require Export HIT.Coeq.
 Require Export HIT.Flattening.
 Require Export HIT.Circle.
@@ -76,8 +75,7 @@ Require Export Modalities.Fracture.
 
 Require Export Comodalities.CoreflectiveSubuniverse.
 
-Require Export Truncations.Core.
-Require Export Truncations.
+Require Export HoTT.Truncations.
 
 Require Export Spaces.Nat.
 Require Export Spaces.Int.
@@ -113,3 +111,8 @@ Require Export HoTT.Tactics.RewriteModuloAssociativity.
 Require Export HoTT.Tactics.EquivalenceInduction.
 
 (** We do _not_ export [UnivalenceAxiom], [FunextAxiom], [UnivalenceImpliesFunext], [HIT.IntervalImpliesFunext], nor [HIT.TruncImpliesFunext] from this file; thus importing it does not prevent you from tracking usage of [Univalence] and [Funext] theorem-by-theorem in the same way that the library does.  If you want any of those files, you should import them separately. *)
+
+(** We check that UnivalenceAxiom, FunextAxiom, UnivalenceImpliesFunext, IntervalImpliesFunext and TruncImpliesFunext aren't being leaked. *)
+(* Fail Check HoTT.UnivalenceAxiom.univalence_axiom. *)
+(* Fail Check HoTT.FunextAxiom. *)
+

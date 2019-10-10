@@ -4,8 +4,7 @@ Require Import Colimits.Pushout.
 Require Import Colimits.SpanPushout.
 Require Import Homotopy.Join.
 Require Import Modalities.ReflectiveSubuniverse.
-Require Import HoTT.Truncations.
-Require Import HIT.Connectedness.
+Require Import Truncations.
 Require Import NullHomotopy Extensions.
 
 (** * The Generalized Blakers-Massey Theorem *)

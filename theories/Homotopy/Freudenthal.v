@@ -3,7 +3,6 @@ Require Import Types.
 Require Import Colimits.Pushout.
 Require Import Colimits.SpanPushout.
 Require Import HoTT.Truncations.
-Require Import HIT.Connectedness.
 Require Import Homotopy.Join.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.BlakersMassey.

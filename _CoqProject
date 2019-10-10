@@ -32,7 +32,7 @@ COQC = hoqc
 theories/Truncations.v
 
 theories/Truncations/Core.v
-
+theories/Truncations/Connectedness.v
 
 #
 #   Basics
@@ -133,7 +133,6 @@ theories/Comodalities/CoreflectiveSubuniverse.v
 
 theories/HIT/Circle.v
 theories/HIT/TruncImpliesFunext.v
-theories/HIT/Connectedness.v
 theories/HIT/Coeq.v
 theories/HIT/FreeIntQuotient.v
 theories/HIT/Flattening.v
