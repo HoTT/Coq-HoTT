@@ -13,6 +13,7 @@ COQC = hoqc
 #   # HIT
 #   # Colimits
 #   # Diagrams
+#   # Truncations
 #   # Other
 #   # Contrib
 #   # Homotopy
@@ -24,15 +25,6 @@ COQC = hoqc
 #   # Categories
 #   # Classes
 #
-
-#
-#   Truncations
-#
-
-theories/Truncations.v
-
-theories/Truncations/Core.v
-theories/Truncations/Connectedness.v
 
 #
 #   Basics
@@ -175,6 +167,15 @@ theories/Diagrams/Sequence.v
 theories/Diagrams/Span.v
 theories/Diagrams/ParallelPair.v
 theories/Diagrams/DDiagram.v
+
+#
+#   Truncations
+#
+
+theories/Truncations.v
+
+theories/Truncations/Core.v
+theories/Truncations/Connectedness.v
 
 #
 #   Other
