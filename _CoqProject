@@ -124,6 +124,7 @@ theories/HIT/V.v
 
 theories/Limits/Limit.v
 theories/Limits/Equalizer.v
+theories/Limits/Pullback.v
 
 #
 #   Colimits
@@ -179,7 +180,6 @@ theories/UnivalenceAxiom.v
 theories/ObjectClassifier.v
 theories/NullHomotopy.v
 theories/Idempotents.v
-theories/Pullback.v
 theories/Factorization.v
 theories/Constant.v
 theories/ExcludedMiddle.v
