@@ -276,7 +276,7 @@ theories/Tactics/BinderApply.v
 #
 
 theories/PropResizing/PropResizing.v
-theories/PropResizing/Truncations.v
+theories/PropResizing/ImpredicativeTruncation.v
 theories/PropResizing/Nat.v
 
 #
