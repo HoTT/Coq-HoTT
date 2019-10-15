@@ -1,9 +1,17 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import HoTT.Basics HoTT.Types.
-Require Import Fibrations Factorization EquivalenceVarieties UnivalenceImpliesFunext HSet HProp DProp.
-Require Import HoTT.Truncations HIT.quotient.
-Import TrM.
+Require Import Basics.
+Require Import Types.
+Require Import HSet.
+Require Import HProp.
+Require Import DProp.
 Require Import Spaces.Nat.
+Require Import Fibrations.
+Require Import Factorization.
+Require Import EquivalenceVarieties.
+Require Import UnivalenceImpliesFunext.
+Require Import Truncations.
+Require Import Colimits.Quotient.
+Import TrM.
 
 Local Open Scope path_scope.
 Local Open Scope nat_scope.
@@ -803,7 +811,7 @@ Section DecidableQuotients.
           `{Reflexive _ R} `{Transitive _ R} `{Symmetric _ R}
           {Rd : forall x y, Decidable (R x y)}.
 
-  Global Instance finite_quotient : Finite (quotient R).
+  Global Instance finite_quotient : Finite (Quotient R).
   Proof.
     assert (e := merely_equiv_fin X).
     strip_truncations.
@@ -812,14 +820,15 @@ Section DecidableQuotients.
     assert (Reflexive R') by (intros ?; unfold R'; apply reflexivity).
     assert (Symmetric R') by (intros ? ?; unfold R'; apply symmetry).
     assert (Transitive R') by (intros ? ? ?; unfold R'; apply transitivity).
-    assert (R'd : forall x y, Decidable (R' x y)) by (intros ? ?; unfold R'; apply Rd).
-    simple refine (finite_equiv' (quotient R') (quotient_functor_equiv R' R e^-1 _) _); try exact _.
-    { intros x y; split; apply idmap. }
+    assert (R'd : forall x y, Decidable (R' x y))
+      by (intros ? ?; unfold R'; apply Rd).
+    srefine (finite_equiv' _ (equiv_quotient_functor R' R e^-1 _) _).
+    1,2: by try (intros; split).
     clearbody R'; clear e.
     generalize dependent (fcard X);
       intros n; induction n as [|n IH]; intros R' ? ? ? ? ?.
     - refine (finite_equiv Empty _^-1 _).
-      refine (quotient_rec R' Empty_rec (fun x _ _ => match x with end)).
+      refine (Quotient_rec R' _ Empty_rec (fun x _ _ => match x with end)).
     - pose (R'' x y := R' (inl x) (inl y)).
       assert (is_mere_relation _ R'') by exact _.
       assert (Reflexive R'') by (intros ?; unfold R''; apply reflexivity).
@@ -831,63 +840,64 @@ Section DecidableQuotients.
       destruct (dec (merely {x:Fin n & R' (inl x) (inr tt)})) as [p|np].
       { strip_truncations.
         destruct p as [x r].
-        refine (finite_equiv' (quotient R'') _ _).
-        refine (Build_Equiv _ _ (quotient_functor R'' R' inl inlresp) _).
+        refine (finite_equiv' (Quotient R'') _ _).
+        refine (BuildEquiv _ _ (Quotient_functor R'' R' inl inlresp) _).
         apply isequiv_surj_emb.
         - apply BuildIsSurjection.
-          refine (quotient_ind_prop R' _ _).
+          refine (Quotient_ind_hprop R' _ _).
           intros [y|[]]; apply tr.
           + exists (class_of R'' y); reflexivity.
           + exists (class_of R'' x); simpl.
-            apply related_classes_eq, r.
+            apply qglue, r.
         - apply isembedding_isinj_hset; intros u.
-          refine (quotient_ind_prop R'' _ _); intros v.
-          revert u; refine (quotient_ind_prop R'' _ _); intros u.
+          refine (Quotient_ind_hprop R'' _ _); intros v.
+          revert u; refine (Quotient_ind_hprop R'' _ _); intros u.
           simpl; intros q.
-          apply related_classes_eq; unfold R''.
-          exact (classes_eq_related R' (inl u) (inl v) q). }
-      { refine (finite_equiv' (quotient R'' + Unit) _ _).
-        refine (Build_Equiv _ _ (sum_ind (fun _ => quotient R')
-                                        (quotient_functor R'' R' inl inlresp)
+          apply qglue; unfold R''.
+          exact (related_quotient_paths R' (inl u) (inl v) q). }
+      { refine (finite_equiv' (Quotient R'' + Unit) _ _).
+        refine (BuildEquiv _ _ (sum_ind (fun _ => Quotient R')
+                                        (Quotient_functor R'' R' inl inlresp)
                                         (fun _ => class_of R' (inr tt))) _).
         apply isequiv_surj_emb.
         - apply BuildIsSurjection.
-          refine (quotient_ind_prop R' _ _).
+          refine (Quotient_ind_hprop R' _ _).
           intros [y|[]]; apply tr.
           + exists (inl (class_of R'' y)); reflexivity.
           + exists (inr tt); reflexivity.
         - apply isembedding_isinj_hset; intros u.
           refine (sum_ind _ _ _).
-          + refine (quotient_ind_prop R'' _ _); intros v.
+          + refine (Quotient_ind_hprop R'' _ _); intros v.
             revert u; refine (sum_ind _ _ _).
-            * refine (quotient_ind_prop R'' _ _); intros u.
+            * refine (Quotient_ind_hprop R'' _ _); intros u.
               simpl; intros q.
-              apply ap, related_classes_eq; unfold R''.
-              exact (classes_eq_related R' (inl u) (inl v) q).
+              apply ap, qglue; unfold R''.
+              exact (related_quotient_paths R' (inl u) (inl v) q).
             * intros []; simpl.
               intros q.
-              apply classes_eq_related in q; try exact _.
+              apply related_quotient_paths in q; try exact _.
               apply symmetry in q.
               elim (np (tr (v ; q))).
           + intros []; simpl.
             destruct u as [u|[]]; simpl.
-            * revert u; refine (quotient_ind_prop R'' _ _); intros u; simpl.
+            * revert u; refine (Quotient_ind_hprop R'' _ _); intros u; simpl.
               intros q.
-              apply classes_eq_related in q; try exact _.
+              apply related_quotient_paths in q; try exact _.
               elim (np (tr (u;q))).
             * intros; reflexivity. }
   Defined.
 
   (** Therefore, the cardinality of [X] is the sum of the cardinalities of its equivalence classes. *)
   Definition fcard_quotient
-  : fcard X = finplus (fun z:quotient R => fcard {x:X & in_class R z x}).
+  : fcard X = finplus (fun z:Quotient R => fcard {x:X & in_class R z x}).
   Proof.
     refine (fcard_domain (class_of R) @ _).
     apply ap, path_arrow; intros z; revert z.
-    refine (quotient_ind_prop _ _ _); intros x; simpl.
+    refine (Quotient_ind_hprop _ _ _); intros x; simpl.
     apply fcard_equiv'; unfold hfiber.
     refine (equiv_functor_sigma' 1 _); intros y; simpl.
-    refine (_ oE sets_exact R y x).
+    symmetry.
+    refine (path_quotient R y x oE _).
     apply equiv_iff_hprop; apply symmetry.
   Defined.
 
