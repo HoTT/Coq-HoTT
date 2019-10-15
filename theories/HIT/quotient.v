@@ -76,7 +76,7 @@ Section Equiv.
 
   Lemma quotient_path2 : forall {x y : quotient R} (p q : x=y), p=q.
   Proof.
-    apply @set_path2. apply _.
+    apply @hset_path2. apply _.
   Defined.
 
   Definition in_class : quotient R -> A -> hProp.

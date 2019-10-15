@@ -534,7 +534,7 @@ Defined.
 
 Global Instance isset_No `{Funext} : IsHSet No.
 Proof.
-  refine (@isset_hrel_subpaths No (fun (x y:No) => (x <= y) * (y <= x)) _ _ _).
+  refine (@ishset_hrel_subpaths No (fun (x y:No) => (x <= y) * (y <= x)) _ _ _).
   - intros x; split; apply le_reflexive.
   - intros x y [xley ylex]; apply path_No; assumption.
 Defined.
