@@ -12,7 +12,7 @@ Import TrM.
 Section Join.
 
   Definition Join (A : Type@{i}) (B : Type@{j})
-    := Pushout@{k i j k k} (@fst A B) (@snd A B).
+    := Pushout@{k i j k} (@fst A B) (@snd A B).
 
   Definition jglue {A B} a b := @pglue (A*B) A B fst snd (a,b).
 
