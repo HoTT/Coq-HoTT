@@ -2,8 +2,8 @@
 Require Import Basics.
 Require Import Types.
 Require Import Pointed.
-Require Import HoTT.Truncations.
-Require Import HIT.quotient.
+Require Import Truncations.
+Require Import Colimits.Quotient.
 
 Import TrM.
 
@@ -281,6 +281,6 @@ Section Subgroups.
       apply moveR_Vp, moveL_pM. exact (p^).
   Defined.
 
-  Definition cosets := quotient in_coset.
+  Definition cosets := Quotient in_coset.
 
 End Subgroups.
