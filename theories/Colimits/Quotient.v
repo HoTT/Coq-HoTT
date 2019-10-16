@@ -24,25 +24,24 @@ We do this by defining the quotient as a truncated coequalizer.
 
 *)
 
-Definition Quotient@{i j k} {A : Type@{i}} (R : relation@{i j} A)
-  `{is_mere_relation _ R} : Type@{k}
+Definition Quotient@{i j k} {A : Type@{i}} (R : relation@{i j} A) : Type@{k}
   := Trunc@{k} 0 (Coeq@{k k}
     (fun x : sig@{k k} (fun a : A => sig (R a)) => x.1)
     (fun x : sig@{k k} (fun a : A => sig (R a)) => x.2.1)).
 
 Definition class_of@{i j k} {A : Type@{i}} (R : relation@{i j} A)
-  `{is_mere_relation _ R} : A -> Quotient@{i j k} R := tr o coeq.
+  : A -> Quotient@{i j k} R := tr o coeq.
 
 Definition qglue@{i j k} {A : Type@{i}} {R : relation@{i j} A}
-  `{is_mere_relation _ R} {x y : A}
+  {x y : A}
   : R x y -> class_of@{i j k} R x = class_of R y
   := fun p => ap tr (cglue (x; y; p)).
 
 Global Instance ishset_quotient {A : Type} (R : relation A)
-  `{is_mere_relation _ R} : IsHSet (Quotient R) := _.
+  : IsHSet (Quotient R) := _.
 
 Definition Quotient_ind@{i j k l}
-  {A : Type@{i}} (R : relation@{i j} A) `{is_mere_relation _ R}
+  {A : Type@{i}} (R : relation@{i j} A)
   (P : Quotient@{i j k} R -> Type@{l}) {sP : forall x, IsHSet (P x)}
   (pclass : forall x, P (class_of R x))
   (peq : forall x y (H : R x y), qglue H # pclass x = pclass y)
@@ -56,7 +55,7 @@ Proof.
 Defined.
 
 Definition Quotient_ind_beta_qglue@{i j k l}
-  {A : Type@{i}} (R : relation@{i j} A) `{is_mere_relation _ R}
+  {A : Type@{i}} (R : relation@{i j} A)
   (P : Quotient@{i j k} R -> Type@{l}) {sP : forall x, IsHSet (P x)}
   (pclass : forall x, P (class_of R x))
   (peq : forall x y (H : R x y), qglue H # pclass x = pclass y)
@@ -69,7 +68,7 @@ Proof.
 Defined.
 
 Definition Quotient_rec@{i j k l}
-  {A : Type@{i}} (R : relation@{i j} A) `{is_mere_relation _ R}
+  {A : Type@{i}} (R : relation@{i j} A)
   (P : Type@{l}) `{IsHSet P} (pclass : A -> P)
   (peq : forall x y, R x y -> pclass x = pclass y)
   : Quotient@{i j k} R -> P.
@@ -80,7 +79,7 @@ Proof.
 Defined.
 
 Definition Quotient_rec_beta_qglue @{i j k l}
-  {A : Type@{i}} (R : relation@{i j} A) `{is_mere_relation _ R}
+  {A : Type@{i}} (R : relation@{i j} A)
   (P : Type@{l}) `{IsHSet P} (pclass : A -> P)
   (peq : forall x y, R x y -> pclass x = pclass y)
   (x y : A) (p : R x y)
@@ -244,8 +243,8 @@ Section Functoriality.
   (* TODO: Develop a notion of set with relation and use that instead of manually adding relation preserving conditions. *)
 
   Definition Quotient_functor
-    {A : Type} (R : relation A) {sR : is_mere_relation _ R}
-    {B : Type} (S : relation B) {sS : is_mere_relation _ S}
+    {A : Type} (R : relation A)
+    {B : Type} (S : relation B)
     (f : A -> B) (fresp : forall x y, R x y -> S (f x) (f y))
     : Quotient R -> Quotient S.
   Proof.
@@ -255,16 +254,16 @@ Section Functoriality.
   Defined.
 
   Definition Quotient_functor_idmap
-    {A : Type} {R : relation A} {sR : is_mere_relation _ R}
+    {A : Type} {R : relation A}
     : Quotient_functor R R idmap (fun x y => idmap) == idmap.
   Proof.
     by serapply Quotient_ind_hprop.
   Defined.
 
   Definition Quotient_functor_compose
-    {A : Type} {R : relation A} {sR : is_mere_relation _ R}
-    {B : Type} {S : relation B} {sS : is_mere_relation _ S}
-    {C : Type} {T : relation C} {sT : is_mere_relation _ T}
+    {A : Type} {R : relation A}
+    {B : Type} {S : relation B}
+    {C : Type} {T : relation C}
     (f : A -> B) (fresp : forall x y, R x y -> S (f x) (f y))
     (g : B -> C) (gresp : forall x y, S x y -> T (g x) (g y))
     : Quotient_functor R T (g o f) (fun x y => (gresp _ _) o (fresp x y))
@@ -273,8 +272,8 @@ Section Functoriality.
     by serapply Quotient_ind_hprop.
   Defined.
 
-  Context {A : Type} (R : relation A) {sR : is_mere_relation _ R}
-          {B : Type} (S : relation B) {sS : is_mere_relation _ S}.
+  Context {A : Type} (R : relation A)
+          {B : Type} (S : relation B).
 
   Global Instance isequiv_quotient_functor (f : A -> B)
     (fresp : forall x y, R x y <-> S (f x) (f y)) `{IsEquiv _ _ f}
@@ -318,7 +317,7 @@ Section Kernel.
   Context {A : Type@{i}} {B : Type} `{IsHSet B} (f : A -> B).
 
   (** A mere relation equivalent to its kernel. *)
-  Context (R : relation A) {sR : is_mere_relation _ R}
+  Context (R : relation A)
           (is_ker : forall x y, f x = f y <~> R x y).
 
   Theorem quotient_kernel_factor
