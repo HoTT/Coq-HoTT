@@ -124,7 +124,6 @@ Section Equiv.
     (dclass : forall x, P (class_of R x)) : forall q, P q.
   Proof.
     serapply (Quotient_ind R P dclass).
-    1: intro; apply trunc_succ.
     intros x y p.
     apply path_ishprop.
   Defined.
