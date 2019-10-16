@@ -6,7 +6,7 @@ Require Import
   HoTT.Types.Universe
   HoTT.HSet
   HoTT.HIT.quotient
-  HoTT.HIT.Truncations
+  HoTT.Truncations
   HoTT.Classes.implementations.list
   HoTT.Classes.theory.ua_homomorphism.
 

@@ -2,7 +2,7 @@ Require Import
         HoTT.Types.Arrow
         HoTT.Types.Universe
         HoTT.Basics
-        HoTT.HIT.Truncations
+        HoTT.Truncations
         HoTT.HIT.unique_choice.
 
 (** Definition by factoring through a surjection. *)

@@ -1,6 +1,6 @@
 (** * Fundamental Pregroupoids *)
 Require Import Category.Core Category.Morphisms.
-Require Import HIT.Truncations PathGroupoids.
+Require Import HoTT.Truncations PathGroupoids.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

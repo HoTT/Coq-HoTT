@@ -2,8 +2,7 @@
 Require Import Basics.
 Require Import Types.
 Require Import Pointed.
-Require Import HIT.Truncations.
-Require Import HIT.Connectedness.
+Require Import HoTT.Truncations.
 Require Import HIT.quotient.
 
 Import TrM.

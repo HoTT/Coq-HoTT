@@ -1,18 +1,16 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Defining the natural numbers from univalence and propresizing. *)
-
-Require Import HoTT.Basics HoTT.Types UnivalenceImpliesFunext HProp.
-Require Import PropResizing.PropResizing PropResizing.Truncations.
+Require Import Basics.
+Require Import Types.
+Require Import UnivalenceImpliesFunext.
+Require Import HProp.
+Require Import PropResizing.PropResizing.
+Require Import PropResizing.ImpredicativeTruncation.
 Local Open Scope path_scope.
 
-(* Be careful about [Import]ing this file!  Usually you want
-to use the standard [Nat] instead. *)
+(* Be careful about [Import]ing this file!  Usually you want to use the standard [Nat] instead. *)
 
-(** Using propositional resizing and univalence, we can construct the
-natural numbers rather than defining them as an inductive type.  In
-concrete practice there is no reason we would want to do this, but
-semantically it means that an elementary (oo,1)-topos (unlike an
-elementary 1-topos) automatically has a natural numbers object. *)
+(** Using propositional resizing and univalence, we can construct the natural numbers rather than defining them as an inductive type.  In concrete practice there is no reason we would want to do this, but semantically it means that an elementary (oo,1)-topos (unlike an elementary 1-topos) automatically has a natural numbers object. *)
 
 Section AssumeStuff.
   Context {UA:Univalence} {PR:PropResizing}.

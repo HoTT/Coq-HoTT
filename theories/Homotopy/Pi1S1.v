@@ -1,16 +1,18 @@
 Require Import HoTT.Basics.
+Require Import HoTT.Types.
 Require Import HoTT.Pointed.
 Require Import HoTT.Spaces.Int.
 Require Import HoTT.Homotopy.HomotopyGroup.
 Require Import HoTT.Homotopy.Suspension.
 Require Import HoTT.HIT.Circle.
-Require Import HoTT.HIT.Truncations.
 Require Import HoTT.HIT.Spheres.
-Require Import HoTT.UnivalenceAxiom.
+Require Import HoTT.Truncations.
 
 (* Calculation of Pi 1 S1 *)
 
 Section Pi1S1.
+  Context `{Univalence}.
+
   Local Notation "( A , a )" := (Build_pType A a).
 
   Theorem Pi1S1 : Pi 1 (S1, base) <~> Int.

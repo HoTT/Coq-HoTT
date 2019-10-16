@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import UnivalenceImpliesFunext TruncType HSet.
-Require Import HIT.Truncations.
+Require Import HoTT.Truncations.
 Import TrM.
 
 Local Open Scope nat_scope.

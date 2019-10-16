@@ -1,10 +1,16 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Connectedness *)
+Require Import Basics.
+Require Import Types.
+Require Import TruncType.
 
-Require Import HoTT.Basics HoTT.Types.
-Require Import TruncType UnivalenceImpliesFunext HProp EquivalenceVarieties Extensions Factorization.
+Require Import UnivalenceImpliesFunext.
+Require Import HProp.
+Require Import EquivalenceVarieties.
+Require Import Extensions.
+Require Import Factorization.
 Require Export Modality.        (* [Export] since the actual definitions of connectednes appear there, in the generality of a modality. *)
-Require Import HIT.Truncations.
+Require Import Truncations.Core.
 Import TrM.
 
 Local Open Scope path_scope.

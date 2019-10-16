@@ -2,7 +2,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Pointed UnivalenceImpliesFunext Factorization.
 Require Import Modalities.Modality.
-Require Import HIT.Truncations HIT.Connectedness HIT.quotient.
+Require Import HoTT.Truncations HIT.quotient.
 Require Import Algebra.ooGroup.
 Import TrM.
 

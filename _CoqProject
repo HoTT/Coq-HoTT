@@ -3,6 +3,30 @@
 COQC = hoqc
 
 #
+#   Table of contents:
+#
+#   # Basics
+#   # Types
+#   # Cubical
+#   # Spaces
+#   # Modalities
+#   # HIT
+#   # Colimits
+#   # Diagrams
+#   # Truncations
+#   # Other
+#   # Contrib
+#   # Homotopy
+#   # Pointed
+#   # Spectra
+#   # Algebra
+#   # Tactics
+#   # PropResizing 
+#   # Categories
+#   # Classes
+#
+
+#
 #   Basics
 #
 
@@ -100,9 +124,7 @@ theories/Comodalities/CoreflectiveSubuniverse.v
 #
 
 theories/HIT/Circle.v
-theories/HIT/Truncations.v
 theories/HIT/TruncImpliesFunext.v
-theories/HIT/Connectedness.v
 theories/HIT/Coeq.v
 theories/HIT/FreeIntQuotient.v
 theories/HIT/Flattening.v
@@ -145,6 +167,15 @@ theories/Diagrams/Sequence.v
 theories/Diagrams/Span.v
 theories/Diagrams/ParallelPair.v
 theories/Diagrams/DDiagram.v
+
+#
+#   Truncations
+#
+
+theories/Truncations.v
+
+theories/Truncations/Core.v
+theories/Truncations/Connectedness.v
 
 #
 #   Other
@@ -245,7 +276,7 @@ theories/Tactics/BinderApply.v
 #
 
 theories/PropResizing/PropResizing.v
-theories/PropResizing/Truncations.v
+theories/PropResizing/ImpredicativeTruncation.v
 theories/PropResizing/Nat.v
 
 #
@@ -497,7 +528,9 @@ theories/Categories/Utf8.v
 theories/Classes/tactics/ring_tac.v
 theories/Classes/tactics/ring_quote.v
 theories/Classes/tactics/ring_pol.v
+
 theories/Classes/isomorphisms/rings.v
+
 theories/Classes/orders/rings.v
 theories/Classes/orders/maps.v
 theories/Classes/orders/semirings.v
@@ -508,6 +541,7 @@ theories/Classes/orders/naturals.v
 theories/Classes/orders/orders.v
 theories/Classes/orders/nat_int.v
 theories/Classes/orders/integers.v
+
 theories/Classes/implementations/assume_rationals.v
 theories/Classes/implementations/peano_naturals.v
 theories/Classes/implementations/binary_naturals.v
@@ -519,6 +553,7 @@ theories/Classes/implementations/hprop_lattice.v
 theories/Classes/implementations/pointwise.v
 theories/Classes/implementations/family_prod.v
 theories/Classes/implementations/ne_list.v
+
 theories/Classes/interfaces/monad.v
 theories/Classes/interfaces/abstract_algebra.v
 theories/Classes/interfaces/naturals.v
@@ -529,6 +564,7 @@ theories/Classes/interfaces/integers.v
 theories/Classes/interfaces/ua_algebra.v
 theories/Classes/interfaces/ua_setalgebra.v
 theories/Classes/interfaces/ua_congruence.v
+
 theories/Classes/theory/premetric.v
 theories/Classes/theory/int_abs.v
 theories/Classes/theory/rings.v
@@ -550,5 +586,9 @@ theories/Classes/theory/ua_quotient_algebra.v
 theories/Classes/theory/ua_first_isomorphism.v
 theories/Classes/theory/ua_second_isomorphism.v
 theories/Classes/theory/ua_third_isomorphism.v
+
 theories/Classes/categories/ua_category.v
+
 theories/Classes/tests/ring_tac.v
+
+
