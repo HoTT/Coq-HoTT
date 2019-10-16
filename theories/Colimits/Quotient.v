@@ -15,14 +15,14 @@ Local Open Scope path_scope.
 
 We aim to model:
 <<
-Inductive quotient : Type :=
-   | class_of : A -> quotient
-   | related_classes_eq : forall x y, (R x y), class_of x = class_of y
-   | quotient_set : IsHSet quotient
+Inductive Quotient R : Type :=
+   | class_of R : A -> Quotient R
+   | qglue : forall x y, (R x y) -> class_of R x = class_of R y
+   | ishset_quotient : IsHSet (Quotient R)
 >>
-*)
+We do this by defining the quotient as a truncated coequalizer.
 
-(** This development should be further connected with the sections in the book; see below.*)
+*)
 
 Definition Quotient@{i j k} {A : Type@{i}} (R : relation@{i j} A)
   `{is_mere_relation _ R} : Type@{k}
@@ -37,6 +37,9 @@ Definition qglue@{i j k} {A : Type@{i}} {R : relation@{i j} A}
   `{is_mere_relation _ R} {x y : A}
   : R x y -> class_of@{i j k} R x = class_of R y
   := fun p => ap tr (cglue (x; y; p)).
+
+Global Instance ishset_quotient {A : Type} (R : relation A)
+  `{is_mere_relation _ R} : IsHSet (Quotient R) := _.
 
 Definition Quotient_ind@{i j k l}
   {A : Type@{i}} (R : relation@{i j} A) `{is_mere_relation _ R}
@@ -93,57 +96,7 @@ Arguments qglue : simpl never.
 Arguments Quotient_ind_beta_qglue : simpl never.
 Arguments Quotient_rec_beta_qglue : simpl never.
 
-(* TODO: add to Notations.v *)
 Notation "A / R" := (Quotient (A:=A) R).
-
-(*
-Module Export Quotient.
-
-  Section Domain.
-
-    Context {A : Type} (R:relation A) {sR: is_mere_relation _ R}.
-
-    (** We choose to let the definition of quotient depend on the proof that [R] is a set-relations.  Alternatively, we could have defined it for all relations and only develop the theory for set-relations.  The former seems more natural.
-
-We do not require [R] to be an equivalence relation, but implicitly consider its transitive-reflexive closure. *)
-
-
-    (** Note: If we wanted to be really accurate, we'd need to put [@quotient A R sr] in the max [U_{sup(i, j)}] of the universes of [A : U_i] and [R : A -> A -> U_j].  But this requires some hacky code, at the moment, and the only thing we gain is avoiding making use of an implicit hpropositional resizing "axiom". *)
-
-    (** This definition has a parameter [sR] that shadows the ambient one in the Context in order to ensure that it actually ends up depending on everything in the Context when the section is closed, since its definition doesn't actually refer to any of them.  *)
-    Private Inductive quotient {sR: is_mere_relation _ R} : Type :=
-    | class_of : A -> quotient.
-
-    (** The path constructors. *)
-    Axiom related_classes_eq
-    : forall {x y : A}, R x y ->
-                        class_of x = class_of y.
-
-    Axiom quotient_set : IsHSet (@quotient sR).
-    Global Existing Instance quotient_set.
-
-    Definition quotient_ind (P : (@quotient sR) -> Type) {sP : forall x, IsHSet (P x)}
-               (dclass : forall x, P (class_of x))
-               (dequiv : (forall x y (H : R x y), (related_classes_eq H) # (dclass x) = dclass y))
-    : forall q, P q
-      := fun q => match q with class_of a => fun _ _ => dclass a end sP dequiv.
-
-    Definition quotient_ind_compute {P sP} dclass dequiv x
-    : @quotient_ind P sP dclass dequiv (class_of x) = dclass x.
-    Proof.
-      reflexivity.
-    Defined.
-
-    (** Again equality of paths needs to be postulated *)
-    Axiom quotient_ind_compute_path
-    : forall P sP dclass dequiv,
-      forall x y (H : R x y),
-        apD (@quotient_ind P sP dclass dequiv) (related_classes_eq H)
-        = dequiv x y H.
-
-  End Domain.
-
-End Quotient. *)
 
 Section Equiv.
 
@@ -165,14 +118,9 @@ Section Equiv.
     apply (transitivity p).
   Defined.
 
-  (* TODO: remove this since this is true by definition? *)
-  (* If x is in the class of y then they are related. *)
-  Definition in_class_of : forall x y, (in_class (class_of R x) y : Type) = R x y
-    := ltac:(reflexivity).
-
   (* Quotient induction into a hprop. *)
   Definition Quotient_ind_hprop
-    (P : Quotient R -> Type) `{forall x, IsHProp (P x)}
+    (P : A / R -> Type) `{forall x, IsHProp (P x)}
     (dclass : forall x, P (class_of R x)) : forall q, P q.
   Proof.
     serapply (Quotient_ind R P dclass).
@@ -189,7 +137,7 @@ Section Equiv.
   Defined.
 
   (* if x is in a class q, then the class of x is equal to q. *)
-  Lemma class_of_repr : forall q x, in_class q x -> q = class_of R x.
+  Lemma path_in_class_of : forall q x, in_class q x -> q = class_of R x.
   Proof.
     serapply Quotient_ind.
     { intros x y p.
@@ -262,7 +210,7 @@ Section Equiv.
   (* Universal property of quotient *)
   (* Lemma 6.10.3 *)
   Theorem equiv_quotient_ump (B : hSet)
-    : (Quotient R -> B) <~> {f : A -> B & forall x y, R x y -> f x = f y}.
+    : (A / R -> B) <~> {f : A -> B & forall x y, R x y -> f x = f y}.
   Proof.
     serapply equiv_adjointify.
     + intro f.
@@ -279,17 +227,13 @@ Section Equiv.
       reflexivity.
   Defined.
 
-  (** TODO:
+(** TODO: The equivalence with VVquotient [A//R].
+  10.1.10.
+    Equivalence relations are effective and there is an equivalence [A/R<~>A//R].
 
-  The equivalence with VVquotient [A//R].
-
-  This should lead to the unnamed theorem:
-
-  10.1.10. Equivalence relations are effective and there is an equivalence [A/R<~>A//R].
-  
-  This will need propositional resizing if we don't want to raise the universe level. *)
-
-  (**
+    This will need propositional resizing if we don't want to raise the universe level.
+*)
+(**
   The theory of canonical quotients is developed by C.Cohen:
   http://perso.crans.org/cohen/work/quotients/
  *)
@@ -297,6 +241,8 @@ Section Equiv.
 End Equiv.
 
 Section Functoriality.
+
+  (* TODO: Develop a notion of set with relation and use that instead of manually adding relation preserving conditions. *)
 
   Definition Quotient_functor
     {A : Type} (R : relation A) {sR : is_mere_relation _ R}
@@ -361,6 +307,8 @@ Section Functoriality.
 End Functoriality.
 
 Section Kernel.
+
+  (* TODO: Properly annotate with universes *)
 
   (** ** Quotients of kernels of maps to sets give a surjection/mono factorization. *)
 
