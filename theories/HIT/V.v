@@ -6,7 +6,7 @@ Require Import HoTT.Basics HoTT.Basics.Notations HoTT.Basics.Utf8.
 Require Import Types.Unit Types.Bool Types.Universe Types.Sigma Types.Arrow Types.Forall.
 Require Import HProp HSet UnivalenceImpliesFunext TruncType.
 Require Import Colimits.SpanPushout.
-Require Import HoTT.Truncations HIT.quotient.
+Require Import HoTT.Truncations Colimits.Quotient.
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
@@ -223,7 +223,7 @@ Notation "x ⊆ y" := (subset x y) : set_scope.
 
 
 (** ** Bisimulation relation *)
-(** The equality in V lives in Type@{U'}. We define the bisimulation relation which is a U-small resizing of the equality in V: it must live in hProp_U : Type{U'}, hence the codomain is hProp@{U'}. We then prove that bisimulation is equality (bisim_equals_id), then use it to prove the key lemma monic_set_present. *)
+(** The equality in V lives in Type@{U'}. We define the bisimulation relation which is a U-small resizing of the equality in V: it must live in hProp_U : Type{U'}, hence the codomain is hProp@{U}. We then prove that bisimulation is equality (bisim_equals_id), then use it to prove the key lemma monic_set_present. *)
 
 (* We define bisimulation by double induction on V. We first fix the first argument as set(A,f) and define bisim_aux : V -> hProp, by induction. This is the inner of the two inductions. *)
 Local Definition bisim_aux (A : Type) (f : A -> V) (H_f : A -> V -> hProp) : V -> hProp.
@@ -253,7 +253,7 @@ Proof.
 Defined.
 
 (* Then we define bisim : V -> (V -> hProp) by induction again *)
-Definition bisimulation : V@{U' U} -> V@{U' U} -> hProp@{U'}.
+Definition bisimulation : V@{U' U} -> V@{U' U} -> hProp@{U}.
 Proof.
   refine (V_rec' (V -> hProp) _ bisim_aux _).
   intros A B f g eq_img H_f H_g H_img.
