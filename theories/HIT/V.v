@@ -5,62 +5,10 @@
 Require Import HoTT.Basics HoTT.Basics.Notations HoTT.Basics.Utf8.
 Require Import Types.Unit Types.Bool Types.Universe Types.Sigma Types.Arrow Types.Forall.
 Require Import HProp HSet UnivalenceImpliesFunext TruncType.
+Require Import Colimits.SpanPushout.
 Require Import HoTT.Truncations HIT.quotient.
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
-
-
-
-(** ** Pushout with respect to a relation *)
-
-(** This could be implemented using the pushouts in /HIT/Pushout.v, where [f] and [g] are [(fst o pr1)] and [(snd o pr1)], with domain {(a,b) : A * B & R a b}. However, these pushouts weren't implemented when I started this work, and doing it this way is closer to exercise 10.11 of the HoTT book *)
-
-Module Export RPushout.
-
-Private Inductive RPushout {A B : Type} (R : A -> B -> hProp) : Type :=
-| inL : A -> RPushout R
-| inR : B -> RPushout R.
-
-Axiom glue : forall {A B : Type} (R : A -> B -> hProp)
-  (a : A) (b : B) (r : R a b), (inL R a) = (inR R b).
-
-Definition RPushout_ind {A B : Type} {R : A -> B -> hProp}
-  (P : RPushout R -> Type)
-  (i : forall a : A, P (inL R a)) (j : forall b : B, P (inR R b))
-  (gl : forall (a : A) (b : B) (r : R a b), (glue R a b r) # (i a) = (j b))
-: forall (x : RPushout R), P x
-:= fun x => (match x with inL a => (fun _ => i a)
-                        | inR b => (fun _ => j b) end) gl.
-
-Axiom RPushout_comp_glue : forall {A B : Type} {R : A -> B -> hProp}
-  (P : RPushout R -> Type)
-  (i : forall a : A, P (inL R a)) (j : forall b : B, P (inR R b))
-  (gl : forall (a : A) (b : B) (r : R a b), (glue R a b r) # (i a) = (j b))
-  (a : A) (b : B) (r : R a b),
-apD (RPushout_ind P i j gl) (glue R a b r) = gl a b r.
-
-End RPushout.
-
-(** The non-depentent eliminator *)
-
-Definition RPushout_rec {A B : Type} (R : A -> B -> hProp)
-  (P : Type) (i : A -> P) (j : B -> P)
-  (gl : forall (a : A) (b : B) (r : R a b), (i a) = (j b))
-: RPushout R -> P
-:= RPushout_ind (fun _ => P) i j (fun a b r => transport_const _ _ @ gl a b r).
-
-Definition RPushout_comp_nd_glue {A B : Type} (R : A -> B -> hProp)
-  (P : Type) (i : A -> P) (j : B -> P)
-  (gl : forall (a : A) (b : B) (r : R a b), (i a) = (j b))
-  (a : A) (b : B) (r : R a b)
-: ap (RPushout_rec R P i j gl) (glue R a b r) = gl a b r.
-Proof.
-  apply (cancelL (transport_const (glue R a b r) (i a))).
-  transitivity (apD (RPushout_rec R P i j gl) (glue R a b r)).
-  - apply (apD_const (RPushout_rec R P i j gl) (glue R a b r))^.
-  - refine (RPushout_comp_glue (fun _ => P) _ _ _ _ _ _).
-Defined.
-
 
 (** Bitotal relation *)
 
@@ -76,8 +24,8 @@ Private Inductive V : Type@{U'} :=
 | set {A : Type@{U}} (f : A -> V) : V.
 
 Axiom setext : forall {A B : Type} (R : A -> B -> hProp)
-  (bitot_R : bitotal R) (h : RPushout R -> V),
-set (h o (inL R)) = set (h o (inR R)).
+  (bitot_R : bitotal R) (h : SPushout R -> V),
+set (h o (spushl R)) = set (h o (spushr R)).
 
 Axiom is0trunc_V : IsTrunc 0 V.
 Existing Instance is0trunc_V.
@@ -86,9 +34,9 @@ Fixpoint V_ind (P : V -> Type)
   (H_0trunc : forall v : V, IsTrunc 0 (P v))
   (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
   (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
-    (h : RPushout R -> V) (H_h : forall x : RPushout R, P (h x)),
-    (setext R bitot_R h) # (H_set A (h o inL R) (H_h oD inL R))
-      = H_set B (h o inR R) (H_h oD inR R) )
+    (h : SPushout R -> V) (H_h : forall x : SPushout R, P (h x)),
+    (setext R bitot_R h) # (H_set A (h o spushl R) (H_h oD spushl R))
+      = H_set B (h o spushr R) (H_h oD spushr R) )
   (v : V)
 : P v
 := (match v with
@@ -103,10 +51,10 @@ Definition V_comp_setext (P : V -> Type)
   (H_0trunc : forall v : V, IsTrunc 0 (P v))
   (H_set : forall (A : Type) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
   (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
-    (h : RPushout R -> V) (H_h : forall x : RPushout R, P (h x)),
-    (setext R bitot_R h) # (H_set A (h o inL R) (H_h oD inL R))
-      = H_set B (h o inR R) (H_h oD inR R) )
-  (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R) (h : RPushout R -> V)
+    (h : SPushout R -> V) (H_h : forall x : SPushout R, P (h x)),
+    (setext R bitot_R h) # (H_set A (h o spushl R) (H_h oD spushl R))
+      = H_set B (h o spushr R) (H_h oD spushr R) )
+  (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R) (h : SPushout R -> V)
 : apD (V_ind P H_0trunc H_set H_setext) (setext R bitot_R h)
   = H_setext A B R bitot_R h ((V_ind P H_0trunc H_set H_setext) oD h).
 Proof.
@@ -119,8 +67,8 @@ Definition V_rec (P : Type)
   (H_0trunc : IsTrunc 0 P)
   (H_set : forall (A : Type), (A -> V) -> (A -> P) -> P)
   (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
-    (h : RPushout R -> V) (H_h : RPushout R -> P),
-    H_set A (h o inL R) (H_h o inL R) = H_set B (h o inR R) (H_h o inR R) )
+    (h : SPushout R -> V) (H_h : SPushout R -> P),
+    H_set A (h o spushl R) (H_h o spushl R) = H_set B (h o spushr R) (H_h o spushr R) )
 : V -> P.
 Proof.
   refine (V_ind _ _ H_set _).
@@ -131,9 +79,9 @@ Definition V_comp_nd_setext (P : Type)
   (H_0trunc : IsTrunc 0 P)
   (H_set : forall (A : Type), (A -> V) -> (A -> P) -> P)
   (H_setext : forall (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R)
-    (h : RPushout R -> V) (H_h : RPushout R -> P),
-    H_set A (h o inL R) (H_h o inL R) = H_set B (h o inR R) (H_h o inR R) )
-  (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R) (h : RPushout R -> V)
+    (h : SPushout R -> V) (H_h : SPushout R -> P),
+    H_set A (h o spushl R) (H_h o spushl R) = H_set B (h o spushr R) (H_h o spushr R) )
+  (A B : Type) (R : A -> B -> hProp) (bitot_R : bitotal R) (h : SPushout R -> V)
 : ap (V_rec P H_0trunc H_set H_setext) (setext R bitot_R h)
   = H_setext A B R bitot_R h ((V_rec P H_0trunc H_set H_setext) o h).
 Proof.
@@ -151,7 +99,7 @@ Definition setext' {A B : Type} (f : A -> V) (g : B -> V) (eq_img : equal_img f 
 : set f = set g.
 Proof.
   pose (R := fun a b => BuildhProp (f a = g b)).
-  pose (h := RPushout_rec R V f g (fun _ _ r => r)).
+  pose (h := SPushout_rec R V f g (fun _ _ r => r)).
   exact (setext R eq_img h).
 Defined.
 
@@ -168,14 +116,14 @@ Proof.
   apply H_setext'.
   - split.
     + intro a. generalize (fst bitot_R a). apply (Trunc_functor -1).
-      intros [b r]. exists b. exact (ap h (glue R _ _ r)).
+      intros [b r]. exists b. exact (ap h (spglue R r)).
     + intro b. generalize (snd bitot_R b). apply (Trunc_functor -1).
-      intros [a r]. exists a. exact (ap h (glue R _ _ r)).
+      intros [a r]. exists a. exact (ap h (spglue R r)).
   - split.
     + intro a. generalize (fst bitot_R a). apply (Trunc_functor -1).
-      intros [b r]. exists b. exact (ap H_h (glue R _ _ r)).
+      intros [b r]. exists b. exact (ap H_h (spglue R r)).
     + intro b. generalize (snd bitot_R b). apply (Trunc_functor -1).
-      intros [a r]. exists a. exact (ap H_h (glue R _ _ r)).
+      intros [a r]. exists a. exact (ap H_h (spglue R r)).
 Defined.
 
 (** Note that the hypothesis H_setext' differs from the one given in section 10.5 of the HoTT book. *)
@@ -195,19 +143,19 @@ Definition V_ind' (P : V -> Type)
 Proof.
   apply V_ind with H_set; try assumption.
   intros A B R bitot_R h H_h.
-  pose (f := h o inL R : A -> V ).
-  pose (g := h o inR R : B -> V ).
-  pose (H_f := H_h oD inL R : forall a : A, P (f a)).
-  pose (H_g := H_h oD inR R : forall b : B, P (g b)).
+  pose (f := h o spushl R : A -> V ).
+  pose (g := h o spushr R : B -> V ).
+  pose (H_f := H_h oD spushl R : forall a : A, P (f a)).
+  pose (H_g := H_h oD spushr R : forall b : B, P (g b)).
   assert (eq_img : equal_img f g).
   { split.
     - intro a. generalize (fst bitot_R a). apply (Trunc_functor -1).
-      intros [b r]. exists b. exact (ap h (glue R _ _ r)).
+      intros [b r]. exists b. exact (ap h (spglue R r)).
     - intro b. generalize (snd bitot_R b). apply (Trunc_functor -1).
-      intros [a r]. exists a. exact (ap h (glue R _ _ r)). }
-  transitivity (transport P (setext' (h o inL R) (h o inR R) eq_img)
-      (H_set A (h o inL R) (H_h oD inL R))).
-  { apply (ap (fun p => transport P p (H_set A (h o inL R) (H_h oD inL R)))).
+      intros [a r]. exists a. exact (ap h (spglue R r)). }
+  transitivity (transport P (setext' (h o spushl R) (h o spushr R) eq_img)
+      (H_set A (h o spushl R) (H_h oD spushl R))).
+  { apply (ap (fun p => transport P p (H_set A (h o spushl R) (H_h oD spushl R)))).
     apply path_ishprop. }
   apply (H_setext' A B f g eq_img H_f H_g).  split.
   - intro a.
@@ -215,16 +163,16 @@ Proof.
     apply (Trunc_functor -1).
     intros [b Rab]. exists b.
     apply tr.
-    exists (ap h (glue R _ _ Rab)).
-    apply (concatR (apD H_h (glue R _ _ Rab))).
+    exists (ap h (spglue R Rab)).
+    apply (concatR (apD H_h (spglue R Rab))).
     apply inverse. unfold f, g. apply transport_compose.
   - intros b.
     set (trunca := snd bitot_R b). generalize trunca.
     apply (Trunc_functor -1).
     intros [a Rab]. exists a.
     apply tr.
-    exists (ap h (glue R _ _ Rab)).
-    apply (concatR (apD H_h (glue R _ _ Rab))).
+    exists (ap h (spglue R Rab)).
+    apply (concatR (apD H_h (spglue R Rab))).
     apply inverse. unfold f, g. apply transport_compose.
 Defined.
 
