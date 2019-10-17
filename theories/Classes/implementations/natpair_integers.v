@@ -37,7 +37,7 @@ Context (N : Type@{UN}) `{Naturals@{UN UN UN UN UN UN UN UNalt} N}.
 Global Instance T_set : IsHSet (T N).
 Proof.
 assert (E : sigT (fun _ : N => N) <~> (T N)).
-- issig (@C N) (@pos N) (@neg N).
+- issig.
 - apply (trunc_equiv' _ E).
 Qed.
 

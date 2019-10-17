@@ -31,7 +31,7 @@ Section path_functor.
   Lemma equiv_sig_functor
   : functor_sig_T <~> Functor C D.
   Proof.
-    issig (@Build_Functor C D) (@object_of C D) (@morphism_of C D) (@composition_of C D) (@identity_of C D).
+    issig.
   Defined.
 
   (** We could leave it at that and be done with it, but we want a more convenient form for actually constructing paths between functors.  For this, we write a trimmed down version of something equivalent to the type of paths between functors. *)

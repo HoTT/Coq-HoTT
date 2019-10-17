@@ -171,8 +171,7 @@ Definition SigAlgebra (σ : Signature) : Type
 
 Lemma issig_algebra (σ : Signature) : SigAlgebra σ <~> Algebra σ.
 Proof.
-  unfold SigAlgebra.
-  issig (@BuildAlgebra σ) (@carriers σ) (@operations σ).
+  issig.
 Defined.
 
 Class IsTruncAlgebra (n : trunc_index) {σ : Signature} (A : Algebra σ)

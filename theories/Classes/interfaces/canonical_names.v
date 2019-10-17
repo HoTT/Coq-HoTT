@@ -288,9 +288,7 @@ Defined.
 Lemma issig_equiv_rel {A:Type} (R : Relation A)
   : SigEquivRel R <~> EquivRel R.
 Proof.
-  unfold SigEquivRel.
-  issig (@Build_EquivRel A R) (@EquivRel_Reflexive A R)
-          (@EquivRel_Symmetric A R) (@EquivRel_Transitive A R).
+  issig.
 Defined.
 
 Global Instance trunc_equiv_rel `{Funext} {A : Type}

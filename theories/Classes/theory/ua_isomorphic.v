@@ -46,9 +46,7 @@ Definition SigIsomorphic {σ : Signature} (A B : Algebra σ) :=
 Lemma issig_isomorphic {σ : Signature} (A B : Algebra σ)
   : SigIsomorphic A B <~> A ≅ B.
 Proof.
-  unfold SigIsomorphic.
-  issig (@BuildIsomorphic σ A B) (@def_isomorphic σ A B)
-    (@is_homomorphism_isomorphic σ A B) (@is_isomorphism_isomorphic σ A B).
+  issig.
 Defined.
 
 (** Isomorphic algebras can be identified [A ≅ B → A = B]. *)
@@ -75,9 +73,12 @@ Lemma path_isomorphic `{Funext} {σ : Signature} {A B : Algebra σ}
   (b : a#(is_homomorphism_isomorphic F) = is_homomorphism_isomorphic G)
   : F = G.
 Proof.
-  apply (ap (issig_isomorphic A B)^-1)^-1. unshelve eapply path_sigma.
+  apply (ap (issig_isomorphic A B)^-1)^-1.
+  serapply path_sigma.
   - exact a.
-  - apply path_sigma_hprop. cbn. by destruct b,a.
+  - apply path_sigma_hprop.
+    refine (ap _ (transport_sigma _ _) @ _).
+    apply b.
 Defined.
 
 (** Suppose [IsHSetAlgebra B]. To find a path between two isomorphic

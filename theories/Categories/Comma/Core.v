@@ -74,10 +74,7 @@ Module Import CommaCategory.
     Lemma issig_object
     : object_sig_T <~> object.
     Proof.
-      issig (@Build_object)
-            (@a)
-            (@b)
-            (@f).
+      issig.
     Defined.
 
     Global Instance trunc_object `{IsTrunc n A, IsTrunc n B}
@@ -154,11 +151,7 @@ Module Import CommaCategory.
     : (morphism_sig_T' abf a'b'f')
         <~> morphism abf a'b'f'.
     Proof.
-      issig (@Build_morphism' abf a'b'f')
-            (@g abf a'b'f')
-            (@h abf a'b'f')
-            (@p abf a'b'f')
-            (@p_sym abf a'b'f').
+      issig.
     Defined.
 
     Lemma issig_morphism_helper {T0} `{IsHSet T0} (a b : T0) (pf : a = b)

@@ -36,9 +36,7 @@ Section FunctorSectionCategory.
   Lemma section_of_functor_sig
   : section_of_functor_sigT <~> SectionOfFunctor.
   Proof.
-    issig Build_SectionOfFunctor
-          section_of_functor_morphism
-          section_of_functor_issect.
+    issig.
   Defined.
 
   Local Open Scope natural_transformation_scope.

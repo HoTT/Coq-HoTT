@@ -33,7 +33,7 @@ Section Factorization.
       { gin1 : class1 _ _ g & class2 _ _ h }}}}}
       <~> Factorization.
   Proof.
-    issig Build_Factorization intermediate factor1 factor2 fact_factors inclass1 inclass2.
+    issig.
   Defined.
 
   (** A path between factorizations is equivalent to a structure of the following sort. *)

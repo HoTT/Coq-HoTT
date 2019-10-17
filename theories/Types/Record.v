@@ -5,125 +5,180 @@ Require Import HoTT.Basics.
 Require Import Types.Sigma Types.Forall.
 Local Open Scope path_scope.
 
+(** The following tactic [issig] proves automatically that a record type is equivalent to a nested Sigma-type. Specifically, it proves a goal that looks like
 
-(** The following tactic proves automatically that a two-component record type is equivalent to a Sigma-type.  Specifically, it proves a goal that looks like
 <<
    { x : A & B x } <~> Some_Record
 >>
-   You have to give it the record constructor and the two record projections as arguments (it has no way to guess what those might be). *)
 
-Ltac issig2 build pr1 pr2 :=
-  (** Just in case the user supplied a goal which only *reduces* to one of the desired form. *)
+In fact you don't even have to write down the sigma type. Though it is good practice to write it out anyway, this tactic can work out the sigma type and tell you what it should look like.
+
+The following should generate the desired equivalence. You can check the definition to see what type it has and therefore what the sigma type should be.
+
+<<
+  Definition issig_myrecord
+    : _ <~> MyRecord := ltac:(issig).
+
+  Check issig_myrecord.
+>>
+
+In order to define this tactic we have many helper tactics.
+
+*)
+
+Local Ltac require_as_test_cps require if_yes if_no :=
+  let res := match constr:(Set) with
+             | _ => let __ := match constr:(Set) with _ => require () end in
+                    ltac:(if_yes)
+             | _ => ltac:(if_no)
+             end in res ().
+
+Local Ltac peel_evars term :=
+  lazymatch term with
+  | ?f ?x
+    => require_as_test_cps ltac:(fun _ => has_evar x)
+                                  ltac:(fun _ => peel_evars f)
+                                         ltac:(fun _ => term)
+  | _ => term
+  end.
+
+Local Ltac pi_to_sig ty :=
+  lazymatch (eval cbv beta in ty) with
+  | forall (x : ?T) (y : @?A x), @?P x y
+    => let x' := fresh in
+       constr:(@sigT T (fun x' : T => ltac:(let res := pi_to_sig (forall y : A x', P x' y) in exact res)))
+  | ?T -> _ => T
+  end.
+
+Local Ltac ctor_to_sig ctor :=
+  let ctor := peel_evars ctor in
+  let t := type of ctor in
+  pi_to_sig t.
+
+Local Ltac unify_first_evar_with term u :=
+  lazymatch term with
+  | ?f ?x
+    => tryif has_evar f
+    then unify_first_evar_with f u
+    else unify x u
+  end.
+
+Local Ltac unify_with_projections term u :=
+  (unify_first_evar_with term u.1; unify_with_projections term u.2) +
+  (unify_first_evar_with term u;
+   tryif has_evar term then fail 0 term "has evars remaining" else idtac).
+
+(* Completely destroys v into it's pieces and trys to put pieces in sigma. *)
+Local Ltac refine_with_existT_as_much_as_needed_then_destruct v :=
+  ((destruct v; shelve) +
+   (simple notypeclasses refine (_ ; _);
+    [ destruct v; shelve
+    | refine_with_existT_as_much_as_needed_then_destruct v ])).
+
+(* Notation for notypeclasses refine *)
+Local Tactic Notation "ntcrefine" uconstr(term) := notypeclasses refine term.
+
+(* TODO: consider adding this and the above into Overture.v? *)
+(* Analogue of rapply, erapply or serapply for notypeclasses refine *)
+Local Ltac ntcrapply p :=
+  ntcrefine p ||
+  ntcrefine (p _) ||
+  ntcrefine (p _ _) ||
+  ntcrefine (p _ _ _) ||
+  ntcrefine (p _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
+
+(* This can be found in Tactics.v but we reproduce it here since it is simple. *)
+Local Ltac head expr :=
+  match expr with
+    | ?f _ => head f
+    | _ => expr
+  end.
+
+Local Ltac get_builder T :=
+  let x := fresh in
+  let x' := fresh in
+  let h := open_constr:(_) in
+  let __ := constr:(fun (x : T)
+                    => let x' := x in
+                       ltac:(destruct x;
+                             let x' := (eval cbv delta [x'] in x') in
+                             let x' := head x' in
+                             unify h x';
+                             exact I)) in
+  h.
+
+(* A version of econstructor that doesn't resolve typeclasses. *)
+Local Ltac ntceconstructor :=
+  lazymatch goal with
+  | [ |- ?G ] => let build := get_builder G in
+                 ntcrapply build
+  end.
+
+(* Finally we can define our issig tactic: *)
+Ltac issig :=
+  (* First we make sure things are normalised. *)
   hnf;
-  (** Extract the fibration of which our Sigma-type is the total space, as well as the record type. We pull the terms out of a [match], rather than leaving everything inside the [match] because this gives us better error messages. *)
-  let fibration := match goal with |- sigT ?fibration <~> ?record => constr:(fibration) end in
-  let record := match goal with |- sigT ?fibration <~> ?record => constr:(record) end in
-  exact (Build_Equiv _ _ _
-                    (Build_IsEquiv
-                       (sigT fibration) record
-                       (fun u => build u.1 u.2)
-                       (fun v => existT fibration (pr1 v) (pr2 v))
-                       (fun v => let (v1,v2) as v' return (build (pr1 v') (pr2 v') = v') := v in 1)
-                       eta_sigma
-                       (** Since [sigT] is primitve, we get judgmental η, and so we can just use the identity here *)
-                       (fun _ => 1))).
-
-(** This allows us to use the same notation for the tactics with varying numbers of variables. *)
-Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) :=
-  issig2 build pr1 pr2.
+  (* We get the types either side of the equivalence. *)
+  let A := match goal with |- ?A <~> ?B => constr:(A) end in
+  let B := match goal with |- ?A <~> ?B => constr:(B) end in
+  let u := fresh "u" in
+  let v := fresh "v" in
+  (** We build an equivalence with 5 holes. *)
+  simple notypeclasses refine  (* We don't want typeclass search running. *)
+         (BuildEquiv A B _
+                     (BuildIsEquiv
+                        A B
+                        (fun u => _)
+                        (fun v => _)
+                        (fun v => _)
+                        (fun u => _)
+                        (fun _ => _)));
+  (** Going from a sigma type to a record *)
+  [ let T := match goal with |- ?T => T end in
+    (* let built be the constructor of T *)
+    let built := open_constr:(ltac:(ntceconstructor) : T) in
+    let A' := ctor_to_sig built in
+    unify A A';
+    unify_with_projections built u;
+    refine built
+  (** Going from a record to a sigma type *)
+  | refine_with_existT_as_much_as_needed_then_destruct v
+  (** Proving eissect *)
+  | destruct v; cbn [pr1 pr2]; reflexivity
+  (** Proving eisretr *)
+  | reflexivity
+  (** Proving eisadj *)
+  | reflexivity ].
 
 (** We show how the tactic works in a couple of examples. *)
 
 Definition issig_contr (A : Type)
-  : { x : A & forall y:A, x = y } <~> Contr A.
+  : {x : A & forall y, x = y} <~> Contr A.
 Proof.
-  issig (BuildContr A) (@center A) (@contr A).
+  issig.
 Defined.
 
 Definition issig_equiv (A B : Type)
-  : { f : A -> B & IsEquiv f } <~> Equiv A B.
+  : {f : A -> B & IsEquiv f} <~> Equiv A B.
 Proof.
-  issig (Build_Equiv A B) (@equiv_fun A B) (@equiv_isequiv A B).
+  issig.
 Defined.
 
-(** Here is a version of the [issig] tactic for three-component records, which proves goals that look like
-<<
-   { x : A & { y : B x & C x y } } <~> Some_Record.
->>
-   It takes the record constructor and its three projections as arguments, as before. *)
-
-Ltac issig3 build pr1 pr2 pr3 :=
-  hnf;
-  let A := match goal with |- ?A <~> ?B => constr:(A) end in
-  let B := match goal with |- ?A <~> ?B => constr:(B) end in
-  exact (Build_Equiv _ _ _
-                    (Build_IsEquiv
-                       A B
-                       (fun u => build u.1 u.2.1 u.2.2)
-                       (fun v => (pr1 v; pr2 v; pr3 v))
-                       (fun v => let (v1, v2, v3) as v' return (build (pr1 v') (pr2 v') (pr3 v') = v') := v in 1)
-                       eta2_sigma
-                       (fun _ => 1))).
-
-Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) :=
-  issig3 build pr1 pr2 pr3.
-
-(** And a similar version for four-component records.  It should be clear how to extend the pattern indefinitely. *)
-Ltac issig4 build pr1 pr2 pr3 pr4 :=
-  hnf;
-  let A := match goal with |- ?A <~> ?B => constr:(A) end in
-  let B := match goal with |- ?A <~> ?B => constr:(B) end in
-  exact (Build_Equiv _ _ _
-                    (Build_IsEquiv
-                       A B
-                       (fun u => build u.1 u.2.1 u.2.2.1 u.2.2.2)
-                       (fun v => (pr1 v; pr2 v; pr3 v; pr4 v))
-                       (fun v => let (v1, v2, v3, v4) as v' return (build (pr1 v') (pr2 v') (pr3 v') (pr4 v') = v') := v in 1)
-                       eta3_sigma
-                       (fun _ => 1))).
-
-Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) constr(pr4) :=
-  issig4 build pr1 pr2 pr3 pr4.
-
-
-Ltac issig5 build pr1 pr2 pr3 pr4 pr5 :=
-  hnf;
-  let A := match goal with |- ?A <~> ?B => constr:(A) end in
-  let B := match goal with |- ?A <~> ?B => constr:(B) end in
-  exact (Build_Equiv _ _ _
-                    (Build_IsEquiv
-                       A B
-                       (fun u => build u.1 u.2.1 u.2.2.1 u.2.2.2.1 u.2.2.2.2)
-                       (fun v => (pr1 v; pr2 v; pr3 v; pr4 v ; pr5 v))
-                       (fun v => let (v1, v2, v3, v4, v5) as v' return (build (pr1 v') (pr2 v') (pr3 v') (pr4 v') (pr5 v') = v') := v in 1)
-                       (fun u => 1)
-                       (fun _ => 1))).
-
-Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) constr(pr4) constr(pr5) :=
-  issig5 build pr1 pr2 pr3 pr4 pr5.
-
-Ltac issig6 build pr1 pr2 pr3 pr4 pr5 pr6 :=
-  hnf;
-  let A := match goal with |- ?A <~> ?B => constr:(A) end in
-  let B := match goal with |- ?A <~> ?B => constr:(B) end in
-  exact (Build_Equiv _ _ _
-                    (Build_IsEquiv
-                       A B
-                       (fun u => build u.1 u.2.1 u.2.2.1 u.2.2.2.1 u.2.2.2.2.1 u.2.2.2.2.2)
-                       (fun v => (pr1 v; pr2 v; pr3 v; pr4 v ; pr5 v ; pr6 v))
-                       (fun v => let (v1, v2, v3, v4, v5, v6) as v' return (build (pr1 v') (pr2 v') (pr3 v') (pr4 v') (pr5 v') (pr6 v') = v') := v in 1)
-                       (fun u => 1)
-                       (fun _ => 1))).
-
-Tactic Notation "issig" constr(build) constr(pr1) constr(pr2) constr(pr3) constr(pr4) constr(pr5) constr(pr6) :=
-  issig6 build pr1 pr2 pr3 pr4 pr5 pr6.
-
-(** The record [IsEquiv] has four components, so [issig4] can prove that it is equivalent to an iterated Sigma-type. *)
-
-Definition issig_isequiv {A B : Type} (f : A -> B) :
-  { g:B->A & { r:Sect g f & { s:Sect f g & forall x : A, r (f x) = ap f (s x) }}}
+Definition issig_isequiv {A B : Type} (f : A -> B)
+  : {g : B -> A & {r : Sect g f & { s : Sect f g
+    & forall x : A, r (f x) = ap f (s x)}}}
   <~> IsEquiv f.
 Proof.
-  issig (Build_IsEquiv A B f) (@equiv_inv A B f) (@eisretr A B f)
-        (@eissect A B f) (@eisadj A B f).
+  issig.
 Defined.

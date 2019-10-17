@@ -204,7 +204,7 @@ Module PreCategoryOfStructures.
       | is_structure_homomorphism _ _ _ f xa.2 yb.2 }
         <~> morphism xa yb.
     Proof.
-      issig (@Build_morphism xa yb) (@f xa yb) (@h xa yb).
+      issig.
     Defined.
 
     Lemma path_morphism

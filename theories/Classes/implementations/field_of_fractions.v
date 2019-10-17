@@ -25,7 +25,7 @@ Record Frac@{} : Type
 Lemma Frac_ishset' : IsHSet Frac.
 Proof.
 assert (E : sigT (fun n : R => sigT (fun d : R => ~ d = 0 )) <~> Frac).
-- issig frac num den den_ne_0.
+- issig.
 - apply (trunc_equiv' _ E).
 Qed.
 

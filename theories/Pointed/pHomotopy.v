@@ -69,6 +69,6 @@ Notation "p ^*" := (phomotopy_inverse p) : pointed_scope.
 Definition issig_phomotopy {A B : pType} (f g : A ->* B)
 : { p : f == g & p (point A) @ point_eq g = point_eq f } <~> (f ==* g).
 Proof.
-  issig (@Build_pHomotopy A B f g) (@pointed_htpy A B f g) (@point_htpy A B f g).
+  issig.
 Defined.
 
