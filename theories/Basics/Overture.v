@@ -834,6 +834,27 @@ Ltac srapply p :=
 
 Tactic Notation "serapply" uconstr(term) := srapply term.
 
+(** A shorter name for [notypeclasses refine]. *)
+Tactic Notation "ntcrefine" uconstr(term) := notypeclasses refine term.
+
+(* An alternative version of [rapply] using [notypeclasses refine]. *)
+Local Ltac ntcrapply p :=
+  ntcrefine p ||
+  ntcrefine (p _) ||
+  ntcrefine (p _ _) ||
+  ntcrefine (p _ _ _) ||
+  ntcrefine (p _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  ntcrefine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
 
 (** Ssreflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=
@@ -935,6 +956,34 @@ Ltac atomic x :=
     | _ => idtac
   end.
 
+(** Find the head of the given expression. *)
+Ltac head expr :=
+  match expr with
+    | ?f _ => head f
+    | _ => expr
+  end.
+
+(** This tactic gets the constructor of any one-constructor inductive type. *)
+Ltac get_constructor_head T :=
+  let x := fresh in
+  let x' := fresh in
+  let h := open_constr:(_) in
+  let __ := constr:(fun (x : T)
+                    => let x' := x in
+                       ltac:(destruct x;
+                             let x' := (eval cbv delta [x'] in x') in
+                             let x' := head x' in
+                             unify h x';
+                             exact I)) in
+  h.
+
+(* A version of econstructor that doesn't resolve typeclasses. *)
+Ltac ntceconstructor :=
+  lazymatch goal with
+  | [ |- ?G ] => let build := get_constructor_head G in
+                 ntcrapply build
+  end.
+
 (** [revert_opaque x] is like [revert x], except that it fails if [x] is not an opaque variable (i.e. if it has a [:=] definition rather than just a type). *)
 Ltac revert_opaque x :=
   revert x;
@@ -983,3 +1032,13 @@ Ltac rel_hnf :=
                          let y' := (eval hnf in y) in
                          change (R x' y')
   end.
+
+(** This tactic is a version of [tryif require () then if_yes () else if_no ()] which is suitable for use in constructing constrs by virtue of being evaluated during the Ltac expression evaluation phase rather than during the tactic running phase.
+All three arguments are expected to be tactic thunks which will be passed a dummy unit argument.*)
+Ltac tryif_cps require if_yes if_no :=
+  let res := match constr:(Set) with
+             | _ => let __ := match constr:(Set) with _ => require () end in
+                    ltac:(if_yes)
+             | _ => ltac:(if_no)
+             end in res ().
+
