@@ -3,7 +3,6 @@ Require Import HoTT.HIT.quotient
   HoTT.Types.Universe
   HoTT.Basics.Trunc
   HoTT.Basics.Decidable
-  HoTT.Types.Record
   HoTT.Types.Prod
   HoTT.Types.Arrow
   HoTT.Types.Sum

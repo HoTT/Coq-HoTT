@@ -6,7 +6,7 @@ Require Import Category.Morphisms FunctorCategory.Core.
 Require Import Pseudofunctor.Core.
 Require Import NaturalTransformation.Composition.Laws.
 Require Import FunctorCategory.Morphisms.
-Require Import Types.Record Trunc Types.Paths Types.Sigma.
+Require Import Trunc Types.Paths Types.Sigma.
 
 Import Functor.Identity.FunctorIdentityNotations.
 

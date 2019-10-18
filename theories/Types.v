@@ -5,7 +5,6 @@ Require Export Types.Prod.
 Require Export Types.Forall.
 Require Export Types.Arrow.
 Require Export Types.Sigma.
-Require Export Types.Record.
 Require Export Types.Equiv.
 Require Export Types.Universe.
 Require Export Types.Bool.

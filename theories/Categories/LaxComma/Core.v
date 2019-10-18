@@ -13,7 +13,7 @@ Require Import Pseudofunctor.Core.
 Require Import NaturalTransformation.Composition.Laws.
 Require Import FunctorCategory.Morphisms.
 Require LaxComma.CoreLaws.
-Require Import Types.Record Trunc HoTT.Tactics Types.Paths Types.Sigma.
+Require Import Trunc HoTT.Tactics Types.Paths Types.Sigma.
 Local Set Warnings Append "-notation-overridden".
 Require Import Basics.Notations.
 Local Set Warnings Append "notation-overridden".

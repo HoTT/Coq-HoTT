@@ -2,8 +2,7 @@ Require Import HoTT.HIT.quotient
   HoTT.Basics.PathGroupoids
   HoTT.Types.Universe
   HoTT.Basics.Trunc
-  HoTT.Basics.Decidable
-  HoTT.Types.Record.
+  HoTT.Basics.Decidable.
 Require Import 
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.theory.rings

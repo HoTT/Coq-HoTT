@@ -3,7 +3,7 @@ Require Import Category.Core Functor.Core.
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 Require Functor.Identity.
 Require Import Category.Strict.
-Require Import Types.Record Types.Paths Types.Sigma Trunc HoTT.Tactics HProp.
+Require Import Types.Paths Types.Sigma Trunc HoTT.Tactics HProp.
 Import Functor.Identity.FunctorIdentityNotations.
 
 Set Universe Polymorphism.

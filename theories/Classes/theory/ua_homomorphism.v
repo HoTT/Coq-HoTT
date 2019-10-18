@@ -11,7 +11,6 @@ Require Import
   HoTT.Types.Forall
   HoTT.Types.Arrow
   HoTT.Types.Universe
-  HoTT.Types.Record
   HoTT.Types.Sigma
   HoTT.Fibrations
   HoTT.HProp

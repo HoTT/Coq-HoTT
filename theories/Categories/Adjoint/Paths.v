@@ -3,7 +3,7 @@ Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Composition.Core Functor.Identity.
 Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
 Require Import Adjoint.UnitCounit Adjoint.Core NaturalTransformation.Paths.
-Require Import Types.Record Types.Sigma Trunc.
+Require Import Types Types.Sigma Trunc.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

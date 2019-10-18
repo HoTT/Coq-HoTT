@@ -9,7 +9,6 @@ Require Export
 
 Require Import
   HoTT.Basics.Equivalences
-  HoTT.Types.Record
   HoTT.Types.Sigma
   HoTT.Types.Arrow
   HoTT.Types.Forall

@@ -9,7 +9,6 @@ Require Import
   HoTT.Basics.Equivalences
   HoTT.Types.Forall
   HoTT.Types.Sigma
-  HoTT.Types.Record
   HoTT.Types.Universe
   HoTT.Tactics.
 

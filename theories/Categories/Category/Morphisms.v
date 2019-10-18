@@ -1,6 +1,6 @@
 (** * Definitions and theorems about {iso,epi,mono,}morphisms in a precategory *)
 Require Import Category.Core Functor.Core.
-Require Import HoTT.Tactics Types.Record Trunc HProp Types.Sigma Equivalences.
+Require Import HoTT.Tactics Trunc HProp Types.Sigma Equivalences.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

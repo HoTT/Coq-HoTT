@@ -54,7 +54,6 @@ theories/Types/Forall.v
 theories/Types/Arrow.v
 theories/Types/Sigma.v
 theories/Types/Prod.v
-theories/Types/Record.v
 theories/Types/Empty.v
 theories/Types/Bool.v
 theories/Types/Sum.v

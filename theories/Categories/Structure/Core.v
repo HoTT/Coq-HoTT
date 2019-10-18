@@ -1,6 +1,6 @@
 (** * Notions of Structure *)
 Require Import Category.Core.
-Require Import HProp HSet Types.Sigma Types.Record Trunc.
+Require Import HProp HSet Types.Sigma Trunc.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

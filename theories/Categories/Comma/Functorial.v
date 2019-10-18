@@ -11,7 +11,7 @@ Local Set Warnings Append "-notation-overridden". (* work around bug #5567, http
 Import Comma.Core.
 Local Set Warnings Append "notation-overridden".
 Import Functor.Identity.FunctorIdentityNotations NaturalTransformation.Identity.NaturalTransformationIdentityNotations.
-Require Import Types.Record Trunc HoTT.Tactics PathGroupoids Types.Forall.
+Require Import Trunc HoTT.Tactics PathGroupoids Types.Forall.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
