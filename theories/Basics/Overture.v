@@ -835,26 +835,26 @@ Ltac srapply p :=
 Tactic Notation "serapply" uconstr(term) := srapply term.
 
 (** A shorter name for [notypeclasses refine]. *)
-Tactic Notation "nrefine" uconstr(term) := notypeclasses refine term.
+Tactic Notation "ntc_refine" uconstr(term) := notypeclasses refine term.
 
 (* An alternative version of [rapply] using [notypeclasses refine]. *)
-Local Ltac nrapply p :=
-  nrefine p ||
-  nrefine (p _) ||
-  nrefine (p _ _) ||
-  nrefine (p _ _ _) ||
-  nrefine (p _ _ _ _) ||
-  nrefine (p _ _ _ _ _) ||
-  nrefine (p _ _ _ _ _ _) ||
-  nrefine (p _ _ _ _ _ _ _) ||
-  nrefine (p _ _ _ _ _ _ _ _) ||
-  nrefine (p _ _ _ _ _ _ _ _ _) ||
-  nrefine (p _ _ _ _ _ _ _ _ _ _) ||
-  nrefine (p _ _ _ _ _ _ _ _ _ _ _) ||
-  nrefine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
-  nrefine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  nrefine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
-  nrefine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
+Local Ltac ntc_rapply p :=
+  ntc_refine p ||
+  ntc_refine (p _) ||
+  ntc_refine (p _ _) ||
+  ntc_refine (p _ _ _) ||
+  ntc_refine (p _ _ _ _) ||
+  ntc_refine (p _ _ _ _ _) ||
+  ntc_refine (p _ _ _ _ _ _) ||
+  ntc_refine (p _ _ _ _ _ _ _) ||
+  ntc_refine (p _ _ _ _ _ _ _ _) ||
+  ntc_refine (p _ _ _ _ _ _ _ _ _) ||
+  ntc_refine (p _ _ _ _ _ _ _ _ _ _) ||
+  ntc_refine (p _ _ _ _ _ _ _ _ _ _ _) ||
+  ntc_refine (p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  ntc_refine (p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  ntc_refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  ntc_refine (p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).
 
 (** Ssreflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=
@@ -978,10 +978,10 @@ Ltac get_constructor_head T :=
   h.
 
 (* A version of econstructor that doesn't resolve typeclasses. *)
-Ltac nconstructor :=
+Ltac ntc_constructor :=
   lazymatch goal with
   | [ |- ?G ] => let build := get_constructor_head G in
-                 nrapply build
+                 ntc_rapply build
   end.
 
 (** [revert_opaque x] is like [revert x], except that it fails if [x] is not an opaque variable (i.e. if it has a [:=] definition rather than just a type). *)
@@ -1125,8 +1125,8 @@ Ltac issig :=
   (** Going from a sigma type to a record *)
   [ (* let built be the constructor of T *)
     let T := match goal with |- ?T => T end in
-    (* We want to get the constructor of the record. Note that we use [nconstructor] instead of [econstructor] since we don't want to resolve typeclasses. If we used [econstructor] then the constructor would be wrong for many records whose fields are classes. [nconstructor] is defined in Overture.v. *)
-    let built := open_constr:(ltac:(nconstructor) : T) in
+    (* We want to get the constructor of the record. Note that we use [ntc_constructor] instead of [econstructor] since we don't want to resolve typeclasses. If we used [econstructor] then the constructor would be wrong for many records whose fields are classes. [ntc_constructor] is defined in Overture.v. *)
+    let built := open_constr:(ltac:(ntc_constructor) : T) in
     let A' := ctor_to_sig built in
     unify A A';
     unify_with_projections built u;
