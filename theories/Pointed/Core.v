@@ -31,6 +31,7 @@ Record pMap (A B : pType) :=
     point_eq : pointed_fun (point A) = point B }.
 
 Arguments point_eq {A B} f : rename.
+Arguments pointed_fun {A B} f : rename.
 Coercion pointed_fun : pMap >-> Funclass.
 
 Infix "->*" := pMap : pointed_scope.

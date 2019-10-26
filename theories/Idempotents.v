@@ -2,6 +2,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Fibrations FunextVarieties UnivalenceImpliesFunext EquivalenceVarieties Constant.
 Require Import HoTT.Truncations.
+Require Import PathAny.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
@@ -86,106 +87,50 @@ Definition contr_retracttype {X : Type} (R : RetractOf X ) (contra : Contr X) : 
 
 (** Like any record type, [RetractOf X] is equivalent to a nested sigma-type.  We use a product at one place in the middle, rather than a sigma, to simplify the next proof. *)
 Definition issig_retractof (X : Type)
-: { A : Type & {rs : (X -> A) * (A -> X) & fst rs o snd rs == idmap }}
+: { A : Type & {r : X -> A & {s : A -> X & r o s == idmap }}}
   <~> RetractOf X.
 Proof.
-  refine (equiv_compose' (B := {A:Type & {r:X->A & {s:A->X & r o s == idmap}}}) _ _).
-  - issig (Build_RetractOf X) (@retract_type X) (@retract_retr X) (@retract_sect X) (@retract_issect X).
-  - refine (equiv_functor_sigma' 1 _); intros A.
-    symmetry.
-    exact (equiv_sigma_prod (fun (rs:(X->A)*(A->X)) => fst rs o snd rs == idmap)).
+  issig (Build_RetractOf X) (@retract_type X) (@retract_retr X) (@retract_sect X) (@retract_issect X).
 Defined.
 
-(** Using this equivalence, we can show how to construct paths between retracts. *)
-Definition path_retractof `{ua : Univalence} {X : Type}
-           {R R' : RetractOf X}
-           (Ap : retract_type R' <~> retract_type R)
-           (rp : Ap o retract_retr R' == retract_retr R)
-           (sp : retract_sect R' o Ap^-1 == retract_sect R)
-           (Hp : forall a, ap Ap (retract_issect R' (Ap^-1 a))
-                           @ eisretr Ap a
-                           = rp (retract_sect R' (Ap^-1 a))
-                             @ ap (retract_retr R) (sp a)
-                             @ retract_issect R a)
-: R' = R.
+(* Path spaces of types of retractions *)
+Definition PathRetractOf (X : Type) (R' R : RetractOf X)
+  := { Ap : retract_type R' <~> retract_type R &
+     { rp : Ap o retract_retr R' == retract_retr R &
+     { sp : retract_sect R' o Ap^-1 == retract_sect R &
+            forall a, ap Ap (retract_issect R' (Ap^-1 a))
+                         @ eisretr Ap a
+                      = rp (retract_sect R' (Ap^-1 a))
+                           @ ap (retract_retr R) (sp a)
+                           @ retract_issect R a } } }.
+
+Definition equiv_path_retractof `{ua : Univalence} {X : Type}
+           (R' R : RetractOf X)
+  : PathRetractOf X R' R <~> R' = R.
 Proof.
-  destruct R as [A r s H]; destruct R' as [A' r' s' H']; simpl in *.
-  refine (@ap _ _ (issig_retractof X) (A';((r',s');H')) (A;((r,s);H)) _).
-  (** The first few components are pretty straightforward. *)
-  simple refine (path_sigma' _ _ _).
-  { apply path_universe_uncurried.
-    exact Ap. }
-  refine (transport_sigma _ _ @ _).
-  simple refine (path_sigma' _ _ _); simpl.
-  { refine (transport_prod _ _ @ _).
-    apply path_prod; simpl.
-    - apply path_arrow; intros x.
-      refine (transport_arrow_fromconst _ _ _ @ _).
-      refine (transport_path_universe_uncurried _ _ @ _).
-      apply rp.
-    - apply path_arrow; intros a.
-      refine (transport_arrow_toconst _ _ _ @ _).
-      refine (_ @ sp a); simpl; apply ap.
-      refine (transport_path_universe_V_uncurried Ap a). }
-  (** This looks messy, but we can start out with some straightforward path computation. *)
-  apply path_forall; intros a.
-  unfold pointwise_paths.
-  rewrite transport_forall_constant; simpl.
-  rewrite transport_paths_Fl; simpl.
-  apply moveR_Vp.
-  rewrite ap_pp, concat_pp_p.
-  apply moveL_Mp.
-  (** Now we break it in half at something we understand better. *)
-  transitivity (transport_arrow_fromconst (path_universe_uncurried Ap) r'
-                 (transport (fun Z => Z -> X) (path_universe_uncurried Ap) s' a)
-                @ ap (transport idmap (path_universe_uncurried Ap) o r')
-                     (transport_arrow_toconst (path_universe_uncurried Ap) s' a)
-                @ ap _ (H' _)
-                @ transport_pV idmap (path_universe_uncurried Ap) a).
-  - (** In this half, we can just do path induction. *)
-    generalize (path_universe_uncurried Ap).
-    intros p; destruct p; simpl.
-    rewrite !concat_1p.
-    symmetry; unfold transport. rewrite ap_idmap. cbn.
-    apply concat_p1.
-  - (** This half is trickier because [transport_path_universe] and friends don't simplify under path induction.  We start with some more path computation. *)
-    rewrite (ap_apply_FlFr _ (fun rs b => fst rs b) (fun rs => snd rs a)).
-    rewrite (ap_compose (fun (rs:(X->A)*(A->X)) => snd rs)
-                        (fun (s:A->X) => s a)).
-    rewrite ap_snd_path_prod.
-    rewrite (ap_compose (fun (rs:(X->A)*(A->X)) => fst rs)
-                        (fun (r:X->A) => fun b => r b)).
-    rewrite ap_fst_path_prod.
-    rewrite ap_apply_l, ap10_path_arrow.
-    rewrite ap11_is_ap10_ap01; simpl.
-    rewrite ap_idmap.
-    rewrite ap10_path_arrow; simpl.
-    (** Now we can start applying naturality and peeling things off. *)
-    Open Scope long_path_scope.
-    rewrite !concat_pp_p; apply whiskerL; rewrite !concat_p_pp.
-    rewrite <- (concat_pA_p rp).
-    rewrite ap_pp, concat_p_pp.
-    rewrite (concat_pA_p rp).
-    (** We can use the hypothesis [Hp]. *)
-    specialize (Hp a).
-    rewrite concat_pp_p in Hp.
-    rewrite !concat_pp_p, <- Hp, !concat_p_pp. clear Hp.
-    (** More naturality and peeling-off *)
-    rewrite (ap_compose r' Ap).
-    rewrite !ap_pp, !concat_p_pp.
-    rewrite <- (ap_compose r' Ap).
-    rewrite <- (concat_Ap (fun x => transport_path_universe_uncurried Ap (r' x))).
-    rewrite !concat_pp_p; apply whiskerL; rewrite !concat_p_pp.
-    rewrite <- (ap_p_pp Ap).
-    rewrite <- (ap_compose s' r').
-    rewrite (concat_A1p H').
-    rewrite ap_pp, concat_p_pp.
-    rewrite <- (concat_Ap (transport_path_universe_uncurried Ap)).
-    rewrite !concat_pp_p; apply whiskerL; rewrite !concat_p_pp.
-    (** And what's left is just the odd-looking lemma [transport_path_universe_pV]. *)
-    symmetry; apply transport_path_universe_pV.
-    Close Scope long_path_scope.
-Qed.
+  eqp_issig_contr (issig_retractof X).
+  { intros [A [r [s H]]]; cbn.
+    exists equiv_idmap.
+    exists (fun x => 1%path).
+    exists (fun x => 1%path).
+    cbn. exact (fun a => concat_p1 _ @ ap_idmap (H a) @ (concat_1p _)^). }
+  intros [A [r [s H]]]; cbn.
+  unfold PathRetractOf.
+  contr_sigsig A (equiv_idmap A); cbn.
+  contr_sigsig r (fun x:X => idpath (r x)); cbn.
+  contr_sigsig s (fun x:A => idpath (s x)); cbn.
+  refine (contr_equiv' {K : r o s == idmap & H == K} _).
+  apply (equiv_functor_sigma' (equiv_idmap _)); intros K.
+  apply (equiv_functor_forall' (equiv_idmap _)); intros a; cbn.
+  apply equiv_concat_lr.
+  - refine (concat_p1 _ @ ap_idmap (H a)).
+  - symmetry; apply concat_1p.
+Defined.
+
+Definition path_retractof `{ua : Univalence} {X : Type} {R' R : RetractOf X}
+           Ap rp sp Hp
+  : R' = R
+  := equiv_path_retractof R' R (Ap;rp;sp;Hp).
 
 (** *** Splittings *)
 
@@ -734,7 +679,7 @@ Section RetractOfRetracts.
                             qidem_retract _).
     intros R.
     exact (@path_retractof _ _
-             R (split_idem_retract' (qidem_retract R))
+             (split_idem_retract' (qidem_retract R)) R
              (equiv_split_idem_retract R)
              (equiv_split_idem_retract_retr R)
              (equiv_split_idem_retract_sect R)
@@ -742,7 +687,7 @@ Section RetractOfRetracts.
   Defined.
 
   (** We have a similar result for splittings of a fixed map [f].  *)
-  Definition splitting_retractof_isqidem0 (f : X -> X)
+  Definition splitting_retractof_isqidem (f : X -> X)
   : RetractOf { I : IsPreIdempotent f & IsQuasiIdempotent f }.
   Proof.
     simple refine (@equiv_retractof'
@@ -766,14 +711,6 @@ Section RetractOfRetracts.
         intros R; simpl.
       apply equiv_ap10.
   Defined.
-
-  (* A phantom universe is introduced at some point, and causes
-     incompatibilities since it is pruned by Coq >= 8.8 (see
-     Coq/Coq#1033). *)
-  Definition splitting_retractof_isqidem@{a b}
-    := Eval unfold splitting_retractof_isqidem0 in
-        ltac:(first [exact splitting_retractof_isqidem0@{a b}|
-                     exact splitting_retractof_isqidem0@{a a b}]).
 
   (** And also for splittings of a fixed map that also induce a given witness of pre-idempotency. *)
   Definition Splitting_PreIdempotent (f : PreIdempotent X)
@@ -900,17 +837,17 @@ Proof.
   unfold Splitting_PreIdempotent, Splitting; simpl.
   refine (equiv_sigma_assoc _ _ oE _); simpl.
   simple refine (equiv_functor_sigma' (issig_retractof X) _ oE _).
-  - intros [A [[r s] H]]; simpl in *.
+  - intros [A [r [s H]]]; simpl in *.
     exact {p : s o r == idmap &
            forall x, ((ap idmap (p x)^ @ (p (s (r x)))^)
                         @ ap s (H (r x))) @ p x = isidem idmap x }.
-  - intros [A [[r s] H]]; simpl. apply equiv_idmap.
+  - intros [A [r [s H]]]; simpl. apply equiv_idmap.
   - refine (equiv_sigma_assoc _ _ oE _); simpl.
     refine (equiv_functor_sigma' (equiv_idmap Type) _); intros Y; simpl.
     refine (equiv_sigma_assoc _ _ oE _); simpl.
-    refine (equiv_sigma_prod _ oE _).
     refine (_ oE (issig_equiv X Y)^-1).
     refine (equiv_functor_sigma' 1 _); intros r; simpl.
+    refine (equiv_sigma_assoc _ _ oE _).
     refine (_ oE (issig_isequiv r)^-1).
     refine (equiv_functor_sigma' 1 _); intros s; simpl.
     unfold Sect.

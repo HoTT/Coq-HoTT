@@ -3,7 +3,7 @@
 (** * Extensions and extendible maps *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp EquivalenceVarieties.
+Require Import HProp EquivalenceVarieties PathAny.
 Require Import HoTT.Tactics.
 
 Local Open Scope nat_scope.
@@ -54,25 +54,25 @@ Section Extensions.
                     (fun x => pr2 ext x @ (pr2 ext' x)^))
     <~> ext = ext'.
   Proof.
-    refine (equiv_path_sigma _ _ _ oE _).
-    refine (equiv_functor_sigma' (equiv_path_forall (ext .1) (ext' .1)) _). intros p.
-    refine (equiv_path_forall _ _ oE _). unfold pointwise_paths.
-    refine (equiv_functor_forall' 1 _). intros x.
-    refine (equiv_compose' (B := (p (f x))^ @ (ext .2 x) = (ext' .2 x)) _ _).
-    - refine (equiv_concat_l _ _).
-      transitivity ((apD10 (path_forall _ _ p) (f x))^ @ ext .2 x).
-      + assert (transp_extension : forall p : ext .1 = ext' .1,
-                                     (transport (fun (s : forall y : B, P y) => forall x : A, s (f x) = d x)
-                                                p (ext .2) x
-                                      = ((apD10 p (f x))^ @ ext .2 x))).
-        * destruct ext as [g gd], ext' as [g' gd']; simpl.
-          intros q; destruct q; simpl.
-          apply inverse, concat_1p.
-        * apply transp_extension.
-      + apply whiskerR, ap, apD10_path_forall.
-    - refine (equiv_moveR_Vp _ _ _ oE _).
-      refine (equiv_moveL_pM _ _ _ oE _).
-      apply equiv_path_inverse.
+    revert ext ext'.
+    refine (equiv_path_from_contr
+              (fun (ext ext' : ExtensionAlong f P d) => (ExtensionAlong
+                                  f (fun y => pr1 ext y = pr1 ext' y)
+                                  (fun x => pr2 ext x @ (pr2 ext' x)^)))).
+    { intros [g gd]; unfold ExtensionAlong; cbn.
+      exists (fun y => 1%path).
+      intros x; symmetry; apply concat_pV. }
+    intros [g gd]; unfold ExtensionAlong; cbn.
+    refine (contr_sigma_sigma
+              (forall y:B, P y) (fun s => forall x:A, s (f x) = d x)
+              (fun a => g == a)
+              (fun a b c => forall x:A, c (f x) = gd x @ (b x)^)
+              g (fun y:B => idpath (g y))).
+    refine (contr_equiv' {p:g o f == d & gd == p} _). cbn.
+    refine (equiv_functor_sigma' (equiv_idmap _) _); intros p.
+    refine (equiv_functor_forall' (equiv_idmap _) _); intros x; cbn.
+    refine (_ oE equiv_path_inverse _ _).
+    symmetry; apply equiv_moveR_1M.
   Defined.
 
   Definition path_extension `{Funext} {A B : Type} {f : A -> B}

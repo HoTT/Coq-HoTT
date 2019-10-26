@@ -378,11 +378,15 @@ Proof.
   destruct p. apply isequiv_concat_r.
 Defined.
 
-Definition isequiv_moveR_1M {A : Type} {x y : A} (p q : x = y)
+Global Instance isequiv_moveR_1M {A : Type} {x y : A} (p q : x = y)
 : IsEquiv (moveR_1M p q).
 Proof.
   destruct p. apply isequiv_concat_r.
 Defined.
+
+Definition equiv_moveR_1M {A : Type} {x y : A} (p q : x = y)
+  : (1 = q @ p^) <~> (p = q)
+  := BuildEquiv _ _ (moveR_1M p q) _.
 
 Definition isequiv_moveR_1V {A : Type} {x y : A} (p : x = y) (q : y = x)
 : IsEquiv (moveR_1V p q).
