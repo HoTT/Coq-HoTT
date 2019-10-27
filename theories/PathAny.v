@@ -2,6 +2,39 @@ Require Import HoTT.Basics HoTT.Types Fibrations FunextVarieties.
 
 (** A nice method for proving characterizations of path-types of nested sigma-types, due to Rijke. *)
 
+(** To show that the path-type of [A] is equivalent to some specified family [P], it suffices to show that [P] is reflexive and its "based path-spaces" are contractible. *)
+Definition equiv_path_from_contr {A : Type} (P : A -> A -> Type)
+           (Prefl : forall x, P x x)
+           (cp : forall x, Contr {y:A & P x y} )
+           (a b : A)
+  : P a b <~> a = b.
+Proof.
+  apply equiv_inverse.
+  srefine (BuildEquiv _ _ _ _).
+  { intros []; apply Prefl. }
+  revert b; apply isequiv_from_functor_sigma.
+  (* For some reason, typeclass search can't find the Contr instances unless we give the types explicitly. *)
+  refine (@isequiv_contr_contr {x:A & a=x} {x:A & P a x} _ _ _).
+Defined.
+
+(** This tactic applies the above equivalence and combines it with an [issig] lemma for [A].  (If the type family [P] is also a record, then the user has to apply its [issig] manually.) *)
+Ltac eqp_issig_contr e :=
+  match goal with
+  | [ |- ?X <~> ?x = ?y ] => revert x y
+  | _ => idtac
+  end;
+  let x := fresh in
+  let y := fresh in
+  equiv_intro e x;
+  equiv_intro e y;
+  refine ((equiv_ap' e^-1 _ _)^-1 oE _);
+  revert x y;
+  match goal with
+    [ |- forall x y, @?P x y <~> ?eq ] =>
+    refine (equiv_path_from_contr P _ _)
+  end.
+
+(** After [eqp_issig_contr], we are left showing the contractibility of a sigma-type whose base and fibers are large nested sigma-types of the same depth.  Moreover, we expect that the types appearing in those two large nested sigma-types "pair up" to form contractible based "path-types".  The following lemma "peels off" the first such pair, whose contractibility can often be found with typeclass search.  The remaining contractibility goal is then simplified by substituting the center of contraction of that first based "path-type", or more precisely a *specific* center that may or may not be the one given by the contractibility instance; the latter freedom sometimes makes things faster and simpler. *)
 Definition contr_sigma_sigma (A : Type) (B : A -> Type)
            (C : A -> Type) (D : forall a, B a -> C a -> Type)
            {cac : Contr {x:A & C x} }
@@ -23,6 +56,7 @@ Proof.
   reflexivity.
 Defined.
 
+(** This tactic just applies the previous lemma, using a match to figure out the appropriate type families so the user doesn't have to specify them. *)
 Ltac contr_sigsig a c :=
   match goal with
   | [ |- Contr (@sig (@sig ?A ?B) (fun ab => @sig (@?C ab) (@?D ab))) ] =>
@@ -34,32 +68,4 @@ Ltac contr_sigsig a c :=
       subst C' ]
   end.
 
-Definition equiv_path_from_contr {A : Type} (P : A -> A -> Type)
-           `{Reflexive A P}
-           {cp : forall x, Contr {y:A & P x y} }
-           (a b : A)
-  : P a b <~> a = b.
-Proof.
-  apply equiv_inverse.
-  srefine (BuildEquiv _ _ _ _).
-  { intros []; reflexivity. }
-  revert b; apply isequiv_from_functor_sigma.
-  (* For some reason, typeclass search can't find the Contr instances unless we give the types explicitly. *)
-  refine (@isequiv_contr_contr {x:A & a=x} {x:A & P a x} _ _ _).
-Defined.
-
-Ltac eqp_issig_contr e :=
-  match goal with
-  | [ |- ?X <~> ?x = ?y ] => revert x y
-  | _ => idtac
-  end;
-  let x := fresh in
-  let y := fresh in
-  equiv_intro e x;
-  equiv_intro e y;
-  refine ((equiv_ap' e^-1 _ _)^-1 oE _);
-  revert x y;
-  match goal with
-    [ |- forall x y, @?P x y <~> ?eq ] =>
-    refine (equiv_path_from_contr P)
-  end.
+(** For examples of the use of this tactic, see for instance [Factorization] and [Idempotents]. *)

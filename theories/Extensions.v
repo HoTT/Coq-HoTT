@@ -58,7 +58,7 @@ Section Extensions.
     refine (equiv_path_from_contr
               (fun (ext ext' : ExtensionAlong f P d) => (ExtensionAlong
                                   f (fun y => pr1 ext y = pr1 ext' y)
-                                  (fun x => pr2 ext x @ (pr2 ext' x)^)))).
+                                  (fun x => pr2 ext x @ (pr2 ext' x)^))) _ _).
     { intros [g gd]; unfold ExtensionAlong; cbn.
       exists (fun y => 1%path).
       intros x; symmetry; apply concat_pV. }
