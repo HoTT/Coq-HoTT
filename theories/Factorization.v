@@ -58,7 +58,7 @@ Section Factorization.
                  = fact_factors fact a }}}
       <~> PathFactorization fact fact'.
   Proof.
-    issig (Build_PathFactorization fact fact') (@path_intermediate fact fact') (@path_factor1 fact fact') (@path_factor2 fact fact') (@path_fact_factors fact fact').
+    issig.
   Defined.
 
   Definition equiv_path_factorization `{Univalence}

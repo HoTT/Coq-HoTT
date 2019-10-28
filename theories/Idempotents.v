@@ -90,7 +90,7 @@ Definition issig_retractof (X : Type)
 : { A : Type & {r : X -> A & {s : A -> X & r o s == idmap }}}
   <~> RetractOf X.
 Proof.
-  issig (Build_RetractOf X) (@retract_type X) (@retract_retr X) (@retract_sect X) (@retract_issect X).
+  issig.
 Defined.
 
 (* Path spaces of types of retractions *)
