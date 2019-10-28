@@ -1,5 +1,4 @@
-Require Import Basics.
-Require Import Types.
+Require Import Basics Types PathAny.
 Require Import Pointed.Core.
 Require Import Pointed.pHomotopy.
 
@@ -9,21 +8,33 @@ Local Open Scope pointed_scope.
 Definition equiv_path_pmap `{Funext} {A B : pType} (f g : A ->* B)
   : (f ==* g) <~> (f = g).
 Proof.
-  refine ((equiv_ap' (issig_pmap A B)^-1 f g)^-1 oE _); cbn.
   refine (_ oE (issig_phomotopy f g)^-1).
-  refine (equiv_path_sigma _ _ _ oE _); cbn.
-  refine (equiv_functor_sigma' (equiv_path_arrow f g) _); intros p. cbn.
-  refine (_ oE equiv_moveL_Vp _ _ _).
-  refine (_ oE equiv_path_inverse _ _).
-  apply equiv_concat_l.
-  refine (transport_paths_Fl (path_forall f g p) (point_eq f) @ _).
-  apply whiskerR, inverse2.
-  refine (ap_apply_l (path_forall f g p) (point A) @ _).
-  apply ap10_path_forall.
+  eqp_issig_contr (issig_pmap A B).
+  { intros [f feq]; cbn.
+    exists (fun a => 1%path).
+    apply concat_1p. }
+  intros [f feq]; cbn.
+  contr_sigsig f (fun a:A => idpath (f a)); cbn.
+  refine (contr_equiv' {feq' : f (point A) = point B & feq = feq'} _).
+  refine (equiv_functor_sigma' (equiv_idmap _) _); intros p.
+  refine (equiv_path_inverse _ _ oE _).
+  apply equiv_concat_r. symmetry; apply concat_1p.
 Defined.
 
 Definition path_pmap `{Funext} {A B : pType} {f g : A ->* B}
   : (f ==* g) -> (f = g) := equiv_path_pmap f g.
+
+(* We note that the inverse of [path_pmap] computes definitionally on reflexivity, and hence [path_pmap] itself computes typally so.  *)
+Definition equiv_inverse_path_pmap_1 `{Funext} {A B} {f : A ->* B}
+  : (equiv_path_pmap f f)^-1 1%path = reflexivity f
+  := 1.
+
+Definition equiv_path_pmap_1 `{Funext} {A B} {f : A ->* B}
+  : path_pmap (reflexivity f) = 1%path.
+Proof.
+  apply moveR_equiv_M.
+  reflexivity.
+Defined.
 
 (** ** Associativity of pointed map composition *)
 

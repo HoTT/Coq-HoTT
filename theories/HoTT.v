@@ -23,6 +23,7 @@ Require Export HoTT.FunextVarieties.
 Require Export HoTT.UnivalenceVarieties.
 Require Export HoTT.Extensions.
 Require Export HoTT.Misc.
+Require Export HoTT.PathAny.
 Require Export HoTT.Functorish.
 Require Export HoTT.Factorization.
 Require Export HoTT.Constant.
