@@ -82,6 +82,14 @@ Proof.
   by destruct p.
 Defined.
 
+(* An alternate version useful for proving recursion computation rules from induction ones *)
+Definition dp_apD_const' {A B : Type} {f : A -> B} {a0 a1 : A}
+  {p : a0 = a1} : dp_const^-1 (dp_apD f p) = ap f p.
+Proof.
+  apply moveR_equiv_V.
+  apply dp_apD_const.
+Defined.
+
 (* Concatenation of dependent paths *)
 Definition dp_concat {A} {P : A -> Type} {a0 a1 a2}
   {p : a0 = a1} {q : a1 = a2} {b0 : P a0} {b1 : P a1} {b2 : P a2}
@@ -118,6 +126,14 @@ Definition dp_apD_V (A : Type) (P : A -> Type) (f : forall a, P a)
   {a0 a1 : A} (p : a0 = a1) : dp_apD f p^ = (dp_apD f p)^D.
 Proof.
   by destruct p.
+Defined.
+
+(* dp_const preserves concatenation *)
+Definition dp_const_pp {A B : Type} {a0 a1 a2 : A}
+  {p : a0 = a1} {q : a1 = a2} {x y z : B} (r : x = y) (s : y = z)
+  : dp_const (p:=p @ q) (r @ s) = (dp_const (p:=p) r) @D (dp_const (p:=q) s).
+Proof.
+  by destruct p,q.
 Defined.
 
 Section DGroupoid.
@@ -174,8 +190,7 @@ Section DGroupoid.
 End DGroupoid.
 
 (* Dependent paths over paths *)
-(* These can be found under names such as dp_paths_l akin to
-   transport_paths_l *)
+(* These can be found under names such as dp_paths_l akin to transport_paths_l *)
 
 Definition dp_paths_l {A : Type} {x1 x2 y : A} (p : x1 = x2) (q : x1 = y) r
   : p^ @ q = r <~> DPath (fun x => x = y) p q r.
