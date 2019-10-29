@@ -3,6 +3,7 @@ Require Import Types.
 Require Import Diagrams.Diagram.
 Require Import Diagrams.Graph.
 Require Import Diagrams.Cocone.
+Require Import Diagrams.ConstantDiagram.
 
 Local Open Scope path_scope.
 Generalizable All Variables.
@@ -81,6 +82,36 @@ Module Export Colimit.
 
 End Colimit.
 
+(** Colimit_rec is an equivalence *)
+
+Global Instance isequiv_colimit_rec `{Funext} {G : Graph}
+  {D : Diagram G} (P : Type) : IsEquiv (Colimit_rec (D:=D) P).
+Proof.
+  serapply isequiv_adjointify.
+  { intro f.
+    serapply Build_Cocone.
+    1: intros i g; apply f, (colim i g).
+    intros i j g x.
+    apply ap, colimp. }
+  { intro.
+    apply path_forall.
+    serapply Colimit_ind.
+    1: reflexivity.
+    intros ????; cbn.
+    rewrite transport_paths_FlFr.
+    rewrite Colimit_rec_beta_colimp.
+    hott_simpl. }
+  { intros [].
+    serapply path_cocone.
+    1: reflexivity.
+    intros ????; cbn.
+    rewrite Colimit_rec_beta_colimp.
+    hott_simpl. }
+Defined.
+
+Definition equiv_colimit_rec `{Funext} {G : Graph} {D : Diagram G} (P : Type)
+  : Cocone D P <~> (Colimit D -> P) := BuildEquiv _ _ _ (isequiv_colimit_rec P).
+
 (** And we can now show that the HIT is actually a colimit. *)
 
 Definition cocone_colimit {G : Graph} (D : Diagram G) : Cocone D (Colimit D)
@@ -90,7 +121,7 @@ Global Instance unicocone_colimit `{Funext} {G : Graph} (D : Diagram G)
   : UniversalCocone (cocone_colimit D).
 Proof.
   serapply Build_UniversalCocone; intro Y.
-  simple refine (isequiv_adjointify _ (Colimit_rec Y) _ _).
+  serapply (isequiv_adjointify _ (Colimit_rec Y) _ _).
   - intros C.
     serapply path_cocone.
     1: reflexivity.
@@ -125,7 +156,7 @@ Section FunctorialityColimit.
   Proof.
     intros HQ.
     serapply (Build_IsColimit (cocone_precompose m HQ) _).
-    apply precompose_equiv_universality, HQ.
+    apply cocone_precompose_equiv_universality, HQ.
   Defined.
 
   Definition iscolimit_postcompose_equiv {D: Diagram G} `(f: Q <~> Q')
@@ -133,7 +164,7 @@ Section FunctorialityColimit.
   Proof.
     intros HQ.
     serapply (Build_IsColimit (cocone_postcompose HQ f) _).
-    apply postcompose_equiv_universality, HQ.
+    apply cocone_postcompose_equiv_universality, HQ.
   Defined.
 
   (** A diagram map [m] : [D1] => [D2] induces a map between any two colimits of [D1] and [D2]. *)
@@ -192,8 +223,8 @@ Section FunctorialityColimit.
 
   Global Instance isequiv_functoriality_colimit
     : IsEquiv (functoriality_colimit m HQ1 HQ2)
-    := isequiv_adjointify _ _ functoriality_colimit_eissect
-                          functoriality_colimit_eisretr.
+    := isequiv_adjointify _ _
+      functoriality_colimit_eissect functoriality_colimit_eisretr.
 
   Definition functoriality_colimit_equiv : Q1 <~> Q2
     := BuildEquiv _ _ _ isequiv_functoriality_colimit.
@@ -211,3 +242,14 @@ Proof.
   serapply functoriality_colimit_equiv.
   serapply (Build_diagram_equiv (diagram_idmap D)).
 Defined.
+
+(** * Colimits are left adjoint to constant diagram *)
+
+Theorem colimit_adjoint `{Funext} {G : Graph} {D : Diagram G} {C : Type}
+  : (Colimit D -> C) <~> DiagramMap D (diagram_const C).
+Proof.
+  symmetry.
+  refine (equiv_colimit_rec C oE _).
+  apply equiv_diagram_const_cocone.
+Defined.
+

@@ -193,3 +193,4 @@ Section Diagram.
 End Diagram.
 
 Notation "D1 ~d~ D2" := (diagram_equiv D1 D2).
+
