@@ -16,17 +16,17 @@ Module BAut_Cantor_Idempotent.
 Section Assumptions.
   Context `{Univalence}.
 
-  Definition f : BAut cantor -> BAut cantor.
+  Definition f : BAut Cantor -> BAut Cantor.
   Proof.
     intros Z.
     (** Here is the important part of this definition. *)
-    exists (Z + cantor)%type.
-    (** The rest is just a proof that [Z+cantor] is again equivalent to [cantor], using [fold_cantor] and the assumption that [Z] is equivalent to [cantor]. *)
+    exists (Z + Cantor)%type.
+    (** The rest is just a proof that [Z+Cantor] is again equivalent to [Cantor], using [cantor_fold] and the assumption that [Z] is equivalent to [Cantor]. *)
     pose (e := Z.2); simpl in e; clearbody e.
     strip_truncations.
     apply tr.
     apply path_universe_uncurried.
-    refine (equiv_fold_cantor oE _).
+    refine (equiv_cantor_fold oE _).
     refine (equiv_path _ _ e +E 1).
   Defined.
 
@@ -36,12 +36,12 @@ Section Assumptions.
     intros Z.
     apply path_baut.
     unfold f; simpl.
-    refine (_ oE equiv_sum_assoc Z cantor cantor).
-    apply (1 +E equiv_fold_cantor).
+    refine (_ oE equiv_sum_assoc Z Cantor Cantor).
+    apply (1 +E equiv_cantor_fold).
   Defined.
 
   (** We record how the action of [f] and [f o f] on paths corresponds to an action on equivalences. *)
-  Definition ap_f {Z Z' : BAut cantor} (p : Z = Z')
+  Definition ap_f {Z Z' : BAut Cantor} (p : Z = Z')
   : equiv_path _ _ (ap f p)..1
     = equiv_path Z Z' p..1 +E 1.
   Proof.
@@ -49,7 +49,7 @@ Section Assumptions.
     intros [z|a]; reflexivity.
   Defined.
 
-  Definition ap_ff {Z Z' : BAut cantor} (p : Z = Z')
+  Definition ap_ff {Z Z' : BAut Cantor} (p : Z = Z')
   : equiv_path _ _ (ap (f o f) p)..1
     = equiv_path Z Z' p..1 +E 1 +E 1.
   Proof.
@@ -60,16 +60,16 @@ Section Assumptions.
   (** Now let's assume [f] is quasi-idempotent, but not necessarily using the same witness of pre-idempotency. *)
   Context (Ip : IsPreIdempotent f) (Jp : @IsQuasiIdempotent _ f Ip).
 
-  Definition I (Z : BAut cantor)
-  : (Z + cantor) + cantor <~> Z + cantor
+  Definition I (Z : BAut Cantor)
+  : (Z + Cantor) + Cantor <~> Z + Cantor
     := equiv_path _ _ (Ip Z)..1.
 
   Definition I0
-  : cantor + cantor + cantor + cantor <~> cantor + cantor + cantor
-    := I (f (point (BAut cantor))).
+  : Cantor + Cantor + Cantor + Cantor <~> Cantor + Cantor + Cantor
+    := I (f (point (BAut Cantor))).
 
   (** We don't know much about [I0], but we can show that it maps the rightmost two summands to the rightmost one, using the naturality of [I].  Here is the naturality. *)
-  Definition Inat (Z Z' : BAut cantor) (e : Z <~> Z')
+  Definition Inat (Z Z' : BAut Cantor) (e : Z <~> Z')
   : I Z' oE (e +E 1 +E 1)
     = (e +E 1) oE I Z.
   Proof.
@@ -82,23 +82,23 @@ Section Assumptions.
     apply ap. apply (concat_Ap Ip).
   Qed.
 
-  (** To show our claim about the action of [I0], we will apply this naturality to the flip automorphism of [cantor + cantor].  Here are the images of that automorphism under [f] and [f o f]. *)
+  (** To show our claim about the action of [I0], we will apply this naturality to the flip automorphism of [Cantor + Cantor].  Here are the images of that automorphism under [f] and [f o f]. *)
   Definition f_flip :=
-    equiv_sum_symm cantor cantor +E equiv_idmap cantor.
+    equiv_sum_symm Cantor Cantor +E equiv_idmap Cantor.
   Definition ff_flip :=
-    (equiv_sum_symm cantor cantor +E equiv_idmap cantor) +E (equiv_idmap cantor).
+    (equiv_sum_symm Cantor Cantor +E equiv_idmap Cantor) +E (equiv_idmap Cantor).
 
   (** The naturality of [I] implies that [I0] commutes with these images of the flip. *)
   Definition I0nat_flip
-        (x : ((cantor + cantor) + cantor) + cantor)
+        (x : ((Cantor + Cantor) + Cantor) + Cantor)
   : I0 (ff_flip x) = f_flip (I0 x)
     := ap10_equiv
-         (Inat (f (point (BAut cantor))) (f (point (BAut cantor)))
-               (equiv_sum_symm cantor cantor))
+         (Inat (f (point (BAut Cantor))) (f (point (BAut Cantor)))
+               (equiv_sum_symm Cantor Cantor))
          x.
 
   (** The value of this is that we can detect which summand an element is in depending on whether or not it is fixed by [f_flip] or [ff_flip]. *)
-  Definition f_flip_fixed_iff_inr (x : cantor + cantor + cantor)
+  Definition f_flip_fixed_iff_inr (x : Cantor + Cantor + Cantor)
   : (f_flip x = x) <-> is_inr x.
   Proof.
     split; intros p; destruct x as [[c|c]|c]; simpl in p.
@@ -113,7 +113,7 @@ Section Assumptions.
   Defined.
 
   Definition ff_flip_fixed_iff_inr
-        (x : cantor + cantor + cantor + cantor)
+        (x : Cantor + Cantor + Cantor + Cantor)
   : (ff_flip x = x) <-> (is_inr x + is_inl_and is_inr x).
   Proof.
     split; intros p; destruct x as [[[c|c]|c]|c]; simpl in p.
@@ -131,7 +131,7 @@ Section Assumptions.
 
   (** And the naturality guarantees that [I0] preserves fixed points. *)
   Definition I0_fixed_iff_fixed
-        (x : cantor + cantor + cantor + cantor)
+        (x : Cantor + Cantor + Cantor + Cantor)
   : (ff_flip x = x) <-> (f_flip (I0 x) = I0 x).
   Proof.
     split; intros p.
@@ -142,7 +142,7 @@ Section Assumptions.
 
   (** Putting it all together, here is the proof of our claim about [I0]. *)
   Definition I0_preserves_inr
-        (x : cantor + cantor + cantor + cantor)
+        (x : Cantor + Cantor + Cantor + Cantor)
   : (is_inr x + is_inl_and is_inr x) <-> is_inr (I0 x).
   Proof.
     refine (iff_compose _ (f_flip_fixed_iff_inr (I0 x))).
@@ -151,7 +151,7 @@ Section Assumptions.
   Defined.
 
   (** Now we bring quasi-idempotence into play. *)
-  Definition J (Z : BAut cantor)
+  Definition J (Z : BAut Cantor)
   : I Z +E 1
     = I (f Z).
   Proof.
@@ -165,10 +165,10 @@ Section Assumptions.
   Definition impossible : Empty.
   Proof.
     pose (x := inl (inr (fun n => true))
-               : ((f (point (BAut cantor))) + cantor) + cantor).
-    apply (not_is_inl_and_inr' (I (f (point (BAut cantor))) x)).
+               : ((f (point (BAut Cantor))) + Cantor) + Cantor).
+    apply (not_is_inl_and_inr' (I (f (point (BAut Cantor))) x)).
     - exact (transport is_inl
-                       (ap10_equiv (J (point (BAut cantor))) x) tt).
+                       (ap10_equiv (J (point (BAut Cantor))) x) tt).
     - exact (fst (I0_preserves_inr x) (inr tt)).
   Defined.
 
@@ -178,7 +178,7 @@ End BAut_Cantor_Idempotent.
 (** Let's make the important conclusions available globally. *)
 
 Definition baut_cantor_idem `{Univalence}
-: BAut cantor -> BAut cantor
+: BAut Cantor -> BAut Cantor
   := BAut_Cantor_Idempotent.f.
 
 Definition preidem_baut_cantor_idem `{Univalence}
