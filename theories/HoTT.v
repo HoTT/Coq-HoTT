@@ -4,35 +4,33 @@
     you are likely going to create a dependency loop. *)
 
 Require Export HoTT.Basics.
-
 Require Export HoTT.Types.
-
 Require Export HoTT.Cubical.
-
 Require Export HoTT.Pointed.
-
 Require Export HoTT.Truncations.
-
 Require Export HoTT.Fibrations.
+
 Require Export HoTT.Conjugation.
 Require Export HoTT.HProp.
 Require Export HoTT.HSet.
 Require Export HoTT.EquivGroupoids.
 Require Export HoTT.EquivalenceVarieties.
+
 Require Export HoTT.FunextVarieties.
 Require Export HoTT.UnivalenceVarieties.
 Require Export HoTT.Extensions.
 Require Export HoTT.Misc.
 Require Export HoTT.PathAny.
+
 Require Export HoTT.Functorish.
 Require Export HoTT.Factorization.
 Require Export HoTT.Constant.
 Require Export HoTT.ObjectClassifier.
 Require Export HoTT.TruncType.
+
 Require Export HoTT.DProp.
 Require Export HoTT.NullHomotopy.
 Require Export HoTT.Idempotents.
-Require Export HoTT.Pullback.
 Require Export HoTT.ExcludedMiddle.
 Require Export HoTT.BoundedSearch.
 
@@ -51,6 +49,21 @@ Require Export HoTT.HIT.unique_choice.
 Require Export HoTT.HIT.iso.
 Require Export HoTT.HIT.quotient.
 Require Export HoTT.HIT.V.
+
+Require Export HoTT.Diagrams.Graph.
+Require Export HoTT.Diagrams.Diagram.
+Require Export HoTT.Diagrams.Cone.
+Require Export HoTT.Diagrams.Cocone.
+Require Export HoTT.Diagrams.DDiagram.
+Require Export HoTT.Diagrams.ConstantDiagram.
+Require Export HoTT.Diagrams.CommutativeSquares.
+Require Export HoTT.Diagrams.Sequence.
+Require Export HoTT.Diagrams.Span.
+Require Export HoTT.Diagrams.ParallelPair.
+
+Require Export HoTT.Limits.Pullback.
+Require Export HoTT.Limits.Equalizer.
+Require Export HoTT.Limits.Limit.
 
 Require Export HoTT.Colimits.Pushout.
 Require Export HoTT.Colimits.SpanPushout.
