@@ -799,7 +799,7 @@ Defined.
 
 Section DecidableQuotients.
   Context `{Univalence} {X} `{Finite X}
-          (R : relation X) `{is_mere_relation X R}
+          (R : Relation X) `{is_mere_relation X R}
           `{Reflexive _ R} `{Transitive _ R} `{Symmetric _ R}
           {Rd : forall x y, Decidable (R x y)}.
 

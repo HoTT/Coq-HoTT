@@ -1,6 +1,14 @@
-Require Export HoTT.Basics.Overture HoTT.Types.Bool HoTT.Basics.Decidable HoTT.Basics.Trunc HoTT.Truncations.
+Require Export
+  HoTT.Basics.Overture
+  HoTT.Types.Bool
+  HoTT.Basics.Decidable
+  HoTT.Basics.Trunc
+  HoTT.Truncations.
 
-Require Import HoTT.Types.Sigma HoTT.Types.Forall HoTT.Types.Record.
+Require Import
+  HoTT.Types.Sigma
+  HoTT.Types.Forall
+  HoTT.Types.Record.
 
 Declare Scope mc_scope.
 Delimit Scope mc_scope with mc.
@@ -42,7 +50,7 @@ Notation "(<>)" := (fun x y => ~x = y) (only parsing) : mc_scope.
 Notation "( x <>)" := (fun y => x <> y) (only parsing) : mc_scope.
 Notation "(<> x )" := (fun y => y <> x) (only parsing) : mc_scope.
 
-Class Apart A := apart: relation A.
+Class Apart A := apart : Relation A.
 Infix "≶" := apart (at level 70, no associativity) : mc_scope.
 Notation "(≶)" := apart (only parsing) : mc_scope.
 Notation "( x ≶)" := (apart x) (only parsing) : mc_scope.
@@ -81,8 +89,8 @@ Class Top A := top: A.
 Class Bottom A := bottom: A.
 Typeclasses Transparent Meet Join Top Bottom.
 
-Class Le A := le: relation A.
-Class Lt A := lt: relation A.
+Class Le A := le: Relation A.
+Class Lt A := lt: Relation A.
 Typeclasses Transparent Le Lt.
 
 Definition NonNeg R `{Zero R} `{Le R} := sig (le zero).
@@ -243,33 +251,33 @@ Class Associative {A} (f : A -> A -> A)
 
 Class Involutive {A} (f : A -> A) := involutive: forall x, f (f x) = x.
 
-Class TotalRelation `(R : relation A) : Type := total : forall x y : A, R x y |_| R y x.
+Class TotalRelation `(R : Relation A) : Type := total : forall x y : A, R x y |_| R y x.
 Arguments total {A} _ {TotalRelation} _ _.
 
-Class Trichotomy `(R : relation A)
+Class Trichotomy `(R : Relation A)
   := trichotomy : forall x y : A, R x y |_| x = y |_| R y x.
 Arguments trichotomy {A} R {Trichotomy} _ _.
 
 Arguments irreflexivity {A} _ {Irreflexive} _ _.
 
-Class CoTransitive `(R : relation A) : Type := cotransitive
+Class CoTransitive `(R : Relation A) : Type := cotransitive
   : forall x y, R x y -> forall z, hor (R x z) (R z y).
 Arguments cotransitive {A R CoTransitive x y} _ _.
 
-Class AntiSymmetric `(R : relation A) : Type
+Class AntiSymmetric `(R : Relation A) : Type
   := antisymmetry: forall x y, R x y -> R y x -> x = y.
 Arguments antisymmetry {A} _ {AntiSymmetric} _ _ _ _.
 
-Class EquivRel `(R : relation A) : Type := Build_EquivRel
+Class EquivRel `(R : Relation A) : Type := Build_EquivRel
   { EquivRel_Reflexive :> Reflexive R ;
     EquivRel_Symmetric :> Symmetric R ;
     EquivRel_Transitive :> Transitive R }.
 
-Definition SigEquivRel {A:Type} (R : relation A) : Type :=
+Definition SigEquivRel {A:Type} (R : Relation A) : Type :=
   {_ : Reflexive R | { _ : Symmetric R | Transitive R}}.
 
 Global Instance trunc_sig_equiv_rel `{Funext} {A : Type}
-  (R : relation A) {n} `{!forall (x y : A), IsTrunc n (R x y)}
+  (R : Relation A) {n} `{!forall (x y : A), IsTrunc n (R x y)}
   :  IsTrunc n (SigEquivRel R).
 Proof.
   apply @trunc_sigma.
@@ -277,7 +285,7 @@ Proof.
   - intros. apply @trunc_sigma; intros; apply trunc_forall.
 Defined.
 
-Lemma issig_equiv_rel {A:Type} (R : relation A)
+Lemma issig_equiv_rel {A:Type} (R : Relation A)
   : SigEquivRel R <~> EquivRel R.
 Proof.
   unfold SigEquivRel.
@@ -286,7 +294,7 @@ Proof.
 Defined.
 
 Global Instance trunc_equiv_rel `{Funext} {A : Type}
-  (R : relation A) {n} `{!forall (x y : A), IsTrunc n (R x y)}
+  (R : Relation A) {n} `{!forall (x y : A), IsTrunc n (R x y)}
   : IsTrunc n (EquivRel R).
 Proof.
   exact (trunc_equiv (SigEquivRel R) (issig_equiv_rel R)).

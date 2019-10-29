@@ -19,7 +19,7 @@ Require Import
 Local Set Universe Minimization ToSet.
 
 
-Class Closeness@{i} (A : Type@{i}) := close : Q+ -> relation@{i i} A.
+Class Closeness@{i} (A : Type@{i}) := close : Q+ -> Relation@{i i} A.
 
 Global Instance Q_close@{} : Closeness Q := fun e q r => - ' e < q - r < ' e.
 

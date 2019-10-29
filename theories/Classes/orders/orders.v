@@ -4,7 +4,7 @@ Require Import
   HoTT.Classes.interfaces.orders
   HoTT.Classes.theory.apartness.
 
-Lemma irrefl_neq `{R : relation A} `{!Irreflexive R}
+Lemma irrefl_neq `{R : Relation A} `{!Irreflexive R}
   : forall x y, R x y -> ~ x = y.
 Proof.
 intros ?? E e;rewrite e in E. apply (irreflexivity _ _ E).

@@ -66,7 +66,7 @@ Section family_prod.
 
       holds. *)
   Lemma reflexive_for_all_2_family_prod (F : I → Type)
-    (R : ∀ i, relation (F i)) `{!∀ i, Reflexive (R i)}
+    (R : ∀ i, Relation (F i)) `{!∀ i, Reflexive (R i)}
     {ℓ : list I} (s : FamilyProd F ℓ)
     : for_all_2_family_prod F F R s s.
   Proof with try reflexivity.

@@ -15,7 +15,7 @@ Import algebra_notations ne_list.notations.
 Section quotient_algebra.
   Context
     `{Funext} {σ : Signature} (A : Algebra σ)
-    (Φ : ∀ s, relation (A s)) `{!IsCongruence A Φ}.
+    (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}.
 
 (** The quotient algebra carriers is the family of set-quotients
     induced by [Φ]. *)
@@ -175,8 +175,8 @@ Import quotient_algebra_notations.
 Section path_quotient_algebra.
   Context
     {σ : Signature} (A : Algebra σ)
-    (Φ : ∀ s, relation (A s)) {CΦ : IsCongruence A Φ}
-    (Ψ : ∀ s, relation (A s)) {CΨ : IsCongruence A Ψ}.
+    (Φ : ∀ s, Relation (A s)) {CΦ : IsCongruence A Φ}
+    (Ψ : ∀ s, Relation (A s)) {CΨ : IsCongruence A Ψ}.
 
   Lemma path_quotient_algebra `{Funext} (p : Φ = Ψ) : A/Φ = A/Ψ.
   Proof.
@@ -200,7 +200,7 @@ End path_quotient_algebra.
 Section hom_quotient.
   Context
     `{Funext} {σ} {A : Algebra σ}
-    (Φ : ∀ s, relation (A s)) `{!IsCongruence A Φ}.
+    (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}.
 
   Definition def_hom_quotient : ∀ (s : Sort σ), A s → (A/Φ) s :=
     λ s x, class_of (Φ s) x.
@@ -236,7 +236,7 @@ End hom_quotient.
     is an isomorphism. *)
 
 Global Instance is_isomorphism_quotient `{Univalence}
-  {σ : Signature} {A : Algebra σ} (Φ : ∀ s, relation (A s))
+  {σ : Signature} {A : Algebra σ} (Φ : ∀ s, Relation (A s))
   `{!IsCongruence A Φ} (P : ∀ s x y, Φ s x y → x = y)
   : IsIsomorphism (hom_quotient Φ).
 Proof.
@@ -253,7 +253,7 @@ Qed.
 Section ump_quotient_algebra.
   Context
     `{Univalence} {σ} {A B : Algebra σ} `{!IsHSetAlgebra B}
-    (Φ : ∀ s, relation (A s)) `{!IsCongruence A Φ}.
+    (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}.
 
 (** In the nested section below we show that if [f : Homomorphism A B]
     maps elements related by [Φ] to equal elements, there is a

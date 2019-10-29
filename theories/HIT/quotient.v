@@ -23,7 +23,7 @@ Module Export Quotient.
 
   Section Domain.
 
-    Context {A : Type} (R:relation A) {sR: is_mere_relation _ R}.
+    Context {A : Type} (R : Relation A) {sR: is_mere_relation _ R}.
 
     (** We choose to let the definition of quotient depend on the proof that [R] is a set-relations.  Alternatively, we could have defined it for all relations and only develop the theory for set-relations.  The former seems more natural.
 
@@ -71,7 +71,7 @@ Section Equiv.
 
   Context `{Univalence}.
 
-  Context {A : Type} (R : relation A) {sR: is_mere_relation _ R}
+  Context {A : Type} (R : Relation A) {sR: is_mere_relation _ R}
           {Htrans : Transitive R} {Hsymm : Symmetric R}.
 
   Lemma quotient_path2 : forall {x y : quotient R} (p q : x=y), p=q.
@@ -230,8 +230,8 @@ End Equiv.
 Section Functoriality.
 
   Definition quotient_functor
-             {A : Type} (R : relation A) {sR: is_mere_relation _ R}
-             {B : Type} (S : relation B) {sS: is_mere_relation _ S}
+             {A : Type} (R : Relation A) {sR: is_mere_relation _ R}
+             {B : Type} (S : Relation B) {sS: is_mere_relation _ S}
              (f : A -> B) (fresp : forall x y, R x y -> S (f x) (f y))
   : quotient R -> quotient S.
   Proof.
@@ -240,8 +240,8 @@ Section Functoriality.
     apply related_classes_eq, fresp, r.
   Defined.
 
-  Context {A : Type} (R : relation A) {sR: is_mere_relation _ R}
-          {B : Type} (S : relation B) {sS: is_mere_relation _ S}.
+  Context {A : Type} (R : Relation A) {sR: is_mere_relation _ R}
+          {B : Type} (S : Relation B) {sS: is_mere_relation _ S}.
 
   Global Instance quotient_functor_isequiv
              (f : A -> B) (fresp : forall x y, R x y <-> S (f x) (f y))
@@ -285,7 +285,7 @@ Section Kernel.
   Context {A B : Type} `{IsHSet B} (f : A -> B).
 
   (** A mere relation equivalent to its kernel. *)
-  Context (R : relation A) {sR : is_mere_relation _ R}.
+  Context (R : Relation A) {sR : is_mere_relation _ R}.
   Context (is_ker : forall x y, f x = f y <~> R x y).
 
   Theorem quotient_kernel_factor

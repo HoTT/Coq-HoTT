@@ -30,19 +30,19 @@ Global Set Printing Primitive Projection Parameters.
 (** Apply using the same opacity information as typeclass proof search. *)
 Ltac class_apply c := autoapply c with typeclass_instances.
 
-Definition relation (A : Type) := A -> A -> Type.
+Definition Relation (A : Type) := A -> A -> Type.
 
-Class Reflexive {A} (R : relation A) :=
+Class Reflexive {A} (R : Relation A) :=
   reflexivity : forall x : A, R x x.
 
-Class Symmetric {A} (R : relation A) :=
+Class Symmetric {A} (R : Relation A) :=
   symmetry : forall x y, R x y -> R y x.
 
-Class Transitive {A} (R : relation A) :=
+Class Transitive {A} (R : Relation A) :=
   transitivity : forall x y z, R x y -> R y z -> R x z.
 
 (** A [PreOrder] is both Reflexive and Transitive. *)
-Class PreOrder {A} (R : relation A) :=
+Class PreOrder {A} (R : Relation A) :=
   { PreOrder_Reflexive : Reflexive R | 2 ;
     PreOrder_Transitive : Transitive R | 2 }.
 
@@ -716,15 +716,15 @@ Notation "x <> y" := (x <> y :> _) : type_scope.
 Definition symmetric_neq {A} {x y : A} : x <> y -> y <> x
   := fun np p => np (p^).
 
-Definition complement {A} (R : relation A) : relation A :=
+Definition complement {A} (R : Relation A) : Relation A :=
   fun x y => ~ (R x y).
 
 Typeclasses Opaque complement.
 
-Class Irreflexive {A} (R : relation A) :=
+Class Irreflexive {A} (R : Relation A) :=
   irreflexivity : Reflexive (complement R).
 
-Class Asymmetric {A} (R : relation A) :=
+Class Asymmetric {A} (R : Relation A) :=
   asymmetry : forall {x y}, R x y -> (complement R y x : Type).
 
 (** Likewise, we put [Unit] here, instead of in [Unit.v], because [Trunc] uses it. *)
