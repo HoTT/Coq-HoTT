@@ -85,7 +85,7 @@ Coercion pointed_equiv_fun : pEquiv >-> pMap.
 Global Existing Instance pointed_isequiv.
 
 Coercion pointed_equiv_equiv {A B} (f : A <~>* B)
-  : A <~> B := BuildEquiv A B f _.
+  : A <~> B := Build_Equiv A B f _.
 
 (* Pointed type family *)
 Definition pFam (A : pType) := {P : A -> Type & P (point A)}.

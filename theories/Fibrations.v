@@ -51,7 +51,7 @@ Definition equiv_hfiber_homotopic
            {A B : Type} (f g : A -> B) (h : f == g) (b : B)
 : hfiber f b <~> hfiber g b.
 Proof.
-  refine (BuildEquiv _ _ (fun fx => (fx.1 ; (h fx.1)^ @ fx.2)) _).
+  refine (Build_Equiv _ _ (fun fx => (fx.1 ; (h fx.1)^ @ fx.2)) _).
   refine (isequiv_adjointify _ (fun gx => (gx.1 ; (h gx.1) @ gx.2)) _ _);
     intros [a p]; simpl.
   - apply ap, concat_V_pp.
@@ -107,7 +107,7 @@ Defined.
 Definition equiv_fibration_replacement  {B C} (f:C ->B):
   C <~> {y:B & hfiber f y}.
 Proof.
-  simple refine (BuildEquiv _ _ _ (BuildIsEquiv
+  simple refine (Build_Equiv _ _ _ (Build_IsEquiv
                C {y:B & {x:C & f x = y}}
                (fun c => (f c; (c; idpath)))
                (fun c => c.2.1)
@@ -121,7 +121,7 @@ Defined.
 Definition hfiber_fibration {X} (x : X) (P:X->Type):
     P x <~> @hfiber (sigT P) X pr1 x.
 Proof.
-  simple refine (BuildEquiv _ _ _ (BuildIsEquiv
+  simple refine (Build_Equiv _ _ _ (Build_IsEquiv
                (P x) { z : sigT P & z.1 = x }
                (fun Px => ((x; Px); idpath))
                (fun Px => transport P Px.2 Px.1.2)

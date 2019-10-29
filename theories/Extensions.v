@@ -212,7 +212,7 @@ Section Extensions.
              {A B : Type} (C D : B -> Type) (f : A -> B)
              (g : forall b, C b -> D b) `{forall b, IsEquiv (g b)}
   : ExtendableAlong n f C -> ExtendableAlong n f D
-    := extendable_postcompose' n C D f (fun b => BuildEquiv _ _ (g b) _).
+    := extendable_postcompose' n C D f (fun b => Build_Equiv _ _ (g b) _).
 
   (** Composition of the maps we extend along.  This also does not require funext. *)
   Definition extendable_compose (n : nat)

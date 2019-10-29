@@ -38,7 +38,7 @@ Definition path_forall_1 `{P : A -> Type} (f : forall x, P x)
 
 Definition equiv_apD10 `{Funext} {A : Type} (P : A -> Type) f g
 : (f = g) <~> (f == g)
-  := BuildEquiv _ _ (@apD10 A P f g) _.
+  := Build_Equiv _ _ (@apD10 A P f g) _.
 
 Global Instance isequiv_path_forall `{P : A -> Type} (f g : forall x, P x)
   : IsEquiv (path_forall f g) | 0
@@ -46,7 +46,7 @@ Global Instance isequiv_path_forall `{P : A -> Type} (f g : forall x, P x)
 
 Definition equiv_path_forall `{P : A -> Type} (f g : forall x, P x)
   : (f == g)  <~>  (f = g)
-  := BuildEquiv _ _ (path_forall f g) _.
+  := Build_Equiv _ _ (path_forall f g) _.
 
 Global Arguments equiv_path_forall {A%type_scope P} (f g)%function_scope.
 
@@ -224,7 +224,7 @@ Definition equiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
   (g : forall b, P (f b) -> Q b)
   `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
   : (forall a, P a) <~> (forall b, Q b)
-  := BuildEquiv _ _ (functor_forall f g) _.
+  := Build_Equiv _ _ (functor_forall f g) _.
 
 Definition equiv_functor_forall' `{P : A -> Type} `{Q : B -> Type}
   (f : B <~> A) (g : forall b, P (f b) <~> Q b)
@@ -341,6 +341,6 @@ Defined.
 
 Definition equiv_flip `(P : A -> B -> Type)
   : (forall a b, P a b) <~> (forall b a, P a b)
-  := BuildEquiv _ _ (@flip _ _ P) _.
+  := Build_Equiv _ _ (@flip _ _ P) _.
 
 End AssumeFunext.

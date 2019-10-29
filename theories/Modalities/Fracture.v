@@ -138,7 +138,7 @@ Module Fracture (Os : Modalities).
     : fracture_glue_uncurried (fracture_unglue A) = A.
     Proof.
       apply path_universe_uncurried, equiv_inverse.
-      exact (BuildEquiv _ _ (pullback_corec (fracture_square A))
+      exact (Build_Equiv _ _ (pullback_corec (fracture_square A))
                         (ispullback_fracture_square A)).
     Qed.
 
@@ -152,7 +152,7 @@ Module Fracture (Os : Modalities).
 
     Definition equiv_fracture_unglue `{Univalence}
     : Type <~> { B : Type_ O1 & { C : Type_ O2 & C -> O2 B }}
-      := BuildEquiv _ _ fracture_unglue isequiv_fracture_unglue.
+      := Build_Equiv _ _ fracture_unglue isequiv_fracture_unglue.
 
   End FractureTheorem.
 

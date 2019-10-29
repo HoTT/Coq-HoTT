@@ -155,7 +155,7 @@ Proof.
 Defined.
 
 Definition equiv_loopS1_int : (base = base) <~> Int
-  := BuildEquiv _ _ (S1_encode base) (S1_encode_isequiv base).
+  := Build_Equiv _ _ (S1_encode base) (S1_encode_isequiv base).
 
 (** ** Connectedness and truncatedness *)
 

@@ -535,7 +535,7 @@ Definition V_singleton (u : V) : V@{U' U} := set (Unit_ind u).
 Global Instance isequiv_ap_V_singleton {u v : V}
 : IsEquiv (@ap _ _ V_singleton u v).
 Proof.
-  simple refine (BuildIsEquiv _ _ _ _ _ _ _); try solve [ intro; apply path_ishprop ].
+  simple refine (Build_IsEquiv _ _ _ _ _ _ _); try solve [ intro; apply path_ishprop ].
   { intro H. specialize (path_V_eqimg H). intros (H1, H2).
     refine (Trunc_rec _ (H1 tt)). intros [t p]. destruct t; exact p. }
 Defined.

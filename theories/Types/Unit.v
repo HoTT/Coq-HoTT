@@ -28,7 +28,7 @@ Proof.
 Defined.
 
 Global Instance isequiv_path_unit (z z' : Unit) : IsEquiv (path_unit_uncurried z z') | 0.
-  refine (BuildIsEquiv _ _ (path_unit_uncurried z z') (fun _ => tt)
+  refine (Build_IsEquiv _ _ (path_unit_uncurried z z') (fun _ => tt)
     (fun p:z=z' =>
       match p in (_ = z') return (path_unit_uncurried z z' tt = p) with
         | idpath => match z as z return (path_unit_uncurried z z tt = 1) with
@@ -40,7 +40,7 @@ Global Instance isequiv_path_unit (z z' : Unit) : IsEquiv (path_unit_uncurried z
 Defined.
 
 Definition equiv_path_unit (z z' : Unit) : Unit <~> (z = z')
-  := BuildEquiv _ _ (path_unit_uncurried z z') _.
+  := Build_Equiv _ _ (path_unit_uncurried z z') _.
 
 (** ** Transport *)
 
@@ -65,7 +65,7 @@ Global Instance isequiv_unit_rec `{Funext} (A : Type)
 
 Definition equiv_unit_rec `{Funext} (A : Type)
   : A <~> (Unit -> A)
-  := (BuildEquiv _ _ (@Unit_ind (fun _ => A)) _).
+  := (Build_Equiv _ _ (@Unit_ind (fun _ => A)) _).
 
 (* For various reasons, it is typically more convenient to define functions out of the unit as constant maps, rather than [Unit_ind]. *)
 Notation unit_name x := (fun (_ : Unit) => x).
@@ -92,7 +92,7 @@ Defined.
 
 Definition equiv_unit_coind `{Funext} (A : Type)
   : Unit <~> (A -> Unit)
-  := BuildEquiv _ _ (@unit_coind A) _.
+  := Build_Equiv _ _ (@unit_coind A) _.
 
 (** ** Truncation *)
 
@@ -108,9 +108,9 @@ Global Instance contr_unit : Contr Unit | 0 := let x := {|
 (** A contractible type is equivalent to [Unit]. *)
 Definition equiv_contr_unit `{Contr A} : A <~> Unit.
 Proof.
-  refine (BuildEquiv _ _
+  refine (Build_Equiv _ _
     (fun (_ : A) => tt)
-    (BuildIsEquiv _ _ _
+    (Build_IsEquiv _ _ _
       (fun (_ : Unit) => center A)
       (fun t : Unit => match t with tt => 1 end)
       (fun x : A => contr x) _)).

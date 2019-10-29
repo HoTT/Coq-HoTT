@@ -28,7 +28,7 @@ Section UnivalenceImpliesFunext.
               _
               _);
     intro;
-    pose (BuildEquiv _ _ w _) as w';
+    pose (Build_Equiv _ _ w _) as w';
     change H0 with (@equiv_isequiv _ _ w');
     change w with (@equiv_fun _ _ w');
     clearbody w'; clear H0 w;

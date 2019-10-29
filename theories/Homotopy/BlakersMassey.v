@@ -437,7 +437,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
                      (equiv_inverse
                         (equiv_pushout (f := Ocodeleft2a1) (g := Ocodeleft2ac)
                                        1%equiv _ 1%equiv _ _))).
-          - exact (BuildEquiv _ _ (pushl' codeleft01 Ocodeleft02b) _).
+          - exact (Build_Equiv _ _ (pushl' codeleft01 Ocodeleft02b) _).
           - intros x.
             refine (ap _ (Ocodeleft2a1_through_2b0 x) @ _).
             refine (pglue' codeleft01 Ocodeleft02b _ @ _).
@@ -454,7 +454,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
           : O (Pushout Ocodeleft2a1 Ocodeleft2ac) <~> O Ocodeleft2c
           := equiv_O_functor
                O (equiv_inverse
-                    (BuildEquiv _ _ (pushr' Ocodeleft2a1 Ocodeleft2ac) _)).
+                    (Build_Equiv _ _ (pushr' Ocodeleft2a1 Ocodeleft2ac) _)).
 
         Definition codeglue6_pushl (s : x0 = x1) (v : ap left s = r)
           : codeglue6 (to O _ (pushl (s;v)))

@@ -18,8 +18,8 @@ Ltac issig2 build pr1 pr2 :=
   (** Extract the fibration of which our Sigma-type is the total space, as well as the record type. We pull the terms out of a [match], rather than leaving everything inside the [match] because this gives us better error messages. *)
   let fibration := match goal with |- sigT ?fibration <~> ?record => constr:(fibration) end in
   let record := match goal with |- sigT ?fibration <~> ?record => constr:(record) end in
-  exact (BuildEquiv _ _ _
-                    (BuildIsEquiv
+  exact (Build_Equiv _ _ _
+                    (Build_IsEquiv
                        (sigT fibration) record
                        (fun u => build u.1 u.2)
                        (fun v => existT fibration (pr1 v) (pr2 v))
@@ -43,7 +43,7 @@ Defined.
 Definition issig_equiv (A B : Type)
   : { f : A -> B & IsEquiv f } <~> Equiv A B.
 Proof.
-  issig (BuildEquiv A B) (@equiv_fun A B) (@equiv_isequiv A B).
+  issig (Build_Equiv A B) (@equiv_fun A B) (@equiv_isequiv A B).
 Defined.
 
 (** Here is a version of the [issig] tactic for three-component records, which proves goals that look like
@@ -56,8 +56,8 @@ Ltac issig3 build pr1 pr2 pr3 :=
   hnf;
   let A := match goal with |- ?A <~> ?B => constr:(A) end in
   let B := match goal with |- ?A <~> ?B => constr:(B) end in
-  exact (BuildEquiv _ _ _
-                    (BuildIsEquiv
+  exact (Build_Equiv _ _ _
+                    (Build_IsEquiv
                        A B
                        (fun u => build u.1 u.2.1 u.2.2)
                        (fun v => (pr1 v; pr2 v; pr3 v))
@@ -73,8 +73,8 @@ Ltac issig4 build pr1 pr2 pr3 pr4 :=
   hnf;
   let A := match goal with |- ?A <~> ?B => constr:(A) end in
   let B := match goal with |- ?A <~> ?B => constr:(B) end in
-  exact (BuildEquiv _ _ _
-                    (BuildIsEquiv
+  exact (Build_Equiv _ _ _
+                    (Build_IsEquiv
                        A B
                        (fun u => build u.1 u.2.1 u.2.2.1 u.2.2.2)
                        (fun v => (pr1 v; pr2 v; pr3 v; pr4 v))
@@ -90,8 +90,8 @@ Ltac issig5 build pr1 pr2 pr3 pr4 pr5 :=
   hnf;
   let A := match goal with |- ?A <~> ?B => constr:(A) end in
   let B := match goal with |- ?A <~> ?B => constr:(B) end in
-  exact (BuildEquiv _ _ _
-                    (BuildIsEquiv
+  exact (Build_Equiv _ _ _
+                    (Build_IsEquiv
                        A B
                        (fun u => build u.1 u.2.1 u.2.2.1 u.2.2.2.1 u.2.2.2.2)
                        (fun v => (pr1 v; pr2 v; pr3 v; pr4 v ; pr5 v))
@@ -106,8 +106,8 @@ Ltac issig6 build pr1 pr2 pr3 pr4 pr5 pr6 :=
   hnf;
   let A := match goal with |- ?A <~> ?B => constr:(A) end in
   let B := match goal with |- ?A <~> ?B => constr:(B) end in
-  exact (BuildEquiv _ _ _
-                    (BuildIsEquiv
+  exact (Build_Equiv _ _ _
+                    (Build_IsEquiv
                        A B
                        (fun u => build u.1 u.2.1 u.2.2.1 u.2.2.2.1 u.2.2.2.2.1 u.2.2.2.2.2)
                        (fun v => (pr1 v; pr2 v; pr3 v; pr4 v ; pr5 v ; pr6 v))
@@ -124,6 +124,6 @@ Definition issig_isequiv {A B : Type} (f : A -> B) :
   { g:B->A & { r:Sect g f & { s:Sect f g & forall x : A, r (f x) = ap f (s x) }}}
   <~> IsEquiv f.
 Proof.
-  issig (BuildIsEquiv A B f) (@equiv_inv A B f) (@eisretr A B f)
+  issig (Build_IsEquiv A B f) (@equiv_inv A B f) (@eisretr A B f)
         (@eissect A B f) (@eisadj A B f).
 Defined.

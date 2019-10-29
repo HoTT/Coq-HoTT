@@ -141,7 +141,7 @@ Definition transport_path_prod'
 Global Instance isequiv_path_prod {A B : Type} {z z' : A * B}
 : IsEquiv (path_prod_uncurried z z') | 0.
 Proof.
-  refine (BuildIsEquiv _ _ _
+  refine (Build_IsEquiv _ _ _
             (fun r => (ap fst r, ap snd r))
             eta_path_prod
             (fun pq => path_prod'
@@ -155,7 +155,7 @@ Defined.
 
 Definition equiv_path_prod {A B : Type} (z z' : A * B)
   : (fst z = fst z') * (snd z = snd z')  <~>  (z = z')
-  := BuildEquiv _ _ (path_prod_uncurried z z') _.
+  := Build_Equiv _ _ (path_prod_uncurried z z') _.
 
 (** Path algebra *)
 
@@ -221,7 +221,7 @@ Defined.
 Global Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
 : IsEquiv (functor_prod f g) | 1000.
 Proof.
-  refine (BuildIsEquiv
+  refine (Build_IsEquiv
             _ _ (functor_prod f g) (functor_prod f^-1 g^-1)
             (fun z => path_prod' (eisretr f (fst z)) (eisretr g (snd z))
                       @ eta_prod z)
@@ -265,9 +265,9 @@ Definition equiv_functor_prod_r {A A' B : Type} (f : A <~> A')
 (** This is a special property of [prod], of course, not an instance of a general family of facts about types. *)
 
 Definition equiv_prod_symm (A B : Type) : A * B <~> B * A
-  := BuildEquiv
+  := Build_Equiv
        _ _ _
-       (BuildIsEquiv
+       (Build_IsEquiv
           (A*B) (B*A)
           (fun ab => (snd ab, fst ab))
           (fun ba => (snd ba, fst ba))
@@ -279,9 +279,9 @@ Definition equiv_prod_symm (A B : Type) : A * B <~> B * A
 
 (** This, too, is a special property of [prod], of course, not an instance of a general family of facts about types. *)
 Definition equiv_prod_assoc (A B C : Type) : A * (B * C) <~> (A * B) * C
-  := BuildEquiv
+  := Build_Equiv
        _ _ _
-       (BuildIsEquiv
+       (Build_IsEquiv
           (A * (B * C)) ((A * B) * C)
           (fun abc => ((fst abc, fst (snd abc)), snd (snd abc)))
           (fun abc => (fst (fst abc), (snd (fst abc), snd abc)))
@@ -292,15 +292,15 @@ Definition equiv_prod_assoc (A B C : Type) : A * (B * C) <~> (A * B) * C
 (** ** Unit and annihilation *)
 
 Definition prod_empty_r X : X * Empty <~> Empty
-  := (BuildEquiv _ _ snd _).
+  := (Build_Equiv _ _ snd _).
 
 Definition prod_empty_l X : Empty * X <~> Empty
-  := (BuildEquiv _ _ fst _).
+  := (Build_Equiv _ _ fst _).
 
 Definition prod_unit_r X : X * Unit <~> X.
 Proof.
-  refine (BuildEquiv _ _ fst _).
-  simple refine (BuildIsEquiv _ _ _ (fun x => (x,tt)) _ _ _).
+  refine (Build_Equiv _ _ fst _).
+  simple refine (Build_IsEquiv _ _ _ (fun x => (x,tt)) _ _ _).
   - intros x; reflexivity.
   - intros [x []]; reflexivity.
   - intros [x []]; reflexivity.
@@ -308,8 +308,8 @@ Defined.
 
 Definition prod_unit_l X : Unit * X <~> X.
 Proof.
-  refine (BuildEquiv _ _ snd _).
-  simple refine (BuildIsEquiv _ _ _ (fun x => (tt,x)) _ _ _).
+  refine (Build_Equiv _ _ snd _).
+  simple refine (Build_IsEquiv _ _ _ (fun x => (tt,x)) _ _ _).
   - intros x; reflexivity.
   - intros [[] x]; reflexivity.
   - intros [[] x]; reflexivity.
@@ -322,7 +322,7 @@ Defined.
 (* First the positive universal property. *)
 Global Instance isequiv_prod_ind `(P : A * B -> Type)
 : IsEquiv (prod_ind P) | 0
-  := BuildIsEquiv
+  := Build_IsEquiv
        _ _
        (prod_ind P)
        (fun f x y => f (x, y))
@@ -332,7 +332,7 @@ Global Instance isequiv_prod_ind `(P : A * B -> Type)
 
 Definition equiv_prod_ind `(P : A * B -> Type)
   : (forall (a : A) (b : B), P (a, b)) <~> (forall p : A * B, P p)
-  := BuildEquiv _ _ (prod_ind P) _.
+  := Build_Equiv _ _ (prod_ind P) _.
 
 (* The non-dependent version, which is a special case, is the currying equivalence. *)
 Definition equiv_uncurry (A B C : Type)
@@ -350,7 +350,7 @@ Definition prod_coind `(f : forall x:X, A x) `(g : forall x:X, B x)
 
 Global Instance isequiv_prod_coind `(A : X -> Type) (B : X -> Type)
 : IsEquiv (@prod_coind_uncurried X A B) | 0
-  := BuildIsEquiv
+  := Build_IsEquiv
        _ _
        (@prod_coind_uncurried X A B)
        (fun h => (fun x => fst (h x), fun x => snd (h x)))
@@ -360,7 +360,7 @@ Global Instance isequiv_prod_coind `(A : X -> Type) (B : X -> Type)
 
 Definition equiv_prod_coind `(A : X -> Type) (B : X -> Type)
   : ((forall x, A x) * (forall x, B x)) <~> (forall x, A x * B x)
-  := BuildEquiv _ _ (@prod_coind_uncurried X A B) _.
+  := Build_Equiv _ _ (@prod_coind_uncurried X A B) _.
 
 (** ** Products preserve truncation *)
 

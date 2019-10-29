@@ -149,7 +149,7 @@ First we define the function that will be the equivalence. *)
   Definition equiv_inhab_baut_bool_bool (t : Bool)
              (Z : BAut Bool) (z : Z)
   : Bool <~> Z
-    := BuildEquiv _ _ (inhab_baut_bool_from_bool t Z z) _.
+    := Build_Equiv _ _ (inhab_baut_bool_from_bool t Z z) _.
 
   Definition path_baut_bool_inhab (Z : BAut Bool) (z : Z)
   : (point (BAut Bool)) = Z.
@@ -190,18 +190,18 @@ First we define the function that will be the equivalence. *)
   Definition equiv_equiv_inhab_baut_bool_bool (t : Bool)
              (Z : BAut Bool)
   : Z <~> (Bool <~> Z)
-    := BuildEquiv _ _ (equiv_inhab_baut_bool_bool t Z) _.
+    := Build_Equiv _ _ (equiv_inhab_baut_bool_bool t Z) _.
 
   (** We compute its inverse in the case of [Bool]. *)
   Definition equiv_equiv_inhab_baut_bool_bool_bool_inv (t : Bool)
              (e : Bool <~> Bool)
   : equiv_inverse (equiv_equiv_inhab_baut_bool_bool t (point _)) e = e t.
   Proof.
-    pose (alt := BuildEquiv _ _ (equiv_inhab_baut_bool_bool t (point _))
+    pose (alt := Build_Equiv _ _ (equiv_inhab_baut_bool_bool t (point _))
                    (isequiv_equiv_inhab_baut_bool_bool_lemma
                       t (point _) (tr 1))).
     assert (p : equiv_equiv_inhab_baut_bool_bool t (point _) = alt).
-    { apply (ap (fun i => BuildEquiv _ _ _ i)).
+    { apply (ap (fun i => Build_Equiv _ _ _ i)).
       apply (ap (isequiv_equiv_inhab_baut_bool_bool_lemma t (point _))).
       apply path_ishprop. }
     exact (ap10_equiv (ap equiv_inverse p) e).

@@ -164,7 +164,7 @@ Defined.
 Definition equiv_equiv_iff_hprop
        `{Funext} (A B : Type) `{IsHProp A} `{IsHProp B}
   : (A <-> B) <~> (A <~> B)
-  := BuildEquiv _ _ (@equiv_iff_hprop_uncurried A _ B _) _.
+  := Build_Equiv _ _ (@equiv_iff_hprop_uncurried A _ B _) _.
 
 (** ** Inhabited and uninhabited hprops *)
 
@@ -181,7 +181,7 @@ Defined.
 Lemma if_not_hprop_then_equiv_Empty (hprop : Type) `{IsHProp hprop} : ~hprop -> hprop <~> Empty.
 Proof.
   intro np.
-  exact (BuildEquiv _ _ np _).
+  exact (Build_Equiv _ _ np _).
 Defined.
 
 (** Thus, a decidable hprop is either equivalent to [Unit] or [Empty]. *)

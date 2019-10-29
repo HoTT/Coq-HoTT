@@ -180,35 +180,35 @@ End DGroupoid.
 Definition dp_paths_l {A : Type} {x1 x2 y : A} (p : x1 = x2) (q : x1 = y) r
   : p^ @ q = r <~> DPath (fun x => x = y) p q r.
 Proof.
-  refine (equiv_composeR' _ (BuildEquiv _ _ dp_path_transport _)).
+  refine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_l.
 Defined.
 
 Definition dp_paths_r {A : Type} {x y1 y2 : A} (p : y1 = y2) (q : x = y1) r
   :  q @ p = r <~> DPath (fun y => x = y) p q r.
 Proof.
-  refine (equiv_composeR' _ (BuildEquiv _ _ dp_path_transport _)).
+  refine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_r.
 Defined.
 
 Definition dp_paths_lr {A : Type} {x1 x2 : A} (p : x1 = x2) (q : x1 = x1) r
   : (p^ @ q) @ p = r <~> DPath (fun x : A => x = x) p q r.
 Proof.
-  srefine (equiv_composeR' _ (BuildEquiv _ _ dp_path_transport _)).
+  srefine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_lr.
 Defined.
 
 Definition dp_paths_Fl {A B} {f : A -> B} {x1 x2 : A} {y : B} (p : x1 = x2)
   (q : f x1 = y) r :  (ap f p)^ @ q = r <~> DPath (fun x => f x = y) p q r.
 Proof.
-  srefine (equiv_composeR' _ (BuildEquiv _ _ dp_path_transport _)).
+  srefine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_Fl.
 Defined.
 
 Definition dp_paths_Fr {A B} {g : A -> B} {y1 y2 : A} {x : B} (p : y1 = y2)
   (q : x = g y1) r :  q @ ap g p = r <~> DPath (fun y : A => x = g y) p q r.
 Proof.
-  srefine (equiv_composeR' _ (BuildEquiv _ _ dp_path_transport _)).
+  srefine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_Fr.
 Defined.
 
@@ -216,7 +216,7 @@ Definition dp_paths_FFlr {A B} {f : A -> B} {g : B -> A} {x1 x2 : A}
   (p : x1 = x2) (q : g (f x1) = x1) r
   : ((ap g (ap f p))^ @ q) @ p = r <~> DPath (fun x : A => g (f x) = x) p q r.
 Proof.
-  refine (equiv_composeR' _ (BuildEquiv _ _ dp_path_transport _)).
+  refine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_FFlr.
 Defined.
 
@@ -224,7 +224,7 @@ Definition dp_paths_FlFr {A B} {f g : A -> B} {x1 x2 : A} (p : x1 = x2)
   (q : f x1 = g x1) r
   : ((ap f p)^ @ q) @ ap g p = r <~> DPath (fun x : A => f x = g x) p q r.
 Proof.
-  srefine (equiv_composeR' _ (BuildEquiv _ _ dp_path_transport _)).
+  srefine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_FlFr.
 Defined.
 
@@ -232,7 +232,7 @@ Definition dp_paths_lFFr {A B} {f : A -> B} {g : B -> A} {x1 x2 : A}
   (p : x1 = x2) (q : x1 = g (f x1)) r
   :  (p^ @ q) @ ap g (ap f p) = r <~> DPath (fun x : A => x = g (f x)) p q r.
 Proof.
-  srefine (equiv_composeR' _ (BuildEquiv _ _ dp_path_transport _)).
+  srefine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_lFFr.
 Defined.
 
@@ -241,7 +241,7 @@ Definition dp_paths_FlFr_D {A B} (f g : forall a : A, B a)
   : ((apD f p)^ @ ap (transport B p) q) @ apD g p = r
     <~> DPath (fun x : A => f x = g x) p q r.
 Proof.
-  srefine (equiv_composeR' _ (BuildEquiv _ _ dp_path_transport _)).
+  srefine (equiv_composeR' _ (Build_Equiv _ _ dp_path_transport _)).
   apply equiv_concat_l, transport_paths_FlFr_D.
 Defined.
 

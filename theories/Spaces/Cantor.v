@@ -4,12 +4,11 @@ Require Import HoTT.Basics HoTT.Types.
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
 
-
 (** * Cantor space 2^N *)
 
-Definition cantor : Type := nat -> Bool.
+Definition Cantor : Type := nat -> Bool.
 
-Definition fold_cantor : cantor + cantor -> cantor.
+Definition cantor_fold : Cantor + Cantor -> Cantor.
 Proof.
   intros [c|c]; intros n.
   - destruct n as [|n].
@@ -20,7 +19,7 @@ Proof.
     + exact (c n).
 Defined.
 
-Definition unfold_cantor : cantor -> cantor + cantor.
+Definition cantor_unfold : Cantor -> Cantor + Cantor.
 Proof.
   intros c.
   case (c 0).
@@ -28,17 +27,20 @@ Proof.
   - exact (inr (fun n => c n.+1)).
 Defined.
 
-Global Instance isequiv_fold_cantor `{Funext} : IsEquiv fold_cantor.
+Global Instance isequiv_cantor_fold `{Funext} : IsEquiv cantor_fold.
 Proof.
-  refine (isequiv_adjointify fold_cantor unfold_cantor _ _).
+  refine (isequiv_adjointify _ cantor_unfold _ _).
   - intros c; apply path_arrow; intros n.
     induction n as [|n IH].
-    + unfold unfold_cantor.
+    + unfold cantor_unfold.
       case (c 0); reflexivity.
-    + unfold unfold_cantor.
+    + unfold cantor_unfold.
       case (c 0); reflexivity.
   - intros [c|c]; apply path_sum; reflexivity.
 Defined.
 
-Definition equiv_fold_cantor `{Funext} : cantor + cantor <~> cantor
-  := BuildEquiv _ _ fold_cantor _.
+Definition equiv_cantor_fold `{Funext} : Cantor + Cantor <~> Cantor
+  := Build_Equiv _ _ cantor_fold _.
+
+Definition equiv_cantor_unfold `{Funext} : Cantor <~> Cantor + Cantor
+  := Build_Equiv _ _ cantor_unfold (isequiv_inverse equiv_cantor_fold).

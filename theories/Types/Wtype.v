@@ -68,7 +68,7 @@ Proof.
 Defined.
 
 Definition equiv_path_wtype {A B} (z z' : W A B)
-  := BuildEquiv _ _ _ (@isequiv_path_wtype A B z z').
+  := Build_Equiv _ _ _ (@isequiv_path_wtype A B z z').
 
 (** ** W-types preserve truncation *)
 

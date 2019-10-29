@@ -138,7 +138,7 @@ Section CoOpen.
 
   Definition coopen_equiv_open X
   : Op U (coOp X) <~> Op U X
-    := BuildEquiv _ _ (O_functor (Op U) (fromF coOp X))
+    := Build_Equiv _ _ (O_functor (Op U) (fromF coOp X))
                   (coopen_isequiv_open X).
 
 End CoOpen.

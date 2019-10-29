@@ -273,7 +273,7 @@ Qed.
 
 Definition equiv_fin_equiv `{Funext} (n m : nat)
 : ((Fin m.+1) * (Fin n <~> Fin m)) <~> (Fin n.+1 <~> Fin m.+1)
-  := BuildEquiv _ _ (fin_equiv' n m) _.
+  := Build_Equiv _ _ (fin_equiv' n m) _.
 
 (** In particular, this implies that if two canonical finite sets are equivalent, then their cardinalities are equal. *)
 Definition nat_eq_fin_equiv (n m : nat)
@@ -832,7 +832,7 @@ Section DecidableQuotients.
       { strip_truncations.
         destruct p as [x r].
         refine (finite_equiv' (quotient R'') _ _).
-        refine (BuildEquiv _ _ (quotient_functor R'' R' inl inlresp) _).
+        refine (Build_Equiv _ _ (quotient_functor R'' R' inl inlresp) _).
         apply isequiv_surj_emb.
         - apply BuildIsSurjection.
           refine (quotient_ind_prop R' _ _).
@@ -847,7 +847,7 @@ Section DecidableQuotients.
           apply related_classes_eq; unfold R''.
           exact (classes_eq_related R' (inl u) (inl v) q). }
       { refine (finite_equiv' (quotient R'' + Unit) _ _).
-        refine (BuildEquiv _ _ (sum_ind (fun _ => quotient R')
+        refine (Build_Equiv _ _ (sum_ind (fun _ => quotient R')
                                         (quotient_functor R'' R' inl inlresp)
                                         (fun _ => class_of R' (inr tt))) _).
         apply isequiv_surj_emb.

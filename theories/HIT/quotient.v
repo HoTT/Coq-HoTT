@@ -265,7 +265,7 @@ Section Functoriality.
              (f : A -> B) (fresp : forall x y, R x y <-> S (f x) (f y))
              `{IsEquiv _ _ f}
   : quotient R <~> quotient S
-    := BuildEquiv _ _
+    := Build_Equiv _ _
          (quotient_functor R S f (fun x y => fst (fresp x y))) _.
 
   Definition quotient_functor_equiv'

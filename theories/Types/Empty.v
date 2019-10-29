@@ -31,7 +31,7 @@ Global Instance isequiv_empty_rec `{Funext} (A : Type)
 
 Definition equiv_empty_rec `{Funext} (A : Type)
   : Unit <~> (Empty -> A)
-  := (BuildEquiv _ _ (fun (_ : Unit) => @Empty_rec A) _).
+  := (Build_Equiv _ _ (fun (_ : Unit) => @Empty_rec A) _).
 
 (** ** Behavior with respect to truncation *)
 
@@ -40,7 +40,7 @@ Proof. intro x. destruct x. Defined.
 
 Global Instance all_to_empty_isequiv (T : Type) (f : T -> Empty) : IsEquiv f.
 Proof.
-  refine (BuildIsEquiv _ _ _ 
+  refine (Build_IsEquiv _ _ _ 
     (Empty_ind (fun _ => T))                (* := equiv_inf *)
     (fun fals:Empty => match fals with end) (* : Sect equiv_inf f *)
     (fun t:T => match (f t) with end)       (* : Sect f equiv_inf *)
@@ -50,7 +50,7 @@ Proof.
 Defined.
 
 Definition equiv_to_empty {T : Type} (f : T -> Empty) : T <~> Empty
-  := BuildEquiv T Empty f _.
+  := Build_Equiv T Empty f _.
 
 (** ** Paths *)
 

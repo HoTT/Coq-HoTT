@@ -968,7 +968,7 @@ Section Book_4_6_i.
   Defined.
   Definition equiv_qinv_path (qua: QInv_Univalence_type) (A B : Type)
     : (A = B) <~> qinv A B
-    := BuildEquiv _ _ (qinv_path A B) (isequiv_qinv (qua A B)).
+    := Build_Equiv _ _ (qinv_path A B) (isequiv_qinv (qua A B)).
 
   Definition qinv_isequiv {A B} (f : A -> B) `{IsEquiv _ _ f}
     : qinv A B
@@ -1091,7 +1091,7 @@ Section EquivFunctorFunextType.
         (g : forall b:B, P (f b) -> Q b)
         `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
   : (forall a, P a) <~> (forall b, Q b)
-    := BuildEquiv _ _ (functor_forall f g) _.
+    := Build_Equiv _ _ (functor_forall f g) _.
 
   Definition ft_equiv_functor_forall_id 
         {A:Type} `{P : A -> Type} `{Q : A -> Type}
@@ -1397,7 +1397,7 @@ Section Book_6_9.
     - refine (match H' _ with end).
       eexists (existT (fun f : Bool <~> Bool =>
                          ~(forall x, f x = x))
-                      (BuildEquiv _ _ negb _)
+                      (Build_Equiv _ _ negb _)
                       (fun H => false_ne_true (H true)));
         simpl.
       intro f.

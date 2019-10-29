@@ -142,11 +142,11 @@ Section Diagram.
     : DiagramMap D2 D1.
   Proof.
     apply (Build_DiagramMap
-             (fun i => (BuildEquiv _ _ _ (diag_equiv_isequiv w i))^-1)).
+             (fun i => (Build_Equiv _ _ _ (diag_equiv_isequiv w i))^-1)).
     intros i j f.
     apply (@comm_square_inverse _ _ _ _ _ _
-                                (BuildEquiv _ _ _ (diag_equiv_isequiv w i))
-                                (BuildEquiv _ _ _ (diag_equiv_isequiv w j))).
+                                (Build_Equiv _ _ _ (diag_equiv_isequiv w i))
+                                (Build_Equiv _ _ _ (diag_equiv_isequiv w j))).
     intros x; apply DiagramMap_comm.
   Defined.
 
@@ -155,7 +155,7 @@ Section Diagram.
     : diagram_comp w (diagram_equiv_inv w) = diagram_idmap D2.
   Proof.
     destruct w as [[w_obj w_comm] is_eq_w]. simpl in *.
-    set (we i := BuildEquiv _ _ _ (is_eq_w i)).
+    set (we i := Build_Equiv _ _ _ (is_eq_w i)).
     simple refine (path_DiagramMap _ _).
     - exact (fun i => eisretr (we i)).
     - simpl.
@@ -168,7 +168,7 @@ Section Diagram.
     : diagram_comp (diagram_equiv_inv w) w = diagram_idmap D1.
   Proof.
     destruct w as [[w_obj w_comm] is_eq_w]. simpl in *.
-    set (we i := BuildEquiv _ _ _ (is_eq_w i)).
+    set (we i := Build_Equiv _ _ _ (is_eq_w i)).
     simple refine (path_DiagramMap _ _).
     - exact (fun i => eissect (we i)).
     - simpl.

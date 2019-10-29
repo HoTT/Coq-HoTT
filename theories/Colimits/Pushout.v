@@ -131,7 +131,7 @@ Definition equiv_Pushout_rec `{Funext} {A B C} (f : A -> B) (g : A -> C) P
   : {psh : (B -> P) * (C -> P) &
            forall a, fst psh (f a) = snd psh (g a) }
       <~> (Pushout f g -> P)
-  := BuildEquiv _ _ _ (isequiv_Pushout_rec f g P).
+  := Build_Equiv _ _ _ (isequiv_Pushout_rec f g P).
 
 Definition equiv_pushout_unrec `{Funext} {A B C} (f : A -> B) (g : A -> C) P
   : (Pushout f g -> P)

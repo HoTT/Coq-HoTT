@@ -50,7 +50,7 @@ Section equiv_iso_set_cat.
   Definition isequiv_isiso s d (m : morphism set_cat s d)
              `{IsIsomorphism _ _ _ m}
   : IsEquiv m
-    := BuildIsEquiv
+    := Build_IsEquiv
          _ _
          m m^-1%morphism
          (ap10 right_inverse)
@@ -67,7 +67,7 @@ Section equiv_iso_set_cat.
   Proof.
     refine (isequiv_adjointify
               (@iso_equiv s d)
-              (fun m => BuildEquiv _ _ _ (@isequiv_isiso s d m m))
+              (fun m => Build_Equiv _ _ _ (@isequiv_isiso s d m m))
               _
               _);
     simpl in *;
@@ -105,7 +105,7 @@ Section equiv_iso_prop_cat.
   Definition isequiv_isiso_prop s d (m : morphism prop_cat s d)
              `{IsIsomorphism _ _ _ m}
   : IsEquiv m
-    := BuildIsEquiv
+    := Build_IsEquiv
          _ _
          m m^-1%morphism
          (ap10 right_inverse)
@@ -122,7 +122,7 @@ Section equiv_iso_prop_cat.
   Proof.
     refine (isequiv_adjointify
               (@iso_equiv_prop s d)
-              (fun m => BuildEquiv _ _ _ (@isequiv_isiso_prop s d m _))
+              (fun m => Build_Equiv _ _ _ (@isequiv_isiso_prop s d m _))
               _
               _);
     simpl in *;

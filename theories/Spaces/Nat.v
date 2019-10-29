@@ -99,7 +99,7 @@ Proof.
 Defined.
 
 Definition equiv_path_nat {n m} : (n =n m) <~> (n = m)
-  := BuildEquiv _ _ (@path_nat n m) _.
+  := Build_Equiv _ _ (@path_nat n m) _.
 
 Global Instance decidable_paths_nat : DecidablePaths nat
   := fun n m => decidable_equiv _ (@path_nat n m) _.

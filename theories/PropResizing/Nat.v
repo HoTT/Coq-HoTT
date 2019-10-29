@@ -597,7 +597,7 @@ Section AssumeStuff.
     apply ((equiv_path_graph _ _)^-1), pr1 in H.
     pose proof ((fun x => H (inr x)) : (vert n.1) -> Empty) as f.
     apply path_N, equiv_path_graph.
-    srefine ((BuildEquiv _ _ f _);_); cbn.
+    srefine ((Build_Equiv _ _ f _);_); cbn.
     intros x y; destruct (f x).
   Qed.
 

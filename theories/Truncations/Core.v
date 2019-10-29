@@ -131,7 +131,7 @@ Section TruncationModality.
 
   Definition equiv_tr (A : Type) `{IsTrunc n A}
   : A <~> Tr n A
-  := BuildEquiv _ _ (@tr n A) _.
+  := Build_Equiv _ _ (@tr n A) _.
 
   Definition untrunc_istrunc {A : Type} `{IsTrunc n A}
   : Tr n A -> A
