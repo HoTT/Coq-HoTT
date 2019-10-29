@@ -114,3 +114,23 @@ Proof.
   destruct p.
   by apply sq_1G.
 Defined.
+
+Definition ds_G1 {A} (P : A -> Type) {a00 a10 }
+  {px0 px1 : a00 = a10} {p : px0 = px1} {b00 b10}
+  (qx0 : DPath P px0 b00 b10) (qx1 : DPath P px1 b00 b10)
+  : DPath (fun x => DPath P x b00 b10) p qx0 qx1
+      ->  DSquare P (sq_G1 p) qx0 qx1 1 1.
+Proof.
+  destruct p, px0.
+  apply sq_G1.
+Defined.
+
+Global Instance isequiv_ds_G1 {A} (P : A -> Type) {a00 a10 }
+  {px0 px1 : a00 = a10} {p : px0 = px1} {b00 b10}
+  (qx0 : DPath P px0 b00 b10) (qx1 : DPath P px1 b00 b10)
+  : IsEquiv (ds_G1 (p:=p) P qx0 qx1).
+Proof.
+  destruct p, px0.
+  cbn in *.
+  exact _.
+Defined.
