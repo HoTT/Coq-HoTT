@@ -169,17 +169,17 @@ Section FunctorialityColimit.
 
   (** A diagram map [m] : [D1] => [D2] induces a map between any two colimits of [D1] and [D2]. *)
 
-  Definition functoriality_colimit {D1 D2 : Diagram G} (m : DiagramMap D1 D2)
+  Definition functor_colimit {D1 D2 : Diagram G} (m : DiagramMap D1 D2)
     {Q1 Q2} (HQ1 : IsColimit D1 Q1) (HQ2 : IsColimit D2 Q2)
     : Q1 -> Q2 := cocone_postcompose_inv HQ1 (cocone_precompose m HQ2).
 
   (** And this map commutes with diagram map. *)
 
-  Definition functoriality_colimit_commute {D1 D2 : Diagram G}
+  Definition functor_colimit_commute {D1 D2 : Diagram G}
     (m : DiagramMap D1 D2) {Q1 Q2}
     (HQ1 : IsColimit D1 Q1) (HQ2: IsColimit D2 Q2)
     : cocone_precompose m HQ2
-      = cocone_postcompose HQ1 (functoriality_colimit m HQ1 HQ2)
+      = cocone_postcompose HQ1 (functor_colimit m HQ1 HQ2)
     := (eisretr (cocone_postcompose HQ1) _)^.
 
   (** ** Colimits of equivalent diagrams *)
@@ -189,9 +189,9 @@ Section FunctorialityColimit.
   Context {D1 D2 : Diagram G} (m : D1 ~d~ D2) {Q1 Q2}
     (HQ1 : IsColimit D1 Q1) (HQ2 : IsColimit D2 Q2).
 
-  Definition functoriality_colimit_eissect
-    : Sect (functoriality_colimit (diagram_equiv_inv m) HQ2 HQ1)
-           (functoriality_colimit m HQ1 HQ2).
+  Definition functor_colimit_eissect
+    : Sect (functor_colimit (diagram_equiv_inv m) HQ2 HQ1)
+           (functor_colimit m HQ1 HQ2).
   Proof.
     apply ap10.
     serapply (equiv_inj (cocone_postcompose HQ2) _).
@@ -205,9 +205,9 @@ Section FunctorialityColimit.
     apply cocone_precompose_identity.
   Defined.
 
-  Definition functoriality_colimit_eisretr
-    : Sect (functoriality_colimit m HQ1 HQ2)
-           (functoriality_colimit (diagram_equiv_inv m) HQ2 HQ1).
+  Definition functor_colimit_eisretr
+    : Sect (functor_colimit m HQ1 HQ2)
+           (functor_colimit (diagram_equiv_inv m) HQ2 HQ1).
   Proof.
     apply ap10.
     serapply (equiv_inj (cocone_postcompose HQ1) _).
@@ -221,13 +221,13 @@ Section FunctorialityColimit.
     apply cocone_precompose_identity.
   Defined.
 
-  Global Instance isequiv_functoriality_colimit
-    : IsEquiv (functoriality_colimit m HQ1 HQ2)
+  Global Instance isequiv_functor_colimit
+    : IsEquiv (functor_colimit m HQ1 HQ2)
     := isequiv_adjointify _ _
-      functoriality_colimit_eissect functoriality_colimit_eisretr.
+      functor_colimit_eissect functor_colimit_eisretr.
 
-  Definition functoriality_colimit_equiv : Q1 <~> Q2
-    := BuildEquiv _ _ _ isequiv_functoriality_colimit.
+  Definition equiv_functor_colimit : Q1 <~> Q2
+    := BuildEquiv _ _ _ isequiv_functor_colimit.
 
 End FunctorialityColimit.
 
@@ -239,7 +239,7 @@ Theorem colimit_unicity `{Funext} {G : Graph} {D : Diagram G} {Q1 Q2 : Type}
   (HQ1 : IsColimit D Q1) (HQ2 : IsColimit D Q2)
   : Q1 <~> Q2.
 Proof.
-  serapply functoriality_colimit_equiv.
+  serapply equiv_functor_colimit.
   serapply (Build_diagram_equiv (diagram_idmap D)).
 Defined.
 

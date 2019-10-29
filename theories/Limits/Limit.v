@@ -94,17 +94,17 @@ Section FunctorialityLimit.
 
   (** A diagram map [m] : [D1] => [D2] induces a map between any two limits of [D1] and [D2]. *)
 
-  Definition functoriality_limit {D1 D2 : Diagram G} (m : DiagramMap D1 D2)
+  Definition functor_limit {D1 D2 : Diagram G} (m : DiagramMap D1 D2)
     {Q1 Q2} (HQ1 : IsLimit D1 Q1) (HQ2 : IsLimit D2 Q2)
     : Q1 -> Q2 := cone_precompose_inv HQ2 (cone_postcompose m HQ1).
 
   (** And this map commutes with diagram map. *)
 
-  Definition functoriality_limit_commute {D1 D2 : Diagram G}
+  Definition functor_limit_commute {D1 D2 : Diagram G}
     (m : DiagramMap D1 D2) {Q1 Q2}
     (HQ1 : IsLimit D1 Q1) (HQ2 : IsLimit D2 Q2)
     : cone_postcompose m HQ1
-      = cone_precompose HQ2 (functoriality_limit m HQ1 HQ2)
+      = cone_precompose HQ2 (functor_limit m HQ1 HQ2)
     := (eisretr (cone_precompose HQ2) _)^.
 
   (** ** Limits of equivalent diagrams *)
@@ -114,9 +114,9 @@ Section FunctorialityLimit.
   Context {D1 D2 : Diagram G} (m : D1 ~d~ D2) {Q1 Q2}
     (HQ1 : IsLimit D1 Q1) (HQ2 : IsLimit D2 Q2).
 
-  Definition functoriality_limit_eissect
-    : Sect (functoriality_limit (diagram_equiv_inv m) HQ2 HQ1)
-           (functoriality_limit m HQ1 HQ2).
+  Definition functor_limit_eissect
+    : Sect (functor_limit (diagram_equiv_inv m) HQ2 HQ1)
+           (functor_limit m HQ1 HQ2).
   Proof.
     apply ap10.
     serapply (equiv_inj (cone_precompose HQ2) _).
@@ -130,9 +130,9 @@ Section FunctorialityLimit.
     apply cone_postcompose_identity.
   Defined.
 
-  Definition functoriality_limit_eisretr
-    : Sect (functoriality_limit m HQ1 HQ2)
-           (functoriality_limit (diagram_equiv_inv m) HQ2 HQ1).
+  Definition functor_limit_eisretr
+    : Sect (functor_limit m HQ1 HQ2)
+           (functor_limit (diagram_equiv_inv m) HQ2 HQ1).
   Proof.
     apply ap10.
     serapply (equiv_inj (cone_precompose HQ1) _).
@@ -146,13 +146,13 @@ Section FunctorialityLimit.
     apply cone_postcompose_identity.
   Defined.
 
-  Global Instance isequiv_functoriality_limit
-    : IsEquiv (functoriality_limit m HQ1 HQ2)
+  Global Instance isequiv_functor_limit
+    : IsEquiv (functor_limit m HQ1 HQ2)
     := isequiv_adjointify _ _
-      functoriality_limit_eissect functoriality_limit_eisretr.
+      functor_limit_eissect functor_limit_eisretr.
 
-  Definition functoriality_limit_equiv : Q1 <~> Q2
-    := BuildEquiv _ _ _ isequiv_functoriality_limit.
+  Definition equiv_functor_limit : Q1 <~> Q2
+    := BuildEquiv _ _ _ isequiv_functor_limit.
 
 End FunctorialityLimit.
 
@@ -164,7 +164,7 @@ Theorem limit_unicity `{Funext} {G : Graph} {D : Diagram G} {Q1 Q2 : Type}
   (HQ1 : IsLimit D Q1) (HQ2 : IsLimit D Q2)
   : Q1 <~> Q2.
 Proof.
-  serapply functoriality_limit_equiv.
+  serapply equiv_functor_limit.
   serapply (Build_diagram_equiv (diagram_idmap D)).
 Defined.
 
