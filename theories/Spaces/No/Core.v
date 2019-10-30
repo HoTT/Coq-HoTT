@@ -1166,6 +1166,6 @@ Defined.
 
 Definition equiv_DecNo_raise `{Univalence}
   : DecNo <~> No
-  := BuildEquiv _ _ No_raise _.
+  := Build_Equiv _ _ No_raise _.
 
 (** Note that this does not extend to other sorts.  For instance, it is *not* true that any plump ordinal is equal to a cut whose types of left and right options are respectively hereditarily decidable and hereditarily empty.  In particular, when making the type of left options inhabited, we have to use surreals whose type of right options is also inhabited.  For instance, [{{ fun _:P => zero | Empty_rec // rempty_cut }}], for a proposition [P], is a plump ordinal, but to make its left options inhabited we have to use a negative surreal, which is not itself a plump ordinal.  *)

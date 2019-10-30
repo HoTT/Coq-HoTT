@@ -42,7 +42,7 @@ Definition equiv_path_trunctype {n : trunc_index} (A B : TruncType n)
 Proof.
   equiv_via (A = B :> Type).
   - apply equiv_path_universe.
-  - exact ((BuildEquiv _ _ (@ap _ _ (@trunctype_type n) A B) _)^-1)%equiv.
+  - exact ((Build_Equiv _ _ (@ap _ _ (@trunctype_type n) A B) _)^-1)%equiv.
 Defined.
 
 Definition path_trunctype@{a b c} {n : trunc_index} {A B : TruncType n}

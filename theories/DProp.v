@@ -118,7 +118,7 @@ Defined.
 
 Definition equiv_dprop_to_bool `{Univalence}
 : DProp <~> Bool
-  := BuildEquiv _ _ dprop_to_bool _.
+  := Build_Equiv _ _ dprop_to_bool _.
 
 (** ** Operations *)
 

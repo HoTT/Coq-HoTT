@@ -36,7 +36,7 @@ Defined.
 Definition isequiv_fcontr `(f : A -> B)
   : (forall b:B, Contr {a : A & f a = b}) -> IsEquiv f.
 Proof.
-  intros ?. refine (BuildIsEquiv _ _ _
+  intros ?. refine (Build_IsEquiv _ _ _
     (fun b => (center {a : A & f a = b}).1)
     (fun b => (center {a : A & f a = b}).2)
     (fun a => (@contr {x : A & f x = f a} _ (a;1))..1)

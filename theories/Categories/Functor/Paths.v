@@ -136,7 +136,7 @@ Section path_functor.
 
   Definition equiv_path_functor_uncurried (F G : Functor C D)
   : path_functor'_T F G <~> F = G
-    := BuildEquiv _ _ (@path_functor_uncurried F G) _.
+    := Build_Equiv _ _ (@path_functor_uncurried F G) _.
 
   Local Open Scope function_scope.
 

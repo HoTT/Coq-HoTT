@@ -152,7 +152,7 @@ Section FunctorialityLimit.
       functor_limit_eissect functor_limit_eisretr.
 
   Definition equiv_functor_limit : Q1 <~> Q2
-    := BuildEquiv _ _ _ isequiv_functor_limit.
+    := Build_Equiv _ _ _ isequiv_functor_limit.
 
 End FunctorialityLimit.
 

@@ -110,7 +110,7 @@ Proof.
 Defined.
 
 Definition equiv_colimit_rec `{Funext} {G : Graph} {D : Diagram G} (P : Type)
-  : Cocone D P <~> (Colimit D -> P) := BuildEquiv _ _ _ (isequiv_colimit_rec P).
+  : Cocone D P <~> (Colimit D -> P) := Build_Equiv _ _ _ (isequiv_colimit_rec P).
 
 (** And we can now show that the HIT is actually a colimit. *)
 
@@ -227,7 +227,7 @@ Section FunctorialityColimit.
       functor_colimit_eissect functor_colimit_eisretr.
 
   Definition equiv_functor_colimit : Q1 <~> Q2
-    := BuildEquiv _ _ _ isequiv_functor_colimit.
+    := Build_Equiv _ _ _ isequiv_functor_colimit.
 
 End FunctorialityColimit.
 

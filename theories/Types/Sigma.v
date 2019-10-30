@@ -188,7 +188,7 @@ Definition transport_pr1_path_sigma
 Global Instance isequiv_path_sigma `{P : A -> Type} {u v : sigT P}
 : IsEquiv (path_sigma_uncurried P u v) | 0.
 Proof.
-  simple refine (BuildIsEquiv
+  simple refine (Build_IsEquiv
             _ _
             _ (fun r => (r..1; r..2))
             eta_path_sigma
@@ -201,7 +201,7 @@ Defined.
 
 Definition equiv_path_sigma `(P : A -> Type) (u v : sigT P)
 : {p : u.1 = v.1 &  p # u.2 = v.2} <~> (u = v)
-  := BuildEquiv _ _ (path_sigma_uncurried P u v) _.
+  := Build_Equiv _ _ (path_sigma_uncurried P u v) _.
 
 (* A contravariant version of [isequiv_path_sigma'] *)
 Instance isequiv_path_sigma_contra `{P : A -> Type} {u v : sigT P}
@@ -218,7 +218,7 @@ Defined.
 (* A contravariant version of [equiv_path_sigma] *)
 Definition equiv_path_sigma_contra {A : Type} `(P : A -> Type) (u v : sigT P)
   : {p : u.1 = v.1 & u.2 = p^ # v.2} <~> (u = v)
-  := BuildEquiv _ _ (path_sigma_uncurried_contra P u v) _.
+  := Build_Equiv _ _ (path_sigma_uncurried_contra P u v) _.
 
 (** This identification respects path concatenation. *)
 
@@ -440,7 +440,7 @@ Definition equiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
            (g : forall a, P a -> Q (f a))
            `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
 : sigT P <~> sigT Q
-  := BuildEquiv _ _ (functor_sigma f g) _.
+  := Build_Equiv _ _ (functor_sigma f g) _.
 
 Definition equiv_functor_sigma' `{P : A -> Type} `{Q : B -> Type}
            (f : A <~> B)
@@ -469,7 +469,7 @@ Defined.
 Definition equiv_sigma_contr {A : Type} (P : A -> Type)
            `{forall a, Contr (P a)}
 : sigT P <~> A
-  := BuildEquiv _ _ pr1 _.
+  := Build_Equiv _ _ pr1 _.
 
 (** Lemma 3.11.9(ii): Dually, summing up over a contractible type does nothing. *)
 
@@ -489,9 +489,9 @@ Defined.
 
 Definition equiv_sigma_assoc `(P : A -> Type) (Q : {a : A & P a} -> Type)
 : {a : A & {p : P a & Q (a;p)}} <~> sigT Q
-  := @BuildEquiv
+  := @Build_Equiv
        _ _ _
-       (@BuildIsEquiv
+       (@Build_IsEquiv
           {a : A & {p : P a & Q (a;p)}} (sigT Q)
           (fun apq => ((apq.1; apq.2.1); apq.2.2))
           (fun apq => (apq.1.1; (apq.1.2; apq.2)))
@@ -501,9 +501,9 @@ Definition equiv_sigma_assoc `(P : A -> Type) (Q : {a : A & P a} -> Type)
 
 Definition equiv_sigma_prod `(Q : (A * B) -> Type)
 : {a : A & {b : B & Q (a,b)}} <~> sigT Q
-  := @BuildEquiv
+  := @Build_Equiv
        _ _ _
-       (@BuildIsEquiv
+       (@Build_IsEquiv
           {a : A & {b : B & Q (a,b)}} (sigT Q)
           (fun apq => ((apq.1, apq.2.1); apq.2.2))
           (fun apq => (fst apq.1; (snd apq.1; apq.2)))
@@ -513,8 +513,8 @@ Definition equiv_sigma_prod `(Q : (A * B) -> Type)
 
 Definition equiv_sigma_prod0 A B
 : {a : A & B} <~> A * B
-  := BuildEquiv _ _ _
-       (BuildIsEquiv
+  := Build_Equiv _ _ _
+       (Build_IsEquiv
           {a : A & B} (A * B)
           (fun (ab : {a:A & B}) => (ab.1 , ab.2))
           (fun (ab : A*B) => (fst ab ; snd ab))
@@ -532,8 +532,8 @@ Definition equiv_sigma_symm `(P : A -> B -> Type)
 Definition equiv_sigma_symm0 (A B : Type)
 : {a : A & B} <~> {b : B & A}.
 Proof.
-  refine (BuildEquiv _ _ (fun (w:{a:A & B}) => (w.2 ; w.1)) _).
-  simple refine (BuildIsEquiv _ _ _ (fun (z:{b:B & A}) => (z.2 ; z.1))
+  refine (Build_Equiv _ _ (fun (w:{a:A & B}) => (w.2 ; w.1)) _).
+  simple refine (Build_IsEquiv _ _ _ (fun (z:{b:B & A}) => (z.2 ; z.1))
                        _ _ _); intros [x y]; reflexivity.
 Defined.
 
@@ -543,7 +543,7 @@ Defined.
 Global Instance isequiv_sigT_ind `{P : A -> Type}
          (Q : sigT P -> Type)
 : IsEquiv (sigT_ind Q) | 0
-  := BuildIsEquiv
+  := Build_IsEquiv
        _ _
        (sigT_ind Q)
        (fun f x y => f (x;y))
@@ -554,7 +554,7 @@ Global Instance isequiv_sigT_ind `{P : A -> Type}
 Definition equiv_sigT_ind `{P : A -> Type}
            (Q : sigT P -> Type)
 : (forall (x:A) (y:P x), Q (x;y)) <~> (forall xy, Q xy)
-  := BuildEquiv _ _ (sigT_ind Q) _.
+  := Build_Equiv _ _ (sigT_ind Q) _.
 
 (** *** The negative universal property. *)
 
@@ -573,7 +573,7 @@ Definition sigT_coind
 Global Instance isequiv_sigT_coind
          `{A : X -> Type} {P : forall x, A x -> Type}
 : IsEquiv (sigT_coind_uncurried P) | 0
-  := BuildIsEquiv
+  := Build_IsEquiv
        _ _
        (sigT_coind_uncurried P)
        (fun h => existT (fun f => forall x, P x (f x))
@@ -587,7 +587,7 @@ Definition equiv_sigT_coind
            `(A : X -> Type) (P : forall x, A x -> Type)
 : { f : forall x, A x & forall x, P x (f x) }
     <~> (forall x, sigT (P x))
-  := BuildEquiv _ _ (sigT_coind_uncurried P) _.
+  := Build_Equiv _ _ (sigT_coind_uncurried P) _.
 
 (** ** Sigmas preserve truncation *)
 
@@ -632,7 +632,7 @@ Hint Immediate isequiv_path_sigma_hprop : typeclass_instances.
 Definition equiv_path_sigma_hprop {A : Type} {P : A -> Type}
            {HP : forall a, IsHProp (P a)} (u v : sigT P)
 : (u.1 = v.1) <~> (u = v)
-  := BuildEquiv _ _ (path_sigma_hprop _ _) _.
+  := Build_Equiv _ _ (path_sigma_hprop _ _) _.
 
 Definition isequiv_pr1_path_hprop {A} {P : A -> Type}
          `{forall a, IsHProp (P a)}

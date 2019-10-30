@@ -114,7 +114,7 @@ Definition extendable_over_postcompose (n : nat)
 : ExtendableAlong_Over n f C D ext
   -> ExtendableAlong_Over n f C E ext
 := extendable_over_postcompose' n C f ext D E
-     (fun b c => BuildEquiv _ _ (g b c) _).
+     (fun b c => Build_Equiv _ _ (g b c) _).
 
 (** And if the dependency is trivial, we obtain them from an ordinary [ExtendableAlong]. *)
 Definition extendable_over_const

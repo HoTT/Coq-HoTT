@@ -248,7 +248,7 @@ Global Instance isequiv_o_to_O `{Funext}
 Definition equiv_o_to_O `{Funext}
            (O : ReflectiveSubuniverse) (P Q : Type) `{In O Q}
 : (O P -> Q) <~> (P -> Q)
-:= BuildEquiv _ _ (fun g : O P -> Q => g o to O P) _.
+:= Build_Equiv _ _ (fun g : O P -> Q => g o to O P) _.
 
 (** ** Properties of Reflective Subuniverses *)
 
@@ -285,7 +285,7 @@ Section Reflective_Subuniverse.
   Global Existing Instance isequiv_to_O_inO.
 
   Definition equiv_to_O (T : Type) `{In O T} : T <~> O T
-    := BuildEquiv T (O T) (to O T) _.
+    := Build_Equiv T (O T) (to O T) _.
 
   Section Functor.
 
@@ -444,7 +444,7 @@ Section Reflective_Subuniverse.
 
     Definition equiv_O_functor {A B : Type} (f : A <~> B)
     : O A <~> O B
-    := BuildEquiv _ _ (O_functor f) _.
+    := Build_Equiv _ _ (O_functor f) _.
 
     (** This is sometimes useful to have a separate name for, to facilitate rewriting along it. *)
     Definition to_O_equiv_natural {A B} (f : A <~> B)
@@ -469,7 +469,7 @@ Section Reflective_Subuniverse.
     Definition ap_O_path_universe `{Univalence}
                {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
     : ap O (path_universe f) = path_universe (O_functor f)
-    := ap_O_path_universe' (BuildEquiv _ _ f _).
+    := ap_O_path_universe' (Build_Equiv _ _ f _).
 
     (** Postcomposition respects [O_rec] *)
     Definition O_rec_postcompose {A B C : Type} `{In O B} {C_inO : In O C}
@@ -541,7 +541,7 @@ Section Reflective_Subuniverse.
     Definition equiv_O_inverts {A B : Type} `{In O A} `{In O B}
       (f : A -> B) `{O_inverts f}
     : A <~> B
-    := BuildEquiv _ _ f (isequiv_O_inverts f).
+    := Build_Equiv _ _ f (isequiv_O_inverts f).
 
     Definition isequiv_O_rec_O_inverts
            {A B : Type} `{In O B} (f : A -> B) `{O_inverts f}
@@ -728,7 +728,7 @@ Section Reflective_Subuniverse.
 
     Definition equiv_O_prod_cmp (A B : Type)
     : O (A * B) <~> (O A * O B)
-    := BuildEquiv _ _ (O_prod_cmp A B) _.
+    := Build_Equiv _ _ (O_prod_cmp A B) _.
 
     (** ** Dependent sums *)
     (** Theorem 7.7.4 *)
@@ -1018,7 +1018,7 @@ Section Reflective_Subuniverse.
 
       Definition equiv_O_coeq
       : O (Coeq f g) <~> O (Coeq (O_functor f) (O_functor g))
-        := BuildEquiv _ _ O_coeq_cmp _.
+        := Build_Equiv _ _ O_coeq_cmp _.
 
       Definition equiv_O_coeq_to_O (a : A)
         : equiv_O_coeq (to O (Coeq f g) (coeq a))

@@ -119,7 +119,7 @@ Defined.
 
 Definition equiv_ap `(f : A -> B) `{IsEquiv A B f} (x y : A)
   : (x = y) <~> (f x = f y)
-  := BuildEquiv _ _ (ap f) _.
+  := Build_Equiv _ _ (ap f) _.
 
 Global Arguments equiv_ap (A B)%type_scope f%function_scope _ _ _.
 
@@ -137,38 +137,38 @@ Definition equiv_inj `(f : A -> B) `{IsEquiv A B f} {x y : A}
 Global Instance isequiv_path_inverse {A : Type} (x y : A)
   : IsEquiv (@inverse A x y) | 0.
 Proof.
-  refine (BuildIsEquiv _ _ _ (@inverse A y x)
+  refine (Build_IsEquiv _ _ _ (@inverse A y x)
                        (@inv_V A y x) (@inv_V A x y) _).
   intros p; destruct p; reflexivity.
 Defined.
 
 Definition equiv_path_inverse {A : Type} (x y : A)
   : (x = y) <~> (y = x)
-  := BuildEquiv _ _ (@inverse A x y) _.
+  := Build_Equiv _ _ (@inverse A x y) _.
 
 Global Instance isequiv_concat_l {A : Type} `(p : x = y:>A) (z : A)
   : IsEquiv (@transitivity A _ _ x y z p) | 0.
 Proof.
-  refine (BuildIsEquiv _ _ _ (concat p^)
+  refine (Build_IsEquiv _ _ _ (concat p^)
                        (concat_p_Vp p) (concat_V_pp p) _).
   intros q; destruct p; destruct q; reflexivity.
 Defined.
 
 Definition equiv_concat_l {A : Type} `(p : x = y) (z : A)
   : (y = z) <~> (x = z)
-  := BuildEquiv _ _ (concat p) _.
+  := Build_Equiv _ _ (concat p) _.
 
 Global Instance isequiv_concat_r {A : Type} `(p : y = z) (x : A)
   : IsEquiv (fun q:x=y => q @ p) | 0.
 Proof.
-  refine (BuildIsEquiv _ _ (fun q => q @ p) (fun q => q @ p^)
+  refine (Build_IsEquiv _ _ (fun q => q @ p) (fun q => q @ p^)
            (fun q => concat_pV_p q p) (fun q => concat_pp_V q p) _).
   intros q; destruct p; destruct q; reflexivity.
 Defined.
 
 Definition equiv_concat_r {A : Type} `(p : y = z) (x : A)
   : (x = y) <~> (x = z)
-  := BuildEquiv _ _ (fun q => q @ p) _.
+  := Build_Equiv _ _ (fun q => q @ p) _.
 
 Global Instance isequiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
   : IsEquiv (fun r:x=y => p @ r @ q) | 0
@@ -176,7 +176,7 @@ Global Instance isequiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y
 
 Definition equiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
   : (x = y) <~> (x' = y')
-  := BuildEquiv _ _ (fun r:x=y => p @ r @ q) _.
+  := Build_Equiv _ _ (fun r:x=y => p @ r @ q) _.
 
 Global Instance isequiv_whiskerL {A} {x y z : A} (p : x = y) {q r : y = z}
 : IsEquiv (@whiskerL A x y z p q r).
@@ -196,7 +196,7 @@ Defined.
 
 Definition equiv_whiskerL {A} {x y z : A} (p : x = y) (q r : y = z)
 : (q = r) <~> (p @ q = p @ r)
-  := BuildEquiv _ _ (whiskerL p) _.
+  := Build_Equiv _ _ (whiskerL p) _.
 
 Definition equiv_cancelL {A} {x y z : A} (p : x = y) (q r : y = z)
 : (p @ q = p @ r) <~> (q = r)
@@ -226,7 +226,7 @@ Defined.
 
 Definition equiv_whiskerR {A} {x y z : A} (p q : x = y) (r : y = z)
 : (p = q) <~> (p @ r = q @ r)
-  := BuildEquiv _ _ (fun h => whiskerR h r) _.
+  := Build_Equiv _ _ (fun h => whiskerR h r) _.
 
 Definition equiv_cancelR {A} {x y z : A} (p q : x = y) (r : y = z)
 : (p @ r = q @ r) <~> (p = q)
@@ -255,7 +255,7 @@ Defined.
 Definition equiv_moveR_Mp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : (p = r^ @ q) <~> (r @ p = q)
-:= BuildEquiv _ _ (moveR_Mp p q r) _.
+:= Build_Equiv _ _ (moveR_Mp p q r) _.
 
 Global Instance isequiv_moveR_pM
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
@@ -268,7 +268,7 @@ Defined.
 Definition equiv_moveR_pM
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : (r = q @ p^) <~> (r @ p = q)
-:= BuildEquiv _ _ (moveR_pM p q r) _.
+:= Build_Equiv _ _ (moveR_pM p q r) _.
 
 Global Instance isequiv_moveR_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
@@ -281,7 +281,7 @@ Defined.
 Definition equiv_moveR_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : (p = r @ q) <~> (r^ @ p = q)
-:= BuildEquiv _ _ (moveR_Vp p q r) _.
+:= Build_Equiv _ _ (moveR_Vp p q r) _.
 
 Global Instance isequiv_moveR_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
@@ -294,7 +294,7 @@ Defined.
 Definition equiv_moveR_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
 : (r = q @ p) <~> (r @ p^ = q)
-:= BuildEquiv _ _ (moveR_pV p q r) _.
+:= Build_Equiv _ _ (moveR_pV p q r) _.
 
 Global Instance isequiv_moveL_Mp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
@@ -307,7 +307,7 @@ Defined.
 Definition equiv_moveL_Mp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : (r^ @ q = p) <~> (q = r @ p)
-:= BuildEquiv _ _ (moveL_Mp p q r) _.
+:= Build_Equiv _ _ (moveL_Mp p q r) _.
 
 Definition isequiv_moveL_pM
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
@@ -320,7 +320,7 @@ Defined.
 Definition equiv_moveL_pM
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   q @ p^ = r <~> q = r @ p
-  := BuildEquiv _ _ _ (isequiv_moveL_pM p q r).
+  := Build_Equiv _ _ _ (isequiv_moveL_pM p q r).
 
 Global Instance isequiv_moveL_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
@@ -333,7 +333,7 @@ Defined.
 Definition equiv_moveL_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : r @ q = p <~> q = r^ @ p
-:= BuildEquiv _ _ (moveL_Vp p q r) _.
+:= Build_Equiv _ _ (moveL_Vp p q r) _.
 
 Global Instance isequiv_moveL_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
@@ -346,7 +346,7 @@ Defined.
 Definition equiv_moveL_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
 : q @ p = r <~> q = r @ p^
-:= BuildEquiv _ _ (moveL_pV p q r) _.
+:= Build_Equiv _ _ (moveL_pV p q r) _.
 
 Definition isequiv_moveL_1M {A : Type} {x y : A} (p q : x = y)
 : IsEquiv (moveL_1M p q).
@@ -386,7 +386,7 @@ Defined.
 
 Definition equiv_moveR_1M {A : Type} {x y : A} (p q : x = y)
   : (1 = q @ p^) <~> (p = q)
-  := BuildEquiv _ _ (moveR_1M p q) _.
+  := Build_Equiv _ _ (moveR_1M p q) _.
 
 Definition isequiv_moveR_1V {A : Type} {x y : A} (p : x = y) (q : y = x)
 : IsEquiv (moveR_1V p q).
@@ -428,7 +428,7 @@ Defined.
 Definition equiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : u = transport P p^ v <~> transport P p u = v
-:= BuildEquiv _ _ (moveR_transport_p P p u v) _.
+:= Build_Equiv _ _ (moveR_transport_p P p u v) _.
 
 
 Definition moveR_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
@@ -458,7 +458,7 @@ Defined.
 Definition equiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : u = transport P p v <~> transport P p^ u = v
-:= BuildEquiv _ _ (moveR_transport_V P p u v) _.
+:= Build_Equiv _ _ (moveR_transport_V P p u v) _.
 
 Global Instance isequiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
@@ -473,7 +473,7 @@ Defined.
 Definition equiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : transport P p u = v <~> u = transport P p^ v
-:= BuildEquiv _ _ (moveL_transport_V P p u v) _.
+:= Build_Equiv _ _ (moveL_transport_V P p u v) _.
 
 Global Instance isequiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
@@ -488,7 +488,7 @@ Defined.
 Definition equiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : transport P p^ u = v <~> u = transport P p v
-:= BuildEquiv _ _ (moveL_transport_p P p u v) _.
+:= Build_Equiv _ _ (moveL_transport_p P p u v) _.
 
 Global Instance isequiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
 : IsEquiv (@moveR_equiv_M A B f _ x y).
@@ -499,7 +499,7 @@ Defined.
 
 Definition equiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
   : (x = f^-1 y) <~> (f x = y)
-  := BuildEquiv _ _ (@moveR_equiv_M A B f _ x y) _.
+  := Build_Equiv _ _ (@moveR_equiv_M A B f _ x y) _.
 
 Global Instance isequiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
 : IsEquiv (@moveR_equiv_V A B f _ x y).
@@ -510,7 +510,7 @@ Defined.
 
 Definition equiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
   : (x = f y) <~> (f^-1 x = y)
-  := BuildEquiv _ _ (@moveR_equiv_V A B f _ x y) _.
+  := Build_Equiv _ _ (@moveR_equiv_V A B f _ x y) _.
 
 Global Instance isequiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
 : IsEquiv (@moveL_equiv_M A B f _ x y).
@@ -521,7 +521,7 @@ Defined.
 
 Definition equiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
   : (f^-1 y = x) <~> (y = f x)
-  := BuildEquiv _ _ (@moveL_equiv_M A B f _ x y) _.
+  := Build_Equiv _ _ (@moveL_equiv_M A B f _ x y) _.
 
 Global Instance isequiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
 : IsEquiv (@moveL_equiv_V A B f _ x y).
@@ -532,7 +532,7 @@ Defined.
 
 Definition equiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
   : (f y = x) <~> (y = f^-1 x)
-  := BuildEquiv _ _ (@moveL_equiv_V A B f _ x y) _.
+  := Build_Equiv _ _ (@moveL_equiv_V A B f _ x y) _.
 
 (** *** Dependent paths *)
 
@@ -661,7 +661,7 @@ Defined.
 Definition equiv_paths_ind `{Funext} {A : Type} (a : A)
   (P : forall x, (a = x) -> Type)
   : P a 1 <~> forall x p, P x p
-  := BuildEquiv _ _ (paths_ind a P) _.
+  := Build_Equiv _ _ (paths_ind a P) _.
 
 (** ** Truncation *)
 

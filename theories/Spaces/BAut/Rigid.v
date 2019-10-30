@@ -73,7 +73,7 @@ Proof.
   { intros f ?.
     refine (isequiv_adjointify (M f) (M f^-1) _ _);
       apply MS; [ apply eisretr | apply eissect ]. }
-  exact (fun f => (BuildEquiv _ _ (M f) (ME f _))).
+  exact (fun f => (Build_Equiv _ _ (M f) (ME f _))).
 Defined.
 
 Definition baut_prod_rigid_equiv `{Univalence}
@@ -81,7 +81,7 @@ Definition baut_prod_rigid_equiv `{Univalence}
            `{IsTrunc n.+1 X} `{IsRigid A} `{IsConnected n.+1 A}
   : BAut X <~> BAut (X * A).
 Proof.
-  refine (BuildEquiv _ _ (baut_prod_r X A) _).
+  refine (Build_Equiv _ _ (baut_prod_r X A) _).
   apply isequiv_surj_emb.
   { apply BuildIsSurjection; intros Z.
     baut_reduce.
@@ -123,7 +123,7 @@ Proof.
         intros [x a]; cbn.
         apply path_prod; [ apply fh | reflexivity ]. }
       intros [x a].
-      pose (gisid := path_aut_rigid (BuildEquiv _ _ (g x) (ge x)) 1).
+      pose (gisid := path_aut_rigid (Build_Equiv _ _ (g x) (ge x)) 1).
       apply path_prod.
       - apply fh.
       - apply gisid. }

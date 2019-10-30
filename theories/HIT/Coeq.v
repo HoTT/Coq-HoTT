@@ -203,7 +203,7 @@ Section IsEquivFunctorCoeq.
 
   Definition equiv_functor_coeq
   : @Coeq B A f g <~> @Coeq B' A' f' g'
-    := BuildEquiv _ _ (functor_coeq h k p q) _.
+    := Build_Equiv _ _ (functor_coeq h k p q) _.
 
 End IsEquivFunctorCoeq.
 

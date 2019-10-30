@@ -10,7 +10,7 @@ Definition equiv_path_from_contr {A : Type} (P : A -> A -> Type)
   : P a b <~> a = b.
 Proof.
   apply equiv_inverse.
-  srefine (BuildEquiv _ _ _ _).
+  srefine (Build_Equiv _ _ _ _).
   { intros []; apply Prefl. }
   revert b; apply isequiv_from_functor_sigma.
   (* For some reason, typeclass search can't find the Contr instances unless we give the types explicitly. *)

@@ -362,7 +362,7 @@ Section OIndEquiv.
 
     Definition equiv_O_ind
     : (forall a, B (to O A a)) <~> (forall oa, B oa)
-    := BuildEquiv _ _ (O_ind B) _.
+    := Build_Equiv _ _ (O_ind B) _.
 
     (** Theorem 7.7.7 *)
     Definition isequiv_oD_to_O

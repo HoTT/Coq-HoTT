@@ -96,7 +96,7 @@ Defined.
 Global Instance isequiv_path_sum {A B : Type} {z z' : A + B}
 : IsEquiv (path_sum z z') | 0.
 Proof.
-  refine (BuildIsEquiv _ _
+  refine (Build_IsEquiv _ _
                        (path_sum z z')
                        (@path_sum_inv _ _ z z')
                        (@eisretr_path_sum A B z z')
@@ -108,7 +108,7 @@ Proof.
 Defined.
 
 Definition equiv_path_sum {A B : Type} (z z' : A + B)
-  := BuildEquiv _ _ _ (@isequiv_path_sum A B z z').
+  := Build_Equiv _ _ _ (@isequiv_path_sum A B z z').
 
 (** ** Fibers of [inl] and [inr] *)
 
@@ -174,7 +174,7 @@ Section DecidableSum.
       destruct (dec (P x)) as [p|np].
       - exact (inl (x;p)).
       - exact (inr (x;np)). }
-    refine (BuildEquiv _ _ f _).
+    refine (Build_Equiv _ _ f _).
     refine (isequiv_adjointify
               _ (fun z => match z with
                           | inl (x;p) => x
@@ -530,7 +530,7 @@ Defined.
 
 Definition equiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}
 : A + B <~> A' + B'
-  := BuildEquiv _ _ (functor_sum f g) _.
+  := Build_Equiv _ _ (functor_sum f g) _.
 
 Definition equiv_functor_sum' {A A' B B' : Type} (f : A <~> A') (g : B <~> B')
 : A + B <~> A' + B'
@@ -578,7 +578,7 @@ Definition equiv_unfunctor_sum_l {A A' B B' : Type}
            (Ha : forall a:A, is_inl (h (inl a)))
            (Hb : forall b:B, is_inr (h (inr b)))
 : A <~> A'
-  := BuildEquiv _ _ (unfunctor_sum_l h Ha)
+  := Build_Equiv _ _ (unfunctor_sum_l h Ha)
                 (isequiv_unfunctor_sum_l h Ha Hb).
 
 Global Instance isequiv_unfunctor_sum_r {A A' B B' : Type}
@@ -611,7 +611,7 @@ Definition equiv_unfunctor_sum_r {A A' B B' : Type}
            (Ha : forall a:A, is_inl (h (inl a)))
            (Hb : forall b:B, is_inr (h (inr b)))
 : B <~> B'
-  := BuildEquiv _ _ (unfunctor_sum_r h Hb)
+  := Build_Equiv _ _ (unfunctor_sum_r h Hb)
                 (isequiv_unfunctor_sum_r h Ha Hb).
 
 Definition equiv_unfunctor_sum {A A' B B' : Type}
@@ -675,13 +675,13 @@ Defined.
 Definition sum_distrib_l A B C
 : A * (B + C) <~> (A * B) + (A * C).
 Proof.
-  refine (BuildEquiv (A * (B + C)) ((A * B) + (A * C))
+  refine (Build_Equiv (A * (B + C)) ((A * B) + (A * C))
             (fun abc => let (a,bc) := abc in
                         match bc with
                           | inl b => inl (a,b)
                           | inr c => inr (a,c)
                         end) _).
-  simple refine (BuildIsEquiv (A * (B + C)) ((A * B) + (A * C)) _
+  simple refine (Build_IsEquiv (A * (B + C)) ((A * B) + (A * C)) _
             (fun ax => match ax with
                          | inl (a,b) => (a,inl b)
                          | inr (a,c) => (a,inr c)
@@ -694,13 +694,13 @@ Defined.
 Definition sum_distrib_r A B C
 : (B + C) * A <~> (B * A) + (C * A).
 Proof.
-  refine (BuildEquiv ((B + C) * A) ((B * A) + (C * A))
+  refine (Build_Equiv ((B + C) * A) ((B * A) + (C * A))
             (fun abc => let (bc,a) := abc in
                         match bc with
                           | inl b => inl (b,a)
                           | inr c => inr (c,a)
                         end) _).
-  simple refine (BuildIsEquiv ((B + C) * A) ((B * A) + (C * A)) _
+  simple refine (Build_IsEquiv ((B + C) * A) ((B * A) + (C * A)) _
             (fun ax => match ax with
                          | inl (b,a) => (inl b,a)
                          | inr (c,a) => (inr c,a)
@@ -719,7 +719,7 @@ Definition equiv_sigma_sum A B (C : A + B -> Type)
 : { x : A+B & C x } <~>
   { a : A & C (inl a) } + { b : B & C (inr b) }.
 Proof.
-  refine (BuildEquiv { x : A+B & C x }
+  refine (Build_Equiv { x : A+B & C x }
                      ({ a : A & C (inl a) } + { b : B & C (inr b) })
            (fun xc => let (x,c) := xc in
                       match x return
@@ -728,7 +728,7 @@ Proof.
                         | inl a => fun c => inl (a;c)
                         | inr b => fun c => inr (b;c)
                       end c) _).
-  simple refine (BuildIsEquiv { x : A+B & C x }
+  simple refine (Build_IsEquiv { x : A+B & C x }
                        ({ a : A & C (inl a) } + { b : B & C (inr b) }) _
            (fun abc => match abc with
                          | inl (a;c) => (inl a ; c)
@@ -869,7 +869,7 @@ Proof.
 Defined.
 
 Definition equiv_sum_ind `{Funext} `(P : A + B -> Type)
-  := BuildEquiv _ _ _ (isequiv_sum_ind P).
+  := Build_Equiv _ _ _ (isequiv_sum_ind P).
 
 (* The non-dependent version, which is a special case, is the sum-distributive equivalence. *)
 Definition equiv_sum_distributive `{Funext} (A B C : Type)

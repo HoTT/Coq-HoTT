@@ -569,8 +569,8 @@ Section AlreadySplit.
   Definition equiv_split_idem_retract
   : split_idem (s o r) <~> A.
   Proof.
-    simple refine (BuildEquiv _ _ (r o split_idem_sect (s o r))
-              (BuildIsEquiv _ _ _ (split_idem_retr (s o r) o s) _ _ _)).
+    simple refine (Build_Equiv _ _ (r o split_idem_sect (s o r))
+              (Build_IsEquiv _ _ _ (split_idem_retr (s o r) o s) _ _ _)).
     - intros a; simpl.
       refine (H _ @ H _).
     - intros a; simpl.

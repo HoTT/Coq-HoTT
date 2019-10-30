@@ -144,7 +144,7 @@ Definition equiv_isomorphism {σ : Signature} {A B : Algebra σ}
   (f : ∀ s, A s → B s) `{IsIsomorphism σ A B f}
   : ∀ (s : Sort σ), A s <~> B s.
 Proof.
-  intro s. rapply (BuildEquiv _ _ (f s)).
+  intro s. rapply (Build_Equiv _ _ (f s)).
 Defined.
 
 Global Instance hprop_is_isomorphism `{Funext} {σ : Signature}

@@ -134,7 +134,7 @@ Definition Susp_rec_eta `{Funext} {X Y : Type} (f : Susp X -> Y)
 Definition equiv_Susp_rec `{Funext} (X Y : Type)
 : (Susp X -> Y) <~> { NS : Y * Y & X -> fst NS = snd NS }.
 Proof.
-  simple refine (BuildEquiv (Susp X -> Y)
+  simple refine (Build_Equiv (Susp X -> Y)
                      { NS : Y * Y & X -> fst NS = snd NS } _ _).
   { intros f.
     exists (f North , f South).

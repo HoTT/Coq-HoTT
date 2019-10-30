@@ -121,7 +121,7 @@ End BoolForall.
 (** The nonidentity equivalence is negation (the flip). *)
 Global Instance isequiv_negb : IsEquiv negb.
 Proof.
-  refine (@BuildIsEquiv
+  refine (@Build_IsEquiv
             _ _
             negb negb
             (fun b => if b as b return negb (negb b) = b then idpath else idpath)
@@ -131,7 +131,7 @@ Proof.
 Defined.
 
 Definition equiv_negb : Bool <~> Bool
-  := BuildEquiv Bool Bool negb _.
+  := Build_Equiv Bool Bool negb _.
 
 (** Any equivalence [Bool <~> Bool] sends [true] and [false] to different things. *)
 Lemma eval_bool_isequiv (f : Bool -> Bool) `{IsEquiv Bool Bool f}

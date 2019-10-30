@@ -14,9 +14,9 @@ Generalizable Variables A B C f g.
 
 (** The identity map is an equivalence. *)
 Global Instance isequiv_idmap (A : Type) : IsEquiv idmap | 0 :=
-  BuildIsEquiv A A idmap idmap (fun _ => 1) (fun _ => 1) (fun _ => 1).
+  Build_IsEquiv A A idmap idmap (fun _ => 1) (fun _ => 1) (fun _ => 1).
 
-Definition equiv_idmap (A : Type) : A <~> A := BuildEquiv A A idmap _.
+Definition equiv_idmap (A : Type) : A <~> A := Build_Equiv A A idmap _.
 
 Arguments equiv_idmap {A} , A.
 
@@ -27,7 +27,7 @@ Global Instance reflexive_equiv : Reflexive Equiv | 0 := @equiv_idmap.
 (** The composition of equivalences is an equivalence. *)
 Global Instance isequiv_compose `{IsEquiv A B f} `{IsEquiv B C g}
   : IsEquiv (compose g f) | 1000
-  := BuildIsEquiv A C (compose g f)
+  := Build_IsEquiv A C (compose g f)
     (compose f^-1 g^-1)
     (fun c => ap g (eisretr f (g^-1 c)) @ eisretr g c)
     (fun a => ap (f^-1) (eissect g (f a)) @ eissect f a)
@@ -52,7 +52,7 @@ Definition isequiv_compose'
 Definition equiv_compose {A B C : Type} (g : B -> C) (f : A -> B)
   `{IsEquiv B C g} `{IsEquiv A B f}
   : A <~> C
-  := BuildEquiv A C (compose g f) _.
+  := Build_Equiv A C (compose g f) _.
 
 Definition equiv_compose' {A B C : Type} (g : B <~> C) (f : A <~> B)
   : A <~> C
@@ -94,10 +94,10 @@ Section IsEquivHomotopic.
 
   (* This should not be an instance; it can cause the unifier to spin forever searching for functions to be hoomotpic to. *)
   Definition isequiv_homotopic : IsEquiv g
-    := BuildIsEquiv _ _ g (f ^-1) sect retr adj.
+    := Build_IsEquiv _ _ g (f ^-1) sect retr adj.
 
   Definition equiv_homotopic : A <~> B
-    := BuildEquiv _ _ g isequiv_homotopic.
+    := Build_Equiv _ _ g isequiv_homotopic.
 
 End IsEquivHomotopic.
 
@@ -140,7 +140,7 @@ Section EquivInverse.
   Qed.
 
   Global Instance isequiv_inverse : IsEquiv f^-1 | 10000
-    := BuildIsEquiv B A f^-1 f (eissect f) (eisretr f) other_adj.
+    := Build_IsEquiv B A f^-1 f (eissect f) (eisretr f) other_adj.
 End EquivInverse.
 
 (** If the goal is [IsEquiv _^-1], then use [isequiv_inverse]; otherwise, don't pretend worry about if the goal is an evar and we want to add a [^-1]. *)
@@ -168,7 +168,7 @@ Definition cancelR_isequiv {A B C} (f : A -> B) {g : B -> C}
 Definition cancelR_equiv {A B C} (f : A -> B) {g : B -> C}
   `{IsEquiv A B f} `{IsEquiv A C (g o f)}
   : B <~> C
-  := BuildEquiv B C g (cancelR_isequiv f).
+  := Build_Equiv B C g (cancelR_isequiv f).
 
 (** If [g \o f] and [g] are equivalences, so is [f]. *)
 Definition cancelL_isequiv {A B C} (g : B -> C) {f : A -> B}
@@ -180,7 +180,7 @@ Definition cancelL_isequiv {A B C} (g : B -> C) {f : A -> B}
 Definition cancelL_equiv {A B C} (g : B -> C) {f : A -> B}
   `{IsEquiv B C g} `{IsEquiv A C (g o f)}
   : A <~> B
-  := BuildEquiv _ _ f (cancelL_isequiv g).
+  := Build_Equiv _ _ f (cancelL_isequiv g).
 
 (** Combining these with [isequiv_compose], we see that equivalences can be transported across commutative squares. *)
 Definition isequiv_commsq {A B C D}
@@ -209,11 +209,11 @@ Section EquivTransport.
   Context {A : Type} (P : A -> Type) (x y : A) (p : x = y).
 
   Global Instance isequiv_transport : IsEquiv (transport P p) | 0
-    := BuildIsEquiv (P x) (P y) (transport P p) (transport P p^)
+    := Build_IsEquiv (P x) (P y) (transport P p) (transport P p^)
     (transport_pV P p) (transport_Vp P p) (transport_pVp P p).
 
   Definition equiv_transport : P x <~> P y
-    := BuildEquiv _ _ (transport P p) _.
+    := Build_Equiv _ _ (transport P p) _.
 
 End EquivTransport.
 
@@ -246,10 +246,10 @@ Section Adjointify.
 
   (** We don't make this a typeclass instance, because we want to control when we are applying it. *)
   Definition isequiv_adjointify : IsEquiv f
-    := BuildIsEquiv A B f g isretr issect' is_adjoint'.
+    := Build_IsEquiv A B f g isretr issect' is_adjoint'.
 
   Definition equiv_adjointify : A <~> B
-    := BuildEquiv A B f isequiv_adjointify.
+    := Build_Equiv A B f isequiv_adjointify.
 
 End Adjointify.
 
@@ -300,7 +300,7 @@ Definition contr_equiv' A {B} `(f : A <~> B) `{Contr A}
 Global Instance isequiv_contr_contr {A B : Type}
        `{Contr A} `{Contr B} (f : A -> B)
   : IsEquiv f
-  := BuildIsEquiv _ _ f (fun _ => (center A))
+  := Build_IsEquiv _ _ f (fun _ => (center A))
                   (fun x => path_contr _ _)
                   (fun x => path_contr _ _)
                   (fun x => path_contr _ _).
@@ -316,7 +316,7 @@ Defined.
 Global Instance isequiv_pr1 {A : Type} (P : A -> Type) `{forall x, Contr (P x)}
   : IsEquiv (@pr1 A P).
 Proof.
-  apply (BuildIsEquiv
+  apply (Build_IsEquiv
            _ _ (@pr1 A P)
            (fun x => (x ; center (P x)))
            (fun x => 1)
@@ -330,7 +330,7 @@ Defined.
 
 Definition equiv_pr1 {A : Type} (P : A -> Type) `{forall x, Contr (P x)}
   : { x : A & P x } <~> A
-  := BuildEquiv _ _ (@pr1 A P) _.
+  := Build_Equiv _ _ (@pr1 A P) _.
 
 
 (** Assuming function extensionality, composing with an equivalence is itself an equivalence *)
@@ -346,11 +346,11 @@ Global Instance isequiv_precompose `{Funext} {A B C : Type}
 Definition equiv_precompose `{Funext} {A B C : Type}
   (f : A -> B) `{IsEquiv A B f}
   : (B -> C) <~> (A -> C)
-  := BuildEquiv _ _ (fun (g:B->C) => g o f) _.
+  := Build_Equiv _ _ (fun (g:B->C) => g o f) _.
 
 Definition equiv_precompose' `{Funext} {A B C : Type} (f : A <~> B)
   : (B -> C) <~> (A -> C)
-  := BuildEquiv _ _ (fun (g:B->C) => g o f) _.
+  := Build_Equiv _ _ (fun (g:B->C) => g o f) _.
 
 Global Instance isequiv_postcompose `{Funext} {A B C : Type}
   (f : B -> C) `{IsEquiv B C f}
@@ -363,11 +363,11 @@ Global Instance isequiv_postcompose `{Funext} {A B C : Type}
 Definition equiv_postcompose `{Funext} {A B C : Type}
   (f : B -> C) `{IsEquiv B C f}
   : (A -> B) <~> (A -> C)
-  := BuildEquiv _ _ (fun (g:A->B) => f o g) _.
+  := Build_Equiv _ _ (fun (g:A->B) => f o g) _.
 
 Definition equiv_postcompose' `{Funext} {A B C : Type} (f : B <~> C)
   : (A -> B) <~> (A -> C)
-  := BuildEquiv _ _ (fun (g:A->B) => f o g) _.
+  := Build_Equiv _ _ (fun (g:A->B) => f o g) _.
 
 (** Conversely, if pre- or post-composing with a function is always an equivalence, then that function is also an equivalence.  It's convenient to know that we only need to assume the equivalence when the other type is the domain or the codomain. *)
 

@@ -133,7 +133,7 @@ Definition NaiveFunext_implies_Funext : NaiveFunext -> Funext_type
 Definition equiv_postcompose_from_NaiveNondepFunext
            (nf : NaiveNondepFunext) {A B C : Type} (f : B <~> C)
   : (A -> B) <~> (A -> C)
-  := BuildEquiv
+  := Build_Equiv
        _ _ (fun (g:A->B) => f o g)
        (isequiv_adjointify
           (fun (g:A->B) => f o g)

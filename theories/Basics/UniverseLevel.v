@@ -22,7 +22,7 @@ Definition lower2 {A B} (f : forall x : Lift A, Lift (B (lower x))) : forall x :
 Typeclasses Opaque lift lower lift2 lower2.
 
 Global Instance isequiv_lift T : IsEquiv (@lift T)
-  := @BuildIsEquiv
+  := @Build_IsEquiv
        _ _
        (@lift T)
        (@lower T)
@@ -31,7 +31,7 @@ Global Instance isequiv_lift T : IsEquiv (@lift T)
        (fun _ => idpath).
 
 Global Instance isequiv_lift2 A B : IsEquiv (@lift2 A B)
-  := @BuildIsEquiv
+  := @Build_IsEquiv
        _ _
        (@lift2 A B)
        (@lower2 A B)
@@ -40,7 +40,7 @@ Global Instance isequiv_lift2 A B : IsEquiv (@lift2 A B)
        (fun _ => idpath).
 
 Global Instance lift_isequiv {A B} (f : A -> B) {H : IsEquiv f} : @IsEquiv (Lift A) (Lift B) (lift2 f)
-  := @BuildIsEquiv
+  := @Build_IsEquiv
        (Lift A) (Lift B)
        (lift2 f)
        (lift2 (f^-1))
@@ -51,7 +51,7 @@ Global Instance lift_isequiv {A B} (f : A -> B) {H : IsEquiv f} : @IsEquiv (Lift
                    @ (@ap_compose A (Lift A) (Lift B) lift (lift2 f) _ _ _)).
 
 Global Instance lower_isequiv {A B} (f : Lift A -> Lift B) {H : IsEquiv f} : @IsEquiv A B (lower2 f)
-  := @BuildIsEquiv
+  := @Build_IsEquiv
        _ _
        (lower2 f)
        (lower2 (f^-1))
@@ -62,7 +62,7 @@ Global Instance lower_isequiv {A B} (f : Lift A -> Lift B) {H : IsEquiv f} : @Is
                    @ (@ap_compose (Lift A) A B lower (lower2 f) _ _ _)).
 
 Definition lower_equiv {A B} (e : Equiv (Lift A) (Lift B)) : Equiv A B
-  := @BuildEquiv A B (lower2 e) _.
+  := @Build_Equiv A B (lower2 e) _.
 
 (** This version doesn't force strict containment, i.e. it allows the two universes to possibly be the same.  No fancy type is necessary here other than the universe annotations, because of cumulativity. *)
 
@@ -86,7 +86,7 @@ Definition lower'2@{i i' j j'} {A : Type@{i}} {B : A -> Type@{i'}}
 Typeclasses Opaque lift' lower' lift'2 lower'2.
 
 Definition isequiv_lift'@{i j} (T : Type@{i}) : IsEquiv (@lift'@{i j} T)
-  := @BuildIsEquiv
+  := @Build_IsEquiv
        _ _
        (@lift' T)
        (@lower' T)
@@ -96,7 +96,7 @@ Definition isequiv_lift'@{i j} (T : Type@{i}) : IsEquiv (@lift'@{i j} T)
 Global Existing Instance isequiv_lift'. (* work around https://coq.inria.fr/bugs/show_bug.cgi?id=4411 *)
 
 Definition isequiv_lift'2@{e0 e1 i i' j j'} (A : Type@{i}) (B : A -> Type@{j}) : IsEquiv@{e0 e1} (@lift'2@{i i' j j'} A B)
-  := @BuildIsEquiv
+  := @Build_IsEquiv
        _ _
        (@lift'2 A B)
        (@lower'2 A B)
@@ -106,7 +106,7 @@ Definition isequiv_lift'2@{e0 e1 i i' j j'} (A : Type@{i}) (B : A -> Type@{j}) :
 Global Existing Instance isequiv_lift'2. (* work around https://coq.inria.fr/bugs/show_bug.cgi?id=4411 *)
 
 Definition lift'_isequiv@{a b i j i' j'}  {A : Type@{a}} {B : Type@{b}} (f : A -> B) {H : IsEquiv f} : @IsEquiv (Lift'@{i j} A) (Lift'@{i' j'} B) (lift'2 f)
-  := @BuildIsEquiv
+  := @Build_IsEquiv
        (Lift' A) (Lift' B)
        (lift'2 f)
        (lift'2 (f^-1))
@@ -118,7 +118,7 @@ Definition lift'_isequiv@{a b i j i' j'}  {A : Type@{a}} {B : Type@{b}} (f : A -
 Global Existing Instance lift'_isequiv. (* work around https://coq.inria.fr/bugs/show_bug.cgi?id=4411 *)
 
 Definition lower'_isequiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}} (f : Lift'@{i j} A -> Lift'@{i' j'} B) {H : IsEquiv f} : @IsEquiv A B (lower'2 f)
-  := @BuildIsEquiv
+  := @Build_IsEquiv
        _ _
        (lower'2 f)
        (lower'2 (f^-1))
@@ -130,7 +130,7 @@ Definition lower'_isequiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}} (f : Lift'@{
 Global Existing Instance lower'_isequiv. (* work around https://coq.inria.fr/bugs/show_bug.cgi?id=4411 *)
 
 Definition lower'_equiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}} (e : Equiv (Lift'@{i j} A) (Lift'@{i' j'} B)) : Equiv A B
-  := @BuildEquiv A B (lower'2 e) _.
+  := @Build_Equiv A B (lower'2 e) _.
 
 (*Fail Check Lift nat : Type0.
 Check 1 : Lift nat.*)

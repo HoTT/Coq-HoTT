@@ -260,7 +260,7 @@ Class AntiSymmetric `(R : relation A) : Type
   := antisymmetry: forall x y, R x y -> R y x -> x = y.
 Arguments antisymmetry {A} _ {AntiSymmetric} _ _ _ _.
 
-Class EquivRel `(R : relation A) : Type := BuildEquivRel
+Class EquivRel `(R : relation A) : Type := Build_EquivRel
   { EquivRel_Reflexive :> Reflexive R ;
     EquivRel_Symmetric :> Symmetric R ;
     EquivRel_Transitive :> Transitive R }.
@@ -281,7 +281,7 @@ Lemma issig_equiv_rel {A:Type} (R : relation A)
   : SigEquivRel R <~> EquivRel R.
 Proof.
   unfold SigEquivRel.
-  issig (@BuildEquivRel A R) (@EquivRel_Reflexive A R)
+  issig (@Build_EquivRel A R) (@EquivRel_Reflexive A R)
           (@EquivRel_Symmetric A R) (@EquivRel_Transitive A R).
 Defined.
 

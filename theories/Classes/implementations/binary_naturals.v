@@ -109,7 +109,7 @@ Section binary_equiv.
     isequiv_adjointify binary unary' binaryunary unarybinary.
 
   Definition equiv_binary : nat <~> binnat :=
-    BuildEquiv _ _  binary isequiv_binary.
+    Build_Equiv _ _  binary isequiv_binary.
 
 End binary_equiv.
 

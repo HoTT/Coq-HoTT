@@ -145,7 +145,7 @@ Module Lex_Modalities_Theory (Os : Modalities).
   Definition equiv_O_functor_hfiber (O : Modality) `{Lex O}
              {A B} (f : A -> B) (b : B)
   : O (hfiber f b) <~> hfiber (O_functor O f) (to O B b)
-    := BuildEquiv _ _ (O_functor_hfiber O f b) _.
+    := Build_Equiv _ _ (O_functor_hfiber O f b) _.
 
   (** 7. Lex modalities preserve path-spaces. *)
   Definition O_path_cmp (O : Modality) {A} (x y : A)
@@ -232,7 +232,7 @@ Module Lex_Modalities_Theory (Os : Modalities).
     : {Q : Type & In O Q * forall x, P x <~> Q}.
   Proof.
     exists (O {x:A & P x}); split; [ exact _ | intros x].
-    refine (BuildEquiv _ _ (fun p => to O _ (x ; p)) _).
+    refine (Build_Equiv _ _ (fun p => to O _ (x ; p)) _).
     refine (isequiv_conn_map_ino O _).
     revert x.
     apply conn_map_fiber.
@@ -316,7 +316,7 @@ Module Lex_Reflective_Subuniverses
     transparent assert (h : (Equiv@{k k} (hfiber@{k i} (@pr1 A B) (g x))
                                          (hfiber@{k i} g (g x)))).
     { refine (_ oE equiv_to_O@{u a k k} O _).
-      refine (_ oE BuildEquiv _ _
+      refine (_ oE Build_Equiv _ _
                 (O_functor_hfiber O (@pr1 A B) (g x)) _).
       unfold hfiber.
       refine (equiv_functor_sigma' 1 _). intros y; cbn.
