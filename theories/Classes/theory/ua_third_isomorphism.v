@@ -18,8 +18,8 @@ Section cong_quotient.
   Context
     `{Univalence}
     {σ : Signature} {A : Algebra σ}
-    (Φ : ∀ s, relation (A s)) `{!IsCongruence A Φ}
-    (Ψ : ∀ s, relation (A s)) `{!IsCongruence A Ψ}
+    (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}
+    (Ψ : ∀ s, Relation (A s)) `{!IsCongruence A Ψ}
     (subrel : ∀ (s : Sort σ) (x y : A s), Ψ s x y → Φ s x y).
 
   Definition cong_quotient (_ : ∀ s x y, Ψ s x y → Φ s x y)
@@ -92,8 +92,8 @@ Section third_isomorphism.
   Context
     `{Univalence}
     {σ : Signature} {A : Algebra σ}
-    (Φ : ∀ s, relation (A s)) `{!IsCongruence A Φ}
-    (Ψ : ∀ s, relation (A s)) `{!IsCongruence A Ψ}
+    (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}
+    (Ψ : ∀ s, Relation (A s)) `{!IsCongruence A Ψ}
     (subrel : ∀ (s : Sort σ) (x y : A s), Ψ s x y → Φ s x y).
 
   Lemma third_surjecton_well_def (s : Sort σ)

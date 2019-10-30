@@ -25,7 +25,7 @@ Section cong_trace.
   Context
     {σ : Signature} {A : Algebra σ}
     (P : ∀ s, A s → Type) `{!IsSubalgebraPredicate A P}
-    (Φ : ∀ s, relation (A s)) `{!IsCongruence A Φ}.
+    (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}.
 
   Definition cong_trace (s : Sort σ) (x : (A&P) s) (y : (A&P) s)
     := Φ s (i s x) (i s y).
@@ -78,7 +78,7 @@ Section is_subalgebra_class.
   Context `{Univalence}
     {σ : Signature} {A : Algebra σ}
     (P : ∀ s, A s → Type) `{!IsSubalgebraPredicate A P}
-    (Φ : ∀ s, relation (A s)) `{!IsCongruence A Φ}.
+    (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}.
 
   Definition is_subalgebra_class (s : Sort σ) (x : (A/Φ) s) : hProp
     := hexists (λ (y : (A&P) s), in_class (Φ s) x (i s y)).
@@ -136,7 +136,7 @@ Section second_isomorphism.
   Context `{Univalence}
     {σ : Signature} (A : Algebra σ)
     (P : ∀ s, A s → Type) `{!IsSubalgebraPredicate A P}
-    (Φ : ∀ s, relation (A s)) `{!IsCongruence A Φ}.
+    (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}.
 
   Local Notation Ψ := (cong_trace P Φ).
 

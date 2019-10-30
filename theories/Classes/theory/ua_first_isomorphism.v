@@ -28,7 +28,7 @@ Section cong_ker.
     {σ : Signature} {A B : Algebra σ} `{IsHSetAlgebra B}
     (f : ∀ s, A s → B s) `{!IsHomomorphism f}.
 
-  Definition cong_ker (s : Sort σ) : relation (A s)
+  Definition cong_ker (s : Sort σ) : Relation (A s)
     := λ (x y : A s), f s x = f s y.
 
 (* Leave the following results about [cong_ker] opaque because they

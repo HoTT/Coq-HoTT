@@ -9,7 +9,7 @@ Require Import
 Import algebra_notations ne_list.notations.
 
 Section congruence.
-  Context {σ : Signature} (A : Algebra σ) (Φ : ∀ s, relation (A s)).
+  Context {σ : Signature} (A : Algebra σ) (Φ : ∀ s, Relation (A s)).
 
 (** An operation [f : A s1 → A s2 → ... → A sn → A t] satisfies
     [OpCompatible f] iff
@@ -75,7 +75,7 @@ End congruence.
     Then [OpCompatible (f x)] holds for all [x : A s1]. *)
 
 Lemma op_compatible_cons {σ : Signature} {A : Algebra σ}
-  (Φ : ∀ s, relation (A s)) `{!IsCongruence A Φ}
+  (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}
   (s : Sort σ) (w : SymbolType σ) (f : Operation A (s ::: w))
   (x : A s) (P : OpCompatible A Φ f)
   : OpCompatible A Φ (f x).
