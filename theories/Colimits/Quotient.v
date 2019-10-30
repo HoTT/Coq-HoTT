@@ -11,7 +11,7 @@ Require Import Truncations.
 Local Open Scope path_scope.
 
 
-(** * Quotient of a Type by an hprop-valued relation
+(** * Quotient of a Type by an hprop-valued Relation
 
 We aim to model:
 <<
@@ -24,24 +24,24 @@ We do this by defining the quotient as a truncated coequalizer.
 
 *)
 
-Definition Quotient@{i j k} {A : Type@{i}} (R : relation@{i j} A) : Type@{k}
+Definition Quotient@{i j k} {A : Type@{i}} (R : Relation@{i j} A) : Type@{k}
   := Trunc@{k} 0 (Coeq@{k k}
     (fun x : sig@{k k} (fun a : A => sig (R a)) => x.1)
     (fun x : sig@{k k} (fun a : A => sig (R a)) => x.2.1)).
 
-Definition class_of@{i j k} {A : Type@{i}} (R : relation@{i j} A)
+Definition class_of@{i j k} {A : Type@{i}} (R : Relation@{i j} A)
   : A -> Quotient@{i j k} R := tr o coeq.
 
-Definition qglue@{i j k} {A : Type@{i}} {R : relation@{i j} A}
+Definition qglue@{i j k} {A : Type@{i}} {R : Relation@{i j} A}
   {x y : A}
   : R x y -> class_of@{i j k} R x = class_of R y
   := fun p => ap tr (cglue (x; y; p)).
 
-Global Instance ishset_quotient {A : Type} (R : relation A)
+Global Instance ishset_quotient {A : Type} (R : Relation A)
   : IsHSet (Quotient R) := _.
 
 Definition Quotient_ind@{i j k l}
-  {A : Type@{i}} (R : relation@{i j} A)
+  {A : Type@{i}} (R : Relation@{i j} A)
   (P : Quotient@{i j k} R -> Type@{l}) {sP : forall x, IsHSet (P x)}
   (pclass : forall x, P (class_of R x))
   (peq : forall x y (H : R x y), qglue H # pclass x = pclass y)
@@ -55,7 +55,7 @@ Proof.
 Defined.
 
 Definition Quotient_ind_beta_qglue@{i j k l}
-  {A : Type@{i}} (R : relation@{i j} A)
+  {A : Type@{i}} (R : Relation@{i j} A)
   (P : Quotient@{i j k} R -> Type@{l}) {sP : forall x, IsHSet (P x)}
   (pclass : forall x, P (class_of R x))
   (peq : forall x y (H : R x y), qglue H # pclass x = pclass y)
@@ -68,7 +68,7 @@ Proof.
 Defined.
 
 Definition Quotient_rec@{i j k l}
-  {A : Type@{i}} (R : relation@{i j} A)
+  {A : Type@{i}} (R : Relation@{i j} A)
   (P : Type@{l}) `{IsHSet P} (pclass : A -> P)
   (peq : forall x y, R x y -> pclass x = pclass y)
   : Quotient@{i j k} R -> P.
@@ -79,7 +79,7 @@ Proof.
 Defined.
 
 Definition Quotient_rec_beta_qglue @{i j k l}
-  {A : Type@{i}} (R : relation@{i j} A)
+  {A : Type@{i}} (R : Relation@{i j} A)
   (P : Type@{l}) `{IsHSet P} (pclass : A -> P)
   (peq : forall x y, R x y -> pclass x = pclass y)
   (x y : A) (p : R x y)
@@ -99,7 +99,7 @@ Notation "A / R" := (Quotient (A:=A) R).
 
 Section Equiv.
 
-  Context `{Univalence} {A : Type} (R : relation A) `{is_mere_relation _ R}
+  Context `{Univalence} {A : Type} (R : Relation A) `{is_mere_relation _ R}
     `{Transitive _ R} `{Symmetric _ R} `{Reflexive _ R}.
 
   (* The proposition of being in a given class in a quotient. *)
@@ -128,7 +128,7 @@ Section Equiv.
     apply path_ishprop.
   Defined.
 
-  (* Being in a class is decidable if the relation is decidable. *)
+  (* Being in a class is decidable if the Relation is decidable. *)
   Global Instance decidable_in_class `{forall x y, Decidable (R x y)}
   : forall x a, Decidable (in_class x a).
   Proof.
@@ -228,7 +228,7 @@ Section Equiv.
 
 (** TODO: The equivalence with VVquotient [A//R].
   10.1.10.
-    Equivalence relations are effective and there is an equivalence [A/R<~>A//R].
+    Equivalence Relations are effective and there is an equivalence [A/R<~>A//R].
 
     This will need propositional resizing if we don't want to raise the universe level.
 *)
@@ -241,11 +241,11 @@ End Equiv.
 
 Section Functoriality.
 
-  (* TODO: Develop a notion of set with relation and use that instead of manually adding relation preserving conditions. *)
+  (* TODO: Develop a notion of set with Relation and use that instead of manually adding Relation preserving conditions. *)
 
   Definition Quotient_functor
-    {A : Type} (R : relation A)
-    {B : Type} (S : relation B)
+    {A : Type} (R : Relation A)
+    {B : Type} (S : Relation B)
     (f : A -> B) (fresp : forall x y, R x y -> S (f x) (f y))
     : Quotient R -> Quotient S.
   Proof.
@@ -255,16 +255,16 @@ Section Functoriality.
   Defined.
 
   Definition Quotient_functor_idmap
-    {A : Type} {R : relation A}
+    {A : Type} {R : Relation A}
     : Quotient_functor R R idmap (fun x y => idmap) == idmap.
   Proof.
     by serapply Quotient_ind_hprop.
   Defined.
 
   Definition Quotient_functor_compose
-    {A : Type} {R : relation A}
-    {B : Type} {S : relation B}
-    {C : Type} {T : relation C}
+    {A : Type} {R : Relation A}
+    {B : Type} {S : Relation B}
+    {C : Type} {T : Relation C}
     (f : A -> B) (fresp : forall x y, R x y -> S (f x) (f y))
     (g : B -> C) (gresp : forall x y, S x y -> T (g x) (g y))
     : Quotient_functor R T (g o f) (fun x y => (gresp _ _) o (fresp x y))
@@ -273,8 +273,8 @@ Section Functoriality.
     by serapply Quotient_ind_hprop.
   Defined.
 
-  Context {A : Type} (R : relation A)
-          {B : Type} (S : relation B).
+  Context {A : Type} (R : Relation A)
+          {B : Type} (S : Relation B).
 
   Global Instance isequiv_quotient_functor (f : A -> B)
     (fresp : forall x y, R x y <-> S (f x) (f y)) `{IsEquiv _ _ f}
@@ -296,7 +296,7 @@ Section Functoriality.
   Definition equiv_quotient_functor (f : A -> B) `{IsEquiv _ _ f}
     (fresp : forall x y, R x y <-> S (f x) (f y))
     : Quotient R <~> Quotient S
-    := BuildEquiv _ _ (Quotient_functor R S f (fun x y => fst (fresp x y))) _.
+    := Build_Equiv _ _ (Quotient_functor R S f (fun x y => fst (fresp x y))) _.
 
   Definition equiv_quotient_functor' (f : A <~> B)
     (fresp : forall x y, R x y <-> S (f x) (f y))
@@ -317,8 +317,8 @@ Section Kernel.
   (** A function we want to factor. *)
   Context {A : Type@{i}} {B : Type} `{IsHSet B} (f : A -> B).
 
-  (** A mere relation equivalent to its kernel. *)
-  Context (R : relation A)
+  (** A mere Relation equivalent to its kernel. *)
+  Context (R : Relation A)
           (is_ker : forall x y, f x = f y <~> R x y).
 
   Theorem quotient_kernel_factor

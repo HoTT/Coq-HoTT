@@ -841,7 +841,7 @@ Section DecidableQuotients.
       { strip_truncations.
         destruct p as [x r].
         refine (finite_equiv' (Quotient R'') _ _).
-        refine (BuildEquiv _ _ (Quotient_functor R'' R' inl inlresp) _).
+        refine (Build_Equiv _ _ (Quotient_functor R'' R' inl inlresp) _).
         apply isequiv_surj_emb.
         - apply BuildIsSurjection.
           refine (Quotient_ind_hprop R' _ _).
@@ -856,7 +856,7 @@ Section DecidableQuotients.
           apply qglue; unfold R''.
           exact (related_quotient_paths R' (inl u) (inl v) q). }
       { refine (finite_equiv' (Quotient R'' + Unit) _ _).
-        refine (BuildEquiv _ _ (sum_ind (fun _ => Quotient R')
+        refine (Build_Equiv _ _ (sum_ind (fun _ => Quotient R')
                                         (Quotient_functor R'' R' inl inlresp)
                                         (fun _ => class_of R' (inr tt))) _).
         apply isequiv_surj_emb.
