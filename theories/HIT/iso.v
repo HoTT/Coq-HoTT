@@ -25,7 +25,7 @@ Section iso.
   : IsEquiv f.
   Proof.
     pose proof (@isepi_issurj _ _ _ f epif) as surjf.
-    pose proof (ismono_isinj _ monof) as injf.
+    pose proof (isinj_ismono _ monof) as injf.
     pose proof (unique_choice
                   (fun y x => f x = y)
                   _

@@ -1,8 +1,8 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
-Require Import HoTT.Basics HoTT.Types.
-Require Import Pointed UnivalenceImpliesFunext Factorization.
-Require Import Modalities.Modality.
-Require Import HoTT.Truncations HIT.quotient.
+Require Import Basics.
+Require Import Types.
+Require Import Truncations.
+Require Import Factorization.
 Require Import Algebra.ooGroup.
 Import TrM.
 

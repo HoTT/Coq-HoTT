@@ -920,6 +920,20 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
+Definition apD_compose {A A' : Type} {B : A' -> Type} (g : A -> A')
+  (f : forall a, B a) {x y : A} (p : x = y)
+  : apD (f o g) p  = (transport_compose _ _ _ _) @ apD f (ap g p).
+Proof.
+  by destruct p.
+Defined.
+
+Definition apD_compose' {A A' : Type} {B : A' -> Type} (g : A -> A')
+  (f : forall a, B a) {x y : A} (p : x = y)
+  : apD f (ap g p) = (transport_compose B _ _ _)^ @ apD (f o g) p.
+Proof.
+  by destruct p.
+Defined.
+
 (** ** The 2-dimensional groupoid structure *)
 
 (** Horizontal composition of 2-dimensional paths. *)

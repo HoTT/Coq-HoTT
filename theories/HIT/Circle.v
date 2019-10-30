@@ -149,7 +149,7 @@ Proof.
   - refine (S1_ind (fun x => Sect (S1_decode x) (S1_encode x))
                    S1_encode_loopexp _ _).
     (* What remains is easy since [Int] is known to be a set. *)
-    by apply path_forall; intros z; apply set_path2.
+    by apply path_forall; intros z; apply hset_path2.
   (* The other side is trivial by path induction. *)
   - intros []; reflexivity.
 Defined.

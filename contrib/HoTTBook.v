@@ -1007,7 +1007,7 @@ Definition Book7_1_11 := @HoTT.TruncType.istrunc_trunctype.
 (* ================================================== thm:h-set-refrel-in-paths-sets *)
 (** Theorem 7.2.2 *)
 
-Definition Book_7_2_2 := @HoTT.HSet.isset_hrel_subpaths.
+Definition Book_7_2_2 := @HoTT.HSet.ishset_hrel_subpaths.
 
 (* ================================================== notnotstable-equality-to-set *)
 (** Corollary 7.2.3 *)

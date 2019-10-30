@@ -5,25 +5,13 @@ Require Import HSet TruncType.
 Require Export HIT.Coeq.
 Local Open Scope path_scope.
 
-
 (** * Homotopy Pushouts *)
-
-(*
-Record Span :=
-  { A : Type; B : Type; C : Type;
-    f : C -> A;
-    g : C -> B }.
-
-Record Cocone (S : Span) (D : Type) :=
-  { i : A S -> D;
-    j : B S -> D;
-    h : forall c, i (f S c) = j (g S c) }.
-*)
 
 (** We define pushouts in terms of coproducts and coequalizers. *)
 
-Definition Pushout {A B C : Type} (f : A -> B) (g : A -> C) : Type
-  := Coeq (inl o f) (inr o g).
+Definition Pushout@{i j k l} {A : Type@{i}} {B : Type@{j}} {C : Type@{k}}
+  (f : A -> B) (g : A -> C) : Type@{l}
+  := Coeq@{l l} (inl o f) (inr o g).
 
 Definition push {A B C : Type} {f : A -> B} {g : A -> C}
  : B+C -> Pushout f g
@@ -46,14 +34,19 @@ Definition pglue' {A B C : Type} (f : A -> B) (g : A -> C) (a : A) : pushl (f a)
 
 Section PushoutInd.
 
-  Context {A B C : Type} {f : A -> B} {g : A -> C} (P : Pushout f g -> Type)
-          (pushb : forall b : B, P (pushl b))
-          (pushc : forall c : C, P (pushr c))
-          (pusha : forall a : A, (pglue a) # (pushb (f a)) = pushc (g a)).
+  Context {A B C : Type} {f : A -> B} {g : A -> C}
+    (P : Pushout f g -> Type)
+    (pushb : forall b : B, P (pushl b))
+    (pushc : forall c : C, P (pushr c))
+    (pusha : forall a : A, (pglue a) # (pushb (f a)) = pushc (g a)).
 
   Definition Pushout_ind
     : forall (w : Pushout f g), P w
-    := Coeq_ind P (fun bc => match bc with inl b => pushb b | inr c => pushc c end) pusha.
+    := Coeq_ind P (fun bc =>
+      match bc with
+        | inl b => pushb b
+        | inr c => pushc c 
+      end) pusha.
 
   Definition Pushout_ind_beta_pushl (b:B) : Pushout_ind (pushl b) = pushb b
     := 1.

@@ -62,7 +62,7 @@ Qed.
 
 Global Instance Qpos_isset : IsHSet Q+.
 Proof.
-apply (@HSet.isset_hrel_subpaths _ (fun e d => ' e = ' d)).
+apply (@HSet.ishset_hrel_subpaths _ (fun e d => ' e = ' d)).
 - intros e; reflexivity.
 - apply _.
 - exact pos_eq.

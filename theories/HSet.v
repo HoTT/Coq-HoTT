@@ -44,7 +44,7 @@ Proof.
   apply (trunc_equiv _ equiv_hset_axiomK).
 Defined.
 
-Theorem set_path2 {A} `{IsHSet A} {x y : A} (p q : x = y):
+Theorem hset_path2 {A} `{IsHSet A} {x y : A} (p q : x = y):
   p = q.
 Proof.
   induction q.
@@ -61,13 +61,13 @@ Lemma axiomK_idpath {A} (x : A) (K : axiomK A) :
   K x (idpath x) = idpath (idpath x).
 Proof.
   pose (T1A := @trunc_succ _ A (@hset_axiomK A K)).
-  exact (@set_path2 (x=x) (T1A x x) _ _ _ _).
+  exact (@hset_path2 (x=x) (T1A x x) _ _ _ _).
 Defined.
 
 End AssumeFunext.
 
 (** We prove that if [R] is a reflexive mere relation on [X] implying identity, then [X] is an hSet, and hence [R x y] is equivalent to [x = y]. *)
-Lemma isset_hrel_subpaths
+Lemma ishset_hrel_subpaths
       {X R}
       `{Reflexive X R}
       `{forall x y, IsHProp (R x y)}
@@ -93,7 +93,7 @@ Global Instance isequiv_hrel_subpaths
        x y
 : IsEquiv (f x y) | 10000.
 Proof.
-  pose proof (isset_hrel_subpaths f).
+  pose proof (ishset_hrel_subpaths f).
   refine (isequiv_adjointify
             (f x y)
             (fun p => transport (R x) p (reflexivity x))
@@ -129,7 +129,7 @@ Proof.
   exact (isi x y (p @ q^)).
 Defined.
 
-Lemma isinj_ismono `{Funext} {X Y} (f : X -> Y) : isinj f -> ismono f.
+Lemma ismono_isinj `{Funext} {X Y} (f : X -> Y) : isinj f -> ismono f.
 Proof.
   intros ? ? ? ? H'.
   apply path_forall.
@@ -138,7 +138,7 @@ Proof.
   eauto.
 Qed.
 
-Definition ismono_isinj {X Y} (f : X -> Y)
+Definition isinj_ismono {X Y} (f : X -> Y)
            (H : ismono f)
 : isinj f
   := fun x0 x1 H' =>

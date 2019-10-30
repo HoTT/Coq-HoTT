@@ -148,7 +148,7 @@ Global Instance istrunc_homomorphism_standard_notion_of_structure
        X P `{@IsStandardNotionOfStructure X P} x
 : IsHSet (P x).
 Proof.
-  eapply (@isset_hrel_subpaths
+  eapply (@ishset_hrel_subpaths
             _ (fun a b => (a <= b) * (b <= a)));
   try typeclasses eauto.
   - repeat intro; split; apply reflexivity.

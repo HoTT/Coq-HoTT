@@ -46,7 +46,7 @@ Class PreMetric@{i j} (A:Type@{i}) {Aclose : Closeness A} :=
 Global Instance premetric_hset@{i j} `{Funext}
   {A:Type@{i} } `{PreMetric@{i j} A} : IsHSet A.
 Proof.
-apply (@HSet.isset_hrel_subpaths@{j i j} _ (fun x y => forall e, close e x y)).
+apply (@HSet.ishset_hrel_subpaths@{j i j} _ (fun x y => forall e, close e x y)).
 - intros x;reflexivity.
 - apply _.
 - apply separated.

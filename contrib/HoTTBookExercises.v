@@ -569,7 +569,7 @@ Proof.
   intros isHSet_A allBx_HSet.
   serapply hset_axiomK. intros x xx.
   pose (path_path_sigma B x x xx 1) as useful.
-  apply (useful (axiomK_hset _ _ _) (set_path2 _ _)).
+  apply (useful (axiomK_hset _ _ _) (hset_path2 _ _)).
 Defined.
 
 (* ================================================== ex:prop-endocontr *)
@@ -1483,7 +1483,7 @@ End Book_6_9.
 Section Book_7_1.
   Lemma Book_7_1_part_i (H : forall A, merely A -> A) A : IsHSet A.
   Proof.
-    apply (@HoTT.HSet.isset_hrel_subpaths
+    apply (@HoTT.HSet.ishset_hrel_subpaths
              A (fun x y => merely (x = y)));
     try typeclasses eauto.
     - intros ?.
