@@ -3,17 +3,17 @@ Require Import
  HoTT.Classes.interfaces.orders.
 
 Class NaturalsToSemiRing@{i j} (A : Type@{i}) :=
-  naturals_to_semiring: forall (B : Type@{j}) `{SemiRing B}, A -> B.
+  naturals_to_semiring: forall (B : Type@{j}) `{IsSemiRing B}, A -> B.
 
 Arguments naturals_to_semiring A {_} B {_ _ _ _ _} _.
 
 Class Naturals A {Aap:Apart A} {Aplus Amult Azero Aone Ale Alt}
   `{U: NaturalsToSemiRing A} :=
-  { naturals_ring :> @SemiRing A Aplus Amult Azero Aone
+  { naturals_ring :> @IsSemiRing A Aplus Amult Azero Aone
   ; naturals_order :> FullPseudoSemiRingOrder Ale Alt
-  ; naturals_to_semiring_mor:> forall `{SemiRing B},
-    SemiRingPreserving (naturals_to_semiring A B)
-  ; naturals_initial: forall `{SemiRing B} {h : A -> B} `{!SemiRingPreserving h} x,
+  ; naturals_to_semiring_mor:> forall `{IsSemiRing B},
+    IsSemiRingPreserving (naturals_to_semiring A B)
+  ; naturals_initial: forall `{IsSemiRing B} {h : A -> B} `{!IsSemiRingPreserving h} x,
     naturals_to_semiring A B x = h x }.
 
 (* Specializable operations: *)

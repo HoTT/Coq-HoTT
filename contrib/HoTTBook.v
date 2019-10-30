@@ -2076,7 +2076,7 @@ Definition Book_10_5_8_item_ix := @HoTT.HIT.V.separation.
 (* ================================================== ordered-field *)
 (** Definition 11.2.7 *)
 
-Definition Book_11_2_7 := @HoTT.Classes.interfaces.abstract_algebra.Field.
+Definition Book_11_2_7 := @HoTT.Classes.interfaces.abstract_algebra.IsField.
 Definition Book_11_2_7' := @HoTT.Classes.interfaces.orders.FullPseudoSemiRingOrder.
 
 (* ================================================== RD-archimedean-ordered-field *)

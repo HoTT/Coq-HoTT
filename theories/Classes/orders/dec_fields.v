@@ -9,7 +9,7 @@ Require Export
 Require Import HoTT.Classes.tactics.ring_tac.
 
 Section contents.
-Context `{DecField F} `{Apart F} `{!TrivialApart F}
+Context `{IsDecField F} `{Apart F} `{!TrivialApart F}
   `{!FullPseudoSemiRingOrder Fle Flt} `{DecidablePaths F}.
 (* Add Ring F : (stdlib_ring_theory F). *)
 

@@ -13,7 +13,7 @@ Module Frac.
 Section contents.
 Universe UR.
 Context `{Funext} `{Univalence} (R:Type@{UR})
-  `{IntegralDomain R} `{DecidablePaths R}.
+  `{IsIntegralDomain R} `{DecidablePaths R}.
 
 Record Frac@{} : Type
   := frac { num: R; den: R; den_ne_0: PropHolds (den <> 0) }.
@@ -204,14 +204,14 @@ Arguments equiv {R _ _} _ _.
 
 
 Section morphisms.
-Context `{IntegralDomain R1} `{DecidablePaths R1}.
-Context `{IntegralDomain R2} `{DecidablePaths R2}.
-Context `(f : R1 -> R2) `{!SemiRingPreserving f} `{!Injective f}.
+Context `{IsIntegralDomain R1} `{DecidablePaths R1}.
+Context `{IsIntegralDomain R2} `{DecidablePaths R2}.
+Context `(f : R1 -> R2) `{!IsSemiRingPreserving f} `{!IsInjective f}.
 
 Definition lift (x : Frac R1) : Frac R2.
 Proof.
 apply (frac (f (num x)) (f (den x))).
-apply injective_ne_0.
+apply isinjective_ne_0.
 apply (den_ne_0 x).
 Defined.
 
@@ -233,7 +233,7 @@ Section contents.
 (* NB: we need a separate IsHSet instance
    so we don't need to depend on everything to define F. *)
 Universe UR.
-Context `{Funext} `{Univalence} {R:Type@{UR} } `{IsHSet R} `{IntegralDomain R}
+Context `{Funext} `{Univalence} {R:Type@{UR} } `{IsHSet R} `{IsIntegralDomain R}
   `{DecidablePaths R}.
 
 Local Existing Instance den_ne_0.
@@ -349,7 +349,7 @@ hnf. apply (F_ind2 _).
 intros;apply path, Frac.pl_comm.
 Qed.
 
-Instance F_ring@{} : Ring F.
+Instance F_ring@{} : IsRing F.
 Proof.
 repeat split;
 first [change sg_op with mult; change mon_unit with 1|
@@ -443,7 +443,7 @@ destruct (decide_rel paths (num q) 0) as [E'|?];[destruct E;apply E'|].
 simpl. reflexivity.
 Qed.
 
-Global Instance F_field@{} : DecField F.
+Global Instance F_field@{} : IsDecField F.
 Proof.
 split;try apply _.
 - red. apply class_neq.
@@ -492,7 +492,7 @@ destruct (decide_rel paths (num q) 0) as [E|E];simpl.
 Qed.
 
 (* A final word about inject *)
-Global Instance inject_sr_morphism@{} : SemiRingPreserving (cast R F).
+Global Instance inject_sr_morphism@{} : IsSemiRingPreserving (cast R F).
 Proof.
 repeat (split; try apply _).
 - intros x y. apply path. change ((x + y) * (1 * 1) = (x * 1 + y * 1) * 1).
@@ -501,7 +501,7 @@ repeat (split; try apply _).
   rewrite !mult_1_r. reflexivity.
 Qed.
 
-Global Instance inject_injective@{} : Injective (cast R F).
+Global Instance inject_injective@{} : IsInjective (cast R F).
 Proof.
 repeat (split; try apply _).
 intros x y E. apply classes_eq_related in E.
@@ -517,9 +517,9 @@ Module Lift.
 Section morphisms.
 Universe UR1 UR2.
 Context `{Funext} `{Univalence}.
-Context {R1:Type@{UR1} } `{IntegralDomain R1} `{DecidablePaths R1}.
-Context {R2:Type@{UR2} } `{IntegralDomain R2} `{DecidablePaths R2}.
-Context `(f : R1 -> R2) `{!SemiRingPreserving f} `{!Injective f}.
+Context {R1:Type@{UR1} } `{IsIntegralDomain R1} `{DecidablePaths R1}.
+Context {R2:Type@{UR2} } `{IsIntegralDomain R2} `{DecidablePaths R2}.
+Context `(f : R1 -> R2) `{!IsSemiRingPreserving f} `{!IsInjective f}.
 
 Definition lift@{} : F R1 -> F R2.
 Proof.
@@ -527,7 +527,7 @@ apply (F_rec (fun x => class (Frac.lift f x))).
 intros;apply path,Frac.lift_respects;trivial.
 Defined.
 
-Global Instance lift_sr_morphism@{i} : SemiRingPreserving lift.
+Global Instance lift_sr_morphism@{i} : IsSemiRingPreserving lift.
 Proof.
 (* This takes a few seconds. *)
 split;split;red.
@@ -547,7 +547,7 @@ split;split;red.
   red;simpl. apply commutativity.
 Qed.
 
-Global Instance lift_injective@{i} : Injective lift.
+Global Instance lift_injective@{i} : IsInjective lift.
 Proof.
 red.
 apply (F_ind2@{UR1 i i} (fun _ _ => _ -> _)).

@@ -6,7 +6,7 @@ Require Export
   HoTT.Classes.theory.rings.
 
 Section field_properties.
-Context `{Field F}.
+Context `{IsField F}.
 
 (* Add Ring F : (stdlib_ring_theory F). *)
 
@@ -32,7 +32,7 @@ Proof.
 intros ? E. rewrite <-E. trivial.
 Qed.
 
-Global Instance: StrongInjective (-).
+Global Instance: IsStrongInjective (-).
 Proof.
 repeat (split; try apply _); intros x y E.
 - apply (strong_extensionality (+ x + y)).
@@ -47,7 +47,7 @@ repeat (split; try apply _); intros x y E.
   apply symmetry;trivial.
 Qed.
 
-Global Instance: StrongInjective (//).
+Global Instance: IsStrongInjective (//).
 Proof.
 repeat (split; try apply _); intros x y E.
 - apply (strong_extensionality (x.1 *.)).
@@ -122,7 +122,7 @@ assert (~ ~ apart y 0) as Ey.
   apply mult_0_l.
 Qed.
 
-Global Instance: IntegralDomain F := {}.
+Global Instance : IsIntegralDomain F := {}.
 
 Global Instance apart_0_sig_apart_0: forall (x : ApartZero F), PropHolds (x.1 ≶ 0).
 Proof.
@@ -199,11 +199,11 @@ Hint Extern 8 (PropHolds (_ * _ ≶ 0)) =>
   eapply @mult_apart_zero : typeclass_instances.
 
 Section morphisms.
-  Context `{Field F1} `{Field F2} `{!SemiRingStrongPreserving (f : F1 -> F2)}.
+  Context `{IsField F1} `{IsField F2} `{!IsSemiRingStrongPreserving (f : F1 -> F2)}.
 
 (*   Add Ring F1 : (stdlib_ring_theory F1). *)
 
-  Lemma strong_injective_preserves_0 : (forall x, x ≶ 0 -> f x ≶ 0) -> StrongInjective f.
+  Lemma strong_injective_preserves_0 : (forall x, x ≶ 0 -> f x ≶ 0) -> IsStrongInjective f.
   Proof.
   intros E1. split; try apply _. intros x y E2.
   apply (strong_extensionality (+ -f y)).
@@ -216,7 +216,7 @@ Section morphisms.
 
   (* We have the following for morphisms to non-trivial strong rings as well.
     However, since we do not have an interface for strong rings, we ignore it. *)
-  Global Instance: StrongInjective f.
+  Global Instance: IsStrongInjective f.
   Proof.
   apply strong_injective_preserves_0.
   intros x Ex.

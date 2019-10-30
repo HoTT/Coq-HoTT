@@ -279,7 +279,7 @@ Section semiring_laws.
     apply (trunc_equiv nat binary).
   Qed.
 
-  Global Instance binnat_semiring : SemiRing binnat.
+  Global Instance binnat_semiring : IsSemiRing binnat.
   Proof.
     split; try split; try split; try split; hnf; intros.
     1, 5: exact (binnat_set x y).
@@ -297,7 +297,7 @@ End semiring_laws.
 
 Section naturals.
 
-  Local Instance binary_preserving : SemiRingPreserving binary.
+  Local Instance binary_preserving : IsSemiRingPreserving binary.
   Proof.
     split; split.
     1, 3: hnf; intros x y; [> apply (binaryplus x y) ^ | apply (binarymult x y) ^ ].
@@ -367,7 +367,7 @@ Section naturals.
 
   Section for_another_semiring.
     Universe U.
-    Context {R:Type} `{SemiRing R}.
+    Context {R:Type} `{IsSemiRing R}.
 
     Notation toR := (naturals_to_semiring binnat R).
     Notation toR_fromnat := (naturals_to_semiring nat R).
@@ -451,12 +451,12 @@ Section naturals.
     Qed.
 
     Global Instance binnat_to_sr_morphism
-      : SemiRingPreserving toR.
+      : IsSemiRingPreserving toR.
     Proof.
       repeat (split;try apply _);trivial.
     Qed.
 
-    Lemma binnat_toR_unique (h : binnat -> R) `{!SemiRingPreserving h} : forall x,
+    Lemma binnat_toR_unique (h : binnat -> R) `{!IsSemiRingPreserving h} : forall x,
         toR x = h x.
     Proof.
       equiv_intro binary n.
@@ -513,10 +513,10 @@ Section decidable.
     | double2 k => k
     end.
 
-  Local Instance double1_inj : Injective double1
+  Local Instance double1_inj : IsInjective double1
   := { injective := fun a b E => ap undouble E }.
 
-  Local Instance double2_inj : Injective double2
+  Local Instance double2_inj : IsInjective double2
   := { injective := fun a b E => ap undouble E }.
 
   Global Instance binnat_dec : DecidablePaths binnat.

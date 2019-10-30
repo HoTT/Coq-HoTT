@@ -259,7 +259,7 @@ trivial;apply symmetry;trivial.
 Qed.
 
 Section to_ring.
-Context {B : Type@{UNalt} } `{Ring@{UNalt} B}.
+Context {B : Type@{UNalt} } `{IsRing@{UNalt} B}.
 
 Definition to_ring@{} : T N -> B.
 Proof.
@@ -425,7 +425,7 @@ Defined.
 Definition Z_negate_compute q : - (' q) = ' (PairT.opp _ q)
   := 1.
 
-Lemma Z_ring@{} : Ring Z.
+Lemma Z_ring@{} : IsRing Z.
 Proof.
 repeat split;try apply _;
 first [change sg_op with mult; change mon_unit with 1|
@@ -466,7 +466,7 @@ first [change sg_op with mult; change mon_unit with 1|
 Qed.
 
 (* A final word about inject *)
-Lemma Z_of_N_morphism@{} : SemiRingPreserving (cast N Z).
+Lemma Z_of_N_morphism@{} : IsSemiRingPreserving (cast N Z).
 Proof.
 repeat (constructor; try apply _).
 - intros x y.
@@ -476,7 +476,7 @@ repeat (constructor; try apply _).
 Qed.
 Global Existing Instance Z_of_N_morphism.
 
-Global Instance Z_of_N_injective@{} : Injective (cast N Z).
+Global Instance Z_of_N_injective@{} : IsInjective (cast N Z).
 Proof.
 intros x y E. apply related_path in E.
 red in E. simpl in E. rewrite 2!plus_0_r in E. trivial.
@@ -860,7 +860,7 @@ eapply Z_rec.
 apply (PairT.to_ring_respects N).
 Defined.
 
-Lemma Z_to_ring_morphism' `{Ring B} : SemiRingPreserving (integers_to_ring Z B).
+Lemma Z_to_ring_morphism' `{IsRing B} : IsSemiRingPreserving (integers_to_ring Z B).
 Proof.
 split;split;red.
 - change (@sg_op B _) with (@plus B _);
@@ -897,11 +897,11 @@ split;split;red.
   rewrite negate_0,plus_0_r;trivial.
 Qed.
 
-Instance Z_to_ring_morphism@{} `{Ring B} : SemiRingPreserving (integers_to_ring Z B)
+Instance Z_to_ring_morphism@{} `{IsRing B} : IsSemiRingPreserving (integers_to_ring Z B)
   := ltac:(first [exact Z_to_ring_morphism'@{Ularge}|
                   exact Z_to_ring_morphism'@{}]).
 
-Lemma Z_to_ring_unique@{} `{Ring B} (h : Z -> B) `{!SemiRingPreserving h}
+Lemma Z_to_ring_unique@{} `{IsRing B} (h : Z -> B) `{!IsSemiRingPreserving h}
   : forall x : Z, integers_to_ring Z B x = h x.
 Proof.
 pose proof Z_ring.

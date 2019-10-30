@@ -112,6 +112,6 @@ Section contents.
       * by apply tr, inl.
   Defined.
 
-  Global Instance boundedlattice_hprop : BoundedLattice hProp.
+  Global Instance boundedlattice_hprop : IsBoundedLattice hProp.
   Proof. repeat split; apply _. Defined.
 End contents.

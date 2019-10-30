@@ -1,13 +1,7 @@
 Require Export
-  HoTT.Basics.Overture
-  HoTT.Types.Bool
-  HoTT.Basics.Decidable
-  HoTT.Basics.Trunc
+  HoTT.Basics
+  HoTT.Types
   HoTT.Truncations.
-
-Require Import
-  HoTT.Types.Sigma
-  HoTT.Types.Forall.
 
 Declare Scope mc_scope.
 Delimit Scope mc_scope with mc.

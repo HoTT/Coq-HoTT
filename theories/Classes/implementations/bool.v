@@ -11,7 +11,7 @@ Section contents.
   Local Ltac solve_bool :=
     repeat (intros [|]); compute; (contradiction || auto).
 
-  Global Instance lattice_bool : BoundedLattice Bool.
+  Global Instance lattice_bool : IsBoundedLattice Bool.
   Proof. repeat split; (apply _ || solve_bool). Defined.
 
 End contents.

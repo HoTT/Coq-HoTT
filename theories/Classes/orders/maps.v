@@ -10,7 +10,7 @@ Section strictly_order_preserving.
   Context `{FullPartialOrder A} `{FullPartialOrder B}.
 
   Global Instance strictly_order_preserving_inj  `{!OrderPreserving (f : A -> B)}
-    `{!StrongInjective f} :
+    `{!IsStrongInjective f} :
     StrictlyOrderPreserving f | 20.
   Proof.
   intros x y E.
@@ -42,7 +42,7 @@ Section strictly_order_preserving_dec.
 
   Global Instance dec_strictly_order_preserving_inj
     `{!OrderPreserving (f : A -> B)}
-    `{!Injective f} :
+    `{!IsInjective f} :
     StrictlyOrderPreserving f | 19.
   Proof.
   pose proof (dec_strong_injective f).
@@ -71,7 +71,7 @@ Section pseudo_injective.
   Qed.
 
   Lemma pseudo_order_embedding_inj `{!StrictOrderEmbedding (f : A -> B)} :
-    StrongInjective f.
+    IsStrongInjective f.
   Proof.
   split;try apply _.
   intros x y E.
@@ -202,7 +202,7 @@ End strict_order_preserving_ops.
 
 Lemma projected_partial_order `{IsHSet A} {Ale : Le A}
   `{is_mere_relation A Ale} `{Ble : Le B}
-  (f : A -> B) `{!Injective f} `{!PartialOrder Ble}
+  (f : A -> B) `{!IsInjective f} `{!PartialOrder Ble}
   : (forall x y, x ≤ y <-> f x ≤ f y) -> PartialOrder Ale.
 Proof.
 intros P. repeat split.
@@ -235,7 +235,7 @@ Qed.
 
 Lemma projected_pseudo_order `{IsApart A} `{Alt : Lt A} `{is_mere_relation A lt}
   `{Apart B} `{Blt : Lt B}
-  (f : A -> B) `{!StrongInjective f} `{!PseudoOrder Blt}
+  (f : A -> B) `{!IsStrongInjective f} `{!PseudoOrder Blt}
   : (forall x y, x < y <-> f x < f y) -> PseudoOrder Alt.
 Proof.
 pose proof (strong_injective_mor f).
@@ -257,7 +257,7 @@ Qed.
 Lemma projected_full_pseudo_order `{IsApart A} `{Ale : Le A} `{Alt : Lt A}
   `{is_mere_relation A le} `{is_mere_relation A lt}
   `{Apart B} `{Ble : Le B} `{Blt : Lt B}
-  (f : A -> B) `{!StrongInjective f} `{!FullPseudoOrder Ble Blt}
+  (f : A -> B) `{!IsStrongInjective f} `{!FullPseudoOrder Ble Blt}
   : (forall x y, x ≤ y <-> f x ≤ f y) -> (forall x y, x < y <-> f x < f y) ->
     FullPseudoOrder Ale Alt.
 Proof.

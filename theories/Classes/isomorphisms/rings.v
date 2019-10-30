@@ -34,7 +34,7 @@ Universe U V.
 Context `{Funext} `{Univalence}.
 Context (A B : Operations@{U V}).
 
-Context (f : A -> B) `{!IsEquiv f} `{!SemiRingPreserving f}.
+Context (f : A -> B) `{!IsEquiv f} `{!IsSemiRingPreserving f}.
 
 Lemma iso_same_semirings : A = B.
 Proof.
@@ -99,7 +99,7 @@ Context `{Funext} `{Univalence}.
 Context (A B : Operations@{U V}).
 
 (* NB: we need to know they're rings for preserves_negate *)
-Context (f : A -> B) `{!IsEquiv f} `{!Ring A} `{!Ring B} `{!SemiRingPreserving f}.
+Context (f : A -> B) `{!IsEquiv f} `{!IsRing A} `{!IsRing B} `{!IsSemiRingPreserving f}.
 
 Lemma iso_same_rings : A = B.
 Proof.
