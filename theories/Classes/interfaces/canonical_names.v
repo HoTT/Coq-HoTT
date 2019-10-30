@@ -7,8 +7,7 @@ Require Export
 
 Require Import
   HoTT.Types.Sigma
-  HoTT.Types.Forall
-  HoTT.Types.Record.
+  HoTT.Types.Forall.
 
 Declare Scope mc_scope.
 Delimit Scope mc_scope with mc.
