@@ -838,7 +838,7 @@ Tactic Notation "serapply" uconstr(term) := srapply term.
 Tactic Notation "ntc_refine" uconstr(term) := notypeclasses refine term.
 
 (* An alternative version of [rapply] using [notypeclasses refine]. *)
-Local Ltac ntc_rapply p :=
+Ltac ntc_rapply p :=
   ntc_refine p ||
   ntc_refine (p _) ||
   ntc_refine (p _ _) ||
