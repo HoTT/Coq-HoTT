@@ -3,7 +3,7 @@ Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Functor.Composition.Core Functor.Identity.
 Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
 Require Import Adjoint.UnitCounit Adjoint.Core NaturalTransformation.Paths.
-Require Import Types.Record Types.Sigma Trunc.
+Require Import Types Trunc.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -32,11 +32,7 @@ Section path_adjunction.
   Lemma equiv_sig_adjunction
   : adjunction_sigT <~> (F -| G).
   Proof.
-    issig (@Build_AdjunctionUnitCounit _ _ F G)
-          (@unit _ _ F G)
-          (@counit _ _ F G)
-          (@unit_counit_equation_1 _ _ F G)
-          (@unit_counit_equation_2 _ _ F G).
+    issig.
   Defined.
 
   (** ** Adjunctions are an hSet *)

@@ -1,7 +1,7 @@
 (** * The Structure Identity Principle *)
 Require Import Category.Core Category.Univalent Category.Morphisms.
 Require Import Structure.Core.
-Require Import HProp Types.Sigma Types.Record Trunc Equivalences.
+Require Import HProp Types.Sigma Trunc Equivalences.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

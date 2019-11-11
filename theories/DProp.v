@@ -74,11 +74,10 @@ Definition bool_to_dhprop (b : Bool) : DHProp
   := if b then True else False.
 
 (** ** The type of decidable props *)
-
 Definition issig_dprop
   : { X : Type & { _ : Funext -> IsHProp X & Decidable X } } <~> DProp.
 Proof.
-  issig Build_DProp dprop_type ishprop_dprop dec_dprop.
+  issig.
 Defined.
 
 Definition equiv_path_dprop `{Funext} (P Q : DProp)

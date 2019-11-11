@@ -2,8 +2,7 @@ Require Import HoTT.HIT.quotient
   HoTT.Basics.PathGroupoids
   HoTT.Types.Universe
   HoTT.Basics.Trunc
-  HoTT.Basics.Decidable
-  HoTT.Types.Record.
+  HoTT.Basics.Decidable.
 Require Import 
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.theory.rings
@@ -25,7 +24,7 @@ Record Frac@{} : Type
 Lemma Frac_ishset' : IsHSet Frac.
 Proof.
 assert (E : sigT (fun n : R => sigT (fun d : R => ~ d = 0 )) <~> Frac).
-- issig frac num den den_ne_0.
+- issig.
 - apply (trunc_equiv' _ E).
 Qed.
 

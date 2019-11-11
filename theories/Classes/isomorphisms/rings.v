@@ -1,5 +1,4 @@
 Require Import
-  HoTT.Types.Record
   HoTT.Types.Universe
   HoTT.Types.Sigma
   HoTT.Types.Prod

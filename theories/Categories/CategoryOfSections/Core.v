@@ -4,7 +4,7 @@ Require Import Category.Strict.
 Require Import Functor.Identity NaturalTransformation.Identity.
 Require Import NaturalTransformation.Paths NaturalTransformation.Composition.Core.
 Require Import Functor.Paths.
-Require Import Types.Record Trunc Types.Sigma.
+Require Import Trunc Types.Sigma.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -36,9 +36,7 @@ Section FunctorSectionCategory.
   Lemma section_of_functor_sig
   : section_of_functor_sigT <~> SectionOfFunctor.
   Proof.
-    issig Build_SectionOfFunctor
-          section_of_functor_morphism
-          section_of_functor_issect.
+    issig.
   Defined.
 
   Local Open Scope natural_transformation_scope.

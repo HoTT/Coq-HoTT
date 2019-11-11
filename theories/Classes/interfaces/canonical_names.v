@@ -7,8 +7,7 @@ Require Export
 
 Require Import
   HoTT.Types.Sigma
-  HoTT.Types.Forall
-  HoTT.Types.Record.
+  HoTT.Types.Forall.
 
 Declare Scope mc_scope.
 Delimit Scope mc_scope with mc.
@@ -288,9 +287,7 @@ Defined.
 Lemma issig_equiv_rel {A:Type} (R : Relation A)
   : SigEquivRel R <~> EquivRel R.
 Proof.
-  unfold SigEquivRel.
-  issig (@Build_EquivRel A R) (@EquivRel_Reflexive A R)
-          (@EquivRel_Symmetric A R) (@EquivRel_Transitive A R).
+  issig.
 Defined.
 
 Global Instance trunc_equiv_rel `{Funext} {A : Type}

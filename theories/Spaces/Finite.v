@@ -307,7 +307,7 @@ Arguments merely_equiv_fin X {_}.
 Definition issig_finite X
 : { n : nat & merely (X <~> Fin n) } <~> Finite X.
 Proof.
-  issig (@Build_Finite X) (@fcard X) (@merely_equiv_fin X).
+  issig.
 Defined.
 
 (** Note that the sigma over cardinalities is not truncated.  Nevertheless, because canonical finite sets of different cardinalities are not isomorphic, being finite is still an hprop.  (Thus, we could have truncated the sigma and gotten an equivalent definition, but it would be less convenient to reason about.) *)

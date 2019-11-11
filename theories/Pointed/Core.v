@@ -125,11 +125,11 @@ Ltac pointed_reduce :=
 
 Definition issig_ptype : { X : Type & X } <~> pType.
 Proof.
-  issig Build_pType pointed_type ispointed_type.
+  issig.
 Defined.
 
 Definition issig_pmap (A B : pType)
 : { f : A -> B & f (point A) = point B } <~> (A ->* B).
 Proof.
-  issig (@Build_pMap A B) (@pointed_fun A B) (@point_eq A B).
+  issig.
 Defined.

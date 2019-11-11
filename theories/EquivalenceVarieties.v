@@ -358,7 +358,7 @@ Section relational.
       | forall b, Contr { a : A & equiv_rel a b } } }
       <~> RelEquiv A B.
   Proof.
-    issig (@Build_RelEquiv A B) (@equiv_rel A B) (@relequiv_contr_f A B) (@relequiv_contr_g A B).
+    issig.
   Defined.
 
   Definition relequiv_of_equiv {A B} (e : A <~> B) : RelEquiv A B.

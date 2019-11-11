@@ -49,7 +49,7 @@ Definition issig_pequiv (A B : pType)
   : { f : A <~> B & f (point A) = point B } <~> (A <~>* B).
 Proof.
   transitivity { f : A ->* B & IsEquiv f }.
-  2:issig (@Build_pEquiv A B) (@pointed_equiv_fun A B) (@pointed_isequiv A B).
+  2: issig.
   refine ((equiv_functor_sigma' (P := fun f => IsEquiv f.1)
     (issig_pmap A B) (fun f => equiv_idmap _)) oE _).
   refine (_ oE (equiv_functor_sigma' (Q := fun f => f.1 (point A) = point B)

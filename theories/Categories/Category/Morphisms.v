@@ -1,6 +1,6 @@
 (** * Definitions and theorems about {iso,epi,mono,}morphisms in a precategory *)
 Require Import Category.Core Functor.Core.
-Require Import HoTT.Tactics Types.Record Trunc HProp Types.Sigma Equivalences.
+Require Import HoTT.Tactics Trunc HProp Types.Sigma Equivalences.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -73,10 +73,7 @@ Section iso_contr.
     Lemma issig_isisomorphism
     : IsIsomorphism_sig_T m <~> IsIsomorphism m.
     Proof.
-      issig (@Build_IsIsomorphism _ _ _ m)
-            (@morphism_inverse _ _ _ m)
-            (@left_inverse _ _ _ m)
-            (@right_inverse _ _ _ m).
+      issig.
     Defined.
 
     (** *** Being an isomorphism is a mere proposition *)
@@ -105,9 +102,7 @@ Section iso_contr.
   Lemma issig_isomorphic
   : Isomorphic_sig_T <~> Isomorphic s d.
   Proof.
-    issig (@Build_Isomorphic C s d)
-          (@morphism_isomorphic C s d)
-          (@isisomorphism_isomorphic C s d).
+    issig.
   Defined.
 
   Local Notation Isomorphic_full_sig_T :=

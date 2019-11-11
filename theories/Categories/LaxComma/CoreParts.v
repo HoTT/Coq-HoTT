@@ -6,7 +6,7 @@ Require Import Category.Morphisms FunctorCategory.Core.
 Require Import Pseudofunctor.Core.
 Require Import NaturalTransformation.Composition.Laws.
 Require Import FunctorCategory.Morphisms.
-Require Import Types.Record Trunc Types.Paths Types.Sigma.
+Require Import Trunc Types.Paths Types.Sigma.
 
 Import Functor.Identity.FunctorIdentityNotations.
 
@@ -70,10 +70,7 @@ Module Import LaxCommaCategoryParts.
     Lemma issig_object
     : object_sig_T <~> object.
     Proof.
-      issig (@Build_object)
-            (@a)
-            (@b)
-            (@f).
+      issig.
     Defined.
 
     Global Instance trunc_object `{IsTrunc n A, IsTrunc n B}
@@ -141,10 +138,7 @@ Module Import LaxCommaCategoryParts.
     : (morphism_sig_T abf a'b'f')
         <~> morphism abf a'b'f'.
     Proof.
-      issig (@Build_morphism abf a'b'f')
-            (@g abf a'b'f')
-            (@h abf a'b'f')
-            (@p abf a'b'f').
+      issig.
     Defined.
 
     Global Instance trunc_morphism abf a'b'f'

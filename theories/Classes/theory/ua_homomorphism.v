@@ -11,7 +11,6 @@ Require Import
   HoTT.Types.Forall
   HoTT.Types.Arrow
   HoTT.Types.Universe
-  HoTT.Types.Record
   HoTT.Types.Sigma
   HoTT.Fibrations
   HoTT.HProp
@@ -90,9 +89,7 @@ Definition SigHomomorphism {σ} (A B : Algebra σ) : Type :=
 Lemma issig_homomorphism {σ} (A B : Algebra σ)
   : SigHomomorphism A B <~> Homomorphism A B.
 Proof.
-  unfold SigHomomorphism.
-  issig (@BuildHomomorphism σ A B) (@def_hom σ A B)
-    (@is_homomorphism_hom σ A B).
+  issig.
 Defined.
 
 Global Instance trunc_homomorphism `{Funext} {σ} {A B : Algebra σ}

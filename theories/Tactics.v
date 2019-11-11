@@ -361,13 +361,6 @@ Tactic Notation "simpl" "rewrite"      "?" open_constr(term) "in" "*" "|-" := si
 Tactic Notation "simpl" "rewrite" "->" "?" open_constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => rewrite -> ?H in * |- ) term.
 Tactic Notation "simpl" "rewrite" "<-" "?" open_constr(term) "in" "*" "|-" := simpl_do_clear ltac:(fun H => rewrite <- ?H in * |- ) term.
 
-(** find the head of the given expression *)
-Ltac head expr :=
-  match expr with
-    | ?f _ => head f
-    | _ => expr
-  end.
-
 Ltac head_hnf expr := let expr' := eval hnf in expr in head expr'.
 
 (* given a [matcher] that succeeds on some hypotheses and fails on

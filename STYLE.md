@@ -1069,19 +1069,14 @@ where they are defined.
   hypothesis.
 
 - `issig`: Defined in `Types/Record`, this tactic proves automatically
-  that a record type is equivalent to a nested sigma-type.  (Actually,
-  there are separate tactics `issig2`, `issig3`, etc. depending on how
-  many fields the record has, but their code is virtually identical,
-  and a tactic notation `issig` invokes the appropriate one
-  automatically.  If you need a version with more fields than yet
-  exists, feel free to add it.)
+  that a record type is equivalent to a nested sigma-type.
 
-- `rapply`, `rapply'`, `erapply`, `erapply'`: Defined in
-  `coq/theories/Program/Tactics` and `Basics/Overture`, these tactics
-  are more well-behaved variants of `apply` for theorems with fewer
-  than 16 arguments.  (It is trivial to extend it to *n* arguments for
-  any finite fixed *n*.)  The unification algorithm used by `apply` is
-  different and often less powerful than the one used by `refine`,
+- `rapply`, `rapply'`, `erapply`, `erapply'`, `serapply`, `ntc_rapply`:
+  Defined in `coq/theories/Program/Tactics` and `Basics/Overture`, these
+  tactics are more well-behaved variants of `apply` for theorems with
+  fewer than 16 arguments.  (It is trivial to extend it to *n* arguments
+  for any finite fixed *n*.)  The unification algorithm used by `apply`
+  is different and often less powerful than the one used by `refine`,
   though it is occasionally better at pattern matching.  If `apply`
   fails with a unification error you think it shouldn't have, try
   `rapply` or `erapply`.  If `rapply` or `erapply` loops on, say,
@@ -1096,6 +1091,10 @@ where they are defined.
   inference early), while `erapply(')` accepts lemmas with holes (such
   as `ap f`, i.e., `@ap _ _ f _ _`), and does typeclass inference
   late.
+
+  `serapply` is a "simple" version of `erapply` and will generate
+  goals for all holes. `ntc_rapply` is a version of `rapply` that
+  doesn't do a typeclass search.
 
 ## Contributing to the library ##
 

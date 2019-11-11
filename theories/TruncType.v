@@ -19,7 +19,7 @@ Context `{Univalence}.
 Definition issig_trunctype {n : trunc_index}
   : { X : Type & IsTrunc n X } <~> TruncType n.
 Proof.
-  issig (@BuildTruncType n) (@trunctype_type n) (@istrunc_trunctype_type n).
+  issig.
 Defined.
 
 Global Instance isequiv_ap_trunctype {n : trunc_index} (A B : n-Type)
