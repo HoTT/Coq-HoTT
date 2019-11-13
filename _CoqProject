@@ -278,7 +278,6 @@ theories/Algebra/Congruence.v
 theories/Algebra/AbelianGroup.v
 theories/Algebra/QuotientGroup.v
 
-theories/Algebra/Group.v
 #
 #   Tactics
 #
