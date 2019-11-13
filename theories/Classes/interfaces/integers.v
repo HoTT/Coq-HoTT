@@ -5,15 +5,15 @@ Require Import
   HoTT.Classes.theory.rings (* for Ring -> SemiRing *).
 
 Class IntegersToRing@{i j} (A:Type@{i})
-  := integers_to_ring: forall (R:Type@{j}) `{Ring R}, A -> R.
+  := integers_to_ring: forall (R:Type@{j}) `{IsRing R}, A -> R.
 Arguments integers_to_ring A {_} R {_ _ _ _ _ _} _.
 
 Class Integers A {Aap:Apart A} {Aplus Amult Azero Aone Anegate Ale Alt}
   `{U : IntegersToRing A} :=
-  { integers_ring :> @Ring A Aplus Amult Azero Aone Anegate
+  { integers_ring :> @IsRing A Aplus Amult Azero Aone Anegate
   ; integers_order :> FullPseudoSemiRingOrder Ale Alt
-  ; integers_to_ring_mor:> forall `{Ring B}, SemiRingPreserving (integers_to_ring A B)
-  ; integers_initial: forall `{Ring B} {h : A -> B} `{!SemiRingPreserving h} x,
+  ; integers_to_ring_mor:> forall `{IsRing B}, IsSemiRingPreserving (integers_to_ring A B)
+  ; integers_initial: forall `{IsRing B} {h : A -> B} `{!IsSemiRingPreserving h} x,
       integers_to_ring A B x = h x}.
 
 Section specializable.

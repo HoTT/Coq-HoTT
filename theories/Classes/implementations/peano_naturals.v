@@ -136,7 +136,7 @@ Qed.
 
 Definition pred x := match x with | 0%nat => 0 | S k => k end.
 
-Global Instance S_inj : Injective@{N N} S
+Global Instance S_inj : IsInjective@{N N} S
   := { injective := fun a b E => ap pred E }.
 
 Global Instance nat_dec: DecidablePaths@{N} nat.
@@ -158,7 +158,7 @@ Proof.
 apply hset_pathcoll, pathcoll_decpaths, nat_dec.
 Qed.
 
-Instance nat_semiring : SemiRing@{N} nat.
+Instance nat_semiring : IsSemiRing@{N} nat.
 Proof.
 repeat (split; try apply _);
 first [change sg_op with plus; change mon_unit with 0
@@ -555,7 +555,7 @@ Global Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
 
 Section for_another_semiring.
   Universe U.
-  Context {R:Type@{U} } `{SemiRing@{U} R}.
+  Context {R:Type@{U} } `{IsSemiRing@{U} R}.
 
   Notation toR := (naturals_to_semiring nat R).
 
@@ -597,12 +597,12 @@ Section for_another_semiring.
   Qed.
 
   Global Instance nat_to_sr_morphism
-    : SemiRingPreserving (naturals_to_semiring nat R).
+    : IsSemiRingPreserving (naturals_to_semiring nat R).
   Proof.
   repeat (split;try apply _);trivial.
   Defined.
 
-  Lemma toR_unique (h : nat -> R) `{!SemiRingPreserving h} x :
+  Lemma toR_unique (h : nat -> R) `{!IsSemiRingPreserving h} x :
     naturals_to_semiring nat R x = h x.
   Proof.
   induction x as [|n E].

@@ -1,8 +1,8 @@
 Require Import Basics.
 Require Import Types.
-Require Import HoTT.Truncations.
 Require Import Pointed.
-Require Import abstract_algebra.
+Require Import Algebra.Group.
+Require Import Truncations.
 Require Import Spaces.Nat.
 
 Import TrM.
@@ -65,7 +65,7 @@ Section PiGroup.
     apply ap, concat_pV.
   Defined.
 
-  Global Instance pi_is_Group : Group (Pi n.+1 X).
+  Global Instance pi_is_Group : IsGroup (Pi n.+1 X).
   Proof.
     repeat split; exact _.
   Defined.
@@ -78,9 +78,9 @@ Proof.
   apply ap, eckmann_hilton.
 Defined.
 
-Global Instance pi_is_AbGroup n X : AbGroup (Pi n.+2 X).
+Global Instance pi_is_AbGroup n X : IsAbGroup (Pi n.+2 X).
 Proof.
-  serapply Build_AbGroup.
+  serapply Build_IsAbGroup.
 Defined.
 
 Section PiFunctor.
@@ -99,9 +99,9 @@ Section PiFunctor.
     exact f.
   Defined.
 
-  Global Instance functor_pi_homomorphism : MonoidPreserving functor_pi.
+  Global Instance functor_pi_homomorphism : IsMonoidPreserving functor_pi.
   Proof.
-    apply Build_MonoidPreserving.
+    apply Build_IsMonoidPreserving.
     + intros x y.
       strip_truncations.
       apply path_Tr, tr, loops_functor_pp.
@@ -122,8 +122,4 @@ Proof.
   apply Trunc_functor_equiv.
   by refine (pequiv_compose _ (iterated_loops_prod _ _)).
 Qed.
-
-
-
-
 

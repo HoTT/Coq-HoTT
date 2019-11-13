@@ -6,7 +6,7 @@ Require Export
   HoTT.Classes.theory.rings.
 
 Section contents.
-Context `{DecField F} `{forall x y: F, Decidable (x = y)}.
+Context `{IsDecField F} `{forall x y: F, Decidable (x = y)}.
 
 (* Add Ring F : (stdlib_ring_theory F). *)
 
@@ -20,7 +20,7 @@ rewrite associativity, (commutativity y), E.
 apply mult_0_l.
 Qed.
 
-Global Instance decfield_integral_domain : IntegralDomain F.
+Global Instance decfield_integral_domain : IsIntegralDomain F.
 Proof.
 split; try apply _.
 Qed.
@@ -83,7 +83,7 @@ destruct (dec (y = 0)) as [Ey|Ey].
   + rewrite dec_recip_inverse;trivial.
 Qed.
 
-Global Instance dec_recip_inj: Injective (/).
+Global Instance dec_recip_inj: IsInjective (/).
 Proof.
 repeat (split; try apply _).
 intros x y E.
@@ -180,14 +180,14 @@ Hint Extern 7 (PropHolds (/ _ <> 0)) =>
 
 (* Given a decidable field we can easily construct a constructive field. *)
 Section is_field.
-  Context `{DecField F} `{Apart F} `{!TrivialApart F}
+  Context `{IsDecField F} `{Apart F} `{!TrivialApart F}
     `{Decidable.DecidablePaths F}.
 
   Global Instance recip_dec_field: Recip F := fun x => / x.1.
 
   Local Existing Instance dec_strong_setoid.
 
-  Global Instance decfield_field : Field F.
+  Global Instance decfield_field : IsField F.
   Proof.
   split; try apply _.
   - apply (dec_strong_binary_morphism (+)).
@@ -245,10 +245,10 @@ Qed. *)
 End from_stdlib_field_theory. *)
 
 Section morphisms.
-  Context  `{DecField F} `{TrivialApart F} `{Decidable.DecidablePaths F}.
+  Context  `{IsDecField F} `{TrivialApart F} `{Decidable.DecidablePaths F}.
 
-  Global Instance dec_field_to_domain_inj `{IntegralDomain R}
-    `{!SemiRingPreserving (f : F -> R)} : Injective f.
+  Global Instance dec_field_to_domain_inj `{IsIntegralDomain R}
+    `{!IsSemiRingPreserving (f : F -> R)} : IsInjective f.
   Proof.
   apply injective_preserves_0.
   intros x Efx.
@@ -260,21 +260,21 @@ Section morphisms.
   apply left_absorb.
   Qed.
 
-  Lemma preserves_dec_recip `{DecField F2} `{forall x y: F2, Decidable (x = y)}
-    `{!SemiRingPreserving (f : F -> F2)} x : f (/ x) = / f x.
+  Lemma preserves_dec_recip `{IsDecField F2} `{forall x y: F2, Decidable (x = y)}
+    `{!IsSemiRingPreserving (f : F -> F2)} x : f (/ x) = / f x.
   Proof.
   case (dec (x = 0)) as [E | E].
   - rewrite E, dec_recip_0, preserves_0, dec_recip_0. reflexivity.
   - intros.
     apply (left_cancellation_ne_0 (.*.) (f x)).
-    + apply injective_ne_0. trivial.
+    + apply isinjective_ne_0. trivial.
     + rewrite <-preserves_mult, 2!dec_recip_inverse.
       * apply preserves_1.
-      * apply injective_ne_0. trivial.
+      * apply isinjective_ne_0. trivial.
       * trivial.
   Qed.
 
-  Lemma dec_recip_to_recip `{Field F2} `{!SemiRingStrongPreserving (f : F -> F2)}
+  Lemma dec_recip_to_recip `{IsField F2} `{!IsSemiRingStrongPreserving (f : F -> F2)}
     x Pfx : f (/ x) = // (f x;Pfx).
   Proof.
   assert (x <> 0).
@@ -282,7 +282,7 @@ Section morphisms.
     destruct (apart_ne (f x) 0 Pfx).
     rewrite Ex, (preserves_0 (f:=f)). reflexivity.
   - apply (left_cancellation_ne_0 (.*.) (f x)).
-    + apply injective_ne_0. trivial.
+    + apply isinjective_ne_0. trivial.
     + rewrite <-preserves_mult, dec_recip_inverse, reciperse_alt by assumption.
       apply preserves_1.
   Qed.

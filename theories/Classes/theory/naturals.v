@@ -13,15 +13,15 @@ Require Export
 (* This grabs a coercion. *)
 Import SemiRings.
 
-Lemma to_semiring_unique `{Naturals N} `{SemiRing SR} (f: N -> SR)
-  `{!SemiRingPreserving f} x
+Lemma to_semiring_unique `{Naturals N} `{IsSemiRing SR} (f: N -> SR)
+  `{!IsSemiRingPreserving f} x
   : f x = naturals_to_semiring N SR x.
 Proof.
 symmetry. apply naturals_initial.
 Qed.
 
-Lemma to_semiring_unique_alt `{Naturals N} `{SemiRing SR} (f g: N -> SR)
-  `{!SemiRingPreserving f} `{!SemiRingPreserving g} x
+Lemma to_semiring_unique_alt `{Naturals N} `{IsSemiRing SR} (f g: N -> SR)
+  `{!IsSemiRingPreserving f} `{!IsSemiRingPreserving g} x
   : f x = g x.
 Proof.
 rewrite (to_semiring_unique f), (to_semiring_unique g);reflexivity.
@@ -34,23 +34,23 @@ change (Compose (naturals_to_semiring N2 N) (naturals_to_semiring N N2) x = id x
 apply to_semiring_unique_alt;apply _.
 Qed.
 
-Lemma morphisms_involutive `{Naturals N} `{SemiRing R} (f : R -> N) (g : N -> R)
-  `{!SemiRingPreserving f} `{!SemiRingPreserving g} x : f (g x) = x.
+Lemma morphisms_involutive `{Naturals N} `{IsSemiRing R} (f : R -> N) (g : N -> R)
+  `{!IsSemiRingPreserving f} `{!IsSemiRingPreserving g} x : f (g x) = x.
 Proof. exact (to_semiring_unique_alt (f ∘ g) id _). Qed.
 
-Lemma to_semiring_twice `{Naturals N} `{SemiRing R1} `{SemiRing R2}
+Lemma to_semiring_twice `{Naturals N} `{IsSemiRing R1} `{IsSemiRing R2}
   (f : R1 -> R2) (g : N -> R1) (h : N -> R2)
-  `{!SemiRingPreserving f} `{!SemiRingPreserving g} `{!SemiRingPreserving h} x
+  `{!IsSemiRingPreserving f} `{!IsSemiRingPreserving g} `{!IsSemiRingPreserving h} x
   : f (g x) = h x.
 Proof. exact (to_semiring_unique_alt (f ∘ g) h _). Qed.
 
-Lemma to_semiring_self `{Naturals N} (f : N -> N) `{!SemiRingPreserving f} x
+Lemma to_semiring_self `{Naturals N} (f : N -> N) `{!IsSemiRingPreserving f} x
   : f x = x.
 Proof. exact (to_semiring_unique_alt f id _). Qed.
 
-Lemma to_semiring_injective `{Naturals N} `{SemiRing A}
-   (f: A -> N) (g: N -> A) `{!SemiRingPreserving f} `{!SemiRingPreserving g}
-   : Injective g.
+Lemma to_semiring_injective `{Naturals N} `{IsSemiRing A}
+   (f: A -> N) (g: N -> A) `{!IsSemiRingPreserving f} `{!IsSemiRingPreserving g}
+   : IsInjective g.
 Proof.
 intros x y E.
 change (id x = id y).
@@ -59,26 +59,26 @@ apply ap,E.
 Qed.
 
 Instance naturals_to_naturals_injective `{Naturals N} `{Naturals N2} (f: N -> N2)
-  `{!SemiRingPreserving f}
-  : Injective f | 15.
+  `{!IsSemiRingPreserving f}
+  : IsInjective f | 15.
 Proof. exact (to_semiring_injective (naturals_to_semiring N2 N) _). Qed.
 
 Section retract_is_nat.
-  Context `{Naturals N} `{SemiRing SR}
+  Context `{Naturals N} `{IsSemiRing SR}
     {SRap : Apart SR} {SRle SRlt} `{!FullPseudoSemiRingOrder (A:=SR) SRle SRlt}.
   Context (f : N -> SR) `{!IsEquiv f}
-    `{!SemiRingPreserving f} `{!SemiRingPreserving (f^-1)}.
+    `{!IsSemiRingPreserving f} `{!IsSemiRingPreserving (f^-1)}.
 
   (* If we make this an instance, instance resolution will loop *)
   Definition retract_is_nat_to_sr : NaturalsToSemiRing SR
     := fun R _ _ _ _ _ => naturals_to_semiring N R ∘ f^-1.
 
   Section for_another_semirings.
-    Context `{SemiRing R}.
+    Context `{IsSemiRing R}.
 
-    Instance: SemiRingPreserving (naturals_to_semiring N R ∘ f^-1) := {}.
+    Instance: IsSemiRingPreserving (naturals_to_semiring N R ∘ f^-1) := {}.
 
-    Context (h :  SR -> R) `{!SemiRingPreserving h}.
+    Context (h :  SR -> R) `{!IsSemiRingPreserving h}.
 
     Lemma same_morphism x : (naturals_to_semiring N R ∘ f^-1) x = h x.
     Proof.
@@ -220,7 +220,7 @@ apply decidablepaths_equiv with nat (naturals_to_semiring nat N);apply _.
 Qed.
 
 Section with_a_ring.
-  Context `{Ring R} `{!SemiRingPreserving (f : N -> R)} `{!Injective f}.
+  Context `{IsRing R} `{!IsSemiRingPreserving (f : N -> R)} `{!IsInjective f}.
 
   Lemma to_ring_zero_sum x y :
     -f x = f y -> x = 0 /\ y = 0.

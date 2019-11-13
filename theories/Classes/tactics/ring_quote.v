@@ -7,7 +7,7 @@ Class AlmostNegate A := almost_negate : A -> A.
 
 Class AlmostRing A {Aplus : Plus A} {Amult : Mult A}
   {Azero : Zero A} {Aone : One A} {Anegate : AlmostNegate A} :=
-  { almost_ring_semiring : SemiRing A
+  { almost_ring_semiring : IsSemiRing A
   ; almost_ring_neg_pr : forall x : A, almost_negate x = (almost_negate 1) * x }.
 
 Section almostring_mor.
@@ -16,7 +16,7 @@ Context {A B : Type} {Aplus : Plus A} {Bplus : Plus B}
   {Aone : One A} {Bone : One B} {Aneg : AlmostNegate A} {Bneg : AlmostNegate B}.
 
 Class AlmostRingPreserving (f : A -> B) :=
-  { almostring_mor_sr_mor : SemiRingPreserving f
+  { almostring_mor_sr_mor : IsSemiRingPreserving f
   ; almostring_mor_neg : forall x, f (almost_negate x) = almost_negate (f x) }.
 End almostring_mor.
 

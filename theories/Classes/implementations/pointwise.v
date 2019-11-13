@@ -35,7 +35,7 @@ Section contents.
     reduce_fun;
     eauto 10 with lattice_hints typeclass_instances.
 
-  Global Instance lattice_fun `{!Lattice B} : Lattice (A -> B).
+  Global Instance lattice_fun `{!IsLattice B} : IsLattice (A -> B).
   Proof.
     repeat split; try apply _; try_solve_fun.
     * apply binary_idempotent.
@@ -43,8 +43,8 @@ Section contents.
   Defined.
 
   Instance boundedjoinsemilattice_fun
-   `{!BoundedJoinSemiLattice B} :
-    BoundedJoinSemiLattice (A -> B).
+   `{!IsBoundedJoinSemiLattice B} :
+    IsBoundedJoinSemiLattice (A -> B).
   Proof.
     repeat split; try apply _; try_solve_fun.
     * apply left_identity.
@@ -54,8 +54,8 @@ Section contents.
   Defined.
 
   Instance boundedmeetsemilattice_fun
-   `{!BoundedMeetSemiLattice B} :
-    BoundedMeetSemiLattice (A -> B).
+   `{!IsBoundedMeetSemiLattice B} :
+    IsBoundedMeetSemiLattice (A -> B).
   Proof.
     repeat split; try apply _; reduce_fun.
     * apply associativity.
@@ -66,7 +66,7 @@ Section contents.
   Defined.
 
   Global Instance boundedlattice_fun
-   `{!BoundedLattice B} : BoundedLattice (A -> B).
+   `{!IsBoundedLattice B} : IsBoundedLattice (A -> B).
   Proof.
     repeat split; try apply _; reduce_fun; apply absorption.
   Defined.

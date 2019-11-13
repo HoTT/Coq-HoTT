@@ -72,7 +72,7 @@ Section strong_cancellation.
 End strong_cancellation.
 
 Section semiring_props.
-  Context `{SemiRing R}.
+  Context `{IsSemiRing R}.
 (*   Add Ring SR : (stdlib_semiring_theory R). *)
 
   Instance mult_ne_0 `{!NoZeroDivisors R} x y
@@ -117,7 +117,7 @@ Section semiring_props.
   apply _.
   Qed.
 
-  Global Instance: forall r : R, @MonoidPreserving R R (+) (+) 0 0 (r *.).
+  Global Instance: forall r : R, @IsMonoidPreserving R R (+) (+) 0 0 (r *.).
   Proof.
   repeat (constructor; try apply _).
   - red. apply distribute_l.
@@ -129,7 +129,7 @@ End semiring_props.
 Hint Extern 3 (PropHolds (_ * _ <> 0)) => eapply @mult_ne_0 : typeclass_instances.
 
 Section semiringmor_props.
-  Context `{SemiRingPreserving A B f}.
+  Context `{IsSemiRingPreserving A B f}.
 
   Lemma preserves_0: f 0 = 0.
   Proof. apply preserves_mon_unit. Qed.
@@ -161,24 +161,24 @@ Section semiringmor_props.
   reflexivity.
   Qed.
 
-  Context `{!Injective f}.
-  Instance injective_ne_0 x : PropHolds (x <> 0) -> PropHolds (f x <> 0).
+  Context `{!IsInjective f}.
+  Instance isinjective_ne_0 x : PropHolds (x <> 0) -> PropHolds (f x <> 0).
   Proof.
-  intros. rewrite <-preserves_0. apply (injective_ne f).
+  intros. rewrite <-preserves_0. apply (isinjective_ne f).
   assumption.
   Qed.
 
   Lemma injective_ne_1 x : x <> 1 -> f x <> 1.
   Proof.
   intros. rewrite <-preserves_1.
-  apply (injective_ne f).
+  apply (isinjective_ne f).
   assumption.
   Qed.
 End semiringmor_props.
 
 (* Due to bug #2528 *)
 Hint Extern 12 (PropHolds (_ _ <> 0)) =>
-  eapply @injective_ne_0 : typeclass_instances.
+  eapply @isinjective_ne_0 : typeclass_instances.
 
 (* Lemma stdlib_ring_theory R `{Ring R} :
   Ring_theory.ring_theory 0 1 (+) (.*.) (fun x y => x - y) (-) (=).
@@ -187,7 +187,7 @@ Qed.
 *)
 
 Section ring_props.
-  Context `{Ring R}.
+  Context `{IsRing R}.
 
 (*   Add Ring R: (stdlib_ring_theory R). *)
 
@@ -202,7 +202,7 @@ Section ring_props.
   - apply ap. apply right_identity.
   Qed.
 
-  Global Instance Ring_Semi: SemiRing R.
+  Global Instance Ring_Semi: IsSemiRing R.
   Proof.
   repeat (constructor; try apply _).
   Qed.
@@ -354,7 +354,7 @@ Section ring_props.
 End ring_props.
 
 Section integral_domain_props.
-  Context `{IntegralDomain R}.
+  Context `{IsIntegralDomain R}.
 
   Instance intdom_nontrivial_apart `{Apart R} `{!TrivialApart R} :
     PropHolds (1 ≶ 0).
@@ -368,7 +368,7 @@ Hint Extern 6 (PropHolds (1 ≶ 0)) =>
   eapply @intdom_nontrivial_apart : typeclass_instances.
 
 Section ringmor_props.
-  Context `{Ring A} `{Ring B} `{!SemiRingPreserving (f : A -> B)}.
+  Context `{IsRing A} `{IsRing B} `{!IsSemiRingPreserving (f : A -> B)}.
 
   Definition preserves_negate x : f (-x) = -f x := groups.preserves_negate x.
   (* alias for convenience *)
@@ -379,7 +379,7 @@ Section ringmor_props.
   apply preserves_plus.
   Qed.
 
-  Lemma injective_preserves_0 : (forall x, f x = 0 -> x = 0) -> Injective f.
+  Lemma injective_preserves_0 : (forall x, f x = 0 -> x = 0) -> IsInjective f.
   Proof.
   intros E1 x y E.
   apply equal_by_zero_sum.
@@ -390,14 +390,14 @@ Section ringmor_props.
 End ringmor_props.
 
 Section from_another_ring.
-  Context `{Ring A} `{IsHSet B}
+  Context `{IsRing A} `{IsHSet B}
    `{Bplus : Plus B} `{Zero B} `{Bmult : Mult B} `{One B} `{Bnegate : Negate B}
-    (f : B -> A) `{!Injective f}
+    (f : B -> A) `{!IsInjective f}
     (plus_correct : forall x y, f (x + y) = f x + f y) (zero_correct : f 0 = 0)
     (mult_correct : forall x y, f (x * y) = f x * f y) (one_correct : f 1 = 1)
     (negate_correct : forall x, f (-x) = -f x).
 
-  Lemma projected_ring: Ring B.
+  Lemma projected_ring: IsRing B.
   Proof.
   split.
   - apply (groups.projected_ab_group f);assumption.
@@ -443,7 +443,7 @@ Section from_stdlib_ring_theory.
   Qed.
 End from_stdlib_ring_theory. *)
 
-Instance id_sr_morphism `{SemiRing A}: SemiRingPreserving (@id A) := {}.
+Instance id_sr_morphism `{IsSemiRing A}: IsSemiRingPreserving (@id A) := {}.
 
 Section morphism_composition.
   Context `{Mult A} `{Plus A} `{One A} `{Zero A}
@@ -452,19 +452,19 @@ Section morphism_composition.
     (f : A -> B) (g : B -> C).
 
   Instance compose_sr_morphism:
-    SemiRingPreserving f -> SemiRingPreserving g -> SemiRingPreserving (g ∘ f).
+    IsSemiRingPreserving f -> IsSemiRingPreserving g -> IsSemiRingPreserving (g ∘ f).
   Proof.
   split; apply _.
   Qed.
 
   Instance invert_sr_morphism:
-    forall `{!IsEquiv f}, SemiRingPreserving f -> SemiRingPreserving (f^-1).
+    forall `{!IsEquiv f}, IsSemiRingPreserving f -> IsSemiRingPreserving (f^-1).
   Proof.
   split; apply _.
   Qed.
 End morphism_composition.
 
-Hint Extern 4 (SemiRingPreserving (_ ∘ _)) =>
+Hint Extern 4 (IsSemiRingPreserving (_ ∘ _)) =>
   class_apply @compose_sr_morphism : typeclass_instances.
-Hint Extern 4 (SemiRingPreserving (_^-1)) =>
+Hint Extern 4 (IsSemiRingPreserving (_^-1)) =>
   class_apply @invert_sr_morphism : typeclass_instances.

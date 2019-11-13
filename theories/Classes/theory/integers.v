@@ -14,15 +14,15 @@ Require Export
  HoTT.Classes.interfaces.integers.
 
 
-Lemma to_ring_unique `{Integers Z} `{Ring R} (f: Z -> R)
-  {h: SemiRingPreserving f} x
+Lemma to_ring_unique `{Integers Z} `{IsRing R} (f: Z -> R)
+  {h: IsSemiRingPreserving f} x
   : f x = integers_to_ring Z R x.
 Proof.
 symmetry. apply integers_initial.
 Qed.
 
-Lemma to_ring_unique_alt `{Integers Z} `{Ring R} (f g: Z -> R)
-  `{!SemiRingPreserving f} `{!SemiRingPreserving g} x :
+Lemma to_ring_unique_alt `{Integers Z} `{IsRing R} (f g: Z -> R)
+  `{!IsSemiRingPreserving f} `{!IsSemiRingPreserving g} x :
   f x = g x.
 Proof.
 rewrite (to_ring_unique f), (to_ring_unique g);reflexivity.
@@ -35,24 +35,24 @@ change (Compose (integers_to_ring Z2 Z) (integers_to_ring Z Z2) x = id x).
 apply to_ring_unique_alt;apply _.
 Qed.
 
-Lemma morphisms_involutive `{Integers Z} `{Ring R} (f: R -> Z) (g: Z -> R)
-  `{!SemiRingPreserving f} `{!SemiRingPreserving g} x : f (g x) = x.
+Lemma morphisms_involutive `{Integers Z} `{IsRing R} (f: R -> Z) (g: Z -> R)
+  `{!IsSemiRingPreserving f} `{!IsSemiRingPreserving g} x : f (g x) = x.
 Proof. exact (to_ring_unique_alt (f ∘ g) id _). Qed.
 
-Lemma to_ring_twice `{Integers Z} `{Ring R1} `{Ring R2}
+Lemma to_ring_twice `{Integers Z} `{IsRing R1} `{IsRing R2}
   (f : R1 -> R2) (g : Z -> R1) (h : Z -> R2)
-  `{!SemiRingPreserving f} `{!SemiRingPreserving g} `{!SemiRingPreserving h} x
+  `{!IsSemiRingPreserving f} `{!IsSemiRingPreserving g} `{!IsSemiRingPreserving h} x
   : f (g x) = h x.
 Proof. exact (to_ring_unique_alt (f ∘ g) h _). Qed.
 
-Lemma to_ring_self `{Integers Z} (f : Z -> Z) `{!SemiRingPreserving f} x : f x = x.
+Lemma to_ring_self `{Integers Z} (f : Z -> Z) `{!IsSemiRingPreserving f} x : f x = x.
 Proof. exact (to_ring_unique_alt f id _). Qed.
 
 (* A ring morphism from integers to another ring is injective
    if there's an injection in the other direction: *)
-Lemma to_ring_injective `{Integers Z} `{Ring R} (f: R -> Z) (g: Z -> R)
-  `{!SemiRingPreserving f} `{!SemiRingPreserving g}
-  : Injective g.
+Lemma to_ring_injective `{Integers Z} `{IsRing R} (f: R -> Z) (g: Z -> R)
+  `{!IsSemiRingPreserving f} `{!IsSemiRingPreserving g}
+  : IsInjective g.
 Proof.
 intros x y E.
 change (id x = id y).
@@ -61,14 +61,14 @@ apply ap,E.
 Qed.
 
 Instance integers_to_integers_injective `{Integers Z} `{Integers Z2}
-  (f: Z -> Z2) `{!SemiRingPreserving f}
-  : Injective f.
+  (f: Z -> Z2) `{!IsSemiRingPreserving f}
+  : IsInjective f.
 Proof. exact (to_ring_injective (integers_to_ring Z2 Z) _). Qed.
 
 Instance naturals_to_integers_injective `{Funext} `{Univalence}
   `{Integers@{i i i i i i i i} Z} `{Naturals@{i i i i i i i i} N}
-  (f: N -> Z) `{!SemiRingPreserving f}
-  : Injective f.
+  (f: N -> Z) `{!IsSemiRingPreserving f}
+  : IsInjective f.
 Proof.
 intros x y E.
 apply (injective (cast N (NatPair.Z N))).
@@ -79,20 +79,20 @@ Qed.
 
 Section retract_is_int.
   Context `{Funext} `{Univalence}.
-  Context `{Integers Z} `{Ring Z2}
+  Context `{Integers Z} `{IsRing Z2}
     {Z2ap : Apart Z2} {Z2le Z2lt} `{!FullPseudoSemiRingOrder (A:=Z2) Z2le Z2lt}.
-  Context (f : Z -> Z2) `{!IsEquiv f} `{!SemiRingPreserving f}
-    `{!SemiRingPreserving (f^-1)}.
+  Context (f : Z -> Z2) `{!IsEquiv f} `{!IsSemiRingPreserving f}
+    `{!IsSemiRingPreserving (f^-1)}.
 
   (* If we make this an instance, then instance resolution will often loop *)
   Definition retract_is_int_to_ring : IntegersToRing Z2 := fun Z2 _ _ _ _ _ _ =>
     integers_to_ring Z Z2 ∘ f^-1.
 
   Section for_another_ring.
-    Context `{Ring R}.
+    Context `{IsRing R}.
 
-    Instance: SemiRingPreserving (integers_to_ring Z R ∘ f^-1) := {}.
-    Context (h :  Z2 -> R) `{!SemiRingPreserving h}.
+    Instance: IsSemiRingPreserving (integers_to_ring Z R ∘ f^-1) := {}.
+    Context (h :  Z2 -> R) `{!IsSemiRingPreserving h}.
 
     Lemma same_morphism x : (integers_to_ring Z R ∘ f^-1) x = h x.
     Proof.
@@ -177,6 +177,6 @@ destruct (zero_product (integers_to_ring Z (NatPair.Z nat) x)
   rewrite rings.preserves_0. trivial.
 Qed.
 
-Global Instance int_integral_domain : IntegralDomain Z := {}.
+Global Instance int_integral_domain : IsIntegralDomain Z := {}.
 
 End contents.

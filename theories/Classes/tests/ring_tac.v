@@ -2,7 +2,7 @@ Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.tactics.ring_tac.
 
-Lemma test1 `{SemiRing R}
+Lemma test1 `{IsSemiRing R}
   : forall x y : R, x + (y * x) = x * (y + 1).
 Proof.
 intros.
@@ -12,7 +12,7 @@ Qed.
 Require Import
   HoTT.Classes.interfaces.naturals.
 
-Lemma test2 `{SemiRing R}
+Lemma test2 `{IsSemiRing R}
   : forall x y : R, x + (y * x) = x * (y + 1).
 Proof.
 intros.
@@ -20,7 +20,7 @@ apply (by_quoting (naturals_to_semiring nat R)).
 compute. reflexivity.
 Qed.
 
-Lemma test3 `{SemiRing R}
+Lemma test3 `{IsSemiRing R}
   (pa pb pc : R) :
   pa * (pb * pc)
 = pa * pb * pc.
@@ -30,7 +30,7 @@ apply (by_quoting (naturals_to_semiring nat R)). compute.
 reflexivity.
 Qed.
 
-Lemma test4 `{SemiRing R}
+Lemma test4 `{IsSemiRing R}
   (a b : R)
   : a * b = b * a.
 Proof.

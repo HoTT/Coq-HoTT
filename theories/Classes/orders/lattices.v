@@ -46,7 +46,7 @@ Section join_semilattice_order.
   transitivity (y ⊔ z); apply join_ub_r.
   Qed.
 
-  Instance join_sl_order_join_sl: JoinSemiLattice L.
+  Instance join_sl_order_join_sl: IsJoinSemiLattice L.
   Proof.
   repeat split.
   - apply _.
@@ -156,7 +156,7 @@ Section join_semilattice_order.
 End join_semilattice_order.
 
 Section bounded_join_semilattice.
-  Context `{JoinSemiLatticeOrder L} `{Bottom L} `{!BoundedJoinSemiLattice L}.
+  Context `{JoinSemiLatticeOrder L} `{Bottom L} `{!IsBoundedJoinSemiLattice L}.
 
   Lemma above_bottom x : ⊥ ≤ x.
   Proof.
@@ -210,7 +210,7 @@ Section meet_semilattice_order.
   transitivity (y ⊓ z); apply meet_lb_r.
   Qed.
 
-  Instance meet_sl_order_meet_sl: MeetSemiLattice L.
+  Instance meet_sl_order_meet_sl: IsMeetSemiLattice L.
   Proof.
   repeat split.
   - apply _.
@@ -320,8 +320,8 @@ End meet_semilattice_order.
 Section lattice_order.
   Context `{LatticeOrder L}.
 
-  Instance: JoinSemiLattice L := join_sl_order_join_sl.
-  Instance: MeetSemiLattice L := meet_sl_order_meet_sl.
+  Instance: IsJoinSemiLattice L := join_sl_order_join_sl.
+  Instance: IsMeetSemiLattice L := meet_sl_order_meet_sl.
 
   Instance: Absorption (⊓) (⊔).
   Proof.
@@ -341,7 +341,7 @@ Section lattice_order.
   - apply join_ub_l.
   Qed.
 
-  Instance lattice_order_lattice: Lattice L := {}.
+  Instance lattice_order_lattice: IsLattice L := {}.
 
   Lemma meet_join_distr_l_le x y z : (x ⊓ y) ⊔ (x ⊓ z) ≤ x ⊓ (y ⊔ z).
   Proof.
@@ -372,10 +372,10 @@ Section lattice_order.
   Qed.
 End lattice_order.
 
-Definition default_join_sl_le `{JoinSemiLattice L} : Le L :=  fun x y => x ⊔ y = y.
+Definition default_join_sl_le `{IsJoinSemiLattice L} : Le L :=  fun x y => x ⊔ y = y.
 
 Section join_sl_order_alt.
-  Context `{JoinSemiLattice L} `{Le L} `{is_mere_relation L le}
+  Context `{IsJoinSemiLattice L} `{Le L} `{is_mere_relation L le}
     (le_correct : forall x y, x ≤ y <-> x ⊔ y = y).
 
   Lemma alt_Build_JoinSemiLatticeOrder : JoinSemiLatticeOrder (≤).
@@ -406,10 +406,10 @@ Section join_sl_order_alt.
   Qed.
 End join_sl_order_alt.
 
-Definition default_meet_sl_le `{MeetSemiLattice L} : Le L :=  fun x y => x ⊓ y = x.
+Definition default_meet_sl_le `{IsMeetSemiLattice L} : Le L :=  fun x y => x ⊓ y = x.
 
 Section meet_sl_order_alt.
-  Context `{MeetSemiLattice L} `{Le L} `{is_mere_relation L le}
+  Context `{IsMeetSemiLattice L} `{Le L} `{is_mere_relation L le}
     (le_correct : forall x y, x ≤ y <-> x ⊓ y = x).
 
   Lemma alt_Build_MeetSemiLatticeOrder : MeetSemiLatticeOrder (≤).
@@ -441,7 +441,7 @@ End meet_sl_order_alt.
 
 Section join_order_preserving.
   Context `{JoinSemiLatticeOrder L} `{JoinSemiLatticeOrder K} (f : L -> K)
-    `{!JoinPreserving f}.
+    `{!IsJoinPreserving f}.
 
   Lemma join_sl_mor_preserving: OrderPreserving f.
   Proof.
@@ -451,7 +451,7 @@ Section join_order_preserving.
   apply ap, E.
   Qed.
 
-  Lemma join_sl_mor_reflecting `{!Injective f}: OrderReflecting f.
+  Lemma join_sl_mor_reflecting `{!IsInjective f}: OrderReflecting f.
   Proof.
   intros x y E.
   apply join_sl_le_spec in E. apply join_sl_le_spec.
@@ -462,7 +462,7 @@ End join_order_preserving.
 
 Section meet_order_preserving.
   Context `{MeetSemiLatticeOrder L} `{MeetSemiLatticeOrder K} (f : L -> K)
-    `{!MeetPreserving f}.
+    `{!IsMeetPreserving f}.
 
   Lemma meet_sl_mor_preserving: OrderPreserving f.
   Proof.
@@ -472,7 +472,7 @@ Section meet_order_preserving.
   apply ap, E.
   Qed.
 
-  Lemma meet_sl_mor_reflecting `{!Injective f}: OrderReflecting f.
+  Lemma meet_sl_mor_reflecting `{!IsInjective f}: OrderReflecting f.
   Proof.
   intros x y E.
   apply meet_sl_le_spec in E. apply meet_sl_le_spec.
@@ -486,7 +486,7 @@ Section order_preserving_join_sl_mor.
     `{!TotalOrder (_ : Le L)} `{!TotalOrder (_ : Le K)}
     `{!OrderPreserving (f : L -> K)}.
 
-  Lemma order_preserving_join_sl_mor: JoinPreserving f.
+  Lemma order_preserving_join_sl_mor: IsJoinPreserving f.
   Proof.
   intros x y. case (total (≤) x y); intros E.
   - change (f (join x y) = join (f x) (f y)).
@@ -502,7 +502,7 @@ Section order_preserving_meet_sl_mor.
     `{!TotalOrder (_ : Le L)} `{!TotalOrder (_ : Le K)}
     `{!OrderPreserving (f : L -> K)}.
 
-  Lemma order_preserving_meet_sl_mor: SemiGroupPreserving f.
+  Lemma order_preserving_meet_sl_mor: IsSemiGroupPreserving f.
   Proof.
   intros x y. case (total (≤) x y); intros E.
   - change (f (meet x y) = meet (f x) (f y)).

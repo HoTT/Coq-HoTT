@@ -67,21 +67,21 @@ Instance negate_almostneg `{Aneg : Negate A} : AlmostNegate A
   := (-).
 Arguments negate_almostneg _ _ _ /.
 
-Instance semiring_almostring `{SemiRing A} : AlmostRing A | 10.
+Instance semiring_almostring `{IsSemiRing A} : AlmostRing A | 10.
 Proof.
 split;try apply _.
 intros. unfold almost_negate;simpl.
 symmetry;apply mult_0_l.
 Qed.
 
-Instance ring_almostring `{Ring A} : AlmostRing A.
+Instance ring_almostring `{IsRing A} : AlmostRing A.
 Proof.
 split;try apply _.
 intros. unfold almost_negate;simpl.
 apply negate_mult.
 Qed.
 
-Instance sr_mor_almostring_mor `{SemiRingPreserving A B f}
+Instance sr_mor_almostring_mor `{IsSemiRingPreserving A B f}
   : AlmostRingPreserving f | 10.
 Proof.
 split;try apply _.
@@ -89,7 +89,7 @@ unfold almost_negate;simpl. intros _. apply preserves_0.
 Qed.
 
 Section VarSec.
-Context `{Ring A} `{Ring B} {f : A -> B} `{!SemiRingPreserving f}.
+Context `{IsRing A} `{IsRing B} {f : A -> B} `{!IsSemiRingPreserving f}.
 
 Global Instance ring_mor_almostring_mor : AlmostRingPreserving f.
 Proof.
@@ -107,7 +107,7 @@ Arguments by_quoting {C _ R} phi
 Ltac ring_with_nat :=
   match goal with
   |- @paths ?R _ _ =>
-    ((pose proof (_ : SemiRing R)) || fail "target equality not on a semiring");
+    ((pose proof (_ : IsSemiRing R)) || fail "target equality not on a semiring");
     apply (by_quoting (naturals_to_semiring nat R));
     compute;reflexivity
   end.
@@ -115,7 +115,7 @@ Ltac ring_with_nat :=
 Ltac ring_with_integers Z :=
   match goal with
   |- @paths ?R _ _ =>
-    ((pose proof (_ : Ring R)) || fail "target equality not on a ring");
+    ((pose proof (_ : IsRing R)) || fail "target equality not on a ring");
     apply (by_quoting (integers_to_ring Z R));
     compute;reflexivity
   end.
@@ -123,7 +123,7 @@ Ltac ring_with_integers Z :=
 Ltac ring_with_self :=
   match goal with
   |- @paths ?R _ _ =>
-    ((pose proof (_ : SemiRing R)) || fail "target equality not on a ring");
+    ((pose proof (_ : IsSemiRing R)) || fail "target equality not on a ring");
     apply (by_quoting (@id R));
     compute;reflexivity
   end.

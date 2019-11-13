@@ -63,8 +63,8 @@ Qed.
 Section morphisms.
   Context `{IsApart A} `{IsApart B} `{IsApart C}.
 
-  Global Instance strong_injective_injective `{!StrongInjective (f : A -> B)} :
-    Injective f.
+  Global Instance strong_injective_injective `{!IsStrongInjective (f : A -> B)} :
+    IsInjective f.
   Proof.
   pose proof (strong_injective_mor f).
   intros ? ? e.
@@ -200,8 +200,8 @@ Section dec_setoid_morphisms.
 
   Context `{!TrivialApart B}.
 
-  Instance dec_strong_injective (f : A -> B) `{!Injective f} :
-    StrongInjective f.
+  Instance dec_strong_injective (f : A -> B) `{!IsInjective f} :
+    IsStrongInjective f.
   Proof.
   split; try apply _.
   intros x y.

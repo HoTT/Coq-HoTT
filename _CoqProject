@@ -272,6 +272,13 @@ theories/Algebra/ooGroup.v
 theories/Algebra/Aut.v
 theories/Algebra/ooAction.v
 
+theories/Algebra/Group.v
+theories/Algebra/Subgroup.v
+theories/Algebra/Congruence.v
+theories/Algebra/AbelianGroup.v
+theories/Algebra/QuotientGroup.v
+
+theories/Algebra/Group.v
 #
 #   Tactics
 #

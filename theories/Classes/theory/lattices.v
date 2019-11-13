@@ -2,60 +2,60 @@ Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.theory.groups.
 
-Instance bounded_sl_is_sl `{BoundedSemiLattice L} : SemiLattice L.
+Instance bounded_sl_is_sl `{IsBoundedSemiLattice L} : IsSemiLattice L.
 Proof.
 repeat (split; try apply _).
 Qed.
 
-Instance bounded_join_sl_is_join_sl `{BoundedJoinSemiLattice L} : JoinSemiLattice L.
+Instance bounded_join_sl_is_join_sl `{IsBoundedJoinSemiLattice L} : IsJoinSemiLattice L.
 Proof.
 repeat (split; try apply _).
 Qed.
 
-Instance bounded_meet_sl_is_meet_sl `{BoundedMeetSemiLattice L} : MeetSemiLattice L.
+Instance bounded_meet_sl_is_meet_sl `{IsBoundedMeetSemiLattice L} : IsMeetSemiLattice L.
 Proof.
 repeat (split; try apply _).
 Qed.
 
-Instance bounded_lattice_is_lattice `{BoundedLattice L} : Lattice L.
+Instance bounded_lattice_is_lattice `{IsBoundedLattice L} : IsLattice L.
 Proof.
 repeat split; apply _.
 Qed.
 
-Instance bounded_sl_mor_is_sl_mor `{H : BoundedJoinPreserving A B f}
-  : JoinPreserving f.
+Instance bounded_sl_mor_is_sl_mor `{H : IsBoundedJoinPreserving A B f}
+  : IsJoinPreserving f.
 Proof.
 red;apply _.
 Qed.
 
-Lemma preserves_join `{JoinPreserving L K f} x y
+Lemma preserves_join `{IsJoinPreserving L K f} x y
   : f (x ⊔ y) = f x ⊔ f y.
 Proof. apply preserves_sg_op. Qed.
 
-Lemma preserves_bottom `{BoundedJoinPreserving L K f}
+Lemma preserves_bottom `{IsBoundedJoinPreserving L K f}
   : f ⊥ = ⊥.
 Proof. apply preserves_mon_unit. Qed.
 
-Lemma preserves_meet `{MeetPreserving L K f} x y :
+Lemma preserves_meet `{IsMeetPreserving L K f} x y :
   f (x ⊓ y) = f x ⊓ f y.
 Proof. apply preserves_sg_op. Qed.
 
 Section bounded_join_sl_props.
-  Context `{BoundedJoinSemiLattice L}.
+  Context `{IsBoundedJoinSemiLattice L}.
 
   Instance join_bottom_l: LeftIdentity (⊔) ⊥ := _.
   Instance join_bottom_r: RightIdentity (⊔) ⊥ := _.
 End bounded_join_sl_props.
 
 Section lattice_props.
-  Context `{Lattice L}.
+  Context `{IsLattice L}.
 
   Definition meet_join_absorption x y : x ⊓ (x ⊔ y) = x := absorption x y.
   Definition join_meet_absorption x y : x ⊔ (x ⊓ y) = x := absorption x y.
 End lattice_props.
 
 Section distributive_lattice_props.
-  Context `{DistributiveLattice L}.
+  Context `{IsDistributiveLattice L}.
 
   Instance join_meet_distr_l: LeftDistribute (⊔) (⊓).
   Proof. exact (join_meet_distr_l _). Qed.
@@ -105,7 +105,7 @@ Section distributive_lattice_props.
 End distributive_lattice_props.
 
 Section lower_bounded_lattice.
-  Context `{Lattice L} `{Bottom L} `{!BoundedJoinSemiLattice L}.
+  Context `{IsLattice L} `{Bottom L} `{!IsBoundedJoinSemiLattice L}.
 
   Global Instance meet_bottom_l: LeftAbsorb (⊓) ⊥.
   Proof.
@@ -122,11 +122,11 @@ Section lower_bounded_lattice.
 End lower_bounded_lattice.
 
 Section from_another_sl.
-  Context `{SemiLattice A} `{IsHSet B}
-   `{Bop : SgOp B} (f : B -> A) `{!Injective f}
+  Context `{IsSemiLattice A} `{IsHSet B}
+   `{Bop : SgOp B} (f : B -> A) `{!IsInjective f}
    (op_correct : forall x y, f (x & y) = f x & f y).
 
-  Lemma projected_sl: SemiLattice B.
+  Lemma projected_sl: IsSemiLattice B.
   Proof.
   split.
   - apply (projected_com_sg f). assumption.
@@ -136,12 +136,12 @@ Section from_another_sl.
 End from_another_sl.
 
 Section from_another_bounded_sl.
-  Context `{BoundedSemiLattice A} `{IsHSet B}
-   `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B -> A) `{!Injective f}
+  Context `{IsBoundedSemiLattice A} `{IsHSet B}
+   `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B -> A) `{!IsInjective f}
    (op_correct : forall x y, f (x & y) = f x & f y)
    (unit_correct : f mon_unit = mon_unit).
 
-  Lemma projected_bounded_sl: BoundedSemiLattice B.
+  Lemma projected_bounded_sl: IsBoundedSemiLattice B.
   Proof.
   split.
   - apply (projected_com_monoid f);trivial.
@@ -151,17 +151,17 @@ Section from_another_bounded_sl.
   Qed.
 End from_another_bounded_sl.
 
-Instance id_join_sl_morphism `{JoinSemiLattice A} : JoinPreserving (@id A)
+Instance id_join_sl_morphism `{IsJoinSemiLattice A} : IsJoinPreserving (@id A)
   := {}.
 
-Instance id_meet_sl_morphism `{MeetSemiLattice A} : MeetPreserving (@id A)
+Instance id_meet_sl_morphism `{IsMeetSemiLattice A} : IsMeetPreserving (@id A)
   := {}.
 
-Instance id_bounded_join_sl_morphism `{BoundedJoinSemiLattice A}
-  : BoundedJoinPreserving (@id A)
+Instance id_bounded_join_sl_morphism `{IsBoundedJoinSemiLattice A}
+  : IsBoundedJoinPreserving (@id A)
   := {}.
 
-Instance id_lattice_morphism `{Lattice A} : LatticePreserving (@id A)
+Instance id_lattice_morphism `{IsLattice A} : IsLatticePreserving (@id A)
   := {}.
 
 Section morphism_composition.
@@ -171,73 +171,73 @@ Section morphism_composition.
     (f : A -> B) (g : B -> C).
 
   Instance compose_join_sl_morphism:
-    JoinPreserving f -> JoinPreserving g ->
-    JoinPreserving (g ∘ f).
+    IsJoinPreserving f -> IsJoinPreserving g ->
+    IsJoinPreserving (g ∘ f).
   Proof.
   red; apply _.
   Qed.
 
   Instance compose_meet_sl_morphism:
-    MeetPreserving f -> MeetPreserving g ->
-    MeetPreserving (g ∘ f).
+    IsMeetPreserving f -> IsMeetPreserving g ->
+    IsMeetPreserving (g ∘ f).
   Proof.
   red;apply _.
   Qed.
 
   Instance compose_bounded_join_sl_morphism:
-    BoundedJoinPreserving f -> BoundedJoinPreserving g ->
-    BoundedJoinPreserving (g ∘ f).
+    IsBoundedJoinPreserving f -> IsBoundedJoinPreserving g ->
+    IsBoundedJoinPreserving (g ∘ f).
   Proof.
   red; apply _.
   Qed.
 
   Instance compose_lattice_morphism:
-    LatticePreserving f -> LatticePreserving g -> LatticePreserving (g ∘ f).
+    IsLatticePreserving f -> IsLatticePreserving g -> IsLatticePreserving (g ∘ f).
   Proof.
   split; apply _.
   Qed.
 
   Instance invert_join_sl_morphism:
-    forall `{!IsEquiv f}, JoinPreserving f ->
-    JoinPreserving (f^-1).
+    forall `{!IsEquiv f}, IsJoinPreserving f ->
+    IsJoinPreserving (f^-1).
   Proof.
   red; apply _.
   Qed.
 
   Instance invert_meet_sl_morphism:
-    forall `{!IsEquiv f}, MeetPreserving f ->
-    MeetPreserving (f^-1).
+    forall `{!IsEquiv f}, IsMeetPreserving f ->
+    IsMeetPreserving (f^-1).
   Proof.
   red; apply _.
   Qed.
 
   Instance invert_bounded_join_sl_morphism:
-    forall `{!IsEquiv f}, BoundedJoinPreserving f ->
-    BoundedJoinPreserving (f^-1).
+    forall `{!IsEquiv f}, IsBoundedJoinPreserving f ->
+    IsBoundedJoinPreserving (f^-1).
   Proof.
   red; apply _.
   Qed.
 
   Instance invert_lattice_morphism:
-    forall `{!IsEquiv f}, LatticePreserving f -> LatticePreserving (f^-1).
+    forall `{!IsEquiv f}, IsLatticePreserving f -> IsLatticePreserving (f^-1).
   Proof.
   split; apply _.
   Qed.
 End morphism_composition.
 
-Hint Extern 4 (JoinPreserving (_ ∘ _)) =>
+Hint Extern 4 (IsJoinPreserving (_ ∘ _)) =>
   class_apply @compose_join_sl_morphism : typeclass_instances.
-Hint Extern 4 (MeetPreserving (_ ∘ _)) =>
+Hint Extern 4 (IsMeetPreserving (_ ∘ _)) =>
   class_apply @compose_meet_sl_morphism : typeclass_instances.
-Hint Extern 4 (BoundedJoinPreserving (_ ∘ _)) =>
+Hint Extern 4 (IsBoundedJoinPreserving (_ ∘ _)) =>
   class_apply @compose_bounded_join_sl_morphism : typeclass_instances.
-Hint Extern 4 (LatticePreserving (_ ∘ _)) =>
+Hint Extern 4 (IsLatticePreserving (_ ∘ _)) =>
   class_apply @compose_lattice_morphism : typeclass_instances.
-Hint Extern 4 (JoinPreserving (_^-1)) =>
+Hint Extern 4 (IsJoinPreserving (_^-1)) =>
   class_apply @invert_join_sl_morphism : typeclass_instances.
-Hint Extern 4 (MeetPreserving (_^-1)) =>
+Hint Extern 4 (IsMeetPreserving (_^-1)) =>
   class_apply @invert_meet_sl_morphism : typeclass_instances.
-Hint Extern 4 (BoundedJoinPreserving (_^-1)) =>
+Hint Extern 4 (IsBoundedJoinPreserving (_^-1)) =>
   class_apply @invert_bounded_join_sl_morphism : typeclass_instances.
-Hint Extern 4 (LatticePreserving (_^-1)) =>
+Hint Extern 4 (IsLatticePreserving (_^-1)) =>
   class_apply @invert_lattice_morphism : typeclass_instances.

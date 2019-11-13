@@ -78,8 +78,8 @@ as [E | E].
 Qed.
 
 Section another_ring.
-  Context `{Ring R} `{Apart R} `{!FullPseudoSemiRingOrder (A:=R) Rle Rlt}
-    `{!SemiRingPreserving (f : N -> R)}.
+  Context `{IsRing R} `{Apart R} `{!FullPseudoSemiRingOrder (A:=R) Rle Rlt}
+    `{!IsSemiRingPreserving (f : N -> R)}.
 
   Lemma negate_to_ring_nonpos n : -f n ≤ 0.
   Proof. apply flip_nonneg_negate. apply to_semiring_nonneg. Qed.
