@@ -46,16 +46,16 @@ Proof.
 Defined.
 
 (** Inverses are involutive *)
-Check negate_involutive.
+(* Check negate_involutive. *)
 
 (** Inverses distribute over the group operation *)
-Check negate_sg_op.
+(* Check negate_sg_op. *)
 
 (** Group elements can be cancelled on the left of an equation *)
-Check group_cancelL.
+(* Check group_cancelL. *)
 
 (** Group elements can be cancelled on the right of an equation *)
-Check group_cancelR.
+(* Check group_cancelR. *)
 
 (** Definition of Group Homomorphism *)
 
