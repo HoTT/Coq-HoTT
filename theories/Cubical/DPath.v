@@ -34,6 +34,13 @@ Proof.
   serapply isequiv_adjointify; by destruct p.
 Defined.
 
+Global Instance istrunc_dp {A : Type} {P : A -> Type} {n : trunc_index}
+ `{forall x, IsTrunc n.+1 (P x)} {a0 a1} {p : a0 = a1} {b0 : P a0}
+ {b1 : P a1} : IsTrunc n (DPath P p b0 b1).
+Proof.
+  apply (trunc_equiv _ dp_path_transport).
+Defined.
+
 (* Here is a notation for DPaths that can make it easier to use *)
 Notation "x =[ q ] y" := (DPath (fun t => DPath _ t _ _) q x y) (at level 10)
   : dpath_scope.
