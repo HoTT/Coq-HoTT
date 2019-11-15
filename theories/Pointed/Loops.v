@@ -319,7 +319,7 @@ Proof.
   induction n.
   { intro A.
     refine (equiv_composeR' equiv_hset_axiomK _).
-    refine (equiv_iff_hprop (fun K a => BuildContr _ 1 (fun x => (K a x)^)) _).
+    refine (equiv_iff_hprop (fun K a => Build_Contr _ 1 (fun x => (K a x)^)) _).
     intros ? ? ?; apply path_contr. }
   intro A.
   transitivity (forall x, IsTrunc n (loops (A, x))).

@@ -103,7 +103,7 @@ Section universal.
             | fst o F = a
               /\ snd o F = b }.
     Proof.
-      refine (BuildContr _ (a * b; (compose_fst_prod, compose_snd_prod)) _).
+      refine (Build_Contr _ (a * b; (compose_fst_prod, compose_snd_prod)) _).
       intro y.
       apply path_sigma_uncurried.
       simpl.

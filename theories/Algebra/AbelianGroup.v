@@ -319,7 +319,7 @@ Section Abelianization.
     : IsAbelianization abel abel_unit.
   Proof.
     intros X A h.
-    serapply BuildContr.
+    serapply Build_Contr.
     { srefine (_;_).
       { simple notypeclasses refine (Build_GroupHomomorphism _).
         { serapply (Abel_rec _ _ h).

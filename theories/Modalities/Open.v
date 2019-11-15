@@ -102,7 +102,7 @@ Proof.
   { intros u.
     pose (contr_inhabited_hprop U u).
     refine (contr_equiv (U -> A) (equiv_contr_forall _)). }
-  simple refine (BuildContr _ _ _).
+  simple refine (Build_Contr _ _ _).
   - intros u; pose (uc u); exact (center (x=y)).
   - intros f; apply path_arrow; intros u.
     pose proof (uc u); apply path_contr.

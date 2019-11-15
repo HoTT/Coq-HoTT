@@ -119,5 +119,5 @@ Defined.
 
 (* Conversely, a type equivalent to [Unit] is contractible. *)
 Global Instance contr_equiv_unit (A : Type) (f : A <~> Unit) : Contr A | 10000
-  := BuildContr A (f^-1 tt)
+  := Build_Contr A (f^-1 tt)
   (fun a => ap f^-1 (contr (f a)) @ eissect f a).

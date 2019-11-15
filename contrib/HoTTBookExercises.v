@@ -1434,7 +1434,7 @@ Section Book_6_9.
   Defined.
 
   Definition contrAllExOthBool `{Funext} : Contr (AllExistsOther Bool) :=
-  (BuildContr _ centerAllExOthBool centralAllExOthBool).
+  (Build_Contr _ centerAllExOthBool centralAllExOthBool).
 
   Definition solution_6_9 `{Funext} : forall X, X -> X.
   Proof.

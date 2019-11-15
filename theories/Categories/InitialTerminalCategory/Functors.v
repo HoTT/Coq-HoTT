@@ -63,7 +63,7 @@ Section unique.
          `{@IsInitialCategory zero} T
   : Contr (zero -> T).
   Proof.
-    refine (BuildContr _ (initial_category_ind _) _).
+    refine (Build_Contr _ (initial_category_ind _) _).
     intro y.
     apply path_forall; intro x.
     apply (initial_category_ind _ x).
@@ -75,7 +75,7 @@ Section unique.
          `{@IsInitialCategory zero}
   : Contr (Functor zero C).
   Proof.
-    refine (BuildContr _ (from_initial C) _).
+    refine (Build_Contr _ (from_initial C) _).
     abstract (
         intros; apply path_functor_uncurried;
         (exists (center _));
@@ -101,7 +101,7 @@ Section unique.
          `{@IsTerminalCategory one H1 H2}
   : Contr (Functor C one).
   Proof.
-    refine (BuildContr _ (to_terminal C) _).
+    refine (Build_Contr _ (to_terminal C) _).
     intros.
     exact (center _).
   Defined.

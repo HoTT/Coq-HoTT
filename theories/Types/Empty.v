@@ -15,7 +15,7 @@ Local Open Scope path_scope.
 Global Instance contr_from_Empty {_ : Funext} (A : Empty -> Type) :
   Contr (forall x:Empty, A x).
 Proof.
-  refine (BuildContr (forall x:Empty, A x) (Empty_ind A) _).
+  refine (Build_Contr (forall x:Empty, A x) (Empty_ind A) _).
   intros f; apply path_forall; intros x; elim x.
 Defined.
 
