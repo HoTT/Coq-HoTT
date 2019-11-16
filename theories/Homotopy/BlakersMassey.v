@@ -611,7 +611,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
     Proof.
       strip_truncations.
       destruct inh as [y0 q00].
-      exact (BuildContr _ (center_code p r) (contraction_code q00 (p;r))).
+      exact (Build_Contr _ (center_code p r) (contraction_code q00 (p;r))).
     Defined.
 
     (** This version is sufficient for the classical Blakers-Massey theorem, as we'll see below, since its leg-wise connectivity hypothesis implies the above surjectivity assumption.  ABFJ have a different method for eliminating the surjectivity assumption using a lemma about pushouts of monos also being pullbacks, though it seems to only work for coderight. *)

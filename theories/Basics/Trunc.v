@@ -165,7 +165,7 @@ Defined.
 (** Conversely, this property characterizes hprops. *)
 Theorem hprop_allpath (A : Type) : (forall (x y : A), x = y) -> IsHProp A.
   intros H x y.
-  pose (C := BuildContr A x (H x)).
+  pose (C := Build_Contr A x (H x)).
   apply contr_paths_contr.
 Defined.
 

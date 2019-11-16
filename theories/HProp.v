@@ -62,7 +62,7 @@ Proof.
     apply path_forall; intro x;
     apply path_forall; intro y;
   (* Now we conclude that [A] is contractible *)
-    try pose (C := BuildContr A x (f x));
+    try pose (C := Build_Contr A x (f x));
     try pose (D := contr_inhabited_hprop A x);
   (* And conclude because we have a path in a contractible space. *)
     apply path_contr.

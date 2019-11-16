@@ -819,7 +819,7 @@ Section AssumeStuff.
         apply equiv_functor_sigma_id; intros f.
         cbn; apply equiv_sigma_prod0.
       - refine (@trunc_sigma@{nr nr large nr} _ _ _ _ _).
-        + srefine (BuildContr _ _ _).
+        + srefine (Build_Contr _ _ _).
           * exists (fun _ => x0); reflexivity.
           * intros [g H].
             srefine (path_sigma _ _ _ _ _); cbn.

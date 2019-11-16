@@ -24,7 +24,7 @@ Section NaturalTransformations.
          `{@IsInitialCategory zero} (F G : Functor zero C)
   : Contr (NaturalTransformation F G).
   Proof.
-    refine (BuildContr _ (from_initial F G) _).
+    refine (Build_Contr _ (from_initial F G) _).
     abstract (
         intros;
         apply path_natural_transformation;
@@ -55,7 +55,7 @@ Section NaturalTransformations.
          `{@IsTerminalCategory one H1 H2} (F G : Functor C one)
   : Contr (NaturalTransformation F G).
   Proof.
-    refine (BuildContr _ (to_terminal F G) _).
+    refine (Build_Contr _ (to_terminal F G) _).
     abstract (path_natural_transformation; exact (contr _)).
   Defined.
 End NaturalTransformations.

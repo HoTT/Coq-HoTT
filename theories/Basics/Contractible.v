@@ -53,7 +53,7 @@ Defined.
 
 Global Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x} | 100.
 Proof.
-  refine (BuildContr _ (x;1) _).
+  refine (Build_Contr _ (x;1) _).
   intros [y p]; apply path_basedpaths'.
 Defined.
 
@@ -97,4 +97,4 @@ Definition contr_dom_equiv {A B} (f : A -> B) `{Contr A} : forall x y : A, f x =
 Definition contr_retract {X Y : Type} `{Contr X} 
            (r : X -> Y) (s : Y -> X) (h : forall y, r (s y) = y)
   : Contr Y
-  := BuildContr _ (r (center X)) (fun y => (ap r (contr _)) @ h _).
+  := Build_Contr _ (r (center X)) (fun y => (ap r (contr _)) @ h _).
