@@ -92,7 +92,7 @@ Section AssumeUnivalence.
   (** ** Connectedness *)
 
   Global Instance isminusoneconnected_baut_bool `{Funext} (Z : BAut Bool)
-  : IsConnected -1 Z.
+  : IsConnected (-1) Z.
   Proof.
     baut_reduce.
     apply contr_inhabited_hprop; try exact _.

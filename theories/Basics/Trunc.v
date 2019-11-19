@@ -32,7 +32,7 @@ Fixpoint trunc_index_inc (n : nat) (k : trunc_index) : trunc_index
 (** ** Truncatedness proper. *)
 
 (** A contractible space is (-2)-truncated, by definition. *)
-Definition contr_trunc_minus_two `{H : IsTrunc -2 A} : Contr A
+Definition contr_trunc_minus_two `{H : IsTrunc (-2) A} : Contr A
   := H.
 
 (** Truncation levels are cumulative. *)
@@ -48,7 +48,7 @@ Qed.
 Definition nat_to_trunc_index_2 (n : nat) : trunc_index.
 Proof.
   induction n.
-  + exact -2.
+  + exact (-2).
   + exact IHn.+1.
 Defined.
 
@@ -60,7 +60,7 @@ Proof.
     intros [ | m'] Hmn A ? .
   - (* -2, -2 *) assumption.
   - (* S m', -2 *) destruct Hmn.
-  - (* -2, S n' *) apply @trunc_succ, (IH -2); auto.
+  - (* -2, S n' *) apply @trunc_succ, (IH (-2)); auto.
   - (* S m', S n' *) intros x y; apply (IH m');
                      auto with typeclass_instances.
 Defined.
@@ -68,10 +68,10 @@ Defined.
 (** In particular, a contractible type, hprop, or hset is truncated at all higher levels.  We don't allow these to be used as idmaps, since there would be no point to it. *)
 
 Definition trunc_contr {n} {A} `{Contr A} : IsTrunc n.+1 A
-  := (@trunc_leq -2 n.+1 tt _ _).
+  := (@trunc_leq (-2) n.+1 tt _ _).
 
 Definition trunc_hprop {n} {A} `{IsHProp A} : IsTrunc n.+2 A
-  := (@trunc_leq -1 n.+2 tt _ _).
+  := (@trunc_leq (-1) n.+2 tt _ _).
 
 Definition trunc_hset {n} {A} `{IsHSet A} : IsTrunc n.+3 A
   := (@trunc_leq 0 n.+3 tt _ _).
@@ -106,7 +106,7 @@ Class IsTruncMap (n : trunc_index) {X Y : Type} (f : X -> Y) :=
 
 Global Existing Instance istruncmap_fiber.
 
-Notation IsEmbedding := (IsTruncMap -1).
+Notation IsEmbedding := (IsTruncMap (-1)).
 
 (** ** Universes of truncated types *)
 
@@ -129,7 +129,7 @@ Notation "n -Type" := (TruncType n) : type_scope.
 Notation hProp := (-1)-Type.
 Notation hSet := 0-Type.
 
-Notation BuildhProp := (BuildTruncType -1).
+Notation BuildhProp := (BuildTruncType (-1)).
 Notation BuildhSet := (BuildTruncType 0).
 
 (** This is (as of October 2014) the only [Canonical Structure] in the library.  It would be nice to do without it, in the interests of minimizing the number of fancy Coq features that the reader needs to know about. *)

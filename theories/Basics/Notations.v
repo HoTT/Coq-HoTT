@@ -13,8 +13,6 @@ Reserved Infix "=n" (at level 70, no associativity).
 Reserved Infix "o*" (at level 40).
 Reserved Infix "oL" (at level 40, left associativity).
 Reserved Infix "oR" (at level 40, left associativity).
-Reserved Notation "-1" (at level 0).
-Reserved Notation "-2" (at level 0).
 Reserved Notation "~~ A" (at level 75, right associativity, only parsing).
 Reserved Notation "A <~> B" (at level 85).
 Reserved Notation "a // 'CAT'" (at level 40, left associativity).

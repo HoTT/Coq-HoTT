@@ -216,7 +216,7 @@ Local Open Scope trunc_scope.
 
 (** We define [merely A] to be an inhabitant of the universe [hProp] of hprops, rather than a type.  We can always treat it as a type because there is a coercion, but this means that if we need an element of [hProp] then we don't need a separate name for it. *)
 
-Definition merely (A : Type@{i}) : hProp@{i} := BuildhProp (Trunc -1 A).
+Definition merely (A : Type@{i}) : hProp@{i} := BuildhProp (Trunc (-1) A).
 
 (** Note that we define [merely] using [Trunc -1] rather than [Tr -1].  These are of course judgmentally equal, but our choice introduces fewer universe parameters, resulting in faster compilation times.  The other choice might in theory give Coq an easier time applying general modality theorems to [merely], but currently things seem to be transparent enough that it doesn't matter. *)
 
@@ -226,16 +226,16 @@ Definition hor (P Q : Type) : hProp := merely (P + Q).
 
 Notation "A \/ B" := (hor A B) : type_scope.
 
-Definition himage {X Y} (f : X -> Y) := image -1 f.
+Definition himage {X Y} (f : X -> Y) := image (-1) f.
 
 Definition contr_inhab_prop {A} `{IsHProp A} (ma : merely A) : Contr A.
 Proof.
-  refine (@contr_trunc_conn -1 A _ _); try assumption.
+  refine (@contr_trunc_conn (-1) A _ _); try assumption.
   refine (contr_inhabited_hprop _ ma).
 Defined.
 
 (** Surjections are the (-1)-connected maps, but they can be characterized more simply since an inhabited hprop is automatically contractible. *)
-Notation IsSurjection := (IsConnMap -1).
+Notation IsSurjection := (IsConnMap (-1)).
 
 Definition BuildIsSurjection {A B} (f : A -> B) :
   (forall b, merely (hfiber f b)) -> IsSurjection f.
@@ -248,7 +248,7 @@ Definition isequiv_surj_emb {A B} (f : A -> B)
            `{IsSurjection f} `{IsEmbedding f}
 : IsEquiv f.
 Proof.
-  apply (@isequiv_conn_ino_map -1); assumption.
+  apply (@isequiv_conn_ino_map (-1)); assumption.
 Defined.
 
 (** ** Tactic to remove truncations in hypotheses if possible. *)
