@@ -64,7 +64,7 @@ Fixpoint trunc_index_inc (n : nat) (k : trunc_index)
 Definition trunc_index_pred : trunc_index -> trunc_index.
 Proof.
   intros [|m].
-  1: exact -2.
+  1: exact (-2).
   exact m.
 Defined.
 
@@ -119,14 +119,14 @@ Fixpoint trunc_index_min (n m : trunc_index)
   : trunc_index.
 Proof.
   destruct n.
-  1: exact -2.
+  1: exact (-2).
   destruct m.
-  1: exact -2.
+  1: exact (-2).
   exact (trunc_index_min n m).+1.
 Defined.
 
 Definition trunc_index_min_minus_two n
-  : trunc_index_min n -2 = -2.
+  : trunc_index_min n (-2) = -2.
 Proof.
   by destruct n.
 Defined.
