@@ -25,12 +25,12 @@ Coercion abgroup_type : AbGroup >-> Sortclass.
 (** The underlying group of an abelian group. *)
 Definition group_abgroup : AbGroup -> Group.
 Proof.
-  intros [G].
-  serapply (Build_Group G).
+  intros [G ? ? ? [l ?]].
+  ntc_rapply (Build_Group G _ _ _ l).
 Defined.
 
 (** We also want abelian groups to be coerced to the underlying group. *)
-Coercion group_abgroup : AbGroup >-> Group. 
+Coercion group_abgroup : AbGroup >-> Group.
 
 (** Definition of Abelianization.
 

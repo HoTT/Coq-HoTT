@@ -23,6 +23,10 @@ Coercion group_type : Group >-> Sortclass.
 Definition issig_group : _ <~> Group
   := ltac:(issig).
 
+(** Groups are pointed sets with point the identity. *)
+Global Instance ispointed_group (G : Group)
+  : IsPointed G := @mon_unit G _.
+
 (** * Some basic properties of groups *)
 
 (** An element acting like the identity is unique. *)
@@ -252,3 +256,58 @@ Proof.
   all: intro; apply negate_involutive.
 Defined.
 
+(** * Direct product of group *)
+
+Definition group_prod : Group -> Group -> Group.
+Proof.
+  intros G H.
+  serapply (Build_Group (G * H)).
+  (** Operation *)
+  { intros [g1 h1] [g2 h2].
+    exact (g1 & g2, h1 & h2). }
+  (** Unit *)
+  1: exact (mon_unit, mon_unit).
+  (** Inverse *)
+  { intros [g h].
+    exact (-g, -h). }
+  (** Group laws *)
+  serapply Build_IsGroup.
+  (** Monoid laws *)
+  { serapply Build_IsMonoid.
+    (** Semigroup lawss *)
+    { serapply Build_IsSemiGroup.
+      (** Associativity *)
+      intros [g1 h1] [g2 h2] [g3 h3].
+      apply path_prod; cbn.
+      1,2: apply associativity. }
+    (** Left identity *)
+    { intros [g h].
+      apply path_prod; cbn.
+      1,2: apply left_identity. }
+    (** Right identity *)
+    { intros [g h].
+      apply path_prod; cbn.
+      1,2: apply right_identity. } }
+  (** Left inverse *)
+  { intros [g h].
+    apply path_prod; cbn.
+    1,2: apply left_inverse. }
+  (** Right inverse *)
+  { intros [g h].
+    apply path_prod; cbn.
+    1,2: apply right_inverse. }
+Defined.
+
+Definition groupiso_prod {A B C D : Group}
+  : GroupIsomorphism A B -> GroupIsomorphism C D
+    -> GroupIsomorphism (group_prod A C) (group_prod B D).
+Proof.
+  intros f g.
+  serapply Build_GroupIsomorphism'.
+  1: serapply (equiv_functor_prod (f:=f) (g:=g)).
+  simpl.
+  unfold functor_prod.
+  intros x y.
+  apply path_prod.
+  1,2: apply grp_homo_op.
+Defined.

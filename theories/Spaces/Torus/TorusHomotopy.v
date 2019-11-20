@@ -1,9 +1,13 @@
 Require Import Basics.
 Require Import Types.
+Require Algebra.Group.
+Require Algebra.AbelianGroup.
+Require Import Homotopy.Pi1S1.
+Require Import Algebra.Z.
 Require Import Pointed.
 Require Import Spaces.Int.
 Require Import HIT.Circle.
-Require Import HoTT.Truncations.
+Require Import Truncations.
 Require Import Homotopy.HomotopyGroup.
 Import TrM.
 
@@ -55,12 +59,30 @@ Proof.
   exact _.
 Defined.
 
+Lemma pequiv_torus_prod_circles `{Funext} : T  <~>* S1 * S1.
+Proof.
+  serapply Build_pEquiv'.
+  1: apply equiv_torus_prod_S1.
+  reflexivity.
+Defined.
+
 (* Fundamental group of Torus *)
 
-Theorem Pi1Torus `{Univalence} : Pi 1 T <~> Int * Int.
+Import Algebra.Group.
+Import Algebra.AbelianGroup.
+
+Local Notation "( A , a )" := (Build_pType A a).
+Local Infix "≅" := GroupIsomorphism (at level 20).
+Local Notation "'π'" := HomotopyGroup (at level 0).
+Local Infix "×" := group_prod (at level 5).
+
+Theorem Pi1Torus `{Univalence} : π 1 T ≅ Z × Z.
 Proof.
-  unfold Pi.
-  refine ((equiv_tr 0 (Int * Int))^-1 oE _).
-  refine (Trunc_functor_equiv 0 _).
-  serapply loops_torus.
+  etransitivity.
+  { apply groupiso_homotopygroup_functor.
+    apply pequiv_torus_prod_circles. }
+  etransitivity.
+  1: apply homotopygroup_prod.
+  apply groupiso_prod.
+  1,2: apply Pi1Circle.
 Defined.
