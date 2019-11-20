@@ -31,7 +31,7 @@ Fixpoint trunc_index_inc (n : nat) (k : trunc_index) : trunc_index
 
 (** ** Truncatedness proper. *)
 
-(** A contractible space is (-2)-truncated, by definition. *)
+(** A contractible space is (-2)-truncated, by definition. This function is the identity, so there is never any need to actually use it, but it exists to be found in searches. *)
 Definition contr_trunc_minus_two `{H : IsTrunc (-2) A} : Contr A
   := H.
 
