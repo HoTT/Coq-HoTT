@@ -19,7 +19,7 @@ End BAut.
 
 (** Equivalently, [BAut X] is the (-1)-image of the classifying map [1 -> Type] of [X]. *)
 Definition equiv_baut_image_unit X
-: BAut X <~> image (Tr -1) (unit_name X).
+: BAut X <~> image (Tr (-1)) (unit_name X).
 Proof.
   unfold BAut, image; simpl.
   refine (equiv_functor_sigma' (equiv_idmap Type) _); intros Z; simpl.
@@ -34,8 +34,8 @@ Proof.
   refine (Build_ooGroup
             (Build_pType { Z : Type & merely (Z = X) } (X ; tr 1)) _).
   refine (conn_pointed_type (point _)); try exact _.
-  pose (c := conn_map_compose (Tr -1)
-                              (factor1 (image (Tr -1) (unit_name X)))
+  pose (c := conn_map_compose (Tr (-1))
+                              (factor1 (image (Tr (-1)) (unit_name X)))
                               (equiv_baut_image_unit X)^-1).
   refine (conn_map_homotopic _ _ _ _ c); intros []; reflexivity.
 Defined.

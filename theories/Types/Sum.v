@@ -891,7 +891,7 @@ Proof.
 Defined.
 
 Global Instance hset_sum `{HA : IsHSet A, HB : IsHSet B} : IsHSet (A + B) | 100
-  := @trunc_sum -2 A HA B HB.
+  := @trunc_sum (-2) A HA B HB.
 
 (** Sums don't preserve hprops in general, but they do for disjoint sums. *)
 

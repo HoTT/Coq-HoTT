@@ -7,7 +7,7 @@ Require Import HoTT.Truncations HoTT.Types.Bool.
 
 (** ** We can construct an interval type as [Trunc -1 Bool] *)
 
-Local Definition interval := Trunc -1 Bool.
+Local Definition interval := Trunc (-1) Bool.
 
 Local Definition interval_rec (P : Type) (a b : P) (p : a = b)
 : interval -> P.

@@ -95,7 +95,7 @@ Proof.
              (path_baut Z W)
              (path_baut (baut_prod_r X A Z) (baut_prod_r X A W))
              (fun e => (ap_baut_prod_r X A e)^)).
-    refine ((isconnected_elim (Tr -1) (A := A) _ _).1).
+    refine ((isconnected_elim (Tr (-1)) (A := A) _ _).1).
     { apply contr_inhabited_hprop;
         [ exact _ | refine (merely_isconnected n A) ]. }
     intros a0.

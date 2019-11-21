@@ -146,7 +146,7 @@ Global Instance indecomposable_0connected `{Univalence}
        (X : Type) `{IsConnected 0 X}
 : Indecomposable X.
 Proof.
-  assert (IsConnected -1 X) by refine (isconnected_pred -1 X).
+  assert (IsConnected (-1) X) by refine (isconnected_pred (-1) X).
   constructor.
   - intros A B f.
     assert (z := center (merely X) : merely X); generalize z.

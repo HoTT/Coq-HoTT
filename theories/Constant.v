@@ -53,7 +53,7 @@ Defined.
 (**  We say that [f] is *conditionally constant* if it factors through the propositional truncation [merely X], and *constant* if it factors through [Unit]. *)
 
 Definition ConditionallyConstant {X Y : Type} (f : X -> Y)
-  := ExtensionAlong (@tr -1 X) (fun _ => Y) f.
+  := ExtensionAlong (@tr (-1) X) (fun _ => Y) f.
 
 (** We don't yet have a need for a predicate [Constant] on functions; we do already have the operation [const] which constructs the constant function at a given point.  Every such constant function is, of course, conditionally constant. *)
 Definition cconst_const {X Y} (y : Y)
@@ -112,10 +112,10 @@ Definition cconst_wconst_hset `{Funext} {X Y : Type} (f : X -> Y)
 Proof.
   assert (Ys' : merely X -> IsHSet Y).
   { apply Trunc_rec. intros x; exact (Ys x). }
-  simple refine (cconst_factors_hprop f (image -1 f) _ _ _).
+  simple refine (cconst_factors_hprop f (image (-1) f) _ _ _).
   - apply hprop_allpath; intros [y1 p1] [y2 p2].
     apply path_sigma_hprop; simpl.
-    pose proof (Ys' (Trunc_functor -1 pr1 p1)).
+    pose proof (Ys' (Trunc_functor (-1) pr1 p1)).
     strip_truncations.
     destruct p1 as [x1 q1], p2 as [x2 q2].
     exact (q1^ @ wconst x1 x2 @ q2).

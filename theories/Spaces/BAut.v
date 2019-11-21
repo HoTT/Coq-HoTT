@@ -85,7 +85,7 @@ Defined.
 Definition baut_prod_r (X A : Type)
   : BAut X -> BAut (X * A)
   := fun Z:BAut X =>
-       (Z * A ; Trunc_functor -1 (ap (fun W => W * A)) (pr2 Z))
+       (Z * A ; Trunc_functor (-1) (ap (fun W => W * A)) (pr2 Z))
        : BAut (X * A).
 
 Definition ap_baut_prod_r `{Univalence} (X A : Type)

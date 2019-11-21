@@ -585,9 +585,6 @@ Definition trunc_index_to_int n :=
   end.
 
 Numeral Notation trunc_index int_to_trunc_index trunc_index_to_int : trunc_scope (warning after 5000).
-(** We declare [-2] and [-1] as notations so that they bind tighter than application, so we can write [IsTrunc -1] rather than [IsTrunc (-1)]. *)
-Notation "-2" := (- 2) : trunc_scope.
-Notation "-1" := (- 1) : trunc_scope.
 
 Fixpoint IsTrunc_internal (n : trunc_index) (A : Type) : Type :=
   match n with
@@ -631,8 +628,8 @@ progress match goal with
              => change (forall (a : A) (b : B a) (c : C a b) (d : D a b c), IsTrunc n.+1 (T a b c d)) in H; cbv beta in H
          end : core.
 
-Notation Contr := (IsTrunc -2).
-Notation IsHProp := (IsTrunc -1).
+Notation Contr := (IsTrunc (-2)).
+Notation IsHProp := (IsTrunc (-1)).
 Notation IsHSet := (IsTrunc 0).
 
 Hint Extern 0 => progress change Contr_internal with Contr in * : typeclass_instances.

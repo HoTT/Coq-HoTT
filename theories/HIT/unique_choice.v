@@ -18,7 +18,7 @@ Lemma iota {X} (P:X-> Type):
   (forall x, IsHProp (P x)) -> (hunique P) -> sigT P.
 Proof.
 intros H1 [H H0].
-apply (@Trunc_rec -1 (sigT P) );auto.
+apply (@Trunc_rec (-1) (sigT P) );auto.
 by apply hprop_allpath, atmost.
 Qed.
 

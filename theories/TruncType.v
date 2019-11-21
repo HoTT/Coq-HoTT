@@ -92,7 +92,7 @@ Proof.
 Qed.
 
 Definition path_hset {A B} := @path_trunctype 0 A B.
-Definition path_hprop {A B} := @path_trunctype -1 A B.
+Definition path_hprop {A B} := @path_trunctype (-1) A B.
 
 Global Instance istrunc_trunctype@{i j k | i < j, j < k} {n : trunc_index}
   : IsTrunc@{j} n.+1 (TruncType@{i} n) | 0.
