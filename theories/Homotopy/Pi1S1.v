@@ -18,14 +18,15 @@ Section Pi1S1.
   Context `{Univalence}.
 
   Local Notation "( A , a )" := (Build_pType A a).
-  Local Infix "≅" := GroupIsomorphism (at level 20).
+
+(*   Local Infix "≅" := GroupIsomorphism (at level 20).
   Local Notation "'π'" := HomotopyGroup (at level 0).
   Local Infix "×" := group_prod (at level 5).
-
+ *)
   Local Open Scope int_scope.
   Local Open Scope pointed_scope.
 
-  Theorem Pi1Circle : π 1 (S1, base) ≅ Z.
+  Theorem Pi1Circle : GroupIsomorphism (Pi 1 (S1, base)) Z.
   Proof.
     (** We give the isomorphism backwards, so we check the operation is preserved coming from the integer side. *)
     symmetry.
@@ -39,7 +40,7 @@ Section Pi1S1.
     apply loopexp_add.
   Defined.
 
-  Theorem Pi1S1 : π 1 (psphere 1) ≅ Z.
+  Theorem Pi1S1 : GroupIsomorphism (Pi 1 (psphere 1)) Z.
   Proof.
     etransitivity.
     2: apply Pi1Circle.

@@ -63,6 +63,13 @@ Proof.
     apply concat_pV.
 Defined.
 
+(** HomotopyGroup can be a bit of a mouthful so we define a notation for it. *)
+Global Notation Pi := HomotopyGroup.
+
+Module PiUtf8.
+  Notation "'π'" := HomotopyGroup (at level 0).
+End PiUtf8.
+
 (** When n >= 2 we have that the nth homotopy group is an abelian group. Note that we don't actually define it as an abelian group but merely show that it is one. This would cause lots of complications with the typechecker. *)
 Global Instance isabgroup_homotopygroup (n : nat) (X : pType)
   : IsAbGroup (HomotopyGroup n.+2 X).
@@ -95,15 +102,10 @@ Proof.
     { apply Trunc_functor.
       apply iterated_loops_functor.
       assumption. }
+    (** Note: we don't have to be careful about which paths we choose here since we are trying to inhabit a proposition. *)
     intros x y.
     strip_truncations.
-    cbv zeta beta.
-    unfold sg_op.
-    unfold Trunc_functor.
-    unfold O_functor.
-    unfold O_rec.
-    cbn.
-    serapply ap.
+    apply (ap tr); cbn.
     rewrite 2 concat_pp_p.
     apply whiskerL.
     rewrite 2 concat_p_pp.
@@ -114,64 +116,60 @@ Proof.
     apply ap_pp.
 Defined.
 
+(** We define a notation for homotopygroup_functor too. *)
+Global Notation pi_functor := homotopygroup_functor.
+
 Definition homotopygroup_functor_idmap n {X : pType}
-  : homotopygroup_functor n.+1 (@pmap_idmap X) == idmap.
+  : pi_functor n.+1 (@pmap_idmap X) == idmap.
 Proof.
   intro x.
   strip_truncations.
-  change (@tr 0 _ (iterated_loops_functor n.+1 pmap_idmap x) = tr x).
-  apply ap, iterated_loops_functor_idmap.
+  apply (ap tr), iterated_loops_functor_idmap.
 Defined.
 
 Definition homotopygroup_functor_compose n {X Y Z : pType}
   (f : X ->* Y) (g : Y ->* Z)
-  : homotopygroup_functor n.+1 (g o* f)
-    == homotopygroup_functor n.+1 g o homotopygroup_functor n.+1 f.
+  : pi_functor n.+1 (g o* f) == pi_functor n.+1 g o pi_functor n.+1 f.
 Proof.
   intro x.
   strip_truncations.
-  change (@tr 0 _ (iterated_loops_functor n.+1 (g o* f) x) =
-   tr (((iterated_loops_functor n.+1 g) o* (iterated_loops_functor n.+1 f)) x)).
-  apply ap, iterated_loops_functor_compose.
+  apply (ap tr), iterated_loops_functor_compose.
 Defined.
 
-Definition homotopygroup_2functor n {X Y : pType} (f g : X ->* Y)
-  : f ==* g -> homotopygroup_functor n.+1 f == homotopygroup_functor n.+1 g.
+Definition homotopygroup_2functor n
+  {X Y : pType} (f g : X ->* Y) (p : f ==* g)
+  : pi_functor n.+1 f == pi_functor n.+1 g.
 Proof.
-  intro p.
   by apply O_functor_homotopy, iterated_loops_2functor.
 Defined.
 
-Definition groupiso_homotopygroup_functor (n : nat) {X Y : pType} (e : X <~>* Y)
-  : GroupIsomorphism (HomotopyGroup n.+1 X) (HomotopyGroup n.+1 Y).
+Definition groupiso_homotopygroup_functor (n : nat)
+  {X Y : pType} (e : X <~>* Y)
+  : GroupIsomorphism (Pi n.+1 X) (Pi n.+1 Y).
 Proof.
   serapply Build_GroupIsomorphism.
   1: apply (homotopygroup_functor n.+1 e).
   serapply isequiv_adjointify.
-  { apply (homotopygroup_functor n.+1).
-    apply e^-1*. }
-  { intro.
+  + apply (homotopygroup_functor n.+1).
+    apply e^-1*.
+  + intro.
     refine (_^ @ _ @ _).
     1: apply homotopygroup_functor_compose.
     2: apply homotopygroup_functor_idmap.
     apply homotopygroup_2functor.
-    apply peisretr. }
-  { intro.
+    apply peisretr.
+  + intro.
     refine (_^ @ _ @ _).
     1: apply homotopygroup_functor_compose.
     2: apply homotopygroup_functor_idmap.
     apply homotopygroup_2functor.
-    apply peissect. }
+    apply peissect.
 Defined.
-
-(* TODO: move these to a Utf8 file and make them more global. *)
-Local Infix "≅" := GroupIsomorphism (at level 20).
-Local Notation "'π'" := HomotopyGroup (at level 0).
-Local Infix "×" := group_prod (at level 5).
 
 (** Homotopy groups preserve products *)
 Lemma homotopygroup_prod (X Y : pType) {n : nat}
-  : π n.+1 (X * Y) ≅ ((π n.+1 X) × (π n.+1 Y)).
+  : GroupIsomorphism (Pi n.+1 (X * Y))
+      (group_prod (Pi n.+1 X) (Pi n.+1 Y)).
 Proof.
   serapply Build_GroupIsomorphism'.
   { refine (equiv_O_prod_cmp _ _ _ oE _).

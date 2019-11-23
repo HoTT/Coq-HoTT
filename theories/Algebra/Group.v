@@ -3,6 +3,7 @@ Require Import Types.
 Require Import PathAny.
 Require Export Classes.interfaces.abstract_algebra.
 Require Export Classes.theory.groups.
+Require Basics.Utf8.
 
 (** ** Groups *)
 
@@ -71,7 +72,6 @@ Class GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
 
 (* We coerce a homomorphism to its underlying map. *)
 Coercion grp_homo_map : GroupHomomorphism >-> Funclass.
-(* Notation "G '->G' H" := (GroupHomomorphism G H) (at level 20). *)
 
 Definition issig_GroupHomomorphism {G H : Group} : _ <~> GroupHomomorphism G H
   := ltac:(issig).
@@ -298,7 +298,7 @@ Proof.
     1,2: apply right_inverse. }
 Defined.
 
-Definition groupiso_prod {A B C D : Group}
+Definition grp_iso_prod {A B C D : Group}
   : GroupIsomorphism A B -> GroupIsomorphism C D
     -> GroupIsomorphism (group_prod A C) (group_prod B D).
 Proof.
@@ -311,3 +311,14 @@ Proof.
   apply path_prod.
   1,2: apply grp_homo_op.
 Defined.
+
+
+(** TODO: If #1140 gets resolved, include this: *)
+(* Module GroupUtf8.
+
+  Import Basics.Utf8.
+  Infix "≅" := GroupIsomorphism.
+  Infix "×" := group_prod.
+
+End GroupUtf8.
+ *)

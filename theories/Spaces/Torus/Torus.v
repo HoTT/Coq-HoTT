@@ -86,6 +86,9 @@ Definition Torus_rec_beta_surf (P : Type) (pb : P) (pla plb : pb = pb)
 Proof.
 Admitted.
 
+(** The torus is pointed. *)
+Global Instance ispointed_torus : IsPointed Torus := tbase.
+
 (* TODO:
 (* We ought to be able to prove the computation rules all at the same time *)
 (* This gives me the idea of writing all our computation rules as a

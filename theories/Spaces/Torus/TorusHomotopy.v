@@ -1,7 +1,7 @@
 Require Import Basics.
 Require Import Types.
-Require Algebra.Group.
-Require Algebra.AbelianGroup.
+Require Import Algebra.Group.
+Require Import Algebra.AbelianGroup.
 Require Import Homotopy.Pi1S1.
 Require Import Algebra.Z.
 Require Import Pointed.
@@ -14,14 +14,17 @@ Import TrM.
 Require Import Torus.
 Require Import TorusEquivCircles.
 
-(* The torus is 1-truncated *)
+Local Open Scope trunc_scope.
+Local Open Scope pointed_scope.
+
+(** The torus is 1-truncated *)
 
 Global Instance is1type_Torus `{Univalence} : IsTrunc 1 Torus.
 Proof.
-  serapply (inO_equiv_inO (O:=1) _ equiv_torus_prod_S1^-1).
+  refine (trunc_equiv _ equiv_torus_prod_S1^-1).
 Qed.
 
-(* The torus is 0-connected *)
+(** The torus is 0-connected *)
 
 Global Instance isconnected_Torus `{Univalence} : IsConnected 0 Torus.
 Proof.
@@ -29,15 +32,11 @@ Proof.
   serapply (isconnected_equiv' _ _ (equiv_sigma_prod0 _ _)).
 Qed.
 
-(* Loop space of Torus *)
+(** We give these notations for the pointed versions. *)
+Local Notation T := (Build_pType Torus _).
+Local Notation S1 := (Build_pType S1 _).
 
-Global Instance ispointed_torus : IsPointed Torus := tbase.
-
-Local Open Scope pointed_scope.
-
-Notation T := (Build_pType Torus _).
-Notation S1 := (Build_pType S1 _).
-
+(** Loop space of Torus *)
 Theorem loops_torus `{Univalence} : loops T <~>* Int * Int.
 Proof.
   srefine (_ o*E _).
@@ -51,7 +50,7 @@ Proof.
   srefine (_ o*E _).
   1: exact (loops S1 * loops S1).
   1: apply loops_prod.
-  serapply Build_pEquiv.
+  simple notypeclasses refine (Build_pEquiv _ _ _ _).
   1: serapply Build_pMap.
   { apply functor_prod.
     1,2: apply equiv_loopS1_int. }
@@ -68,21 +67,14 @@ Defined.
 
 (* Fundamental group of Torus *)
 
-Import Algebra.Group.
-Import Algebra.AbelianGroup.
-
-Local Notation "( A , a )" := (Build_pType A a).
-Local Infix "≅" := GroupIsomorphism (at level 20).
-Local Notation "'π'" := HomotopyGroup (at level 0).
-Local Infix "×" := group_prod (at level 5).
-
-Theorem Pi1Torus `{Univalence} : π 1 T ≅ Z × Z.
+Theorem Pi1Torus `{Univalence}
+  : GroupIsomorphism (Pi 1 T) (group_prod Z Z).
 Proof.
   etransitivity.
   { apply groupiso_homotopygroup_functor.
     apply pequiv_torus_prod_circles. }
   etransitivity.
   1: apply homotopygroup_prod.
-  apply groupiso_prod.
+  apply grp_iso_prod.
   1,2: apply Pi1Circle.
 Defined.
