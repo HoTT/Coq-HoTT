@@ -48,6 +48,8 @@ Reserved Notation "n .+2" (at level 2, left associativity, format "n .+2").
 Reserved Notation "n .+3" (at level 2, left associativity, format "n .+3").
 Reserved Notation "n .+4" (at level 2, left associativity, format "n .+4").
 Reserved Notation "n .+5" (at level 2, left associativity, format "n .+5").
+Reserved Notation "n '.-1'" (at level 2, left associativity, format "n .-1").
+Reserved Notation "n '.-2'" (at level 2, left associativity, format "n .-2").
 Reserved Notation "n -Type" (at level 1).
 Reserved Notation "p ..1" (at level 3).
 Reserved Notation "p ..2" (at level 3).
