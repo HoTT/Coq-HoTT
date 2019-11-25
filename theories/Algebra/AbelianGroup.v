@@ -287,7 +287,7 @@ Section AbelGroup.
 End AbelGroup.
 
 (** We can easily prove that ab is a surjection. *)
-Lemma issurj_ab `{Funext} {G : Group} : IsSurjection ab.
+Global Instance issurj_ab `{Funext} {G : Group} : IsSurjection ab.
 Proof.
   serapply Abel_ind_hprop.
   intro x; cbn.
@@ -342,3 +342,105 @@ Section Abelianization.
   Defined.
 
 End Abelianization.
+
+Theorem groupiso_isabelianization
+  (F1 F2 : Group -> AbGroup)
+  (eta1 : forall X, GroupHomomorphism X (F1 X))
+  (eta2 : forall X, GroupHomomorphism X (F2 X))
+  {x : IsAbelianization F1 eta1}
+  {y : IsAbelianization F2 eta2}
+  (G : Group) : GroupIsomorphism (F1 G) (F2 G).
+Proof.
+  unfold IsAbelianization in x, y.
+  destruct (x G (F2 G) (eta2 G)) as [[a ah] ac].
+  destruct (y G (F1 G) (eta1 G)) as [[b bh] bc].
+  destruct (x G (F1 G) (eta1 G)) as [[c ch] cc].
+  destruct (y G (F2 G) (eta2 G)) as [[d dh] dc].
+  serapply (Build_GroupIsomorphism _ _ a).
+  serapply (isequiv_adjointify _ b).
+  { apply ap10.
+    change (@grp_homo_map _ _ (grp_homo_compose a b)
+      = @grp_homo_map _ _ grp_homo_id).
+    refine (ap (@grp_homo_map _ _) _).
+    refine (ap pr1 ((dc (_; _))^ @ dc (grp_homo_id; _))).
+    1: exact (fun i => ah i @ ap a (bh i)).
+    reflexivity. }
+  { apply ap10.
+    change (@grp_homo_map _ _ (grp_homo_compose b a)
+      = @grp_homo_map _ _ grp_homo_id).
+    refine (ap (@grp_homo_map _ _) _).
+    refine (ap pr1 ((cc (_; _))^ @ cc (grp_homo_id; _))).
+    1: exact (fun i => bh i @ ap b (ah i)).
+    reflexivity. }
+Defined.
+
+Global Instance isequiv_groupiso_isabelianization
+  (F1 F2 : Group -> AbGroup)
+  (eta1 : forall X, GroupHomomorphism X (F1 X))
+  (eta2 : forall X, GroupHomomorphism X (F2 X))
+  `{IsAbelianization F1 eta1}
+  `{IsAbelianization F2 eta2}
+  (G : Group)
+  : IsEquiv (groupiso_isabelianization F1 F2 eta1 eta2 G).
+Proof.
+  exact _.
+Defined.
+
+Theorem homotopic_isabelianization (F1 F2 : Group -> AbGroup)
+  (eta1 : forall X, GroupHomomorphism X (F1 X))
+  (eta2 : forall X, GroupHomomorphism X (F2 X))
+  {x : IsAbelianization F1 eta1}
+  {y : IsAbelianization F2 eta2}
+  (G : Group)
+  : eta2 G
+   == grp_homo_compose (groupiso_isabelianization F1 F2 eta1 eta2 G) (eta1 G).
+Proof.
+  unfold IsAbelianization in x, y.
+  destruct (x G (F2 G) (eta2 G)) as [[a ah] ac].
+  destruct (y G (F1 G) (eta1 G)) as [[b bh] bc].
+  refine (transport (fun e : GroupHomomorphism (F1 G) (F2 G)
+    => _ == (fun x : G => e (eta1 G x))) (ap pr1 (ac _)) ah).
+Defined.
+
+(** Hence any abelianization is surjective. *)
+Global Instance issurj_isabelianization `{Funext}
+  (F : Group -> AbGroup)
+  (eta : forall X, GroupHomomorphism X (F X))
+  : IsAbelianization F eta -> forall G, IsSurjection (eta G).
+Proof.
+  intros k G.
+  pose (homotopic_isabelianization F abel eta abel_unit G) as p.
+  simpl in p.
+  refine (@cancelR_isequiv_conn_map _ _ _ _ _ _ _
+    (conn_map_homotopic _ _ _ p _)).
+  apply (isequiv_groupiso_isabelianization F abel eta abel_unit G).
+Qed.
+
+Definition isequiv_abgroup_abelianization `{U : Univalence}
+  (F : Group -> AbGroup)
+  (eta : forall X, GroupHomomorphism X (F X))
+  {H : IsAbelianization F eta}
+  (A : AbGroup) : IsEquiv (eta A).
+Proof.
+  destruct (H A A grp_homo_id) as [[a ah] ac].
+  serapply (isequiv_adjointify (eta A) a).
+  + simpl.
+    Require HIT.epi.
+    apply ap10.
+    pose (epi.issurj_isepi (eta A) _) as i.
+    refine (i _ _ idmap _).
+    apply path_forall.
+    intro x.
+    apply ap.
+    symmetry.
+    apply ah.
+  + change (a o eta A == idmap); symmetry.
+    apply ah.
+Defined.
+
+
+
+
+
+
+
