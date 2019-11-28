@@ -144,3 +144,59 @@ Section Join.
   Defined.
 
 End Join.
+
+(** Diamond lemmas for Join *)
+Section Diamond.
+
+  Context {A B : Type}.
+
+  Definition Diamond (a a' : A) (b b' : B)
+    := Square (jglue a b) (jglue a' b')^ (jglue a b') (jglue a' b)^.
+
+  Definition diamond_h {a a' : A} (b b' : B) (p : a = a')
+    : Diamond a a' b b'.
+  Proof.
+    destruct p.
+    apply sq_path.
+    exact (concat_pV _ @ (concat_pV _)^).
+  Defined.
+
+  Definition diamond_v (a a' : A) {b b' : B} (p : b = b')
+    : Diamond a a' b b'.
+  Proof.
+    destruct p.
+    by apply sq_path.
+  Defined.
+
+  Lemma diamond_symm (a : A) (b : B)
+    : diamond_v a a 1 = diamond_h b b 1.
+  Proof.
+    unfold diamond_v, diamond_h.
+    symmetry; apply ap, concat_pV.
+  Defined.
+
+End Diamond.
+
+Definition diamond_twist {A : Type} {a a' : A} (p : a = a')
+  : DPath (fun x => Diamond a' x a x) p
+    (diamond_v a' a 1) (diamond_h a a' 1).
+Proof.
+  destruct p.
+  apply diamond_symm.
+Defined.
+
+Definition join_natsq_v {A B : Type} {a a' : A} {b b' : B}
+  (p : a = a') (q : b = b')
+  : Square (ap joinl p) (ap joinr q) (jglue a b) (jglue a' b').
+Proof.
+  destruct p, q.
+  apply sq_refl_v.
+Defined.
+
+Definition join_natsq_h {A B : Type} {a a' : A} {b b' : B}
+  (p : a = a') (q : b = b')
+  : Square (jglue a b) (jglue a' b') (ap joinl p) (ap joinr q).
+Proof.
+  destruct p, q.
+  apply sq_refl_h.
+Defined.
