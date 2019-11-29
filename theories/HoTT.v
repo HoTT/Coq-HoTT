@@ -115,6 +115,7 @@ Require Export HoTT.Algebra.ooAction.
 
 Require Export HoTT.Homotopy.HomotopyGroup.
 Require Export HoTT.Homotopy.Pi1S1.
+Require Export HoTT.Homotopy.WhiteheadsPrinciple.
 Require Export HoTT.Homotopy.BlakersMassey.
 Require Export HoTT.Homotopy.Freudenthal.
 Require Export HoTT.Homotopy.Suspension.

@@ -83,35 +83,52 @@ Proof.
   serapply Build_IsAbGroup.
 Defined.
 
-Section PiFunctor.
-
-  Local Open Scope pointed_scope.
-
-  Context
-    {n : nat}
-    {X Y : pType}
-    (f : X ->* Y).
-
-  Definition functor_pi : Pi n.+1 X -> Pi n.+1 Y.
-  Proof.
-    serapply Trunc_functor.
-    serapply iterated_loops_functor.
-    exact f.
-  Defined.
-
-  Global Instance functor_pi_homomorphism : IsMonoidPreserving functor_pi.
-  Proof.
-    apply Build_IsMonoidPreserving.
-    + intros x y.
-      strip_truncations.
-      apply path_Tr, tr, loops_functor_pp.
-    + apply path_Tr, tr; cbn.
-      destruct n; hott_simpl.
-  Defined.
-
-End PiFunctor.
+Definition pi_loops n X : Pi n.+1 X <~> Pi n (loops X).
+Proof.
+  apply equiv_O_functor.
+  apply pointed_equiv_equiv.
+  apply unfold_iterated_loops'.
+Defined.
 
 Local Open Scope pointed_scope.
+
+Definition functor_pi (n : nat) {X Y : pType} (f : X ->* Y)
+  : Pi n.+1 X -> Pi n.+1 Y.
+Proof.
+  serapply Trunc_functor.
+  serapply iterated_loops_functor.
+  exact f.
+Defined.
+
+Global Instance functor_pi_homomorphism (n : nat) {X Y : pType} (f : X ->* Y)
+  : IsMonoidPreserving (functor_pi n f).
+Proof.
+  apply Build_IsMonoidPreserving.
+  + intros x y.
+    strip_truncations.
+    apply path_Tr, tr, loops_functor_pp.
+  + apply path_Tr, tr; cbn.
+    destruct n; hott_simpl.
+Defined.
+
+Definition functor_pi_homotopy (n : nat) {X Y : pType} {f g : X ->* Y}
+           (h : f ==* g)
+  : functor_pi n f == functor_pi n g.
+Proof.
+  intros x; apply O_functor_homotopy, iterated_loops_2functor; exact h.
+Defined.
+
+Definition functor_pi_loops (n : nat) {X Y : pType} (f : X ->* Y)
+  : (pi_loops n.+1 Y) o (functor_pi n.+1 f)
+    == (functor_pi n (loops_functor f)) o (pi_loops n.+1 X).
+Proof.
+  intros x.
+  unfold pi_loops, functor_pi, equiv_O_functor, Trunc_functor.
+  refine ((O_functor_compose 0 _ _ _)^ @ _).
+  refine (_ @ (O_functor_compose 0 _ _ _)).
+  apply O_functor_homotopy.
+  exact (pointed_htpy (unfold_iterated_loops_functor n.+1 f)).
+Defined.
 
 (* Homotopy groups of product space *)
 Lemma Pi_prod (X Y : pType) {n}

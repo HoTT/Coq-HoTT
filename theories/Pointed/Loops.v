@@ -39,10 +39,6 @@ Proof.
   by refine (ap loops IHn @ _).
 Defined.
 
-Definition unfold_iterated_loops' (n : nat) (X : pType)
-  : iterated_loops n.+1 X <~>* iterated_loops n (loops X)
-  := pequiv_path (unfold_iterated_loops n X).
-
 (** The loop space decreases the truncation level by one.  We don't bother making this an instance because it is automatically found by typeclass search, but we record it here in case anyone is looking for it. *)
 Definition istrunc_loops {n} (A : pType) `{IsTrunc n.+1 A}
   : IsTrunc n (loops A) := _.
@@ -62,13 +58,13 @@ Proof.
   refine (concat_1p _ @ (concat_p1 _)^).
 Defined.
 
-Fixpoint iterated_loops_functor {A B : pType} (n : nat) 
+Definition iterated_loops_functor {A B : pType} (n : nat) 
   : (A ->* B) -> (iterated_loops n A) ->* (iterated_loops n B).
 Proof.
-  destruct n.
+  induction n as [|n IHn].
   1: exact idmap.
   refine (loops_functor o _).
-  apply iterated_loops_functor.
+  apply IHn.
 Defined.
 
 (* Loops functor respects composition *)
@@ -118,10 +114,18 @@ Lemma iterated_loops_functor_compose n A B C (f : B ->* C)
   (g : A ->* B) : iterated_loops_functor n (f o* g)
   ==* (iterated_loops_functor n f) o* (iterated_loops_functor n g).
 Proof.
-  induction n; cbn.
+  induction n as [|n IHn]; cbn.
   1: reflexivity.
   refine (_ @* (loops_functor_compose _ _)).
   apply loops_2functor, IHn.
+Defined.
+
+(* Iterated loops functor respects homotopies *)
+Definition iterated_loops_2functor n {A B : pType}
+           {f g : A ->* B} (p : f ==* g)
+  : (iterated_loops_functor n f) ==* (iterated_loops_functor n g).
+Proof.
+  induction n as [|n IHn]; [ assumption | apply loops_2functor, IHn ].
 Defined.
 
 (** The loop space functor decreases the truncation level by one.  *)
@@ -176,7 +180,7 @@ Proof.
   apply isequiv_path_inverse.
 Defined.
 
-(* Loops functor preserves equivalences *)
+(** Loops functor preserves equivalences *)
 Definition pequiv_loops_functor {A B : pType}
   : A <~>* B -> loops A <~>* loops B.
 Proof.
@@ -190,6 +194,37 @@ Proof.
   apply peissect.
 Defined.
 
+(** A version of [unfold_iterated_loops] that's an equivalence rather than an equality.  We could get this from the equality, but it's more useful to construct it explicitly since then we can reason about it.  *)
+Definition unfold_iterated_loops' (n : nat) (X : pType)
+  : iterated_loops n.+1 X <~>* iterated_loops n (loops X).
+Proof.
+  induction n.
+  1: reflexivity.
+  change (iterated_loops n.+2 X)
+    with (loops (iterated_loops n.+1 X)).
+  apply pequiv_loops_functor, IHn.
+Defined.
+
+(** For instance, we can prove that it's natural. *)
+Definition unfold_iterated_loops_functor {A B : pType} (n : nat) (f : A ->* B)
+  : (unfold_iterated_loops' n B) o* (iterated_loops_functor n.+1 f)
+    ==* (iterated_loops_functor n (loops_functor f)) o* (unfold_iterated_loops' n A).
+Proof.
+  induction n.
+  - srefine (Build_pHomotopy _ _).
+    + reflexivity.
+    + cbn.
+      refine (concat_1p _ @ _).
+      refine (concat_1p _ @ _).
+      refine (_ @ (concat_p1 _)^).
+      exact ((ap_idmap _)^).
+  - refine ((loops_functor_compose _ _)^* @* _).
+    refine (_ @* (loops_functor_compose _ _)).
+    apply loops_2functor.
+    apply IHn.
+Defined.
+
+(** Iterated loops preserves equivalences *)
 Lemma pequiv_iterated_loops_functor {A B n} : A <~>* B
   -> iterated_loops n A <~>* iterated_loops n B.
 Proof.

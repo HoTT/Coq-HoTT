@@ -1427,16 +1427,19 @@ Definition Book_7_6_2 := @HoTT.Fibrations.equiv_istruncmap_ap.
 (* ================================================== thm:whitehead0 *)
 (** Theorem 8.8.1 *)
 
+Definition Book_8_8_1 := @HoTT.Homotopy.WhiteheadsPrinciple.isequiv_issurj_tr0_isequiv_ap.
 
 
 (* ================================================== thm:whitehead1 *)
 (** Corollary 8.8.2 *)
 
+Definition Book_8_8_2 := @HoTT.Homotopy.WhiteheadsPrinciple.isequiv_isbij_tr0_isequiv_loops.
 
 
 (* ================================================== thm:whiteheadn *)
 (** Theorem 8.8.3 *)
 
+Definition Book_8_8_3 := @HoTT.Homotopy.WhiteheadsPrinciple.whiteheads_principle.
 
 
 (* ================================================== thm:whitehead-contr *)
