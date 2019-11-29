@@ -33,6 +33,9 @@ Fixpoint psphere (n : nat) : pType
       | S n' => psusp (psphere n')
      end.
 
+Arguments Sphere : simpl never.
+Arguments psphere : simpl never.
+
 (** ** Explicit equivalences in low dimensions  *)
 
 (** *** [Sphere 0] *)
