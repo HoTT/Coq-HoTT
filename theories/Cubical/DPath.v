@@ -41,6 +41,13 @@ Proof.
   apply (trunc_equiv _ dp_path_transport).
 Defined.
 
+Definition dp_ishprop {A : Type} (P : A -> Type) {a0 a1} {p : a0 = a1}
+  {b0 : P a0} {b1 : P a1} `{IsHProp (P a0)} `{IsHProp (P a1)}
+  : DPath P p b0 b1.
+Proof.
+  apply dp_path_transport, path_ishprop.
+Defined.
+
 (* Here is a notation for DPaths that can make it easier to use *)
 Notation "x =[ q ] y" := (DPath (fun t => DPath _ t _ _) q x y) (at level 10)
   : dpath_scope.
