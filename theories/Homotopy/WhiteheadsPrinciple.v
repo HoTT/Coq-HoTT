@@ -72,7 +72,7 @@ Definition whiteheads_principle
            (n : trunc_index) {H0 : IsTrunc n A} {H1 : IsTrunc n B}
            {i  : IsEquiv (Trunc_functor 0 f)}
            {ii : forall (x : A) (k : nat),
-               IsEquiv (functor_pi k
+               IsEquiv (pi_functor k.+1
                           (Build_pMap (Build_pType A x) (Build_pType B (f x))
                                       f 1%path))}
   : IsEquiv f.
@@ -90,27 +90,27 @@ Proof.
   pose proof (@istrunc_paths _ _ H1 (f x) (f x)) as h1.
   ntc_refine (IHn (x=x) (f x=f x) h0 h1 (@ap _ _ f x x) _ _).
   - pose proof (ii x 0) as h2.
-    unfold functor_pi in h2; cbn in h2.
+    unfold pi_functor in h2; cbn in h2.
     refine (@isequiv_homotopic _ _ _ _ h2 _).
     apply O_functor_homotopy; intros p.
     exact (concat_1p _ @ concat_p1 _).
   - intros p k; revert p.
     assert (h3 : forall (y:A) (q:x=y),
-               IsEquiv (functor_pi
-                          k (Build_pMap
-                               (Build_pType (x=y) q)
-                               (Build_pType (f x = f y) (ap f q))
-                               (@ap _ _ f x y) (idpath (ap f q))))).
+               IsEquiv (pi_functor k.+1
+                          (Build_pMap
+                             (Build_pType (x=y) q)
+                             (Build_pType (f x = f y) (ap f q))
+                             (@ap _ _ f x y) (idpath (ap f q))))).
     2:exact (h3 x).
     intros y q. destruct q.
     pose (fp := Build_pMap (Build_pType A x) (Build_pType B (f x))
                            f 1%path).
-    ntc_refine (isequiv_homotopic (functor_pi k (loops_functor fp)) _).
-    2:{ apply functor_pi_homotopy; srefine (Build_pHomotopy _ _).
+    ntc_refine (isequiv_homotopic (pi_functor k.+1 (loops_functor fp)) _).
+    2:{ apply pi_2functor; srefine (Build_pHomotopy _ _).
         - intros p; cbn.
           refine (concat_1p _ @ concat_p1 _).
         - reflexivity. }
-    ntc_refine (isequiv_commsq _ _ _ _ (functor_pi_loops k fp)).
-    2-3:exact _.
+    ntc_refine (isequiv_commsq _ _ _ _ (pi_functor_loops k.+1 fp)).
+    2-3:refine (equiv_isequiv (pi_loops _ _)).
     exact (ii x k.+1).
 Defined.

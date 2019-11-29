@@ -20,6 +20,24 @@ Definition ptr_functor {X Y : pType} (n : trunc_index) (f : X ->* Y)
   : pTr n X ->* pTr n Y := Build_pMap (pTr n X) (pTr n Y)
     (Trunc_functor n f) (ap (@tr n Y) (point_eq f)).
 
+Definition ptr_functor_pmap_idmap {X : pType} n
+  : ptr_functor n (@pmap_idmap X) ==* pmap_idmap.
+Proof.
+  serapply Build_pHomotopy.
+  { intro x.
+    by strip_truncations. }
+  reflexivity.
+Defined.
+
+Definition ptr_functor_pmap_compose n {X Y Z : pType} (f : X ->* Y) (g : Y ->* Z)
+  : ptr_functor n (g o* f) ==* ptr_functor n g o* ptr_functor n f.
+Proof.
+  serapply Build_pHomotopy.
+  { intro x.
+    by strip_truncations. }
+  by pointed_reduce.
+Defined.
+
 Definition ptr_pequiv {X Y : pType} (n : trunc_index) (f : X <~>* Y)
   : pTr n X <~>* pTr n Y := Build_pEquiv _ _ (ptr_functor n f) _.
 

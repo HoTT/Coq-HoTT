@@ -120,6 +120,27 @@ Proof.
   apply loops_2functor, IHn.
 Defined.
 
+Lemma iterated_loops_functor_idmap (A : pType) n
+  : iterated_loops_functor n (@pmap_idmap A) ==* pmap_idmap.
+Proof.
+  induction n; cbn.
+  1: reflexivity.
+  etransitivity.
+  2: apply loops_functor_idmap.
+  apply loops_2functor, IHn.
+Defined.
+
+Lemma iterated_loops_functor_pp {X Y : pType} (f : pMap X Y) n
+  (x y : iterated_loops n.+1 X) : iterated_loops_functor n.+1 f (x @ y)
+    = iterated_loops_functor n.+1 f x @ iterated_loops_functor n.+1 f y.
+Proof.
+  induction n.
+  1: apply loops_functor_pp.
+  change (iterated_loops_functor n.+2 f)
+    with (loops_functor (iterated_loops_functor n.+1 f)).
+  apply loops_functor_pp.
+Defined.
+
 (* Iterated loops functor respects homotopies *)
 Definition iterated_loops_2functor n {A B : pType}
            {f g : A ->* B} (p : f ==* g)
@@ -225,13 +246,22 @@ Proof.
 Defined.
 
 (** Iterated loops preserves equivalences *)
-Lemma pequiv_iterated_loops_functor {A B n} : A <~>* B
+Lemma pequiv_iterated_loops_functor {A B} n : A <~>* B
   -> iterated_loops n A <~>* iterated_loops n B.
 Proof.
   intros f.
   induction n.
   1: apply f.
   by apply pequiv_loops_functor.
+Defined.
+
+(** Since that was a separate induction, its underlying function is only homotopic to [iterated_loops_functor n], not definitionally equal. *)
+Definition pequiv_iterated_loops_functor_is_iterated_loops_functor {A B} n (f : A <~>* B)
+  : pequiv_iterated_loops_functor n f ==* iterated_loops_functor n f.
+Proof.
+  induction n as [|n IHn].
+  - reflexivity.
+  - apply loops_2functor, IHn.
 Defined.
 
 (* Loops preserves products *)

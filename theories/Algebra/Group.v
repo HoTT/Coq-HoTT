@@ -3,6 +3,8 @@ Require Import Types.
 Require Import PathAny.
 Require Export Classes.interfaces.abstract_algebra.
 Require Export Classes.theory.groups.
+Require Import Pointed.Core.
+Require Basics.Utf8.
 
 (** ** Groups *)
 
@@ -22,6 +24,14 @@ Coercion group_type : Group >-> Sortclass.
 
 Definition issig_group : _ <~> Group
   := ltac:(issig).
+
+(** Groups are pointed sets with point the identity. *)
+Global Instance ispointed_group (G : Group)
+  : IsPointed G := @mon_unit G _.
+
+Definition ptype_group : Group -> pType
+  := fun G => Build_pType G _.
+Coercion ptype_group : Group >-> pType.
 
 (** * Some basic properties of groups *)
 
@@ -67,7 +77,11 @@ Class GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
 
 (* We coerce a homomorphism to its underlying map. *)
 Coercion grp_homo_map : GroupHomomorphism >-> Funclass.
-(* Notation "G '->G' H" := (GroupHomomorphism G H) (at level 20). *)
+
+(* Group homomorphisms are pointed maps *)
+Definition pmap_GroupHomomorphism {G H : Group} (f : GroupHomomorphism G H) : pMap G H
+  := Build_pMap G H f (@monmor_unitmor _ _ _ _ _ _ _ (@grp_homo_ishomo G H f)).
+Coercion pmap_GroupHomomorphism : GroupHomomorphism >-> pMap.
 
 Definition issig_GroupHomomorphism {G H : Group} : _ <~> GroupHomomorphism G H
   := ltac:(issig).
@@ -82,6 +96,7 @@ Proof.
 Defined.
 
 (** * Some basic properties of group homomorphisms *)
+
 
 (** Group homomorphisms preserve identities *)
 Definition grp_homo_unit {G H} (f : GroupHomomorphism G H)
@@ -252,3 +267,69 @@ Proof.
   all: intro; apply negate_involutive.
 Defined.
 
+(** * Direct product of group *)
+
+Definition group_prod : Group -> Group -> Group.
+Proof.
+  intros G H.
+  serapply (Build_Group (G * H)).
+  (** Operation *)
+  { intros [g1 h1] [g2 h2].
+    exact (g1 & g2, h1 & h2). }
+  (** Unit *)
+  1: exact (mon_unit, mon_unit).
+  (** Inverse *)
+  { intros [g h].
+    exact (-g, -h). }
+  (** Group laws *)
+  serapply Build_IsGroup.
+  (** Monoid laws *)
+  { serapply Build_IsMonoid.
+    (** Semigroup lawss *)
+    { serapply Build_IsSemiGroup.
+      (** Associativity *)
+      intros [g1 h1] [g2 h2] [g3 h3].
+      apply path_prod; cbn.
+      1,2: apply associativity. }
+    (** Left identity *)
+    { intros [g h].
+      apply path_prod; cbn.
+      1,2: apply left_identity. }
+    (** Right identity *)
+    { intros [g h].
+      apply path_prod; cbn.
+      1,2: apply right_identity. } }
+  (** Left inverse *)
+  { intros [g h].
+    apply path_prod; cbn.
+    1,2: apply left_inverse. }
+  (** Right inverse *)
+  { intros [g h].
+    apply path_prod; cbn.
+    1,2: apply right_inverse. }
+Defined.
+
+Definition grp_iso_prod {A B C D : Group}
+  : GroupIsomorphism A B -> GroupIsomorphism C D
+    -> GroupIsomorphism (group_prod A C) (group_prod B D).
+Proof.
+  intros f g.
+  serapply Build_GroupIsomorphism'.
+  1: serapply (equiv_functor_prod (f:=f) (g:=g)).
+  simpl.
+  unfold functor_prod.
+  intros x y.
+  apply path_prod.
+  1,2: apply grp_homo_op.
+Defined.
+
+
+(** TODO: If #1140 gets resolved, include this: *)
+(* Module GroupUtf8.
+
+  Import Basics.Utf8.
+  Infix "≅" := GroupIsomorphism.
+  Infix "×" := group_prod.
+
+End GroupUtf8.
+ *)

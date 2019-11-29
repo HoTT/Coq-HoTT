@@ -19,7 +19,7 @@ Section FreeIntAction.
   (** A free action by [Int] is the same as a single autoequivalence [f] (the action of [1]) whose iterates are all pointwise distinct. *)
   Context (f : R <~> R)
           (f_free : forall (r : R) (n m : Int),
-                      (iter_int f n r = iter_int f m r) -> (n = m)).
+                      (int_iter f n r = int_iter f m r) -> (n = m)).
 
   (** We can then define the quotient to be the coequalizer of [f] and the identity map.  This gives it the desired universal property for all types; it remains to show that this definition gives a set. *)
   Let RmodZ := Coeq f idmap.

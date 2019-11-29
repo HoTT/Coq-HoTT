@@ -5,6 +5,7 @@
 Require Import HoTT.Basics.
 Require Import Types.Paths Types.Forall Types.Arrow Types.Universe Types.Empty Types.Unit.
 Require Import HSet UnivalenceImpliesFunext.
+Require Import Spaces.Pos.
 Require Import Spaces.Int.
 Require Import HIT.Coeq.
 Require Import Modalities.Modality Truncations.
@@ -74,12 +75,12 @@ Section AssumeUnivalence.
 Context `{Univalence}.
 
 Definition S1_code : S1 -> Type
-  := S1_rec Type Int (path_universe succ_int).
+  := S1_rec Type Int (path_universe int_succ).
 
 (* Transporting in the codes fibration is the successor autoequivalence. *)
 
 Definition transport_S1_code_loop (z : Int)
-  : transport S1_code loop z = succ_int z.
+  : transport S1_code loop z = int_succ z.
 Proof.
   refine (transport_compose idmap S1_code loop z @ _).
   unfold S1_code; rewrite S1_rec_beta_loop.
@@ -87,12 +88,12 @@ Proof.
 Defined.
 
 Definition transport_S1_code_loopV (z : Int)
-  : transport S1_code loop^ z = pred_int z.
+  : transport S1_code loop^ z = int_pred z.
 Proof.
   refine (transport_compose idmap S1_code loop^ z @ _).
   rewrite ap_V.
   unfold S1_code; rewrite S1_rec_beta_loop.
-  rewrite <- (path_universe_V succ_int).
+  rewrite <- (path_universe_V int_succ).
   apply transport_path_universe.
 Defined.
 
@@ -103,19 +104,29 @@ Definition S1_encode (x:S1) : (base = x) -> S1_code x
 
 (* Decode by iterating loop. *)
 
-Definition S1_decode (x:S1) : S1_code x -> (base = x).
+Definition S1_decode (x : S1) : S1_code x -> (base = x).
 Proof.
   revert x; refine (S1_ind (fun x => S1_code x -> base = x) (loopexp loop) _).
   apply path_forall; intros z; simpl in z.
   refine (transport_arrow _ _ _ @ _).
   refine (transport_paths_r loop _ @ _).
   rewrite transport_S1_code_loopV.
-  destruct z as [[|n] | | [|n]]; simpl.
-  - by apply concat_pV_p.
-  - by apply concat_pV_p.
-  - by apply concat_Vp.
-  - by apply concat_1p.
-  - reflexivity.
+  destruct z as [n| |n].
+  2: apply concat_Vp.
+  { rewrite <- int_neg_pos_succ.
+    unfold loopexp, loopexp_pos.
+    rewrite pos_peano_ind_beta_pos_succ.
+    apply concat_pV_p. }
+  induction n as [|n nH] using pos_peano_ind.
+  1: apply concat_1p.
+  rewrite <- pos_add_1_r.
+  change (pos (n + 1)%pos)
+    with (int_succ (pos n)).
+  rewrite int_pred_succ.
+  cbn; rewrite pos_add_1_r.
+  unfold loopexp_pos.
+  rewrite pos_peano_ind_beta_pos_succ.
+  reflexivity.
 Defined.
 
 (* The nontrivial part of the proof that decode and encode are equivalences is showing that decoding followed by encoding is the identity on the fibers over [base]. *)
@@ -124,27 +135,36 @@ Definition S1_encode_loopexp (z:Int)
   : S1_encode base (loopexp loop z) = z.
 Proof.
   destruct z as [n | | n]; unfold S1_encode.
-  - induction n; simpl in *.
+  - induction n using pos_peano_ind; simpl in *.
     + refine (moveR_transport_V _ loop _ _ _).
         by symmetry; apply transport_S1_code_loop.
-    + rewrite transport_pp.
+    + unfold loopexp_pos.
+      rewrite pos_peano_ind_beta_pos_succ.
+      rewrite transport_pp.
       refine (moveR_transport_V _ loop _ _ _).
       refine (_ @ (transport_S1_code_loop _)^).
-      assumption.
+      refine (IHn @ _^).
+      rewrite int_neg_pos_succ.
+      by rewrite int_succ_pred.
   - reflexivity.
-  - induction n; simpl in *.
+  - induction n using pos_peano_ind; simpl in *.
     + by apply transport_S1_code_loop.
-    + rewrite transport_pp.
+    + unfold loopexp_pos.
+      rewrite pos_peano_ind_beta_pos_succ.
+      rewrite transport_pp.
       refine (moveR_transport_p _ loop _ _ _).
       refine (_ @ (transport_S1_code_loopV _)^).
-      assumption.
+      refine (IHn @ _^).
+      rewrite <- pos_add_1_r.
+      change (int_pred (int_succ (pos n)) = pos n).
+      apply int_pred_succ.
 Defined.
 
 (* Now we put it together. *)
 
 Definition S1_encode_isequiv (x:S1) : IsEquiv (S1_encode x).
 Proof.
-  refine (isequiv_adjointify (S1_encode x) (S1_decode x) _ _).
+ refine (isequiv_adjointify (S1_encode x) (S1_decode x) _ _).
   (* Here we induct on [x:S1].  We just did the case when [x] is [base]. *)
   - refine (S1_ind (fun x => Sect (S1_decode x) (S1_encode x))
                    S1_encode_loopexp _ _).
@@ -172,7 +192,7 @@ Proof.
 Defined.
 
 (** It follows that the circle is a 1-type. *)
-Global Instance is1type_S1 : IsTrunc 1 S1.
+Global Instance istrunc_S1 : IsTrunc 1 S1.
 Proof.
   intros x y.
   assert (p := merely_path_is0connected S1 base x).
@@ -187,7 +207,7 @@ Defined.
 (** If [P : S1 -> Type] is defined by a type [X] and an autoequivalence [f], then the image of [n:Int] regarded as in [base = base] is [iter_int f n]. *)
 Definition S1_action_is_iter X (f : X <~> X) (n : Int) (x : X)
 : transport (S1_rec Type X (path_universe f)) (equiv_loopS1_int^-1 n) x
-  = iter_int f n x.
+  = int_iter f n x.
 Proof.
   refine (_ @ loopexp_path_universe _ _ _).
   refine (transport_compose idmap _ _ _ @ _).

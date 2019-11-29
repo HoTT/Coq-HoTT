@@ -78,11 +78,20 @@ theories/Cubical/DCube.v
 #
 
 theories/Spaces/Nat.v
-theories/Spaces/Int.v
 theories/Spaces/Cantor.v
 theories/Spaces/Finite.v
 theories/Spaces/Universe.v
 theories/Spaces/Card.v
+
+theories/Spaces/Int.v
+theories/Spaces/Int/Core.v
+theories/Spaces/Int/Spec.v
+theories/Spaces/Int/Equiv.v
+theories/Spaces/Int/LoopExp.v
+
+theories/Spaces/Pos.v
+theories/Spaces/Pos/Core.v
+theories/Spaces/Pos/Spec.v
 
 theories/Spaces/BAut.v
 theories/Spaces/BAut/Cantor.v
@@ -272,6 +281,8 @@ theories/Spectra/Coinductive.v
 theories/Algebra/ooGroup.v
 theories/Algebra/Aut.v
 theories/Algebra/ooAction.v
+
+theories/Algebra/Z.v
 
 theories/Algebra/Group.v
 theories/Algebra/Subgroup.v
