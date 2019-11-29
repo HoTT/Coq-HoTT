@@ -91,6 +91,16 @@ Proof.
   by destruct p, p1x.
 Defined.
 
+(** Squares in (n+2)-truncated types are n-truncated *)
+Global Instance istrunc_sq n
+  {A} `{!IsTrunc n.+2 A} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11}
+  {p0x : a00 = a01} {p1x : a10 = a11}
+  : IsTrunc n (Square px0 px1 p0x p1x).
+Proof.
+  serapply (trunc_equiv _ sq_path).
+Defined.
+
 (* We can give degenerate squares *)
 Section SquaresFromPaths.
 
