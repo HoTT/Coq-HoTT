@@ -38,11 +38,7 @@ Defined.
 Definition isequiv_isbij_tr0_isequiv_loops
            `{Univalence} {A B : Type} (f : A -> B)
            {i  : IsEquiv (Trunc_functor 0 f)}
-           {ii : forall x,
-               IsEquiv (@loops_functor
-                          (Build_pType A x) (Build_pType B (f x))
-                          (Build_pMap (Build_pType A x) (Build_pType B (f x))
-                                      f idpath))}
+           {ii : forall x, IsEquiv (loops_functor (pmap_from_point f x)) }
   : IsEquiv f.
 Proof.
   serapply (isequiv_issurj_tr0_isequiv_ap f).
@@ -71,10 +67,7 @@ Definition whiteheads_principle
            {ua : Univalence} {A B : Type} {f : A -> B}
            (n : trunc_index) {H0 : IsTrunc n A} {H1 : IsTrunc n B}
            {i  : IsEquiv (Trunc_functor 0 f)}
-           {ii : forall (x : A) (k : nat),
-               IsEquiv (pi_functor k.+1
-                          (Build_pMap (Build_pType A x) (Build_pType B (f x))
-                                      f 1%path))}
+           {ii : forall (x : A) (k : nat), IsEquiv (pi_functor k.+1 (pmap_from_point f x)) }
   : IsEquiv f.
 Proof.
   revert A B H0 H1 f i ii.
@@ -83,7 +76,7 @@ Proof.
   intros A B H0 H1 f i ii.
   ntc_refine (@isequiv_isbij_tr0_isequiv_loops ua _ _ f i _).
   intro x.
-  refine (isequiv_homotopic (@ap _ _ f x x) _).
+  ntc_refine (isequiv_homotopic (@ap _ _ f x x) _).
   2:{intros p; cbn.
      symmetry; exact (concat_1p _ @ concat_p1 _). }
   pose proof (@istrunc_paths _ _ H0 x x) as h0.
@@ -96,21 +89,15 @@ Proof.
     exact (concat_1p _ @ concat_p1 _).
   - intros p k; revert p.
     assert (h3 : forall (y:A) (q:x=y),
-               IsEquiv (pi_functor k.+1
-                          (Build_pMap
-                             (Build_pType (x=y) q)
-                             (Build_pType (f x = f y) (ap f q))
-                             (@ap _ _ f x y) (idpath (ap f q))))).
+               IsEquiv (pi_functor k.+1 (pmap_from_point (@ap _ _ f x y) q))).
     2:exact (h3 x).
     intros y q. destruct q.
-    pose (fp := Build_pMap (Build_pType A x) (Build_pType B (f x))
-                           f 1%path).
-    ntc_refine (isequiv_homotopic (pi_functor k.+1 (loops_functor fp)) _).
+    ntc_refine (isequiv_homotopic (pi_functor k.+1 (loops_functor (pmap_from_point f x))) _).
     2:{ apply pi_2functor; srefine (Build_pHomotopy _ _).
         - intros p; cbn.
           refine (concat_1p _ @ concat_p1 _).
         - reflexivity. }
-    ntc_refine (isequiv_commsq _ _ _ _ (pi_functor_loops k.+1 fp)).
+    ntc_refine (isequiv_commsq _ _ _ _ (pi_functor_loops k.+1 (pmap_from_point f x))).
     2-3:refine (equiv_isequiv (pi_loops _ _)).
     exact (ii x k.+1).
 Defined.
