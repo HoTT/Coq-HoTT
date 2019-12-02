@@ -35,8 +35,8 @@ Proof.
 Defined.
 
 Global Instance istrunc_dp {A : Type} {P : A -> Type} {n : trunc_index}
- `{forall x, IsTrunc n.+1 (P x)} {a0 a1} {p : a0 = a1} {b0 : P a0}
- {b1 : P a1} : IsTrunc n (DPath P p b0 b1).
+ {a0 a1} {p : a0 = a1} {b0 : P a0} {b1 : P a1} `{IsTrunc n.+1 (P a0)}
+  `{IsTrunc n.+1 (P a1)} : IsTrunc n (DPath P p b0 b1).
 Proof.
   apply (trunc_equiv _ dp_path_transport).
 Defined.
@@ -282,18 +282,43 @@ Defined.
    to keep such lemmas seperate, since it is difficult to otherwise search
    for a DPath lemma if they are all written using transports. *)
 
-(* DPath over an arrow type *)
-Definition dp_arrow `{Funext} {A} (B C : A -> Type) {x1 x2 : A} (p : x1 = x2)
-  (f : B x1 -> C x1) (g : B x2 -> C x2)
-  : (forall y1, DPath C p (f y1) (g (p # y1)))
-    <~> DPath (fun x => B x -> C x) p f g.
-Proof.
-  destruct p.
-  apply equiv_path_forall.
-Defined.
-
 Definition path_sigma_dp {A P} {x x' : A} {y : P x} {y' : P x'}
   (p : x = x') (q : DPath P p y y') : (x; y) = (x'; y').
+Proof.
+  destruct p.
+  apply (ap _ q).
+Defined.
+
+Definition path_sigma_dp_uncurried {A P} {x x' : A} {y : P x} {y' : P x'}
+  : {p : x = x' & DPath P p y y'} -> (x; y) = (x'; y').
+Proof.
+  intros [p q].
+  exact (path_sigma_dp p q).
+Defined.
+
+Global Instance isequiv_path_sigma_dp_uncurried
+  {A P} {x x' : A} {y : P x} {y' : P x'}
+  : IsEquiv (@path_sigma_dp_uncurried A P x x' y y').
+Proof.
+  serapply isequiv_adjointify.
+  { intro r.
+    exists (ap pr1 r).
+    serapply (dp_compose _ _ _ _ _)^-1.
+    apply (dp_apD pr2 r). }
+  { intros r.
+    set (xy := (x; y)) in *.
+    set (x'y':= (x';y')) in *.
+    change x with xy.1; change y with xy.2;
+    change x' with x'y'.1; change y' with x'y'.2.
+    clearbody xy x'y'; clear x y x' y'.
+    by destruct r. }
+  intros [p q].
+  by destruct p, q.
+Defined.
+
+Lemma ap_pr1_path_sigma_dp {A : Type} {P : A -> Type}
+  {x x' : A} {y : P x} {y' : P x'} (p : x = x') (q : DPath P p y y')
+  : ap pr1 (path_sigma_dp p q) = p.
 Proof.
   by destruct p, q.
 Defined.
@@ -301,10 +326,11 @@ Defined.
 (* DPath over a forall *)
 Definition dp_forall `{Funext} {A : Type} {B : A -> Type} {C : sig B -> Type}
   {a1 a2 : A} {p : a1 = a2} {f : forall x, C (a1; x)} {g : forall x, C (a2; x)}
-  : DPath (fun a => forall x, C (a; x)) p f g
-  <~> forall (x : B a1) (y : B a2) (q : DPath B p x y),
-    DPath C (path_sigma_dp p q) (f x) (g y).
+  : (forall (x : B a1) (y : B a2) (q : DPath B p x y),
+    DPath C (path_sigma_dp p q) (f x) (g y))
+    <~> DPath (fun a => forall x, C (a; x)) p f g.
 Proof.
+  symmetry.
   destruct p; cbn.
   refine (equiv_compose' _ (equiv_apD10 _ _ _)).
   apply equiv_functor_forall_id.
@@ -317,6 +343,16 @@ Proof.
   + by intro.
 Defined.
 
+(* DPath over a forall *)
+Definition dp_arrow `{Funext} {A : Type} {B C : A -> Type}
+  {a1 a2 : A} {p : a1 = a2} {f :  B a1 -> C a1} {g : B a2 -> C a2}
+  : (forall x, DPath C p (f x) (g (p # x)))
+    <~> DPath (fun x => B x -> C x) p f g.
+Proof.
+  destruct p.
+  apply equiv_path_forall.
+Defined.
+
 (* Restricted version allowing us to pull the domain of a forall out *)
 Definition dp_forall_domain `{Funext} {D : Type} {A : Type} {B : D -> A -> Type}
   {t1 t2 : D} {d : t1 = t2} {f : forall x, B t1 x} {g : forall x, B t2 x}
@@ -325,6 +361,42 @@ Definition dp_forall_domain `{Funext} {D : Type} {A : Type} {B : D -> A -> Type}
 Proof.
   destruct d.
   apply equiv_path_forall.
+Defined.
+
+Definition dp_sigma {A : Type} {B : A -> Type}
+  {C : sig B -> Type} {x1 x2 : A} {p : x1 = x2}
+  {y1 : { y : B x1 & C (x1; y) }} {y2 : { y : B x2 & C (x2; y) }}
+  (n : DPath B p y1.1 y2.1) (m : DPath C (path_sigma_dp p n) y1.2 y2.2)
+  : DPath (fun x => { y : B x & C (x; y) }) p y1 y2.
+Proof.
+  destruct p.
+  apply (path_sigma_dp n).
+  by apply dp_compose.
+Defined.
+
+Definition dp_sigma_uncurried {A : Type} {B : A -> Type}
+  {C : sig B -> Type} {x1 x2 : A} {p : x1 = x2}
+  (y1 : { y : B x1 & C (x1; y) }) (y2 : { y : B x2 & C (x2; y) })
+  : {n : DPath B p y1.1 y2.1 & DPath C (path_sigma_dp p n) y1.2 y2.2}
+    -> DPath (fun x => { y : B x & C (x; y) }) p y1 y2.
+Proof.
+  destruct p.
+  simpl.
+  intro nm.
+  apply path_sigma_dp_uncurried.
+  erapply equiv_functor_sigma_id.
+  { intro p.
+    serapply (dp_compose (exist B x1)). }
+  apply nm.
+Defined.
+
+Global Instance isequiv_dp_sigma_uncurried {A : Type} {B : A -> Type}
+  {C : sig B -> Type} {x1 x2 : A} {p : x1 = x2}
+  {y1 : { y : B x1 & C (x1; y) }} {y2 : { y : B x2 & C (x2; y) }}
+  : IsEquiv (@dp_sigma_uncurried A B C x1 x2 p y1 y2).
+Proof.
+  destruct p.
+  exact _.
 Defined.
 
 (* Useful for turning computation rules of HITs written with transports to
