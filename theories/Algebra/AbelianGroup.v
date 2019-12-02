@@ -334,7 +334,7 @@ Section Abelianization.
       cbn; reflexivity. }
     intros [g p].
     apply path_sigma_hprop; cbn.
-    apply path_GroupHomomorphism.
+    apply equiv_path_grouphomomorphism.
     serapply Abel_ind_hprop.
     exact p.
   Defined.
