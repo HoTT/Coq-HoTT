@@ -282,6 +282,7 @@ Defined.
    to keep such lemmas seperate, since it is difficult to otherwise search
    for a DPath lemma if they are all written using transports. *)
 
+(** A version of [path_sigma] for [DPath]s *)
 Definition path_sigma_dp {A P} {x x' : A} {y : P x} {y' : P x'}
   (p : x = x') (q : DPath P p y y') : (x; y) = (x'; y').
 Proof.
@@ -289,6 +290,7 @@ Proof.
   apply (ap _ q).
 Defined.
 
+(** An uncurried version *)
 Definition path_sigma_dp_uncurried {A P} {x x' : A} {y : P x} {y' : P x'}
   : {p : x = x' & DPath P p y y'} -> (x; y) = (x'; y').
 Proof.
@@ -296,6 +298,7 @@ Proof.
   exact (path_sigma_dp p q).
 Defined.
 
+(** This is an equivalnece. "A path in a sigma type is a sigma type of paths" *)
 Global Instance isequiv_path_sigma_dp_uncurried
   {A P} {x x' : A} {y : P x} {y' : P x'}
   : IsEquiv (@path_sigma_dp_uncurried A P x x' y y').
@@ -343,7 +346,7 @@ Proof.
   + by intro.
 Defined.
 
-(* DPath over a forall *)
+(* DPath over an arrow *)
 Definition dp_arrow `{Funext} {A : Type} {B C : A -> Type}
   {a1 a2 : A} {p : a1 = a2} {f :  B a1 -> C a1} {g : B a2 -> C a2}
   : (forall x, DPath C p (f x) (g (p # x)))
@@ -363,6 +366,7 @@ Proof.
   apply equiv_path_forall.
 Defined.
 
+(** Necessery data to give a dependent path over a sigma type. *)
 Definition dp_sigma {A : Type} {B : A -> Type}
   {C : sig B -> Type} {x1 x2 : A} {p : x1 = x2}
   {y1 : { y : B x1 & C (x1; y) }} {y2 : { y : B x2 & C (x2; y) }}
@@ -374,6 +378,7 @@ Proof.
   by apply dp_compose.
 Defined.
 
+(** Uncurried version of dp_sigma *)
 Definition dp_sigma_uncurried {A : Type} {B : A -> Type}
   {C : sig B -> Type} {x1 x2 : A} {p : x1 = x2}
   (y1 : { y : B x1 & C (x1; y) }) (y2 : { y : B x2 & C (x2; y) })
@@ -390,6 +395,7 @@ Proof.
   apply nm.
 Defined.
 
+(** This is an equivlance. "A DPath of sigmas is a sigma of DPaths" *)
 Global Instance isequiv_dp_sigma_uncurried {A : Type} {B : A -> Type}
   {C : sig B -> Type} {x1 x2 : A} {p : x1 = x2}
   {y1 : { y : B x1 & C (x1; y) }} {y2 : { y : B x2 & C (x2; y) }}
