@@ -204,39 +204,50 @@ Proof.
   exact _.
 Defined.
 
-(** Under univalence, equality of groups is equivalent to isomorphism of groups. This is a long proof that mostly consists of rearranging sigma types. *)
+(** Under univalence, equality of groups is equivalent to isomorphism of groups. *)
 Definition equiv_path_group {U : Univalence} {G H : Group}
   : GroupIsomorphism G H <~> G = H.
 Proof.
-  refine (equiv_compose' (B := sig (fun f : G <~> H => IsMonoidPreserving f)) _ _).
+  refine (equiv_compose'
+    (B := sig (fun f : G <~> H => IsMonoidPreserving f)) _ _).
   { eqp_issig_contr issig_group.
     + intros [G [? [? [? ?]]]].
       exists 1%equiv.
       exact _.
     + intros [G [op [unit [neg ax]]]]; cbn.
       contr_sigsig G (equiv_idmap G).
-      srefine (Build_Contr _ ((_;(_;(_;_)));_) _); cbn; try assumption; try exact _.
+      srefine (Build_Contr _ ((_;(_;(_;_)));_) _); cbn;
+        try assumption; try exact _.
       intros [[op' [unit' [neg' ax']]] eq].
       apply path_sigma_hprop; cbn.
       (* We really need to fix https://github.com/HoTT/HoTT/issues/976 *)
-      srefine (@ap _ _ (fun x : sig (fun oun : sig (fun oo : SgOp G => sig (fun u : MonUnit G => Negate G)) => @IsGroup G oun.1 oun.2.1 oun.2.2) => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
-                   ((op;unit;neg);ax) ((op';unit';neg');ax') _).
+      refine (@ap _ _ (fun x : { oun :
+        { oo : SgOp G | { u : MonUnit G | Negate G}}
+        | @IsGroup G oun.1 oun.2.1 oun.2.2}
+        => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
+        ((op;unit;neg);ax) ((op';unit';neg');ax') _).
       apply path_sigma_hprop; cbn.
-      srefine (path_sigma' _ _ _).
-      { apply path_arrow; intros x; apply path_arrow; intros y; apply eq. }
-      rewrite transport_const.
-      srefine (path_sigma' _ _ _).
-      { apply eq. }
-      rewrite transport_const.
-      apply path_arrow; intros x.
+      srefine (path_sigma_dp _ _).
+      1: funext x y; apply eq.
+      apply dp_const.
+      srefine (path_sigma_dp _ _).
+      1: apply eq.
+      apply dp_const.
+      funext x.
       exact (preserves_negate x). }
   refine (_ oE (issig_GroupIsomorphism G H)^-1).
-  refine (_ oE (equiv_functor_sigma' (issig_GroupHomomorphism G H) (fun f => 1%equiv))^-1).
+  refine (_ oE (equiv_functor_sigma' (issig_GroupHomomorphism G H)
+    (fun f => 1%equiv))^-1).
   refine (equiv_functor_sigma' (issig_equiv G H) (fun f => 1%equiv) oE _).
   cbn.
-  refine (equiv_adjointify (fun f => (exist (IsMonoidPreserving o pr1) (exist IsEquiv f.1.1 f.2) f.1.2))
-                           (fun f => (exist (IsEquiv o pr1) (exist IsMonoidPreserving f.1.1 f.2) f.1.2))
-                           _ _); intros [[f f1] f2]; reflexivity.
+  refine (
+    equiv_adjointify
+      (fun f => (exist (IsMonoidPreserving o pr1)
+        (exist IsEquiv f.1.1 f.2) f.1.2))
+      (fun f => (exist (IsEquiv o pr1)
+        (exist IsMonoidPreserving f.1.1 f.2) f.1.2))
+       _ _).
+  all: intros [[]]; reflexivity.
 Defined.  
 
 (** * Simple group equivalences *)
