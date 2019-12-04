@@ -249,9 +249,10 @@ theories/Homotopy/Wedge.v
 theories/Homotopy/Join.v
 
 theories/Homotopy/WhiteheadsPrinciple.v
+theories/Homotopy/HSpace.v
+theories/Homotopy/HSpaceS1.v
 theories/Homotopy/BlakersMassey.v
 theories/Homotopy/Freudenthal.v
-theories/Homotopy/HSpace.v
 theories/Homotopy/ClassifyingSpace.v
 theories/Homotopy/EMSpace.v
 
