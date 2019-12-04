@@ -2,124 +2,192 @@ Require Import Basics.
 Require Import Types.
 Require Import Pointed.
 Require Import Algebra.Group.
+Require Import Algebra.AbelianGroup.
 Require Import Truncations.
 Require Import Spaces.Nat.
 
 Import TrM.
 
-(* In this file we define homotopy groups *)
-
-Definition Pi n (X : pType) := Tr 0 (iterated_loops n X).
-
-Section PiGroup.
-
-  Context
-    (n : nat)
-    (X : pType).
-
-  Global Instance PiUnit : MonUnit (Pi n.+1 X).
-  Proof.
-    by apply tr.
-  Defined.
-
-  (* We explicitly give the operation here *)
-  Global Instance PiOp : SgOp (Pi n.+1 X).
-  Proof.
-    intros a b; strip_truncations.
-    exact (tr (a @ b)).
-  Defined.
-
-  Global Instance PiOp_assoc : Associative PiOp.
-  Proof.
-    intros x y z; strip_truncations; cbn.
-    apply ap, concat_p_pp.
-  Defined.
-
-  Global Instance PiOp_leftId : LeftIdentity PiOp PiUnit.
-  Proof.
-    intro x; strip_truncations; cbn.
-    apply ap, concat_1p.
-  Defined.
-
-  Global Instance PiOp_rightId : RightIdentity PiOp PiUnit.
-  Proof.
-    intro x; strip_truncations; cbn.
-    apply ap, concat_p1.
-  Defined.
-
-  Global Instance PiInverse : Negate (Pi n.+1 X).
-  Proof.
-    intro; strip_truncations.
-    by apply tr, Overture.inverse.
-  Defined.
-
-  Global Instance PiOp_leftInv : LeftInverse PiOp PiInverse PiUnit.
-  Proof.
-    intro x; strip_truncations; cbn.
-    apply ap, concat_Vp.
-  Defined.
-
-  Global Instance PiOp_rightInv : RightInverse PiOp PiInverse PiUnit.
-  Proof.
-    intro x; strip_truncations; cbn.
-    apply ap, concat_pV.
-  Defined.
-
-  Global Instance pi_is_Group : IsGroup (Pi n.+1 X).
-  Proof.
-    repeat split; exact _.
-  Defined.
-
-End  PiGroup.
-
-Global Instance piop_commutative n X : Commutative (PiOp n.+1 X).
-Proof.
-  intros x y; strip_truncations; cbn.
-  apply ap, eckmann_hilton.
-Defined.
-
-Global Instance pi_is_AbGroup n X : IsAbGroup (Pi n.+2 X).
-Proof.
-  serapply Build_IsAbGroup.
-Defined.
-
-Section PiFunctor.
-
-  Local Open Scope pointed_scope.
-
-  Context
-    {n : nat}
-    {X Y : pType}
-    (f : X ->* Y).
-
-  Definition functor_pi : Pi n.+1 X -> Pi n.+1 Y.
-  Proof.
-    serapply Trunc_functor.
-    serapply iterated_loops_functor.
-    exact f.
-  Defined.
-
-  Global Instance functor_pi_homomorphism : IsMonoidPreserving functor_pi.
-  Proof.
-    apply Build_IsMonoidPreserving.
-    + intros x y.
-      strip_truncations.
-      apply path_Tr, tr, loops_functor_pp.
-    + apply path_Tr, tr; cbn.
-      destruct n; hott_simpl.
-  Defined.
-
-End PiFunctor.
-
 Local Open Scope pointed_scope.
+Local Open Scope path_scope.
 
-(* Homotopy groups of product space *)
-Lemma Pi_prod (X Y : pType) {n}
-  : Pi n (X * Y) <~> Pi n X * Pi n Y.
+(** The type that the nth homotopy group will have. *)
+Definition HomotopyGroup_type (n : nat) : Type
+  := match n with
+      | 0 => pType
+      | n.+1 => Group
+     end.
+
+(** Definition of the nth homotopy group *)
+Definition HomotopyGroup (n : nat) (X : pType) : HomotopyGroup_type n.
 Proof.
-  unfold Pi.
-  apply (equiv_compose' (equiv_O_prod_cmp _ _ _)).
-  apply Trunc_functor_equiv.
-  by refine (pequiv_compose _ (iterated_loops_prod _ _)).
-Qed.
+  destruct n.
+  1: exact X.
+  serapply (Build_Group (Tr 0 (iterated_loops n.+1 X)));
+  repeat split.
+  (** Operation *)
+  + intros x y.
+    strip_truncations.
+    exact (tr (x @ y)).
+  (** Unit *)
+  + exact (tr 1).
+  (** Inverse *)
+  + serapply Trunc_rec; intro x.
+    exact (tr x^).
+  (** IsHSet *)
+  + exact _.
+  (** Associativity *)
+  + intros x y z.
+    strip_truncations.
+    cbn; apply ap.
+    apply concat_p_pp.
+  (** Left identity *)
+  + intro x.
+    strip_truncations.
+    cbn; apply ap.
+    apply concat_1p.
+  (** Right identity *)
+  + intro x.
+    strip_truncations.
+    cbn; apply ap.
+    apply concat_p1.
+  (** Left inverse *)
+  + intro x.
+    strip_truncations.
+    apply (ap tr).
+    apply concat_Vp.
+  (** Right inverse *)
+  + intro x.
+    strip_truncations.
+    apply (ap tr).
+    apply concat_pV.
+Defined.
 
+(** HomotopyGroup can be a bit of a mouthful so we define a notation for it. *)
+Global Notation Pi := HomotopyGroup.
+
+Module PiUtf8.
+  Notation "'π'" := HomotopyGroup (at level 0).
+End PiUtf8.
+
+(** When n >= 2 we have that the nth homotopy group is an abelian group. Note that we don't actually define it as an abelian group but merely show that it is one. This would cause lots of complications with the typechecker. *)
+Global Instance isabgroup_homotopygroup (n : nat) (X : pType)
+  : IsAbGroup (HomotopyGroup n.+2 X).
+Proof.
+  ntc_rapply Build_IsAbGroup.
+  1: exact _.
+  intros x y.
+  strip_truncations.
+  cbn; apply (ap tr).
+  apply eckmann_hilton.
+Defined.
+
+(** The nth homotopy group is infact a functor. We now give the type this functor ought to have. For n = 0, this will simply be a pointed map, for n >= 1 this should be a group homomorphism. *)
+Definition homotopygroup_functor_type (n : nat) (X Y : pType) : Type.
+Proof.
+  destruct n.
+  1: exact (pTr 0 X ->* pTr 0 Y).
+  serapply (GroupHomomorphism _ _).
+  + exact (HomotopyGroup n.+1 X).
+  + exact (HomotopyGroup n.+1 Y).
+Defined.
+
+Definition homotopygroup_functor (n : nat) {X Y : pType}
+  : (X ->* Y) -> homotopygroup_functor_type n X Y.
+Proof.
+  destruct n.
+  + exact (ptr_functor 0).
+  + intro f.
+    serapply Build_GroupHomomorphism.
+    { apply Trunc_functor.
+      apply iterated_loops_functor.
+      assumption. }
+    (** Note: we don't have to be careful about which paths we choose here since we are trying to inhabit a proposition. *)
+    intros x y.
+    strip_truncations.
+    apply (ap tr); cbn.
+    rewrite 2 concat_pp_p.
+    apply whiskerL.
+    rewrite 2 concat_p_pp.
+    rewrite (concat_pp_p (ap (iterated_loops_functor n f) x)).
+    rewrite concat_pV, concat_p1.
+    rewrite concat_p_pp.
+    apply whiskerR.
+    apply ap_pp.
+Defined.
+
+(** We define a notation for homotopygroup_functor too. *)
+Global Notation pi_functor := homotopygroup_functor.
+
+Definition homotopygroup_functor_idmap n {X : pType}
+  : pi_functor n.+1 (@pmap_idmap X) == idmap.
+Proof.
+  intro x.
+  strip_truncations.
+  apply (ap tr), iterated_loops_functor_idmap.
+Defined.
+
+Definition homotopygroup_functor_compose n {X Y Z : pType}
+  (f : X ->* Y) (g : Y ->* Z)
+  : pi_functor n.+1 (g o* f) == pi_functor n.+1 g o pi_functor n.+1 f.
+Proof.
+  intro x.
+  strip_truncations.
+  apply (ap tr), iterated_loops_functor_compose.
+Defined.
+
+Definition homotopygroup_2functor n
+  {X Y : pType} (f g : X ->* Y) (p : f ==* g)
+  : pi_functor n.+1 f == pi_functor n.+1 g.
+Proof.
+  by apply O_functor_homotopy, iterated_loops_2functor.
+Defined.
+
+Definition groupiso_homotopygroup_functor (n : nat)
+  {X Y : pType} (e : X <~>* Y)
+  : GroupIsomorphism (Pi n.+1 X) (Pi n.+1 Y).
+Proof.
+  serapply Build_GroupIsomorphism.
+  1: apply (homotopygroup_functor n.+1 e).
+  serapply isequiv_adjointify.
+  + apply (homotopygroup_functor n.+1).
+    apply e^-1*.
+  + intro.
+    refine (_^ @ _ @ _).
+    1: apply homotopygroup_functor_compose.
+    2: apply homotopygroup_functor_idmap.
+    apply homotopygroup_2functor.
+    apply peisretr.
+  + intro.
+    refine (_^ @ _ @ _).
+    1: apply homotopygroup_functor_compose.
+    2: apply homotopygroup_functor_idmap.
+    apply homotopygroup_2functor.
+    apply peissect.
+Defined.
+
+(** Homotopy groups preserve products *)
+Lemma homotopygroup_prod (X Y : pType) {n : nat}
+  : GroupIsomorphism (Pi n.+1 (X * Y))
+      (group_prod (Pi n.+1 X) (Pi n.+1 Y)).
+Proof.
+  serapply Build_GroupIsomorphism'.
+  { refine (equiv_O_prod_cmp _ _ _ oE _).
+    apply Trunc_functor_equiv.
+    serapply iterated_loops_prod. }
+  intros x y.
+  strip_truncations; simpl.
+  set (Z := (iterated_loops_prod X Y)).
+  apply path_prod.
+  1,2: apply (ap tr).
+  1: set (q := ap fst); unfold fst; unfold q; clear q.
+  2: set (q := ap snd); unfold snd; unfold q; clear q.
+  1,2: rewrite 8 ap_pp.
+  1,2: rewrite ? concat_p_pp.
+  1,2: do 2 apply whiskerR.
+  1,2: rewrite ? ap_V.
+  1,2: rewrite concat_pp_p.
+  1,2: rewrite concat_pV.
+  1,2: rewrite concat_p1.
+  1,2: reflexivity.
+Defined.

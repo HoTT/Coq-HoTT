@@ -124,6 +124,36 @@ Proof.
   apply loops_2functor, IHn.
 Defined.
 
+Lemma iterated_loops_functor_idmap (A : pType) n
+  : iterated_loops_functor n (@pmap_idmap A) ==* pmap_idmap.
+Proof.
+  induction n; cbn.
+  1: reflexivity.
+  etransitivity.
+  2: apply loops_functor_idmap.
+  apply loops_2functor, IHn.
+Defined.
+
+Lemma iterated_loops_functor_pp {X Y : pType} (f : pMap X Y) n
+  (x y : iterated_loops n.+1 X) : iterated_loops_functor n.+1 f (x @ y)
+    = iterated_loops_functor n.+1 f x @ iterated_loops_functor n.+1 f y.
+Proof.
+  induction n.
+  1: apply loops_functor_pp.
+  change (iterated_loops_functor n.+2 f)
+    with (loops_functor (iterated_loops_functor n.+1 f)).
+  apply loops_functor_pp.
+Defined.
+
+Definition iterated_loops_2functor n {A B : pType} {f g : A ->* B} (p : f ==* g)
+  : (iterated_loops_functor n f) ==* (iterated_loops_functor n g).
+Proof.
+  induction n.
+  1: apply p.
+  apply loops_2functor.
+  apply IHn.
+Defined.
+
 (** The loop space functor decreases the truncation level by one.  *)
 Global Instance istrunc_loops_functor {n} (A B : pType) (f : A ->* B)
   `{IsTruncMap n.+1 _ _ f} : IsTruncMap n (loops_functor f).
