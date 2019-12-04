@@ -1,6 +1,5 @@
 Require Import Basics.
 Require Import Types.
-Require Import Cubical.
 Require Import PathAny.
 Require Export Classes.interfaces.abstract_algebra.
 Require Export Classes.theory.groups.
@@ -227,12 +226,12 @@ Proof.
         => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
         ((op;unit;neg);ax) ((op';unit';neg');ax') _).
       apply path_sigma_hprop; cbn.
-      srefine (path_sigma_dp _ _).
+      srefine (path_sigma' _ _ _).
       1: funext x y; apply eq.
-      apply dp_const.
-      srefine (path_sigma_dp _ _).
+      rewrite transport_const.
+      srefine (path_sigma' _ _ _).
       1: apply eq.
-      apply dp_const.
+      rewrite transport_const.
       funext x.
       exact (preserves_negate x). }
   refine (_ oE (issig_GroupIsomorphism G H)^-1).
