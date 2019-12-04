@@ -70,13 +70,13 @@ Class GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
 Coercion grp_homo_map : GroupHomomorphism >-> Funclass.
 (* Notation "G '->G' H" := (GroupHomomorphism G H) (at level 20). *)
 
-Definition issig_GroupHomomorphism {G H : Group} : _ <~> GroupHomomorphism G H
+Definition issig_GroupHomomorphism (G H : Group) : _ <~> GroupHomomorphism G H
   := ltac:(issig).
 
 Definition equiv_path_grouphomomorphism {F : Funext} {G H : Group}
   {g h : GroupHomomorphism G H} : g == h <~> g = h.
 Proof.
-  refine ((equiv_ap issig_GroupHomomorphism^-1 _ _)^-1 oE _).
+  refine ((equiv_ap (issig_GroupHomomorphism G H)^-1 _ _)^-1 oE _).
   refine (equiv_path_sigma_hprop _ _ oE _).
   apply equiv_path_forall.
 Defined.
@@ -208,114 +208,36 @@ Defined.
 Definition equiv_path_group {U : Univalence} {G H : Group}
   : GroupIsomorphism G H <~> G = H.
 Proof.
-  refine (_ oE _).
-  { symmetry.
-    exact (equiv_ap' issig_group^-1 G H). }
-  simpl.
-  (** Turning (_;_;_;_) into ((_;_;_);_) *)
-  refine (_ oE _).
-  { symmetry.
-    erapply equiv_ap'.
-    refine (_ oE _).
-    2: { erapply equiv_functor_sigma_id.
-      intro X.
-      refine (_ oE _).
-      2: { erapply equiv_functor_sigma_id.
-        intro m.
-        serapply (equiv_sigma_assoc _
-          (fun x => @IsGroup X m x.1 x.2)). }
-      serapply (equiv_sigma_assoc _
-      (fun x => @IsGroup X x.1 x.2.1 x.2.2)). }
-    serapply (equiv_sigma_assoc _
-      (fun x => @IsGroup x.1 x.2.1 x.2.2.1 x.2.2.2)). }
-  refine (_ oE _).
-  1: serapply equiv_path_sigma_hprop.
-  simpl.
-  (** Now we will turn our equality of sigma types into a sigma type of equalities. *)
-  refine (Build_Equiv _ _ path_sigma_dp_uncurried _ oE _).
-  refine (_ oE _).
-  { erapply equiv_functor_sigma_id; intro.
-    exact (Build_Equiv _ _ (dp_sigma_uncurried
-      (C := fun a => {_ : MonUnit a.1 | Negate a.1}) (_;_;_) _) _). }
-  simpl.
-  (** We use univalence to unpack G = K as {f : G <~> K & IsEquiv f} *)
-  refine (_ oE _).
-  { serapply equiv_functor_sigma'.
-    4: intro; reflexivity.
-    1: shelve.
-    refine (equiv_path_universe _ _ oE _).
-    apply issig_equiv. }
-  refine (equiv_sigma_assoc _ _ oE _).
-  (** Now we unpack the data of a group isomorphism. *)
-  refine (_ oE (issig_GroupIsomorphism _ _)^-1).
-  refine (_ oE _).
-  2: { serapply equiv_functor_sigma'.
-    3: symmetry; apply issig_GroupHomomorphism.
-    1: exact (fun x => IsEquiv (pr1 x)).
-    reflexivity. }
-  refine (_ oE (equiv_sigma_assoc _ _)^-1).
-  (** We see that we have an equivalence in the first component *)
-  serapply (equiv_functor_sigma' (reflexivity _)).
-  intro f; cbn.
-  refine (_ oE equiv_sigma_symm0 _ _).
-  (** We see that we have an equivalence in the first component *)
-  serapply (equiv_functor_sigma' (reflexivity _)).
-  intro e; cbn.
-  (** Now we prove that an equivalence being monoid preserving is equivalent to this sigma of dependent paths. Note that both sides are props. *)
-  apply equiv_iff_hprop.
-  { (** First we show that being monoid preserving implies the sigma type. *)
-    intro p.
-    srefine (_;_).
-    { unfold SgOp.
-      apply dp_arrow; intro x.
-      apply dp_arrow; intro y.
-      apply dp_path_transport.
-      refine (transport_path_universe_uncurried _ _ @ _).
-      refine (monmor_sgmor _ _ @ _).
-      apply ap2.
-      1,2: symmetry; apply transport_path_universe_uncurried. }
-    simpl.
-    serapply (dp_compose pr1 (fun a => {_ : MonUnit a | Negate a}) _ (_;_) _).
-    rewrite ap_pr1_path_sigma_dp.
-    serapply (@dp_sigma _ MonUnit (fun x => Negate x.1)).
-    { simpl.
-      unfold MonUnit.
-      apply dp_path_transport.
-      refine (_ @ monmor_unitmor (f:=f)).
-      apply transport_path_universe_uncurried. }
-    serapply (dp_compose pr1).
-    rewrite ap_pr1_path_sigma_dp.
-    unfold Negate.
-    apply dp_arrow; simpl.
-    intro x.
-    apply dp_path_transport.
-    rewrite ? transport_path_universe_uncurried.
-    change (f (-x) = -f(x)).
-    serapply preserves_negate. }
-  (** Now we must show that the sigma type implies monoid preservin. *)
-  intros [p q].
-  (** Since we are trying to prove that a map between groups is monoid preserving, we can use Build_GroupHomomorphism to show that being semigroup preserving is sufficient. *)
-  serapply (@grp_homo_ishomo _ _ (Build_GroupHomomorphism f)).
-  intros x y.
-  set (F := Build_Equiv _ _ f _) in *.
-  change f with (equiv_fun F).
-  clearbody F; clear e f.
-  clear q.
-  apply dp_path_transport^-1 in p.
-  pose (apD10 (apD10 p (F x)) (F y)) as q.
-  refine (_ @ q).
-  clear q.
-  rewrite <- (eissect path_universe_uncurried F).
-  simpl.
-  set (P := path_universe_uncurried F) in *.
-  clearbody P; clear F.
-  simpl in *.
-  unfold path_universe_uncurried.
-  rewrite (eissect (equiv_path G H) P).
-  rewrite 2 transport_arrow.
-  rewrite 2 transport_Vp.
-  reflexivity.
-Defined.
+  refine (equiv_compose' (B := sig (fun f : G <~> H => IsMonoidPreserving f)) _ _).
+  { eqp_issig_contr issig_group.
+    + intros [G [? [? [? ?]]]].
+      exists 1%equiv.
+      exact _.
+    + intros [G [op [unit [neg ax]]]]; cbn.
+      contr_sigsig G (equiv_idmap G).
+      srefine (Build_Contr _ ((_;(_;(_;_)));_) _); cbn; try assumption; try exact _.
+      intros [[op' [unit' [neg' ax']]] eq].
+      apply path_sigma_hprop; cbn.
+      (* We really need to fix https://github.com/HoTT/HoTT/issues/976 *)
+      srefine (@ap _ _ (fun x : sig (fun oun : sig (fun oo : SgOp G => sig (fun u : MonUnit G => Negate G)) => @IsGroup G oun.1 oun.2.1 oun.2.2) => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
+                   ((op;unit;neg);ax) ((op';unit';neg');ax') _).
+      apply path_sigma_hprop; cbn.
+      srefine (path_sigma' _ _ _).
+      { apply path_arrow; intros x; apply path_arrow; intros y; apply eq. }
+      rewrite transport_const.
+      srefine (path_sigma' _ _ _).
+      { apply eq. }
+      rewrite transport_const.
+      apply path_arrow; intros x.
+      exact (preserves_negate x). }
+  refine (_ oE (issig_GroupIsomorphism G H)^-1).
+  refine (_ oE (equiv_functor_sigma' (issig_GroupHomomorphism G H) (fun f => 1%equiv))^-1).
+  refine (equiv_functor_sigma' (issig_equiv G H) (fun f => 1%equiv) oE _).
+  cbn.
+  refine (equiv_adjointify (fun f => (exist (IsMonoidPreserving o pr1) (exist IsEquiv f.1.1 f.2) f.1.2))
+                           (fun f => (exist (IsEquiv o pr1) (exist IsMonoidPreserving f.1.1 f.2) f.1.2))
+                           _ _); intros [[f f1] f2]; reflexivity.
+Defined.  
 
 (** * Simple group equivalences *)
 
