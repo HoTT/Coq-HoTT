@@ -5,6 +5,8 @@ Require Import Classes.interfaces.abstract_algebra.
   This is technically incorrect since we are not enforcing the relation to be an equivalence relation.
 *)
 
+Local Open Scope mc_mult_scope.
+
 Class IsCongruence `{SgOp G} (R : Relation G) := {
-  iscong {x x' y y'} : R x x' -> R y y' -> R (x & y) (x' & y');
+  iscong {x x' y y'} : R x x' -> R y y' -> R (x * y) (x' * y');
 }.

@@ -7,6 +7,8 @@ Require Basics.Utf8.
 
 (** ** Groups *)
 
+Local Open Scope mc_mult_scope.
+
 (** * Definition of Group *)
 
 (** A group consists of a type, and operation on that type, and unit and an inverse, such that they satisfy the group axioms in IsGroup. *)
@@ -41,12 +43,12 @@ Definition identity_unique' {A : Type} {Aop : SgOp A}
 
 (** An element acting like an inverse is unique. *)
 Definition inverse_unique `{IsMonoid A}
-  (a x y : A) {p : x & a = mon_unit} {q : a & y = mon_unit}
+  (a x y : A) {p : x * a = mon_unit} {q : a * y = mon_unit}
   : x = y.
 Proof.
   refine ((right_identity x)^ @ ap _ q^ @ _).
   refine (associativity _ _ _ @ _).
-  refine (ap (& y) p @ _).
+  refine (ap (fun x => x * y) p @ _).
   apply left_identity.
 Defined.
 
@@ -96,7 +98,7 @@ Defined.
 
 (** Group homomorphisms preserve group operations *)
 Definition grp_homo_op {G H} (f : GroupHomomorphism G H)
-  : forall x y : G, f (x & y) = f x & f y.
+  : forall x y : G, f (x * y) = f x * f y.
 Proof.
   apply monmor_sgmor.
 Defined.
@@ -215,38 +217,38 @@ Admitted.
 
 (** Left multiplication is an equivalence *)
 Global Instance isequiv_group_left_op `{IsGroup G}
-  : forall x, IsEquiv (x &).
+  : forall x, IsEquiv (x *.).
 Proof.
   intro x.
   serapply isequiv_adjointify.
-  1: exact (-x &).
+  1: exact (-x *.).
   all: intro y.
   all: refine (associativity _ _ _ @ _ @ left_identity y).
-  all: refine (ap (& y) _).
+  all: refine (ap (fun x => x * y) _).
   1: apply right_inverse.
   apply left_inverse.
 Defined.
 
 (** Right multiplication is an equivalence *)
 Global Instance isequiv_group_right_op `{IsGroup G}
-  : forall x, IsEquiv (& x).
+  : forall x:G, IsEquiv (fun y => y * x).
 Proof.
   intro x.
   serapply isequiv_adjointify.
-  1: exact (& - x).
+  1: exact (fun y => y * - x).
   all: intro y.
   all: refine ((associativity _ _ _)^ @ _ @ right_identity y).
-  all: refine (ap (y &) _).
+  all: refine (ap (y *.) _).
   1: apply left_inverse.
   apply right_inverse.
 Defined.
 
 Definition left_mult_equiv `{IsGroup G} : G -> G <~> G
-  := fun x => Build_Equiv _ _ (x &) _.
+  := fun x => Build_Equiv _ _ (x *.) _.
 
 (* Right multiplication is an equivalence. *)
 Definition right_mult_equiv `{IsGroup G} : G -> G <~> G
-  := fun x => Build_Equiv _ _ (& x) _.
+  := fun x => Build_Equiv _ _ (fun y => y * x) _.
 
 Global Instance isequiv_group_inverse `{IsGroup G}
   : IsEquiv (-).
@@ -264,7 +266,7 @@ Proof.
   serapply (Build_Group (G * H)).
   (** Operation *)
   { intros [g1 h1] [g2 h2].
-    exact (g1 & g2, h1 & h2). }
+    exact (g1 * g2, h1 * h2). }
   (** Unit *)
   1: exact (mon_unit, mon_unit).
   (** Inverse *)
