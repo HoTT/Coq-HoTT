@@ -7,6 +7,8 @@ Require Import Colimits.Quotient.
 
 (** * Quotient groups *)
 
+Local Open Scope mc_mult_scope.
+
 Section GroupCongruenceQuotient.
 
   Context `{Univalence} {G : Group} {R : Relation G}
@@ -20,7 +22,7 @@ Section GroupCongruenceQuotient.
     serapply Quotient_rec2.
     { intros x y.
       apply class_of.
-      exact (x & y). }
+      exact (x * y). }
     intros x x' p y y' q.
     pose (iscong p q).
     by apply path_quotient.
@@ -38,7 +40,7 @@ Section GroupCongruenceQuotient.
     intros x y p.
     rewrite <- (left_identity (-x)).
     destruct (left_inverse y).
-    set (-y & y & -x).
+    set (-y * y * -x).
     rewrite <- (right_identity (-y)).
     destruct (right_inverse x).
     unfold g; clear g.

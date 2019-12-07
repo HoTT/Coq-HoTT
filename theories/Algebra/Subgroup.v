@@ -3,6 +3,8 @@ Require Import Types.
 Require Import HSet.
 Require Import Algebra.Group.
 
+Local Open Scope mc_mult_scope.
+
 (** * Subgroups *)
 
 (** The property of being a subgroup *)
@@ -41,7 +43,7 @@ Section Cosets.
   Proof.
     intros x y.
     refine (hfiber issubgroup_incl _).
-    exact (-x & y).
+    exact (-x * y).
   Defined.
 
   (* The relation of being in a right coset represented by an element. *)
@@ -49,7 +51,7 @@ Section Cosets.
   Proof.
     intros x y.
     refine (hfiber issubgroup_incl _).
-    exact (x & -y).
+    exact (x * -y).
   Defined.
 
   (* These are props *)
@@ -94,7 +96,7 @@ Section Cosets.
     refine (p @ _).
     symmetry.
     refine (negate_sg_op _ _ @ _).
-    refine (ap (-x &) _).
+    refine (ap (-x *.) _).
     apply negate_involutive.
   Defined.
 
@@ -108,20 +110,20 @@ Section Cosets.
     refine (p @ _).
     symmetry.
     refine (negate_sg_op _ _ @ _).
-    refine (ap (& -y) _).
+    refine (ap (fun x => x *  -y) _).
     apply negate_involutive.
   Defined.
 
   Global Instance transitive_in_cosetL : Transitive in_cosetL.
   Proof.
     intros x y z [h p] [h' q].
-    exists (h & h').
+    exists (h * h').
     refine (grp_homo_op _ _ _ @ _).
     destruct p^, q^.
     rewrite <- simple_associativity.
     apply ap.
     rewrite simple_associativity.
-    refine (ap (& -z) _ @ _).
+    refine (ap (fun x => x *  -z) _ @ _).
     1: apply right_inverse.
     apply left_identity.
   Defined.
@@ -129,13 +131,13 @@ Section Cosets.
   Global Instance transitive_in_cosetR : Transitive in_cosetR.
   Proof.
     intros x y z [h p] [h' q].
-    exists (h & h').
+    exists (h * h').
     refine (grp_homo_op _ _ _ @ _).
     destruct p^, q^.
     rewrite <- simple_associativity.
     apply ap.
     rewrite simple_associativity.
-    refine (ap (& -z) _ @ _).
+    refine (ap (fun x => x *  -z) _ @ _).
     1: apply left_inverse.
     apply left_identity.
   Defined.
@@ -145,25 +147,25 @@ End Cosets.
 (** Identities related to the left and right cosets. *)
 
 Definition in_cosetL_unit {G : Group} `{!IsSubgroup N G}
-  : forall x y, in_cosetL (-x & y) mon_unit <~> in_cosetL x y.
+  : forall x y, in_cosetL (-x * y) mon_unit <~> in_cosetL x y.
 Proof.
   intros x y.
   unfold in_cosetL.
   rewrite negate_sg_op.
   rewrite negate_involutive.
-  rewrite (right_identity (-y & x)).
+  rewrite (right_identity (-y * x)).
   change (in_cosetL y x <~> in_cosetL x y).
   serapply equiv_iff_hprop;
   by intro; symmetry.
 Defined.
 
 Definition in_cosetR_unit {G : Group} `{!IsSubgroup N G}
-  : forall x y, in_cosetR (x & -y) mon_unit <~> in_cosetR x y.
+  : forall x y, in_cosetR (x * -y) mon_unit <~> in_cosetR x y.
 Proof.
   intros x y.
   unfold in_cosetR.
   rewrite negate_mon_unit.
-  rewrite (right_identity (x & -y)).
+  rewrite (right_identity (x * -y)).
   reflexivity.
 Defined.
 
@@ -215,9 +217,9 @@ Defined.
 (* There is always another element of the normal subgroup allowing us to commute with an element of the group. *)
 Definition normal_subgroup_swap {G : Group}
   `{!IsNormalSubgroup N} (x : G) (h : N)
-  : exists h' : N, x & issubgroup_incl h = issubgroup_incl h' & x.
+  : exists h' : N, x * issubgroup_incl h = issubgroup_incl h' * x.
 Proof.
-  assert (X : in_cosetL x (x & issubgroup_incl h)).
+  assert (X : in_cosetL x (x * issubgroup_incl h)).
   { exists h.
     rewrite simple_associativity.
     rewrite left_inverse.
@@ -230,18 +232,18 @@ Proof.
   eexists (-a).
   symmetry.
   rewrite grp_homo_inv.
-  apply (moveR_equiv_M (f := (- _ &))).
+  apply (moveR_equiv_M (f := (- _ *.))).
   cbn; rewrite negate_involutive.
   rewrite simple_associativity.
-  apply (moveL_equiv_M (f := (& _))).
-  apply (moveL_equiv_M (f := (& _))).
+  apply (moveL_equiv_M (f := (fun x => x * _))).
+  apply (moveL_equiv_M (f := (fun x => x * _))).
   symmetry.
   assumption.
 Defined.
 
 (* This let's us prove that left and right coset relations are congruences. *)
 Definition in_cosetL_cong {G : Group} `{!IsNormalSubgroup N}
-  : forall x x' y y', in_cosetL x y -> in_cosetL x' y' -> in_cosetL (x & x') (y & y').
+  : forall x x' y y', in_cosetL x y -> in_cosetL x' y' -> in_cosetL (x * x') (y * y').
 Proof.
   intros x x' y y' [a p] [b q].
   eexists ?[c].
@@ -257,7 +259,7 @@ Proof.
 Defined.
 
 Definition in_cosetR_cong {G : Group} `{!IsNormalSubgroup N}
-  : forall x x' y y', in_cosetR x y -> in_cosetR x' y' -> in_cosetR (x & x') (y & y').
+  : forall x x' y y', in_cosetR x y -> in_cosetR x' y' -> in_cosetR (x * x') (y * y').
 Proof.
   intros x x' y y' [a p] [b q].
   eexists ?[c].

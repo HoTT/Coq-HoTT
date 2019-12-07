@@ -7,6 +7,8 @@ Require Import Algebra.Subgroup.
 Require Import Cubical.
 Import TrM.
 
+Local Open Scope mc_mult_scope.
+
 (** * Abelian groups *)
 
 (** Definition of an abelian group *)
@@ -50,7 +52,7 @@ In fact this models the following HIT:
 
 HIT Abel (G : Group) := 
  | ab : G -> Abel G
- | ab_comm : forall x y z, ab (x & (y & z)) = ab (x & (z & y)).
+ | ab_comm : forall x y z, ab (x * (y * z)) = ab (x * (z * y)).
 
 We also derive ab and ab_comm from our coequalizer definition, and even prove the induction and computation rules for this HIT.
 
@@ -73,8 +75,8 @@ Section Abel.
   (** The type Abel is defined to be the set coequalizer of the following maps G^3 -> G. *)
   Definition Abel
     := Tr 0 (Coeq
-      (uncurry2 (fun a b c => a & (b & c)))
-      (uncurry2 (fun a b c => a & (c & b)))).
+      (uncurry2 (fun a b c => a * (b * c)))
+      (uncurry2 (fun a b c => a * (c * b)))).
 
   (** We have a natural map from G to Abel G *)
   Definition ab : G -> Abel.
@@ -85,7 +87,7 @@ Section Abel.
 
   (** This map has to satisfy the condition ab_comm *)
   Definition ab_comm a b c
-    : ab (a & (b & c)) = ab (a & (c & b)).
+    : ab (a * (b * c)) = ab (a * (c * b)).
   Proof.
     apply (ap tr).
     exact (cglue (a, b, c)).
@@ -97,7 +99,7 @@ Section Abel.
   (** We can derive the induction principle from the ones for truncation and the coequalizer. *)
   Definition Abel_ind (P : Abel -> Type) `{forall x, IsHSet (P x)} 
     (a : forall x, P (ab x)) (c : forall x y z, DPath P (ab_comm x y z)
-      (a (x & (y & z))) (a (x & (z & y))))
+      (a (x * (y * z))) (a (x * (z * y))))
     : forall (x : Abel), P x.
   Proof.
     serapply Trunc_ind.
@@ -113,7 +115,7 @@ Section Abel.
   Definition Abel_ind_beta_ab_comm (P : Abel -> Type)
     `{forall x, IsHSet (P x)}(a : forall x, P (ab x))
     (c : forall x y z, DPath P (ab_comm x y z)
-      (a (x & (y & z))) (a (x & (z & y))))
+      (a (x * (y * z))) (a (x * (z * y))))
     (x y z : G) : dp_apD (Abel_ind P a c) (ab_comm x y z) = c x y z.
   Proof.
     unfold ab_comm.
@@ -129,7 +131,7 @@ Section Abel.
 
   (** We also have a recursion princple. *)
   Definition Abel_rec (P : Type) `{IsHSet P} (a : G -> P)
-    (c : forall x y z, a (x & (y & z)) = a (x & (z & y)))
+    (c : forall x y z, a (x * (y * z)) = a (x * (z * y)))
     : Abel -> P.
   Proof.
     apply (Abel_ind _ a).
@@ -174,7 +176,7 @@ Section AbelGroup.
     { intro a.
       serapply Abel_rec.
       { intro b.
-        exact (ab (a & b)). }
+        exact (ab (a * b)). }
       intros b c d; cbn.
       refine (ab_comm _ _ _ @ _).
       refine (ap _ _ @ _).
@@ -236,16 +238,16 @@ Section AbelGroup.
     serapply Abel_ind_hprop; intro x.
     serapply Abel_ind_hprop; intro y.
     cbn.
-    rewrite <- (left_identity (x & y)).
-    rewrite <- (left_identity (y & x)).
+    rewrite <- (left_identity (x * y)).
+    rewrite <- (left_identity (y * x)).
     apply ab_comm.
   Defined.
 
   (** Now we can define the negation. This is just
         - (ab g) := (ab (g^-1) 
       However when checking that it respects ab_comm we have to show the following:
-        ab (- z & - y & - x) = ab (- y & - z & - x)
-      there is no obvious way to do this, but we note that ab (x & y) is exactly the definition of ab x + ab y! Hence by commutativity we can show this. *)
+        ab (- z * - y * - x) = ab (- y * - z * - x)
+      there is no obvious way to do this, but we note that ab (x * y) is exactly the definition of ab x + ab y! Hence by commutativity we can show this. *)
   Global Instance abel_negate : Negate (Abel G).
   Proof.
     serapply Abel_rec.
@@ -253,7 +255,7 @@ Section AbelGroup.
       exact (ab (-g)). }
     intros x y z; cbn.
     rewrite ?negate_sg_op.
-    change (ab(- z) & ab(- y) & ab (- x) = ab (- y) & ab (- z) & ab(- x)).
+    change (ab(- z) * ab(- y) * ab (- x) = ab (- y) * ab (- z) * ab(- x)).
     by rewrite (commutativity (ab (-z)) (ab (-y))).
   Defined.
 
@@ -325,7 +327,7 @@ Section Abelianization.
         { serapply (Abel_rec _ _ h).
           intros x y z.
           refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
-          apply (ap (_ &)).
+          apply (ap (_ *.)).
           refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
           apply commutativity. }
         serapply Abel_ind_hprop; intro x.

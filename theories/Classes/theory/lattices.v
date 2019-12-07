@@ -122,23 +122,25 @@ Section lower_bounded_lattice.
 End lower_bounded_lattice.
 
 Section from_another_sl.
+  Local Open Scope mc_add_scope.
   Context `{IsSemiLattice A} `{IsHSet B}
    `{Bop : SgOp B} (f : B -> A) `{!IsInjective f}
-   (op_correct : forall x y, f (x & y) = f x & f y).
+   (op_correct : forall x y, f (x + y) = f x + f y).
 
   Lemma projected_sl: IsSemiLattice B.
   Proof.
   split.
   - apply (projected_com_sg f). assumption.
-  - repeat intro; apply (injective f). rewrite !op_correct, (idempotency (&) _).
+  - repeat intro; apply (injective f). rewrite !op_correct, (idempotency (+) _).
     reflexivity.
   Qed.
 End from_another_sl.
 
 Section from_another_bounded_sl.
+  Local Open Scope mc_add_scope.
   Context `{IsBoundedSemiLattice A} `{IsHSet B}
    `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B -> A) `{!IsInjective f}
-   (op_correct : forall x y, f (x & y) = f x & f y)
+   (op_correct : forall x y, f (x + y) = f x + f y)
    (unit_correct : f mon_unit = mon_unit).
 
   Lemma projected_bounded_sl: IsBoundedSemiLattice B.
@@ -146,7 +148,7 @@ Section from_another_bounded_sl.
   split.
   - apply (projected_com_monoid f);trivial.
   - repeat intro; apply (injective f).
-    rewrite op_correct, (idempotency (&) _).
+    rewrite op_correct, (idempotency (+) _).
     trivial.
   Qed.
 End from_another_bounded_sl.

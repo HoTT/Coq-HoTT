@@ -65,39 +65,43 @@ Section upper_classes.
   Universe i.
   Context (A : Type@{i}).
 
+  Local Open Scope mc_mult_scope.
+
   Class IsSemiGroup {Aop: SgOp A} :=
     { sg_set :> IsHSet A
-    ; sg_ass :> Associative (&) }.
+    ; sg_ass :> Associative (.*.) }.
 
   Class IsCommutativeSemiGroup {Aop : SgOp A} :=
-    { comsg_sg :> @IsSemiGroup Aop
-    ; comsg_comm :> Commutative (&) }.
+    { comsg_sg :> @IsSemiGroup (.*.)
+    ; comsg_comm :> Commutative (.*.) }.
 
   Class IsSemiLattice {Aop : SgOp A} :=
-    { semilattice_sg :> @IsCommutativeSemiGroup Aop
-    ; semilattice_idempotent :> BinaryIdempotent (&)}.
+    { semilattice_sg :> @IsCommutativeSemiGroup (.*.)
+    ; semilattice_idempotent :> BinaryIdempotent (.*.)}.
 
   Class IsMonoid {Aop : SgOp A} {Aunit : MonUnit A} :=
     { monoid_semigroup :> IsSemiGroup
-    ; monoid_left_id :> LeftIdentity (&) mon_unit
-    ; monoid_right_id :> RightIdentity (&) mon_unit }.
+    ; monoid_left_id :> LeftIdentity (.*.) mon_unit
+    ; monoid_right_id :> RightIdentity (.*.) mon_unit }.
 
-  Class IsCommutativeMonoid {Aop Aunit} :=
-    { commonoid_mon :> @IsMonoid Aop Aunit
-    ; commonoid_commutative :> Commutative (&) }.
+  Class IsCommutativeMonoid {Aop : SgOp A} {Aunit : MonUnit A} :=
+    { commonoid_mon :> @IsMonoid (.*.) Aunit
+    ; commonoid_commutative :> Commutative (.*.) }.
 
-  Class IsGroup {Aop Aunit} {Anegate : Negate A} :=
-    { group_monoid :> @IsMonoid Aop Aunit
-    ; negate_l :> LeftInverse (&) (-) mon_unit
-    ; negate_r :> RightInverse (&) (-) mon_unit }.
+  Class IsGroup {Aop : SgOp A} {Aunit : MonUnit A} {Anegate : Negate A} :=
+    { group_monoid :> @IsMonoid (.*.) Aunit
+    ; negate_l :> LeftInverse (.*.) (-) mon_unit
+    ; negate_r :> RightInverse (.*.) (-) mon_unit }.
 
-  Class IsBoundedSemiLattice {Aop Aunit} :=
-    { bounded_semilattice_mon :> @IsCommutativeMonoid Aop Aunit
-    ; bounded_semilattice_idempotent :> BinaryIdempotent (&)}.
+  Class IsBoundedSemiLattice {Aop : SgOp A} {Aunit : MonUnit A} :=
+    { bounded_semilattice_mon :> @IsCommutativeMonoid (.*.) Aunit
+    ; bounded_semilattice_idempotent :> BinaryIdempotent (.*.)}.
 
-  Class IsAbGroup {Aop Aunit Anegate} :=
-    { abgroup_group :> @IsGroup Aop Aunit Anegate
-    ; abgroup_commutative :> Commutative (&) }.
+  Class IsAbGroup {Aop : SgOp A} {Aunit : MonUnit A} {Anegate : Negate A} :=
+    { abgroup_group :> @IsGroup (.*.) Aunit Anegate
+    ; abgroup_commutative :> Commutative (.*.) }.
+
+  Close Scope mc_mult_scope.
 
   Context {Aplus : Plus A} {Amult : Mult A} {Azero : Zero A} {Aone : One A}.
 
@@ -206,8 +210,10 @@ Section morphism_classes.
   Context {A B : Type} {Aop : SgOp A} {Bop : SgOp B}
     {Aunit : MonUnit A} {Bunit : MonUnit B}.
 
+  Local Open Scope mc_mult_scope.
+
   Class IsSemiGroupPreserving (f : A -> B) :=
-    preserves_sg_op : forall x y, f (x & y) = f x & f y.
+    preserves_sg_op : forall x y, f (x * y) = f x * f y.
 
   Class IsUnitPreserving (f : A -> B) :=
     preserves_mon_unit : f mon_unit = mon_unit.
