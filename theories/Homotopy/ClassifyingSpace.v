@@ -7,7 +7,6 @@ Require Import Algebra.AbelianGroup.
 Require Import Homotopy.HSpace.
 Require Import TruncType.
 Require Import Truncations.
-Require Import HIT.Coeq.
 Import TrM.
 
 Local Open Scope pointed_scope.
@@ -16,9 +15,9 @@ Local Open Scope trunc_scope.
 Declare Scope bg_scope.
 Local Open Scope bg_scope.
 
-(** * We define the Classifying space of a type with operation (a magma) to be the following HIT:
+(** * We define the Classifying space of a group to be the following HIT:
 
-  HIT ClassifyingSpace (X : Type) {op : X -> X -> X} : 1-Type
+  HIT ClassifyingSpace (G : Group) : 1-Type
    | bbase : ClassifyingSpace
    | bloop : X -> bbase = bbase
    | bloop_pp : forall x y, bloop (x & y) = bloop x @ bloop y.
@@ -29,30 +28,32 @@ Module Export ClassifyingSpace.
 
   Section ClassifyingSpace.
 
-    Private Inductive ClassifyingSpace {X : Type} `{SgOp X} :=
+    Private Inductive ClassifyingSpace {G : Group} :=
       | bbase : ClassifyingSpace.
 
-    Definition bloop {X : Type} `{SgOp X} : X -> bbase = bbase. 
+    Context {G : Group}.
+
+    Definition bloop : G -> bbase = bbase. 
     Proof. Admitted.
 
-    Definition bloop_pp {X : Type} `{SgOp X}
+    Definition bloop_pp
       : forall x y, bloop (x & y) = bloop x @ bloop y.
     Proof. Admitted.
 
-    Global Instance istrunc_ClassifyingSpace {X : Type} `{SgOp X}
+    Global Instance istrunc_ClassifyingSpace
       : IsTrunc 1 ClassifyingSpace.
     Proof. Admitted.
 
   End ClassifyingSpace.
 
-  Arguments ClassifyingSpace X {_}.
+  Arguments ClassifyingSpace G : clear implicits.
 
   (** Now we can state the expected dependent elimination principle, and derive other versions of the elimination principle from it. *)
   Section ClassifyingSpace_ind.
 
     Local Open Scope dpath_scope.
 
-    Context `{SgOp G}.
+    Context {G : Group}.
 
     (** Note that since our classifying space is 1-truncated, we can only eliminate into 1-truncated type families. *)
     Definition ClassifyingSpace_ind
@@ -84,7 +85,7 @@ End ClassifyingSpace.
 (** Other eliminators *)
 Section Eliminators.
 
-  Context `{SgOp G}.
+  Context {G : Group}.
 
   (** The non-dependent eliminator *)
   Definition ClassifyingSpace_rec
@@ -138,8 +139,8 @@ Section Eliminators.
 End Eliminators.
 
 (** We can prove that the classifying space is 0-connected. *)
-Global Instance isconnected_classifyingspace {X : Type} `{SgOp X}
-  : IsConnected 0 (ClassifyingSpace X).
+Global Instance isconnected_classifyingspace {G : Group}
+  : IsConnected 0 (ClassifyingSpace G).
 Proof.
   exists (tr bbase).
   serapply Trunc_ind.
@@ -283,7 +284,7 @@ Section HSpace_bg.
     apply ap; cbn.
     apply path_forall.
     serapply ClassifyingSpace_ind_hset.
-    1: apply bloop_pp.
+    1: exact (bloop_pp x y).
     intro z.
     serapply dp_paths_FlFr_D.
     serapply path_ishprop.
