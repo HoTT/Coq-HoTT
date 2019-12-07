@@ -7,6 +7,8 @@ Require Export
   HoTT.Classes.orders.orders
   HoTT.Classes.orders.maps.
 
+Generalizable Variables R Rlt f.
+
 Section semiring_order.
   Context `{SemiRingOrder R} `{!IsSemiRing R}.
 (*   Add Ring R : (stdlib_semiring_theory R). *)

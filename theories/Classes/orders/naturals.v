@@ -14,6 +14,8 @@ Require Import
 Require Export
   HoTT.Classes.orders.nat_int.
 
+Generalizable Variables N R Rle Rlt f.
+
 Section naturals_order.
 Context `{Funext} `{Univalence}.
 Context `{Naturals N} `{!TrivialApart N}.

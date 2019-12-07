@@ -4,6 +4,8 @@ Require
 Require Import
   HoTT.Classes.interfaces.abstract_algebra.
 
+Generalizable Variables R A B C f z.
+
 Definition is_ne_0 `(x : R) `{Zero R} `{p : PropHolds (x <> 0)}
   : x <> 0 := p.
 Definition is_nonneg `(x : R) `{Le R} `{Zero R} `{p : PropHolds (0 ≤ x)}

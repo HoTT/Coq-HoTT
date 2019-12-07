@@ -2,6 +2,8 @@ Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Types.Unit HoTT.Types.Prod.
 
+Generalizable Variables A B C.
+
 Open Scope list_scope.
 
 (** Standard notations for lists. 

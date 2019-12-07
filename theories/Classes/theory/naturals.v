@@ -10,6 +10,8 @@ Require Import
 Require Export
   HoTT.Classes.interfaces.naturals.
 
+Generalizable Variables A N R SR f.
+
 (* This grabs a coercion. *)
 Import SemiRings.
 

@@ -1,5 +1,7 @@
 Require Import HoTT.Classes.interfaces.abstract_algebra.
 
+Generalizable Variables A.
+
 (*
 In this file we describe interfaces for ordered structures. Since we are in a
 constructive setting we use a pseudo order instead of a total order. Therefore

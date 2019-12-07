@@ -5,6 +5,8 @@ Require Import
 Require Export
   HoTT.Classes.orders.semirings.
 
+Generalizable Variables R Rle Rlt R1le R1lt.
+
 Section from_ring_order.
   Context `{IsRing R} `{!PartialOrder Rle}
     (plus_spec : forall z, OrderPreserving (z +))

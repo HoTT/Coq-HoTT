@@ -9,6 +9,8 @@ Require Import
 Require Export
   HoTT.Classes.orders.semirings.
 
+Generalizable Variables N R f.
+
 Section Univ.
 Context `{Funext} `{Univalence}.
 

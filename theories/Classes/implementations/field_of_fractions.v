@@ -204,8 +204,8 @@ Arguments equiv {R _ _} _ _.
 
 
 Section morphisms.
-Context `{IsIntegralDomain R1} `{DecidablePaths R1}.
-Context `{IsIntegralDomain R2} `{DecidablePaths R2}.
+Context {R1} `{IsIntegralDomain R1} `{DecidablePaths R1}.
+Context {R2} `{IsIntegralDomain R2} `{DecidablePaths R2}.
 Context `(f : R1 -> R2) `{!IsSemiRingPreserving f} `{!IsInjective f}.
 
 Definition lift (x : Frac R1) : Frac R2.

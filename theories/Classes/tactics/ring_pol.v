@@ -5,6 +5,8 @@ Require Import
   HoTT.Classes.tactics.ring_quote
   HoTT.Classes.theory.rings.
 
+Generalizable Variables Vlt.
+
 Import Quoting.
 Local Set Universe Minimization ToSet.
 

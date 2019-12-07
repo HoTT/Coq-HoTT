@@ -6,6 +6,8 @@ Require Export Classes.theory.groups.
 Require Import Pointed.Core.
 Require Basics.Utf8.
 
+Generalizable Variables G H A B C f g.
+
 (** ** Groups *)
 
 Local Open Scope mc_mult_scope.

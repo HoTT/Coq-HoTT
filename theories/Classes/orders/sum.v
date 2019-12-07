@@ -2,6 +2,8 @@ Require Import
   HoTT.Classes.interfaces.canonical_names
   HoTT.Classes.interfaces.orders.
 
+Generalizable Variables A B.
+
 Global Instance Empty_lt : Lt@{Set Set} Empty.
 Proof. intros []. Defined.
 

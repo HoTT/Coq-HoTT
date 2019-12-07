@@ -8,6 +8,8 @@ Require Import
   HoTT.Classes.theory.rings
   HoTT.Classes.orders.rings.
 
+Generalizable Variables N Z Zle Zlt R f.
+
 Section contents.
 Context `{Funext} `{Univalence}.
 Context `{Integers Z} `{Apart Z} `{!TrivialApart Z}

@@ -1,6 +1,8 @@
 Require Import HoTT.Basics.Decidable HoTT.Truncations.
 Require Import HoTT.Classes.interfaces.abstract_algebra.
 
+Generalizable Variables A B C f g.
+
 Section contents.
 Context `{IsApart A}.
 

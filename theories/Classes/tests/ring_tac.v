@@ -2,6 +2,8 @@ Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.tactics.ring_tac.
 
+Generalizable Variables R.
+
 Lemma test1 `{IsSemiRing R}
   : forall x y : R, x + (y * x) = x * (y + 1).
 Proof.

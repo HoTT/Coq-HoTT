@@ -1,5 +1,7 @@
 Require Import HoTT.Classes.interfaces.abstract_algebra.
 
+Generalizable Variables A R.
+
 Local Set Universe Minimization ToSet.
 
 Instance decide_eqb `{DecidablePaths A} : Eqb A

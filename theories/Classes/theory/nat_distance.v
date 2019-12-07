@@ -8,6 +8,8 @@ Require Import
   HoTT.Classes.interfaces.orders
   HoTT.Classes.theory.additional_operations.
 
+Generalizable Variables N.
+
 Section contents.
 Context `{Funext} `{Univalence}.
 Context `{Naturals N}.

@@ -18,6 +18,8 @@ Require Import
   HoTT.Classes.interfaces.naturals
   HoTT.Classes.theory.naturals.
 
+Generalizable Variables B.
+
 Local Set Universe Minimization ToSet.
 
 Module NatPair.

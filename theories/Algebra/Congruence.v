@@ -7,6 +7,6 @@ Require Import Classes.interfaces.abstract_algebra.
 
 Local Open Scope mc_mult_scope.
 
-Class IsCongruence `{SgOp G} (R : Relation G) := {
+Class IsCongruence {G} `{SgOp G} (R : Relation G) := {
   iscong {x x' y y'} : R x x' -> R y y' -> R (x * y) (x' * y');
 }.

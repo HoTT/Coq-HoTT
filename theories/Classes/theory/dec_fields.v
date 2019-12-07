@@ -5,6 +5,8 @@ Require Import
 Require Export
   HoTT.Classes.theory.rings.
 
+Generalizable Variables F f R.
+
 Section contents.
 Context `{IsDecField F} `{forall x y: F, Decidable (x = y)}.
 
