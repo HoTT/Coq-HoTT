@@ -92,6 +92,8 @@ Require Export HoTT.Comodalities.CoreflectiveSubuniverse.
 
 Require Export HoTT.Spaces.Nat.
 Require Export HoTT.Spaces.Int.
+Require Export HoTT.Spaces.Pos.
+
 Require Export HoTT.Spaces.Cantor.
 
 Require Export HoTT.Spaces.BAut.
@@ -122,6 +124,8 @@ Require Export HoTT.Homotopy.Suspension.
 Require Export HoTT.Homotopy.Smash.
 Require Export HoTT.Homotopy.Wedge.
 Require Export HoTT.Homotopy.Join.
+Require Export HoTT.Homotopy.HSpace.
+Require Export HoTT.Homotopy.ClassifyingSpace.
 
 Require Export HoTT.Spectra.Spectrum.
 
