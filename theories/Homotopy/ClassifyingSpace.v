@@ -33,12 +33,9 @@ Module Export ClassifyingSpace.
 
     Context {G : Group}.
 
-    Definition bloop : G -> bbase = bbase. 
-    Proof. Admitted.
+    Axiom bloop : G -> bbase = bbase.
 
-    Definition bloop_pp
-      : forall x y, bloop (x & y) = bloop x @ bloop y.
-    Proof. Admitted.
+    Axiom bloop_pp : forall x y, bloop (x & y) = bloop x @ bloop y.
 
     Global Instance istrunc_ClassifyingSpace
       : IsTrunc 1 ClassifyingSpace.
@@ -63,11 +60,11 @@ Module Export ClassifyingSpace.
       (bloop' : forall x, DPath P (bloop x) bbase' bbase')
       (bloop_pp' : forall x y,  DSquare P (sq_G1 (bloop_pp x y))
         (bloop' (x & y)) ((bloop' x) @D (bloop' y)) 1 1) x : P x
-      := match x return (_ -> P x) with
-            bbase => (fun _ => bbase')
-         end bloop'.
+      := match x with
+            bbase => (fun _ _ => bbase')
+         end bloop' bloop_pp'.
 
-    (** Here we state the computation rule for [ClassifyingSpace_ind] over [bloop] as an axiom. We don't need one for bloop_pp since we have a 1-type. **)
+    (** Here we state the computation rule for [ClassifyingSpace_ind] over [bloop] as an axiom. We don't need one for bloop_pp since we have a 1-type. We leave this as admitted since the computation rule is an axiom. **)
     Definition ClassifyingSpace_ind_beta_bloop
       (P : ClassifyingSpace G -> Type)
      `{forall x, IsTrunc 1 (P x)}
