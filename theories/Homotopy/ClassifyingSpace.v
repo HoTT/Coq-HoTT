@@ -61,7 +61,7 @@ Module Export ClassifyingSpace.
         (bloop' (x & y)) ((bloop' x) @D (bloop' y)) 1 1) x : P x
       := match x return (_ -> P x) with
             bbase => (fun _ => bbase')
-         end bloop.
+         end bloop'.
 
     (** Here we state the computation rule for [ClassifyingSpace_ind] over [bloop] as an axiom. We don't need one for bloop_pp since we have a 1-type. **)
     Definition ClassifyingSpace_ind_beta_bloop
@@ -328,8 +328,8 @@ Section HSpace_bg.
     apply bg_mul_left_id.
   Defined.
 
-  Global Instance hspace_bg : HSpace (B G)
-    := Build_HSpace _
+  Global Instance ishspace_bg : IsHSpace (B G)
+    := Build_IsHSpace _
           bg_mul
           bg_mul_left_id
           bg_mul_right_id.
