@@ -153,9 +153,10 @@ Defined.
 (** Now we focus on the classifying space of a group. *)
 
 (** The classifying space of a group is the following pointed type. *)
-Definition B_group (G : Group) := Build_pType (ClassifyingSpace G) bbase.
+Definition pClassifingSpace (G : Group)
+  := Build_pType (ClassifyingSpace G) bbase.
 
-Notation "'B' G" := (B_group G) (at level 0) : bg_scope.
+Notation "'B' G" := (pClassifingSpace G) (at level 0) : bg_scope.
 
 (** We can show that [bloop] takes the unit of the group to reflexivity. *)
 Definition bloop_id {G : Group} : bloop mon_unit = idpath.
