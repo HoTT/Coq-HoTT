@@ -374,18 +374,6 @@ Proof.
     reflexivity. }
 Defined.
 
-Global Instance isequiv_groupiso_isabelianization
-  (F1 F2 : Group -> AbGroup)
-  (eta1 : forall X, GroupHomomorphism X (F1 X))
-  (eta2 : forall X, GroupHomomorphism X (F2 X))
-  `{IsAbelianization F1 eta1}
-  `{IsAbelianization F2 eta2}
-  (G : Group)
-  : IsEquiv (groupiso_isabelianization F1 F2 eta1 eta2 G).
-Proof.
-  exact _.
-Defined.
-
 Theorem homotopic_isabelianization (F1 F2 : Group -> AbGroup)
   (eta1 : forall X, GroupHomomorphism X (F1 X))
   (eta2 : forall X, GroupHomomorphism X (F2 X))
@@ -410,10 +398,8 @@ Global Instance issurj_isabelianization `{Funext}
 Proof.
   intros k G.
   pose (homotopic_isabelianization F abel eta abel_unit G) as p.
-  simpl in p.
   refine (@cancelR_isequiv_conn_map _ _ _ _ _ _ _
     (conn_map_homotopic _ _ _ p _)).
-  apply (isequiv_groupiso_isabelianization F abel eta abel_unit G).
 Qed.
 
 Definition isequiv_abgroup_abelianization `{U : Univalence}
@@ -437,10 +423,3 @@ Proof.
   + change (a o eta A == idmap); symmetry.
     apply ah.
 Defined.
-
-
-
-
-
-
-
