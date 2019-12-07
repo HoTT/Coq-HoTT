@@ -37,10 +37,10 @@ Coercion group_abgroup : AbGroup >-> Group.
 (** Definition of Abelianization.
 
   Given a map F that turns any group into an abelian group, and a unit homomorphism eta_X : X -> F X. This data is considered an Abelianization if and only if for all maps X -> A, there exists a unique g such that h == g o eta X. *)
-Definition IsAbelianization (F : Group -> AbGroup)
-  (eta : forall X, GroupHomomorphism X (F X))
-  := forall (X : Group) (A : AbGroup) (h : GroupHomomorphism X A),
-    Contr (exists (g : GroupHomomorphism (F X) A), h == g o eta X).
+Definition IsAbelianization {G : Group} (G_ab : AbGroup)
+  (eta : GroupHomomorphism G G_ab)
+  := forall (A : AbGroup) (h : GroupHomomorphism G A),
+    Contr (exists (g : GroupHomomorphism G_ab A), h == g o eta).
 
 Existing Class IsAbelianization.
 
@@ -317,10 +317,10 @@ Section Abelianization.
   Defined.
 
   (** Finally we can prove that our construction abel is an abelianization. *)
-  Global Instance isabelianization_abel
-    : IsAbelianization abel abel_unit.
+  Global Instance isabelianization_abel {G : Group}
+    : IsAbelianization (abel G) (abel_unit G).
   Proof.
-    intros X A h.
+    intros A h.
     serapply Build_Contr.
     { srefine (_;_).
       { simple notypeclasses refine (Build_GroupHomomorphism _).
@@ -343,19 +343,19 @@ Section Abelianization.
 
 End Abelianization.
 
-Theorem groupiso_isabelianization
-  (F1 F2 : Group -> AbGroup)
-  (eta1 : forall X, GroupHomomorphism X (F1 X))
-  (eta2 : forall X, GroupHomomorphism X (F2 X))
-  {x : IsAbelianization F1 eta1}
-  {y : IsAbelianization F2 eta2}
-  (G : Group) : GroupIsomorphism (F1 G) (F2 G).
+Theorem groupiso_isabelianization {G : Group}
+  (A B : AbGroup)
+  (eta1 : GroupHomomorphism G A)
+  (eta2 : GroupHomomorphism G B)
+  {x : IsAbelianization A eta1}
+  {y : IsAbelianization B eta2}
+  : GroupIsomorphism A B.
 Proof.
   unfold IsAbelianization in x, y.
-  destruct (x G (F2 G) (eta2 G)) as [[a ah] ac].
-  destruct (y G (F1 G) (eta1 G)) as [[b bh] bc].
-  destruct (x G (F1 G) (eta1 G)) as [[c ch] cc].
-  destruct (y G (F2 G) (eta2 G)) as [[d dh] dc].
+  destruct (x B eta2) as [[a ah] ac].
+  destruct (y A eta1) as [[b bh] bc].
+  destruct (x A eta1) as [[c ch] cc].
+  destruct (y B eta2) as [[d dh] dc].
   serapply (Build_GroupIsomorphism _ _ a).
   serapply (isequiv_adjointify _ b).
   { apply ap10.
@@ -374,52 +374,45 @@ Proof.
     reflexivity. }
 Defined.
 
-Theorem homotopic_isabelianization (F1 F2 : Group -> AbGroup)
-  (eta1 : forall X, GroupHomomorphism X (F1 X))
-  (eta2 : forall X, GroupHomomorphism X (F2 X))
-  {x : IsAbelianization F1 eta1}
-  {y : IsAbelianization F2 eta2}
-  (G : Group)
-  : eta2 G
-   == grp_homo_compose (groupiso_isabelianization F1 F2 eta1 eta2 G) (eta1 G).
+Theorem homotopic_isabelianization {G : Group} (A B : AbGroup)
+  (eta1 : GroupHomomorphism G A) (eta2 : GroupHomomorphism G B)
+  {x : IsAbelianization A eta1} {y : IsAbelianization B eta2}
+  : eta2 == grp_homo_compose (groupiso_isabelianization A B eta1 eta2) eta1.
 Proof.
   unfold IsAbelianization in x, y.
-  destruct (x G (F2 G) (eta2 G)) as [[a ah] ac].
-  destruct (y G (F1 G) (eta1 G)) as [[b bh] bc].
-  refine (transport (fun e : GroupHomomorphism (F1 G) (F2 G)
-    => _ == (fun x : G => e (eta1 G x))) (ap pr1 (ac _)) ah).
+  destruct (x B eta2) as [[a ah] ac].
+  destruct (y A eta1) as [[b bh] bc].
+  refine (transport (fun e : GroupHomomorphism A B
+    => _ == (fun x : G => e (eta1 x))) (ap pr1 (ac _)) ah).
 Defined.
 
 (** Hence any abelianization is surjective. *)
-Global Instance issurj_isabelianization `{Funext}
-  (F : Group -> AbGroup)
-  (eta : forall X, GroupHomomorphism X (F X))
-  : IsAbelianization F eta -> forall G, IsSurjection (eta G).
+Global Instance issurj_isabelianization `{Funext} {G : Group}
+  (A : AbGroup) (eta : GroupHomomorphism G A)
+  : IsAbelianization A eta -> IsSurjection eta.
 Proof.
-  intros k G.
-  pose (homotopic_isabelianization F abel eta abel_unit G) as p.
+  intros k.
+  pose (homotopic_isabelianization A (abel G) eta (abel_unit G)) as p.
   refine (@cancelR_isequiv_conn_map _ _ _ _ _ _ _
     (conn_map_homotopic _ _ _ p _)).
 Qed.
 
-Definition isequiv_abgroup_abelianization `{U : Univalence}
-  (F : Group -> AbGroup)
-  (eta : forall X, GroupHomomorphism X (F X))
-  {H : IsAbelianization F eta}
-  (A : AbGroup) : IsEquiv (eta A).
+Global Instance isequiv_abgroup_abelianization `{U : Univalence}
+  (A B : AbGroup) (eta : GroupHomomorphism A B) {H : IsAbelianization B eta}
+  : IsEquiv eta.
 Proof.
-  destruct (H A A grp_homo_id) as [[a ah] ac].
-  serapply (isequiv_adjointify (eta A) a).
+  destruct (H A grp_homo_id) as [[a ah] ac].
+  serapply (isequiv_adjointify eta a).
   + simpl.
     Require HIT.epi.
     apply ap10.
-    pose (epi.issurj_isepi (eta A) _) as i.
+    pose (epi.issurj_isepi eta _) as i.
     refine (i _ _ idmap _).
     apply path_forall.
     intro x.
     apply ap.
     symmetry.
     apply ah.
-  + change (a o eta A == idmap); symmetry.
+  + change (a o eta == idmap); symmetry.
     apply ah.
 Defined.
