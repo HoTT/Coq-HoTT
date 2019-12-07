@@ -65,43 +65,43 @@ Section upper_classes.
   Universe i.
   Context (A : Type@{i}).
 
-  Local Open Scope mc_add_scope.
+  Local Open Scope mc_mult_scope.
 
   Class IsSemiGroup {Aop: SgOp A} :=
     { sg_set :> IsHSet A
-    ; sg_ass :> Associative (+) }.
+    ; sg_ass :> Associative (.*.) }.
 
   Class IsCommutativeSemiGroup {Aop : SgOp A} :=
-    { comsg_sg :> @IsSemiGroup (+)
-    ; comsg_comm :> Commutative (+) }.
+    { comsg_sg :> @IsSemiGroup (.*.)
+    ; comsg_comm :> Commutative (.*.) }.
 
   Class IsSemiLattice {Aop : SgOp A} :=
-    { semilattice_sg :> @IsCommutativeSemiGroup (+)
-    ; semilattice_idempotent :> BinaryIdempotent (+)}.
+    { semilattice_sg :> @IsCommutativeSemiGroup (.*.)
+    ; semilattice_idempotent :> BinaryIdempotent (.*.)}.
 
   Class IsMonoid {Aop : SgOp A} {Aunit : MonUnit A} :=
     { monoid_semigroup :> IsSemiGroup
-    ; monoid_left_id :> LeftIdentity (+) mon_unit
-    ; monoid_right_id :> RightIdentity (+) mon_unit }.
+    ; monoid_left_id :> LeftIdentity (.*.) mon_unit
+    ; monoid_right_id :> RightIdentity (.*.) mon_unit }.
 
   Class IsCommutativeMonoid {Aop : SgOp A} {Aunit : MonUnit A} :=
-    { commonoid_mon :> @IsMonoid (+) Aunit
-    ; commonoid_commutative :> Commutative (+) }.
+    { commonoid_mon :> @IsMonoid (.*.) Aunit
+    ; commonoid_commutative :> Commutative (.*.) }.
 
   Class IsGroup {Aop : SgOp A} {Aunit : MonUnit A} {Anegate : Negate A} :=
-    { group_monoid :> @IsMonoid (+) Aunit
-    ; negate_l :> LeftInverse (+) (-) mon_unit
-    ; negate_r :> RightInverse (+) (-) mon_unit }.
+    { group_monoid :> @IsMonoid (.*.) Aunit
+    ; negate_l :> LeftInverse (.*.) (-) mon_unit
+    ; negate_r :> RightInverse (.*.) (-) mon_unit }.
 
   Class IsBoundedSemiLattice {Aop : SgOp A} {Aunit : MonUnit A} :=
-    { bounded_semilattice_mon :> @IsCommutativeMonoid (+) Aunit
-    ; bounded_semilattice_idempotent :> BinaryIdempotent (+)}.
+    { bounded_semilattice_mon :> @IsCommutativeMonoid (.*.) Aunit
+    ; bounded_semilattice_idempotent :> BinaryIdempotent (.*.)}.
 
   Class IsAbGroup {Aop : SgOp A} {Aunit : MonUnit A} {Anegate : Negate A} :=
-    { abgroup_group :> @IsGroup (+) Aunit Anegate
-    ; abgroup_commutative :> Commutative (+) }.
+    { abgroup_group :> @IsGroup (.*.) Aunit Anegate
+    ; abgroup_commutative :> Commutative (.*.) }.
 
-  Close Scope mc_add_scope.
+  Close Scope mc_mult_scope.
 
   Context {Aplus : Plus A} {Amult : Mult A} {Azero : Zero A} {Aone : One A}.
 

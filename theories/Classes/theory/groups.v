@@ -1,7 +1,7 @@
 Require Import
   HoTT.Classes.interfaces.abstract_algebra.
 
-Local Open Scope mc_add_scope.
+Local Open Scope mc_mult_scope.
 
 Section group_props.
   Context `{IsGroup G}.
@@ -10,14 +10,14 @@ Section group_props.
   Global Instance negate_involutive : Involutive (-).
   Proof.
     intros x.
-    transitivity (mon_unit + x).
+    transitivity (mon_unit * x).
     2: apply left_identity.
-    transitivity ((- - x + - x) + x).
-    2: apply (@ap _ _ (fun y => y + x)),
+    transitivity ((- - x * - x) * x).
+    2: apply (@ap _ _ (fun y => y * x)),
           left_inverse.
-    transitivity (- - x + (- x + x)).
+    transitivity (- - x * (- x * x)).
     2: apply associativity.
-    transitivity (- - x + mon_unit).
+    transitivity (- - x * mon_unit).
     2: apply ap, symmetry, left_inverse.
     apply symmetry, right_identity.
   Qed.
@@ -36,7 +36,7 @@ Section group_props.
     apply symmetry, right_identity.
   Qed.
 
-  Global Instance group_cancelL : forall z : G, LeftCancellation (+) z.
+  Global Instance group_cancelL : forall z : G, LeftCancellation (.*.) z.
   Proof.
     intros z x y E.
     rewrite <- (left_identity x).
@@ -47,7 +47,7 @@ Section group_props.
     reflexivity.
   Qed.
 
-  Global Instance group_cancelR: forall z : G, RightCancellation (+) z.
+  Global Instance group_cancelR: forall z : G, RightCancellation (.*.) z.
   Proof.
     intros z x y E.
     rewrite <-(right_identity x).
@@ -58,10 +58,10 @@ Section group_props.
     reflexivity.
   Qed.
 
-  Lemma negate_sg_op x y : - (x + y) = -y + -x.
+  Lemma negate_sg_op x y : - (x * y) = -y * -x.
   Proof.
-    rewrite <- (left_identity (-y + -x)).
-    rewrite <- (left_inverse (unit:=mon_unit) (x + y)).
+    rewrite <- (left_identity (-y * -x)).
+    rewrite <- (left_inverse (unit:=mon_unit) (x * y)).
     rewrite <- simple_associativity.
     rewrite <- simple_associativity.
     rewrite (associativity y).
@@ -75,9 +75,9 @@ End group_props.
 
 Section abgroup_props.
 
-  Lemma negate_sg_op_distr `{IsAbGroup G} x y : -(x + y) = -x + -y.
+  Lemma negate_sg_op_distr `{IsAbGroup G} x y : -(x * y) = -x * -y.
   Proof.
-    path_via (-y + -x).
+    path_via (-y * -x).
     - apply negate_sg_op.
     - apply commutativity.
   Qed.
@@ -90,7 +90,7 @@ Section groupmor_props.
 
   Lemma preserves_negate x : f (-x) = -f x.
   Proof.
-    apply (left_cancellation (+) (f x)).
+    apply (left_cancellation (.*.) (f x)).
     rewrite <-preserves_sg_op.
     rewrite 2!right_inverse.
     apply preserves_mon_unit.
@@ -103,7 +103,7 @@ Section from_another_sg.
   Context
     `{IsSemiGroup A} `{IsHSet B}
     `{Bop : SgOp B} (f : B -> A) `{!IsInjective f}
-    (op_correct : forall x y, f (x + y) = f x + f y).
+    (op_correct : forall x y, f (x * y) = f x * f y).
 
   Lemma projected_sg: IsSemiGroup B.
   Proof.
@@ -118,7 +118,7 @@ Section from_another_com.
 
   Context `{SgOp A} `{!Commutative (A:=A) sg_op} {B}
    `{Bop : SgOp B} (f : B -> A) `{!IsInjective f}
-   (op_correct : forall x y, f (x + y) = f x + f y).
+   (op_correct : forall x y, f (x * y) = f x * f y).
 
   Lemma projected_comm : Commutative (A:=B) sg_op.
   Proof.
@@ -135,7 +135,7 @@ Section from_another_com_sg.
   Context
     `{IsCommutativeSemiGroup A} `{IsHSet B}
     `{Bop : SgOp B} (f : B -> A) `{!IsInjective f}
-    (op_correct : forall x y, f (x + y) = f x + f y).
+    (op_correct : forall x y, f (x * y) = f x * f y).
 
   Lemma projected_com_sg : IsCommutativeSemiGroup B.
   Proof.
@@ -150,7 +150,7 @@ Section from_another_monoid.
 
   Context `{IsMonoid A} `{IsHSet B}
    `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B -> A) `{!IsInjective f}
-   (op_correct : forall x y, f (x + y) = f x + f y) (unit_correct : f mon_unit = mon_unit).
+   (op_correct : forall x y, f (x * y) = f x * f y) (unit_correct : f mon_unit = mon_unit).
 
   Lemma projected_monoid : IsMonoid B.
   Proof.
@@ -171,7 +171,7 @@ Section from_another_com_monoid.
   Context
    `{IsCommutativeMonoid A} `{IsHSet B}
    `{Bop : SgOp B} `{Bunit : MonUnit B} (f : B -> A) `{!IsInjective f}
-   (op_correct : forall x y, f (x + y) = f x + f y)
+   (op_correct : forall x y, f (x * y) = f x * f y)
    (unit_correct : f mon_unit = mon_unit).
 
   Lemma projected_com_monoid : IsCommutativeMonoid B.
@@ -189,7 +189,7 @@ Section from_another_group.
     `{IsGroup A} `{IsHSet B}
     `{Bop : SgOp B} `{Bunit : MonUnit B} `{Bnegate : Negate B}
     (f : B -> A) `{!IsInjective f}
-    (op_correct : forall x y, f (x + y) = f x + f y)
+    (op_correct : forall x y, f (x * y) = f x * f y)
     (unit_correct : f mon_unit = mon_unit)
     (negate_correct : forall x, f (-x) = -f x).
 
@@ -212,7 +212,7 @@ Section from_another_ab_group.
   Context `{IsAbGroup A} `{IsHSet B}
    `{Bop : SgOp B} `{Bunit : MonUnit B} `{Bnegate : Negate B}
    (f : B -> A) `{!IsInjective f}
-   (op_correct : forall x y, f (x + y) = f x + f y)
+   (op_correct : forall x y, f (x * y) = f x * f y)
    (unit_correct : f mon_unit = mon_unit)
    (negate_correct : forall x, f (-x) = -f x).
 
