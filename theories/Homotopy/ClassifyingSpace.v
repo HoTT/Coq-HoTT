@@ -13,6 +13,9 @@ Import TrM.
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
 
+Declare Scope bg_scope.
+Local Open Scope bg_scope.
+
 (** * We define the Classifying space of a type with operation (a magma) to be the following HIT:
 
   HIT ClassifyingSpace (X : Type) {op : X -> X -> X} : 1-Type
@@ -74,58 +77,65 @@ Module Export ClassifyingSpace.
         = bloop' x.
     Proof. Admitted.
 
-    (** The non-dependent eliminator *)
-    Definition ClassifyingSpace_rec
-      (P : Type) `{IsTrunc 1 P} (bbase' : P) (bloop' : G -> bbase' = bbase')
-      (bloop_pp' : forall x y : G, bloop' (x & y) = bloop' x @ bloop' y)
-      : ClassifyingSpace G -> P.
-    Proof.
-      srefine (ClassifyingSpace_ind (fun _ => P) bbase' _ _).
-      1: intro; apply dp_const, bloop', x.
-      intros x y.
-      apply ds_const'.
-      erapply sq_GGcc.
-      2: refine (_ @ ap _ (dp_const_pp _ _)).
-      1,2: symmetry; apply eissect.
-      by apply sq_G1.
-    Defined.
-
-    (** Computation rule for non-dependent eliminator *)
-    Definition ClassifyingSpace_rec_beta_bloop
-      (P : Type) `{IsTrunc 1 P} (bbase' : P) (bloop' : G -> bbase' = bbase')
-      (bloop_pp' : forall x y : G, bloop' (x & y) = bloop' x @ bloop' y) (x : G)
-      : ap (ClassifyingSpace_rec P bbase' bloop' bloop_pp') (bloop x) = bloop' x.
-    Proof.
-      rewrite <- dp_apD_const'.
-      unfold ClassifyingSpace_rec.
-      rewrite ClassifyingSpace_ind_beta_bloop.
-      apply eissect.
-    Qed.
-
-    (** Sometimes we want to induct into a set which means we can ignore the bloop_pp arguments. Since this is a routine argument, we turn it into a special case of our induction principle. *)
-    Definition ClassifyingSpace_ind_hset
-      (P : ClassifyingSpace G -> Type)
-     `{forall x, IsTrunc 0 (P x)}
-      (bbase' : P bbase) (bloop' : forall x, DPath P (bloop x) bbase' bbase')
-      : forall x, P x.
-    Proof.
-      refine (ClassifyingSpace_ind P bbase' bloop' _).
-      intros.
-      apply ds_G1, dp_path_transport.
-      serapply path_ishprop.
-    Defined.
-
-    Definition ClassifyingSpace_rec_hset
-      (P : Type) `{IsTrunc 0 P} (bbase' : P) (bloop' : G -> bbase' = bbase')
-      : ClassifyingSpace G -> P.
-    Proof.
-      serapply (ClassifyingSpace_rec P bbase' bloop' _).
-      intros; apply path_ishprop.
-    Defined.
-
   End ClassifyingSpace_ind.
 
 End ClassifyingSpace.
+
+(** Other eliminators *)
+Section Eliminators.
+
+  Context `{SgOp G}.
+
+  (** The non-dependent eliminator *)
+  Definition ClassifyingSpace_rec
+    (P : Type) `{IsTrunc 1 P} (bbase' : P) (bloop' : G -> bbase' = bbase')
+    (bloop_pp' : forall x y : G, bloop' (x & y) = bloop' x @ bloop' y)
+    : ClassifyingSpace G -> P.
+  Proof.
+    srefine (ClassifyingSpace_ind (fun _ => P) bbase' _ _).
+    1: intro; apply dp_const, bloop', x.
+    intros x y.
+    apply ds_const'.
+    erapply sq_GGcc.
+    2: refine (_ @ ap _ (dp_const_pp _ _)).
+    1,2: symmetry; apply eissect.
+    by apply sq_G1.
+  Defined.
+
+  (** Computation rule for non-dependent eliminator *)
+  Definition ClassifyingSpace_rec_beta_bloop
+    (P : Type) `{IsTrunc 1 P} (bbase' : P) (bloop' : G -> bbase' = bbase')
+    (bloop_pp' : forall x y : G, bloop' (x & y) = bloop' x @ bloop' y) (x : G)
+    : ap (ClassifyingSpace_rec P bbase' bloop' bloop_pp') (bloop x) = bloop' x.
+  Proof.
+    rewrite <- dp_apD_const'.
+    unfold ClassifyingSpace_rec.
+    rewrite ClassifyingSpace_ind_beta_bloop.
+    apply eissect.
+  Qed.
+
+  (** Sometimes we want to induct into a set which means we can ignore the bloop_pp arguments. Since this is a routine argument, we turn it into a special case of our induction principle. *)
+  Definition ClassifyingSpace_ind_hset
+    (P : ClassifyingSpace G -> Type)
+   `{forall x, IsTrunc 0 (P x)}
+    (bbase' : P bbase) (bloop' : forall x, DPath P (bloop x) bbase' bbase')
+    : forall x, P x.
+  Proof.
+    refine (ClassifyingSpace_ind P bbase' bloop' _).
+    intros.
+    apply ds_G1, dp_path_transport.
+    serapply path_ishprop.
+  Defined.
+
+  Definition ClassifyingSpace_rec_hset
+    (P : Type) `{IsTrunc 0 P} (bbase' : P) (bloop' : G -> bbase' = bbase')
+    : ClassifyingSpace G -> P.
+  Proof.
+    serapply (ClassifyingSpace_rec P bbase' bloop' _).
+    intros; apply path_ishprop.
+  Defined.
+
+End Eliminators.
 
 (** We can prove that the classifying space is 0-connected. *)
 Global Instance isconnected_classifyingspace {X : Type} `{SgOp X}
@@ -143,7 +153,9 @@ Defined.
 (** Now we focus on the classifying space of a group. *)
 
 (** The classifying space of a group is the following pointed type. *)
-Definition B (G : Group) := Build_pType (ClassifyingSpace G) bbase.
+Definition B_group (G : Group) := Build_pType (ClassifyingSpace G) bbase.
+
+Notation "'B' G" := (B_group G) (at level 0) : bg_scope.
 
 (** We can show that [bloop] takes the unit of the group to reflexivity. *)
 Definition bloop_id {G : Group} : bloop mon_unit = idpath.
