@@ -11,6 +11,7 @@ Import TrM.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
+Local Open Scope mc_mult_scope.
 
 Declare Scope bg_scope.
 Local Open Scope bg_scope.
@@ -20,7 +21,7 @@ Local Open Scope bg_scope.
   HIT ClassifyingSpace (G : Group) : 1-Type
    | bbase : ClassifyingSpace
    | bloop : X -> bbase = bbase
-   | bloop_pp : forall x y, bloop (x & y) = bloop x @ bloop y.
+   | bloop_pp : forall x y, bloop (x * y) = bloop x @ bloop y.
 
   We implement this is a private inductive type.
 *)
@@ -35,7 +36,7 @@ Module Export ClassifyingSpace.
 
     Axiom bloop : G -> bbase = bbase.
 
-    Axiom bloop_pp : forall x y, bloop (x & y) = bloop x @ bloop y.
+    Axiom bloop_pp : forall x y, bloop (x * y) = bloop x @ bloop y.
 
     Global Instance istrunc_ClassifyingSpace
       : IsTrunc 1 ClassifyingSpace.
@@ -59,7 +60,7 @@ Module Export ClassifyingSpace.
       (bbase' : P bbase)
       (bloop' : forall x, DPath P (bloop x) bbase' bbase')
       (bloop_pp' : forall x y,  DSquare P (sq_G1 (bloop_pp x y))
-        (bloop' (x & y)) ((bloop' x) @D (bloop' y)) 1 1) x : P x
+        (bloop' (x * y)) ((bloop' x) @D (bloop' y)) 1 1) x : P x
       := match x with
             bbase => (fun _ _ => bbase')
          end bloop' bloop_pp'.
@@ -70,7 +71,7 @@ Module Export ClassifyingSpace.
      `{forall x, IsTrunc 1 (P x)}
       (bbase' : P bbase) (bloop' : forall x, DPath P (bloop x) bbase' bbase')
       (bloop_pp' : forall x y,  DSquare P (sq_G1 (bloop_pp x y))
-        (bloop' (x & y)) ((bloop' x) @D (bloop' y)) 1 1) (x : G)
+        (bloop' (x * y)) ((bloop' x) @D (bloop' y)) 1 1) (x : G)
       : dp_apD (ClassifyingSpace_ind P bbase' bloop' bloop_pp') (bloop x)
         = bloop' x.
     Proof. Admitted.
@@ -87,7 +88,7 @@ Section Eliminators.
   (** The non-dependent eliminator *)
   Definition ClassifyingSpace_rec
     (P : Type) `{IsTrunc 1 P} (bbase' : P) (bloop' : G -> bbase' = bbase')
-    (bloop_pp' : forall x y : G, bloop' (x & y) = bloop' x @ bloop' y)
+    (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y)
     : ClassifyingSpace G -> P.
   Proof.
     srefine (ClassifyingSpace_ind (fun _ => P) bbase' _ _).
@@ -103,7 +104,7 @@ Section Eliminators.
   (** Computation rule for non-dependent eliminator *)
   Definition ClassifyingSpace_rec_beta_bloop
     (P : Type) `{IsTrunc 1 P} (bbase' : P) (bloop' : G -> bbase' = bbase')
-    (bloop_pp' : forall x y : G, bloop' (x & y) = bloop' x @ bloop' y) (x : G)
+    (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y) (x : G)
     : ap (ClassifyingSpace_rec P bbase' bloop' bloop_pp') (bloop x) = bloop' x.
   Proof.
     rewrite <- dp_apD_const'.
@@ -203,7 +204,7 @@ Section EncodeDecode.
   Defined.
 
   Local Definition codes_transport
-    : forall x y, transport codes (bloop x) y = y & x.
+    : forall x y, transport codes (bloop x) y = y * x.
   Proof.
     intros x y.
     rewrite transport_idmap_ap.
