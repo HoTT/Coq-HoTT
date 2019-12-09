@@ -191,10 +191,10 @@ Class Abs A `{Le A} `{Zero A} `{Negate A}
 Definition abs `{Abs A} := fun x : A => (abs_sig x).1.
 
 (* Common properties: *)
-Class Inverse `(A -> B) : Type := inverse: B -> A.
+(* Class Inverse `(A -> B) : Type := inverse: B -> A.
 Arguments inverse {A B} _ {Inverse} _.
 Typeclasses Transparent Inverse.
-Notation "f ⁻¹" := (inverse f) (at level 30) : mc_scope.
+Notation "f ⁻¹" := (inverse f) (at level 30) : mc_scope. *)
 
 Class Idempotent `(f: A -> A -> A) (x : A) : Type := idempotency: f x x = x.
 Arguments idempotency {A} _ _ {Idempotent}.
