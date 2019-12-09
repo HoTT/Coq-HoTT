@@ -5,6 +5,7 @@ Require Export Classes.interfaces.abstract_algebra.
 Import TrM.
 
 Local Open Scope trunc_scope.
+Local Open Scope mc_mult_scope.
 
 Class IsHSpace (X : pType) := {
   hspace_op :> SgOp X;
@@ -25,7 +26,7 @@ Section HSpaceProperties.
    `{IsConnected 0 A}.
 
   Global Instance isequiv_hspace_left_op
-    : forall (a : A), IsEquiv (a &).
+    : forall (a : A), IsEquiv (fun x => a * x).
   Proof.
     refine (conn_map_elim (-1) (unit_name hspace_id) _ _).
     + exact (conn_point_incl hspace_id).
@@ -36,7 +37,7 @@ Section HSpaceProperties.
   Defined.
 
   Global Instance isequiv_hspace_right_op
-    : forall (a : A), IsEquiv (& a).
+    : forall (a : A), IsEquiv (fun x => x * a).
   Proof.
     refine (conn_map_elim (-1) (unit_name hspace_id) _ _).
     + exact (conn_point_incl hspace_id).
@@ -47,9 +48,9 @@ Section HSpaceProperties.
   Defined.
 
   Definition equiv_hspace_left_op (a : A) : A <~> A
-    := Build_Equiv _ _ (a &) _.
+    := Build_Equiv _ _ _ (isequiv_hspace_left_op a).
 
   Definition equiv_hspace_right_op (a : A) : A <~> A
-    := Build_Equiv _ _ (& a) _.
+    := Build_Equiv _ _ _ (isequiv_hspace_right_op a).
 
 End HSpaceProperties.
