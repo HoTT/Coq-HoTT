@@ -13,6 +13,15 @@ Reserved Infix "=n" (at level 70, no associativity).
 Reserved Infix "o*" (at level 40).
 Reserved Infix "oL" (at level 40, left associativity).
 Reserved Infix "oR" (at level 40, left associativity).
+Reserved Infix "$->" (at level 99).
+Reserved Infix "$<~>" (at level 85).
+Reserved Infix "$o" (at level 40).
+Reserved Infix "$oE" (at level 40).
+Reserved Infix "$==" (at level 70).
+Reserved Infix "$@" (at level 30).
+Reserved Infix "$@L" (at level 30).
+Reserved Infix "$@R" (at level 30).
+Reserved Infix "$-->" (at level 99).
 Reserved Notation "~~ A" (at level 75, right associativity, only parsing).
 Reserved Notation "A <~> B" (at level 85).
 Reserved Notation "a // 'CAT'" (at level 40, left associativity).
@@ -30,6 +39,7 @@ Reserved Notation "f ^-1" (at level 3, format "f '^-1'").
 Reserved Notation "f ^-1*" (at level 3, format "f '^-1*'").
 Reserved Notation "F '_1' m" (at level 10, no associativity).
 Reserved Notation "f ^*" (at level 20).
+Reserved Notation "f ^$" (at level 20).
 Reserved Notation "f *E g" (at level 40, no associativity).
 Reserved Notation "f +E g" (at level 50, left associativity).
 Reserved Notation "f == g" (at level 70, no associativity).
