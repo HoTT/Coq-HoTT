@@ -5,6 +5,7 @@ Require Import Algebra.Group.
 Require Import Algebra.AbelianGroup.
 Require Import Truncations.
 Require Import Spaces.Nat.
+Require Import Modalities.ReflectiveSubuniverse.
 
 Import TrM.
 
@@ -18,11 +19,20 @@ Definition HomotopyGroup_type (n : nat) : Type
       | n.+1 => Group
      end.
 
+(* Every homotopy group is, in particular, a pointed type. *)
+Definition HomotopyGroup_type_ptype (n : nat) : HomotopyGroup_type n -> pType
+  := match n return HomotopyGroup_type n -> pType with
+     | 0    => fun X => X
+     | n.+1 => fun G => G       (* This works because [ptype_group] is already a coercion. *)
+     end.
+
+Coercion HomotopyGroup_type_ptype : HomotopyGroup_type >-> pType.
+
 (** Definition of the nth homotopy group *)
-Definition HomotopyGroup (n : nat) (X : pType) : HomotopyGroup_type n.
+Definition Pi (n : nat) (X : pType) : HomotopyGroup_type n.
 Proof.
   destruct n.
-  1: exact X.
+  1: exact (pTr 0 X).
   serapply (Build_Group (Tr 0 (iterated_loops n.+1 X)));
   repeat split.
   (** Operation *)
@@ -63,16 +73,13 @@ Proof.
     apply concat_pV.
 Defined.
 
-(** HomotopyGroup can be a bit of a mouthful so we define a notation for it. *)
-Global Notation Pi := HomotopyGroup.
-
 Module PiUtf8.
-  Notation "'π'" := HomotopyGroup (at level 0).
+  Notation "'π'" := Pi (at level 0).
 End PiUtf8.
 
 (** When n >= 2 we have that the nth homotopy group is an abelian group. Note that we don't actually define it as an abelian group but merely show that it is one. This would cause lots of complications with the typechecker. *)
-Global Instance isabgroup_homotopygroup (n : nat) (X : pType)
-  : IsAbGroup (HomotopyGroup n.+2 X).
+Global Instance isabgroup_pi (n : nat) (X : pType)
+  : IsAbGroup (Pi n.+2 X).
 Proof.
   ntc_rapply Build_IsAbGroup.
   1: exact _.
@@ -82,18 +89,23 @@ Proof.
   apply eckmann_hilton.
 Defined.
 
-(** The nth homotopy group is infact a functor. We now give the type this functor ought to have. For n = 0, this will simply be a pointed map, for n >= 1 this should be a group homomorphism. *)
-Definition homotopygroup_functor_type (n : nat) (X Y : pType) : Type.
-Proof.
-  destruct n.
-  1: exact (pTr 0 X ->* pTr 0 Y).
-  serapply (GroupHomomorphism _ _).
-  + exact (HomotopyGroup n.+1 X).
-  + exact (HomotopyGroup n.+1 Y).
-Defined.
+(** The nth homotopy group is in fact a functor. We now give the type this functor ought to have. For n = 0, this will simply be a pointed map, for n >= 1 this should be a group homomorphism. *)
+Definition pi_functor_type (n : nat) (X Y : pType) : Type
+  := match n with
+     | 0 => pTr 0 X ->* pTr 0 Y
+     | n.+1 => GroupHomomorphism (Pi n.+1 X) (Pi n.+1 Y)
+     end.
 
-Definition homotopygroup_functor (n : nat) {X Y : pType}
-  : (X ->* Y) -> homotopygroup_functor_type n X Y.
+(* Every such map is, in particular, a pointed map. *)
+Definition pi_functor_type_pmap n X Y : pi_functor_type n X Y -> (Pi n X ->* Pi n Y)
+  := match n return pi_functor_type n X Y -> (Pi n X ->* Pi n Y) with
+     | 0    => fun f => f
+     | n.+1 => fun f => f       (* This works because [pmap_GroupHomomorphism] is already a coercion. *)
+     end.
+Coercion pi_functor_type_pmap : pi_functor_type >-> pMap.
+
+Definition pi_functor (n : nat) {X Y : pType}
+  : (X ->* Y) -> pi_functor_type n X Y.
 Proof.
   destruct n.
   + exact (ptr_functor 0).
@@ -116,58 +128,68 @@ Proof.
     apply ap_pp.
 Defined.
 
-(** We define a notation for homotopygroup_functor too. *)
-Global Notation pi_functor := homotopygroup_functor.
-
-Definition homotopygroup_functor_idmap n {X : pType}
-  : pi_functor n.+1 (@pmap_idmap X) == idmap.
+Definition pi_functor_idmap n {X : pType}
+  : pi_functor n (@pmap_idmap X) == pmap_idmap.
 Proof.
-  intro x.
-  strip_truncations.
-  apply (ap tr), iterated_loops_functor_idmap.
+  destruct n; intros x.
+  - apply Trunc_functor_idmap.
+  - etransitivity.
+    + apply O_functor_homotopy, iterated_loops_functor_idmap.
+    + apply O_functor_idmap.
 Defined.
 
-Definition homotopygroup_functor_compose n {X Y Z : pType}
+Definition pi_functor_compose n {X Y Z : pType}
   (f : X ->* Y) (g : Y ->* Z)
-  : pi_functor n.+1 (g o* f) == pi_functor n.+1 g o pi_functor n.+1 f.
+  : pi_functor n (g o* f) == pi_functor n g o pi_functor n f.
 Proof.
-  intro x.
-  strip_truncations.
-  apply (ap tr), iterated_loops_functor_compose.
+  destruct n; intro x.
+  - cbn; apply Trunc_functor_compose.
+  - etransitivity.
+    + apply O_functor_homotopy, iterated_loops_functor_compose.
+    + refine (O_functor_compose 0%trunc _ _ x).
 Defined.
 
-Definition homotopygroup_2functor n
+Definition pi_2functor (n : nat)
   {X Y : pType} (f g : X ->* Y) (p : f ==* g)
-  : pi_functor n.+1 f == pi_functor n.+1 g.
+  : pi_functor n f == pi_functor n g.
 Proof.
-  by apply O_functor_homotopy, iterated_loops_2functor.
+  destruct n; intros x.
+  - apply O_functor_homotopy; exact p.
+  - apply O_functor_homotopy, iterated_loops_2functor; exact p.
 Defined.
 
-Definition groupiso_homotopygroup_functor (n : nat)
+(* The homotopy groups of a loop space are those of the space shifted.  *)
+Definition pi_loops n X : Pi n.+1 X <~> Pi n (loops X).
+Proof.
+  destruct n.
+  all:apply equiv_O_functor.
+  all:apply pointed_equiv_equiv.
+  all:apply unfold_iterated_loops'.
+Defined.
+
+Definition pi_functor_loops (n : nat) {X Y : pType} (f : X ->* Y)
+  : (pi_loops n Y) o (pi_functor n.+1 f)
+    == (pi_functor n (loops_functor f)) o (pi_loops n X).
+Proof.
+  destruct n; intros x.
+  all:refine ((O_functor_compose 0 _ _ _)^ @ _ @ (O_functor_compose 0 _ _ _)).
+  all:apply O_functor_homotopy.
+  - reflexivity.
+  - exact (pointed_htpy (unfold_iterated_loops_functor n.+1 f)).
+Defined.
+
+Definition groupiso_pi_functor (n : nat)
   {X Y : pType} (e : X <~>* Y)
   : GroupIsomorphism (Pi n.+1 X) (Pi n.+1 Y).
 Proof.
   serapply Build_GroupIsomorphism.
-  1: apply (homotopygroup_functor n.+1 e).
-  serapply isequiv_adjointify.
-  + apply (homotopygroup_functor n.+1).
-    apply e^-1*.
-  + intro.
-    refine (_^ @ _ @ _).
-    1: apply homotopygroup_functor_compose.
-    2: apply homotopygroup_functor_idmap.
-    apply homotopygroup_2functor.
-    apply peisretr.
-  + intro.
-    refine (_^ @ _ @ _).
-    1: apply homotopygroup_functor_compose.
-    2: apply homotopygroup_functor_idmap.
-    apply homotopygroup_2functor.
-    apply peissect.
+  1: apply (pi_functor n.+1 e).
+  ntc_refine (Trunc_functor_isequiv _ _).
+  refine (isequiv_homotopic _ (pequiv_iterated_loops_functor_is_iterated_loops_functor n.+1 e)).
 Defined.
 
 (** Homotopy groups preserve products *)
-Lemma homotopygroup_prod (X Y : pType) {n : nat}
+Lemma pi_prod (X Y : pType) {n : nat}
   : GroupIsomorphism (Pi n.+1 (X * Y))
       (group_prod (Pi n.+1 X) (Pi n.+1 Y)).
 Proof.

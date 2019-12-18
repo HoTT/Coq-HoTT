@@ -3,6 +3,7 @@ Require Import Types.
 Require Import PathAny.
 Require Export Classes.interfaces.abstract_algebra.
 Require Export Classes.theory.groups.
+Require Import Pointed.Core.
 Require Basics.Utf8.
 
 (** ** Groups *)
@@ -29,6 +30,10 @@ Definition issig_group : _ <~> Group
 (** Groups are pointed sets with point the identity. *)
 Global Instance ispointed_group (G : Group)
   : IsPointed G := @mon_unit G _.
+
+Definition ptype_group : Group -> pType
+  := fun G => Build_pType G _.
+Coercion ptype_group : Group >-> pType.
 
 (** * Some basic properties of groups *)
 
@@ -75,6 +80,11 @@ Class GroupHomomorphism (G H : Group) := Build_GroupHomomorphism' {
 (* We coerce a homomorphism to its underlying map. *)
 Coercion grp_homo_map : GroupHomomorphism >-> Funclass.
 
+(* Group homomorphisms are pointed maps *)
+Definition pmap_GroupHomomorphism {G H : Group} (f : GroupHomomorphism G H) : pMap G H
+  := Build_pMap G H f (@monmor_unitmor _ _ _ _ _ _ _ (@grp_homo_ishomo G H f)).
+Coercion pmap_GroupHomomorphism : GroupHomomorphism >-> pMap.
+
 Definition issig_GroupHomomorphism {G H : Group} : _ <~> GroupHomomorphism G H
   := ltac:(issig).
 
@@ -88,6 +98,7 @@ Proof.
 Defined.
 
 (** * Some basic properties of group homomorphisms *)
+
 
 (** Group homomorphisms preserve identities *)
 Definition grp_homo_unit {G H} (f : GroupHomomorphism G H)

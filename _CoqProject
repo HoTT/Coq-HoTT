@@ -248,6 +248,7 @@ theories/Homotopy/Smash.v
 theories/Homotopy/Wedge.v
 theories/Homotopy/Join.v
 
+theories/Homotopy/WhiteheadsPrinciple.v
 theories/Homotopy/BlakersMassey.v
 theories/Homotopy/Freudenthal.v
 

@@ -353,7 +353,7 @@ Section Reflective_Subuniverse.
     Proof.
       refine (O_indpaths _ _ _); intros x.
       apply O_rec_beta.
-    Qed.
+    Defined.
 
     (** 3-functoriality, as an example use of [O_ind2paths] *)
     Definition O_functor_2homotopy {A B : Type} {f g : A -> B}

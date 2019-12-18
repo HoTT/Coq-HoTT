@@ -44,7 +44,7 @@ Section Pi1S1.
   Proof.
     etransitivity.
     2: apply Pi1Circle.
-    apply groupiso_homotopygroup_functor.
+    apply groupiso_pi_functor.
     apply pequiv_pSph1_to_S1.
   Defined.
 

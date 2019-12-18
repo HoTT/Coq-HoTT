@@ -71,10 +71,10 @@ Theorem Pi1Torus `{Univalence}
   : GroupIsomorphism (Pi 1 T) (group_prod Z Z).
 Proof.
   etransitivity.
-  { apply groupiso_homotopygroup_functor.
+  { apply groupiso_pi_functor.
     apply pequiv_torus_prod_circles. }
   etransitivity.
-  1: apply homotopygroup_prod.
+  1: apply pi_prod.
   apply grp_iso_prod.
   1,2: apply Pi1Circle.
 Defined.
