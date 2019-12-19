@@ -421,7 +421,7 @@ Definition unyoneda {A : Type} `{Is1Cat A} (a : A) (F : A^op -> Type) {ff : Is1F
 
 Global Instance is1natural_yoneda {A : Type} `{Is2Cat A} (a : A) (F : A^op -> Type) {ff : Is1Functor F} {ff1 : Is1Functor1 F} (x : F a)
   (* Why is typeclass inference failing here? *)
-  : @Is1Natural A^op Type _ _ _ _ (yon a) _ F ff (@yoneda A H a F ff x).
+  : @Is1Natural A^op Type _ _ _ _ (yon a) _ F _ (yoneda a F x).
 Proof.
   apply Build_Is1Natural.
   unfold op, yon, yoneda; intros b c f g; cbn in *.
