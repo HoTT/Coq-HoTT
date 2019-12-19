@@ -8,30 +8,34 @@ Local Open Scope path_scope.
 (** ** Unbundled definitions of categories *)
 
 Class Is1Cat (A : Type) :=
-  { Hom : A -> A -> Type
-    ; Id : forall (a : A), Hom a a
-    ; Comp : forall (a b c : A), Hom b c -> Hom a b -> Hom a c
+  { Hom : A -> A -> Type where "a $-> b" := (Hom a b)
+    ; Id : forall (a : A), a $-> a
+    ; Comp : forall (a b c : A), (b $-> c) -> (a $-> b) -> (a $-> c)
   }.
-
-Arguments Comp {A _ a b c} _ _.
 
 Notation "a $-> b" := (Hom a b).
-Notation "g $o f" := (Comp _ _ _ g f).
+Arguments Comp {A _ a b c} _ _.
+Notation "g $o f" := (Comp g f).
 
 Class Is2Cat (A : Type) `{Is1Cat A} :=
-  { Htpy : forall (a b : A), (a $-> b) -> (a $-> b) -> Type
-    ; Id_Htpy : forall a b (f : a $-> b), Htpy a b f f
-    ; Opp_Htpy : forall a b (f g : a $-> b), Htpy a b f g -> Htpy a b g f
-    ; Concat_Htpy : forall a b (f : a $-> b) (g : a $-> b) (h : a $-> b), Htpy a b f g -> Htpy a b g h -> Htpy a b f h
-    ; WhiskerL_Htpy : forall a b c (f g : a $-> b) (h : b $-> c) (p : Htpy a b f g), Htpy a c (h $o f) (h $o g)
-    ; WhiskerR_Htpy : forall a b c (f g : b $-> c) (p : Htpy b c f g) (h : a $-> b), Htpy a c (f $o h) (g $o h)
+  { Htpy : forall (a b : A), (a $-> b) -> (a $-> b) -> Type where "f $== g" := (Htpy _ _ f g)
+    ; Id_Htpy : forall a b (f : a $-> b), f $== f
+    ; Opp_Htpy : forall a b (f g : a $-> b), (f $== g) -> (g $== f)
+    ; Concat_Htpy : forall a b (f : a $-> b) (g : a $-> b) (h : a $-> b), (f $== g) -> (g $== h) -> (f $== h)
+    ; WhiskerL_Htpy : forall a b c (f g : a $-> b) (h : b $-> c) (p : f $== g), (h $o f $== h $o g)
+    ; WhiskerR_Htpy : forall a b c (f g : b $-> c) (p : f $== g) (h : a $-> b), (f $o h $== g $o h)
   }.
 
-Notation "f $== g" := (Htpy _ _ f g).
-Notation "p $@ q" := (Concat_Htpy _ _ _ _ _ p q).
-Notation "h $@L p" := (WhiskerL_Htpy _ _ _ _ _ h p).
-Notation "p $@R h" := (WhiskerR_Htpy _ _ _ _ _ p h).
-Notation "p ^$" := (Opp_Htpy _ _ _ _ p).
+Arguments Htpy {_ _ _ _ _} _ _.
+Notation "f $== g" := (Htpy f g).
+Arguments Concat_Htpy {_ _ _ _ _ _ _ _} p q.
+Notation "p $@ q" := (Concat_Htpy p q).
+Arguments WhiskerL_Htpy {_ _ _ _ _ _ _ _} h p.
+Notation "h $@L p" := (WhiskerL_Htpy h p).
+Arguments WhiskerR_Htpy {_ _ _ _ _ _ _ _} p h.
+Notation "p $@R h" := (WhiskerR_Htpy p h).
+Arguments Opp_Htpy {_ _ _ _ _ _ _} p.
+Notation "p ^$" := (Opp_Htpy p).
 
 Global Instance Reflexive_Htpy A `{Is2Cat A} (a b : A) : Reflexive (@Htpy A _ _ a b)
   := fun f => Id_Htpy _ _ f.
@@ -150,8 +154,8 @@ Proof.
   1:intros a b f g; exact (f $== g).
   all:cbn.
   - intros a b; apply Id_Htpy.
-  - intros a b; apply Opp_Htpy.
-  - intros a b; apply Concat_Htpy.
+  - intros a b f g; apply Opp_Htpy.
+  - intros a b f g h; apply Concat_Htpy.
   - intros a b c f g h p; exact (p $@R h).
   - intros a b c f g p h; exact (h $@L p).
 Defined.
