@@ -13,6 +13,8 @@ Class Is1Cat (A : Type) :=
     ; Comp : forall (a b c : A), Hom b c -> Hom a b -> Hom a c
   }.
 
+Arguments Comp {A _ a b c} _ _.
+
 Notation "a $-> b" := (Hom a b).
 Notation "g $o f" := (Comp _ _ _ g f).
 
