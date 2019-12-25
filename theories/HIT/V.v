@@ -306,7 +306,7 @@ Defined.
 
 (** ** Canonical presentation of V-sets (Lemma 10.5.6) *)
 
-(** Using the regular kernel (with = instead of ~~) also works, but this seems to be a Coq bug, it should lead to a universe inconsistency in the monic_set_present lemma later. This version is the right way to do it. *)
+(** Using the regular kernel would lead to a universe inconsistency in the monic_set_present lemma later. *)
 Definition ker_bisim {A} (f : A -> V) (x y : A) := (f x ~~ f y).
 
 Definition ker_bisim_is_ker {A} (f : A -> V)
