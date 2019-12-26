@@ -194,50 +194,40 @@ Definition test4 A {ac : Is1Cat A} {ac2 : Is2Cat A} {ac11 : Is1Cat1 A} : ac11 = 
 
 (** ** Equivalences *)
 
-(** We can define equivalences in any wild 2-category as bi-invertible maps (we'd need a 3-category to reproduce half-adjoint equivalences).  However, in concrete cases there is often an equivalent definition of equivalences that we want to use instead. *)
+(** We could define equivalences in any wild 2-category as bi-invertible maps, or in a wild 3-category as half-adjoint equivalences.  However, in concrete cases there is often an equivalent definition of equivalences that we want to use instead, and the important property we need is that it's logically equivalent to quasi-isomorphism. *)
 
-Record CatEquiv {A : Type} `{Is2Cat A} {a b : A} :=
-  { cate_fun : a $-> b
-    ; cate_retr : b $-> a
-    ; cate_sect : b $-> a
-    ; cate_isretr : cate_fun $o cate_sect $== Id b
-    ; cate_issect : cate_retr $o cate_fun $== Id a
+Record CatIso {A : Type} `{Is2Cat A} {a b : A} :=
+  { catiso_fun : a $-> b
+    ; catiso_inv : b $-> a
+    ; catiso_retr : catiso_fun $o catiso_inv $== Id b
+    ; catiso_sect : catiso_inv $o catiso_fun $== Id a
   }.
 
-Arguments CatEquiv [_ _ _] a b.
+Arguments CatIso [_ _ _] a b.
 
-Definition issig_CatEquiv {A : Type} `{Is2Cat A} (a b : A)
-  : _ <~> CatEquiv a b := ltac:(issig).
-
-Definition cate_retr_is_sect {A : Type} `{Is1Cat1 A} {a b : A} (e : CatEquiv a b)
-  : cate_retr e $== cate_sect e.
-Proof.
-  refine ((cat_idr _)^$ $@ _ $@ cat_idl _).
-  refine ((_ $@L (cate_isretr e)^$) $@ _).
-  refine (cat_assoc_opp _ _ _ $@ _).
-  exact (cate_issect e $@R _).
-Defined.
+Definition issig_CatIso {A : Type} `{Is2Cat A} (a b : A)
+  : _ <~> CatIso a b := ltac:(issig).
 
 Class HasEquivs (A : Type) `{Is2Cat A} :=
   { cat_equiv : A -> A -> Type
-    ; to_cat_equiv : forall a b, cat_equiv a b -> CatEquiv a b
-    ; from_cat_equiv : forall a b, CatEquiv a b -> cat_equiv a b
-    (** In fully coherent examples, [to_cat_equiv] and [from_cat_equiv] are inverses.  But proving that generally requires funext, and it may not be true in incoherent examples.  So we assert only one inversion property on underlying maps, on the side where that makes sense. *)
-    ; to_from_cat_equiv : forall a b (f : CatEquiv a b), cate_fun (to_cat_equiv a b (from_cat_equiv a b f)) $== cate_fun f
+    ; cat_unadjointify : forall a b, cat_equiv a b -> CatIso a b
+    ; cat_adjointify : forall a b, CatIso a b -> cat_equiv a b
+    (** In fully coherent examples, [cat_adjointify] and [cat_unadjointify] are inverses.  But proving that generally requires funext, and it may not be true in incoherent examples.  So we assert only one inversion property on underlying maps, on the side where that makes sense. *)
+    ; cat_adj_fun : forall a b (f : CatIso a b), catiso_fun (cat_unadjointify a b (cat_adjointify a b f)) $== catiso_fun f
   }.
 
 Notation "a $<~> b" := (cat_equiv a b).
 
-Arguments to_cat_equiv [_ _ _ _ _ _] _.
-Arguments from_cat_equiv [_ _ _ _ _ _] _.
+Arguments cat_unadjointify [_ _ _ _ _ _] _.
+Arguments cat_adjointify [_ _ _ _ _ _] _.
 
 (** Equivalences can be composed. *)
 Definition compose_cate {A : Type} `{HasEquivs A} {c1 : Is1Cat1 A} {a b c : A} (g : b $<~> c) (f : a $<~> b)
   : a $<~> c.
 Proof.
-  apply from_cat_equiv; apply to_cat_equiv in g; apply to_cat_equiv in f.
-  destruct f as [f rf sf retrf sectf]; destruct g as [g rg sg retrg sectg].
-  refine (Build_CatEquiv _ _ _ a c (g $o f) (rf $o rg) (sf $o sg) _ _).
+  apply cat_adjointify; apply cat_unadjointify in g; apply cat_unadjointify in f.
+  destruct f as [f fi retrf sectf]; destruct g as [g gi retrg sectg].
+  refine (Build_CatIso _ _ _ a c (g $o f) (fi $o gi) _ _).
   - refine (cat_assoc _ _ _ $@ _).
     refine ((_ $@L cat_assoc_opp _ _ _) $@ _).
     refine ((_ $@L (retrf $@R _)) $@ _).
@@ -257,13 +247,12 @@ Definition emap {A B : Type} `{HasEquivs A} `{HasEquivs B} (F : A -> B)
            {ff1 : Is1Functor F} {ff2 : Is2Functor F} {ff11 : Is1Functor1 F}
            {a b : A} (f : a $<~> b) : F a $<~> F b.
 Proof.
-  apply from_cat_equiv; apply to_cat_equiv in f; destruct f as [f retr sect isretr issect].
-  srapply Build_CatEquiv.
+  apply cat_adjointify; apply cat_unadjointify in f; destruct f as [f fi isretr issect].
+  srapply Build_CatIso.
   - exact (fmap F f).
-  - exact (fmap F retr).
-  - exact (fmap F sect).
-  - refine ((fmap_comp F sect f)^$ $@ fmap2 F isretr $@ fmap_id F _).
-  - refine ((fmap_comp F f retr)^$ $@ fmap2 F issect $@ fmap_id F _).
+  - exact (fmap F fi).
+  - refine ((fmap_comp F fi f)^$ $@ fmap2 F isretr $@ fmap_id F _).
+  - refine ((fmap_comp F f fi)^$ $@ fmap2 F issect $@ fmap_id F _).
 Defined.
 
 
@@ -292,11 +281,9 @@ Global Instance hasequivs_type : HasEquivs Type.
 Proof.
   srefine (Build_HasEquivs Type _ _ Equiv _ _ _); intros A B.
   - intros [f ?].
-    exact (Build_CatEquiv _ _ _ A B f f^-1 f^-1 (eisretr f) (eissect f)).
-  - intros [f r s issect isretr]; cbn in *.
-    refine (equiv_adjointify f r _ isretr); intros x.
-    refine (ap f _ @ issect x).
-    exact (ap r (issect x)^ @ isretr (s x)).
+    exact (Build_CatIso _ _ _ A B f f^-1 (eisretr f) (eissect f)).
+  - intros [f fi issect isretr]; cbn in *.
+    exact (equiv_adjointify f fi issect isretr).
   - reflexivity.
 Defined.
 
@@ -317,10 +304,11 @@ Proof.
   - intros [F ?] [G ?].
     exact (NatTrans F G).
   - intros [F ?]; cbn.
-    exists (fun a => Id (F a)); constructor; intros a b f; cbn.
+    exists (fun a => Id (F a)); apply Build_Is1Natural; intros a b f; cbn.
     refine (cat_idl (fmap F f) $@ (cat_idr (fmap F f))^$).
   - intros [F ?] [G ?] [K ?] [gamma ?] [alpha ?]; cbn in *.
-    exists (fun a => gamma a $o alpha a); constructor; intros a b f; cbn.
+    exists (fun a => gamma a $o alpha a).
+    apply Build_Is1Natural; intros a b f; cbn.
     refine (cat_assoc _ _ _ $@ _).
     refine ((gamma b $@L isnat alpha f) $@ _).
     refine (cat_assoc_opp _ _ _ $@ _).
@@ -360,56 +348,43 @@ Proof.
   - rapply cat_idlr.
 Defined.
 
-(** It also inherits a notion of equivalence, namely a natural transformation that is a pointwise equivalence.  Note that due to incoherence, in this case we do *not* expect [to_cat_equiv] and [from_cat_equiv] to actually be inverses. *)
+(** It also inherits a notion of equivalence, namely a natural transformation that is a pointwise equivalence.  Note that due to incoherence, in this case we do *not* expect [cat_unadjointify] and [cat_adjointify] to actually be inverses. *)
 
 Definition NatEquiv {A B : Type} `{Is2Cat A} `{HasEquivs B} (F G : A -> B) {ff : Is1Functor F} {fg : Is1Functor G}
-  := { alpha : forall a, F a $<~> G a & Is1Natural F G (fun a => cate_fun (to_cat_equiv (alpha a))) }.
+  := { alpha : forall a, F a $<~> G a & Is1Natural F G (fun a => catiso_fun (cat_unadjointify (alpha a))) }.
 
 Global Instance hasequivs_fun (A B : Type) `{Is1Cat1 A} `{Is1Cat1 B} {eB : HasEquivs B} : HasEquivs (Fun1 A B).
 Proof.
   srapply Build_HasEquivs.
   - intros [F ?] [G ?]. exact (NatEquiv F G).
   - intros [F ?] [G ?] [alpha alnat]. 
-    srapply Build_CatEquiv; cbn.
-    + exists (fun a => cate_fun (to_cat_equiv (alpha a))); assumption.
-    + exists (fun a => cate_retr (to_cat_equiv (alpha a))); constructor; intros a b f.
-      pose (alpha' := fun a => cate_fun (to_cat_equiv (alpha a)) : F a $-> G a).
+    srapply Build_CatIso; cbn.
+    + exists (fun a => catiso_fun (cat_unadjointify (alpha a))); assumption.
+    + exists (fun a => catiso_inv (cat_unadjointify (alpha a))).
+      apply Build_Is1Natural; intros a b f.
+      pose (alpha' := fun a => catiso_fun (cat_unadjointify (alpha a)) : F a $-> G a).
       change (Is1Natural F G alpha') in alnat.
       refine ((cat_idr _)^$ $@ _).
-      refine ((_ $@L (cate_isretr (to_cat_equiv (alpha a)))^$) $@ _).
+      refine ((_ $@L (catiso_retr (cat_unadjointify (alpha a)))^$) $@ _).
       refine (cat_assoc _ _ _ $@ _).
       refine ((_ $@L (cat_assoc_opp _ _ _)) $@ _).
       refine ((_ $@L ((isnat alpha' f)^$ $@R _)) $@ _).
       refine ((_ $@L (cat_assoc _ _ _)) $@ _).
       refine (cat_assoc_opp _ _ _ $@ _).
-      refine ((cate_issect (to_cat_equiv (alpha b)) $@R _) $@ _).
-      refine (cat_idl _ $@ _).
-      exact (_ $@L (cate_retr_is_sect (to_cat_equiv (alpha a)))^$).
-    + exists (fun a => cate_sect (to_cat_equiv (alpha a))); constructor; intros a b f.
-      pose (alpha' := fun a => cate_fun (to_cat_equiv (alpha a)) : F a $-> G a).
-      change (Is1Natural F G alpha') in alnat.
-      refine (((cate_retr_is_sect (to_cat_equiv (alpha b)))^$ $@R _) $@ _).
-      refine ((cat_idr _)^$ $@ _).
-      refine ((_ $@L (cate_isretr (to_cat_equiv (alpha a)))^$) $@ _).
-      refine (cat_assoc _ _ _ $@ _).
-      refine ((_ $@L (cat_assoc_opp _ _ _)) $@ _).
-      refine ((_ $@L ((isnat alpha' f)^$ $@R _)) $@ _).
-      refine ((_ $@L (cat_assoc _ _ _)) $@ _).
-      refine (cat_assoc_opp _ _ _ $@ _).
-      refine ((cate_issect (to_cat_equiv (alpha b)) $@R _) $@ _).
+      refine ((catiso_sect (cat_unadjointify (alpha b)) $@R _) $@ _).
       exact (cat_idl _).
-    + intros a; apply cate_isretr.
-    + intros a; apply cate_issect.
-  - intros [F ?] [G ?] [[alpha ?] [gamma ?] [phi ?] r s]; cbn in *.
+    + intros a; apply catiso_retr.
+    + intros a; apply catiso_sect.
+  - intros [F ?] [G ?] [[alpha ?] [gamma ?] r s]; cbn in *.
     srefine (exist _ _ _).
-    + intros a; apply from_cat_equiv.
-      exact (Build_CatEquiv _ _ _ _ _ (alpha a) (gamma a) (phi a) (r a) (s a)).
-    + cbn; constructor; intros a b f.
-      refine ((to_from_cat_equiv _ _ _ $@R _) $@ _); cbn.
-      refine (_ $@ (_ $@L to_from_cat_equiv _ _ _)^$); cbn.
+    + intros a; apply cat_adjointify.
+      exact (Build_CatIso _ _ _ _ _ (alpha a) (gamma a) (r a) (s a)).
+    + cbn; apply Build_Is1Natural; intros a b f.
+      refine ((cat_adj_fun _ _ _ $@R _) $@ _); cbn.
+      refine (_ $@ (_ $@L cat_adj_fun _ _ _)^$); cbn.
       exact (isnat alpha f).
-  - intros [F ?] [G ?] [[alpha ?] [gamma ?] [phi ?] r s] a; cbn in *.
-    apply to_from_cat_equiv.
+  - intros [F ?] [G ?] [[alpha ?] [gamma ?] r s] a; cbn in *.
+    apply cat_adj_fun.
 Defined.
 
 
@@ -478,10 +453,10 @@ Definition yon1 {A : Type} `{Is1Cat A} (a : A) : Fun1 A^op Type
 Definition yon_equiv {A : Type} `{Is1Cat1_Strong A} {eA : HasEquivs A} (a b : A)
   : (yon1 a $<~> yon1 b) -> (a $<~> b).
 Proof.
-  intros f; apply from_cat_equiv; apply to_cat_equiv in f.
-  destruct f as [[f fnat] [g gnat] [h hnat] r s]. cbn in *; unfold yon in *.
-  refine (Build_CatEquiv _ _ _ a b (f a (Id a)) (g b (Id b)) (h b (Id b)) _ _); apply Htpy_path.
-  - refine ((isnat (alnat := fnat) f (h b (Id b)) (Id a))^ @ _); cbn.
+  intros f; apply cat_adjointify; apply cat_unadjointify in f.
+  destruct f as [[f fnat] [g gnat] r s]. cbn in *; unfold yon in *.
+  refine (Build_CatIso _ _ _ a b (f a (Id a)) (g b (Id b)) _ _); apply Htpy_path.
+  - refine ((isnat (alnat := fnat) f (g b (Id b)) (Id a))^ @ _); cbn.
     refine (_ @ r b (Id b)).
     apply ap. 
     rapply cat_idl_strong.
@@ -551,14 +526,14 @@ Definition opyon1 {A : Type} `{Is1Cat A} (a : A) : Fun1 A Type
 Definition opyon_equiv {A : Type} `{Is1Cat1_Strong A} {eA : HasEquivs A} (a b : A)
   : (opyon1 a $<~> opyon1 b) -> (b $<~> a).
 Proof.
-  intros f; apply from_cat_equiv; apply to_cat_equiv in f.
-  destruct f as [[f ?] [g ?] [h ?] r s]. cbn in *; unfold opyon in *.
-  refine (Build_CatEquiv _ _ _ b a (f a (Id a)) (h b (Id b)) (g b (Id b)) _ _); apply Htpy_path.
+  intros f; apply cat_adjointify; apply cat_unadjointify in f.
+  destruct f as [[f ?] [g ?] r s]. cbn in *; unfold opyon in *.
+  refine (Build_CatIso _ _ _ b a (f a (Id a)) (g b (Id b)) _ _); apply Htpy_path.
   - refine ((isnat g (f a (Id a)) (Id b))^ @ _); cbn.
     refine (_ @ s a (Id a)).
     apply ap. 
     rapply cat_idr_strong.
-  - refine ((isnat f (h b (Id b)) (Id a))^ @ _); cbn.
+  - refine ((isnat f (g b (Id b)) (Id a))^ @ _); cbn.
     refine (_ @ r b (Id b)).
     apply ap. 
     rapply cat_idr_strong.
