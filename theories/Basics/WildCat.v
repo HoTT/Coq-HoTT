@@ -28,6 +28,7 @@ Class Is2Cat (A : Type) `{Is1Cat A} :=
 
 Arguments Htpy {_ _ _ _ _} _ _.
 Notation "f $== g" := (Htpy f g).
+Arguments Id_Htpy {_ _ _ _ _} f.
 Arguments Concat_Htpy {_ _ _ _ _ _ _ _} p q.
 Notation "p $@ q" := (Concat_Htpy p q).
 Arguments WhiskerL_Htpy {_ _ _ _ _ _ _ _} h p.
@@ -38,7 +39,7 @@ Arguments Opp_Htpy {_ _ _ _ _ _ _} p.
 Notation "p ^$" := (Opp_Htpy p).
 
 Global Instance Reflexive_Htpy A `{Is2Cat A} (a b : A) : Reflexive (@Htpy A _ _ a b)
-  := fun f => Id_Htpy _ _ f.
+  := fun f => Id_Htpy f.
 
 Global Instance Symmetric_Htpy A `{Is2Cat A} (a b : A) : Symmetric (@Htpy A _ _ a b)
   := fun f g p => p^$.
@@ -312,6 +313,45 @@ Proof.
 Defined.
 
 
+(** ** Product categories *)
+
+Global Instance is1cat_prod A B `{Is1Cat A} `{Is1Cat B}
+  : Is1Cat (A * B).
+Proof.
+  refine (Build_Is1Cat (A * B) (fun x y => (fst x $-> fst y) * (snd x $-> snd y)) _ _).
+  - intros [a b]; exact (Id a, Id b).
+  - intros [a1 b1] [a2 b2] [a3 b3] [f1 g1] [f2 g2]; cbn in *.
+    exact (f1 $o f2 , g1 $o g2).
+Defined.
+
+Global Instance is2cat_prod A B `{Is2Cat A} `{Is2Cat B}
+  : Is2Cat (A * B).
+Proof.
+  srefine (Build_Is2Cat (A * B) _ _ _ _ _ _ _).
+  - intros x y f g.
+    exact ((fst f $== fst g) * (snd f $== snd g)).
+  - intros [a1 b1] [a2 b2] [f g]; split; reflexivity.
+  - intros [a1 b1] [a2 b2] [f1 g1] [f2 g2] [p q]; cbn in *.
+    exact (p^$, q^$).
+  - intros [a1 b1] [a2 b2] [f1 g1] [f2 g2] [f3 g3] [p1 q1] [p2 q2]; cbn in *.
+    exact (p1 $@ p2, q1 $@ q2).
+  - intros [a1 b1] [a2 b2] [a3 b3] [f1 g1] [f2 g2] [f3 g3] [p q]; cbn in *.
+    exact (f3 $@L p , g3 $@L q).
+  - intros [a1 b1] [a2 b2] [a3 b3] [f1 g1] [f2 g2] [p q] [f3 g3]; cbn in *.
+    exact (p $@R f3, q $@R g3).
+Defined.
+
+Global Instance is1cat1_prod A B `{Is1Cat1 A} `{Is1Cat1 B}
+  : Is1Cat1 (A * B).
+Proof.
+Admitted.
+
+
+(** ** Sum categories *)
+
+(* TODO? *)
+
+
 (** ** Wild functor categories *)
 
 Definition Fun1 (A B : Type) `{Is1Cat A} `{Is1Cat B}
@@ -535,3 +575,29 @@ Definition yon1 {A : Type} `{Is1Cat A} (a : A) : Fun1 A^op Type
 Definition yon_equiv {A : Type} `{Is1Cat1_Strong A} {eA : HasEquivs A} (a b : A)
   : (yon1 a $<~> yon1 b) -> (a $<~> b)
   := (@opyon_equiv A^op _ _ _ _ a b).
+
+
+(** ** Wild category of wild categories *)
+
+Record WildCat :=
+  { cat_carrier : Type
+    ; cat_is1cat : Is1Cat cat_carrier
+    (* TODO: How much should we include here? *)
+  }.
+Coercion cat_carrier : WildCat >-> Sortclass.
+Global Existing Instance cat_is1cat.
+
+Global Instance is1cat_wildcat : Is1Cat WildCat.
+Proof.
+  refine (Build_Is1Cat WildCat (fun A B => Fun1 A B) _ _).
+Admitted.
+
+Global Instance is2cat_wildcat : Is2Cat WildCat.
+Proof.
+Admitted.
+
+(* TODO: is1cat1_wildcat *)
+
+(** ** Grothendieck constructions *)
+
+(* How much coherence do we need? *)
