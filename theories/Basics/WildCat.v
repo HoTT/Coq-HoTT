@@ -136,10 +136,18 @@ Notation "F $--> G" := (Transformation F G).
 
 Class Is1Natural {A B : Type} `{Is2Cat A} `{Is2Cat B}
       (F : A -> B) {ff1 : Is1Functor F} (G : A -> B) {fg1 : Is1Functor G}
-      (alpha : F $--> G) :=
-  { isnat : forall a b (f : a $-> b), alpha b $o fmap F f $== fmap G f $o alpha a }.
+      (alpha : F $--> G) := Build_Is1Natural'
+  { isnat : forall a b (f : a $-> b), alpha b $o fmap F f $== fmap G f $o alpha a
+  ; isnat_opp : forall a b (f : a $-> b), fmap G f $o alpha a $== alpha b $o fmap F f }.
 
 Arguments isnat [_ _ _ _ _ _ _ _ _ _] alpha [alnat _ _] f : rename.
+
+Definition Build_Is1Natural {A B : Type} `{Is2Cat A} `{Is2Cat B}
+           (F : A -> B) {ff1 : Is1Functor F} (G : A -> B) {fg1 : Is1Functor G} (alpha : F $--> G)
+           (isnat' : forall a b (f : a $-> b), alpha b $o fmap F f $== fmap G f $o alpha a)
+  : Is1Natural F G alpha
+  := Build_Is1Natural' _ _ _ _ _ _ F _ G _ alpha
+                       isnat' (fun a b f => (isnat' a b f)^$).
 
 
 (** ** Opposite categories *)
@@ -181,7 +189,7 @@ Definition test3 A {ac : Is1Cat A} {ac2 : Is2Cat A} : ac2 = is2cat_op (A^op) := 
 Definition test4 A {ac : Is1Cat A} {ac2 : Is2Cat A} {ac11 : Is1Cat1 A} : ac11 = is1cat1_op (A^op) := 1.
 *)
 
-(* TODO: Opposite functors *)
+(* TODO: Opposite functors and natural transformations *)
 
 
 (** ** Equivalences *)
