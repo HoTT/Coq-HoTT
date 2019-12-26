@@ -181,6 +181,16 @@ Proof.
   - intros a; exact (cat_idlr a).
 Defined.
 
+Global Instance is1cat1_strong_op A `{Is1Cat1_Strong A} : Is1Cat1_Strong (A ^op).
+Proof.
+  srapply Build_Is1Cat1_Strong'; unfold op in *; cbn in *.
+  - intros a b c d f g h; exact (cat_assoc_opp_strong h g f).
+  - intros a b c d f g h; exact (cat_assoc_strong h g f).
+  - intros a b f; exact (cat_idr_strong f).
+  - intros a b f; exact (cat_idl_strong f).
+  - intros a; exact (cat_idlr_strong a).
+Defined.
+
 (* Opposites are definitionally involutive. *)
 (*
 Definition test1 A {ac : Is1Cat A} : A = (A^op)^op := 1.
@@ -255,6 +265,20 @@ Proof.
   - refine ((fmap_comp F f fi)^$ $@ fmap2 F issect $@ fmap_id F _).
 Defined.
 
+Global Instance hasequivs_op {A} `{HasEquivs A} : HasEquivs A^op.
+Proof.
+  srapply Build_HasEquivs; intros a b; unfold op in *; cbn in *.
+  - exact (b $<~> a).
+  - intros f; serapply Build_CatIso; unfold op; cbn.
+    + exact (catiso_fun (cat_unadjointify f)).
+    + exact (catiso_inv (cat_unadjointify f)).
+    + apply catiso_sect.
+    + apply catiso_retr.
+  - intros [f fi r s]; apply cat_adjointify; serapply Build_CatIso;
+      unfold op in *; cbn in *; assumption.
+  - intros [f fi r s]; cbn.
+    apply cat_adj_fun.
+Defined.
 
 (** ** The category of types *)
 
@@ -388,87 +412,9 @@ Proof.
 Defined.
 
 
-(** ** The contravariant Yoneda lemma *)
-
-Definition yon {A : Type} `{Is1Cat A} (a : A) : A -> Type
-  := fun b => (b $-> a).
-
-Global Instance is1functor_yon {A : Type} `{Is1Cat A} (a : A) : @Is1Functor (A^op) Type _ _ (yon a).
-Proof.
-  apply Build_Is1Functor.
-  unfold yon; intros b c f g; cbn in *.
-  exact (g $o f).
-Defined.
-
-Definition yoneda {A : Type} `{Is1Cat A} (a : A) (F : A^op -> Type) {ff : Is1Functor F} 
-  : F a -> (yon a $--> F).
-Proof.
-  intros x b f.
-  change (@Hom A^op _  a b) in f.
-  exact (fmap F f x).
-Defined.
-
-Definition unyoneda {A : Type} `{Is1Cat A} (a : A) (F : A^op -> Type) {ff : Is1Functor F}
-  : (yon a $--> F) -> F a
-  := fun alpha => alpha a (Id a).
-
-Global Instance is1natural_yoneda {A : Type} `{Is2Cat A} (a : A) (F : A^op -> Type) {ff : Is1Functor F} {ff1 : Is1Functor1 F} (x : F a)
-  (* Why is typeclass inference failing here? *)
-  : @Is1Natural A^op Type _ _ _ _ (yon a) _ F _ (yoneda a F x).
-Proof.
-  apply Build_Is1Natural.
-  unfold op, yon, yoneda; intros b c f g; cbn in *.
-  (* Why is typeclass inference failing here? *)
-  exact (@fmap_comp _ _ _ _ _ _ F _ ff1 _ _ _ g f x).
-Defined.
-
-Definition yoneda_issect {A : Type} `{Is2Cat A} (a : A) (F : A^op -> Type) {ff : Is1Functor F} {ff1 : Is1Functor1 F} (x : F a)
-  : unyoneda a F (yoneda a F x) = x
-  := fmap_id F a x.
-
-(** We assume for the converse that the coherences in [A] are equalities (this is a weak funext-type assumption).  Note that we do not in general recover the witness of 1-naturality.  Indeed, if [A] is fully coherent, then a transformation of the form [yoneda a F x] is always also fully coherently natural, so an incoherent witness of 1-naturality could not be recovered in this way.  *)
-Definition yoneda_isretr {A : Type} `{Is1Cat1_Strong A} (a : A)
-           (F : A^op -> Type) {ff : Is1Functor F} {ff1 : Is1Functor1 F}
-           (alpha : yon a $--> F)
-           {alnat : @Is1Natural A^op Type _ _ _ _ (yon a) _ F ff alpha} (* again, what? *)
-           (b : A)
-  : yoneda a F (unyoneda a F alpha) b $== alpha b.
-Proof.
-  unfold yoneda, unyoneda, yon; intros f.
-  refine ((isnat alpha (alnat := alnat) f (Id a))^ @ _). (* again? *)
-  cbn.
-  apply ap.
-  exact (cat_idl_strong f).
-Defined.
-
-(** Specialization to "full-faithfulness" of the Yoneda embedding.  (In quotes because, again, incoherence means we can't recover the witness of naturality.)  *)
-Definition yon_cancel {A : Type} `{Is1Cat A} (a b : A)
-  : (yon a $--> yon b) -> (a $-> b)
-  := unyoneda a (yon b).
-
-Definition yon1 {A : Type} `{Is1Cat A} (a : A) : Fun1 A^op Type
-  := (yon a ; is1functor_yon a).
-
-(** We can also deduce "full-faithfulness" on equivalences. *)
-Definition yon_equiv {A : Type} `{Is1Cat1_Strong A} {eA : HasEquivs A} (a b : A)
-  : (yon1 a $<~> yon1 b) -> (a $<~> b).
-Proof.
-  intros f; apply cat_adjointify; apply cat_unadjointify in f.
-  destruct f as [[f fnat] [g gnat] r s]. cbn in *; unfold yon in *.
-  refine (Build_CatIso _ _ _ a b (f a (Id a)) (g b (Id b)) _ _); apply Htpy_path.
-  - refine ((isnat (alnat := fnat) f (g b (Id b)) (Id a))^ @ _); cbn.
-    refine (_ @ r b (Id b)).
-    apply ap. 
-    rapply cat_idl_strong.
-  - refine ((isnat (alnat := gnat) g (f a (Id a)) (Id b))^ @ _); cbn.
-    refine (_ @ s a (Id a)).
-    apply ap. 
-    rapply cat_idl_strong.
-Defined.
-
 (** ** The covariant Yoneda lemma *)
 
-(** This is just the same, except that the typeclasses aren't a problem. *)
+(** This is easier than the contravariant version because it doesn't involve any "op"s. *)
 
 Definition opyon {A : Type} `{Is1Cat A} (a : A) : A -> Type
   := fun b => (a $-> b).
@@ -476,7 +422,7 @@ Definition opyon {A : Type} `{Is1Cat A} (a : A) : A -> Type
 Global Instance is1functor_opyon {A : Type} `{Is1Cat A} (a : A) : @Is1Functor A Type _ _ (opyon a).
 Proof.
   apply Build_Is1Functor.
-  unfold yon; intros b c f g; cbn in *.
+  unfold opyon; intros b c f g; cbn in *.
   exact (f $o g).
 Defined.
 
@@ -495,7 +441,7 @@ Global Instance is1natural_opyoneda {A : Type} `{Is2Cat A} (a : A) (F : A -> Typ
   : Is1Natural (opyon a) F (opyoneda a F x).
 Proof.
   apply Build_Is1Natural.
-  unfold op, yon, yoneda; intros b c f g; cbn in *.
+  unfold op, opyon, opyoneda; intros b c f g; cbn in *.
   exact (fmap_comp F g f x).
 Defined.
 
@@ -503,19 +449,21 @@ Definition opyoneda_issect {A : Type} `{Is2Cat A} (a : A) (F : A -> Type) {ff : 
   : un_opyoneda a F (opyoneda a F x) = x
   := fmap_id F a x.
 
+(** We assume for the converse that the coherences in [A] are equalities (this is a weak funext-type assumption).  Note that we do not in general recover the witness of 1-naturality.  Indeed, if [A] is fully coherent, then a transformation of the form [yoneda a F x] is always also fully coherently natural, so an incoherent witness of 1-naturality could not be recovered in this way.  *)
 Definition opyoneda_isretr {A : Type} `{Is1Cat1_Strong A} (a : A)
            (F : A -> Type) {ff : Is1Functor F} {ff1 : Is1Functor1 F}
            (alpha : opyon a $--> F) {alnat : Is1Natural (opyon a) F alpha}
            (b : A)
   : opyoneda a F (un_opyoneda a F alpha) b $== alpha b.
 Proof.
-  unfold yoneda, unyoneda, yon; intros f.
+  unfold opyoneda, un_opyoneda, opyon; intros f.
   refine ((isnat alpha f (Id a))^ @ _).
   cbn.
   apply ap.
   exact (cat_idr_strong f).
 Defined.
 
+(** Specialization to "full-faithfulness" of the Yoneda embedding.  (In quotes because, again, incoherence means we can't recover the witness of naturality.)  *)
 Definition opyon_cancel {A : Type} `{Is1Cat A} (a b : A)
   : (opyon a $--> opyon b) -> (b $-> a)
   := un_opyoneda a (opyon b).
@@ -523,6 +471,7 @@ Definition opyon_cancel {A : Type} `{Is1Cat A} (a b : A)
 Definition opyon1 {A : Type} `{Is1Cat A} (a : A) : Fun1 A Type
   := (opyon a ; is1functor_opyon a).
 
+(** We can also deduce "full-faithfulness" on equivalences. *)
 Definition opyon_equiv {A : Type} `{Is1Cat1_Strong A} {eA : HasEquivs A} (a b : A)
   : (opyon1 a $<~> opyon1 b) -> (b $<~> a).
 Proof.
@@ -538,3 +487,51 @@ Proof.
     apply ap. 
     rapply cat_idr_strong.
 Defined.
+
+(** ** The contravariant Yoneda lemma *)
+
+(** We can deduce this from the covariant version with some boilerplate. *)
+
+Definition yon {A : Type} `{Is1Cat A} (a : A) : A^op -> Type
+  := @opyon (A^op) _ a.
+
+Global Instance is1functor_yon {A : Type} `{Is1Cat A} (a : A)
+  : Is1Functor (yon a)
+  := @is1functor_opyon A _ a.
+
+Definition yoneda {A : Type} `{Is1Cat A} (a : A)
+           (F : A^op -> Type) {ff : Is1Functor F} 
+  : F a -> (yon a $--> F)
+  := @opyoneda (A^op) _ a F _.
+
+Definition un_yoneda {A : Type} `{Is1Cat A} (a : A)
+           (F : A^op -> Type) {ff : Is1Functor F}
+  : (yon a $--> F) -> F a
+  := @un_opyoneda (A^op) _ a F _.
+
+Global Instance is1natural_yoneda {A : Type} `{Is2Cat A} (a : A)
+       (F : A^op -> Type) {ff : Is1Functor F} {ff1 : Is1Functor1 F} (x : F a)
+  : Is1Natural (yon a) F (yoneda a F x)
+  := @is1natural_opyoneda (A^op) _ _ a F _ _ x.
+
+Definition yoneda_issect {A : Type} `{Is2Cat A} (a : A) (F : A^op -> Type) {ff : Is1Functor F} {ff1 : Is1Functor1 F} (x : F a)
+  : un_yoneda a F (yoneda a F x) = x
+  := @opyoneda_issect (A^op) _ _ a F _ _ x.
+
+Definition yoneda_isretr {A : Type} `{Is1Cat1_Strong A} (a : A)
+           (F : A^op -> Type) {ff : Is1Functor F} {ff1 : Is1Functor1 F}
+           (alpha : yon a $--> F) {alnat : Is1Natural (yon a) F alpha}
+           (b : A)
+  : yoneda a F (un_yoneda a F alpha) b $== alpha b
+  := @opyoneda_isretr A^op _ _ _ a F _ _ alpha alnat b.
+
+Definition yon_cancel {A : Type} `{Is1Cat A} (a b : A)
+  : (yon a $--> yon b) -> (a $-> b)
+  := un_yoneda a (yon b).
+
+Definition yon1 {A : Type} `{Is1Cat A} (a : A) : Fun1 A^op Type
+  := opyon1 a.
+
+Definition yon_equiv {A : Type} `{Is1Cat1_Strong A} {eA : HasEquivs A} (a b : A)
+  : (yon1 a $<~> yon1 b) -> (a $<~> b)
+  := (@opyon_equiv A^op _ _ _ _ a b).
