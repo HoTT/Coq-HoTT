@@ -16,6 +16,8 @@ Require Import
   HoTT.Classes.theory.additional_operations
   HoTT.Classes.implementations.assume_rationals.
 
+Generalizable Variables A B.
+
 Local Set Universe Minimization ToSet.
 
 

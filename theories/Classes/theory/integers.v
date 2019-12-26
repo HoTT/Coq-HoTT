@@ -13,6 +13,7 @@ Require Import
 Require Export
  HoTT.Classes.interfaces.integers.
 
+Generalizable Variables N Z R f.
 
 Lemma to_ring_unique `{Integers Z} `{IsRing R} (f: Z -> R)
   {h: IsSemiRingPreserving f} x

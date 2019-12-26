@@ -5,6 +5,8 @@ Require Import
 Require Export
   HoTT.Classes.theory.rings.
 
+Generalizable Variables F f.
+
 Section field_properties.
 Context `{IsField F}.
 

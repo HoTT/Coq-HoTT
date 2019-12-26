@@ -4,6 +4,8 @@ Require Import
   HoTT.Classes.orders.maps
   HoTT.Classes.theory.lattices.
 
+Generalizable Variables K L f.
+
 (*
 We prove that the algebraic definition of a lattice corresponds to the
 order theoretic one. Note that we do not make any of these instances global,

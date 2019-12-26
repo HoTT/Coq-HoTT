@@ -2,6 +2,8 @@ Require Coq.Init.Peano.
 Require Export
   HoTT.Classes.interfaces.canonical_names.
 
+Generalizable Variables A B f g x y.
+
 (* 
 For various structures we omit declaration of substructures. For example, if we 
 say:

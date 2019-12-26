@@ -7,15 +7,7 @@ Declare Scope mc_scope.
 Delimit Scope mc_scope with mc.
 Global Open Scope mc_scope.
 
-(* 'o' is used for the compose notation. *)
-Global Generalizable Variables
-  A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-  a b c d e f g h i j k l m n p q r s t u v w x y z
-  Fa Ga
-  Fle Flt Nle Nlt Rle Rlt
-  R1le R2le
-  Alt Blt R1lt R2lt Vlt Zle Zlt
-  SR.
+Generalizable Variables A B f g x y.
 
 Monomorphic Universe Ularge Uhuge.
 Monomorphic Constraint Ularge < Uhuge.

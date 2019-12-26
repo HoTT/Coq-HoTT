@@ -4,6 +4,7 @@ Require Import HSet.
 Require Import Algebra.Group.
 
 Local Open Scope mc_mult_scope.
+Generalizable Variables G H A B C N f g.
 
 (** * Subgroups *)
 

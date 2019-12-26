@@ -4,6 +4,8 @@ Require Import
   HoTT.Classes.interfaces.orders
   HoTT.Classes.theory.apartness.
 
+Generalizable Variables A.
+
 Lemma irrefl_neq `{R : Relation A} `{!Irreflexive R}
   : forall x y, R x y -> ~ x = y.
 Proof.

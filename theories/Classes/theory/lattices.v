@@ -2,6 +2,8 @@ Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.theory.groups.
 
+Generalizable Variables A B C K L f.
+
 Instance bounded_sl_is_sl `{IsBoundedSemiLattice L} : IsSemiLattice L.
 Proof.
 repeat (split; try apply _).

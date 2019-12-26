@@ -2,6 +2,7 @@ Require Import
   HoTT.Classes.interfaces.abstract_algebra.
 
 Local Open Scope mc_mult_scope.
+Generalizable Variables G H A B C f g.
 
 Section group_props.
   Context `{IsGroup G}.

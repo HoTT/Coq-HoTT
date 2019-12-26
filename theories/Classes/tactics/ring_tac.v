@@ -10,6 +10,8 @@ Require Import
   HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.integers.
 
+Generalizable Variables A B C R V f l n m Vlt.
+
 Section content.
 Context `{DecidablePaths C}.
 

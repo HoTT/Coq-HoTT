@@ -8,6 +8,8 @@ Require Export
   HoTT.Classes.orders.rings.
 Require Import HoTT.Classes.tactics.ring_tac.
 
+Generalizable Variables F f R Fle Flt.
+
 Section contents.
 Context `{IsDecField F} `{Apart F} `{!TrivialApart F}
   `{!FullPseudoSemiRingOrder Fle Flt} `{DecidablePaths F}.

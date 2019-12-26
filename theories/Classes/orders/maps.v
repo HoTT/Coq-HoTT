@@ -4,6 +4,8 @@ Require Import
   HoTT.Classes.orders.orders
   HoTT.Classes.theory.apartness.
 
+Generalizable Variables A B C R S f g z.
+
 (* If a function between strict partial orders is order preserving (back), we can
   derive that it is strictly order preserving (back) *)
 Section strictly_order_preserving.

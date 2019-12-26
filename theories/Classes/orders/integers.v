@@ -14,6 +14,8 @@ Require Import
 Require Export
   HoTT.Classes.orders.nat_int.
 
+Generalizable Variables N Z R f.
+
 Section integers.
 Context `{Funext} `{Univalence}.
 Context `{Integers Z} `{!TrivialApart Z}.
