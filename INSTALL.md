@@ -3,7 +3,7 @@
 Make sure you have all the prerequisites for compiling Coq. These are
 `OCaml`, `camlp5`, `git`, and `make`. If you want to build the HoTT
 version of the graphical user interface `coqide` you also need the
-`lablgtk3` and `lablgtksourceview2` libraries.  To get these:
+`lablgtk3` and `lablgtksourceview3` libraries.  To get these:
 
 ### Linux and OSX
 
