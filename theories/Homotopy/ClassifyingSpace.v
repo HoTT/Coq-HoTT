@@ -155,7 +155,12 @@ Defined.
 Definition pClassifingSpace (G : Group)
   := Build_pType (ClassifyingSpace G) bbase.
 
-Notation "'B' G" := (pClassifingSpace G) (at level 0) : bg_scope.
+(** To use the B G notation for pClassifyingSpace import this module. *)
+Module Import ClassifyingSpaceNotation.
+  Definition B G := pClassifingSpace G.
+End ClassifyingSpaceNotation.
+
+Import ClassifyingSpaceNotation.
 
 (** We can show that [bloop] takes the unit of the group to reflexivity. *)
 Definition bloop_id {G : Group} : bloop mon_unit = idpath.
