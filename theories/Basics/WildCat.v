@@ -57,6 +57,7 @@ Class Is1Cat1 (A : Type) `{Is2Cat A} :=
     ; cat_assoc_opp : forall a b c d (f : a $-> b) (g : b $-> c) (h : c $-> d), h $o (g $o f) $== (h $o g) $o f
     ; cat_idl : forall a b (f : a $-> b), Id b $o f $== f
     ; cat_idr : forall a b (f : a $-> b), f $o Id a $== f
+    ; cat_idlr : forall a, Id a $o Id a $== Id a
   }.
 
 Definition Build_Is1Cat1 (A : Type) `{Is2Cat A}
@@ -64,7 +65,7 @@ Definition Build_Is1Cat1 (A : Type) `{Is2Cat A}
            (cat_idl' : forall a b (f : a $-> b), Id b $o f $== f)
            (cat_idr' : forall a b (f : a $-> b), f $o Id a $== f)
   : Is1Cat1 A
-  := Build_Is1Cat1' A _ _ cat_assoc' (fun a b c d f g h => (cat_assoc' a b c d f g h)^$) cat_idl' cat_idr'.
+  := Build_Is1Cat1' A _ _ cat_assoc' (fun a b c d f g h => (cat_assoc' a b c d f g h)^$) cat_idl' cat_idr' (fun a => cat_idl' a a (Id a)).
 
 Arguments cat_assoc [_ _ _ _ _ _ _ _] f g h.
 Arguments cat_assoc_opp [_ _ _ _ _ _ _ _] f g h.
@@ -78,6 +79,7 @@ Class Is1Cat1_Strong (A : Type) `{Is2Cat A} :=
     ; cat_assoc_opp_strong : forall a b c d (f : a $-> b) (g : b $-> c) (h : c $-> d), h $o (g $o f) = (h $o g) $o f
     ; cat_idl_strong : forall a b (f : a $-> b), Id b $o f = f
     ; cat_idr_strong : forall a b (f : a $-> b), f $o Id a = f
+    ; cat_idlr_strong : forall a, Id a $o Id a = Id a
   }.
 
 Definition Build_Is1Cat1_Strong (A : Type) `{Is2Cat A}
@@ -85,7 +87,7 @@ Definition Build_Is1Cat1_Strong (A : Type) `{Is2Cat A}
            (cat_idl' : forall a b (f : a $-> b), Id b $o f = f)
            (cat_idr' : forall a b (f : a $-> b), f $o Id a = f)
   : Is1Cat1_Strong A
-  := Build_Is1Cat1_Strong' A _ _ cat_assoc' (fun a b c d f g h => (cat_assoc' a b c d f g h)^) cat_idl' cat_idr'.
+  := Build_Is1Cat1_Strong' A _ _ cat_assoc' (fun a b c d f g h => (cat_assoc' a b c d f g h)^) cat_idl' cat_idr' (fun a => cat_idl' a a (Id a)).
 
 Arguments cat_assoc_strong [_ _ _ _ _ _ _ _] f g h.
 Arguments cat_assoc_opp_strong [_ _ _ _ _ _ _ _] f g h.
@@ -99,6 +101,7 @@ Proof.
   - rapply cat_assoc_opp_strong.
   - rapply cat_idl_strong.
   - rapply cat_idr_strong.
+  - rapply cat_idlr_strong.
 Defined.
 
 
@@ -167,6 +170,7 @@ Proof.
   - intros a b c d f g h; exact (cat_assoc h g f).
   - intros a b f; exact (cat_idr f).
   - intros a b f; exact (cat_idl f).
+  - intros a; exact (cat_idlr a).
 Defined.
 
 (* Opposites are definitionally involutive. *)
@@ -340,10 +344,12 @@ Proof.
   srapply Build_Is1Cat1'.
   1,2:intros [F ?] [G ?] [K ?] [L ?] [alpha ?] [gamma ?] [phi ?] a; cbn.
   3,4:intros [F ?] [G ?] [alpha ?] a; cbn.
+  5:intros [F ?] a; cbn.
   - rapply cat_assoc.
   - rapply cat_assoc_opp.
   - rapply cat_idl.
   - rapply cat_idr.
+  - rapply cat_idlr.
 Defined.
 
 (** It also inherits a notion of equivalence, namely a natural transformation that is a pointwise equivalence.  Note that due to incoherence, in this case we do *not* expect [to_cat_equiv] and [from_cat_equiv] to actually be inverses. *)
