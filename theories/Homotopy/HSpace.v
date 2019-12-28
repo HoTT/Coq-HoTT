@@ -13,7 +13,7 @@ Class IsHSpace (X : pType) := {
   hspace_right_identity :> RightIdentity hspace_op (point _);
 }.
 
-Global Instance hspace_mon_unit `{IsHSpace X} : MonUnit X := point _.
+Global Instance hspace_mon_unit {X : pType} `{IsHSpace X} : MonUnit X := point _.
 
 Definition hspace_id {X : pType} := point X.
 
