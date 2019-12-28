@@ -1140,6 +1140,19 @@ comment such as LGTM ("Looks Good To Me").  Currently the rules are:
   merging (which doesn't always mean making the changes, but a
   discussion must be had and resolved).
 
+- In general, a pull request should not be merged unless Travis CI
+  confirms that it builds successfully.  Exceptions to this rule
+  sometimes have to be made if the Travis configuration is broken for
+  some unrelated reason, but in that case it is better if the
+  person(s) approving the pull request confirms locally that it builds
+  successfully.
+
+  Note also that Travis doesn't automatically restart itself on a pull
+  request when the master branch changes, so if other pull requests
+  have been merged in the interval since a given pull request was
+  first submitted it may be necessary to manually restart Travis
+  before merging it.
+
 - In the absence of objections, two approvals suffice for a pull
   request to be merged.  Thus, instead of giving a second approval one
   may just merge the pull request.
