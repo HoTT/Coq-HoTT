@@ -1,10 +1,16 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-
-Require Import HoTT.Basics HoTT.Types.
-Require Import HProp HSet NullHomotopy Extensions.
-Require Import Colimits.Pushout HoTT.Truncations.
-Local Open Scope path_scope.
+Require Import Basics.
+Require Import Types.
+Require Import Cubical.
+Require Import HProp.
+Require Import HSet.
+Require Import NullHomotopy.
+Require Import Extensions.
+Require Import Colimits.Pushout.
+Require Import Truncations.
 Import TrM.
+
+Local Open Scope path_scope.
 
 (** * Joins *)
 
@@ -14,7 +20,49 @@ Section Join.
   Definition Join (A : Type@{i}) (B : Type@{j})
     := Pushout@{k i j k} (@fst A B) (@snd A B).
 
-  Definition jglue {A B} a b := @pglue (A*B) A B fst snd (a,b).
+  Definition joinl {A B} : A -> Join A B
+    := fun a => @pushl (A*B) A B fst snd a.
+
+  Definition joinr {A B} : B -> Join A B
+    := fun b => @pushr (A*B) A B fst snd b.
+
+  Definition jglue {A B} a b : joinl a = joinr b
+    := @pglue (A*B) A B fst snd (a , b).
+
+  Definition Join_ind {A B : Type} (P : Join A B -> Type)
+    (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
+    (P_g : forall a b, DPath P (jglue a b) (P_A a) (P_B b))
+    : forall (x : Join A B), P x.
+  Proof.
+    serapply (Pushout_ind P P_A P_B).
+    intros [a b].
+    apply dp_path_transport^-1.
+    exact (P_g a b).
+  Defined.
+
+  Definition Join_ind_beta_jglue {A B : Type} (P : Join A B -> Type)
+    (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
+    (P_g : forall a b, DPath P (jglue a b) (P_A a) (P_B b)) a b
+    : dp_apD (Join_ind P P_A P_B P_g) (jglue a b) = P_g a b.
+  Proof.
+    apply dp_apD_path_transport.
+    serapply Pushout_ind_beta_pglue.
+  Defined.
+
+  Definition Join_rec {A B P : Type} (P_A : A -> P) (P_B : B -> P)
+    (P_g : forall a b, P_A a = P_B b) : Join A B -> P.
+  Proof.
+    serapply (Pushout_rec P P_A P_B).
+    intros [a b].
+    apply P_g.
+  Defined.
+
+  Definition Join_rec_beta_jglue {A B P : Type} (P_A : A -> P)
+    (P_B : B -> P) (P_g : forall a b, P_A a = P_B b) a b
+    : ap (Join_rec P_A P_B P_g) (jglue a b) = P_g a b.
+  Proof.
+    serapply Pushout_rec_beta_pglue.
+  Defined.
 
   (** Joining with a contractible type produces a contractible type *)
   Global Instance contr_join A B `{Contr A} : Contr (Join A B).
