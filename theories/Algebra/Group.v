@@ -87,16 +87,21 @@ Definition pmap_GroupHomomorphism {G H : Group} (f : GroupHomomorphism G H) : pM
   := Build_pMap G H f (@monmor_unitmor _ _ _ _ _ _ _ (@grp_homo_ishomo G H f)).
 Coercion pmap_GroupHomomorphism : GroupHomomorphism >-> pMap.
 
-Definition issig_GroupHomomorphism {G H : Group} : _ <~> GroupHomomorphism G H
+Definition issig_GroupHomomorphism (G H : Group) : _ <~> GroupHomomorphism G H
   := ltac:(issig).
 
-Definition path_GroupHomomorphism `{F : Funext} {G H : Group}
-  {g h : GroupHomomorphism G H} : g == h -> g = h.
+Definition equiv_path_grouphomomorphism {F : Funext} {G H : Group}
+  {g h : GroupHomomorphism G H} : g == h <~> g = h.
 Proof.
-  intro p.
-  apply ((ap issig_GroupHomomorphism^-1)^-1).
-  serapply path_sigma_hprop.
-  by apply path_forall.
+  refine ((equiv_ap (issig_GroupHomomorphism G H)^-1 _ _)^-1 oE _).
+  refine (equiv_path_sigma_hprop _ _ oE _).
+  apply equiv_path_forall.
+Defined.
+
+Global Instance ishset_grouphomomorphism {F : Funext} {G H : Group}
+  : IsHSet (GroupHomomorphism G H).
+Proof.
+  intros f g; apply (trunc_equiv' _ equiv_path_grouphomomorphism).
 Defined.
 
 (** * Some basic properties of group homomorphisms *)
@@ -217,14 +222,51 @@ Proof.
   exact _.
 Defined.
 
-(** TODO: Finish this
+(** Under univalence, equality of groups is equivalent to isomorphism of groups. *)
 Definition equiv_path_group {U : Univalence} {G H : Group}
   : GroupIsomorphism G H <~> G = H.
 Proof.
-  refine (_ oE (issig_GroupIsomorphism _ _)^-1).
-  eqp_issig_contr issig_group.
-Admitted.
-*)
+  refine (equiv_compose'
+    (B := sig (fun f : G <~> H => IsMonoidPreserving f)) _ _).
+  { eqp_issig_contr issig_group.
+    + intros [G [? [? [? ?]]]].
+      exists 1%equiv.
+      exact _.
+    + intros [G [op [unit [neg ax]]]]; cbn.
+      contr_sigsig G (equiv_idmap G).
+      srefine (Build_Contr _ ((_;(_;(_;_)));_) _); cbn;
+        try assumption; try exact _.
+      intros [[op' [unit' [neg' ax']]] eq].
+      apply path_sigma_hprop; cbn.
+      (* We really need to fix https://github.com/HoTT/HoTT/issues/976 *)
+      refine (@ap _ _ (fun x : { oun :
+        { oo : SgOp G | { u : MonUnit G | Negate G}}
+        | @IsGroup G oun.1 oun.2.1 oun.2.2}
+        => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
+        ((op;unit;neg);ax) ((op';unit';neg');ax') _).
+      apply path_sigma_hprop; cbn.
+      srefine (path_sigma' _ _ _).
+      1: funext x y; apply eq.
+      rewrite transport_const.
+      srefine (path_sigma' _ _ _).
+      1: apply eq.
+      rewrite transport_const.
+      funext x.
+      exact (preserves_negate x). }
+  refine (_ oE (issig_GroupIsomorphism G H)^-1).
+  refine (_ oE (equiv_functor_sigma' (issig_GroupHomomorphism G H)
+    (fun f => 1%equiv))^-1).
+  refine (equiv_functor_sigma' (issig_equiv G H) (fun f => 1%equiv) oE _).
+  cbn.
+  refine (
+    equiv_adjointify
+      (fun f => (exist (IsMonoidPreserving o pr1)
+        (exist IsEquiv f.1.1 f.2) f.1.2))
+      (fun f => (exist (IsEquiv o pr1)
+        (exist IsMonoidPreserving f.1.1 f.2) f.1.2))
+       _ _).
+  all: intros [[]]; reflexivity.
+Defined.  
 
 (** * Simple group equivalences *)
 
