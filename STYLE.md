@@ -1148,10 +1148,11 @@ comment such as LGTM ("Looks Good To Me").  Currently the rules are:
   successfully.
 
   Note also that Travis doesn't automatically restart itself on a pull
-  request when the master branch changes, so if other pull requests
-  have been merged in the interval since a given pull request was
-  first submitted it may be necessary to manually restart Travis
-  before merging it.
+  request when the master branch changes.  Thus, if other pull
+  requests have been merged in the interval since a given pull request
+  was first submitted, it may be necessary to rebase that pull request
+  against the new master and then manually restart Travis, to make
+  sure before merging it that it won't break the master branch.
 
 - In the absence of objections, two approvals suffice for a pull
   request to be merged.  Thus, instead of giving a second approval one
