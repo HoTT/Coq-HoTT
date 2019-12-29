@@ -103,7 +103,7 @@ Section Join.
     apply sq_refl_h.
   Defined.
 
-  Definition join_bifunctor {A B C D} (f : A -> C) (g : B -> D)
+  Definition functor_join {A B C D} (f : A -> C) (g : B -> D)
     : Join A B -> Join C D.
   Proof.
     serapply Join_rec.
@@ -113,9 +113,9 @@ Section Join.
     apply jglue.
   Defined.
 
-  Definition join_bifunctor_compose {A B C D E F}
+  Definition functor_join_compose {A B C D E F}
     (f : A -> C) (g : B -> D) (h : C -> E) (i : D -> F)
-    : join_bifunctor (h o f) (i o g) == join_bifunctor h i o join_bifunctor f g.
+    : functor_join (h o f) (i o g) == functor_join h i o functor_join f g.
   Proof.
     serapply Join_ind.
     1,2: reflexivity.
@@ -129,8 +129,8 @@ Section Join.
     reflexivity.
   Defined.
 
-  Definition join_bifunctor_idmap {A}
-    : join_bifunctor idmap idmap == (idmap : Join A A -> Join A A).
+  Definition functor_join_idmap {A}
+    : functor_join idmap idmap == (idmap : Join A A -> Join A A).
   Proof.
     serapply Join_ind.
     1,2: reflexivity.
@@ -141,25 +141,25 @@ Section Join.
     apply concat_Vp.
   Defined.
 
-  Global Instance isequiv_join_bifunctor {A B C D}
+  Global Instance isequiv_functor_join {A B C D}
     (f : A -> C) `{!IsEquiv f} (g : B -> D) `{!IsEquiv g}
-    : IsEquiv (join_bifunctor f g).
+    : IsEquiv (functor_join f g).
   Proof.
     serapply isequiv_adjointify.
-    1: apply (join_bifunctor f^-1 g^-1).
+    1: apply (functor_join f^-1 g^-1).
     1,2: serapply Join_ind.
     1,2: intro; simpl; apply ap, eisretr.
     2,3: intro; simpl; apply ap, eissect.
     1,2: intros c d.
     1,2: apply sq_dp^-1.
-     1 : rewrite (ap_compose _ (join_bifunctor f g)).
-     2 : rewrite (ap_compose (join_bifunctor f g)).
+     1 : rewrite (ap_compose _ (functor_join f g)).
+     2 : rewrite (ap_compose (functor_join f g)).
     1,2: rewrite 2 Join_rec_beta_jglue, ap_idmap.
     1,2: apply join_natsq_v.
   Defined.
 
-  Definition equiv_join_bifunctor {A B C D} (f : A <~> C) (g : B <~> D)
-    : Join A B <~> Join C D := Build_Equiv _ _ (join_bifunctor f g) _.
+  Definition equiv_functor_join {A B C D} (f : A <~> C) (g : B <~> D)
+    : Join A B <~> Join C D := Build_Equiv _ _ (functor_join f g) _.
 
   (** The join of hprops is an hprop *)
   Global Instance ishprop_join `{Funext} A B `{IsHProp A} `{IsHProp B} : IsHProp (Join A B).
