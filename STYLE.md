@@ -1151,7 +1151,7 @@ comment such as LGTM ("Looks Good To Me").  Currently the rules are:
   request when the master branch changes.  Thus, if other pull
   requests have been merged in the interval since a given pull request
   was first submitted, it may be necessary to rebase that pull request
-  against the new master and then manually restart Travis, to make
+  against the new master, to make
   sure before merging it that it won't break the master branch.
 
 - In the absence of objections, two approvals suffice for a pull
