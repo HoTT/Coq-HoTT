@@ -51,7 +51,7 @@
     - [Available tactics](#available-tactics)
   - [Contributing to the library](#contributing-to-the-library)
     - [Fork & Pull](#fork--pull)
-    - [Two pairs of eyes](#two-pairs-of-eyes)
+    - [Approval of pull requests](#approval-of-pull-requests)
     - [Commit messages](#commit-messages)
     - [Creating new files](#creating-new-files)
     - [Travis](#travis)
@@ -1129,17 +1129,41 @@ on each other.
 
 [minor]: http://en.wikipedia.org/wiki/Help:Minor_edit
 
-### Two pairs of eyes ###
+### Approval of pull requests ###
 
-In general, pull requests require "two pairs of eyes" from among the
-core developers, i.e. two people to approve them before they are
-merged.  This usually works fine, but can sometimes stall if most of
-the core developers are busy.  If a pull request seems to have
-stalled, feel free to bump it back to attention with a comment.
+Before being merged, pull requests must be approved by one or two of
+the core developers, not counting whoever submitted it.  An approval
+can be an official "Approving review" through the GitHub UI, or just a
+comment such as LGTM ("Looks Good To Me").  Currently the rules are:
 
-You may see the abbreviations LGTM ("Looks Good To Me") meaning that
-the commenter counts as one pair of eyes, and APOE ("Another Pair Of
-Eyes") asking for a second pair.
+- Any objections or requested changes must be addressed somehow before
+  merging (which doesn't always mean making the changes, but a
+  discussion must be had and resolved).
+
+- In general, a pull request should not be merged unless Travis CI
+  confirms that it builds successfully.  Exceptions to this rule
+  sometimes have to be made if the Travis configuration is broken for
+  some unrelated reason, but in that case it is better if the
+  person(s) approving the pull request confirms locally that it builds
+  successfully.
+
+  Note also that Travis doesn't automatically restart itself on a pull
+  request when the master branch changes.  Thus, if other pull
+  requests have been merged in the interval since a given pull request
+  was first submitted, it may be necessary to rebase that pull request
+  against the new master, to make
+  sure before merging it that it won't break the master branch.
+
+- In the absence of objections, two approvals suffice for a pull
+  request to be merged.  Thus, instead of giving a second approval one
+  may just merge the pull request.
+
+- In the absence of objections but with only one approval, a pull
+  request may be merged if at least 48 hours have passed after its
+  submission.
+
+If a pull request is lacking even one approval and hasn't received any
+discussion, feel free to bump it back to attention with a comment.
 
 ### Commit messages ###
 
