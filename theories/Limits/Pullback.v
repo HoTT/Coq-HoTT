@@ -159,3 +159,56 @@ Section Functor_Pullback.
   Defined.
 
 End Functor_Pullback.
+
+Section EquivPullback.
+  Context {A B C f g A' B' C' f' g'}
+          (eA : A <~> A') (eB : B <~> B') (eC : C <~> C')
+          (p : f' o eB == eA o f) (q :  g' o eC == eA o g).
+
+  Lemma equiv_pullback
+    : Pullback f g <~> Pullback f' g'.
+  Proof.
+    unfold Pullback.
+    apply (equiv_functor_sigma' eB); intro b.
+    apply (equiv_functor_sigma' eC); intro c.
+    refine (equiv_concat_l (p _) _ oE _).
+    refine (equiv_concat_r (q _)^ _ oE _).
+    refine (equiv_ap' eA _ _).
+  Defined.
+
+End EquivPullback.
+
+
+(** Pullbacks commute with sigmas *)
+Section PullbackSigma.
+
+  Context
+    {X Y Z : Type}
+    {A : X -> Type} {B : Y -> Type} {C : Z -> Type}
+    (f : Y -> X) (g : Z -> X)
+    (r : forall x, B x -> A (f x))
+    (s : forall x, C x -> A (g x)).
+
+  Definition equiv_sigma_pullback
+    : {p : Pullback f g & Pullback (transport A p.2.2 o r p.1) (s p.2.1)}
+      <~> Pullback (functor_sigma f r) (functor_sigma g s).
+  Proof.
+    refine (_ oE (equiv_sigma_assoc _ _)^-1).
+    refine (equiv_sigma_assoc _ _ oE _).
+    apply (equiv_functor_sigma' equiv_idmap); intro y.
+    refine (_ oE (equiv_sigma_assoc _ _)^-1).
+    refine (equiv_functor_sigma' equiv_idmap _ oE _).
+    1: intro; apply equiv_sigma_assoc.
+    refine (equiv_sigma_symm _ oE _).
+    refine (equiv_functor_sigma' equiv_idmap _); intro z.
+    refine (_ oE _).
+    { refine (equiv_functor_sigma' equiv_idmap _); intro b.
+      refine (equiv_functor_sigma' equiv_idmap _); intro c.
+      apply equiv_path_sigma. }
+    refine (equiv_functor_sigma' equiv_idmap _ oE _).
+    1: intro b; cbn; apply equiv_sigma_symm.
+    cbn; apply equiv_sigma_symm.
+  Defined.
+
+End PullbackSigma.
+
