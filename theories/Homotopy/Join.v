@@ -87,6 +87,80 @@ Section Join.
       intros [a b]; reflexivity.
   Defined.
 
+  Definition join_natsq_v {A B : Type} {a a' : A} {b b' : B}
+    (p : a = a') (q : b = b')
+    : Square (ap joinl p) (ap joinr q) (jglue a b) (jglue a' b').
+  Proof.
+    destruct p, q.
+    apply sq_refl_v.
+  Defined.
+
+  Definition join_natsq_h {A B : Type} {a a' : A} {b b' : B}
+    (p : a = a') (q : b = b')
+    : Square (jglue a b) (jglue a' b') (ap joinl p) (ap joinr q).
+  Proof.
+    destruct p, q.
+    apply sq_refl_h.
+  Defined.
+
+  Definition functor_join {A B C D} (f : A -> C) (g : B -> D)
+    : Join A B -> Join C D.
+  Proof.
+    serapply Join_rec.
+    1: intro a; apply joinl, f, a.
+    1: intro b; apply joinr, g, b.
+    intros a b.
+    apply jglue.
+  Defined.
+
+  Definition functor_join_compose {A B C D E F}
+    (f : A -> C) (g : B -> D) (h : C -> E) (i : D -> F)
+    : functor_join (h o f) (i o g) == functor_join h i o functor_join f g.
+  Proof.
+    serapply Join_ind.
+    1,2: reflexivity.
+    intros a b.
+    simpl.
+    apply sq_dp^-1.
+    apply sq_1G.
+    symmetry.
+    rewrite ap_compose.
+    rewrite 3 Join_rec_beta_jglue.
+    reflexivity.
+  Defined.
+
+  Definition functor_join_idmap {A}
+    : functor_join idmap idmap == (idmap : Join A A -> Join A A).
+  Proof.
+    serapply Join_ind.
+    1,2: reflexivity.
+    intros a b.
+    cbn; apply dp_paths_FlFr.
+    rewrite Join_rec_beta_jglue.
+    rewrite ap_idmap, concat_p1.
+    apply concat_Vp.
+  Defined.
+
+  Global Instance isequiv_functor_join {A B C D}
+    (f : A -> C) `{!IsEquiv f} (g : B -> D) `{!IsEquiv g}
+    : IsEquiv (functor_join f g).
+  Proof.
+    serapply isequiv_adjointify.
+    1: apply (functor_join f^-1 g^-1).
+    1,2: serapply Join_ind.
+    1,2: intro; simpl; apply ap, eisretr.
+    2,3: intro; simpl; apply ap, eissect.
+    1,2: intros c d.
+    1,2: apply sq_dp^-1.
+     1 : rewrite (ap_compose _ (functor_join f g)).
+     2 : rewrite (ap_compose (functor_join f g)).
+    1,2: rewrite 2 Join_rec_beta_jglue, ap_idmap.
+    1,2: apply join_natsq_v.
+  Defined.
+
+  Definition equiv_functor_join {A B C D} (f : A <~> C) (g : B <~> D)
+    : Join A B <~> Join C D := Build_Equiv _ _ (functor_join f g) _.
+
   (** The join of hprops is an hprop *)
   Global Instance ishprop_join `{Funext} A B `{IsHProp A} `{IsHProp B} : IsHProp (Join A B).
   Proof.
@@ -144,3 +218,44 @@ Section Join.
   Defined.
 
 End Join.
+
+(** Diamond lemmas for Join *)
+Section Diamond.
+
+  Context {A B : Type}.
+
+  Definition Diamond (a a' : A) (b b' : B)
+    := Square (jglue a b) (jglue a' b')^ (jglue a b') (jglue a' b)^.
+
+  Definition diamond_h {a a' : A} (b b' : B) (p : a = a')
+    : Diamond a a' b b'.
+  Proof.
+    destruct p.
+    apply sq_path.
+    exact (concat_pV _ @ (concat_pV _)^).
+  Defined.
+
+  Definition diamond_v (a a' : A) {b b' : B} (p : b = b')
+    : Diamond a a' b b'.
+  Proof.
+    destruct p.
+    by apply sq_path.
+  Defined.
+
+  Lemma diamond_symm (a : A) (b : B)
+    : diamond_v a a 1 = diamond_h b b 1.
+  Proof.
+    unfold diamond_v, diamond_h.
+    symmetry; apply ap, concat_pV.
+  Defined.
+
+End Diamond.
+
+Definition diamond_twist {A : Type} {a a' : A} (p : a = a')
+  : DPath (fun x => Diamond a' x a x) p
+    (diamond_v a' a 1) (diamond_h a a' 1).
+Proof.
+  destruct p.
+  apply diamond_symm.
+Defined.
+
