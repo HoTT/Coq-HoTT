@@ -13,17 +13,20 @@ It draws many ideas from Vladimir Voevodsky's
 [Foundations](https://github.com/vladimirias/Foundations) library (which has since been
 incorporated into the [UniMath](https://github.com/UniMath/UniMath) library) and also
 cross-pollinates with the [HoTT-Agda](https://github.com/HoTT/HoTT-Agda) library.
-Recently, there are also the [Lean](https://github.com/leanprover/lean/blob/master/hott/hott.md) library and the [cubical](https://github.com/mortberg/cubicaltt) type checker.
+See also: [HoTT in Lean2](https://github.com/leanprover/lean2/tree/master/hott),
+[Spectral Sequences in Lean2](https://github.com/cmu-phil/Spectral), and
+[Cubical Agda](https://agda.readthedocs.io/en/v2.6.0.1/language/cubical.html).
 
 More information about this libary can be found in:
-* _The HoTT Library: A formalization of homotopy type theory in Coq_, 
-Andrej Bauer, Jason Gross, Peter LeFanu Lumsdaine, Mike Shulman, Matthieu Sozeau, Bas Spitters, 2016 [arxiv](https://arxiv.org/abs/1610.04591) [CPP17](http://cpp2017.mpi-sws.org/)
+
+- _The HoTT Library: A formalization of homotopy type theory in Coq_,
+  Andrej Bauer, Jason Gross, Peter LeFanu Lumsdaine, Mike Shulman, Matthieu Sozeau, Bas Spitters, 2016 [arxiv](https://arxiv.org/abs/1610.04591) [CPP17](http://cpp2017.mpi-sws.org/)
 
 Other publications related to the library can be found [here](https://github.com/HoTT/HoTT/wiki/Publications-based-on-the-HoTT-library).
 
 ## INSTALLATION
 
-Installation details are explained in the file `INSTALL.md`. 
+Installation details are explained in the file [INSTALL.md](/INSTALL.md).
 
 ## USAGE
 
@@ -41,13 +44,13 @@ with `hoqtop` as the underlying `coqtop`.
 
 ## CONTRIBUTING
 
-Contributions to the HoTT library are very welcome!  For style
-guidelines and further information, see the file `STYLE.md`.
+Contributions to the HoTT library are very welcome! For style
+guidelines and further information, see the file [STYLE.md](/STYLE.md).
 
 ## LICENSING
 
 The library is released under the permissive BSD 2-clause license, see the file
-`LICENSE.txt` for further information. In brief, this means you can do whatever you like
+[LICENSE.txt](/LICENSE.txt) for further information. In brief, this means you can do whatever you like
 with it, as long as you preserve the Copyright messages. And of course, no warranty!
 
 ## Wiki
