@@ -4,6 +4,9 @@ bin_SCRIPTS = hoqtop hoqc hoqdep hoq-config
 if make_hoqide
   bin_SCRIPTS += hoqide
 endif
+if make_hoqidetop
+  bin_SCRIPTS += hoqidetop
+endif
 if make_hoqtopbyte
   bin_SCRIPTS += hoqtop.byte
 endif
