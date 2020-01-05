@@ -252,6 +252,7 @@ theories/Homotopy/WhiteheadsPrinciple.v
 theories/Homotopy/BlakersMassey.v
 theories/Homotopy/Freudenthal.v
 theories/Homotopy/HSpace.v
+theories/Homotopy/ClassifyingSpace.v
 
 #
 #   Pointed

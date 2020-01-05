@@ -37,10 +37,10 @@ Coercion group_abgroup : AbGroup >-> Group.
 (** Definition of Abelianization.
 
   Given a map F that turns any group into an abelian group, and a unit homomorphism eta_X : X -> F X. This data is considered an Abelianization if and only if for all maps X -> A, there exists a unique g such that h == g o eta X. *)
-Definition IsAbelianization (F : Group -> AbGroup)
-  (eta : forall X, GroupHomomorphism X (F X))
-  := forall (X : Group) (A : AbGroup) (h : GroupHomomorphism X A),
-    Contr (exists (g : GroupHomomorphism (F X) A), h == g o eta X).
+Definition IsAbelianization {G : Group} (G_ab : AbGroup)
+  (eta : GroupHomomorphism G G_ab)
+  := forall (A : AbGroup) (h : GroupHomomorphism G A),
+    Contr (exists (g : GroupHomomorphism G_ab A), h == g o eta).
 
 Existing Class IsAbelianization.
 
@@ -287,7 +287,7 @@ Section AbelGroup.
 End AbelGroup.
 
 (** We can easily prove that ab is a surjection. *)
-Lemma issurj_ab `{Funext} {G : Group} : IsSurjection ab.
+Global Instance issurj_ab `{Funext} {G : Group} : IsSurjection ab.
 Proof.
   serapply Abel_ind_hprop.
   intro x; cbn.
@@ -317,10 +317,10 @@ Section Abelianization.
   Defined.
 
   (** Finally we can prove that our construction abel is an abelianization. *)
-  Global Instance isabelianization_abel
-    : IsAbelianization abel abel_unit.
+  Global Instance isabelianization_abel {G : Group}
+    : IsAbelianization (abel G) (abel_unit G).
   Proof.
-    intros X A h.
+    intros A h.
     serapply Build_Contr.
     { srefine (_;_).
       { simple notypeclasses refine (Build_GroupHomomorphism _).
@@ -342,3 +342,77 @@ Section Abelianization.
   Defined.
 
 End Abelianization.
+
+Theorem groupiso_isabelianization {G : Group}
+  (A B : AbGroup)
+  (eta1 : GroupHomomorphism G A)
+  (eta2 : GroupHomomorphism G B)
+  {x : IsAbelianization A eta1}
+  {y : IsAbelianization B eta2}
+  : GroupIsomorphism A B.
+Proof.
+  unfold IsAbelianization in x, y.
+  destruct (x B eta2) as [[a ah] ac].
+  destruct (y A eta1) as [[b bh] bc].
+  destruct (x A eta1) as [[c ch] cc].
+  destruct (y B eta2) as [[d dh] dc].
+  serapply (Build_GroupIsomorphism _ _ a).
+  serapply (isequiv_adjointify _ b).
+  { apply ap10.
+    change (@grp_homo_map _ _ (grp_homo_compose a b)
+      = @grp_homo_map _ _ grp_homo_id).
+    refine (ap (@grp_homo_map _ _) _).
+    refine (ap pr1 ((dc (_; _))^ @ dc (grp_homo_id; _))).
+    1: exact (fun i => ah i @ ap a (bh i)).
+    reflexivity. }
+  { apply ap10.
+    change (@grp_homo_map _ _ (grp_homo_compose b a)
+      = @grp_homo_map _ _ grp_homo_id).
+    refine (ap (@grp_homo_map _ _) _).
+    refine (ap pr1 ((cc (_; _))^ @ cc (grp_homo_id; _))).
+    1: exact (fun i => bh i @ ap b (ah i)).
+    reflexivity. }
+Defined.
+
+Theorem homotopic_isabelianization {G : Group} (A B : AbGroup)
+  (eta1 : GroupHomomorphism G A) (eta2 : GroupHomomorphism G B)
+  {x : IsAbelianization A eta1} {y : IsAbelianization B eta2}
+  : eta2 == grp_homo_compose (groupiso_isabelianization A B eta1 eta2) eta1.
+Proof.
+  unfold IsAbelianization in x, y.
+  destruct (x B eta2) as [[a ah] ac].
+  destruct (y A eta1) as [[b bh] bc].
+  refine (transport (fun e : GroupHomomorphism A B
+    => _ == (fun x : G => e (eta1 x))) (ap pr1 (ac _)) ah).
+Defined.
+
+(** Hence any abelianization is surjective. *)
+Global Instance issurj_isabelianization `{Funext} {G : Group}
+  (A : AbGroup) (eta : GroupHomomorphism G A)
+  : IsAbelianization A eta -> IsSurjection eta.
+Proof.
+  intros k.
+  pose (homotopic_isabelianization A (abel G) eta (abel_unit G)) as p.
+  refine (@cancelR_isequiv_conn_map _ _ _ _ _ _ _
+    (conn_map_homotopic _ _ _ p _)).
+Qed.
+
+Global Instance isequiv_abgroup_abelianization `{U : Univalence}
+  (A B : AbGroup) (eta : GroupHomomorphism A B) {H : IsAbelianization B eta}
+  : IsEquiv eta.
+Proof.
+  destruct (H A grp_homo_id) as [[a ah] ac].
+  serapply (isequiv_adjointify eta a).
+  + simpl.
+    Require HIT.epi.
+    apply ap10.
+    pose (epi.issurj_isepi eta _) as i.
+    refine (i _ _ idmap _).
+    apply path_forall.
+    intro x.
+    apply ap.
+    symmetry.
+    apply ah.
+  + change (a o eta == idmap); symmetry.
+    apply ah.
+Defined.

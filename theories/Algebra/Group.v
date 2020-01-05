@@ -161,6 +161,11 @@ Proof.
   apply grp_homo_op.
 Defined.
 
+Definition grp_homo_id {G : Group} : GroupHomomorphism G G.
+Proof.
+  serapply (Build_GroupHomomorphism idmap).
+Defined.
+
 (* An isomorphism of groups is a group homomorphism that is an equivalence. *)
 Class GroupIsomorphism (G H : Group) := Build_GroupIsomorphism {
   grp_iso_homo :> GroupHomomorphism G H;
