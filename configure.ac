@@ -108,6 +108,34 @@ AS_IF([test "x$make_coqide" = "xno"],
 
 AM_CONDITIONAL(make_hoqide, [test "$make_coqide" = "yes"])
 
+# Checking for coqidetop, which can be optional
+make_coqidetop="no"
+AC_ARG_WITH([coqidetop],
+            [AS_HELP_STRING([--without-coqidetop], [disable support for coqidetop])],
+            [],
+            [make_coqidetop="yes"])
+
+AS_IF([test "x$make_coqidetop" = "xno"],
+      [AC_MSG_NOTICE([Will not make hoqidetop])],
+      [AC_ARG_VAR([COQIDETOP], [the absolute path of the coqidetop executable])
+       AS_IF([test "x$COQIDETOP" != "x"],
+             [AC_MSG_CHECKING([for coqidetop])
+              AC_MSG_RESULT([(preset) $COQIDETOP])
+              AC_SUBST([COQIDETOP])],
+             [AC_PATH_PROG([COQIDETOP],[coqidetop.opt],[no],[$COQBIN_PATH])])
+       AS_IF([test "x$COQIDETOP" = "xno"],
+             [AC_MSG_NOTICE([Could not find coqidetop])
+              make_coqidetop="no"],
+             [AC_MSG_NOTICE([Trusting that coqidetop version is $COQVERSION])
+              COQIDETOPVERSION="$COQVERSION"
+              AC_SUBST([COQIDETOPVERSION])
+              AS_IF([test "x$COQIDETOPVERSION" != "x$COQVERSION"],
+                    [AC_MSG_ERROR([Version mismatch between coqtop $COQVERSION and coqidetop $COQIDETOPVERSION])])
+             ])
+      ])
+
+AM_CONDITIONAL(make_hoqidetop, [test "$make_coqidetop" = "yes"])
+
 # Checking for coqchk, which can be optional
 make_coqchk="no"
 AC_ARG_WITH([coqchk],
