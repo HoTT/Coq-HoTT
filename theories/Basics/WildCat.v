@@ -388,6 +388,33 @@ Proof.
 Admitted.
 
 
+(** ** Two-variable functors *)
+
+(** To avoid having to define a separate notion of "two-variable functor", we define two-variable functors in uncurried form.  The following definition applies such a two-variable functor, with a currying built in. *)
+Definition fmap11 {A B C : Type} `{Is1Cat A} `{Is1Cat B} `{Is1Cat C}
+  (F : A -> B -> C) {H2 : Is1Functor (uncurry F)}
+  {a1 a2 : A} {b1 b2 : B} (f1 : a1 $-> a2) (f2 : b1 $-> b2)
+  : F a1 b1 $-> F a2 b2
+  := @fmap _ _ _ _ (uncurry F) H2 (a1, b1) (a2, b2) (f1, f2).
+
+(** For instance, we have hom-functors. *)
+Global Instance is1functor_hom {A} `{Is1Cat A}
+  : @Is1Functor (A^op * A) Type _ _ (uncurry (@Hom A _)).
+Proof.
+  apply Build_Is1Functor.
+  intros [a1 a2] [b1 b2] [f1 f2] g; cbn in *.
+  exact (f2 $o g $o f1).
+Defined.
+
+Global Instance is2functor_hom {A} `{Is2Cat A}
+  : @Is2Functor (A^op * A) Type _ _ _ _ (uncurry (@Hom A _)) _.
+Proof.
+  apply Build_Is2Functor.
+  intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [p1 p2] q; cbn in *.
+  (* This needs funext in [A]. *)
+Abort.
+  
+
 (** ** Sum categories *)
 
 (* TODO? *)
