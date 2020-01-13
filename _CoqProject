@@ -43,6 +43,22 @@ theories/Basics/Trunc.v
 theories/Basics/Decidable.v
 
 #
+#   Wildcat
+#
+theories/WildCat.v
+theories/WildCat/Core.v
+theories/WildCat/UnitCat.v
+theories/WildCat/EmptyCat.v
+theories/WildCat/Prod.v
+theories/WildCat/Equiv.v
+theories/WildCat/Sum.v
+theories/WildCat/Opposite.v
+theories/WildCat/Type.v
+theories/WildCat/Induced.v
+theories/WildCat/FunctorCat.v
+theories/WildCat/Yoneda.v
+
+#
 #   Types
 #
 
@@ -268,6 +284,7 @@ theories/Pointed/pEquiv.v
 theories/Pointed/pTrunc.v
 theories/Pointed/pHomotopy.v
 theories/Pointed/pSusp.v
+theories/Pointed/pType.v
 
 #
 #   Spectra

@@ -346,7 +346,7 @@ Local Notation "( X , x )" := (Build_pType X x).
 Definition loops_type `{Univalence} (A : Type)
   : loops (Type,A) <~>* (A <~> A, equiv_idmap).
 Proof.
-  apply issig_pequiv.
+  apply issig_pequiv'.
   exists (equiv_equiv_path A A).
   reflexivity.
 Defined.
@@ -357,7 +357,7 @@ Lemma local_global_looping `{Univalence} (A : Type) (n : nat)
 Proof.
   induction n.
   { refine (_ o*E pequiv_loops_functor (loops_type A)).
-    apply issig_pequiv.
+    apply issig_pequiv'.
     exists (equiv_inverse (equiv_path_arrow 1%equiv 1%equiv)
             oE equiv_inverse (equiv_path_equiv 1%equiv 1%equiv)).
     reflexivity. }
