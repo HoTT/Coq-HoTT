@@ -1,5 +1,4 @@
-Require Import Basics.
-Require Import Types.
+Require Import HoTT.Basics HoTT.Types UnivalenceImpliesFunext.
 Require Import Truncations.
 Require Import HIT.Coeq.
 Require Import Algebra.Group.

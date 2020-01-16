@@ -2,6 +2,7 @@
 Require Import Category.Core Functor.Core Functor.Paths.
 Require Import InitialTerminalCategory.Core.
 Require Import NatCategory Contractible.
+Require Import HoTT.Basics HoTT.Types.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

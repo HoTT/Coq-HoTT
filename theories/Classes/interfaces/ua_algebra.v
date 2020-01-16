@@ -2,18 +2,13 @@
 
 Require Export
   Coq.Unicode.Utf8
-  HoTT.Basics.Overture
-  HoTT.Basics.Trunc
+  HoTT.Basics
   HoTT.Classes.implementations.ne_list
   HoTT.Classes.implementations.family_prod.
 
 Require Import
-  HoTT.Basics.Equivalences
-  HoTT.Types.Sigma
-  HoTT.Types.Arrow
-  HoTT.Types.Forall
-  HoTT.Types.Universe
-  HoTT.HSet
+  HoTT.Types
+  HoTT.HSet HoTT.HProp
   HoTT.Classes.implementations.list.
 
 Import ne_list.notations.

@@ -1,8 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 (** * Basic facts about fibrations *)
 
-Require Import HoTT.Basics Types.Sigma Types.Paths.
-Require Import EquivalenceVarieties.
+Require Import HoTT.Basics HoTT.Types HProp EquivalenceVarieties.
 
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.

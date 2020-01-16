@@ -2,8 +2,7 @@
 
 (** * The cumulative hierarchy [V]. *)
 
-Require Import HoTT.Basics HoTT.Basics.Notations HoTT.Basics.Utf8.
-Require Import Types.Unit Types.Bool Types.Universe Types.Sigma Types.Arrow Types.Forall.
+Require Import HoTT.Basics HoTT.Basics.Utf8 HoTT.Types.
 Require Import HProp HSet UnivalenceImpliesFunext TruncType.
 Require Import Colimits.SpanPushout.
 Require Import HoTT.Truncations Colimits.Quotient.

@@ -1,6 +1,7 @@
 Require Import
-  HoTT.Basics.Equivalences
-  HoTT.Types.Universe
+  HoTT.Basics
+  HoTT.Types
+  HoTT.UnivalenceImpliesFunext
   HoTT.Categories.Category.Core
   HoTT.Categories.Category.Univalent
   HoTT.Classes.theory.ua_isomorphic.

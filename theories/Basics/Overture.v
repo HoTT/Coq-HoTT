@@ -27,6 +27,9 @@ Global Set Default Goal Selector "!".
 (** Currently Coq doesn't print equivalences correctly (8.6). This fixes that. See https://github.com/HoTT/HoTT/issues/1000 *)
 Global Set Printing Primitive Projection Parameters.
 
+(** This tells Coq that when we [Require] a module without [Import]ing it, typeclass instances defined in that module should also not be imported.  In other words, the only effect of [Require] without [Import] is to make qualified names available. *)
+Global Set Loose Hint Behavior "Strict".
+
 (** Apply using the same opacity information as typeclass proof search. *)
 Ltac class_apply c := autoapply c with typeclass_instances.
 

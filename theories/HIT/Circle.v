@@ -2,8 +2,7 @@
 
 (** * Theorems about the circle [S1]. *)
 
-Require Import HoTT.Basics.
-Require Import Types.Paths Types.Forall Types.Arrow Types.Universe Types.Empty Types.Unit.
+Require Import HoTT.Basics HoTT.Types HProp.
 Require Import HSet UnivalenceImpliesFunext.
 Require Import Spaces.Pos.
 Require Import Spaces.Int.

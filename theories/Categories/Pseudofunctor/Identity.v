@@ -4,6 +4,7 @@ Require Import NaturalTransformation.Isomorphisms.
 Require Import NaturalTransformation.Paths.
 Require Import Cat.Core.
 Require Import Pseudofunctor.Core.
+Require Import HoTT.Basics HoTT.Types.
 
 (** Bring things into scope. *)
 Import NaturalTransformation.Identity.

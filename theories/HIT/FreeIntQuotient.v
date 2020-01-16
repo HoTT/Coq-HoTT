@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Basics HoTT.Types UnivalenceImpliesFunext.
 Require Import TruncType HProp HSet.
 Require Import Spaces.Int.
 Require Import HIT.Coeq HIT.Circle HIT.Flattening Truncations.

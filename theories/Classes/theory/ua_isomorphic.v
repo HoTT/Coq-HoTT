@@ -4,12 +4,10 @@
 Require Export HoTT.Classes.theory.ua_homomorphism.
 
 Require Import
-  HoTT.Basics.Overture
-  HoTT.Basics.Trunc
-  HoTT.Basics.Equivalences
-  HoTT.Types.Forall
-  HoTT.Types.Sigma
-  HoTT.Types.Universe
+  HoTT.Basics
+  HoTT.Types
+  HoTT.UnivalenceImpliesFunext
+  HoTT.HProp
   HoTT.Tactics.
 
 (** Two algebras [A B : Algebra σ] are isomorphic if there is an

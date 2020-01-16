@@ -1,6 +1,6 @@
 (** * Classification of path spaces of functors *)
 Require Import Category.Core Functor.Core.
-Require Import HProp HoTT.Tactics Equivalences Basics.PathGroupoids Types.Sigma Trunc Types.Paths.
+Require Import HoTT.Basics HoTT.Types HoTT.Tactics Equivalences HProp.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

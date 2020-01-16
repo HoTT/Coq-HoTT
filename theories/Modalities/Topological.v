@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import HoTT.Basics HoTT.Types.
-Require Import EquivalenceVarieties Extensions.
+Require Import HoTT.Basics HoTT.Types HProp UnivalenceImpliesFunext.
+Require Import EquivalenceVarieties FunextVarieties Extensions.
 Require Import HoTT.Truncations.
 Require Import Modality Accessible Lex Nullification.
 

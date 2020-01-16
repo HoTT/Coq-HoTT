@@ -4,7 +4,7 @@ Require Import Category.Strict.
 Require Import Functor.Identity NaturalTransformation.Identity.
 Require Import NaturalTransformation.Paths NaturalTransformation.Composition.Core.
 Require Import Functor.Paths.
-Require Import Trunc Types.Sigma.
+Require Import Trunc HoTT.Basics HoTT.Types.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

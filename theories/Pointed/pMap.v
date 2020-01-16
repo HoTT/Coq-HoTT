@@ -1,4 +1,4 @@
-Require Import Basics Types PathAny.
+Require Import Basics Types PathAny FunextVarieties.
 Require Import Pointed.Core.
 Require Import Pointed.pHomotopy.
 

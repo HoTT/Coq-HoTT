@@ -1,7 +1,8 @@
 (** * Functor category [D → C] (also [Cᴰ] and [[D, C]]) *)
 Require Import Category.Core Category.Strict Functor.Core NaturalTransformation.Core Functor.Paths.
+Require Import HoTT.Basics HoTT.Types.
 (** These must come last, so that [identity], [compose], etc., refer to natural transformations. *)
-Require Import NaturalTransformation.Composition.Core NaturalTransformation.Identity NaturalTransformation.Composition.Laws.
+Require Import NaturalTransformation.Composition.Core NaturalTransformation.Identity NaturalTransformation.Composition.Laws NaturalTransformation.Paths. 
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

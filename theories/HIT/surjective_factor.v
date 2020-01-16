@@ -1,6 +1,5 @@
 Require Import
-        HoTT.Types.Arrow
-        HoTT.Types.Universe
+        HoTT.Types
         HoTT.Basics
         HoTT.Truncations
         HoTT.HIT.unique_choice.

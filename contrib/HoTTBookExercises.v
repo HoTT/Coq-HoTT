@@ -24,6 +24,7 @@
 *)
 
 Require Import HoTT Coq.Init.Peano.
+Require Import UnivalenceImpliesFunext.
 
 Local Open Scope path_scope.
 

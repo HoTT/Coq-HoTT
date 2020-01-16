@@ -6,16 +6,13 @@
 Require Export HoTT.Classes.interfaces.ua_setalgebra.
 
 Require Import
-  HoTT.Basics.Equivalences
-  HoTT.Basics.PathGroupoids
-  HoTT.Types.Forall
-  HoTT.Types.Arrow
-  HoTT.Types.Universe
-  HoTT.Types.Sigma
+  HoTT.Basics
+  HoTT.Types
   HoTT.Fibrations
   HoTT.HProp
   HoTT.HSet
-  HoTT.Tactics.
+  HoTT.Tactics
+  UnivalenceImpliesFunext.
 
 Import algebra_notations ne_list.notations.
 
