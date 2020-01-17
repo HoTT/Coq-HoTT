@@ -1,5 +1,6 @@
 Require Import HoTT.Basics.Decidable.
 Require Import
+  HoTT.Classes.theory.apartness
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.orders
   HoTT.Classes.theory.rings.

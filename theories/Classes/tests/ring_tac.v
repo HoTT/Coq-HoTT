@@ -1,5 +1,6 @@
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
+  HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.tactics.ring_tac.
 
 Generalizable Variables R.

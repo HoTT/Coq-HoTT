@@ -1,6 +1,7 @@
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.orders
+  HoTT.Classes.theory.groups
   HoTT.Classes.theory.rings.
 Require Export
   HoTT.Classes.orders.semirings.

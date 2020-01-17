@@ -3,6 +3,7 @@
 Require Import
   HoTT.Types.Universe
   HoTT.HIT.quotient
+  HoTT.UnivalenceImpliesFunext
   HoTT.Classes.interfaces.canonical_names
   HoTT.Classes.theory.ua_quotient_algebra
   HoTT.Classes.theory.ua_isomorphic
