@@ -8,11 +8,13 @@ Require Import HoTT.HIT.quotient
   HoTT.Types.Sum
   HoTT.TruncType.
 Require Import
+  HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.orders
   HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.integers
   HoTT.Classes.theory.rings
+  HoTT.Classes.orders.sum
   HoTT.Classes.orders.rings
   HoTT.Classes.tactics.ring_tac
   HoTT.Classes.interfaces.naturals
@@ -20,6 +22,7 @@ Require Import
 
 Generalizable Variables B.
 
+Local Set Loose Hint Behavior "Lax".
 Local Set Universe Minimization ToSet.
 
 Module NatPair.

@@ -4,6 +4,7 @@ Require Import
   HoTT.Classes.tactics.ring_tac.
 
 Generalizable Variables R.
+Local Set Loose Hint Behavior "Lax".
 
 Lemma test1 `{IsSemiRing R}
   : forall x y : R, x + (y * x) = x * (y + 1).

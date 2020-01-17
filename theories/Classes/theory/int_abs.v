@@ -8,6 +8,7 @@ Require Import
   HoTT.Classes.theory.rings
   HoTT.Classes.orders.rings.
 
+Local Set Loose Hint Behavior "Lax".
 Generalizable Variables N Z Zle Zlt R f.
 
 Section contents.

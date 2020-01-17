@@ -14,7 +14,7 @@ Require Import
   HoTT.Classes.implementations.natpair_integers
   HoTT.Classes.theory.additional_operations.
 
-
+Local Set Loose Hint Behavior "Lax".
 Local Set Universe Minimization ToSet.
 
 Section contents.
