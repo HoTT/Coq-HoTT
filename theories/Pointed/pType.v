@@ -28,12 +28,13 @@ Defined.
 
 Global Instance is1cat_ptype : Is1Cat pType.
 Proof.
-  simple refine (Build_Is1Cat _ _ _ _ _ _ _ _); try exact _.
-  - intros A B C; rapply Build_Is0Functor.
-    intros [f1 f2] [g1 g2] [p q]; cbn.
-    transitivity (f1 o* g2).
-    + apply pmap_postwhisker; assumption.
-    + apply pmap_prewhisker; assumption.
+  econstructor.
+  - intros A B C h; rapply Build_Is0Functor.
+    intros f g p; cbn.
+    apply pmap_postwhisker; assumption.
+  - intros A B C h; rapply Build_Is0Functor.
+    intros f g p; cbn.
+    apply pmap_prewhisker; assumption.
   - intros ? ? ? ? f g h; exact (pmap_compose_assoc h g f).
   - intros ? ? f; exact (pmap_postcompose_idmap f).
   - intros ? ? f; exact (pmap_precompose_idmap f).

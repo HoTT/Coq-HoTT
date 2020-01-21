@@ -25,7 +25,7 @@ Proof.
   apply Build_Is1Functor.
   - intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [p1 p2] q; cbn in *.
     apply path_hom.
-    exact ((p2 $@R q) $o@ p1).
+    exact (((p2 $@R q) $@R _) $@ (_ $@L p1)).
   - intros [a1 a2] f; cbn in *.
     apply path_hom.
     exact (cat_idr _ $@ cat_idl f).

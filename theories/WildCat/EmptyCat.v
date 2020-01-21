@@ -15,5 +15,5 @@ Defined.
 
 Global Instance is1cat_empty : Is1Cat Empty.
 Proof.
-  simple notypeclasses refine (Build_Is1Cat _ _ _ _ _ _ _ _); intros [].
+  simple notypeclasses refine (Build_Is1Cat _ _ _ _ _ _ _ _ _); intros [].
 Defined.

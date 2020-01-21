@@ -36,8 +36,9 @@ Section Induced_category.
     serapply Build_Is1Cat.
     + intros a b. cbn in *. exact _.
     + intros a b. cbn in *. exact _.
-    + intros a b c. cbn in *. 
-      unfold uncurry. exact _.
+    + intros a b c. cbn in *. exact _.
+    + intros a b c h.
+      exact (is0functor_precomp (f a) (f b) (f c) h).
     + intros a b c d; cbn in *. 
       intros u v w. apply cat_assoc.
     + intros a b; cbn in *.

@@ -17,7 +17,7 @@ Defined.
 
 Global Instance is1cat_unit : Is1Cat Unit.
 Proof.
-  simple notypeclasses refine (Build_Is1Cat _ _ _ _ _ _ _ _); try exact _; intros.
-  1:rapply Build_Is0Functor; intros.
-  all:exact tt.
+  econstructor.
+  1,2:econstructor.
+  all:intros; exact tt.
 Defined.

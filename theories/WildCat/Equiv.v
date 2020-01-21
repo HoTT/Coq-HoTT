@@ -234,7 +234,6 @@ Defined.
 Global Instance is01cat_core_hom {A : Type} `{HasEquivs A} (a b : core A)
   : Is01Cat (a $-> b).
 Proof.
-  cbv in a, b.
   srapply Build_Is01Cat.
   - intros f g ; exact (cate_fun f $== cate_fun g).
   - intro f ; apply Id.
@@ -244,22 +243,31 @@ Defined.
 Global Instance is0gpd_core_hom {A : Type} `{HasEquivs A} (a b : core A)
   : Is0Gpd (a $-> b).
 Proof.
-  cbv in a, b.
   apply Build_Is0Gpd.
   intros f g ; cbv.
   apply gpd_rev.
 Defined.
 
-Global Instance is0functor_cat_comp {A : Type} `{HasEquivs A}
-       (a b c : core A) :
-  Is0Functor (uncurry (@cat_comp (core A) _ a b c)).
+Global Instance is0functor_core_postcomp {A : Type} `{HasEquivs A}
+       (a b c : core A) (h : b $-> c) :
+  Is0Functor (cat_postcomp a h).
 Proof.
-  cbv in a, b, c.
   apply Build_Is0Functor.
-  - intros [f g] [f' g'] [al be].
-    exact (compose_cate_fun f g
-           $@ (al $o@ be)
-           $@ (compose_cate_fun f' g')^$).
+  intros f g al; cbn in h.
+  exact (compose_cate_fun h f
+           $@ (h $@L al)
+           $@ (compose_cate_fun h g)^$).
+Defined.
+
+Global Instance is0functor_core_precomp {A : Type} `{HasEquivs A}
+       (a b c : core A) (h : a $-> b) :
+  Is0Functor (cat_precomp c h).
+Proof.
+  apply Build_Is0Functor.
+  intros f g al; cbn in h.
+  exact (compose_cate_fun f h
+           $@ (al $@R h)
+           $@ (compose_cate_fun g h)^$).
 Defined.
 
 Global Instance is1cat_core {A : Type} `{HasEquivs A}

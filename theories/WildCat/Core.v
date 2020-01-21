@@ -27,6 +27,14 @@ Global Existing Instance isgraph_1cat.
 Arguments cat_comp {A _ a b c} _ _.
 Notation "g $o f" := (cat_comp g f).
 
+Definition cat_postcomp {A} `{Is01Cat A} (a : A) {b c : A} (g : b $-> c)
+  : (a $-> b) -> (a $-> c)
+  := cat_comp g.
+
+Definition cat_precomp {A} `{Is01Cat A} {a b : A} (c : A) (f : a $-> b)
+  : (b $-> c) -> (a $-> c)
+  := fun g => g $o f.
+
 Definition Build_Is01Cat A
            (Hom' : A -> A -> Type)
            (Id'  : forall (a : A), Hom' a a)
@@ -72,36 +80,16 @@ Class Is0Functor {A B : Type} `{IsGraph A} `{IsGraph B} (F : A -> B)
 
 Arguments fmap {_ _ _ _} F {_ _ _} f.
 
-(** Products preserve (0,1)-categories. *)
-Global Instance isgraph_prod A B `{IsGraph A} `{IsGraph B}
-  : IsGraph (A * B)
-  := Build_IsGraph (A * B) (fun x y => (fst x $-> fst y) * (snd x $-> snd y)).
-
-Global Instance is01cat_prod A B `{Is01Cat A} `{Is01Cat B}
-  : Is01Cat (A * B).
-Proof.
-  refine (Build_Is01Cat (A * B) (fun x y => (fst x $-> fst y) * (snd x $-> snd y)) _ _).
-  - intros [a b]; exact (Id a, Id b).
-  - intros [a1 b1] [a2 b2] [a3 b3] [f1 g1] [f2 g2]; cbn in *.
-    exact (f1 $o f2 , g1 $o g2).
-Defined.
-
-(** To avoid having to define a separate notion of "two-variable functor", we define two-variable functors in uncurried form.  The following definition applies such a two-variable functor, with a currying built in. *)
-Definition fmap11 {A B C : Type} `{IsGraph A} `{IsGraph B} `{IsGraph C}
-  (F : A -> B -> C) {H2 : Is0Functor (uncurry F)}
-  {a1 a2 : A} {b1 b2 : B} (f1 : a1 $-> a2) (f2 : b1 $-> b2)
-  : F a1 b1 $-> F a2 b2
-  := @fmap _ _ _ _ (uncurry F) H2 (a1, b1) (a2, b2) (f1, f2).
-
 
 (** ** Wild 1-categorical structures *)
 
-(** A wild 1-category (a.k.a. (1,1)-category) has its hom-types enhanced to 0-groupoids, its composition operations to 0-functors, and its composition associative and unital up to these 2-cells. *)
+(** A wild 1-category (a.k.a. (1,1)-category) has its hom-types enhanced to 0-groupoids, its composition operations to 0-functors in each variable separately (providing whiskering operations), and its composition associative and unital up to these 2-cells. *)
 Class Is1Cat (A : Type) `{Is01Cat A} :=
 {
   is01cat_hom : forall (a b : A), Is01Cat (a $-> b) ;
   isgpd_hom : forall (a b : A), Is0Gpd (a $-> b) ;
-  is0functor_comp : forall (a b c : A), Is0Functor (uncurry (@cat_comp A _ a b c)) ;
+  is0functor_postcomp : forall (a b c : A) (g : b $-> c), Is0Functor (cat_postcomp a g) ;
+  is0functor_precomp : forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f) ;
   cat_assoc : forall a b c d (f : a $-> b) (g : b $-> c) (h : c $-> d),
     (h $o g) $o f $== h $o (g $o f);
   cat_idl : forall a b (f : a $-> b), Id b $o f $== f;
@@ -109,7 +97,8 @@ Class Is1Cat (A : Type) `{Is01Cat A} :=
 }.
 Global Existing Instance is01cat_hom.
 Global Existing Instance isgpd_hom.
-Global Existing Instance is0functor_comp.
+Global Existing Instance is0functor_postcomp.
+Global Existing Instance is0functor_precomp.
 Arguments cat_assoc {_ _ _ _ _ _ _} f g h.
 Arguments cat_idl {_ _ _ _ _} f.
 Arguments cat_idr {_ _ _ _ _} f.
@@ -119,32 +108,35 @@ Definition cat_assoc_opp {A : Type} `{Is1Cat A}
   : h $o (g $o f) $== (h $o g) $o f
   := (cat_assoc f g h)^$.
 
+(*
 Definition Comp2 {A} `{Is1Cat A} {a b c : A}
            {f g : a $-> b} {h k : b $-> c}
            (q : h $-> k) (p : f $-> g)
   : (h $o f $-> k $o g)
-  := fmap11 cat_comp q p.
+  := ??
 
 Infix "$o@" := Comp2.
+*)
 
-Definition WhiskerL_Htpy {A} `{Is1Cat A} {a b c : A}
+Definition cat_postwhisker {A} `{Is1Cat A} {a b c : A}
            {f g : a $-> b} (h : b $-> c) (p : f $== g)
   : h $o f $== h $o g
-  := (Id h) $o@ p.
-Notation "h $@L p" := (WhiskerL_Htpy h p).
+  := fmap (cat_postcomp a h) p.
+Notation "h $@L p" := (cat_postwhisker h p).
 
-Definition WhiskerR_Htpy {A} `{Is1Cat A} {a b c : A}
+Definition cat_prewhisker {A} `{Is1Cat A} {a b c : A}
            {f g : b $-> c} (p : f $== g) (h : a $-> b)
   : f $o h $== g $o h
-  := p $o@ (Id h).
-Notation "p $@R h" := (WhiskerR_Htpy p h).
+  := fmap (cat_precomp c h) p.
+Notation "p $@R h" := (cat_prewhisker p h).
 
 (** Often, the coherences are actually equalities rather than homotopies. *)
 Class Is1Cat_Strong (A : Type) `{Is01Cat A} := 
 {
   is01cat_hom_strong : forall (a b : A), Is01Cat (a $-> b) ;
   isgpd_hom_strong : forall (a b : A), Is0Gpd (a $-> b) ;
-  is0functor_comp_strong : forall (a b c : A), Is0Functor (uncurry (@cat_comp A _ a b c)) ;
+  is0functor_postcomp_strong : forall (a b c : A) (g : b $-> c), Is0Functor (cat_postcomp a g) ;
+  is0functor_precomp_strong : forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f) ;
   cat_assoc_strong : forall (a b c d : A)
     (f : a $-> b) (g : b $-> c) (h : c $-> d),
     (h $o g) $o f = h $o (g $o f);
@@ -164,11 +156,12 @@ Definition cat_assoc_opp_strong {A : Type} `{Is1Cat_Strong A}
 Global Instance is1cat_is1cat_strong (A : Type) `{Is1Cat_Strong A}
   : Is1Cat A.
 Proof.
-  srefine (Build_Is1Cat A _ _ _ _ _ _ _).
+  srefine (Build_Is1Cat A _ _ _ _ _ _ _ _).
   all:intros a b.
   - apply is01cat_hom_strong.
   - apply isgpd_hom_strong.
-  - apply is0functor_comp_strong.
+  - apply is0functor_postcomp_strong.
+  - apply is0functor_precomp_strong.
   - intros; apply GpdHom_path, cat_assoc_strong.
   - intros; apply GpdHom_path, cat_idl_strong.
   - intros; apply GpdHom_path, cat_idr_strong.
@@ -339,47 +332,6 @@ Section CompositeFunctor.
 
 End CompositeFunctor.
 
-(** More products *)
-
-Global Instance is0gpd_prod A B `{Is0Gpd A} `{Is0Gpd B}
- : Is0Gpd (A * B).
-Proof. 
-  serapply Build_Is0Gpd.
-  intros [x1 x2] [y1 y2] [f1 f2].
-  cbn in *.
-  exact ( (f1^$, f2^$) ).
-Defined.
-
-Global Instance is1cat_prod A B `{Is1Cat A} `{Is1Cat B}
-  : Is1Cat (A * B).
-Proof.
-  serapply (Build_Is1Cat).
-  - intros [x1 x2] [y1 y2].
-    rapply is01cat_prod.
-  - intros [x1 x2] [y1 y2].
-    apply is0gpd_prod.
-    + cbn.
-      apply isgpd_hom.
-    + cbn.
-      apply isgpd_hom.
-  - intros [x1 x2] [y1 y2] [z1 z2].
-    serapply Build_Is0Functor.  
-    intros f g. unfold uncurry.
-    destruct f as [[f11 f12] [f21 f22]].
-    destruct g as [[g11 g12] [g21 g22]]. cbn in *. 
-    intros a. destruct a as [[a11 a12][a21 a22]].
-    exact ( a11 $o@ a21, a12 $o@ a22).
-  - intros [a1 a2] [b1 b2] [c1 c2] [d1 d2] [f1 f2] [g1 g2] [h1 h2].
-    cbn in *. 
-    exact(cat_assoc f1 g1 h1, cat_assoc f2 g2 h2).
-  - intros [a1 a2] [b1 b2] [f1 f2].
-    cbn in *.
-    exact (cat_idl _, cat_idl _).
-  - intros [a1 a2] [b1 b2] [g1 g2].
-    cbn in *.
-    exact (cat_idr _, cat_idr _). 
-Defined. 
-
 (** ** Wild 1-groupoids *)
 
 Class Is1Gpd (A : Type) `{Is1Cat A, !Is0Gpd A} :=
@@ -387,123 +339,3 @@ Class Is1Gpd (A : Type) `{Is1Cat A, !Is0Gpd A} :=
   gpd_issect : forall {a b : A} (f : a $-> b), f^$ $o f $== Id a ;
   gpd_isretr : forall {a b : A} (f : a $-> b), f $o f^$ $== Id b ;
 }.
-
-(** Wild (2,1)-categories *)
-
-Definition cat_comp_lassoc {A : Type} `{Is1Cat A} (a b c d : A)
-  : (a $-> b) * (b $-> c) * (c $-> d) -> a $-> d.
-Proof.
-  intros [[f g] h].
-  exact ((h $o g) $o f).
-Defined.
-
-Definition cat_comp_rassoc {A : Type} `{Is1Cat A} (a b c d : A)
-  : (a $-> b) * (b $-> c) * (c $-> d) -> a $-> d.
-Proof.
-  intros [[f g] h].
-  exact (h $o (g $o f)).
-Defined.
-
-Global Instance is01cat_cat_assoc_dom {A : Type} `{Is1Cat A}
-       {a b c d : A} : Is01Cat ((a $-> b) * (b $-> c) * (c $-> d)).
-Proof.
-  rapply is01cat_prod.
-Defined.
-
-Global Instance is0functor_cat_comp_lassoc
-       {A : Type} `{Is1Cat A}
-       {a b c d : A} : Is0Functor (cat_comp_lassoc a b c d).
-Proof.
-  apply Build_Is0Functor.
-  intros [[f g] h] [[f' g'] h'] [[al be] ga] ;
-    exact (fmap11 cat_comp (fmap11 cat_comp ga be) al).
-Defined.
-
-Global Instance is0functor_cat_comp_rassoc
-       {A : Type} `{Is1Cat A}
-       {a b c d : A} : Is0Functor (cat_comp_rassoc a b c d).
-Proof.
-  apply Build_Is0Functor.
-  intros [[f g] h] [[f' g'] h'] [[al be] ga] ;
-    exact (fmap11 cat_comp ga (fmap11 cat_comp be al)).
-Defined.
-
-Definition cat_assoc_transformation {A : Type} `{Is1Cat A} {a b c d : A}
-  : (cat_comp_lassoc a b c d) $=> (cat_comp_rassoc a b c d).
-Proof.
-  intros [[f g] h] ; exact (cat_assoc f g h).
-Defined.
-
-Definition cat_comp_idl {A : Type} `{Is1Cat A} (a b : A)
-  : (a $-> b) -> (a $-> b)
-  := fun (f : a $-> b) => Id b $o f.
-
-Global Instance is0functor_cat_comp_idl {A : Type} `{Is1Cat A} (a b : A)
-  : Is0Functor (cat_comp_idl a b).
-Proof.
-  apply Build_Is0Functor.
-  intros f g p; unfold cat_comp_idl; cbn.
-  exact (Id b $@L p).
-Defined.
-
-Definition cat_idl_transformation {A : Type} `{Is1Cat A} {a b : A}
-  : cat_comp_idl a b $=> idmap.
-Proof.
-  intro f ; exact (cat_idl f).
-Defined.
-
-Definition cat_comp_idr {A : Type} `{Is1Cat A} (a b : A)
-  : (a $-> b) -> (a $-> b)
-  := fun (f : a $-> b) => f $o Id a.
-
-Global Instance is0functor_cat_comp_idr {A : Type} `{Is1Cat A} (a b : A)
-  : Is0Functor (cat_comp_idr a b).
-Proof.
-  apply Build_Is0Functor.
-  intros f g p; unfold cat_comp_idr; cbn.
-  exact (p $@R Id a).
-Defined.
-
-Definition cat_idr_transformation {A : Type} `{Is1Cat A} {a b : A}
-  : cat_comp_idr a b $=> idmap.
-Proof.
-  intro f ; exact (cat_idr f).
-Defined.
-
-Class Is21Cat (A : Type) `{Is1Cat A} :=
-{
-  is1cat_hom : forall (a b : A), Is1Cat (a $-> b) ;
-  is1gpd_hom : forall (a b : A), Is1Gpd (a $-> b) ;
-  is1functor_comp : forall (a b c : A),
-      Is1Functor (uncurry (@cat_comp A _ a b c)) ;
-
-  (** *** Associator *)
-  is1natural_cat_assoc : forall (a b c d : A),
-      Is1Natural (cat_comp_lassoc a b c d) (cat_comp_rassoc a b c d)
-                 cat_assoc_transformation ;
-
-  (** *** Unitors *)
-  is1natural_cat_idl : forall (a b : A),
-      Is1Natural (cat_comp_idl a b) idmap
-                 cat_idl_transformation;
-
-  is1natural_cat_idr : forall (a b : A),
-      Is1Natural (cat_comp_idr a b) idmap
-                 cat_idr_transformation;
-
-  (** *** Coherence *)
-  cat_pentagon : forall (a b c d e : A)
-                        (f : a $-> b) (g : b $-> c) (h : c $-> d) (k : d $-> e),
-      (k $@L cat_assoc f g h) $o (cat_assoc f (h $o g) k) $o (cat_assoc g h k $@R f)
-      $== (cat_assoc (g $o f) h k) $o (cat_assoc f g (k $o h)) ;
-
-  cat_tril : forall (a b c : A) (f : a $-> b) (g : b $-> c),
-      (g $@L cat_idl f) $o (cat_assoc f (Id b) g) $== (cat_idr g $@R f)
-}.
-
-Global Existing Instance is1cat_hom.
-Global Existing Instance is1gpd_hom.
-Global Existing Instance is1functor_comp.
-Global Existing Instance is1natural_cat_assoc.
-Global Existing Instance is1natural_cat_idl.
-Global Existing Instance is1natural_cat_idr.
