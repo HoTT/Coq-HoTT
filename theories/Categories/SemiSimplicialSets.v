@@ -1,4 +1,5 @@
 (** * The category of semisimplicial sets *)
+Require Import Types.
 Require Import Category.Core Functor.Core.
 Require Import Category.Morphisms.
 Require Import Category.Dual FunctorCategory.Core.
