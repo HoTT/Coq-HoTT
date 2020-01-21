@@ -14,6 +14,7 @@ Require Import
   HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.integers
   HoTT.Classes.theory.rings
+  HoTT.Classes.theory.groups
   HoTT.Classes.theory.apartness
   HoTT.Classes.orders.sum
   HoTT.Classes.orders.rings
@@ -300,6 +301,8 @@ Arguments Tapart {_ _ _} _ _.
 Arguments to_ring N {_} B {_ _ _ _ _ _} / _.
 
 End PairT.
+
+Import PairT.
 
 Section contents.
 Universe UN UNalt.
