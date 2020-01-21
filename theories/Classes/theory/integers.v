@@ -144,8 +144,6 @@ Qed.
 
 Global Instance int_dec : DecidablePaths Z | 10.
 Proof.
-Set Typeclasses Debug.
-Set Loose Hint Behavior "Lax".
 apply decidablepaths_equiv with (NatPair.Z nat)
   (integers_to_ring (NatPair.Z nat) Z);apply _.
 Qed.

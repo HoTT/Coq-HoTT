@@ -29,7 +29,7 @@ Local Set Universe Minimization ToSet.
 
 Module NatPair.
 
-Module PairT.
+Module Import PairT.
 
 Record T (N : Type) := C { pos : N ; neg : N }.
 Arguments C {N} _ _.
@@ -301,8 +301,6 @@ Arguments Tapart {_ _ _} _ _.
 Arguments to_ring N {_} B {_ _ _ _ _ _} / _.
 
 End PairT.
-
-Import PairT.
 
 Section contents.
 Universe UN UNalt.
