@@ -2,11 +2,13 @@
 
 (** * The spheres, in all dimensions. *)
 
-Require Import HoTT.Basics.
-Require Import Types.Sigma Types.Forall Types.Paths Types.Bool.
+Require Import Basics.
+Require Import Types.
 Require Import HProp NullHomotopy.
 Require Import Homotopy.Suspension HIT.Circle HIT.TwoSphere.
 Require Import Pointed.pSusp Pointed.Core.
+Require Import Truncations.
+Import TrM.
 
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
@@ -30,6 +32,9 @@ Fixpoint psphere (n : nat) : pType
       | O => Build_pType (Susp Empty) North
       | S n' => psusp (psphere n')
      end.
+
+Arguments Sphere : simpl never.
+Arguments psphere : simpl never.
 
 (** ** Explicit equivalences in low dimensions  *)
 
@@ -157,7 +162,7 @@ Proof.
                       (fun x => ap Sph2_to_S2 (merid x @ (merid North)^))
                       (fun x => Susp_rec 1 1 
                                 (Susp_rec surf 1 
-                                (Empty_rec (surf = 1))) x 
+                                Empty_rec) x 
                                 @ 1)
                       (fun x => ap_pp Sph2_to_S2 (merid x) (merid North)^ 
                                 @ ((1 @@ ap_V Sph2_to_S2 (merid North)) 
@@ -168,7 +173,7 @@ Proof.
   { refine (_ @ (ap_pp_concat_pV _ _)).
     refine (ap (fun w => _ @ (_ @ w)) (concat_pV_inverse2 _ _ _)). }
   refine ((concat2_ap_ap (Susp_rec 1 1 (Susp_rec surf 1 
-                                         (Empty_rec (surf = 1)))) 
+                                         Empty_rec)) 
                          (fun _ => 1) 
                          (merid North @ (merid South)^))^ @ _).
   refine ((ap (fun w => _ @@ w) (ap_const _ _)) @ _).
@@ -194,7 +199,7 @@ Proof.
   path_via (ap S2_to_Sph2 (ap Sph2_to_S2 (merid x))).
   { apply (ap_compose Sph2_to_S2 S2_to_Sph2 (merid x)). }
   path_via (ap S2_to_Sph2 
-               (Susp_rec 1 1 (Susp_rec surf 1 (Empty_rec (surf = 1))) x)). 
+               (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x)). 
   { repeat f_ap. apply Susp_rec_beta_merid. }
   symmetry. generalize dependent x. 
 
@@ -207,7 +212,7 @@ Proof.
     refine ((ap (transport _ _) (ap_pp _ (merid x) (merid South)^)^) @ _).
     refine (_ @ (ap_compose (Susp_rec 1 1 
                               (Susp_rec surf 1 
-                                (Empty_rec (surf = 1)))) 
+                                Empty_rec)) 
                             (ap S2_to_Sph2) (merid x))^).
     refine (_ @ (ap (ap02 S2_to_Sph2) (Susp_rec_beta_merid _)^)).
     symmetry. generalize dependent x.
@@ -228,7 +233,28 @@ Proof.
   - apply issect_S2_to_Sph2.
   - apply issect_Sph2_to_S2.
 Defined.
-        
+
+(** Truncation and connectedness of spheres. *)
+
+(** S0 is 0-truncated. *)
+Global Instance istrunc_s0 : IsHSet (Sphere 0).
+Proof.
+  serapply (trunc_equiv _ Sph0_to_Bool^-1).
+Defined.
+
+(** S1 is 1-truncated. *)
+Global Instance istrunc_s1 `{Univalence} : IsTrunc 1 (Sphere 1).
+Proof.
+  serapply (trunc_equiv _ Sph1_to_S1^-1).
+Defined.
+
+Global Instance isconnected_sn n : IsConnected n.+1 (Sphere n.+2).
+Proof.
+  induction n.
+  { serapply contr_inhabited_hprop.
+    apply tr, North. }
+  apply isconnected_susp.
+Defined.
 
 (** ** Truncatedness via spheres  *)
 
