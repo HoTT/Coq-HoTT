@@ -271,6 +271,7 @@ theories/Homotopy/BlakersMassey.v
 theories/Homotopy/Freudenthal.v
 theories/Homotopy/ClassifyingSpace.v
 theories/Homotopy/EMSpace.v
+theories/Homotopy/CayleyDickson.v
 
 #
 #   Pointed
