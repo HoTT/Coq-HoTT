@@ -78,17 +78,17 @@ Section Lookup.
 
   Context (x:R) {A B:Type0 } (va : Vars A) (vb : Vars B).
 
-  Global Instance lookup_l `{!Lookup x va} : Lookup x (merge va vb).
+  Local Instance lookup_l `{!Lookup x va} : Lookup x (merge va vb).
   Proof.
   exists (inl (lookup x va)). apply lookup_correct.
   Defined.
 
-  Global Instance lookup_r `{!Lookup x vb} : Lookup x (merge va vb).
+  Local Instance lookup_r `{!Lookup x vb} : Lookup x (merge va vb).
   Proof.
   exists (inr (lookup x vb)). apply lookup_correct.
   Defined.
 
-  Global Instance lookup_single : Lookup x (singleton x).
+  Local Instance lookup_single : Lookup x (singleton x).
   Proof.
   exists tt. reflexivity.
   Defined.
@@ -130,13 +130,13 @@ Section Quote.
   intros [?|?];auto.
   Defined.
 
-  Global Instance quote_zero (V:Type0) (v: Vars V): Quote v 0 noVars.
+  Local Instance quote_zero (V:Type0) (v: Vars V): Quote v 0 noVars.
   Proof.
   exists Zero.
   reflexivity.
   Defined.
 
-  Global Instance quote_one (V:Type0) (v: Vars V): Quote v 1 noVars.
+  Local Instance quote_one (V:Type0) (v: Vars V): Quote v 1 noVars.
   Proof.
   exists One.
   reflexivity.
@@ -157,7 +157,7 @@ Section Quote.
   - intros [[?|?]|?];reflexivity.
   Qed.
 
-  Global Instance quote_plus (V:Type0) (v: Vars V) n
+  Local Instance quote_plus (V:Type0) (v: Vars V) n
   (V':Type0) (v': Vars V') m (V'':Type0) (v'': Vars V'')
   `{!Quote v n v'} `{!Quote (merge v v') m v''}: Quote v (n + m) (merge v' v'').
   Proof.
@@ -179,7 +179,7 @@ Section Quote.
   - intros [[?|?]|?];reflexivity.
   Qed.
 
-  Global Instance quote_mult (V:Type0) (v: Vars V) n
+  Local Instance quote_mult (V:Type0) (v: Vars V) n
     (V':Type0) (v': Vars V') m (V'':Type0) (v'': Vars V'')
     `{!Quote v n v'} `{!Quote (merge v v') m v''}
     : Quote v (n * m) (merge v' v'').
@@ -194,7 +194,7 @@ Section Quote.
   simpl. apply ap,eval_quote.
   Qed.
 
-  Global Instance quote_neg (V:Type0) (v : Vars V) n (V':Type0) (v' : Vars V')
+  Local Instance quote_neg (V:Type0) (v : Vars V) n (V':Type0) (v' : Vars V')
     `{!Quote v n v'}
     : Quote v (almost_negate n) v'.
   Proof.
@@ -202,14 +202,14 @@ Section Quote.
   apply quote_neg_ok.
   Defined.
 
-  Global Instance quote_old_var (V:Type0) (v: Vars V) x {i: Lookup x v}
+  Local Instance quote_old_var (V:Type0) (v: Vars V) x {i: Lookup x v}
     : Quote v x noVars | 8.
   Proof.
   exists (Var (inl (lookup x v))).
   apply lookup_correct.
   Defined.
 
-  Global Instance quote_new_var (V:Type0) (v: Vars V) x
+  Local Instance quote_new_var (V:Type0) (v: Vars V) x
     : Quote v x (singleton x) | 9.
   Proof.
   exists (Var (inr tt)).
@@ -248,7 +248,7 @@ path_via (eval (merge v (merge v' v'')) (expr_map sum_aux (quote n)));
   intros [[?|?]|?];reflexivity.
 Qed.
 
-Global Instance eq_quote (V:Type0) (v: Vars V) n
+Local Instance eq_quote (V:Type0) (v: Vars V) n
   (V':Type0) (v': Vars V') m (V'':Type0) (v'': Vars V'')
   `{!Quote v n v'} `{!Quote (merge v v') m v''}
   : EqQuote (merge v v') n m v''.
@@ -281,5 +281,11 @@ intros [[]|?]. reflexivity.
 Qed.
 
 End contents.
+
+Module Export Instances.
+  Global Existing Instances lookup_l lookup_r lookup_single quote_zero quote_one quote_plus quote_mult quote_neg eq_quote.
+  Global Existing Instance quote_old_var | 8.
+  Global Existing Instance quote_new_var | 9.
+End Instances.
 
 End Quoting.

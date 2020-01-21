@@ -14,6 +14,7 @@ Require Import
   HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.integers
   HoTT.Classes.theory.rings
+  HoTT.Classes.theory.apartness
   HoTT.Classes.orders.sum
   HoTT.Classes.orders.rings
   HoTT.Classes.tactics.ring_tac
@@ -22,7 +23,7 @@ Require Import
 
 Generalizable Variables B.
 
-Local Set Loose Hint Behavior "Lax".
+Import ring_quote.Quoting.Instances.
 Local Set Universe Minimization ToSet.
 
 Module NatPair.

@@ -14,7 +14,6 @@ Require Import
 Require Export
   HoTT.Classes.orders.nat_int.
 
-Local Set Loose Hint Behavior "Lax".
 Generalizable Variables N Z R f.
 
 Section integers.

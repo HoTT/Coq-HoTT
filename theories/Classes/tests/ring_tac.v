@@ -1,10 +1,11 @@
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.implementations.peano_naturals
-  HoTT.Classes.tactics.ring_tac.
+  HoTT.Classes.tactics.ring_tac
+  HoTT.Classes.tactics.ring_quote.
 
+Import Quoting.Instances.
 Generalizable Variables R.
-Local Set Loose Hint Behavior "Lax".
 
 Lemma test1 `{IsSemiRing R}
   : forall x y : R, x + (y * x) = x * (y + 1).

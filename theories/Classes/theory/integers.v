@@ -13,7 +13,6 @@ Require Import
 Require Export
  HoTT.Classes.interfaces.integers.
 
-Local Set Loose Hint Behavior "Lax".
 Generalizable Variables N Z R f.
 
 Lemma to_ring_unique `{Integers Z} `{IsRing R} (f: Z -> R)

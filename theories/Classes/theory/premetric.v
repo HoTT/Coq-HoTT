@@ -18,7 +18,6 @@ Require Import
 
 Generalizable Variables A B.
 
-Local Set Loose Hint Behavior "Lax".
 Local Set Universe Minimization ToSet.
 
 
