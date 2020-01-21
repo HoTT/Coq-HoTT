@@ -6,111 +6,32 @@ Require Import WildCat.NatTrans.
 
 (** * Wild (2,1)-categories *)
 
-Definition cat_comp_lassoc {A : Type} `{Is1Cat A} (a b c d : A)
-  : (a $-> b) * (b $-> c) * (c $-> d) -> a $-> d.
-Proof.
-  intros [[f g] h].
-  exact ((h $o g) $o f).
-Defined.
-
-Definition cat_comp_rassoc {A : Type} `{Is1Cat A} (a b c d : A)
-  : (a $-> b) * (b $-> c) * (c $-> d) -> a $-> d.
-Proof.
-  intros [[f g] h].
-  exact (h $o (g $o f)).
-Defined.
-
-Global Instance is01cat_cat_assoc_dom {A : Type} `{Is1Cat A}
-       {a b c d : A} : Is01Cat ((a $-> b) * (b $-> c) * (c $-> d)).
-Proof.
-  rapply is01cat_prod.
-Defined.
-
-Global Instance is0functor_cat_comp_lassoc
-       {A : Type} `{Is1Cat A}
-       {a b c d : A} : Is0Functor (cat_comp_lassoc a b c d).
-Proof.
-  apply Build_Is0Functor.
-  intros [[f g] h] [[f' g'] h'] [[al be] ga] ;
-    exact (fmap11 cat_comp (fmap11 cat_comp ga be) al).
-Defined.
-
-Global Instance is0functor_cat_comp_rassoc
-       {A : Type} `{Is1Cat A}
-       {a b c d : A} : Is0Functor (cat_comp_rassoc a b c d).
-Proof.
-  apply Build_Is0Functor.
-  intros [[f g] h] [[f' g'] h'] [[al be] ga] ;
-    exact (fmap11 cat_comp ga (fmap11 cat_comp be al)).
-Defined.
-
-
-Definition cat_comp_idl {A : Type} `{Is1Cat A} (a b : A)
-  : (a $-> b) -> (a $-> b)
-  := fun (f : a $-> b) => Id b $o f.
-
-Global Instance is0functor_cat_comp_idl {A : Type} `{Is1Cat A} (a b : A)
-  : Is0Functor (cat_comp_idl a b).
-Proof.
-  apply Build_Is0Functor.
-  intros f g p; unfold cat_comp_idl; cbn.
-  exact (Id b $@L p).
-Defined.
-
-
-
-Definition cat_comp_idr {A : Type} `{Is1Cat A} (a b : A)
-  : (a $-> b) -> (a $-> b)
-  := fun (f : a $-> b) => f $o Id a.
-
-Global Instance is0functor_cat_comp_idr {A : Type} `{Is1Cat A} (a b : A)
-  : Is0Functor (cat_comp_idr a b).
-Proof.
-  apply Build_Is0Functor.
-  intros f g p; unfold cat_comp_idr; cbn.
-  exact (p $@R Id a).
-Defined.
-
-
-Definition cat_assoc_transformation {A : Type} `{Is1Cat A} {a b c d : A}
-  : (cat_comp_lassoc a b c d) $=> (cat_comp_rassoc a b c d).
-Proof.
-  intros [[f g] h] ; exact (cat_assoc f g h).
-Defined.
-
-Definition cat_idl_transformation {A : Type} `{Is1Cat A} {a b : A}
-  : cat_comp_idl a b $=> idmap.
-Proof.
-  intro f ; exact (cat_idl f).
-Defined.
-
-
-Definition cat_idr_transformation {A : Type} `{Is1Cat A} {a b : A}
-  : cat_comp_idr a b $=> idmap.
-Proof.
-  intro f ; exact (cat_idr f).
-Defined.
-
 Class Is21Cat (A : Type) `{Is1Cat A} :=
 {
   is1cat_hom : forall (a b : A), Is1Cat (a $-> b) ;
   is1gpd_hom : forall (a b : A), Is1Gpd (a $-> b) ;
-  is1functor_comp : forall (a b c : A),
-      Is1Functor (uncurry (@cat_comp A _ a b c)) ;
+  is1functor_postcomp : forall (a b c : A) (g : b $-> c), Is1Functor (cat_postcomp a g) ;
+  is1functor_precomp : forall (a b c : A) (f : a $-> b), Is1Functor (cat_precomp c f) ;
 
-  (** *** Associator *)
-  is1natural_cat_assoc : forall (a b c d : A),
-      Is1Natural (cat_comp_lassoc a b c d) (cat_comp_rassoc a b c d)
-                 cat_assoc_transformation ;
+  (** Naturality of the associator in each variable separately *)
+  is1natural_cat_assoc_l : forall (a b c d : A) (f : a $-> b) (g : b $-> c),
+      Is1Natural (cat_precomp d f o cat_precomp d g) (cat_precomp d (g $o f))
+                 (cat_assoc f g);
+  is1natural_cat_assoc_m : forall (a b c d : A) (f : a $-> b) (h : c $-> d),
+      Is1Natural (cat_precomp d f o cat_postcomp b h) (cat_postcomp a h o cat_precomp c f)
+                 (fun g => cat_assoc f g h);
+  is1natural_cat_assoc_r : forall (a b c d : A) (g : b $-> c) (h : c $-> d),
+      Is1Natural (cat_postcomp a (h $o g)) (cat_postcomp a h o cat_postcomp a g)
+                 (fun f => cat_assoc f g h);
 
-  (** *** Unitors *)
+  (** Naturality of the unitors *)
   is1natural_cat_idl : forall (a b : A),
-      Is1Natural (cat_comp_idl a b) idmap
-                 cat_idl_transformation;
+      Is1Natural (cat_postcomp a (Id b)) idmap
+                 cat_idl ;
 
   is1natural_cat_idr : forall (a b : A),
-      Is1Natural (cat_comp_idr a b) idmap
-                 cat_idr_transformation;
+      Is1Natural (cat_precomp b (Id a)) idmap
+                 cat_idr;
 
   (** *** Coherence *)
   cat_pentagon : forall (a b c d e : A)
@@ -124,7 +45,10 @@ Class Is21Cat (A : Type) `{Is1Cat A} :=
 
 Global Existing Instance is1cat_hom.
 Global Existing Instance is1gpd_hom.
-Global Existing Instance is1functor_comp.
-Global Existing Instance is1natural_cat_assoc.
+Global Existing Instance is1functor_precomp.
+Global Existing Instance is1functor_postcomp.
+Global Existing Instance is1natural_cat_assoc_l.
+Global Existing Instance is1natural_cat_assoc_m.
+Global Existing Instance is1natural_cat_assoc_r.
 Global Existing Instance is1natural_cat_idl.
 Global Existing Instance is1natural_cat_idr.
