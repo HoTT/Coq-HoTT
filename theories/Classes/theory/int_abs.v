@@ -6,6 +6,7 @@ Require Import
   HoTT.Classes.orders.nat_int
   HoTT.Classes.theory.integers
   HoTT.Classes.theory.rings
+  HoTT.Classes.theory.groups
   HoTT.Classes.orders.rings.
 
 Generalizable Variables N Z Zle Zlt R f.

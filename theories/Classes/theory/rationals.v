@@ -1,19 +1,26 @@
 Require Import
   HoTT.Types.Universe
   HoTT.Basics.Decidable
+  HoTT.Classes.implementations.peano_naturals
+  HoTT.Classes.implementations.natpair_integers
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.integers
   HoTT.Classes.interfaces.rationals
   HoTT.Classes.interfaces.orders
   HoTT.Classes.theory.rings
+  HoTT.Classes.theory.groups
   HoTT.Classes.theory.integers
   HoTT.Classes.theory.dec_fields
+  HoTT.Classes.orders.sum
   HoTT.Classes.orders.dec_fields
   HoTT.Classes.orders.lattices
-  HoTT.Classes.implementations.natpair_integers
-  HoTT.Classes.theory.additional_operations.
+  HoTT.Classes.theory.additional_operations
+  HoTT.Classes.tactics.ring_quote
+  HoTT.Classes.tactics.ring_tac.
 
+Import Quoting.Instances.
+Import NatPair.Instances.
 Local Set Universe Minimization ToSet.
 
 Section contents.
@@ -289,7 +296,8 @@ Lemma Qabs_nonneg@{} : forall q : Q, 0 <= abs q.
 Proof.
 intros q;destruct (total_abs_either q) as [E|E];destruct E as [E1 E2];rewrite E2.
 - trivial.
-- apply flip_nonneg_negate. rewrite involutive;trivial.
+- apply flip_nonneg_negate.
+ rewrite involutive;trivial.
 Qed.
 
 Lemma Qabs_nonpos_0@{} : forall q : Q, abs q <= 0 -> q = 0.
