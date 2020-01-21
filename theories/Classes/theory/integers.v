@@ -2,9 +2,8 @@
 Require Import
   HoTT.Types.Universe
   HoTT.Basics.Decidable.
-Require
- HoTT.Classes.theory.nat_distance.
 Require Import
+ HoTT.Classes.theory.nat_distance
  HoTT.Classes.implementations.peano_naturals
  HoTT.Classes.interfaces.naturals
  HoTT.Classes.interfaces.abstract_algebra
