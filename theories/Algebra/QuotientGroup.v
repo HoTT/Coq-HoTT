@@ -11,7 +11,7 @@ Local Open Scope mc_mult_scope.
 
 Section GroupCongruenceQuotient.
 
-  Context `{Univalence} {G : Group} {R : Relation G}
+  Context {G : Group} {R : Relation G}
     `{is_mere_relation _ R} `{!IsCongruence R} (* Congruence just means respects op *)
     `{!Reflexive R} `{!Symmetric R} `{!Transitive R}.
 
@@ -19,13 +19,23 @@ Section GroupCongruenceQuotient.
 
   Instance congquot_sgop : SgOp CongruenceQuotient.
   Proof.
-    serapply Quotient_rec2.
-    { intros x y.
-      apply class_of.
-      exact (x * y). }
-    intros x x' p y y' q.
-    pose (iscong p q).
-    by apply path_quotient.
+    intros x.
+    serapply Quotient_rec.
+    { intro y; revert x.
+      serapply Quotient_rec.
+      { intros x.
+        apply class_of.
+        exact (x * y). }
+      intros a b r.
+      cbn.
+      apply qglue.
+      by apply iscong. }
+    intros a b r.
+    revert x.
+    serapply Quotient_ind_hprop.
+    intro x.
+    apply qglue.
+    by apply iscong.
   Defined.
 
   Instance congquot_mon_unit : MonUnit CongruenceQuotient.
@@ -52,10 +62,11 @@ Section GroupCongruenceQuotient.
 
   Instance congquot_sgop_associative : Associative congquot_sgop.
   Proof.
-    serapply Quotient_ind_hprop; intro x.
-    serapply Quotient_ind_hprop; intro y.
-    serapply Quotient_ind_hprop; intro z.
-    by simpl; rewrite associativity.
+    intros x y.
+    serapply Quotient_ind_hprop; intro a; revert y.
+    serapply Quotient_ind_hprop; intro b; revert x.
+    serapply Quotient_ind_hprop; intro c.
+    simpl; by rewrite associativity.
   Defined.
 
   Instance issemigroup_congquot : IsSemiGroup CongruenceQuotient := {}.
@@ -98,8 +109,7 @@ End GroupCongruenceQuotient.
 
 Section QuotientGroup.
 
-  Context `{Univalence} (G : Group) (N : Subgroup G)
-    `{!IsNormalSubgroup N}.
+  Context (G : Group) (N : Subgroup G) `{!IsNormalSubgroup N}.
 
   Instance iscongruence_in_cosetL: IsCongruence in_cosetL.
   Proof.
