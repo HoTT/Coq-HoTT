@@ -1,9 +1,10 @@
 Require Import
   HoTT.Types.Universe
   HoTT.Types.Sigma.
-Require
+Require Import
   HoTT.Classes.theory.naturals.
 Require Import
+  HoTT.Classes.theory.apartness
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.orders

@@ -1,10 +1,9 @@
 Require Import
-  HoTT.Basics.Equivalences
+  HoTT.Basics
   HoTT.TruncType
   HoTT.HProp
-  HoTT.Types.Universe
-  HoTT.Types.Sigma
-  HoTT.Types.Forall
+  HoTT.Types
+  HoTT.UnivalenceImpliesFunext
   HoTT.Classes.theory.ua_homomorphism.
 
 Import algebra_notations ne_list.notations.

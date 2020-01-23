@@ -3,7 +3,7 @@ Require Import Category.Core Functor.Core.
 Require Import Category.Morphisms.
 Require Import SetCategory.Core.
 Require Import Grothendieck.ToSet.Core.
-Require Import HoTT.Basics.Equivalences HoTT.Types.Sigma.
+Require Import HoTT.Basics HoTT.Types.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

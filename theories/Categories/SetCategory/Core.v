@@ -1,6 +1,6 @@
 (** * PreCategories [set_cat] and [prop_cat] *)
 Require Import Category.Core Category.Strict.
-Require Import HoTT.Basics.Trunc HProp HSet Types.Universe UnivalenceImpliesFunext TruncType.
+Require Import HoTT.Basics HoTT.Types HProp HSet UnivalenceImpliesFunext TruncType.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

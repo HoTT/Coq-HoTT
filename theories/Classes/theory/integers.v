@@ -2,17 +2,19 @@
 Require Import
   HoTT.Types.Universe
   HoTT.Basics.Decidable.
-Require
- HoTT.Classes.theory.nat_distance.
 Require Import
+ HoTT.Classes.theory.nat_distance
+ HoTT.Classes.implementations.peano_naturals
  HoTT.Classes.interfaces.naturals
  HoTT.Classes.interfaces.abstract_algebra
  HoTT.Classes.interfaces.orders
  HoTT.Classes.implementations.natpair_integers
+ HoTT.Classes.theory.rings
  HoTT.Classes.isomorphisms.rings.
 Require Export
  HoTT.Classes.interfaces.integers.
 
+Import NatPair.Instances.
 Generalizable Variables N Z R f.
 
 Lemma to_ring_unique `{Integers Z} `{IsRing R} (f: Z -> R)

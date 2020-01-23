@@ -12,6 +12,8 @@ Require Import
 
 Generalizable Variables A B C R V f l n m Vlt.
 
+Import Quoting.Instances.
+
 Section content.
 Context `{DecidablePaths C}.
 

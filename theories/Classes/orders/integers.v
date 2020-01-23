@@ -3,6 +3,7 @@ Require
   HoTT.Classes.theory.integers
   HoTT.Classes.theory.int_abs.
 Require Import
+  HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.integers
   HoTT.Classes.interfaces.naturals
@@ -10,10 +11,12 @@ Require Import
   HoTT.Classes.interfaces.orders
   HoTT.Classes.implementations.natpair_integers
   HoTT.Classes.orders.rings
-  HoTT.Classes.theory.rings.
+  HoTT.Classes.theory.rings
+  HoTT.Classes.theory.integers.
 Require Export
   HoTT.Classes.orders.nat_int.
 
+Import NatPair.Instances.
 Generalizable Variables N Z R f.
 
 Section integers.

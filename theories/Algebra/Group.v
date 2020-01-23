@@ -1,5 +1,4 @@
-Require Import Basics.
-Require Import Types.
+Require Import HoTT.Basics HoTT.Types UnivalenceImpliesFunext.
 Require Import PathAny.
 Require Export Classes.interfaces.abstract_algebra.
 Require Export Classes.theory.groups.

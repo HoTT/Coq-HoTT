@@ -1,13 +1,7 @@
-Require Import Basics.
-Require Import Types.
-Require Import HSet.
-Require Import Fibrations.
-Require Import Factorization.
-Require Import HoTT.Truncations.
-Require Import Pointed.Core.
-Require Import Pointed.pMap.
-Require Import Pointed.pEquiv.
-Require Import Pointed.pHomotopy.
+Require Import HoTT.Basics HoTT.Types.
+Require Import HSet Fibrations Factorization HoTT.Truncations HProp.
+Require Import UnivalenceImpliesFunext.
+Require Import Pointed.Core Pointed.pMap Pointed.pEquiv Pointed.pHomotopy.
 
 Import TrM.
 

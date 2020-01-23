@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import EquivalenceVarieties Fibrations Extensions Pullback NullHomotopy Factorization.
+Require Import EquivalenceVarieties Fibrations Extensions Pullback NullHomotopy Factorization UnivalenceImpliesFunext.
 Require Import Modality Accessible.
 Require Import HoTT.Tactics.
 
@@ -368,20 +368,15 @@ Module Accessible_Lex_Modalities_Theory
 
   A more serious issue is that there are some declarations that function up to a syntactic equality that is stricter than judgmental conversion.  For instance, [Inductive] and [Record] definitions, like modules, always create a new object not convertible to any previously existing one.  There are no [Inductive] or [Record] definitions in [Modalities_Theory], but there are [Class] declarations, and these function similarly.  In particular, typeclass search is unable to use [Instance]s defined in [Acc_Theory] to instantiate typeclasses from [Modalities_Theory] (such as [IsConnected]) needed by functions in [Lex_Theory], and vice versa.
 
-  Fortunately, all the typeclasses defined in [Modalities_Theory] are *singleton* or *definitional* classes (defined with `:= unique_field` rather than `{ field1 ; field2 ; ... }`), which means that they do not actually introduce a new record wrapper.  Thus, the [Instance]s from [Acc_Theory] can in fact be typechecked to *belong* to the typeclasses needed by [Lex_Theory], and hence can be supplied explicitly.
-
-  We can also do this once and for all by defining [Instance]s translating automatically between the two typeclasses, although unfortunately we probably can't declare such instances in both directions at once for fear of infinite loops.  Fortunately, there is not a lot in [Acc_Theory], so this direction seems likely to be the most useful. *)
-
-  Global Instance isconnected_acc_to_lex {O : Modality} {A : Type}
-         {H : Acc_Theory.Os_Theory.RSU.IsConnected O A}
-            : Lex_Theory.Os_Theory.RSU.IsConnected O A
-         := H.
+  Fortunately, all the typeclasses defined in [Modalities_Theory] are *singleton* or *definitional* classes (defined with `:= unique_field` rather than `{ field1 ; field2 ; ... }`), which means that they do not actually introduce a new record wrapper.  Thus, the [Instance]s from [Acc_Theory] can in fact be typechecked to *belong* to the typeclasses needed by [Lex_Theory], and hence can be supplied (or [assert]ed) explicitly. *)
 
   (** Probably the most important thing about an accessible lex modality is that the universe of modal types is again modal.  Here by "the universe" we mean a universe large enough to contain the generating family; this is why we need accessibility. *)
   Global Instance inO_typeO `{Univalence} (O : Modality) `{Lex O}
   : In O (Type_ O).
   Proof.
     apply (snd (inO_iff_isnull O _)); intros i n; simpl in *.
+    assert (Lex_Theory.Os_Theory.RSU.IsConnected O (acc_gen O i))
+      by exact (isconnected_acc_gen O i).
     destruct n; [ exact tt | split ].
     - intros P.
       (** The case [n=0] is basically just one of the above characterizations of lex-ness. *)

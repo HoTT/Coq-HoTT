@@ -1,4 +1,5 @@
 (** * Initial and terminal category definitions *)
+Require Import HoTT.Basics HoTT.Types.
 Require Import Category.Core.
 Require Import NatCategory Contractible.
 

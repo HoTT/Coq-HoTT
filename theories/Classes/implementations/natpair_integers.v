@@ -8,11 +8,15 @@ Require Import HoTT.HIT.quotient
   HoTT.Types.Sum
   HoTT.TruncType.
 Require Import
+  HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.interfaces.abstract_algebra
   HoTT.Classes.interfaces.orders
   HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.integers
   HoTT.Classes.theory.rings
+  HoTT.Classes.theory.groups
+  HoTT.Classes.theory.apartness
+  HoTT.Classes.orders.sum
   HoTT.Classes.orders.rings
   HoTT.Classes.tactics.ring_tac
   HoTT.Classes.interfaces.naturals
@@ -20,11 +24,12 @@ Require Import
 
 Generalizable Variables B.
 
+Import ring_quote.Quoting.Instances.
 Local Set Universe Minimization ToSet.
 
 Module NatPair.
 
-Module PairT.
+Module Import PairT.
 
 Record T (N : Type) := C { pos : N ; neg : N }.
 Arguments C {N} _ _.
@@ -1110,5 +1115,10 @@ Global Instance Z_zero_product@{} : ZeroProduct Z
                   exact Z_zero_product'@{}]).
 
 End contents.
+
+Module Instances.
+  Global Existing Instances
+    T_set inject Tle_hprop Tlt_hprop Tapart_hprop Z_of_pair Z_of_N R_dec Z0 Z1 Z_plus Z_mult Z_negate Z_of_N_injective Zle ishprop_Zle Zle_cast_embedding Z_order Zle_dec Zlt ishprop_Zlt Z_strict_srorder Zlt_dec Zapart ishprop_Zapart Z_trivial_apart Z_to_ring Z_integers Z_abs Z_zero_product Z_of_N_morphism.
+End Instances.
 
 End NatPair.

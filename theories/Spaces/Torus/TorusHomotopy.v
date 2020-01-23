@@ -9,6 +9,7 @@ Require Import Spaces.Int.
 Require Import HIT.Circle.
 Require Import Truncations.
 Require Import Homotopy.HomotopyGroup.
+Require Import UnivalenceImpliesFunext.
 Import TrM.
 
 Require Import Torus.

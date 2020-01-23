@@ -1,6 +1,7 @@
 (** * Functors involving functor categories involving the terminal category *)
 Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity NaturalTransformation.Core NaturalTransformation.Paths Functor.Composition.Core.
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors InitialTerminalCategory.NaturalTransformations.
+Require Import HoTT.Basics HoTT.Types.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

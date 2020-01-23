@@ -1,5 +1,5 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Basics HoTT.Types UnivalenceImpliesFunext.
 Require Import Fibrations Extensions Pullback NullHomotopy.
 Require Import Modality Lex Open Closed Nullification.
 Require Import HoTT.Tactics.

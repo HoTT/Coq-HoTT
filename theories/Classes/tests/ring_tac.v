@@ -1,7 +1,11 @@
 Require Import
   HoTT.Classes.interfaces.abstract_algebra
-  HoTT.Classes.tactics.ring_tac.
+  HoTT.Classes.implementations.peano_naturals
+  HoTT.Classes.orders.sum
+  HoTT.Classes.tactics.ring_tac
+  HoTT.Classes.tactics.ring_quote.
 
+Import Quoting.Instances.
 Generalizable Variables R.
 
 Lemma test1 `{IsSemiRing R}

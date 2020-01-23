@@ -154,6 +154,7 @@ Module Accessible_Modalities_Theory
 
   Export Os Acc.
   Module Export Os_Theory := Modalities_Theory Os.
+  Import Acc.Os_Theory.
 
   (** Unsurprisingly, the generators are connected. *)
   Global Instance isconnected_acc_gen O i : IsConnected O (acc_gen O i).

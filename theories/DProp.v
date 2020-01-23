@@ -5,6 +5,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import TruncType HProp UnivalenceImpliesFunext.
 Require Import HoTT.Truncations.
+Import TrM.
 
 Local Open Scope path_scope.
 

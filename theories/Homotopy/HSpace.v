@@ -1,6 +1,6 @@
 Require Import Basics.
 Require Import Types.
-Require Import Truncations.
+Require Import Truncations UnivalenceImpliesFunext.
 Require Export Classes.interfaces.abstract_algebra.
 Import TrM.
 

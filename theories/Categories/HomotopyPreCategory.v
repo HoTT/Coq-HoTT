@@ -1,6 +1,6 @@
 (** * Homotopy PreCategory of Types *)
 Require Import Category.Core Category.Morphisms.
-Require Import HoTT.Truncations HSet.
+Require Import HoTT.Basics HoTT.Truncations HSet.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

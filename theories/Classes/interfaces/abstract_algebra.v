@@ -1,6 +1,6 @@
 Require Coq.Init.Peano.
-Require Export
-  HoTT.Classes.interfaces.canonical_names.
+Require Export HoTT.Classes.interfaces.canonical_names.
+Require Import HProp.
 
 Generalizable Variables A B f g x y.
 

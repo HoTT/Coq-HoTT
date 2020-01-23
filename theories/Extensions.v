@@ -3,7 +3,7 @@
 (** * Extensions and extendible maps *)
 
 Require Import HoTT.Basics HoTT.Types.
-Require Import HProp EquivalenceVarieties PathAny.
+Require Import HProp FunextVarieties EquivalenceVarieties PathAny.
 Require Import HoTT.Tactics.
 
 Local Open Scope nat_scope.

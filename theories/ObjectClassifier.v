@@ -2,8 +2,7 @@
 This equivalence is close to the existence of an object classifier.
 *)
 
-Require Import HoTT.Basics.
-Require Import Types.Universe Types.Sigma Types.Arrow.
+Require Import HoTT.Basics HoTT.Types.
 Require Import Fibrations HProp EquivalenceVarieties UnivalenceImpliesFunext Pullback.
 
 Local Open Scope path_scope.

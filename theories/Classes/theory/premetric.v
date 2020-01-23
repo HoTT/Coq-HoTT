@@ -6,16 +6,23 @@ Require Import
   HoTT.Classes.interfaces.naturals
   HoTT.Classes.interfaces.rationals
   HoTT.Classes.interfaces.orders
+  HoTT.Classes.implementations.peano_naturals
   HoTT.Classes.implementations.natpair_integers
   HoTT.Classes.theory.rings
+  HoTT.Classes.theory.groups
   HoTT.Classes.theory.integers
   HoTT.Classes.theory.dec_fields
   HoTT.Classes.orders.dec_fields
+  HoTT.Classes.orders.sum
   HoTT.Classes.theory.rationals
   HoTT.Classes.orders.lattices
   HoTT.Classes.theory.additional_operations
-  HoTT.Classes.implementations.assume_rationals.
+  HoTT.Classes.implementations.assume_rationals
+  HoTT.Classes.tactics.ring_quote
+  HoTT.Classes.tactics.ring_tac.
 
+Import NatPair.Instances.
+Import Quoting.Instances.
 Generalizable Variables A B.
 
 Local Set Universe Minimization ToSet.
@@ -231,7 +238,8 @@ split.
   apply (merely_destruct E1);intros [d1 [d1' [E3 E4]]].
   apply (merely_destruct E2);intros [d2 [d2' [E5 E6]]].
   apply tr;exists (d1+d2),(d1'+d2'). split.
-  + rewrite E3,E5. abstract (apply pos_eq; ring_tac.ring_with_nat).
+  + rewrite E3,E5.
+   abstract (apply pos_eq; ring_tac.ring_with_nat).
   + intros x. apply triangular with (g x);trivial.
 - intros e f g. split.
   + apply (Trunc_ind _). intros [d [d' [E1 E2]]].

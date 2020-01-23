@@ -1,4 +1,4 @@
-Require
+Require Import
   HoTT.Classes.theory.groups
   HoTT.Classes.theory.apartness.
 Require Import
