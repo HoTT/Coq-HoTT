@@ -65,7 +65,7 @@ Require CategoryOfSections.
 (** ** The Dependent Product *)
 Require DependentProduct.
 (** ** The Yoneda Lemma *)
-Require Yoneda.
+Require Categories.Yoneda.
 (** ** The Structure Identity Principle *)
 Require Structure.
 (** ** Fundamental Pregroupoids *)
@@ -105,7 +105,7 @@ Include LaxComma.Core.
 Include DualFunctor.
 Include CategoryOfSections.Core.
 Include DependentProduct.
-Include Yoneda.
+Include Categories.Yoneda.
 Include Structure.Core.
 Include FundamentalPreGroupoidCategory.
 Include HomotopyPreCategory.

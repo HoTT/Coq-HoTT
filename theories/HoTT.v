@@ -5,6 +5,7 @@
 
 Require Export HoTT.Basics.
 Require Export HoTT.Types.
+Require Export HoTT.WildCat.
 Require Export HoTT.Cubical.
 Require Export HoTT.Pointed.
 Require Export HoTT.Truncations.

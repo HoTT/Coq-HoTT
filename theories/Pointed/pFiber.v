@@ -23,7 +23,7 @@ Definition pfib {A B : pType} (f : A ->* B) : pfiber f ->* A
 Definition pfiber2_loops {A B : pType} (f : A ->* B)
 : pfiber (pfib f) <~>* loops B.
 Proof.
-  apply issig_pequiv; simple refine (_;_).
+  apply issig_pequiv'; simple refine (_;_).
   - simpl; unfold hfiber.
     refine (_ oE (equiv_sigma_assoc _ _)^-1); simpl.
     refine (_ oE (equiv_functor_sigma'
