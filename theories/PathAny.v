@@ -17,8 +17,8 @@ Proof.
   refine (@isequiv_contr_contr {x:A & a=x} {x:A & P a x} _ _ _).
 Defined.
 
-(** Another useful result when trying to characterize the path type of [A] when given an equivalence [e : B <~> A], such as an [issig] lemma for [A]. *)
-Definition equiv_path_along_equiv {A B : Type} (P : A -> A -> Type)
+(** This is another result for characterizing the path type of [A] when given an equivalence [e : B <~> A], such as an [issig] lemma for [A]. It can help Coq to deduce the type family [P] if [revert] is used to move [a0] and [a1] into the goal, if needed. *)
+Definition equiv_path_along_equiv {A B : Type} {P : A -> A -> Type}
            (e : B <~> A)
            (K : forall b0 b1 : B, P (e b0) (e b1) <~> b0 = b1)
   : forall a0 a1 : A, P a0 a1 <~> a0 = a1.
@@ -28,18 +28,18 @@ Proof.
   apply equiv_ap'.
 Defined.
 
-(** This simply combines the two previous results, a common idiom. *)
-Definition eqp_issig_contr {A B : Type} {P : A -> A -> Type}
+(** This simply combines the two previous results, a common idiom. Again, it can help Coq to deduce the type family [P] if [revert] is used to move [a0] and [a1] into the goal, if needed. *)
+Definition equiv_path_issig_contr {A B : Type} {P : A -> A -> Type}
            (e : B <~> A)
            (Prefl : forall b, P (e b) (e b))
            (cp : forall b1, Contr {b2 : B & P (e b1) (e b2)})
   : forall a0 a1 : A, P a0 a1 <~> a0 = a1.
 Proof.
-  apply (equiv_path_along_equiv _ e).
+  apply (equiv_path_along_equiv e).
   apply equiv_path_from_contr; assumption.
 Defined.
 
-(** After [eqp_issig_contr], we are left showing the contractibility of a sigma-type whose base and fibers are large nested sigma-types of the same depth.  Moreover, we expect that the types appearing in those two large nested sigma-types "pair up" to form contractible based "path-types".  The following lemma "peels off" the first such pair, whose contractibility can often be found with typeclass search.  The remaining contractibility goal is then simplified by substituting the center of contraction of that first based "path-type", or more precisely a *specific* center that may or may not be the one given by the contractibility instance; the latter freedom sometimes makes things faster and simpler. *)
+(** After [equiv_path_issig_contr], we are left showing the contractibility of a sigma-type whose base and fibers are large nested sigma-types of the same depth.  Moreover, we expect that the types appearing in those two large nested sigma-types "pair up" to form contractible based "path-types".  The following lemma "peels off" the first such pair, whose contractibility can often be found with typeclass search.  The remaining contractibility goal is then simplified by substituting the center of contraction of that first based "path-type", or more precisely a *specific* center that may or may not be the one given by the contractibility instance; the latter freedom sometimes makes things faster and simpler. *)
 Definition contr_sigma_sigma (A : Type) (B : A -> Type)
            (C : A -> Type) (D : forall a, B a -> C a -> Type)
            {cac : Contr {x:A & C x} }
