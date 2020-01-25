@@ -109,7 +109,7 @@ Definition equiv_path_retractof `{ua : Univalence} {X : Type}
            (R' R : RetractOf X)
   : PathRetractOf X R' R <~> R' = R.
 Proof.
-  eqp_issig_contr (issig_retractof X).
+  revert R' R; apply (equiv_path_issig_contr (issig_retractof X)).
   { intros [A [r [s H]]]; cbn.
     exists equiv_idmap.
     exists (fun x => 1%path).
