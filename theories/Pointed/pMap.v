@@ -9,7 +9,7 @@ Definition equiv_path_pmap `{Funext} {A B : pType} (f g : A ->* B)
   : (f ==* g) <~> (f = g).
 Proof.
   refine (_ oE (issig_phomotopy f g)^-1).
-  eqp_issig_contr (issig_pmap A B).
+  revert f g; apply (eqp_issig_contr (issig_pmap A B)).
   { intros [f feq]; cbn.
     exists (fun a => 1%path).
     apply concat_1p. }
