@@ -481,17 +481,18 @@ Definition equiv_induction'_comp (P : forall U V, U <~> V -> Type)
 Global Instance contr_basedequiv {X : Type}
 : Contr {Y : Type & X <~> Y}.
 Proof.
-  refine (trunc_equiv' {Y : Type & X = Y}
-           (equiv_functor_sigma' (equiv_idmap Type)
-             (fun Y => equiv_equiv_path X Y))).
+  exists (X; equiv_idmap).
+  intros [Y f]; revert Y f.
+  exact (equiv_induction _ idpath).
 Defined.
 
 Global Instance contr_basedequiv' {X : Type}
 : Contr {Y : Type & Y <~> X}.
 Proof.
-  refine (trunc_equiv' {Y : Type & Y = X}
-           (equiv_functor_sigma' (equiv_idmap Type)
-             (fun Y => equiv_equiv_path Y X))).
+  serapply Build_Contr.
+  - exact (X; equiv_idmap).
+  - intros [Y f]; revert Y X f.
+    refine (equiv_induction' _ (fun T => idpath)).
 Defined.
 
 (** ** Truncations *)
