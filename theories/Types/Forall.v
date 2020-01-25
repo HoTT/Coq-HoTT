@@ -285,6 +285,24 @@ Proof.
   symmetry; apply transport_pp.
 Qed.
 
+(** ** Two variable versions for function extensionality. *)
+
+Definition equiv_path_forall2 {A B : Type} {P : A -> B -> Type} (f g : forall x y, P x y)
+  : (forall (a : A) (b : B), f a b = g a b) <~> f = g
+  := (equiv_path_forall f g) oE (equiv_functor_forall_id (fun a => equiv_path_forall (f a) (g a))).
+
+Definition path_forall2 {A B : Type} {P : A -> B -> Type} (f g : forall x y, P x y)
+  : (forall x y, f x y = g x y) -> f = g
+  := equiv_path_forall2 f g.
+
+Global Instance isequiv_path_forall2 `{P : A -> B -> Type} (f g : forall x y, P x y)
+  : IsEquiv (path_forall2 f g) | 0
+  := _.
+
+Global Arguments equiv_path_forall2 {A B}%type_scope {P} (f g)%function_scope.
+
+Global Arguments path_forall2 {A B}%type_scope {P} (f g)%function_scope.
+
 (** ** Truncatedness: any dependent product of n-types is an n-type *)
 
 Global Instance contr_forall `{P : A -> Type} `{forall a, Contr (P a)}
