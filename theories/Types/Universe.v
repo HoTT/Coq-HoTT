@@ -452,7 +452,7 @@ Definition transport_path_universe_pV `{Funext}
 Theorem equiv_induction {U : Type} (P : forall V, U <~> V -> Type) :
   (P U (equiv_idmap U)) -> (forall V (w : U <~> V), P V w).
 Proof.
-  intros H0 V w.
+  intros H0 V.
   apply (equiv_ind (equiv_path U V)).
   exact (paths_ind U (fun Y p => P Y (equiv_path U Y p)) H0 V).
 Defined.
@@ -476,6 +476,19 @@ Definition equiv_induction'_comp (P : forall U V, U <~> V -> Type)
   : equiv_induction' P didmap U U (equiv_idmap U) = didmap U
   := (equiv_ind_comp (P U U) _ 1).
 
+Theorem equiv_induction_inv {U : Type} (P : forall V, V <~> U -> Type) :
+  (P U (equiv_idmap U)) -> (forall V (w : V <~> U), P V w).
+Proof.
+  intros H0 V.
+  apply (equiv_ind ((equiv_equiv_path V U) oE equiv_path_inverse _ _)).
+  exact (paths_ind U (fun Y p => P Y (equiv_path Y U p^)) H0 V).
+Defined.
+
+Definition equiv_induction_inv_comp {U : Type} (P : forall V, V <~> U -> Type)
+  (didmap : P U (equiv_idmap U))
+  : equiv_induction_inv P didmap U (equiv_idmap U) = didmap
+  := (equiv_ind_comp (P U) _ 1).
+
 (** ** Based equivalence types *)
 
 Global Instance contr_basedequiv {X : Type}
@@ -489,10 +502,11 @@ Defined.
 Global Instance contr_basedequiv' {X : Type}
 : Contr {Y : Type & Y <~> X}.
 Proof.
+  (* The next line is used so that Coq can figure out the type of (X; equiv_idmap). *)
   serapply Build_Contr.
   - exact (X; equiv_idmap).
-  - intros [Y f]; revert Y X f.
-    refine (equiv_induction' _ (fun T => idpath)).
+  - intros [Y f]; revert Y f.
+    refine (equiv_induction_inv _ idpath).
 Defined.
 
 (** ** Truncations *)
