@@ -301,7 +301,7 @@ Global Instance isequiv_path_forall2 `{P : A -> B -> Type} (f g : forall x y, P 
 
 Global Arguments equiv_path_forall2 {A B}%type_scope {P} (f g)%function_scope.
 
-Global Arguments path_forall2 {A B}%type_scope {P} (f g)%function_scope.
+Global Arguments path_forall2 {A B}%type_scope {P} (f g)%function_scope _.
 
 (** ** Truncatedness: any dependent product of n-types is an n-type *)
 
