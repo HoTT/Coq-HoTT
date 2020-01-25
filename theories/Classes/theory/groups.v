@@ -226,16 +226,6 @@ Section from_another_ab_group.
 
 End from_another_ab_group.
 
-Instance id_sg_morphism `{IsSemiGroup A} : IsSemiGroupPreserving (@id A).
-Proof.
-  red. split.
-Qed.
-
-Instance id_monoid_morphism `{IsMonoid A} : IsMonoidPreserving (@id A).
-Proof.
-split;split.
-Qed.
-
 Section compose_mor.
 
   Context
@@ -244,16 +234,27 @@ Section compose_mor.
     `{SgOp C} `{MonUnit C}
     (f : A -> B) (g : B -> C).
 
-  Instance compose_sg_morphism : IsSemiGroupPreserving f -> IsSemiGroupPreserving g ->
+  Global Instance id_sg_morphism : IsSemiGroupPreserving (@id A).
+  Proof.
+    split.
+  Defined.
+
+  Global Instance id_monoid_morphism : IsMonoidPreserving (@id A).
+  Proof.
+    split; split.
+  Defined.
+
+  Global Instance compose_sg_morphism : IsSemiGroupPreserving f -> IsSemiGroupPreserving g ->
     IsSemiGroupPreserving (g ∘ f).
   Proof.
-    red;intros.
+    red; intros fp gp x y.
     unfold Compose.
-    rewrite (preserves_sg_op x y).
-    apply preserves_sg_op.
-  Qed.
+    refine ((ap g _) @ _).
+    - apply fp.
+    - apply gp.
+  Defined.
 
-  Instance compose_monoid_morphism : IsMonoidPreserving f -> IsMonoidPreserving g ->
+  Global Instance compose_monoid_morphism : IsMonoidPreserving f -> IsMonoidPreserving g ->
     IsMonoidPreserving (g ∘ f).
   Proof.
     intros;split.
@@ -261,28 +262,33 @@ Section compose_mor.
     - red;unfold Compose.
       etransitivity;[|apply preserves_mon_unit].
       apply ap,preserves_mon_unit.
-  Qed.
+  Defined.
 
-  Instance invert_sg_morphism
+  Global Instance invert_sg_morphism
     : forall `{!IsEquiv f}, IsSemiGroupPreserving f ->
       IsSemiGroupPreserving (f^-1).
   Proof.
-    red;intros.
+    red; intros E fp x y.
     apply (Paths.equiv_inj f).
-    rewrite (preserves_sg_op (f:=f)).
-    rewrite !eisretr.
-    reflexivity.
-  Qed.
+    refine (_ @ _ @ _ @ _)^.
+    - apply fp.
+    (* We could use [apply ap2; apply eisretr] here, but it is convenient
+       to have things in terms of ap. *)
+    - refine (ap (fun z => z * _) _); apply eisretr.
+    - refine (ap (fun z => _ * z) _); apply eisretr.
+    - symmetry; apply eisretr.
+  Defined.
 
-  Instance invert_monoid_morphism :
+  Global Instance invert_monoid_morphism :
     forall `{!IsEquiv f}, IsMonoidPreserving f -> IsMonoidPreserving (f^-1).
   Proof.
     intros;split.
     - apply _.
     - apply (Paths.equiv_inj f).
-      rewrite eisretr.
-      rewrite (preserves_mon_unit (f:=f)). reflexivity.
-  Qed.
+      refine (_ @ _).
+      + apply eisretr.
+      + symmetry; apply preserves_mon_unit.
+  Defined.
 
 End compose_mor.
 

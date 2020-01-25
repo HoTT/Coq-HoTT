@@ -153,11 +153,7 @@ Definition grp_homo_compose {G H K : Group}
   : GroupHomomorphism H K -> GroupHomomorphism G H -> GroupHomomorphism G K.
 Proof.
   intros f g.
-  serapply Build_GroupHomomorphism.
-  1: exact (f o g).
-  intros x y.
-  refine (ap f (grp_homo_op g _ _) @ _).
-  apply grp_homo_op.
+  serapply (Build_GroupHomomorphism (f o g)).
 Defined.
 
 Definition grp_homo_id {G : Group} : GroupHomomorphism G G.
@@ -181,14 +177,8 @@ Definition grp_iso_inverse {G H : Group}
 Proof.
   intros [f e].
   serapply Build_GroupIsomorphism.
-  { serapply Build_GroupHomomorphism.
-    1: exact f^-1.
-    unfold IsSemiGroupPreserving.
-    intros x y.
-    apply (ap f)^-1.
-    rewrite grp_homo_op.
-    by rewrite !eisretr. }
-  exact _.
+  - serapply (Build_GroupHomomorphism f^-1).
+  - exact _.
 Defined.
 
 (* We can build an isomorphism from an operation preserving equivalence. *)
@@ -256,7 +246,7 @@ Proof.
       1: apply eq.
       rewrite transport_const.
       funext x.
-      exact (preserves_negate x). }
+      exact (preserves_negate (f:=idmap) _). }
   refine (_ oE (issig_GroupIsomorphism G H)^-1).
   refine (_ oE (equiv_functor_sigma' (issig_GroupHomomorphism G H)
     (fun f => 1%equiv))^-1).
