@@ -8,21 +8,6 @@ Require Import Homotopy.Join.
 
 Local Open Scope mc_mult_scope.
 
-(** TODO: possibly add these to canonical_names.v? *)
-Class Conjugate A := conj : A -> A.
-
-Class DistrOpp {A} `(SgOp A) `(Conjugate A)
-  := distropp : forall x y : A, conj (x * y) = conj y * conj x.
-
-Class SwapOp {A} `(Negate A) `(Conjugate A)
-  := swapop : forall x, conj (-x) = - (conj x).
-
-Class FactorNegLeft {A} `(Negate A) `(SgOp A)
-  := factorneg_l : forall x y, (-x) * y = - (x * y).
-
-Class FactorNegRight {A} `(Negate A) `(SgOp A)
-  := factorneg_r : forall x y, x * (-y) = - (x * y).
-
 (** A Cayley-Dickson Spheroid is a pointed type X which is an H-space, with two operations called negation and conjugation, satisfying the seven following laws.
   --x=x   x**=x   1*=1    (-x)*=-x*   x(-y)=-(xy)   (xy)* = y* x*    x* x=1    *)
 Class CayleyDicksonSpheroid (X : pType) := {
@@ -40,7 +25,7 @@ Class CayleyDicksonSpheroid (X : pType) := {
 
 Section CayleyDicksonSpherioid_Properties.
 
-  Context {X} `(CayleyDicksonSpheroid X).
+  Context {X : pType} `(CayleyDicksonSpheroid X).
 
   Global Instance cds_factorneg_l : FactorNegLeft (-) (.*.).
   Proof.

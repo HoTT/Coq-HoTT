@@ -290,6 +290,20 @@ Proof.
   exact (trunc_equiv (SigEquivRel R) (issig_equiv_rel R)).
 Qed.
 
+Class Conjugate A := conj : A -> A.
+
+Class DistrOpp {A} `(SgOp A) `(Conjugate A)
+  := distropp : forall x y : A, conj (sg_op x y) = sg_op (conj y) (conj x).
+
+Class SwapOp {A} `(Negate A) `(Conjugate A)
+  := swapop : forall x, conj (-x) = - (conj x).
+
+Class FactorNegLeft {A} `(Negate A) `(SgOp A)
+  := factorneg_l : forall x y, sg_op (-x) y = - (sg_op x y).
+
+Class FactorNegRight {A} `(Negate A) `(SgOp A)
+  := factorneg_r : forall x y, sg_op x (-y) = - (sg_op x y).
+
 Class LeftHeteroDistribute {A B C}
   (f : A -> B -> C) (g_r : B -> B -> B) (g : C -> C -> C) : Type
   := distribute_l : forall a b c, f a (g_r b c) = g (f a b) (f a c).
