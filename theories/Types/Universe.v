@@ -454,7 +454,7 @@ Theorem equiv_induction {U : Type} (P : forall V, U <~> V -> Type) :
 Proof.
   intros H0 V.
   apply (equiv_ind (equiv_path U V)).
-  exact (paths_ind U (fun Y p => P Y (equiv_path U Y p)) H0 V).
+  intro p; induction p; exact H0.
 Defined.
 
 Definition equiv_induction_comp {U : Type} (P : forall V, U <~> V -> Type)
@@ -468,7 +468,7 @@ Theorem equiv_induction' (P : forall U V, U <~> V -> Type) :
 Proof.
   intros H0 U V w.
   apply (equiv_ind (equiv_path U V)).
-  exact (paths_ind' (fun X Y p => P X Y (equiv_path X Y p)) H0 U V).
+  intro p; induction p; apply H0.
 Defined.
 
 Definition equiv_induction'_comp (P : forall U V, U <~> V -> Type)
@@ -480,8 +480,8 @@ Theorem equiv_induction_inv {U : Type} (P : forall V, V <~> U -> Type) :
   (P U (equiv_idmap U)) -> (forall V (w : V <~> U), P V w).
 Proof.
   intros H0 V.
-  apply (equiv_ind ((equiv_equiv_path V U) oE equiv_path_inverse _ _)).
-  exact (paths_ind U (fun Y p => P Y (equiv_path Y U p^)) H0 V).
+  apply (equiv_ind (equiv_path V U)).
+  intro p; induction p; apply H0.
 Defined.
 
 Definition equiv_induction_inv_comp {U : Type} (P : forall V, V <~> U -> Type)
