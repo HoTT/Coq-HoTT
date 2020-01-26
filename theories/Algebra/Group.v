@@ -154,6 +154,7 @@ Definition grp_homo_compose {G H K : Group}
 Proof.
   intros f g.
   serapply (Build_GroupHomomorphism (f o g)).
+  serapply compose_sg_morphism.
 Defined.
 
 Definition grp_homo_id {G : Group} : GroupHomomorphism G G.
@@ -246,7 +247,7 @@ Proof.
       1: apply eq.
       rewrite transport_const.
       funext x.
-      exact (preserves_negate (f:=idmap) _). }
+      exact (preserves_negate _). }
   refine (_ oE (issig_GroupIsomorphism G H)^-1).
   refine (_ oE (equiv_functor_sigma' (issig_GroupHomomorphism G H)
     (fun f => 1%equiv))^-1).

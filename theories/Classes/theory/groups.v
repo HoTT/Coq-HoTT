@@ -244,7 +244,9 @@ Section compose_mor.
     split; split.
   Defined.
 
-  Global Instance compose_sg_morphism : IsSemiGroupPreserving f -> IsSemiGroupPreserving g ->
+  (* The remaining items in this Section are not made into Global Instances as that
+  causes [serapply Build_GroupHomomorphism] to get stuck in typeclass resolution. *)
+  Instance compose_sg_morphism : IsSemiGroupPreserving f -> IsSemiGroupPreserving g ->
     IsSemiGroupPreserving (g ∘ f).
   Proof.
     red; intros fp gp x y.
@@ -254,7 +256,7 @@ Section compose_mor.
     - apply gp.
   Defined.
 
-  Global Instance compose_monoid_morphism : IsMonoidPreserving f -> IsMonoidPreserving g ->
+  Instance compose_monoid_morphism : IsMonoidPreserving f -> IsMonoidPreserving g ->
     IsMonoidPreserving (g ∘ f).
   Proof.
     intros;split.
@@ -264,7 +266,7 @@ Section compose_mor.
       apply ap,preserves_mon_unit.
   Defined.
 
-  Global Instance invert_sg_morphism
+  Instance invert_sg_morphism
     : forall `{!IsEquiv f}, IsSemiGroupPreserving f ->
       IsSemiGroupPreserving (f^-1).
   Proof.
@@ -279,7 +281,7 @@ Section compose_mor.
     - symmetry; apply eisretr.
   Defined.
 
-  Global Instance invert_monoid_morphism :
+  Instance invert_monoid_morphism :
     forall `{!IsEquiv f}, IsMonoidPreserving f -> IsMonoidPreserving (f^-1).
   Proof.
     intros;split.
