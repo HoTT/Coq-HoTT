@@ -152,6 +152,7 @@ Defined.
 Definition grp_homo_compose {G H K : Group}
   : GroupHomomorphism H K -> GroupHomomorphism G H -> GroupHomomorphism G K.
 Proof.
+  pose @compose_sg_morphism.
   intros f g.
   serapply (Build_GroupHomomorphism (f o g)).
 Defined.

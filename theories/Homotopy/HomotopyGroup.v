@@ -110,7 +110,7 @@ Proof.
   destruct n.
   + exact (ptr_functor 0).
   + intro f.
-    simple notypeclasses refine (Build_GroupHomomorphism _).
+    serapply Build_GroupHomomorphism.
     { apply Trunc_functor.
       apply iterated_loops_functor.
       assumption. }
