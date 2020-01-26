@@ -49,7 +49,6 @@ Proof.
   apply path_pmap.
   serapply Build_pHomotopy.
   1: intro; by strip_truncations.
-  apply moveL_pV.
   reflexivity.
 Defined.
 
