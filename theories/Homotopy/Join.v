@@ -89,7 +89,7 @@ Section Join.
 
   Definition join_natsq_v {A B : Type} {a a' : A} {b b' : B}
     (p : a = a') (q : b = b')
-    : Square (ap joinl p) (ap joinr q) (jglue a b) (jglue a' b').
+    : PathSquare (ap joinl p) (ap joinr q) (jglue a b) (jglue a' b').
   Proof.
     destruct p, q.
     apply sq_refl_v.
@@ -97,7 +97,7 @@ Section Join.
 
   Definition join_natsq_h {A B : Type} {a a' : A} {b b' : B}
     (p : a = a') (q : b = b')
-    : Square (jglue a b) (jglue a' b') (ap joinl p) (ap joinr q).
+    : PathSquare (jglue a b) (jglue a' b') (ap joinl p) (ap joinr q).
   Proof.
     destruct p, q.
     apply sq_refl_h.
@@ -225,7 +225,7 @@ Section Diamond.
   Context {A B : Type}.
 
   Definition Diamond (a a' : A) (b b' : B)
-    := Square (jglue a b) (jglue a' b')^ (jglue a b') (jglue a' b)^.
+    := PathSquare (jglue a b) (jglue a' b')^ (jglue a b') (jglue a' b)^.
 
   Definition diamond_h {a a' : A} (b b' : B) (p : a = a')
     : Diamond a a' b b'.

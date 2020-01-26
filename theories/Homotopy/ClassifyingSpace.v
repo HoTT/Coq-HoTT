@@ -60,7 +60,7 @@ Module Export ClassifyingSpace.
      `{forall x, IsTrunc 1 (P x)}
       (bbase' : P bbase)
       (bloop' : forall x, DPath P (bloop x) bbase' bbase')
-      (bloop_pp' : forall x y,  DSquare P (sq_G1 (bloop_pp x y))
+      (bloop_pp' : forall x y,  DPathSquare P (sq_G1 (bloop_pp x y))
         (bloop' (x * y)) ((bloop' x) @D (bloop' y)) 1 1) x : P x
       := match x with
             bbase => (fun _ _ => bbase')
@@ -71,7 +71,7 @@ Module Export ClassifyingSpace.
       (P : ClassifyingSpace G -> Type)
      `{forall x, IsTrunc 1 (P x)}
       (bbase' : P bbase) (bloop' : forall x, DPath P (bloop x) bbase' bbase')
-      (bloop_pp' : forall x y,  DSquare P (sq_G1 (bloop_pp x y))
+      (bloop_pp' : forall x y,  DPathSquare P (sq_G1 (bloop_pp x y))
         (bloop' (x * y)) ((bloop' x) @D (bloop' y)) 1 1) (x : G)
       : dp_apD (ClassifyingSpace_ind P bbase' bloop' bloop_pp') (bloop x)
         = bloop' x.

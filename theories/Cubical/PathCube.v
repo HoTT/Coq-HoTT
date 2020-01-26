@@ -1,7 +1,7 @@
 Require Import Basics.
-Require Import DPath.
-Require Import Square.
-Require Import DSquare.
+Require Import Cubical.DPath.
+Require Import Cubical.PathSquare.
+Require Import Cubical.DPathSquare.
 Require Import Types.Paths.
 
 Declare Scope cube_scope.
@@ -26,39 +26,39 @@ x011   |               |          x011----pi11----x111   |
  *)
  
 (* Contents:
-  * Definition of Cube
-  * Cube reflexivity
-  * Cube face rewriting
-  * Cubes from paths between squares
-  * Cubes from squres
-  * Cube flipping
+  * Definition of PathCube
+  * PathCube reflexivity
+  * PathCube face rewriting
+  * PathCubes from paths between squares
+  * PathCubes from squres
+  * PathCube flipping
   * Kan fillers
-  * Cube concatenation
+  * PathCube concatenation
   * natural cubes from ap
 *)
 
 
 (* Homogeneous cubes *)
-(* Cube left right top bottom front back *)
-Cumulative Inductive Cube {A}
+(* PathCube left right top bottom front back *)
+Cumulative Inductive PathCube {A}
   : forall x000 {x010 x100 x110 x001 x011 x101 x111 : A}
   {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  (s0ii : Square p0i0 p0i1 p00i p01i) (s1ii : Square p1i0 p1i1 p10i p11i)
-  (sii0 : Square p0i0 p1i0 pi00 pi10) (sii1 : Square p0i1 p1i1 pi01 pi11)
-  (si0i : Square p00i p10i pi00 pi01) (si1i : Square p01i p11i pi10 pi11), Type
-  := idcube : forall x, Cube x 1 1 1 1 1 1.
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11), Type
+  := idcube : forall x, PathCube x 1 1 1 1 1 1.
 
-Arguments Cube {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
+Arguments PathCube {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
-Scheme Cube_ind := Induction for Cube Sort Type.
-Arguments Cube_ind {A} P f
+Scheme PathCube_ind := Induction for PathCube Sort Type.
+Arguments PathCube_ind {A} P f
   {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
-Scheme Cube_rec := Minimality for Cube Sort Type.
-Arguments Cube_rec {A} P f
+Scheme PathCube_rec := Minimality for PathCube Sort Type.
+Arguments PathCube_rec {A} P f
   {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
 (* These notations make it easier to write our lemmas *)
@@ -67,20 +67,20 @@ Local Notation vr := (sq_refl_v _).
 Local Notation tr := sq_tr.
 Local Notation fv := sq_flip_v.
 
-(* Cubes form a path of squares up to retyping *)
+(* PathCubes form a path of squares up to retyping *)
 Definition cu_path {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  (s0ii : Square p0i0 p0i1 p00i p01i) (s1ii : Square p1i0 p1i1 p10i p11i)
-  (sii0 : Square p0i0 p1i0 pi00 pi10) (sii1 : Square p0i1 p1i1 pi01 pi11)
-  (si0i : Square p00i p10i pi00 pi01) (si1i : Square p01i p11i pi10 pi11)
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
   : (tr (fv s0ii)) @h (si0i @h (tr s1ii)) =
       sq_ccGG
         (moveL_Vp _ _ _ (sq_path^-1 sii0))
         (moveL_Vp _ _ _ (sq_path^-1 sii1)) si1i
-      -> Cube s0ii s1ii sii0 sii1 si0i si1i.
+      -> PathCube s0ii s1ii sii0 sii1 si0i si1i.
 Proof.
   destruct sii0, sii1.
   cbn.
@@ -100,9 +100,9 @@ Global Instance isequiv_cu_path {A}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  {s0ii : Square p0i0 p0i1 p00i p01i} {s1ii : Square p1i0 p1i1 p10i p11i}
-  {sii0 : Square p0i0 p1i0 pi00 pi10} {sii1 : Square p0i1 p1i1 pi01 pi11}
-  {si0i : Square p00i p10i pi00 pi01} {si1i : Square p01i p11i pi10 pi11}
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
   : IsEquiv (cu_path s0ii s1ii sii0 sii1 si0i si1i).
 Proof.
   serapply isequiv_adjointify.
@@ -124,26 +124,26 @@ Arguments cu_path {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
 Section Reflexivity.
 
-  (* Cube reflexivity *)
+  (* PathCube reflexivity *)
 
   Context {A} {a00 a10 a01 a11 : A}
     {px0 : a00 = a10} {px1 : a01 = a11}
     {p0x : a00 = a01} {p1x : a10 = a11}.
 
   (* Left right reflexivity *)
-  Definition cu_refl_lr (s : Square px0 px1 p0x p1x) : Cube s s hr hr hr hr.
+  Definition cu_refl_lr (s : PathSquare px0 px1 p0x p1x) : PathCube s s hr hr hr hr.
   Proof.
     by destruct s.
   Defined.
 
   (* Top bottom reflexivity *)
-  Definition cu_refl_tb (s : Square px0 px1 p0x p1x) : Cube hr hr s s vr vr.
+  Definition cu_refl_tb (s : PathSquare px0 px1 p0x p1x) : PathCube hr hr s s vr vr.
   Proof.
     by destruct s.
   Defined.
 
   (* Front back reflexivity *)
-  Definition cu_refl_fb (s : Square px0 px1 p0x p1x) : Cube vr vr vr vr s s.
+  Definition cu_refl_fb (s : PathSquare px0 px1 p0x p1x) : PathCube vr vr vr vr s s.
   Proof.
     by destruct s.
   Defined.
@@ -151,23 +151,23 @@ Section Reflexivity.
 End Reflexivity.
 
 (* Lemmas for rewriting faces of cubes *)
-Section CubeRewriting.
+Section PathCubeRewriting.
 
   Context {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
     {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
     {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
     {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
     {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-    {s0ii : Square p0i0 p0i1 p00i p01i} {s1ii : Square p1i0 p1i1 p10i p11i}
-    {sii0 : Square p0i0 p1i0 pi00 pi10} {sii1 : Square p0i1 p1i1 pi01 pi11}
-    {si0i : Square p00i p10i pi00 pi01} {si1i : Square p01i p11i pi10 pi11}.
+    {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+    {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+    {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}.
 
   (* We write the most general version and derive special cases from this *)
   Definition cu_GGGGGG {s0ii' s1ii' sii0' sii1' si0i' si1i'}
     (t0ii : s0ii = s0ii') (t1ii : s1ii = s1ii') (tii0 : sii0 = sii0')
     (tii1 : sii1 = sii1') (ti0i : si0i = si0i') (ti1i : si1i = si1i')
-    : Cube s0ii s1ii sii0 sii1 si0i si1i
-    -> Cube s0ii' s1ii' sii0' sii1' si0i' si1i'.
+    : PathCube s0ii s1ii sii0 sii1 si0i si1i
+    -> PathCube s0ii' s1ii' sii0' sii1' si0i' si1i'.
   Proof.
     by destruct t0ii, t1ii, tii0, tii1, ti0i, ti1i.
   Defined.
@@ -196,7 +196,7 @@ Section CubeRewriting.
   Definition cu_ccGGcc := cu_GGGGGG 1 1 tii0 tii1 1 1.
   Definition cu_ccccGG := cu_GGGGGG 1 1 1 1 ti0i ti1i.
 
-End CubeRewriting.
+End PathCubeRewriting.
 
 (* Rotating top and bottom to front and back *)
 Definition cu_rot_tb_fb {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
@@ -204,11 +204,11 @@ Definition cu_rot_tb_fb {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  (s0ii : Square p0i0 p0i1 p00i p01i) (s1ii : Square p1i0 p1i1 p10i p11i)
-  (sii0 : Square p0i0 p1i0 pi00 pi10) (sii1 : Square p0i1 p1i1 pi01 pi11)
-  (si0i : Square p00i p10i pi00 pi01) (si1i : Square p01i p11i pi10 pi11)
-  : Cube si0i si1i (sq_tr s0ii) (sq_tr s1ii) (sq_tr sii0) (sq_tr sii1)
-   -> Cube s0ii s1ii sii0 sii1 si0i si1i.
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
+  : PathCube si0i si1i (sq_tr s0ii) (sq_tr s1ii) (sq_tr sii0) (sq_tr sii1)
+   -> PathCube s0ii s1ii sii0 sii1 si0i si1i.
 Proof.
   intro cube.
   refine (cu_GGGGcc _ _ _ _ _).
@@ -229,9 +229,9 @@ Global Instance isequiv_cu_rot_tb_fb
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  {s0ii : Square p0i0 p0i1 p00i p01i} {s1ii : Square p1i0 p1i1 p10i p11i}
-  {sii0 : Square p0i0 p1i0 pi00 pi10} {sii1 : Square p0i1 p1i1 pi01 pi11}
-  {si0i : Square p00i p10i pi00 pi01} {si1i : Square p01i p11i pi10 pi11}
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
   : IsEquiv (cu_rot_tb_fb s0ii s1ii sii0 sii1 si0i si1i).
 Proof.
   serapply isequiv_adjointify.
@@ -257,7 +257,7 @@ Defined.
 
 Arguments cu_rot_tb_fb {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
-Section CubesFromPaths.
+Section PathCubesFromPaths.
 
   (* Degnerate cubes formed from paths between squares *)
 
@@ -265,8 +265,8 @@ Section CubesFromPaths.
   Definition cu_G11 {A} {a00 a10 a01 a11 : A}
     {px0 : a00 = a10} {px1 : a01 = a11}
     {p0x : a00 = a01} {p1x : a10 = a11}
-    (s s' : Square px0 px1 p0x p1x)
-    : s = s' -> Cube s s' hr hr hr hr.
+    (s s' : PathSquare px0 px1 p0x p1x)
+    : s = s' -> PathCube s s' hr hr hr hr.
   Proof.
     destruct s; intro.
     apply cu_path.
@@ -282,7 +282,7 @@ Section CubesFromPaths.
   Global Instance isequiv_cu_G11 {A} {a00 a10 a01 a11 : A}
     {px0 : a00 = a10} {px1 : a01 = a11}
     {p0x : a00 = a01} {p1x : a10 = a11}
-    {s s' : Square px0 px1 p0x p1x}
+    {s s' : PathSquare px0 px1 p0x p1x}
   : IsEquiv (cu_G11 s s').
   Proof.
     destruct s; exact _.
@@ -293,8 +293,8 @@ Section CubesFromPaths.
   Definition cu_1G1 {A} {a00 a10 a01 a11 : A}
     {px0 : a00 = a10} {px1 : a01 = a11}
     {p0x : a00 = a01} {p1x : a10 = a11}
-    (s s' : Square px0 px1 p0x p1x)
-  : s = s' -> Cube hr hr s s' vr vr.
+    (s s' : PathSquare px0 px1 p0x p1x)
+  : s = s' -> PathCube hr hr s s' vr vr.
   Proof.
     intro p.
     apply cu_rot_tb_fb.
@@ -310,15 +310,15 @@ Section CubesFromPaths.
   Global Instance isequiv_cu_1G1 {A} {a00 a10 a01 a11 : A}
     {px0 : a00 = a10} {px1 : a01 = a11}
     {p0x : a00 = a01} {p1x : a10 = a11}
-    (s s' : Square px0 px1 p0x p1x)
+    (s s' : PathSquare px0 px1 p0x p1x)
   : IsEquiv (cu_1G1 s s') := _.
 
   (* Finally this is an even simpler rotation *)
   Definition cu_11G {A} {a00 a10 a01 a11 : A}
     {px0 : a00 = a10} {px1 : a01 = a11}
     {p0x : a00 = a01} {p1x : a10 = a11}
-    (s s' : Square px0 px1 p0x p1x)
-    : s = s' -> Cube vr vr vr vr s s'.
+    (s s' : PathSquare px0 px1 p0x p1x)
+    : s = s' -> PathCube vr vr vr vr s s'.
   Proof.
     intro p.
     apply cu_rot_tb_fb.
@@ -331,26 +331,26 @@ Section CubesFromPaths.
   Global Instance isequiv_cu_11G {A} {a00 a10 a01 a11 : A}
     {px0 : a00 = a10} {px1 : a01 = a11}
     {p0x : a00 = a01} {p1x : a10 = a11}
-    (s s' : Square px0 px1 p0x p1x)
+    (s s' : PathSquare px0 px1 p0x p1x)
   : IsEquiv (cu_11G s s') := _.
 
-End CubesFromPaths.
+End PathCubesFromPaths.
 
 Arguments cu_G11 {_ _ _ _ _ _ _ _ _ _ _}.
 Arguments cu_1G1 {_ _ _ _ _ _ _ _ _ _ _}.
 Arguments cu_11G {_ _ _ _ _ _ _ _ _ _ _}.
 
 (* Degnerate cubes given by squares *)
-Section PathSquares.
+Section PathPathSquares.
 
-  Section PathSquaresMaps.
+  Section PathPathSquaresMaps.
 
     Context {A} {x y : A} {a00 a10 a01 a11 : x = y}
       (px0 : a00 = a10) (px1 : a01 = a11)
       (p0x : a00 = a01) (p1x : a10 = a11).
 
-    Definition cu_GG1 : Square px0 px1 p0x p1x
-      -> Cube (sq_G1 px0) (sq_G1 px1) (sq_G1 p0x) (sq_G1 p1x) 1 1.
+    Definition cu_GG1 : PathSquare px0 px1 p0x p1x
+      -> PathCube (sq_G1 px0) (sq_G1 px1) (sq_G1 p0x) (sq_G1 p1x) 1 1.
     Proof.
       destruct p0x, p1x, a10.
       intro.
@@ -359,8 +359,8 @@ Section PathSquares.
       by apply sq_G1^-1.
     Defined.
 
-    Definition cu_1GG : Square px0 px1 p0x p1x
-      -> Cube 1 1 (sq_1G px0) (sq_1G px1) (sq_1G p0x) (sq_1G p1x).
+    Definition cu_1GG : PathSquare px0 px1 p0x p1x
+      -> PathCube 1 1 (sq_1G px0) (sq_1G px1) (sq_1G p0x) (sq_1G p1x).
     Proof.
       destruct px0, px1, a01.
       intro.
@@ -369,8 +369,8 @@ Section PathSquares.
       by apply sq_1G^-1.
     Defined.
 
-    Definition cu_G1G : Square px0 px1 p0x p1x
-      -> Cube (sq_1G px0) (sq_1G px1) 1 1 (sq_G1 p0x) (sq_G1 p1x).
+    Definition cu_G1G : PathSquare px0 px1 p0x p1x
+      -> PathCube (sq_1G px0) (sq_1G px1) 1 1 (sq_G1 p0x) (sq_G1 p1x).
     Proof.
       destruct p0x, p1x, a10.
       intro.
@@ -379,7 +379,7 @@ Section PathSquares.
       by apply sq_G1^-1.
     Defined.
 
-  End PathSquaresMaps.
+  End PathPathSquaresMaps.
 
   Context {A} {x y : A} {a00 a10 a01 a11 : x = y}
     {px0 : a00 = a10} {px1 : a01 = a11}
@@ -403,35 +403,35 @@ Section PathSquares.
     destruct p0x, p1x, a10; exact _.
   Defined.
 
-End PathSquares.
+End PathPathSquares.
 
 Arguments cu_GG1 {_ _ _ _ _ _ _ _ _ _ _}.
 Arguments cu_G1G {_ _ _ _ _ _ _ _ _ _ _}.
 Arguments cu_1GG {_ _ _ _ _ _ _ _ _ _ _}.
 
-Section CubeDSquare.
+Section PathCubeDPathSquare.
 
   Context {A B} {f g : A -> B} {a00 a10 a01 a11 : A}
     {px0 : a00 = a10} {px1 : a01 = a11}
     {p0x : a00 = a01} {p1x : a10 = a11}.
 
-  (* Cubes can be given by DSquares over Paths*)
-  Definition cu_ds (s : Square px0 px1 p0x p1x)
+  (* PathCubes can be given by DPathSquares over Paths*)
+  Definition cu_ds (s : PathSquare px0 px1 p0x p1x)
     {b00 : f a00 = g a00} {b01 : f a01 = g a01}
     {b10 : f a10 = g a10} {b11 : f a11 = g a11}
     (qx0 : DPath (fun x => f x = g x) px0 b00 b10)
     (qx1 : DPath (fun x => f x = g x) px1 b01 b11)
     (q0x : DPath (fun x => f x = g x) p0x b00 b01)
     (q1x : DPath (fun x => f x = g x) p1x b10 b11)
-    : DSquare (fun x => f x = g x) s qx0 qx1 q0x q1x
-    -> Cube (sq_dp qx0) (sq_dp qx1) (sq_dp q0x) (sq_dp q1x)
+    : DPathSquare (fun x => f x = g x) s qx0 qx1 q0x q1x
+    -> PathCube (sq_dp qx0) (sq_dp qx1) (sq_dp q0x) (sq_dp q1x)
         (sq_ap f s) (sq_ap g s).
   Proof.
     destruct s.
     apply cu_GG1.
   Defined.
 
-  Global Instance isequiv_cu_ds {s : Square px0 px1 p0x p1x}
+  Global Instance isequiv_cu_ds {s : PathSquare px0 px1 p0x p1x}
     {b00 : f a00 = g a00} {b01 : f a01 = g a01}
     {b10 : f a10 = g a10} {b11 : f a11 = g a11}
     {qx0 : DPath (fun x => f x = g x) px0 b00 b10}
@@ -443,22 +443,22 @@ Section CubeDSquare.
     unfold cu_ds; destruct s; exact _.
   Defined.
 
-End CubeDSquare.
+End PathCubeDPathSquare.
 
 Arguments cu_ds {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
-Section CubeDPath.
+Section PathCubeDPath.
 
   Context {A B : Type} {x1 x2 : A} {a00 a01 a10 a11 : A -> B}
     {px0 : a00 == a10} {px1 : a01 == a11} {p0x : a00 == a01} {p1x : a10 == a11}
-    {f1 : Square (px0 x1) (px1 x1) (p0x x1) (p1x x1)}
-    {f2 : Square (px0 x2) (px1 x2) (p0x x2) (p1x x2)}.
+    {f1 : PathSquare (px0 x1) (px1 x1) (p0x x1) (p1x x1)}
+    {f2 : PathSquare (px0 x2) (px1 x2) (p0x x2) (p1x x2)}.
 
-  (* Cubes can be given by DPaths over Squares *)
+  (* PathCubes can be given by DPaths over PathSquares *)
   Definition cu_dp {p : x1 = x2} 
-    : Cube f1 f2 (sq_dp (dp_apD px0 p)) (sq_dp (dp_apD px1 p))
+    : PathCube f1 f2 (sq_dp (dp_apD px0 p)) (sq_dp (dp_apD px1 p))
        (sq_dp (dp_apD p0x p)) (sq_dp (dp_apD p1x p))
-    -> DPath (fun x => Square (px0 x) (px1 x) (p0x x) (p1x x)) p f1 f2.
+    -> DPath (fun x => PathSquare (px0 x) (px1 x) (p0x x) (p1x x)) p f1 f2.
   Proof.
     destruct p; apply cu_G11^-1.
   Defined.
@@ -470,7 +470,7 @@ Section CubeDPath.
     exact _.
   Defined.
 
-End CubeDPath.
+End PathCubeDPath.
 
 (* Flipping a cube along the left right direction *)
 Definition cu_flip_lr {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
@@ -478,11 +478,11 @@ Definition cu_flip_lr {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  (s0ii : Square p0i0 p0i1 p00i p01i) (s1ii : Square p1i0 p1i1 p10i p11i)
-  (sii0 : Square p0i0 p1i0 pi00 pi10) (sii1 : Square p0i1 p1i1 pi01 pi11)
-  (si0i : Square p00i p10i pi00 pi01) (si1i : Square p01i p11i pi10 pi11)
-  : Cube s0ii s1ii sii0 sii1 si0i si1i
-  -> Cube s1ii s0ii (sq_flip_h sii0) (sq_flip_h sii1)
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
+  : PathCube s0ii s1ii sii0 sii1 si0i si1i
+  -> PathCube s1ii s0ii (sq_flip_h sii0) (sq_flip_h sii1)
         (sq_flip_h si0i) (sq_flip_h si1i).
 Proof.
   destruct si1i, si0i.
@@ -504,9 +504,9 @@ Global Instance isequiv_cu_flip_lr {A}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  {s0ii : Square p0i0 p0i1 p00i p01i} {s1ii : Square p1i0 p1i1 p10i p11i}
-  {sii0 : Square p0i0 p1i0 pi00 pi10} {sii1 : Square p0i1 p1i1 pi01 pi11}
-  {si0i : Square p00i p10i pi00 pi01} {si1i : Square p01i p11i pi10 pi11}
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
   : IsEquiv (cu_flip_lr s0ii s1ii sii0 sii1 si0i si1i).
 Proof.
   destruct si1i, si0i.
@@ -515,7 +515,7 @@ Defined.
 
 Arguments cu_flip_lr {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
-(* Cube Kan fillers ~ Every open crate has a lid *)
+(* PathCube Kan fillers ~ Every open crate has a lid *)
 
 
 Definition cu_fill_left {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
@@ -523,10 +523,10 @@ Definition cu_fill_left {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-                                      (s1ii : Square p1i0 p1i1 p10i p11i)
-  (sii0 : Square p0i0 p1i0 pi00 pi10) (sii1 : Square p0i1 p1i1 pi01 pi11)
-  (si0i : Square p00i p10i pi00 pi01) (si1i : Square p01i p11i pi10 pi11)
-  : {s0ii : Square p0i0 p0i1 p00i p01i & Cube s0ii s1ii sii0 sii1 si0i si1i}.
+                                      (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
+  : {s0ii : PathSquare p0i0 p0i1 p00i p01i & PathCube s0ii s1ii sii0 sii1 si0i si1i}.
 Proof.
   destruct si0i, si1i.
   set (a := sq_G1^-1 s1ii).
@@ -549,10 +549,10 @@ Definition cu_fill_right {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  (s0ii : Square p0i0 p0i1 p00i p01i)
-  (sii0 : Square p0i0 p1i0 pi00 pi10) (sii1 : Square p0i1 p1i1 pi01 pi11)
-  (si0i : Square p00i p10i pi00 pi01) (si1i : Square p01i p11i pi10 pi11)
-  : {s1ii : Square p1i0 p1i1 p10i p11i & Cube s0ii s1ii sii0 sii1 si0i si1i}.
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
+  : {s1ii : PathSquare p1i0 p1i1 p10i p11i & PathCube s0ii s1ii sii0 sii1 si0i si1i}.
 Proof.
   refine (_;_).
   apply cu_flip_lr^-1.
@@ -564,10 +564,10 @@ Definition cu_fill_top {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  (s0ii : Square p0i0 p0i1 p00i p01i) (s1ii : Square p1i0 p1i1 p10i p11i)
-                                      (sii1 : Square p0i1 p1i1 pi01 pi11)
-  (si0i : Square p00i p10i pi00 pi01) (si1i : Square p01i p11i pi10 pi11)
-  : {sii0 : Square p0i0 p1i0 pi00 pi10 & Cube s0ii s1ii sii0 sii1 si0i si1i}.
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+                                      (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
+  : {sii0 : PathSquare p0i0 p1i0 pi00 pi10 & PathCube s0ii s1ii sii0 sii1 si0i si1i}.
 Proof.
   refine (_;_).
   apply cu_rot_tb_fb.
@@ -581,10 +581,10 @@ Definition cu_fill_bottom {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  (s0ii : Square p0i0 p0i1 p00i p01i) (s1ii : Square p1i0 p1i1 p10i p11i)
-  (sii0 : Square p0i0 p1i0 pi00 pi10)
-  (si0i : Square p00i p10i pi00 pi01) (si1i : Square p01i p11i pi10 pi11)
-  : {sii1 : Square p0i1 p1i1 pi01 pi11 & Cube s0ii s1ii sii0 sii1 si0i si1i}.
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10)
+  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
+  : {sii1 : PathSquare p0i1 p1i1 pi01 pi11 & PathCube s0ii s1ii sii0 sii1 si0i si1i}.
 Proof.
   refine (_;_).
   apply cu_rot_tb_fb.
@@ -598,10 +598,10 @@ Definition cu_fill_front {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  (s0ii : Square p0i0 p0i1 p00i p01i) (s1ii : Square p1i0 p1i1 p10i p11i)
-  (sii0 : Square p0i0 p1i0 pi00 pi10) (sii1 : Square p0i1 p1i1 pi01 pi11)
-                                      (si1i : Square p01i p11i pi10 pi11)
-  : {si0i : Square p00i p10i pi00 pi01 & Cube s0ii s1ii sii0 sii1 si0i si1i}.
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+                                      (si1i : PathSquare p01i p11i pi10 pi11)
+  : {si0i : PathSquare p00i p10i pi00 pi01 & PathCube s0ii s1ii sii0 sii1 si0i si1i}.
 Proof.
   refine (_;_).
   apply cu_rot_tb_fb.
@@ -613,18 +613,18 @@ Definition cu_fill_back {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  (s0ii : Square p0i0 p0i1 p00i p01i) (s1ii : Square p1i0 p1i1 p10i p11i)
-  (sii0 : Square p0i0 p1i0 pi00 pi10) (sii1 : Square p0i1 p1i1 pi01 pi11)
-  (si0i : Square p00i p10i pi00 pi01)
-  : {si1i : Square p01i p11i pi10 pi11 & Cube s0ii s1ii sii0 sii1 si0i si1i}.
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+  (si0i : PathSquare p00i p10i pi00 pi01)
+  : {si1i : PathSquare p01i p11i pi10 pi11 & PathCube s0ii s1ii sii0 sii1 si0i si1i}.
 Proof.
   refine (_;_).
   apply cu_rot_tb_fb.
   apply cu_fill_right.
 Defined.
 
-(* Cube concatenation *)
-Section CubeConcat.
+(* PathCube concatenation *)
+Section PathCubeConcat.
 
   Context {A} {x000 x010 x100 x110 x001 x011 x101 x111 x201 x200 x210 x211 : A}
     {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
@@ -634,12 +634,12 @@ Section CubeConcat.
     {pj01 : x101 = x201} {pj11 : x111 = x211} {pj10 : x110 = x210}
     {pj00 : x100 = x200} {p2i1 : x201 = x211} {p2i0 : x200 = x210}
     {p20i : x200 = x201} {p21i : x210 = x211}
-    {s0ii : Square p0i0 p0i1 p00i p01i} {s1ii : Square p1i0 p1i1 p10i p11i}
-    {sii0 : Square p0i0 p1i0 pi00 pi10} {sii1 : Square p0i1 p1i1 pi01 pi11}
-    {si0i : Square p00i p10i pi00 pi01} {si1i : Square p01i p11i pi10 pi11}
-    {sji0 : Square p1i0 p2i0 pj00 pj10} {sji1 : Square p1i1 p2i1 pj01 pj11}
-    {sj0i : Square p10i p20i pj00 pj01} {sj1i : Square p11i p21i pj10 pj11}
-    {s2ii : Square p2i0 p2i1 p20i p21i}.
+    {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+    {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+    {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
+    {sji0 : PathSquare p1i0 p2i0 pj00 pj10} {sji1 : PathSquare p1i1 p2i1 pj01 pj11}
+    {sj0i : PathSquare p10i p20i pj00 pj01} {sj1i : PathSquare p11i p21i pj10 pj11}
+    {s2ii : PathSquare p2i0 p2i1 p20i p21i}.
 
   (* We only define left right concatenation for now since that is what we
      need. The other concatenations will not be as nice however, due to the
@@ -647,9 +647,9 @@ Section CubeConcat.
 
   (* TODO: Work out why this is so slow *)
   (* Left right concatenation *)
-  Definition cu_concat_lr : Cube s0ii s1ii sii0 sii1 si0i si1i
-    -> Cube s1ii s2ii sji0 sji1 sj0i sj1i
-    -> Cube s0ii s2ii (sq_concat_h sii0 sji0) (sq_concat_h sii1 sji1)
+  Definition cu_concat_lr : PathCube s0ii s1ii sii0 sii1 si0i si1i
+    -> PathCube s1ii s2ii sji0 sji1 sj0i sj1i
+    -> PathCube s0ii s2ii (sq_concat_h sii0 sji0) (sq_concat_h sii1 sji1)
          (sq_concat_h si0i sj0i) (sq_concat_h si1i sj1i).
   Proof.
     intros a b.
@@ -658,7 +658,7 @@ Section CubeConcat.
     by destruct a.
   Defined.
 
-End CubeConcat.
+End PathCubeConcat.
 
 (* Notation for left right concatenation *)
 Notation "x '@lr' y" := (cu_concat_lr x y) (at level 10) : cube_scope.
@@ -668,8 +668,8 @@ Local Notation apc := (ap_compose_sq _ _ _).
 (* sq_ap analogue for ap_compse *)
 Definition sq_ap_compose {A B C : Type} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
-  (f : A -> B) (g : B -> C) (s : Square px0 px1 p0x p1x)
-  : Cube (sq_ap (g o f) s) (sq_ap g (sq_ap f s)) apc apc apc apc.
+  (f : A -> B) (g : B -> C) (s : PathSquare px0 px1 p0x p1x)
+  : PathCube (sq_ap (g o f) s) (sq_ap g (sq_ap f s)) apc apc apc apc.
 Proof.
   by destruct s.
 Defined.
@@ -679,8 +679,8 @@ Local Notation api := (ap_idmap_sq _).
 (* sq_ap analogue for ap_idmap *)
 Definition sq_ap_idmap {A : Type} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
-  (s : Square px0 px1 p0x p1x)
-  : Cube (sq_ap idmap s) s api api api api.
+  (s : PathSquare px0 px1 p0x p1x)
+  : PathCube (sq_ap idmap s) s api api api api.
 Proof.
   by destruct s.
 Defined.
@@ -691,8 +691,8 @@ Local Notation apn := (ap_nat _ _).
 Definition sq_ap_nat
   {A B : Type} {a00 a10 a01 a11 : A} (f f' : A -> B) (h : f == f')
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
-  (s : Square px0 px1 p0x p1x)
-  : Cube (sq_ap f s) (sq_ap f' s) (ap_nat h _) apn apn apn.
+  (s : PathSquare px0 px1 p0x p1x)
+  : PathCube (sq_ap f s) (sq_ap f' s) (ap_nat h _) apn apn apn.
 Proof.
   destruct s as [x]; cbn; by destruct (h x).
 Defined.
@@ -700,7 +700,7 @@ Defined.
 (* Uncurry a function in sq_ap2 *)
 Definition sq_ap_uncurry {A B C} (f : A -> B -> C)
   {a a' : A} (p : a = a') {b b' : B} (q : b = b')
-  : Cube (sq_ap (uncurry f) (sq_prod hr vr)) (sq_ap2 f p q)
+  : PathCube (sq_ap (uncurry f) (sq_prod hr vr)) (sq_ap2 f p q)
   (ap_uncurry _ _ _) (ap_uncurry _ _ _) (ap_uncurry _ _ _) (ap_uncurry _ _ _).
 Proof.
   by destruct p, q.
@@ -712,11 +712,11 @@ Definition cu_ap {A B} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-  {s0ii : Square p0i0 p0i1 p00i p01i} {s1ii : Square p1i0 p1i1 p10i p11i}
-  {sii0 : Square p0i0 p1i0 pi00 pi10} {sii1 : Square p0i1 p1i1 pi01 pi11}
-  {si0i : Square p00i p10i pi00 pi01} {si1i : Square p01i p11i pi10 pi11}
-  (f : A -> B) (c : Cube s0ii s1ii sii0 sii1 si0i si1i)
-  : Cube (sq_ap f s0ii) (sq_ap f s1ii) (sq_ap f sii0)
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
+  (f : A -> B) (c : PathCube s0ii s1ii sii0 sii1 si0i si1i)
+  : PathCube (sq_ap f s0ii) (sq_ap f s1ii) (sq_ap f sii0)
      (sq_ap f sii1) (sq_ap f si0i) (sq_ap f si1i).
 Proof.
   by destruct c.
