@@ -52,29 +52,21 @@ If opam complains that you do not have a switch installed, run
 
 ### MS Windows
 
-[Note that these instructions have not been updated for a while, they
-may be out of date.  If you have trouble, please open an issue on the
-repository github tracker.]
+Here are some instruction for setting up the HoTT library using the
+Coq precompiled binaries.
 
-We recommend that you install the 32-bit version of cygwin [1] and, in
-the setup process install all of the packages mentioning `ocaml`, as
-well as `make` and `git` and `dos2unix`.  (The 64-bit version of
-cygwin seems to be missing some ocaml packages.  See also
-https://coq.inria.fr/bugs/show_bug.cgi?id=3154.)  To prevent bash from
-complaining about unrecognized `\r` commands, use `dos2unix`.  The
-following commands, from the root of the HoTT library, should mostly
-take care of things:
-
-    dos2unix hoq*
-    /usr/bin/find . -name '*.sh' | xargs dos2unix
-
-You can also try to install Coq via opam, although opam support on
-windows is experimental.
-
-If you wish to build CoqIDE/hoqide on Windows, we wish you good luck.
-
-[1]:http://www.cygwin.com/setup-x86.exe
-
+1. Install the [precompiled binaries for coq](https://github.com/coq/coq/releases). Just pick the one
+labelled latest release and run the exe file.
+2. Run the [cygwin installer](https://cygwin.com/install.html). It
+doesn't matter which version, 64 and 32 both work.
+3. When you are told to choose packages, select the following packages
+(use the search bar)
+  `git`, `make`, `ocaml`, `automake`, `libtool`
+You can select these packages by choosing a version from the drop down
+in the installer.
+4. Complete the installation of cygwin.
+5. Run cygwin and check that git works by running `git`. It should
+just give you the help screen.
 
 ## Obtain the HoTT library
 
@@ -103,7 +95,7 @@ However, to obtain an up-to-date version of the library, and to
 contribute to it, you need to clone it using git.
 
 
-## Install Coq
+## Install Coq (Linux and OSX)
 
 The recommended procedure is to install a local/custom version of Coq
 in a subdirectory of the HoTT directory, which can be done by running
@@ -112,9 +104,11 @@ from the HoTT directory:
     etc/install_coq.sh
 
 Compiling Coq may take a while.
-To speed it up, use `make -jn`, where n is the number of cores you have on your machine.
+To speed it up, use `make -jn`, where n is the number of cores you
+have on your machine.
 On Linux this can be found with `nproc` or `lscpu`.
-On OSX Apple menu -> About this Mac -> System Report, then look for "number of cores".
+On OSX Apple menu -> About this Mac -> System Report, then look for
+"number of cores".
 
 Alternatively, you can install Coq using a package manager or opam.
 
@@ -151,6 +145,11 @@ installed a version of Coq that is not available on your PATH, then
 you need to supply the *absolute* path name (starting with /) of the
 `bin` directory which contains `coqtop`, `coqc`, etc.
 
+If you are trying to install on Windows using cygwin, configure the 
+library with `./configure COQBIN="/cygdrive/c/Coq/bin/"`. This tells 
+the HoTT library where to find the coq binaries. This is of course 
+assuming the coq binaries were installed in `C:\Coq\bin`. When in 
+cygwin you can access your C drive through `/cygdrive/c`.
 
 ## Running Coq for the HoTT library
 
@@ -160,8 +159,8 @@ can run
 
     ./hoqtop
 
-directly from the HoTT directory to start using the library.  You can
-load the library from your Coq files with
+directly from the HoTT directory to start using the library.
+You can load the library from your Coq files with
 
     Require Import HoTT.
 
@@ -169,10 +168,17 @@ There is also a `hoqc` for compiling files, and `hoqide` which is the
 version of coqide running the hoqtop toplevel if you have compiled it
 successfully.
 
+You may want to put an ampersand after `./hoqide &` to allow the
+process to run in the background, allowing you to continue using the
+terminal.
+
 You may prefer to install `hoqtop`, `hoqc` and the library files
 globally, in which case you can type
 
     sudo make install
+
+Though this is not recommended if you intend on developing the library
+itself.
 
 By default the files will be installed in `/usr/local/bin` and
 `/usr/local/share/hott`.  You can change the location by using
@@ -201,7 +207,8 @@ and to save this for future sessions.  This will prompt PG to ask you
 for the name of the Coq toplevel to be used each time you start
 evaluating a file.
 
-To use the Emacs tags facility with the `*.v` files here, run the command
+To use the Emacs tags facility with the `*.v` files here, run the
+command
 
     make TAGS
 
