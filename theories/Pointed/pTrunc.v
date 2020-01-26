@@ -1,6 +1,5 @@
 Require Import Basics.
 Require Import Types.
-Require Import Spaces.Nat.
 Require Import Pointed.Core.
 Require Import Pointed.pMap.
 Require Import Pointed.pEquiv.
@@ -31,14 +30,9 @@ Global Instance isequiv_ptr n (A : pType) `{IsTrunc n A}
 Definition pequiv_ptr {n : trunc_index} {A : pType} `{IsTrunc n A}
   : A <~>* pTr n A := Build_pEquiv _ _ ptr _.
 
-Definition pTr_rec n {X Y : pType} `{IsTrunc n Y}
-  (f : X ->* Y)
-  : pTr n X ->* Y.
-Proof.
-  serapply Build_pMap.
-  1: exact (Trunc_rec f).
-  apply point_eq.
-Defined.
+Definition pTr_rec n {X Y : pType} `{IsTrunc n Y} (f : X ->* Y)
+  : pTr n X ->* Y
+  := Build_pMap (pTr n X) Y (Trunc_rec f) (point_eq f).
 
 Definition equiv_ptr_rec `{Funext} {n} {X Y : pType} `{IsTrunc n Y}
   : (pTr n X ->* Y) <~> (X ->* Y).
@@ -60,7 +54,8 @@ Proof.
 Defined.
 
 Definition ptr_functor {X Y : pType} (n : trunc_index) (f : X ->* Y)
-  : pTr n X ->* pTr n Y := Build_pMap (pTr n X) (pTr n Y)
+  : pTr n X ->* pTr n Y
+  := Build_pMap (pTr n X) (pTr n Y)
     (Trunc_functor n f) (ap (@tr n Y) (point_eq f)).
 
 Definition ptr_functor_pmap_idmap {X : pType} n
