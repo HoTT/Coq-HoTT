@@ -244,7 +244,8 @@ Section compose_mor.
     split; split.
   Defined.
 
-  Global Instance compose_sg_morphism : IsSemiGroupPreserving f -> IsSemiGroupPreserving g ->
+  (** Making these global instances causes typeclass loops.  Instead they are declared below as [Hint Extern]s that apply only when the goal has the specified form. *)
+  Local Instance compose_sg_morphism : IsSemiGroupPreserving f -> IsSemiGroupPreserving g ->
     IsSemiGroupPreserving (g ∘ f).
   Proof.
     red; intros fp gp x y.
@@ -254,7 +255,7 @@ Section compose_mor.
     - apply gp.
   Defined.
 
-  Global Instance compose_monoid_morphism : IsMonoidPreserving f -> IsMonoidPreserving g ->
+  Local Instance compose_monoid_morphism : IsMonoidPreserving f -> IsMonoidPreserving g ->
     IsMonoidPreserving (g ∘ f).
   Proof.
     intros;split.
@@ -264,7 +265,7 @@ Section compose_mor.
       apply ap,preserves_mon_unit.
   Defined.
 
-  Global Instance invert_sg_morphism
+  Local Instance invert_sg_morphism
     : forall `{!IsEquiv f}, IsSemiGroupPreserving f ->
       IsSemiGroupPreserving (f^-1).
   Proof.
@@ -279,7 +280,7 @@ Section compose_mor.
     - symmetry; apply eisretr.
   Defined.
 
-  Global Instance invert_monoid_morphism :
+  Local Instance invert_monoid_morphism :
     forall `{!IsEquiv f}, IsMonoidPreserving f -> IsMonoidPreserving (f^-1).
   Proof.
     intros;split.
@@ -295,6 +296,11 @@ End compose_mor.
 Hint Extern 4 (IsSemiGroupPreserving (_ ∘ _)) =>
   class_apply @compose_sg_morphism : typeclass_instances.
 Hint Extern 4 (IsMonoidPreserving (_ ∘ _)) =>
+  class_apply @compose_monoid_morphism : typeclass_instances.
+
+Hint Extern 4 (IsSemiGroupPreserving (_ o _)) =>
+  class_apply @compose_sg_morphism : typeclass_instances.
+Hint Extern 4 (IsMonoidPreserving (_ o _)) =>
   class_apply @compose_monoid_morphism : typeclass_instances.
 
 Hint Extern 4 (IsSemiGroupPreserving (_^-1)) =>
