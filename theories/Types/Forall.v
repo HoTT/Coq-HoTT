@@ -287,15 +287,15 @@ Qed.
 
 (** ** Two variable versions for function extensionality. *)
 
-Definition equiv_path_forall11 {A B : Type} {P : A -> B -> Type} (f g : forall x y, P x y)
-  : (forall (a : A) (b : B), f a b = g a b) <~> f = g
+Definition equiv_path_forall11 {A : Type} {B : A -> Type} {P : forall a : A, B a -> Type} (f g : forall a b, P a b)
+  : (forall (a : A) (b : B a), f a b = g a b) <~> f = g
   := (equiv_path_forall f g) oE (equiv_functor_forall_id (fun a => equiv_path_forall (f a) (g a))).
 
-Definition path_forall11 {A B : Type} {P : A -> B -> Type} (f g : forall x y, P x y)
+Definition path_forall11 {A : Type} {B : A -> Type} {P : forall a : A, B a -> Type} (f g : forall a b, P a b)
   : (forall x y, f x y = g x y) -> f = g
   := equiv_path_forall11 f g.
 
-Global Instance isequiv_path_forall11 `{P : A -> B -> Type} (f g : forall x y, P x y)
+Global Instance isequiv_path_forall11 {A : Type} {B : A -> Type} `{P : forall a : A, B a -> Type} (f g : forall a b, P a b)
   : IsEquiv (path_forall11 f g) | 0
   := _.
 
