@@ -209,7 +209,7 @@ AC_ARG_VAR([TIME], [the absolute path of a 'time' command])
 AC_PATH_PROG([TIME],[time],[no])
 AS_IF([test "x$TIME" = "xno"],
       [STDTIME=""],
-      [STDTIME="\"$TIME\" -f \"\$* (user: %U mem: %M ko)\""])
+      [STDTIME="\"$TIME\" -f \"\$@ (real: %e, user: %U, sys: %S, mem: %M ko)\""])
 AC_SUBST([STDTIME])
 
 dnl Create symbolic links to the Coq library

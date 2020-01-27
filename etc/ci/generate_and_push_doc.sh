@@ -33,7 +33,7 @@ Generated with \`make html proviola\`"
 
 echo '$ make html'
 make html || exit $?
-make proviola -j4 -k; make proviola || exit $?
+make proviola -j4 TIMED=1 -k; make proviola TIMED=1 || exit $?
 make timing-html || exit $?
 mv proviola-html proviola-html-bak
 mv timing-html timing-html-bak
