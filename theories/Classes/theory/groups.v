@@ -244,7 +244,7 @@ Section compose_mor.
     split; split.
   Defined.
 
-  (** Making these global instances causes typeclass loops. *)
+  (** Making these global instances causes typeclass loops.  Instead they are declared below as [Hint Extern]s that apply only when the goal has the specified form. *)
   Local Instance compose_sg_morphism : IsSemiGroupPreserving f -> IsSemiGroupPreserving g ->
     IsSemiGroupPreserving (g ∘ f).
   Proof.
@@ -296,6 +296,11 @@ End compose_mor.
 Hint Extern 4 (IsSemiGroupPreserving (_ ∘ _)) =>
   class_apply @compose_sg_morphism : typeclass_instances.
 Hint Extern 4 (IsMonoidPreserving (_ ∘ _)) =>
+  class_apply @compose_monoid_morphism : typeclass_instances.
+
+Hint Extern 4 (IsSemiGroupPreserving (_ o _)) =>
+  class_apply @compose_sg_morphism : typeclass_instances.
+Hint Extern 4 (IsMonoidPreserving (_ o _)) =>
   class_apply @compose_monoid_morphism : typeclass_instances.
 
 Hint Extern 4 (IsSemiGroupPreserving (_^-1)) =>
