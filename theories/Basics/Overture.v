@@ -674,13 +674,6 @@ Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A,
 
 Global Arguments path_forall {_ A%type_scope P} (f g)%function_scope _.
 
-Definition path_forall2 `{Funext} {A B : Type} {P : A -> B -> Type} (f g : forall x y, P x y) :
-  (forall x y, f x y = g x y) -> f = g
-  :=
-  (fun E => path_forall f g (fun x => path_forall (f x) (g x) (E x))).
-
-Global Arguments path_forall2 {_} {A B}%type_scope {P} (f g)%function_scope _.
-
 (** *** Tactics *)
 
 (** We declare some more [Hint Resolve] hints, now in the "hint database" [path_hints].  In general various hints (resolve, rewrite, unfold hints) can be grouped into "databases". This is necessary as sometimes different kinds of hints cannot be mixed, for example because they would cause a combinatorial explosion or rewriting cycles.
