@@ -16,12 +16,12 @@ Module Export Torus.
 
   Axiom loop_a : tbase = tbase.
   Axiom loop_b : tbase = tbase.
-  Axiom surf : Square loop_a loop_a loop_b loop_b.
+  Axiom surf : PathSquare loop_a loop_a loop_b loop_b.
 
   (* We define the induction principle for Torus *)
   Definition Torus_ind (P : Torus -> Type) (pb : P tbase)
     (pla : DPath P loop_a pb pb) (plb : DPath P loop_b pb pb)
-    (ps : DSquare P surf pla pla plb plb) (x : Torus) : P x.
+    (ps : DPathSquare P surf pla pla plb plb) (x : Torus) : P x.
   Proof.
     by destruct x.
   Defined.
@@ -29,12 +29,12 @@ Module Export Torus.
   (* We declare propsitional computational rules for loop_a and loop_b *)
   Axiom Torus_ind_beta_loop_a : forall (P : Torus -> Type) (pb : P tbase)
     (pla : DPath P loop_a pb pb) (plb : DPath P loop_b pb pb)
-    (ps : DSquare P surf pla pla plb plb), DSquare P hr
+    (ps : DPathSquare P surf pla pla plb plb), DPathSquare P hr
       (dp_apD (Torus_ind P pb pla plb ps) (loop_a)) pla 1%dpath 1%dpath.
 
   Axiom Torus_ind_beta_loop_b : forall (P : Torus -> Type) (pb : P tbase)
     (pla : DPath P loop_a pb pb) (plb : DPath P loop_b pb pb)
-    (ps : DSquare P surf pla pla plb plb), DSquare P hr
+    (ps : DPathSquare P surf pla pla plb plb), DPathSquare P hr
       (dp_apD (Torus_ind P pb pla plb ps) (loop_b)) plb 1%dpath 1%dpath.
 
   (* We write out the computation rule for surf even though we will not
@@ -42,8 +42,8 @@ Module Export Torus.
      principle, but we don't currently know how to derive it from this *)
   Axiom Torus_ind_beta_surf : forall (P : Torus -> Type) (pb : P tbase)
     (pla : DPath P loop_a pb pb) (plb : DPath P loop_b pb pb)
-    (ps : DSquare P surf pla pla plb plb),
-      DCube P (cu_refl_lr _) (ds_apD (Torus_ind P pb pla plb ps) surf) ps
+    (ps : DPathSquare P surf pla pla plb plb),
+      DPathCube P (cu_refl_lr _) (ds_apD (Torus_ind P pb pla plb ps) surf) ps
         (Torus_ind_beta_loop_a _ _ _ _ _) (Torus_ind_beta_loop_a _ _ _ _ _)
         (Torus_ind_beta_loop_b _ _ _ _ _) (Torus_ind_beta_loop_b _ _ _ _ _).
 
@@ -51,13 +51,13 @@ End Torus.
 
 (* We can now define Torus recursion as a sepcial case of Torus induction *)
 Definition Torus_rec (P : Type) (pb : P) (pla plb : pb = pb)
-  (ps : Square pla pla plb plb) : Torus -> P
+  (ps : PathSquare pla pla plb plb) : Torus -> P
   := Torus_ind _ pb (dp_const pla) (dp_const plb) (ds_const ps).
 
 (* We can derive the recursion computation rules for Torus_rec *)
 Lemma Torus_rec_beta_loop_a (P : Type) (pb : P) (pla plb : pb = pb)
-  (ps : Square pla pla plb plb)
-  : Square (ap (Torus_rec P pb pla plb ps) loop_a) pla 1 1.
+  (ps : PathSquare pla pla plb plb)
+  : PathSquare (ap (Torus_rec P pb pla plb ps) loop_a) pla 1 1.
 Proof.
   refine (sq_GGcc _ (eissect _ _)
     (ds_const'^-1 (Torus_ind_beta_loop_a _ _ _ _ _))).
@@ -65,8 +65,8 @@ Proof.
 Defined.
 
 Lemma Torus_rec_beta_loop_b (P : Type) (pb : P) (pla plb : pb = pb)
-  (ps : Square pla pla plb plb)
-  : Square (ap (Torus_rec P pb pla plb ps) loop_b) plb 1 1.
+  (ps : PathSquare pla pla plb plb)
+  : PathSquare (ap (Torus_rec P pb pla plb ps) loop_b) plb 1 1.
 Proof.
   refine (sq_GGcc _ (eissect _ _)
     (ds_const'^-1 (Torus_ind_beta_loop_b _ _ _ _ _))).
@@ -77,8 +77,8 @@ Defined.
    but it is currently too difficult. Therefore we will leave it
    as admitted where it will simply look like an axiom. *)
 Definition Torus_rec_beta_surf (P : Type) (pb : P) (pla plb : pb = pb)
-  (ps : Square pla pla plb plb)
-  :  Cube (sq_ap (Torus_rec P pb pla plb ps) surf) ps
+  (ps : PathSquare pla pla plb plb)
+  :  PathCube (sq_ap (Torus_rec P pb pla plb ps) surf) ps
       (Torus_rec_beta_loop_a P pb pla plb ps)
       (Torus_rec_beta_loop_a P pb pla plb ps)
       (Torus_rec_beta_loop_b P pb pla plb ps)
@@ -94,10 +94,10 @@ Global Instance ispointed_torus : IsPointed Torus := tbase.
 (* This gives me the idea of writing all our computation rules as a
    "dependent filler" *)
 Definition Torus_rec_beta_cube (P : Type) (pb : P) (pla plb : pb = pb)
-  (ps : Square pla pla plb plb)
-  : { ba : Square (ap (Torus_rec P pb pla plb ps) loop_a) pla 1 1 &
-    { bb : Square (ap (Torus_rec P pb pla plb ps) loop_b) plb 1 1 &
-    Cube (sq_ap (Torus_rec P pb pla plb ps) surf) ps ba ba bb bb}}.
+  (ps : PathSquare pla pla plb plb)
+  : { ba : PathSquare (ap (Torus_rec P pb pla plb ps) loop_a) pla 1 1 &
+    { bb : PathSquare (ap (Torus_rec P pb pla plb ps) loop_b) plb 1 1 &
+    PathCube (sq_ap (Torus_rec P pb pla plb ps) surf) ps ba ba bb bb}}.
 Proof.
   refine (_;_;_).
   set 

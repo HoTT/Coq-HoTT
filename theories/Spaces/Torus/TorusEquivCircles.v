@@ -15,10 +15,10 @@ Section TorusEquivCircle.
 
   (* Here is a cube filler for help with circle recursion into the torus *)
   Definition c2t_square_and_cube
-    : {s : Square loop_a loop_a
+    : {s : PathSquare loop_a loop_a
         (ap (S1_rec _ tbase loop_b) loop)
         (ap (S1_rec _ tbase loop_b) loop)
-      &  Cube s surf hr hr
+      &  PathCube s surf hr hr
          (sq_G1 (S1_rec_beta_loop _ _ _))
          (sq_G1 (S1_rec_beta_loop _ _ _))}.
   Proof.
@@ -57,9 +57,9 @@ Section TorusEquivCircle.
 
   (* Computation rules for c2t' as a cube filler *)
   Definition c2t'_beta :
-    {bl1 : Square (ap (fun y => c2t' base y) loop) loop_b 1 1 &
-    {bl2 : Square (ap (fun x => c2t' x base) loop) loop_a 1 1 &
-    Cube (sq_ap2 c2t' loop loop) surf bl2 bl2 bl1 bl1}}.
+    {bl1 : PathSquare (ap (fun y => c2t' base y) loop) loop_b 1 1 &
+    {bl2 : PathSquare (ap (fun x => c2t' x base) loop) loop_a 1 1 &
+    PathCube (sq_ap2 c2t' loop loop) surf bl2 bl2 bl1 bl1}}.
   Proof.
     refine (_;_;_).
     unfold sq_ap2.
@@ -93,7 +93,7 @@ Section TorusEquivCircle.
     unfold Sect.
     (* We start with Torus induction *)
     refine (Torus_ind _ 1 _ _ _).
-    (* Our DSquare is really just a cube *)
+    (* Our DPathSquare is really just a cube *)
     apply cu_ds^-1.
     (* We pretend that our sides have sq_dpath o sq_dpath^-1
       and get rid of them *)
@@ -142,7 +142,7 @@ Section TorusEquivCircle.
 
   Definition sq_ap2_compose {A B C D : Type} (f : A -> B -> C) (g : C -> D)
     {a a' : A} (p : a = a') {b b' : B} (q : b = b')
-    : Cube (sq_ap2 (fun x y => g (f x y)) p q) (sq_ap g (sq_ap2 f p q))
+    : PathCube (sq_ap2 (fun x y => g (f x y)) p q) (sq_ap g (sq_ap2 f p q))
         apcs apcs apcs apcs.
   Proof.
     by destruct p, q.
