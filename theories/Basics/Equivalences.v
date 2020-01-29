@@ -349,12 +349,12 @@ Section EquivInverse.
   Theorem other_adj (b : B) : eissect f (f^-1 b) = ap f^-1 (eisretr f b).
   Proof.
     apply (equiv_inj (ap f)).
-    refine ((_ @ _ @ _)^ @ _).
-    4: apply ap_compose.
-    - serapply ap_homotopic_id.
-      intro; apply eisretr.
-    - simpl.  apply concat_pp_V.
-    - apply eisadj.
+    (* We will prove the equality as a composite of four paths, working right to left. *)
+    refine (_ @ _ @ _ @ _).
+    4: { apply ap_compose. }
+    3: { symmetry; apply (ap_homotopic_id (eisretr f)). }
+    2: { symmetry; apply concat_pp_V. }
+    symmetry; apply eisadj.
   Qed.
 
   Global Instance isequiv_inverse : IsEquiv f^-1 | 10000
