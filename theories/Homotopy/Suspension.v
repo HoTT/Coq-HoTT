@@ -1,16 +1,19 @@
 (* -*- mode: coq; mode: visual-line -*- *)
-
-(** * The suspension of a type *)
-
-Require Import Basics Types.
+Require Import Basics.
+Require Import Types.
+Require Import Cubical.
 Require Import Colimits.Pushout.
 Require Import NullHomotopy.
 Require Import Truncations.
-Local Open Scope path_scope.
 Import TrM.
+
+(** * The suspension of a type *)
 
 Generalizable Variables X A B f g n.
 
+Local Open Scope path_scope.
+
+(** TODO: remove and replace with HIT description. *)
 (* ** Definition of suspension. *)
 (* 
 Module Export Suspension.
@@ -59,12 +62,34 @@ Proof.
   - exact (H_merid).
 Defined.
 
+Definition Susp_ind_dp {X : Type} (P : Susp X -> Type)
+  (H_N : P North) (H_S : P South)
+  (H_merid : forall x:X, DPath P (merid x) H_N H_S)
+  : forall (y : Susp X), P y.
+Proof.
+  serapply Susp_ind.
+  - exact H_N.
+  - exact H_S.
+  - intro x.
+    apply dp_path_transport^-1.
+    exact (H_merid x).
+Defined.
+
 Definition Susp_ind_beta_merid {X : Type}
   (P : Susp X -> Type) (H_N : P North) (H_S : P South)
   (H_merid : forall x:X, (merid x) # H_N = H_S) (x : X)
   : apD (Susp_ind P H_N H_S H_merid) (merid x) = H_merid x.
 Proof.
   serapply Pushout_ind_beta_pglue.
+Defined.
+
+Definition Susp_ind_dp_beta_merid {X : Type}
+  (P : Susp X -> Type) (H_N : P North) (H_S : P South)
+  (H_merid : forall x:X, DPath P (merid x) H_N H_S) (x : X)
+  : dp_apD (Susp_ind_dp P H_N H_S H_merid) (merid x) = H_merid x.
+Proof.
+  apply dp_apD_path_transport.
+  serapply Susp_ind_beta_merid.
 Defined.
 
 (** We want to allow the user to forget that we've defined suspension in this way. *)
