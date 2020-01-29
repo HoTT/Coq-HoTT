@@ -440,6 +440,14 @@ Definition concat_Ap {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y 
     | idpath => concat_1p _ @ ((concat_p1 _) ^)
   end.
 
+(* A useful variant of concat_Ap. *)
+Definition ap_homotopic {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y : A} (q : x = y)
+  : (ap f q) = (p x) @ (ap g q) @ (p y)^.
+Proof.
+  apply moveL_pV.
+  apply concat_Ap.
+Defined.
+
 (** Naturality of [ap] at identity. *)
 Definition concat_A1p {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} (q : x = y) :
   (ap f q) @ (p y) = (p x) @ q
@@ -447,6 +455,14 @@ Definition concat_A1p {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} 
   match q with
     | idpath => concat_1p _ @ ((concat_p1 _) ^)
   end.
+
+(* The corresponding variant of concat_A1p. *)
+Definition ap_homotopic_id {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} (q : x = y)
+  : (ap f q) = (p x) @ q @ (p y)^.
+Proof.
+  apply moveL_pV.
+  apply concat_A1p.
+Defined.
 
 Definition concat_pA1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} (q : x = y) :
   (p x) @ (ap f q) =  q @ (p y)

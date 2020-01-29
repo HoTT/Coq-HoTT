@@ -349,37 +349,16 @@ Definition equiv_inj `(f : A -> B) `{IsEquiv A B f} {x y : A}
 Section EquivInverse.
 
   Context {A B : Type} (f : A -> B) {feq : IsEquiv f}.
-  Open Scope long_path_scope.
 
   Theorem other_adj (b : B) : eissect f (f^-1 b) = ap f^-1 (eisretr f b).
   Proof.
-    (* First we set up the mess. *)
-    rewrite <- (concat_1p (eissect _ _)).
-    rewrite <- (concat_Vp (ap f^-1 (eisretr f (f (f^-1 b))))).
-    rewrite (whiskerR (inverse2 (ap02 f^-1 (eisadj f (f^-1 b)))) _).
-    refine (whiskerL _ (concat_1p (eissect _ _))^ @ _).
-    rewrite <- (concat_Vp (eissect f (f^-1 (f (f^-1 b))))).
-    rewrite <- (whiskerL _ (concat_1p (eissect f (f^-1 (f (f^-1 b)))))).
-    rewrite <- (concat_pV (ap f^-1 (eisretr f (f (f^-1 b))))).
-    apply moveL_M1.
-    repeat rewrite concat_p_pp.
-    (* Now we apply lots of naturality and cancel things. *)
-    rewrite <- (concat_pp_A1 (fun a => (eissect f a)^) _ _).
-    rewrite (ap_compose' f f^-1).
-    rewrite <- (ap_p_pp _ _ (ap f (ap f^-1 (eisretr f (f (f^-1 b))))) _).
-    rewrite <- (ap_compose f^-1 f).
-    rewrite (concat_A1p (eisretr f) _).
-    rewrite ap_pp, concat_p_pp.
-    rewrite (concat_pp_V _ (ap f^-1 (eisretr f (f (f^-1 b))))).
-    repeat rewrite <- ap_V; rewrite <- ap_pp.
-    rewrite <- (concat_pA1 (fun y => (eissect f y)^) _).
-    rewrite ap_compose', <- (ap_compose f^-1 f).
-    rewrite <- ap_p_pp.
-    rewrite (concat_A1p (eisretr f) _).
-    rewrite concat_p_Vp.
-    rewrite <- ap_compose.
-    rewrite (concat_pA1_p (eissect f) _).
-    rewrite concat_pV_p; apply concat_Vp.
+    apply (equiv_inj (ap f)).
+    refine ((_ @ _ @ _)^ @ _).
+    4: apply ap_compose.
+    - serapply ap_homotopic_id.
+      intro; apply eisretr.
+    - simpl.  apply concat_pp_V.
+    - apply eisadj.
   Qed.
 
   Global Instance isequiv_inverse : IsEquiv f^-1 | 10000
