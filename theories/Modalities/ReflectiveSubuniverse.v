@@ -730,6 +730,34 @@ Section Reflective_Subuniverse.
     : O (A * B) <~> (O A * O B)
     := Build_Equiv _ _ (O_prod_cmp A B) _.
 
+    (** ** Pullbacks *)
+
+    Global Instance inO_pullback {A B C} (f : B -> A) (g : C -> A)
+           `{In O A} `{In O B} `{In O C}
+      : In O (Pullback f g).
+    Proof.
+      serapply inO_to_O_retract.
+      - intros op.
+        exists (O_rec pr1 op).
+        exists (O_rec (fun p => p.2.1) op).
+        revert op; apply O_indpaths; intros [b [c a]].
+        refine (ap f (O_rec_beta _ _) @ _); cbn.
+        refine (a @ ap g (O_rec_beta _ _)^).
+      - intros [b [c a]]; cbn.
+        serapply path_sigma'.
+        { apply O_rec_beta. }
+        refine (transport_sigma' _ _ @ _); cbn.
+        serapply path_sigma'.
+        { apply O_rec_beta. }
+        abstract (
+          rewrite transport_paths_Fr;
+          rewrite transport_paths_Fl;
+          rewrite O_indpaths_beta;
+          rewrite concat_V_pp;
+          rewrite ap_V;
+          apply concat_pV_p ).
+    Defined.
+
     (** ** Dependent sums *)
     (** Theorem 7.7.4, (ii) => (i) *)
     Definition inO_sigma_from_O_ind@{i j}
