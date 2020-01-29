@@ -731,7 +731,7 @@ Section Reflective_Subuniverse.
     := Build_Equiv _ _ (O_prod_cmp A B) _.
 
     (** ** Dependent sums *)
-    (** Theorem 7.7.4 *)
+    (** Theorem 7.7.4, (ii) => (i) *)
     Definition inO_sigma_from_O_ind@{i j}
     : (forall (A:Type@{i}) (B: O_reflector@{Ou Oa i} O A -> Type@{j}) `{forall a, In@{Ou Oa j} O (B a)}
               (g : forall (a:A), (B (to@{Ou Oa i} O A a))),
@@ -752,9 +752,9 @@ Section Reflective_Subuniverse.
       intros [x1 x2].
       simple refine (path_sigma B _ _ _ _); simpl.
       - apply p.
-      - rewrite (q (x1;x2)).
+      - refine (ap _ (q (x1;x2)) @ _).
         unfold g; simpl. exact (transport_pV B _ _).
-    Qed.
+    Defined.
 
     (** TODO: Manage the universes more carefully in this lemma, rather than simply allowing any universes to be inferred by unsetting strict universe declaration. *)
     Local Unset Strict Universe Declaration.
