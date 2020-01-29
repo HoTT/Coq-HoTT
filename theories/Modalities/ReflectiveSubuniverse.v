@@ -11,6 +11,17 @@ Local Open Scope path_scope.
 
 (** * Reflective Subuniverses *)
 
+(** ** References  *)
+
+(** Reflective subuniverses (and modalities) are studied in the following papers, which we will refer to below by their abbreviations:
+
+- The Book: The Homotopy Type Theory Book, chapter 7.  Bare references to "Theorem 7.x.x" are always to the Book.
+- RSS: Rijke, Spitters, and Shulman, "Modalities in homotopy type theory", https://arxiv.org/abs/1706.07526.
+- CORS: Christensen, Opie, Rijke, and Scoccola, "Localization in Homotopy Type Theory", https://arxiv.org/abs/1807.04155.
+*)
+
+(** ** Overview *)
+
 (** We will define reflective subuniverses using modules.  Since modules are one of the more difficult parts of Coq to understand, and the documentation in the reference manual is a bit sparse, we include here a brief introduction to modules.
 
 For our purposes here, it is appropriate to think of a [Module Type] as analogous to a [Record] type, and a [Module] having that module type (called an "implementation" of it) as analogous to an element of that record type.  For instance, instead of
