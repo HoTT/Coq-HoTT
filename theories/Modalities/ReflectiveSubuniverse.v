@@ -486,6 +486,10 @@ Section Reflective_Subuniverse.
 
   Section Replete.
 
+    Definition inO_equiv_inO' (T : Type) {U : Type} `{In O T} (f : T <~> U)
+    : In O U
+      := inO_equiv_inO T f.
+
     (** An equivalent formulation of repleteness is that a type lies in the subuniverse as soon as its unit map is an equivalence. *)
     Definition inO_isequiv_to_O (T:Type)
     : IsEquiv (to O T) -> In O T
