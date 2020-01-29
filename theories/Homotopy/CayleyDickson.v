@@ -258,7 +258,7 @@ Section ImaginaroidHSpace.
     serapply sq_dp^-1.
     refine (sq_ccGG _^ _^ _).
     1,2: apply Join_rec_beta_jglue.
-    change (Square (jglue (a * c) (c * b)) (jglue ((- d) * conj b) (conj a * d))^
+    change (PathSquare (jglue (a * c) (c * b)) (jglue ((- d) * conj b) (conj a * d))^
       (jglue (a * c) (conj a * d)) (jglue ((- d) * conj b) (c * b))^).
     rewrite <- (lemma1 a c), <- (lemma2 a b c d),
        <- (lemma3 b c), <- (lemma4 a b c d).
