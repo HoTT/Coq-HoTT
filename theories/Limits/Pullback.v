@@ -58,6 +58,28 @@ Definition IsPullback {A B C D}
            (p : k o f == g o h)
   := IsEquiv (pullback_corec p).
 
+Definition equiv_ispullback {A B C D}
+           {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
+           (p : k o f == g o h) (ip : IsPullback p)
+  : A <~> Pullback k g
+  := Build_Equiv _ _ (pullback_corec p) ip.
+
+(** The pullback of the projections [{d:D & P d} -> D <- {d:D & Q d}] is equivalent to [{d:D & P d * Q d}]. *)
+Definition ispullback_sigprod {D : Type} (P Q : D -> Type)
+  : IsPullback (fun z:{d:D & P d * Q d} => 1%path : (z.1;fst z.2).1 = (z.1;snd z.2).1).
+Proof.
+  serapply isequiv_adjointify.
+  - intros [[d1 p] [[d2 q] e]]; cbn in e.
+    exists d1. exact (p, e^ # q).
+  - intros [[d1 p] [[d2 q] e]]; unfold pullback_corec; cbn in *.
+    destruct e; reflexivity.
+  - intros [d [p q]]; reflexivity.
+Defined.
+
+Definition equiv_sigprod_pullback {D : Type} (P Q : D -> Type)
+  : {d:D & P d * Q d} <~> Pullback (@pr1 D P) (@pr1 D Q)
+  := Build_Equiv _ _ _ (ispullback_sigprod P Q).
+
 (** The pullback of a map along another one *)
 Definition pullback_along {A B C} (f : B -> A) (g : C -> A)
 : Pullback f g -> B
