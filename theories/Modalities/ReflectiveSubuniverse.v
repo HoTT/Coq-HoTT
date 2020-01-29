@@ -757,37 +757,34 @@ Section Reflective_Subuniverse.
     Defined.
 
     (** For (i) => (ii) we first prove a "local" version, that if a *particular* sigma-type is in [O] then it admits extensions. *)
-    Definition extension_from_inO_sigma
+    Definition extension_from_inO_sigma@{i j k}
                {A:Type@{i}} (B: (O A) -> Type@{j})
-               {H : In@{Ou Oa j} O (sig@{i j} (fun z:O A => B z))}
+               {H : In@{Ou Oa k} O (sig@{i j} (fun z:O A => B z))}
                (g : forall x, B (to O A x))
-      : ExtensionAlong (to O A) B g.
+      : ExtensionAlong@{i i j k k} (to O A) B g.
     Proof.
-      set (Z := sigT B) in *.
+      set (Z := sigT B : Type@{k}) in *.
       pose (g' := (fun a:A => (to O A a ; g a)) : A -> Z).
-      pose (f' := O_rec@{Ou Oa i j i u2 j} g').
+      pose (f' := O_rec@{Ou Oa i k i k k} g').
       pose (eqf := (O_rec_beta g')  : f' o to O A == g').
-      pose (eqid := O_indpaths@{Ou Oa i i i u3 i}
-                    (pr1 o f') idmap (fun x => ap pr1 (eqf x))).
+      pose (eqid := O_indpaths@{Ou Oa i i i i i}
+                    (pr1 o f') idmap (fun x => ap@{k i} pr1 (eqf x))).
       exists (fun z => transport B (eqid z) ((f' z).2)).
       intros a. unfold eqid.
       refine (_ @ pr2_path (O_rec_beta g' a)).
-      refine (ap (fun p => transport B p (O_rec g' (to O A a)).2) _).
+      refine (ap@{i k} (fun p => transport B p (O_rec g' (to O A a)).2) _).
       serapply O_indpaths_beta.
     Defined.
 
-    (** We then deduce the general version from this.  Note that although here we see two universe parameters, after the section closes this definition ends up with four universe parameters [Ou Oa i j]. *)
-    Definition O_ind_from_inO_sigma@{i j}
+    (** We then deduce the general version from this.  Note that although here we see three universe parameters, after the section closes this definition ends up with five universe parameters [Ou Oa i j k]. *)
+    Definition O_ind_from_inO_sigma@{i j k}
                (H : forall (A:Type@{i}) (B:A -> Type@{j})
                            {A_inO : In@{Ou Oa i} O A}
                            `{forall a, In@{Ou Oa j} O (B a)},
-                   (In@{Ou Oa j} O (sig@{i j} (fun x:A => B x))))
+                   (In@{Ou Oa k} O (sig@{i j} (fun x:A => B x))))
                (A:Type@{i}) (B: (O A) -> Type@{j}) `{forall a, In@{Ou Oa j} O (B a)}
                (g : forall (a:A), (B (to O A a)))
-      : { f : forall (z:O A), (B z) & forall a:A, f (to@{Ou Oa i} O A a) = g a }.
-    Proof.
-      apply extension_from_inO_sigma, H; exact _.
-    Defined.
+      := @extension_from_inO_sigma@{i j k} A B (H (O A) B) g.
 
     (** ** Fibers *)
 
