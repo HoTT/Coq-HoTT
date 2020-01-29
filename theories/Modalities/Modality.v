@@ -140,7 +140,7 @@ End SigmaClosed.
 (** We omit the module type, because Coq won't actually accept it (see below for why). *)
 Module ReflectiveSubuniverses_to_Modalities
        (Os : ReflectiveSubuniverses) (OsSigma : SigmaClosed Os).
-(** <: Modalities. *)
+  (** <: Modalities. *)
 
   Import Os OsSigma.
   Module Import Os_Theory := ReflectiveSubuniverses_Theory Os.
@@ -155,12 +155,12 @@ Module ReflectiveSubuniverses_to_Modalities
   Definition inO_equiv_inO@{u a i j k} := @inO_equiv_inO@{u a i j k}.
   Definition hprop_inO@{u a i} := hprop_inO@{u a i}.
 
-  (** The reason Coq won't actually accept this as a module of type [Modalities] is that the following definitions of [O_ind_internal] and [O_ind_beta_internal] have an extra universe parameter [k] that's at least as large as both [i] and [j].  This is because [extendable_to_O] has such a parameter, which in turn is because [ooExtendableAlong] does.  Unfortunately, we can't directly instantiate [k] to [max(i,j)] because Coq doesn't allow "algebraic universes" in arbitrary position.  We could probably work around it by defining [ExtendableAlong] inductively rather than recursively, but given the non-usefulness of this construction in practice, that doesn't seem to be worth the trouble at the moment. *)
+  (** The reason Coq won't actually accept this as a module of type [Modalities] seems to be that [O_ind_from_inO_sigma] forces [i <= j].  I'm not currently sure why that is. *)
   Definition O_ind_internal@{u a i j k} (O : Modality@{u a})
              (A : Type@{i}) (B : O_reflector@{u a i} O A -> Type@{j})
              (B_inO : forall oa, In@{u a j} O (B oa))
   : (forall a, B (to O A a)) -> forall a, B a
-  := fun g => pr1 ((O_ind_from_inO_sigma@{u a i j j k k} O (inO_sigma O))
+  := fun g => pr1 ((O_ind_from_inO_sigma@{u a i j k k k} O (inO_sigma O))
                      A B B_inO g).
 
   Definition O_ind_beta_internal@{u a i j k} (O : Modality@{u a})
@@ -168,7 +168,7 @@ Module ReflectiveSubuniverses_to_Modalities
              (B_inO : forall oa, In@{u a j} O (B oa))
              (f : forall a : A, B (to O A a)) (a:A)
   : O_ind_internal O A B B_inO f (to O A a) = f a
-  := pr2 ((O_ind_from_inO_sigma@{u a i j j k k} O (inO_sigma O))
+  := pr2 ((O_ind_from_inO_sigma@{u a i j k k k} O (inO_sigma O))
                      A B B_inO f) a.
 
   Definition minO_paths@{u a i} (O : Modality@{u a})
