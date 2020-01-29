@@ -304,11 +304,7 @@ Definition isequiv_isequiv_postcompose {A B : Type} (f : A -> B)
 (* TODO *)
 *)
 
-(** ** Functorial action *)
-
-(** 'functor_path' is called [ap]. *)
-
-(** ** Equivalences between path spaces *)
+(** Equivalences between path spaces *)
 
 (** If [f] is an equivalence, then so is [ap f].  We are lazy and use [adjointify]. *)
 Global Instance isequiv_ap `{IsEquiv A B f} (x y : A)

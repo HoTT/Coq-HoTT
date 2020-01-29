@@ -109,6 +109,14 @@ Proof.
   refine (H 1 q).
 Defined.
 
+(** ** Functorial action *)
+
+(** 'functor_path' is called [ap]. *)
+
+(** ** Equivalences between path spaces *)
+
+(** [isequiv_ap] and [equiv_ap] are in Equivalences.v  *)
+
 (** ** Path operations are equivalences *)
 
 Global Instance isequiv_path_inverse {A : Type} (x y : A)
