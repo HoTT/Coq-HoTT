@@ -346,7 +346,7 @@ Section EquivInverse.
 
   Context {A B : Type} (f : A -> B) {feq : IsEquiv f}.
 
-  Theorem other_adj (b : B) : eissect f (f^-1 b) = ap f^-1 (eisretr f b).
+  Theorem eisadj_other (b : B) : eissect f (f^-1 b) = ap f^-1 (eisretr f b).
   Proof.
     apply (equiv_inj (ap f)).
     (* We will prove the equality as a composite of four paths, working right to left. *)
@@ -358,7 +358,7 @@ Section EquivInverse.
   Qed.
 
   Global Instance isequiv_inverse : IsEquiv f^-1 | 10000
-    := Build_IsEquiv B A f^-1 f (eissect f) (eisretr f) other_adj.
+    := Build_IsEquiv B A f^-1 f (eissect f) (eisretr f) eisadj_other.
 End EquivInverse.
 
 (** If the goal is [IsEquiv _^-1], then use [isequiv_inverse]; otherwise, don't pretend worry about if the goal is an evar and we want to add a [^-1]. *)
