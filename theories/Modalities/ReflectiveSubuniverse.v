@@ -756,32 +756,38 @@ Section Reflective_Subuniverse.
         unfold g; simpl. exact (transport_pV B _ _).
     Defined.
 
-    (** TODO: Manage the universes more carefully in this lemma, rather than simply allowing any universes to be inferred by unsetting strict universe declaration. *)
-    Local Unset Strict Universe Declaration.
-    Definition O_ind_from_inO_sigma
-    (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3811 *)
-    : (forall (A:Type@{i}) (B:A -> Type@{j}) {A_inO : In@{Ou Oa i} O A} `{forall a, In@{Ou Oa j} O (B a)},
-         (In@{Ou Oa j} O (sig@{i j} (fun x:A => B x))))
-      ->
-      (forall (A:Type@{i}) (B: (O A) -> Type@{j}) `{forall a, In@{Ou Oa j} O (B a)}
-              (g : forall (a:A), (B (to O A a))),
-         { f : forall (z:O A), (B z) & forall a:A, f (to@{Ou Oa i} O A a) = g a }).
+    (** For (i) => (ii) we first prove a "local" version, that if a *particular* sigma-type is in [O] then it admits extensions. *)
+    Definition extension_from_inO_sigma
+               {A:Type@{i}} (B: (O A) -> Type@{j})
+               {H : In@{Ou Oa j} O (sig@{i j} (fun z:O A => B z))}
+               (g : forall x, B (to O A x))
+      : ExtensionAlong (to O A) B g.
     Proof.
-      intro H. intros A B ? g.
-      pose (Z := sigT B).
-      assert (In@{Ou Oa j} O Z).
-      { apply H; [ exact _ | assumption ]. }
+      set (Z := sigT B) in *.
       pose (g' := (fun a:A => (to O A a ; g a)) : A -> Z).
       pose (f' := O_rec@{Ou Oa i j i u2 j} g').
       pose (eqf := (O_rec_beta g')  : f' o to O A == g').
       pose (eqid := O_indpaths@{Ou Oa i i i u3 i}
-                      (pr1 o f') idmap
-                      (fun x => ap pr1 (eqf x))).
-      exists (fun z => transport B (eqid z) ((f' z).2)); intros a.
-      unfold eqid. rewrite O_indpaths_beta.
-      exact (pr2_path (O_rec_beta g' a)).
+                    (pr1 o f') idmap (fun x => ap pr1 (eqf x))).
+      exists (fun z => transport B (eqid z) ((f' z).2)).
+      intros a. unfold eqid.
+      refine (_ @ pr2_path (O_rec_beta g' a)).
+      refine (ap (fun p => transport B p (O_rec g' (to O A a)).2) _).
+      serapply O_indpaths_beta.
     Defined.
-    Local Set Strict Universe Declaration.
+
+    (** We then deduce the general version from this.  Note that although here we see two universe parameters, after the section closes this definition ends up with four universe parameters [Ou Oa i j]. *)
+    Definition O_ind_from_inO_sigma@{i j}
+               (H : forall (A:Type@{i}) (B:A -> Type@{j})
+                           {A_inO : In@{Ou Oa i} O A}
+                           `{forall a, In@{Ou Oa j} O (B a)},
+                   (In@{Ou Oa j} O (sig@{i j} (fun x:A => B x))))
+               (A:Type@{i}) (B: (O A) -> Type@{j}) `{forall a, In@{Ou Oa j} O (B a)}
+               (g : forall (a:A), (B (to O A a)))
+      : { f : forall (z:O A), (B z) & forall a:A, f (to@{Ou Oa i} O A a) = g a }.
+    Proof.
+      apply extension_from_inO_sigma, H; exact _.
+    Defined.
 
     (** ** Fibers *)
 
