@@ -786,6 +786,50 @@ Section Reflective_Subuniverse.
                (g : forall (a:A), (B (to O A a)))
       := @extension_from_inO_sigma@{i j k} A B (H (O A) B) g.
 
+    (** In fact, we can enhance [extension_from_inO_sigma] to a local version of [extendable_to_O], as stated in CORS Proposition 2.8 (but our version avoids funext by using [ooExtendableAlong], as usual). *)
+    Definition extendable_from_inO_sigma
+               {A:Type} (B: (O A) -> Type)
+               {H : In O (sig (fun z:O A => B z))}
+      : ooExtendableAlong (to O A) B.
+    Proof.
+      intros n; generalize dependent A.
+      induction n as [|n IHn]; intros; [ exact tt | cbn ].
+      refine (extension_from_inO_sigma B , _).
+      intros h k; apply IHn.
+      set (Z := sigT B) in *.
+      pose (W := sigT (fun a => B a * B a)).
+      refine (inO_equiv_inO' (Pullback (A := W) (fun a:O A => (a;(h a,k a)))
+                                       (fun z:Z => (z.1;(z.2,z.2)))) _).
+      { serapply inO_pullback.
+        exact (inO_equiv_inO' _ (equiv_sigprod_pullback B B)^-1). }
+      unfold Pullback.
+      (** The rest is just contracting a couple of based path spaces.  It seems like it should be less work than this. *)
+      apply (equiv_functor_sigma' equiv_idmap); intros z; cbn. 
+      pose (e := fun z':Z => (equiv_path_sigma (fun oa => B oa * B oa)
+                               (z;(h z,k z)) (z'.1;(z'.2,z'.2)))^-1%equiv).
+      refine (_ oE equiv_functor_sigma'
+                (Q := fun z' => {p : z = z'.1 & p # (h z,k z) = (z'.2,z'.2)})
+                equiv_idmap e); clear e.
+      refine (_ oE (equiv_sigma_assoc _ _)^-1%equiv); cbn.
+      pose (e := (fun a:O A => equiv_sigma_symm (fun (b:B a) (q:z=a) =>
+                    transport (fun oa => B oa * B oa) q (h z,k z) = (b,b)))).
+      cbn in e.
+      refine (_ oE (equiv_functor_sigma'
+                     (Q := fun a:O A => {q : z = a & {b : B a &
+                        q # (h z, k z) = (b, b)}})
+                     1%equiv e)); clear e.
+      refine (_ oE (equiv_sigma_assoc (fun a => z = a)
+                                      (fun aq => {b : B aq.1 & aq.2 # (h z,k z) = (b,b)}))).
+      refine (_ oE equiv_contr_sigma _); cbn.
+      refine (_ oE equiv_functor_sigma' (Q := fun b => (h z = b) * (k z = b))
+                1%equiv (fun b:B z => (equiv_path_prod (h z,k z) (b,b))^-1)).
+      refine (_ oE equiv_functor_sigma' (Q := fun b => {_ : h z = b & k z = b})
+                1%equiv (fun b => (equiv_sigma_prod0 _ _)^-1)).
+      refine (_ oE equiv_sigma_assoc (fun b => h z = b) (fun bp => k z = bp.1)).
+      refine (_ oE equiv_contr_sigma _); cbn.
+      apply equiv_path_inverse.
+    Defined.
+
     (** ** Fibers *)
 
     Global Instance inO_hfiber {A B : Type} `{In O A} `{In O B}
