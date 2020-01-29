@@ -218,7 +218,7 @@ Lemma path_path_algebra {σ : Signature} {A B : Algebra σ} (p q : A = B)
   (r : ap (issig_algebra σ)^-1 p = ap (issig_algebra σ)^-1 q)
   : p = q.
 Proof.
-  set (e := (Paths.equiv_ap (issig_algebra σ)^-1 A B)).
+  set (e := (equiv_ap (issig_algebra σ)^-1 A B)).
   by apply (@equiv_inv _ _ (ap e) (Equivalences.isequiv_ap _ _)).
 Defined.
 
