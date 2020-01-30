@@ -349,12 +349,14 @@ Section EquivInverse.
   Theorem eisadj_other (b : B) : eissect f (f^-1 b) = ap f^-1 (eisretr f b).
   Proof.
     apply (equiv_inj (ap f)).
-    (* We will prove the equality as a composite of four paths, working right to left. *)
-    refine (_ @ _ @ _ @ _).
-    4: { apply ap_compose. }
-    3: { symmetry; apply (ap_homotopic_id (eisretr f)). }
-    2: { symmetry; apply concat_pp_V. }
-    symmetry; apply eisadj.
+    (* We will prove the equality as a composite of four paths, working right to left.
+       The LHS remains [ap f (eissect f (f^-1 b))] throughout the process.
+       Both sides of the equation are paths of type [f (f^-1 (f (f^-1 b))) = f (f^-1 b)]. *)
+    refine (_ @ _ @ _ @ _); revgoals.
+    1: apply ap_compose.
+    1: symmetry; apply (ap_homotopic_id (eisretr f)).
+    1: symmetry; apply concat_pp_V.
+    1: symmetry; apply eisadj.
   Qed.
 
   Global Instance isequiv_inverse : IsEquiv f^-1 | 10000
