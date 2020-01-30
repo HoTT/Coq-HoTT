@@ -11,6 +11,17 @@ Local Open Scope path_scope.
 
 (** * Reflective Subuniverses *)
 
+(** ** References  *)
+
+(** Reflective subuniverses (and modalities) are studied in the following papers, which we will refer to below by their abbreviations:
+
+- The Book: The Homotopy Type Theory Book, chapter 7.  Bare references to "Theorem 7.x.x" are always to the Book.
+- RSS: Rijke, Spitters, and Shulman, "Modalities in homotopy type theory", https://arxiv.org/abs/1706.07526.
+- CORS: Christensen, Opie, Rijke, and Scoccola, "Localization in Homotopy Type Theory", https://arxiv.org/abs/1807.04155.
+*)
+
+(** ** Overview *)
+
 (** We will define reflective subuniverses using modules.  Since modules are one of the more difficult parts of Coq to understand, and the documentation in the reference manual is a bit sparse, we include here a brief introduction to modules.
 
 For our purposes here, it is appropriate to think of a [Module Type] as analogous to a [Record] type, and a [Module] having that module type (called an "implementation" of it) as analogous to an element of that record type.  For instance, instead of
@@ -486,6 +497,10 @@ Section Reflective_Subuniverse.
 
   Section Replete.
 
+    Definition inO_equiv_inO' (T : Type) {U : Type} `{In O T} (f : T <~> U)
+    : In O U
+      := inO_equiv_inO T f.
+
     (** An equivalent formulation of repleteness is that a type lies in the subuniverse as soon as its unit map is an equivalence. *)
     Definition inO_isequiv_to_O (T:Type)
     : IsEquiv (to O T) -> In O T
@@ -730,8 +745,36 @@ Section Reflective_Subuniverse.
     : O (A * B) <~> (O A * O B)
     := Build_Equiv _ _ (O_prod_cmp A B) _.
 
+    (** ** Pullbacks *)
+
+    Global Instance inO_pullback {A B C} (f : B -> A) (g : C -> A)
+           `{In O A} `{In O B} `{In O C}
+      : In O (Pullback f g).
+    Proof.
+      serapply inO_to_O_retract.
+      - intros op.
+        exists (O_rec pr1 op).
+        exists (O_rec (fun p => p.2.1) op).
+        revert op; apply O_indpaths; intros [b [c a]].
+        refine (ap f (O_rec_beta _ _) @ _); cbn.
+        refine (a @ ap g (O_rec_beta _ _)^).
+      - intros [b [c a]]; cbn.
+        serapply path_sigma'.
+        { apply O_rec_beta. }
+        refine (transport_sigma' _ _ @ _); cbn.
+        serapply path_sigma'.
+        { apply O_rec_beta. }
+        abstract (
+          rewrite transport_paths_Fr;
+          rewrite transport_paths_Fl;
+          rewrite O_indpaths_beta;
+          rewrite concat_V_pp;
+          rewrite ap_V;
+          apply concat_pV_p ).
+    Defined.
+
     (** ** Dependent sums *)
-    (** Theorem 7.7.4 *)
+    (** Theorem 7.7.4, (ii) => (i) *)
     Definition inO_sigma_from_O_ind@{i j}
     : (forall (A:Type@{i}) (B: O_reflector@{Ou Oa i} O A -> Type@{j}) `{forall a, In@{Ou Oa j} O (B a)}
               (g : forall (a:A), (B (to@{Ou Oa i} O A a))),
@@ -752,36 +795,83 @@ Section Reflective_Subuniverse.
       intros [x1 x2].
       simple refine (path_sigma B _ _ _ _); simpl.
       - apply p.
-      - rewrite (q (x1;x2)).
+      - refine (ap _ (q (x1;x2)) @ _).
         unfold g; simpl. exact (transport_pV B _ _).
-    Qed.
-
-    (** TODO: Manage the universes more carefully in this lemma, rather than simply allowing any universes to be inferred by unsetting strict universe declaration. *)
-    Local Unset Strict Universe Declaration.
-    Definition O_ind_from_inO_sigma
-    (** Work around https://coq.inria.fr/bugs/show_bug.cgi?id=3811 *)
-    : (forall (A:Type@{i}) (B:A -> Type@{j}) {A_inO : In@{Ou Oa i} O A} `{forall a, In@{Ou Oa j} O (B a)},
-         (In@{Ou Oa j} O (sig@{i j} (fun x:A => B x))))
-      ->
-      (forall (A:Type@{i}) (B: (O A) -> Type@{j}) `{forall a, In@{Ou Oa j} O (B a)}
-              (g : forall (a:A), (B (to O A a))),
-         { f : forall (z:O A), (B z) & forall a:A, f (to@{Ou Oa i} O A a) = g a }).
-    Proof.
-      intro H. intros A B ? g.
-      pose (Z := sigT B).
-      assert (In@{Ou Oa j} O Z).
-      { apply H; [ exact _ | assumption ]. }
-      pose (g' := (fun a:A => (to O A a ; g a)) : A -> Z).
-      pose (f' := O_rec@{Ou Oa i j i u2 j} g').
-      pose (eqf := (O_rec_beta g')  : f' o to O A == g').
-      pose (eqid := O_indpaths@{Ou Oa i i i u3 i}
-                      (pr1 o f') idmap
-                      (fun x => ap pr1 (eqf x))).
-      exists (fun z => transport B (eqid z) ((f' z).2)); intros a.
-      unfold eqid. rewrite O_indpaths_beta.
-      exact (pr2_path (O_rec_beta g' a)).
     Defined.
-    Local Set Strict Universe Declaration.
+
+    (** For (i) => (ii) we first prove a "local" version, that if a *particular* sigma-type is in [O] then it admits extensions. *)
+    Definition extension_from_inO_sigma@{i j k}
+               {A:Type@{i}} (B: (O A) -> Type@{j})
+               {H : In@{Ou Oa k} O (sig@{i j} (fun z:O A => B z))}
+               (g : forall x, B (to O A x))
+      : ExtensionAlong@{i i j k k} (to O A) B g.
+    Proof.
+      set (Z := sigT B : Type@{k}) in *.
+      pose (g' := (fun a:A => (to O A a ; g a)) : A -> Z).
+      pose (f' := O_rec@{Ou Oa i k i k k} g').
+      pose (eqf := (O_rec_beta g')  : f' o to O A == g').
+      pose (eqid := O_indpaths@{Ou Oa i i i i i}
+                    (pr1 o f') idmap (fun x => ap@{k i} pr1 (eqf x))).
+      exists (fun z => transport B (eqid z) ((f' z).2)).
+      intros a. unfold eqid.
+      refine (_ @ pr2_path (O_rec_beta g' a)).
+      refine (ap@{i k} (fun p => transport B p (O_rec g' (to O A a)).2) _).
+      serapply O_indpaths_beta.
+    Defined.
+
+    (** We then deduce the general version from this.  Note that although here we see three universe parameters, after the section closes this definition ends up with five universe parameters [Ou Oa i j k]. *)
+    Definition O_ind_from_inO_sigma@{i j k}
+               (H : forall (A:Type@{i}) (B:A -> Type@{j})
+                           {A_inO : In@{Ou Oa i} O A}
+                           `{forall a, In@{Ou Oa j} O (B a)},
+                   (In@{Ou Oa k} O (sig@{i j} (fun x:A => B x))))
+               (A:Type@{i}) (B: (O A) -> Type@{j}) `{forall a, In@{Ou Oa j} O (B a)}
+               (g : forall (a:A), (B (to O A a)))
+      := @extension_from_inO_sigma@{i j k} A B (H (O A) B) g.
+
+    (** In fact, we can enhance [extension_from_inO_sigma] to a local version of [extendable_to_O], as stated in CORS Proposition 2.8 (but our version avoids funext by using [ooExtendableAlong], as usual). *)
+    Definition extendable_from_inO_sigma
+               {A:Type} (B: (O A) -> Type)
+               {H : In O (sig (fun z:O A => B z))}
+      : ooExtendableAlong (to O A) B.
+    Proof.
+      intros n; generalize dependent A.
+      induction n as [|n IHn]; intros; [ exact tt | cbn ].
+      refine (extension_from_inO_sigma B , _).
+      intros h k; apply IHn.
+      set (Z := sigT B) in *.
+      pose (W := sigT (fun a => B a * B a)).
+      refine (inO_equiv_inO' (Pullback (A := W) (fun a:O A => (a;(h a,k a)))
+                                       (fun z:Z => (z.1;(z.2,z.2)))) _).
+      { serapply inO_pullback.
+        exact (inO_equiv_inO' _ (equiv_sigprod_pullback B B)^-1). }
+      unfold Pullback.
+      (** The rest is just contracting a couple of based path spaces.  It seems like it should be less work than this. *)
+      apply (equiv_functor_sigma' equiv_idmap); intros z; cbn. 
+      pose (e := fun z':Z => (equiv_path_sigma (fun oa => B oa * B oa)
+                               (z;(h z,k z)) (z'.1;(z'.2,z'.2)))^-1%equiv).
+      refine (_ oE equiv_functor_sigma'
+                (Q := fun z' => {p : z = z'.1 & p # (h z,k z) = (z'.2,z'.2)})
+                equiv_idmap e); clear e.
+      refine (_ oE (equiv_sigma_assoc _ _)^-1%equiv); cbn.
+      pose (e := (fun a:O A => equiv_sigma_symm (fun (b:B a) (q:z=a) =>
+                    transport (fun oa => B oa * B oa) q (h z,k z) = (b,b)))).
+      cbn in e.
+      refine (_ oE (equiv_functor_sigma'
+                     (Q := fun a:O A => {q : z = a & {b : B a &
+                        q # (h z, k z) = (b, b)}})
+                     1%equiv e)); clear e.
+      refine (_ oE (equiv_sigma_assoc (fun a => z = a)
+                                      (fun aq => {b : B aq.1 & aq.2 # (h z,k z) = (b,b)}))).
+      refine (_ oE equiv_contr_sigma _); cbn.
+      refine (_ oE equiv_functor_sigma' (Q := fun b => (h z = b) * (k z = b))
+                1%equiv (fun b:B z => (equiv_path_prod (h z,k z) (b,b))^-1)).
+      refine (_ oE equiv_functor_sigma' (Q := fun b => {_ : h z = b & k z = b})
+                1%equiv (fun b => (equiv_sigma_prod0 _ _)^-1)).
+      refine (_ oE equiv_sigma_assoc (fun b => h z = b) (fun bp => k z = bp.1)).
+      refine (_ oE equiv_contr_sigma _); cbn.
+      apply equiv_path_inverse.
+    Defined.
 
     (** ** Fibers *)
 
