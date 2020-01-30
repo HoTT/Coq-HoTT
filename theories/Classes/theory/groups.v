@@ -270,7 +270,7 @@ Section compose_mor.
       IsSemiGroupPreserving (f^-1).
   Proof.
     red; intros E fp x y.
-    apply (Paths.equiv_inj f).
+    apply (equiv_inj f).
     refine (_ @ _ @ _ @ _)^.
     - apply fp.
     (* We could use [apply ap2; apply eisretr] here, but it is convenient
@@ -285,7 +285,7 @@ Section compose_mor.
   Proof.
     intros;split.
     - apply _.
-    - apply (Paths.equiv_inj f).
+    - apply (equiv_inj f).
       refine (_ @ _).
       + apply eisretr.
       + symmetry; apply preserves_mon_unit.

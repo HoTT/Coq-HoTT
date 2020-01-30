@@ -115,22 +115,7 @@ Defined.
 
 (** ** Equivalences between path spaces *)
 
-(** [isequiv_ap] is in Equivalences.v  *)
-
-Definition equiv_ap `(f : A -> B) `{IsEquiv A B f} (x y : A)
-  : (x = y) <~> (f x = f y)
-  := Build_Equiv _ _ (ap f) _.
-
-Global Arguments equiv_ap (A B)%type_scope f%function_scope _ _ _.
-
-Definition equiv_ap' `(f : A <~> B) (x y : A)
-  : (x = y) <~> (f x = f y)
-  := equiv_ap f x y.
-
-(* TODO: Is this really necessary? *)
-Definition equiv_inj `(f : A -> B) `{IsEquiv A B f} {x y : A}
-  : (f x = f y) -> (x = y)
-  := (ap f)^-1.
+(** [isequiv_ap] and [equiv_ap] are in Equivalences.v  *)
 
 (** ** Path operations are equivalences *)
 

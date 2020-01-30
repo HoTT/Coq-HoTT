@@ -101,108 +101,6 @@ Section IsEquivHomotopic.
 
 End IsEquivHomotopic.
 
-
-(** The inverse of an equivalence is an equivalence. *)
-Section EquivInverse.
-
-  Context {A B : Type} (f : A -> B) {feq : IsEquiv f}.
-  Open Scope long_path_scope.
-
-  Theorem other_adj (b : B) : eissect f (f^-1 b) = ap f^-1 (eisretr f b).
-  Proof.
-    (* First we set up the mess. *)
-    rewrite <- (concat_1p (eissect _ _)).
-    rewrite <- (concat_Vp (ap f^-1 (eisretr f (f (f^-1 b))))).
-    rewrite (whiskerR (inverse2 (ap02 f^-1 (eisadj f (f^-1 b)))) _).
-    refine (whiskerL _ (concat_1p (eissect _ _))^ @ _).
-    rewrite <- (concat_Vp (eissect f (f^-1 (f (f^-1 b))))).
-    rewrite <- (whiskerL _ (concat_1p (eissect f (f^-1 (f (f^-1 b)))))).
-    rewrite <- (concat_pV (ap f^-1 (eisretr f (f (f^-1 b))))).
-    apply moveL_M1.
-    repeat rewrite concat_p_pp.
-    (* Now we apply lots of naturality and cancel things. *)
-    rewrite <- (concat_pp_A1 (fun a => (eissect f a)^) _ _).
-    rewrite (ap_compose' f f^-1).
-    rewrite <- (ap_p_pp _ _ (ap f (ap f^-1 (eisretr f (f (f^-1 b))))) _).
-    rewrite <- (ap_compose f^-1 f).
-    rewrite (concat_A1p (eisretr f) _).
-    rewrite ap_pp, concat_p_pp.
-    rewrite (concat_pp_V _ (ap f^-1 (eisretr f (f (f^-1 b))))).
-    repeat rewrite <- ap_V; rewrite <- ap_pp.
-    rewrite <- (concat_pA1 (fun y => (eissect f y)^) _).
-    rewrite ap_compose', <- (ap_compose f^-1 f).
-    rewrite <- ap_p_pp.
-    rewrite (concat_A1p (eisretr f) _).
-    rewrite concat_p_Vp.
-    rewrite <- ap_compose.
-    rewrite (concat_pA1_p (eissect f) _).
-    rewrite concat_pV_p; apply concat_Vp.
-  Qed.
-
-  Global Instance isequiv_inverse : IsEquiv f^-1 | 10000
-    := Build_IsEquiv B A f^-1 f (eissect f) (eisretr f) other_adj.
-End EquivInverse.
-
-(** If the goal is [IsEquiv _^-1], then use [isequiv_inverse]; otherwise, don't pretend worry about if the goal is an evar and we want to add a [^-1]. *)
-Hint Extern 0 (IsEquiv _^-1) => apply @isequiv_inverse : typeclass_instances.
-
-(** [Equiv A B] is a symmetric relation. *)
-Theorem equiv_inverse {A B : Type} : (A <~> B) -> (B <~> A).
-Proof.
-  intro e.
-  exists (e^-1).
-  apply isequiv_inverse.
-Defined.
-
-Notation "e ^-1" := (@equiv_inverse _ _ e) : equiv_scope.
-
-Global Instance symmetric_equiv : Symmetric Equiv | 0 := @equiv_inverse.
-
-(** If [g \o f] and [f] are equivalences, so is [g].  This is not an Instance because it would require Coq to guess [f]. *)
-Definition cancelR_isequiv {A B C} (f : A -> B) {g : B -> C}
-  `{IsEquiv A B f} `{IsEquiv A C (g o f)}
-  : IsEquiv g
-  := isequiv_homotopic (compose (compose g f) f^-1)
-       (fun b => ap g (eisretr f b)).
-
-Definition cancelR_equiv {A B C} (f : A -> B) {g : B -> C}
-  `{IsEquiv A B f} `{IsEquiv A C (g o f)}
-  : B <~> C
-  := Build_Equiv B C g (cancelR_isequiv f).
-
-(** If [g \o f] and [g] are equivalences, so is [f]. *)
-Definition cancelL_isequiv {A B C} (g : B -> C) {f : A -> B}
-  `{IsEquiv B C g} `{IsEquiv A C (g o f)}
-  : IsEquiv f
-  := isequiv_homotopic (compose g^-1 (compose g f))
-       (fun a => eissect g (f a)).
-
-Definition cancelL_equiv {A B C} (g : B -> C) {f : A -> B}
-  `{IsEquiv B C g} `{IsEquiv A C (g o f)}
-  : A <~> B
-  := Build_Equiv _ _ f (cancelL_isequiv g).
-
-(** Combining these with [isequiv_compose], we see that equivalences can be transported across commutative squares. *)
-Definition isequiv_commsq {A B C D}
-           (f : A -> B) (g : C -> D) (h : A -> C) (k : B -> D)
-           (p : k o f == g o h)
-           `{IsEquiv _ _ f} `{IsEquiv _ _ h} `{IsEquiv _ _ k}
-: IsEquiv g.
-Proof.
-  refine (@cancelR_isequiv _ _ _ h g _ _).
-  refine (isequiv_homotopic _ p).
-Defined.
-
-Definition isequiv_commsq' {A B C D}
-           (f : A -> B) (g : C -> D) (h : A -> C) (k : B -> D)
-           (p : g o h == k o f)
-           `{IsEquiv _ _ g} `{IsEquiv _ _ h} `{IsEquiv _ _ k}
-: IsEquiv f.
-Proof.
-  refine (@cancelL_isequiv _ _ _ k f _ _).
-  refine (isequiv_homotopic _ p).
-Defined.
-
 (** Transporting is an equivalence. *)
 Section EquivTransport.
 
@@ -406,6 +304,8 @@ Definition isequiv_isequiv_postcompose {A B : Type} (f : A -> B)
 (* TODO *)
 *)
 
+(** Equivalences between path spaces *)
+
 (** If [f] is an equivalence, then so is [ap f].  We are lazy and use [adjointify]. *)
 Global Instance isequiv_ap `{IsEquiv A B f} (x y : A)
   : IsEquiv (@ap A B f x y) | 1000
@@ -425,6 +325,101 @@ Global Instance isequiv_ap `{IsEquiv A B f} (x y : A)
     @ concat_pA1_p (eissect f) _ _
     @ whiskerR (concat_Vp _) _
     @ concat_1p _).
+
+Definition equiv_ap `(f : A -> B) `{IsEquiv A B f} (x y : A)
+  : (x = y) <~> (f x = f y)
+  := Build_Equiv _ _ (ap f) _.
+
+Global Arguments equiv_ap (A B)%type_scope f%function_scope _ _ _.
+
+Definition equiv_ap' `(f : A <~> B) (x y : A)
+  : (x = y) <~> (f x = f y)
+  := equiv_ap f x y.
+
+(* TODO: Is this really necessary? *)
+Definition equiv_inj `(f : A -> B) `{IsEquiv A B f} {x y : A}
+  : (f x = f y) -> (x = y)
+  := (ap f)^-1.
+
+(** The inverse of an equivalence is an equivalence. *)
+Section EquivInverse.
+
+  Context {A B : Type} (f : A -> B) {feq : IsEquiv f}.
+
+  Theorem eisadj_other (b : B) : eissect f (f^-1 b) = ap f^-1 (eisretr f b).
+  Proof.
+    apply (equiv_inj (ap f)).
+    (* We will prove the equality as a composite of four paths, working right to left. *)
+    refine (_ @ _ @ _ @ _).
+    4: { apply ap_compose. }
+    3: { symmetry; apply (ap_homotopic_id (eisretr f)). }
+    2: { symmetry; apply concat_pp_V. }
+    symmetry; apply eisadj.
+  Qed.
+
+  Global Instance isequiv_inverse : IsEquiv f^-1 | 10000
+    := Build_IsEquiv B A f^-1 f (eissect f) (eisretr f) eisadj_other.
+End EquivInverse.
+
+(** If the goal is [IsEquiv _^-1], then use [isequiv_inverse]; otherwise, don't pretend worry about if the goal is an evar and we want to add a [^-1]. *)
+Hint Extern 0 (IsEquiv _^-1) => apply @isequiv_inverse : typeclass_instances.
+
+(** [Equiv A B] is a symmetric relation. *)
+Theorem equiv_inverse {A B : Type} : (A <~> B) -> (B <~> A).
+Proof.
+  intro e.
+  exists (e^-1).
+  apply isequiv_inverse.
+Defined.
+
+Notation "e ^-1" := (@equiv_inverse _ _ e) : equiv_scope.
+
+Global Instance symmetric_equiv : Symmetric Equiv | 0 := @equiv_inverse.
+
+(** If [g \o f] and [f] are equivalences, so is [g].  This is not an Instance because it would require Coq to guess [f]. *)
+Definition cancelR_isequiv {A B C} (f : A -> B) {g : B -> C}
+  `{IsEquiv A B f} `{IsEquiv A C (g o f)}
+  : IsEquiv g
+  := isequiv_homotopic (compose (compose g f) f^-1)
+       (fun b => ap g (eisretr f b)).
+
+Definition cancelR_equiv {A B C} (f : A -> B) {g : B -> C}
+  `{IsEquiv A B f} `{IsEquiv A C (g o f)}
+  : B <~> C
+  := Build_Equiv B C g (cancelR_isequiv f).
+
+(** If [g \o f] and [g] are equivalences, so is [f]. *)
+Definition cancelL_isequiv {A B C} (g : B -> C) {f : A -> B}
+  `{IsEquiv B C g} `{IsEquiv A C (g o f)}
+  : IsEquiv f
+  := isequiv_homotopic (compose g^-1 (compose g f))
+       (fun a => eissect g (f a)).
+
+Definition cancelL_equiv {A B C} (g : B -> C) {f : A -> B}
+  `{IsEquiv B C g} `{IsEquiv A C (g o f)}
+  : A <~> B
+  := Build_Equiv _ _ f (cancelL_isequiv g).
+
+(** Combining these with [isequiv_compose], we see that equivalences can be transported across commutative squares. *)
+Definition isequiv_commsq {A B C D}
+           (f : A -> B) (g : C -> D) (h : A -> C) (k : B -> D)
+           (p : k o f == g o h)
+           `{IsEquiv _ _ f} `{IsEquiv _ _ h} `{IsEquiv _ _ k}
+: IsEquiv g.
+Proof.
+  refine (@cancelR_isequiv _ _ _ h g _ _).
+  refine (isequiv_homotopic _ p).
+Defined.
+
+Definition isequiv_commsq' {A B C D}
+           (f : A -> B) (g : C -> D) (h : A -> C) (k : B -> D)
+           (p : g o h == k o f)
+           `{IsEquiv _ _ g} `{IsEquiv _ _ h} `{IsEquiv _ _ k}
+: IsEquiv f.
+Proof.
+  refine (@cancelL_isequiv _ _ _ k f _ _).
+  refine (isequiv_homotopic _ p).
+Defined.
 
 (** The function [equiv_ind] says that given an equivalence [f : A <~> B], and a hypothesis from [B], one may always assume that the hypothesis is in the image of [e].
 
