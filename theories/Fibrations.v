@@ -257,6 +257,16 @@ Proof.
   red; by apply fcontr_isequiv.
 Defined.
 
+(** Theorem 4.7.7 *)
+Definition equiv_total_iff_equiv_fiberwise {A} (P Q : A -> Type)
+           (g : forall a, P a -> Q a)
+: IsEquiv (functor_sigma idmap g) <-> forall a, IsEquiv (g a).
+Proof.
+  split.
+  - apply isequiv_from_functor_sigma.
+  - intro H. apply isequiv_functor_sigma.
+Defined.
+
 (** ** Fibers of [functor_prod] *)
 Definition hfiber_functor_prod {A B C D}
            (f : A -> B) (g : C -> D) y
