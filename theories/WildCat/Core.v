@@ -167,6 +167,16 @@ Proof.
   - intros; apply GpdHom_path, cat_idr_strong.
 Defined.
 
+(** Initial objects *)
+Definition IsInitial {A : Type} `{Is1Cat A} (x : A)
+  := forall (y : A), {f : x $-> y & forall g, g $== f}.
+Existing Class IsInitial.
+
+(** Terminal objects *)
+Definition IsTerminal {A : Type} `{Is1Cat A} (y : A)
+  := forall (x : A), {f : x $-> y & forall g, g $== f}.
+Existing Class IsTerminal.
+
 (** Generalizing function extensionality, "Morphism extensionality" states that homwise [GpdHom_path] is an equivalence. *)
 Class HasMorExt (A : Type) `{Is1Cat A} :=
   { isequiv_Htpy_path : forall a b f g, IsEquiv (@GpdHom_path (a $-> b) _ _ f g) }.
@@ -191,74 +201,7 @@ Arguments fmap_id {A B _ _ _ _} F {_ _} a.
 Arguments fmap_comp {A B _ _ _ _} F {_ _ _ _ _} f g.
 
 
-(** ** Natural transformations *)
 
-Definition Transformation {A B : Type} `{IsGraph B} (F : A -> B) (G : A -> B)
-  := forall (a : A), F a $-> G a.
-
-Notation "F $=> G" := (Transformation F G).
-
-(** A 1-natural transformation is natural up to a 2-cell, so its domain must be a 1-category. *)
-Class Is1Natural {A B : Type} `{IsGraph A} `{Is1Cat B}
-      (F : A -> B) `{!Is0Functor F} (G : A -> B) `{!Is0Functor G}
-      (alpha : F $=> G) :=
-{
-  isnat : forall a b (f : a $-> b),
-    alpha b $o fmap F f $== fmap G f $o alpha a;
-}.
-
-Arguments isnat {_ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.
-
-Definition isnat_opp {A B : Type} `{IsGraph A} `{Is1Cat B}
-      {F : A -> B} `{!Is0Functor F} {G : A -> B} `{!Is0Functor G}
-      (alpha : F $=> G) `{!Is1Natural F G alpha}
-      {a b : A} (f : a $-> b)
-  : fmap G f $o alpha a $== alpha b $o fmap F f
-  := (isnat alpha f)^$.
-
-Definition id_transformation {A B : Type} `{Is01Cat B} (F : A -> B)
-  : F $=> F
-  := fun a => Id (F a).
-
-Global Instance is1natural_id {A B : Type} `{IsGraph A} `{Is1Cat B}
-       (F : A -> B) `{!Is0Functor F}
-  : Is1Natural F F (id_transformation F).
-Proof.
-  apply Build_Is1Natural; intros a b f; cbn.
-  refine (cat_idl (fmap F f) $@ (cat_idr (fmap F f))^$).
-Defined.
-
-Definition comp_transformation {A B : Type} `{Is01Cat B}
-           {F G K : A -> B} (gamma : G $=> K) (alpha : F $=> G)
-  : F $=> K
-  := fun a => gamma a $o alpha a.
-
-Global Instance is1natural_comp {A B : Type} `{IsGraph A} `{Is1Cat B}
-       {F G K : A -> B} `{!Is0Functor F} `{!Is0Functor G} `{!Is0Functor K}
-       (gamma : G $=> K) `{!Is1Natural G K gamma}
-       (alpha : F $=> G) `{!Is1Natural F G alpha}
-  : Is1Natural F K (comp_transformation gamma alpha).
-Proof.
-  apply Build_Is1Natural; intros a b f; cbn.
-  refine (cat_assoc _ _ _ $@ _).
-  refine ((gamma b $@L isnat alpha f) $@ _).
-  refine (cat_assoc_opp _ _ _ $@ _).
-  refine ((isnat gamma f) $@R alpha a $@ _).
-  exact (cat_assoc _ _ _).
-Defined.  
-
-(** Modifying a transformation to something pointwise equal preserves naturality. *)
-Definition is1natural_homotopic {A B : Type} `{Is01Cat A} `{Is1Cat B}
-      {F : A -> B} `{!Is0Functor F} {G : A -> B} `{!Is0Functor G}
-      {alpha : F $=> G} (gamma : F $=> G) `{!Is1Natural F G gamma}
-      (p : forall a, alpha a $== gamma a)
-  : Is1Natural F G alpha.
-Proof.
-  refine (Build_Is1Natural _ _ _ _ _ F _ G _ alpha _); intros a b f.
-  refine ((p b $@R fmap F f) $@ _).
-  refine (_ $@ (fmap G f $@L (p a)^$)).
-  apply (isnat gamma).
-Defined.
 
 (** Identity functor *)
 
@@ -284,7 +227,7 @@ Section ConstantFunctor.
 
   Context {A B : Type}.
 
-  Global Instance is0coh1functor_const
+  Global Instance is01functor_const
     `{IsGraph A} `{Is01Cat B} (x : B)
     : Is0Functor (fun _ : A => x).
   Proof.
@@ -339,3 +282,69 @@ Class Is1Gpd (A : Type) `{Is1Cat A, !Is0Gpd A} :=
   gpd_issect : forall {a b : A} (f : a $-> b), f^$ $o f $== Id a ;
   gpd_isretr : forall {a b : A} (f : a $-> b), f $o f^$ $== Id b ;
 }.
+
+(** Some more convenient equalities for morphisms in a 1-groupoid. The naming scheme is similar to [PathGroupoids.v].*)
+
+Definition gpd_V_hh {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : a $-> b) 
+  : f^$ $o (f $o g) $== g :=
+  (cat_assoc _ _ _)^$ $@ (gpd_issect f $@R g) $@ cat_idl g.
+
+Definition gpd_h_Vh {A} `{Is1Gpd A} {a b c : A} (f : c $-> b) (g : a $-> b) 
+  : f $o (f^$ $o g) $== g :=
+  (cat_assoc _ _ _)^$ $@ (gpd_isretr f $@R g) $@ cat_idl g.
+
+Definition gpd_hh_V {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : a $-> b) 
+  : (f $o g) $o g^$ $== f :=
+  cat_assoc _ _ _ $@ (f $@L gpd_isretr g) $@ cat_idr f.
+
+Definition gpd_hV_h {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : b $-> a) 
+  : (f $o g^$) $o g $== f :=
+  cat_assoc _ _ _ $@ (f $@L gpd_issect g) $@ cat_idr f.
+
+Definition gpd_moveL_1M {A : Type} `{Is1Gpd A} {x y : A} {p q : x $-> y}
+  (r : p $o q^$ $== Id _) : p $== q.
+Proof.
+  refine ((cat_idr p)^$ $@ (p $@L (gpd_issect q)^$) $@ (cat_assoc _ _ _)^$ $@ _).
+  refine ((r $@R q) $@ cat_idl q).
+Defined.
+
+Definition gpd_moveL_V1 {A : Type} `{Is1Gpd A} {x y : A} {p : x $-> y}
+  {q : y $-> x} (r : p $o q $== Id _) : p^$ $== q.
+Proof.
+  refine ((cat_idr (p^$))^$ $@ ((p^$) $@L (r^$)) $@ _).
+  apply gpd_V_hh.
+Defined.
+
+Definition gpd_moveR_hV {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
+  {q : x $-> y} {r : x $-> z} (s : r $== p $o q) 
+  : r $o q^$ $== p 
+  := (s $@R q^$) $@ gpd_hh_V _ _.
+
+Definition gpd_moveR_Vh {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
+  {q : x $-> y} {r : x $-> z} (s : r $== p $o q) 
+  : p^$ $o r $== q 
+  := (p^$ $@L s) $@ gpd_V_hh _ _.
+
+Definition gpd_moveL_hV {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
+  {q : x $-> y} {r : x $-> z} (s : p $o q $== r) 
+  : p $== r $o q^$ 
+  := (gpd_moveR_hV (s^$))^$.
+
+Definition gpd_moveL_Vh {A : Type} `{Is1Gpd A} {x y z : A} {p : y $-> z}
+  {q : x $-> y} {r : x $-> z} (s : p $o q $== r) 
+  : q $== p^$ $o r 
+  := (gpd_moveR_Vh (s^$))^$.
+
+Definition gpd_rev2 {A : Type} `{Is1Gpd A} {x y : A} {p q : x $-> y}
+  (r : p $== q) : p^$ $== q^$.
+Proof.
+  apply gpd_moveL_V1. apply gpd_moveR_hV.
+  exact (r $@ (cat_idl q)^$).
+Defined.
+
+Definition gpd_rev_pp {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : a $-> b) 
+  : (f $o g)^$ $== g^$ $o f^$.
+Proof.
+  apply gpd_moveL_V1.
+  refine (cat_assoc _ _ _ $@ (f $@L gpd_h_Vh g (f^$)) $@ gpd_isretr f).
+Defined.

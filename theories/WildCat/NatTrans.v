@@ -1,6 +1,5 @@
 Require Import Basics.
 Require Import WildCat.Core.
-Require Import WildCat.Square.
 
 (** ** Natural transformations *)
 
@@ -15,7 +14,7 @@ Class Is1Natural {A B : Type} `{IsGraph A} `{Is1Cat B}
       (alpha : F $=> G) :=
 {
   isnat : forall a a' (f : a $-> a'),
-    Square (fmap F f) (fmap G f) (alpha a) (alpha a');
+     (alpha a') $o (fmap F f) $== (fmap G f) $o (alpha a);
 }.
 
 Arguments isnat {_ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.
@@ -25,7 +24,7 @@ Definition isnat_tr {A B : Type} `{IsGraph A} `{Is1Cat B}
       {F : A -> B} `{!Is0Functor F} {G : A -> B} `{!Is0Functor G}
       (alpha : F $=> G) `{!Is1Natural F G alpha}
       {a a' : A} (f : a $-> a')
-  : Square (alpha a) (alpha a') (fmap F f) (fmap G f)
+  : (fmap G f) $o (alpha a) $== (alpha a') $o (fmap F f)
   := (isnat alpha f)^$.
 
 Definition id_transformation {A B : Type} `{Is01Cat B} (F : A -> B)
@@ -36,7 +35,8 @@ Global Instance is1natural_id {A B : Type} `{IsGraph A} `{Is1Cat B}
        (F : A -> B) `{!Is0Functor F}
   : Is1Natural F F (id_transformation F).
 Proof.
-  apply Build_Is1Natural; intros a b f; cbn. exact vrfl.
+  apply Build_Is1Natural; intros a b f; cbn.
+  refine (cat_idl _ $@ (cat_idr _)^$).
 Defined.
 
 Definition comp_transformation {A B : Type} `{Is01Cat B}
@@ -50,8 +50,10 @@ Global Instance is1natural_comp {A B : Type} `{IsGraph A} `{Is1Cat B}
        (alpha : F $=> G) `{!Is1Natural F G alpha}
   : Is1Natural F K (comp_transformation gamma alpha).
 Proof.
-  apply Build_Is1Natural; intros a b f; cbn.
-  exact (isnat alpha f $@v isnat gamma f).
+  apply Build_Is1Natural; intros a b f; unfold comp_transformation; cbn.
+  refine (cat_assoc _ _ _ $@ (_ $@L isnat alpha f) $@ _).
+  refine (cat_assoc_opp _ _ _ $@ (isnat gamma f $@R _) $@ _).
+  apply cat_assoc.
 Defined.
 
 (** Modifying a transformation to something pointwise equal preserves naturality. *)
@@ -62,7 +64,5 @@ Definition is1natural_homotopic {A B : Type} `{Is01Cat A} `{Is1Cat B}
   : Is1Natural F G alpha.
 Proof.
   constructor; intros a b f.
-  refine (_ $@hL _ $@hR p b).
-  1: exact (p a). 
-  exact (isnat gamma f).
+  exact ((p b $@R _) $@ isnat gamma f $@ (_ $@L (p a)^$)).
 Defined.

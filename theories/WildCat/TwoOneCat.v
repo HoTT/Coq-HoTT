@@ -1,6 +1,5 @@
 Require Import Basics.
 Require Import WildCat.Core.
-Require Import WildCat.Square.
 Require Import WildCat.Prod.
 Require Import WildCat.NatTrans.
 

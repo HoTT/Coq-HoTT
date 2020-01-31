@@ -9,6 +9,7 @@ Require Import Basics.Equivalences.
 
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
+Require Import WildCat.NatTrans.
 
 (** ** Opposite categories *)
 
@@ -155,7 +156,7 @@ Proof.
   unfold transformation_op.
   cbn.
   intros a b f.
-  apply isnat_opp.
+  apply isnat_tr.
   assumption.
 Defined.
 
