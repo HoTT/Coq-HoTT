@@ -198,3 +198,83 @@ Section DPathCubeConst.
   Defined.
 
 End DPathCubeConst.
+
+(** Dependent Kan fillers *)
+
+Section Kan.
+Context {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+  {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+  {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+  {s1ii : PathSquare p1i0 p1i1 p10i p11i} {s0ii : PathSquare p0i0 p0i1 p00i p01i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
+  (c : PathCube s0ii s1ii sii0 sii1 si0i si1i)
+  {P : A -> Type} {y000 y010 y100 y110 y001 y011 y101 y111}
+  {q0i0 : DPath P p0i0 y000 y010} {q1i0 : DPath P p1i0 y100 y110} {qi00 : DPath P pi00 y000 y100}
+  {qi10 : DPath P pi10 y010 y110} {q0i1 : DPath P p0i1 y001 y011} {q1i1 : DPath P p1i1 y101 y111}
+  {qi01 : DPath P pi01 y001 y101} {qi11 : DPath P pi11 y011 y111} {q00i : DPath P p00i y000 y001}
+  {q01i : DPath P p01i y010 y011} {q10i : DPath P p10i y100 y101} {q11i : DPath P p11i y110 y111}.
+
+Definition dc_fill_left
+  (t1ii : DPathSquare P s1ii q1i0 q1i1 q10i q11i)
+  (tii0 : DPathSquare P sii0 q0i0 q1i0 qi00 qi10) (tii1 : DPathSquare P sii1 q0i1 q1i1 qi01 qi11)
+  (ti0i : DPathSquare P si0i q00i q10i qi00 qi01) (ti1i : DPathSquare P si1i q01i q11i qi10 qi11)
+  : {t0ii : DPathSquare P s0ii q0i0 q0i1 q00i q01i & DPathCube P c t0ii t1ii tii0 tii1 ti0i ti1i}.
+Proof.
+  destruct c.
+  apply cu_fill_left.
+Defined.
+
+Definition dc_fill_right
+  (t0ii : DPathSquare P s0ii q0i0 q0i1 q00i q01i)
+  (tii0 : DPathSquare P sii0 q0i0 q1i0 qi00 qi10) (tii1 : DPathSquare P sii1 q0i1 q1i1 qi01 qi11)
+  (ti0i : DPathSquare P si0i q00i q10i qi00 qi01) (ti1i : DPathSquare P si1i q01i q11i qi10 qi11)
+  : {t1ii : DPathSquare P s1ii q1i0 q1i1 q10i q11i & DPathCube P c t0ii t1ii tii0 tii1 ti0i ti1i}.
+Proof.
+  destruct c.
+  apply cu_fill_right.
+Defined.
+
+Definition dc_fill_top
+  (t0ii : DPathSquare P s0ii q0i0 q0i1 q00i q01i) (t1ii : DPathSquare P s1ii q1i0 q1i1 q10i q11i)
+                                                  (tii1 : DPathSquare P sii1 q0i1 q1i1 qi01 qi11)
+  (ti0i : DPathSquare P si0i q00i q10i qi00 qi01) (ti1i : DPathSquare P si1i q01i q11i qi10 qi11)
+  : {tii0 : DPathSquare P sii0 q0i0 q1i0 qi00 qi10 & DPathCube P c t0ii t1ii tii0 tii1 ti0i ti1i}.
+Proof.
+  destruct c.
+  apply cu_fill_top.
+Defined.
+
+Definition dc_fill_bottom
+  (t0ii : DPathSquare P s0ii q0i0 q0i1 q00i q01i) (t1ii : DPathSquare P s1ii q1i0 q1i1 q10i q11i)
+  (tii0 : DPathSquare P sii0 q0i0 q1i0 qi00 qi10)
+  (ti0i : DPathSquare P si0i q00i q10i qi00 qi01) (ti1i : DPathSquare P si1i q01i q11i qi10 qi11)
+  : {tii1 : DPathSquare P sii1 q0i1 q1i1 qi01 qi11 & DPathCube P c t0ii t1ii tii0 tii1 ti0i ti1i}.
+Proof.
+  destruct c.
+  apply cu_fill_bottom.
+Defined.
+
+Definition dc_fill_front
+  (t0ii : DPathSquare P s0ii q0i0 q0i1 q00i q01i) (t1ii : DPathSquare P s1ii q1i0 q1i1 q10i q11i)
+  (tii0 : DPathSquare P sii0 q0i0 q1i0 qi00 qi10) (tii1 : DPathSquare P sii1 q0i1 q1i1 qi01 qi11)
+                                                  (ti1i : DPathSquare P si1i q01i q11i qi10 qi11)
+  : {ti0i : DPathSquare P si0i q00i q10i qi00 qi01 & DPathCube P c t0ii t1ii tii0 tii1 ti0i ti1i}.
+Proof.
+  destruct c.
+  apply cu_fill_front.
+Defined.
+
+Definition dc_fill_back
+  (t0ii : DPathSquare P s0ii q0i0 q0i1 q00i q01i) (t1ii : DPathSquare P s1ii q1i0 q1i1 q10i q11i)
+  (tii0 : DPathSquare P sii0 q0i0 q1i0 qi00 qi10) (tii1 : DPathSquare P sii1 q0i1 q1i1 qi01 qi11)
+  (ti0i : DPathSquare P si0i q00i q10i qi00 qi01)
+  : {ti1i : DPathSquare P si1i q01i q11i qi10 qi11 & DPathCube P c t0ii t1ii tii0 tii1 ti0i ti1i}.
+Proof.
+  destruct c.
+  apply cu_fill_back.
+Defined.
+
+End Kan.
