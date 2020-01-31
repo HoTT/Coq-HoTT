@@ -2,19 +2,19 @@ Require Import HoTT.Basics HoTT.Types Fibrations FunextVarieties.
 
 (** A nice method for proving characterizations of path-types of nested sigma-types, due to Rijke. *)
 
-(** To show that the path-type of [A] is equivalent to some specified family [P], it suffices to show that [P] is reflexive and its "based path-spaces" are contractible. *)
-Definition equiv_path_from_contr {A : Type} (P : A -> A -> Type)
-           (Prefl : forall x, P x x)
-           (cp : forall x, Contr {y:A & P x y} )
-           (a b : A)
-  : P a b <~> a = b.
+(** To show that the based path-type of [A] is equivalent to some specified family [P], it suffices to show that [P] is reflexive and its total space is contractible. This is part of Theorem 5.8.2, namely (iv) implies (iii). *)
+Definition equiv_path_from_contr {A : Type} (a : A) (P : A -> Type)
+           (Prefl : P a)
+           (cp : Contr {y:A & P y} )
+           (b : A)
+  : P b <~> a = b.
 Proof.
   apply equiv_inverse.
   srefine (Build_Equiv _ _ _ _).
   { intros []; apply Prefl. }
   revert b; apply isequiv_from_functor_sigma.
   (* For some reason, typeclass search can't find the Contr instances unless we give the types explicitly. *)
-  refine (@isequiv_contr_contr {x:A & a=x} {x:A & P a x} _ _ _).
+  refine (@isequiv_contr_contr {x:A & a=x} {x:A & P x} _ _ _).
 Defined.
 
 (** This is another result for characterizing the path type of [A] when given an equivalence [e : B <~> A], such as an [issig] lemma for [A]. It can help Coq to deduce the type family [P] if [revert] is used to move [a0] and [a1] into the goal, if needed. *)
@@ -36,7 +36,9 @@ Definition equiv_path_issig_contr {A B : Type} {P : A -> A -> Type}
   : forall a0 a1 : A, P a0 a1 <~> a0 = a1.
 Proof.
   apply (equiv_path_along_equiv e).
-  apply equiv_path_from_contr; assumption.
+  intro a0.
+  serapply equiv_path_from_contr.
+  apply Prefl.
 Defined.
 
 (** After [equiv_path_issig_contr], we are left showing the contractibility of a sigma-type whose base and fibers are large nested sigma-types of the same depth.  Moreover, we expect that the types appearing in those two large nested sigma-types "pair up" to form contractible based "path-types".  The following lemma "peels off" the first such pair, whose contractibility can often be found with typeclass search.  The remaining contractibility goal is then simplified by substituting the center of contraction of that first based "path-type", or more precisely a *specific* center that may or may not be the one given by the contractibility instance; the latter freedom sometimes makes things faster and simpler. *)
