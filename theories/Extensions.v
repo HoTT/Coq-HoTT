@@ -54,15 +54,12 @@ Section Extensions.
                     (fun x => pr2 ext x @ (pr2 ext' x)^))
     <~> ext = ext'.
   Proof.
-    revert ext ext'.
-    refine (equiv_path_from_contr
-              (fun (ext ext' : ExtensionAlong f P d) => (ExtensionAlong
-                                  f (fun y => pr1 ext y = pr1 ext' y)
-                                  (fun x => pr2 ext x @ (pr2 ext' x)^))) _ _).
-    { intros [g gd]; unfold ExtensionAlong; cbn.
+    revert ext'.
+    serapply equiv_path_from_contr.
+    { unfold ExtensionAlong; cbn.
       exists (fun y => 1%path).
       intros x; symmetry; apply concat_pV. }
-    intros [g gd]; unfold ExtensionAlong; cbn.
+    destruct ext as [g gd]; unfold ExtensionAlong; cbn.
     refine (contr_sigma_sigma
               (forall y:B, P y) (fun s => forall x:A, s (f x) = d x)
               (fun a => g == a)
