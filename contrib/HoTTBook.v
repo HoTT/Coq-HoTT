@@ -44,7 +44,7 @@
    1. Compile the latest version of the HoTT Book to update the LaTeX
       labels. Do not forget to pull in changes from HoTT/HoTT.
 
-   2. Run `etc/Book.py` as described by `etc/Book.py` if you run it with `-h`.
+   2. Run `cat ../book/*.aux | etc/Book.py contrib/HoTTBook.v`.
       If it complains, fix things.
 
    3. Add contents to new entries.
@@ -766,9 +766,7 @@ Definition Book_4_9_5 := @HoTT.FunextVarieties.WeakFunext_implies_Funext.
 (* ================================================== thm:identity-systems *)
 (** Theorem 5.8.2 *)
 
-(** This is just the implication (iv) => (iii). *)
-
-Definition Book_5_8_2 := @HoTT.PathAny.equiv_path_from_contr.
+Definition Book_5_8_2_iv_implies_iii := @HoTT.PathAny.equiv_path_from_contr.
 
 (* ================================================== thm:ML-identity-systems *)
 (** Theorem 5.8.4 *)

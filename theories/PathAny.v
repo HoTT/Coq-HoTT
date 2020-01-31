@@ -2,8 +2,7 @@ Require Import HoTT.Basics HoTT.Types Fibrations FunextVarieties.
 
 (** A nice method for proving characterizations of path-types of nested sigma-types, due to Rijke. *)
 
-(** To show that the based path-type of [A] is equivalent to some specified family [P], it suffices to show that [P] is reflexive and its total space is contractible. This is part of Theorem 5.8.2,
-namely (iv) implies (iii). *)
+(** To show that the based path-type of [A] is equivalent to some specified family [P], it suffices to show that [P] is reflexive and its total space is contractible. This is part of Theorem 5.8.2, namely (iv) implies (iii). *)
 Definition equiv_path_from_contr {A : Type} (a : A) (P : A -> Type)
            (Prefl : P a)
            (cp : Contr {y:A & P y} )
