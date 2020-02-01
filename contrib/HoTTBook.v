@@ -676,7 +676,7 @@ Definition Book_4_7_6 := @HoTT.Fibrations.hfiber_functor_sigma.
 (* ================================================== thm:total-fiber-equiv *)
 (** Theorem 4.7.7 *)
 
-Definition Book_4_7_7 := @HoTT.Fibrations.isequiv_from_functor_sigma.
+Definition Book_4_7_7 := @HoTT.Fibrations.equiv_total_iff_equiv_fiberwise.
 
 (* ================================================== thm:fiber-of-a-fibration *)
 (** Lemma 4.8.1 *)
