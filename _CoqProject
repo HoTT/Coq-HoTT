@@ -58,6 +58,7 @@ theories/WildCat/Opposite.v
 theories/WildCat/Paths.v
 theories/WildCat/Type.v
 theories/WildCat/Induced.v
+theories/WildCat/EquivGpd.v
 theories/WildCat/FunctorCat.v
 theories/WildCat/Yoneda.v
 theories/WildCat/TwoOneCat.v

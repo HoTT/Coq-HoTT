@@ -3,6 +3,7 @@ Require Export WildCat.Core.
 Require Export WildCat.Equiv.
 Require Export WildCat.Opposite.
 Require Export WildCat.Induced.
+Require Export WildCat.EquivGpd.
 Require Export WildCat.FunctorCat.
 Require Export WildCat.NatTrans.
 Require Export WildCat.Yoneda.
