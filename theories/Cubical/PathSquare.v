@@ -74,8 +74,12 @@ Definition sq_path {A} {a00 a10 a01 a11 : A}
   {p0x : a00 = a01} {p1x : a10 = a11}
   : px0 @ p1x = p0x @ px1 -> PathSquare px0 px1 p0x p1x.
 Proof.
-  intro q.
-  by destruct px0, p0x, (cancelL 1 _ _ q), p1x.
+  destruct p0x, p1x.
+  intro e.
+  generalize (e @ concat_1p _).
+  intro e'.
+  destruct e', px0.
+  exact sq_id.
 Defined.
 
 Global Instance isequiv_sq_path {A} {a00 a10 a01 a11 : A}
@@ -83,13 +87,23 @@ Global Instance isequiv_sq_path {A} {a00 a10 a01 a11 : A}
 : IsEquiv (@sq_path _ _ _ _ _ px0 px1 p0x p1x).
 Proof.
   serapply isequiv_adjointify; try by intros [].
-  intro X.
-  destruct px0, p0x.
-  destruct (eissect (equiv_cancelL 1 _ _) X).
-  cbn; set (p := cancelL 1 _ _ X).
-  clearbody p; clear X.
-  by destruct p, p1x.
+  destruct p0x, p1x.
+  intros e.
+  pattern e.
+  pose (e' := @ e @ concat_1p _).
+  pose (e'' := e' @ (concat_1p _)^).
+  refine (@transport _ _ e'' e _ _).
+  - subst e' e''; hott_simpl.
+  - clearbody e'; clear e.
+    destruct e', px0.
+    reflexivity.
 Defined.
+
+Definition equiv_sq_path {A} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11}
+  {p0x : a00 = a01} {p1x : a10 = a11}
+  : px0 @ p1x = p0x @ px1 <~> PathSquare px0 px1 p0x p1x
+  := Build_Equiv _ _ sq_path _.
 
 (** Squares in (n+2)-truncated types are n-truncated *)
 Global Instance istrunc_sq n
@@ -119,6 +133,9 @@ Section PathSquaresFromPaths.
 
   Global Instance isequiv_sq_G1 : IsEquiv sq_G1 := _.
 
+  Definition equiv_sq_G1 : p = p' <~> PathSquare p p' 1 1
+    := Build_Equiv _ _ sq_G1 _.
+
   Definition sq_1G : q = q' -> PathSquare 1 1 q q'.
   Proof.
     intro.
@@ -126,6 +143,9 @@ Section PathSquaresFromPaths.
   Defined.
 
   Global Instance isequiv_sq_1G : IsEquiv sq_G1 := _.
+
+  Definition equiv_sq_1G : q = q' <~> PathSquare 1 1 q q'
+    := Build_Equiv _ _ sq_1G _.
 
 End PathSquaresFromPaths.
 
@@ -512,6 +532,19 @@ Proof.
   by intros [].
 Defined.
 
+(** This preserves reflexivity *)
+Definition sq_ap_refl_h {A B} (f : A -> B) {a0 a1 : A} (p : a0 = a1)
+  : sq_ap f (sq_refl_h p) = sq_refl_h (ap f p).
+Proof.
+  by destruct p.
+Defined.
+
+Definition sq_ap_refl_v {A B} (f : A -> B) {a0 a1 : A} (p : a0 = a1)
+  : sq_ap f (sq_refl_v p) = sq_refl_v (ap f p).
+Proof.
+  by destruct p.
+Defined.
+
 (* Curried version of the following equivalence *)
 Definition sq_prod {A B : Type} {a00 a10 a01 a11 : A} {px0 : a00 = a10}
   {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11} {b00 b10 b01 b11 : B}
@@ -590,6 +623,11 @@ Global Instance isequiv_sq_dp {A B : Type} {f g : A -> B} {a1 a2 : A}
 Proof.
   destruct p; exact _.
 Defined.
+
+Definition equiv_sq_dp {A B : Type} (f g : A -> B) {a1 a2 : A} (p : a1 = a2)
+  (q1 : f a1 = g a1) (q2 : f a2 = g a2)
+  : DPath (fun x => f x = g x) p q1 q2 <~> PathSquare q1 q2 (ap f p) (ap g p)
+  := Build_Equiv _ _ (@sq_dp A B f g a1 a2 p q1 q2) _.
 
 (* ap2 fits into a square *)
 Definition sq_ap2 {A B C} (f : A -> B -> C)

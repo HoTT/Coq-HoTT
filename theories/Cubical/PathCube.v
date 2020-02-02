@@ -517,13 +517,12 @@ Arguments cu_flip_lr {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.
 
 (* PathCube Kan fillers ~ Every open crate has a lid *)
 
-
 Definition cu_fill_left {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
   {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
-                                      (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+                                          (s1ii : PathSquare p1i0 p1i1 p10i p11i)
   (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
   (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
   : {s0ii : PathSquare p0i0 p0i1 p00i p01i & PathCube s0ii s1ii sii0 sii1 si0i si1i}.
@@ -565,7 +564,7 @@ Definition cu_fill_top {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
   (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
-                                      (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+                                          (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
   (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
   : {sii0 : PathSquare p0i0 p1i0 pi00 pi10 & PathCube s0ii s1ii sii0 sii1 si0i si1i}.
 Proof.
@@ -600,7 +599,7 @@ Definition cu_fill_front {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
   {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
   (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
   (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
-                                      (si1i : PathSquare p01i p11i pi10 pi11)
+                                          (si1i : PathSquare p01i p11i pi10 pi11)
   : {si0i : PathSquare p00i p10i pi00 pi01 & PathCube s0ii s1ii sii0 sii1 si0i si1i}.
 Proof.
   refine (_;_).

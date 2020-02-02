@@ -21,7 +21,8 @@ Arguments DPath _ / _ _ _ : simpl nomatch.
   (b0 : P a0) (b1 : P a1) := transport P p b0 = b1.  *)
 
 (* We can prove they are equivalent anyway *)
-Definition dp_path_transport {A P} {a0 a1 : A} {p : a0 = a1} {b0 b1}
+Definition dp_path_transport {A : Type} {P : A -> Type}
+           {a0 a1 : A} {p : a0 = a1} {b0 : P a0} {b1 : P a1}
   : transport P p b0 = b1 -> DPath P p b0 b1.
 Proof.
   by destruct p.
@@ -33,6 +34,11 @@ Global Instance isequiv_dp_path_transport {A} (P : A -> Type) {a0 a1}
 Proof.
   serapply isequiv_adjointify; by destruct p.
 Defined.
+
+Definition equiv_dp_path_transport {A : Type} (P : A -> Type)
+           {a0 a1 : A} (p : a0 = a1) (b0 : P a0) (b1 : P a1)
+  : transport P p b0 = b1 <~> DPath P p b0 b1
+  := Build_Equiv _ _ (@dp_path_transport A P a0 a1 p b0 b1) _.
 
 Global Instance istrunc_dp {A : Type} {P : A -> Type} {n : trunc_index}
  {a0 a1} {p : a0 = a1} {b0 : P a0} {b1 : P a1} `{IsTrunc n.+1 (P a0)}
@@ -266,7 +272,7 @@ Proof.
 Defined.
 
 Definition dp_paths_FlFr_D {A B} (f g : forall a : A, B a) 
-  (x1 x2 : A) (p : x1 = x2) (q : f x1 = g x1) r
+  {x1 x2 : A} (p : x1 = x2) (q : f x1 = g x1) (r : f x2 = g x2)
   : ((apD f p)^ @ ap (transport B p) q) @ apD g p = r
     <~> DPath (fun x : A => f x = g x) p q r.
 Proof.
@@ -274,9 +280,21 @@ Proof.
   apply equiv_concat_l, transport_paths_FlFr_D.
 Defined.
 
+Definition dp_compose' {A B} (f : A -> B) (P : B -> Type) {x y : A}
+  {p : x = y} {q : f x = f y} (r : ap f p = q) (u : P (f x)) (v : P (f y))
+  : DPath (fun x => P (f x)) p u v <~> DPath P q u v.
+Proof.
+  by destruct r, p.
+Defined.
+
 Definition dp_compose {A B} (f : A -> B) (P : B -> Type) {x y : A}
   (p : x = y) (u : P (f x)) (v : P (f y))
-  : DPath P (ap f p) u v <~> DPath (fun x => P (f x)) p u v.
+  : DPath (fun x => P (f x)) p u v <~> DPath P (ap f p) u v
+  := dp_compose' f P (idpath (ap f p)) u v.
+
+Definition dp_apD_compose {A B : Type} (f : A -> B) (P : B -> Type)
+           {x y : A} (p : x = y) (g : forall b:B, P b)
+  : dp_apD (g o f) p = (dp_compose f P p (g (f x)) (g (f y)))^-1 (dp_apD g (ap f p)).
 Proof.
   by destruct p.
 Defined.
@@ -313,7 +331,7 @@ Proof.
   serapply isequiv_adjointify.
   { intro r.
     exists (ap pr1 r).
-    serapply (dp_compose _ _ _ _ _)^-1.
+    serapply dp_compose.
     apply (dp_apD pr2 r). }
   { intros r.
     set (xy := (x; y)) in *.
@@ -398,7 +416,7 @@ Proof.
   apply path_sigma_dp_uncurried.
   erapply equiv_functor_sigma_id.
   { intro p.
-    serapply (dp_compose (exist B x1)). }
+    symmetry; serapply (dp_compose (exist B x1)). }
   apply nm.
 Defined.
 
