@@ -8,6 +8,7 @@ Require Export WildCat.NatTrans.
 Require Export WildCat.Yoneda.
 (* Examples *)
 Require Export WildCat.Type.
+Require Export WildCat.Paths.
 Require Export WildCat.UnitCat.
 Require Export WildCat.EmptyCat.
 Require Export WildCat.Prod.

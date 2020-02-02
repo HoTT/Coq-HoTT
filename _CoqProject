@@ -54,6 +54,7 @@ theories/WildCat/Equiv.v
 theories/WildCat/Sum.v
 theories/WildCat/Forall.v
 theories/WildCat/Opposite.v
+theories/WildCat/Paths.v
 theories/WildCat/Type.v
 theories/WildCat/Induced.v
 theories/WildCat/FunctorCat.v
