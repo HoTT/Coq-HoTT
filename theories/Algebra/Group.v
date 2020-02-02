@@ -3,6 +3,7 @@ Require Import PathAny.
 Require Export Classes.interfaces.abstract_algebra.
 Require Export Classes.theory.groups.
 Require Import Pointed.Core.
+Require Import WildCat.
 Require Basics.Utf8.
 
 Generalizable Variables G H A B C f g.
@@ -361,6 +362,62 @@ Proof.
   intros x y.
   apply path_prod.
   1,2: apply grp_homo_op.
+Defined.
+
+(** Group forms a 01Cat *)
+Global Instance is01cat_Group : Is01Cat Group :=
+  (Build_Is01Cat Group GroupHomomorphism (@grp_homo_id) (@grp_homo_compose)).
+
+Global Instance is01cat_GroupHomomorphism {A B : Group} : Is01Cat (A $-> B) :=
+  induced_01cat (@grp_homo_map A B).
+
+Global Instance is0gpd_GroupHomomorphism {A B : Group}: Is0Gpd (A $-> B) := 
+  induced_0gpd (@grp_homo_map A B).
+
+Global Instance is0functor_postcomp_GroupHomomorphism
+       {A B C : Group} (h : B $-> C)
+  : Is0Functor (@cat_postcomp Group _ A B C h).
+Proof.
+  apply Build_Is0Functor.
+  intros [f ?] [g ?] p a ; exact (ap h (p a)).
+Defined.
+
+Global Instance is0functor_precomp_GroupHomomorphism
+       {A B C : Group} (h : A $-> B)
+  : Is0Functor (@cat_precomp Group _ A B C h).
+Proof.
+  apply Build_Is0Functor.
+  intros [f ?] [g ?] p a ; exact (p (h a)).
+Defined.
+
+(** Group forms a 1Cat *)
+Global Instance is1cat_group : Is1Cat Group.
+Proof.
+  srapply Build_Is1Cat; cbn; intros; reflexivity.
+Defined.
+
+Instance hasmorext_group `{Funext} : HasMorExt Group.
+Proof.
+  srapply Build_HasMorExt.
+  intros A B f g; cbn in *.
+  simple notypeclasses refine (isequiv_homotopic ((equiv_path_grouphomomorphism)^-1) _). 
+  1,3: exact _.
+(*   1: exact _. *)
+  1: apply equiv_isequiv.
+  intros []. reflexivity. 
+Defined.
+
+Global Instance hasequivs_group : HasEquivs Group.
+Proof.
+  srefine (Build_HasEquivs Group _ _ GroupIsomorphism (fun G H f => IsEquiv f) _ _ _ _ _ _ _ _); intros A B f.
+  - exact f.
+  - cbn. exact _.
+  - apply Build_GroupIsomorphism.
+  - intro fe. reflexivity.
+  - intro fe. exact (grp_iso_inverse (Build_GroupIsomorphism _ _ f fe)).
+  - cbn. intros ? x; apply eissect.
+  - cbn. intros ? x; apply eisretr.
+  - intros g r s; refine (isequiv_adjointify f g r s).
 Defined.
 
 

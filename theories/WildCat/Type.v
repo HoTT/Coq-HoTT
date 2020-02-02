@@ -18,12 +18,18 @@ Proof.
   intros f g p a ; exact (p a)^.
 Defined.
 
-Global Instance is0functor_comp {A B C : Type}:
-  Is0Functor (uncurry (@cat_comp Type _ A B C)).
+Global Instance is0functor_type_postcomp {A B C : Type} (h : B $-> C):
+  Is0Functor (cat_postcomp A h).
 Proof.
   apply Build_Is0Functor.
-  intros [f g] [f' g'] [p p'] a ;
-    exact (p (g a) @ ap f' (p' a)).
+  intros f g p a; exact (ap h (p a)).
+Defined.
+
+Global Instance is0functor_type_precomp {A B C : Type} (h : A $-> B):
+  Is0Functor (cat_precomp C h).
+Proof.
+  apply Build_Is0Functor.
+  intros f g p a; exact (p (h a)).
 Defined.
 
 Global Instance is1cat_strong_type : Is1Cat_Strong Type.

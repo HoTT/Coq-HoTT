@@ -4,6 +4,7 @@ Require Import Basics.
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
 Require Import WildCat.Induced.
+Require Import WildCat.NatTrans.
 
 (** * Wild functor categories *)
 
@@ -49,10 +50,14 @@ Proof.
   - intros [F ?] [G ?]; serapply Build_Is0Gpd.
     intros [alpha ?] [gamma ?] mu a.
     exact ((mu a)^$).
-  - intros [F ?] [G ?] [K ?].
+  - intros [F ?] [G ?] [K ?] [alpha ?].
     serapply Build_Is0Functor.
-    intros [[alpha ?] [gamma ?]] [[phi ?] [mu ?]] [f g] a.
-    exact (f a $o@ g a).
+    intros [phi ?] [mu ?] f a.
+    exact (alpha a $@L f a).
+  - intros [F ?] [G ?] [K ?] [alpha ?].
+    serapply Build_Is0Functor.
+    intros [phi ?] [mu ?] f a.
+    exact (f a $@R alpha a).
   - intros [F ?] [G ?] [K ?] [L ?] [alpha ?] [gamma ?] [phi ?] a; cbn.
     serapply cat_assoc.
   - intros [F ?] [G ?] [alpha ?] a; cbn.

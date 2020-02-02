@@ -9,6 +9,7 @@ Require Import Basics.Equivalences.
 
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
+Require Import WildCat.NatTrans.
 
 (** ** Opposite categories *)
 
@@ -28,11 +29,16 @@ Proof.
     apply is01cat_hom.
   - intros a b.
     apply isgpd_hom.
-  - intros a b c.
+  - intros a b c h.
     srapply Build_Is0Functor.
-    intros [f g] [h k] [p q].
+    intros f g p.
     cbn in *.
-    exact (q $o@ p).
+    exact (p $@R h).
+  - intros a b c h.
+    srapply Build_Is0Functor.
+    intros f g p.
+    cbn in *.
+    exact (h $@L p).
   - intros a b c d f g h; exact (cat_assoc_opp h g f).
   - intros a b f; exact (cat_idr f).
   - intros a b f; exact (cat_idl f).
@@ -150,7 +156,7 @@ Proof.
   unfold transformation_op.
   cbn.
   intros a b f.
-  apply isnat_opp.
+  apply isnat_tr.
   assumption.
 Defined.
 

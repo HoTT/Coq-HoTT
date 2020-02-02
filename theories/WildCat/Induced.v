@@ -24,6 +24,12 @@ Section Induced_category.
       exact ( g1 $o g2).
   Defined.
 
+  Local Instance induced_0gpd `{Is0Gpd B} : Is0Gpd A.
+  Proof.
+    rapply Build_Is0Gpd.
+    intros a b g; cbn in *; exact (g^$).
+  Defined.
+
   (** The structure map along which we induce the category structure becomes a functor with respect to the induced structure *) 
   Local Instance inducingmap_is0functor `{Is01Cat B} : Is0Functor f.
   Proof.
@@ -36,8 +42,9 @@ Section Induced_category.
     serapply Build_Is1Cat.
     + intros a b. cbn in *. exact _.
     + intros a b. cbn in *. exact _.
-    + intros a b c. cbn in *. 
-      unfold uncurry. exact _.
+    + intros a b c. cbn in *. exact _.
+    + intros a b c h.
+      exact (is0functor_precomp (f a) (f b) (f c) h).
     + intros a b c d; cbn in *. 
       intros u v w. apply cat_assoc.
     + intros a b; cbn in *.
@@ -54,6 +61,11 @@ Section Induced_category.
     + intros a b c g h. cbn in *. exact (Id _). 
   Defined.
 
+  Instance induced_hasmorext `{HasMorExt B} : HasMorExt A.
+  Proof.
+    constructor. intros. apply H1.
+  Defined.
+
   Definition induced_hasequivs `{HasEquivs B} : HasEquivs A.
   Proof.
     serapply Build_HasEquivs.
@@ -68,12 +80,12 @@ Section Induced_category.
       exact ( cate_buildequiv' _ _ h).
     + intros a b h fe; cbn in *. 
       exact ( cate_buildequiv_fun' (f a) (f b) h fe) .
-    + intros a b h fe; cbn in *.
-      exact(cate_inv'  _ _ h fe ).
-    + intros a b h fe; cbn in *.
-      exact (cate_issect' _ _ h fe ).
-    + intros a b h fe; cbn in *.
-      exact (cate_isretr' _ _ _ _ ).
+    + intros a b h; cbn in *.
+      exact(cate_inv'  _ _ h ).
+    + intros a b h; cbn in *.
+      exact (cate_issect' _ _ h ).
+    + intros a b h; cbn in *.
+      exact (cate_isretr' _ _ _ ).
     + intros a b h g m n; cbn in *.  
       exact ( catie_adjointify' _ _ h g m n  ).
   Defined.

@@ -32,10 +32,14 @@ Proof.
   - intros x y; serapply Build_Is0Gpd.
     destruct x as [a1 | b1], y as [a2 | b2];
     try contradiction; cbn; intros f g; apply gpd_rev.
-  - intros x y z; serapply Build_Is0Functor.
-    intros [f g] [h i] [j k].
+  - intros x y z h; serapply Build_Is0Functor.
+    intros f g p.
     destruct x as [a1 | b1], y as [a2 | b2], z as [a3 | b3];
-    try contradiction; exact (j $o@ k).
+    try contradiction; cbn in *; change (f $== g) in p; exact (h $@L p).
+  - intros x y z h; serapply Build_Is0Functor.
+    intros f g p.
+    destruct x as [a1 | b1], y as [a2 | b2], z as [a3 | b3];
+    try contradiction; cbn in *; change (f $== g) in p; exact (p $@R h).
   - intros [a1 | b1] [a2 | b2] [a3 | b3] [a4 | b4] f g h;
     try contradiction; cbn; apply cat_assoc.
   - intros [a1 | b1] [a2 | b2] f; try contradiction;
