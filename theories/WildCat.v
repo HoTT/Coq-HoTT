@@ -14,5 +14,6 @@ Require Export WildCat.EmptyCat.
 Require Export WildCat.Prod.
 Require Export WildCat.Sum.
 Require Export WildCat.Forall.
+Require Export WildCat.Sigma.
 (* Higher categories *)
 Require Export WildCat.TwoOneCat.
