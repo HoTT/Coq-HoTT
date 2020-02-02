@@ -136,6 +136,22 @@ Proof.
   apply ap, inverse. refine (Susp_ind_beta_merid _ _ _ _ _).
 Defined.
 
+Definition Susp_eta_homot_dp {X : Type} {P : Susp X -> Type} (f : forall y, P y)
+  : f == Susp_ind_dp P (f North) (f South) (fun x => dp_apD f (merid x)).
+Proof.
+  unfold pointwise_paths. refine (Susp_ind_dp _ 1 1 _).
+  intros x.
+  apply dp_paths_FlFr_D.
+  cbn.
+  refine (concat_pp_p _ _ _ @ _).
+  apply moveR_Vp.
+  refine (concat_1p _ @ _ @ (concat_p1 _)^).
+  apply (equiv_inj dp_path_transport).
+  refine (dp_path_transport_apD _ _ @ _). 
+  refine (_ @ (dp_path_transport_apD f (merid x))^).
+  serapply Susp_ind_dp_beta_merid.
+Defined.
+
 Definition Susp_rec_eta_homot {X Y : Type} (f : Susp X -> Y)
 : f == Susp_rec (f North) (f South) (fun x => ap f (merid x)).
 Proof.
@@ -156,13 +172,29 @@ Definition Susp_rec_eta `{Funext} {X Y : Type} (f : Susp X -> Y)
   : f = Susp_rec (f North) (f South) (fun x => ap f (merid x))
 := path_forall _ _ (Susp_rec_eta_homot f).
 
+(** ** Functoriality *)
+
+Definition functor_susp {X Y : Type} (f : X -> Y)
+  : Susp X -> Susp Y.
+Proof.
+  serapply Susp_rec.
+  - exact North.
+  - exact South.
+  - intros x; exact (merid (f x)).
+Defined.
+
+Definition ap_functor_susp_merid {X Y : Type} (f : X -> Y) (x : X)
+  : ap (functor_susp f) (merid x) = merid (f x).
+Proof.
+  serapply Susp_rec_beta_merid.
+Defined.
+
 (** ** Universal property *)
 
 Definition equiv_Susp_rec `{Funext} (X Y : Type)
 : (Susp X -> Y) <~> { NS : Y * Y & X -> fst NS = snd NS }.
 Proof.
-  simple refine (Build_Equiv (Susp X -> Y)
-                     { NS : Y * Y & X -> fst NS = snd NS } _ _).
+  unshelve econstructor.
   { intros f.
     exists (f North , f South).
     intros x. exact (ap f (merid x)). }
@@ -203,7 +235,15 @@ Proof.
     apply (concatR (concat_p1 _)), whiskerL. apply ap_const.
 Defined.
 
-(* ** Connectedness of the suspension *)
+(** ** Contractibility of the suspension *)
+
+Global Instance contr_susp (A : Type) `{Contr A}
+  : Contr (Susp A).
+Proof.
+  unfold Susp; exact _.
+Defined.
+
+(** ** Connectedness of the suspension *)
 
 Global Instance isconnected_susp {n : trunc_index} {X : Type}
   `{H : IsConnected n X} : IsConnected n.+1 (Susp X).

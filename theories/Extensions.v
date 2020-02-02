@@ -383,6 +383,12 @@ Section Extensions.
   : ooExtendableAlong f C -> ooExtendableAlong f D
     := fun ppp n => extendable_postcompose n C D f g (ppp n).
 
+  Definition ooextendable_postcompose'
+             {A B : Type} (C D : B -> Type) (f : A -> B)
+             (g : forall b, C b <~> D b)
+  : ooExtendableAlong f C -> ooExtendableAlong f D
+    := fun ppp n => extendable_postcompose' n C D f g (ppp n).
+
   Definition ooextendable_compose
              {A B C : Type} (P : C -> Type) (f : A -> B) (g : B -> C)
   : ooExtendableAlong g P -> ooExtendableAlong f (fun b => P (g b)) -> ooExtendableAlong (g o f) P

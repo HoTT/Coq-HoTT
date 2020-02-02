@@ -260,6 +260,12 @@ Definition equiv_functor_prod_r {A A' B : Type} (f : A <~> A')
   : A * B <~> A' * B
   := f *E 1.
 
+(** ** Logical equivalences *)
+
+Definition iff_functor_prod {A A' B B' : Type} (f : A <-> A') (g : B <-> B')
+  : A * B <-> A' * B'
+  := (functor_prod (fst f) (fst g) , functor_prod (snd f) (snd g)).
+
 (** ** Symmetry *)
 
 (** This is a special property of [prod], of course, not an instance of a general family of facts about types. *)
