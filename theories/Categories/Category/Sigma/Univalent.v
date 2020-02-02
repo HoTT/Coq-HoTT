@@ -31,6 +31,8 @@ Section onobjects.
   : IsCategory (sigT_obj A Pobj).
   Proof.
     intros s d.
+    (* This makes typeclass search go faster. *)
+    pose @isequiv_compose.
     refine (isequiv_homotopic
               ((issig_full_isomorphic (sigT_obj A Pobj) _ _ o (issig_full_isomorphic A _ _)^-1)
                  o (@idtoiso A s.1 d.1)
@@ -114,8 +116,9 @@ Section onmorphisms.
   : IsCategory A'.
   Proof.
     intros s d.
+    (* Use [equiv_compose] rather than "o" to speed up typeclass search. *)
     refine (isequiv_homotopic
-              (iscategory_sigT_mor_helper^-1 o @idtoiso _ _ _)
+              (equiv_compose iscategory_sigT_mor_helper^-1 (@idtoiso _ _ _))
               _).
     intro x; apply path_isomorphic; cbn.
     destruct x; refine (path_sigma' _ 1 (contr _)).
@@ -287,7 +290,9 @@ Section on_both.
       (iso_A'_code (iso_A'_decode x)).2 = x.2.
   Proof.
     simple refine (path_sigma _ _ _ _ _); cycle 1.
-    1:simple refine (path_sigma _ _ _ _ (path_ishprop _ _)).
+    (* Speed up typeclass search: *)
+    1:pose @trunc_sigma; pose @istrunc_paths; pose @ishset_pmor;
+      simple refine (path_sigma _ _ _ _ (path_ishprop _ _)).
     all:repeat match goal with
                  | [ |- (transport ?P ?p ?z).1 = _ ] => rewrite (@ap_transport _ P _ _ _ p (fun _ x => x.1))
                  | [ |- (transport ?P ?p ?z).2.1 = _ ] => rewrite (@ap_transport _ P _ _ _ p (fun _ x => x.2.1))
@@ -330,19 +335,21 @@ Section on_both.
   : IsCategory A'.
   Proof.
     intros s d.
-    simple refine (isequiv_homotopic
+    simple notypeclasses refine (isequiv_homotopic
               ((equiv_iso_A'^-1)
                  o (functor_sigma _ _)
                  o (path_sigma_uncurried _ _ _)^-1)
-              _); try exact _.
+              _); [exact _ | | | exact _ | |].
+    (* [try exact _] leaves the third remaining goal unchanged, but takes ~9s to do so. *)
     { exact (@idtoiso A _ _). }
-    1:revert Pisotoid; clear; intro Pisotoid.
-    all:repeat (refine isequiv_compose; []).
     { destruct s as [s0 s1], d as [d0 d1]; cbn.
       intro p; destruct p; cbn.
       refine ((@Pmor_iso_adjust s0 s1 d1)^-1 o _).
       refine (@Pidtoiso _ _ _). }
-    { refine isequiv_functor_sigma.
+    { (* Do this in small steps to make it fast. *)
+      ntc_refine isequiv_compose. 1:apply isequiv_inverse.
+      ntc_refine isequiv_compose. 2:apply isequiv_inverse.
+      ntc_refine isequiv_functor_sigma. 1:simple apply A_cat.
       destruct s, d.
       simpl Overture.pr1.
       intro p; destruct p.
