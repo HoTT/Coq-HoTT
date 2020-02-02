@@ -106,6 +106,27 @@ Module Truncation_Modalities <: Modalities.
     unfold In in *; exact _.
   Defined.
 
+  Definition IsSepFor@{u a} (n' n : Modality@{u a}) : Type@{u}
+    := (paths@{a} n.+1 n').
+
+  Definition inO_paths_from_inSepO@{u a i iplus}
+             (n' n : Modality@{u a}) (sep : IsSepFor n' n)
+             (A : Type@{i}) (A_inO : In@{u a i} n' A) (x y : A)
+    : In@{u a i} n (x = y).
+  Proof.
+    destruct sep; unfold In in *.
+    exact _.
+  Defined.
+
+  Definition inSepO_from_inO_paths@{u a i iplus}
+             (n' n : Modality@{u a}) (sep : IsSepFor n' n)
+             (A : Type@{i}) (inO_pathsA : forall (x y : A), In@{u a i} n (x = y))
+    : In@{u a i} n' A.
+  Proof.
+    destruct sep; unfold In in *.
+    intros x y; apply inO_pathsA.
+  Defined.
+
 End Truncation_Modalities.
 
 (** If you import the following module [TrM], then you can call all the modality functions with a [trunc_index] as the modality parameter, since we defined [Truncation_Modalities.Modality] to be [trunc_index]. *)
@@ -168,6 +189,11 @@ Section TruncationModality.
   Definition equiv_Trunc_prod_cmp `{Funext} {X Y}
     : Tr n (X * Y) <~> Tr n X * Tr n Y
     := equiv_O_prod_cmp n X Y.
+
+  (** Separatedness *)
+
+  Global Instance issepfor_trunc n : IsSepFor n.+1 n
+    := idpath.
 
 End TruncationModality.
 
@@ -267,43 +293,17 @@ Ltac strip_truncations :=
 
 (** ** Path-spaces of truncations *)
 
-(** This direction doesn't require univalence. *)
-Definition path_Tr {n A} (x y : A)
-: Tr n (x = y) -> (tr x = tr y :> Tr n.+1 A).
-Proof.
-  intros e.
-  strip_truncations.
-  exact (ap tr e).
-Defined.
+(** These are just special cases of results about subuniverses of separated types. *)
 
-(** But the full characterization does. *)
+Definition path_Tr {n A} (x y : A)
+  : Tr n (x = y) -> (tr x = tr y :> Tr n.+1 A)
+  := path_SepO x y.
+
 Definition equiv_path_Tr `{Univalence} {n A} (x y : A)
-  : Tr n (x = y) <~> (tr x = tr y :> Tr n.+1 A).
-Proof.
-  (** Encode-decode *)
-  transparent assert (code : (Tr n.+1 A -> Tr n.+1 A -> TruncType n)).
-  { intros z w; strip_truncations.
-    refine (BuildTruncType n (Tr n (z = w))). }
-  revert x y.
-  cut (forall z w, code z w <~> z = w).
-  { intros e x y; exact (e (tr x) (tr y)). }
-  transparent assert (idcode : (forall z, code z z)).
-  { intros z; strip_truncations; simpl.
-    exact (tr idpath). }
-  transparent assert (decode : (forall z w, code z w -> z = w)).
-  { intros z w.
-    strip_truncations.
-    simpl. apply Trunc_rec, (ap tr). }
-  pose (encode := (fun z w p => transport (code z) p (idcode z))
-                  : (forall z w, z = w -> code z w)).
-  intros z w; refine (equiv_adjointify (decode z w) (encode z w) _ _).
-  - intros p. destruct p.
-    strip_truncations. reflexivity.
-  - revert z; refine (Trunc_ind _ _); intro z.
-    revert w; refine (Trunc_ind _ _); intro w.
-    intros c; simpl in *.
-    strip_truncations. destruct c. reflexivity.
-Defined.
+  : Tr n (x = y) <~> (tr x = tr y :> Tr n.+1 A)
+  := equiv_path_SepO x y.
+
+(** ** Iterated truncations *)
 
 Definition Trunc_min n m X : Tr n (Tr m X) <~> Tr (trunc_index_min n m) X.
 Proof.

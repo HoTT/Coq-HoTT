@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
-Require Import Modality Accessible Nullification.
+Require Import Modality Accessible.
 
 Local Open Scope path_scope.
 
@@ -69,6 +69,22 @@ Module Identity_Modalities <: Modalities.
       In@{u a i} O (z = z')
     := fun _ _ _ _ _ => tt.
 
+  Definition IsSepFor@{u a}
+    : forall (O' O : Modality@{u a}), Type@{u}
+    := fun _ _ => Unit.
+
+  Definition inO_paths_from_inSepO@{u a i iplus}
+    : forall (O' O : Modality@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}) (A_inO : In@{u a i} O' A) (x y : A),
+      In@{u a i} O (x = y)
+    := fun _ _ _ _ _ _ _ => tt.
+
+  Definition inSepO_from_inO_paths@{u a i iplus}
+    : forall (O' O : Modality@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}),
+      (forall (x y : A), In@{u a i} O (x = y)) -> In@{u a i} O' A
+    := fun _ _ _ _ _ => tt.
+
 End Identity_Modalities.
 
 Module purelyM := Modalities_Theory Identity_Modalities.
@@ -90,7 +106,7 @@ Module Accessible_Identity <: Accessible_Modalities Identity_Modalities.
   : forall (O : Modality@{u a}) (X : Type@{i}),
       iff@{i i i}
         (In@{u a i} O X)
-        (IsNull@{u a i} (acc_gen O) X)
+        (IsNull_Internal.IsNull@{a i} (acc_gen O) X)
   := fun O X => @pair _ (_ -> Unit)
      (fun _ => Empty_ind _)
      (fun _ => tt).

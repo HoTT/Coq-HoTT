@@ -116,6 +116,21 @@ Module ClosedModalities <: Modalities.
     intros u; pose (A_inO u); apply contr_paths_contr.
   Defined.
 
+  Definition IsSepFor@{u a} (O' O : Modality@{u a}) : Type@{u}
+    := Empty.
+
+  Definition inO_paths_from_inSepO@{u a i iplus}
+            (O' O : Modality@{u a}) (sep : IsSepFor O' O)
+            (A : Type@{i}) (A_inO : In@{u a i} O' A) (x y : A)
+    : In@{u a i} O (x = y)
+    := Empty_rec sep.
+
+  Definition inSepO_from_inO_paths@{u a i iplus}
+             (O' O : Modality@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}) (op : forall (x y : A), In@{u a i} O (x = y))
+    : In@{u a i} O' A
+    := Empty_rec sep.
+
 End ClosedModalities.
 
 Module Import ClM := Modalities_Theory ClosedModalities.

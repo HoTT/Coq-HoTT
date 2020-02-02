@@ -1,7 +1,7 @@
 (* -*- mode: coq; mode: visual-line -*- *)
 Require Import HoTT.Basics HoTT.Types.
 Require Import UnivalenceImpliesFunext EquivalenceVarieties Extensions HProp Fibrations NullHomotopy Pullback.
-Require Import HoTT.Tactics.
+Require Import HoTT.Tactics PathAny.
 Require Import HIT.Coeq Colimits.Pushout.
 Require Import Tactics.RewriteModuloAssociativity.
 
@@ -109,13 +109,14 @@ Module Type ReflectiveSubuniverses.
   (** As mentioned above, an implementation of this module type is a *family* of reflective subuniverses, indexed by the below type [ReflectiveSubuniverse].  If we just wrote [ReflectiveSubuniverse : Type], then it would end up parametrized by one universe, but in many examples the natural definition of the parametrizing type involves also a smaller universe, which would cause problems with Coq's strict polymorphism enforcement for module type implementations.  Thus, we use [Type2] instead, which takes two universe parameters. *)
   Parameter ReflectiveSubuniverse@{u a} : Type2@{u a}.
 
-  (** The universe parameters occurring in the definitions here play one of four roles, which we indicate consistently by [u], [a], [i], and [j].
+  (** The universe parameters occurring in the definitions here play one of the following roles, which we indicate consistently by the same letters.
 
   - [u] is the size of the parametrizing type [ReflectiveSubuniverse] (and, later, also [Modality]).
   - [a] is the size of smaller type-data occurring in that type, such as the family of generators for a localization.  This generally must be strictly smaller than [u].
   - [i] is the size of a type that we are reflecting or testing to be in the subuniverse.  This is generally at least as big as [a].
   - [j] is the size of a type that we are eliminating into (out of a type in [i]) with a universal property.  Also generally at least as big as [a].
-  - [k] is a universe at least as large as both [i] and [j], in which statements about types in both of them can live. *)
+  - [k] is a universe at least as large as both [i] and [j], in which statements about types in both of them can live.
+  - [iplus] is a universe that is strictly larger than [i]. *)
 
   Parameter O_reflector@{u a i} : forall (O : ReflectiveSubuniverse@{u a}),
                             Type2le@{i a} -> Type2le@{i a}.
@@ -133,7 +134,7 @@ Module Type ReflectiveSubuniverses.
   Parameter inO_equiv_inO@{u a i j k} :
       forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}) (U : Type@{j})
              (T_inO : In@{u a i} O T) (f : T -> U) (feq : IsEquiv f),
-        (** We add an extra universe parameter that's bigger than both [i] and [j].  This seems to be necessary for the proof of repleteness in some examples, such as easy modalities. *)
+        (** We add an extra universe parameter that's at least as large as both [i] and [j].  This seems to be necessary for the proof of repleteness in some examples, such as easy modalities. *)
         let gei := ((fun x => x) : Type@{i} -> Type@{k}) in
         let gej := ((fun x => x) : Type@{j} -> Type@{k}) in
         In@{u a j} O U.
@@ -147,6 +148,22 @@ Module Type ReflectiveSubuniverses.
   Parameter extendable_to_O@{u a i j k}
   : forall (O : ReflectiveSubuniverse@{u a}) {P : Type2le@{i a}} {Q : Type2le@{j a}} {Q_inO : In@{u a j} O Q},
       ooExtendableAlong@{i i j k} (to O P) (fun _ => Q).
+
+  (** As defined in CORS, for a reflective subuniverse [O], the [O]-separated types are those whose identity types are in [O].  These form another reflective subuniverse [O'], but in general it might not be in the same family.  Thus, instead of considering [O] -> [O'] as an operation on reflective subuniverses, we consider it a relation between them; [IsSepFor O' O] says that [O'] is the [O]-separated subuniverse.  In addition, we can't just *define* this relation to say that the types in [O'] are the [O]-separated ones, because we want that to be true universe-polymorphically.  Thus, we assert the relation [IsSepFor] as part of the data of a family of reflective subuniverses, along with two more parameters saying that the types in [O'] are the [O]-separated ones at all universe levels.  *)
+  Parameter IsSepFor@{u a} : forall (O' O : ReflectiveSubuniverse@{u a}), Type@{u}.
+
+  (** These two have an extra universe parameter [iplus] that's strictly bigger than [i], because our current proofs of them in the case of localization seem to produce such a universe.  (It's unclear how necessary that is.) *)
+  Parameter inO_paths_from_inSepO@{u a i iplus}
+    : forall (O' O : ReflectiveSubuniverse@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}) (A_inO : In@{u a i} O' A) (x y : A),
+      let gt := (Type1@{i} : Type@{iplus}) in
+      In@{u a i} O (x = y).
+
+  Parameter inSepO_from_inO_paths@{u a i iplus}
+    : forall (O' O : ReflectiveSubuniverse@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}),
+      let gt := (Type1@{i} : Type@{iplus}) in
+      (forall (x y : A), In@{u a i} O (x = y)) -> In@{u a i} O' A.
 
 End ReflectiveSubuniverses.
 
@@ -173,7 +190,7 @@ Module Export Coercions.
 
 End Coercions.
 
-(** We assumed repleteness of the subuniverse in the definition.  Of course, with univalence this would be automatic, but we include it as a hypothesis since this is the only appearance of univalence in the theory of reflective subuniverses and non-lex modalities, and most or all examples can be shown to be replete without using univalence. *)
+(** We assumed repleteness of the subuniverse in the definition.  Of course, with univalence this would be automatic, but we include it as a hypothesis since most of the theory of reflective subuniverses and modalities doesn't need univalence, and most or all examples can be shown to be replete without using univalence. *)
 Arguments inO_equiv_inO {O} T {U} {_} f {_}.
 
 (** Being in the subuniverse is a mere predicate (by hypothesis) *)
@@ -183,14 +200,17 @@ Global Existing Instance hprop_inO.
 Arguments O_inO {O} T.
 Global Existing Instance O_inO.
 
-(** The second component of [TypeO] is unique *)
-Definition path_TypeO {fs : Funext} O (T T' : Type_ O) (p : T.1 = T'.1)
+Existing Class IsSepFor.
+Global Existing Instance inO_paths_from_inSepO.
+
+(** The second component of [TypeO] is unique.  Without a universe annotation, for some reason this collapses [j=u] and [i=a]. *)
+Definition path_TypeO@{u a j i} {fs : Funext} O (T T' : Type_@{u a j i} O) (p : T.1 = T'.1)
   : T = T'
   := path_sigma_hprop T T' p.
 
-Definition equiv_path_TypeO {fs : Funext} O (T T' : Type_ O)
-: (T.1 = T'.1) <~> (T = T')
-:= equiv_path_sigma_hprop T T'.
+Definition equiv_path_TypeO@{u a j i} {fs : Funext} O (T T' : Type_@{u a j i} O)
+: (paths@{j} T.1 T'.1) <~> (T = T')
+:= equiv_path_sigma_hprop@{j i j j} T T'.
 
 (** Types in [TypeO] are always in [O]. *)
 Global Instance inO_TypeO {O : ReflectiveSubuniverse} (A : Type_ O)
@@ -497,9 +517,9 @@ Section Reflective_Subuniverse.
 
   Section Replete.
 
-    Definition inO_equiv_inO' (T : Type) {U : Type} `{In O T} (f : T <~> U)
-    : In O U
-      := inO_equiv_inO T f.
+    Definition inO_equiv_inO'@{i j k} (T : Type@{i}) {U : Type@{j}} `{In@{Ou Oa i} O T} (f : T <~> U)
+    : In@{Ou Oa j} O U
+      := inO_equiv_inO@{Ou Oa i j k} T f.
 
     (** An equivalent formulation of repleteness is that a type lies in the subuniverse as soon as its unit map is an equivalence. *)
     Definition inO_isequiv_to_O (T:Type)
@@ -568,6 +588,39 @@ Section Reflective_Subuniverse.
                                 (O_functor_compose _ _)).
       refine (isequiv_homotopic (O_functor f)
                (O_functor_homotopy _ _ (fun x => (O_rec_beta f x)^))).
+    Defined.
+
+    (** If a map is inverted by the representable functor [? -> Z] for all [O]-modal types [Z], then it is inverted by [O].  First we prove a version that doesn't require funext. *)
+    Definition O_inverts_by_yoneda' {A : Type@{i}} {B : Type@{j}} (f : A -> B)
+               (** Without the universe annotations, the result ends up insufficiently polymorphic. *)
+               (e : forall (Z:Type@{k}), In O Z -> ExtendableAlong@{i j k l} 2 f (fun _ => Z))
+      : O_inverts f.
+    Proof.
+      serapply isequiv_adjointify.
+      - exact (O_rec (fst (e (O A) _) (to O A)).1).
+      - serapply O_indpaths. intros b.
+        rewrite O_rec_beta.
+        assert (e1 := fun h k => fst (snd (e (O B) _) h k)). cbn in e1.
+        refine ((e1 (fun y => O_functor f ((fst (e (O A) _) (to O A)).1 y)) (to O B) _).1 b).
+        intros a.
+        rewrite ((fst (e (O A) (O_inO A)) (to O A)).2 a).
+        apply to_O_natural.
+      - serapply O_indpaths. intros a.
+        rewrite to_O_natural, O_rec_beta.
+        exact ((fst (e (O A) (O_inO A)) (to O A)).2 a).
+    Defined.
+
+    (** And the version with funext.  Use it with universe parameters [i j k l lplus l l l l]. *)
+    Definition O_inverts_by_yoneda `{Funext}
+               {A : Type@{i}} {B : Type@{j}} (f : A -> B)
+               (e : forall (Z:Type@{k}), In@{Ou Oa k} O Z ->
+                                         IsEquiv@{l l} (fun g:B->Z => g o f))
+      : O_inverts f.
+    Proof.
+      apply O_inverts_by_yoneda'.
+      intros Z ?.
+      apply (equiv_extendable_isequiv 0 _ _)^-1.
+      rapply e.
     Defined.
 
     Definition to_O_inv_natural {A B : Type} `{In O A} `{In O B}
@@ -831,9 +884,9 @@ Section Reflective_Subuniverse.
 
     (** In fact, we can enhance [extension_from_inO_sigma] to a local version of [extendable_to_O], as stated in CORS Proposition 2.8 (but our version avoids funext by using [ooExtendableAlong], as usual). *)
     Definition extendable_from_inO_sigma
-               {A:Type} (B: (O A) -> Type)
+               {A:Type@{i}} (B: (O A) -> Type@{j})
                {H : In O (sig (fun z:O A => B z))}
-      : ooExtendableAlong (to O A) B.
+      : ooExtendableAlong@{i i j k} (to O A) B.
     Proof.
       intros n; generalize dependent A.
       induction n as [|n IHn]; intros; [ exact tt | cbn ].
@@ -930,6 +983,43 @@ Section Reflective_Subuniverse.
         intros [a op]; revert op; apply O_indpaths; try exact _; intros p; simpl.
         abstract (repeat (simpl rewrite @O_rec_beta); reflexivity).
     Defined.
+
+    (** ** Equivalences *)
+
+    (** Naively it might seem that we need closure under Sigmas (hence a modality) to deduce closure under [Equiv], but in fact the above closure under fibers is sufficient.  This appears as part of the proof of Proposition 2.18 of CORS.  For later use, we try to reduce the number of universe parameters (but we don't completely control them all). *)
+    Global Instance inO_equiv `{Funext} (A : Type@{i}) (B : Type@{j})
+           `{In@{Ou Oa i} O A} `{In@{Ou Oa j} O B}
+      : In@{Ou Oa k} O (A <~> B).
+    Proof.
+      refine (inO_equiv_inO@{Ou Oa k k k} _ (issig_equiv@{i j k} A B)).
+      refine (inO_equiv_inO@{Ou Oa k k k} _ (equiv_functor_sigma equiv_idmap@{k}
+                                 (fun f => equiv_biinv_isequiv@{i j k l} f))).
+      pose (U := hfiber@{k k} (fun fgh : prod@{k k} (A->B) (prod@{k k} (B->A) (B->A))
+                               => ((snd (snd fgh)) o (fst fgh) , (fst fgh) o (fst (snd fgh)))
+                                  : prod@{k k} (A -> A) (B -> B))
+                       (idmap, idmap)).
+      refine (inO_equiv_inO'@{k k k} U _). (** Introduces some extra copies of [k] by typeclass inference. *)
+      unfold hfiber, BiInv; cbn.
+      srefine (equiv_adjointify _ _ _ _).
+      - intros [[f [g h]] p].
+        apply (equiv_inverse (equiv_path_prod _ _)) in p.
+        destruct p as [p q]; cbn in *.
+        exists f; split; [ exists h | exists g ].
+        all:apply ap10; assumption.
+      - intros [f [[g p] [h q]]].
+        exists (f,(h,g)); cbn.
+        apply path_prod; apply path_arrow; assumption.
+      - intros [f [[g p] [h q]]]; cbn.
+        apply (path_sigma' _ 1); apply path_prod; apply (path_sigma' _ 1);
+          cbn; rewrite transport_1.
+        1:rewrite ap_fst_path_prod.
+        2:rewrite ap_snd_path_prod.
+        all:apply path_forall; intros x; rewrite ap10_path_arrow; reflexivity.
+      - intros [[f [g h]] p]; cbn. 
+        apply (path_sigma' _ 1); cbn.
+        refine (_ @ eta_path_prod p); apply ap011; apply eta_path_arrow.
+    Defined.
+    Check inO_equiv@{i j k l k k}.  (** k is max(i,j), while k < l *)
 
     (** ** Paths *)
 
@@ -1422,6 +1512,14 @@ Section ConnectedTypes.
   : Contr A.
   Proof.
     apply (contr_equiv _ (to O A)^-1).
+  Defined.
+
+  (** Any map between connected types is inverted by O. *)
+  Global Instance O_inverts_isconnected {A B : Type} (f : A -> B)
+             `{IsConnected O A} `{IsConnected O B}
+    : O_inverts O f.
+  Proof.
+    exact _.
   Defined.
 
   (** Here's another way of stating the universal property for mapping out of connected types into modal ones. *)
@@ -1919,6 +2017,174 @@ Section ConnectedMaps.
 End ConnectedMaps.
 
 
+(** ** Separated subuniverses *)
+
+Section Separated.
+  Universes Ou Oa.
+  Context {O' O : ReflectiveSubuniverse@{Ou Oa}} {sep : IsSepFor@{Ou Oa} O' O}.
+
+  Global Instance inSepO_inO {A : Type} `{In O A} : In O' A.
+  Proof.
+    rapply inSepO_from_inO_paths.
+  Defined.
+
+  Global Instance inSepO_hprop {A : Type} {hp : IsHProp A} : In O' A.
+  Proof.
+    rapply inSepO_from_inO_paths.
+  Defined.
+
+  (** Proposition 2.18 of CORS.  Since we have universe-polymorphic RSUs, we can state it in the simpler form "[Type_ O] is in [O']".  Note the universe parameters: [Type_@{Ou Oa j i}] is a subtype of [Type@{i}], which is an element of [Type@{j}] (so that [i<j]).  The extra parameter [k] is required by separatedness. *)
+  Global Instance inSepO_typeO@{i j k} `{Univalence} : In O' (Type_@{Ou Oa j i} O).
+  Proof.
+    rapply inSepO_from_inO_paths@{Ou Oa j k}.
+    1:exact _.
+    (** For some reason, if we keep [A] and [B] in [Type_ O] and coerce them to [Type] (or write [A.1] and [B.1]), instead of destructing them into elements of [Type], then the universes get collapsed to [i=a] and [j=u].  I can't figure out why that is; maybe a bug in Coq? *)
+    intros [A ?] [B ?].
+    pose (inO_equiv@{Ou Oa i i i j i i} O A B).
+    serapply (inO_equiv_inO'@{Ou Oa i j j} O (A <~> B) (equiv_compose'@{i j j} _ _)).
+    3:apply equiv_path_universe.
+    refine (equiv_path_TypeO@{Ou Oa j i} O (A;_) (B;_)).
+  Defined.
+
+  (** Lemma 2.21 of CORS *)
+  Global Instance inSepO_sigma {X : Type} {P : X -> Type} `{In O' X} `{forall x, In O (P x)}
+    : In O' (sig P).
+  Proof.
+    rapply inSepO_from_inO_paths.
+    1:exact _.
+    intros [x p] [y q].
+    refine (inO_equiv_inO' O _ (equiv_path_sigma P (x;p) (y;q))).
+  Defined.
+
+  (** Proposition 2.22 of CORS (in funext-free form).  Universe parameters are [i j k kplus kplus kplus]. *)
+  Definition extendable_toSepO_inO
+             {X : Type@{i}} (P : O' X -> Type@{j}) `{forall x, In@{Ou Oa j} O (P x)}
+    : ooExtendableAlong@{i i j k} (to O' X) P.
+  Proof.
+    rapply extendable_from_inO_sigma@{Ou Oa i j k kplus k k k k}.
+  Defined.
+
+  (** And now the version with funext.  Universe parameters are [i j k kplus kplus kplus]. *)
+  Definition isequiv_toSepO_inO `{Funext}
+             {X : Type@{i}} (P : O' X -> Type@{j}) `{forall x, In@{Ou Oa j} O (P x)}
+    : IsEquiv@{k k} (fun g : (forall y, P y) => g o to O' X)
+    := isequiv_ooextendable@{i i j k k k k k k k k} _ _ (extendable_toSepO_inO P).
+
+  Definition equiv_toSepO_inO@{i j k kplus} `{Funext}
+             {X : Type@{i}} (P : O' X -> Type@{j}) `{forall x, In O (P x)}
+    : (forall y, P y) <~> (forall x, P (to O' X x))
+    := Build_Equiv _ _ _ (isequiv_toSepO_inO@{i j k kplus kplus kplus} P).
+
+  (** Proposition 2.26 of CORS *)
+  Definition path_SepO {X : Type@{i}} (x y : X)
+    : O (x = y) -> (to O' X x = to O' X y)
+    := O_rec (O := O) (@ap X (O' X) (to O' X) x y).
+
+  Global Instance isequiv_path_SepO `{Univalence} {X : Type@{i}} (x y : X)
+    : IsEquiv (path_SepO x y).
+  Proof.
+    pose (Oxeq := fun y : X => (O (x = y); O_inO (x = y)) : Type_ O).
+    assert (Pb := fun y => (O_rec_beta@{Ou Oa i j j i j} Oxeq y)..1).
+    set (P := O_rec Oxeq) in *; subst Oxeq; cbn in *.
+    serapply isequiv_homotopic'.
+    { refine (_ oE equiv_path _ _ (Pb y)^).
+      generalize (to O' X y); clear y.
+      apply equiv_path_from_contr.
+      1:exact (transport idmap (Pb x)^ (to O _ idpath)).
+      exists (to O' X x; transport idmap (Pb x)^ (to O _ 1%path)).
+      apply sig_ind.
+      refine ((extension_from_inO_sigma
+                 O' (fun (w:O' X) => forall (p: (P w).1),
+                         (to O' X x ; transport idmap (Pb x)^ (to O (x = x) 1%path))
+                         = (w ; p)) _).1).
+      intros y.
+      equiv_intro (equiv_path _ _ (Pb y)^) p.
+      revert p; refine ((extension_from_inO_sigma O _ _).1).
+      { refine (inO_equiv_inO' _ (to O' X x = to O' X y) _).
+        pose (e := fun p:O (x = y) => (equiv_path_sigma (fun a => (P a).1)
+                                                        (to O' X x; transport idmap (Pb x)^ (to O (x = x) 1%path))
+                                                        (to O' X y; transport idmap (Pb y)^ p))^-1%equiv).
+        refine (equiv_functor_sigma' 1%equiv (fun p => (e p)^-1%equiv) oE _); clear e; cbn.
+        refine (equiv_sigma_symm _ oE _).
+        refine ((equiv_sigma_contr _)^-1%equiv).
+        intros p.
+        refine (@contr_equiv' _ _ _ (@contr_basedpaths (O (x = y)) _)).
+        apply (equiv_functor_sigma' 1%equiv); intros q; cbn.
+        exact (equiv_moveL_transport_V idmap (Pb y) _ q). }
+      intros p; destruct p.
+      reflexivity. }
+    { apply O_indpaths; intros p.
+      refine (_ @ (O_rec_beta _ _)^).
+      apply moveR_equiv_V.
+      destruct p; cbn.
+      reflexivity. }
+  Defined.
+
+  Definition equiv_path_SepO `{Univalence} {A : Type} (x y : A)
+    : O (x = y) <~> (to O' A x = to O' A y)
+    := Build_Equiv _ _ _ (isequiv_path_SepO x y).
+
+  (** Lemma 2.27 of CORS.  I don't see how to prove any version of this without funext, although that seems strange since its statement doesn't involve any pi-types. *)
+  Global Instance O_inverts_functor_sigma_to_SepO@{i j jplus} `{Funext}
+         {X : Type@{i} } (P : O' X -> Type@{j})
+    : O_inverts O (functor_sigma@{i j i j} (Q := P) (to O' X) (fun x => idmap)).
+  Proof.
+    rapply O_inverts_by_yoneda@{Ou Oa j j j j jplus j j j j}.
+    intros Z ?.
+    serapply isequiv_homotopic'.
+    { refine (_ oE _ oE _).
+      3:apply equiv_inverse.
+      1,3: serapply equiv_sigT_ind@{i j j jplus}.
+      serapply equiv_toSepO_inO@{i j j jplus}. }
+    reflexivity.
+  Defined.
+
+  Definition equiv_functor_sigma_to_SepO@{i j jplus} `{Funext}
+             {X : Type@{i} } (P : O' X -> Type@{j})
+    : (O {x : X & P (to O' X x)}) <~> (O {ox : O' X & P ox})
+    := Build_Equiv _ _ _ (O_inverts_functor_sigma_to_SepO@{i j jplus} P).
+
+  (** Corollary 2.29 of CORS *)
+  Global Instance SepO_inverts_functor_hfiber `{Univalence}
+         {Y X : Type@{i} } (f : Y -> X) (x : X)
+    : O_inverts O (functor_hfiber@{i i i i} (fun y => (to_O_natural O' f y)^) x).
+  Proof.
+    serapply isequiv_homotopic'.
+    - unfold hfiber.
+      refine (_ oE (equiv_inverse (equiv_O_sigma_O O _))).
+      pose (fun oy:O' Y => O_functor@{Ou Oa i i i i i} O' f oy = to O' X x).
+      refine (equiv_functor_sigma_to_SepO@{i i iplus}
+                (fun oy:O' Y => O_functor@{Ou Oa i i i i i} O' f oy = to O' X x) oE _).
+      apply equiv_O_functor. 
+      refine (equiv_functor_sigma' equiv_idmap _); intros y; cbn.
+      refine (_ oE equiv_path_SepO (f y) x).
+      apply equiv_concat_l, to_O_natural.
+    - apply O_indpaths.
+      intros [y p]; cbn.
+      abstract (
+      rewrite O_rec_beta;
+      rewrite !(to_O_natural O _ _);
+      apply ap; refine (path_sigma' _ 1 _); cbn;
+      unfold path_SepO;
+      rewrite O_rec_beta, inv_V; reflexivity
+      ).
+  Defined.
+
+  (** Proposition 2.30 of CORS *)
+  (* Making this an [Instance] breaks typeclass inference in various places. *)
+  Definition conn_map_SepO_inverts `{Univalence} {Y X : Type@{i}} (f : Y -> X)
+         `{O_inverts O' f}
+    : IsConnMap@{Ou Oa i i i} O f.
+  Proof.
+    intros x.
+    refine (contr_equiv' (O (hfiber (O_functor O' f) (to O' X x))) _).
+    refine (equiv_inverse (Build_Equiv _ _
+             (O_functor O (functor_hfiber (fun y => (to_O_natural O' f y)^) x)) _)).
+  Defined.
+
+End Separated.
+
+
 End ReflectiveSubuniverses_Theory.
 
 (** ** Restriction of a family of reflective subuniverses *)
@@ -1954,6 +2220,12 @@ Module ReflectiveSubuniverses_Restriction
     := Os.hprop_inO@{u a i} H (Res.ReflectiveSubuniverses_restriction O).
   Definition extendable_to_O@{u a i j k} (O : ReflectiveSubuniverse@{u a})
     := @Os.extendable_to_O@{u a i j k} (Res.ReflectiveSubuniverses_restriction@{u a} O).
+  Definition IsSepFor@{u a} (O' O : ReflectiveSubuniverse@{u a})
+    := @Os.IsSepFor@{u a} (Res.ReflectiveSubuniverses_restriction@{u a} O') (Res.ReflectiveSubuniverses_restriction@{u a} O).
+  Definition inO_paths_from_inSepO@{u a i iplus} (O' O : ReflectiveSubuniverse@{u a})
+    := @Os.inO_paths_from_inSepO@{u a i iplus} (Res.ReflectiveSubuniverses_restriction@{u a} O') (Res.ReflectiveSubuniverses_restriction@{u a} O).
+  Definition inSepO_from_inO_paths@{u a i iplus} (O' O : ReflectiveSubuniverse@{u a})
+    := @Os.inSepO_from_inO_paths@{u a i iplus} (Res.ReflectiveSubuniverses_restriction@{u a} O') (Res.ReflectiveSubuniverses_restriction@{u a} O).
 
 End ReflectiveSubuniverses_Restriction.
 
@@ -2021,6 +2293,40 @@ Module ReflectiveSubuniverses_FamUnion
   Proof.
     intros [O|O]; [ exact (@Os1.extendable_to_O@{u a i j k} O)
                   | exact (@Os2.extendable_to_O@{u a i j k} O) ].
+  Defined.
+
+  Definition IsSepFor@{u a}
+    : forall (O' O : ReflectiveSubuniverse@{u a}), Type@{u}.
+  Proof.
+    intros [O'|O'] [O|O];
+      [ exact (@Os1.IsSepFor@{u a} O' O)
+      | exact Empty
+      | exact Empty
+      | exact (@Os2.IsSepFor@{u a} O' O) ].
+  Defined.
+
+  Definition inO_paths_from_inSepO@{u a i iplus}
+    : forall (O' O : ReflectiveSubuniverse@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}) (A_inO : In@{u a i} O' A) (x y : A),
+      In@{u a i} O (x = y).
+  Proof.
+    intros [O'|O'] [O|O];
+      [ exact (@Os1.inO_paths_from_inSepO@{u a i iplus} O' O)
+      | contradiction
+      | contradiction
+      | exact (@Os2.inO_paths_from_inSepO@{u a i iplus} O' O) ].
+  Defined.
+
+  Definition inSepO_from_inO_paths@{u a i iplus}
+    : forall (O' O : ReflectiveSubuniverse@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}),
+      (forall (x y : A), In@{u a i} O (x = y)) -> In@{u a i} O' A.
+  Proof.
+    intros [O'|O'] [O|O];
+      [ exact (@Os1.inSepO_from_inO_paths@{u a i iplus} O' O)
+      | contradiction
+      | contradiction
+      | exact (@Os2.inSepO_from_inO_paths@{u a i iplus} O' O) ].
   Defined.
 
 End ReflectiveSubuniverses_FamUnion.
