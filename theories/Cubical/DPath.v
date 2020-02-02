@@ -82,6 +82,13 @@ Proof.
   by destruct p.
 Defined.
 
+(* which corresponds to ordinary apD *)
+Definition dp_path_transport_apD {A P} (f : forall a, P a) {a0 a1 : A} (p : a0 = a1)
+  : dp_path_transport (apD f p) = dp_apD f p.
+Proof.
+  by destruct p.
+Defined.
+
 (* A DPath over a constant family is just a path *)
 Definition dp_const {A C} {a0 a1 : A} {p : a0 = a1} {x y}
   : (x = y) -> DPath (fun _ => C) p x y.
@@ -94,6 +101,10 @@ Global Instance isequiv_dp_const {A C} {a0 a1 : A} {p : a0 = a1} {x y}
 Proof.
   destruct p; exact _.
 Defined.
+
+Definition equiv_dp_const {A C} {a0 a1 : A} {p : a0 = a1} {x y}
+  : (x = y) <~> DPath (fun _ => C) p x y
+  := Build_Equiv _ _ dp_const _.
 
 (* dp_apD of a non-dependent map is just a constant DPath *)
 Definition dp_apD_const {A B} (f : A -> B) {a0 a1 : A}

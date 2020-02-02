@@ -1,4 +1,5 @@
 Require Import Basics.
+Require Import Types.
 Require Import Cubical.DPath.
 Require Import Cubical.PathSquare.
 
@@ -124,8 +125,8 @@ Proof.
 Defined.
 
 (* dp_apD fits into a natural square *)
-Definition dp_apD_nat {A} {P : A -> Type} (f g : forall x, P x) {x y : A}
-  (p : x = y) (q : f == g)
+Definition dp_apD_nat {A} {P : A -> Type} {f g : forall x, P x} {x y : A}
+  (q : f == g) (p : x = y)
   : DPathSquare P (sq_refl_h _) (dp_apD f p) (dp_apD g p) (q x) (q y).
 Proof.
   destruct p.
@@ -201,3 +202,22 @@ Section Kan.
   Defined.
 
 End Kan.
+
+(** Another equivalent formulation of a dependent square over reflexivity *)
+Definition equiv_ds_transport_dpath {A} {a0 a1 : A} {p : a0 = a1}
+           {P : A -> Type} {b00 b10 b01 b11}
+           (qx0 : DPath P p b00 b10) (qx1 : DPath P p b01 b11)
+           (q0x : b00 = b01) (q1x : b10 = b11)
+  : DPathSquare P (sq_refl_h p) qx0 qx1 q0x q1x
+    <~> transport (fun y => DPath P p y b11) q0x
+          (transport (fun y => DPath P p b00 y) q1x
+                     qx0) = qx1.
+Proof.
+  destruct p; cbn.
+  refine (_ oE equiv_sq_path^-1).
+  refine (equiv_concat_l _ _ oE _).
+  { apply transport_paths_l. }
+  refine (equiv_moveR_Vp _ _ _ oE _).
+  refine (equiv_concat_l _ _).
+  apply transport_paths_r.
+Defined.

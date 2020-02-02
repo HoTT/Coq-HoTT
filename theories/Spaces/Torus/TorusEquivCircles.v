@@ -64,15 +64,15 @@ Section TorusEquivCircle.
     refine (_;_;_).
     unfold sq_ap2.
     (* 1. Unfusing ap *)
-    refine (cu_concat_lr (cu_ds (dp_apD_nat _ _ _
-      (fun y => ap_compose _ (fun f => f y) _))) _
+    refine (cu_concat_lr (cu_ds (dp_apD_nat
+      (fun y => ap_compose _ (fun f => f y) _) _)) _
       (sji0:=?[X1]) (sji1:=?X1) (sj0i:=?[Y1]) (sj1i:=?Y1) (pj11:=1)).
     (* 2. Reducing c2t' on loop *)
-    refine (cu_concat_lr (cu_ds (dp_apD_nat _ _ _
-      (fun x => ap_apply_l _ _ @ apD10 (ap _(S1_rec_beta_loop _ _ _)) x))) _
+    refine (cu_concat_lr (cu_ds (dp_apD_nat
+      (fun x => ap_apply_l _ _ @ apD10 (ap _(S1_rec_beta_loop _ _ _)) x) _)) _
       (sji0:=?[X2]) (sji1:=?X2) (sj0i:=?[Y2]) (sj1i:=?Y2) (pj11:=1)).
     (* 3. Reducing ap10 on function extensionality *)
-    refine (cu_concat_lr (cu_ds (dp_apD_nat _ _ _ (ap10_path_forall _ _ _))) _
+    refine (cu_concat_lr (cu_ds (dp_apD_nat (ap10_path_forall _ _ _) _)) _
       (sji0:=?[X3]) (sji1:=?X3) (sj0i:=?[Y3]) (sj1i:=?Y3) (pj11:=1)).
     (* 4. Reducing S1_ind_dp on loop *)
     refine (cu_concat_lr (cu_G11 (ap _ (S1_ind_dp_beta_loop _ _ _))) _
