@@ -151,6 +151,24 @@ Definition pushout_sym {A B C} {f : A -> B} {g : A -> C}
   : Pushout f g <~> Pushout g f :=
 equiv_adjointify pushout_sym_map pushout_sym_map sect_pushout_sym_map sect_pushout_sym_map.
 
+(** ** Functoriality *)
+
+Definition functor_pushout
+           {A B C} (f : A -> B) (g : A -> C)
+           {A' B' C'} (f' : A' -> B') (g' : A' -> C')
+           (h : A -> A') (k : B -> B') (l : C -> C')
+           (p : k o f == f' o h) (q : l o g == g' o h)
+  : Pushout f g -> Pushout f' g'.
+Proof.
+  unfold Pushout; serapply functor_coeq.
+  - exact h.
+  - exact (functor_sum k l).
+  - intros a; cbn.
+    apply ap, p.
+  - intros a; cbn.
+    apply ap, q.
+Defined.
+
 (** ** Equivalences *)
 
 (** Pushouts preserve equivalences. *)
@@ -182,6 +200,32 @@ Section EquivPushout.
   Defined.
 
 End EquivPushout.
+
+(** ** Contractibility *)
+
+(** The pushout of a span of contractible types is contractible *)
+
+Global Instance contr_pushout {A B C : Type} `{Contr A, Contr B, Contr C}
+       (f : A -> B) (g : A -> C)
+  : Contr (Pushout f g).
+Proof.
+  exists (pushl (center B)).
+  serapply Pushout_ind.
+  - intros b; apply ap, path_contr.
+  - intros c.
+    refine (_ @ pglue (center A) @ _).
+    + apply ap, path_contr.
+    + apply ap, path_contr.
+  - intros a.
+    rewrite transport_paths_r.
+    assert (p := path_contr (center A) a).
+    destruct p.
+    refine ((concat_p1 _)^ @ _).
+    apply whiskerL.
+    change 1 with (ap (@pushr A B C f g) (idpath (g (center A)))).
+    apply (ap (ap pushr)).
+    apply path_contr.
+Defined.
 
 (** ** Sigmas *)
 

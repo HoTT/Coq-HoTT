@@ -101,6 +101,10 @@ Section IsEquivHomotopic.
 
 End IsEquivHomotopic.
 
+Definition isequiv_homotopic' {A B : Type} (f : A <~> B) {g : A -> B} (h : f == g)
+  : IsEquiv g
+  := isequiv_homotopic f h.
+
 (** Transporting is an equivalence. *)
 Section EquivTransport.
 

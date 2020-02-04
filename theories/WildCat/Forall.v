@@ -19,6 +19,15 @@ Proof.
   + intros x y z f g a; exact (f a $o g a).
 Defined.
 
+Global Instance is0gpd_forall (A : Type) (B : A -> Type)
+  (* Apparently when there's a [forall] there, Coq can't automatically add the [Is01Cat] instance from the [Is0Gpd] instance. *)
+  `{forall a, Is01Cat (B a)} `{forall a, Is0Gpd (B a)}
+  : Is0Gpd (forall a, B a).
+Proof.
+  constructor.
+  intros f g p a; exact ((p a)^$).
+Defined.
+
 Global Instance is1cat_forall (A : Type) (B : A -> Type)
   {c1 : forall a, Is01Cat (B a)} {c2 : forall a, Is1Cat (B a)}
   : Is1Cat (forall a, B a).

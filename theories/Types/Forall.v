@@ -285,6 +285,18 @@ Proof.
   symmetry; apply transport_pp.
 Qed.
 
+(** ** Functoriality on logical equivalences *)
+
+(** At least over a fixed base *)
+Definition iff_functor_forall {A : Type} {P Q : A -> Type}
+           (f : forall a, P a <-> Q a)
+  : (forall a, P a) <-> (forall a, Q a).
+Proof.
+  split.
+  - intros g a; exact (fst (f a) (g a)).
+  - intros h a; exact (snd (f a) (h a)).
+Defined.
+
 (** ** Two variable versions for function extensionality. *)
 
 Definition equiv_path_forall11 {A : Type} {B : A -> Type} {P : forall a : A, B a -> Type} (f g : forall a b, P a b)

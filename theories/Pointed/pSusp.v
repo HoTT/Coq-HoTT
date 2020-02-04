@@ -32,10 +32,9 @@ Definition psusp (X : pType) : pType
 
 (** ** Suspension Functor *)
 
-(* Definition of suspension functor *)
+(* Definition of pointed suspension functor *)
 Definition psusp_functor {X Y : pType} (f : X ->* Y) : psusp X ->* psusp Y
-  := Build_pMap (psusp X) (psusp Y)
-    (Susp_rec North South (fun x => merid (f x))) 1.
+  := Build_pMap (psusp X) (psusp Y) (functor_susp f) 1.
 
 (* Suspension functor preserves composition *)
 Definition psusp_functor_compose {X Y Z : pType} (g : Y ->* Z) (f : X ->* Y)
