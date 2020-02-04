@@ -994,12 +994,11 @@ Section Reflective_Subuniverse.
       refine (inO_equiv_inO@{Ou Oa k k k} _ (issig_equiv@{i j k} A B)).
       refine (inO_equiv_inO@{Ou Oa k k k} _ (equiv_functor_sigma equiv_idmap@{k}
                                  (fun f => equiv_biinv_isequiv@{i j k l} f))).
-      pose (U := hfiber@{k k} (fun fgh : prod@{k k} (A->B) (prod@{k k} (B->A) (B->A))
-                               => ((snd (snd fgh)) o (fst fgh) , (fst fgh) o (fst (snd fgh)))
-                                  : prod@{k k} (A -> A) (B -> B))
-                       (idmap, idmap)).
+      transparent assert (c : (prod@{k k} (A->B) (prod@{k k} (B->A) (B->A)) -> prod@{k k} (A -> A) (B -> B))).
+      { intros [f [g h]]; exact (h o f, f o g). }
+      pose (U := hfiber@{k k} c (idmap, idmap)).
       refine (inO_equiv_inO'@{k k k} U _). (** Introduces some extra copies of [k] by typeclass inference. *)
-      unfold hfiber, BiInv; cbn. cbn in U.
+      unfold hfiber, BiInv; cbn in *.
       srefine (equiv_adjointify _ _ _ _).
       - intros [[f [g h]] p].
         apply (equiv_inverse (equiv_path_prod _ _)) in p.
@@ -2091,8 +2090,8 @@ Section Separated.
     serapply isequiv_homotopic'.
     { (* First we generalize from [y:X] to [y':O' X]. *)
       refine (_ oE equiv_path _ _ (Pb y)^).
-      generalize (to O' X y); clear y.
-      (* Now by a standard result, it suffices to show that [P] is a pointed predicate whose total space. *)
+      generalize (to O' X y) as y'; clear y.
+      (* Now by a standard result, it suffices to show that [P] is a pointed predicate whose total space is contractible. *)
       apply equiv_path_from_contr.
       (* The point is just the image of [idpath x], but we have to transport it across [Pb] to put it in the right type. *)
       1:exact (transport idmap (Pb x)^ (to O _ idpath)).
@@ -2100,17 +2099,13 @@ Section Separated.
       exists (to O' X x; transport idmap (Pb x)^ (to O _ idpath)).
       intros [y' p]; revert y' p.
       (* To construct a contraction, we first observe that it suffices to return to the case [y:X]. *)
-      refine ((extension_from_inO_sigma
-                 O' (fun (w:O' X) => forall (p: (P w).1),
-                         (to O' X x ; transport idmap (Pb x)^ (to O (x = x) 1%path))
-                         = (w ; p)) _).1).
+      refine ((extension_from_inO_sigma O' _ _).1).
       intros y.
       (* Now we have to transport [p] again across the computation rule [Pb]. *)
-      equiv_intro (equiv_path _ _ (Pb y)^) p; revert p.
+      equiv_intro (equiv_path _ _ (Pb y)^) p; revert p; cbn.
       (* We claim that once again, it suffices to assume [p:x=y]. *)
       refine ((extension_from_inO_sigma O _ _).1).
-      { cbn.
-        refine (inO_equiv_inO' _ (to O' X x = to O' X y) _).
+      { refine (inO_equiv_inO' _ (to O' X x = to O' X y) _).
         (* First we change the equality in a sigma-type to a pair of equalities. *)
         pose (e := fun p:O (x = y) =>
                      (equiv_path_sigma (fun a => (P a).1)
@@ -2127,7 +2122,8 @@ Section Separated.
       intros p; destruct p.
       reflexivity. }
     (* Finally, since [path_SepO] is the unique map making a commutative triangle with [to O' X], to show that the above equivalence is homotopic to [path_SepO] it suffices to show that it also makes that triangle commute. *)
-    { apply O_indpaths; intros p.
+    { unfold equiv_path_from_contr.
+      apply O_indpaths; intros p.
       refine (_ @ (O_rec_beta _ _)^).
       (* In fact it's easier to show that the *inverse* of this equivalence makes the triangle commute in the other direction. *)
       apply moveR_equiv_V.
