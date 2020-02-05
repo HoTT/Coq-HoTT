@@ -222,11 +222,7 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
                   refine (equiv_sigma_symm _). }
                 refine (equiv_sigma_symm _).
               * cbn.
-                refine ((equiv_sigma_assoc (fun y => y = y1) (fun yt =>
-                         {b : {q00 : Q x0 yt.1 &
-                              {q10 : Q x1 yt.1 & glue q00 @ (glue q10)^ = r} } &
-                         {_ : transport (fun x => Q x yt.1) s b.1 = b.2.1 &
-                              transport (Q x1) yt.2 (b.2).1 = q11}}))^-1 oE _).
+                refine ((equiv_sigma_assoc' _ _)^-1 oE _).
                 refine ((equiv_contr_sigma _)^-1 oE _); cbn.
                 refine (equiv_sigma_assoc _ _ oE _).
                 refine (equiv_functor_sigma' equiv_idmap _); intros q01; cbn.
@@ -236,9 +232,7 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
                 refine (equiv_functor_sigma' equiv_idmap _ oE _).
                 { intros q; cbn; apply equiv_sigma_symm. }
                 cbn.
-                refine ((equiv_sigma_assoc (fun q => q = q11) (fun qt =>
-                   {_ : glue q01 @ (glue qt.1)^ = r &
-                        transport (fun x => Q x y1) s q01 = qt.1}))^-1 oE _).
+                refine ((equiv_sigma_assoc' _ _)^-1 oE _).
                 refine ((equiv_contr_sigma _)^-1 oE _); cbn.
                 apply equiv_sigma_symm0.
           - unfold Ocodeleft2b.
@@ -270,11 +264,7 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
               refine (equiv_functor_sigma' equiv_idmap _ oE _).
               { intros y0; apply equiv_sigma_symm. }
               cbn.
-              refine ((equiv_sigma_assoc (fun y => y = y1) (fun yt =>
-                        {b : {q00 : Q x0 yt.1 &
-                             {q10 : Q x1 yt.1 &
-                             glue q00 @ (glue q10)^ = r}}
-                             & transport (Q x1) yt.2 (b.2).1 = q11}))^-1 oE _).
+              refine ((equiv_sigma_assoc' _ _)^-1 oE _).
                 refine ((equiv_contr_sigma _)^-1 oE _); cbn.
                 refine (equiv_sigma_assoc _ _ oE _).
                 refine (equiv_functor_sigma' equiv_idmap _); intros q01; cbn.
@@ -282,8 +272,7 @@ Module GenBlakersMassey (Os : ReflectiveSubuniverses).
                 refine (equiv_functor_sigma' equiv_idmap _ oE _).
                 { intros q; cbn; apply equiv_sigma_symm0. }
                 cbn.
-                refine ((equiv_sigma_assoc (fun q => q = q11)
-                          (fun qt => glue q01 @ (glue qt.1)^ = r))^-1 oE _).
+                refine ((equiv_sigma_assoc' _ _)^-1 oE _).
                 refine ((equiv_contr_sigma _)^-1 oE _); cbn.
                 apply equiv_idmap.
           - intros [s [q01 [w u]]]; reflexivity.

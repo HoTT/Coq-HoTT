@@ -499,6 +499,18 @@ Definition equiv_sigma_assoc `(P : A -> Type) (Q : {a : A & P a} -> Type)
           (fun _ => 1)
           (fun _ => 1)).
 
+Definition equiv_sigma_assoc' `(P : A -> Type) (Q : forall a : A, P a -> Type)
+: {a : A & {p : P a & Q a p}} <~> {ap : sigT P & Q ap.1 ap.2}
+  := @Build_Equiv
+       _ _ _
+       (@Build_IsEquiv
+          {a : A & {p : P a & Q a p}} {ap : sigT P & Q ap.1 ap.2}
+          (fun apq => ((apq.1; apq.2.1); apq.2.2))
+          (fun apq => (apq.1.1; (apq.1.2; apq.2)))
+          (fun _ => 1)
+          (fun _ => 1)
+          (fun _ => 1)).
+
 Definition equiv_sigma_prod `(Q : (A * B) -> Type)
 : {a : A & {b : B & Q (a,b)}} <~> sigT Q
   := @Build_Equiv

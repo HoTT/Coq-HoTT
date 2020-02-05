@@ -91,18 +91,16 @@ Definition hfiber_pullback_along {A B C} (f : B -> A) (g : C -> A) (b:B)
 : hfiber (f ^* g) b <~> hfiber g (f b).
 Proof.
   unfold hfiber, Pullback.
-  refine (_ oE (equiv_sigma_assoc (fun b' => {c : C & f b' = g c})
-                                 (fun x => (f^* g) x = b))^-1).
+  refine (_ oE (equiv_sigma_assoc _ _)^-1).
   simpl.
   refine (_ oE (@equiv_functor_sigma'
                  B (fun b' => {_ : {c:C & f b' = g c} & b' = b})
                  B (fun b' => {_ : b' = b & {c:C & f b' = g c}})
                  1
                  (fun b' => equiv_sigma_symm0 {c:C & f b' = g c} (b' = b)))).
-  refine (_ oE (equiv_sigma_assoc (fun b' => b' = b)
-                                 (fun b'p => {c:C & f b'p.1 = g c}))).
+  refine (_ oE (equiv_sigma_assoc' _ _)).
   refine (_ oE equiv_contr_sigma _).
-  exact (equiv_functor_sigma' 1 (fun c => equiv_path_inverse _ _)).
+  exact (equiv_functor_sigma_id (fun c => equiv_path_inverse _ _)).
 Defined.
 
 (** And the dual sort of pullback *)
@@ -118,19 +116,16 @@ Definition hfiber_pullback_along' {A B C} (g : C -> A) (f : B -> A) (c:C)
 : hfiber (g ^*' f) c <~> hfiber f (g c).
 Proof.
   unfold hfiber, Pullback.
-  refine (_ oE (equiv_sigma_assoc (fun b' => {c : C & f b' = g c})
-                                 (fun x => (g^*' f) x = c))^-1).
+  refine (_ oE (equiv_sigma_assoc _ _)^-1).
   refine (equiv_functor_sigma' 1 _); intros b.
-  refine (_ oE (equiv_sigma_assoc (fun c' => f b = g c')
-                                 (fun x => (g^*' f) (b;x) = c))^-1).
+  refine (_ oE (equiv_sigma_assoc _ _)^-1).
   simpl.
   refine (_ oE (@equiv_functor_sigma'
                  C (fun c' => {_ : f b = g c' & c' = c})
                  C (fun c' => {_ : c' = c & f b = g c'})
                  1
                  (fun c' => equiv_sigma_symm0 (f b = g c') (c' = c)))).
-  refine (_ oE (equiv_sigma_assoc (fun c' => c' = c)
-                                 (fun c'p => f b = g c'p.1))).
+  refine (_ oE equiv_sigma_assoc' _ _).
   refine (_ oE equiv_contr_sigma _).
   apply equiv_idmap.
 Defined.
