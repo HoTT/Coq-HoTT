@@ -1,10 +1,11 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Nullification *)
 
-Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Basics HoTT.Types HoTT.Cubical.
 Require Import Extensions.
 Require Import Modality Accessible.
 Require Export Localization.    (** Nullification is a special case of localization *)
+Require Import Homotopy.Suspension.
 
 Local Open Scope path_scope.
 
@@ -40,6 +41,13 @@ Definition ooextendable_over_unit@{i j k l m}
             ooExtendableAlong (@const A Unit tt) (fun u => (D u (c u))))
 : ooExtendableAlong_Over (@const A Unit tt) C D ext
   := fun n => extendable_over_unit n A C D (ext n) (fun c => ext' c n).
+
+(** A basic operation on local generators is the pointwise suspension. *)
+Definition susp_nullgen@{a} (S : NullGenerators@{a}) : NullGenerators@{a}.
+Proof.
+  econstructor; intros i.
+  exact (Susp@{a a a a a a} (S i)).
+Defined.
 
 (** We define a wrapper, as before. *)
 Record Nullification_Modality := Nul { unNul : NullGenerators }.
@@ -97,6 +105,44 @@ Module Nullification_Modalities <: Modalities.
   : In@{u a i} O (z = z').
   Proof.
     apply (LocRSUTh.inO_paths@{u a i i}); assumption.
+  Defined.
+
+  (** Just as for general localizations, the separated modality corresponding to a nullification is nullification at the suspension of the generators.  The proofs are a little more involved because we have to transfer across the equivalence [Susp Unit <~> Unit]. *)
+  Definition IsSepFor@{u a} (O' O : Modality@{u a}) : Type@{u}
+    := paths@{u} (Nul (susp_nullgen (unNul O))) O'.
+
+  Definition inO_paths_from_inSepO@{u a i iplus}
+             (O' O : Modality@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}) (A_inO : In@{u a i} O' A) (x y : A)
+    : In@{u a i} O (x = y).
+  Proof.
+    destruct O as [S]; destruct sep; unfold In, IsLocal in *; intros i; cbn in *.
+    specialize (A_inO i).
+    cbn in A_inO.
+    assert (ee : ooExtendableAlong (functor_susp (fun _:S i => tt)) (fun _ => A)).
+    { refine (cancelL_ooextendable _ _ (fun _ => tt) _ A_inO).
+      apply ooextendable_equiv.
+      apply isequiv_contr_contr. }
+    assert (e := fst (ooextendable_iff_functor_susp@{a a i i a a a i i iplus i a a a i i iplus i i i i i i i i i i i i iplus i i i iplus i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i} (fun _:S i => tt) _) ee (x,y)).
+    cbn in e.
+    refine (ooextendable_postcompose' _ _ _ _ e).
+    intros b.
+    symmetry; apply equiv_dp_const.
+  Defined.
+
+  Definition inSepO_from_inO_paths@{u a i iplus}
+             (O' O : Modality@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}) (e : forall (x y : A), In@{u a i} O (x = y))
+    : In@{u a i} O' A.
+  Proof.
+    destruct O as [S]; destruct sep; unfold In, IsLocal in *; intros i; cbn in *.
+    apply (ooextendable_compose _ (functor_susp (fun _:S i => tt)) (fun _:Susp Unit => tt)).
+    1:apply ooextendable_equiv, isequiv_contr_contr.
+    apply (ooextendable_iff_functor_susp@{a a i i a a a i i iplus i a a a i i iplus i i i i i i i i i i i i iplus i i i iplus i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i} (fun _:S i => tt)).  
+    intros [x y].
+    refine (ooextendable_postcompose' _ _ _ _ (e x y i)).
+    intros b.
+    apply equiv_dp_const.
   Defined.
 
 End Nullification_Modalities.

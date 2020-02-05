@@ -1,9 +1,10 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 (** * Localization *)
 
-Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Basics HoTT.Types HoTT.Cubical.
 Require Import Extensions EquivalenceVarieties.
 Require Import ReflectiveSubuniverse Accessible.
+Require Import Homotopy.Suspension.
 
 Local Open Scope nat_scope.
 Local Open Scope path_scope.
@@ -270,6 +271,13 @@ Proof.
   apply Xloc.
 Defined.
 
+(** A basic operation on local generators is the pointwise suspension. *)
+Definition susp_localgen (f : LocalGenerators@{a}) : LocalGenerators@{a}.
+Proof.
+  econstructor; intros i.
+  exact (functor_susp@{a a a a a a a a a a a a} (f i)).
+Defined.
+
 (** ** Localization as a HIT *)
 
 Module Export LocalizationHIT.
@@ -390,6 +398,38 @@ Module Localization_ReflectiveSubuniverses <: ReflectiveSubuniverses.
     apply ext_localize_ind@{a i j i k}; intros ?.
     apply ooextendable_over_const.
     apply Q_inO.
+  Defined.
+
+  (** The separated subuniverse corresponding to localization at [f] is localization at the pointwise suspension of [f].  This (and the following two definitions that prove it) is CORS Lemma 2.15, except that we can't use exactly the same proof since we have to avoid funext.  Instead we use the non-funext version proven using wild 0-groupoids in [Homotopy.Suspension]. *)
+  Definition IsSepFor@{u a} (O' O : ReflectiveSubuniverse@{u a}) : Type@{u}
+    := paths@{u} (Loc (susp_localgen (unLoc O))) O'.
+
+  Definition inO_paths_from_inSepO@{u a i iplus}
+             (O' O : ReflectiveSubuniverse@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}) (A_inO : In@{u a i} O' A) (x y : A)
+    : In@{u a i} O (x = y).
+  Proof.
+    destruct O as [f]; destruct sep; unfold In, IsLocal in *; intros i; cbn in *.
+    specialize (A_inO i).
+    (** Unfortunately, [ooextendable_iff_functor_susp] has a ridiculous number of universe parameters.  Fortunately, most of them can be [i], and it's fairly easy to figure out which have to be [a].  But a few of them have to be something strictly larger than [i], which is why we included such a universe parameter [iplus] in these fields of [ReflectiveSubuniverse]. *)
+    assert (e := fst (ooextendable_iff_functor_susp@{a a i i a a a i i iplus i a a a i i iplus i i i i i i i i i i i i iplus i i i iplus i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i} (f i) _) A_inO (x,y)).
+    cbn in e.
+    refine (ooextendable_postcompose' _ _ _ _ e).
+    intros b.
+    symmetry; apply equiv_dp_const.
+  Defined.
+
+  Definition inSepO_from_inO_paths@{u a i iplus}
+             (O' O : ReflectiveSubuniverse@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}) (e : forall (x y : A), In@{u a i} O (x = y))
+    : In@{u a i} O' A.
+  Proof.
+    destruct O as [f]; destruct sep; unfold In, IsLocal in *; intros i; cbn in *.
+    apply (ooextendable_iff_functor_susp@{a a i i a a a i i iplus i a a a i i iplus i i i i i i i i i i i i iplus i i i iplus i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i} (f i)).  
+    intros [x y].
+    refine (ooextendable_postcompose' _ _ _ _ (e x y i)).
+    intros b.
+    apply equiv_dp_const.
   Defined.
 
 End Localization_ReflectiveSubuniverses.

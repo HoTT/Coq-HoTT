@@ -38,6 +38,20 @@ Module Type Modalities.
   : Funext -> forall (O : Modality@{u a}) (T : Type@{i}),
                 IsHProp (In@{u a i} O T).
 
+  Parameter IsSepFor@{u a} : forall (O' O : Modality@{u a}), Type@{u}.
+
+  Parameter inO_paths_from_inSepO@{u a i iplus}
+    : forall (O' O : Modality@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}) (A_inO : In@{u a i} O' A) (x y : A),
+      let gt := (Type1@{i} : Type@{iplus}) in
+      In@{u a i} O (x = y).
+
+  Parameter inSepO_from_inO_paths@{u a i iplus}
+    : forall (O' O : Modality@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}),
+      let gt := (Type1@{i} : Type@{iplus}) in
+      (forall (x y : A), In@{u a i} O (x = y)) -> In@{u a i} O' A.
+
   (** Now instead of [extendable_to_O], we have an ordinary induction principle. *)
 
   (** Unfortunately, we have to define these parameters as [_internal] versions and redefine them later.  This is because eventually we want the [In] fields of [O_ind] and [O_ind_beta] to refer to the [In] typeclass defined for [ReflectiveSubuniverse]s, but in order to prove that modalities *are* reflective subuniverses we need to already have [O_ind] and [O_ind_beta]. *)
@@ -112,6 +126,9 @@ Module Modalities_to_ReflectiveSubuniverses
   : Funext -> forall (O : ReflectiveSubuniverse@{u a}) (T : Type@{i}),
                 IsHProp (In@{u a i} O T)
     := hprop_inO@{u a i}.
+  Definition IsSepFor@{u a} := IsSepFor@{u a}.
+  Definition inO_paths_from_inSepO@{u a i iplus} := inO_paths_from_inSepO@{u a i iplus}.
+  Definition inSepO_from_inO_paths@{u a i iplus} := inSepO_from_inO_paths@{u a i iplus}.
 
   (** Corollary 7.7.8, part 1 *)
   Definition extendable_to_O@{u a i j k} (O : ReflectiveSubuniverse@{u a})
@@ -153,6 +170,9 @@ Module ReflectiveSubuniverses_to_Modalities
   Definition to@{u a i} := to@{u a i}.
   Definition inO_equiv_inO@{u a i j k} := @inO_equiv_inO@{u a i j k}.
   Definition hprop_inO@{u a i} := hprop_inO@{u a i}.
+  Definition IsSepFor@{u a} := IsSepFor@{u a}.
+  Definition inO_paths_from_inSepO@{u a i iplus} := inO_paths_from_inSepO@{u a i iplus}.
+  Definition inSepO_from_inO_paths@{u a i iplus} := inSepO_from_inO_paths@{u a i iplus}.
 
   Definition O_ind_internal@{u a i j k} (O : Modality@{u a})
              (A : Type@{i}) (B : O_reflector@{u a i} O A -> Type@{j})
@@ -307,6 +327,22 @@ Module EasyModalities_to_Modalities (Os : EasyModalities)
     - apply isequiv_inverse.
   Defined.
 
+  (** We don't bother including separatedness for modalities constructed in this way.  (We could.)  *)
+  Definition IsSepFor@{u a} (O' O : Modality@{u a}) : Type@{u}
+    := Empty.
+
+  Definition inO_paths_from_inSepO@{u a i iplus}
+            (O' O : Modality@{u a}) (sep : IsSepFor O' O)
+            (A : Type@{i}) (A_inO : In@{u a i} O' A) (x y : A)
+    : In@{u a i} O (x = y)
+    := Empty_rec sep.
+
+  Definition inSepO_from_inO_paths@{u a i iplus}
+             (O' O : Modality@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}) (op : forall (x y : A), In@{u a i} O (x = y))
+    : In@{u a i} O' A
+    := Empty_rec sep.
+
 End EasyModalities_to_Modalities.
 
 (** We now move on to the general theory of modalities. *)
@@ -438,17 +474,7 @@ Section Enhancements.
     apply O_ind_beta.
   Defined.
 
-  (** This has useful consequences like closure under [Equiv]. *)
-  Global Instance inO_equiv `{Funext} (A B : Type)
-         `{In O A} `{In O B}
-  : In O (A <~> B).
-  Proof.
-    refine (inO_equiv_inO _ (issig_equiv A B)).
-    refine (inO_sigma _ _).
-    intros f; refine (inO_equiv_inO _ (issig_isequiv f)).
-  Defined.
-
-  (** And that the composite of modal maps is modal *)
+  (** This implies that the composite of modal maps is modal. *)
   Global Instance mapinO_compose {A B C : Type} (f : A -> B) (g : B -> C)
          `{MapIn O _ _ f} `{MapIn O _ _ g}
   : MapIn O (g o f).
@@ -467,6 +493,24 @@ Section Enhancements.
   Defined.
 
 End Enhancements.
+
+(** An enhancement of Corollary 2.29 of CORS: when O (hence also O') is a modality, the map between fibers is not just an O-equivalence but is O-connected. *)
+Global Instance conn_map_functor_hfiber `{Univalence} {O O' : Modality} `{IsSepFor O' O}
+       {Y X : Type} (f : Y -> X) (x : X)
+  : IsConnMap O (functor_hfiber (fun y => (to_O_natural O' f y)^) x).
+Proof.
+  intros [oy p].
+  rewrite <- (inv_V p).
+  ntc_refine (isconnected_equiv' O _
+               (hfiber_functor_hfiber (to_O_natural O' f) oy x p^) _).
+  ntc_refine (isconnected_hfiber_conn_map
+                (f := (functor_hfiber (to_O_natural O' f) oy)) (x;p^)).
+  apply conn_map_SepO_inverts.
+  (* Actually typeclasss search can do the rest by itself, but to help the human reader we show what's going on.  (As a byproduct this makes it marginally faster too). *)
+  apply O_inverts_isconnected. 
+  - apply conn_map_to_O.
+  - apply conn_map_to_O.
+Defined.
 
 (** ** The modal factorization system *)
 
@@ -642,6 +686,12 @@ Module Modalities_Restriction
     := Os.O_ind_beta_internal@{u a i j k} (Res.Modalities_restriction O).
   Definition minO_paths (O : Modality@{u a})
     := Os.minO_paths@{u a i} (Res.Modalities_restriction O).
+  Definition IsSepFor@{u a} (O' O : Modality@{u a})
+    := @Os.IsSepFor@{u a} (Res.Modalities_restriction@{u a} O') (Res.Modalities_restriction@{u a} O).
+  Definition inO_paths_from_inSepO@{u a i iplus} (O' O : Modality@{u a})
+    := @Os.inO_paths_from_inSepO@{u a i iplus} (Res.Modalities_restriction@{u a} O') (Res.Modalities_restriction@{u a} O).
+  Definition inSepO_from_inO_paths@{u a i iplus} (O' O : Modality@{u a})
+    := @Os.inSepO_from_inO_paths@{u a i iplus} (Res.Modalities_restriction@{u a} O') (Res.Modalities_restriction@{u a} O).
 
 End Modalities_Restriction.
 
@@ -729,6 +779,40 @@ Module Modalities_FamUnion (Os1 Os2 : Modalities)
   Proof.
     intros [O|O]; [ exact (Os1.minO_paths@{u a i} O)
                   | exact (Os2.minO_paths@{u a i} O) ].
+  Defined.
+
+  Definition IsSepFor@{u a}
+    : forall (O' O : Modality@{u a}), Type@{u}.
+  Proof.
+    intros [O'|O'] [O|O];
+      [ exact (@Os1.IsSepFor@{u a} O' O)
+      | exact Empty
+      | exact Empty
+      | exact (@Os2.IsSepFor@{u a} O' O) ].
+  Defined.
+
+  Definition inO_paths_from_inSepO@{u a i iplus}
+    : forall (O' O : Modality@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}) (A_inO : In@{u a i} O' A) (x y : A),
+      In@{u a i} O (x = y).
+  Proof.
+    intros [O'|O'] [O|O];
+      [ exact (@Os1.inO_paths_from_inSepO@{u a i iplus} O' O)
+      | contradiction
+      | contradiction
+      | exact (@Os2.inO_paths_from_inSepO@{u a i iplus} O' O) ].
+  Defined.
+
+  Definition inSepO_from_inO_paths@{u a i iplus}
+    : forall (O' O : Modality@{u a}) (sep : IsSepFor O' O)
+             (A : Type@{i}),
+      (forall (x y : A), In@{u a i} O (x = y)) -> In@{u a i} O' A.
+  Proof.
+    intros [O'|O'] [O|O];
+      [ exact (@Os1.inSepO_from_inO_paths@{u a i iplus} O' O)
+      | contradiction
+      | contradiction
+      | exact (@Os2.inSepO_from_inO_paths@{u a i iplus} O' O) ].
   Defined.
 
 End Modalities_FamUnion.
