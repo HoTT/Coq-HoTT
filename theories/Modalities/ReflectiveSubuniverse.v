@@ -900,28 +900,20 @@ Section Reflective_Subuniverse.
         exact (inO_equiv_inO' _ (equiv_sigprod_pullback B B)^-1). }
       unfold Pullback.
       (** The rest is just contracting a couple of based path spaces.  It seems like it should be less work than this. *)
-      apply (equiv_functor_sigma' equiv_idmap); intros z; cbn. 
-      pose (e := fun z':Z => (equiv_path_sigma (fun oa => B oa * B oa)
-                               (z;(h z,k z)) (z'.1;(z'.2,z'.2)))^-1%equiv).
-      refine (_ oE equiv_functor_sigma'
-                (Q := fun z' => {p : z = z'.1 & p # (h z,k z) = (z'.2,z'.2)})
-                equiv_idmap e); clear e.
+      apply equiv_functor_sigma_id; intros z; cbn. 
+      refine (_ oE equiv_functor_sigma_id _).
+      2:intros; symmetry; apply equiv_path_sigma.
       refine (_ oE (equiv_sigma_assoc _ _)^-1%equiv); cbn.
-      pose (e := (fun a:O A => equiv_sigma_symm (fun (b:B a) (q:z=a) =>
-                    transport (fun oa => B oa * B oa) q (h z,k z) = (b,b)))).
-      cbn in e.
-      refine (_ oE (equiv_functor_sigma'
-                     (Q := fun a:O A => {q : z = a & {b : B a &
-                        q # (h z, k z) = (b, b)}})
-                     1%equiv e)); clear e.
-      refine (_ oE (equiv_sigma_assoc (fun a => z = a)
-                                      (fun aq => {b : B aq.1 & aq.2 # (h z,k z) = (b,b)}))).
+      refine (_ oE equiv_functor_sigma_id _).
+      2:intros; apply equiv_sigma_symm.
+      refine (_ oE (equiv_sigma_assoc
+                      _ (fun aq => {b : B aq.1 & aq.2 # (h z,k z) = (b,b)}))).
       refine (_ oE equiv_contr_sigma _); cbn.
-      refine (_ oE equiv_functor_sigma' (Q := fun b => (h z = b) * (k z = b))
-                1%equiv (fun b:B z => (equiv_path_prod (h z,k z) (b,b))^-1)).
-      refine (_ oE equiv_functor_sigma' (Q := fun b => {_ : h z = b & k z = b})
-                1%equiv (fun b => (equiv_sigma_prod0 _ _)^-1)).
-      refine (_ oE equiv_sigma_assoc (fun b => h z = b) (fun bp => k z = bp.1)).
+      refine (_ oE equiv_functor_sigma_id _).
+      2:{ intros; symmetry; etransitivity; revgoals.
+          - apply equiv_path_prod.
+          - apply equiv_sigma_prod0. }
+      refine (_ oE equiv_sigma_assoc _ (fun bp => k z = bp.1)).
       refine (_ oE equiv_contr_sigma _); cbn.
       apply equiv_path_inverse.
     Defined.
@@ -1836,7 +1828,7 @@ Section ConnectedMaps.
     apply isequiv_fcontr; intros d.
     apply contr_inhabited_hprop.
     - refine (@trunc_equiv' {g : forall b, P b & g oD f == d} _ _ _ _).
-      { refine (equiv_functor_sigma' (equiv_idmap _) _); intros g.
+      { refine (equiv_functor_sigma_id _); intros g.
         apply equiv_path_forall. }
       apply hprop_allpath. intros g h.
       exact (allpath_extension_conn_map f P d g h).
@@ -1885,8 +1877,7 @@ Section ConnectedMaps.
   Proof.
     intros b.
     srefine (isconnected_equiv' O (hfiber (g o f) (g b)) _ _).
-    exact (equiv_inverse (equiv_functor_sigma'
-                            equiv_idmap (fun a => equiv_ap g (f a) b))).
+    exact (equiv_inverse (equiv_functor_sigma_id (fun a => equiv_ap g (f a) b))).
   Defined.
 
   Definition cancelR_equiv_conn_map {A B C : Type} (f : A -> B) (g : B <~> C)
@@ -2060,7 +2051,7 @@ Section Separated.
              {X : Type@{i}} (P : O' X -> Type@{j}) `{forall x, In@{Ou Oa j} O (P x)}
     : ooExtendableAlong@{i i j k} (to O' X) P.
   Proof.
-    rapply extendable_from_inO_sigma@{Ou Oa i j k kplus k k k k}.
+    rapply extendable_from_inO_sigma@{Ou Oa i j k kplus k k k kplus k k kplus}.
   Defined.
 
   (** And now the version with funext.  Universe parameters are [i j k kplus kplus kplus]. *)
@@ -2099,7 +2090,8 @@ Section Separated.
       exists (to O' X x; transport idmap (Pb x)^ (to O _ idpath)).
       intros [y' p]; revert y' p.
       (* To construct a contraction, we first observe that it suffices to return to the case [y:X]. *)
-      refine ((extension_from_inO_sigma O' _ _).1).
+      pose (H1 := @inSepO_sigma); pose (H2 := @inO_paths_from_inSepO); pose (H3 := @inO_forall);
+        refine ((extension_from_inO_sigma O' _ _).1); clear H1 H2 H3.
       intros y.
       (* Now we have to transport [p] again across the computation rule [Pb]. *)
       equiv_intro (equiv_path _ _ (Pb y)^) p; revert p; cbn.
@@ -2107,16 +2099,13 @@ Section Separated.
       refine ((extension_from_inO_sigma O _ _).1).
       { refine (inO_equiv_inO' _ (to O' X x = to O' X y) _).
         (* First we change the equality in a sigma-type to a pair of equalities. *)
-        pose (e := fun p:O (x = y) =>
-                     (equiv_path_sigma (fun a => (P a).1)
-                                       (to O' X x; transport idmap (Pb x)^ (to O _ 1%path))
-                                       (to O' X y; transport idmap (Pb y)^ p))^-1%equiv).
-        refine (equiv_functor_sigma' 1%equiv (fun p => (e p)^-1%equiv) oE _); clear e; cbn.
+        refine (equiv_functor_sigma_id _ oE _); cbn.
+        1:intros p; apply equiv_path_sigma.
         (* Now we rearrange things to see that the two extra components are equivalent to a contractible based path space. *)
-        refine (equiv_sigma_symm _ oE _).
+        cbn. refine (equiv_sigma_symm _ oE _).
         refine ((equiv_sigma_contr _)^-1%equiv). intros p.
         refine (@contr_equiv' _ _ _ (@contr_basedpaths (O (x = y)) _)).
-        apply (equiv_functor_sigma' 1%equiv); intros q; cbn.
+        apply equiv_functor_sigma_id; intros q; cbn.
         exact (equiv_moveL_transport_V idmap (Pb y) _ q). }
       (* Now it's easy by path induction. *)
       intros p; destruct p.
@@ -2136,12 +2125,12 @@ Section Separated.
     : O (x = y) <~> (to O' A x = to O' A y)
     := Build_Equiv _ _ _ (isequiv_path_SepO x y).
 
-  (** Lemma 2.27 of CORS.  I don't see how to prove any version of this without funext, although that seems strange since its statement doesn't involve any pi-types. *)
+  (** Lemma 2.27 of CORS.  This is the proof given in CORS, which requires funext.  An alternative proof not requiring funext should be possible, using the fact that [to O' X] is [O]-connected. *)
   Global Instance O_inverts_functor_sigma_to_SepO@{i j jplus} `{Funext}
          {X : Type@{i} } (P : O' X -> Type@{j})
     : O_inverts O (functor_sigma@{i j i j} (Q := P) (to O' X) (fun x => idmap)).
   Proof.
-    rapply O_inverts_by_yoneda@{Ou Oa j j j j jplus j j j j}.
+    apply (O_inverts_by_yoneda@{Ou Oa j j j j jplus j j j j} O).
     intros Z ?.
     serapply isequiv_homotopic'.
     { refine (_ oE _ oE _).
@@ -2164,11 +2153,9 @@ Section Separated.
     serapply isequiv_homotopic'.
     - unfold hfiber.
       refine (_ oE (equiv_inverse (equiv_O_sigma_O O _))).
-      pose (fun oy:O' Y => O_functor@{Ou Oa i i i i i} O' f oy = to O' X x).
-      refine (equiv_functor_sigma_to_SepO@{i i iplus}
-                (fun oy:O' Y => O_functor@{Ou Oa i i i i i} O' f oy = to O' X x) oE _).
-      apply equiv_O_functor. 
-      refine (equiv_functor_sigma' equiv_idmap _); intros y; cbn.
+      refine (equiv_functor_sigma_to_SepO@{i i iplus} _ oE _).
+      apply equiv_O_functor.
+      apply equiv_functor_sigma_id; intros y; cbn.
       refine (_ oE equiv_path_SepO (f y) x).
       apply equiv_concat_l, to_O_natural.
     - apply O_indpaths.
@@ -2182,6 +2169,10 @@ Section Separated.
       ).
   Defined.
 
+  Definition equiv_SepO_functor_hfiber `{Univalence}
+             {Y X : Type@{i} } (f : Y -> X) (x : X)
+    := Build_Equiv _ _ _ (SepO_inverts_functor_hfiber f x).
+
   (** Proposition 2.30 of CORS *)
   (* Making this an [Instance] breaks typeclass inference in various places. *)
   Definition conn_map_SepO_inverts `{Univalence} {Y X : Type@{i}} (f : Y -> X)
@@ -2190,8 +2181,7 @@ Section Separated.
   Proof.
     intros x.
     refine (contr_equiv' (O (hfiber (O_functor O' f) (to O' X x))) _).
-    refine (equiv_inverse (Build_Equiv _ _
-             (O_functor O (functor_hfiber (fun y => (to_O_natural O' f y)^) x)) _)).
+    exact ((equiv_SepO_functor_hfiber f x)^-1%equiv).
   Defined.
 
 End Separated.
