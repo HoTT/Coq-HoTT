@@ -134,7 +134,7 @@ Local Definition equiv_fcontr_isequiv' `(f : A -> B)
   : (forall b:B, Contr {a : A & f a = b}) <~> IsEquiv f.
 Proof.
   (* First we get rid of those pesky records. *)
-  refine (_ oE (equiv_functor_forall idmap
+  refine (_ oE (equiv_functor_forall_id 
     (fun b => (issig_contr {a : A & f a = b})^-1))).
   refine (issig_isequiv f oE _).
   (* Now we can really get to work.
@@ -145,12 +145,9 @@ Proof.
       (equiv_sigT_coind _ _)
       (fun fg => equiv_idmap (forall x y,
         (equiv_sigT_coind _ (fun b a => f a = b) fg x = y))))^-1).
-  refine (_ oE (equiv_sigma_assoc
-    (fun g => forall x, f (g x) = x)
-    (fun gh => forall x y,
-      (fun b => (gh.1 b; gh.2 b)) x = y))^-1).
-  refine (equiv_functor_sigma' 1 _). intros g.
-  refine (equiv_functor_sigma' 1 _). intros r. simpl.
+  refine (_ oE (equiv_sigma_assoc _ _)^-1).
+  refine (equiv_functor_sigma_id _). intros g.
+  refine (equiv_functor_sigma_id _). intros r. simpl.
   (* Now we use the fact that Paulin-Mohring J is an equivalence. *)
   refine (_ oE (@equiv_functor_forall' _ _
     (fun x => forall a (y : f a = x),

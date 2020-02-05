@@ -167,7 +167,7 @@ Section UnstableOctahedral.
     refine (equiv_functor_sigma' 1 _); intros a.
     refine (equiv_functor_sigma' 1
               (fun b => equiv_sigma_symm0 _ _) oE _); simpl.
-    refine ((equiv_sigma_assoc (fun b => f a = b) (fun w => g w.1 = c))^-1 oE _).
+    refine ((equiv_sigma_assoc' _ _)^-1 oE _).
     symmetry.
     exact (equiv_contr_sigma (fun (w:{b:B & f a = b}) => g w.1 = c)).
   Defined.
@@ -208,8 +208,7 @@ Proof.
   equiv_via ({a:A & {q:f a = b & {p : P a & q # (g a p) = v}}}).
   { refine (equiv_functor_sigma' 1 (fun a => _)); simpl.
     refine (equiv_sigma_symm _). }
-  refine (_ oE (equiv_sigma_assoc (fun a => f a = b)
-                 (fun w => {p : P w.1 & w.2 # (g w.1 p) = v}))).
+  refine (_ oE (equiv_sigma_assoc' _ _)).
   refine (equiv_functor_sigma' 1 _);
     intros [a p]; simpl.
   refine (equiv_functor_sigma' 1 _);

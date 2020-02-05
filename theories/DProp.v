@@ -87,7 +87,7 @@ Proof.
   destruct P as [P hP dP]. destruct Q as [Q hQ dQ].
   refine (((equiv_ap' issig_dprop^-1 _ _)^-1)
             oE _); cbn.
-  refine ((equiv_ap' (equiv_sigma_assoc _ (fun Xp => Decidable Xp.1))^-1
+  refine ((equiv_ap' (equiv_sigma_assoc' _ _)^-1
                      ((P;hP);dP) ((Q;hQ);dQ))
             oE _).
   refine (equiv_path_sigma_hprop _ _ oE _); cbn.

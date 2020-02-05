@@ -701,14 +701,11 @@ Section RetractOfRetracts.
     - refine ((hfiber_fibration f
                   (fun g => { I : IsPreIdempotent g & @IsQuasiIdempotent _ g I }))^-1 oE _).
       unfold hfiber.
-      refine (equiv_functor_sigma'
-                (equiv_sigma_assoc IsPreIdempotent
-                                   (fun fi => @IsQuasiIdempotent _ fi.1 fi.2))^-1
-                (fun a => _)); simpl.
+      refine (equiv_functor_sigma' (equiv_sigma_assoc _ _)^-1 (fun a => _)); simpl.
       destruct a as [[g I] J]; unfold quasiidempotent_pr1; simpl.
       apply equiv_idmap.
     - simpl.  unfold hfiber, Splitting.
-      refine (equiv_functor_sigma' (equiv_idmap (RetractOf X)) _);
+      refine (equiv_functor_sigma_id _);
         intros R; simpl.
       apply equiv_ap10.
   Defined.

@@ -119,9 +119,7 @@ Module Book_Loop_Susp_Adjunction.
                  1
                  (fun b => equiv_sigma_symm (A := B) (B := b = point B)
                              (fun p _ => A -> b = p)))).
-    refine (_ oE
-              (equiv_sigma_assoc (fun b => b = point B)
-                                 (fun bq => {p:B & A -> bq.1 = p}))).
+    refine (_ oE equiv_sigma_assoc' _ _).
     refine (_ oE equiv_contr_sigma _); simpl.
     refine (_ oE (equiv_sigma_contr
                    (A := {p : B & A -> point B = p})
@@ -132,10 +130,7 @@ Module Book_Loop_Susp_Adjunction.
                  (Q := fun b => {q : point B = b & {p : A -> point B = b & p (point A) = q}})
                  1
                  (fun b => equiv_sigma_symm (fun p q => p (point A) = q)))).
-    refine (_ oE
-              (equiv_sigma_assoc
-                 (fun b => point B = b)
-                 (fun bq => {p : A -> point B = bq.1 & p (point A) = bq.2}))).
+    refine (_ oE equiv_sigma_assoc' _ _).
     refine (_ oE equiv_contr_sigma _); simpl.
     refine (issig_pmap A (loops B)).
   Defined.

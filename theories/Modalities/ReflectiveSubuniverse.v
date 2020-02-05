@@ -906,14 +906,13 @@ Section Reflective_Subuniverse.
       refine (_ oE (equiv_sigma_assoc _ _)^-1%equiv); cbn.
       refine (_ oE equiv_functor_sigma_id _).
       2:intros; apply equiv_sigma_symm.
-      refine (_ oE (equiv_sigma_assoc
-                      _ (fun aq => {b : B aq.1 & aq.2 # (h z,k z) = (b,b)}))).
+      refine (_ oE (equiv_sigma_assoc' _ _)). 
       refine (_ oE equiv_contr_sigma _); cbn.
       refine (_ oE equiv_functor_sigma_id _).
       2:{ intros; symmetry; etransitivity; revgoals.
           - apply equiv_path_prod.
           - apply equiv_sigma_prod0. }
-      refine (_ oE equiv_sigma_assoc _ (fun bp => k z = bp.1)).
+      refine (_ oE equiv_sigma_assoc' _ _).
       refine (_ oE equiv_contr_sigma _); cbn.
       apply equiv_path_inverse.
     Defined.

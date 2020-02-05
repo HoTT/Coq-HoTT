@@ -30,7 +30,7 @@ Proof.
                    (P := fun a => {_ : f a = point B & a = point A})
                    (Q := fun a => {_ : a = point A & f a = point B })
                    1 (fun a => equiv_sigma_symm0 _ _))).
-    refine (_ oE equiv_sigma_assoc _ (fun a => f a.1 = point B)).
+    refine (_ oE equiv_sigma_assoc' _ _).
     refine (_ oE equiv_contr_sigma _); simpl.
     apply equiv_concat_l.
     symmetry; apply point_eq.

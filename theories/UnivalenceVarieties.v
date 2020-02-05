@@ -34,13 +34,12 @@ Theorem WeakUnivalence_implies_Univalence :
 Proof.
   intros [etop H] A.
   apply isequiv_from_functor_sigma.
-  refine (@isequiv_contr_contr _ {B:Type & A <~> B} (contr_basedpaths A) _ _).
-  refine (contr_retracttype
-            (Build_RetractOf _ {B:Type & A <~> B}
+  serapply isequiv_contr_contr.
+  serapply (contr_retracttype
+            (Build_RetractOf _ _
                              (fun Be => (Be.1 ; equiv_path A Be.1 Be.2))
                              (fun Bf => (Bf.1 ; etop A Bf.1 Bf.2))
-                             _)
-            (contr_basedpaths A)).
+                             _)).
   intros [B f].
   refine (path_sigma' (fun B => A <~> B) 1 (H A B f)).
 Defined.
@@ -70,8 +69,7 @@ Proof.
     refine (unit vwu A @ _ @ (unit vwu B)^).
     refine (_ @ flip vwu A B (fun a b => f a = b) @ _).
     - apply ap, path_arrow; intros a.
-      symmetry; apply (contract vwu).
-      apply contr_basedpaths.
+      symmetry; rapply (contract vwu).
     - apply ap, path_arrow; intros b.
       apply (contract vwu), fcontr_isequiv; exact _. }
   { intros A B f.
@@ -81,15 +79,9 @@ Proof.
     rewrite !(unit_comp vwu).
     rewrite <- !transport_compose.
     rewrite (transport_sigma' (C := fun P (a0:A) => P a0)); cbn.
-    assert (p : (transport (fun x : A -> Type0 => x a)
-                   (path_arrow (fun _ : A => Unit)
-                      (fun a0 : A => {b : B & f a0 = b})
-                      (fun a0 : A =>
-                         (contract vwu {b : B & f a0 = b}
-                           (contr_basedpaths (f a0)))^)) tt)
-                = (f a ; 1))
-      by apply path_contr.
-    rewrite p; clear p.
+    refine (ap _ _ @ _).
+    1:{ apply ap, ap.
+        exact (path_contr _ (f a ; 1)). }
     rewrite (flip_comp vwu).
     rewrite transport_sigma'; cbn.
     apply ap, path_contr. }
